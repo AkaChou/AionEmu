@@ -25,9 +25,9 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PlayerStatsData {
 	@XmlElement(name = "player_stats", required = true)
-	private List<PlayerStatsType> templatesList = new ArrayList<PlayerStatsType>();
+	private List<PlayerStatsType> templatesList = new ArrayList<>();
 
-	private final IntObjectHashMap<PlayerStatsTemplate> playerTemplates = new IntObjectHashMap<PlayerStatsTemplate>();
+	private final IntObjectHashMap<PlayerStatsTemplate> playerTemplates = new IntObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，归一化属性、写入等级模板并为各职业注册 0 级计算模板。

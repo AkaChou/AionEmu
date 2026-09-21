@@ -100,58 +100,52 @@ public class HotspotTeleportService {
 		final int cooldown = TransportConfig.HOTSPOT_COOLDOWN_SECONDS;
 		final int castTimeMillis = castTimeMillis(TransportConfig.HOTSPOT_CAST_TIME_SECONDS);
 		final AtomicReference<Future<?>> castTask = new AtomicReference<>();
-		Future<?> scheduledCast = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				Future<?> teleportTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						TeleportService2.teleportTo(player, worldId, getX, getY, getZ, player.getHeading(), TeleportAnimation.NO_ANIMATION);
-						player.getInventory().decreaseKinah(price);
-						PacketSendUtility.sendPacket(player,
-								new SM_HOTSPOT_TELEPORT(player, 3, teleportId, cooldown));
-					}
-				}, 1000);
-				if (!player.getController().replaceTask(TaskId.HOTSPOT_TELEPORT, castTask.get(), teleportTask)) {
-					return;
-				}
-				finishCastBar(player, 0);
-				PacketSendUtility.broadcastPacketAndReceive(player,
+		Future<?> scheduledCast = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			Future<?> teleportTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				TeleportService2.teleportTo(player, worldId, getX, getY, getZ, player.getHeading(), TeleportAnimation.NO_ANIMATION);
+				player.getInventory().decreaseKinah(price);
+				PacketSendUtility.sendPacket(player,
 						new SM_HOTSPOT_TELEPORT(player, 3, teleportId, cooldown));
-				ActionObserver attackedObserver = new ActionObserver(ObserverType.ATTACKED) {
-					@Override
-					public void attacked(Creature creature) {
-						if (player.getController().cancelTask(TaskId.HOTSPOT_TELEPORT) != null) {
-							finishCastBar(player, 2);
-						}
-					}
-				};
-				player.getObserveController().addObserver(attackedObserver);
-				player.setHotTeleObservers(attackedObserver);
-				ActionObserver rideObserver = new ActionObserver(ObserverType.ABNORMALSETTED) {
-					@Override
-					public void abnormalsetted(AbnormalState state) {
-						if (state.getId() > 0) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1402444));
-							if (player.getController().cancelTask(TaskId.HOTSPOT_TELEPORT) != null) {
-								finishCastBar(player, 2);
-							}
-						}
-					}
-				};
-				player.getObserveController().addObserver(rideObserver);
-				player.setHotTeleObservers(rideObserver);
-				ActionObserver dotAttackedObserver = new ActionObserver(ObserverType.DOT_ATTACKED) {
-					@Override
-					public void dotattacked(Creature creature, Effect dotEffect) {
-						if (player.getController().cancelTask(TaskId.HOTSPOT_TELEPORT) != null) {
-							finishCastBar(player, 2);
-						}
-					}
-				};
-				player.getObserveController().addObserver(dotAttackedObserver);
-				player.setHotTeleObservers(dotAttackedObserver);
+			}, 1000);
+			if (!player.getController().replaceTask(TaskId.HOTSPOT_TELEPORT, castTask.get(), teleportTask)) {
+				return;
 			}
+			finishCastBar(player, 0);
+			PacketSendUtility.broadcastPacketAndReceive(player,
+					new SM_HOTSPOT_TELEPORT(player, 3, teleportId, cooldown));
+			ActionObserver attackedObserver = new ActionObserver(ObserverType.ATTACKED) {
+				@Override
+				public void attacked(Creature creature) {
+					if (player.getController().cancelTask(TaskId.HOTSPOT_TELEPORT) != null) {
+						finishCastBar(player, 2);
+					}
+				}
+			};
+			player.getObserveController().addObserver(attackedObserver);
+			player.setHotTeleObservers(attackedObserver);
+			ActionObserver rideObserver = new ActionObserver(ObserverType.ABNORMALSETTED) {
+				@Override
+				public void abnormalsetted(AbnormalState state) {
+					if (state.getId() > 0) {
+						PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1402444));
+						if (player.getController().cancelTask(TaskId.HOTSPOT_TELEPORT) != null) {
+							finishCastBar(player, 2);
+						}
+					}
+				}
+			};
+			player.getObserveController().addObserver(rideObserver);
+			player.setHotTeleObservers(rideObserver);
+			ActionObserver dotAttackedObserver = new ActionObserver(ObserverType.DOT_ATTACKED) {
+				@Override
+				public void dotattacked(Creature creature, Effect dotEffect) {
+					if (player.getController().cancelTask(TaskId.HOTSPOT_TELEPORT) != null) {
+						finishCastBar(player, 2);
+					}
+				}
+			};
+			player.getObserveController().addObserver(dotAttackedObserver);
+			player.setHotTeleObservers(dotAttackedObserver);
 		}, castTimeMillis);
 		castTask.set(scheduledCast);
 		player.getController().addTask(TaskId.HOTSPOT_TELEPORT, scheduledCast);
@@ -170,11 +164,14 @@ public class HotspotTeleportService {
 	 * @return 实际可玩世界 ID / Live world id
 	 */
 	static int resolveLiveWorldId(int worldId) {
-		return switch (worldId) {
-			case ELYOS_INGGISON_MASTER_WORLD_ID -> ELYOS_INGGISON_WORLD_ID;
-			case ASMODIAN_GELKMAROS_MASTER_WORLD_ID -> ASMODIAN_GELKMAROS_WORLD_ID;
-			default -> worldId;
-		};
+        switch (worldId) {
+            case ELYOS_INGGISON_MASTER_WORLD_ID:
+                return ELYOS_INGGISON_WORLD_ID;
+            case ASMODIAN_GELKMAROS_MASTER_WORLD_ID:
+                return ASMODIAN_GELKMAROS_WORLD_ID;
+            default:
+                return worldId;
+        }
 	}
 
 	static int castTimeMillis(int castTimeSeconds) {

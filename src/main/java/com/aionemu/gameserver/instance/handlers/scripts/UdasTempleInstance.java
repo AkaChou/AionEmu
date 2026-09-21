@@ -58,7 +58,7 @@ public class UdasTempleInstance extends GeneralInstanceHandler {
 			break;
 		}
     }
-	
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -88,7 +88,7 @@ public class UdasTempleInstance extends GeneralInstanceHandler {
 		    break;
 		}
 	}
-	
+
 	@Override
     public void onDie(Npc npc) {
         Player player = npc.getAggroList().getMostPlayerDamage();
@@ -115,43 +115,35 @@ public class UdasTempleInstance extends GeneralInstanceHandler {
 			break;
 		}
     }
-	
+
 	@Override
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 	}
-	
+
 	@Override
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 	}
-	
+
 	@Override
     public void onInstanceDestroy() {
         doors.clear();
     }
-	
+
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
 		storage.decreaseByItemId(185000083, storage.getItemCountByItemId(185000083)); //Silent Chapel Key.
 		storage.decreaseByItemId(185000084, storage.getItemCountByItemId(185000084)); //Great Chapel Key.
 		storage.decreaseByItemId(185000085, storage.getItemCountByItemId(185000085)); //Chamber Of Guidance Key.
 	}
-	
-	
+
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
+		GameThreadPoolServices.threadPoolManager().schedule(() -> instance.doOnAllPlayers(player -> {
+			if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
 			}
-		}, time);
+		}), time);
 	}
 }

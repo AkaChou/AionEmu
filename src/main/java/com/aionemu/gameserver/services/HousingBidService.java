@@ -237,7 +237,7 @@ public class HousingBidService extends AbstractCronTask {
 
 	private void loadBidData() {
 		Set<PlayerHouseBid> playerBidData = DAOManager.getDAO(HouseBidsDAO.class).loadBids();
-		List<PlayerHouseBid> sortedBids = new ArrayList<PlayerHouseBid>(playerBidData);
+		List<PlayerHouseBid> sortedBids = new ArrayList<>(playerBidData);
 		Collections.sort(sortedBids);
 		Map<Integer, House> housesById = new LinkedHashMap<>();
 		for (House house : GameHousingServices.housingService().getCustomHouses()) {
@@ -290,9 +290,9 @@ public class HousingBidService extends AbstractCronTask {
 				return;
 			}
 		}
-		Map<HouseBidEntry, Integer> winners = new HashMap<HouseBidEntry, Integer>();
-		Map<HouseBidEntry, Integer> successSell = new HashMap<HouseBidEntry, Integer>();
-		Map<HouseBidEntry, Integer> failedSell = new HashMap<HouseBidEntry, Integer>();
+		Map<HouseBidEntry, Integer> winners = new HashMap<>();
+		Map<HouseBidEntry, Integer> successSell = new HashMap<>();
+		Map<HouseBidEntry, Integer> failedSell = new HashMap<>();
 		for (Entry<Integer, HouseBidEntry> playerBid : playerBids.entrySet()) {
 			int playerId = playerBid.getKey();
 			HouseBidEntry houseBid = getBidByEntryIndex(playerBid.getValue().getEntryIndex());
@@ -422,7 +422,7 @@ public class HousingBidService extends AbstractCronTask {
 			bidHouse.save();
 			MailFormatter.sendHouseAuctionMail(bidHouse, sellerPcd, result, time, compensation);
 		}
-		List<HouseBidEntry> copy = new ArrayList<HouseBidEntry>();
+		List<HouseBidEntry> copy = new ArrayList<>();
 		copy.addAll(houseBids.values());
 		houseBids.clear();
 		playerBids.clear();
@@ -731,12 +731,7 @@ public class HousingBidService extends AbstractCronTask {
 		}
 		if (minutesLeft < 5 && timeProlonged < 30) {
 			timeProlonged += 5;
-			GameThreadPoolServices.threadPoolManager().execute(new Runnable() {
-				@Override
-				public void run() {
-					DAOManager.getDAO(ServerVariablesDAO.class).store("auctionProlonged", timeProlonged);
-				}
-			});
+			GameThreadPoolServices.threadPoolManager().execute(() -> DAOManager.getDAO(ServerVariablesDAO.class).store("auctionProlonged", timeProlonged));
 		} else if (!isBiddingAllowed()) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_BID_TIMEOUT);
 			return;
@@ -835,7 +830,7 @@ public class HousingBidService extends AbstractCronTask {
 	 */
 	public List<HouseBidEntry> getHouseBidEntries(Race playerRace) {
 		synchronized (houseBids) {
-			List<HouseBidEntry> bids = new ArrayList<HouseBidEntry>();
+			List<HouseBidEntry> bids = new ArrayList<>();
 			for (HouseBidEntry bid : houseBids.values()) {
 				HousingLand land = DataManager.HOUSE_DATA.getLand(bid.getLandId());
 				boolean isEly = DataManager.NPC_DATA.getNpcTemplate(land.getManagerNpcId()).getTribe() == TribeClass.GENERAL;

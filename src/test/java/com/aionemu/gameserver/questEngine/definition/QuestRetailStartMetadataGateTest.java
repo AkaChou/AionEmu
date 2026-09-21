@@ -334,32 +334,35 @@ class QuestRetailStartMetadataGateTest {
 			Set<String> races = production.get(qid).races();
 			boolean wildcard = races.isEmpty() || races.contains("PC_ALL");
 			boolean both = races.contains("ELYOS") && races.contains("ASMODIANS");
-			switch (retailFaction) {
-				case "PC_ALL" -> {
-					if (!wildcard && !both) {
-						// 服务端阵营拆分（真端双阵营 -> 生产 1xxxx/2xxxx 单阵营成对任务）。
-						Integer mirror = FACTION_SPLIT_PAIRS.get(qid);
-						if (mirror == null) {
-							problems.add("quest " + qid + " races=" + races
-								+ " but retail=PC_ALL without a split pair");
-						} else {
-							assertSplitPair(qid, mirror,
-								races.contains("ELYOS") ? "ELYOS" : "ASMODIANS", problems);
-						}
-					}
-				}
-				case "ELYOS", "ASMODIANS" -> {
-					if (wildcard || both) {
-						problems.add("quest " + qid + " races=" + races
-							+ " is broader than retail=" + retailFaction);
-					} else if (!races.contains(retailFaction)) {
-						problems.add("quest " + qid + " races=" + races
-							+ " but retail=" + retailFaction);
-					}
-				}
-				default -> problems.add("quest " + qid + " unknown retail faction "
-					+ retailFaction);
-			}
+            switch (retailFaction) {
+                case "PC_ALL":
+                    if (!wildcard && !both) {
+                        // 服务端阵营拆分（真端双阵营 -> 生产 1xxxx/2xxxx 单阵营成对任务）。
+                        Integer mirror = FACTION_SPLIT_PAIRS.get(qid);
+                        if (mirror == null) {
+                            problems.add("quest " + qid + " races=" + races
+                                    + " but retail=PC_ALL without a split pair");
+                        } else {
+                            assertSplitPair(qid, mirror,
+                                    races.contains("ELYOS") ? "ELYOS" : "ASMODIANS", problems);
+                        }
+                    }
+                    break;
+                case "ELYOS":
+                case "ASMODIANS":
+                    if (wildcard || both) {
+                        problems.add("quest " + qid + " races=" + races
+                                + " is broader than retail=" + retailFaction);
+                    } else if (!races.contains(retailFaction)) {
+                        problems.add("quest " + qid + " races=" + races
+                                + " but retail=" + retailFaction);
+                    }
+                    break;
+                default:
+                    problems.add("quest " + qid + " unknown retail faction "
+                            + retailFaction);
+                    break;
+            }
 		}
 		assertTrue(problems.isEmpty(), () -> "faction mismatches: " + problems);
 	}

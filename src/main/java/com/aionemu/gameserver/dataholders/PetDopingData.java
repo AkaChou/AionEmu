@@ -27,7 +27,7 @@ public class PetDopingData {
 	private List<PetDopingEntry> list;
 
 	@XmlTransient
-	private final ShortObjectHashMap<PetDopingEntry> dopingsById = new ShortObjectHashMap<PetDopingEntry>();
+	private final ShortObjectHashMap<PetDopingEntry> dopingsById = new ShortObjectHashMap<>();
 
 	public PetDopingData(List<PetDopingEntry> entries) {
 		for (PetDopingEntry entry : entries) {

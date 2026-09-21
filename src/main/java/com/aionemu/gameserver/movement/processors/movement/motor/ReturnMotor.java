@@ -48,16 +48,12 @@ public class ReturnMotor extends AMovementMotor {
 				new SM_MOVE(this._owner.getObjectId(), this._owner.getX(), this._owner.getY(), this._owner.getZ(),
 						this._targetPosition.x, this._targetPosition.y, this._targetPosition.z, this._targetHeading,
 						this._targetMask));
-		this._task = this._processor.schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(ReturnMotor.this._owner, ReturnMotor.this._targetPosition.x,
-						ReturnMotor.this._targetPosition.y, ReturnMotor.this._targetPosition.z,
-						ReturnMotor.this._targetHeading, false);
-				ReturnMotor.this._owner.getAi2().onGeneralEvent(AIEventType.MOVE_ARRIVED);
-				ReturnMotor.this._owner.getAi2().onGeneralEvent(AIEventType.BACK_HOME);
-			}
+		this._task = this._processor.schedule(() -> {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(ReturnMotor.this._owner, ReturnMotor.this._targetPosition.x,
+					ReturnMotor.this._targetPosition.y, ReturnMotor.this._targetPosition.z,
+					ReturnMotor.this._targetHeading, false);
+			ReturnMotor.this._owner.getAi2().onGeneralEvent(AIEventType.MOVE_ARRIVED);
+			ReturnMotor.this._owner.getAi2().onGeneralEvent(AIEventType.BACK_HOME);
 		}, movementTime);
 	}
 

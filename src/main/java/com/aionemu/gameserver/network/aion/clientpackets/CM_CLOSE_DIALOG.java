@@ -52,12 +52,7 @@ public class CM_CLOSE_DIALOG extends AionClientPacket {
 		if (obj instanceof Npc npc) {
 			npc.getAi2().onCreatureEvent(AIEventType.DIALOG_FINISH, player);
 			DialogService.onCloseDialog(npc, player);
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					client.sendPacket(new SM_HEADING_UPDATE(targetObjectId, obj.getHeading()));
-				}
-			}, 1200);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> client.sendPacket(new SM_HEADING_UPDATE(targetObjectId, obj.getHeading())), 1200);
 		}
 		var mailbox = player.getMailbox();
 		if (mailbox != null && mailbox.mailBoxState != MailboxState.CLOSED) {

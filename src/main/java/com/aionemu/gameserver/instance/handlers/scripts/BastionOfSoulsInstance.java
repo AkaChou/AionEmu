@@ -95,9 +95,9 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
-	private final List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<>();
 		/** 灵魂堡垒任务 / bastion task */
-		private final List<Future<?>> bastionTask = new ArrayList<Future<?>>();
+		private final List<Future<?>> bastionTask = new ArrayList<>();
 
 	/**
 	 * NPC 掉落表注册时处理。
@@ -332,7 +332,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	@Override
     public boolean onPassFlyingRing(Player player, String flyingRing) {
         if (flyingRing.equals("BASTION_OF_SOULS")) {
-			instance.doOnAllPlayers(new Visitor<Player>() {
+			instance.doOnAllPlayers(new Visitor<>() {
 				/**
 				 * 处理 visit。
 				 * Handle visit.
@@ -366,7 +366,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -623,14 +623,14 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 
 	private void sendPacket(Player player, final String variable, final int value) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-		    /**
-		     * 处理 visit。
-		     * Handle visit.
-		     *
-		     * @param player 玩家 / player
-		     */
-		    @Override
+		instance.doOnAllPlayers(new Visitor<>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
+			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
 					PacketSendUtility.sendPacket(player, new SM_CONDITION_VARIABLE(player, variable, value));
@@ -902,7 +902,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -932,7 +932,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -962,7 +962,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -992,7 +992,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -1022,7 +1022,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -1052,7 +1052,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -1082,7 +1082,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -1112,7 +1112,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -1142,7 +1142,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -1172,7 +1172,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -1202,7 +1202,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -1229,22 +1229,22 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				sendMsgByRace(1404222, Race.PC_ALL, 0);
 				final int Bastiel_Batiskan07 = spawnRace == Race.ASMODIANS ? 806597 : 806588;
 				spawn(Bastiel_Batiskan07, 229.58844f, 729.6629f, 422.73956f, (byte) 80);
-				instance.doOnAllPlayers(new Visitor<Player>() {
-				    /**
-				     * 处理 visit。
-				     * Handle visit.
-				     *
-				     * @param player 玩家 / player
-				     */
-				    @Override
-				    public void visit(Player player) {
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
 						deleteNpc(806702);
 						deleteNpc(806703);
 						stopInstance(player);
 						killNpc(getNpcs(731804));
 						bastionTaskA12.cancel(true);
-				    }
-			    });
+					}
+				});
             }
         }, 720000)); //...12Min
     }
@@ -1646,7 +1646,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
     }
 
 	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -1684,7 +1684,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.

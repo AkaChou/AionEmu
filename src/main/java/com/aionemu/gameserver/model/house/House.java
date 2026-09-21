@@ -84,7 +84,7 @@ public class House extends VisibleObject {
 	private Timestamp nextPay;
 	/** 返回 sell started / Returns the sell started */
 	private Timestamp sellStarted;
-	private final Map<SpawnType, Npc> spawns = new HashMap<SpawnType, Npc>(3);
+	private final Map<SpawnType, Npc> spawns = new HashMap<>(3);
 	private HouseRegistry houseRegistry;
 	/** 返回 house owner info flags / Returns the house owner info flags */
 	private byte houseOwnerInfoFlags = PlayerHouseOwnerFlags.SINGLE_HOUSE.getId();
@@ -192,7 +192,7 @@ public class House extends VisibleObject {
 		int creatorId = getAddress().getId();
 		String masterName = StringUtils.EMPTY;
 		if (playerObjectId != 0) {
-			ArrayList<Integer> players = new ArrayList<Integer>(1);
+			ArrayList<Integer> players = new ArrayList<>(1);
 			players.add(playerObjectId);
 			Map<Integer, String> playerNames = DAOManager.getDAO(PlayerDAO.class).getPlayerNames(players);
 			if (playerNames.containsKey(playerObjectId)) {

@@ -31,15 +31,15 @@ public final class PlayerSkillList implements SkillList<Player> {
 	private final Map<Integer, PlayerSkillEntry> basicSkills;
 	private final Map<Integer, PlayerSkillEntry> stigmaSkills;
 	private final Map<Integer, PlayerSkillEntry> linkedSkills;
-	List<Integer> linked = new ArrayList<Integer>();
+	List<Integer> linked = new ArrayList<>();
 
 	private final List<PlayerSkillEntry> deletedSkills;
 
 	public PlayerSkillList() {
-		this.basicSkills = new HashMap<Integer, PlayerSkillEntry>(0);
-		this.stigmaSkills = new HashMap<Integer, PlayerSkillEntry>(0);
-		this.linkedSkills = new HashMap<Integer, PlayerSkillEntry>(0);
-		this.deletedSkills = new ArrayList<PlayerSkillEntry>(0);
+		this.basicSkills = new HashMap<>(0);
+		this.stigmaSkills = new HashMap<>(0);
+		this.linkedSkills = new HashMap<>(0);
+		this.deletedSkills = new ArrayList<>(0);
 	}
 
 	public PlayerSkillList(List<PlayerSkillEntry> skills) {
@@ -59,7 +59,7 @@ public final class PlayerSkillList implements SkillList<Player> {
 	 * @return 包含全部技能的数组 / Returns array with all skills
 	 */
 	public PlayerSkillEntry[] getAllSkills() {
-		List<PlayerSkillEntry> allSkills = new ArrayList<PlayerSkillEntry>();
+		List<PlayerSkillEntry> allSkills = new ArrayList<>();
 		allSkills.addAll(basicSkills.values());
 		allSkills.addAll(stigmaSkills.values());
 		allSkills.addAll(linkedSkills.values());
@@ -68,7 +68,7 @@ public final class PlayerSkillList implements SkillList<Player> {
 
 	/** 返回全部技能 ID 列表 / Returns all skill IDs */
 	public List<Integer> getAllSkills2() {
-		HashSet<Integer> allSkills = new HashSet<Integer>();
+		HashSet<Integer> allSkills = new HashSet<>();
 		for (PlayerSkillEntry i : basicSkills.values()) {
 			allSkills.add(i.getSkillId());
 		}

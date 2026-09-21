@@ -33,7 +33,7 @@ public class HyperionAI2 extends AggressiveNpcAI2
 	private int castc = 0;
 	private Future<?> Cast;
 	private final boolean canThink = true;
-	private final List<Integer> percents = new ArrayList<Integer>();
+	private final List<Integer> percents = new ArrayList<>();
 
 	@Override
 	public boolean canThink() {
@@ -59,108 +59,28 @@ public class HyperionAI2 extends AggressiveNpcAI2
 		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDRuneWP_Charger4_Completed, 21000);
 		switch (Rnd.get(1, 4)) {
 		    case 1:
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						spawn(276519, 108.55013f, 138.96940f, 132.60164f, (byte) 0);
-					}
-				}, 3000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						spawn(231093, 126.54710f, 154.47961f, 131.47116f, (byte) 0);
-					}
-				}, 9000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						spawn(231094, 146.72450f, 139.12267f, 132.68515f, (byte) 0);
-					}
-				}, 15000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						spawn(231095, 129.41306f, 121.34766f, 131.47110f, (byte) 0);
-					}
-				}, 21000);
+			    GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(276519, 108.55013f, 138.96940f, 132.60164f, (byte) 0), 3000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231093, 126.54710f, 154.47961f, 131.47116f, (byte) 0), 9000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231094, 146.72450f, 139.12267f, 132.68515f, (byte) 0), 15000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231095, 129.41306f, 121.34766f, 131.47110f, (byte) 0), 21000);
 			break;
 			case 2:
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						spawn(276519, 129.41306f, 121.34766f, 131.47110f, (byte) 0);
-					}
-				}, 3000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						spawn(231093, 108.55013f, 138.96940f, 132.60164f, (byte) 0);
-					}
-				}, 9000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						spawn(231094, 126.54710f, 154.47961f, 131.47116f, (byte) 0);
-					}
-				}, 15000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						spawn(231095, 146.72450f, 139.12267f, 132.68515f, (byte) 0);
-					}
-				}, 21000);
+			    GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(276519, 129.41306f, 121.34766f, 131.47110f, (byte) 0), 3000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231093, 108.55013f, 138.96940f, 132.60164f, (byte) 0), 9000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231094, 126.54710f, 154.47961f, 131.47116f, (byte) 0), 15000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231095, 146.72450f, 139.12267f, 132.68515f, (byte) 0), 21000);
 			break;
 			case 3:
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						spawn(276519, 146.72450f, 139.12267f, 132.68515f, (byte) 0);
-					}
-				}, 3000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						spawn(231093, 129.41306f, 121.34766f, 131.47110f, (byte) 0);
-					}
-				}, 9000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						spawn(231094, 108.55013f, 138.96940f, 132.60164f, (byte) 0);
-					}
-				}, 15000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						spawn(231095, 126.54710f, 154.47961f, 131.47116f, (byte) 0);
-					}
-				}, 21000);
+			    GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(276519, 146.72450f, 139.12267f, 132.68515f, (byte) 0), 3000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231093, 129.41306f, 121.34766f, 131.47110f, (byte) 0), 9000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231094, 108.55013f, 138.96940f, 132.60164f, (byte) 0), 15000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231095, 126.54710f, 154.47961f, 131.47116f, (byte) 0), 21000);
 			break;
 			case 4:
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						spawn(276519, 126.54710f, 154.47961f, 131.47116f, (byte) 0);
-					}
-				}, 3000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						spawn(231093, 146.72450f, 139.12267f, 132.68515f, (byte) 0);
-					}
-				}, 9000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						spawn(231094, 129.41306f, 121.34766f, 131.47110f, (byte) 0);
-					}
-				}, 15000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						spawn(231095, 108.55013f, 138.96940f, 132.60164f, (byte) 0);
-					}
-				}, 21000);
+			    GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(276519, 126.54710f, 154.47961f, 131.47116f, (byte) 0), 3000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231093, 146.72450f, 139.12267f, 132.68515f, (byte) 0), 9000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231094, 129.41306f, 121.34766f, 131.47110f, (byte) 0), 15000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231095, 108.55013f, 138.96940f, 132.60164f, (byte) 0), 21000);
 			break;
 		}
 	}
@@ -262,14 +182,11 @@ public class HyperionAI2 extends AggressiveNpcAI2
 	}
 
 	private void startCast() {
-		Cast = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-		    @Override
-		    public void run() {
-			    if (castc >= 3)
-				Cast.cancel(false);
-				Cast1();
-				castc++;
-			}
+		Cast = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (castc >= 3)
+			Cast.cancel(false);
+			Cast1();
+			castc++;
 		}, 1000, 5 * 1000);
     }
 
@@ -278,14 +195,11 @@ public class HyperionAI2 extends AggressiveNpcAI2
 	}
 
 	private void startCast2() {
-		Cast = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-		    @Override
-		    public void run() {
-			    if (castc >= 3)
-				Cast.cancel(false);
-				Cast2();
-				castc++;
-			}
+		Cast = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (castc >= 3)
+			Cast.cancel(false);
+			Cast2();
+			castc++;
 		}, 1000, 3 * 1000);
     }
 
@@ -301,14 +215,11 @@ public class HyperionAI2 extends AggressiveNpcAI2
 	}
 
 	private void startCast3() {
-		Cast = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-		    @Override
-		    public void run() {
-			    if (castc >= 4)
-				Cast.cancel(false);
-				Cast3();
-				castc++;
-			}
+		Cast = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (castc >= 4)
+			Cast.cancel(false);
+			Cast3();
+			castc++;
 		}, 1000, 3 * 1000);
     }
 
@@ -330,14 +241,11 @@ public class HyperionAI2 extends AggressiveNpcAI2
 	}
 
 	private void startCast4() {
-		Cast = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-		    @Override
-		    public void run() {
-			    if (castc >= 3)
-				Cast.cancel(false);
-				Cast4();
-				castc++;
-			}
+		Cast = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (castc >= 3)
+			Cast.cancel(false);
+			Cast4();
+			castc++;
 		}, 1000, 3 * 1000);
     }
 
@@ -356,14 +264,11 @@ public class HyperionAI2 extends AggressiveNpcAI2
 	}
 
 	private void startCast5() {
-		Cast = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-		    @Override
-		    public void run() {
-			    if (castc >= 3)
-				Cast.cancel(false);
-				Cast5();
-				castc++;
-			}
+		Cast = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (castc >= 3)
+			Cast.cancel(false);
+			Cast5();
+			castc++;
 		}, 1000, 5 * 1000);
     }
 

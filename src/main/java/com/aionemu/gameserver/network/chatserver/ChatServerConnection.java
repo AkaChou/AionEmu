@@ -40,7 +40,7 @@ public class ChatServerConnection extends AConnection {
 	 * 待发送服务端包队列。
 	 * Outbound server-packet queue.
 	 */
-	private final Deque<CsServerPacket> sendMsgQueue = new ArrayDeque<CsServerPacket>();
+	private final Deque<CsServerPacket> sendMsgQueue = new ArrayDeque<>();
 
 	/**
 	 * 当前连接状态。

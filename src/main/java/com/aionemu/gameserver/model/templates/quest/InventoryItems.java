@@ -23,7 +23,7 @@ public class InventoryItems {
 	/** 获取背包物品。 / Returns the inventory item. */
 	public List<InventoryItem> getInventoryItem() {
 		if (inventoryItem == null) {
-			inventoryItem = new ArrayList<InventoryItem>();
+			inventoryItem = new ArrayList<>();
 		}
 		return inventoryItem;
 	}

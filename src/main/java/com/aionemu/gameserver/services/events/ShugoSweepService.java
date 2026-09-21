@@ -170,13 +170,10 @@ public class ShugoSweepService {
 	 * @param move 步数（用于延迟） / move count (used for delay)
 	 */
 	private void rewardPlayer(final Player player, final int step, final int move) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (player.isOnline()) {
-					ShugoSweepReward reward = getRewardForBoard(boardId, step);
-					ItemService.addItem(player, reward.getItemId(), reward.getCount());
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (player.isOnline()) {
+				ShugoSweepReward reward = getRewardForBoard(boardId, step);
+				ItemService.addItem(player, reward.getItemId(), reward.getCount());
 			}
 		}, move * 1200L);
 

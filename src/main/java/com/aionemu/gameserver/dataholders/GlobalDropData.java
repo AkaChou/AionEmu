@@ -34,7 +34,7 @@ public class GlobalDropData {
 	 */
 	public List<GlobalRule> getAllRules() {
 		if (globalDropRules == null) {
-			globalDropRules = new ArrayList<GlobalRule>();
+			globalDropRules = new ArrayList<>();
 		}
 		return this.globalDropRules;
 	}

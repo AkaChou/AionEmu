@@ -50,13 +50,10 @@ public class Core_Of_Knowledge_Bind_PointAI2 extends NpcAI2
     }
 
 	private void announceCoreOfKnowledge() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 全知之树中心的绑定点装置已激活。 / The All-knowing Tree Center's bind point device was activated.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_14);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 全知之树中心的绑定点装置已激活。 / The All-knowing Tree Center's bind point device was activated.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_14);
 			}
 		});
 	}

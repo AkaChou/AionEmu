@@ -48,29 +48,28 @@ public class Ai2Command extends AdminCommand {
 		 */
 		String param0 = params[0];
 
-		if (param0.equals("createlog")) {
-			boolean oldValue = AIConfig.ONCREATE_DEBUG;
-			AIConfig.ONCREATE_DEBUG = !oldValue;
-			PacketSendUtility.sendMessage(player, "New createlog value: " + !oldValue);
-			return;
-		}
-
-		if (param0.equals("eventlog")) {
-			boolean oldValue = AIConfig.EVENT_DEBUG;
-			AIConfig.EVENT_DEBUG = !oldValue;
-			PacketSendUtility.sendMessage(player, "New eventlog value: " + !oldValue);
-			return;
-		}
-
-		if (param0.equals("movelog")) {
-			boolean oldValue = AIConfig.MOVE_DEBUG;
-			AIConfig.MOVE_DEBUG = !oldValue;
-			PacketSendUtility.sendMessage(player, "New movelog value: " + !oldValue);
-			return;
-		}
-
-		if (param0.equals("say")) {
-			log.info(I18n.get("log.f71e557037c3", params[1]));
+		switch (param0) {
+			case "createlog": {
+				boolean oldValue = AIConfig.ONCREATE_DEBUG;
+				AIConfig.ONCREATE_DEBUG = !oldValue;
+				PacketSendUtility.sendMessage(player, "New createlog value: " + !oldValue);
+				return;
+			}
+			case "eventlog": {
+				boolean oldValue = AIConfig.EVENT_DEBUG;
+				AIConfig.EVENT_DEBUG = !oldValue;
+				PacketSendUtility.sendMessage(player, "New eventlog value: " + !oldValue);
+				return;
+			}
+			case "movelog": {
+				boolean oldValue = AIConfig.MOVE_DEBUG;
+				AIConfig.MOVE_DEBUG = !oldValue;
+				PacketSendUtility.sendMessage(player, "New movelog value: " + !oldValue);
+				return;
+			}
+			case "say":
+				log.info(I18n.get("log.f71e557037c3", params[1]));
+				break;
 		}
 
 		/**
@@ -84,58 +83,61 @@ public class Ai2Command extends AdminCommand {
 			return;
 		}
 
-		if (param0.equals("info")) {
-			PacketSendUtility.sendMessage(player, "Ai name: " + npc.getAi2().getName());
-			PacketSendUtility.sendMessage(player, "Ai state: " + npc.getAi2().getState());
-			PacketSendUtility.sendMessage(player, "Ai substate: " + npc.getAi2().getSubState());
-			return;
-		}
-
-		if (param0.equals("log")) {
-			boolean oldValue = npc.getAi2().isLogging();
-			((AbstractAI) npc.getAi2()).setLogging(!oldValue);
-			PacketSendUtility.sendMessage(player, "New log value: " + !oldValue);
-			return;
-		}
-
-		if (param0.equals("print")) {
-			AIEventLog eventLog = ((AbstractAI) npc.getAi2()).getEventLog();
-			Iterator<AIEventType> iterator = eventLog.iterator();
-			while (iterator.hasNext()) {
-				PacketSendUtility.sendMessage(player, "EVENT: " + iterator.next().name());
-			}
-			return;
+		switch (param0) {
+			case "info":
+				PacketSendUtility.sendMessage(player, "Ai name: " + npc.getAi2().getName());
+				PacketSendUtility.sendMessage(player, "Ai state: " + npc.getAi2().getState());
+				PacketSendUtility.sendMessage(player, "Ai substate: " + npc.getAi2().getSubState());
+				return;
+			case "log":
+				boolean oldValue = npc.getAi2().isLogging();
+				((AbstractAI) npc.getAi2()).setLogging(!oldValue);
+				PacketSendUtility.sendMessage(player, "New log value: " + !oldValue);
+				return;
+			case "print":
+				AIEventLog eventLog = ((AbstractAI) npc.getAi2()).getEventLog();
+				Iterator<AIEventType> iterator = eventLog.iterator();
+				while (iterator.hasNext()) {
+					PacketSendUtility.sendMessage(player, "EVENT: " + iterator.next().name());
+				}
+				return;
 		}
 
 		String param1 = params[1];
-		if (param0.equals("set")) {
-			String aiName = param1;
-			GameEngineServices.ai2Engine().setupAI(aiName, npc);
-			// 新装配的 AI 实例停留在 CREATED，只有 SPAWNED 事件会把它推进 IDLE；缺少这一步会让该 NPC
-			// 收不到 ATTACK / CREATURE_SEE 等事件，变成完全木桩（与 RetailDirectPortalEngine 的做法保持一致）。
-			// A freshly attached AI stays in CREATED until the SPAWNED event moves it to IDLE; without it the NPC
-			// stops receiving ATTACK / CREATURE_SEE and behaves like a statue (same as RetailDirectPortalEngine).
-			npc.getAi2().onGeneralEvent(AIEventType.SPAWNED);
-		}
-		else if (param0.equals("event")) {
-			AIEventType eventType = AIEventType.valueOf(param1.toUpperCase());
-			if (eventType != null) {
-				npc.getAi2().onGeneralEvent(eventType);
+		switch (param0) {
+			case "set": {
+				String aiName = param1;
+				GameEngineServices.ai2Engine().setupAI(aiName, npc);
+				// 新装配的 AI 实例停留在 CREATED，只有 SPAWNED 事件会把它推进 IDLE；缺少这一步会让该 NPC
+				// 收不到 ATTACK / CREATURE_SEE 等事件，变成完全木桩（与 RetailDirectPortalEngine 的做法保持一致）。
+				// A freshly attached AI stays in CREATED until the SPAWNED event moves it to IDLE; without it the NPC
+				// stops receiving ATTACK / CREATURE_SEE and behaves like a statue (same as RetailDirectPortalEngine).
+				npc.getAi2().onGeneralEvent(AIEventType.SPAWNED);
+				break;
 			}
-		}
-		else if (param0.equals("event2")) {
-			AIEventType eventType = AIEventType.valueOf(param1.toUpperCase());
-			Creature creature = (Creature) com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(Integer.valueOf(params[2]));
-			if (eventType != null) {
-				npc.getAi2().onCreatureEvent(eventType, creature);
+			case "event": {
+				AIEventType eventType = AIEventType.valueOf(param1.toUpperCase());
+				if (eventType != null) {
+					npc.getAi2().onGeneralEvent(eventType);
+				}
+				break;
 			}
-		}
-		else if (param0.equals("state")) {
-			AIState state = AIState.valueOf(param1.toUpperCase());
-			((NpcAI2) npc.getAi2()).setStateIfNot(state);
-			if (params.length > 2) {
-				AISubState substate = AISubState.valueOf(params[2]);
-				((NpcAI2) npc.getAi2()).setSubStateIfNot(substate);
+			case "event2": {
+				AIEventType eventType = AIEventType.valueOf(param1.toUpperCase());
+				Creature creature = (Creature) com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(Integer.valueOf(params[2]));
+				if (eventType != null) {
+					npc.getAi2().onCreatureEvent(eventType, creature);
+				}
+				break;
+			}
+			case "state": {
+				AIState state = AIState.valueOf(param1.toUpperCase());
+				((NpcAI2) npc.getAi2()).setStateIfNot(state);
+				if (params.length > 2) {
+					AISubState substate = AISubState.valueOf(params[2]);
+					((NpcAI2) npc.getAi2()).setSubStateIfNot(substate);
+				}
+				break;
 			}
 		}
 	}

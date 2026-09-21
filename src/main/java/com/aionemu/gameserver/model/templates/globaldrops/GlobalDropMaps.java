@@ -23,7 +23,7 @@ public class GlobalDropMaps {
 	/** 返回全局掉落地图。 / Returns the global drop maps. */
 	public List<GlobalDropMap> getGlobalDropMaps() {
 		if (gdMaps == null) {
-			gdMaps = new ArrayList<GlobalDropMap>();
+			gdMaps = new ArrayList<>();
 		}
 		return this.gdMaps;
 	}

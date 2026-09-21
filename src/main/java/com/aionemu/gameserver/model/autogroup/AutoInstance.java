@@ -25,7 +25,7 @@ public abstract class AutoInstance extends AbstractLockManager implements AutoIn
 	public long startInstanceTime;
 	public WorldMapInstance instance;
 	public AutoGroupType agt;
-	public Map<Integer, AGPlayer> players = new ConcurrentHashMap<Integer, AGPlayer>();
+	public Map<Integer, AGPlayer> players = new ConcurrentHashMap<>();
 
 	protected boolean decrease(Player player, int itemId, long count) {
 		long i = 0;
@@ -36,8 +36,10 @@ public abstract class AutoInstance extends AbstractLockManager implements AutoIn
 		if (i < count) {
 			return false;
 		}
-		Collections.sort(items, new Comparator<Item>() {
-			/** 比较 / compare. */
+		Collections.sort(items, new Comparator<>() {
+			/**
+			 * 比较 / compare.
+			 */
 			@Override
 			public int compare(Item o1, Item o2) {
 				return Long.compare(o1.getExpireTime(), o2.getExpireTime());
@@ -55,7 +57,7 @@ public abstract class AutoInstance extends AbstractLockManager implements AutoIn
 	}
 
 	protected List<AGPlayer> getAGPlayersByRace(Race race) {
-		List<AGPlayer> result = new ArrayList<AGPlayer>();
+		List<AGPlayer> result = new ArrayList<>();
 		for (AGPlayer agPlayer : players.values()) {
 			if (agPlayer.getRace() == race) {
 				result.add(agPlayer);
@@ -65,7 +67,7 @@ public abstract class AutoInstance extends AbstractLockManager implements AutoIn
 	}
 
 	protected List<Player> getPlayersByRace(Race race) {
-		List<Player> result = new ArrayList<Player>();
+		List<Player> result = new ArrayList<>();
 		for (Player player : instance.getPlayersInside()) {
 			if (player.getRace() == race) {
 				result.add(player);
@@ -75,7 +77,7 @@ public abstract class AutoInstance extends AbstractLockManager implements AutoIn
 	}
 
 	protected List<AGPlayer> getPlayersByClass(PlayerClass playerClass) {
-		List<AGPlayer> result = new ArrayList<AGPlayer>();
+		List<AGPlayer> result = new ArrayList<>();
 		for (AGPlayer agPlayer : players.values()) {
 			if (agPlayer.getPlayerClass() == playerClass) {
 				result.add(agPlayer);

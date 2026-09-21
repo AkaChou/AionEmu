@@ -23,13 +23,13 @@ public class Wealhtheow_Keep_Rune_EliteAI2 extends AggressiveNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 	}
-	
+
 	@Override
     protected void handleSpawned() {
         super.handleSpawned();
 		announceRuneElite();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		// 指定 NPC 死亡后 10 秒在固定位置生成 3 个宝箱。 / Spawns 3 treasure chests at fixed spots 10s after these NPCs die.
@@ -38,35 +38,24 @@ public class Wealhtheow_Keep_Rune_EliteAI2 extends AggressiveNpcAI2
 			case 251825:
 			case 251830:
 				treasureChest();
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			        @Override
-			        public void run() {
-						spawn(701481, 780.46515f, 288.62924f, 143.18782f, (byte) 45);
-                        spawn(701481, 787.1314f, 288.72644f, 143.20233f, (byte) 30);
-                        spawn(701481, 793.9525f, 289.05054f, 143.18248f, (byte) 15);
-			        }
-		        }, 10000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					spawn(701481, 780.46515f, 288.62924f, 143.18782f, (byte) 45);
+					spawn(701481, 787.1314f, 288.72644f, 143.20233f, (byte) 30);
+					spawn(701481, 793.9525f, 289.05054f, 143.18248f, (byte) 15);
+				}, 10000);
 			break;
 		}
 		super.handleDied();
 	}
-	
+
 	private void treasureChest() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 出现了一个宝箱。 / A treasure chest has appeared.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdC_BoxSpawn);
-			}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			// 出现了一个宝箱。 / A treasure chest has appeared.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdC_BoxSpawn);
 		});
 	}
-	
+
 	private void announceRuneElite() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_RuneElite);
-			}
-		});
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_RuneElite));
 	}
 }

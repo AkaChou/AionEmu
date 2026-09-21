@@ -53,13 +53,10 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402685, 240000);
 					// 片刻后，分遣队突击小队将怀着牺牲决心攻击泉源。 / In a moment, the Detachment's Rush Squad, armed with the resolve to sacrifice themselves, will attack the Fount.
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402686, 270000);
-					heatventProtectorTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							AI2Actions.deleteOwner(Heatvent_ProtectorAI2.this);
-							// 多亏分遣队突击小队的牺牲，守护者之泉已被摧毁。 / Thanks to the sacrifice of the Detachment's Rush Squad, the Protectors' Fount has been destroyed.
-							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDSeal_Twin_06, 0);
-						}
+					heatventProtectorTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						AI2Actions.deleteOwner(Heatvent_ProtectorAI2.this);
+						// 多亏分遣队突击小队的牺牲，守护者之泉已被摧毁。 / Thanks to the sacrifice of the Detachment's Rush Squad, the Protectors' Fount has been destroyed.
+						PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDSeal_Twin_06, 0);
 					}, 300000);
 				break;
 			}
@@ -95,30 +92,27 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 	}
 
 	private void startTornadoTask() {
-		tornadoTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelTornadoTask();
-					cancelFlamekiteGeistTask();
-					cancelHeatventProtectorTask();
-				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 21645, 60, getOwner()).useNoAnimationSkill(); //Raging Hellfire.
-					List<Player> players = getLifedPlayers();
-					if (!players.isEmpty()) {
-						int size = players.size();
-						if (players.size() < 6) {
-							for (Player p: players) {
-								spawnTornado(p);
+		tornadoTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelTornadoTask();
+				cancelFlamekiteGeistTask();
+				cancelHeatventProtectorTask();
+			} else {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 21645, 60, getOwner()).useNoAnimationSkill(); //Raging Hellfire.
+				List<Player> players = getLifedPlayers();
+				if (!players.isEmpty()) {
+					int size = players.size();
+					if (players.size() < 6) {
+						for (Player p: players) {
+							spawnTornado(p);
+						}
+					} else {
+						int count = Rnd.get(6, size);
+						for (int i = 0; i < count; i++) {
+							if (players.isEmpty()) {
+								break;
 							}
-						} else {
-							int count = Rnd.get(6, size);
-							for (int i = 0; i < count; i++) {
-								if (players.isEmpty()) {
-									break;
-								}
-								spawnTornado(players.get(Rnd.get(players.size())));
-							}
+							spawnTornado(players.get(Rnd.get(players.size())));
 						}
 					}
 				}
@@ -127,29 +121,26 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 	}
 
 	private void startFlamekiteGeistTask() {
-		flamekiteGeistTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelTornadoTask();
-					cancelFlamekiteGeistTask();
-					cancelHeatventProtectorTask();
-				} else {
-					List<Player> players = getLifedPlayers();
-					if (!players.isEmpty()) {
-						int size = players.size();
-						if (players.size() < 6) {
-							for (Player p: players) {
-								spawnFlamekiteGeist(p);
+		flamekiteGeistTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelTornadoTask();
+				cancelFlamekiteGeistTask();
+				cancelHeatventProtectorTask();
+			} else {
+				List<Player> players = getLifedPlayers();
+				if (!players.isEmpty()) {
+					int size = players.size();
+					if (players.size() < 6) {
+						for (Player p: players) {
+							spawnFlamekiteGeist(p);
+						}
+					} else {
+						int count = Rnd.get(6, size);
+						for (int i = 0; i < count; i++) {
+							if (players.isEmpty()) {
+								break;
 							}
-						} else {
-							int count = Rnd.get(6, size);
-							for (int i = 0; i < count; i++) {
-								if (players.isEmpty()) {
-									break;
-								}
-								spawnFlamekiteGeist(players.get(Rnd.get(players.size())));
-							}
+							spawnFlamekiteGeist(players.get(Rnd.get(players.size())));
 						}
 					}
 				}
@@ -162,12 +153,9 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						spawn(855625, x, y, z, (byte) 0); //Tornado.
-					}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					spawn(855625, x, y, z, (byte) 0); //Tornado.
 				}
 			}, 3000);
 		}
@@ -178,12 +166,9 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						spawn(855622, x, y, z, (byte) 0); //Flamekite Geist.
-					}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					spawn(855622, x, y, z, (byte) 0); //Flamekite Geist.
 				}
 			}, 3000);
 		}
@@ -195,7 +180,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 	}
 
 	private List<Player> getLifedPlayers() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);

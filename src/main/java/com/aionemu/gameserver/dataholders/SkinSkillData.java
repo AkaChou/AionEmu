@@ -29,9 +29,9 @@ public class SkinSkillData {
 	private List<SkinSkillTemplate> tlist;
 
 	@XmlTransient
-	private final IntObjectHashMap<SkinSkillTemplate> skinSkillData = new IntObjectHashMap<SkinSkillTemplate>();
+	private final IntObjectHashMap<SkinSkillTemplate> skinSkillData = new IntObjectHashMap<>();
 
-	private final Map<String, SkinSkillTemplate> string = new LinkedHashMap<String, SkinSkillTemplate>();
+	private final Map<String, SkinSkillTemplate> string = new LinkedHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，按 ID 与大写组名写入双索引。

@@ -47,7 +47,7 @@ public class MotionList {
     /** 添加。 / Add. */
     public void add(Motion motion, boolean persist) {
         if (motions == null) {
-            motions = new HashMap<Integer, Motion>();
+            motions = new HashMap<>();
         }
         if (motions.containsKey(motion.getId()) && motion.getExpireTime() == 0) {
             remove(motion.getId());
@@ -55,7 +55,7 @@ public class MotionList {
         motions.put(motion.getId(), motion);
         if (motion.isActive()) {
             if (activeMotions == null) {
-                activeMotions = new HashMap<Integer, Motion>();
+                activeMotions = new HashMap<>();
             }
             Motion old = activeMotions.put(Motion.motionType.get(motion.getId()), motion);
             if (old != null) {
@@ -93,7 +93,7 @@ public class MotionList {
                 return;
             }
             if (activeMotions == null) {
-                activeMotions = new HashMap<Integer, Motion>();
+                activeMotions = new HashMap<>();
             }
             Motion old = activeMotions.put(motionType, motion);
             if (old != null) {

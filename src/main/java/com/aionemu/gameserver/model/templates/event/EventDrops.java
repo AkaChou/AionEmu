@@ -23,7 +23,7 @@ public class EventDrops {
 	/** 返回活动掉落列表 / Returns the event drops */
 	public List<EventDrop> getEventDrops() {
 		if (eventDrops == null) {
-			eventDrops = new ArrayList<EventDrop>();
+			eventDrops = new ArrayList<>();
 		}
 		return this.eventDrops;
 	}

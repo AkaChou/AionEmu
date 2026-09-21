@@ -38,21 +38,15 @@ public class Miren_Crystal_SwordAI2 extends NpcAI2
 				case 702842: //Miren's Crystal Sword [Elyos]
 					announceSpiritOfMiren30Min();
 					announceSpiritOfMirenAppears();
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							spawn(883662, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Spirit Of Miren.
-						}
+					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						spawn(883662, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Spirit Of Miren.
 					}, 1800000); //30 Minutes.
 				break;
 				case 702843: //Miren's Crystal Sword [Asmodians]
 					announceSpiritOfMiren30Min();
 					announceSpiritOfMirenAppears();
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							spawn(884028, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Spirit Of Miren.
-						}
+					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						spawn(884028, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Spirit Of Miren.
 					}, 1800000); //30 Minutes.
 				break;
 			}
@@ -66,26 +60,20 @@ public class Miren_Crystal_SwordAI2 extends NpcAI2
 	}
 
 	private void announceSpiritOfMirenAppears() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦守护之灵将在 5 分钟后出现。 / The Miren Protector Spirit will appear after 5 minutes.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_BossNamed_SpawnAlarm_1241_05, 1500000);
-				// 米伦守护之灵将在 3 分钟后出现。 / The Miren Protector Spirit will appear after 3 minutes.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_BossNamed_SpawnAlarm_1241_03, 1620000);
-				// 米伦守护之灵将在 1 分钟后出现。 / The Miren Protector Spirit will appear after 1 minute
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_BossNamed_SpawnAlarm_1241_01, 1740000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦守护之灵将在 5 分钟后出现。 / The Miren Protector Spirit will appear after 5 minutes.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_BossNamed_SpawnAlarm_1241_05, 1500000);
+			// 米伦守护之灵将在 3 分钟后出现。 / The Miren Protector Spirit will appear after 3 minutes.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_BossNamed_SpawnAlarm_1241_03, 1620000);
+			// 米伦守护之灵将在 1 分钟后出现。 / The Miren Protector Spirit will appear after 1 minute
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_BossNamed_SpawnAlarm_1241_01, 1740000);
 		});
 	}
 
 	private void announceSpiritOfMiren30Min() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦之灵将在 30 分钟后从米伦水晶剑中被召唤。 / Spirit of Miren will be summoned from Miren's Crystal Sword in 30 minutes.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Lamiren_Named_Spawn_System);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦之灵将在 30 分钟后从米伦水晶剑中被召唤。 / Spirit of Miren will be summoned from Miren's Crystal Sword in 30 minutes.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Lamiren_Named_Spawn_System);
 		});
 	}
 }

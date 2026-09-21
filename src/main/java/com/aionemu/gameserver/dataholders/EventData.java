@@ -37,10 +37,10 @@ public class EventData {
 	protected List<EventTemplate> events;
 
 	@XmlTransient
-	private final Map<String, EventTemplate> activeEvents = new LinkedHashMap<String, EventTemplate>();
+	private final Map<String, EventTemplate> activeEvents = new LinkedHashMap<>();
 
 	@XmlTransient
-	private final Map<String, EventTemplate> allEvents = new LinkedHashMap<String, EventTemplate>();
+	private final Map<String, EventTemplate> allEvents = new LinkedHashMap<>();
 
 	@XmlTransient
 	private int counter = 0;
@@ -57,7 +57,7 @@ public class EventData {
 		allEvents.clear();
 		activeEvents.clear();
 
-		Set<String> ae = new HashSet<String>();
+		Set<String> ae = new HashSet<>();
 		Collections.addAll(ae, active.split(";"));
 
 		for (EventTemplate ev : events) {
@@ -99,7 +99,7 @@ public class EventData {
 	 * @return 全部活动模板 / all event templates
 	 */
 	public List<EventTemplate> getAllEvents() {
-		List<EventTemplate> result = new ArrayList<EventTemplate>();
+		List<EventTemplate> result = new ArrayList<>();
 		synchronized (allEvents) {
 			result.addAll(allEvents.values());
 		}
@@ -115,7 +115,7 @@ public class EventData {
 	 */
 	public void setAllEvents(List<EventTemplate> events, String active) {
 		if (events == null) {
-			events = new ArrayList<EventTemplate>();
+			events = new ArrayList<>();
 		}
 		this.events = events;
 		this.active = active;
@@ -138,7 +138,7 @@ public class EventData {
 	 * @return 激活活动模板 / active event templates
 	 */
 	public List<EventTemplate> getActiveEvents() {
-		List<EventTemplate> result = new ArrayList<EventTemplate>();
+		List<EventTemplate> result = new ArrayList<>();
 		synchronized (activeEvents) {
 			result.addAll(activeEvents.values());
 		}

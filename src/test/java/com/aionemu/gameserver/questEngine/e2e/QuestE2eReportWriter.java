@@ -86,13 +86,23 @@ public final class QuestE2eReportWriter {
 		StringBuilder result = new StringBuilder("\"");
 		String text = value == null ? "" : value;
 		for (char character : text.toCharArray()) {
-			switch (character) {
-				case '\\' -> result.append("\\\\");
-				case '"' -> result.append("\\\"");
-				case '\n' -> result.append("\\n");
-				case '\r' -> result.append("\\r");
-				default -> result.append(character);
-			}
+            switch (character) {
+                case '\\':
+                    result.append("\\\\");
+                    break;
+                case '"':
+                    result.append("\\\"");
+                    break;
+                case '\n':
+                    result.append("\\n");
+                    break;
+                case '\r':
+                    result.append("\\r");
+                    break;
+                default:
+                    result.append(character);
+                    break;
+            }
 		}
 		return result.append('"').toString();
 	}

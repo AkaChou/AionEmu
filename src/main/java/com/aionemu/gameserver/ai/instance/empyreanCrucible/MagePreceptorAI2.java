@@ -27,7 +27,7 @@ import java.util.List;
 @AIName("mage_preceptor")
 public class MagePreceptorAI2 extends AggressiveNpcAI2 {
 
-	private final List<Integer> percents = new ArrayList<Integer>();
+	private final List<Integer> percents = new ArrayList<>();
 
 	@Override
 	public void handleAttack(Creature creature) {
@@ -43,27 +43,21 @@ public class MagePreceptorAI2 extends AggressiveNpcAI2 {
 				GameEngineServices.skillEngine().getSkill(getOwner(), 19605, 46, getTargetPlayer()).useNoAnimationSkill();
 			break;
 			case 50:
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						if (!isAlreadyDead()) {
-							GameEngineServices.skillEngine().getSkill(getOwner(), 19609, 46, getOwner()).useNoAnimationSkill();
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-								@Override
-								public void run() {
-									WorldPosition p = getPosition();
-									switch (Rnd.get(1, 2)) {
-										case 1:
-										    spawn(282363, p.getX(), p.getY(), p.getZ(), p.getHeading()); //Summoned Tran Of Fire.
-										break;
-										case 2:
-										    spawn(282364, p.getX(), p.getY(), p.getZ(), p.getHeading()); //Summoned Tran Of Wind.
-										break;
-									}
-									scheduleSkill(2000);
-								}
-							}, 4500);
-						}
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					if (!isAlreadyDead()) {
+						GameEngineServices.skillEngine().getSkill(getOwner(), 19609, 46, getOwner()).useNoAnimationSkill();
+						GameThreadPoolServices.threadPoolManager().schedule(() -> {
+							WorldPosition p = getPosition();
+							switch (Rnd.get(1, 2)) {
+								case 1:
+									spawn(282363, p.getX(), p.getY(), p.getZ(), p.getHeading()); //Summoned Tran Of Fire.
+								break;
+								case 2:
+									spawn(282364, p.getX(), p.getY(), p.getZ(), p.getHeading()); //Summoned Tran Of Wind.
+								break;
+							}
+							scheduleSkill(2000);
+						}, 4500);
 					}
 				}, 3000);
 			break;
@@ -76,18 +70,15 @@ public class MagePreceptorAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void scheduleSkill(int delay) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!isAlreadyDead()) {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19605, 46, getTargetPlayer()).useNoAnimationSkill();
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isAlreadyDead()) {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 19605, 46, getTargetPlayer()).useNoAnimationSkill();
 			}
 		}, delay);
 	}
 
 	private Player getTargetPlayer() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player : getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player) && MathUtil.isIn3dRange(player, getOwner(), 37)) {
 				players.add(player);

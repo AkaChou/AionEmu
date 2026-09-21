@@ -34,34 +34,19 @@ public class CrucibleRiftAI2 extends ActionItemNpcAI2
 			break;
 		}
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		switch (getNpcId()) {
 			case 730459: // 试炼裂隙 / Crucible Rift.
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						announceCrucibleRift1();
-					}
-				}, 2000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						announceCrucibleRift2();
-					}
-				}, 6000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						announceCrucibleRift3();
-					}
-				}, 10000);
+			    GameThreadPoolServices.threadPoolManager().schedule(() -> announceCrucibleRift1(), 2000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> announceCrucibleRift2(), 6000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> announceCrucibleRift3(), 10000);
 			break;
 		}
 		super.handleSpawned();
 	}
-	
+
 	@Override
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000 && getNpcId() == 730459) { // 试炼裂隙 / Crucible Rift.
@@ -79,39 +64,30 @@ public class CrucibleRiftAI2 extends ActionItemNpcAI2
 		}
 		return true;
 	}
-	
+
 	private void announceCrucibleRift1() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 万克特里斯特消失处出现试炼裂隙。我得去调查！ / A Crucible Rift has appeared at the spot where Vanktrist vanished. I'd better go investigate!
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(false, 1111482, player.getObjectId(), 2));
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 万克特里斯特消失处出现试炼裂隙。我得去调查！ / A Crucible Rift has appeared at the spot where Vanktrist vanished. I'd better go investigate!
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(false, 1111482, player.getObjectId(), 2));
 			}
 		});
 	}
-	
+
 	private void announceCrucibleRift2() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 嗯，正如我所料……提亚马特的龙族已渗透试炼场。 / Hmm, just as I suspected... Tiamat's Balaur have infiltrated the Crucible.
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(false, 1111483, player.getObjectId(), 2));
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 嗯，正如我所料……提亚马特的龙族已渗透试炼场。 / Hmm, just as I suspected... Tiamat's Balaur have infiltrated the Crucible.
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(false, 1111483, player.getObjectId(), 2));
 			}
 		});
 	}
-	
+
 	private void announceCrucibleRift3() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 奇怪。看起来像试炼场……但不是我们的。不知道属于谁？ / Weird. It looks like a Crucible... just not OUR Crucible. I wonder who it belongs to?
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(false, 1111484, player.getObjectId(), 2));
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 奇怪。看起来像试炼场……但不是我们的。不知道属于谁？ / Weird. It looks like a Crucible... just not OUR Crucible. I wonder who it belongs to?
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(false, 1111484, player.getObjectId(), 2));
 			}
 		});
 	}

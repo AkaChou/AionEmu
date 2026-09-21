@@ -28,7 +28,7 @@ public class BlessedRelicsAI2 extends ActionItemNpcAI2
 	private boolean isRewarded;
 	protected int startBarAnimation = 1;
 	protected int cancelBarAnimation = 2;
-	
+
 	@Override
     protected void handleDialogStart(Player player) {
         handleUseItemStart(player);
@@ -38,7 +38,7 @@ public class BlessedRelicsAI2 extends ActionItemNpcAI2
         }
         super.handleDialogStart(player);
     }
-	
+
 	protected void handleUseItemStart(final Player player) {
 		final int delay = getTalkDelay();
 		if (delay != 0) {
@@ -54,20 +54,17 @@ public class BlessedRelicsAI2 extends ActionItemNpcAI2
 			player.getObserveController().attach(observer);
 			PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), startBarAnimation));
 			PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.START_QUESTLOOT, 0, getObjectId()), true);
-			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
-					PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
-					player.getObserveController().removeObserver(observer);
-					handleUseItemFinish(player);
-				}
+			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
+				PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
+				player.getObserveController().removeObserver(observer);
+				handleUseItemFinish(player);
 			}, delay));
 		} else {
 			handleUseItemFinish(player);
 		}
 	}
-	
+
 	@Override
 	protected void handleUseItemFinish(Player player) {
 		if (!isRewarded) {
@@ -85,12 +82,12 @@ public class BlessedRelicsAI2 extends ActionItemNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
 	protected int getTalkDelay() {
 		return getObjectTemplate().getTalkDelay() * 1000;
 	}

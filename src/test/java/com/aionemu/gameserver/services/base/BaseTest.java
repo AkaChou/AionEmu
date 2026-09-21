@@ -35,7 +35,7 @@ class BaseTest {
 
 	@Test
 	void stopToleratesBaseNpcRemovalFromWorldCollectionDuringDelete() {
-		List<BaseNpc> liveNpcs = new ArrayList<BaseNpc>();
+		List<BaseNpc> liveNpcs = new ArrayList<>();
 		TestBaseNpc firstNpc = baseNpc(liveNpcs);
 		TestBaseNpc secondNpc = baseNpc(liveNpcs);
 		TestBaseNpc thirdNpc = baseNpc(liveNpcs);
@@ -46,13 +46,13 @@ class BaseTest {
 		world.npcs = liveNpcs;
 		worldBootstrapServices = new GameWorldBootstrapServices(null, null, null, null, provider(World.class, world));
 
-		assertDoesNotThrow(() -> new Base<TestBaseLocation>(new TestBaseLocation()).stop());
+		assertDoesNotThrow(() -> new Base<>(new TestBaseLocation()).stop());
 		assertTrue(liveNpcs.isEmpty());
 	}
 
 	@Test
 	void despawnAttackersToleratesAttackerRemovalDuringDelete() {
-		Base<TestBaseLocation> base = new Base<TestBaseLocation>(new TestBaseLocation());
+		Base<TestBaseLocation> base = new Base<>(new TestBaseLocation());
 		List<Npc> attackers = base.getAttackers();
 		TestBaseNpc firstNpc = attackerNpc(attackers);
 		TestBaseNpc secondNpc = attackerNpc(attackers);

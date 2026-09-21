@@ -52,7 +52,7 @@ public class TaskManagerFromDB {
 	 * Load DB tasks, register built-in handlers, and schedule them.
 	 */
 	public TaskManagerFromDB() {
-		this.handlers = new HashMap<String, TaskFromDBHandler>();
+		this.handlers = new HashMap<>();
 
 		tasksList = getDAO().getAllTasks();
 		log.info(I18n.get("log.8fed1ca907ff", tasksList.size(), (tasksList.size() > 1 ? "s" : "")));

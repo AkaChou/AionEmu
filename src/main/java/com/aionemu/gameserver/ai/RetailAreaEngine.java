@@ -45,47 +45,59 @@ public final class RetailAreaEngine {
 		if (DataManager.RETAIL_AI_DATA == null) {
 			return false;
 		}
-		return switch (areaType) {
-			case "AI_CONTROL_AREA_RESURRECT" -> DataManager.RETAIL_AI_DATA.hasResurrectArea(worldId, prefix);
-			case "AI_CONTROL_AREA_QUESTSCRIPT" -> DataManager.RETAIL_AI_DATA.hasQuestArea(worldId, prefix)
-				&& DataManager.RETAIL_AI_DATA.findQuestAreas(worldId, prefix).stream().allMatch(RetailAreaEngine::hasQuestTemplates);
-			case "AI_CONTROL_AREA_LIMIT_NOPARK", "AI_CONTROL_AREA_LIMIT_NORECALL" ->
-				!DataManager.RETAIL_AI_DATA.findLimitAreas(worldId, prefix).isEmpty()
+		switch (areaType) {
+			case "AI_CONTROL_AREA_RESURRECT":
+				return DataManager.RETAIL_AI_DATA.hasResurrectArea(worldId, prefix);
+			case "AI_CONTROL_AREA_QUESTSCRIPT":
+				return DataManager.RETAIL_AI_DATA.hasQuestArea(worldId, prefix)
+					&& DataManager.RETAIL_AI_DATA.findQuestAreas(worldId, prefix).stream().allMatch(RetailAreaEngine::hasQuestTemplates);
+			case "AI_CONTROL_AREA_LIMIT_NOPARK":
+			case "AI_CONTROL_AREA_LIMIT_NORECALL":
+				return !DataManager.RETAIL_AI_DATA.findLimitAreas(worldId, prefix).isEmpty()
 					&& DataManager.RETAIL_AI_DATA.findLimitAreas(worldId, prefix).stream().allMatch(LimitArea::dynamic);
-			case "AI_CONTROL_AREA_GROUPCTRL" -> RetailGroupControlEngine.supports(worldId, prefix);
-			default -> false;
-		};
+			case "AI_CONTROL_AREA_GROUPCTRL":
+				return RetailGroupControlEngine.supports(worldId, prefix);
+			default:
+				return false;
+		}
 	}
 
 	public static boolean setEnabled(WorldMapInstance instance, String areaType, String prefix, boolean enabled) {
 		if (!supports(instance.getMapId(), areaType, prefix)) {
 			return false;
 		}
-		if (areaType.equals("AI_CONTROL_AREA_GROUPCTRL")) {
-			return RetailGroupControlEngine.setAreaEnabled(instance, prefix, enabled);
-		} else if (areaType.equals("AI_CONTROL_AREA_RESURRECT")) {
-			Map<String, Boolean> states = RESURRECT_STATES.computeIfAbsent(instance, ignored -> new ConcurrentHashMap<>());
-			for (ResurrectArea area : DataManager.RETAIL_AI_DATA.getResurrectAreas(instance.getMapId())) {
-				if (matchesPrefix(area.name(), prefix)) {
-					states.put(key(area.name()), enabled);
+		switch (areaType) {
+			case "AI_CONTROL_AREA_GROUPCTRL":
+				return RetailGroupControlEngine.setAreaEnabled(instance, prefix, enabled);
+			case "AI_CONTROL_AREA_RESURRECT": {
+				Map<String, Boolean> states = RESURRECT_STATES.computeIfAbsent(instance, ignored -> new ConcurrentHashMap<>());
+				for (ResurrectArea area : DataManager.RETAIL_AI_DATA.getResurrectAreas(instance.getMapId())) {
+					if (matchesPrefix(area.name(), prefix)) {
+						states.put(key(area.name()), enabled);
+					}
 				}
+				break;
 			}
-		} else if (areaType.equals("AI_CONTROL_AREA_QUESTSCRIPT")) {
-			Map<String, Boolean> states = QUEST_STATES.computeIfAbsent(instance, ignored -> new ConcurrentHashMap<>());
-			DataManager.RETAIL_AI_DATA.findQuestAreas(instance.getMapId(), prefix)
-				.forEach(area -> states.put(key(area.name()), enabled));
-			instance.getPlayersInside().forEach(RetailAreaEngine::onPlayerMoved);
-		} else {
-			boolean noPark = areaType.equals("AI_CONTROL_AREA_LIMIT_NOPARK");
-			Map<WorldMapInstance, Map<String, Boolean>> stateStore = noPark
-				? LIMIT_NOPARK_STATES : LIMIT_NORECALL_STATES;
-			Map<String, Boolean> states = stateStore.computeIfAbsent(instance, ignored -> new ConcurrentHashMap<>());
-			for (LimitArea area : DataManager.RETAIL_AI_DATA.findLimitAreas(instance.getMapId(), prefix)) {
-				states.put(key(area.name()), enabled);
-				if (!noPark) {
-					var packet = new SM_DYNAMIC_LIMIT_AREA_INFO(area.name(), enabled);
-					instance.getPlayersInside().forEach(player -> PacketSendUtility.sendPacket(player, packet));
+			case "AI_CONTROL_AREA_QUESTSCRIPT": {
+				Map<String, Boolean> states = QUEST_STATES.computeIfAbsent(instance, ignored -> new ConcurrentHashMap<>());
+				DataManager.RETAIL_AI_DATA.findQuestAreas(instance.getMapId(), prefix)
+					.forEach(area -> states.put(key(area.name()), enabled));
+				instance.getPlayersInside().forEach(RetailAreaEngine::onPlayerMoved);
+				break;
+			}
+			default: {
+				boolean noPark = areaType.equals("AI_CONTROL_AREA_LIMIT_NOPARK");
+				Map<WorldMapInstance, Map<String, Boolean>> stateStore = noPark
+					? LIMIT_NOPARK_STATES : LIMIT_NORECALL_STATES;
+				Map<String, Boolean> states = stateStore.computeIfAbsent(instance, ignored -> new ConcurrentHashMap<>());
+				for (LimitArea area : DataManager.RETAIL_AI_DATA.findLimitAreas(instance.getMapId(), prefix)) {
+					states.put(key(area.name()), enabled);
+					if (!noPark) {
+						var packet = new SM_DYNAMIC_LIMIT_AREA_INFO(area.name(), enabled);
+						instance.getPlayersInside().forEach(player -> PacketSendUtility.sendPacket(player, packet));
+					}
 				}
+				break;
 			}
 		}
 		return true;
@@ -104,7 +116,7 @@ public final class RetailAreaEngine {
 				presence = new QuestPresence(instance, new HashSet<>());
 			}
 			entered = enteredQuestAreas(DataManager.RETAIL_AI_DATA.getQuestAreas(player.getWorldId()).stream()
-				.filter(RetailAreaEngine::hasQuestTemplates).toList(), QUEST_STATES.getOrDefault(instance, Map.of()),
+					.filter(RetailAreaEngine::hasQuestTemplates).toList(), QUEST_STATES.getOrDefault(instance, Map.of()),
 				presence.areas(), player.getX(), player.getY(), player.getZ());
 			if (presence.areas().isEmpty()) {
 				QUEST_PRESENCE.remove(player);
@@ -178,7 +190,7 @@ public final class RetailAreaEngine {
 	}
 
 	static List<QuestArea> enteredQuestAreas(Iterable<QuestArea> areas, Map<String, Boolean> states,
-			Set<QuestArea> active, float x, float y, float z) {
+											 Set<QuestArea> active, float x, float y, float z) {
 		Set<QuestArea> current = new HashSet<>();
 		List<QuestArea> entered = new ArrayList<>();
 		for (QuestArea area : areas) {
@@ -196,7 +208,7 @@ public final class RetailAreaEngine {
 	}
 
 	static LocationAliasPoint findResurrectPoint(Iterable<ResurrectArea> areas, Map<String, Boolean> states,
-			int race, String tribe, float x, float y, float z) {
+												 int race, String tribe, float x, float y, float z) {
 		for (ResurrectArea area : areas) {
 			if (states.getOrDefault(area.name().toLowerCase(Locale.ROOT), true)
 				&& matchesActor(area, race, tribe) && area.area().isInside3D(x, y, z)) {
@@ -207,7 +219,7 @@ public final class RetailAreaEngine {
 	}
 
 	static boolean isNoPark(Iterable<LimitArea> areas, Map<String, Boolean> states, int race,
-			long secondsOffline, float x, float y, float z) {
+							long secondsOffline, float x, float y, float z) {
 		for (LimitArea area : areas) {
 			boolean enabled = states.getOrDefault(key(area.name()), true);
 			boolean blocksRace = area.noPark().equalsIgnoreCase("All")

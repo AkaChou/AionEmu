@@ -27,7 +27,7 @@ public class BoostEventService implements StatOwner {
 
 	private static volatile ObjectProvider<BoostEventService> instanceProvider;
 
-	public Map<Integer, BoostEvents> data = new HashMap<Integer, BoostEvents>(1);
+	public Map<Integer, BoostEvents> data = new HashMap<>(1);
 
 	/**
 	 * 启动服务。
@@ -61,7 +61,7 @@ public class BoostEventService implements StatOwner {
 	 * result
 	 */
 	public Map<Integer, BoostEvents> getCurrentBoost() {
-		Map<Integer, BoostEvents> boost = new HashMap<Integer, BoostEvents>();
+		Map<Integer, BoostEvents> boost = new HashMap<>();
 		ZonedDateTime now = ZonedDateTime.now();
 		for (BoostEvents be : data.values()) {
 			if (be.getStartDate().isBefore(now) && be.getEndDate().isAfter(now)) {

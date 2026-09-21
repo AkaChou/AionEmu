@@ -28,7 +28,7 @@ public class QuestWorkItems {
 	 */
 	public List<QuestItems> getQuestWorkItem() {
 		if (questWorkItem == null) {
-			questWorkItem = new ArrayList<QuestItems>();
+			questWorkItem = new ArrayList<>();
 		}
 		return this.questWorkItem;
 	}

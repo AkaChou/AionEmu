@@ -42,7 +42,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 		/** dramata 任务 / dramata task */
 		private Future<?> dramataTask;
 	/** 已播放动画集合 / played-movie set */
-	private final List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<>();
 
 	/**
 	 * 玩家进入副本时处理。
@@ -55,7 +55,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 		super.onInstanceCreate(instance);
 		// 须在时限内击败守护者以唤醒处于防护沉眠的帕德玛拉什卡。 / You must defeat the protector within the time limit to wake Padmarashka from the Protective Slumber.
 		sendMsgByRace(1400711, Race.PC_ALL, 10000);
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -175,20 +175,20 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 				// 帕德玛拉什卡已死亡。30 分钟后将离开其洞穴。 / Padmarashka has died. You will be removed from Padmarashka's Cave in 30 minutes.
 				sendMsgByRace(1400675, Race.PC_ALL, 10000);
 				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Padmarashka Cave>");
-				instance.doOnAllPlayers(new Visitor<Player>() {
-			        /**
-			         * 处理 visit。
-			         * Handle visit.
-			         *
-			         * @param player 玩家 / player
-			         */
-			        @Override
-			        public void visit(Player player) {
-				        if (player.isOnline()) {
-						    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
-					    }
-				    }
-			    });
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
+						if (player.isOnline()) {
+							PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
+						}
+					}
+				});
 			break;
 			case 282613: //Padmarashka's Eggs.
 			case 282614: //Huge Padmarashka's Eggs.
@@ -264,7 +264,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 	}
 
 	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -310,20 +310,20 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
+				instance.doOnAllPlayers(new Visitor<>() {
+                    /**
+                     * 处理 visit。
+                     * Handle visit.
+                     *
+                     * @param player 玩家 / player
+                     */
+                    @Override
+                    public void visit(Player player) {
+                        if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
+                            PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
+                        }
+                    }
+                });
 			}
 		}, time);
 	}

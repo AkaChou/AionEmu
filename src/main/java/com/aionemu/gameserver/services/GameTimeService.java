@@ -62,16 +62,13 @@ public class GameTimeService {
 	 * Starts the scheduled task that sends game time to all online players and saves it.
 	 */
 	public GameTimeService() {
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				Iterator<Player> iterator = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
-				while (iterator.hasNext()) {
-					Player next = iterator.next();
-					PacketSendUtility.sendPacket(next, new SM_GAME_TIME());
-				}
-				GameTimeManager.saveTime();
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			Iterator<Player> iterator = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+			while (iterator.hasNext()) {
+				Player next = iterator.next();
+				PacketSendUtility.sendPacket(next, new SM_GAME_TIME());
 			}
+			GameTimeManager.saveTime();
 		}, GAMETIME_UPDATE, GAMETIME_UPDATE);
 		log.info(I18n.get("log.c03f3afa17b3", GAMETIME_UPDATE));
 	}

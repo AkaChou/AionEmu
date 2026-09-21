@@ -31,7 +31,7 @@ public class GuardRankRestriction {
 	/** 返回 guard penalty attr / Returns the guard penalty attr */
 	public List<GuardRankPenaltyAttr> getGuardPenaltyAttr() {
 		if (guardpenaltyAttr == null) {
-			guardpenaltyAttr = new ArrayList<GuardRankPenaltyAttr>();
+			guardpenaltyAttr = new ArrayList<>();
 		}
 		return this.guardpenaltyAttr;
 	}

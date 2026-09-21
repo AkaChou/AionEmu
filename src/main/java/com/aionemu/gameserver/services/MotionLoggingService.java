@@ -51,7 +51,7 @@ public class MotionLoggingService {
 
 	private static volatile ObjectProvider<MotionLoggingService> instanceProvider;
 
-	private final Map<String, MotionLog> motionsMap = new LinkedHashMap<String, MotionLog>();
+	private final Map<String, MotionLog> motionsMap = new LinkedHashMap<>();
 
 	private boolean advancedLog = false;
 
@@ -214,7 +214,7 @@ public class MotionLoggingService {
 		List<MotionTime> motionTimes = motionData.getMotionTimes();
 
 		// 创建结果 / create results
-		TreeMap<String, List<WeaponTime>> results = new TreeMap<String, List<WeaponTime>>();
+		TreeMap<String, List<WeaponTime>> results = new TreeMap<>();
 		for (Entry<String, MotionLog> entry : motionsMap.entrySet()) {
 			WeaponTime weaponTimeAm = new WeaponTime(Race.ASMODIANS, Gender.MALE);
 			WeaponTime weaponTimeAf = new WeaponTime(Race.ASMODIANS, Gender.FEMALE);
@@ -252,7 +252,7 @@ public class MotionLoggingService {
 						break;
 					}
 				}
-				List<WeaponTime> weaponTimes = new ArrayList<WeaponTime>(4);
+				List<WeaponTime> weaponTimes = new ArrayList<>(4);
 				weaponTimes.add(weaponTimeAm);
 				weaponTimes.add(weaponTimeAf);
 				weaponTimes.add(weaponTimeEm);
@@ -263,7 +263,7 @@ public class MotionLoggingService {
 		}
 
 		for (Entry<String, List<WeaponTime>> entry : results.entrySet()) {
-			Set<WeaponTypeWrapper> listofWeapons = new TreeSet<WeaponTypeWrapper>();
+			Set<WeaponTypeWrapper> listofWeapons = new TreeSet<>();
 			listofWeapons.add(new WeaponTypeWrapper(WeaponType.BOOK_2H, null));
 			listofWeapons.add(new WeaponTypeWrapper(WeaponType.BOW, null));
 			listofWeapons.add(new WeaponTypeWrapper(WeaponType.DAGGER_1H, null));
@@ -349,7 +349,7 @@ public class MotionLoggingService {
 	 */
 	private int recalculate(String method, WeaponTypeWrapper weapon, int attackSpeed, int time) {
 		int finalTime = 0;
-		TreeMap<WeaponType, float[]> list = new TreeMap<WeaponType, float[]>();
+		TreeMap<WeaponType, float[]> list = new TreeMap<>();
 
 		float[] mace1h = { 750f, 1500f };
 		list.put(WeaponType.MACE_1H, mace1h);
@@ -594,7 +594,7 @@ public class MotionLoggingService {
 	}
 
 	private class MotionLog {
-		private final Map<WeaponTypeWrapper, List<SkillTime>> motionsForWeapons = new LinkedHashMap<WeaponTypeWrapper, List<SkillTime>>();
+		private final Map<WeaponTypeWrapper, List<SkillTime>> motionsForWeapons = new LinkedHashMap<>();
 
 		public Map<WeaponTypeWrapper, List<SkillTime>> getMotionLog() {
 			return this.motionsForWeapons;
@@ -607,7 +607,7 @@ public class MotionLoggingService {
 					return true;
 				}
 			} else {
-				List<SkillTime> list = new ArrayList<SkillTime>();
+				List<SkillTime> list = new ArrayList<>();
 				list.add(skillTime);
 				motionsForWeapons.put(weapon, list);
 				return true;
@@ -745,7 +745,7 @@ public class MotionLoggingService {
 	}
 
 	private class WeaponTime {
-		private final TreeMap<WeaponTypeWrapper, List<Integer>> values = new TreeMap<WeaponTypeWrapper, List<Integer>>();
+		private final TreeMap<WeaponTypeWrapper, List<Integer>> values = new TreeMap<>();
 		private Race race;
 		private Gender gender;
 
@@ -786,14 +786,14 @@ public class MotionLoggingService {
 			if (values.containsKey(weapon)) {
 				values.get(weapon).add(value);
 			} else {
-				List<Integer> list = new ArrayList<Integer>();
+				List<Integer> list = new ArrayList<>();
 				list.add(value);
 				values.put(weapon, list);
 			}
 		}
 
 		public TreeMap<WeaponTypeWrapper, Integer> process() {
-			TreeMap<WeaponTypeWrapper, Integer> weaponMap = new TreeMap<WeaponTypeWrapper, Integer>();
+			TreeMap<WeaponTypeWrapper, Integer> weaponMap = new TreeMap<>();
 
 			for (Entry<WeaponTypeWrapper, List<Integer>> entry2 : values.entrySet()) {
 				// 按 weaponType 计算一个值的逻辑 / logic to calculate one value per weaponType

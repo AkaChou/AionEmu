@@ -38,7 +38,7 @@ public class HousingObjectData {
 	protected List<PlaceableHouseObject> housingObjects;
 
 	@XmlTransient
-	protected IntObjectHashMap<PlaceableHouseObject> objectTemplatesById = new IntObjectHashMap<PlaceableHouseObject>();
+	protected IntObjectHashMap<PlaceableHouseObject> objectTemplatesById = new IntObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，按模板 ID 建立索引并释放原始列表。

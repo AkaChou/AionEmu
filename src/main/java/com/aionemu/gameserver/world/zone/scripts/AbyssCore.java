@@ -26,7 +26,7 @@ public class AbyssCore implements ZoneHandler {
 	private static final String CORE_GEOMETRY = "levels/common/abyss/abground/landmark/ground_a/na_ab_lmark_col_01a.cgf";
 
 	/** 已挂载的碰撞观察者 / attached collision observers */
-	Map<Integer, CollisionDieActor> observed = new ConcurrentHashMap<Integer, CollisionDieActor>();
+	Map<Integer, CollisionDieActor> observed = new ConcurrentHashMap<>();
 
 	/** 核心几何体 / core geometry */
 	private final Spatial geometry;

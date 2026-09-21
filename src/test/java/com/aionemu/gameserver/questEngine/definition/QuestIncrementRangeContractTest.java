@@ -72,11 +72,18 @@ class QuestIncrementRangeContractTest {
 	private static Integer upperBound(QuestDefinition definition, QuestTransition transition, String field) {
 		Integer bound = null;
 		for (QuestCondition condition : transition.conditions()) {
-			Integer candidate = switch (condition) {
-				case QuestCondition.VariableBelow below when below.field().equals(field) -> below.value() - 1;
-				case QuestCondition.QuestVariableIs exact when exact.field().equals(field) -> exact.value();
-				default -> null;
-			};
+			Integer candidate;
+			switch (condition) {
+				case QuestCondition.VariableBelow below when below.field().equals(field):
+					candidate = below.value() - 1;
+					break;
+				case QuestCondition.QuestVariableIs exact when exact.field().equals(field):
+					candidate = exact.value();
+					break;
+				default:
+					candidate = null;
+					break;
+			}
 			if (candidate != null) {
 				bound = bound == null ? candidate : Math.min(bound, candidate);
 			}

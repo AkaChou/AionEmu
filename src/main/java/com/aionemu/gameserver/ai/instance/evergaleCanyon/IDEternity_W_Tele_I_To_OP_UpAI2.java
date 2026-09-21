@@ -69,35 +69,26 @@ public class IDEternity_W_Tele_I_To_OP_UpAI2 extends NpcAI2
     }
 
 	private void announceTele11() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 广播传送点开启公告 / broadcast teleport open announcement
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_War_tele_11);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 广播传送点开启公告 / broadcast teleport open announcement
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_War_tele_11);
 			}
 		});
 	}
 	private void announceTele05E() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 广播传送点开启公告 / broadcast teleport open announcement
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_War_tele_05);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 广播传送点开启公告 / broadcast teleport open announcement
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_War_tele_05);
 			}
 		});
 	}
 	private void announceTele06A() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 广播传送点开启公告 / broadcast teleport open announcement
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_War_tele_06);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 广播传送点开启公告 / broadcast teleport open announcement
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_War_tele_06);
 			}
 		});
 	}

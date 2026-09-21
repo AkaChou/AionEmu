@@ -49,7 +49,7 @@ public class NightmareCircusService {
 	private CircusSchedule circusSchedule;
 	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private Map<Integer, NightmareCircusLocation> nightmareCircus;
-	private final ConcurrentMap<Integer, CircusInstance<?>> activeNightmareCircus = new ConcurrentHashMap<Integer, CircusInstance<?>>();
+	private final ConcurrentMap<Integer, CircusInstance<?>> activeNightmareCircus = new ConcurrentHashMap<>();
 
 	/**
 	 * 初始化马戏团地点并按关闭状态刷怪。
@@ -112,12 +112,7 @@ public class NightmareCircusService {
 		}
 		nightmare.start();
 		dreamFaerieMsg(id);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				stopNightmareCircus(id);
-			}
-		}, (long) CustomConfig.NIGHTMARE_CIRCUS_DURATION * 3600 * 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> stopNightmareCircus(id), (long) CustomConfig.NIGHTMARE_CIRCUS_DURATION * 3600 * 1000);
 	}
 
 	/**
@@ -165,12 +160,7 @@ public class NightmareCircusService {
 	public boolean dreamFaerieMsg(int id) {
 		switch (id) {
 		case 1:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					PacketSendUtility.sendSys3Message(player, "\uE09B", "<Nightmare Circus> is now open !!!");
-				}
-			});
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE09B", "<Nightmare Circus> is now open !!!"));
 			return true;
 		default:
 			return false;
@@ -187,7 +177,7 @@ public class NightmareCircusService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
+		for (VisibleObject obj : new ArrayList<>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {

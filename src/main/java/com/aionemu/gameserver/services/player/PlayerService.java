@@ -515,21 +515,17 @@ public class PlayerService {
 		}
 		final Map<Integer, String> result = Maps.newHashMap();
 		final Set<Integer> playerObjIdsCopy = Sets.newHashSet(playerObjIds);
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			/**
-			 * visit 方法。
-			 * visit method.
-			 *
-			 * object
-			 */
-			public void visit(Player object) {
-				if (playerObjIdsCopy.contains(object.getObjectId())) {
-					result.put(object.getObjectId(), object.getName());
-					playerObjIdsCopy.remove(object.getObjectId());
-				}
-			}
-		});
+		/**
+		 * visit 方法。
+		 * visit method.
+		 *
+		 * object
+		 */com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(object -> {
+			 if (playerObjIdsCopy.contains(object.getObjectId())) {
+				 result.put(object.getObjectId(), object.getName());
+				 playerObjIdsCopy.remove(object.getObjectId());
+			 }
+		 });
 		result.putAll(DAOManager.getDAO(PlayerDAO.class).getPlayerNames(playerObjIdsCopy));
 		return result;
 	}

@@ -55,7 +55,7 @@ public class ObserveController {
 	/** 常驻行为观察者集合（首次写入才物化）。 / Persistent action observers, materialised on first write. */
 	protected volatile Collection<ActionObserver> observers = EMPTY_ACTION_OBSERVERS;
 	/** 一次性行为观察者列表。 / One-shot action observers. */
-	protected List<ActionObserver> onceUsedObservers = new ArrayList<ActionObserver>(0);
+	protected List<ActionObserver> onceUsedObservers = new ArrayList<>(0);
 	/** 攻击计算观察者集合（首次写入才物化）。 / Attack calculation observers, materialised on first write. */
 	protected volatile Collection<AttackCalcObserver> attackCalcObservers = EMPTY_ATTACK_CALC_OBSERVERS;
 
@@ -100,7 +100,7 @@ public class ObserveController {
 		}
 		synchronized (this) {
 			if (observers == EMPTY_ACTION_OBSERVERS) {
-				observers = new CopyOnWriteArrayList<ActionObserver>();
+				observers = new CopyOnWriteArrayList<>();
 			}
 			return observers;
 		}
@@ -119,7 +119,7 @@ public class ObserveController {
 		}
 		synchronized (this) {
 			if (attackCalcObservers == EMPTY_ATTACK_CALC_OBSERVERS) {
-				attackCalcObservers = new CopyOnWriteArrayList<AttackCalcObserver>();
+				attackCalcObservers = new CopyOnWriteArrayList<>();
 			}
 			return attackCalcObservers;
 		}
@@ -184,7 +184,7 @@ public class ObserveController {
 		lock.lock();
 		try {
 			if (onceUsedObservers.size() > 0) {
-				tempOnceused = new ArrayList<ActionObserver>();
+				tempOnceused = new ArrayList<>();
 				Iterator<ActionObserver> iterator = onceUsedObservers.iterator();
 				while (iterator.hasNext()) {
 					ActionObserver observer = iterator.next();

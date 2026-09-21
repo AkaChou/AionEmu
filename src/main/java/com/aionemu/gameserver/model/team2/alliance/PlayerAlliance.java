@@ -24,8 +24,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PlayerAlliance extends TemporaryPlayerTeam<PlayerAllianceMember> {
-	private final Map<Integer, PlayerAllianceGroup> groups = new HashMap<Integer, PlayerAllianceGroup>();
-	private final List<Integer> viceCaptainIds = new CopyOnWriteArrayList<Integer>();
+	private final Map<Integer, PlayerAllianceGroup> groups = new HashMap<>();
+	private final List<Integer> viceCaptainIds = new CopyOnWriteArrayList<>();
 	/** 返回联盟就绪状态 / Returns the alliance ready status */
 	private int allianceReadyStatus;
 	private final TeamType type;

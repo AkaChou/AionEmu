@@ -266,14 +266,24 @@ public final class QuestDialogOrderAudit {
 		List<String> responses = new ArrayList<>();
 		for (int index = 0; index < actions.size(); index++) {
 			AfterCommitAction action = actions.get(index);
-			String response = switch (action) {
-				case AfterCommitAction.CloseDialog ignored -> "CLOSE_DIALOG";
-				case AfterCommitAction.ShowQuestDialog shown -> "SHOW_QUEST_PAGE(page=" + shown.dialogId() + ")";
-				case AfterCommitAction.ShowQuestSelectionDialog shown ->
-					"SHOW_SELECTION_PAGE(page=" + shown.dialogId() + ")";
-				case AfterCommitAction.ShowDialogWindow shown -> "SHOW_DIALOG_WINDOW(page=" + shown.dialogId() + ")";
-				default -> null;
-			};
+			String response;
+			switch (action) {
+				case AfterCommitAction.CloseDialog ignored:
+					response = "CLOSE_DIALOG";
+					break;
+				case AfterCommitAction.ShowQuestDialog shown:
+					response = "SHOW_QUEST_PAGE(page=" + shown.dialogId() + ")";
+					break;
+				case AfterCommitAction.ShowQuestSelectionDialog shown:
+					response = "SHOW_SELECTION_PAGE(page=" + shown.dialogId() + ")";
+					break;
+				case AfterCommitAction.ShowDialogWindow shown:
+					response = "SHOW_DIALOG_WINDOW(page=" + shown.dialogId() + ")";
+					break;
+				default:
+					response = null;
+					break;
+			}
 			if (response != null) {
 				responses.add((index + 1) + ":" + response);
 			}
@@ -297,25 +307,23 @@ public final class QuestDialogOrderAudit {
 	}
 
 	private static String serializeValue(Object value) {
-		if (value == null) {
-			return "null";
-		}
-		if (value instanceof String string) {
-			return '"' + string.replace("\\", "\\\\").replace("\"", "\\\"") + '"';
-		}
-		if (value instanceof Enum<?> enumValue) {
-			return enumValue.name();
-		}
-		if (value instanceof Map<?, ?> map) {
-			return serializeMap(map);
-		}
-		if (value instanceof Set<?> set) {
-			return set.stream().map(QuestDialogOrderAudit::serializeValue).sorted()
-				.collect(java.util.stream.Collectors.joining(", ", "{", "}"));
-		}
-		if (value instanceof Collection<?> collection) {
-			return collection.stream().map(QuestDialogOrderAudit::serializeValue)
-				.collect(java.util.stream.Collectors.joining(", ", "[", "]"));
+		switch (value) {
+			case null:
+				return "null";
+			case String string:
+				return '"' + string.replace("\\", "\\\\").replace("\"", "\\\"") + '"';
+			case Enum<?> enumValue:
+				return enumValue.name();
+			case Map<?, ?> map:
+				return serializeMap(map);
+			case Set<?> set:
+				return set.stream().map(QuestDialogOrderAudit::serializeValue).sorted()
+					.collect(java.util.stream.Collectors.joining(", ", "{", "}"));
+			case Collection<?> collection:
+				return collection.stream().map(QuestDialogOrderAudit::serializeValue)
+					.collect(java.util.stream.Collectors.joining(", ", "[", "]"));
+			default:
+				break;
 		}
 		if (value.getClass().isArray()) {
 			List<String> elements = new ArrayList<>(Array.getLength(value));
@@ -407,22 +415,31 @@ public final class QuestDialogOrderAudit {
 	}
 
 	private static int dialogAction(QuestEvent event) {
-		return switch (event) {
-			case QuestEvent.TalkToNpc talk -> talk.dialogId();
-			case QuestEvent.QuestDialog dialog -> dialog.dialogId();
-			case QuestEvent.UseItem use -> 0;
-			case QuestEvent.ItemPlay play -> 0;
-			default -> throw new IllegalArgumentException("not a dialog event: " + event);
-		};
+		switch (event) {
+			case QuestEvent.TalkToNpc talk:
+				return talk.dialogId();
+			case QuestEvent.QuestDialog dialog:
+				return dialog.dialogId();
+			case QuestEvent.UseItem use:
+				return 0;
+			case QuestEvent.ItemPlay play:
+				return 0;
+			default:
+				throw new IllegalArgumentException("not a dialog event: " + event);
+		}
 	}
 
 	private static String dialogOwner(QuestEvent event) {
-		return switch (event) {
-			case QuestEvent.TalkToNpc talk -> "NPC " + talk.npcId();
-			case QuestEvent.UseItem use -> "ITEM " + use.itemId();
-			case QuestEvent.ItemPlay play -> "ITEM " + play.itemId();
-			default -> "QUEST_ACTION";
-		};
+        switch (event) {
+            case QuestEvent.TalkToNpc talk:
+                return "NPC " + talk.npcId();
+            case QuestEvent.UseItem use:
+                return "ITEM " + use.itemId();
+            case QuestEvent.ItemPlay play:
+                return "ITEM " + play.itemId();
+            default:
+                return "QUEST_ACTION";
+        }
 	}
 
 	private static String ownerNpc(QuestEvent event) {

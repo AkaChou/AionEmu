@@ -54,11 +54,11 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
-	private final List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<>();
 		/** taloc 任务 / taloc task */
-		private final List<Future<?>> talocTask = new ArrayList<Future<?>>();
+		private final List<Future<?>> talocTask = new ArrayList<>();
 		/** 对象 / objects */
-		private final Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+		private final Map<Integer, VisibleObject> objects = new LinkedHashMap<>();
 
 	/**
 	 * 副本创建时初始化逻辑。
@@ -280,12 +280,9 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	 * @param ownerNpcId 死亡的 Celestius 模板 ID / template id of the dead Celestius
 	 */
 	private void spawnMirageIfPatternMissed(final int ownerNpcId) {
-		talocTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!isInstanceDestroyed) {
-					RetailPatternAI2.spawnRetailActionNpc(instance, ownerNpcId, "on_killed_by_user", "CaspaGhost_01");
-				}
+		talocTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isInstanceDestroyed) {
+				RetailPatternAI2.spawnRetailActionNpc(instance, ownerNpcId, "on_killed_by_user", "CaspaGhost_01");
 			}
 		}, 1000));
 	}
@@ -490,7 +487,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
     }
 
 	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -520,20 +517,20 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
+				instance.doOnAllPlayers(new Visitor<>() {
+                    /**
+                     * 处理 visit。
+                     * Handle visit.
+                     *
+                     * @param player 玩家 / player
+                     */
+                    @Override
+                    public void visit(Player player) {
+                        if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
+                            PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
+                        }
+                    }
+                });
 			}
 		}, time);
 	}

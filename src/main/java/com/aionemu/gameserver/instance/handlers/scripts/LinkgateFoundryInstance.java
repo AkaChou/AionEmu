@@ -47,15 +47,15 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
 {
     private Future<?> linkgateTask;
 	private boolean isStartTimer1 = false;
-	private final List<Npc> Drs = new ArrayList<Npc>();
-	private final List<Npc> Drs2 = new ArrayList<Npc>();
-	private final List<Npc> Drs3 = new ArrayList<Npc>();
-	private final List<Npc> TailedBuzzBug = new ArrayList<Npc>();
-	private final List<Npc> IrradiatedStog = new ArrayList<Npc>();
-	private final List<Npc> VashartiDracuni = new ArrayList<Npc>();
-	private final List<Npc> ThecynonBruiser = new ArrayList<Npc>();
-	private final List<Npc> IridescentLeowasp = new ArrayList<Npc>();
-	private final List<Npc> DementedAshulagen = new ArrayList<Npc>();
+	private final List<Npc> Drs = new ArrayList<>();
+	private final List<Npc> Drs2 = new ArrayList<>();
+	private final List<Npc> Drs3 = new ArrayList<>();
+	private final List<Npc> TailedBuzzBug = new ArrayList<>();
+	private final List<Npc> IrradiatedStog = new ArrayList<>();
+	private final List<Npc> VashartiDracuni = new ArrayList<>();
+	private final List<Npc> ThecynonBruiser = new ArrayList<>();
+	private final List<Npc> IridescentLeowasp = new ArrayList<>();
+	private final List<Npc> DementedAshulagen = new ArrayList<>();
 
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
@@ -100,13 +100,10 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
 		if (!isStartTimer1) {
 			isStartTimer1 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-				@Override
-			    public void visit(Player player) {
-					if (player.isOnline()) {
-					    startLinkgateTimer();
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 1200)); //20 Minutes.
-					}
+			instance.doOnAllPlayers(player1 -> {
+				if (player1.isOnline()) {
+					startLinkgateTimer();
+					PacketSendUtility.sendPacket(player1, new SM_QUEST_ACTION(0, 1200)); //20 Minutes.
 				}
 			});
 			// Dimensional Research Security 阶段 / Dimensional Research Security phase
@@ -243,107 +240,104 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
 		this.sendMessage(1402458, 19 * 60 * 1000);
 		//All monsters except Belsagos have disappeared from the Linkgate Foundry.
 		this.sendMessage(1402461, 20 * 60 * 1000);
-		linkgateTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				// Dimensional Research Security 阶段 / Dimensional Research Security phase
-				Drs.get(0).getController().onDelete();
-				Drs.get(1).getController().onDelete();
-				Drs.get(2).getController().onDelete();
-				Drs.get(3).getController().onDelete();
-				Drs.get(4).getController().onDelete();
-				Drs.get(5).getController().onDelete();
-				Drs.get(6).getController().onDelete();
-				Drs.get(7).getController().onDelete();
-				Drs.get(8).getController().onDelete();
-				Drs.get(9).getController().onDelete();
-				Drs.get(10).getController().onDelete();
-				Drs.get(11).getController().onDelete();
-				Drs.get(12).getController().onDelete();
-				Drs.get(13).getController().onDelete();
-				Drs.get(14).getController().onDelete();
-				Drs.get(15).getController().onDelete();
-				Drs.get(16).getController().onDelete();
-				Drs.get(17).getController().onDelete();
-				Drs.get(18).getController().onDelete();
-				Drs.get(19).getController().onDelete();
-				Drs.get(20).getController().onDelete();
-				Drs.get(21).getController().onDelete();
-				Drs.get(22).getController().onDelete();
-				// Dimensional Research Security 阶段 / Dimensional Research Security phase
-				Drs2.get(0).getController().onDelete();
-				Drs2.get(1).getController().onDelete();
-				Drs2.get(2).getController().onDelete();
-				Drs2.get(3).getController().onDelete();
-				Drs2.get(4).getController().onDelete();
-				Drs2.get(5).getController().onDelete();
-				// Dimensional Research Security 阶段 / Dimensional Research Security phase
-				Drs3.get(0).getController().onDelete();
-				Drs3.get(1).getController().onDelete();
-				Drs3.get(2).getController().onDelete();
-				Drs3.get(3).getController().onDelete();
-				Drs3.get(4).getController().onDelete();
-				Drs3.get(5).getController().onDelete();
-				Drs3.get(6).getController().onDelete();
-				Drs3.get(7).getController().onDelete();
-				Drs3.get(8).getController().onDelete();
-				Drs3.get(9).getController().onDelete();
-				Drs3.get(10).getController().onDelete();
-				Drs3.get(11).getController().onDelete();
-				Drs3.get(12).getController().onDelete();
-				Drs3.get(13).getController().onDelete();
-				Drs3.get(14).getController().onDelete();
-				Drs3.get(15).getController().onDelete();
-				Drs3.get(16).getController().onDelete();
-				Drs3.get(17).getController().onDelete();
-				Drs3.get(18).getController().onDelete();
-				Drs3.get(19).getController().onDelete();
-				Drs3.get(20).getController().onDelete();
-				Drs3.get(21).getController().onDelete();
-				// Thecynon Bruiser 阶段 / Thecynon Bruiser phase
-				ThecynonBruiser.get(0).getController().onDelete();
-				ThecynonBruiser.get(1).getController().onDelete();
-				ThecynonBruiser.get(2).getController().onDelete();
-				ThecynonBruiser.get(3).getController().onDelete();
-				ThecynonBruiser.get(4).getController().onDelete();
-				ThecynonBruiser.get(5).getController().onDelete();
-				ThecynonBruiser.get(6).getController().onDelete();
-				// Irradiated Stog 阶段 / Irradiated Stog phase
-				IrradiatedStog.get(0).getController().onDelete();
-				IrradiatedStog.get(1).getController().onDelete();
-				IrradiatedStog.get(2).getController().onDelete();
-				IrradiatedStog.get(3).getController().onDelete();
-				IrradiatedStog.get(4).getController().onDelete();
-				IrradiatedStog.get(5).getController().onDelete();
-				IrradiatedStog.get(6).getController().onDelete();
-				IrradiatedStog.get(7).getController().onDelete();
-				IrradiatedStog.get(8).getController().onDelete();
-				// Iridescent Leowasp 阶段 / Iridescent Leowasp phase
-				IridescentLeowasp.get(0).getController().onDelete();
-				IridescentLeowasp.get(1).getController().onDelete();
-				IridescentLeowasp.get(2).getController().onDelete();
-				// Demented Ashulagen 阶段 / Demented Ashulagen phase
-				DementedAshulagen.get(0).getController().onDelete();
-				DementedAshulagen.get(1).getController().onDelete();
-				DementedAshulagen.get(2).getController().onDelete();
-				DementedAshulagen.get(3).getController().onDelete();
-				DementedAshulagen.get(4).getController().onDelete();
-				DementedAshulagen.get(5).getController().onDelete();
-				DementedAshulagen.get(6).getController().onDelete();
-				DementedAshulagen.get(7).getController().onDelete();
-				DementedAshulagen.get(8).getController().onDelete();
-				DementedAshulagen.get(9).getController().onDelete();
-				DementedAshulagen.get(10).getController().onDelete();
-				DementedAshulagen.get(11).getController().onDelete();
-				// Tailed Buzz Bug 阶段 / Tailed Buzz Bug phase
-				TailedBuzzBug.get(0).getController().onDelete();
-				TailedBuzzBug.get(1).getController().onDelete();
-				TailedBuzzBug.get(2).getController().onDelete();
-				// Vasharti Dracuni 阶段 / Vasharti Dracuni phase
-				VashartiDracuni.get(0).getController().onDelete();
-				VashartiDracuni.get(1).getController().onDelete();
-				VashartiDracuni.get(2).getController().onDelete();
-			}
+		linkgateTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			// Dimensional Research Security 阶段 / Dimensional Research Security phase
+			Drs.get(0).getController().onDelete();
+			Drs.get(1).getController().onDelete();
+			Drs.get(2).getController().onDelete();
+			Drs.get(3).getController().onDelete();
+			Drs.get(4).getController().onDelete();
+			Drs.get(5).getController().onDelete();
+			Drs.get(6).getController().onDelete();
+			Drs.get(7).getController().onDelete();
+			Drs.get(8).getController().onDelete();
+			Drs.get(9).getController().onDelete();
+			Drs.get(10).getController().onDelete();
+			Drs.get(11).getController().onDelete();
+			Drs.get(12).getController().onDelete();
+			Drs.get(13).getController().onDelete();
+			Drs.get(14).getController().onDelete();
+			Drs.get(15).getController().onDelete();
+			Drs.get(16).getController().onDelete();
+			Drs.get(17).getController().onDelete();
+			Drs.get(18).getController().onDelete();
+			Drs.get(19).getController().onDelete();
+			Drs.get(20).getController().onDelete();
+			Drs.get(21).getController().onDelete();
+			Drs.get(22).getController().onDelete();
+			// Dimensional Research Security 阶段 / Dimensional Research Security phase
+			Drs2.get(0).getController().onDelete();
+			Drs2.get(1).getController().onDelete();
+			Drs2.get(2).getController().onDelete();
+			Drs2.get(3).getController().onDelete();
+			Drs2.get(4).getController().onDelete();
+			Drs2.get(5).getController().onDelete();
+			// Dimensional Research Security 阶段 / Dimensional Research Security phase
+			Drs3.get(0).getController().onDelete();
+			Drs3.get(1).getController().onDelete();
+			Drs3.get(2).getController().onDelete();
+			Drs3.get(3).getController().onDelete();
+			Drs3.get(4).getController().onDelete();
+			Drs3.get(5).getController().onDelete();
+			Drs3.get(6).getController().onDelete();
+			Drs3.get(7).getController().onDelete();
+			Drs3.get(8).getController().onDelete();
+			Drs3.get(9).getController().onDelete();
+			Drs3.get(10).getController().onDelete();
+			Drs3.get(11).getController().onDelete();
+			Drs3.get(12).getController().onDelete();
+			Drs3.get(13).getController().onDelete();
+			Drs3.get(14).getController().onDelete();
+			Drs3.get(15).getController().onDelete();
+			Drs3.get(16).getController().onDelete();
+			Drs3.get(17).getController().onDelete();
+			Drs3.get(18).getController().onDelete();
+			Drs3.get(19).getController().onDelete();
+			Drs3.get(20).getController().onDelete();
+			Drs3.get(21).getController().onDelete();
+			// Thecynon Bruiser 阶段 / Thecynon Bruiser phase
+			ThecynonBruiser.get(0).getController().onDelete();
+			ThecynonBruiser.get(1).getController().onDelete();
+			ThecynonBruiser.get(2).getController().onDelete();
+			ThecynonBruiser.get(3).getController().onDelete();
+			ThecynonBruiser.get(4).getController().onDelete();
+			ThecynonBruiser.get(5).getController().onDelete();
+			ThecynonBruiser.get(6).getController().onDelete();
+			// Irradiated Stog 阶段 / Irradiated Stog phase
+			IrradiatedStog.get(0).getController().onDelete();
+			IrradiatedStog.get(1).getController().onDelete();
+			IrradiatedStog.get(2).getController().onDelete();
+			IrradiatedStog.get(3).getController().onDelete();
+			IrradiatedStog.get(4).getController().onDelete();
+			IrradiatedStog.get(5).getController().onDelete();
+			IrradiatedStog.get(6).getController().onDelete();
+			IrradiatedStog.get(7).getController().onDelete();
+			IrradiatedStog.get(8).getController().onDelete();
+			// Iridescent Leowasp 阶段 / Iridescent Leowasp phase
+			IridescentLeowasp.get(0).getController().onDelete();
+			IridescentLeowasp.get(1).getController().onDelete();
+			IridescentLeowasp.get(2).getController().onDelete();
+			// Demented Ashulagen 阶段 / Demented Ashulagen phase
+			DementedAshulagen.get(0).getController().onDelete();
+			DementedAshulagen.get(1).getController().onDelete();
+			DementedAshulagen.get(2).getController().onDelete();
+			DementedAshulagen.get(3).getController().onDelete();
+			DementedAshulagen.get(4).getController().onDelete();
+			DementedAshulagen.get(5).getController().onDelete();
+			DementedAshulagen.get(6).getController().onDelete();
+			DementedAshulagen.get(7).getController().onDelete();
+			DementedAshulagen.get(8).getController().onDelete();
+			DementedAshulagen.get(9).getController().onDelete();
+			DementedAshulagen.get(10).getController().onDelete();
+			DementedAshulagen.get(11).getController().onDelete();
+			// Tailed Buzz Bug 阶段 / Tailed Buzz Bug phase
+			TailedBuzzBug.get(0).getController().onDelete();
+			TailedBuzzBug.get(1).getController().onDelete();
+			TailedBuzzBug.get(2).getController().onDelete();
+			// Vasharti Dracuni 阶段 / Vasharti Dracuni phase
+			VashartiDracuni.get(0).getController().onDelete();
+			VashartiDracuni.get(1).getController().onDelete();
+			VashartiDracuni.get(2).getController().onDelete();
 		}, 1200000); //20 Minutes.
     }
 
@@ -358,23 +352,14 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
 	}
 
 	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
+		instance.doOnAllPlayers(player -> PacketSendUtility.sendWhiteMessageOnCenter(player, str));
 	}
 
 	private void sendMessage(final int msgId, long delay) {
         if (delay == 0) {
             this.sendMsg(msgId);
         } else {
-            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-                public void run() {
-                    sendMsg(msgId);
-                }
-            }, delay);
+            GameThreadPoolServices.threadPoolManager().schedule(() -> sendMsg(msgId), delay);
         }
     }
 }

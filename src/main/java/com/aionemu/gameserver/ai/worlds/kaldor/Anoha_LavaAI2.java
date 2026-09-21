@@ -20,28 +20,23 @@ public class Anoha_LavaAI2 extends AggressiveNpcAI2
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21767, 46, getOwner()).useNoAnimationSkill(); // 炼狱火焰爆炸 / Infernal Flame Explosion.
 		startLifeTask();
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(Anoha_LavaAI2.this);
-			}
-		}, 4000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Anoha_LavaAI2.this), 4000);
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();

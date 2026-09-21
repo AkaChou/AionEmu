@@ -24,7 +24,7 @@ public class StringParamList {
 	/** 返回参数 / Returns the param*/
 	public List<Param> getParam() {
 		if (param == null) {
-			param = new ArrayList<Param>();
+			param = new ArrayList<>();
 		}
 		return param;
 	}

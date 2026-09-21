@@ -428,17 +428,21 @@ public final class QuestProductionDispatcher {
 					}
 				}
 			}
-			return switch (result.status()) {
-				case COMMITTED -> result.plan().requiredActions().stream()
-					.anyMatch(QuestAction.BlockDefaultItemUse.class::isInstance)
-					? QuestRouteResult.BLOCKED : QuestRouteResult.HANDLED;
-				// 同一 owner 的一条路由可能被重复索引（例如同一物品用于不同任务状态）。
-				// FIRST_NON_UNKNOWN 应继续尝试，直到某个 transition 真正匹配。
-				// A route can be indexed more than once for one owner (for example
-				// one item used at different quest states). Let FIRST_NON_UNKNOWN
-				// continue until a transition actually matches.
-				case NO_MATCH -> QuestRouteResult.UNKNOWN;
-			};
+            switch (result.status()) {
+                case COMMITTED:
+                    return result.plan().requiredActions().stream()
+                            .anyMatch(QuestAction.BlockDefaultItemUse.class::isInstance)
+                            ? QuestRouteResult.BLOCKED : QuestRouteResult.HANDLED;
+                // 同一 owner 的一条路由可能被重复索引（例如同一物品用于不同任务状态）。
+                // FIRST_NON_UNKNOWN 应继续尝试，直到某个 transition 真正匹配。
+                // A route can be indexed more than once for one owner (for example
+                // one item used at different quest states). Let FIRST_NON_UNKNOWN
+                // continue until a transition actually matches.
+                case NO_MATCH:
+                    return QuestRouteResult.UNKNOWN;
+                default:
+                    throw new IllegalArgumentException();
+            }
 		} catch (RuntimeException failure) {
 			throw failure;
 		} catch (Exception failure) {

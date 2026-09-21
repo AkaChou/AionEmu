@@ -63,14 +63,7 @@ public class DebugService {
 	 * Starts the periodic player-health check task.
 	 */
 	public DebugService() {
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-
-			@Override
-			public void run() {
-				analyzeWorldPlayers();
-			}
-
-		}, ANALYZE_PLAYERS_INTERVAL, ANALYZE_PLAYERS_INTERVAL);
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> analyzeWorldPlayers(), ANALYZE_PLAYERS_INTERVAL, ANALYZE_PLAYERS_INTERVAL);
 		log.info(I18n.get("log.c0807adf5cd7", ANALYZE_PLAYERS_INTERVAL));
 	}
 

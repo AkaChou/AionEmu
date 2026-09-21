@@ -41,7 +41,7 @@ public final class CompiledScriptLoader {
 
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(classLoader);
 		MetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory(resolver);
-		Set<String> classNames = new LinkedHashSet<String>();
+		Set<String> classNames = new LinkedHashSet<>();
 		for (String packageName : packageNames) {
 			String packagePath = packageName.replace('.', '/');
 			Resource[] resources = resolver.getResources(String.format(CLASS_RESOURCE_PATTERN, packagePath));
@@ -54,10 +54,10 @@ public final class CompiledScriptLoader {
 			}
 		}
 
-		List<String> sortedClassNames = new ArrayList<String>(classNames);
+		List<String> sortedClassNames = new ArrayList<>(classNames);
 		Collections.sort(sortedClassNames);
 
-		List<Class<?>> classes = new ArrayList<Class<?>>(sortedClassNames.size());
+		List<Class<?>> classes = new ArrayList<>(sortedClassNames.size());
 		for (String className : sortedClassNames) {
 			classes.add(Class.forName(className, false, classLoader));
 		}

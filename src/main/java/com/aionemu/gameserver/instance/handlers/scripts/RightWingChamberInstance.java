@@ -35,10 +35,10 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
 		/** ancien treasure box / ancien treasure box */
-		private final List<Npc> AncienTreasureBox = new ArrayList<Npc>();
+		private final List<Npc> AncienTreasureBox = new ArrayList<>();
 
 	private void startRightWingChamberTimer() {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -48,14 +48,14 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-				    rightWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					rightWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						/**
 						 * 处理 run。
 						 * Handle run.
 						 */
 						@Override
 						public void run() {
-							instance.doOnAllPlayers(new Visitor<Player>() {
+							instance.doOnAllPlayers(new Visitor<>() {
 								/**
 								 * 处理 visit。
 								 * Handle visit.
@@ -87,16 +87,16 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 		if (!isStartTimer) {
 			isStartTimer = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
 						startRightWingChamberTimer();
 						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900));
 					}
@@ -422,7 +422,7 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.

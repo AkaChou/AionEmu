@@ -23,7 +23,7 @@ public class ActionItemNpcAI2 extends NpcAI2
 {
 	protected int startBarAnimation = 1;
 	protected int cancelBarAnimation = 2;
-	
+
 	/**
 	 * 玩家开始与本 NPC 对话/交互。
 	 * Player starts dialog/interaction with this NPC.
@@ -34,7 +34,7 @@ public class ActionItemNpcAI2 extends NpcAI2
 	protected void handleDialogStart(Player player) {
 		handleUseItemStart(player);
 	}
-	
+
 	/**
 	 * 开始使用交互物（进度条）。
 	 * Start using the action item (progress bar).
@@ -56,20 +56,17 @@ public class ActionItemNpcAI2 extends NpcAI2
 			player.getObserveController().attach(observer);
 			PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), startBarAnimation));
 			PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.START_QUESTLOOT, 0, getObjectId()), true);
-			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
-					PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
-					player.getObserveController().removeObserver(observer);
-					handleUseItemFinish(player);
-				}
+			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
+				PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
+				player.getObserveController().removeObserver(observer);
+				handleUseItemFinish(player);
 			}, delay));
 		} else {
 			handleUseItemFinish(player);
 		}
 	}
-	
+
 	/**
 	 * 使用交互物完成时的逻辑。
 	 * Logic when action-item use finishes.

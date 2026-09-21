@@ -20,28 +20,20 @@ public class Earthen_FireAI2 extends AggressiveNpcAI2
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 17655, 60, getOwner()).useNoAnimationSkill(); //IDAb1_Ere_Smigol_AreaFire.
-				startLifeTask();
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			GameEngineServices.skillEngine().getSkill(getOwner(), 17655, 60, getOwner()).useNoAnimationSkill(); //IDAb1_Ere_Smigol_AreaFire.
+			startLifeTask();
 		}, 1000);
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(Earthen_FireAI2.this);
-			}
-		}, 10000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Earthen_FireAI2.this), 10000);
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

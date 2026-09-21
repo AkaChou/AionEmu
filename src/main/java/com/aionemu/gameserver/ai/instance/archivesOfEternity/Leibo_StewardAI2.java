@@ -47,14 +47,11 @@ public class Leibo_StewardAI2 extends GeneralNpcAI2
 		WalkManager.startWalking(this);
 		getOwner().setState(1);
 	PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-                GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!isAlreadyDead()) {
-                            despawn();
-                        }
-                    }
-                }, 6000);
+                GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					if (!isAlreadyDead()) {
+						despawn();
+					}
+				}, 6000);
             }
         } else if (getNpcId() == 857834 && isInRange(creature, 15) && creature instanceof Player) {
 	if (startedEvent.compareAndSet(false, true)) {
@@ -65,14 +62,11 @@ public class Leibo_StewardAI2 extends GeneralNpcAI2
 		WalkManager.startWalking(this);
 		getOwner().setState(1);
 	PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-                GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!isAlreadyDead()) {
-                            despawn();
-                        }
-                    }
-                }, 6000);
+                GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					if (!isAlreadyDead()) {
+						despawn();
+					}
+				}, 6000);
             }
         } else if (getNpcId() == 857835 && isInRange(creature, 15) && creature instanceof Player) {
 	if (startedEvent.compareAndSet(false, true)) {
@@ -83,14 +77,11 @@ public class Leibo_StewardAI2 extends GeneralNpcAI2
 		WalkManager.startWalking(this);
 		getOwner().setState(1);
 	PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-                GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!isAlreadyDead()) {
-                            despawn();
-                        }
-                    }
-                }, 6000);
+                GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					if (!isAlreadyDead()) {
+						despawn();
+					}
+				}, 6000);
             }
         } else if (getNpcId() == 857836 && isInRange(creature, 15) && creature instanceof Player) {
 	if (startedEvent.compareAndSet(false, true)) {
@@ -101,14 +92,11 @@ public class Leibo_StewardAI2 extends GeneralNpcAI2
 		WalkManager.startWalking(this);
 		getOwner().setState(1);
 		PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-                GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!isAlreadyDead()) {
-                            despawn();
-                        }
-                    }
-                }, 6000);
+                GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					if (!isAlreadyDead()) {
+						despawn();
+					}
+				}, 6000);
             }
         } else if (getNpcId() == 857904 && isInRange(creature, 15) && creature instanceof Player) {
 	if (startedEvent.compareAndSet(false, true)) {
@@ -119,12 +107,9 @@ public class Leibo_StewardAI2 extends GeneralNpcAI2
 	       		WalkManager.startWalking(this);
 	       		getOwner().setState(1);
 		PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!isAlreadyDead()) {
-					despawn();
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isAlreadyDead()) {
+				despawn();
 			}
 		}, 6000);
 	}
@@ -137,12 +122,9 @@ public class Leibo_StewardAI2 extends GeneralNpcAI2
 	       		WalkManager.startWalking(this);
 	       		getOwner().setState(1);
 		PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!isAlreadyDead()) {
-					despawn();
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isAlreadyDead()) {
+				despawn();
 			}
 		}, 6000);
 	}

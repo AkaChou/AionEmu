@@ -34,7 +34,7 @@ public class ItemSkillEnhance {
 	/** 返回技能 ID / Returns the skill id */
 	public List<Integer> getSkillId() {
 		if (skillId == null) {
-			skillId = new ArrayList<Integer>();
+			skillId = new ArrayList<>();
 		}
 		return skillId;
 	}

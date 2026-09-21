@@ -38,7 +38,7 @@ public class AssemblyItem {
 	/** 返回 parts / Returns the parts */
 	public List<Integer> getParts() {
 		if (parts == null) {
-			parts = new ArrayList<Integer>();
+			parts = new ArrayList<>();
 		}
 		return parts;
 	}

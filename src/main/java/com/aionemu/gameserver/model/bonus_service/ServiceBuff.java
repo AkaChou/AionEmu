@@ -23,7 +23,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 
 public class ServiceBuff implements StatOwner {
-	private final List<IStatFunction> functions = new ArrayList<IStatFunction>();
+	private final List<IStatFunction> functions = new ArrayList<>();
 	private final BonusServiceAttr serviceBonusAttr;
 
 	public ServiceBuff(int buffId) {

@@ -37,7 +37,7 @@ public class MarabataControllerAI2 extends NpcAI2
 		}
 		return npc;
 	}
-	
+
 	private void applyEffect(boolean remove) {
 		Npc boss = getBoss();
 		if (boss != null && !boss.getLifeStats().isAlreadyDead()) {
@@ -66,26 +66,21 @@ public class MarabataControllerAI2 extends NpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();
 		applyEffect(true);
 		AI2Actions.deleteOwner(this);
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		applyEffect(false);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				useSkill();
-			}
-		}, 2000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> useSkill(), 2000);
 	}
-	
+
 	private void useSkill() {
 		if (isAlreadyDead()) {
 			return;

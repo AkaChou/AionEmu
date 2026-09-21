@@ -226,19 +226,19 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 					 */
 					@Override
 					public void run() {
-					    instance.doOnAllPlayers(new Visitor<Player>() {
-						    /**
-						     * 处理 visit。
-						     * Handle visit.
-						     *
-						     * @param player 玩家 / player
-						     */
-						    @Override
-						    public void visit(Player player) {
-							    stopInstance1(player);
+					    instance.doOnAllPlayers(new Visitor<>() {
+							/**
+							 * 处理 visit。
+							 * Handle visit.
+							 *
+							 * @param player 玩家 / player
+							 */
+							@Override
+							public void visit(Player player) {
+								stopInstance1(player);
 								stopInstance2(player);
-						    }
-					    });
+							}
+						});
 					}
 				}, 5000);
 			break;
@@ -466,7 +466,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	}
 
 	private void sendPacket(final int nameId, final int point) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -538,19 +538,19 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
              */
             @Override
             public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-				    /**
-				     * 处理 visit。
-				     * Handle visit.
-				     *
-				     * @param player 玩家 / player
-				     */
-				    @Override
-				    public void visit(Player player) {
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
 						stopInstance1(player);
 						factoryTaskA3.cancel(true);
-				    }
-			    });
+					}
+				});
             }
         }, 480000)); //...8 分钟 / ...8Min
 	}
@@ -566,18 +566,18 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
              */
             @Override
             public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-				    /**
-				     * 处理 visit。
-				     * Handle visit.
-				     *
-				     * @param player 玩家 / player
-				     */
-				    @Override
-				    public void visit(Player player) {
-					    stopInstance2(player);
-				    }
-			    });
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
+						stopInstance2(player);
+					}
+				});
             }
         }, 3600000)); // 1 小时 / 1 Hour.
     }
@@ -637,7 +637,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 				}
 			}, prepareTimerSeconds);
 		}
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -893,7 +893,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.

@@ -97,13 +97,15 @@ final class LuredNpcCheckTask implements Runnable {
 		Objects.requireNonNull(npc, "npc");
 		Objects.requireNonNull(player, "player");
 		Objects.requireNonNull(completion, "completion");
-		switch (completion) {
-			case DELETE -> {
-				npc.getController().scheduleRespawn();
-				npc.getController().onDelete();
-			}
-			case KILL -> npc.getController().onDie(player);
-		}
+        switch (completion) {
+            case DELETE:
+                npc.getController().scheduleRespawn();
+                npc.getController().onDelete();
+                break;
+            case KILL:
+                npc.getController().onDie(player);
+                break;
+        }
 	}
 
 	private void lost(Player player) {

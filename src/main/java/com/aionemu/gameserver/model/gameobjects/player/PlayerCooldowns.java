@@ -70,7 +70,7 @@ final class PlayerCooldowns {
 	 */
 	void addCoolDown(int delayId, long time, int useDelay) {
 		if (itemCoolDowns == null) {
-			itemCoolDowns = new LinkedHashMap<Integer, ItemCooldown>();
+			itemCoolDowns = new LinkedHashMap<>();
 		}
 		itemCoolDowns.put(delayId, new ItemCooldown(time, useDelay));
 	}

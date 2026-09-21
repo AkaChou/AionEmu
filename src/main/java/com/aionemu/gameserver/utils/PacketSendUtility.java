@@ -206,12 +206,9 @@ public class PacketSendUtility {
 	 * @param time 延迟毫秒 / Delay in milliseconds
 	 */
 	public static void playerSendPacketTime(final Player player, final AionServerPacket packet, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (player.getClientConnection() != null) {
-					player.getClientConnection().sendPacket(packet);
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (player.getClientConnection() != null) {
+				player.getClientConnection().sendPacket(packet);
 			}
 		}, time);
 	}
@@ -225,19 +222,11 @@ public class PacketSendUtility {
 	 * @param time 延迟毫秒 / Delay in milliseconds
 	 */
 	public static void npcSendPacketTime(final Npc npc, final AionServerPacket packet, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				npc.getKnownList().doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player player) {
-						if (player.isOnline()) {
-							sendPacket(player, packet);
-						}
-					}
-				});
+		GameThreadPoolServices.threadPoolManager().schedule(() -> npc.getKnownList().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				sendPacket(player, packet);
 			}
-		}, time);
+		}), time);
 	}
 
 	/**
@@ -249,19 +238,11 @@ public class PacketSendUtility {
 	 * @param time 延迟毫秒 / Delay in milliseconds
 	 */
 	public static void sendMessageTime(final Player player, final String message, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player player) {
-						if (player.isOnline()) {
-							sendMessage(player, message);
-						}
-					}
-				});
+		GameThreadPoolServices.threadPoolManager().schedule(() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player1 -> {
+			if (player1.isOnline()) {
+				sendMessage(player1, message);
 			}
-		}, time);
+		}), time);
 	}
 
 	/**
@@ -301,12 +282,9 @@ public class PacketSendUtility {
 	 * @param packet 服务器包 / Server packet
 	 */
 	public static void broadcastPacket(VisibleObject visibleObject, final AionServerPacket packet) {
-		visibleObject.getKnownList().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					sendPacket(player, packet);
-				}
+		visibleObject.getKnownList().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				sendPacket(player, packet);
 			}
 		});
 	}
@@ -320,12 +298,9 @@ public class PacketSendUtility {
 	 * @param filter 玩家过滤器 / Player filter
 	 */
 	public static void broadcastPacket(VisibleObject visibleObject, AionServerPacket packet, ObjectFilter<Player> filter) {
-		visibleObject.getKnownList().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline() && filter.acceptObject(player)) {
-					sendPacket(player, packet);
-				}
+		visibleObject.getKnownList().doOnAllPlayers(player -> {
+			if (player.isOnline() && filter.acceptObject(player)) {
+				sendPacket(player, packet);
 			}
 		});
 	}
@@ -344,12 +319,9 @@ public class PacketSendUtility {
 		if (toSelf) {
 			sendPacket(player, packet);
 		}
-		player.getKnownList().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player object) {
-				if (filter.acceptObject(object)) {
-					sendPacket(object, packet);
-				}
+		player.getKnownList().doOnAllPlayers(object -> {
+			if (filter.acceptObject(object)) {
+				sendPacket(object, packet);
 			}
 		});
 	}
@@ -364,12 +336,9 @@ public class PacketSendUtility {
 	 */
 	public static void broadcastPacket(final VisibleObject visibleObject, final AionServerPacket packet,
 			final int distance) {
-		visibleObject.getKnownList().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player p) {
-				if (MathUtil.isIn3dRange(visibleObject, p, distance)) {
-					sendPacket(p, packet);
-				}
+		visibleObject.getKnownList().doOnAllPlayers(p -> {
+			if (MathUtil.isIn3dRange(visibleObject, p, distance)) {
+				sendPacket(p, packet);
 			}
 		});
 	}
@@ -382,13 +351,9 @@ public class PacketSendUtility {
 	 * @param filter 玩家过滤器 / Player filter
 	 */
 	public static void broadcastFilteredPacket(final AionServerPacket packet, final ObjectFilter<Player> filter) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-
-			@Override
-			public void visit(Player object) {
-				if (filter.acceptObject(object)) {
-					sendPacket(object, packet);
-				}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(object -> {
+			if (filter.acceptObject(object)) {
+				sendPacket(object, packet);
 			}
 		});
 	}
@@ -430,11 +395,6 @@ public class PacketSendUtility {
 	 * @param packet 服务器包 / Server packet
 	 */
 	public static void broadcastPacketToZone(SiegeZoneInstance zone, final AionServerPacket packet) {
-		zone.doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				sendPacket(player, packet);
-			}
-		});
+		zone.doOnAllPlayers(player -> sendPacket(player, packet));
 	}
 }

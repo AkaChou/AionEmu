@@ -34,7 +34,7 @@ public class NpcData {
 	private List<NpcTemplate> npcs;
 
 	/** 全部 NPC 模板映射 / map containing all npc templates */
-	private final IntObjectHashMap<NpcTemplate> npcData = new IntObjectHashMap<NpcTemplate>();
+	private final IntObjectHashMap<NpcTemplate> npcData = new IntObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，按模板 ID 建立索引并释放列表。

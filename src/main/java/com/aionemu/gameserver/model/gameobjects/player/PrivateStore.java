@@ -30,7 +30,7 @@ public class PrivateStore {
 	 */
 	public PrivateStore(Player owner) {
 		this.owner = owner;
-		this.items = new LinkedHashMap<Integer, TradePSItem>();
+		this.items = new LinkedHashMap<>();
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class PrivateStore {
 	 * @return LinkedHashMap<Integer, TradePSItem>
 	 */
 	public synchronized LinkedHashMap<Integer, TradePSItem> getSoldItems() {
-		LinkedHashMap<Integer, TradePSItem> snapshot = new LinkedHashMap<Integer, TradePSItem>();
+		LinkedHashMap<Integer, TradePSItem> snapshot = new LinkedHashMap<>();
 		for (TradePSItem item : items.values()) {
 			snapshot.put(item.getItemObjId(), copy(item));
 		}

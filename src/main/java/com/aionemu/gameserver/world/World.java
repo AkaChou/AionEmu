@@ -50,11 +50,11 @@ public class World {
 	/** 全部可见对象 / all visible objects */
 	private final Map<Integer, VisibleObject> allObjects;
 	/** 按据点 ID 索引的攻城 NPC / siege NPCs indexed by siege location id */
-	private final IntObjectHashMap<Collection<SiegeNpc>> localSiegeNpcs = new IntObjectHashMap<Collection<SiegeNpc>>();
+	private final IntObjectHashMap<Collection<SiegeNpc>> localSiegeNpcs = new IntObjectHashMap<>();
 	/** 按基地 ID 索引的基地 NPC / base NPCs indexed by base id */
-	private final IntObjectHashMap<Collection<BaseNpc>> localBaseNpcs = new IntObjectHashMap<Collection<BaseNpc>>();
+	private final IntObjectHashMap<Collection<BaseNpc>> localBaseNpcs = new IntObjectHashMap<>();
 	/** 按前哨 ID 索引的前哨 NPC / outpost NPCs indexed by outpost id */
-	private final IntObjectHashMap<Collection<OutpostNpc>> localOutpostNpcs = new IntObjectHashMap<Collection<OutpostNpc>>();
+	private final IntObjectHashMap<Collection<OutpostNpc>> localOutpostNpcs = new IntObjectHashMap<>();
 	/** 全部 NPC / all NPCs */
 	private final Map<Integer, Npc> allNpcs;
 	/** 全部世界地图的 ID（升序，供二分查找）。 / Ids of all world maps (ascending, binary searchable). */
@@ -69,8 +69,8 @@ public class World {
 	public World() {
 		Util.printSection(I18n.get("console.section.world"));
 		allPlayers = new PlayerContainer();
-		allObjects = Collections.synchronizedMap(new LinkedHashMap<Integer, VisibleObject>());
-		allNpcs = Collections.synchronizedMap(new LinkedHashMap<Integer, Npc>());
+		allObjects = Collections.synchronizedMap(new LinkedHashMap<>());
+		allNpcs = Collections.synchronizedMap(new LinkedHashMap<>());
 		List<WorldMapTemplate> templates = new ArrayList<>();
 		for (WorldMapTemplate template : DataManager.WORLD_MAPS_DATA) {
 			templates.add(template);
@@ -190,7 +190,7 @@ public class World {
 			synchronized (localSiegeNpcs) {
 				Collection<SiegeNpc> npcs = localSiegeNpcs.get(siegeNpc.getSiegeId());
 				if (npcs == null) {
-					npcs = new ArrayList<SiegeNpc>();
+					npcs = new ArrayList<>();
 					localSiegeNpcs.put(siegeNpc.getSiegeId(), npcs);
 				}
 				npcs.add(siegeNpc);
@@ -200,7 +200,7 @@ public class World {
 			synchronized (localBaseNpcs) {
 				Collection<BaseNpc> npcs = localBaseNpcs.get(baseNpc.getBaseId());
 				if (npcs == null) {
-					npcs = new ArrayList<BaseNpc>();
+					npcs = new ArrayList<>();
 					localBaseNpcs.put(baseNpc.getBaseId(), npcs);
 				}
 				npcs.add(baseNpc);
@@ -210,7 +210,7 @@ public class World {
 			synchronized (localOutpostNpcs) {
 				Collection<OutpostNpc> npcs = localOutpostNpcs.get(outpostNpc.getOutpostId());
 				if (npcs == null) {
-					npcs = new ArrayList<OutpostNpc>();
+					npcs = new ArrayList<>();
 					localOutpostNpcs.put(outpostNpc.getOutpostId(), npcs);
 				}
 				npcs.add(outpostNpc);
@@ -288,7 +288,7 @@ public class World {
 	public Collection<SiegeNpc> getLocalSiegeNpcs(int locationId) {
 		synchronized (localSiegeNpcs) {
 			Collection<SiegeNpc> result = localSiegeNpcs.get(locationId);
-			return result != null ? new ArrayList<SiegeNpc>(result) : Collections.emptySet();
+			return result != null ? new ArrayList<>(result) : Collections.emptySet();
 		}
 	}
 
@@ -302,7 +302,7 @@ public class World {
 	public Collection<BaseNpc> getLocalBaseNpcs(int locationId) {
 		synchronized (localBaseNpcs) {
 			Collection<BaseNpc> result = localBaseNpcs.get(locationId);
-			return result != null ? new ArrayList<BaseNpc>(result) : Collections.emptySet();
+			return result != null ? new ArrayList<>(result) : Collections.emptySet();
 		}
 	}
 
@@ -316,7 +316,7 @@ public class World {
 	public Collection<OutpostNpc> getLocalOutpostNpcs(int locationId) {
 		synchronized (localOutpostNpcs) {
 			Collection<OutpostNpc> result = localOutpostNpcs.get(locationId);
-			return result != null ? new ArrayList<OutpostNpc>(result) : Collections.emptySet();
+			return result != null ? new ArrayList<>(result) : Collections.emptySet();
 		}
 	}
 
@@ -328,7 +328,7 @@ public class World {
 	 */
 	public Collection<Npc> getNpcs() {
 		synchronized (allNpcs) {
-			return new ArrayList<Npc>(allNpcs.values());
+			return new ArrayList<>(allNpcs.values());
 		}
 	}
 
@@ -647,7 +647,7 @@ public class World {
 	 */
 	private List<VisibleObject> allObjectsSnapshot() {
 		synchronized (allObjects) {
-			return new ArrayList<VisibleObject>(allObjects.values());
+			return new ArrayList<>(allObjects.values());
 		}
 	}
 }

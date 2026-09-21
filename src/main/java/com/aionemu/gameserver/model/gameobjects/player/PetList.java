@@ -26,7 +26,7 @@ public class PetList {
 	@Setter
 	private int lastUsedPetId;
 
-	private final Map<Integer, PetCommonData> pets = new LinkedHashMap<Integer, PetCommonData>();
+	private final Map<Integer, PetCommonData> pets = new LinkedHashMap<>();
 
 	PetList(Player player) {
 		this.player = player;

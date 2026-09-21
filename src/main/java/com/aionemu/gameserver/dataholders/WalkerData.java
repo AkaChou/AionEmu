@@ -45,7 +45,7 @@ public class WalkerData {
 	private List<WalkerTemplate> walkerlist;
 
 	@XmlTransient
-	private final Map<String, WalkerTemplate> walkerlistData = new LinkedHashMap<String, WalkerTemplate>();
+	private final Map<String, WalkerTemplate> walkerlistData = new LinkedHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，将路线按 ID 索引并跳过重复项，随后释放列表。
@@ -99,7 +99,7 @@ public class WalkerData {
 	 */
 	public void AddTemplate(WalkerTemplate newTemplate) {
 		if (walkerlist == null)
-			walkerlist = new ArrayList<WalkerTemplate>();
+			walkerlist = new ArrayList<>();
 		walkerlist.add(newTemplate);
 	}
 

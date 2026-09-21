@@ -25,7 +25,7 @@ import java.util.List;
 @AIName("wardensurama")
 public class Warden_SuramaAI2 extends AggressiveNpcAI2
 {
-	private final List<Integer> percents = new ArrayList<Integer>();
+	private final List<Integer> percents = new ArrayList<>();
 
 	@Override
 	protected void handleSpawned() {

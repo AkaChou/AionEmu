@@ -72,12 +72,7 @@ public class WalkerGroup {
 	 */
 	public WalkerGroup(List<ClusteredNpc> members) {
 		this.members = members;
-		Collections.sort(this.members, new Comparator<ClusteredNpc>() {
-			@Override
-			public int compare(ClusteredNpc o1, ClusteredNpc o2) {
-				return Integer.compare(o1.getWalkerIndex(), o2.getWalkerIndex());
-			}
-		});
+		Collections.sort(this.members, (o1, o2) -> Integer.compare(o1.getWalkerIndex(), o2.getWalkerIndex()));
 		memberSteps = new int[members.size()];
 		walkerXpos = members.get(0).getX();
 		walkerYpos = members.get(0).getY();

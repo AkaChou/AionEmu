@@ -28,7 +28,7 @@ public class AnohaData {
 	private List<AnohaTemplate> anohaTemplates;
 
 	@XmlTransient
-	private final Map<Integer, AnohaLocation> anoha = new LinkedHashMap<Integer, AnohaLocation>();
+	private final Map<Integer, AnohaLocation> anoha = new LinkedHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，将模板转为运行时地点并按 ID 索引。

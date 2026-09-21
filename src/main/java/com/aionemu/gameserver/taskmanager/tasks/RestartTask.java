@@ -74,21 +74,9 @@ public class RestartTask extends TaskFromDBHandler {
 		announceInterval = Integer.parseInt(params[1]);
 		warnCountDown = Integer.parseInt(params[2]);
 
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendBrightYellowMessageOnCenter(player, "Automatic Task: The server will restart in "
+				+ warnCountDown + " seconds ! Please find a safe place and disconnect your character."));
 
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendBrightYellowMessageOnCenter(player, "Automatic Task: The server will restart in "
-						+ warnCountDown + " seconds ! Please find a safe place and disconnect your character.");
-			}
-		});
-
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				GameShutdownRequest.doShutdown(countDown, announceInterval, ShutdownMode.RESTART);
-			}
-		}, warnCountDown * 1000L);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> GameShutdownRequest.doShutdown(countDown, announceInterval, ShutdownMode.RESTART), warnCountDown * 1000L);
 	}
 }

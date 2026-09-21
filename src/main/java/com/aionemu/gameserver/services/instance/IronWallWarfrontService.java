@@ -32,7 +32,7 @@ public class IronWallWarfrontService {
 	private static volatile ObjectProvider<IronWallWarfrontService> instanceProvider;
 
 	private boolean registerAvailable;
-	private final List<Integer> playersWithCooldown = new ArrayList<Integer>();
+	private final List<Integer> playersWithCooldown = new ArrayList<>();
 	public static final byte minLevel = 66, capLevel = 76;
 	public static final int maskId = 109;
 
@@ -44,43 +44,33 @@ public class IronWallWarfrontService {
 		log.info(I18n.get("log.578bb9df9c44"));
 		if (AutoGroupConfig.BASTION_ENABLED) {
 			// 铁壁战线 周五 23:00–00:00 / Iron Wall Warfront FRI "11PM-0AM"
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				/**
-				 * 执行任务。
-				 * Runs the task.
-				 */
-				public void run() {
-					startBastionRegistration();
-				}
-			}, AutoGroupConfig.BASTION_SCHEDULE_MIDNIGHT);
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */GameCronServices.cronService().schedule(() -> startBastionRegistration(), AutoGroupConfig.BASTION_SCHEDULE_MIDNIGHT);
 		}
 	}
 
 	private void startUregisterBastionTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */
-			public void run() {
-				registerAvailable = false;
-				playersWithCooldown.clear();
-				GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskId);
-				Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
-				while (iter.hasNext()) {
-					Player player = iter.next();
-					if (player.getLevel() > minLevel) {
-						int instanceMaskId = getInstanceMaskId(player);
-						if (instanceMaskId > 0) {
-							PacketSendUtility.sendPacket(player,
-									new SM_AUTO_GROUP(instanceMaskId, SM_AUTO_GROUP.wnd_EntryIcon, true));
-						}
-					}
-				}
-			}
-		}, AutoGroupConfig.BASTION_TIMER * 60 * 1000);
+		/**
+		 * 执行任务。
+		 * Runs the task.
+		 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			 registerAvailable = false;
+			 playersWithCooldown.clear();
+			 GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskId);
+			 Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+			 while (iter.hasNext()) {
+				 Player player = iter.next();
+				 if (player.getLevel() > minLevel) {
+					 int instanceMaskId = getInstanceMaskId(player);
+					 if (instanceMaskId > 0) {
+						 PacketSendUtility.sendPacket(player,
+								 new SM_AUTO_GROUP(instanceMaskId, SM_AUTO_GROUP.wnd_EntryIcon, true));
+					 }
+				 }
+			 }
+		 }, AutoGroupConfig.BASTION_TIMER * 60 * 1000);
 	}
 
 	private void startBastionRegistration() {

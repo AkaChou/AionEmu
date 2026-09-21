@@ -24,7 +24,7 @@ import java.util.LinkedHashMap;
 public class CosmeticItemsData {
 	@XmlElement(name = "cosmetic_item", type = CosmeticItemTemplate.class)
 	private List<CosmeticItemTemplate> templates;
-	private final Map<String, CosmeticItemTemplate> cosmeticItemTemplates = new LinkedHashMap<String, CosmeticItemTemplate>();
+	private final Map<String, CosmeticItemTemplate> cosmeticItemTemplates = new LinkedHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，按外观名称建立索引并释放列表。

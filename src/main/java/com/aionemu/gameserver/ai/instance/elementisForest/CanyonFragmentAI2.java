@@ -38,13 +38,10 @@ public class CanyonFragmentAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void schedule() {
-		task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!isAlreadyDead()) {
-					spawn(282430, getPosition().getX(), getPosition().getY(), getPosition().getZ(), (byte) 0);
-					AI2Actions.deleteOwner(CanyonFragmentAI2.this);
-				}
+		task = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isAlreadyDead()) {
+				spawn(282430, getPosition().getX(), getPosition().getY(), getPosition().getZ(), (byte) 0);
+				AI2Actions.deleteOwner(CanyonFragmentAI2.this);
 			}
 		}, 25000);
 	}

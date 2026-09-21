@@ -23,7 +23,7 @@ public class GaleCycloneAI2 extends NpcAI2
 	// 是否已失效：死亡或消失后为 true，阻止继续对玩家施放旋风技能。 / Whether defunct: true after death/despawn, blocks further cyclone casts.
     private boolean blocked;
 	// 正在观察的玩家及其移动观察器，用于在玩家移动时触发旋风技能。 / Observed players and their move observers, triggering the cyclone skill on movement.
-	private final Map<Integer, GaleCycloneObserver> observed = new ConcurrentHashMap<Integer, GaleCycloneObserver>();
+	private final Map<Integer, GaleCycloneObserver> observed = new ConcurrentHashMap<>();
 
 	@Override
 	protected void handleCreatureSee(Creature creature) {

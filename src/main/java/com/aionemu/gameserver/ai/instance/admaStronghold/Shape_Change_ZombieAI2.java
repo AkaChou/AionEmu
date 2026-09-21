@@ -18,22 +18,17 @@ public class Shape_Change_ZombieAI2 extends AggressiveNpcAI2
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		startLifeTask();
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(Shape_Change_ZombieAI2.this);
-			}
-		}, 10000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Shape_Change_ZombieAI2.this), 10000);
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();

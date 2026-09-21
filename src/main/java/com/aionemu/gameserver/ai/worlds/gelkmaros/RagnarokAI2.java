@@ -67,28 +67,25 @@ public class RagnarokAI2 extends AggressiveNpcAI2
 	}
 
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelPhaseTask();
-				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 18679, 60, getOwner()).useNoAnimationSkill(); //Self Harm.
-					List<Player> players = getLifedPlayers();
-					if (!players.isEmpty()) {
-						int size = players.size();
-						if (players.size() < 6) {
-							for (Player p: players) {
-								spawnRagnarok(p);
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelPhaseTask();
+			} else {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 18679, 60, getOwner()).useNoAnimationSkill(); //Self Harm.
+				List<Player> players = getLifedPlayers();
+				if (!players.isEmpty()) {
+					int size = players.size();
+					if (players.size() < 6) {
+						for (Player p: players) {
+							spawnRagnarok(p);
+						}
+					} else {
+						int count = Rnd.get(6, size);
+						for (int i = 0; i < count; i++) {
+							if (players.isEmpty()) {
+								break;
 							}
-						} else {
-							int count = Rnd.get(6, size);
-							for (int i = 0; i < count; i++) {
-								if (players.isEmpty()) {
-									break;
-								}
-								spawnRagnarok(players.get(Rnd.get(players.size())));
-							}
+							spawnRagnarok(players.get(Rnd.get(players.size())));
 						}
 					}
 				}
@@ -101,20 +98,17 @@ public class RagnarokAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						switch (Rnd.get(1, 2)) {
-						    case 1:
-								spawn(281950, x, y, z, (byte) 0); //Ragnarok's Parasite.
-							break;
-							case 2:
-							    // 诸神黄昏的酸液出现。 / Ragnarok's acidic fluid appears.
-								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400612, 2000);
-							    spawn(281951, x, y, z, (byte) 0); //Ragnarok Slime.
-							break;
-						}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					switch (Rnd.get(1, 2)) {
+						case 1:
+							spawn(281950, x, y, z, (byte) 0); //Ragnarok's Parasite.
+						break;
+						case 2:
+							// 诸神黄昏的酸液出现。 / Ragnarok's acidic fluid appears.
+							GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400612, 2000);
+							spawn(281951, x, y, z, (byte) 0); //Ragnarok Slime.
+						break;
 					}
 				}
 			}, 1000);
@@ -122,7 +116,7 @@ public class RagnarokAI2 extends AggressiveNpcAI2
 	}
 
 	private List<Player> getLifedPlayers() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);

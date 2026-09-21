@@ -57,7 +57,7 @@ public class AnohaService {
 	// 狂暴阿诺哈 4.7 / Berserk Anoha 4.7
 	private final List<VisibleObject> adventSwordEffect = Collections.synchronizedList(new ArrayList<>());
 
-	private final ConcurrentMap<Integer, BerserkAnoha<?>> activeAnoha = new ConcurrentHashMap<Integer, BerserkAnoha<?>>();
+	private final ConcurrentMap<Integer, BerserkAnoha<?>> activeAnoha = new ConcurrentHashMap<>();
 
 	/**
 	 * 初始化阿诺哈活动地点：按配置加载并在和平状态刷怪。
@@ -119,12 +119,7 @@ public class AnohaService {
 			return;
 		}
 		danuarhero.start();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				stopAnoha(id);
-			}
-		}, (long) CustomConfig.ANOHA_DURATION * 3600 * 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> stopAnoha(id), (long) CustomConfig.ANOHA_DURATION * 3600 * 1000);
 	}
 
 	/**
@@ -200,15 +195,15 @@ public class AnohaService {
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
 	public boolean adventSwordEffectSP(int id) {
-		switch (id) {
-		case 1:
-			adventSwordEffect.add(SpawnEngine.spawnObject(
+		return switch (id) {
+			case 1 -> {
+				adventSwordEffect.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(600090000, 702644, 791.27985f, 489.02353f, 142.90796f, (byte) 30),
 					1));
-			return true;
-		default:
-			return false;
-		}
+				yield true;
+			}
+			default -> false;
+		};
 	}
 
 	/**
@@ -219,18 +214,15 @@ public class AnohaService {
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
 	public boolean berserkAnohaMsg1(int id) {
-		switch (id) {
-		case 1:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
+		return switch (id) {
+			case 1 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_Named_Spawn_System, 0); // Berserk Anoha will return to Kaldor in 30 minutes.
-				}
-			});
-			return true;
-		default:
-			return false;
-		}
+				});
+				yield true;
+			}
+			default -> false;
+		};
 	}
 
 	/**
@@ -241,18 +233,15 @@ public class AnohaService {
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
 	public boolean wealhtheowGuardianMsg1(int id) {
-		switch (id) {
-		case 1:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
+		return switch (id) {
+			case 1 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_Anoha_01, 0); // Enraged Wealhtheow Guardian will appear in 5 minutes.
-				}
-			});
-			return true;
-		default:
-			return false;
-		}
+				});
+				yield true;
+			}
+			default -> false;
+		};
 	}
 
 	/**
@@ -263,18 +252,15 @@ public class AnohaService {
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
 	public boolean wealhtheowGuardianMsg2(int id) {
-		switch (id) {
-		case 1:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
+		return switch (id) {
+			case 1 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_Anoha_02, 0); // Enraged Wealhtheow Guardian will appear in 3 minutes.
-				}
-			});
-			return true;
-		default:
-			return false;
-		}
+				});
+				yield true;
+			}
+			default -> false;
+		};
 	}
 
 	/**
@@ -285,18 +271,15 @@ public class AnohaService {
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
 	public boolean wealhtheowGuardianMsg3(int id) {
-		switch (id) {
-		case 1:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
+		return switch (id) {
+			case 1 -> {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_Anoha_03, 0); // Enraged Wealhtheow Guardian will appear in 1 minute.
-				}
-			});
-			return true;
-		default:
-			return false;
-		}
+				});
+				yield true;
+			}
+			default -> false;
+		};
 	}
 
 	/**
@@ -328,17 +311,14 @@ public class AnohaService {
             }
         };
 
-        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            @Override
-            public void run() {
-                if (player.isOnline() && player.isSpawned() && player.getLevel() <= 75) {
-                    boolean requested = player.getResponseRequester().putRequest(902247, responseHandler);
-                    if (requested) {
-                        PacketSendUtility.sendPacket(player, new SM_QUESTION_WINDOW(902247, 0, 0, message));
-                    }
-                }
-            }
-        }, 10000);
+        GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (player.isOnline() && player.isSpawned() && player.getLevel() <= 75) {
+				boolean requested = player.getResponseRequester().putRequest(902247, responseHandler);
+				if (requested) {
+					PacketSendUtility.sendPacket(player, new SM_QUESTION_WINDOW(902247, 0, 0, message));
+				}
+			}
+		}, 10000);
     }
 
 	/**
@@ -351,7 +331,7 @@ public class AnohaService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
+		for (VisibleObject obj : new ArrayList<>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {

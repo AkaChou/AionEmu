@@ -37,261 +37,275 @@ final class AttackControlEffects {
 	 * @author KorLightNing
 	 */
 	static boolean isSkillEffect(int skillId) {
-		switch (skillId) {
-		// 踉跄效果 / Stagger Effect
-		case 1054: // Finishing Arrow I.
-		case 1055: // Finishing Arrow II.
-		case 1056: // Finishing Arrow III.
-		case 1102: // Rupture Arrow I.
-		case 1103: // Rupture Arrow II.
-		case 1104: // Rupture Arrow III.
-		case 1105: // Rupture Arrow IV.
-		case 1106: // Rupture Arrow V.
-		case 1107: // Rupture Arrow VI.
-		case 1108: // Rupture Arrow VII.
-		case 1109: // Rupture Arrow VIII.
-		case 1110: // Rupture Arrow IX.
-		case 1226: // Frozen Shock I.
-		case 1227: // Frozen Shock II.
-		case 1228: // Frozen Shock III.
-		case 1229: // Frozen Shock IV.
-		case 1230: // Frozen Shock V.
-		case 1231: // Frozen Shock VI.
-		case 1232: // Frozen Shock VII.
-		case 1233: // Frozen Shock VIII.
-		case 1234: // Frozen Shock IX.
-		case 1235: // Frozen Shock X.
-		case 1236: // Frozen Shock XI.
-		case 1237: // Frozen Shock XII.
-		case 1258: // Aetherflame I.
-		case 4728: // [ArchDaeva] Aetherflame 5.1
-		case 1826: // Tremor I.
-		case 1827: // Tremor II.
-		case 1828: // Tremor III.
-		case 1829: // Tremor IV.
-		case 1830: // Tremor V.
-		case 1831: // Tremor VI.
-		case 2055: // Trunk Shot I.
-		case 2056: // Trunk Shot II.
-		case 2057: // Trunk Shot III.
-		case 2058: // Trunk Shot IV.
-		case 2059: // Trunk Shot V.
-		case 2060: // Trunk Shot VI.
-		case 2061: // Trunk Shot VII.
-		case 2062: // Trunk Shot VIII.
-		case 2063: // Trunk Shot IX.
-		case 2064: // Trunk Shot X.
-		case 2065: // Trunk Shot XI.
-		case 2232: // Shock & Awe I.
-		case 2235: // Shock & Awe II.
-		case 2238: // Shock & Awe III.
-		case 2241: // Shock & Awe IV.
-		case 2244: // Shock & Awe V.
-		case 2247: // Shock & Awe VI.
-		case 2250: // Shock & Awe VII.
-		case 2253: // Shock & Awe VIII.
-		case 3614: // Stone Shock I.
-		case 3615: // Stone Shock II.
-		case 3616: // Stone Shock III.
-		case 3617: // Stone Shock IV.
-		case 3618: // Stone Shock V.
-		case 3619: // Stone Shock VI.
-		case 3620: // Stone Shock VII.
-		case 3621: // Stone Shock VIII.
-		case 3622: // Stone Shock IX.
-		case 3623: // Stone Shock X.
-		case 3624: // Stone Shock XI.
-		case 4396: // Chorus Of Fortitude I.
-		case 4397: // Chorus Of Fortitude II.
-		case 4398: // Chorus Of Fortitude III.
-		case 4399: // Chorus Of Fortitude IV.
-		case 4522: // Sonic Gust I.
-		case 4523: // Sonic Gust II.
-		case 4790: // [ArchDaeva] Sonic Gust 5.1
+		return switch (skillId) {
+			// 踉跄效果 / Stagger Effect
+			// Finishing Arrow I.
+			// Finishing Arrow II.
+			// Finishing Arrow III.
+			// Rupture Arrow I.
+			// Rupture Arrow II.
+			// Rupture Arrow III.
+			// Rupture Arrow IV.
+			// Rupture Arrow V.
+			// Rupture Arrow VI.
+			// Rupture Arrow VII.
+			// Rupture Arrow VIII.
+			// Rupture Arrow IX.
+			// Frozen Shock I.
+			// Frozen Shock II.
+			// Frozen Shock III.
+			// Frozen Shock IV.
+			// Frozen Shock V.
+			// Frozen Shock VI.
+			// Frozen Shock VII.
+			// Frozen Shock VIII.
+			// Frozen Shock IX.
+			// Frozen Shock X.
+			// Frozen Shock XI.
+			// Frozen Shock XII.
+			// Aetherflame I.
+			// [ArchDaeva] Aetherflame 5.1
+			// Tremor I.
+			// Tremor II.
+			// Tremor III.
+			// Tremor IV.
+			// Tremor V.
+			// Tremor VI.
+			// Trunk Shot I.
+			// Trunk Shot II.
+			// Trunk Shot III.
+			// Trunk Shot IV.
+			// Trunk Shot V.
+			// Trunk Shot VI.
+			// Trunk Shot VII.
+			// Trunk Shot VIII.
+			// Trunk Shot IX.
+			// Trunk Shot X.
+			// Trunk Shot XI.
+			// Shock & Awe I.
+			// Shock & Awe II.
+			// Shock & Awe III.
+			// Shock & Awe IV.
+			// Shock & Awe V.
+			// Shock & Awe VI.
+			// Shock & Awe VII.
+			// Shock & Awe VIII.
+			// Stone Shock I.
+			// Stone Shock II.
+			// Stone Shock III.
+			// Stone Shock IV.
+			// Stone Shock V.
+			// Stone Shock VI.
+			// Stone Shock VII.
+			// Stone Shock VIII.
+			// Stone Shock IX.
+			// Stone Shock X.
+			// Stone Shock XI.
+			// Chorus Of Fortitude I.
+			// Chorus Of Fortitude II.
+			// Chorus Of Fortitude III.
+			// Chorus Of Fortitude IV.
+			// Sonic Gust I.
+			// Sonic Gust II.
+			// [ArchDaeva] Sonic Gust 5.1
 			// 绊倒效果 / Stumble Effect
-		case 519: // Explosion Of Rage I.
-		case 520: // Explosion Of Rage II.
-		case 521: // Explosion Of Rage III.
-		case 522: // 激怒爆炸 IV 效果 / Explosion Of Rage IV.
-		case 523: // Explosion Of Rage V.
-		case 524: // Explosion Of Rage VI.
-		case 525: // Explosion Of Rage VII.
-		case 526: // Explosion Of Rage VIII.
-		case 527: // Explosion Of Rage IX.
-		case 528: // Explosion Of Rage X.
-		case 529: // Explosion Of Rage XI.
-		case 530: // Explosion Of Rage XII.
-		case 531: // Crushing Blow I.
-		case 532: // Crushing Blow II.
-		case 533: // Crushing Blow III.
-		case 534: // Crushing Blow IV.
-		case 535: // Crushing Blow V.
-		case 536: // Crushing Blow VI.
-		case 537: // Crushing Blow VII.
-		case 538: // Crushing Blow VIII.
-		case 555: // Seismic Billow I.
-		case 556: // Seismic Billow II.
-		case 557: // Seismic Billow III.
-		case 558: // Seismic Billow IV.
-		case 559: // Seismic Billow V.
-		case 560: // Seismic Billow VI.
-		case 561: // Seismic Billow VII.
-		case 562: // Seismic Billow VIII.
-		case 584: // Spite Strike I.
-		case 585: // Spite Strike II.
-		case 586: // Spite Strike III.
-		case 587: // Spite Strike IV.
-		case 588: // Spite Strike V.
-		case 589: // Spite Strike VI.
-		case 621: // Wrathful Explosion I.
-		case 622: // Wrathful Explosion II.
-		case 623: // Wrathful Explosion III.
-		case 624: // Wrathful Strike I.
-		case 625: // Wrathful Strike II.
-		case 626: // Wrathful Strike III.
-		case 627: // Wrathful Strike IV.
-		case 628: // Wrathful Strike V.
-		case 629: // Wrathful Strike VI.
-		case 630: // Wrathful Strike VII.
-		case 631: // Wrathful Strike VIII.
-		case 632: // Wrathful Strike IX.
-		case 633: // Wrathful Strike X.
-		case 634: // Wrathful Strike XI.
-		case 635: // Wrathful Wave I.
-		case 636: // Wrathful Wave II.
-		case 637: // Wrathful Wave III.
-		case 638: // Wrathful Wave IV.
-		case 639: // Wrathful Wave V.
-		case 640: // Wrathful Wave VI.
-		case 728: // Wind Lance I.
-		case 729: // Wind Lance II.
-		case 730: // Wind Lance III.
-		case 731: // Wind Lance IV.
-		case 732: // Wind Lance V.
-		case 733: // Severe Precision Cut I.
-		case 734: // Severe Precision Cut II.
-		case 735: // Severe Precision Cut III.
-		case 736: // Severe Precision Cut IV.
-		case 737: // Severe Precision Cut V.
-		case 738: // Severe Precision Cut VI.
-		case 1863: // Disorienting Blow I.
-		case 1864: // Disorienting Blow II.
-		case 1865: // Disorienting Blow III.
-		case 1866: // Disorienting Blow IV.
-		case 1867: // Disorienting Blow V.
-		case 1868: // Disorienting Blow VI.
-		case 1875: // Pentacle Shock I.
-		case 1876: // Pentacle Shock II.
-		case 1877: // Pentacle Shock III.
-		case 1878: // Pentacle Shock IV.
-		case 1879: // Pentacle Shock V.
-		case 1880: // Pentacle Shock VI.
-		case 1881: // Pentacle Shock VII.
-		case 1882: // Pentacle Shock VIII.
-		case 1891: // Soul Crush I.
-		case 1892: // Soul Crush II.
-		case 1893: // Soul Crush III.
-		case 1894: // Soul Crush IV.
-		case 1895: // Soul Crush V.
-		case 1896: // Soul Crush VI.
-		case 1897: // Soul Crush VII.
-		case 1898: // Soul Crush VIII.
-		case 2399: // Beatdown I.
-		case 2530: // Annihilation Barrage I.
-		case 2531: // Annihilation Barrage II.
-		case 2532: // Annihilation Barrage III.
-		case 2533: // Annihilation Barrage IV.
-		case 2534: // Annihilation Barrage V.
-		case 2535: // Annihilation Barrage VI.
-		case 2568: // Uppercut I.
-		case 2569: // Uppercut II.
-		case 2570: // Uppercut III.
-		case 2571: // Uppercut IV.
-		case 2606: // Kinetic Slam I.
-		case 2609: // Kinetic Slam II.
-		case 2612: // Kinetic Slam III.
-		case 2615: // Kinetic Slam IV.
-		case 2618: // Kinetic Slam V.
-		case 2621: // Kinetic Slam VI.
-		case 2624: // Kinetic Slam VII.
-		case 2627: // Kinetic Slam VIII.
-		case 2630: // Kinetic Slam IX.
-		case 2633: // Kinetic Slam X.
-		case 2336: // Kinetic Slam XI.
-		case 2639: // Kinetic Slam XII.
-		case 4797: // [ArchDaeva] Kinetic Slam 5.1
-		case 4798: // [ArchDaeva] Kinetic Slam 5.1
-		case 4799: // [ArchDaeva] Kinetic Slam 5.1
-		case 2923: // Shieldburst I.
-		case 2924: // Shieldburst II.
-		case 2925: // Shieldburst III.
-		case 3106: // Face Smash I.
-		case 3107: // Face Smash II.
-		case 3108: // Face Smash III.
-		case 3109: // Face Smash IV.
-		case 3110: // Face Smash V.
-		case 3111: // Face Smash VI.
-		case 3112: // Face Smash VII.
-		case 3113: // Swinging Shield Counter I.
-		case 3114: // Swinging Shield Counter II.
-		case 3115: // Swinging Shield Counter III.
-		case 3125: // Sword Storm I.
-		case 3126: // Sword Storm II.
-		case 3330: // Shadowfall I.
-		case 4591: // Shadowfall II.
-		case 4592: // Shadowfall III.
-		case 4593: // Shadowfall IV.
-		case 4594: // Shadowfall V.
-		case 4595: // Shadowfall VI.
-		case 4596: // Shadowfall VII.
+			// Explosion Of Rage I.
+			// Explosion Of Rage II.
+			// Explosion Of Rage III.
+			// 激怒爆炸 IV 效果 / Explosion Of Rage IV.
+			// Explosion Of Rage V.
+			// Explosion Of Rage VI.
+			// Explosion Of Rage VII.
+			// Explosion Of Rage VIII.
+			// Explosion Of Rage IX.
+			// Explosion Of Rage X.
+			// Explosion Of Rage XI.
+			// Explosion Of Rage XII.
+			// Crushing Blow I.
+			// Crushing Blow II.
+			// Crushing Blow III.
+			// Crushing Blow IV.
+			// Crushing Blow V.
+			// Crushing Blow VI.
+			// Crushing Blow VII.
+			// Crushing Blow VIII.
+			// Seismic Billow I.
+			// Seismic Billow II.
+			// Seismic Billow III.
+			// Seismic Billow IV.
+			// Seismic Billow V.
+			// Seismic Billow VI.
+			// Seismic Billow VII.
+			// Seismic Billow VIII.
+			// Spite Strike I.
+			// Spite Strike II.
+			// Spite Strike III.
+			// Spite Strike IV.
+			// Spite Strike V.
+			// Spite Strike VI.
+			// Wrathful Explosion I.
+			// Wrathful Explosion II.
+			// Wrathful Explosion III.
+			// Wrathful Strike I.
+			// Wrathful Strike II.
+			// Wrathful Strike III.
+			// Wrathful Strike IV.
+			// Wrathful Strike V.
+			// Wrathful Strike VI.
+			// Wrathful Strike VII.
+			// Wrathful Strike VIII.
+			// Wrathful Strike IX.
+			// Wrathful Strike X.
+			// Wrathful Strike XI.
+			// Wrathful Wave I.
+			// Wrathful Wave II.
+			// Wrathful Wave III.
+			// Wrathful Wave IV.
+			// Wrathful Wave V.
+			// Wrathful Wave VI.
+			// Wind Lance I.
+			// Wind Lance II.
+			// Wind Lance III.
+			// Wind Lance IV.
+			// Wind Lance V.
+			// Severe Precision Cut I.
+			// Severe Precision Cut II.
+			// Severe Precision Cut III.
+			// Severe Precision Cut IV.
+			// Severe Precision Cut V.
+			// Severe Precision Cut VI.
+			// Disorienting Blow I.
+			// Disorienting Blow II.
+			// Disorienting Blow III.
+			// Disorienting Blow IV.
+			// Disorienting Blow V.
+			// Disorienting Blow VI.
+			// Pentacle Shock I.
+			// Pentacle Shock II.
+			// Pentacle Shock III.
+			// Pentacle Shock IV.
+			// Pentacle Shock V.
+			// Pentacle Shock VI.
+			// Pentacle Shock VII.
+			// Pentacle Shock VIII.
+			// Soul Crush I.
+			// Soul Crush II.
+			// Soul Crush III.
+			// Soul Crush IV.
+			// Soul Crush V.
+			// Soul Crush VI.
+			// Soul Crush VII.
+			// Soul Crush VIII.
+			// Beatdown I.
+			// Annihilation Barrage I.
+			// Annihilation Barrage II.
+			// Annihilation Barrage III.
+			// Annihilation Barrage IV.
+			// Annihilation Barrage V.
+			// Annihilation Barrage VI.
+			// Uppercut I.
+			// Uppercut II.
+			// Uppercut III.
+			// Uppercut IV.
+			// Kinetic Slam I.
+			// Kinetic Slam II.
+			// Kinetic Slam III.
+			// Kinetic Slam IV.
+			// Kinetic Slam V.
+			// Kinetic Slam VI.
+			// Kinetic Slam VII.
+			// Kinetic Slam VIII.
+			// Kinetic Slam IX.
+			// Kinetic Slam X.
+			// Kinetic Slam XI.
+			// Kinetic Slam XII.
+			// [ArchDaeva] Kinetic Slam 5.1
+			// [ArchDaeva] Kinetic Slam 5.1
+			// [ArchDaeva] Kinetic Slam 5.1
+			// Shieldburst I.
+			// Shieldburst II.
+			// Shieldburst III.
+			// Face Smash I.
+			// Face Smash II.
+			// Face Smash III.
+			// Face Smash IV.
+			// Face Smash V.
+			// Face Smash VI.
+			// Face Smash VII.
+			// Swinging Shield Counter I.
+			// Swinging Shield Counter II.
+			// Swinging Shield Counter III.
+			// Sword Storm I.
+			// Sword Storm II.
+			// Shadowfall I.
+			// Shadowfall II.
+			// Shadowfall III.
+			// Shadowfall IV.
+			// Shadowfall V.
+			// Shadowfall VI.
+			// Shadowfall VII.
 			// 空中击飞效果 / Openaerial Effect
-		case 545: // Aerial Lockdown I.
-		case 546: // Aerial Lockdown II.
-		case 547: // Aerial Lockdown III.
-		case 548: // Aerial Lockdown IV.
-		case 549: // Aerial Lockdown V.
-		case 550: // Aerial Lockdown VI.
-		case 551: // Aerial Lockdown VII.
-		case 552: // Aerial Lockdown VIII.
-		case 553: // Aerial Lockdown IX.
-		case 1184: // Aether's Hold I.
-		case 1185: // Aether's Hold II.
-		case 1186: // Aether's Hold III.
-		case 1187: // Aether's Hold IV.
-		case 1188: // Aether's Hold V.
-		case 1189: // Aether's Hold VI.
-		case 1190: // Aether's Hold VII.
-		case 1191: // Aether's Hold VIII.
-		case 2109: // Paralysis Cannon I.
-		case 2110: // Paralysis Cannon II.
-		case 2111: // Paralysis Cannon III.
-		case 2112: // Paralysis Cannon IV.
-		case 2113: // Paralysis Cannon V.
-		case 2114: // Paralysis Cannon VI.
-		case 3406: // Binding Rune I.
-		case 3407: // Binding Rune II.
-		case 3408: // Binding Rune III.
-		case 3409: // Binding Rune IV.
-		case 3410: // Binding Rune V.
-		case 3411: // Binding Rune VI.
-		case 3412: // Binding Rune VII.
-		case 3413: // Binding Rune VIII.
-		case 3414: // Binding Rune IX.
+			// Aerial Lockdown I.
+			// Aerial Lockdown II.
+			// Aerial Lockdown III.
+			// Aerial Lockdown IV.
+			// Aerial Lockdown V.
+			// Aerial Lockdown VI.
+			// Aerial Lockdown VII.
+			// Aerial Lockdown VIII.
+			// Aerial Lockdown IX.
+			// Aether's Hold I.
+			// Aether's Hold II.
+			// Aether's Hold III.
+			// Aether's Hold IV.
+			// Aether's Hold V.
+			// Aether's Hold VI.
+			// Aether's Hold VII.
+			// Aether's Hold VIII.
+			// Paralysis Cannon I.
+			// Paralysis Cannon II.
+			// Paralysis Cannon III.
+			// Paralysis Cannon IV.
+			// Paralysis Cannon V.
+			// Paralysis Cannon VI.
+			// Binding Rune I.
+			// Binding Rune II.
+			// Binding Rune III.
+			// Binding Rune IV.
+			// Binding Rune V.
+			// Binding Rune VI.
+			// Binding Rune VII.
+			// Binding Rune VIII.
+			// Binding Rune IX.
 			// 拉拽效果 / Pulled Effect
-		case 326: // 守护星之擒拿 / Sweeping Hook.
-		case 2967: // 幻影摄捕 I / Illusion Chains.
-		case 4721: // [ArchDaeva] Illusion Chains 5.1
-		case 3071: // 活捉 I / Ensnaring Blow.
-		case 3123: // Doom Lure.
-		case 3162: // Divine Grasp I.
-		case 3163: // Divine Grasp II.
-		case 3164: // Divine Grasp III.
-		case 3165: // Divine Grasp IV.
-		case 3166: // Divine Grasp V.
-		case 3167: // Divine Grasp VI.
-			return true;
-		}
-		return false;
+			// 守护星之擒拿 / Sweeping Hook.
+			// 幻影摄捕 I / Illusion Chains.
+			// [ArchDaeva] Illusion Chains 5.1
+			// 活捉 I / Ensnaring Blow.
+			// Doom Lure.
+			// Divine Grasp I.
+			// Divine Grasp II.
+			// Divine Grasp III.
+			// Divine Grasp IV.
+			// Divine Grasp V.
+			case 1054, 1055, 1056, 1102, 1103, 1104, 1105, 1106, 1107, 1108, 1109, 1110, 1226, 1227, 1228, 1229, 1230,
+			     1231, 1232, 1233, 1234, 1235, 1236, 1237, 1258, 4728, 1826, 1827, 1828, 1829, 1830, 1831, 2055, 2056,
+			     2057, 2058, 2059, 2060, 2061, 2062, 2063, 2064, 2065, 2232, 2235, 2238, 2241, 2244, 2247, 2250, 2253,
+			     3614, 3615, 3616, 3617, 3618, 3619, 3620, 3621, 3622, 3623, 3624, 4396, 4397, 4398, 4399, 4522, 4523,
+			     4790, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537,
+			     538, 555, 556, 557, 558, 559, 560, 561, 562, 584, 585, 586, 587, 588, 589, 621, 622, 623, 624, 625,
+			     626, 627, 628, 629, 630, 631, 632, 633, 634, 635, 636, 637, 638, 639, 640, 728, 729, 730, 731, 732,
+			     733, 734, 735, 736, 737, 738, 1863, 1864, 1865, 1866, 1867, 1868, 1875, 1876, 1877, 1878, 1879, 1880,
+			     1881, 1882, 1891, 1892, 1893, 1894, 1895, 1896, 1897, 1898, 2399, 2530, 2531, 2532, 2533, 2534, 2535,
+			     2568, 2569, 2570, 2571, 2606, 2609, 2612, 2615, 2618, 2621, 2624, 2627, 2630, 2633, 2336, 2639, 4797,
+			     4798, 4799, 2923, 2924, 2925, 3106, 3107, 3108, 3109, 3110, 3111, 3112, 3113, 3114, 3115, 3125, 3126,
+			     3330, 4591, 4592, 4593, 4594, 4595, 4596, 545, 546, 547, 548, 549, 550, 551, 552, 553, 1184, 1185,
+			     1186, 1187, 1188, 1189, 1190, 1191, 2109, 2110, 2111, 2112, 2113, 2114, 3406, 3407, 3408, 3409, 3410,
+			     3411, 3412, 3413, 3414, 326, 2967, 4721, 3071, 3123, 3162, 3163, 3164, 3165, 3166,
+			     3167 -> // Divine Grasp VI.
+				true;
+			default -> false;
+		};
 	}
 
 	/**

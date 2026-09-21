@@ -23,19 +23,14 @@ public class Macunbello_Right_HandAI2 extends AggressiveNpcAI2
 		startLifeTask();
 		this.setStateIfNot(AIState.FOLLOWING);
 	}
-	
+
 	@Override
 	protected void handleMoveArrived() {
 		AI2Actions.targetCreature(Macunbello_Right_HandAI2.this, getPosition().getWorldMapInstance().getNpc(216245)); // Boss：Macunbello / Macunbello.
 		AI2Actions.useSkill(Macunbello_Right_HandAI2.this, 19049); // 吞噬灵魂 / Devour Soul.
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(Macunbello_Right_HandAI2.this);
-			}
-		}, 33000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Macunbello_Right_HandAI2.this), 33000);
 	}
 }

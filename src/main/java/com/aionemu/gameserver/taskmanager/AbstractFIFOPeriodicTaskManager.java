@@ -25,13 +25,13 @@ public abstract class AbstractFIFOPeriodicTaskManager<T> extends AbstractPeriodi
 	 * 待处理任务队列（保持插入顺序）。
 	 * Pending task queue (insertion order preserved).
 	 */
-	private final Set<T> queue = new LinkedHashSet<T>();
+	private final Set<T> queue = new LinkedHashSet<>();
 
 	/**
 	 * 当前周期内正在处理的任务集合。
 	 * Active tasks being processed in the current tick.
 	 */
-	private final Set<T> activeTasks = new LinkedHashSet<T>();
+	private final Set<T> activeTasks = new LinkedHashSet<>();
 
 	/**
 	 * 以给定周期构造 FIFO 任务管理器。

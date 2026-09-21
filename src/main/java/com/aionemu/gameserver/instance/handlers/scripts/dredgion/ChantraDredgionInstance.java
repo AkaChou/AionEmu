@@ -77,7 +77,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	/** 副本是否已开始 / whether the instance started */
 		protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
 	/** chantra 任务 / chantra task */
-		private final List<Future<?>> chantraTask = new ArrayList<Future<?>>();
+		private final List<Future<?>> chantraTask = new ArrayList<>();
 	/**
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
@@ -234,63 +234,51 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 
 	protected void startInstanceTask() {
 		instanceTime = System.currentTimeMillis();
-		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				openFirstDoors();
-				// 舱壁已激活，第一军械库与重力控制室之间的通道已封闭。 / The bulkhead has been activated and the passage between the First Armory and Gravity Control has been sealed.
-				sendMsgByRace(1400604, Race.PC_ALL, 5000);
-				// 舱壁已激活，第二军械库与重力控制室之间的通道已封闭。 / The bulkhead has been activated and the passage between the Second Armory and Gravity Control has been sealed.
-				sendMsgByRace(1400605, Race.PC_ALL, 10000);
-				dredgionReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
-				sendPacket();
-				switch (Rnd.get(1, 2)) {
-					case 1:
-					    spawn(216888, 415.2769f, 282.0216f, 409.7311f, (byte) 118); //Quartermaster Bhati.
-					break;
-					case 2:
-					    spawn(216888, 556.53534f, 279.2918f, 409.7311f, (byte) 33); //Quartermaster Bhati.
-					break;
-				} switch (Rnd.get(1, 2)) {
-					case 1:
-					    spawn(216887, 485.25455f, 877.04614f, 405.01407f, (byte) 90); //Skyguard Parishka.
-					break;
-					case 2:
-					    spawn(216885, 485.25455f, 877.04614f, 405.01407f, (byte) 90); //Hookmatan.
-					break;
-				}
+		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			openFirstDoors();
+			// 舱壁已激活，第一军械库与重力控制室之间的通道已封闭。 / The bulkhead has been activated and the passage between the First Armory and Gravity Control has been sealed.
+			sendMsgByRace(1400604, Race.PC_ALL, 5000);
+			// 舱壁已激活，第二军械库与重力控制室之间的通道已封闭。 / The bulkhead has been activated and the passage between the Second Armory and Gravity Control has been sealed.
+			sendMsgByRace(1400605, Race.PC_ALL, 10000);
+			dredgionReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
+			sendPacket();
+			switch (Rnd.get(1, 2)) {
+				case 1:
+					spawn(216888, 415.2769f, 282.0216f, 409.7311f, (byte) 118); //Quartermaster Bhati.
+				break;
+				case 2:
+					spawn(216888, 556.53534f, 279.2918f, 409.7311f, (byte) 33); //Quartermaster Bhati.
+				break;
+			} switch (Rnd.get(1, 2)) {
+				case 1:
+					spawn(216887, 485.25455f, 877.04614f, 405.01407f, (byte) 90); //Skyguard Parishka.
+				break;
+				case 2:
+					spawn(216885, 485.25455f, 877.04614f, 405.01407f, (byte) 90); //Hookmatan.
+				break;
 			}
 		}, 60000));
 	   /**
 	 * 钱特拉战舰内有多处传送装置。 / Chantra Dredgion Teleportation Devices: There are numerous teleportation devices located inside the Chantra Dredgion. These teleportation devices allow players to teleport to different areas of the Dredgion with ease. Central Teleporter: This teleporter activates 10 minutes after the Instanced Dungeon has begun
 	 */
-		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				// 紧急出口传送装置已激活。 / A teleport device has been activated in the Emergency Exit.
-				sendMsgByRace(1401424, Race.PC_ALL, 0);
-				spawn(730311, 415.07663f, 173.85265f, 432.53436f, (byte) 0, 34); //Portside Central Teleporter.
-				spawn(730312, 554.83081f, 173.87158f, 432.52448f, (byte) 0, 9); //Starboard Central Teleporter.
-			}
+		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			// 紧急出口传送装置已激活。 / A teleport device has been activated in the Emergency Exit.
+			sendMsgByRace(1401424, Race.PC_ALL, 0);
+			spawn(730311, 415.07663f, 173.85265f, 432.53436f, (byte) 0, 34); //Portside Central Teleporter.
+			spawn(730312, 554.83081f, 173.87158f, 432.52448f, (byte) 0, 9); //Starboard Central Teleporter.
 		}, 600000));
 	   /**
 	 * 军官卡曼亚：位置重力控制室；经过 15 分钟；勇气 1000 点。 / Officer Kamanya: Location: Gravity Control Time Elapsed: 15 Minutes Valor: 1,000 Points
 	 */
-		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				// 军官卡曼亚已出现在重力控制室。 / Officer Kamanya has appeared in Gravity Control.
-				sendMsgByRace(1400633, Race.PC_ALL, 0);
-				spawn(216941, 485.4811f, 313.925f, 403.71857f, (byte) 36); //Officer Kamanya.
-			}
+		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			// 军官卡曼亚已出现在重力控制室。 / Officer Kamanya has appeared in Gravity Control.
+			sendMsgByRace(1400633, Race.PC_ALL, 0);
+			spawn(216941, 485.4811f, 313.925f, 403.71857f, (byte) 36); //Officer Kamanya.
 		}, 900000));
-		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!dredgionReward.isRewarded()) {
-					Race winningRace = dredgionReward.getWinningRaceByScore();
-					stopInstance(winningRace);
-				}
+		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!dredgionReward.isRewarded()) {
+				Race winningRace = dredgionReward.getWinningRaceByScore();
+				stopInstance(winningRace);
 			}
 		}, 3600000));
 	}
@@ -458,13 +446,10 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			break;
 			case 216886: //Captain Zanata.
 				point = 1000;
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				    @Override
-					public void run() {
-						if (!dredgionReward.isRewarded()) {
-							Race winningRace = dredgionReward.getWinningRaceByScore();
-							stopInstance(winningRace);
-						}
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					if (!dredgionReward.isRewarded()) {
+						Race winningRace = dredgionReward.getWinningRaceByScore();
+						stopInstance(winningRace);
 					}
 				}, 30000);
 			break;
@@ -550,18 +535,15 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!isInstanceDestroyed) {
-					for (Player player : instance.getPlayersInside()) {
-						if (PlayerActions.isAlreadyDead(player)) {
-							PlayerReviveService.duelRevive(player);
-						}
-						onExitInstance(player);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isInstanceDestroyed) {
+				for (Player player : instance.getPlayersInside()) {
+					if (PlayerActions.isAlreadyDead(player)) {
+						PlayerReviveService.duelRevive(player);
 					}
-					GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
+					onExitInstance(player);
 				}
+				GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
 			}
 		}, 120000);
 	}
@@ -655,7 +637,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			return;
 		}
 		addPointsByRace(player.getRace(), points);
-		List<Player> playersToGainScore = new ArrayList<Player>();
+		List<Player> playersToGainScore = new ArrayList<>();
 		if (target != null && player.isInGroup2()) {
 			for (Player member : player.getPlayerGroup2().getOnlineMembers()) {
 				if (member.getLifeStats().isAlreadyDead()) {
@@ -718,7 +700,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	}
 
 	private void sendPacket() {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -779,17 +761,14 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	 */
 
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            @Override
-            public void run() {
-                if (!isInstanceDestroyed) {
-                    spawn(npcId, x, y, z, h, entityId);
-                    if (msg > 0) {
-                        sendMsgByRace(msg, race, 0);
-                    }
-                }
-            }
-        }, time));
+        chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isInstanceDestroyed) {
+				spawn(npcId, x, y, z, h, entityId);
+				if (msg > 0) {
+					sendMsgByRace(msg, race, 0);
+				}
+			}
+		}, time));
     }
 	/**
 	 * 延迟生成沿指定巡行路线行走的 NPC。
@@ -805,16 +784,13 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	 */
 
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            @Override
-            public void run() {
-                if (!isInstanceDestroyed) {
-                    Npc npc = (Npc) spawn(npcId, x, y, z, h);
-                    npc.getSpawn().setWalkerId(walkerId);
-                    WalkManager.startWalking((NpcAI2) npc.getAi2());
-                }
-            }
-        }, time));
+        chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isInstanceDestroyed) {
+				Npc npc = (Npc) spawn(npcId, x, y, z, h);
+				npc.getSpawn().setWalkerId(walkerId);
+				WalkManager.startWalking((NpcAI2) npc.getAi2());
+			}
+		}, time));
     }
 	/**
 	 * 延迟后向指定阵营广播系统消息。
@@ -826,25 +802,20 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	 */
 
     protected void sendMsgByRace(final int msg, final Race race, int time) {
-        chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            @Override
-            public void run() {
-                instance.doOnAllPlayers(new Visitor<Player>() {
-                    /**
-                     * 处理 visit。
-                     * Handle visit.
-                     *
-                     * @param player 玩家 / player
-                     */
-                    @Override
-                    public void visit(Player player) {
-                        if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-                            PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-                        }
-                    }
-                });
-            }
-        }, time));
+        chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> instance.doOnAllPlayers(new Visitor<>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
+			@Override
+			public void visit(Player player) {
+				if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
+					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
+				}
+			}
+		}), time));
     }
 
 	private void stopInstanceTask() {

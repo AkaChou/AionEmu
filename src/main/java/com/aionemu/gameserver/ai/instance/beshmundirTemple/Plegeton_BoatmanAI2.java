@@ -19,12 +19,12 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public class Plegeton_BoatmanAI2 extends NpcAI2
 {
     private boolean isStartTimer = false;
-	
+
 	@Override
     protected void handleDialogStart(Player player) {
         PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
     }
-	
+
     @Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
         if (dialogId == 10000) {
@@ -62,13 +62,8 @@ public class Plegeton_BoatmanAI2 extends NpcAI2
         }
         return true;
     }
-	
+
     private void sendTimer() {
-        getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-            @Override
-            public void visit(Player player) {
-                PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 420));
-            }
-        });
+        getPosition().getWorldMapInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 420)));
     }
 }

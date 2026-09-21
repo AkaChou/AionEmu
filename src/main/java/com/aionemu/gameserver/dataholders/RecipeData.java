@@ -33,7 +33,7 @@ public class RecipeData {
 	 * After JAXB unmarshalling, builds the id index and auto-learn race lists.
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		recipeData = new IntObjectHashMap<RecipeTemplate>();
+		recipeData = new IntObjectHashMap<>();
 		elyos = new ArrayList<>();
 		asmos = new ArrayList<>();
 		any = new ArrayList<>();

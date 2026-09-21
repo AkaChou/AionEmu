@@ -27,8 +27,8 @@ public class AtreianPassportData {
 	@XmlElement(name = "atreian_passport")
 	private List<AtreianPassport> tlist;
 	/** 通行证模板索引 / passport template index */
-	private final IntObjectHashMap<AtreianPassport> passportData = new IntObjectHashMap<AtreianPassport>();
-	private final Map<Integer, AtreianPassport> passportDataMap = new HashMap<Integer, AtreianPassport>(1);
+	private final IntObjectHashMap<AtreianPassport> passportData = new IntObjectHashMap<>();
+	private final Map<Integer, AtreianPassport> passportDataMap = new HashMap<>(1);
 
 	/**
 	 * JAXB 反序列化完成后，将列表写入双索引映射。

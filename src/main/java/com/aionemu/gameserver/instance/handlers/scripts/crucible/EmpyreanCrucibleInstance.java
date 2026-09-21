@@ -55,12 +55,12 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	 */
 	private boolean isDoneStage6Round1 = false;
 	/** NPC 列表 / NPC list */
-	private final List<Npc> npcs = new ArrayList<Npc>();
+	private final List<Npc> npcs = new ArrayList<>();
 	/** 天界阶段列表 / empyrean stage list */
-	private final List<EmpyreanStage> empyreanStage = new ArrayList<EmpyreanStage>();
+	private final List<EmpyreanStage> empyreanStage = new ArrayList<>();
 
 	private class EmpyreanStage {
-		private List<Npc> npcs = new ArrayList<Npc>();
+		private List<Npc> npcs = new ArrayList<>();
 
 		public EmpyreanStage(List<Npc> npcs) {
 			this.npcs = npcs;
@@ -121,7 +121,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	}
 
 	private void sendPacket(final int points, final int nameId) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -134,7 +134,8 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 					CruciblePlayerReward playerReward = getPlayerReward(player.getObjectId());
 					if (nameId != 0) {
 						PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400237, new DescriptionId(nameId * 2 + 1), points));
-					} if (!playerReward.isRewarded()) {
+					}
+					if (!playerReward.isRewarded()) {
 						playerReward.addPoints(points);
 					}
 					PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(instanceReward));
@@ -152,7 +153,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -925,7 +926,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 							     */
 							    @Override
 							    public void run() {
-								    List<Npc> round = new ArrayList<Npc>();
+								    List<Npc> round = new ArrayList<>();
 								    round.add(sp(217557, 357.24625f, 338.30093f, 96.09104f, (byte) 65));
 								    round.add(sp(217558, 357.20663f, 359.28714f, 96.091064f, (byte) 75));
 								    round.add(sp(217561, 365.109f, 349.1218f, 96.09114f, (byte) 60));
@@ -1705,7 +1706,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	}
 
 	private void startStage4Round4_1() {
-		List<Npc> round = new ArrayList<Npc>();
+		List<Npc> round = new ArrayList<>();
 		round.add(sp(217508, 334.06754f, 339.84393f, 96.09091f, (byte) 0));
 		empyreanStage.add(new EmpyreanStage(round));
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -1715,7 +1716,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			 */
 			@Override
 			public void run() {
-				List<Npc> round1 = new ArrayList<Npc>();
+				List<Npc> round1 = new ArrayList<>();
 				round1.add(sp(217506, 342.12405f, 364.4922f, 96.09093f, (byte) 0));
 				round1.add(sp(217507, 344.4953f, 365.14444f, 96.09092f, (byte) 0));
 				empyreanStage.add(new EmpyreanStage(round1));
@@ -1737,7 +1738,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			 */
 			@Override
 			public void run() {
-				List<Npc> round = new ArrayList<Npc>();
+				List<Npc> round = new ArrayList<>();
 				round.add(sp(217566, 362.87164f, 357.87164f, 96.091125f, (byte) 73));
 				round.add(sp(217563, 359.1135f, 359.6953f, 96.091125f, (byte) 80));
 				empyreanStage.add(new EmpyreanStage(round));
@@ -1825,7 +1826,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	public boolean onReviveEvent(final Player player) {
 		super.onReviveEvent(player);
 		moveToReadyRoom(player);
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.

@@ -236,18 +236,31 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 		for (QuestTransition transition : List.copyOf(transitions)) {
 			for (QuestCondition condition : transition.conditions()) {
 				switch (condition) {
-					case QuestCondition.StatusIs ignored -> { }
-					case QuestCondition.HasItem ignored -> { }
-					case QuestCondition.QuestVariableIs ignored -> { }
-					case QuestCondition.VariableAtLeast ignored -> { }
-					case QuestCondition.VariableBelow ignored -> { }
-					case QuestCondition.VariableSumIs ignored -> { }
-					case QuestCondition.VariableSumBelow ignored -> { }
-					case QuestCondition.WorldIs ignored -> { }
-					case QuestCondition.WorldNpcIs ignored -> { }
-					case QuestCondition.ZoneIs ignored -> { }
-					case QuestCondition.NpcHpBelowPercent ignored -> { }
-					default -> applyCondition(condition);
+					case QuestCondition.StatusIs ignored:
+						break;
+					case QuestCondition.HasItem ignored:
+						break;
+					case QuestCondition.QuestVariableIs ignored:
+						break;
+					case QuestCondition.VariableAtLeast ignored:
+						break;
+					case QuestCondition.VariableBelow ignored:
+						break;
+					case QuestCondition.VariableSumIs ignored:
+						break;
+					case QuestCondition.VariableSumBelow ignored:
+						break;
+					case QuestCondition.WorldIs ignored:
+						break;
+					case QuestCondition.WorldNpcIs ignored:
+						break;
+					case QuestCondition.ZoneIs ignored:
+						break;
+					case QuestCondition.NpcHpBelowPercent ignored:
+						break;
+					default:
+						applyCondition(condition);
+						break;
 				}
 			}
 		}
@@ -264,11 +277,20 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	public void seedStepConditions(QuestTransition transition) {
 		for (QuestCondition condition : java.util.Objects.requireNonNull(transition, "transition").conditions()) {
 			switch (condition) {
-				case QuestCondition.WorldIs ignored -> applyCondition(condition);
-				case QuestCondition.WorldNpcIs ignored -> applyCondition(condition);
-				case QuestCondition.ZoneIs ignored -> applyCondition(condition);
-				case QuestCondition.NpcHpBelowPercent ignored -> applyCondition(condition);
-				default -> { }
+				case QuestCondition.WorldIs ignored:
+					applyCondition(condition);
+					break;
+				case QuestCondition.WorldNpcIs ignored:
+					applyCondition(condition);
+					break;
+				case QuestCondition.ZoneIs ignored:
+					applyCondition(condition);
+					break;
+				case QuestCondition.NpcHpBelowPercent ignored:
+					applyCondition(condition);
+					break;
+				default:
+					break;
 			}
 		}
 	}
@@ -340,7 +362,7 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 		committedTransactionActions = List.of();
 		auditEvents.clear();
 		switch (request.event()) {
-			case QuestEvent.TalkToNpc talk -> {
+			case QuestEvent.TalkToNpc talk:
 				facts.targetless = false;
 				facts.itemObjectId = 0;
 				int objectId = request.objectId() > 0 ? request.objectId() : talk.interactionObjectId();
@@ -348,32 +370,32 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 					state.interactWith(talk.npcId(), objectId);
 					world.player().rememberNpcQuestDialogSelection(objectId, definition.id());
 				}
-			}
-			case QuestEvent.UseItem use -> {
+				break;
+			case QuestEvent.UseItem use:
 				facts.targetless = false;
 				facts.itemObjectId = request.itemObjectId() > 0 ? request.itemObjectId()
 					: use.itemObjectId() > 0 ? use.itemObjectId() : facts.itemObjectId;
 				facts.inventory.putIfAbsent(use.itemId(), 1);
-			}
-			case QuestEvent.ItemPlay itemPlay -> {
+				break;
+			case QuestEvent.ItemPlay itemPlay:
 				facts.targetless = false;
 				facts.itemObjectId = request.itemObjectId() > 0 ? request.itemObjectId() : facts.itemObjectId;
 				facts.inventory.putIfAbsent(itemPlay.itemId(), 1);
-			}
-			case QuestEvent.GetItem get -> {
+				break;
+			case QuestEvent.GetItem get:
 				facts.targetless = true;
 				facts.itemObjectId = 0;
 				facts.inventory.merge(get.itemId(), 1, Math::max);
-			}
-			case QuestEvent.CollectItem collect -> {
+				break;
+			case QuestEvent.CollectItem collect:
 				facts.targetless = true;
 				facts.itemObjectId = 0;
 				facts.inventory.merge(collect.itemId(), collect.count(), Math::max);
-			}
-			default -> {
+				break;
+			default:
 				facts.targetless = true;
 				facts.itemObjectId = 0;
-			}
+				break;
 		}
 	}
 
@@ -407,19 +429,24 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	 */
 	private void seedEventAuthority(QuestEvent event) {
 		switch (event) {
-			case QuestEvent.TalkToNpc talk -> {
+			case QuestEvent.TalkToNpc talk:
 				int objectId = 900_000 + talk.npcId();
 				world.seedInteractionNpc(talk.npcId(), objectId);
 				world.player().rememberNpcQuestDialogSelection(objectId, definition.id());
-			}
-			case QuestEvent.UseItem use ->
+				break;
+			case QuestEvent.UseItem use:
 				facts.itemObjectId = use.itemObjectId() == 0 ? 800_000 + use.itemId() : use.itemObjectId();
-			case QuestEvent.ItemPlay itemPlay -> facts.itemObjectId = 800_000 + itemPlay.itemId();
-			case QuestEvent.AttackNpc attack -> {
+				break;
+			case QuestEvent.ItemPlay itemPlay:
+				facts.itemObjectId = 800_000 + itemPlay.itemId();
+				break;
+			case QuestEvent.AttackNpc attack:
 				world.seedInteractionNpc(attack.npcId(), 900_000 + attack.npcId());
 				facts.targetless = true;
-			}
-			default -> facts.targetless = true;
+				break;
+			default:
+				facts.targetless = true;
+				break;
 		}
 	}
 
@@ -446,17 +473,24 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 		// For OR groups, satisfy one group; every condition in that group has AND semantics.
 		for (var condition : groups.getFirst().conditions()) {
 			switch (condition.type()) {
-				case "finished" -> facts.completed.add(condition.questId());
-				case "acquired" -> facts.active.add(condition.questId());
-				case "equipped" -> {
+				case "finished":
+					facts.completed.add(condition.questId());
+					break;
+				case "acquired":
+					facts.active.add(condition.questId());
+					break;
+				case "equipped":
 					facts.equipmentCaptured = true;
 					facts.equippedItems.put(condition.questId(), 1);
-				}
-				case "unfinished", "noacquired" -> {
+					break;
+				case "unfinished":
+				case "noacquired":
 					facts.completed.remove(condition.questId());
 					facts.active.remove(condition.questId());
-				}
-				default -> unsupportedFacts = true;
+					break;
+				default:
+					unsupportedFacts = true;
+					break;
 			}
 		}
 	}
@@ -535,13 +569,19 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 		List<QuestEventIndex.Route> routes = eventIndex.routesFor(request.event(), definition.id());
 		routeCandidateCount = routes.size();
 		List<QuestTransition> sourceCandidates = List.copyOf(attributableBefore);
-		List<QuestTransition> attributed = switch (routeResult) {
-			case HANDLED, BLOCKED -> sourceCandidates.stream()
-				.filter(transition -> transitionResultMatches(transition, beforePackedVariables,
-					state.status(), state.packedVariables()))
-				.toList();
-			default -> sourceCandidates;
-		};
+		List<QuestTransition> attributed;
+		switch (routeResult) {
+			case HANDLED:
+			case BLOCKED:
+				attributed = sourceCandidates.stream()
+					.filter(transition -> transitionResultMatches(transition, beforePackedVariables,
+						state.status(), state.packedVariables()))
+					.toList();
+				break;
+			default:
+				attributed = sourceCandidates;
+				break;
+		}
 		matchedTransitionCandidates = List.copyOf(attributed);
 		matchedTransition = attributed.size() == 1 ? attributed.getFirst() : null;
 		matchedRouteResult = routeResult;
@@ -598,24 +638,25 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	 */
 	public QuestEvent materializeEvent(QuestTransition transition) {
 		java.util.Objects.requireNonNull(transition, "transition");
-		return switch (transition.event()) {
-			case QuestEvent.KillNpcSet kills -> new QuestEvent.KillNpc(
-				kills.npcIds().stream().min(Integer::compareTo).orElseThrow());
-			case QuestEvent.AttackNpc attack -> new QuestEvent.AttackNpc(attack.npcId(),
-				new QuestNpcAttackFacts(PLAYER_ID, state.currentObjectId(), attack.npcId(),
-					facts.npcCurrentHp, facts.npcMaxHp,
-					state.worldId(), state.instanceId()));
-			case QuestEvent.KillRanked ranked -> {
+		switch (transition.event()) {
+			case QuestEvent.KillNpcSet kills:
+				return new QuestEvent.KillNpc(
+					kills.npcIds().stream().min(Integer::compareTo).orElseThrow());
+			case QuestEvent.AttackNpc attack:
+				return new QuestEvent.AttackNpc(attack.npcId(),
+					new QuestNpcAttackFacts(PLAYER_ID, state.currentObjectId(), attack.npcId(),
+						facts.npcCurrentHp, facts.npcMaxHp,
+						state.worldId(), state.instanceId()));
+			case QuestEvent.KillRanked ranked:
 				facts.pvpFacts = pvpFacts(ranked.rankId(), state.worldId());
-				yield new QuestEvent.KillRanked(ranked.rankId(), facts.pvpFacts);
-			}
-			case QuestEvent.KillInWorld kill -> {
+				return new QuestEvent.KillRanked(ranked.rankId(), facts.pvpFacts);
+			case QuestEvent.KillInWorld kill:
 				int worldId = kill.worldId() == 0 ? state.worldId() : kill.worldId();
 				facts.pvpFacts = pvpFacts(1, worldId);
-				yield new QuestEvent.KillInWorld(worldId, facts.pvpFacts);
-			}
-			default -> transition.event();
-		};
+				return new QuestEvent.KillInWorld(worldId, facts.pvpFacts);
+			default:
+				return transition.event();
+		}
 	}
 
 	private QuestSnapshot snapshot(Connection ignored, int playerId, int questId, QuestEvent event) {
@@ -680,17 +721,36 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 
 	private void applyCondition(QuestCondition condition) {
 		switch (condition) {
-			case QuestCondition.StatusIs ignored -> { }
-			case QuestCondition.StartEligible ignored -> facts.startEligibility = QuestStartEligibility.allowed();
-			case QuestCondition.HasItem item -> setItem(item.itemId(), item.count(), item.expected());
-			case QuestCondition.CurrencyAtLeast currency -> facts.currencies.put(currency.kind(), currency.amount());
-			case QuestCondition.CurrencyBelow currency -> facts.currencies.put(currency.kind(), 0L);
-			case QuestCondition.PlayerRaceIs race -> facts.race = race.race();
-			case QuestCondition.PlayerClassIs playerClass -> facts.playerClass = playerClass.startingClass();
-			case QuestCondition.AdvancedClassIs playerClass -> facts.playerClass = playerClass.playerClass();
-			case QuestCondition.PlayerInGroup group -> facts.inGroup = group.expected();
-			case QuestCondition.GenderIs gender -> facts.gender = gender.gender();
-			case QuestCondition.WorldIs world -> {
+			case QuestCondition.StatusIs ignored:
+				break;
+			case QuestCondition.StartEligible ignored:
+				facts.startEligibility = QuestStartEligibility.allowed();
+				break;
+			case QuestCondition.HasItem item:
+				setItem(item.itemId(), item.count(), item.expected());
+				break;
+			case QuestCondition.CurrencyAtLeast currency:
+				facts.currencies.put(currency.kind(), currency.amount());
+				break;
+			case QuestCondition.CurrencyBelow currency:
+				facts.currencies.put(currency.kind(), 0L);
+				break;
+			case QuestCondition.PlayerRaceIs race:
+				facts.race = race.race();
+				break;
+			case QuestCondition.PlayerClassIs playerClass:
+				facts.playerClass = playerClass.startingClass();
+				break;
+			case QuestCondition.AdvancedClassIs playerClass:
+				facts.playerClass = playerClass.playerClass();
+				break;
+			case QuestCondition.PlayerInGroup group:
+				facts.inGroup = group.expected();
+				break;
+			case QuestCondition.GenderIs gender:
+				facts.gender = gender.gender();
+				break;
+			case QuestCondition.WorldIs world:
 				if (world.expected()) {
 					facts.worldId = world.worldId();
 					state.moveTo(world.worldId(), state.instanceId(), state.x(), state.y(), state.z(), state.heading());
@@ -699,21 +759,29 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 					facts.worldId = otherWorldId;
 					state.moveTo(otherWorldId, state.instanceId(), state.x(), state.y(), state.z(), state.heading());
 				}
-			}
-			case QuestCondition.ZoneIs zone -> {
-				if (zone.expected()) facts.zoneNames.add(zone.zone()); else facts.zoneNames.remove(zone.zone());
-			}
-			case QuestCondition.WorldNpcIs npc -> {
-				if (npc.expected()) facts.worldNpcIds.add(npc.npcId()); else facts.worldNpcIds.remove(npc.npcId());
-			}
-			case QuestCondition.QuestsFinished quests -> facts.completed.addAll(quests.questIds());
-			case QuestCondition.UnfinishedQuest quests -> facts.completed.removeAll(quests.questIds());
-			case QuestCondition.NoAcquiredQuest quests -> {
+				break;
+			case QuestCondition.ZoneIs zone:
+				if (zone.expected()) facts.zoneNames.add(zone.zone());
+				else facts.zoneNames.remove(zone.zone());
+				break;
+			case QuestCondition.WorldNpcIs npc:
+				if (npc.expected()) facts.worldNpcIds.add(npc.npcId());
+				else facts.worldNpcIds.remove(npc.npcId());
+				break;
+			case QuestCondition.QuestsFinished quests:
+				facts.completed.addAll(quests.questIds());
+				break;
+			case QuestCondition.UnfinishedQuest quests:
+				facts.completed.removeAll(quests.questIds());
+				break;
+			case QuestCondition.NoAcquiredQuest quests:
 				facts.completed.removeAll(quests.questIds());
 				facts.active.removeAll(quests.questIds());
-			}
-			case QuestCondition.AcquiredQuest quests -> facts.active.addAll(quests.questIds());
-			case QuestCondition.EventActive event -> {
+				break;
+			case QuestCondition.AcquiredQuest quests:
+				facts.active.addAll(quests.questIds());
+				break;
+			case QuestCondition.EventActive event:
 				if (event.expected()) {
 					if (event.questId() == 0) facts.eventActive = true;
 					else facts.eventActivities.put(event.questId(), true);
@@ -722,45 +790,64 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 				} else {
 					facts.eventActivities.put(event.questId(), false);
 				}
-			}
-			case QuestCondition.EquipmentSetEquipped equipment -> setEquipmentSet(equipment);
-			case QuestCondition.EquippedItem item -> setEquippedItem(item);
-			case QuestCondition.MembershipPermission permission -> {
+				break;
+			case QuestCondition.EquipmentSetEquipped equipment:
+				setEquipmentSet(equipment);
+				break;
+			case QuestCondition.EquippedItem item:
+				setEquippedItem(item);
+				break;
+			case QuestCondition.MembershipPermission permission:
 				facts.membershipCaptured = true;
 				if (permission.expected()) facts.membershipPermissions.add(permission.permission());
 				else facts.membershipPermissions.remove(permission.permission());
-			}
-			case QuestCondition.DpAtMax ignored -> facts.dpAtMax = true;
-			case QuestCondition.CompleteCountIs count ->
+				break;
+			case QuestCondition.DpAtMax ignored:
+				facts.dpAtMax = true;
+				break;
+			case QuestCondition.CompleteCountIs count:
 				facts.completeCount = count.expected() ? count.value() : count.value() == 0 ? 1 : 0;
-			case QuestCondition.NpcHpBelowPercent hp -> {
+				break;
+			case QuestCondition.NpcHpBelowPercent hp:
 				if (hp.percent() == 0) {
 					unsupportedFacts = true;
 				} else {
 					facts.npcCurrentHp = Math.min(facts.npcCurrentHp, hp.percent() - 1);
 				}
-			}
-			case QuestCondition.RecipeKnown recipe -> {
+				break;
+			case QuestCondition.RecipeKnown recipe:
 				facts.craftCaptured = true;
 				if (recipe.expected()) facts.knownRecipes.add(recipe.recipeId());
 				else facts.knownRecipes.remove(recipe.recipeId());
-			}
-			case QuestCondition.CanGrantCraftSkill skill -> {
+				break;
+			case QuestCondition.CanGrantCraftSkill skill:
 				facts.craftCaptured = true;
 				facts.craftingSkillLevels.merge(skill.skillId(), Math.max(0, skill.targetLevel() - 1), Math::max);
-			}
-			case QuestCondition.PvpVictimLevelDelta level -> {
+				break;
+			case QuestCondition.PvpVictimLevelDelta level:
 				facts.minimumPvpDelta = facts.minimumPvpDelta == null ? level.minimumRecipientDelta()
 					: Math.max(facts.minimumPvpDelta, level.minimumRecipientDelta());
 				facts.maximumPvpDelta = facts.maximumPvpDelta == null ? level.maximumRecipientDelta()
 					: Math.min(facts.maximumPvpDelta, level.maximumRecipientDelta());
-			}
-			case QuestCondition.PvpRecipientInZone zone -> facts.pvpRecipientZones.add(zone.zone());
-			case QuestCondition.QuestVariableIs variable -> setVariable(variable.field(), variable.value());
-			case QuestCondition.VariableAtLeast variable -> setVariableAtLeast(variable.field(), variable.value());
-			case QuestCondition.VariableBelow variable -> setVariableBelow(variable.field(), variable.value());
-			case QuestCondition.VariableSumIs sum -> setVariableSum(sum.fields(), sum.value(), false);
-			case QuestCondition.VariableSumBelow sum -> setVariableSum(sum.fields(), sum.value(), true);
+				break;
+			case QuestCondition.PvpRecipientInZone zone:
+				facts.pvpRecipientZones.add(zone.zone());
+				break;
+			case QuestCondition.QuestVariableIs variable:
+				setVariable(variable.field(), variable.value());
+				break;
+			case QuestCondition.VariableAtLeast variable:
+				setVariableAtLeast(variable.field(), variable.value());
+				break;
+			case QuestCondition.VariableBelow variable:
+				setVariableBelow(variable.field(), variable.value());
+				break;
+			case QuestCondition.VariableSumIs sum:
+				setVariableSum(sum.fields(), sum.value(), false);
+				break;
+			case QuestCondition.VariableSumBelow sum:
+				setVariableSum(sum.fields(), sum.value(), true);
+				break;
 		}
 	}
 
@@ -1044,11 +1131,18 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 			trace.add("TRANSACTION", "actions");
 			List<QuestAction> appliedActions = List.copyOf(actions);
 			for (QuestAction action : actions) {
-				switch (action) {
-					case QuestAction.RemoveItem remove -> { if (remove.removeAll()) facts.inventory.remove(remove.itemId()); else facts.inventory.computeIfPresent(remove.itemId(), (id, count) -> count <= remove.count() ? null : count - remove.count()); }
-					case QuestAction.GiveItem give -> facts.inventory.merge(give.itemId(), give.count(), Integer::sum);
-					default -> { }
-				}
+                switch (action) {
+                    case QuestAction.RemoveItem remove:
+                        if (remove.removeAll()) facts.inventory.remove(remove.itemId());
+                        else
+                            facts.inventory.computeIfPresent(remove.itemId(), (id, count) -> count <= remove.count() ? null : count - remove.count());
+                        break;
+                    case QuestAction.GiveItem give:
+                        facts.inventory.merge(give.itemId(), give.count(), Integer::sum);
+                        break;
+                    default:
+                        break;
+                }
 			}
 			return QuestTransactionParticipant.of(() -> {
 				committedTransactionActions = appliedActions;

@@ -65,7 +65,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 		/** 副本计时秒数 / instance timer seconds */
 		private final int instanceTimerSeconds = 600000; //...10Min
 		/** smoldering 任务 / smoldering task */
-		private final List<Future<?>> smolderingTask = new ArrayList<Future<?>>();
+		private final List<Future<?>> smolderingTask = new ArrayList<>();
 	/**
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
@@ -241,18 +241,18 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 					 */
 					@Override
 					public void run() {
-					    instance.doOnAllPlayers(new Visitor<Player>() {
-						    /**
-						     * 处理 visit。
-						     * Handle visit.
-						     *
-						     * @param player 玩家 / player
-						     */
-						    @Override
-						    public void visit(Player player) {
-							    stopInstance(player);
-						    }
-					    });
+					    instance.doOnAllPlayers(new Visitor<>() {
+							/**
+							 * 处理 visit。
+							 * Handle visit.
+							 *
+							 * @param player 玩家 / player
+							 */
+							@Override
+							public void visit(Player player) {
+								stopInstance(player);
+							}
+						});
 					}
 				}, 3000);
 			break;
@@ -352,7 +352,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	}
 
 	private void sendPacket(final int nameId, final int point) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -398,18 +398,18 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
              */
             @Override
             public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-				    /**
-				     * 处理 visit。
-				     * Handle visit.
-				     *
-				     * @param player 玩家 / player
-				     */
-				    @Override
-				    public void visit(Player player) {
-					    stopInstance(player);
-				    }
-			    });
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
+						stopInstance(player);
+					}
+				});
             }
         }, 600000));
     }
@@ -467,7 +467,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 				}
 			}, prepareTimerSeconds);
 		}
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -610,7 +610,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.

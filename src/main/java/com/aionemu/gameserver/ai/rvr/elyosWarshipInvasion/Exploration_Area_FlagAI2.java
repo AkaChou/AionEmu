@@ -21,7 +21,7 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 	protected void handleDialogStart(Player player) {
 		super.handleDialogStart(player);
 	}
-	
+
 	@Override
 	protected void handleUseItemFinish(Player player) {
 		switch (getNpcId()) {
@@ -100,23 +100,20 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 		}
 		AI2Actions.deleteOwner(this);
 	}
-	
+
 	private void announceF6Invasion() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 先锋指挥官正在准备探索区防御。 / Vanguard Commanders are preparing exploration area defenses. It will be established in 10 minutes.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Invasion_3rd_Bonus_01, 0);
-				// 突击指挥官正在准备探索区防御。 / Strike Commanders are preparing exploration area defenses. It will be established in 5 minutes.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Invasion_3rd_Bonus_02, 300000);
-				// 突击指挥官正在准备探索区防御。 / Strike Commanders are preparing exploration area defenses. It will be established in one minutes.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Invasion_3rd_Bonus_03, 540000);
-				// 突击委任军官正在防御探索区。 / Strike Commissioned Officers are defending the exploration area.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Invasion_3rd_Bonus_04, 600000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 先锋指挥官正在准备探索区防御。 / Vanguard Commanders are preparing exploration area defenses. It will be established in 10 minutes.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Invasion_3rd_Bonus_01, 0);
+			// 突击指挥官正在准备探索区防御。 / Strike Commanders are preparing exploration area defenses. It will be established in 5 minutes.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Invasion_3rd_Bonus_02, 300000);
+			// 突击指挥官正在准备探索区防御。 / Strike Commanders are preparing exploration area defenses. It will be established in one minutes.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Invasion_3rd_Bonus_03, 540000);
+			// 突击委任军官正在防御探索区。 / Strike Commissioned Officers are defending the exploration area.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Invasion_3rd_Bonus_04, 600000);
 		});
 	}
-	
+
    /**
 	 * 奥西亚碎片堡垒 / Othia Fragment Redoubt
 	 */
@@ -189,7 +186,7 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 		spawn(240580, 1910.654f, 1390.4042f, 295.875f, (byte) 67);
 		spawn(240582, 1909.7693f, 1387.8267f, 295.875f, (byte) 67);
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

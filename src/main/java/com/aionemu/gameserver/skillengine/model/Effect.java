@@ -1063,12 +1063,7 @@ public class Effect implements StatOwner {
 				duration = skillTemplate.getDuration();
 			}
 			endTime = System.currentTimeMillis() + duration;
-			task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					endEffect();
-				}
-			}, duration);
+			task = GameThreadPoolServices.threadPoolManager().schedule(() -> endEffect(), duration);
 		} catch (RuntimeException | Error failure) {
 			try {
 				endEffect();
@@ -1303,13 +1298,9 @@ public class Effect implements StatOwner {
 			return;
 		}
 		int checktime = periodicActions.getChecktime();
-		periodicActionsTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-
-			@Override
-			public void run() {
-				for (PeriodicAction action : periodicActions.getPeriodicActions()) {
-					action.act(Effect.this);
-				}
+		periodicActionsTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			for (PeriodicAction action : periodicActions.getPeriodicActions()) {
+				action.act(Effect.this);
 			}
 		}, 0, checktime);
 	}

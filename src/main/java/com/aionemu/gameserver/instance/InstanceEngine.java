@@ -41,7 +41,7 @@ public class InstanceEngine implements GameEngine {
 	 * 地图 ID → 处理器类 的注册表。
 	 * Registry of map id → handler class.
 	 */
-	private final Map<Integer, Class<? extends InstanceHandler>> handlers = new HashMap<Integer, Class<? extends InstanceHandler>>();
+	private final Map<Integer, Class<? extends InstanceHandler>> handlers = new HashMap<>();
 
 	/**
 	 * 加载副本脚本处理器。
@@ -122,13 +122,10 @@ public class InstanceEngine implements GameEngine {
 	 * @param instance 新建的世界地图实例 / newly created world-map instance
 	 */
 	public void onInstanceCreate(final WorldMapInstance instance) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400360,
-					// clt.getMaxMemberDark(), instance.getName()));
-				}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400360,
+				// clt.getMaxMemberDark(), instance.getName()));
 			}
 		});
 		instance.getInstanceHandler().onInstanceCreate(instance);

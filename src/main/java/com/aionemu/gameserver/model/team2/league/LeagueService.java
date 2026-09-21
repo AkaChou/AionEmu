@@ -27,7 +27,7 @@ import com.google.common.base.Preconditions;
 @Slf4j
 
 public class LeagueService {
-	private static final Map<Integer, League> leagues = new ConcurrentHashMap<Integer, League>();
+	private static final Map<Integer, League> leagues = new ConcurrentHashMap<>();
 
 	static {
 		PlayerAllianceService.addListener(new PlayerAllianceService.PlayerAllianceListener() {

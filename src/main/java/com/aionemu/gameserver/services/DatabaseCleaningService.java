@@ -118,7 +118,7 @@ public class DatabaseCleaningService {
 	 * @param idsToDelegate 待删除角色 ID / player ids to delete
 	 */
 	private void delegateToThreads(int numberOfThreads, List<Integer> idsToDelegate) {
-		workers = new ArrayList<Worker>();
+		workers = new ArrayList<>();
 		log.info(I18n.get("log.12a06ef31fa4", numberOfThreads));
 
 		int itr = 0;
@@ -176,7 +176,7 @@ public class DatabaseCleaningService {
 	 */
 	private class Worker implements Runnable {
 
-		private final List<Integer> ids = new ArrayList<Integer>();
+		private final List<Integer> ids = new ArrayList<>();
 		private final AtomicInteger deletedChars = new AtomicInteger();
 		private final AtomicBoolean ready = new AtomicBoolean();
 

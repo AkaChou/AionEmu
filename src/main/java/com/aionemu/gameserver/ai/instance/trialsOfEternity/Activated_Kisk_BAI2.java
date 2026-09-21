@@ -58,13 +58,10 @@ public class Activated_Kisk_BAI2 extends NpcAI2
     }
 
 	private void announceIDEternity03B() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 走廊 A 传送石已激活。 / The Corridor A teleport stone has been activated.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_03_teleporter_2);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 走廊 A 传送石已激活。 / The Corridor A teleport stone has been activated.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_03_teleporter_2);
 			}
 		});
 	}

@@ -48,28 +48,13 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
     public static final String SELECT_QUERY = "SELECT `skill_id`, `skill_level`, `skin_id`, `skin_active_date`, " + "`skin_expire_time`, `skin_activated` FROM `player_skills` WHERE `player_id` = ?";
 
     /** 待插入技能谓词（NEW 状态） / Predicate for skills to insert (NEW state) */
-    private static final Predicate<PlayerSkillEntry> skillsToInsertPredicate = new Predicate<PlayerSkillEntry>() {
-        @Override
-        public boolean apply(PlayerSkillEntry input) {
-            return input != null && PersistentState.NEW == input.getPersistentState();
-        }
-    };
+    private static final Predicate<PlayerSkillEntry> skillsToInsertPredicate = input -> input != null && PersistentState.NEW == input.getPersistentState();
 
     /** 待更新技能谓词（UPDATE_REQUIRED 状态） / Predicate for skills to update (UPDATE_REQUIRED state) */
-    private static final Predicate<PlayerSkillEntry> skillsToUpdatePredicate = new Predicate<PlayerSkillEntry>() {
-        @Override
-        public boolean apply(PlayerSkillEntry input) {
-            return input != null && PersistentState.UPDATE_REQUIRED == input.getPersistentState();
-        }
-    };
+    private static final Predicate<PlayerSkillEntry> skillsToUpdatePredicate = input -> input != null && PersistentState.UPDATE_REQUIRED == input.getPersistentState();
 
     /** 待删除技能谓词（DELETED 状态） / Predicate for skills to delete (DELETED state) */
-    private static final Predicate<PlayerSkillEntry> skillsToDeletePredicate = new Predicate<PlayerSkillEntry>() {
-        @Override
-        public boolean apply(PlayerSkillEntry input) {
-            return input != null && PersistentState.DELETED == input.getPersistentState();
-        }
-    };
+    private static final Predicate<PlayerSkillEntry> skillsToDeletePredicate = input -> input != null && PersistentState.DELETED == input.getPersistentState();
 
     /**
      * 加载玩家技能列表。

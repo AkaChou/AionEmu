@@ -46,9 +46,9 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
-	private final List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<>();
 		/** beshmundir 任务 / beshmundir task */
-		private final List<Future<?>> beshmundirTask = new ArrayList<Future<?>>();
+		private final List<Future<?>> beshmundirTask = new ArrayList<>();
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -556,7 +556,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.

@@ -243,12 +243,20 @@ public final class QuestE2eBatchAudit {
 				.anyMatch(QuestE2eBatchAudit::requiresItemProtocol)) {
 			return true;
 		}
-		return switch (row.status()) {
-			case CLICK_NO_RESPONSE, PAGE_NOT_IN_CLIENT, PAGE_NOT_IN_TASK_HTML, INVALID_INTERACTION_OBJECT,
-				INVALID_DIALOG_PACKET, INVALID_PACKET_ORDER, STATE_CHANGED_WITHOUT_RESPONSE, AFTER_COMMIT_FAILURE,
-				RUNTIME_REQUIRED -> true;
-			default -> false;
-		};
+		switch (row.status()) {
+			case CLICK_NO_RESPONSE:
+			case PAGE_NOT_IN_CLIENT:
+			case PAGE_NOT_IN_TASK_HTML:
+			case INVALID_INTERACTION_OBJECT:
+			case INVALID_DIALOG_PACKET:
+			case INVALID_PACKET_ORDER:
+			case STATE_CHANGED_WITHOUT_RESPONSE:
+			case AFTER_COMMIT_FAILURE:
+			case RUNTIME_REQUIRED:
+				return true;
+			default:
+				return false;
+		}
 	}
 
 	private static boolean requiresItemProtocol(QuestAction action) {
@@ -290,15 +298,19 @@ public final class QuestE2eBatchAudit {
 
 	private static ClientActionRequest protocolRequest(CompiledQuestDefinition definition, QuestTransition transition,
 			QuestE2eRuntime runtime) {
-		return switch (transition.event()) {
-			case QuestEvent.TalkToNpc talk -> ClientActionRequest.dialog(definition.id(), talk.npcId(),
-				runtime.state().currentObjectId(), talk.dialogId());
-			case QuestEvent.UseItem use -> ClientActionRequest.useItem(definition.id(), use.itemId(),
-				runtime.expectedDialogTargetObjectId());
-			case QuestEvent.ItemPlay itemPlay -> ClientActionRequest.itemPlay(definition.id(), itemPlay.itemId(),
-				runtime.expectedDialogTargetObjectId(), itemPlay.animationMillis());
-			default -> throw new IllegalArgumentException("event has no CM protocol request: " + transition.event().type());
-		};
+		switch (transition.event()) {
+			case QuestEvent.TalkToNpc talk:
+				return ClientActionRequest.dialog(definition.id(), talk.npcId(),
+					runtime.state().currentObjectId(), talk.dialogId());
+			case QuestEvent.UseItem use:
+				return ClientActionRequest.useItem(definition.id(), use.itemId(),
+					runtime.expectedDialogTargetObjectId());
+			case QuestEvent.ItemPlay itemPlay:
+				return ClientActionRequest.itemPlay(definition.id(), itemPlay.itemId(),
+					runtime.expectedDialogTargetObjectId(), itemPlay.animationMillis());
+			default:
+				throw new IllegalArgumentException("event has no CM protocol request: " + transition.event().type());
+		}
 	}
 
 	private static QuestE2eStatus classifyProtocol(CompiledQuestDefinition definition, QuestTransition transition,
@@ -385,14 +397,20 @@ public final class QuestE2eBatchAudit {
 			}
 			return audit.committed() ? QuestE2eStatus.AFTER_COMMIT_FAILURE : QuestE2eStatus.TRANSACTION_FAILURE;
 		}
-		return switch (runtime.transitionMatch()) {
-			case EXPECTED_TRANSITION_MATCHED -> QuestE2eStatus.PASS;
-			case ALTERNATE_TRANSITION_MATCHED -> exclusiveSibling(definition, runtime)
-				? QuestE2eStatus.EXCLUSIVE_SIBLING : QuestE2eStatus.AMBIGUOUS_ROUTE;
-			case NO_TRANSITION_MATCHED -> runtime.routeCandidateCount() == 0
-				? QuestE2eStatus.NO_ROUTE : QuestE2eStatus.NO_MATCH;
-			case UNSUPPORTED_SCENARIO_FACTS -> QuestE2eStatus.RUNTIME_REQUIRED;
-		};
+		switch (runtime.transitionMatch()) {
+			case EXPECTED_TRANSITION_MATCHED:
+				return QuestE2eStatus.PASS;
+			case ALTERNATE_TRANSITION_MATCHED:
+				return exclusiveSibling(definition, runtime)
+					? QuestE2eStatus.EXCLUSIVE_SIBLING : QuestE2eStatus.AMBIGUOUS_ROUTE;
+			case NO_TRANSITION_MATCHED:
+				return runtime.routeCandidateCount() == 0
+					? QuestE2eStatus.NO_ROUTE : QuestE2eStatus.NO_MATCH;
+			case UNSUPPORTED_SCENARIO_FACTS:
+				return QuestE2eStatus.RUNTIME_REQUIRED;
+			default:
+				throw new IllegalArgumentException();
+		}
 	}
 
 	/**
@@ -557,21 +575,29 @@ public final class QuestE2eBatchAudit {
 	}
 
 	private static int npcId(QuestEvent event) {
-		return switch (event) {
-			case QuestEvent.TalkToNpc talk -> talk.npcId();
-			case QuestEvent.KillNpc kill -> kill.npcId();
-			case QuestEvent.AttackNpc attack -> attack.npcId();
-			case QuestEvent.CanAct canAct -> canAct.templateId();
-			default -> 0;
-		};
+		switch (event) {
+			case QuestEvent.TalkToNpc talk:
+				return talk.npcId();
+			case QuestEvent.KillNpc kill:
+				return kill.npcId();
+			case QuestEvent.AttackNpc attack:
+				return attack.npcId();
+			case QuestEvent.CanAct canAct:
+				return canAct.templateId();
+			default:
+				return 0;
+		}
 	}
 
 	private static int dialogId(QuestEvent event) {
-		return switch (event) {
-			case QuestEvent.TalkToNpc talk -> talk.dialogId() == null ? 0 : talk.dialogId();
-			case QuestEvent.QuestDialog dialog -> dialog.dialogId();
-			default -> 0;
-		};
+        switch (event) {
+            case QuestEvent.TalkToNpc talk:
+                return talk.dialogId() == null ? 0 : talk.dialogId();
+            case QuestEvent.QuestDialog dialog:
+                return dialog.dialogId();
+            default:
+                return 0;
+        }
 	}
 
 	private static <T extends Throwable> T cause(Throwable failure, Class<T> type) {

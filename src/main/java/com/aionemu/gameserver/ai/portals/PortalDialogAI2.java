@@ -42,7 +42,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 	protected int rewardDialogId = 5;
 	protected int startingDialogId = 10;
 	protected int questDialogId = 10;
-	
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		if (getTalkDelay() == 0) {
@@ -51,7 +51,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 			super.handleDialogStart(player);
 		}
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
@@ -72,7 +72,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 			break;
         }
 	}
-	
+
 /* 	private void startLifeTask() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -81,7 +81,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 			}
 		}, 120000); //2 Minutes.
 	} */
-	
+
 	@Override
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);
@@ -111,12 +111,12 @@ public class PortalDialogAI2 extends PortalAI2 {
 		}
 		return true;
 	}
-	
+
 	@Override
 	protected void handleUseItemFinish(Player player) {
 		checkDialog(player);
 	}
-	
+
 	private void checkDialog(Player player) {
 		int npcId = getNpcId();
 		int entityId = getOwner().getSpawn() == null ? 0 : getOwner().getSpawn().getEntityId();
@@ -272,14 +272,11 @@ public class PortalDialogAI2 extends PortalAI2 {
 				? List.of(QuestDialog.START_DIALOG.id())
 				: List.of();
 	}
-	
+
 	private void announceIlluminaryObeliskOpen() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 通往炼狱光明方尖碑的入口已开启。 / The entrance to the Infernal Illuminary Obelisk has opened.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_Hard_Door_Open);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 通往炼狱光明方尖碑的入口已开启。 / The entrance to the Infernal Illuminary Obelisk has opened.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_Hard_Door_Open);
 		});
 	}
 }

@@ -31,13 +31,13 @@ public class TemporaryTradeTimeTask extends AbstractPeriodicTaskManager {
 	 * 物品到可交易玩家 Id 集合的映射。
 	 * Map of items to allowed trader player ids.
 	 */
-	private final Map<Item, Collection<Integer>> items = new HashMap<Item, Collection<Integer>>();
+	private final Map<Item, Collection<Integer>> items = new HashMap<>();
 
 	/**
 	 * 物品 objectId 到物品的索引。
 	 * Index of item objectId to item.
 	 */
-	private final Map<Integer, Item> itemById = new HashMap<Integer, Item>();
+	private final Map<Integer, Item> itemById = new HashMap<>();
 
 	/**
 	 * 以 1 秒周期构造临时交易计时任务。

@@ -16,26 +16,21 @@ public class PlayerVisualStateService {
 	 * @param hiden 是否隐藏 / hiden
 	 */
 	public static void hideValidate(final Player hiden) {
-		hiden.getKnownList().doOnAllPlayers(new Visitor<Player>() {
+		/**
+		 * 访问观察者：同步隐身可见状态。
+		 * Visits the observer: syncs hide visibility.
+		 *
+		 * @param observer 观察者玩家 / observer player
+		 */hiden.getKnownList().doOnAllPlayers(observer -> {
+			 boolean canSee = observer.canSee(hiden);
+			 boolean isSee = observer.isSeePlayer(hiden);
 
-			@Override
-			/**
-			 * 访问观察者：同步隐身可见状态。
-			 * Visits the observer: syncs hide visibility.
-			 *
-			 * @param observer 观察者玩家 / observer player
-			 */
-			public void visit(Player observer) {
-				boolean canSee = observer.canSee(hiden);
-				boolean isSee = observer.isSeePlayer(hiden);
-
-				if (canSee && !isSee) {
-					observer.getKnownList().addVisualObject(hiden);
-				} else if (!canSee && isSee) {
-					observer.getKnownList().delVisualObject(hiden, false);
-				}
-			}
-		});
+			 if (canSee && !isSee) {
+				 observer.getKnownList().addVisualObject(hiden);
+			 } else if (!canSee && isSee) {
+				 observer.getKnownList().delVisualObject(hiden, false);
+			 }
+		 });
 	}
 
 	/**
@@ -45,25 +40,20 @@ public class PlayerVisualStateService {
 	 * search
 	 */
 	public static void seeValidate(final Player search) {
-		search.getKnownList().doOnAllPlayers(new Visitor<Player>() {
+		/**
+		 * 访问目标玩家：同步看见状态。
+		 * Visits the target player: syncs see state.
+		 *
+		 * @param hide 被查看玩家 / player being checked
+		 */search.getKnownList().doOnAllPlayers(hide -> {
+			 boolean canSee = search.canSee(hide);
+			 boolean isSee = search.isSeePlayer(hide);
 
-			@Override
-			/**
-			 * 访问目标玩家：同步看见状态。
-			 * Visits the target player: syncs see state.
-			 *
-			 * @param hide 被查看玩家 / player being checked
-			 */
-			public void visit(Player hide) {
-				boolean canSee = search.canSee(hide);
-				boolean isSee = search.isSeePlayer(hide);
-
-				if (canSee && !isSee) {
-					search.getKnownList().addVisualObject(hide);
-				} else if (!canSee && isSee) {
-					search.getKnownList().delVisualObject(hide, false);
-				}
-			}
-		});
+			 if (canSee && !isSee) {
+				 search.getKnownList().addVisualObject(hide);
+			 } else if (!canSee && isSee) {
+				 search.getKnownList().delVisualObject(hide, false);
+			 }
+		 });
 	}
 }

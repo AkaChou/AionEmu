@@ -43,12 +43,7 @@ public class AbyssRankingCache {
 		renewPlayerRanking(Race.ASMODIANS);
 		renewPlayerRanking(Race.ELYOS);
 		renewLegionRanking();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				player.resetAbyssRankListUpdated();
-			}
-		});
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> player.resetAbyssRankListUpdated());
 	}
 
 	/**
@@ -56,7 +51,7 @@ public class AbyssRankingCache {
 	 * Rebuild both races' legion rankings and push to the legion service.
 	 */
 	private void renewLegionRanking() {
-		Map<Integer, Integer> newLegionRankingCache = new HashMap<Integer, Integer>();
+		Map<Integer, Integer> newLegionRankingCache = new HashMap<>();
 		ArrayList<AbyssRankingResult> elyosRanking = getDAO().getAbyssRankingLegions(Race.ELYOS);
 		ArrayList<AbyssRankingResult> asmoRanking = getDAO().getAbyssRankingLegions(Race.ASMODIANS);
 		legions.clear();
@@ -94,7 +89,7 @@ public class AbyssRankingCache {
 	private List<SM_ABYSS_RANKING_PLAYERS> generatePacketsForRace(Race race) {
 		ArrayList<AbyssRankingResult> list = getDAO().getAbyssRankingPlayers(race);
 		int page = 1;
-		List<SM_ABYSS_RANKING_PLAYERS> playerPackets = new ArrayList<SM_ABYSS_RANKING_PLAYERS>();
+		List<SM_ABYSS_RANKING_PLAYERS> playerPackets = new ArrayList<>();
 		for (int i = 0; i < list.size(); i += 44) {
 			if (list.size() > i + 44) {
 				playerPackets.add(new SM_ABYSS_RANKING_PLAYERS(lastUpdate, list.subList(i, i + 44), race, page, false));

@@ -18,7 +18,7 @@ import java.util.concurrent.Future;
 public class Venge_Full_OrbAI2 extends NpcAI2
 {
 	private Future<?> task;
-	
+
     @Override
     protected void handleSpawned() {
   	    super.handleSpawned();
@@ -32,20 +32,10 @@ public class Venge_Full_OrbAI2 extends NpcAI2
 		}
 		if (skill == 0)
 			return;
-		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.useSkill(Venge_Full_OrbAI2.this, skill);
-			}
-		},0, 2000);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(Venge_Full_OrbAI2.this);
-			}
-		}, 1000);
+		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> AI2Actions.useSkill(Venge_Full_OrbAI2.this, skill),0, 2000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Venge_Full_OrbAI2.this), 1000);
 	}
-	
+
 	@Override
 	public void handleDespawned() {
 		task.cancel(true);

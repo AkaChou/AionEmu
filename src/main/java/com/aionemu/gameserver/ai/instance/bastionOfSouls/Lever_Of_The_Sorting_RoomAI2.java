@@ -29,12 +29,12 @@ public class Lever_Of_The_Sorting_RoomAI2 extends NpcAI2
 {
 	protected int startBarAnimation = 1;
 	protected int cancelBarAnimation = 2;
-	
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		handleUseItemStart(player);
 	}
-	
+
 	protected void handleUseItemStart(final Player player) {
 		final int delay = getTalkDelay();
 		if (delay != 0) {
@@ -50,20 +50,17 @@ public class Lever_Of_The_Sorting_RoomAI2 extends NpcAI2
 			player.getObserveController().attach(observer);
 			PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), startBarAnimation));
 			PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.START_QUESTLOOT, 0, getObjectId()), true);
-			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
-					PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
-					player.getObserveController().removeObserver(observer);
-					handleUseItemFinish(player);
-				}
+			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
+				PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
+				player.getObserveController().removeObserver(observer);
+				handleUseItemFinish(player);
 			}, delay));
 		} else {
 			handleUseItemFinish(player);
 		}
 	}
-	
+
 	protected void handleUseItemFinish(Player player) {
 		WorldPosition worldPosition = player.getPosition();
 		if (worldPosition.isInstanceMap()) {
@@ -73,18 +70,18 @@ public class Lever_Of_The_Sorting_RoomAI2 extends NpcAI2
 			}
 		}
 	}
-	
+
 	private void killNpc(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			AI2Actions.killSilently(this, npc);
 		}
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
 	protected int getTalkDelay() {
 		return getObjectTemplate().getTalkDelay() * 1000;
 	}

@@ -22,7 +22,7 @@ public class Akhal_PhantasmAI2 extends NpcAI2
 		super.handleSpawned();
 		startEvent();
 	}
-	
+
 	private void startEvent() {
 		switch (getNpcId()) {
 			case 237276: //Akhal's Phantasm.
@@ -34,16 +34,11 @@ public class Akhal_PhantasmAI2 extends NpcAI2
 				sendMsg(1403085, getObjectId(), false, 10000);
 				// 我们的命运计划遭破坏了吗？阻截入侵者，巴卡尔玛。吾主全靠你了！ / Hath our fated plans fallen prey to sabatoge? Impede the intruders, Bakarma. Our Lord depends upon it!
 				sendMsg(1403067, getObjectId(), false, 14000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						AI2Actions.deleteOwner(Akhal_PhantasmAI2.this);
-				    }
-			    }, 18000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Akhal_PhantasmAI2.this), 18000);
 			break;
 		}
 	}
-	
+
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
 		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}

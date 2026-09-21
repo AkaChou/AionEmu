@@ -24,7 +24,7 @@ import java.util.List;
 public class Watcher_Silikor_Of_MemoryAI2 extends AggressiveNpcAI2
 {
 	private final boolean canThink = true;
-	private final List<Integer> percents = new ArrayList<Integer>();
+	private final List<Integer> percents = new ArrayList<>();
 
 	@Override
 	public boolean canThink() {

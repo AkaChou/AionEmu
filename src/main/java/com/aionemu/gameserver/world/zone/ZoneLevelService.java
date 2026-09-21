@@ -90,24 +90,20 @@ public class ZoneLevelService {
 	 */
 	private static void scheduleDrowningTask(final Player player) {
 		player.getController().addTask(TaskId.DROWN,
-				GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-
-					@Override
-					public void run() {
-						int value = Math.max(1, Math.round(player.getLifeStats().getMaxHp() / 10f));
-						if (!player.getLifeStats().isAlreadyDead()) {
-							if (!player.isInvul()) {
-								int previousHp = player.getLifeStats().getCurrentHp();
-								int currentHp = player.getLifeStats().reduceHp(value, player);
-								PacketSendUtility.broadcastPacketAndReceive(player,
-										new SM_ATTACK_STATUS(player, player, TYPE.DROWNING, 0, previousHp - currentHp, LOG.REGULAR));
-								if (currentHp == 0) {
-									stopDrowning(player);
-								}
+				GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+					int value = Math.max(1, Math.round(player.getLifeStats().getMaxHp() / 10f));
+					if (!player.getLifeStats().isAlreadyDead()) {
+						if (!player.isInvul()) {
+							int previousHp = player.getLifeStats().getCurrentHp();
+							int currentHp = player.getLifeStats().reduceHp(value, player);
+							PacketSendUtility.broadcastPacketAndReceive(player,
+									new SM_ATTACK_STATUS(player, player, TYPE.DROWNING, 0, previousHp - currentHp, LOG.REGULAR));
+							if (currentHp == 0) {
+								stopDrowning(player);
 							}
-						} else {
-							stopDrowning(player);
 						}
+					} else {
+						stopDrowning(player);
 					}
 				}, 0, DROWN_PERIOD));
 	}

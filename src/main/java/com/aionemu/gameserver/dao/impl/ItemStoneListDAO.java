@@ -43,30 +43,15 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
 
     /** 筛选需新增的镶嵌石 / Filter stones to insert */
     private static final Predicate<ItemStone> itemStoneAddPredicate =
-        new Predicate<ItemStone>() {
-            @Override
-            public boolean apply(ItemStone itemStone) {
-                return itemStone != null && PersistentState.NEW == itemStone.getPersistentState();
-            }
-        };
+		itemStone -> itemStone != null && PersistentState.NEW == itemStone.getPersistentState();
 
     /** 筛选需删除的镶嵌石 / Filter stones to delete */
     private static final Predicate<ItemStone> itemStoneDeletedPredicate =
-        new Predicate<ItemStone>() {
-            @Override
-            public boolean apply(ItemStone itemStone) {
-                return itemStone != null && PersistentState.DELETED == itemStone.getPersistentState();
-            }
-        };
+		itemStone -> itemStone != null && PersistentState.DELETED == itemStone.getPersistentState();
 
     /** 筛选需更新的镶嵌石 / Filter stones to update */
     private static final Predicate<ItemStone> itemStoneUpdatePredicate =
-        new Predicate<ItemStone>() {
-            @Override
-            public boolean apply(ItemStone itemStone) {
-                return itemStone != null && PersistentState.UPDATE_REQUIRED == itemStone.getPersistentState();
-            }
-        };
+            itemStone -> itemStone != null && PersistentState.UPDATE_REQUIRED == itemStone.getPersistentState();
 
     /**
      * 为武器/防具加载镶嵌石（Mana/God/Fusion/Idian）。

@@ -37,46 +37,37 @@ public class BeritraStartRunnable implements Runnable {
 		GameLocationBootstrapServices.beritraService().invasionCorridorMsg(id);
 		// 埃雷什基伽尔军团入侵走廊已创建。 / The Ereshkigal Legion's Invasion Corridor has been created.
 		GameLocationBootstrapServices.beritraService().ereshkigalCorridorMsg(id);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				// 贝里特拉入侵激光。 / Beritra Invasion Lazer.
-				GameLocationBootstrapServices.beritraService().adventDirectingSP(id);
-				// 埃雷什基伽尔入侵激光。 / Ereshkigal Invasion Lazer.
-				GameLocationBootstrapServices.beritraService().adventDirectingEreshSP(id);
-				// 恶魔部队已通过入侵走廊渗透。 / The Devil Unit has infiltrated through the Invasion Corridor.
-				GameLocationBootstrapServices.beritraService().devilUnitThroughMsg(id);
-				// 埃雷什基伽尔军团的魔法武器已通过入侵走廊。 / The Ereshkigal Legion's magic weapon has infiltrated through the invasion corridor.
-				GameLocationBootstrapServices.beritraService().ereshkigalLegionThroughMsg(id);
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			// 贝里特拉入侵激光。 / Beritra Invasion Lazer.
+			GameLocationBootstrapServices.beritraService().adventDirectingSP(id);
+			// 埃雷什基伽尔入侵激光。 / Ereshkigal Invasion Lazer.
+			GameLocationBootstrapServices.beritraService().adventDirectingEreshSP(id);
+			// 恶魔部队已通过入侵走廊渗透。 / The Devil Unit has infiltrated through the Invasion Corridor.
+			GameLocationBootstrapServices.beritraService().devilUnitThroughMsg(id);
+			// 埃雷什基伽尔军团的魔法武器已通过入侵走廊。 / The Ereshkigal Legion's magic weapon has infiltrated through the invasion corridor.
+			GameLocationBootstrapServices.beritraService().ereshkigalLegionThroughMsg(id);
 		}, 180000);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				// 贝里特拉入侵黑空。 / Beritra Invasion Black Sky.
-				GameLocationBootstrapServices.beritraService().adventControlSP(id);
-				// 埃雷什基伽尔入侵黑空。 / Ereshkigal Invasion Black Sky.
-				GameLocationBootstrapServices.beritraService().adventControlEreshSP(id);
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			// 贝里特拉入侵黑空。 / Beritra Invasion Black Sky.
+			GameLocationBootstrapServices.beritraService().adventControlSP(id);
+			// 埃雷什基伽尔入侵黑空。 / Ereshkigal Invasion Black Sky.
+			GameLocationBootstrapServices.beritraService().adventControlEreshSP(id);
 		}, 300000);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				Map<Integer, BeritraLocation> locations = GameLocationBootstrapServices.beritraService().getBeritraLocations();
-				for (final BeritraLocation loc : locations.values()) {
-					if (loc.getId() == id) {
-						// 贝里特拉入侵浅蓝。 / Beritra Invasion Light Blue.
-						GameLocationBootstrapServices.beritraService().adventEffectSP(id);
-						// 埃雷什基伽尔入侵浅蓝。 / Ereshkigal Invasion Light Blue.
-						GameLocationBootstrapServices.beritraService().adventEffectEreshSP(id);
-						// 贝里特拉入侵开始 4.7 / Beritra Invasion Start 4.7
-						GameLocationBootstrapServices.beritraService().beritraInvasionMsg(id);
-						// 埃雷什基伽尔入侵开始 4.9.1 / Ereshkigal Invasion Start 4.9.1
-						GameLocationBootstrapServices.beritraService().ereshkigalInvasionMsg(id);
-						// 战舰防御。 / Dredgion Defense.
-						GameLocationBootstrapServices.beritraService().dredgionDefenseMsg(id);
-						GameLocationBootstrapServices.beritraService().startBeritraInvasion(loc.getId());
-					}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			Map<Integer, BeritraLocation> locations = GameLocationBootstrapServices.beritraService().getBeritraLocations();
+			for (final BeritraLocation loc : locations.values()) {
+				if (loc.getId() == id) {
+					// 贝里特拉入侵浅蓝。 / Beritra Invasion Light Blue.
+					GameLocationBootstrapServices.beritraService().adventEffectSP(id);
+					// 埃雷什基伽尔入侵浅蓝。 / Ereshkigal Invasion Light Blue.
+					GameLocationBootstrapServices.beritraService().adventEffectEreshSP(id);
+					// 贝里特拉入侵开始 4.7 / Beritra Invasion Start 4.7
+					GameLocationBootstrapServices.beritraService().beritraInvasionMsg(id);
+					// 埃雷什基伽尔入侵开始 4.9.1 / Ereshkigal Invasion Start 4.9.1
+					GameLocationBootstrapServices.beritraService().ereshkigalInvasionMsg(id);
+					// 战舰防御。 / Dredgion Defense.
+					GameLocationBootstrapServices.beritraService().dredgionDefenseMsg(id);
+					GameLocationBootstrapServices.beritraService().startBeritraInvasion(loc.getId());
 				}
 			}
 		}, 600000);

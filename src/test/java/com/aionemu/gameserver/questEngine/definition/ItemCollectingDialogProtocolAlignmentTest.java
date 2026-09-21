@@ -242,113 +242,272 @@ class ItemCollectingDialogProtocolAlignmentTest {
 	}
 
 	private static List<Integer> startNpcs(int questId) {
-		return switch (questId) {
-			case 18742 -> List.of(206378, 206379, 206380);
-			case 28742 -> List.of(206395, 206396, 206397);
-			case 50052, 50053, 50054, 50055, 50056, 50057 -> List.of(833982, 833983);
-			case 50088 -> List.of(835542, 835543);
-			case 50089, 50090, 50094 -> List.of(835680, 835681);
-			default -> List.of(singleStartNpc(questId));
-		};
+		switch (questId) {
+			case 18742:
+				return List.of(206378, 206379, 206380);
+			case 28742:
+				return List.of(206395, 206396, 206397);
+			case 50052:
+			case 50053:
+			case 50054:
+			case 50055:
+			case 50056:
+			case 50057:
+				return List.of(833982, 833983);
+			case 50088:
+				return List.of(835542, 835543);
+			case 50089:
+			case 50090:
+			case 50094:
+				return List.of(835680, 835681);
+			default:
+				return List.of(singleStartNpc(questId));
+		}
 	}
 
 	private static List<Integer> endNpcs(int questId) {
-		return switch (questId) {
-			case 18742 -> List.of(804707);
-			case 25012 -> List.of(804905);
-			case 25085 -> List.of(804927);
-			case 25092 -> List.of(804929);
-			case 28742 -> List.of(804732);
-			case 18977, 18978 -> List.of(805215);
-			case 28977, 28978 -> List.of(805218);
-			case 50052, 50053, 50054, 50055, 50056, 50057 -> List.of(833982, 833983);
-			case 50088 -> List.of(835542, 835543);
-			case 50089, 50090, 50094 -> List.of(835680, 835681);
-			case 80870, 80871, 80872, 80874 -> List.of(834167);
-			default -> startNpcs(questId);
-		};
+		switch (questId) {
+			case 18742:
+				return List.of(804707);
+			case 25012:
+				return List.of(804905);
+			case 25085:
+				return List.of(804927);
+			case 25092:
+				return List.of(804929);
+			case 28742:
+				return List.of(804732);
+			case 18977:
+			case 18978:
+				return List.of(805215);
+			case 28977:
+			case 28978:
+				return List.of(805218);
+			case 50052:
+			case 50053:
+			case 50054:
+			case 50055:
+			case 50056:
+			case 50057:
+				return List.of(833982, 833983);
+			case 50088:
+				return List.of(835542, 835543);
+			case 50089:
+			case 50090:
+			case 50094:
+				return List.of(835680, 835681);
+			case 80870:
+			case 80871:
+			case 80872:
+			case 80874:
+				return List.of(834167);
+			default:
+				return startNpcs(questId);
+		}
 	}
 
 	private static int singleStartNpc(int questId) {
-		return switch (questId) {
-			case 13968 -> 835217;
-			case 15011 -> 804875;
-			case 15021 -> 804877;
-			case 15022 -> 804878;
-			case 15044 -> 804887;
-			case 15052 -> 804888;
-			case 15071 -> 804709;
-			case 15102 -> 804895;
-			case 15103 -> 804896;
-			case 15230, 15231, 15232 -> 805222;
-			case 15307 -> 805327;
-			case 15323 -> 805330;
-			case 15403, 15404, 15405 -> 805378;
-			case 15502 -> 806089;
-			case 15505 -> 806090;
-			case 15508 -> 806091;
-			case 15511 -> 806092;
-			case 15514 -> 806093;
-			case 15517 -> 806094;
-			case 15523 -> 806096;
-			case 15526 -> 806097;
-			case 15532 -> 806099;
-			case 15535 -> 806100;
-			case 15538 -> 806254;
-			case 15540 -> 806134;
-			case 15541 -> 834136;
-			case 15665 -> 806089;
-			case 15666 -> 806090;
-			case 15689, 15691 -> 806696;
-			case 18975, 18976 -> 805215;
-			case 18977 -> 802350;
-			case 18978 -> 802431;
-			case 23968 -> 835220;
-			case 25012 -> 804906;
-			case 25020 -> 804725;
-			case 25033 -> 804913;
-			case 25085 -> 804922;
-			case 25091 -> 804738;
-			case 25092 -> 804739;
-			case 25307 -> 805339;
-			case 25323 -> 805342;
-			case 25403, 25404, 25405 -> 805401;
-			case 25502 -> 806101;
-			case 25505 -> 806102;
-			case 25508 -> 806103;
-			case 25511 -> 806104;
-			case 25517 -> 806106;
-			case 25523 -> 806108;
-			case 25540 -> 806135;
-			case 25541 -> 834138;
-			case 25665 -> 806101;
-			case 25666 -> 806102;
-			case 25689, 25691 -> 806697;
-			case 28975, 28976 -> 805218;
-			case 28977 -> 802353;
-			case 28978 -> 802433;
-			case 29010 -> 204104;
-			case 29016 -> 204106;
-			case 29022 -> 204110;
-			case 29028 -> 204108;
-			case 29034 -> 204102;
-			case 80723, 80725, 80727, 80729 -> 833543;
-			case 80724, 80726, 80728, 80730 -> 833545;
-			case 80735 -> 833544;
-			case 80736 -> 833546;
-			case 80834, 80836 -> 833742;
-			case 80835, 80837 -> 833743;
-			case 80838, 80839, 80840, 80841 -> 832913;
-			case 80870, 80871, 80872, 80874 -> 833825;
-			case 80877, 80878, 80881 -> 834463;
-			case 80900, 80901, 80902, 80903, 80904, 80905, 80906, 80907, 80908, 80909,
-				80910, 80911, 80912, 80913, 80914, 80915, 80916, 80917, 80918, 80919 -> 834418;
-			case 80947, 80948 -> 835439;
-			case 80949 -> 835551;
-			case 80950, 80951 -> 835552;
-			case 80953 -> 835553;
-			default -> throw new IllegalArgumentException("missing start NPC for quest " + questId);
-		};
+        switch (questId) {
+            case 13968:
+                return 835217;
+            case 15011:
+                return 804875;
+            case 15021:
+                return 804877;
+            case 15022:
+                return 804878;
+            case 15044:
+                return 804887;
+            case 15052:
+                return 804888;
+            case 15071:
+                return 804709;
+            case 15102:
+                return 804895;
+            case 15103:
+                return 804896;
+            case 15230:
+            case 15231:
+            case 15232:
+                return 805222;
+            case 15307:
+                return 805327;
+            case 15323:
+                return 805330;
+            case 15403:
+            case 15404:
+            case 15405:
+                return 805378;
+            case 15502:
+                return 806089;
+            case 15505:
+                return 806090;
+            case 15508:
+                return 806091;
+            case 15511:
+                return 806092;
+            case 15514:
+                return 806093;
+            case 15517:
+                return 806094;
+            case 15523:
+                return 806096;
+            case 15526:
+                return 806097;
+            case 15532:
+                return 806099;
+            case 15535:
+                return 806100;
+            case 15538:
+                return 806254;
+            case 15540:
+                return 806134;
+            case 15541:
+                return 834136;
+            case 15665:
+                return 806089;
+            case 15666:
+                return 806090;
+            case 15689:
+            case 15691:
+                return 806696;
+            case 18975:
+            case 18976:
+                return 805215;
+            case 18977:
+                return 802350;
+            case 18978:
+                return 802431;
+            case 23968:
+                return 835220;
+            case 25012:
+                return 804906;
+            case 25020:
+                return 804725;
+            case 25033:
+                return 804913;
+            case 25085:
+                return 804922;
+            case 25091:
+                return 804738;
+            case 25092:
+                return 804739;
+            case 25307:
+                return 805339;
+            case 25323:
+                return 805342;
+            case 25403:
+            case 25404:
+            case 25405:
+                return 805401;
+            case 25502:
+                return 806101;
+            case 25505:
+                return 806102;
+            case 25508:
+                return 806103;
+            case 25511:
+                return 806104;
+            case 25517:
+                return 806106;
+            case 25523:
+                return 806108;
+            case 25540:
+                return 806135;
+            case 25541:
+                return 834138;
+            case 25665:
+                return 806101;
+            case 25666:
+                return 806102;
+            case 25689:
+            case 25691:
+                return 806697;
+            case 28975:
+            case 28976:
+                return 805218;
+            case 28977:
+                return 802353;
+            case 28978:
+                return 802433;
+            case 29010:
+                return 204104;
+            case 29016:
+                return 204106;
+            case 29022:
+                return 204110;
+            case 29028:
+                return 204108;
+            case 29034:
+                return 204102;
+            case 80723:
+            case 80725:
+            case 80727:
+            case 80729:
+                return 833543;
+            case 80724:
+            case 80726:
+            case 80728:
+            case 80730:
+                return 833545;
+            case 80735:
+                return 833544;
+            case 80736:
+                return 833546;
+            case 80834:
+            case 80836:
+                return 833742;
+            case 80835:
+            case 80837:
+                return 833743;
+            case 80838:
+            case 80839:
+            case 80840:
+            case 80841:
+                return 832913;
+            case 80870:
+            case 80871:
+            case 80872:
+            case 80874:
+                return 833825;
+            case 80877:
+            case 80878:
+            case 80881:
+                return 834463;
+            case 80900:
+            case 80901:
+            case 80902:
+            case 80903:
+            case 80904:
+            case 80905:
+            case 80906:
+            case 80907:
+            case 80908:
+            case 80909:
+            case 80910:
+            case 80911:
+            case 80912:
+            case 80913:
+            case 80914:
+            case 80915:
+            case 80916:
+            case 80917:
+            case 80918:
+            case 80919:
+                return 834418;
+            case 80947:
+            case 80948:
+                return 835439;
+            case 80949:
+                return 835551;
+            case 80950:
+            case 80951:
+                return 835552;
+            case 80953:
+                return 835553;
+            default:
+                throw new IllegalArgumentException("missing start NPC for quest " + questId);
+        }
 	}
 
 	private record SimpleItemQuest(int id, int npcId) {

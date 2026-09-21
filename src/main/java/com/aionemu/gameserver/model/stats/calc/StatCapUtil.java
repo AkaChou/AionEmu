@@ -28,9 +28,9 @@ public class StatCapUtil {
 
     }
 
-	static HashMap<StatEnum, Integer> minValues = new HashMap<StatEnum, Integer>();
-	static HashMap<StatEnum, Integer> maxValues = new HashMap<StatEnum, Integer>();
-	static HashMap<StatEnum, StatLimits> limits = new HashMap<StatEnum, StatLimits>();
+	static HashMap<StatEnum, Integer> minValues = new HashMap<>();
+	static HashMap<StatEnum, Integer> maxValues = new HashMap<>();
+	static HashMap<StatEnum, StatLimits> limits = new HashMap<>();
 	static {
 		for (StatEnum stat : StatEnum.values()) {
 			minValues.put(stat, getLowerCap(stat));
@@ -201,7 +201,7 @@ public class StatCapUtil {
 			}
 			if (wrongStat != null) {
 				if (wrongStats == null) {
-					wrongStats = new ArrayList<Stat2>();
+					wrongStats = new ArrayList<>();
 				}
 				wrongStats.add(wrongStat);
 			}

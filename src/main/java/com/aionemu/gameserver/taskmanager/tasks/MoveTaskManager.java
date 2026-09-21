@@ -53,38 +53,35 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 	 * 单次移动步进谓词：推进目标点，到达则移除并触发 AI 事件。
 	 * Per-creature move step: advance destination; on arrival remove and fire AI events.
 	 */
-	private final Predicate<MoveRegistration> CREATURE_MOVE_PREDICATE = new Predicate<MoveRegistration>() {
-		@Override
-		public boolean apply(MoveRegistration registration) {
-			Creature creature = registration.creature();
-			Integer key = registration.key;
+	private final Predicate<MoveRegistration> CREATURE_MOVE_PREDICATE = registration -> {
+		Creature creature = registration.creature();
+		Integer key = registration.key;
+		if (movingCreatures.get(key) != registration) {
+			return true;
+		}
+		long now = System.currentTimeMillis();
+		if (now < registration.nextUpdateAt) {
+			return true;
+		}
+		registration.processing = true;
+		try {
+			creature.getMoveController().moveToDestination();
 			if (movingCreatures.get(key) != registration) {
 				return true;
 			}
-			long now = System.currentTimeMillis();
-			if (now < registration.nextUpdateAt) {
-				return true;
-			}
-			registration.processing = true;
-			try {
-				creature.getMoveController().moveToDestination();
-				if (movingCreatures.get(key) != registration) {
-					return true;
+			if (creature.getAi2().poll(AIQuestion.DESTINATION_REACHED)) {
+				if (movingCreatures.remove(key, registration)) {
+					creature.getAi2().onGeneralEvent(AIEventType.MOVE_ARRIVED);
+					GameMovementLoopServices.zoneUpdateService().add(creature);
 				}
-				if (creature.getAi2().poll(AIQuestion.DESTINATION_REACHED)) {
-					if (movingCreatures.remove(key, registration)) {
-						creature.getAi2().onGeneralEvent(AIEventType.MOVE_ARRIVED);
-						GameMovementLoopServices.zoneUpdateService().add(creature);
-					}
-				} else {
-					creature.getAi2().onGeneralEvent(AIEventType.MOVE_VALIDATE);
-				}
-			} finally {
-				registration.nextUpdateAt = now + movementUpdatePeriod(creature);
-				registration.processing = false;
+			} else {
+				creature.getAi2().onGeneralEvent(AIEventType.MOVE_VALIDATE);
 			}
-			return true;
+		} finally {
+			registration.nextUpdateAt = now + movementUpdatePeriod(creature);
+			registration.processing = false;
 		}
+		return true;
 	};
 
 	/**

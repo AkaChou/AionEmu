@@ -28,8 +28,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 	private final AtomicLong totalDamage = new AtomicLong();
-	private final Map<Integer, AtomicLong> playerDamageCounter = new LinkedHashMap<Integer, AtomicLong>();
-	private final Map<Integer, AtomicLong> playerAPCounter = new LinkedHashMap<Integer, AtomicLong>();
+	private final Map<Integer, AtomicLong> playerDamageCounter = new LinkedHashMap<>();
+	private final Map<Integer, AtomicLong> playerAPCounter = new LinkedHashMap<>();
 	/**
 	 * 返回本计数器所属阵营。
 	 * Returns the race of this counter.
@@ -149,20 +149,14 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 			}
 			tempList = Lists.newLinkedList(unorderedMap.entrySet());
 		}
-		Collections.sort(tempList, new Comparator<Map.Entry<K, AtomicLong>>() {
-			@Override
-			/**
-			 * 比较排序。
-			 * Compares for ordering.
-			 *
-			 * @param o1 前一条目 / first entry
-			 * @param o2 后一条目 / second entry
-			 * @return 比较结果 / comparison result
-			 */
-			public int compare(Map.Entry<K, AtomicLong> o1, Map.Entry<K, AtomicLong> o2) {
-				return Long.compare(o2.getValue().get(), o1.getValue().get());
-			}
-		});
+		/**
+		 * 比较排序。
+		 * Compares for ordering.
+		 *
+		 * @param o1 前一条目 / first entry
+		 * @param o2 后一条目 / second entry
+		 * @return 比较结果 / comparison result
+		 */Collections.sort(tempList, (o1, o2) -> Long.compare(o2.getValue().get(), o1.getValue().get()));
 		Map<K, Long> result = Maps.newLinkedHashMap();
 		for (Map.Entry<K, AtomicLong> entry : tempList) {
 			if (entry.getValue().get() > 0) {
@@ -191,7 +185,7 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 	 * @return 军团 ID / legion id
 	 */
 	public Integer getWinnerLegionId() {
-		Map<Player, AtomicLong> teamDamageMap = new HashMap<Player, AtomicLong>();
+		Map<Player, AtomicLong> teamDamageMap = new HashMap<>();
 		for (Integer id : getCounterKeys(playerDamageCounter)) {
 			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(id);
 			if (player != null && player.getCurrentTeam() != null) {
@@ -215,7 +209,7 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 
 	private <K> Set<K> getCounterKeys(Map<K, AtomicLong> counterMap) {
 		synchronized (counterMap) {
-			return new HashSet<K>(counterMap.keySet());
+			return new HashSet<>(counterMap.keySet());
 		}
 	}
 }

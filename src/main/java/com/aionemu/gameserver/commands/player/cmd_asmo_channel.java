@@ -82,13 +82,9 @@ public class cmd_asmo_channel extends PlayerCommand {
 			final boolean toAll = params[0].equals("ALL");
 			final Race race = adminRace;
 
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-
-				@Override
-				public void visit(Player player) {
-					if (toAll || player.getRace() == race || (player.getAccessLevel() > 0)) {
-						PacketSendUtility.sendMessage(player, sMessage);
-					}
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player1 -> {
+				if (toAll || player1.getRace() == race || (player1.getAccessLevel() > 0)) {
+					PacketSendUtility.sendMessage(player1, sMessage);
 				}
 			});
 		}

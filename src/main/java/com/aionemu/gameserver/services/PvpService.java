@@ -327,7 +327,7 @@ public class PvpService {
 		}
 
 		// 查找范围内的小队成员 / Find group members in range
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 
 		// 在本地小队中找最高军阶与等级 / Find highest rank and level in local group
 		int maxRank = AbyssRankEnum.GRADE9_SOLDIER.getId();
@@ -408,7 +408,7 @@ public class PvpService {
 		}
 
 		// 查找范围内的小队成员 / Find group members in range
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 
 		// 在本地小队中找最高军阶与等级 / Find highest rank and level in local group
 		int maxRank = AbyssRankEnum.GRADE9_SOLDIER.getId();
@@ -527,7 +527,7 @@ public class PvpService {
 			return;
 		}
 
-		List<Player> rewarded = new ArrayList<Player>();
+		List<Player> rewarded = new ArrayList<>();
 		QuestPvpCreditSource creditSource;
 		int worldId = victim.getWorldId();
 

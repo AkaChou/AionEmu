@@ -22,7 +22,7 @@ public class Artifact_Of_ProtectionAI2 extends NpcAI2
 	protected void handleDialogStart(Player player) {
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getOwner().getObjectId(), 1011));
 	}
-	
+
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000) {
@@ -60,23 +60,17 @@ public class Artifact_Of_ProtectionAI2 extends NpcAI2
 		AI2Actions.deleteOwner(this);
 		return true;
 	}
-	
+
 	private void announceArtifactProtector() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 实体守护者登场了！ / An Artifact Protector has appeared!
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdD_Wakeup);
-			}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			// 实体守护者登场了！ / An Artifact Protector has appeared!
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdD_Wakeup);
 		});
 	}
 	private void announceFerociousProtector() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 狂暴的实体守护者登场！ / A Ferocious Artifact Protector has appeared!
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdDH_Wakeup);
-			}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			// 狂暴的实体守护者登场！ / A Ferocious Artifact Protector has appeared!
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdDH_Wakeup);
 		});
 	}
 }

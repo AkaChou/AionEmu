@@ -41,7 +41,7 @@ class PlayerContainerTest {
 	@Test
 	void doOnAllPlayersUsesSnapshotSafeForRemovalDuringVisit() {
 		PlayerContainer players = playerContainerWithThreePlayers();
-		List<Integer> visited = new ArrayList<Integer>();
+		List<Integer> visited = new ArrayList<>();
 
 		players.doOnAllPlayers(player -> {
 			visited.add(player.getObjectId());
@@ -55,7 +55,7 @@ class PlayerContainerTest {
 	@Test
 	void doOnAllPlayersContinuesAfterVisitorFailure() {
 		PlayerContainer players = playerContainerWithThreePlayers();
-		List<Integer> visited = new ArrayList<Integer>();
+		List<Integer> visited = new ArrayList<>();
 
 		players.doOnAllPlayers(player -> {
 			visited.add(player.getObjectId());

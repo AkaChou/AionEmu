@@ -141,7 +141,7 @@ public class SM_MAIL_SERVICE extends MailServicePacket {
 		case 2:
 			Collection<Letter> _letters;
 			if (!letters.isEmpty()) {
-				ListSplitter<Letter> splittedLetters = new ListSplitter<Letter>(letters, 100);
+				ListSplitter<Letter> splittedLetters = new ListSplitter<>(letters, 100);
 				_letters = splittedLetters.getNext();
 			} else {
 				_letters = letters;

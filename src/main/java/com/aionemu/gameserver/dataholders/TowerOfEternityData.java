@@ -28,7 +28,7 @@ public class TowerOfEternityData {
 	private List<TowerOfEternityTemplate> towerOfEternityTemplates;
 
 	@XmlTransient
-	private final Map<Integer, TowerOfEternityLocation> towerOfEternity = new LinkedHashMap<Integer, TowerOfEternityLocation>();
+	private final Map<Integer, TowerOfEternityLocation> towerOfEternity = new LinkedHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，将模板索引为塔点位映射。

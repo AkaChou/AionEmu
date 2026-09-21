@@ -26,7 +26,7 @@ public class TeleLocationData {
 	private List<TelelocationTemplate> tlist;
 
 	/** 传送点位置模板映射。 / Map of all teleport location templates. */
-	private final IntObjectHashMap<TelelocationTemplate> loctlistData = new IntObjectHashMap<TelelocationTemplate>();
+	private final IntObjectHashMap<TelelocationTemplate> loctlistData = new IntObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，按位置 ID 索引传送点模板。

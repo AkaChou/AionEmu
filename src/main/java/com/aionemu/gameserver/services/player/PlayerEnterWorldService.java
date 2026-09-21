@@ -233,22 +233,19 @@ public final class PlayerEnterWorldService {
 			delay = 15000;
 			log.warn(I18n.get("log.7b9179898aab", objectId));
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objectId);
-					if (player != null) {
-						AuditLogger.info(player, "Duplicate player in world");
-						client.close(new SM_QUIT_RESPONSE(), false);
-						return;
-					}
-					enterWorld(client, objectId);
-				} catch (Throwable ex) {
-					log.error(I18n.get("log.24d84e2b082e", objectId), ex);
-				} finally {
-					pendingEnterWorld.remove(objectId);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			try {
+				Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objectId);
+				if (player != null) {
+					AuditLogger.info(player, "Duplicate player in world");
+					client.close(new SM_QUIT_RESPONSE(), false);
+					return;
 				}
+				enterWorld(client, objectId);
+			} catch (Throwable ex) {
+				log.error(I18n.get("log.24d84e2b082e", objectId), ex);
+			} finally {
+				pendingEnterWorld.remove(objectId);
 			}
 		}, delay);
 	}
@@ -356,8 +353,8 @@ public final class PlayerEnterWorldService {
 			if (EventsConfig.ENABLE_EVENT_ARCADE) {
 				GameFeatureServices.arcadeUpgradeService().onEnterWorld(player);
 			}
-			List<QuestState> questList = new ArrayList<QuestState>();
-			List<QuestState> completeQuestList = new ArrayList<QuestState>();
+			List<QuestState> questList = new ArrayList<>();
+			List<QuestState> completeQuestList = new ArrayList<>();
 			for (QuestState qs : player.getQuestStateList().getAllQuestState()) {
 				if (qs.getStatus() == QuestStatus.NONE && qs.getCompleteCount() == 0) {
 					continue;
@@ -738,12 +735,9 @@ public final class PlayerEnterWorldService {
 	 */
 	public static void abyssLightLogon(final Player player) {
 		if (player.getAbyssRank().getRank().getId() == AbyssRankEnum.SUPREME_COMMANDER.getId()) {
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player players) {
-					// 天族总督“玩家名”恩泽阿特雷亚。 / Elyos Governor "Player Name" has graced Atreia.
-					PacketSendUtility.sendPacket(players, new SM_SYSTEM_MESSAGE(1403134, player.getName()));
-				}
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(players -> {
+				// 天族总督“玩家名”恩泽阿特雷亚。 / Elyos Governor "Player Name" has graced Atreia.
+				PacketSendUtility.sendPacket(players, new SM_SYSTEM_MESSAGE(1403134, player.getName()));
 			});
 		}
 	}
@@ -756,12 +750,9 @@ public final class PlayerEnterWorldService {
 	 */
 	public static void abyssDarkLogon(final Player player) {
 		if (player.getAbyssRank().getRank().getId() == AbyssRankEnum.SUPREME_COMMANDER.getId()) {
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player players) {
-					// 魔族总督“玩家名”恩泽阿特雷亚。 / Asmodian Governor "Player Name" has graced Atreia.
-					PacketSendUtility.sendPacket(players, new SM_SYSTEM_MESSAGE(1403135, player.getName()));
-				}
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(players -> {
+				// 魔族总督“玩家名”恩泽阿特雷亚。 / Asmodian Governor "Player Name" has graced Atreia.
+				PacketSendUtility.sendPacket(players, new SM_SYSTEM_MESSAGE(1403135, player.getName()));
 			});
 		}
 	}
@@ -779,19 +770,19 @@ public final class PlayerEnterWorldService {
 		player.getInventory().setLimit(StorageType.CUBE.getLimit() + (questExpands + npcExpands) * 9);
 		player.getWarehouse().setLimit(StorageType.REGULAR_WAREHOUSE.getLimit() + player.getWarehouseSize() * 8);
 		Storage inventory = player.getInventory();
-		List<Item> allItems = new ArrayList<Item>();
+		List<Item> allItems = new ArrayList<>();
 		if (inventory.getKinah() == 0) {
 			inventory.increaseKinah(0);
 		}
 		allItems.add(inventory.getKinahItem());
 		allItems.addAll(player.getEquipment().getEquippedItems());
 		allItems.addAll(inventory.getItems());
-		client.sendPacket(new SM_INVENTORY_INFO(true, new ArrayList<Item>(0), npcExpands, questExpands, player));
-		ListSplitter<Item> splitter = new ListSplitter<Item>(allItems, 10);
+		client.sendPacket(new SM_INVENTORY_INFO(true, new ArrayList<>(0), npcExpands, questExpands, player));
+		ListSplitter<Item> splitter = new ListSplitter<>(allItems, 10);
 		while (!splitter.isLast()) {
 			client.sendPacket(new SM_INVENTORY_INFO(false, splitter.getNext(), npcExpands, questExpands, player));
 		}
-		client.sendPacket(new SM_INVENTORY_INFO(false, new ArrayList<Item>(0), npcExpands, questExpands, player));
+		client.sendPacket(new SM_INVENTORY_INFO(false, new ArrayList<>(0), npcExpands, questExpands, player));
 		client.sendPacket(new SM_STATS_INFO(player));
 		client.sendPacket(SM_CUBE_UPDATE.stigmaSlots(player.getCommonData().getAdvancedStigmaSlotSize()));
 	}

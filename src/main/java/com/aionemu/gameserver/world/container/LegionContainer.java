@@ -19,12 +19,12 @@ public class LegionContainer implements Iterable<Legion> {
 	/**
 	 * 按军团 ID 索引 / Indexed by legion ID
 	 */
-	private final Map<Integer, Legion> legionsById = new LinkedHashMap<Integer, Legion>();
+	private final Map<Integer, Legion> legionsById = new LinkedHashMap<>();
 
 	/**
 	 * 按军团名称（小写）索引 / Indexed by legion name (lower-case)
 	 */
-	private final Map<String, Legion> legionsByName = new LinkedHashMap<String, Legion>();
+	private final Map<String, Legion> legionsByName = new LinkedHashMap<>();
 
 	/**
 	 * 添加军团；ID 或名称冲突时抛出 {@link DuplicateAionObjectException}。
@@ -84,7 +84,7 @@ public class LegionContainer implements Iterable<Legion> {
 	 * @return 军团列表副本 / copy of the legion list
 	 */
 	public synchronized List<Legion> getAllLegions() {
-		return new ArrayList<Legion>(legionsByName.values());
+		return new ArrayList<>(legionsByName.values());
 	}
 
 	/**
@@ -117,7 +117,7 @@ public class LegionContainer implements Iterable<Legion> {
 	 */
 	@Override
 	public synchronized Iterator<Legion> iterator() {
-		return new ArrayList<Legion>(legionsById.values()).iterator();
+		return new ArrayList<>(legionsById.values()).iterator();
 	}
 
 	/**

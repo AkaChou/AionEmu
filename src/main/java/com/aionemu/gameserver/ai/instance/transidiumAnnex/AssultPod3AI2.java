@@ -44,26 +44,13 @@ public class AssultPod3AI2 extends AggressiveNpcAI2
 					spawn(297352, 394.50833f, 385.5321f, 688.8357f, (byte) 70);
 					spawn(297352, 397.13196f, 401.5456f, 688.86523f, (byte) 75);
 					spawn(297308, 645.25562f, 649.67334f, 688.83008f, (byte) 78, 166); // 阿塔纳托斯进阶走廊护盾 / Atanatos Advance Corridor Shield
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					    @Override
-					    public void run() {
-							spawn(297190, 628.48737f, 643.67847f, 688.8357f, (byte) 13);
-				        }
-			        }, 1000);
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					    @Override
-					    public void run() {
-							spawn(297190, 639.0038f, 630.83386f, 688.8357f, (byte) 16);
-				        }
-			        }, 3000);
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					    @Override
-					    public void run() {
-							spawn(297194, 623.9741f, 628.6063f, 688.869f, (byte) 16);
-							spawn(297190, 639.4943f, 649.3327f, 688.9949f, (byte) 2);
-							spawn(297190, 645.90936f, 644.1133f, 688.9645f, (byte) 31);
-				        }
-			        }, 5000);
+					GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(297190, 628.48737f, 643.67847f, 688.8357f, (byte) 13), 1000);
+					GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(297190, 639.0038f, 630.83386f, 688.8357f, (byte) 16), 3000);
+					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						spawn(297194, 623.9741f, 628.6063f, 688.869f, (byte) 16);
+						spawn(297190, 639.4943f, 649.3327f, 688.9949f, (byte) 2);
+						spawn(297190, 645.90936f, 644.1133f, 688.9645f, (byte) 31);
+					}, 5000);
 				}
 			}
 		}

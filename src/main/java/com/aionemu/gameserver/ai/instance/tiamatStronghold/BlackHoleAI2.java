@@ -20,33 +20,25 @@ public class BlackHoleAI2 extends AggressiveNpcAI2
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 20738, 1, getOwner()).useNoAnimationSkill(); //Gravity Reduction.
-				startLifeTask();
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			GameEngineServices.skillEngine().getSkill(getOwner(), 20738, 1, getOwner()).useNoAnimationSkill(); //Gravity Reduction.
+			startLifeTask();
 		}, 1000);
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(BlackHoleAI2.this);
-			}
-		}, 15000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(BlackHoleAI2.this), 15000);
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();

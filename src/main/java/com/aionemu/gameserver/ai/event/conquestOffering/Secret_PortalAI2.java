@@ -23,17 +23,14 @@ public class Secret_PortalAI2 extends ActionItemNpcAI2
         announceRotationBuff();
 		super.handleSpawned();
     }
-	
+
 	private void announceRotationBuff() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 你感到周围有奇怪的存在。 / You feel a strange presence around you.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_BF4_Rotation_Buff_NPC_01);
-			}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			// 你感到周围有奇怪的存在。 / You feel a strange presence around you.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_BF4_Rotation_Buff_NPC_01);
 		});
 	}
-	
+
 	@Override
 	protected void handleUseItemFinish(Player player) {
 		switch (getNpcId()) {

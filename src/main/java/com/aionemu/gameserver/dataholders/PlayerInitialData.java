@@ -30,14 +30,14 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 public class PlayerInitialData {
 
 	@XmlElement(name = "player_data")
-	private List<PlayerCreationData> dataList = new ArrayList<PlayerCreationData>();
+	private List<PlayerCreationData> dataList = new ArrayList<>();
 
 	@XmlElement(name = "elyos_spawn_location", required = true)
 	private LocationData elyosSpawnLocation;
 	@XmlElement(name = "asmodian_spawn_location", required = true)
 	private LocationData asmodianSpawnLocation;
 
-	private final Map<PlayerClass, PlayerCreationData> data = new LinkedHashMap<PlayerClass, PlayerCreationData>();
+	private final Map<PlayerClass, PlayerCreationData> data = new LinkedHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，按职业索引创建数据并释放列表。
@@ -124,7 +124,7 @@ public class PlayerInitialData {
 		static class ItemsType {
 
 			@XmlElement(name = "item")
-			public List<ItemType> items = new ArrayList<ItemType>();
+			public List<ItemType> items = new ArrayList<>();
 		}
 
 		/**

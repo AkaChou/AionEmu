@@ -262,14 +262,16 @@ final class QuestTimers {
 		synchronized (questTimerLock) {
 			ManagedQuestTimer existing = questTimers.get(key);
 			if (existing != null) {
-				switch (policy.overwritePolicy()) {
-					case KEEP_EXISTING -> {
-						return TimerStartOutcome.KEPT_EXISTING;
-					}
-					case FAIL_IF_RUNNING -> throw new IllegalStateException(
-						"quest timer is already running: " + policy.identity().timerId());
-					case REPLACE -> existing.cancel();
-				}
+                switch (policy.overwritePolicy()) {
+                    case KEEP_EXISTING:
+                        return TimerStartOutcome.KEPT_EXISTING;
+                    case FAIL_IF_RUNNING:
+                        throw new IllegalStateException(
+                                "quest timer is already running: " + policy.identity().timerId());
+                    case REPLACE:
+                        existing.cancel();
+                        break;
+                }
 			}
 			ManagedQuestTimer timer = new ManagedQuestTimer(policy, player.getInstanceId(), visible);
 			Future<?> future = scheduler.schedule(() -> {

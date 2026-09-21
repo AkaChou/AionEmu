@@ -27,8 +27,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class Invasion extends DimensionalVortex<VortexLocation> {
 
 	PlayerAlliance invAlliance, defAlliance;
-	protected Map<Integer, Player> invaders = new LinkedHashMap<Integer, Player>();
-	protected Map<Integer, Player> defenders = new LinkedHashMap<Integer, Player>();
+	protected Map<Integer, Player> invaders = new LinkedHashMap<>();
+	protected Map<Integer, Player> defenders = new LinkedHashMap<>();
 
 	/**
 	 * 绑定漩涡地点。

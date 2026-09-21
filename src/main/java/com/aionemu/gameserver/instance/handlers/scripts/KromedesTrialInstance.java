@@ -65,7 +65,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
-	private final List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<>();
 	/** 遗物钥匙来源是否已在本实例被击杀 / whether the relic-key source has been killed in this instance */
 	private boolean relicKeySourceConsumed;
 	/**
@@ -582,7 +582,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	}
 
 	private void announceKaligaTreasury() {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -734,7 +734,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.

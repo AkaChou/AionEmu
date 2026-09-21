@@ -40,11 +40,8 @@ public class SteelRoseCannonAI2 extends ActionItemNpcAI2
 				//某处沉重的门已打开。 / A heavy door has opened somewhere.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDLDF5_Under_02_Canon, 5000);
 				GameEngineServices.skillEngine().getSkill(getOwner(), 21126, 60, getOwner()).useNoAnimationSkill(); // 破坏封印。 / Destroy Seal.
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				    @Override
-					public void run() {
-					    despawnNpc(233142); // 不屈巨石。 / Unyielding Boulder.
-					}
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					despawnNpc(233142); // 不屈巨石。 / Unyielding Boulder.
 				}, 5000);
 			}
 			// 达努阿尔圣所 4.8 / Danuar Sanctuary 4.8
@@ -52,21 +49,18 @@ public class SteelRoseCannonAI2 extends ActionItemNpcAI2
 				//某处沉重的门已打开。 / A heavy door has opened somewhere.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDLDF5_Under_02_Canon, 5000);
 				GameEngineServices.skillEngine().getSkill(getOwner(), 21126, 60, getOwner()).useNoAnimationSkill(); // 破坏封印。 / Destroy Seal.
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				    @Override
-					public void run() {
-					    despawnNpc(233142); // 不屈巨石。 / Unyielding Boulder.
-					}
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					despawnNpc(233142); // 不屈巨石。 / Unyielding Boulder.
 				}, 5000);
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);

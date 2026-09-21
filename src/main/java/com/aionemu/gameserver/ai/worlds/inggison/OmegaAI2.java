@@ -58,28 +58,25 @@ public class OmegaAI2 extends AggressiveNpcAI2
 	}
 
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelPhaseTask();
-				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 18671, 60, getOwner()).useNoAnimationSkill(); // 魔法护盾 / Magic Ward.
-					List<Player> players = getLifedPlayers();
-					if (!players.isEmpty()) {
-						int size = players.size();
-						if (players.size() < 6) {
-							for (Player p: players) {
-								spawnOmegaClone(p);
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelPhaseTask();
+			} else {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 18671, 60, getOwner()).useNoAnimationSkill(); // 魔法护盾 / Magic Ward.
+				List<Player> players = getLifedPlayers();
+				if (!players.isEmpty()) {
+					int size = players.size();
+					if (players.size() < 6) {
+						for (Player p: players) {
+							spawnOmegaClone(p);
+						}
+					} else {
+						int count = Rnd.get(6, size);
+						for (int i = 0; i < count; i++) {
+							if (players.isEmpty()) {
+								break;
 							}
-						} else {
-							int count = Rnd.get(6, size);
-							for (int i = 0; i < count; i++) {
-								if (players.isEmpty()) {
-									break;
-								}
-								spawnOmegaClone(players.get(Rnd.get(players.size())));
-							}
+							spawnOmegaClone(players.get(Rnd.get(players.size())));
 						}
 					}
 				}
@@ -92,37 +89,34 @@ public class OmegaAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						switch (Rnd.get(1, 5)) {
-						    case 1:
-							    // 欧米伽召唤生物。 / Omega summons a creature.
-								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400606, 0);
-								spawn(281945, x, y, z, (byte) 0); // 力量分身 / Clone Of Power.
-							break;
-							case 2:
-							    // 欧米伽召唤强大生物。 / Omega summons a powerful creature.
-								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400607, 0);
-							    spawn(281946, x, y, z, (byte) 0); // 爆炸分身 / Clone Of Explosion.
-							break;
-							case 3:
-							    // 欧米伽召唤治疗生物。 / Omega summons a healing creature.
-								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400608, 0);
-							    spawn(281947, x, y, z, (byte) 0); // 治疗分身 / Clone Of Healing.
-							break;
-							case 4:
-							    // 欧米伽召唤制造屏障的生物。 / Omega summons a creature that creates barriers.
-								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400609, 0);
-							    spawn(281948, x, y, z, (byte) 0); // 物理屏障分身 / Clone Of Physical Barrier.
-							break;
-							case 5:
-							    // 欧米伽召唤制造屏障的生物。 / Omega summons a creature that creates barriers.
-								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400609, 0);
-							    spawn(281949, x, y, z, (byte) 0); // 魔法屏障分身 / Clone Of Magical Barrier.
-							break;
-						}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					switch (Rnd.get(1, 5)) {
+						case 1:
+							// 欧米伽召唤生物。 / Omega summons a creature.
+							GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400606, 0);
+							spawn(281945, x, y, z, (byte) 0); // 力量分身 / Clone Of Power.
+						break;
+						case 2:
+							// 欧米伽召唤强大生物。 / Omega summons a powerful creature.
+							GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400607, 0);
+							spawn(281946, x, y, z, (byte) 0); // 爆炸分身 / Clone Of Explosion.
+						break;
+						case 3:
+							// 欧米伽召唤治疗生物。 / Omega summons a healing creature.
+							GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400608, 0);
+							spawn(281947, x, y, z, (byte) 0); // 治疗分身 / Clone Of Healing.
+						break;
+						case 4:
+							// 欧米伽召唤制造屏障的生物。 / Omega summons a creature that creates barriers.
+							GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400609, 0);
+							spawn(281948, x, y, z, (byte) 0); // 物理屏障分身 / Clone Of Physical Barrier.
+						break;
+						case 5:
+							// 欧米伽召唤制造屏障的生物。 / Omega summons a creature that creates barriers.
+							GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400609, 0);
+							spawn(281949, x, y, z, (byte) 0); // 魔法屏障分身 / Clone Of Magical Barrier.
+						break;
 					}
 				}
 			}, 1000);
@@ -130,7 +124,7 @@ public class OmegaAI2 extends AggressiveNpcAI2
 	}
 
 	private List<Player> getLifedPlayers() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);

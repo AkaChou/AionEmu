@@ -34,14 +34,14 @@ public class SysMail {
 	private String name;
 
 	@XmlTransient
-	private final Map<String, List<MailTemplate>> mailCaseTemplates = new HashMap<String, List<MailTemplate>>();
+	private final Map<String, List<MailTemplate>> mailCaseTemplates = new HashMap<>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (MailTemplate template : templates) {
 			String caseName = template.getName().toLowerCase();
 			List<MailTemplate> sysTemplates = mailCaseTemplates.get(caseName);
 			if (sysTemplates == null) {
-				sysTemplates = new ArrayList<MailTemplate>();
+				sysTemplates = new ArrayList<>();
 				mailCaseTemplates.put(caseName, sysTemplates);
 			}
 			sysTemplates.add(template);

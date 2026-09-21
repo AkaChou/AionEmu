@@ -66,11 +66,11 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     /** 副本是否已销毁 / whether the instance is destroyed */
     private boolean isInstanceDestroyed = false;
 	/** 已播放动画集合 / played-movie set */
-	private final List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<>();
         /** 副本是否已开始 / whether the instance started */
         protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
         /** idgel 任务 / idgel task */
-        private final List<Future<?>> idgelTask = new ArrayList<Future<?>>();
+        private final List<Future<?>> idgelTask = new ArrayList<>();
     /**
      * 返回玩家奖励记录。
      * Return the player's reward record.
@@ -223,77 +223,77 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     }
 
     private void sendEnterPacket(final Player player) {
-    	instance.doOnAllPlayers(new Visitor<Player>() {
-            /**
-             * 处理 visit。
-             * Handle visit.
-             *
-             * @param opponent 对手 / opponent
-             */
-            @Override
-            public void visit(Player opponent) {
-                if (player.getRace() != opponent.getRace()) {
-                    PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(11, getTime(), getInstanceReward(), player.getObjectId()));
-                    PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(11, getTime(), getInstanceReward(), opponent.getObjectId()));
-                    PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(3, getTime(), getInstanceReward(),  player.getObjectId()));
-                } else {
-                    PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(11, getTime(), getInstanceReward(), opponent.getObjectId()));
-                    if (player.getObjectId() != opponent.getObjectId()) {
-                        PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(3, getTime(), getInstanceReward(), player.getObjectId(), 20, 0));
-                    }
-                }
-            }
-        });
+    	instance.doOnAllPlayers(new Visitor<>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param opponent 对手 / opponent
+			 */
+			@Override
+			public void visit(Player opponent) {
+				if (player.getRace() != opponent.getRace()) {
+					PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(11, getTime(), getInstanceReward(), player.getObjectId()));
+					PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(11, getTime(), getInstanceReward(), opponent.getObjectId()));
+					PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(3, getTime(), getInstanceReward(), player.getObjectId()));
+				} else {
+					PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(11, getTime(), getInstanceReward(), opponent.getObjectId()));
+					if (player.getObjectId() != opponent.getObjectId()) {
+						PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(3, getTime(), getInstanceReward(), player.getObjectId(), 20, 0));
+					}
+				}
+			}
+		});
     	sendPacket(true);
     	sendPacket(false);
         PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(4, getTime(), getInstanceReward(), player.getObjectId(), 20, 0));
     }
 
     private void startInstancePacket() {
-    	instance.doOnAllPlayers(new Visitor<Player>() {
-            /**
-             * 处理 visit。
-             * Handle visit.
-             *
-             * @param player 玩家 / player
-             */
-            @Override
-            public void visit(Player player) {
-            	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), idgelDomeReward, instance.getPlayersInside(), true));
-            	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(3, getTime(), idgelDomeReward, player.getObjectId(), 0, 0));
-            	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), idgelDomeReward, instance.getPlayersInside(), true));
-            	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(11, getTime(), getInstanceReward(), player.getObjectId()));
-            }
-        });
+    	instance.doOnAllPlayers(new Visitor<>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
+			@Override
+			public void visit(Player player) {
+				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), idgelDomeReward, instance.getPlayersInside(), true));
+				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(3, getTime(), idgelDomeReward, player.getObjectId(), 0, 0));
+				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), idgelDomeReward, instance.getPlayersInside(), true));
+				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(11, getTime(), getInstanceReward(), player.getObjectId()));
+			}
+		});
     }
 
     private void sendPacket(boolean isObjects) {
     	if (isObjects) {
-    		instance.doOnAllPlayers(new Visitor<Player>() {
-                /**
-                 * 处理 visit。
-                 * Handle visit.
-                 *
-                 * @param player 玩家 / player
-                 */
-                @Override
-                public void visit(Player player) {
-                	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(6, getTime(), idgelDomeReward, instance.getPlayersInside(), true));
-                }
-            });
+    		instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(6, getTime(), idgelDomeReward, instance.getPlayersInside(), true));
+				}
+			});
     	} else {
-    		instance.doOnAllPlayers(new Visitor<Player>() {
-                /**
-                 * 处理 visit。
-                 * Handle visit.
-                 *
-                 * @param player 玩家 / player
-                 */
-                @Override
-                public void visit(Player player) {
-                	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), idgelDomeReward, instance.getPlayersInside(), true));
-                }
-            });
+    		instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), idgelDomeReward, instance.getPlayersInside(), true));
+				}
+			});
     	}
     }
 
@@ -479,7 +479,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
             return;
         }
         addPointsByRace(player.getRace(), points);
-        List<Player> playersToGainScore = new ArrayList<Player>();
+        List<Player> playersToGainScore = new ArrayList<>();
         if (target != null && player.isInGroup2()) {
             for (Player member : player.getPlayerGroup2().getOnlineMembers()) {
                 if (member.getLifeStats().isAlreadyDead()) {
@@ -746,7 +746,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
              */
             @Override
             public void run() {
-                instance.doOnAllPlayers(new Visitor<Player>() {
+                instance.doOnAllPlayers(new Visitor<>() {
                     /**
                      * 处理 visit。
                      * Handle visit.

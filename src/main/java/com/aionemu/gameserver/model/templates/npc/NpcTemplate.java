@@ -168,39 +168,102 @@ public class NpcTemplate extends VisibleObjectTemplate {
 	@XmlAttribute(name = "abnormal_immunity")
 	private void setAbnormalImmunity(String value) {
 		for (String name : value.split(",")) {
-			abnormalImmunity |= switch (name.trim().toLowerCase(Locale.ROOT)) {
-				case "", "0" -> 0;
-				case "stat_arall" -> ALL_OTHER_ABNORMALS;
-				case "stat_arstunlike" -> STUN_LIKE_ABNORMALS;
-				case "stat_arphysicalab" -> 0x1620B7;
-				case "stat_armentalab" -> 0x800F48;
-				case "poison" -> 1 << 0;
-				case "bleed" -> 1 << 1;
-				case "paralyze" -> 1 << 2;
-				case "sleep" -> 1 << 3;
-				case "root" -> 1 << 4;
-				case "blind" -> 1 << 5;
-				case "charm" -> 1 << 6;
-				case "disease" -> 1 << 7;
-				case "silence" -> 1 << 8;
-				case "fear" -> 1 << 9;
-				case "curse" -> 1 << 10;
-				case "confuse" -> 1 << 11;
-				case "stun" -> 1 << 12;
-				case "petrification", "perification" -> 1 << 13;
-				case "stumble" -> 1 << 14;
-				case "stagger" -> 1 << 15;
-				case "openaerial" -> 1 << 16;
-				case "snare" -> 1 << 17;
-				case "slow" -> 1 << 18;
-				case "spin" -> 1 << 19;
-				case "bind" -> 1 << 20;
-				case "deform" -> 1 << 21;
-				case "pulled" -> 1 << 22;
-				case "nofly" -> 1 << 23;
-				case "simpleroot" -> 1 << 24;
-				default -> throw new IllegalArgumentException("Unknown NPC abnormal immunity: " + name);
-			};
+			switch (name.trim().toLowerCase(Locale.ROOT)) {
+				case "":
+				case "0":
+					abnormalImmunity |= 0;
+					break;
+				case "stat_arall":
+					abnormalImmunity |= ALL_OTHER_ABNORMALS;
+					break;
+				case "stat_arstunlike":
+					abnormalImmunity |= STUN_LIKE_ABNORMALS;
+					break;
+				case "stat_arphysicalab":
+					abnormalImmunity |= 0x1620B7;
+					break;
+				case "stat_armentalab":
+					abnormalImmunity |= 0x800F48;
+					break;
+				case "poison":
+					abnormalImmunity |= 1 << 0;
+					break;
+				case "bleed":
+					abnormalImmunity |= 1 << 1;
+					break;
+				case "paralyze":
+					abnormalImmunity |= 1 << 2;
+					break;
+				case "sleep":
+					abnormalImmunity |= 1 << 3;
+					break;
+				case "root":
+					abnormalImmunity |= 1 << 4;
+					break;
+				case "blind":
+					abnormalImmunity |= 1 << 5;
+					break;
+				case "charm":
+					abnormalImmunity |= 1 << 6;
+					break;
+				case "disease":
+					abnormalImmunity |= 1 << 7;
+					break;
+				case "silence":
+					abnormalImmunity |= 1 << 8;
+					break;
+				case "fear":
+					abnormalImmunity |= 1 << 9;
+					break;
+				case "curse":
+					abnormalImmunity |= 1 << 10;
+					break;
+				case "confuse":
+					abnormalImmunity |= 1 << 11;
+					break;
+				case "stun":
+					abnormalImmunity |= 1 << 12;
+					break;
+				case "petrification":
+				case "perification":
+					abnormalImmunity |= 1 << 13;
+					break;
+				case "stumble":
+					abnormalImmunity |= 1 << 14;
+					break;
+				case "stagger":
+					abnormalImmunity |= 1 << 15;
+					break;
+				case "openaerial":
+					abnormalImmunity |= 1 << 16;
+					break;
+				case "snare":
+					abnormalImmunity |= 1 << 17;
+					break;
+				case "slow":
+					abnormalImmunity |= 1 << 18;
+					break;
+				case "spin":
+					abnormalImmunity |= 1 << 19;
+					break;
+				case "bind":
+					abnormalImmunity |= 1 << 20;
+					break;
+				case "deform":
+					abnormalImmunity |= 1 << 21;
+					break;
+				case "pulled":
+					abnormalImmunity |= 1 << 22;
+					break;
+				case "nofly":
+					abnormalImmunity |= 1 << 23;
+					break;
+				case "simpleroot":
+					abnormalImmunity |= 1 << 24;
+					break;
+				default:
+					throw new IllegalArgumentException("Unknown NPC abnormal immunity: " + name);
+			}
 		}
 	}
 
@@ -212,32 +275,81 @@ public class NpcTemplate extends VisibleObjectTemplate {
 	 * @return 是否免疫 / whether immune
 	 */
 	public boolean isImmuneTo(StatEnum stat) {
-		int mask = switch (stat) {
-			case POISON_RESISTANCE -> 1 << 0;
-			case BLEED_RESISTANCE -> 1 << 1;
-			case PARALYZE_RESISTANCE -> 1 << 2;
-			case SLEEP_RESISTANCE -> 1 << 3;
-			case ROOT_RESISTANCE -> 1 << 4 | 1 << 24;
-			case BLIND_RESISTANCE -> 1 << 5;
-			case CHARM_RESISTANCE -> 1 << 6;
-			case DISEASE_RESISTANCE -> 1 << 7;
-			case SILENCE_RESISTANCE -> 1 << 8;
-			case FEAR_RESISTANCE -> 1 << 9;
-			case CURSE_RESISTANCE -> 1 << 10;
-			case CONFUSE_RESISTANCE -> 1 << 11;
-			case STUN_RESISTANCE -> 1 << 12;
-			case PERIFICATION_RESISTANCE -> 1 << 13;
-			case STUMBLE_RESISTANCE -> 1 << 14;
-			case STAGGER_RESISTANCE -> 1 << 15;
-			case OPENAREIAL_RESISTANCE -> 1 << 16;
-			case SNARE_RESISTANCE -> 1 << 17;
-			case SLOW_RESISTANCE -> 1 << 18;
-			case SPIN_RESISTANCE -> 1 << 19;
-			case BIND_RESISTANCE -> 1 << 20;
-			case DEFORM_RESISTANCE -> 1 << 21;
-			case PULLED_RESISTANCE -> 1 << 22;
-			default -> 0;
-		};
+		int mask;
+		switch (stat) {
+			case POISON_RESISTANCE:
+				mask = 1 << 0;
+				break;
+			case BLEED_RESISTANCE:
+				mask = 1 << 1;
+				break;
+			case PARALYZE_RESISTANCE:
+				mask = 1 << 2;
+				break;
+			case SLEEP_RESISTANCE:
+				mask = 1 << 3;
+				break;
+			case ROOT_RESISTANCE:
+				mask = 1 << 4 | 1 << 24;
+				break;
+			case BLIND_RESISTANCE:
+				mask = 1 << 5;
+				break;
+			case CHARM_RESISTANCE:
+				mask = 1 << 6;
+				break;
+			case DISEASE_RESISTANCE:
+				mask = 1 << 7;
+				break;
+			case SILENCE_RESISTANCE:
+				mask = 1 << 8;
+				break;
+			case FEAR_RESISTANCE:
+				mask = 1 << 9;
+				break;
+			case CURSE_RESISTANCE:
+				mask = 1 << 10;
+				break;
+			case CONFUSE_RESISTANCE:
+				mask = 1 << 11;
+				break;
+			case STUN_RESISTANCE:
+				mask = 1 << 12;
+				break;
+			case PERIFICATION_RESISTANCE:
+				mask = 1 << 13;
+				break;
+			case STUMBLE_RESISTANCE:
+				mask = 1 << 14;
+				break;
+			case STAGGER_RESISTANCE:
+				mask = 1 << 15;
+				break;
+			case OPENAREIAL_RESISTANCE:
+				mask = 1 << 16;
+				break;
+			case SNARE_RESISTANCE:
+				mask = 1 << 17;
+				break;
+			case SLOW_RESISTANCE:
+				mask = 1 << 18;
+				break;
+			case SPIN_RESISTANCE:
+				mask = 1 << 19;
+				break;
+			case BIND_RESISTANCE:
+				mask = 1 << 20;
+				break;
+			case DEFORM_RESISTANCE:
+				mask = 1 << 21;
+				break;
+			case PULLED_RESISTANCE:
+				mask = 1 << 22;
+				break;
+			default:
+				mask = 0;
+				break;
+		}
 		return (abnormalImmunity & mask) != 0;
 	}
 

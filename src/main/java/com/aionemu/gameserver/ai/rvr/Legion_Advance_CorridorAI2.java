@@ -30,12 +30,12 @@ public class Legion_Advance_CorridorAI2 extends NpcAI2
 	protected int startBarAnimation = 1;
 	protected int cancelBarAnimation = 2;
 	private final int CANCEL_DIALOG_METERS = 10;
-	
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		handleUseItemStart(player);
 	}
-	
+
 	protected void handleUseItemStart(final Player player) {
 		final int delay = getTalkDelay();
 		if (delay != 0) {
@@ -51,20 +51,17 @@ public class Legion_Advance_CorridorAI2 extends NpcAI2
 			player.getObserveController().attach(observer);
 			PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), startBarAnimation));
 			PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.START_QUESTLOOT, 0, getObjectId()), true);
-			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
-					PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
-					player.getObserveController().removeObserver(observer);
-					handleUseItemFinish(player);
-				}
+			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
+				PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
+				player.getObserveController().removeObserver(observer);
+				handleUseItemFinish(player);
 			}, delay));
 		} else {
 			handleUseItemFinish(player);
 		}
 	}
-	
+
 	protected void handleUseItemFinish(Player player) {
 		if (player.getLevel() >= 45) {
 			// 是否要通过次元漩涡渗透敌区？ / Do you want to infiltrate the enemy zone through the Dimensional Vortex ?
@@ -100,16 +97,16 @@ public class Legion_Advance_CorridorAI2 extends NpcAI2
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_INVADE_DIRECT_PORTAL_LEVEL_LIMIT);
 		}
 	}
-	
+
 	protected int getTalkDelay() {
 		return getObjectTemplate().getTalkDelay() * 1000;
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
    /**
 	 * @param responder 天族 / Elyos
 	 */
@@ -119,7 +116,7 @@ public class Legion_Advance_CorridorAI2 extends NpcAI2
 	private void transferRvrElyos2(Player responder) {
         TeleportService2.teleportTo(responder, 210040000, 1370.1682f, 671.9592f, 180.76796f, (byte) 12);
     }
-	
+
    /**
 	 * @param responder 魔族 / Asmodians
 	 */
@@ -129,19 +126,14 @@ public class Legion_Advance_CorridorAI2 extends NpcAI2
 	private void transferRvrAsmodians2(Player responder) {
         TeleportService2.teleportTo(responder, 220040000, 790.0702f, 1434.9897f, 312.33909f, (byte) 66);
     }
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		startLifeTask();
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(Legion_Advance_CorridorAI2.this);
-			}
-		}, 3540000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Legion_Advance_CorridorAI2.this), 3540000);
 	}
 }

@@ -108,32 +108,29 @@ public class BaseBossDeathListener implements AbstractAI.AiDeathListener {
 	 */
 	public void announceCapture(final TemporaryPlayerTeam team, final Creature kill) {
 		final String baseName = base.getBaseLocation().getName();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			if (team != null && kill == null) {
+				// %0 成功征服了 %1。 / %0 succeeded in conquering %1.
+				PacketSendUtility.sendPacket(player,
+						new SM_SYSTEM_MESSAGE(1301039, team.getRace().getRaceDescriptionId(), baseName));
+			} else {
+				// %0 成功征服了 %1。 / %0 succeeded in conquering %1.
+				PacketSendUtility.sendPacket(player,
+						new SM_SYSTEM_MESSAGE(1301039, kill.getRace().getRaceDescriptionId(), baseName));
+			}
+			// 欧比斯登陆 4.9.1 / Abyss Landing 4.9.1
+			switch (player.getWorldId()) {
+			case 400010000: // Reshanta.
 				if (team != null && kill == null) {
-					// %0 成功征服了 %1。 / %0 succeeded in conquering %1.
+					// %0 已占领 %1 基地，登陆点已增强。 / %0 has occupied %1 Base and the Landing is now enhanced.
 					PacketSendUtility.sendPacket(player,
-							new SM_SYSTEM_MESSAGE(1301039, team.getRace().getRaceDescriptionId(), baseName));
+							new SM_SYSTEM_MESSAGE(1403186, team.getRace().getRaceDescriptionId(), baseName));
 				} else {
-					// %0 成功征服了 %1。 / %0 succeeded in conquering %1.
+					// %0 已占领 %1 基地，登陆点已增强。 / %0 has occupied %1 Base and the Landing is now enhanced.
 					PacketSendUtility.sendPacket(player,
-							new SM_SYSTEM_MESSAGE(1301039, kill.getRace().getRaceDescriptionId(), baseName));
+							new SM_SYSTEM_MESSAGE(1403186, kill.getRace().getRaceDescriptionId(), baseName));
 				}
-				// 欧比斯登陆 4.9.1 / Abyss Landing 4.9.1
-				switch (player.getWorldId()) {
-				case 400010000: // Reshanta.
-					if (team != null && kill == null) {
-						// %0 已占领 %1 基地，登陆点已增强。 / %0 has occupied %1 Base and the Landing is now enhanced.
-						PacketSendUtility.sendPacket(player,
-								new SM_SYSTEM_MESSAGE(1403186, team.getRace().getRaceDescriptionId(), baseName));
-					} else {
-						// %0 已占领 %1 基地，登陆点已增强。 / %0 has occupied %1 Base and the Landing is now enhanced.
-						PacketSendUtility.sendPacket(player,
-								new SM_SYSTEM_MESSAGE(1403186, kill.getRace().getRaceDescriptionId(), baseName));
-					}
-					break;
-				}
+				break;
 			}
 		});
 	}
@@ -143,26 +140,23 @@ public class BaseBossDeathListener implements AbstractAI.AiDeathListener {
 	 * Applies race bane buffs and related messages to all players.
 	 */
 	public void applyBaseBuff() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.getCommonData().getRace() == Race.ELYOS) {
-					GameEngineServices.skillEngine().applyEffectDirectly(12115, player, player, 0); // Kaisinel's Bane.
-					// 凯希内尔保护的力量环绕着你。 / The power of Kaisinel's Protection surrounds you.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_WEAK_RACE_BUFF_LIGHT_GAIN,
-							5000);
-					// 玛尔库坦的保护增强了敌对阵营。 / Marchutan's Protection has strengthened the opposing faction.
-					PacketSendUtility.playerSendPacketTime(player,
-							SM_SYSTEM_MESSAGE.STR_MSG_WEAK_RACE_BUFF_DARK_WARNING, 10000);
-				} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
-					GameEngineServices.skillEngine().applyEffectDirectly(12117, player, player, 0); // Marchutan's Bane.
-					// 玛尔库坦保护的力量环绕着你。 / The power of Marchutan's Protection surrounds you.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_WEAK_RACE_BUFF_DARK_GAIN,
-							5000);
-					// 凯希内尔的保护增强了敌对阵营。 / Kaisinel's Protection has strengthened the opposing faction.
-					PacketSendUtility.playerSendPacketTime(player,
-							SM_SYSTEM_MESSAGE.STR_MSG_WEAK_RACE_BUFF_LIGHT_WARNING, 10000);
-				}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			if (player.getCommonData().getRace() == Race.ELYOS) {
+				GameEngineServices.skillEngine().applyEffectDirectly(12115, player, player, 0); // Kaisinel's Bane.
+				// 凯希内尔保护的力量环绕着你。 / The power of Kaisinel's Protection surrounds you.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_WEAK_RACE_BUFF_LIGHT_GAIN,
+						5000);
+				// 玛尔库坦的保护增强了敌对阵营。 / Marchutan's Protection has strengthened the opposing faction.
+				PacketSendUtility.playerSendPacketTime(player,
+						SM_SYSTEM_MESSAGE.STR_MSG_WEAK_RACE_BUFF_DARK_WARNING, 10000);
+			} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
+				GameEngineServices.skillEngine().applyEffectDirectly(12117, player, player, 0); // Marchutan's Bane.
+				// 玛尔库坦保护的力量环绕着你。 / The power of Marchutan's Protection surrounds you.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_WEAK_RACE_BUFF_DARK_GAIN,
+						5000);
+				// 凯希内尔的保护增强了敌对阵营。 / Kaisinel's Protection has strengthened the opposing faction.
+				PacketSendUtility.playerSendPacketTime(player,
+						SM_SYSTEM_MESSAGE.STR_MSG_WEAK_RACE_BUFF_LIGHT_WARNING, 10000);
 			}
 		});
 	}

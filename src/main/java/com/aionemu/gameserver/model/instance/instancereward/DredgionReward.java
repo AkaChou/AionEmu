@@ -25,7 +25,7 @@ public class DredgionReward extends InstanceReward<DredgionPlayerReward> {
 	private final MutableInt asmodiansPoints = new MutableInt(0);
 	private final MutableInt elyosPoins = new MutableInt(0);
 	private Race race;
-	private final List<DredgionRooms> dredgionRooms = new ArrayList<DredgionRooms>();
+	private final List<DredgionRooms> dredgionRooms = new ArrayList<>();
 	private Point3D asmodiansStartPosition;
 	private Point3D elyosStartPosition;
 

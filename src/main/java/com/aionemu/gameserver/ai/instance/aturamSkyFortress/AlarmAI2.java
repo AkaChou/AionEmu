@@ -48,12 +48,9 @@ public class AlarmAI2 extends AggressiveNpcAI2
 					PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
 					getPosition().getWorldMapInstance().getDoors().get(128).setOpen(true);
 					getPosition().getWorldMapInstance().getDoors().get(138).setOpen(true);
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							if (!isAlreadyDead()) {
-								despawn();
-							}
+					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						if (!isAlreadyDead()) {
+							despawn();
 						}
 					}, 3000);
 				}

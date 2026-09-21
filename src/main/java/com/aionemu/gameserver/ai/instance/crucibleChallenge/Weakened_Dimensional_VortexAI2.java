@@ -20,28 +20,20 @@ public class Weakened_Dimensional_VortexAI2 extends AggressiveNpcAI2
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 19570, 46, getOwner()).useNoAnimationSkill(); // 次元漩涡 / Dimensional Vortex.
-				startLifeTask();
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			GameEngineServices.skillEngine().getSkill(getOwner(), 19570, 46, getOwner()).useNoAnimationSkill(); // 次元漩涡 / Dimensional Vortex.
+			startLifeTask();
 		}, 1000);
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(Weakened_Dimensional_VortexAI2.this);
-			}
-		}, 15000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Weakened_Dimensional_VortexAI2.this), 15000);
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();

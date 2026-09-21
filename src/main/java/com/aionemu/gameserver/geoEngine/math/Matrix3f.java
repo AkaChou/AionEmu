@@ -16,7 +16,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public final class Matrix3f implements Cloneable, Reusable {
 	/** 对象工厂，用于矩阵实例池化。 / Object factory for pooling matrix instances. */
-	private static final ObjectFactory<Object> FACTORY = new ObjectFactory<Object>() {
+	private static final ObjectFactory<Object> FACTORY = new ObjectFactory<>() {
 
 		public Object create() {
 			return new Matrix3f();

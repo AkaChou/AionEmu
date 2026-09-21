@@ -15,7 +15,7 @@ import lombok.Setter;
 public class CollisionResults implements Iterable<CollisionResult> {
 
 	/** 命中结果列表。 / Hit result list. */
-	private final ArrayList<CollisionResult> results = new ArrayList<CollisionResult>();
+	private final ArrayList<CollisionResult> results = new ArrayList<>();
 	/** 列表是否已按距离排序。 / Whether the list is sorted by distance. */
 	private boolean sorted = true;
 	/** 是否只取第一个命中。 / Whether only the first hit is required. */

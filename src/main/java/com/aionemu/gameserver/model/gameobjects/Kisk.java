@@ -42,7 +42,7 @@ public class Kisk extends SummonedObject<Player> {
 		if (this.kiskStatsTemplate == null) {
 			this.kiskStatsTemplate = new KiskStatsTemplate();
 		}
-		this.kiskMemberIds = new HashSet<Integer>(kiskStatsTemplate.getMaxMembers());
+		this.kiskMemberIds = new HashSet<>(kiskStatsTemplate.getMaxMembers());
 		this.remainingResurrections = this.kiskStatsTemplate.getMaxResurrects();
 		this.kiskSpawnTime = System.currentTimeMillis() / 1000;
 		this.ownerLegion = owner.getLegion();
@@ -92,7 +92,7 @@ public class Kisk extends SummonedObject<Player> {
 
 	/** 返回当前成员列表 / Returns the current member list */
 	public List<Player> getCurrentMemberList() {
-		List<Player> currentMemberList = new ArrayList<Player>();
+		List<Player> currentMemberList = new ArrayList<>();
 		for (int memberId : this.kiskMemberIds) {
 			Player member = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(memberId);
 			if (member != null) {
@@ -192,8 +192,10 @@ public class Kisk extends SummonedObject<Player> {
 			}
 		}
 		final Kisk kisk = this;
-		getKnownList().doOnAllPlayers(new Visitor<Player>() {
-			/** 访问 / Visit. */
+		getKnownList().doOnAllPlayers(new Visitor<>() {
+			/**
+			 * 访问 / Visit.
+			 */
 			@Override
 			public void visit(Player object) {
 				if (object.getRace() == ownerRace) {

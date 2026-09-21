@@ -65,7 +65,7 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         /** 副本计时秒数 / instance timer seconds */
         private final int instanceTimerSeconds = 1800000;
         /** oblivion 任务 / oblivion task */
-        private final List<Future<?>> oblivionTask = new ArrayList<Future<?>>();
+        private final List<Future<?>> oblivionTask = new ArrayList<>();
 
         /** spawned / spawned */
         private boolean spawned = false;
@@ -739,18 +739,18 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
                    */
                   @Override
                   public void run() {
-                       instance.doOnAllPlayers(new Visitor<Player>() {
-                            /**
-                             * 处理 visit。
-                             * Handle visit.
-                             *
-                             * @param player 玩家 / player
-                             */
-                            @Override
-                            public void visit(Player player) {
-                                 stopInstance(player);
-                            }
-                       });
+                       instance.doOnAllPlayers(new Visitor<>() {
+						   /**
+							* 处理 visit。
+							* Handle visit.
+							*
+							* @param player 玩家 / player
+							*/
+						   @Override
+						   public void visit(Player player) {
+							   stopInstance(player);
+						   }
+					   });
                   }
              }, 3000);
         }
@@ -768,21 +768,21 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
     }
 
     private void sendPacket(final int nameId, final int point) {
-        instance.doOnAllPlayers(new Visitor<Player>() {
-            /**
-             * 处理 visit。
-             * Handle visit.
-             *
-             * @param player 玩家 / player
-             */
-            @Override
-            public void visit(Player player) {
-                if (nameId != 0) {
-                    PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400237, new DescriptionId(nameId * 2 + 1), point));
-                }
-                PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(getTime(), instanceReward, null));
-            }
-        });
+        instance.doOnAllPlayers(new Visitor<>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
+			@Override
+			public void visit(Player player) {
+				if (nameId != 0) {
+					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400237, new DescriptionId(nameId * 2 + 1), point));
+				}
+				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(getTime(), instanceReward, null));
+			}
+		});
     }
 
     private int checkRank(int totalPoints) {
@@ -809,18 +809,18 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
              */
             @Override
             public void run() {
-                instance.doOnAllPlayers(new Visitor<Player>() {
-                    /**
-                     * 处理 visit。
-                     * Handle visit.
-                     *
-                     * @param player 玩家 / player
-                     */
-                    @Override
-                    public void visit(Player player) {
-                        stopInstance(player);
-                    }
-                });
+                instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
+						stopInstance(player);
+					}
+				});
             }
         }, 1800000));
     }
@@ -880,18 +880,18 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
                 }
             }, prepareTimerSeconds);
         }
-        instance.doOnAllPlayers(new Visitor<Player>() {
-            /**
-             * 处理 visit。
-             * Handle visit.
-             *
-             * @param player 玩家 / player
-             */
-            @Override
-            public void visit(Player player) {
-                PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(prepareTimerSeconds, instanceReward, null));
-            }
-        });
+        instance.doOnAllPlayers(new Visitor<>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
+			@Override
+			public void visit(Player player) {
+				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(prepareTimerSeconds, instanceReward, null));
+			}
+		});
     }
 
     private void startMainInstanceTimer() {
@@ -1203,13 +1203,13 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
              */
             @Override
             public void run() {
-                instance.doOnAllPlayers(new Visitor<Player>() {
+                instance.doOnAllPlayers(new Visitor<>() {
                     /**
-                     * 处理 visit。
-                     * Handle visit.
-                     *
-                     * @param player 玩家 / player
-                     */
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
                     @Override
                     public void visit(Player player) {
                         if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {

@@ -202,13 +202,7 @@ public class SummonController extends CreatureController<Summon> {
 
 		if (!master.equals(lastAttacker) && !owner.equals(lastAttacker) && !master.getLifeStats().isAlreadyDead()
 				&& !lastAttacker.getLifeStats().isAlreadyDead()) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-				@Override
-				public void run() {
-					lastAttacker.getAggroList().addHate(master, 1);
-				}
-			}, 1000);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> lastAttacker.getAggroList().addHate(master, 1), 1000);
 		}
 	}
 
@@ -231,13 +225,7 @@ public class SummonController extends CreatureController<Summon> {
 		if (skill != null) {
 			// 技能成功时，按需处理自动释放 / If skill succeeds, handle automatic release if expected
 			if (skill.useSkill() && skillId == releaseAfterSkill) {
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-					@Override
-					public void run() {
-						SummonsService.release(getOwner(), UnsummonType.UNSPECIFIED, isAttacked);
-					}
-				}, 1000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> SummonsService.release(getOwner(), UnsummonType.UNSPECIFIED, isAttacked), 1000);
 			}
 			setReleaseAfterSkill(-1);
 		}

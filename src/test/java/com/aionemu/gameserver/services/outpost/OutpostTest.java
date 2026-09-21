@@ -35,7 +35,7 @@ class OutpostTest {
 
 	@Test
 	void stopToleratesOutpostNpcRemovalFromWorldCollectionDuringDelete() {
-		List<OutpostNpc> liveNpcs = new ArrayList<OutpostNpc>();
+		List<OutpostNpc> liveNpcs = new ArrayList<>();
 		TestOutpostNpc firstNpc = outpostNpc(liveNpcs);
 		TestOutpostNpc secondNpc = outpostNpc(liveNpcs);
 		TestOutpostNpc thirdNpc = outpostNpc(liveNpcs);
@@ -46,13 +46,13 @@ class OutpostTest {
 		world.npcs = liveNpcs;
 		worldBootstrapServices = new GameWorldBootstrapServices(null, null, null, null, provider(World.class, world));
 
-		assertDoesNotThrow(() -> new Outpost<TestOutpostLocation>(new TestOutpostLocation()).stop());
+		assertDoesNotThrow(() -> new Outpost<>(new TestOutpostLocation()).stop());
 		assertTrue(liveNpcs.isEmpty());
 	}
 
 	@Test
 	void despawnAttackersToleratesAttackerRemovalDuringDelete() {
-		Outpost<TestOutpostLocation> outpost = new Outpost<TestOutpostLocation>(new TestOutpostLocation());
+		Outpost<TestOutpostLocation> outpost = new Outpost<>(new TestOutpostLocation());
 		List<Npc> attackers = outpost.getAttackers();
 		TestOutpostNpc firstNpc = attackerNpc(attackers);
 		TestOutpostNpc secondNpc = attackerNpc(attackers);

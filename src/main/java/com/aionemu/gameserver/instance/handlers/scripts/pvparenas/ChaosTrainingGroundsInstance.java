@@ -36,7 +36,7 @@ public class ChaosTrainingGroundsInstance extends PvPArenaInstance
 		deathFine = -125;
 		super.onInstanceCreate(instance);
 	}
-	
+
 	/**
 	 * 玩家采集完成时处理。
 	 * Handle player gathering completion.
@@ -55,7 +55,7 @@ public class ChaosTrainingGroundsInstance extends PvPArenaInstance
 		DescriptionId name = new DescriptionId(nameId * 2 + 1);
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400237, name, 1250));
 	}
-	
+
 	/**
 	 * 处理 reward。
 	 * Handle reward.
@@ -161,7 +161,7 @@ public class ChaosTrainingGroundsInstance extends PvPArenaInstance
 		}
 		super.reward();
 	}
-	
+
 	/**
 	 * 处理 spawnRings。
 	 * Handle spawnRings.
@@ -199,7 +199,7 @@ public class ChaosTrainingGroundsInstance extends PvPArenaInstance
 		new Point3D(665.2619, 1766.4718, 207.25465), 6), instanceId);
 		fv3.spawn();
 	}
-	
+
 	/**
 	 * 玩家通过飞行环时处理。
 	 * Handle a player passing a flying ring.
@@ -215,54 +215,61 @@ public class ChaosTrainingGroundsInstance extends PvPArenaInstance
 			return false;
 		}
 		Npc npc;
-		if (flyingRing.equals("PVP_ARENA_1")) {
-			npc = getNpc(674.841f, 1793.065f, 150.964f);
-			if (npc != null && npc.isSpawned()) {
-				npc.getController().scheduleRespawn();
-				npc.getController().onDelete();
-				sendSystemMsg(player, npc, 250);
-				sendPacket();
-			}
-		} else if (flyingRing.equals("PVP_ARENA_2")) {
-			npc = getNpc(688.410f, 1769.611f, 150.964f);
-			if (npc != null && npc.isSpawned()) {
-				npc.getController().scheduleRespawn();
-				npc.getController().onDelete();
-				playerReward.addPoints(250);
-				sendSystemMsg(player, npc, 250);
-				sendPacket();
-			}
-		} else if (flyingRing.equals("PVP_ARENA_3")) {
-			npc = getNpc(664.160f, 1761.933f, 171.504f);
-			if (npc != null && npc.isSpawned()) {
-				npc.getController().scheduleRespawn();
-				npc.getController().onDelete();
-				playerReward.addPoints(250);
-				sendSystemMsg(player, npc, 250);
-				sendPacket();
-			}
-		} else if (flyingRing.equals("PVP_ARENA_VOID_1")) {
-			npc = getNpc(693.061f, 1752.479f, 186.750f);
-			if (npc != null && npc.isSpawned()) {
-				useSkill(npc, player, 20059, 1);
-				npc.getController().scheduleRespawn();
-				npc.getController().onDelete();
-			}
-		} else if (flyingRing.equals("PVP_ARENA_VOID_2")) {
-			npc = getNpc(688.061f, 1798.229f, 198.500f);
-			if (npc != null && npc.isSpawned()) {
-				useSkill(npc, player, 20059, 1);
-				npc.getController().scheduleRespawn();
-				npc.getController().onDelete();
-			}
-		} else if (flyingRing.equals("PVP_ARENA_VOID_3")) {
-			npc = getNpc(659.311f, 1768.979f, 201.500f);
-			if (npc != null && npc.isSpawned()) {
-				useSkill(npc, player, 20059, 1);
-				npc.getController().scheduleRespawn();
-				npc.getController().onDelete();
-			}
-		}
+        switch (flyingRing) {
+            case "PVP_ARENA_1":
+                npc = getNpc(674.841f, 1793.065f, 150.964f);
+                if (npc != null && npc.isSpawned()) {
+                    npc.getController().scheduleRespawn();
+                    npc.getController().onDelete();
+                    sendSystemMsg(player, npc, 250);
+                    sendPacket();
+                }
+                break;
+            case "PVP_ARENA_2":
+                npc = getNpc(688.410f, 1769.611f, 150.964f);
+                if (npc != null && npc.isSpawned()) {
+                    npc.getController().scheduleRespawn();
+                    npc.getController().onDelete();
+                    playerReward.addPoints(250);
+                    sendSystemMsg(player, npc, 250);
+                    sendPacket();
+                }
+                break;
+            case "PVP_ARENA_3":
+                npc = getNpc(664.160f, 1761.933f, 171.504f);
+                if (npc != null && npc.isSpawned()) {
+                    npc.getController().scheduleRespawn();
+                    npc.getController().onDelete();
+                    playerReward.addPoints(250);
+                    sendSystemMsg(player, npc, 250);
+                    sendPacket();
+                }
+                break;
+            case "PVP_ARENA_VOID_1":
+                npc = getNpc(693.061f, 1752.479f, 186.750f);
+                if (npc != null && npc.isSpawned()) {
+                    useSkill(npc, player, 20059, 1);
+                    npc.getController().scheduleRespawn();
+                    npc.getController().onDelete();
+                }
+                break;
+            case "PVP_ARENA_VOID_2":
+                npc = getNpc(688.061f, 1798.229f, 198.500f);
+                if (npc != null && npc.isSpawned()) {
+                    useSkill(npc, player, 20059, 1);
+                    npc.getController().scheduleRespawn();
+                    npc.getController().onDelete();
+                }
+                break;
+            case "PVP_ARENA_VOID_3":
+                npc = getNpc(659.311f, 1768.979f, 201.500f);
+                if (npc != null && npc.isSpawned()) {
+                    useSkill(npc, player, 20059, 1);
+                    npc.getController().scheduleRespawn();
+                    npc.getController().onDelete();
+                }
+                break;
+        }
 		return false;
 	}
 }

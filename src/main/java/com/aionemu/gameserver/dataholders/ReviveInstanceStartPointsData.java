@@ -28,7 +28,7 @@ public class ReviveInstanceStartPointsData {
 	protected List<InstanceReviveStartPoints> InstanceStartPoints;
 
 	@XmlTransient
-	private final IntObjectHashMap<InstanceReviveStartPoints> custom = new IntObjectHashMap<InstanceReviveStartPoints>();
+	private final IntObjectHashMap<InstanceReviveStartPoints> custom = new IntObjectHashMap<>();
 
 	/**
 	 * 按世界 ID 获取副本复活起始点。

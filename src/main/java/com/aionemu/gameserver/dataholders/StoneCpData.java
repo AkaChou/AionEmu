@@ -28,10 +28,10 @@ public class StoneCpData {
 	private List<StoneCP> stonelist;
 
 	@XmlTransient
-	private final IntObjectHashMap<StoneCP> stoneData = new IntObjectHashMap<StoneCP>();
+	private final IntObjectHashMap<StoneCP> stoneData = new IntObjectHashMap<>();
 
 	@XmlTransient
-	private final Map<Integer, StoneCP> stoneDataMap = new HashMap<Integer, StoneCP>(1);
+	private final Map<Integer, StoneCP> stoneDataMap = new HashMap<>(1);
 
 	/**
 	 * JAXB 反序列化完成后，将 CP 石模板索引到两套映射中。

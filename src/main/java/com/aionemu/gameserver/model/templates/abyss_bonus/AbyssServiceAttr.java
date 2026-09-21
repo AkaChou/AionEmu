@@ -41,7 +41,7 @@ public class AbyssServiceAttr {
 	/** 返回 penalty attr / Returns the penalty attr */
 	public List<AbyssPenaltyAttr> getPenaltyAttr() {
 		if (bonusAttr == null) {
-			bonusAttr = new ArrayList<AbyssPenaltyAttr>();
+			bonusAttr = new ArrayList<>();
 		}
 		return bonusAttr;
 	}

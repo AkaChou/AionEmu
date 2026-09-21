@@ -42,36 +42,25 @@ public class Kysis_OverlordAI2 extends AggressiveNpcAI2
 			case 279639:
 			case 269011:
 				treasureChest();
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			        @Override
-			        public void run() {
-						spawnTreasureChest(701481);
-			        }
-		        }, 10000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTreasureChest(701481), 10000);
 			break;
 		}
 		super.handleDied();
 	}
 
 	private void treasureChest() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 出现了一个宝箱。 / A treasure chest has appeared.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdC_BoxSpawn);
-			}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			// 出现了一个宝箱。 / A treasure chest has appeared.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdC_BoxSpawn);
 		});
 	}
 
 	private void announceUnsealedKysis() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 解封的基西斯。 / Unsealed Kysis.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Dkisas_Named_Spawn);
-				// 基西斯龙族王子已出现！ / The Kysis Balaur Prince has appeared!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1231_Boss_hide_Dispel, 20000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 解封的基西斯。 / Unsealed Kysis.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Dkisas_Named_Spawn);
+			// 基西斯龙族王子已出现！ / The Kysis Balaur Prince has appeared!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1231_Boss_hide_Dispel, 20000);
 		});
 	}
 

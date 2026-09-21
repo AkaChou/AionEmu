@@ -38,7 +38,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -122,7 +122,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 奖励怪：“索罗基地盗墓者”，可出现在 5 个房间，掉落古代硬币、古代魔石、外观。 / Bonus Monster: "Sauro Base Grave Robber" They can appear in "5 different rooms" and give: Ancient Coins. Ancient Manastones. Skins
 	 */
@@ -158,7 +158,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 			break;
 		}
     }
-	
+
     /**
      * 处理死亡事件。
      * Handle a death event.
@@ -196,7 +196,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 					break;
 				}
 			break;
-			
+
 			/**
 			 * 区域 2：符文回廊与后勤基地。 / Area 2: Rune Cloister And Logistic Base
 			 */
@@ -210,7 +210,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 				// 通往失落虔诚之树的门已打开。 / The door to the Lost Tree of Devotion has opened.
 				sendMsgByRace(1401917, Race.PC_ALL, 0);
 			break;
-			
+
 			/**
 			 * 区域 3：符文桥与后勤基地军械库。 / Area 3: Rune Bridge And Logistic Base Arsenal
 			 */
@@ -224,7 +224,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 				// 通往重型仓储区的门已打开。 / The door to the Heavy Storage Area has opened.
 				sendMsgByRace(1401919, Race.PC_ALL, 0);
 			break;
-			
+
 			/**
 	 * 区域 4。 / Area 4: Chiefs Chamber
 	 */
@@ -240,7 +240,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 				sendMsgByRace(1401922, Race.PC_ALL, 5000);
 				spawn(730872, 127.77696f, 432.75684f, 151.69659f, (byte) 0, 3);
 			break;
-			
+
 			/**
 	 * 区域 5。 / Area 5: Final Boss
 	 */
@@ -276,7 +276,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	public void removeItems(Player player) {
         Storage storage = player.getInventory();
         storage.decreaseByItemId(185000176, storage.getItemCountByItemId(185000176)); //Red Storeroom Key.
@@ -284,7 +284,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
         storage.decreaseByItemId(185000178, storage.getItemCountByItemId(185000178)); //Green Storeroom Key.
 		storage.decreaseByItemId(185000179, storage.getItemCountByItemId(185000179)); //Danuar Stone Room Key.
     }
-	
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -293,7 +293,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -302,7 +302,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -319,7 +319,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -330,7 +330,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -341,7 +341,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 	}
-	
+
     /**
      * 副本销毁时清理资源。
      * Clean up resources when the instance is destroyed.

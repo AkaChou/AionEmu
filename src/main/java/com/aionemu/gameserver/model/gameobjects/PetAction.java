@@ -20,7 +20,7 @@ public enum PetAction {
 	private static final Map<Integer, PetAction> petActions;
 
 	static {
-		petActions = new HashMap<Integer, PetAction>();
+		petActions = new HashMap<>();
 		for (PetAction action : values()) {
 			petActions.put(action.getActionId(), action);
 		}

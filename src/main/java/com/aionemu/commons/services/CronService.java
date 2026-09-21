@@ -53,7 +53,7 @@ import lombok.AccessLevel;
 public final class CronService {
 
     /** 单例实例 Singleton instances */
-    private static final Map<String, CronService> instances = new ConcurrentHashMap<String, CronService>();
+    private static final Map<String, CronService> instances = new ConcurrentHashMap<>();
 
     /** Quartz 调度器 / Quartz scheduler */
     private Scheduler scheduler;

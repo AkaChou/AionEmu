@@ -16,9 +16,9 @@ import java.util.List;
  * @author Encom
  */
 @AIName("dynamic_iluma_monster")
-public class Dynamic_Iluma_MonsterAI2 extends AggressiveNpcAI2 {	
+public class Dynamic_Iluma_MonsterAI2 extends AggressiveNpcAI2 {
 
-	
+
 	@Override
 	protected void handleDied() {
 		switch (Rnd.get(1, 24)) {
@@ -118,14 +118,11 @@ public class Dynamic_Iluma_MonsterAI2 extends AggressiveNpcAI2 {
 				spawn(240889, 1358.5513f, 335.7875f, 348.35382f, (byte) 0); //Archon Scout.
 			break;
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				despawnNpc(241053); //传送门。 / Portal.
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			despawnNpc(241053); //传送门。 / Portal.
 		}, 60000);
 	}
-	
+
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);

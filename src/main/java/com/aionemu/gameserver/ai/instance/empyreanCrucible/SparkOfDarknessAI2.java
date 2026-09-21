@@ -20,34 +20,26 @@ public class SparkOfDarknessAI2 extends GeneralNpcAI2
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		startEventTask();
 		startLifeTask();
 	}
-	
+
 	private void startEventTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!isAlreadyDead()) {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19554, 1, getOwner()).useNoAnimationSkill();
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isAlreadyDead()) {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 19554, 1, getOwner()).useNoAnimationSkill();
 			}
 		}, 500);
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(SparkOfDarknessAI2.this);
-			}
-		}, 6500);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(SparkOfDarknessAI2.this), 6500);
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

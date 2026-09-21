@@ -23,7 +23,7 @@ class FindGroupServiceTest {
 	@Test
 	void cleanRemovesExpiredGroupsWithoutConcurrentModification() throws ReflectiveOperationException {
 		TestFindGroupService service = objenesis.newInstance(TestFindGroupService.class);
-		Map<Integer, FindGroup> groups = new LinkedHashMap<Integer, FindGroup>();
+		Map<Integer, FindGroup> groups = new LinkedHashMap<>();
 		groups.put(1, expiredGroup(1));
 		groups.put(2, expiredGroup(2));
 		service.mapToMutate = groups;
@@ -39,7 +39,7 @@ class FindGroupServiceTest {
 	@Test
 	void getFindGroupsReturnsSnapshotInsteadOfLiveMapValues() throws ReflectiveOperationException {
 		TestFindGroupService service = objenesis.newInstance(TestFindGroupService.class);
-		Map<Integer, FindGroup> groups = new LinkedHashMap<Integer, FindGroup>();
+		Map<Integer, FindGroup> groups = new LinkedHashMap<>();
 		groups.put(1, activeGroup(1));
 		groups.put(2, activeGroup(2));
 		setField(service, "elyosRecruitFindGroups", groups);
@@ -57,7 +57,7 @@ class FindGroupServiceTest {
 	void updatesApplyListingAndIgnoresMissingEntries() throws ReflectiveOperationException {
 		FindGroupService service = objenesis.newInstance(FindGroupService.class);
 		FindGroup application = activeGroup(1);
-		Map<Integer, FindGroup> applications = new LinkedHashMap<Integer, FindGroup>();
+		Map<Integer, FindGroup> applications = new LinkedHashMap<>();
 		applications.put(1, application);
 		setField(service, "elyosApplyFindGroups", applications);
 

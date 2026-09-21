@@ -59,12 +59,7 @@ public class IdianDepths extends AdminCommand
 				PacketSendUtility.sendMessage(player, "<Idian Depths> " + idianDepthsId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Idian Depths> " + idianDepthsId + " started!");
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player player) {
-						PacketSendUtility.sendSys3Message(player, "", "<Idian Depths> is now open !!!");
-					}
-				});
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player1 -> PacketSendUtility.sendSys3Message(player1, "", "<Idian Depths> is now open !!!"));
 				GameLocationBootstrapServices.idianDepthsService().startIdianDepths(idianDepthsId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {

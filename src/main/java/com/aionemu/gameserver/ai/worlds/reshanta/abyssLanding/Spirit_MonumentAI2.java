@@ -46,22 +46,19 @@ public class Spirit_MonumentAI2 extends NpcAI2
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}
-	
+
 	private void updateGuardianLanding(final int id) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
-                    if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-                        GameLocationBootstrapServices.abyssLandingService().onDieMonuments(Race.ASMODIANS, id, 20000);
-                    } else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-                        GameLocationBootstrapServices.abyssLandingService().onDieMonuments(Race.ELYOS, id, 20000);
-                    }
-                }
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
+if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
+GameLocationBootstrapServices.abyssLandingService().onDieMonuments(Race.ASMODIANS, id, 20000);
+} else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
+GameLocationBootstrapServices.abyssLandingService().onDieMonuments(Race.ELYOS, id, 20000);
+}
+}
 		});
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

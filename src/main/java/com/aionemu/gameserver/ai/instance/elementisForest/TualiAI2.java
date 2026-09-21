@@ -41,24 +41,19 @@ public class TualiAI2 extends AggressiveNpcAI2 {
 			GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500454, getObjectId(), true, 0, 0);
 			scheduleSkills();
 
-			task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						GameEngineServices.skillEngine().getSkill(getOwner(), 19348, 60, getOwner()).useNoAnimationSkill();
-						int size = getPosition().getWorldMapInstance().getNpcs(282308).size();
-						for (int i = 0; i < 6; i++) {
-							if (size >= 12) {
-								break;
-							}
-							size++;
-							rndSpawn(282307);
+			task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+				if (!isAlreadyDead()) {
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19348, 60, getOwner()).useNoAnimationSkill();
+					int size = getPosition().getWorldMapInstance().getNpcs(282308).size();
+					for (int i = 0; i < 6; i++) {
+						if (size >= 12) {
+							break;
 						}
-						GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401378, 6000);
+						size++;
+						rndSpawn(282307);
 					}
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401378, 6000);
 				}
-
 			}, 20000, 50000);
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
@@ -146,13 +141,9 @@ public class TualiAI2 extends AggressiveNpcAI2 {
 		if (isAlreadyDead() || !isStart.get()) {
 			return;
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				AI2Actions.useSkill(TualiAI2.this, 19512 + Rnd.get(5));
-				scheduleSkills();
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			AI2Actions.useSkill(TualiAI2.this, 19512 + Rnd.get(5));
+			scheduleSkills();
 		}, Rnd.get(18, 22) * 1000L);
 	}
 }

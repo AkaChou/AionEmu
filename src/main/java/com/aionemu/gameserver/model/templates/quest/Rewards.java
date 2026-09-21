@@ -71,7 +71,7 @@ public class Rewards {
 	/** 返回可选奖励物品列表 / Returns the selectable reward items */
 	public List<QuestItems> getSelectableRewardItem() {
 		if (selectableRewardItem == null) {
-			selectableRewardItem = new ArrayList<QuestItems>();
+			selectableRewardItem = new ArrayList<>();
 		}
 		return this.selectableRewardItem;
 	}
@@ -79,7 +79,7 @@ public class Rewards {
 	/** 获取奖励物品。 / Returns the reward item. */
 	public List<QuestItems> getRewardItem() {
 		if (rewardItem == null) {
-			rewardItem = new ArrayList<QuestItems>();
+			rewardItem = new ArrayList<>();
 		}
 		return this.rewardItem;
 	}

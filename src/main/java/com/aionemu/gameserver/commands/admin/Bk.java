@@ -31,7 +31,7 @@ import java.util.ArrayList;
 @Slf4j
 public class Bk extends AdminCommand {
 
-	ArrayList<Bookmark> bookmarks = new ArrayList<Bookmark>();
+	ArrayList<Bookmark> bookmarks = new ArrayList<>();
 	private String bookmark_name = "";
 
 	/**
@@ -54,25 +54,23 @@ public class Bk extends AdminCommand {
 			return;
 		}
 
-		if (params[0].equals("add"))
-			try {
-				bookmark_name = params[1].toLowerCase();
-				if (isBookmarkExists(bookmark_name, player.getObjectId())) {
-					PacketSendUtility.sendMessage(player, "Bookmark " + bookmark_name + " already exists !");
-					return;
-				}
+		switch (params[0]) {
+			case "add":
+				try {
+					bookmark_name = params[1].toLowerCase();
+					if (isBookmarkExists(bookmark_name, player.getObjectId())) {
+						PacketSendUtility.sendMessage(player, "Bookmark " + bookmark_name + " already exists !");
+						return;
+					}
 
-				final float x = player.getX();
-				final float y = player.getY();
-				final float z = player.getZ();
-				final int char_id = player.getObjectId();
-				final int world_id = player.getWorldId();
+					final float x = player.getX();
+					final float y = player.getY();
+					final float z = player.getZ();
+					final int char_id = player.getObjectId();
+					final int world_id = player.getWorldId();
 
-				DB.insertUpdate("INSERT INTO bookmark (" + "`name`,`char_id`, `x`, `y`, `z`,`world_id` )" + " VALUES "
-					+ "(?, ?, ?, ?, ?, ?)", new IUStH() {
-
-					@Override
-					public void handleInsertUpdate(PreparedStatement ps) throws SQLException {
+					DB.insertUpdate("INSERT INTO bookmark (" + "`name`,`char_id`, `x`, `y`, `z`,`world_id` )" + " VALUES "
+						+ "(?, ?, ?, ?, ?, ?)", ps -> {
 						ps.setString(1, bookmark_name);
 						ps.setInt(2, char_id);
 						ps.setFloat(3, x);
@@ -80,72 +78,69 @@ public class Bk extends AdminCommand {
 						ps.setFloat(5, z);
 						ps.setInt(6, world_id);
 						ps.execute();
-					}
-				});
+					});
 
-				PacketSendUtility
-					.sendMessage(player, "Bookmark " + bookmark_name + " sucessfully added to your bookmark list!");
+					PacketSendUtility
+						.sendMessage(player, "Bookmark " + bookmark_name + " sucessfully added to your bookmark list!");
 
-				updateInfo(player.getObjectId());
-			}
-			catch (Exception e) {
-				PacketSendUtility.sendMessage(player, "syntax //bk <add|del|tele> <bookmark name>");
-			}
-		else if (params[0].equals("del")) {
-			Connection con = null;
-			try {
-				bookmark_name = params[1].toLowerCase();
-				con = DatabaseFactory.getConnection();
-
-				PreparedStatement statement = con.prepareStatement("DELETE FROM bookmark WHERE name = ?");
-				statement.setString(1, bookmark_name);
-				statement.executeUpdate();
-				statement.close();
-			}
-			catch (Exception e) {
-				PacketSendUtility.sendMessage(player, "syntax //bk <add|del|tele> <bookmark name>");
-			}
-			finally {
-				DatabaseFactory.close(con);
-				PacketSendUtility.sendMessage(player, "Bookmark " + bookmark_name
-					+ " sucessfully removed from your bookmark list!");
-				updateInfo(player.getObjectId());
-			}
-		}
-		else if (params[0].equals("tele"))
-			try {
-
-				if (params[1].equals("") || params[1] == null) {
+					updateInfo(player.getObjectId());
+				} catch (Exception e) {
 					PacketSendUtility.sendMessage(player, "syntax //bk <add|del|tele> <bookmark name>");
-					return;
 				}
-
-				updateInfo(player.getObjectId());
-
-				bookmark_name = params[1].toLowerCase();
-				Bookmark tele_bk = null;
+				break;
+			case "del":
+				Connection con = null;
 				try {
-					tele_bk = selectByName(bookmark_name);
+					bookmark_name = params[1].toLowerCase();
+					con = DatabaseFactory.getConnection();
+
+					PreparedStatement statement = con.prepareStatement("DELETE FROM bookmark WHERE name = ?");
+					statement.setString(1, bookmark_name);
+					statement.executeUpdate();
+					statement.close();
+				} catch (Exception e) {
+					PacketSendUtility.sendMessage(player, "syntax //bk <add|del|tele> <bookmark name>");
+				} finally {
+					DatabaseFactory.close(con);
+					PacketSendUtility.sendMessage(player, "Bookmark " + bookmark_name
+						+ " sucessfully removed from your bookmark list!");
+					updateInfo(player.getObjectId());
 				}
-				finally {
-					if (tele_bk != null) {
-						TeleportService2.teleportTo(player, tele_bk.getWorld_id(), tele_bk.getX(), tele_bk.getY(), tele_bk.getZ());
-						PacketSendUtility.sendMessage(player, "Teleported to bookmark " + tele_bk.getName() + " location");
+				break;
+			case "tele":
+				try {
+
+					if (params[1].equals("") || params[1] == null) {
+						PacketSendUtility.sendMessage(player, "syntax //bk <add|del|tele> <bookmark name>");
+						return;
 					}
+
+					updateInfo(player.getObjectId());
+
+					bookmark_name = params[1].toLowerCase();
+					Bookmark tele_bk = null;
+					try {
+						tele_bk = selectByName(bookmark_name);
+					} finally {
+						if (tele_bk != null) {
+							TeleportService2.teleportTo(player, tele_bk.getWorld_id(), tele_bk.getX(), tele_bk.getY(), tele_bk.getZ());
+							PacketSendUtility.sendMessage(player, "Teleported to bookmark " + tele_bk.getName() + " location");
+						}
+					}
+				} catch (Exception e) {
+					PacketSendUtility.sendMessage(player, "syntax //bk <add|del|tele> <bookmark name>");
 				}
-			}
-			catch (Exception e) {
-				PacketSendUtility.sendMessage(player, "syntax //bk <add|del|tele> <bookmark name>");
-			}
-		else if (params[0].equals("list")) {
-			updateInfo(player.getObjectId());
-			PacketSendUtility.sendMessage(player, "=====Bookmark list begin=====");
-			for (Bookmark b : bookmarks) {
-				String chatLink = ChatUtil.position(b.getName(), b.getWorld_id(), b.getX(), b.getY(), b.getZ());
-				PacketSendUtility.sendMessage(player, " = " + chatLink + " =  " + WorldMapType.getWorld(b.getWorld_id())
-					+ "  ( " + b.getX() + " ," + b.getY() + " ," + b.getZ() + " )");
-			}
-			PacketSendUtility.sendMessage(player, "=====Bookmark list end=======");
+				break;
+			case "list":
+				updateInfo(player.getObjectId());
+				PacketSendUtility.sendMessage(player, "=====Bookmark list begin=====");
+				for (Bookmark b : bookmarks) {
+					String chatLink = ChatUtil.position(b.getName(), b.getWorld_id(), b.getX(), b.getY(), b.getZ());
+					PacketSendUtility.sendMessage(player, " = " + chatLink + " =  " + WorldMapType.getWorld(b.getWorld_id())
+						+ "  ( " + b.getX() + " ," + b.getY() + " ," + b.getZ() + " )");
+				}
+				PacketSendUtility.sendMessage(player, "=====Bookmark list end=======");
+				break;
 		}
 	}
 

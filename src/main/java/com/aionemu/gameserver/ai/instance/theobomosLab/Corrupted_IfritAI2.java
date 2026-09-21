@@ -89,30 +89,27 @@ public class Corrupted_IfritAI2 extends AggressiveNpcAI2
 	}
 
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelPhaseTask();
-				} else {
-					// 元素力量即将以毁灭性爆炸释放。 / A massive blast of elemental power will soon explode with destructive force.
-					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_Teo_T_Boss_Skill_03, 0);
-					GameEngineServices.skillEngine().getSkill(getOwner(), 22743, 10, getOwner()).useNoAnimationSkill(); //Elemental Explosion.
-					List<Player> players = getLifedPlayers();
-					if (!players.isEmpty()) {
-						int size = players.size();
-						if (players.size() < 6) {
-							for (Player p: players) {
-								spawnIfritSoul(p);
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelPhaseTask();
+			} else {
+				// 元素力量即将以毁灭性爆炸释放。 / A massive blast of elemental power will soon explode with destructive force.
+				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_Teo_T_Boss_Skill_03, 0);
+				GameEngineServices.skillEngine().getSkill(getOwner(), 22743, 10, getOwner()).useNoAnimationSkill(); //Elemental Explosion.
+				List<Player> players = getLifedPlayers();
+				if (!players.isEmpty()) {
+					int size = players.size();
+					if (players.size() < 6) {
+						for (Player p: players) {
+							spawnIfritSoul(p);
+						}
+					} else {
+						int count = Rnd.get(6, size);
+						for (int i = 0; i < count; i++) {
+							if (players.isEmpty()) {
+								break;
 							}
-						} else {
-							int count = Rnd.get(6, size);
-							for (int i = 0; i < count; i++) {
-								if (players.isEmpty()) {
-									break;
-								}
-								spawnIfritSoul(players.get(Rnd.get(players.size())));
-							}
+							spawnIfritSoul(players.get(Rnd.get(players.size())));
 						}
 					}
 				}
@@ -125,12 +122,9 @@ public class Corrupted_IfritAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						spawn(237252, x, y, z, (byte) 0); //Ifrit's Soul.
-					}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					spawn(237252, x, y, z, (byte) 0); //Ifrit's Soul.
 				}
 			}, 3000);
 		}
@@ -142,7 +136,7 @@ public class Corrupted_IfritAI2 extends AggressiveNpcAI2
 	}
 
 	private List<Player> getLifedPlayers() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);

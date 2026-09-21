@@ -116,7 +116,7 @@ public class GameServer {
 	 * NPC 统计集合（启动/诊断用）。
 	 * NPC counting set (startup/diagnostics).
 	 */
-	public static HashSet<String> npcs_count = new HashSet<String>();
+	public static HashSet<String> npcs_count = new HashSet<>();
 	/** 魔族角色计数 / Asmodian character count */
 	private static int ASMOS_COUNT = 0;
 	/** 天族角色计数 / Elyos character count */
@@ -127,7 +127,7 @@ public class GameServer {
 	private static double ASMOS_RATIO = 0.0;
 	private static final ReentrantLock lock = new ReentrantLock(true);
 
-	private static Set<StartupHook> startUpHooks = new HashSet<StartupHook>();
+	private static Set<StartupHook> startUpHooks = new HashSet<>();
 	private static volatile GameServer activeServer;
 
 	private GameServerNetworkLifecycle networkLifecycle;
@@ -1436,24 +1436,21 @@ public class GameServer {
 	 * Registers the faction character-ratio startup hook (loads counts from DB).
 	 */
 	public static void registerRatioLimitStartupHook() {
-		addStartupHook(new StartupHook() {
-			@Override
-			public void onStartup() {
-				lock.lock();
-				try {
-					long dbStart = System.currentTimeMillis();
-					ASMOS_COUNT = DAOManager.getDAO(PlayerDAO.class).getCharacterCountForRace(Race.ASMODIANS);
-					ELYOS_COUNT = DAOManager.getDAO(PlayerDAO.class).getCharacterCountForRace(Race.ELYOS);
-					long dbTime = System.currentTimeMillis() - dbStart;
-					log.debug("Database faction query took {} ms", dbTime);
-					computeRatios();
-				} catch (Exception e) {
-					log.error(I18n.get("log.a690a349a611"), e);
-				} finally {
-					lock.unlock();
-				}
-				displayRatios(false);
+		addStartupHook(() -> {
+			lock.lock();
+			try {
+				long dbStart = System.currentTimeMillis();
+				ASMOS_COUNT = DAOManager.getDAO(PlayerDAO.class).getCharacterCountForRace(Race.ASMODIANS);
+				ELYOS_COUNT = DAOManager.getDAO(PlayerDAO.class).getCharacterCountForRace(Race.ELYOS);
+				long dbTime = System.currentTimeMillis() - dbStart;
+				log.debug("Database faction query took {} ms", dbTime);
+				computeRatios();
+			} catch (Exception e) {
+				log.error(I18n.get("log.a690a349a611"), e);
+			} finally {
+				lock.unlock();
 			}
+			displayRatios(false);
 		});
 	}
 

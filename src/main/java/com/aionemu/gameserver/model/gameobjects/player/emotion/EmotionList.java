@@ -29,7 +29,7 @@ public class EmotionList {
 	/** 添加。 / Add. */
 	public void add(int emotionId, int dispearTime, boolean isNew) {
 		if (emotions == null) {
-			emotions = new HashMap<Integer, Emotion>();
+			emotions = new HashMap<>();
 		}
 		Emotion emotion = new Emotion(emotionId, dispearTime);
 		emotions.put(emotionId, emotion);

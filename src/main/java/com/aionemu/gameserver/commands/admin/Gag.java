@@ -60,13 +60,9 @@ public class Gag extends AdminCommand {
 			Future<?> task = player.getController().getTask(TaskId.GAG);
 			if (task != null)
 				player.getController().cancelTask(TaskId.GAG);
-			player.getController().addTask(TaskId.GAG, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-				@Override
-				public void run() {
-					player.setGagged(false);
-					PacketSendUtility.sendMessage(player, "You have been ungagged");
-				}
+			player.getController().addTask(TaskId.GAG, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				player.setGagged(false);
+				PacketSendUtility.sendMessage(player, "You have been ungagged");
 			}, time * 60000L));
 		}
 		PacketSendUtility.sendMessage(player, "You have been gagged" + (time != 0 ? " for " + time + " minutes" : ""));

@@ -33,7 +33,7 @@ public class TaskFromDBDAO extends com.aionemu.gameserver.dao.TaskFromDBDAO {
 	 */
 	@Override
 	public ArrayList<TaskFromDB> getAllTasks() {
-		final ArrayList<TaskFromDB> result = new ArrayList<TaskFromDB>();
+		final ArrayList<TaskFromDB> result = new ArrayList<>();
 
 		try (Connection con = DatabaseFactory.getConnection();
 			 PreparedStatement stmt = con.prepareStatement(SELECT_ALL_QUERY);

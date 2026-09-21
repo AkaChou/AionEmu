@@ -542,8 +542,10 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	}
 
 	private Set<ManaStone> itemStonesCollection() {
-		return new TreeSet<ManaStone>(new Comparator<ManaStone>() {
-			/** 比较 / compare. */
+		return new TreeSet<>(new Comparator<>() {
+			/**
+			 * 比较 / compare.
+			 */
 			@Override
 			public int compare(ManaStone o1, ManaStone o2) {
 				if (o1.getSlot() == o2.getSlot()) {
@@ -969,7 +971,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/** 返回 current modifiers / Returns the current modifiers */
 	public List<StatFunction> getCurrentModifiers() {
 		if (currentModifiers == null) {
-			currentModifiers = new ArrayList<StatFunction>();
+			currentModifiers = new ArrayList<>();
 		}
 		return currentModifiers;
 	}

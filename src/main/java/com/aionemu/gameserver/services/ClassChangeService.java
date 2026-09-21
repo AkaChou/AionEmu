@@ -118,36 +118,60 @@ public class ClassChangeService {
 
 	static PlayerClass classForSelection(Race race, int dialogId) {
 		if (race == Race.ELYOS) {
-			return switch (dialogId) {
-				case 2376 -> PlayerClass.GLADIATOR;
-				case 2461 -> PlayerClass.TEMPLAR;
-				case 2717 -> PlayerClass.ASSASSIN;
-				case 2802 -> PlayerClass.RANGER;
-				case 3058 -> PlayerClass.SORCERER;
-				case 3143 -> PlayerClass.SPIRIT_MASTER;
-				case 3399 -> PlayerClass.CLERIC;
-				case 3484 -> PlayerClass.CHANTER;
-				case 3740 -> PlayerClass.AETHERTECH;
-				case 3825 -> PlayerClass.GUNSLINGER;
-				case 4081 -> PlayerClass.SONGWEAVER;
-				default -> null;
-			};
+			switch (dialogId) {
+				case 2376:
+					return PlayerClass.GLADIATOR;
+				case 2461:
+					return PlayerClass.TEMPLAR;
+				case 2717:
+					return PlayerClass.ASSASSIN;
+				case 2802:
+					return PlayerClass.RANGER;
+				case 3058:
+					return PlayerClass.SORCERER;
+				case 3143:
+					return PlayerClass.SPIRIT_MASTER;
+				case 3399:
+					return PlayerClass.CLERIC;
+				case 3484:
+					return PlayerClass.CHANTER;
+				case 3740:
+					return PlayerClass.AETHERTECH;
+				case 3825:
+					return PlayerClass.GUNSLINGER;
+				case 4081:
+					return PlayerClass.SONGWEAVER;
+				default:
+					return null;
+			}
 		}
 		if (race == Race.ASMODIANS) {
-			return switch (dialogId) {
-				case 3058 -> PlayerClass.GLADIATOR;
-				case 3143 -> PlayerClass.TEMPLAR;
-				case 3399 -> PlayerClass.ASSASSIN;
-				case 3484 -> PlayerClass.RANGER;
-				case 3570 -> PlayerClass.AETHERTECH;
-				case 3591 -> PlayerClass.GUNSLINGER;
-				case 3740 -> PlayerClass.SORCERER;
-				case 3825 -> PlayerClass.SPIRIT_MASTER;
-				case 3911 -> PlayerClass.SONGWEAVER;
-				case 4081 -> PlayerClass.CLERIC;
-				case 4166 -> PlayerClass.CHANTER;
-				default -> null;
-			};
+			switch (dialogId) {
+				case 3058:
+					return PlayerClass.GLADIATOR;
+				case 3143:
+					return PlayerClass.TEMPLAR;
+				case 3399:
+					return PlayerClass.ASSASSIN;
+				case 3484:
+					return PlayerClass.RANGER;
+				case 3570:
+					return PlayerClass.AETHERTECH;
+				case 3591:
+					return PlayerClass.GUNSLINGER;
+				case 3740:
+					return PlayerClass.SORCERER;
+				case 3825:
+					return PlayerClass.SPIRIT_MASTER;
+				case 3911:
+					return PlayerClass.SONGWEAVER;
+				case 4081:
+					return PlayerClass.CLERIC;
+				case 4166:
+					return PlayerClass.CHANTER;
+				default:
+					return null;
+			}
 		}
 		return null;
 	}
@@ -223,14 +247,21 @@ public class ClassChangeService {
 	}
 
 	static boolean isValidClassSwitch(PlayerClass oldClass, PlayerClass playerClass) {
-		return switch (oldClass) {
-			case WARRIOR -> playerClass == PlayerClass.GLADIATOR || playerClass == PlayerClass.TEMPLAR;
-			case SCOUT -> playerClass == PlayerClass.ASSASSIN || playerClass == PlayerClass.RANGER;
-			case MAGE -> playerClass == PlayerClass.SORCERER || playerClass == PlayerClass.SPIRIT_MASTER;
-			case PRIEST -> playerClass == PlayerClass.CLERIC || playerClass == PlayerClass.CHANTER;
-			case TECHNIST -> playerClass == PlayerClass.GUNSLINGER || playerClass == PlayerClass.AETHERTECH;
-			case MUSE -> playerClass == PlayerClass.SONGWEAVER;
-			default -> false;
-		};
+        switch (oldClass) {
+            case WARRIOR:
+                return playerClass == PlayerClass.GLADIATOR || playerClass == PlayerClass.TEMPLAR;
+            case SCOUT:
+                return playerClass == PlayerClass.ASSASSIN || playerClass == PlayerClass.RANGER;
+            case MAGE:
+                return playerClass == PlayerClass.SORCERER || playerClass == PlayerClass.SPIRIT_MASTER;
+            case PRIEST:
+                return playerClass == PlayerClass.CLERIC || playerClass == PlayerClass.CHANTER;
+            case TECHNIST:
+                return playerClass == PlayerClass.GUNSLINGER || playerClass == PlayerClass.AETHERTECH;
+            case MUSE:
+                return playerClass == PlayerClass.SONGWEAVER;
+            default:
+                return false;
+        }
 	}
 }

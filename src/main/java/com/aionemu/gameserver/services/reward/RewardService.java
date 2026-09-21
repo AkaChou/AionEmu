@@ -79,7 +79,7 @@ public class RewardService {
 		if (list.size() == 0 || player.getMailbox() == null) {
 			return;
 		}
-		List<Integer> rewarded = new ArrayList<Integer>();
+		List<Integer> rewarded = new ArrayList<>();
 		for (RewardEntryItem item : list) {
 			if (DataManager.ITEM_DATA.getItemTemplate(item.id) == null) {
 				log.warn(I18n.get("log.b873f28ac3e2", item.unique, item.id, player.getObjectId()));

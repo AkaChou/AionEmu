@@ -56,13 +56,21 @@ final class QuestDependencyIndex {
 	}
 
 	private static void addConditionDependencies(Set<Integer> dependencies, QuestCondition condition) {
-		switch (condition) {
-			case QuestCondition.QuestsFinished quests -> dependencies.addAll(quests.questIds());
-			case QuestCondition.UnfinishedQuest quests -> dependencies.addAll(quests.questIds());
-			case QuestCondition.NoAcquiredQuest quests -> dependencies.addAll(quests.questIds());
-			case QuestCondition.AcquiredQuest quests -> dependencies.addAll(quests.questIds());
-			default -> {
-			}
-		}
+        switch (condition) {
+            case QuestCondition.QuestsFinished quests:
+                dependencies.addAll(quests.questIds());
+                break;
+            case QuestCondition.UnfinishedQuest quests:
+                dependencies.addAll(quests.questIds());
+                break;
+            case QuestCondition.NoAcquiredQuest quests:
+                dependencies.addAll(quests.questIds());
+                break;
+            case QuestCondition.AcquiredQuest quests:
+                dependencies.addAll(quests.questIds());
+                break;
+            default:
+                break;
+        }
 	}
 }

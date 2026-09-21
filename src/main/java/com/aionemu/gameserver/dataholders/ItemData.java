@@ -46,7 +46,7 @@ public class ItemData extends ReloadableData {
 	private Map<String, ItemTemplate> itemsByName;
 
 	@XmlTransient
-	private final IntObjectHashMap<ItemTemplate> petEggs = new IntObjectHashMap<ItemTemplate>();
+	private final IntObjectHashMap<ItemTemplate> petEggs = new IntObjectHashMap<>();
 
 	/**
 	 * 返回按等级分组的魔石模板映射。
@@ -55,7 +55,7 @@ public class ItemData extends ReloadableData {
 	 * @return 等级到魔石列表的映射 / map of level to manastone list
 	 */
 	@XmlTransient
-	Map<Integer, List<ItemTemplate>> manastones = new HashMap<Integer, List<ItemTemplate>>();
+	Map<Integer, List<ItemTemplate>> manastones = new HashMap<>();
 
 	/**
 	 * 返回全部物品模板映射。
@@ -71,9 +71,9 @@ public class ItemData extends ReloadableData {
 	 * After JAXB unmarshalling, indexes templates by id and clears the raw list.
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		items = new IntObjectHashMap<ItemTemplate>();
+		items = new IntObjectHashMap<>();
 		itemsByName = new HashMap<>();
-		allItems = new HashMap<Integer, ItemTemplate>();
+		allItems = new HashMap<>();
 		if (its != null) {
 			for (ItemTemplate it : its) {
 				items.put(it.getTemplateId(), it);

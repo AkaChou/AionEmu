@@ -34,6 +34,7 @@ import java.util.concurrent.atomic.AtomicReferenceArray;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.aionemu.commons.utils.collections.LongObjectHashMap;
+
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -56,7 +57,9 @@ public final class PathData {
 	 * Last successfully resolved (worldId → MapData): returned without locking or boxing while the cache is unchanged.
 	 */
 	private volatile MapLookup memoLookup = MapLookup.EMPTY;
-	/** 每次 {@link #maps} 结构变更（装载/淘汰）递增，使 memo 失效。 / Bumped on every structural change of {@link #maps}. */
+	/**
+	 * 每次 {@link #maps} 结构变更（装载/淘汰）递增，使 memo 失效。 / Bumped on every structural change of {@link #maps}.
+	 */
 	private volatile int mapsEpoch;
 
 	public int scan() {
@@ -197,8 +200,8 @@ public final class PathData {
 	 * Immutable snapshot for the lock-free fast path (published by a single volatile write).
 	 *
 	 * @param worldId 世界 ID / world id
-	 * @param map 缓存的地图数据 / cached map data
-	 * @param epoch 生成该快照时的 {@link #mapsEpoch} / {@link #mapsEpoch} when the snapshot was created
+	 * @param map     缓存的地图数据 / cached map data
+	 * @param epoch   生成该快照时的 {@link #mapsEpoch} / {@link #mapsEpoch} when the snapshot was created
 	 */
 	private record MapLookup(int worldId, MapData map, int epoch) {
 
@@ -238,32 +241,57 @@ public final class PathData {
 		boolean canPass(float x, float y, float z);
 	}
 
-	/** 路径途经点 / Path waypoint */
-	public record PathPoint(float x, float y, float z) {}
+	/**
+	 * 路径途经点 / Path waypoint
+	 */
+	public record PathPoint(float x, float y, float z) {
+	}
 
-	/** 搜索结果状态 / Search result status */
+	/**
+	 * 搜索结果状态 / Search result status
+	 */
 	public enum SearchStatus {
-		/** 已找到路径 / Path found */
+		/**
+		 * 已找到路径 / Path found
+		 */
 		FOUND,
-		/** 无可行路径 / No path */
+		/**
+		 * 无可行路径 / No path
+		 */
 		NO_PATH,
-		/** 节点预算耗尽 / Node budget exhausted */
+		/**
+		 * 节点预算耗尽 / Node budget exhausted
+		 */
 		NODE_LIMIT,
-		/** 搜索被中断 / Search interrupted */
+		/**
+		 * 搜索被中断 / Search interrupted
+		 */
 		INTERRUPTED,
-		/** 起点或终点无效 / Invalid start or target */
+		/**
+		 * 起点或终点无效 / Invalid start or target
+		 */
 		INVALID_POSITION
 	}
 
-	/** 搜索模式 / Search mode */
+	/**
+	 * 搜索模式 / Search mode
+	 */
 	public enum SearchMode {
-		/** 直线直达 / Direct */
+		/**
+		 * 直线直达 / Direct
+		 */
 		DIRECT,
-		/** 底层网格搜索 / Low-level grid search */
+		/**
+		 * 底层网格搜索 / Low-level grid search
+		 */
 		LOW_LEVEL,
-		/** 分层搜索 / Hierarchical search */
+		/**
+		 * 分层搜索 / Hierarchical search
+		 */
 		HIERARCHICAL,
-		/** 分层搜索回退 / Hierarchical fallback */
+		/**
+		 * 分层搜索回退 / Hierarchical fallback
+		 */
 		HIERARCHICAL_FALLBACK
 	}
 
@@ -272,7 +300,7 @@ public final class PathData {
 	 * Search result: status, waypoints, processed node count and search mode.
 	 */
 	public record SearchResult(SearchStatus status, List<PathPoint> path, int processedNodes, SearchMode mode,
-			int abstractNodes) {
+							   int abstractNodes) {
 
 		private static SearchResult direct(List<PathPoint> path) {
 			return new SearchResult(SearchStatus.FOUND, path, 0, SearchMode.DIRECT, 0);
@@ -288,7 +316,7 @@ public final class PathData {
 
 		private SearchResult hierarchical(SearchMode searchMode, int extraProcessedNodes, int processedAbstractNodes) {
 			return new SearchResult(status, path, processedNodes + extraProcessedNodes, searchMode,
-					abstractNodes + processedAbstractNodes);
+				abstractNodes + processedAbstractNodes);
 		}
 	}
 
@@ -296,7 +324,8 @@ public final class PathData {
 	 * 单张地图的压缩数据与索引文件对（包内可见，供加载与测试复用）。
 	 * Pair of compressed data and index files for one map (package-visible for loading and tests).
 	 */
-	record PathFiles(File compressed, File index) {}
+	record PathFiles(File compressed, File index) {
+	}
 
 	/**
 	 * 单张地图的路径数据：分层块（Block）与扇区（Sector）结构。
@@ -322,9 +351,9 @@ public final class PathData {
 		private static final int[] DIAGONAL_FIRST = {0, 1, 0, 2};
 		private static final int[] DIAGONAL_SECOND = {1, 2, 3, 3};
 		private static final Comparator<OpenNode> OPEN_NODE_ORDER = Comparator.comparingDouble(OpenNode::score)
-				.thenComparing(Comparator.comparingLong(OpenNode::sequence).reversed());
+			.thenComparing(Comparator.comparingLong(OpenNode::sequence).reversed());
 		private static final Comparator<BlockOpenNode> BLOCK_OPEN_NODE_ORDER = Comparator.comparingDouble(BlockOpenNode::score)
-				.thenComparing(Comparator.comparingLong(BlockOpenNode::sequence).reversed());
+			.thenComparing(Comparator.comparingLong(BlockOpenNode::sequence).reversed());
 		/**
 		 * 逐线程租约：只在寻路调用期间绑定工作区，用完归还共享池。
 		 * Thread-local lease that binds a workspace only for the duration of a search call.
@@ -363,7 +392,7 @@ public final class PathData {
 		private final Map<Integer, int[]> blockNeighbors = new ConcurrentHashMap<>();
 
 		private MapData(byte[] bytes, int width, int height, int blockColumns, int blockRows,
-				int nodeTableOffset, int nodeTableSize, int portalOffset, int portalCount, int[] blockOffsets) {
+						int nodeTableOffset, int nodeTableSize, int portalOffset, int portalCount, int[] blockOffsets) {
 			this.bytes = bytes;
 			this.width = width;
 			this.height = height;
@@ -383,7 +412,7 @@ public final class PathData {
 		 */
 		private int intAt(int offset) {
 			return (bytes[offset] & 0xff) | (bytes[offset + 1] & 0xff) << 8 | (bytes[offset + 2] & 0xff) << 16
-					| bytes[offset + 3] << 24;
+				| bytes[offset + 3] << 24;
 		}
 
 		/**
@@ -402,7 +431,9 @@ public final class PathData {
 			return (short) uShortAt(offset);
 		}
 
-		/** 有符号 8 位读取，等价 {@code ByteBuffer.get(offset)}。 / Signed 8-bit read, like {@code buffer.get(offset)}. */
+		/**
+		 * 有符号 8 位读取，等价 {@code ByteBuffer.get(offset)}。 / Signed 8-bit read, like {@code buffer.get(offset)}.
+		 */
 		private int byteAt(int offset) {
 			return bytes[offset];
 		}
@@ -439,8 +470,8 @@ public final class PathData {
 			MessageDigest digest = sha256();
 			ByteBuffer data;
 			try (InputStream input = new DigestInputStream(
-					new GZIPInputStream(new BufferedInputStream(Files.newInputStream(source.compressed().toPath()))),
-					digest)) {
+				new GZIPInputStream(new BufferedInputStream(Files.newInputStream(source.compressed().toPath()))),
+				digest)) {
 				data = ByteBuffer.allocate((int) expectedSize).order(ByteOrder.LITTLE_ENDIAN);
 				byte[] chunk = new byte[64 * 1024];
 				int read;
@@ -457,7 +488,7 @@ public final class PathData {
 			}
 			data.flip();
 			if ((data.getInt(16) >>> 16) != PATH_VERSION_MAJOR || nodeOffset + nodeSize > size
-					|| portalOffset + portalCount * 4L > size) {
+				|| portalOffset + portalCount * 4L > size) {
 				throw new IOException("Invalid path data header: " + source.compressed());
 			}
 			int[] offsets = new int[blockCount];
@@ -471,7 +502,7 @@ public final class PathData {
 				previous = offset;
 			}
 			return new MapData(data.array(), width, height, columns, rows, nodeOffset, nodeSize, portalOffset,
-					portalCount, offsets);
+				portalCount, offsets);
 		}
 
 		private static MessageDigest sha256() {
@@ -490,22 +521,22 @@ public final class PathData {
 		}
 
 		public List<PathPoint> findPath(float startX, float startY, float startZ, float targetX, float targetY,
-				float targetZ, int maxNodes, HeightProvider terrain) {
+										float targetZ, int maxNodes, HeightProvider terrain) {
 			return findPath(startX, startY, startZ, targetX, targetY, targetZ, maxNodes, terrain, null);
 		}
 
 		public List<PathPoint> findPath(float startX, float startY, float startZ, float targetX, float targetY,
-				float targetZ, int maxNodes, HeightProvider terrain, EdgePassability passability) {
+										float targetZ, int maxNodes, HeightProvider terrain, EdgePassability passability) {
 			return searchAStar(startX, startY, startZ, targetX, targetY, targetZ, maxNodes, terrain, passability).path();
 		}
 
 		SearchResult searchAStar(float startX, float startY, float startZ, float targetX, float targetY,
-				float targetZ, int maxNodes, HeightProvider terrain, EdgePassability passability) {
+								 float targetZ, int maxNodes, HeightProvider terrain, EdgePassability passability) {
 			return searchAStar(startX, startY, startZ, targetX, targetY, targetZ, maxNodes, terrain, passability, false);
 		}
 
 		SearchResult searchAStar(float startX, float startY, float startZ, float targetX, float targetY,
-				float targetZ, int maxNodes, HeightProvider terrain, EdgePassability passability, boolean hierarchical) {
+								 float targetZ, int maxNodes, HeightProvider terrain, EdgePassability passability, boolean hierarchical) {
 			SearchWorkspace leased = acquireWorkspace();
 			try {
 				leased.resetNodes();
@@ -527,33 +558,33 @@ public final class PathData {
 					BlockPath corridor = findBlockPath(start.sector().block.id(), target.sector().block.id());
 					if (corridor.status() == SearchStatus.INTERRUPTED) {
 						return SearchResult.failed(SearchStatus.INTERRUPTED, 0)
-								.hierarchical(SearchMode.HIERARCHICAL, 0, corridor.processedNodes());
+							.hierarchical(SearchMode.HIERARCHICAL, 0, corridor.processedNodes());
 					}
 					if (corridor.blocks() != null) {
 						SearchResult refined = refineBlockPath(start, target, corridor.blocks(),
-								Math.min(budget, HIERARCHICAL_FINE_MAX_NODES), terrain, passability);
+							Math.min(budget, HIERARCHICAL_FINE_MAX_NODES), terrain, passability);
 						if (refined.status() == SearchStatus.FOUND || refined.status() == SearchStatus.INTERRUPTED) {
 							return refined.hierarchical(SearchMode.HIERARCHICAL, 0, corridor.processedNodes());
 						}
 						SearchResult fallback = searchLowLevel(start, target, startX, startY, startZ, targetX, targetY,
-								targetZ, searchRadiusSquared, budget, terrain, passability, null);
+							targetZ, searchRadiusSquared, budget, terrain, passability, null);
 						return fallback.hierarchical(SearchMode.HIERARCHICAL_FALLBACK, refined.processedNodes(),
-								corridor.processedNodes());
+							corridor.processedNodes());
 					}
 					SearchResult fallback = searchLowLevel(start, target, startX, startY, startZ, targetX, targetY,
-							targetZ, searchRadiusSquared, budget, terrain, passability, null);
+						targetZ, searchRadiusSquared, budget, terrain, passability, null);
 					return fallback.hierarchical(SearchMode.HIERARCHICAL_FALLBACK, 0, corridor.processedNodes());
 				}
 				return searchLowLevel(start, target, startX, startY, startZ, targetX, targetY, targetZ,
-						searchRadiusSquared, budget, terrain, passability, null);
+					searchRadiusSquared, budget, terrain, passability, null);
 			} finally {
 				releaseWorkspace(leased);
 			}
 		}
 
 		private SearchResult searchLowLevel(Node start, Node target, float startX, float startY, float startZ,
-				float targetX, float targetY, float targetZ, float searchRadiusSquared, int budget,
-				HeightProvider terrain, EdgePassability passability, BitSet allowedBlocks) {
+											float targetX, float targetY, float targetZ, float searchRadiusSquared, int budget,
+											HeightProvider terrain, EdgePassability passability, BitSet allowedBlocks) {
 			SearchWorkspace workspace = workspace();
 			workspace.beginLowLevelSearch(budget);
 			LongObjectHashMap<SearchNode> visited = workspace.visited;
@@ -575,7 +606,7 @@ public final class PathData {
 					if (current.node.key() == target.key()) {
 						List<PathPoint> path = reconstruct(current);
 						return path == null ? SearchResult.failed(SearchStatus.NODE_LIMIT, processed)
-								: SearchResult.found(path, processed);
+							: SearchResult.found(path, processed);
 					}
 					for (int direction = 0; direction < 8; direction++) {
 						// 记录游标：只有被 visited 保留的邻居才占用节点槽位，其余临时节点回退复用。
@@ -584,8 +615,8 @@ public final class PathData {
 						int nodeMark = workspace.nodeMark();
 						Node neighbor = step(current.node, direction, terrain, passability);
 						if (neighbor == null || allowedBlocks != null && !allowedBlocks.get(neighbor.sector().block.id())
-								|| !withinSearchArea(neighbor, startX, startY, startZ, targetX, targetY, targetZ,
-										searchRadiusSquared)) {
+							|| !withinSearchArea(neighbor, startX, startY, startZ, targetX, targetY, targetZ,
+							searchRadiusSquared)) {
 							workspace.rollbackNodes(nodeMark);
 							continue;
 						}
@@ -637,12 +668,12 @@ public final class PathData {
 			try {
 				long sequence = 0;
 				BlockSearchNode first = workspace.blockSearchNode(startBlock, null, 0,
-						blockDistance(startBlock, targetBlock));
+					blockDistance(startBlock, targetBlock));
 				visited.put(startBlock, first);
 				open.add(workspace.blockOpenNode(startBlock, 0, first.score, sequence++));
 				int processed = 0;
 				while (!open.isEmpty() && processed < HIERARCHICAL_MAX_ABSTRACT_NODES
-						&& !Thread.currentThread().isInterrupted()) {
+					&& !Thread.currentThread().isInterrupted()) {
 					BlockOpenNode queued = open.poll();
 					BlockSearchNode current = visited.get(queued.blockId());
 					if (current == null || current.closed || Float.compare(current.cost, queued.cost()) != 0) {
@@ -672,7 +703,7 @@ public final class PathData {
 					}
 				}
 				SearchStatus status = Thread.currentThread().isInterrupted() ? SearchStatus.INTERRUPTED
-						: open.isEmpty() ? SearchStatus.NO_PATH : SearchStatus.NODE_LIMIT;
+					: open.isEmpty() ? SearchStatus.NO_PATH : SearchStatus.NODE_LIMIT;
 				return new BlockPath(status, null, processed);
 			} finally {
 				workspace.endBlockSearch();
@@ -706,7 +737,7 @@ public final class PathData {
 		}
 
 		private SearchResult refineBlockPath(Node start, Node target, int[] blockPath, int budget,
-				HeightProvider terrain, EdgePassability passability) {
+											 HeightProvider terrain, EdgePassability passability) {
 			List<PathPoint> result = new ArrayList<>();
 			result.add(point(start));
 			Node current = start;
@@ -717,9 +748,9 @@ public final class PathData {
 					return SearchResult.failed(SearchStatus.NODE_LIMIT, processed);
 				}
 				List<PortalStep> portals = boundaryPortals(blockPath[index - 1], blockPath[index], terrain,
-						passability);
+					passability);
 				PortalSearchResult segment = searchToAnyPortal(current, blockPath[index - 1], portals, remaining,
-						terrain, passability);
+					terrain, passability);
 				processed += segment.processedNodes();
 				if (segment.status() != SearchStatus.FOUND) {
 					return SearchResult.failed(segment.status(), processed);
@@ -748,10 +779,10 @@ public final class PathData {
 			BitSet targetBlock = new BitSet(blockOffsets.length);
 			targetBlock.set(blockPath[blockPath.length - 1]);
 			float distanceSquared = square(target.x() - current.x()) + square(target.y() - current.y())
-					+ square(target.z() - current.z());
+				+ square(target.z() - current.z());
 			SearchResult last = searchLowLevel(current, target, current.x(), current.y(), current.z(), target.x(),
-					target.y(), target.z(), Math.max(2_500, 2 * distanceSquared), remaining, terrain, passability,
-					targetBlock);
+				target.y(), target.z(), Math.max(2_500, 2 * distanceSquared), remaining, terrain, passability,
+				targetBlock);
 			processed += last.processedNodes();
 			if (last.status() != SearchStatus.FOUND) {
 				return SearchResult.failed(last.status(), processed);
@@ -763,7 +794,7 @@ public final class PathData {
 		}
 
 		private PortalSearchResult searchToAnyPortal(Node start, int blockId, List<PortalStep> portals, int budget,
-				HeightProvider terrain, EdgePassability passability) {
+													 HeightProvider terrain, EdgePassability passability) {
 			if (portals.isEmpty()) {
 				return PortalSearchResult.failed(SearchStatus.NO_PATH, 0);
 			}
@@ -798,7 +829,7 @@ public final class PathData {
 					if (reached != null) {
 						List<PathPoint> path = reconstruct(current);
 						return path == null ? PortalSearchResult.failed(SearchStatus.NODE_LIMIT, processed)
-								: PortalSearchResult.found(path, reached, processed);
+							: PortalSearchResult.found(path, reached, processed);
 					}
 					for (int direction = 0; direction < 8; direction++) {
 						// 与低层搜索一致：只有被 visited 保留的邻居才占用节点槽位。
@@ -846,7 +877,7 @@ public final class PathData {
 		}
 
 		private List<PortalStep> boundaryPortals(int blockId, int targetBlockId, HeightProvider terrain,
-				EdgePassability passability) {
+												 EdgePassability passability) {
 			int direction = blockDirection(blockId, targetBlockId);
 			if (direction < 0) {
 				return List.of();
@@ -857,32 +888,46 @@ public final class PathData {
 				if (sector.type == 16) {
 					for (int offset : sector.nodeOffsets()) {
 						addBoundaryPortal(result, sector.complexNode(offset), direction, targetBlockId, terrain,
-								passability);
+							passability);
 					}
 					continue;
 				}
 				int blockColumn = blockId % blockColumns;
 				int blockRow = blockId / blockColumns;
 				for (int coordinate = 0; coordinate < 32; coordinate++) {
-					int gridX = switch (direction) {
-						case 0 -> blockColumn * 32 + 31;
-						case 2 -> blockColumn * 32;
-						default -> blockColumn * 32 + coordinate;
-					};
-					int gridY = switch (direction) {
-						case 1 -> blockRow * 32 + 31;
-						case 3 -> blockRow * 32;
-						default -> blockRow * 32 + coordinate;
-					};
+					int gridX;
+					switch (direction) {
+						case 0:
+							gridX = blockColumn * 32 + 31;
+							break;
+						case 2:
+							gridX = blockColumn * 32;
+							break;
+						default:
+							gridX = blockColumn * 32 + coordinate;
+							break;
+					}
+					int gridY;
+					switch (direction) {
+						case 1:
+							gridY = blockRow * 32 + 31;
+							break;
+						case 3:
+							gridY = blockRow * 32;
+							break;
+						default:
+							gridY = blockRow * 32 + coordinate;
+							break;
+					}
 					addBoundaryPortal(result, sector.simpleNode(gridX, gridY, terrain), direction, targetBlockId,
-							terrain, passability);
+						terrain, passability);
 				}
 			}
 			return result;
 		}
 
 		private void addBoundaryPortal(List<PortalStep> result, Node source, int direction, int targetBlockId,
-				HeightProvider terrain, EdgePassability passability) {
+									   HeightProvider terrain, EdgePassability passability) {
 			if (source == null) {
 				return;
 			}
@@ -937,7 +982,7 @@ public final class PathData {
 		}
 
 		boolean canWalkStraight(float startX, float startY, float startZ, float targetX, float targetY,
-				float targetZ, HeightProvider terrain, EdgePassability passability) {
+								float targetZ, HeightProvider terrain, EdgePassability passability) {
 			SearchWorkspace leased = acquireWorkspace();
 			try {
 				leased.resetNodes();
@@ -961,7 +1006,7 @@ public final class PathData {
 		}
 
 		PathPoint nearestPathPoint(float x, float y, float z, float maxRadius, float maxVerticalDelta,
-				HeightProvider terrain, PointPassability passability) {
+								   HeightProvider terrain, PointPassability passability) {
 			SearchWorkspace leased = acquireWorkspace();
 			try {
 				leased.resetNodes();
@@ -1028,7 +1073,7 @@ public final class PathData {
 				}
 				current = next;
 				float amount = ((current.gridX() - start.gridX()) * lineX
-						+ (current.gridY() - start.gridY()) * lineY) / lineLengthSquared;
+					+ (current.gridY() - start.gridY()) * lineY) / lineLengthSquared;
 				float expectedZ = start.z() + (target.z() - start.z()) * amount;
 				if (Math.abs(current.z() - expectedZ) > MAX_STRAIGHT_HEIGHT_DEVIATION) {
 					return false;
@@ -1043,9 +1088,9 @@ public final class PathData {
 
 		private Node step(Node source, int direction, HeightProvider terrain, EdgePassability passability) {
 			Node next = direction < 4 ? neighbor(source, direction, terrain)
-					: diagonalNeighbor(source, direction - 4, terrain, passability);
+				: diagonalNeighbor(source, direction - 4, terrain, passability);
 			if (next == null || Math.abs(source.z() - next.z()) > MAX_ADJACENT_HEIGHT_DELTA
-					|| distance(source, next) >= 20) {
+				|| distance(source, next) >= 20) {
 				return null;
 			}
 			return direction < 4 && !edgeAllowed(source, next, passability) ? null : next;
@@ -1108,7 +1153,7 @@ public final class PathData {
 			Node firstTarget = neighbor(first, DIAGONAL_SECOND[diagonal], terrain);
 			Node secondTarget = neighbor(second, DIAGONAL_FIRST[diagonal], terrain);
 			if (firstTarget == null || secondTarget == null || firstTarget.key() != secondTarget.key()
-					|| !edgeAllowed(source, firstTarget, passability)) {
+				|| !edgeAllowed(source, firstTarget, passability)) {
 				return null;
 			}
 			return firstTarget;
@@ -1116,13 +1161,13 @@ public final class PathData {
 
 		private static boolean edgeAllowed(Node start, Node end, EdgePassability passability) {
 			return end != null && (passability == null || passability.canPass(start.x(), start.y(), start.z(), end.x(), end.y(),
-					end.z()));
+				end.z()));
 		}
 
 		private Node neighbor(Node source, int direction, HeightProvider terrain) {
 			return source.complexOffset() >= 0
-					? complexNeighbor(source, direction, terrain)
-					: simpleNeighbor(source, direction, terrain);
+				? complexNeighbor(source, direction, terrain)
+				: simpleNeighbor(source, direction, terrain);
 		}
 
 		private Node simpleNeighbor(Node source, int direction, HeightProvider terrain) {
@@ -1238,17 +1283,26 @@ public final class PathData {
 		}
 
 		private static int payloadSize(int type) {
-			return switch (type & ~1) {
-				case 0 -> 4;
-				case 2 -> 0;
-				case 4 -> 4096;
-				case 6 -> 128;
-				case 8 -> 264;
-				case 10 -> 568;
-				case 12 -> 1028;
-				case 14 -> 2052;
-				default -> throw new IllegalArgumentException("Unknown sector type " + type);
-			};
+			switch (type & ~1) {
+				case 0:
+					return 4;
+				case 2:
+					return 0;
+				case 4:
+					return 4096;
+				case 6:
+					return 128;
+				case 8:
+					return 264;
+				case 10:
+					return 568;
+				case 12:
+					return 1028;
+				case 14:
+					return 2052;
+				default:
+					throw new IllegalArgumentException("Unknown sector type " + type);
+			}
 		}
 
 		private static float distance(Node first, Node second) {
@@ -1263,7 +1317,7 @@ public final class PathData {
 		}
 
 		private static boolean withinSearchArea(Node node, float startX, float startY, float startZ, float targetX,
-				float targetY, float targetZ, float radiusSquared) {
+												float targetY, float targetZ, float radiusSquared) {
 			float x = node.x() - startX;
 			float y = node.y() - startY;
 			float z = node.z() - startZ;
@@ -1289,7 +1343,7 @@ public final class PathData {
 			private volatile int[] complexOffsets;
 
 			private Sector(Block block, int layer, int type, int boundaryMask, int[] boundaries, int payload,
-					int links, int complexBase, int complexCount) {
+						   int links, int complexBase, int complexCount) {
 				this.block = block;
 				this.layer = layer;
 				this.type = type;
@@ -1386,11 +1440,14 @@ public final class PathData {
 				for (int direction = 0; direction < 4; direction++) {
 					int mode = descriptor >>> (direction * 2) & 3;
 					if (direction == wantedDirection) {
-						return switch (mode) {
-							case 1 -> (complexBase + uShortAt(cursor)) << 7 | layer;
-							case 2 -> intAt(cursor);
-							default -> 0;
-						};
+						switch (mode) {
+							case 1:
+								return (complexBase + uShortAt(cursor)) << 7 | layer;
+							case 2:
+								return intAt(cursor);
+							default:
+								return 0;
+						}
 					}
 					cursor += mode == 1 ? 2 : mode == 2 ? 4 : 0;
 				}
@@ -1403,13 +1460,24 @@ public final class PathData {
 						Node node = complexNode(offset);
 						int localX = node == null ? -1 : node.gridX() & 31;
 						int localY = node == null ? -1 : node.gridY() & 31;
-						boolean onBoundary = switch (direction) {
-							case 0 -> localX == 31;
-							case 1 -> localY == 31;
-							case 2 -> localX == 0;
-							case 3 -> localY == 0;
-							default -> false;
-						};
+						boolean onBoundary;
+						switch (direction) {
+							case 0:
+								onBoundary = localX == 31;
+								break;
+							case 1:
+								onBoundary = localY == 31;
+								break;
+							case 2:
+								onBoundary = localX == 0;
+								break;
+							case 3:
+								onBoundary = localY == 0;
+								break;
+							default:
+								onBoundary = false;
+								break;
+						}
 						if (onBoundary && edge(offset, direction) != 0) {
 							return true;
 						}
@@ -1443,35 +1511,40 @@ public final class PathData {
 				int localY = y & 31;
 				int cell = localY * 32 + localX;
 				float terrainHeight = Float.NaN;
-				return switch (type & ~1) {
-					case 0 -> intAt(payload) / 100f;
-					case 2 -> terrain.get(x * 0.5f + 0.25f, y * 0.5f + 0.25f);
-					case 4 -> decodedHeight(intAt(payload + cell * 4));
-					case 6 -> ((byteAt(payload + localY * 4 + localX / 8) >>> (localX & 7)) & 1) != 0
+				switch (type & ~1) {
+					case 0:
+						return intAt(payload) / 100f;
+					case 2:
+						return terrain.get(x * 0.5f + 0.25f, y * 0.5f + 0.25f);
+					case 4:
+						return decodedHeight(intAt(payload + cell * 4));
+					case 6:
+						return ((byteAt(payload + localY * 4 + localX / 8) >>> (localX & 7)) & 1) != 0
 							? Float.NaN : terrain.get(x * 0.5f + 0.25f, y * 0.5f + 0.25f);
-					case 8 -> {
+					case 8: {
 						int code = byteAt(payload + 8 + localY * 8 + localX / 4) >>> ((localX & 3) * 2) & 3;
-						yield code < 2 ? intAt(payload + code * 4) / 100f
-								: code == 2 ? terrain.get(x * 0.5f + 0.25f, y * 0.5f + 0.25f) : Float.NaN;
+						return code < 2 ? intAt(payload + code * 4) / 100f
+							: code == 2 ? terrain.get(x * 0.5f + 0.25f, y * 0.5f + 0.25f) : Float.NaN;
 					}
-					case 10 -> {
+					case 10: {
 						int value = byteAt(payload + 56 + localY * 16 + localX / 2) & 0xff;
 						int code = (localX & 1) == 0 ? value & 0xf : value >>> 4;
-						yield code < 14 ? intAt(payload + code * 4) / 100f
-								: code == 14 ? terrain.get(x * 0.5f + 0.25f, y * 0.5f + 0.25f) : Float.NaN;
+						return code < 14 ? intAt(payload + code * 4) / 100f
+							: code == 14 ? terrain.get(x * 0.5f + 0.25f, y * 0.5f + 0.25f) : Float.NaN;
 					}
-					case 12 -> {
+					case 12: {
 						int value = byteAt(payload + 4 + cell) & 0xff;
-						yield value < 0xfe ? (intAt(payload) + value) / 100f
-								: value == 0xfe ? terrain.get(x * 0.5f + 0.25f, y * 0.5f + 0.25f) : Float.NaN;
+						return value < 0xfe ? (intAt(payload) + value) / 100f
+							: value == 0xfe ? terrain.get(x * 0.5f + 0.25f, y * 0.5f + 0.25f) : Float.NaN;
 					}
-					case 14 -> {
+					case 14: {
 						int value = uShortAt(payload + 4 + cell * 2);
-						yield value < 0xfffe ? (intAt(payload) + value) / 100f
-								: value == 0xfffe ? terrain.get(x * 0.5f + 0.25f, y * 0.5f + 0.25f) : Float.NaN;
+						return value < 0xfffe ? (intAt(payload) + value) / 100f
+							: value == 0xfffe ? terrain.get(x * 0.5f + 0.25f, y * 0.5f + 0.25f) : Float.NaN;
 					}
-					default -> terrainHeight;
-				};
+					default:
+						return terrainHeight;
+				}
 			}
 
 			private static float decodedHeight(int value) {
@@ -1533,13 +1606,16 @@ public final class PathData {
 			}
 		}
 
-		/** 线程本地的租约状态。 / Thread-local lease state. */
+		/**
+		 * 线程本地的租约状态。 / Thread-local lease state.
+		 */
 		private static final class WorkspaceLease {
 			private SearchWorkspace workspace;
 			private int depth;
 		}
 
-		private record Block(int id, Sector[] sectors) {}
+		private record Block(int id, Sector[] sectors) {
+		}
 
 		private static final class Node {
 			private Sector sector;
@@ -1550,7 +1626,7 @@ public final class PathData {
 			private float z;
 
 			private Node reset(Sector sector, int gridX, int gridY, int complexOffset, long key,
-					float z) {
+							   float z) {
 				this.sector = sector;
 				this.gridX = gridX;
 				this.gridY = gridY;
@@ -1588,7 +1664,9 @@ public final class PathData {
 				return gridX * 0.5f + 0.25f;
 			}
 
-			/** 世界 Y 由网格索引推导（同 {@link #x()}）。 / World Y derived from the grid index (see {@link #x()}). */
+			/**
+			 * 世界 Y 由网格索引推导（同 {@link #x()}）。 / World Y derived from the grid index (see {@link #x()}).
+			 */
 			private float y() {
 				return gridY * 0.5f + 0.25f;
 			}
@@ -1856,12 +1934,14 @@ public final class PathData {
 			}
 		}
 
-		private record BlockPath(SearchStatus status, int[] blocks, int processedNodes) {}
+		private record BlockPath(SearchStatus status, int[] blocks, int processedNodes) {
+		}
 
-		private record PortalStep(Node source, Node target) {}
+		private record PortalStep(Node source, Node target) {
+		}
 
 		private record PortalSearchResult(SearchStatus status, List<PathPoint> path, PortalStep portal,
-				int processedNodes) {
+										  int processedNodes) {
 
 			private static PortalSearchResult found(List<PathPoint> path, PortalStep portal, int processedNodes) {
 				return new PortalSearchResult(SearchStatus.FOUND, path, portal, processedNodes);

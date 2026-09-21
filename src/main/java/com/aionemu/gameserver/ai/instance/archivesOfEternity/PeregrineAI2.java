@@ -32,7 +32,7 @@ public class PeregrineAI2 extends GeneralNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);
@@ -56,11 +56,18 @@ public class PeregrineAI2 extends GeneralNpcAI2
 			|| getPosition().getWorldMapInstance().getDoors() == null) {
 			return;
 		}
-		int doorId = switch (Rnd.get(1, 3)) {
-			case 1 -> 349;
-			case 2 -> 352;
-			default -> 359;
-		};
+		int doorId;
+		switch (Rnd.get(1, 3)) {
+			case 1:
+				doorId = 349;
+				break;
+			case 2:
+				doorId = 352;
+				break;
+			default:
+				doorId = 359;
+				break;
+		}
 		var door = getPosition().getWorldMapInstance().getDoors().get(doorId);
 		if (door == null) {
 			return;

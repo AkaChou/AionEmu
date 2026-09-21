@@ -35,7 +35,7 @@ public class VeteranRewardsDAO extends com.aionemu.gameserver.dao.VeteranRewards
 	 */
 	@Override
 	public Set<VeteranRewards> getVeteranReward() {
-		final Set<VeteranRewards> result = new HashSet<VeteranRewards>();
+		final Set<VeteranRewards> result = new HashSet<>();
 
 		try (Connection con = DatabaseFactory.getConnection();
 			 PreparedStatement stmt = con.prepareStatement(SELECT_QUERY);

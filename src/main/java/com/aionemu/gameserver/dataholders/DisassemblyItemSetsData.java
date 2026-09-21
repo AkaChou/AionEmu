@@ -34,7 +34,7 @@ public class DisassemblyItemSetsData
 	private List<DisassemblyItemSet> DisassemblyItemSet;
 
 	@XmlTransient
-	private final IntObjectHashMap<List<DisassembleItemGroups>> disassemblyItemGroups = new IntObjectHashMap<List<DisassembleItemGroups>>();
+	private final IntObjectHashMap<List<DisassembleItemGroups>> disassemblyItemGroups = new IntObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，按拆解物品 ID 索引分组列表。

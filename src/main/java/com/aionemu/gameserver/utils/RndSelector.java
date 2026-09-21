@@ -60,7 +60,7 @@ public class RndSelector<E> {
 	 * Creates a selector with default capacity.
 	 */
 	public RndSelector() {
-		nodes = new ArrayList<RndNode<E>>();
+		nodes = new ArrayList<>();
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class RndSelector<E> {
 	 * @param initialCapacity 初始容量 / Initial capacity
 	 */
 	public RndSelector(int initialCapacity) {
-		nodes = new ArrayList<RndNode<E>>(initialCapacity);
+		nodes = new ArrayList<>(initialCapacity);
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class RndSelector<E> {
 			return;
 		}
 		totalWeight += weight;
-		nodes.add(new RndNode<E>(value, weight));
+		nodes.add(new RndNode<>(value, weight));
 	}
 
 	/**

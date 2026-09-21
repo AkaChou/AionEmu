@@ -35,7 +35,7 @@ public class InGameShopProperty {
 	 */
 	public List<IGCategory> getCategories() {
 		if (categories == null) {
-			categories = new ArrayList<IGCategory>();
+			categories = new ArrayList<>();
 		}
 		return categories;
 	}

@@ -42,7 +42,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 		private Future<?> abyssGateTask;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -69,7 +69,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 			SpawnIDDF3DragonSP();
 		}
 	}
-	
+
 	private void SpawnIDDF3DragonSP() {
 		final int npc1 = spawnRace == Race.ASMODIANS ? 805737 : 805736;
 		spawn(npc1, 498.74973f, 379.33267f, 621.2866f, (byte) 54);
@@ -80,7 +80,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -119,7 +119,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
     /**
      * 处理死亡事件。
      * Handle a death event.
@@ -187,7 +187,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 			break;
         }
     }
-	
+
 	/**
 	 * Central Control Room Raid
 	 */
@@ -236,11 +236,11 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void spawnCommanderBakarma() {
 		spawn(236929, 777.46985f, 431.09888f, 321.7541f, (byte) 62); //Commander Bakarma.
 	}
-	
+
 	private void spawnAkhal() {
 		spawn(237275, 777.46985f, 431.09888f, 321.7541f, (byte) 62); //Akhal.
 	}
@@ -248,7 +248,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 	 * 处理 startAbyssGateRaid1。
 	 * Handle startAbyssGateRaid1.
 	 */
-	
+
 	public void startAbyssGateRaid1() {
 	    abyssGateRaid((Npc)spawn(236900, 514.45465f, 614.66077f, 515.35785f, (byte) 67));
 		abyssGateRaid((Npc)spawn(236900, 514.45465f, 614.66077f, 515.35785f, (byte) 67));
@@ -258,13 +258,13 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 	 * 处理 startAbyssGateRaid2。
 	 * Handle startAbyssGateRaid2.
 	 */
-	
+
 	public void startAbyssGateRaid2() {
 	    abyssGateRaid((Npc)spawn(236900, 514.45465f, 614.66077f, 515.35785f, (byte) 67));
 		abyssGateRaid((Npc)spawn(236900, 514.45465f, 614.66077f, 515.35785f, (byte) 67));
 		abyssGateRaid((Npc)spawn(236900, 514.45465f, 614.66077f, 515.35785f, (byte) 67));
 	}
-	
+
 	private void abyssGateRaid(final Npc npc) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -291,19 +291,19 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	protected void despawnNpc(Npc npc) {
         if (npc != null) {
             npc.getController().onDelete();
         }
     }
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -312,7 +312,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -321,7 +321,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.

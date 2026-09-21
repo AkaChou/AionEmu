@@ -101,7 +101,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/** 副本奖励对象 / instance reward object */
 	private ContaminatedUnderpathReward instanceReward;
 	/** contamined 任务 / contamined task */
-		private final List<Future<?>> contaminedTask = new ArrayList<Future<?>>();
+		private final List<Future<?>> contaminedTask = new ArrayList<>();
 
 	protected ContaminatedUnderpathPlayerReward getPlayerReward(Integer object) {
 		return (ContaminatedUnderpathPlayerReward) instanceReward.getPlayerReward(object);
@@ -235,19 +235,19 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 					 */
 					@Override
 					public void run() {
-					    instance.doOnAllPlayers(new Visitor<Player>() {
-						    /**
-						     * 处理 visit。
-						     * Handle visit.
-						     *
-						     * @param player 玩家 / player
-						     */
-						    @Override
-						    public void visit(Player player) {
-							    stopInstance(player);
+					    instance.doOnAllPlayers(new Visitor<>() {
+							/**
+							 * 处理 visit。
+							 * Handle visit.
+							 *
+							 * @param player 玩家 / player
+							 */
+							@Override
+							public void visit(Player player) {
+								stopInstance(player);
 								underpathTaskA11.cancel(true);
-						    }
-					    });
+							}
+						});
 					}
 				}, 5000);
 			break;
@@ -936,7 +936,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	}
 
 	private void sendPacket(final int nameId, final int point) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -1245,7 +1245,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				}
 			}, prepareTimerSeconds);
 		}
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -1415,20 +1415,20 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
+				instance.doOnAllPlayers(new Visitor<>() {
+                    /**
+                     * 处理 visit。
+                     * Handle visit.
+                     *
+                     * @param player 玩家 / player
+                     */
+                    @Override
+                    public void visit(Player player) {
+                        if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
+                            PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
+                        }
+                    }
+                });
 			}
 		}, time);
 	}

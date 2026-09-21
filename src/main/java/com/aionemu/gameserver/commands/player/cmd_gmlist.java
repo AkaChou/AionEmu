@@ -34,15 +34,12 @@ public class cmd_gmlist extends PlayerCommand {
 	 */
     @Override
     public void execute(Player player, String... params) {
-        final List<Player> admins = new ArrayList<Player>();
-        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-            @Override
-            public void visit(Player object) {
-                if (object.getAccessLevel() > 0 && object.getFriendList().getStatus() != FriendList.Status.OFFLINE) {
-                    admins.add(object);
-                }
-            }
-        });
+        final List<Player> admins = new ArrayList<>();
+        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(object -> {
+			if (object.getAccessLevel() > 0 && object.getFriendList().getStatus() != FriendList.Status.OFFLINE) {
+				admins.add(object);
+			}
+		});
 
         if (admins.size() > 0) {
             PacketSendUtility.sendMessage(player, "====================");

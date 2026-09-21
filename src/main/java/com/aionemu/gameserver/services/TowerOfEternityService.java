@@ -52,7 +52,7 @@ public class TowerOfEternityService {
 
 	private static volatile ObjectProvider<TowerOfEternityService> instanceProvider;
 	private Map<Integer, TowerOfEternityLocation> towerOfEternity;
-	private final ConcurrentMap<Integer, TowerOfEternity<?>> activeTowerOfEternity = new ConcurrentHashMap<Integer, TowerOfEternity<?>>();
+	private final ConcurrentMap<Integer, TowerOfEternity<?>> activeTowerOfEternity = new ConcurrentHashMap<>();
 	/**
 	 * 开关串行锁：启动开放、整点刷新与持续时间计时器互斥，保证同一世界始终只有一个入口。
 	 * Serializes tower transitions (startup open, scheduled refresh, duration timers) so that every
@@ -78,12 +78,9 @@ public class TowerOfEternityService {
 			openRandomTowerOfWorld(ELYOS_TOWER_WORLD);
 			openRandomTowerOfWorld(ASMODIAN_TOWER_WORLD);
 
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				public void run() {
-					openRandomTowerOfWorld(ELYOS_TOWER_WORLD);
-					openRandomTowerOfWorld(ASMODIAN_TOWER_WORLD);
-				}
+			GameCronServices.cronService().schedule(() -> {
+				openRandomTowerOfWorld(ELYOS_TOWER_WORLD);
+				openRandomTowerOfWorld(ASMODIAN_TOWER_WORLD);
 			}, () -> CustomConfig.TOWER_OF_ETERNITY_SCHEDULE);
 		} else {
 			log.info(I18n.get("log.1f021afa9f81"));
@@ -133,7 +130,7 @@ public class TowerOfEternityService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
+		for (VisibleObject obj : new ArrayList<>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {
@@ -154,7 +151,7 @@ public class TowerOfEternityService {
 	 * @return 已开启的地点 ID；无地点数据时为 -1 / opened location id, or -1 when no location exists
 	 */
 	public int openRandomTowerOfWorld(int worldId) {
-		List<Integer> locationIds = new ArrayList<Integer>();
+		List<Integer> locationIds = new ArrayList<>();
 		if (towerOfEternity != null) {
 			for (TowerOfEternityLocation loc : towerOfEternity.values()) {
 				if (loc.getWorldId() == worldId) {
@@ -206,12 +203,7 @@ public class TowerOfEternityService {
 				return;
 			}
 			tower.start();
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					stopTowerOfEternity(id, tower);
-				}
-			}, (long) CustomConfig.TOWER_OF_ETERNITY_DURATION * 3600 * 1000);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> stopTowerOfEternity(id, tower), (long) CustomConfig.TOWER_OF_ETERNITY_DURATION * 3600 * 1000);
 		}
 	}
 
@@ -286,28 +278,26 @@ public class TowerOfEternityService {
 				|| ((player.getWorldId() == 210100000) && (player.getRace() == Race.ASMODIANS))
 				|| ((player.getWorldId() == 220110000) && (player.getRace() == Race.ASMODIANS))) {
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(player.getWorldId()).getMainWorldMapInstance()
-					.doOnAllPlayers(new Visitor<Player>() {
-						public void visit(Player player) {
-							for (VisibleObject npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
-								if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
-									if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ELYOS)) {
-										PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
-									}
+					.doOnAllPlayers(player1 -> {
+						for (VisibleObject npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
+							if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
+								if ((player1.getWorldId() == 210100000) && (player1.getRace() == Race.ELYOS)) {
+									PacketSendUtility.sendPacket(player1, new SM_FLAG_INFO(1, (Npc) npc));
 								}
-								if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
-									if ((player.getWorldId() == 220110000) && (player.getRace() == Race.ELYOS)) {
-										PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
-									}
+							}
+							if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
+								if ((player1.getWorldId() == 220110000) && (player1.getRace() == Race.ELYOS)) {
+									PacketSendUtility.sendPacket(player1, new SM_FLAG_INFO(1, (Npc) npc));
 								}
-								if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
-									if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ASMODIANS)) {
-										PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
-									}
+							}
+							if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
+								if ((player1.getWorldId() == 210100000) && (player1.getRace() == Race.ASMODIANS)) {
+									PacketSendUtility.sendPacket(player1, new SM_FLAG_INFO(1, (Npc) npc));
 								}
-								if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
-									if ((player.getWorldId() == 220110000) && (player.getRace() == Race.ASMODIANS)) {
-										PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
-									}
+							}
+							if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
+								if ((player1.getWorldId() == 220110000) && (player1.getRace() == Race.ASMODIANS)) {
+									PacketSendUtility.sendPacket(player1, new SM_FLAG_INFO(1, (Npc) npc));
 								}
 							}
 						}
@@ -317,28 +307,26 @@ public class TowerOfEternityService {
 
 	private void broadcastUpdate(final TowerOfEternityLocation tower) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(tower.getWorldId()).getMainWorldMapInstance()
-				.doOnAllPlayers(new Visitor<Player>() {
-					public void visit(Player player) {
-						for (VisibleObject npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
-							if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
-								if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ELYOS)) {
-									PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
-								}
+				.doOnAllPlayers(player -> {
+					for (VisibleObject npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
+						if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
+							if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ELYOS)) {
+								PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
 							}
-							if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
-								if ((player.getWorldId() == 220110000) && (player.getRace() == Race.ELYOS)) {
-									PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
-								}
+						}
+						if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
+							if ((player.getWorldId() == 220110000) && (player.getRace() == Race.ELYOS)) {
+								PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
 							}
-							if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
-								if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ASMODIANS)) {
-									PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
-								}
+						}
+						if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
+							if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ASMODIANS)) {
+								PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
 							}
-							if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
-								if ((player.getWorldId() == 220110000) && (player.getRace() == Race.ASMODIANS)) {
-									PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
-								}
+						}
+						if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
+							if ((player.getWorldId() == 220110000) && (player.getRace() == Race.ASMODIANS)) {
+								PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
 							}
 						}
 					}
@@ -347,28 +335,26 @@ public class TowerOfEternityService {
 
 	private void broadcastDespawn(final TowerOfEternityLocation tower) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(tower.getWorldId()).getMainWorldMapInstance()
-				.doOnAllPlayers(new Visitor<Player>() {
-					public void visit(Player player) {
-						for (VisibleObject npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
-							if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
-								if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ELYOS)) {
-									PacketSendUtility.sendPacket(player, new SM_FLAG_UPDATE((Npc) npc));
-								}
+				.doOnAllPlayers(player -> {
+					for (VisibleObject npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
+						if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
+							if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ELYOS)) {
+								PacketSendUtility.sendPacket(player, new SM_FLAG_UPDATE((Npc) npc));
 							}
-							if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
-								if ((player.getWorldId() == 220110000) && (player.getRace() == Race.ELYOS)) {
-									PacketSendUtility.sendPacket(player, new SM_FLAG_UPDATE((Npc) npc));
-								}
+						}
+						if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
+							if ((player.getWorldId() == 220110000) && (player.getRace() == Race.ELYOS)) {
+								PacketSendUtility.sendPacket(player, new SM_FLAG_UPDATE((Npc) npc));
 							}
-							if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
-								if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ASMODIANS)) {
-									PacketSendUtility.sendPacket(player, new SM_FLAG_UPDATE((Npc) npc));
-								}
+						}
+						if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
+							if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ASMODIANS)) {
+								PacketSendUtility.sendPacket(player, new SM_FLAG_UPDATE((Npc) npc));
 							}
-							if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
-								if ((player.getWorldId() == 220110000) && (player.getRace() == Race.ASMODIANS)) {
-									PacketSendUtility.sendPacket(player, new SM_FLAG_UPDATE((Npc) npc));
-								}
+						}
+						if ((npc.getObjectTemplate().getTemplateId() == 703146) && (npc.isSpawned())) {
+							if ((player.getWorldId() == 220110000) && (player.getRace() == Race.ASMODIANS)) {
+								PacketSendUtility.sendPacket(player, new SM_FLAG_UPDATE((Npc) npc));
 							}
 						}
 					}

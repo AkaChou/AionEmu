@@ -15,13 +15,15 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public abstract class AionObject {
 
-	public static Function<AionObject, Integer> OBJECT_TO_ID_TRANSFORMER = new Function<AionObject, Integer>() {
-		/** 应用。 / Apply. */
-		@Override
-		public Integer apply(AionObject input) {
-			return input != null ? input.getObjectId() : null;
-		}
-	};
+	public static Function<AionObject, Integer> OBJECT_TO_ID_TRANSFORMER = new Function<>() {
+        /**
+         * 应用。 / Apply.
+         */
+        @Override
+        public Integer apply(AionObject input) {
+            return input != null ? input.getObjectId() : null;
+        }
+    };
 
 	/**
 	 * 所有游戏对象的唯一 ID：物品、玩家、怪物等。

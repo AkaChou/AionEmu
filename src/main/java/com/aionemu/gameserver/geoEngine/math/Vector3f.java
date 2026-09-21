@@ -16,12 +16,12 @@ import lombok.AllArgsConstructor;
 public final class Vector3f implements Cloneable, Reusable {
 
 	/** 对象池工厂。 / Object-pool factory. */
-	private static final ObjectFactory<Object> FACTORY = new ObjectFactory<Object>() {
+	private static final ObjectFactory<Object> FACTORY = new ObjectFactory<>() {
 
-		public Object create() {
-			return new Vector3f();
-		}
-	};
+        public Object create() {
+            return new Vector3f();
+        }
+    };
 
 	/** 零向量 (0, 0, 0)。 / Zero vector (0, 0, 0). */
 	public static final Vector3f ZERO = new Vector3f(0.0f, 0.0f, 0.0f);

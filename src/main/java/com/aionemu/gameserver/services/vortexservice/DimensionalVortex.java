@@ -158,7 +158,7 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 */
 	protected void initRiftGenerator() {
 		Npc gen = null;
-		for (VisibleObject obj : new ArrayList<VisibleObject>(getVortexLocation().getSpawned())) {
+		for (VisibleObject obj : new ArrayList<>(getVortexLocation().getSpawned())) {
 			int npcId = ((Npc) obj).getNpcId();
 			if (npcId == 209486 || npcId == 209487) {
 				gen = (Npc) obj;

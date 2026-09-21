@@ -52,7 +52,7 @@ public class MoltenusService {
 	private MoltenusSchedule moltenusSchedule;
 	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private Map<Integer, MoltenusLocation> moltenus;
-	private final ConcurrentMap<Integer, MoltenusFight<?>> activeMoltenus = new ConcurrentHashMap<Integer, MoltenusFight<?>>();
+	private final ConcurrentMap<Integer, MoltenusFight<?>> activeMoltenus = new ConcurrentHashMap<>();
 
 	/**
 	 * 加载熔岩领主地点并刷和平态 NPC。
@@ -116,12 +116,7 @@ public class MoltenusService {
 		}
 		boss.start();
 		moltenusMsg(id);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				stopMoltenus(id);
-			}
-		}, (long) CustomConfig.MOLTENUS_DURATION * 3600 * 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> stopMoltenus(id), (long) CustomConfig.MOLTENUS_DURATION * 3600 * 1000);
 	}
 
 	/**
@@ -169,13 +164,8 @@ public class MoltenusService {
 	public boolean moltenusMsg(int id) {
 		switch (id) {
 		case 1:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					PacketSendUtility.sendSys3Message(player, "\uE005",
-							"<Resurrected Moltenus> appear in the abyss !!!");
-				}
-			});
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE005",
+					"<Resurrected Moltenus> appear in the abyss !!!"));
 			return true;
 		default:
 			return false;
@@ -193,13 +183,10 @@ public class MoltenusService {
 		switch (id) {
 		case 4:
 		case 7:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					// 暴怒的硫磺守护者将在 10 分钟后出现。 / Enraged Sulfur Guardian will appear in 10 minutes.
-					PacketSendUtility.playerSendPacketTime(player,
-							SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Spawnmsg_01, 0);
-				}
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				// 暴怒的硫磺守护者将在 10 分钟后出现。 / Enraged Sulfur Guardian will appear in 10 minutes.
+				PacketSendUtility.playerSendPacketTime(player,
+						SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Spawnmsg_01, 0);
 			});
 			return true;
 		default:
@@ -218,13 +205,10 @@ public class MoltenusService {
 		switch (id) {
 		case 5:
 		case 8:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					// 暴怒的西部守护者将在 10 分钟后出现。 / Enraged Western Guardian will appear in 10 minutes.
-					PacketSendUtility.playerSendPacketTime(player,
-							SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Spawnmsg_02, 10000);
-				}
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				// 暴怒的西部守护者将在 10 分钟后出现。 / Enraged Western Guardian will appear in 10 minutes.
+				PacketSendUtility.playerSendPacketTime(player,
+						SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Spawnmsg_02, 10000);
 			});
 			return true;
 		default:
@@ -243,13 +227,10 @@ public class MoltenusService {
 		switch (id) {
 		case 6:
 		case 9:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					// 暴怒的东部守护者将在 10 分钟后出现。 / Enraged Eastern Guardian will appear in 10 minutes.
-					PacketSendUtility.playerSendPacketTime(player,
-							SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Spawnmsg_03, 20000);
-				}
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				// 暴怒的东部守护者将在 10 分钟后出现。 / Enraged Eastern Guardian will appear in 10 minutes.
+				PacketSendUtility.playerSendPacketTime(player,
+						SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Spawnmsg_03, 20000);
 			});
 			return true;
 		default:
@@ -267,7 +248,7 @@ public class MoltenusService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
+		for (VisibleObject obj : new ArrayList<>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {

@@ -63,7 +63,7 @@ public class SurveyService {
 	 * Constructs the service and starts the periodic update task.
 	 */
 	public SurveyService() {
-		activeItems = new ConcurrentHashMap<Integer, SurveyItem>();
+		activeItems = new ConcurrentHashMap<>();
 		reload();
 	}
 
@@ -137,7 +137,7 @@ public class SurveyService {
 		if (newList.size() == 0) {
 			return;
 		}
-		List<Integer> players = new ArrayList<Integer>();
+		List<Integer> players = new ArrayList<>();
 		int cnt = 0;
 		for (SurveyItem item : newList) {
 			activeItems.put(item.uniqueId, item);

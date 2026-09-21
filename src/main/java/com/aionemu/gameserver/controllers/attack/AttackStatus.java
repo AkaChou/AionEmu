@@ -120,33 +120,20 @@ public enum AttackStatus {
 	 * @throws IllegalArgumentException 无法映射时 / if the status cannot be mapped
 	 */
 	public static final AttackStatus getOffHandStats(AttackStatus mainHandStatus) {
-		switch (mainHandStatus) {
-		case DODGE:
-			return OFFHAND_DODGE;
-		case PARRY:
-			return OFFHAND_PARRY;
-		case BLOCK:
-			return OFFHAND_BLOCK;
-		case RESIST:
-			return OFFHAND_RESIST;
-		case BUF:
-			return OFFHAND_BUF;
-		case NORMALHIT:
-			return OFFHAND_NORMALHIT;
-		case CRITICAL:
-			return OFFHAND_CRITICAL;
-		case CRITICAL_DODGE:
-			return OFFHAND_CRITICAL_DODGE;
-		case CRITICAL_PARRY:
-			return OFFHAND_CRITICAL_PARRY;
-		case CRITICAL_BLOCK:
-			return OFFHAND_CRITICAL_BLOCK;
-		case CRITICAL_RESIST:
-			return OFFHAND_CRITICAL_RESIST;
-		default:
-			break;
-		}
-		throw new IllegalArgumentException("Invalid mainHandStatus " + mainHandStatus);
+		return switch (mainHandStatus) {
+			case DODGE -> OFFHAND_DODGE;
+			case PARRY -> OFFHAND_PARRY;
+			case BLOCK -> OFFHAND_BLOCK;
+			case RESIST -> OFFHAND_RESIST;
+			case BUF -> OFFHAND_BUF;
+			case NORMALHIT -> OFFHAND_NORMALHIT;
+			case CRITICAL -> OFFHAND_CRITICAL;
+			case CRITICAL_DODGE -> OFFHAND_CRITICAL_DODGE;
+			case CRITICAL_PARRY -> OFFHAND_CRITICAL_PARRY;
+			case CRITICAL_BLOCK -> OFFHAND_CRITICAL_BLOCK;
+			case CRITICAL_RESIST -> OFFHAND_CRITICAL_RESIST;
+			default -> throw new IllegalArgumentException("Invalid mainHandStatus " + mainHandStatus);
+		};
 	}
 
 	/**
@@ -157,30 +144,13 @@ public enum AttackStatus {
 	 * @return 基本状态 / base status
 	 */
 	public static final AttackStatus getBaseStatus(AttackStatus status) {
-		switch (status) {
-		case DODGE:
-		case CRITICAL_DODGE:
-		case OFFHAND_DODGE:
-		case OFFHAND_CRITICAL_DODGE:
-			return AttackStatus.DODGE;
-		case PARRY:
-		case CRITICAL_PARRY:
-		case OFFHAND_PARRY:
-		case OFFHAND_CRITICAL_PARRY:
-			return AttackStatus.PARRY;
-		case BLOCK:
-		case CRITICAL_BLOCK:
-		case OFFHAND_BLOCK:
-		case OFFHAND_CRITICAL_BLOCK:
-			return AttackStatus.BLOCK;
-		case RESIST:
-		case CRITICAL_RESIST:
-		case OFFHAND_RESIST:
-		case OFFHAND_CRITICAL_RESIST:
-			return AttackStatus.RESIST;
-		default:
-			return status;
-		}
+		return switch (status) {
+			case DODGE, CRITICAL_DODGE, OFFHAND_DODGE, OFFHAND_CRITICAL_DODGE -> AttackStatus.DODGE;
+			case PARRY, CRITICAL_PARRY, OFFHAND_PARRY, OFFHAND_CRITICAL_PARRY -> AttackStatus.PARRY;
+			case BLOCK, CRITICAL_BLOCK, OFFHAND_BLOCK, OFFHAND_CRITICAL_BLOCK -> AttackStatus.BLOCK;
+			case RESIST, CRITICAL_RESIST, OFFHAND_RESIST, OFFHAND_CRITICAL_RESIST -> AttackStatus.RESIST;
+			default -> status;
+		};
 	}
 
 	/**
@@ -191,29 +161,18 @@ public enum AttackStatus {
 	 * @return 暴击状态 / critical status
 	 */
 	public static final AttackStatus getCriticalStatusFor(AttackStatus status) {
-		switch (status) {
-		case DODGE:
-			return AttackStatus.CRITICAL_DODGE;
-		case OFFHAND_DODGE:
-			return AttackStatus.OFFHAND_CRITICAL_DODGE;
-		case PARRY:
-			return AttackStatus.CRITICAL_PARRY;
-		case OFFHAND_PARRY:
-			return AttackStatus.OFFHAND_CRITICAL_PARRY;
-		case BLOCK:
-			return AttackStatus.CRITICAL_BLOCK;
-		case OFFHAND_BLOCK:
-			return AttackStatus.OFFHAND_CRITICAL_BLOCK;
-		case RESIST:
-			return AttackStatus.CRITICAL_RESIST;
-		case OFFHAND_RESIST:
-			return AttackStatus.OFFHAND_CRITICAL_RESIST;
-		case NORMALHIT:
-			return AttackStatus.CRITICAL;
-		case OFFHAND_NORMALHIT:
-			return AttackStatus.OFFHAND_CRITICAL;
-		default:
-			return status;
-		}
+		return switch (status) {
+			case DODGE -> AttackStatus.CRITICAL_DODGE;
+			case OFFHAND_DODGE -> AttackStatus.OFFHAND_CRITICAL_DODGE;
+			case PARRY -> AttackStatus.CRITICAL_PARRY;
+			case OFFHAND_PARRY -> AttackStatus.OFFHAND_CRITICAL_PARRY;
+			case BLOCK -> AttackStatus.CRITICAL_BLOCK;
+			case OFFHAND_BLOCK -> AttackStatus.OFFHAND_CRITICAL_BLOCK;
+			case RESIST -> AttackStatus.CRITICAL_RESIST;
+			case OFFHAND_RESIST -> AttackStatus.OFFHAND_CRITICAL_RESIST;
+			case NORMALHIT -> AttackStatus.CRITICAL;
+			case OFFHAND_NORMALHIT -> AttackStatus.OFFHAND_CRITICAL;
+			default -> status;
+		};
 	}
 }

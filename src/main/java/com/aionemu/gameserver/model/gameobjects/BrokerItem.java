@@ -214,8 +214,10 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		return itemUniqueId > o.getItemUniqueId() ? 1 : -1;
 	}
 
-	static Comparator<BrokerItem> NAME_SORT_ASC = new Comparator<BrokerItem>() {
-		/** 比较 / compare. */
+	static Comparator<BrokerItem> NAME_SORT_ASC = new Comparator<>() {
+		/**
+		 * 比较 / compare.
+		 */
 		@Override
 		public int compare(BrokerItem o1, BrokerItem o2) {
 			if (o1 == null || o2 == null) {
@@ -225,8 +227,10 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		}
 	};
 
-	static Comparator<BrokerItem> NAME_SORT_DESC = new Comparator<BrokerItem>() {
-		/** 比较 / compare. */
+	static Comparator<BrokerItem> NAME_SORT_DESC = new Comparator<>() {
+		/**
+		 * 比较 / compare.
+		 */
 		@Override
 		public int compare(BrokerItem o1, BrokerItem o2) {
 			if (o1 == null || o2 == null) {
@@ -236,8 +240,10 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		}
 	};
 
-	static Comparator<BrokerItem> PRICE_SORT_ASC = new Comparator<BrokerItem>() {
-		/** 比较 / compare. */
+	static Comparator<BrokerItem> PRICE_SORT_ASC = new Comparator<>() {
+		/**
+		 * 比较 / compare.
+		 */
 		@Override
 		public int compare(BrokerItem o1, BrokerItem o2) {
 			if (o1 == null || o2 == null) {
@@ -250,8 +256,10 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		}
 	};
 
-	static Comparator<BrokerItem> PRICE_SORT_DESC = new Comparator<BrokerItem>() {
-		/** 比较 / compare. */
+	static Comparator<BrokerItem> PRICE_SORT_DESC = new Comparator<>() {
+		/**
+		 * 比较 / compare.
+		 */
 		@Override
 		public int compare(BrokerItem o1, BrokerItem o2) {
 			if (o1 == null || o2 == null) {
@@ -264,8 +272,10 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		}
 	};
 
-	static Comparator<BrokerItem> PIECE_PRICE_SORT_ASC = new Comparator<BrokerItem>() {
-		/** 比较 / compare. */
+	static Comparator<BrokerItem> PIECE_PRICE_SORT_ASC = new Comparator<>() {
+		/**
+		 * 比较 / compare.
+		 */
 		@Override
 		public int compare(BrokerItem o1, BrokerItem o2) {
 			if (o1 == null || o2 == null) {
@@ -278,8 +288,10 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		}
 	};
 
-	static Comparator<BrokerItem> PIECE_PRICE_SORT_DESC = new Comparator<BrokerItem>() {
-		/** 比较 / compare. */
+	static Comparator<BrokerItem> PIECE_PRICE_SORT_DESC = new Comparator<>() {
+		/**
+		 * 比较 / compare.
+		 */
 		@Override
 		public int compare(BrokerItem o1, BrokerItem o2) {
 			if (o1 == null || o2 == null) {
@@ -292,8 +304,10 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		}
 	};
 
-	static Comparator<BrokerItem> LEVEL_SORT_ASC = new Comparator<BrokerItem>() {
-		/** 比较 / compare. */
+	static Comparator<BrokerItem> LEVEL_SORT_ASC = new Comparator<>() {
+		/**
+		 * 比较 / compare.
+		 */
 		@Override
 		public int compare(BrokerItem o1, BrokerItem o2) {
 			if (o1 == null || o2 == null) {
@@ -306,19 +320,21 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		}
 	};
 
-	static Comparator<BrokerItem> LEVEL_SORT_DESC = new Comparator<BrokerItem>() {
-		/** 比较 / compare. */
-		@Override
-		public int compare(BrokerItem o1, BrokerItem o2) {
-			if (o1 == null || o2 == null) {
-				return comparePossiblyNull(o1, o2);
-			}
-			if (o1.getItemLevel() == o2.getItemLevel()) {
-				return 0;
-			}
-			return o1.getItemLevel() > o2.getItemLevel() ? -1 : 1;
-		}
-	};
+	static Comparator<BrokerItem> LEVEL_SORT_DESC = new Comparator<>() {
+        /**
+         * 比较 / compare.
+         */
+        @Override
+        public int compare(BrokerItem o1, BrokerItem o2) {
+            if (o1 == null || o2 == null) {
+                return comparePossiblyNull(o1, o2);
+            }
+            if (o1.getItemLevel() == o2.getItemLevel()) {
+                return 0;
+            }
+            return o1.getItemLevel() > o2.getItemLevel() ? -1 : 1;
+        }
+    };
 
 	private static <T extends Comparable<T>> int comparePossiblyNull(T aThis, T aThat) {
 		int result = 0;

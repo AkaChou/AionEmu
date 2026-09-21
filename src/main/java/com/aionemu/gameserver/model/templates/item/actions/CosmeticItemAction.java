@@ -53,34 +53,45 @@ public class CosmeticItemAction extends AbstractItemAction {
 		PlayerAppearance playerAppearance = player.getPlayerAppearance();
 		String type = template.getType();
 		int id = template.getId();
-		if (type.equals("hair_color")) {
-			playerAppearance.setHairRGB(id);
-		} else if (type.equals("face_color")) {
-			playerAppearance.setSkinRGB(id);
-		} else if (type.equals("lip_color")) {
-			playerAppearance.setLipRGB(id);
-		} else if (type.equals("eye_color")) {
-			playerAppearance.setEyeRGB(id);
-		} else if (type.equals("hair_type")) {
-			playerAppearance.setHair(id);
-		} else if (type.equals("face_type")) {
-			playerAppearance.setFace(id);
-		} else if (type.equals("voice_type")) {
-			playerAppearance.setVoice(id);
-		} else if (type.equals("makeup_type")) {
-			playerAppearance.setTattoo(id);
-		} else if (type.equals("tattoo_type")) {
-			playerAppearance.setDeco(id);
-		} else if (type.equals("preset_name")) {
-			CosmeticItemTemplate.Preset preset = template.getPreset();
-			playerAppearance.setEyeRGB((preset.getEyeColor()));
-			playerAppearance.setLipRGB((preset.getLipColor()));
-			playerAppearance.setHairRGB((preset.getHairColor()));
-			playerAppearance.setSkinRGB((preset.getEyeColor()));
-			playerAppearance.setHair((preset.getHairType()));
-			playerAppearance.setFace((preset.getFaceType()));
-			playerAppearance.setHeight((preset.getScale()));
-		}
+        switch (type) {
+            case "hair_color":
+                playerAppearance.setHairRGB(id);
+                break;
+            case "face_color":
+                playerAppearance.setSkinRGB(id);
+                break;
+            case "lip_color":
+                playerAppearance.setLipRGB(id);
+                break;
+            case "eye_color":
+                playerAppearance.setEyeRGB(id);
+                break;
+            case "hair_type":
+                playerAppearance.setHair(id);
+                break;
+            case "face_type":
+                playerAppearance.setFace(id);
+                break;
+            case "voice_type":
+                playerAppearance.setVoice(id);
+                break;
+            case "makeup_type":
+                playerAppearance.setTattoo(id);
+                break;
+            case "tattoo_type":
+                playerAppearance.setDeco(id);
+                break;
+            case "preset_name":
+                CosmeticItemTemplate.Preset preset = template.getPreset();
+                playerAppearance.setEyeRGB((preset.getEyeColor()));
+                playerAppearance.setLipRGB((preset.getLipColor()));
+                playerAppearance.setHairRGB((preset.getHairColor()));
+                playerAppearance.setSkinRGB((preset.getEyeColor()));
+                playerAppearance.setHair((preset.getHairType()));
+                playerAppearance.setFace((preset.getFaceType()));
+                playerAppearance.setHeight((preset.getScale()));
+                break;
+        }
 		DAOManager.getDAO(PlayerAppearanceDAO.class).store(player);
 		player.getInventory().delete(targetItem);
 		PacketSendUtility.sendPacket(player, new SM_PLAYER_INFO(player, false));

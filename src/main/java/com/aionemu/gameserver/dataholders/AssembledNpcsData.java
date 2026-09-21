@@ -25,7 +25,7 @@ public class AssembledNpcsData {
 
 	@XmlElement(name = "assembled_npc", type = AssembledNpcTemplate.class)
 	private List<AssembledNpcTemplate> templates;
-	private final Map<Integer, AssembledNpcTemplate> assembledNpcsTemplates = new LinkedHashMap<Integer, AssembledNpcTemplate>();
+	private final Map<Integer, AssembledNpcTemplate> assembledNpcsTemplates = new LinkedHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，按编号建立索引并释放列表。

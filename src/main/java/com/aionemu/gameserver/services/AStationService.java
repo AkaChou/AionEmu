@@ -24,7 +24,7 @@ import com.aionemu.gameserver.world.WorldType;
 public class AStationService {
 	private static volatile ObjectProvider<AStationService> instanceProvider;
 	/** Accountscurrently 在 Stationmappedplayers / Accounts currently on A-Station mapped to players */
-	private final ConcurrentMap<Integer, Player> accountsOnAStation = new ConcurrentHashMap<Integer, Player>(1);
+	private final ConcurrentMap<Integer, Player> accountsOnAStation = new ConcurrentHashMap<>(1);
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。

@@ -82,7 +82,7 @@ public class GeoWorldLoader {
 	 * @throws IOException 读文件失败 / on I/O failure
 	 */
 	public static Map<String, Spatial> loadMeshs(String fileName) throws IOException {
-		Map<String, Spatial> geoms = new HashMap<String, Spatial>();
+		Map<String, Spatial> geoms = new HashMap<>();
 		File geoFile = Config.geoFile(fileName);
 		try (RandomAccessFile raFile = new RandomAccessFile(geoFile, "r");
 			 FileChannel roChannel = raFile.getChannel();

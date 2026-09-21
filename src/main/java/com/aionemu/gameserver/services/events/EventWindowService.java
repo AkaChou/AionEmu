@@ -39,7 +39,7 @@ public class EventWindowService {
 
 	private static volatile ObjectProvider<EventWindowService> instanceProvider;
 	private final Map<Integer, EventsWindow> allEvents = DataManager.EVENTS_WINDOW.getAllEvents();
-	private final ConcurrentMap<Integer, EventsWindow> activeEvents = new ConcurrentHashMap<Integer, EventsWindow>();
+	private final ConcurrentMap<Integer, EventsWindow> activeEvents = new ConcurrentHashMap<>();
 
 	/**
 	 * 初始化所有活动。
@@ -61,7 +61,7 @@ public class EventWindowService {
 	 */
 	public Map<Integer, EventsWindow> getActiveEvents(Player player) {
 		ZonedDateTime now = ZonedDateTime.now();
-		Map<Integer, EventsWindow> activeEventsForPlayer = new HashMap<Integer, EventsWindow>();
+		Map<Integer, EventsWindow> activeEventsForPlayer = new HashMap<>();
 		for (EventsWindow eventsWindow : allEvents.values()) {
 			if (activeEvents.containsKey(eventsWindow.getId())) {
 				continue;
@@ -85,7 +85,7 @@ public class EventWindowService {
 			return;
 		}
 		Map<Integer, EventsWindow> activeEventsForPlayer = getActiveEvents(player);
-		final Map<Integer, EventsWindow> sendActiveEventsForPlayer = new ConcurrentHashMap<Integer, EventsWindow>();
+		final Map<Integer, EventsWindow> sendActiveEventsForPlayer = new ConcurrentHashMap<>();
 		final int accountId = player.getPlayerAccount().getId();
 		final PlayerEventsWindowDAO playerEventsWindowDAO = DAOManager.getDAO(PlayerEventsWindowDAO.class);
 		ZonedDateTime now = ZonedDateTime.now();
@@ -104,28 +104,23 @@ public class EventWindowService {
 				playerEventsWindowDAO.store(accountId, eventsWindow.getId(), new Timestamp(System.currentTimeMillis()), elapsed); // 临时用于更新时间戳 / temp for updating Timestamp
 			}
 			log.info(I18n.get("log.e1c6fecfcb1f", eventsWindow.getId(), eventsWindow.getRemainingTime()));
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-				@Override
-				/**
-				 * 执行任务。
-				 * Runs the task.
-				 */
-				public void run() {
-					if (player.isOnline()) {
-						if (recivedCount == eventsWindow.getMaxCountOfDay()) {
-							sendActiveEventsForPlayer.remove(eventsWindow.getId());
-							return;
-						}
-						playerEventsWindowDAO.setRewardRecivedCount(accountId, eventsWindow.getId(),(recivedCount + 1)); // 同时将 elapsed 置 0 并更新时间戳 / it also sets elapsed to 0 and updates the timestamp
-						ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(eventsWindow.getItemId());
-						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_HCOIN_07(itemTemplate.getNameId()));
-						ItemService.addItem(player, eventsWindow.getItemId(), eventsWindow.getCount());
-						restartTimer(player, eventsWindow.getId(), sendActiveEventsForPlayer);
-						PacketSendUtility.sendPacket(player, new SM_EVENT_WINDOW_ITEMS(sendActiveEventsForPlayer.values()));
-					}
-				}
-			}, (eventsWindow.getRemainingTime() - elapsed) * 60000L);
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				 if (player.isOnline()) {
+					 if (recivedCount == eventsWindow.getMaxCountOfDay()) {
+						 sendActiveEventsForPlayer.remove(eventsWindow.getId());
+						 return;
+					 }
+					 playerEventsWindowDAO.setRewardRecivedCount(accountId, eventsWindow.getId(),(recivedCount + 1)); // 同时将 elapsed 置 0 并更新时间戳 / it also sets elapsed to 0 and updates the timestamp
+					 ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(eventsWindow.getItemId());
+					 PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_HCOIN_07(itemTemplate.getNameId()));
+					 ItemService.addItem(player, eventsWindow.getItemId(), eventsWindow.getCount());
+					 restartTimer(player, eventsWindow.getId(), sendActiveEventsForPlayer);
+					 PacketSendUtility.sendPacket(player, new SM_EVENT_WINDOW_ITEMS(sendActiveEventsForPlayer.values()));
+				 }
+			 }, (eventsWindow.getRemainingTime() - elapsed) * 60000L);
 		}
 		PacketSendUtility.sendPacket(player, new SM_EVENT_WINDOW_ITEMS(sendActiveEventsForPlayer.values()));
 		PacketSendUtility.sendPacket(player, new SM_EVENT_WINDOW(1, sendActiveEventsForPlayer.size()));
@@ -139,7 +134,7 @@ public class EventWindowService {
 	 * eventId
 	 */
 	public void restartTimer(final Player player, final int eventId) {
-		restartTimer(player, eventId, new ConcurrentHashMap<Integer, EventsWindow>(getActiveEvents(player)));
+		restartTimer(player, eventId, new ConcurrentHashMap<>(getActiveEvents(player)));
 	}
 
 	private void restartTimer(final Player player, final int eventId, final Map<Integer, EventsWindow> sendActiveEventsForPlayer) {
@@ -153,26 +148,22 @@ public class EventWindowService {
 				continue;
 			}
 			if (eventsWindow.getId() == eventId) {
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					/**
-					 * 执行任务。
-					 * Runs the task.
-					 */
-					public void run() {
-						if (player.isOnline()) {
-							if (recivedCount == eventsWindow.getMaxCountOfDay()) {
-								sendActiveEventsForPlayer.remove(eventsWindow.getId());
-								return;
-							}
-							playerEventsWindowDAO.setRewardRecivedCount(accountId, eventsWindow.getId(), (recivedCount + 1));
-							ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(eventsWindow.getItemId());
-							PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_HCOIN_07(itemTemplate.getNameId()));
-							ItemService.addItem(player, eventsWindow.getItemId(), eventsWindow.getCount());
-							restartTimer(player, eventId, sendActiveEventsForPlayer);
-						}
-					}
-				}, eventsWindow.getRemainingTime() * 60000L);
+				/**
+				 * 执行任务。
+				 * Runs the task.
+				 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					 if (player.isOnline()) {
+						 if (recivedCount == eventsWindow.getMaxCountOfDay()) {
+							 sendActiveEventsForPlayer.remove(eventsWindow.getId());
+							 return;
+						 }
+						 playerEventsWindowDAO.setRewardRecivedCount(accountId, eventsWindow.getId(), (recivedCount + 1));
+						 ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(eventsWindow.getItemId());
+						 PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_HCOIN_07(itemTemplate.getNameId()));
+						 ItemService.addItem(player, eventsWindow.getItemId(), eventsWindow.getCount());
+						 restartTimer(player, eventId, sendActiveEventsForPlayer);
+					 }
+				 }, eventsWindow.getRemainingTime() * 60000L);
 			}
 		}
 	}

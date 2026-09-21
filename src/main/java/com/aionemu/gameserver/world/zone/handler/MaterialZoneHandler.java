@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MaterialZoneHandler implements ZoneHandler {
 
 	/** 当前区域内已观察的生物 / creatures currently observed inside the zone */
-	Map<Integer, IActor> observed = new ConcurrentHashMap<Integer, IActor>();
+	Map<Integer, IActor> observed = new ConcurrentHashMap<>();
 
 	/** 材质几何体 / material geometry */
 	private final Spatial geometry;

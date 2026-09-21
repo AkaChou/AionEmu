@@ -27,13 +27,10 @@ public class Grave_SlimeAI2 extends AggressiveNpcAI2
 	}
 
 	private void announceGraveSlime() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 墓地史莱姆一分为二！ / Grave Slime is splitting in two!
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDCatacombs_Normal_Slime_Isolation);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 墓地史莱姆一分为二！ / Grave Slime is splitting in two!
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDCatacombs_Normal_Slime_Isolation);
 			}
 		});
 	}

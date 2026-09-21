@@ -32,7 +32,7 @@ public class ZorshivDredgionLocation {
 	/** 返回玩家集合 / Returns the players */
 	protected Map<Integer, Player> players = new HashMap<>();
 	/** 返回已生成对象列表 / Returns the spawned */
-	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
+	private final List<VisibleObject> spawned = new ArrayList<>();
 
 	public ZorshivDredgionLocation(ZorshivDredgionTemplate template) {
 		this.template = template;

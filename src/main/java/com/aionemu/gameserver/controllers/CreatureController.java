@@ -66,7 +66,7 @@ import java.util.Map;
 public abstract class CreatureController<T extends Creature> extends VisibleObjectController<Creature> {
 
 	/** 任务 ID 到 Future 的映射 / Map from task id to Future */
-	private final Map<Integer, Future<?>> tasks = new ConcurrentHashMap<Integer, Future<?>>();
+	private final Map<Integer, Future<?>> tasks = new ConcurrentHashMap<>();
 	/** 地形区域碰撞材质角色 / Terrain zone collision material actor */
 	private volatile TerrainZoneCollisionMaterialActor terrainMaterialActor;
 	/** 治疗技能增益倍率。 / Healing skill boost multiplier. */
@@ -272,12 +272,9 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 		getOwner().incrementAttackedCount();
 
 		// 通知周围所有 NPC：该生物正在攻击我 / notify all NPC's around that creature is attacking me
-		getOwner().getKnownList().doOnAllNpcs(new Visitor<Npc>() {
-			@Override
-			public void visit(Npc object) {
-				object.getAi2().onCreatureEvent(AIEventType.CREATURE_NEEDS_SUPPORT, getOwner());
-				object.getAi2().onSeeAttack(attacker, getOwner());
-			}
+		getOwner().getKnownList().doOnAllNpcs(object -> {
+			object.getAi2().onCreatureEvent(AIEventType.CREATURE_NEEDS_SUPPORT, getOwner());
+			object.getAi2().onSeeAttack(attacker, getOwner());
 		});
 	}
 
@@ -589,7 +586,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 */
 	public void cancelAllTasks() {
 		while (hasCancellableTasks()) {
-			for (Map.Entry<Integer, Future<?>> entry : new ArrayList<Map.Entry<Integer, Future<?>>>(tasks.entrySet())) {
+			for (Map.Entry<Integer, Future<?>> entry : new ArrayList<>(tasks.entrySet())) {
 				int i = entry.getKey();
 				Future<?> task = entry.getValue();
 				if (task != null && i != TaskId.RESPAWN.ordinal() && tasks.remove(i, task)) {

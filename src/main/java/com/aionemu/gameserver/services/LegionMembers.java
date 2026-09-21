@@ -192,7 +192,7 @@ final class LegionMembers {
 	 * @return 成员扩展列表 / Extended member list
 	 */
 	public ArrayList<LegionMemberEx> loadLegionMemberExList(Legion legion, Integer objExcluded) {
-		ArrayList<LegionMemberEx> legionMembers = new ArrayList<LegionMemberEx>();
+		ArrayList<LegionMemberEx> legionMembers = new ArrayList<>();
 		for (Integer memberObjId : legion.getLegionMembers()) {
 			LegionMemberEx legionMemberEx;
 			if (objExcluded != null && objExcluded.equals(memberObjId)) {
@@ -233,7 +233,7 @@ final class LegionMembers {
 		storeLegionMember(player.getLegionMember(), true);
 		PacketSendUtility.sendPacket(player, new SM_LEGION_INFO(legion));
 		ArrayList<LegionMemberEx> totalMembers = loadLegionMemberExList(legion, player.getObjectId());
-		ListSplitter<LegionMemberEx> splits = new ListSplitter<LegionMemberEx>(totalMembers, 128);
+		ListSplitter<LegionMemberEx> splits = new ListSplitter<>(totalMembers, 128);
 		boolean isFirst = true;
 		while (!splits.isLast()) {
 			boolean result = false;
@@ -342,7 +342,7 @@ final class LegionMembers {
 		PacketSendUtility.broadcastPacketToLegion(legion, new SM_LEGION_ADD_MEMBER(activePlayer, true, 0, ""));
 		PacketSendUtility.sendPacket(activePlayer, new SM_LEGION_INFO(legion));
 		ArrayList<LegionMemberEx> totalMembers = loadLegionMemberExList(legion, null);
-		ListSplitter<LegionMemberEx> splits = new ListSplitter<LegionMemberEx>(totalMembers, 128);
+		ListSplitter<LegionMemberEx> splits = new ListSplitter<>(totalMembers, 128);
 		boolean isFirst = true;
 		while (!splits.isLast()) {
 			boolean result = false;

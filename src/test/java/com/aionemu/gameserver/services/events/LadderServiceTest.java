@@ -28,7 +28,7 @@ class LadderServiceTest {
 	@Test
 	void getActiveBattlegroundUsesSnapshotWhenBattlegroundMapChangesDuringScan() throws ReflectiveOperationException {
 		LadderService service = objenesis.newInstance(LadderService.class);
-		Map<Integer, Battleground> battlegrounds = Collections.synchronizedMap(new LinkedHashMap<Integer, Battleground>());
+		Map<Integer, Battleground> battlegrounds = Collections.synchronizedMap(new LinkedHashMap<>());
 		battlegrounds.put(1, new MutatingBattleground(() -> battlegrounds.remove(2)));
 		battlegrounds.put(2, new TestBattleground());
 		setField(service, "bgMap", battlegrounds);
@@ -40,7 +40,7 @@ class LadderServiceTest {
 	@Test
 	void getBattlegroundsReturnsReadOnlySnapshot() throws ReflectiveOperationException {
 		LadderService service = objenesis.newInstance(LadderService.class);
-		Map<Integer, Battleground> battlegrounds = Collections.synchronizedMap(new LinkedHashMap<Integer, Battleground>());
+		Map<Integer, Battleground> battlegrounds = Collections.synchronizedMap(new LinkedHashMap<>());
 		battlegrounds.put(1, new TestBattleground());
 		setField(service, "bgMap", battlegrounds);
 
@@ -95,24 +95,24 @@ class LadderServiceTest {
 		@Override
 		public Iterator<AionObject> iterator() {
 			Iterator<AionObject> delegate = super.iterator();
-			return new Iterator<AionObject>() {
-				private boolean mutated;
+			return new Iterator<>() {
+                private boolean mutated;
 
-				@Override
-				public boolean hasNext() {
-					return delegate.hasNext();
-				}
+                @Override
+                public boolean hasNext() {
+                    return delegate.hasNext();
+                }
 
-				@Override
-				public AionObject next() {
-					AionObject next = delegate.next();
-					if (!mutated) {
-						mutated = true;
-						MutatingQueue.this.remove(1);
-					}
-					return next;
-				}
-			};
+                @Override
+                public AionObject next() {
+                    AionObject next = delegate.next();
+                    if (!mutated) {
+                        mutated = true;
+                        MutatingQueue.this.remove(1);
+                    }
+                    return next;
+                }
+            };
 		}
 	}
 

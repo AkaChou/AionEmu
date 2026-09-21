@@ -78,19 +78,21 @@ public class LeagueLeftEvent extends AlwaysTrueTeamEvent implements Predicate<Le
 	@Override
 	public boolean apply(LeagueMember member) {
 		PlayerAlliance leagueAlliance = member.getObject();
-		leagueAlliance.applyOnMembers(new Predicate<Player>() {
-			/** 应用。 / Apply. */
+		leagueAlliance.applyOnMembers(new Predicate<>() {
+			/**
+			 * 应用。 / Apply.
+			 */
 			@Override
 			public boolean apply(Player member) {
 				switch (reason) {
-				case LEAVE:
-					PacketSendUtility.sendPacket(member, new SM_ALLIANCE_INFO(alliance, SM_ALLIANCE_INFO.UNION_LEAVE,
+					case LEAVE:
+						PacketSendUtility.sendPacket(member, new SM_ALLIANCE_INFO(alliance, SM_ALLIANCE_INFO.UNION_LEAVE,
 							alliance.getLeader().getName()));
-					break;
-				case EXPEL:
-					PacketSendUtility.sendPacket(member, new SM_ALLIANCE_INFO(alliance, SM_ALLIANCE_INFO.UNION_BAN_HIM,
+						break;
+					case EXPEL:
+						PacketSendUtility.sendPacket(member, new SM_ALLIANCE_INFO(alliance, SM_ALLIANCE_INFO.UNION_BAN_HIM,
 							alliance.getLeader().getName()));
-					break;
+						break;
 				}
 				return true;
 			}

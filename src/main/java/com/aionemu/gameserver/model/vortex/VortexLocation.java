@@ -54,9 +54,9 @@ public class VortexLocation implements ZoneHandler {
 	protected List<InvasionZoneInstance> zones;
 	/** 返回玩家集合 / Returns the players */
 	protected Map<Integer, Player> players = new HashMap<>();
-	protected Map<Integer, Kisk> kisks = new LinkedHashMap<Integer, Kisk>();
+	protected Map<Integer, Kisk> kisks = new LinkedHashMap<>();
 	/** 返回已生成的对象列表 / Returns the spawned objects */
-	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
+	private final List<VisibleObject> spawned = new ArrayList<>();
 	protected HomePoint home;
 	protected ResurrectionPoint resurrection;
 	protected StartPoint start;
@@ -66,7 +66,7 @@ public class VortexLocation implements ZoneHandler {
 		this.id = template.getId();
 		this.offenceRace = template.getInvadersRace();
 		this.defendsRace = template.getDefendersRace();
-		this.zones = new ArrayList<InvasionZoneInstance>();
+		this.zones = new ArrayList<>();
 		this.home = template.getHomePoint();
 		this.resurrection = template.getResurrectionPoint();
 		this.start = template.getStartPoint();

@@ -46,12 +46,9 @@ public class Kontesius_Gampt_2AI2 extends AggressiveNpcAI2
 					WalkManager.startWalking(this);
 					getOwner().setState(1);
 					PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							if (!isAlreadyDead()) {
-								despawn();
-							}
+					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						if (!isAlreadyDead()) {
+							despawn();
 						}
 					}, 9500);
 				}

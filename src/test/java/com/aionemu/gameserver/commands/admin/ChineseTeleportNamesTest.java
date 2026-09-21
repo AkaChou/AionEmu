@@ -81,7 +81,7 @@ class ChineseTeleportNamesTest {
 	 * @throws IOException 读取地点表失败时 / When the table cannot be read
 	 */
 	private static void assertAnchor(String name, int worldId, Map<Integer, Integer> telelocations) throws IOException {
-		List<Integer> matchedWorlds = new ArrayList<Integer>();
+		List<Integer> matchedWorlds = new ArrayList<>();
 		for (String row : nameTableRows()) {
 			String[] columns = row.split("\\t+");
 			if (columns.length >= 2 && columns[1].trim().equals(name)) {
@@ -101,7 +101,7 @@ class ChineseTeleportNamesTest {
 	 * @throws IOException 读取失败时 / When the table cannot be read
 	 */
 	private static List<String> nameTableRows() throws IOException {
-		List<String> rows = new ArrayList<String>();
+		List<String> rows = new ArrayList<>();
 		for (String line : Files.readAllLines(NAME_TABLE, StandardCharsets.UTF_8)) {
 			String trimmed = line.trim();
 			if (!trimmed.isEmpty() && !trimmed.startsWith("#")) {
@@ -119,7 +119,7 @@ class ChineseTeleportNamesTest {
 	 * @throws IOException 读取失败时 / When the file cannot be read
 	 */
 	private static Map<Integer, Integer> telelocationsByLocId() throws IOException {
-		Map<Integer, Integer> telelocations = new HashMap<Integer, Integer>();
+		Map<Integer, Integer> telelocations = new HashMap<>();
 		Matcher tags = TELELOC_TAG.matcher(Files.readString(TELELOC, StandardCharsets.UTF_8));
 		while (tags.find()) {
 			telelocations.put(attribute(tags.group(), "loc_id"), attribute(tags.group(), "mapid"));

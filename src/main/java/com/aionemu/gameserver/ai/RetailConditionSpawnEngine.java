@@ -279,14 +279,20 @@ public final class RetailConditionSpawnEngine {
 			for (String operator : List.of("==", "!=", ">=", "<=", ">", "<")) {
 				if (consume(operator)) {
 					int right = primary();
-					return switch (operator) {
-						case "==" -> left == right ? 1 : 0;
-						case "!=" -> left != right ? 1 : 0;
-						case ">=" -> left >= right ? 1 : 0;
-						case "<=" -> left <= right ? 1 : 0;
-						case ">" -> left > right ? 1 : 0;
-						default -> left < right ? 1 : 0;
-					};
+                    switch (operator) {
+                        case "==":
+                            return left == right ? 1 : 0;
+                        case "!=":
+                            return left != right ? 1 : 0;
+                        case ">=":
+                            return left >= right ? 1 : 0;
+                        case "<=":
+                            return left <= right ? 1 : 0;
+                        case ">":
+                            return left > right ? 1 : 0;
+                        default:
+                            return left < right ? 1 : 0;
+                    }
 				}
 			}
 			return left;

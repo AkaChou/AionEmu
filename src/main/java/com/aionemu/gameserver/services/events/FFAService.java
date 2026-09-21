@@ -55,11 +55,11 @@ public class FFAService {
 	/** Spring 实例提供者 / Spring instance provider */
 	private static volatile ObjectProvider<FFAService> instanceProvider;
 	/** Worldpositionscached 前 enteringFFA / World positions cached before entering FFA */
-	private final Map<Integer, WorldPosition> previousLocations = new HashMap<Integer, WorldPosition>();
+	private final Map<Integer, WorldPosition> previousLocations = new HashMap<>();
 	/** 当前活跃竞技场实例。 / Currently active arena instance. */
 	private WorldMapInstance activeInstance;
 	/** 可用竞技场地图列表。 / Available arena map list. */
-	private final List<ArenaMap> maps = new ArrayList<ArenaMap>();
+	private final List<ArenaMap> maps = new ArrayList<>();
 	/** 当前活跃竞技场地图。 / Currently active arena map. */
 	private ArenaMap activeMap = null;
 	/** 定时任务秒计数器。 / Periodic task second counter. */
@@ -273,43 +273,34 @@ public class FFAService {
 		pickArenaMap();
 		activeInstance = getWorldMap().getMainWorldMapInstance();
 		doors = activeInstance.getDoors();
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				incrementCounter++;
-				if ((incrementCounter % 300) == 0) {
-					announcePlayerCount();
-				}
-				if ((incrementCounter % 180) == 0) {
-					announcePlayerCount();
-				}
-				if ((incrementCounter % 900) == 0) {
-					final int players = activeInstance.getPlayersInside().size();
-					if (players > 0) {
-						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-							@Override
-							public void visit(Player pl) {
-								if (!isInArena(pl) && pl.getBattleground() == null) {
-									PacketSendUtility.sendSys3Message(pl, "\uE00B", "<FFA> Join the <FFA> map in writing: .ffa and play with " + players + " other players right now!!!");
-								}
-							}
-						});
-					}
-				}
-				if ((incrementCounter % 600) == 0) { // 每 10 分钟更换地图 / change map every 10 minutes
-					pickArenaMap();
-				}
-				if ((incrementCounter % 3600) == 0) {
-					incrementCounter = 0;
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-						@Override
-						public void visit(Player pl) {
-							if (!isInArena(pl) && pl.getBattleground() == null) {
-								PacketSendUtility.sendSys3Message(pl, "\uE00B", "<FFA> Join the <FFA> area, and try to win AP/GP. Write: .ffa!!!");
-							}
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			incrementCounter++;
+			if ((incrementCounter % 300) == 0) {
+				announcePlayerCount();
+			}
+			if ((incrementCounter % 180) == 0) {
+				announcePlayerCount();
+			}
+			if ((incrementCounter % 900) == 0) {
+				final int players = activeInstance.getPlayersInside().size();
+				if (players > 0) {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
+						if (!isInArena(pl) && pl.getBattleground() == null) {
+							PacketSendUtility.sendSys3Message(pl, "\uE00B", "<FFA> Join the <FFA> map in writing: .ffa and play with " + players + " other players right now!!!");
 						}
 					});
 				}
+			}
+			if ((incrementCounter % 600) == 0) { // 每 10 分钟更换地图 / change map every 10 minutes
+				pickArenaMap();
+			}
+			if ((incrementCounter % 3600) == 0) {
+				incrementCounter = 0;
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
+					if (!isInArena(pl) && pl.getBattleground() == null) {
+						PacketSendUtility.sendSys3Message(pl, "\uE00B", "<FFA> Join the <FFA> area, and try to win AP/GP. Write: .ffa!!!");
+					}
+				});
 			}
 		}, 1000, 1000);
 	}
@@ -329,18 +320,15 @@ public class FFAService {
 			analyseInstanceBalance();
 			return false;
 		}
-		List<ArenaMap> mapsWithoutActive = new ArrayList<ArenaMap>(maps.size());
+		List<ArenaMap> mapsWithoutActive = new ArrayList<>(maps.size());
 		mapsWithoutActive.addAll(maps);
 		if (activeMap != null) {
 			mapsWithoutActive.remove(activeMap);
 			for (WorldMapInstance instance : getWorldMap().getInstances()) {
 				final String msg = "Map loading, please wait...";
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player pl) {
-						PacketSendUtility.sendMessage(pl, msg);
-						enterArena(pl, true);
-					}
+				instance.doOnAllPlayers(pl -> {
+					PacketSendUtility.sendMessage(pl, msg);
+					enterArena(pl, true);
 				});
 			}
 		}
@@ -358,12 +346,7 @@ public class FFAService {
 	private void announcePlayerCount() {
 		for (WorldMapInstance instance : getWorldMap().getInstances()) {
 			final String msg = "[FFA] There are currently: " + instance.getPlayersInside().size() + " player's on the map.";
-			instance.doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player pl) {
-					PacketSendUtility.sendMessage(pl, msg);
-				}
-			});
+			instance.doOnAllPlayers(pl -> PacketSendUtility.sendMessage(pl, msg));
 		}
 	}
 
@@ -377,12 +360,7 @@ public class FFAService {
 	public void announceKill(Player victim, Player killer) {
 		for (WorldMapInstance instance : getWorldMap().getInstances()) {
 			final String msg = killer.getPlayerClass() + " has killed " + victim.getPlayerClass() + "!";
-			instance.doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player pl) {
-					PacketSendUtility.sendSys3Message(pl, "\uE00B", msg);
-				}
-			});
+			instance.doOnAllPlayers(pl -> PacketSendUtility.sendSys3Message(pl, "\uE00B", msg));
 		}
 	}
 
@@ -406,16 +384,13 @@ public class FFAService {
 		if (lastAttacker instanceof Player) {
 			rewardKiller(player, (Player) lastAttacker);
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (isInArena(player) && player.isFFA()) {
-					if (player.getLifeStats().isAlreadyDead()) {
-						PlayerReviveService.ffaRevive(player);
-					}
-					Float[] spawn = getRandomSpawn();
-					TeleportService2.teleportTo(player, getWorldMap().getMapId(), player.getInstanceId(), spawn[0], spawn[1], spawn[2]);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (isInArena(player) && player.isFFA()) {
+				if (player.getLifeStats().isAlreadyDead()) {
+					PlayerReviveService.ffaRevive(player);
 				}
+				Float[] spawn = getRandomSpawn();
+				TeleportService2.teleportTo(player, getWorldMap().getMapId(), player.getInstanceId(), spawn[0], spawn[1], spawn[2]);
 			}
 		}, 6000);
 	}
@@ -444,12 +419,7 @@ public class FFAService {
 		killer.getCommonData().setDp(500 + killer.getCommonData().getDp());
 		for (WorldMapInstance instance : getWorldMap().getInstances()) {
 			final String msg = killer.getName() + " has killed " + player.getName() + "!";
-			instance.doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player pl) {
-					PacketSendUtility.sendSys3Message(pl, "\uE005", msg);
-				}
-			});
+			instance.doOnAllPlayers(pl -> PacketSendUtility.sendSys3Message(pl, "\uE005", msg));
 		}
 	}
 
@@ -466,12 +436,7 @@ public class FFAService {
 				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_1;
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player pl) {
-						PacketSendUtility.sendSys3Message(pl, "\uE07e", msg);
-					}
-				});
+				instance.doOnAllPlayers(pl -> PacketSendUtility.sendSys3Message(pl, "\uE07e", msg));
 			}
 		}
 		if (player.getKillStreak() == 10) {
@@ -480,12 +445,7 @@ public class FFAService {
 				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_2;
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player pl) {
-						PacketSendUtility.sendSys3Message(pl, "\uE07e", msg);
-					}
-				});
+				instance.doOnAllPlayers(pl -> PacketSendUtility.sendSys3Message(pl, "\uE07e", msg));
 			}
 		}
 		if (player.getKillStreak() == 15) {
@@ -494,12 +454,7 @@ public class FFAService {
 				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_3;
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player pl) {
-						PacketSendUtility.sendSys3Message(pl, "\uE07e", msg);
-					}
-				});
+				instance.doOnAllPlayers(pl -> PacketSendUtility.sendSys3Message(pl, "\uE07e", msg));
 			}
 		}
 		if (player.getKillStreak() == 20) {
@@ -508,12 +463,7 @@ public class FFAService {
 				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_4;
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player pl) {
-						PacketSendUtility.sendSys3Message(pl, "\uE07e", msg);
-					}
-				});
+				instance.doOnAllPlayers(pl -> PacketSendUtility.sendSys3Message(pl, "\uE07e", msg));
 			}
 		}
 		if (player.getKillStreak() == 25) {
@@ -522,12 +472,7 @@ public class FFAService {
 				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_5;
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player pl) {
-						PacketSendUtility.sendSys3Message(pl, "\uE07e", msg);
-					}
-				});
+				instance.doOnAllPlayers(pl -> PacketSendUtility.sendSys3Message(pl, "\uE07e", msg));
 			}
 		}
 		if (player.getKillStreak() == 30) {
@@ -536,12 +481,7 @@ public class FFAService {
 				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_6;
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player pl) {
-						PacketSendUtility.sendSys3Message(pl, "\uE07e", msg);
-					}
-				});
+				instance.doOnAllPlayers(pl -> PacketSendUtility.sendSys3Message(pl, "\uE07e", msg));
 			}
 		}
 		if (player.getKillStreak() == 35) {
@@ -550,12 +490,7 @@ public class FFAService {
 				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_7;
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player pl) {
-						PacketSendUtility.sendSys3Message(pl, "\uE07e", msg);
-					}
-				});
+				instance.doOnAllPlayers(pl -> PacketSendUtility.sendSys3Message(pl, "\uE07e", msg));
 			}
 		}
 		if (player.getKillStreak() == 40) {
@@ -564,12 +499,7 @@ public class FFAService {
 				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_8;
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player pl) {
-						PacketSendUtility.sendSys3Message(pl, "\uE07e", msg);
-					}
-				});
+				instance.doOnAllPlayers(pl -> PacketSendUtility.sendSys3Message(pl, "\uE07e", msg));
 			}
 		}
 		if (player.getKillStreak() == 45) {
@@ -578,12 +508,7 @@ public class FFAService {
 				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_9;
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player pl) {
-						PacketSendUtility.sendSys3Message(pl, "\uE07e", msg);
-					}
-				});
+				instance.doOnAllPlayers(pl -> PacketSendUtility.sendSys3Message(pl, "\uE07e", msg));
 			}
 		}
 		if (player.getKillStreak() >= 50 && player.getKillStreak() <= 999) {
@@ -592,12 +517,7 @@ public class FFAService {
 				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_10;
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player pl) {
-						PacketSendUtility.sendSys3Message(pl, "\uE07e", msg);
-					}
-				});
+				instance.doOnAllPlayers(pl -> PacketSendUtility.sendSys3Message(pl, "\uE07e", msg));
 			}
 		}
 	}
@@ -644,30 +564,27 @@ public class FFAService {
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.FFA, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				player.getObserveController().removeObserver(observer);
-				if (player.getLifeStats().isAlreadyDead()) {
-					PlayerReviveService.skillRevive(player);
-				}
-				if (player.isInGroup2()) {
-					PlayerGroupService.removePlayer(player);
-				}
-				if (player.isInAlliance2()) {
-					PlayerAllianceService.removePlayer(player);
-				}
-				player.getEffectController().unsetAbnormal(AbnormalState.SLEEP.getId());
-				player.getEffectController().updatePlayerEffectIcons();
-				player.getEffectController().broadCastEffects();
-				player.getCommonData().setDp(0);
-				player.setFFA(true);
-				analyseInstanceBalance();
-				Float[] spawn = getRandomSpawn();
-				// sendEventPacket(StageType.PVP_STAGE_1, 0);
-				TeleportService2.teleportTo(player, getWorldMap().getMapId(), activeInstance.getInstanceId(), spawn[0],
-						spawn[1], spawn[2]);
+		player.getController().addTask(TaskId.FFA, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			player.getObserveController().removeObserver(observer);
+			if (player.getLifeStats().isAlreadyDead()) {
+				PlayerReviveService.skillRevive(player);
 			}
+			if (player.isInGroup2()) {
+				PlayerGroupService.removePlayer(player);
+			}
+			if (player.isInAlliance2()) {
+				PlayerAllianceService.removePlayer(player);
+			}
+			player.getEffectController().unsetAbnormal(AbnormalState.SLEEP.getId());
+			player.getEffectController().updatePlayerEffectIcons();
+			player.getEffectController().broadCastEffects();
+			player.getCommonData().setDp(0);
+			player.setFFA(true);
+			analyseInstanceBalance();
+			Float[] spawn = getRandomSpawn();
+			// sendEventPacket(StageType.PVP_STAGE_1, 0);
+			TeleportService2.teleportTo(player, getWorldMap().getMapId(), activeInstance.getInstanceId(), spawn[0],
+					spawn[1], spawn[2]);
 		}, 10 * 1000));
 	}
 
@@ -682,21 +599,18 @@ public class FFAService {
 		player.getEffectController().setAbnormal(AbnormalState.SLEEP.getId());
 		player.getEffectController().updatePlayerEffectIcons();
 		player.getEffectController().broadCastEffects();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (player.getLifeStats().isAlreadyDead()) {
-					PlayerReviveService.skillRevive(player);
-				}
-				player.getEffectController().unsetAbnormal(AbnormalState.SLEEP.getId());
-				player.getEffectController().updatePlayerEffectIcons();
-				player.getEffectController().broadCastEffects();
-				player.setFFA(false);
-				if (pos != null) {
-					TeleportService2.teleportTo(player, pos.getMapId(), pos.getX(), pos.getY(), pos.getZ());
-				} else {
-					TeleportService2.moveToBindLocation(player, true);
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (player.getLifeStats().isAlreadyDead()) {
+				PlayerReviveService.skillRevive(player);
+			}
+			player.getEffectController().unsetAbnormal(AbnormalState.SLEEP.getId());
+			player.getEffectController().updatePlayerEffectIcons();
+			player.getEffectController().broadCastEffects();
+			player.setFFA(false);
+			if (pos != null) {
+				TeleportService2.teleportTo(player, pos.getMapId(), pos.getX(), pos.getY(), pos.getZ());
+			} else {
+				TeleportService2.moveToBindLocation(player, true);
 			}
 		}, 10 * 1000);
 	}

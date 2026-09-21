@@ -28,7 +28,7 @@ public class EmpyreanArbiterAI2 extends NpcAI2
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1097));
         }
     }
-	
+
 	@Override
 	public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		int instanceId = getPosition().getInstanceId();
@@ -73,15 +73,12 @@ public class EmpyreanArbiterAI2 extends NpcAI2
 		}
 		return true;
 	}
-	
+
 	private void announceReentered() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// “玩家名”重新进入了幻象竞技场。 / "Player Name" has reentered the Illusion Stadium.
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400964, player.getName()));
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// “玩家名”重新进入了幻象竞技场。 / "Player Name" has reentered the Illusion Stadium.
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400964, player.getName()));
 			}
 		});
 	}

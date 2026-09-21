@@ -44,7 +44,7 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
      */
     @Override
     public FriendList load(final Player player) {
-        final List<Friend> friends = new ArrayList<Friend>();
+        final List<Friend> friends = new ArrayList<>();
 
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(LOAD_QUERY)) {

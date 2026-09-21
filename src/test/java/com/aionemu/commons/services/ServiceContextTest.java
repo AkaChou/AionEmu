@@ -16,12 +16,7 @@ class ServiceContextTest {
         RunnableWrapper wrapper;
 
         try (ServiceContext.Scope ignored = ServiceContext.use("login")) {
-            wrapper = new RunnableWrapper(new Runnable() {
-                @Override
-                public void run() {
-                    observedContext.set(ServiceContext.current());
-                }
-            });
+            wrapper = new RunnableWrapper(() -> observedContext.set(ServiceContext.current()));
         }
 
         try (ServiceContext.Scope ignored = ServiceContext.use("game")) {

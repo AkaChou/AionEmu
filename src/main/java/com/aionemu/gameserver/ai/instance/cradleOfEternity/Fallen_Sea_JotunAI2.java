@@ -68,32 +68,29 @@ public class Fallen_Sea_JotunAI2 extends AggressiveNpcAI2
 	}
 
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelPhaseTask();
-				} else {
-					// 尤顿战斗人员开始集结支援水尤顿。 / Jotun’s combatants started to gather to support the Water Jotun.
-				    PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_Nepilim_Summon_MSG_01, 0);
-					// 尤顿战斗人员的支援再次开始。 / The support of the Jotun combatants has started again.
-				    PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_Nepilim_Summon_MSG_03, 10000);
-					GameEngineServices.skillEngine().getSkill(getOwner(), 23008, 60, getOwner()).useNoAnimationSkill(); // 蒸腾的间歇泉 / Steaming Geyser.
-					List<Player> players = getLifedPlayers();
-					if (!players.isEmpty()) {
-						int size = players.size();
-						if (players.size() < 6) {
-							for (Player p: players) {
-								spawnNepilimSummon(p);
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelPhaseTask();
+			} else {
+				// 尤顿战斗人员开始集结支援水尤顿。 / Jotun’s combatants started to gather to support the Water Jotun.
+				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_Nepilim_Summon_MSG_01, 0);
+				// 尤顿战斗人员的支援再次开始。 / The support of the Jotun combatants has started again.
+				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_Nepilim_Summon_MSG_03, 10000);
+				GameEngineServices.skillEngine().getSkill(getOwner(), 23008, 60, getOwner()).useNoAnimationSkill(); // 蒸腾的间歇泉 / Steaming Geyser.
+				List<Player> players = getLifedPlayers();
+				if (!players.isEmpty()) {
+					int size = players.size();
+					if (players.size() < 6) {
+						for (Player p: players) {
+							spawnNepilimSummon(p);
+						}
+					} else {
+						int count = Rnd.get(6, size);
+						for (int i = 0; i < count; i++) {
+							if (players.isEmpty()) {
+								break;
 							}
-						} else {
-							int count = Rnd.get(6, size);
-							for (int i = 0; i < count; i++) {
-								if (players.isEmpty()) {
-									break;
-								}
-								spawnNepilimSummon(players.get(Rnd.get(players.size())));
-							}
+							spawnNepilimSummon(players.get(Rnd.get(players.size())));
 						}
 					}
 				}
@@ -107,12 +104,9 @@ public class Fallen_Sea_JotunAI2 extends AggressiveNpcAI2
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
 			spawn(220537, x, y, z, (byte) 0); //IDEternity_02_Nepilim_Boss_Area.
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						spawn(220535, x, y, z, (byte) 0); //IDEternity_02_Nepilim_Boss_Summon.
-					}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					spawn(220535, x, y, z, (byte) 0); //IDEternity_02_Nepilim_Boss_Summon.
 				}
 			}, 3000);
 		}
@@ -124,7 +118,7 @@ public class Fallen_Sea_JotunAI2 extends AggressiveNpcAI2
 	}
 
 	private List<Player> getLifedPlayers() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);

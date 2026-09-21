@@ -331,7 +331,7 @@ public class EffectController {
 		}
 		synchronized (this) {
 			if (passiveEffectMap == EMPTY_EFFECTS) {
-				passiveEffectMap = Collections.synchronizedMap(new LinkedHashMap<String, Effect>());
+				passiveEffectMap = Collections.synchronizedMap(new LinkedHashMap<>());
 			}
 			return passiveEffectMap;
 		}
@@ -350,7 +350,7 @@ public class EffectController {
 		}
 		synchronized (this) {
 			if (noshowEffects == EMPTY_EFFECTS) {
-				noshowEffects = Collections.synchronizedMap(new LinkedHashMap<String, Effect>());
+				noshowEffects = Collections.synchronizedMap(new LinkedHashMap<>());
 			}
 			return noshowEffects;
 		}
@@ -372,7 +372,7 @@ public class EffectController {
 		}
 		synchronized (this) {
 			if (abnormalEffectMap == EMPTY_EFFECTS) {
-				abnormalEffectMap = Collections.synchronizedMap(new LinkedHashMap<String, Effect>());
+				abnormalEffectMap = Collections.synchronizedMap(new LinkedHashMap<>());
 			}
 			return abnormalEffectMap;
 		}
@@ -1021,7 +1021,7 @@ public class EffectController {
 	 * @return 异常效果列表 / abnormal effects
 	 */
 	public List<Effect> getAbnormalEffects() {
-		List<Effect> effects = new ArrayList<Effect>();
+		List<Effect> effects = new ArrayList<>();
 		Iterator<Effect> iterator = iterator();
 		while (iterator.hasNext()) {
 			Effect effect = iterator.next();
@@ -1039,12 +1039,7 @@ public class EffectController {
 	 * @return 可显示效果集合 / displayable effects
 	 */
 	public Collection<Effect> getAbnormalEffectsToShow() {
-		return Collections2.filter(effectsSnapshot(abnormalEffectMap), new Predicate<Effect>() {
-			@Override
-			public boolean apply(Effect effect) {
-				return !effect.isStopped() && effect.getSkillTemplate().getTargetSlot() != SkillTargetSlot.NOSHOW;
-			}
-		});
+		return Collections2.filter(effectsSnapshot(abnormalEffectMap), effect -> !effect.isStopped() && effect.getSkillTemplate().getTargetSlot() != SkillTargetSlot.NOSHOW);
 	}
 
 	/**
@@ -1054,12 +1049,7 @@ public class EffectController {
 	 * @return 吟唱效果集合 / chant effects
 	 */
 	public Collection<Effect> getChantEffects() {
-		return Collections2.filter(effectsSnapshot(abnormalEffectMap), new Predicate<Effect>() {
-			@Override
-			public boolean apply(Effect effect) {
-				return effect.isChant();
-			}
-		});
+		return Collections2.filter(effectsSnapshot(abnormalEffectMap), effect -> effect.isChant());
 	}
 
 	/**
@@ -1069,12 +1059,7 @@ public class EffectController {
 	 * @return 弓星增益集合 / ranger effects
 	 */
 	public Collection<Effect> getRangerEffects() {
-		return Collections2.filter(effectsSnapshot(abnormalEffectMap), new Predicate<Effect>() {
-			@Override
-			public boolean apply(Effect effect) {
-				return effect.isRangerBuff();
-			}
-		});
+		return Collections2.filter(effectsSnapshot(abnormalEffectMap), effect -> effect.isRangerBuff());
 	}
 
 	/**
@@ -1084,12 +1069,7 @@ public class EffectController {
 	 * @return 增益效果集合 / buff effects
 	 */
 	public Collection<Effect> getBuffEffects() {
-		return Collections2.filter(effectsSnapshot(abnormalEffectMap), new Predicate<Effect>() {
-			@Override
-			public boolean apply(Effect effect) {
-				return effect.isBuff();
-			}
-		});
+		return Collections2.filter(effectsSnapshot(abnormalEffectMap), effect -> effect.isBuff());
 	}
 
 	/**
@@ -1260,7 +1240,7 @@ public class EffectController {
 	 */
 	private static List<Effect> effectsSnapshot(Map<String, Effect> effects) {
 		synchronized (effects) {
-			return new ArrayList<Effect>(effects.values());
+			return new ArrayList<>(effects.values());
 		}
 	}
 
@@ -1273,7 +1253,7 @@ public class EffectController {
 	 */
 	private static List<Map.Entry<String, Effect>> effectEntriesSnapshot(Map<String, Effect> effects) {
 		synchronized (effects) {
-			return new ArrayList<Map.Entry<String, Effect>>(effects.entrySet());
+			return new ArrayList<>(effects.entrySet());
 		}
 	}
 

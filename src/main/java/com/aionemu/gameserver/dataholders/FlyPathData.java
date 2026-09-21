@@ -24,7 +24,7 @@ public class FlyPathData {
 	@XmlElement(name = "flypath_location")
 	private List<FlyPathEntry> list;
 
-	private final ShortObjectHashMap<FlyPathEntry> loctlistData = new ShortObjectHashMap<FlyPathEntry>();
+	private final ShortObjectHashMap<FlyPathEntry> loctlistData = new ShortObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，将飞行路径写入 ID 索引。

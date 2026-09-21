@@ -19,7 +19,7 @@ public class MovementProcessor extends AGameProcessor {
 	 * 已注册生物到其当前移动电机的映射。
 	 * Map of registered creatures to their current movement motors.
 	 */
-	private final ConcurrentHashMap<Creature, AMovementMotor> _registeredCreatures = new ConcurrentHashMap<Creature, AMovementMotor>();
+	private final ConcurrentHashMap<Creature, AMovementMotor> _registeredCreatures = new ConcurrentHashMap<>();
 
 	/**
 	 * 以 12 个工作线程和遗留静态门面的告警阈值创建移动处理器。

@@ -40,7 +40,7 @@ public class EventScheduler implements Runnable {
 	 * 延迟事件队列。
 	 * Delayed event queue.
 	 */
-	private final EventQueue<DelayedEvent> queue = new EventQueue<DelayedEvent>();
+	private final EventQueue<DelayedEvent> queue = new EventQueue<>();
 
 	/**
 	 * 当前执行开始时间戳；0 表示空闲。

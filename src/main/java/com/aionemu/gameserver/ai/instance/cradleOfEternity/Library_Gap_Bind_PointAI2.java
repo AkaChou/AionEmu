@@ -50,13 +50,10 @@ public class Library_Gap_Bind_PointAI2 extends NpcAI2
     }
 
 	private void announceLibraryGap() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 图书馆裂隙的绑定点装置已激活。 / The Library Gap's bind point device was activated.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_13);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 图书馆裂隙的绑定点装置已激活。 / The Library Gap's bind point device was activated.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_13);
 			}
 		});
 	}

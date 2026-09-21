@@ -19,41 +19,38 @@ import java.util.concurrent.Future;
 public class Exploding_FlameAI2 extends AggressiveNpcAI2
 {
 	private Future<?> eventTask;
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		startEventTask();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		cancelEventTask();
 		super.handleDied();
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		cancelEventTask();
 		super.handleDespawned();
 	}
-	
+
 	private void cancelEventTask() {
 		if (eventTask != null &&
 		   !eventTask.isDone()) {
 			eventTask.cancel(true);
 		}
 	}
-	
+
 	private void startEventTask() {
-		eventTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelEventTask();
-				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 21516, 46, getOwner()).useNoAnimationSkill();
-				}
+		eventTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelEventTask();
+			} else {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 21516, 46, getOwner()).useNoAnimationSkill();
 			}
 		}, 3000, 8000);
 	}

@@ -21,7 +21,7 @@ import java.util.Map;
 @AIName("kahrun3")
 public class IDTiamat2HardKahrunAI2 extends NpcAI2
 {
-	private final Map<Integer, VisibleObject> portal = new LinkedHashMap<Integer, VisibleObject>();
+	private final Map<Integer, VisibleObject> portal = new LinkedHashMap<>();
 
 	@Override
 	protected void handleDialogStart(Player player) {

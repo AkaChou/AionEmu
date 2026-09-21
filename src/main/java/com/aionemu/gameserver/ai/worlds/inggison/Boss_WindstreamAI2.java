@@ -27,7 +27,7 @@ import java.util.List;
 @AIName("boss_windstream")
 public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 {
-	private final Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+	private final Map<Integer, VisibleObject> objects = new LinkedHashMap<>();
 
 	@Override
 	protected void handleDied() {
@@ -40,60 +40,35 @@ public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 				SpawnTemplate CastShadowPLSM = SpawnEngine.addNewSingleTimeSpawn(getOwner().getWorldId(), 281817, 338.26440f, 573.72168f, 458.27939f, (byte) 0);
 				CastShadowPLSM.setEntityId(755);
 				objects.put(281817, SpawnEngine.spawnObject(CastShadowPLSM, 1));
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				    @Override
-					public void run() {
-					    despawnNpc(281817);
-					}
-				}, 300000); //5 分钟。 / 5 Minutes.
+				GameThreadPoolServices.threadPoolManager().schedule(() -> despawnNpc(281817), 300000); //5 分钟。 / 5 Minutes.
 			break;
 			case 216849: // 守望者 Garma / Watcher Garma.
 				announceWindBox();
 				SpawnTemplate EnvWeatherShow = SpawnEngine.addNewSingleTimeSpawn(getOwner().getWorldId(), 281817, 2602.6992f, 1526.0367f, 258.13651f, (byte) 0);
 				EnvWeatherShow.setEntityId(754);
 				objects.put(281817, SpawnEngine.spawnObject(EnvWeatherShow, 1));
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				    @Override
-					public void run() {
-					    despawnNpc(281817);
-					}
-				}, 300000); //5 分钟。 / 5 Minutes.
+				GameThreadPoolServices.threadPoolManager().schedule(() -> despawnNpc(281817), 300000); //5 分钟。 / 5 Minutes.
 			break;
 			case 216848: //Illanthe Hundredyears / Illanthe Hundredyears.
 				announceWindBox();
 				SpawnTemplate SkipOnLowSpec = SpawnEngine.addNewSingleTimeSpawn(getOwner().getWorldId(), 281817, 1745.8660f, 1716.3790f, 226.37808f, (byte) 0);
 				SkipOnLowSpec.setEntityId(1039);
 				objects.put(281817, SpawnEngine.spawnObject(SkipOnLowSpec, 1));
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				    @Override
-					public void run() {
-					    despawnNpc(281817);
-					}
-				}, 300000); //5 分钟。 / 5 Minutes.
+				GameThreadPoolServices.threadPoolManager().schedule(() -> despawnNpc(281817), 300000); //5 分钟。 / 5 Minutes.
 			break;
 			case 217071: // Esalki 第四 / Esalki The Fourth.
 				announceWindBox();
 				SpawnTemplate EnvWeatherHide = SpawnEngine.addNewSingleTimeSpawn(getOwner().getWorldId(), 281817, 2288.1091f, 1067.0475f, 285.73407f, (byte) 0);
 				EnvWeatherHide.setEntityId(2311);
 				objects.put(281817, SpawnEngine.spawnObject(EnvWeatherHide, 1));
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				    @Override
-					public void run() {
-					    despawnNpc(281817);
-					}
-				}, 300000); //5 分钟。 / 5 Minutes.
+				GameThreadPoolServices.threadPoolManager().schedule(() -> despawnNpc(281817), 300000); //5 分钟。 / 5 Minutes.
 			break;
 			case 217072: // 巨型瀑布 Starturtle / Huge Waterfall Starturtle.
 				announceWindBox();
 				SpawnTemplate DisplayFilled = SpawnEngine.addNewSingleTimeSpawn(getOwner().getWorldId(), 281817, 1660.0439f, 928.57129f, 404.99213f, (byte) 0);
 				DisplayFilled.setEntityId(2292);
 				objects.put(281817, SpawnEngine.spawnObject(DisplayFilled, 1));
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				    @Override
-					public void run() {
-					    despawnNpc(281817);
-					}
-				}, 300000); //5 分钟。 / 5 Minutes.
+				GameThreadPoolServices.threadPoolManager().schedule(() -> despawnNpc(281817), 300000); //5 分钟。 / 5 Minutes.
 			break;
 		/**
 		 * 格尔克马洛斯风道 / WINDSTREAM GELKMAROS
@@ -103,12 +78,7 @@ public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 				SpawnTemplate FileLadderCGF = SpawnEngine.addNewSingleTimeSpawn(getOwner().getWorldId(), 281817, 1719.2194f, 2301.7344f, 318.70938f, (byte) 0);
 				FileLadderCGF.setEntityId(1821);
 				objects.put(281817, SpawnEngine.spawnObject(FileLadderCGF, 1));
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				    @Override
-					public void run() {
-					    despawnNpc(281817);
-					}
-				}, 300000); //5 分钟。 / 5 Minutes.
+				GameThreadPoolServices.threadPoolManager().schedule(() -> despawnNpc(281817), 300000); //5 分钟。 / 5 Minutes.
 			break;
 		}
 		super.handleDied();
@@ -116,12 +86,7 @@ public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 	}
 
 	private void announceWindBox() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_JUMP_TRIGGER_ON_INFO);
-			}
-		});
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_JUMP_TRIGGER_ON_INFO));
 	}
 
 	private void despawnNpc(int npcId) {

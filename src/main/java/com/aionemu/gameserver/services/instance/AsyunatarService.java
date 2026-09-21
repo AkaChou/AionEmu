@@ -31,7 +31,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class AsyunatarService {
 	private static volatile ObjectProvider<AsyunatarService> instanceProvider;
 	private boolean registerAvailable;
-	private final List<Integer> playersWithCooldown = new ArrayList<Integer>();
+	private final List<Integer> playersWithCooldown = new ArrayList<>();
 	public static final byte minLevel = 66, capLevel = 76;
 	public static final int maskId = 121;
 
@@ -43,65 +43,43 @@ public class AsyunatarService {
 		if (AutoGroupConfig.ASHUNATAL_ENABLED) {
 			log.info(I18n.get("log.a77e6c7b475a"));
 			// 阿舒纳塔尔战舰 周一至周日 12:00–14:00 / Ashunatal Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "12PM-2PM"
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				/**
-				 * 执行任务。
-				 * Runs the task.
-				 */
-				public void run() {
-					startAsyunatarRegistration();
-				}
-			}, AutoGroupConfig.ASHUNATAL_SCHEDULE_MIDDAY);
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */GameCronServices.cronService().schedule(() -> startAsyunatarRegistration(), AutoGroupConfig.ASHUNATAL_SCHEDULE_MIDDAY);
 			// 阿舒纳塔尔战舰 周一至周日 12:00–14:00 / Ashunatal Dredgion MON-TUE-WED-THU-FRI "8PM-10PM"
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				/**
-				 * 执行任务。
-				 * Runs the task.
-				 */
-				public void run() {
-					startAsyunatarRegistration();
-				}
-			}, AutoGroupConfig.ASHUNATAL_SCHEDULE_EVENING);
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */GameCronServices.cronService().schedule(() -> startAsyunatarRegistration(), AutoGroupConfig.ASHUNATAL_SCHEDULE_EVENING);
 			// 阿舒纳塔尔战舰 周六/日 23:00–00:00 / Ashunatal Dredgion SAT-SUN "11PM-00PM"
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				/**
-				 * 执行任务。
-				 * Runs the task.
-				 */
-				public void run() {
-					startAsyunatarRegistration();
-				}
-			}, AutoGroupConfig.ASHUNATAL_SCHEDULE_MIDNIGHT);
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */GameCronServices.cronService().schedule(() -> startAsyunatarRegistration(), AutoGroupConfig.ASHUNATAL_SCHEDULE_MIDNIGHT);
 		}
 	}
 
 	private void startUregisterAsyunatarTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */
-			public void run() {
-				registerAvailable = false;
-				playersWithCooldown.clear();
-				GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskId);
-				Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
-				while (iter.hasNext()) {
-					Player player = iter.next();
-					if (player.getLevel() > minLevel) {
-						int instanceMaskId = getInstanceMaskId(player);
-						if (instanceMaskId > 0) {
-							PacketSendUtility.sendPacket(player,
-									new SM_AUTO_GROUP(instanceMaskId, SM_AUTO_GROUP.wnd_EntryIcon, true));
-						}
-					}
-				}
-			}
-		}, AutoGroupConfig.ASHUNATAL_TIMER * 60 * 1000);
+		/**
+		 * 执行任务。
+		 * Runs the task.
+		 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			 registerAvailable = false;
+			 playersWithCooldown.clear();
+			 GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskId);
+			 Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+			 while (iter.hasNext()) {
+				 Player player = iter.next();
+				 if (player.getLevel() > minLevel) {
+					 int instanceMaskId = getInstanceMaskId(player);
+					 if (instanceMaskId > 0) {
+						 PacketSendUtility.sendPacket(player,
+								 new SM_AUTO_GROUP(instanceMaskId, SM_AUTO_GROUP.wnd_EntryIcon, true));
+					 }
+				 }
+			 }
+		 }, AutoGroupConfig.ASHUNATAL_TIMER * 60 * 1000);
 	}
 
 	private void startAsyunatarRegistration() {

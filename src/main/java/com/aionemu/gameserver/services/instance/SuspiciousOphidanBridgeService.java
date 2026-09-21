@@ -31,7 +31,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class SuspiciousOphidanBridgeService {
 	private static volatile ObjectProvider<SuspiciousOphidanBridgeService> instanceProvider;
 	private boolean registerAvailable;
-	private final List<Integer> playersWithCooldown = new ArrayList<Integer>();
+	private final List<Integer> playersWithCooldown = new ArrayList<>();
 	public static final byte minLevel = 66, capLevel = 76;
 	public static final int maskId = 122;
 
@@ -43,43 +43,33 @@ public class SuspiciousOphidanBridgeService {
 		if (AutoGroupConfig.OPHIDAN_WARPATH_ENABLED) {
 			log.info(I18n.get("log.926526f1607c"));
 			// 奥菲丹战道 二/四 23:00–00:00 / Ophidan Warpath TUE-THU "11PM-00AM"
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				/**
-				 * 执行任务。
-				 * Runs the task.
-				 */
-				public void run() {
-					startSuspiciousOphidanRegistration();
-				}
-			}, AutoGroupConfig.OPHIDAN_WARPATH_SCHEDULE_MIDNIGHT);
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */GameCronServices.cronService().schedule(() -> startSuspiciousOphidanRegistration(), AutoGroupConfig.OPHIDAN_WARPATH_SCHEDULE_MIDNIGHT);
 		}
 	}
 
 	private void startUregisterSuspiciousTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */
-			public void run() {
-				registerAvailable = false;
-				playersWithCooldown.clear();
-				GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskId);
-				Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
-				while (iter.hasNext()) {
-					Player player = iter.next();
-					if (player.getLevel() > minLevel) {
-						int instanceMaskId = getInstanceMaskId(player);
-						if (instanceMaskId > 0) {
-							PacketSendUtility.sendPacket(player,
-									new SM_AUTO_GROUP(instanceMaskId, SM_AUTO_GROUP.wnd_EntryIcon, true));
-						}
-					}
-				}
-			}
-		}, AutoGroupConfig.OPHIDAN_WARPATH_TIMER * 60 * 1000);
+		/**
+		 * 执行任务。
+		 * Runs the task.
+		 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			 registerAvailable = false;
+			 playersWithCooldown.clear();
+			 GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskId);
+			 Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+			 while (iter.hasNext()) {
+				 Player player = iter.next();
+				 if (player.getLevel() > minLevel) {
+					 int instanceMaskId = getInstanceMaskId(player);
+					 if (instanceMaskId > 0) {
+						 PacketSendUtility.sendPacket(player,
+								 new SM_AUTO_GROUP(instanceMaskId, SM_AUTO_GROUP.wnd_EntryIcon, true));
+					 }
+				 }
+			 }
+		 }, AutoGroupConfig.OPHIDAN_WARPATH_TIMER * 60 * 1000);
 	}
 
 	private void startSuspiciousOphidanRegistration() {

@@ -26,14 +26,11 @@ public class IDEVENT_Def_MobAI2 extends AggressiveNpcAI2
 		}
 		super.handleDied();
 	}
-	
+
 	private void sendWarPoints() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (MathUtil.isIn3dRange(player, getOwner(), 100)) {
-					ItemService.addItem(player, 186000470, 1); //战争点数。 / War Points.
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (MathUtil.isIn3dRange(player, getOwner(), 100)) {
+				ItemService.addItem(player, 186000470, 1); //战争点数。 / War Points.
 			}
 		});
 	}

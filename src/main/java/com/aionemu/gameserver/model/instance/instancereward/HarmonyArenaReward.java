@@ -22,7 +22,7 @@ import lombok.Getter;
 @Getter
 public class HarmonyArenaReward extends PvPArenaReward {
 	/** 返回组 / Returns the groups*/
-	private final List<HarmonyGroupReward> groups = new ArrayList<HarmonyGroupReward>();
+	private final List<HarmonyGroupReward> groups = new ArrayList<>();
 
 	public HarmonyArenaReward(Integer mapId, int instanceId, WorldMapInstance instance) {
 		super(mapId, instanceId, instance);
@@ -41,7 +41,7 @@ public class HarmonyArenaReward extends PvPArenaReward {
 
 	/** 返回 harmony group inside / Returns the harmony group inside */
 	public List<HarmonyGroupReward> getHarmonyGroupInside() {
-		List<HarmonyGroupReward> harmonyGroups = new ArrayList<HarmonyGroupReward>();
+		List<HarmonyGroupReward> harmonyGroups = new ArrayList<>();
 		for (HarmonyGroupReward group : groups) {
 			for (AGPlayer agp : group.getAGPlayers()) {
 				if (agp.isInInstance()) {
@@ -55,7 +55,7 @@ public class HarmonyArenaReward extends PvPArenaReward {
 
 	/** 返回 players inside / Returns the players inside */
 	public List<Player> getPlayersInside(HarmonyGroupReward group) {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player playerInside : instance.getPlayersInside()) {
 			if (group.containPlayer(playerInside.getObjectId())) {
 				players.add(playerInside);
@@ -71,12 +71,14 @@ public class HarmonyArenaReward extends PvPArenaReward {
 
 	/** 发送数据包。 / Send packet. */
 	public void sendPacket(final int type, final Integer object) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/** 访问 / visit. */
+		instance.doOnAllPlayers(new Visitor<>() {
+			/**
+			 * 访问 / visit.
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player,
-						new SM_INSTANCE_SCORE(type, getTime(), getInstanceReward(), object));
+					new SM_INSTANCE_SCORE(type, getTime(), getInstanceReward(), object));
 			}
 		});
 	}

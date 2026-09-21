@@ -58,12 +58,7 @@ public class SummonTotemEffect extends SummonServantEffect {
 			SpawnTemplate spawn = SpawnEngine.addNewSingleTimeSpawn(worldId, npcId, x, y, z, heading);
 			final Servant servant = VisibleObjectSpawner.spawnServant(spawn, instanceId, effector, effect.getSkillId(),
 					effect.getSkillLevel(), NpcObjectType.SKILLAREA);
-			Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					servant.getController().delete();
-				}
-			}, time * 1000L);
+			Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> servant.getController().delete(), time * 1000L);
 			servant.getController().addTask(TaskId.DESPAWN, task);
 			return;
 		default:

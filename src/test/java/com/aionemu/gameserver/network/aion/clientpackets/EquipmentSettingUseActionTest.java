@@ -334,10 +334,10 @@ class EquipmentSettingUseActionTest {
 		private long slot;
 		private boolean switchHandsResult = true;
 		private boolean strictInventory;
-		private final Map<Integer, Long> equippedSlots = new HashMap<Integer, Long>();
-		private final Set<Integer> inventoryItemIds = new HashSet<Integer>();
-		private final Set<Integer> twoHandItemIds = new HashSet<Integer>();
-		private final List<String> operations = new ArrayList<String>();
+		private final Map<Integer, Long> equippedSlots = new HashMap<>();
+		private final Set<Integer> inventoryItemIds = new HashSet<>();
+		private final Set<Integer> twoHandItemIds = new HashSet<>();
+		private final List<String> operations = new ArrayList<>();
 
 		@Override
 		public boolean equipItem(int itemObjectId, long slot) {
@@ -392,7 +392,7 @@ class EquipmentSettingUseActionTest {
 			if (!switchHandsResult) {
 				return false;
 			}
-			Map<Integer, Long> switchedSlots = new HashMap<Integer, Long>();
+			Map<Integer, Long> switchedSlots = new HashMap<>();
 			for (Map.Entry<Integer, Long> equippedSlot : equippedSlots.entrySet()) {
 				long slot = equippedSlot.getValue();
 				if ((slot & ItemSlot.RIGHT_HAND.getSlotIdMask()) != 0) {

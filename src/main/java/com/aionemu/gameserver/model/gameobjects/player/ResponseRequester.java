@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class ResponseRequester {
 
 	private final Player player;
-	private final HashMap<Integer, RequestResponseHandler> map = new HashMap<Integer, RequestResponseHandler>();
+	private final HashMap<Integer, RequestResponseHandler> map = new HashMap<>();
 
 	/**
 	 * 为此消息 ID 添加处理器，已存在时返回 false。

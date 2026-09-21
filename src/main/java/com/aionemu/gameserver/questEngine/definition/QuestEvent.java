@@ -689,64 +689,49 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 	 */
 	static QuestEvent routeKey(QuestEvent event) {
 		Objects.requireNonNull(event, "event");
-		if (event instanceof TalkToNpc talk) {
-			return new TalkToNpc(talk.npcId());
+		switch (event) {
+			case TalkToNpc talk:
+				return new TalkToNpc(talk.npcId());
+			case AttackNpc attack:
+				return new AttackNpc(attack.npcId());
+			case UseItem useItem:
+				return new UseItem(useItem.itemId());
+// 收集路由以物品为键；执行路由时按权威背包快照校验数量。
+// Collection routes are keyed by item; the count is checked against the
+// authoritative inventory snapshot when the route is executed.
+			case CollectItem collectItem:
+				return new CollectItem(collectItem.itemId(), 1);
+			case ItemPlay itemPlay:
+				return new ItemPlay(itemPlay.itemId(), 0);
+			case KillRanked killRanked:
+				return new KillRanked(1);
+			case KillInWorld kill:
+				return new KillInWorld(kill.worldId());
+			case AtDistance atDistance:
+				return new AtDistance(atDistance.npcId());
+			case HouseItemUse houseItemUse:
+				return new HouseItemUse(houseItemUse.itemId());
+			case AddAggroList addAggroList:
+				return new AddAggroList(addAggroList.npcId());
+			case PassFlyingRing passFlyingRing:
+				return new PassFlyingRing(passFlyingRing.ring());
+			case EnterWindStream enterWindStream:
+				return new EnterWindStream(enterWindStream.teleportId());
+			case UseSkill useSkill:
+				return new UseSkill(useSkill.skillId());
+			case DredgionReward dredgionReward:
+				return new DredgionReward();
+			case KamarReward kamarReward:
+				return new KamarReward();
+			case OphidanReward ophidanReward:
+				return new OphidanReward();
+			case BastionReward bastionReward:
+				return new BastionReward();
+			case LogOut logOut:
+				return new LogOut();
+			default:
+				return event;
 		}
-		if (event instanceof AttackNpc attack) {
-			return new AttackNpc(attack.npcId());
-		}
-		if (event instanceof UseItem useItem) {
-			return new UseItem(useItem.itemId());
-		}
-		if (event instanceof CollectItem collectItem) {
-			// 收集路由以物品为键；执行路由时按权威背包快照校验数量。
-			// Collection routes are keyed by item; the count is checked against the
-			// authoritative inventory snapshot when the route is executed.
-			return new CollectItem(collectItem.itemId(), 1);
-		}
-		if (event instanceof ItemPlay itemPlay) {
-			return new ItemPlay(itemPlay.itemId(), 0);
-		}
-		if (event instanceof KillRanked) {
-			return new KillRanked(1);
-		}
-		if (event instanceof KillInWorld kill) {
-			return new KillInWorld(kill.worldId());
-		}
-		if (event instanceof AtDistance atDistance) {
-			return new AtDistance(atDistance.npcId());
-		}
-		if (event instanceof HouseItemUse houseItemUse) {
-			return new HouseItemUse(houseItemUse.itemId());
-		}
-		if (event instanceof AddAggroList addAggroList) {
-			return new AddAggroList(addAggroList.npcId());
-		}
-		if (event instanceof PassFlyingRing passFlyingRing) {
-			return new PassFlyingRing(passFlyingRing.ring());
-		}
-		if (event instanceof EnterWindStream enterWindStream) {
-			return new EnterWindStream(enterWindStream.teleportId());
-		}
-		if (event instanceof UseSkill useSkill) {
-			return new UseSkill(useSkill.skillId());
-		}
-		if (event instanceof DredgionReward) {
-			return new DredgionReward();
-		}
-		if (event instanceof KamarReward) {
-			return new KamarReward();
-		}
-		if (event instanceof OphidanReward) {
-			return new OphidanReward();
-		}
-		if (event instanceof BastionReward) {
-			return new BastionReward();
-		}
-		if (event instanceof LogOut) {
-			return new LogOut();
-		}
-		return event;
 	}
 
 	/**
@@ -756,52 +741,41 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 	public static boolean matches(QuestEvent definition, QuestEvent actual) {
 		Objects.requireNonNull(definition, "definition");
 		Objects.requireNonNull(actual, "actual");
-		if (definition instanceof TalkToNpc expected && actual instanceof TalkToNpc observed) {
-			return expected.npcId() == observed.npcId()
-				&& matchesDialogId(expected.dialogId(), observed.dialogId());
-		}
-		if (definition instanceof UseItem expected && actual instanceof UseItem observed) {
-			return expected.itemId() == observed.itemId();
-		}
-		if (definition instanceof CollectItem(int itemId3, int count1) && actual instanceof CollectItem(int itemId2, int count)) {
-			return itemId3 == itemId2 && count >= count1;
-		}
-		if (definition instanceof AttackNpc expected && actual instanceof AttackNpc observed) {
-			return expected.npcId() == observed.npcId();
-		}
-		if (definition instanceof ItemPlay(int itemId1, int millis) && actual instanceof ItemPlay(int itemId, int animationMillis)) {
-			return itemId1 == itemId
-				&& millis == animationMillis;
-		}
-		if (definition instanceof QuestDialog(int id) && actual instanceof QuestDialog(int dialogId)) {
-			return id == dialogId;
-		}
-		if (definition instanceof KillRanked expected && actual instanceof KillRanked observed) {
-			return observed.rankId() >= expected.rankId();
-		}
-		if (definition instanceof KillInWorld expected && actual instanceof KillInWorld observed) {
-			return expected.worldId() == 0 || expected.worldId() == observed.worldId();
-		}
-		if (definition instanceof KillNpcSet(Set<Integer> npcIds) && actual instanceof KillNpc(int npcId)) {
-			return npcIds.contains(npcId);
-		}
-		if (definition instanceof AtDistance expected && actual instanceof AtDistance observed) {
-			return expected.npcId() == observed.npcId();
-		}
-		if (definition instanceof HouseItemUse expected && actual instanceof HouseItemUse observed) {
-			return expected.itemId() == observed.itemId();
-		}
-		if (definition instanceof AddAggroList expected && actual instanceof AddAggroList observed) {
-			return expected.npcId() == observed.npcId();
-		}
-		if (definition instanceof PassFlyingRing expected && actual instanceof PassFlyingRing observed) {
-			return expected.ring().equals(observed.ring());
-		}
-		if (definition instanceof EnterWindStream expected && actual instanceof EnterWindStream observed) {
-			return expected.teleportId() == observed.teleportId();
-		}
-		if (definition instanceof UseSkill expected && actual instanceof UseSkill observed) {
-			return expected.skillId() == observed.skillId();
+		switch (definition) {
+			case TalkToNpc expected when actual instanceof TalkToNpc observed:
+				return expected.npcId() == observed.npcId()
+					&& matchesDialogId(expected.dialogId(), observed.dialogId());
+			case UseItem expected when actual instanceof UseItem observed:
+				return expected.itemId() == observed.itemId();
+			case CollectItem(int itemId3, int count1) when actual instanceof CollectItem(int itemId2, int count):
+				return itemId3 == itemId2 && count >= count1;
+			case AttackNpc expected when actual instanceof AttackNpc observed:
+				return expected.npcId() == observed.npcId();
+			case ItemPlay(int itemId1, int millis) when actual instanceof ItemPlay(int itemId, int animationMillis):
+				return itemId1 == itemId
+					&& millis == animationMillis;
+			case QuestDialog(int id) when actual instanceof QuestDialog(int dialogId):
+				return id == dialogId;
+			case KillRanked expected when actual instanceof KillRanked observed:
+				return observed.rankId() >= expected.rankId();
+			case KillInWorld expected when actual instanceof KillInWorld observed:
+				return expected.worldId() == 0 || expected.worldId() == observed.worldId();
+			case KillNpcSet(Set<Integer> npcIds) when actual instanceof KillNpc(int npcId):
+				return npcIds.contains(npcId);
+			case AtDistance expected when actual instanceof AtDistance observed:
+				return expected.npcId() == observed.npcId();
+			case HouseItemUse expected when actual instanceof HouseItemUse observed:
+				return expected.itemId() == observed.itemId();
+			case AddAggroList expected when actual instanceof AddAggroList observed:
+				return expected.npcId() == observed.npcId();
+			case PassFlyingRing expected when actual instanceof PassFlyingRing observed:
+				return expected.ring().equals(observed.ring());
+			case EnterWindStream expected when actual instanceof EnterWindStream observed:
+				return expected.teleportId() == observed.teleportId();
+			case UseSkill expected when actual instanceof UseSkill observed:
+				return expected.skillId() == observed.skillId();
+			default:
+				break;
 		}
 		if (definition instanceof DredgionReward && actual instanceof DredgionReward
 				|| definition instanceof KamarReward && actual instanceof KamarReward
@@ -846,41 +820,33 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 	static boolean overlaps(QuestEvent left, QuestEvent right) {
 		Objects.requireNonNull(left, "left");
 		Objects.requireNonNull(right, "right");
-		if (left instanceof TalkToNpc a && right instanceof TalkToNpc b) {
-			return a.npcId() == b.npcId()
-				&& (a.dialogId() == null || b.dialogId() == null || a.dialogId().equals(b.dialogId()));
-		}
-		if (left instanceof UseItem a && right instanceof UseItem b) {
-			return a.itemId() == b.itemId();
-		}
-		if (left instanceof AttackNpc a && right instanceof AttackNpc b) {
-			return a.npcId() == b.npcId();
-		}
-		if (left instanceof ItemPlay a && right instanceof ItemPlay b) {
-			return a.itemId() == b.itemId();
-		}
-		if (left instanceof QuestDialog(int dialogId1) && right instanceof QuestDialog(int dialogId)) {
-			return dialogId1 == dialogId;
-		}
-		if (left instanceof KillRanked && right instanceof KillRanked) {
-			return true;
-		}
-		if (left instanceof AtDistance a && right instanceof AtDistance b) {
-			return a.npcId() == b.npcId();
-		}
-		if (left instanceof KillInWorld a && right instanceof KillInWorld b) {
-			return a.worldId() == 0 || b.worldId() == 0 || a.worldId() == b.worldId();
-		}
-		if (left instanceof KillNpcSet(Set<Integer> npcIds2) && right instanceof KillNpcSet(Set<Integer> npcIds1)) {
-			return !java.util.Collections.disjoint(npcIds2, npcIds1);
-		}
-		if (left instanceof KillNpcSet(Set<Integer> ids) && right instanceof KillNpc(int id)) {
-			return ids.contains(id);
-		}
-		if (left instanceof KillNpc(int npcId) && right instanceof KillNpcSet(Set<Integer> npcIds)) {
-			return npcIds.contains(npcId);
-		}
-		return left.equals(right);
+        switch (left) {
+            case TalkToNpc a when right instanceof TalkToNpc b:
+                return a.npcId() == b.npcId()
+                        && (a.dialogId() == null || b.dialogId() == null || a.dialogId().equals(b.dialogId()));
+            case UseItem a when right instanceof UseItem b:
+                return a.itemId() == b.itemId();
+            case AttackNpc a when right instanceof AttackNpc b:
+                return a.npcId() == b.npcId();
+            case ItemPlay a when right instanceof ItemPlay b:
+                return a.itemId() == b.itemId();
+            case QuestDialog(int dialogId1) when right instanceof QuestDialog(int dialogId):
+                return dialogId1 == dialogId;
+            case KillRanked killRanked when right instanceof KillRanked:
+                return true;
+            case AtDistance a when right instanceof AtDistance b:
+                return a.npcId() == b.npcId();
+            case KillInWorld a when right instanceof KillInWorld b:
+                return a.worldId() == 0 || b.worldId() == 0 || a.worldId() == b.worldId();
+            case KillNpcSet(Set<Integer> npcIds2) when right instanceof KillNpcSet(Set<Integer> npcIds1):
+                return !java.util.Collections.disjoint(npcIds2, npcIds1);
+            case KillNpcSet(Set<Integer> ids) when right instanceof KillNpc(int id):
+                return ids.contains(id);
+            case KillNpc(int npcId) when right instanceof KillNpcSet(Set<Integer> npcIds):
+                return npcIds.contains(npcId);
+            default:
+                return left.equals(right);
+        }
 	}
 
 	/**

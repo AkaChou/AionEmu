@@ -30,7 +30,7 @@ public class Conquest_Gelkmaros_BossAI2 extends AggressiveNpcAI2
         super.handleSpawned();
 		boostDefense();
     }
-	
+
 	@Override
 	protected void handleDied() {
 		final WorldPosition p = getPosition();
@@ -45,39 +45,30 @@ public class Conquest_Gelkmaros_BossAI2 extends AggressiveNpcAI2
 		}
 		super.handleDied();
 	}
-	
+
     private void spawnSecretPortal() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				spawn(833021, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Secret Portal.
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(833021, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Secret Portal.
 		}, 15000);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				despawnNpc(833021); //Secret Portal.
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			despawnNpc(833021); //Secret Portal.
 		}, 300000); //5 分钟。 / 5 Minutes.
     }
-	
-	
-	
+
+
+
 	private void boostDefense() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21923, 1, getOwner()).useNoAnimationSkill(); //Boost Defense.
 	}
-	
+
 	private void sendGuide() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
-					HTMLService.sendGuideHtml(player, "Conquest_Offering");
-				}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
+				HTMLService.sendGuideHtml(player, "Conquest_Offering");
 			}
 		});
 	}
-	
+
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);

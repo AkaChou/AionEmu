@@ -44,12 +44,7 @@ public class SuramaTheTraitorAI2 extends GeneralNpcAI2
 		getOwner().setState(1);
 		getMoveController().moveToPoint(651, 1319, 487);
 		PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getOwner().getObjectId()));
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-		    @Override
-		    public void run() {
-			    startDialog();
-		    }
-	    }, 10000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> startDialog(), 10000);
 	}
 
 	private void startDialog() {
@@ -57,20 +52,17 @@ public class SuramaTheTraitorAI2 extends GeneralNpcAI2
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 390841, getOwner().getObjectId(), 0, 0);
 		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 390842, getOwner().getObjectId(), 0, 3000);
 		GameFeatureServices.npcShoutsService().sendMsg(laksyaka, 390843, laksyaka.getObjectId(), 0, 6000);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-		    @Override
-		    public void run() {
-			    WorldMapInstance instance = getPosition().getWorldMapInstance();
-			    laksyaka.setTarget(getOwner());
-			    GameEngineServices.skillEngine().getSkill(laksyaka, 20952, 60, getOwner()).useNoAnimationSkill();
-			    laksyaka.setNpcType(NpcType.ATTACKABLE);
-			    for (Player player: instance.getPlayersInside()) {
-					if (MathUtil.isIn3dRange(player, laksyaka, 100)) {
-						player.clearKnownlist();
-						player.updateKnownlist();
-					}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			WorldMapInstance instance = getPosition().getWorldMapInstance();
+			laksyaka.setTarget(getOwner());
+			GameEngineServices.skillEngine().getSkill(laksyaka, 20952, 60, getOwner()).useNoAnimationSkill();
+			laksyaka.setNpcType(NpcType.ATTACKABLE);
+			for (Player player: instance.getPlayersInside()) {
+				if (MathUtil.isIn3dRange(player, laksyaka, 100)) {
+					player.clearKnownlist();
+					player.updateKnownlist();
 				}
-		    }
-	    }, 8000);
+			}
+		}, 8000);
 	}
 }

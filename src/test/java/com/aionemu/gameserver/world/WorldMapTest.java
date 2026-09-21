@@ -56,7 +56,7 @@ class WorldMapTest {
 
 	private WorldMap worldMapWithInstances() throws ReflectiveOperationException {
 		WorldMap map = objenesis.newInstance(WorldMap.class);
-		Map<Integer, WorldMapInstance> instances = new LinkedHashMap<Integer, WorldMapInstance>();
+		Map<Integer, WorldMapInstance> instances = new LinkedHashMap<>();
 		instances.put(1, instance(1));
 		instances.put(2, instance(2));
 		instances.put(3, instance(3));

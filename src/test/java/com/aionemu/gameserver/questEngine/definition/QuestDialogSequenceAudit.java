@@ -174,11 +174,14 @@ public final class QuestDialogSequenceAudit {
 	}
 
 	private static int dialogAction(QuestEvent event) {
-		return switch (event) {
-			case QuestEvent.TalkToNpc talk -> talk.dialogId();
-			case QuestEvent.QuestDialog dialog -> dialog.dialogId();
-			default -> throw new IllegalArgumentException("not a dialog event: " + event);
-		};
+        switch (event) {
+            case QuestEvent.TalkToNpc talk:
+                return talk.dialogId();
+            case QuestEvent.QuestDialog dialog:
+                return dialog.dialogId();
+            default:
+                throw new IllegalArgumentException("not a dialog event: " + event);
+        }
 	}
 
 	private static int ownerNpc(QuestEvent event) {

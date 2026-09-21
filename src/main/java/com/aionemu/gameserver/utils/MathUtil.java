@@ -640,7 +640,7 @@ public class MathUtil {
 			return x.round(rootMC);
 		}
 		v = BigDecimal.ONE.divide(TWO.multiply(x), nMC);
-		ArrayList<Integer> nPrecs = new ArrayList<Integer>();
+		ArrayList<Integer> nPrecs = new ArrayList<>();
 		assert nInit > 3 : "Never ending loop!";
 		for (int m = prec + 1; m > nInit; m = m / 2 + (m > 100 ? 1 : 2)) {
 			nPrecs.add(m);

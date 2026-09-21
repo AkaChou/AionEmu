@@ -19,14 +19,16 @@ import lombok.AccessLevel;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 final class RewardCollections {
 	static <T> List<T> sortedByScoreDescending(Collection<T> rewards, final ToIntFunction<T> scoreFunction) {
-		List<T> sorted = new ArrayList<T>(rewards);
-		Collections.sort(sorted, new Comparator<T>() {
-			/** 比较 / compare. */
-			@Override
-			public int compare(T o1, T o2) {
-				return Integer.compare(scoreFunction.applyAsInt(o2), scoreFunction.applyAsInt(o1));
-			}
-		});
+		List<T> sorted = new ArrayList<>(rewards);
+		Collections.sort(sorted, new Comparator<>() {
+            /**
+             * 比较 / compare.
+             */
+            @Override
+            public int compare(T o1, T o2) {
+                return Integer.compare(scoreFunction.applyAsInt(o2), scoreFunction.applyAsInt(o1));
+            }
+        });
 		return sorted;
 	}
 

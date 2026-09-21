@@ -51,14 +51,11 @@ public class Soul_Anchor_BarrierAI2 extends NpcAI2
 			player.getObserveController().attach(observer);
 			PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), startBarAnimation));
 			PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.START_QUESTLOOT, 0, getObjectId()), true);
-			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
-					PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
-					player.getObserveController().removeObserver(observer);
-					handleUseItemFinish(player);
-				}
+			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
+				PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
+				player.getObserveController().removeObserver(observer);
+				handleUseItemFinish(player);
 			}, delay));
 		} else {
 			handleUseItemFinish(player);
@@ -101,15 +98,12 @@ public class Soul_Anchor_BarrierAI2 extends NpcAI2
 
 	@Override
 	protected void handleDied() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				AionObject winner = getAggroList().getMostDamage();
-				if (winner instanceof Creature kill) {
-					AI2Actions.deleteOwner(Soul_Anchor_BarrierAI2.this);
-					// “种族”的“玩家名”摧毁了城门。 / "Player Name" of the "Race" destroyed the Castle Gate.
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1301049, kill.getRace().getRaceDescriptionId(), kill.getName()));
-				}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			AionObject winner = getAggroList().getMostDamage();
+			if (winner instanceof Creature kill) {
+				AI2Actions.deleteOwner(Soul_Anchor_BarrierAI2.this);
+				// “种族”的“玩家名”摧毁了城门。 / "Player Name" of the "Race" destroyed the Castle Gate.
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1301049, kill.getRace().getRaceDescriptionId(), kill.getName()));
 			}
 		});
 	}

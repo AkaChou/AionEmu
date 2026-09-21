@@ -18,23 +18,13 @@ public class WorldRaid_Advent_ControlAI2 extends NpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				startLifeTask();
-			}
-		}, 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> startLifeTask(), 1000);
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(WorldRaid_Advent_ControlAI2.this);
-			}
-		}, 13800000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(WorldRaid_Advent_ControlAI2.this), 13800000);
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

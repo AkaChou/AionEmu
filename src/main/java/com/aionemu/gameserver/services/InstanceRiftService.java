@@ -49,7 +49,7 @@ public class InstanceRiftService {
 	private InstanceSchedule instanceSchedule;
 	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private Map<Integer, InstanceRiftLocation> instanceRift;
-	private final ConcurrentMap<Integer, RiftInstance<?>> activeInstanceRift = new ConcurrentHashMap<Integer, RiftInstance<?>>();
+	private final ConcurrentMap<Integer, RiftInstance<?>> activeInstanceRift = new ConcurrentHashMap<>();
 
 	/**
 	 * 加载副本裂隙地点并刷关闭态 NPC。
@@ -112,12 +112,7 @@ public class InstanceRiftService {
 		}
 		rift.start();
 		instanceRiftMsg(id);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				stopInstanceRift(id);
-			}
-		}, (long) CustomConfig.INSTANCE_RIFT_DURATION * 3600 * 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> stopInstanceRift(id), (long) CustomConfig.INSTANCE_RIFT_DURATION * 3600 * 1000);
 	}
 
 	/**
@@ -165,12 +160,7 @@ public class InstanceRiftService {
 	public boolean instanceRiftMsg(int id) {
 		switch (id) {
 		case 1:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					PacketSendUtility.sendSys3Message(player, "\uE04C", "<Instance Rift> is now open !!!");
-				}
-			});
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE04C", "<Instance Rift> is now open !!!"));
 			return true;
 		default:
 			return false;
@@ -187,7 +177,7 @@ public class InstanceRiftService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
+		for (VisibleObject obj : new ArrayList<>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {

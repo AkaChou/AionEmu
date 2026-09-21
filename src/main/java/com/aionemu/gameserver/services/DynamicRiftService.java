@@ -44,7 +44,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public class DynamicRiftService {
 	private static volatile ObjectProvider<DynamicRiftService> instanceProvider;
 	private Map<Integer, DynamicRiftLocation> dynamicRift;
-	private final ConcurrentMap<Integer, DynamicRift<?>> activeDynamicRift = new ConcurrentHashMap<Integer, DynamicRift<?>>();
+	private final ConcurrentMap<Integer, DynamicRift<?>> activeDynamicRift = new ConcurrentHashMap<>();
 
 	/**
 	 * 加载动态裂隙地点、刷关闭态 NPC，并注册各类型开启 cron。
@@ -57,48 +57,26 @@ public class DynamicRiftService {
 				spawn(loc, DynamicRiftStateType.CLOSED);
 			}
 			log.info(I18n.get("log.69fd598b3b65", dynamicRift.size()));
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				public void run() {
-					startDynamicRift(1);
-					startDynamicRift(3);
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-						@Override
-						public void visit(Player player) {
-							PacketSendUtility.sendPacket(player,
-									SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_PORTAL_OPEN_IDDF3_Dragon);
-						}
-					});
-				}
+			GameCronServices.cronService().schedule(() -> {
+				startDynamicRift(1);
+				startDynamicRift(3);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player,
+						SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_PORTAL_OPEN_IDDF3_Dragon));
 			}, () -> CustomConfig.DYNAMIC_RIFT_DRAGON_SCHEDULE);
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				public void run() {
-					startDynamicRift(2);
-					startDynamicRift(4);
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-						@Override
-						public void visit(Player player) {
-							PacketSendUtility.sendPacket(player,
-									SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_PORTAL_OPEN_IDLF3_Castle_Indratoo);
-						}
-					});
-				}
+			GameCronServices.cronService().schedule(() -> {
+				startDynamicRift(2);
+				startDynamicRift(4);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player,
+						SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_PORTAL_OPEN_IDLF3_Castle_Indratoo));
 			}, () -> CustomConfig.DYNAMIC_RIFT_INDRATOO_SCHEDULE);
 			// 术古商人联盟 / Shugo Merchant League
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				public void run() {
-					startDynamicRift(5);
-					startDynamicRift(6);
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-						@Override
-						public void visit(Player player) {
-							// 术古商人联盟已到达。 / The Shugo Merchant League has arrived.
-							PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HF_ShugoCaravanAppear);
-						}
-					});
-				}
+			GameCronServices.cronService().schedule(() -> {
+				startDynamicRift(5);
+				startDynamicRift(6);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+					// 术古商人联盟已到达。 / The Shugo Merchant League has arrived.
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HF_ShugoCaravanAppear);
+				});
 			}, () -> CustomConfig.SHUGO_MERCHANT_LEAGUE_SCHEDULE);
 		} else {
 			dynamicRift = Collections.emptyMap();
@@ -129,12 +107,7 @@ public class DynamicRiftService {
 			return;
 		}
 		portal.start();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				stopDynamicRift(id);
-			}
-		}, (long) CustomConfig.DYNAMIC_RIFT_DURATION * 3600 * 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> stopDynamicRift(id), (long) CustomConfig.DYNAMIC_RIFT_DURATION * 3600 * 1000);
 	}
 
 	/**
@@ -182,7 +155,7 @@ public class DynamicRiftService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
+		for (VisibleObject obj : new ArrayList<>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {

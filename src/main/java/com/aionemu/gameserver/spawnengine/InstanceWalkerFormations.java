@@ -40,8 +40,8 @@ public class InstanceWalkerFormations {
 	 * Creates an empty instance walker formation holder.
 	 */
 	public InstanceWalkerFormations() {
-		groupedSpawnObjects = new HashMap<String, List<ClusteredNpc>>();
-		walkFormations = new HashMap<String, WalkerGroup>();
+		groupedSpawnObjects = new HashMap<>();
+		walkFormations = new HashMap<>();
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class InstanceWalkerFormations {
 		String walkerId = npcWalker.getWalkTemplate().getRouteId();
 		List<ClusteredNpc> candidateList = groupedSpawnObjects.get(walkerId);
 		if (candidateList == null) {
-			candidateList = new ArrayList<ClusteredNpc>();
+			candidateList = new ArrayList<>();
 			groupedSpawnObjects.put(walkerId, candidateList);
 		}
 		return candidateList.add(npcWalker);
@@ -95,7 +95,7 @@ public class InstanceWalkerFormations {
 				WalkerTemplate template = candidates.get(0).getWalkTemplate();
 				int formationSize = template.getFormationSize();
 				List<ClusteredNpc> formationMembers = (formationSize >= 2 && npcs.size() > formationSize)
-						? new ArrayList<ClusteredNpc>(npcs.subList(0, formationSize))
+						? new ArrayList<>(npcs.subList(0, formationSize))
 						: npcs;
 				WalkerGroup wg = new WalkerGroup(formationMembers);
 				if (template.getPool() != candidates.size()) {
@@ -127,20 +127,20 @@ public class InstanceWalkerFormations {
 	 */
 	static List<List<ClusteredNpc>> groupCandidates(List<ClusteredNpc> candidates) {
 		if (candidates.isEmpty()) {
-			return new ArrayList<List<ClusteredNpc>>();
+			return new ArrayList<>();
 		}
 		int formationSize = candidates.get(0).getWalkTemplate().getFormationSize();
 		if (formationSize >= 2 && candidates.size() == formationSize) {
-			List<List<ClusteredNpc>> completeFormation = new ArrayList<List<ClusteredNpc>>();
-			completeFormation.add(new ArrayList<ClusteredNpc>(candidates));
+			List<List<ClusteredNpc>> completeFormation = new ArrayList<>();
+			completeFormation.add(new ArrayList<>(candidates));
 			return completeFormation;
 		}
 
-		List<List<ClusteredNpc>> grouped = new ArrayList<List<ClusteredNpc>>();
+		List<List<ClusteredNpc>> grouped = new ArrayList<>();
 		for (ClusteredNpc candidate : candidates) {
 			List<ClusteredNpc> group = findPositionGroup(grouped, candidate);
 			if (group == null) {
-				group = new ArrayList<ClusteredNpc>();
+				group = new ArrayList<>();
 				grouped.add(group);
 			}
 			group.add(candidate);

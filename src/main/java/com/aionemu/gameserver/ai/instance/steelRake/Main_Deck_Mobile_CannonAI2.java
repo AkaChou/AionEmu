@@ -36,36 +36,30 @@ public class Main_Deck_Mobile_CannonAI2 extends ActionItemNpcAI2
 		if (worldPosition.isInstanceMap()) {
 			if (worldPosition.getMapId() == 300100000) {
 				GameEngineServices.skillEngine().getSkill(getOwner(), 21126, 60, getOwner()).useNoAnimationSkill(); // 破坏封印 / Destroy Seal.
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						despawnNpc(214968);
-						despawnNpc(215402);
-						despawnNpc(215403);
-						despawnNpc(215404);
-						despawnNpc(215405);
-					}
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					despawnNpc(214968);
+					despawnNpc(215402);
+					despawnNpc(215403);
+					despawnNpc(215404);
+					despawnNpc(215405);
 				}, 5000);
 			}
 		}
 	}
-	
+
 	/**
 	 * 向副本内所有玩家广播缺少燧石的提示。
 	 * Broadcast the missing-flint message to all players in the instance.
 	 */
 	private void announceMainDeckMobileCannon() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 我需要拉吉马克的燧石。 / I'll need Largimark's Flint.
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(false, 1111302, player.getObjectId(), 2));
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 我需要拉吉马克的燧石。 / I'll need Largimark's Flint.
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(false, 1111302, player.getObjectId(), 2));
 			}
 		});
 	}
-	
+
 	/**
 	 * 静默击杀副本内指定 ID 的全部 NPC。
 	 * Silently kill all NPCs of the given ID in the instance.

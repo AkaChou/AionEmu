@@ -30,7 +30,7 @@ public class RiftSpawn {
 	private int world;
 	/** 获取刷新。 / Returns the spawns. */
 	@XmlElement(name = "spawn")
-	private List<Spawn> spawns = new ArrayList<Spawn>();
+	private List<Spawn> spawns = new ArrayList<>();
 
 	/** 返回世界 ID / Returns the world id */
 	public int getWorldId() {

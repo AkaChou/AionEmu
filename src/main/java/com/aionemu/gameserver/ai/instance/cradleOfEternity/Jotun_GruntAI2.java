@@ -22,30 +22,27 @@ public class Jotun_GruntAI2 extends AggressiveNpcAI2
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		GameEngineServices.skillEngine().getSkill(getOwner(), 23014, 60, getOwner()).useNoAnimationSkill(); // 牺牲仪式 / Sacrificial Rite.
 		startLifeTask();
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				// 尤顿战斗人员的支援被推迟。 / The support of the Jotun combatants was delayed.
-				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_Nepilim_Summon_MSG_02, 10000);
-				AI2Actions.deleteOwner(Jotun_GruntAI2.this);
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			// 尤顿战斗人员的支援被推迟。 / The support of the Jotun combatants was delayed.
+			PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_Nepilim_Summon_MSG_02, 10000);
+			AI2Actions.deleteOwner(Jotun_GruntAI2.this);
 		}, 10000);
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();

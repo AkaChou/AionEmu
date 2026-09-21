@@ -61,9 +61,9 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 		/** 副本计时秒数 / instance timer seconds */
 		private final int instanceTimerSeconds = 14400000; //...4Hrs
 	/** 已播放动画集合 / played-movie set */
-	private final List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<>();
 		/** darkpoeta 任务 / dark poeta task */
-		private final List<Future<?>> darkPoetaTask = new ArrayList<Future<?>>();
+		private final List<Future<?>> darkPoetaTask = new ArrayList<>();
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -477,18 +477,18 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 					 */
 					@Override
 					public void run() {
-					    instance.doOnAllPlayers(new Visitor<Player>() {
-						    /**
-						     * 处理 visit。
-						     * Handle visit.
-						     *
-						     * @param player 玩家 / player
-						     */
-						    @Override
-						    public void visit(Player player) {
-							    stopInstance(player);
-						    }
-					    });
+					    instance.doOnAllPlayers(new Visitor<>() {
+							/**
+							 * 处理 visit。
+							 * Handle visit.
+							 *
+							 * @param player 玩家 / player
+							 */
+							@Override
+							public void visit(Player player) {
+								stopInstance(player);
+							}
+						});
 					}
 				}, 5000);
 			break;
@@ -501,7 +501,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	}
 
 	private void sendPacket(final int nameId, final int point) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -564,18 +564,18 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
              */
             @Override
             public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-				    /**
-				     * 处理 visit。
-				     * Handle visit.
-				     *
-				     * @param player 玩家 / player
-				     */
-				    @Override
-				    public void visit(Player player) {
-					    stopInstance(player);
-				    }
-			    });
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
+						stopInstance(player);
+					}
+				});
             }
         }, 14400000));
     }
@@ -634,7 +634,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 				}
 			}, prepareTimerSeconds);
 		}
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -892,7 +892,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.

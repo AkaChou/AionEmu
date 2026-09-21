@@ -54,7 +54,7 @@ public class PetTemplate {
 		if (hasPlayerFuncs == null) {
 			hasPlayerFuncs = false;
 			if (petFunctions == null) {
-				List<PetFunction> result = new ArrayList<PetFunction>();
+				List<PetFunction> result = new ArrayList<>();
 				result.add(PetFunction.CreateEmpty());
 				petFunctions = result;
 			} else {

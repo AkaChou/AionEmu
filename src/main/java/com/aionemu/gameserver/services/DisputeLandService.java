@@ -69,17 +69,9 @@ public class DisputeLandService {
 	public void initDisputeLand() {
 		if (CustomConfig.DISPUTE_LAND_ENABLED) {
 			log.info(I18n.get("log.87d65384cfca"));
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (isActive()) {
-						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-							@Override
-							public void run() {
-								setActive(false);
-							}
-						}, (long) CustomConfig.DISPUTE_LAND_DURATION * 3600 * 1000);
-					}
+			GameCronServices.cronService().schedule(() -> {
+				if (isActive()) {
+					GameThreadPoolServices.threadPoolManager().schedule(() -> setActive(false), (long) CustomConfig.DISPUTE_LAND_DURATION * 3600 * 1000);
 				}
 			}, () -> CustomConfig.DISPUTE_LAND_SCHEDULE);
 		}
@@ -157,12 +149,7 @@ public class DisputeLandService {
 	}
 
 	private void broadcast() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				broadcast(player);
-			}
-		});
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> broadcast(player));
 	}
 
 	/**

@@ -47,7 +47,7 @@ public class PetFlavour {
 	/** 返回食物奖励组列表 / Returns the food */
 	public List<PetRewards> getFood() {
 		if (food == null) {
-			food = new ArrayList<PetRewards>();
+			food = new ArrayList<>();
 		}
 		return this.food;
 	}

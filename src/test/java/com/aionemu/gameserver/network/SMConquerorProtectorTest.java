@@ -17,7 +17,7 @@ class SMConquerorProtectorTest {
 
 	@Test
 	void constructorCopiesPlayerCollection() throws ReflectiveOperationException {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		players.add(objenesis.newInstance(Player.class));
 
 		SM_CONQUEROR_PROTECTOR packet = new SM_CONQUEROR_PROTECTOR(players);

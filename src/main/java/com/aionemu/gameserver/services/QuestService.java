@@ -131,7 +131,7 @@ public final class QuestService {
 		if (template.getCategory() == QuestCategory.MISSION && qs.getCompleteCount() != 0) {
 			return false;
 		}
-		List<QuestItems> questItems = new ArrayList<QuestItems>();
+		List<QuestItems> questItems = new ArrayList<>();
 		if (!template.getExtendedRewards().isEmpty()) {
 			if (template.getRewardRepeatCount() > 0
 					&& qs.getCompleteCount() == template.getRewardRepeatCount() - 1) {
@@ -161,7 +161,7 @@ public final class QuestService {
 	private static List<QuestItems> getRewardItems(QuestEnv env, QuestTemplate template, boolean extended, int reward) {
 		Player player = env.getPlayer();
 		int id = env.getQuestId();
-		List<QuestItems> questItems = new ArrayList<QuestItems>();
+		List<QuestItems> questItems = new ArrayList<>();
 		Rewards rewards;
 		if (extended) {
 			rewards = template.getExtendedRewards().get(0);
@@ -551,7 +551,7 @@ public final class QuestService {
 			return false;
 		}
 		if (template.getCombineSkill() != null) {
-			List<Integer> skills = new ArrayList<Integer>();
+			List<Integer> skills = new ArrayList<>();
 			if (template.getCombineSkill() == -1) {
 				skills.add(30002);
 				skills.add(30003);
@@ -714,7 +714,7 @@ public final class QuestService {
 			return false;
 		}
 		if (template.getCombineSkill() != null) {
-			List<Integer> skills = new ArrayList<Integer>();
+			List<Integer> skills = new ArrayList<>();
 			if (template.getCombineSkill() == -1) {
 				skills.add(30002);
 				skills.add(30003);
@@ -966,12 +966,9 @@ public final class QuestService {
 	}
 
 	private static void despawnQuestNpc(final Npc npc, int timeInMin) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (npc != null && !npc.getLifeStats().isAlreadyDead()) {
-					npc.getController().onDelete();
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (npc != null && !npc.getLifeStats().isAlreadyDead()) {
+				npc.getController().onDelete();
 			}
 		}, 60000L * timeInMin);
 	}
@@ -998,7 +995,7 @@ public final class QuestService {
 				continue;
 			}
 			if (players != null && player.isInGroup2()) {
-				List<Player> pls = new ArrayList<Player>();
+				List<Player> pls = new ArrayList<>();
 				if (drop.dropEachGroupMember()) {
 					for (Player member : players) {
 						if (isQuestDrop(member, drop)) {
@@ -1027,7 +1024,7 @@ public final class QuestService {
 					pls.clear();
 				}
 			} else if (players != null && player.isInAlliance2()) {
-				List<Player> pls = new ArrayList<Player>();
+				List<Player> pls = new ArrayList<>();
 				if (drop.dropEachAllianceMember()) {
 					for (Player member : players) {
 						if (isQuestDrop(member, drop)) {
@@ -1431,7 +1428,7 @@ public final class QuestService {
 	 * member list
 	 */
 	public static List<Player> getEachDropMembersGroup(PlayerGroup group, int npcId, int questId) {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (QuestCatalogDrop qd : getQuestDrop(npcId)) {
 			if (qd.questId() == questId && qd.dropEachGroupMember()) {
 				for (Player player : group.getMembers()) {
@@ -1456,7 +1453,7 @@ public final class QuestService {
 	 * member list
 	 */
 	public static List<Player> getEachDropMembersAlliance(PlayerAlliance alliance, int npcId, int questId) {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (QuestCatalogDrop qd : getQuestDrop(npcId)) {
 			if (qd.questId() == questId && qd.dropEachAllianceMember()) {
 				for (Player player : alliance.getMembers()) {

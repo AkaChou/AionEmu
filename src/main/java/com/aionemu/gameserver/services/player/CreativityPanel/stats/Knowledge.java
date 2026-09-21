@@ -19,7 +19,7 @@ public class Knowledge implements StatOwner {
 
 	private static volatile ObjectProvider<Knowledge> instanceProvider;
 
-	private final List<IStatFunction> knowledge = new ArrayList<IStatFunction>();
+	private final List<IStatFunction> knowledge = new ArrayList<>();
 
 	/**
 	 * 属性变更时重算。

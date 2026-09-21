@@ -54,7 +54,7 @@ public class Stats extends AdminCommand implements StatOwner {
 
 		if(params[0].equals("hp")){
 			if(value < 9999999){
-				List<IStatFunction> functions = new ArrayList<IStatFunction>();
+				List<IStatFunction> functions = new ArrayList<>();
 				functions.add(new StatChangeFunction(StatEnum.MAXHP, value));
 				player.getGameStats().addEffect(this, functions);
 				PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.START_EMOTE2, 0, 0), true);

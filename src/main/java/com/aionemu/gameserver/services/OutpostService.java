@@ -39,7 +39,7 @@ public class OutpostService {
 	private static volatile ObjectProvider<OutpostService> instanceProvider;
 
 	/** 当前活跃的前哨实例。 / Currently active outpost instances. */
-	private final ConcurrentMap<Integer, Outpost<?>> active = new ConcurrentHashMap<Integer, Outpost<?>>();
+	private final ConcurrentMap<Integer, Outpost<?>> active = new ConcurrentHashMap<>();
 	/** 前哨点位数据。 / Outpost location data. */
 	private Map<Integer, OutpostLocation> outposts;
 
@@ -71,39 +71,37 @@ public class OutpostService {
 		Race race = null;
 		log.info(I18n.get("log.9028be61d10e"));
 		String weekly = "0 0 9 ? * WED *";
-		GameCronServices.cronService().schedule(new Runnable() {
-			public void run() {
-				// 英吉斯温。 / Inggison.
-				capture(101, Race.NPC);
-				capture(102, Race.NPC);
-				capture(103, Race.NPC);
-				capture(104, Race.NPC);
-				capture(105, Race.NPC);
-				capture(106, Race.NPC);
-				capture(107, Race.NPC);
-				captureArtifact(101, Race.NPC);
-				captureArtifact(102, Race.NPC);
-				captureArtifact(103, Race.NPC);
-				captureArtifact(104, Race.NPC);
-				captureArtifact(105, Race.NPC);
-				captureArtifact(106, Race.NPC);
-				captureArtifact(107, Race.NPC);
-				// 格尔克马洛斯。 / Gelkmaros.
-				capture(201, Race.NPC);
-				capture(202, Race.NPC);
-				capture(203, Race.NPC);
-				capture(204, Race.NPC);
-				capture(205, Race.NPC);
-				capture(206, Race.NPC);
-				capture(207, Race.NPC);
-				captureArtifact(201, Race.NPC);
-				captureArtifact(202, Race.NPC);
-				captureArtifact(203, Race.NPC);
-				captureArtifact(204, Race.NPC);
-				captureArtifact(205, Race.NPC);
-				captureArtifact(206, Race.NPC);
-				captureArtifact(207, Race.NPC);
-			}
+		GameCronServices.cronService().schedule(() -> {
+			// 英吉斯温。 / Inggison.
+			capture(101, Race.NPC);
+			capture(102, Race.NPC);
+			capture(103, Race.NPC);
+			capture(104, Race.NPC);
+			capture(105, Race.NPC);
+			capture(106, Race.NPC);
+			capture(107, Race.NPC);
+			captureArtifact(101, Race.NPC);
+			captureArtifact(102, Race.NPC);
+			captureArtifact(103, Race.NPC);
+			captureArtifact(104, Race.NPC);
+			captureArtifact(105, Race.NPC);
+			captureArtifact(106, Race.NPC);
+			captureArtifact(107, Race.NPC);
+			// 格尔克马洛斯。 / Gelkmaros.
+			capture(201, Race.NPC);
+			capture(202, Race.NPC);
+			capture(203, Race.NPC);
+			capture(204, Race.NPC);
+			capture(205, Race.NPC);
+			capture(206, Race.NPC);
+			capture(207, Race.NPC);
+			captureArtifact(201, Race.NPC);
+			captureArtifact(202, Race.NPC);
+			captureArtifact(203, Race.NPC);
+			captureArtifact(204, Race.NPC);
+			captureArtifact(205, Race.NPC);
+			captureArtifact(206, Race.NPC);
+			captureArtifact(207, Race.NPC);
 		}, weekly);
 	}
 
@@ -255,17 +253,14 @@ public class OutpostService {
 	 */
 	public void broadcastUpdate(final OutpostLocation outpostLocation) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(outpostLocation.getWorldId()).getMainWorldMapInstance()
-				.doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player player) {
-						Outpost<?> outpost = getActiveOutpost(outpostLocation.getId());
-						if (outpost == null) {
-							return;
-						}
-						PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, outpost.getFlag()));
-						player.getController().updateZone();
-						player.getController().updateNearbyQuests();
+				.doOnAllPlayers(player -> {
+					Outpost<?> outpost = getActiveOutpost(outpostLocation.getId());
+					if (outpost == null) {
+						return;
 					}
+					PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, outpost.getFlag()));
+					player.getController().updateZone();
+					player.getController().updateNearbyQuests();
 				});
 	}
 

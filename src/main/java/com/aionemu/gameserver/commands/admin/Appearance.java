@@ -80,157 +80,151 @@ public class Appearance extends AdminCommand {
 		if (player.getSavedPlayerAppearance() == null)
 			player.setSavedPlayerAppearance((PlayerAppearance) playerAppearance.clone());
 
-		if (params[0].equals("size")) // Edit player's size. Min: 0, Max: 50 (prevent bug)
-		{
-			float height;
+        switch (params[0]) {
+            case "size":// Edit player's size. Min: 0, Max: 50 (prevent bug)
 
-			try {
-				height = Float.parseFloat(params[1]);
-			}
-			catch (NumberFormatException e) {
-				PacketSendUtility.sendMessage(admin, "The value must be a number !");
-				onFail(player, e.getMessage());
-				return;
-			}
+                float height;
 
-			if (height < 0 || height > 50) {
-				PacketSendUtility.sendMessage(admin, "Size: Min value : 0 - Max value : 50");
-				return;
-			}
+                try {
+                    height = Float.parseFloat(params[1]);
+                } catch (NumberFormatException e) {
+                    PacketSendUtility.sendMessage(admin, "The value must be a number !");
+                    onFail(player, e.getMessage());
+                    return;
+                }
 
-			// 编辑身高 / Edit the height
-			playerAppearance.setHeight(height);
-		}
-		else if (params[0].equals("voice")) // Min: 0, Max: 3
-		{
-			int voice;
+                if (height < 0 || height > 50) {
+                    PacketSendUtility.sendMessage(admin, "Size: Min value : 0 - Max value : 50");
+                    return;
+                }
 
-			try {
-				voice = Integer.parseInt(params[1]);
-			}
-			catch (NumberFormatException e) {
-				PacketSendUtility.sendMessage(admin, "The value must be a number !");
-				onFail(player, e.getMessage());
-				return;
-			}
+                // 编辑身高 / Edit the height
+                playerAppearance.setHeight(height);
+                break;
+            case "voice":// Min: 0, Max: 3
 
-			if (voice < 0 || voice > 3) {
-				PacketSendUtility.sendMessage(admin, "Voice: Min value : 0 - Max value : 3");
-				return;
-			}
+                int voice;
 
-			// 编辑声音 / Edit the voice
-			playerAppearance.setVoice(voice);
-		}
-		else if (params[0].equals("hair")) // Min: 1, Max: 43
-		{
-			int hair;
+                try {
+                    voice = Integer.parseInt(params[1]);
+                } catch (NumberFormatException e) {
+                    PacketSendUtility.sendMessage(admin, "The value must be a number !");
+                    onFail(player, e.getMessage());
+                    return;
+                }
 
-			try {
-				hair = Integer.parseInt(params[1]);
-			}
-			catch (NumberFormatException e) {
-				PacketSendUtility.sendMessage(admin, "The value must be a number !");
-				onFail(player, e.getMessage());
-				return;
-			}
+                if (voice < 0 || voice > 3) {
+                    PacketSendUtility.sendMessage(admin, "Voice: Min value : 0 - Max value : 3");
+                    return;
+                }
 
-			if (hair < 1 || hair > 43) {
-				PacketSendUtility.sendMessage(admin, "Hair: Min value : 1 - Max value : 43");
-				return;
-			}
+                // 编辑声音 / Edit the voice
+                playerAppearance.setVoice(voice);
+                break;
+            case "hair":// Min: 1, Max: 43
 
-			// 编辑头发 / Edit the hair
-			playerAppearance.setHair(hair);
-		}
-		else if (params[0].equals("face")) // Min: 1, Max: 24
-		{
-			int face;
+                int hair;
 
-			try {
-				face = Integer.parseInt(params[1]);
-			}
-			catch (NumberFormatException e) {
-				PacketSendUtility.sendMessage(admin, "The value must be a number !");
-				onFail(player, e.getMessage());
-				return;
-			}
+                try {
+                    hair = Integer.parseInt(params[1]);
+                } catch (NumberFormatException e) {
+                    PacketSendUtility.sendMessage(admin, "The value must be a number !");
+                    onFail(player, e.getMessage());
+                    return;
+                }
 
-			if (face < 1 || face > 24) {
-				PacketSendUtility.sendMessage(admin, "Face: Min value : 1 - Max value : 24");
-				return;
-			}
+                if (hair < 1 || hair > 43) {
+                    PacketSendUtility.sendMessage(admin, "Hair: Min value : 1 - Max value : 43");
+                    return;
+                }
 
-			// 编辑面部 / Edit the face
-			playerAppearance.setFace(face);
-		}
-		else if (params[0].equals("deco")) // Min: 1, Max: 18
-		{
-			int deco;
+                // 编辑头发 / Edit the hair
+                playerAppearance.setHair(hair);
+                break;
+            case "face":// Min: 1, Max: 24
 
-			try {
-				deco = Integer.parseInt(params[1]);
-			}
-			catch (NumberFormatException e) {
-				PacketSendUtility.sendMessage(admin, "The value must be a number !");
-				onFail(player, e.getMessage());
-				return;
-			}
+                int face;
 
-			if (deco < 1 || deco > 18) {
-				PacketSendUtility.sendMessage(admin, "Deco: Min value : 1 - Max value : 18");
-				return;
-			}
+                try {
+                    face = Integer.parseInt(params[1]);
+                } catch (NumberFormatException e) {
+                    PacketSendUtility.sendMessage(admin, "The value must be a number !");
+                    onFail(player, e.getMessage());
+                    return;
+                }
 
-			// 编辑装饰 / Edit the deco
-			playerAppearance.setDeco(deco);
-		}
-		else if (params[0].equals("head_size")) // Min: 0, Max: 100
-		{
-			int head;
+                if (face < 1 || face > 24) {
+                    PacketSendUtility.sendMessage(admin, "Face: Min value : 1 - Max value : 24");
+                    return;
+                }
 
-			try {
-				head = Integer.parseInt(params[1]);
-			}
-			catch (NumberFormatException e) {
-				PacketSendUtility.sendMessage(admin, "The value must be a number !");
-				onFail(player, e.getMessage());
-				return;
-			}
+                // 编辑面部 / Edit the face
+                playerAppearance.setFace(face);
+                break;
+            case "deco":// Min: 1, Max: 18
 
-			if (head < 0 || head > 100) {
-				PacketSendUtility.sendMessage(admin, "Head Size: Min value : 0 - Max value : 100");
-				return;
-			}
+                int deco;
 
-			// 编辑头部 / Edit the head
-			playerAppearance.setHeadSize(head + 200);
-		}
-		else if (params[0].equals("tattoo")) // Min: 1, Max: 13
-		{
-			int tattoo;
+                try {
+                    deco = Integer.parseInt(params[1]);
+                } catch (NumberFormatException e) {
+                    PacketSendUtility.sendMessage(admin, "The value must be a number !");
+                    onFail(player, e.getMessage());
+                    return;
+                }
 
-			try {
-				tattoo = Integer.parseInt(params[1]);
-			}
-			catch (NumberFormatException e) {
-				PacketSendUtility.sendMessage(admin, "The value must be a number !");
-				onFail(player, e.getMessage());
-				return;
-			}
+                if (deco < 1 || deco > 18) {
+                    PacketSendUtility.sendMessage(admin, "Deco: Min value : 1 - Max value : 18");
+                    return;
+                }
 
-			if (tattoo < 1 || tattoo > 13) {
-				PacketSendUtility.sendMessage(admin, "Tattoo: Min value : 1 - Max value : 13");
-				return;
-			}
+                // 编辑装饰 / Edit the deco
+                playerAppearance.setDeco(deco);
+                break;
+            case "head_size":// Min: 0, Max: 100
 
-			// 编辑纹身 / Edit the tattoo
-			playerAppearance.setTattoo(tattoo);
-		}
-		else {
-			onFail(player, null);
-			return;
-		}
+                int head;
+
+                try {
+                    head = Integer.parseInt(params[1]);
+                } catch (NumberFormatException e) {
+                    PacketSendUtility.sendMessage(admin, "The value must be a number !");
+                    onFail(player, e.getMessage());
+                    return;
+                }
+
+                if (head < 0 || head > 100) {
+                    PacketSendUtility.sendMessage(admin, "Head Size: Min value : 0 - Max value : 100");
+                    return;
+                }
+
+                // 编辑头部 / Edit the head
+                playerAppearance.setHeadSize(head + 200);
+                break;
+            case "tattoo":// Min: 1, Max: 13
+
+                int tattoo;
+
+                try {
+                    tattoo = Integer.parseInt(params[1]);
+                } catch (NumberFormatException e) {
+                    PacketSendUtility.sendMessage(admin, "The value must be a number !");
+                    onFail(player, e.getMessage());
+                    return;
+                }
+
+                if (tattoo < 1 || tattoo > 13) {
+                    PacketSendUtility.sendMessage(admin, "Tattoo: Min value : 1 - Max value : 13");
+                    return;
+                }
+
+                // 编辑纹身 / Edit the tattoo
+                playerAppearance.setTattoo(tattoo);
+                break;
+            default:
+                onFail(player, null);
+                return;
+        }
 
 		// 用我们的修改编辑当前玩家外观 / Edit the current player's appearance with our modifications
 		player.setPlayerAppearance(playerAppearance);

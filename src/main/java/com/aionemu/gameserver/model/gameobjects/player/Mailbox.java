@@ -31,8 +31,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Mailbox {
 
-	private final Map<Integer, Letter> mails = new LinkedHashMap<Integer, Letter>();
-	private final Map<Integer, Letter> reserveMail = new LinkedHashMap<Integer, Letter>();
+	private final Map<Integer, Letter> mails = new LinkedHashMap<>();
+	private final Map<Integer, Letter> reserveMail = new LinkedHashMap<>();
 	/** 返回所有者 / Returns the owner*/
 	private final Player owner;
 	public boolean isMailListUpdateRequired;
@@ -60,9 +60,11 @@ public class Mailbox {
 	 * @return
 	 */
 	public Collection<Letter> getLetters() {
-		SortedSet<Letter> letters = new TreeSet<Letter>(new Comparator<Letter>() {
+		SortedSet<Letter> letters = new TreeSet<>(new Comparator<>() {
 
-			/** 比较 / compare. */
+			/**
+			 * 比较 / compare.
+			 */
 			@Override
 			public int compare(Letter o1, Letter o2) {
 				if (o1.getTimeStamp().getTime() > o2.getTimeStamp().getTime()) {
@@ -89,7 +91,7 @@ public class Mailbox {
 	 * @return 新信件列表 / new list of letters
 	 */
 	public List<Letter> getNewSystemLetters(String substring) {
-		List<Letter> letters = new ArrayList<Letter>();
+		List<Letter> letters = new ArrayList<>();
 		for (Letter letter : mails.values()) {
 			if (letter.getSenderName() == null || !letter.isUnread()) {
 				continue;

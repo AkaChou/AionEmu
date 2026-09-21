@@ -67,13 +67,7 @@ public class HTMLService {
 	 */
 	public static void pushSurvey(final String html) {
 		final int messageId = GameWorldBootstrapServices.idFactory().nextId();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-
-			@Override
-			public void visit(Player player) {
-				sendData(player, messageId, html);
-			}
-		});
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> sendData(player, messageId, html));
 	}
 
 	/**
@@ -224,7 +218,7 @@ public class HTMLService {
 	 * @return 匹配的模板列表 / matched templates
 	 */
 	private static List<SurveyTemplate> getSurveyTemplates(List<SurveyTemplate> surveys, List<Integer> items) {
-		List<SurveyTemplate> templates = new ArrayList<SurveyTemplate>();
+		List<SurveyTemplate> templates = new ArrayList<>();
 		for (SurveyTemplate survey : surveys) {
 			if (items.contains(survey.getItemId())) {
 				templates.add(survey);

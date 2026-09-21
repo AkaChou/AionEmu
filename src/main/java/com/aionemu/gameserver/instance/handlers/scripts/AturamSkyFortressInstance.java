@@ -59,9 +59,9 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
-	private final List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<>();
 		/** aturamskyfortress 任务 / aturam sky fortress task */
-		private final List<Future<?>> aturamSkyFortressTask = new ArrayList<Future<?>>();
+		private final List<Future<?>> aturamSkyFortressTask = new ArrayList<>();
 
 	/**
 	 * 副本创建时初始化逻辑。
@@ -390,51 +390,40 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	 */
 	@Override
     public boolean onPassFlyingRing(Player player, String flyingRing) {
-        if (flyingRing.equals("ATURAM_SKY_FORTRESS_1")) {
-			instance.doOnAllPlayers(new Visitor<Player>() {
-				/**
-				 * 处理 visit。
-				 * Handle visit.
-				 *
-				 * @param player 玩家 / player
-				 */
-				@Override
-				public void visit(Player player) {
-					if (player.isOnline()) {
-						removeEffects(player);
+		switch (flyingRing) {
+			case "ATURAM_SKY_FORTRESS_1":
+			case "ATURAM_SKY_FORTRESS_2":
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
+						if (player.isOnline()) {
+							removeEffects(player);
+						}
 					}
-				}
-			});
-		} else if (flyingRing.equals("ATURAM_SKY_FORTRESS_2")) {
-			instance.doOnAllPlayers(new Visitor<Player>() {
-				/**
-				 * 处理 visit。
-				 * Handle visit.
-				 *
-				 * @param player 玩家 / player
-				 */
-				@Override
-				public void visit(Player player) {
-					if (player.isOnline()) {
-						removeEffects(player);
+				});
+				break;
+			case "ATURAM_SKY_FORTRESS_3":
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
+						if (player.isOnline()) {
+							doors.get(177).setOpen(true);
+						}
 					}
-				}
-			});
-		} else if (flyingRing.equals("ATURAM_SKY_FORTRESS_3")) {
-			instance.doOnAllPlayers(new Visitor<Player>() {
-				/**
-				 * 处理 visit。
-				 * Handle visit.
-				 *
-				 * @param player 玩家 / player
-				 */
-				@Override
-				public void visit(Player player) {
-					if (player.isOnline()) {
-						doors.get(177).setOpen(true);
-					}
-				}
-			});
+				});
+				break;
 		}
 		return false;
 	}
@@ -701,7 +690,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.

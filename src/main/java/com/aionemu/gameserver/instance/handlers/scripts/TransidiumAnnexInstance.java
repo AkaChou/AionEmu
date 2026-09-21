@@ -57,7 +57,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -79,7 +79,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -95,7 +95,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 			GameEngineServices.skillEngine().getSkill(npc, 21571, 60, npc).useNoAnimationSkill(); //Ereshkigal's Reign.
 		}
 	}
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -130,7 +130,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 			}, 60000);
 		}
 	}
-	
+
 	/**
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
@@ -150,7 +150,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 			transidiumAnnexBase = 4;
 		}
     }
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -181,7 +181,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 					 */
 					@Override
 					public void run() {
-						instance.doOnAllPlayers(new Visitor<Player>() {
+						instance.doOnAllPlayers(new Visitor<>() {
 							/**
 							 * 处理 visit。
 							 * Handle visit.
@@ -214,7 +214,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 					 */
 					@Override
 					public void run() {
-						instance.doOnAllPlayers(new Visitor<Player>() {
+						instance.doOnAllPlayers(new Visitor<>() {
 							/**
 							 * 处理 visit。
 							 * Handle visit.
@@ -247,7 +247,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 					 */
 					@Override
 					public void run() {
-						instance.doOnAllPlayers(new Visitor<Player>() {
+						instance.doOnAllPlayers(new Visitor<>() {
 							/**
 							 * 处理 visit。
 							 * Handle visit.
@@ -280,7 +280,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 					 */
 					@Override
 					public void run() {
-						instance.doOnAllPlayers(new Visitor<Player>() {
+						instance.doOnAllPlayers(new Visitor<>() {
 							/**
 							 * 处理 visit。
 							 * Handle visit.
@@ -381,9 +381,9 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
             break;
 		}
 	}
-	
+
 	private void sendQuestionWindow() {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -402,7 +402,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 	 *
 	 * @param doorId 门 ID / doorId
 	 */
-	
+
 	protected void openDoor(int doorId) {
         StaticDoor door = doors.get(doorId);
         if (door != null) {
@@ -413,14 +413,14 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 	 * 处理 openFirstDoors。
 	 * Handle openFirstDoors.
 	 */
-	
+
 	protected void openFirstDoors() {
 	    openDoor(176);
 		openDoor(177);
 		openDoor(178);
 		openDoor(179);
     }
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -463,7 +463,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 				GameEngineServices.skillEngine().getSkill(npc, 21579, 60, player).useNoAnimationSkill(); //Board The Ignus Engine.
 			break;
 			case 297473: //Aspida Chariot.
-                despawnNpc(npc);			
+                despawnNpc(npc);
 				GameEngineServices.skillEngine().getSkill(npc, 21586, 60, player).useNoAnimationSkill(); //Board The Ignus Engine.
 			break;
 			case 297474: //Atanatos Chariot.
@@ -476,7 +476,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void removeEffects(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
 		effectController.removeEffect(21728);
@@ -498,19 +498,19 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	protected void despawnNpc(Npc npc) {
         if (npc != null) {
             npc.getController().onDelete();
         }
     }
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -521,7 +521,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 	public void onPlayerLogOut(Player player) {
 		removeEffects(player);
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -532,7 +532,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 	public void onLeaveInstance(Player player) {
 		removeEffects(player);
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -542,9 +542,9 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 		isInstanceDestroyed = true;
 		doors.clear();
 	}
-	
+
 	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -565,7 +565,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -574,20 +574,20 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
+				instance.doOnAllPlayers(new Visitor<>() {
+                    /**
+                     * 处理 visit。
+                     * Handle visit.
+                     *
+                     * @param player 玩家 / player
+                     */
+                    @Override
+                    public void visit(Player player) {
+                        if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
+                            PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
+                        }
+                    }
+                });
 			}
 		}, time);
 	}

@@ -29,9 +29,9 @@ public class InstanceExitData {
 	protected List<InstanceExit> instanceExit;
 
 	@XmlTransient
-	protected List<InstanceExit> instanceExits = new ArrayList<InstanceExit>();
+	protected List<InstanceExit> instanceExits = new ArrayList<>();
 	@XmlTransient
-	private final Map<Integer, List<InstanceExit>> exitsByWorldId = new HashMap<Integer, List<InstanceExit>>();
+	private final Map<Integer, List<InstanceExit>> exitsByWorldId = new HashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，建立世界 ID 索引并释放原始列表。
@@ -40,7 +40,7 @@ public class InstanceExitData {
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
 		for (InstanceExit exit : instanceExit) {
 			instanceExits.add(exit);
-			exitsByWorldId.computeIfAbsent(exit.getInstanceId(), k -> new ArrayList<InstanceExit>()).add(exit);
+			exitsByWorldId.computeIfAbsent(exit.getInstanceId(), k -> new ArrayList<>()).add(exit);
 		}
 		instanceExit.clear();
 		instanceExit = null;

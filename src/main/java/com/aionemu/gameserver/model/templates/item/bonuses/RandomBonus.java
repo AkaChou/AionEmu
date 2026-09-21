@@ -40,7 +40,7 @@ public class RandomBonus {
 	/** 获取修正器。 / Returns the modifiers. */
 	public List<ModifiersTemplate> getModifiers() {
 		if (modifiers == null) {
-			modifiers = new ArrayList<ModifiersTemplate>();
+			modifiers = new ArrayList<>();
 		}
 		return this.modifiers;
 	}

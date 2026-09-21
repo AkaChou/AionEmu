@@ -43,7 +43,7 @@ public class ConquestService {
 	private ConquestSchedule conquestSchedule;
 	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private Map<Integer, ConquestLocation> conquest;
-	private final ConcurrentMap<Integer, ConquestOffering<?>> activeConquest = new ConcurrentHashMap<Integer, ConquestOffering<?>>();
+	private final ConcurrentMap<Integer, ConquestOffering<?>> activeConquest = new ConcurrentHashMap<>();
 
 	/**
 	 * 初始化征服活动地点：按配置加载并在和平状态刷怪。
@@ -105,12 +105,7 @@ public class ConquestService {
 			return;
 		}
 		offering.start();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				stopConquest(id);
-			}
-		}, (long) CustomConfig.CONQUEST_DURATION * 3600 * 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> stopConquest(id), (long) CustomConfig.CONQUEST_DURATION * 3600 * 1000);
 	}
 
 	/**
@@ -158,7 +153,7 @@ public class ConquestService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
+		for (VisibleObject obj : new ArrayList<>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {

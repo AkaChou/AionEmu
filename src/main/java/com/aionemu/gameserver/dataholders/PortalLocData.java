@@ -27,7 +27,7 @@ public class PortalLocData {
 	protected List<PortalLoc> portalLoc;
 
 	@XmlTransient
-	private final IntObjectHashMap<PortalLoc> portalLocs = new IntObjectHashMap<PortalLoc>();
+	private final IntObjectHashMap<PortalLoc> portalLocs = new IntObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，将坐标写入 ID 索引并释放列表。

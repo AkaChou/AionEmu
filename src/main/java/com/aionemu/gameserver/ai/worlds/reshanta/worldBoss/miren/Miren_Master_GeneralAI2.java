@@ -42,36 +42,25 @@ public class Miren_Master_GeneralAI2 extends AggressiveNpcAI2
 			case 279541:
 			case 269911:
 				treasureChest();
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			        @Override
-			        public void run() {
-						spawnTreasureChest(701481);
-			        }
-		        }, 10000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTreasureChest(701481), 10000);
 			break;
 		}
 		super.handleDied();
 	}
 
 	private void treasureChest() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 出现了一个宝箱。 / A treasure chest has appeared.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdC_BoxSpawn);
-			}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			// 出现了一个宝箱。 / A treasure chest has appeared.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdC_BoxSpawn);
 		});
 	}
 
 	private void announceUnsealedMiren() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 解封的米伦。 / Unsealed Miren.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Lamiren_Named_Spawn);
-				// 米伦龙族王子已出现！ / The Miren Balaur Prince has appeared!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_Boss_hide_Dispel, 30000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 解封的米伦。 / Unsealed Miren.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Lamiren_Named_Spawn);
+			// 米伦龙族王子已出现！ / The Miren Balaur Prince has appeared!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_Boss_hide_Dispel, 30000);
 		});
 	}
 

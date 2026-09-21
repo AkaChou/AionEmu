@@ -32,12 +32,7 @@ public class Broken_BarrelAI2 extends AggressiveNpcAI2
 			if (MathUtil.getDistance(getOwner(), player) <= 15) {
 				if (startedEvent.compareAndSet(false, true)) {
 					getPosition().getWorldMapInstance().getDoors().get(54).setOpen(true);
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					    @Override
-					    public void run() {
-						    spawn(282626, 167.56618f, 341.45828f, 207.60175f, (byte) 0, 229);
-				        }
-			        }, 5000);
+					GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(282626, 167.56618f, 341.45828f, 207.60175f, (byte) 0, 229), 5000);
 					AI2Actions.deleteOwner(Broken_BarrelAI2.this);
 				}
 			}

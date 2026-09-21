@@ -53,7 +53,7 @@ public class SpawnAssembledNpc  extends AdminCommand {
 			PacketSendUtility.sendMessage(player, "This spawnId is Wrong.");
 			return;
 		}
-		List<AssembledNpcPart> assembledPatrs = new ArrayList<AssembledNpcPart>();
+		List<AssembledNpcPart> assembledPatrs = new ArrayList<>();
 		for (AssembledNpcTemplate.AssembledNpcPartTemplate npcPart : template.getAssembledNpcPartTemplates()) {
 			assembledPatrs.add(new AssembledNpcPart(GameWorldBootstrapServices.idFactory().nextId(), npcPart));
 		}

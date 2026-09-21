@@ -67,7 +67,7 @@ public class AbyssRankCleaningService {
 				.getAbyssRankingPlayers(Race.ELYOS);
 		ArrayList<AbyssRankingResult> rankingsAsmos = DAOManager.getDAO(AbyssRankDAO.class)
 				.getAbyssRankingPlayers(Race.ASMODIANS);
-		List<Player> ToArray = new ArrayList<Player>();
+		List<Player> ToArray = new ArrayList<>();
 		long offlineThresholdMs = (long) periodInDays * 24L * 60L * 60L * 1000L;
 		for (AbyssRankingResult result : rankingsElyos) {
 			Player p = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(result.getPlayerName());

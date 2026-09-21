@@ -56,7 +56,7 @@ public class NpcEquippedGear implements Iterable<Entry<ItemSlot, ItemTemplate>> 
 	public void init() {
 		synchronized (this) {
 			if (items == null) {
-				items = new TreeMap<ItemSlot, ItemTemplate>();
+				items = new TreeMap<>();
 				int[] itemIds = v.itemIds != null ? v.itemIds : new int[0];
 				for (int itemId : itemIds) {
 					ItemTemplate item = DataManager.ITEM_DATA.getItemTemplate(itemId);

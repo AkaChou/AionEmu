@@ -38,7 +38,7 @@ public class ShugoImperialTombSpawnManager {
 	 * 当前存活的皇陵裂隙对象队列。
 	 * Queue of currently alive imperial tomb rift objects.
 	 */
-	private static final ConcurrentLinkedQueue<VisibleObject> tomb = new ConcurrentLinkedQueue<VisibleObject>();
+	private static final ConcurrentLinkedQueue<VisibleObject> tomb = new ConcurrentLinkedQueue<>();
 	private final List<Runnable> schedules = new ArrayList<>();
 
 	/**
@@ -55,12 +55,9 @@ public class ShugoImperialTombSpawnManager {
 		}
 		String[] times = EventsConfig.IMPERIAL_TOMB_TIMES.split("\\|");
 		for (String cron : times) {
-			Runnable schedule = new Runnable() {
-				@Override
-				public void run() {
-					for (RiftEnum rift : RiftEnum.values()) {
-						spawnImperialTomb(rift);
-					}
+			Runnable schedule = () -> {
+				for (RiftEnum rift : RiftEnum.values()) {
+					spawnImperialTomb(rift);
 				}
 			};
 			schedules.add(schedule);
@@ -91,13 +88,10 @@ public class ShugoImperialTombSpawnManager {
 	 * @param visObj 裂隙可见对象 / the visible rift object
 	 */
 	private static void scheduleDelete(final VisibleObject visObj) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (visObj != null && visObj.isSpawned()) {
-					visObj.getController().delete();
-					tomb.remove(visObj);
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (visObj != null && visObj.isSpawned()) {
+				visObj.getController().delete();
+				tomb.remove(visObj);
 			}
 		}, EventsConfig.IMPERIAL_TOMB_TIMER * 60 * 1000);
 	}
@@ -125,12 +119,9 @@ public class ShugoImperialTombSpawnManager {
 	public static void sendAnnounce(final VisibleObject visObj) {
 		if (visObj.isSpawned()) {
 			WorldMapInstance worldInstance = visObj.getPosition().getMapRegion().getParent();
-			worldInstance.doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					if (player.isSpawned()) {
-						sendMessage(player, visObj.getObjectTemplate().getTemplateId());
-					}
+			worldInstance.doOnAllPlayers(player -> {
+				if (player.isSpawned()) {
+					sendMessage(player, visObj.getObjectTemplate().getTemplateId());
 				}
 			});
 		}

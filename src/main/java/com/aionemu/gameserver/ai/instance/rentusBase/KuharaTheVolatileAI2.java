@@ -83,104 +83,89 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 	}
 
 	private void startBarrelEvent() {
-		barrelEventTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelBarrelEventTask();
-				} else {
-					switch(Rnd.get(1, 4)) {
-						case 1:
-							spawn(282394, 163.79257f, 266.18692f, 210.0678f, (byte) 74);
-				            spawn(282394, 166.12807f, 263.00272f, 210.11052f, (byte) 74);
-				            spawn(282394, 162.76723f, 263.038f, 210.0678f, (byte) 74);
-						break;
-						case 2:
-							spawn(282394, 158.55418f, 236.08423f, 210.0678f, (byte) 42);
-                            spawn(282394, 155.07852f, 234.39168f, 210.06781f, (byte) 40);
-							spawn(282394, 155.78406f, 237.70297f, 210.0678f, (byte) 39);
-						break;
-						case 3:
-							spawn(282394, 119.849335f, 243.8364f, 210.06781f, (byte) 12);
-                            spawn(282394, 117.94701f, 246.95924f, 210.06781f, (byte) 12);
-                            spawn(282394, 121.0155f, 246.60715f, 210.06781f, (byte) 11);
-						break;
-						case 4:
-							spawn(282394, 124.52082f, 273.96237f, 210.06781f, (byte) 105);
-							spawn(282394, 127.199356f, 276.00143f, 210.06781f, (byte) 104);
-							spawn(282394, 127.42693f, 273.05597f, 210.06781f, (byte) 103);
-						break;
-					}
-					startBombEvent();
-					announceWeakKuhara();
+		barrelEventTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelBarrelEventTask();
+			} else {
+				switch(Rnd.get(1, 4)) {
+					case 1:
+						spawn(282394, 163.79257f, 266.18692f, 210.0678f, (byte) 74);
+						spawn(282394, 166.12807f, 263.00272f, 210.11052f, (byte) 74);
+						spawn(282394, 162.76723f, 263.038f, 210.0678f, (byte) 74);
+					break;
+					case 2:
+						spawn(282394, 158.55418f, 236.08423f, 210.0678f, (byte) 42);
+spawn(282394, 155.07852f, 234.39168f, 210.06781f, (byte) 40);
+						spawn(282394, 155.78406f, 237.70297f, 210.0678f, (byte) 39);
+					break;
+					case 3:
+						spawn(282394, 119.849335f, 243.8364f, 210.06781f, (byte) 12);
+spawn(282394, 117.94701f, 246.95924f, 210.06781f, (byte) 12);
+spawn(282394, 121.0155f, 246.60715f, 210.06781f, (byte) 11);
+					break;
+					case 4:
+						spawn(282394, 124.52082f, 273.96237f, 210.06781f, (byte) 105);
+						spawn(282394, 127.199356f, 276.00143f, 210.06781f, (byte) 104);
+						spawn(282394, 127.42693f, 273.05597f, 210.06781f, (byte) 103);
+					break;
 				}
+				startBombEvent();
+				announceWeakKuhara();
 			}
 		}, 15000, 15000);
 	}
 
 	private void announceOilBarrel() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 鸢族军需官发现油桶。\n 引爆可伤害库哈拉。 / The Reian Quartermaster found an oil barrel.\nKuhara will be hurt if you make it explode.
-					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDYun_Kuhara_Barrel_Spawn, 0);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 鸢族军需官发现油桶。\n 引爆可伤害库哈拉。 / The Reian Quartermaster found an oil barrel.\nKuhara will be hurt if you make it explode.
+				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDYun_Kuhara_Barrel_Spawn, 0);
 			}
 		});
 	}
 
 	private void announceWeakKuhara() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 库哈拉耗尽全部能量，防御将短��极��。 / Kuhara used up all his energy. His defenses will be very weak for a short while.
-					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDYun_Kuhara_StatDown, 5000);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 库哈拉耗尽全部能量，防御将短��极��。 / Kuhara used up all his energy. His defenses will be very weak for a short while.
+				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDYun_Kuhara_StatDown, 5000);
 			}
 		});
 	}
 
 	private void startBombEvent() {
-		bombEventTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.ACTIVE)) {
-					phase = Phase.BOMBS;
-					cancelActiveEventTask();
-					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500394, getObjectId(), 0, 0);
-					canThink = false;
-					EmoteManager.emoteStopAttacking(getOwner());
-					setStateIfNot(AIState.WALKING);
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19703, 60, getOwner()).useNoAnimationSkill();
-					spawnBombEvent();
-					bombEventTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.BOMBS)) {
-								phase = Phase.ACTIVE;
-								canThink = true;
-								Creature creature = getAggroList().getMostHated();
-								if (creature == null || creature.getLifeStats().isAlreadyDead() || !getOwner().canSee(creature)) {
-									setStateIfNot(AIState.FIGHT);
-									think();
-								} else {
-									getMoveController().abortMove();
-									getOwner().setTarget(creature);
-									getOwner().getGameStats().renewLastAttackTime();
-									getOwner().getGameStats().renewLastAttackedTime();
-									getOwner().getGameStats().renewLastChangeTargetTime();
-									getOwner().getGameStats().renewLastSkillTime();
-									setStateIfNot(AIState.FIGHT);
-									handleMoveValidate();
-									GameEngineServices.skillEngine().getSkill(getOwner(), 19375, 60, getOwner()).useNoAnimationSkill();
-								}
-								deleteNpcs(getPosition().getWorldMapInstance().getNpcs(282396)); // 库哈拉炸弹 / Kuhara Bomb.
-							}
+		bombEventTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.ACTIVE)) {
+				phase = Phase.BOMBS;
+				cancelActiveEventTask();
+				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500394, getObjectId(), 0, 0);
+				canThink = false;
+				EmoteManager.emoteStopAttacking(getOwner());
+				setStateIfNot(AIState.WALKING);
+				GameEngineServices.skillEngine().getSkill(getOwner(), 19703, 60, getOwner()).useNoAnimationSkill();
+				spawnBombEvent();
+				bombEventTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.BOMBS)) {
+						phase = Phase.ACTIVE;
+						canThink = true;
+						Creature creature = getAggroList().getMostHated();
+						if (creature == null || creature.getLifeStats().isAlreadyDead() || !getOwner().canSee(creature)) {
+							setStateIfNot(AIState.FIGHT);
+							think();
+						} else {
+							getMoveController().abortMove();
+							getOwner().setTarget(creature);
+							getOwner().getGameStats().renewLastAttackTime();
+							getOwner().getGameStats().renewLastAttackedTime();
+							getOwner().getGameStats().renewLastChangeTargetTime();
+							getOwner().getGameStats().renewLastSkillTime();
+							setStateIfNot(AIState.FIGHT);
+							handleMoveValidate();
+							GameEngineServices.skillEngine().getSkill(getOwner(), 19375, 60, getOwner()).useNoAnimationSkill();
 						}
-					}, 11000);
-				}
+						deleteNpcs(getPosition().getWorldMapInstance().getNpcs(282396)); // 库哈拉炸弹 / Kuhara Bomb.
+					}
+				}, 11000);
 			}
 		}, 14000);
 	}
@@ -219,30 +204,21 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 	}
 
 	private void startActivEvent() {
-		activeEventTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelActiveEventTask();
-				} else {
-					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500395, getObjectId(), 0, 0);
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
+		activeEventTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelActiveEventTask();
+			} else {
+				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500395, getObjectId(), 0, 0);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.ACTIVE)) {
+						GameEngineServices.skillEngine().getSkill(getOwner(), 19704, 60, getOwner()).useNoAnimationSkill();
+						GameThreadPoolServices.threadPoolManager().schedule(() -> {
 							if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.ACTIVE)) {
-								GameEngineServices.skillEngine().getSkill(getOwner(), 19704, 60, getOwner()).useNoAnimationSkill();
-								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-									@Override
-									public void run() {
-										if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.ACTIVE)) {
-											GameEngineServices.skillEngine().getSkill(getOwner(), 19705, 60, getOwner()).useNoAnimationSkill();
-										}
-									}
-								}, 3500);
+								GameEngineServices.skillEngine().getSkill(getOwner(), 19705, 60, getOwner()).useNoAnimationSkill();
 							}
-						}
-					}, 1000);
-				}
+						}, 3500);
+					}
+				}, 1000);
 			}
 		}, 8000, 14000);
 	}

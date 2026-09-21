@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class RepurchaseList {
 
 	private final int sellerObjId;
-	private final List<Item> repurchases = new ArrayList<Item>();
+	private final List<Item> repurchases = new ArrayList<>();
 
 	/**
 	 * @param player

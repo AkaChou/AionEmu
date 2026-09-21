@@ -34,10 +34,10 @@ import java.util.List;
 @AIName("summoner")
 public class SummonerAI2 extends AggressiveNpcAI2
 {
-	private final List<Integer> spawnedNpc = new ArrayList<Integer>();
+	private final List<Integer> spawnedNpc = new ArrayList<>();
 	private List<Percentage> percentage = Collections.emptyList();
 	private int spawnedPercent = 0;
-	
+
 	/**
 	 * 处理受到攻击事件。
 	 * Handle being attacked.
@@ -49,7 +49,7 @@ public class SummonerAI2 extends AggressiveNpcAI2
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	/**
 	 * 处理消失事件。
 	 * Handle despawn.
@@ -63,7 +63,7 @@ public class SummonerAI2 extends AggressiveNpcAI2
 		}
 		percentage.clear();
 	}
-	
+
 	/**
 	 * 处理归位完成事件。
 	 * Handle back-home.
@@ -77,7 +77,7 @@ public class SummonerAI2 extends AggressiveNpcAI2
 		}
 		spawnedPercent = 0;
 	}
-	
+
 	/**
 	 * 处理生成完成事件。
 	 * Handle post-spawn.
@@ -109,7 +109,7 @@ public class SummonerAI2 extends AggressiveNpcAI2
 		}
 		percentage = DataManager.AI_DATA.getAiTemplate().get(getNpcId()).getSummons().getPercentage();
 	}
-	
+
 	private void anuhartBravery() {
 	    GameEngineServices.skillEngine().getSkill(getOwner(), 18168, 1, getOwner()).useNoAnimationSkill(); //Anuhart's Bravery.
 	}
@@ -119,7 +119,7 @@ public class SummonerAI2 extends AggressiveNpcAI2
 	private void elementalLordship() {
 	    GameEngineServices.skillEngine().getSkill(getOwner(), 22744, 1, getOwner()).useNoAnimationSkill(); //Elemental Lordship.
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle death.
@@ -145,27 +145,21 @@ public class SummonerAI2 extends AggressiveNpcAI2
 		spawnedNpc.clear();
 		percentage.clear();
 	}
-	
+
 	private void addGpPlayer() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
-					AbyssPointsService.addGp(player, 500);
-				}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
+				AbyssPointsService.addGp(player, 500);
 			}
 		});
 	}
 	private void announceTarmatDie() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 恶魔部队的塔马特贝塔已被摧毁。 / The Devil Unit's Tarmat Beta has been destroyed.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_DIE_02);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 恶魔部队的塔马特贝塔已被摧毁。 / The Devil Unit's Tarmat Beta has been destroyed.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_DIE_02);
 		});
 	}
-	
+
 	private void removeHelpersSpawn() {
 		for (Integer object : spawnedNpc) {
 			VisibleObject npc = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(object);
@@ -174,13 +168,13 @@ public class SummonerAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
-	protected void addHelpersSpawn(int objId) {	
+
+	protected void addHelpersSpawn(int objId) {
 		synchronized(spawnedNpc) {
 			spawnedNpc.add(objId);
 		}
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		for (Percentage percent : percentage) {
 			if (spawnedPercent != 0 && spawnedPercent <= percent.getPercent()) {
@@ -195,19 +189,14 @@ public class SummonerAI2 extends AggressiveNpcAI2
 					handleBeforeSpawn(percent);
 					for (SummonGroup summonGroup : percent.getSummons()) {
 						final SummonGroup sg = summonGroup;
-						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-							@Override
-							public void run() {
-								spawnHelpers(sg);
-							}
-						}, summonGroup.getSchedule());
+						GameThreadPoolServices.threadPoolManager().schedule(() -> spawnHelpers(sg), summonGroup.getSchedule());
 					}
 				}
 				spawnedPercent = percent.getPercent();
 			}
 		}
 	}
-	
+
 	protected void spawnHelpers(SummonGroup summonGroup) {
 		if (!isAlreadyDead() && checkBeforeSpawn()) {
 			int count = 0;
@@ -228,18 +217,18 @@ public class SummonerAI2 extends AggressiveNpcAI2
 			handleSpawnFinished(summonGroup);
 		}
 	}
-	
+
 	protected SpawnTemplate rndSpawnInRange(int npcId, float distance) {
 		float direction = Rnd.get(0, 199) / 100f;
 		float x = (float) (Math.cos(Math.PI * direction) * distance);
 		float y = (float) (Math.sin(Math.PI * direction) * distance);
 		return SpawnEngine.addNewSingleTimeSpawn(getPosition().getMapId(), npcId, getPosition().getX() + x, getPosition().getY() + y, getPosition().getZ(), getPosition().getHeading());
 	}
-	
+
 	protected boolean checkBeforeSpawn() {
 		return true;
 	}
-	
+
 	/**
 	 * 处理生成前事件。
 	 * Handle before-spawn.
@@ -248,7 +237,7 @@ public class SummonerAI2 extends AggressiveNpcAI2
 	 */
 	protected void handleBeforeSpawn(Percentage percent) {
 	}
-	
+
 	/**
 	 * 处理召唤物生成完成。
 	 * Handle spawn-finished for summons.
@@ -257,7 +246,7 @@ public class SummonerAI2 extends AggressiveNpcAI2
 	 */
 	protected void handleSpawnFinished(SummonGroup summonGroup) {
 	}
-	
+
 	/**
 	 * 按血量百分比分批生成召唤物。
 	 * Spawn individual summons by HP percent.

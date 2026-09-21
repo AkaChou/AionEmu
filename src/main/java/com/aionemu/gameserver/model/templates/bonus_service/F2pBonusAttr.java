@@ -31,7 +31,7 @@ public class F2pBonusAttr {
 	/** 返回 penalty attr / Returns the penalty attr */
 	public List<F2pPenalityAttr> getPenaltyAttr() {
 		if (bonusAttr == null) {
-			bonusAttr = new ArrayList<F2pPenalityAttr>();
+			bonusAttr = new ArrayList<>();
 		}
 		return bonusAttr;
 	}

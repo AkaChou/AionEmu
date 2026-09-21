@@ -27,7 +27,7 @@ public class KahrunAI2 extends NpcAI2
     protected void handleDialogStart(Player player) {
         PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
     }
-	
+
 	@Override
     	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000) {
@@ -37,21 +37,18 @@ public class KahrunAI2 extends NpcAI2
         }
         return true;
     }
-	
+
 	private void startProtectorateEvent() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				Npc fileLadderCGF = getPosition().getWorldMapInstance().getNpc(730612);
-				Npc aionFXPostGlow = getPosition().getWorldMapInstance().getNpc(730694);
-				Npc kharunReianLeader = (Npc)spawn(800335, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 60);
-			    kharunReianLeader.setTarget(aionFXPostGlow);
-			    // 退后。我来处理这屏障。 / Stand back. I will take care of this barrier.
-				GameFeatureServices.npcShoutsService().sendMsg(kharunReianLeader, 1500596, kharunReianLeader.getObjectId(), 0, 1000);
-				GameEngineServices.skillEngine().getSkill(kharunReianLeader, 20943, 60, aionFXPostGlow).useNoAnimationSkill();
-			    fileLadderCGF.getController().onDelete();
-			    aionFXPostGlow.getController().onDelete();
-			}
-	    }, 3000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			Npc fileLadderCGF = getPosition().getWorldMapInstance().getNpc(730612);
+			Npc aionFXPostGlow = getPosition().getWorldMapInstance().getNpc(730694);
+			Npc kharunReianLeader = (Npc)spawn(800335, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 60);
+			kharunReianLeader.setTarget(aionFXPostGlow);
+			// 退后。我来处理这屏障。 / Stand back. I will take care of this barrier.
+			GameFeatureServices.npcShoutsService().sendMsg(kharunReianLeader, 1500596, kharunReianLeader.getObjectId(), 0, 1000);
+			GameEngineServices.skillEngine().getSkill(kharunReianLeader, 20943, 60, aionFXPostGlow).useNoAnimationSkill();
+			fileLadderCGF.getController().onDelete();
+			aionFXPostGlow.getController().onDelete();
+		}, 3000);
     }
 }

@@ -64,9 +64,9 @@ public final class ZoneService implements GameEngine {
 	/** 按地图 ID 索引的区域信息 / zone info indexed by map id */
 	private final IntObjectHashMap<List<ZoneInfo>> zoneByMapIdMap;
 	/** 区域名称 → 脚本处理器类 / zone name → script handler class */
-	private final Map<ZoneName, Class<? extends ZoneHandler>> handlers = new HashMap<ZoneName, Class<? extends ZoneHandler>>();
+	private final Map<ZoneName, Class<? extends ZoneHandler>> handlers = new HashMap<>();
 	/** 区域名称 → 可碰撞处理器实例 / zone name → collidable handler instance */
-	private final Map<ZoneName, ZoneHandler> collidableHandlers = new ConcurrentHashMap<ZoneName, ZoneHandler>();
+	private final Map<ZoneName, ZoneHandler> collidableHandlers = new ConcurrentHashMap<>();
 	/** 默认空处理器 / default no-op handler */
 	public static final ZoneHandler DUMMY_ZONE_HANDLER = new NoOpZoneHandler();
 
@@ -220,7 +220,7 @@ public final class ZoneService implements GameEngine {
 	 * @return 区域名称 → 区域实例 / zone name → zone instance
 	 */
 	public Map<ZoneName, ZoneInstance> getZoneInstancesByWorldId(int mapId) {
-		Map<ZoneName, ZoneInstance> zones = new HashMap<ZoneName, ZoneInstance>();
+		Map<ZoneName, ZoneInstance> zones = new HashMap<>();
 		int worldSize = DataManager.WORLD_MAPS_DATA.getTemplate(mapId).getWorldSize();
 		WorldZoneTemplate zone = new WorldZoneTemplate(worldSize, mapId);
 		PolyArea fullArea = new PolyArea(zone.getName(), mapId, zone.getPoints().getPoint(),
@@ -364,7 +364,7 @@ public final class ZoneService implements GameEngine {
 
 		Collection<ZoneInfo> areas = this.zoneByMapIdMap.get(worldId);
 		if (areas == null) {
-			this.zoneByMapIdMap.put(worldId, new ArrayList<ZoneInfo>());
+			this.zoneByMapIdMap.put(worldId, new ArrayList<>());
 			areas = this.zoneByMapIdMap.get(worldId);
 		}
 		ZoneInfo zoneInfo = null;
@@ -418,7 +418,7 @@ public final class ZoneService implements GameEngine {
 	 * Sort collidable material zone templates and persist them via ZoneData.
 	 */
 	public void saveMaterialZones() {
-		List<ZoneTemplate> templates = new ArrayList<ZoneTemplate>();
+		List<ZoneTemplate> templates = new ArrayList<>();
 		for (WorldMapTemplate map : DataManager.WORLD_MAPS_DATA) {
 			Collection<ZoneInfo> areas = this.zoneByMapIdMap.get(map.getMapId());
 			if (areas == null) {
@@ -430,13 +430,7 @@ public final class ZoneService implements GameEngine {
 				}
 			}
 		}
-		Collections.sort(templates, new Comparator<ZoneTemplate>() {
-
-			@Override
-			public int compare(ZoneTemplate o1, ZoneTemplate o2) {
-				return o1.getMapid() - o2.getMapid();
-			}
-		});
+		Collections.sort(templates, (o1, o2) -> o1.getMapid() - o2.getMapid());
 
 		ZoneData zoneData = new ZoneData();
 		zoneData.zoneList = templates;

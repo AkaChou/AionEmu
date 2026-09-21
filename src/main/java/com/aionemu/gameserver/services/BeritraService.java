@@ -60,7 +60,7 @@ public class BeritraService {
 	private final List<VisibleObject> adventEreshControl = Collections.synchronizedList(new ArrayList<>());
 	private final List<VisibleObject> adventEreshDirecting = Collections.synchronizedList(new ArrayList<>());
 
-	private final ConcurrentMap<Integer, BeritraInvasion<?>> activeInvasions = new ConcurrentHashMap<Integer, BeritraInvasion<?>>();
+	private final ConcurrentMap<Integer, BeritraInvasion<?>> activeInvasions = new ConcurrentHashMap<>();
 
 	/**
 	 * 初始化入侵活动地点：按配置加载并在和平状态刷怪。
@@ -121,12 +121,7 @@ public class BeritraService {
 			return;
 		}
 		invade.start();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				stopBeritraInvasion(id);
-			}
-		}, (long) CustomConfig.BERITRA_DURATION * 3600 * 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> stopBeritraInvasion(id), (long) CustomConfig.BERITRA_DURATION * 3600 * 1000);
 	}
 
 	/**
@@ -214,12 +209,7 @@ public class BeritraService {
 	public boolean beritraInvasionMsg(int id) {
 		switch (id) {
 		case 1:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_INVADE_VRITRA_SPECIAL);
-				}
-			});
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_INVADE_VRITRA_SPECIAL));
 			return true;
 		default:
 			return false;
@@ -236,12 +226,9 @@ public class BeritraService {
 	public boolean invasionCorridorMsg(int id) {
 		switch (id) {
 		case 1:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					// 贝里特拉军团入侵走廊已出现。 / The Beritra Legion's Invasion Corridor has appeared.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_01);
-				}
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				// 贝里特拉军团入侵走廊已出现。 / The Beritra Legion's Invasion Corridor has appeared.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_01);
 			});
 			return true;
 		default:
@@ -259,12 +246,9 @@ public class BeritraService {
 	public boolean devilUnitThroughMsg(int id) {
 		switch (id) {
 		case 1:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					// 恶魔部队已通过入侵走廊渗透。 / The Devil Unit has infiltrated through the Invasion Corridor.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_02);
-				}
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				// 恶魔部队已通过入侵走廊渗透。 / The Devil Unit has infiltrated through the Invasion Corridor.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_02);
 			});
 			return true;
 		default:
@@ -282,12 +266,9 @@ public class BeritraService {
 	public boolean devilUnitReturnMsg(int id) {
 		switch (id) {
 		case 1:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					// 恶魔部队正准备返回。 / The Devil Unit is preparing for its return.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_03);
-				}
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				// 恶魔部队正准备返回。 / The Devil Unit is preparing for its return.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_03);
 			});
 			return true;
 		default:
@@ -305,12 +286,7 @@ public class BeritraService {
 	public boolean ereshkigalInvasionMsg(int id) {
 		switch (id) {
 		case 35:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_INVADE_VRITRA_SPECIAL);
-				}
-			});
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_INVADE_VRITRA_SPECIAL));
 			return true;
 		default:
 			return false;
@@ -327,12 +303,9 @@ public class BeritraService {
 	public boolean ereshkigalCorridorMsg(int id) {
 		switch (id) {
 		case 35:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					// 埃雷什基伽尔军团入侵走廊已创建。 / The Ereshkigal Legion's Invasion Corridor has been created.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_Ere_MESSAGE_01);
-				}
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				// 埃雷什基伽尔军团入侵走廊已创建。 / The Ereshkigal Legion's Invasion Corridor has been created.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_Ere_MESSAGE_01);
 			});
 			return true;
 		default:
@@ -350,13 +323,10 @@ public class BeritraService {
 	public boolean ereshkigalLegionThroughMsg(int id) {
 		switch (id) {
 		case 35:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					// 埃雷什基伽尔军团的魔法武器已通过入侵 / The Ereshkigal Legion's Magic weapon has infiltrated through the Invasion
-					// 走廊。 / Corridor.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_Ere_MESSAGE_02);
-				}
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				// 埃雷什基伽尔军团的魔法武器已通过入侵 / The Ereshkigal Legion's Magic weapon has infiltrated through the Invasion
+				// 走廊。 / Corridor.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_Ere_MESSAGE_02);
 			});
 			return true;
 		default:
@@ -374,12 +344,9 @@ public class BeritraService {
 	public boolean beritraLegionReturnMsg(int id) {
 		switch (id) {
 		case 35:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					// 贝里特拉军团恶魔部队正准备返回。 / The Beritra Legion Devil Unit is preparing for its return.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_03);
-				}
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				// 贝里特拉军团恶魔部队正准备返回。 / The Beritra Legion Devil Unit is preparing for its return.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_03);
 			});
 			return true;
 		default:
@@ -397,12 +364,7 @@ public class BeritraService {
 	public boolean dredgionDefenseMsg(int id) {
 		switch (id) {
 		case 57:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Dreadgion_Start_L);
-				}
-			});
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Dreadgion_Start_L));
 			return true;
 		default:
 			return false;
@@ -1123,7 +1085,7 @@ public class BeritraService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
+		for (VisibleObject obj : new ArrayList<>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {

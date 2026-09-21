@@ -33,12 +33,7 @@ public class PriestElyosPreceptorAI2 extends AggressiveNpcAI2 {
 	@Override
 	public void handleSpawned() {
 		super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 19612, 46, getOwner()).useNoAnimationSkill();
-			}
-		}, 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> GameEngineServices.skillEngine().getSkill(getOwner(), 19612, 46, getOwner()).useNoAnimationSkill(), 1000);
 	}
 
 	@Override
@@ -61,33 +56,27 @@ public class PriestElyosPreceptorAI2 extends AggressiveNpcAI2 {
 
 	private void startEvent() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 19610, 46, getOwner()).useNoAnimationSkill();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 19614, 46, getOwner()).useNoAnimationSkill();
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						WorldPosition p = getPosition();
-						switch (Rnd.get(1, 3)) {
-							case 1:
-								applySoulSickness((Npc) spawn(282366, p.getX(), p.getY(), p.getZ(), p.getHeading())); // 布雷亚斯 / Boreas
-							break;
-							case 2:
-								applySoulSickness((Npc) spawn(282367, p.getX(), p.getY(), p.getZ(), p.getHeading())); // 尤贝恩图斯 / Jumentis
-							break;
-							case 3:
-								applySoulSickness((Npc) spawn(282368, p.getX(), p.getY(), p.getZ(), p.getHeading())); // 黑卡泰 / Charna
-							break;
-						}
-					}
-				}, 5000);
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			GameEngineServices.skillEngine().getSkill(getOwner(), 19614, 46, getOwner()).useNoAnimationSkill();
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				WorldPosition p = getPosition();
+				switch (Rnd.get(1, 3)) {
+					case 1:
+						applySoulSickness((Npc) spawn(282366, p.getX(), p.getY(), p.getZ(), p.getHeading())); // 布雷亚斯 / Boreas
+					break;
+					case 2:
+						applySoulSickness((Npc) spawn(282367, p.getX(), p.getY(), p.getZ(), p.getHeading())); // 尤贝恩图斯 / Jumentis
+					break;
+					case 3:
+						applySoulSickness((Npc) spawn(282368, p.getX(), p.getY(), p.getZ(), p.getHeading())); // 黑卡泰 / Charna
+					break;
+				}
+			}, 5000);
 		}, 2000);
 	}
 
 	private Player getTargetPlayer() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player : getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player) && MathUtil.isIn3dRange(player, getOwner(), 25)) {
 				players.add(player);
@@ -97,12 +86,9 @@ public class PriestElyosPreceptorAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void applySoulSickness(final Npc npc) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				npc.getLifeStats().setCurrentHpPercent(50);
-				GameEngineServices.skillEngine().getSkill(npc, 19594, 4, npc).useNoAnimationSkill();
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			npc.getLifeStats().setCurrentHpPercent(50);
+			GameEngineServices.skillEngine().getSkill(npc, 19594, 4, npc).useNoAnimationSkill();
 		}, 1000);
 	}
 

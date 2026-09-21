@@ -32,10 +32,10 @@ public class HousePartsData {
 	protected List<HousePart> houseParts;
 
 	@XmlTransient
-	Map<String, List<HousePart>> partsByTags = new HashMap<String, List<HousePart>>(5);
+	Map<String, List<HousePart>> partsByTags = new HashMap<>(5);
 
 	@XmlTransient
-	Map<Integer, HousePart> partsById = new HashMap<Integer, HousePart>();
+	Map<Integer, HousePart> partsById = new HashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，按部件 ID 与标签建立索引并释放原始列表。
@@ -52,7 +52,7 @@ public class HousePartsData {
 				String tag = iterator.next();
 				List<HousePart> parts = partsByTags.get(tag);
 				if (parts == null) {
-					parts = new ArrayList<HousePart>();
+					parts = new ArrayList<>();
 					partsByTags.put(tag, parts);
 				}
 				parts.add(part);

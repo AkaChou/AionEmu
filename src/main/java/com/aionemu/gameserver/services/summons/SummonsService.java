@@ -307,12 +307,7 @@ public class SummonsService {
 				if (target instanceof Creature lastAttacker) {
 					if (!master.getLifeStats().isAlreadyDead() && !lastAttacker.getLifeStats().isAlreadyDead()
 							&& isAttacked) {
-						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-							@Override
-							public void run() {
-								lastAttacker.getAggroList().addHate(master, 1);
-							}
-						}, 1000);
+						GameThreadPoolServices.threadPoolManager().schedule(() -> lastAttacker.getAggroList().addHate(master, 1), 1000);
 					}
 				}
 				break;

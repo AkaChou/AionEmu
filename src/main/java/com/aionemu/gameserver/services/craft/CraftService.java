@@ -204,28 +204,25 @@ public class CraftService {
 		};
 		player.getObserveController().attach(observer);
 		player.setCraftObserver(observer);
-		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
-			@Override
-			public void run() {
-				int xpReward = (2 * (recipeTemplate.getSkillpoint() + 100) * (recipeTemplate.getSkillpoint() + 100) + 60);
-				long remaining = ItemService.addItem(player, recipeTemplate.getProductid(), (long) recipeTemplate.getQuantity() * productCount, new ItemUpdatePredicate(ItemAddType.AETHERFORGING, ItemUpdateType.INC_ITEM_COLLECT));
-				if (remaining != 0) {
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
-					player.getObserveController().removeObserver(observer);
-					player.setCraftObserver(null);
-					PacketSendUtility.broadcastPacket(player, new SM_AETHERFORGING_ANIMATION(player, recipeTemplate.getId(), 0, 1), true);
-					return;
-				}
-				if (Rnd.get(1, 10) == 10 && player.getSkillList().getSkillLevel(40011) != 300) {
-					player.getObserveController().removeObserver(observer);
-					player.getCommonData().addExp(xpReward, RewardType.CRAFTING);
-					player.getSkillList().addSkill(player, 40011, player.getSkillList().getSkillLevel(40011) + 1);
-				}
+		player.getController().scheduleTask(TaskId.ITEM_USE, () -> {
+			int xpReward = (2 * (recipeTemplate.getSkillpoint() + 100) * (recipeTemplate.getSkillpoint() + 100) + 60);
+			long remaining = ItemService.addItem(player, recipeTemplate.getProductid(), (long) recipeTemplate.getQuantity() * productCount, new ItemUpdatePredicate(ItemAddType.AETHERFORGING, ItemUpdateType.INC_ITEM_COLLECT));
+			if (remaining != 0) {
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
 				player.getObserveController().removeObserver(observer);
 				player.setCraftObserver(null);
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CRAFT_SUCCESS_GETEXP);
-				PacketSendUtility.sendPacket(player, new SM_AETHERFORGING_ANIMATION(player, recipeTemplate.getId(), 0, 2));
+				PacketSendUtility.broadcastPacket(player, new SM_AETHERFORGING_ANIMATION(player, recipeTemplate.getId(), 0, 1), true);
+				return;
 			}
+			if (Rnd.get(1, 10) == 10 && player.getSkillList().getSkillLevel(40011) != 300) {
+				player.getObserveController().removeObserver(observer);
+				player.getCommonData().addExp(xpReward, RewardType.CRAFTING);
+				player.getSkillList().addSkill(player, 40011, player.getSkillList().getSkillLevel(40011) + 1);
+			}
+			player.getObserveController().removeObserver(observer);
+			player.setCraftObserver(null);
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CRAFT_SUCCESS_GETEXP);
+			PacketSendUtility.sendPacket(player, new SM_AETHERFORGING_ANIMATION(player, recipeTemplate.getId(), 0, 2));
 		}, 3000);
 	}
 

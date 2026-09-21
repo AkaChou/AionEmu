@@ -20,7 +20,7 @@ public class CancellationToken {
 	 * 取消时待执行的回调队列。
 	 * Queue of callbacks to run on cancellation.
 	 */
-	private final Queue<Runnable> _cancelActions = new ConcurrentLinkedQueue<Runnable>();
+	private final Queue<Runnable> _cancelActions = new ConcurrentLinkedQueue<>();
 
 	/**
 	 * 创建未取消状态的令牌。

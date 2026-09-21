@@ -44,12 +44,7 @@ public class LoginServer {
             return;
         }
         new File("./log/backup/").mkdirs();
-        File[] files = new File("log").listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".log");
-            }
-        });
+        File[] files = new File("log").listFiles((dir, name) -> name.endsWith(".log"));
 
         if (files != null && files.length > 0) {
             byte[] buf = new byte[1024];

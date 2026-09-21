@@ -25,13 +25,9 @@ public class TualisDrainedMinionAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void startLifeTask() {
-		lifeTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				if (!isAlreadyDead()) {
-					AI2Actions.deleteOwner(TualisDrainedMinionAI2.this);
-				}
+		lifeTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isAlreadyDead()) {
+				AI2Actions.deleteOwner(TualisDrainedMinionAI2.this);
 			}
 		}, 30000);
 	}

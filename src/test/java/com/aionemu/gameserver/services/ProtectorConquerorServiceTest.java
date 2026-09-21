@@ -30,7 +30,7 @@ class ProtectorConquerorServiceTest {
 
 	@BeforeEach
 	void setUp() throws ReflectiveOperationException {
-		oldHandledWorlds = new LinkedHashMap<Integer, ProtectorConquerorService.WorldType>(handledWorlds());
+		oldHandledWorlds = new LinkedHashMap<>(handledWorlds());
 		CustomConfig.PROTECTOR_CONQUEROR_ENABLE = true;
 		CustomConfig.PROTECTOR_CONQUEROR_DECREASE = 2;
 		handledWorlds().clear();
@@ -47,10 +47,10 @@ class ProtectorConquerorServiceTest {
 	@Test
 	void decayRemovesExpiredEntriesWithoutConcurrentModification() throws Exception {
 		ProtectorConquerorService service = new ProtectorConquerorService();
-		Map<Integer, Protector> protectors = new LinkedHashMap<Integer, Protector>();
+		Map<Integer, Protector> protectors = new LinkedHashMap<>();
 		protectors.put(1, protector(player(1), 1));
 		protectors.put(2, protector(player(2), 1));
-		Map<Integer, Conqueror> conquerors = new LinkedHashMap<Integer, Conqueror>();
+		Map<Integer, Conqueror> conquerors = new LinkedHashMap<>();
 		conquerors.put(3, conqueror(player(3), 1));
 		conquerors.put(4, conqueror(player(4), 1));
 		setField(service, "protectors", protectors);

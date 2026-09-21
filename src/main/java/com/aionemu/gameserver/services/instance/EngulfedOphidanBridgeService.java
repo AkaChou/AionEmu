@@ -31,7 +31,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class EngulfedOphidanBridgeService {
 	private static volatile ObjectProvider<EngulfedOphidanBridgeService> instanceProvider;
 	private boolean registerAvailable;
-	private final List<Integer> playersWithCooldown = new ArrayList<Integer>();
+	private final List<Integer> playersWithCooldown = new ArrayList<>();
 	public static final byte minLevel = 61, capLevel = 66;
 	public static final int maskId = 108;
 
@@ -43,54 +43,38 @@ public class EngulfedOphidanBridgeService {
 		if (AutoGroupConfig.OPHIDAN_ENABLED) {
 			log.info(I18n.get("log.cc3f8b52924a"));
 			// 被吞没的奥菲丹桥 二/四/六 12:00–13:00 / Engulfed Ophidan Bridge TUE-THU-SAT "12PM-1PM"
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				/**
-				 * 执行任务。
-				 * Runs the task.
-				 */
-				public void run() {
-					startOphidanRegistration();
-				}
-			}, AutoGroupConfig.OPHIDAN_SCHEDULE_MIDDAY);
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */GameCronServices.cronService().schedule(() -> startOphidanRegistration(), AutoGroupConfig.OPHIDAN_SCHEDULE_MIDDAY);
 			// 被吞没的奥菲丹桥 二/四/六 23:00–00:00 / Engulfed Ophidan Bridge TUE-THU-SAT "11PM-0AM"
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				/**
-				 * 执行任务。
-				 * Runs the task.
-				 */
-				public void run() {
-					startOphidanRegistration();
-				}
-			}, AutoGroupConfig.OPHIDAN_SCHEDULE_MIDNIGHT);
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */GameCronServices.cronService().schedule(() -> startOphidanRegistration(), AutoGroupConfig.OPHIDAN_SCHEDULE_MIDNIGHT);
 		}
 	}
 
 	private void startUregisterOphidanTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */
-			public void run() {
-				registerAvailable = false;
-				playersWithCooldown.clear();
-				GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskId);
-				Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
-				while (iter.hasNext()) {
-					Player player = iter.next();
-					if (player.getLevel() > minLevel) {
-						int instanceMaskId = getInstanceMaskId(player);
-						if (instanceMaskId > 0) {
-							PacketSendUtility.sendPacket(player,
-									new SM_AUTO_GROUP(instanceMaskId, SM_AUTO_GROUP.wnd_EntryIcon, true));
-						}
-					}
-				}
-			}
-		}, AutoGroupConfig.OPHIDAN_TIMER * 60 * 1000);
+		/**
+		 * 执行任务。
+		 * Runs the task.
+		 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			 registerAvailable = false;
+			 playersWithCooldown.clear();
+			 GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskId);
+			 Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+			 while (iter.hasNext()) {
+				 Player player = iter.next();
+				 if (player.getLevel() > minLevel) {
+					 int instanceMaskId = getInstanceMaskId(player);
+					 if (instanceMaskId > 0) {
+						 PacketSendUtility.sendPacket(player,
+								 new SM_AUTO_GROUP(instanceMaskId, SM_AUTO_GROUP.wnd_EntryIcon, true));
+					 }
+				 }
+			 }
+		 }, AutoGroupConfig.OPHIDAN_TIMER * 60 * 1000);
 	}
 
 	private void startOphidanRegistration() {

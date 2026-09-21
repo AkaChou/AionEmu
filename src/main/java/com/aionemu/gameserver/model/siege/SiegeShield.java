@@ -26,7 +26,7 @@ import lombok.Setter;
 @Setter
 public class SiegeShield implements ZoneHandler {
 
-	Map<Integer, ActionObserver> observed = new ConcurrentHashMap<Integer, ActionObserver>();
+	Map<Integer, ActionObserver> observed = new ConcurrentHashMap<>();
 	/** 获取几何。 / Returns the geometry. */
 	private final Spatial geometry;
 	/** 返回攻城地点 ID / Returns the siege location id */

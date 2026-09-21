@@ -50,13 +50,10 @@ public class Garden_Temple_Bind_PointAI2 extends NpcAI2
     }
 
 	private void announceGardenTemple() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 花园神殿的绑定点装置已激活。 / The Garden Temple's bind point device was activated.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_12);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 花园神殿的绑定点装置已激活。 / The Garden Temple's bind point device was activated.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_12);
 			}
 		});
 	}

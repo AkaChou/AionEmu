@@ -24,7 +24,7 @@ public class AetherMineQInstance extends GeneralInstanceHandler
 	/** 刷怪种族 / spawn race */
 	private Race spawnRace;
 		/** 对象 / objects */
-		private final Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+		private final Map<Integer, VisibleObject> objects = new LinkedHashMap<>();
 
 	/**
 	 * 玩家进入副本时处理。

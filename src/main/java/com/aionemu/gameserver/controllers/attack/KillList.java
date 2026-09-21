@@ -24,7 +24,7 @@ public class KillList {
 	 * Creates an empty kill list.
 	 */
 	public KillList() {
-		killList = new LinkedHashMap<Integer, List<Long>>();
+		killList = new LinkedHashMap<>();
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class KillList {
 	public void addKillFor(int victimId) {
 		List<Long> killTimes = killList.get(victimId);
 		if (killTimes == null) {
-			killTimes = new ArrayList<Long>();
+			killTimes = new ArrayList<>();
 			killList.put(victimId, killTimes);
 		}
 

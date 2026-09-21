@@ -88,13 +88,18 @@ public class Summon extends Creature {
 	}
 
 	static SkillElement getAlwaysResistElement(String name) {
-		return switch (name) {
-			case "earth spirit" -> SkillElement.EARTH;
-			case "fire spirit" -> SkillElement.FIRE;
-			case "water spirit" -> SkillElement.WATER;
-			case "wind spirit" -> SkillElement.WIND;
-			default -> SkillElement.NONE;
-		};
+        switch (name) {
+            case "earth spirit":
+                return SkillElement.EARTH;
+            case "fire spirit":
+                return SkillElement.FIRE;
+            case "water spirit":
+                return SkillElement.WATER;
+            case "wind spirit":
+                return SkillElement.WIND;
+            default:
+                return SkillElement.NONE;
+        }
 	}
 
 	@Override

@@ -59,12 +59,7 @@ public class SummonTrapEffect extends SummonEffect {
 		maxTraps(effector);
 		SpawnTemplate spawn = SpawnEngine.addNewSingleTimeSpawn(worldId, npcId, x, y, z, heading);
 		final Trap trap = VisibleObjectSpawner.spawnTrap(spawn, instanceId, effector);
-		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				trap.getController().onDelete();
-			}
-		}, time * 1000L);
+		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> trap.getController().onDelete(), time * 1000L);
 		trap.getController().addTask(TaskId.DESPAWN, task);
 	}
 

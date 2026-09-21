@@ -34,7 +34,7 @@ public class HouseSpawns implements Comparable<HouseSpawns> {
 	/** 获取刷新。 / Returns the spawns. */
 	public List<HouseSpawn> getSpawns() {
 		if (spawns == null) {
-			spawns = new ArrayList<HouseSpawn>();
+			spawns = new ArrayList<>();
 		}
 		return spawns;
 	}

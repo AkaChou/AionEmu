@@ -20,7 +20,7 @@ public final class PlayerCPList {
 	private final Map<Integer, PlayerCPEntry> entry;
 
 	public PlayerCPList() {
-		this.entry = new HashMap<Integer, PlayerCPEntry>(0);
+		this.entry = new HashMap<>(0);
 	}
 
 	public PlayerCPList(List<PlayerCPEntry> entries) {
@@ -32,7 +32,7 @@ public final class PlayerCPList {
 
 	/** 返回全部创意点 / Returns the all cp*/
 	public PlayerCPEntry[] getAllCP() {
-		List<PlayerCPEntry> allCp = new ArrayList<PlayerCPEntry>();
+		List<PlayerCPEntry> allCp = new ArrayList<>();
 		allCp.addAll(entry.values());
 		return allCp.toArray(new PlayerCPEntry[allCp.size()]);
 	}

@@ -25,7 +25,7 @@ public class SM_SHIELD_EFFECT extends AionServerPacket {
 	 * location id
 	 */
 	public SM_SHIELD_EFFECT(int location) {
-		this.locations = new ArrayList<SiegeLocation>();
+		this.locations = new ArrayList<>();
 		this.locations.add(GameFeatureServices.siegeService().getSiegeLocation(location));
 	}
 

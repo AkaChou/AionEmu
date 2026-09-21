@@ -39,7 +39,7 @@ public class AbyssSpecialLandingDAO extends com.aionemu.gameserver.dao.AbyssSpec
     @Override
     public boolean loadLandingSpecialLocations(final Map<Integer, LandingSpecialLocation> locations) {
         boolean success = true;
-        List<Integer> loaded = new ArrayList<Integer>();
+        List<Integer> loaded = new ArrayList<>();
 
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(SELECT_QUERY);

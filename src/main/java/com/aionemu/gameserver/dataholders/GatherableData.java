@@ -27,7 +27,7 @@ public class GatherableData {
 	private List<GatherableTemplate> gatherables;
 
 	/** 全部采集物模板的 ID 索引 / ID index of all gatherable templates */
-	private final IntObjectHashMap<GatherableTemplate> gatherableData = new IntObjectHashMap<GatherableTemplate>();
+	private final IntObjectHashMap<GatherableTemplate> gatherableData = new IntObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，排序材料列表并按模板 ID 建立索引。

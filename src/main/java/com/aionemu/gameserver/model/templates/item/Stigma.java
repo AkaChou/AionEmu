@@ -30,7 +30,7 @@ public class Stigma {
 
 	/** 返回技能 / Returns the skills */
 	public List<StigmaSkill> getSkills() {
-		List<StigmaSkill> list = new ArrayList<StigmaSkill>();
+		List<StigmaSkill> list = new ArrayList<>();
 		for (String st : skill) {
 			String[] array = st.split(":");
 			list.add(new StigmaSkill(Integer.parseInt(array[0]), Integer.parseInt(array[1])));
@@ -40,7 +40,7 @@ public class Stigma {
 
 	/** 返回技能 ID 列表（仅 ID）/ Returns the skill ids only */
 	public List<Integer> getSkillIdOnly() {
-		List<Integer> ids = new ArrayList<Integer>();
+		List<Integer> ids = new ArrayList<>();
 		List<String> skill = this.skill;
 		if (skill.size() != 1) {
 			String[] tempArray = new String[0];
@@ -65,7 +65,7 @@ public class Stigma {
 	/** 返回所需技能 / Returns the require skill */
 	public List<RequireSkill> getRequireSkill() {
 		if (requireSkill == null) {
-			requireSkill = new ArrayList<RequireSkill>();
+			requireSkill = new ArrayList<>();
 		}
 		return this.requireSkill;
 	}

@@ -44,15 +44,15 @@ class TowerOfEternityServiceTest {
 	}
 
 	private static TowerOfEternity<TowerOfEternityLocation> tower() {
-		return new TowerOfEternity<TowerOfEternityLocation>(null) {
-			@Override
-			protected void startTowerOfEternity() {
-			}
+		return new TowerOfEternity<>(null) {
+            @Override
+            protected void startTowerOfEternity() {
+            }
 
-			@Override
-			protected void stopTowerOfEternity() {
-			}
-		};
+            @Override
+            protected void stopTowerOfEternity() {
+            }
+        };
 	}
 
 	@SuppressWarnings("unchecked")

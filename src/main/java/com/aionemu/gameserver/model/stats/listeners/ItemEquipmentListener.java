@@ -119,7 +119,7 @@ public class ItemEquipmentListener {
 		if (randomStats != null) {
 			randomStats.onUnEquip(owner);
 		}
-		
+
 		/**
 	 * 卸装时强化技能须与效果一并移除，仅保留长期技能效果。 / onItemUnequipment Amplify skill must be removed same as effect. We leave only effects from long time playing skills. after that we must to update passive skills stats
 	 */
@@ -240,7 +240,7 @@ public class ItemEquipmentListener {
 	 * 按规则过滤属性：融合属性仅取自一把武器等。 / Filter stats based on the following rules:<br> 1) don't include fusioned stats which will be taken only from 1 weapon <br> 2) wrap stats which are different for MAIN and OFF hands<br> 3) add the rest<br>.
 	 */
 	private static List<StatFunction> wrapModifiers(Item item, List<StatFunction> modifiers) {
-		List<StatFunction> allModifiers = new ArrayList<StatFunction>();
+		List<StatFunction> allModifiers = new ArrayList<>();
 		for (StatFunction modifier : modifiers) {
 			switch (modifier.getName()) {
 			// 为何被移除见 DuplicateStatFunction / why they are removed look at DuplicateStatFunction

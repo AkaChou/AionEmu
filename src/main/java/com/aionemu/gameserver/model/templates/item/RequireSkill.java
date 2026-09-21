@@ -24,7 +24,7 @@ public class RequireSkill {
 	/** 返回技能 ID 列表 / Returns the skill ids */
 	public List<Integer> getSkillIds() {
 		if (skillIds == null) {
-			skillIds = new ArrayList<Integer>();
+			skillIds = new ArrayList<>();
 		}
 		return this.skillIds;
 	}

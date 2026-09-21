@@ -42,7 +42,7 @@ public class MailTemplate {
 	protected Race race;
 
 	@XmlTransient
-	private final Map<MailPartType, MailPart> mailPartsMap = new HashMap<MailPartType, MailPart>();
+	private final Map<MailPartType, MailPart> mailPartsMap = new HashMap<>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (MailPart part : mailParts) {

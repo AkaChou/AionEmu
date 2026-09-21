@@ -44,7 +44,7 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
         /** 副本是否已开始 / whether the instance started */
         protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
         /** hot 任务 / hot task */
-        private final List<Future<?>> hotTask = new ArrayList<Future<?>>();
+        private final List<Future<?>> hotTask = new ArrayList<>();
     /**
      * 返回玩家奖励记录。
      * Return the player's reward record.
@@ -260,7 +260,7 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
              */
             @Override
             public void run() {
-                instance.doOnAllPlayers(new Visitor<Player>() {
+                instance.doOnAllPlayers(new Visitor<>() {
                     /**
                      * 处理 visit。
                      * Handle visit.

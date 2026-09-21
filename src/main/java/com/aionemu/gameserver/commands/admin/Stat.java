@@ -49,7 +49,7 @@ public class Stat extends AdminCommand {
 				// The facade returns a read-only view guarded by the stats lock; the admin command does not take
 				// that lock, so it copies the view before iterating.
 				TreeSet<IStatFunction> stats =
-					new TreeSet<IStatFunction>(creature.getGameStats().getStatsByStatEnum(StatEnum.valueOf(params[0])));
+                        new TreeSet<>(creature.getGameStats().getStatsByStatEnum(StatEnum.valueOf(params[0])));
 
 				if (params.length == 1) {
 					for (IStatFunction stat : stats) {

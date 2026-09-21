@@ -21,8 +21,8 @@ import com.aionemu.gameserver.world.WorldMapInstance;
  */
 
 public class AutoHarmonyInstance extends AutoInstance {
-	private final List<AGPlayer> group1 = new ArrayList<AGPlayer>();
-	private final List<AGPlayer> group2 = new ArrayList<AGPlayer>();
+	private final List<AGPlayer> group1 = new ArrayList<>();
+	private final List<AGPlayer> group2 = new ArrayList<>();
 
 	/** 副本创建 / On Instance Create*/
 	@Override
@@ -130,7 +130,7 @@ public class AutoHarmonyInstance extends AutoInstance {
 	}
 
 	private List<Player> getPlayerFromGroup(List<AGPlayer> group) {
-		List<Player> _players = new ArrayList<Player>();
+		List<Player> _players = new ArrayList<>();
 		for (AGPlayer agp : group) {
 			for (Player p : instance.getPlayersInside()) {
 				if (p.getObjectId().equals(agp.getObjectId())) {

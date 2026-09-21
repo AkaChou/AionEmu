@@ -53,10 +53,10 @@ public class ZoneData {
 	public List<ZoneTemplate> zoneList;
 
 	@XmlTransient
-	private final IntObjectHashMap<List<ZoneInfo>> zoneNameMap = new IntObjectHashMap<List<ZoneInfo>>();
+	private final IntObjectHashMap<List<ZoneInfo>> zoneNameMap = new IntObjectHashMap<>();
 
 	@XmlTransient
-	private final HashMap<ZoneTemplate, Integer> weatherZoneIds = new HashMap<ZoneTemplate, Integer>();
+	private final HashMap<ZoneTemplate, Integer> weatherZoneIds = new HashMap<>();
 
 	@XmlTransient
 	private int count;
@@ -91,7 +91,7 @@ public class ZoneData {
 			if (area != null) {
 				List<ZoneInfo> zones = zoneNameMap.get(zone.getMapid());
 				if (zones == null) {
-					zones = new ArrayList<ZoneInfo>();
+					zones = new ArrayList<>();
 					zoneNameMap.put(zone.getMapid(), zones);
 				}
 				if (zone.getZoneType() == ZoneClassName.WEATHER) {

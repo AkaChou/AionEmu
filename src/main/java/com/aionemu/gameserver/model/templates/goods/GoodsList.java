@@ -32,7 +32,7 @@ public class GoodsList {
 	private List<Integer> itemIdList;
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		itemIdList = new ArrayList<Integer>();
+		itemIdList = new ArrayList<>();
 		if (items == null) {
 			return;
 		}

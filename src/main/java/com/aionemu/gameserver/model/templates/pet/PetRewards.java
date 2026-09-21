@@ -37,7 +37,7 @@ public class PetRewards {
 	/** 返回奖励结果列表 / Returns the results */
 	public List<PetFeedResult> getResults() {
 		if (results == null) {
-			results = new ArrayList<PetFeedResult>();
+			results = new ArrayList<>();
 		}
 		return this.results;
 	}

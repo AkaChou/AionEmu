@@ -99,7 +99,7 @@ public abstract class CreatureGameStats<T extends Creature> {
 				if (lock == null) {
 					lock = new ReentrantReadWriteLock();
 				}
-				stats = new LinkedHashMap<StatEnum, TreeSet<IStatFunction>>();
+				stats = new LinkedHashMap<>();
 			}
 			return stats;
 		}
@@ -133,7 +133,7 @@ public abstract class CreatureGameStats<T extends Creature> {
 		try {
 			for (IStatFunction function : functions) {
 				if (!current.containsKey(function.getName())) {
-					current.put(function.getName(), new TreeSet<IStatFunction>());
+					current.put(function.getName(), new TreeSet<>());
 				}
 				IStatFunction func = function;
 				if (function instanceof StatFunction) {
@@ -528,7 +528,7 @@ public abstract class CreatureGameStats<T extends Creature> {
 		for (IStatFunction func : allStats) {
 			if (func.getPriority() >= Integer.MAX_VALUE - 10) {
 				if (setFuncs == null) {
-					setFuncs = new TreeSet<IStatFunction>();
+					setFuncs = new TreeSet<>();
 				}
 				setFuncs.add(func);
 			} else if (setFuncs != null) {

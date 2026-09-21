@@ -126,7 +126,7 @@ public class InGameShopEn {
 	/** 返回 top sales / Returns the top sales */
 	public List<Integer> getTopSales(int subCategory, byte category) {
 		byte max = 6;
-		TreeMap<Integer, Integer> map = new TreeMap<Integer, Integer>(new DescFilter());
+		TreeMap<Integer, Integer> map = new TreeMap<>(new DescFilter());
 		if (!items.containsKey(category)) {
 			return new ArrayList<>();
 		}

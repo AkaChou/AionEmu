@@ -92,7 +92,7 @@ public class PlayerController extends CreatureController<Player> {
 	private long lastAttackedMilis = 0;
 	private int stance = 0;
 	private int stanceType = 0;
-	private final Map<Integer, VisibleObject> autoPortals = new LinkedHashMap<Integer, VisibleObject>();
+	private final Map<Integer, VisibleObject> autoPortals = new LinkedHashMap<>();
 
 	/**
 	 * 玩家看到其他可见对象时同步状态包。
@@ -1167,13 +1167,10 @@ public class PlayerController extends CreatureController<Player> {
 	 * leveling player
 	 */
 	public static final void reachedPlayerLvl(final Player player) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player players) {
-				// “玩家名”已达到 %1 级。 / "Player Name" has reached level %1.
-				byte playerLevel = player.getLevel();
-				PacketSendUtility.sendPacket(players, new SM_SYSTEM_MESSAGE(1300086, player.getName(), playerLevel));
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(players -> {
+			// “玩家名”已达到 %1 级。 / "Player Name" has reached level %1.
+			byte playerLevel = player.getLevel();
+			PacketSendUtility.sendPacket(players, new SM_SYSTEM_MESSAGE(1300086, player.getName(), playerLevel));
 		});
 	}
 
@@ -1191,12 +1188,7 @@ public class PlayerController extends CreatureController<Player> {
 			AttackUtil.cancelCastOn(getOwner());
 			AttackUtil.removeTargetFrom(getOwner());
 			PacketSendUtility.broadcastPacket(getOwner(), new SM_PLAYER_STATE(getOwner()), true);
-			Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					stopProtectionActiveTask();
-				}
-			}, 60000);
+			Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> stopProtectionActiveTask(), 60000);
 			addTask(TaskId.PROTECTION_ACTIVE, task);
 		}
 	}

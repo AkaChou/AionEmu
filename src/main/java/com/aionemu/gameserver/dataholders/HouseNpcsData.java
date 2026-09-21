@@ -29,7 +29,7 @@ public class HouseNpcsData {
 	protected List<HouseSpawns> houseSpawnsData;
 
 	@XmlTransient
-	private final IntObjectHashMap<List<HouseSpawn>> houseSpawnsByAddressId = new IntObjectHashMap<List<HouseSpawn>>();
+	private final IntObjectHashMap<List<HouseSpawn>> houseSpawnsByAddressId = new IntObjectHashMap<>();
 
 	/**
 	 * 返回房屋刷怪配置列表；若尚未初始化则创建空列表。
@@ -39,7 +39,7 @@ public class HouseNpcsData {
 	 */
 	public List<HouseSpawns> getHouseSpawns() {
 		if (houseSpawnsData == null) {
-			houseSpawnsData = new ArrayList<HouseSpawns>();
+			houseSpawnsData = new ArrayList<>();
 		}
 		return houseSpawnsData;
 	}

@@ -48,13 +48,13 @@ public class LadderService {
 	/** Spring 实例提供者 / Spring instance provider */
 	private static volatile ObjectProvider<LadderService> instanceProvider;
 	/** 活动战场排队列表。 / Event battleground queue list. */
-	private final List<AionObject> eventQueueList = Collections.synchronizedList(new ArrayList<AionObject>());
+	private final List<AionObject> eventQueueList = Collections.synchronizedList(new ArrayList<>());
 	/** 普通战场排队列表。 / Normal battleground queue list. */
-	private final List<AionObject> normalQueueList = Collections.synchronizedList(new ArrayList<AionObject>());
+	private final List<AionObject> normalQueueList = Collections.synchronizedList(new ArrayList<>());
 	/** 当前 battleground 映射 bgIdbattleground / Active battleground map (bgId → battleground) */
-	private final Map<Integer, Battleground> bgMap = Collections.synchronizedMap(new LinkedHashMap<Integer, Battleground>());
+	private final Map<Integer, Battleground> bgMap = Collections.synchronizedMap(new LinkedHashMap<>());
 	/** 普通战场与事件引擎关联映射。 / Map linking normal BGs to event engine instances. */
-	private final Map<Integer, Event> normalBgMap = Collections.synchronizedMap(new LinkedHashMap<Integer, Event>());
+	private final Map<Integer, Event> normalBgMap = Collections.synchronizedMap(new LinkedHashMap<>());
 	/** 当前活动战场模板。 / Current event battleground template. */
 	private Battleground eventBg = null;
 	/** 活动报名截止任务。 / Event registration deadline task. */
@@ -77,12 +77,7 @@ public class LadderService {
 	 * Constructs the service and starts periodic rank updates.
 	 */
 	public LadderService() {
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				UpdateRanks();
-			}
-		}, rankUpdateInterval * 60 * 1000, rankUpdateInterval * 60 * 1000);
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> UpdateRanks(), rankUpdateInterval * 60 * 1000, rankUpdateInterval * 60 * 1000);
 		log.info(I18n.get("log.feb60173643c"));
 	}
 
@@ -368,27 +363,16 @@ public class LadderService {
 		normalQueueList.clear();
 		announceAll(
 				"[BG Open] Register with the button located on the right of your skill bar. You have <2 Minutes> to register!!!");
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player pl) {
-				if (pl.getBattleground() == null && !isInQueue(pl) && !GameFeatureServices.ffaService().isInArena(pl)) {
-					PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(301550000, true));
-				}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
+			if (pl.getBattleground() == null && !isInQueue(pl) && !GameFeatureServices.ffaService().isInArena(pl)) {
+				PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(301550000, true));
 			}
 		});
-		normalTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				HandleNormalQueue(event);
-				normalReady = false;
-				normalTask = null;
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player pl) {
-						PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(301550000, false));
-					}
-				});
-			}
+		normalTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			HandleNormalQueue(event);
+			normalReady = false;
+			normalTask = null;
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(301550000, false)));
 		}, (normalTeamBased ? 60 : 30) * 1000);
 		return true;
 	}
@@ -419,27 +403,16 @@ public class LadderService {
 			announceAll("WARNING!!! " + bg.getName()
 					+ "The event start in 30 seconds ! Register you by using the right button on your skill bars!!!");
 		}
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player pl) {
-				if (pl.getBattleground() == null && !isInQueue(pl)) {
-					PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(300350000, true));
-				}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
+			if (pl.getBattleground() == null && !isInQueue(pl)) {
+				PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(300350000, true));
 			}
 		});
-		eventTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player pl) {
-						PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(300350000, false));
-					}
-				});
-				HandleEventQueue();
-				eventTask.cancel(false);
-				eventTask = null;
-			}
+		eventTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(300350000, false)));
+			HandleEventQueue();
+			eventTask.cancel(false);
+			eventTask = null;
 		}, (eventTeamBased ? 60 : 30) * 1000);
 		return true;
 	}
@@ -451,44 +424,43 @@ public class LadderService {
 	 * @param event 战场事件 / battleground event
 	 */
 	private void HandleNormalQueue(BattlegroundEvent event) {
-		List<List<Player>> validGroups = new ArrayList<List<Player>>();
-		List<Integer> validParticipants = new ArrayList<Integer>();
+		List<List<Player>> validGroups = new ArrayList<>();
+		List<Integer> validParticipants = new ArrayList<>();
 		for (AionObject ao : queueSnapshot(normalQueueList)) {
-			if (ao == null) {
-				continue;
-			}
-			if (ao instanceof Player pl) {
-				PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(2, 301550000, 0));
-				if (!pl.isOnline() || pl.getBattleground() != null) {
-					continue;
-				}
-				validGroups.add(List.of(pl));
-				validParticipants.add(pl.getObjectId());
-			} else if (ao instanceof PlayerGroup group) {
-				boolean add = true;
-				for (Player pl : group.getMembers()) {
-					PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(2, 301550000, 0));
-					if (!pl.isOnline() || pl.getBattleground() != null) {
-						add = false;
-					}
-				}
-				if (add && normalTeamBased) {
-					validGroups.add(new ArrayList<Player>() {
-						{
-							addAll(group.getMembers());
-						}
-					});
-				}
-			}
+            switch (ao) {
+                case null:
+                    continue;
+                case Player pl:
+                    PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(2, 301550000, 0));
+                    if (!pl.isOnline() || pl.getBattleground() != null) {
+                        continue;
+                    }
+                    validGroups.add(List.of(pl));
+                    validParticipants.add(pl.getObjectId());
+                    break;
+                case PlayerGroup group:
+                    boolean add = true;
+                    for (Player pl : group.getMembers()) {
+                        PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(2, 301550000, 0));
+                        if (!pl.isOnline() || pl.getBattleground() != null) {
+                            add = false;
+                        }
+                    }
+                    if (add && normalTeamBased) {
+                        validGroups.add(new ArrayList<>() {
+                            {
+                                addAll(group.getMembers());
+                            }
+                        });
+                    }
+                    break;
+                default:
+                    break;
+            }
 		}
 		if (normalTeamBased) {
 			Collections.shuffle(validGroups);
-			Collections.sort(validGroups, new Comparator<List<Player>>() {
-				@Override
-				public int compare(List<Player> o1, List<Player> o2) {
-					return -Integer.valueOf(o1.size()).compareTo(Integer.valueOf(o2.size()));
-				}
-			});
+			Collections.sort(validGroups, (o1, o2) -> -Integer.valueOf(o1.size()).compareTo(Integer.valueOf(o2.size())));
 		} else {
 			Collections.shuffle(validParticipants);
 			SortParticipantList(validParticipants);
@@ -499,14 +471,14 @@ public class LadderService {
 			Battleground bg = getRandomBg(normalTeamBased);
 			bg.setTeamBased(normalTeamBased);
 			if (normalTeamBased) {
-				List<List<Player>> usedGroups = new ArrayList<List<Player>>();
-				List<List<Player>> groups = new ArrayList<List<Player>>();
-				List<Integer> participants = new ArrayList<Integer>();
+				List<List<Player>> usedGroups = new ArrayList<>();
+				List<List<Player>> groups = new ArrayList<>();
+				List<Integer> participants = new ArrayList<>();
 				if (validGroups.size() < bg.getTeamCount()) {
 					continue;
 				}
 				for (int i = 0; i < bg.getTeamCount(); i++) {
-					groups.add(new ArrayList<Player>());
+					groups.add(new ArrayList<>());
 					for (List<Player> group : validGroups) {
 						if (!usedGroups.contains(group) && group.size() <= bg.getMaxSize()) {
 							groups.set(i, cloneGroup(group));
@@ -588,8 +560,8 @@ public class LadderService {
 	 * Processes event-queue matchmaking and creates battlegrounds.
 	 */
 	private void HandleEventQueue() {
-		List<List<Player>> validGroups = new ArrayList<List<Player>>();
-		List<Integer> validParticipants = new ArrayList<Integer>();
+		List<List<Player>> validGroups = new ArrayList<>();
+		List<Integer> validParticipants = new ArrayList<>();
 		for (AionObject ao : queueSnapshot(eventQueueList)) {
 			if (ao != null && ao instanceof Player pl) {
 				PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(2, 300350000, 0));
@@ -607,7 +579,7 @@ public class LadderService {
 					}
 				}
 				if (add && eventTeamBased) {
-					validGroups.add(new ArrayList<Player>() {
+					validGroups.add(new ArrayList<>() {
 						{
 							addAll(group.getMembers());
 						}
@@ -617,12 +589,7 @@ public class LadderService {
 		}
 		if (eventTeamBased) {
 			Collections.shuffle(validGroups);
-			Collections.sort(validGroups, new Comparator<List<Player>>() {
-				@Override
-				public int compare(List<Player> o1, List<Player> o2) {
-					return -Integer.valueOf(o1.size()).compareTo(Integer.valueOf(o2.size()));
-				}
-			});
+			Collections.sort(validGroups, (o1, o2) -> -Integer.valueOf(o1.size()).compareTo(Integer.valueOf(o2.size())));
 		} else {
 			Collections.shuffle(validParticipants);
 			SortParticipantList(validParticipants);
@@ -640,14 +607,14 @@ public class LadderService {
 			bg.setTeamBased(eventTeamBased);
 			bg.setIsEvent(true);
 			if (eventTeamBased) {
-				List<List<Player>> usedGroups = new ArrayList<List<Player>>();
-				List<List<Player>> groups = new ArrayList<List<Player>>();
-				List<Integer> participants = new ArrayList<Integer>();
+				List<List<Player>> usedGroups = new ArrayList<>();
+				List<List<Player>> groups = new ArrayList<>();
+				List<Integer> participants = new ArrayList<>();
 				if (validGroups.size() < bg.getTeamCount()) {
 					continue;
 				}
 				for (int i = 0; i < bg.getTeamCount(); i++) {
-					groups.add(new ArrayList<Player>());
+					groups.add(new ArrayList<>());
 					for (List<Player> group : validGroups) {
 						if (!usedGroups.contains(group) && group.size() <= bg.getMaxSize()) {
 							groups.set(i, cloneGroup(group));
@@ -753,12 +720,7 @@ public class LadderService {
 			eventQueueList.clear();
 			eventTask = null;
 			eventReady = false;
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player pl) {
-					PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(300350000, false));
-				}
-			});
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(300350000, false)));
 			announceAll("The event was canceled!!!");
 		}
 	}
@@ -770,12 +732,9 @@ public class LadderService {
 	 * message
 	 */
 	private void announceAll(final String msg) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.getBattleground() == null && !GameFeatureServices.ffaService().isInArena(player)) {
-					PacketSendUtility.sendSys3Message(player, "\uE05C", msg);
-				}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			if (player.getBattleground() == null && !GameFeatureServices.ffaService().isInArena(player)) {
+				PacketSendUtility.sendSys3Message(player, "\uE05C", msg);
 			}
 		});
 	}
@@ -833,7 +792,7 @@ public class LadderService {
 	 */
 	public Map<Integer, Battleground> getBattlegrounds() {
 		synchronized (bgMap) {
-			return Collections.unmodifiableMap(new LinkedHashMap<Integer, Battleground>(bgMap));
+			return Collections.unmodifiableMap(new LinkedHashMap<>(bgMap));
 		}
 	}
 
@@ -845,7 +804,7 @@ public class LadderService {
 	 */
 	private List<Battleground> battlegroundsSnapshot() {
 		synchronized (bgMap) {
-			return new ArrayList<Battleground>(bgMap.values());
+			return new ArrayList<>(bgMap.values());
 		}
 	}
 
@@ -858,7 +817,7 @@ public class LadderService {
 	 */
 	private List<AionObject> queueSnapshot(List<AionObject> queue) {
 		synchronized (queue) {
-			return new ArrayList<AionObject>(queue);
+			return new ArrayList<>(queue);
 		}
 	}
 
@@ -1056,12 +1015,12 @@ public class LadderService {
 	 * @param participants 参与者 objectId 列表 / participant objectId list
 	 */
 	private void SortParticipantList(List<Integer> participants) {
-		List<Integer> warrior = new ArrayList<Integer>();
-		List<Integer> scout = new ArrayList<Integer>();
-		List<Integer> mage = new ArrayList<Integer>();
-		List<Integer> cleric = new ArrayList<Integer>();
-		List<Integer> technist = new ArrayList<Integer>();
-		List<Integer> muse = new ArrayList<Integer>();
+		List<Integer> warrior = new ArrayList<>();
+		List<Integer> scout = new ArrayList<>();
+		List<Integer> mage = new ArrayList<>();
+		List<Integer> cleric = new ArrayList<>();
+		List<Integer> technist = new ArrayList<>();
+		List<Integer> muse = new ArrayList<>();
 		for (Integer objectId : participants) {
 			Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objectId);
 			if (pl == null) {
@@ -1088,7 +1047,7 @@ public class LadderService {
 				break;
 			}
 		}
-		participants = new ArrayList<Integer>();
+		participants = new ArrayList<>();
 		while (!warrior.isEmpty() && !scout.isEmpty() && !mage.isEmpty() && !cleric.isEmpty() && !technist.isEmpty()
 				&& !muse.isEmpty()) {
 			int total = warrior.size() + scout.size() + mage.size() + cleric.size() + technist.size() + muse.size();
@@ -1145,7 +1104,7 @@ public class LadderService {
 	 * clone
 	 */
 	private List<Player> cloneGroup(List<Player> group) {
-		List<Player> clone = new ArrayList<Player>();
+		List<Player> clone = new ArrayList<>();
 		clone.addAll(group);
 		return clone;
 	}
@@ -1173,12 +1132,7 @@ public class LadderService {
 	 */
 	private void scheduleAnnouncement(final Player player, final String sender, final String msg, int delay) {
 		if (delay > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					PacketSendUtility.sendSys3Message(player, sender, msg);
-				}
-			}, delay);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> PacketSendUtility.sendSys3Message(player, sender, msg), delay);
 		} else {
 			PacketSendUtility.sendSys3Message(player, sender, msg);
 		}

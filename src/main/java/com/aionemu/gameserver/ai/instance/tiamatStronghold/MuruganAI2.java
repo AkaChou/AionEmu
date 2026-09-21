@@ -70,13 +70,10 @@ public class MuruganAI2 extends GeneralNpcAI2
 		getOwner().setState(1);
 		getMoveController().moveToPoint(838, 1317, 396);
 		PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getOwner().getObjectId()));
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-		    @Override
-		    public void run() {
-			    forQuest(player);
-			    AI2Actions.deleteOwner(MuruganAI2.this);
-		    }
-	    }, 10000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			forQuest(player);
+			AI2Actions.deleteOwner(MuruganAI2.this);
+		}, 10000);
 	}
 
     private void openSuramaDoor() {

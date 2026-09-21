@@ -69,28 +69,25 @@ public class PopuchinAI2 extends AggressiveNpcAI2
 	}
 
 	private void startPhaseTask() {
-		bombTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelBombTaskTask();
-				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19412, 1, getOwner()).useNoAnimationSkill(); //Drop The Drana Bomb.
-					List<Player> players = getLifedPlayers();
-					if (!players.isEmpty()) {
-						int size = players.size();
-						if (players.size() < 1) {
-							for (Player p: players) {
-								spawnShulackBomb(p);
+		bombTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelBombTaskTask();
+			} else {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 19412, 1, getOwner()).useNoAnimationSkill(); //Drop The Drana Bomb.
+				List<Player> players = getLifedPlayers();
+				if (!players.isEmpty()) {
+					int size = players.size();
+					if (players.size() < 1) {
+						for (Player p: players) {
+							spawnShulackBomb(p);
+						}
+					} else {
+						int count = Rnd.get(1, size);
+						for (int i = 0; i < count; i++) {
+							if (players.isEmpty()) {
+								break;
 							}
-						} else {
-							int count = Rnd.get(1, size);
-							for (int i = 0; i < count; i++) {
-								if (players.isEmpty()) {
-									break;
-								}
-								spawnShulackBomb(players.get(Rnd.get(players.size())));
-							}
+							spawnShulackBomb(players.get(Rnd.get(players.size())));
 						}
 					}
 				}
@@ -103,18 +100,15 @@ public class PopuchinAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						switch (Rnd.get(1, 2)) {
-						    case 1:
-							    spawn(217374, x, y, z, (byte) 0); //Shulack Guided Bomb.
-							break;
-							case 2:
-							    spawn(217375, x, y, z, (byte) 0); //Shulack Thermo Bomb.
-							break;
-						}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					switch (Rnd.get(1, 2)) {
+						case 1:
+							spawn(217374, x, y, z, (byte) 0); //Shulack Guided Bomb.
+						break;
+						case 2:
+							spawn(217375, x, y, z, (byte) 0); //Shulack Thermo Bomb.
+						break;
 					}
 				}
 			}, 1000);
@@ -127,7 +121,7 @@ public class PopuchinAI2 extends AggressiveNpcAI2
 	}
 
 	private List<Player> getLifedPlayers() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);

@@ -79,8 +79,8 @@ public class DuelService {
 	 * Constructs the service and initializes duel maps.
 	 */
 	public DuelService() {
-		this.duels = new ConcurrentHashMap<Integer, Integer>();
-		timeOutTask = new ConcurrentHashMap<Integer, Future<?>>();
+		this.duels = new ConcurrentHashMap<>();
+		timeOutTask = new ConcurrentHashMap<>();
 	}
 
 	/**
@@ -197,14 +197,11 @@ public class DuelService {
 	 * @param player2 决斗玩家 2 / player 2
 	 */
 	private void startDuelMsg(final Player player1, final Player player2) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player object) {
-				if (MathUtil.isInRange(player1, object, 100)) {
-					// %0 与 %1 的决斗已开始。 / A duel between %0 and %1 has started.
-					PacketSendUtility.sendPacket(object,
-							SM_SYSTEM_MESSAGE.STR_DUEL_START_BROADCAST(player2.getName(), player1.getName()));
-				}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(object -> {
+			if (MathUtil.isInRange(player1, object, 100)) {
+				// %0 与 %1 的决斗已开始。 / A duel between %0 and %1 has started.
+				PacketSendUtility.sendPacket(object,
+						SM_SYSTEM_MESSAGE.STR_DUEL_START_BROADCAST(player2.getName(), player1.getName()));
 			}
 		});
 	}
@@ -217,14 +214,11 @@ public class DuelService {
 	 * winner
 	 */
 	private void loseDuelMsg(final Player player1, final Player player2) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player object) {
-				if (MathUtil.isInRange(player1, object, 100)) {
-					// %0 在决斗中击败了 %1。 / %0 defeated %1 in a duel.
-					PacketSendUtility.sendPacket(object,
-							SM_SYSTEM_MESSAGE.STR_DUEL_STOP_BROADCAST(player2.getName(), player1.getName()));
-				}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(object -> {
+			if (MathUtil.isInRange(player1, object, 100)) {
+				// %0 在决斗中击败了 %1。 / %0 defeated %1 in a duel.
+				PacketSendUtility.sendPacket(object,
+						SM_SYSTEM_MESSAGE.STR_DUEL_STOP_BROADCAST(player2.getName(), player1.getName()));
 			}
 		});
 	}
@@ -237,14 +231,11 @@ public class DuelService {
 	 * player 2
 	 */
 	private void drawDuelMsg(final Player player1, final Player player2) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player object) {
-				if (MathUtil.isInRange(player1, object, 100)) {
-					// %0 与 %1 的决斗平局。 / The duel between %0 and %1 was a draw.
-					PacketSendUtility.sendPacket(object,
-							SM_SYSTEM_MESSAGE.STR_DUEL_TIMEOUT_BROADCAST(player2.getName(), player1.getName()));
-				}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(object -> {
+			if (MathUtil.isInRange(player1, object, 100)) {
+				// %0 与 %1 的决斗平局。 / The duel between %0 and %1 was a draw.
+				PacketSendUtility.sendPacket(object,
+						SM_SYSTEM_MESSAGE.STR_DUEL_TIMEOUT_BROADCAST(player2.getName(), player1.getName()));
 			}
 		});
 	}
@@ -314,16 +305,14 @@ public class DuelService {
 	 * responder
 	 */
 	private void createTask(final Player requester, final Player responder) {
-		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			public void run() {
-				if (isDueling(requester.getObjectId(), responder.getObjectId())) {
-					drawDuelMsg(requester, responder);
-					PacketSendUtility.sendPacket(requester,
-							SM_DUEL.SM_DUEL_RESULT(DuelResult.DUEL_TIMEOUT, requester.getName()));
-					PacketSendUtility.sendPacket(responder,
-							SM_DUEL.SM_DUEL_RESULT(DuelResult.DUEL_TIMEOUT, responder.getName()));
-					DuelService.this.removeDuel(requester.getObjectId(), responder.getObjectId());
-				}
+		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (isDueling(requester.getObjectId(), responder.getObjectId())) {
+				drawDuelMsg(requester, responder);
+				PacketSendUtility.sendPacket(requester,
+						SM_DUEL.SM_DUEL_RESULT(DuelResult.DUEL_TIMEOUT, requester.getName()));
+				PacketSendUtility.sendPacket(responder,
+						SM_DUEL.SM_DUEL_RESULT(DuelResult.DUEL_TIMEOUT, responder.getName()));
+				DuelService.this.removeDuel(requester.getObjectId(), responder.getObjectId());
 			}
 		}, 5 * 60 * 1000);
 		PacketSendUtility.sendPacket(requester, new SM_QUEST_ACTION(0, 300));

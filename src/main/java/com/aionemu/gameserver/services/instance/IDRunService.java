@@ -31,7 +31,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class IDRunService {
 	private static volatile ObjectProvider<IDRunService> instanceProvider;
 	private boolean registerAvailable;
-	private final List<Integer> playersWithCooldown = new ArrayList<Integer>();
+	private final List<Integer> playersWithCooldown = new ArrayList<>();
 	public static final byte minLevel = 10, capLevel = 76;
 	public static final int maskId = 131;
 
@@ -43,43 +43,33 @@ public class IDRunService {
 		if (AutoGroupConfig.IDRUN_ENABLED) {
 			log.info(I18n.get("log.d139cc6b9301"));
 			// IDRun ？？？？ / IDRun ????
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				/**
-				 * 执行任务。
-				 * Runs the task.
-				 */
-				public void run() {
-					startIDRunRegistration();
-				}
-			}, AutoGroupConfig.IDRUN_SCHEDULE);
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */GameCronServices.cronService().schedule(() -> startIDRunRegistration(), AutoGroupConfig.IDRUN_SCHEDULE);
 		}
 	}
 
 	private void startUregisterIDRunTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */
-			public void run() {
-				registerAvailable = false;
-				playersWithCooldown.clear();
-				GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskId);
-				Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
-				while (iter.hasNext()) {
-					Player player = iter.next();
-					if (player.getLevel() > minLevel) {
-						int instanceMaskId = getInstanceMaskId(player);
-						if (instanceMaskId > 0) {
-							PacketSendUtility.sendPacket(player,
-									new SM_AUTO_GROUP(instanceMaskId, SM_AUTO_GROUP.wnd_EntryIcon, true));
-						}
-					}
-				}
-			}
-		}, AutoGroupConfig.IDRUN_TIMER * 60 * 1000);
+		/**
+		 * 执行任务。
+		 * Runs the task.
+		 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			 registerAvailable = false;
+			 playersWithCooldown.clear();
+			 GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskId);
+			 Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+			 while (iter.hasNext()) {
+				 Player player = iter.next();
+				 if (player.getLevel() > minLevel) {
+					 int instanceMaskId = getInstanceMaskId(player);
+					 if (instanceMaskId > 0) {
+						 PacketSendUtility.sendPacket(player,
+								 new SM_AUTO_GROUP(instanceMaskId, SM_AUTO_GROUP.wnd_EntryIcon, true));
+					 }
+				 }
+			 }
+		 }, AutoGroupConfig.IDRUN_TIMER * 60 * 1000);
 	}
 
 	private void startIDRunRegistration() {

@@ -133,48 +133,34 @@ public class ServerCommandProcessor {
 	 * 关服按钮监听。
 	 * Shutdown button listener.
 	 */
-	ActionListener al_shutdown = new ActionListener() {
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		GameAdminPanelShutdownRequest.shutdown();
-	}
-};
+	ActionListener al_shutdown = e -> GameAdminPanelShutdownRequest.shutdown();
 
 	/**
 	 * 在线人数查询监听。
 	 * Online-count query listener.
 	 */
-	ActionListener al_online = new ActionListener() {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			int playerCount = DAOManager.getDAO(PlayerDAO.class).getOnlinePlayerCount();
-			if (playerCount == 1) {
-				log.info(I18n.get("log.b5cec4ab4481", (playerCount)));
-			} else {
-				log.info(I18n.get("log.4fd6572503cf", (playerCount)));
-			}
-
+	ActionListener al_online = e -> {
+		int playerCount = DAOManager.getDAO(PlayerDAO.class).getOnlinePlayerCount();
+		if (playerCount == 1) {
+			log.info(I18n.get("log.b5cec4ab4481", (playerCount)));
+		} else {
+			log.info(I18n.get("log.4fd6572503cf", (playerCount)));
 		}
+
 	};
 
 	/**
 	 * 列出在线玩家监听。
 	 * List-online-players listener.
 	 */
-	ActionListener al_who = new ActionListener() {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			Collection<Player> players = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers();
-			if (players.isEmpty()) {
-				log.info(I18n.get("log.b09026e40703"));
-				return;
-			}
-			for (Player player : players) {
-				log.info(I18n.get("log.28f1440a2d52", player.getName(), player.getCommonData().getRace().name(), player.getAcountName()));
-			}
+	ActionListener al_who = e -> {
+		Collection<Player> players = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers();
+		if (players.isEmpty()) {
+			log.info(I18n.get("log.b09026e40703"));
+			return;
+		}
+		for (Player player : players) {
+			log.info(I18n.get("log.28f1440a2d52", player.getName(), player.getCommonData().getRace().name(), player.getAcountName()));
 		}
 	};
 
@@ -182,60 +168,53 @@ public class ServerCommandProcessor {
 	 * 给指定玩家发放物品监听。
 	 * Grant-item-to-player listener.
 	 */
-	ActionListener al_add = new ActionListener() {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			int i = Integer.parseInt(itemID.getText());
-			int itemId = i;
-			long itemCount = 1;
+	ActionListener al_add = e -> {
+		int i = Integer.parseInt(itemID.getText());
+		int itemId = i;
+		long itemCount = 1;
 
-			Player receiver;
-			String playerName = playerNameFieled.getText();
+		Player receiver;
+		String playerName = playerNameFieled.getText();
 
-			receiver = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerName);
+		receiver = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerName);
 
-			if (itemID.getText() != null) {
-				if (i != 0) {
-					if (DataManager.ITEM_DATA.getItemTemplate(itemId) == null) {
-						log.info(I18n.get("log.60fb69b4774c", itemId));
-						return;
-					}
-					ItemService.addItem(receiver, itemId, itemCount);
-					log.info(I18n.get("log.df6292dc9697", itemId, playerName, itemCount));
-				} else {
-					log.info(I18n.get("log.50592272cfc3"));
+		if (itemID.getText() != null) {
+			if (i != 0) {
+				if (DataManager.ITEM_DATA.getItemTemplate(itemId) == null) {
+					log.info(I18n.get("log.60fb69b4774c", itemId));
+					return;
 				}
+				ItemService.addItem(receiver, itemId, itemCount);
+				log.info(I18n.get("log.df6292dc9697", itemId, playerName, itemCount));
 			} else {
-				log.info(I18n.get("log.93ffb7a90c17", playerName));
+				log.info(I18n.get("log.50592272cfc3"));
 			}
-
+		} else {
+			log.info(I18n.get("log.93ffb7a90c17", playerName));
 		}
+
 	};
 
 	/**
 	 * 踢出玩家（或全部非 GM）监听。
 	 * Kick player (or all non-GMs) listener.
 	 */
-	ActionListener al_kick = new ActionListener() {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (playerNameFieled.getText() != null && "All".equalsIgnoreCase(playerNameFieled.getText())) {
-				for (final Player player : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
-					if (!player.isGM()) {
-						player.getClientConnection().close(new SM_QUIT_RESPONSE(), false);
-						log.info(I18n.get("log.9d66bf0d9920", player.getName()));
-					}
+	ActionListener al_kick = e -> {
+		if (playerNameFieled.getText() != null && "All".equalsIgnoreCase(playerNameFieled.getText())) {
+			for (final Player player : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
+				if (!player.isGM()) {
+					player.getClientConnection().close(new SM_QUIT_RESPONSE(), false);
+					log.info(I18n.get("log.9d66bf0d9920", player.getName()));
 				}
-			} else {
-				Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerNameFieled.getText());
-				if (player == null) {
-					log.info(I18n.get("log.e98bca3b524f"));
-					return;
-				}
-				player.getClientConnection().close(new SM_QUIT_RESPONSE(), false);
-				log.info(I18n.get("log.c55d9b1d9649", player.getName()));
 			}
+		} else {
+			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerNameFieled.getText());
+			if (player == null) {
+				log.info(I18n.get("log.e98bca3b524f"));
+				return;
+			}
+			player.getClientConnection().close(new SM_QUIT_RESPONSE(), false);
+			log.info(I18n.get("log.c55d9b1d9649", player.getName()));
 		}
 	};
 
@@ -243,16 +222,12 @@ public class ServerCommandProcessor {
 	 * 全服公告监听。
 	 * Server-wide announce listener.
 	 */
-	ActionListener al_announce = new ActionListener() {
+	ActionListener al_announce = e -> {
+		if (!"Announce message".equals(messageAnnounce.getText())) {
+			Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (!"Announce message".equals(messageAnnounce.getText())) {
-				Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
-
-				while (iter.hasNext()) {
-					PacketSendUtility.sendBrightYellowMessageOnCenter(iter.next(), messageAnnounce.getText());
-				}
+			while (iter.hasNext()) {
+				PacketSendUtility.sendBrightYellowMessageOnCenter(iter.next(), messageAnnounce.getText());
 			}
 		}
 	};
@@ -261,23 +236,19 @@ public class ServerCommandProcessor {
 	 * 送入监狱监听。
 	 * Send-to-prison listener.
 	 */
-	ActionListener al_sendPrison = new ActionListener() {
+	ActionListener al_sendPrison = e -> {
+		if (playerNameFieled.getText() != null) {
+			try {
+				Player playerToPrison = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerNameFieled.getText());
+				int delay = 30;
+				String reason = "Ban from Admin";
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (playerNameFieled.getText() != null) {
-				try {
-					Player playerToPrison = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerNameFieled.getText());
-					int delay = 30;
-					String reason = "Ban from Admin";
-
-					if (playerToPrison != null) {
-						PunishmentService.setIsInPrison(playerToPrison, true, delay, reason);
-						log.info(I18n.get("log.8c0b8cb89af5", playerToPrison.getName(), delay, reason));
-					}
-				} catch (Exception eo) {
-
+				if (playerToPrison != null) {
+					PunishmentService.setIsInPrison(playerToPrison, true, delay, reason);
+					log.info(I18n.get("log.8c0b8cb89af5", playerToPrison.getName(), delay, reason));
 				}
+			} catch (Exception eo) {
+
 			}
 		}
 	};
@@ -286,21 +257,17 @@ public class ServerCommandProcessor {
 	 * 从监狱救出监听。
 	 * Rescue-from-prison listener.
 	 */
-	ActionListener al_rescuePrison = new ActionListener() {
+	ActionListener al_rescuePrison = e -> {
+		if (playerNameFieled.getText() != null) {
+			try {
+				Player playerFromPrison = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerNameFieled.getText());
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (playerNameFieled.getText() != null) {
-				try {
-					Player playerFromPrison = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerNameFieled.getText());
-
-					if (playerFromPrison != null) {
-						PunishmentService.setIsInPrison(playerFromPrison, false, 0, "");
-						log.info(I18n.get("log.dd4fb905c8ca", playerFromPrison.getName()));
-					}
-				} catch (NoSuchElementException nsee) {
-				} catch (Exception ee) {
+				if (playerFromPrison != null) {
+					PunishmentService.setIsInPrison(playerFromPrison, false, 0, "");
+					log.info(I18n.get("log.dd4fb905c8ca", playerFromPrison.getName()));
 				}
+			} catch (NoSuchElementException nsee) {
+			} catch (Exception ee) {
 			}
 		}
 	};

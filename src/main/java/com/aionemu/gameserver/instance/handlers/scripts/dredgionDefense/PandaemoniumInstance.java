@@ -53,9 +53,9 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
 	/** 已播放动画集合 / played-movie set */
-	private final List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<>();
 	/** pandaemonium 任务 / pandaemonium task */
-		private final List<Future<?>> pandaemoniumTask = new ArrayList<Future<?>>();
+		private final List<Future<?>> pandaemoniumTask = new ArrayList<>();
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -221,7 +221,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 					 */
 					@Override
 					public void run() {
-						instance.doOnAllPlayers(new Visitor<Player>() {
+						instance.doOnAllPlayers(new Visitor<>() {
 							/**
 							 * 处理 visit。
 							 * Handle visit.
@@ -274,7 +274,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 						 */
 						@Override
 						public void run() {
-							instance.doOnAllPlayers(new Visitor<Player>() {
+							instance.doOnAllPlayers(new Visitor<>() {
 								/**
 								 * 处理 visit。
 								 * Handle visit.
@@ -1040,7 +1040,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.

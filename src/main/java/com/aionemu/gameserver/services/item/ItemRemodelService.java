@@ -173,28 +173,18 @@ public class ItemRemodelService {
 				new SM_SYSTEM_MESSAGE(1300483, new DescriptionId(item.getItemTemplate().getNameId())));
 		PacketSendUtility.broadcastPacket(player, new SM_UPDATE_PLAYER_APPEARANCE(player.getObjectId(),
 				player.getEquipment().getEquippedItemsWithoutStigma()), true);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */
-			public void run() {
-				item.setItemSkinTemplate(oldTemplate);
-			}
-		}, 50);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */
-			public void run() {
-				PacketSendUtility.sendPacket(player, new SM_UPDATE_PLAYER_APPEARANCE(player.getObjectId(),
-						player.getEquipment().getEquippedForApparence()));
-				PacketSendUtility.broadcastPacket(player, new SM_UPDATE_PLAYER_APPEARANCE(player.getObjectId(),
-						player.getEquipment().getEquippedItemsWithoutStigma()), true);
-			}
-		}, duration * 1000L);
+		/**
+		 * 执行任务。
+		 * Runs the task.
+		 */GameThreadPoolServices.threadPoolManager().schedule(() -> item.setItemSkinTemplate(oldTemplate), 50);
+		/**
+		 * 执行任务。
+		 * Runs the task.
+		 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			 PacketSendUtility.sendPacket(player, new SM_UPDATE_PLAYER_APPEARANCE(player.getObjectId(),
+					 player.getEquipment().getEquippedForApparence()));
+			 PacketSendUtility.broadcastPacket(player, new SM_UPDATE_PLAYER_APPEARANCE(player.getObjectId(),
+					 player.getEquipment().getEquippedItemsWithoutStigma()), true);
+		 }, duration * 1000L);
 	}
 }

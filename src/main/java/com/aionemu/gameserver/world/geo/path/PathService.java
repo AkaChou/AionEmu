@@ -611,43 +611,56 @@ public final class PathService implements DisposableBean {
 		if (failure instanceof CompletionException || failure instanceof ExecutionException) {
 			return resultStatus(path, failure.getCause());
 		}
-		if (failure instanceof IncompletePathSearchException incomplete) {
-			return switch (incomplete.status()) {
-				case NODE_LIMIT -> PathResultStatus.NODE_LIMIT;
-				case INTERRUPTED -> PathResultStatus.INTERRUPTED;
-				case INVALID_POSITION -> PathResultStatus.INVALID_POSITION;
-				case NO_PATH -> PathResultStatus.NO_PATH;
-				case FOUND -> PathResultStatus.FAILED;
-			};
+		switch (failure) {
+			case IncompletePathSearchException incomplete:
+				return switch (incomplete.status()) {
+					case NODE_LIMIT -> PathResultStatus.NODE_LIMIT;
+					case INTERRUPTED -> PathResultStatus.INTERRUPTED;
+					case INVALID_POSITION -> PathResultStatus.INVALID_POSITION;
+					case NO_PATH -> PathResultStatus.NO_PATH;
+					case FOUND -> PathResultStatus.FAILED;
+				};
+			case TimeoutException timeoutException:
+				return PathResultStatus.TIMEOUT;
+			case QueueExpiredException queueExpiredException:
+				return PathResultStatus.QUEUE_EXPIRED;
+			case RejectedExecutionException rejectedExecutionException:
+				return PathResultStatus.REJECTED;
+			case CancellationException cancellationException:
+				return PathResultStatus.CANCELLED;
+			default:
+				return PathResultStatus.FAILED;
 		}
-		if (failure instanceof TimeoutException) {
-			return PathResultStatus.TIMEOUT;
-		}
-		if (failure instanceof QueueExpiredException) {
-			return PathResultStatus.QUEUE_EXPIRED;
-		}
-		if (failure instanceof RejectedExecutionException) {
-			return PathResultStatus.REJECTED;
-		}
-		if (failure instanceof CancellationException) {
-			return PathResultStatus.CANCELLED;
-		}
-		return PathResultStatus.FAILED;
 	}
 
 	private void recordResultStatus(PathResultStatus status) {
 		switch (status) {
-			case FOUND -> found.increment();
-			case NO_PATH -> noPath.increment();
-			case INVALID_POSITION -> invalidPosition.increment();
-			case NODE_LIMIT -> nodeLimit.increment();
-			case INTERRUPTED -> interrupted.increment();
-			case CANCELLED -> cancelled.increment();
-			case FAILED -> failed.increment();
-			case TIMEOUT, QUEUE_EXPIRED, REJECTED -> {
-				// 调度层在决定具体原因的位置计数，避免同一请求重复累计。
+			case FOUND:
+				found.increment();
+				break;
+			case NO_PATH:
+				noPath.increment();
+				break;
+			case INVALID_POSITION:
+				invalidPosition.increment();
+				break;
+			case NODE_LIMIT:
+				nodeLimit.increment();
+				break;
+			case INTERRUPTED:
+				interrupted.increment();
+				break;
+			case CANCELLED:
+				cancelled.increment();
+				break;
+			case FAILED:
+				failed.increment();
+				break;
+			case TIMEOUT:
+			case QUEUE_EXPIRED:
+			case REJECTED:// 调度层在决定具体原因的位置计数，避免同一请求重复累计。
 				// These are already counted by the scheduler where the concrete reason is decided, avoiding double-counting a request.
-			}
+				break;
 		}
 	}
 
@@ -753,11 +766,18 @@ public final class PathService implements DisposableBean {
 	}
 
 	private static List<PathData.PathPoint> groundPath(PathData.SearchResult result) {
-		return switch (result.status()) {
-			case FOUND -> result.path();
-			case NODE_LIMIT, INTERRUPTED -> throw new IncompletePathSearchException(result.status(), result.processedNodes());
-			case NO_PATH, INVALID_POSITION -> null;
-		};
+        switch (result.status()) {
+            case FOUND:
+                return result.path();
+            case NODE_LIMIT:
+            case INTERRUPTED:
+                throw new IncompletePathSearchException(result.status(), result.processedNodes());
+            case NO_PATH:
+            case INVALID_POSITION:
+                return null;
+            default:
+                throw new IllegalArgumentException();
+        }
 	}
 
 	private float[][] findSpatialPath(PathRequest request) {

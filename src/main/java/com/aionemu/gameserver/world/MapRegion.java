@@ -125,7 +125,7 @@ public class MapRegion {
 	 * @return entityId → 门映射 / entity id to door map
 	 */
 	public Map<Integer, StaticDoor> getDoors() {
-		Map<Integer, StaticDoor> doors = new HashMap<Integer, StaticDoor>();
+		Map<Integer, StaticDoor> doors = new HashMap<>();
 		for (VisibleObject obj : objects.values()) {
 			if (obj instanceof StaticDoor door) {
 				doors.put(door.getSpawn().getEntityId(), door);
@@ -206,15 +206,11 @@ public class MapRegion {
 	 * Delayed activation of self and neighbour AI.
 	 */
 	final void startActivation() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				log.debug("Activating in map {} region {}", getMapId(), regionId);
-				MapRegion.this.activateObjects();
-				for (MapRegion neighbor : getNeighbours()) {
-					neighbor.activate();
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			log.debug("Activating in map {} region {}", getMapId(), regionId);
+			MapRegion.this.activateObjects();
+			for (MapRegion neighbor : getNeighbours()) {
+				neighbor.activate();
 			}
 		}, 1000);
 	}
@@ -224,15 +220,11 @@ public class MapRegion {
 	 * Delayed check whether neighbours can deactivate.
 	 */
 	final void startDeactivation() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				log.debug("Deactivating in map {} region {}", getMapId(), regionId);
-				for (MapRegion neighbor : getNeighbours()) {
-					if (!neighbor.isNeighboursActive()) {
-						neighbor.deactivate();
-					}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			log.debug("Deactivating in map {} region {}", getMapId(), regionId);
+			for (MapRegion neighbor : getNeighbours()) {
+				if (!neighbor.isNeighboursActive()) {
+					neighbor.deactivate();
 				}
 			}
 		}, 60000);
@@ -351,7 +343,7 @@ public class MapRegion {
 	 * @return 包含生物的 Zone 列表 / the zone list
 	 */
 	public List<ZoneInstance> getZones(Creature creature) {
-		List<ZoneInstance> z = new ArrayList<ZoneInstance>();
+		List<ZoneInstance> z = new ArrayList<>();
 		for (Entry<Integer, TreeSet<ZoneInstance>> e : zoneMap.entrySet()) {
 			TreeSet<ZoneInstance> zones = e.getValue();
 			for (ZoneInstance zone : zones) {
@@ -460,7 +452,7 @@ public class MapRegion {
 	 * @param zones Zone 数组 / the zone array
 	 */
 	private void createZoneMap(ZoneInstance[] zones) {
-		zoneMap = new LinkedHashMap<Integer, TreeSet<ZoneInstance>>();
+		zoneMap = new LinkedHashMap<>();
 		for (int i = 0; i < zones.length; i++) {
 			ZoneInstance zone = zones[i];
 			int category = -1;
@@ -469,7 +461,7 @@ public class MapRegion {
 			}
 			TreeSet<ZoneInstance> zoneCategory = zoneMap.get(category);
 			if (zoneCategory == null) {
-				zoneCategory = new TreeSet<ZoneInstance>();
+				zoneCategory = new TreeSet<>();
 				zoneMap.put(category, zoneCategory);
 			}
 			zoneCategory.add(zone);

@@ -37,7 +37,7 @@ public class NochsanaTrainingCampInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 * 
+	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -56,7 +56,7 @@ public class NochsanaTrainingCampInstance extends GeneralInstanceHandler
 			break;
         }
     }
-	
+
 //	@Override
 //	public void onDie(Npc npc) {
 //		Player player = npc.getAggroList().getMostPlayerDamage();
@@ -71,7 +71,7 @@ public class NochsanaTrainingCampInstance extends GeneralInstanceHandler
 //			break;
 //		}
 //	}
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -102,20 +102,20 @@ public class NochsanaTrainingCampInstance extends GeneralInstanceHandler
 			sendMsg("Nochsana Abyss Gate has appeared.");
 		}
 	}
-	
+
 	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
+		instance.doOnAllPlayers(new Visitor<>() {
+            /**
+             * 处理 visit。
+             * Handle visit.
+             *
+             * @param player 玩家 / player
+             */
+            @Override
+            public void visit(Player player) {
+                PacketSendUtility.sendWhiteMessageOnCenter(player, str);
+            }
+        });
 	}
-	
+
 }

@@ -26,8 +26,8 @@ public class Exchange {
 
 	private long kinahCount;
 
-	private final Map<Integer, ExchangeItem> items = new HashMap<Integer, ExchangeItem>();
-	private final List<Item> itemsToUpdate = new ArrayList<Item>();
+	private final Map<Integer, ExchangeItem> items = new HashMap<>();
+	private final List<Item> itemsToUpdate = new ArrayList<>();
 
 	public Exchange(Player activeplayer, Player targetPlayer) {
 		super();

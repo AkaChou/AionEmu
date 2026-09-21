@@ -37,7 +37,7 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 	 * 各地图移动广播峰值统计（[最大次数, Npc 模板 Id]）。
 	 * Per-map movement-broadcast peak stats ([max count, Npc template id]).
 	 */
-	private static final Map<Integer, int[]> moveBroadcastCounts = new HashMap<Integer, int[]>();
+	private static final Map<Integer, int[]> moveBroadcastCounts = new HashMap<>();
 
 	/**
 	 * 广播统计表是否已按世界地图模板初始化。
@@ -133,7 +133,7 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 	 */
 	public String[] dumpBroadcastStats() {
 		ensureMoveBroadcastCountsInitialized();
-		List<String> lines = new ArrayList<String>();
+		List<String> lines = new ArrayList<>();
 		lines.add("------- Movement broadcast counts -------");
 		for (Entry<Integer, int[]> entry : moveBroadcastCounts.entrySet()) {
 			lines.add(

@@ -41,8 +41,8 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
 		/** fallen 任务 / fallen task */
-		private final List<Future<?>> fallenTask = new ArrayList<Future<?>>();
-	
+		private final List<Future<?>> fallenTask = new ArrayList<>();
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -57,7 +57,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			SpawnFallenPoetaRace();
 		}
 	}
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -85,7 +85,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 		// 阿努哈特中尉正在接近。 / Lieutenant Anuhart approaches.
 		sendMsgByRace(1403418, Race.PC_ALL, 120000);
     }
-	
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -134,7 +134,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			break;
         }
     }
-	
+
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
 		storage.decreaseByItemId(164002346, storage.getItemCountByItemId(164002346)); //Thorn Tentacle Trap.
@@ -143,7 +143,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	 * 启动副本计时/任务。
 	 * Start instance timer/tasks.
 	 */
-	
+
 	protected void startInstanceTask() {
 		fallenTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -159,7 +159,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
             }
         }, 180000)); //...3Min
 	}
-	
+
 	private void startAnuhartPath() {
 		anuhartTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -172,7 +172,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -283,7 +283,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	 * 停止副本并结算。
 	 * Stop the instance and settle.
 	 */
-	
+
 	protected void stopInstance() {
 		stopInstanceTask();
 		anuhartTaskA1.cancel(true);
@@ -291,7 +291,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 		sendMsgByRace(1403444, Race.PC_ALL, 0);
 		killNpc(getNpcs(243682)); //Lieutenant Anuhart.
 	}
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -328,7 +328,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void seaOfFlames1() {
         spawn(243952, 288.4514f, 928.72723f, 104.85776f, (byte) 46);
         spawn(243952, 279.38016f, 937.39996f, 103.04628f, (byte) 46);
@@ -601,7 +601,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
         spawn(243952, 185.62698f, 521.16547f, 113.148094f, (byte) 98);
         spawn(243952, 226.95226f, 522.12164f, 110.36903f, (byte) 62);
 	}
-	
+
 	private void SpawnFallenPoetaRace() {
 		final int Kantil_Animar = spawnRace == Race.ASMODIANS ? 833844 : 833843;
 		final int RoadAethercannon1 = spawnRace == Race.ASMODIANS ? 703306 : 703302;
@@ -629,7 +629,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 		spawn(IDF6LF1NPCRa03, 287.49606f, 961.96747f, 106.27848f, (byte) 31);
         spawn(IDF6LF1NPCRa03, 277.42953f, 962.95776f, 105.60828f, (byte) 21);
 	}
-	
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -638,7 +638,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -647,7 +647,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -664,7 +664,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			}
 		}, time);
 	}
-	
+
 	private void stopInstanceTask() {
         for (Future<?> task : fallenTask) {
 			if (task != null) {
@@ -684,7 +684,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	 * @param time 时间 / time
 	 * @param walkerId 寻路器 ID / walkerId
 	 */
-	
+
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         fallenTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -701,8 +701,8 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
-	
+
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -711,13 +711,13 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	public void onInstanceDestroy() {
 		isInstanceDestroyed = true;
 	}
-	
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
@@ -729,7 +729,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	 *
 	 * @param npcs NPC 列表 / npcs
 	 */
-	
+
 	protected void killNpc(List<Npc> npcs) {
         for (Npc npc: npcs) {
             npc.getController().die();
@@ -742,20 +742,20 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	 * @param npcId NPC / NPC
 	 * @return 结果 / result
 	 */
-	
+
 	protected List<Npc> getNpcs(int npcId) {
 		if (!isInstanceDestroyed) {
 			return instance.getNpcs(npcId);
 		}
 		return null;
 	}
-	
+
 	private void removeEffects(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
 		effectController.removeEffect(21805);
 		effectController.removeEffect(21806);
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -767,7 +767,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 		removeItems(player);
 		removeEffects(player);
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.

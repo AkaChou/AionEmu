@@ -26,7 +26,7 @@ public class RiftLocation {
 	private boolean opened;
 	protected RiftTemplate template;
 	/** 返回是否已刷新 / Returns the spawned */
-	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
+	private final List<VisibleObject> spawned = new ArrayList<>();
 
 	public RiftLocation(RiftTemplate template) {
 		this.template = template;

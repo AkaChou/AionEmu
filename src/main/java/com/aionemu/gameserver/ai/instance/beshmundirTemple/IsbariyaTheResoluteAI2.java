@@ -35,7 +35,7 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 	private int stage = 0;
 	private Future<?> basicSkillTask;
 	private final AtomicBoolean isStart = new AtomicBoolean(false);
-	private final List<Point3D> soulLocations = new ArrayList<Point3D>();
+	private final List<Point3D> soulLocations = new ArrayList<>();
 
 	@Override
 	protected void handleAttack(Creature creature) {
@@ -89,14 +89,11 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 	}
 
 	private void startBasicSkillTask() {
-		basicSkillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead())
-					cancelSkillTask();
-				else
-					GameEngineServices.skillEngine().getSkill(getOwner(), 18912 + Rnd.get(2), 55, getOwner()).useNoAnimationSkill();
-			}
+		basicSkillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead())
+				cancelSkillTask();
+			else
+				GameEngineServices.skillEngine().getSkill(getOwner(), 18912 + Rnd.get(2), 55, getOwner()).useNoAnimationSkill();
 		},0 , 24000);
 	}
 
@@ -136,7 +133,7 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 	}
 
 	private void spawnSouls() {
-	    List<Point3D> points = new ArrayList<Point3D>();
+	    List<Point3D> points = new ArrayList<>();
 	    points.addAll(soulLocations);
 		int count = Rnd.get(3, 6);
 		for(int i = 0; i < count; i++) {
@@ -148,7 +145,7 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 	}
 
 	private Player getTargetPlayer() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player : getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player) && MathUtil.isIn3dRange(player, getOwner(), 40) && player != getTarget()) {
 				players.add(player);
@@ -158,12 +155,7 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 	}
 
 	private void scheduleSpecial(int delay) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				launchSpecial();
-			}
-		}, delay);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> launchSpecial(), delay);
 	}
 
 	private SpawnTemplate rndSpawnInRange(int npcId) {

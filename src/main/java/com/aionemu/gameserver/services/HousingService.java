@@ -50,7 +50,7 @@ public class HousingService {
 
 	private static volatile ObjectProvider<HousingService> instanceProvider;
 	/** 地图 ID 到该图房屋 / Map id to houses on that map */
-	private static final Map<Integer, List<House>> housesByMapId = new HashMap<Integer, List<House>>();
+	private static final Map<Integer, List<House>> housesByMapId = new HashMap<>();
 	/** 自定义（地产）房屋缓存。 / Custom (estate) house cache. */
 	private final Map<Integer, House> customHouses;
 	/** 工作室缓存（玩家对象 ID → 工作室） / Studio cache (player objectId → studio) */
@@ -166,7 +166,7 @@ public class HousingService {
 				spawnedCounter++;
 				List<House> housesForMap = housesByMapId.get(worldId);
 				if (housesForMap == null) {
-					housesForMap = new ArrayList<House>();
+					housesForMap = new ArrayList<>();
 					housesByMapId.put(worldId, housesForMap);
 				}
 				housesForMap.add(customHouse);
@@ -185,7 +185,7 @@ public class HousingService {
 	 * house list
 	 */
 	public List<House> searchPlayerHouses(int playerObjId) {
-		List<House> houses = new ArrayList<House>();
+		List<House> houses = new ArrayList<>();
 		synchronized (studios) {
 			if (studios.containsKey(playerObjId)) {
 				houses.add(studios.get(playerObjId));
@@ -416,7 +416,7 @@ public class HousingService {
 	 * @return 自定义房屋列表 / custom house list
 	 */
 	public List<House> getCustomHouses() {
-		List<House> houses = new ArrayList<House>();
+		List<House> houses = new ArrayList<>();
 		for (List<House> mapHouses : housesByMapId.values()) {
 			houses.addAll(mapHouses);
 		}

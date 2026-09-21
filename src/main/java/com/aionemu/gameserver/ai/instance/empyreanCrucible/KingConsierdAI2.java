@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("king_consierd")
 public class KingConsierdAI2 extends AggressiveNpcAI2
 {
-	private final List<Integer> percents = new ArrayList<Integer>();
+	private final List<Integer> percents = new ArrayList<>();
 	private final AtomicBoolean isHome = new AtomicBoolean(true);
 	private Future<?> eventTask;
 	private Future<?> skillTask;
@@ -63,54 +63,38 @@ public class KingConsierdAI2 extends AggressiveNpcAI2
 		checkPercentage(getLifeStats().getHpPercentage());
 		if (isHome.compareAndSet(true, false)) {
 			startBloodThirstTask();
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19691, 1, getTarget()).useNoAnimationSkill();
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							GameEngineServices.skillEngine().getSkill(getOwner(), 17954, 10, getTarget()).useNoAnimationSkill();
-						}
-					}, 4000);
-				}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 19691, 1, getTarget()).useNoAnimationSkill();
+				GameThreadPoolServices.threadPoolManager().schedule(() -> GameEngineServices.skillEngine().getSkill(getOwner(), 17954, 10, getTarget()).useNoAnimationSkill(), 4000);
 			}, 2000);
 		}
 	}
 
 	private void startBloodThirstTask() {
-		eventTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 19624, 10, getOwner()).useNoAnimationSkill();
-			}
-		}, 180 * 1000);
+		eventTask = GameThreadPoolServices.threadPoolManager().schedule(() -> GameEngineServices.skillEngine().getSkill(getOwner(), 19624, 10, getOwner()).useNoAnimationSkill(), 180 * 1000);
 	}
 
 	private void startSkillTask() {
-		skillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelTasks();
-				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 17951, 10, getTarget()).useNoAnimationSkill();
-					List<Player> players = getLifedPlayers();
-					if (!players.isEmpty()) {
-						int size = players.size();
-						if (players.size() < 6) {
-							for (Player p: players) {
-								spawnBabyConsierd(p);
+		skillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelTasks();
+			} else {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 17951, 10, getTarget()).useNoAnimationSkill();
+				List<Player> players = getLifedPlayers();
+				if (!players.isEmpty()) {
+					int size = players.size();
+					if (players.size() < 6) {
+						for (Player p: players) {
+							spawnBabyConsierd(p);
+						}
+					} else {
+						int count = Rnd.get(1, size);
+						for (int i = 0; i < count; i++) {
+							if (players.isEmpty()) {
+								break;
 							}
-						} else {
-							int count = Rnd.get(1, size);
-							for (int i = 0; i < count; i++) {
-								if (players.isEmpty()) {
-									break;
-								}
-								spawnBabyConsierd(players.get(Rnd.get(players.size())));
-								GameEngineServices.skillEngine().getSkill(getOwner(), 17952, 10, getTarget()).useNoAnimationSkill();
-							}
+							spawnBabyConsierd(players.get(Rnd.get(players.size())));
+							GameEngineServices.skillEngine().getSkill(getOwner(), 17952, 10, getTarget()).useNoAnimationSkill();
 						}
 					}
 				}
@@ -123,19 +107,16 @@ public class KingConsierdAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						spawn(282378, x, y, z, (byte) 0); // 小 Consierd / Baby Consierd
-					}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					spawn(282378, x, y, z, (byte) 0); // 小 Consierd / Baby Consierd
 				}
 			}, 3000);
 		}
 	}
 
 	private List<Player> getLifedPlayers() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);

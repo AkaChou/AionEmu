@@ -33,36 +33,21 @@ public class Archon_Shadow_ScoutAI2 extends NpcAI2
 		// 我还以为一切都完了。 / And I thought all was lost.
 		sendMsg(1501532, getObjectId(), false, 8000);
 	}
-	
+
 	private void startRiftEscapeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				spawnRiftEscape(701131);
-			}
-		}, 2500);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> spawnRiftEscape(701131), 2500);
 	}
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(Archon_Shadow_ScoutAI2.this);
-			}
-		}, 10000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Archon_Shadow_ScoutAI2.this), 10000);
 	}
 	private void startRiftEscapeClosed() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				despawnNpc(701131);
-			}
-		}, 12500);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> despawnNpc(701131), 12500);
 	}
-	
+
 	private void spawnRiftEscape(int npcId) {
 		rndSpawnInRange(npcId, Rnd.get(1, 3));
 	}
-	
+
 	private Npc rndSpawnInRange(int npcId, float distance) {
 		float direction = Rnd.get(0, 199) / 100f;
 		float x1 = (float) (Math.cos(Math.PI * direction) * distance);
@@ -70,7 +55,7 @@ public class Archon_Shadow_ScoutAI2 extends NpcAI2
 		WorldPosition p = getPosition();
 		return (Npc) spawn(npcId, p.getX() + x1, p.getY() + y1, p.getZ(), (byte) 0);
 	}
-	
+
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);
@@ -79,7 +64,7 @@ public class Archon_Shadow_ScoutAI2 extends NpcAI2
 			}
 		}
 	}
-	
+
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
 		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}

@@ -236,15 +236,17 @@ final class RetailAiDefinitionLoader {
 				int event = reader.next();
 				if (event == XMLStreamConstants.START_ELEMENT) {
 					switch (reader.getLocalName()) {
-						case "world" -> worldId = Integer.parseInt(attribute(reader, "id"));
-						case "party" -> {
+						case "world":
+							worldId = Integer.parseInt(attribute(reader, "id"));
+							break;
+						case "party":
 							token = attribute(reader, "token");
 							if (!tokens.add(worldId + ":" + token)) {
 								throw new IllegalStateException("Duplicate retail NPC party: " + worldId + ":" + token);
 							}
 							partyMembers = new ArrayList<>();
-						}
-						case "npc" -> {
+							break;
+						case "npc":
 							NpcPartyMember member = new NpcPartyMember(Integer.parseInt(attribute(reader, "id")),
 								Float.parseFloat(attribute(reader, "x")), Float.parseFloat(attribute(reader, "y")),
 								Float.parseFloat(attribute(reader, "z")), Integer.parseInt(attribute(reader, "h", "0")),
@@ -254,7 +256,7 @@ final class RetailAiDefinitionLoader {
 								throw new IllegalStateException("Retail NPC party member belongs to multiple parties: " + key);
 							}
 							partyMembers.add(member);
-						}
+							break;
 					}
 				} else if (event == XMLStreamConstants.END_ELEMENT && reader.getLocalName().equals("party")) {
 					parties.computeIfAbsent(worldId, ignored -> new ArrayList<>()).add(new NpcParty(token, partyMembers));
@@ -337,7 +339,7 @@ final class RetailAiDefinitionLoader {
 				int event = reader.next();
 				if (event == XMLStreamConstants.START_ELEMENT) {
 					switch (reader.getLocalName()) {
-						case "portal" -> {
+						case "portal":
 							id = Integer.parseInt(attribute(reader, "id"));
 							name = attribute(reader, "name");
 							time = Integer.parseInt(attribute(reader, "time"));
@@ -347,32 +349,39 @@ final class RetailAiDefinitionLoader {
 							needItem = attribute(reader, "need_item", "");
 							groupId = Integer.parseInt(attribute(reader, "group_id", "0"));
 							invadeType = Integer.parseInt(attribute(reader, "invade_type", "0"));
-						}
-						case "start", "destination" -> {
+							break;
+						case "start":
+						case "destination":
 							worldId = Integer.parseInt(attribute(reader, "world_id"));
 							npcId = Integer.parseInt(attribute(reader, "npc_id"));
 							groups = new ArrayList<>();
-						}
-						case "group" -> {
+							break;
+						case "group":
 							weight = Integer.parseInt(attribute(reader, "weight"));
 							points = new ArrayList<>();
-						}
-						case "point" -> points.add(new DirectPortalPoint(Float.parseFloat(attribute(reader, "x")),
-							Float.parseFloat(attribute(reader, "y")), Float.parseFloat(attribute(reader, "z")),
-							Float.parseFloat(attribute(reader, "dir"))));
+							break;
+						case "point":
+							points.add(new DirectPortalPoint(Float.parseFloat(attribute(reader, "x")),
+								Float.parseFloat(attribute(reader, "y")), Float.parseFloat(attribute(reader, "z")),
+								Float.parseFloat(attribute(reader, "dir"))));
+							break;
 					}
 				} else if (event == XMLStreamConstants.END_ELEMENT) {
 					switch (reader.getLocalName()) {
-						case "group" -> groups.add(new DirectPortalGroup(weight, points));
-						case "start" -> start = new DirectPortalEndpoint(worldId, npcId, groups);
-						case "destination" -> {
+						case "group":
+							groups.add(new DirectPortalGroup(weight, points));
+							break;
+						case "start":
+							start = new DirectPortalEndpoint(worldId, npcId, groups);
+							break;
+						case "destination":
 							DirectPortal portal = new DirectPortal(id, name, time, count, minLevel, maxLevel,
 								needItem, groupId, invadeType, start,
 								new DirectPortalEndpoint(worldId, npcId, groups));
 							if (portals.put(id, portal) != null) {
 								throw new IllegalStateException("Duplicate retail direct portal: " + id);
 							}
-						}
+							break;
 					}
 				}
 			}
@@ -464,31 +473,35 @@ final class RetailAiDefinitionLoader {
 				int event = reader.next();
 				if (event == XMLStreamConstants.START_ELEMENT) {
 					switch (reader.getLocalName()) {
-						case "world" -> {
+						case "world":
 							worldId = Integer.parseInt(attribute(reader, "id"));
 							worldIdsByName.put(attribute(reader, "name").toLowerCase(), worldId);
 							worldSpawns = new ArrayList<>();
 							variables.put(worldId, new HashSet<>());
-						}
-						case "variable" -> variables.get(worldId).add(attribute(reader, "name").toLowerCase());
-						case "condition" -> {
+							break;
+						case "variable":
+							variables.get(worldId).add(attribute(reader, "name").toLowerCase());
+							break;
+						case "condition":
 							conditionId = Integer.parseInt(attribute(reader, "id"));
 							expression = attribute(reader, "expression");
 							despawnAtOther = Boolean.parseBoolean(attribute(reader, "despawn_at_other"));
 							groupMode = attribute(reader, "group_mode");
 							groups = new ArrayList<>();
-						}
-						case "group" -> {
+							break;
+						case "group":
 							groupProbability = Integer.parseInt(attribute(reader, "probability"));
 							slots = new ArrayList<>();
-						}
-						case "slot" -> slot = new ArrayList<>();
-						case "party" -> {
+							break;
+						case "slot":
+							slot = new ArrayList<>();
+							break;
+						case "party":
 							choiceProbability = Integer.parseInt(attribute(reader, "probability"));
 							partyId = attribute(reader, "token");
 							partyMembers = new ArrayList<>();
-						}
-						case "npc" -> {
+							break;
+						case "npc":
 							npcId = Integer.parseInt(attribute(reader, "id"));
 							if (partyMembers == null) {
 								choiceProbability = Integer.parseInt(attribute(reader, "probability"));
@@ -503,22 +516,22 @@ final class RetailAiDefinitionLoader {
 							initialDelayExtra = Integer.parseInt(attribute(reader, "initial_delay_extra"));
 							walker = attribute(reader, "walker");
 							sensoryPoints = null;
-						}
-						case "sensory_area" -> {
+							break;
+						case "sensory_area":
 							sensoryBottom = Float.parseFloat(attribute(reader, "bottom"));
 							sensoryTop = Float.parseFloat(attribute(reader, "top"));
 							sensoryPoints = new ArrayList<>();
-						}
-						case "point" -> {
+							break;
+						case "point":
 							if (sensoryPoints != null) {
 								sensoryPoints.add(new Point2D(Float.parseFloat(attribute(reader, "x")),
 									Float.parseFloat(attribute(reader, "y"))));
 							}
-						}
+							break;
 					}
 				} else if (event == XMLStreamConstants.END_ELEMENT) {
 					switch (reader.getLocalName()) {
-						case "npc" -> {
+						case "npc":
 							Area sensoryArea = sensoryPoints == null ? null : new PolyArea(
 								ZoneName.createOrGet("retail_sensory_" + worldId + "_" + npcId + "_" + npcX + "_" + npcY),
 								worldId, sensoryPoints, sensoryBottom, sensoryTop);
@@ -529,17 +542,25 @@ final class RetailAiDefinitionLoader {
 							} else {
 								partyMembers.add(npc);
 							}
-						}
-						case "party" -> {
+							break;
+						case "party":
 							slot.add(new ConditionSpawnChoice(choiceProbability, partyId, partyMembers));
 							partyMembers = null;
 							partyId = null;
-						}
-						case "slot" -> slots.add(List.copyOf(slot));
-						case "group" -> groups.add(new ConditionSpawnGroup(groupProbability, slots));
-						case "condition" -> worldSpawns.add(new ConditionSpawn(conditionId, expression, despawnAtOther,
-							groupMode, groups));
-						case "world" -> spawns.put(worldId, List.copyOf(worldSpawns));
+							break;
+						case "slot":
+							slots.add(List.copyOf(slot));
+							break;
+						case "group":
+							groups.add(new ConditionSpawnGroup(groupProbability, slots));
+							break;
+						case "condition":
+							worldSpawns.add(new ConditionSpawn(conditionId, expression, despawnAtOther,
+								groupMode, groups));
+							break;
+						case "world":
+							spawns.put(worldId, List.copyOf(worldSpawns));
+							break;
 					}
 				}
 			}
@@ -820,27 +841,34 @@ final class RetailAiDefinitionLoader {
 							.contains(reader.getLocalName())) {
 					String zoneName = areaType.equals("skill_area") ? "retail_skill_area_" + worldId + "_" + id : name;
 					Area area = new PolyArea(ZoneName.createOrGet(zoneName), worldId, points, bottom, top);
-					if (areaType.equals("skill_area")) {
-						skillAreas.computeIfAbsent(worldId, ignored -> new HashMap<>())
-							.computeIfAbsent(id, ignored -> new ArrayList<>()).add(area);
-					} else if (areaType.equals("resurrect_area")) {
-						resurrectAreas.computeIfAbsent(worldId, ignored -> new ArrayList<>())
-							.add(new ResurrectArea(name, locationAlias, race, tribe, area, destinations));
-					} else if (areaType.equals("quest_area")) {
-						questAreas.computeIfAbsent(worldId, ignored -> new ArrayList<>())
-							.add(new QuestArea(name, questIds, area));
-					} else if (areaType.equals("limit_area")) {
-						limitAreas.computeIfAbsent(worldId, ignored -> new ArrayList<>())
-							.add(new LimitArea(name, dynamic, noBind, noRecall, noPark, noParkReenterInterval,
-								noRide, noShop, priority, area));
-					} else if (areaType.equals("groupctrl_area")) {
-						groupControlAreas.computeIfAbsent(worldId, ignored -> new ArrayList<>())
-							.add(new GroupControlArea(name, area));
-					} else {
-						Area previous = areas.computeIfAbsent(worldId, ignored -> new HashMap<>()).put(name.toLowerCase(), area);
-						if (previous != null) {
-							throw new IllegalStateException("Duplicate retail AI area: " + worldId + "/" + name);
-						}
+					switch (areaType) {
+						case "skill_area":
+							skillAreas.computeIfAbsent(worldId, ignored -> new HashMap<>())
+								.computeIfAbsent(id, ignored -> new ArrayList<>()).add(area);
+							break;
+						case "resurrect_area":
+							resurrectAreas.computeIfAbsent(worldId, ignored -> new ArrayList<>())
+								.add(new ResurrectArea(name, locationAlias, race, tribe, area, destinations));
+							break;
+						case "quest_area":
+							questAreas.computeIfAbsent(worldId, ignored -> new ArrayList<>())
+								.add(new QuestArea(name, questIds, area));
+							break;
+						case "limit_area":
+							limitAreas.computeIfAbsent(worldId, ignored -> new ArrayList<>())
+								.add(new LimitArea(name, dynamic, noBind, noRecall, noPark, noParkReenterInterval,
+									noRide, noShop, priority, area));
+							break;
+						case "groupctrl_area":
+							groupControlAreas.computeIfAbsent(worldId, ignored -> new ArrayList<>())
+								.add(new GroupControlArea(name, area));
+							break;
+						default:
+							Area previous = areas.computeIfAbsent(worldId, ignored -> new HashMap<>()).put(name.toLowerCase(), area);
+							if (previous != null) {
+								throw new IllegalStateException("Duplicate retail AI area: " + worldId + "/" + name);
+							}
+							break;
 					}
 				}
 			}

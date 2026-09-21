@@ -30,7 +30,7 @@ public class Illusion_GateAI2 extends NpcAI2
 	protected int startBarAnimation = 1;
 	protected int cancelBarAnimation = 2;
 	private final int CANCEL_DIALOG_METERS = 10;
-	
+
 	/**
 	 * 玩家开始与本 NPC 对话/交互。
 	 * Player starts dialog/interaction with this NPC.
@@ -41,7 +41,7 @@ public class Illusion_GateAI2 extends NpcAI2
 	protected void handleDialogStart(Player player) {
 		handleUseItemStart(player);
 	}
-	
+
 	/**
 	 * 开始使用交互物（进度条）。
 	 * Start using the action item (progress bar).
@@ -63,20 +63,17 @@ public class Illusion_GateAI2 extends NpcAI2
 			player.getObserveController().attach(observer);
 			PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), startBarAnimation));
 			PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.START_QUESTLOOT, 0, getObjectId()), true);
-			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
-					PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
-					player.getObserveController().removeObserver(observer);
-					handleUseItemFinish(player);
-				}
+			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
+				PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
+				player.getObserveController().removeObserver(observer);
+				handleUseItemFinish(player);
 			}, delay));
 		} else {
 			handleUseItemFinish(player);
 		}
 	}
-	
+
 	/**
 	 * 使用交互物完成时的逻辑。
 	 * Logic when action-item use finishes.
@@ -117,7 +114,7 @@ public class Illusion_GateAI2 extends NpcAI2
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SKILL_CAN_NOT_USE_GROUPGATE_NO_RIGHT);
 		}
 	}
-	
+
 	/**
 	 * 返回交互进度条时长（毫秒）。
 	 * Return interaction progress-bar duration in milliseconds.
@@ -125,7 +122,7 @@ public class Illusion_GateAI2 extends NpcAI2
 	protected int getTalkDelay() {
 		return getObjectTemplate().getTalkDelay() * 1000;
 	}
-	
+
 	/**
 	 * 是否支持移动。
 	 * Whether movement is supported.

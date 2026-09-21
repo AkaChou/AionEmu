@@ -123,13 +123,9 @@ public class Send extends AdminCommand {
 
 			delay += packetTemplate.getDelay();
 
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-				@Override
-				public void run() {
-					// log.debug("Sending: " + packetTemplate);
-					PacketSendUtility.sendPacket(target, packet);
-				}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				// log.debug("Sending: " + packetTemplate);
+				PacketSendUtility.sendPacket(target, packet);
 			}, delay);
 
 			delay += packets.getDelay();
@@ -148,7 +144,7 @@ public class Send extends AdminCommand {
 	private static class Packets implements Iterable<Packet> {
 
 		@XmlElement(name = "packet")
-		private List<Packet> packets = new ArrayList<Packet>();
+		private List<Packet> packets = new ArrayList<>();
 
 		@XmlAttribute(name = "delay")
 		private long delay = -1;
@@ -186,7 +182,7 @@ public class Send extends AdminCommand {
 	private static class Packet {
 
 		@XmlElement(name = "part")
-		private Collection<Part> parts = new ArrayList<Part>();
+		private Collection<Part> parts = new ArrayList<>();
 
 		@XmlAttribute(name = "opcode")
 		private String opcode = "-1";

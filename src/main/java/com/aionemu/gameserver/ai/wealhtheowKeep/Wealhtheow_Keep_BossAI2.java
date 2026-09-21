@@ -85,27 +85,24 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 	 * Every 15s spawns explosive sacrifices near living players: one per player when fewer than 6, otherwise a random 6 to size count.
 	 */
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelPhaseTask();
-				} else {
-					List<Player> players = getLifedPlayers();
-					if (!players.isEmpty()) {
-						int size = players.size();
-						if (players.size() < 6) {
-							for (Player p: players) {
-								spawnExplosiveSacrifice(p);
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelPhaseTask();
+			} else {
+				List<Player> players = getLifedPlayers();
+				if (!players.isEmpty()) {
+					int size = players.size();
+					if (players.size() < 6) {
+						for (Player p: players) {
+							spawnExplosiveSacrifice(p);
+						}
+					} else {
+						int count = Rnd.get(6, size);
+						for (int i = 0; i < count; i++) {
+							if (players.isEmpty()) {
+								break;
 							}
-						} else {
-							int count = Rnd.get(6, size);
-							for (int i = 0; i < count; i++) {
-								if (players.isEmpty()) {
-									break;
-								}
-								spawnExplosiveSacrifice(players.get(Rnd.get(players.size())));
-							}
+							spawnExplosiveSacrifice(players.get(Rnd.get(players.size())));
 						}
 					}
 				}
@@ -122,12 +119,9 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						spawn(855262, x, y, z, (byte) 0); //Explosive Sacrifice.
-					}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					spawn(855262, x, y, z, (byte) 0); //Explosive Sacrifice.
 				}
 			}, 3000);
 		}
@@ -138,7 +132,7 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 	 * Collects all living players in the known list.
 	 */
 	private List<Player> getLifedPlayers() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);
@@ -168,13 +162,10 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 			deleteNpcs(p.getWorldMapInstance().getNpcs(855262)); //Explosive Sacrifice.
 		}
 		// 死亡后 10 秒在固定位置生成 3 个宝箱。 / Spawns 3 treasure chests at fixed spots 10s after death.
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				spawn(701481, 780.46515f, 288.62924f, 143.18782f, (byte) 45);
-                spawn(701481, 787.1314f, 288.72644f, 143.20233f, (byte) 30);
-                spawn(701481, 793.9525f, 289.05054f, 143.18248f, (byte) 15);
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(701481, 780.46515f, 288.62924f, 143.18782f, (byte) 45);
+spawn(701481, 787.1314f, 288.72644f, 143.20233f, (byte) 30);
+spawn(701481, 793.9525f, 289.05054f, 143.18248f, (byte) 15);
 		}, 10000);
 		treasureChest();
 		cancelPhaseTask();
@@ -190,21 +181,13 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 	}
 
 	private void treasureChest() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 出现了一个宝箱。 / A treasure chest has appeared.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdC_BoxSpawn);
-			}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			// 出现了一个宝箱。 / A treasure chest has appeared.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdC_BoxSpawn);
 		});
 	}
 
 	private void announceWealhtheowKeepBoss() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_RuneElite);
-			}
-		});
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_RuneElite));
 	}
 }

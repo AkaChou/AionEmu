@@ -20,7 +20,7 @@ import com.aionemu.gameserver.world.*;
 @AIName("IDEternity_03_Dimension_Boss_01")
 public class BoliagAI2 extends AggressiveNpcAI2
 {
-	private final List<Integer> percents = new ArrayList<Integer>();
+	private final List<Integer> percents = new ArrayList<>();
 
 	@Override
 	protected void handleSpawned() {

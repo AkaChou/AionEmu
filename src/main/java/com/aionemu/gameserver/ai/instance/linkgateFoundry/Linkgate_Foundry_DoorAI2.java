@@ -24,12 +24,12 @@ public class Linkgate_Foundry_DoorAI2 extends NpcAI2
 {
 	protected int startBarAnimation = 1;
 	protected int cancelBarAnimation = 2;
-	
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		handleUseItemStart(player);
 	}
-	
+
 	/**
 	 * 使用物品交互的进度条流程：延迟结束后调用 {@link #handleUseItemFinish}。
 	 * Item-use interaction with a progress bar: calls {@link #handleUseItemFinish} after the delay.
@@ -51,31 +51,28 @@ public class Linkgate_Foundry_DoorAI2 extends NpcAI2
 			player.getObserveController().attach(observer);
 			PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), startBarAnimation));
 			PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.START_QUESTLOOT, 0, getObjectId()), true);
-			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
-					PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
-					player.getObserveController().removeObserver(observer);
-					handleUseItemFinish(player);
-				}
+			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
+				PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
+				player.getObserveController().removeObserver(observer);
+				handleUseItemFinish(player);
 			}, delay));
 		} else {
 			handleUseItemFinish(player);
 		}
 	}
-	
+
 	protected void handleUseItemFinish(Player player) {
 		if (getOwner().isInInstance()) {
 			AI2Actions.dieSilently(this, player);
 		}
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
 	protected int getTalkDelay() {
 		return getObjectTemplate().getTalkDelay() * 1000;
 	}

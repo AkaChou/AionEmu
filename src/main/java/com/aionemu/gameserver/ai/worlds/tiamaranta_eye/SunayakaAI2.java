@@ -52,29 +52,20 @@ public class SunayakaAI2 extends AggressiveNpcAI2
 				case 249145: // 狂战士苏纳亚卡 / Berserker Sunayaka.
 					// 狂战士苏纳亚卡在开战 15 分钟后狂暴。 / Berserker Sunayaka goes berserk 15 minutes after the battle starts.
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401459, 0);
-					getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-						@Override
-						public void visit(Player player) {
-							if (player.isOnline()) {
-								PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900)); // 15 分钟 / 15 Minutes.
-							}
+					getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+						if (player.isOnline()) {
+							PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900)); // 15 分钟 / 15 Minutes.
 						}
 					});
-					sunayakaRageTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							// 狂战士苏纳亚卡已狂暴。 / Berserker Sunayaka has gone berserk.
-							GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401460, 0);
-							getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-								@Override
-								public void visit(Player player) {
-									simmeringRage();
-									if (player.isOnline()) {
-										PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
-									}
-								}
-							});
-						}
+					sunayakaRageTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						// 狂战士苏纳亚卡已狂暴。 / Berserker Sunayaka has gone berserk.
+						GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401460, 0);
+						getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+							simmeringRage();
+							if (player.isOnline()) {
+								PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
+							}
+						});
 					}, 900000); // 15 分钟 / 15Min...
 				break;
 			}
@@ -101,12 +92,9 @@ public class SunayakaAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDespawned() {
 		cancelSunayakaRageTask();
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
 			}
 		});
 		super.handleDespawned();
@@ -117,12 +105,9 @@ public class SunayakaAI2 extends AggressiveNpcAI2
 		canThink = true;
 		isAggred.set(false);
 		cancelSunayakaRageTask();
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
 			}
 		});
 		super.handleBackHome();
@@ -131,12 +116,9 @@ public class SunayakaAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
 		cancelSunayakaRageTask();
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
 			}
 		});
 		super.handleDied();

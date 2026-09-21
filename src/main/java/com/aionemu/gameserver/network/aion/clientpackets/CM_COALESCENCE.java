@@ -36,7 +36,7 @@ public class CM_COALESCENCE extends AionClientPacket {
 
 	@Override
 	protected void readImpl() {
-		materialItemObjId = new ArrayList<Integer>();
+		materialItemObjId = new ArrayList<>();
 		mainItemObjId = readD();
 		materialCount = readH();
 		for (int i = 0; i < materialCount; i++) {

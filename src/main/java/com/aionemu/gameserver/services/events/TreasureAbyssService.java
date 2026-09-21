@@ -33,7 +33,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public class TreasureAbyssService {
 
 	/** 随机刷怪坐标池。 / Spawn coordinate pool. */
-	private static final List<float[]> floatArray = new ArrayList<float[]>();
+	private static final List<float[]> floatArray = new ArrayList<>();
 
 	/** 缓存的活动 cron 表达式 / Cached event cron expression */
 	private static final String ABYSS_EVENT_SCHEDULE = EventsConfig.ABYSS_EVENT_SCHEDULE;
@@ -79,14 +79,7 @@ public class TreasureAbyssService {
 	 * Schedules the Treasure Abyss event from configured cron.
 	 */
 	public static void ScheduleCron() {
-		GameCronServices.cronService().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				startEvent();
-			}
-
-		}, ABYSS_EVENT_SCHEDULE);
+		GameCronServices.cronService().schedule(() -> startEvent(), ABYSS_EVENT_SCHEDULE);
 		log.info(I18n.get("log.ef71d9caa077", EventsConfig.ABYSS_EVENT_SCHEDULE));
 	}
 
@@ -100,13 +93,7 @@ public class TreasureAbyssService {
 		}
 		announceAll("[Event] Balaur treasure chest start location quickly follow to take the prize!");
 		initPig();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				endEvent();
-			}
-		}, 30 * 60 * 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> endEvent(), 30 * 60 * 1000);
 	}
 
 	/**
@@ -116,12 +103,7 @@ public class TreasureAbyssService {
 	 * @param msg 消息内容 / message text
 	 */
 	private static void announceAll(final String msg) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendSys3Message(player, "\uE056", msg);
-			}
-		});
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE056", msg));
 	}
 
 	/**

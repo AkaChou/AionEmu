@@ -23,7 +23,7 @@ class PrivateStoreTest {
 		store.removeItem(20);
 
 		assertFalse(store.getSoldItems().containsKey(20));
-		assertEquals(Arrays.asList(10, 30), new ArrayList<Integer>(store.getSoldItems().keySet()));
+		assertEquals(Arrays.asList(10, 30), new ArrayList<>(store.getSoldItems().keySet()));
 	}
 
 	@Test

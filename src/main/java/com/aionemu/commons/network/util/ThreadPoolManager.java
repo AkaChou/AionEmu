@@ -77,7 +77,7 @@ public class ThreadPoolManager implements Executor {
 
         int packetPoolSize = packetPoolSize();
         generalPacketsThreadPoolExecutor = new ThreadPoolExecutor(packetPoolSize, packetPoolSize, 0L, TimeUnit.SECONDS,
-            new ArrayBlockingQueue<Runnable>(PACKET_QUEUE_CAPACITY),
+                new ArrayBlockingQueue<>(PACKET_QUEUE_CAPACITY),
             new PriorityThreadFactory("PacketPool", Thread.NORM_PRIORITY));
         generalPacketsThreadPoolExecutor.setRejectedExecutionHandler(new AionRejectedExecutionHandler());
         generalPacketsThreadPoolExecutor.prestartAllCoreThreads();

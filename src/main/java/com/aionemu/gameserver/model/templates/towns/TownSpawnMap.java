@@ -28,7 +28,7 @@ public class TownSpawnMap {
 	private int mapId;
 	@XmlElement(name = "town_spawn")
 	private List<TownSpawn> townSpawns;
-	private final Map<Integer, TownSpawn> townSpawnsData = new HashMap<Integer, TownSpawn>();
+	private final Map<Integer, TownSpawn> townSpawnsData = new HashMap<>();
 
 	/**
 	 * 反序列化后将城镇出生列表转为按城镇 ID 索引的映射。

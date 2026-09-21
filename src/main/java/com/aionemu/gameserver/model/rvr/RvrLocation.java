@@ -32,7 +32,7 @@ public class RvrLocation {
 	/** 返回玩家集合 / Returns the players */
 	protected Map<Integer, Player> players = new HashMap<>();
 	/** 返回是否已刷新 / Returns the spawned */
-	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
+	private final List<VisibleObject> spawned = new ArrayList<>();
 
 	public RvrLocation(RvrTemplate template) {
 		this.template = template;

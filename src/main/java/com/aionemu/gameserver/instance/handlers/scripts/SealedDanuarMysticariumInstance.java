@@ -58,26 +58,26 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 	protected boolean isInstanceDestroyed = false;
 	// 小游戏 1 / Mini Game 1
 		/** ancient box1 / ancient box1 */
-		private final List<Npc> AncientBox1 = new ArrayList<Npc>();
+		private final List<Npc> AncientBox1 = new ArrayList<>();
 		/** ancient box2 / ancient box2 */
-		private final List<Npc> AncientBox2 = new ArrayList<Npc>();
+		private final List<Npc> AncientBox2 = new ArrayList<>();
 	// 小游戏 2 / Mini Game 2
 		/** test subject48012c / test subject48012c */
-		private final List<Npc> TestSubject48012C = new ArrayList<Npc>();
+		private final List<Npc> TestSubject48012C = new ArrayList<>();
 		/** test subject48013c / test subject48013c */
-		private final List<Npc> TestSubject48013C = new ArrayList<Npc>();
+		private final List<Npc> TestSubject48013C = new ArrayList<>();
 		/** test subject48015c / test subject48015c */
-		private final List<Npc> TestSubject48015C = new ArrayList<Npc>();
+		private final List<Npc> TestSubject48015C = new ArrayList<>();
 		/** test subject48023b / test subject48023b */
-		private final List<Npc> TestSubject48023B = new ArrayList<Npc>();
+		private final List<Npc> TestSubject48023B = new ArrayList<>();
 		/** test subject48027b / test subject48027b */
-		private final List<Npc> TestSubject48027B = new ArrayList<Npc>();
+		private final List<Npc> TestSubject48027B = new ArrayList<>();
 		/** test subject48025b / test subject48025b */
-		private final List<Npc> TestSubject48025B = new ArrayList<Npc>();
+		private final List<Npc> TestSubject48025B = new ArrayList<>();
 		/** test subject48039a / test subject48039a */
-		private final List<Npc> TestSubject48039A = new ArrayList<Npc>();
+		private final List<Npc> TestSubject48039A = new ArrayList<>();
 		/** test subject48123a / test subject48123a */
-		private final List<Npc> TestSubject48123A = new ArrayList<Npc>();
+		private final List<Npc> TestSubject48123A = new ArrayList<>();
 
 	/**
 	 * 副本创建时初始化逻辑。
@@ -564,19 +564,19 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 		    if (!isStartTimer1) {
 			    isStartTimer1 = true;
 			    System.currentTimeMillis();
-			    instance.doOnAllPlayers(new Visitor<Player>() {
-				    /**
-				     * 处理 visit。
-				     * Handle visit.
-				     *
-				     * @param player 玩家 / player
-				     */
-				    @Override
-			        public void visit(Player player) {
-					    if (player.isOnline()) {
-						    startAncientBoxTimer();
-					        PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
-					    }
+			    instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
+						if (player.isOnline()) {
+							startAncientBoxTimer();
+							PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+						}
 					}
 				});
 			}
@@ -617,19 +617,19 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 		    if (!isStartTimer2) {
 			    isStartTimer2 = true;
 			    System.currentTimeMillis();
-			    instance.doOnAllPlayers(new Visitor<Player>() {
-				    /**
-				     * 处理 visit。
-				     * Handle visit.
-				     *
-				     * @param player 玩家 / player
-				     */
-				    @Override
-			        public void visit(Player player) {
-					    if (player.isOnline()) {
-						    startTestSubjectPrisonTimer();
-					        PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
-					    }
+			    instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
+						if (player.isOnline()) {
+							startTestSubjectPrisonTimer();
+							PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+						}
 					}
 				});
 			}
@@ -829,7 +829,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 	}
 
 	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -859,7 +859,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.

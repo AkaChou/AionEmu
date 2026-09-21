@@ -62,8 +62,8 @@ public class AutoGroupService {
 
 	private static volatile ObjectProvider<AutoGroupService> instanceProvider;
 	private static volatile AutoGroupService resolvedInstance;
-	private final Map<Integer, LookingForParty> searchers = new ConcurrentHashMap<Integer, LookingForParty>();
-	private final Map<Integer, AutoInstance> autoInstances = new ConcurrentHashMap<Integer, AutoInstance>();
+	private final Map<Integer, LookingForParty> searchers = new ConcurrentHashMap<>();
+	private final Map<Integer, AutoInstance> autoInstances = new ConcurrentHashMap<>();
 	private final Collection<Integer> penaltys = ConcurrentHashMap.newKeySet();
 	private final Lock lock = new ReentrantLock();
 
@@ -589,7 +589,7 @@ public class AutoGroupService {
 	private void startSort(EntryRequestType ert, Integer instanceMaskId, boolean checkNewGroup) {
 		lock.lock();
 		try {
-			Collection<Player> players = new HashSet<Player>();
+			Collection<Player> players = new HashSet<>();
 			if (ert.isFastGroupEntry()) {
 				for (LookingForParty lfp : searchers.values()) {
 					if (lfp.getPlayer() == null || lfp.isOnStartEnterTask()) {
@@ -876,12 +876,7 @@ public class AutoGroupService {
 	private void startPenalty(final Integer obj) {
 		penaltys.remove(obj);
 		penaltys.add(obj);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				penaltys.remove(obj);
-			}
-		}, 10000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> penaltys.remove(obj), 10000);
 	}
 
 	/**

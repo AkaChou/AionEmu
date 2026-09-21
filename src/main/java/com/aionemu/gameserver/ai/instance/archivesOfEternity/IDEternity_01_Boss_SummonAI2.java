@@ -217,60 +217,48 @@ public class IDEternity_01_Boss_SummonAI2 extends ActionItemNpcAI2
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);
 	}
-	
+
 	private void announceSummon1() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 第一支配之柱已激活。 / The First Column of Dominion  has been activated.
-				    PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_01_On, 0);
-				    // 第一支配之柱已停用。 / The First Column of Dominion has been deactivated.
-				    PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_01_Off, 2000);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 第一支配之柱已激活。 / The First Column of Dominion  has been activated.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_01_On, 0);
+				// 第一支配之柱已停用。 / The First Column of Dominion has been deactivated.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_01_Off, 2000);
 			}
 		});
 	}
 	private void announceSummon2() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 第二支配之柱已激活。 / The Second Column of Dominion  has been activated.
-				    PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_02_On, 0);
-				    // 第二支配之柱已停用。 / The Second Column of Dominion has been deactivated.
-				    PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_02_Off, 2000);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 第二支配之柱已激活。 / The Second Column of Dominion  has been activated.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_02_On, 0);
+				// 第二支配之柱已停用。 / The Second Column of Dominion has been deactivated.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_02_Off, 2000);
 			}
 		});
 	}
 	private void announceSummon3() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 第三支配之柱已激活。 / The Third Column of Dominion  has been activated.
-				    PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_03_On, 0);
-				    // 第三支配之柱已停用。 / The Third Column of Dominion has been deactivated.
-				    PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_03_Off, 2000);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 第三支配之柱已激活。 / The Third Column of Dominion  has been activated.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_03_On, 0);
+				// 第三支配之柱已停用。 / The Third Column of Dominion has been deactivated.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_03_Off, 2000);
 			}
 		});
 	}
 	private void announceSummon4() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 第四支配之柱已激活。 / The Fourth Column of Dominion  has been activated.
-				    PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_04_On, 0);
-				    // 第四支配之柱已停用。 / The Fourth Column of Dominion has been deactivated.
-				    PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_04_Off, 2000);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 第四支配之柱已激活。 / The Fourth Column of Dominion  has been activated.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_04_On, 0);
+				// 第四支配之柱已停用。 / The Fourth Column of Dominion has been deactivated.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_01_Summon_Ctrl_04_Off, 2000);
 			}
 		});
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

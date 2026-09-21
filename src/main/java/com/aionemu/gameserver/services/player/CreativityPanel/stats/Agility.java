@@ -19,7 +19,7 @@ public class Agility implements StatOwner {
 
 	private static volatile ObjectProvider<Agility> instanceProvider;
 
-	private final List<IStatFunction> agility = new ArrayList<IStatFunction>();
+	private final List<IStatFunction> agility = new ArrayList<>();
 
 	/**
 	 * 属性变更时重算。

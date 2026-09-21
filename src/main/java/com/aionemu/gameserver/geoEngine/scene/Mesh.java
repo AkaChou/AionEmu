@@ -70,7 +70,7 @@ public class Mesh {
 	// VertexBuffer>(VertexBuffer.Type.class);
 	// private VertexBuffer[] buffers = new VertexBuffer[BUFFERS_SIZE];
 	/** 按类型序数索引的顶点缓冲映射。 / Vertex buffers keyed by type ordinal. */
-	private final IntMap<VertexBuffer> buffers = new IntMap<VertexBuffer>();
+	private final IntMap<VertexBuffer> buffers = new IntMap<>();
 	/** 点大小。 / Point size. */
 	private float pointSize = 1;
 	/** 线宽。 / Line width. */
@@ -226,7 +226,7 @@ public class Mesh {
 	 */
 	@SuppressWarnings("unchecked")
 	public void setInterleaved() {
-		ArrayList<VertexBuffer> vbs = new ArrayList<VertexBuffer>();
+		ArrayList<VertexBuffer> vbs = new ArrayList<>();
 		for (Entry<VertexBuffer> entry : buffers) {
 			vbs.add(entry.getValue());
 		}
@@ -733,15 +733,16 @@ public class Mesh {
 		}
 
 		Buffer buf = vb.getData();
-		if (buf instanceof ByteBuffer) {
-			return new IndexByteBuffer((ByteBuffer) buf);
-		} else if (buf instanceof ShortBuffer) {
-			return new IndexShortBuffer((ShortBuffer) buf);
-		} else if (buf instanceof IntBuffer) {
-			return new IndexIntBuffer((IntBuffer) buf);
-		} else {
-			throw new UnsupportedOperationException("Index buffer type unsupported: " + buf.getClass());
-		}
+        switch (buf) {
+            case ByteBuffer byteBuffer:
+                return new IndexByteBuffer(byteBuffer);
+            case ShortBuffer shortBuffer:
+                return new IndexShortBuffer(shortBuffer);
+            case IntBuffer intBuffer:
+                return new IndexIntBuffer(intBuffer);
+            default:
+                throw new UnsupportedOperationException("Index buffer type unsupported: " + buf.getClass());
+        }
 	}
 
 	/**

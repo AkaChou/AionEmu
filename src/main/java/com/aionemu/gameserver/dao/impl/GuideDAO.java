@@ -76,7 +76,7 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	 */
 	@Override
 	public List<Guide> loadGuides(int playerId) {
-		final List<Guide> guides = new ArrayList<Guide>();
+		final List<Guide> guides = new ArrayList<>();
 
 		try (Connection con = DatabaseFactory.getConnection();
 			 PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {
@@ -158,7 +158,7 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	 */
 	@Override
 	public int[] getUsedIDs() {
-		List<Integer> ids = new ArrayList<Integer>();
+		List<Integer> ids = new ArrayList<>();
 
 		try (Connection con = DatabaseFactory.getConnection();
 			 PreparedStatement statement = con.prepareStatement(SELECT_USED_IDS_QUERY, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);

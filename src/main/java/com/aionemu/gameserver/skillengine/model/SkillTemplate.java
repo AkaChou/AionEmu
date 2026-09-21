@@ -627,7 +627,7 @@ public class SkillTemplate {
 			for (EffectTemplate et : this.getEffects().getEffects()) {
 				if (et.getEffectid() != 0) {
 					if (effectIds == null) {
-						effectIds = new HashMap<Integer, Integer>();
+						effectIds = new HashMap<>();
 					}
 					effectIds.put(et.getEffectid(), et.getBasicLvl());
 				}

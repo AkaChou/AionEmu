@@ -26,7 +26,7 @@ public class PlayerMoveTaskManager extends AbstractPeriodicTaskManager {
 	 * 正在移动的玩家/生物（objectId → 对象）。
 	 * Moving players/creatures (objectId → creature).
 	 */
-	private final Map<Integer, Creature> movingPlayers = new ConcurrentHashMap<Integer, Creature>();
+	private final Map<Integer, Creature> movingPlayers = new ConcurrentHashMap<>();
 
 	/**
 	 * 以 200ms 周期构造玩家移动任务管理器。

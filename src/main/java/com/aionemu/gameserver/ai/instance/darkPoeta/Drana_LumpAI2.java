@@ -22,17 +22,17 @@ import java.util.concurrent.Future;
 public class Drana_LumpAI2 extends AggressiveNpcAI2
 {
 	private Future<?> dranaBreakTask;
-	
+
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		startDranaBreak();
 		super.handleSpawned();
 	}
-	
+
 	private void startDranaBreak() {
 		final Npc spallerEchtra = getPosition().getWorldMapInstance().getNpc(214880); //Spaller Echtra.
 		final Npc spallerRakanatra = getPosition().getWorldMapInstance().getNpc(215388); //Spaller Rakanatra.
@@ -48,19 +48,16 @@ public class Drana_LumpAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	private void dranaBreak() {
-		dranaBreakTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.targetCreature(Drana_LumpAI2.this, getPosition().getWorldMapInstance().getNpc(214880)); //Spaller Echtra.
-				AI2Actions.targetCreature(Drana_LumpAI2.this, getPosition().getWorldMapInstance().getNpc(215388)); //Spaller Rakanatra.
-				AI2Actions.targetCreature(Drana_LumpAI2.this, getPosition().getWorldMapInstance().getNpc(215389)); //Spaller Dhatra.
-				AI2Actions.useSkill(Drana_LumpAI2.this, 18536); // 德拉纳破坏。 / Drana Break.
-			}
+		dranaBreakTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			AI2Actions.targetCreature(Drana_LumpAI2.this, getPosition().getWorldMapInstance().getNpc(214880)); //Spaller Echtra.
+			AI2Actions.targetCreature(Drana_LumpAI2.this, getPosition().getWorldMapInstance().getNpc(215388)); //Spaller Rakanatra.
+			AI2Actions.targetCreature(Drana_LumpAI2.this, getPosition().getWorldMapInstance().getNpc(215389)); //Spaller Dhatra.
+			AI2Actions.useSkill(Drana_LumpAI2.this, 18536); // 德拉纳破坏。 / Drana Break.
 		}, 1000, 6000);
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

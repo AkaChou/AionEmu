@@ -44,23 +44,18 @@ public final class ThreadPoolManager {
         scheduledPool.setRejectedExecutionHandler(new AionRejectedExecutionHandler());
         scheduledPool.prestartAllCoreThreads();
 
-        instantPool = new ThreadPoolExecutor(instantPoolSize, instantPoolSize, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(100000));
+        instantPool = new ThreadPoolExecutor(instantPoolSize, instantPoolSize, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100000));
         instantPool.setRejectedExecutionHandler(new AionRejectedExecutionHandler());
         instantPool.prestartAllCoreThreads();
 
         int longRunningPoolSize = longRunningPoolSize();
         longRunningPool = new ThreadPoolExecutor(longRunningPoolSize, longRunningPoolSize, 0, TimeUnit.SECONDS,
-                new ArrayBlockingQueue<Runnable>(LONG_RUNNING_QUEUE_CAPACITY),
+                new ArrayBlockingQueue<>(LONG_RUNNING_QUEUE_CAPACITY),
                 new PriorityThreadFactory("LongRunningPool", Thread.NORM_PRIORITY));
         longRunningPool.setRejectedExecutionHandler(new AionRejectedExecutionHandler());
         longRunningPool.prestartAllCoreThreads();
 
-        scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                purge();
-            }
-        }, 150000, 150000);
+        scheduleAtFixedRate(() -> purge(), 150000, 150000);
 
         log.info(I18n.get("log.17977a3c1da1", scheduledPool.getPoolSize(), instantPool.getPoolSize(), longRunningPool.getPoolSize()));
     }
@@ -275,7 +270,7 @@ public final class ThreadPoolManager {
      * @return 可读统计行列表 / human-readable stats lines
      */
     public List<String> getStats() {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
 
         list.add("");
         list.add("Scheduled pool:");

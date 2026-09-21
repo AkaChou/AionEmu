@@ -61,12 +61,7 @@ public class Agent extends AdminCommand
 				PacketSendUtility.sendMessage(player, "<Agent Fight> " + agentId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Agent Fight> " + agentId + " started!");
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player player) {
-						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_GodElite);
-					}
-				});
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player1 -> PacketSendUtility.sendPacket(player1, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_GodElite));
 				GameLocationBootstrapServices.agentService().startAgentFight(agentId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {

@@ -20,33 +20,25 @@ public class Ophidan_BombAI2 extends AggressiveNpcAI2
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				startLifeTask();
-				GameEngineServices.skillEngine().getSkill(getOwner(), 21709, 60, getOwner()).useNoAnimationSkill();
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			startLifeTask();
+			GameEngineServices.skillEngine().getSkill(getOwner(), 21709, 60, getOwner()).useNoAnimationSkill();
 		}, 1000);
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(Ophidan_BombAI2.this);
-			}
-		}, 10000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Ophidan_BombAI2.this), 10000);
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();

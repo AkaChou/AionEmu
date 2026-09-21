@@ -106,11 +106,21 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 			}
 			try {
 				switch (kind) {
-					case GOLD, KINAH -> kinah = Math.addExact(kinah, amount);
-					case AP -> apTotal = Math.addExact(apTotal, amount);
-					case GP -> gpTotal = Math.addExact(gpTotal, amount);
-					case DP -> dpTotal = Math.addExact(dpTotal, amount);
-					default -> throw new SQLException("unsupported currency reward " + kind);
+					case GOLD:
+					case KINAH:
+						kinah = Math.addExact(kinah, amount);
+						break;
+					case AP:
+						apTotal = Math.addExact(apTotal, amount);
+						break;
+					case GP:
+						gpTotal = Math.addExact(gpTotal, amount);
+						break;
+					case DP:
+						dpTotal = Math.addExact(dpTotal, amount);
+						break;
+					default:
+						throw new SQLException("unsupported currency reward " + kind);
 				}
 			} catch (ArithmeticException overflow) {
 				throw new SQLException("currency reward amount overflow for player " + snapshot.playerId(), overflow);
@@ -279,13 +289,22 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 					if (!supported(debit.kind())) {
 						throw new SQLException("no transactional currency store for kind " + debit.kind());
 					}
-					switch (canonicalCurrencyKind(debit.kind())) {
-						case GOLD -> kinah = Math.addExact(kinah, debit.amount());
-						case AP -> ap = Math.addExact(ap, Math.toIntExact(debit.amount()));
-						case GP -> gp = Math.addExact(gp, Math.toIntExact(debit.amount()));
-						case DP -> dp = Math.addExact(dp, Math.toIntExact(debit.amount()));
-						default -> throw new SQLException("unsupported currency debit " + debit.kind());
-					}
+                switch (canonicalCurrencyKind(debit.kind())) {
+                    case GOLD:
+                        kinah = Math.addExact(kinah, debit.amount());
+                        break;
+                    case AP:
+                        ap = Math.addExact(ap, Math.toIntExact(debit.amount()));
+                        break;
+                    case GP:
+                        gp = Math.addExact(gp, Math.toIntExact(debit.amount()));
+                        break;
+                    case DP:
+                        dp = Math.addExact(dp, Math.toIntExact(debit.amount()));
+                        break;
+                    default:
+                        throw new SQLException("unsupported currency debit " + debit.kind());
+                }
 			}
 		} catch (ArithmeticException overflow) {
 			throw new SQLException("currency debit amount overflow for player " + snapshot.playerId(), overflow);

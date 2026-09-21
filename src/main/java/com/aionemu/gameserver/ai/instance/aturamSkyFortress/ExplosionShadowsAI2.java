@@ -44,20 +44,14 @@ public class ExplosionShadowsAI2 extends AggressiveNpcAI2
 
 	private void doSchedule() {
 		if (!isAlreadyDead()) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						GameEngineServices.skillEngine().getSkill(getOwner(), 19425, 49, getOwner()).useNoAnimationSkill();
-						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-							@Override
-							public void run() {
-								if (!isAlreadyDead()) {
-									check();
-								}
-							}
-						}, 1500);
-					}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19425, 49, getOwner()).useNoAnimationSkill();
+					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						if (!isAlreadyDead()) {
+							check();
+						}
+					}, 1500);
 				}
 			}, 3000);
 		}
@@ -66,25 +60,19 @@ public class ExplosionShadowsAI2 extends AggressiveNpcAI2
 	private void check() {
 		getPosition().getWorldMapInstance().getDoors().get(17).setOpen(false);
 		getPosition().getWorldMapInstance().getDoors().get(2).setOpen(false);
-		getKnownList().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.getEffectController().hasAbnormalEffect(19502) ||
-				    player.getEffectController().hasAbnormalEffect(21807) ||
-				    player.getEffectController().hasAbnormalEffect(21808)) {
-					final Npc npc = (Npc) spawn(799657, player.getX(), player.getY(), player.getZ(), player.getHeading());
-					player.getEffectController().removeEffect(19502);
-					player.getEffectController().removeEffect(21807);
-					player.getEffectController().removeEffect(21808);
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							if (npc != null && !npc.getLifeStats().isAlreadyDead()) {
-								npc.getController().onDelete();
-							}
-						}
-					}, 4000);
-				}
+		getKnownList().doOnAllPlayers(player -> {
+			if (player.getEffectController().hasAbnormalEffect(19502) ||
+				player.getEffectController().hasAbnormalEffect(21807) ||
+				player.getEffectController().hasAbnormalEffect(21808)) {
+				final Npc npc = (Npc) spawn(799657, player.getX(), player.getY(), player.getZ(), player.getHeading());
+				player.getEffectController().removeEffect(19502);
+				player.getEffectController().removeEffect(21807);
+				player.getEffectController().removeEffect(21808);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					if (npc != null && !npc.getLifeStats().isAlreadyDead()) {
+						npc.getController().onDelete();
+					}
+				}, 4000);
 			}
 		});
 		AI2Actions.deleteOwner(this);

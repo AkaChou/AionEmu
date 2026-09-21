@@ -59,7 +59,7 @@ public class WindstreamData {
 	}
 
 	private void indexTemplates() {
-		windstreams = new IntObjectHashMap<WindstreamTemplate>();
+		windstreams = new IntObjectHashMap<>();
 		for (WindstreamTemplate wt : wts) {
 			windstreams.put(wt.getMapid(), wt);
 		}

@@ -40,7 +40,7 @@ public class PlayerRecipesDAO extends com.aionemu.gameserver.dao.PlayerRecipesDA
 	 */
 	@Override
 	public RecipeList load(final int playerId) {
-		final HashSet<Integer> recipeList = new HashSet<Integer>();
+		final HashSet<Integer> recipeList = new HashSet<>();
 
 		try (Connection con = DatabaseFactory.getConnection();
 			 PreparedStatement ps = con.prepareStatement(SELECT_QUERY)) {

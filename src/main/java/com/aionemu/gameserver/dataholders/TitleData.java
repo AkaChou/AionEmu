@@ -32,7 +32,7 @@ public class TitleData {
 	 * After JAXB unmarshalling, indexes templates by title id and clears the source list.
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		titles = new IntObjectHashMap<TitleTemplate>();
+		titles = new IntObjectHashMap<>();
 		for (TitleTemplate tt : tts) {
 			titles.put(tt.getTitleId(), tt);
 		}

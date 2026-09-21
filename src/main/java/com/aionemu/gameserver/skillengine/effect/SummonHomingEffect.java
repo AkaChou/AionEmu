@@ -85,13 +85,9 @@ public class SummonHomingEffect extends SummonEffect {
 				effect.setActionObserver(observer, position);
 			}
 			// 以防万一调度取消生成 / Schedule a despawn just in case
-			Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-				@Override
-				public void run() {
-					if ((homing != null) && (homing.isSpawned())) {
-						homing.getController().onDelete();
-					}
+			Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if ((homing != null) && (homing.isSpawned())) {
+					homing.getController().onDelete();
 				}
 			}, 15 * 1000L);
 			homing.getController().addTask(TaskId.DESPAWN, task);

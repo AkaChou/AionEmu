@@ -88,7 +88,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
 	/** 已播放动画集合 / played-movie set */
-	private final List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<>();
 	/** illuminary task1 / illuminary task1 */
 		private final List<Future<?>> illuminaryTask1 = new ArrayList<>();
 	/** illuminary task2 / illuminary task2 */
@@ -262,7 +262,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				}
 			break;
 			case 730886: //Shield Control Room Teleporter.
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -530,20 +530,20 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
             @Override
             public void run() {
 				spawn(702220, 255.56438f, 297.59488f, 321.39154f, (byte) 29); //Eastern Defence Charge 03.
-				instance.doOnAllPlayers(new Visitor<Player>() {
-				    /**
-				     * 处理 visit。
-				     * Handle visit.
-				     *
-				     * @param player 玩家 / player
-				     */
-				    @Override
-				    public void visit(Player player) {
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
 						illuminaryWave++;
 						stopInstance1(player);
 						easternTaskE4.cancel(true);
-				    }
-			    });
+					}
+				});
             }
         }, 480000)); //...8Min
 	}
@@ -607,20 +607,20 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
             @Override
             public void run() {
 				spawn(702223, 255.38777f, 212.00926f, 321.37292f, (byte) 90); //Western Defence Charge 03.
-				instance.doOnAllPlayers(new Visitor<Player>() {
-				    /**
-				     * 处理 visit。
-				     * Handle visit.
-				     *
-				     * @param player 玩家 / player
-				     */
-				    @Override
-				    public void visit(Player player) {
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
 						illuminaryWave++;
 						stopInstance2(player);
 						westernTaskW4.cancel(true);
-				    }
-			    });
+					}
+				});
             }
         }, 480000)); //...8Min
 	}
@@ -684,20 +684,20 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
             @Override
             public void run() {
 				spawn(702226, 298.13452f, 254.48087f, 295.93027f, (byte) 119); //Southern Defence Charge 03.
-				instance.doOnAllPlayers(new Visitor<Player>() {
-				    /**
-				     * 处理 visit。
-				     * Handle visit.
-				     *
-				     * @param player 玩家 / player
-				     */
-				    @Override
-				    public void visit(Player player) {
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
 						illuminaryWave++;
 						stopInstance3(player);
 						southernTaskS4.cancel(true);
-				    }
-			    });
+					}
+				});
             }
         }, 480000)); //...8Min
 	}
@@ -761,20 +761,20 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
             @Override
             public void run() {
 				spawn(702229, 212.96484f, 254.4526f, 295.90784f, (byte) 60); //Northern Defence Charge 03.
-				instance.doOnAllPlayers(new Visitor<Player>() {
-				    /**
-				     * 处理 visit。
-				     * Handle visit.
-				     *
-				     * @param player 玩家 / player
-				     */
-				    @Override
-				    public void visit(Player player) {
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
 						illuminaryWave++;
 						stopInstance4(player);
 						northernTaskN4.cancel(true);
-				    }
-			    });
+					}
+				});
             }
         }, 480000)); //...8Min
 	}
@@ -1360,7 +1360,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 
 	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -1398,20 +1398,20 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
+				instance.doOnAllPlayers(new Visitor<>() {
+                    /**
+                     * 处理 visit。
+                     * Handle visit.
+                     *
+                     * @param player 玩家 / player
+                     */
+                    @Override
+                    public void visit(Player player) {
+                        if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
+                            PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
+                        }
+                    }
+                });
 			}
 		}, time);
 	}

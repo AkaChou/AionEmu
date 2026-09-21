@@ -35,7 +35,7 @@ public class MapWeatherData {
 	 * After JAXB unmarshalling, indexes weather tables by map id and clears the list.
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		mapWeather = new IntObjectHashMap<WeatherTable>();
+		mapWeather = new IntObjectHashMap<>();
 
 		for (WeatherTable table : weatherData) {
 			mapWeather.put(table.getMapId(), table);

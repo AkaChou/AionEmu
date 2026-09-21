@@ -78,28 +78,25 @@ public class IDTiamatT1CrackKeyNamed65AlAI2 extends AggressiveNpcAI2
 	}
 
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelPhaseTask();
-				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 20172, 60, getOwner()).useNoAnimationSkill();
-					List<Player> players = getLifedPlayers();
-					if (!players.isEmpty()) {
-						int size = players.size();
-						if (players.size() < 6) {
-							for (Player p: players) {
-								spawnCollapsingEarth(p);
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelPhaseTask();
+			} else {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 20172, 60, getOwner()).useNoAnimationSkill();
+				List<Player> players = getLifedPlayers();
+				if (!players.isEmpty()) {
+					int size = players.size();
+					if (players.size() < 6) {
+						for (Player p: players) {
+							spawnCollapsingEarth(p);
+						}
+					} else {
+						int count = Rnd.get(6, size);
+						for (int i = 0; i < count; i++) {
+							if (players.isEmpty()) {
+								break;
 							}
-						} else {
-							int count = Rnd.get(6, size);
-							for (int i = 0; i < count; i++) {
-								if (players.isEmpty()) {
-									break;
-								}
-								spawnCollapsingEarth(players.get(Rnd.get(players.size())));
-							}
+							spawnCollapsingEarth(players.get(Rnd.get(players.size())));
 						}
 					}
 				}
@@ -112,22 +109,19 @@ public class IDTiamatT1CrackKeyNamed65AlAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						spawn(282735, x, y, z, (byte) 0); //Cavity Of Earth.
-						// 大地之腔。 / Cavity Of Earth.
-						spawn(282737, x, y, z, (byte) 0); //Collapsing Earth.
-						// 崩塌的大地。 / Collapsing Earth.
-					}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					spawn(282735, x, y, z, (byte) 0); //Cavity Of Earth.
+					// 大地之腔。 / Cavity Of Earth.
+					spawn(282737, x, y, z, (byte) 0); //Collapsing Earth.
+					// 崩塌的大地。 / Collapsing Earth.
 				}
 			}, 3000);
 		}
 	}
 
 	private List<Player> getLifedPlayers() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);

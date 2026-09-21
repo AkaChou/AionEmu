@@ -34,7 +34,7 @@ public class StaticDoorData {
 	private List<StaticDoorWorld> staticDorWorlds;
 
 	/** 门模板映射。 / Map of all door templates. */
-	private final IntObjectHashMap<StaticDoorWorld> staticDoorData = new IntObjectHashMap<StaticDoorWorld>();
+	private final IntObjectHashMap<StaticDoorWorld> staticDoorData = new IntObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，按世界 ID 重建门模板索引。

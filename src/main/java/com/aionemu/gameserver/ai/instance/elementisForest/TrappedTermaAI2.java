@@ -28,7 +28,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class TrappedTermaAI2 extends NpcAI2 {
 
 	private boolean isMove;
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -54,23 +54,16 @@ public class TrappedTermaAI2 extends NpcAI2 {
 		PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getOwner().getObjectId()));
 		dead();
 	}
-	
+
 	private void dead() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				getOwner().getController().die();
-			}
-
-		}, 16000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> getOwner().getController().die(), 16000);
 	}
-	
+
 	@Override
 	public boolean canThink() {
 		return false;
 	}
-	
+
 	@Override
 	public int modifyDamage(int damage) {
 		return 1;

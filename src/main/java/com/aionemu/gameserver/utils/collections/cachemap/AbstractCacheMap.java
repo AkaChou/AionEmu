@@ -34,13 +34,13 @@ abstract class AbstractCacheMap<K, V> implements CacheMap<K, V> {
 	 * 存储缓存对象引用的映射。
 	 * Map storing references to cached objects.
 	 */
-	protected final Map<K, Reference<V>> cacheMap = new HashMap<K, Reference<V>>();
+	protected final Map<K, Reference<V>> cacheMap = new HashMap<>();
 
 	/**
 	 * 引用回收队列。
 	 * Reference queue for cleared entries.
 	 */
-	protected final ReferenceQueue<V> refQueue = new ReferenceQueue<V>();
+	protected final ReferenceQueue<V> refQueue = new ReferenceQueue<>();
 
 	/**
 	 * 使用缓存名与值名构造。

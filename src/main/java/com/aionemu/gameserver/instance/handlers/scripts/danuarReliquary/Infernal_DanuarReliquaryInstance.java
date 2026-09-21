@@ -35,7 +35,7 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 		private Future<?> infernalReliquaryTask;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
-	
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -60,7 +60,7 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
             break;
         }
     }
-	
+
    /**
 	 * 莫多尔启动了达努亚怨念炸弹 / Modor activated the Danuar Bomb of grudge
 	 */
@@ -69,7 +69,7 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 		sendMsgByRace(1401676, Race.PC_ALL, 5000);
 		this.sendMessage(1401677, 10 * 60 * 1000); //10 minutes elapsed.
 		this.sendMessage(1401678, 15 * 60 * 1000); //The bomb has detonated.
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -79,14 +79,14 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-				    infernalReliquaryTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					infernalReliquaryTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						/**
 						 * 处理 run。
 						 * Handle run.
 						 */
 						@Override
 						public void run() {
-							instance.doOnAllPlayers(new Visitor<Player>() {
+							instance.doOnAllPlayers(new Visitor<>() {
 								/**
 								 * 处理 visit。
 								 * Handle visit.
@@ -105,7 +105,7 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 			}
 		});
     }
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -134,21 +134,21 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 				} else if (ideanKilled == 2) {
 				} else if (ideanKilled == 3) {
 				    spawn(234690, 256.45197f, 257.91986f, 241.78688f, (byte) 90); //Vengeful Modor.
-					instance.doOnAllPlayers(new Visitor<Player>() {
-					    /**
-					     * 处理 visit。
-					     * Handle visit.
-					     *
-					     * @param player 玩家 / player
-					     */
-					    @Override
-					    public void visit(Player player) {
-						    if (player.isOnline()) {
-							    startInfernalReliquaryTimer();
-							    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900)); //15 Minutes.
-						    }
-					    }
-				    });
+					instance.doOnAllPlayers(new Visitor<>() {
+						/**
+						 * 处理 visit。
+						 * Handle visit.
+						 *
+						 * @param player 玩家 / player
+						 */
+						@Override
+						public void visit(Player player) {
+							if (player.isOnline()) {
+								startInfernalReliquaryTimer();
+								PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900)); //15 Minutes.
+							}
+						}
+					});
 				}
 				despawnNpc(npc);
 			break;
@@ -168,26 +168,26 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <[Infernal] Danuar Reliquary>");
 				spawn(730843, 256.45197f, 257.91986f, 241.78688f, (byte) 90); //[Infernal] Danuar Reliquary Exit.
 				spawn(701795, 256.39725f, 255.52034f, 241.78006f, (byte) 90); //[Infernal] Danuar Reliquary Box.
-				instance.doOnAllPlayers(new Visitor<Player>() {
-			        /**
-			         * 处理 visit。
-			         * Handle visit.
-			         *
-			         * @param player 玩家 / player
-			         */
-			        @Override
-			        public void visit(Player player) {
-				        if (player.isOnline()) {
-						    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
-					    }
-				    }
-			    });
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
+						if (player.isOnline()) {
+							PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
+						}
+					}
+				});
 			break;
 		}
 	}
-	
+
 	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -208,7 +208,7 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 延迟时间 / delay time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -217,24 +217,24 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
+				instance.doOnAllPlayers(new Visitor<>() {
+                    /**
+                     * 处理 visit。
+                     * Handle visit.
+                     *
+                     * @param player 玩家 / player
+                     */
+                    @Override
+                    public void visit(Player player) {
+                        if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
+                            PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
+                        }
+                    }
+                });
 			}
 		}, time);
 	}
-	
+
 	private void sendMessage(final int msgId, long delay) {
         if (delay == 0) {
             this.sendMsg(msgId);
@@ -250,7 +250,7 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
             }, delay);
         }
     }
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -259,7 +259,7 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 	public void onInstanceDestroy() {
 		isInstanceDestroyed = true;
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
@@ -271,7 +271,7 @@ public class Infernal_DanuarReliquaryInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	public void onExitInstance(Player player) {
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 	}

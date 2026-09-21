@@ -31,8 +31,8 @@ public class TerritoryService {
 	private static volatile ObjectProvider<TerritoryService> instanceProvider;
 	private TerritoryBuff territoryBuff;
 	private final Map<Integer, TerritoryBuff> buffs = new HashMap<>();
-	private final TreeMap<Integer, LegionTerritory> territories = new TreeMap<Integer, LegionTerritory>();
-	private final TreeMap<Integer, TreeMap<Integer, WorldPosition>> teleporters = new TreeMap<Integer, TreeMap<Integer, WorldPosition>>();
+	private final TreeMap<Integer, LegionTerritory> territories = new TreeMap<>();
+	private final TreeMap<Integer, TreeMap<Integer, WorldPosition>> teleporters = new TreeMap<>();
 
 	/**
 	 * 初始化全部领地槽位并从数据库加载军团占领状态。
@@ -40,7 +40,7 @@ public class TerritoryService {
 	 */
 	public void initTerritory() {
 		LegionService ls = GameCoreGameplayServices.legionService();
-		Collection<Legion> legions = new ArrayList<Legion>();
+		Collection<Legion> legions = new ArrayList<>();
 		int counter = 0;
 		for (int i = 1; i <= 6; i++) {
 			territories.put(i, new LegionTerritory(i));
@@ -137,7 +137,7 @@ public class TerritoryService {
 	 * @param player 发起扫描的玩家 / Scanning player
 	 */
 	public void scanForIntruders(Player player) {
-		Collection<Player> players = new ArrayList<Player>();
+		Collection<Player> players = new ArrayList<>();
 		Iterator<Player> playerIt = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (playerIt.hasNext()) {
 			Player enemy = playerIt.next();
@@ -194,7 +194,7 @@ public class TerritoryService {
 		LegionTerritory fakeTerritory = new LegionTerritory(oldTerritoryId);
 		territories.remove(oldTerritoryId);
 		territories.put(oldTerritoryId, fakeTerritory);
-		TreeMap<Integer, LegionTerritory> lostTerr = new TreeMap<Integer, LegionTerritory>();
+		TreeMap<Integer, LegionTerritory> lostTerr = new TreeMap<>();
 		lostTerr.put(oldTerritoryId, fakeTerritory);
 		broadcastTerritoryList(lostTerr);
 		broadcastToLegion(legion);

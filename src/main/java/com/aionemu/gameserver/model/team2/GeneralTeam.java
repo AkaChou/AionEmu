@@ -25,10 +25,10 @@ import com.google.common.collect.Collections2;
 @Slf4j
 public abstract class GeneralTeam<M extends AionObject, TM extends TeamMember<M>> extends AionObject
 		implements Team<M, TM> {
-	protected final Map<Integer, TM> members = new ConcurrentHashMap<Integer, TM>();
+	protected final Map<Integer, TM> members = new ConcurrentHashMap<>();
 	protected final Lock teamLock = new ReentrantLock();
 	private TM leader;
-	private final MemberTransformFunction<TM, M> TRANSFORM_FUNCTION = new MemberTransformFunction<TM, M>();
+	private final MemberTransformFunction<TM, M> TRANSFORM_FUNCTION = new MemberTransformFunction<>();
 
 	public GeneralTeam(Integer objId) {
 		super(objId);

@@ -50,7 +50,7 @@ public class PlayerAllianceInvite extends RequestResponseHandler {
 					return;
 				}
 			}
-			List<Player> playersToAdd = new ArrayList<Player>();
+			List<Player> playersToAdd = new ArrayList<>();
 			collectPlayersToAdd(playersToAdd, alliance);
 			if (alliance == null) {
 				alliance = PlayerAllianceService.createAlliance(inviter, invited, TeamType.ALLIANCE);

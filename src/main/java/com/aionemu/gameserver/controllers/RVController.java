@@ -35,7 +35,7 @@ public class RVController extends NpcController {
 	/** 是否为入侵旋涡。 / Whether this is an invasion vortex. */
 	private boolean isVortex = false;
 	/** 已通过旋涡的玩家映射。 / Map of players who have passed through the vortex. */
-	protected Map<Integer, Player> passedPlayers = new LinkedHashMap<Integer, Player>();
+	protected Map<Integer, Player> passedPlayers = new LinkedHashMap<>();
 	/** 从端（出口）生成模板。 / Slave (exit) spawn template. */
 	private SpawnTemplate slaveSpawnTemplate;
 	/** 从属 NPC / Slave NPC */

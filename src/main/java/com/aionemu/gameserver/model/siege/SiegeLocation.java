@@ -66,9 +66,9 @@ public class SiegeLocation implements ZoneHandler {
 	/** 返回影响力值 / Returns the influence value*/
 	protected int influenceValue;
 	/** 返回生物集合 / Returns the creatures */
-	private final Map<Integer, Creature> creatures = Collections.synchronizedMap(new LinkedHashMap<Integer, Creature>());
+	private final Map<Integer, Creature> creatures = Collections.synchronizedMap(new LinkedHashMap<>());
 	/** 返回玩家集合 / Returns the players */
-	private final Map<Integer, Player> players = Collections.synchronizedMap(new LinkedHashMap<Integer, Player>());
+	private final Map<Integer, Player> players = Collections.synchronizedMap(new LinkedHashMap<>());
 	protected int buffId;
 	protected int buffIdA;
 	protected int buffIdE;
@@ -80,7 +80,7 @@ public class SiegeLocation implements ZoneHandler {
 		this.worldId = template.getWorldId();
 		this.type = template.getType();
 		this.siegeDuration = template.getSiegeDuration();
-		this.zone = new ArrayList<SiegeZoneInstance>();
+		this.zone = new ArrayList<>();
 		this.influenceValue = template.getInfluenceValue();
 	}
 
@@ -194,13 +194,13 @@ public class SiegeLocation implements ZoneHandler {
 	/** 返回生物集合快照 / Returns the creatures snapshot */
 	public List<Creature> getCreaturesSnapshot() {
 		synchronized (creatures) {
-			return new ArrayList<Creature>(creatures.values());
+			return new ArrayList<>(creatures.values());
 		}
 	}
 
 	private List<Player> playersSnapshot() {
 		synchronized (players) {
-			return new ArrayList<Player>(players.values());
+			return new ArrayList<>(players.values());
 		}
 	}
 

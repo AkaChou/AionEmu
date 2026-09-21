@@ -126,9 +126,9 @@ public class LegionCommand extends AdminCommand {
 			if(legion == null)
 				return;
 
-			List<String> message = new ArrayList<String>();
-			List<String> online = new ArrayList<String>();
-			List<String> offline = new ArrayList<String>();
+			List<String> message = new ArrayList<>();
+			List<String> online = new ArrayList<>();
+			List<String> offline = new ArrayList<>();
 			message.add("name: "+legion.getLegionName());
 			message.add("contrib points: "+legion.getContributionPoints());
 			message.add("level: "+legion.getLegionLevel());

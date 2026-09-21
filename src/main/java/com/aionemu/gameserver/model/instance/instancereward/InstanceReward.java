@@ -19,7 +19,7 @@ import lombok.Setter;
 @Setter
 public class InstanceReward<T extends InstancePlayerReward> {
 	/** 获取副本奖励。 / Returns the instance rewards. */
-	protected List<T> instanceRewards = new ArrayList<T>();
+	protected List<T> instanceRewards = new ArrayList<>();
 	/** 设置 instance score type / Sets the instance score type */
 	private InstanceScoreType instanceScoreType = InstanceScoreType.START_PROGRESS;
 	/** 返回映射 ID / Returns the map id */

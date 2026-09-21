@@ -31,7 +31,7 @@ public class AdmaFallInstance extends GeneralInstanceHandler
 {
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
-	
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -77,7 +77,7 @@ public class AdmaFallInstance extends GeneralInstanceHandler
 			break;
         }
     }
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -89,7 +89,7 @@ public class AdmaFallInstance extends GeneralInstanceHandler
         super.onInstanceCreate(instance);
         doors = instance.getDoors();
     }
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -116,7 +116,7 @@ public class AdmaFallInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -125,7 +125,7 @@ public class AdmaFallInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -134,24 +134,24 @@ public class AdmaFallInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
+				instance.doOnAllPlayers(new Visitor<>() {
+                    /**
+                     * 处理 visit。
+                     * Handle visit.
+                     *
+                     * @param player 玩家 / player
+                     */
+                    @Override
+                    public void visit(Player player) {
+                        if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
+                            PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
+                        }
+                    }
+                });
 			}
 		}, time);
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.

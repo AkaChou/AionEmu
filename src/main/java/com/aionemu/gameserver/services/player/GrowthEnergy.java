@@ -47,20 +47,16 @@ public class GrowthEnergy {
 	}
 
 	private void updateGrowthEnergy() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			/**
-			 * visit 方法。
-			 * visit method.
-			 *
-			 * @param player 玩家 / player
-			 */
-			public void visit(final Player player) {
-				player.getCommonData().setAuraOfGrowth(0);
-				PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
-				DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
-			}
-		});
+		/**
+		 * visit 方法。
+		 * visit method.
+		 *
+		 * @param player 玩家 / player
+		 */com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			 player.getCommonData().setAuraOfGrowth(0);
+			 PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
+			 DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
+		 });
 	}
 
 	/**

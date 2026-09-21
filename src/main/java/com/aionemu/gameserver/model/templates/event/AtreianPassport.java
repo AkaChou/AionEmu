@@ -69,7 +69,7 @@ public class AtreianPassport {
 	/** 返回艾特里亚通行证奖励列表 / Returns the atreian passport rewards */
 	public List<AtreianPassportRewards> getAtreianPassportRewards() {
 		if (atreian_passport_reward == null) {
-			atreian_passport_reward = new ArrayList<AtreianPassportRewards>();
+			atreian_passport_reward = new ArrayList<>();
 		}
 		return atreian_passport_reward;
 	}

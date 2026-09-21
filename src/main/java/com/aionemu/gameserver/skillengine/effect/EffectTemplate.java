@@ -436,7 +436,7 @@ public abstract class EffectTemplate {
 	}
 
 	private List<Integer> getPreEffects() {
-		List<Integer> preEffects = new ArrayList<Integer>();
+		List<Integer> preEffects = new ArrayList<>();
 
 		if (this.getPreEffect() == null) {
 			return preEffects;

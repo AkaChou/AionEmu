@@ -17,7 +17,7 @@ import com.aionemu.gameserver.model.ai.BombTemplate;
 public class BombAi2 extends AggressiveNpcAI2
 {
 	private BombTemplate template;
-	
+
 	/**
 	 * 处理生成完成事件。
 	 * Handle post-spawn.
@@ -26,26 +26,16 @@ public class BombAi2 extends AggressiveNpcAI2
 	protected void handleSpawned() {
 		bombSkill();
 	}
-	
+
 	private void bombSkill() {
 		template = DataManager.AI_DATA.getAiTemplate().get(getNpcId()).getBombs().getBombTemplate();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				useSkill(template.getSkillId());
-			}
-		}, template.getCd());
+		GameThreadPoolServices.threadPoolManager().schedule(() -> useSkill(template.getSkillId()), template.getCd());
 	}
-	
+
 	private void useSkill(int skill) {
 		AI2Actions.targetSelf(this);
 		AI2Actions.useSkill(this, skill);
 		int duration = DataManager.SKILL_DATA.getSkillTemplate(skill).getDuration();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(BombAi2.this);
-			}
-		}, duration != 0 ? duration + 1000 : 0);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(BombAi2.this), duration != 0 ? duration + 1000 : 0);
 	}
 }

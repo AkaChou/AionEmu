@@ -57,17 +57,7 @@ public class FortressAssault extends Assault<FortressSiege> {
 	 */
 	@Override
 	protected void scheduleAssault(int delay) {
-		dredgionTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				spawnTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						spawnAttackers();
-					}
-				}, Rnd.get(240, 300) * 1000L);
-			}
-		}, delay * 1000L);
+		dredgionTask = GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTask = GameThreadPoolServices.threadPoolManager().schedule(() -> spawnAttackers(), Rnd.get(240, 300) * 1000L), delay * 1000L);
 	}
 
 	/**
@@ -85,12 +75,9 @@ public class FortressAssault extends Assault<FortressSiege> {
 		if (!captured) {
 			rewardDefendingPlayers();
 		} else {
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					// 龙族击杀了守护者将军。 / The Balaur have killed the Guardian General.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_DRAGON_BOSS_KILLED);
-				}
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				// 龙族击杀了守护者将军。 / The Balaur have killed the Guardian General.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_DRAGON_BOSS_KILLED);
 			});
 		}
 	}
@@ -148,14 +135,11 @@ public class FortressAssault extends Assault<FortressSiege> {
 				SpawnEngine.spawnObject(spawn, 1);
 			}
 		}
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 战舰吐出一大群龙族士兵。 / The Dredgion has disgorged a horde of Balaur troopers.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_ABYSS_CARRIER_DROP_DRAGON, 0);
-				// 龙族传送袭击者已出现。 / The Balaur Teleport Raiders appeared.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_ABYSS_WARP_DRAGON, 120000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 战舰吐出一大群龙族士兵。 / The Dredgion has disgorged a horde of Balaur troopers.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_ABYSS_CARRIER_DROP_DRAGON, 0);
+			// 龙族传送袭击者已出现。 / The Balaur Teleport Raiders appeared.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_ABYSS_WARP_DRAGON, 120000);
 		});
 		idList.clear();
 	}
@@ -165,7 +149,7 @@ public class FortressAssault extends Assault<FortressSiege> {
 	 * Spawns regular Balaur units from peace spawn points and caches nearby coords.
 	 */
 	private void spawnRegularBalaurs() {
-		spawnLocations = new ArrayList<float[]>();
+		spawnLocations = new ArrayList<>();
 		List<SpawnGroup2> siegeSpawns = DataManager.SPAWNS_DATA2.getSiegeSpawnsByLocId(locationId);
 		for (SpawnGroup2 spawnGroup : siegeSpawns) {
 			for (SpawnTemplate spawnTemplate : spawnGroup.getSpawnTemplates()) {
@@ -201,7 +185,7 @@ public class FortressAssault extends Assault<FortressSiege> {
 	 * @return NPC 模板 ID 列表 / NPC template id list
 	 */
 	private List<Integer> getSpawnIds() {
-		List<Integer> Spawns = new ArrayList<Integer>();
+		List<Integer> Spawns = new ArrayList<>();
 		switch (locationId) {
 		case 1011: // Divine Fortress.
 			Spawns.add(884940);

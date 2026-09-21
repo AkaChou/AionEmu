@@ -28,7 +28,7 @@ public class PetMerchandData {
 	private List<PetMerchandEntry> list;
 
 	@XmlTransient
-	private final IntObjectHashMap<PetMerchandEntry> merchandsById = new IntObjectHashMap<PetMerchandEntry>();
+	private final IntObjectHashMap<PetMerchandEntry> merchandsById = new IntObjectHashMap<>();
 
 	public PetMerchandData(List<PetMerchandEntry> entries) {
 		for (PetMerchandEntry entry : entries) {

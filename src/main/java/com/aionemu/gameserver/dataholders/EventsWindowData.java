@@ -29,10 +29,10 @@ public class EventsWindowData {
 	private List<EventsWindow> events_window;
 
 	@XmlTransient
-	private final IntObjectHashMap<EventsWindow> eventData = new IntObjectHashMap<EventsWindow>();
+	private final IntObjectHashMap<EventsWindow> eventData = new IntObjectHashMap<>();
 
 	@XmlTransient
-	private final Map<Integer, EventsWindow> eventDataMap = new HashMap<Integer, EventsWindow>(1);
+	private final Map<Integer, EventsWindow> eventDataMap = new HashMap<>(1);
 
 	/**
 	 * JAXB 反序列化完成后，将事件窗口写入 ID 索引。

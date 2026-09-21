@@ -77,7 +77,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 	/** 副本是否已开始 / whether the instance started */
 		protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
 	/** asyunatar 任务 / asyunatar task */
-		private final List<Future<?>> asyunatarTask = new ArrayList<Future<?>>();
+		private final List<Future<?>> asyunatarTask = new ArrayList<>();
 	/**
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
@@ -197,61 +197,49 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 
 	protected void startInstanceTask() {
 		instanceTime = System.currentTimeMillis();
-		asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				openFirstDoors();
-				// 舱壁已激活，第一军械库与重力控制室之间的通道已封闭。 / The bulkhead has been activated and the passage between the First Armory and Gravity Control has been sealed.
-				sendMsgByRace(1400604, Race.PC_ALL, 5000);
-				// 舱壁已激活，第二军械库与重力控制室之间的通道已封闭。 / The bulkhead has been activated and the passage between the Second Armory and Gravity Control has been sealed.
-				sendMsgByRace(1400605, Race.PC_ALL, 10000);
-				dredgionReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
-				sendPacket();
-				switch (Rnd.get(1, 2)) {
-					case 1:
-					    spawn(243807, 415.2769f, 282.0216f, 409.7311f, (byte) 118); //Supervisor Gayaba.
-					break;
-					case 2:
-					    spawn(243807, 556.53534f, 279.2918f, 409.7311f, (byte) 33); //Supervisor Gayaba.
-					break;
-				} switch (Rnd.get(1, 2)) {
-					case 1:
-						spawn(243815, 485.25455f, 877.04614f, 405.01407f, (byte) 90); //Vice Captain Anggiras.
-					break;
-					case 2:
-					    spawn(243852, 485.25455f, 877.04614f, 405.01407f, (byte) 90); //Auditor Agwe.
-					break;
-				}
+		asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			openFirstDoors();
+			// 舱壁已激活，第一军械库与重力控制室之间的通道已封闭。 / The bulkhead has been activated and the passage between the First Armory and Gravity Control has been sealed.
+			sendMsgByRace(1400604, Race.PC_ALL, 5000);
+			// 舱壁已激活，第二军械库与重力控制室之间的通道已封闭。 / The bulkhead has been activated and the passage between the Second Armory and Gravity Control has been sealed.
+			sendMsgByRace(1400605, Race.PC_ALL, 10000);
+			dredgionReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
+			sendPacket();
+			switch (Rnd.get(1, 2)) {
+				case 1:
+					spawn(243807, 415.2769f, 282.0216f, 409.7311f, (byte) 118); //Supervisor Gayaba.
+				break;
+				case 2:
+					spawn(243807, 556.53534f, 279.2918f, 409.7311f, (byte) 33); //Supervisor Gayaba.
+				break;
+			} switch (Rnd.get(1, 2)) {
+				case 1:
+					spawn(243815, 485.25455f, 877.04614f, 405.01407f, (byte) 90); //Vice Captain Anggiras.
+				break;
+				case 2:
+					spawn(243852, 485.25455f, 877.04614f, 405.01407f, (byte) 90); //Auditor Agwe.
+				break;
 			}
 		}, 60000));
 	   /**
 	 * 阿舒纳塔尔战舰内有多处传送装置。 / "Ashunatal Dredgion" Teleportation Devices: There are numerous teleportation devices located inside the "Ashunatal Dredgion" These teleportation devices allow players to teleport to different areas of the Dredgion with ease. Side Teleporter: This teleporter activates 10 minutes after the Instanced Dungeon has begun
 	 */
-		asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				// 紧急出口的传送装置现已可用。 / The teleportation device at the Emergency Exit is now operational.
-				sendMsgByRace(1401903, Race.PC_ALL, 0);
-				spawn(801989, 415.07663f, 173.85265f, 432.53436f, (byte) 0, 34); //Port Side Teleporter.
-				spawn(801990, 554.83081f, 173.87158f, 432.52448f, (byte) 0, 9); //Starboard Side Teleporter.
-			}
+		asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			// 紧急出口的传送装置现已可用。 / The teleportation device at the Emergency Exit is now operational.
+			sendMsgByRace(1401903, Race.PC_ALL, 0);
+			spawn(801989, 415.07663f, 173.85265f, 432.53436f, (byte) 0, 34); //Port Side Teleporter.
+			spawn(801990, 554.83081f, 173.87158f, 432.52448f, (byte) 0, 9); //Starboard Side Teleporter.
 		}, 600000));
 		/**
 	 * 大型巴吉塔拉：位置重力控制室；经过 15 分钟；勇气 1000 点。 / Large Bagitara: Location: Gravity Control Time Elapsed: 15 Minutes Valor: 1,000 Points
 	 */
-		asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				spawn(243822, 485.4811f, 313.925f, 403.71857f, (byte) 36); //Large Bagitara.
-			}
+		asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(243822, 485.4811f, 313.925f, 403.71857f, (byte) 36); //Large Bagitara.
 		}, 900000));
-		asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!dredgionReward.isRewarded()) {
-					Race winningRace = dredgionReward.getWinningRaceByScore();
-					stopInstance(winningRace);
-				}
+		asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!dredgionReward.isRewarded()) {
+				Race winningRace = dredgionReward.getWinningRaceByScore();
+				stopInstance(winningRace);
 			}
 		}, 3600000));
 	}
@@ -420,13 +408,10 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 			case 243816: //Frigate Commander Ashunatal.
 				point = 1000;
 				AbyssPointsService.addGp(mostPlayerDamage, 540);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				    @Override
-					public void run() {
-						if (!dredgionReward.isRewarded()) {
-							Race winningRace = dredgionReward.getWinningRaceByScore();
-							stopInstance(winningRace);
-						}
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					if (!dredgionReward.isRewarded()) {
+						Race winningRace = dredgionReward.getWinningRaceByScore();
+						stopInstance(winningRace);
 					}
 				}, 30000);
 			break;
@@ -512,18 +497,15 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!isInstanceDestroyed) {
-					for (Player player : instance.getPlayersInside()) {
-						if (PlayerActions.isAlreadyDead(player)) {
-							PlayerReviveService.duelRevive(player);
-						}
-						onExitInstance(player);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isInstanceDestroyed) {
+				for (Player player : instance.getPlayersInside()) {
+					if (PlayerActions.isAlreadyDead(player)) {
+						PlayerReviveService.duelRevive(player);
 					}
-					GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
+					onExitInstance(player);
 				}
+				GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
 			}
 		}, 120000);
 	}
@@ -617,7 +599,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 			return;
 		}
 		addPointsByRace(player.getRace(), points);
-		List<Player> playersToGainScore = new ArrayList<Player>();
+		List<Player> playersToGainScore = new ArrayList<>();
 		if (target != null && player.isInGroup2()) {
 			for (Player member : player.getPlayerGroup2().getOnlineMembers()) {
 				if (member.getLifeStats().isAlreadyDead()) {
@@ -680,7 +662,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 	}
 
 	private void sendPacket() {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -741,17 +723,14 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 	 */
 
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            @Override
-            public void run() {
-                if (!isInstanceDestroyed) {
-                    spawn(npcId, x, y, z, h, entityId);
-                    if (msg > 0) {
-                        sendMsgByRace(msg, race, 0);
-                    }
-                }
-            }
-        }, time));
+        asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isInstanceDestroyed) {
+				spawn(npcId, x, y, z, h, entityId);
+				if (msg > 0) {
+					sendMsgByRace(msg, race, 0);
+				}
+			}
+		}, time));
     }
 	/**
 	 * 延迟生成沿指定巡行路线行走的 NPC。
@@ -767,16 +746,13 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 	 */
 
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            @Override
-            public void run() {
-                if (!isInstanceDestroyed) {
-                    Npc npc = (Npc) spawn(npcId, x, y, z, h);
-                    npc.getSpawn().setWalkerId(walkerId);
-                    WalkManager.startWalking((NpcAI2) npc.getAi2());
-                }
-            }
-        }, time));
+        asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isInstanceDestroyed) {
+				Npc npc = (Npc) spawn(npcId, x, y, z, h);
+				npc.getSpawn().setWalkerId(walkerId);
+				WalkManager.startWalking((NpcAI2) npc.getAi2());
+			}
+		}, time));
     }
 	/**
 	 * 延迟后向指定阵营广播系统消息。
@@ -788,25 +764,20 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 	 */
 
     protected void sendMsgByRace(final int msg, final Race race, int time) {
-        asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+        asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> instance.doOnAllPlayers(new Visitor<>() {
+            /**
+             * 处理 visit。
+             * Handle visit.
+             *
+             * @param player 玩家 / player
+             */
             @Override
-            public void run() {
-                instance.doOnAllPlayers(new Visitor<Player>() {
-                    /**
-                     * 处理 visit。
-                     * Handle visit.
-                     *
-                     * @param player 玩家 / player
-                     */
-                    @Override
-                    public void visit(Player player) {
-                        if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-                            PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-                        }
-                    }
-                });
+            public void visit(Player player) {
+                if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
+                    PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
+                }
             }
-        }, time));
+        }), time));
     }
 
 	private void stopInstanceTask() {

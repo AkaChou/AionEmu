@@ -30,13 +30,13 @@ public class TemporarySpawnEngine {
 	 * 已注册的临时刷怪组列表。
 	 * Registered temporary spawn groups.
 	 */
-	private static final List<SpawnGroup2> temporarySpawns = new ArrayList<SpawnGroup2>();
+	private static final List<SpawnGroup2> temporarySpawns = new ArrayList<>();
 
 	/**
 	 * 刷怪组 → 关联实例 ID 集合。
 	 * Spawn group to associated instance ids.
 	 */
-	private static final Map<SpawnGroup2, HashSet<Integer>> tempSpawnInstanceMap = new LinkedHashMap<SpawnGroup2, HashSet<Integer>>();
+	private static final Map<SpawnGroup2, HashSet<Integer>> tempSpawnInstanceMap = new LinkedHashMap<>();
 
 	/**
 	 * 启动时刷出所有处于刷怪时间窗内的临时对象。
@@ -142,7 +142,7 @@ public class TemporarySpawnEngine {
 			HashSet<Integer> instances = tempSpawnInstanceMap.get(spawn);
 			if (instances == null) {
 				temporarySpawns.add(spawn);
-				instances = new HashSet<Integer>();
+				instances = new HashSet<>();
 				tempSpawnInstanceMap.put(spawn, instances);
 			}
 			instances.add(instanceId);
@@ -157,7 +157,7 @@ public class TemporarySpawnEngine {
 	 */
 	private static List<SpawnGroup2> temporarySpawnsSnapshot() {
 		synchronized (temporarySpawnLock) {
-			return new ArrayList<SpawnGroup2>(temporarySpawns);
+			return new ArrayList<>(temporarySpawns);
 		}
 	}
 
@@ -174,7 +174,7 @@ public class TemporarySpawnEngine {
 			if (instances == null) {
 				return Collections.emptySet();
 			}
-			return new HashSet<Integer>(instances);
+			return new HashSet<>(instances);
 		}
 	}
 }

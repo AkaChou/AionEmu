@@ -31,7 +31,7 @@ public class PetitionService {
 
 	private static volatile ObjectProvider<PetitionService> instanceProvider;
 
-	private static SortedMap<Integer, Petition> registeredPetitions = new ConcurrentSkipListMap<Integer, Petition>();
+	private static SortedMap<Integer, Petition> registeredPetitions = new ConcurrentSkipListMap<>();
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -88,7 +88,7 @@ public class PetitionService {
 	 * petition collection
 	 */
 	public Collection<Petition> getRegisteredPetitions() {
-		return new ArrayList<Petition>(registeredPetitions.values());
+		return new ArrayList<>(registeredPetitions.values());
 	}
 
 	/**
@@ -98,7 +98,7 @@ public class PetitionService {
 	 * player object id
 	 */
 	public void deletePetition(int playerObjId) {
-		Set<Petition> petitions = new HashSet<Petition>();
+		Set<Petition> petitions = new HashSet<>();
 		for (Petition p : registeredPetitions.values()) {
 			if (p.getPlayerObjId() == playerObjId) {
 				petitions.add(p);

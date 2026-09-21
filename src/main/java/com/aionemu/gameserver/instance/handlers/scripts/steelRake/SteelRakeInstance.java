@@ -29,7 +29,7 @@ import java.util.Set;
 public class SteelRakeInstance extends GeneralInstanceHandler {
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
-	
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -211,7 +211,7 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 			break;
         }
     }
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -265,12 +265,12 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 			case 5:
 				spawn(215076, 461.933350f, 510.545654f, 877.618103f, (byte) 90);
 			break;
-			case 6: 
+			case 6:
 				spawn(215077, 461.933350f, 510.545654f, 877.618103f, (byte) 90);
 			break;
 		}
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -331,11 +331,11 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	public void onExitInstance(Player player) {
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -344,7 +344,7 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
     public void onInstanceDestroy() {
 		isInstanceDestroyed = true;
     }
-	
+
 	/**
 	 * 延迟后向指定阵营广播系统消息。
 	 * Broadcast a system message to the given race after a delay.
@@ -355,27 +355,22 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(() -> instance.doOnAllPlayers(new Visitor<>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
 			@Override
-			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
+			public void visit(Player player) {
+				if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
+					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
+				}
 			}
-		}, time);
+		}), time);
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();

@@ -50,94 +50,92 @@ public class Reload extends AdminCommand {
 			PacketSendUtility.sendMessage(admin, "syntax //reload <quest | skill | portal | commands | drop | gameshop | events | config>");
 			return;
 		}
-		if (params[0].equals("quest")) {
-			File xml = Config.dataFile("./data/static_data/quest_data/quest_data.xml");
-			try {
-				JAXBContext jc = JAXBContext.newInstance(StaticData.class);
-				Unmarshaller un = jc.createUnmarshaller();
-				QuestsData newQuestData = (QuestsData) un.unmarshal(xml);
-				QuestEngine questEngine = GameEngineServices.questEngine();
-				QuestEngine.PreparedProductionDefinitions prepared = questEngine.prepareProductionDefinitions();
-				reloadQuests(newQuestData.getQuestsData(), prepared);
-				PacketSendUtility.sendMessage(admin, "Quest reload Success!");
-			}
-			catch (Exception | GameServerError e) {
-				PacketSendUtility.sendMessage(admin, "Quest reload failed!");
-				log.error(I18n.get("log.bc69156970fe"), e);
-			}
+		switch (params[0]) {
+			case "quest":
+				File xml = Config.dataFile("./data/static_data/quest_data/quest_data.xml");
+				try {
+					JAXBContext jc = JAXBContext.newInstance(StaticData.class);
+					Unmarshaller un = jc.createUnmarshaller();
+					QuestsData newQuestData = (QuestsData) un.unmarshal(xml);
+					QuestEngine questEngine = GameEngineServices.questEngine();
+					QuestEngine.PreparedProductionDefinitions prepared = questEngine.prepareProductionDefinitions();
+					reloadQuests(newQuestData.getQuestsData(), prepared);
+					PacketSendUtility.sendMessage(admin, "Quest reload Success!");
+				} catch (Exception | GameServerError e) {
+					PacketSendUtility.sendMessage(admin, "Quest reload failed!");
+					log.error(I18n.get("log.bc69156970fe"), e);
+				}
+				break;
+			case "skill":
+				try {
+					DataManager.SKILL_DATA = GameStaticDataServices.xmlDataLoader().loadSkillData();
+					PacketSendUtility.sendMessage(admin, "Skill reload Success!");
+				} catch (Exception e) {
+					PacketSendUtility.sendMessage(admin, "Skill reload failed!");
+					log.error(I18n.get("log.9229e36d9667"), e);
+				}
+				break;
+			case "portal":
+				try {
+					JAXBContext jc = JAXBContext.newInstance(StaticData.class);
+					Unmarshaller un = jc.createUnmarshaller();
+					PortalLocData portalLocData = (PortalLocData) un.unmarshal(Config.dataFile("./data/static_data/portals/portal_loc.xml"));
+					Portal2Data portal2Data = (Portal2Data) un.unmarshal(Config.dataFile("./data/static_data/portals/portal_template2.xml"));
+					DataManager.PORTAL_LOC_DATA = portalLocData;
+					DataManager.PORTAL2_DATA = portal2Data;
+					PacketSendUtility.sendMessage(admin, "Portal reload Success!");
+				} catch (Exception e) {
+					PacketSendUtility.sendMessage(admin, "Portal reload failed!");
+					log.error(I18n.get("log.e210b296177e"), e);
+				}
+				break;
+			case "commands":
+				try {
+					GameEngineServices.chatProcessor().reload();
+					PacketSendUtility.sendMessage(admin, "Admin commands successfully reloaded!");
+				} catch (GameServerError e) {
+					PacketSendUtility.sendMessage(admin, "Admin command reload failed; existing commands were kept.");
+					log.error(I18n.get("log.555f9d822d8e"), e);
+				}
+				break;
+			case "config":
+				Config.reload();
+				PacketSendUtility.sendMessage(admin, "Configs successfully reloaded!");
+				break;
+			case "drop":
+				DataManager.NPC_DROP_DATA = NpcDropData.loadEager(Config.definitionFile("./definitions/compact/npc_drops"));
+				PacketSendUtility.sendMessage(admin, "NpcDrops successfully reloaded!");
+				break;
+			case "gameshop":
+				GameRuntimeServices.inGameShopEn().reload();
+				PacketSendUtility.sendMessage(admin, "Gameshop successfully reloaded!");
+				break;
+			case "events":
+				File eventXml = Config.dataFile("./data/static_data/events_config/events_config.xml");
+				EventData data = null;
+				try {
+					JAXBContext jc = JAXBContext.newInstance(EventData.class);
+					Unmarshaller un = jc.createUnmarshaller();
+					data = (EventData) un.unmarshal(eventXml);
+				} catch (Exception e) {
+					PacketSendUtility.sendMessage(admin, "Event reload failed! Keeping the last version ...");
+					log.error(I18n.get("log.e8459365ba32"), e);
+					return;
+				}
+				if (data != null) {
+					GameEventServices.eventService().stop();
+					String text = data.getActiveText();
+					if (text == null || text.trim().length() == 0)
+						text = "NONE";
+					DataManager.EVENT_DATA.setAllEvents(data.getAllEvents(), data.getActiveText());
+					PacketSendUtility.sendMessage(admin, "Active events: " + text);
+					GameEventServices.eventService().start();
+				}
+				break;
+			default:
+				PacketSendUtility.sendMessage(admin, "syntax //reload <quest | skill | portal | commands | drop | gameshop | events | config>");
+				break;
 		}
-
-		else if (params[0].equals("skill")) {
-			try {
-				DataManager.SKILL_DATA = GameStaticDataServices.xmlDataLoader().loadSkillData();
-				PacketSendUtility.sendMessage(admin, "Skill reload Success!");
-			}
-			catch (Exception e) {
-				PacketSendUtility.sendMessage(admin, "Skill reload failed!");
-				log.error(I18n.get("log.9229e36d9667"), e);
-			}
-		}
-		else if (params[0].equals("portal")) {
-			try {
-				JAXBContext jc = JAXBContext.newInstance(StaticData.class);
-				Unmarshaller un = jc.createUnmarshaller();
-				PortalLocData portalLocData = (PortalLocData) un.unmarshal(Config.dataFile("./data/static_data/portals/portal_loc.xml"));
-				Portal2Data portal2Data = (Portal2Data) un.unmarshal(Config.dataFile("./data/static_data/portals/portal_template2.xml"));
-				DataManager.PORTAL_LOC_DATA = portalLocData;
-				DataManager.PORTAL2_DATA = portal2Data;
-				PacketSendUtility.sendMessage(admin, "Portal reload Success!");
-			}
-			catch (Exception e) {
-				PacketSendUtility.sendMessage(admin, "Portal reload failed!");
-				log.error(I18n.get("log.e210b296177e"), e);
-			}
-		}
-		else if (params[0].equals("commands")) {
-			try {
-				GameEngineServices.chatProcessor().reload();
-				PacketSendUtility.sendMessage(admin, "Admin commands successfully reloaded!");
-			} catch (GameServerError e) {
-				PacketSendUtility.sendMessage(admin, "Admin command reload failed; existing commands were kept.");
-				log.error(I18n.get("log.555f9d822d8e"), e);
-			}
-		}
-		else if (params[0].equals("config")) {
-			Config.reload();
-			PacketSendUtility.sendMessage(admin, "Configs successfully reloaded!");
-		}
-		else if (params[0].equals("drop")) {
-			DataManager.NPC_DROP_DATA = NpcDropData.loadEager(Config.definitionFile("./definitions/compact/npc_drops"));
-			PacketSendUtility.sendMessage(admin, "NpcDrops successfully reloaded!");
-		}
-		else if (params[0].equals("gameshop")) {
-			GameRuntimeServices.inGameShopEn().reload();
-			PacketSendUtility.sendMessage(admin, "Gameshop successfully reloaded!");
-		}
-		else if (params[0].equals("events")) {
-			File eventXml = Config.dataFile("./data/static_data/events_config/events_config.xml");
-			EventData data = null;
-			try {
-				JAXBContext jc = JAXBContext.newInstance(EventData.class);
-				Unmarshaller un = jc.createUnmarshaller();
-				data = (EventData) un.unmarshal(eventXml);
-			}
-			catch (Exception e) {
-				PacketSendUtility.sendMessage(admin, "Event reload failed! Keeping the last version ...");
-				log.error(I18n.get("log.e8459365ba32"), e);
-				return;
-			}
-			if (data != null) {
-				GameEventServices.eventService().stop();
-				String text = data.getActiveText();
-				if (text == null || text.trim().length() == 0)
-					text = "NONE";
-				DataManager.EVENT_DATA.setAllEvents(data.getAllEvents(), data.getActiveText());
-				PacketSendUtility.sendMessage(admin, "Active events: " + text);
-				GameEventServices.eventService().start();
-			}
-		}
-		else
-			PacketSendUtility.sendMessage(admin, "syntax //reload <quest | skill | portal | commands | drop | gameshop | events | config>");
 
 	}
 

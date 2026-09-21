@@ -28,14 +28,14 @@ public class OreGroup extends BonusItemGroup {
 	 */
 	public List<ItemRaceEntry> getItems() {
 		if (items == null) {
-			items = new ArrayList<ItemRaceEntry>();
+			items = new ArrayList<>();
 		}
 		return this.items;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.aionemu.gameserver.model.templates.itemgroups.ItemGroup#getRewards()
 	 */
 	@Override

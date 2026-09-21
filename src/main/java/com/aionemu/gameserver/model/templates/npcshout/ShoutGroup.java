@@ -37,7 +37,7 @@ public class ShoutGroup {
 	 */
 	public List<ShoutList> getShoutNpcs() {
 		if (shoutNpcs == null) {
-			shoutNpcs = new ArrayList<ShoutList>();
+			shoutNpcs = new ArrayList<>();
 		}
 		return this.shoutNpcs;
 	}

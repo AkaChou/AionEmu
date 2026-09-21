@@ -51,17 +51,13 @@ public class cmd_unstuck extends PlayerCommand {
 		player.getEffectController().updatePlayerEffectIcons();
 		player.getEffectController().broadCastEffects();
 		PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), 0, 0, 0, (int) TimeUnit.SECONDS.toMillis(10), 0));
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				player.getEffectController().unsetAbnormal(AbnormalState.PARALYZE.getId());
-				player.getEffectController().updatePlayerEffectIcons();
-				player.getEffectController().broadCastEffects();
-				player.getController().cancelUseItem();
-				PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), 0, 0, 0, 0, 1));
-				TeleportService2.moveToBindLocation(player, true);
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			player.getEffectController().unsetAbnormal(AbnormalState.PARALYZE.getId());
+			player.getEffectController().updatePlayerEffectIcons();
+			player.getEffectController().broadCastEffects();
+			player.getController().cancelUseItem();
+			PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), 0, 0, 0, 0, 1));
+			TeleportService2.moveToBindLocation(player, true);
 		}, (int) TimeUnit.SECONDS.toMillis(10));
 	}
 

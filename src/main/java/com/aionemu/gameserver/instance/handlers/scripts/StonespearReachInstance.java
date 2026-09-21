@@ -383,7 +383,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 					 */
 					@Override
 					public void run() {
-						instance.doOnAllPlayers(new Visitor<Player>() {
+						instance.doOnAllPlayers(new Visitor<>() {
 							/**
 							 * 处理 visit。
 							 * Handle visit.
@@ -773,7 +773,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -816,7 +816,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	}
 
 	private void sendPacket(final int nameId, final int point) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -886,7 +886,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 				}
 			}, prepareTimerSeconds);
 		}
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -1067,7 +1067,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -1098,7 +1098,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 		PlayerReviveService.revive(player, 100, 100, false, 0);
 		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_REBIRTH_MASSAGE_ME);
 		PacketSendUtility.sendPacket(player, new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_INSTANT_DUNGEON_RESURRECT, 0, 0));
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.

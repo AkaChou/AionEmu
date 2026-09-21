@@ -34,24 +34,18 @@ public class Dredgion_CommanderAI2 extends AggressiveNpcAI2
 	}
 
 	private void announceKilledBattleship() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				AionObject winner = getAggroList().getMostDamage();
-				if (winner instanceof Creature kill) {
-					// “种族”的“玩家名”摧毁了龙族战舰。 / "Player Name" of the "Race" has destroyed the Balaur Battleship Dredgion.
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1390196, kill.getRace().getRaceDescriptionId(), kill.getName()));
-				}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			AionObject winner = getAggroList().getMostDamage();
+			if (winner instanceof Creature kill) {
+				// “种族”的“玩家名”摧毁了龙族战舰。 / "Player Name" of the "Race" has destroyed the Balaur Battleship Dredgion.
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1390196, kill.getRace().getRaceDescriptionId(), kill.getName()));
 			}
 		});
 	}
 	private void sendDredgionGuide() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
-					HTMLService.sendGuideHtml(player, "Dredgion_Guide");
-				}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
+				HTMLService.sendGuideHtml(player, "Dredgion_Guide");
 			}
 		});
 	}

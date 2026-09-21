@@ -44,26 +44,13 @@ public class AssultPod4AI2 extends AggressiveNpcAI2
 					spawn(297352, 394.50833f, 385.5321f, 688.8357f, (byte) 70);
 					spawn(297352, 397.13196f, 401.5456f, 688.86523f, (byte) 75);
 					spawn(297309, 645.18121f, 376.97357f, 688.78943f, (byte) 78, 165); // 迪西隆进阶走廊护盾 / Disillon Advance Corridor Shield
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					    @Override
-					    public void run() {
-							spawn(297193, 639.1037f, 393.87778f, 688.8357f, (byte) 103);
-				        }
-			        }, 1000);
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					    @Override
-					    public void run() {
-							spawn(297193, 626.69946f, 382.24298f, 688.8357f, (byte) 107);
-				        }
-			        }, 3000);
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					    @Override
-					    public void run() {
-							spawn(297192, 624.11786f, 398.21442f, 688.869f, (byte) 105);
-							spawn(297193, 647.3834f, 381.9655f, 688.94727f, (byte) 82);
-							spawn(297193, 639.4842f, 377.7366f, 688.9912f, (byte) 118);
-				        }
-			        }, 5000);
+					GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(297193, 639.1037f, 393.87778f, 688.8357f, (byte) 103), 1000);
+					GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(297193, 626.69946f, 382.24298f, 688.8357f, (byte) 107), 3000);
+					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						spawn(297192, 624.11786f, 398.21442f, 688.869f, (byte) 105);
+						spawn(297193, 647.3834f, 381.9655f, 688.94727f, (byte) 82);
+						spawn(297193, 639.4842f, 377.7366f, 688.9912f, (byte) 118);
+					}, 5000);
 				}
 			}
 		}

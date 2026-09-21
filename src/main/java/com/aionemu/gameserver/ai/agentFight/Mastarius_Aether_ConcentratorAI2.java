@@ -24,17 +24,14 @@ public class Mastarius_Aether_ConcentratorAI2 extends ActionItemNpcAI2
 	@Override
     protected void handleSpawned() {
         super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 20125, 1, getOwner()).useNoAnimationSkill(); //Aether Concentrator Standby.
-				GameEngineServices.skillEngine().getSkill(getOwner(), 22776, 1, getOwner()).useNoAnimationSkill();
-				GameEngineServices.skillEngine().getSkill(getOwner(), 22781, 1, getOwner()).useNoAnimationSkill();
-				GameEngineServices.skillEngine().getSkill(getOwner(), 22783, 1, getOwner()).useNoAnimationSkill();
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			GameEngineServices.skillEngine().getSkill(getOwner(), 20125, 1, getOwner()).useNoAnimationSkill(); //Aether Concentrator Standby.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 22776, 1, getOwner()).useNoAnimationSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), 22781, 1, getOwner()).useNoAnimationSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), 22783, 1, getOwner()).useNoAnimationSkill();
 		}, 1000);
     }
-	
+
 	@Override
 	protected void handleUseItemFinish(Player player) {
 		switch (getNpcId()) {
@@ -74,35 +71,26 @@ public class Mastarius_Aether_ConcentratorAI2 extends ActionItemNpcAI2
 		}
 		announceMastariusIII();
 	}
-	
+
 	private void announceMastariusI() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 第一命运球已激活。 / The first Sphere of Destiny has been activated.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GODELITE_BUFF_FIRST_OBJECT_ON_DF);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 第一命运球已激活。 / The first Sphere of Destiny has been activated.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GODELITE_BUFF_FIRST_OBJECT_ON_DF);
 		});
 	}
 	private void announceMastariusII() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 第二命运球已激活。玛尔库坦代理人玛斯塔里乌斯准备施放主神祝福。 / The second Sphere of Destiny has been activated. Marchutan's Agent Mastarius prepares to cast the Empyrean Lord's blessing.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GODELITE_BUFF_SECOND_OBJECT_ON_DF);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 第二命运球已激活。玛尔库坦代理人玛斯塔里乌斯准备施放主神祝福。 / The second Sphere of Destiny has been activated. Marchutan's Agent Mastarius prepares to cast the Empyrean Lord's blessing.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GODELITE_BUFF_SECOND_OBJECT_ON_DF);
 		});
 	}
 	private void announceMastariusIII() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 你可再次使用命运球。 / You may use the Sphere of Destiny again.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GODELITE_BUFF_CAN_USE_OBJECT_DF, 120000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 你可再次使用命运球。 / You may use the Sphere of Destiny again.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GODELITE_BUFF_CAN_USE_OBJECT_DF, 120000);
 		});
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

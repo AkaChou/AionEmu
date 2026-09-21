@@ -29,7 +29,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 
 public class PetBuff implements StatOwner {
-	private final List<IStatFunction> functions = new ArrayList<IStatFunction>();
+	private final List<IStatFunction> functions = new ArrayList<>();
 	private final PetBonusAttr petBonusAttr;
 	private long startTime;
 	private ScheduledFuture<?> task = null;

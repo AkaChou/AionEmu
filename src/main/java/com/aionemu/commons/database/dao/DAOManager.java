@@ -34,7 +34,7 @@ public class DAOManager {
  * 已注册的 DAO 集合
      * Collection of registered DAOs
      */
-    private static final Map<String, DaoState> states = new ConcurrentHashMap<String, DaoState>();
+    private static final Map<String, DaoState> states = new ConcurrentHashMap<>();
 
     /**
  * 初始化 DAOManager
@@ -204,6 +204,6 @@ public class DAOManager {
      * DAO registry for a single service context
      */
     private static final class DaoState {
-        private final Map<String, DAO> daoMap = new HashMap<String, DAO>();
+        private final Map<String, DAO> daoMap = new HashMap<>();
     }
 }

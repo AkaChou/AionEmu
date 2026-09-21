@@ -177,19 +177,21 @@ public class EngulfedOphidanBridgeReward extends InstanceReward<EngulfedOphidanB
 
 	/** 发送数据包。 / Send packet. */
 	public void sendPacket(final int type, final Integer object) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/** 访问 / visit. */
+		instance.doOnAllPlayers(new Visitor<>() {
+			/**
+			 * 访问 / visit.
+			 */
 			@Override
 			public void visit(Player player) {
 				switch (player.getWorldId()) {
-				case 301210000: // Engulfed Ophidan Bridge 4.7
-					PacketSendUtility.sendPacket(player,
+					case 301210000: // Engulfed Ophidan Bridge 4.7
+						PacketSendUtility.sendPacket(player,
 							new SM_INSTANCE_SCORE(type, getTime(), getInstanceReward(), object));
-					break;
-				case 301670000: // Ophidan Warpath 5.1
-					PacketSendUtility.sendPacket(player,
+						break;
+					case 301670000: // Ophidan Warpath 5.1
+						PacketSendUtility.sendPacket(player,
 							new SM_INSTANCE_SCORE(type, getTime2(), getInstanceReward(), object));
-					break;
+						break;
 				}
 			}
 		});

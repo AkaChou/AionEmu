@@ -175,12 +175,14 @@ public class LandMarkReward extends InstanceReward<LandMarkPlayerReward> {
 
 	/** 发送数据包。 / Send packet. */
 	public void sendPacket(final int type, final Integer object) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/** 访问 / visit. */
+		instance.doOnAllPlayers(new Visitor<>() {
+			/**
+			 * 访问 / visit.
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player,
-						new SM_INSTANCE_SCORE(type, getTime(), getInstanceReward(), object));
+					new SM_INSTANCE_SCORE(type, getTime(), getInstanceReward(), object));
 			}
 		});
 	}

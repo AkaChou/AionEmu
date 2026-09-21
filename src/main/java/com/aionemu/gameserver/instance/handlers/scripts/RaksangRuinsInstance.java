@@ -70,7 +70,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 	private Map<Integer, StaticDoor> doors;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -82,7 +82,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 		super.onInstanceCreate(instance);
 		doors = instance.getDoors();
 	}
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -91,13 +91,13 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 	 */
 	@Override
     public void onEnterInstance(Player player) {
-        super.onEnterInstance(player); 
+        super.onEnterInstance(player);
 		if (spawnRace == null) {
 			spawnRace = player.getRace();
 			SpawnAbisoRace();
 		}
     }
-	
+
 	private void SpawnAbisoRace() {
 		final int abiso1 = spawnRace == Race.ASMODIANS ? 206395 : 206378;
         final int abiso2 = spawnRace == Race.ASMODIANS ? 206396 : 206379;
@@ -120,7 +120,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -170,7 +170,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 			break;
 		}
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -271,7 +271,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 			break;
 		}
 	}
-	
+
 	/**
 	 * Terror's Vault Raid A1/A2
 	 */
@@ -343,7 +343,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 			}
 		}, 20000);
 	}
-	
+
 	/**
 	 * Torment's Forge Raid B1/B2
 	 */
@@ -538,7 +538,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 			break;
 		}
 	}
-	
+
 	/**
 	 * Torment's Forge Raid B
 	 */
@@ -646,7 +646,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 		raksangRaid((Npc)spawn(236078, 1006.8747f, 894.7426f, 762.55774f, (byte) 81));
 		raksangRaid((Npc)spawn(236079, 1006.8747f, 894.7426f, 762.55774f, (byte) 81));
 	}
-	
+
 	/**
 	 * Hellpath Raid C1
 	 */
@@ -724,7 +724,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 			}
 		}, 120000);
 	}
-	
+
 	private void raksangRaid(final Npc npc) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -745,7 +745,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 			}
 		}, 1000);
 	}
-	
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -754,7 +754,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -763,7 +763,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -780,7 +780,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 			}
 		}, time);
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
@@ -794,14 +794,14 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
         if (raksangRaidTaskA2 != null) {
             raksangRaidTaskA2.cancel(true);
         }
-    
+
         if (raksangRaidTaskB1 != null) {
             raksangRaidTaskB1.cancel(true);
         }
         if (raksangRaidTaskB2 != null) {
             raksangRaidTaskB2.cancel(true);
         }
-    
+
         if (raksangRaidTaskC1 != null) {
             raksangRaidTaskC1.cancel(true);
         }

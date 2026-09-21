@@ -42,36 +42,25 @@ public class Krotan_Auxillary_GeneralAI2 extends AggressiveNpcAI2
 			case 279443:
 			case 267811:
 				treasureChest();
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			        @Override
-			        public void run() {
-						spawnTreasureChest(701481);
-			        }
-		        }, 10000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTreasureChest(701481), 10000);
 			break;
 		}
 		super.handleDied();
 	}
 
 	private void treasureChest() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 出现了一个宝箱。 / A treasure chest has appeared.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdC_BoxSpawn);
-			}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			// 出现了一个宝箱。 / A treasure chest has appeared.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdC_BoxSpawn);
 		});
 	}
 
 	private void announceUnsealedKrotan() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 解封的克罗坦。 / Unsealed Krotan.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Crotan_Named_Spawn);
-				// 克罗坦龙族王子已出现！ / The Krotan Balaur Prince has appeared!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1221_Boss_hide_Dispel, 10000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 解封的克罗坦。 / Unsealed Krotan.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Crotan_Named_Spawn);
+			// 克罗坦龙族王子已出现！ / The Krotan Balaur Prince has appeared!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1221_Boss_hide_Dispel, 10000);
 		});
 	}
 

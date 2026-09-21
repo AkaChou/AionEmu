@@ -26,32 +26,29 @@ public class Ahserion_Flight_BarrierAI2 extends NpcAI2
 		super.handleSpawned();
 		startShieldVulnerable();
 	}
-	
+
    /**
 	* 「Ahserion」周围不可破坏屏障已移除；屏障关闭后可开始攻击。
 	 * Indestructible barrier around "Ahserion" is removed. Once the barriers are off you can start attacking "Ahserion".
 	*/
 	private void startShieldVulnerable() {
 		final Npc GAb1SubCenterBarricadeDa65Ah = getPosition().getWorldMapInstance().getNpc(277230); // 阿塞里昂飞行屏障 / Ahserion Flight Barrier
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				GAb1SubCenterBarricadeDa65Ah.setTarget(getOwner());
-				GAb1SubCenterBarricadeDa65Ah.setNpcType(NpcType.ATTACKABLE);
-				WorldMapInstance instance = getPosition().getWorldMapInstance();
-				for (Player player: instance.getPlayersInside()) {
-					if (MathUtil.isIn3dRange(player, GAb1SubCenterBarricadeDa65Ah, 20)) {
-						player.getEffectController().updatePlayerEffectIcons();
-						player.clearKnownlist();
-						player.updateKnownlist();
-					}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			GAb1SubCenterBarricadeDa65Ah.setTarget(getOwner());
+			GAb1SubCenterBarricadeDa65Ah.setNpcType(NpcType.ATTACKABLE);
+			WorldMapInstance instance = getPosition().getWorldMapInstance();
+			for (Player player: instance.getPlayersInside()) {
+				if (MathUtil.isIn3dRange(player, GAb1SubCenterBarricadeDa65Ah, 20)) {
+					player.getEffectController().updatePlayerEffectIcons();
+					player.clearKnownlist();
+					player.updateKnownlist();
 				}
-				// 特兰西迪姆附楼效果削弱了阿塞里昂飞行屏障。 / The effect of the Transidium Annex has weakened the Ahserion's Flight Barrier.
-				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_11, 0);
 			}
+			// 特兰西迪姆附楼效果削弱了阿塞里昂飞行屏障。 / The effect of the Transidium Annex has weakened the Ahserion's Flight Barrier.
+			PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_11, 0);
 		}, 1500000); // 25 分钟后 / 25 minutes
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

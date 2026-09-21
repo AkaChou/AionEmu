@@ -20,7 +20,7 @@ public final class ZoneName {
 
 
 	/** 名称 → 实例缓存 / name → instance cache */
-	private static final Map<String, ZoneName> zoneNames = new ConcurrentHashMap<String, ZoneName>();
+	private static final Map<String, ZoneName> zoneNames = new ConcurrentHashMap<>();
 	/** 空名称常量 / none name constant */
 	public static final String NONE = "NONE";
 	/** 欧比斯城堡区域名称常量 / abyss castle zone name constant */

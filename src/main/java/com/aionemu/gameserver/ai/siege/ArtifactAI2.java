@@ -48,7 +48,7 @@ import java.util.concurrent.ScheduledFuture;
 @Slf4j
 public class ArtifactAI2 extends NpcAI2
 {
-	private final Map<Integer, ItemUseObserver> observers = new HashMap<Integer, ItemUseObserver>();
+	private final Map<Integer, ItemUseObserver> observers = new HashMap<>();
 
 	@Override
 	protected SiegeSpawnTemplate getSpawnTemplate() {
@@ -105,12 +105,9 @@ public class ArtifactAI2 extends NpcAI2
 		final SM_SYSTEM_MESSAGE startMessage = SM_SYSTEM_MESSAGE.STR_ARTIFACT_CASTING(player.getRace().getRaceDescriptionId(), player.getName(), new DescriptionId(skillTemplate.getNameId()));
 		loc.setStatus(ArtifactStatus.ACTIVATION);
 		final SM_ABYSS_ARTIFACT_INFO3 artifactInfo = new SM_ABYSS_ARTIFACT_INFO3(loc.getLocationId());
-		player.getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendPacket(player, startMessage);
-				PacketSendUtility.sendPacket(player, artifactInfo);
-			}
+		player.getPosition().getWorldMapInstance().doOnAllPlayers(player3 -> {
+			PacketSendUtility.sendPacket(player3, startMessage);
+			PacketSendUtility.sendPacket(player3, artifactInfo);
 		});
 		PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), 10000, 1));
 		PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.START_QUESTLOOT, 0, getObjectId()), true);
@@ -123,50 +120,38 @@ public class ArtifactAI2 extends NpcAI2
 				final SM_SYSTEM_MESSAGE message = SM_SYSTEM_MESSAGE.STR_ARTIFACT_CANCELED(loc.getRace().getDescriptionId(), new DescriptionId(skillTemplate.getNameId()));
 				loc.setStatus(ArtifactStatus.IDLE);
 				final SM_ABYSS_ARTIFACT_INFO3 artifactInfo = new SM_ABYSS_ARTIFACT_INFO3(loc.getLocationId());
-				getOwner().getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player player) {
-						PacketSendUtility.sendPacket(player, message);
-						PacketSendUtility.sendPacket(player, artifactInfo);
-					}
+				getOwner().getPosition().getWorldMapInstance().doOnAllPlayers(player2 -> {
+					PacketSendUtility.sendPacket(player2, message);
+					PacketSendUtility.sendPacket(player2, artifactInfo);
 				});
 			}
 		};
 		observers.put(player.getObjectId(), observer);
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				ItemUseObserver observer = observers.remove(player.getObjectId());
-				if (observer != null)
-					player.getObserveController().removeObserver(observer);
-				PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), 10000, 0));
-				PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
-				if (!player.getInventory().decreaseByItemId(itemId, count))
-					return;
-				final SM_SYSTEM_MESSAGE message = SM_SYSTEM_MESSAGE.STR_ARTIFACT_CORE_CASTING(loc.getRace().getDescriptionId(), new DescriptionId(skillTemplate.getNameId()));
-				loc.setStatus(ArtifactStatus.CASTING);
-				final SM_ABYSS_ARTIFACT_INFO3 artifactInfo = new SM_ABYSS_ARTIFACT_INFO3(loc.getLocationId());
-				player.getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player player) {
-						PacketSendUtility.sendPacket(player, message);
-						PacketSendUtility.sendPacket(player, artifactInfo);
-					}
-				});
-				loc.setLastActivation(System.currentTimeMillis());
-				if (loc.getTemplate().getRepeatCount() == 1)
-					GameThreadPoolServices.threadPoolManager().schedule(new ArtifactUseSkill(loc, player, skillTemplate), 13000);
-				else {
-					final ScheduledFuture<?> s = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new ArtifactUseSkill(loc, player, skillTemplate), 13000, loc.getTemplate().getRepeatInterval() * 1000L);
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							s.cancel(true);
-							loc.setStatus(ArtifactStatus.IDLE);
-						}
-					}, 13000 + ((long) loc.getTemplate().getRepeatInterval() * loc.getTemplate().getRepeatCount() * 1000));
-				}
+		player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ItemUseObserver observer1 = observers.remove(player.getObjectId());
+			if (observer1 != null)
+				player.getObserveController().removeObserver(observer1);
+			PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), 10000, 0));
+			PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
+			if (!player.getInventory().decreaseByItemId(itemId, count))
+				return;
+			final SM_SYSTEM_MESSAGE message = SM_SYSTEM_MESSAGE.STR_ARTIFACT_CORE_CASTING(loc.getRace().getDescriptionId(), new DescriptionId(skillTemplate.getNameId()));
+			loc.setStatus(ArtifactStatus.CASTING);
+			final SM_ABYSS_ARTIFACT_INFO3 artifactInfo1 = new SM_ABYSS_ARTIFACT_INFO3(loc.getLocationId());
+			player.getPosition().getWorldMapInstance().doOnAllPlayers(player1 -> {
+				PacketSendUtility.sendPacket(player1, message);
+				PacketSendUtility.sendPacket(player1, artifactInfo1);
+			});
+			loc.setLastActivation(System.currentTimeMillis());
+			if (loc.getTemplate().getRepeatCount() == 1)
+				GameThreadPoolServices.threadPoolManager().schedule(new ArtifactUseSkill(loc, player, skillTemplate), 13000);
+			else {
+				final ScheduledFuture<?> s = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new ArtifactUseSkill(loc, player, skillTemplate), 13000, loc.getTemplate().getRepeatInterval() * 1000L);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					s.cancel(true);
+					loc.setStatus(ArtifactStatus.IDLE);
+				}, 13000 + ((long) loc.getTemplate().getRepeatInterval() * loc.getTemplate().getRepeatCount() * 1000));
 			}
 		}, 10000));
 	}
@@ -194,17 +179,14 @@ public class ArtifactAI2 extends NpcAI2
 			final boolean start = (runCount == 1);
 			final boolean end = (runCount == artifact.getTemplate().getRepeatCount());
 			runCount++;
-			player.getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					if (start) {
-						PacketSendUtility.sendPacket(player, message);
-					    artifact.setStatus(ArtifactStatus.ACTIVATED);
-						PacketSendUtility.sendPacket(player, pkt);
-					} if (end) {
-						artifact.setStatus(ArtifactStatus.IDLE);
-						PacketSendUtility.sendPacket(player, pkt);
-					}
+			player.getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+				if (start) {
+					PacketSendUtility.sendPacket(player, message);
+					artifact.setStatus(ArtifactStatus.ACTIVATED);
+					PacketSendUtility.sendPacket(player, pkt);
+				} if (end) {
+					artifact.setStatus(ArtifactStatus.IDLE);
+					PacketSendUtility.sendPacket(player, pkt);
 				}
 			});
 			boolean pc = skill.getProperties().getTargetSpecies() == TargetSpeciesAttribute.PC;

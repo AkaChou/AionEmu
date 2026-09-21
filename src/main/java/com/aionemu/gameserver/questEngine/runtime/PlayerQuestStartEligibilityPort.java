@@ -174,18 +174,24 @@ public final class PlayerQuestStartEligibilityPort implements QuestStartEligibil
 
 	private boolean startConditionMet(Player player, QuestStartCondition condition) {
 		QuestState state = player.getQuestStateList().getQuestState(condition.questId());
-		return switch (condition.type().toLowerCase(java.util.Locale.ROOT)) {
-			case "finished" -> state != null && state.getStatus() == QuestStatus.COMPLETE
-				&& rewardMatches(condition, state) && repeatCompletionMatches(condition.questId(), state);
-			case "unfinished" -> state == null || state.getStatus() != QuestStatus.COMPLETE;
-			case "noacquired" -> state == null || (state.getStatus() != QuestStatus.START
-				&& state.getStatus() != QuestStatus.REWARD && state.getStatus() != QuestStatus.COMPLETE);
-			case "acquired" -> state != null && state.getStatus() != QuestStatus.NONE
-				&& state.getStatus() != QuestStatus.LOCKED;
-			case "equipped" -> player.getEquipment() != null
-				&& player.getEquipment().getEquippedItemIds().contains(condition.questId());
-			default -> false;
-		};
+        switch (condition.type().toLowerCase(java.util.Locale.ROOT)) {
+            case "finished":
+                return state != null && state.getStatus() == QuestStatus.COMPLETE
+                        && rewardMatches(condition, state) && repeatCompletionMatches(condition.questId(), state);
+            case "unfinished":
+                return state == null || state.getStatus() != QuestStatus.COMPLETE;
+            case "noacquired":
+                return state == null || (state.getStatus() != QuestStatus.START
+                        && state.getStatus() != QuestStatus.REWARD && state.getStatus() != QuestStatus.COMPLETE);
+            case "acquired":
+                return state != null && state.getStatus() != QuestStatus.NONE
+                        && state.getStatus() != QuestStatus.LOCKED;
+            case "equipped":
+                return player.getEquipment() != null
+                        && player.getEquipment().getEquippedItemIds().contains(condition.questId());
+            default:
+                return false;
+        }
 	}
 
 	private boolean repeatCompletionMatches(int questId, QuestState state) {

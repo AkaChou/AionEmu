@@ -144,19 +144,16 @@ public class ChatServer {
 		if (serverShutdown || !connectionTaskQueued.compareAndSet(false, true)) {
 			return;
 		}
-		connectionTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				connectionTaskQueued.set(false);
-				connectionTask = null;
-				if (serverShutdown || chatServer != null) {
-					return;
-				}
-				if (!connectOnce()) {
-					scheduleConnect(5000);
-				} else if (serverShutdown) {
-					gameServerDisconnected();
-				}
+		connectionTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			connectionTaskQueued.set(false);
+			connectionTask = null;
+			if (serverShutdown || chatServer != null) {
+				return;
+			}
+			if (!connectOnce()) {
+				scheduleConnect(5000);
+			} else if (serverShutdown) {
+				gameServerDisconnected();
 			}
 		}, delay);
 	}

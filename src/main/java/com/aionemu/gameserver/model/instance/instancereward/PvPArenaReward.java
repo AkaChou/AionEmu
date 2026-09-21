@@ -29,8 +29,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
-	private final Map<Integer, Boolean> positions = new HashMap<Integer, Boolean>();
-	private final List<Integer> zones = new ArrayList<Integer>();
+	private final Map<Integer, Boolean> positions = new HashMap<>();
+	private final List<Integer> zones = new ArrayList<>();
 	/** 返回 round / Returns the round */
 	private int round = 1;
 	private Integer zone;
@@ -95,7 +95,7 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 	}
 
 	private List<Integer> getFreePositions() {
-		List<Integer> p = new ArrayList<Integer>();
+		List<Integer> p = new ArrayList<>();
 		for (Integer key : positions.keySet()) {
 			if (!positions.get(key)) {
 				p.add(key);
@@ -252,8 +252,10 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 	/** 发送数据包。 / Send packet. */
 	public void sendPacket() {
 		final List<Player> players = instance.getPlayersInside();
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/** 访问 / visit. */
+		instance.doOnAllPlayers(new Visitor<>() {
+			/**
+			 * 访问 / visit.
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(getTime(), getInstanceReward(), players));

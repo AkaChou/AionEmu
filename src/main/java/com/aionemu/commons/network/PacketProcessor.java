@@ -123,8 +123,8 @@ public class PacketProcessor<T extends AConnection> {
     PacketProcessor(int minThreads, int maxThreads, int threadSpawnThreshold, int threadKillThreshold, Executor executor, ThreadFactory threadFactory) {
         this.lock = new ReentrantLock();
         this.notEmpty = this.lock.newCondition();
-        this.packets = new LinkedList<BaseClientPacket<T>>();
-        this.threads = new ArrayList<Thread>();
+        this.packets = new LinkedList<>();
+        this.threads = new ArrayList<>();
 
         Preconditions.checkArgument(minThreads > 0, "Min Threads must be positive");
         Preconditions.checkArgument(maxThreads >= minThreads, "Max Threads must be >= Min Threads");

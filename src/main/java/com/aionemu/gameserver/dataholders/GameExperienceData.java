@@ -28,10 +28,10 @@ public class GameExperienceData {
 	private List<GameExperience> glist;
 
 	@XmlTransient
-	private final IntObjectHashMap<GameExperience> experienceData = new IntObjectHashMap<GameExperience>();
+	private final IntObjectHashMap<GameExperience> experienceData = new IntObjectHashMap<>();
 
 	@XmlTransient
-	private final Map<Integer, GameExperience> experienceDataMap = new HashMap<Integer, GameExperience>(1);
+	private final Map<Integer, GameExperience> experienceDataMap = new HashMap<>(1);
 
 	/**
 	 * JAXB 反序列化完成后，将体验物品写入 ID 索引。

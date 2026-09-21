@@ -45,7 +45,7 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 	 */
 	@Override
 	public PlayerCPList loadCP(Player player) {
-		List<PlayerCPEntry> cp = new ArrayList<PlayerCPEntry>();
+		List<PlayerCPEntry> cp = new ArrayList<>();
 
 		try (Connection con = DatabaseFactory.getConnection();
 			 PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {

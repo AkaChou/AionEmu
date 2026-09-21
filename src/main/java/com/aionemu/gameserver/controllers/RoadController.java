@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RoadController extends VisibleObjectController<Road> {
 
 	/** 当前观察该道路的玩家观察者映射。 / Map of observers for players currently observing this road. */
-	Map<Integer, RoadObserver> observed = new ConcurrentHashMap<Integer, RoadObserver>();
+	Map<Integer, RoadObserver> observed = new ConcurrentHashMap<>();
 
 	/**
 	 * 玩家进入道路可视范围时注册观察者。

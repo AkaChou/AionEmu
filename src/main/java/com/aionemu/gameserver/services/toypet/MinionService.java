@@ -109,14 +109,11 @@ public class MinionService {
 		PacketSendUtility.sendPacket(player, new SM_MINIONS(12));
 
 		if (lastUsedMinionId != 0 && player.getMinion() == null) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (player.isOnline() && player.getMinion() == null) {
-						MinionCommonData minionData = player.getMinionList().getMinion(lastUsedMinionId);
-						if (minionData != null) {
-							spawnMinion(player, lastUsedMinionId);
-						}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (player.isOnline() && player.getMinion() == null) {
+					MinionCommonData minionData = player.getMinionList().getMinion(lastUsedMinionId);
+					if (minionData != null) {
+						spawnMinion(player, lastUsedMinionId);
 					}
 				}
 			}, 3000);
@@ -157,107 +154,103 @@ public class MinionService {
 		};
 
 		player.getObserveController().attach(itemUseObserver);
-		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
-
-			@Override
-			public void run() {
-				player.getObserveController().removeObserver(itemUseObserver);
-				player.getController().cancelTask(TaskId.ITEM_USE);
-				if (rejectIfMinionLimitReached(player)) {
-					PacketSendUtility.broadcastPacket(player,
-							new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, item.getItemId(), 0, 2), true);
-					return;
-				}
-				int rnd = 0;
-				int minionId = 0;
-				String grade = "";
-				int level = 0;
-				String name = "";
-				int growthPoint = 0;
-				switch (item.getItemTemplate().getTemplateId()) {
-					case 190080007:
-					case 190080008:
-					case 190080013:
-						rnd = Rnd.get(0, 1610);
-						minionId = minionId(rnd);
-						break;
-
-					case 190080012:
-						// Retail Contract04: one-star Seiren or Steel Rose (50/50).
-						minionId = questContractMinionId(Rnd.nextBoolean());
-						break;
-
-					case 190080006:
-						rnd = Rnd.get(0, 910);
-						minionId = minionId(rnd);
-						MinionTemplate mediumTemplate = DataManager.MINION_DATA.getMinionTemplate(minionId);
-						if (mediumTemplate != null) {
-							String rank = mediumTemplate.getGrade();
-							int attempts = 0;
-							while (rank.equals("A") && attempts < 50) {
-								rnd = Rnd.get(0, 910);
-								minionId = minionId(rnd);
-								mediumTemplate = DataManager.MINION_DATA.getMinionTemplate(minionId);
-								if (mediumTemplate != null) {
-									rank = mediumTemplate.getGrade();
-								}
-								attempts++;
-							}
-						}
-						break;
-
-					case 190080005:
-					case 190080009:
-					case 190080010:
-					case 190080011:
-					case 190080020:
-					case 190080021:
-					case 190089999:
-						rnd = Rnd.get(0, 210);
-						minionId = minionId(rnd);
-						MinionTemplate lesserTemplate = DataManager.MINION_DATA.getMinionTemplate(minionId);
-						if (lesserTemplate != null) {
-							String rank = lesserTemplate.getGrade();
-							int attempts = 0;
-							while ((rank.equals("A") || rank.equals("B")) && attempts < 50) {
-								rnd = Rnd.get(0, 210);
-								minionId = minionId(rnd);
-								lesserTemplate = DataManager.MINION_DATA.getMinionTemplate(minionId);
-								if (lesserTemplate != null) {
-									rank = lesserTemplate.getGrade();
-								}
-								attempts++;
-							}
-						}
-						break;
-
-					default:
-						return;
-				}
-
-				MinionTemplate minionTemplate = DataManager.MINION_DATA.getMinionTemplate(minionId);
-				if (minionTemplate == null || !player.getInventory().decreaseByObjectId(itemObjId, 1)) {
-					PacketSendUtility.broadcastPacket(player,
-							new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, item.getItemId(), 0, 2), true);
-					return;
-				}
+		player.getController().scheduleTask(TaskId.ITEM_USE, () -> {
+			player.getObserveController().removeObserver(itemUseObserver);
+			player.getController().cancelTask(TaskId.ITEM_USE);
+			if (rejectIfMinionLimitReached(player)) {
 				PacketSendUtility.broadcastPacket(player,
-						new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, item.getItemId(), 0, 1), true);
-				grade = minionTemplate.getGrade();
-				level = minionTemplate.getLevel();
-				name = minionTemplate.getName();
-				growthPoint = minionTemplate.getGrowthPt();
-
-				MinionCommonData addNewMinion = player.getMinionList().addNewMinion(player, minionId, name, grade, level, growthPoint);
-
-				if (addNewMinion == null) {
-					ItemService.addItem(player, item.getItemId(), 1);
-					return;
-				}
-				PacketSendUtility.sendPacket(player, new SM_MINIONS(1, addNewMinion, 0));
-				GameEngineServices.questEngine().onItemPlayCompletedEvent(player, item.getItemId());
-				checkQuest(player, item);
+						new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, item.getItemId(), 0, 2), true);
+				return;
 			}
+			int rnd = 0;
+			int minionId = 0;
+			String grade = "";
+			int level = 0;
+			String name = "";
+			int growthPoint = 0;
+			switch (item.getItemTemplate().getTemplateId()) {
+				case 190080007:
+				case 190080008:
+				case 190080013:
+					rnd = Rnd.get(0, 1610);
+					minionId = minionId(rnd);
+					break;
+
+				case 190080012:
+					// Retail Contract04: one-star Seiren or Steel Rose (50/50).
+					minionId = questContractMinionId(Rnd.nextBoolean());
+					break;
+
+				case 190080006:
+					rnd = Rnd.get(0, 910);
+					minionId = minionId(rnd);
+					MinionTemplate mediumTemplate = DataManager.MINION_DATA.getMinionTemplate(minionId);
+					if (mediumTemplate != null) {
+						String rank = mediumTemplate.getGrade();
+						int attempts = 0;
+						while (rank.equals("A") && attempts < 50) {
+							rnd = Rnd.get(0, 910);
+							minionId = minionId(rnd);
+							mediumTemplate = DataManager.MINION_DATA.getMinionTemplate(minionId);
+							if (mediumTemplate != null) {
+								rank = mediumTemplate.getGrade();
+							}
+							attempts++;
+						}
+					}
+					break;
+
+				case 190080005:
+				case 190080009:
+				case 190080010:
+				case 190080011:
+				case 190080020:
+				case 190080021:
+				case 190089999:
+					rnd = Rnd.get(0, 210);
+					minionId = minionId(rnd);
+					MinionTemplate lesserTemplate = DataManager.MINION_DATA.getMinionTemplate(minionId);
+					if (lesserTemplate != null) {
+						String rank = lesserTemplate.getGrade();
+						int attempts = 0;
+						while ((rank.equals("A") || rank.equals("B")) && attempts < 50) {
+							rnd = Rnd.get(0, 210);
+							minionId = minionId(rnd);
+							lesserTemplate = DataManager.MINION_DATA.getMinionTemplate(minionId);
+							if (lesserTemplate != null) {
+								rank = lesserTemplate.getGrade();
+							}
+							attempts++;
+						}
+					}
+					break;
+
+				default:
+					return;
+			}
+
+			MinionTemplate minionTemplate = DataManager.MINION_DATA.getMinionTemplate(minionId);
+			if (minionTemplate == null || !player.getInventory().decreaseByObjectId(itemObjId, 1)) {
+				PacketSendUtility.broadcastPacket(player,
+						new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, item.getItemId(), 0, 2), true);
+				return;
+			}
+			PacketSendUtility.broadcastPacket(player,
+					new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, item.getItemId(), 0, 1), true);
+			grade = minionTemplate.getGrade();
+			level = minionTemplate.getLevel();
+			name = minionTemplate.getName();
+			growthPoint = minionTemplate.getGrowthPt();
+
+			MinionCommonData addNewMinion = player.getMinionList().addNewMinion(player, minionId, name, grade, level, growthPoint);
+
+			if (addNewMinion == null) {
+				ItemService.addItem(player, item.getItemId(), 1);
+				return;
+			}
+			PacketSendUtility.sendPacket(player, new SM_MINIONS(1, addNewMinion, 0));
+			GameEngineServices.questEngine().onItemPlayCompletedEvent(player, item.getItemId());
+			checkQuest(player, item);
 		}, 1500);
 	}
 
@@ -906,12 +899,7 @@ public class MinionService {
 		limit.setDelayTime(useDelay);
 		if (player.isItemUseDisabled(limit)) {
 			final int useItemId = itemId;
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					PacketSendUtility.broadcastPacket(player, new SM_MINIONS(8, 3, minionObjectId, useItemId, slot, 0), true);
-				}
-			}, useDelay);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> PacketSendUtility.broadcastPacket(player, new SM_MINIONS(8, 3, minionObjectId, useItemId, slot, 0), true), useDelay);
 			return;
 		}
 		if (!RestrictionsManager.canUseItem(player, useItem) || player.isProtectionActive()) {

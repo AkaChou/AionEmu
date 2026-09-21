@@ -39,11 +39,11 @@ public class ItemUpgradeData {
 	 * After JAXB unmarshalling, indexes upgrade templates and result items by base item id.
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		itemUpgradeSets = new IntObjectHashMap<ItemUpgradeTemplate>();
-		upgradeResultItemMap = new LinkedHashMap<Integer, Map<Integer, UpgradeResultItem>>();
+		itemUpgradeSets = new IntObjectHashMap<>();
+		upgradeResultItemMap = new LinkedHashMap<>();
 		for (ItemUpgradeTemplate set : itemUpgradeTemplates) {
 			itemUpgradeSets.put(set.getUpgrade_base_item_id(), set);
-			upgradeResultItemMap.put(set.getUpgrade_base_item_id(), new LinkedHashMap<Integer, UpgradeResultItem>());
+			upgradeResultItemMap.put(set.getUpgrade_base_item_id(), new LinkedHashMap<>());
 			if (!set.getUpgrade_result_item().isEmpty()) {
 				for (UpgradeResultItem resultItem : set.getUpgrade_result_item()) {
 					upgradeResultItemMap.get(set.getUpgrade_base_item_id()).put(resultItem.getItem_id(), resultItem);

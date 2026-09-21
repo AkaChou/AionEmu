@@ -32,8 +32,8 @@ import java.util.List;
 @AIName("quest_use_item")
 public class QuestItemNpcAI2 extends ActionItemNpcAI2
 {
-	private List<Player> registeredPlayers = new ArrayList<Player>();
-	
+	private List<Player> registeredPlayers = new ArrayList<>();
+
 	/**
 	 * 玩家开始与本 NPC 对话/交互。
 	 * Player starts dialog/interaction with this NPC.
@@ -61,7 +61,7 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 	static List<Integer> dialogIds() {
 		return List.of(QuestDialog.USE_OBJECT.id(), QuestDialog.START_DIALOG.id());
 	}
-	
+
 	/**
 	 * 使用交互物完成时的逻辑。
 	 * Logic when action-item use finishes.
@@ -107,11 +107,11 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 			GameCoreGameplayServices.dropService().requestDropList(player, getObjectId());
 		}
 	}
-	
+
 	private boolean isDialogNpc() {
 		return getObjectTemplate().isDialogNpc();
 	}
-	
+
 	/**
 	 * 处理消失事件。
 	 * Handle despawn.
@@ -121,7 +121,7 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 		super.handleDespawned();
 		registeredPlayers.clear();
 	}
-	
+
 	/**
 	 * 处理看见生物事件。
 	 * Handle seeing a creature.
@@ -132,7 +132,7 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 	protected void handleCreatureSee(Creature creature) {
 		CreatureEventHandler.onCreatureSee(this, creature);
 	}
-	
+
 	/**
 	 * 处理生物移动事件。
 	 * Handle creature-moved.

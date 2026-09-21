@@ -35,7 +35,7 @@ public class AbyssLandingSpecialService {
 	/** 特殊登陆点 ID → 位置。 / Special landing id → location. */
 	private static Map<Integer, LandingSpecialLocation> abyssSpecialLanding;
 	/** 当前活跃的特殊登陆实例。 / Currently active special landing instances. */
-	private final ConcurrentMap<Integer, SpecialLanding<?>> activeSpecialLanding = new ConcurrentHashMap<Integer, SpecialLanding<?>>();
+	private final ConcurrentMap<Integer, SpecialLanding<?>> activeSpecialLanding = new ConcurrentHashMap<>();
 
 	/**
 	 * 初始化特殊登陆点：加载模板与数据库状态，并刷新 ACTIVE 位置。
@@ -125,7 +125,7 @@ public class AbyssLandingSpecialService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
+		for (VisibleObject obj : new ArrayList<>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {

@@ -49,19 +49,20 @@ public class cmd_drop extends PlayerCommand {
 		else {
 			VisibleObject visibleObject = player.getTarget();
 
-			if (visibleObject == null) {
-				PacketSendUtility.sendMessage(player, "You have no target !");
-				return;
-			}
+            switch (visibleObject) {
+                case null:
+                    PacketSendUtility.sendMessage(player, "You have no target !");
+                    return;
+                case Player player1:
+                    PacketSendUtility.sendMessage(player, "Your target must be a npc !");
+                    return;
+                case Npc npc:
+                    npcDrop = npc.getNpcDrop();
+                    break;
+                default:
+                    break;
+            }
 
-			if (visibleObject instanceof Player) {
-				PacketSendUtility.sendMessage(player, "Your target must be a npc !");
-				return;
-			}
-
-			if (visibleObject instanceof Npc) {
-				npcDrop = ((Npc) visibleObject).getNpcDrop();
-			}
 		}
 		if (npcDrop == null) {
 			Npc npc = (Npc) player.getTarget();

@@ -84,7 +84,7 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 	private long lastTransferTime;
 	private int stamps = 0;
 	private int passportReward = 0;
-	public Map<Integer, AtreianPassport> playerPassports = new HashMap<Integer, AtreianPassport>(1);
+	public Map<Integer, AtreianPassport> playerPassports = new HashMap<>(1);
 	private PlayerPassports completedPassports;
 	private boolean isArchDaeva = false;
 	private int creativityPoint;

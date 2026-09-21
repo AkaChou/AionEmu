@@ -99,7 +99,7 @@ public class MailService {
 	 * Constructs the mail service and initializes the new-player queue.
 	 */
 	public MailService() {
-		newPlayers = new ConcurrentLinkedQueue<Player>();
+		newPlayers = new ConcurrentLinkedQueue<>();
 	}
 
 	/**

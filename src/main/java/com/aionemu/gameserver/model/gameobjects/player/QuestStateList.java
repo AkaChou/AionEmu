@@ -38,7 +38,7 @@ public class QuestStateList {
 	}
 
 	QuestStateList(IntFunction<QuestMetadata> metadata) {
-		_quests = new TreeMap<Integer, QuestState>();
+		_quests = new TreeMap<>();
 		this.metadata = Objects.requireNonNull(metadata, "metadata");
 	}
 
@@ -73,7 +73,7 @@ public class QuestStateList {
 
 	/** 返回 all finished quests / Returns the all finished quests */
 	public List<QuestState> getAllFinishedQuests() {
-		List<QuestState> completeQuestList = new ArrayList<QuestState>();
+		List<QuestState> completeQuestList = new ArrayList<>();
 		for (QuestState qs : _quests.values()) {
 			if (qs.getStatus() == QuestStatus.COMPLETE) {
 				completeQuestList.add(qs);
@@ -85,7 +85,7 @@ public class QuestStateList {
 	/*
 	 * Issue #13 fix Used by the QuestService to check the amount of normal quests
 	 * in the player's list
-	 * 
+	 *
 	 * @author vlog
 	 */
 	public int getNormalQuestListSize() {
@@ -94,11 +94,11 @@ public class QuestStateList {
 
 	/*
 	 * Issue #13 fix Returns the list of normal quests
-	 * 
+	 *
 	 * @author vlog
 	 */
 	public Collection<QuestState> getNormalQuests() {
-		Collection<QuestState> l = new ArrayList<QuestState>();
+		Collection<QuestState> l = new ArrayList<>();
 
 		for (QuestState qs : this.getAllQuestState()) {
 			QuestMetadata questMetadata = metadata.apply(qs.getQuestId());
@@ -115,7 +115,7 @@ public class QuestStateList {
 	/*
 	 * Returns true if there is a quest in the list with this id Used by the
 	 * QuestService
-	 * 
+	 *
 	 * @author vlog
 	 */
 	public boolean hasQuest(int questId) {
@@ -125,7 +125,7 @@ public class QuestStateList {
 	/*
 	 * Change the old value of the quest status to the new one Used by the
 	 * QuestService
-	 * 
+	 *
 	 * @author vlog
 	 */
 	public void changeQuestStatus(Integer key, QuestStatus newStatus) {

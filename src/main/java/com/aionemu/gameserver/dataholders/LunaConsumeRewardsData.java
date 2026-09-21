@@ -29,13 +29,13 @@ public class LunaConsumeRewardsData {
 	private List<LunaConsumeRewardsTemplate> lunaList;
 
 	@XmlTransient
-	private final IntObjectHashMap<LunaConsumeRewardsTemplate> lunaData = new IntObjectHashMap<LunaConsumeRewardsTemplate>();
+	private final IntObjectHashMap<LunaConsumeRewardsTemplate> lunaData = new IntObjectHashMap<>();
 
 	@XmlTransient
-	private final IntObjectHashMap<LunaConsumeRewardsTemplate> lunaConsumeCountData = new IntObjectHashMap<LunaConsumeRewardsTemplate>();
+	private final IntObjectHashMap<LunaConsumeRewardsTemplate> lunaConsumeCountData = new IntObjectHashMap<>();
 
 	@XmlTransient
-	private final Map<Integer, LunaConsumeRewardsTemplate> lunaDataMap = new HashMap<Integer, LunaConsumeRewardsTemplate>(1);
+	private final Map<Integer, LunaConsumeRewardsTemplate> lunaDataMap = new HashMap<>(1);
 
 	/**
 	 * JAXB 反序列化完成后，按 ID 与累计点数建立索引。

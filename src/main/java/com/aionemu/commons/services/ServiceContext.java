@@ -9,13 +9,13 @@ import java.util.Locale;
 public final class ServiceContext {
 
     private static final String DEFAULT_CONTEXT = "default";
-    private static final InheritableThreadLocal<String> CURRENT = new InheritableThreadLocal<String>() {
+    private static final InheritableThreadLocal<String> CURRENT = new InheritableThreadLocal<>() {
         /**
-         * 提供默认上下文名称
-         * Provide the default context name
-         *
-         * @return 默认上下文 / Default context
-         */
+		 * 提供默认上下文名称
+		 * Provide the default context name
+		 *
+		 * @return 默认上下文 / Default context
+		 */
         @Override
         protected String initialValue() {
             return DEFAULT_CONTEXT;

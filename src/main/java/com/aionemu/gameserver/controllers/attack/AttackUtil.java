@@ -312,18 +312,13 @@ public class AttackUtil {
 	}
 
 	static int getRandomDamagePercent(int randomDamageType, int range) {
-		switch (randomDamageType) {
-		case 1:
-			return range < 7 ? 50 : range < 13 ? 100 : 150;
-		case 2:
-			return range < 14 ? 60 : 200;
-		case 3:
-			return range < 7 ? 90 : range < 13 ? 100 : 110;
-		case 6:
-			return range < 14 ? 100 : 200;
-		default:
-			return 100;
-		}
+		return switch (randomDamageType) {
+			case 1 -> range < 7 ? 50 : range < 13 ? 100 : 150;
+			case 2 -> range < 14 ? 60 : 200;
+			case 3 -> range < 7 ? 90 : range < 13 ? 100 : 110;
+			case 6 -> range < 14 ? 100 : 200;
+			default -> 100;
+		};
 	}
 
 	/**
@@ -482,28 +477,14 @@ public class AttackUtil {
 			coefficient = 1f;
 		} else {
 			coefficient = switch (weaponType) {
-				case DAGGER_1H:
-					yield 2.3f;
-				case SWORD_1H:
-					yield 2.2f;
-				case MACE_1H:
-					yield 2f;
-				case SWORD_2H:
-				case POLEARM_2H:
-					yield 1.8f;
-				case STAFF_2H:
-				case BOW:
-				case GUN_1H:
-				case CANNON_2H:
-					yield 1.7f;
-				case BOOK_2H:
-				case ORB_2H:
-				case HARP_2H:
-					yield 2f;
-				case KEYBLADE_2H:
-					yield 1.5f;
-				default:
-					yield 1f;
+				case DAGGER_1H -> 2.3f;
+				case SWORD_1H -> 2.2f;
+				case MACE_1H -> 2f;
+				case SWORD_2H, POLEARM_2H -> 1.8f;
+				case STAFF_2H, BOW, GUN_1H, CANNON_2H -> 1.7f;
+				case BOOK_2H, ORB_2H, HARP_2H -> 2f;
+				case KEYBLADE_2H -> 1.5f;
+				default -> 1f;
 			};
 		}
 		return Math.max(1f, coefficient - fortitude / Math.max(1f, attackerStatRatio) / 1000f + critAddDmg / 100f);
@@ -539,13 +520,13 @@ public class AttackUtil {
 		Creature effector = effect.getEffector();
 		Creature effected = effect.getEffected();
 
-		float damage = 0;
-		int baseAttack = 0;
+		float damage;
+		int baseAttack;
 		CalculationType[] calculationTypes = new CalculationType[] { CalculationType.SKILL };
 		if (effector instanceof Player && ((Player) effector).getEquipment().hasDualWeaponEquipped(ItemSlot.SUB_HAND)) {
 			calculationTypes = ArrayUtils.add(calculationTypes, CalculationType.DUAL_WIELD);
 		}
-		AttackStatus status = AttackStatus.NORMALHIT;
+		AttackStatus status;
 		boolean physicalAttackType = effector.getAttackType() == ItemAttackType.PHYSICAL;
 		if (physicalAttackType) {
 			status = calculatePhysicalStatus(effector, effected, true, accMod, criticalProb, true, cannotMiss);
@@ -1056,23 +1037,15 @@ public class AttackUtil {
 	 * @param target 目标生物 / target creature
 	 */
 	public static void cancelCastOn(final Creature target) {
-		target.getKnownList().doOnAllPlayers(new Visitor<Player>() {
-
-			@Override
-			public void visit(Player observer) {
-				if (observer.getTarget() == target) {
-					cancelCast(observer, target);
-				}
+		target.getKnownList().doOnAllPlayers(observer -> {
+			if (observer.getTarget() == target) {
+				cancelCast(observer, target);
 			}
 		});
 
-		target.getKnownList().doOnAllNpcs(new Visitor<Npc>() {
-
-			@Override
-			public void visit(Npc observer) {
-				if (observer.getTarget() == target) {
-					cancelCast(observer, target);
-				}
+		target.getKnownList().doOnAllNpcs(observer -> {
+			if (observer.getTarget() == target) {
+				cancelCast(observer, target);
 			}
 		});
 	}
@@ -1110,21 +1083,17 @@ public class AttackUtil {
 	 * @param validateSee 是否校验可见性 / whether to validate visibility
 	 */
 	public static void removeTargetFrom(final Creature object, final boolean validateSee) {
-		object.getKnownList().doOnAllPlayers(new Visitor<Player>() {
-
-			@Override
-			public void visit(Player observer) {
-				if (validateSee && observer.getTarget() == object) {
-					if (!observer.canSee(object)) {
-						observer.setTarget(null);
-						// 正式服数据包 / retail packet (//fsc 0x44 dhdd 0 0 0 0) right after SM_PLAYER_STATE
-						PacketSendUtility.sendPacket(observer, new SM_TARGET_SELECTED(observer));
-					}
-				} else if (observer.getTarget() == object) {
+		object.getKnownList().doOnAllPlayers(observer -> {
+			if (validateSee && observer.getTarget() == object) {
+				if (!observer.canSee(object)) {
 					observer.setTarget(null);
 					// 正式服数据包 / retail packet (//fsc 0x44 dhdd 0 0 0 0) right after SM_PLAYER_STATE
 					PacketSendUtility.sendPacket(observer, new SM_TARGET_SELECTED(observer));
 				}
+			} else if (observer.getTarget() == object) {
+				observer.setTarget(null);
+				// 正式服数据包 / retail packet (//fsc 0x44 dhdd 0 0 0 0) right after SM_PLAYER_STATE
+				PacketSendUtility.sendPacket(observer, new SM_TARGET_SELECTED(observer));
 			}
 		});
 	}

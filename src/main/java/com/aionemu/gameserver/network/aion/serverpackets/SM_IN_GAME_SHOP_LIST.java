@@ -23,7 +23,7 @@ public class SM_IN_GAME_SHOP_LIST extends AionServerPacket {
 	private final Player player;
 	private final int nrList;
 	private final int salesRanking;
-	private final IntObjectHashMap<List<IGItem>> allItems = new IntObjectHashMap<List<IGItem>>();
+	private final IntObjectHashMap<List<IGItem>> allItems = new IntObjectHashMap<>();
 
 	@Override
 	protected void writeImpl(AionConnection con) {

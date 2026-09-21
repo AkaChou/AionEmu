@@ -29,7 +29,7 @@ public class CollectItems {
 	 */
 	public List<CollectItem> getCollectItem() {
 		if (collectItem == null) {
-			collectItem = new ArrayList<CollectItem>();
+			collectItem = new ArrayList<>();
 		}
 		return this.collectItem;
 	}

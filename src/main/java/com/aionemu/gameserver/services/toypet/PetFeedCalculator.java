@@ -51,7 +51,7 @@ public final class PetFeedCalculator {
 	static final int[][] pointValues;
 
 	static {
-		TreeSet<Short> counts = new TreeSet<Short>();
+		TreeSet<Short> counts = new TreeSet<>();
 		for (PetFlavour flavour : DataManager.PET_FEED_DATA.getPetFlavours()) {
 			if (flavour.getFullCount() > 0) {
 				counts.add((short) (flavour.getFullCount() & 0xFFFF));
@@ -221,7 +221,7 @@ public final class PetFeedCalculator {
 			if (rewardGroup.getResults().size() == 1) {
 				return rewardGroup.getResults().get(0);
 			}
-			List<PetFeedResult> validRewards = new ArrayList<PetFeedResult>();
+			List<PetFeedResult> validRewards = new ArrayList<>();
 			int maxLevel = 0;
 			for (PetFeedResult result : rewardGroup.getResults()) {
 				int resultLevel = DataManager.ITEM_DATA.getItemTemplate(result.getItem()).getLevel();

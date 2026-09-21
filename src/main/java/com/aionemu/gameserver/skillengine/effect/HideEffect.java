@@ -92,12 +92,7 @@ public class HideEffect extends BuffEffect {
 
 		PacketSendUtility.broadcastPacketAndReceive(effected, new SM_PLAYER_STATE(effected));
 
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			public void run() {
-				AttackUtil.removeTargetFrom(effected, true);
-			}
-		}, 500L);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AttackUtil.removeTargetFrom(effected, true), 500L);
 
 		if ((effected instanceof Player)) {
 			if (SecurityConfig.INVIS) {

@@ -34,7 +34,7 @@ public class ItemEnchantTemplate {
 	private List<ItemEnchantBonus> item_enchant;
 
 	@XmlTransient
-	private final Map<Integer, List<StatFunction>> enchants = new HashMap<Integer, List<StatFunction>>();
+	private final Map<Integer, List<StatFunction>> enchants = new HashMap<>();
 
 	/** 获取属性。 / Returns the stats. */
 	public List<StatFunction> getStats(int level) {

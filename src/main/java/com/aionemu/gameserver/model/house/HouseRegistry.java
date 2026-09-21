@@ -33,13 +33,13 @@ public class HouseRegistry {
 
 	public HouseRegistry(House owner) {
 		this.owner = owner;
-		this.objects = new HashMap<Integer, HouseObject<?>>();
-		this.customParts = new HashMap<Integer, HouseDecoration>();
+		this.objects = new HashMap<>();
+		this.customParts = new HashMap<>();
 	}
 
 	/** 返回对象 / Returns the objects*/
 	public List<HouseObject<?>> getObjects() {
-		List<HouseObject<?>> temp = new ArrayList<HouseObject<?>>();
+		List<HouseObject<?>> temp = new ArrayList<>();
 		for (HouseObject<?> obj : objects.values()) {
 			temp.add(obj);
 		}
@@ -48,7 +48,7 @@ public class HouseRegistry {
 
 	/** 返回 spawned objects / Returns the spawned objects */
 	public List<HouseObject<?>> getSpawnedObjects() {
-		List<HouseObject<?>> temp = new ArrayList<HouseObject<?>>();
+		List<HouseObject<?>> temp = new ArrayList<>();
 		for (HouseObject<?> obj : objects.values()) {
 			if (obj.isSpawnedByPlayer() && obj.getPersistentState() != PersistentState.DELETED) {
 				temp.add(obj);
@@ -59,7 +59,7 @@ public class HouseRegistry {
 
 	/** 返回 not spawned objects / Returns the not spawned objects */
 	public List<HouseObject<?>> getNotSpawnedObjects() {
-		List<HouseObject<?>> temp = new ArrayList<HouseObject<?>>();
+		List<HouseObject<?>> temp = new ArrayList<>();
 		for (HouseObject<?> obj : objects.values()) {
 			if (!obj.isSpawnedByPlayer() && obj.getPersistentState() != PersistentState.DELETED) {
 				temp.add(obj);
@@ -104,7 +104,7 @@ public class HouseRegistry {
 
 	/** 返回 custom parts / Returns the custom parts */
 	public List<HouseDecoration> getCustomParts() {
-		List<HouseDecoration> temp = new ArrayList<HouseDecoration>();
+		List<HouseDecoration> temp = new ArrayList<>();
 		for (HouseDecoration decor : customParts.values()) {
 			if (decor.getPersistentState() != PersistentState.DELETED && !decor.isUsed()) {
 				temp.add(decor);
@@ -179,7 +179,7 @@ public class HouseRegistry {
 
 	/** 返回 default parts / Returns the default parts */
 	public List<HouseDecoration> getDefaultParts() {
-		List<HouseDecoration> temp = new ArrayList<HouseDecoration>();
+		List<HouseDecoration> temp = new ArrayList<>();
 		for (HouseDecoration deco : defaultParts) {
 			if (deco != null) {
 				temp.add(deco);
@@ -201,7 +201,7 @@ public class HouseRegistry {
 
 	/** 返回 all parts / Returns the all parts */
 	public List<HouseDecoration> getAllParts() {
-		List<HouseDecoration> temp = new ArrayList<HouseDecoration>();
+		List<HouseDecoration> temp = new ArrayList<>();
 		for (HouseDecoration deco : defaultParts) {
 			if (deco != null) {
 				temp.add(deco);

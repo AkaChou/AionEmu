@@ -41,9 +41,9 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 		/** suspiciouspot 任务 / suspicious pot task */
 		private Future<?> suspiciousPotTask;
 		/** suspicious pot / suspicious pot */
-		private final List<Npc> suspiciousPot = new ArrayList<Npc>();
+		private final List<Npc> suspiciousPot = new ArrayList<>();
 		/** 对象 / objects */
-		private final Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+		private final Map<Integer, VisibleObject> objects = new LinkedHashMap<>();
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -286,7 +286,7 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 	}
 
 	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -316,20 +316,20 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
+				instance.doOnAllPlayers(new Visitor<>() {
+                    /**
+                     * 处理 visit。
+                     * Handle visit.
+                     *
+                     * @param player 玩家 / player
+                     */
+                    @Override
+                    public void visit(Player player) {
+                        if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
+                            PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
+                        }
+                    }
+                });
 			}
 		}, time);
 	}

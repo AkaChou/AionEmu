@@ -27,8 +27,8 @@ public class InstanceCooltimeData {
 
 	@XmlElement(name = "instance_cooltime", required = true)
 	protected List<InstanceCooltime> instanceCooltime;
-	private final Map<Integer, InstanceCooltime> instanceCooltimes = new LinkedHashMap<Integer, InstanceCooltime>();
-	private final HashMap<Integer, Integer> syncIdToMapId = new HashMap<Integer, Integer>();
+	private final Map<Integer, InstanceCooltime> instanceCooltimes = new LinkedHashMap<>();
+	private final HashMap<Integer, Integer> syncIdToMapId = new HashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，按世界 ID 与同步 ID 建立索引并释放列表。

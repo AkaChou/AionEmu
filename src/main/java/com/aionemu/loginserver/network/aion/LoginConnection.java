@@ -34,12 +34,12 @@ public class LoginConnection extends AConnection {
      * 执行客户端包的包处理器。
      * Packet processor for client packets.
      */
-    private final static PacketProcessor<LoginConnection> processor = new PacketProcessor<LoginConnection>(1, 8, 50, 3);
+    private final static PacketProcessor<LoginConnection> processor = new PacketProcessor<>(1, 8, 50, 3);
     /**
      * 待发送服务端包队列。
      * Outgoing server-packet queue.
      */
-    private final Deque<AionServerPacket> sendMsgQueue = new ArrayDeque<AionServerPacket>();
+    private final Deque<AionServerPacket> sendMsgQueue = new ArrayDeque<>();
     /**
      * 本连接唯一会话 ID。
      * Unique session id of this connection.

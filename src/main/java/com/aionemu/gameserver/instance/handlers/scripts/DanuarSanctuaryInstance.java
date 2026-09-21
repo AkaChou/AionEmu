@@ -43,9 +43,9 @@ public class DanuarSanctuaryInstance extends GeneralInstanceHandler
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 	/** 已播放动画集合 / played-movie set */
-	private final List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<>();
 		/** 对象 / objects */
-		private final Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+		private final Map<Integer, VisibleObject> objects = new LinkedHashMap<>();
 
 	/**
 	 * 副本创建时初始化逻辑。
@@ -343,7 +343,7 @@ public class DanuarSanctuaryInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.

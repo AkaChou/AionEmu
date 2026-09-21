@@ -52,15 +52,12 @@ public class Esoterrace_AlarmAI2 extends AggressiveNpcAI2
 					WalkManager.startWalking(this);
 					getOwner().setState(1);
 					PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							if (!isAlreadyDead()) {
-								despawn();
-								announceBridgeRaised();
-								getPosition().getWorldMapInstance().getDoors().get(69).setOpen(true);
-								getPosition().getWorldMapInstance().getDoors().get(367).setOpen(true);
-							}
+					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						if (!isAlreadyDead()) {
+							despawn();
+							announceBridgeRaised();
+							getPosition().getWorldMapInstance().getDoors().get(69).setOpen(true);
+							getPosition().getWorldMapInstance().getDoors().get(367).setOpen(true);
 						}
 					}, 12000);
 				}
@@ -69,13 +66,10 @@ public class Esoterrace_AlarmAI2 extends AggressiveNpcAI2
 	}
 
 	private void announceBridgeRaised() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 通往德拉纳生产实验室的桥已升起。 / The Bridge to the Drana Production Lab has been raised.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF4Re_Drana_01);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 通往德拉纳生产实验室的桥已升起。 / The Bridge to the Drana Production Lab has been raised.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF4Re_Drana_01);
 			}
 		});
 	}

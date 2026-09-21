@@ -76,26 +76,32 @@ public class CM_TARGET_SELECT extends AionClientPacket {
 			} else {
 				player.setTarget(obj);
 			}
-			if (obj instanceof Player target) {
-				if (player != obj && !player.canSee(target)) {
-					AuditLogger.info(player, "Possible radar hacker detected, targeting on invisible Player name: "
-							+ target.getName() + " objectId: " + target.getObjectId() + " by");
-				}
-			} else if (obj instanceof Trap target) {
-				boolean isSameTeamTrap = false;
-				if (target.getMaster() instanceof Player) {
-					isSameTeamTrap = ((Player) target.getMaster()).isInSameTeam(player);
-				}
-				if (player != obj && !player.canSee(target) && !isSameTeamTrap) {
-					AuditLogger.info(player, "Possible radar hacker detected, targeting on invisible Trap name: "
-							+ target.getName() + " objectId: " + target.getObjectId() + " by");
-				}
-			} else if (obj instanceof Creature target) {
-				if (player != obj && !player.canSee(target)) {
-					AuditLogger.info(player, "Possible radar hacker detected, targeting on invisible Npc name: "
-							+ target.getName() + " objectId: " + target.getObjectId() + " by");
-				}
-			}
+            switch (obj) {
+                case Player target:
+                    if (player != obj && !player.canSee(target)) {
+                        AuditLogger.info(player, "Possible radar hacker detected, targeting on invisible Player name: "
+                                + target.getName() + " objectId: " + target.getObjectId() + " by");
+                    }
+                    break;
+                case Trap target:
+                    boolean isSameTeamTrap = false;
+                    if (target.getMaster() instanceof Player) {
+                        isSameTeamTrap = ((Player) target.getMaster()).isInSameTeam(player);
+                    }
+                    if (player != obj && !player.canSee(target) && !isSameTeamTrap) {
+                        AuditLogger.info(player, "Possible radar hacker detected, targeting on invisible Trap name: "
+                                + target.getName() + " objectId: " + target.getObjectId() + " by");
+                    }
+                    break;
+                case Creature target:
+                    if (player != obj && !player.canSee(target)) {
+                        AuditLogger.info(player, "Possible radar hacker detected, targeting on invisible Npc name: "
+                                + target.getName() + " objectId: " + target.getObjectId() + " by");
+                    }
+                    break;
+                default:
+                    break;
+            }
 		} else {
 			player.setTarget(null);
 		}

@@ -25,7 +25,7 @@ public class TerrainZoneCollisionMaterialActor extends ActionObserver implements
 	/** 被观察生物 / Observed creature */
 	private final Creature creature;
 	/** 当前生效的材质技能列表 / Currently active material skills */
-	private final AtomicReference<List<MaterialSkill>> currentSkills = new AtomicReference<List<MaterialSkill>>(Collections.emptyList());
+	private final AtomicReference<List<MaterialSkill>> currentSkills = new AtomicReference<>(Collections.emptyList());
 	/** 上次材质 ID / Last material id */
 	private int lastMaterialId;
 	/** 周期任务 / Periodic task */
@@ -74,7 +74,7 @@ public class TerrainZoneCollisionMaterialActor extends ActionObserver implements
 		if (template == null) {
 			return Collections.emptyList();
 		}
-		List<MaterialSkill> matches = new ArrayList<MaterialSkill>();
+		List<MaterialSkill> matches = new ArrayList<>();
 		for (MaterialSkill skill : template.getSkills()) {
 			if (skill.getTarget().isTarget(creature)) {
 				matches.add(skill);
@@ -94,19 +94,16 @@ public class TerrainZoneCollisionMaterialActor extends ActionObserver implements
 			return;
 		}
 		final int[] secondsElapsed = new int[1];
-		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				for (MaterialSkill materialSkill : materialSkills) {
-					if (secondsElapsed[0] % materialSkill.getFrequency() != 0 || creature.getEffectController().hasAbnormalEffect(materialSkill.getId())) {
-						continue;
-					}
-					Skill skill = GameEngineServices.skillEngine().getSkill(creature, materialSkill.getId(), materialSkill.getSkillLevel(), creature);
-					skill.getEffectedList().add(creature);
-					skill.useWithoutPropSkill();
+		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			for (MaterialSkill materialSkill : materialSkills) {
+				if (secondsElapsed[0] % materialSkill.getFrequency() != 0 || creature.getEffectController().hasAbnormalEffect(materialSkill.getId())) {
+					continue;
 				}
-				secondsElapsed[0]++;
+				Skill skill = GameEngineServices.skillEngine().getSkill(creature, materialSkill.getId(), materialSkill.getSkillLevel(), creature);
+				skill.getEffectedList().add(creature);
+				skill.useWithoutPropSkill();
 			}
+			secondsElapsed[0]++;
 		}, 0, 1000);
 		creature.getController().addTask(TaskId.TERRAIN_MATERIAL_ACTION, task);
 	}

@@ -23,7 +23,7 @@ public class LsPacketHandler {
 	 * 按连接状态索引的 opcode → 封包原型表。
 	 * Map of connection state to (opcode → packet prototype).
 	 */
-	private static final Map<State, Map<Integer, LsClientPacket>> packetPrototypes = new HashMap<State, Map<Integer, LsClientPacket>>();
+	private static final Map<State, Map<Integer, LsClientPacket>> packetPrototypes = new HashMap<>();
 
 	/**
 	 * 从给定 ByteBuffer 读取并构造一个客户端封包。
@@ -51,7 +51,7 @@ public class LsPacketHandler {
 		for (State state : states) {
 			Map<Integer, LsClientPacket> pm = packetPrototypes.get(state);
 			if (pm == null) {
-				pm = new HashMap<Integer, LsClientPacket>();
+				pm = new HashMap<>();
 				packetPrototypes.put(state, pm);
 			}
 			pm.put(packetPrototype.getOpcode(), packetPrototype);

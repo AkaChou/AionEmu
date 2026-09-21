@@ -37,7 +37,7 @@ public class AnnouncementService {
 	/** 已加载的公告集合。 / Loaded announcements. */
 	private Collection<Announcement> announcements;
 	/** 定时广播任务列表。 / Scheduled broadcast task list. */
-	private final List<Future<?>> delays = new ArrayList<Future<?>>();
+	private final List<Future<?>> delays = new ArrayList<>();
 
 	/**
 	 * 构造服务并加载公告。
@@ -102,43 +102,39 @@ public class AnnouncementService {
 	 * Loads announcements from DB and schedules fixed-rate broadcasts.
 	 */
 	private void load() {
-		announcements = new HashSet<Announcement>(getDAO().getAnnouncements());
+		announcements = new HashSet<>(getDAO().getAnnouncements());
 
 		for (final Announcement announce : announcements) {
-			delays.add(GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
+			delays.add(GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+				final Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+				while (iter.hasNext()) {
+					Player player = iter.next();
 
-				@Override
-				public void run() {
-					final Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
-					while (iter.hasNext()) {
-						Player player = iter.next();
-
-						if (announce.getFaction().equalsIgnoreCase("ALL"))
-							if (announce.getChatType() == ChatType.SHOUT
-									|| announce.getChatType() == ChatType.GROUP_LEADER) {
-								PacketSendUtility.sendPacket(player, new SM_MESSAGE(1, "Announcement",
-										announce.getAnnounce(), announce.getChatType()));
-							} else {
-								PacketSendUtility.sendPacket(player, new SM_MESSAGE(1, "Announcement",
-										"Announcement: " + announce.getAnnounce(), announce.getChatType()));
-							}
-						else if (announce.getFactionEnum() == player.getRace()) {
-							if (announce.getChatType() == ChatType.SHOUT
-									|| announce.getChatType() == ChatType.GROUP_LEADER) {
-								PacketSendUtility.sendPacket(player,
-										new SM_MESSAGE(1,
-												(announce.getFaction().equalsIgnoreCase("ELYOS") ? "Elyos" : "Asmodian")
-														+ " Announcement",
-												announce.getAnnounce(), announce.getChatType()));
-							}
+					if (announce.getFaction().equalsIgnoreCase("ALL"))
+						if (announce.getChatType() == ChatType.SHOUT
+								|| announce.getChatType() == ChatType.GROUP_LEADER) {
+							PacketSendUtility.sendPacket(player, new SM_MESSAGE(1, "Announcement",
+									announce.getAnnounce(), announce.getChatType()));
 						} else {
-							PacketSendUtility.sendPacket(player, new SM_MESSAGE(1,
-									(announce.getFaction().equalsIgnoreCase("ELYOS") ? "Elyos" : "Asmodian")
-											+ " Announcement",
-									(announce.getFaction().equalsIgnoreCase("ELYOS") ? "Elyos" : "Asmodian")
-											+ " Announcement: " + announce.getAnnounce(),
-									announce.getChatType()));
+							PacketSendUtility.sendPacket(player, new SM_MESSAGE(1, "Announcement",
+									"Announcement: " + announce.getAnnounce(), announce.getChatType()));
 						}
+					else if (announce.getFactionEnum() == player.getRace()) {
+						if (announce.getChatType() == ChatType.SHOUT
+								|| announce.getChatType() == ChatType.GROUP_LEADER) {
+							PacketSendUtility.sendPacket(player,
+									new SM_MESSAGE(1,
+											(announce.getFaction().equalsIgnoreCase("ELYOS") ? "Elyos" : "Asmodian")
+													+ " Announcement",
+											announce.getAnnounce(), announce.getChatType()));
+						}
+					} else {
+						PacketSendUtility.sendPacket(player, new SM_MESSAGE(1,
+								(announce.getFaction().equalsIgnoreCase("ELYOS") ? "Elyos" : "Asmodian")
+										+ " Announcement",
+								(announce.getFaction().equalsIgnoreCase("ELYOS") ? "Elyos" : "Asmodian")
+										+ " Announcement: " + announce.getAnnounce(),
+								announce.getChatType()));
 					}
 				}
 			}, announce.getDelay() * 1000L, announce.getDelay() * 1000L));

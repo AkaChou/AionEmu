@@ -46,16 +46,13 @@ public class Pandaemonium_Tank_2AI2 extends GeneralNpcAI2
 					WalkManager.startWalking(this);
 					getOwner().setState(1);
 					PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							if (!isAlreadyDead()) {
-								despawn();
-								giveItem();
-								ItemService.addItem(player, 185000287, 1); //Pandaemonium Defense Turret Energy Source.
-								spawn(834257, 941.10925f, 1129.3489f, 206.85745f, (byte) 16); //Saranerk.
-								spawn(220826, 947.12330f, 1124.4325f, 206.84692f, (byte) 35); //Dreadgion_Turret_Carrier_D_Da.
-							}
+					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						if (!isAlreadyDead()) {
+							despawn();
+							giveItem();
+							ItemService.addItem(player, 185000287, 1); //Pandaemonium Defense Turret Energy Source.
+							spawn(834257, 941.10925f, 1129.3489f, 206.85745f, (byte) 16); //Saranerk.
+							spawn(220826, 947.12330f, 1124.4325f, 206.84692f, (byte) 35); //Dreadgion_Turret_Carrier_D_Da.
 						}
 					}, 318000);
 				}
@@ -100,35 +97,26 @@ public class Pandaemonium_Tank_2AI2 extends GeneralNpcAI2
 	}
 
 	private void announcePandaemoniumTankB() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 埃雷什基伽尔军团正在攻击战车！ / The Ereshkigal Legion is attacking the chariot!
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403978));
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 埃雷什基伽尔军团正在攻击战车！ / The Ereshkigal Legion is attacking the chariot!
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403978));
 			}
 		});
 	}
 	private void announcePandaemoniumTankBDie() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 运输战车被摧毁！你得回去再找一辆！ / The transportation chariot was destroyed! You'll have to go back for another!
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403975));
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 运输战车被摧毁！你得回去再找一辆！ / The transportation chariot was destroyed! You'll have to go back for another!
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403975));
 			}
 		});
 	}
 	private void giveItem() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 成功！用战车能量核心为防御炮塔充能！ / Success! Use the energy core from the chariot to charge the defense turret!
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403976));
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 成功！用战车能量核心为防御炮塔充能！ / Success! Use the energy core from the chariot to charge the defense turret!
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403976));
 			}
 		});
 	}

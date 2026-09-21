@@ -85,13 +85,13 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		/** trialseternity 任务 A8 / trials of eternity task a8 */
 		private Future<?> trialsOfEternityTaskA8;
 	/** 已播放动画集合 / played-movie set */
-	private final List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<>();
 		/** scattered energy book / scattered energy book */
-		private final List<Npc> ScatteredEnergyBook = new ArrayList<Npc>();
+		private final List<Npc> ScatteredEnergyBook = new ArrayList<>();
 		/** trialseternity 任务 / trials of eternity task */
-		private final List<Future<?>> trialsOfEternityTask = new ArrayList<Future<?>>();
+		private final List<Future<?>> trialsOfEternityTask = new ArrayList<>();
 		/** trials shield / trials shield */
-		private final Map<Integer, VisibleObject> trialsShield = new LinkedHashMap<Integer, VisibleObject>();
+		private final Map<Integer, VisibleObject> trialsShield = new LinkedHashMap<>();
 
 	/**
 	 * NPC 掉落表注册时处理。
@@ -190,16 +190,16 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	@Override
     public boolean onPassFlyingRing(Player player, String flyingRing) {
         if (flyingRing.equals("TRIALS_OF_ETERNITY")) {
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
 						startTrialsOfEternityTimer();
 						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 600)); //10 Minutes.
 					}
@@ -218,14 +218,14 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
     }
 
 	private void sendPacket(Player player, final String variable, final int value) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-		    /**
-		     * 处理 visit。
-		     * Handle visit.
-		     *
-		     * @param player 玩家 / player
-		     */
-		    @Override
+		instance.doOnAllPlayers(new Visitor<>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
+			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
 					PacketSendUtility.sendPacket(player, new SM_CONDITION_VARIABLE(player, variable, value));
@@ -475,7 +475,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				//再坚持一下就能活下来。 / Hold a little longer and you will survive.
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				sendMsg("[START]: Wave <1/8>");
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -610,23 +610,23 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
              */
             @Override
             public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-				    /**
-				     * 处理 visit。
-				     * Handle visit.
-				     *
-				     * @param player 玩家 / player
-				     */
-				    @Override
-				    public void visit(Player player) {
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
 						stopInstance(player);
 						dimensionBoss01(player);
 						trialsOfEternityTaskA8.cancel(true);
 						if (player.isOnline()) {
 							PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
 						}
-				    }
-			    });
+					}
+				});
             }
         }, 1020000)); //...17Min
     }
@@ -1012,7 +1012,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
     }
 
 	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -1050,20 +1050,20 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
+				instance.doOnAllPlayers(new Visitor<>() {
+                    /**
+                     * 处理 visit。
+                     * Handle visit.
+                     *
+                     * @param player 玩家 / player
+                     */
+                    @Override
+                    public void visit(Player player) {
+                        if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
+                            PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
+                        }
+                    }
+                });
 			}
 		}, time);
 	}

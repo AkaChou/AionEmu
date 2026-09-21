@@ -65,16 +65,18 @@ public final class PlayerQuestSystemMessagePort implements QuestSystemMessagePor
 		if (player == null) {
 			return false;
 		}
-		switch (message) {
-			case QUEST_FAILED -> {
-				QuestMetadata questMetadata = metadata.apply(snapshot.questId());
-				if (questMetadata == null) {
-					throw new IllegalStateException("QUEST_FAILED requires quest metadata for " + snapshot.questId());
-				}
-				operations.questFailed(player, questMetadata.name());
-			}
-			case WAREHOUSE_FULL_INVENTORY -> operations.warehouseFull(player);
-		}
+        switch (message) {
+            case QUEST_FAILED:
+                QuestMetadata questMetadata = metadata.apply(snapshot.questId());
+                if (questMetadata == null) {
+                    throw new IllegalStateException("QUEST_FAILED requires quest metadata for " + snapshot.questId());
+                }
+                operations.questFailed(player, questMetadata.name());
+                break;
+            case WAREHOUSE_FULL_INVENTORY:
+                operations.warehouseFull(player);
+                break;
+        }
 		return true;
 	}
 

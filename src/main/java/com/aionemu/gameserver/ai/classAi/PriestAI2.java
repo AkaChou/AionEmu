@@ -66,27 +66,24 @@ public class PriestAI2 extends AggressiveNpcAI2
 			if (phaseTask != null && !phaseTask.isDone()) {
 				return;
 			}
-			phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-				@Override
-				public void run() {
-					if (isAlreadyDead()) {
-						cancelPhaseTask();
-					} else {
-						List<Player> players = getLifedPlayers();
-						if (!players.isEmpty()) {
-							int size = players.size();
-							if (players.size() < 1) {
-								for (Player p: players) {
-									spawnServant(p);
+			phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+				if (isAlreadyDead()) {
+					cancelPhaseTask();
+				} else {
+					List<Player> players = getLifedPlayers();
+					if (!players.isEmpty()) {
+						int size = players.size();
+						if (players.size() < 1) {
+							for (Player p: players) {
+								spawnServant(p);
+							}
+						} else {
+							int count = Rnd.get(1, size);
+							for (int i = 0; i < count; i++) {
+								if (players.isEmpty()) {
+									break;
 								}
-							} else {
-								int count = Rnd.get(1, size);
-								for (int i = 0; i < count; i++) {
-									if (players.isEmpty()) {
-										break;
-									}
-									spawnServant(players.get(Rnd.get(players.size())));
-								}
+								spawnServant(players.get(Rnd.get(players.size())));
 							}
 						}
 					}
@@ -108,13 +105,18 @@ public class PriestAI2 extends AggressiveNpcAI2
 	}
 
 	static int getServantNpcId(int priestNpcId) {
-		return switch (priestNpcId) {
-			case 280635 -> 280638;
-			case 280636 -> 280639;
-			case 280637 -> 280640;
-			case 281300 -> 281301;
-			default -> 0;
-		};
+        switch (priestNpcId) {
+            case 280635:
+                return 280638;
+            case 280636:
+                return 280639;
+            case 280637:
+                return 280640;
+            case 281300:
+                return 281301;
+            default:
+                return 0;
+        }
 	}
 
 	@Override
@@ -127,7 +129,7 @@ public class PriestAI2 extends AggressiveNpcAI2
 	}
 
 	private List<Player> getLifedPlayers() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);

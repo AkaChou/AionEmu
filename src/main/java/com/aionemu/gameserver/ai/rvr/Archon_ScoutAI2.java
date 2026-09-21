@@ -38,16 +38,11 @@ public class Archon_ScoutAI2 extends AggressiveNpcAI2
 		// 主神阿兹菲尔！请赐予我力量。 / Empyrean Lord Azphel! Please give me strength.
 		sendMsg(1501540, getObjectId(), false, 14000);
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(Archon_ScoutAI2.this);
-			}
-		}, 300000); //5 分钟。 / 5 Minutes.
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Archon_ScoutAI2.this), 300000); //5 分钟。 / 5 Minutes.
 	}
-	
+
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
 		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}

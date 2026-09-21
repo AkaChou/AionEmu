@@ -28,7 +28,7 @@ public class CuringZoneService {
 
 	private static volatile ObjectProvider<CuringZoneService> instanceProvider;
 	/** 已生成的治愈物列表。 / Spawned curing objects. */
-	private final List<CuringObject> curingObjects = new ArrayList<CuringObject>();
+	private final List<CuringObject> curingObjects = new ArrayList<>();
 
 	/**
 	 * 加载治愈模板、生成治愈物并启动周期任务。
@@ -49,19 +49,14 @@ public class CuringZoneService {
 	 * Starts the per-second scan that casts the curing skill on in-range players without the effect.
 	 */
 	private void startTask() {
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-
-			public void run() {
-				for (final CuringObject obj : curingObjects)
-					obj.getKnownList().doOnAllPlayers(new Visitor<Player>() {
-						public void visit(Player player) {
-							if ((MathUtil.isIn3dRange(obj, player, obj.getRange()))
-									&& (!player.getEffectController().hasAbnormalEffect(8751))) {
-								GameEngineServices.skillEngine().getSkill(player, 8751, 1, player).useNoAnimationSkill();
-							}
-						}
-					});
-			}
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			for (final CuringObject obj : curingObjects)
+				obj.getKnownList().doOnAllPlayers(player -> {
+					if ((MathUtil.isIn3dRange(obj, player, obj.getRange()))
+							&& (!player.getEffectController().hasAbnormalEffect(8751))) {
+						GameEngineServices.skillEngine().getSkill(player, 8751, 1, player).useNoAnimationSkill();
+					}
+				});
 		}, 1000, 1000);
 	}
 

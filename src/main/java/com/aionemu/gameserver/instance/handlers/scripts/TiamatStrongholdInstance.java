@@ -45,7 +45,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 	private Map<Integer, StaticDoor> doors;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -100,7 +100,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -165,7 +165,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 			break;
 		}
 	}
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -183,7 +183,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 			break;
 		}
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -346,39 +346,39 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 		    break;
 		}
 	}
-	
+
 	private void spawnStrongholdTreasureChest() {
 		spawn(701527, 1074.0504f, 1068.9313f, 785.9529f, (byte) 118);
 	}
-	
+
 	private void raidProtectorate(final Npc npc, float x, float y, float z, boolean despawn) {
 		((AbstractAI) npc.getAi2()).setStateIfNot(AIState.WALKING);
 		npc.setState(1);
 		npc.getMoveController().moveToPoint(x, y, z);
 		PacketSendUtility.broadcastPacket(npc, new SM_EMOTION(npc, EmotionType.START_EMOTE2, 0, npc.getObjectId()));
 	}
-	
+
 	private void protectorateFirstWave() {
 		raidProtectorate((Npc)spawn(219369, 1509.0016f, 1051.2535f, 491.42322f, (byte) 5), 1556.6959f, 1063.507f, 492.16028f, false); //Protectorate Elite Fighter.
 		raidProtectorate((Npc)spawn(219370, 1508.4454f, 1085.6877f, 491.35217f, (byte) 118), 1556.8972f, 1072.9952f, 492.16028f, false); //Protectorate Elite Infantryman.
 		raidProtectorate((Npc)spawn(219371, 1508.9395f, 1061.8333f, 491.48456f, (byte) 119), 1555.9574f, 1066.3362f, 492.16028f, false); //Protectorate Elite Scout.
 		raidProtectorate((Npc)spawn(219372, 1508.3008f, 1073.0205f, 491.48438f, (byte) 3), 1555.0793f, 1070.4535f, 492.16028f, false); //Protectorate Elite Healer.
 	}
-	
+
 	private void protectorateSecondWave() {
 		raidProtectorate((Npc)spawn(219369, 1509.0016f, 1051.2535f, 491.42322f, (byte) 5), 1556.6959f, 1063.507f, 492.16028f, false); //Protectorate Elite Fighter.
 		raidProtectorate((Npc)spawn(219370, 1508.4454f, 1085.6877f, 491.35217f, (byte) 118), 1556.8972f, 1072.9952f, 492.16028f, false); //Protectorate Elite Infantryman.
 		raidProtectorate((Npc)spawn(219371, 1508.9395f, 1061.8333f, 491.48456f, (byte) 119), 1555.9574f, 1066.3362f, 492.16028f, false); //Protectorate Elite Scout.
 		raidProtectorate((Npc)spawn(219372, 1508.3008f, 1073.0205f, 491.48438f, (byte) 3), 1555.0793f, 1070.4535f, 492.16028f, false); //Protectorate Elite Healer.
 	}
-	
+
 	private void protectorateThirdWave() {
 		raidProtectorate((Npc)spawn(219370, 1509.0016f, 1051.2535f, 491.42322f, (byte) 5), 1556.6959f, 1063.507f, 492.16028f, false); //Protectorate Elite Infantryman.
 		raidProtectorate((Npc)spawn(219372, 1508.4454f, 1085.6877f, 491.35217f, (byte) 118), 1556.8972f, 1072.9952f, 492.16028f, false); //Protectorate Elite Healer.
 		raidProtectorate((Npc)spawn(219373, 1508.9395f, 1061.8333f, 491.48456f, (byte) 119), 1555.9574f, 1066.3362f, 492.16028f, false); //Protectorate Elite Mounted Officer.
 		raidProtectorate((Npc)spawn(219373, 1508.3008f, 1073.0205f, 491.48438f, (byte) 3), 1555.0793f, 1070.4535f, 492.16028f, false); //Protectorate Elite Mounted Officer.
 	}
-	
+
 	private void moveToForward(final Npc npc, float x, float y, float z, boolean despawn) {
 		((AbstractAI) npc.getAi2()).setStateIfNot(AIState.WALKING);
 		npc.setState(1);
@@ -435,7 +435,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 		    }, 13000);
 		}
 	}
-	
+
 	private void spawnStrongholdGatewaySecure() {
 		moveToForward((Npc)spawn(800463, 1201.272f, 1072.5137f, 491f, (byte) 61), 1130, 1072, 497.3f, false);
 		moveToForward((Npc)spawn(800463, 1192.8656f, 1071.1085f, 491f, (byte) 61), 1112, 1070, 497, false);
@@ -451,7 +451,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 		moveToForward((Npc)spawn(800347, 1178.0425f, 1072.28f, 491.02545f, (byte) 61), 1106, 1072, 497.2f, false);
 		moveToForward((Npc)spawn(800336, 1178.0559f, 1069.6f, 491.02545f, (byte) 61), 1104, 1069, 497, true);
 	}
-	
+
 	/**
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
@@ -468,9 +468,9 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 			}
 		}
 	}
-	
+
 	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -491,7 +491,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -500,7 +500,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -524,21 +524,21 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 	 * @param npcId NPC / NPC
 	 * @return 结果 / result
 	 */
-	
+
 	protected Npc getNpc(int npcId) {
 		if (!isInstanceDestroyed) {
 			return instance.getNpc(npcId);
 		}
 		return null;
 	}
-	
-	
+
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.

@@ -45,7 +45,7 @@ public class ExchangeService {
 
 
 	/** 玩家对象 ID 到交易会话 / Player objectId to exchange session */
-	private final ConcurrentMap<Integer, Exchange> exchanges = new ConcurrentHashMap<Integer, Exchange>();
+	private final ConcurrentMap<Integer, Exchange> exchanges = new ConcurrentHashMap<>();
 
 	private static volatile ObjectProvider<ExchangeService> instanceProvider;
 

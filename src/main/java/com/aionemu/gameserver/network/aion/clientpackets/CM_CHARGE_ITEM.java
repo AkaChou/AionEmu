@@ -30,7 +30,7 @@ public class CM_CHARGE_ITEM extends AionClientPacket {
 		targetNpcObjectId = readD();
 		chargeLevel = readC();
 		int itemsSize = readH();
-		itemIds = new ArrayList<Integer>();
+		itemIds = new ArrayList<>();
 		for (int i = 0; i < itemsSize; i++) {
 			itemIds.add(readD());
 		}

@@ -65,56 +65,41 @@ public class Defence_Tower_Of_Sanctum_2AI2 extends ActionItemNpcAI2
 	}
 
 	private void dreadgionDrakanATK() {
-		dreadgionDrakanATKTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.targetCreature(Defence_Tower_Of_Sanctum_2AI2.this, getPosition().getWorldMapInstance().getNpc(220967));
-                AI2Actions.useSkill(Defence_Tower_Of_Sanctum_2AI2.this, 18311);
-			}
+		dreadgionDrakanATKTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			AI2Actions.targetCreature(Defence_Tower_Of_Sanctum_2AI2.this, getPosition().getWorldMapInstance().getNpc(220967));
+AI2Actions.useSkill(Defence_Tower_Of_Sanctum_2AI2.this, 18311);
 		}, 4000, 10000);
 	}
 
 	private void startDreadgionOverheatTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				cancelATKTask();
-				announceDreadgionOverheat();
-				//AI2Actions.useSkill(Defence_Tower_Of_Sanctum_2AI2.this, 18310); //Dreadgion Overheat.
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			cancelATKTask();
+			announceDreadgionOverheat();
+			//AI2Actions.useSkill(Defence_Tower_Of_Sanctum_2AI2.this, 18310); //Dreadgion Overheat.
 		}, 300000);
 	}
 
 	private void announceDefenceSanctumB() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 防御炮塔正遭受攻击！ / The defense turret is being attacked!
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403709));
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 防御炮塔正遭受攻击！ / The defense turret is being attacked!
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403709));
 			}
 		});
 	}
 	private void announceDefenceSanctumDieB() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 防御炮塔已被摧毁。 / The defense turret has been destroyed.
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403710));
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 防御炮塔已被摧毁。 / The defense turret has been destroyed.
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403710));
 			}
 		});
 	}
 	private void announceDreadgionOverheat() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 防御炮塔过热。去找冷却剂！ / The defense turret is overheating. Find some coolant!
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403947));
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 防御炮塔过热。去找冷却剂！ / The defense turret is overheating. Find some coolant!
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403947));
 			}
 		});
 	}

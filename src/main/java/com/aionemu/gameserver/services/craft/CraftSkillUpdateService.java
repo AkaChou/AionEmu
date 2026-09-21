@@ -39,11 +39,11 @@ public class CraftSkillUpdateService {
 	private static volatile ObjectProvider<CraftSkillUpdateService> instanceProvider;
 
 	/** NPC → 可学制作技能模板映射 / NPC to craft-learn template mapping */
-	protected static final Map<Integer, CraftLearnTemplate> npcBySkill = new HashMap<Integer, CraftLearnTemplate>();
+	protected static final Map<Integer, CraftLearnTemplate> npcBySkill = new HashMap<>();
 	/** 技能等级 → 升级基纳费用 / Skill level to upgrade kinah cost */
-	private static final Map<Integer, Integer> cost = new HashMap<Integer, Integer>();
+	private static final Map<Integer, Integer> cost = new HashMap<>();
 	/** 可计为专家/大师名额的制作技能 ID 列表 / Craft skill ids counted for expert/master slots */
-	private static final List<Integer> craftingSkillIds = new ArrayList<Integer>();
+	private static final List<Integer> craftingSkillIds = new ArrayList<>();
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。

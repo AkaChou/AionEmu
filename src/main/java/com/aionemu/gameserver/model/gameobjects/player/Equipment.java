@@ -64,9 +64,9 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 public class Equipment {
 
 	private Player owner;
-	private final Set<Long> markedFreeSlots = new HashSet<Long>();
+	private final Set<Long> markedFreeSlots = new HashSet<>();
 	private PersistentState persistentState = PersistentState.UPDATED;
-	private final SortedMap<Long, Item> equipment = new TreeMap<Long, Item>();
+	private final SortedMap<Long, Item> equipment = new TreeMap<>();
 
 	private static final long[] ARMOR_SLOTS = new long[] { ItemSlot.BOOTS.getSlotIdMask(), ItemSlot.GLOVES.getSlotIdMask(), ItemSlot.PANTS.getSlotIdMask(), ItemSlot.SHOULDER.getSlotIdMask(), ItemSlot.TORSO.getSlotIdMask() };
 
@@ -605,7 +605,7 @@ public class Equipment {
 	 * @return 匹配的已装备物品列表 / the matching equipped items
 	 */
 	public List<Item> getEquippedItemsByItemId(int value) {
-		List<Item> equippedItemsById = new ArrayList<Item>();
+		List<Item> equippedItemsById = new ArrayList<>();
 		Set<Item> seen = Collections.newSetFromMap(new IdentityHashMap<>());
 		synchronized (equipment) {
 			for (Item item : equipment.values()) {
@@ -693,7 +693,7 @@ public class Equipment {
 	 * @return 全部已装备物品 / all equipped items
 	 */
 	public List<Item> getEquippedItems() {
-		HashSet<Item> equippedItems = new HashSet<Item>();
+		HashSet<Item> equippedItems = new HashSet<>();
 		equippedItems.addAll(equipment.values());
 
 		return Arrays.asList(equippedItems.toArray(new Item[0]));
@@ -706,7 +706,7 @@ public class Equipment {
 	 * @return 已装备物品 ID 列表 / the equipped item ids
 	 */
 	public List<Integer> getEquippedItemIds() {
-		HashSet<Integer> equippedIds = new HashSet<Integer>();
+		HashSet<Integer> equippedIds = new HashSet<>();
 		for (Item i : equipment.values()) {
 			equippedIds.add(i.getItemId());
 		}
@@ -720,7 +720,7 @@ public class Equipment {
 	 * @return 非烙印槽已装备物品 / the equipped items outside stigma slots
 	 */
 	public List<Item> getEquippedItemsWithoutStigma() {
-		List<Item> equippedItems = new ArrayList<Item>();
+		List<Item> equippedItems = new ArrayList<>();
 		Item twoHanded = null;
 		for (Item item : equipment.values()) {
 			if (!ItemSlot.isStigma(item.getEquipmentSlot())) {
@@ -741,7 +741,7 @@ public class Equipment {
 	 * Legacy variant: returns equipped items outside stigma slots (keeps main/off two-handed weapons separate).
 	 */
 	public List<Item> getEquippedItemsWithoutStigmaOld() {
-		List<Item> equippedItems = new ArrayList<Item>();
+		List<Item> equippedItems = new ArrayList<>();
 		Item twoHanded = null;
 		Item offTwoHanded = null;
 		for (Item item : equipment.values()) {
@@ -768,7 +768,7 @@ public class Equipment {
 	 * @return ItemSlots
 	 */
 	public List<Item> getEquippedForApparence() {
-		List<Item> equippedItems = new ArrayList<Item>();
+		List<Item> equippedItems = new ArrayList<>();
 		Item twoHanded = null;
 		for (Item item : equipment.values()) {
 			long slot = item.getEquipmentSlot();
@@ -794,7 +794,7 @@ public class Equipment {
 	 * @return 烙印槽已装备物品 / the equipped items in stigma slots
 	 */
 	public List<Item> getEquippedItemsAllStigma() {
-		List<Item> equippedItems = new ArrayList<Item>();
+		List<Item> equippedItems = new ArrayList<>();
 		for (Item item : equipment.values()) {
 			if (ItemSlot.isStigma(item.getEquipmentSlot())) {
 				equippedItems.add(item);
@@ -805,7 +805,7 @@ public class Equipment {
 
 	/** 返回烙印槽位已装备物品的 ID 列表。 / Returns the ids of all equipped stigma-slot items. */
 	public List<Integer> getEquippedItemsAllStigmaIds() {
-		List<Integer> equippedItemIds = new ArrayList<Integer>();
+		List<Integer> equippedItemIds = new ArrayList<>();
 		for (Item item : equipment.values()) {
 			if (ItemSlot.isStigma(item.getEquipmentSlot())) {
 				equippedItemIds.add(item.getItemId());
@@ -821,7 +821,7 @@ public class Equipment {
 	 * @return 普通烙印槽已装备物品 / the equipped items in regular stigma slots
 	 */
 	public List<Item> getEquippedItemsRegularStigma() {
-		List<Item> equippedItems = new ArrayList<Item>();
+		List<Item> equippedItems = new ArrayList<>();
 		for (Item item : equipment.values()) {
 			if (ItemSlot.isRegularStigma(item.getEquipmentSlot())) {
 				equippedItems.add(item);
@@ -832,7 +832,7 @@ public class Equipment {
 
 	/** 返回 equipped items estima / Returns the equipped items estima */
 	public List<Item> getEquippedItemsEstima() {
-		List<Item> equippedItems = new ArrayList<Item>();
+		List<Item> equippedItems = new ArrayList<>();
 		for (Item item : equipment.values()) {
 			if (ItemSlot.isEstisma(item.getEquipmentSlot())) {
 				equippedItems.add(item);
@@ -1098,7 +1098,7 @@ public class Equipment {
 		Item mainOffHandItem = equipment.get(ItemSlot.MAIN_OFF_HAND.getSlotIdMask());
 		Item subOffHandItem = equipment.get(ItemSlot.SUB_OFF_HAND.getSlotIdMask());
 
-		List<Item> equippedWeapon = new ArrayList<Item>();
+		List<Item> equippedWeapon = new ArrayList<>();
 
 		if (mainHandItem != null) {
 			equippedWeapon.add(mainHandItem);

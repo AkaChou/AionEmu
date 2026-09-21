@@ -24,12 +24,12 @@ public class Vine_SeedAI2 extends NpcAI2
 {
 	protected int startBarAnimation = 1;
 	protected int cancelBarAnimation = 2;
-	
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		handleUseItemStart(player);
 	}
-	
+
 	/**
 	 * 使用物品 NPC：先展示使用进度条，对话延迟结束后执行完成逻辑；中途中断则取消任务。
 	 * Item-use NPC: shows the use progress bar, runs the finish logic after the talk delay, or cancels the task on abort.
@@ -49,30 +49,27 @@ public class Vine_SeedAI2 extends NpcAI2
 			player.getObserveController().attach(observer);
 			PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), startBarAnimation));
 			PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.START_QUESTLOOT, 0, getObjectId()), true);
-			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
-					PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
-					player.getObserveController().removeObserver(observer);
-					handleUseItemFinish(player);
-				}
+			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
+				PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
+				player.getObserveController().removeObserver(observer);
+				handleUseItemFinish(player);
 			}, delay));
 		} else {
 			handleUseItemFinish(player);
 		}
 	}
-	
+
 	protected void handleUseItemFinish(Player player) {
 		spawn(216643, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Vinestem.
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);
 	}
-	
+
 	protected int getTalkDelay() {
 		return getObjectTemplate().getTalkDelay() * 1000;
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

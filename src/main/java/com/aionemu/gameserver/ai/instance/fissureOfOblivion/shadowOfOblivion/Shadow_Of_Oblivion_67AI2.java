@@ -36,13 +36,10 @@ public class Shadow_Of_Oblivion_67AI2 extends AggressiveNpcAI2
 	}
 
 	private void announceShadowOfOblivion() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 遗忘之影正在变身。 / Shadow of Oblivion is transforming.
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403699));
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 遗忘之影正在变身。 / Shadow of Oblivion is transforming.
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403699));
 			}
 		});
 	}

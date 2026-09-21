@@ -63,7 +63,7 @@ public class LunaTemplate {
 	/** 返回月华组件 1 / Returns the luna component 1 */
 	public List<LunaComponent> getLunaComponent() {
 		if (luna_component_panel_1 == null) {
-			luna_component_panel_1 = new ArrayList<LunaComponent>();
+			luna_component_panel_1 = new ArrayList<>();
 		}
 		return this.luna_component_panel_1;
 	}
@@ -71,7 +71,7 @@ public class LunaTemplate {
 	/** 返回月华组件 2 / Returns the luna component 2 */
 	public List<LunaComponent> getLunaComponent2() {
 		if (luna_component_panel_2 == null) {
-			luna_component_panel_2 = new ArrayList<LunaComponent>();
+			luna_component_panel_2 = new ArrayList<>();
 		}
 		return this.luna_component_panel_2;
 	}
@@ -79,7 +79,7 @@ public class LunaTemplate {
 	/** 返回月华组件 3 / Returns the luna component 3 */
 	public List<LunaComponent> getLunaComponent3() {
 		if (luna_component_panel_3 == null) {
-			luna_component_panel_3 = new ArrayList<LunaComponent>();
+			luna_component_panel_3 = new ArrayList<>();
 		}
 		return this.luna_component_panel_3;
 	}
@@ -87,7 +87,7 @@ public class LunaTemplate {
 	/** 返回月华组件 4 / Returns the luna component 4 */
 	public List<LunaComponent> getLunaComponent4() {
 		if (luna_component_panel_4 == null) {
-			luna_component_panel_4 = new ArrayList<LunaComponent>();
+			luna_component_panel_4 = new ArrayList<>();
 		}
 		return this.luna_component_panel_4;
 	}
@@ -95,7 +95,7 @@ public class LunaTemplate {
 	/** 返回月华组件 5 / Returns the luna component 5 */
 	public List<LunaComponent> getLunaComponent5() {
 		if (luna_component_panel_5 == null) {
-			luna_component_panel_5 = new ArrayList<LunaComponent>();
+			luna_component_panel_5 = new ArrayList<>();
 		}
 		return this.luna_component_panel_5;
 	}

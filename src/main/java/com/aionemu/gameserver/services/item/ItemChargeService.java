@@ -38,21 +38,15 @@ public class ItemChargeService {
 		if (selectedItem != null) {
 			return Collections.singletonList(selectedItem);
 		}
-		return Collections2.filter(player.getEquipment().getEquippedItems(), new Predicate<Item>() {
-			@Override
-			/**
-			 * 应用效果。
-			 * Applies the effect.
-			 *
-			 * item
-			 * result
-			 */
-			public boolean apply(Item item) {
-				return item.getChargeLevelMax() != 0 && item.getImprovement() != null
-						&& item.getImprovement().getChargeWay() == chargeWay
-						&& item.getChargePoints() < ChargeInfo.LEVEL2;
-			}
-		});
+		/**
+		 * 应用效果。
+		 * Applies the effect.
+		 *
+		 * item
+		 * result
+		 */return Collections2.filter(player.getEquipment().getEquippedItems(), item -> item.getChargeLevelMax() != 0 && item.getImprovement() != null
+				 && item.getImprovement().getChargeWay() == chargeWay
+				 && item.getChargePoints() < ChargeInfo.LEVEL2);
 	}
 
 	/**

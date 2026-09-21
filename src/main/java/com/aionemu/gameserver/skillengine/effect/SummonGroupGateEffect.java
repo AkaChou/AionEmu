@@ -38,12 +38,7 @@ public class SummonGroupGateEffect extends SummonEffect {
 		int instanceId = effector.getInstanceId();
 		SpawnTemplate spawn = SpawnEngine.addNewSingleTimeSpawn(worldId, npcId, x, y, z, heading);
 		final GroupGate groupgate = VisibleObjectSpawner.spawnGroupGate(spawn, instanceId, effector);
-		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				groupgate.getController().onDelete();
-			}
-		}, time * 1000L);
+		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> groupgate.getController().onDelete(), time * 1000L);
 		groupgate.getController().addTask(TaskId.DESPAWN, task);
 	}
 }

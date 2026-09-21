@@ -273,30 +273,57 @@ public final class QuestProductionJourneyPlanner {
 	private static boolean conditionsMatch(CompiledQuestDefinition definition, QuestTransition transition,
 			PathState state) {
 		for (QuestCondition condition : transition.conditions()) {
-			boolean matches = switch (condition) {
-				case QuestCondition.StatusIs required -> required.status() == state.status();
-				case QuestCondition.HasItem ignored when state.steps().isEmpty() -> true;
-				case QuestCondition.QuestVariableIs ignored when state.steps().isEmpty() -> true;
-				case QuestCondition.VariableAtLeast ignored when state.steps().isEmpty() -> true;
-				case QuestCondition.VariableBelow ignored when state.steps().isEmpty() -> true;
-				case QuestCondition.VariableSumIs ignored when state.steps().isEmpty() -> true;
-				case QuestCondition.VariableSumBelow ignored when state.steps().isEmpty() -> true;
-				case QuestCondition.HasItem item ->
-					(state.inventory().getOrDefault(item.itemId(), 0) >= item.count()) == item.expected();
-				case QuestCondition.QuestVariableIs variable ->
-					state.variables().getOrDefault(variable.field(), 0) == variable.value();
-				case QuestCondition.VariableAtLeast variable ->
-					state.variables().getOrDefault(variable.field(), 0) >= variable.value();
-				case QuestCondition.VariableBelow variable ->
-					state.variables().getOrDefault(variable.field(), 0) < variable.value();
-				case QuestCondition.VariableSumIs sum -> variableSum(state, sum.fields()) == sum.value();
-				case QuestCondition.VariableSumBelow sum -> variableSum(state, sum.fields()) < sum.value();
-				case QuestCondition.PlayerClassIs playerClass ->
-					PlayerClass.getStartingClassFor(state.playerClass()) == playerClass.startingClass();
-				case QuestCondition.AdvancedClassIs playerClass ->
-					state.playerClass() == playerClass.playerClass();
-				default -> true;
-			};
+			boolean matches;
+			switch (condition) {
+				case QuestCondition.StatusIs required:
+					matches = required.status() == state.status();
+					break;
+				case QuestCondition.HasItem ignored when state.steps().isEmpty():
+					matches = true;
+					break;
+				case QuestCondition.QuestVariableIs ignored when state.steps().isEmpty():
+					matches = true;
+					break;
+				case QuestCondition.VariableAtLeast ignored when state.steps().isEmpty():
+					matches = true;
+					break;
+				case QuestCondition.VariableBelow ignored when state.steps().isEmpty():
+					matches = true;
+					break;
+				case QuestCondition.VariableSumIs ignored when state.steps().isEmpty():
+					matches = true;
+					break;
+				case QuestCondition.VariableSumBelow ignored when state.steps().isEmpty():
+					matches = true;
+					break;
+				case QuestCondition.HasItem item:
+					matches = (state.inventory().getOrDefault(item.itemId(), 0) >= item.count()) == item.expected();
+					break;
+				case QuestCondition.QuestVariableIs variable:
+					matches = state.variables().getOrDefault(variable.field(), 0) == variable.value();
+					break;
+				case QuestCondition.VariableAtLeast variable:
+					matches = state.variables().getOrDefault(variable.field(), 0) >= variable.value();
+					break;
+				case QuestCondition.VariableBelow variable:
+					matches = state.variables().getOrDefault(variable.field(), 0) < variable.value();
+					break;
+				case QuestCondition.VariableSumIs sum:
+					matches = variableSum(state, sum.fields()) == sum.value();
+					break;
+				case QuestCondition.VariableSumBelow sum:
+					matches = variableSum(state, sum.fields()) < sum.value();
+					break;
+				case QuestCondition.PlayerClassIs playerClass:
+					matches = PlayerClass.getStartingClassFor(state.playerClass()) == playerClass.startingClass();
+					break;
+				case QuestCondition.AdvancedClassIs playerClass:
+					matches = state.playerClass() == playerClass.playerClass();
+					break;
+				default:
+					matches = true;
+					break;
+			}
 			if (!matches) return false;
 		}
 		return true;
@@ -479,22 +506,27 @@ public final class QuestProductionJourneyPlanner {
 		Set<String> actionTouchedFields = new HashSet<>();
 		for (QuestAction action : choice.transition().actions()) {
 			switch (action) {
-				case QuestAction.SetStatus set -> status = set.status();
-				case QuestAction.SetVariable set -> {
+				case QuestAction.SetStatus set:
+					status = set.status();
+					break;
+				case QuestAction.SetVariable set:
 					variables.put(set.field(), set.value());
 					actionTouchedFields.add(set.field());
-				}
-				case QuestAction.IncrementVariable increment -> {
+					break;
+				case QuestAction.IncrementVariable increment:
 					variables.merge(increment.field(), increment.delta(), Integer::sum);
 					actionTouchedFields.add(increment.field());
-				}
-				case QuestAction.GiveItem give -> inventory.merge(give.itemId(), give.count(), Integer::sum);
-				case QuestAction.RemoveItem remove -> {
+					break;
+				case QuestAction.GiveItem give:
+					inventory.merge(give.itemId(), give.count(), Integer::sum);
+					break;
+				case QuestAction.RemoveItem remove:
 					if (remove.removeAll()) inventory.remove(remove.itemId());
 					else inventory.computeIfPresent(remove.itemId(), (ignored, count) ->
 						count <= remove.count() ? null : count - remove.count());
-				}
-				default -> { }
+					break;
+				default:
+					break;
 			}
 		}
 		if (target != null) {
@@ -538,12 +570,20 @@ public final class QuestProductionJourneyPlanner {
 				}
 			}
 			switch (step.transition().event()) {
-				case QuestEvent.UseItem use -> inventory.putIfAbsent(use.itemId(), 1);
-				case QuestEvent.ItemPlay itemPlay -> inventory.putIfAbsent(itemPlay.itemId(), 1);
-				case QuestEvent.GetItem get -> inventory.merge(get.itemId(), 1, Math::max);
-				case QuestEvent.CollectItem collect ->
+				case QuestEvent.UseItem use:
+					inventory.putIfAbsent(use.itemId(), 1);
+					break;
+				case QuestEvent.ItemPlay itemPlay:
+					inventory.putIfAbsent(itemPlay.itemId(), 1);
+					break;
+				case QuestEvent.GetItem get:
+					inventory.merge(get.itemId(), 1, Math::max);
+					break;
+				case QuestEvent.CollectItem collect:
 					inventory.merge(collect.itemId(), collect.count(), Math::max);
-				default -> { }
+					break;
+				default:
+					break;
 			}
 			for (QuestAction action : step.transition().actions()) {
 				if (action instanceof QuestAction.GiveItem(int itemId, int count1)) {
@@ -580,18 +620,26 @@ public final class QuestProductionJourneyPlanner {
 	private static void seedInitialConditions(QuestTransition transition, Map<String, Integer> variables,
 			Map<Integer, Integer> inventory) {
 		for (QuestCondition condition : transition.conditions()) {
-			switch (condition) {
-				case QuestCondition.HasItem item when item.expected() ->
-					inventory.merge(item.itemId(), item.count(), Math::max);
-				case QuestCondition.HasItem item -> inventory.remove(item.itemId());
-				case QuestCondition.QuestVariableIs variable -> variables.put(variable.field(), variable.value());
-				case QuestCondition.VariableAtLeast variable ->
-					variables.merge(variable.field(), variable.value(), Math::max);
-				case QuestCondition.VariableBelow variable when variable.value() > 0 ->
-					variables.compute(variable.field(), (ignored, value) ->
-						value == null || value >= variable.value() ? variable.value() - 1 : value);
-				default -> { }
-			}
+            switch (condition) {
+                case QuestCondition.HasItem item when item.expected():
+                    inventory.merge(item.itemId(), item.count(), Math::max);
+                    break;
+                case QuestCondition.HasItem item:
+                    inventory.remove(item.itemId());
+                    break;
+                case QuestCondition.QuestVariableIs variable:
+                    variables.put(variable.field(), variable.value());
+                    break;
+                case QuestCondition.VariableAtLeast variable:
+                    variables.merge(variable.field(), variable.value(), Math::max);
+                    break;
+                case QuestCondition.VariableBelow variable when variable.value() > 0:
+                    variables.compute(variable.field(), (ignored, value) ->
+                            value == null || value >= variable.value() ? variable.value() - 1 : value);
+                    break;
+                default:
+                    break;
+            }
 		}
 	}
 

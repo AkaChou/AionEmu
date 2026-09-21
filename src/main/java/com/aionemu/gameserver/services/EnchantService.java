@@ -200,26 +200,23 @@ public class EnchantService {
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
-			@Override
-			public void run() {
-				if (isEstimaSuccess) {
-					player.getObserveController().removeObserver(observer);
-					PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentObjectId, parentItemId, 0, 1, 1), true);
-					player.getInventory().decreaseByObjectId(parentObjectId, 1);
-					targetItem.setEnchantLevel(targetEnchantLvl + 1);
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_ENCHANT_SUCCESS(new DescriptionId(parentNameId)));
-				} else {
-					player.getInventory().decreaseByObjectId(parentObjectId, 1);
-					targetItem.setEnchantLevel(0);
-					PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, targetItem));
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_ENCHANT_FAIL(new DescriptionId(parentNameId)));
-				}
+		player.getController().scheduleTask(TaskId.ITEM_USE, () -> {
+			if (isEstimaSuccess) {
 				player.getObserveController().removeObserver(observer);
+				PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentObjectId, parentItemId, 0, 1, 1), true);
+				player.getInventory().decreaseByObjectId(parentObjectId, 1);
+				targetItem.setEnchantLevel(targetEnchantLvl + 1);
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_ENCHANT_SUCCESS(new DescriptionId(parentNameId)));
+			} else {
+				player.getInventory().decreaseByObjectId(parentObjectId, 1);
+				targetItem.setEnchantLevel(0);
 				PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, targetItem));
-				ItemPacketService.updateItemAfterInfoChange(player, targetItem);
-				PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 0, isEstimaSuccess ? 1 : 2, 0));
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_ENCHANT_FAIL(new DescriptionId(parentNameId)));
 			}
+			player.getObserveController().removeObserver(observer);
+			PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, targetItem));
+			ItemPacketService.updateItemAfterInfoChange(player, targetItem);
+			PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 0, isEstimaSuccess ? 1 : 2, 0));
 		}, 5000);
 	}
 
@@ -865,7 +862,7 @@ public class EnchantService {
 	 * @param isEquipped 是否穿戴 / equipped flag
 	 */
 	public static void onBraceletEquip(Player player, Item item, boolean isEquipped) {
-		List<IStatFunction> modifiers = new ArrayList<IStatFunction>();
+		List<IStatFunction> modifiers = new ArrayList<>();
 		int braceletTableId = item.getItemTemplate().getTemperingTableId();
 		ItemEnchantTemplate iet = DataManager.ITEM_ENCHANT_DATA.getEnchantTemplate(EnchantType.AUTHORIZE, braceletTableId);
 		int defPoint1 = 0;
@@ -976,7 +973,7 @@ public class EnchantService {
 	 * @param item 物品 / item
 	 */
 	public static void onItemEquip(Player player, Item item) {
-		List<IStatFunction> modifiers = new ArrayList<IStatFunction>();
+		List<IStatFunction> modifiers = new ArrayList<>();
 		try {
 			if (item.getItemTemplate().isWeapon()) {
 				switch (item.getItemTemplate().getWeaponType()) {

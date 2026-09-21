@@ -37,9 +37,9 @@ public class ChestData {
 	private List<ChestTemplate> chests;
 
 	/** 宝箱模板索引 / chest template index */
-	private final IntObjectHashMap<ChestTemplate> chestData = new IntObjectHashMap<ChestTemplate>();
-	private final IntObjectHashMap<ArrayList<ChestTemplate>> instancesMap = new IntObjectHashMap<ArrayList<ChestTemplate>>();
-	private final Map<String, ChestTemplate> namedChests = new LinkedHashMap<String, ChestTemplate>();
+	private final IntObjectHashMap<ChestTemplate> chestData = new IntObjectHashMap<>();
+	private final IntObjectHashMap<ArrayList<ChestTemplate>> instancesMap = new IntObjectHashMap<>();
+	private final Map<String, ChestTemplate> namedChests = new LinkedHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后重建索引；保留原始列表以支持热重载。

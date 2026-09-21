@@ -39,7 +39,7 @@ public class CacheMapFactory {
 	 * @return 软引用缓存映射 / Soft-reference cache map
 	 */
 	public static <K, V> CacheMap<K, V> createSoftCacheMap(String cacheName, String valueName) {
-		return new SoftCacheMap<K, V>(cacheName, valueName);
+		return new SoftCacheMap<>(cacheName, valueName);
 	}
 
 	/**
@@ -53,6 +53,6 @@ public class CacheMapFactory {
 	 * @return 弱引用缓存映射 / Weak-reference cache map
 	 */
 	public static <K, V> CacheMap<K, V> createWeakCacheMap(String cacheName, String valueName) {
-		return new WeakCacheMap<K, V>(cacheName, valueName);
+		return new WeakCacheMap<>(cacheName, valueName);
 	}
 }

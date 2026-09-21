@@ -37,7 +37,7 @@ public class AggroList {
 	/** 列表所属单位 / List owner */
 	protected final Creature owner;
 	/** 对象 ID → 仇恨条目 / object id → aggro entry */
-	private final Map<Integer, AggroInfo> aggroList = new ConcurrentHashMap<Integer, AggroInfo>();
+	private final Map<Integer, AggroInfo> aggroList = new ConcurrentHashMap<>();
 
 	/** 伤害监听器接口 / Damage listener interface */
 	public interface DamageListener {
@@ -211,12 +211,9 @@ public class AggroList {
 
 	private void afterHateAdded(Creature creature, Creature previousMostHated) {
 		if (creature instanceof Player && owner instanceof Npc) {
-			owner.getKnownList().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					if (MathUtil.isIn3dRange(owner, player, 50)) {
-						GameEngineServices.questEngine().onAddAggroList(new QuestEnv(owner, player, 0, 0), creature);
-					}
+			owner.getKnownList().doOnAllPlayers(player -> {
+				if (MathUtil.isIn3dRange(owner, player, 50)) {
+					GameEngineServices.questEngine().onAddAggroList(new QuestEnv(owner, player, 0, 0), creature);
 				}
 			});
 		}
@@ -484,7 +481,7 @@ public class AggroList {
 	 * @return 仇恨列表快照 / aggro list snapshot
 	 */
 	public Collection<AggroInfo> getList() {
-		return new ArrayList<AggroInfo>(aggroList.values());
+		return new ArrayList<>(aggroList.values());
 	}
 
 	/**
@@ -509,7 +506,7 @@ public class AggroList {
 	 * @return 最终伤害条目集合 / final damage entries
 	 */
 	public Collection<AggroInfo> getFinalDamageList(boolean mergeGroupDamage) {
-		Map<Integer, AggroInfo> list = new HashMap<Integer, AggroInfo>();
+		Map<Integer, AggroInfo> list = new HashMap<>();
 		for (AggroInfo ai : aggroList.values()) {
 			// 仅获取主人以控制伤害。 / Get master only to control damage.
 			Creature creature = ((Creature) ai.getAttacker()).getMaster();

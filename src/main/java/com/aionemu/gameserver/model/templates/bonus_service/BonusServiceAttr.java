@@ -33,7 +33,7 @@ public class BonusServiceAttr {
 	/** 返回 penalty attr / Returns the penalty attr */
 	public List<BonusPenaltyAttr> getPenaltyAttr() {
 		if (bonusAttr == null) {
-			bonusAttr = new ArrayList<BonusPenaltyAttr>();
+			bonusAttr = new ArrayList<>();
 		}
 		return bonusAttr;
 	}

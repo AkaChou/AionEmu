@@ -34,7 +34,7 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
 	private Future<?> skillTask;
 	private final boolean canThink = true;
 	private final AtomicBoolean isHome = new AtomicBoolean(true);
-	private final List<Integer> percents = new ArrayList<Integer>();
+	private final List<Integer> percents = new ArrayList<>();
 
 	@Override
 	public boolean canThink() {
@@ -85,14 +85,11 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
     }
 
 	private void startSkillTask() {
-		skillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-				    cancelTask();
-				} else {
-					chooseRandomEvent();
-				}
+		skillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelTask();
+			} else {
+				chooseRandomEvent();
 			}
 		}, 5000, 30000);
 	}
@@ -121,15 +118,13 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
 		if (!isAlreadyDead()) {
 			GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 			sendMsg(1500750);
-		    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				public void run() {
-					if (!isAlreadyDead()) {
-                        spawn(284380, 244.12497f, 276.17401f, 242.625f, (byte) 0); // 葛兰达的保镖 / Modor's Bodyguard
-                        spawn(284381, 263.12497f, 276.17401f, 242.625f, (byte) 0); // 复仇收割者 / Vengeful Reaper
-						spawn(284382, 253.12497f, 277.17401f, 242.625f, (byte) 0); // 白霜阿刻戎龙 / Hoarfrost Acheron Drake
-						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), 284.34036f, 262.9162f, 248.851f, (byte) 63);
-				        PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
-					}
+		    GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+spawn(284380, 244.12497f, 276.17401f, 242.625f, (byte) 0); // 葛兰达的保镖 / Modor's Bodyguard
+spawn(284381, 263.12497f, 276.17401f, 242.625f, (byte) 0); // 复仇收割者 / Vengeful Reaper
+					spawn(284382, 253.12497f, 277.17401f, 242.625f, (byte) 0); // 白霜阿刻戎龙 / Hoarfrost Acheron Drake
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), 284.34036f, 262.9162f, 248.851f, (byte) 63);
+					PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 				}
 			}, 2000);
 		}
@@ -139,62 +134,53 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
         AI2Actions.targetSelf(Cursed_Queen_ModorAI2.this);
         GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
         sendMsg(1500741);
-        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            @Override
-            public void run() {
-			    float[][] pos1 = {
-                    {
-                        232.426f, 263.818f, 248.6419f, 115
-                    }, {
-                        271.426f, 230.243f, 250.9022f, 38
-                    }, {
-                        240.130f, 235.219f, 251.1553f, 17
-                    }
-                };
-                float[] pos = pos1[Rnd.get(0, 2)];
-                com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
-                PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
-            }
-        }, 2000);
+        GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			float[][] pos1 = {
+				{
+					232.426f, 263.818f, 248.6419f, 115
+				}, {
+					271.426f, 230.243f, 250.9022f, 38
+				}, {
+					240.130f, 235.219f, 251.1553f, 17
+				}
+			};
+			float[] pos = pos1[Rnd.get(0, 2)];
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
+			PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
+		}, 2000);
     }
 
 	private void Teleport3() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 		sendMsg(1500741);
-        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            @Override
-            public void run(){
-                float[][] pos1 = {
-                    {
-                        245.426f, 261.818f, 242.1f, 114
-                    }, {
-                        251.426f, 247.243f, 242.1f, 20
-                    }, {
-                        261.130f, 247.219f, 242.1f, 40
-                    }, {
-                        267.426f, 260.243f, 242.1f, 65
-                    }, {
-                        256.426f, 269.243f, 242.1f, 90
-                    }
-                };
-                float[] pos = pos1[Rnd.get(0, 4)];
-                com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
-                PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
-            }
-        }, 2000);
+        GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			float[][] pos1 = {
+				{
+					245.426f, 261.818f, 242.1f, 114
+				}, {
+					251.426f, 247.243f, 242.1f, 20
+				}, {
+					261.130f, 247.219f, 242.1f, 40
+				}, {
+					267.426f, 260.243f, 242.1f, 65
+				}, {
+					256.426f, 269.243f, 242.1f, 90
+				}
+			};
+			float[] pos = pos1[Rnd.get(0, 4)];
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
+			PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
+		}, 2000);
 	}
 
 	private void Teleport4() {
 		AI2Actions.targetSelf(Cursed_Queen_ModorAI2.this);
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 		sendMsg(1500741);
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), 256.4457f, 257.6867f, 242.30f, (byte) 115);
 				PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
-			}
-		}, 2000);
+			}, 2000);
 	}
 
 	private void Teleport5() {
@@ -202,15 +188,13 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
         EmoteManager.emoteStopAttacking(getOwner());
 		sendMsg(1500744);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			public void run() {
-				despawnNpcs(231304); // 被诅咒的葛兰达女王 / Cursed Queen Modor
-				spawn(284383, 255.12497f, 293.17401f, 257.625f, (byte) 22);
-				spawn(284383, 284.12497f, 262.17401f, 249.625f, (byte) 0);
-				spawn(284383, 271.12497f, 230.17401f, 251.625f, (byte) 0);
-				spawn(284383, 240.12497f, 235.17401f, 252.625f, (byte) 0);
-				spawn(284383, 232.12497f, 263.17401f, 249.625f, (byte) 0);
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			despawnNpcs(231304); // 被诅咒的葛兰达女王 / Cursed Queen Modor
+			spawn(284383, 255.12497f, 293.17401f, 257.625f, (byte) 22);
+			spawn(284383, 284.12497f, 262.17401f, 249.625f, (byte) 0);
+			spawn(284383, 271.12497f, 230.17401f, 251.625f, (byte) 0);
+			spawn(284383, 240.12497f, 235.17401f, 252.625f, (byte) 0);
+			spawn(284383, 232.12497f, 263.17401f, 249.625f, (byte) 0);
 		}, 2000);
 	}
 

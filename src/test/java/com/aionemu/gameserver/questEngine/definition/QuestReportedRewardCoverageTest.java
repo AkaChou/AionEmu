@@ -173,19 +173,31 @@ class QuestReportedRewardCoverageTest {
 	}
 
 	private static String classRewardKey(PlayerClass playerClass) {
-		return switch (playerClass) {
-			case GLADIATOR -> "FIGHTER";
-			case TEMPLAR -> "KNIGHT";
-			case RANGER -> "RANGER";
-			case ASSASSIN -> "ASSASSIN";
-			case SORCERER -> "WIZARD";
-			case SPIRIT_MASTER -> "ELEMENTALIST";
-			case CLERIC -> "PRIEST";
-			case CHANTER -> "CHANTER";
-			case GUNSLINGER -> "GUNSLINGER";
-			case SONGWEAVER -> "SONGWEAVER";
-			case AETHERTECH -> "AETHERTECH";
-			default -> throw new IllegalArgumentException("unsupported advanced class " + playerClass);
-		};
+        switch (playerClass) {
+            case GLADIATOR:
+                return "FIGHTER";
+            case TEMPLAR:
+                return "KNIGHT";
+            case RANGER:
+                return "RANGER";
+            case ASSASSIN:
+                return "ASSASSIN";
+            case SORCERER:
+                return "WIZARD";
+            case SPIRIT_MASTER:
+                return "ELEMENTALIST";
+            case CLERIC:
+                return "PRIEST";
+            case CHANTER:
+                return "CHANTER";
+            case GUNSLINGER:
+                return "GUNSLINGER";
+            case SONGWEAVER:
+                return "SONGWEAVER";
+            case AETHERTECH:
+                return "AETHERTECH";
+            default:
+                throw new IllegalArgumentException("unsupported advanced class " + playerClass);
+        }
 	}
 }

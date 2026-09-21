@@ -12,10 +12,10 @@ import com.aionemu.gameserver.network.aion.serverpackets.*;
  * Server packet opcode registry: Class → opcode map with duplicate checks at startup.
  */
 public class ServerPacketsOpcodes {
-	private static final Map<Class<? extends AionServerPacket>, Integer> opcodes = new HashMap<Class<? extends AionServerPacket>, Integer>();
+	private static final Map<Class<? extends AionServerPacket>, Integer> opcodes = new HashMap<>();
 
 	static {
-		Set<Integer> idSet = new HashSet<Integer>();
+		Set<Integer> idSet = new HashSet<>();
 		addPacketOpcode(SM_KEY.class, 0x48, idSet); // 5.8
 		addPacketOpcode(SM_VERSION_CHECK.class, 0x00, idSet); // 5.8
 		addPacketOpcode(SM_TIME_CHECK.class, 0x27, idSet); // 5.8

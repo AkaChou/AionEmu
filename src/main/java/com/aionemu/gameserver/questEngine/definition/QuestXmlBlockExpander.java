@@ -23,7 +23,7 @@ final class QuestXmlBlockExpander {
 	}
 
 	static List<QuestTransition> expand(int questId, QuestMetadata metadata, ProgressLayout progress,
-			List<QuestNode> nodes, Element transitionsElement) {
+										List<QuestNode> nodes, Element transitionsElement) {
 		if (transitionsElement == null) {
 			return List.of();
 		}
@@ -31,21 +31,49 @@ final class QuestXmlBlockExpander {
 		List<QuestTransition> transitions = new ArrayList<>();
 		for (Element element : children(transitionsElement)) {
 			switch (element.getTagName()) {
-					case "transition" -> transitions.addAll(QuestDefinitionXmlCompiler.parseTransition(element));
-					case "dialog" -> transitions.addAll(expandDialog(context, element));
-					case "npc-start" -> transitions.addAll(expandNpcStart(context, element));
-					case "counter" -> transitions.addAll(expandCounter(context, element));
-					case "counter-grid" -> transitions.addAll(expandCounterGrid(context, element));
-					case "kill-chain" -> transitions.addAll(expandKillChain(context, element));
-					case "kill-routes" -> transitions.addAll(expandKillRoutes(context, element));
-					case "npc-item-report" -> transitions.addAll(expandNpcItemReport(context, element));
-					case "npc-report" -> transitions.addAll(expandNpcReport(context, element));
-					case "npc-complete" -> transitions.addAll(expandNpcComplete(context, element));
-					case "equipment-exchange" -> transitions.addAll(expandEquipmentExchange(context, element));
-					case "npc-dialog" -> transitions.addAll(expandNpcDialog(context, element));
-					case "movie-page-turn" -> transitions.addAll(expandMoviePageTurn(context, element));
-					default -> fail("UNKNOWN_XML_BLOCK", context, element.getTagName(), "element",
+				case "transition":
+					transitions.addAll(QuestDefinitionXmlCompiler.parseTransition(element));
+					break;
+				case "dialog":
+					transitions.addAll(expandDialog(context, element));
+					break;
+				case "npc-start":
+					transitions.addAll(expandNpcStart(context, element));
+					break;
+				case "counter":
+					transitions.addAll(expandCounter(context, element));
+					break;
+				case "counter-grid":
+					transitions.addAll(expandCounterGrid(context, element));
+					break;
+				case "kill-chain":
+					transitions.addAll(expandKillChain(context, element));
+					break;
+				case "kill-routes":
+					transitions.addAll(expandKillRoutes(context, element));
+					break;
+				case "npc-item-report":
+					transitions.addAll(expandNpcItemReport(context, element));
+					break;
+				case "npc-report":
+					transitions.addAll(expandNpcReport(context, element));
+					break;
+				case "npc-complete":
+					transitions.addAll(expandNpcComplete(context, element));
+					break;
+				case "equipment-exchange":
+					transitions.addAll(expandEquipmentExchange(context, element));
+					break;
+				case "npc-dialog":
+					transitions.addAll(expandNpcDialog(context, element));
+					break;
+				case "movie-page-turn":
+					transitions.addAll(expandMoviePageTurn(context, element));
+					break;
+				default:
+					fail("UNKNOWN_XML_BLOCK", context, element.getTagName(), "element",
 						"unsupported transitions child");
+					break;
 			}
 		}
 		String reportedRewardMode = attribute(transitionsElement, "reported-reward-mode");
@@ -64,7 +92,7 @@ final class QuestXmlBlockExpander {
 	 * is incomplete.
 	 */
 	private static List<QuestTransition> expandReportedRewards(Context context, String rawMode,
-			List<QuestTransition> transitions) {
+															   List<QuestTransition> transitions) {
 		ReportedRewardMode mode;
 		try {
 			mode = ReportedRewardMode.valueOf(rawMode);
@@ -72,17 +100,22 @@ final class QuestXmlBlockExpander {
 			return fail("REPORTED_REWARD_MODE_INVALID", context, "transitions", "reported-reward-mode",
 				"must be FIXED, CHOICE, or CLASS");
 		}
-		return switch (mode) {
-			case FIXED -> expandFixedReportedReward(context, transitions);
-			case CHOICE -> expandChoiceReportedRewards(context, transitions);
-			case CLASS -> expandClassReportedRewards(context, transitions);
-		};
+		switch (mode) {
+			case FIXED:
+				return expandFixedReportedReward(context, transitions);
+			case CHOICE:
+				return expandChoiceReportedRewards(context, transitions);
+			case CLASS:
+				return expandClassReportedRewards(context, transitions);
+			default:
+				throw new IllegalArgumentException();
+		}
 	}
 
 	private static List<QuestTransition> expandFixedReportedReward(Context context,
-			List<QuestTransition> transitions) {
+																   List<QuestTransition> transitions) {
 		if (context.metadata().useClassReward() == 1 || !context.metadata().classRewards().isEmpty()
-				|| selectableRewards(context).size() != 0) {
+			|| selectableRewards(context).size() != 0) {
 			return fail("REPORTED_REWARD_METADATA_MISMATCH", context, "transitions", "reported-reward-mode",
 				"FIXED requires fixed rewards without single-class or selectable rewards");
 		}
@@ -104,7 +137,7 @@ final class QuestXmlBlockExpander {
 	}
 
 	private static List<QuestTransition> expandChoiceReportedRewards(Context context,
-			List<QuestTransition> transitions) {
+																	 List<QuestTransition> transitions) {
 		if (context.metadata().useClassReward() != 0 || !context.metadata().classRewards().isEmpty()) {
 			return fail("REPORTED_REWARD_METADATA_MISMATCH", context, "transitions", "reported-reward-mode",
 				"CHOICE does not accept class rewards");
@@ -137,7 +170,7 @@ final class QuestXmlBlockExpander {
 			generatedActions.add(QuestDialogAction.SELECTED_QUEST_AUTO_REWARD1.id() + slot);
 		}
 		for (int ordinaryAction = QuestDialogAction.SELECTED_QUEST_REWARD1.id() + selectableRewards.size();
-				ordinaryAction <= QuestDialogAction.SELECTED_QUEST_REWARD15.id(); ordinaryAction++) {
+			 ordinaryAction <= QuestDialogAction.SELECTED_QUEST_REWARD15.id(); ordinaryAction++) {
 			if (!completionContracts(context, transitions, ordinaryAction).isEmpty()) {
 				return fail("REPORTED_REWARD_SLOT_GAP", context, "transitions", "reported-reward-mode",
 					"CHOICE has an ordinary reward contract beyond its " + selectableRewards.size()
@@ -156,9 +189,9 @@ final class QuestXmlBlockExpander {
 	}
 
 	private static List<QuestTransition> expandClassReportedRewards(Context context,
-			List<QuestTransition> transitions) {
+																	List<QuestTransition> transitions) {
 		if (context.metadata().useClassReward() != 1 || context.metadata().classRewards().size() != 11
-				|| !selectableRewards(context).isEmpty()) {
+			|| !selectableRewards(context).isEmpty()) {
 			return fail("REPORTED_REWARD_METADATA_MISMATCH", context, "transitions", "reported-reward-mode",
 				"CLASS requires all 11 class rewards and no ordinary selectable rewards");
 		}
@@ -185,8 +218,8 @@ final class QuestXmlBlockExpander {
 			PlayerClass playerClass = classes.getFirst();
 			List<QuestReward> rewards = context.metadata().classRewards().get(classRewardKey(playerClass));
 			if (rewards == null || rewards.size() != 1
-					|| !contract.actions().contains(rewardAction(context, "reported-reward-mode", 0,
-						rewards.getFirst()))) {
+				|| !contract.actions().contains(rewardAction(context, "reported-reward-mode", 0,
+				rewards.getFirst()))) {
 				return fail("REPORTED_REWARD_CLASS_ACTION_MISMATCH", context, "transitions",
 					"reported-reward-mode", "ordinary action 8 does not grant the declared reward for "
 						+ playerClass);
@@ -208,20 +241,32 @@ final class QuestXmlBlockExpander {
 	}
 
 	private static String classRewardKey(PlayerClass playerClass) {
-		return switch (playerClass) {
-			case GLADIATOR -> "FIGHTER";
-			case TEMPLAR -> "KNIGHT";
-			case RANGER -> "RANGER";
-			case ASSASSIN -> "ASSASSIN";
-			case SORCERER -> "WIZARD";
-			case SPIRIT_MASTER -> "ELEMENTALIST";
-			case CLERIC -> "PRIEST";
-			case CHANTER -> "CHANTER";
-			case GUNSLINGER -> "GUNSLINGER";
-			case SONGWEAVER -> "SONGWEAVER";
-			case AETHERTECH -> "AETHERTECH";
-			default -> throw new IllegalArgumentException("unsupported advanced class " + playerClass);
-		};
+		switch (playerClass) {
+			case GLADIATOR:
+				return "FIGHTER";
+			case TEMPLAR:
+				return "KNIGHT";
+			case RANGER:
+				return "RANGER";
+			case ASSASSIN:
+				return "ASSASSIN";
+			case SORCERER:
+				return "WIZARD";
+			case SPIRIT_MASTER:
+				return "ELEMENTALIST";
+			case CLERIC:
+				return "PRIEST";
+			case CHANTER:
+				return "CHANTER";
+			case GUNSLINGER:
+				return "GUNSLINGER";
+			case SONGWEAVER:
+				return "SONGWEAVER";
+			case AETHERTECH:
+				return "AETHERTECH";
+			default:
+				throw new IllegalArgumentException("unsupported advanced class " + playerClass);
+		}
 	}
 
 	private static List<QuestReward> selectableRewards(Context context) {
@@ -231,7 +276,7 @@ final class QuestXmlBlockExpander {
 	}
 
 	private static List<QuestTransition> completionContracts(Context context,
-			List<QuestTransition> transitions, int dialogId) {
+															 List<QuestTransition> transitions, int dialogId) {
 		List<QuestTransition> result = transitions.stream()
 			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.dialogId() != null && talk.dialogId() == dialogId)
@@ -259,12 +304,12 @@ final class QuestXmlBlockExpander {
 		}
 		List<AfterCommitAction> afterCommit = transition.afterCommit();
 		if (afterCommit.size() < 3 || !(afterCommit.get(0) instanceof AfterCommitAction.RefreshPlayerStats)
-				|| !(afterCommit.get(1) instanceof AfterCommitAction.SyncQuestState(QuestStateSyncMode mode))
-				|| mode != QuestStateSyncMode.COMPLETION
-				|| !(afterCommit.getLast() instanceof AfterCommitAction.ShowQuestSelectionDialog(int id))
-				|| id != QuestDialogPage.SELECT_QUEST.id()
-				|| afterCommit.subList(2, afterCommit.size() - 1).stream()
-					.anyMatch(QuestXmlBlockExpander::isDialogResponse)) {
+			|| !(afterCommit.get(1) instanceof AfterCommitAction.SyncQuestState(QuestStateSyncMode mode))
+			|| mode != QuestStateSyncMode.COMPLETION
+			|| !(afterCommit.getLast() instanceof AfterCommitAction.ShowQuestSelectionDialog(int id))
+			|| id != QuestDialogPage.SELECT_QUEST.id()
+			|| afterCommit.subList(2, afterCommit.size() - 1).stream()
+			.anyMatch(QuestXmlBlockExpander::isDialogResponse)) {
 			fail("REPORTED_REWARD_AFTER_COMMIT_ORDER", context, "transitions", "reported-reward-mode",
 				"ordinary action " + dialogId
 					+ " must end refresh-player-stats, COMPLETION sync, then SELECT_QUEST response");
@@ -279,7 +324,7 @@ final class QuestXmlBlockExpander {
 	}
 
 	private static void requireNoTargetlessRewardRoutes(Context context, List<QuestTransition> transitions,
-			Set<Integer> dialogIds) {
+														Set<Integer> dialogIds) {
 		for (QuestTransition transition : transitions) {
 			if (transition.event() instanceof QuestEvent.QuestDialog(int dialogId) && dialogIds.contains(dialogId)) {
 				fail("REPORTED_REWARD_ROUTE_CONFLICT", context, "transitions", "reported-reward-mode",
@@ -345,7 +390,9 @@ final class QuestXmlBlockExpander {
 		return Set.copyOf(result);
 	}
 
-	/** 解析已知的对话动作；未知动作返回 null。 / Resolves a known dialog action; unknown values yield null. */
+	/**
+	 * 解析已知的对话动作；未知动作返回 null。 / Resolves a known dialog action; unknown values yield null.
+	 */
 	private static QuestDialogAction knownAction(String value) {
 		try {
 			return QuestDialogAction.valueOf(value);
@@ -356,13 +403,14 @@ final class QuestXmlBlockExpander {
 
 	private static List<QuestTransition> expandDialog(Context context, Element block) {
 		QuestDialogType type = QuestDefinitionXmlCompiler.dialogType(block);
-		return switch (type) {
-			case NPC_START, NPC_REPORT -> {
+		switch (type) {
+			case NPC_START:
+			case NPC_REPORT:
 				QuestDefinitionXmlCompiler.validateTransitionDialogShape(block, type);
-				yield type == QuestDialogType.NPC_START ? expandNpcStart(context, block) : expandNpcReport(context, block);
-			}
-			default -> fail("DIALOG_TYPE_NOT_ALLOWED_IN_TRANSITIONS", context, "dialog", "type", type.name());
-		};
+				return type == QuestDialogType.NPC_START ? expandNpcStart(context, block) : expandNpcReport(context, block);
+			default:
+				return fail("DIALOG_TYPE_NOT_ALLOWED_IN_TRANSITIONS", context, "dialog", "type", type.name());
+		}
 	}
 
 	private static List<QuestTransition> expandNpcDialog(Context context, Element block) {
@@ -465,7 +513,7 @@ final class QuestXmlBlockExpander {
 	 * the "movie only, client stays on the old page" defect.
 	 */
 	private static QuestDialogPage sameNamedPage(Context context, Element block, String attribute,
-			QuestDialogAction action) {
+												 QuestDialogAction action) {
 		try {
 			return QuestDialogPage.valueOf(action.name());
 		} catch (IllegalArgumentException e) {
@@ -587,7 +635,7 @@ final class QuestXmlBlockExpander {
 		result.add(talk(npcId, QuestDialogAction.QUEST_REFUSE_1.id(), List.of(), List.of(), source, source, null,
 			List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.QUEST_REFUSE_1.id()))));
 		for (QuestDialogAction action : List.of(QuestDialogAction.QUEST_REFUSE_2,
-				QuestDialogAction.QUEST_REFUSE_SIMPLE)) {
+			QuestDialogAction.QUEST_REFUSE_SIMPLE)) {
 			result.add(talk(npcId, action.id(), List.of(), List.of(), source, source, null,
 				List.of(new AfterCommitAction.CloseDialog())));
 		}
@@ -635,7 +683,7 @@ final class QuestXmlBlockExpander {
 		QuestNode sourceNode = requireNode(context, "npc-report", "source", source);
 		QuestNode targetNode = requireNode(context, "npc-report", "target", target);
 		if (sourceNode.projection().status() != QuestStatus.START
-				&& sourceNode.projection().status() != QuestStatus.REWARD) {
+			&& sourceNode.projection().status() != QuestStatus.REWARD) {
 			fail("NPC_REPORT_SOURCE_STATUS", context, "npc-report", "source",
 				"node " + source + " must project START or REWARD");
 		}
@@ -648,7 +696,7 @@ final class QuestXmlBlockExpander {
 			? QuestDefinitionXmlCompiler.dialogPageSymbol(block, "page").id()
 			: integer(context, block, "npc-report", "page");
 		if (!Set.of(QuestDialogPage.SELECT2.id(), QuestDialogPage.SELECT5.id(),
-				QuestDialogPage.DEFAULT_SUCCESS.id()).contains(page)) {
+			QuestDialogPage.DEFAULT_SUCCESS.id()).contains(page)) {
 			fail("NPC_REPORT_INVALID_PAGE", context, "npc-report", "page",
 				"must be SELECT2, SELECT5, or DEFAULT_SUCCESS");
 		}
@@ -817,7 +865,7 @@ final class QuestXmlBlockExpander {
 					continue;
 				}
 				CounterGridKey targetKey = sourceKey.increment(fieldsIndex(dimensions, dimension.field()));
-			List<QuestNode> targets = nodesByKey.getOrDefault(targetKey, List.of());
+				List<QuestNode> targets = nodesByKey.getOrDefault(targetKey, List.of());
 				if (targets.size() != 1) {
 					return fail("COUNTER_GRID_TARGET_MISSING", context, "counter-grid", "nodes",
 						"source node " + source.label() + " has no unique target for " + dimension.field());
@@ -964,7 +1012,7 @@ final class QuestXmlBlockExpander {
 			return fail("KILL_CHAIN_EVENT_INVALID", context, "kill-chain", "event", e.getMessage());
 		}
 		if (events.stream().anyMatch(event -> !(event instanceof QuestEvent.KillNpc)
-				&& !(event instanceof QuestEvent.KillNpcSet))) {
+			&& !(event instanceof QuestEvent.KillNpcSet))) {
 			return fail("KILL_CHAIN_EVENT_TYPE", context, "kill-chain", "event",
 				"must be kill-npc");
 		}
@@ -1011,9 +1059,9 @@ final class QuestXmlBlockExpander {
 		QuestNode rewardNode = requireNode(context, "equipment-exchange", "reward", reward);
 		QuestNode completeNode = requireNode(context, "equipment-exchange", "complete", complete);
 		if (sourceNode.projection().status() != QuestStatus.NONE
-				|| startedNode.projection().status() != QuestStatus.START
-				|| rewardNode.projection().status() != QuestStatus.REWARD
-				|| completeNode.projection().status() != QuestStatus.COMPLETE) {
+			|| startedNode.projection().status() != QuestStatus.START
+			|| rewardNode.projection().status() != QuestStatus.REWARD
+			|| completeNode.projection().status() != QuestStatus.COMPLETE) {
 			return fail("EQUIPMENT_EXCHANGE_NODE_STATUS", context, "equipment-exchange", "nodes",
 				"source, started, reward, and complete must project NONE, START, REWARD, and COMPLETE");
 		}
@@ -1037,20 +1085,21 @@ final class QuestXmlBlockExpander {
 		Set<Integer> groupIndices = new LinkedHashSet<>();
 		for (Element child : children(block)) {
 			switch (child.getTagName()) {
-				case "category" -> {
+				case "category": {
 					int action = singleDialogAction(context, child, "equipment-exchange", "category");
 					addExchangeAction(context, routeActions, action, "category.action");
 					categories.add(new ExchangeCategory(action,
 						QuestDefinitionXmlCompiler.dialogPageSymbol(child, "page").id()));
+					break;
 				}
-				case "equipment" -> {
+				case "equipment": {
 					int action = singleDialogAction(context, child, "equipment-exchange", "equipment");
 					addExchangeAction(context, routeActions, action, "equipment.action");
 					boolean singular = child.hasAttribute("item-id");
 					boolean plural = child.hasAttribute("item-ids");
 					if (singular == plural) {
 						return fail(singular ? "EQUIPMENT_EXCHANGE_ITEM_ATTRIBUTE_CONFLICT"
-							: "EQUIPMENT_EXCHANGE_ITEM_REQUIRED", context, "equipment-exchange", "equipment",
+								: "EQUIPMENT_EXCHANGE_ITEM_REQUIRED", context, "equipment-exchange", "equipment",
 							"declare item-id or item-ids");
 					}
 					List<Integer> itemIds = singular
@@ -1063,8 +1112,9 @@ final class QuestXmlBlockExpander {
 						}
 					}
 					equipment.add(new ExchangeEquipment(action, itemIds, equipment.size() + 1));
+					break;
 				}
-				case "reward-group" -> {
+				case "reward-group": {
 					int action = singleDialogAction(context, child, "equipment-exchange", "reward-group");
 					addExchangeAction(context, routeActions, action, "reward-group.action");
 					int index = integer(context, child, "equipment-exchange", "index");
@@ -1074,9 +1124,12 @@ final class QuestXmlBlockExpander {
 					}
 					rewardGroups.add(new ExchangeRewardGroup(action, index,
 						QuestDefinitionXmlCompiler.dialogPageSymbol(child, "page").id()));
+					break;
 				}
-				default -> fail("EQUIPMENT_EXCHANGE_UNKNOWN_CHILD", context, "equipment-exchange",
-					child.getTagName(), "unsupported child");
+				default:
+					fail("EQUIPMENT_EXCHANGE_UNKNOWN_CHILD", context, "equipment-exchange",
+						child.getTagName(), "unsupported child");
+					break;
 			}
 		}
 		if (categories.isEmpty() || equipment.isEmpty() || rewardGroups.size() < 2) {
@@ -1090,7 +1143,7 @@ final class QuestXmlBlockExpander {
 				"must represent 0.." + equipment.size());
 		}
 		if (selectedReward == null || selectedReward.minValue() > 0
-				|| selectedReward.maxValue() < rewardGroups.size()) {
+			|| selectedReward.maxValue() < rewardGroups.size()) {
 			return fail("EQUIPMENT_EXCHANGE_REWARD_FIELD", context, "equipment-exchange", "reward-field",
 				"must represent 0.." + rewardGroups.size());
 		}
@@ -1196,7 +1249,7 @@ final class QuestXmlBlockExpander {
 				}
 			}
 			for (QuestDialogAction preview : List.of(QuestDialogAction.USE_OBJECT,
-					QuestDialogAction.SELECT_QUEST_REWARD)) {
+				QuestDialogAction.SELECT_QUEST_REWARD)) {
 				result.add(talk(npcId, preview.id(),
 					List.of(new QuestCondition.QuestVariableIs(rewardField, groupValue)), List.of(),
 					reward, reward, null, List.of(new AfterCommitAction.ShowQuestDialog(group.page()))));
@@ -1388,10 +1441,14 @@ final class QuestXmlBlockExpander {
 			afterCommit.add(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION));
 			afterCommit.addAll(extraAfterCommit);
 			switch (finish) {
-				case SELECTION_DIALOG -> afterCommit.add(new AfterCommitAction.ShowQuestSelectionDialog(10));
-				case CLOSE_DIALOG -> afterCommit.add(new AfterCommitAction.CloseDialog());
-				case NONE -> {
-				}
+				case SELECTION_DIALOG:
+					afterCommit.add(new AfterCommitAction.ShowQuestSelectionDialog(10));
+					break;
+				case CLOSE_DIALOG:
+					afterCommit.add(new AfterCommitAction.CloseDialog());
+					break;
+				case NONE:
+					break;
 			}
 			result.add(talk(npcId, route.dialogId(), List.of(), actions, source, target, null, afterCommit));
 		}
@@ -1430,7 +1487,7 @@ final class QuestXmlBlockExpander {
 	}
 
 	private static QuestRewardKind rewardKind(Context context, String attribute, int rewardIndex,
-			QuestReward reward) {
+											  QuestReward reward) {
 		try {
 			return QuestRewardKind.fromWire(reward.kind());
 		} catch (IllegalArgumentException e) {
@@ -1440,19 +1497,28 @@ final class QuestXmlBlockExpander {
 	}
 
 	private static QuestAction rewardAction(Context context, String attribute, int rewardIndex,
-			QuestReward reward) {
+											QuestReward reward) {
 		QuestRewardKind kind = rewardKind(context, attribute, rewardIndex, reward);
 		QuestRewardKind actionKind = kind == QuestRewardKind.SELECTABLE_ITEM ? QuestRewardKind.ITEM : kind;
-		QuestRewardAmountMode amountMode = switch (actionKind) {
-			case GOLD, KINAH, EXP, AP, GP -> QuestRewardAmountMode.QUEST_BASE;
-			default -> QuestRewardAmountMode.EXACT;
-		};
+		QuestRewardAmountMode amountMode;
+		switch (actionKind) {
+			case GOLD:
+			case KINAH:
+			case EXP:
+			case AP:
+			case GP:
+				amountMode = QuestRewardAmountMode.QUEST_BASE;
+				break;
+			default:
+				amountMode = QuestRewardAmountMode.EXACT;
+				break;
+		}
 		return new QuestAction.GrantReward(actionKind.name(), reward.id(), reward.amount(), amountMode);
 	}
 
 	private static QuestTransition talk(int npcId, int dialogId, List<QuestCondition> conditions,
-			List<QuestAction> actions, String source, String target, Integer priority,
-			List<AfterCommitAction> afterCommit) {
+										List<QuestAction> actions, String source, String target, Integer priority,
+										List<AfterCommitAction> afterCommit) {
 		return new QuestTransition(new QuestEvent.TalkToNpc(npcId, dialogId), conditions, actions, target,
 			afterCommit, priority, source);
 	}
@@ -1482,7 +1548,7 @@ final class QuestXmlBlockExpander {
 	}
 
 	private static List<Integer> integerTokens(Context context, Element element, String block,
-			String attribute, boolean required) {
+											   String attribute, boolean required) {
 		List<String> values = tokens(context, element, block, attribute, required);
 		List<Integer> result = new ArrayList<>(values.size());
 		for (String value : values) {
@@ -1497,7 +1563,7 @@ final class QuestXmlBlockExpander {
 	}
 
 	private static List<Integer> positiveIntegerTokens(Context context, Element element, String block,
-			String attribute) {
+													   String attribute) {
 		List<String> values = tokens(context, element, block, attribute, true);
 		List<Integer> result = new ArrayList<>(values.size());
 		for (String value : values) {
@@ -1518,7 +1584,7 @@ final class QuestXmlBlockExpander {
 	}
 
 	private static List<String> tokens(Context context, Element element, String block,
-			String attribute, boolean required) {
+									   String attribute, boolean required) {
 		String raw = attribute(element, attribute).trim();
 		if (raw.isEmpty()) {
 			if (required) {
@@ -1576,9 +1642,9 @@ final class QuestXmlBlockExpander {
 	}
 
 	private record Context(int questId, QuestMetadata metadata, ProgressLayout progress,
-			Map<String, QuestNode> nodes, Set<DialogRouteKey> explicitDialogRoutes) {
+						   Map<String, QuestNode> nodes, Set<DialogRouteKey> explicitDialogRoutes) {
 		private Context(int questId, QuestMetadata metadata, ProgressLayout progress, List<QuestNode> nodes,
-				Set<DialogRouteKey> explicitDialogRoutes) {
+						Set<DialogRouteKey> explicitDialogRoutes) {
 			this(questId, metadata, progress, index(nodes), explicitDialogRoutes);
 		}
 
@@ -1595,7 +1661,7 @@ final class QuestXmlBlockExpander {
 	}
 
 	private record CounterGridDimension(String field, int required, List<Integer> npcIds,
-			SourceOrder sourceOrder) {
+										SourceOrder sourceOrder) {
 		private CounterGridDimension {
 			npcIds = List.copyOf(npcIds);
 		}
@@ -1674,7 +1740,7 @@ final class QuestXmlBlockExpander {
 					continue;
 				}
 				if (delimiter == 0 || delimiter + 2 == token.length()
-						|| token.indexOf("..", delimiter + 2) >= 0) {
+					|| token.indexOf("..", delimiter + 2) >= 0) {
 					return fail("NPC_COMPLETE_INVALID_DIALOG_SET", context, block, attribute, token);
 				}
 				int first = parse(token.substring(0, delimiter), attribute);

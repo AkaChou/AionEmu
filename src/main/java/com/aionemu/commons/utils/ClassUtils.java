@@ -108,7 +108,7 @@ public class ClassUtils {
      * @return 类名集合 / Set of class names
      */
     public Set<String> getClassNamesFromPackage(File directory, String packageName, boolean recursive) {
-        Set<String> classes = new HashSet<String>();
+        Set<String> classes = new HashSet<>();
         if (!directory.exists()) {
             return classes;
         }
@@ -151,7 +151,7 @@ public class ClassUtils {
             throw new IllegalArgumentException("File " + file + " is not valid jar file");
         }
 
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         JarFile jarFile = null;
         try {
             jarFile = new JarFile(file);
@@ -198,7 +198,7 @@ public class ClassUtils {
             return null;
         }
 
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         JarFile jarFile = null;
         JarInputStream nestedJar = null;
         try {

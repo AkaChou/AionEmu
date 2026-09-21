@@ -34,7 +34,7 @@ public class LandingSpecialLocation {
 	/** 返回玩家集合 / Returns the players */
 	protected Map<Integer, Player> players = new HashMap<>();
 	/** 返回是否已刷新 / Returns the spawned */
-	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
+	private final List<VisibleObject> spawned = new ArrayList<>();
 
 	public LandingSpecialLocation(LandingSpecialTemplate template) {
 		this.template = template;

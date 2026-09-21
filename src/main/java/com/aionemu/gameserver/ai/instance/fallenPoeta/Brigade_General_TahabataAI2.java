@@ -21,13 +21,13 @@ import java.util.List;
 public class Brigade_General_TahabataAI2 extends AggressiveNpcAI2
 {
 	private int phase = 0;
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage == 90 && phase < 1) {
 			phase = 1;
@@ -43,20 +43,17 @@ public class Brigade_General_TahabataAI2 extends AggressiveNpcAI2
 			startPhase();
 		}
 	}
-	
+
 	private void fireTornado() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				spawn(243961, 679.88f, 1068.88f, 497.88f, (byte) 0); //IDF6_LF1_Thor_SumStatue_PhyAtk.
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(243961, 679.88f, 1068.88f, 497.88f, (byte) 0); //IDF6_LF1_Thor_SumStatue_PhyAtk.
 		}, 5000);
 	}
-	
+
 	private void startPhase() {
 		AI2Actions.useSkill(this, 20060); //Lava Eruption.
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		final WorldPosition p = getPosition();
@@ -66,7 +63,7 @@ public class Brigade_General_TahabataAI2 extends AggressiveNpcAI2
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}
-	
+
 	private void deleteNpcs(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			if (npc != null) {

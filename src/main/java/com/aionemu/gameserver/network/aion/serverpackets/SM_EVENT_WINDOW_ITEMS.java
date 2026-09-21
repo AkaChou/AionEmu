@@ -29,7 +29,7 @@ public class SM_EVENT_WINDOW_ITEMS extends AionServerPacket {
 	 * @param active_events_packet 活跃活动集合 / collection of active events
 	 */
 	public SM_EVENT_WINDOW_ITEMS(Collection<EventsWindow> active_events_packet) {
-		this.active_events_packet = new ArrayList<EventsWindow>(active_events_packet);
+		this.active_events_packet = new ArrayList<>(active_events_packet);
 	}
 
 	@Override

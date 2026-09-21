@@ -46,39 +46,33 @@ public class ChieftainMuhamurruAI2 extends AggressiveNpcAI2
 	 * Periodic hide task: casts the hide skill every 14 seconds and triggers three attack events in sequence.
 	 */
 	private void startHideTask() {
-		hideTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelPhaseTask();
-				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19660, 60, getOwner()).useNoAnimationSkill();
-					sendMsg(1500398);
-					startEvent(2000, 1500399, 19661);
-					startEvent(6000, 1500399, 19661);
-					startEvent(8000, 1500400, 19662);
-				}
+		hideTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelPhaseTask();
+			} else {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 19660, 60, getOwner()).useNoAnimationSkill();
+				sendMsg(1500398);
+				startEvent(2000, 1500399, 19661);
+				startEvent(6000, 1500399, 19661);
+				startEvent(8000, 1500400, 19662);
 			}
 		}, 14000, 14000);
 	}
 
 	private void startEvent(int time, final int msg, final int skill) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!isAlreadyDead() && !isHome.get()) {
-					Creature target = getOwner();
-					if (skill == 19661) {
-						VisibleObject npcTarget = target.getTarget();
-						if (npcTarget != null && npcTarget instanceof Creature) {
-							target = (Creature) npcTarget;
-						}
-					} if (target != null && isInRange(target, 5)) {
-						GameEngineServices.skillEngine().getSkill(getOwner(), skill, 60, target).useNoAnimationSkill();
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isAlreadyDead() && !isHome.get()) {
+				Creature target = getOwner();
+				if (skill == 19661) {
+					VisibleObject npcTarget = target.getTarget();
+					if (npcTarget != null && npcTarget instanceof Creature) {
+						target = (Creature) npcTarget;
 					}
-					getEffectController().removeEffect(19660);
-					sendMsg(msg);
+				} if (target != null && isInRange(target, 5)) {
+					GameEngineServices.skillEngine().getSkill(getOwner(), skill, 60, target).useNoAnimationSkill();
 				}
+				getEffectController().removeEffect(19660);
+				sendMsg(msg);
 			}
 		}, time);
 	}

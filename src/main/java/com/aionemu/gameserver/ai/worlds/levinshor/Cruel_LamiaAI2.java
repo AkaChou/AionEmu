@@ -60,16 +60,13 @@ public class Cruel_LamiaAI2 extends AggressiveNpcAI2
 	}
 
 	private void startPhaseTask() {
-		lamiaTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelPhaseTask();
-				} else {
-					getOwner().getController().cancelCurrentSkill();
-					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500230, getObjectId(), 0, 0);
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19551, 60, getOwner()).useNoAnimationSkill();
-				}
+		lamiaTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelPhaseTask();
+			} else {
+				getOwner().getController().cancelCurrentSkill();
+				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500230, getObjectId(), 0, 0);
+				GameEngineServices.skillEngine().getSkill(getOwner(), 19551, 60, getOwner()).useNoAnimationSkill();
 			}
 		}, 3000, 15000);
 	}

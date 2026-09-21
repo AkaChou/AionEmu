@@ -27,7 +27,7 @@ public class SpringObjectsData {
 	protected List<SpringTemplate> springObject;
 
 	@XmlTransient
-	private final List<SpringTemplate> springObjects = new ArrayList<SpringTemplate>();
+	private final List<SpringTemplate> springObjects = new ArrayList<>();
 
 	/**
 	 * JAXB 反序列化完成后，将泉水模板复制到运行时列表。

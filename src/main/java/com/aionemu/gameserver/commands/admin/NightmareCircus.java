@@ -61,12 +61,7 @@ public class NightmareCircus extends AdminCommand
 				PacketSendUtility.sendMessage(player, "<Nightmare Circus> " + nightmareId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Nightmare Circus> " + nightmareId + " started!");
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player player) {
-						PacketSendUtility.sendSys3Message(player, "\uE04C", "<Nightmare Circus 4.3> is now open !!!");
-					}
-				});
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player1 -> PacketSendUtility.sendSys3Message(player1, "\uE04C", "<Nightmare Circus 4.3> is now open !!!"));
 				GameLocationBootstrapServices.nightmareCircusService().startNightmareCircus(nightmareId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {

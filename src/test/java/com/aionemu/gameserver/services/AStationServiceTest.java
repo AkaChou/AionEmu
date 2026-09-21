@@ -29,7 +29,7 @@ class AStationServiceTest {
 	@Test
 	void checkAStationMoveKeepsEnterAndLeaveStateConsistent() throws Exception {
 		AStationService service = objenesis.newInstance(AStationService.class);
-		Map<Integer, Player> accounts = new ConcurrentHashMap<Integer, Player>();
+		Map<Integer, Player> accounts = new ConcurrentHashMap<>();
 		setField(service, "accountsOnAStation", accounts);
 		Player player = player(1, "player");
 
@@ -47,7 +47,7 @@ class AStationServiceTest {
 	@Test
 	void duplicateAStationMoveDoesNotReaddPlayerAfterMovingBack() throws Exception {
 		TestAStationService service = objenesis.newInstance(TestAStationService.class);
-		Map<Integer, Player> accounts = new ConcurrentHashMap<Integer, Player>();
+		Map<Integer, Player> accounts = new ConcurrentHashMap<>();
 		setField(service, AStationService.class, "accountsOnAStation", accounts);
 		Player player = player(1, "player");
 		player.setOnAStation(true);

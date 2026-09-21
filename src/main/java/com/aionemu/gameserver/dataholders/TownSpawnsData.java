@@ -22,7 +22,7 @@ public class TownSpawnsData {
 	@XmlElement(name = "spawn_map")
 	private List<TownSpawnMap> spawnMap;
 
-	private final IntObjectHashMap<TownSpawnMap> spawnMapsData = new IntObjectHashMap<TownSpawnMap>();
+	private final IntObjectHashMap<TownSpawnMap> spawnMapsData = new IntObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，将刷怪地图索引到映射并释放列表。

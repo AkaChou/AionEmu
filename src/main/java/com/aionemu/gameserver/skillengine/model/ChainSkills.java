@@ -13,7 +13,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
  */
 public class ChainSkills {
 
-	private final Map<String, ChainSkill> multiSkills = new LinkedHashMap<String, ChainSkill>();
+	private final Map<String, ChainSkill> multiSkills = new LinkedHashMap<>();
 	private final ChainSkill chainSkill = new ChainSkill("", 0, 0);
 
 	/**
@@ -104,7 +104,7 @@ public class ChainSkills {
 	 * @return 连锁技能集合 / chain skill collection
 	 */
 	public Collection<ChainSkill> getChainSkills() {
-		Collection<ChainSkill> collection = new ArrayList<ChainSkill>();
+		Collection<ChainSkill> collection = new ArrayList<>();
 		collection.add(this.chainSkill);
 		collection.addAll(this.multiSkills.values());
 		return collection;

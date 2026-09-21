@@ -97,25 +97,33 @@ public final class QuestProductionJourneyExecutor {
 
 	private static QuestJourneyRunner.Step executeStep(QuestJourneyRunner journey,
 			QuestProductionJourneyPlanner.PlannedStep step) {
-		return switch (step.kind()) {
-			case INTERACT -> {
+		switch (step.kind()) {
+			case INTERACT:
 				QuestEvent.TalkToNpc talk = (QuestEvent.TalkToNpc) step.transition().event();
-				yield journey.interact(talk.npcId(), talk.dialogId() == null ? 0 : talk.dialogId());
-			}
-			case TARGETLESS_ACTION -> journey.clickTargetlessAction(dialogId(step.transition().event()));
-			case PAGE_ACTION -> journey.clickVisibleAction(dialogId(step.transition().event()));
-			case CLIENT_LOCAL_FINISH_DIALOG -> journey.finishDialogLocally();
-			case NATIVE_REWARD_ACTION -> journey.clickNativeAction(dialogId(step.transition().event()));
-			case USE_OBJECT -> journey.useObject(((QuestEvent.TalkToNpc) step.transition().event()).npcId());
-			case USE_OBJECT_DROP -> journey.useObjectAndReceiveMetadataDrop(
-				((QuestEvent.TalkToNpc) step.transition().event()).npcId(), step.metadataDrop().itemId());
-			case USE_ITEM -> journey.useItem(((QuestEvent.UseItem) step.transition().event()).itemId());
-			case ITEM_PLAY -> {
+				return journey.interact(talk.npcId(), talk.dialogId() == null ? 0 : talk.dialogId());
+			case TARGETLESS_ACTION:
+				return journey.clickTargetlessAction(dialogId(step.transition().event()));
+			case PAGE_ACTION:
+				return journey.clickVisibleAction(dialogId(step.transition().event()));
+			case CLIENT_LOCAL_FINISH_DIALOG:
+				return journey.finishDialogLocally();
+			case NATIVE_REWARD_ACTION:
+				return journey.clickNativeAction(dialogId(step.transition().event()));
+			case USE_OBJECT:
+				return journey.useObject(((QuestEvent.TalkToNpc) step.transition().event()).npcId());
+			case USE_OBJECT_DROP:
+				return journey.useObjectAndReceiveMetadataDrop(
+					((QuestEvent.TalkToNpc) step.transition().event()).npcId(), step.metadataDrop().itemId());
+			case USE_ITEM:
+				return journey.useItem(((QuestEvent.UseItem) step.transition().event()).itemId());
+			case ITEM_PLAY:
 				QuestEvent.ItemPlay itemPlay = (QuestEvent.ItemPlay) step.transition().event();
-				yield journey.playItem(itemPlay.itemId(), itemPlay.animationMillis());
-			}
-			case WORLD_EVENT -> journey.emitWorldEvent(step.transition());
-		};
+				return journey.playItem(itemPlay.itemId(), itemPlay.animationMillis());
+			case WORLD_EVENT:
+				return journey.emitWorldEvent(step.transition());
+			default:
+				throw new IllegalArgumentException();
+		}
 	}
 
 	private static Failure validate(CompiledQuestDefinition definition, ClientResourceOracle oracle, int stepIndex,
@@ -290,11 +298,14 @@ public final class QuestProductionJourneyExecutor {
 	}
 
 	private static int dialogId(QuestEvent event) {
-		return switch (event) {
-			case QuestEvent.TalkToNpc talk -> talk.dialogId() == null ? 0 : talk.dialogId();
-			case QuestEvent.QuestDialog dialog -> dialog.dialogId();
-			default -> throw new IllegalArgumentException("step does not carry a dialog action");
-		};
+        switch (event) {
+            case QuestEvent.TalkToNpc talk:
+                return talk.dialogId() == null ? 0 : talk.dialogId();
+            case QuestEvent.QuestDialog dialog:
+                return dialog.dialogId();
+            default:
+                throw new IllegalArgumentException("step does not carry a dialog action");
+        }
 	}
 
 	private static String routeNames(List<QuestTransition> transitions) {

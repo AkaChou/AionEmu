@@ -20,23 +20,18 @@ public class Fiery_TyphonAI2 extends AggressiveNpcAI2
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		GameEngineServices.skillEngine().getSkill(getOwner(), 23035, 60, getOwner()).useNoAnimationSkill(); // 提芬的污染物 / Typhons Pollutant.
 		startLifeTask();
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(Fiery_TyphonAI2.this);
-			}
-		}, 10000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Fiery_TyphonAI2.this), 10000);
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

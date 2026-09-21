@@ -23,7 +23,7 @@ public class GlobalDropTribes {
 	/** 返回全局掉落部落。 / Returns the global drop tribes. */
 	public List<GlobalDropTribe> getGlobalDropTribes() {
 		if (gdTribes == null) {
-			gdTribes = new ArrayList<GlobalDropTribe>();
+			gdTribes = new ArrayList<>();
 		}
 		return this.gdTribes;
 	}

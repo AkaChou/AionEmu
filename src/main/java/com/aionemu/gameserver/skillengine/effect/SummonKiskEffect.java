@@ -43,12 +43,7 @@ public class SummonKiskEffect extends SummonEffect {
 		SpawnTemplate spawn = SpawnEngine.addNewSingleTimeSpawn(worldId, npcId, x, y, z, heading);
 		final Kisk kisk = VisibleObjectSpawner.spawnKisk(spawn, instanceId, player);
 		Integer objOwnerId = player.getObjectId();
-		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				kisk.getController().onDelete();
-			}
-		}, time * 1000L);
+		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> kisk.getController().onDelete(), time * 1000L);
 		kisk.getController().addTask(TaskId.DESPAWN, task);
 		player.getController().cancelTask(TaskId.ITEM_USE);
 		GameFeatureServices.kiskService().regKisk(kisk, objOwnerId);

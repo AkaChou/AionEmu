@@ -50,7 +50,7 @@ public class LandingLocation {
 	/** 返回玩家集合 / Returns the players */
 	protected Map<Integer, Player> players = new HashMap<>();
 	/** 返回是否已刷新 / Returns the spawned */
-	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
+	private final List<VisibleObject> spawned = new ArrayList<>();
 	/** 获取持久化状态。 / Returns the persistent state. */
 	private PersistentState persistentState;
 

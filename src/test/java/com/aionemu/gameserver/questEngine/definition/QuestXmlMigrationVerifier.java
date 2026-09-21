@@ -308,46 +308,46 @@ public final class QuestXmlMigrationVerifier {
 				}
 				return null;
 			}
-			if (before instanceof int[] left && after instanceof int[] right) {
-				return Arrays.equals(left, right) ? null : path;
-			}
-			if (before instanceof Object[] left && after instanceof Object[] right) {
-				return Arrays.deepEquals(left, right) ? null : path;
-			}
-			if (before instanceof List<?> left && after instanceof List<?> right) {
-				if (left.size() != right.size()) {
-					return path + "[size:" + left.size() + "!=" + right.size() + "]";
-				}
-				for (int i = 0; i < left.size(); i++) {
-					String diff = difference(left.get(i), right.get(i), path + "[" + i + "]");
-					if (diff != null) {
-						return diff;
-					}
-				}
-				return null;
-			}
-			if (before instanceof Map<?, ?> left && after instanceof Map<?, ?> right) {
-				if (left.size() != right.size()) {
-					return path + "[size:" + left.size() + "!=" + right.size() + "]";
-				}
-				var leftIterator = left.entrySet().iterator();
-				var rightIterator = right.entrySet().iterator();
-				int index = 0;
-				while (leftIterator.hasNext()) {
-					Map.Entry<?, ?> leftEntry = leftIterator.next();
-					Map.Entry<?, ?> rightEntry = rightIterator.next();
-					String keyDiff = difference(leftEntry.getKey(), rightEntry.getKey(), path + "[" + index + "].key");
-					if (keyDiff != null) {
-						return keyDiff;
-					}
-					String diff = difference(leftEntry.getValue(), rightEntry.getValue(), path + "[" + index + "].value");
-					if (diff != null) {
-						return diff;
-					}
-					index++;
-				}
-				return null;
-			}
+            switch (before) {
+                case int[] left when after instanceof int[] right:
+                    return Arrays.equals(left, right) ? null : path;
+                case Object[] left when after instanceof Object[] right:
+                    return Arrays.deepEquals(left, right) ? null : path;
+                case List<?> left when after instanceof List<?> right:
+                    if (left.size() != right.size()) {
+                        return path + "[size:" + left.size() + "!=" + right.size() + "]";
+                    }
+                    for (int i = 0; i < left.size(); i++) {
+                        String diff = difference(left.get(i), right.get(i), path + "[" + i + "]");
+                        if (diff != null) {
+                            return diff;
+                        }
+                    }
+                    return null;
+                case Map<?, ?> left when after instanceof Map<?, ?> right:
+                    if (left.size() != right.size()) {
+                        return path + "[size:" + left.size() + "!=" + right.size() + "]";
+                    }
+                    var leftIterator = left.entrySet().iterator();
+                    var rightIterator = right.entrySet().iterator();
+                    int index = 0;
+                    while (leftIterator.hasNext()) {
+                        Map.Entry<?, ?> leftEntry = leftIterator.next();
+                        Map.Entry<?, ?> rightEntry = rightIterator.next();
+                        String keyDiff = difference(leftEntry.getKey(), rightEntry.getKey(), path + "[" + index + "].key");
+                        if (keyDiff != null) {
+                            return keyDiff;
+                        }
+                        String diff = difference(leftEntry.getValue(), rightEntry.getValue(), path + "[" + index + "].value");
+                        if (diff != null) {
+                            return diff;
+                        }
+                        index++;
+                    }
+                    return null;
+                default:
+                    break;
+            }
 			if (!before.equals(after)) {
 				return path;
 			}

@@ -26,31 +26,22 @@ public class CanyonMarkAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void markTarget() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			target = (Creature) getOwner().getTarget();
+			if (target != null) {
+				AI2Actions.useSkill(CanyonMarkAI2.this, 19504);
 
-			@Override
-			public void run() {
-				target = (Creature) getOwner().getTarget();
-				if (target != null) {
-					AI2Actions.useSkill(CanyonMarkAI2.this, 19504);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					if (!isAlreadyDead()) {
+						AI2Actions.targetCreature(CanyonMarkAI2.this, target);
+						AI2Actions.useSkill(CanyonMarkAI2.this, 19505);
+						AI2Actions.deleteOwner(CanyonMarkAI2.this);
+					}
+				}, Rnd.get(5,10) * 1000L);
 
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-						@Override
-						public void run() {
-							if (!isAlreadyDead()) {
-								AI2Actions.targetCreature(CanyonMarkAI2.this, target);
-								AI2Actions.useSkill(CanyonMarkAI2.this, 19505);
-								AI2Actions.deleteOwner(CanyonMarkAI2.this);
-							}
-						}
-
-					}, Rnd.get(5,10) * 1000L);
-
-				}
-				else {
-					AI2Actions.deleteOwner(CanyonMarkAI2.this);
-				}
+			}
+			else {
+				AI2Actions.deleteOwner(CanyonMarkAI2.this);
 			}
 		}, 5000);
 	}

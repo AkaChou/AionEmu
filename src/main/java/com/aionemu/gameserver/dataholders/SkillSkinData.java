@@ -29,7 +29,7 @@ public class SkillSkinData {
 	 * After JAXB unmarshalling, indexes skill skins by id and releases the list.
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		skillskins = new IntObjectHashMap<SkillSkinTemplate>();
+		skillskins = new IntObjectHashMap<>();
 		for (SkillSkinTemplate st : sst) {
 			skillskins.put(st.getId(), st);
 		}

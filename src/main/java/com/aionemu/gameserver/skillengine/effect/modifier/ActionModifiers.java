@@ -34,7 +34,7 @@ public class ActionModifiers {
 	 */
 	public List<ActionModifier> getActionModifiers() {
 		if (actionModifiers == null) {
-			actionModifiers = new ArrayList<ActionModifier>();
+			actionModifiers = new ArrayList<>();
 		}
 		return this.actionModifiers;
 	}

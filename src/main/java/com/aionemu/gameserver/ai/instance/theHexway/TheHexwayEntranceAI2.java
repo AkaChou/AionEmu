@@ -30,20 +30,17 @@ public class TheHexwayEntranceAI2 extends NpcAI2
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_INSTANCE_ENTER_LEVEL);
         }
 	}
-	
+
 	@Override
     protected void handleSpawned() {
         announceHexwayOpen();
 		super.handleSpawned();
     }
-	
+
 	private void announceHexwayOpen() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 通往六角道的入口已开启。 / The entrance to The Hexway has opened.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_Underpass_IDUnderpassRe_Open);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 通往六角道的入口已开启。 / The entrance to The Hexway has opened.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_Underpass_IDUnderpassRe_Open);
 		});
 	}
 }

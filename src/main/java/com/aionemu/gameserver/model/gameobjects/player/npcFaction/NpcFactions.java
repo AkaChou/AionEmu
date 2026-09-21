@@ -43,7 +43,7 @@ import lombok.RequiredArgsConstructor;
 public class NpcFactions {
 	private final Player owner;
 
-	private final Map<Integer, NpcFaction> factions = new HashMap<Integer, NpcFaction>();
+	private final Map<Integer, NpcFaction> factions = new HashMap<>();
 	private final NpcFaction[] activeNpcFaction = new NpcFaction[2];
 	private final int[] timeLimit = new int[] { 0, 0 };
 

@@ -38,28 +38,13 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
     private static final String SELECT_QUERY = "SELECT `item_id`, `item_name` FROM `player_stigmas_equipped` WHERE `player_id`=?";
 
     /** 需要插入的条目过滤条件 / Predicate for items to insert */
-    private static final Predicate<EquippedStigmasEntry> itemsToInsertPredicate = new Predicate<EquippedStigmasEntry>() {
-        @Override
-        public boolean apply(EquippedStigmasEntry input) {
-            return input != null && PersistentState.NEW == input.getPersistentState();
-        }
-    };
+    private static final Predicate<EquippedStigmasEntry> itemsToInsertPredicate = input -> input != null && PersistentState.NEW == input.getPersistentState();
 
     /** 需要更新的条目过滤条件 / Predicate for items to update */
-    private static final Predicate<EquippedStigmasEntry> itemsToUpdatePredicate = new Predicate<EquippedStigmasEntry>() {
-        @Override
-        public boolean apply(EquippedStigmasEntry input) {
-            return input != null && PersistentState.UPDATE_REQUIRED == input.getPersistentState();
-        }
-    };
+    private static final Predicate<EquippedStigmasEntry> itemsToUpdatePredicate = input -> input != null && PersistentState.UPDATE_REQUIRED == input.getPersistentState();
 
     /** 需要删除的条目过滤条件 / Predicate for items to delete */
-    private static final Predicate<EquippedStigmasEntry> itemsToDeletePredicate = new Predicate<EquippedStigmasEntry>() {
-        @Override
-        public boolean apply(EquippedStigmasEntry input) {
-            return input != null && PersistentState.DELETED == input.getPersistentState();
-        }
-    };
+    private static final Predicate<EquippedStigmasEntry> itemsToDeletePredicate = input -> input != null && PersistentState.DELETED == input.getPersistentState();
 
     /**
      * 加载玩家已装备灵魂石列表。

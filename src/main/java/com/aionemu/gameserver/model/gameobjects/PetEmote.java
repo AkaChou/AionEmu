@@ -21,7 +21,7 @@ public enum PetEmote {
 	private static final Map<Integer, PetEmote> petEmotes;
 
 	static {
-		petEmotes = new HashMap<Integer, PetEmote>();
+		petEmotes = new HashMap<>();
 		for (PetEmote emote : values()) {
 			petEmotes.put(emote.getEmoteId(), emote);
 		}

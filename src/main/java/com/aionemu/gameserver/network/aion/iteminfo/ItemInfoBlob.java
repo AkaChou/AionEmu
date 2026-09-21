@@ -31,7 +31,7 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	protected final Item item;
 
 	/** 已添加 blob 条目列表 / List of added blob entries */
-	private final List<ItemBlobEntry> itemBlobEntries = new ArrayList<ItemBlobEntry>();
+	private final List<ItemBlobEntry> itemBlobEntries = new ArrayList<>();
 
 	/**
 	 * 为指定玩家与物品创建 Blob 容器。

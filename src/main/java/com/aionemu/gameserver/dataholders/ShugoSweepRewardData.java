@@ -29,9 +29,9 @@ public class ShugoSweepRewardData {
 	protected List<ShugoSweepReward> ShugoSweepRewardData;
 
 	@XmlTransient
-	protected List<ShugoSweepReward> ShugoSweepRewardList = new ArrayList<ShugoSweepReward>();
+	protected List<ShugoSweepReward> ShugoSweepRewardList = new ArrayList<>();
 	@XmlTransient
-	private final Map<Long, ShugoSweepReward> rewardsByBoardAndNum = new HashMap<Long, ShugoSweepReward>();
+	private final Map<Long, ShugoSweepReward> rewardsByBoardAndNum = new HashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，写入列表与复合键索引并释放 XML 列表。

@@ -37,7 +37,7 @@ public class PvPRewardService {
 	 * item id list
 	 */
 	private static List<Integer> getRewardList(PlayerClass pc) {
-		List<Integer> rewardList = new ArrayList<Integer>();
+		List<Integer> rewardList = new ArrayList<>();
 		String rewardString = "";
 		switch (pc) {
 		case TEMPLAR:
@@ -209,7 +209,7 @@ public class PvPRewardService {
 	private static List<Integer> getAdvancedReward(Player winner) {
 		int lvl = winner.getLevel();
 		PlayerClass pc = winner.getPlayerClass();
-		List<Integer> rewardList = new ArrayList<Integer>();
+		List<Integer> rewardList = new ArrayList<>();
 		if (lvl >= 25 && lvl <= 83) {
 			rewardList.addAll(getFilteredRewardList(pc, 25, 83));
 		}
@@ -226,7 +226,7 @@ public class PvPRewardService {
 	 * @return 过滤后的物品 ID 列表 / filtered item id list
 	 */
 	private static List<Integer> getFilteredRewardList(PlayerClass pc, int minLevel, int maxLevel) {
-		List<Integer> filteredRewardList = new ArrayList<Integer>();
+		List<Integer> filteredRewardList = new ArrayList<>();
 		List<Integer> rewardList = getRewardList(pc);
 		for (Iterator<Integer> i = rewardList.iterator(); i.hasNext();) {
 			int id = i.next();
@@ -239,6 +239,6 @@ public class PvPRewardService {
 				filteredRewardList.add(id);
 			}
 		}
-		return filteredRewardList.size() > 0 ? filteredRewardList : new ArrayList<Integer>();
+		return filteredRewardList.size() > 0 ? filteredRewardList : new ArrayList<>();
 	}
 }

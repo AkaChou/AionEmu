@@ -127,12 +127,12 @@ public class StatFunction implements IStatFunction {
 	 */
 	public static List<StatFunction> mergeRandomBonuses(List<StatFunction> modifiers, List<StatFunction> rndBonuses) {
 		if (modifiers == null) {
-			modifiers = new ArrayList<StatFunction>();
+			modifiers = new ArrayList<>();
 		}
 		if (rndBonuses == null) {
 			return modifiers;
 		}
-		List<StatFunction> allModifiers = new ArrayList<StatFunction>();
+		List<StatFunction> allModifiers = new ArrayList<>();
 		EnumSet<StatEnum> rndNames = EnumSet.noneOf(StatEnum.class);
 
 		for (IStatFunction func : rndBonuses) {

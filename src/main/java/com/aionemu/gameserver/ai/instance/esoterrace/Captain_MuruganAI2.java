@@ -42,41 +42,32 @@ public class Captain_MuruganAI2 extends AggressiveNpcAI2
 		if (target != null && target instanceof Player) {
 			GameEngineServices.skillEngine().getSkill(getOwner(), 19324, 1, target).useNoAnimationSkill();
 		}
-		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelTask();
-				} else {
-					// 我先除掉被诅咒的那些！ / I'll get rid of the cursed ones first!
-					sendMsg(1500193, getObjectId(), false, 0);
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19325, 1, getOwner()).useNoAnimationSkill();
-					if (getLifeStats().getHpPercentage() <= 50) {
-						specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-							@Override
-							public void run() {
-								if (!isAlreadyDead()) {
-									// 我先除掉被诅咒的那些！ / I'll get rid of the cursed ones first!
-									sendMsg(1500193, getObjectId(), false, 0);
-									VisibleObject target = getTarget();
-									if (target != null && target instanceof Player) {
-										GameEngineServices.skillEngine().getSkill(getOwner(), 19324, 1, target).useNoAnimationSkill();
-									}
-									specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-										@Override
-										public void run() {
-											if (!isAlreadyDead()) {
-												VisibleObject target = getTarget();
-												if (target != null && target instanceof Player) {
-													GameEngineServices.skillEngine().getSkill(getOwner(), 19324, 1, target).useNoAnimationSkill();
-												}
-											}
-										}
-									}, 4000);
-								}
+		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelTask();
+			} else {
+				// 我先除掉被诅咒的那些！ / I'll get rid of the cursed ones first!
+				sendMsg(1500193, getObjectId(), false, 0);
+				GameEngineServices.skillEngine().getSkill(getOwner(), 19325, 1, getOwner()).useNoAnimationSkill();
+				if (getLifeStats().getHpPercentage() <= 50) {
+					specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						if (!isAlreadyDead()) {
+							// 我先除掉被诅咒的那些！ / I'll get rid of the cursed ones first!
+							sendMsg(1500193, getObjectId(), false, 0);
+							VisibleObject target2 = getTarget();
+							if (target2 != null && target2 instanceof Player) {
+								GameEngineServices.skillEngine().getSkill(getOwner(), 19324, 1, target2).useNoAnimationSkill();
 							}
-						}, 10000);
-					}
+							specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+								if (!isAlreadyDead()) {
+									VisibleObject target1 = getTarget();
+									if (target1 != null && target1 instanceof Player) {
+										GameEngineServices.skillEngine().getSkill(getOwner(), 19324, 1, target1).useNoAnimationSkill();
+									}
+								}
+							}, 4000);
+						}
+					}, 10000);
 				}
 			}
 		}, 20000, 20000);

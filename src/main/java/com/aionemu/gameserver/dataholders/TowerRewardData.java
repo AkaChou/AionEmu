@@ -28,10 +28,10 @@ public class TowerRewardData {
 	private List<TowerStageRewardTemplate> TowerReward;
 
 	@XmlTransient
-	private final IntObjectHashMap<TowerStageRewardTemplate> templates = new IntObjectHashMap<TowerStageRewardTemplate>();
+	private final IntObjectHashMap<TowerStageRewardTemplate> templates = new IntObjectHashMap<>();
 
 	@XmlTransient
-	private final Map<Integer, TowerStageRewardTemplate> templatesMap = new HashMap<Integer, TowerStageRewardTemplate>();
+	private final Map<Integer, TowerStageRewardTemplate> templatesMap = new HashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，将奖励模板按楼层索引并释放列表。

@@ -198,10 +198,10 @@ public class ItemGroupsData {
 	@XmlElement(name = "high_craft_step")
 	protected FeedGroups.HighCraftStepGroup highCraftStep;
 
-	Map<Integer, Map<Range<Integer>, List<CraftReward>>> craftMaterialsBySkill = new LinkedHashMap<Integer, Map<Range<Integer>, List<CraftReward>>>();
-	Map<Integer, Map<Range<Integer>, List<CraftReward>>> craftShopBySkill = new LinkedHashMap<Integer, Map<Range<Integer>, List<CraftReward>>>();
-	Map<Integer, Map<Range<Integer>, List<CraftReward>>> craftBundlesBySkill = new LinkedHashMap<Integer, Map<Range<Integer>, List<CraftReward>>>();
-	Map<Integer, Map<Range<Integer>, List<CraftReward>>> craftRecipesBySkill = new LinkedHashMap<Integer, Map<Range<Integer>, List<CraftReward>>>();
+	Map<Integer, Map<Range<Integer>, List<CraftReward>>> craftMaterialsBySkill = new LinkedHashMap<>();
+	Map<Integer, Map<Range<Integer>, List<CraftReward>>> craftShopBySkill = new LinkedHashMap<>();
+	Map<Integer, Map<Range<Integer>, List<CraftReward>>> craftBundlesBySkill = new LinkedHashMap<>();
+	Map<Integer, Map<Range<Integer>, List<CraftReward>>> craftRecipesBySkill = new LinkedHashMap<>();
 
 	/** 全部制作加成组 / all craft bonus groups */
 	BonusItemGroup[] craftGroups;
@@ -221,7 +221,7 @@ public class ItemGroupsData {
 	BonusItemGroup[] enchantGroups;
 	/** 首领加成组 / boss bonus groups */
 	BonusItemGroup[] bossGroups;
-	Map<FoodType, Set<Integer>> petFood = new HashMap<FoodType, Set<Integer>>();
+	Map<FoodType, Set<Integer>> petFood = new HashMap<>();
 
 	private int count = 0;
 	private int petFoodCount = 0;
@@ -298,14 +298,14 @@ public class ItemGroupsData {
 		if (dataHolder.containsKey(reward.getSkill())) {
 			ranges = dataHolder.get(reward.getSkill());
 		} else {
-			ranges = new LinkedHashMap<Range<Integer>, List<CraftReward>>();
+			ranges = new LinkedHashMap<>();
 			dataHolder.put(reward.getSkill(), ranges);
 		}
 		List<CraftReward> items;
 		if (ranges.containsKey(range)) {
 			items = ranges.get(range);
 		} else {
-			items = new ArrayList<CraftReward>();
+			items = new ArrayList<>();
 			ranges.put(range, items);
 		}
 		items.add(reward);
@@ -322,7 +322,7 @@ public class ItemGroupsData {
 		if (craftMaterialsBySkill.containsKey(skillId)) {
 			return Collections.emptyList();
 		}
-		List<CraftReward> result = new ArrayList<CraftReward>();
+		List<CraftReward> result = new ArrayList<>();
 		for (List<CraftReward> items : craftMaterialsBySkill.get(skillId).values()) {
 			result.addAll(items);
 		}
@@ -350,7 +350,7 @@ public class ItemGroupsData {
 		if (craftShopBySkill.containsKey(skillId)) {
 			return Collections.emptyList();
 		}
-		List<CraftReward> result = new ArrayList<CraftReward>();
+		List<CraftReward> result = new ArrayList<>();
 		for (List<CraftReward> items : craftShopBySkill.get(skillId).values()) {
 			result.addAll(items);
 		}
@@ -378,7 +378,7 @@ public class ItemGroupsData {
 		if (craftBundlesBySkill.containsKey(skillId)) {
 			return Collections.emptyList();
 		}
-		List<CraftReward> result = new ArrayList<CraftReward>();
+		List<CraftReward> result = new ArrayList<>();
 		for (List<CraftReward> items : craftBundlesBySkill.get(skillId).values()) {
 			result.addAll(items);
 		}
@@ -406,7 +406,7 @@ public class ItemGroupsData {
 		if (craftRecipesBySkill.containsKey(skillId)) {
 			return Collections.emptyList();
 		}
-		List<CraftReward> result = new ArrayList<CraftReward>();
+		List<CraftReward> result = new ArrayList<>();
 		for (List<CraftReward> items : craftRecipesBySkill.get(skillId).values()) {
 			result.addAll(items);
 		}

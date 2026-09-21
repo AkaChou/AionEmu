@@ -55,30 +55,21 @@ public class BrigadeGeneralTahabataAI2 extends AggressiveNpcAI2
 	}
 
 	private void phase1() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				spawn(283116, 679.88f, 1068.88f, 497.88f, (byte) 0); //Tahabata's Altar 1.
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(283116, 679.88f, 1068.88f, 497.88f, (byte) 0); //Tahabata's Altar 1.
 		}, 5000);
 	}
 
 	private void phase2() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				spawn(283118, 679.88f, 1068.88f, 497.88f, (byte) 0); //Tahabata's Altar 2.
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(283118, 679.88f, 1068.88f, 497.88f, (byte) 0); //Tahabata's Altar 2.
 		}, 5000);
 	}
 
 	private void phase3() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				spawn(283120, 679.88f, 1068.88f, 497.88f, (byte) 0); //Tahabata's Altar 3.
-				spawn(283102, 679.88f, 1068.88f, 497.88f, (byte) 0); //Fire Tornado.
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(283120, 679.88f, 1068.88f, 497.88f, (byte) 0); //Tahabata's Altar 3.
+			spawn(283102, 679.88f, 1068.88f, 497.88f, (byte) 0); //Fire Tornado.
 		}, 5000);
 	}
 
@@ -94,12 +85,7 @@ public class BrigadeGeneralTahabataAI2 extends AggressiveNpcAI2
 		if (isAlreadyDead()) {
 			return;
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				startParalyze();
-			}
-		}, 10000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> startParalyze(), 10000);
 	}
 
 	@Override

@@ -71,7 +71,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 		/** 副本计时秒数 / instance timer seconds */
 		private final int instanceTimerSeconds = 1800000; //...30Min
 		/** 灵魂堡垒任务 / bastion task */
-		private final List<Future<?>> bastionTask = new ArrayList<Future<?>>();
+		private final List<Future<?>> bastionTask = new ArrayList<>();
 	/**
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
@@ -301,18 +301,18 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 					 */
 					@Override
 					public void run() {
-					    instance.doOnAllPlayers(new Visitor<Player>() {
-						    /**
-						     * 处理 visit。
-						     * Handle visit.
-						     *
-						     * @param player 玩家 / player
-						     */
-						    @Override
-						    public void visit(Player player) {
-							    stopInstance(player);
-						    }
-					    });
+					    instance.doOnAllPlayers(new Visitor<>() {
+							/**
+							 * 处理 visit。
+							 * Handle visit.
+							 *
+							 * @param player 玩家 / player
+							 */
+							@Override
+							public void visit(Player player) {
+								stopInstance(player);
+							}
+						});
 					}
 				}, 5000);
 				points = 24000;
@@ -374,18 +374,18 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 					 */
 					@Override
 					public void run() {
-					    instance.doOnAllPlayers(new Visitor<Player>() {
-						    /**
-						     * 处理 visit。
-						     * Handle visit.
-						     *
-						     * @param player 玩家 / player
-						     */
-						    @Override
-						    public void visit(Player player) {
-							    stopInstance(player);
-						    }
-					    });
+					    instance.doOnAllPlayers(new Visitor<>() {
+							/**
+							 * 处理 visit。
+							 * Handle visit.
+							 *
+							 * @param player 玩家 / player
+							 */
+							@Override
+							public void visit(Player player) {
+								stopInstance(player);
+							}
+						});
 					}
 				}, 5000);
 				final int bastionExit1 = spawnRace == Race.ASMODIANS ? 730882 : 730871;
@@ -745,7 +745,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 	}
 
 	private void sendPacket(final int nameId, final int point) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -930,7 +930,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 				}
 			}, prepareTimerSeconds);
 		}
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -1005,7 +1005,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.

@@ -105,8 +105,8 @@ public class cmd_shop extends PlayerCommand {
         }
 
 		private final String filename;
-		private final HashMap<String, ItemSet> itemSets = new HashMap<String, ItemSet>();
-		private final List<String> names = new ArrayList<String>();
+		private final HashMap<String, ItemSet> itemSets = new HashMap<>();
+		private final List<String> names = new ArrayList<>();
 
 		public Shop(String filename) throws Exception {
 			this.filename = filename;
@@ -115,7 +115,7 @@ public class cmd_shop extends PlayerCommand {
 		}
 
 		private static List<Item> getItems(NodeList list) {
-			ArrayList<Item> result = new ArrayList<Item>(list.getLength());
+			ArrayList<Item> result = new ArrayList<>(list.getLength());
 
 			for (int i = 0; i < list.getLength(); i++) {
 				Node item = list.item(i);
@@ -155,13 +155,13 @@ public class cmd_shop extends PlayerCommand {
 
 			if (set == null) {
 
-				TreeMap<Integer, String> lvs = new TreeMap<Integer, String>();
+				TreeMap<Integer, String> lvs = new TreeMap<>();
 
 				for (String id : names) {
 					lvs.put(levenshteinDistance(name, id, 2, 1, 1), id);
 				}
 
-				ArrayList<String> suggestions = new ArrayList<String>();
+				ArrayList<String> suggestions = new ArrayList<>();
 
 				Map.Entry<Integer, String> it;
 				while ((it = lvs.pollFirstEntry()) != null && suggestions.size() < 3) {

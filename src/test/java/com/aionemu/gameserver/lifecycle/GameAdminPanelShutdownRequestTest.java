@@ -50,12 +50,16 @@ class GameAdminPanelShutdownRequestTest {
 			new Class<?>[]{ObjectProvider.class},
 			(proxy, method, args) -> {
 				if (method.getDeclaringClass() == Object.class) {
-					return switch (method.getName()) {
-						case "toString" -> "processRuntimeBridgeProvider";
-						case "hashCode" -> System.identityHashCode(proxy);
-						case "equals" -> proxy == args[0];
-						default -> null;
-					};
+                    switch (method.getName()) {
+                        case "toString":
+                            return "processRuntimeBridgeProvider";
+                        case "hashCode":
+                            return System.identityHashCode(proxy);
+                        case "equals":
+                            return proxy == args[0];
+                        default:
+                            return null;
+                    }
 				}
 				if ("getIfAvailable".equals(method.getName()) || "getObject".equals(method.getName())) {
 					return runtimeBridge;

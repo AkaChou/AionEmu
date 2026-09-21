@@ -35,13 +35,10 @@ public class Western_Shield_GeneratorAI2 extends ActionItemNpcAI2
 	}
 
 	private void announceWesternShield() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 西部护盾能量发生器遭受攻击。 / The western power shield generator is under attack.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_DEFENCE_02_ATTACKED);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 西部护盾能量发生器遭受攻击。 / The western power shield generator is under attack.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_DEFENCE_02_ATTACKED);
 			}
 		});
 	}

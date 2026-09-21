@@ -52,7 +52,7 @@ public class Town {
 		this.levelUpDate = levelUpDate;
 		this.race = race;
 		this.persistentState = PersistentState.UPDATED;
-		this.spawnedNpcs = new ArrayList<Npc>();
+		this.spawnedNpcs = new ArrayList<>();
 		spawnNewObjects();
 		updateTownToLevel();
 	}
@@ -100,11 +100,13 @@ public class Town {
 	}
 
 	private void broadcastUpdate() {
-		Map<Integer, Town> data = new HashMap<Integer, Town>(1);
+		Map<Integer, Town> data = new HashMap<>(1);
 		data.put(this.id, this);
 		final SM_TOWNS_LIST packet = new SM_TOWNS_LIST(data);
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			/** 访问 / visit. */
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<>() {
+			/**
+			 * 访问 / visit.
+			 */
 			@Override
 			public void visit(Player player) {
 				if (player.getRace() == race) {

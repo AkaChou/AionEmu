@@ -51,7 +51,7 @@ public class HouseObjectCooldownList {
 	/** 添加房屋对象冷却。 / Adds house object cooldown. */
 	public void addHouseObjectCooldown(int objectId, int delay) {
 		if (houseObjectCooldowns == null) {
-			houseObjectCooldowns = new HashMap<Integer, Long>();
+			houseObjectCooldowns = new HashMap<>();
 		}
 
 		long nextUseTime = System.currentTimeMillis() + (delay * 1000L);

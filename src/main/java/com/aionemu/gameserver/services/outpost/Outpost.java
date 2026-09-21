@@ -44,21 +44,21 @@ public class Outpost<OL extends OutpostLocation> {
 	 */
 	private final OL outpostLocation;
 	private Future<?> startAssault, stopAssault;
-	private final List<Race> list = new ArrayList<Race>();
+	private final List<Race> list = new ArrayList<>();
 	/**
 	 * 获取已生成单位列表。
 	 * Returns the spawned unit list.
 	 *
 	 * @return 已生成单位 / Spawned units
 	 */
-	private final List<Npc> spawned = new ArrayList<Npc>();
+	private final List<Npc> spawned = new ArrayList<>();
 	/**
 	 * 获取袭击单位列表。
 	 * Returns the attacker list.
 	 *
 	 * @return 袭击单位列表 / attackers
 	 */
-	private final List<Npc> attackers = new ArrayList<Npc>();
+	private final List<Npc> attackers = new ArrayList<>();
 	private final AtomicBoolean finished = new AtomicBoolean();
 	private final OutpostBossDeathListener baseBossDeathListener = new OutpostBossDeathListener(this);
 
@@ -163,7 +163,7 @@ public class Outpost<OL extends OutpostLocation> {
 	protected void despawn(int outpostLocationId) {
 		setFlag(null);
 		Collection<OutpostNpc> outpostNpcs = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getLocalOutpostNpcs(outpostLocationId);
-		for (OutpostNpc npc : new ArrayList<OutpostNpc>(outpostNpcs)) {
+		for (OutpostNpc npc : new ArrayList<>(outpostNpcs)) {
 			npc.getController().onDelete();
 		}
 	}
@@ -173,12 +173,7 @@ public class Outpost<OL extends OutpostLocation> {
 	 * Schedules the next assault after a random delay.
 	 */
 	private void delayedAssault() {
-		startAssault = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				chooseAttackersRace();
-			}
-		}, Rnd.get(120, 180) * 60000L);
+		startAssault = GameThreadPoolServices.threadPoolManager().schedule(() -> chooseAttackersRace(), Rnd.get(120, 180) * 60000L);
 	}
 
 	/**
@@ -230,12 +225,9 @@ public class Outpost<OL extends OutpostLocation> {
 			}
 			if (getAttackers().isEmpty()) {
 			} else {
-				stopAssault = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						despawnAttackers();
-						delayedAssault();
-					}
+				stopAssault = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					despawnAttackers();
+					delayedAssault();
 				}, 5 * 60000);
 			}
 		}
@@ -246,7 +238,7 @@ public class Outpost<OL extends OutpostLocation> {
 	 * Despawns all attackers.
 	 */
 	protected void despawnAttackers() {
-		for (Npc attacker : new ArrayList<Npc>(getAttackers())) {
+		for (Npc attacker : new ArrayList<>(getAttackers())) {
 			attacker.getController().onDelete();
 		}
 		getAttackers().clear();

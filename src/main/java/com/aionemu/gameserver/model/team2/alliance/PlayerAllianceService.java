@@ -52,7 +52,7 @@ import com.google.common.base.Predicate;
 @Slf4j
 
 public class PlayerAllianceService {
-	private static final Map<Integer, PlayerAlliance> alliances = new ConcurrentHashMap<Integer, PlayerAlliance>();
+	private static final Map<Integer, PlayerAlliance> alliances = new ConcurrentHashMap<>();
 	private static final AtomicBoolean offlineCheckStarted = new AtomicBoolean();
 
 	/** 联盟事件监听器接口 / Player alliance event listener interface */
@@ -329,7 +329,7 @@ public class PlayerAllianceService {
 	public static void distributeKinah(Player player, long amount) {
 		PlayerAlliance alliance = player.getPlayerAlliance2();
 		if (alliance != null) {
-			alliance.onEvent(new TeamKinahDistributionEvent<PlayerAlliance>(alliance, player, amount));
+			alliance.onEvent(new TeamKinahDistributionEvent<>(alliance, player, amount));
 		}
 	}
 
@@ -337,7 +337,7 @@ public class PlayerAllianceService {
 	public static void distributeKinahInGroup(Player player, long amount) {
 		PlayerAllianceGroup allianceGroup = player.getPlayerAllianceGroup2();
 		if (allianceGroup != null) {
-			allianceGroup.onEvent(new TeamKinahDistributionEvent<PlayerAllianceGroup>(allianceGroup, player, amount));
+			allianceGroup.onEvent(new TeamKinahDistributionEvent<>(allianceGroup, player, amount));
 		}
 	}
 
@@ -345,7 +345,7 @@ public class PlayerAllianceService {
 	public static void showBrand(Player player, int targetObjId, int brandId) {
 		PlayerAlliance alliance = player.getPlayerAlliance2();
 		if (alliance != null) {
-			alliance.onEvent(new ShowBrandEvent<PlayerAlliance>(alliance, targetObjId, brandId));
+			alliance.onEvent(new ShowBrandEvent<>(alliance, targetObjId, brandId));
 		}
 	}
 

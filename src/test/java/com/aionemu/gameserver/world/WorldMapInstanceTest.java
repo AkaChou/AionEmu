@@ -33,7 +33,7 @@ class WorldMapInstanceTest {
 	@Test
 	void objectIteratorReturnsSnapshotSafeForRemovalDuringIteration() throws ReflectiveOperationException {
 		TestWorldMapInstance instance = objenesis.newInstance(TestWorldMapInstance.class);
-		Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+		Map<Integer, VisibleObject> objects = new LinkedHashMap<>();
 		objects.put(1, objenesis.newInstance(Npc.class));
 		objects.put(2, objenesis.newInstance(Npc.class));
 		objects.put(3, objenesis.newInstance(Npc.class));
@@ -52,7 +52,7 @@ class WorldMapInstanceTest {
 	@Test
 	void playerIteratorReturnsSnapshotSafeForRemovalDuringIteration() throws ReflectiveOperationException {
 		TestWorldMapInstance instance = objenesis.newInstance(TestWorldMapInstance.class);
-		Map<Integer, Player> players = new LinkedHashMap<Integer, Player>();
+		Map<Integer, Player> players = new LinkedHashMap<>();
 		players.put(1, objenesis.newInstance(Player.class));
 		players.put(2, objenesis.newInstance(Player.class));
 		players.put(3, objenesis.newInstance(Player.class));
@@ -71,13 +71,13 @@ class WorldMapInstanceTest {
 	@Test
 	void doOnAllPlayersUsesSnapshotSafeForRemovalDuringVisit() throws ReflectiveOperationException {
 		TestWorldMapInstance instance = objenesis.newInstance(TestWorldMapInstance.class);
-		Map<Integer, Player> players = new LinkedHashMap<Integer, Player>();
+		Map<Integer, Player> players = new LinkedHashMap<>();
 		Player first = objenesis.newInstance(Player.class);
 		Player second = objenesis.newInstance(Player.class);
 		players.put(1, first);
 		players.put(2, second);
 		setField(instance, "worldMapPlayers", players);
-		List<Player> visited = new java.util.ArrayList<Player>();
+		List<Player> visited = new java.util.ArrayList<>();
 
 		instance.doOnAllPlayers(player -> {
 			visited.add(player);
@@ -92,7 +92,7 @@ class WorldMapInstanceTest {
 	@Test
 	void getQuestIdsReturnsReadOnlySnapshot() throws ReflectiveOperationException {
 		TestWorldMapInstance instance = objenesis.newInstance(TestWorldMapInstance.class);
-		List<Integer> questIds = new ArrayList<Integer>();
+		List<Integer> questIds = new ArrayList<>();
 		questIds.add(1001);
 		setField(instance, "questIds", questIds);
 
@@ -115,7 +115,7 @@ class WorldMapInstanceTest {
 	@Test
 	void addObjectDuplicateObjectIdDoesNotReplaceExistingObject() throws ReflectiveOperationException {
 		TestWorldMapInstance instance = objenesis.newInstance(TestWorldMapInstance.class);
-		Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+		Map<Integer, VisibleObject> objects = new LinkedHashMap<>();
 		setField(instance, "worldMapObjects", objects);
 		VisibleObject existing = new TestVisibleObject(1);
 		VisibleObject duplicate = new TestVisibleObject(1);

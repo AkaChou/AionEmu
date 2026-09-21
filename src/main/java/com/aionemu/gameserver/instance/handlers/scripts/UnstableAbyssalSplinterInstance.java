@@ -46,8 +46,8 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 		/** abyssalsplinter 任务 / abyssal splinter task */
-		private final List<Future<?>> abyssalSplinterTask = new ArrayList<Future<?>>();
-	
+		private final List<Future<?>> abyssalSplinterTask = new ArrayList<>();
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -59,7 +59,7 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 		super.onInstanceCreate(instance);
 		doors = instance.getDoors();
 	}
-	
+
     /**
      * 玩家进入副本时处理。
      * Handle a player entering the instance.
@@ -77,7 +77,7 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -88,7 +88,7 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 			break;
 		}
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -182,7 +182,7 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
             break;
 		}
 	}
-	
+
 	private void abyssalBlessing() {
 		for (Player p: instance.getPlayersInside()) {
 			SkillTemplate st =  DataManager.SKILL_DATA.getSkillTemplate(19283); //Abyssal Blessing.
@@ -191,17 +191,17 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 			e.applyEffect();
 		}
 	}
-	
+
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
 		storage.decreaseByItemId(185000104, storage.getItemCountByItemId(185000104)); //Abyssal Fragment.
 	}
-	
+
 	private void removeEffects(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
 		effectController.removeEffect(19283); //Abyssal Blessing.
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -213,7 +213,7 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 		removeItems(player);
 		removeEffects(player);
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -225,7 +225,7 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 		removeItems(player);
 		removeEffects(player);
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -235,7 +235,7 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 		isInstanceDestroyed = true;
 		doors.clear();
 	}
-	
+
 	/**
 	 * 处理 sp。
 	 * Handle sp.
@@ -247,14 +247,14 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 	 * @param h 朝向 / h
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
         sp(npcId, x, y, z, h, 0, time, 0, null);
     }
     /**
      * 处理 sp。
      * Handle sp.
-     * 
+     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -264,14 +264,14 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
      * @param msg 消息 / message
      * @param race 阵营 / race
      */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
         sp(npcId, x, y, z, h, 0, time, msg, race);
     }
     /**
      * 处理 sp。
      * Handle sp.
-     * 
+     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -282,7 +282,7 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
      * @param msg 消息 / message
      * @param race 阵营 / race
      */
-	
+
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
         abyssalSplinterTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -312,7 +312,7 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 	 * @param time 时间 / time
 	 * @param walkerId 寻路器 ID / walkerId
 	 */
-	
+
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         abyssalSplinterTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -329,7 +329,7 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
             }
         }, time));
     }
-	
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -338,7 +338,7 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -347,7 +347,7 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -364,12 +364,12 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 			}
 		}, time);
 	}
-	
+
 	private boolean isDead(Npc npc) {
 		return (npc == null || npc.getLifeStats().isAlreadyDead());
 	}
-	
-	
+
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();

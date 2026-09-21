@@ -15,7 +15,7 @@ import lombok.Setter;
  */
 
 public class LookingForParty extends AbstractLockManager {
-	private final List<SearchInstance> searchInstances = new ArrayList<SearchInstance>();
+	private final List<SearchInstance> searchInstances = new ArrayList<>();
 	/** 获取玩家。 / Returns the player. */
 	@Getter
 	@Setter
@@ -50,7 +50,7 @@ public class LookingForParty extends AbstractLockManager {
 	public List<SearchInstance> getSearchInstances() {
 		super.readLock();
 		try {
-			return new ArrayList<SearchInstance>(searchInstances);
+			return new ArrayList<>(searchInstances);
 		} finally {
 			super.readUnlock();
 		}

@@ -30,7 +30,7 @@ public abstract class FeedItemGroup {
 	/** 获取物品。 / Returns the items. */
 	public List<ItemRaceEntry> getItems() {
 		if (items == null) {
-			items = new ArrayList<ItemRaceEntry>();
+			items = new ArrayList<>();
 		}
 		return items;
 	}

@@ -21,34 +21,28 @@ public class Explosive_RootAI2 extends AggressiveNpcAI2
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 18900, 60, getOwner()).useNoAnimationSkill(); // 束缚技能 / Root.
-				startLifeTask();
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			GameEngineServices.skillEngine().getSkill(getOwner(), 18900, 60, getOwner()).useNoAnimationSkill(); // 束缚技能 / Root.
+			startLifeTask();
 		}, 1000);
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(Explosive_RootAI2.this);
-				AI2Actions.scheduleRespawn(Explosive_RootAI2.this);
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			AI2Actions.deleteOwner(Explosive_RootAI2.this);
+			AI2Actions.scheduleRespawn(Explosive_RootAI2.this);
 		}, 10000);
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();

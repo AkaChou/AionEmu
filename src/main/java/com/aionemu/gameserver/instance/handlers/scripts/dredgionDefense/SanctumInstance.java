@@ -53,9 +53,9 @@ public class SanctumInstance extends GeneralInstanceHandler
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
 	/** 已播放动画集合 / played-movie set */
-	private final List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<>();
 	/** sanctum 任务 / sanctum task */
-		private final List<Future<?>> sanctumTask = new ArrayList<Future<?>>();
+		private final List<Future<?>> sanctumTask = new ArrayList<>();
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -213,7 +213,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 					 */
 					@Override
 					public void run() {
-						instance.doOnAllPlayers(new Visitor<Player>() {
+						instance.doOnAllPlayers(new Visitor<>() {
 							/**
 							 * 处理 visit。
 							 * Handle visit.
@@ -266,7 +266,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 						 */
 						@Override
 						public void run() {
-							instance.doOnAllPlayers(new Visitor<Player>() {
+							instance.doOnAllPlayers(new Visitor<>() {
 								/**
 								 * 处理 visit。
 								 * Handle visit.
@@ -1026,7 +1026,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.

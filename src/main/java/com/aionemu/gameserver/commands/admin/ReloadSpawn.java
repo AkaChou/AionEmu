@@ -26,7 +26,7 @@ public class ReloadSpawn extends AdminCommand
 	public ReloadSpawn() {
 		super("reload_spawn");
 	}
-	
+
 	/**
 	 * 执行该管理指令。
 	 * Executes this admin command.
@@ -47,7 +47,7 @@ public class ReloadSpawn extends AdminCommand
 			StringBuilder sbDestination = new StringBuilder();
 			for(String p : params)
 				sbDestination.append(p + " ");
-		
+
 			destination = sbDestination.toString().trim();
 		// 天族。 / ELYOS.
 		if (destination.equalsIgnoreCase("Sanctum"))
@@ -191,31 +191,28 @@ public class ReloadSpawn extends AdminCommand
 			// 房屋 / Housing
 			reloadMap(WorldMapType.ORIEL.getId(), player, "Oriel");
 			reloadMap(WorldMapType.PERNON.getId(), player, "Pernon");
-		} else {	
+		} else {
 			reloadMap(worldId, player, destinationMap);
 		}
 	}
-	
+
 	private void reloadMap (int worldId, Player admin, String destinationMap) {
 		final int IdWorld = worldId;
 		final Player adm = admin;
 		final String dest = destinationMap;
 		if (IdWorld != 0) {
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllObjects(new Visitor<VisibleObject>() {
-				@Override
-				public void visit(VisibleObject object) {
-					if (object.getWorldId() != IdWorld) {
-						return;
-					} if (object instanceof Npc || object instanceof Gatherable || object instanceof StaticObject) {
-						object.getController().delete();
-					}
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllObjects(object -> {
+				if (object.getWorldId() != IdWorld) {
+					return;
+				} if (object instanceof Npc || object instanceof Gatherable || object instanceof StaticObject) {
+					object.getController().delete();
 				}
 			});
 			SpawnEngine.spawnWorldMap(IdWorld);
 			PacketSendUtility.sendMessage(adm, "Spawns for map: " + IdWorld + " (" + dest + ") reloaded succesfully");
 		}
 	}
-	
+
 	/**
 	 * 参数错误时输出用法。
 	 * Prints usage when arguments are invalid.

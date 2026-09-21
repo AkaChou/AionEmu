@@ -61,7 +61,7 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 
 public class InstanceService {
 	/** 映射 IDwhereinstancemobsuseaggro / Map IDs where instance mobs use aggro */
-	private static final List<Integer> instanceAggro = new ArrayList<Integer>();
+	private static final List<Integer> instanceAggro = new ArrayList<>();
 	/** 待空副本重置的实例集合（弱引用）。 / Instances pending empty-reset (weak refs). */
 	private static final Set<WorldMapInstance> pendingResets = Collections
 			.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
@@ -509,13 +509,10 @@ public class InstanceService {
 			instance.getEmptyInstanceTask().cancel(false);
 		}
 		pendingResets.add(instance);
-		instance.setEmptyInstanceTask(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				pendingResets.remove(instance);
-				if (isInstanceExist(instance.getMapId(), instance.getInstanceId()) && isEmptyForResetAfterLeave(instance)) {
-					destroyInstance(instance);
-				}
+		instance.setEmptyInstanceTask(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			pendingResets.remove(instance);
+			if (isInstanceExist(instance.getMapId(), instance.getInstanceId()) && isEmptyForResetAfterLeave(instance)) {
+				destroyInstance(instance);
 			}
 		}, getScheduledDestroyDelayMillis(instance)));
 	}

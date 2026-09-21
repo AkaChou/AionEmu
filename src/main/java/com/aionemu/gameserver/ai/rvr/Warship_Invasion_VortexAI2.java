@@ -31,12 +31,12 @@ public class Warship_Invasion_VortexAI2 extends NpcAI2
 	protected int startBarAnimation = 1;
 	protected int cancelBarAnimation = 2;
 	private final int CANCEL_DIALOG_METERS = 10;
-	
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		handleUseItemStart(player);
 	}
-	
+
 	protected void handleUseItemStart(final Player player) {
 		final int delay = getTalkDelay();
 		if (delay != 0) {
@@ -52,20 +52,17 @@ public class Warship_Invasion_VortexAI2 extends NpcAI2
 			player.getObserveController().attach(observer);
 			PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), startBarAnimation));
 			PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.START_QUESTLOOT, 0, getObjectId()), true);
-			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
-					PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
-					player.getObserveController().removeObserver(observer);
-					handleUseItemFinish(player);
-				}
+			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
+				PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
+				player.getObserveController().removeObserver(observer);
+				handleUseItemFinish(player);
 			}, delay));
 		} else {
 			handleUseItemFinish(player);
 		}
 	}
-	
+
 	protected void handleUseItemFinish(Player player) {
 		if (player.getLevel() >= 66) {
 			// 是否要通过军团裂隙旅行？ / Do you want to travel through the Legion Rift ?
@@ -95,30 +92,30 @@ public class Warship_Invasion_VortexAI2 extends NpcAI2
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_INVADE_DIRECT_PORTAL_LEVEL_LIMIT);
 		}
 	}
-	
+
 	protected int getTalkDelay() {
 		return getObjectTemplate().getTalkDelay() * 1000;
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
    /**
 	 * @param responder 天族 / Elyos
 	 */
 	private void transferInvasion1(Player responder) {
         TeleportService2.teleportTo(responder, 220110000, 1549.2898f, 2402.2078f, 195.69263f, (byte) 110);
     }
-	
+
    /**
 	 * @param responder 魔族 / Asmodians
 	 */
 	private void transferInvasion2(Player responder) {
         TeleportService2.teleportTo(responder, 210100000, 1352.1334f, 1761.8057f, 325.0038f, (byte) 1);
     }
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
@@ -128,13 +125,8 @@ public class Warship_Invasion_VortexAI2 extends NpcAI2
 			break;
         }
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(Warship_Invasion_VortexAI2.this);
-			}
-		}, 300000); //5 分钟。 / 5 Minutes.
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Warship_Invasion_VortexAI2.this), 300000); //5 分钟。 / 5 Minutes.
 	}
 }

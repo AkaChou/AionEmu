@@ -115,11 +115,8 @@ class NettyServerTest {
 
     private static void warmUp(EventLoopGroup group) {
         for (io.netty.util.concurrent.EventExecutor executor : group) {
-            executor.submit(new Runnable() {
-                @Override
-                public void run() {
-                }
-            }).syncUninterruptibly();
+            executor.submit(() -> {
+			}).syncUninterruptibly();
         }
     }
 

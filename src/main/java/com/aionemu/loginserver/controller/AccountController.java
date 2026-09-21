@@ -56,19 +56,19 @@ public class AccountController {
      * 当前在登录服上、或已加入游戏服但尚未完成认证的账号连接。
      * Accounts active on LoginServer or joined GameServer but not yet authenticated.
      */
-    private final Map<Integer, LoginConnection> accountsOnLS = new ConcurrentHashMap<Integer, LoginConnection>();
+    private final Map<Integer, LoginConnection> accountsOnLS = new ConcurrentHashMap<>();
 
     /**
      * 正在从游戏服快速重连回登录服的账号。
      * Accounts reconnecting to LoginServer after joining GameServer.
      */
-    private final Map<Integer, ReconnectingAccount> reconnectingAccounts = new ConcurrentHashMap<Integer, ReconnectingAccount>();
+    private final Map<Integer, ReconnectingAccount> reconnectingAccounts = new ConcurrentHashMap<>();
 
     /**
      * 各账号在各游戏服上的角色数量。
      * Character counts per gameserver for each account.
      */
-    private final Map<Integer, Map<Integer, Integer>> accountsGSCharacterCounts = new ConcurrentHashMap<Integer, Map<Integer, Integer>>();
+    private final Map<Integer, Map<Integer, Integer>> accountsGSCharacterCounts = new ConcurrentHashMap<>();
 
     /**
      * 从登录服连接列表移除账号。
@@ -377,7 +377,7 @@ public class AccountController {
      */
     public synchronized void loadGSCharactersCount(int accountId) {
         GsConnection gsc = null;
-        Map<Integer, Integer> accountCharacterCount = new ConcurrentHashMap<Integer, Integer>();
+        Map<Integer, Integer> accountCharacterCount = new ConcurrentHashMap<>();
         accountsGSCharacterCounts.put(accountId, accountCharacterCount);
 
         for (GameServerInfo gsi : GameServerTable.getGameServers()) {
@@ -434,7 +434,7 @@ public class AccountController {
      */
     public Map<Integer, Integer> getGSCharacterCountsFor(int accountId) {
         Map<Integer, Integer> characterCount = accountsGSCharacterCounts.get(accountId);
-        return characterCount == null ? null : Collections.unmodifiableMap(new HashMap<Integer, Integer>(characterCount));
+        return characterCount == null ? null : Collections.unmodifiableMap(new HashMap<>(characterCount));
     }
 
     /**
@@ -447,7 +447,7 @@ public class AccountController {
      */
     public synchronized void addGSCharacterCountFor(int accountId, int gsid, int characterCount) {
         accountsGSCharacterCounts
-            .computeIfAbsent(accountId, id -> new ConcurrentHashMap<Integer, Integer>())
+            .computeIfAbsent(accountId, id -> new ConcurrentHashMap<>())
             .put(gsid, characterCount);
     }
 

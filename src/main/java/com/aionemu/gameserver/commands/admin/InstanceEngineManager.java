@@ -58,12 +58,9 @@ public class InstanceEngineManager extends AdminCommand {
 			}
 			if (COMMAND_RESTART.equalsIgnoreCase(params[0])) {
 				GameEngineServices.instanceEngine().shutdown();
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						GameEngineServices.instanceEngine().load(progressLatch);
-						PacketSendUtility.sendMessage(player, "InstanceEngine reloaded successfully!");
-					}
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					GameEngineServices.instanceEngine().load(progressLatch);
+					PacketSendUtility.sendMessage(player, "InstanceEngine reloaded successfully!");
 				}, 5000);
 			}
 			if (COMMAND_STARTHOT.equalsIgnoreCase(params[0])) {

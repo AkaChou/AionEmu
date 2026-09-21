@@ -40,9 +40,9 @@ public class QuestsData {
 	@XmlElement(name = "quest", required = true)
 	protected List<QuestTemplate> questsData;
 	@XmlTransient
-	private final IntObjectHashMap<QuestTemplate> questData = new IntObjectHashMap<QuestTemplate>();
+	private final IntObjectHashMap<QuestTemplate> questData = new IntObjectHashMap<>();
 	@XmlTransient
-	private final IntObjectHashMap<List<QuestTemplate>> sortedByFactionId = new IntObjectHashMap<List<QuestTemplate>>();
+	private final IntObjectHashMap<List<QuestTemplate>> sortedByFactionId = new IntObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，重建任务 ID 索引与势力分组。
@@ -58,7 +58,7 @@ public class QuestsData {
 				continue;
 			}
 			if (!sortedByFactionId.containsKey(npcFactionId)) {
-				List<QuestTemplate> factionQuests = new ArrayList<QuestTemplate>();
+				List<QuestTemplate> factionQuests = new ArrayList<>();
 				factionQuests.add(quest);
 				sortedByFactionId.put(npcFactionId, factionQuests);
 			} else {
@@ -88,7 +88,7 @@ public class QuestsData {
 	 */
 	public List<QuestTemplate> getQuestsByNpcFaction(int npcFactionId, Player player) {
 		List<QuestTemplate> factionQuests = sortedByFactionId.get(npcFactionId);
-		List<QuestTemplate> quests = new ArrayList<QuestTemplate>();
+		List<QuestTemplate> quests = new ArrayList<>();
 		QuestEnv questEnv = new QuestEnv(null, player, 0, 0);
 		for (QuestTemplate questTemplate : factionQuests) {
 			if (!GameEngineServices.questEngine().isHaveHandler(questTemplate.getId())) {

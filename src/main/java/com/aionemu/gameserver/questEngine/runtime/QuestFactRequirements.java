@@ -83,9 +83,17 @@ public record QuestFactRequirements(boolean startEligibility, Set<Integer> event
 				for (var group : metadata.startConditionGroups()) {
 					for (var condition : group.conditions()) {
 						switch (condition.type().toLowerCase(java.util.Locale.ROOT)) {
-							case "finished", "unfinished", "noacquired", "acquired" -> questIdSets = true;
-							case "equipped" -> equipment = true;
-							default -> { }
+							case "finished":
+							case "unfinished":
+							case "noacquired":
+							case "acquired":
+								questIdSets = true;
+								break;
+							case "equipped":
+								equipment = true;
+								break;
+							default:
+								break;
 						}
 					}
 				}
@@ -125,68 +133,135 @@ public record QuestFactRequirements(boolean startEligibility, Set<Integer> event
 		Set<Integer> eventActivityQuestIds = new HashSet<>();
 		for (QuestCondition condition : transition.conditions()) {
 			switch (condition) {
-				case QuestCondition.StartEligible ignored -> startEligibility = true;
-				case QuestCondition.EventActive eventActive ->
+				case QuestCondition.StartEligible ignored:
+					startEligibility = true;
+					break;
+				case QuestCondition.EventActive eventActive:
 					eventActivityQuestIds.add(eventActive.questId() == 0 ? questId : eventActive.questId());
-				case QuestCondition.WorldNpcIs ignored -> worldFacts = true;
-				case QuestCondition.ZoneIs ignored -> worldFacts = true;
-				case QuestCondition.QuestsFinished ignored -> questIdSets = true;
-				case QuestCondition.UnfinishedQuest ignored -> questIdSets = true;
-				case QuestCondition.AcquiredQuest ignored -> questIdSets = true;
-				case QuestCondition.NoAcquiredQuest ignored -> questIdSets = true;
-				case QuestCondition.HasItem ignored -> inventory = true;
-				case QuestCondition.EquipmentSetEquipped ignored -> equipment = true;
-				case QuestCondition.EquippedItem ignored -> equipment = true;
-				case QuestCondition.RecipeKnown ignored -> craft = true;
-				case QuestCondition.CanGrantCraftSkill ignored -> craft = true;
+					break;
+				case QuestCondition.WorldNpcIs ignored:
+					worldFacts = true;
+					break;
+				case QuestCondition.ZoneIs ignored:
+					worldFacts = true;
+					break;
+				case QuestCondition.QuestsFinished ignored:
+					questIdSets = true;
+					break;
+				case QuestCondition.UnfinishedQuest ignored:
+					questIdSets = true;
+					break;
+				case QuestCondition.AcquiredQuest ignored:
+					questIdSets = true;
+					break;
+				case QuestCondition.NoAcquiredQuest ignored:
+					questIdSets = true;
+					break;
+				case QuestCondition.HasItem ignored:
+					inventory = true;
+					break;
+				case QuestCondition.EquipmentSetEquipped ignored:
+					equipment = true;
+					break;
+				case QuestCondition.EquippedItem ignored:
+					equipment = true;
+					break;
+				case QuestCondition.RecipeKnown ignored:
+					craft = true;
+					break;
+				case QuestCondition.CanGrantCraftSkill ignored:
+					craft = true;
+					break;
 				// 其余条件只读基础事实：状态、变量、职业、种族、性别、世界 ID、货币、队伍、会员、DP、完成次数。
 				// The remaining conditions read base facts only: status, variables, class, race, gender, world id,
 				// currencies, team, membership, DP and completion count.
-				case QuestCondition.StatusIs ignored -> { }
-				case QuestCondition.QuestVariableIs ignored -> { }
-				case QuestCondition.VariableAtLeast ignored -> { }
-				case QuestCondition.VariableBelow ignored -> { }
-				case QuestCondition.VariableSumIs ignored -> { }
-				case QuestCondition.VariableSumBelow ignored -> { }
-				case QuestCondition.PvpVictimLevelDelta ignored -> { }
-				case QuestCondition.PvpRecipientInZone ignored -> { }
-				case QuestCondition.PlayerClassIs ignored -> { }
-				case QuestCondition.AdvancedClassIs ignored -> { }
-				case QuestCondition.GenderIs ignored -> { }
-				case QuestCondition.PlayerRaceIs ignored -> { }
-				case QuestCondition.PlayerInGroup ignored -> { }
-				case QuestCondition.WorldIs ignored -> { }
-				case QuestCondition.NpcHpBelowPercent ignored -> { }
-				case QuestCondition.CurrencyAtLeast ignored -> { }
-				case QuestCondition.CurrencyBelow ignored -> { }
-				case QuestCondition.MembershipPermission ignored -> { }
-				case QuestCondition.DpAtMax ignored -> { }
-				case QuestCondition.CompleteCountIs ignored -> { }
+				case QuestCondition.StatusIs ignored:
+					break;
+				case QuestCondition.QuestVariableIs ignored:
+					break;
+				case QuestCondition.VariableAtLeast ignored:
+					break;
+				case QuestCondition.VariableBelow ignored:
+					break;
+				case QuestCondition.VariableSumIs ignored:
+					break;
+				case QuestCondition.VariableSumBelow ignored:
+					break;
+				case QuestCondition.PvpVictimLevelDelta ignored:
+					break;
+				case QuestCondition.PvpRecipientInZone ignored:
+					break;
+				case QuestCondition.PlayerClassIs ignored:
+					break;
+				case QuestCondition.AdvancedClassIs ignored:
+					break;
+				case QuestCondition.GenderIs ignored:
+					break;
+				case QuestCondition.PlayerRaceIs ignored:
+					break;
+				case QuestCondition.PlayerInGroup ignored:
+					break;
+				case QuestCondition.WorldIs ignored:
+					break;
+				case QuestCondition.NpcHpBelowPercent ignored:
+					break;
+				case QuestCondition.CurrencyAtLeast ignored:
+					break;
+				case QuestCondition.CurrencyBelow ignored:
+					break;
+				case QuestCondition.MembershipPermission ignored:
+					break;
+				case QuestCondition.DpAtMax ignored:
+					break;
+				case QuestCondition.CompleteCountIs ignored:
+					break;
 			}
 		}
 		for (QuestAction action : transition.actions()) {
-			switch (action) {
-				case QuestAction.RemoveItem ignored -> inventory = true;
-				case QuestAction.GiveItem ignored -> inventory = true;
-				case QuestAction.UnequipItem ignored -> equipment = true;
-				// 其余动作不改写需要预读的事实族；制作动作只写技能/配方，不读快照中的制作事实。
-				// The remaining actions do not rewrite a fact family that has to be pre-read; craft actions only
-				// write skills/recipes and never read the captured craft facts.
-				case QuestAction.SetVariable ignored -> { }
-				case QuestAction.IncrementVariable ignored -> { }
-				case QuestAction.SetStatus ignored -> { }
-				case QuestAction.GrantReward ignored -> { }
-				case QuestAction.GrantSelectedReward ignored -> { }
-				case QuestAction.DecreaseCurrency ignored -> { }
-				case QuestAction.SetCurrency ignored -> { }
-				case QuestAction.LearnRecipe ignored -> { }
-				case QuestAction.ForgetRecipe ignored -> { }
-				case QuestAction.GrantCraftSkill ignored -> { }
-				case QuestAction.CompleteQuest ignored -> completes = true;
-				case QuestAction.PromoteArchDaeva ignored -> { }
-				case QuestAction.BlockDefaultItemUse ignored -> { }
-				case QuestAction.AbandonQuest ignored -> abandons = true;
-			}
+            switch (action) {
+                case QuestAction.RemoveItem ignored:
+                    inventory = true;
+                    break;
+                case QuestAction.GiveItem ignored:
+                    inventory = true;
+                    break;
+                case QuestAction.UnequipItem ignored:
+                    equipment = true;
+                    break;
+                // 其余动作不改写需要预读的事实族；制作动作只写技能/配方，不读快照中的制作事实。
+                // The remaining actions do not rewrite a fact family that has to be pre-read; craft actions only
+                // write skills/recipes and never read the captured craft facts.
+                case QuestAction.SetVariable ignored:
+                    break;
+                case QuestAction.IncrementVariable ignored:
+                    break;
+                case QuestAction.SetStatus ignored:
+                    break;
+                case QuestAction.GrantReward ignored:
+                    break;
+                case QuestAction.GrantSelectedReward ignored:
+                    break;
+                case QuestAction.DecreaseCurrency ignored:
+                    break;
+                case QuestAction.SetCurrency ignored:
+                    break;
+                case QuestAction.LearnRecipe ignored:
+                    break;
+                case QuestAction.ForgetRecipe ignored:
+                    break;
+                case QuestAction.GrantCraftSkill ignored:
+                    break;
+                case QuestAction.CompleteQuest ignored:
+                    completes = true;
+                    break;
+                case QuestAction.PromoteArchDaeva ignored:
+                    break;
+                case QuestAction.BlockDefaultItemUse ignored:
+                    break;
+                case QuestAction.AbandonQuest ignored:
+                    abandons = true;
+                    break;
+            }
 		}
 		// 完成与放弃会让 planner 追加 questWorkItems 的 RemoveItem(ALL)，提交前的 preflight 仍会读取背包数量；
 		// 这类转换占比很小，因此整类保守地要求背包事实，换取不依赖 metadata 的稳定判定。

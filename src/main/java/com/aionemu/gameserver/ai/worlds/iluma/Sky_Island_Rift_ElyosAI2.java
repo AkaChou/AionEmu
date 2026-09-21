@@ -37,16 +37,11 @@ public class Sky_Island_Rift_ElyosAI2 extends NpcAI2 {
 			break;
         }
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(Sky_Island_Rift_ElyosAI2.this);
-			}
-		}, 3600000); // 1 小时后消失 / 1Hrs.
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Sky_Island_Rift_ElyosAI2.this), 3600000); // 1 小时后消失 / 1Hrs.
 	}
-	
+
 	@Override
     protected void handleDialogStart(Player player) {
 /*         if (player.isArchDaeva()) { */
@@ -56,7 +51,7 @@ public class Sky_Island_Rift_ElyosAI2 extends NpcAI2 {
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
 /* 		} */
     }
-	
+
     @Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		// 使用传送石传送至天空岛。 / Use the teleport stone to teleport to the Sky Island.

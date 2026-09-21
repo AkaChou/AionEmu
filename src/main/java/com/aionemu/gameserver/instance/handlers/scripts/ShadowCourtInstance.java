@@ -24,7 +24,7 @@ import java.util.Set;
 public class ShadowCourtInstance extends GeneralInstanceHandler
 {
     /** 已播放动画集合 / played-movie set */
-    private final List<Integer> movies = new ArrayList<Integer>();
+    private final List<Integer> movies = new ArrayList<>();
 
 	/**
 	 * 玩家进入副本时处理。

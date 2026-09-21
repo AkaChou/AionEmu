@@ -19,19 +19,19 @@ public abstract class AbstractIterativePeriodicTaskManager<T> extends AbstractPe
 	 * 待加入活跃集的任务。
 	 * Tasks pending addition to the active set.
 	 */
-	private final Set<T> startList = new LinkedHashSet<T>();
+	private final Set<T> startList = new LinkedHashSet<>();
 
 	/**
 	 * 待从活跃集移除的任务。
 	 * Tasks pending removal from the active set.
 	 */
-	private final Set<T> stopList = new LinkedHashSet<T>();
+	private final Set<T> stopList = new LinkedHashSet<>();
 
 	/**
 	 * 当前活跃任务集合。
 	 * Currently active tasks.
 	 */
-	private final Set<T> activeTasks = new LinkedHashSet<T>();
+	private final Set<T> activeTasks = new LinkedHashSet<>();
 
 	/**
 	 * 以给定周期构造迭代式任务管理器。

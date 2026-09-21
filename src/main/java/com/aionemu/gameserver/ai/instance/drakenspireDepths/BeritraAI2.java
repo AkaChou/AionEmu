@@ -88,29 +88,26 @@ public class BeritraAI2 extends AggressiveNpcAI2
 	}
 
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelPhaseTask();
-				} else {
-					// 贝里特拉使用其力量。 / Beritra uses his Power.
-					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDSeal_Vritra_Human_01, 0);
-					List<Player> players = getLifedPlayers();
-					if (!players.isEmpty()) {
-						int size = players.size();
-						if (players.size() < 6) {
-							for (Player p: players) {
-								spawnBeritraSummon(p);
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelPhaseTask();
+			} else {
+				// 贝里特拉使用其力量。 / Beritra uses his Power.
+				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDSeal_Vritra_Human_01, 0);
+				List<Player> players = getLifedPlayers();
+				if (!players.isEmpty()) {
+					int size = players.size();
+					if (players.size() < 6) {
+						for (Player p: players) {
+							spawnBeritraSummon(p);
+						}
+					} else {
+						int count = Rnd.get(6, size);
+						for (int i = 0; i < count; i++) {
+							if (players.isEmpty()) {
+								break;
 							}
-						} else {
-							int count = Rnd.get(6, size);
-							for (int i = 0; i < count; i++) {
-								if (players.isEmpty()) {
-									break;
-								}
-								spawnBeritraSummon(players.get(Rnd.get(players.size())));
-							}
+							spawnBeritraSummon(players.get(Rnd.get(players.size())));
 						}
 					}
 				}
@@ -123,21 +120,18 @@ public class BeritraAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						switch (Rnd.get(1, 3)) {
-						    case 1:
-							    spawn(855444, x, y, z, (byte) 0); //Drakenspire Reaper.
-							break;
-							case 2:
-							    spawn(855445, x, y, z, (byte) 0); //Drakenspire Tomescale.
-							break;
-							case 3:
-							    spawn(855446, x, y, z, (byte) 0); //Drakenspire Pustule.
-							break;
-						}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					switch (Rnd.get(1, 3)) {
+						case 1:
+							spawn(855444, x, y, z, (byte) 0); //Drakenspire Reaper.
+						break;
+						case 2:
+							spawn(855445, x, y, z, (byte) 0); //Drakenspire Tomescale.
+						break;
+						case 3:
+							spawn(855446, x, y, z, (byte) 0); //Drakenspire Pustule.
+						break;
 					}
 				}
 			}, 3000);
@@ -150,7 +144,7 @@ public class BeritraAI2 extends AggressiveNpcAI2
 	}
 
 	private List<Player> getLifedPlayers() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);

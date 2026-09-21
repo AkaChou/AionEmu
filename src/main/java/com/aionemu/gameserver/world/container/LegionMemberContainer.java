@@ -18,17 +18,17 @@ public class LegionMemberContainer {
 	/**
 	 * 按 objectId 索引的基础成员 / Basic members indexed by objectId
 	 */
-	private final Map<Integer, LegionMember> legionMemberById = new LinkedHashMap<Integer, LegionMember>();
+	private final Map<Integer, LegionMember> legionMemberById = new LinkedHashMap<>();
 
 	/**
 	 * 按 objectId 索引的扩展成员 / Extended members indexed by objectId
 	 */
-	private final Map<Integer, LegionMemberEx> legionMemberExById = new LinkedHashMap<Integer, LegionMemberEx>();
+	private final Map<Integer, LegionMemberEx> legionMemberExById = new LinkedHashMap<>();
 
 	/**
 	 * 按名称索引的扩展成员 / Extended members indexed by name
 	 */
-	private final Map<String, LegionMemberEx> legionMemberExByName = new LinkedHashMap<String, LegionMemberEx>();
+	private final Map<String, LegionMemberEx> legionMemberExByName = new LinkedHashMap<>();
 
 	/**
 	 * 添加基础军团成员（已存在则忽略）。

@@ -39,31 +39,36 @@ public class HouseCommand extends AdminCommand
 		if (params.length == 0) {
 			PacketSendUtility.sendMessage(admin, "Syntax: //house <tp | acquire | revoke>");
 			return;
-		} if (params[0].equals("acquire")) {
-			if (params.length == 1) {
-				PacketSendUtility.sendMessage(admin, "Syntax: //house acquire <HOUSE_Id>");
-				return;
-			}
-			ChangeHouseOwner(admin, params[1].toUpperCase(), true);
-		} else if (params[0].equals("revoke")) {
-			if (params.length == 1) {
-				PacketSendUtility.sendMessage(admin, "Syntax: //house revoke <HOUSE_Id>");
-				return;
-			}
-			ChangeHouseOwner(admin, params[1].toUpperCase(), false);
-		} else if (params[0].equals("tp")) {
-			if (params.length == 1) {
-				PacketSendUtility.sendMessage(admin, "Syntax: //house tp <HOUSE_Id>");
-				return;
-			}
-			House house = GameHousingServices.housingService().getHouseByName(params[1].toUpperCase());
-			if (house == null) {
-				PacketSendUtility.sendMessage(admin, "No such house!");
-				return;
-			}
-			HouseAddress address = house.getAddress();
-			TeleportService2.teleportTo(admin, address.getMapId(), address.getX(), address.getY(), address.getZ());
 		}
+        switch (params[0]) {
+            case "acquire":
+                if (params.length == 1) {
+                    PacketSendUtility.sendMessage(admin, "Syntax: //house acquire <HOUSE_Id>");
+                    return;
+                }
+                ChangeHouseOwner(admin, params[1].toUpperCase(), true);
+                break;
+            case "revoke":
+                if (params.length == 1) {
+                    PacketSendUtility.sendMessage(admin, "Syntax: //house revoke <HOUSE_Id>");
+                    return;
+                }
+                ChangeHouseOwner(admin, params[1].toUpperCase(), false);
+                break;
+            case "tp":
+                if (params.length == 1) {
+                    PacketSendUtility.sendMessage(admin, "Syntax: //house tp <HOUSE_Id>");
+                    return;
+                }
+                House house = GameHousingServices.housingService().getHouseByName(params[1].toUpperCase());
+                if (house == null) {
+                    PacketSendUtility.sendMessage(admin, "No such house!");
+                    return;
+                }
+                HouseAddress address = house.getAddress();
+                TeleportService2.teleportTo(admin, address.getMapId(), address.getX(), address.getY(), address.getZ());
+                break;
+        }
 	}
 
 	private void ChangeHouseOwner(Player admin, String houseName, boolean acquire) {

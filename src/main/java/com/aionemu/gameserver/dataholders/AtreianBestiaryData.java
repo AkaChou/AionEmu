@@ -26,8 +26,8 @@ public class AtreianBestiaryData {
 	@XmlElement(name = "monster_book", type = AtreianBestiaryTemplate.class)
 	private List<AtreianBestiaryTemplate> templates;
 
-	private final Map<Integer, AtreianBestiaryTemplate> idsHolder = new LinkedHashMap<Integer, AtreianBestiaryTemplate>();
-	private final Map<Integer, AtreianBestiaryTemplate> npcIdsHolder = new LinkedHashMap<Integer, AtreianBestiaryTemplate>();
+	private final Map<Integer, AtreianBestiaryTemplate> idsHolder = new LinkedHashMap<>();
+	private final Map<Integer, AtreianBestiaryTemplate> npcIdsHolder = new LinkedHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，按图鉴 ID 与 NPC ID 建立双索引并释放列表。

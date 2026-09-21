@@ -32,7 +32,7 @@ public class Lava_Arm_CruegoAI2 extends AggressiveNpcAI2
 	private boolean think = true;
 	private int curentPercent = 100;
 	private Future<?> specialSkillTask;
-	private final List<Integer> percents = new ArrayList<Integer>();
+	private final List<Integer> percents = new ArrayList<>();
 	private final AtomicBoolean isAggred = new AtomicBoolean(false);
 
 	@Override
@@ -74,13 +74,10 @@ public class Lava_Arm_CruegoAI2 extends AggressiveNpcAI2
 						EmoteManager.emoteStopAttacking(getOwner());
 						GameEngineServices.skillEngine().getSkill(getOwner(), 20483, 60, getOwner()).useNoAnimationSkill();
 						sendMsg(1500501);
-						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-							@Override
-							public void run() {
-								if (!isAlreadyDead()) {
-									GameEngineServices.skillEngine().getSkill(getOwner(), 20216, 60, getOwner()).useNoAnimationSkill();
-									startThinkTask();
-								}
+						GameThreadPoolServices.threadPoolManager().schedule(() -> {
+							if (!isAlreadyDead()) {
+								GameEngineServices.skillEngine().getSkill(getOwner(), 20216, 60, getOwner()).useNoAnimationSkill();
+								startThinkTask();
 							}
 						}, 3500);
 					break;
@@ -112,27 +109,24 @@ public class Lava_Arm_CruegoAI2 extends AggressiveNpcAI2
 	}
 
 	private void startThinkTask() {
-		thinkTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!isAlreadyDead()) {
-					think = true;
-					Creature creature = getAggroList().getMostHated();
-					if (creature == null || creature.getLifeStats().isAlreadyDead() || !getOwner().canSee(creature)) {
-						setStateIfNot(AIState.FIGHT);
-						think();
-					} else {
-						getMoveController().abortMove();
-						getOwner().setTarget(creature);
-						getOwner().getGameStats().renewLastAttackTime();
-						getOwner().getGameStats().renewLastAttackedTime();
-						getOwner().getGameStats().renewLastChangeTargetTime();
-						getOwner().getGameStats().renewLastSkillTime();
-						setStateIfNot(AIState.FIGHT);
-						handleMoveValidate();
-						cancelspecialSkillTask();
-						startSpecialSkillTask();
-					}
+		thinkTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isAlreadyDead()) {
+				think = true;
+				Creature creature = getAggroList().getMostHated();
+				if (creature == null || creature.getLifeStats().isAlreadyDead() || !getOwner().canSee(creature)) {
+					setStateIfNot(AIState.FIGHT);
+					think();
+				} else {
+					getMoveController().abortMove();
+					getOwner().setTarget(creature);
+					getOwner().getGameStats().renewLastAttackTime();
+					getOwner().getGameStats().renewLastAttackedTime();
+					getOwner().getGameStats().renewLastChangeTargetTime();
+					getOwner().getGameStats().renewLastSkillTime();
+					setStateIfNot(AIState.FIGHT);
+					handleMoveValidate();
+					cancelspecialSkillTask();
+					startSpecialSkillTask();
 				}
 			}
 		}, 20000);
@@ -141,51 +135,36 @@ public class Lava_Arm_CruegoAI2 extends AggressiveNpcAI2
 	private void startPhaseTask() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 20481, 60, getOwner()).useNoAnimationSkill();
 		sendMsg(1500500);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!isAlreadyDead()) {
-					cancelspecialSkillTask();
-					startSpecialSkillTask();
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isAlreadyDead()) {
+				cancelspecialSkillTask();
+				startSpecialSkillTask();
 			}
 		}, 4000);
 	}
 
 	private void startSpecialSkillTask() {
-		specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!isAlreadyDead()) {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 20223, 60, getOwner()).useNoAnimationSkill();
-					specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
+		specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isAlreadyDead()) {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 20223, 60, getOwner()).useNoAnimationSkill();
+				specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					if (!isAlreadyDead()) {
+						GameEngineServices.skillEngine().getSkill(getOwner(), 20224, 60, getOwner()).useNoAnimationSkill();
+						specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
 							if (!isAlreadyDead()) {
 								GameEngineServices.skillEngine().getSkill(getOwner(), 20224, 60, getOwner()).useNoAnimationSkill();
-								specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-									@Override
-									public void run() {
+								if (curentPercent <= 63) {
+									specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
 										if (!isAlreadyDead()) {
-											GameEngineServices.skillEngine().getSkill(getOwner(), 20224, 60, getOwner()).useNoAnimationSkill();
-											if (curentPercent <= 63) {
-												specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-													@Override
-													public void run() {
-														if (!isAlreadyDead()) {
-															GameEngineServices.skillEngine().getSkill(getOwner(), 20480, 60, getOwner()).useNoAnimationSkill();
-															sendMsg(1500502);
-														}
-													}
-												}, 21000);
-											}
+											GameEngineServices.skillEngine().getSkill(getOwner(), 20480, 60, getOwner()).useNoAnimationSkill();
+											sendMsg(1500502);
 										}
-									}
-								}, 3500);
+									}, 21000);
+								}
 							}
-						}
-					}, 1500);
-				}
+						}, 3500);
+					}
+				}, 1500);
 			}
 		}, 12000);
 	}

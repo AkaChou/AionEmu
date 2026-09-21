@@ -37,7 +37,7 @@ public class InfinityShardInstance extends GeneralInstanceHandler
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed = false;
 		/** 对象 / objects */
-		private final Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+		private final Map<Integer, VisibleObject> objects = new LinkedHashMap<>();
 
 	/**
 	 * NPC 掉落表注册时处理。
@@ -175,7 +175,7 @@ public class InfinityShardInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.

@@ -218,7 +218,7 @@ public class Effects {
 	 */
 	public List<EffectTemplate> getEffects() {
 		if (effects == null) {
-			effects = new ArrayList<EffectTemplate>();
+			effects = new ArrayList<>();
 		}
 		return this.effects;
 	}
@@ -231,7 +231,7 @@ public class Effects {
 	 */
 	public void addEffectType(EffectType effectType) {
 		if (effectTypes == null) {
-			effectTypes = new ArrayList<EffectType>();
+			effectTypes = new ArrayList<>();
 		}
 		effectTypes.add(effectType);
 	}

@@ -23,7 +23,7 @@ public class GlobalDropItems {
 	/** 获取全局掉落物品。 / Returns the global drop items. */
 	public List<GlobalDropItem> getGlobalDropItems() {
 		if (gdItems == null) {
-			gdItems = new ArrayList<GlobalDropItem>();
+			gdItems = new ArrayList<>();
 		}
 		return this.gdItems;
 	}

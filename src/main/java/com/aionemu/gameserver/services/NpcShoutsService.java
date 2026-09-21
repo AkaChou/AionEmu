@@ -64,29 +64,26 @@ public class NpcShoutsService {
 				}
 			}
 
-			GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-				@Override
-				public void run() {
-					AionObject npcObj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objectId);
-					if (npcObj != null && npcObj instanceof Npc npc2) {
-						// 检查 AI 是否覆盖 / check if AI overrides
-						if (!npc2.getAi2().poll(AIQuestion.CAN_SHOUT)) {
+			GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+				AionObject npcObj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objectId);
+				if (npcObj != null && npcObj instanceof Npc npc2) {
+					// 检查 AI 是否覆盖 / check if AI overrides
+					if (!npc2.getAi2().poll(AIQuestion.CAN_SHOUT)) {
+						return;
+					}
+					int randomShout = Rnd.get(shouts.size());
+					NpcShout shout = shouts.get(randomShout);
+					if (shout.getPattern() != null && !((AITemplate) npc2.getAi2())
+							.onPatternShout(ShoutEventType.IDLE, shout.getPattern(), 0)) {
+						return;
+					}
+					Iterator<Player> iter = npc2.getKnownList().getKnownPlayers().values().iterator();
+					while (iter.hasNext()) {
+						Player kObj = iter.next();
+						if (kObj.getLifeStats().isAlreadyDead()) {
 							return;
 						}
-						int randomShout = Rnd.get(shouts.size());
-						NpcShout shout = shouts.get(randomShout);
-						if (shout.getPattern() != null && !((AITemplate) npc2.getAi2())
-								.onPatternShout(ShoutEventType.IDLE, shout.getPattern(), 0)) {
-							return;
-						}
-						Iterator<Player> iter = npc2.getKnownList().getKnownPlayers().values().iterator();
-						while (iter.hasNext()) {
-							Player kObj = iter.next();
-							if (kObj.getLifeStats().isAlreadyDead()) {
-								return;
-							}
-							shout(npc2, kObj, shout, 0);
-						}
+						shout(npc2, kObj, shout, 0);
 					}
 				}
 			}, 0, defaultPollDelay);
@@ -263,25 +260,11 @@ public class NpcShoutsService {
 	 */
 	public void sendMsg(final Npc npc, final WorldMapInstance instance, final int msg, final int Obj,
 			final boolean isShout, final int color, int delay) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (npc != null && npc.isSpawned()) {
-					npc.getKnownList().doOnAllPlayers(new Visitor<Player>() {
-						@Override
-						public void visit(Player player) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(isShout, msg, Obj, color));
-						}
-					});
-				} else if (instance != null) {
-					instance.doOnAllPlayers(new Visitor<Player>() {
-						@Override
-						public void visit(Player player) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(isShout, msg, Obj, color));
-						}
-
-					});
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (npc != null && npc.isSpawned()) {
+				npc.getKnownList().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(isShout, msg, Obj, color)));
+			} else if (instance != null) {
+				instance.doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(isShout, msg, Obj, color)));
 			}
 		}, delay);
 	}

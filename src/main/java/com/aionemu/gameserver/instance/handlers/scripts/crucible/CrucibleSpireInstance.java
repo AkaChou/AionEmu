@@ -58,7 +58,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     /** boss timer end / boss timer end */
         private long bossTimerEnd;
     /** floor npcs / floor npcs */
-    
+
     private static final int[][] FLOOR_NPCS = {
         {247247, 247248},
         {247249, 247250},
@@ -101,7 +101,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
         {247305, 247306},
         {247245}
     };
-    
+
     /**
      * NPC 掉落表注册时处理。
      * Handle NPC drop-table registration.
@@ -118,12 +118,12 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
                 break;
         }
     }
-    
+
     private void removeItems(Player player) {
         Storage storage = player.getInventory();
         storage.decreaseByItemId(164000530, storage.getItemCountByItemId(164000530));
     }
-    
+
     /**
      * 玩家进入副本时处理。
      * Handle a player entering the instance.
@@ -132,7 +132,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
      */
     @Override
     public void onEnterInstance(final Player player) {
-        super.onEnterInstance(player); 
+        super.onEnterInstance(player);
         if (spawnRace == null) {
             spawnRace = player.getRace();
             spawnInggrilInggness1();
@@ -142,7 +142,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
             sendPacket(player, "Condition_Infinity_THIS_SEASON_Floor_Reward", pfloor);
         }
     }
-    
+
     /**
      * 副本创建时初始化逻辑。
      * Initialize logic when the instance is created.
@@ -164,21 +164,21 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
         spawn(247310, 279.90237f, 255.53593f, 243.45923f, (byte) 0, 60);
         spawn(701772, 280.85883f, 249.46001f, 241.08347f, (byte) 0, 115);
     }
-    
+
     private void sendPacket(Player player, final String variable, final int floor) {
         PacketSendUtility.sendPacket(player, new SM_CONDITION_VARIABLE(player, variable, floor));
     }
-    
+
     private void spawnInggrilInggness1() {
         final int Inggril_Inggness1 = spawnRace == Race.ASMODIANS ? 247386 : 247376;
         spawn(Inggril_Inggness1, 255.26721f, 249.49001f, 242.03000f, (byte) 60);
     }
-    
+
     private void spawnInggrilInggness2() {
         final int Inggril_Inggness2 = spawnRace == Race.ASMODIANS ? 247386 : 247376;
         spawn(Inggril_Inggness2, 255.26721f, 249.49001f, 242.03000f, (byte) 60);
     }
-    
+
     private void teleportCrucibleFloor(Player player) {
         isSpawning = true;
         int pfloor = player.getFloor();
@@ -201,7 +201,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
         }
         sendPacket(player, "Condition_Infinity_THIS_SEASON_Floor", pfloor + 1);
     }
-    
+
     private void spawnFloorRings() {
         FlyRing f1 = new FlyRing(new FlyRingTemplate("FLOOR", mapId,
         new Point3D(317.41605, 1254.6891, 258.0014),
@@ -209,7 +209,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
         new Point3D(317.51993, 1244.0759, 258.0506), 30), instanceId);
         f1.spawn();
     }
-    
+
 	private void spawnNextFloor(int next) {
 		switch (next) {
 			case 1:
@@ -502,10 +502,10 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
 			break;
 		}
 	}
-    
+
     private boolean isFloorCleared(int floorNum, Npc npc) {
         if (floorNum < 1 || floorNum > FLOOR_NPCS.length) return false;
-        
+
         int[] npcs = FLOOR_NPCS[floorNum - 1];
         for (int npcId : npcs) {
             if (!getNpcs(npcId).isEmpty()) {
@@ -514,7 +514,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
         }
         return true;
     }
-    
+
     /**
      * 处理死亡事件。
      * Handle a death event.
@@ -525,25 +525,25 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     public void onDie(final Npc npc) {
         Player player = npc.getAggroList().getMostPlayerDamage();
         if (player == null) return;
-        
+
         int npcId = npc.getNpcId();
-        
+
         if (npcId == 247361 || npcId == 247362 || npcId == 247363) {
             handleFloor12Transformation(npc);
             return;
         }
-        
+
         for (int i = 0; i < FLOOR_NPCS.length; i++) {
             for (int id : FLOOR_NPCS[i]) {
                 if (id == npcId) {
                     despawnNpc(npc);
                     int nextFloor = i + 2;
-                    
+
                     if (isFloorCleared(i + 1, npc)) {
                         floor = (byte) nextFloor;
                         isSpawning = false;
                         deleteNpc(701000);
-                        
+
                         if (i + 1 == 5) despawnNpcs(getNpcs(247351));
                         else if (i + 1 == 6) despawnNpcs(getNpcs(247352));
                         else if (i + 1 == 7) despawnNpcs(getNpcs(247354));
@@ -559,15 +559,15 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
                         else if (i + 1 == 36) {
                             despawnNpcs(getNpcs(247373));
                         }
-                        
+
                         spawn(701773, 280.65912f, 1249.3933f, 240.99275f, (byte) 0, 114);
-                        
+
                         if (player != null) {
                             sendPacket(player, "Condition_Infinity_THIS_SEASON_Floor_Reward", floor - 1);
                             player.setFloor(floor - 1);
                             rewardForFloorId(player);
                         }
-                        
+
                         if (i + 1 == 40) {
                             sendPacket(player, "Condition_Infinity_THIS_SEASON_Floor_Reward", 100);
                             bossTimerEnd = System.currentTimeMillis() - bossTimerStart;
@@ -578,7 +578,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
             }
         }
     }
-    
+
     private void handleFloor12Transformation(Npc npc) {
         despawnNpc(npc);
         if (npc.getNpcId() == 247361 && getNpcs(247361).isEmpty()) {
@@ -595,43 +595,43 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
      *
      * @param player 玩家 / player
      */
-    
+
     public void rewardForFloorId(Player player) {
         final TowerStageRewardTemplate reward = DataManager.TOWER_REWARD_DATA.getTowerReward(player.getFloor());
         int floor = player.getFloor();
-        
+
         int itemId1 = reward.getItemId();
         int itemCount1 = reward.getItemCount();
         if (itemId1 != 0 && itemCount1 != 0) {
             ItemService.addItem(player, itemId1, itemCount1);
         }
-        
+
         int itemId2 = reward.getItemId2();
         int itemCount2 = reward.getItemCount2();
         if (itemId2 != 0 && itemCount2 != 0) {
             ItemService.addItem(player, itemId2, itemCount2);
         }
-        
+
         int kinahCount = reward.getKinahCount();
         if (kinahCount != 0) {
             ItemService.addItem(player, 182400001, kinahCount);
         }
-        
+
         int expCount = reward.getExpCount();
         if (expCount != 0) {
             player.getCommonData().addExp(expCount, RewardType.QUEST);
         }
-        
+
         int apCount = reward.getApCount();
         if (apCount != 0) {
             AbyssPointsService.addAp(player, apCount);
         }
-        
+
         int gpCount = reward.getGpCount();
         if (gpCount != 0) {
             AbyssPointsService.addGp(player, gpCount);
         }
-        
+
         if (floor % 5 == 0 && floor <= 40) {
             switch (floor) {
                 case 5:
@@ -669,10 +669,10 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
                     break;
             }
         }
-        
+
         PacketSendUtility.sendMessage(player, "You received a reward for completing floor " + floor + "!");
     }
-    
+
     /**
      * 玩家通过飞行环时处理。
      * Handle a player passing a flying ring.
@@ -687,7 +687,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
            int objId = player.getObjectId();
            long now = System.currentTimeMillis();
            Long last = lastTeleportTime.get(objId);
-        
+
            if (last == null || now - last > 5000) {
                lastTeleportTime.put(objId, now);
                teleportCrucibleFloor(player);
@@ -703,7 +703,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
      * 阵营 / race
      * time
      */
-    
+
     protected void sendMsgByRace(final int msg, final Race race, int time) {
         GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -712,13 +712,13 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
              */
             @Override
             public void run() {
-                instance.doOnAllPlayers(new Visitor<Player>() {
+                instance.doOnAllPlayers(new Visitor<>() {
                     /**
-                     * 处理 visit。
-                     * Handle visit.
-                     *
-                     * @param player 玩家 / player
-                     */
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
                     @Override
                     public void visit(Player player) {
                         if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
@@ -729,13 +729,13 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
             }
         }, time);
     }
-    
+
     private void deleteNpc(int npcId) {
         if (getNpc(npcId) != null) {
             getNpc(npcId).getController().onDelete();
         }
     }
-    
+
     private void despawnNpc(Npc npc) {
         if (npc != null) {
             npc.getController().onDelete();
@@ -747,7 +747,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
      *
      * npcs
      */
-    
+
     protected void despawnNpcs(List<Npc> npcs) {
         if (npcs == null) return;
         for (Npc npc: npcs) {
@@ -763,7 +763,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
      * NPC
      * result
      */
-    
+
     protected List<Npc> getNpcs(int npcId) {
         if (!isInstanceDestroyed && instance != null) {
             return instance.getNpcs(npcId);
@@ -776,7 +776,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
      *
      * @param player 玩家 / player
      */
-    
+
     public void onFailCrucible(Player player) {
         TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
     }
@@ -786,7 +786,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
      *
      * @param player 玩家 / player
      */
-    
+
     public void onExitInstance(Player player) {
         removeItems(player);
         TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
@@ -797,12 +797,12 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
      *
      * @param player 玩家 / player
      */
-    
+
     public void onPlayerLogOut(Player player) {
         removeItems(player);
         TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
     }
-    
+
     /**
      * 副本销毁时清理资源。
      * Clean up resources when the instance is destroyed.
@@ -820,7 +820,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
             doors.clear();
         }
     }
-    
+
     private void teleportFloor(float x, float y, float z, byte h) {
         for (Player playerInside: instance.getPlayersInside()) {
             if (playerInside.isOnline()) {
@@ -838,11 +838,11 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
      * @param z Z 坐标 / Z
      * @param h 朝向 / h
      */
-    
+
     protected void teleportFloor(Player player, float x, float y, float z, byte h) {
         TeleportService2.teleportTo(player, mapId, instanceId, x, y, z, h);
     }
-    
+
     /**
      * 处理玩家复活事件。
      * Handle a player revive event.

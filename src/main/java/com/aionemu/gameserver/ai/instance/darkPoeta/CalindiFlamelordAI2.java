@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AIName("calindiflamelord")
 public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 {
-	private final List<Integer> percents = new ArrayList<Integer>();
+	private final List<Integer> percents = new ArrayList<>();
 	private final AtomicBoolean isStart = new AtomicBoolean(false);
 
 	@Override
@@ -51,21 +51,13 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 				if (percent == 60) {
 					EmoteManager.emoteStopAttacking(getOwner());
 					GameEngineServices.skillEngine().getSkill(getOwner(), 18233, 50, getOwner()).useSkill();
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							sp(281267);
-						}
-					}, 3000);
+					GameThreadPoolServices.threadPoolManager().schedule(() -> sp(281267), 3000);
 				} else {
 					EmoteManager.emoteStopAttacking(getOwner());
 					GameEngineServices.skillEngine().getSkill(getOwner(), 18233, 50, getOwner()).useSkill();
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							sp(281268);
-							sp(281268);
-						}
+					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						sp(281268);
+						sp(281268);
 					}, 3000);
 				}
 				percents.remove(percent);
@@ -91,23 +83,17 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 	}
 
 	private void checkTimer() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!isAlreadyDead()) {
-					EmoteManager.emoteStopAttacking(getOwner());
-					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400259);
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19679, 50, getTarget()).useSkill();
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							if (!isAlreadyDead()) {
-								getOwner().getController().onDelete();
-								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400260);
-							}
-						}
-					}, 2000);
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isAlreadyDead()) {
+				EmoteManager.emoteStopAttacking(getOwner());
+				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400259);
+				GameEngineServices.skillEngine().getSkill(getOwner(), 19679, 50, getTarget()).useSkill();
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					if (!isAlreadyDead()) {
+						getOwner().getController().onDelete();
+						GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400260);
+					}
+				}, 2000);
 			}
 		}, 600000);
 	}

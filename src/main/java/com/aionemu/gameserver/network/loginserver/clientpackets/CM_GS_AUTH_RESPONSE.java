@@ -82,13 +82,7 @@ public class CM_GS_AUTH_RESPONSE extends LsClientPacket {
 			/**
 	 * 10 秒后重试 / try again after 10s
 	 */
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-				@Override
-				public void run() {
-					CM_GS_AUTH_RESPONSE.this.sendPacket(new SM_GS_AUTH());
-				}
-			}, 10000);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> CM_GS_AUTH_RESPONSE.this.sendPacket(new SM_GS_AUTH()), 10000);
 		}
 	}
 }

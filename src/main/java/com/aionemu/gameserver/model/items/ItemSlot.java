@@ -113,7 +113,7 @@ public enum ItemSlot {
 
 	/** 返回槽位 / Returns the slots for*/
 	public static ItemSlot[] getSlotsFor(long slot) {
-		List<ItemSlot> slots = new ArrayList<ItemSlot>();
+		List<ItemSlot> slots = new ArrayList<>();
 		for (ItemSlot itemSlot : values()) {
 			if (slot != 0 && !itemSlot.isCombo() && (slot & itemSlot.slotIdMask) == itemSlot.slotIdMask) {
 				slots.add(itemSlot);

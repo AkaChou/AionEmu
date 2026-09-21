@@ -45,13 +45,7 @@ public class SummonEffect extends EffectTemplate {
 		SummonsService.createSummon(effected, npcId, effect.getSkillId(), effect.getSkillLevel(), time);
 		if (time > 0 && (effect.getEffected() instanceof Player effector)) {
 			final Summon summon = effector.getSummon();
-			Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-				@Override
-				public void run() {
-					SummonsService.expire(summon);
-				}
-			}, time * 1000L);
+			Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> SummonsService.expire(summon), time * 1000L);
 			summon.getController().addTask(TaskId.DESPAWN, task);
 		}
 	}

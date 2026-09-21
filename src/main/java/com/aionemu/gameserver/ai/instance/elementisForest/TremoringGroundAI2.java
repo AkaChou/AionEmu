@@ -31,14 +31,9 @@ public class TremoringGroundAI2 extends GeneralNpcAI2 {
 		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 16) {
 				if (isUsed.compareAndSet(false, true)) {
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-						@Override
-						public void run() {
-							GameEngineServices.skillEngine().getSkill(getOwner(), 19442, 51, player).useNoAnimationSkill();
-							AI2Actions.deleteOwner(TremoringGroundAI2.this);
-						}
-
+					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						GameEngineServices.skillEngine().getSkill(getOwner(), 19442, 51, player).useNoAnimationSkill();
+						AI2Actions.deleteOwner(TremoringGroundAI2.this);
 					}, 2000);
 				}
 			}

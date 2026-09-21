@@ -208,7 +208,7 @@ public class StatFunctions {
 	 */
 	public static List<AttackResult> calculateAttackDamage(Creature attacker, SkillElement element, AttackStatus status,
 			CalculationType... calculationTypes) {
-		List<AttackResult> attackResultList = new ArrayList<AttackResult>();
+		List<AttackResult> attackResultList = new ArrayList<>();
 		AttackStatus baseStatus = AttackStatus.getBaseStatus(status);
 		if (baseStatus == AttackStatus.DODGE || baseStatus == AttackStatus.RESIST) {
 			attackResultList.add(new AttackResult(0, baseStatus));
@@ -687,14 +687,20 @@ public class StatFunctions {
 	}
 
 	static StatEnum getPveAttackRatioStat(Race race) {
-		return switch (race) {
-			case TYPE_A -> StatEnum.PVE_ATTACK_RATIO_TYPE_A;
-			case TYPE_B -> StatEnum.PVE_ATTACK_RATIO_TYPE_B;
-			case TYPE_C -> StatEnum.PVE_ATTACK_RATIO_TYPE_C;
-			case TYPE_D -> StatEnum.PVE_ATTACK_RATIO_TYPE_D;
-			case TYPE_E -> StatEnum.PVE_ATTACK_RATIO_TYPE_E;
-			default -> null;
-		};
+		switch (race) {
+			case TYPE_A:
+				return StatEnum.PVE_ATTACK_RATIO_TYPE_A;
+			case TYPE_B:
+				return StatEnum.PVE_ATTACK_RATIO_TYPE_B;
+			case TYPE_C:
+				return StatEnum.PVE_ATTACK_RATIO_TYPE_C;
+			case TYPE_D:
+				return StatEnum.PVE_ATTACK_RATIO_TYPE_D;
+			case TYPE_E:
+				return StatEnum.PVE_ATTACK_RATIO_TYPE_E;
+			default:
+				return null;
+		}
 	}
 
 	/**
@@ -1050,16 +1056,28 @@ public class StatFunctions {
 	}
 
 	static float applyMovementStatModifier(int heading, StatEnum stat, float value) {
-		return switch (stat) {
-			case PHYSICAL_DEFENSE, MAGICAL_DEFEND -> heading == 0 ? value * 0.8f : value;
-			case WATER_RESISTANCE, WIND_RESISTANCE, FIRE_RESISTANCE, EARTH_RESISTANCE,
-					ELEMENTAL_RESISTANCE_DARK, ELEMENTAL_RESISTANCE_LIGHT -> heading == 0 ? value * 0.5f : value;
-			case EVASION -> heading != 0 && heading != 4 ? value + 300 : value;
-			case PARRY, BLOCK -> heading >= 3 && heading <= 5 ? value + 500 : value;
-			case SPEED -> heading == 2 || heading == 6 ? value * 0.8f
+		switch (stat) {
+			case PHYSICAL_DEFENSE:
+			case MAGICAL_DEFEND:
+				return heading == 0 ? value * 0.8f : value;
+			case WATER_RESISTANCE:
+			case WIND_RESISTANCE:
+			case FIRE_RESISTANCE:
+			case EARTH_RESISTANCE:
+			case ELEMENTAL_RESISTANCE_DARK:
+			case ELEMENTAL_RESISTANCE_LIGHT:
+				return heading == 0 ? value * 0.5f : value;
+			case EVASION:
+				return heading != 0 && heading != 4 ? value + 300 : value;
+			case PARRY:
+			case BLOCK:
+				return heading >= 3 && heading <= 5 ? value + 500 : value;
+			case SPEED:
+				return heading == 2 || heading == 6 ? value * 0.8f
 					: heading >= 3 && heading <= 5 ? value * 0.6f : value;
-			default -> value;
-		};
+			default:
+				return value;
+		}
 	}
 
 	private static float movementDamageBonus(Creature creature, float value) {

@@ -64,28 +64,25 @@ public class Power_GeneratorAI2 extends AggressiveNpcAI2
 	}
 
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelPhaseTask();
-				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 18126, 46, getOwner()).useNoAnimationSkill(); // 电击。 / Electrocution.
-					List<Player> players = getLifedPlayers();
-					if (!players.isEmpty()) {
-						int size = players.size();
-						if (players.size() < 6) {
-							for (Player p: players) {
-								spawnGeneratorCore(p);
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelPhaseTask();
+			} else {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 18126, 46, getOwner()).useNoAnimationSkill(); // 电击。 / Electrocution.
+				List<Player> players = getLifedPlayers();
+				if (!players.isEmpty()) {
+					int size = players.size();
+					if (players.size() < 6) {
+						for (Player p: players) {
+							spawnGeneratorCore(p);
+						}
+					} else {
+						int count = Rnd.get(6, size);
+						for (int i = 0; i < count; i++) {
+							if (players.isEmpty()) {
+								break;
 							}
-						} else {
-							int count = Rnd.get(6, size);
-							for (int i = 0; i < count; i++) {
-								if (players.isEmpty()) {
-									break;
-								}
-								spawnGeneratorCore(players.get(Rnd.get(players.size())));
-							}
+							spawnGeneratorCore(players.get(Rnd.get(players.size())));
 						}
 					}
 				}
@@ -98,27 +95,24 @@ public class Power_GeneratorAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						switch (Rnd.get(1, 5)) {
-						    case 1:
-							    spawn(281088, x, y, z, (byte) 0); // 光明发电机核心。 / Light Generator Core.
-							break;
-							case 2:
-							    spawn(281089, x, y, z, (byte) 0); // 波动发电机核心。 / Wave Generator Core.
-							break;
-							case 3:
-							    spawn(281090, x, y, z, (byte) 0); // 麻痹发电机核心。 / Torpidity Generator Core.
-							break;
-							case 4:
-							    spawn(281091, x, y, z, (byte) 0); // 冲击波发电机核心。 / Shockwave Generator Core.
-							break;
-							case 5:
-							    spawn(281092, x, y, z, (byte) 0); // 混乱发电机核心。 / Confusion Generator Core.
-							break;
-						}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					switch (Rnd.get(1, 5)) {
+						case 1:
+							spawn(281088, x, y, z, (byte) 0); // 光明发电机核心。 / Light Generator Core.
+						break;
+						case 2:
+							spawn(281089, x, y, z, (byte) 0); // 波动发电机核心。 / Wave Generator Core.
+						break;
+						case 3:
+							spawn(281090, x, y, z, (byte) 0); // 麻痹发电机核心。 / Torpidity Generator Core.
+						break;
+						case 4:
+							spawn(281091, x, y, z, (byte) 0); // 冲击波发电机核心。 / Shockwave Generator Core.
+						break;
+						case 5:
+							spawn(281092, x, y, z, (byte) 0); // 混乱发电机核心。 / Confusion Generator Core.
+						break;
 					}
 				}
 			}, 1000);
@@ -126,7 +120,7 @@ public class Power_GeneratorAI2 extends AggressiveNpcAI2
 	}
 
 	private List<Player> getLifedPlayers() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);

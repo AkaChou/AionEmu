@@ -43,46 +43,34 @@ public class Hangar_ControllerAI2 extends NpcAI2
 	}
 
 	private void announceGAB1SubTankA() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 战车机库 I 控制器遭受攻击。 / Chariot Hangar I Controller is under attack.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_TANK_A_ATTACKED);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 战车机库 I 控制器遭受攻击。 / Chariot Hangar I Controller is under attack.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_TANK_A_ATTACKED);
 			}
 		});
 	}
 	private void announceGAB1SubTankB() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 战车机库 II 控制器遭受攻击。 / Chariot Hangar II Controller is under attack.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_TANK_B_ATTACKED);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 战车机库 II 控制器遭受攻击。 / Chariot Hangar II Controller is under attack.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_TANK_B_ATTACKED);
 			}
 		});
 	}
 	private void announceGAB1SubTankC() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 伊格努斯引擎机库 I 控制器遭受攻击。 / Ignus Engine Hangar I Controller is under attack.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_TANK_C_ATTACKED);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 伊格努斯引擎机库 I 控制器遭受攻击。 / Ignus Engine Hangar I Controller is under attack.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_TANK_C_ATTACKED);
 			}
 		});
 	}
 	private void announceGAB1SubTankD() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 伊格努斯引擎机库 II 控制器遭受攻击。 / Ignus Engine Hangar II Controller is under attack.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_TANK_D_ATTACKED);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 伊格努斯引擎机库 II 控制器遭受攻击。 / Ignus Engine Hangar II Controller is under attack.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_TANK_D_ATTACKED);
 			}
 		});
 	}

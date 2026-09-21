@@ -25,7 +25,7 @@ public class ChronomancerAI2 extends NpcAI2 {
 	protected void handleDialogStart(Player player) {
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
 	}
-	
+
 	@Override
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		int pfloor = player.getFloor();
@@ -34,11 +34,8 @@ public class ChronomancerAI2 extends NpcAI2 {
 		    switch (getNpcId()) {
 				case 247376:
 			    case 247386:
-				    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							despawnNpc(701772); // 楼梯 / Stair.
-						}
+				    GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						despawnNpc(701772); // 楼梯 / Stair.
 					}, 5000);
 					spawnFloor(pfloor + 1);
 					spawn(701000, 263.55551f, 1249.5244f, 240.73053f, (byte) 0, 56); // 墙 / Wall.
@@ -68,7 +65,7 @@ public class ChronomancerAI2 extends NpcAI2 {
 			break;
 		}
 	}
-	
+
 	/**
 	 * 删除副本中指定 ID 的全部 NPC。
 	 * Delete all NPCs of the given ID in the instance.

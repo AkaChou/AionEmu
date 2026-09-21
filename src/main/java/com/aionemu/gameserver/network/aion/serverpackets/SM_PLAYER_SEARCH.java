@@ -23,7 +23,7 @@ public class SM_PLAYER_SEARCH extends AionServerPacket {
 	 * @param region 回退区域/地图 ID（玩家无活动区域时使用） / fallback region/map id when player has no active region
 	 */
 	public SM_PLAYER_SEARCH(List<Player> players, int region) {
-		this.players = new ArrayList<Player>(players);
+		this.players = new ArrayList<>(players);
 		this.region = region;
 	}
 

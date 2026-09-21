@@ -54,42 +54,30 @@ public class ZorshivCommanderAI2 extends AggressiveNpcAI2
 	}
 
 	private void announcePublicQuest() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 你加入了对抗入侵龙族的战斗。 / You joined the battle against the Invading Balaur.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Public_Quest_Accept);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 你加入了对抗入侵龙族的战斗。 / You joined the battle against the Invading Balaur.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Public_Quest_Accept);
 		});
 	}
 	private void announceZorshivDie() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 你赢得了对抗入侵龙族的战斗。 / You won the battle against the Invading Balaur.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Public_Quest_Reward);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 你赢得了对抗入侵龙族的战斗。 / You won the battle against the Invading Balaur.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Public_Quest_Reward);
 		});
 	}
 	private void announceKilledZorshiv() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				AionObject winner = getAggroList().getMostDamage();
-				if (winner instanceof Creature kill) {
-					// “种族”的“玩家名”摧毁了龙族战舰。 / "Player Name" of the "Race" has destroyed the Balaur Battleship Dredgion.
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1390196, kill.getRace().getRaceDescriptionId(), kill.getName()));
-				}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			AionObject winner = getAggroList().getMostDamage();
+			if (winner instanceof Creature kill) {
+				// “种族”的“玩家名”摧毁了龙族战舰。 / "Player Name" of the "Race" has destroyed the Balaur Battleship Dredgion.
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1390196, kill.getRace().getRaceDescriptionId(), kill.getName()));
 			}
 		});
 	}
 	private void sendZorshivGuide() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
-					HTMLService.sendGuideHtml(player, "Dredgion_Guide");
-				}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
+				HTMLService.sendGuideHtml(player, "Dredgion_Guide");
 			}
 		});
 	}

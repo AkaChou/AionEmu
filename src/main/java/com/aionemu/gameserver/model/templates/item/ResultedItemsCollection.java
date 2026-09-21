@@ -39,7 +39,7 @@ public class ResultedItemsCollection {
 		if (randomItems != null) {
 			return randomItems;
 		} else {
-			return new ArrayList<RandomItem>();
+			return new ArrayList<>();
 		}
 	}
 }

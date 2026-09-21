@@ -181,12 +181,7 @@ public class RiftService {
 		} finally {
 			closing.unlock();
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				closeRifts();
-			}
-		}, (long) CustomConfig.RIFT_DURATION * 3600 * 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> closeRifts(), (long) CustomConfig.RIFT_DURATION * 3600 * 1000);
 	}
 
 	/**
@@ -197,7 +192,7 @@ public class RiftService {
 	 */
 	public void closeRift(RiftLocation location) {
 		location.setOpened(false);
-		for (VisibleObject npc : new ArrayList<VisibleObject>(location.getSpawned())) {
+		for (VisibleObject npc : new ArrayList<>(location.getSpawned())) {
 			((Npc) npc).getController().cancelTask(TaskId.RESPAWN);
 			npc.getController().onDelete();
 		}

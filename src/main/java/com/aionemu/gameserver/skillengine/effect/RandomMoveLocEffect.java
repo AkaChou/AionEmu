@@ -82,7 +82,7 @@ public class RandomMoveLocEffect extends EffectTemplate {
 			effector.setUseRobot(false);
 			effector.setRobotId(0);
 			// 移除冷却技能。 / Remove Cooldown Skill.
-			List<Integer> delayIds = new ArrayList<Integer>();
+			List<Integer> delayIds = new ArrayList<>();
 			if (effector.getSkillCoolDowns() != null) {
 				long currentTime = System.currentTimeMillis();
 				for (Entry<Integer, Long> en : effector.getSkillCoolDowns().entrySet()) {

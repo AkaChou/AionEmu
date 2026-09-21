@@ -40,40 +40,30 @@ public class RestoredHetgolemAI2 extends AggressiveNpcAI2 {
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				if (!isAlreadyDead()) {
-					getMoveController().abortMove();
-					setSubStateIfNot(AISubState.WALK_RANDOM);
-					setStateIfNot(AIState.WALKING);
-					float direction = Rnd.get(0, 199) / 100f;
-					float x1 = (float) (Math.cos(Math.PI * direction) * 8);
-					float y1 = (float) (Math.sin(Math.PI * direction) * 8);
-					WorldPosition p = getPosition();
-					if ( p != null && p.getWorldMapInstance() != null) {
-						getMoveController().moveToPoint(p.getX() + x1, p.getY() + y1, p.getZ());
-						getOwner().setState(1);
-						PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-					}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isAlreadyDead()) {
+				getMoveController().abortMove();
+				setSubStateIfNot(AISubState.WALK_RANDOM);
+				setStateIfNot(AIState.WALKING);
+				float direction = Rnd.get(0, 199) / 100f;
+				float x1 = (float) (Math.cos(Math.PI * direction) * 8);
+				float y1 = (float) (Math.sin(Math.PI * direction) * 8);
+				WorldPosition p = getPosition();
+				if ( p != null && p.getWorldMapInstance() != null) {
+					getMoveController().moveToPoint(p.getX() + x1, p.getY() + y1, p.getZ());
+					getOwner().setState(1);
+					PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
 				}
 			}
-
 		}, 3000);
 		startLifeTask();
 	}
 
 	private void startLifeTask() {
-		lifeTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				if (!isAlreadyDead()) {
-					spawnEvent();
-				}
+		lifeTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isAlreadyDead()) {
+				spawnEvent();
 			}
-
 		}, 5000);
 	}
 

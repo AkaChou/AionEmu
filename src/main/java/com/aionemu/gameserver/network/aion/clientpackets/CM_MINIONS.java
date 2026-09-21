@@ -33,7 +33,7 @@ public class CM_MINIONS extends AionClientPacket {
 	private int minionObjectId;
 	private int functionParam1;
 	private int functionParam2;
-	private final ArrayList<Integer> MaterialObjIds = new ArrayList<Integer>();
+	private final ArrayList<Integer> MaterialObjIds = new ArrayList<>();
 	private int lock = 0;
 	/**
 	 * 构造该客户端包。

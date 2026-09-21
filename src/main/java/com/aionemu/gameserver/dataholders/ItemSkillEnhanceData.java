@@ -27,10 +27,10 @@ public class ItemSkillEnhanceData {
 	protected List<ItemSkillEnhance> skillEnhances;
 
 	@XmlTransient
-	protected IntObjectHashMap<ItemSkillEnhance> enhanceSkillsById = new IntObjectHashMap<ItemSkillEnhance>();
+	protected IntObjectHashMap<ItemSkillEnhance> enhanceSkillsById = new IntObjectHashMap<>();
 
 	@XmlTransient
-	protected IntObjectHashMap<EnumMap<PlayerClass, ItemSkillEnhance>> enhanceSkillsByIdAndClass = new IntObjectHashMap<EnumMap<PlayerClass, ItemSkillEnhance>>();
+	protected IntObjectHashMap<EnumMap<PlayerClass, ItemSkillEnhance>> enhanceSkillsByIdAndClass = new IntObjectHashMap<>();
 
 	/**
 	 * 按 ID 获取技能强化模板（忽略职业）。
@@ -72,7 +72,7 @@ public class ItemSkillEnhanceData {
 		enhanceSkillsByIdAndClass.clear();
 		for (ItemSkillEnhance enhance : skillEnhances) {
 			enhanceSkillsById.put(enhance.getId(), enhance);
-			enhanceSkillsByIdAndClass.computeIfAbsent(enhance.getId(), id -> new EnumMap<PlayerClass, ItemSkillEnhance>(PlayerClass.class))
+			enhanceSkillsByIdAndClass.computeIfAbsent(enhance.getId(), id -> new EnumMap<>(PlayerClass.class))
 					.put(enhance.getClassId(), enhance);
 		}
 		skillEnhances.clear();

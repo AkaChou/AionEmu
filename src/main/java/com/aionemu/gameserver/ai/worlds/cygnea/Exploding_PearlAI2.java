@@ -23,33 +23,25 @@ public class Exploding_PearlAI2 extends AggressiveNpcAI2
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 19937, 46, getOwner()).useNoAnimationSkill();
-				startLifeTask();
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			GameEngineServices.skillEngine().getSkill(getOwner(), 19937, 46, getOwner()).useNoAnimationSkill();
+			startLifeTask();
 		}, 1000);
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(Exploding_PearlAI2.this);
-			}
-		}, 10000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Exploding_PearlAI2.this), 10000);
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
 	@Override
 	protected AIAnswer pollInstance(AIQuestion question) {
 		switch (question) {
@@ -63,7 +55,7 @@ public class Exploding_PearlAI2 extends AggressiveNpcAI2
 				return null;
 		}
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();

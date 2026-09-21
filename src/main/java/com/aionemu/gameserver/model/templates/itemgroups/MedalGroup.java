@@ -25,7 +25,7 @@ public class MedalGroup extends BonusItemGroup {
 	/** 获取物品。 / Returns the items. */
 	public List<MedalItem> getItems() {
 		if (items == null) {
-			items = new ArrayList<MedalItem>();
+			items = new ArrayList<>();
 		}
 		return items;
 	}

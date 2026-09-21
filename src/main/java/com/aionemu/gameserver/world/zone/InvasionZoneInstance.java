@@ -24,7 +24,7 @@ import java.util.Map;
 public class InvasionZoneInstance extends ZoneInstance {
 
 	/** 区内玩家集合 / players inside the zone */
-	private final Map<Integer, Player> players = Collections.synchronizedMap(new LinkedHashMap<Integer, Player>());
+	private final Map<Integer, Player> players = Collections.synchronizedMap(new LinkedHashMap<>());
 
 	/**
 	 * 创建入侵区域实例。
@@ -99,7 +99,7 @@ public class InvasionZoneInstance extends ZoneInstance {
 	 */
 	private List<Player> playersSnapshot() {
 		synchronized (players) {
-			return new ArrayList<Player>(players.values());
+			return new ArrayList<>(players.values());
 		}
 	}
 }

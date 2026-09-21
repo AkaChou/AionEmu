@@ -37,7 +37,7 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 		/** 是否启动计时器 / is start timer */
 		private boolean isStartTimer = false;
 		/** carpus isle storeroom treasure box suscess / carpus isle storeroom treasure box suscess */
-		private final List<Npc> CarpusIsleStoreroomTreasureBoxSuscess = new ArrayList<Npc>();
+		private final List<Npc> CarpusIsleStoreroomTreasureBoxSuscess = new ArrayList<>();
 
 	/**
 	 * 副本创建时初始化逻辑。
@@ -108,15 +108,15 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 		    if (!isStartTimer) {
 			    isStartTimer = true;
 			    System.currentTimeMillis();
-			    instance.doOnAllPlayers(new Visitor<Player>() {
-			        /**
-			         * 处理 visit。
-			         * Handle visit.
-			         *
-			         * @param player 玩家 / player
-			         */
-			        @Override
-			        public void visit(Player player) {
+			    instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
 						if (player.isOnline()) {
 							startCarpusIsleStoreroomChamberTimer();
 							PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900));
@@ -162,7 +162,7 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
     }
 
 	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -170,10 +170,10 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 			 * @param player 玩家 / player
 			 */
 			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
+            public void visit(Player player) {
+                PacketSendUtility.sendWhiteMessageOnCenter(player, str);
+            }
+        });
 	}
 
 	/**

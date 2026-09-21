@@ -23,7 +23,7 @@ public class GlobalDropNpcs {
 	/** 返回全局掉落 NPC。 / Returns the global drop npcs. */
 	public List<GlobalDropNpc> getGlobalDropNpcs() {
 		if (gdNpcs == null) {
-			gdNpcs = new ArrayList<GlobalDropNpc>();
+			gdNpcs = new ArrayList<>();
 		}
 		return this.gdNpcs;
 	}

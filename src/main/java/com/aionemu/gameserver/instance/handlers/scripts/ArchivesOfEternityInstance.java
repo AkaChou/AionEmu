@@ -58,7 +58,7 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 
 	private record SecretCubeSpot(float x, float y, float z, float heading) {
 	}
-	
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -76,7 +76,14 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 		}
 		int npcObjectId = npc.getObjectId();
 		switch (npc.getNpcId()) {
-			case 857452, 857456, 857459, 857460, 857462, 857464 -> registerNamedBossDrops(dropItems, npcObjectId);
+			case 857452:
+			case 857456:
+			case 857459:
+			case 857460:
+			case 857462:
+			case 857464:
+				registerNamedBossDrops(dropItems, npcObjectId);
+				break;
 		}
 	}
 
@@ -108,7 +115,7 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 		dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(
 			nextIndex, playerObjectId, npcObjectId, itemId, count));
 	}
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -138,7 +145,7 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 			spawnRecordsFromTheEraOfMen();
 		}
 	}
-	
+
 	private void spawnLibraryGuardianRace() {
         final int libraryGuardian = spawnRace == Race.ASMODIANS ? 806151 : 806150;
 		spawn(libraryGuardian, 737.3133f, 490.04956f, 468.99835f, (byte) 31);
@@ -172,7 +179,7 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 		spawn(empyreanHistories, 549.72137f, 648.74438f, 468.95096f, (byte) 0, 373);
 		spawn(empyreanHistories, 439.38571f, 504.14023f, 468.95096f, (byte) 0, 399);
     }
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -216,7 +223,7 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 		SecretCubeSpot cubeSpot = SECRET_CUBE_SPOTS.get(Rnd.get(1, SECRET_CUBE_SPOTS.size()) - 1);
 		spawn(806139, cubeSpot.x(), cubeSpot.y(), cubeSpot.z(), MathUtil.convertDegreeToHeading(cubeSpot.heading()));
     }
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -249,7 +256,7 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -258,7 +265,7 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -267,7 +274,7 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -275,22 +282,22 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 					 * @param player 玩家 / player
 					 */
 					@Override
-					public void visit(Player player) {
+                    public void visit(Player player) {
 						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
+                            PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
+                        }
+                    }
+                });
 			}
 		}, time);
 	}
-	
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.

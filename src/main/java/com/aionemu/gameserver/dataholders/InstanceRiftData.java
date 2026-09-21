@@ -28,7 +28,7 @@ public class InstanceRiftData {
 	private List<InstanceRiftTemplate> instanceRiftTemplates;
 
 	@XmlTransient
-	private final Map<Integer, InstanceRiftLocation> instanceRift = new LinkedHashMap<Integer, InstanceRiftLocation>();
+	private final Map<Integer, InstanceRiftLocation> instanceRift = new LinkedHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，将模板转为按 ID 索引的地点映射。

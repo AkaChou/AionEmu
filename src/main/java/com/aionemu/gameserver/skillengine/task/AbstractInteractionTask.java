@@ -79,16 +79,13 @@ public abstract class AbstractInteractionTask {
 	 */
 	public void start() {
 		onInteractionStart();
-		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (!validateParticipants()) {
-					stop(true);
-				}
-				boolean stopTask = onInteraction();
-				if (stopTask) {
-					stop(false);
-				}
+		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (!validateParticipants()) {
+				stop(true);
+			}
+			boolean stopTask = onInteraction();
+			if (stopTask) {
+				stop(false);
 			}
 		}, 1000, 2500);
 	}

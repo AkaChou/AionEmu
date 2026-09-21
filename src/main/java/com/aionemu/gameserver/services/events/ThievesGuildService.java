@@ -282,17 +282,11 @@ public class ThievesGuildService {
 	}
 
 	private void scheduleThievesTask(final Player player, long thievesTimer) {
-		player.getController().addTask(TaskId.THIEVES, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			@Override
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */
-			public void run() {
-				captchaCheck(player, 0, false, 0);
-			}
-		}, thievesTimer));
+		/**
+		 * 执行任务。
+		 * Runs the task.
+		 */
+		player.getController().addTask(TaskId.THIEVES, GameThreadPoolServices.threadPoolManager().schedule(() -> captchaCheck(player, 0, false, 0), thievesTimer));
 	}
 
 	/**

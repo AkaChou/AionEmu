@@ -131,7 +131,7 @@ public class HallOfTenacityReward extends InstanceReward<HallOfTenacityPlayerRew
 
 	/** 返回 players inside / Returns the players inside */
 	public List<Player> getPlayersInside() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player playerInside : instance.getPlayersInside()) {
 			if (containPlayer(playerInside.getObjectId())) {
 				players.add(playerInside);
@@ -142,12 +142,14 @@ public class HallOfTenacityReward extends InstanceReward<HallOfTenacityPlayerRew
 
 	/** 发送数据包。 / Send packet. */
 	public void sendPacket(final int type, final Integer object) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/** 访问 / visit. */
+		instance.doOnAllPlayers(new Visitor<>() {
+			/**
+			 * 访问 / visit.
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player,
-						new SM_INSTANCE_SCORE(type, getTime(), getInstanceReward(), object));
+					new SM_INSTANCE_SCORE(type, getTime(), getInstanceReward(), object));
 			}
 		});
 	}
@@ -155,8 +157,10 @@ public class HallOfTenacityReward extends InstanceReward<HallOfTenacityPlayerRew
 	/** 发送数据包。 / Send packet. */
 	public void sendPacket() {
 		final List<Player> players = instance.getPlayersInside();
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/** 访问 / visit. */
+		instance.doOnAllPlayers(new Visitor<>() {
+			/**
+			 * 访问 / visit.
+			 */
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(getTime(), getInstanceReward(), players));
@@ -183,12 +187,12 @@ public class HallOfTenacityReward extends InstanceReward<HallOfTenacityPlayerRew
 	/** 设置 couple slot for battle 32 / Sets the couple slot for battle 32 */
 	public void setCoupleSlotForBattle32() {
 		int size = 15;// 32/2=16 (packet first slot count from 0 to 15)
-		ArrayList<Integer> containRandomPlayerCoupleSlots = new ArrayList<Integer>();
-		ArrayList<Integer> totalCoupleSlots = new ArrayList<Integer>(size);
+		ArrayList<Integer> containRandomPlayerCoupleSlots = new ArrayList<>();
+		ArrayList<Integer> totalCoupleSlots = new ArrayList<>(size);
 
-		ArrayList<Player> totalPlayer = new ArrayList<Player>(getPlayersInside());
-		ArrayList<Player> matchLeft = new ArrayList<Player>();
-		ArrayList<Player> matchRight = new ArrayList<Player>();
+		ArrayList<Player> totalPlayer = new ArrayList<>(getPlayersInside());
+		ArrayList<Player> matchLeft = new ArrayList<>();
+		ArrayList<Player> matchRight = new ArrayList<>();
 
 		// 打乱玩家 / do shuffle players
 		Collections.shuffle(totalPlayer);

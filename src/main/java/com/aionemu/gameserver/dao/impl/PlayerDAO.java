@@ -40,9 +40,9 @@ import java.util.*;
 public class PlayerDAO extends com.aionemu.gameserver.dao.PlayerDAO {
 
     /** 按对象 ID 缓存的玩家公共数据 / Player common data cache by object ID */
-    private final Map<Integer, PlayerCommonData> playerCommonData = new ConcurrentHashMap<Integer, PlayerCommonData>();
+    private final Map<Integer, PlayerCommonData> playerCommonData = new ConcurrentHashMap<>();
     /** 按角色名（小写）缓存的玩家公共数据 / Player common data cache by name (lowercase) */
-    private final Map<String, PlayerCommonData> playerCommonDataByName = new ConcurrentHashMap<String, PlayerCommonData>();
+    private final Map<String, PlayerCommonData> playerCommonDataByName = new ConcurrentHashMap<>();
 
     // 查询 / Queries
     /** 检查角色名是否占用 / Check if character name is used */

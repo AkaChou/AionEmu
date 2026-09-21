@@ -12,7 +12,7 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
  */
 
 public class PlayerStatFunctions {
-	private static final List<IStatFunction> FUNCTIONS = new ArrayList<IStatFunction>();
+	private static final List<IStatFunction> FUNCTIONS = new ArrayList<>();
 
 	static {
 		FUNCTIONS.add(new AttackSpeedFunction());

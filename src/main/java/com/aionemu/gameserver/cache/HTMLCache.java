@@ -40,13 +40,7 @@ public final class HTMLCache {
 	 * 仅接受目录或 {@code .xhtml} 文件。
 	 * Accepts directories or {@code .xhtml} files only.
 	 */
-	private static final FileFilter HTML_FILTER = new FileFilter() {
-
-		@Override
-		public boolean accept(File file) {
-			return file.isDirectory() || file.getName().endsWith(".xhtml");
-		}
-	};
+	private static final FileFilter HTML_FILTER = file -> file.isDirectory() || file.getName().endsWith(".xhtml");
 
 	/**
 	 * HTML 根目录。
@@ -95,7 +89,7 @@ public final class HTMLCache {
 	 * 相对路径 → HTML 内容。
 	 * Relative path → HTML content.
 	 */
-	private final Map<String, String> cache = new LinkedHashMap<String, String>(16000);
+	private final Map<String, String> cache = new LinkedHashMap<>(16000);
 
 	/**
 	 * 已加载文件数。
@@ -165,7 +159,7 @@ public final class HTMLCache {
 	static {
 		final String[] tagsToCompact = { "html", "title", "body", "br", "br1", "p", "table", "tr", "td" };
 
-		final List<String> list = new ArrayList<String>();
+		final List<String> list = new ArrayList<>();
 
 		for (String tag : tagsToCompact) {
 			list.add("<" + tag + ">");
@@ -174,7 +168,7 @@ public final class HTMLCache {
 			list.add("<" + tag + " />");
 		}
 
-		final List<String> list2 = new ArrayList<String>();
+		final List<String> list2 = new ArrayList<>();
 
 		for (String tag : list) {
 			list2.add(tag);

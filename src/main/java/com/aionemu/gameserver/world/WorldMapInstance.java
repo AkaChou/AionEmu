@@ -68,13 +68,13 @@ public abstract class WorldMapInstance {
 	 * 活跃区域表。
 	 * Active region map.
 	 */
-	protected final IntObjectHashMap<MapRegion> regions = new IntObjectHashMap<MapRegion>();
+	protected final IntObjectHashMap<MapRegion> regions = new IntObjectHashMap<>();
 
 	/**
 	 * 本实例内已生成的全部可见对象。
 	 * All visible objects spawned in this instance.
 	 */
-	private final Map<Integer, VisibleObject> worldMapObjects = Collections.synchronizedMap(new LinkedHashMap<Integer, VisibleObject>());
+	private final Map<Integer, VisibleObject> worldMapObjects = Collections.synchronizedMap(new LinkedHashMap<>());
 
 	/**
 	 * 可见对象扫描缓存：对象表未变化时复用同一数组，避免每次实例广播都整表复制。
@@ -92,7 +92,7 @@ public abstract class WorldMapInstance {
 	 * 本实例内玩家。
 	 * Players spawned in this instance.
 	 */
-	private final Map<Integer, Player> worldMapPlayers = Collections.synchronizedMap(new LinkedHashMap<Integer, Player>());
+	private final Map<Integer, Player> worldMapPlayers = Collections.synchronizedMap(new LinkedHashMap<>());
 
 	/** 已注册对象 ID 集合 / registered object ids */
 	private final Set<Integer> registeredObjects = ConcurrentHashMap.newKeySet();
@@ -110,13 +110,13 @@ public abstract class WorldMapInstance {
 	private final int instanceId;
 
 	/** 本实例相关任务 ID / quest ids related to this instance */
-	private final List<Integer> questIds = new ArrayList<Integer>();
+	private final List<Integer> questIds = new ArrayList<>();
 
 	/** 副本处理器 / instance handler */
 	private InstanceHandler instanceHandler;
 
 	/** 区域名到区域实例 / zone name → zone instance */
-	private Map<ZoneName, ZoneInstance> zones = new HashMap<ZoneName, ZoneInstance>();
+	private Map<ZoneName, ZoneInstance> zones = new HashMap<>();
 
 	/** 单人所有者对象 ID / solo owner objectId */
 	private Integer soloPlayer;
@@ -305,7 +305,7 @@ public abstract class WorldMapInstance {
 		if (data == null) {
 			return Collections.emptyList();
 		}
-		List<Integer> addedQuestIds = new ArrayList<Integer>();
+		List<Integer> addedQuestIds = new ArrayList<>();
 		synchronized (questIds) {
 			for (int id : data.getOnQuestStart()) {
 				if (!questIds.contains(id)) {
@@ -377,7 +377,7 @@ public abstract class WorldMapInstance {
 	public List<Player> getPlayersInside() {
 		// 单次预分配结果列表，避免快照迭代器与结果列表的双份分配。 / Single pre-sized pass instead of a snapshot iterator plus a result list.
 		synchronized (worldMapPlayers) {
-			List<Player> playersInside = new ArrayList<Player>(worldMapPlayers.size());
+			List<Player> playersInside = new ArrayList<>(worldMapPlayers.size());
 			playersInside.addAll(worldMapPlayers.values());
 			return playersInside;
 		}
@@ -391,7 +391,7 @@ public abstract class WorldMapInstance {
 	 * @return 匹配的 NPC 列表 / the NPC list
 	 */
 	public List<Npc> getNpcs(int npcId) {
-		List<Npc> npcs = new ArrayList<Npc>();
+		List<Npc> npcs = new ArrayList<>();
 		for (Iterator<VisibleObject> iter = objectIterator(); iter.hasNext();) {
 			VisibleObject obj = iter.next();
 			if (obj instanceof Npc npc) {
@@ -412,7 +412,7 @@ public abstract class WorldMapInstance {
 	public List<Npc> getNpcs() {
 		// 单次预分配结果列表，避免“先复制快照、再扩容收集”的双份临时数组。 / Single pre-sized pass instead of a snapshot plus a growing result list.
 		synchronized (worldMapObjects) {
-			List<Npc> npcs = new ArrayList<Npc>(worldMapObjects.size());
+			List<Npc> npcs = new ArrayList<>(worldMapObjects.size());
 			for (VisibleObject obj : worldMapObjects.values()) {
 				if (obj instanceof Npc npc) {
 					npcs.add(npc);
@@ -429,7 +429,7 @@ public abstract class WorldMapInstance {
 	 * @return 门映射 / the door map
 	 */
 	public Map<Integer, StaticDoor> getDoors() {
-		Map<Integer, StaticDoor> doors = new HashMap<Integer, StaticDoor>();
+		Map<Integer, StaticDoor> doors = new HashMap<>();
 		for (Iterator<VisibleObject> iter = objectIterator(); iter.hasNext();) {
 			VisibleObject obj = iter.next();
 			if (obj instanceof StaticDoor door) {
@@ -447,7 +447,7 @@ public abstract class WorldMapInstance {
 	 * @return 陷阱列表 / the trap list
 	 */
 	public List<Trap> getTraps(Creature p) {
-		List<Trap> traps = new ArrayList<Trap>();
+		List<Trap> traps = new ArrayList<>();
 		for (Iterator<VisibleObject> iter = objectIterator(); iter.hasNext();) {
 			VisibleObject obj = iter.next();
 			if (obj instanceof Trap t) {
@@ -582,7 +582,7 @@ public abstract class WorldMapInstance {
 	 */
 	public List<Integer> getQuestIds() {
 		synchronized (questIds) {
-			return Collections.unmodifiableList(new ArrayList<Integer>(questIds));
+			return Collections.unmodifiableList(new ArrayList<>(questIds));
 		}
 	}
 
@@ -673,7 +673,7 @@ public abstract class WorldMapInstance {
 	 * @return Zone 数组 / the zone array
 	 */
 	protected ZoneInstance[] filterZones(int mapId, int regionId, float startX, float startY, float minZ, float maxZ) {
-		List<ZoneInstance> regionZones = new ArrayList<ZoneInstance>();
+		List<ZoneInstance> regionZones = new ArrayList<>();
 		RegionZone regionZone = new RegionZone(startX, startY, minZ, maxZ);
 
 		for (ZoneInstance zoneInstance : zones.values()) {
@@ -743,7 +743,7 @@ public abstract class WorldMapInstance {
 	 */
 	private List<VisibleObject> worldMapObjectsSnapshot() {
 		synchronized (worldMapObjects) {
-			return new ArrayList<VisibleObject>(worldMapObjects.values());
+			return new ArrayList<>(worldMapObjects.values());
 		}
 	}
 
@@ -777,7 +777,7 @@ public abstract class WorldMapInstance {
 	 */
 	private List<Player> worldMapPlayersSnapshot() {
 		synchronized (worldMapPlayers) {
-			return new ArrayList<Player>(worldMapPlayers.values());
+			return new ArrayList<>(worldMapPlayers.values());
 		}
 	}
 }

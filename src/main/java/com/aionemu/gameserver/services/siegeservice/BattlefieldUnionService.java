@@ -83,7 +83,7 @@ public class BattlefieldUnionService {
 	 * @param fortressId 要塞 ID / fortress id
 	 */
 	public void onSiegeStart(final int fortressId) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<>() {
 			/**
 			 * visit 方法。
 			 * visit method.
@@ -92,7 +92,7 @@ public class BattlefieldUnionService {
 			 */
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player,
-						new SM_BATTLEFIELD_UNION(fortressId, true, getSize(), getMaxSize()));
+					new SM_BATTLEFIELD_UNION(fortressId, true, getSize(), getMaxSize()));
 			}
 		});
 	}
@@ -104,7 +104,7 @@ public class BattlefieldUnionService {
 	 * @param fortressId 要塞 ID / fortress id
 	 */
 	public void onSiegeFinish(final int fortressId) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<>() {
 			/**
 			 * visit 方法。
 			 * visit method.
@@ -113,7 +113,7 @@ public class BattlefieldUnionService {
 			 */
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player,
-						new SM_BATTLEFIELD_UNION(fortressId, false, getSize(), getMaxSize()));
+					new SM_BATTLEFIELD_UNION(fortressId, false, getSize(), getMaxSize()));
 			}
 		});
 	}

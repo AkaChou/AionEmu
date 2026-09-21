@@ -136,12 +136,20 @@ class ReportTo1101DefinitionTest {
 		CompiledQuestDefinition compiled = definition();
 		for (QuestTransition transition : compiled.definition().transitions()) {
 			QuestEvent.TalkToNpc route = (QuestEvent.TalkToNpc) transition.event();
-			QuestSnapshot snapshot = switch (transition.sourceNode()) {
-				case "unaccepted" -> new QuestSnapshot(7, 1101, QuestStatus.NONE, 0, Map.of());
-				case "started" -> new QuestSnapshot(7, 1101, QuestStatus.START, 0, Map.of());
-				case "reward" -> new QuestSnapshot(7, 1101, QuestStatus.REWARD, 1, Map.of());
-				default -> throw new AssertionError("unexpected source " + transition.sourceNode());
-			};
+			QuestSnapshot snapshot;
+			switch (transition.sourceNode()) {
+				case "unaccepted":
+					snapshot = new QuestSnapshot(7, 1101, QuestStatus.NONE, 0, Map.of());
+					break;
+				case "started":
+					snapshot = new QuestSnapshot(7, 1101, QuestStatus.START, 0, Map.of());
+					break;
+				case "reward":
+					snapshot = new QuestSnapshot(7, 1101, QuestStatus.REWARD, 1, Map.of());
+					break;
+				default:
+					throw new AssertionError("unexpected source " + transition.sourceNode());
+			}
 			snapshot = snapshot.withStartEligibility(QuestStartEligibility.allowed());
 			QuestEvent event = new QuestEvent.TalkToNpc(route.npcId(), route.dialogId(), 900007);
 

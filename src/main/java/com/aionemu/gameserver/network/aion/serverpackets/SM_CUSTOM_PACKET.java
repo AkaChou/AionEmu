@@ -133,7 +133,7 @@ public class SM_CUSTOM_PACKET extends AionServerPacket {
 		}
 	}
 
-	private final List<PacketElement> elements = new ArrayList<PacketElement>();
+	private final List<PacketElement> elements = new ArrayList<>();
 
 	/**
 	 * @param opcode 自定义包操作码 / custom packet opcode

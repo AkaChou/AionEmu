@@ -29,16 +29,13 @@ public class RiftOrbAI2 extends NpcAI2 {
     protected void handleDialogStart(Player player) {
         PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
     }
-	
+
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
         if (dialogId == 10000) {
-			getKnownList().doOnAllPlayers(new Visitor<Player>() {
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline() && !player.getLifeStats().isAlreadyDead()) {
-					    PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, 443));
-				    }
+			getKnownList().doOnAllPlayers(player1 -> {
+				if (player1.isOnline() && !player1.getLifeStats().isAlreadyDead()) {
+					PacketSendUtility.sendPacket(player1, new SM_PLAY_MOVIE(0, 443));
 				}
 			});
 			spawn(730276, 1604.6683f, 1606.5886f, 306.8665f, (byte) 90); // 冰之监狱入口 / Prison Of Ice Entrance.
@@ -52,7 +49,7 @@ public class RiftOrbAI2 extends NpcAI2 {
     private void forQuest(Player player) {
     List<Integer> questsToComplete = new ArrayList<>();
     Race race = player.getCommonData().getRace();
-    
+
     if (race == Race.ELYOS) {
         questsToComplete.add(30211);
         questsToComplete.add(30213);
@@ -60,7 +57,7 @@ public class RiftOrbAI2 extends NpcAI2 {
         questsToComplete.add(30311);
         questsToComplete.add(30313);
     }
-    
+
     for (int questId : questsToComplete) {
         final QuestState qs = player.getQuestStateList().getQuestState(questId);
         if (qs != null && qs.getStatus() == QuestStatus.START) {

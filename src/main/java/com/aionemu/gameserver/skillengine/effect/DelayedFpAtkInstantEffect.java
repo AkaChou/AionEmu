@@ -38,12 +38,9 @@ public class DelayedFpAtkInstantEffect extends EffectTemplate {
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	public void applyEffect(final Effect effect) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			public void run() {
-				if (effect.getEffector().isEnemy(effect.getEffected())) {
-					DelayedFpAtkInstantEffect.this.calculateAndApplyDamage(effect);
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (effect.getEffector().isEnemy(effect.getEffected())) {
+				DelayedFpAtkInstantEffect.this.calculateAndApplyDamage(effect);
 			}
 		}, delay);
 	}

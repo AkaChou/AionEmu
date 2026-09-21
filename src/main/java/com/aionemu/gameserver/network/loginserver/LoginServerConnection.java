@@ -46,7 +46,7 @@ public class LoginServerConnection extends AConnection {
 	 * 待发送服务端封包队列。
 	 * Queue of server packets waiting to be sent.
 	 */
-	private final Deque<LsServerPacket> sendMsgQueue = new ArrayDeque<LsServerPacket>();
+	private final Deque<LsServerPacket> sendMsgQueue = new ArrayDeque<>();
 
 	/**
 	 * 当前连接状态。

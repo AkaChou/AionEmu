@@ -95,7 +95,7 @@ public class BlockListDAO extends com.aionemu.gameserver.dao.BlockListDAO {
 	 */
 	@Override
 	public BlockList load(final Player player) {
-		final Map<Integer, BlockedPlayer> list = new HashMap<Integer, BlockedPlayer>();
+		final Map<Integer, BlockedPlayer> list = new HashMap<>();
 
 		try (Connection con = DatabaseFactory.getConnection();
 			 PreparedStatement stmt = con.prepareStatement(LOAD_QUERY)) {

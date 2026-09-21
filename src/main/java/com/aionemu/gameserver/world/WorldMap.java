@@ -31,7 +31,7 @@ public class WorldMap {
 	 * 实例表（instanceId → 实例）。
 	 * Instance table (instanceId → instance).
 	 */
-	private final Map<Integer, WorldMapInstance> instances = Collections.synchronizedMap(new LinkedHashMap<Integer, WorldMapInstance>());
+	private final Map<Integer, WorldMapInstance> instances = Collections.synchronizedMap(new LinkedHashMap<>());
 
 	/** 所属世界 / owning world */
 	private final World world;
@@ -385,7 +385,7 @@ public class WorldMap {
 	 */
 	public Collection<Integer> getAvailableInstanceIds() {
 		synchronized (instances) {
-			return new ArrayList<Integer>(instances.keySet());
+			return new ArrayList<>(instances.keySet());
 		}
 	}
 
@@ -417,7 +417,7 @@ public class WorldMap {
 	 */
 	private List<WorldMapInstance> instancesSnapshot() {
 		synchronized (instances) {
-			return new ArrayList<WorldMapInstance>(instances.values());
+			return new ArrayList<>(instances.values());
 		}
 	}
 }

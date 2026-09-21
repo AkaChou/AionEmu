@@ -30,7 +30,7 @@ public class LimitedItemTradeService {
 	private final GoodsListData goodsListData = DataManager.GOODSLIST_DATA;
 	private final TradeListData tradeListData = DataManager.TRADE_LIST_DATA;
 	/** NPC ID 到限购交易数据 / NPC id to limited-trade data*/
-	private final Map<Integer, LimitedTradeNpc> limitedTradeNpcs = new HashMap<Integer, LimitedTradeNpc>();
+	private final Map<Integer, LimitedTradeNpc> limitedTradeNpcs = new HashMap<>();
 
 	/**
 	 * 从交易表加载限购项，并按销售时间 cron 重置。
@@ -57,12 +57,7 @@ public class LimitedItemTradeService {
 		}
 		for (LimitedTradeNpc limitedTradeNpc : limitedTradeNpcs.values()) {
 			for (final LimitedItem limitedItem : limitedTradeNpc.getLimitedItems()) {
-				GameCronServices.cronService().schedule(new Runnable() {
-					@Override
-					public void run() {
-						limitedItem.setToDefault();
-					}
-				}, limitedItem.getSalesTime());
+				GameCronServices.cronService().schedule(() -> limitedItem.setToDefault(), limitedItem.getSalesTime());
 			}
 		}
 		log.info(I18n.get("log.5a5db961d623", limitedTradeNpcs.size()));

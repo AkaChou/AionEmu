@@ -23,46 +23,112 @@ public final class QuestConditionEvaluator {
 			List<QuestCondition> conditions) {
 		Map<String, Integer> variables = layout.unpack(snapshot.packedVariables());
 		for (QuestCondition condition : conditions) {
-			boolean matched = switch (condition) {
-				case QuestCondition.StatusIs status -> snapshot.status() == status.status();
-				case QuestCondition.HasItem item -> hasItem(snapshot, item);
-				case QuestCondition.QuestVariableIs variable -> variables.getOrDefault(variable.field(), Integer.MIN_VALUE)
-					== variable.value();
-				case QuestCondition.VariableAtLeast variable ->
-					variables.getOrDefault(variable.field(), Integer.MIN_VALUE) >= variable.value();
-				case QuestCondition.VariableBelow variable ->
-					variables.getOrDefault(variable.field(), Integer.MIN_VALUE) < variable.value();
-				case QuestCondition.VariableSumIs variable -> variableSum(variables, variable.fields()) == variable.value();
-				case QuestCondition.VariableSumBelow variable -> variableSum(variables, variable.fields()) < variable.value();
-				case QuestCondition.RecipeKnown recipe -> recipeKnown(snapshot, recipe);
-				case QuestCondition.CanGrantCraftSkill skill -> canGrantCraftSkill(snapshot, skill);
-				case QuestCondition.PvpVictimLevelDelta level -> pvpVictimLevelDelta(snapshot, level);
-				case QuestCondition.PvpRecipientInZone zone -> pvpRecipientInZone(snapshot, zone);
-				case QuestCondition.StartEligible ignored -> startEligible(snapshot);
-				case QuestCondition.PlayerClassIs playerClass -> playerClass(startingClass(snapshot),
-					playerClass.startingClass());
-				case QuestCondition.AdvancedClassIs playerClass ->
-					advancedClass(snapshot, playerClass.playerClass());
-				case QuestCondition.GenderIs gender -> gender(snapshot, gender);
-				case QuestCondition.PlayerRaceIs race -> snapshot.race() != null && snapshot.race() == race.race();
-				case QuestCondition.PlayerInGroup group -> playerInGroup(snapshot, group);
-				case QuestCondition.WorldIs world -> worldIs(snapshot, world);
-				case QuestCondition.WorldNpcIs npc -> worldNpcIs(snapshot, npc);
-				case QuestCondition.ZoneIs zone -> zoneIs(snapshot, zone);
-				case QuestCondition.NpcHpBelowPercent hp -> npcHpBelowPercent(event, hp);
-				case QuestCondition.CurrencyAtLeast currency -> currencyAtLeast(snapshot, currency);
-				case QuestCondition.CurrencyBelow currency -> currencyBelow(snapshot, currency);
-				case QuestCondition.QuestsFinished quests -> questsFinished(snapshot, quests);
-				case QuestCondition.UnfinishedQuest quests -> unfinishedQuest(snapshot, quests);
-				case QuestCondition.NoAcquiredQuest quests -> noAcquiredQuest(snapshot, quests);
-				case QuestCondition.AcquiredQuest quests -> acquiredQuest(snapshot, quests);
-				case QuestCondition.EquipmentSetEquipped equipment -> equipmentSetEquipped(snapshot, equipment);
-				case QuestCondition.EquippedItem equipped -> equippedItem(snapshot, equipped);
-				case QuestCondition.MembershipPermission permission -> membershipPermission(snapshot, permission);
-				case QuestCondition.DpAtMax ignored -> dpAtMax(snapshot);
-				case QuestCondition.CompleteCountIs count -> completeCountIs(snapshot, count);
-				case QuestCondition.EventActive active -> eventActive(snapshot, active);
-			};
+			boolean matched;
+			switch (condition) {
+				case QuestCondition.StatusIs status:
+					matched = snapshot.status() == status.status();
+					break;
+				case QuestCondition.HasItem item:
+					matched = hasItem(snapshot, item);
+					break;
+				case QuestCondition.QuestVariableIs variable:
+					matched = variables.getOrDefault(variable.field(), Integer.MIN_VALUE)
+						== variable.value();
+					break;
+				case QuestCondition.VariableAtLeast variable:
+					matched = variables.getOrDefault(variable.field(), Integer.MIN_VALUE) >= variable.value();
+					break;
+				case QuestCondition.VariableBelow variable:
+					matched = variables.getOrDefault(variable.field(), Integer.MIN_VALUE) < variable.value();
+					break;
+				case QuestCondition.VariableSumIs variable:
+					matched = variableSum(variables, variable.fields()) == variable.value();
+					break;
+				case QuestCondition.VariableSumBelow variable:
+					matched = variableSum(variables, variable.fields()) < variable.value();
+					break;
+				case QuestCondition.RecipeKnown recipe:
+					matched = recipeKnown(snapshot, recipe);
+					break;
+				case QuestCondition.CanGrantCraftSkill skill:
+					matched = canGrantCraftSkill(snapshot, skill);
+					break;
+				case QuestCondition.PvpVictimLevelDelta level:
+					matched = pvpVictimLevelDelta(snapshot, level);
+					break;
+				case QuestCondition.PvpRecipientInZone zone:
+					matched = pvpRecipientInZone(snapshot, zone);
+					break;
+				case QuestCondition.StartEligible ignored:
+					matched = startEligible(snapshot);
+					break;
+				case QuestCondition.PlayerClassIs playerClass:
+					matched = playerClass(startingClass(snapshot),
+						playerClass.startingClass());
+					break;
+				case QuestCondition.AdvancedClassIs playerClass:
+					matched = advancedClass(snapshot, playerClass.playerClass());
+					break;
+				case QuestCondition.GenderIs gender:
+					matched = gender(snapshot, gender);
+					break;
+				case QuestCondition.PlayerRaceIs race:
+					matched = snapshot.race() != null && snapshot.race() == race.race();
+					break;
+				case QuestCondition.PlayerInGroup group:
+					matched = playerInGroup(snapshot, group);
+					break;
+				case QuestCondition.WorldIs world:
+					matched = worldIs(snapshot, world);
+					break;
+				case QuestCondition.WorldNpcIs npc:
+					matched = worldNpcIs(snapshot, npc);
+					break;
+				case QuestCondition.ZoneIs zone:
+					matched = zoneIs(snapshot, zone);
+					break;
+				case QuestCondition.NpcHpBelowPercent hp:
+					matched = npcHpBelowPercent(event, hp);
+					break;
+				case QuestCondition.CurrencyAtLeast currency:
+					matched = currencyAtLeast(snapshot, currency);
+					break;
+				case QuestCondition.CurrencyBelow currency:
+					matched = currencyBelow(snapshot, currency);
+					break;
+				case QuestCondition.QuestsFinished quests:
+					matched = questsFinished(snapshot, quests);
+					break;
+				case QuestCondition.UnfinishedQuest quests:
+					matched = unfinishedQuest(snapshot, quests);
+					break;
+				case QuestCondition.NoAcquiredQuest quests:
+					matched = noAcquiredQuest(snapshot, quests);
+					break;
+				case QuestCondition.AcquiredQuest quests:
+					matched = acquiredQuest(snapshot, quests);
+					break;
+				case QuestCondition.EquipmentSetEquipped equipment:
+					matched = equipmentSetEquipped(snapshot, equipment);
+					break;
+				case QuestCondition.EquippedItem equipped:
+					matched = equippedItem(snapshot, equipped);
+					break;
+				case QuestCondition.MembershipPermission permission:
+					matched = membershipPermission(snapshot, permission);
+					break;
+				case QuestCondition.DpAtMax ignored:
+					matched = dpAtMax(snapshot);
+					break;
+				case QuestCondition.CompleteCountIs count:
+					matched = completeCountIs(snapshot, count);
+					break;
+				case QuestCondition.EventActive active:
+					matched = eventActive(snapshot, active);
+					break;
+				default:
+					throw new IllegalArgumentException();
+			}
 			if (!matched) {
 				return false;
 			}

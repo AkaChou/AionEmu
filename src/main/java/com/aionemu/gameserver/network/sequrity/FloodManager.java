@@ -171,7 +171,7 @@ public final class FloodManager {
 
 	private static final long ZERO = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1);
 
-	private final Map<String, LogEntry> _entries = new HashMap<String, LogEntry>();
+	private final Map<String, LogEntry> _entries = new HashMap<>();
 	private final ReentrantLock _lock = new ReentrantLock();
 
 	private final int _tickLength;
@@ -198,12 +198,7 @@ public final class FloodManager {
 		}
 		_tickAmount = max;
 
-		NetFlusher.add(new Runnable() {
-			@Override
-			public void run() {
-				flush();
-			}
-		}, 60000);
+		NetFlusher.add(() -> flush(), 60000);
 	}
 
 	/**

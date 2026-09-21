@@ -55,7 +55,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 		private int rewardCount;
 	/** bonus timer / bonus timer */
 		private Future<?> bonusTimer;
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -68,14 +68,14 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 		sp(205668, 345.77954f, 1662.6697f, 95.25f, (byte) 0, 10000);
 		sp(205682, 383.3434f, 1667.2977f, 97.79293f, (byte) 60, 10000);
 	}
-	
+
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
         storage.decreaseByItemId(186000124, storage.getItemCountByItemId(186000124)); // 败者复活券 / Worthiness Ticket.
 		storage.decreaseByItemId(186000125, storage.getItemCountByItemId(186000125)); // 败者复活券 / Worthiness Ticket.
 		storage.decreaseByItemId(186000134, storage.getItemCountByItemId(186000134)); // 败者复活券 / Worthiness Ticket.
 	}
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -88,9 +88,9 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 		sendPacket(0, 0);
 		sendEventPacket();
 	}
-	
+
 	private void sendPacket(final int nameId, final int points) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -108,24 +108,24 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			}
 		});
 	}
-	
+
 	private void sendEventPacket() {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					PacketSendUtility.sendPacket(player, new SM_INSTANCE_STAGE_INFO(2, stageType.getId(), stageType.getType()));
-				}
-			}
-		});
+		instance.doOnAllPlayers(new Visitor<>() {
+            /**
+             * 处理 visit。
+             * Handle visit.
+             *
+             * @param player 玩家 / player
+             */
+            @Override
+            public void visit(Player player) {
+                if (player.isOnline()) {
+                    PacketSendUtility.sendPacket(player, new SM_INSTANCE_STAGE_INFO(2, stageType.getId(), stageType.getType()));
+                }
+            }
+        });
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -494,7 +494,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
             break;
 		}
 	}
-	
+
 	private void startStage3Round1_1(int npcId) {
 		int bossId = 0;
 		switch (npcId) {
@@ -512,7 +512,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 		despawnNpc(getNpc(218561));
 		despawnNpc(getNpc(217841));
 	}
-	
+
 	/**
 	 * 结算并发放奖励。
 	 * Settle and grant rewards.
@@ -533,7 +533,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 		}
 		PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(instanceReward));
 	}
-	
+
 	private void startBonusStage2() {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -574,7 +574,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			}
 		}, 12000, 4000);
 	}
-	
+
 	private void startWalk(final Npc npc, final String walkId) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -592,7 +592,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			}
 		}, 2000);
 	}
-	
+
 	private void spawnBonus2() {
 		switch (spawnCount) {
 			case 1:
@@ -631,7 +631,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			break;
 		}
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -644,7 +644,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			bonusTimer.cancel(false);
 		}
 	}
-	
+
 	private void passStage2() {
 		setEvent(StageType.PASS_STAGE_2, 0);
 		//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
@@ -653,7 +653,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 		sendMsgByRace(1400930, Race.PC_ALL, 4000);
 		sp(205675, 1784.5883f, 306.98645f, 469.25f, (byte) 0, 0);
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -694,11 +694,11 @@ public class CrucibleChallengeInstance extends CrucibleInstance
         }, 13000);
 		return true;
 	}
-	
+
 	protected void teleport(Player player, float x, float y, float z, byte h) {
 		TeleportService2.teleportTo(player, mapId, instanceId, x, y, z, h);
 	}
-	
+
 	/**
 	 * 处理玩家复活事件。
 	 * Handle a player revive event.
@@ -734,7 +734,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -745,7 +745,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	public void onLeaveInstance(Player player) {
 		removeItems(player);
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -756,7 +756,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	public void onPlayerLogOut(Player player) {
 		removeItems(player);
 	}
-	
+
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
@@ -770,7 +770,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 		// “玩家名”退出训练并离开了试炼场。 / "Player Name" dropped out of training and left the Crucible.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400962, player.getName()));
 	}
-	
+
 	/**
 	 * 玩家登录到该副本时处理。
 	 * Handle a player logging into this instance.
@@ -785,7 +785,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			doReward(player);
 		}
 	}
-	
+
 	/**
 	 * 玩家停止训练时处理。
 	 * Handle a player stopping training.
@@ -796,7 +796,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	public void onStopTraining(Player player) {
 		doReward(player);
 	}
-	
+
 	/**
 	 * 副本阶段变更时处理。
 	 * Handle instance stage change.
@@ -941,7 +941,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			break;
 		}
 	}
-	
+
 	private void sp(final int npcId, final float x, final float y, final float z, final byte h, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -956,7 +956,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			}
 		}, time);
 	}
-	
+
 	private void setEvent(StageType type, int time) {
 		this.stageType = type;
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -970,7 +970,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			}
 		}, time);
 	}
-	
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.

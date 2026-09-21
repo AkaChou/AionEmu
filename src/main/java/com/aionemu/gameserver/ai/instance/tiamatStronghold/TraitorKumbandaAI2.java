@@ -70,29 +70,26 @@ public class TraitorKumbandaAI2 extends AggressiveNpcAI2
 	}
 
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelPhaseTask();
-				} else {
-					sendMsg(1500708);
-					GameEngineServices.skillEngine().getSkill(getOwner(), 20726, 10, getOwner()).useNoAnimationSkill(); //Time Speed.
-					List<Player> players = getLifedPlayers();
-					if (!players.isEmpty()) {
-						int size = players.size();
-						if (players.size() < 6) {
-							for (Player p: players) {
-								spawnTimeAccelerator(p);
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelPhaseTask();
+			} else {
+				sendMsg(1500708);
+				GameEngineServices.skillEngine().getSkill(getOwner(), 20726, 10, getOwner()).useNoAnimationSkill(); //Time Speed.
+				List<Player> players = getLifedPlayers();
+				if (!players.isEmpty()) {
+					int size = players.size();
+					if (players.size() < 6) {
+						for (Player p: players) {
+							spawnTimeAccelerator(p);
+						}
+					} else {
+						int count = Rnd.get(6, size);
+						for (int i = 0; i < count; i++) {
+							if (players.isEmpty()) {
+								break;
 							}
-						} else {
-							int count = Rnd.get(6, size);
-							for (int i = 0; i < count; i++) {
-								if (players.isEmpty()) {
-									break;
-								}
-								spawnTimeAccelerator(players.get(Rnd.get(players.size())));
-							}
+							spawnTimeAccelerator(players.get(Rnd.get(players.size())));
 						}
 					}
 				}
@@ -105,12 +102,9 @@ public class TraitorKumbandaAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						spawn(283086, x, y, z, (byte) 0); //Time Accelerator.
-					}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					spawn(283086, x, y, z, (byte) 0); //Time Accelerator.
 				}
 			}, 3000);
 		}
@@ -136,30 +130,15 @@ public class TraitorKumbandaAI2 extends AggressiveNpcAI2
 	}
 
 	private void scheduleStop() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				timeStop();
-			}
-		}, 5000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> timeStop(), 5000);
 	}
 
 	private void scheduleRush() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				timeRush();
-			}
-		}, 5000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> timeRush(), 5000);
 	}
 
 	private void scheduleSlow() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				timeSlow();
-			}
-		}, 5000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> timeSlow(), 5000);
 	}
 
 	@Override
@@ -181,7 +160,7 @@ public class TraitorKumbandaAI2 extends AggressiveNpcAI2
 	}
 
 	private List<Player> getLifedPlayers() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);

@@ -62,7 +62,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 	/** 副本奖励对象 / instance reward object */
 	private SealedArgentManorReward instanceReward;
 		/** sealed 任务 / sealed task */
-		private final List<Future<?>> sealedTask = new ArrayList<Future<?>>();
+		private final List<Future<?>> sealedTask = new ArrayList<>();
 	/**
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
@@ -227,18 +227,18 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 					 */
 					@Override
 					public void run() {
-					    instance.doOnAllPlayers(new Visitor<Player>() {
-						    /**
-						     * 处理 visit。
-						     * Handle visit.
-						     *
-						     * @param player 玩家 / player
-						     */
-						    @Override
-						    public void visit(Player player) {
-							    stopInstance(player);
-						    }
-					    });
+					    instance.doOnAllPlayers(new Visitor<>() {
+							/**
+							 * 处理 visit。
+							 * Handle visit.
+							 *
+							 * @param player 玩家 / player
+							 */
+							@Override
+							public void visit(Player player) {
+								stopInstance(player);
+							}
+						});
 					}
 				}, 3000);
 				points = 1500;
@@ -260,7 +260,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 	}
 
 	private void sendPacket(final int nameId, final int point) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -306,18 +306,18 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
              */
             @Override
             public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-				    /**
-				     * 处理 visit。
-				     * Handle visit.
-				     *
-				     * @param player 玩家 / player
-				     */
-				    @Override
-				    public void visit(Player player) {
-					    stopInstance(player);
-				    }
-			    });
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
+						stopInstance(player);
+					}
+				});
             }
         }, 900000));
     }
@@ -389,7 +389,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 				}
 			}, prepareTimerSeconds);
 		}
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -487,7 +487,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.

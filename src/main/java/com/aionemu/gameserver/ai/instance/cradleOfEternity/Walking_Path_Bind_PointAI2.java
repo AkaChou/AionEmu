@@ -50,13 +50,10 @@ public class Walking_Path_Bind_PointAI2 extends NpcAI2
     }
 
 	private void announceWalkingPath() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 步行道的绑定点装置已激活。 / The Walking Path's bind point device was activated.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_11);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 步行道的绑定点装置已激活。 / The Walking Path's bind point device was activated.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_11);
 			}
 		});
 	}

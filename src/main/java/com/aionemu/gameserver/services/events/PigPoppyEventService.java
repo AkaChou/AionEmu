@@ -33,7 +33,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public class PigPoppyEventService {
 
 	/** 随机刷怪坐标池。 / Spawn coordinate pool. */
-	private static final List<float[]> floatArray = new ArrayList<float[]>();
+	private static final List<float[]> floatArray = new ArrayList<>();
 
 	/** 缓存的活动 cron 表达式 / Cached event cron expression */
 	private static final String PIG_POPPY_EVENT_SCHEDULE = EventsConfig.PIG_POPPY_EVENT_SCHEDULE;
@@ -81,13 +81,8 @@ public class PigPoppyEventService {
 	 * Schedules the Pig Poppy event from configured cron.
 	 */
 	public static void ScheduleCron() {
-		GameCronServices.cronService().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				startEvent(); // To change body of generated methods, choose Tools | Templates.
-			}
-
+		GameCronServices.cronService().schedule(() -> {
+			startEvent(); // To change body of generated methods, choose Tools | Templates.
 		}, PIG_POPPY_EVENT_SCHEDULE);
 		log.info(I18n.get("log.5df8f3db8e1d", EventsConfig.PIG_POPPY_EVENT_SCHEDULE));
 	}
@@ -104,12 +99,8 @@ public class PigPoppyEventService {
 		}
 		initPigAsmo();
 		initPigEly();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				endEvent(); // To change body of generated methods, choose Tools | Templates.
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			endEvent(); // To change body of generated methods, choose Tools | Templates.
 		}, 30 * 60 * 1000);
 	}
 
@@ -121,12 +112,7 @@ public class PigPoppyEventService {
 	 */
 	private static void announceAll(final String msg) {
 
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendSys3Message(player, "\uE058", msg);
-			}
-		});
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE058", msg));
 	}
 
 	/**

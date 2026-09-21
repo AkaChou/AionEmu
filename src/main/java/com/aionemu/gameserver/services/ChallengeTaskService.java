@@ -86,8 +86,8 @@ public class ChallengeTaskService {
 	 * Constructs the service and initializes task caches.
 	 */
 	public ChallengeTaskService() {
-		cityTasks = new LinkedHashMap<Integer, Map<Integer, ChallengeTask>>();
-		legionTasks = new LinkedHashMap<Integer, Map<Integer, ChallengeTask>>();
+		cityTasks = new LinkedHashMap<>();
+		legionTasks = new LinkedHashMap<>();
 		log.info(I18n.get("log.e300214dba9a"));
 	}
 
@@ -138,7 +138,7 @@ public class ChallengeTaskService {
 			taskMap = cityTasks;
 		}
 		int playerTownId = GameHousingServices.townService().getTownResidence(player);
-		List<ChallengeTask> availableTasks = new ArrayList<ChallengeTask>();
+		List<ChallengeTask> availableTasks = new ArrayList<>();
 		if (!taskMap.containsKey(ownerId)) {
 			Map<Integer, ChallengeTask> tasks = DAOManager.getDAO(ChallengeTasksDAO.class).load(ownerId, challengeType);
 			taskMap.put(ownerId, tasks);
@@ -283,13 +283,13 @@ public class ChallengeTaskService {
 			quest.increaseCompleteCount();
 			DAOManager.getDAO(ChallengeTasksDAO.class).storeTask(task);
 			if (task.isCompleted()) {
-				TreeMap<Integer, List<Integer>> winnersByPoints = new TreeMap<Integer, List<Integer>>();
+				TreeMap<Integer, List<Integer>> winnersByPoints = new TreeMap<>();
 				for (Integer memberObjId : player.getLegion().getLegionMembers()) {
 					Player member = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(memberObjId);
 					if (member != null) {
 						int score = member.getLegionMember().getChallengeScore();
 						if (winnersByPoints.get(score) == null) {
-							winnersByPoints.put(score, new ArrayList<Integer>());
+							winnersByPoints.put(score, new ArrayList<>());
 						}
 						winnersByPoints.get(score).add(member.getObjectId());
 						member.getLegionMember().setChallengeScore(0);
@@ -302,7 +302,7 @@ public class ChallengeTaskService {
 							continue;
 						}
 						if (winnersByPoints.get(score) == null) {
-							winnersByPoints.put(score, new ArrayList<Integer>());
+							winnersByPoints.put(score, new ArrayList<>());
 						}
 						winnersByPoints.get(score).add(legionMember.getObjectId());
 						legionMember.setChallengeScore(0);

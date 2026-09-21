@@ -22,33 +22,22 @@ public class Idle_Power_GeneratorAI2 extends NpcAI2
 	protected void handleSpawned() {
 		switch (getNpcId()) {
 			case 806391: // 北方发电机。 / North Power Generator.
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				    @Override
-					public void run() {
-						announceWarNeu01();
-						spawn(833935, 589.974180f, 407.85278f, 610.20313f, (byte) 0, 3);
-					}
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					announceWarNeu01();
+					spawn(833935, 589.974180f, 407.85278f, 610.20313f, (byte) 0, 3);
 				}, 300000); //5 分钟。 / 5 Minutes.
 			break;
 			case 806392: // 南方发电机。 / South Power Generator.
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				    @Override
-					public void run() {
-						announceWarNeu01();
-						spawn(833936, 605.049130f, 553.60150f, 591.49310f, (byte) 0, 42);
-					}
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					announceWarNeu01();
+					spawn(833936, 605.049130f, 553.60150f, 591.49310f, (byte) 0, 42);
 				}, 300000); //5 分钟。 / 5 Minutes.
 			break;
 		}
 		super.handleSpawned();
 	}
-	
+
 	private void announceWarNeu01() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDLDF5_Under_02_war_neu_01);
-			}
-		});
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDLDF5_Under_02_war_neu_01));
 	}
 }

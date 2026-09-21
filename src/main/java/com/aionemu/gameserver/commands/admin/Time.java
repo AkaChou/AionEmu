@@ -37,37 +37,39 @@ public class Time extends AdminCommand
 		int time = GameTimeManager.getGameTime().getHour();
 		int min = GameTimeManager.getGameTime().getMinute();
 		int hour;
-		if (params[0].equals("night")) {
-			hour = 22;
-		} else if (params[0].equals("dusk")) {
-			hour = 18;
-		} else if (params[0].equals("day")) {
-			hour = 9;
-		} else if (params[0].equals("dawn")) {
-			hour = 4;
-		} else {
-			try {
-				hour = Integer.parseInt(params[0]);
-			} catch (NumberFormatException e) {
-				onFail(admin, null);
-				return;
-			} if (hour < 0 || hour > 23) {
-				onFail(admin, null);
-				PacketSendUtility.sendMessage(admin, "A day have only 24 hours!\n" + "Min value : 0 - Max value : 23");
-				return;
-			}
-		}
+        switch (params[0]) {
+            case "night":
+                hour = 22;
+                break;
+            case "dusk":
+                hour = 18;
+                break;
+            case "day":
+                hour = 9;
+                break;
+            case "dawn":
+                hour = 4;
+                break;
+            default:
+                try {
+                    hour = Integer.parseInt(params[0]);
+                } catch (NumberFormatException e) {
+                    onFail(admin, null);
+                    return;
+                }
+                if (hour < 0 || hour > 23) {
+                    onFail(admin, null);
+                    PacketSendUtility.sendMessage(admin, "A day have only 24 hours!\n" + "Min value : 0 - Max value : 23");
+                    return;
+                }
+                break;
+        }
 		time = hour - time;
 		time = GameTimeManager.getGameTime().getTime() + (60 * time) - min;
 		GameTimeManager.reloadTime(time);
 		GameTimeManager.getGameTime().calculateDayTime();
 		TemporarySpawnEngine.onHourChange();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendPacket(player, new SM_GAME_TIME());
-			}
-		});
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, new SM_GAME_TIME()));
 		PacketSendUtility.sendMessage(admin, "You changed the time to " + params[0] + ".");
 	}
 

@@ -70,7 +70,7 @@ public class CmdAttrBonus extends AbstractGMHandler implements StatOwner {
 			return;
 		}
 
-		List<IStatFunction> functions = new ArrayList<IStatFunction>();
+		List<IStatFunction> functions = new ArrayList<>();
 		functions.add(new StatChangeFunction(a.getStatEnum(), value));
 		tgtPlayer.getGameStats().addEffect(this, functions);
 		PacketSendUtility.broadcastPacket(tgtPlayer, new SM_EMOTION(tgtPlayer, EmotionType.START_EMOTE2, 0, 0), true);

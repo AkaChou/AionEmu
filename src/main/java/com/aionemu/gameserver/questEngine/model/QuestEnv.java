@@ -109,15 +109,17 @@ public class QuestEnv {
 	 * @return 目标模板 ID / Target template id
 	 */
 	public int getTargetId() {
-		if (visibleObject == null) {
-			return 0;
-		} else if (visibleObject instanceof Npc) {
-			return ((Npc) visibleObject).getNpcId();
-		} else if (visibleObject instanceof Gatherable) {
-			return ((Gatherable) visibleObject).getObjectTemplate().getTemplateId();
-		} else if (visibleObject instanceof StaticObject) {
-			return visibleObject.getObjectTemplate().getTemplateId();
-		}
-		return 0;
+        switch (visibleObject) {
+            case null:
+                return 0;
+            case Npc npc:
+                return npc.getNpcId();
+            case Gatherable gatherable:
+                return gatherable.getObjectTemplate().getTemplateId();
+            case StaticObject staticObject:
+                return visibleObject.getObjectTemplate().getTemplateId();
+            default:
+                return 0;
+        }
 	}
 }

@@ -238,17 +238,25 @@ public final class QuestDefinitionCatalogManifest {
 							throw new QuestCompilationException("CATALOG_RESOURCE_MISSING", entry.resource());
 						}
 						if (definitionSchema == null) {
-							return switch (entry.mode()) {
-								case EXECUTABLE -> QuestCatalogEntry.executable(QuestDefinitionXmlCompiler.compile(input));
-								case METADATA_ONLY -> QuestCatalogEntry.metadataOnly(QuestDefinitionXmlCompiler.parse(input));
-							};
+							switch (entry.mode()) {
+								case EXECUTABLE:
+									return QuestCatalogEntry.executable(QuestDefinitionXmlCompiler.compile(input));
+								case METADATA_ONLY:
+									return QuestCatalogEntry.metadataOnly(QuestDefinitionXmlCompiler.parse(input));
+								default:
+									throw new IllegalArgumentException();
+							}
 						}
-						return switch (entry.mode()) {
-							case EXECUTABLE -> QuestCatalogEntry.executable(
-								QuestDefinitionXmlCompiler.compile(input, definitionSchema));
-							case METADATA_ONLY -> QuestCatalogEntry.metadataOnly(
-								QuestDefinitionXmlCompiler.parse(input, definitionSchema));
-						};
+                        switch (entry.mode()) {
+                            case EXECUTABLE:
+                                return QuestCatalogEntry.executable(
+                                        QuestDefinitionXmlCompiler.compile(input, definitionSchema));
+                            case METADATA_ONLY:
+                                return QuestCatalogEntry.metadataOnly(
+                                        QuestDefinitionXmlCompiler.parse(input, definitionSchema));
+                            default:
+                                throw new IllegalArgumentException();
+                        }
 					} catch (IOException e) {
 						throw new QuestCompilationException("CATALOG_RESOURCE_READ_FAILED", entry.resource());
 					}

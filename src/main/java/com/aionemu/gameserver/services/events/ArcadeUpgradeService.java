@@ -222,16 +222,11 @@ public class ArcadeUpgradeService {
 	public void getPlaySuccesArcade(final Player player, final PlayerUpgradeArcade arcade) {
 		arcade.setFrenzyLevel(arcade.getFrenzyLevel() + 1);
 		PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(3, true, arcade.getFrenzyPoints()));
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */
-			public void run() {
-				PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(player, 4, arcade.getFrenzyLevel()));
-			}
-		}, 3000);
+		/**
+		 * 执行任务。
+		 * Runs the task.
+		 */
+		GameThreadPoolServices.threadPoolManager().schedule(() -> PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(player, 4, arcade.getFrenzyLevel())), 3000);
 	}
 
 	/**
@@ -243,26 +238,22 @@ public class ArcadeUpgradeService {
 	 */
 	public void getPlayFailedArcade(final Player player, final PlayerUpgradeArcade arcade) {
 		PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(3, false, arcade.getFrenzyPoints()));
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */
-			public void run() {
-				PacketSendUtility.sendPacket(player,
-						new SM_UPGRADE_ARCADE(player, 5, arcade.isReTry() ? arcade.getFailedLevel() : 1));
-				if (arcade.getFrenzyLevel() < 8 && !arcade.isReTry()) {
-					arcade.setFrenzyLevel(1);
-				} else {
-					arcade.setReTry(true);
-					arcade.setFailedLevel(arcade.getFrenzyLevel());
-				}
-				PacketSendUtility.sendPacket(player,
-						new SM_UPGRADE_ARCADE(player, 5, arcade.isReTry() ? arcade.getFailedLevel() : 1));
-				arcade.setFailed(true);
-			}
-		}, 3000);
+		/**
+		 * 执行任务。
+		 * Runs the task.
+		 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			 PacketSendUtility.sendPacket(player,
+					 new SM_UPGRADE_ARCADE(player, 5, arcade.isReTry() ? arcade.getFailedLevel() : 1));
+			 if (arcade.getFrenzyLevel() < 8 && !arcade.isReTry()) {
+				 arcade.setFrenzyLevel(1);
+			 } else {
+				 arcade.setReTry(true);
+				 arcade.setFailedLevel(arcade.getFrenzyLevel());
+			 }
+			 PacketSendUtility.sendPacket(player,
+					 new SM_UPGRADE_ARCADE(player, 5, arcade.isReTry() ? arcade.getFailedLevel() : 1));
+			 arcade.setFailed(true);
+		 }, 3000);
 	}
 
 	/**
@@ -287,21 +278,17 @@ public class ArcadeUpgradeService {
 		// 升级狂热！ / Upgrade Frenzy!
 		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GACHA_FEVERTIME_START);
 		PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(7, frenzyTime, arcade.getFrenzyCount()));
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */
-			public void run() {
-				PlayerUpgradeArcade arcade = player.getUpgradeArcade();
-				PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(7, 0, arcade.getFrenzyCount()));
-				player.getUpgradeArcade().setFrenzy(false);
-				if (arcade.getFrenzyCount() >= 4) {
-					arcade.setFrenzyCount(0);
-				}
-			}
-		}, frenzyTime * 1000);
+		/**
+		 * 执行任务。
+		 * Runs the task.
+		 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			 PlayerUpgradeArcade arcade1 = player.getUpgradeArcade();
+			 PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(7, 0, arcade1.getFrenzyCount()));
+			 player.getUpgradeArcade().setFrenzy(false);
+			 if (arcade1.getFrenzyCount() >= 4) {
+				 arcade1.setFrenzyCount(0);
+			 }
+		 }, frenzyTime * 1000);
 		player.getUpgradeArcade().setFrenzyPoints(0);
 		if (arcade.getFrenzyCount() == 4) {
 			arcade.setFrenzyCount(0);

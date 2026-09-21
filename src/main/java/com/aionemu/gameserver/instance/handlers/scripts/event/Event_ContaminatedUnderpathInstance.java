@@ -79,7 +79,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/** 副本奖励对象 / instance reward object */
 	private IDEventDefReward instanceReward;
 	/** ideventdef 任务 / idevent def task */
-		private final List<Future<?>> IDEventDefTask = new ArrayList<Future<?>>();
+		private final List<Future<?>> IDEventDefTask = new ArrayList<>();
 	/**
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
@@ -271,19 +271,19 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 					 */
 					@Override
 					public void run() {
-					    instance.doOnAllPlayers(new Visitor<Player>() {
-						    /**
-						     * 处理 visit。
-						     * Handle visit.
-						     *
-						     * @param player 玩家 / player
-						     */
-						    @Override
-						    public void visit(Player player) {
-							    stopInstance(player);
+					    instance.doOnAllPlayers(new Visitor<>() {
+							/**
+							 * 处理 visit。
+							 * Handle visit.
+							 *
+							 * @param player 玩家 / player
+							 */
+							@Override
+							public void visit(Player player) {
+								stopInstance(player);
 								underpathTaskA4.cancel(true);
-						    }
-					    });
+							}
+						});
 					}
 				}, 5000);
 			break;
@@ -552,7 +552,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	}
 
 	private void sendPacket(final int nameId, final int point) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -615,19 +615,19 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
              */
             @Override
             public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-				    /**
-				     * 处理 visit。
-				     * Handle visit.
-				     *
-				     * @param player 玩家 / player
-				     */
-				    @Override
-				    public void visit(Player player) {
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
 						deleteNpc(248525);
-					    stopInstance(player);
-				    }
-			    });
+						stopInstance(player);
+					}
+				});
             }
         }, 1200000)); //...20Min
     }
@@ -694,7 +694,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				}
 			}, prepareTimerSeconds);
 		}
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -979,7 +979,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	}
 
 	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -1009,7 +1009,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.

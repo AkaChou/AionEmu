@@ -28,14 +28,14 @@ public class CraftItemGroup extends CraftGroup {
 	 */
 	public List<CraftItem> getItems() {
 		if (items == null) {
-			items = new ArrayList<CraftItem>();
+			items = new ArrayList<>();
 		}
 		return this.items;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.aionemu.gameserver.model.templates.itemgroups.ItemGroup#getRewards()
 	 */
 	@Override

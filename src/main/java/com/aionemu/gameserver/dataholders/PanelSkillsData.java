@@ -22,7 +22,7 @@ public class PanelSkillsData {
 
 	@XmlElement(name = "panel")
 	protected List<SkillPanel> templates;
-	private final IntObjectHashMap<SkillPanel> skillPanels = new IntObjectHashMap<SkillPanel>();
+	private final IntObjectHashMap<SkillPanel> skillPanels = new IntObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，将面板写入 ID 索引并释放列表。

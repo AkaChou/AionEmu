@@ -22,7 +22,7 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
 public class Accuracy implements StatOwner {
 	private static volatile ObjectProvider<Accuracy> instanceProvider;
 
-	private final List<IStatFunction> accuracy = new ArrayList<IStatFunction>();
+	private final List<IStatFunction> accuracy = new ArrayList<>();
 
 	/**
 	 * 属性变更时重算。

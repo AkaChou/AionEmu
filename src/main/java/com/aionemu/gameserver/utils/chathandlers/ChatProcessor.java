@@ -50,12 +50,12 @@ public class ChatProcessor implements GameEngine {
 	 * 别名 → 命令映射。
 	 * Alias-to-command map.
 	 */
-	private volatile Map<String, ChatCommand> commands = new HashMap<String, ChatCommand>();
+	private volatile Map<String, ChatCommand> commands = new HashMap<>();
 	/**
 	 * 别名 → 访问等级映射（来自配置）。
 	 * Alias-to-access-level map (from config).
 	 */
-	private Map<String, Byte> accessLevel = new HashMap<String, Byte>();
+	private Map<String, Byte> accessLevel = new HashMap<>();
 
 	/**
 	 * 获取处理器实例（优先 Spring 提供者）。

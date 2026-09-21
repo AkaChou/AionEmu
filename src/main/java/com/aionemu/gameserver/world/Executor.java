@@ -57,13 +57,7 @@ public abstract class Executor<T extends AionObject> {
 		if (now) {
 			runImpl(objects);
 		} else {
-			GameThreadPoolServices.threadPoolManager().execute(new Runnable() {
-
-				@Override
-				public void run() {
-					runImpl(objects);
-				}
-			});
+			GameThreadPoolServices.threadPoolManager().execute(() -> runImpl(objects));
 		}
 	}
 

@@ -31,25 +31,22 @@ public class DF6_WindStreamAI2 extends NpcAI2
 		startWindStream(npc);
         windStreamAnnounce(getOwner(), 0);
     }
-	
+
 	private void startWindStream(final Npc npc) {
-        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            @Override
-            public void run() {
-                Npc npc2 = (Npc) spawn(220110000, 857865, 1661.18f, 1956.75f, 197.8f, (byte) 0, 0, 1);
-				windStreamAnnounce(npc2, 1);
-				despawnNpc(857864);
-                spawn(857865, 1661.0259f, 1956.8621f, 200.32886f, (byte) 0, 2449);
-                PacketSendUtility.broadcastPacket(npc2, new SM_WINDSTREAM_ANNOUNCE(1, 220110000, 301, 1));
-                if (npc2 != null) {
-                    npc2.getController().onDelete();
-                } if (npc != null) {
-                    npc.getController().onDelete();
-                }
-            }
-        }, 5000);
+        GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			Npc npc2 = (Npc) spawn(220110000, 857865, 1661.18f, 1956.75f, 197.8f, (byte) 0, 0, 1);
+			windStreamAnnounce(npc2, 1);
+			despawnNpc(857864);
+			spawn(857865, 1661.0259f, 1956.8621f, 200.32886f, (byte) 0, 2449);
+			PacketSendUtility.broadcastPacket(npc2, new SM_WINDSTREAM_ANNOUNCE(1, 220110000, 301, 1));
+			if (npc2 != null) {
+				npc2.getController().onDelete();
+			} if (npc != null) {
+				npc.getController().onDelete();
+			}
+		}, 5000);
     }
-	
+
     private void windStreamAnnounce(final Npc npc, final int state) {
         WindstreamTemplate template = DataManager.WINDSTREAM_DATA.getStreamTemplate(npc.getPosition().getMapId());
         for (Location2D wind: template.getLocations().getLocation()) {
@@ -58,14 +55,9 @@ public class DF6_WindStreamAI2 extends NpcAI2
                 break;
             }
         }
-        npc.getPosition().getWorld().doOnAllPlayers(new Visitor<Player>() {
-            @Override
-            public void visit(Player player) {
-                PacketSendUtility.sendPacket(player, new SM_WINDSTREAM_ANNOUNCE(1, 220110000, 301, state));
-            }
-        });
+        npc.getPosition().getWorld().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, new SM_WINDSTREAM_ANNOUNCE(1, 220110000, 301, state)));
     }
-	
+
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);

@@ -26,7 +26,7 @@ public class PetData {
 	private List<PetTemplate> pets;
 
 	/** 按宠物 ID 索引的模板映射 / map of pet templates by id */
-	private final IntObjectHashMap<PetTemplate> petData = new IntObjectHashMap<PetTemplate>();
+	private final IntObjectHashMap<PetTemplate> petData = new IntObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，将宠物模板写入 ID 索引并释放列表。

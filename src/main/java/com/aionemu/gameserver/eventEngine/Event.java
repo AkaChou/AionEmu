@@ -143,12 +143,7 @@ public abstract class Event implements Runnable {
 	 */
 	protected void announce(final Player pl, final String msg, int delay) {
 		if (delay > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					PacketSendUtility.sendSys3Message(pl, "Event", msg);
-				}
-			}, delay);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> PacketSendUtility.sendSys3Message(pl, "Event", msg), delay);
 		} else {
 			PacketSendUtility.sendSys3Message(pl, "Event", msg);
 		}
@@ -173,26 +168,15 @@ public abstract class Event implements Runnable {
 	 */
 	protected void announceAll(final String msg, int delay) {
 		if (delay > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-						@Override
-						public void visit(Player pl) {
-							if (pl.getBattleground() == null) {
-								PacketSendUtility.sendSys3Message(pl, "Event", msg);
-							}
-						}
-					});
+			GameThreadPoolServices.threadPoolManager().schedule(() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
+				if (pl.getBattleground() == null) {
+					PacketSendUtility.sendSys3Message(pl, "Event", msg);
 				}
-			}, delay);
+			}), delay);
 		} else {
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player pl) {
-					if (pl.getBattleground() == null) {
-						PacketSendUtility.sendSys3Message(pl, "Event", msg);
-					}
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
+				if (pl.getBattleground() == null) {
+					PacketSendUtility.sendSys3Message(pl, "Event", msg);
 				}
 			});
 		}

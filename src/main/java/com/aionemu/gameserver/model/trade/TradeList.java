@@ -34,7 +34,7 @@ public class TradeList {
 	/**
 	 * @return the tradeItems
 	 */
-	private final List<TradeItem> tradeItems = new ArrayList<TradeItem>();
+	private final List<TradeItem> tradeItems = new ArrayList<>();
 
 	/**
 	 * @return the requiredKinah
@@ -49,7 +49,7 @@ public class TradeList {
 	/**
 	 * @return the requiredItems
 	 */
-	private final Map<Integer, Long> requiredItems = new HashMap<Integer, Long>();
+	private final Map<Integer, Long> requiredItems = new HashMap<>();
 
 	public TradeList(int sellerObjId) {
 		this.sellerObjId = sellerObjId;

@@ -463,18 +463,15 @@ public class ItemSocketService {
 			}
 		};
 		player.getObserveController().attach(Enchant);
-		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
-			@Override
-			public void run() {
-				player.getController().cancelTask(TaskId.ITEM_USE);
-				player.getObserveController().removeObserver(Enchant);
-				weaponItem.addGodStone(godStoneItemId);
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE
-						.STR_GIVE_ITEM_PROC_ENCHANTED_TARGET_ITEM(new DescriptionId(weaponItem.getNameId())));
-				ItemPacketService.updateItemAfterInfoChange(player, weaponItem);
-				PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
-						godstone.getObjectId(), godstone.getItemTemplate().getTemplateId(), 0, 1, 384));
-			}
+		player.getController().scheduleTask(TaskId.ITEM_USE, () -> {
+			player.getController().cancelTask(TaskId.ITEM_USE);
+			player.getObserveController().removeObserver(Enchant);
+			weaponItem.addGodStone(godStoneItemId);
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE
+					.STR_GIVE_ITEM_PROC_ENCHANTED_TARGET_ITEM(new DescriptionId(weaponItem.getNameId())));
+			ItemPacketService.updateItemAfterInfoChange(player, weaponItem);
+			PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
+					godstone.getObjectId(), godstone.getItemTemplate().getTemplateId(), 0, 1, 384));
 		}, 5000);
 	}
 
@@ -585,24 +582,21 @@ public class ItemSocketService {
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
-			@Override
-			public void run() {
-				player.getObserveController().removeObserver(observer);
-				PacketSendUtility.broadcastPacket(player,
-						new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(), toolObjectId, toolItemId, 0, 1, 1),
-						true);
-				if (!player.getInventory().decreaseByObjectId(toolObjectId, 1))
-					return;
-				if (!player.getInventory().decreaseByObjectId(enchantmentStoneObjectId, 1))
-					return;
-				currentItem.setAmplification(true);
-				player.getInventory().setPersistentState(PersistentState.UPDATE_REQUIRED);
-				currentItem.setPersistentState(PersistentState.UPDATE_REQUIRED);
-				ItemPacketService.updateItemAfterInfoChange(player, currentItem);
-				PacketSendUtility.sendPacket(player,
-						SM_SYSTEM_MESSAGE.STR_MSG_EXCEED_SUCCEED(new DescriptionId(currentItem.getNameId())));
-			}
+		player.getController().scheduleTask(TaskId.ITEM_USE, () -> {
+			player.getObserveController().removeObserver(observer);
+			PacketSendUtility.broadcastPacket(player,
+					new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(), toolObjectId, toolItemId, 0, 1, 1),
+					true);
+			if (!player.getInventory().decreaseByObjectId(toolObjectId, 1))
+				return;
+			if (!player.getInventory().decreaseByObjectId(enchantmentStoneObjectId, 1))
+				return;
+			currentItem.setAmplification(true);
+			player.getInventory().setPersistentState(PersistentState.UPDATE_REQUIRED);
+			currentItem.setPersistentState(PersistentState.UPDATE_REQUIRED);
+			ItemPacketService.updateItemAfterInfoChange(player, currentItem);
+			PacketSendUtility.sendPacket(player,
+					SM_SYSTEM_MESSAGE.STR_MSG_EXCEED_SUCCEED(new DescriptionId(currentItem.getNameId())));
 		}, 5000);
 	}
 }

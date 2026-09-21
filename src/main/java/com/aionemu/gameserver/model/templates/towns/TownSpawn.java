@@ -28,7 +28,7 @@ public class TownSpawn {
 	private int townId;
 	@XmlElement(name = "town_level")
 	private List<TownLevel> townLevels;
-	private final Map<Integer, TownLevel> townLevelsData = new HashMap<Integer, TownLevel>();
+	private final Map<Integer, TownLevel> townLevelsData = new HashMap<>();
 
 	/**
 	 * 反序列化后将城镇等级列表转为按等级索引的映射。

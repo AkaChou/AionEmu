@@ -49,7 +49,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public class AbyssLandingService {
 	private static volatile ObjectProvider<AbyssLandingService> instanceProvider;
 	private static Map<Integer, LandingLocation> abyssLanding;
-	private final ConcurrentMap<Integer, Landing<?>> activeLanding = new ConcurrentHashMap<Integer, Landing<?>>();
+	private final ConcurrentMap<Integer, Landing<?>> activeLanding = new ConcurrentHashMap<>();
 
 	/**
 	 * 从静态数据与数据库加载登陆点并全部启动。
@@ -121,7 +121,7 @@ public class AbyssLandingService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
+		for (VisibleObject obj : new ArrayList<>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {
@@ -331,28 +331,25 @@ public class AbyssLandingService {
 	 */
 	public void AnnounceToPoints(final Player pl, final DescriptionId race, final DescriptionId name, final int points,
 			final LandingPointsEnum type) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				switch (type) {
-				case SIEGE:
-					// %0 占领了 %0，登陆点已增强。 / %0 has occupied %0 and the Landing is now enhanced.
-					PacketSendUtility.sendPacket(player,
-							SM_SYSTEM_MESSAGE.STR_MSG_BUILDUP_NOTICE_CONTRIBUTE_USER_OCCUPY(race, name));
-					break;
-				case BASE:
-					// %0 已占领 %1 基地，登陆点已增强。 / %0 has occupied %1 Base and the Landing is now enhanced.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE
-							.STR_MSG_BUILDUP_NOTICE_CONTRIBUTE_USER_OCCUPY_BASECAMP(race, name.toString()));
-					break;
-				case QUEST:
-					// 已完成任务为登陆点贡献了 %0 点。 / Completed quest has contributed %0 points to the Landing.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_BUILDUP_POINT_QUEST_GAIN(points));
-					// %0 已完成的任务增强了登陆点。 / %0's completed quest has enhanced the Landing.
-					PacketSendUtility.sendPacket(player,
-							SM_SYSTEM_MESSAGE.STR_MSG_BUILDUP_NOTICE_CONTRIBUTE_USER_QUEST(pl.getName()));
-					break;
-				}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			switch (type) {
+			case SIEGE:
+				// %0 占领了 %0，登陆点已增强。 / %0 has occupied %0 and the Landing is now enhanced.
+				PacketSendUtility.sendPacket(player,
+						SM_SYSTEM_MESSAGE.STR_MSG_BUILDUP_NOTICE_CONTRIBUTE_USER_OCCUPY(race, name));
+				break;
+			case BASE:
+				// %0 已占领 %1 基地，登陆点已增强。 / %0 has occupied %1 Base and the Landing is now enhanced.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE
+						.STR_MSG_BUILDUP_NOTICE_CONTRIBUTE_USER_OCCUPY_BASECAMP(race, name.toString()));
+				break;
+			case QUEST:
+				// 已完成任务为登陆点贡献了 %0 点。 / Completed quest has contributed %0 points to the Landing.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_BUILDUP_POINT_QUEST_GAIN(points));
+				// %0 已完成的任务增强了登陆点。 / %0's completed quest has enhanced the Landing.
+				PacketSendUtility.sendPacket(player,
+						SM_SYSTEM_MESSAGE.STR_MSG_BUILDUP_NOTICE_CONTRIBUTE_USER_QUEST(pl.getName()));
+				break;
 			}
 		});
 	}
@@ -435,14 +432,11 @@ public class AbyssLandingService {
 		redemptionLanding().setLevel(level);
 		stopLanding(redemptionLanding().getId());
 		startLanding(redemptionLanding().getId());
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 登陆点升级。 / Landing Level Up.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ABYSS_OP_LEVEL_UP_LIGHT);
-				PacketSendUtility.sendPacket(player,
-						new SM_ABYSS_LANDING_LEVEL(0, redemptionLanding().getLevel(), redemptionLanding().getLevel()));
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 登陆点升级。 / Landing Level Up.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ABYSS_OP_LEVEL_UP_LIGHT);
+			PacketSendUtility.sendPacket(player,
+					new SM_ABYSS_LANDING_LEVEL(0, redemptionLanding().getLevel(), redemptionLanding().getLevel()));
 		});
 	}
 
@@ -456,14 +450,11 @@ public class AbyssLandingService {
 		harbingerLanding().setLevel(level);
 		stopLanding(harbingerLanding().getId());
 		startLanding(harbingerLanding().getId());
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 登陆点升级。 / Landing Level Up.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ABYSS_OP_LEVEL_UP_DARK);
-				PacketSendUtility.sendPacket(player,
-						new SM_ABYSS_LANDING_LEVEL(1, harbingerLanding().getLevel(), harbingerLanding().getLevel()));
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 登陆点升级。 / Landing Level Up.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ABYSS_OP_LEVEL_UP_DARK);
+			PacketSendUtility.sendPacket(player,
+					new SM_ABYSS_LANDING_LEVEL(1, harbingerLanding().getLevel(), harbingerLanding().getLevel()));
 		});
 	}
 
@@ -477,14 +468,11 @@ public class AbyssLandingService {
 		harbingerLanding().setLevel(level);
 		stopLanding(harbingerLanding().getId());
 		startLanding(harbingerLanding().getId());
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 登陆点削弱。 / Landing Weakened.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ABYSS_OP_LEVEL_DOWN);
-				PacketSendUtility.sendPacket(player,
-						new SM_ABYSS_LANDING_LEVEL(1, harbingerLanding().getLevel(), harbingerLanding().getLevel()));
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 登陆点削弱。 / Landing Weakened.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ABYSS_OP_LEVEL_DOWN);
+			PacketSendUtility.sendPacket(player,
+					new SM_ABYSS_LANDING_LEVEL(1, harbingerLanding().getLevel(), harbingerLanding().getLevel()));
 		});
 	}
 
@@ -498,14 +486,11 @@ public class AbyssLandingService {
 		redemptionLanding().setLevel(level);
 		stopLanding(redemptionLanding().getId());
 		startLanding(redemptionLanding().getId());
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 登陆点削弱。 / Landing Weakened.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ABYSS_OP_LEVEL_DOWN);
-				PacketSendUtility.sendPacket(player,
-						new SM_ABYSS_LANDING_LEVEL(0, redemptionLanding().getLevel(), redemptionLanding().getLevel()));
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 登陆点削弱。 / Landing Weakened.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ABYSS_OP_LEVEL_DOWN);
+			PacketSendUtility.sendPacket(player,
+					new SM_ABYSS_LANDING_LEVEL(0, redemptionLanding().getLevel(), redemptionLanding().getLevel()));
 		});
 	}
 

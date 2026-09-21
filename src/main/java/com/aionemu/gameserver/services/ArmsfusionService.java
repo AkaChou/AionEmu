@@ -117,22 +117,15 @@ public class ArmsfusionService {
 	 * price rate
 	 */
 	private static double rarityRate(ItemQuality rarity) {
-		switch (rarity) {
-		case COMMON:
-			return 1.0;
-		case RARE:
-			return 1.25;
-		case LEGEND:
-			return 1.5;
-		case UNIQUE:
-			return 2.0;
-		case EPIC:
-			return 2.5;
-		case MYTHIC:
-			return 3.0;
-		default:
-			return 1.0;
-		}
+		return switch (rarity) {
+			case COMMON -> 1.0;
+			case RARE -> 1.25;
+			case LEGEND -> 1.5;
+			case UNIQUE -> 2.0;
+			case EPIC -> 2.5;
+			case MYTHIC -> 3.0;
+			default -> 1.0;
+		};
 	}
 
 	/**

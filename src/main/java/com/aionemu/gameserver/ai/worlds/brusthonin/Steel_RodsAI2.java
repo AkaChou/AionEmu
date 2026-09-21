@@ -20,17 +20,14 @@ public class Steel_RodsAI2 extends NpcAI2
 {
 	@Override
 	protected void handleDied() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-			    despawnNpc(209479); // 俘虏的格里芬之爪军团兵 / Captured Griffon's Claw Legionnary.
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			despawnNpc(209479); // 俘虏的格里芬之爪军团兵 / Captured Griffon's Claw Legionnary.
 		}, 3000);
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);
 	}
-	
+
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);

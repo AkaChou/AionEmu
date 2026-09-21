@@ -30,7 +30,7 @@ public class BrokerPlayerCache {
 	 * @return the brokerStartPageCache
 	 */
 	private int brokerStartPageCache;
-	private List<Integer> itemList = new ArrayList<Integer>();
+	private List<Integer> itemList = new ArrayList<>();
 
 	/**
 	 * @return the brokerSoftTypeCache

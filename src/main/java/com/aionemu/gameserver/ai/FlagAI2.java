@@ -20,7 +20,7 @@ import java.util.concurrent.Future;
 public class FlagAI2 extends NoActionAI2
 {
     private Future<?> sendPacketTask;
-	
+
     /**
      * 处理生成完成事件。
      * Handle post-spawn.
@@ -28,23 +28,15 @@ public class FlagAI2 extends NoActionAI2
     @Override
     public void handleSpawned() {
         super.handleSpawned();
-        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-            @Override
-            public void visit(final Player player) {
-                sendPacketTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (player.getWorldId() == getOwner().getWorldId()) {
-                            if (getOwner().isSpawned()) {
-                                PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, getOwner()));
-                            }
-                        }
-                    }
-                }, 1000, 2000);
-            }
-        });
+        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> sendPacketTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (player.getWorldId() == getOwner().getWorldId()) {
+				if (getOwner().isSpawned()) {
+					PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, getOwner()));
+				}
+			}
+		}, 1000, 2000));
     }
-	
+
     /**
      * 处理消失事件。
      * Handle despawn.
@@ -52,20 +44,12 @@ public class FlagAI2 extends NoActionAI2
     @Override
     protected void handleDespawned() {
         super.handleDespawned();
-        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-            @Override
-            public void visit(final Player player) {
-                sendPacketTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (player.getWorldId() == getOwner().getWorldId()) {
-                            PacketSendUtility.sendPacket(player, new SM_FLAG_UPDATE(getOwner()));
-                            AI2Actions.deleteOwner(FlagAI2.this);
-                        }
-                    }
-                }, 1000, 2000);
-            }
-        });
+        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> sendPacketTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (player.getWorldId() == getOwner().getWorldId()) {
+				PacketSendUtility.sendPacket(player, new SM_FLAG_UPDATE(getOwner()));
+				AI2Actions.deleteOwner(FlagAI2.this);
+			}
+		}, 1000, 2000));
     }
-	
+
 }

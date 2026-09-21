@@ -29,12 +29,12 @@ public class PortalAI2 extends ActionItemNpcAI2
 {
 	protected PortalUse portalUse;
 	protected TeleporterTemplate teleportTemplate;
-	
+
 	@Override
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		return true;
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
@@ -45,32 +45,19 @@ public class PortalAI2 extends ActionItemNpcAI2
 			case 802221: //Advance Corridor [Umbral Fortress].
 			case 802223: //Advance Corridor [Eternum Fortress].
 			case 802225: //Advance Corridor [Skyclash Fortress].
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						startLifeTask();
-					}
-				}, 1000);
+			    GameThreadPoolServices.threadPoolManager().schedule(() -> startLifeTask(), 1000);
 			break;
         }
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			        @Override
-			        public void visit(Player player) {
-						AI2Actions.deleteOwner(PortalAI2.this);
-						// 进阶走廊关闭后，你将返回所用入口。 / You will be returned to the entrance you used upon closure of the Advance Corridor.
-						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_SVS_DIRECT_PORTAL_CLOSE_COMPULSION_TELEPORT);
-			        }
-				});
-			}
-		}, 600000); // 10 分钟。 / 10 minutes.
+		GameThreadPoolServices.threadPoolManager().schedule(() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			AI2Actions.deleteOwner(PortalAI2.this);
+			// 进阶走廊关闭后，你将返回所用入口。 / You will be returned to the entrance you used upon closure of the Advance Corridor.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_SVS_DIRECT_PORTAL_CLOSE_COMPULSION_TELEPORT);
+		}), 600000); // 10 分钟。 / 10 minutes.
 	}
-	
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		AI2Actions.selectDialog(this, player, 0, -1);
@@ -80,7 +67,7 @@ public class PortalAI2 extends ActionItemNpcAI2
 			handleUseItemFinish(player);
 		}
 	}
-	
+
 	@Override
 	protected void handleUseItemFinish(Player player) {
 		if (portalUse != null) {

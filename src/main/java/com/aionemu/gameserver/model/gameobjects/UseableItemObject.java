@@ -32,7 +32,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class UseableItemObject extends HouseObject<HousingUseableItem> {
 
 	private volatile boolean mustGiveLastReward = false;
-	private final AtomicReference<Player> usingPlayer = new AtomicReference<Player>();
+	private final AtomicReference<Player> usingPlayer = new AtomicReference<>();
 	private UseDataWriter entryWriter = null;
 
 	public UseableItemObject(House owner, int objId, int templateId) {

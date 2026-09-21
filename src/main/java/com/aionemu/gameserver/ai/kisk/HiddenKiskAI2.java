@@ -30,27 +30,24 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class HiddenKiskAI2 extends NpcAI2
 {
     private final int CANCEL_DIALOG_METERS = 9;
-	
+
 	@Override
 	public Kisk getOwner() {
 		return (Kisk) super.getOwner();
 	}
-	
+
 	@Override
     public void handleSpawned() {
         if (!isAlreadyDead()) {
-		    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					getOwner().getEffectController().setAbnormal(AbnormalState.HIDE.getId());
-					getOwner().setVisualState(CreatureVisualState.HIDE1);
-		            PacketSendUtility.broadcastPacket(getOwner(), new SM_PLAYER_STATE(getOwner()));
-				}
+		    GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				getOwner().getEffectController().setAbnormal(AbnormalState.HIDE.getId());
+				getOwner().setVisualState(CreatureVisualState.HIDE1);
+				PacketSendUtility.broadcastPacket(getOwner(), new SM_PLAYER_STATE(getOwner()));
 			}, 180000); // 3 分钟后进入半隐形状态 / 3 Min after become half-invisible.
         }
 		super.handleSpawned();
     }
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		if (getLifeStats().isFullyRestoredHp()) {
@@ -59,7 +56,7 @@ public class HiddenKiskAI2 extends NpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		if (isAlreadyDead()) {
@@ -68,7 +65,7 @@ public class HiddenKiskAI2 extends NpcAI2
 		}
 		super.handleDied();
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		GameFeatureServices.kiskService().removeKisk(getOwner());
@@ -77,7 +74,7 @@ public class HiddenKiskAI2 extends NpcAI2
 		}
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		if (player.getKisk() == getOwner()) {
@@ -107,12 +104,12 @@ public class HiddenKiskAI2 extends NpcAI2
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_REGISTER_BINDSTONE_HAVE_NO_AUTHORITY);
 		}
 	}
-	
+
 	@Override
 	public int modifyOwnerDamage(int damage) {
 		return 1;
 	}
-	
+
 	@Override
 	public int modifyDamage(int damage) {
 		return 1;

@@ -124,7 +124,7 @@ public class SpawnMap {
 	/** 获取刷新。 / Returns the spawns. */
 	public List<Spawn> getSpawns() {
 		if (spawns == null) {
-			spawns = new ArrayList<Spawn>();
+			spawns = new ArrayList<>();
 		}
 		return spawns;
 	}
@@ -142,7 +142,7 @@ public class SpawnMap {
 	/** 获取要塞刷新。 / Returns the siege spawns. */
 	public List<SiegeSpawn> getSiegeSpawns() {
 		if (siegeSpawns == null) {
-			siegeSpawns = new ArrayList<SiegeSpawn>();
+			siegeSpawns = new ArrayList<>();
 		}
 		return siegeSpawns;
 	}
@@ -150,7 +150,7 @@ public class SpawnMap {
 	/** 获取军团领地刷新。 / Returns the legion dominion spawns. */
 	public List<LegionDominionSpawn> getLegionDominionSpawns() {
 		if (legionDominionSpawns == null) {
-			legionDominionSpawns = new ArrayList<LegionDominionSpawn>();
+			legionDominionSpawns = new ArrayList<>();
 		}
 		return legionDominionSpawns;
 	}
@@ -158,7 +158,7 @@ public class SpawnMap {
 	/** 获取基础刷新。 / Returns the base spawns. */
 	public List<BaseSpawn> getBaseSpawns() {
 		if (baseSpawns == null) {
-			baseSpawns = new ArrayList<BaseSpawn>();
+			baseSpawns = new ArrayList<>();
 		}
 		return baseSpawns;
 	}
@@ -166,7 +166,7 @@ public class SpawnMap {
 	/** 获取前哨刷新。 / Returns the outpost spawns. */
 	public List<OutpostSpawn> getOutpostSpawns() {
 		if (outpostSpawns == null) {
-			outpostSpawns = new ArrayList<OutpostSpawn>();
+			outpostSpawns = new ArrayList<>();
 		}
 		return outpostSpawns;
 	}
@@ -174,7 +174,7 @@ public class SpawnMap {
 	/** 获取裂隙刷新。 / Returns the rift spawns. */
 	public List<RiftSpawn> getRiftSpawns() {
 		if (riftSpawns == null) {
-			riftSpawns = new ArrayList<RiftSpawn>();
+			riftSpawns = new ArrayList<>();
 		}
 		return riftSpawns;
 	}
@@ -182,7 +182,7 @@ public class SpawnMap {
 	/** 获取漩涡刷新。 / Returns the vortex spawns. */
 	public List<VortexSpawn> getVortexSpawns() {
 		if (vortexSpawns == null) {
-			vortexSpawns = new ArrayList<VortexSpawn>();
+			vortexSpawns = new ArrayList<>();
 		}
 		return vortexSpawns;
 	}
@@ -190,7 +190,7 @@ public class SpawnMap {
 	/** 获取贝里特拉刷新。 / Returns the beritra spawns. */
 	public List<BeritraSpawn> getBeritraSpawns() {
 		if (beritraSpawns == null) {
-			beritraSpawns = new ArrayList<BeritraSpawn>();
+			beritraSpawns = new ArrayList<>();
 		}
 		return beritraSpawns;
 	}
@@ -198,7 +198,7 @@ public class SpawnMap {
 	/** 获取代理人刷新。 / Returns the agent spawns. */
 	public List<AgentSpawn> getAgentSpawns() {
 		if (agentSpawns == null) {
-			agentSpawns = new ArrayList<AgentSpawn>();
+			agentSpawns = new ArrayList<>();
 		}
 		return agentSpawns;
 	}
@@ -206,7 +206,7 @@ public class SpawnMap {
 	/** 获取阿诺哈刷新。 / Returns the anoha spawns. */
 	public List<AnohaSpawn> getAnohaSpawns() {
 		if (anohaSpawns == null) {
-			anohaSpawns = new ArrayList<AnohaSpawn>();
+			anohaSpawns = new ArrayList<>();
 		}
 		return anohaSpawns;
 	}
@@ -214,7 +214,7 @@ public class SpawnMap {
 	/** 获取征服刷新。 / Returns the conquest spawns. */
 	public List<ConquestSpawn> getConquestSpawns() {
 		if (conquestSpawns == null) {
-			conquestSpawns = new ArrayList<ConquestSpawn>();
+			conquestSpawns = new ArrayList<>();
 		}
 		return conquestSpawns;
 	}
@@ -222,7 +222,7 @@ public class SpawnMap {
 	/** 获取势力战刷新。 / Returns the svs spawns. */
 	public List<SvsSpawn> getSvsSpawns() {
 		if (svsSpawns == null) {
-			svsSpawns = new ArrayList<SvsSpawn>();
+			svsSpawns = new ArrayList<>();
 		}
 		return svsSpawns;
 	}
@@ -230,7 +230,7 @@ public class SpawnMap {
 	/** 获取阵营战刷新。 / Returns the rvr spawns. */
 	public List<RvrSpawn> getRvrSpawns() {
 		if (rvrSpawns == null) {
-			rvrSpawns = new ArrayList<RvrSpawn>();
+			rvrSpawns = new ArrayList<>();
 		}
 		return rvrSpawns;
 	}
@@ -238,7 +238,7 @@ public class SpawnMap {
 	/** 获取 IU 刷新 / Returns the iu spawns */
 	public List<IuSpawn> getIuSpawns() {
 		if (iuSpawns == null) {
-			iuSpawns = new ArrayList<IuSpawn>();
+			iuSpawns = new ArrayList<>();
 		}
 		return iuSpawns;
 	}
@@ -246,7 +246,7 @@ public class SpawnMap {
 	/** 获取熔岩魔刷新。 / Returns the moltenus spawns. */
 	public List<MoltenusSpawn> getMoltenusSpawns() {
 		if (moltenusSpawns == null) {
-			moltenusSpawns = new ArrayList<MoltenusSpawn>();
+			moltenusSpawns = new ArrayList<>();
 		}
 		return moltenusSpawns;
 	}
@@ -254,7 +254,7 @@ public class SpawnMap {
 	/** 获取动态裂隙刷新。 / Returns the dynamic rift spawns. */
 	public List<DynamicRiftSpawn> getDynamicRiftSpawns() {
 		if (dynamicRiftSpawns == null) {
-			dynamicRiftSpawns = new ArrayList<DynamicRiftSpawn>();
+			dynamicRiftSpawns = new ArrayList<>();
 		}
 		return dynamicRiftSpawns;
 	}
@@ -262,7 +262,7 @@ public class SpawnMap {
 	/** 获取副本裂隙刷新。 / Returns the instance rift spawns. */
 	public List<InstanceRiftSpawn> getInstanceRiftSpawns() {
 		if (instanceRiftSpawns == null) {
-			instanceRiftSpawns = new ArrayList<InstanceRiftSpawn>();
+			instanceRiftSpawns = new ArrayList<>();
 		}
 		return instanceRiftSpawns;
 	}
@@ -270,7 +270,7 @@ public class SpawnMap {
 	/** 获取梦魇马戏团刷新。 / Returns the nightmare circus spawns. */
 	public List<NightmareCircusSpawn> getNightmareCircusSpawns() {
 		if (nightmareCircusSpawns == null) {
-			nightmareCircusSpawns = new ArrayList<NightmareCircusSpawn>();
+			nightmareCircusSpawns = new ArrayList<>();
 		}
 		return nightmareCircusSpawns;
 	}
@@ -278,7 +278,7 @@ public class SpawnMap {
 	/** 获取伊迪安深渊刷新。 / Returns the idian depths spawns. */
 	public List<IdianDepthsSpawn> getIdianDepthsSpawns() {
 		if (idianDepthsSpawns == null) {
-			idianDepthsSpawns = new ArrayList<IdianDepthsSpawn>();
+			idianDepthsSpawns = new ArrayList<>();
 		}
 		return idianDepthsSpawns;
 	}
@@ -286,7 +286,7 @@ public class SpawnMap {
 	/** 获取佐希夫无畏舰刷新。 / Returns the zorshiv dredgion spawns. */
 	public List<ZorshivDredgionSpawn> getZorshivDredgionSpawns() {
 		if (zorshivDredgionSpawns == null) {
-			zorshivDredgionSpawns = new ArrayList<ZorshivDredgionSpawn>();
+			zorshivDredgionSpawns = new ArrayList<>();
 		}
 		return zorshivDredgionSpawns;
 	}
@@ -294,7 +294,7 @@ public class SpawnMap {
 	/** 获取登陆刷新。 / Returns the landing spawns. */
 	public List<LandingSpawn> getLandingSpawns() {
 		if (landingSpawns == null) {
-			landingSpawns = new ArrayList<LandingSpawn>();
+			landingSpawns = new ArrayList<>();
 		}
 		return landingSpawns;
 	}
@@ -302,7 +302,7 @@ public class SpawnMap {
 	/** 获取特殊登陆刷新 / Returns the landing special spawns */
 	public List<LandingSpecialSpawn> getLandingSpecialSpawns() {
 		if (landingSpecialSpawns == null) {
-			landingSpecialSpawns = new ArrayList<LandingSpecialSpawn>();
+			landingSpecialSpawns = new ArrayList<>();
 		}
 		return landingSpecialSpawns;
 	}
@@ -310,7 +310,7 @@ public class SpawnMap {
 	/** 获取永恒之塔刷新 / Returns the tower of eternity spawns */
 	public List<TowerOfEternitySpawn> getTowerOfEternitySpawns() {
 		if (towerOfEternitySpawns == null) {
-			towerOfEternitySpawns = new ArrayList<TowerOfEternitySpawn>();
+			towerOfEternitySpawns = new ArrayList<>();
 		}
 		return towerOfEternitySpawns;
 	}

@@ -31,7 +31,7 @@ public class RankRestriction {
 	/** 返回惩罚属性列表 / Returns the penalty attr */
 	public List<RankPenaltyAttr> getPenaltyAttr() {
 		if (penaltyAttr == null) {
-			penaltyAttr = new ArrayList<RankPenaltyAttr>();
+			penaltyAttr = new ArrayList<>();
 		}
 		return this.penaltyAttr;
 	}

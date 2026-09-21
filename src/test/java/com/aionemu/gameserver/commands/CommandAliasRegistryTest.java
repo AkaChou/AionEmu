@@ -59,7 +59,7 @@ class CommandAliasRegistryTest {
 	 */
 	@Test
 	void everyConfiguredAliasHasACommandClass() throws IOException {
-		TreeSet<String> missingHandlers = new TreeSet<String>(configuredAliases());
+		TreeSet<String> missingHandlers = new TreeSet<>(configuredAliases());
 		missingHandlers.removeAll(declaredAliases().keySet());
 
 		assertTrue(missingHandlers.isEmpty(),
@@ -72,7 +72,7 @@ class CommandAliasRegistryTest {
 	 */
 	@Test
 	void everyCommandClassAliasIsConfigured() throws IOException {
-		TreeSet<String> missingAccessLevels = new TreeSet<String>(declaredAliases().keySet());
+		TreeSet<String> missingAccessLevels = new TreeSet<>(declaredAliases().keySet());
 		missingAccessLevels.removeAll(configuredAliases());
 
 		assertTrue(missingAccessLevels.isEmpty(),
@@ -116,7 +116,7 @@ class CommandAliasRegistryTest {
 	 * @throws IOException 读取命令源文件失败时 / When a command source cannot be read
 	 */
 	private static Map<String, Path> declaredAliases() throws IOException {
-		Map<String, Path> aliases = new TreeMap<String, Path>();
+		Map<String, Path> aliases = new TreeMap<>();
 		for (Path source : commandSources()) {
 			Matcher declaration = DECLARED_ALIAS_DECLARATION.matcher(Files.readString(source));
 			while (declaration.find()) {
@@ -139,7 +139,7 @@ class CommandAliasRegistryTest {
 	 * @throws IOException 读取配置失败时 / When the config cannot be read
 	 */
 	private static TreeSet<String> configuredAliases() throws IOException {
-		TreeSet<String> aliases = new TreeSet<String>();
+		TreeSet<String> aliases = new TreeSet<>();
 		for (String line : Files.readAllLines(ACCESS_LEVEL_CONFIG)) {
 			if (line.trim().startsWith("#")) {
 				continue;
@@ -160,7 +160,7 @@ class CommandAliasRegistryTest {
 	 * @throws IOException 遍历命令包失败时 / When the command packages cannot be walked
 	 */
 	private static List<Path> commandSources() throws IOException {
-		List<Path> sources = new ArrayList<Path>();
+		List<Path> sources = new ArrayList<>();
 		for (Path root : COMMAND_PACKAGES) {
 			try (Stream<Path> files = Files.walk(root)) {
 				files.filter(path -> path.getFileName().toString().endsWith(".java")).forEach(sources::add);

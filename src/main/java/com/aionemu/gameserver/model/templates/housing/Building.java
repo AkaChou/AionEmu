@@ -45,7 +45,7 @@ public class Building {
 	protected int id;
 
 	@XmlTransient
-	Map<PartType, Integer> partsByType = new HashMap<PartType, Integer>();
+	Map<PartType, Integer> partsByType = new HashMap<>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		if (parts == null) {

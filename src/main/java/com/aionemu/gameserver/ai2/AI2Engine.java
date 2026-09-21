@@ -36,7 +36,7 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 public class AI2Engine implements GameEngine {
 
 	private static volatile ObjectProvider<AI2Engine> instanceProvider;
-	private final Map<String, Class<? extends AbstractAI>> aiMap = new HashMap<String, Class<? extends AbstractAI>>();
+	private final Map<String, Class<? extends AbstractAI>> aiMap = new HashMap<>();
 	/**
 	 * 这些自定义 AI 的交互协议、生命周期或战斗阶段副作用会生成可被任务引用的 NPC；零售 pattern 没有等价行为时，必须保留脚本 AI。
 	 * Scripted interaction protocols, lifecycle or combat-phase spawns must not be bypassed by an incomplete retail pattern.
@@ -172,7 +172,7 @@ public class AI2Engine implements GameEngine {
 	 * Validates that all AI names referenced by NPC templates are registered.
 	 */
 	private void validateScripts() {
-		Collection<String> npcAINames = new HashSet<String>();
+		Collection<String> npcAINames = new HashSet<>();
 		for (NpcTemplate npcTemplate : DataManager.NPC_DATA.getNpcData().values()) {
 			npcAINames.add(npcTemplate.getAi());
 		}

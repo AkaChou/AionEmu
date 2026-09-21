@@ -41,7 +41,7 @@ public class CM_QUESTIONNAIRE extends AionClientPacket {
 	protected void readImpl() {
 		objectId = readD();
 		itemSize = readH();
-		items = new ArrayList<Integer>();
+		items = new ArrayList<>();
 		for (int i = 0; i < itemSize; i++) {
 			itemId = readD();
 			items.add(itemId);

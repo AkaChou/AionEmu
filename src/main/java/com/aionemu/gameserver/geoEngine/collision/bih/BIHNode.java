@@ -187,7 +187,7 @@ public final class BIHNode {
 	public int intersectWhere(Collidable col, BoundingBox box, Matrix4f worldMatrix, BIHTree tree,
 							  CollisionResults results) {
 
-		List<BIHStackData> stack = new ArrayList<BIHStackData>();
+		List<BIHStackData> stack = new ArrayList<>();
 
 		float[] minExts = { box.getCenter().x - box.getXExtent(), box.getCenter().y - box.getYExtent(),
 				box.getCenter().z - box.getZExtent() };
@@ -264,7 +264,7 @@ public final class BIHNode {
 
 		int cols = 0;
 
-		List<BIHStackData> stack = new ArrayList<BIHStackData>();
+		List<BIHStackData> stack = new ArrayList<>();
 		stack.clear();
 		stack.add(new BIHStackData(this, 0, 0));
 		while (stack.size() > 0) {

@@ -19,24 +19,19 @@ public class TechGolemAI2 extends AggressiveNpcAI2
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 	}
-	
+
 	@Override
     protected void handleSpawned() {
         super.handleSpawned();
 		startLifeTask();
     }
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(TechGolemAI2.this);
-			}
-		}, 120000); // 2 分钟后自毁 / Self-destruct after 2 minutes
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(TechGolemAI2.this), 120000); // 2 分钟后自毁 / Self-destruct after 2 minutes
 	}
 }

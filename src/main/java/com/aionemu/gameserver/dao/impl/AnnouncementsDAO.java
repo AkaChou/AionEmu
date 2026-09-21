@@ -39,7 +39,7 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 	 */
 	@Override
 	public Set<Announcement> getAnnouncements() {
-		final Set<Announcement> result = new HashSet<Announcement>();
+		final Set<Announcement> result = new HashSet<>();
 
 		try (Connection con = DatabaseFactory.getConnection();
 			 PreparedStatement stmt = con.prepareStatement(SELECT_QUERY);

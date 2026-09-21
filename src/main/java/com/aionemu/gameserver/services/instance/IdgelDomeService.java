@@ -32,7 +32,7 @@ public class IdgelDomeService {
 	private static volatile ObjectProvider<IdgelDomeService> instanceProvider;
 
 	private boolean registerAvailable;
-	private final List<Integer> playersWithCooldown = new ArrayList<Integer>();
+	private final List<Integer> playersWithCooldown = new ArrayList<>();
 	public static final byte minLevel = 61, capLevel = 66;
 	public static final int maskId = 111;
 
@@ -44,54 +44,38 @@ public class IdgelDomeService {
 		if (AutoGroupConfig.IDGEL_ENABLED) {
 			log.info(I18n.get("log.770479d27791"));
 			// 伊杰尔穹顶 一/三/五 12:00–13:00 / Idgel Dome MON-WED-FRI "12PM-1PM"
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				/**
-				 * 执行任务。
-				 * Runs the task.
-				 */
-				public void run() {
-					startIdgelRegistration();
-				}
-			}, AutoGroupConfig.IDGEL_SCHEDULE_MIDDAY);
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */GameCronServices.cronService().schedule(() -> startIdgelRegistration(), AutoGroupConfig.IDGEL_SCHEDULE_MIDDAY);
 			// 伊杰尔穹顶 一/三/五 23:00–00:00 / Idgel Dome MON-WED-FRI "11PM-0PM"
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				/**
-				 * 执行任务。
-				 * Runs the task.
-				 */
-				public void run() {
-					startIdgelRegistration();
-				}
-			}, AutoGroupConfig.IDGEL_SCHEDULE_MIDNIGHT);
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */GameCronServices.cronService().schedule(() -> startIdgelRegistration(), AutoGroupConfig.IDGEL_SCHEDULE_MIDNIGHT);
 		}
 	}
 
 	private void startUregisterIdgelTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */
-			public void run() {
-				registerAvailable = false;
-				playersWithCooldown.clear();
-				GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskId);
-				Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
-				while (iter.hasNext()) {
-					Player player = iter.next();
-					if (player.getLevel() > minLevel) {
-						int instanceMaskId = getInstanceMaskId(player);
-						if (instanceMaskId > 0) {
-							PacketSendUtility.sendPacket(player,
-									new SM_AUTO_GROUP(instanceMaskId, SM_AUTO_GROUP.wnd_EntryIcon, true));
-						}
-					}
-				}
-			}
-		}, AutoGroupConfig.IDGEL_TIMER * 60 * 1000);
+		/**
+		 * 执行任务。
+		 * Runs the task.
+		 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			 registerAvailable = false;
+			 playersWithCooldown.clear();
+			 GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskId);
+			 Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+			 while (iter.hasNext()) {
+				 Player player = iter.next();
+				 if (player.getLevel() > minLevel) {
+					 int instanceMaskId = getInstanceMaskId(player);
+					 if (instanceMaskId > 0) {
+						 PacketSendUtility.sendPacket(player,
+								 new SM_AUTO_GROUP(instanceMaskId, SM_AUTO_GROUP.wnd_EntryIcon, true));
+					 }
+				 }
+			 }
+		 }, AutoGroupConfig.IDGEL_TIMER * 60 * 1000);
 	}
 
 	private void startIdgelRegistration() {

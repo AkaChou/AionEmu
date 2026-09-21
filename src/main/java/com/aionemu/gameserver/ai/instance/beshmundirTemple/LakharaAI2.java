@@ -27,27 +27,19 @@ public class LakharaAI2 extends AggressiveNpcAI2
 			certainDoom();
 		}
 	}
-	
+
 	private void certainDoom() {
 		int hp = getOwner().getLifeStats().getHpPercentage();
 		if (hp <= 25) {
 			sendMessage();
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					getOwner().getController().useSkill(18891);
-				}
-			}, 5000);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> getOwner().getController().useSkill(18891), 5000);
 		}
 	}
-	
+
 	private void sendMessage() {
-		getKnownList().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400382));
-				}
+		getKnownList().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400382));
 			}
 		});
 	}

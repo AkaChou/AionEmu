@@ -19,27 +19,22 @@ public class OilCaskAI2 extends AggressiveNpcAI2
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 	}
-	
+
 	@Override
     protected void handleSpawned() {
         super.handleSpawned();
 		startLifeTask();
     }
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(OilCaskAI2.this);
-			}
-		}, 20000); // 20 秒后 / 20 Secondes.
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(OilCaskAI2.this), 20000); // 20 秒后 / 20 Secondes.
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

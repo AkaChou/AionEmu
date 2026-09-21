@@ -31,7 +31,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class HallOfTenacityService {
 	private static volatile ObjectProvider<HallOfTenacityService> instanceProvider;
 	private boolean registerAvailable;
-	private final List<Integer> playersWithCooldown = new ArrayList<Integer>();
+	private final List<Integer> playersWithCooldown = new ArrayList<>();
 	public static final byte minLevel = 66, capLevel = 76;
 	public static final int maskId = 125;
 
@@ -43,54 +43,38 @@ public class HallOfTenacityService {
 		if (AutoGroupConfig.HALL_OF_TENACITY_ENABLED) {
 			log.info(I18n.get("log.9b3ac2974711"));
 			// 坚韧大厅 周六/日 09:00–17:00 / Hall Of Tenacity SAT-SUN "9AM-5PM"
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				/**
-				 * 执行任务。
-				 * Runs the task.
-				 */
-				public void run() {
-					startHallOfTenacityRegistration();
-				}
-			}, AutoGroupConfig.HALL_OF_TENACITY_SCHEDULE_MORNING);
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */GameCronServices.cronService().schedule(() -> startHallOfTenacityRegistration(), AutoGroupConfig.HALL_OF_TENACITY_SCHEDULE_MORNING);
 			// 坚韧大厅 周一至周五 18:00–00:00 / Hall Of Tenacity MON-TUE-WED-THU-FRI "6PM-0AM"
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				/**
-				 * 执行任务。
-				 * Runs the task.
-				 */
-				public void run() {
-					startHallOfTenacityRegistration();
-				}
-			}, AutoGroupConfig.HALL_OF_TENACITY_SCHEDULE_EVENING);
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */GameCronServices.cronService().schedule(() -> startHallOfTenacityRegistration(), AutoGroupConfig.HALL_OF_TENACITY_SCHEDULE_EVENING);
 		}
 	}
 
 	private void startUregisterHallOfTenacityTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */
-			public void run() {
-				registerAvailable = false;
-				playersWithCooldown.clear();
-				GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskId);
-				Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
-				while (iter.hasNext()) {
-					Player player = iter.next();
-					if (player.getLevel() > minLevel) {
-						int instanceMaskId = getInstanceMaskId(player);
-						if (instanceMaskId > 0) {
-							PacketSendUtility.sendPacket(player,
-									new SM_AUTO_GROUP(instanceMaskId, SM_AUTO_GROUP.wnd_EntryIcon, true));
-						}
-					}
-				}
-			}
-		}, AutoGroupConfig.HALL_OF_TENACITY_TIMER * 60 * 1000);
+		/**
+		 * 执行任务。
+		 * Runs the task.
+		 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			 registerAvailable = false;
+			 playersWithCooldown.clear();
+			 GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskId);
+			 Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+			 while (iter.hasNext()) {
+				 Player player = iter.next();
+				 if (player.getLevel() > minLevel) {
+					 int instanceMaskId = getInstanceMaskId(player);
+					 if (instanceMaskId > 0) {
+						 PacketSendUtility.sendPacket(player,
+								 new SM_AUTO_GROUP(instanceMaskId, SM_AUTO_GROUP.wnd_EntryIcon, true));
+					 }
+				 }
+			 }
+		 }, AutoGroupConfig.HALL_OF_TENACITY_TIMER * 60 * 1000);
 	}
 
 	/**

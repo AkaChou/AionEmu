@@ -247,11 +247,14 @@ public class TeleportService2 {
 	}
 
 	static int getAbyssEntryQuestId(Race race) {
-		return switch (race) {
-		case ELYOS -> ELYOS_ABYSS_ENTRY_QUEST_ID;
-		case ASMODIANS -> ASMODIAN_ABYSS_ENTRY_QUEST_ID;
-		default -> 0;
-		};
+		switch (race) {
+			case ELYOS:
+				return ELYOS_ABYSS_ENTRY_QUEST_ID;
+			case ASMODIANS:
+				return ASMODIAN_ABYSS_ENTRY_QUEST_ID;
+			default:
+				return 0;
+		}
 	}
 
 	public static boolean isInggisonEntryWorld(int worldId) {
@@ -300,19 +303,25 @@ public class TeleportService2 {
 	}
 
 	static int getBalaureaEntryQuestId(Race race) {
-		return switch (race) {
-		case ELYOS -> ELYOS_BALAUREA_ENTRY_QUEST_ID;
-		case ASMODIANS -> ASMODIAN_BALAUREA_ENTRY_QUEST_ID;
-		default -> 0;
-		};
+		switch (race) {
+			case ELYOS:
+				return ELYOS_BALAUREA_ENTRY_QUEST_ID;
+			case ASMODIANS:
+				return ASMODIAN_BALAUREA_ENTRY_QUEST_ID;
+			default:
+				return 0;
+		}
 	}
 
 	static int getBalaureaEntryQuestStep(Race race) {
-		return switch (race) {
-		case ELYOS -> ELYOS_BALAUREA_ENTRY_QUEST_STEP;
-		case ASMODIANS -> ASMODIAN_BALAUREA_ENTRY_QUEST_STEP;
-		default -> 0;
-		};
+		switch (race) {
+			case ELYOS:
+				return ELYOS_BALAUREA_ENTRY_QUEST_STEP;
+			case ASMODIANS:
+				return ASMODIAN_BALAUREA_ENTRY_QUEST_STEP;
+			default:
+				return 0;
+		}
 	}
 
 	/**
@@ -346,11 +355,14 @@ public class TeleportService2 {
 	}
 
 	static int getKahrunEntryQuestId(Race race) {
-		return switch (race) {
-		case ELYOS -> ELYOS_KAHRUN_ENTRY_QUEST_ID;
-		case ASMODIANS -> ASMODIAN_KAHRUN_ENTRY_QUEST_ID;
-		default -> 0;
-		};
+		switch (race) {
+			case ELYOS:
+				return ELYOS_KAHRUN_ENTRY_QUEST_ID;
+			case ASMODIANS:
+				return ASMODIAN_KAHRUN_ENTRY_QUEST_ID;
+			default:
+				return 0;
+		}
 	}
 
 	/**
@@ -387,11 +399,14 @@ public class TeleportService2 {
 	}
 
 	static int getArchDaevaEntryQuestId(Race race, int targetWorldId) {
-		return switch (race) {
-		case ELYOS -> targetWorldId == ELYOS_ILUMA_WORLD_ID ? ELYOS_ARCHDAEVA_ENTRY_QUEST_ID : 0;
-		case ASMODIANS -> targetWorldId == ASMODIAN_NORSVOLD_WORLD_ID ? ASMODIAN_ARCHDAEVA_ENTRY_QUEST_ID : 0;
-		default -> 0;
-		};
+        switch (race) {
+            case ELYOS:
+                return targetWorldId == ELYOS_ILUMA_WORLD_ID ? ELYOS_ARCHDAEVA_ENTRY_QUEST_ID : 0;
+            case ASMODIANS:
+                return targetWorldId == ASMODIAN_NORSVOLD_WORLD_ID ? ASMODIAN_ARCHDAEVA_ENTRY_QUEST_ID : 0;
+            default:
+                return 0;
+        }
 	}
 
 	/**
@@ -455,19 +470,16 @@ public class TeleportService2 {
 		playerTransformation(player);
 		instanceTransformation(player);
 		archdaevaTransformation(player);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (player.getLifeStats().isAlreadyDead() || !player.isSpawned()) {
-					return;
-				}
-				if (animation.equals(TeleportAnimation.BEAM_ANIMATION)) {
-					PacketSendUtility.broadcastPacket(player, new SM_DELETE(player, 2), 50);
-				} else if (animation.equals(TeleportAnimation.JUMP_ANIMATION)) {
-					PacketSendUtility.broadcastPacket(player, new SM_DELETE(player, 11), 50);
-				}
-				changePosition(player, targetMapId, instanceId, x, y, z, h, animation);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (player.getLifeStats().isAlreadyDead() || !player.isSpawned()) {
+				return;
 			}
+			if (animation.equals(TeleportAnimation.BEAM_ANIMATION)) {
+				PacketSendUtility.broadcastPacket(player, new SM_DELETE(player, 2), 50);
+			} else if (animation.equals(TeleportAnimation.JUMP_ANIMATION)) {
+				PacketSendUtility.broadcastPacket(player, new SM_DELETE(player, 11), 50);
+			}
+			changePosition(player, targetMapId, instanceId, x, y, z, h, animation);
 		}, delay);
 	}
 
@@ -798,12 +810,7 @@ public class TeleportService2 {
 				instanceTransformation(player);
 				archdaevaTransformation(player);
 				if (player.isUseRobot() || player.getRobotId() != 0) {
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							PacketSendUtility.sendPacket(player, new SM_USE_ROBOT(player, getRobotInfo(player).getRobotId()));
-						}
-					}, 3000);
+					GameThreadPoolServices.threadPoolManager().schedule(() -> PacketSendUtility.sendPacket(player, new SM_USE_ROBOT(player, getRobotInfo(player).getRobotId())), 3000);
 				}
 			}
 

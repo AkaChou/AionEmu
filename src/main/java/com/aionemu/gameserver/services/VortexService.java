@@ -51,7 +51,7 @@ public class VortexService {
 	private VortexSchedule vortexSchedule;
 	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private Map<Integer, VortexLocation> vortex;
-	private final ConcurrentMap<Integer, DimensionalVortex<?>> activeInvasions = new ConcurrentHashMap<Integer, DimensionalVortex<?>>();
+	private final ConcurrentMap<Integer, DimensionalVortex<?>> activeInvasions = new ConcurrentHashMap<>();
 
 	/**
 	 * 初始化漩涡地点并按和平状态刷怪。
@@ -115,12 +115,9 @@ public class VortexService {
 		theobomosVortexMsg(id);
 		brusthoninVortexMsg(id);
 		dimensionalVortexCountdownMsg(id);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!invasion.isGeneratorDestroyed()) {
-					stopInvasion(id);
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!invasion.isGeneratorDestroyed()) {
+				stopInvasion(id);
 			}
 		}, (long) CustomConfig.VORTEX_DURATION * 3600 * 1000);
 	}
@@ -172,14 +169,11 @@ public class VortexService {
 	public boolean theobomosVortexMsg(int id) {
 		switch (id) {
 		case 1:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					if (player.getCommonData().getRace() == Race.ASMODIANS) {
-						// 通往泰奥勃莫斯的次元漩涡已出现。 / A Dimensional Vortex leading to Theobomos has appeared.
-						PacketSendUtility.sendPacket(player,
-								SM_SYSTEM_MESSAGE.STR_MSG_LIGHT_SIDE_INVADE_DIRECT_PORTAL_OPEN);
-					}
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				if (player.getCommonData().getRace() == Race.ASMODIANS) {
+					// 通往泰奥勃莫斯的次元漩涡已出现。 / A Dimensional Vortex leading to Theobomos has appeared.
+					PacketSendUtility.sendPacket(player,
+							SM_SYSTEM_MESSAGE.STR_MSG_LIGHT_SIDE_INVADE_DIRECT_PORTAL_OPEN);
 				}
 			});
 			return true;
@@ -198,14 +192,11 @@ public class VortexService {
 	public boolean brusthoninVortexMsg(int id) {
 		switch (id) {
 		case 1:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					if (player.getCommonData().getRace() == Race.ELYOS) {
-						// 通往布鲁斯特豪宁的次元漩涡已出现。 / A Dimensional Vortex leading to Brusthonin has appeared.
-						PacketSendUtility.sendPacket(player,
-								SM_SYSTEM_MESSAGE.STR_MSG_DARK_SIDE_INVADE_DIRECT_PORTAL_OPEN);
-					}
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				if (player.getCommonData().getRace() == Race.ELYOS) {
+					// 通往布鲁斯特豪宁的次元漩涡已出现。 / A Dimensional Vortex leading to Brusthonin has appeared.
+					PacketSendUtility.sendPacket(player,
+							SM_SYSTEM_MESSAGE.STR_MSG_DARK_SIDE_INVADE_DIRECT_PORTAL_OPEN);
 				}
 			});
 			return true;
@@ -224,50 +215,47 @@ public class VortexService {
 	public boolean dimensionalVortexCountdownMsg(int id) {
 		switch (id) {
 		case 1:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					// 次元漩涡将在 90 分钟后关闭。关闭后联盟 / The Dimensional Vortex will close in 90 minutes. When it closes, the alliance
-					// 将被解散，所有渗透者将被送回。 / will be disbanded and all infiltrators will be returned home.
-					PacketSendUtility.playerSendPacketTime(player,
-							SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_CLOSE_TIMER_90M, 1800000);
-					// 次元漩涡将在 60 分钟后关闭。关闭后联盟 / The Dimensional Vortex will close in 60 minutes. When it closes, the alliance
-					// 将被解散，所有渗透者将被送回。 / will be disbanded and all infiltrators will be returned home.
-					PacketSendUtility.playerSendPacketTime(player,
-							SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_CLOSE_TIMER_60M, 3600000);
-					// 次元漩涡将在 30 分钟后关闭。关闭后联盟 / The Dimensional Vortex will close in 30 minutes. When it closes, the alliance
-					// 将被解散，所有渗透者将被送回。 / will be disbanded and all infiltrators will be returned home.
-					PacketSendUtility.playerSendPacketTime(player,
-							SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_CLOSE_TIMER_30M, 5400000);
-					// 次元漩涡将在 15 分钟后关闭。关闭后联盟 / The Dimensional Vortex will close in 15 minutes. When it closes, the alliance
-					// 将被解散，所有渗透者将被送回。 / will be disbanded and all infiltrators will be returned home.
-					PacketSendUtility.playerSendPacketTime(player,
-							SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_CLOSE_TIMER_15M, 6300000);
-					// 次元漩涡将在 10 分钟后关闭。关闭后联盟 / The Dimensional Vortex will close in 10 minutes. When it closes, the alliance
-					// 将被解散，所有渗透者将被送回。 / will be disbanded and all infiltrators will be returned home.
-					PacketSendUtility.playerSendPacketTime(player,
-							SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_CLOSE_TIMER_10M, 6600000);
-					// 次元漩涡将在 5 分钟后关闭。关闭后联盟 / The Dimensional Vortex will close in 5 minutes. When it closes, the alliance
-					// 将被解散，所有渗透者将被送回。 / will be disbanded and all infiltrators will be returned home.
-					PacketSendUtility.playerSendPacketTime(player,
-							SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_CLOSE_TIMER_5M, 6900000);
-					// 次元漩涡将在 3 分钟后关闭。关闭后联盟 / The Dimensional Vortex will close in 3 minutes. When it closes, the alliance
-					// 将被解散，所有渗透者将被送回。 / will be disbanded and all infiltrators will be returned home.
-					PacketSendUtility.playerSendPacketTime(player,
-							SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_CLOSE_TIMER_3M, 7020000);
-					// 次元漩涡将在 2 分钟后关闭。关闭后联盟 / The Dimensional Vortex will close in 2 minutes. When it closes, the alliance
-					// 将被解散，所有渗透者将被送回。 / will be disbanded and all infiltrators will be returned home.
-					PacketSendUtility.playerSendPacketTime(player,
-							SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_CLOSE_TIMER_2M, 7080000);
-					// 次元漩涡将在 1 分钟后关闭。关闭后联盟 / The Dimensional Vortex will close in 1 minutes. When it closes, the alliance
-					// 将被解散，所有渗透者将被送回。 / will be disbanded and all infiltrators will be returned home.
-					PacketSendUtility.playerSendPacketTime(player,
-							SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_CLOSE_TIMER_1M, 7140000);
-					// 次元漩涡已关闭，你将被送回 / The Dimensional Vortex has closed, and you will be returned to where you
-					// 已进入。 / entered.
-					PacketSendUtility.playerSendPacketTime(player,
-							SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_CLOSE_COMPULSION_TELEPORT, 7200000);
-				}
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				// 次元漩涡将在 90 分钟后关闭。关闭后联盟 / The Dimensional Vortex will close in 90 minutes. When it closes, the alliance
+				// 将被解散，所有渗透者将被送回。 / will be disbanded and all infiltrators will be returned home.
+				PacketSendUtility.playerSendPacketTime(player,
+						SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_CLOSE_TIMER_90M, 1800000);
+				// 次元漩涡将在 60 分钟后关闭。关闭后联盟 / The Dimensional Vortex will close in 60 minutes. When it closes, the alliance
+				// 将被解散，所有渗透者将被送回。 / will be disbanded and all infiltrators will be returned home.
+				PacketSendUtility.playerSendPacketTime(player,
+						SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_CLOSE_TIMER_60M, 3600000);
+				// 次元漩涡将在 30 分钟后关闭。关闭后联盟 / The Dimensional Vortex will close in 30 minutes. When it closes, the alliance
+				// 将被解散，所有渗透者将被送回。 / will be disbanded and all infiltrators will be returned home.
+				PacketSendUtility.playerSendPacketTime(player,
+						SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_CLOSE_TIMER_30M, 5400000);
+				// 次元漩涡将在 15 分钟后关闭。关闭后联盟 / The Dimensional Vortex will close in 15 minutes. When it closes, the alliance
+				// 将被解散，所有渗透者将被送回。 / will be disbanded and all infiltrators will be returned home.
+				PacketSendUtility.playerSendPacketTime(player,
+						SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_CLOSE_TIMER_15M, 6300000);
+				// 次元漩涡将在 10 分钟后关闭。关闭后联盟 / The Dimensional Vortex will close in 10 minutes. When it closes, the alliance
+				// 将被解散，所有渗透者将被送回。 / will be disbanded and all infiltrators will be returned home.
+				PacketSendUtility.playerSendPacketTime(player,
+						SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_CLOSE_TIMER_10M, 6600000);
+				// 次元漩涡将在 5 分钟后关闭。关闭后联盟 / The Dimensional Vortex will close in 5 minutes. When it closes, the alliance
+				// 将被解散，所有渗透者将被送回。 / will be disbanded and all infiltrators will be returned home.
+				PacketSendUtility.playerSendPacketTime(player,
+						SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_CLOSE_TIMER_5M, 6900000);
+				// 次元漩涡将在 3 分钟后关闭。关闭后联盟 / The Dimensional Vortex will close in 3 minutes. When it closes, the alliance
+				// 将被解散，所有渗透者将被送回。 / will be disbanded and all infiltrators will be returned home.
+				PacketSendUtility.playerSendPacketTime(player,
+						SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_CLOSE_TIMER_3M, 7020000);
+				// 次元漩涡将在 2 分钟后关闭。关闭后联盟 / The Dimensional Vortex will close in 2 minutes. When it closes, the alliance
+				// 将被解散，所有渗透者将被送回。 / will be disbanded and all infiltrators will be returned home.
+				PacketSendUtility.playerSendPacketTime(player,
+						SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_CLOSE_TIMER_2M, 7080000);
+				// 次元漩涡将在 1 分钟后关闭。关闭后联盟 / The Dimensional Vortex will close in 1 minutes. When it closes, the alliance
+				// 将被解散，所有渗透者将被送回。 / will be disbanded and all infiltrators will be returned home.
+				PacketSendUtility.playerSendPacketTime(player,
+						SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_CLOSE_TIMER_1M, 7140000);
+				// 次元漩涡已关闭，你将被送回 / The Dimensional Vortex has closed, and you will be returned to where you
+				// 已进入。 / entered.
+				PacketSendUtility.playerSendPacketTime(player,
+						SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_CLOSE_COMPULSION_TELEPORT, 7200000);
 			});
 			return true;
 		default:
@@ -286,7 +274,7 @@ public class VortexService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
+		for (VisibleObject obj : new ArrayList<>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {

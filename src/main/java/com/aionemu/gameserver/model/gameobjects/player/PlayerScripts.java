@@ -32,7 +32,7 @@ public class PlayerScripts {
 	private final int houseObjId;
 
 	public PlayerScripts(int houseObjectId) {
-		this.scripts = new HashMap<Integer, PlayerScript>(8);
+		this.scripts = new HashMap<>(8);
 		for (int index = 0; index < 8; index++) {
 			this.scripts.put(index, new PlayerScript());
 		}

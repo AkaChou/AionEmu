@@ -51,7 +51,7 @@ public class LootGroupRules {
 	 */
 	private int nrRoundRobin;
 	/** 返回 items to be distributed / Returns the items to be distributed */
-	private final List<DropItem> itemsToBeDistributed = new ArrayList<DropItem>();
+	private final List<DropItem> itemsToBeDistributed = new ArrayList<>();
 
 	public LootGroupRules() {
 		lootRule = LootRuleType.ROUNDROBIN;

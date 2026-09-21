@@ -821,18 +821,8 @@ public class SoloSurvivorBg extends Battleground {
 				}
 			}
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				openStaticDoors();
-			}
-		}, 25 * 1000);
-		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				endSoloSurvivorMatch(true);
-			}
-		}, getMatchLength() * 1000L));
+		GameThreadPoolServices.threadPoolManager().schedule(() -> openStaticDoors(), 25 * 1000);
+		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(() -> endSoloSurvivorMatch(true), getMatchLength() * 1000L));
 		super.startBackgroundTask();
 	}
 
@@ -920,14 +910,11 @@ public class SoloSurvivorBg extends Battleground {
 		super.setStartStamp(System.currentTimeMillis());
 		synchronized (super.getPlayers()) {
 			for (final Player pl : super.getPlayers()) {
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						preparePlayer(pl, 8000, false);
-						SpawnPosition pos = getSpawnPositions().get(pl.getBgIndex());
-						if (pos != null) {
-							TeleportService2.teleportTo(pl, getMapId(), pos.getX(), pos.getY(), pos.getZ());
-						}
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					preparePlayer(pl, 8000, false);
+					SpawnPosition pos = getSpawnPositions().get(pl.getBgIndex());
+					if (pos != null) {
+						TeleportService2.teleportTo(pl, getMapId(), pos.getX(), pos.getY(), pos.getZ());
 					}
 				}, 5000);
 			}
@@ -935,20 +922,12 @@ public class SoloSurvivorBg extends Battleground {
 		for (Player pl : super.getSpectators()) {
 			super.createTimer(pl, getMatchLength());
 		}
-		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				endSoloSurvivorMatch(true);
-			}
-		}, getMatchLength() * 1000L));
+		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(() -> endSoloSurvivorMatch(true), getMatchLength() * 1000L));
 		super.startBackgroundTask();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				endCalled = false;
-				if (getPlayers().size() <= 1) {
-					endSoloSurvivorMatch(false);
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			endCalled = false;
+			if (getPlayers().size() <= 1) {
+				endSoloSurvivorMatch(false);
 			}
 		}, 5000);
 	}

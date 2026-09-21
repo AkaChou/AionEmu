@@ -35,7 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class HouseController extends VisibleObjectController<House> {
 
 	/** 正在观察该房屋的玩家映射。 / Map of players currently observing this house. */
-	Map<Integer, ActionObserver> observed = new ConcurrentHashMap<Integer, ActionObserver>();
+	Map<Integer, ActionObserver> observed = new ConcurrentHashMap<>();
 
 	/**
 	 * 玩家进入房屋范围时发送渲染包并生成室内物件。
@@ -107,16 +107,13 @@ public class HouseController extends VisibleObjectController<House> {
 	 * Asynchronously pushes a house appearance update to all observers.
 	 */
 	public void updateAppearance() {
-		GameThreadPoolServices.threadPoolManager().execute(new Runnable() {
-			@Override
-			public void run() {
-				for (int playerId : observed.keySet()) {
-					Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
-					if (player == null) {
-						continue;
-					}
-					PacketSendUtility.sendPacket(player, new SM_HOUSE_UPDATE(getOwner()));
+		GameThreadPoolServices.threadPoolManager().execute(() -> {
+			for (int playerId : observed.keySet()) {
+				Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
+				if (player == null) {
+					continue;
 				}
+				PacketSendUtility.sendPacket(player, new SM_HOUSE_UPDATE(getOwner()));
 			}
 		});
 	}
@@ -126,16 +123,13 @@ public class HouseController extends VisibleObjectController<House> {
 	 * Asynchronously broadcasts the full house render packet to all observers.
 	 */
 	public void broadcastAppearance() {
-		GameThreadPoolServices.threadPoolManager().execute(new Runnable() {
-			@Override
-			public void run() {
-				for (int playerId : observed.keySet()) {
-					Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
-					if (player == null) {
-						continue;
-					}
-					PacketSendUtility.sendPacket(player, new SM_HOUSE_RENDER(getOwner()));
+		GameThreadPoolServices.threadPoolManager().execute(() -> {
+			for (int playerId : observed.keySet()) {
+				Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
+				if (player == null) {
+					continue;
 				}
+				PacketSendUtility.sendPacket(player, new SM_HOUSE_RENDER(getOwner()));
 			}
 		});
 	}

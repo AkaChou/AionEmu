@@ -43,7 +43,7 @@ public class FireTempleInstance extends GeneralInstanceHandler
             break;
 		}
 	}
-	
+
 	private void spawnKromedeTreasureChest() {
 		switch (Rnd.get(1, 3)) {
 		    case 1:
@@ -60,9 +60,9 @@ public class FireTempleInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void announceKromedeOrnate() {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -79,7 +79,7 @@ public class FireTempleInstance extends GeneralInstanceHandler
 		});
 	}
 	private void announceKromedeBrilliant() {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -96,7 +96,7 @@ public class FireTempleInstance extends GeneralInstanceHandler
 		});
 	}
 	private void announceKromedeDazzling() {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -112,7 +112,7 @@ public class FireTempleInstance extends GeneralInstanceHandler
 			}
 		});
 	}
-	
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -179,7 +179,7 @@ public class FireTempleInstance extends GeneralInstanceHandler
 				break;
         }
     }
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -189,7 +189,7 @@ public class FireTempleInstance extends GeneralInstanceHandler
 	@Override
     public void onInstanceCreate(WorldMapInstance instance) {
         super.onInstanceCreate(instance);
-		
+
         // Boss 随机生成 / Random spawns of bosses
         if (Rnd.get(1, 100) > 25) { // Blue Crystal Molgat
             spawn(212839, 127.1218f, 176.1912f, 99.67548f, (byte) 15);
@@ -233,6 +233,6 @@ public class FireTempleInstance extends GeneralInstanceHandler
             spawn(212846, 421.9935f, 93.18915f, 117.3053f, (byte) 46);
         }
     }
-	
-	
+
+
 }

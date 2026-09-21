@@ -37,15 +37,15 @@ public class GoodsListData {
 	 * After JAXB unmarshalling, indexes the three goods list types by id and releases the raw lists.
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		goodsListData = new IntObjectHashMap<GoodsList>();
+		goodsListData = new IntObjectHashMap<>();
 		for (GoodsList it : list) {
 			goodsListData.put(it.getId(), it);
 		}
-		goodsInListData = new IntObjectHashMap<GoodsList>();
+		goodsInListData = new IntObjectHashMap<>();
 		for (GoodsList it : inList) {
 			goodsInListData.put(it.getId(), it);
 		}
-		goodsPurchaseListData = new IntObjectHashMap<GoodsList>();
+		goodsPurchaseListData = new IntObjectHashMap<>();
 		for (GoodsList it : pList) {
 			goodsPurchaseListData.put(it.getId(), it);
 		}

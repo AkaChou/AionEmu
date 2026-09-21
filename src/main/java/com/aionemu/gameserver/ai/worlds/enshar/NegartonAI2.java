@@ -31,7 +31,7 @@ public class NegartonAI2 extends NpcAI2
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 27));
         }
     }
-	
+
 	/**
 	 * 处理对话选择：消耗钥匙并打开通往黑暗军团传送门的路。
 	 * Handles dialog selection: consumes the key and opens the Dark Legion portal path.
@@ -50,28 +50,18 @@ public class NegartonAI2 extends NpcAI2
 				case 804840: // 开启黑暗军团传送门的 NPC / Negarton.
 				    announceDarkLegionPortal();
 					spawn(702721, 1474.6984f, 1796.5096f, 330.69998f, (byte) 103);
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					    @Override
-					    public void run() {
-						    despawnNpc(702721);
-				        }
-			        }, 300000); //5 分钟。 / 5 Minutes.
+					GameThreadPoolServices.threadPoolManager().schedule(() -> despawnNpc(702721), 300000); //5 分钟。 / 5 Minutes.
 				break;
 			}
 		}
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
 		return true;
 	}
-	
+
 	private void announceDarkLegionPortal() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_DARK_SIDE_LEGION_DIRECT_PORTAL_OPEN);
-			}
-		});
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_DARK_SIDE_LEGION_DIRECT_PORTAL_OPEN));
 	}
-	
+
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);

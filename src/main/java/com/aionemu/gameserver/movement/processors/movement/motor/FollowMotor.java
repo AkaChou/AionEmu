@@ -156,56 +156,46 @@ public class FollowMotor extends AMovementMotor {
 			}
 			this._lastMoveMs = System.currentTimeMillis();
 		}
-		this._task = this._processor.schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				if (FollowMotor.this._targetPosition != null) {
-					Vector3f lastMove = FollowMotor.this._lastMovePoint;
-					Vector3f targetMove = new Vector3f(FollowMotor.this._targetPosition.x,
-							FollowMotor.this._targetPosition.y, FollowMotor.this._targetPosition.z);
-					float speed = FollowMotor.this._owner.getGameStats().getMovementSpeedFloat();
-					long time = System.currentTimeMillis() - FollowMotor.this._lastMoveMs;
-					float distPassed = speed * ((float) time / 1000.0f);
-					if (lastMove == null) {
-						lastMove = new Vector3f(FollowMotor.this._owner.getX(), FollowMotor.this._owner.getY(),
-								FollowMotor.this._owner.getZ());
-					}
-					float maxDist = lastMove.distance(targetMove);
-					if (distPassed <= 0.0f) {
-						return;
-					}
-					if (distPassed > maxDist) {
-						distPassed = maxDist;
-					}
-					Vector3f dir = GeomUtil.getDirection3D(lastMove, targetMove);
-					Vector3f position = GeomUtil.getNextPoint3D(lastMove, dir, distPassed);
-					if (FollowMotor.this._owner.getWorldId() != 300230000) {
-						float newZ = GameWorldServices.geoService().getZ(FollowMotor.this._owner.getWorldId(), position.x,
-								position.y, position.z, 100.0f, FollowMotor.this._owner.getInstanceId());
-						position.z = lastMove.getZ() < newZ & Math.abs(lastMove.getZ() - newZ) > 1.0f
-								? newZ + FollowMotor.this._owner.getObjectTemplate().getBoundRadius().getUpper()
-										- FollowMotor.this._owner.getObjectTemplate().getHeight()
-								: newZ;
-					}
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(FollowMotor.this._owner, position.x, position.y, position.z,
-							FollowMotor.this.new_targetHeading, false);
-				} else {
-					PacketSendUtility.broadcastPacket(FollowMotor.this._owner,
-							new SM_MOVE(FollowMotor.this._owner.getObjectId(), FollowMotor.this._owner.getX(),
-									FollowMotor.this._owner.getY(), FollowMotor.this._owner.getZ(),
-									FollowMotor.this._owner.getX(), FollowMotor.this._owner.getY(),
-									FollowMotor.this._owner.getZ(), FollowMotor.this._owner.getHeading(), (byte) 0));
-					pathfindRevalidationTime = 0L;
+		this._task = this._processor.schedule(() -> {
+			if (FollowMotor.this._targetPosition != null) {
+				Vector3f lastMove = FollowMotor.this._lastMovePoint;
+				Vector3f targetMove = new Vector3f(FollowMotor.this._targetPosition.x,
+						FollowMotor.this._targetPosition.y, FollowMotor.this._targetPosition.z);
+				float speed = FollowMotor.this._owner.getGameStats().getMovementSpeedFloat();
+				long time = System.currentTimeMillis() - FollowMotor.this._lastMoveMs;
+				float distPassed = speed * ((float) time / 1000.0f);
+				if (lastMove == null) {
+					lastMove = new Vector3f(FollowMotor.this._owner.getX(), FollowMotor.this._owner.getY(),
+							FollowMotor.this._owner.getZ());
 				}
-				FollowMotor.this._processor.schedule(new Runnable() {
-
-					@Override
-					public void run() {
-						FollowMotor.this.update();
-					}
-				}, 0L);
+				float maxDist = lastMove.distance(targetMove);
+				if (distPassed <= 0.0f) {
+					return;
+				}
+				if (distPassed > maxDist) {
+					distPassed = maxDist;
+				}
+				Vector3f dir = GeomUtil.getDirection3D(lastMove, targetMove);
+				Vector3f position = GeomUtil.getNextPoint3D(lastMove, dir, distPassed);
+				if (FollowMotor.this._owner.getWorldId() != 300230000) {
+					float newZ = GameWorldServices.geoService().getZ(FollowMotor.this._owner.getWorldId(), position.x,
+							position.y, position.z, 100.0f, FollowMotor.this._owner.getInstanceId());
+					position.z = lastMove.getZ() < newZ & Math.abs(lastMove.getZ() - newZ) > 1.0f
+							? newZ + FollowMotor.this._owner.getObjectTemplate().getBoundRadius().getUpper()
+									- FollowMotor.this._owner.getObjectTemplate().getHeight()
+							: newZ;
+				}
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(FollowMotor.this._owner, position.x, position.y, position.z,
+						FollowMotor.this.new_targetHeading, false);
+			} else {
+				PacketSendUtility.broadcastPacket(FollowMotor.this._owner,
+						new SM_MOVE(FollowMotor.this._owner.getObjectId(), FollowMotor.this._owner.getX(),
+								FollowMotor.this._owner.getY(), FollowMotor.this._owner.getZ(),
+								FollowMotor.this._owner.getX(), FollowMotor.this._owner.getY(),
+								FollowMotor.this._owner.getZ(), FollowMotor.this._owner.getHeading(), (byte) 0));
+				pathfindRevalidationTime = 0L;
 			}
+			FollowMotor.this._processor.schedule(() -> FollowMotor.this.update(), 0L);
 		}, TARGET_REVALIDATE_TIME);
 		return true;
 	}

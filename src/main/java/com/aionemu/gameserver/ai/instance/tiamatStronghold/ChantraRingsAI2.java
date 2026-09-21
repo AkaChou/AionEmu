@@ -21,17 +21,17 @@ public class ChantraRingsAI2 extends NpcAI2
     @Override
 	public void think() {
 	}
-	
+
 	@Override
     protected void handleCreatureSee(Creature creature) {
         checkDistance(this, creature);
     }
-	
+
     @Override
     protected void handleCreatureMoved(Creature creature) {
         checkDistance(this, creature);
     }
-	
+
     private void checkDistance(NpcAI2 ai, Creature creature) {
 	    int debuff = getOwner().getNpcId() == 283172 ? 20735 : 20734;
         if (creature instanceof Player) {
@@ -44,22 +44,17 @@ public class ChantraRingsAI2 extends NpcAI2
 	    }
         }
 	}
-	
+
     @Override
     protected void handleSpawned() {
 	    super.handleSpawned();
 	    despawn();
     }
-	
+
     private void despawn() {
-	    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-		    @Override
-		    public void run() {
-			    getOwner().getController().onDelete();
-		    }
-	    }, 20000);
+	    GameThreadPoolServices.threadPoolManager().schedule(() -> getOwner().getController().onDelete(), 20000);
     }
-	
+
     @Override
 	public boolean isMoveSupported() {
 		return false;

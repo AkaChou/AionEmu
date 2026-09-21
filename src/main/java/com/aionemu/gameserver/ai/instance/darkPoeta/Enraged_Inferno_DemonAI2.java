@@ -79,30 +79,27 @@ public class Enraged_Inferno_DemonAI2 extends AggressiveNpcAI2
 	}
 
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelPhaseTask();
-				} else {
-					// 元素力量即将以毁灭性爆炸释放。 / A massive blast of elemental power will soon explode with destructive force.
-					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_Teo_T_Boss_Skill_03, 0);
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19567, 46, getOwner()).useNoAnimationSkill(); // 引力位移。 / Gravitational Shift.
-					List<Player> players = getLifedPlayers();
-					if (!players.isEmpty()) {
-						int size = players.size();
-						if (players.size() < 6) {
-							for (Player p: players) {
-								spawnDimensionalIntruder(p);
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelPhaseTask();
+			} else {
+				// 元素力量即将以毁灭性爆炸释放。 / A massive blast of elemental power will soon explode with destructive force.
+				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_Teo_T_Boss_Skill_03, 0);
+				GameEngineServices.skillEngine().getSkill(getOwner(), 19567, 46, getOwner()).useNoAnimationSkill(); // 引力位移。 / Gravitational Shift.
+				List<Player> players = getLifedPlayers();
+				if (!players.isEmpty()) {
+					int size = players.size();
+					if (players.size() < 6) {
+						for (Player p: players) {
+							spawnDimensionalIntruder(p);
+						}
+					} else {
+						int count = Rnd.get(6, size);
+						for (int i = 0; i < count; i++) {
+							if (players.isEmpty()) {
+								break;
 							}
-						} else {
-							int count = Rnd.get(6, size);
-							for (int i = 0; i < count; i++) {
-								if (players.isEmpty()) {
-									break;
-								}
-								spawnDimensionalIntruder(players.get(Rnd.get(players.size())));
-							}
+							spawnDimensionalIntruder(players.get(Rnd.get(players.size())));
 						}
 					}
 				}
@@ -115,20 +112,17 @@ public class Enraged_Inferno_DemonAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						switch (Rnd.get(1, 2)) {
-						    case 1:
-							    spawn(237374, x, y, z, (byte) 0); // 变异的次元入侵者。 / Mutated Dimensional Intruder.
-								spawn(856597, x, y, z, (byte) 0);
-							break;
-							case 2:
-							    spawn(237381, x, y, z, (byte) 0); // 警惕的次元入侵者。 / Wary Dimensional Intruder.
-								spawn(856597, x, y, z, (byte) 0);
-							break;
-						}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					switch (Rnd.get(1, 2)) {
+						case 1:
+							spawn(237374, x, y, z, (byte) 0); // 变异的次元入侵者。 / Mutated Dimensional Intruder.
+							spawn(856597, x, y, z, (byte) 0);
+						break;
+						case 2:
+							spawn(237381, x, y, z, (byte) 0); // 警惕的次元入侵者。 / Wary Dimensional Intruder.
+							spawn(856597, x, y, z, (byte) 0);
+						break;
 					}
 				}
 			}, 1000);
@@ -141,7 +135,7 @@ public class Enraged_Inferno_DemonAI2 extends AggressiveNpcAI2
 	}
 
 	private List<Player> getLifedPlayers() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);

@@ -22,9 +22,9 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SummonStatsData {
 	@XmlElement(name = "summon_stats", required = true)
-	private List<SummonStatsType> summonTemplatesList = new ArrayList<SummonStatsType>();
+	private List<SummonStatsType> summonTemplatesList = new ArrayList<>();
 
-	private final IntObjectHashMap<SummonStatsTemplate> summonTemplates = new IntObjectHashMap<SummonStatsTemplate>();
+	private final IntObjectHashMap<SummonStatsTemplate> summonTemplates = new IntObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，分别为暗/光 NPC ID 与等级建立属性模板索引。

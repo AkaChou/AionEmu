@@ -48,7 +48,7 @@ public class TradeListTemplate {
 	/** 返回 trade tablist / Returns the trade tablist */
 	public List<TradeTab> getTradeTablist() {
 		if (tradeTablist == null) {
-			tradeTablist = new ArrayList<TradeTab>();
+			tradeTablist = new ArrayList<>();
 		}
 		return this.tradeTablist;
 	}

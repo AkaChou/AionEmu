@@ -7488,26 +7488,17 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 
 	@Override
 	protected AIAnswer pollInstance(AIQuestion question) {
-		switch (question) {
-	        case CAN_SPAWN_ON_DAYTIME_CHANGE:
-			    return AIAnswers.POSITIVE;
-			case SHOULD_DECAY:
-			    return AIAnswers.POSITIVE;
-			case SHOULD_RESPAWN:
-			    return AIAnswers.POSITIVE;
-			case SHOULD_REWARD:
-			    return AIAnswers.POSITIVE;
-			case SHOULD_REWARD_AP:
-			    return AIAnswers.POSITIVE;
-			case SHOULD_REWARD_GP:
-			    return AIAnswers.POSITIVE;
-			case CAN_RESIST_ABNORMAL:
-			    return AIAnswers.POSITIVE;
-			case CAN_ATTACK_PLAYER:
-			    return AIAnswers.POSITIVE;
-			default:
-				return null;
-		}
+		return switch (question) {
+			case CAN_SPAWN_ON_DAYTIME_CHANGE -> AIAnswers.POSITIVE;
+			case SHOULD_DECAY -> AIAnswers.POSITIVE;
+			case SHOULD_RESPAWN -> AIAnswers.POSITIVE;
+			case SHOULD_REWARD -> AIAnswers.POSITIVE;
+			case SHOULD_REWARD_AP -> AIAnswers.POSITIVE;
+			case SHOULD_REWARD_GP -> AIAnswers.POSITIVE;
+			case CAN_RESIST_ABNORMAL -> AIAnswers.POSITIVE;
+			case CAN_ATTACK_PLAYER -> AIAnswers.POSITIVE;
+			default -> null;
+		};
 	}
 
 	/**

@@ -30,9 +30,9 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	/** 所属地图 ID / owning map id */
 	private final int mapId;
 	/** 区内生物集合 / creatures inside the zone */
-	private final Map<Integer, Creature> creatures = new LinkedHashMap<Integer, Creature>();
+	private final Map<Integer, Creature> creatures = new LinkedHashMap<>();
 	/** 区域事件处理器列表 / zone event handlers */
-	protected List<ZoneHandler> handlers = new ArrayList<ZoneHandler>();
+	protected List<ZoneHandler> handlers = new ArrayList<>();
 
 	/**
 	 * 创建区域实例。

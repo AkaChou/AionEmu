@@ -54,16 +54,24 @@ public class NpcFactionQuestData {
 		if (entry == null) {
 			return true;
 		}
-		return switch (calendarDayOfWeek) {
-			case Calendar.SUNDAY -> entry.sun;
-			case Calendar.MONDAY -> entry.mon;
-			case Calendar.TUESDAY -> entry.tue;
-			case Calendar.WEDNESDAY -> entry.wed;
-			case Calendar.THURSDAY -> entry.thu;
-			case Calendar.FRIDAY -> entry.fri;
-			case Calendar.SATURDAY -> entry.sat;
-			default -> true;
-		};
+        switch (calendarDayOfWeek) {
+            case Calendar.SUNDAY:
+                return entry.sun;
+            case Calendar.MONDAY:
+                return entry.mon;
+            case Calendar.TUESDAY:
+                return entry.tue;
+            case Calendar.WEDNESDAY:
+                return entry.wed;
+            case Calendar.THURSDAY:
+                return entry.thu;
+            case Calendar.FRIDAY:
+                return entry.fri;
+            case Calendar.SATURDAY:
+                return entry.sat;
+            default:
+                return true;
+        }
 	}
 
 	/**

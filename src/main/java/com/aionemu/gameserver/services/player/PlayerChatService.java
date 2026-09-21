@@ -32,16 +32,13 @@ public class PlayerChatService {
 			player.setGagged(true);
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FLOODING);
 			player.getController().cancelTask(TaskId.GAG);
-			player.getController().addTask(TaskId.GAG, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				/**
-				 * 执行任务。
-				 * Runs the task.
-				 */
-				public void run() {
-					player.setGagged(false);
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CAN_CHAT_NOW);
-				}
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */
+			player.getController().addTask(TaskId.GAG, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				player.setGagged(false);
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CAN_CHAT_NOW);
 			}, 2 * 60000L));
 			return true;
 		}

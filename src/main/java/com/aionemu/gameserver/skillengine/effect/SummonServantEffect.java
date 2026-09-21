@@ -76,13 +76,7 @@ public class SummonServantEffect extends SummonEffect {
 		final Servant servant = VisibleObjectSpawner.spawnServant(spawn, instanceId, effector, skillId,
 				effect.getSkillLevel(), npcObjectType);
 
-		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				servant.getController().onDelete();
-			}
-		}, time * 1000L);
+		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> servant.getController().onDelete(), time * 1000L);
 		servant.getController().addTask(TaskId.DESPAWN, task);
 		servant.getAi2().onCreatureEvent(AIEventType.ATTACK, target != null ? target : effected);
 		return servant;

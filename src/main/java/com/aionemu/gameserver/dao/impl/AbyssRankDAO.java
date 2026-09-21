@@ -166,12 +166,12 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
 
     @Override
     public void storeInTransaction(Connection con, int playerId, AbyssRank rank) throws SQLException {
-        boolean result = switch (rank.getPersistentState()) {
-            case NEW -> addRank(con, playerId, rank);
-            case UPDATE_REQUIRED -> updateRank(con, playerId, rank);
-            default -> true;
-        };
-        if (!result) {
+		boolean result = switch (rank.getPersistentState()) {
+			case NEW -> addRank(con, playerId, rank);
+			case UPDATE_REQUIRED -> updateRank(con, playerId, rank);
+			default -> true;
+		};
+		if (!result) {
             throw new SQLException("No abyss rank row changed for player " + playerId);
         }
     }

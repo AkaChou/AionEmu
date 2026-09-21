@@ -38,21 +38,15 @@ public class Krotan_Crystal_SwordAI2 extends NpcAI2
 				case 702840: //Krotan's Crystal Sword [Elyos]
 				    announceSpiritOfKrotan30Min();
 					announceSpiritOfKrotanAppears();
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							spawn(883323, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Spirit Of Krotan.
-						}
+					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						spawn(883323, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Spirit Of Krotan.
 					}, 1800000); //30 Minutes.
 				break;
 				case 702841: //Krotan's Crystal Sword [Asmodians]
 				    announceSpiritOfKrotan30Min();
 					announceSpiritOfKrotanAppears();
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							spawn(884027, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Spirit Of Krotan.
-						}
+					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						spawn(884027, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Spirit Of Krotan.
 					}, 1800000); //30 Minutes.
 				break;
 			}
@@ -66,26 +60,20 @@ public class Krotan_Crystal_SwordAI2 extends NpcAI2
 	}
 
 	private void announceSpiritOfKrotanAppears() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 克罗坦守护之灵将在 5 分钟后出现。 / The Krotan Protector Spirit will appear after 5 minutes.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_BossNamed_SpawnAlarm_1221_05, 1500000);
-				// 克罗坦守护之灵将在 3 分钟后出现。 / The Krotan Protector Spirit will appear after 3 minutes.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_BossNamed_SpawnAlarm_1221_03, 1620000);
-				// 克罗坦守护之灵将在 1 分钟后出现。 / The Krotan Protector Spirit will appear after 1 minute.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_BossNamed_SpawnAlarm_1221_01, 1740000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 克罗坦守护之灵将在 5 分钟后出现。 / The Krotan Protector Spirit will appear after 5 minutes.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_BossNamed_SpawnAlarm_1221_05, 1500000);
+			// 克罗坦守护之灵将在 3 分钟后出现。 / The Krotan Protector Spirit will appear after 3 minutes.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_BossNamed_SpawnAlarm_1221_03, 1620000);
+			// 克罗坦守护之灵将在 1 分钟后出现。 / The Krotan Protector Spirit will appear after 1 minute.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_BossNamed_SpawnAlarm_1221_01, 1740000);
 		});
 	}
 
 	private void announceSpiritOfKrotan30Min() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 克罗坦之灵将在 30 分钟后从克罗坦水晶剑中被召唤。 / The Spirit of Krotan will be summoned from Krotan's Crystal Sword in 30 minutes.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Crotan_Named_Spawn_System);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 克罗坦之灵将在 30 分钟后从克罗坦水晶剑中被召唤。 / The Spirit of Krotan will be summoned from Krotan's Crystal Sword in 30 minutes.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Crotan_Named_Spawn_System);
 		});
 	}
 }

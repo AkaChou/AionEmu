@@ -49,13 +49,13 @@ public class LoginServer {
 	 * 等待登录服响应的账号连接表（accountId → AionConnection）。
 	 * Map of accountId to connection for pending LoginServer requests.
 	 */
-	private final Map<Integer, AionConnection> loginRequests = new HashMap<Integer, AionConnection>();
+	private final Map<Integer, AionConnection> loginRequests = new HashMap<>();
 
 	/**
 	 * 已登录账号连接表（accountId → AionConnection）。
 	 * Map of accountId to connection for all logged-in accounts.
 	 */
-	private final Map<Integer, AionConnection> loggedInAccounts = new HashMap<Integer, AionConnection>();
+	private final Map<Integer, AionConnection> loggedInAccounts = new HashMap<>();
 
 	/**
 	 * 与登录服的当前连接。
@@ -181,19 +181,16 @@ public class LoginServer {
 		if (serverShutdown || !connectionTaskQueued.compareAndSet(false, true)) {
 			return;
 		}
-		connectionTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				connectionTaskQueued.set(false);
-				connectionTask = null;
-				if (serverShutdown || loginServer != null) {
-					return;
-				}
-				if (!connectOnce()) {
-					scheduleConnect(5000);
-				} else if (serverShutdown) {
-					gameServerDisconnected();
-				}
+		connectionTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			connectionTaskQueued.set(false);
+			connectionTask = null;
+			if (serverShutdown || loginServer != null) {
+				return;
+			}
+			if (!connectOnce()) {
+				scheduleConnect(5000);
+			} else if (serverShutdown) {
+				gameServerDisconnected();
 			}
 		}, delay);
 	}
@@ -472,17 +469,13 @@ public class LoginServer {
 	private void closeClientWithCheck(AionConnection client, final int accountId) {
 		log.info(I18n.get("log.2e4538832cae", accountId));
 		client.close(/* closePacket, */false);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				AionConnection client = loggedInAccounts.get(accountId);
-				if (client != null) {
-					log.warn(I18n.get("log.9300ce8c338a"));
-					client.close(false);
-					loggedInAccounts.remove(accountId);
-					sendAccountDisconnected(accountId);
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			AionConnection client1 = loggedInAccounts.get(accountId);
+			if (client1 != null) {
+				log.warn(I18n.get("log.9300ce8c338a"));
+				client1.close(false);
+				loggedInAccounts.remove(accountId);
+				sendAccountDisconnected(accountId);
 			}
 		}, 5000);
 	}

@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PlaceableObjectController<T extends PlaceableHouseObject> extends VisibleObjectController<HouseObject<T>> {
 
 	/** 观察该物件的玩家映射。 / Map of players observing this object. */
-	Map<Integer, ActionObserver> observed = new ConcurrentHashMap<Integer, ActionObserver>();
+	Map<Integer, ActionObserver> observed = new ConcurrentHashMap<>();
 
 	/**
 	 * 玩家进入范围时发送房屋物件包并注册移动观察者。

@@ -32,7 +32,7 @@ public class IuLocation {
 	/** 返回玩家集合 / Returns the players */
 	protected Map<Integer, Player> players = new HashMap<>();
 	/** 返回已生成对象列表 / Returns the spawned */
-	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
+	private final List<VisibleObject> spawned = new ArrayList<>();
 
 	public IuLocation(IuTemplate template) {
 		this.template = template;

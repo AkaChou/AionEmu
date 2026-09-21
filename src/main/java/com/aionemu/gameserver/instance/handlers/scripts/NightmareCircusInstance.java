@@ -47,9 +47,9 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 	/** 狂乱梦魇击杀数 / frenetic nightmare killed */
 	private int freneticNightmareKilled;
 	/** 已播放动画集合 / played-movie set */
-	private final List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<>();
 		/** 对象 / objects */
-		private final Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+		private final Map<Integer, VisibleObject> objects = new LinkedHashMap<>();
 
 	/**
 	 * 副本创建时初始化逻辑。
@@ -408,18 +408,18 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			break;
 			case 831572: //Solid Iron Chain.
 				startNightmareWave();
-				instance.doOnAllPlayers(new Visitor<Player>() {
-				    /**
-				     * 处理 visit。
-				     * Handle visit.
-				     *
-				     * @param player 玩家 / player
-				     */
-				    @Override
-				    public void visit(Player player) {
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
 						sendMovie(player, 981);
-				    }
-			    });
+					}
+				});
 			break;
 		}
 	}
@@ -588,7 +588,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.

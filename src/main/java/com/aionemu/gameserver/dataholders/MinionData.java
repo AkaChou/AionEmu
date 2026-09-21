@@ -26,7 +26,7 @@ public class MinionData {
 	@XmlTransient
 	private final IntObjectHashMap<MinionTemplate> minionData = new IntObjectHashMap<>();
 	@XmlTransient
-	private final List<Integer> minionDataList = new ArrayList<Integer>();
+	private final List<Integer> minionDataList = new ArrayList<>();
 
 	/**
 	 * JAXB 反序列化完成后，按 ID 建立索引并释放列表。

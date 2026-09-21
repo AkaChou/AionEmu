@@ -29,7 +29,7 @@ public class HouseBuildingData {
 	protected List<Building> buildings;
 
 	@XmlTransient
-	Map<Integer, Building> buildingById = new HashMap<Integer, Building>();
+	Map<Integer, Building> buildingById = new HashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，按建筑 ID 建立索引并释放原始列表。

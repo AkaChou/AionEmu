@@ -30,7 +30,7 @@ public class WeatherTable {
 	 * untouched, so it must start as an empty list to keep the lookup methods null-safe.
 	 */
 	@XmlElement(name = "table", required = true)
-	protected List<WeatherEntry> zoneData = new ArrayList<WeatherEntry>();
+	protected List<WeatherEntry> zoneData = new ArrayList<>();
 
 	/** 返回天气数量 / Returns the weather count */
 	@XmlAttribute(name = "weather_count", required = true)
@@ -66,7 +66,7 @@ public class WeatherTable {
 
 	/** 返回区域天气列表 / Returns the weathers for a zone */
 	public List<WeatherEntry> getWeathersForZone(int zoneId) {
-		List<WeatherEntry> result = new ArrayList<WeatherEntry>();
+		List<WeatherEntry> result = new ArrayList<>();
 		for (WeatherEntry entry : getZoneData()) {
 			if (entry.getZoneId() == zoneId) {
 				result.add(entry);

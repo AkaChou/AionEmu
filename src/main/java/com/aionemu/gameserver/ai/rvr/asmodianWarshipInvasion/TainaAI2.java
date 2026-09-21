@@ -23,7 +23,7 @@ public class TainaAI2 extends AggressiveNpcAI2
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 75) {
 			announceLF6G1BossSpawn01();
@@ -31,14 +31,11 @@ public class TainaAI2 extends AggressiveNpcAI2
 			AI2Actions.deleteOwner(this);
 		}
 	}
-	
+
 	private void announceLF6G1BossSpawn01() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 魔族护卫舰指挥官已抵达。 / The Asmodian Frigate Commander has arrived.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LF6_G1_Boss_Spawn_01);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 魔族护卫舰指挥官已抵达。 / The Asmodian Frigate Commander has arrived.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LF6_G1_Boss_Spawn_01);
 		});
 	}
 }

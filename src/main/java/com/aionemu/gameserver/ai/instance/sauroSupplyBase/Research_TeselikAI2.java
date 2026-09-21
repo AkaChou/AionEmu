@@ -71,12 +71,10 @@ public class Research_TeselikAI2 extends AggressiveNpcAI2
 
 	private void ShebanMysticalTyrhund() {
 	    if (!isAlreadyDead()) {
-		    enrageTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			    public void run() {
-					if (!isAlreadyDead()) {
-					    spawn(284455, 482.25043f, 337.24167f, 181.71579f, (byte) 30); // 生成 Sheban Mystical Tyrhund / spawn Sheban Mystical Tyrhund.
-					    spawn(284455, 476.00104f, 337.45627f, 181.71579f, (byte) 30); // 生成 Sheban Mystical Tyrhund / spawn Sheban Mystical Tyrhund.
-					}
+		    enrageTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					spawn(284455, 482.25043f, 337.24167f, 181.71579f, (byte) 30); // 生成 Sheban Mystical Tyrhund / spawn Sheban Mystical Tyrhund.
+					spawn(284455, 476.00104f, 337.45627f, 181.71579f, (byte) 30); // 生成 Sheban Mystical Tyrhund / spawn Sheban Mystical Tyrhund.
 				}
 			}, 3000);
 		}
@@ -85,12 +83,7 @@ public class Research_TeselikAI2 extends AggressiveNpcAI2
 	private void scheduleDelayStage1(int delay) {
 		if (!isStart && !isAlreadyDead()) {
 		} else {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					stage1();
-				}
-			}, delay);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> stage1(), delay);
 		}
 	}
 

@@ -33,7 +33,7 @@ public class Times {
 	protected String times;
 
 	@XmlTransient
-	private final HashMap<WeaponTypeWrapper, Integer> timeForWeaponType = new HashMap<WeaponTypeWrapper, Integer>();
+	private final HashMap<WeaponTypeWrapper, Integer> timeForWeaponType = new HashMap<>();
 
 	/**
 	 * 按武器包装获取动作时间。

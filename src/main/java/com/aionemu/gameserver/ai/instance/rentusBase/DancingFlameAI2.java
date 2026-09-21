@@ -25,27 +25,24 @@ import java.util.concurrent.Future;
 public class DancingFlameAI2 extends GeneralNpcAI2
 {
 	private Future<?> task;
-	
+
 	private void startTask() {
-		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelTask();
-				} else {
-					if (isPlayerInRange()) {
-						WorldPosition p = getPosition();
-						if (getNpcId() == 282996) {
-							spawn(282998, p.getX(), p.getY(), p.getZ(), p.getHeading());
-						} else {
-							spawn(282999, p.getX(), p.getY(), p.getZ(), p.getHeading());
-						}
+		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelTask();
+			} else {
+				if (isPlayerInRange()) {
+					WorldPosition p = getPosition();
+					if (getNpcId() == 282996) {
+						spawn(282998, p.getX(), p.getY(), p.getZ(), p.getHeading());
+					} else {
+						spawn(282999, p.getX(), p.getY(), p.getZ(), p.getHeading());
 					}
 				}
 			}
 		}, 3000, 3000);
 	}
-	
+
 	private boolean isPlayerInRange() {
 		for (Player player : getKnownList().getKnownPlayers().values()) {
 			if (isInRange(player, 30)) {
@@ -54,56 +51,46 @@ public class DancingFlameAI2 extends GeneralNpcAI2
 		}
 		return false;
 	}
-	
+
 	private void cancelTask() {
 		if (task != null && !task.isDone())  {
 			task.cancel(true);
 		}
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		if (getNpcId() == 282996 || getNpcId() == 282997) {
 			startTask();
 		} else {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					GameEngineServices.skillEngine().getSkill(getOwner(), getNpcId() == 282998 ? 20536 : 20535, 60, getOwner()).useNoAnimationSkill();
-				}
-			}, 500);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> GameEngineServices.skillEngine().getSkill(getOwner(), getNpcId() == 282998 ? 20536 : 20535, 60, getOwner()).useNoAnimationSkill(), 500);
 			starLifeTask();
 		}
 	}
-	
+
 	private void starLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				despawn();
-			}
-		}, 4000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> despawn(), 4000);
 	}
-	
+
 	private void despawn() {
 		if (!isAlreadyDead()) {
 			AI2Actions.deleteOwner(this);
 		}
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		super.handleDespawned();
 		cancelTask();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();
 		cancelTask();
 	}
-	
+
 	@Override
 	public AIAnswer ask(AIQuestion question) {
 		switch (question) {

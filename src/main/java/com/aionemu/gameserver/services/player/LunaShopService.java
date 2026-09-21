@@ -61,14 +61,14 @@ public class LunaShopService {
 	private boolean dailyGenerated = true;
 	private boolean specialGenerated = true;
 	private boolean reciveBonus = false;
-	private final List<Integer> DailyCraft = new ArrayList<Integer>();
-	private final List<Integer> SpecialCraft = new ArrayList<Integer>();
-	private final List<Integer> armors = new ArrayList<Integer>();
-	private final List<Integer> pants = new ArrayList<Integer>();
-	private final List<Integer> shoes = new ArrayList<Integer>();
-	private final List<Integer> gloves = new ArrayList<Integer>();
-	private final List<Integer> shoulders = new ArrayList<Integer>();
-	private final List<Integer> weapons = new ArrayList<Integer>();
+	private final List<Integer> DailyCraft = new ArrayList<>();
+	private final List<Integer> SpecialCraft = new ArrayList<>();
+	private final List<Integer> armors = new ArrayList<>();
+	private final List<Integer> pants = new ArrayList<>();
+	private final List<Integer> shoes = new ArrayList<>();
+	private final List<Integer> gloves = new ArrayList<>();
+	private final List<Integer> shoulders = new ArrayList<>();
+	private final List<Integer> weapons = new ArrayList<>();
 
 	public void init() {
 		log.info(I18n.get("log.54a853f1dff1"));
@@ -81,19 +81,15 @@ public class LunaShopService {
 			generateSpecialCraft();
 		}
 
-		GameCronServices.cronService().schedule(new Runnable() {
-			public void run() {
-				dailyGenerated = false;
-				generateDailyCraft();
-				resetFreeLuna();
-			}
+		GameCronServices.cronService().schedule(() -> {
+			dailyGenerated = false;
+			generateDailyCraft();
+			resetFreeLuna();
 		}, daily);
 
-		GameCronServices.cronService().schedule(new Runnable() {
-			public void run() {
-				specialGenerated = false;
-				generateSpecialCraft();
-			}
+		GameCronServices.cronService().schedule(() -> {
+			specialGenerated = false;
+			generateSpecialCraft();
 		}, weekly);
 	}
 
@@ -171,25 +167,16 @@ public class LunaShopService {
 	}
 
 	private void updateSpecialCraft() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(2, 0, SpecialCraft));
-			}
-		});
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(2, 0, SpecialCraft)));
 	}
 
 	private void updateFreeLuna() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-
-			@Override
-			public void visit(Player player) {
-				PlayerLunaShop pls = new PlayerLunaShop(true, true, true);
-				pls.setPersistentState(PersistentState.UPDATE_REQUIRED);
-				player.setPlayerLunaShop(pls);
-				DAOManager.getDAO(PlayerLunaShopDAO.class).add(player.getObjectId(), pls.isFreeUnderpath(),
-						pls.isFreeFactory(), pls.isFreeChest());
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			PlayerLunaShop pls = new PlayerLunaShop(true, true, true);
+			pls.setPersistentState(PersistentState.UPDATE_REQUIRED);
+			player.setPlayerLunaShop(pls);
+			DAOManager.getDAO(PlayerLunaShopDAO.class).add(player.getObjectId(), pls.isFreeUnderpath(),
+					pls.isFreeFactory(), pls.isFreeChest());
 		});
 	}
 
@@ -217,12 +204,9 @@ public class LunaShopService {
 	}
 
 	private void updateDailyCraft() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(DailyCraft));
-				dailyGenerated = true;
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(DailyCraft));
+			dailyGenerated = true;
 		});
 	}
 
@@ -563,7 +547,7 @@ public class LunaShopService {
 	 * @param player 玩家 / player
 	 */
 	public void munirunerksTreasureChamber(final Player player) {
-		HashMap<Integer, Long> hm = new HashMap<Integer, Long>();
+		HashMap<Integer, Long> hm = new HashMap<>();
 		hm.put(188054633, (long) 1); // [Event] Special Head Executor Weapon Box
 		hm.put(188054634, (long) 1); // [Event] Special Head Executor Armor Box
 		hm.put(166030013, (long) 1); // [Event] Tempering Solution
@@ -640,34 +624,29 @@ public class LunaShopService {
 			}
 		}
 
-		final HashMap<Integer, Long> mt = new HashMap<Integer, Long>();
+		final HashMap<Integer, Long> mt = new HashMap<>();
 		for (int i = 0; i < 3; i++) {
 			Object[] crunchifyKeys = hm.keySet().toArray();
 			Object key = crunchifyKeys[new Random().nextInt(crunchifyKeys.length)];
 			mt.put((int) key, hm.get(key));
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			@Override
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */
-			public void run() {
-				for (Map.Entry<Integer, Long> e : mt.entrySet()) {
-					ItemService.addItem(player, e.getKey(), e.getValue());
-					ItemTemplate t = DataManager.ITEM_DATA.getItemTemplate(e.getKey());
-					if (e.getValue() == 1) {
-						PacketSendUtility.sendPacket(player,
-								SM_SYSTEM_MESSAGE.STR_MSG_LUNA_REWARD_GOTCHA_ITEM(t.getNameId()));
-					} else if (e.getValue() > 1) {
-						PacketSendUtility.sendPacket(player,
-								SM_SYSTEM_MESSAGE.STR_MSG_LUNA_REWARD_GOTCHA_ITEM_MULTI(e.getValue(), t.getNameId()));
-					}
-				}
-				PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(mt));
-			}
-		}, 1);
+		/**
+		 * 执行任务。
+		 * Runs the task.
+		 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			 for (Map.Entry<Integer, Long> e : mt.entrySet()) {
+				 ItemService.addItem(player, e.getKey(), e.getValue());
+				 ItemTemplate t = DataManager.ITEM_DATA.getItemTemplate(e.getKey());
+				 if (e.getValue() == 1) {
+					 PacketSendUtility.sendPacket(player,
+							 SM_SYSTEM_MESSAGE.STR_MSG_LUNA_REWARD_GOTCHA_ITEM(t.getNameId()));
+				 } else if (e.getValue() > 1) {
+					 PacketSendUtility.sendPacket(player,
+							 SM_SYSTEM_MESSAGE.STR_MSG_LUNA_REWARD_GOTCHA_ITEM_MULTI(e.getValue(), t.getNameId()));
+				 }
+			 }
+			 PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(mt));
+		 }, 1);
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(5));
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(4, player.getMuniKeys()));
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(0, player.getLunaAccount()));

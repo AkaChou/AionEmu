@@ -28,7 +28,7 @@ public class ReviveWorldStartPointsData {
 	protected List<WorldReviveStartPoints> WorldStartPoints;
 
 	@XmlTransient
-	protected List<WorldReviveStartPoints> StartPointsList = new ArrayList<WorldReviveStartPoints>();
+	protected List<WorldReviveStartPoints> StartPointsList = new ArrayList<>();
 
 	/**
 	 * JAXB 反序列化完成后，将起始点复制到运行时列表并释放 XML 列表。

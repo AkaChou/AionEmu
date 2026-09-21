@@ -332,7 +332,7 @@ public class CreativityEssenceService {
 		GameCreativityServices.precision().onChange(player, 0);
 		GameCreativityServices.knowledge().onChange(player, 0);
 		GameCreativityServices.will().onChange(player, 0);
-		List<Integer> a = new ArrayList<Integer>();
+		List<Integer> a = new ArrayList<>();
 		a.add(8);
 		a.add(10);
 		a.add(12);

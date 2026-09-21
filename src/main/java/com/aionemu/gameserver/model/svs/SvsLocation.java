@@ -32,7 +32,7 @@ public class SvsLocation {
 	/** 返回玩家集合 / Returns the players */
 	protected Map<Integer, Player> players = new HashMap<>();
 	/** 返回已刷新的对象列表 / Returns the spawned objects */
-	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
+	private final List<VisibleObject> spawned = new ArrayList<>();
 
 	public SvsLocation(SvsTemplate template) {
 		this.template = template;

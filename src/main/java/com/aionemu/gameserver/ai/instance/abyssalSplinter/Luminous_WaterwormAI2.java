@@ -19,26 +19,23 @@ public class Luminous_WaterwormAI2 extends AggressiveNpcAI2
 	@Override
 	public void think() {
 	}
-	
+
     @Override
     protected void handleSpawned() {
         super.handleSpawned();
-        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            @Override
-            public void run() {
-                AI2Actions.targetCreature(Luminous_WaterwormAI2.this, getPosition().getWorldMapInstance().getNpc(216951)); //Pazuzu.
-				AI2Actions.targetCreature(Luminous_WaterwormAI2.this, getPosition().getWorldMapInstance().getNpc(219554)); //Unstable Pazuzu.
-                AI2Actions.useSkill(Luminous_WaterwormAI2.this, 19291); //Replenishment.
-            }
-        }, 3000);
+        GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			AI2Actions.targetCreature(Luminous_WaterwormAI2.this, getPosition().getWorldMapInstance().getNpc(216951)); //Pazuzu.
+			AI2Actions.targetCreature(Luminous_WaterwormAI2.this, getPosition().getWorldMapInstance().getNpc(219554)); //Unstable Pazuzu.
+			AI2Actions.useSkill(Luminous_WaterwormAI2.this, 19291); //Replenishment.
+		}, 3000);
     }
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

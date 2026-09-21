@@ -79,181 +79,127 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		}
 		super.handleSpawned();
     }
-	
+
    /**
 	 * 天族 / Elyos
 	 */
 	private void announceSunbathedAppears() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞浴日指挥官已出现！ / The Miren Fortress Sunbathed Commander has appeared!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_01_Spawn_Li, 0);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞浴日指挥官已出现！ / The Miren Fortress Sunbathed Commander has appeared!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_01_Spawn_Li, 0);
 		});
 	}
 	private void announceSunsoakedAppears() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞浸日指挥官已出现！ / The Miren Fortress Sunsoaked Commander has appeared!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_02_Spawn_Li, 10000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞浸日指挥官已出现！ / The Miren Fortress Sunsoaked Commander has appeared!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_02_Spawn_Li, 10000);
 		});
 	}
 	private void announceSuntouchedAppears() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞触日指挥官已出现！ / The Miren Fortress Suntouched Commander has appeared!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_03_Spawn_Li, 20000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞触日指挥官已出现！ / The Miren Fortress Suntouched Commander has appeared!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_03_Spawn_Li, 20000);
 		});
 	}
 	private void announceSunsteepedAppears() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞深日指挥官已出现！ / The Miren Fortress Sunsteeped Commander has appeared!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_04_Spawn_Li, 30000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞深日指挥官已出现！ / The Miren Fortress Sunsteeped Commander has appeared!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_04_Spawn_Li, 30000);
 		});
 	}
 	private void announceSundrenchedAppears() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞沐日指挥官已出现！ / The Miren Fortress Sundrenched Commander has appeared!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_05_Spawn_Li, 40000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞沐日指挥官已出现！ / The Miren Fortress Sundrenched Commander has appeared!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_05_Spawn_Li, 40000);
 		});
 	}
 	private void announceSunblessedAppears() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞日福指挥官已出现！ / The Miren Fortress Sunblessed Commander has appeared!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_06_Spawn_Li, 50000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞日福指挥官已出现！ / The Miren Fortress Sunblessed Commander has appeared!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_06_Spawn_Li, 50000);
 		});
 	}
-	
+
    /**
 	 * 魔族 / Asmodians
 	 */
 	private void announceShadeprotectedAppears() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞蔽护指挥官已出现！ / The Miren Fortress Shadeprotected Commander has appeared!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_01_Spawn_Da, 0);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞蔽护指挥官已出现！ / The Miren Fortress Shadeprotected Commander has appeared!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_01_Spawn_Da, 0);
 		});
 	}
 	private void announceShadesoakedAppears() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞浸影指挥官已出现！ / The Miren Fortress Shadesoaked Commander has appeared!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_02_Spawn_Da, 10000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞浸影指挥官已出现！ / The Miren Fortress Shadesoaked Commander has appeared!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_02_Spawn_Da, 10000);
 		});
 	}
 	private void announceShadetouchedAppears() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞触影指挥官已出现！ / The Miren Fortress Shadetouched Commander has appeared!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_03_Spawn_Da, 20000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞触影指挥官已出现！ / The Miren Fortress Shadetouched Commander has appeared!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_03_Spawn_Da, 20000);
 		});
 	}
 	private void announceShadesteepedAppears() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞深影指挥官已出现！ / The Miren Fortress Shadesteeped Commander has appeared!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_04_Spawn_Da, 30000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞深影指挥官已出现！ / The Miren Fortress Shadesteeped Commander has appeared!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_04_Spawn_Da, 30000);
 		});
 	}
 	private void announceShadedrenchedAppears() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞浸影指挥官已出现！ / The Miren Fortress Shadedrenched Commander has appeared!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_05_Spawn_Da, 40000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞浸影指挥官已出现！ / The Miren Fortress Shadedrenched Commander has appeared!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_05_Spawn_Da, 40000);
 		});
 	}
 	private void announceShadeblessedAppears() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞荫福指挥官已出现！ / The Miren Fortress Shadeblessed Commander has appeared!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_06_Spawn_Da, 50000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞荫福指挥官已出现！ / The Miren Fortress Shadeblessed Commander has appeared!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_06_Spawn_Da, 50000);
 		});
 	}
-	
+
    /**
 	 * 龙族 / Balaur
 	 */
 	private void announceIcecrownedAppears() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 埃雷什基伽尔冰冠米伦指挥官已出现！ / The Ereshkigal Icecrowned Miren Commander has appeared!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_01_Spawn_Dr, 0);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 埃雷什基伽尔冰冠米伦指挥官已出现！ / The Ereshkigal Icecrowned Miren Commander has appeared!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_01_Spawn_Dr, 0);
 		});
 	}
 	private void announceIcecoatedAppears() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 埃雷什基伽尔覆冰米伦指挥官已出现！ / The Ereshkigal Icecoated Miren Commander has appeared!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_02_Spawn_Dr, 10000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 埃雷什基伽尔覆冰米伦指挥官已出现！ / The Ereshkigal Icecoated Miren Commander has appeared!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_02_Spawn_Dr, 10000);
 		});
 	}
 	private void announceIcebladedAppears() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 埃雷什基伽尔冰刃米伦指挥官已出现！ / The Ereshkigal Icebladed Miren Commander has appeared!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_03_Spawn_Dr, 20000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 埃雷什基伽尔冰刃米伦指挥官已出现！ / The Ereshkigal Icebladed Miren Commander has appeared!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_03_Spawn_Dr, 20000);
 		});
 	}
 	private void announceIcesteepedAppears() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 埃雷什基伽尔深冰米伦指挥官已出现！ / The Ereshkigal Icesteeped Miren Commander has appeared!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_04_Spawn_Dr, 30000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 埃雷什基伽尔深冰米伦指挥官已出现！ / The Ereshkigal Icesteeped Miren Commander has appeared!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_04_Spawn_Dr, 30000);
 		});
 	}
 	private void announceIcedrenchedAppears() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 埃雷什基伽尔冰浸米伦指挥官已出现！ / The Ereshkigal Icedrenched Miren Commander has appeared!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_05_Spawn_Dr, 40000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 埃雷什基伽尔冰浸米伦指挥官已出现！ / The Ereshkigal Icedrenched Miren Commander has appeared!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_05_Spawn_Dr, 40000);
 		});
 	}
 	private void announceIcebloodedAppears() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 埃雷什基伽尔冰血米伦指挥官已出现！ / The Ereshkigal Iceblooded Miren Commander has appeared!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_06_Spawn_Dr, 50000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 埃雷什基伽尔冰血米伦指挥官已出现！ / The Ereshkigal Iceblooded Miren Commander has appeared!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_06_Spawn_Dr, 50000);
 		});
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {
@@ -317,178 +263,124 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		}
 		super.handleDied();
 	}
-	
+
    /**
 	 * 天族 / Elyos
 	 */
 	private void announceSunbathedDied() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞浴日指挥官已被击杀！ / The Miren Fortress Sunbathed Commander has been slain!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_01_Die_Li, 0);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞浴日指挥官已被击杀！ / The Miren Fortress Sunbathed Commander has been slain!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_01_Die_Li, 0);
 		});
 	}
 	private void announceSunsoakedDied() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞浸日指挥官已被击杀！ / The Miren Fortress Sunsoaked Commander has been slain!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_02_Die_Li, 0);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞浸日指挥官已被击杀！ / The Miren Fortress Sunsoaked Commander has been slain!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_02_Die_Li, 0);
 		});
 	}
 	private void announceSuntouchedDied() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞触日指挥官已被击杀！ / The Miren Fortress Suntouched Commander has been slain!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_03_Die_Li, 0);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞触日指挥官已被击杀！ / The Miren Fortress Suntouched Commander has been slain!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_03_Die_Li, 0);
 		});
 	}
 	private void announceSunsteepedDied() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞深日指挥官已被击杀！ / The Miren Fortress Sunsteeped Commander has been slain!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_04_Die_Li, 0);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞深日指挥官已被击杀！ / The Miren Fortress Sunsteeped Commander has been slain!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_04_Die_Li, 0);
 		});
 	}
 	private void announceSundrenchedDied() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞沐日指挥官已被击杀！ / The Miren Fortress Sundrenched Commander has been slain!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_05_Die_Li, 0);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞沐日指挥官已被击杀！ / The Miren Fortress Sundrenched Commander has been slain!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_05_Die_Li, 0);
 		});
 	}
 	private void announceSunblessedDied() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞日福指挥官已被击杀！ / The Miren Fortress Sunblessed Commander has been slain!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_06_Die_Li, 0);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞日福指挥官已被击杀！ / The Miren Fortress Sunblessed Commander has been slain!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_06_Die_Li, 0);
 		});
 	}
-	
+
    /**
 	 * 魔族 / Asmodians
 	 */
 	private void announceShadeprotectedDied() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞蔽护指挥官已被击杀！ / The Miren Fortress Shadeprotected Commander has been slain!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_01_Die_Da, 0);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞蔽护指挥官已被击杀！ / The Miren Fortress Shadeprotected Commander has been slain!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_01_Die_Da, 0);
 		});
 	}
 	private void announceShadesoakedDied() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞浸影指挥官已被击杀！ / The Miren Fortress Shadesoaked Commander has been slain!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_02_Die_Da, 0);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞浸影指挥官已被击杀！ / The Miren Fortress Shadesoaked Commander has been slain!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_02_Die_Da, 0);
 		});
 	}
 	private void announceShadetouchedDied() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞触影指挥官已被击杀！ / The Miren Fortress Shadetouched Commander has been slain!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_03_Die_Da, 0);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞触影指挥官已被击杀！ / The Miren Fortress Shadetouched Commander has been slain!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_03_Die_Da, 0);
 		});
 	}
 	private void announceShadesteepedDied() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞深影指挥官已被击杀！ / The Miren Fortress Shadesteeped Commander has been slain!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_04_Die_Da, 0);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞深影指挥官已被击杀！ / The Miren Fortress Shadesteeped Commander has been slain!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_04_Die_Da, 0);
 		});
 	}
 	private void announceShadedrenchedDied() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞浸影指挥官已被击杀！ / The Miren Fortress Shadedrenched Commander has been slain!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_05_Die_Da, 0);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞浸影指挥官已被击杀！ / The Miren Fortress Shadedrenched Commander has been slain!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_05_Die_Da, 0);
 		});
 	}
 	private void announceShadeblessedDied() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦要塞荫福指挥官已被击杀！ / The Miren Fortress Shadeblessed Commander has been slain!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_06_Die_Da, 0);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦要塞荫福指挥官已被击杀！ / The Miren Fortress Shadeblessed Commander has been slain!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_06_Die_Da, 0);
 		});
 	}
-	
+
    /**
 	 * 龙族 / Balaur
 	 */
 	private void announceIcecrownedDied() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 埃雷什基伽尔冰冠米伦指挥官已被击杀！ / The Ereshkigal Icecrowned Miren Commander has been slain!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_01_Die_Dr, 0);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 埃雷什基伽尔冰冠米伦指挥官已被击杀！ / The Ereshkigal Icecrowned Miren Commander has been slain!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_01_Die_Dr, 0);
 		});
 	}
 	private void announceIcecoatedDied() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 埃雷什基伽尔覆冰米伦指挥官已被击杀！ / The Ereshkigal Icecoated Miren Commander has been slain!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_02_Die_Dr, 0);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 埃雷什基伽尔覆冰米伦指挥官已被击杀！ / The Ereshkigal Icecoated Miren Commander has been slain!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_02_Die_Dr, 0);
 		});
 	}
 	private void announceIcebladedDied() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 埃雷什基伽尔冰刃米伦指挥官已被击杀！ / The Ereshkigal Icebladed Miren Commander has been slain!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_03_Die_Dr, 0);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 埃雷什基伽尔冰刃米伦指挥官已被击杀！ / The Ereshkigal Icebladed Miren Commander has been slain!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_03_Die_Dr, 0);
 		});
 	}
 	private void announceIcesteepedDied() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 埃雷什基伽尔深冰米伦指挥官已被击杀！ / The Ereshkigal Icesteeped Miren Commander has been slain!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_04_Die_Dr, 0);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 埃雷什基伽尔深冰米伦指挥官已被击杀！ / The Ereshkigal Icesteeped Miren Commander has been slain!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_04_Die_Dr, 0);
 		});
 	}
 	private void announceIcedrenchedDied() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 埃雷什基伽尔冰浸米伦指挥官已被击杀！ / The Ereshkigal Icedrenched Miren Commander has been slain!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_05_Die_Dr, 0);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 埃雷什基伽尔冰浸米伦指挥官已被击杀！ / The Ereshkigal Icedrenched Miren Commander has been slain!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_05_Die_Dr, 0);
 		});
 	}
 	private void announceIcebloodedDied() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 埃雷什基伽尔冰血米伦指挥官已被击杀！ / The Ereshkigal Iceblooded Miren Commander has been slain!
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_06_Die_Dr, 0);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 埃雷什基伽尔冰血米伦指挥官已被击杀！ / The Ereshkigal Iceblooded Miren Commander has been slain!
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_1241_commander_06_Die_Dr, 0);
 		});
 	}
 }

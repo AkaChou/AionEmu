@@ -18,37 +18,27 @@ import java.util.concurrent.Future;
 public class ElectrocuteAI2 extends NpcAI2
 {
 	private Future<?> task;
-	
+
 	@Override
 	public void think() {
 	}
-	
+
     @Override
     protected void handleSpawned() {
 	    super.handleSpawned();
-		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.useSkill(ElectrocuteAI2.this, 20757);
-			}
-		},0, 2000);
+		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> AI2Actions.useSkill(ElectrocuteAI2.this, 20757),0, 2000);
 	    despawn();
     }
-	
+
     private void despawn() {
-	    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-		    @Override
-		    public void run() {
-			    getOwner().getController().onDelete();
-		    }
-	    }, 10000);
+	    GameThreadPoolServices.threadPoolManager().schedule(() -> getOwner().getController().onDelete(), 10000);
     }
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
 	@Override
 	public void handleDespawned() {
 		task.cancel(true);

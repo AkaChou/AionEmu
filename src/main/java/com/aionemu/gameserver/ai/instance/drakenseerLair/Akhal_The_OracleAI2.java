@@ -67,28 +67,25 @@ public class Akhal_The_OracleAI2 extends AggressiveNpcAI2
 	}
 
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelPhaseTask();
-				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 22772, 60, getOwner()).useNoAnimationSkill(); // 钢铁护膜 I / Stone Skin.
-					List<Player> players = getLifedPlayers();
-					if (!players.isEmpty()) {
-						int size = players.size();
-						if (players.size() < 6) {
-							for (Player p: players) {
-								spawnDarkMessengerAssaulter(p);
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelPhaseTask();
+			} else {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 22772, 60, getOwner()).useNoAnimationSkill(); // 钢铁护膜 I / Stone Skin.
+				List<Player> players = getLifedPlayers();
+				if (!players.isEmpty()) {
+					int size = players.size();
+					if (players.size() < 6) {
+						for (Player p: players) {
+							spawnDarkMessengerAssaulter(p);
+						}
+					} else {
+						int count = Rnd.get(6, size);
+						for (int i = 0; i < count; i++) {
+							if (players.isEmpty()) {
+								break;
 							}
-						} else {
-							int count = Rnd.get(6, size);
-							for (int i = 0; i < count; i++) {
-								if (players.isEmpty()) {
-									break;
-								}
-								spawnDarkMessengerAssaulter(players.get(Rnd.get(players.size())));
-							}
+							spawnDarkMessengerAssaulter(players.get(Rnd.get(players.size())));
 						}
 					}
 				}
@@ -101,18 +98,15 @@ public class Akhal_The_OracleAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						switch (Rnd.get(1, 2)) {
-						    case 1:
-							    spawn(220452, x, y, z, (byte) 0); //IDF6_Dragon_Messenger_Summon1_69_An.
-							break;
-							case 2:
-							    spawn(220453, x, y, z, (byte) 0); //IDF6_Dragon_Messenger_Summon2_69_An.
-							break;
-						}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					switch (Rnd.get(1, 2)) {
+						case 1:
+							spawn(220452, x, y, z, (byte) 0); //IDF6_Dragon_Messenger_Summon1_69_An.
+						break;
+						case 2:
+							spawn(220453, x, y, z, (byte) 0); //IDF6_Dragon_Messenger_Summon2_69_An.
+						break;
 					}
 				}
 			}, 3000);
@@ -125,7 +119,7 @@ public class Akhal_The_OracleAI2 extends AggressiveNpcAI2
 	}
 
 	private List<Player> getLifedPlayers() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);

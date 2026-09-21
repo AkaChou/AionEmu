@@ -35,7 +35,7 @@ public class RobotData {
 	 * After JAXB unmarshalling, indexes robot info by id and releases the list.
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		robotInfos = new IntObjectHashMap<RobotInfo>();
+		robotInfos = new IntObjectHashMap<>();
 		for (RobotInfo info : robots) {
 			robotInfos.put(info.getRobotId(), info);
 		}

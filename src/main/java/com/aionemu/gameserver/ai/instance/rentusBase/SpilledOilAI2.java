@@ -18,36 +18,28 @@ import java.util.concurrent.Future;
 public class SpilledOilAI2 extends AggressiveNpcAI2
 {
 	private Future<?> attackOilSoakTask;
-	
+
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
     protected void handleSpawned() {
         super.handleSpawned();
 		attackOilSoak();
 		startLifeTask();
     }
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(SpilledOilAI2.this);
-			}
-		}, 20000); // 20 秒后 / 20 Secondes.
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(SpilledOilAI2.this), 20000); // 20 秒后 / 20 Secondes.
 	}
-	
+
 	private void attackOilSoak() {
-		attackOilSoakTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.targetCreature(SpilledOilAI2.this, getPosition().getWorldMapInstance().getNpc(217311)); // 狂暴的库哈拉 / Kuhara The Volatile.
-				AI2Actions.targetCreature(SpilledOilAI2.this, getPosition().getWorldMapInstance().getNpc(236298)); // 狂暴的库哈拉 / Kuhara The Volatile.
-				AI2Actions.useSkill(SpilledOilAI2.this, 19658); // 油浸 / Oil Soak.
-			}
+		attackOilSoakTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			AI2Actions.targetCreature(SpilledOilAI2.this, getPosition().getWorldMapInstance().getNpc(217311)); // 狂暴的库哈拉 / Kuhara The Volatile.
+			AI2Actions.targetCreature(SpilledOilAI2.this, getPosition().getWorldMapInstance().getNpc(236298)); // 狂暴的库哈拉 / Kuhara The Volatile.
+			AI2Actions.useSkill(SpilledOilAI2.this, 19658); // 油浸 / Oil Soak.
 		}, 3000, 8000);
 	}
-	
+
 }

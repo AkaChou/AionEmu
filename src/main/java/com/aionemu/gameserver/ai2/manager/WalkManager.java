@@ -40,7 +40,7 @@ public class WalkManager {
 	private static final int WALK_RANDOM_RANGE = 5;
 
 	private static final int MAX_WALK_ATTEMPTS = 10;
-	private static final Map<Integer, Integer> walkAttemptCounts = new ConcurrentHashMap<Integer, Integer>();
+	private static final Map<Integer, Integer> walkAttemptCounts = new ConcurrentHashMap<>();
 
 	// Z 值检查相关常量 / Constants related to Z-value checks
 	private static final int Z_CHECK_INTERVAL = 10000;
@@ -49,11 +49,11 @@ public class WalkManager {
 	private static final int STUCK_CHECK_COUNT = 3;
 
 	// Z 值检查相关集合 / Maps used for Z-value checks
-	private static final Map<Integer, Npc> randomWalkingNpcs = new ConcurrentHashMap<Integer, Npc>();
-	private static final Map<Integer, Float> lastCheckPositions = new ConcurrentHashMap<Integer, Float>();
-	private static final Map<Integer, Integer> stuckCounters = new ConcurrentHashMap<Integer, Integer>();
+	private static final Map<Integer, Npc> randomWalkingNpcs = new ConcurrentHashMap<>();
+	private static final Map<Integer, Float> lastCheckPositions = new ConcurrentHashMap<>();
+	private static final Map<Integer, Integer> stuckCounters = new ConcurrentHashMap<>();
 
-	private static final Map<Integer, ScheduledFuture<?>> pendingWalkTasks = new ConcurrentHashMap<Integer, ScheduledFuture<?>>();
+	private static final Map<Integer, ScheduledFuture<?>> pendingWalkTasks = new ConcurrentHashMap<>();
 
 	private static Future<?> zCheckTask = null;
 
@@ -294,13 +294,10 @@ public class WalkManager {
 			npcAI.getOwner().getMoveController().abortMove();
 			npcAI.getOwner().getMoveController().chooseNextStep();
 
-			ScheduledFuture<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					pendingWalkTasks.remove(npcAI.getOwner().getObjectId());
-					if (isNpcRegionActive(npcAI.getOwner()) && npcAI.isInState(AIState.WALKING)) {
-						npcAI.getOwner().getMoveController().moveToNextPoint();
-					}
+			ScheduledFuture<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				pendingWalkTasks.remove(npcAI.getOwner().getObjectId());
+				if (isNpcRegionActive(npcAI.getOwner()) && npcAI.isInState(AIState.WALKING)) {
+					npcAI.getOwner().getMoveController().moveToNextPoint();
 				}
 			}, walkPause);
 			pendingWalkTasks.put(npcObjectId, task);
@@ -320,70 +317,67 @@ public class WalkManager {
 		final boolean outsideWalkRange = isOutsideRandomWalkRange(owner.getX(), owner.getY(),
 			owner.getSpawn().getX(), owner.getSpawn().getY(), walkRange);
 
-		ScheduledFuture<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				pendingWalkTasks.remove(npcObjectId);
+		ScheduledFuture<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			pendingWalkTasks.remove(npcObjectId);
 
-				if (!isNpcRegionActive(owner)) {
-					return;
-				}
+			if (!isNpcRegionActive(owner)) {
+				return;
+			}
 
-				if (!npcAI.isInState(AIState.WALKING)) {
-					return;
-				}
+			if (!npcAI.isInState(AIState.WALKING)) {
+				return;
+			}
 
-				if (outsideWalkRange) {
-					owner.getMoveController().moveToPoint(owner.getSpawn().getX(), owner.getSpawn().getY(),
-						owner.getSpawn().getEffectiveZ());
-				} else {
-					int maxAttempts = 5;
-					int attempts = 0;
+			if (outsideWalkRange) {
+				owner.getMoveController().moveToPoint(owner.getSpawn().getX(), owner.getSpawn().getY(),
+					owner.getSpawn().getEffectiveZ());
+			} else {
+				int maxAttempts = 5;
+				int attempts = 0;
 
-					while (attempts < maxAttempts) {
-						Point randomPoint = MathUtil.get2DPointInsideCircle(owner.getSpawn().getX(), owner.getSpawn().getY(), walkRange);
-						float targetX = randomPoint.x;
-						float targetY = randomPoint.y;
+				while (attempts < maxAttempts) {
+					Point randomPoint = MathUtil.get2DPointInsideCircle(owner.getSpawn().getX(), owner.getSpawn().getY(), walkRange);
+					float targetX = randomPoint.x;
+					float targetY = randomPoint.y;
 
-						if (!isTargetPointValid(owner, targetX, targetY, owner.getZ())) {
-							attempts++;
-							continue;
+					if (!isTargetPointValid(owner, targetX, targetY, owner.getZ())) {
+						attempts++;
+						continue;
+					}
+
+					float targetZ = owner.getZ();
+
+					if (GeoDataConfig.GEO_ENABLE && GeoDataConfig.GEO_NPC_MOVE && !owner.isFlying()) {
+						try {
+							targetZ = GameWorldServices.geoService().getZ(owner.getWorldId(), targetX, targetY, owner.getZ(), 0.5F, owner.getInstanceId());
+						} catch (Exception e) {
+							targetZ = owner.getSpawn().getEffectiveZ();
 						}
+					}
 
-						float targetZ = owner.getZ();
+					if (GeoDataConfig.GEO_ENABLE && GeoDataConfig.GEO_NPC_MOVE) {
+						BoundRadius radius = owner.getObjectTemplate().getBoundRadius();
+						byte flags = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId() | CollisionIntention.WALK.getId());
+						Vector3f loc = GameWorldServices.geoService().getClosestCollision(owner, targetX, targetY, targetZ, true, flags);
 
-						if (GeoDataConfig.GEO_ENABLE && GeoDataConfig.GEO_NPC_MOVE && !owner.isFlying()) {
-							try {
-								targetZ = GameWorldServices.geoService().getZ(owner.getWorldId(), targetX, targetY, owner.getZ(), 0.5F, owner.getInstanceId());
-							} catch (Exception e) {
-								targetZ = owner.getSpawn().getEffectiveZ();
-							}
-						}
-
-						if (GeoDataConfig.GEO_ENABLE && GeoDataConfig.GEO_NPC_MOVE) {
-							BoundRadius radius = owner.getObjectTemplate().getBoundRadius();
-							byte flags = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId() | CollisionIntention.WALK.getId());
-							Vector3f loc = GameWorldServices.geoService().getClosestCollision(owner, targetX, targetY, targetZ, true, flags);
-
-							if (loc != null && (Math.abs(loc.x - targetX) > 0.5f || Math.abs(loc.y - targetY) > 0.5f)) {
-								owner.getMoveController().moveToPoint(loc.x, loc.y, loc.z);
-								break;
-							} else if (loc != null) {
-								owner.getMoveController().moveToPoint(targetX, targetY, targetZ);
-								break;
-							}
-						} else {
+						if (loc != null && (Math.abs(loc.x - targetX) > 0.5f || Math.abs(loc.y - targetY) > 0.5f)) {
+							owner.getMoveController().moveToPoint(loc.x, loc.y, loc.z);
+							break;
+						} else if (loc != null) {
 							owner.getMoveController().moveToPoint(targetX, targetY, targetZ);
 							break;
 						}
-
-						attempts++;
+					} else {
+						owner.getMoveController().moveToPoint(targetX, targetY, targetZ);
+						break;
 					}
 
-					if (attempts >= maxAttempts) {
-						owner.getMoveController().moveToPoint(owner.getSpawn().getX(), owner.getSpawn().getY(),
-							owner.getSpawn().getEffectiveZ());
-					}
+					attempts++;
+				}
+
+				if (attempts >= maxAttempts) {
+					owner.getMoveController().moveToPoint(owner.getSpawn().getX(), owner.getSpawn().getY(),
+						owner.getSpawn().getEffectiveZ());
 				}
 			}
 		}, Rnd.get(AIConfig.MINIMIMUM_DELAY, AIConfig.MAXIMUM_DELAY) * 1000L);
@@ -473,12 +467,7 @@ public class WalkManager {
 			return;
 		}
 
-		zCheckTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				performZCheck();
-			}
-		}, Z_CHECK_INTERVAL, Z_CHECK_INTERVAL);
+		zCheckTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> performZCheck(), Z_CHECK_INTERVAL, Z_CHECK_INTERVAL);
 	}
 
 	private static void performZCheck() {

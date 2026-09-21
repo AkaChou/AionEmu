@@ -63,7 +63,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	private boolean isInstanceDestroyed = false;
 	/** 已播放动画集合 / played-movie set */
 		/** evergalecanyon 任务 / evergale canyon task */
-		private final List<Future<?>> evergaleCanyonTask = new ArrayList<Future<?>>();
+		private final List<Future<?>> evergaleCanyonTask = new ArrayList<>();
 
 	protected EvergaleCanyonPlayerReward getPlayerReward(Player player) {
         evergaleCanyonReward.regPlayerReward(player);
@@ -193,77 +193,77 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
     }
 
 	private void sendEnterPacket(final Player player) {
-    	instance.doOnAllPlayers(new Visitor<Player>() {
-            /**
-             * 处理 visit。
-             * Handle visit.
-             *
-             * @param opponent 对手 / opponent
-             */
-            @Override
-            public void visit(Player opponent) {
-                if (player.getRace() != opponent.getRace()) {
-                    PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(11, getTime(), getInstanceReward(), player.getObjectId()));
-                    PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(11, getTime(), getInstanceReward(), opponent.getObjectId()));
-                    PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(3, getTime(), getInstanceReward(),  player.getObjectId()));
-                } else {
-                    PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(11, getTime(), getInstanceReward(), opponent.getObjectId()));
-                    if (player.getObjectId() != opponent.getObjectId()) {
-                        PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(3, getTime(), getInstanceReward(), player.getObjectId(), 20, 0));
-                    }
-                }
-            }
-        });
+    	instance.doOnAllPlayers(new Visitor<>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param opponent 对手 / opponent
+			 */
+			@Override
+			public void visit(Player opponent) {
+				if (player.getRace() != opponent.getRace()) {
+					PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(11, getTime(), getInstanceReward(), player.getObjectId()));
+					PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(11, getTime(), getInstanceReward(), opponent.getObjectId()));
+					PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(3, getTime(), getInstanceReward(), player.getObjectId()));
+				} else {
+					PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(11, getTime(), getInstanceReward(), opponent.getObjectId()));
+					if (player.getObjectId() != opponent.getObjectId()) {
+						PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(3, getTime(), getInstanceReward(), player.getObjectId(), 20, 0));
+					}
+				}
+			}
+		});
     	sendPacket(true);
     	sendPacket(false);
         PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(4, getTime(), getInstanceReward(), player.getObjectId(), 20, 0));
     }
 
 	private void startInstancePacket() {
-    	instance.doOnAllPlayers(new Visitor<Player>() {
-            /**
-             * 处理 visit。
-             * Handle visit.
-             *
-             * @param player 玩家 / player
-             */
-            @Override
-            public void visit(Player player) {
-            	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), evergaleCanyonReward, instance.getPlayersInside(), true));
-            	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(3, getTime(), evergaleCanyonReward, player.getObjectId(), 0, 0));
-            	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), evergaleCanyonReward, instance.getPlayersInside(), true));
-            	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(11, getTime(), getInstanceReward(), player.getObjectId()));
-            }
-        });
+    	instance.doOnAllPlayers(new Visitor<>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
+			@Override
+			public void visit(Player player) {
+				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), evergaleCanyonReward, instance.getPlayersInside(), true));
+				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(3, getTime(), evergaleCanyonReward, player.getObjectId(), 0, 0));
+				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), evergaleCanyonReward, instance.getPlayersInside(), true));
+				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(11, getTime(), getInstanceReward(), player.getObjectId()));
+			}
+		});
     }
 
     private void sendPacket(boolean isObjects) {
     	if (isObjects) {
-    		instance.doOnAllPlayers(new Visitor<Player>() {
-                /**
-                 * 处理 visit。
-                 * Handle visit.
-                 *
-                 * @param player 玩家 / player
-                 */
-                @Override
-                public void visit(Player player) {
-                	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(6, getTime(), evergaleCanyonReward, instance.getPlayersInside(), true));
-                }
-            });
+    		instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(6, getTime(), evergaleCanyonReward, instance.getPlayersInside(), true));
+				}
+			});
     	} else {
-    		instance.doOnAllPlayers(new Visitor<Player>() {
-                /**
-                 * 处理 visit。
-                 * Handle visit.
-                 *
-                 * @param player 玩家 / player
-                 */
-                @Override
-                public void visit(Player player) {
-                	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), evergaleCanyonReward, instance.getPlayersInside(), true));
-                }
-            });
+    		instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), evergaleCanyonReward, instance.getPlayersInside(), true));
+				}
+			});
     	}
     }
 
@@ -448,7 +448,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
             return;
         }
         addPointsByRace(player.getRace(), points);
-        List<Player> playersToGainScore = new ArrayList<Player>();
+        List<Player> playersToGainScore = new ArrayList<>();
         if (target != null && player.isInGroup2()) {
             for (Player member : player.getPlayerGroup2().getOnlineMembers()) {
                 if (member.getLifeStats().isAlreadyDead()) {
@@ -1164,13 +1164,13 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
              */
             @Override
             public void run() {
-                instance.doOnAllPlayers(new Visitor<Player>() {
+                instance.doOnAllPlayers(new Visitor<>() {
                     /**
-                     * 处理 visit。
-                     * Handle visit.
-                     *
-                     * @param player 玩家 / player
-                     */
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
                     @Override
                     public void visit(Player player) {
                         if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {

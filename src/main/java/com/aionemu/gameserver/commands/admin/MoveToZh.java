@@ -192,7 +192,7 @@ public class MoveToZh extends AdminCommand {
 
 		List<Integer> locIds = table.get(name);
 		if (locIds == null) {
-			List<String> candidates = new ArrayList<String>();
+			List<String> candidates = new ArrayList<>();
 			for (String known : table.keySet()) {
 				if (known.contains(name)) {
 					candidates.add(known);
@@ -210,7 +210,7 @@ public class MoveToZh extends AdminCommand {
 			return;
 		}
 
-		Set<Integer> worlds = new LinkedHashSet<Integer>();
+		Set<Integer> worlds = new LinkedHashSet<>();
 		for (TelelocationTemplate template : templates) {
 			worlds.add(template.getMapId());
 		}
@@ -248,7 +248,7 @@ public class MoveToZh extends AdminCommand {
 			return;
 		}
 
-		List<String> matched = new ArrayList<String>();
+		List<String> matched = new ArrayList<>();
 		for (Map.Entry<String, List<Integer>> entry : table.entrySet()) {
 			if (keyword.isEmpty() || entry.getKey().contains(keyword)) {
 				List<TelelocationTemplate> templates = resolveTemplates(entry.getValue());
@@ -298,7 +298,7 @@ public class MoveToZh extends AdminCommand {
 			return null;
 		}
 
-		Map<String, List<Integer>> table = new LinkedHashMap<String, List<Integer>>();
+		Map<String, List<Integer>> table = new LinkedHashMap<>();
 		for (String rawLine : lines) {
 			String line = rawLine.trim();
 			if (line.isEmpty() || line.startsWith("#")) {
@@ -312,7 +312,7 @@ public class MoveToZh extends AdminCommand {
 				int locId = Integer.parseInt(columns[0].trim());
 				String name = columns[1].trim();
 				if (!name.isEmpty()) {
-					table.computeIfAbsent(name, key -> new ArrayList<Integer>()).add(locId);
+					table.computeIfAbsent(name, key -> new ArrayList<>()).add(locId);
 				}
 			}
 			catch (NumberFormatException ignored) {
@@ -357,7 +357,7 @@ public class MoveToZh extends AdminCommand {
 	 * @return 传送模板列表 / Template list
 	 */
 	private List<TelelocationTemplate> resolveTemplates(List<Integer> locIds) {
-		List<TelelocationTemplate> templates = new ArrayList<TelelocationTemplate>(locIds.size());
+		List<TelelocationTemplate> templates = new ArrayList<>(locIds.size());
 		for (int locId : locIds) {
 			TelelocationTemplate template = DataManager.TELELOCATION_DATA.getTelelocationTemplate(locId);
 			if (template != null) {

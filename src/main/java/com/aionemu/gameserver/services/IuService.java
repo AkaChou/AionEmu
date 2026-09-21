@@ -44,7 +44,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public class IuService {
 	private static volatile ObjectProvider<IuService> instanceProvider;
 	private Map<Integer, IuLocation> iu;
-	private final ConcurrentMap<Integer, Iu<?>> activeConcert = new ConcurrentHashMap<Integer, Iu<?>>();
+	private final ConcurrentMap<Integer, Iu<?>> activeConcert = new ConcurrentHashMap<>();
 
 	/**
 	 * 加载演唱会地点、刷关闭态 NPC，并注册开启 cron。
@@ -57,19 +57,11 @@ public class IuService {
 				spawn(loc, IuStateType.CLOSED);
 			}
 			log.info(I18n.get("log.521fbac2260d", iu.size()));
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				public void run() {
-					for (IuLocation loc : getIuLocations().values()) {
-						startConcert(loc.getId());
-					}
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-						@Override
-						public void visit(Player player) {
-							PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_OPEN);
-						}
-					});
+			GameCronServices.cronService().schedule(() -> {
+				for (IuLocation loc : getIuLocations().values()) {
+					startConcert(loc.getId());
 				}
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_OPEN));
 			}, () -> CustomConfig.IU_SCHEDULE);
 		} else {
 			//log.info(I18n.get("log.14574ab2d3ba"));
@@ -102,12 +94,7 @@ public class IuService {
 		}
 		circusBound.start();
 		lPCHCountdownMsg(id);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				stopConcert(id);
-			}
-		}, (long) CustomConfig.IU_DURATION * 3600 * 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> stopConcert(id), (long) CustomConfig.IU_DURATION * 3600 * 1000);
 	}
 
 	/**
@@ -155,30 +142,27 @@ public class IuService {
 	public boolean lPCHCountdownMsg(int id) {
 		switch (id) {
 		case 1:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					// 现场派对音乐厅入口已出现。 / The entrance to the Live Party Concert Hall appeared.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_OPEN, 0);
-					// 现场派对音乐厅入口将在 90 分钟后关闭，将启动逃离。 / The entrance to the Live Party Concert Hall closes in 90 minutes. Escape will engage.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_CLOSE_TIMER_90M, 1800000);
-					// 现场派对音乐厅入口将在 60 分钟后关闭，将启动逃离。 / The entrance to the Live Party Concert Hall closes in 60 minutes. Escape will engage.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_CLOSE_TIMER_60M, 3600000);
-					// 现场派对音乐厅入口将在 30 分钟后关闭，将启动逃离。 / The entrance to the Live Party Concert Hall closes in 30 minutes. Escape will engage.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_CLOSE_TIMER_30M, 5400000);
-					// 现场派对音乐厅入口将在 15 分钟后关闭，将启动逃离。 / The entrance to the Live Party Concert Hall closes in 15 minutes. Escape will engage.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_CLOSE_TIMER_15M, 6300000);
-					// 现场派对音乐厅入口将在 10 分钟后关闭，将启动逃离。 / The entrance to the Live Party Concert Hall closes in 10 minutes. Escape will engage.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_CLOSE_TIMER_10M, 6600000);
-					// 现场派对音乐厅入口将在 5 分钟后关闭，将启动逃离。 / The entrance to the Live Party Concert Hall closes in 5 minutes. Escape will engage.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_CLOSE_TIMER_5M, 6900000);
-					// 现场派对音乐厅入口将在 3 分钟后关闭，将启动逃离。 / The entrance to the Live Party Concert Hall closes in 3 minutes. Escape will engage.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_CLOSE_TIMER_3M, 7020000);
-					// 现场派对音乐厅入口将在 2 分钟后关闭，将启动逃离。 / The entrance to the Live Party Concert Hall closes in 2 minutes. Escape will engage.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_CLOSE_TIMER_2M, 7080000);
-					// 现场派对音乐厅入口将在 1 分钟后关闭，将启动逃离。 / The entrance to the Live Party Concert Hall closes in 1 minutes. Escape will engage.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_CLOSE_TIMER_1M, 7140000);
-				}
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				// 现场派对音乐厅入口已出现。 / The entrance to the Live Party Concert Hall appeared.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_OPEN, 0);
+				// 现场派对音乐厅入口将在 90 分钟后关闭，将启动逃离。 / The entrance to the Live Party Concert Hall closes in 90 minutes. Escape will engage.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_CLOSE_TIMER_90M, 1800000);
+				// 现场派对音乐厅入口将在 60 分钟后关闭，将启动逃离。 / The entrance to the Live Party Concert Hall closes in 60 minutes. Escape will engage.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_CLOSE_TIMER_60M, 3600000);
+				// 现场派对音乐厅入口将在 30 分钟后关闭，将启动逃离。 / The entrance to the Live Party Concert Hall closes in 30 minutes. Escape will engage.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_CLOSE_TIMER_30M, 5400000);
+				// 现场派对音乐厅入口将在 15 分钟后关闭，将启动逃离。 / The entrance to the Live Party Concert Hall closes in 15 minutes. Escape will engage.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_CLOSE_TIMER_15M, 6300000);
+				// 现场派对音乐厅入口将在 10 分钟后关闭，将启动逃离。 / The entrance to the Live Party Concert Hall closes in 10 minutes. Escape will engage.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_CLOSE_TIMER_10M, 6600000);
+				// 现场派对音乐厅入口将在 5 分钟后关闭，将启动逃离。 / The entrance to the Live Party Concert Hall closes in 5 minutes. Escape will engage.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_CLOSE_TIMER_5M, 6900000);
+				// 现场派对音乐厅入口将在 3 分钟后关闭，将启动逃离。 / The entrance to the Live Party Concert Hall closes in 3 minutes. Escape will engage.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_CLOSE_TIMER_3M, 7020000);
+				// 现场派对音乐厅入口将在 2 分钟后关闭，将启动逃离。 / The entrance to the Live Party Concert Hall closes in 2 minutes. Escape will engage.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_CLOSE_TIMER_2M, 7080000);
+				// 现场派对音乐厅入口将在 1 分钟后关闭，将启动逃离。 / The entrance to the Live Party Concert Hall closes in 1 minutes. Escape will engage.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_CLOSE_TIMER_1M, 7140000);
 			});
 			return true;
 		default:
@@ -196,7 +180,7 @@ public class IuService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
+		for (VisibleObject obj : new ArrayList<>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {

@@ -30,7 +30,7 @@ public class RiftInformer {
 	 */
 	public static List<Npc> getSpawned(int worldId) {
 		List<Npc> rifts = RiftManager.getSpawned();
-		List<Npc> worldRifts = new CopyOnWriteArrayList<Npc>();
+		List<Npc> worldRifts = new CopyOnWriteArrayList<>();
 		for (Npc rift : rifts) {
 			if (rift.getWorldId() == worldId) {
 				worldRifts.add(rift);
@@ -95,7 +95,7 @@ public class RiftInformer {
 	}
 
 	private static List<AionServerPacket> getPackets(int worldId, int objId) {
-		List<AionServerPacket> packets = new ArrayList<AionServerPacket>();
+		List<AionServerPacket> packets = new ArrayList<>();
 		if (objId == -1) {
 			for (Npc rift : getSpawned(worldId)) {
 				RVController controller = (RVController) rift.getController();
@@ -131,12 +131,7 @@ public class RiftInformer {
 	}
 
 	private static void syncRiftsState(int worldId, final List<AionServerPacket> packets, final boolean isDespawnInfo) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId).getMainWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				syncRiftsState(player, packets);
-			}
-		});
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId).getMainWorldMapInstance().doOnAllPlayers(player -> syncRiftsState(player, packets));
 	}
 
 	private static Map<Integer, Integer> getAnnounceData(int worldId) {

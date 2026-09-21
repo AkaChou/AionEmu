@@ -28,12 +28,12 @@ public class PlayerContainer implements Iterable<Player> {
 	/**
 	 * 按 objectId 索引的玩家 / Players indexed by objectId
 	 */
-	private final Map<Integer, Player> playersById = new LinkedHashMap<Integer, Player>();
+	private final Map<Integer, Player> playersById = new LinkedHashMap<>();
 
 	/**
 	 * 按名称索引的玩家 / Players indexed by name
 	 */
-	private final Map<String, Player> playersByName = new LinkedHashMap<String, Player>();
+	private final Map<String, Player> playersByName = new LinkedHashMap<>();
 
 	/**
 	 * 添加玩家；objectId 或名称冲突时抛出 {@link DuplicateAionObjectException}。
@@ -141,6 +141,6 @@ public class PlayerContainer implements Iterable<Player> {
 	 * @return 玩家列表副本 / copy of the player list
 	 */
 	private synchronized List<Player> playersSnapshot() {
-		return new ArrayList<Player>(playersById.values());
+		return new ArrayList<>(playersById.values());
 	}
 }

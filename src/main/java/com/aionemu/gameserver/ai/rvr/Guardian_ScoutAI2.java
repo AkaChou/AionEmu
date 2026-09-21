@@ -39,16 +39,11 @@ public class Guardian_ScoutAI2 extends AggressiveNpcAI2
 		// 艾瑞尔大人！请向那魔族展示您的力量！ / Lord Ariel! Please show your power to that Asmodian!
 		sendMsg(1501541, getObjectId(), false, 14000);
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(Guardian_ScoutAI2.this);
-			}
-		}, 300000); //5 分钟。 / 5 Minutes.
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Guardian_ScoutAI2.this), 300000); //5 分钟。 / 5 Minutes.
 	}
-	
+
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
 		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}

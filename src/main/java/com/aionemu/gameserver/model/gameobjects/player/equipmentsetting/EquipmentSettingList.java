@@ -17,7 +17,7 @@ import lombok.Setter;
 
 public class EquipmentSettingList {
 
-	private final Map<Integer, EquipmentSetting> equipmentSetting = new HashMap<Integer, EquipmentSetting>();
+	private final Map<Integer, EquipmentSetting> equipmentSetting = new HashMap<>();
 	/** 返回所有者。 / Returns the owner. */
 	@Getter
 	@Setter

@@ -39,17 +39,14 @@ public class Blood_WingAI2 extends NpcAI2
 
 	private void startBloodWing() {
 		AI2Actions.deleteOwner(Blood_WingAI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				attackBloodWing((Npc)spawn(217109, 641.71704f, 573.7239f, 209.03032f, (byte) 96), 651.39923f, 564.0526f, 206.85417f, false);
-				attackBloodWing((Npc)spawn(217109, 640.8816f, 572.90814f, 209.03218f, (byte) 103), 651.39923f, 564.0526f, 206.85417f, false);
-				attackBloodWing((Npc)spawn(217109, 639.92664f, 572.13995f, 209.03427f, (byte) 103), 651.39923f, 564.0526f, 206.85417f, false);
-				attackBloodWing((Npc)spawn(217109, 639.0914f, 571.4476f, 209.0361f, (byte) 103), 651.39923f, 564.0526f, 206.85417f, false);
-				attackBloodWing((Npc)spawn(217109, 640.8328f, 573.7359f, 209.03212f, (byte) 103), 651.39923f, 564.0526f, 206.85417f, false);
-				attackBloodWing((Npc)spawn(217109, 639.96747f, 573.10034f, 209.034f, (byte) 103), 651.39923f, 564.0526f, 206.85417f, false);
-				attackBloodWing((Npc)spawn(217109, 638.9543f, 572.216f, 209.03624f, (byte) 103), 651.39923f, 564.0526f, 206.85417f, false);
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			attackBloodWing((Npc)spawn(217109, 641.71704f, 573.7239f, 209.03032f, (byte) 96), 651.39923f, 564.0526f, 206.85417f, false);
+			attackBloodWing((Npc)spawn(217109, 640.8816f, 572.90814f, 209.03218f, (byte) 103), 651.39923f, 564.0526f, 206.85417f, false);
+			attackBloodWing((Npc)spawn(217109, 639.92664f, 572.13995f, 209.03427f, (byte) 103), 651.39923f, 564.0526f, 206.85417f, false);
+			attackBloodWing((Npc)spawn(217109, 639.0914f, 571.4476f, 209.0361f, (byte) 103), 651.39923f, 564.0526f, 206.85417f, false);
+			attackBloodWing((Npc)spawn(217109, 640.8328f, 573.7359f, 209.03212f, (byte) 103), 651.39923f, 564.0526f, 206.85417f, false);
+			attackBloodWing((Npc)spawn(217109, 639.96747f, 573.10034f, 209.034f, (byte) 103), 651.39923f, 564.0526f, 206.85417f, false);
+			attackBloodWing((Npc)spawn(217109, 638.9543f, 572.216f, 209.03624f, (byte) 103), 651.39923f, 564.0526f, 206.85417f, false);
 		}, 2500);
 	}
 

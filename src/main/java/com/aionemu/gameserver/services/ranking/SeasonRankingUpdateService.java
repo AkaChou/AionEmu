@@ -64,7 +64,7 @@ public class SeasonRankingUpdateService {
 	 */
 	private List<SM_SEASON_RANKING> loadRankPacket(int tableid) {
 		ArrayList<SeasonRankingResult> list = getDAO().getCompetitionRankingPlayers(tableid);
-		List<SM_SEASON_RANKING> playerPackets = new ArrayList<SM_SEASON_RANKING>();
+		List<SM_SEASON_RANKING> playerPackets = new ArrayList<>();
 		for (int i = 0; i < list.size(); i += 94) {
 			if (list.size() > i + 94) {
 				playerPackets.add(new SM_SEASON_RANKING(tableid, 0, list.subList(i, i + 94), lastUpdate));

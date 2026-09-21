@@ -149,7 +149,7 @@ public class ShieldService {
 	public void registerShield(int worldId, SiegeShield shield) {
 		List<SiegeShield> mapShields = registeredShields.get(worldId);
 		if (mapShields == null) {
-			mapShields = new ArrayList<SiegeShield>();
+			mapShields = new ArrayList<>();
 			registeredShields.put(worldId, mapShields);
 		}
 		mapShields.add(shield);
@@ -166,7 +166,7 @@ public class ShieldService {
 		if (mapShields == null)
 			return;
 		ZoneInstance zone = location.getZone().get(0);
-		List<SiegeShield> shields = new ArrayList<SiegeShield>();
+		List<SiegeShield> shields = new ArrayList<>();
 		for (int index = mapShields.size() - 1; index >= 0; index--) {
 			SiegeShield shield = mapShields.get(index);
 			Vector3f center = shield.getGeometry().getWorldBound().getCenter();

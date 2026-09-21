@@ -14,7 +14,7 @@ class SMEventWindowItemsTest {
 
 	@Test
 	void constructorCopiesActiveEventsCollection() throws ReflectiveOperationException {
-		List<EventsWindow> activeEvents = new ArrayList<EventsWindow>();
+		List<EventsWindow> activeEvents = new ArrayList<>();
 		activeEvents.add(new EventsWindow());
 
 		SM_EVENT_WINDOW_ITEMS packet = new SM_EVENT_WINDOW_ITEMS(activeEvents);

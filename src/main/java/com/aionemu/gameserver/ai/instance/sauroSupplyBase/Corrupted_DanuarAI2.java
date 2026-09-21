@@ -18,35 +18,32 @@ import java.util.concurrent.Future;
 public class Corrupted_DanuarAI2 extends AggressiveNpcAI2
 {
     private Future<?> skillTask;
-	
+
     @Override
     protected void handleSpawned() {
         super.handleSpawned();
         startpower();
     }
-	
+
     private void startpower() {
-        skillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-		        AI2Actions.targetSelf(Corrupted_DanuarAI2.this);
-                AI2Actions.useSkill(Corrupted_DanuarAI2.this, 21185); // 符文诅咒 / Curse Of The Rune.
-            }
-        }, 3000, 5000);
+        skillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			AI2Actions.targetSelf(Corrupted_DanuarAI2.this);
+			AI2Actions.useSkill(Corrupted_DanuarAI2.this, 21185); // 符文诅咒 / Curse Of The Rune.
+		}, 3000, 5000);
     }
-	
+
     private void cancelskillTask() {
         if (skillTask != null && !skillTask.isCancelled()) {
             skillTask.cancel(true);
         }
     }
-	
+
     @Override
     protected void handleDied() {
         cancelskillTask();
         super.handleDied();
     }
-	
+
     @Override
     protected void handleDespawned() {
         cancelskillTask();

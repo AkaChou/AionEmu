@@ -18,7 +18,7 @@ public class CsPacketHandler {
 	 * 按状态分组的操作码 → 包原型映射。
 	 * Opcode-to-prototype map grouped by connection state.
 	 */
-	private final Map<State, Map<Integer, CsClientPacket>> packetPrototypes = new HashMap<State, Map<Integer, CsClientPacket>>();
+	private final Map<State, Map<Integer, CsClientPacket>> packetPrototypes = new HashMap<>();
 
 	/**
 	 * 从缓冲中读取操作码并构造对应入站包。
@@ -45,7 +45,7 @@ public class CsPacketHandler {
 		for (State state : states) {
 			Map<Integer, CsClientPacket> pm = packetPrototypes.get(state);
 			if (pm == null) {
-				pm = new HashMap<Integer, CsClientPacket>();
+				pm = new HashMap<>();
 				packetPrototypes.put(state, pm);
 			}
 			pm.put(packetPrototype.getOpcode(), packetPrototype);

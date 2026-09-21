@@ -56,11 +56,6 @@ public class DelayedFPAttackInstantEffect extends EffectTemplate {
 		final Player effected = (Player) effect.getEffected();
 		final int newValue = effect.getReserved2();
 
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				effected.getLifeStats().reduceFp(newValue);
-			}
-		}, delay);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> effected.getLifeStats().reduceFp(newValue), delay);
 	}
 }

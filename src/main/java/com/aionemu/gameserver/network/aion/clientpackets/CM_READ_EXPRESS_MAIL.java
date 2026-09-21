@@ -67,10 +67,7 @@ public class CM_READ_EXPRESS_MAIL extends AionClientPacket {
 				return;
 			} else if (haveUnreadExpress) {
 				VisibleObjectSpawner.spawnPostman(player);
-				Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-					}
+				Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> {
 				}, TimeUnit.SECONDS.toMillis(Math.max(0, CustomConfig.EXPRESS_MAIL_COOLDOWN_SECONDS)));
 				player.getController().addTask(TaskId.EXPRESS_MAIL_USE, task);
 			}

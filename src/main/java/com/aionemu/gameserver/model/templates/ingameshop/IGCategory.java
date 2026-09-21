@@ -34,7 +34,7 @@ public class IGCategory {
 	/** 返回 sub categories / Returns the sub categories */
 	public List<IGSubCategory> getSubCategories() {
 		if (subCategories == null) {
-			subCategories = new ArrayList<IGSubCategory>();
+			subCategories = new ArrayList<>();
 		}
 		return subCategories;
 	}

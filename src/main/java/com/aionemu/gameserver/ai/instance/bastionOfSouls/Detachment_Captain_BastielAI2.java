@@ -26,14 +26,14 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 public class Detachment_Captain_BastielAI2 extends GeneralNpcAI2
 {
 	private boolean isInstanceDestroyed;
-	
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		if (player.getLevel() >= 66) {
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
 		}
 	}
-	
+
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000) {
@@ -43,7 +43,7 @@ public class Detachment_Captain_BastielAI2 extends GeneralNpcAI2
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
 		return true;
 	}
-	
+
 	private void startInvulnerable() {
 		final Npc detachmentCaptainBastiel = getPosition().getWorldMapInstance().getNpc(806702);
 		detachmentCaptainBastiel.setTarget(getOwner());
@@ -57,42 +57,36 @@ public class Detachment_Captain_BastielAI2 extends GeneralNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		Npc owner = getOwner();
 		owner.getLifeStats().setCurrentHpPercent(5);
 	}
-	
+
 	private void startBastionOfSoulsWave() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				attackBastionOfSouls((Npc)spawn(246520, 260.62317f, 753.64874f, 421.74033f, (byte) 67), 238.8924f, 748.75555f, 421.254f, false);
-				attackBastionOfSouls((Npc)spawn(246521, 229.63022f, 773.9174f, 421.83142f, (byte) 94), 238.8924f, 748.75555f, 421.254f, false);
-				attackBastionOfSouls((Npc)spawn(246522, 220.49199f, 743.5425f, 421.625f, (byte) 14), 238.8924f, 748.75555f, 421.254f, false);
-				attackBastionOfSouls((Npc)spawn(246523, 244.47363f, 733.99384f, 421.38748f, (byte) 33), 238.8924f, 748.75555f, 421.254f, false);
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			attackBastionOfSouls((Npc)spawn(246520, 260.62317f, 753.64874f, 421.74033f, (byte) 67), 238.8924f, 748.75555f, 421.254f, false);
+			attackBastionOfSouls((Npc)spawn(246521, 229.63022f, 773.9174f, 421.83142f, (byte) 94), 238.8924f, 748.75555f, 421.254f, false);
+			attackBastionOfSouls((Npc)spawn(246522, 220.49199f, 743.5425f, 421.625f, (byte) 14), 238.8924f, 748.75555f, 421.254f, false);
+			attackBastionOfSouls((Npc)spawn(246523, 244.47363f, 733.99384f, 421.38748f, (byte) 33), 238.8924f, 748.75555f, 421.254f, false);
 		}, 1000);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				attackBastionOfSouls((Npc)spawn(246520, 260.62317f, 753.64874f, 421.74033f, (byte) 67), 238.8924f, 748.75555f, 421.254f, false);
-				attackBastionOfSouls((Npc)spawn(246521, 229.63022f, 773.9174f, 421.83142f, (byte) 94), 238.8924f, 748.75555f, 421.254f, false);
-				attackBastionOfSouls((Npc)spawn(246522, 220.49199f, 743.5425f, 421.625f, (byte) 14), 238.8924f, 748.75555f, 421.254f, false);
-				attackBastionOfSouls((Npc)spawn(246523, 244.47363f, 733.99384f, 421.38748f, (byte) 33), 238.8924f, 748.75555f, 421.254f, false);
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			attackBastionOfSouls((Npc)spawn(246520, 260.62317f, 753.64874f, 421.74033f, (byte) 67), 238.8924f, 748.75555f, 421.254f, false);
+			attackBastionOfSouls((Npc)spawn(246521, 229.63022f, 773.9174f, 421.83142f, (byte) 94), 238.8924f, 748.75555f, 421.254f, false);
+			attackBastionOfSouls((Npc)spawn(246522, 220.49199f, 743.5425f, 421.625f, (byte) 14), 238.8924f, 748.75555f, 421.254f, false);
+			attackBastionOfSouls((Npc)spawn(246523, 244.47363f, 733.99384f, 421.38748f, (byte) 33), 238.8924f, 748.75555f, 421.254f, false);
 		}, 30000);
 	}
-	
+
 	private void attackBastionOfSouls(final Npc npc, float x, float y, float z, boolean despawn) {
 		((AbstractAI) npc.getAi2()).setStateIfNot(AIState.WALKING);
 		npc.setState(1);
 		npc.getMoveController().moveToPoint(x, y, z);
 		PacketSendUtility.broadcastPacket(npc, new SM_EMOTION(npc, EmotionType.START_EMOTE2, 0, npc.getObjectId()));
 	}
-	
+
 	public void onInstanceDestroy() {
 		isInstanceDestroyed = true;
 	}

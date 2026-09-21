@@ -57,14 +57,11 @@ public class WarriorPreceptorAI2 extends AggressiveNpcAI2
 	}
 
 	private void startSkillTask() {
-		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelTask();
-				} else {
-					startSkillEvent();
-				}
+		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelTask();
+			} else {
+				startSkillEvent();
 			}
 		}, 30000, 30000);
 	}
@@ -77,18 +74,15 @@ public class WarriorPreceptorAI2 extends AggressiveNpcAI2
 
 	private void startSkillEvent() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 19595, 46, getTargetPlayer()).useNoAnimationSkill();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!isAlreadyDead()) {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19596, 46, getOwner()).useNoAnimationSkill();
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isAlreadyDead()) {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 19596, 46, getOwner()).useNoAnimationSkill();
 			}
 		}, 6000);
 	}
 
 	private Player getTargetPlayer() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player : getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player) && MathUtil.isIn3dRange(player, getOwner(), 15)) {
 				players.add(player);

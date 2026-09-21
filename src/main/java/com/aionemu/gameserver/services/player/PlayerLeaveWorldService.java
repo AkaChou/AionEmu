@@ -64,16 +64,10 @@ public class PlayerLeaveWorldService {
 	 */
 	public static final void startLeaveWorldDelay(final Player player, int delay) {
 		player.getController().stopMoving();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */
-			public void run() {
-				startLeaveWorld(player);
-			}
-		}, delay);
+		/**
+		 * 执行任务。
+		 * Runs the task.
+		 */GameThreadPoolServices.threadPoolManager().schedule(() -> startLeaveWorld(player), delay);
 	}
 
 	/**

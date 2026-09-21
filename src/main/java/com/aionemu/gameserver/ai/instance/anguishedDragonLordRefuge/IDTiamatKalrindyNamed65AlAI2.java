@@ -55,16 +55,13 @@ public class IDTiamatKalrindyNamed65AlAI2 extends AggressiveNpcAI2
     }
 
     private void startSkillTask() {
-	    trapTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-		    @Override
-		    public void run() {
-			    if (isAlreadyDead())
-			       cancelTask();
-			    else {
-			       startHallucinatoryVictoryEvent();
-			    }
-		    }
-	    }, 5000, 80000);
+	    trapTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead())
+			   cancelTask();
+			else {
+			   startHallucinatoryVictoryEvent();
+			}
+		}, 5000, 80000);
     }
 
     private void cancelTask() {
@@ -112,7 +109,7 @@ public class IDTiamatKalrindyNamed65AlAI2 extends AggressiveNpcAI2
     }
 
     private Player getRandomTarget() {
-	    List<Player> players = new ArrayList<Player>();
+	    List<Player> players = new ArrayList<>();
 	    for (Player player : getKnownList().getKnownPlayers().values()) {
 		    if (!PlayerActions.isAlreadyDead(player) && MathUtil.isIn3dRange(player, getOwner(), 50)) {
 			   players.add(player);

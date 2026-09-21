@@ -218,14 +218,20 @@ public final class RetailGroupControlEngine {
 	}
 
 	private static TeamType teamType(int controlTargetType) {
-		return switch (controlTargetType) {
-			case 0 -> TeamType.IN_AREA_DEFAULT;
-			case 1 -> TeamType.IN_AREA_TARGET_1;
-			case 2 -> TeamType.IN_AREA_TARGET_2;
-			case 3 -> TeamType.IN_AREA_TARGET_3;
-			case 4 -> TeamType.IN_AREA_TARGET_4;
-			default -> throw new IllegalArgumentException("Unsupported GROUPCTRL target type: " + controlTargetType);
-		};
+		switch (controlTargetType) {
+			case 0:
+				return TeamType.IN_AREA_DEFAULT;
+			case 1:
+				return TeamType.IN_AREA_TARGET_1;
+			case 2:
+				return TeamType.IN_AREA_TARGET_2;
+			case 3:
+				return TeamType.IN_AREA_TARGET_3;
+			case 4:
+				return TeamType.IN_AREA_TARGET_4;
+			default:
+				throw new IllegalArgumentException("Unsupported GROUPCTRL target type: " + controlTargetType);
+		}
 	}
 
 	private static boolean matchesPrefix(String name, String prefix) {
@@ -284,24 +290,30 @@ public final class RetailGroupControlEngine {
 			}
 			TeamType teamType = teamType(definition.controlTargetType());
 			switch (definition.type()) {
-				case 1, 3 -> {
+				case 1:
+				case 3:
 					PlayerGroup group = groups.stream().filter(existing -> !existing.isFull()).findFirst().orElse(null);
 					if (group == null) {
 						groups.add(PlayerGroupService.createGroup(player, teamType));
 					} else {
 						PlayerGroupService.addPlayer(group, player);
 					}
-				}
-				case 2, 4 -> {
+					break;
+				case 2:
+				case 4:
 					PlayerAlliance alliance = alliances.stream().filter(existing -> !existing.isFull()).findFirst().orElse(null);
 					if (alliance == null) {
 						alliances.add(PlayerAllianceService.createAlliance(player, teamType));
 					} else {
 						PlayerAllianceService.addPlayer(alliance, player);
 					}
-				}
-				case 5, 6 -> addToLeague(player, teamType);
-				default -> throw new IllegalStateException("Unsupported GROUPCTRL type: " + definition.type());
+					break;
+				case 5:
+				case 6:
+					addToLeague(player, teamType);
+					break;
+				default:
+					throw new IllegalStateException("Unsupported GROUPCTRL type: " + definition.type());
 			}
 		}
 
@@ -324,12 +336,22 @@ public final class RetailGroupControlEngine {
 		}
 
 		private void remove(Player player, boolean transfer) {
-			int messageId = switch (definition.type()) {
-				case 1 -> 1403202;
-				case 2 -> 1403203;
-				case 5, 6 -> 1403229;
-				default -> 0;
-			};
+			int messageId;
+			switch (definition.type()) {
+				case 1:
+					messageId = 1403202;
+					break;
+				case 2:
+					messageId = 1403203;
+					break;
+				case 5:
+				case 6:
+					messageId = 1403229;
+					break;
+				default:
+					messageId = 0;
+					break;
+			}
 			if (transfer && messageId != 0) {
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(messageId));
 			}

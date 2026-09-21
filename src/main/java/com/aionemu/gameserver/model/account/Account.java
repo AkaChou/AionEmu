@@ -44,7 +44,7 @@ public class Account implements Iterable<PlayerAccountData> {
 	/** 获取账号时间。 / Returns the account time. */
 	private AccountTime accountTime;
 
-	private final Map<Integer, PlayerAccountData> players = new HashMap<Integer, PlayerAccountData>();
+	private final Map<Integer, PlayerAccountData> players = new HashMap<>();
 
 	/**
 	 * @return 账号仓库 / the accountWarehouse
@@ -149,11 +149,13 @@ public class Account implements Iterable<PlayerAccountData> {
 	 * Sorts the accounts on last online
 	 */
 	public ArrayList<PlayerAccountData> getSortedAccountsList() {
-		ArrayList<PlayerAccountData> list = new ArrayList<PlayerAccountData>();
+		ArrayList<PlayerAccountData> list = new ArrayList<>();
 		list.addAll(players.values());
-		Collections.sort(list, new Comparator<PlayerAccountData>() {
+		Collections.sort(list, new Comparator<>() {
 
-			/** 比较 / compare. */
+			/**
+			 * 比较 / compare.
+			 */
 			@Override
 			public int compare(PlayerAccountData x, PlayerAccountData y) {
 				Timestamp t1 = x.getPlayerCommonData().getLastOnline();
@@ -179,13 +181,11 @@ public class Account implements Iterable<PlayerAccountData> {
 
 	/** 返回 number of / Returns the number of */
 	public int getNumberOf(Race race) {
-		switch (race) {
-		case ASMODIANS:
-			return numberOfAsmos;
-		case ELYOS:
-			return numberOfElyos;
-		}
-		return 0;
+		return switch (race) {
+			case ASMODIANS -> numberOfAsmos;
+			case ELYOS -> numberOfElyos;
+			default -> 0;
+		};
 	}
 
 	/** Decrement 次数 / Decrement Count Of */

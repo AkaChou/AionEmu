@@ -61,12 +61,7 @@ public class Moltenus extends AdminCommand
 				PacketSendUtility.sendMessage(player, "<Resurrected Moltenus> " + moltenusId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Resurrected Moltenus> " + moltenusId + " started!");
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player player) {
-						PacketSendUtility.sendSys3Message(player, "\uE005", "<Resurrected Moltenus> appear in the abyss !!!");
-					}
-				});
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player1 -> PacketSendUtility.sendSys3Message(player1, "\uE005", "<Resurrected Moltenus> appear in the abyss !!!"));
 				GameLocationBootstrapServices.moltenusService().startMoltenus(moltenusId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {

@@ -28,23 +28,13 @@ public class JurdinsIllusionAI2 extends GeneralNpcAI2 {
 			WorldPosition p = getPosition();
 			final int instanceId = p.getInstanceId();
 			final int worldId = p.getMapId();
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-				@Override
-				public void run() {
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-						@Override
-						public void run() {
-							spawn(worldId, 217238, 472.989f, 798.109f, 130.072f, (byte) 90, 0, instanceId);
-							Npc smoke = (Npc) spawn(282465, 472.989f, 798.109f, 130.072f, (byte) 0);
-							NpcActions.delete(smoke);
-						}
-
-					}, 4000);
-					AI2Actions.deleteOwner(JurdinsIllusionAI2.this);
-				}
-
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					spawn(worldId, 217238, 472.989f, 798.109f, 130.072f, (byte) 90, 0, instanceId);
+					Npc smoke = (Npc) spawn(282465, 472.989f, 798.109f, 130.072f, (byte) 0);
+					NpcActions.delete(smoke);
+				}, 4000);
+				AI2Actions.deleteOwner(JurdinsIllusionAI2.this);
 			}, 3000);
 		}
 		super.handleDialogStart(player);

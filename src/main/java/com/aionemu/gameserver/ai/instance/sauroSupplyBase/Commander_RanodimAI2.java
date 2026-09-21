@@ -90,36 +90,21 @@ public class Commander_RanodimAI2 extends AggressiveNpcAI2
 	private void scheduleDelayStage1(int delay) {
 		if (!isStart && !isAlreadyDead()) {
 		} else {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					stage1();
-				}
-			}, delay);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> stage1(), delay);
 		}
 	}
 
 	private void scheduleDelayStage2(int delay) {
 		if (!isStart && !isAlreadyDead()) {
 		} else {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					stage2();
-				}
-			}, delay);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> stage2(), delay);
 		}
 	}
 
 	private void scheduleDelayStage3(int delay) {
 		if (!isStart && !isAlreadyDead()) {
 		} else {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					stage3();
-				}
-			}, delay);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> stage3(), delay);
 		}
 	}
 

@@ -47,7 +47,7 @@ public class JurdinTheCursedAI2 extends SummonerAI2 {
 		isStart = false;
 		cancelTask();
 	}
-	
+
 	@Override
 	public void handleDied() {
 		super.handleDied();
@@ -92,44 +92,36 @@ public class JurdinTheCursedAI2 extends SummonerAI2 {
 
 	private void startTask() {
 
-		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelTask();
-				}
-				else {
-					spawnShadows();
-				}
+		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelTask();
+			}
+			else {
+				spawnShadows();
 			}
 		},0, 60000);
 	}
 
 	private void spawnShadows() {
 		spawnFlowers();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				if (isAlreadyDead() || !isStart) {
-					return;
-				}
-				WorldPosition p = getPosition();
-				if (p != null) {
-					WorldMapInstance instance = p.getWorldMapInstance();
-					if (instance != null) {
-						for (int i = 0; i < 7; i++) {
-							SpawnTemplate temp = rndSpawnInRange(282201, 10);
-							VisibleObject o = SpawnEngine.spawnObject(temp, getPosition().getInstanceId());
-							addHelpersSpawn(o.getObjectId());
-						}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (isAlreadyDead() || !isStart) {
+				return;
+			}
+			WorldPosition p = getPosition();
+			if (p != null) {
+				WorldMapInstance instance = p.getWorldMapInstance();
+				if (instance != null) {
+					for (int i = 0; i < 7; i++) {
+						SpawnTemplate temp = rndSpawnInRange(282201, 10);
+						VisibleObject o = SpawnEngine.spawnObject(temp, getPosition().getInstanceId());
+						addHelpersSpawn(o.getObjectId());
 					}
 				}
 			}
 		}, 5000);
 	}
-	
+
 	private void cancelTask() {
 		if (task != null && !task.isCancelled()) {
 			task.cancel(true);
@@ -154,7 +146,7 @@ public class JurdinTheCursedAI2 extends SummonerAI2 {
 			}
 		}
 	}
-	
+
 	private void spawnFlowers() {
 		WorldPosition p = getPosition();
 		if (p != null) {

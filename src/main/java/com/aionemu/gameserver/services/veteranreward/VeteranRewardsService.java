@@ -84,12 +84,7 @@ public class VeteranRewardsService {
 	private void Init_VeteranRewardStatusLoop() {
 		log.info(I18n.get("log.9d55ff406e5f"));
 
-		GameCronServices.cronService().schedule(new Runnable() {
-			@Override
-			public void run() {
-				Init_VeteranRewards();
-			}
-		}, VETERAN_REWARDS_LOOP_STATUS_BROADCAST_SCHEDULE);
+		GameCronServices.cronService().schedule(() -> Init_VeteranRewards(), VETERAN_REWARDS_LOOP_STATUS_BROADCAST_SCHEDULE);
 		log.info(I18n.get("log.364637c5d487", VETERAN_REWARDS_LOOP_STATUS_BROADCAST_SCHEDULE));
 	}
 
@@ -102,7 +97,7 @@ public class VeteranRewardsService {
 			veteran_rewards.clear();
 		}
 
-		veteran_rewards = new HashSet<VeteranRewards>(getDAO().getVeteranReward());
+		veteran_rewards = new HashSet<>(getDAO().getVeteranReward());
 
 		if (veteran_rewards.size() > 0) {
 			if (VeteranRewardConfig.VETERANREWARDS_ENABLED_INFO_LOG) {

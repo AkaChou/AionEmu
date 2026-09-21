@@ -26,7 +26,7 @@ public class WorldMapsData implements Iterable<WorldMapTemplate> {
 	@XmlElement(name = "map")
 	protected List<WorldMapTemplate> worldMaps;
 
-	protected IntObjectHashMap<WorldMapTemplate> worldIdMap = new IntObjectHashMap<WorldMapTemplate>();
+	protected IntObjectHashMap<WorldMapTemplate> worldIdMap = new IntObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，将地图模板按地图 ID 建索引。

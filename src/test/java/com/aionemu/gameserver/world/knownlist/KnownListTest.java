@@ -161,7 +161,7 @@ class KnownListTest {
 				knownList.removeKnown(player);
 			}
 		});
-		assertEquals(List.of(), new ArrayList<Player>(knownList.getKnownPlayers().values()));
+		assertEquals(List.of(), new ArrayList<>(knownList.getKnownPlayers().values()));
 	}
 
 	@Test

@@ -44,30 +44,21 @@ public class High_Elder_RoamimAI2 extends AggressiveNpcAI2
 	}
 
 	private void announceHighElderRoamimFurious() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 大长老罗阿米姆暴怒！ / High Elder Roamim is furious!
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Underpass_Nephilim_Raid_Rage);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 大长老罗阿米姆暴怒！ / High Elder Roamim is furious!
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Underpass_Nephilim_Raid_Rage);
 		});
 	}
 	private void announceHighElderRoamimSummoned() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 大长老罗阿米姆已召唤玩家。 / High Elder Roamim has summoned players.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Underpass_Nephilim_Raid_Recall);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 大长老罗阿米姆已召唤玩家。 / High Elder Roamim has summoned players.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Underpass_Nephilim_Raid_Recall);
 		});
 	}
 	private void announceHighElderRoamimReset() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 大长老罗阿米姆的威胁等级已重置！ / High Elder Roamim's threat level has reset!
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Underpass_Nephilim_Raid_ResetAggro);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 大长老罗阿米姆的威胁等级已重置！ / High Elder Roamim's threat level has reset!
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Underpass_Nephilim_Raid_ResetAggro);
 		});
 	}
 

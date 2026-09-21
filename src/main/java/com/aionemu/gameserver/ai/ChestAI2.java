@@ -27,7 +27,7 @@ import java.util.List;
 public class ChestAI2 extends ActionItemNpcAI2
 {
 	private ChestTemplate chestTemplate;
-	
+
 	/**
 	 * 玩家开始与本 NPC 对话/交互。
 	 * Player starts dialog/interaction with this NPC.
@@ -42,7 +42,7 @@ public class ChestAI2 extends ActionItemNpcAI2
 		}
 		super.handleDialogStart(player);
 	}
-	
+
 	/**
 	 * 使用交互物完成时的逻辑。
 	 * Logic when action-item use finishes.
@@ -55,7 +55,7 @@ public class ChestAI2 extends ActionItemNpcAI2
 			if (isAlreadyDead())
 				return;
 			AI2Actions.dieSilently(this, player);
-			Collection<Player> players = new HashSet<Player>();
+			Collection<Player> players = new HashSet<>();
 			if (player.isInGroup2()) {
 				for (Player member : player.getPlayerGroup2().getOnlineMembers()) {
 					if (MathUtil.isIn3dRange(member, getOwner(), GroupConfig.GROUP_MAX_DISTANCE)) {
@@ -87,7 +87,7 @@ public class ChestAI2 extends ActionItemNpcAI2
 		}
 		return maxLevel;
 	}
-	
+
 	private boolean analyzeOpening(final Player player) {
 		List<KeyItem> keyItems = chestTemplate.getKeyItem();
 		int i = 0;
@@ -118,7 +118,7 @@ public class ChestAI2 extends ActionItemNpcAI2
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 玩家结束与本 NPC 对话。
 	 * Player finishes dialog with this NPC.

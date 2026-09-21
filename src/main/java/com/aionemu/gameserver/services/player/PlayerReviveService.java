@@ -282,23 +282,19 @@ public class PlayerReviveService {
 	 */
 	public static final void revive(final Player player, int hpPercent, int mpPercent, boolean setSoulsickness,
 			int resurrectionSkill) {
-		player.getKnownList().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			/**
-			 * 访问周围玩家：敌对目标改为注视复活者。
-			 * Visits nearby players: hostile targets switch to the reviving player.
-			 *
-			 * @param visitor 被访问玩家 / visited player
-			 */
-			public void visit(Player visitor) {
-				VisibleObject target = visitor.getTarget();
-				if (target != null && target.getObjectId() == player.getObjectId()
-						&& (visitor.getRace() != player.getRace())) {
-					visitor.setTarget(null);
-					PacketSendUtility.sendPacket(visitor, new SM_TARGET_SELECTED(null));
-				}
-			}
-		});
+		/**
+		 * 访问周围玩家：敌对目标改为注视复活者。
+		 * Visits nearby players: hostile targets switch to the reviving player.
+		 *
+		 * @param visitor 被访问玩家 / visited player
+		 */player.getKnownList().doOnAllPlayers(visitor -> {
+			 VisibleObject target = visitor.getTarget();
+			 if (target != null && target.getObjectId() == player.getObjectId()
+					 && (visitor.getRace() != player.getRace())) {
+				 visitor.setTarget(null);
+				 PacketSendUtility.sendPacket(visitor, new SM_TARGET_SELECTED(null));
+			 }
+		 });
 		boolean isNoResurrectPenalty = player.getController().isNoResurrectPenaltyInEffect();
 		player.getMoveController().stopFalling();
 		player.setPlayerResActivate(false);

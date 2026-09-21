@@ -84,7 +84,7 @@ public abstract class Battleground {
 
 	/** 战场显示名 → 实现类。 / Display name → implementation class. */
 	@SuppressWarnings("serial")
-	protected static final Map<String, Class<?>> aliases = new HashMap<String, Class<?>>() {
+	protected static final Map<String, Class<?>> aliases = new HashMap<>() {
 		{
 			put("[DeathMatch]", DeathmatchBg.class);
 			put("[1 VS 1]", SoloSurvivorBg.class);
@@ -104,7 +104,7 @@ public abstract class Battleground {
 	/** 对局时长（秒）。 / Match length in seconds. */
 	protected int matchLength = 0;
 	/** 可选战场地图列表。 / Available battleground maps. */
-	protected List<BattlegroundMap> maps = new ArrayList<BattlegroundMap>();
+	protected List<BattlegroundMap> maps = new ArrayList<>();
 	/** 当前副本 ID / Current instance id */
 	protected int instanceId = -1;
 	/** 战场注册 ID / Registered battleground id. */
@@ -136,17 +136,17 @@ public abstract class Battleground {
 	/** 是否基于队伍。 / Whether team-based. */
 	protected boolean teamBased = false;
 	/** 玩家进场前坐标。 / Player locations before entry. */
-	protected Map<Integer, WorldPosition> previousLocations = new HashMap<Integer, WorldPosition>();
+	protected Map<Integer, WorldPosition> previousLocations = new HashMap<>();
 	/** 单人参赛者列表。 / Solo participants. */
-	protected List<Player> _players = new CopyOnWriteArrayList<Player>();
+	protected List<Player> _players = new CopyOnWriteArrayList<>();
 	/** 小队参赛者列表。 / Group participants. */
-	protected List<PlayerGroup> _groups = new CopyOnWriteArrayList<PlayerGroup>();
+	protected List<PlayerGroup> _groups = new CopyOnWriteArrayList<>();
 	/** 联盟参赛者列表。 / Alliance participants. */
-	protected List<PlayerAlliance> _alliances = new CopyOnWriteArrayList<PlayerAlliance>();
+	protected List<PlayerAlliance> _alliances = new CopyOnWriteArrayList<>();
 	/** 观战者列表。 / Spectators. */
-	protected List<Player> _spectators = new CopyOnWriteArrayList<Player>();
+	protected List<Player> _spectators = new CopyOnWriteArrayList<>();
 	/** 中途离开者（用于重连）。 / Leavers (for reconnect). */
-	protected Map<Integer, AionObject> _leavers = Collections.synchronizedMap(new LinkedHashMap<Integer, AionObject>());
+	protected Map<Integer, AionObject> _leavers = Collections.synchronizedMap(new LinkedHashMap<>());
 
 	/**
 	 * 根据排队玩家创建并准备对局。
@@ -250,7 +250,7 @@ public abstract class Battleground {
 	 */
 	public List<SpawnPosition> getSpawnPositions() {
 		if (map == null) {
-			return new ArrayList<SpawnPosition>();
+			return new ArrayList<>();
 		} else {
 			return map.getSpawnPoints();
 		}
@@ -340,7 +340,7 @@ public abstract class Battleground {
 		}
 		int groupIndex = 0;
 		while (players.size() >= groupSize) {
-			List<Player> groupPlayers = new ArrayList<Player>();
+			List<Player> groupPlayers = new ArrayList<>();
 			while (groupPlayers.size() < groupSize && players.size() > 0) {
 				int objId = players.remove(0);
 				Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
@@ -379,7 +379,7 @@ public abstract class Battleground {
 		}
 		int allianceIndex = 0;
 		while (players.size() >= allianceSize) {
-			List<Player> alliancePlayers = new ArrayList<Player>();
+			List<Player> alliancePlayers = new ArrayList<>();
 			while (alliancePlayers.size() < allianceSize && players.size() > 0) {
 				int objId = players.remove(0);
 				Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
@@ -494,7 +494,7 @@ public abstract class Battleground {
 	 * @return 成功则 true / true on success
 	 */
 	protected boolean createPlayers(List<List<Player>> players) {
-		List<Integer> playerList = new ArrayList<Integer>();
+		List<Integer> playerList = new ArrayList<>();
 		for (List<Player> plList : players) {
 			for (Player pl : plList) {
 				playerList.add(pl.getObjectId());
@@ -565,13 +565,10 @@ public abstract class Battleground {
 		player.getEffectController().setAbnormal(AbnormalState.PARALYZE.getId());
 		player.getEffectController().updatePlayerEffectIcons();
 		player.getEffectController().broadCastEffects();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				player.getEffectController().unsetAbnormal(AbnormalState.PARALYZE.getId());
-				player.getEffectController().updatePlayerEffectIcons();
-				player.getEffectController().broadCastEffects();
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			player.getEffectController().unsetAbnormal(AbnormalState.PARALYZE.getId());
+			player.getEffectController().updatePlayerEffectIcons();
+			player.getEffectController().broadCastEffects();
 		}, duration);
 	}
 
@@ -622,7 +619,7 @@ public abstract class Battleground {
 	 * @param player 玩家 / player
 	 */
 	protected void performCdReset(Player player) {
-		List<Integer> delayIds = new ArrayList<Integer>();
+		List<Integer> delayIds = new ArrayList<>();
 		if (player.getSkillCoolDowns() != null) {
 			long currentTime = System.currentTimeMillis();
 			for (Map.Entry<Integer, Long> en : player.getSkillCoolDowns().entrySet()) {
@@ -670,12 +667,7 @@ public abstract class Battleground {
 	 */
 	protected void scheduleAnnouncement(final Player player, final String sender, final String msg, int delay) {
 		if (delay > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					PacketSendUtility.sendSys3Message(player, sender, msg);
-				}
-			}, delay);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> PacketSendUtility.sendSys3Message(player, sender, msg), delay);
 		} else {
 			PacketSendUtility.sendSys3Message(player, sender, msg);
 		}
@@ -719,12 +711,9 @@ public abstract class Battleground {
 	 * @param delay 延迟毫秒 / delay ms
 	 */
 	protected void specAnnounce(final String msg, int delay) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				for (Player spectator : getSpectators()) {
-					PacketSendUtility.sendSys3Message(spectator, "BG", msg);
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			for (Player spectator : getSpectators()) {
+				PacketSendUtility.sendSys3Message(spectator, "BG", msg);
 			}
 		}, delay);
 	}
@@ -751,12 +740,9 @@ public abstract class Battleground {
 	 * @param delay 延迟毫秒 / delay ms
 	 */
 	protected void scheduleGroupDisband(final PlayerGroup group, int delay) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				while (group.size() > 0) {
-					PlayerGroupService.removePlayer((Player) group.getMembers().toArray()[0]);
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			while (group.size() > 0) {
+				PlayerGroupService.removePlayer((Player) group.getMembers().toArray()[0]);
 			}
 		}, delay);
 	}
@@ -769,12 +755,9 @@ public abstract class Battleground {
 	 * @param delay 延迟毫秒 / delay ms
 	 */
 	protected void scheduleAllianceDisband(final PlayerAlliance alliance, int delay) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				while (alliance.size() > 0) {
-					PlayerAllianceService.removePlayer(((Player) alliance.getMembers().toArray()[0]));
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			while (alliance.size() > 0) {
+				PlayerAllianceService.removePlayer(((Player) alliance.getMembers().toArray()[0]));
 			}
 		}, delay);
 	}
@@ -821,18 +804,8 @@ public abstract class Battleground {
 				scheduleAnnouncement(pl, "The match begin's!!!", time);
 				// sendEventPacket(StageType.PVP_STAGE_1, 0);
 			}
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					pl.getEffectController().removeAllEffects();
-				}
-			}, 2500);
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					createTimer(pl, getSecondsLeft());
-				}
-			}, time - 5000);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> pl.getEffectController().removeAllEffects(), 2500);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> createTimer(pl, getSecondsLeft()), time - 5000);
 		} else {
 			pl.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.DEBUFF);
 			pl.getEffectController().removeEffectByDispelCat(DispelCategoryType.ALL, SkillTargetSlot.DEBUFF, 100, 2,
@@ -851,7 +824,7 @@ public abstract class Battleground {
 	 * @param player 玩家 / player
 	 */
 	public void removecd(Player player) {
-		List<Integer> delay = new ArrayList<Integer>();
+		List<Integer> delay = new ArrayList<>();
 		if (player.getSkillCoolDowns() != null) {
 			for (Map.Entry<Integer, Long> en : player.getSkillCoolDowns().entrySet()) {
 				delay.add(en.getKey());
@@ -873,15 +846,12 @@ public abstract class Battleground {
 	 */
 	protected void resetPlayerKnownlist(final Player player, int delay) {
 		if (delay > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					player.clearKnownlist();
-					PacketSendUtility.sendPacket(player, new SM_PLAYER_INFO(player, false));
-					PacketSendUtility.sendPacket(player, new SM_MOTION(player.getMotions().getMotions().values()));
-					player.getEffectController().updatePlayerEffectIcons();
-					player.getKnownList().doUpdate();
-				}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				player.clearKnownlist();
+				PacketSendUtility.sendPacket(player, new SM_PLAYER_INFO(player, false));
+				PacketSendUtility.sendPacket(player, new SM_MOTION(player.getMotions().getMotions().values()));
+				player.getEffectController().updatePlayerEffectIcons();
+				player.getKnownList().doUpdate();
 			}, delay);
 		} else {
 			player.clearKnownlist();
@@ -1004,32 +974,24 @@ public abstract class Battleground {
 	 * Starts the background periodic task (e.g. fall checks).
 	 */
 	protected void startBackgroundTask() {
-		setBackgroundTask(GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */
-			public void run() {
-				backgroundCounter++;
-				zCheck();
-				if ((backgroundCounter % 5) == 0) {
-					backgroundCounter = 0;
-				}
-			}
-		}, 30 * 1000, 1000));
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */
-			public void run() {
-				if (getBackgroundTask() != null) {
-					getBackgroundTask().cancel(true);
-				}
-			}
-		}, 10L * getMatchLength() * 1000);
+		/**
+		 * 执行任务。
+		 * Runs the task.
+		 */setBackgroundTask(GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			 backgroundCounter++;
+			 zCheck();
+			 if ((backgroundCounter % 5) == 0) {
+				 backgroundCounter = 0;
+			 }
+		 }, 30 * 1000, 1000));
+		/**
+		 * 执行任务。
+		 * Runs the task.
+		 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			 if (getBackgroundTask() != null) {
+				 getBackgroundTask().cancel(true);
+			 }
+		 }, 10L * getMatchLength() * 1000);
 	}
 
 	/**
@@ -1234,18 +1196,14 @@ public abstract class Battleground {
 			for (Player pl : getPlayers()) {
 				freezePlayer(pl, 7500);
 			}
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				/**
-				 * 执行任务。
-				 * Runs the task.
-				 */
-				public void run() {
-					for (Player pl : getPlayers()) {
-						returnToPreviousLocation(pl);
-					}
-				}
-			}, 5000);
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				 for (Player pl : getPlayers()) {
+					 returnToPreviousLocation(pl);
+				 }
+			 }, 5000);
 		}
 		if (getGroups().size() > 0) {
 			for (PlayerGroup group : getGroups()) {
@@ -1253,23 +1211,19 @@ public abstract class Battleground {
 					freezePlayer(pl, 7500);
 				}
 			}
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				/**
-				 * 执行任务。
-				 * Runs the task.
-				 */
-				public void run() {
-					for (PlayerGroup group : getGroups()) {
-						for (Player pl : group.getMembers()) {
-							returnToPreviousLocation(pl);
-						}
-						if (!isTournament() && shouldDisband()) {
-							scheduleGroupDisband(group, 2000);
-						}
-					}
-				}
-			}, 5000);
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				 for (PlayerGroup group : getGroups()) {
+					 for (Player pl : group.getMembers()) {
+						 returnToPreviousLocation(pl);
+					 }
+					 if (!isTournament() && shouldDisband()) {
+						 scheduleGroupDisband(group, 2000);
+					 }
+				 }
+			 }, 5000);
 		}
 		if (getAlliances().size() > 0) {
 			for (PlayerAlliance alliance : getAlliances()) {
@@ -1280,53 +1234,41 @@ public abstract class Battleground {
 					freezePlayer(pl, 7500);
 				}
 			}
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				/**
-				 * 执行任务。
-				 * Runs the task.
-				 */
-				public void run() {
-					for (PlayerAlliance alliance : getAlliances()) {
-						for (Player pl : alliance.getMembers()) {
-							if (pl == null) {
-								continue;
-							}
-							returnToPreviousLocation(pl);
-						}
-						if (!isTournament() && shouldDisband()) {
-							scheduleAllianceDisband(alliance, 2000);
-						}
-					}
-				}
-			}, 5000);
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				 for (PlayerAlliance alliance : getAlliances()) {
+					 for (Player pl : alliance.getMembers()) {
+						 if (pl == null) {
+							 continue;
+						 }
+						 returnToPreviousLocation(pl);
+					 }
+					 if (!isTournament() && shouldDisband()) {
+						 scheduleAllianceDisband(alliance, 2000);
+					 }
+				 }
+			 }, 5000);
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */
-			public void run() {
-				List<Player> spectators = new ArrayList<Player>(getSpectators());
-				for (Player pl : spectators) {
-					onSpectatorLeave(pl, true);
-				}
-				getSpectators().removeAll(spectators);
-			}
-		}, 5000);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */
-			public void run() {
-				for (Player pl : getInstance().getPlayersInside()) {
-					returnToPreviousLocation(pl);
-				}
-			}
-		}, 15000);
+		/**
+		 * 执行任务。
+		 * Runs the task.
+		 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			 List<Player> spectators = new ArrayList<>(getSpectators());
+			 for (Player pl : spectators) {
+				 onSpectatorLeave(pl, true);
+			 }
+			 getSpectators().removeAll(spectators);
+		 }, 5000);
+		/**
+		 * 执行任务。
+		 * Runs the task.
+		 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			 for (Player pl : getInstance().getPlayersInside()) {
+				 returnToPreviousLocation(pl);
+			 }
+		 }, 15000);
 
 		this.isDone = true;
 	}
@@ -1364,21 +1306,17 @@ public abstract class Battleground {
 	public void onSpectatorLeave(final Player spectator, boolean isIterating) {
 		endTimer(spectator);
 		returnToPreviousLocation(spectator);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */
-			public void run() {
-				spectator.getEffectController().unsetAbnormal(AbnormalState.HIDE.getId());
-				spectator.unsetVisualState(CreatureVisualState.HIDE3);
-				spectator.setInvul(false);
-				spectator.unsetSeeState(CreatureSeeState.SEARCH2);
-				spectator.setSpectating(false);
-				PacketSendUtility.broadcastPacket(spectator, new SM_PLAYER_STATE(spectator), true);
-			}
-		}, TELEPORT_DEFAULT_DELAY);
+		/**
+		 * 执行任务。
+		 * Runs the task.
+		 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			 spectator.getEffectController().unsetAbnormal(AbnormalState.HIDE.getId());
+			 spectator.unsetVisualState(CreatureVisualState.HIDE3);
+			 spectator.setInvul(false);
+			 spectator.unsetSeeState(CreatureSeeState.SEARCH2);
+			 spectator.setSpectating(false);
+			 PacketSendUtility.broadcastPacket(spectator, new SM_PLAYER_STATE(spectator), true);
+		 }, TELEPORT_DEFAULT_DELAY);
 		if (!isIterating) {
 			List<Player> spectators = getSpectators();
 			synchronized (spectators) {
@@ -1407,37 +1345,43 @@ public abstract class Battleground {
 		String msg = player.getName() + " is back in <Battleground>!";
 		boolean success = false;
 		SpawnPosition pos = null;
-		if (obj == null) {
-			success = true;
-			addPlayer(player);
-			int bgIndex = getPlayers().get(getPlayers().size() - 1).getBgIndex() + 1;
-			player.setBgIndex(bgIndex);
-			pos = getSpawnPositions().get(Rnd.get(getSpawnPositions().size()));
-			for (Player pl : getPlayers()) {
-				scheduleAnnouncement(pl, msg, 0);
-			}
-		} else if (obj instanceof PlayerAlliance alliance) {
-			success = true;
-			PlayerAllianceService.onPlayerLogin(player);
-			pos = getSpawnPositions().get(alliance.getBgIndex());
-			for (PlayerAlliance ally : getAlliances()) {
-				for (Player pl : ally.getMembers()) {
-					if (pl == null) {
-						continue;
-					}
-					scheduleAnnouncement(pl, msg, 0);
-				}
-			}
-		} else if (obj instanceof PlayerGroup group) {
-			success = true;
-			PlayerGroupService.onPlayerLogin(player);
-			pos = getSpawnPositions().get(group.getBgIndex());
-			for (PlayerGroup grp : getGroups()) {
-				for (Player pl : grp.getMembers()) {
-					scheduleAnnouncement(pl, msg, 0);
-				}
-			}
-		}
+        switch (obj) {
+            case null:
+                success = true;
+                addPlayer(player);
+                int bgIndex = getPlayers().get(getPlayers().size() - 1).getBgIndex() + 1;
+                player.setBgIndex(bgIndex);
+                pos = getSpawnPositions().get(Rnd.get(getSpawnPositions().size()));
+                for (Player pl : getPlayers()) {
+                    scheduleAnnouncement(pl, msg, 0);
+                }
+                break;
+            case PlayerAlliance alliance:
+                success = true;
+                PlayerAllianceService.onPlayerLogin(player);
+                pos = getSpawnPositions().get(alliance.getBgIndex());
+                for (PlayerAlliance ally : getAlliances()) {
+                    for (Player pl : ally.getMembers()) {
+                        if (pl == null) {
+                            continue;
+                        }
+                        scheduleAnnouncement(pl, msg, 0);
+                    }
+                }
+                break;
+            case PlayerGroup group:
+                success = true;
+                PlayerGroupService.onPlayerLogin(player);
+                pos = getSpawnPositions().get(group.getBgIndex());
+                for (PlayerGroup grp : getGroups()) {
+                    for (Player pl : grp.getMembers()) {
+                        scheduleAnnouncement(pl, msg, 0);
+                    }
+                }
+                break;
+            default:
+                break;
+        }
 		if (success) {
 			player.setBattleground(this);
 			preparePlayer(player, 0, false);
@@ -1812,7 +1756,7 @@ public abstract class Battleground {
 		 */
 		public void addSpawn(SpawnPosition pos) {
 			if (spawnPoints == null) {
-				spawnPoints = new ArrayList<SpawnPosition>();
+				spawnPoints = new ArrayList<>();
 			}
 			spawnPoints.add(pos);
 		}
@@ -1825,7 +1769,7 @@ public abstract class Battleground {
 		 */
 		public void addStaticDoor(Integer doorId) {
 			if (staticDoors == null) {
-				staticDoors = new ArrayList<Integer>();
+				staticDoors = new ArrayList<>();
 			}
 			staticDoors.add(doorId);
 		}

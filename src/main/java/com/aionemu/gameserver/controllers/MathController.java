@@ -22,7 +22,7 @@ import java.util.Map;
 public class MathController extends VisibleObjectController<MathObject> {
 
 	/** 已注册的生物观察者映射。 / Map of registered creature observers. */
-	Map<Creature, MathObjectObserver> observers = new LinkedHashMap<Creature, MathObjectObserver>();
+	Map<Creature, MathObjectObserver> observers = new LinkedHashMap<>();
 
 	/**
 	 * 符合反应类型的生物进入范围时注册观察者。
@@ -92,13 +92,7 @@ public class MathController extends VisibleObjectController<MathObject> {
 	 * @param delay 延迟毫秒数 / delay in milliseconds
 	 */
 	public void onDelete(int delay) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				MathController.this.delete();
-			}
-		}, delay);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> MathController.this.delete(), delay);
 	}
 
 	/**
@@ -110,21 +104,17 @@ public class MathController extends VisibleObjectController<MathObject> {
 		if (this.getOwner().getMaster() != null) {
 			this.getOwner().getMaster().getController().delete();
 		}
-		this.getOwner().getKnownList().doOnAllObjects(new Visitor<VisibleObject>() {
-
-			@Override
-			public void visit(VisibleObject object) {
-				if (!(object instanceof Creature creature)) {
-					return;
-				}
-				MathObjectObserver observer = MathController.this.observers
-						.remove(creature);
-				if (observer == null) {
-					return;
-				}
-				observer.clearShedules();
-				creature.getObserveController().removeObserver(observer);
+		this.getOwner().getKnownList().doOnAllObjects(object -> {
+			if (!(object instanceof Creature creature)) {
+				return;
 			}
+			MathObjectObserver observer = MathController.this.observers
+					.remove(creature);
+			if (observer == null) {
+				return;
+			}
+			observer.clearShedules();
+			creature.getObserveController().removeObserver(observer);
 		});
 		super.delete();
 	}

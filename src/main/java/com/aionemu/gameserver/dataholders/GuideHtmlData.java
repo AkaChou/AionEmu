@@ -35,7 +35,7 @@ public class GuideHtmlData {
 	 *
 	 * @return 哈希键到引导模板列表的映射 / map of hash key to guide template list
 	 */
-	private final IntObjectHashMap<ArrayList<GuideTemplate>> templates = new IntObjectHashMap<ArrayList<GuideTemplate>>();
+	private final IntObjectHashMap<ArrayList<GuideTemplate>> templates = new IntObjectHashMap<>();
 	private final int CLASS_ALL = 255;
 
 	/**
@@ -65,7 +65,7 @@ public class GuideHtmlData {
 		int hash = makeHash(classId, race.ordinal(), template.getLevel());
 		ArrayList<GuideTemplate> value = templates.get(hash);
 		if (value == null) {
-			value = new ArrayList<GuideTemplate>();
+			value = new ArrayList<>();
 			templates.put(hash, value);
 		}
 		value.add(template);
@@ -109,7 +109,7 @@ public class GuideHtmlData {
 	 * @return 匹配的引导模板数组 / array of matching guide templates
 	 */
 	public GuideTemplate[] getTemplatesFor(PlayerClass playerClass, Race race, int level) {
-		List<GuideTemplate> guideTemplate = new ArrayList<GuideTemplate>();
+		List<GuideTemplate> guideTemplate = new ArrayList<>();
 		List<GuideTemplate> classRaceSpecificTemplates = templates
 				.get(makeHash(playerClass.ordinal(), race.ordinal(), level));
 		List<GuideTemplate> classSpecificTemplates = templates

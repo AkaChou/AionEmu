@@ -77,7 +77,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	/** 副本是否已开始 / whether the instance started */
 		protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
 	/** baranath 任务 / baranath task */
-		private final List<Future<?>> baranathTask = new ArrayList<Future<?>>();
+		private final List<Future<?>> baranathTask = new ArrayList<>();
 	/**
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
@@ -235,52 +235,43 @@ public class BaranathDredgion extends GeneralInstanceHandler
 
 	protected void startInstanceTask() {
 		instanceTime = System.currentTimeMillis();
-		baranathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				openFirstDoors();
-				// 舱壁已激活，第一军械库与重力控制室之间的通道已封闭。 / The bulkhead has been activated and the passage between the First Armory and Gravity Control has been sealed.
-				sendMsgByRace(1400595, Race.PC_ALL, 5000);
-				// 舱壁已激活，第二军械库与重力控制室之间的通道已封闭。 / The bulkhead has been activated and the passage between the Second Armory and Gravity Control has been sealed.
-				sendMsgByRace(1400596, Race.PC_ALL, 10000);
-				dredgionReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
-				sendPacket();
-				switch (Rnd.get(1, 2)) {
-					case 1:
-					    spawn(215391, 415.2769f, 282.0216f, 409.7311f, (byte) 118); //Quartermaster Vujara.
-					break;
-					case 2:
-					    spawn(215391, 556.53534f, 279.2918f, 409.7311f, (byte) 33); //Quartermaster Vujara.
-					break;
-				} switch (Rnd.get(1, 2)) {
-					case 1:
-					    spawn(215086, 485.25455f, 877.04614f, 405.01407f, (byte) 90); //First Mate Aznaya.
-					break;
-					case 2:
-					    spawn(215390, 485.25455f, 877.04614f, 405.01407f, (byte) 90); //Auditor Nirshaka.
-					break;
-				}
+		baranathTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			openFirstDoors();
+			// 舱壁已激活，第一军械库与重力控制室之间的通道已封闭。 / The bulkhead has been activated and the passage between the First Armory and Gravity Control has been sealed.
+			sendMsgByRace(1400595, Race.PC_ALL, 5000);
+			// 舱壁已激活，第二军械库与重力控制室之间的通道已封闭。 / The bulkhead has been activated and the passage between the Second Armory and Gravity Control has been sealed.
+			sendMsgByRace(1400596, Race.PC_ALL, 10000);
+			dredgionReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
+			sendPacket();
+			switch (Rnd.get(1, 2)) {
+				case 1:
+					spawn(215391, 415.2769f, 282.0216f, 409.7311f, (byte) 118); //Quartermaster Vujara.
+				break;
+				case 2:
+					spawn(215391, 556.53534f, 279.2918f, 409.7311f, (byte) 33); //Quartermaster Vujara.
+				break;
+			} switch (Rnd.get(1, 2)) {
+				case 1:
+					spawn(215086, 485.25455f, 877.04614f, 405.01407f, (byte) 90); //First Mate Aznaya.
+				break;
+				case 2:
+					spawn(215390, 485.25455f, 877.04614f, 405.01407f, (byte) 90); //Auditor Nirshaka.
+				break;
 			}
 		}, 60000));
 	   /**
 	 * 巴拉纳斯战舰内有多处传送装置。 / Baranath Dredgion Teleportation Devices: There are numerous teleportation devices located inside the Baranath Dredgion. These teleportation devices allow players to teleport to different areas of the Dredgion with ease. Central Teleporter: This teleporter activates 10 minutes after the Instanced Dungeon has begun
 	 */
-		baranathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				// 紧急出口已生成核控制室传送器。 / A Nuclear Control Room Teleporter has been created at the Emergency Exit.
-				sendMsgByRace(1400265, Race.PC_ALL, 0);
-				spawn(730187, 398.45651f, 160.15234f, 432.2988f, (byte) 0, 10); //Portside Central Teleporter.
-				spawn(730188, 571.88f, 160.62f, 432.29999f, (byte) 0, 9); //Starboard Central Teleporter.
-			}
+		baranathTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			// 紧急出口已生成核控制室传送器。 / A Nuclear Control Room Teleporter has been created at the Emergency Exit.
+			sendMsgByRace(1400265, Race.PC_ALL, 0);
+			spawn(730187, 398.45651f, 160.15234f, 432.2988f, (byte) 0, 10); //Portside Central Teleporter.
+			spawn(730188, 571.88f, 160.62f, 432.29999f, (byte) 0, 9); //Starboard Central Teleporter.
 		}, 600000));
-		baranathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!dredgionReward.isRewarded()) {
-					Race winningRace = dredgionReward.getWinningRaceByScore();
-					stopInstance(winningRace);
-				}
+		baranathTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!dredgionReward.isRewarded()) {
+				Race winningRace = dredgionReward.getWinningRaceByScore();
+				stopInstance(winningRace);
 			}
 		}, 3600000));
 	}
@@ -453,13 +444,10 @@ public class BaranathDredgion extends GeneralInstanceHandler
             break;
             case 214823: //Captain Adhati.
                 point = 1000;
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				    @Override
-					public void run() {
-						if (!dredgionReward.isRewarded()) {
-							Race winningRace = dredgionReward.getWinningRaceByScore();
-							stopInstance(winningRace);
-						}
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					if (!dredgionReward.isRewarded()) {
+						Race winningRace = dredgionReward.getWinningRaceByScore();
+						stopInstance(winningRace);
 					}
 				}, 30000);
 			break;
@@ -545,18 +533,15 @@ public class BaranathDredgion extends GeneralInstanceHandler
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!isInstanceDestroyed) {
-					for (Player player : instance.getPlayersInside()) {
-						if (PlayerActions.isAlreadyDead(player)) {
-							PlayerReviveService.duelRevive(player);
-						}
-						onExitInstance(player);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isInstanceDestroyed) {
+				for (Player player : instance.getPlayersInside()) {
+					if (PlayerActions.isAlreadyDead(player)) {
+						PlayerReviveService.duelRevive(player);
 					}
-					GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
+					onExitInstance(player);
 				}
+				GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
 			}
 		}, 120000);
 	}
@@ -650,7 +635,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 			return;
 		}
 		addPointsByRace(player.getRace(), points);
-		List<Player> playersToGainScore = new ArrayList<Player>();
+		List<Player> playersToGainScore = new ArrayList<>();
 		if (target != null && player.isInGroup2()) {
 			for (Player member : player.getPlayerGroup2().getOnlineMembers()) {
 				if (member.getLifeStats().isAlreadyDead()) {
@@ -713,7 +698,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	}
 
 	private void sendPacket() {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -774,17 +759,14 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	 */
 
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        baranathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            @Override
-            public void run() {
-                if (!isInstanceDestroyed) {
-                    spawn(npcId, x, y, z, h, entityId);
-                    if (msg > 0) {
-                        sendMsgByRace(msg, race, 0);
-                    }
-                }
-            }
-        }, time));
+        baranathTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isInstanceDestroyed) {
+				spawn(npcId, x, y, z, h, entityId);
+				if (msg > 0) {
+					sendMsgByRace(msg, race, 0);
+				}
+			}
+		}, time));
     }
 	/**
 	 * 延迟生成沿指定巡行路线行走的 NPC。
@@ -800,16 +782,13 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	 */
 
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        baranathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            @Override
-            public void run() {
-                if (!isInstanceDestroyed) {
-                    Npc npc = (Npc) spawn(npcId, x, y, z, h);
-                    npc.getSpawn().setWalkerId(walkerId);
-                    WalkManager.startWalking((NpcAI2) npc.getAi2());
-                }
-            }
-        }, time));
+        baranathTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isInstanceDestroyed) {
+				Npc npc = (Npc) spawn(npcId, x, y, z, h);
+				npc.getSpawn().setWalkerId(walkerId);
+				WalkManager.startWalking((NpcAI2) npc.getAi2());
+			}
+		}, time));
     }
 	/**
 	 * 延迟后向指定阵营广播系统消息。
@@ -821,25 +800,20 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	 */
 
     protected void sendMsgByRace(final int msg, final Race race, int time) {
-        baranathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            @Override
-            public void run() {
-                instance.doOnAllPlayers(new Visitor<Player>() {
-                    /**
-                     * 处理 visit。
-                     * Handle visit.
-                     *
-                     * @param player 玩家 / player
-                     */
-                    @Override
-                    public void visit(Player player) {
-                        if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-                            PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-                        }
-                    }
-                });
-            }
-        }, time));
+        baranathTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> instance.doOnAllPlayers(new Visitor<>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
+			@Override
+			public void visit(Player player) {
+				if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
+					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
+				}
+			}
+		}), time));
     }
 
 	private void stopInstanceTask() {

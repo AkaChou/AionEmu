@@ -152,25 +152,13 @@ public class PrivateStoreService {
 							new SM_PRIVATE_STORE_NAME(playerActive.getObjectId(), name), true);
 				} else {
 					PacketSendUtility.broadcastPacket(playerActive,
-							new SM_PRIVATE_STORE_NAME(playerActive.getObjectId(), name), true, new ObjectFilter<Player>() {
-
-								@Override
-								public boolean acceptObject(Player object) {
-									return ((senderRace == object.getRace().getRaceId()
-											&& !object.getBlockList().contains(playerActive.getObjectId()))
-											|| object.isGM());
-								}
-							});
+							new SM_PRIVATE_STORE_NAME(playerActive.getObjectId(), name), true, object -> ((senderRace == object.getRace().getRaceId()
+									&& !object.getBlockList().contains(playerActive.getObjectId()))
+									|| object.isGM()));
 					PacketSendUtility.broadcastPacket(playerActive,
-							new SM_PRIVATE_STORE_NAME(playerActive.getObjectId(), ""), false, new ObjectFilter<Player>() {
-
-								@Override
-								public boolean acceptObject(Player object) {
-									return senderRace != object.getRace().getRaceId()
-											&& !object.getBlockList().contains(playerActive.getObjectId())
-											&& !object.isGM();
-								}
-							});
+							new SM_PRIVATE_STORE_NAME(playerActive.getObjectId(), ""), false, object -> senderRace != object.getRace().getRaceId()
+									&& !object.getBlockList().contains(playerActive.getObjectId())
+									&& !object.isGM());
 				}
 			} else {
 				PacketSendUtility.broadcastPacket(playerActive, new SM_PRIVATE_STORE_NAME(playerActive.getObjectId(), ""),
@@ -392,7 +380,7 @@ public class PrivateStoreService {
 	 */
 	private static boolean validateBuyItems(Player seller, TradeList tradeList) {
 		PrivateStore store = seller.getStore();
-		Set<Integer> itemObjectIds = new HashSet<Integer>();
+		Set<Integer> itemObjectIds = new HashSet<>();
 		for (TradeItem tradeItem : tradeList.getTradeItems()) {
 			Item item = seller.getInventory().getItemByObjId(tradeItem.getItemId());
 			TradePSItem storeItem = store.getTradeItemByObjId(tradeItem.getItemId());

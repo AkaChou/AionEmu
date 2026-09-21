@@ -76,22 +76,15 @@ public class Inspector_CharduAI2 extends AggressiveNpcAI2
 
 	private void skill() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 18158, 100, getOwner()).useNoAnimationSkill(); // 愤怒毒爆 / Wrathful Venom Burst
-		   GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			public void run() {
-                GameEngineServices.skillEngine().getSkill(getOwner(), 18160, 100, getOwner()).useNoAnimationSkill(); // 毒性 / Virulence
-			}
-		}, 4000);
+		   GameThreadPoolServices.threadPoolManager().schedule(() -> {
+GameEngineServices.skillEngine().getSkill(getOwner(), 18160, 100, getOwner()).useNoAnimationSkill(); // 毒性 / Virulence
+		   }, 4000);
 	}
 
 	private void scheduleDelayStage2(int delay) {
 		if (!isStart && !isAlreadyDead()) {
 		} else {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					stage2();
-				}
-			}, delay);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> stage2(), delay);
 		}
 	}
 
@@ -106,18 +99,15 @@ public class Inspector_CharduAI2 extends AggressiveNpcAI2
 	private void scheduleDelayStage3(int delay) {
 		if (!isStart && !isAlreadyDead()) {
 		} else {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					getRandomTarget();
-					stage3();
-				}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				getRandomTarget();
+				stage3();
 			}, delay);
 		}
 	}
 
     private void getRandomTarget()  {
-        List<Player> players = new ArrayList<Player>();
+        List<Player> players = new ArrayList<>();
         for (Player player : getKnownList().getKnownPlayers().values()) {
             if (!PlayerActions.isAlreadyDead(player) && MathUtil.isIn3dRange(player, getOwner(), 16)) {
                 players.add(player);

@@ -32,10 +32,10 @@ public class MaterialData {
 	protected List<MaterialTemplate> materialTemplates;
 
 	@XmlTransient
-	Map<Integer, MaterialTemplate> materialsById = new HashMap<Integer, MaterialTemplate>();
+	Map<Integer, MaterialTemplate> materialsById = new HashMap<>();
 
 	@XmlTransient
-	Set<Integer> skillIds = new HashSet<Integer>();
+	Set<Integer> skillIds = new HashSet<>();
 
 	/**
 	 * JAXB 反序列化完成后，按材质 ID 索引并收集技能 ID，随后释放列表。

@@ -39,13 +39,13 @@ import lombok.extern.slf4j.Slf4j;
 public class ProtectorConquerorService {
 	private static volatile ObjectProvider<ProtectorConquerorService> instanceProvider;
 
-	private final Map<Integer, Protector> protectors = new ConcurrentHashMap<Integer, Protector>();
-	private final Map<Integer, Conqueror> conquerors = new ConcurrentHashMap<Integer, Conqueror>();
+	private final Map<Integer, Protector> protectors = new ConcurrentHashMap<>();
+	private final Map<Integer, Conqueror> conquerors = new ConcurrentHashMap<>();
 
-	private final Map<Integer, Map<Integer, Player>> worldConqueror = new ConcurrentHashMap<Integer, Map<Integer, Player>>();
-	private final Map<Integer, Map<Integer, Player>> worldProtectors = new ConcurrentHashMap<Integer, Map<Integer, Player>>();
+	private final Map<Integer, Map<Integer, Player>> worldConqueror = new ConcurrentHashMap<>();
+	private final Map<Integer, Map<Integer, Player>> worldProtectors = new ConcurrentHashMap<>();
 
-	private static final Map<Integer, WorldType> handledWorlds = new ConcurrentHashMap<Integer, WorldType>();
+	private static final Map<Integer, WorldType> handledWorlds = new ConcurrentHashMap<>();
 	private Future<?> refreshTask;
 	private ProtectorBuffs protectorBuff;
 	private ConquerorBuffs conquerorBuff;
@@ -82,12 +82,7 @@ public class ProtectorConquerorService {
 			WorldType type = worldType > 0 ? worldType > 1 ? WorldType.ASMODIANS : WorldType.ELYOS : WorldType.USEALL;
 			handledWorlds.put(worldId, type);
 		}
-			refreshTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-				@Override
-				public void run() {
-					decayProtectorConquerorRanks();
-				}
-			}, CustomConfig.PROTECTOR_CONQUEROR_REFRESH * 60000L, CustomConfig.PROTECTOR_CONQUEROR_REFRESH * 60000L);
+			refreshTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> decayProtectorConquerorRanks(), CustomConfig.PROTECTOR_CONQUEROR_REFRESH * 60000L, CustomConfig.PROTECTOR_CONQUEROR_REFRESH * 60000L);
 		}
 
 	void decayProtectorConquerorRanks() {
@@ -131,7 +126,7 @@ public class ProtectorConquerorService {
 	 * player map
 	 */
 	public Map<Integer, Player> getWorldProtector(int worldId) {
-		return worldProtectors.computeIfAbsent(worldId, id -> new ConcurrentHashMap<Integer, Player>());
+		return worldProtectors.computeIfAbsent(worldId, id -> new ConcurrentHashMap<>());
 	}
 
 	/**
@@ -142,11 +137,11 @@ public class ProtectorConquerorService {
 	 * player map
 	 */
 	public Map<Integer, Player> getWorldConqueror(int worldId) {
-		return worldConqueror.computeIfAbsent(worldId, id -> new ConcurrentHashMap<Integer, Player>());
+		return worldConqueror.computeIfAbsent(worldId, id -> new ConcurrentHashMap<>());
 	}
 
 	private List<Player> playersSnapshot(Map<Integer, Player> players) {
-		return new ArrayList<Player>(players.values());
+		return new ArrayList<>(players.values());
 	}
 
 	/**
@@ -220,12 +215,9 @@ public class ProtectorConquerorService {
 			}
 			protectorBuff.applyRankEffect(player, info.getRank());
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId).getWorldMapInstanceById(player.getInstanceId())
-					.doOnAllPlayers(new Visitor<Player>() {
-						@Override
-						public void visit(Player victim) {
-							if (!player.getRace().equals(victim.getRace())) {
-								PacketSendUtility.sendPacket(victim, new SM_CONQUEROR_PROTECTOR(playersSnapshot(world)));
-							}
+					.doOnAllPlayers(victim -> {
+						if (!player.getRace().equals(victim.getRace())) {
+							PacketSendUtility.sendPacket(victim, new SM_CONQUEROR_PROTECTOR(playersSnapshot(world)));
 						}
 					});
 		} else if (isEnemyWorld(player)) { // Conqueror.
@@ -250,12 +242,9 @@ public class ProtectorConquerorService {
 			}
 			conquerorBuff.applyEffect(player, infoConqueror.getRank());
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId).getWorldMapInstanceById(player.getInstanceId())
-					.doOnAllPlayers(new Visitor<Player>() {
-						@Override
-						public void visit(Player victim) {
-							if (!player.getRace().equals(victim.getRace())) {
-								PacketSendUtility.sendPacket(victim, new SM_CONQUEROR_PROTECTOR(playersSnapshot(world)));
-							}
+					.doOnAllPlayers(victim -> {
+						if (!player.getRace().equals(victim.getRace())) {
+							PacketSendUtility.sendPacket(victim, new SM_CONQUEROR_PROTECTOR(playersSnapshot(world)));
 						}
 					});
 		} else {
@@ -280,7 +269,7 @@ public class ProtectorConquerorService {
 		}
 		if (!isEnemyWorld(player)) { // Protector.
 			Protector info = player.getProtectorInfo();
-			List<Player> kill = new ArrayList<Player>();
+			List<Player> kill = new ArrayList<>();
 			Map<Integer, Player> guards = getWorldProtector(worldId);
 			kill.addAll(playersSnapshot(guards));
 			guards.remove(player.getObjectId());
@@ -296,7 +285,7 @@ public class ProtectorConquerorService {
 			}
 		} else if (isEnemyWorld(player)) { // Conqueror.
 			Conqueror info = player.getConquerorInfo();
-			List<Player> kill = new ArrayList<Player>();
+			List<Player> kill = new ArrayList<>();
 			Map<Integer, Player> killers = getWorldConqueror(worldId);
 			kill.addAll(playersSnapshot(killers));
 			killers.remove(player.getObjectId());
@@ -359,13 +348,10 @@ public class ProtectorConquerorService {
 					final Map<Integer, Player> guards = getWorldProtector(killer.getWorldId());
 					PacketSendUtility.sendPacket(killer, new SM_CONQUEROR_PROTECTOR(true, info.getRank()));
 					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(killer.getWorldId()).getWorldMapInstanceById(killer.getInstanceId())
-							.doOnAllPlayers(new Visitor<Player>() {
-								@Override
-								public void visit(Player observed) {
-									if (!killer.getRace().equals(observed.getRace())) {
-										PacketSendUtility.sendPacket(observed,
-												new SM_CONQUEROR_PROTECTOR(playersSnapshot(guards)));
-									}
+							.doOnAllPlayers(observed -> {
+								if (!killer.getRace().equals(observed.getRace())) {
+									PacketSendUtility.sendPacket(observed,
+											new SM_CONQUEROR_PROTECTOR(playersSnapshot(guards)));
 								}
 							});
 				}
@@ -395,13 +381,10 @@ public class ProtectorConquerorService {
 					final Map<Integer, Player> killers = getWorldConqueror(killer.getWorldId());
 					PacketSendUtility.sendPacket(killer, new SM_CONQUEROR_PROTECTOR(true, info.getRank()));
 					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(killer.getWorldId()).getWorldMapInstanceById(killer.getInstanceId())
-							.doOnAllPlayers(new Visitor<Player>() {
-								@Override
-								public void visit(Player observed) {
-									if (!killer.getRace().equals(observed.getRace())) {
-										PacketSendUtility.sendPacket(observed,
-												new SM_CONQUEROR_PROTECTOR(playersSnapshot(killers)));
-									}
+							.doOnAllPlayers(observed -> {
+								if (!killer.getRace().equals(observed.getRace())) {
+									PacketSendUtility.sendPacket(observed,
+											new SM_CONQUEROR_PROTECTOR(playersSnapshot(killers)));
 								}
 							});
 				}
@@ -427,22 +410,16 @@ public class ProtectorConquerorService {
 	public void onKillProtectorConqueror(final Player killer, final Player victim) {
 		if (!isEnemyWorld(victim)) {
 			final Protector info = victim.getProtectorInfo();
-			victim.getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					if (killer.getRace().equals(player.getRace()) && MathUtil.isIn3dRange(victim, player, 30)) {
-						GameEngineServices.skillEngine().applyEffectDirectly(buffId(killer, info), player, player, 0);
-					}
+			victim.getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+				if (killer.getRace().equals(player.getRace()) && MathUtil.isIn3dRange(victim, player, 30)) {
+					GameEngineServices.skillEngine().applyEffectDirectly(buffId(killer, info), player, player, 0);
 				}
 			});
 		} else if (isEnemyWorld(victim)) {
 			final Conqueror conqueror = victim.getConquerorInfo();
-			victim.getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					if (killer.getRace().equals(player.getRace()) && MathUtil.isIn3dRange(victim, player, 30)) {
-						GameEngineServices.skillEngine().applyEffectDirectly(buffId(killer, conqueror), player, player, 0);
-					}
+			victim.getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+				if (killer.getRace().equals(player.getRace()) && MathUtil.isIn3dRange(victim, player, 30)) {
+					GameEngineServices.skillEngine().applyEffectDirectly(buffId(killer, conqueror), player, player, 0);
 				}
 			});
 		}

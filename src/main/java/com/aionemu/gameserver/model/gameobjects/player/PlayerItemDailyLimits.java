@@ -31,7 +31,7 @@ final class PlayerItemDailyLimits {
 	 */
 	void addItemMaxCount(int itemId, int thisCount) {
 		if (maxCountEvent == null) {
-			maxCountEvent = new LinkedHashMap<Integer, MaxCountOfDay>();
+			maxCountEvent = new LinkedHashMap<>();
 		}
 		if (maxCountEvent.get(itemId) != null) {
 			maxCountEvent.get(itemId).setThisCount(thisCount);

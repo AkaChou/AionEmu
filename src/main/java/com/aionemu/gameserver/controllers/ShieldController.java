@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ShieldController extends VisibleObjectController<Shield> {
 
 	/** 当前受护盾观察的玩家映射。 / Map of players currently observed by the shield. */
-	Map<Integer, ActionObserver> observed = new ConcurrentHashMap<Integer, ActionObserver>();
+	Map<Integer, ActionObserver> observed = new ConcurrentHashMap<>();
 
 	/**
 	 * 敌对玩家进入护盾范围时注册护盾观察者。

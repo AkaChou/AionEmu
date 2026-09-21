@@ -19,11 +19,6 @@ public class BomberAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleCreatureAggro(Creature creature) {
 		AI2Actions.useSkill(this, 21866); //Wide Area Explosion.
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(BomberAI2.this);
-			}
-		}, 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(BomberAI2.this), 1000);
 	}
 }

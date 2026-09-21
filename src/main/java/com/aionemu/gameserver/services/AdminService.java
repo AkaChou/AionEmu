@@ -70,7 +70,7 @@ public class AdminService {
 	 * Constructs the service; reloads the restriction list when trade restriction is enabled.
 	 */
 	public AdminService() {
-		list = new ArrayList<Integer>();
+		list = new ArrayList<>();
 		if (AdminConfig.ENABLE_TRADEITEM_RESTRICTION)
 			reload();
 	}

@@ -33,7 +33,7 @@ public class MoltenusLocation {
 	/** 位置内的玩家映射 / Players in this location */
 	protected Map<Integer, Player> players = new HashMap<>();
 	/** 已刷出的实体列表 / Spawned entities */
-	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
+	private final List<VisibleObject> spawned = new ArrayList<>();
 
 	/**
 	 * 以模板构造位置。

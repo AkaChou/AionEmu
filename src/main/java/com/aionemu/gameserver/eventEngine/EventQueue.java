@@ -35,7 +35,7 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 	 * 内部优先队列。
 	 * Backing priority queue.
 	 */
-	private final PriorityQueue<E> q = new PriorityQueue<E>();
+	private final PriorityQueue<E> q = new PriorityQueue<>();
 
 	/**
 	 * 空队列。

@@ -34,11 +34,11 @@ public class MeshList {
 
 	/** 网格路径到材料 ID 的映射。 / Map of mesh path to material id. */
 	@XmlTransient
-	Map<String, Integer> materialIdsByPath = new HashMap<String, Integer>();
+	Map<String, Integer> materialIdsByPath = new HashMap<>();
 
 	/** 路径哈希到区域名称的映射。 / Map of path hash to zone name. */
 	@XmlTransient
-	Map<Integer, String> pathZones = new HashMap<Integer, String>();
+	Map<Integer, String> pathZones = new HashMap<>();
 
 	/**
 	 * JAXB 反序列化后处理：将网格材料整理为查询映射并释放中间列表。

@@ -25,7 +25,7 @@ import java.util.concurrent.Future;
 @AIName("bollvig")
 public class BollvigAI2 extends AggressiveFirstSkillAI2
 {
-	protected List<Integer> percents = new ArrayList<Integer>();
+	protected List<Integer> percents = new ArrayList<>();
 	private Future<?> firstTask;
 	private Future<?> secondTask;
 	private Future<?> thirdTask;
@@ -93,45 +93,29 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 	private void firstSkill() {
 		int hpPercent = getLifeStats().getHpPercentage();
 		if (50 >= hpPercent && hpPercent > 25) {
-			firstTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run()  {
-					useSkill(18034);
-					rndSpawnInRange(280804);
-				}
+			firstTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				useSkill(18034);
+				rndSpawnInRange(280804);
 			}, 10000);
 		} else if(hpPercent <= 25) {
 			useSkill(18037);
 		}
-		secondTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				skillThree();
-			}
-		}, 31000);
+		secondTask = GameThreadPoolServices.threadPoolManager().schedule(() -> skillThree(), 31000);
 	}
 
 	private void skillThree() {
 		useSkill(17899);
-		thirdTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				int hpPercent = getLifeStats().getHpPercentage();
-				if (75 >= hpPercent && hpPercent > 50) {
-					useSkill(18025);
-					firstSkill();
-				} else if (50 >= hpPercent) {
-					useSkill(18025);
-					firstSkill();
-				} else if (25 >= hpPercent) {
-					useSkill(18027);
-					lastTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							skillThree();
-						}
-					}, 11000);
-				}
+		thirdTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			int hpPercent = getLifeStats().getHpPercentage();
+			if (75 >= hpPercent && hpPercent > 50) {
+				useSkill(18025);
+				firstSkill();
+			} else if (50 >= hpPercent) {
+				useSkill(18025);
+				firstSkill();
+			} else if (25 >= hpPercent) {
+				useSkill(18027);
+				lastTask = GameThreadPoolServices.threadPoolManager().schedule(() -> skillThree(), 11000);
 			}
 		}, 5000);
 	}

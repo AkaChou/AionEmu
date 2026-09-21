@@ -60,12 +60,7 @@ public class Treasure_Box_Success_BossAI2 extends AggressiveNpcAI2 {
     }
 
     private void treasureChest() {
-        getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-            @Override
-            public void visit(Player player) {
-                PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdC_BoxSpawn);
-            }
-        });
+        getPosition().getWorldMapInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdC_BoxSpawn));
     }
 
     private void spawnTreasureChest(int npcId) {
@@ -141,7 +136,7 @@ public class Treasure_Box_Success_BossAI2 extends AggressiveNpcAI2 {
 		}
 		GameWorldServices.dropRegistrationService().normalizeDropIndices(dropItems);
 	}
-	
+
 	private class DropChance {
 		public int itemId;
 		public int count;
@@ -153,6 +148,6 @@ public class Treasure_Box_Success_BossAI2 extends AggressiveNpcAI2 {
 			this.chance = chance;
 		}
 	}
-	
-	
+
+
 }

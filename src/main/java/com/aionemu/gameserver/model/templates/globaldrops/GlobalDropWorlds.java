@@ -23,7 +23,7 @@ public class GlobalDropWorlds {
 	/** 返回全局掉落世界。 / Returns the global drop worlds. */
 	public List<GlobalDropWorld> getGlobalDropWorlds() {
 		if (gdWorlds == null) {
-			gdWorlds = new ArrayList<GlobalDropWorld>();
+			gdWorlds = new ArrayList<>();
 		}
 		return this.gdWorlds;
 	}

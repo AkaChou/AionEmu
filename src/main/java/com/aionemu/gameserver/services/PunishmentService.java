@@ -158,13 +158,7 @@ public class PunishmentService {
 			if (player.getWorldId() != WorldMapType.DF_PRISON.getId()
 					&& player.getWorldId() != WorldMapType.DE_PRISON.getId()) {
 				PacketSendUtility.sendMessage(player, "You will be teleported to prison in one minute!");
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-					@Override
-					public void run() {
-						TeleportService2.teleportToPrison(player);
-					}
-				}, 60000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> TeleportService2.teleportToPrison(player), 60000);
 			}
 		}
 	}
@@ -178,13 +172,7 @@ public class PunishmentService {
 	 */
 	private static void schedulePrisonTask(final Player player, long prisonTimer) {
 		player.setPrisonTimer(prisonTimer);
-		player.getController().addTask(TaskId.PRISON, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				setIsInPrison(player, false, 0, "");
-			}
-		}, prisonTimer));
+		player.getController().addTask(TaskId.PRISON, GameThreadPoolServices.threadPoolManager().schedule(() -> setIsInPrison(player, false, 0, ""), prisonTimer));
 	}
 
 	/**
@@ -274,13 +262,7 @@ public class PunishmentService {
 	 */
 	private static void scheduleGatherableTask(final Player player, long gatherableTimer) {
 		player.setGatherableTimer(gatherableTimer);
-		player.getController().addTask(TaskId.GATHERABLE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				setIsNotGatherable(player, 0, false, 0);
-			}
-		}, gatherableTimer));
+		player.getController().addTask(TaskId.GATHERABLE, GameThreadPoolServices.threadPoolManager().schedule(() -> setIsNotGatherable(player, 0, false, 0), gatherableTimer));
 	}
 
 	/**

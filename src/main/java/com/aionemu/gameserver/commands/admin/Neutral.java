@@ -45,37 +45,32 @@ public class Neutral extends AdminCommand {
 
 		int enemyType = admin.getAdminEnmity();
 
-		if (params[0].equals("all")) {
-			admin.setAdminNeutral(3);
-			admin.setAdminEnmity(0);
-		}
-
-		else if (params[0].equals("players")) {
-			admin.setAdminNeutral(2);
-			if (enemyType > 1)
-				admin.setAdminEnmity(0);
-		}
-
-		else if (params[0].equals("npcs")) {
-			admin.setAdminNeutral(1);
-			if (enemyType == 1 || enemyType == 3)
-				admin.setAdminEnmity(0);
-		}
-
-		else if (params[0].equals("cancel")) {
-			admin.setAdminNeutral(0);
-			output = "You appear regular to both Players and Npcs.";
-		}
-
-		else if (params[0].equals("help")) {
-			PacketSendUtility.sendMessage(admin, help);
-			return;
-		}
-
-		else {
-			onFail(admin, null);
-			return;
-		}
+        switch (params[0]) {
+            case "all":
+                admin.setAdminNeutral(3);
+                admin.setAdminEnmity(0);
+                break;
+            case "players":
+                admin.setAdminNeutral(2);
+                if (enemyType > 1)
+                    admin.setAdminEnmity(0);
+                break;
+            case "npcs":
+                admin.setAdminNeutral(1);
+                if (enemyType == 1 || enemyType == 3)
+                    admin.setAdminEnmity(0);
+                break;
+            case "cancel":
+                admin.setAdminNeutral(0);
+                output = "You appear regular to both Players and Npcs.";
+                break;
+            case "help":
+                PacketSendUtility.sendMessage(admin, help);
+                return;
+            default:
+                onFail(admin, null);
+                return;
+        }
 
 		PacketSendUtility.sendMessage(admin, output);
 

@@ -19,7 +19,7 @@ class GaleCycloneAI2Test {
 	@Test
 	void clearRemovesAllObserversWithoutConcurrentModification() throws Exception {
 		TestGaleCycloneAI2 ai = new TestGaleCycloneAI2();
-		Map<Integer, GaleCycloneObserver> observed = new LinkedHashMap<Integer, GaleCycloneObserver>();
+		Map<Integer, GaleCycloneObserver> observed = new LinkedHashMap<>();
 		observed.put(1, objenesis.newInstance(TestObserver.class));
 		observed.put(2, objenesis.newInstance(TestObserver.class));
 		setField(ai, "observed", observed);

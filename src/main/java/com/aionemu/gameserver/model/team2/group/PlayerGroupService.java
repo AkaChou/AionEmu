@@ -49,7 +49,7 @@ import com.google.common.base.Predicate;
 @Slf4j
 
 public class PlayerGroupService {
-	private static final Map<Integer, PlayerGroup> groups = new ConcurrentHashMap<Integer, PlayerGroup>();
+	private static final Map<Integer, PlayerGroup> groups = new ConcurrentHashMap<>();
 	private static final AtomicBoolean offlineCheckStarted = new AtomicBoolean();
 
 	/** 队伍事件监听器接口 / Player group event listener interface */
@@ -276,7 +276,7 @@ public class PlayerGroupService {
 	public static void distributeKinah(Player player, long kinah) {
 		PlayerGroup group = player.getPlayerGroup2();
 		if (group != null) {
-			group.onEvent(new TeamKinahDistributionEvent<PlayerGroup>(group, player, kinah));
+			group.onEvent(new TeamKinahDistributionEvent<>(group, player, kinah));
 		}
 	}
 
@@ -284,7 +284,7 @@ public class PlayerGroupService {
 	public static void showBrand(Player player, int targetObjId, int brandId) {
 		PlayerGroup group = player.getPlayerGroup2();
 		if (group != null) {
-			group.onEvent(new ShowBrandEvent<PlayerGroup>(group, targetObjId, brandId));
+			group.onEvent(new ShowBrandEvent<>(group, targetObjId, brandId));
 		}
 	}
 

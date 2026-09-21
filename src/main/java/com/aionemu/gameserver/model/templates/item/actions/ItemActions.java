@@ -65,14 +65,14 @@ public class ItemActions {
 	/** 返回 item actions / Returns the item actions */
 	public List<AbstractItemAction> getItemActions() {
 		if (itemActions == null) {
-			itemActions = new ArrayList<AbstractItemAction>();
+			itemActions = new ArrayList<>();
 		}
 		return this.itemActions;
 	}
 
 	/** 返回 toy pet spawn actions / Returns the toy pet spawn actions */
 	public List<ToyPetSpawnAction> getToyPetSpawnActions() {
-		List<ToyPetSpawnAction> result = new ArrayList<ToyPetSpawnAction>();
+		List<ToyPetSpawnAction> result = new ArrayList<>();
 		if (itemActions == null) {
 			return result;
 		}

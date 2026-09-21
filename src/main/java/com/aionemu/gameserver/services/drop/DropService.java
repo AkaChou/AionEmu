@@ -109,23 +109,19 @@ public class DropService {
 	 * NPC unique object id
 	 */
 	public void scheduleFreeForAll(final int npcUniqueId) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				DropNpc dropNpc = dropRegistrationService().getDropRegistrationMap().get(npcUniqueId);
-				if (dropNpc != null) {
-					dropRegistrationService().getDropRegistrationMap().get(npcUniqueId).startFreeForAll();
-					VisibleObject npc = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(npcUniqueId);
-					if (npc != null && npc.isSpawned()) {
-						if (npc instanceof Npc freeForAllNpc
-								&& (freeForAllNpc.getRace() == com.aionemu.gameserver.model.Race.ELYOS
-										|| freeForAllNpc.getRace() == com.aionemu.gameserver.model.Race.ASMODIANS)) {
-							PacketSendUtility.broadcastPacket(npc, new SM_LOOT_STATUS(npcUniqueId, Status.LOOT_ENABLE),
-									looter -> freeForAllNpc.getRace() != looter.getRace());
-						} else {
-							PacketSendUtility.broadcastPacket(npc, new SM_LOOT_STATUS(npcUniqueId, Status.LOOT_ENABLE));
-						}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			DropNpc dropNpc = dropRegistrationService().getDropRegistrationMap().get(npcUniqueId);
+			if (dropNpc != null) {
+				dropRegistrationService().getDropRegistrationMap().get(npcUniqueId).startFreeForAll();
+				VisibleObject npc = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(npcUniqueId);
+				if (npc != null && npc.isSpawned()) {
+					if (npc instanceof Npc freeForAllNpc
+							&& (freeForAllNpc.getRace() == com.aionemu.gameserver.model.Race.ELYOS
+									|| freeForAllNpc.getRace() == com.aionemu.gameserver.model.Race.ASMODIANS)) {
+						PacketSendUtility.broadcastPacket(npc, new SM_LOOT_STATUS(npcUniqueId, Status.LOOT_ENABLE),
+								looter -> freeForAllNpc.getRace() != looter.getRace());
+					} else {
+						PacketSendUtility.broadcastPacket(npc, new SM_LOOT_STATUS(npcUniqueId, Status.LOOT_ENABLE));
 					}
 				}
 			}
@@ -685,18 +681,15 @@ public class DropService {
 				final int pRaceId = player.getRace().getRaceId();
 				final int pMapId = player.getWorldId();
 				final int pInstance = player.isInInstance() ? player.getInstanceId() : 0;
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player other) {
-						int oObjectId = other.getObjectId();
-						int oRaceId = other.getRace().getRaceId();
-						int oMapId = other.getWorldId();
-						int oInstance = other.isInInstance() ? other.getInstanceId() : 0;
-						if (oObjectId != pObjectId && other.isSpawned() && oRaceId == pRaceId && oMapId == pMapId
-								&& oInstance == pInstance) {
-							PacketSendUtility.sendPacket(other, new SM_SYSTEM_MESSAGE(1390001, lastGetName,
-									"[item: " + requestedItem.getDropTemplate().getItemId() + "]"));
-						}
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(other -> {
+					int oObjectId = other.getObjectId();
+					int oRaceId = other.getRace().getRaceId();
+					int oMapId = other.getWorldId();
+					int oInstance = other.isInInstance() ? other.getInstanceId() : 0;
+					if (oObjectId != pObjectId && other.isSpawned() && oRaceId == pRaceId && oMapId == pMapId
+							&& oInstance == pInstance) {
+						PacketSendUtility.sendPacket(other, new SM_SYSTEM_MESSAGE(1390001, lastGetName,
+								"[item: " + requestedItem.getDropTemplate().getItemId() + "]"));
 					}
 				});
 			}

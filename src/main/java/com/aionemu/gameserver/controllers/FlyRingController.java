@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class FlyRingController extends VisibleObjectController<FlyRing> {
 
 	/** 当前观察该飞行环的玩家观察者映射。 / Map of observers for players currently observing this fly ring. */
-	Map<Integer, FlyRingObserver> observed = new ConcurrentHashMap<Integer, FlyRingObserver>();
+	Map<Integer, FlyRingObserver> observed = new ConcurrentHashMap<>();
 
 	/**
 	 * 玩家进入飞行环可视范围时注册观察者。

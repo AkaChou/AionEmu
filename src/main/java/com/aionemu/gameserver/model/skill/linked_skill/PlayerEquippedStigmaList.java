@@ -26,8 +26,8 @@ public final class PlayerEquippedStigmaList {
 	private final List<EquippedStigmasEntry> deletedItems;
 
 	public PlayerEquippedStigmaList() {
-		this.itemList = new HashMap<Integer, EquippedStigmasEntry>(0);
-		this.deletedItems = new ArrayList<EquippedStigmasEntry>(0);
+		this.itemList = new HashMap<>(0);
+		this.deletedItems = new ArrayList<>(0);
 	}
 
 	public PlayerEquippedStigmaList(List<EquippedStigmasEntry> items) {
@@ -39,14 +39,14 @@ public final class PlayerEquippedStigmaList {
 
 	/** 返回全部物品 / Returns the all items*/
 	public EquippedStigmasEntry[] getAllItems() {
-		List<EquippedStigmasEntry> allItems = new ArrayList<EquippedStigmasEntry>();
+		List<EquippedStigmasEntry> allItems = new ArrayList<>();
 		allItems.addAll(itemList.values());
 		return allItems.toArray(new EquippedStigmasEntry[allItems.size()]);
 	}
 
 	/** 返回全部物品 ID 列表 / Returns all items as integers */
 	public List<Integer> getAllItemsAsInteger() {
-		HashSet<Integer> equippedIds = new HashSet<Integer>();
+		HashSet<Integer> equippedIds = new HashSet<>();
 		for (EquippedStigmasEntry i : itemList.values()) {
 			equippedIds.add(i.getItemId());
 		}

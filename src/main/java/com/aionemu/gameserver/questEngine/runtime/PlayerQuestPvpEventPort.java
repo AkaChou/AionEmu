@@ -85,15 +85,20 @@ public final class PlayerQuestPvpEventPort implements QuestPvpEventPort {
 	}
 
 	private static boolean creditSelected(Player killer, Player recipient, QuestPvpCreditSource source) {
-		return switch (source) {
-			case SOLO -> killer.getObjectId().equals(recipient.getObjectId());
-			case GROUP -> killer.isInGroup2() && killer.getPlayerGroup2() != null
-				&& killer.getPlayerGroup2().getOnlineMembers() != null
-				&& killer.getPlayerGroup2().getOnlineMembers().contains(recipient);
-			case ALLIANCE -> killer.isInAlliance2() && killer.getPlayerAllianceGroup2() != null
-				&& killer.getPlayerAllianceGroup2().getOnlineMembers() != null
-				&& killer.getPlayerAllianceGroup2().getOnlineMembers().contains(recipient);
-		};
+        switch (source) {
+            case SOLO:
+                return killer.getObjectId().equals(recipient.getObjectId());
+            case GROUP:
+                return killer.isInGroup2() && killer.getPlayerGroup2() != null
+                        && killer.getPlayerGroup2().getOnlineMembers() != null
+                        && killer.getPlayerGroup2().getOnlineMembers().contains(recipient);
+            case ALLIANCE:
+                return killer.isInAlliance2() && killer.getPlayerAllianceGroup2() != null
+                        && killer.getPlayerAllianceGroup2().getOnlineMembers() != null
+                        && killer.getPlayerAllianceGroup2().getOnlineMembers().contains(recipient);
+            default:
+                throw new IllegalArgumentException();
+        }
 	}
 
 	private static Player requireRecipient(QuestEnv env) {

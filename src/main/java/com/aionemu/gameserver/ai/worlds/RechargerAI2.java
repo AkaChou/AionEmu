@@ -46,7 +46,7 @@ public class RechargerAI2 extends ActionItemNpcAI2 {
         player.getLifeStats().increaseMp(SM_ATTACK_STATUS.TYPE.MP, player.getLifeStats().getMaxMp() + 1);
         player.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.SPEC2);
 
-        List<Integer> delayIds = new ArrayList<Integer>();
+        List<Integer> delayIds = new ArrayList<>();
         if (player.getSkillCoolDowns() != null) {
             long currentTime = System.currentTimeMillis();
             for (Map.Entry<Integer, Long> en : player.getSkillCoolDowns().entrySet()) {

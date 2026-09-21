@@ -79,7 +79,7 @@ public class PortalCooldownList {
 	/** 添加传送门冷却。 / Adds portal cooldown. */
 	public void addPortalCooldown(int worldId, int entryCount, long useDelay) {
 		if (portalCooldowns == null) {
-			portalCooldowns = new HashMap<Integer, PortalCooldownItem>();
+			portalCooldowns = new HashMap<>();
 		}
 		portalCooldowns.put(worldId, new PortalCooldownItem(worldId, entryCount, useDelay));
 		if (owner.isInTeam()) {

@@ -30,7 +30,7 @@ public class ServantNpcAI2 extends GeneralNpcAI2
 	@Override
 	public void think() {
 	}
-	
+
 	/**
 	 * 处理生成完成事件。
 	 * Handle post-spawn.
@@ -39,20 +39,17 @@ public class ServantNpcAI2 extends GeneralNpcAI2
 	protected void handleSpawned() {
 		super.handleSpawned();
 		if (getCreator() != null) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (getOwner().getNpcObjectType() != NpcObjectType.TOTEM) {
-						AI2Actions.targetCreature(ServantNpcAI2.this, (Creature) getCreator().getTarget());
-					} else {
-						AI2Actions.targetSelf(ServantNpcAI2.this);
-					}
-					healOrAttack();
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (getOwner().getNpcObjectType() != NpcObjectType.TOTEM) {
+					AI2Actions.targetCreature(ServantNpcAI2.this, (Creature) getCreator().getTarget());
+				} else {
+					AI2Actions.targetSelf(ServantNpcAI2.this);
 				}
+				healOrAttack();
 			}, 200);
 		}
 	}
-	
+
 	private void healOrAttack() {
 		if (skillId == 0) {
 			NpcSkillEntry npcSkill = getSkillList().getRandomSkill();
@@ -61,15 +58,10 @@ public class ServantNpcAI2 extends GeneralNpcAI2
 			skillId = npcSkill.getSkillId();
 		}
 		int duration = getOwner().getNpcObjectType() == NpcObjectType.TOTEM ? 3000 : 5000;
-		Future<?> task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				getOwner().getController().useSkill(skillId, 1);
-			}
-		}, 1000, duration);
+		Future<?> task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> getOwner().getController().useSkill(skillId, 1), 1000, duration);
 		getOwner().getController().addTask(TaskId.SKILL_USE, task);
 	}
-	
+
 	@Override
 	protected AIAnswer pollInstance(AIQuestion question) {
 		switch (question) {

@@ -30,7 +30,7 @@ public class AbsoluteStatsData {
 	protected List<AbsoluteStatsTemplate> absoluteStats;
 
 	@XmlTransient
-	private final IntObjectHashMap<ModifiersTemplate> absoluteStatsData = new IntObjectHashMap<ModifiersTemplate>();
+	private final IntObjectHashMap<ModifiersTemplate> absoluteStatsData = new IntObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，将属性集索引到修正模板映射并释放列表。

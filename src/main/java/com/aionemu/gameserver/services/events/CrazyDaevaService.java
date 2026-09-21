@@ -51,12 +51,7 @@ public class CrazyDaevaService {
 		}
 		String[] times = EventsConfig.CRAZY_TIMES.split("\\|");
 		for (String cron : times) {
-			Runnable schedule = new Runnable() {
-				@Override
-				public void run() {
-					checkStart();
-				}
-			};
+			Runnable schedule = () -> checkStart();
 			schedules.add(schedule);
 			GameCronServices.cronService().schedule(schedule, cron);
 			log.info(I18n.get("log.22a3e7a99e76", cron, EventsConfig.CRAZY_ENDTIME));
@@ -79,22 +74,19 @@ public class CrazyDaevaService {
 	 */
 	public void startChoose() {
 		crazyCount = 0;
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(final Player player) {
-				int rnd = 0;
-				rnd = Rnd.get(1, 100);
-				player.setRndCrazy(rnd);
-				if (player.getRndCrazy() >= EventsConfig.CRAZY_LOWEST_RND && player.getLevel() >= 55) {
-					crazyCount++;
-					if (crazyCount == 1) {
-						PacketSendUtility.sendYellowMessageOnCenter(player, "CRAZY DAEVA " + player.getName());
-						log.info(I18n.get("log.b2c3238d6b52", player.getName()));
-						player.setInCrazy(true);
-					}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			int rnd = 0;
+			rnd = Rnd.get(1, 100);
+			player.setRndCrazy(rnd);
+			if (player.getRndCrazy() >= EventsConfig.CRAZY_LOWEST_RND && player.getLevel() >= 55) {
+				crazyCount++;
+				if (crazyCount == 1) {
+					PacketSendUtility.sendYellowMessageOnCenter(player, "CRAZY DAEVA " + player.getName());
+					log.info(I18n.get("log.b2c3238d6b52", player.getName()));
+					player.setInCrazy(true);
 				}
-				log.info(I18n.get("log.17935c8ff33a", player.getName(), rnd));
 			}
+			log.info(I18n.get("log.17935c8ff33a", player.getName(), rnd));
 		});
 	}
 
@@ -160,13 +152,8 @@ public class CrazyDaevaService {
 			if (killer.getRace().getRaceId() != victim.getRace().getRaceId()) {
 				final String spreeEnder = isPvPDeath ? killer.getName() : "Killer";
 				AbyssPointsService.addAp((Player) killer, 5000);
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(final Player player) {
-						PacketSendUtility.sendYellowMessageOnCenter(player,
-								"Crazier " + victim.getName() + " has slain by " + spreeEnder + "!");
-					}
-				});
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendYellowMessageOnCenter(player,
+						"Crazier " + victim.getName() + " has slain by " + spreeEnder + "!"));
 				log.info(I18n.get("log.fe71cec0426c", victim.getName(), spreeEnder));
 			}
 		}
@@ -177,40 +164,33 @@ public class CrazyDaevaService {
 	 * Ends the event: clears state and stops after configured duration.
 	 */
 	public void clearCrazy() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(final Player player) {
-						if (player.isInCrazy()) {
-							if (player.getCrazyLevel() == 1) {
-								AbyssPointsService.addAp(player, 5000);
-								log.info(I18n.get("log.a3154d047f49", player.getName(), player.getCrazyKillCount()));
-							}
-							if (player.getCrazyLevel() == 2) {
-								AbyssPointsService.addAp(player, 10000);
-								log.info(I18n.get("log.3384ff2aa68a", player.getName(), player.getCrazyKillCount()));
-							}
-							if (player.getCrazyLevel() == 3) {
-								AbyssPointsService.addAp(player, 15000);
-								log.info(I18n.get("log.5088c1ecb7b6", player.getName(), player.getCrazyKillCount()));
-							}
-							player.setCrazyKillCount(0);
-							player.setCrazyLevel(0);
-							player.setInCrazy(false);
-							player.setRndCrazy(0);
-						}
-						player.setInCrazy(false);
-						player.setRndCrazy(0);
-						player.getLifeStats().increaseHp(TYPE.HP, player.getLifeStats().getMaxHp() + 5000);
-
-						PacketSendUtility.sendYellowMessageOnCenter(player, "Crazy Daeva event has stopped!");
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				if (player.isInCrazy()) {
+					if (player.getCrazyLevel() == 1) {
+						AbyssPointsService.addAp(player, 5000);
+						log.info(I18n.get("log.a3154d047f49", player.getName(), player.getCrazyKillCount()));
 					}
-				});
-				log.info(I18n.get("log.f2f29a601942"));
-			}
+					if (player.getCrazyLevel() == 2) {
+						AbyssPointsService.addAp(player, 10000);
+						log.info(I18n.get("log.3384ff2aa68a", player.getName(), player.getCrazyKillCount()));
+					}
+					if (player.getCrazyLevel() == 3) {
+						AbyssPointsService.addAp(player, 15000);
+						log.info(I18n.get("log.5088c1ecb7b6", player.getName(), player.getCrazyKillCount()));
+					}
+					player.setCrazyKillCount(0);
+					player.setCrazyLevel(0);
+					player.setInCrazy(false);
+					player.setRndCrazy(0);
+				}
+				player.setInCrazy(false);
+				player.setRndCrazy(0);
+				player.getLifeStats().increaseHp(TYPE.HP, player.getLifeStats().getMaxHp() + 5000);
+
+				PacketSendUtility.sendYellowMessageOnCenter(player, "Crazy Daeva event has stopped!");
+			});
+			log.info(I18n.get("log.f2f29a601942"));
 		}, (long) EventsConfig.CRAZY_ENDTIME * 60 * 1000); // 活动停止时间 / time stop
 	}
 

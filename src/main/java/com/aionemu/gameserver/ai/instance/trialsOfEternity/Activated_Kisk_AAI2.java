@@ -58,13 +58,10 @@ public class Activated_Kisk_AAI2 extends NpcAI2
     }
 
 	private void announceIDEternity03A() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 沉没走廊传送石已激活。 / The Sunken Corridor teleport stone has been activated.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_03_teleporter_1);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 沉没走廊传送石已激活。 / The Sunken Corridor teleport stone has been activated.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_03_teleporter_1);
 			}
 		});
 	}

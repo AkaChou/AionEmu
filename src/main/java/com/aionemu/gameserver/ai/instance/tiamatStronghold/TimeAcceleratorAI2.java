@@ -18,23 +18,18 @@ public class TimeAcceleratorAI2 extends AggressiveNpcAI2
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		int lifetime = (getNpcId() == 283086 ? 20000 : 10000); //Time Accelerator.
 		toDespawn(lifetime);
 	}
-	
+
 	private void toDespawn(int delay) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(TimeAcceleratorAI2.this);
-			}
-		}, delay);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(TimeAcceleratorAI2.this), delay);
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

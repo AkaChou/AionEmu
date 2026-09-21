@@ -42,12 +42,7 @@ public class Petrified_Jotun_WorkerAI2 extends AggressiveNpcAI2
 					spawn(219776, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 					AI2Actions.deleteOwner(Petrified_Jotun_WorkerAI2.this);
 					AI2Actions.scheduleRespawn(this);
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					    @Override
-					    public void run() {
-						    despawnNpc(219776);
-				        }
-			        }, 300000); //5 分钟。 / 5 Minutes.
+					GameThreadPoolServices.threadPoolManager().schedule(() -> despawnNpc(219776), 300000); //5 分钟。 / 5 Minutes.
 				}
 			}
 		}

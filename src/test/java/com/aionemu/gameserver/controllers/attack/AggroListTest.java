@@ -40,7 +40,7 @@ class AggroListTest {
 	@Test
 	void getListReturnsSnapshotSafeForRemovalDuringIteration() throws ReflectiveOperationException {
 		AggroList aggroList = new AggroList(null);
-		Map<Integer, AggroInfo> entries = new LinkedHashMap<Integer, AggroInfo>();
+		Map<Integer, AggroInfo> entries = new LinkedHashMap<>();
 		entries.put(1, new AggroInfo(null));
 		entries.put(2, new AggroInfo(null));
 		entries.put(3, new AggroInfo(null));
@@ -111,7 +111,7 @@ class AggroListTest {
 	@Test
 	void timedHateIsRemovedOnlyFromTheOriginalEntry() throws ReflectiveOperationException {
 		AggroList aggroList = new AggroList(null);
-		Map<Integer, AggroInfo> entries = new LinkedHashMap<Integer, AggroInfo>();
+		Map<Integer, AggroInfo> entries = new LinkedHashMap<>();
 		AggroInfo original = new AggroInfo(null);
 		original.setHate(60);
 		long token = original.addVolatileHate(40);

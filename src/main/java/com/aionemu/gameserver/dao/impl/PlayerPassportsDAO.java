@@ -149,7 +149,7 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 	 */
 	@Override
 	public List<Integer> getPassports(final int accountId) {
-		final List<Integer> ids = new ArrayList<Integer>();
+		final List<Integer> ids = new ArrayList<>();
 
 		try (Connection con = DatabaseFactory.getConnection();
 			 PreparedStatement stmt = con.prepareStatement(SELECT_PASSPORTS_QUERY)) {

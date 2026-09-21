@@ -38,7 +38,7 @@ public class MaintenanceTask extends AbstractCronTask {
 	private static final List<House> maintainedHouses;
 
 	static {
-		maintainedHouses = new ArrayList<House>();
+		maintainedHouses = new ArrayList<>();
 	}
 
 	/** 获取副本。 / Returns the instance. */

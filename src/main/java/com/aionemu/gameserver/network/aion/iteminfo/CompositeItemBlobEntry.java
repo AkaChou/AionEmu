@@ -48,8 +48,8 @@ public class CompositeItemBlobEntry extends ItemBlobEntry {
 		int count = 0;
 		if (item.hasFusionStones()) {
 			Set<ManaStone> itemStones = item.getFusionStones();
-			ArrayList<ManaStone> basicStones = new ArrayList<ManaStone>();
-			ArrayList<ManaStone> ancientStones = new ArrayList<ManaStone>();
+			ArrayList<ManaStone> basicStones = new ArrayList<>();
+			ArrayList<ManaStone> ancientStones = new ArrayList<>();
 			for (ManaStone itemStone : itemStones) {
 				if (itemStone.isBasic()) {
 					basicStones.add(itemStone);

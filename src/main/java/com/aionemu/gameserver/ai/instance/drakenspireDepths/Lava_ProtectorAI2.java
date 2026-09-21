@@ -43,13 +43,10 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 		if (isAggred.compareAndSet(false, true)) {
 			switch (getNpcId()) {
 				case 236227: //Lava Protector.
-					lavaProtectorTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							AI2Actions.deleteOwner(Lava_ProtectorAI2.this);
-							// 多亏分遣队突击小队的牺牲，守护者之泉已被摧毁。 / Thanks to the sacrifice of the Detachment's Rush Squad, the Protectors' Fount has been destroyed.
-							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDSeal_Twin_06, 0);
-						}
+					lavaProtectorTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						AI2Actions.deleteOwner(Lava_ProtectorAI2.this);
+						// 多亏分遣队突击小队的牺牲，守护者之泉已被摧毁。 / Thanks to the sacrifice of the Detachment's Rush Squad, the Protectors' Fount has been destroyed.
+						PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDSeal_Twin_06, 0);
 					}, 300000);
 				break;
 			}
@@ -85,29 +82,26 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 	}
 
 	private void startMagmaGluttenTask() {
-		magmaGluttenTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelMagmaGluttenTask();
-					cancelLavaProtectorTask();
-				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 21645, 60, getOwner()).useNoAnimationSkill(); //Raging Hellfire.
-					List<Player> players = getLifedPlayers();
-					if (!players.isEmpty()) {
-						int size = players.size();
-						if (players.size() < 6) {
-							for (Player p: players) {
-								spawnMagmaGlutten(p);
+		magmaGluttenTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelMagmaGluttenTask();
+				cancelLavaProtectorTask();
+			} else {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 21645, 60, getOwner()).useNoAnimationSkill(); //Raging Hellfire.
+				List<Player> players = getLifedPlayers();
+				if (!players.isEmpty()) {
+					int size = players.size();
+					if (players.size() < 6) {
+						for (Player p: players) {
+							spawnMagmaGlutten(p);
+						}
+					} else {
+						int count = Rnd.get(6, size);
+						for (int i = 0; i < count; i++) {
+							if (players.isEmpty()) {
+								break;
 							}
-						} else {
-							int count = Rnd.get(6, size);
-							for (int i = 0; i < count; i++) {
-								if (players.isEmpty()) {
-									break;
-								}
-								spawnMagmaGlutten(players.get(Rnd.get(players.size())));
-							}
+							spawnMagmaGlutten(players.get(Rnd.get(players.size())));
 						}
 					}
 				}
@@ -120,12 +114,9 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						spawn(855621, x, y, z, (byte) 0); //Magma Glutten.
-					}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					spawn(855621, x, y, z, (byte) 0); //Magma Glutten.
 				}
 			}, 3000);
 		}
@@ -137,7 +128,7 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 	}
 
 	private List<Player> getLifedPlayers() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);

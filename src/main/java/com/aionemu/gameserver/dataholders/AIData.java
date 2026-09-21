@@ -34,7 +34,7 @@ public class AIData {
 	 *
 	 * @return NPC ID 到 AI 模板的映射 / map of NPC id to AI template
 	 */
-	private final Map<Integer, AITemplate> aiTemplate = new LinkedHashMap<Integer, AITemplate>();
+	private final Map<Integer, AITemplate> aiTemplate = new LinkedHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，将列表转为按 NPC ID 索引的 AI 模板映射。

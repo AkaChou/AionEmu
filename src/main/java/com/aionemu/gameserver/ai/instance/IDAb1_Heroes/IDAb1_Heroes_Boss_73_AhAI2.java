@@ -69,28 +69,25 @@ public class IDAb1_Heroes_Boss_73_AhAI2 extends AggressiveNpcAI2
 	}
 
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelPhaseTask();
-				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 18100, 60, getOwner()).useNoAnimationSkill(); //IDAb1_Heroes_Boss_Shield_Summon.
-					List<Player> players = getLifedPlayers();
-					if (!players.isEmpty()) {
-						int size = players.size();
-						if (players.size() < 6) {
-							for (Player p: players) {
-								spawnIDAb1HeroesBossSummon(p);
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelPhaseTask();
+			} else {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 18100, 60, getOwner()).useNoAnimationSkill(); //IDAb1_Heroes_Boss_Shield_Summon.
+				List<Player> players = getLifedPlayers();
+				if (!players.isEmpty()) {
+					int size = players.size();
+					if (players.size() < 6) {
+						for (Player p: players) {
+							spawnIDAb1HeroesBossSummon(p);
+						}
+					} else {
+						int count = Rnd.get(6, size);
+						for (int i = 0; i < count; i++) {
+							if (players.isEmpty()) {
+								break;
 							}
-						} else {
-							int count = Rnd.get(6, size);
-							for (int i = 0; i < count; i++) {
-								if (players.isEmpty()) {
-									break;
-								}
-								spawnIDAb1HeroesBossSummon(players.get(Rnd.get(players.size())));
-							}
+							spawnIDAb1HeroesBossSummon(players.get(Rnd.get(players.size())));
 						}
 					}
 				}
@@ -103,28 +100,25 @@ public class IDAb1_Heroes_Boss_73_AhAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						switch (Rnd.get(1, 4)) {
-						    case 1:
-							    // IDAb1_Heroes_Boss_Summon_01_73_Ae.
-							    spawn(248026, x, y, z, (byte) 0);
-							break;
-							case 2:
-							    // IDAb1_Heroes_Boss_Summon_02_73_Ae.
-							    spawn(248027, x, y, z, (byte) 0);
-							break;
-							case 3:
-							    // IDAb1_Heroes_Boss_Summon_03_73_Ae.
-							    spawn(248028, x, y, z, (byte) 0);
-							break;
-							case 4:
-							    // IDAb1_Heroes_Boss_Summon_04_73_Ae.
-							    spawn(248029, x, y, z, (byte) 0);
-							break;
-						}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					switch (Rnd.get(1, 4)) {
+						case 1:
+							// IDAb1_Heroes_Boss_Summon_01_73_Ae.
+							spawn(248026, x, y, z, (byte) 0);
+						break;
+						case 2:
+							// IDAb1_Heroes_Boss_Summon_02_73_Ae.
+							spawn(248027, x, y, z, (byte) 0);
+						break;
+						case 3:
+							// IDAb1_Heroes_Boss_Summon_03_73_Ae.
+							spawn(248028, x, y, z, (byte) 0);
+						break;
+						case 4:
+							// IDAb1_Heroes_Boss_Summon_04_73_Ae.
+							spawn(248029, x, y, z, (byte) 0);
+						break;
 					}
 				}
 			}, 3000);
@@ -137,7 +131,7 @@ public class IDAb1_Heroes_Boss_73_AhAI2 extends AggressiveNpcAI2
 	}
 
 	private List<Player> getLifedPlayers() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);

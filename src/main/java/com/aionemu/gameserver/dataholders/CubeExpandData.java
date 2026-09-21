@@ -24,7 +24,7 @@ public class CubeExpandData {
 
 	@XmlElement(name = "cube_npc")
 	private List<CubeExpandTemplate> clist;
-	private final IntObjectHashMap<CubeExpandTemplate> npctlistData = new IntObjectHashMap<CubeExpandTemplate>();
+	private final IntObjectHashMap<CubeExpandTemplate> npctlistData = new IntObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，按 NPC ID 建立索引。

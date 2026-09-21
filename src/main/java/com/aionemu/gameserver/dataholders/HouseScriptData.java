@@ -61,7 +61,7 @@ public class HouseScriptData {
 	 * Initializes the default template index container.
 	 */
 	public HouseScriptData() {
-		defaultTemplates = new HashMap<Integer, LBox>();
+		defaultTemplates = new HashMap<>();
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class HouseScriptData {
 		result.setId(position);
 		result.setIcon(iconId);
 		HouseScriptData fragment = new HouseScriptData();
-		fragment.scriptData = new ArrayList<LBox>();
+		fragment.scriptData = new ArrayList<>();
 		fragment.scriptData.add(result);
 		Writer writer = new StringWriter();
 		try {

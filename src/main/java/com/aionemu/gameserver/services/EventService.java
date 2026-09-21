@@ -52,10 +52,10 @@ public class EventService {
 	private final List<EventTemplate> activeEvents;
 
 	/** 可开启任务 ID → 活动模板。 / Startable quest id → event templates. */
-	Map<Integer, List<EventTemplate>> eventsForStartQuest = new HashMap<Integer, List<EventTemplate>>();
+	Map<Integer, List<EventTemplate>> eventsForStartQuest = new HashMap<>();
 
 	/** 可维护任务 ID → 活动模板。 / Maintainable quest id → event templates. */
-	Map<Integer, List<EventTemplate>> eventsForMaintainQuest = new HashMap<Integer, List<EventTemplate>>();
+	Map<Integer, List<EventTemplate>> eventsForMaintainQuest = new HashMap<>();
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -108,8 +108,8 @@ public class EventService {
 	 * @param player 玩家 / player
 	 */
 	public void onPlayerLogin(Player player) {
-		List<Integer> activeStartQuests = new ArrayList<Integer>();
-		List<Integer> activeMaintainQuests = new ArrayList<Integer>();
+		List<Integer> activeStartQuests = new ArrayList<>();
+		List<Integer> activeMaintainQuests = new ArrayList<>();
 		Map<Integer, List<EventTemplate>> map1 = null;
 		Map<Integer, List<EventTemplate>> map2 = null;
 
@@ -120,8 +120,8 @@ public class EventService {
 					activeMaintainQuests.addAll(et.getMaintainableQuests());
 				}
 			}
-			map1 = new HashMap<Integer, List<EventTemplate>>(eventsForStartQuest);
-			map2 = new HashMap<Integer, List<EventTemplate>>(eventsForMaintainQuest);
+			map1 = new HashMap<>(eventsForStartQuest);
+			map2 = new HashMap<>(eventsForMaintainQuest);
 		}
 
 		StartOrMaintainQuests(player, activeStartQuests.listIterator(), map1, true);
@@ -231,13 +231,7 @@ public class EventService {
 		}
 		isStarted = true;
 
-		checkTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-
-			@Override
-			public void run() {
-				checkEvents();
-			}
-		}, 0, CHECK_TIME_PERIOD);
+		checkTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> checkEvents(), 0, CHECK_TIME_PERIOD);
 	}
 
 	/**
@@ -257,7 +251,7 @@ public class EventService {
 	 * Refreshes the active event list, starting new and stopping expired events.
 	 */
 	private void checkEvents() {
-		List<EventTemplate> newEvents = new ArrayList<EventTemplate>();
+		List<EventTemplate> newEvents = new ArrayList<>();
 		List<EventTemplate> allEvents = DataManager.EVENT_DATA.getAllEvents();
 
 		for (EventTemplate et : allEvents) {
@@ -292,13 +286,13 @@ public class EventService {
 		for (EventTemplate et : activeEvents) {
 			for (int qId : et.getStartableQuests()) {
 				if (!eventsForStartQuest.containsKey(qId)) {
-					eventsForStartQuest.put(qId, new ArrayList<EventTemplate>());
+					eventsForStartQuest.put(qId, new ArrayList<>());
 				}
 				eventsForStartQuest.get(qId).add(et);
 			}
 			for (int qId : et.getMaintainableQuests()) {
 				if (!eventsForMaintainQuest.containsKey(qId)) {
-					eventsForMaintainQuest.put(qId, new ArrayList<EventTemplate>());
+					eventsForMaintainQuest.put(qId, new ArrayList<>());
 				}
 				eventsForMaintainQuest.get(qId).add(et);
 			}
@@ -361,7 +355,7 @@ public class EventService {
 	 */
 	private List<EventTemplate> activeEventsSnapshot() {
 		synchronized (activeEvents) {
-			return new ArrayList<EventTemplate>(activeEvents);
+			return new ArrayList<>(activeEvents);
 		}
 	}
 }

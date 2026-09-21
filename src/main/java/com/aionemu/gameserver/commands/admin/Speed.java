@@ -80,7 +80,7 @@ public class Speed extends AdminCommand {
 	 * @param percent 速度百分比 0–1000 / Speed percent 0–1000
 	 */
 	public static void applyPercent(Player admin, int percent) {
-		List<IStatFunction> functions = new ArrayList<IStatFunction>();
+		List<IStatFunction> functions = new ArrayList<>();
 		functions.add(new SpeedFunction(StatEnum.SPEED, percent));
 		functions.add(new SpeedFunction(StatEnum.FLY_SPEED, percent));
 

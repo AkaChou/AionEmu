@@ -21,7 +21,7 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 	protected void handleDialogStart(Player player) {
 		super.handleDialogStart(player);
 	}
-	
+
 	@Override
 	protected void handleUseItemFinish(Player player) {
 		switch (getNpcId()) {
@@ -43,7 +43,7 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 				explorationAreaStart1_3();
 				spawn(805933, 1291.6405f, 2098.4895f, 185.14610f, (byte) 0, 131);
 			break;
-			
+
 		   /**
 			* 探索区 2 的入侵触发。 / Exploration area 2 invasion trigger.
 			*/
@@ -62,7 +62,7 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 				explorationAreaStart2_3();
 				spawn(805935, 1764.2432f, 2447.4143f, 213.45287f, (byte) 0, 874);
 			break;
-			
+
 		   /**
 			* 探索区 3 的入侵触发。 / Exploration area 3 invasion trigger.
 			*/
@@ -81,7 +81,7 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 				explorationAreaStart3_3();
 				spawn(805937, 1553.7285f, 1615.7953f, 203.65607f, (byte) 0, 890);
 			break;
-			
+
 		   /**
 			* 探索区 4 的入侵触发。 / Exploration area 4 invasion trigger.
 			*/
@@ -103,77 +103,74 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 		}
 		AI2Actions.deleteOwner(this);
 	}
-	
+
 	private void announceF6Invasion() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 先锋指挥官正在准备探索区防御。 / Vanguard Commanders are preparing exploration area defenses. It will be established in 10 minutes.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Invasion_3rd_Bonus_01, 0);
-				// 突击指挥官正在准备探索区防御。 / Strike Commanders are preparing exploration area defenses. It will be established in 5 minutes.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Invasion_3rd_Bonus_02, 300000);
-				// 突击指挥官正在准备探索区防御。 / Strike Commanders are preparing exploration area defenses. It will be established in one minutes.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Invasion_3rd_Bonus_03, 540000);
-				// 突击委任军官正在防御探索区。 / Strike Commissioned Officers are defending the exploration area.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Invasion_3rd_Bonus_04, 600000);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 先锋指挥官正在准备探索区防御。 / Vanguard Commanders are preparing exploration area defenses. It will be established in 10 minutes.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Invasion_3rd_Bonus_01, 0);
+			// 突击指挥官正在准备探索区防御。 / Strike Commanders are preparing exploration area defenses. It will be established in 5 minutes.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Invasion_3rd_Bonus_02, 300000);
+			// 突击指挥官正在准备探索区防御。 / Strike Commanders are preparing exploration area defenses. It will be established in one minutes.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Invasion_3rd_Bonus_03, 540000);
+			// 突击委任军官正在防御探索区。 / Strike Commissioned Officers are defending the exploration area.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Invasion_3rd_Bonus_04, 600000);
 		});
 	}
-	
+
    /**
 	* 探索区 1 的敌军生成（预留，当前为空实现）。 / Enemy spawns for exploration area 1 (reserved, currently empty).
 	*/
 	private void explorationAreaStart1_1() {
-		//spawn(240672, 
-		//spawn(240673, 
-		//spawn(240675, 
+		//spawn(240672,
+		//spawn(240673,
+		//spawn(240675,
 	}
 	private void explorationAreaStart1_2() {
-		
+
 	}
 	private void explorationAreaStart1_3() {
-		
+
 	}
-	
+
    /**
 	* 探索区 2 的敌军生成（预留，当前为空实现）。 / Enemy spawns for exploration area 2 (reserved, currently empty).
 	*/
 	private void explorationAreaStart2_1() {
-		
+
 	}
 	private void explorationAreaStart2_2() {
-		
+
 	}
 	private void explorationAreaStart2_3() {
-		
+
 	}
-	
+
    /**
 	* 探索区 3 的敌军生成（预留，当前为空实现）。 / Enemy spawns for exploration area 3 (reserved, currently empty).
 	*/
 	private void explorationAreaStart3_1() {
-		
+
 	}
 	private void explorationAreaStart3_2() {
-		
+
 	}
 	private void explorationAreaStart3_3() {
-		
+
 	}
-	
+
    /**
 	* 探索区 4 的敌军生成（预留，当前为空实现）。 / Enemy spawns for exploration area 4 (reserved, currently empty).
 	*/
 	private void explorationAreaStart4_1() {
-		
+
 	}
 	private void explorationAreaStart4_2() {
-		
+
 	}
 	private void explorationAreaStart4_3() {
-		
+
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

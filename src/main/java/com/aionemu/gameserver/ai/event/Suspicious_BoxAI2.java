@@ -54,47 +54,28 @@ public class Suspicious_BoxAI2 extends NpcAI2
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_TREASUREBOX_DESPAWN_ONE, 0);
 			} else if (MathUtil.isIn3dRange(getOwner(), creature, 10)) {
 				if (startedEvent.compareAndSet(false, true)) {
-					suspiciousChestTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					    @Override
-						public void run() {
-						    eventChestStart();
-						}
-					}, 1000);
-					suspiciousChestTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					    @Override
-						public void run() {
-						    getOwner().setNpcType(NpcType.ATTACKABLE);
-							PacketSendUtility.sendPacket(player, new SM_CUSTOM_SETTINGS(getOwner().getObjectId(), 0, NpcType.ATTACKABLE.getId(), 0));
-						}
+					suspiciousChestTask = GameThreadPoolServices.threadPoolManager().schedule(() -> eventChestStart(), 1000);
+					suspiciousChestTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						getOwner().setNpcType(NpcType.ATTACKABLE);
+						PacketSendUtility.sendPacket(player, new SM_CUSTOM_SETTINGS(getOwner().getObjectId(), 0, NpcType.ATTACKABLE.getId(), 0));
 					}, 3000);
-					suspiciousChestTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					    @Override
-					    public void run() {
-							eventChestFail();
-							AI2Actions.deleteOwner(Suspicious_BoxAI2.this);
-							AI2Actions.scheduleRespawn(Suspicious_BoxAI2.this);
-				        }
-			        }, 180000);
+					suspiciousChestTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						eventChestFail();
+						AI2Actions.deleteOwner(Suspicious_BoxAI2.this);
+						AI2Actions.scheduleRespawn(Suspicious_BoxAI2.this);
+					}, 180000);
 				}
 			}
         }
     }
 
 	private void eventChestStart() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendSys3Message(player, "\uE005", "You have <3 Minutes> for remove a curse on chest");
-			}
-		});
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE005", "You have <3 Minutes> for remove a curse on chest"));
 	}
 	private void eventChestFail() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 未在时限内消灭怪物，宝箱已消失。 / The treasure chest has disappeared because you failed to destroy the monsters within the time limit.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDABRECORE_OOPS_REWARD_IS_GONE);
-			}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			// 未在时限内消灭怪物，宝箱已消失。 / The treasure chest has disappeared because you failed to destroy the monsters within the time limit.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDABRECORE_OOPS_REWARD_IS_GONE);
 		});
 	}
 

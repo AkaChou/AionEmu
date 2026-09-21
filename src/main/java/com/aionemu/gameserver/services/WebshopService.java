@@ -72,24 +72,16 @@ public class WebshopService {
 	 * Starts the periodic task that delivers pending shop rewards to online players.
 	 */
 	private void load() {
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player pl) {
-						RewardServiceDAO rewardDao = DAOManager.getDAO(RewardServiceDAO.class);
-						List<RewardEntryItem> liste = rewardDao.getAvailable(pl.getObjectId());
-						if (liste.isEmpty()) {
-						} else {
-							for (RewardEntryItem item : liste) {
-								deliverRewardMail(pl.getName(), item, rewardDao, GameFeatureServices.systemMailService());
-							}
-						}
-					}
-				});
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
+			RewardServiceDAO rewardDao = DAOManager.getDAO(RewardServiceDAO.class);
+			List<RewardEntryItem> liste = rewardDao.getAvailable(pl.getObjectId());
+			if (liste.isEmpty()) {
+			} else {
+				for (RewardEntryItem item : liste) {
+					deliverRewardMail(pl.getName(), item, rewardDao, GameFeatureServices.systemMailService());
+				}
 			}
-		}, 5 * 1000, 5 * 1000);
+		}), 5 * 1000, 5 * 1000);
 	}
 
 	/**

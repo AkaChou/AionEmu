@@ -130,36 +130,21 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 	private void scheduleDelayStage4(int delay) {
 		if (!isStart && !isAlreadyDead()) {
 		} else {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					stage4();
-				}
-			}, delay);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> stage4(), delay);
 		}
 	}
 
 	private void scheduleDelayStage3(int delay) {
 		if (!isStart && !isAlreadyDead()) {
 		} else {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					stage3();
-				}
-			}, delay);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> stage3(), delay);
 		}
 	}
 
 	private void scheduleDelayStage1(int delay) {
 		if (!isStart && !isAlreadyDead()) {
 		} else {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					stage1();
-				}
-			}, delay);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> stage1(), delay);
 		}
 	}
 

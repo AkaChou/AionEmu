@@ -22,18 +22,12 @@ public class ArenaPortalAI2 extends PortalDialogAI2
 			super.onDialogSelect(player, dialogId, questId, extendedRewardIndex);
 			return true;
 		}
-		int worldId = 0;
-		switch (dialogId) {
-			case 10000:
-				worldId = 300430000;
-			break;
-			case 10001:
-				worldId = 300420000;
-			break;
-			case 10002:
-				worldId = 300570000;
-			break;
-		}
+		int worldId = switch (dialogId) {
+			case 10000 -> 300430000;
+			case 10001 -> 300420000;
+			case 10002 -> 300570000;
+			default -> 0;
+		};
 		AutoGroupType agt = AutoGroupType.getAutoGroupByWorld(player.getLevel(), worldId);
 		if (agt != null) {
 			PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(agt.getInstanceMaskId()));

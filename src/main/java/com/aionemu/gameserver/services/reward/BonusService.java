@@ -236,7 +236,7 @@ public class BonusService {
 			}
 			allRewards = group.getRewards(questTemplate.getCombineSkill(), questTemplate.getCombineSkillPoint());
 			if (allRewards.length == 0) {
-				List<BonusItemGroup> temp = new ArrayList<BonusItemGroup>();
+				List<BonusItemGroup> temp = new ArrayList<>();
 				Collections.addAll(temp, groups);
 				temp.remove(group);
 				group = null;
@@ -247,7 +247,7 @@ public class BonusService {
 		if (group == null) { // 可能所有概率都设为 0 / probably all chances set to 0
 			return null;
 		}
-		List<ItemRaceEntry> finalList = new ArrayList<ItemRaceEntry>();
+		List<ItemRaceEntry> finalList = new ArrayList<>();
 
 		for (int i = 0; i < allRewards.length; i++) {
 			ItemRaceEntry r = allRewards[i];
@@ -319,7 +319,7 @@ public class BonusService {
 	QuestItems getManastoneBonus(Player player, QuestBonuses bonus) {
 		ManastoneGroup group = (ManastoneGroup) getRandomGroup(BonusType.MANASTONE);
 		ItemRaceEntry[] allRewards = group.getRewards();
-		List<ItemRaceEntry> finalList = new ArrayList<ItemRaceEntry>();
+		List<ItemRaceEntry> finalList = new ArrayList<>();
 		for (int i = 0; i < allRewards.length; i++) {
 			ItemRaceEntry r = allRewards[i];
 			ItemTemplate template = DataManager.ITEM_DATA.getItemTemplate(r.getId());

@@ -43,7 +43,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public class IdianDepthsService {
 	private static volatile ObjectProvider<IdianDepthsService> instanceProvider;
 	private Map<Integer, IdianDepthsLocation> idianDepths;
-	private final ConcurrentMap<Integer, IdianDepths<?>> activeIdianDepths = new ConcurrentHashMap<Integer, IdianDepths<?>>();
+	private final ConcurrentMap<Integer, IdianDepths<?>> activeIdianDepths = new ConcurrentHashMap<>();
 
 	/**
 	 * 加载伊迪安深渊地点、刷关闭态 NPC，并注册开启 cron。
@@ -57,19 +57,11 @@ public class IdianDepthsService {
 			}
 			log.info(I18n.get("log.35480b35b73c", idianDepths.size()));
 
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				public void run() {
-					for (IdianDepthsLocation loc : getIdianDepthsLocations().values()) {
-						startIdianDepths(loc.getId());
-					}
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-						@Override
-						public void visit(Player player) {
-							PacketSendUtility.sendSys3Message(player, "\uE0AA", "<Idian Depths> open !!!");
-						}
-					});
+			GameCronServices.cronService().schedule(() -> {
+				for (IdianDepthsLocation loc : getIdianDepthsLocations().values()) {
+					startIdianDepths(loc.getId());
 				}
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE0AA", "<Idian Depths> open !!!"));
 			}, () -> CustomConfig.IDIAN_DEPTHS_SCHEDULE);
 		} else {
 			log.info(I18n.get("log.b09d3ab19771"));
@@ -99,12 +91,7 @@ public class IdianDepthsService {
 			return;
 		}
 		idian.start();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				stopIdianDepths(id);
-			}
-		}, (long) CustomConfig.IDIAN_DEPTHS_DURATION * 3600 * 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> stopIdianDepths(id), (long) CustomConfig.IDIAN_DEPTHS_DURATION * 3600 * 1000);
 	}
 
 	/**
@@ -152,7 +139,7 @@ public class IdianDepthsService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
+		for (VisibleObject obj : new ArrayList<>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {

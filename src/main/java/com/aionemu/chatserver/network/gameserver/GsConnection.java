@@ -47,7 +47,7 @@ public class GsConnection extends AConnection {
      * 待发送服务端包队列。
      * Outbound server-packet queue.
      */
-    private final Deque<GsServerPacket> sendMsgQueue = new ArrayDeque<GsServerPacket>();
+    private final Deque<GsServerPacket> sendMsgQueue = new ArrayDeque<>();
 
     /**
      * 当前连接状态。

@@ -112,7 +112,7 @@ public final class QuestMutationPlanner {
 		}
 		for (QuestAction action : actions) {
 			switch (action) {
-				case QuestAction.RemoveItem remove -> {
+				case QuestAction.RemoveItem remove:
 					if (!removalFeasible(snapshot, remove, unequippedItems, returnedItemRemovals,
 						plannedRemovals)) {
 						return Optional.empty();
@@ -126,30 +126,30 @@ public final class QuestMutationPlanner {
 							return Optional.empty();
 						}
 					}
-				}
-				case QuestAction.UnequipItem unequip -> {
+					break;
+				case QuestAction.UnequipItem unequip:
 					if (snapshot.equipmentFacts() == null) {
 						return Optional.empty();
 					}
-				}
-				case QuestAction.GiveItem ignored -> {
-				}
-				case QuestAction.SetVariable set -> {
+					break;
+				case QuestAction.GiveItem ignored:
+					break;
+				case QuestAction.SetVariable set:
 					variables.put(set.field(), set.value());
 					actionTouchedFields.add(set.field());
-				}
-				case QuestAction.IncrementVariable inc -> {
+					break;
+				case QuestAction.IncrementVariable inc:
 					variables.merge(inc.field(), inc.delta(), Integer::sum);
 					actionTouchedFields.add(inc.field());
-				}
-				case QuestAction.SetStatus ignored -> {
-				}
-				case QuestAction.GrantReward ignored -> {
-				}
-				case QuestAction.GrantSelectedReward ignored -> {
-					// 在此校验循环之前已降级为 GrantReward。 / Lowered to GrantReward before this validation loop.
-				}
-				case QuestAction.DecreaseCurrency debit -> {
+					break;
+				case QuestAction.SetStatus ignored:
+					break;
+				case QuestAction.GrantReward ignored:
+					break;
+				case
+					QuestAction.GrantSelectedReward ignored:// 在此校验循环之前已降级为 GrantReward。 / Lowered to GrantReward before this validation loop.
+					break;
+				case QuestAction.DecreaseCurrency debit:
 					QuestRewardKind balanceKind = canonicalCurrencyKind(debit.kind());
 					long total;
 					try {
@@ -160,29 +160,29 @@ public final class QuestMutationPlanner {
 					if (!debitFeasible(snapshot, balanceKind, total)) {
 						return Optional.empty();
 					}
-				}
-				case QuestAction.SetCurrency set -> {
+					break;
+				case QuestAction.SetCurrency set:
 					if (!setCurrencyFeasible(snapshot, set)) {
 						return Optional.empty();
 					}
-				}
-				case QuestAction.LearnRecipe ignored -> {
-				}
-				case QuestAction.ForgetRecipe ignored -> {
-				}
-				case QuestAction.GrantCraftSkill ignored -> {
-				}
-				case QuestAction.CompleteQuest ignored -> {
-				}
-				case QuestAction.PromoteArchDaeva ignored -> {
-				}
-				case QuestAction.BlockDefaultItemUse ignored -> {
-				}
-				case QuestAction.AbandonQuest ignored -> {
-					// NONE 投影由 QuestStatePort 持久化；终止清理由 QuestExecutionCoordinator 在提交后注册。
+					break;
+				case QuestAction.LearnRecipe ignored:
+					break;
+				case QuestAction.ForgetRecipe ignored:
+					break;
+				case QuestAction.GrantCraftSkill ignored:
+					break;
+				case QuestAction.CompleteQuest ignored:
+					break;
+				case QuestAction.PromoteArchDaeva ignored:
+					break;
+				case QuestAction.BlockDefaultItemUse ignored:
+					break;
+				case
+					QuestAction.AbandonQuest ignored:// NONE 投影由 QuestStatePort 持久化；终止清理由 QuestExecutionCoordinator 在提交后注册。
 					// The NONE projection is persisted by QuestStatePort; terminal cleanup
 					// is registered by QuestExecutionCoordinator after commit.
-				}
+					break;
 			}
 		}
 		// 目标投影对动作未触及的字段（跨节点进度）是权威的，但绝不能覆盖
@@ -259,10 +259,19 @@ public final class QuestMutationPlanner {
 			QuestReward reward = metadataRewards.get(rewardIndex);
 			QuestRewardKind kind = QuestRewardKind.fromWire(reward.kind());
 			QuestRewardKind actionKind = kind == QuestRewardKind.SELECTABLE_ITEM ? QuestRewardKind.ITEM : kind;
-			QuestRewardAmountMode mode = switch (actionKind) {
-				case GOLD, KINAH, AP, GP, EXP -> QuestRewardAmountMode.QUEST_BASE;
-				default -> QuestRewardAmountMode.EXACT;
-			};
+			QuestRewardAmountMode mode;
+			switch (actionKind) {
+				case GOLD:
+				case KINAH:
+				case AP:
+				case GP:
+				case EXP:
+					mode = QuestRewardAmountMode.QUEST_BASE;
+					break;
+				default:
+					mode = QuestRewardAmountMode.EXACT;
+					break;
+			}
 			expanded.add(new QuestAction.GrantReward(actionKind.name(), reward.id(), reward.amount(), mode));
 		}
 		return expanded;
@@ -328,11 +337,20 @@ public final class QuestMutationPlanner {
 		}
 		for (QuestReward reward : definition.definition().metadata().extendedRewards()) {
 			QuestRewardKind kind = QuestRewardKind.fromWire(reward.kind());
-			QuestRewardAmountMode mode = switch (kind) {
-				case GOLD, KINAH, EXP, AP, GP -> QuestRewardAmountMode.QUEST_BASE;
-				default -> QuestRewardAmountMode.EXACT;
-			};
-			actions.add(new QuestAction.GrantReward(reward.kind(), reward.id(), reward.amount(), mode));
+            QuestRewardAmountMode mode;
+            switch (kind) {
+                case GOLD:
+                case KINAH:
+                case EXP:
+                case AP:
+                case GP:
+                    mode = QuestRewardAmountMode.QUEST_BASE;
+                    break;
+                default:
+                    mode = QuestRewardAmountMode.EXACT;
+                    break;
+            }
+            actions.add(new QuestAction.GrantReward(reward.kind(), reward.id(), reward.amount(), mode));
 		}
 	}
 

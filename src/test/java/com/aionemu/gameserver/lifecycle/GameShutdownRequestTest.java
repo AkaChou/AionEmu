@@ -74,12 +74,16 @@ class GameShutdownRequestTest {
 			new Class<?>[]{ObjectProvider.class},
 			(proxy, method, args) -> {
 				if (method.getDeclaringClass() == Object.class) {
-					return switch (method.getName()) {
-						case "toString" -> "shutdownHookProvider";
-						case "hashCode" -> System.identityHashCode(proxy);
-						case "equals" -> proxy == args[0];
-						default -> null;
-					};
+                    switch (method.getName()) {
+                        case "toString":
+                            return "shutdownHookProvider";
+                        case "hashCode":
+                            return System.identityHashCode(proxy);
+                        case "equals":
+                            return proxy == args[0];
+                        default:
+                            return null;
+                    }
 				}
 				if ("getIfAvailable".equals(method.getName()) || "getObject".equals(method.getName())) {
 					return shutdownHook;

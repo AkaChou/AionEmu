@@ -170,7 +170,7 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 		}
 
 		int cnt = readD();
-		List<String> itemOut = new ArrayList<String>();
+		List<String> itemOut = new ArrayList<>();
 		for (int a = 0; a < cnt; a++) { // 背包 / inventory
 			int objIdOld = readD();
 			int itemId = readD();
@@ -189,7 +189,7 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 			int optSocket = readD();
 			int optFusion = readD();
 			int charge = readD();
-			List<int[]> manastones = new ArrayList<int[]>(), fusions = new ArrayList<int[]>();
+			List<int[]> manastones = new ArrayList<>(), fusions = new ArrayList<>();
 			int len = readD();
 			for (int b = 0; b < len; b++) {
 				manastones.add(new int[] { readD(), readD() });
@@ -276,7 +276,7 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 			int optSocket = readD();
 			int optFusion = readD();
 			int charge = readD();
-			List<int[]> manastones = new ArrayList<int[]>(), fusions = new ArrayList<int[]>();
+			List<int[]> manastones = new ArrayList<>(), fusions = new ArrayList<>();
 			int len = readD();
 			for (int b = 0; b < len; b++) {
 				manastones.add(new int[] { readD(), readD() });

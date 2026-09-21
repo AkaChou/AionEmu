@@ -18,20 +18,10 @@ public class TornadoAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				startLifeTask();
-			}
-		}, 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> startLifeTask(), 1000);
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(TornadoAI2.this);
-			}
-		}, 20000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(TornadoAI2.this), 20000);
 	}
 }

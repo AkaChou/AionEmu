@@ -45,31 +45,25 @@ public class DelayedSkillEffect extends EffectTemplate {
 		if (effect.getSkill() == null) {
 			return;
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (effect.getEffected().getEffectController().hasAbnormalEffect(effect.getSkill().getSkillId())) {
-					final SkillTemplate template = DataManager.SKILL_DATA.getSkillTemplate(skillId);
-					if (template == null) {
-						return;
-					}
-					int launchedSkillLevel = Math.max(1,
-						useCurrentLevel ? effect.getSkillLevel() : calculateValue(effect.getSkillLevel()));
-					if (template.getProperties().getTargetMaxCount() > 1) {
-						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllObjects(new Visitor<VisibleObject>() {
-							@Override
-							public void visit(VisibleObject object) {
-								if (object instanceof Creature target && MathUtil.getDistance(effect.getEffected(), target) <= template.getProperties().getRevisionDistance()) {
-									GameEngineServices.skillEngine().applyEffectDirectly(template.getSkillId(), effect.getEffector(),
-										target, template.getDuration(), launchedSkillLevel);
-								}
-							}
-						});
-					} else {
-						Effect e = new Effect(effect.getEffector(), effect.getEffected(), template, launchedSkillLevel, 0);
-						e.initialize();
-						e.applyEffect();
-					}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (effect.getEffected().getEffectController().hasAbnormalEffect(effect.getSkill().getSkillId())) {
+				final SkillTemplate template = DataManager.SKILL_DATA.getSkillTemplate(skillId);
+				if (template == null) {
+					return;
+				}
+				int launchedSkillLevel = Math.max(1,
+					useCurrentLevel ? effect.getSkillLevel() : calculateValue(effect.getSkillLevel()));
+				if (template.getProperties().getTargetMaxCount() > 1) {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllObjects(object -> {
+						if (object instanceof Creature target && MathUtil.getDistance(effect.getEffected(), target) <= template.getProperties().getRevisionDistance()) {
+							GameEngineServices.skillEngine().applyEffectDirectly(template.getSkillId(), effect.getEffector(),
+								target, template.getDuration(), launchedSkillLevel);
+						}
+					});
+				} else {
+					Effect e = new Effect(effect.getEffector(), effect.getEffected(), template, launchedSkillLevel, 0);
+					e.initialize();
+					e.applyEffect();
 				}
 			}
 		}, effect.getEffectsDuration());

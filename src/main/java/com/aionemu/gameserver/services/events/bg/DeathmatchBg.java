@@ -788,7 +788,7 @@ public class DeathmatchBg extends Battleground {
 	public void startMatch() {
 		super.createInstance();
 		openStaticDoors();
-		List<SpawnPosition> spawns = new ArrayList<SpawnPosition>(getSpawnPositions());
+		List<SpawnPosition> spawns = new ArrayList<>(getSpawnPositions());
 		synchronized (super.getPlayers()) {
 			for (Player pl : super.getPlayers()) {
 				super.preparePlayer(pl, 25000);
@@ -800,12 +800,7 @@ public class DeathmatchBg extends Battleground {
 				}
 			}
 		}
-		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				endDeathmatch();
-			}
-		}, getMatchLength() * 1000L));
+		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(() -> endDeathmatch(), getMatchLength() * 1000L));
 		super.startBackgroundTask();
 	}
 
@@ -854,12 +849,9 @@ public class DeathmatchBg extends Battleground {
 			killer.getLifeStats().increaseHp(SM_ATTACK_STATUS.TYPE.HP, 1000 + 200 * killer.getKillStreak());
 			killer.getLifeStats().increaseMp(SM_ATTACK_STATUS.TYPE.MP, 1000 + 200 * killer.getKillStreak());
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (player.getBattleground() != null && player.getBattleground() instanceof DeathmatchBg) {
-					spawnPlayer(player, true);
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (player.getBattleground() != null && player.getBattleground() instanceof DeathmatchBg) {
+				spawnPlayer(player, true);
 			}
 		}, 6000);
 	}

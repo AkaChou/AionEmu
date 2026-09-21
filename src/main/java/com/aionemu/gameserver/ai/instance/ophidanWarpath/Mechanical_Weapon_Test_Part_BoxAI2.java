@@ -18,7 +18,7 @@ import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 public class Mechanical_Weapon_Test_Part_BoxAI2 extends ActionItemNpcAI2
 {
     private boolean isRewarded;
-	
+
     @Override
     protected void handleDialogStart(Player player) {
         InstanceReward<?> instance = getPosition().getWorldMapInstance().getInstanceHandler().getInstanceReward();
@@ -27,7 +27,7 @@ public class Mechanical_Weapon_Test_Part_BoxAI2 extends ActionItemNpcAI2
         }
         super.handleDialogStart(player);
     }
-	
+
     @Override
     protected void handleUseItemFinish(Player player) {
         if (!isRewarded) {
@@ -36,19 +36,14 @@ public class Mechanical_Weapon_Test_Part_BoxAI2 extends ActionItemNpcAI2
             AI2Actions.deleteOwner(this);
         }
     }
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		startLifeTask();
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(Mechanical_Weapon_Test_Part_BoxAI2.this);
-			}
-		}, 59000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Mechanical_Weapon_Test_Part_BoxAI2.this), 59000);
 	}
 }

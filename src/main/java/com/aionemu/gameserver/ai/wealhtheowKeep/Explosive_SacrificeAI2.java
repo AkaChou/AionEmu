@@ -20,7 +20,7 @@ public class Explosive_SacrificeAI2 extends AggressiveNpcAI2
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
@@ -34,19 +34,14 @@ public class Explosive_SacrificeAI2 extends AggressiveNpcAI2
 	 * Deletes itself after 5 seconds (explosive self-destruct).
 	 */
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(Explosive_SacrificeAI2.this);
-			}
-		}, 5000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Explosive_SacrificeAI2.this), 5000);
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();

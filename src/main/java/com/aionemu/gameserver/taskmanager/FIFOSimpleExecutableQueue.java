@@ -17,7 +17,7 @@ public abstract class FIFOSimpleExecutableQueue<T> extends FIFOExecutableQueue {
 	 * 内部双端队列。
 	 * Internal deque.
 	 */
-	private final Deque<T> queue = new ArrayDeque<T>();
+	private final Deque<T> queue = new ArrayDeque<>();
 
 	/**
 	 * 将元素加入队尾并触发执行。

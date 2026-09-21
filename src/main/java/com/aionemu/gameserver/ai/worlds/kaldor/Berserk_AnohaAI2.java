@@ -45,7 +45,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 	private boolean think = true;
 	private int curentPercent = 100;
 	private Future<?> specialSkillTask;
-	private final List<Integer> percents = new ArrayList<Integer>();
+	private final List<Integer> percents = new ArrayList<>();
 	private final AtomicBoolean isAggred = new AtomicBoolean(false);
 
 	@Override
@@ -61,19 +61,11 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 	}
 
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			        @Override
-			        public void visit(Player player) {
-						AI2Actions.deleteOwner(Berserk_AnohaAI2.this);
-						// 狂暴阿诺哈已消失。 / Berserk Anoha has disappeared.
-						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Anoha_DeSpawn);
-			        }
-				});
-			}
-		}, 1800000); // 30 分钟 / 30 Minutes.
+		GameThreadPoolServices.threadPoolManager().schedule(() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			AI2Actions.deleteOwner(Berserk_AnohaAI2.this);
+			// 狂暴阿诺哈已消失。 / Berserk Anoha has disappeared.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Anoha_DeSpawn);
+		}), 1800000); // 30 分钟 / 30 Minutes.
 	}
 
 	@Override
@@ -103,17 +95,14 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 						sendMsg(1501393, getObjectId(), false, 0);
 						// 离开埃雷什基伽尔的要塞！ / Leave Ereshkigal's fortress!
 						sendMsg(1501394, getObjectId(), false, 5000);
-						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-							@Override
-							public void run() {
-								if (!isAlreadyDead()) {
-									GameEngineServices.skillEngine().getSkill(getOwner(), 21767, 60, getOwner()).useNoAnimationSkill();
-									startThinkTask();
-									int total = explosiveSacrifice(855262); // 爆炸性牺牲 / Explosive Sacrifice.
-									if (total == 0 || (6 - total) != 0) {
-										for (int i = 0; i < (6 - total); i++) {
-											rndSpawn(855262); // 爆炸性牺牲 / Explosive Sacrifice.
-										}
+						GameThreadPoolServices.threadPoolManager().schedule(() -> {
+							if (!isAlreadyDead()) {
+								GameEngineServices.skillEngine().getSkill(getOwner(), 21767, 60, getOwner()).useNoAnimationSkill();
+								startThinkTask();
+								int total = explosiveSacrifice(855262); // 爆炸性牺牲 / Explosive Sacrifice.
+								if (total == 0 || (6 - total) != 0) {
+									for (int i = 0; i < (6 - total); i++) {
+										rndSpawn(855262); // 爆炸性牺牲 / Explosive Sacrifice.
 									}
 								}
 							}
@@ -146,26 +135,23 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 	}
 
 	private void startThinkTask() {
-		thinkTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!isAlreadyDead()) {
-					think = true;
-					Creature creature = getAggroList().getMostHated();
-					if (creature == null || creature.getLifeStats().isAlreadyDead() || !getOwner().canSee(creature)) {
-						setStateIfNot(AIState.FIGHT);
-						think();
-					} else {
-						getMoveController().abortMove();
-						getOwner().setTarget(creature);
-						getOwner().getGameStats().renewLastAttackTime();
-						getOwner().getGameStats().renewLastAttackedTime();
-						getOwner().getGameStats().renewLastChangeTargetTime();
-						getOwner().getGameStats().renewLastSkillTime();
-						setStateIfNot(AIState.FIGHT);
-						handleMoveValidate();
-						startSpecialSkillTask();
-					}
+		thinkTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isAlreadyDead()) {
+				think = true;
+				Creature creature = getAggroList().getMostHated();
+				if (creature == null || creature.getLifeStats().isAlreadyDead() || !getOwner().canSee(creature)) {
+					setStateIfNot(AIState.FIGHT);
+					think();
+				} else {
+					getMoveController().abortMove();
+					getOwner().setTarget(creature);
+					getOwner().getGameStats().renewLastAttackTime();
+					getOwner().getGameStats().renewLastAttackedTime();
+					getOwner().getGameStats().renewLastChangeTargetTime();
+					getOwner().getGameStats().renewLastSkillTime();
+					setStateIfNot(AIState.FIGHT);
+					handleMoveValidate();
+					startSpecialSkillTask();
 				}
 			}
 		}, 20000);
@@ -177,68 +163,50 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 		sendMsg(1501395, getObjectId(), false, 0);
 		// 冻结并面对遗忘！ / Freeze and face oblivion!
 		sendMsg(1501397, getObjectId(), false, 5000);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!isAlreadyDead()) {
-					deleteNpcs(282746); // 熔岩 / Lava.
-                    int total = explosiveSacrifice(282746); // 熔岩 / Lava.
-                    if (total == 0 || (8 - total) != 0) {
-					    for (int i = 0; i < (8 - total); i++) {
-					    	rndSpawn(282746); // 熔岩 / Lava.
-					    }
-                    }
-					startSpecialSkillTask();
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isAlreadyDead()) {
+				deleteNpcs(282746); // 熔岩 / Lava.
+int total = explosiveSacrifice(282746); // 熔岩 / Lava.
+if (total == 0 || (8 - total) != 0) {
+					for (int i = 0; i < (8 - total); i++) {
+						rndSpawn(282746); // 熔岩 / Lava.
+					}
+}
+				startSpecialSkillTask();
 			}
 		}, 4000);
 	}
 
 	private void startSpecialSkillTask() {
-		specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!isAlreadyDead()) {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 21761, 60, getOwner()).useNoAnimationSkill();
-					specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
+		specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isAlreadyDead()) {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 21761, 60, getOwner()).useNoAnimationSkill();
+				specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					if (!isAlreadyDead()) {
+						GameEngineServices.skillEngine().getSkill(getOwner(), 21762, 60, getOwner()).useNoAnimationSkill();
+						specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
 							if (!isAlreadyDead()) {
-								GameEngineServices.skillEngine().getSkill(getOwner(), 21762, 60, getOwner()).useNoAnimationSkill();
-								specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-									@Override
-									public void run() {
+								GameEngineServices.skillEngine().getSkill(getOwner(), 21763, 60, getOwner()).useNoAnimationSkill();
+								if (curentPercent <= 63) {
+									specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
 										if (!isAlreadyDead()) {
-											GameEngineServices.skillEngine().getSkill(getOwner(), 21763, 60, getOwner()).useNoAnimationSkill();
-											if (curentPercent <= 63) {
-												specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-													@Override
-													public void run() {
-														if (!isAlreadyDead()) {
-															GameEngineServices.skillEngine().getSkill(getOwner(), 21764, 60, getOwner()).useNoAnimationSkill();
-															// 哈哈哈！见识真正的力量！ / Muhahaha! Experience true power!
-															sendMsg(1501157, getObjectId(), false, 0);
-															GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-																@Override
-																public void run() {
-																	if (!isAlreadyDead()) {
-																		deleteNpcs(282747); // 熔岩 / Lava.
-																		rndSpawn(282747); // 熔岩 / Lava.
-																		rndSpawn(282747); // 熔岩 / Lava.
-																	}
-																}
-															}, 2000);
-														}
-													}
-												}, 21000);
-											}
+											GameEngineServices.skillEngine().getSkill(getOwner(), 21764, 60, getOwner()).useNoAnimationSkill();
+											// 哈哈哈！见识真正的力量！ / Muhahaha! Experience true power!
+											sendMsg(1501157, getObjectId(), false, 0);
+											GameThreadPoolServices.threadPoolManager().schedule(() -> {
+												if (!isAlreadyDead()) {
+													deleteNpcs(282747); // 熔岩 / Lava.
+													rndSpawn(282747); // 熔岩 / Lava.
+													rndSpawn(282747); // 熔岩 / Lava.
+												}
+											}, 2000);
 										}
-									}
-								}, 3500);
+									}, 21000);
+								}
 							}
-						}
-					}, 1500);
-				}
+						}, 3500);
+					}
+				}, 1500);
 			}
 		}, 12000);
 	}
@@ -251,12 +219,9 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 
 	private void deleteNpcs(final int npcId) {
 		if (getKnownList() != null) {
-			getKnownList().doOnAllNpcs(new Visitor<Npc>() {
-				@Override
-				public void visit(Npc npc) {
-					if (npc.getNpcId() == npcId) {
-						NpcActions.delete(npc);
-					}
+			getKnownList().doOnAllNpcs(npc -> {
+				if (npc.getNpcId() == npcId) {
+					NpcActions.delete(npc);
 				}
 			});
 		}
@@ -265,14 +230,11 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
     private int explosiveSacrifice(final int npcId) {
         final AtomicInteger total = new AtomicInteger();
         if (getKnownList() != null) {
-            getKnownList().doOnAllNpcs(new Visitor<Npc>() {
-                @Override
-                public void visit(Npc npc) {
-                    if (npc.getNpcId() == npcId) {
-                        total.incrementAndGet();
-                    }
-                }
-            });
+            getKnownList().doOnAllNpcs(npc -> {
+				if (npc.getNpcId() == npcId) {
+					total.incrementAndGet();
+				}
+			});
         }
         return total.get();
     }
@@ -327,24 +289,18 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 		if (p != null) {
 			sendBerserkAnohaGuide();
 		}
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 狂暴阿诺哈已被击败。 / Berserk Anoha has been defeated.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Anoha_Die);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 狂暴阿诺哈已被击败。 / Berserk Anoha has been defeated.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Anoha_Die);
 		});
 		AI2Actions.deleteOwner(this);
 		super.handleDied();
 	}
 
 	private void sendBerserkAnohaGuide() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
-					HTMLService.sendGuideHtml(player, "Berserk_Anoha");
-				}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
+				HTMLService.sendGuideHtml(player, "Berserk_Anoha");
 			}
 		});
 	}

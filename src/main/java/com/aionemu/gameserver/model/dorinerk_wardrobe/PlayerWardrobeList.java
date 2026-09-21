@@ -21,7 +21,7 @@ public final class PlayerWardrobeList {
 	private final Map<Integer, PlayerWardrobeEntry> entry;
 
 	public PlayerWardrobeList() {
-		this.entry = new HashMap<Integer, PlayerWardrobeEntry>(0);
+		this.entry = new HashMap<>(0);
 	}
 
 	public PlayerWardrobeList(List<PlayerWardrobeEntry> entries) {
@@ -33,7 +33,7 @@ public final class PlayerWardrobeList {
 
 	/** 返回全部衣橱。 / Returns the all wardrobe. */
 	public PlayerWardrobeEntry[] getAllWardrobe() {
-		List<PlayerWardrobeEntry> allWardrobe = new ArrayList<PlayerWardrobeEntry>();
+		List<PlayerWardrobeEntry> allWardrobe = new ArrayList<>();
 		allWardrobe.addAll(entry.values());
 		return allWardrobe.toArray(new PlayerWardrobeEntry[allWardrobe.size()]);
 	}

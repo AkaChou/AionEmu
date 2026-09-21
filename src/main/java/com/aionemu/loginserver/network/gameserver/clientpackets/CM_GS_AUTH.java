@@ -67,7 +67,7 @@ public class CM_GS_AUTH extends GsClientPacket {
         byte len1 = (byte) readC();
         defaultAddress = readB(len1);
         int size = readD();
-        ipRanges = new ArrayList<IPRange>(size);
+        ipRanges = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             byte[] min = readB(readC());
             byte[] max = readB(readC());
@@ -98,12 +98,7 @@ public class CM_GS_AUTH extends GsClientPacket {
                 log.info(I18n.get("log.8317d73f1707", gameServerId));
                 client.setState(State.AUTHED);
                 client.sendPacket(new SM_GS_AUTH_RESPONSE(resp));
-                LoginThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-                    @Override
-                    public void run() {
-                        client.sendPacket(new SM_MACBAN_LIST());
-                    }
-                }, 500);
+                LoginThreadPoolServices.threadPoolManager().schedule(() -> client.sendPacket(new SM_MACBAN_LIST()), 500);
                 break;
 
             default:

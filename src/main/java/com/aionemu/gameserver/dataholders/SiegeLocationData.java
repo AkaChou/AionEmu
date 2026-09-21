@@ -29,9 +29,9 @@ public class SiegeLocationData {
 	private List<SiegeLocationTemplate> siegeLocationTemplates;
 
 	@XmlTransient
-	private final Map<Integer, ArtifactLocation> artifactLocations = new LinkedHashMap<Integer, ArtifactLocation>();
+	private final Map<Integer, ArtifactLocation> artifactLocations = new LinkedHashMap<>();
 	@XmlTransient
-	private final Map<Integer, FortressLocation> fortressLocations = new LinkedHashMap<Integer, FortressLocation>();
+	private final Map<Integer, FortressLocation> fortressLocations = new LinkedHashMap<>();
 	/**
 	 * 返回全部攻城据点映射。
 	 * Returns the full siege location map.
@@ -39,7 +39,7 @@ public class SiegeLocationData {
 	 * @return ID 到据点的映射 / map of id to location
 	 */
 	@XmlTransient
-	private final Map<Integer, SiegeLocation> siegeLocations = new LinkedHashMap<Integer, SiegeLocation>();
+	private final Map<Integer, SiegeLocation> siegeLocations = new LinkedHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，按类型构建要塞/神器/统一据点索引。

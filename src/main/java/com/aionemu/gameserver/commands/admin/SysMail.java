@@ -211,7 +211,7 @@ public class SysMail extends AdminCommand {
 			outText[0] = enclosedText.substring(0, enclosedText.length() - 1);
 		}
 		else {
-			List<String> titleWords = new ArrayList<String>();
+			List<String> titleWords = new ArrayList<>();
 			titleWords.add(enclosedText);
 			for (; wordCount < words.length; wordCount++) {
 				String word = words[wordCount];

@@ -27,7 +27,7 @@ public class BaseData {
 	@XmlElement(name = "base_location")
 	private List<BaseTemplate> baseTemplates;
 	@XmlTransient
-	private final Map<Integer, BaseLocation> base = new LinkedHashMap<Integer, BaseLocation>();
+	private final Map<Integer, BaseLocation> base = new LinkedHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，将模板转为运行时地点并按 ID 索引。

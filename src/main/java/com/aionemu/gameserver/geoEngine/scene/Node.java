@@ -35,7 +35,7 @@ public class Node extends Spatial implements Cloneable {
 	 * 子节点列表。
 	 * This node's children.
 	 */
-	protected ArrayList<Spatial> children = new ArrayList<Spatial>(1);
+	protected ArrayList<Spatial> children = new ArrayList<>(1);
 	/** 碰撞标志。 / Collision flags. */
 	protected short collisionFlags;
 
@@ -379,7 +379,7 @@ public class Node extends Spatial implements Cloneable {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends Spatial> List<T> descendantMatches(Class<T> spatialSubclass, String nameRegex) {
-		List<T> newList = new ArrayList<T>();
+		List<T> newList = new ArrayList<>();
 		if (getQuantity() < 1) {
 			return newList;
 		}

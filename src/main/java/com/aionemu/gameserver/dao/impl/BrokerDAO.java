@@ -169,14 +169,25 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
 
     @Override
     public void storeInTransaction(Connection con, BrokerItem item) throws SQLException {
-        boolean result = switch (item.getPersistentState()) {
-            case NEW -> insertBrokerItem(con, item);
-            case DELETED -> deleteBrokerItem(con, item);
-            case UPDATE_ITEM_BROKER -> updateItem(con, item);
-            case UPDATE_REQUIRED -> updateBrokerItem(con, item);
-            default -> true;
-        };
-        if (!result) {
+		boolean result;
+	    switch (item.getPersistentState()) {
+		    case NEW:
+			    result = insertBrokerItem(con, item);
+				break;
+			case DELETED:
+			    result = deleteBrokerItem(con, item);
+				break;
+			case UPDATE_ITEM_BROKER:
+			    result = updateItem(con, item);
+				break;
+			case UPDATE_REQUIRED:
+			    result = updateBrokerItem(con, item);
+				break;
+			default:
+			    result = true;
+				break;
+	    }
+		if (!result) {
             throw new SQLException("No broker row changed for item " + item.getItemUniqueId());
         }
     }

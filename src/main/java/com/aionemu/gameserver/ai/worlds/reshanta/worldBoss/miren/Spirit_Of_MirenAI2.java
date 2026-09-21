@@ -28,65 +28,48 @@ public class Spirit_Of_MirenAI2 extends AggressiveNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 	}
-	
+
 	@Override
     protected void handleSpawned() {
         super.handleSpawned();
 		startLifeTask();
 		announceSpiritOfMiren();
     }
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			        @Override
-			        public void visit(Player player) {
-						AI2Actions.deleteOwner(Spirit_Of_MirenAI2.this);
-						// 米伦狂战士之魂已消失。 / The Miren Berserker Soul has disappeared..
-						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Despawn_lamiren);
-			        }
-				});
-			}
-		}, 1800000); //30 Minutes.
+		GameThreadPoolServices.threadPoolManager().schedule(() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			AI2Actions.deleteOwner(Spirit_Of_MirenAI2.this);
+			// 米伦狂战士之魂已消失。 / The Miren Berserker Soul has disappeared..
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Despawn_lamiren);
+		}), 1800000); //30 Minutes.
 	}
-	
+
 	private void announceSpiritOfMiren() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦守护者出现。 / Miren Guardian Appears.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Lamiren_Named_Spawn_In);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦守护者出现。 / Miren Guardian Appears.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Lamiren_Named_Spawn_In);
 		});
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		updateMirenLanding();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 米伦狂战士之魂已被击杀。 / The Miren Berserker Soul has been slain.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Die_lamiren);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 米伦狂战士之魂已被击杀。 / The Miren Berserker Soul has been slain.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Die_lamiren);
 		});
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}
-	
+
 	private void updateMirenLanding() {
 		final com.aionemu.gameserver.model.gameobjects.Creature mostHated = getOwner().getAggroList().getMostHated();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (mostHated != null && MathUtil.isIn3dRange(mostHated, getOwner(), 20)) {
-					if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-						GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ASMODIANS, 14, 0);
-					} else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-						GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ELYOS, 2, 0);
-					}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			if (mostHated != null && MathUtil.isIn3dRange(mostHated, getOwner(), 20)) {
+				if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
+					GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ASMODIANS, 14, 0);
+				} else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
+					GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ELYOS, 2, 0);
 				}
 			}
 		});

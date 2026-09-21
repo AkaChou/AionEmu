@@ -50,7 +50,7 @@ public class SpawnUpdate extends AdminCommand {
 			}
 
 			SpawnTemplate spawn = npc.getSpawn();
-			
+
 			if (params[1].equalsIgnoreCase("x")) {
 				float x;
 				if (params.length < 3)
@@ -70,7 +70,7 @@ public class SpawnUpdate extends AdminCommand {
 				}
 				return;
 			}
-			
+
 			if (params[1].equalsIgnoreCase("y")) {
 				float y;
 				if (params.length < 3)
@@ -90,7 +90,7 @@ public class SpawnUpdate extends AdminCommand {
 				}
 				return;
 			}
-			
+
 			if (params[1].equalsIgnoreCase("z")) {
 				float z;
 				if (params.length < 3)
@@ -110,7 +110,7 @@ public class SpawnUpdate extends AdminCommand {
 				}
 				return;
 			}
-			
+
 			if (params[1].equalsIgnoreCase("h")) {
 				byte h;
 				if (params.length < 3) {
@@ -136,7 +136,7 @@ public class SpawnUpdate extends AdminCommand {
 				}
 				return;
 			}
-			
+
 			if (params[1].equalsIgnoreCase("xyz")) {
 				PacketSendUtility.sendPacket(admin, new SM_DELETE(npc, 0));
 				npc.getPosition().setXYZH(admin.getX(), null, null, null);
@@ -157,7 +157,7 @@ public class SpawnUpdate extends AdminCommand {
 				}
 				return;
 			}
-			
+
 			if (params[1].equalsIgnoreCase("w")) {
 				String walkerId = null;
 				if (params.length == 3)
@@ -169,7 +169,7 @@ public class SpawnUpdate extends AdminCommand {
 						return;
 					}
 					List<SpawnGroup2> allSpawns = DataManager.SPAWNS_DATA2.getSpawnsByWorldId(npc.getWorldId());
-					List<SpawnTemplate> sameIds = new ArrayList<SpawnTemplate>();
+					List<SpawnTemplate> sameIds = new ArrayList<>();
 					for (SpawnGroup2 spawnGroup : allSpawns) {
 						for (SpawnTemplate spawnTemplate : spawnGroup.getSpawnTemplates()) {
 							if (walkerId.equals(spawnTemplate.getWalkerId())) {

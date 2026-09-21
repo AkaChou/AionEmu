@@ -73,7 +73,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
         /** 副本是否已开始 / whether the instance started */
         protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
         /** warpath 任务 / warpath task */
-        private final List<Future<?>> warpathTask = new ArrayList<Future<?>>();
+        private final List<Future<?>> warpathTask = new ArrayList<>();
 
     protected EngulfedOphidanBridgePlayerReward getPlayerReward(Player player) {
         engulfedOphidanBridgeReward.regPlayerReward(player);
@@ -599,77 +599,77 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
     }
 
     private void sendEnterPacket(final Player player) {
-    	instance.doOnAllPlayers(new Visitor<Player>() {
-            /**
-             * 处理 visit。
-             * Handle visit.
-             *
-             * @param opponent 对手 / opponent
-             */
-            @Override
-            public void visit(Player opponent) {
-                if (player.getRace() != opponent.getRace()) {
-                    PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(11, getTime2(), getInstanceReward(), player.getObjectId()));
-                    PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(11, getTime2(), getInstanceReward(), opponent.getObjectId()));
-                    PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(3, getTime2(), getInstanceReward(),  player.getObjectId()));
-                } else {
-                    PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(11, getTime2(), getInstanceReward(), opponent.getObjectId()));
-                    if (player.getObjectId() != opponent.getObjectId()) {
-                        PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(3, getTime2(), getInstanceReward(), player.getObjectId(), 20, 0));
-                    }
-                }
-            }
-        });
+    	instance.doOnAllPlayers(new Visitor<>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param opponent 对手 / opponent
+			 */
+			@Override
+			public void visit(Player opponent) {
+				if (player.getRace() != opponent.getRace()) {
+					PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(11, getTime2(), getInstanceReward(), player.getObjectId()));
+					PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(11, getTime2(), getInstanceReward(), opponent.getObjectId()));
+					PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(3, getTime2(), getInstanceReward(), player.getObjectId()));
+				} else {
+					PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(11, getTime2(), getInstanceReward(), opponent.getObjectId()));
+					if (player.getObjectId() != opponent.getObjectId()) {
+						PacketSendUtility.sendPacket(opponent, new SM_INSTANCE_SCORE(3, getTime2(), getInstanceReward(), player.getObjectId(), 20, 0));
+					}
+				}
+			}
+		});
     	sendPacket(true);
     	sendPacket(false);
         PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(4, getTime2(), getInstanceReward(), player.getObjectId(), 20, 0));
     }
 
     private void startInstancePacket() {
-    	instance.doOnAllPlayers(new Visitor<Player>() {
-            /**
-             * 处理 visit。
-             * Handle visit.
-             *
-             * @param player 玩家 / player
-             */
-            @Override
-            public void visit(Player player) {
-            	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime2(), engulfedOphidanBridgeReward, instance.getPlayersInside(), true));
-            	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(3, getTime2(), engulfedOphidanBridgeReward, player.getObjectId(), 0, 0));
-            	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime2(), engulfedOphidanBridgeReward, instance.getPlayersInside(), true));
-            	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(11, getTime2(), getInstanceReward(), player.getObjectId()));
-            }
-        });
+    	instance.doOnAllPlayers(new Visitor<>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 *
+			 * @param player 玩家 / player
+			 */
+			@Override
+			public void visit(Player player) {
+				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime2(), engulfedOphidanBridgeReward, instance.getPlayersInside(), true));
+				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(3, getTime2(), engulfedOphidanBridgeReward, player.getObjectId(), 0, 0));
+				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime2(), engulfedOphidanBridgeReward, instance.getPlayersInside(), true));
+				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(11, getTime2(), getInstanceReward(), player.getObjectId()));
+			}
+		});
     }
 
     private void sendPacket(boolean isObjects) {
     	if (isObjects) {
-    		instance.doOnAllPlayers(new Visitor<Player>() {
-                /**
-                 * 处理 visit。
-                 * Handle visit.
-                 *
-                 * @param player 玩家 / player
-                 */
-                @Override
-                public void visit(Player player) {
-                	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(6, getTime2(), engulfedOphidanBridgeReward, instance.getPlayersInside(), true));
-                }
-            });
+    		instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(6, getTime2(), engulfedOphidanBridgeReward, instance.getPlayersInside(), true));
+				}
+			});
     	} else {
-    		instance.doOnAllPlayers(new Visitor<Player>() {
-                /**
-                 * 处理 visit。
-                 * Handle visit.
-                 *
-                 * @param player 玩家 / player
-                 */
-                @Override
-                public void visit(Player player) {
-                	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime2(), engulfedOphidanBridgeReward, instance.getPlayersInside(), true));
-                }
-            });
+    		instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime2(), engulfedOphidanBridgeReward, instance.getPlayersInside(), true));
+				}
+			});
     	}
     }
 
@@ -835,7 +835,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
             return;
         }
         addPointsByRace(player.getRace(), points);
-        List<Player> playersToGainScore = new ArrayList<Player>();
+        List<Player> playersToGainScore = new ArrayList<>();
         if (target != null && player.isInGroup2()) {
             for (Player member : player.getPlayerGroup2().getOnlineMembers()) {
                 if (member.getLifeStats().isAlreadyDead()) {
@@ -1105,7 +1105,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
              */
             @Override
             public void run() {
-                instance.doOnAllPlayers(new Visitor<Player>() {
+                instance.doOnAllPlayers(new Visitor<>() {
                     /**
                      * 处理 visit。
                      * Handle visit.

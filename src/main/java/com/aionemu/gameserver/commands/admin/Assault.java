@@ -70,66 +70,66 @@ public class Assault extends AdminCommand {
 			return;
 		}
 
-		List<Integer> idList = new ArrayList<Integer>();
-		if((params[2]).equals("tier20")) {
-			idList.add(210799);
-			idList.add(211961);
-			idList.add(213831);
-			idList.add(253739);
-			idList.add(210566);
-			idList.add(210745);
-		}
-		else if(params[2].equals("tier30")) {
-			idList.add(210997);
-			idList.add(213831);
-			idList.add(213547);
-			idList.add(253739);
-			idList.add(210942);
-			idList.add(212631);
-		}
-		else if(params[2].equals("balaur4")) {
-			idList.add(210997);
-			idList.add(255704);
-			idList.add(211962);
-			idList.add(213240);
-			idList.add(214387);
-			idList.add(213547);
-		}
-		else if(params[2].equals("balaur5")) {
-			idList.add(250187);
-			idList.add(250187);
-			idList.add(250187);
-			idList.add(250182);
-			idList.add(250182);
-			idList.add(250182);
-			idList.add(250187);
-		}
-		else if(params[2].equals("dredgion")) {
-			idList.add(258236);
-			idList.add(258238);
-			idList.add(258243);
-			idList.add(258241);
-			idList.add(258237);
-			idList.add(258240);
-			idList.add(258239);
-			idList.add(258242);
-			idList.add(250187);
-			idList.add(250182);
-		}
-		else
-		{
-			for(String npcId : params[2].split(",")) {
-				try {
-					idList.add(Integer.parseInt(npcId));
-				}
-				catch(NumberFormatException e) {
-					PacketSendUtility.sendMessage(admin, "You should only input integers as NPC ids.");
-					return;
-				}
-			}
-			if(idList.size() == 0)
-				return;
-		}
+		List<Integer> idList = new ArrayList<>();
+        switch ((params[2])) {
+            case "tier20":
+                idList.add(210799);
+                idList.add(211961);
+                idList.add(213831);
+                idList.add(253739);
+                idList.add(210566);
+                idList.add(210745);
+                break;
+            case "tier30":
+                idList.add(210997);
+                idList.add(213831);
+                idList.add(213547);
+                idList.add(253739);
+                idList.add(210942);
+                idList.add(212631);
+                break;
+            case "balaur4":
+                idList.add(210997);
+                idList.add(255704);
+                idList.add(211962);
+                idList.add(213240);
+                idList.add(214387);
+                idList.add(213547);
+                break;
+            case "balaur5":
+                idList.add(250187);
+                idList.add(250187);
+                idList.add(250187);
+                idList.add(250182);
+                idList.add(250182);
+                idList.add(250182);
+                idList.add(250187);
+                break;
+            case "dredgion":
+                idList.add(258236);
+                idList.add(258238);
+                idList.add(258243);
+                idList.add(258241);
+                idList.add(258237);
+                idList.add(258240);
+                idList.add(258239);
+                idList.add(258242);
+                idList.add(250187);
+                idList.add(250182);
+                break;
+            default:
+                for (String npcId : params[2].split(",")) {
+                    try {
+                        idList.add(Integer.parseInt(npcId));
+                    } catch (NumberFormatException e) {
+                        PacketSendUtility.sendMessage(admin, "You should only input integers as NPC ids.");
+                        return;
+                    }
+                }
+                if (idList.size() == 0)
+                    return;
+                break;
+        }
 
 		Creature target;
 		if(admin.getTarget() != null)
@@ -152,7 +152,7 @@ public class Assault extends AdminCommand {
 		int spawnCount = 0;
 
 		VisibleObject visibleObject;
-		List<VisibleObject> despawnList = new ArrayList<VisibleObject>();//will hold the list of spawned mobs
+		List<VisibleObject> despawnList = new ArrayList<>();//will hold the list of spawned mobs
 
 		for( int i = 0; amount > i; i++) {
 			templateId = idList.get((int)(Math.random() * idList.size()));
@@ -189,18 +189,15 @@ public class Assault extends AdminCommand {
 	 * @param despawnList 待删除可见对象列表 / list of visible objects to despawn
 	 */
 	private void despawnThem(final Player admin, final List<VisibleObject> despawnList, final int despawnTime) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				int despawnCount = 0;
-				for(VisibleObject visObj : despawnList)	{
-					if(visObj != null && visObj.isSpawned()) {
-						visObj.getController().delete();
-						despawnCount++;
-					}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			int despawnCount = 0;
+			for(VisibleObject visObj : despawnList)	{
+				if(visObj != null && visObj.isSpawned()) {
+					visObj.getController().delete();
+					despawnCount++;
 				}
-				PacketSendUtility.sendMessage(admin, despawnCount + " npc have been deleted.");
 			}
+			PacketSendUtility.sendMessage(admin, despawnCount + " npc have been deleted.");
 		}, despawnTime * 1000L);
 	}
 

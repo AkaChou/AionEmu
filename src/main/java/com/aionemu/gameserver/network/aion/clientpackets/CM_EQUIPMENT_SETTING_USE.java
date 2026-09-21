@@ -21,7 +21,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 public class CM_EQUIPMENT_SETTING_USE extends AionClientPacket {
 
-	private final List<EquipmentSettingUseAction> actions = new ArrayList<EquipmentSettingUseAction>();
+	private final List<EquipmentSettingUseAction> actions = new ArrayList<>();
 
 	/**
 	 * 构造客户端包实例。

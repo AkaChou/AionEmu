@@ -59,24 +59,24 @@ public class SiegeAutoRace {
 				loc.setRace(SiegeRace.ASMODIANS);
 			}
 			loc.setLegionId(0);
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				/**
-				 * visit 方法。
-				 * visit method.
-				 *
-				 * @param player 玩家 / player
-				 */
-				public void visit(Player player) {
-					if (legionId != 0 && player.getRace().getRaceId() == oldOwnerRaceId) {
-						// %0 征服了 %1。 / %0 has conquered %1.
-						PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1301038, legionName, NameId));
-					}
-					// %0 成功征服了 %1。 / %0 succeeded in conquering %1.
-					PacketSendUtility.sendPacket(player,
-							new SM_SYSTEM_MESSAGE(1404542, loc.getRace().getDescriptionId(), NameId));
-					PacketSendUtility.sendPacket(player, new SM_SIEGE_LOCATION_INFO(loc));
-				}
-			});
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<>() {
+                /**
+                 * visit 方法。
+                 * visit method.
+                 *
+                 * @param player 玩家 / player
+                 */
+                public void visit(Player player) {
+                    if (legionId != 0 && player.getRace().getRaceId() == oldOwnerRaceId) {
+                        // %0 征服了 %1。 / %0 has conquered %1.
+                        PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1301038, legionName, NameId));
+                    }
+                    // %0 成功征服了 %1。 / %0 succeeded in conquering %1.
+                    PacketSendUtility.sendPacket(player,
+                            new SM_SYSTEM_MESSAGE(1404542, loc.getRace().getDescriptionId(), NameId));
+                    PacketSendUtility.sendPacket(player, new SM_SIEGE_LOCATION_INFO(loc));
+                }
+            });
 			if (ElyosAutoSiege(locid)) {
 				GameFeatureServices.siegeService().spawnNpcs(locid, SiegeRace.ELYOS, SiegeModType.PEACE);
 			} else if (AsmoAutoSiege(locid)) {

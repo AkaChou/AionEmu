@@ -47,11 +47,11 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 		/** poppy / poppy */
-		private final List<Npc> Poppy = new ArrayList<Npc>();
+		private final List<Npc> Poppy = new ArrayList<>();
 	/** 已播放动画集合 / played-movie set */
-	private final List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<>();
 		/** kumukicave 任务 / kumuki cave task */
-		private final List<Future<?>> kumukiCaveTask = new ArrayList<Future<?>>();
+		private final List<Future<?>> kumukiCaveTask = new ArrayList<>();
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -141,7 +141,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403991, Race.PC_ALL, 220000);
 				// 你被发现了！敌人正在肆虐。 / You've been discovered! The enemy is wreaking havoc.
 				sendMsgByRace(1403990, Race.PC_ALL, 300000);
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -209,21 +209,21 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
              */
             @Override
             public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-				    /**
-				     * 处理 visit。
-				     * Handle visit.
-				     *
-				     * @param player 玩家 / player
-				     */
-				    @Override
-				    public void visit(Player player) {
-					    stopInstance1(player);
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
+						stopInstance1(player);
 						// 库穆基烤完了所有波古斯。 / The Kumukis barbecued all the Porguses.
 						sendMsgByRace(1404019, Race.PC_ALL, 0);
 						Poppy.get(3).getController().onDelete();
-				    }
-			    });
+					}
+				});
             }
         }, 900000)); //15 Minutes.
     }
@@ -274,20 +274,20 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 				despawnNpc(npc);
 				stopInstance2();
 				spawn(835057, 223.93062f, 337.54870f, 142.43079f, (byte) 90); //Kumuki Cave Exit.
-				instance.doOnAllPlayers(new Visitor<Player>() {
-			        /**
-			         * 处理 visit。
-			         * Handle visit.
-			         *
-			         * @param player 玩家 / player
-			         */
-			        @Override
-			        public void visit(Player player) {
-				        if (player.isOnline()) {
-						    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
-					    }
-				    }
-			    });
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
+						if (player.isOnline()) {
+							PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
+						}
+					}
+				});
 			break;
         }
     }
@@ -484,7 +484,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
     }
 
     private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -530,7 +530,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.

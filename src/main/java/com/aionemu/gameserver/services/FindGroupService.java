@@ -37,13 +37,13 @@ public class FindGroupService {
 	private static volatile ObjectProvider<FindGroupService> instanceProvider;
 	private static final AtomicBoolean LISTENERS_REGISTERED = new AtomicBoolean();
 	/** 天族招募列表。 / Elyos recruit listings. */
-	private final Map<Integer, FindGroup> elyosRecruitFindGroups = new LinkedHashMap<Integer, FindGroup>();
+	private final Map<Integer, FindGroup> elyosRecruitFindGroups = new LinkedHashMap<>();
 	/** 天族申请列表。 / Elyos apply listings. */
-	private final Map<Integer, FindGroup> elyosApplyFindGroups = new LinkedHashMap<Integer, FindGroup>();
+	private final Map<Integer, FindGroup> elyosApplyFindGroups = new LinkedHashMap<>();
 	/** 魔族招募列表。 / Asmodian recruit listings. */
-	private final Map<Integer, FindGroup> asmodianRecruitFindGroups = new LinkedHashMap<Integer, FindGroup>();
+	private final Map<Integer, FindGroup> asmodianRecruitFindGroups = new LinkedHashMap<>();
 	/** 魔族申请列表。 / Asmodian apply listings. */
-	private final Map<Integer, FindGroup> asmodianApplyFindGroups = new LinkedHashMap<Integer, FindGroup>();
+	private final Map<Integer, FindGroup> asmodianApplyFindGroups = new LinkedHashMap<>();
 
 	/**
 	 * 注册组队/联盟变更回调，用于自动维护寻找队伍列表。
@@ -170,7 +170,7 @@ public class FindGroupService {
 			break;
 		}
 
-		Collection<FindGroup> findGroupList = new ArrayList<FindGroup>();
+		Collection<FindGroup> findGroupList = new ArrayList<>();
 		findGroupList.add(findGroup);
 
 		PacketSendUtility.sendPacket(player,
@@ -212,9 +212,9 @@ public class FindGroupService {
 		case ELYOS:
 			switch (action) {
 			case 0x00:
-				return new ArrayList<FindGroup>(elyosRecruitFindGroups.values());
+				return new ArrayList<>(elyosRecruitFindGroups.values());
 			case 0x04:
-				return new ArrayList<FindGroup>(elyosApplyFindGroups.values());
+				return new ArrayList<>(elyosApplyFindGroups.values());
 			case 0xA:
 				return Collections.emptyList();
 			}
@@ -222,9 +222,9 @@ public class FindGroupService {
 		case ASMODIANS:
 			switch (action) {
 			case 0x00:
-				return new ArrayList<FindGroup>(asmodianRecruitFindGroups.values());
+				return new ArrayList<>(asmodianRecruitFindGroups.values());
 			case 0x04:
-				return new ArrayList<FindGroup>(asmodianApplyFindGroups.values());
+				return new ArrayList<>(asmodianApplyFindGroups.values());
 			case 0xA:
 				return Collections.emptyList();
 			}
@@ -299,13 +299,7 @@ public class FindGroupService {
 		}
 		if (findGroup != null)
 			PacketSendUtility.broadcastFilteredPacket(new SM_FIND_GROUP(action + 1, playerObjId, findGroup.getUnk()),
-					new ObjectFilter<Player>() {
-
-						@Override
-						public boolean acceptObject(Player object) {
-							return race == object.getRace();
-						}
-					});
+				object -> race == object.getRace());
 		return findGroup;
 	}
 
@@ -329,7 +323,7 @@ public class FindGroupService {
 	 * action type
 	 */
 	private void cleanMap(Map<Integer, FindGroup> map, Race race, int action) {
-		for (FindGroup group : new ArrayList<FindGroup>(map.values())) {
+		for (FindGroup group : new ArrayList<>(map.values())) {
 			if (group.getLastUpdate() + 60 * 60 < System.currentTimeMillis() / 1000) {
 				removeFindGroup(race, action, group.getObjectId());
 			}

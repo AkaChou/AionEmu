@@ -115,13 +115,10 @@ public class NpcController extends CreatureController<Npc> {
 					owner.setState(CreatureState.DEAD);
 				}
 
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						if (owner.isSpawned() && owner.getLifeStats().isAlreadyDead()) {
-							PacketSendUtility.sendPacket(player, new SM_EMOTION(owner, EmotionType.DIE, 0, 0));
-							GameCoreGameplayServices.dropService().see(player, owner);
-						}
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					if (owner.isSpawned() && owner.getLifeStats().isAlreadyDead()) {
+						PacketSendUtility.sendPacket(player, new SM_EMOTION(owner, EmotionType.DIE, 0, 0));
+						GameCoreGameplayServices.dropService().see(player, owner);
 					}
 				}, 100);
 			}
@@ -195,12 +192,9 @@ public class NpcController extends CreatureController<Npc> {
 		final int npcNameId = owner.getObjectTemplate().getNameId();
 		NpcRank npcRank = owner.getObjectTemplate().getRank();
 		if (npcRank == NpcRank.EXPERT && !player.isInInstance()) {
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player players) {
-					// “玩家名”击杀了“命名怪” / "Player Name" has killed "Named Monster"
-					PacketSendUtility.sendPacket(players, new SM_SYSTEM_MESSAGE(1400021, player.getName(), new DescriptionId(npcNameId * 2 + 1)));
-				}
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(players -> {
+				// “玩家名”击杀了“命名怪” / "Player Name" has killed "Named Monster"
+				PacketSendUtility.sendPacket(players, new SM_SYSTEM_MESSAGE(1400021, player.getName(), new DescriptionId(npcNameId * 2 + 1)));
 			});
 		}
 	}
@@ -533,7 +527,7 @@ public class NpcController extends CreatureController<Npc> {
 		int totalDamage = getOwner().getAggroList().getTotalDamage();
 		for (AggroInfo aggro : getOwner().getAggroList().getFinalDamageList(true)) {
 			float percentage = aggro.getDamage() / totalDamage;
-			List<Player> players = new ArrayList<Player>();
+			List<Player> players = new ArrayList<>();
 			if (aggro.getAttacker() instanceof Player player) {
 				if (MathUtil.isIn3dRange(player, getOwner(), GroupConfig.GROUP_MAX_DISTANCE) && !player.getLifeStats().isAlreadyDead()) {
 					int apPlayerReward = Math.round(StatFunctions.calculatePvEApGained(player, getOwner()) * percentage);
@@ -557,7 +551,7 @@ public class NpcController extends CreatureController<Npc> {
 					}
 				}
 			} else if ((aggro.getAttacker() instanceof PlayerAlliance alliance)) {
-				players = new ArrayList<Player>();
+				players = new ArrayList<>();
 				for (Player member : alliance.getMembers()) {
 					if (MathUtil.isIn3dRange(member, getOwner(), GroupConfig.GROUP_MAX_DISTANCE) && !member.getLifeStats().isAlreadyDead()) {
 						players.add(member);

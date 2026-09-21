@@ -283,7 +283,7 @@ public class TradeService {
 	private static boolean validateBuyItems(Npc npc, TradeList tradeList, Player player) {
 		TradeListTemplate tradeListTemplate = tradeListData
 				.getTradeListTemplate(npc.getObjectTemplate().getTemplateId());
-		Set<Integer> allowedItems = new HashSet<Integer>();
+		Set<Integer> allowedItems = new HashSet<>();
 		for (TradeTab tradeTab : tradeListTemplate.getTradeTablist()) {
 			GoodsList goodsList = goodsListData.getGoodsListById(tradeTab.getId());
 			if (goodsList != null && goodsList.getItemIdList() != null) {
@@ -313,7 +313,7 @@ public class TradeService {
 	public static boolean performSellToShop(Player player, TradeList tradeList) {
 		Storage inventory = player.getInventory();
 		long kinahReward = 0;
-		List<Item> items = new ArrayList<Item>();
+		List<Item> items = new ArrayList<>();
 		if (!RestrictionsManager.canTrade(player)) {
 			return false;
 		}

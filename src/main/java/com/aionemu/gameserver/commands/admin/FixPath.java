@@ -89,73 +89,69 @@ public class FixPath extends AdminCommand {
 		runner = admin;
 		final float height = jumpHeight;
 
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			boolean wasInvul = admin.isInvul();
+			admin.setInvul(true);
 
-			@Override
-			public void run() {
-				boolean wasInvul = admin.isInvul();
-				admin.setInvul(true);
+			float zDelta = 0;
+			HashMap<Integer, Float> corrections = new HashMap<>();
 
-				float zDelta = 0;
-				HashMap<Integer, Float> corrections = new HashMap<Integer, Float>();
-
-				try {
-					int i = 1;
-					for (RouteStep step : template.getRouteSteps()) {
-						if (canceled || admin.isInState(CreatureState.DEAD)) {
-							corrections.clear();
-							return;
-						}
-						if (step.getX() == 0 || step.getY() == 0) {
-							corrections.put(i++, admin.getZ());
-							PacketSendUtility.sendMessage(admin, "Skipping zero coordinate...");
-							continue;
-						}
-						if (zDelta == 0)
-							zDelta = z - step.getZ() + height;
-						PacketSendUtility.sendMessage(admin, "Teleporting to step " + i + "...");
-						TeleportService2.teleportTo(admin, admin.getWorldId(), step.getX(), step.getY(), step.getZ() + zDelta);
-						admin.getController().stopProtectionActiveTask();
-						PacketSendUtility.sendMessage(admin, "Waiting to get Z...");
-						Thread.sleep(5000);
-						step.setZ(admin.getZ());
+			try {
+				int i = 1;
+				for (RouteStep step : template.getRouteSteps()) {
+					if (canceled || admin.isInState(CreatureState.DEAD)) {
+						corrections.clear();
+						return;
+					}
+					if (step.getX() == 0 || step.getY() == 0) {
 						corrections.put(i++, admin.getZ());
+						PacketSendUtility.sendMessage(admin, "Skipping zero coordinate...");
+						continue;
 					}
-
-					PacketSendUtility.sendMessage(admin, "Saving corrections...");
-
-					WalkerData data = new WalkerData();
-					WalkerTemplate newTemplate = new WalkerTemplate(template.getRouteId());
-
-					i = 1;
-					ArrayList<RouteStep> newSteps = new ArrayList<RouteStep>();
-
-					int lastStep = template.isReversed() ? (template.getRouteSteps().size() + 2) / 2 : template.getRouteSteps().size();
-					for (int s = 0; s < lastStep; s++) {
-						RouteStep step = template.getRouteSteps().get(s);
-						RouteStep fixedStep = new RouteStep(step.getX(), step.getY(), corrections.get(i), 0);
-						fixedStep.setRouteStep(i++);
-						newSteps.add(fixedStep);
-					}
-
-					newTemplate.setRouteSteps(newSteps);
-					if (template.isReversed())
-						newTemplate.setIsReversed(true);
-					newTemplate.setPool(template.getPool());
-					data.AddTemplate(newTemplate);
-					data.saveData(template.getRouteId());
-
-					PacketSendUtility.sendMessage(admin, "Done.");
+					if (zDelta == 0)
+						zDelta = z - step.getZ() + height;
+					PacketSendUtility.sendMessage(admin, "Teleporting to step " + i + "...");
+					TeleportService2.teleportTo(admin, admin.getWorldId(), step.getX(), step.getY(), step.getZ() + zDelta);
+					admin.getController().stopProtectionActiveTask();
+					PacketSendUtility.sendMessage(admin, "Waiting to get Z...");
+					Thread.sleep(5000);
+					step.setZ(admin.getZ());
+					corrections.put(i++, admin.getZ());
 				}
-				catch (Exception e) {
+
+				PacketSendUtility.sendMessage(admin, "Saving corrections...");
+
+				WalkerData data = new WalkerData();
+				WalkerTemplate newTemplate = new WalkerTemplate(template.getRouteId());
+
+				i = 1;
+				ArrayList<RouteStep> newSteps = new ArrayList<>();
+
+				int lastStep = template.isReversed() ? (template.getRouteSteps().size() + 2) / 2 : template.getRouteSteps().size();
+				for (int s = 0; s < lastStep; s++) {
+					RouteStep step = template.getRouteSteps().get(s);
+					RouteStep fixedStep = new RouteStep(step.getX(), step.getY(), corrections.get(i), 0);
+					fixedStep.setRouteStep(i++);
+					newSteps.add(fixedStep);
 				}
-				finally {
-					runner = null;
-					isRunning = false;
-					canceled = false;
-					if (!wasInvul)
-						admin.setInvul(false);
-				}
+
+				newTemplate.setRouteSteps(newSteps);
+				if (template.isReversed())
+					newTemplate.setIsReversed(true);
+				newTemplate.setPool(template.getPool());
+				data.AddTemplate(newTemplate);
+				data.saveData(template.getRouteId());
+
+				PacketSendUtility.sendMessage(admin, "Done.");
+			}
+			catch (Exception e) {
+			}
+			finally {
+				runner = null;
+				isRunning = false;
+				canceled = false;
+				if (!wasInvul)
+					admin.setInvul(false);
 			}
 		}, 5000);
 	}

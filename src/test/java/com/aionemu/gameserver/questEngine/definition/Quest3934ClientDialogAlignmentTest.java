@@ -194,17 +194,26 @@ class Quest3934ClientDialogAlignmentTest {
 	private record Stage(int step, int npcId, QuestDialogPage page, QuestDialogAction response,
 			QuestDialogAction progress) {
 		private QuestDialogPage responsePage() {
-			return switch (step) {
-				case 1 -> QuestDialogPage.SELECT1_1;
-				case 2 -> QuestDialogPage.SELECT2_1;
-				case 3 -> QuestDialogPage.SELECT3_1;
-				case 4 -> QuestDialogPage.SELECT4_1;
-				case 5 -> QuestDialogPage.SELECT5_1;
-				case 6 -> QuestDialogPage.SELECT6_1;
-				case 7 -> QuestDialogPage.SELECT7_1;
-				case 8 -> QuestDialogPage.SELECT8_1;
-				default -> throw new IllegalArgumentException("unsupported stage " + step);
-			};
+            switch (step) {
+                case 1:
+                    return QuestDialogPage.SELECT1_1;
+                case 2:
+                    return QuestDialogPage.SELECT2_1;
+                case 3:
+                    return QuestDialogPage.SELECT3_1;
+                case 4:
+                    return QuestDialogPage.SELECT4_1;
+                case 5:
+                    return QuestDialogPage.SELECT5_1;
+                case 6:
+                    return QuestDialogPage.SELECT6_1;
+                case 7:
+                    return QuestDialogPage.SELECT7_1;
+                case 8:
+                    return QuestDialogPage.SELECT8_1;
+                default:
+                    throw new IllegalArgumentException("unsupported stage " + step);
+            }
 		}
 	}
 }

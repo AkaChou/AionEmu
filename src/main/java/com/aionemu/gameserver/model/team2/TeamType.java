@@ -59,10 +59,16 @@ public enum TeamType {
 
 	/** 是否为真实区域控制器创建的自动团队。 / Whether created as an auto team by the retail in-area controller. */
 	public boolean isInArea() {
-		return switch (this) {
-			case IN_AREA_DEFAULT, IN_AREA_TARGET_1, IN_AREA_TARGET_2, IN_AREA_TARGET_3, IN_AREA_TARGET_4 -> true;
-			default -> false;
-		};
+        switch (this) {
+            case IN_AREA_DEFAULT:
+            case IN_AREA_TARGET_1:
+            case IN_AREA_TARGET_2:
+            case IN_AREA_TARGET_3:
+            case IN_AREA_TARGET_4:
+                return true;
+            default:
+                return false;
+        }
 	}
 
 	/** 区域团队保留最后一名成员，空团队仍正常解散。 / In-area teams keep the last member; empty teams still disband normally. */

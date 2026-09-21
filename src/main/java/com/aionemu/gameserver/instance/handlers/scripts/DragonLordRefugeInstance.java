@@ -45,7 +45,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
 	/** 已播放动画集合 / played-movie set */
-	private final List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<>();
 
 	/**
 	 * 副本创建时初始化逻辑。
@@ -212,20 +212,20 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 				        break;
 					}
 			    }
-			    instance.doOnAllPlayers(new Visitor<Player>() {
-				    /**
-				     * 处理 visit。
-				     * Handle visit.
-				     *
-				     * @param player 玩家 / player
-				     */
-				    @Override
-				    public void visit(Player player) {
+			    instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
 						// 龙主提亚马特以死亡咆哮击败了主神。 / Dragon Lord Tiamat used its Death Roar to defeat the Empyrean Lord.
 						sendMsgByRace(1401542, Race.PC_ALL, 0);
 						GameEngineServices.skillEngine().applyEffectDirectly(20920, player, player, 30000); //Dragon Lord's Roar.
-				    }
-			    });
+					}
+				});
 			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
@@ -233,18 +233,18 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 				     */
 				    @Override
 				    public void run() {
-					    instance.doOnAllPlayers(new Visitor<Player>() {
-						    /**
-						     * 处理 visit。
-						     * Handle visit.
-						     *
-						     * @param player 玩家 / player
-						     */
-						    @Override
-						    public void visit(Player player) {
-							    player.getEffectController().removeEffect(20920); //Dragon Lord's Roar.
-						    }
-					    });
+					    instance.doOnAllPlayers(new Visitor<>() {
+							/**
+							 * 处理 visit。
+							 * Handle visit.
+							 *
+							 * @param player 玩家 / player
+							 */
+							@Override
+							public void visit(Player player) {
+								player.getEffectController().removeEffect(20920); //Dragon Lord's Roar.
+							}
+						});
 				    }
 			    }, 10000);
 			break;
@@ -473,18 +473,18 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 				    despawnNpc(getNpc(219367));
 			    if (!getNpcs(219368).isEmpty()) //Petriscale.
 				    despawnNpc(getNpc(219368));
-			    instance.doOnAllPlayers(new Visitor<Player>() {
-				    /**
-				     * 处理 visit。
-				     * Handle visit.
-				     *
-				     * @param player 玩家 / player
-				     */
-				    @Override
-				    public void visit(Player player) {
-					    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.IDTIAMAT_TIAMAT_COUNTDOWN_OVER);
-				    }
-			    });
+			    instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
+						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.IDTIAMAT_TIAMAT_COUNTDOWN_OVER);
+					}
+				});
 			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
@@ -492,18 +492,18 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 				     */
 				    @Override
 				    public void run() {
-					    instance.doOnAllPlayers(new Visitor<Player>() {
-						    /**
-						     * 处理 visit。
-						     * Handle visit.
-						     *
-						     * @param player 玩家 / player
-						     */
-						    @Override
-						    public void visit(Player player) {
-							    onExitInstance(player);
-						    }
-					    });
+					    instance.doOnAllPlayers(new Visitor<>() {
+							/**
+							 * 处理 visit。
+							 * Handle visit.
+							 *
+							 * @param player 玩家 / player
+							 */
+							@Override
+							public void visit(Player player) {
+								onExitInstance(player);
+							}
+						});
 					    onInstanceDestroy();
 				    }
 			    }, 10000);
@@ -519,18 +519,18 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 				    despawnNpc(getNpc(219367));
 			    if (!getNpcs(219368).isEmpty()) //Petriscale.
 				    despawnNpc(getNpc(219368));
-			    instance.doOnAllPlayers(new Visitor<Player>() {
-				    /**
-				     * 处理 visit。
-				     * Handle visit.
-				     *
-				     * @param player 玩家 / player
-				     */
-				    @Override
-				    public void visit(Player player) {
-					    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.IDTIAMAT_TIAMAT_COUNTDOWN_OVER);
-				    }
-			    });
+			    instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
+						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.IDTIAMAT_TIAMAT_COUNTDOWN_OVER);
+					}
+				});
 			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
@@ -538,18 +538,18 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 				     */
 				    @Override
 				    public void run() {
-					    instance.doOnAllPlayers(new Visitor<Player>() {
-						    /**
-						     * 处理 visit。
-						     * Handle visit.
-						     *
-						     * @param player 玩家 / player
-						     */
-						    @Override
-						    public void visit(Player player) {
-							    onExitInstance(player);
-						    }
-					    });
+					    instance.doOnAllPlayers(new Visitor<>() {
+							/**
+							 * 处理 visit。
+							 * Handle visit.
+							 *
+							 * @param player 玩家 / player
+							 */
+							@Override
+							public void visit(Player player) {
+								onExitInstance(player);
+							}
+						});
 					    onInstanceDestroy();
 				    }
 			    }, 10000);
@@ -812,7 +812,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
     }
 
 	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -842,20 +842,20 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
+				instance.doOnAllPlayers(new Visitor<>() {
+                    /**
+                     * 处理 visit。
+                     * Handle visit.
+                     *
+                     * @param player 玩家 / player
+                     */
+                    @Override
+                    public void visit(Player player) {
+                        if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
+                            PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
+                        }
+                    }
+                });
 			}
 		}, time);
 	}

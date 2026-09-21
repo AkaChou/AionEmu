@@ -148,11 +148,20 @@ class Quest3502RetailFlowAlignmentTest {
 	private static QuestAction rewardAction(QuestReward reward) {
 		QuestRewardKind kind = QuestRewardKind.fromWire(reward.kind());
 		QuestRewardKind actionKind = kind == QuestRewardKind.SELECTABLE_ITEM ? QuestRewardKind.ITEM : kind;
-		QuestRewardAmountMode amountMode = switch (actionKind) {
-			case GOLD, KINAH, EXP, AP, GP -> QuestRewardAmountMode.QUEST_BASE;
-			default -> QuestRewardAmountMode.EXACT;
-		};
-		return new QuestAction.GrantReward(actionKind.name(), reward.id(), reward.amount(), amountMode);
+        QuestRewardAmountMode amountMode;
+        switch (actionKind) {
+            case GOLD:
+            case KINAH:
+            case EXP:
+            case AP:
+            case GP:
+                amountMode = QuestRewardAmountMode.QUEST_BASE;
+                break;
+            default:
+                amountMode = QuestRewardAmountMode.EXACT;
+                break;
+        }
+        return new QuestAction.GrantReward(actionKind.name(), reward.id(), reward.amount(), amountMode);
 	}
 
 	private static void assertRuntimeOrder(CompiledQuestDefinition definition) {

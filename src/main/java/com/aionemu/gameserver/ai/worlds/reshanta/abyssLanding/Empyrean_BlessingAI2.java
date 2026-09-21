@@ -21,7 +21,7 @@ public class Empyrean_BlessingAI2 extends ActionItemNpcAI2
 	protected void handleDialogStart(Player player) {
 		super.handleDialogStart(player);
 	}
-	
+
 	@Override
 	protected void handleUseItemFinish(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
@@ -38,20 +38,33 @@ public class Empyrean_BlessingAI2 extends ActionItemNpcAI2
 	}
 
 	static int getBlessingSkillId(int npcId) {
-		return switch (npcId) {
-			case 883956, 883960 -> 22742; // Flight Energy.
-			case 883957, 883961 -> 22741; // Life Energy.
-			case 883958, 883962 -> 22740; // Battle Energy.
-			case 883959, 883963 -> 22739; // Defense Energy.
-			default -> 0;
-		};
+        switch (npcId) {
+            case 883956:
+            case 883960:
+                return 22742;
+            // Flight Energy.
+            case 883957:
+            case 883961:
+                return 22741;
+            // Life Energy.
+            case 883958:
+            case 883962:
+                return 22740;
+            // Battle Energy.
+            case 883959:
+            case 883963:
+                return 22739;
+            // Defense Energy.
+            default:
+                return 0;
+        }
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();

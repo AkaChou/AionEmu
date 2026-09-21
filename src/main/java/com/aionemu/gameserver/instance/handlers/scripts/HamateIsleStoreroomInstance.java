@@ -38,7 +38,7 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 		/** 是否启动计时器 / is start timer */
 		private boolean isStartTimer = false;
 		/** hamate isle storeroom treasure box suscess / hamate isle storeroom treasure box suscess */
-		private final List<Npc> HamateIsleStoreroomTreasureBoxSuscess = new ArrayList<Npc>();
+		private final List<Npc> HamateIsleStoreroomTreasureBoxSuscess = new ArrayList<>();
 
 	/**
 	 * 副本创建时初始化逻辑。
@@ -134,15 +134,15 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 		    if (!isStartTimer) {
 			    isStartTimer = true;
 			    System.currentTimeMillis();
-			    instance.doOnAllPlayers(new Visitor<Player>() {
-			        /**
-			         * 处理 visit。
-			         * Handle visit.
-			         *
-			         * @param player 玩家 / player
-			         */
-			        @Override
-			        public void visit(Player player) {
+			    instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
 						if (player.isOnline()) {
 							startHamateIsleStoreroomTimer();
 							PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900));
@@ -188,7 +188,7 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
     }
 
 	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.

@@ -144,7 +144,7 @@ public class ItemStorage {
 
 	/** 返回特殊魔立方物品 / Returns the special cube items */
 	public List<Item> getSpecialCubeItems() {
-		List<Item> result = new ArrayList<Item>();
+		List<Item> result = new ArrayList<>();
 		for (Item item : items.values()) {
 			if (item.getItemTemplate().getExtraInventoryId() > 0) {
 				result.add(item);
@@ -155,7 +155,7 @@ public class ItemStorage {
 
 	/** 获取魔立方物品。 / Returns the cube items. */
 	public List<Item> getCubeItems() {
-		List<Item> result = new ArrayList<Item>();
+		List<Item> result = new ArrayList<>();
 		for (Item item : items.values()) {
 			if (item.getItemTemplate().getExtraInventoryId() < 1) {
 				result.add(item);

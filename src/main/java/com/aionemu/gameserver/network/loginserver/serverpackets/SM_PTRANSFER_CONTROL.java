@@ -331,7 +331,7 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 			}
 			PlayerSkillList skillList = player.getSkillList();
 			// 丢弃烙印之石技能 / discard stigma skills
-			List<PlayerSkillEntry> skills = new ArrayList<PlayerSkillEntry>();
+			List<PlayerSkillEntry> skills = new ArrayList<>();
 			for (PlayerSkillEntry sk : skillList.getAllSkills()) {
 				if (!sk.isStigma()) {
 					skills.add(sk);
@@ -360,7 +360,7 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 			writeD(ps.getDeny());
 			writeD(ps.getDisplay());
 			QuestStateList qsl = player.getQuestStateList();
-			List<QuestState> quests = new ArrayList<QuestState>();
+			List<QuestState> quests = new ArrayList<>();
 			for (QuestState qs : qsl.getQuests().values()) {
 				if (qs == null) {
 					log.warn(I18n.get("log.ae410cf2be90", player.getName(), taskId));

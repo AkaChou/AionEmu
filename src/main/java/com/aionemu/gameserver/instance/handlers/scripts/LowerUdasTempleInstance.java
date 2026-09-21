@@ -57,7 +57,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 		/** chestudastemple 任务 / chest udas temple task */
 		private Future<?> chestUdasTempleTask;
 		/** udas temple chest / udas temple chest */
-		private final List<Npc> udasTempleChest = new ArrayList<Npc>();
+		private final List<Npc> udasTempleChest = new ArrayList<>();
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
@@ -119,20 +119,20 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 					    spawn(702659, 575.1232f, 1295.7212f, 187.85898f, (byte) 113); //高级修道院箱子。 / Noble Abbey Box.
 					break;
 				} */
-				instance.doOnAllPlayers(new Visitor<Player>() {
-			        /**
-			         * 处理 visit。
-			         * Handle visit.
-			         *
-			         * @param player 玩家 / player
-			         */
-			        @Override
-			        public void visit(Player player) {
-				        if (player.isOnline()) {
-						    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
-					    }
-				    }
-			    });
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
+						if (player.isOnline()) {
+							PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
+						}
+					}
+				});
 			break;
 		}
 	}
@@ -149,16 +149,16 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 		if (!isStartTimer1) {
 			isStartTimer1 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
 						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
 					}
 				}
@@ -194,17 +194,17 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
         if (!isStartTimer2) {
 			isStartTimer2 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
+						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
 					}
 				}
 			});
@@ -227,17 +227,17 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 	    if (!isStartTimer3) {
 			isStartTimer3 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
+						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
 					}
 				}
 			});
@@ -260,17 +260,17 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 	    if (!isStartTimer4) {
 			isStartTimer4 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
+						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
 					}
 				}
 			});
@@ -293,17 +293,17 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 	    if (!isStartTimer5) {
 			isStartTimer5 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
+						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
 					}
 				}
 			});
@@ -326,17 +326,17 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 	    if (!isStartTimer6) {
 			isStartTimer6 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
+						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
 					}
 				}
 			});
@@ -359,17 +359,17 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 	    if (!isStartTimer7) {
 			isStartTimer7 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
+						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
 					}
 				}
 			});
@@ -392,17 +392,17 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 	    if (!isStartTimer8) {
 			isStartTimer8 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
+						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
 					}
 				}
 			});
@@ -425,17 +425,17 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 	    if (!isStartTimer9) {
 			isStartTimer9 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
+						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
 					}
 				}
 			});
@@ -458,17 +458,17 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 	    if (!isStartTimer10) {
 			isStartTimer10 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
+						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
 					}
 				}
 			});
@@ -491,17 +491,17 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 	    if (!isStartTimer11) {
 			isStartTimer11 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
+						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
 					}
 				}
 			});
@@ -524,20 +524,20 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 	    if (!isStartTimer12) {
 			isStartTimer12 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
-					}
-				}
-			});
+			instance.doOnAllPlayers(new Visitor<>() {
+                /**
+                 * 处理 visit。
+                 * Handle visit.
+                 *
+                 * @param player 玩家 / player
+                 */
+                @Override
+                public void visit(Player player) {
+                    if (player.isOnline()) {
+                        PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+                    }
+                }
+            });
 			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				/**
 				 * 处理 run。
@@ -582,17 +582,17 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 	}
 
 	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 *
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
+		instance.doOnAllPlayers(new Visitor<>() {
+            /**
+             * 处理 visit。
+             * Handle visit.
+             *
+             * @param player 玩家 / player
+             */
+            @Override
+            public void visit(Player player) {
+                PacketSendUtility.sendWhiteMessageOnCenter(player, str);
+            }
+        });
 	}
 }

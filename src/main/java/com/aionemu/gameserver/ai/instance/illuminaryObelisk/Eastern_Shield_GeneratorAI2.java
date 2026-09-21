@@ -35,13 +35,10 @@ public class Eastern_Shield_GeneratorAI2 extends ActionItemNpcAI2
 	}
 
 	private void announceEasternShield() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 东部护盾能量发生器遭受攻击。 / The eastern power shield generator is under attack.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_DEFENCE_01_ATTACKED);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 东部护盾能量发生器遭受攻击。 / The eastern power shield generator is under attack.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_DEFENCE_01_ATTACKED);
 			}
 		});
 	}

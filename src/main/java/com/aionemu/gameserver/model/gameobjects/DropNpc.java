@@ -30,14 +30,14 @@ public class DropNpc {
 	/** 设置允许拾取者集合 / Sets the allowed looters */
 	private Set<Integer> allowedLooters = new HashSet<>();
 	/** 设置范围内的玩家 / Sets the in-range players */
-	private Collection<Player> inRangePlayers = new ArrayList<Player>();
+	private Collection<Player> inRangePlayers = new ArrayList<>();
 	/**
 	 * 返回玩家状态集合。
 	 * Returns the player status collection.
 	 *
 	 * @return 玩家状态 / player status
 	 */
-	private final Collection<Player> playerStatus = new ArrayList<Player>();
+	private final Collection<Player> playerStatus = new ArrayList<>();
 	/**
 	 * 设置正在拾取的玩家。
 	 * Sets the player currently looting.

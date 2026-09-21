@@ -118,7 +118,7 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 	 */
 	protected void initConquestBoss() {
 		Npc cb = null;
-		for (VisibleObject obj : new ArrayList<VisibleObject>(getConquestLocation().getSpawned())) {
+		for (VisibleObject obj : new ArrayList<>(getConquestLocation().getSpawned())) {
 			int npcId = ((Npc) obj).getNpcId();
 			// 征服/供奉 英吉斯温。 / Conquest/Offering Inggison.
 			if (npcId >= 236530 && npcId <= 236553) {

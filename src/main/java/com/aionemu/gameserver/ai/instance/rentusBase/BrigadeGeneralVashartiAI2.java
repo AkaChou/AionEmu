@@ -37,9 +37,9 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 	private Future<?> flameBuffTask;
 	private Future<?> flameSmashTask;
 	private final AtomicBoolean isHome = new AtomicBoolean(true);
-	private final List<Integer> percents = new ArrayList<Integer>();
-	private final List<Point3D> blueFlameSmashs = new ArrayList<Point3D>();
-	private final List<Point3D> redFlameSmashs = new ArrayList<Point3D>();
+	private final List<Integer> percents = new ArrayList<>();
+	private final List<Point3D> blueFlameSmashs = new ArrayList<>();
+	private final List<Point3D> redFlameSmashs = new ArrayList<>();
 	private int flameSmashCount = 1;
 
 	@Override
@@ -71,76 +71,62 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 	}
 
 	private void startAirEvent(final NpcAI2 ai, final int percent) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!isAlreadyDead()) {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 20534, 60, getOwner()).useNoAnimationSkill();
-					int npcId1 = 0;
-					int npcId2 = 0;
-					switch (percent) {
-						case 80:
-							npcId1 = 283010;
-							npcId2 = 283002;
-						break;
-						case 70:
-							npcId1 = 283011;
-							npcId2 = 283003;
-						break;
-						case 50:
-							npcId1 = 283011;
-							npcId2 = 283004;
-						break;
-						case 40:
-							npcId1 = 283012;
-						    npcId2 = 283004;
-						break;
-						case 25:
-							npcId1 = 283012;
-							npcId2 = 283006;
-						break;
-					}
-					spawn(npcId2, 188.16568f, 414.03534f, 260.75488f, (byte) 0);
-					spawn(npcId1, 188.33f, 414.61f, 260.61f, (byte) 244);
-					final Npc buffNpc = (Npc) spawn(283007, 188.33f, 414.61f, 260.61f, (byte) 0);
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							if (!buffNpc.getLifeStats().isAlreadyDead()) {
-								startFlameSmashEvent(percent);
-								GameEngineServices.skillEngine().getSkill(buffNpc, 20538, 60, buffNpc).useNoAnimationSkill();
-								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-									@Override
-									public void run() {
-										buffNpc.getController().onDelete();
-									}
-								}, 4000);
-							}
-						}
-					}, 1000);
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							cancelFlameSmashTask();
-							cancelAirEvent();
-							startFlameBuffEvent();
-							Creature creature = getAggroList().getMostHated();
-							if (creature == null || creature.getLifeStats().isAlreadyDead() || !getOwner().canSee(creature)) {
-								setStateIfNot(AIState.FIGHT);
-								think();
-							} else {
-								getMoveController().abortMove();
-								getOwner().setTarget(creature);
-								getOwner().getGameStats().renewLastAttackTime();
-								getOwner().getGameStats().renewLastAttackedTime();
-								getOwner().getGameStats().renewLastChangeTargetTime();
-								getOwner().getGameStats().renewLastSkillTime();
-								setStateIfNot(AIState.FIGHT);
-								handleMoveValidate();
-							}
-						}
-					}, 40000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isAlreadyDead()) {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 20534, 60, getOwner()).useNoAnimationSkill();
+				int npcId1 = 0;
+				int npcId2 = 0;
+				switch (percent) {
+					case 80:
+						npcId1 = 283010;
+						npcId2 = 283002;
+					break;
+					case 70:
+						npcId1 = 283011;
+						npcId2 = 283003;
+					break;
+					case 50:
+						npcId1 = 283011;
+						npcId2 = 283004;
+					break;
+					case 40:
+						npcId1 = 283012;
+						npcId2 = 283004;
+					break;
+					case 25:
+						npcId1 = 283012;
+						npcId2 = 283006;
+					break;
 				}
+				spawn(npcId2, 188.16568f, 414.03534f, 260.75488f, (byte) 0);
+				spawn(npcId1, 188.33f, 414.61f, 260.61f, (byte) 244);
+				final Npc buffNpc = (Npc) spawn(283007, 188.33f, 414.61f, 260.61f, (byte) 0);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					if (!buffNpc.getLifeStats().isAlreadyDead()) {
+						startFlameSmashEvent(percent);
+						GameEngineServices.skillEngine().getSkill(buffNpc, 20538, 60, buffNpc).useNoAnimationSkill();
+						GameThreadPoolServices.threadPoolManager().schedule(() -> buffNpc.getController().onDelete(), 4000);
+					}
+				}, 1000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					cancelFlameSmashTask();
+					cancelAirEvent();
+					startFlameBuffEvent();
+					Creature creature = getAggroList().getMostHated();
+					if (creature == null || creature.getLifeStats().isAlreadyDead() || !getOwner().canSee(creature)) {
+						setStateIfNot(AIState.FIGHT);
+						think();
+					} else {
+						getMoveController().abortMove();
+						getOwner().setTarget(creature);
+						getOwner().getGameStats().renewLastAttackTime();
+						getOwner().getGameStats().renewLastAttackedTime();
+						getOwner().getGameStats().renewLastChangeTargetTime();
+						getOwner().getGameStats().renewLastSkillTime();
+						setStateIfNot(AIState.FIGHT);
+						handleMoveValidate();
+					}
+				}, 40000);
 			}
 		}, 4000);
 	}
@@ -153,55 +139,52 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 	}
 
 	private void startFlameSmashEvent(final int percent) {
-		flameSmashTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelFlameSmashTask();
-				} else {
-					List<Point3D> redFlameSmashs = getRedFlameSmashs(283008);
-					List<Point3D> blueFlameSmashs = getRedFlameSmashs(283009);
-					WorldMapInstance instance = getPosition().getWorldMapInstance();
-					if (instance != null) {
-						if (percent > 40 && flameSmashCount == 1) {
-							flameSmashCount++;
+		flameSmashTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelFlameSmashTask();
+			} else {
+				List<Point3D> redFlameSmashs = getRedFlameSmashs(283008);
+				List<Point3D> blueFlameSmashs = getRedFlameSmashs(283009);
+				WorldMapInstance instance = getPosition().getWorldMapInstance();
+				if (instance != null) {
+					if (percent > 40 && flameSmashCount == 1) {
+						flameSmashCount++;
+						spawnFlameSmash(redFlameSmashs, 283008);
+						spawnFlameSmash(blueFlameSmashs, 283009);
+					} else {
+						if (instance.getNpc(283010) != null) {
+							flameSmashCount = 1;
 							spawnFlameSmash(redFlameSmashs, 283008);
+							spawnFlameSmash(redFlameSmashs, 283008);
+							spawnFlameSmash(redFlameSmashs, 283008);
+						} else if (instance.getNpc(283011) != null) {
+							flameSmashCount = 1;
 							spawnFlameSmash(blueFlameSmashs, 283009);
-						} else {
-							if (instance.getNpc(283010) != null) {
+							spawnFlameSmash(blueFlameSmashs, 283009);
+							spawnFlameSmash(blueFlameSmashs, 283009);
+						} else if (instance.getNpc(283012) != null) {
+							if (flameSmashCount == 1) {
+								flameSmashCount++;
+								spawnFlameSmash(redFlameSmashs, 283008);
+								spawnFlameSmash(redFlameSmashs, 283008);
+								spawnFlameSmash(blueFlameSmashs, 283009);
+								spawnFlameSmash(blueFlameSmashs, 283009);
+							} else if (flameSmashCount == 2) {
+								flameSmashCount++;
+								spawnFlameSmash(redFlameSmashs, 283008);
+								spawnFlameSmash(redFlameSmashs, 283008);
+								spawnFlameSmash(redFlameSmashs, 283008);
+							} else {
 								flameSmashCount = 1;
-								spawnFlameSmash(redFlameSmashs, 283008);
-								spawnFlameSmash(redFlameSmashs, 283008);
-								spawnFlameSmash(redFlameSmashs, 283008);
-							} else if (instance.getNpc(283011) != null) {
-								flameSmashCount = 1;
 								spawnFlameSmash(blueFlameSmashs, 283009);
 								spawnFlameSmash(blueFlameSmashs, 283009);
 								spawnFlameSmash(blueFlameSmashs, 283009);
-							} else if (instance.getNpc(283012) != null) {
-								if (flameSmashCount == 1) {
-									flameSmashCount++;
-									spawnFlameSmash(redFlameSmashs, 283008);
-									spawnFlameSmash(redFlameSmashs, 283008);
-									spawnFlameSmash(blueFlameSmashs, 283009);
-									spawnFlameSmash(blueFlameSmashs, 283009);
-								} else if (flameSmashCount == 2) {
-									flameSmashCount++;
-									spawnFlameSmash(redFlameSmashs, 283008);
-									spawnFlameSmash(redFlameSmashs, 283008);
-									spawnFlameSmash(redFlameSmashs, 283008);
-								} else {
-									flameSmashCount = 1;
-									spawnFlameSmash(blueFlameSmashs, 283009);
-									spawnFlameSmash(blueFlameSmashs, 283009);
-									spawnFlameSmash(blueFlameSmashs, 283009);
-								}
 							}
 						}
 					}
-					redFlameSmashs.clear();
-					blueFlameSmashs.clear();
 				}
+				redFlameSmashs.clear();
+				blueFlameSmashs.clear();
 			}
 		}, 3000, 3000);
 	}
@@ -223,7 +206,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 	}
 
 	private List<Point3D> getRedFlameSmashs(int npcId) {
-		List<Point3D> flameSmashs = new ArrayList<Point3D>();
+		List<Point3D> flameSmashs = new ArrayList<>();
 		for (Point3D flameSmash : (npcId == 283008 ? redFlameSmashs : blueFlameSmashs)) {
 			if (!isSpawned(npcId, flameSmash)) {
 				flameSmashs.add(flameSmash);
@@ -273,23 +256,20 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 	}
 
 	private void startFlameBuffEvent() {
-		flameBuffTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelFlameBuffEvent();
-				} else {
-					WorldMapInstance instance = getPosition().getWorldMapInstance();
-					if (instance != null) {
-						GameEngineServices.skillEngine().getSkill(getOwner(), Rnd.get(0, 1) == 0 ? 20530 : 20531, 60, getOwner()).useNoAnimationSkill();
-						if (instance.getNpc(283000) == null && instance.getNpc(283001) == null) {
-							VisibleObject ice = spawn(283001, 205.280f, 410.53f, 261f, (byte) 56);
-							VisibleObject fire = spawn(283000, 171.330f, 417.57f, 261f, (byte) 116);
-							if (ice != null) {
-								useKissBuff((Npc) ice);
-							} if (fire != null) {
-								useKissBuff((Npc) fire);
-							}
+		flameBuffTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelFlameBuffEvent();
+			} else {
+				WorldMapInstance instance = getPosition().getWorldMapInstance();
+				if (instance != null) {
+					GameEngineServices.skillEngine().getSkill(getOwner(), Rnd.get(0, 1) == 0 ? 20530 : 20531, 60, getOwner()).useNoAnimationSkill();
+					if (instance.getNpc(283000) == null && instance.getNpc(283001) == null) {
+						VisibleObject ice = spawn(283001, 205.280f, 410.53f, 261f, (byte) 56);
+						VisibleObject fire = spawn(283000, 171.330f, 417.57f, 261f, (byte) 116);
+						if (ice != null) {
+							useKissBuff((Npc) ice);
+						} if (fire != null) {
+							useKissBuff((Npc) fire);
 						}
 					}
 				}
@@ -298,12 +278,9 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 	}
 
 	private void useKissBuff(final Npc npc) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (npc != null && !npc.getLifeStats().isAlreadyDead()) {
-					GameEngineServices.skillEngine().getSkill(npc, npc.getNpcId() == 283001 ? 19346 : 19345, 60, npc).useNoAnimationSkill();
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (npc != null && !npc.getLifeStats().isAlreadyDead()) {
+				GameEngineServices.skillEngine().getSkill(npc, npc.getNpcId() == 283001 ? 19346 : 19345, 60, npc).useNoAnimationSkill();
 			}
 		}, 1000);
 	}

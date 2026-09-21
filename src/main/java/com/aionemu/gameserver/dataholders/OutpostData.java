@@ -26,7 +26,7 @@ public class OutpostData {
 	@XmlElement(name = "outpost_location")
 	private List<OutpostTemplate> outpostTemplates;
 	@XmlTransient
-	private final Map<Integer, OutpostLocation> out = new LinkedHashMap<Integer, OutpostLocation>();
+	private final Map<Integer, OutpostLocation> out = new LinkedHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，将模板包装为据点实例并写入索引。

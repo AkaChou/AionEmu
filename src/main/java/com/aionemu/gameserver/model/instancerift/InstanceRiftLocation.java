@@ -32,7 +32,7 @@ public class InstanceRiftLocation {
 	/** 返回玩家集合 / Returns the players */
 	protected Map<Integer, Player> players = new HashMap<>();
 	/** 返回已生成的对象列表 / Returns the spawned objects */
-	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
+	private final List<VisibleObject> spawned = new ArrayList<>();
 
 	public InstanceRiftLocation(InstanceRiftTemplate template) {
 		this.template = template;

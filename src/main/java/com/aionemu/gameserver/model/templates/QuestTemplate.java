@@ -184,7 +184,7 @@ public class QuestTemplate {
 	 */
 	public List<Rewards> getRewards() {
 		if (rewards == null) {
-			rewards = new ArrayList<Rewards>();
+			rewards = new ArrayList<>();
 		}
 		return this.rewards;
 	}
@@ -192,7 +192,7 @@ public class QuestTemplate {
 	/** 返回 extended rewards / Returns the extended rewards */
 	public List<Rewards> getExtendedRewards() {
 		if (extendedRewards == null) {
-			extendedRewards = new ArrayList<Rewards>();
+			extendedRewards = new ArrayList<>();
 		}
 		return this.extendedRewards;
 	}
@@ -200,7 +200,7 @@ public class QuestTemplate {
 	/** 获取加成。 / Returns the bonus. */
 	public List<QuestBonuses> getBonus() {
 		if (bonus == null) {
-			bonus = new ArrayList<QuestBonuses>();
+			bonus = new ArrayList<>();
 		}
 		return this.bonus;
 	}
@@ -210,7 +210,7 @@ public class QuestTemplate {
 	 */
 	public List<QuestDrop> getQuestDrop() {
 		if (questDrop == null) {
-			questDrop = new ArrayList<QuestDrop>();
+			questDrop = new ArrayList<>();
 		}
 		return this.questDrop;
 	}
@@ -218,7 +218,7 @@ public class QuestTemplate {
 	/** 返回 quest kill / Returns the quest kill */
 	public List<QuestKill> getQuestKill() {
 		if (questKill == null) {
-			questKill = new ArrayList<QuestKill>();
+			questKill = new ArrayList<>();
 		}
 		return this.questKill;
 	}
@@ -226,7 +226,7 @@ public class QuestTemplate {
 	/** 返回 xml start conditions / Returns the xml start conditions */
 	public List<XMLStartCondition> getXMLStartConditions() {
 		if (startConds == null) {
-			startConds = new ArrayList<XMLStartCondition>();
+			startConds = new ArrayList<>();
 		}
 		return startConds;
 	}
@@ -236,7 +236,7 @@ public class QuestTemplate {
 	 */
 	public List<PlayerClass> getClassPermitted() {
 		if (classPermitted == null) {
-			classPermitted = new ArrayList<PlayerClass>();
+			classPermitted = new ArrayList<>();
 		}
 		return this.classPermitted;
 	}
@@ -246,7 +246,7 @@ public class QuestTemplate {
 	 */
 	public List<QuestItems> getFighterSelectableReward() {
 		if (fighterSelectableReward == null) {
-			fighterSelectableReward = new ArrayList<QuestItems>();
+			fighterSelectableReward = new ArrayList<>();
 		}
 		return this.fighterSelectableReward;
 	}
@@ -256,7 +256,7 @@ public class QuestTemplate {
 	 */
 	public List<QuestItems> getKnightSelectableReward() {
 		if (knightSelectableReward == null) {
-			knightSelectableReward = new ArrayList<QuestItems>();
+			knightSelectableReward = new ArrayList<>();
 		}
 		return this.knightSelectableReward;
 	}
@@ -266,7 +266,7 @@ public class QuestTemplate {
 	 */
 	public List<QuestItems> getRangerSelectableReward() {
 		if (rangerSelectableReward == null) {
-			rangerSelectableReward = new ArrayList<QuestItems>();
+			rangerSelectableReward = new ArrayList<>();
 		}
 		return this.rangerSelectableReward;
 	}
@@ -276,7 +276,7 @@ public class QuestTemplate {
 	 */
 	public List<QuestItems> getAssassinSelectableReward() {
 		if (assassinSelectableReward == null) {
-			assassinSelectableReward = new ArrayList<QuestItems>();
+			assassinSelectableReward = new ArrayList<>();
 		}
 		return this.assassinSelectableReward;
 	}
@@ -286,7 +286,7 @@ public class QuestTemplate {
 	 */
 	public List<QuestItems> getWizardSelectableReward() {
 		if (wizardSelectableReward == null) {
-			wizardSelectableReward = new ArrayList<QuestItems>();
+			wizardSelectableReward = new ArrayList<>();
 		}
 		return this.wizardSelectableReward;
 	}
@@ -296,7 +296,7 @@ public class QuestTemplate {
 	 */
 	public List<QuestItems> getElementalistSelectableReward() {
 		if (elementalistSelectableReward == null) {
-			elementalistSelectableReward = new ArrayList<QuestItems>();
+			elementalistSelectableReward = new ArrayList<>();
 		}
 		return this.elementalistSelectableReward;
 	}
@@ -306,7 +306,7 @@ public class QuestTemplate {
 	 */
 	public List<QuestItems> getPriestSelectableReward() {
 		if (priestSelectableReward == null) {
-			priestSelectableReward = new ArrayList<QuestItems>();
+			priestSelectableReward = new ArrayList<>();
 		}
 		return this.priestSelectableReward;
 	}
@@ -316,7 +316,7 @@ public class QuestTemplate {
 	 */
 	public List<QuestItems> getChanterSelectableReward() {
 		if (chanterSelectableReward == null) {
-			chanterSelectableReward = new ArrayList<QuestItems>();
+			chanterSelectableReward = new ArrayList<>();
 		}
 		return this.chanterSelectableReward;
 	}
@@ -326,7 +326,7 @@ public class QuestTemplate {
 	 */
 	public List<QuestItems> getGunslingerSelectableReward() {
 		if (gunslingerSelectableReward == null) {
-			gunslingerSelectableReward = new ArrayList<QuestItems>();
+			gunslingerSelectableReward = new ArrayList<>();
 		}
 		return this.gunslingerSelectableReward;
 	}
@@ -336,7 +336,7 @@ public class QuestTemplate {
 	 */
 	public List<QuestItems> getSongweaverSelectableReward() {
 		if (songweaverSelectableReward == null) {
-			songweaverSelectableReward = new ArrayList<QuestItems>();
+			songweaverSelectableReward = new ArrayList<>();
 		}
 		return this.songweaverSelectableReward;
 	}
@@ -346,7 +346,7 @@ public class QuestTemplate {
 	 */
 	public List<QuestItems> getAethertechSelectableReward() {
 		if (aethertechSelectableReward == null) {
-			aethertechSelectableReward = new ArrayList<QuestItems>();
+			aethertechSelectableReward = new ArrayList<>();
 		}
 		return this.aethertechSelectableReward;
 	}
@@ -467,7 +467,7 @@ public class QuestTemplate {
 	 */
 	public List<Race> getRacePermitted() {
 		if (racePermitted == null) {
-			racePermitted = new ArrayList<Race>();
+			racePermitted = new ArrayList<>();
 		}
 		return racePermitted;
 	}

@@ -98,7 +98,7 @@ class ShutdownHookTest {
     @Test
     void shutdownStatusToleratesNpcRemovalFromWorldCollectionDuringDelete() {
         ShutdownConfig.DESPAWN_NPCS = true;
-        List<Npc> liveNpcs = new ArrayList<Npc>();
+        List<Npc> liveNpcs = new ArrayList<>();
         TestNpc firstNpc = npc(liveNpcs);
         TestNpc secondNpc = npc(liveNpcs);
         TestNpc thirdNpc = npc(liveNpcs);

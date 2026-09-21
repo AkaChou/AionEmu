@@ -31,7 +31,7 @@ public class InstanceBonusAttr {
 	/** 返回属性修正列表。 / Returns the penalty attrs. */
 	public List<InstancePenaltyAttr> getPenaltyAttr() {
 		if (penaltyAttr == null) {
-			penaltyAttr = new ArrayList<InstancePenaltyAttr>();
+			penaltyAttr = new ArrayList<>();
 		}
 		return this.penaltyAttr;
 	}

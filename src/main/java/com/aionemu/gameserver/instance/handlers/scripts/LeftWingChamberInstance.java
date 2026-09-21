@@ -58,7 +58,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 		/** left wing treasure box / left wing treasure box */
-		private final List<Npc> leftWingTreasureBox = new ArrayList<Npc>();
+		private final List<Npc> leftWingTreasureBox = new ArrayList<>();
 
     /**
      * 副本创建时初始化逻辑。
@@ -90,7 +90,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 				if (!isStartTimer1) {
 					isStartTimer1 = true;
 					System.currentTimeMillis();
-					instance.doOnAllPlayers(new Visitor<Player>() {
+					instance.doOnAllPlayers(new Visitor<>() {
 						/**
 						 * 处理 visit。
 						 * Handle visit.
@@ -137,17 +137,17 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
         if (!isStartTimer2) {
 			isStartTimer2 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
+						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
 					}
 				}
 			});
@@ -170,17 +170,17 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 	    if (!isStartTimer3) {
 			isStartTimer3 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
+						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
 					}
 				}
 			});
@@ -203,17 +203,17 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 	    if (!isStartTimer4) {
 			isStartTimer4 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
+						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
 					}
 				}
 			});
@@ -236,17 +236,17 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 	    if (!isStartTimer5) {
 			isStartTimer5 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
+						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
 					}
 				}
 			});
@@ -269,17 +269,17 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 	    if (!isStartTimer6) {
 			isStartTimer6 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
+						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
 					}
 				}
 			});
@@ -302,17 +302,17 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 	    if (!isStartTimer7) {
 			isStartTimer7 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
+						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
 					}
 				}
 			});
@@ -335,17 +335,17 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 	    if (!isStartTimer8) {
 			isStartTimer8 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
+						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
 					}
 				}
 			});
@@ -368,17 +368,17 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 	    if (!isStartTimer9) {
 			isStartTimer9 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
+						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
 					}
 				}
 			});
@@ -401,17 +401,17 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 	    if (!isStartTimer10) {
 			isStartTimer10 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
+						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
 					}
 				}
 			});
@@ -434,17 +434,17 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 	    if (!isStartTimer11) {
 			isStartTimer11 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
+						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
 					}
 				}
 			});
@@ -467,17 +467,17 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 	    if (!isStartTimer12) {
 			isStartTimer12 = true;
 			System.currentTimeMillis();
-			instance.doOnAllPlayers(new Visitor<Player>() {
-			    /**
-			     * 处理 visit。
-			     * Handle visit.
-			     *
-			     * @param player 玩家 / player
-			     */
-			    @Override
-			    public void visit(Player player) {
-				    if (player.isOnline()) {
-					    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
+			instance.doOnAllPlayers(new Visitor<>() {
+				/**
+				 * 处理 visit。
+				 * Handle visit.
+				 *
+				 * @param player 玩家 / player
+				 */
+				@Override
+				public void visit(Player player) {
+					if (player.isOnline()) {
+						PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
 					}
 				}
 			});
@@ -497,7 +497,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 	}
 
 	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.

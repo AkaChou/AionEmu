@@ -26,7 +26,7 @@ public class SM_ABYSS_ARTIFACT_INFO3 extends AionServerPacket {
 	 * @param loc 神器位置 ID / artifact location id
 	 */
 	public SM_ABYSS_ARTIFACT_INFO3(int loc) {
-		locations = new ArrayList<ArtifactLocation>();
+		locations = new ArrayList<>();
 		locations.add(GameFeatureServices.siegeService().getArtifact(loc));
 	}
 
@@ -38,7 +38,7 @@ public class SM_ABYSS_ARTIFACT_INFO3 extends AionServerPacket {
 	 * @param teleportStatus 是否允许传送 / whether teleport is available
 	 */
 	public SM_ABYSS_ARTIFACT_INFO3(int locationId, boolean teleportStatus) {
-		locations = new ArrayList<ArtifactLocation>();
+		locations = new ArrayList<>();
 		locations.add(GameFeatureServices.siegeService().getArtifact(locationId));
 		this.teleportStatus = teleportStatus;
 	}

@@ -21,13 +21,8 @@ public class IsbariyaServantsAI2 extends AggressiveNpcAI2
 		int lifetime = (getNpcId() == 281659 ? 20000 : 10000);
 		toDespawn(lifetime);
 	}
-	
+
 	private void toDespawn(int delay) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(IsbariyaServantsAI2.this);
-			}
-		}, delay);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(IsbariyaServantsAI2.this), delay);
 	}
 }

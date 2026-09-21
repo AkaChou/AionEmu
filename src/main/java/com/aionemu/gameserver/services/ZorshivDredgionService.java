@@ -49,7 +49,7 @@ public class ZorshivDredgionService {
 	private DredgionSchedule dredgionSchedule;
 	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private Map<Integer, ZorshivDredgionLocation> zorshivDredgion;
-	private final ConcurrentMap<Integer, ZorshivDredgion<?>> activeZorshivDredgion = new ConcurrentHashMap<Integer, ZorshivDredgion<?>>();
+	private final ConcurrentMap<Integer, ZorshivDredgion<?>> activeZorshivDredgion = new ConcurrentHashMap<>();
 
 	// 英吉斯温入侵 / Inggison Invasion
 	private final List<VisibleObject> adventPortal = Collections.synchronizedList(new ArrayList<>());
@@ -117,12 +117,7 @@ public class ZorshivDredgionService {
 			return;
 		}
 		zorshiv.start();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				stopZorshivDredgion(id);
-			}
-		}, (long) CustomConfig.ZORSHIV_DREDGION_DURATION * 3600 * 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> stopZorshivDredgion(id), (long) CustomConfig.ZORSHIV_DREDGION_DURATION * 3600 * 1000);
 	}
 
 	/**
@@ -204,21 +199,18 @@ public class ZorshivDredgionService {
 		switch (id) {
 		case 1:
 		case 2:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					PacketSendUtility.sendSys3Message(player, "\uE050",
-							"The <Zorshiv Dredgion> to lands at levinshor !!!");
-					// 龙族战舰已出现。 / The Balaur Dredgion has appeared.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_SPAWN,
-							120000);
-					// 战舰投下了龙族士兵。 / The Dredgion has dropped Balaur Troopers.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_DROP_DRAGON,
-							300000);
-					// 龙族战舰已消失。 / The Balaur Dredgion has disappeared.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_DESPAWN,
-							3600000);
-				}
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				PacketSendUtility.sendSys3Message(player, "\uE050",
+						"The <Zorshiv Dredgion> to lands at levinshor !!!");
+				// 龙族战舰已出现。 / The Balaur Dredgion has appeared.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_SPAWN,
+						120000);
+				// 战舰投下了龙族士兵。 / The Dredgion has dropped Balaur Troopers.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_DROP_DRAGON,
+						300000);
+				// 龙族战舰已消失。 / The Balaur Dredgion has disappeared.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_DESPAWN,
+						3600000);
 			});
 			return true;
 		default:
@@ -236,21 +228,18 @@ public class ZorshivDredgionService {
 	public boolean inggisonMsg(int id) {
 		switch (id) {
 		case 3:
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player player) {
-					PacketSendUtility.sendSys3Message(player, "\uE050",
-							"The <Zorshiv Dredgion> to lands at inggison !!!");
-					// 龙族战舰已出现。 / The Balaur Dredgion has appeared.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_SPAWN,
-							120000);
-					// 战舰投下了龙族士兵。 / The Dredgion has dropped Balaur Troopers.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_DROP_DRAGON,
-							300000);
-					// 龙族战舰已消失。 / The Balaur Dredgion has disappeared.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_DESPAWN,
-							3600000);
-				}
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				PacketSendUtility.sendSys3Message(player, "\uE050",
+						"The <Zorshiv Dredgion> to lands at inggison !!!");
+				// 龙族战舰已出现。 / The Balaur Dredgion has appeared.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_SPAWN,
+						120000);
+				// 战舰投下了龙族士兵。 / The Dredgion has dropped Balaur Troopers.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_DROP_DRAGON,
+						300000);
+				// 龙族战舰已消失。 / The Balaur Dredgion has disappeared.
+				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_CARRIER_DESPAWN,
+						3600000);
 			});
 			return true;
 		default:
@@ -344,7 +333,7 @@ public class ZorshivDredgionService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
+		for (VisibleObject obj : new ArrayList<>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {
@@ -453,35 +442,26 @@ public class ZorshivDredgionService {
 			ZorshivDredgionService.getInstance().clearAdventObjects(id);
 			// 入侵传送门。 / Invasion Portal.
 			ZorshivDredgionService.getInstance().adventPortalSP(id);
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					// 入侵激光。 / Invasion Lazer.
-					ZorshivDredgionService.getInstance().adventDirectingSP(id);
-				}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				// 入侵激光。 / Invasion Lazer.
+				ZorshivDredgionService.getInstance().adventDirectingSP(id);
 			}, 180000);
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					// 入侵黑空。 / Invasion Black Sky.
-					ZorshivDredgionService.getInstance().adventControlSP(id);
-				}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				// 入侵黑空。 / Invasion Black Sky.
+				ZorshivDredgionService.getInstance().adventControlSP(id);
 			}, 300000);
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					Map<Integer, ZorshivDredgionLocation> locations = ZorshivDredgionService.getInstance()
-							.getZorshivDredgionLocations();
-					for (ZorshivDredgionLocation loc : locations.values()) {
-						if (loc.getId() == id) {
-							// 入侵浅蓝。 / Invasion Light Blue.
-							ZorshivDredgionService.getInstance().adventEffectSP(id);
-							// 龙族战舰已出现。 / The Balaur Dredgion has appeared at levinshor.
-							ZorshivDredgionService.getInstance().levinshorMsg(id);
-							// 龙族战舰已出现。 / The Balaur Dredgion has appeared at inggison.
-							ZorshivDredgionService.getInstance().inggisonMsg(id);
-							ZorshivDredgionService.getInstance().startZorshivDredgion(loc.getId());
-						}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				Map<Integer, ZorshivDredgionLocation> locations = ZorshivDredgionService.getInstance()
+						.getZorshivDredgionLocations();
+				for (ZorshivDredgionLocation loc : locations.values()) {
+					if (loc.getId() == id) {
+						// 入侵浅蓝。 / Invasion Light Blue.
+						ZorshivDredgionService.getInstance().adventEffectSP(id);
+						// 龙族战舰已出现。 / The Balaur Dredgion has appeared at levinshor.
+						ZorshivDredgionService.getInstance().levinshorMsg(id);
+						// 龙族战舰已出现。 / The Balaur Dredgion has appeared at inggison.
+						ZorshivDredgionService.getInstance().inggisonMsg(id);
+						ZorshivDredgionService.getInstance().startZorshivDredgion(loc.getId());
 					}
 				}
 			}, 600000);

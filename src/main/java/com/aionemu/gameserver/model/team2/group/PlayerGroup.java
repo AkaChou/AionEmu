@@ -29,7 +29,7 @@ public class PlayerGroup extends TemporaryPlayerTeam<PlayerGroupMember> {
 	/** 设置 buff id / Sets the buff id */
 	private int buffId = 0;
 	private final PlayerGroupStats playerGroupStats;
-	private final Map<Integer, Player> groupMembers = new LinkedHashMap<Integer, Player>();
+	private final Map<Integer, Player> groupMembers = new LinkedHashMap<>();
 
 	public PlayerGroup(PlayerGroupMember leader, TeamType type) {
 		super(GameWorldBootstrapServices.idFactory().nextId());

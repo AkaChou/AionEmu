@@ -177,7 +177,7 @@ public class GiveStigma extends PlayerCommand {
     }
 
     private List<Integer> glad(Player player, boolean getStoneIds){
-        List<Integer> stones = new ArrayList<Integer>();
+        List<Integer> stones = new ArrayList<>();
         stones.add(140001119);
         stones.add(140001118);
         stones.add(140001117);
@@ -204,7 +204,7 @@ public class GiveStigma extends PlayerCommand {
         return null;
     }
     private List<Integer> temp(Player player, boolean getStoneIds){
-        List<Integer> stones = new ArrayList<Integer>();
+        List<Integer> stones = new ArrayList<>();
 
         stones.add(140001135);
         stones.add(140001134);
@@ -232,7 +232,7 @@ public class GiveStigma extends PlayerCommand {
         return null;
     }
     private List<Integer> sin(Player player, boolean getStoneIds){
-        List<Integer> stones = new ArrayList<Integer>();
+        List<Integer> stones = new ArrayList<>();
 
         stones.add(140001152);
         stones.add(140001151);
@@ -260,7 +260,7 @@ public class GiveStigma extends PlayerCommand {
         return null;
     }
     private List<Integer> ranger(Player player, boolean getStoneIds){
-        List<Integer> stones = new ArrayList<Integer>();
+        List<Integer> stones = new ArrayList<>();
 
         if(player.getRace() == Race.ELYOS){
             stones.add(140001169);
@@ -296,7 +296,7 @@ public class GiveStigma extends PlayerCommand {
         return null;
     }
     private List<Integer> sorc(Player player, boolean getStoneIds){
-        List<Integer> stones = new ArrayList<Integer>();
+        List<Integer> stones = new ArrayList<>();
 
         if(player.getRace() == Race.ELYOS){
             stones.add(140001184);
@@ -331,7 +331,7 @@ public class GiveStigma extends PlayerCommand {
         return null;
     }
     private List<Integer> sm(Player player, boolean getStoneIds){
-        List<Integer> stones = new ArrayList<Integer>();
+        List<Integer> stones = new ArrayList<>();
 
         if(player.getRace() == Race.ELYOS){
             stones.add(140001197);
@@ -366,7 +366,7 @@ public class GiveStigma extends PlayerCommand {
         return null;
     }
     private List<Integer> cleric(Player player, boolean getStoneIds){
-        List<Integer> stones = new ArrayList<Integer>();
+        List<Integer> stones = new ArrayList<>();
 
         if(player.getRace() == Race.ELYOS){
             stones.add(140001234);
@@ -400,7 +400,7 @@ public class GiveStigma extends PlayerCommand {
         return null;
     }
     private List<Integer> chanter(Player player, boolean getStoneIds){
-        List<Integer> stones = new ArrayList<Integer>();
+        List<Integer> stones = new ArrayList<>();
 
         stones.add(140001227);
         stones.add(140001226);
@@ -428,7 +428,7 @@ public class GiveStigma extends PlayerCommand {
         return null;
     }
     private List<Integer> gunner(Player player, boolean getStoneIds){
-        List<Integer> stones = new ArrayList<Integer>();
+        List<Integer> stones = new ArrayList<>();
 
         stones.add(140001263);
         stones.add(140001262);
@@ -456,7 +456,7 @@ public class GiveStigma extends PlayerCommand {
         return null;
     }
     private List<Integer> at(Player player, boolean getStoneIds){
-        List<Integer> stones = new ArrayList<Integer>();
+        List<Integer> stones = new ArrayList<>();
 
         stones.add(140001280);
         stones.add(140001279);
@@ -484,7 +484,7 @@ public class GiveStigma extends PlayerCommand {
         return null;
     }
     private List<Integer> bard(Player player, boolean getStoneIds){
-        List<Integer> stones = new ArrayList<Integer>();
+        List<Integer> stones = new ArrayList<>();
 
         stones.add(140001297);
         stones.add(140001296);

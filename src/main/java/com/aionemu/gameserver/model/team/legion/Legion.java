@@ -55,7 +55,7 @@ public class Legion {
 	/**
 	 * @return the legionMembers
 	 */
-	private List<Integer> legionMembers = new ArrayList<Integer>();
+	private List<Integer> legionMembers = new ArrayList<>();
 	/**
 	 * @return the deputyPermission
 	 */
@@ -79,7 +79,7 @@ public class Legion {
 	/**
 	 * @return the announcementList
 	 */
-	private TreeMap<Timestamp, String> announcementList = new TreeMap<Timestamp, String>();
+	private TreeMap<Timestamp, String> announcementList = new TreeMap<>();
 	/**
 	 * @param legionEmblem the legionEmblem to set
 	 */
@@ -91,7 +91,7 @@ public class Legion {
 	private final SortedSet<LegionHistory> legionHistory;
 	private final AtomicBoolean hasBonus = new AtomicBoolean(false);
 	/** 返回加入申请映射。 / Returns the join request map. */
-	private final Map<Integer, LegionJoinRequest> joinRequestMap = new LinkedHashMap<Integer, LegionJoinRequest>();
+	private final Map<Integer, LegionJoinRequest> joinRequestMap = new LinkedHashMap<>();
 	/** 设置描述。 / Sets the description. */
 	private String description = "";
 	/** 设置最小加入等级。 / Sets the min join level. */
@@ -116,9 +116,11 @@ public class Legion {
 	 */
 	public Legion() {
 		this.legionWarehouse = new LegionWarehouse(this);
-		this.legionHistory = new TreeSet<LegionHistory>(new Comparator<LegionHistory>() {
+		this.legionHistory = new TreeSet<>(new Comparator<>() {
 
-			/** 比较。 / Compare. */
+			/**
+			 * 比较。 / Compare.
+			 */
 			@Override
 			public int compare(LegionHistory o1, LegionHistory o2) {
 				return o1.getTime().getTime() < o2.getTime().getTime() ? 1 : -1;
@@ -137,7 +139,7 @@ public class Legion {
 	 * @return the online legionMembers
 	 */
 	public ArrayList<Player> getOnlineLegionMembers() {
-		ArrayList<Player> onlineLegionMembers = new ArrayList<Player>();
+		ArrayList<Player> onlineLegionMembers = new ArrayList<>();
 		for (int legionMemberObjId : legionMembers) {
 			Player onlineLegionMember = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(legionMemberObjId);
 			if (onlineLegionMember != null) {
@@ -404,7 +406,7 @@ public class Legion {
 		if (legionHistory.isEmpty()) {
 			return legionHistory;
 		}
-		List<LegionHistory> result = new ArrayList<LegionHistory>();
+		List<LegionHistory> result = new ArrayList<>();
 		for (LegionHistory history : legionHistory) {
 			if (history.getTabId() == tabType) {
 				result.add(history);

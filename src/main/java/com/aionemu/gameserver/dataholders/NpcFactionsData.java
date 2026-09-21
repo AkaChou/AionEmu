@@ -32,8 +32,8 @@ public class NpcFactionsData {
 	 */
 	@XmlElement(name = "npc_faction", required = true)
 	protected List<NpcFactionTemplate> npcFactionsData;
-	private final IntObjectHashMap<NpcFactionTemplate> factionsById = new IntObjectHashMap<NpcFactionTemplate>();
-	private final IntObjectHashMap<NpcFactionTemplate> factionsByNpcId = new IntObjectHashMap<NpcFactionTemplate>();
+	private final IntObjectHashMap<NpcFactionTemplate> factionsById = new IntObjectHashMap<>();
+	private final IntObjectHashMap<NpcFactionTemplate> factionsByNpcId = new IntObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，按势力 ID 与 NPC ID 建立索引。

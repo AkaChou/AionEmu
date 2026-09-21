@@ -40,10 +40,10 @@ public class AionConnection extends AConnection {
 
 
 	/** 客户端包线程池处理器 / client packet processor thread pool */
-	private static final PacketProcessor<AionConnection> packetProcessor = new PacketProcessor<AionConnection>(
-			NetworkConfig.PACKET_PROCESSOR_MIN_THREADS, NetworkConfig.PACKET_PROCESSOR_MAX_THREADS,
-			NetworkConfig.PACKET_PROCESSOR_THREAD_SPAWN_THRESHOLD, NetworkConfig.PACKET_PROCESSOR_THREAD_KILL_THRESHOLD,
-			new ExecuteWrapper());
+	private static final PacketProcessor<AionConnection> packetProcessor = new PacketProcessor<>(
+		NetworkConfig.PACKET_PROCESSOR_MIN_THREADS, NetworkConfig.PACKET_PROCESSOR_MAX_THREADS,
+		NetworkConfig.PACKET_PROCESSOR_THREAD_SPAWN_THRESHOLD, NetworkConfig.PACKET_PROCESSOR_THREAD_KILL_THRESHOLD,
+		new ExecuteWrapper());
 
 	/**
 	 * AionConnection 可能的连接状态。
@@ -71,7 +71,7 @@ public class AionConnection extends AConnection {
 	 * 待发送服务端包队列。
 	 * Server packet "to send" queue.
 	 */
-	private final List<AionServerPacket> sendMsgQueue = new ArrayList<AionServerPacket>();
+	private final List<AionServerPacket> sendMsgQueue = new ArrayList<>();
 
 	/**
 	 * 当前连接状态。
@@ -95,7 +95,7 @@ public class AionConnection extends AConnection {
 	 * 当前在线玩家（已进入游戏）。
 	 * Active player that the owner of this connection is playing.
 	 */
-	private final AtomicReference<Player> activePlayer = new AtomicReference<Player>();
+	private final AtomicReference<Player> activePlayer = new AtomicReference<>();
 	private String lastPlayerName = "";
 
 	private AionPacketHandler aionPacketHandler;

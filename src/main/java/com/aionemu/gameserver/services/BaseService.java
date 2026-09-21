@@ -31,7 +31,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public class BaseService {
 	private static volatile ObjectProvider<BaseService> instanceProvider;
 	/** 当前活跃据点实例。 / Currently active base instances. */
-	private final ConcurrentMap<Integer, Base<?>> active = new ConcurrentHashMap<Integer, Base<?>>();
+	private final ConcurrentMap<Integer, Base<?>> active = new ConcurrentHashMap<>();
 	/** 据点位置映射。 / Base location map. */
 	private Map<Integer, BaseLocation> bases;
 
@@ -64,61 +64,59 @@ public class BaseService {
 		Race race = null;
 		log.info(I18n.get("log.0b82f7fdbd34"));
 		String weekly = "0 0 9 ? * WED *";
-		GameCronServices.cronService().schedule(new Runnable() {
-			public void run() {
-				// 埃尔特内。 / Elten.
-				capture(45, Race.NPC);
-				capture(46, Race.NPC);
-				// 因特尔蒂卡。 / Heiron.
-				capture(47, Race.NPC);
-				capture(48, Race.NPC);
-				// 莫尔海姆。 / Morheim.
-				capture(49, Race.NPC);
-				capture(50, Race.NPC);
-				// 贝鲁斯兰。 / Beluslan.
-				capture(51, Race.NPC);
-				capture(52, Race.NPC);
-				// 雷珊塔。 / Reshanta.
-				capture(53, Race.NPC);
-				capture(54, Race.NPC);
-				capture(55, Race.NPC);
-				capture(56, Race.NPC);
-				capture(57, Race.NPC);
-				capture(58, Race.NPC);
-				capture(59, Race.NPC);
-				capture(60, Race.NPC);
-				capture(61, Race.NPC);
-				capture(62, Race.NPC);
-				capture(63, Race.NPC);
-				capture(64, Race.NPC);
-				// 卡塔拉姆。 / Katalam.
-				capture(71, Race.NPC);
-				capture(72, Race.NPC);
-				capture(73, Race.NPC);
-				capture(74, Race.NPC);
-				capture(75, Race.NPC);
-				capture(76, Race.NPC);
-				capture(77, Race.NPC);
-				capture(78, Race.NPC);
-				capture(79, Race.NPC);
-				// 莱文肖尔。 / Levinshor.
-				capture(90, Race.NPC);
-				capture(91, Race.NPC);
-				capture(92, Race.NPC);
-				capture(93, Race.NPC);
-				capture(94, Race.NPC);
-				capture(95, Race.NPC);
-				capture(96, Race.NPC);
-				capture(97, Race.NPC);
-				capture(98, Race.NPC);
-				capture(99, Race.NPC);
-				capture(100, Race.NPC);
-				capture(101, Race.NPC);
-				capture(102, Race.NPC);
-				// 卡尔多。 / Kaldor.
-				capture(103, Race.NPC);
-				capture(104, Race.NPC);
-			}
+		GameCronServices.cronService().schedule(() -> {
+			// 埃尔特内。 / Elten.
+			capture(45, Race.NPC);
+			capture(46, Race.NPC);
+			// 因特尔蒂卡。 / Heiron.
+			capture(47, Race.NPC);
+			capture(48, Race.NPC);
+			// 莫尔海姆。 / Morheim.
+			capture(49, Race.NPC);
+			capture(50, Race.NPC);
+			// 贝鲁斯兰。 / Beluslan.
+			capture(51, Race.NPC);
+			capture(52, Race.NPC);
+			// 雷珊塔。 / Reshanta.
+			capture(53, Race.NPC);
+			capture(54, Race.NPC);
+			capture(55, Race.NPC);
+			capture(56, Race.NPC);
+			capture(57, Race.NPC);
+			capture(58, Race.NPC);
+			capture(59, Race.NPC);
+			capture(60, Race.NPC);
+			capture(61, Race.NPC);
+			capture(62, Race.NPC);
+			capture(63, Race.NPC);
+			capture(64, Race.NPC);
+			// 卡塔拉姆。 / Katalam.
+			capture(71, Race.NPC);
+			capture(72, Race.NPC);
+			capture(73, Race.NPC);
+			capture(74, Race.NPC);
+			capture(75, Race.NPC);
+			capture(76, Race.NPC);
+			capture(77, Race.NPC);
+			capture(78, Race.NPC);
+			capture(79, Race.NPC);
+			// 莱文肖尔。 / Levinshor.
+			capture(90, Race.NPC);
+			capture(91, Race.NPC);
+			capture(92, Race.NPC);
+			capture(93, Race.NPC);
+			capture(94, Race.NPC);
+			capture(95, Race.NPC);
+			capture(96, Race.NPC);
+			capture(97, Race.NPC);
+			capture(98, Race.NPC);
+			capture(99, Race.NPC);
+			capture(100, Race.NPC);
+			capture(101, Race.NPC);
+			capture(102, Race.NPC);
+			// 卡尔多。 / Kaldor.
+			capture(103, Race.NPC);
+			capture(104, Race.NPC);
 		}, weekly);
 	}
 
@@ -150,7 +148,7 @@ public class BaseService {
 	 * @param id 据点 ID / base id
 	 */
 	public void start(final int id) {
-		Base<?> base = new Base<BaseLocation>(getBaseLocation(id));
+		Base<?> base = new Base<>(getBaseLocation(id));
 		if (active.putIfAbsent(id, base) != null) {
 			return;
 		}
@@ -238,15 +236,12 @@ public class BaseService {
 	 */
 	public void broadcastUpdate(final BaseLocation baseLocation) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(baseLocation.getWorldId()).getMainWorldMapInstance()
-				.doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player player) {
-						if (isActive(baseLocation.getId())) {
-							Base<?> base = getActiveBase(baseLocation.getId());
-							PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, base.getFlag()));
-							player.getController().updateZone();
-							player.getController().updateNearbyQuests();
-						}
+				.doOnAllPlayers(player -> {
+					if (isActive(baseLocation.getId())) {
+						Base<?> base = getActiveBase(baseLocation.getId());
+						PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, base.getFlag()));
+						player.getController().updateZone();
+						player.getController().updateNearbyQuests();
 					}
 				});
 	}

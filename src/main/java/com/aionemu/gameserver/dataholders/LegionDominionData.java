@@ -28,7 +28,7 @@ public class LegionDominionData {
 	private List<LegionDominionTemplate> legionDominionTemplates;
 
 	@XmlTransient
-	private final Map<Integer, LegionDominionLocation> legionDominion = new LinkedHashMap<Integer, LegionDominionLocation>();
+	private final Map<Integer, LegionDominionLocation> legionDominion = new LinkedHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，将模板转为按领地 ID 索引的地点映射。

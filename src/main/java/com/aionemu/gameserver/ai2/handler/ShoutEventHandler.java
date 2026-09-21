@@ -209,7 +209,7 @@ public final class ShoutEventHandler {
 		List<NpcShout> shouts = DataManager.NPC_SHOUT_DATA.getNpcShouts(npc.getPosition().getMapId(), npc.getNpcId(),
 				ShoutEventType.ATTACKED, null, 0);
 
-		List<NpcShout> finalShouts = new ArrayList<NpcShout>();
+		List<NpcShout> finalShouts = new ArrayList<>();
 		for (NpcShout s : shouts) {
 			if (s.getShoutType() == ShoutType.SAY) {
 				finalShouts.add(s);
@@ -227,18 +227,14 @@ public final class ShoutEventHandler {
 		if (!npc.mayShout(shout.getPollDelay() / 1000)) {
 			return;
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				Iterator<Player> iter = npc.getKnownList().getKnownPlayers().values().iterator();
-				while (iter.hasNext()) {
-					Player kObj = iter.next();
-					if (kObj.getLifeStats().isAlreadyDead()) {
-						return;
-					}
-					GameFeatureServices.npcShoutsService().shout(npc, kObj, shout, shout.getPollDelay() / 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			Iterator<Player> iter = npc.getKnownList().getKnownPlayers().values().iterator();
+			while (iter.hasNext()) {
+				Player kObj = iter.next();
+				if (kObj.getLifeStats().isAlreadyDead()) {
+					return;
 				}
+				GameFeatureServices.npcShoutsService().shout(npc, kObj, shout, shout.getPollDelay() / 1000);
 			}
 		}, 0);
 	}
@@ -280,8 +276,8 @@ public final class ShoutEventHandler {
 		if (shouts == null) {
 			return;
 		}
-		List<NpcShout> validShouts = new ArrayList<NpcShout>();
-		List<NpcShout> nonNumberedShouts = new ArrayList<NpcShout>();
+		List<NpcShout> validShouts = new ArrayList<>();
+		List<NpcShout> nonNumberedShouts = new ArrayList<>();
 		for (NpcShout shout : shouts) {
 			if (shout.getSkillNo() == 0) {
 				nonNumberedShouts.add(shout);

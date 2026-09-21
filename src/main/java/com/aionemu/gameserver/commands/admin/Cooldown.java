@@ -59,7 +59,7 @@ public class Cooldown extends AdminCommand {
      *
      */
     private void resetAllCooldowns(Player player) {
-        List<Integer> delayIds = new ArrayList<Integer>();
+        List<Integer> delayIds = new ArrayList<>();
 
         if (player.getSkillCoolDowns() != null && !player.getSkillCoolDowns().isEmpty()) {
             long currentTime = System.currentTimeMillis();

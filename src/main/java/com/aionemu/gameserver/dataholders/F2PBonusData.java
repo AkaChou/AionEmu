@@ -29,7 +29,7 @@ public class F2PBonusData {
 	protected List<F2pBonusAttr> f2pBonusattr;
 
 	@XmlTransient
-	private final IntObjectHashMap<F2pBonusAttr> templates = new IntObjectHashMap<F2pBonusAttr>();
+	private final IntObjectHashMap<F2pBonusAttr> templates = new IntObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，按 buffId 建立索引并释放原始列表。

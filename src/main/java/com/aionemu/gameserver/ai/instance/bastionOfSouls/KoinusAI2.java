@@ -23,7 +23,7 @@ public class KoinusAI2 extends NpcAI2
 		super.handleSpawned();
 		startLifeTask();
 	}
-	
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		if (player.getLevel() >= 66) {
@@ -32,7 +32,7 @@ public class KoinusAI2 extends NpcAI2
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 27));
         }
 	}
-	
+
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000) {
@@ -40,13 +40,8 @@ public class KoinusAI2 extends NpcAI2
 		}
         return true;
     }
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(KoinusAI2.this);
-			}
-		}, 900000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(KoinusAI2.this), 900000);
 	}
 }

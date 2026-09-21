@@ -52,10 +52,10 @@ public class SkillData {
 	 * @return 技能数据映射 / skill data map
 	 */
 	@XmlTransient
-	private final IntObjectHashMap<SkillTemplate> skillData = new IntObjectHashMap<SkillTemplate>();
+	private final IntObjectHashMap<SkillTemplate> skillData = new IntObjectHashMap<>();
 
 	@XmlTransient
-	private final Map<String, SkillTemplate> skillGroup = new LinkedHashMap<String, SkillTemplate>();
+	private final Map<String, SkillTemplate> skillGroup = new LinkedHashMap<>();
 	@XmlTransient
 	private Map<Integer, Set<String>> itemExclusiveAttributes = Map.of();
 	@XmlTransient
@@ -132,12 +132,12 @@ public class SkillData {
 	 * Initializes cooldown groups by aggregating skill ids under each delay id.
 	 */
 	public void initializeCooldownGroups() {
-		cooldownGroups = new HashMap<Integer, ArrayList<Integer>>();
+		cooldownGroups = new HashMap<>();
 		persistentCooldownGroups = new HashSet<>();
 		for (SkillTemplate skillTemplate : skillTemplates) {
 			int delayId = skillTemplate.getDelayId();
 			if (!cooldownGroups.containsKey(delayId)) {
-				cooldownGroups.put(delayId, new ArrayList<Integer>());
+				cooldownGroups.put(delayId, new ArrayList<>());
 			}
 			cooldownGroups.get(delayId).add(skillTemplate.getSkillId());
 			if (skillTemplate.isRemainCooltimeOnLogin()) {

@@ -67,44 +67,38 @@ public class MacunbelloAI2 extends AggressiveNpcAI2
 	}
 
 	private void startMacumbelloRightHandEvent() {
-		rightHandTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.ACTIVE)) {
-					phase = Phase.RIGHT_HAND;
-					cancelActiveEventTask();
-					// 出来吧，我忠诚的仆从们！ / Come forth, my faithful servants!
-					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500060, getObjectId(), 0, 0);
-					// 快去吞噬这些愚蠢的守护者！ / Hurry and devour these foolish Daevas!
-					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500061, getObjectId(), 0, 3000);
-					canThink = false;
-					EmoteManager.emoteStopAttacking(getOwner());
-					setStateIfNot(AIState.WALKING);
-					spawnMacumbelloRightHandEvent();
-					rightHandTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.RIGHT_HAND)) {
-								phase = Phase.ACTIVE;
-								canThink = true;
-								Creature creature = getAggroList().getMostHated();
-								if (creature == null || creature.getLifeStats().isAlreadyDead() || !getOwner().canSee(creature)) {
-									setStateIfNot(AIState.FIGHT);
-									think();
-								} else {
-									getMoveController().abortMove();
-									getOwner().setTarget(creature);
-									getOwner().getGameStats().renewLastAttackTime();
-									getOwner().getGameStats().renewLastAttackedTime();
-									getOwner().getGameStats().renewLastChangeTargetTime();
-									getOwner().getGameStats().renewLastSkillTime();
-									setStateIfNot(AIState.FIGHT);
-									handleMoveValidate();
-								}
-							}
+		rightHandTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.ACTIVE)) {
+				phase = Phase.RIGHT_HAND;
+				cancelActiveEventTask();
+				// 出来吧，我忠诚的仆从们！ / Come forth, my faithful servants!
+				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500060, getObjectId(), 0, 0);
+				// 快去吞噬这些愚蠢的守护者！ / Hurry and devour these foolish Daevas!
+				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500061, getObjectId(), 0, 3000);
+				canThink = false;
+				EmoteManager.emoteStopAttacking(getOwner());
+				setStateIfNot(AIState.WALKING);
+				spawnMacumbelloRightHandEvent();
+				rightHandTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.RIGHT_HAND)) {
+						phase = Phase.ACTIVE;
+						canThink = true;
+						Creature creature = getAggroList().getMostHated();
+						if (creature == null || creature.getLifeStats().isAlreadyDead() || !getOwner().canSee(creature)) {
+							setStateIfNot(AIState.FIGHT);
+							think();
+						} else {
+							getMoveController().abortMove();
+							getOwner().setTarget(creature);
+							getOwner().getGameStats().renewLastAttackTime();
+							getOwner().getGameStats().renewLastAttackedTime();
+							getOwner().getGameStats().renewLastChangeTargetTime();
+							getOwner().getGameStats().renewLastSkillTime();
+							setStateIfNot(AIState.FIGHT);
+							handleMoveValidate();
 						}
-					}, 11000);
-				}
+					}
+				}, 11000);
 			}
 		}, 14000);
 	}

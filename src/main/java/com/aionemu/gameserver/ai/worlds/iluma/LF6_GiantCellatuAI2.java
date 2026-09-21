@@ -20,13 +20,8 @@ public class LF6_GiantCellatuAI2 extends NpcAI2
 		super.handleSpawned();
 		startLifeTask();
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(LF6_GiantCellatuAI2.this);
-			}
-		}, 10000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(LF6_GiantCellatuAI2.this), 10000);
 	}
 }

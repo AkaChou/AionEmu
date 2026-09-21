@@ -39,28 +39,13 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	private static final int BATCH_SIZE = 100;
 
 	/** 筛选需新增的任务状态 / Filter quests to insert */
-	private static final Predicate<QuestState> questsToAddPredicate = new Predicate<QuestState>() {
-		@Override
-		public boolean apply(QuestState input) {
-			return input != null && PersistentState.NEW == input.getPersistentState();
-		}
-	};
+	private static final Predicate<QuestState> questsToAddPredicate = input -> input != null && PersistentState.NEW == input.getPersistentState();
 
 	/** 筛选需更新的任务状态 / Filter quests to update */
-	private static final Predicate<QuestState> questsToUpdatePredicate = new Predicate<QuestState>() {
-		@Override
-		public boolean apply(QuestState input) {
-			return input != null && PersistentState.UPDATE_REQUIRED == input.getPersistentState();
-		}
-	};
+	private static final Predicate<QuestState> questsToUpdatePredicate = input -> input != null && PersistentState.UPDATE_REQUIRED == input.getPersistentState();
 
 	/** 筛选需删除的任务状态 / Filter quests to delete */
-	private static final Predicate<QuestState> questsToDeletePredicate = new Predicate<QuestState>() {
-		@Override
-		public boolean apply(QuestState input) {
-			return input != null && PersistentState.DELETED == input.getPersistentState();
-		}
-	};
+	private static final Predicate<QuestState> questsToDeletePredicate = input -> input != null && PersistentState.DELETED == input.getPersistentState();
 
 	/**
 	 * 从数据库加载玩家的任务状态列表。

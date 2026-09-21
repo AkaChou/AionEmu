@@ -77,27 +77,24 @@ public class BrigadeGeneralLaksyakaAI2 extends AggressiveNpcAI2
 	}
 
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelPhaseTask();
-				} else {
-					List<Player> players = getLifedPlayers();
-					if (!players.isEmpty()) {
-						int size = players.size();
-						if (players.size() < 6) {
-							for (Player p: players) {
-								spawnLaksyakaOffering(p);
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelPhaseTask();
+			} else {
+				List<Player> players = getLifedPlayers();
+				if (!players.isEmpty()) {
+					int size = players.size();
+					if (players.size() < 6) {
+						for (Player p: players) {
+							spawnLaksyakaOffering(p);
+						}
+					} else {
+						int count = Rnd.get(6, size);
+						for (int i = 0; i < count; i++) {
+							if (players.isEmpty()) {
+								break;
 							}
-						} else {
-							int count = Rnd.get(6, size);
-							for (int i = 0; i < count; i++) {
-								if (players.isEmpty()) {
-									break;
-								}
-								spawnLaksyakaOffering(players.get(Rnd.get(players.size())));
-							}
+							spawnLaksyakaOffering(players.get(Rnd.get(players.size())));
 						}
 					}
 				}
@@ -110,26 +107,20 @@ public class BrigadeGeneralLaksyakaAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						spawn(283115, x, y, z, (byte) 0); //Laksyaka Offering.
-					}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					spawn(283115, x, y, z, (byte) 0); //Laksyaka Offering.
 				}
 			}, 3000);
 		}
 	}
 
 	private void startSkillTask() {
-		skeletonTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead())
-					cancelTask();
-				else {
-					startSkeletonEvent();
-				}
+		skeletonTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead())
+				cancelTask();
+			else {
+				startSkeletonEvent();
 			}
 		}, 5000, 40000);
 	}
@@ -148,7 +139,7 @@ public class BrigadeGeneralLaksyakaAI2 extends AggressiveNpcAI2
 
 	private void startSkeletonEvent() {
 		Npc tiamatEye = getPosition().getWorldMapInstance().getNpc(283178); //Tiamat's Eye.
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);
@@ -159,7 +150,7 @@ public class BrigadeGeneralLaksyakaAI2 extends AggressiveNpcAI2
 	}
 
 	private List<Player> getLifedPlayers() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);

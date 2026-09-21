@@ -47,7 +47,7 @@ public class HousePart {
 	protected int id;
 
 	@XmlTransient
-	protected Set<String> tagsSet = new HashSet<String>(1);
+	protected Set<String> tagsSet = new HashSet<>(1);
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		if (buildingTags == null) {

@@ -33,7 +33,7 @@ public class NpcSkillData {
 	private List<NpcSkillTemplates> npcSkills;
 
 	/** 全部 NPC 技能模板映射 / map containing all npc skill templates */
-	private final IntObjectHashMap<NpcSkillTemplates> npcSkillData = new IntObjectHashMap<NpcSkillTemplates>();
+	private final IntObjectHashMap<NpcSkillTemplates> npcSkillData = new IntObjectHashMap<>();
 
 	public NpcSkillData(List<NpcSkillTemplates> npcSkills) {
 		this.npcSkills = npcSkills;

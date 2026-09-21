@@ -528,7 +528,7 @@ public class KnownList {
 			return Collections.emptyMap();
 		}
 		synchronized (knownPlayers) {
-			return new LinkedHashMap<Integer, Player>(knownPlayers);
+			return new LinkedHashMap<>(knownPlayers);
 		}
 	}
 
@@ -568,7 +568,7 @@ public class KnownList {
 			return Collections.emptyMap();
 		}
 		synchronized (visualPlayers) {
-			return new LinkedHashMap<Integer, Player>(visualPlayers);
+			return new LinkedHashMap<>(visualPlayers);
 		}
 	}
 

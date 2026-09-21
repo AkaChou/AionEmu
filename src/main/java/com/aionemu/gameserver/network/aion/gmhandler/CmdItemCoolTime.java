@@ -39,7 +39,7 @@ public class CmdItemCoolTime extends AbstractGMHandler {
 	private void run() {
 		Player playerT = target != null ? target : admin;
 
-		List<Integer> delayIds = new ArrayList<Integer>();
+		List<Integer> delayIds = new ArrayList<>();
 		if (playerT.getSkillCoolDowns() != null) {
 			long currentTime = System.currentTimeMillis();
 			for (Entry<Integer, Long> en : playerT.getSkillCoolDowns().entrySet()) {

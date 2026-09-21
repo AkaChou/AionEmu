@@ -72,27 +72,24 @@ public class TumonAI2 extends AggressiveNpcAI2
 	}
 
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelPhaseTask();
-				} else {
-					List<Player> players = getLifedPlayers();
-					if (!players.isEmpty()) {
-						int size = players.size();
-						if (players.size() < 6) {
-							for (Player p: players) {
-								spawnCannonBall(p);
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelPhaseTask();
+			} else {
+				List<Player> players = getLifedPlayers();
+				if (!players.isEmpty()) {
+					int size = players.size();
+					if (players.size() < 6) {
+						for (Player p: players) {
+							spawnCannonBall(p);
+						}
+					} else {
+						int count = Rnd.get(6, size);
+						for (int i = 0; i < count; i++) {
+							if (players.isEmpty()) {
+								break;
 							}
-						} else {
-							int count = Rnd.get(6, size);
-							for (int i = 0; i < count; i++) {
-								if (players.isEmpty()) {
-									break;
-								}
-								spawnCannonBall(players.get(Rnd.get(players.size())));
-							}
+							spawnCannonBall(players.get(Rnd.get(players.size())));
 						}
 					}
 				}
@@ -105,12 +102,9 @@ public class TumonAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						spawn(287261, x, y, z, (byte) 0); // 炮弹。 / Cannon Ball.
-					}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					spawn(287261, x, y, z, (byte) 0); // 炮弹。 / Cannon Ball.
 				}
 			}, 3000);
 		}
@@ -122,7 +116,7 @@ public class TumonAI2 extends AggressiveNpcAI2
 	}
 
 	private List<Player> getLifedPlayers() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);
@@ -185,42 +179,33 @@ public class TumonAI2 extends AggressiveNpcAI2
 	}
 
 	private void addGpPlayer() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
-					AbyssPointsService.addGp(player, 500);
-				}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
+				AbyssPointsService.addGp(player, 500);
 			}
 		});
 	}
 
 	private void updateTumonLanding1() {
 		final com.aionemu.gameserver.model.gameobjects.Creature mostHated = getOwner().getAggroList().getMostHated();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (mostHated != null && MathUtil.isIn3dRange(mostHated, getOwner(), 20)) {
-					if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-						GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ASMODIANS, 21, 0);
-					} else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-						GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ELYOS, 9, 0);
-					}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			if (mostHated != null && MathUtil.isIn3dRange(mostHated, getOwner(), 20)) {
+				if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
+					GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ASMODIANS, 21, 0);
+				} else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
+					GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ELYOS, 9, 0);
 				}
 			}
 		});
 	}
 	private void updateTumonLanding2() {
 		final com.aionemu.gameserver.model.gameobjects.Creature mostHated = getOwner().getAggroList().getMostHated();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (mostHated != null && MathUtil.isIn3dRange(mostHated, getOwner(), 20)) {
-					if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-						GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ASMODIANS, 22, 0);
-					} else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-						GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ELYOS, 10, 0);
-					}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			if (mostHated != null && MathUtil.isIn3dRange(mostHated, getOwner(), 20)) {
+				if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
+					GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ASMODIANS, 22, 0);
+				} else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
+					GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ELYOS, 10, 0);
 				}
 			}
 		});
@@ -251,22 +236,16 @@ public class TumonAI2 extends AggressiveNpcAI2
 	}
 
 	private void announceTumonDie() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 恶魔部队的图蒙已被摧毁。 / The Devil Unit's Tumon has been destroyed.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_DIE_04);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 恶魔部队的图蒙已被摧毁。 / The Devil Unit's Tumon has been destroyed.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_DIE_04);
 		});
 	}
 
 	private void announceRadeonDie() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 恶魔部队的雷登贝塔已被摧毁。 / The Devil Unit's Raedon Beta has been destroyed.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_DIE_05);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 恶魔部队的雷登贝塔已被摧毁。 / The Devil Unit's Raedon Beta has been destroyed.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_DIE_05);
 		});
 	}
 }

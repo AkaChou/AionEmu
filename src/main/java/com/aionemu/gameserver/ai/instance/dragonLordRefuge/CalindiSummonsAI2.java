@@ -18,30 +18,20 @@ import java.util.concurrent.Future;
 public class CalindiSummonsAI2 extends AggressiveNpcAI2
 {
 	private Future<?> task;
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		final int skill = getOwner().getNpcId() == 283132 ? 20914 : 20916;
 		int delay = getNpcId() == 283132 ? 500 : 2000;
-		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.useSkill(CalindiSummonsAI2.this, skill);
-			}
-		}, delay, delay);
+		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> AI2Actions.useSkill(CalindiSummonsAI2.this, skill), delay, delay);
 		despawn();
 	}
-	
+
 	private void despawn() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				getOwner().getController().onDelete();
-			}
-		}, 15000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> getOwner().getController().onDelete(), 15000);
 	}
-	
+
 	@Override
 	public void handleDespawned() {
 		task.cancel(true);

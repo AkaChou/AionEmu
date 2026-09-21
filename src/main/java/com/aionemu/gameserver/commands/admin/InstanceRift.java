@@ -59,12 +59,7 @@ public class InstanceRift extends AdminCommand
 				PacketSendUtility.sendMessage(player, "<Instance Rift> " + instanceRiftId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Instance Rift> " + instanceRiftId + " started!");
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-					@Override
-					public void visit(Player player) {
-						PacketSendUtility.sendSys3Message(player, "", "<Instance Rift> is now open !!!");
-					}
-				});
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player1 -> PacketSendUtility.sendSys3Message(player1, "", "<Instance Rift> is now open !!!"));
 				GameLocationBootstrapServices.instanceRiftService().startInstanceRift(instanceRiftId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {

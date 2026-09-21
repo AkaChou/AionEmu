@@ -24,25 +24,20 @@ public class Siege_ShieldAI2 extends NpcAI2
 		sendShieldPacket(false);
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		sendShieldPacket(true);
 		super.handleSpawned();
 	}
-	
+
 	private void sendShieldPacket(boolean shieldStatus) {
 		int id = getSpawnTemplate().getSiegeId();
 		GameFeatureServices.siegeService().getFortress(id).setUnderShield(shieldStatus);
 		final SM_SHIELD_EFFECT packet = new SM_SHIELD_EFFECT(id);
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendPacket(player, packet);
-			}
-		});
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, packet));
 	}
-	
+
 	@Override
 	protected SiegeSpawnTemplate getSpawnTemplate() {
 		return (SiegeSpawnTemplate) super.getSpawnTemplate();

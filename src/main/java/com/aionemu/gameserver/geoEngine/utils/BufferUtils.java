@@ -35,7 +35,7 @@ public final class BufferUtils {
 	// private static final ColorRGBA _tempColor = new ColorRGBA();
 	//// -- 追踪哈希 / TRACKER HASH -- ////
 	/** 直接内存缓冲弱引用追踪表。 / Weak-reference tracker for direct memory buffers. */
-	private static final Map<Buffer, Object> trackingHash = new ConcurrentHashMap<>(new WeakHashMap<Buffer, Object>());
+	private static final Map<Buffer, Object> trackingHash = new ConcurrentHashMap<>(new WeakHashMap<>());
 	/** 追踪表占位引用对象。 / Sentinel reference object stored in the tracking map. */
 	private static final Object ref = new Object();
 	/** 是否启用直接内存追踪。 / Whether direct-memory tracking is enabled. */
@@ -52,19 +52,21 @@ public final class BufferUtils {
 	 * @throws UnsupportedOperationException 不支持的缓冲类型 / unsupported buffer type
 	 */
 	public static Buffer clone(Buffer buf) {
-		if (buf instanceof FloatBuffer) {
-			return clone((FloatBuffer) buf);
-		} else if (buf instanceof ShortBuffer) {
-			return clone((ShortBuffer) buf);
-		} else if (buf instanceof ByteBuffer) {
-			return clone((ByteBuffer) buf);
-		} else if (buf instanceof IntBuffer) {
-			return clone((IntBuffer) buf);
-		} else if (buf instanceof DoubleBuffer) {
-			return clone((DoubleBuffer) buf);
-		} else {
-			throw new UnsupportedOperationException();
-		}
+        switch (buf) {
+            case FloatBuffer floatBuffer:
+                return clone(floatBuffer);
+            case ShortBuffer shortBuffer:
+                return clone(shortBuffer);
+            case ByteBuffer byteBuffer:
+                return clone(byteBuffer);
+            case IntBuffer intBuffer:
+                return clone(intBuffer);
+            case DoubleBuffer doubleBuffer:
+                return clone(doubleBuffer);
+            case null:
+            default:
+                throw new UnsupportedOperationException();
+        }
 	}
 
 	//VECTOR3F METHODS -- ////
@@ -807,7 +809,7 @@ public final class BufferUtils {
 	public static void printCurrentDirectMemory(StringBuilder store) {
 		long totalHeld = 0;
 		// 新建集合保存键，避免并发问题。 / make a new set to hold the keys to prevent concurrency issues.
-		ArrayList<Buffer> bufs = new ArrayList<Buffer>(trackingHash.keySet());
+		ArrayList<Buffer> bufs = new ArrayList<>(trackingHash.keySet());
 		int fBufs = 0, bBufs = 0, iBufs = 0, sBufs = 0, dBufs = 0;
 		int fBufsM = 0, bBufsM = 0, iBufsM = 0, sBufsM = 0, dBufsM = 0;
 		for (Buffer b : bufs) {

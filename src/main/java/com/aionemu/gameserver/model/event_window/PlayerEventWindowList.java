@@ -29,7 +29,7 @@ public class PlayerEventWindowList {
 
 	/** 返回全部 / Returns the all */
 	public PlayerEventWindowEntry[] getAll() {
-		ArrayList<PlayerEventWindowEntry> arrayList = new ArrayList<PlayerEventWindowEntry>(entry.values());
+		ArrayList<PlayerEventWindowEntry> arrayList = new ArrayList<>(entry.values());
 		return arrayList.toArray(new PlayerEventWindowEntry[arrayList.size()]);
 	}
 

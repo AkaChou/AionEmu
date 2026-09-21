@@ -36,12 +36,7 @@ public class Stygian_Mist_WarriorAI2 extends AggressiveNpcAI2
 					spawn(235912, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 					AI2Actions.deleteOwner(Stygian_Mist_WarriorAI2.this);
 					AI2Actions.scheduleRespawn(this);
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					    @Override
-					    public void run() {
-						    despawnNpc(235912);
-				        }
-			        }, 300000); //5 分钟。 / 5 Minutes.
+					GameThreadPoolServices.threadPoolManager().schedule(() -> despawnNpc(235912), 300000); //5 分钟。 / 5 Minutes.
 				}
 			}
 		}

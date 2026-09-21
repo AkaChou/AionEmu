@@ -39,7 +39,7 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 	/** 材质行为模板 / Material action template */
 	private final MaterialTemplate actionTemplate;
 	/** 当前生效技能列表 / Currently active skills */
-	private final AtomicReference<List<MaterialSkill>> currentSkills = new AtomicReference<List<MaterialSkill>>(Collections.emptyList());
+	private final AtomicReference<List<MaterialSkill>> currentSkills = new AtomicReference<>(Collections.emptyList());
 	/** 不再接触时是否停止 / Whether to stop when no longer touching */
 	private final boolean stopWhenNotTouching;
 	/** 周期任务 / Periodic task */
@@ -96,7 +96,7 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 				return Collections.emptyList();
 			}
 		}
-		List<MaterialSkill> foundSkills = new ArrayList<MaterialSkill>();
+		List<MaterialSkill> foundSkills = new ArrayList<>();
 		for (MaterialSkill skill : actionTemplate.getSkills()) {
 			if (skill.getTarget().isTarget(creature)) {
 				foundSkills.add(skill);
@@ -127,7 +127,7 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 			return Collections.emptyList();
 		}
 		GameTime gameTime = (GameTime) GameTimeManager.getGameTime().clone();
-		List<MaterialSkill> activeSkills = new ArrayList<MaterialSkill>();
+		List<MaterialSkill> activeSkills = new ArrayList<>();
 		for (MaterialSkill foundSkill : foundSkills) {
 			if (foundSkill.getTime() == null || foundSkill.getTime() == MaterialActTime.DAY && weatherCode == 0
 					|| gameTime.getDayTime() == DayTime.NIGHT && foundSkill.getTime() == MaterialActTime.NIGHT
@@ -167,23 +167,20 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 				return;
 			}
 			final int[] secondsElapsed = new int[1];
-			task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-				@Override
-				public void run() {
-					for (MaterialSkill actSkill : actSkills) {
-						if (secondsElapsed[0] % actSkill.getFrequency() != 0) {
-							continue;
-						}
-						if (creature.getEffectController().hasAbnormalEffect(actSkill.getId())) {
-							continue;
-						}
-						Skill skill = GameEngineServices.skillEngine().getSkill(creature, actSkill.getId(),
-								actSkill.getSkillLevel(), creature);
-						skill.getEffectedList().add(creature);
-						skill.useWithoutPropSkill();
+			task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+				for (MaterialSkill actSkill : actSkills) {
+					if (secondsElapsed[0] % actSkill.getFrequency() != 0) {
+						continue;
 					}
-					secondsElapsed[0]++;
+					if (creature.getEffectController().hasAbnormalEffect(actSkill.getId())) {
+						continue;
+					}
+					Skill skill = GameEngineServices.skillEngine().getSkill(creature, actSkill.getId(),
+							actSkill.getSkillLevel(), creature);
+					skill.getEffectedList().add(creature);
+					skill.useWithoutPropSkill();
 				}
+				secondsElapsed[0]++;
 			}, 0, 1000);
 			creature.getController().addTask(TaskId.ZONE_MATERIAL_ACTION, task);
 		}

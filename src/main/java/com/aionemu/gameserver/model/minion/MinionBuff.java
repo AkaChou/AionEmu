@@ -30,7 +30,7 @@ public class MinionBuff implements StatOwner {
 			return;
 		}
 		MinionTemplate minionTemplate = DataManager.MINION_DATA.getMinionTemplate(minionId);
-		List<IStatFunction> functions = new ArrayList<IStatFunction>();
+		List<IStatFunction> functions = new ArrayList<>();
 		for (StatFunction statFunction : minionTemplate.getModifiers()) {
 			// if
 			// (player.getPlayerClass().getClassType(player).equals(statFunction.getClassType()))

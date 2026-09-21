@@ -79,13 +79,13 @@ public class QuestEngine implements GameEngine {
 	/** Spring ObjectProvider 覆盖钩子 / Spring ObjectProvider override hook */
 	private static volatile ObjectProvider<QuestEngine> instanceProvider;
 	/** NPC 关联任务索引 / NPC-related quest index */
-	private final IntObjectHashMap<QuestNpc> questNpcs = new IntObjectHashMap<QuestNpc>();
+	private final IntObjectHashMap<QuestNpc> questNpcs = new IntObjectHashMap<>();
 	/** 物品使用关联任务 / Item-use related quests */
-	private final IntObjectHashMap<IntArrayList> questItemRelated = new IntObjectHashMap<IntArrayList>();
+	private final IntObjectHashMap<IntArrayList> questItemRelated = new IntObjectHashMap<>();
 	/** 房屋物品关联任务 / House-item related quests */
-	private final IntObjectHashMap<IntArrayList> questHouseItems = new IntObjectHashMap<IntArrayList>();
+	private final IntObjectHashMap<IntArrayList> questHouseItems = new IntObjectHashMap<>();
 	/** 获得物品关联任务 / Item-obtain related quests */
-	private final IntObjectHashMap<IntArrayList> questItems = new IntObjectHashMap<IntArrayList>();
+	private final IntObjectHashMap<IntArrayList> questItems = new IntObjectHashMap<>();
 	/** 区域任务结束监听列表 / Zone-mission-end listeners */
 	private final IntArrayList questOnEnterZoneMissionEnd = new IntArrayList();
 	/** 升级监听列表 / Level-up listeners */
@@ -97,29 +97,29 @@ public class QuestEngine implements GameEngine {
 	/** 进入世界监听列表 / Enter-world listeners */
 	private final IntArrayList questOnEnterWorld = new IntArrayList();
 	/** 进入区域监听 / Enter-zone listeners */
-	private final Map<ZoneName, IntArrayList> questOnEnterZone = new LinkedHashMap<ZoneName, IntArrayList>();
+	private final Map<ZoneName, IntArrayList> questOnEnterZone = new LinkedHashMap<>();
 	/** 离开区域监听 / Leave-zone listeners */
-	private final Map<ZoneName, IntArrayList> questOnLeaveZone = new LinkedHashMap<ZoneName, IntArrayList>();
+	private final Map<ZoneName, IntArrayList> questOnLeaveZone = new LinkedHashMap<>();
 	/** 穿过飞行环监听 / Pass-flying-ring listeners */
-	private final Map<String, IntArrayList> questOnPassFlyingRings = new LinkedHashMap<String, IntArrayList>();
+	private final Map<String, IntArrayList> questOnPassFlyingRings = new LinkedHashMap<>();
 	/** 动画结束监听 / Movie-end listeners */
-	private final IntObjectHashMap<IntArrayList> questOnMovieEnd = new IntObjectHashMap<IntArrayList>();
+	private final IntObjectHashMap<IntArrayList> questOnMovieEnd = new IntObjectHashMap<>();
 	/** 计时器结束监听 / Timer-end listeners */
-	private final List<Integer> questOnTimerEnd = new ArrayList<Integer>();
+	private final List<Integer> questOnTimerEnd = new ArrayList<>();
 	/** 隐形计时器结束监听 / Invisible-timer-end listeners */
-	private final List<Integer> onInvisibleTimerEnd = new ArrayList<Integer>();
+	private final List<Integer> onInvisibleTimerEnd = new ArrayList<>();
 	/** 击杀军衔玩家监听 / Kill-ranked listeners */
-	private final Map<AbyssRankEnum, IntArrayList> questOnKillRanked = new LinkedHashMap<AbyssRankEnum, IntArrayList>();
+	private final Map<AbyssRankEnum, IntArrayList> questOnKillRanked = new LinkedHashMap<>();
 	/** 世界内击杀监听 / Kill-in-world listeners */
-	private final Map<Integer, IntArrayList> questOnKillInWorld = new LinkedHashMap<Integer, IntArrayList>();
+	private final Map<Integer, IntArrayList> questOnKillInWorld = new LinkedHashMap<>();
 	/** 使用技能监听 / Skill-use listeners */
-	private final IntObjectHashMap<IntArrayList> questOnUseSkill = new IntObjectHashMap<IntArrayList>();
+	private final IntObjectHashMap<IntArrayList> questOnUseSkill = new IntObjectHashMap<>();
 	/** 对话框 ID → 枚举映射 / dialogId → enum map */
 	private final Map<Integer, QuestDialog> dialogMap = new LinkedHashMap<>();
 	/** 制作失败监听 / Fail-craft listeners */
-	private final Map<Integer, Integer> questOnFailCraft = new HashMap<Integer, Integer>();
+	private final Map<Integer, Integer> questOnFailCraft = new HashMap<>();
 	/** 装备物品监听 / Equip-item listeners */
-	private final Map<Integer, Set<Integer>> questOnEquipItem = new HashMap<Integer, Set<Integer>>();
+	private final Map<Integer, Set<Integer>> questOnEquipItem = new HashMap<>();
 	/** 每日/周任务提醒定时任务 / Daily/weekly reminder scheduled task */
 	private ScheduledFuture<?> messageSendingTask;
 	/** Fully composed production ports used by typed quest execution. */
@@ -138,17 +138,17 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 	/** 可行动作监听 / Can-act listeners */
-	private final IntObjectHashMap<IntArrayList> questCanAct = new IntObjectHashMap<IntArrayList>();
+	private final IntObjectHashMap<IntArrayList> questCanAct = new IntObjectHashMap<>();
 	/** 挖掘号奖励监听 / Dredgion reward listeners */
-	private final List<Integer> questOnDredgionReward = new ArrayList<Integer>();
+	private final List<Integer> questOnDredgionReward = new ArrayList<>();
 	/** 卡玛尔奖励监听 / Kamar reward listeners */
-	private final List<Integer> questOnKamarReward = new ArrayList<Integer>();
+	private final List<Integer> questOnKamarReward = new ArrayList<>();
 	/** 欧菲丹奖励监听 / Ophidan reward listeners */
-	private final List<Integer> questOnOphidanReward = new ArrayList<Integer>();
+	private final List<Integer> questOnOphidanReward = new ArrayList<>();
 	/** 堡垒奖励监听 / Bastion reward listeners */
-	private final List<Integer> questOnBastionReward = new ArrayList<Integer>();
+	private final List<Integer> questOnBastionReward = new ArrayList<>();
 	/** 奖励加成监听 / Bonus-apply listeners */
-	private final Map<BonusType, IntArrayList> questOnBonusApply = new LinkedHashMap<BonusType, IntArrayList>();
+	private final Map<BonusType, IntArrayList> questOnBonusApply = new LinkedHashMap<>();
 	/** 跟随到达目标监听 / Reach-target listeners */
 	private final IntArrayList reachTarget = new IntArrayList();
 	/** 跟随丢失目标监听 / Lost-target listeners */
@@ -344,8 +344,8 @@ public class QuestEngine implements GameEngine {
 	 */
 	List<Integer> npcDialogDispatchOwners(Player player, Npc npc, QuestEvent event) {
 		QuestProductionDispatcher typed = productionDispatcher;
-		List<Integer> preferred = new ArrayList<Integer>();
-		List<Integer> remaining = new ArrayList<Integer>();
+		List<Integer> preferred = new ArrayList<>();
+		List<Integer> remaining = new ArrayList<>();
 		// 候选来自正式 catalog 并通过事件键过滤，因此不依赖 questNpcs 索引是否已装载。
 		// Candidates come from the production catalog and are filtered by the event key, so this does
 		// not depend on the questNpcs index being installed.
@@ -1735,7 +1735,7 @@ public class QuestEngine implements GameEngine {
 	 */
 	public void registerOnEquipItem(int itemId, int questId) {
 		if (!questOnEquipItem.containsKey(itemId)) {
-			Set<Integer> questIds = new HashSet<Integer>();
+			Set<Integer> questIds = new HashSet<>();
 			questIds.add(questId);
 			questOnEquipItem.put(itemId, questIds);
 		} else {
@@ -2268,29 +2268,25 @@ public class QuestEngine implements GameEngine {
 		if (sendingDate.getTime().getTime() < System.currentTimeMillis()) {
 			sendingDate.add(Calendar.HOUR, 24);
 		}
-		messageSendingTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-
-			@Override
-			public void run() {
-				SM_SYSTEM_MESSAGE dailyMessage = new SM_SYSTEM_MESSAGE(1400854);
-				SM_SYSTEM_MESSAGE weeklyMessage = new SM_SYSTEM_MESSAGE(1400856);
-				for (Player player : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
-					for (QuestState qs : player.getQuestStateList().getAllQuestState()) {
-						var metadata = qs == null ? null : questCatalog().findMetadata(qs.getQuestId()).orElse(null);
-						if (qs != null && qs.canRepeat(metadata)) {
-							if (metadata.repeatPolicy().daily()) {
-								player.getController().updateZone();
-								player.getController().updateNearbyQuests();
-								PacketSendUtility.sendPacket(player, dailyMessage);
-							} else if (metadata.repeatPolicy().weekly()) {
-								player.getController().updateZone();
-								player.getController().updateNearbyQuests();
-								PacketSendUtility.sendPacket(player, weeklyMessage);
-							}
+		messageSendingTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			SM_SYSTEM_MESSAGE dailyMessage = new SM_SYSTEM_MESSAGE(1400854);
+			SM_SYSTEM_MESSAGE weeklyMessage = new SM_SYSTEM_MESSAGE(1400856);
+			for (Player player : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
+				for (QuestState qs : player.getQuestStateList().getAllQuestState()) {
+					var metadata = qs == null ? null : questCatalog().findMetadata(qs.getQuestId()).orElse(null);
+					if (qs != null && qs.canRepeat(metadata)) {
+						if (metadata.repeatPolicy().daily()) {
+							player.getController().updateZone();
+							player.getController().updateNearbyQuests();
+							PacketSendUtility.sendPacket(player, dailyMessage);
+						} else if (metadata.repeatPolicy().weekly()) {
+							player.getController().updateZone();
+							player.getController().updateNearbyQuests();
+							PacketSendUtility.sendPacket(player, weeklyMessage);
 						}
 					}
-					player.getNpcFactions().sendDailyQuest();
 				}
+				player.getNpcFactions().sendDailyQuest();
 			}
 		}, sendingDate.getTimeInMillis() - System.currentTimeMillis(), 1000 * 60 * 60 * 24);
 	}

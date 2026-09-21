@@ -237,14 +237,20 @@ class CollectTurnInClientActionAlignmentBatchTest {
 	}
 
 	private static int pageIdOf(String pageName) {
-		return switch (pageName) {
-			case "SELECT1" -> QuestDialogPage.SELECT1.id();
-			case "SELECT2" -> QuestDialogPage.SELECT2.id();
-			case "SELECT5" -> QuestDialogPage.SELECT5.id();
-			case "SELECT6" -> QuestDialogPage.SELECT6.id();
-			case "CHECK_USER_ITEM_FAIL" -> QuestDialogPage.CHECK_USER_ITEM_FAIL.id();
-			default -> throw new IllegalArgumentException("unknown page " + pageName);
-		};
+        switch (pageName) {
+            case "SELECT1":
+                return QuestDialogPage.SELECT1.id();
+            case "SELECT2":
+                return QuestDialogPage.SELECT2.id();
+            case "SELECT5":
+                return QuestDialogPage.SELECT5.id();
+            case "SELECT6":
+                return QuestDialogPage.SELECT6.id();
+            case "CHECK_USER_ITEM_FAIL":
+                return QuestDialogPage.CHECK_USER_ITEM_FAIL.id();
+            default:
+                throw new IllegalArgumentException("unknown page " + pageName);
+        }
 	}
 
 	private static QuestTransition talk(QuestDefinition definition, String source, String target, int npcId,

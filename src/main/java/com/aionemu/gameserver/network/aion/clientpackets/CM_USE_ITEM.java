@@ -164,7 +164,7 @@ public class CM_USE_ITEM extends AionClientPacket {
 			return;
 		}
 		ItemActions itemActions = item.getItemTemplate().getActions();
-		ArrayList<AbstractItemAction> actions = new ArrayList<AbstractItemAction>();
+		ArrayList<AbstractItemAction> actions = new ArrayList<>();
 		if (itemActions == null) {
 			return;
 		}

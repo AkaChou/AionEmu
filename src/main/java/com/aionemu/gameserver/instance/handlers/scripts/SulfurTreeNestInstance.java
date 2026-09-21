@@ -32,7 +32,7 @@ public class SulfurTreeNestInstance extends GeneralInstanceHandler
 		private boolean isStartTimer = false;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -44,7 +44,7 @@ public class SulfurTreeNestInstance extends GeneralInstanceHandler
         super.onInstanceCreate(instance);
         spawnSulfurTreeNestRings();
     }
-	
+
 	/**
 	 * 玩家通过飞行环时处理。
 	 * Handle a player passing a flying ring.
@@ -59,15 +59,15 @@ public class SulfurTreeNestInstance extends GeneralInstanceHandler
 		    if (!isStartTimer) {
 			    isStartTimer = true;
 			    System.currentTimeMillis();
-			    instance.doOnAllPlayers(new Visitor<Player>() {
-			        /**
-			         * 处理 visit。
-			         * Handle visit.
-			         *
-			         * @param player 玩家 / player
-			         */
-			        @Override
-			        public void visit(Player player) {
+			    instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
 						if (player.isOnline()) {
 							startSulfurTreeNestTimer();
 							PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900));
@@ -80,9 +80,9 @@ public class SulfurTreeNestInstance extends GeneralInstanceHandler
 		}
 		return false;
 	}
-	
+
 	private void startSulfurTreeNestTimer() {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -92,14 +92,14 @@ public class SulfurTreeNestInstance extends GeneralInstanceHandler
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-				    sulfurTreeNestTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					sulfurTreeNestTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						/**
 						 * 处理 run。
 						 * Handle run.
 						 */
 						@Override
 						public void run() {
-							instance.doOnAllPlayers(new Visitor<Player>() {
+							instance.doOnAllPlayers(new Visitor<>() {
 								/**
 								 * 处理 visit。
 								 * Handle visit.
@@ -118,7 +118,7 @@ public class SulfurTreeNestInstance extends GeneralInstanceHandler
 			}
 		});
     }
-	
+
 	private void spawnSulfurTreeNestRings() {
         FlyRing f1 = new FlyRing(new FlyRingTemplate("SULFUR_TREE_NEST", mapId,
         new Point3D(462.9394, 380.34888, 168.97256),
@@ -126,7 +126,7 @@ public class SulfurTreeNestInstance extends GeneralInstanceHandler
         new Point3D(468.9229, 380.7933, 168.97256), 6), instanceId);
         f1.spawn();
     }
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -141,7 +141,7 @@ public class SulfurTreeNestInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	public void onExitInstance(Player player) {
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 	}

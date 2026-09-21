@@ -37,14 +37,11 @@ public class BrigadeGeneralChantraAI2 extends AggressiveNpcAI2
 	}
 
 	private void startSkillTask()	{
-		trapTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run()	{
-				if (isAlreadyDead()) {
-					cancelTask();
-				} else {
-					startTrapEvent();
-				}
+		trapTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelTask();
+			} else {
+				startTrapEvent();
 			}
 		}, 5000, 40000);
 	}
@@ -60,18 +57,15 @@ public class BrigadeGeneralChantraAI2 extends AggressiveNpcAI2
 		final int trap = trapNpc[Rnd.get(0, trapNpc.length -1)];
 		if (getPosition().getWorldMapInstance().getNpc(trap) == null) {
 			spawn(trap, 1031.1f, 466.38f, 445.45f, (byte) 0);
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-	  		    @Override
-	  		    public void run() {
-	  			    Npc ring = getPosition().getWorldMapInstance().getNpc(trap);
-	  			    if (trap == 283092) {
-	  				    spawn(283171, 1031.1f, 466.38f, 445.45f, (byte) 0);
-					} else {
-	  				    spawn(283172, 1031.1f, 466.38f, 445.45f, (byte) 0);
-					}
-	  			    ring.getController().onDelete();
-	  		    }
-	  	    }, 5000);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				Npc ring = getPosition().getWorldMapInstance().getNpc(trap);
+				if (trap == 283092) {
+					spawn(283171, 1031.1f, 466.38f, 445.45f, (byte) 0);
+			  } else {
+					spawn(283172, 1031.1f, 466.38f, 445.45f, (byte) 0);
+			  }
+				ring.getController().onDelete();
+			}, 5000);
 	    }
 	}
 

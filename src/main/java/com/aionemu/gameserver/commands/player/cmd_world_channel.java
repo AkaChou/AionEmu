@@ -79,13 +79,7 @@ public class cmd_world_channel extends PlayerCommand {
 		final String sMessage = message.substring(0, CustomConfig.MAX_CHAT_TEXT_LENGHT > messageLenght ? messageLenght : CustomConfig.MAX_CHAT_TEXT_LENGHT);
 		if (player.isGM()) {
 
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-
-				@Override
-				public void visit(Player player) {
-					PacketSendUtility.sendMessage(player, sMessage);
-				}
-			});
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player2 -> PacketSendUtility.sendMessage(player2, sMessage));
 		}
 		else if (!player.isGM() && !player.isInPrison()) {
 			if (player.getAbyssRank().getAp() < ap) {
@@ -93,13 +87,7 @@ public class cmd_world_channel extends PlayerCommand {
 			}
 			else {
 				AbyssPointsService.addAp(player, -ap);
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-
-					@Override
-					public void visit(Player player) {
-						PacketSendUtility.sendMessage(player, sMessage);
-					}
-				});
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player1 -> PacketSendUtility.sendMessage(player1, sMessage));
 			}
 		}
 		else {

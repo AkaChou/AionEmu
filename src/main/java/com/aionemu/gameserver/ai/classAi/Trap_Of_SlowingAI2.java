@@ -18,33 +18,25 @@ public class Trap_Of_SlowingAI2 extends AggressiveNpcAI2
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				startLifeTask();
-				AI2Actions.useSkill(Trap_Of_SlowingAI2.this, 18503);
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			startLifeTask();
+			AI2Actions.useSkill(Trap_Of_SlowingAI2.this, 18503);
 		}, 1000);
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(Trap_Of_SlowingAI2.this);
-			}
-		}, 5000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Trap_Of_SlowingAI2.this), 5000);
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();

@@ -29,7 +29,7 @@ public enum TeamCommand {
 	private static final Map<Integer, TeamCommand> teamCommands;
 
 	static {
-		teamCommands = new HashMap<Integer, TeamCommand>();
+		teamCommands = new HashMap<>();
 		for (TeamCommand eventCode : values()) {
 			teamCommands.put(eventCode.getCodeId(), eventCode);
 		}

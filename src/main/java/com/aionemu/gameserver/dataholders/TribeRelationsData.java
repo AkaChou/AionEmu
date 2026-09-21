@@ -24,7 +24,7 @@ public class TribeRelationsData {
 	@XmlElement(name = "tribe", required = true)
 	protected List<Tribe> tribeList;
 
-	protected Map<TribeClass, Tribe> tribeNameMap = new LinkedHashMap<TribeClass, Tribe>();
+	protected Map<TribeClass, Tribe> tribeNameMap = new LinkedHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，将种族按名称索引并释放列表。

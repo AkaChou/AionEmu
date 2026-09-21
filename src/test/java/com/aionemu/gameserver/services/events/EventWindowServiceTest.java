@@ -25,7 +25,7 @@ class EventWindowServiceTest {
 	@Test
 	void getActiveEventsDoesNotReusePreviousPlayersResults() throws Exception {
 		EventWindowService service = objenesis.newInstance(EventWindowService.class);
-		Map<Integer, EventsWindow> allEvents = new LinkedHashMap<Integer, EventsWindow>();
+		Map<Integer, EventsWindow> allEvents = new LinkedHashMap<>();
 		allEvents.put(1, eventWindow(1, 1, 10));
 		allEvents.put(2, eventWindow(2, 50, 60));
 		setField(service, "allEvents", allEvents);

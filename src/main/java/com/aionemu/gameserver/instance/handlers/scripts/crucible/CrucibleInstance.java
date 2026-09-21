@@ -35,7 +35,7 @@ public class CrucibleInstance extends GeneralInstanceHandler
 		protected StageType stageType = StageType.DEFAULT;
 	/** 副本奖励对象 / instance reward object */
 	protected InstanceReward instanceReward;
-	
+
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
@@ -48,7 +48,7 @@ public class CrucibleInstance extends GeneralInstanceHandler
 			addPlayerReward(player);
 		}
 	}
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -60,7 +60,7 @@ public class CrucibleInstance extends GeneralInstanceHandler
 		super.onInstanceCreate(instance);
 		instanceReward = new InstanceReward(mapId, instanceId);
 	}
-	
+
 	/**
 	 * 处理 addPlayerReward。
 	 * Handle addPlayerReward.
@@ -78,11 +78,11 @@ public class CrucibleInstance extends GeneralInstanceHandler
 	 * visible object
 	 * result
 	 */
-	
+
 	protected CruciblePlayerReward getPlayerReward(Integer object) {
 		return (CruciblePlayerReward) instanceReward.getPlayerReward(object);
 	}
-	
+
 	/**
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
@@ -100,7 +100,7 @@ public class CrucibleInstance extends GeneralInstanceHandler
 	 * NPC
 	 * result
 	 */
-	
+
 	protected List<Npc> getNpcs(int npcId) {
 		if (!isInstanceDestroyed) {
 			return instance.getNpcs(npcId);
@@ -115,11 +115,11 @@ public class CrucibleInstance extends GeneralInstanceHandler
 	 * 玩家 / player
 	 * result
 	 */
-	
+
 	protected boolean isInZone(ZoneName zone, Player player) {
 		return player.isInsideZone(zone);
 	}
-	
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
@@ -128,7 +128,7 @@ public class CrucibleInstance extends GeneralInstanceHandler
 	 * 阵营 / race
 	 * time
 	 */
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -137,7 +137,7 @@ public class CrucibleInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -160,7 +160,7 @@ public class CrucibleInstance extends GeneralInstanceHandler
 	 *
 	 * npc
 	 */
-	
+
 	protected void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
@@ -172,13 +172,13 @@ public class CrucibleInstance extends GeneralInstanceHandler
 	 *
 	 * npcs
 	 */
-	
+
 	protected void despawnNpcs(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			npc.getController().onDelete();
 		}
 	}
-	
+
 	/**
 	 * 返回当前副本阶段。
 	 * Return the current instance stage.
@@ -189,7 +189,7 @@ public class CrucibleInstance extends GeneralInstanceHandler
 	public StageType getStage() {
 		return stageType;
 	}
-	
+
 	/**
 	 * 处理玩家复活事件。
 	 * Handle a player revive event.
@@ -205,7 +205,7 @@ public class CrucibleInstance extends GeneralInstanceHandler
 		PacketSendUtility.sendPacket(player, new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_IDARENA_RESURRECT, 0, 0));
 		return true;
 	}
-	
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.

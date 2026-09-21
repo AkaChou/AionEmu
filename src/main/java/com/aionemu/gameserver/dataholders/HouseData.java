@@ -33,10 +33,10 @@ public class HouseData {
 	protected List<HousingLand> lands;
 
 	@XmlTransient
-	Map<Integer, HousingLand> landsById = new HashMap<Integer, HousingLand>();
+	Map<Integer, HousingLand> landsById = new HashMap<>();
 
 	@XmlTransient
-	Map<Integer, Set<HousingLand>> landsByEntryWorldId = new HashMap<Integer, Set<HousingLand>>();
+	Map<Integer, Set<HousingLand>> landsByEntryWorldId = new HashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，按地块 ID 与入口世界 ID 建立索引并释放原始列表。
@@ -55,7 +55,7 @@ public class HouseData {
 				}
 				Set<HousingLand> landList = landsByEntryWorldId.get(exitMapId);
 				if (landList == null) {
-					landList = new HashSet<HousingLand>();
+					landList = new HashSet<>();
 					landsByEntryWorldId.put(exitMapId, landList);
 				}
 				landList.add(land);

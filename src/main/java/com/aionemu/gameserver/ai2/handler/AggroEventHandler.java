@@ -181,13 +181,7 @@ public class AggroEventHandler {
 				aggressive.getAggroList().addHate(target, 1);
 			}
 			if (broadcast) {
-				aggressive.getKnownList().doOnAllNpcs(new Visitor<Npc>() {
-
-					@Override
-					public void visit(Npc object) {
-						object.getAi2().onCreatureEvent(AIEventType.CREATURE_NEEDS_SUPPORT, aggressive);
-					}
-				});
+				aggressive.getKnownList().doOnAllNpcs(object -> object.getAi2().onCreatureEvent(AIEventType.CREATURE_NEEDS_SUPPORT, aggressive));
 			}
 			aggressive = null;
 			target = null;

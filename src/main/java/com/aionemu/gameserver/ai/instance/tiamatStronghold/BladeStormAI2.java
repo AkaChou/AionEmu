@@ -18,38 +18,30 @@ import java.util.concurrent.Future;
 public class BladeStormAI2 extends AggressiveNpcAI2
 {
 	private Future<?> stormBladeTask;
-	
+
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		stormBlade();
 		startLifeTask();
 	}
-	
+
 	private void stormBlade() {
-		stormBladeTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.targetCreature(BladeStormAI2.this, getPosition().getWorldMapInstance().getNpc(219357)); //Adjudant Anuhart.
-				AI2Actions.targetCreature(BladeStormAI2.this, getPosition().getWorldMapInstance().getNpc(247717)); //F4_Raid_Drakan_Boss_55_Ah.
-				AI2Actions.useSkill(BladeStormAI2.this, 20748); //Storm Blade.
-			}
+		stormBladeTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			AI2Actions.targetCreature(BladeStormAI2.this, getPosition().getWorldMapInstance().getNpc(219357)); //Adjudant Anuhart.
+			AI2Actions.targetCreature(BladeStormAI2.this, getPosition().getWorldMapInstance().getNpc(247717)); //F4_Raid_Drakan_Boss_55_Ah.
+			AI2Actions.useSkill(BladeStormAI2.this, 20748); //Storm Blade.
 		}, 3000, 8000);
 	}
-	
+
     private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(BladeStormAI2.this);
-			}
-		}, 10000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(BladeStormAI2.this), 10000);
 	}
-	
+
     @Override
 	public boolean isMoveSupported() {
 		return false;

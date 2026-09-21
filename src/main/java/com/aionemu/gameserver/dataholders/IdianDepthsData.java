@@ -28,7 +28,7 @@ public class IdianDepthsData {
 	private List<IdianDepthsTemplate> idianDepthsTemplates;
 
 	@XmlTransient
-	private final Map<Integer, IdianDepthsLocation> idianDepths = new LinkedHashMap<Integer, IdianDepthsLocation>();
+	private final Map<Integer, IdianDepthsLocation> idianDepths = new LinkedHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，将模板转为按 ID 索引的地点映射。

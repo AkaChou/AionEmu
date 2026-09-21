@@ -167,7 +167,7 @@ public class Skill {
 	 *
 	 */
 	public Skill(SkillTemplate skillTemplate, Creature effector, int skillLvl, Creature firstTarget, ItemTemplate itemTemplate) {
-		this.effectedList = new ArrayList<Creature>();
+		this.effectedList = new ArrayList<>();
 		this.conditionChangeListener = new StartMovingListener();
 		this.firstTarget = firstTarget;
 		this.skillLevel = skillLvl;
@@ -812,7 +812,7 @@ public class Skill {
 		int resistCount = 0;
 		boolean blockedChain = false;
 		boolean blockedStance = false;
-		final List<Effect> effects = new ArrayList<Effect>();
+		final List<Effect> effects = new ArrayList<>();
 		if (skillTemplate.getEffects() != null) {
 			boolean blockAOESpread = false;
 			for (Creature effected : effectedList) {

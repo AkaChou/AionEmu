@@ -36,78 +36,78 @@ public class Announcements extends AdminCommand {
 	 */
 	@Override
 	public void execute(Player player, String... params) {
-		if (params[0].equals("list")) {
-			Set<Announcement> announces = announceService.getAnnouncements();
-			PacketSendUtility.sendMessage(player, "ID  |  FACTION  |  CHAT TYPE  |  DELAY  |  MESSAGE");
-			PacketSendUtility.sendMessage(player, "-------------------------------------------------------------------");
+        switch (params[0]) {
+            case "list":
+                Set<Announcement> announces = announceService.getAnnouncements();
+                PacketSendUtility.sendMessage(player, "ID  |  FACTION  |  CHAT TYPE  |  DELAY  |  MESSAGE");
+                PacketSendUtility.sendMessage(player, "-------------------------------------------------------------------");
 
-			for (Announcement announce : announces)
-				PacketSendUtility.sendMessage(player, announce.getId() + "  |  " + announce.getFaction() + "  |  " + announce.getType() + "  |  " + announce.getDelay() + "  |  " + announce.getAnnounce());
-		}
-		else if (params[0].equals("add")) {
-			if ((params.length < 5)) {
-				onFail(player, null);
-				return;
-			}
+                for (Announcement announce : announces)
+                    PacketSendUtility.sendMessage(player, announce.getId() + "  |  " + announce.getFaction() + "  |  " + announce.getType() + "  |  " + announce.getDelay() + "  |  " + announce.getAnnounce());
+                break;
+            case "add":
+                if ((params.length < 5)) {
+                    onFail(player, null);
+                    return;
+                }
 
-			int delay;
+                int delay;
 
-			try {
-				delay = Integer.parseInt(params[3]);
-			}
-			catch (NumberFormatException e) {
-				// 15 分钟，默认 / 15 minutes, default
-				delay = 900;
-			}
+                try {
+                    delay = Integer.parseInt(params[3]);
+                } catch (NumberFormatException e) {
+                    // 15 分钟，默认 / 15 minutes, default
+                    delay = 900;
+                }
 
-			String message = "";
+                String message = "";
 
-			// 带空格添加 / Add with space
-			for (int i = 4; i < params.length - 1; i++)
-				message += params[i] + " ";
+                // 带空格添加 / Add with space
+                for (int i = 4; i < params.length - 1; i++)
+                    message += params[i] + " ";
 
-			// 添加最后一项，末尾不加空格 / Add the last without the end space
-			message += params[params.length - 1];
+                // 添加最后一项，末尾不加空格 / Add the last without the end space
+                message += params[params.length - 1];
 
-			// 创建公告 / Create the announce
-			Announcement announce = new Announcement(message, params[1], params[2], delay);
+                // 创建公告 / Create the announce
+                Announcement announce = new Announcement(message, params[1], params[2], delay);
 
-			// 在数据库中添加公告 / Add the announce in the database
-			announceService.addAnnouncement(announce);
+                // 在数据库中添加公告 / Add the announce in the database
+                announceService.addAnnouncement(announce);
 
-			// 重新加载全部公告 / Reload all announcements
-			announceService.reload();
+                // 重新加载全部公告 / Reload all announcements
+                announceService.reload();
 
-			PacketSendUtility.sendMessage(player, "The announcement has been created with successful !");
-		}
-		else if (params[0].equals("delete")) {
-			if ((params.length < 2)) {
-				onFail(player, null);
-				return;
-			}
+                PacketSendUtility.sendMessage(player, "The announcement has been created with successful !");
+                break;
+            case "delete":
+                if ((params.length < 2)) {
+                    onFail(player, null);
+                    return;
+                }
 
-			int id;
+                int id;
 
-			try {
-				id = Integer.parseInt(params[1]);
-			}
-			catch (NumberFormatException e) {
-				PacketSendUtility.sendMessage(player, "The announcement's ID is wrong !");
-				onFail(player, e.getMessage());
-				return;
-			}
+                try {
+                    id = Integer.parseInt(params[1]);
+                } catch (NumberFormatException e) {
+                    PacketSendUtility.sendMessage(player, "The announcement's ID is wrong !");
+                    onFail(player, e.getMessage());
+                    return;
+                }
 
-			// 从数据库删除公告 / Delete the announcement from the database
-			announceService.delAnnouncement(id);
+                // 从数据库删除公告 / Delete the announcement from the database
+                announceService.delAnnouncement(id);
 
-			// 重新加载全部公告 / Reload all announcements
-			announceService.reload();
+                // 重新加载全部公告 / Reload all announcements
+                announceService.reload();
 
-			PacketSendUtility.sendMessage(player, "The announcement has been deleted with successful !");
-		}
-		else {
-			onFail(player, null);
-		}
+                PacketSendUtility.sendMessage(player, "The announcement has been deleted with successful !");
+                break;
+            default:
+                onFail(player, null);
+                break;
+        }
 	}
 
 	/**

@@ -31,13 +31,10 @@ public class Destoyer_FeldAI2 extends AggressiveNpcAI2
 	public void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isStart.compareAndSet(false, true)) {
-			task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						GameEngineServices.skillEngine().getSkill(getOwner(), 19348, 60, getOwner()).useNoAnimationSkill();
-						GameEngineServices.skillEngine().getSkill(getOwner(), 19512, 1, getOwner()).useNoAnimationSkill();
-					}
+			task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+				if (!isAlreadyDead()) {
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19348, 60, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19512, 1, getOwner()).useNoAnimationSkill();
 				}
 			}, 20000, 50000);
 		}

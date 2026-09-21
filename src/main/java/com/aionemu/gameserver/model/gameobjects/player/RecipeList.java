@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 public class RecipeList {
 
 	/** 获取配方列表。 / Returns the recipe list. */
-	private Set<Integer> recipeList = new HashSet<Integer>();
+	private Set<Integer> recipeList = new HashSet<>();
 
 	public RecipeList(HashSet<Integer> recipeList) {
 		this.recipeList = recipeList;

@@ -34,7 +34,7 @@ public class RunnableStatsManager {
      * 类统计映射。
      * Class statistics map.
      */
-    private static final Map<Class<?>, ClassStat> classStats = new HashMap<Class<?>, ClassStat>();
+    private static final Map<Class<?>, ClassStat> classStats = new HashMap<>();
 
     /**
      * 类级统计信息。
@@ -238,51 +238,51 @@ public class RunnableStatsManager {
             this.xmlAttributeName = xmlAttributeName;
         }
 
-        private final Comparator<MethodStat> comparator = new Comparator<MethodStat>() {
-            @Override
-            @SuppressWarnings("rawtypes")
-            public int compare(MethodStat o1, MethodStat o2) {
-                final Comparable c1 = getComparableValueOf(o1);
-                final Comparable c2 = getComparableValueOf(o2);
+        private final Comparator<MethodStat> comparator = new Comparator<>() {
+			@Override
+			@SuppressWarnings("rawtypes")
+			public int compare(MethodStat o1, MethodStat o2) {
+				final Comparable c1 = getComparableValueOf(o1);
+				final Comparable c2 = getComparableValueOf(o2);
 
-                if (c1 instanceof Number) {
-                    return c2.compareTo(c1);
-                }
+				if (c1 instanceof Number) {
+					return c2.compareTo(c1);
+				}
 
-                final String s1 = (String) c1;
-                final String s2 = (String) c2;
+				final String s1 = (String) c1;
+				final String s2 = (String) c2;
 
-                final int len1 = s1.length();
-                final int len2 = s2.length();
-                final int n = Math.min(len1, len2);
+				final int len1 = s1.length();
+				final int len2 = s2.length();
+				final int n = Math.min(len1, len2);
 
-                for (int k = 0; k < n; k++) {
-                    char ch1 = s1.charAt(k);
-                    char ch2 = s2.charAt(k);
+				for (int k = 0; k < n; k++) {
+					char ch1 = s1.charAt(k);
+					char ch2 = s2.charAt(k);
 
-                    if (ch1 != ch2) {
-                        if (Character.isUpperCase(ch1) != Character.isUpperCase(ch2)) {
-                            return ch2 - ch1;
-                        } else {
-                            return ch1 - ch2;
-                        }
-                    }
-                }
+					if (ch1 != ch2) {
+						if (Character.isUpperCase(ch1) != Character.isUpperCase(ch2)) {
+							return ch2 - ch1;
+						} else {
+							return ch1 - ch2;
+						}
+					}
+				}
 
-                final int result = len1 - len2;
+				final int result = len1 - len2;
 
-                if (result != 0) {
-                    return result;
-                }
+				if (result != 0) {
+					return result;
+				}
 
-                switch (SortBy.this) {
-                    case METHOD:
-                        return NAME.comparator.compare(o1, o2);
-                    default:
-                        return 0;
-                }
-            }
-        };
+				switch (SortBy.this) {
+					case METHOD:
+						return NAME.comparator.compare(o1, o2);
+					default:
+						return 0;
+				}
+			}
+		};
 
         @SuppressWarnings("rawtypes")
         private Comparable getComparableValueOf(MethodStat stat) {
@@ -327,7 +327,7 @@ public class RunnableStatsManager {
         if (!CommonsConfig.RUNNABLESTATS_ENABLE) {
             return;
         }
-        final List<MethodStat> methodStats = new ArrayList<MethodStat>();
+        final List<MethodStat> methodStats = new ArrayList<>();
 
         synchronized (RunnableStatsManager.class) {
             for (ClassStat classStat : classStats.values()) {
@@ -343,7 +343,7 @@ public class RunnableStatsManager {
             Collections.sort(methodStats, sortBy.comparator);
         }
 
-        final List<String> lines = new ArrayList<String>();
+        final List<String> lines = new ArrayList<>();
 
         lines.add("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
         lines.add("<entries>");

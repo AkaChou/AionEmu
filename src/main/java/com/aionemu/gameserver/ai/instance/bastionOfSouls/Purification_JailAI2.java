@@ -20,13 +20,8 @@ public class Purification_JailAI2 extends NpcAI2
 		super.handleSpawned();
 		startLifeTask();
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(Purification_JailAI2.this);
-			}
-		}, 900000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Purification_JailAI2.this), 900000);
 	}
 }

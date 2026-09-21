@@ -35,7 +35,7 @@ public abstract class ChatCommand {
 	 * 别名 → 访问等级映射（注册时由配置绑定）。
 	 * Alias-to-access-level map (bound from config at registration).
 	 */
-	private final Map<String, Byte> aliasLevels = new HashMap<String, Byte>();
+	private final Map<String, Byte> aliasLevels = new HashMap<>();
 
 	/**
 	 * 无参数时使用的空参数数组。
@@ -51,7 +51,7 @@ public abstract class ChatCommand {
 	 * @param alternateAliases 额外别名 / Additional aliases
 	 */
 	protected ChatCommand(String alias, String... alternateAliases) {
-		List<String> registered = new ArrayList<String>(1 + alternateAliases.length);
+		List<String> registered = new ArrayList<>(1 + alternateAliases.length);
 		registered.add(alias);
 		for (String alternate : alternateAliases) {
 			if (alternate != null && !alternate.isEmpty() && !registered.contains(alternate)) {

@@ -42,7 +42,7 @@ public class RemoveCd extends AdminCommand {
 
 		if (target instanceof Player player) {
 			if (params.length == 0) {
-				List<Integer> delayIds = new ArrayList<Integer>();
+				List<Integer> delayIds = new ArrayList<>();
 				if (player.getSkillCoolDowns() != null) {
 					long currentTime = System.currentTimeMillis();
 					for (Entry<Integer, Long> en : player.getSkillCoolDowns().entrySet())
@@ -89,7 +89,7 @@ public class RemoveCd extends AdminCommand {
 					return;
 				if (params.length >= 2) {
 					if (params[1].equalsIgnoreCase("all")) {
-						List<Integer> mapIds = new ArrayList<Integer>();
+						List<Integer> mapIds = new ArrayList<>();
                         for (Entry<Integer, PortalCooldownItem> mapId : player.getPortalCooldownList().getPortalCoolDowns().entrySet()) {
                             mapIds.add(mapId.getKey());
                         }

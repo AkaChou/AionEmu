@@ -59,19 +59,11 @@ public abstract class PvPZone implements AdvencedZoneHandler {
 		}
 		PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.DIE, 0, player.equals(lastAttacker) ? 0 : lastAttacker.getObjectId()), true);
 		if (zone instanceof SiegeZoneInstance) {
-			((SiegeZoneInstance) zone).doOnAllPlayers(new Visitor<Player>() {
-				@Override
-				public void visit(Player p) {
-					PacketSendUtility.sendPacket(p, SM_SYSTEM_MESSAGE.STR_PvPZONE_OUT_MESSAGE(player.getName()));
-				}
-			});
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					PlayerReviveService.duelRevive(player);
-					doTeleport(player, zone.getZoneTemplate().getName());
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_PvPZONE_MY_DEATH_TO_B(lastAttacker.getName()));
-				}
+			((SiegeZoneInstance) zone).doOnAllPlayers(p -> PacketSendUtility.sendPacket(p, SM_SYSTEM_MESSAGE.STR_PvPZONE_OUT_MESSAGE(player.getName())));
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				PlayerReviveService.duelRevive(player);
+				doTeleport(player, zone.getZoneTemplate().getName());
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_PvPZONE_MY_DEATH_TO_B(lastAttacker.getName()));
 			}, 5000);
 		}
 		return true;

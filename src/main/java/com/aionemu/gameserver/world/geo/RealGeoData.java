@@ -81,21 +81,18 @@ public class RealGeoData implements GeoData {
 		}
 
 		for (final WorldMapTemplate map : DataManager.WORLD_MAPS_DATA) {
-			tasks.add(new Callable<Void>() {
-				@Override
-				public Void call() throws Exception {
-					int mapId = map.getMapId();
-					GeoMap geoMap = geoMaps.get(mapId);
-					try {
-						GeoWorldLoader.loadWorldObjects(mapId, models, geoMap, missingMeshes);
-					} catch (Throwable t) {
-						log.error(I18n.get("log.55a8c9c96345", mapId), t);
-						synchronized (mapsWithErrors) {
-							mapsWithErrors.add(mapId);
-						}
+			tasks.add(() -> {
+				int mapId = map.getMapId();
+				GeoMap geoMap = geoMaps.get(mapId);
+				try {
+					GeoWorldLoader.loadWorldObjects(mapId, models, geoMap, missingMeshes);
+				} catch (Throwable t) {
+					log.error(I18n.get("log.55a8c9c96345", mapId), t);
+					synchronized (mapsWithErrors) {
+						mapsWithErrors.add(mapId);
 					}
-					return null;
 				}
+				return null;
 			});
 		}
 

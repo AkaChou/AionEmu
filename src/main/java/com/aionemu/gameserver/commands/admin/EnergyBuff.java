@@ -39,32 +39,45 @@ public class EnergyBuff extends AdminCommand {
 		Creature creature = (Creature) target;
 		if (params == null || params.length < 1) {
 			onFail(player, null);
-		}
-		else if (target instanceof Player) {
-			if (params[0].equals("repose")) {
-				Player targetPlayer = (Player) creature;
-				if (params[1].equals("info"))
-					PacketSendUtility.sendMessage(player, "Current EoR: " + targetPlayer.getCommonData().getCurrentReposteEnergy() + "\n Max EoR: " + targetPlayer.getCommonData().getMaxReposteEnergy());
-				else if (params[1].equals("add"))
-					targetPlayer.getCommonData().addReposteEnergy(Long.parseLong(params[2]));
-				else if (params[1].equals("reset"))
-					targetPlayer.getCommonData().setCurrentReposteEnergy(0);
+		} else if (target instanceof Player) {
+			switch (params[0]) {
+				case "repose": {
+					Player targetPlayer = (Player) creature;
+					switch (params[1]) {
+						case "info":
+							PacketSendUtility.sendMessage(player, "Current EoR: " + targetPlayer.getCommonData().getCurrentReposteEnergy() + "\n Max EoR: " + targetPlayer.getCommonData().getMaxReposteEnergy());
+							break;
+						case "add":
+							targetPlayer.getCommonData().addReposteEnergy(Long.parseLong(params[2]));
+							break;
+						case "reset":
+							targetPlayer.getCommonData().setCurrentReposteEnergy(0);
+							break;
+					}
+					break;
+				}
+				case "salvation": {
+					Player targetPlayer = (Player) creature;
+					switch (params[1]) {
+						case "info":
+							PacketSendUtility.sendMessage(player, "Current EoS: " + targetPlayer.getCommonData().getCurrentSalvationPercent());
+							break;
+						case "add":
+							targetPlayer.getCommonData().addSalvationPoints(Long.parseLong(params[2]));
+							break;
+						case "reset":
+							targetPlayer.getCommonData().resetSalvationPoints();
+							break;
+					}
+					break;
+				}
+				case "refresh": {
+					Player targetPlayer = (Player) creature;
+					PacketSendUtility.sendPacket(targetPlayer, new SM_STATS_INFO(targetPlayer));
+					break;
+				}
 			}
-			else if (params[0].equals("salvation")) {
-				Player targetPlayer = (Player) creature;
-				if (params[1].equals("info"))
-					PacketSendUtility.sendMessage(player, "Current EoS: " + targetPlayer.getCommonData().getCurrentSalvationPercent());
-				else if (params[1].equals("add"))
-					targetPlayer.getCommonData().addSalvationPoints(Long.parseLong(params[2]));
-				else if (params[1].equals("reset"))
-					targetPlayer.getCommonData().resetSalvationPoints();
-			}
-			else if (params[0].equals("refresh")) {
-				Player targetPlayer = (Player) creature;
-				PacketSendUtility.sendPacket(targetPlayer, new SM_STATS_INFO(targetPlayer));
-			}
-		}
-		else
+		} else
 			PacketSendUtility.sendMessage(player, "This is not player");
 	}
 

@@ -36,8 +36,8 @@ public class SkillTreeData {
 	 *
 	 * @return 哈希到模板列表的映射 / map of hash to template list
 	 */
-	private final IntObjectHashMap<ArrayList<SkillLearnTemplate>> templates = new IntObjectHashMap<ArrayList<SkillLearnTemplate>>();
-	private final IntObjectHashMap<ArrayList<SkillLearnTemplate>> templatesById = new IntObjectHashMap<ArrayList<SkillLearnTemplate>>();
+	private final IntObjectHashMap<ArrayList<SkillLearnTemplate>> templates = new IntObjectHashMap<>();
+	private final IntObjectHashMap<ArrayList<SkillLearnTemplate>> templatesById = new IntObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，将学习模板写入双索引并释放列表。
@@ -59,14 +59,14 @@ public class SkillTreeData {
 		int hash = makeHash(template.getClassId().ordinal(), race.ordinal(), template.getMinLevel());
 		ArrayList<SkillLearnTemplate> value = templates.get(hash);
 		if (value == null) {
-			value = new ArrayList<SkillLearnTemplate>();
+			value = new ArrayList<>();
 			templates.put(hash, value);
 		}
 		value.add(template);
 
 		value = templatesById.get(template.getSkillId());
 		if (value == null) {
-			value = new ArrayList<SkillLearnTemplate>();
+			value = new ArrayList<>();
 			templatesById.put(template.getSkillId(), value);
 		}
 		value.add(template);
@@ -82,7 +82,7 @@ public class SkillTreeData {
 	 * @return 匹配的学习模板数组 / matching learn templates
 	 */
 	public SkillLearnTemplate[] getTemplatesFor(PlayerClass playerClass, int level, Race race) {
-		List<SkillLearnTemplate> newSkills = new ArrayList<SkillLearnTemplate>();
+		List<SkillLearnTemplate> newSkills = new ArrayList<>();
 
 		List<SkillLearnTemplate> classRaceSpecificTemplates = templates
 				.get(makeHash(playerClass.ordinal(), race.ordinal(), level));
@@ -111,7 +111,7 @@ public class SkillTreeData {
 	 * @return 学习模板数组 / learn template array
 	 */
 	public SkillLearnTemplate[] getTemplatesForSkill(int skillId) {
-		List<SkillLearnTemplate> searchSkills = new ArrayList<SkillLearnTemplate>();
+		List<SkillLearnTemplate> searchSkills = new ArrayList<>();
 
 		List<SkillLearnTemplate> byId = templatesById.get(skillId);
 		if (byId != null) {

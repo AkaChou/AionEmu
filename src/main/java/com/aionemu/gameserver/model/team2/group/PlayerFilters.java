@@ -13,8 +13,10 @@ import com.google.common.base.Predicate;
  */
 public class PlayerFilters {
 
-	public static final Predicate<Player> ONLINE = new Predicate<Player>() {
-		/** 应用。 / Apply. */
+	public static final Predicate<Player> ONLINE = new Predicate<>() {
+		/**
+		 * 应用。 / Apply.
+		 */
 		@Override
 		public boolean apply(Player member) {
 			return member.isOnline();
@@ -51,8 +53,10 @@ public class PlayerFilters {
 		}
 	}
 
-	public static final Predicate<Player> HAS_LOOT_PET = new Predicate<Player>() {
-		/** 应用。 / Apply. */
+	public static final Predicate<Player> HAS_LOOT_PET = new Predicate<>() {
+		/**
+		 * 应用。 / Apply.
+		 */
 		@Override
 		public boolean apply(Player member) {
 			Pet pet = member.getPet();

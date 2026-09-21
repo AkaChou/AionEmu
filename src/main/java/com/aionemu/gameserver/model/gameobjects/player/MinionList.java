@@ -23,7 +23,7 @@ public class MinionList {
 	public static final String LAST_USED_VAR = "minion.last_used_object_id";
 	private final Player player;
 	private int lastUsedObjId;
-	private final Map<Integer, MinionCommonData> minions = new LinkedHashMap<Integer, MinionCommonData>();
+	private final Map<Integer, MinionCommonData> minions = new LinkedHashMap<>();
 
 	public MinionList(Player player) {
 		this.player = player;

@@ -52,12 +52,7 @@ public class LandingUpdateService {
 	 */
 	public void initResetQuestPoints() {
 		if (AbyssLandingConfig.ABYSS_LANDING_QUEST_RESET_ENABLED) {
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				public void run() {
-					resetQuestPoints();
-				}
-			}, () -> AbyssLandingConfig.ABYSS_LANDING_QUEST_RESET_TIME);
+			GameCronServices.cronService().schedule(() -> resetQuestPoints(), () -> AbyssLandingConfig.ABYSS_LANDING_QUEST_RESET_TIME);
 		}
 	}
 
@@ -67,13 +62,10 @@ public class LandingUpdateService {
 	 */
 	public void initResetAbyssLandingPoints() {
 		if (AbyssLandingConfig.ABYSS_LANDING_POINTS_RESET_ENABLED) {
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				public void run() {
-					resetMonumentPoints();
-					resetFacilityPoints();
-					resetCommanderPoints();
-				}
+			GameCronServices.cronService().schedule(() -> {
+				resetMonumentPoints();
+				resetFacilityPoints();
+				resetCommanderPoints();
 			}, () -> AbyssLandingConfig.ABYSS_LANDING_POINTS_RESET_TIME);
 		}
 	}

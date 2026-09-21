@@ -20,28 +20,23 @@ public class Frigid_CrystalAI2 extends AggressiveNpcAI2
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21638, 46, getOwner()).useNoAnimationSkill(); //Frozen Blur.
 		startLifeTask();
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(Frigid_CrystalAI2.this);
-			}
-		}, 2500);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Frigid_CrystalAI2.this), 2500);
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();

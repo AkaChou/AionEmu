@@ -57,14 +57,14 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
 		/** imperialtomb 任务 / imperial tomb task */
-		private final List<Future<?>> imperialTombTask = new ArrayList<Future<?>>();
+		private final List<Future<?>> imperialTombTask = new ArrayList<>();
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
 	 * @param npc NPC / npc
 	 */
-	
+
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
@@ -132,7 +132,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
@@ -145,7 +145,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		spawn(831110, 183.95969f, 237.51074f, 536.16974f, (byte) 71); // 称颂皇太子的人 / Crown Prince's Admirer.
 		spawn(831095, 218.27571f, 287.24326f, 550.68805f, (byte) 74); //Shugo Warrior Transformation Device.
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
@@ -239,7 +239,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			break;
 		}
 	}
-	
+
 	private void spawnFairyGuardian() {
 		spawn(219544, 315.94565f, 431.73035f, 294.58875f, (byte) 116);
         spawn(219505, 314.94418f, 428.22006f, 294.58875f, (byte) 115);
@@ -248,7 +248,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
         spawn(219505, 316.08636f, 435.35806f, 294.58875f, (byte) 115);
         spawn(219505, 321.05954f, 430.44263f, 294.58875f, (byte) 115);
 	}
-	
+
 	/**
 	 * TOMB RAID A
 	 */
@@ -414,7 +414,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 190000);
 	}
-	
+
 	/**
 	 * TOMB RAID B
 	 */
@@ -640,7 +640,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 190000);
 	}
-	
+
 	/**
 	 * TOMB RAID C-1
 	 */
@@ -836,7 +836,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			}
 		}, 190000);
 	}
-	
+
 	/**
 	 * TOMB RAID C-2
 	 */
@@ -1038,7 +1038,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 	private void startCaptainLediar() {
 		sp(219531, 398.66214f, 81.80799f, 223.16089f, (byte) 8, 2000, "ImperialTombUnderpath8"); //Captain Lediar.
 	}
-	
+
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
@@ -1060,7 +1060,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 	 *
 	 * @param player 玩家 / player
 	 */
-	
+
 	public void removeItems(Player player) {
         Storage storage = player.getInventory();
         storage.decreaseByItemId(182006989, storage.getItemCountByItemId(182006989)); //Emperor's Golden Tag.
@@ -1068,19 +1068,19 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
         storage.decreaseByItemId(182006991, storage.getItemCountByItemId(182006991)); //Crown Prince's Brass Tag.
 		storage.decreaseByItemId(182006999, storage.getItemCountByItemId(182006999)); //Shugo Coin.
     }
-	
+
 	private void removeEffects(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
 		effectController.removeEffect(21096);
 	}
-	
-	
+
+
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
-	
+
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
@@ -1094,7 +1094,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
 	}
-	
+
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
@@ -1106,8 +1106,8 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		removeItems(player);
 		removeEffects(player);
 	}
-	
-	
+
+
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
@@ -1116,8 +1116,8 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 	public void onInstanceDestroy() {
 		isInstanceDestroyed = true;
 	}
-	
-	
+
+
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         imperialTombTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
@@ -1134,7 +1134,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
             }
         }, time));
     }
-	
+
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -1143,7 +1143,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.

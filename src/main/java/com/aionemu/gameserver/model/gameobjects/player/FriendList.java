@@ -34,7 +34,7 @@ public class FriendList implements Iterable<Friend> {
 	 * Constructs an empty friend list for the given player.
 	 */
 	public FriendList(Player player) {
-		this(player, new ConcurrentLinkedQueue<Friend>());
+		this(player, new ConcurrentLinkedQueue<>());
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class FriendList implements Iterable<Friend> {
 	 * Constructs a friend list for the given player, with the given friends.
 	 */
 	public FriendList(Player owner, Collection<Friend> newFriends) {
-		this.friends = new ConcurrentLinkedQueue<Friend>(newFriends);
+		this.friends = new ConcurrentLinkedQueue<>(newFriends);
 		this.player = owner;
 	}
 

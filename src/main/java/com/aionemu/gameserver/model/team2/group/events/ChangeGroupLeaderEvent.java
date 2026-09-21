@@ -39,19 +39,21 @@ public class ChangeGroupLeaderEvent extends ChangeLeaderEvent<PlayerGroup> {
 	@Override
 	protected void changeLeaderTo(final Player player) {
 		team.changeLeader(team.getMember(player.getObjectId()));
-		team.applyOnMembers(new Predicate<Player>() {
-			/** 应用。 / Apply. */
-			@Override
-			public boolean apply(Player member) {
-				PacketSendUtility.sendPacket(member, new SM_GROUP_INFO(team));
-				if (!player.equals(member)) {
-					PacketSendUtility.sendPacket(member,
-							SM_SYSTEM_MESSAGE.STR_PARTY_HE_IS_NEW_LEADER(player.getName()));
-				} else {
-					PacketSendUtility.sendPacket(member, SM_SYSTEM_MESSAGE.STR_PARTY_YOU_BECOME_NEW_LEADER);
-				}
-				return true;
-			}
-		});
+		team.applyOnMembers(new Predicate<>() {
+            /**
+             * 应用。 / Apply.
+             */
+            @Override
+            public boolean apply(Player member) {
+                PacketSendUtility.sendPacket(member, new SM_GROUP_INFO(team));
+                if (!player.equals(member)) {
+                    PacketSendUtility.sendPacket(member,
+                            SM_SYSTEM_MESSAGE.STR_PARTY_HE_IS_NEW_LEADER(player.getName()));
+                } else {
+                    PacketSendUtility.sendPacket(member, SM_SYSTEM_MESSAGE.STR_PARTY_YOU_BECOME_NEW_LEADER);
+                }
+                return true;
+            }
+        });
 	}
 }

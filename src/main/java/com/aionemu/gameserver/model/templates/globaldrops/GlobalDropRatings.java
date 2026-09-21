@@ -23,7 +23,7 @@ public class GlobalDropRatings {
 	/** 返回全局掉落评级。 / Returns the global drop ratings. */
 	public List<GlobalDropRating> getGlobalDropRatings() {
 		if (gdRatings == null) {
-			gdRatings = new ArrayList<GlobalDropRating>();
+			gdRatings = new ArrayList<>();
 		}
 		return this.gdRatings;
 	}

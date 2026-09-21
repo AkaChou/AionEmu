@@ -28,7 +28,7 @@ public class Fuel_BarrelAI2 extends ActionItemNpcAI2
     private boolean isRewarded; // 是否已发放过奖励 / whether the reward was already granted
 	protected int startBarAnimation = 1; // 读条开始动画 ID / start cast bar animation ID
 	protected int cancelBarAnimation = 2; // 读条取消动画 ID / cancel cast bar animation ID
-	
+
     @Override
     protected void handleDialogStart(Player player) {
         handleUseItemStart(player);
@@ -38,7 +38,7 @@ public class Fuel_BarrelAI2 extends ActionItemNpcAI2
         }
         super.handleDialogStart(player);
     }
-	
+
 	/**
 	 * 带读条的物品交互：延迟结束后触发使用完成逻辑，交互中断则取消任务。
 	 * Item use with a cast bar: triggers the finish logic after the delay, cancels the task on abort.
@@ -58,20 +58,17 @@ public class Fuel_BarrelAI2 extends ActionItemNpcAI2
 			player.getObserveController().attach(observer);
 			PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), startBarAnimation));
 			PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.START_QUESTLOOT, 0, getObjectId()), true);
-			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
-					PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
-					player.getObserveController().removeObserver(observer);
-					handleUseItemFinish(player);
-				}
+			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
+				PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
+				player.getObserveController().removeObserver(observer);
+				handleUseItemFinish(player);
 			}, delay));
 		} else {
 			handleUseItemFinish(player);
 		}
 	}
-	
+
     @Override
     protected void handleUseItemFinish(Player player) {
 		// 仅首次使用生效：触发使用完成并删除燃料桶。
@@ -82,12 +79,12 @@ public class Fuel_BarrelAI2 extends ActionItemNpcAI2
             AI2Actions.deleteOwner(this);
         }
     }
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;
 	}
-	
+
 	protected int getTalkDelay() {
 		return getObjectTemplate().getTalkDelay() * 1000;
 	}

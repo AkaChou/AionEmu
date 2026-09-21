@@ -23,7 +23,7 @@ public class GlobalDropZones {
 	/** 返回全局掉落区域。 / Returns the global drop zones. */
 	public List<GlobalDropZone> getGlobalDropZones() {
 		if (gdZones == null) {
-			gdZones = new ArrayList<GlobalDropZone>();
+			gdZones = new ArrayList<>();
 		}
 		return this.gdZones;
 	}

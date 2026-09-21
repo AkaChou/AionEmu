@@ -24,7 +24,7 @@ import java.util.concurrent.Future;
 @AIName("alukina_emp")
 public class QueenAlukinaAI2 extends AggressiveNpcAI2
 {
-	private final List<Integer> percents = new ArrayList<Integer>();
+	private final List<Integer> percents = new ArrayList<>();
 	private Future<?> task;
 
 	@Override
@@ -73,9 +73,7 @@ public class QueenAlukinaAI2 extends AggressiveNpcAI2
 				scheduleSkill(17902, 8000);
 			break;
 			case 25:
-				task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-				@Override
-				public void run() {
+				task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
 					if (isAlreadyDead()) {
 						cancelTask();
 					} else {
@@ -83,8 +81,7 @@ public class QueenAlukinaAI2 extends AggressiveNpcAI2
 						scheduleSkill(17902, 5500);
 						scheduleSkill(17902, 7500);
 					}
-				}
-			}, 4500, 20000);
+				}, 4500, 20000);
 			break;
 		}
 	}
@@ -95,12 +92,9 @@ public class QueenAlukinaAI2 extends AggressiveNpcAI2
 	}
 
 	private void scheduleSkill(final int skillId , int delay) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (!isAlreadyDead()) {
-					GameEngineServices.skillEngine().getSkill(getOwner(), skillId, 41, getTarget()).useNoAnimationSkill();
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (!isAlreadyDead()) {
+				GameEngineServices.skillEngine().getSkill(getOwner(), skillId, 41, getTarget()).useNoAnimationSkill();
 			}
 		}, delay);
 	}

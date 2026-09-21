@@ -58,8 +58,8 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 public class DropRegistrationService {
 	private static volatile ObjectProvider<DropRegistrationService> instanceProvider;
 
-	private final ConcurrentMap<Integer, Set<DropItem>> currentDropMap = new ConcurrentHashMap<Integer, Set<DropItem>>();
-	private final ConcurrentMap<Integer, DropNpc> dropRegistrationMap = new ConcurrentHashMap<Integer, DropNpc>();
+	private final ConcurrentMap<Integer, Set<DropItem>> currentDropMap = new ConcurrentHashMap<>();
+	private final ConcurrentMap<Integer, DropNpc> dropRegistrationMap = new ConcurrentHashMap<>();
 	private volatile Set<Integer> noReductionMaps = Set.of();
 
 	/**

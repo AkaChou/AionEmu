@@ -26,24 +26,19 @@ public class Shulack_DrudgeAI2 extends GeneralNpcAI2
 		addItems(player);
 		super.handleDialogFinish(player);
 	}
-	
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
 	}
-	
+
 	private void addItems(Player player) {
 	    int itemId = player.getRace() == Race.ELYOS ? 182212606 : 182212607;
 	    Item dredgionSupplies = player.getInventory().getFirstItemByItemId(itemId);
 	    if (dredgionSupplies == null) {
 	  	    ItemService.addItem(player, itemId, 1);
 	  	    getOwner().setNpcType(NpcType.NON_ATTACKABLE);
-	  	    getKnownList().doOnAllPlayers(new Visitor<Player>() {
-			    @Override
-			    public void visit(Player player) {
-				    PacketSendUtility.sendPacket(player, new SM_CUSTOM_SETTINGS(getOwner().getObjectId(), 0, NpcType.NON_ATTACKABLE.getId(), 0));
-			    }
-		    });
+	  	    getKnownList().doOnAllPlayers(player1 -> PacketSendUtility.sendPacket(player1, new SM_CUSTOM_SETTINGS(getOwner().getObjectId(), 0, NpcType.NON_ATTACKABLE.getId(), 0)));
 	    }
 	}
 }

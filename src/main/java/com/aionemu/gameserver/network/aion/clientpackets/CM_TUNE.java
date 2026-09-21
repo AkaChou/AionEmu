@@ -99,26 +99,23 @@ public class CM_TUNE extends AionClientPacket {
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
-			@Override
-			public void run() {
-				if (item.getOptionalSocket() != -1) {
-					return;
-				}
-				player.getObserveController().removeObserver(observer);
-				PacketSendUtility.broadcastPacket(player,
-						new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjectId, itemId, 0, 1, 1), true);
-				item.setOptionalSocket(Rnd.get(0, item.getItemTemplate().getOptionSlotBonus()));
-				/*
-				 * if (item.getItemTemplate().getMaxEnchantBonus() > 0) {
-				 * item.setEnchantBonus(Rnd.get(0,
-				 * item.getItemTemplate().getMaxEnchantBonus())); }
-				 */
-				item.setRndBonus();
-				item.setPersistentState(PersistentState.UPDATE_REQUIRED);
-				PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, item));
-				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1401626, new DescriptionId(nameId)));
+		player.getController().scheduleTask(TaskId.ITEM_USE, () -> {
+			if (item.getOptionalSocket() != -1) {
+				return;
 			}
+			player.getObserveController().removeObserver(observer);
+			PacketSendUtility.broadcastPacket(player,
+					new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjectId, itemId, 0, 1, 1), true);
+			item.setOptionalSocket(Rnd.get(0, item.getItemTemplate().getOptionSlotBonus()));
+			/*
+			 * if (item.getItemTemplate().getMaxEnchantBonus() > 0) {
+			 * item.setEnchantBonus(Rnd.get(0,
+			 * item.getItemTemplate().getMaxEnchantBonus())); }
+			 */
+			item.setRndBonus();
+			item.setPersistentState(PersistentState.UPDATE_REQUIRED);
+			PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, item));
+			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1401626, new DescriptionId(nameId)));
 		}, 3000);
 	}
 }

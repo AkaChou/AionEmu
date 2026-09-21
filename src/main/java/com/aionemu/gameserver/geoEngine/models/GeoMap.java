@@ -52,15 +52,15 @@ public class GeoMap extends Node {
 	/** 地形高度/材质数据。 / Terrain height and material data. */
 	private Terrain terrain;
 	/** 按区域 ID 索引的分块节点 / Chunk nodes keyed by region id */
-	private final Map<Integer, Node> chunkById = new HashMap<Integer, Node>();
+	private final Map<Integer, Node> chunkById = new HashMap<>();
 	/** 按静态 ID 的可放置对象 / Placeable objects by static id */
-	private final Map<Integer, DespawnableNode> despawnables = new LinkedHashMap<Integer, DespawnableNode>();
+	private final Map<Integer, DespawnableNode> despawnables = new LinkedHashMap<>();
 	/** 按城镇 ID 索引的城镇对象 / Town objects by town id*/
-	private final Map<Integer, List<DespawnableNode>> despawnableTownObjects = new LinkedHashMap<Integer, List<DespawnableNode>>();
+	private final Map<Integer, List<DespawnableNode>> despawnableTownObjects = new LinkedHashMap<>();
 	/** 房屋门（地址 → 节点）。 / House doors by address. */
-	private final Map<Integer, DespawnableNode> despawnableHouseDoors = new LinkedHashMap<Integer, DespawnableNode>();
+	private final Map<Integer, DespawnableNode> despawnableHouseDoors = new LinkedHashMap<>();
 	/** 按门 ID 的门状态对 [关闭, 打开] / Door state pair [closed, open] by door id */
-	private final Map<Integer, DespawnableNode[]> despawnableDoors = new LinkedHashMap<Integer, DespawnableNode[]>();
+	private final Map<Integer, DespawnableNode[]> despawnableDoors = new LinkedHashMap<>();
 
 	/**
 	 * 以地图名与世界尺寸构造 GeoMap。
@@ -225,15 +225,24 @@ public class GeoMap extends Node {
 		if (world == null) {
 			return Set.of();
 		}
-		return switch (world) {
-			case RENTUS_BASE, OCCUPIED_RENTUS_BASE -> Set.of(145);
-			case ABYSSAL_SPLINTER, UNSTABLE_ABYSSAL_SPLINTER -> Set.of(15, 16, 18, 69);
-			case ATURAM_SKY_FORTRESS -> Set.of(128, 138, 308, 307);
-			case ESOTERRACE -> Set.of(78);
-			case RAKSANG_RUINS -> Set.of(219);
-			case KAMAR_BATTLEFIELD -> Set.of(5, 144);
-			default -> Set.of();
-		};
+        switch (world) {
+            case RENTUS_BASE:
+            case OCCUPIED_RENTUS_BASE:
+                return Set.of(145);
+            case ABYSSAL_SPLINTER:
+            case UNSTABLE_ABYSSAL_SPLINTER:
+                return Set.of(15, 16, 18, 69);
+            case ATURAM_SKY_FORTRESS:
+                return Set.of(128, 138, 308, 307);
+            case ESOTERRACE:
+                return Set.of(78);
+            case RAKSANG_RUINS:
+                return Set.of(219);
+            case KAMAR_BATTLEFIELD:
+                return Set.of(5, 144);
+            default:
+                return Set.of();
+        }
 	}
 
 	/**
@@ -361,7 +370,7 @@ public class GeoMap extends Node {
 			despawnableHouseDoors.put(node.id, node);
 			break;
 		case TOWN_OBJECT:
-			despawnableTownObjects.computeIfAbsent(node.id, key -> new ArrayList<DespawnableNode>()).add(node);
+			despawnableTownObjects.computeIfAbsent(node.id, key -> new ArrayList<>()).add(node);
 			break;
 		case DOOR_STATE1:
 		case DOOR_STATE2:

@@ -37,7 +37,7 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 		/** elementsealingstone 任务 / element sealing stone task */
 		private Future<?> elementSealingStoneTask;
 		/** element sealing stone / element sealing stone */
-		private final List<Npc> elementSealingStone = new ArrayList<Npc>();
+		private final List<Npc> elementSealingStone = new ArrayList<>();
 
 	/**
 	 * NPC 掉落表注册时处理。
@@ -298,7 +298,7 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 	}
 
 	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -328,20 +328,20 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
+				instance.doOnAllPlayers(new Visitor<>() {
+                    /**
+                     * 处理 visit。
+                     * Handle visit.
+                     *
+                     * @param player 玩家 / player
+                     */
+                    @Override
+                    public void visit(Player player) {
+                        if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
+                            PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
+                        }
+                    }
+                });
 			}
 		}, time);
 	}

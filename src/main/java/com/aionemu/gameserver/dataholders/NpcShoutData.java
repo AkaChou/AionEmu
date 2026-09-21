@@ -65,7 +65,7 @@ public class NpcShoutData {
 				this.count += shoutList.getNpcShouts().size();
 				for (int j = shoutList.getNpcIds().size() - 1; j >= 0; j--) {
 					int npcId = shoutList.getNpcIds().get(j);
-					List<NpcShout> shouts = new ArrayList<NpcShout>(shoutList.getNpcShouts());
+					List<NpcShout> shouts = new ArrayList<>(shoutList.getNpcShouts());
 					if (worldShouts.get(npcId) == null) {
 						worldShouts.put(npcId, shouts);
 					} else {
@@ -163,9 +163,9 @@ public class NpcShoutData {
 		List<NpcShout> globalShouts = shouts(0, npcId);
 		List<NpcShout> worldShouts = shouts(worldId, npcId);
 		if (globalShouts == null) {
-			return worldShouts == null ? null : new ArrayList<NpcShout>(worldShouts);
+			return worldShouts == null ? null : new ArrayList<>(worldShouts);
 		}
-		List<NpcShout> npcShouts = new ArrayList<NpcShout>(globalShouts);
+		List<NpcShout> npcShouts = new ArrayList<>(globalShouts);
 		if (worldShouts != null) {
 			npcShouts.addAll(worldShouts);
 		}
@@ -235,7 +235,7 @@ public class NpcShoutData {
 		if (shouts == null) {
 			return null;
 		}
-		List<NpcShout> result = new ArrayList<NpcShout>();
+		List<NpcShout> result = new ArrayList<>();
 		for (NpcShout s : shouts) {
 			if (s.getWhen() == type) {
 				if (pattern != null && !pattern.equals(s.getPattern())) {

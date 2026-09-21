@@ -61,12 +61,10 @@ public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
 
 	private void ShebanMysticalTyrhund() {
 	    if (!isAlreadyDead()) {
-		    enrageTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			    public void run() {
-					if (!isAlreadyDead()) {
-					    spawn(284455, 1051.3069f, 694.83075f, 282.0391f, (byte) 14); // Sheban Mystical Tyrhund 召唤兽。 / Sheban Mystical Tyrhund.
-					    spawn(284455, 1062.1957f, 694.9131f, 282.0391f, (byte) 51); // Sheban Mystical Tyrhund 召唤兽。 / Sheban Mystical Tyrhund.
-					}
+		    enrageTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					spawn(284455, 1051.3069f, 694.83075f, 282.0391f, (byte) 14); // Sheban Mystical Tyrhund 召唤兽。 / Sheban Mystical Tyrhund.
+					spawn(284455, 1062.1957f, 694.9131f, 282.0391f, (byte) 51); // Sheban Mystical Tyrhund 召唤兽。 / Sheban Mystical Tyrhund.
 				}
 			}, 3000);
 		}
@@ -75,12 +73,7 @@ public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
 	private void scheduleDelayStage1(int delay) {
 		if (!isStart && !isAlreadyDead()) {
 		} else {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					stage1();
-				}
-			}, delay);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> stage1(), delay);
 		}
 	}
 

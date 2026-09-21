@@ -30,7 +30,7 @@ public class SM_TELEPORT_MAP extends AionServerPacket {
 	private final Player player;
 	private final TeleporterTemplate teleport;
 	public Npc npc;
-	private static final List<Integer> disableTeleportNpcs = new ArrayList<Integer>();
+	private static final List<Integer> disableTeleportNpcs = new ArrayList<>();
 
 	/**
 	 * @param player         请求传送的玩家 / player requesting teleport

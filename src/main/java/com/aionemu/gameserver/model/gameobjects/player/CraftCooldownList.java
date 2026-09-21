@@ -55,7 +55,7 @@ public class CraftCooldownList {
 	/** 添加制作冷却。 / Adds craft cooldown. */
 	public void addCraftCooldown(int delayId, int delay) {
 		if (craftCooldowns == null) {
-			craftCooldowns = new HashMap<Integer, Long>();
+			craftCooldowns = new HashMap<>();
 		}
 
 		long nextUseTime = System.currentTimeMillis() + (delay * 1000L);

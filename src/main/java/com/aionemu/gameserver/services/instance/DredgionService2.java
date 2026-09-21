@@ -30,7 +30,7 @@ public class DredgionService2 {
 	private static volatile ObjectProvider<DredgionService2> instanceProvider;
 
 	private boolean registerAvailable;
-	private final List<Integer> playersWithCooldown = new ArrayList<Integer>();
+	private final List<Integer> playersWithCooldown = new ArrayList<>();
 	private final SM_AUTO_GROUP[] autoGroupUnreg;
 	private final SM_AUTO_GROUP[] autoGroupReg;
 	private final byte maskLvlGradeC = 1, maskLvlGradeB = 2, maskLvlGradeA = 3;
@@ -53,66 +53,44 @@ public class DredgionService2 {
 		if (AutoGroupConfig.DREDGION_ENABLED) {
 			log.info(I18n.get("log.e829b9492ce7"));
 			// 战舰 周一至周日 12:00–13:00 / Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "12PM-1PM"
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				/**
-				 * 执行任务。
-				 * Runs the task.
-				 */
-				public void run() {
-					startDredgionRegistration();
-				}
-			}, AutoGroupConfig.DREDGION_SCHEDULE_MIDDAY);
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */GameCronServices.cronService().schedule(() -> startDredgionRegistration(), AutoGroupConfig.DREDGION_SCHEDULE_MIDDAY);
 			// 战舰 周一至周日 20:00–21:00 / Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "8PM-9PM"
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				/**
-				 * 执行任务。
-				 * Runs the task.
-				 */
-				public void run() {
-					startDredgionRegistration();
-				}
-			}, AutoGroupConfig.DREDGION_SCHEDULE_EVENING);
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */GameCronServices.cronService().schedule(() -> startDredgionRegistration(), AutoGroupConfig.DREDGION_SCHEDULE_EVENING);
 			// 战舰 周一至周日 23:00–00:00 / Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "23PM-0AM"
-			GameCronServices.cronService().schedule(new Runnable() {
-				@Override
-				/**
-				 * 执行任务。
-				 * Runs the task.
-				 */
-				public void run() {
-					startDredgionRegistration();
-				}
-			}, AutoGroupConfig.DREDGION_SCHEDULE_MIDNIGHT);
+			/**
+			 * 执行任务。
+			 * Runs the task.
+			 */GameCronServices.cronService().schedule(() -> startDredgionRegistration(), AutoGroupConfig.DREDGION_SCHEDULE_MIDNIGHT);
 		}
 	}
 
 	private void startUregisterDredgionTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */
-			public void run() {
-				registerAvailable = false;
-				playersWithCooldown.clear();
-				GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskLvlGradeA);
-				GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskLvlGradeB);
-				GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskLvlGradeC);
-				Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
-				while (iter.hasNext()) {
-					Player player = iter.next();
-					if (player.getLevel() > minLevel) {
-						int instanceMaskId = getInstanceMaskId(player);
-						if (instanceMaskId > 0) {
-							PacketSendUtility.sendPacket(player, DredgionService2.this.autoGroupUnreg[instanceMaskId]);
-						}
-					}
-				}
-			}
-		}, AutoGroupConfig.DREDGION_TIMER * 60 * 1000);
+		/**
+		 * 执行任务。
+		 * Runs the task.
+		 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			 registerAvailable = false;
+			 playersWithCooldown.clear();
+			 GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskLvlGradeA);
+			 GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskLvlGradeB);
+			 GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskLvlGradeC);
+			 Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+			 while (iter.hasNext()) {
+				 Player player = iter.next();
+				 if (player.getLevel() > minLevel) {
+					 int instanceMaskId = getInstanceMaskId(player);
+					 if (instanceMaskId > 0) {
+						 PacketSendUtility.sendPacket(player, DredgionService2.this.autoGroupUnreg[instanceMaskId]);
+					 }
+				 }
+			 }
+		 }, AutoGroupConfig.DREDGION_TIMER * 60 * 1000);
 	}
 
 	private void startDredgionRegistration() {

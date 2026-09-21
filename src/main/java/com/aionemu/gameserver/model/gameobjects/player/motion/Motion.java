@@ -19,7 +19,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class Motion implements IExpirable {
 	/** 动作 ID 到槽位类型的映射表。 / Motion ID to slot type mapping. */
-	static final Map<Integer, Integer> motionType = new HashMap<Integer, Integer>();
+	static final Map<Integer, Integer> motionType = new HashMap<>();
 	static {
 		motionType.put(1, 1);
 		motionType.put(2, 2);

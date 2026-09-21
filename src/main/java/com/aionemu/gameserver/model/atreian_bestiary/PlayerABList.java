@@ -21,7 +21,7 @@ public final class PlayerABList {
 	private final Map<Integer, PlayerABEntry> entry;
 
 	public PlayerABList() {
-		this.entry = new HashMap<Integer, PlayerABEntry>(0);
+		this.entry = new HashMap<>(0);
 	}
 
 	public PlayerABList(List<PlayerABEntry> entries) {
@@ -33,7 +33,7 @@ public final class PlayerABList {
 
 	/** 返回全部 AB 条目。 / Returns all AB entries. */
 	public PlayerABEntry[] getAllAB() {
-		List<PlayerABEntry> allCp = new ArrayList<PlayerABEntry>();
+		List<PlayerABEntry> allCp = new ArrayList<>();
 		allCp.addAll(entry.values());
 		return allCp.toArray(new PlayerABEntry[allCp.size()]);
 	}

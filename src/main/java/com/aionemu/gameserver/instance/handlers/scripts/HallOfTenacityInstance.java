@@ -45,7 +45,7 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
         /** 副本是否已开始 / whether the instance started */
         protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
         /** hot 任务 / hot task */
-        private final List<Future<?>> hotTask = new ArrayList<Future<?>>();
+        private final List<Future<?>> hotTask = new ArrayList<>();
     /**
      * 返回玩家奖励记录。
      * Return the player's reward record.
@@ -162,19 +162,19 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
 	instanceReward.sendLog("Hall Of Tenacity got "+instance.getPlayersInside().size()+" player(s)");
 	//instanceReward.sendPacket(0, null);
 	//instanceReward.sendPacket(9, null);
-	instance.doOnAllPlayers(new Visitor<Player>() {
-                        /**
-                         * 处理 visit。
-                         * Handle visit.
-                         *
-                         * @param player 玩家 / player
-                         */
-                        @Override
-                        public void visit(Player player) {
-	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(0, getTime(), instanceReward, instance.getPlayersInside(), true));
-	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(9, getTime(), instanceReward, instance.getPlayersInside(), true));
-                        }
-                    });
+	instance.doOnAllPlayers(new Visitor<>() {
+		/**
+		 * 处理 visit。
+		 * Handle visit.
+		 *
+		 * @param player 玩家 / player
+		 */
+		@Override
+		public void visit(Player player) {
+			PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(0, getTime(), instanceReward, instance.getPlayersInside(), true));
+			PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(9, getTime(), instanceReward, instance.getPlayersInside(), true));
+		}
+	});
 				}
             }
         }, 60000));//after enter 1 min will show versus board
@@ -186,19 +186,19 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
             @Override
             public void run() {
                 if (!instanceReward.isRewarded()) {
-				    instance.doOnAllPlayers(new Visitor<Player>() {
+				    instance.doOnAllPlayers(new Visitor<>() {
 
-			            /**
-			             * 处理 visit。
-			             * Handle visit.
-			             *
-			             * @param player 玩家 / player
-			             */
-			            @Override
-			            public void visit(Player player) {
-			            	sendRequest(player);
-			            }
-			        });
+						/**
+						 * 处理 visit。
+						 * Handle visit.
+						 *
+						 * @param player 玩家 / player
+						 */
+						@Override
+						public void visit(Player player) {
+							sendRequest(player);
+						}
+					});
 				}
             }
         }, 150000));//after enter 1 min 30s will show enter battle window
@@ -295,7 +295,7 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
              */
             @Override
             public void run() {
-                instance.doOnAllPlayers(new Visitor<Player>() {
+                instance.doOnAllPlayers(new Visitor<>() {
                     /**
                      * 处理 visit。
                      * Handle visit.

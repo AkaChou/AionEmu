@@ -18,23 +18,13 @@ public class WorldRaid_Directing_EffectAI2 extends NpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				startLifeTask();
-			}
-		}, 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> startLifeTask(), 1000);
 	}
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				AI2Actions.deleteOwner(WorldRaid_Directing_EffectAI2.this);
-			}
-		}, 410000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(WorldRaid_Directing_EffectAI2.this), 410000);
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

@@ -82,13 +82,7 @@ public abstract class AbstractOverTimeEffect extends EffectTemplate {
 			return;
 		}
 		try {
-			Future<?> task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-
-				@Override
-				public void run() {
-					onPeriodicAction(effect);
-				}
-			}, checktime, checktime);
+			Future<?> task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> onPeriodicAction(effect), checktime, checktime);
 			effect.setPeriodicTask(task, position);
 		} catch (Exception e) {
 			log.warn(I18n.get("log.3cb547ba6faf", effect.getSkillId()), e);

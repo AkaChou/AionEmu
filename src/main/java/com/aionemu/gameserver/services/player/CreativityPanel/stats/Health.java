@@ -19,7 +19,7 @@ public class Health implements StatOwner {
 
 	private static volatile ObjectProvider<Health> instanceProvider;
 
-	private final List<IStatFunction> health = new ArrayList<IStatFunction>();
+	private final List<IStatFunction> health = new ArrayList<>();
 
 	/**
 	 * 属性变更时重算。

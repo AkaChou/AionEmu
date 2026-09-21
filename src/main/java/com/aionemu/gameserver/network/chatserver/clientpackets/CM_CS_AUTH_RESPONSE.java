@@ -76,12 +76,7 @@ public class CM_CS_AUTH_RESPONSE extends CsClientPacket {
 			break;
 		case 2: // Already Registered
 			log.info(I18n.get("log.2812bb8416bb"));
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					CM_CS_AUTH_RESPONSE.this.getConnection().sendPacket(new SM_CS_AUTH());
-				}
-			}, 10000);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> CM_CS_AUTH_RESPONSE.this.getConnection().sendPacket(new SM_CS_AUTH()), 10000);
 			break;
 		}
 	}

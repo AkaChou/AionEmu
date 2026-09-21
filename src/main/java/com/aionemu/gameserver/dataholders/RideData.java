@@ -34,7 +34,7 @@ public class RideData {
 	 * After JAXB unmarshalling, indexes ride info by NPC id and releases the list.
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		rideInfos = new IntObjectHashMap<RideInfo>();
+		rideInfos = new IntObjectHashMap<>();
 
 		for (RideInfo info : rides) {
 			rideInfos.put(info.getNpcId(), info);

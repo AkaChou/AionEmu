@@ -28,7 +28,7 @@ public class TwoTeamSmallBg extends Battleground {
 	/** 额外回合/超时任务。 / Extra round/timeout task. */
 	private final ScheduledFuture<?> extraTask = null;
 	/** 队伍索引 → 回合胜场。 / Team index → round wins. */
-	private final Map<Integer, Integer> roundResults = new HashMap<Integer, Integer>();
+	private final Map<Integer, Integer> roundResults = new HashMap<>();
 	/** 最大回合数。 / Maximum rounds. */
 	private int maxRounds = 3;
 	/** 已完成回合数。 / Rounds completed. */
@@ -819,12 +819,7 @@ public class TwoTeamSmallBg extends Battleground {
 				}
 			}
 		}
-		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				endTwoTeamMatch(true);
-			}
-		}, getMatchLength() * 1000L));
+		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(() -> endTwoTeamMatch(true), getMatchLength() * 1000L));
 		super.startBackgroundTask();
 	}
 
@@ -910,15 +905,12 @@ public class TwoTeamSmallBg extends Battleground {
 		synchronized (super.getGroups()) {
 			for (final PlayerGroup group : super.getGroups()) {
 				for (final Player pl : group.getMembers()) {
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							if (!pl.isAfk()) {
-								preparePlayer(pl, 8000, false);
-								SpawnPosition pos = getSpawnPositions().get(group.getBgIndex());
-								if (pos != null) {
-									TeleportService2.teleportTo(pl, getMapId(), pos.getX(), pos.getY(), pos.getZ());
-								}
+					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						if (!pl.isAfk()) {
+							preparePlayer(pl, 8000, false);
+							SpawnPosition pos = getSpawnPositions().get(group.getBgIndex());
+							if (pos != null) {
+								TeleportService2.teleportTo(pl, getMapId(), pos.getX(), pos.getY(), pos.getZ());
 							}
 						}
 					}, 5000);
@@ -928,21 +920,13 @@ public class TwoTeamSmallBg extends Battleground {
 		for (Player pl : super.getSpectators()) {
 			super.createTimer(pl, getMatchLength());
 		}
-		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				endTwoTeamMatch(true);
-			}
-		}, getMatchLength() * 1000L));
+		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(() -> endTwoTeamMatch(true), getMatchLength() * 1000L));
 		super.startBackgroundTask();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				endCalled = false;
-				for (PlayerGroup group : getGroups()) {
-					if (group.size() < 1) {
-						endTwoTeamMatch(false);
-					}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			endCalled = false;
+			for (PlayerGroup group : getGroups()) {
+				if (group.size() < 1) {
+					endTwoTeamMatch(false);
 				}
 			}
 		}, 1000);
@@ -974,7 +958,7 @@ public class TwoTeamSmallBg extends Battleground {
 	 */
 	private PlayerGroup getRoundWinner() {
 		PlayerGroup winner = null;
-		Map<PlayerGroup, Integer> deadCounts = new HashMap<PlayerGroup, Integer>();
+		Map<PlayerGroup, Integer> deadCounts = new HashMap<>();
 		for (PlayerGroup group : super.getGroups()) {
 			int deadCounter = 0;
 			for (Player pl : group.getMembers()) {

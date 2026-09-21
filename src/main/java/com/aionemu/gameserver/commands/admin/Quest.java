@@ -65,20 +65,22 @@ public class Quest extends AdminCommand {
             return;
         }
 
-        if (subcommand.equals("start")) {
-            handleStart(admin, target, params);
-        }
-        else if (subcommand.equals("set")) {
-            handleSet(admin, target, params);
-        }
-        else if (subcommand.equals("delete")) {
-            handleDelete(admin, target, params);
-        }
-        else if (subcommand.equals("show")) {
-            handleShow(admin, target, params);
-        }
-        else {
-            PacketSendUtility.sendMessage(admin, "syntax //quest <start|set|show|delete|log>");
+        switch (subcommand) {
+            case "start":
+                handleStart(admin, target, params);
+                break;
+            case "set":
+                handleSet(admin, target, params);
+                break;
+            case "delete":
+                handleDelete(admin, target, params);
+                break;
+            case "show":
+                handleShow(admin, target, params);
+                break;
+            default:
+                PacketSendUtility.sendMessage(admin, "syntax //quest <start|set|show|delete|log>");
+                break;
         }
     }
 
@@ -316,14 +318,11 @@ public class Quest extends AdminCommand {
         target.getController().updateZone();
         target.getController().updateNearbyQuests();
 
-        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            @Override
-            public void run() {
-                if (target.isOnline()) {
-                    target.getController().updateNearbyQuests();
-                }
-            }
-        }, 1000);
+        GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (target.isOnline()) {
+				target.getController().updateNearbyQuests();
+			}
+		}, 1000);
 
         PacketSendUtility.sendMessage(admin, "Quest " + questId + " deleted successfully for " + target.getName());
     }

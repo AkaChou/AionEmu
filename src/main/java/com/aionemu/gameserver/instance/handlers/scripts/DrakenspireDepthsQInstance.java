@@ -61,9 +61,9 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 	/** 虚脱的奥里萨（任务 15300/25300 唯一认可的击杀目标）/ Exhausted Orissan (the only accepted quest kill target). */
 	private static final int EXHAUSTED_ORISSAN_NPC_ID = 237231;
 	/** 已播放动画集合 / played-movie set */
-	private final List<Integer> movies = new ArrayList<Integer>();
+	private final List<Integer> movies = new ArrayList<>();
 		/** 对象 / objects */
-		private final Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+		private final Map<Integer, VisibleObject> objects = new LinkedHashMap<>();
 
 	/**
 	 * 副本创建时初始化逻辑。
@@ -1077,7 +1077,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 			case 237237: //Beritra.
 			    despawnNpc(npc);
 			    spawn(237238, 127.77517f, 508.3428f, 1749.8322f, (byte) 8); //Beritra [Dragon Form]
-			    instance.doOnAllPlayers(new Visitor<Player>() {
+			    instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
@@ -1089,8 +1089,8 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 						if (player.isOnline()) {
 							startDrakenspireTimer();
 							killNpc(getNpcs(702695));
-						    killNpc(getNpcs(702697));
-						    killNpc(getNpcs(702699));
+							killNpc(getNpcs(702697));
+							killNpc(getNpcs(702699));
 							PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 420)); //7 Minutes.
 						}
 					}
@@ -1122,7 +1122,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501326, Masionel.getObjectId(), 0, 12000);
 									// 贝里特拉逃走了！他或许逃脱，但我们给他留下了深刻印象！ / Beritra has fled! He may have escaped, but we gave him something to remember us by!
 									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501327, Masionel.getObjectId(), 0, 22000);
-									instance.doOnAllPlayers(new Visitor<Player>() {
+									instance.doOnAllPlayers(new Visitor<>() {
 										/**
 										 * 处理 visit。
 										 * Handle visit.
@@ -1161,7 +1161,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501326, Parsia.getObjectId(), 0, 12000);
 									// 贝里特拉逃走了！他或许逃脱，但我们给他留下了深刻印象！ / Beritra has fled! He may have escaped, but we gave him something to remember us by!
 									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501327, Parsia.getObjectId(), 0, 22000);
-									instance.doOnAllPlayers(new Visitor<Player>() {
+									instance.doOnAllPlayers(new Visitor<>() {
 										/**
 										 * 处理 visit。
 										 * Handle visit.
@@ -1197,7 +1197,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 		this.sendMessage(1402725, 6 * 60 * 1000);
 		// 龙主遗物提取完成，贝里特拉已消失。 / The extraction of the Balaur Lord's Relic is complete and Beritra has disappeared.
 		this.sendMessage(1402720, 7 * 60 * 1000);
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -1207,14 +1207,14 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-				    drakenspireQTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					drakenspireQTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						/**
 						 * 处理 run。
 						 * Handle run.
 						 */
 						@Override
 						public void run() {
-							instance.doOnAllPlayers(new Visitor<Player>() {
+							instance.doOnAllPlayers(new Visitor<>() {
 								/**
 								 * 处理 visit。
 								 * Handle visit.
@@ -1500,7 +1500,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 	}
 
 	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -1522,20 +1522,20 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-					/**
-					 * 处理 visit。
-					 * Handle visit.
-					 *
-					 * @param player 玩家 / player
-					 */
-					@Override
-					public void visit(Player player) {
-						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-						}
-					}
-				});
+				instance.doOnAllPlayers(new Visitor<>() {
+                    /**
+                     * 处理 visit。
+                     * Handle visit.
+                     *
+                     * @param player 玩家 / player
+                     */
+                    @Override
+                    public void visit(Player player) {
+                        if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
+                            PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
+                        }
+                    }
+                });
 			}
 		}, time);
 	}

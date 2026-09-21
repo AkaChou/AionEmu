@@ -328,7 +328,7 @@ public class Player extends Creature {
 	private long nextSkillUse;
 	private long nextSummonSkillUse;
 	private ChainSkills chainSkills;
-	private final Map<AttackStatus, Long> lastCounterSkill = new HashMap<AttackStatus, Long>();
+	private final Map<AttackStatus, Long> lastCounterSkill = new HashMap<>();
 	/**
 	 * @return the dualEffectValue
 	 */
@@ -1801,7 +1801,7 @@ public class Player extends Creature {
 
 	public void setRideObservers(ActionObserver observer) {
 		if (rideObservers == null) {
-			rideObservers = new ArrayList<ActionObserver>(3);
+			rideObservers = new ArrayList<>(3);
 		}
 		rideObservers.add(observer);
 	}
@@ -1912,7 +1912,7 @@ public class Player extends Creature {
 
 	public void setHotTeleObservers(ActionObserver observer) {
 		if (hotTeleObservers == null) {
-			hotTeleObservers = new ArrayList<ActionObserver>(3);
+			hotTeleObservers = new ArrayList<>(3);
 		}
 		hotTeleObservers.add(observer);
 	}
@@ -2239,7 +2239,7 @@ public class Player extends Creature {
 	/** 设置 queued players / Sets the queued players */
 	public void setQueuedPlayers(Player player) {
 		if (QueuedPlayers == null) {
-			QueuedPlayers = new ArrayList<Player>(50);
+			QueuedPlayers = new ArrayList<>(50);
 		}
 		QueuedPlayers.add(player);
 	}
@@ -2283,5 +2283,5 @@ public class Player extends Creature {
 	}
 
 	/** 返回 disassembly item lists / Returns the disassembly item lists */
-	private List<DisassembleItem> disassemblyItemLists = new ArrayList<DisassembleItem>();
+	private List<DisassembleItem> disassemblyItemLists = new ArrayList<>();
 }

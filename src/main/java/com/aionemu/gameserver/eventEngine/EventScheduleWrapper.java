@@ -51,12 +51,7 @@ class EventScheduleWrapper implements Runnable {
 			}
 		}
 		if (!check()) {
-			Runnable runnable = new Runnable() {
-				@Override
-				public void run() {
-					check();
-				}
-			};
+			Runnable runnable = () -> check();
 			last_future = GameThreadPoolServices.threadPoolManager().schedule(runnable, RECHECK_DELAY * 60 * 1000);
 		}
 	}

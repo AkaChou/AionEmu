@@ -174,8 +174,8 @@ public class ManaStoneInfoBlobEntry extends ItemBlobEntry {
 		int count = 0;
 		if (item.hasManaStones()) {
 			Set<ManaStone> itemStones = item.getItemStones();
-			ArrayList<ManaStone> basicStones = new ArrayList<ManaStone>();
-			ArrayList<ManaStone> ancientStones = new ArrayList<ManaStone>();
+			ArrayList<ManaStone> basicStones = new ArrayList<>();
+			ArrayList<ManaStone> ancientStones = new ArrayList<>();
 			for (ManaStone itemStone : itemStones) {
 				if (itemStone.isBasic()) {
 					basicStones.add(itemStone);

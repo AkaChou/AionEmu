@@ -43,46 +43,34 @@ public class Advance_Corridor_ShieldAI2 extends NpcAI2
 	}
 
 	private void announceBelusAdvance() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 贝卢斯进阶走廊护盾遭受攻击。 / The Belus Advance Corridor Shield is under attack.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_PORTAL_DEST_69_ATTACKED);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 贝卢斯进阶走廊护盾遭受攻击。 / The Belus Advance Corridor Shield is under attack.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_PORTAL_DEST_69_ATTACKED);
 			}
 		});
 	}
 	private void announceAspidaAdvance() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 阿斯皮达进阶走廊护盾遭受攻击。 / The Aspida Advance Corridor Shield is under attack.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_PORTAL_DEST_70_ATTACKED);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 阿斯皮达进阶走廊护盾遭受攻击。 / The Aspida Advance Corridor Shield is under attack.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_PORTAL_DEST_70_ATTACKED);
 			}
 		});
 	}
 	private void announceAtanatosAdvance() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 阿塔纳托斯进阶走廊护盾遭受攻击。 / The Atanatos Advance Corridor Shield is under attack.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_PORTAL_DEST_71_ATTACKED);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 阿塔纳托斯进阶走廊护盾遭受攻击。 / The Atanatos Advance Corridor Shield is under attack.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_PORTAL_DEST_71_ATTACKED);
 			}
 		});
 	}
 	private void announceDisillonAdvance() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 迪西隆进阶走廊护盾遭受攻击。 / The Disillon Advance Corridor Shield is under attack.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_PORTAL_DEST_72_ATTACKED);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 迪西隆进阶走廊护盾遭受攻击。 / The Disillon Advance Corridor Shield is under attack.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_PORTAL_DEST_72_ATTACKED);
 			}
 		});
 	}

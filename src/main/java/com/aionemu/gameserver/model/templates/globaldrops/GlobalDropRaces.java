@@ -23,7 +23,7 @@ public class GlobalDropRaces {
 	/** 返回全局掉落种族。 / Returns the global drop races. */
 	public List<GlobalDropRace> getGlobalDropRaces() {
 		if (gdRaces == null) {
-			gdRaces = new ArrayList<GlobalDropRace>();
+			gdRaces = new ArrayList<>();
 		}
 		return this.gdRaces;
 	}

@@ -87,7 +87,7 @@ public class SpawnGroup2 extends AbstractLockManager {
 	private int respawnTime;
 	/** 获取处理器类型。 / Returns the handler type. */
 	private SpawnHandlerType handlerType;
-	private final List<SpawnTemplate> spots = new ArrayList<SpawnTemplate>();
+	private final List<SpawnTemplate> spots = new ArrayList<>();
 	private HashMap<Integer, HashMap<SpawnTemplate, Boolean>> poolUsedTemplates;
 
 	public SpawnGroup2(int worldId, Spawn spawn) {
@@ -358,7 +358,7 @@ public class SpawnGroup2 extends AbstractLockManager {
 		spawnPageRestricted = spawn.hasSpawnPage();
 		initialDelay = spawn.getInitialDelay();
 		if (hasPool()) {
-			poolUsedTemplates = new HashMap<Integer, HashMap<SpawnTemplate, Boolean>>();
+			poolUsedTemplates = new HashMap<>();
 		}
 	}
 
@@ -399,7 +399,7 @@ public class SpawnGroup2 extends AbstractLockManager {
 	/** 返回随机刷新模板 / Returns a random spawn template */
 	public SpawnTemplate getRndTemplate(int instanceId) {
 		final List<SpawnTemplate> allTemplates = spots;
-		List<SpawnTemplate> templates = new ArrayList<SpawnTemplate>();
+		List<SpawnTemplate> templates = new ArrayList<>();
 		super.readLock();
 		try {
 			for (SpawnTemplate template : allTemplates) {
@@ -425,7 +425,7 @@ public class SpawnGroup2 extends AbstractLockManager {
 		try {
 			HashMap<SpawnTemplate, Boolean> states = poolUsedTemplates.get(instanceId);
 			if (states == null) {
-				states = new HashMap<SpawnTemplate, Boolean>();
+				states = new HashMap<>();
 				poolUsedTemplates.put(instanceId, states);
 			}
 			states.put(template, isUsed);

@@ -22,7 +22,7 @@ import com.aionemu.gameserver.skillengine.change.Func;
 public class ProtectorBuffs implements StatOwner {
 	private GuardRankRestriction guardRankRestriction;
 	private GuardTypeRestriction guardTypeRestriction;
-	private final List<IStatFunction> functions = new ArrayList<IStatFunction>();
+	private final List<IStatFunction> functions = new ArrayList<>();
 
 	/**
 	 * 按守护等级对玩家施加属性效果。

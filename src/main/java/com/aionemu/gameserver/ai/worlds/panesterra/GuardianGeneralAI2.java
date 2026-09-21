@@ -26,78 +26,38 @@ public class GuardianGeneralAI2 extends AggressiveNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {
 			case 277400: //Mirage Dance Guardian General.
 			case 277405: //Chaos Wind Guardian General.
 				killedTheGuardianGeneral();
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			        @Override
-			        public void run() {
-			            spawnTreasureChest(701481);
-			        }
-		        }, 10000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			        @Override
-			        public void run() {
-					    spawn(802219, 1024.12f, 1078.747f, 1530.2688f, (byte) 90);
-			        }
-		        }, 480000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTreasureChest(701481), 10000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(802219, 1024.12f, 1078.747f, 1530.2688f, (byte) 90), 480000);
 			break;
 			case 277415: //Mirage Dance Guardian General.
 			case 277420: //Chaos Wind Guardian General.
 			    killedTheGuardianGeneral();
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			        @Override
-			        public void run() {
-			            spawnTreasureChest(701481);
-			        }
-		        }, 10000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			        @Override
-			        public void run() {
-					    spawn(802221, 1024.12f, 1078.747f, 1530.2688f, (byte) 90);
-			        }
-		        }, 480000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTreasureChest(701481), 10000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(802221, 1024.12f, 1078.747f, 1530.2688f, (byte) 90), 480000);
 			break;
 			case 277430: //Mirage Dance Guardian General.
 			case 277435: //Chaos Wind Guardian General.
 			    killedTheGuardianGeneral();
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			        @Override
-			        public void run() {
-			            spawnTreasureChest(701481);
-			        }
-		        }, 10000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			        @Override
-			        public void run() {
-					    spawn(802223, 1024.12f, 1078.747f, 1530.2688f, (byte) 90);
-			        }
-		        }, 480000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTreasureChest(701481), 10000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(802223, 1024.12f, 1078.747f, 1530.2688f, (byte) 90), 480000);
 			break;
 			case 277445: //Mirage Dance Guardian General.
 			case 277450: //Chaos Wind Guardian General.
 			    killedTheGuardianGeneral();
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			        @Override
-			        public void run() {
-			            spawnTreasureChest(701481);
-			        }
-		        }, 10000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			        @Override
-			        public void run() {
-					    spawn(802225, 1024.12f, 1078.747f, 1530.2688f, (byte) 90);
-			        }
-		        }, 480000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTreasureChest(701481), 10000);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(802225, 1024.12f, 1078.747f, 1530.2688f, (byte) 90), 480000);
 			break;
 		}
 		super.handleDied();
 	}
-	
+
 	private void spawnTreasureChest(int npcId) {
 		rndSpawnInRange(npcId, Rnd.get(1, 4));
 		rndSpawnInRange(npcId, Rnd.get(1, 4));
@@ -106,7 +66,7 @@ public class GuardianGeneralAI2 extends AggressiveNpcAI2
 		rndSpawnInRange(npcId, Rnd.get(1, 4));
 		rndSpawnInRange(npcId, Rnd.get(1, 4));
 	}
-	
+
 	private Npc rndSpawnInRange(int npcId, float distance) {
 		float direction = Rnd.get(0, 199) / 100f;
 		float x1 = (float) (Math.cos(Math.PI * direction) * distance);
@@ -114,26 +74,23 @@ public class GuardianGeneralAI2 extends AggressiveNpcAI2
 		WorldPosition p = getPosition();
 		return (Npc) spawn(npcId, p.getX() + x1, p.getY() + y1, p.getZ(), (byte) 0);
 	}
-	
+
 	private void killedTheGuardianGeneral() {
-        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 正在加载进阶走廊护盾……请稍候。 / Loading the Advance Corridor Shield... Please wait.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_01, 0);
-				// 特兰西迪姆附楼入口将在 8 分钟后开启。 / The entrance to the Transidium Annex will open in 8 minutes.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_02, 10000);
-				// 特兰西迪姆附楼入口将在 6 分钟后开启。 / The entrance to the Transidium Annex will open in 6 minutes.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_03, 120000);
-				// 特兰西迪姆附楼入口将在 4 分钟后开启。 / The entrance to the Transidium Annex will open in 4 minutes.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_04, 240000);
-				// 特兰西迪姆附楼入口将在 2 分钟后开启。 / The entrance to the Transidium Annex will open in 2 minutes.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_05, 360000);
-				// 特兰西迪姆附楼入口将在 1 分钟后开启。 / The entrance to the Transidium Annex will open in 1 minute.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_06, 420000);
-				// 特兰西迪姆附楼入口已开启。 / The entrance to the Transidium Annex has opened.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_08, 480000);
-			}
+        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 正在加载进阶走廊护盾……请稍候。 / Loading the Advance Corridor Shield... Please wait.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_01, 0);
+			// 特兰西迪姆附楼入口将在 8 分钟后开启。 / The entrance to the Transidium Annex will open in 8 minutes.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_02, 10000);
+			// 特兰西迪姆附楼入口将在 6 分钟后开启。 / The entrance to the Transidium Annex will open in 6 minutes.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_03, 120000);
+			// 特兰西迪姆附楼入口将在 4 分钟后开启。 / The entrance to the Transidium Annex will open in 4 minutes.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_04, 240000);
+			// 特兰西迪姆附楼入口将在 2 分钟后开启。 / The entrance to the Transidium Annex will open in 2 minutes.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_05, 360000);
+			// 特兰西迪姆附楼入口将在 1 分钟后开启。 / The entrance to the Transidium Annex will open in 1 minute.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_06, 420000);
+			// 特兰西迪姆附楼入口已开启。 / The entrance to the Transidium Annex has opened.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_08, 480000);
 		});
     }
 }

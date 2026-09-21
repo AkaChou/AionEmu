@@ -95,17 +95,13 @@ public class MathObjectObserver extends ActionObserver {
 	private void shedulesEvent() {
 		int delay = this.template != null && this.template.getDuration() >= 1000 ? this.template.getDuration()
 				: (this.mathObject.getDuration() >= 1000 ? this.mathObject.getDuration() : 1000);
-		this.shedules = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-
-			@Override
-			public void run() {
-				if (!MathObjectObserver.this.mathObject.isSpawned()) {
-					MathObjectObserver.this.creature.getObserveController().removeObserver(MathObjectObserver.this);
-					MathObjectObserver.this.clearShedules();
-					return;
-				}
-				MathObjectObserver.this.onActionEvent();
+		this.shedules = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (!MathObjectObserver.this.mathObject.isSpawned()) {
+				MathObjectObserver.this.creature.getObserveController().removeObserver(MathObjectObserver.this);
+				MathObjectObserver.this.clearShedules();
+				return;
 			}
+			MathObjectObserver.this.onActionEvent();
 		}, delay, delay);
 	}
 

@@ -19,7 +19,7 @@ import com.aionemu.gameserver.skillengine.change.Func;
  */
 
 public class F2pBonus implements StatOwner {
-	private final List<IStatFunction> functions = new ArrayList<IStatFunction>();
+	private final List<IStatFunction> functions = new ArrayList<>();
 	private final F2pBonusAttr f2pBonusattr;
 
 	public F2pBonus(int buffId) {

@@ -136,12 +136,21 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
 			for (QuestAction.GrantReward reward : rewards) {
 				QuestRewardKind kind = reward.rewardKind();
 				switch (kind) {
-					case ITEM -> items.add(new QuestItems(reward.id(), (int) QuestRewardAmounts.resolve(player, reward)));
-					case RANDOM -> items.add(drawRandomReward(snapshot, reward.id()));
-					case EXP, EXP_BOOST, AURA_OF_GROWTH -> {
-					}
-					case TITLE -> grantTitle(connection, snapshot, player, reward, grantedTitles);
-					default -> throw new SQLException("unsupported durable reward " + kind);
+					case ITEM:
+						items.add(new QuestItems(reward.id(), (int) QuestRewardAmounts.resolve(player, reward)));
+						break;
+					case RANDOM:
+						items.add(drawRandomReward(snapshot, reward.id()));
+						break;
+					case EXP:
+					case EXP_BOOST:
+					case AURA_OF_GROWTH:
+						break;
+					case TITLE:
+						grantTitle(connection, snapshot, player, reward, grantedTitles);
+						break;
+					default:
+						throw new SQLException("unsupported durable reward " + kind);
 				}
 			}
 			if (!itemRewards && !commonDataChanged && grantedTitles.isEmpty()) {
@@ -151,19 +160,26 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
 				throw new SQLException("failed to add quest items for player " + snapshot.playerId());
 			}
 			for (QuestAction.GrantReward reward : rewards) {
-				switch (reward.rewardKind()) {
-					case ITEM, RANDOM -> {
-					}
-					case EXP -> player.getCommonData().addExp(QuestRewardAmounts.resolve(player, reward),
-						expRewardType(reward));
-					case EXP_BOOST -> player.getCommonData().addAuraOfGrowth(1060000L * QuestRewardAmounts.resolve(player, reward));
-					case AURA_OF_GROWTH -> player.getCommonData().addAuraOfGrowth(QuestRewardAmounts.resolve(player, reward));
-					case TITLE -> {
-						// 已在首个循环中经 grantTitle 处理，仅内存+连接持久化，不回写 common data。
-						// Handled by grantTitle in the first loop; in-memory + connection persistence only, no common-data write-back.
-					}
-					default -> throw new SQLException("unsupported durable reward " + reward.rewardKind());
-				}
+                switch (reward.rewardKind()) {
+                    case ITEM:
+                    case RANDOM:
+                        break;
+                    case EXP:
+                        player.getCommonData().addExp(QuestRewardAmounts.resolve(player, reward),
+                                expRewardType(reward));
+                        break;
+                    case EXP_BOOST:
+                        player.getCommonData().addAuraOfGrowth(1060000L * QuestRewardAmounts.resolve(player, reward));
+                        break;
+                    case AURA_OF_GROWTH:
+                        player.getCommonData().addAuraOfGrowth(QuestRewardAmounts.resolve(player, reward));
+                        break;
+                    case TITLE:// 已在首个循环中经 grantTitle 处理，仅内存+连接持久化，不回写 common data。
+                        // Handled by grantTitle in the first loop; in-memory + connection persistence only, no common-data write-back.
+                        break;
+                    default:
+                        throw new SQLException("unsupported durable reward " + reward.rewardKind());
+                }
 			}
 			List<Item> dirty = itemRewards ? List.copyOf(player.getDirtyItemsToUpdate()) : List.of();
 			inventoryStage = QuestInventoryPersistenceStage.persist(inventoryDao, connection, player, dirty);

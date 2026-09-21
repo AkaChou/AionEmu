@@ -33,12 +33,9 @@ public class SummonFunctionalNpcEffect extends SummonEffect {
 		Player effected = (Player) effect.getEffected();
 		final Npc functionalNpc = VisibleObjectSpawner.spawnFunctionalNpc(effected, npcId, owner);
 
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				if (functionalNpc != null && functionalNpc.isSpawned()) {
-					functionalNpc.getController().onDelete();
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (functionalNpc != null && functionalNpc.isSpawned()) {
+				functionalNpc.getController().onDelete();
 			}
 		}, (time > 0 ? time : 300) * 1000L);
 	}

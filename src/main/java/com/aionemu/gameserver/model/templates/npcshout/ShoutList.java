@@ -33,7 +33,7 @@ public class ShoutList {
 	 */
 	public List<NpcShout> getNpcShouts() {
 		if (npcShouts == null) {
-			npcShouts = new ArrayList<NpcShout>();
+			npcShouts = new ArrayList<>();
 		}
 		return this.npcShouts;
 	}
@@ -43,7 +43,7 @@ public class ShoutList {
 	 */
 	public List<Integer> getNpcIds() {
 		if (npcIds == null) {
-			npcIds = new ArrayList<Integer>();
+			npcIds = new ArrayList<>();
 		}
 		return this.npcIds;
 	}

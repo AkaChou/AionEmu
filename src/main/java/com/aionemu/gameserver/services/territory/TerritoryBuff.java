@@ -14,7 +14,7 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
  * Legion territory buff applying PvP defense bonus to players inside territory.
  */
 public class TerritoryBuff implements StatOwner {
-	private final List<IStatFunction> functions = new ArrayList<IStatFunction>();
+	private final List<IStatFunction> functions = new ArrayList<>();
 
 	/**
 	 * 对玩家施加领地增益效果。

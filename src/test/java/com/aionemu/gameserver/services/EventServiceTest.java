@@ -20,7 +20,7 @@ class EventServiceTest {
 	void getActiveEventsReturnsSnapshot() throws ReflectiveOperationException {
 		EventService service = objenesis.newInstance(EventService.class);
 		EventTemplate event = new EventTemplate();
-		List<EventTemplate> activeEvents = Collections.synchronizedList(new ArrayList<EventTemplate>());
+		List<EventTemplate> activeEvents = Collections.synchronizedList(new ArrayList<>());
 		activeEvents.add(event);
 		setField(service, "activeEvents", activeEvents);
 

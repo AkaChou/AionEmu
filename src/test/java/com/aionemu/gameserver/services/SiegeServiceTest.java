@@ -39,7 +39,7 @@ class SiegeServiceTest {
 
 	@Test
 	void deSpawnNpcsToleratesNpcRemovalFromWorldCollectionDuringDelete() {
-		List<SiegeNpc> liveNpcs = new ArrayList<SiegeNpc>();
+		List<SiegeNpc> liveNpcs = new ArrayList<>();
 		TestSiegeNpc firstNpc = siegeNpc(liveNpcs);
 		TestSiegeNpc secondNpc = siegeNpc(liveNpcs);
 		TestSiegeNpc thirdNpc = siegeNpc(liveNpcs);

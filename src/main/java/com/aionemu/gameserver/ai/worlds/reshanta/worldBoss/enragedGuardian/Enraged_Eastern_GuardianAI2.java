@@ -24,48 +24,34 @@ public class Enraged_Eastern_GuardianAI2 extends AggressiveNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 	}
-	
+
 	@Override
     protected void handleSpawned() {
         super.handleSpawned();
 		startLifeTask();
 		announceAb1NamedAppears();
     }
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			        @Override
-			        public void visit(Player player) {
-						AI2Actions.deleteOwner(Enraged_Eastern_GuardianAI2.this);
-						// 暴怒的东部守护者已消失。 / Enraged Eastern Guardian has disappeared.
-						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Despawn_03);
-			        }
-				});
-			}
-		}, 3600000); // 1 小时 / 1Hr.
+		GameThreadPoolServices.threadPoolManager().schedule(() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			AI2Actions.deleteOwner(Enraged_Eastern_GuardianAI2.this);
+			// 暴怒的东部守护者已消失。 / Enraged Eastern Guardian has disappeared.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Despawn_03);
+		}), 3600000); // 1 小时 / 1Hr.
 	}
-	
+
 	private void announceAb1NamedAppears() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 希尔东部守护者已出现。 / Siel's Eastern Guardian has appeared.
-				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Named_Spawn_In_03, 0);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 希尔东部守护者已出现。 / Siel's Eastern Guardian has appeared.
+			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Named_Spawn_In_03, 0);
 		});
 	}
-	
+
 	@Override
 	protected void handleDied() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 暴怒的东部守护者已被击败。 / Enraged Eastern Guardian has been defeated.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Die_03);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 暴怒的东部守护者已被击败。 / Enraged Eastern Guardian has been defeated.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Die_03);
 		});
 		super.handleDied();
 	}

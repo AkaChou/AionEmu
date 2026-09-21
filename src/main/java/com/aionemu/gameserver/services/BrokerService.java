@@ -64,12 +64,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j(topic = "EXCHANGE_LOG")
 public class BrokerService {
 
-	private final ConcurrentMap<Integer, BrokerItem> elyosBrokerItems = new ConcurrentHashMap<Integer, BrokerItem>();
-	private final ConcurrentMap<Integer, BrokerItem> elyosSettledItems = new ConcurrentHashMap<Integer, BrokerItem>();
-	private final ConcurrentMap<Integer, BrokerItem> asmodianBrokerItems = new ConcurrentHashMap<Integer, BrokerItem>();
-	private final ConcurrentMap<Integer, BrokerItem> asmodianSettledItems = new ConcurrentHashMap<Integer, BrokerItem>();
+	private final ConcurrentMap<Integer, BrokerItem> elyosBrokerItems = new ConcurrentHashMap<>();
+	private final ConcurrentMap<Integer, BrokerItem> elyosSettledItems = new ConcurrentHashMap<>();
+	private final ConcurrentMap<Integer, BrokerItem> asmodianBrokerItems = new ConcurrentHashMap<>();
+	private final ConcurrentMap<Integer, BrokerItem> asmodianSettledItems = new ConcurrentHashMap<>();
 	private Future<?> expiredItemsTask;
-	private final ConcurrentMap<Integer, BrokerPlayerCache> playerBrokerCache = new ConcurrentHashMap<Integer, BrokerPlayerCache>();
+	private final ConcurrentMap<Integer, BrokerPlayerCache> playerBrokerCache = new ConcurrentHashMap<>();
 	private static volatile ObjectProvider<BrokerService> instanceProvider;
 
 	/**
@@ -127,12 +127,7 @@ public class BrokerService {
 
 	private void scheduleExpiredItemsTask() {
 		int delay = Math.max(BrokerConfig.CHECK_EXPIRED_ITEMS_INTERVAL * 1000, 60000);
-		expiredItemsTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				checkExpiredItems();
-			}
-		}, delay, delay);
+		expiredItemsTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> checkExpiredItems(), delay, delay);
 	}
 
 	private void initBrokerService() {
@@ -203,7 +198,7 @@ public class BrokerService {
 		getPlayerCache(player).setBrokerStartPageCache(startPage);
 
 		if (itemList != null) {
-			List<BrokerItem> itemsFound = new ArrayList<BrokerItem>();
+			List<BrokerItem> itemsFound = new ArrayList<>();
 			for (BrokerItem item : searchItems) {
 				if (itemList.contains(item.getItemId())) {
 					itemsFound.add(item);
@@ -230,7 +225,7 @@ public class BrokerService {
 	 * @return
 	 */
 	private BrokerItem[] getItemsByMask(Player player, int clientMask, boolean cached) {
-		List<BrokerItem> searchItems = new ArrayList<BrokerItem>();
+		List<BrokerItem> searchItems = new ArrayList<>();
 		BrokerItemMask brokerMask = BrokerItemMask.getBrokerMaskById(clientMask);
 		if (cached) {
 			BrokerItem[] brokerItems = getFilteredItems(player);
@@ -280,7 +275,7 @@ public class BrokerService {
 	 * @return
 	 */
 	private BrokerItem[] getRequestedPage(BrokerItem[] brokerItems, int startPage) {
-		List<BrokerItem> page = new ArrayList<BrokerItem>();
+		List<BrokerItem> page = new ArrayList<>();
 		int startingElement = startPage * 9;
 		for (int i = startingElement, limit = 0; i < brokerItems.length && limit < 45; i++, limit++) {
 			page.add(brokerItems[i]);
@@ -442,7 +437,7 @@ public class BrokerService {
 				} else {
 					int buyingItemIndex = ArrayUtils.indexOf(getFilteredItems(player), buyingItem);
 					newCache = ArrayUtils.removeElement(getFilteredItems(player), buyingItem);
-					List<BrokerItem> updatedCache = new ArrayList<BrokerItem>(Arrays.asList(newCache));
+					List<BrokerItem> updatedCache = new ArrayList<>(Arrays.asList(newCache));
 					updatedCache.add(buyingItemIndex, buyingItem);
 					newCache = updatedCache.toArray(new BrokerItem[updatedCache.size()]);
 				}
@@ -754,7 +749,7 @@ public class BrokerService {
 			return 0;
 		}
 
-		List<BrokerItem> itemsFound = new ArrayList<BrokerItem>();
+		List<BrokerItem> itemsFound = new ArrayList<>();
 		for (BrokerItem item : searchItems) {
 			if (TargetItem.getItemId() == item.getItemId()) {
 				itemsFound.add(item);
@@ -871,7 +866,7 @@ public class BrokerService {
 	public void showRegisteredItems(Player player) {
 		Map<Integer, BrokerItem> brokerItems = getRaceBrokerItems(player.getRace());
 
-		List<BrokerItem> registeredItems = new ArrayList<BrokerItem>();
+		List<BrokerItem> registeredItems = new ArrayList<>();
 		int playerId = player.getObjectId();
 
 		for (BrokerItem item : brokerItems.values()) {
@@ -957,7 +952,7 @@ public class BrokerService {
 	 */
 	public void showSettledItems(Player player) {
 		Map<Integer, BrokerItem> brokerSettledItems = getRaceBrokerSettledItems(player.getRace());
-		List<BrokerItem> settledItems = new ArrayList<BrokerItem>();
+		List<BrokerItem> settledItems = new ArrayList<>();
 		int playerId = player.getObjectId();
 		long totalKinah = 0;
 		for (BrokerItem item : brokerSettledItems.values()) {
@@ -1015,7 +1010,7 @@ public class BrokerService {
 	public synchronized void settleAccount(Player player) {
 		Race playerRace = player.getRace();
 		Map<Integer, BrokerItem> brokerSettledItems = getRaceBrokerSettledItems(playerRace);
-		List<BrokerItem> collectedItems = new ArrayList<BrokerItem>();
+		List<BrokerItem> collectedItems = new ArrayList<>();
 		List<BrokerItem> brokerItemsToDelete = new ArrayList<>();
 		List<Item> inventoryItems = new ArrayList<>();
 		List<SettlementChange> settlementChanges = new ArrayList<>();

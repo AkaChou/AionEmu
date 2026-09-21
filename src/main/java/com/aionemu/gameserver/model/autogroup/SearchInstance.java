@@ -25,7 +25,7 @@ public class SearchInstance {
 		this.instanceMaskId = instanceMaskId;
 		this.ert = ert;
 		if (members != null) {
-			this.members = new ArrayList<Integer>();
+			this.members = new ArrayList<>();
 			for (Player member : members) {
 				this.members.add(member.getObjectId());
 			}

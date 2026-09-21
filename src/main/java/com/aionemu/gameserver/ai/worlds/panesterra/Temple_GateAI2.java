@@ -28,12 +28,12 @@ public class Temple_GateAI2 extends NpcAI2
 	protected int startBarAnimation = 1;
 	protected int cancelBarAnimation = 2;
 	private final int CANCEL_DIALOG_METERS = 10;
-	
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		handleUseItemStart(player);
 	}
-	
+
 	protected void handleUseItemStart(final Player player) {
 		final int delay = getTalkDelay();
 		if (delay != 0) {
@@ -49,20 +49,17 @@ public class Temple_GateAI2 extends NpcAI2
 			player.getObserveController().attach(observer);
 			PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), startBarAnimation));
 			PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.START_QUESTLOOT, 0, getObjectId()), true);
-			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
-					PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
-					player.getObserveController().removeObserver(observer);
-					handleUseItemFinish(player);
-				}
+			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
+				PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
+				player.getObserveController().removeObserver(observer);
+				handleUseItemFinish(player);
 			}, delay));
 		} else {
 			handleUseItemFinish(player);
 		}
 	}
-	
+
 	protected void handleUseItemFinish(Player player) {
 		if (player.getLevel() >= 65) {
 			// 是否要通过城门？ / Do you want to pass through the castle gate ?
@@ -84,7 +81,7 @@ public class Temple_GateAI2 extends NpcAI2
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_DOOR_FAR_FROM_NPC);
 		}
 	}
-	
+
 	private void moveToAcrossTempleGate(Player responder) {
 		int worldId = responder.getWorldId();
 		double radian = Math.toRadians(MathUtil.convertHeadingToDegree(responder.getHeading()));
@@ -96,11 +93,11 @@ public class Temple_GateAI2 extends NpcAI2
 		PacketSendUtility.broadcastPacketAndReceive(responder, new SM_TRANSFORM(responder, responder.getTransformedModelId(), true, responder.getTransformedItemId()));
 		TeleportService2.teleportTo(responder, worldId, responder.getX() + x, responder.getY() + y, responder.getZ(), (byte) 0);
 	}
-	
+
 	protected int getTalkDelay() {
 		return getObjectTemplate().getTalkDelay() * 1000;
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

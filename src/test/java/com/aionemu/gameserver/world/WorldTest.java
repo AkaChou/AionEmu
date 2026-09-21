@@ -30,7 +30,7 @@ class WorldTest {
 	@Test
 	void getNpcsReturnsSnapshotSafeForRemovalDuringIteration() throws ReflectiveOperationException {
 		World world = objenesis.newInstance(World.class);
-		Map<Integer, Npc> allNpcs = new LinkedHashMap<Integer, Npc>();
+		Map<Integer, Npc> allNpcs = new LinkedHashMap<>();
 		allNpcs.put(1, objenesis.newInstance(Npc.class));
 		allNpcs.put(2, objenesis.newInstance(Npc.class));
 		allNpcs.put(3, objenesis.newInstance(Npc.class));
@@ -49,11 +49,11 @@ class WorldTest {
 	@Test
 	void getLocalSiegeNpcsReturnsSnapshotSafeForRemovalDuringIteration() throws ReflectiveOperationException {
 		World world = objenesis.newInstance(World.class);
-		Collection<SiegeNpc> localNpcs = new ArrayList<SiegeNpc>();
+		Collection<SiegeNpc> localNpcs = new ArrayList<>();
 		localNpcs.add(objenesis.newInstance(SiegeNpc.class));
 		localNpcs.add(objenesis.newInstance(SiegeNpc.class));
 		localNpcs.add(objenesis.newInstance(SiegeNpc.class));
-		IntObjectHashMap<Collection<SiegeNpc>> localSiegeNpcs = new IntObjectHashMap<Collection<SiegeNpc>>();
+		IntObjectHashMap<Collection<SiegeNpc>> localSiegeNpcs = new IntObjectHashMap<>();
 		localSiegeNpcs.put(1, localNpcs);
 		setField(world, "localSiegeNpcs", localSiegeNpcs);
 

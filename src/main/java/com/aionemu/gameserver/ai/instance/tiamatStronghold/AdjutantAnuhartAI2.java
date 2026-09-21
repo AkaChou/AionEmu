@@ -27,7 +27,7 @@ public class AdjutantAnuhartAI2 extends AggressiveNpcAI2
 
 	private Future<?> bladeStormTask;
 	private final AtomicBoolean isAggred = new AtomicBoolean(false);
-	private final List<Integer> percents = new ArrayList<Integer>();
+	private final List<Integer> percents = new ArrayList<>();
 
 	@Override
 	protected void handleAttack(Creature creature) {
@@ -39,14 +39,11 @@ public class AdjutantAnuhartAI2 extends AggressiveNpcAI2
 	}
 
 	private void startBladeStormTask() {
-		bladeStormTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelTask();
-				} else {
-					startBladeStormEvent();
-				}
+		bladeStormTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelTask();
+			} else {
+				startBladeStormEvent();
 			}
 		}, 5000, 40000);
 	}

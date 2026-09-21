@@ -86,7 +86,7 @@ class EquipmentSettingUseAction {
 	private static boolean unequipCurrentEquipment(List<EquipmentSettingUseAction> actions, EquipmentSettingUseTarget target,
 			boolean switchWeaponSets) {
 		boolean changed = false;
-		Map<Integer, Long> slotsToUnequip = new LinkedHashMap<Integer, Long>();
+		Map<Integer, Long> slotsToUnequip = new LinkedHashMap<>();
 		for (EquipmentSettingUseAction action : actions) {
 			if (action.action == ACTION_UNEQUIP) {
 				addCurrentSlotToUnequip(slotsToUnequip, action.itemObjectId, target);
@@ -145,7 +145,7 @@ class EquipmentSettingUseAction {
 	}
 
 	private static Map<Integer, Long> getRequestedWeaponSlots(List<EquipmentSettingUseAction> actions, long weaponSet) {
-		Map<Integer, Long> requestedWeaponSlots = new LinkedHashMap<Integer, Long>();
+		Map<Integer, Long> requestedWeaponSlots = new LinkedHashMap<>();
 		for (EquipmentSettingUseAction action : actions) {
 			if (action.action == ACTION_EQUIP && isWeaponSlot(action.slot) && (action.slot & weaponSet) != 0) {
 				Long requestedSlot = requestedWeaponSlots.get(action.itemObjectId);

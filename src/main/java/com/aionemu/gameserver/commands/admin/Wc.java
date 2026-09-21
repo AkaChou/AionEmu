@@ -42,23 +42,26 @@ public class Wc extends AdminCommand {
 		}
 
 		StringBuilder sbMessage;
-		if (params[0].equals("ELY")) {
-			sbMessage = new StringBuilder("[World-Elyos]" + admin.getName() + ": ");
-			adminRace = Race.ELYOS;
-		}
-		else if (params[0].equals("ASM")) {
-			sbMessage = new StringBuilder("[World-Asmodian]" + admin.getName() + ": ");
-			adminRace = Race.ASMODIANS;
-		}
-		else if (params[0].equals("ALL"))
-			sbMessage = new StringBuilder("[World-All]" + admin.getName() + ": ");
-		else {
-			check = false;
-			if (adminRace == Race.ELYOS)
-				sbMessage = new StringBuilder("[World-Elyos]" + admin.getName() + ": ");
-			else
-				sbMessage = new StringBuilder("[World-Asmodian]" + admin.getName() + ": ");
-		}
+        switch (params[0]) {
+            case "ELY":
+                sbMessage = new StringBuilder("[World-Elyos]" + admin.getName() + ": ");
+                adminRace = Race.ELYOS;
+                break;
+            case "ASM":
+                sbMessage = new StringBuilder("[World-Asmodian]" + admin.getName() + ": ");
+                adminRace = Race.ASMODIANS;
+                break;
+            case "ALL":
+                sbMessage = new StringBuilder("[World-All]" + admin.getName() + ": ");
+                break;
+            default:
+                check = false;
+                if (adminRace == Race.ELYOS)
+                    sbMessage = new StringBuilder("[World-Elyos]" + admin.getName() + ": ");
+                else
+                    sbMessage = new StringBuilder("[World-Asmodian]" + admin.getName() + ": ");
+                break;
+        }
 
 		for (String s : params)
 			if (i++ != 1 && (check))
@@ -71,13 +74,9 @@ public class Wc extends AdminCommand {
 		final boolean toAll = params[0].equals("ALL");
 		final Race race = adminRace;
 
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-
-			@Override
-			public void visit(Player player) {
-				if (toAll || player.getRace() == race || player.getAccessLevel() >= getLevel()) {
-					PacketSendUtility.sendMessage(player, sMessage);
-				}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			if (toAll || player.getRace() == race || player.getAccessLevel() >= getLevel()) {
+				PacketSendUtility.sendMessage(player, sMessage);
 			}
 		});
 	}

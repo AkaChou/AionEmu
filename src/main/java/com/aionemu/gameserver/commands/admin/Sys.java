@@ -52,77 +52,71 @@ public class Sys extends AdminCommand {
 			return;
 		}
 
-		if (params[0].equals("info")) {
-			// 时间 / Time
-			PacketSendUtility.sendMessage(player, "System Informations at: " + AEInfos.getRealTime());
+        switch (params[0]) {
+            case "info":// 时间 / Time
+                PacketSendUtility.sendMessage(player, "System Informations at: " + AEInfos.getRealTime());
 
-			// OS 信息 / OS Infos
-			for (String line : AEInfos.getOSInfo())
-				PacketSendUtility.sendMessage(player, line);
+                // OS 信息 / OS Infos
+                for (String line : AEInfos.getOSInfo())
+                    PacketSendUtility.sendMessage(player, line);
 
-			// CPU 信息 / CPU Infos
-			for (String line : AEInfos.getCPUInfo())
-				PacketSendUtility.sendMessage(player, line);
+                // CPU 信息 / CPU Infos
+                for (String line : AEInfos.getCPUInfo())
+                    PacketSendUtility.sendMessage(player, line);
 
-			// JRE 信息 / JRE Infos
-			for (String line : AEInfos.getJREInfo())
-				PacketSendUtility.sendMessage(player, line);
+                // JRE 信息 / JRE Infos
+                for (String line : AEInfos.getJREInfo())
+                    PacketSendUtility.sendMessage(player, line);
 
-			// JVM 信息 / JVM Infos
-			for (String line : AEInfos.getJVMInfo())
-				PacketSendUtility.sendMessage(player, line);
-		}
-
-		else if (params[0].equals("memory")) {
-			// 内存信息 / Memory Infos
-			for (String line : AEInfos.getMemoryInfo())
-				PacketSendUtility.sendMessage(player, line);
-		}
-
-		else if (params[0].equals("gc")) {
-			long time = System.currentTimeMillis();
-			PacketSendUtility.sendMessage(player, "RAM Used (Before): "
-				+ ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576));
-			System.gc();
-			PacketSendUtility.sendMessage(player, "RAM Used (After): "
-				+ ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576));
-			PacketSendUtility.sendMessage(player,
-				"Garbage Collection finished in: " + (System.currentTimeMillis() - time) + " milliseconds...");
-		}
-		else if (params[0].equals("shutdown")) {
-			try {
-				int val = Integer.parseInt(params[1]);
-				int announceInterval = Integer.parseInt(params[2]);
-				GameShutdownRequest.doShutdown(val, announceInterval, ShutdownMode.SHUTDOWN);
-				PacketSendUtility.sendMessage(player, "Server will shutdown in " + val + " seconds.");
-			}
-			catch (ArrayIndexOutOfBoundsException e) {
-				PacketSendUtility.sendMessage(player, "Numbers only!");
-			}
-			catch (NumberFormatException e) {
-				PacketSendUtility.sendMessage(player, "Numbers only!");
-			}
-		}
-		else if (params[0].equals("restart")) {
-			try {
-				int val = Integer.parseInt(params[1]);
-				int announceInterval = Integer.parseInt(params[2]);
-				GameShutdownRequest.doShutdown(val, announceInterval, ShutdownMode.RESTART);
-				PacketSendUtility.sendMessage(player, "Server will restart in " + val + " seconds.");
-			}
-			catch (ArrayIndexOutOfBoundsException e) {
-				PacketSendUtility.sendMessage(player, "Numbers only!");
-			}
-			catch (NumberFormatException e) {
-				PacketSendUtility.sendMessage(player, "Numbers only!");
-			}
-		}
-		else if (params[0].equals("threadpool")) {
-			List<String> stats = GameThreadPoolServices.threadPoolManager().getStats();
-			for (String stat : stats) {
-				PacketSendUtility.sendMessage(player, stat.replaceAll("\t", ""));
-			}
-		}
+                // JVM 信息 / JVM Infos
+                for (String line : AEInfos.getJVMInfo())
+                    PacketSendUtility.sendMessage(player, line);
+                break;
+            case "memory":// 内存信息 / Memory Infos
+                for (String line : AEInfos.getMemoryInfo())
+                    PacketSendUtility.sendMessage(player, line);
+                break;
+            case "gc":
+                long time = System.currentTimeMillis();
+                PacketSendUtility.sendMessage(player, "RAM Used (Before): "
+                        + ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576));
+                System.gc();
+                PacketSendUtility.sendMessage(player, "RAM Used (After): "
+                        + ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576));
+                PacketSendUtility.sendMessage(player,
+                        "Garbage Collection finished in: " + (System.currentTimeMillis() - time) + " milliseconds...");
+                break;
+            case "shutdown":
+                try {
+                    int val = Integer.parseInt(params[1]);
+                    int announceInterval = Integer.parseInt(params[2]);
+                    GameShutdownRequest.doShutdown(val, announceInterval, ShutdownMode.SHUTDOWN);
+                    PacketSendUtility.sendMessage(player, "Server will shutdown in " + val + " seconds.");
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    PacketSendUtility.sendMessage(player, "Numbers only!");
+                } catch (NumberFormatException e) {
+                    PacketSendUtility.sendMessage(player, "Numbers only!");
+                }
+                break;
+            case "restart":
+                try {
+                    int val = Integer.parseInt(params[1]);
+                    int announceInterval = Integer.parseInt(params[2]);
+                    GameShutdownRequest.doShutdown(val, announceInterval, ShutdownMode.RESTART);
+                    PacketSendUtility.sendMessage(player, "Server will restart in " + val + " seconds.");
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    PacketSendUtility.sendMessage(player, "Numbers only!");
+                } catch (NumberFormatException e) {
+                    PacketSendUtility.sendMessage(player, "Numbers only!");
+                }
+                break;
+            case "threadpool":
+                List<String> stats = GameThreadPoolServices.threadPoolManager().getStats();
+                for (String stat : stats) {
+                    PacketSendUtility.sendMessage(player, stat.replaceAll("\t", ""));
+                }
+                break;
+        }
 	}
 
 	/**

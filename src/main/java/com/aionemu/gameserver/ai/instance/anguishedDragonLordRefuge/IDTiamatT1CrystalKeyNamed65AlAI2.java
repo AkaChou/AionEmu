@@ -78,29 +78,26 @@ public class IDTiamatT1CrystalKeyNamed65AlAI2 extends AggressiveNpcAI2
 	}
 
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelPhaseTask();
-				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 20159, 60, getOwner()).useNoAnimationSkill(); //Petrification Crystal.
-					// 石化水晶。 / Petrification Crystal.
-					List<Player> players = getLifedPlayers();
-					if (!players.isEmpty()) {
-						int size = players.size();
-						if (players.size() < 6) {
-							for (Player p: players) {
-								spawnPetrificationCrystal(p);
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelPhaseTask();
+			} else {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 20159, 60, getOwner()).useNoAnimationSkill(); //Petrification Crystal.
+				// 石化水晶。 / Petrification Crystal.
+				List<Player> players = getLifedPlayers();
+				if (!players.isEmpty()) {
+					int size = players.size();
+					if (players.size() < 6) {
+						for (Player p: players) {
+							spawnPetrificationCrystal(p);
+						}
+					} else {
+						int count = Rnd.get(6, size);
+						for (int i = 0; i < count; i++) {
+							if (players.isEmpty()) {
+								break;
 							}
-						} else {
-							int count = Rnd.get(6, size);
-							for (int i = 0; i < count; i++) {
-								if (players.isEmpty()) {
-									break;
-								}
-								spawnPetrificationCrystal(players.get(Rnd.get(players.size())));
-							}
+							spawnPetrificationCrystal(players.get(Rnd.get(players.size())));
 						}
 					}
 				}
@@ -113,20 +110,17 @@ public class IDTiamatT1CrystalKeyNamed65AlAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						spawn(282731, x, y, z, (byte) 0); //Petrification Crystal.
-						// 石化水晶。 / Petrification Crystal.
-					}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					spawn(282731, x, y, z, (byte) 0); //Petrification Crystal.
+					// 石化水晶。 / Petrification Crystal.
 				}
 			}, 3000);
 		}
 	}
 
 	private List<Player> getLifedPlayers() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);

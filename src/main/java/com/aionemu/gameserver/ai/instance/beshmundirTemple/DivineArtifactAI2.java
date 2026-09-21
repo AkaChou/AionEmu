@@ -17,7 +17,7 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 public class DivineArtifactAI2 extends AggressiveNpcAI2
 {
 	private boolean cooldown = false;
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -26,14 +26,9 @@ public class DivineArtifactAI2 extends AggressiveNpcAI2
 			setCD();
 		}
 	}
-	
+
 	private void setCD() {
 		cooldown = true;
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				cooldown = false;
-			}
-		}, 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(() -> cooldown = false, 1000);
 	}
 }

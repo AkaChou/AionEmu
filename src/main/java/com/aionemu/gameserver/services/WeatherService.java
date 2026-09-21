@@ -72,7 +72,7 @@ public class WeatherService {
 	 * Initializes weather for all maps that have a weather table.
 	 */
 	public WeatherService() {
-		worldZoneWeathers = new HashMap<WeatherKey, WeatherEntry[]>();
+		worldZoneWeathers = new HashMap<>();
 		GameTime gameTime = (GameTime) GameTimeManager.getGameTime().clone();
 		for (Iterator<WorldMapTemplate> mapIterator = DataManager.WORLD_MAPS_DATA.iterator(); mapIterator.hasNext();) {
 			int mapId = mapIterator.next().getMapId();
@@ -125,13 +125,10 @@ public class WeatherService {
 	 * Advances weather for all maps to the next stage and broadcasts the change.
 	 */
 	public void checkWeathersTime() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				for (WeatherKey key : worldZoneWeathers.keySet()) {
-					setNextWeather(key);
-					onWeatherChange(key.getMapId(), null);
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			for (WeatherKey key : worldZoneWeathers.keySet()) {
+				setNextWeather(key);
+				onWeatherChange(key.getMapId(), null);
 			}
 		}, 0);
 	}
@@ -180,7 +177,7 @@ public class WeatherService {
 		} else if (chance > 50) {
 			attRanking = 1;
 		}
-		List<WeatherEntry> chosenWeather = new ArrayList<WeatherEntry>();
+		List<WeatherEntry> chosenWeather = new ArrayList<>();
 		while (attRanking >= 0) {
 			for (WeatherEntry entry : weathers) {
 				if (entry.getAttRanking() == -1) {
@@ -300,7 +297,7 @@ public class WeatherService {
 	 * Resets weather of all loaded maps to clear (code 0).
 	 */
 	public synchronized void resetWeather() {
-		Set<WeatherKey> loadedWeathers = new HashSet<WeatherKey>(worldZoneWeathers.keySet());
+		Set<WeatherKey> loadedWeathers = new HashSet<>(worldZoneWeathers.keySet());
 		for (WeatherKey key : loadedWeathers) {
 			WeatherEntry[] oldEntries = worldZoneWeathers.get(key);
 			if (oldEntries == null) {

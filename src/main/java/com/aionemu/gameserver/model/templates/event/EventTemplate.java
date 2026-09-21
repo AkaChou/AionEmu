@@ -102,7 +102,7 @@ public class EventTemplate {
 	/** 返回可开始任务列表 / Returns the startable quests */
 	public List<Integer> getStartableQuests() {
 		if (quests == null) {
-			return new ArrayList<Integer>();
+			return new ArrayList<>();
 		}
 		return quests.getStartableQuests();
 	}
@@ -110,7 +110,7 @@ public class EventTemplate {
 	/** 返回可保持任务列表 / Returns the maintainable quests */
 	public List<Integer> getMaintainableQuests() {
 		if (quests == null) {
-			return new ArrayList<Integer>();
+			return new ArrayList<>();
 		}
 		return quests.getMaintainQuests();
 	}
@@ -146,7 +146,7 @@ public class EventTemplate {
 		}
 		if (spawns != null && spawns.size() > 0) {
 			if (spawnedObjects == null) {
-				spawnedObjects = new ArrayList<VisibleObject>();
+				spawnedObjects = new ArrayList<>();
 			}
 			int spawnCount = 0;
 			for (SpawnMap map : spawns.getTemplates()) {
@@ -240,7 +240,7 @@ public class EventTemplate {
 	/** 添加已刷新的对象。 / Adds a spawned object. */
 	public void addSpawnedObject(VisibleObject object) {
 		if (spawnedObjects == null) {
-			spawnedObjects = new ArrayList<VisibleObject>();
+			spawnedObjects = new ArrayList<>();
 		}
 		spawnedObjects.add(object);
 	}

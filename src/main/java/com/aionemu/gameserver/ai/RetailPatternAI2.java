@@ -2,39 +2,25 @@ package com.aionemu.gameserver.ai;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.gameserver.ai2.AI2Actions;
-import com.aionemu.gameserver.ai2.AI2Logger;
-import com.aionemu.gameserver.ai2.AIName;
-import com.aionemu.gameserver.ai2.AIState;
-import com.aionemu.gameserver.ai2.AISubState;
-import com.aionemu.gameserver.ai2.AbstractAI;
-import com.aionemu.gameserver.ai2.AttackIntention;
+import com.aionemu.gameserver.ai2.*;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.handler.ReturningEventHandler;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
+import com.aionemu.gameserver.controllers.attack.AggroInfo;
+import com.aionemu.gameserver.controllers.attack.AttackStatus;
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.dataholders.RetailAiData.Operation;
 import com.aionemu.gameserver.dataholders.RetailAiData.LocationAliasPoint;
+import com.aionemu.gameserver.dataholders.RetailAiData.Operation;
 import com.aionemu.gameserver.dataholders.RetailAiData.Pattern;
 import com.aionemu.gameserver.dataholders.RetailAiData.Rule;
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.controllers.attack.AggroInfo;
-import com.aionemu.gameserver.controllers.attack.AttackStatus;
-import com.aionemu.gameserver.model.ChatType;
-import com.aionemu.gameserver.model.EmotionType;
-import com.aionemu.gameserver.model.Gender;
-import com.aionemu.gameserver.model.NpcType;
-import com.aionemu.gameserver.model.PlayerClass;
-import com.aionemu.gameserver.model.Race;
-import com.aionemu.gameserver.model.TaskId;
-import com.aionemu.gameserver.model.TeleportAnimation;
-import com.aionemu.gameserver.model.TribeClass;
+import com.aionemu.gameserver.model.*;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -49,19 +35,14 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplateType;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.walker.RouteStep;
 import com.aionemu.gameserver.model.templates.walker.WalkerTemplate;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_MESSAGE;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAY_MOVIE;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_USE_OBJECT;
+import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.questEngine.model.RetailQuestState;
-import com.aionemu.gameserver.skillengine.model.Effect;
-import com.aionemu.gameserver.skillengine.model.SkillTemplate;
-import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.services.LimitedQuestService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.skillengine.model.Effect;
+import com.aionemu.gameserver.skillengine.model.Skill;
+import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -69,15 +50,7 @@ import com.aionemu.gameserver.utils.PositionUtil;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
@@ -110,10 +83,10 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		"is_event_skill_id", "is_user_flying", "is_race", "increase_intvar", "is_distance_longer_than",
 		"is_distance_shorter_than", "is_npc_state", "set_intvar_if_larger_than", "set_intvar_if_less_than",
 		"is_user_class", "set_world_flag_var", "unset_world_flag_var", "is_npc", "is_in_abnormal_state",
-			"is_obj_in_abnormal_state", "is_waypoint_index", "is_last_waypoint", "is_tribe", "is_abnormal_state",
-			"add_intvar", "decrease_intvar", "is_user_level", "is_user_gender", "is_my_curent_target",
-			"is_world_flag_var", "sub_intvar", "is_event_skill_category", "is_hyperlink_id",
-			"has_attack_damage_flag", "is_target_quest_state");
+		"is_obj_in_abnormal_state", "is_waypoint_index", "is_last_waypoint", "is_tribe", "is_abnormal_state",
+		"add_intvar", "decrease_intvar", "is_user_level", "is_user_gender", "is_my_curent_target",
+		"is_world_flag_var", "sub_intvar", "is_event_skill_category", "is_hyperlink_id",
+		"has_attack_damage_flag", "is_target_quest_state");
 	private static final Set<String> ATTACK_DAMAGE_FLAGS = Set.of("DODGE");
 	private static final Set<Long> NPC_SCORE_CONSUMERS = Set.of(
 		npcScoreConsumer(301120000, 232855), npcScoreConsumer(301120000, 232856),
@@ -135,12 +108,12 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		"play_cutscene_by_user_indicator", "add_hate_point", "switch_target", "attack_most_hating",
 		"change_direction", "random_move", "goto_waypoint", "goto_next_waypoint", "send_system_msg", "flee_from",
 		"switch_target_by_class_indicator", "close_dialog", "teleport_target_alias", "shout_to_all",
-			"change_world_scene_status", "say_to_all_str", "teleport_target", "say", "send_message",
-				"return_to_spawn_point", "reset_queued_actions", "goto_alias", "activate_skillarea", "open_directportal",
-				"open_directportal_by_user", "close_directportal", "enable_area", "on_off_windpath",
-				"on_off_moving_collision",
-				"system_message_to_all_by_obj_indicator_param",
-				"broadcast_message_to_party", "charge_limitedquest");
+		"change_world_scene_status", "say_to_all_str", "teleport_target", "say", "send_message",
+		"return_to_spawn_point", "reset_queued_actions", "goto_alias", "activate_skillarea", "open_directportal",
+		"open_directportal_by_user", "close_directportal", "enable_area", "on_off_windpath",
+		"on_off_moving_collision",
+		"system_message_to_all_by_obj_indicator_param",
+		"broadcast_message_to_party", "charge_limitedquest");
 	private static final Set<String> SUPPORTED_TARGETS = Set.of(
 		"OBJI_SELF", "OBJI_CUR_TARGET", "OBJI_EVENT_TARGET", "OBJI_CASTER", "OBJI_MESSAGE_SENDER",
 		"OBJI_MESSAGE_PARAM", "OBJI_ATTACKER", "OBJI_FLEE_FROM", "OBJI_FRIEND", "OBJI_KILLER", "OBJI_SEEN",
@@ -275,6 +248,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	private volatile Set<Integer> usersInSensoryArea = EMPTY_SENSORY_USERS;
 	private volatile Map<Player, ItemUseObserver> gaugeObservers = EMPTY_GAUGE_OBSERVERS;
 	private volatile Map<Integer, PendingCutsceneTeleport> pendingCutsceneTeleports = EMPTY_PENDING_TELEPORTS;
+
 	/**
 	 * 物化延迟动作集合：双检 + {@code synchronized (this)}，保证并发首次写入收敛到同一个集合
 	 * （否则先加入的任务会落进被丢弃的集合，之后无法取消）。
@@ -547,9 +521,9 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 					|| !rule.actions().stream().allMatch(action -> supportsAction(event.getKey(), action, allowNpcScore))
 					|| !supportsNpcPartyRule(event.getKey(), rule)
 					|| !TARGET_EVENTS.contains(event.getKey()) && rule.actions().stream()
-						.anyMatch(RetailPatternAI2::usesEventTarget)
+					.anyMatch(RetailPatternAI2::usesEventTarget)
 					|| TERMINAL_EVENTS.contains(event.getKey())
-						&& hasUnsupportedActionsAfterSkill(event.getKey(), rule.actions())) {
+					&& hasUnsupportedActionsAfterSkill(event.getKey(), rule.actions())) {
 					return false;
 				}
 			}
@@ -581,7 +555,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		}
 		if (!Collections.disjoint(pattern.events().keySet(), SENSORY_EVENTS)
 			&& DataManager.RETAIL_AI_DATA.findSensoryArea(npc.getWorldId(), npc.getNpcId(), npc.getSpawn().getX(),
-				npc.getSpawn().getY(), npc.getSpawn().getZ()) == null) {
+			npc.getSpawn().getY(), npc.getSpawn().getZ()) == null) {
 			return false;
 		}
 		WalkerTemplate npcWalker = walker(npc);
@@ -601,7 +575,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 					}
 					if ((operation.type().equals("goto_waypoint") || operation.type().equals("is_waypoint_index"))
 						&& (!hasWaypoints(npcWalker) || integer(operation,
-							operation.type().equals("goto_waypoint") ? "waypoint" : "index") >= npcWalker.getRouteSteps().size())) {
+						operation.type().equals("goto_waypoint") ? "waypoint" : "index") >= npcWalker.getRouteSteps().size())) {
 						return false;
 					}
 					if ((isSkillAction(operation) || operation.type().equals("is_skill_count_left"))
@@ -612,7 +586,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 						|| operation.type().equals("spawn_on_target_by_attacker_indicator")
 						|| operation.type().equals("spawn_on_multi_target") || operation.type().equals("despawn_by_nameid"))
 						&& DataManager.RETAIL_AI_DATA.findNpcId(value(operation,
-							operation.type().equals("despawn_by_nameid") ? "target_npc_nameid" : "npc_nameid")) == null) {
+						operation.type().equals("despawn_by_nameid") ? "target_npc_nameid" : "npc_nameid")) == null) {
 						return false;
 					}
 					if (operation.type().equals("spawn") && !value(operation, "pathname").isBlank()) {
@@ -639,19 +613,19 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 							return false;
 						}
 					}
-						if (operation.type().equals("enable_area") && !RetailAreaEngine.supports(npc.getWorldId(),
-							value(operation, "area_type"), value(operation, "area_name"))) {
-							return false;
-						}
-						if (operation.type().equals("on_off_windpath")
-							&& !RetailWindstreamEngine.supports(npc.getWorldId(), integer(operation, "groupid"))) {
-							return false;
-						}
-						if (operation.type().equals("on_off_moving_collision")
-							&& !RetailDynamicAreaEngine.supports(npc.getWorldId(), value(operation, "type"),
-								integer(operation, "sunzoneid"))) {
-							return false;
-						}
+					if (operation.type().equals("enable_area") && !RetailAreaEngine.supports(npc.getWorldId(),
+						value(operation, "area_type"), value(operation, "area_name"))) {
+						return false;
+					}
+					if (operation.type().equals("on_off_windpath")
+						&& !RetailWindstreamEngine.supports(npc.getWorldId(), integer(operation, "groupid"))) {
+						return false;
+					}
+					if (operation.type().equals("on_off_moving_collision")
+						&& !RetailDynamicAreaEngine.supports(npc.getWorldId(), value(operation, "type"),
+						integer(operation, "sunzoneid"))) {
+						return false;
+					}
 					if ((operation.type().equals("say") || operation.type().equals("say_to_all") || operation.type().equals("shout_to_all")
 						|| operation.type().equals("display_system_message")
 						|| operation.type().equals("send_system_msg"))
@@ -672,7 +646,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 					}
 					if (Set.of("give_item_by_user_indicator", "give_item_by_obj_indicator").contains(operation.type())
 						&& (DataManager.ITEM_DATA == null
-							|| DataManager.ITEM_DATA.getItemTemplate(value(operation, "item_id")) == null)) {
+						|| DataManager.ITEM_DATA.getItemTemplate(value(operation, "item_id")) == null)) {
 						return false;
 					}
 					if (operation.type().equals("give_score")) {
@@ -753,61 +727,71 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	private static boolean supportsNpcPartyCondition(String event, Operation condition) {
-		return switch (event) {
-			case "on_party_mbr_attacking" -> switch (condition.type()) {
-				case "is_user", "is_npc" -> value(condition, "obj_indicator").equals("OBJI_EVENT_TARGET");
-				case "is_npc_state", "set_flag_var" -> true;
-				default -> false;
-			};
-			case "on_party_mbr_attacked" -> switch (condition.type()) {
-				case "is_hp_lower_than" -> value(condition, "who").equals("OBJI_PARTY_MEMBER");
-				case "is_user" -> value(condition, "obj_indicator").equals("OBJI_ATTACKER");
-				case "is_distance_longer_than", "is_distance_shorter_than" ->
-					Set.of("OBJI_ATTACKER", "OBJI_EVENT_TARGET").contains(value(condition, "who"));
-				case "is_skill_count_left", "is_npc_state" -> true;
-				default -> false;
-			};
-			case "on_party_mbr_spelled" -> switch (condition.type()) {
-				case "is_hp_lower_than" -> value(condition, "who").equals("OBJI_PARTY_MEMBER");
-				case "is_user" -> value(condition, "obj_indicator").equals("OBJI_CASTER");
-				case "is_distance_longer_than", "is_distance_shorter_than" ->
-					Set.of("OBJI_CASTER", "OBJI_EVENT_TARGET").contains(value(condition, "who"));
-				case "is_skill_count_left", "is_npc_state" -> true;
-				default -> false;
-			};
-			case "on_party_mbr_enter_attack_state" -> switch (condition.type()) {
-				case "is_distance_longer_than" -> value(condition, "who").equals("OBJI_EVENT_TARGET");
-				case "is_npc_state" -> true;
-				default -> false;
-			};
-			default -> false;
-		};
+		switch (event) {
+			case "on_party_mbr_attacking":
+				return switch (condition.type()) {
+					case "is_user", "is_npc" -> value(condition, "obj_indicator").equals("OBJI_EVENT_TARGET");
+					case "is_npc_state", "set_flag_var" -> true;
+					default -> false;
+				};
+			case "on_party_mbr_attacked":
+				return switch (condition.type()) {
+					case "is_hp_lower_than" -> value(condition, "who").equals("OBJI_PARTY_MEMBER");
+					case "is_user" -> value(condition, "obj_indicator").equals("OBJI_ATTACKER");
+					case "is_distance_longer_than", "is_distance_shorter_than" ->
+						Set.of("OBJI_ATTACKER", "OBJI_EVENT_TARGET").contains(value(condition, "who"));
+					case "is_skill_count_left", "is_npc_state" -> true;
+					default -> false;
+				};
+			case "on_party_mbr_spelled":
+				return switch (condition.type()) {
+					case "is_hp_lower_than" -> value(condition, "who").equals("OBJI_PARTY_MEMBER");
+					case "is_user" -> value(condition, "obj_indicator").equals("OBJI_CASTER");
+					case "is_distance_longer_than", "is_distance_shorter_than" ->
+						Set.of("OBJI_CASTER", "OBJI_EVENT_TARGET").contains(value(condition, "who"));
+					case "is_skill_count_left", "is_npc_state" -> true;
+					default -> false;
+				};
+			case "on_party_mbr_enter_attack_state":
+				return switch (condition.type()) {
+					case "is_distance_longer_than" -> value(condition, "who").equals("OBJI_EVENT_TARGET");
+					case "is_npc_state" -> true;
+					default -> false;
+				};
+			default:
+				return false;
+		}
 	}
 
 	private static boolean supportsNpcPartyAction(String event, Operation action) {
-		return switch (event) {
-			case "on_party_mbr_attacking" -> switch (action.type()) {
-				case "switch_target", "add_hate_point" -> value(action, "target").equals("OBJI_EVENT_TARGET");
-				case "add_battle_timer", "attack_most_hating", "do_nothing" -> true;
-				default -> false;
-			};
-			case "on_party_mbr_attacked" -> switch (action.type()) {
-				case "switch_target" -> value(action, "target").equals("OBJI_ATTACKER");
-				case "attack_most_hating", "do_nothing" -> true;
-				default -> false;
-			};
-			case "on_party_mbr_spelled" -> switch (action.type()) {
-				case "switch_target" -> value(action, "target").equals("OBJI_CASTER");
-				case "attack_most_hating", "do_nothing" -> true;
-				default -> false;
-			};
-			case "on_party_mbr_enter_attack_state" -> action.type().equals("do_nothing");
-			default -> false;
-		};
+		switch (event) {
+			case "on_party_mbr_attacking":
+				return switch (action.type()) {
+					case "switch_target", "add_hate_point" -> value(action, "target").equals("OBJI_EVENT_TARGET");
+					case "add_battle_timer", "attack_most_hating", "do_nothing" -> true;
+					default -> false;
+				};
+			case "on_party_mbr_attacked":
+				return switch (action.type()) {
+					case "switch_target" -> value(action, "target").equals("OBJI_ATTACKER");
+					case "attack_most_hating", "do_nothing" -> true;
+					default -> false;
+				};
+			case "on_party_mbr_spelled":
+				return switch (action.type()) {
+					case "switch_target" -> value(action, "target").equals("OBJI_CASTER");
+					case "attack_most_hating", "do_nothing" -> true;
+					default -> false;
+				};
+			case "on_party_mbr_enter_attack_state":
+				return action.type().equals("do_nothing");
+			default:
+				return false;
+		}
 	}
 
 	static boolean hasCompleteGaugeData(Pattern pattern,
-			com.aionemu.gameserver.dataholders.RetailAiData.Npc npc) {
+										com.aionemu.gameserver.dataholders.RetailAiData.Npc npc) {
 		return pattern == null || Collections.disjoint(pattern.events().keySet(), GAUGE_EVENTS)
 			|| npc != null && npc.talkDelay() > 0;
 	}
@@ -818,7 +802,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		}
 		return pattern.event("on_talked_by_user").stream().allMatch(rule -> rule.conditions().isEmpty()
 			&& !rule.actions().isEmpty() && rule.actions().stream().allMatch(action ->
-				action.type().equals("broadcast_message") && supportsAction("on_talked_by_user", action, false)));
+			action.type().equals("broadcast_message") && supportsAction("on_talked_by_user", action, false)));
 	}
 
 	static void runQuestItemTalkedByUser(Npc owner, Player player) {
@@ -836,12 +820,17 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	private static Creature resolveQuestItemTalkObject(Npc owner, Player player, String indicator) {
-		return switch (indicator) {
-			case "OBJI_SELF" -> owner;
-			case "OBJI_CUR_TARGET" -> owner.getTarget() instanceof Creature creature ? creature : null;
-			case "OBJI_EVENT_TARGET", "OBJI_TALKER" -> player;
-			default -> null;
-		};
+		switch (indicator) {
+			case "OBJI_SELF":
+				return owner;
+			case "OBJI_CUR_TARGET":
+				return owner.getTarget() instanceof Creature creature ? creature : null;
+			case "OBJI_EVENT_TARGET":
+			case "OBJI_TALKER":
+				return player;
+			default:
+				return null;
+		}
 	}
 
 	static boolean hasCompleteWakeUpData(Pattern pattern, NpcTemplateType npcType) {
@@ -873,7 +862,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		pattern = DataManager.RETAIL_AI_DATA == null ? null : DataManager.RETAIL_AI_DATA.getPattern(getNpcId());
 		sensoryArea = pattern == null || Collections.disjoint(pattern.events().keySet(), SENSORY_EVENTS) ? null
 			: DataManager.RETAIL_AI_DATA.findSensoryArea(getOwner().getWorldId(), getNpcId(), getOwner().getSpawn().getX(),
-				getOwner().getSpawn().getY(), getOwner().getSpawn().getZ());
+			getOwner().getSpawn().getY(), getOwner().getSpawn().getZ());
 		super.handleSpawned();
 		if (sensoryArea != null) {
 			RetailSensoryAreaEngine.register(getPosition().getWorldMapInstance(), this);
@@ -1079,10 +1068,14 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	private static boolean isDirectTalkAction(Operation action) {
-		return switch (action.type()) {
-			case "use_skill", "teleport_target", "teleport_target_alias" -> true;
-			default -> false;
-		};
+		switch (action.type()) {
+			case "use_skill":
+			case "teleport_target":
+			case "teleport_target_alias":
+				return true;
+			default:
+				return false;
+		}
 	}
 
 	static boolean hasGaugeEvent(Pattern pattern) {
@@ -1475,12 +1468,12 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void runEvent(String event, String timer, Creature eventTarget, RetailMessage message, SkillTemplate eventSkill,
-			int eventAbnormalState) {
+						  int eventAbnormalState) {
 		runEvent(event, timer, eventTarget, message, eventSkill, eventAbnormalState, null);
 	}
 
 	private void runEvent(String event, String timer, Creature eventTarget, RetailMessage message, SkillTemplate eventSkill,
-			int eventAbnormalState, AttackStatus attackStatus) {
+						  int eventAbnormalState, AttackStatus attackStatus) {
 		if (pattern == null || isAlreadyDead() && !TERMINAL_EVENTS.contains(event)) {
 			return;
 		}
@@ -1510,7 +1503,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void executeActions(List<Operation> actions, int start, Creature eventTarget, RetailMessage message,
-			boolean allowDead, boolean immediateTerminalCleanup) {
+								boolean allowDead, boolean immediateTerminalCleanup) {
 		if (!allowDead && isAlreadyDead()) {
 			return;
 		}
@@ -1564,100 +1557,175 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	private boolean matches(Rule rule, String timer, Creature eventTarget, RetailMessage message, SkillTemplate eventSkill,
-			int eventAbnormalState, AttackStatus attackStatus) {
+							int eventAbnormalState, AttackStatus attackStatus) {
 		for (Operation condition : rule.conditions()) {
-			boolean matches = switch (condition.type()) {
-				case "is_hp_lower_than" -> {
+			boolean matches;
+			switch (condition.type()) {
+				case "is_hp_lower_than": {
 					Creature object = resolveObject(value(condition, "who"), eventTarget, message);
-					yield object != null && object.getLifeStats().getHpPercentage() <= integer(condition, "percent");
+					matches = object != null && object.getLifeStats().getHpPercentage() <= integer(condition, "percent");
+					break;
 				}
-				case "is_hp_in_boundary" -> {
+				case "is_hp_in_boundary": {
 					Creature object = resolveObject(value(condition, "who"), eventTarget, message);
-					yield object != null && object.getLifeStats().getHpPercentage() > integer(condition, "larger_than")
+					matches = object != null && object.getLifeStats().getHpPercentage() > integer(condition, "larger_than")
 						&& object.getLifeStats().getHpPercentage() <= integer(condition, "less_than");
+					break;
 				}
-				case "is_battle_timer_indicator" -> value(condition, "btimer_indicator").equals(timer);
-				case "test_probability" -> Rnd.chance(integer(condition, "percent"));
-				case "set_flag_var" -> writableFlags().add(value(condition, "flagvar_indicator"));
-				case "unset_flag_var" -> flags.remove(value(condition, "flagvar_indicator"));
-				case "is_skill_count_left" -> {
+				case "is_battle_timer_indicator":
+					matches = value(condition, "btimer_indicator").equals(timer);
+					break;
+				case "test_probability":
+					matches = Rnd.chance(integer(condition, "percent"));
+					break;
+				case "set_flag_var":
+					matches = writableFlags().add(value(condition, "flagvar_indicator"));
+					break;
+				case "unset_flag_var":
+					matches = flags.remove(value(condition, "flagvar_indicator"));
+					break;
+				case "is_skill_count_left": {
 					NpcSkillEntry skill = skill(condition);
-					yield skill != null && skill.hasUsesLeft();
+					matches = skill != null && skill.hasUsesLeft();
+					break;
 				}
-				case "is_message" -> message != null && message.type() == integer(condition, "message_type");
-				case "is_user" -> resolveObject(value(condition, "obj_indicator"), eventTarget, message) instanceof Player;
-				case "is_npc" -> resolveObject(value(condition, "obj_indicator"), eventTarget, message) instanceof Npc;
-				case "is_enemy" -> {
+				case "is_message":
+					matches = message != null && message.type() == integer(condition, "message_type");
+					break;
+				case "is_user":
+					matches = resolveObject(value(condition, "obj_indicator"), eventTarget, message) instanceof Player;
+					break;
+				case "is_npc":
+					matches = resolveObject(value(condition, "obj_indicator"), eventTarget, message) instanceof Npc;
+					break;
+				case "is_enemy": {
 					Creature object = resolveObject(value(condition, "who"), eventTarget, message);
-					yield object != null && getOwner().isEnemy(object);
+					matches = object != null && getOwner().isEnemy(object);
+					break;
 				}
-				case "is_event_skill_id" -> eventSkill != null
-					&& value(condition, "skill_id").equals(eventSkill.getNamedesc());
-				case "is_event_skill_category" -> eventSkill != null && value(condition, "skill_category")
-					.equals(DataManager.RETAIL_AI_DATA.getSkillCategory(eventSkill.getSkillId()));
-				case "is_hyperlink_id" -> message != null
-					&& message.param1() == retailHyperlinkId(value(condition, "hyperlink_id"));
-				case "has_attack_damage_flag" -> matchesAttackDamageFlag(attackStatus, value(condition, "damage_flag"));
-				case "is_target_quest_state" -> resolveObject(value(condition, "target"), eventTarget, message) instanceof Player player
-					&& player.getQuestStateList() != null && RetailQuestState.valueOf(value(condition, "quest_progress"))
+				case "is_event_skill_id":
+					matches = eventSkill != null
+						&& value(condition, "skill_id").equals(eventSkill.getNamedesc());
+					break;
+				case "is_event_skill_category":
+					matches = eventSkill != null && value(condition, "skill_category")
+						.equals(DataManager.RETAIL_AI_DATA.getSkillCategory(eventSkill.getSkillId()));
+					break;
+				case "is_hyperlink_id":
+					matches = message != null
+						&& message.param1() == retailHyperlinkId(value(condition, "hyperlink_id"));
+					break;
+				case "has_attack_damage_flag":
+					matches = matchesAttackDamageFlag(attackStatus, value(condition, "damage_flag"));
+					break;
+				case "is_target_quest_state":
+					matches = resolveObject(value(condition, "target"), eventTarget, message) instanceof Player player
+						&& player.getQuestStateList() != null && RetailQuestState.valueOf(value(condition, "quest_progress"))
 						.matches(player.getQuestStateList().getQuestState(integer(condition, "quest_id")));
-				case "is_user_flying" -> resolveUser(value(condition, "user"), eventTarget, message) instanceof Player player
-					&& player.isFlying();
-				case "is_race" -> {
+					break;
+				case "is_user_flying":
+					matches = resolveUser(value(condition, "user"), eventTarget, message) instanceof Player player
+						&& player.isFlying();
+					break;
+				case "is_race": {
 					Creature object = resolveObject(value(condition, "from"), eventTarget, message);
-					yield object != null && matchesRace(object.getRace(), value(condition, "race_type"));
+					matches = object != null && matchesRace(object.getRace(), value(condition, "race_type"));
+					break;
 				}
-				case "is_distance_longer_than", "is_distance_shorter_than" -> {
+				case "is_distance_longer_than":
+				case "is_distance_shorter_than": {
 					Creature object = resolveObject(value(condition, "who"), eventTarget, message);
-					yield object != null && matchesDistance(object, decimal(condition, "distance"),
+					matches = object != null && matchesDistance(object, decimal(condition, "distance"),
 						condition.type().equals("is_distance_shorter_than"));
+					break;
 				}
-				case "increase_intvar" -> increaseIntVar(writableIntVars(), value(condition, "intvar_indicator"),
-					integer(condition, "lower_bound"), integer(condition, "upper_bound"),
-					Boolean.parseBoolean(value(condition, "be_true_only_when_hit_the_bound")));
-				case "set_intvar_if_larger_than" -> setIntVar(writableIntVars(), value(condition, "intvar_indicator"),
-					integer(condition, "intvar_to_set"), integer(condition, "comparand"), true);
-				case "set_intvar_if_less_than" -> setIntVar(writableIntVars(), value(condition, "intvar_indicator"),
-					integer(condition, "intvar_to_set"), integer(condition, "comparand"), false);
-				case "is_npc_state" -> value(condition, "who").equals("NPCI_SELF")
-					&& matchesNpcState(getState(), getSubState(), value(condition, "state"),
+				case "increase_intvar":
+					matches = increaseIntVar(writableIntVars(), value(condition, "intvar_indicator"),
+						integer(condition, "lower_bound"), integer(condition, "upper_bound"),
+						Boolean.parseBoolean(value(condition, "be_true_only_when_hit_the_bound")));
+					break;
+				case "set_intvar_if_larger_than":
+					matches = setIntVar(writableIntVars(), value(condition, "intvar_indicator"),
+						integer(condition, "intvar_to_set"), integer(condition, "comparand"), true);
+					break;
+				case "set_intvar_if_less_than":
+					matches = setIntVar(writableIntVars(), value(condition, "intvar_indicator"),
+						integer(condition, "intvar_to_set"), integer(condition, "comparand"), false);
+					break;
+				case "is_npc_state":
+					matches = value(condition, "who").equals("NPCI_SELF")
+						&& matchesNpcState(getState(), getSubState(), value(condition, "state"),
 						System.nanoTime() < wakeUpUntil, aliasMoving);
-				case "is_user_class" -> resolveUser(value(condition, "user"), eventTarget, message) instanceof Player player
-					&& matchesUserClass(player.getPlayerClass(), value(condition, "class"));
-				case "set_world_flag_var" -> RetailConditionSpawnEngine.setFlag(
-					getPosition().getWorldMapInstance(), value(condition, "flagvar_indicator"), true);
-				case "unset_world_flag_var" -> RetailConditionSpawnEngine.setFlag(
-					getPosition().getWorldMapInstance(), value(condition, "flagvar_indicator"), false);
-				case "is_in_abnormal_state" -> matchesRetailAbnormal(getOwner(), value(condition, "abnormal_state"));
-				case "is_obj_in_abnormal_state" -> matchesRetailAbnormal(
-					resolveObject(value(condition, "obj"), eventTarget, message), value(condition, "abnormal_state"));
-				case "is_waypoint_index" -> waypointIndex == integer(condition, "index");
-				case "is_last_waypoint" -> waypointIndex >= 0 && waypointIndex == waypointCount() - 1;
-				case "is_tribe" -> matchesTribe(resolveObject(value(condition, "target"), eventTarget, message),
-					value(condition, "tribe_name"));
-				case "is_abnormal_state" -> matchesRetailAbnormal(eventAbnormalState, value(condition, "abnormal_state"));
-				case "add_intvar" -> addIntVar(writableIntVars(), value(condition, "intvar_indicator"),
-					integer(condition, "var_to_add"), integer(condition, "lower_bound"), integer(condition, "upper_bound"),
-					Boolean.parseBoolean(value(condition, "be_true_only_when_hit_the_bound")));
-				case "decrease_intvar" -> decreaseIntVar(writableIntVars(), value(condition, "intvar_indicator"),
-					integer(condition, "lower_bound"), integer(condition, "upper_bound"),
-					Boolean.parseBoolean(value(condition, "be_true_only_when_hit_the_bound")));
-				case "is_user_level" -> resolveUser(value(condition, "user"), eventTarget, message) instanceof Player player
-					&& matchesLevel(player.getLevel(), integer(condition, "level_min"), integer(condition, "level_max"));
-				case "is_user_gender" -> resolveUser(value(condition, "user"), eventTarget, message) instanceof Player player
-					&& matchesGender(player.getGender(), value(condition, "gender"));
-				case "is_my_curent_target" -> {
+					break;
+				case "is_user_class":
+					matches = resolveUser(value(condition, "user"), eventTarget, message) instanceof Player player
+						&& matchesUserClass(player.getPlayerClass(), value(condition, "class"));
+					break;
+				case "set_world_flag_var":
+					matches = RetailConditionSpawnEngine.setFlag(
+						getPosition().getWorldMapInstance(), value(condition, "flagvar_indicator"), true);
+					break;
+				case "unset_world_flag_var":
+					matches = RetailConditionSpawnEngine.setFlag(
+						getPosition().getWorldMapInstance(), value(condition, "flagvar_indicator"), false);
+					break;
+				case "is_in_abnormal_state":
+					matches = matchesRetailAbnormal(getOwner(), value(condition, "abnormal_state"));
+					break;
+				case "is_obj_in_abnormal_state":
+					matches = matchesRetailAbnormal(
+						resolveObject(value(condition, "obj"), eventTarget, message), value(condition, "abnormal_state"));
+					break;
+				case "is_waypoint_index":
+					matches = waypointIndex == integer(condition, "index");
+					break;
+				case "is_last_waypoint":
+					matches = waypointIndex >= 0 && waypointIndex == waypointCount() - 1;
+					break;
+				case "is_tribe":
+					matches = matchesTribe(resolveObject(value(condition, "target"), eventTarget, message),
+						value(condition, "tribe_name"));
+					break;
+				case "is_abnormal_state":
+					matches = matchesRetailAbnormal(eventAbnormalState, value(condition, "abnormal_state"));
+					break;
+				case "add_intvar":
+					matches = addIntVar(writableIntVars(), value(condition, "intvar_indicator"),
+						integer(condition, "var_to_add"), integer(condition, "lower_bound"), integer(condition, "upper_bound"),
+						Boolean.parseBoolean(value(condition, "be_true_only_when_hit_the_bound")));
+					break;
+				case "decrease_intvar":
+					matches = decreaseIntVar(writableIntVars(), value(condition, "intvar_indicator"),
+						integer(condition, "lower_bound"), integer(condition, "upper_bound"),
+						Boolean.parseBoolean(value(condition, "be_true_only_when_hit_the_bound")));
+					break;
+				case "is_user_level":
+					matches = resolveUser(value(condition, "user"), eventTarget, message) instanceof Player player
+						&& matchesLevel(player.getLevel(), integer(condition, "level_min"), integer(condition, "level_max"));
+					break;
+				case "is_user_gender":
+					matches = resolveUser(value(condition, "user"), eventTarget, message) instanceof Player player
+						&& matchesGender(player.getGender(), value(condition, "gender"));
+					break;
+				case "is_my_curent_target": {
 					Creature object = resolveObject(value(condition, "who"), eventTarget, message);
-					yield object != null && getOwner().isTargeting(object.getObjectId());
+					matches = object != null && getOwner().isTargeting(object.getObjectId());
+					break;
 				}
-				case "is_world_flag_var" -> RetailConditionSpawnEngine.testFlag(getPosition().getWorldMapInstance(),
-					value(condition, "flagvar_indicator"), Boolean.parseBoolean(value(condition, "flag_expected")));
-				case "sub_intvar" -> subIntVar(writableIntVars(), value(condition, "intvar_indicator"),
-					integer(condition, "var_to_sub"), integer(condition, "lower_bound"),
-					integer(condition, "upper_bound"),
-					Boolean.parseBoolean(value(condition, "be_true_only_when_hit_the_bound")));
-				default -> false;
-			};
+				case "is_world_flag_var":
+					matches = RetailConditionSpawnEngine.testFlag(getPosition().getWorldMapInstance(),
+						value(condition, "flagvar_indicator"), Boolean.parseBoolean(value(condition, "flag_expected")));
+					break;
+				case "sub_intvar":
+					matches = subIntVar(writableIntVars(), value(condition, "intvar_indicator"),
+						integer(condition, "var_to_sub"), integer(condition, "lower_bound"),
+						integer(condition, "upper_bound"),
+						Boolean.parseBoolean(value(condition, "be_true_only_when_hit_the_bound")));
+					break;
+				default:
+					matches = false;
+					break;
+			}
 			if (!matches) {
 				return false;
 			}
@@ -1666,27 +1734,48 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	private Creature resolveObject(String indicator, Creature eventTarget, RetailMessage message) {
-		return switch (indicator) {
-			case "OBJI_SELF" -> getOwner();
-			case "OBJI_CUR_TARGET" -> getOwner().getTarget() instanceof Creature creature ? creature : null;
-			case "OBJI_EVENT_TARGET", "OBJI_ATTACKER", "OBJI_KILLER", "OBJI_SEEN", "OBJI_TALKER",
-				"OBJI_FLEE_FROM" -> eventTarget;
-			case "OBJI_CASTER" -> message != null && message.paramObject() != null ? message.paramObject() : eventTarget;
-			case "OBJI_MESSAGE_SENDER" -> message == null ? null : message.sender();
-			case "OBJI_MESSAGE_PARAM" -> message == null ? null : message.paramObject();
-			case "OBJI_FRIEND" -> message == null ? null : message.paramObject();
-			case "OBJI_PARTY_MEMBER" -> message == null ? null : message.sender();
-			default -> null;
-		};
+		switch (indicator) {
+			case "OBJI_SELF":
+				return getOwner();
+			case "OBJI_CUR_TARGET":
+				return getOwner().getTarget() instanceof Creature creature ? creature : null;
+			case "OBJI_EVENT_TARGET":
+			case "OBJI_ATTACKER":
+			case "OBJI_KILLER":
+			case "OBJI_SEEN":
+			case "OBJI_TALKER":
+			case "OBJI_FLEE_FROM":
+				return eventTarget;
+			case "OBJI_CASTER":
+				return message != null && message.paramObject() != null ? message.paramObject() : eventTarget;
+			case "OBJI_MESSAGE_SENDER":
+				return message == null ? null : message.sender();
+			case "OBJI_MESSAGE_PARAM":
+				return message == null ? null : message.paramObject();
+			case "OBJI_FRIEND":
+				return message == null ? null : message.paramObject();
+			case "OBJI_PARTY_MEMBER":
+				return message == null ? null : message.sender();
+			default:
+				return null;
+		}
 	}
 
 	private Creature resolveUser(String indicator, Creature eventTarget, RetailMessage message) {
-		return switch (indicator) {
-			case "USERI_CASTER" -> resolveObject("OBJI_CASTER", eventTarget, message);
-			case "USERI_ATTACKER", "USERI_KILLER", "USERI_SEEN", "USERI_EVENT_TARGET", "USERI_TALKER" -> eventTarget;
-			case "USERI_EVENT_MAKER" -> eventTarget != null ? eventTarget : getAggroList().getMostPlayerDamage();
-			default -> null;
-		};
+		switch (indicator) {
+			case "USERI_CASTER":
+				return resolveObject("OBJI_CASTER", eventTarget, message);
+			case "USERI_ATTACKER":
+			case "USERI_KILLER":
+			case "USERI_SEEN":
+			case "USERI_EVENT_TARGET":
+			case "USERI_TALKER":
+				return eventTarget;
+			case "USERI_EVENT_MAKER":
+				return eventTarget != null ? eventTarget : getAggroList().getMostPlayerDamage();
+			default:
+				return null;
+		}
 	}
 
 	private boolean matchesDistance(Creature object, float distance, boolean shorter) {
@@ -1711,83 +1800,179 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 
 	private void execute(Operation action, Creature eventTarget, RetailMessage message) {
 		switch (action.type()) {
-			case "add_battle_timer" -> schedule(value(action, "btimer_indicator"), integer(action, "delay"),
-				"on_battle_timer", false, eventTarget, message);
-			case "set_idle_timer" -> schedule("IDLE", integer(action, "delay"), "on_idle_timer", true,
-				eventTarget, message);
-			case "spawn" -> spawn(action);
-			case "spawn_on_target" -> spawnOnTarget(action, eventTarget, message);
-			case "spawn_on_target_by_attacker_indicator" -> spawnOnAttacker(action);
-			case "spawn_on_multi_target" -> spawnOnMultiTarget(action);
-			case "despawn" -> despawn(action);
-			case "despawn_by_nameid" -> despawnByNameId(action);
-			case "switch_target_by_attacker_indicator" -> switchTarget(action);
-			case "send_message" -> sendMessage(action, eventTarget, message);
-			case "broadcast_message" -> broadcastMessage(action, eventTarget, message);
-			case "broadcast_message_to_party" -> broadcastMessageToParty(action, eventTarget, message);
-			case "return_to_spawn_point" -> ReturningEventHandler.onNotAtHome(this);
-			case "reset_queued_actions" -> resetQueuedActions();
-			case "say_to_all" -> sayToAll(action, false);
-			case "shout_to_all" -> sayToAll(action, true);
-			case "say_to_all_str" -> sayToAllString(action);
-			case "say" -> say(action, eventTarget, message);
-			case "change_world_scene_status" -> {
+			case "add_battle_timer":
+				schedule(value(action, "btimer_indicator"), integer(action, "delay"),
+					"on_battle_timer", false, eventTarget, message);
+				break;
+			case "set_idle_timer":
+				schedule("IDLE", integer(action, "delay"), "on_idle_timer", true,
+					eventTarget, message);
+				break;
+			case "spawn":
+				spawn(action);
+				break;
+			case "spawn_on_target":
+				spawnOnTarget(action, eventTarget, message);
+				break;
+			case "spawn_on_target_by_attacker_indicator":
+				spawnOnAttacker(action);
+				break;
+			case "spawn_on_multi_target":
+				spawnOnMultiTarget(action);
+				break;
+			case "despawn":
+				despawn(action);
+				break;
+			case "despawn_by_nameid":
+				despawnByNameId(action);
+				break;
+			case "switch_target_by_attacker_indicator":
+				switchTarget(action);
+				break;
+			case "send_message":
+				sendMessage(action, eventTarget, message);
+				break;
+			case "broadcast_message":
+				broadcastMessage(action, eventTarget, message);
+				break;
+			case "broadcast_message_to_party":
+				broadcastMessageToParty(action, eventTarget, message);
+				break;
+			case "return_to_spawn_point":
+				ReturningEventHandler.onNotAtHome(this);
+				break;
+			case "reset_queued_actions":
+				resetQueuedActions();
+				break;
+			case "say_to_all":
+				sayToAll(action, false);
+				break;
+			case "shout_to_all":
+				sayToAll(action, true);
+				break;
+			case "say_to_all_str":
+				sayToAllString(action);
+				break;
+			case "say":
+				say(action, eventTarget, message);
+				break;
+			case "change_world_scene_status":
 				var handler = getPosition().getWorldMapInstance().getInstanceHandler();
 				StageType stageType = retailStageType(integer(action, "scenestatus"));
 				if (handler.getStage() != stageType) {
 					handler.onChangeStage(stageType);
 				}
-			}
-			case "display_system_message" -> displaySystemMessage(action);
-			case "send_system_msg" -> displaySystemMessage(action);
-			case "system_message_to_all_by_obj_indicator_param" ->
+				break;
+			case "display_system_message":
+				displaySystemMessage(action);
+				break;
+			case "send_system_msg":
+				displaySystemMessage(action);
+				break;
+			case "system_message_to_all_by_obj_indicator_param":
 				systemMessageToAll(action, eventTarget, message);
-			case "reset_hatepoints" -> resetHatepoints(action);
-			case "control_door" -> controlDoor(action);
-			case "set_condition_spawn_variable" -> RetailConditionSpawnEngine.setVariable(
-				getPosition().getWorldMapInstance(), value(action, "string"), integer(action, "set"), integer(action, "modify"));
-			case "set_condition_spawn_variable_to_world" -> RetailConditionSpawnEngine.setVariableToWorld(
-				value(action, "worldid"), value(action, "string"), integer(action, "set"), integer(action, "modify"));
-			case "give_item_by_user_indicator", "give_item_by_obj_indicator" -> giveItem(action, eventTarget, message);
-			case "give_score" -> giveScore(action, eventTarget, message);
-			case "give_exp" -> giveExperience(action, eventTarget, message);
-			case "toggle_attackable_status_flag" -> getOwner().setNpcType(
-				Boolean.parseBoolean(value(action, "attakable")) ? NpcType.ATTACKABLE : NpcType.NON_ATTACKABLE);
-			case "play_cutscene_by_user_indicator" -> playCutscene(action, eventTarget);
-			case "add_hate_point" -> addHate(action, eventTarget, message);
-			case "switch_target" -> switchObjectTarget(action, eventTarget, message);
-			case "attack_most_hating" -> getOwner().setTarget(getAggroList().getMostHated());
-			case "change_direction" -> GameWorldBootstrapServices.world().updatePosition(getOwner(), getOwner().getX(),
-				getOwner().getY(), getOwner().getZ(), (byte) integer(action, "direction"));
-			case "random_move" -> randomMove(action);
-			case "goto_waypoint" -> gotoWaypoint(action, false);
-			case "goto_next_waypoint" -> gotoWaypoint(action, true);
-			case "goto_alias" -> gotoAlias(action);
-			case "flee_from" -> fleeFrom(action, eventTarget, message);
-			case "switch_target_by_class_indicator" -> switchTargetByClass(action);
-			case "close_dialog" -> {
+				break;
+			case "reset_hatepoints":
+				resetHatepoints(action);
+				break;
+			case "control_door":
+				controlDoor(action);
+				break;
+			case "set_condition_spawn_variable":
+				RetailConditionSpawnEngine.setVariable(
+					getPosition().getWorldMapInstance(), value(action, "string"), integer(action, "set"), integer(action, "modify"));
+				break;
+			case "set_condition_spawn_variable_to_world":
+				RetailConditionSpawnEngine.setVariableToWorld(
+					value(action, "worldid"), value(action, "string"), integer(action, "set"), integer(action, "modify"));
+				break;
+			case "give_item_by_user_indicator":
+			case "give_item_by_obj_indicator":
+				giveItem(action, eventTarget, message);
+				break;
+			case "give_score":
+				giveScore(action, eventTarget, message);
+				break;
+			case "give_exp":
+				giveExperience(action, eventTarget, message);
+				break;
+			case "toggle_attackable_status_flag":
+				getOwner().setNpcType(
+					Boolean.parseBoolean(value(action, "attakable")) ? NpcType.ATTACKABLE : NpcType.NON_ATTACKABLE);
+				break;
+			case "play_cutscene_by_user_indicator":
+				playCutscene(action, eventTarget);
+				break;
+			case "add_hate_point":
+				addHate(action, eventTarget, message);
+				break;
+			case "switch_target":
+				switchObjectTarget(action, eventTarget, message);
+				break;
+			case "attack_most_hating":
+				getOwner().setTarget(getAggroList().getMostHated());
+				break;
+			case "change_direction":
+				GameWorldBootstrapServices.world().updatePosition(getOwner(), getOwner().getX(),
+					getOwner().getY(), getOwner().getZ(), (byte) integer(action, "direction"));
+				break;
+			case "random_move":
+				randomMove(action);
+				break;
+			case "goto_waypoint":
+				gotoWaypoint(action, false);
+				break;
+			case "goto_next_waypoint":
+				gotoWaypoint(action, true);
+				break;
+			case "goto_alias":
+				gotoAlias(action);
+				break;
+			case "flee_from":
+				fleeFrom(action, eventTarget, message);
+				break;
+			case "switch_target_by_class_indicator":
+				switchTargetByClass(action);
+				break;
+			case "close_dialog":
 				Creature target = resolveUser(value(action, "target"), eventTarget, message);
 				if (target instanceof Player player) {
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
 				}
-			}
-			case "teleport_target_alias" -> teleportTargetAlias(action, eventTarget, message);
-			case "teleport_target" -> teleportTarget(action, eventTarget, message);
-			case "open_directportal" -> RetailDirectPortalEngine.open(integer(action, "direct_portal_id"), getOwner());
-			case "open_directportal_by_user" -> {
+				break;
+			case "teleport_target_alias":
+				teleportTargetAlias(action, eventTarget, message);
+				break;
+			case "teleport_target":
+				teleportTarget(action, eventTarget, message);
+				break;
+			case "open_directportal":
+				RetailDirectPortalEngine.open(integer(action, "direct_portal_id"), getOwner());
+				break;
+			case "open_directportal_by_user":
 				if (resolveUser(value(action, "requestuser"), eventTarget, message) instanceof Player player) {
 					RetailDirectPortalEngine.openByUser(integer(action, "direct_portal_id"), getOwner(), player);
 				}
-			}
-			case "close_directportal" -> RetailDirectPortalEngine.close(integer(action, "direct_portal_id"));
-			case "enable_area" -> RetailAreaEngine.setEnabled(getPosition().getWorldMapInstance(),
-				value(action, "area_type"), value(action, "area_name"), integer(action, "op_code") == 1);
-			case "on_off_windpath" -> RetailWindstreamEngine.setEnabled(getPosition().getWorldMapInstance(),
-				integer(action, "groupid"), Boolean.parseBoolean(value(action, "onoff")));
-			case "on_off_moving_collision" -> RetailDynamicAreaEngine.setEnabled(getPosition().getWorldMapInstance(),
-				value(action, "type"), integer(action, "sunzoneid"), Boolean.parseBoolean(value(action, "onoff")));
-			case "charge_limitedquest" -> LimitedQuestService.charge(integer(action, "quest_id"),
-				Boolean.parseBoolean(value(action, "charge_max_count")));
+				break;
+			case "close_directportal":
+				RetailDirectPortalEngine.close(integer(action, "direct_portal_id"));
+				break;
+			case "enable_area":
+				RetailAreaEngine.setEnabled(getPosition().getWorldMapInstance(),
+					value(action, "area_type"), value(action, "area_name"), integer(action, "op_code") == 1);
+				break;
+			case "on_off_windpath":
+				RetailWindstreamEngine.setEnabled(getPosition().getWorldMapInstance(),
+					integer(action, "groupid"), Boolean.parseBoolean(value(action, "onoff")));
+				break;
+			case "on_off_moving_collision":
+				RetailDynamicAreaEngine.setEnabled(getPosition().getWorldMapInstance(),
+					value(action, "type"), integer(action, "sunzoneid"), Boolean.parseBoolean(value(action, "onoff")));
+				break;
+			case "charge_limitedquest":
+				LimitedQuestService.charge(integer(action, "quest_id"),
+					Boolean.parseBoolean(value(action, "charge_max_count")));
+				break;
 		}
 	}
 
@@ -1964,8 +2149,12 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		if (WalkManager.startWalkingToWaypoint(this, walker, target)) {
 			aliasMoving = false;
 			switch (value(action, "move_type")) {
-				case "MOVETYPE_WALK" -> getOwner().setState(CreatureState.WALKING);
-				case "MOVETYPE_RUN" -> getOwner().unsetState(CreatureState.WALKING);
+				case "MOVETYPE_WALK":
+					getOwner().setState(CreatureState.WALKING);
+					break;
+				case "MOVETYPE_RUN":
+					getOwner().unsetState(CreatureState.WALKING);
+					break;
 			}
 			waypointIndex = target;
 			waypointMoving = true;
@@ -1989,8 +2178,12 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		setStateIfNot(AIState.WALKING);
 		setSubStateIfNot(AISubState.NONE);
 		switch (value(action, "move_type")) {
-			case "MOVETYPE_WALK" -> getOwner().setState(CreatureState.WALKING);
-			case "MOVETYPE_RUN" -> getOwner().unsetState(CreatureState.WALKING);
+			case "MOVETYPE_WALK":
+				getOwner().setState(CreatureState.WALKING);
+				break;
+			case "MOVETYPE_RUN":
+				getOwner().unsetState(CreatureState.WALKING);
+				break;
 		}
 		getOwner().getMoveController().moveToPoint(point.x(), point.y(), point.z());
 		waypointIndex = -1;
@@ -2043,12 +2236,22 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void playCutscene(Operation action, Creature eventTarget) {
-		Player player = switch (value(action, "target")) {
-			case "USERI_KILLER", "USERI_EVENT_MAKER", "USERI_EVENT_TARGET", "USERI_SEEN", "USERI_TALKER" ->
-				eventTarget instanceof Player target ? target : null;
-			case "USERI_MASTER" -> getOwner().getMaster() instanceof Player master ? master : null;
-			default -> null;
-		};
+		Player player;
+		switch (value(action, "target")) {
+			case "USERI_KILLER":
+			case "USERI_EVENT_MAKER":
+			case "USERI_EVENT_TARGET":
+			case "USERI_SEEN":
+			case "USERI_TALKER":
+				player = eventTarget instanceof Player target ? target : null;
+				break;
+			case "USERI_MASTER":
+				player = getOwner().getMaster() instanceof Player master ? master : null;
+				break;
+			default:
+				player = null;
+				break;
+		}
 		if (player == null) {
 			return;
 		}
@@ -2059,21 +2262,23 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		}
 		SM_PLAY_MOVIE movie = new SM_PLAY_MOVIE(0, 0, cutsceneId, 0, getObjectId());
 		switch (value(action, "play_target_type")) {
-			case "CUTSCENE_PLAY_TO_PARTY" -> {
+			case "CUTSCENE_PLAY_TO_PARTY":
 				if (player.getCurrentGroup() == null) {
 					PacketSendUtility.sendPacket(player, movie);
 				} else {
 					player.getCurrentGroup().sendPacket(movie);
 				}
-			}
-			case "CUTSCENE_PLAY_TO_ALLIANCE" -> {
+				break;
+			case "CUTSCENE_PLAY_TO_ALLIANCE":
 				if (player.getPlayerAlliance2() == null) {
 					PacketSendUtility.sendPacket(player, movie);
 				} else {
 					player.getPlayerAlliance2().sendPacket(movie);
 				}
-			}
-			default -> PacketSendUtility.sendPacket(player, movie);
+				break;
+			default:
+				PacketSendUtility.sendPacket(player, movie);
+				break;
 		}
 	}
 
@@ -2081,11 +2286,21 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		var instance = getPosition().getWorldMapInstance();
 		int doorId = integer(action, "id");
 		if (instance.getMapId() == 300190000) {
-			doorId = switch (doorId) {
-				case 1 -> 48; // 真端 1F Boss 门 / Retail 1F boss door.
-				case 2 -> 7; // 真端 2F Boss 门 / Retail 2F boss door.
-				default -> doorId;
-			};
+			// 真端 1F Boss 门 / Retail 1F boss door.
+			// 真端 2F Boss 门 / Retail 2F boss door.
+			switch (doorId) {
+				case 1:
+					doorId = 48;
+					break;
+				// 真端 1F Boss 门 / Retail 1F boss door.
+				case 2:
+					doorId = 7;
+					break;
+				// 真端 2F Boss 门 / Retail 2F boss door.
+				default:
+					doorId = doorId;
+					break;
+			}
 		}
 		var door = instance.getDoors().get(doorId);
 		if (door != null) {
@@ -2245,13 +2460,13 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		VisibleObject previousTarget = getOwner().getTarget();
 		VisibleObject target = action.type().equals("use_skill_by_attacker_indicator") ? selectAttacker(action)
 			: action.type().equals("attack_most_hating") ? getAggroList().getMostHated() : switch (value(action, "target")) {
-				case "OBJI_SELF" -> getOwner();
-				case "OBJI_EVENT_TARGET", "OBJI_CASTER", "OBJI_ATTACKER", "OBJI_FLEE_FROM", "OBJI_KILLER",
-					"OBJI_SEEN", "OBJI_TALKER" -> eventTarget;
-				case "OBJI_MESSAGE_SENDER" -> message == null ? null : message.sender();
-				case "OBJI_MESSAGE_PARAM", "OBJI_FRIEND" -> message == null ? null : message.paramObject();
-				default -> previousTarget;
-			};
+			case "OBJI_SELF" -> getOwner();
+			case "OBJI_EVENT_TARGET", "OBJI_CASTER", "OBJI_ATTACKER", "OBJI_FLEE_FROM", "OBJI_KILLER",
+				 "OBJI_SEEN", "OBJI_TALKER" -> eventTarget;
+			case "OBJI_MESSAGE_SENDER" -> message == null ? null : message.sender();
+			case "OBJI_MESSAGE_PARAM", "OBJI_FRIEND" -> message == null ? null : message.paramObject();
+			default -> previousTarget;
+		};
 		if (target == null) {
 			return -1;
 		}
@@ -2276,10 +2491,10 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			return -1;
 		}
 		List<Creature> targets = new ArrayList<>();
-		for (var objects = getPosition().getWorldMapInstance().objectIterator(); objects.hasNext();) {
+		for (var objects = getPosition().getWorldMapInstance().objectIterator(); objects.hasNext(); ) {
 			VisibleObject object = objects.next();
 			if (object instanceof Creature creature && areas.stream()
-					.anyMatch(area -> area.isInside3D(creature.getX(), creature.getY(), creature.getZ()))) {
+				.anyMatch(area -> area.isInside3D(creature.getX(), creature.getY(), creature.getZ()))) {
 				targets.add(creature);
 			}
 		}
@@ -2309,15 +2524,30 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			return null;
 		}
 		String indicator = value(action, "target");
-		AggroInfo selected = switch (indicator) {
-			case "ATTACKERI_RANDOM_ONE" -> Rnd.get(attackers);
-			case "ATTACKERI_RANDOM_ONE_EXCEPT_CURRENT_TARGET" -> randomExceptCurrent(attackers);
-			case "ATTACKERI_SECOND_HATING" -> hating(attackers, 1);
-			case "ATTACKERI_THIRD_HATING" -> hating(attackers, 2);
-			case "ATTACKERI_HAS_LOWEST_HP" -> byHp(attackers, true);
-			case "ATTACKERI_HAS_MOST_HP" -> byHp(attackers, false);
-			default -> null;
-		};
+		AggroInfo selected;
+		switch (indicator) {
+			case "ATTACKERI_RANDOM_ONE":
+				selected = Rnd.get(attackers);
+				break;
+			case "ATTACKERI_RANDOM_ONE_EXCEPT_CURRENT_TARGET":
+				selected = randomExceptCurrent(attackers);
+				break;
+			case "ATTACKERI_SECOND_HATING":
+				selected = hating(attackers, 1);
+				break;
+			case "ATTACKERI_THIRD_HATING":
+				selected = hating(attackers, 2);
+				break;
+			case "ATTACKERI_HAS_LOWEST_HP":
+				selected = byHp(attackers, true);
+				break;
+			case "ATTACKERI_HAS_MOST_HP":
+				selected = byHp(attackers, false);
+				break;
+			default:
+				selected = null;
+				break;
+		}
 		return selected == null ? null : (Creature) selected.getAttacker();
 	}
 
@@ -2369,62 +2599,123 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	static boolean matchesRace(Race race, String retailRace) {
-		return switch (retailRace.toLowerCase()) {
-			case "pc" -> race.isPlayerRace();
-			case "pc_light" -> race == Race.ELYOS;
-			case "pc_dark" -> race == Race.ASMODIANS;
-			default -> race.name().equalsIgnoreCase(retailRace);
-		};
+		switch (retailRace.toLowerCase()) {
+			case "pc":
+				return race.isPlayerRace();
+			case "pc_light":
+				return race == Race.ELYOS;
+			case "pc_dark":
+				return race == Race.ASMODIANS;
+			default:
+				return race.name().equalsIgnoreCase(retailRace);
+		}
 	}
 
 	static boolean matchesUserClass(PlayerClass playerClass, String retailClass) {
 		int id = Byte.toUnsignedInt(playerClass.getClassId());
-		return switch (retailClass) {
-			case "CLASSI_WARRIOR" -> id == 0;
-			case "CLASSI_FIGHTER" -> id == 1;
-			case "CLASSI_KNIGHT" -> id == 2;
-			case "CLASSI_SCOUT" -> id == 3;
-			case "CLASSI_ASSASSIN" -> id == 4;
-			case "CLASSI_RANGER" -> id == 5;
-			case "CLASSI_MAGE" -> id == 6;
-			case "CLASSI_WIZARD" -> id == 7;
-			case "CLASSI_ELEMENTALIST" -> id == 8;
-			case "CLASSI_CLERIC" -> id == 9;
-			case "CLASSI_PRIEST" -> id == 10;
-			case "CLASSI_CHANTER" -> id == 11;
-			case "CLASSI_ENGINEER" -> id == 12;
-			case "CLASSI_RIDER" -> id == 13;
-			case "CLASSI_GUNNER" -> id == 14;
-			case "CLASSI_ARTIST" -> id == 15;
-			case "CLASSI_BARD" -> id == 16;
-			case "CLASSI_WARRIOR_GROUP" -> id < 3;
-			case "CLASSI_SCOUT_GROUP" -> id >= 3 && id < 6;
-			case "CLASSI_MAGE_GROUP" -> id >= 6 && id < 9;
-			case "CLASSI_CLERIC_GROUP" -> id >= 9 && id < 12;
-			case "CLASSI_ENGINEER_GROUP" -> id >= 12 && id < 15;
-			case "CLASSI_ARTIST_GROUP" -> id >= 15 && id < 17;
-			case "CLASSI_MELEE_GROUP" -> id < 6 || id >= 12 && id < 15;
-			case "CLASSI_CASTER_GROUP" -> id >= 6 && id < 12 || id >= 15 && id < 17;
-			case "CLASSI_TANKER_GROUP" -> id < 3 || id == 13;
-			case "CLASSI_DEALER_GROUP" -> id >= 3 && id < 9 || id == 14;
-			case "CLASSI_HEALER_GROUP" -> id >= 9 && id < 12 || id == 16;
-			case "CLASSI_JUNIOR_GROUP" -> id < 17 && id % 3 == 0;
-			case "CLASSI_SENIOR_GROUP" -> id < 17 && id % 3 != 0;
-			default -> false;
-		};
+		switch (retailClass) {
+			case "CLASSI_WARRIOR":
+				return id == 0;
+			case "CLASSI_FIGHTER":
+				return id == 1;
+			case "CLASSI_KNIGHT":
+				return id == 2;
+			case "CLASSI_SCOUT":
+				return id == 3;
+			case "CLASSI_ASSASSIN":
+				return id == 4;
+			case "CLASSI_RANGER":
+				return id == 5;
+			case "CLASSI_MAGE":
+				return id == 6;
+			case "CLASSI_WIZARD":
+				return id == 7;
+			case "CLASSI_ELEMENTALIST":
+				return id == 8;
+			case "CLASSI_CLERIC":
+				return id == 9;
+			case "CLASSI_PRIEST":
+				return id == 10;
+			case "CLASSI_CHANTER":
+				return id == 11;
+			case "CLASSI_ENGINEER":
+				return id == 12;
+			case "CLASSI_RIDER":
+				return id == 13;
+			case "CLASSI_GUNNER":
+				return id == 14;
+			case "CLASSI_ARTIST":
+				return id == 15;
+			case "CLASSI_BARD":
+				return id == 16;
+			case "CLASSI_WARRIOR_GROUP":
+				return id < 3;
+			case "CLASSI_SCOUT_GROUP":
+				return id >= 3 && id < 6;
+			case "CLASSI_MAGE_GROUP":
+				return id >= 6 && id < 9;
+			case "CLASSI_CLERIC_GROUP":
+				return id >= 9 && id < 12;
+			case "CLASSI_ENGINEER_GROUP":
+				return id >= 12 && id < 15;
+			case "CLASSI_ARTIST_GROUP":
+				return id >= 15 && id < 17;
+			case "CLASSI_MELEE_GROUP":
+				return id < 6 || id >= 12 && id < 15;
+			case "CLASSI_CASTER_GROUP":
+				return id >= 6 && id < 12 || id >= 15 && id < 17;
+			case "CLASSI_TANKER_GROUP":
+				return id < 3 || id == 13;
+			case "CLASSI_DEALER_GROUP":
+				return id >= 3 && id < 9 || id == 14;
+			case "CLASSI_HEALER_GROUP":
+				return id >= 9 && id < 12 || id == 16;
+			case "CLASSI_JUNIOR_GROUP":
+				return id < 17 && id % 3 == 0;
+			case "CLASSI_SENIOR_GROUP":
+				return id < 17 && id % 3 != 0;
+			default:
+				return false;
+		}
 	}
 
 	private static boolean isRetailPlayerClass(String retailClass) {
-		return switch (retailClass) {
-			case "CLASSI_WARRIOR", "CLASSI_FIGHTER", "CLASSI_KNIGHT", "CLASSI_SCOUT", "CLASSI_ASSASSIN",
-				"CLASSI_RANGER", "CLASSI_MAGE", "CLASSI_WIZARD", "CLASSI_ELEMENTALIST", "CLASSI_PRIEST",
-				"CLASSI_CLERIC", "CLASSI_CHANTER", "CLASSI_ENGINEER", "CLASSI_RIDER", "CLASSI_GUNNER",
-				"CLASSI_ARTIST", "CLASSI_BARD", "CLASSI_WARRIOR_GROUP", "CLASSI_SCOUT_GROUP", "CLASSI_MAGE_GROUP",
-				"CLASSI_CLERIC_GROUP", "CLASSI_ENGINEER_GROUP", "CLASSI_ARTIST_GROUP", "CLASSI_MELEE_GROUP",
-				"CLASSI_CASTER_GROUP", "CLASSI_TANKER_GROUP", "CLASSI_DEALER_GROUP", "CLASSI_HEALER_GROUP",
-				"CLASSI_JUNIOR_GROUP", "CLASSI_SENIOR_GROUP", "CLASSI_NONE" -> true;
-			default -> false;
-		};
+		switch (retailClass) {
+			case "CLASSI_WARRIOR":
+			case "CLASSI_FIGHTER":
+			case "CLASSI_KNIGHT":
+			case "CLASSI_SCOUT":
+			case "CLASSI_ASSASSIN":
+			case "CLASSI_RANGER":
+			case "CLASSI_MAGE":
+			case "CLASSI_WIZARD":
+			case "CLASSI_ELEMENTALIST":
+			case "CLASSI_PRIEST":
+			case "CLASSI_CLERIC":
+			case "CLASSI_CHANTER":
+			case "CLASSI_ENGINEER":
+			case "CLASSI_RIDER":
+			case "CLASSI_GUNNER":
+			case "CLASSI_ARTIST":
+			case "CLASSI_BARD":
+			case "CLASSI_WARRIOR_GROUP":
+			case "CLASSI_SCOUT_GROUP":
+			case "CLASSI_MAGE_GROUP":
+			case "CLASSI_CLERIC_GROUP":
+			case "CLASSI_ENGINEER_GROUP":
+			case "CLASSI_ARTIST_GROUP":
+			case "CLASSI_MELEE_GROUP":
+			case "CLASSI_CASTER_GROUP":
+			case "CLASSI_TANKER_GROUP":
+			case "CLASSI_DEALER_GROUP":
+			case "CLASSI_HEALER_GROUP":
+			case "CLASSI_JUNIOR_GROUP":
+			case "CLASSI_SENIOR_GROUP":
+			case "CLASSI_NONE":
+				return true;
+			default:
+				return false;
+		}
 	}
 
 	private static boolean supportsUser(String event, String user) {
@@ -2432,24 +2723,43 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			&& Set.of("USERI_EVENT_TARGET", "USERI_ATTACKER").contains(user)) {
 			return true;
 		}
-		return switch (event) {
-			case "on_attacked" -> user.equals("USERI_ATTACKER");
-			case "on_spelled" -> Set.of("USERI_ATTACKER", "USERI_CASTER").contains(user);
-			case "on_see_spell", "on_casted" -> user.equals("USERI_CASTER");
-			case "on_see_user", "on_see_user_move" -> user.equals("USERI_SEEN");
-			case "on_user_enter_sensory_area", "on_user_leave_sensory_area" -> user.equals("USERI_EVENT_MAKER");
-			case "on_enter_attack_state" -> Set.of("USERI_EVENT_TARGET", "USERI_ATTACKER").contains(user);
-			case "on_healed_by_user" -> user.equals("USERI_EVENT_TARGET");
-			case "on_killed_by_user", "on_see_friend_killed_by_user", "on_sense_friend_killed_by_user" -> user.equals("USERI_KILLER");
-			case "on_killed_by_npc" -> user.equals("USERI_MASTER");
-			case "on_talked_by_user", "on_hyperlink_clicked", "on_gauge_begin", "on_gauge_stop", "on_gauge_end" ->
-				user.equals("USERI_TALKER");
-			default -> false;
-		};
+		switch (event) {
+			case "on_attacked":
+				return user.equals("USERI_ATTACKER");
+			case "on_spelled":
+				return Set.of("USERI_ATTACKER", "USERI_CASTER").contains(user);
+			case "on_see_spell":
+			case "on_casted":
+				return user.equals("USERI_CASTER");
+			case "on_see_user":
+			case "on_see_user_move":
+				return user.equals("USERI_SEEN");
+			case "on_user_enter_sensory_area":
+			case "on_user_leave_sensory_area":
+				return user.equals("USERI_EVENT_MAKER");
+			case "on_enter_attack_state":
+				return Set.of("USERI_EVENT_TARGET", "USERI_ATTACKER").contains(user);
+			case "on_healed_by_user":
+				return user.equals("USERI_EVENT_TARGET");
+			case "on_killed_by_user":
+			case "on_see_friend_killed_by_user":
+			case "on_sense_friend_killed_by_user":
+				return user.equals("USERI_KILLER");
+			case "on_killed_by_npc":
+				return user.equals("USERI_MASTER");
+			case "on_talked_by_user":
+			case "on_hyperlink_clicked":
+			case "on_gauge_begin":
+			case "on_gauge_stop":
+			case "on_gauge_end":
+				return user.equals("USERI_TALKER");
+			default:
+				return false;
+		}
 	}
 
 	static boolean increaseIntVar(Map<String, Integer> variables, String name, int lower, int upper,
-			boolean trueOnlyAtUpperBound) {
+								  boolean trueOnlyAtUpperBound) {
 		int current = variables.getOrDefault(name, 0);
 		if (current < lower || current >= upper) {
 			return false;
@@ -2460,7 +2770,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	static boolean decreaseIntVar(Map<String, Integer> variables, String name, int lower, int upper,
-			boolean trueOnlyAtLowerBound) {
+								  boolean trueOnlyAtLowerBound) {
 		int current = variables.getOrDefault(name, 0);
 		if (current <= lower || current > upper) {
 			return false;
@@ -2471,7 +2781,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	static boolean addIntVar(Map<String, Integer> variables, String name, int amount, int lower, int upper,
-			boolean trueOnlyAtUpperBound) {
+							 boolean trueOnlyAtUpperBound) {
 		int current = variables.getOrDefault(name, 0);
 		if (current < lower || current >= upper) {
 			return false;
@@ -2501,7 +2811,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	static boolean subIntVar(Map<String, Integer> variables, String name, int amount, int lower, int upper,
-			boolean trueOnlyAtLowerBound) {
+							 boolean trueOnlyAtLowerBound) {
 		int current = variables.getOrDefault(name, 0);
 		if (current <= lower || current > upper) {
 			return false;
@@ -2529,18 +2839,27 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	static boolean matchesNpcState(AIState state, AISubState subState, String retailState, boolean wakingUp,
-			boolean goingToPoint) {
-		return switch (retailState) {
-			case "NPC_STATE_ATTACK" -> state == AIState.FIGHT;
-			case "NPC_STATE_IDLE" -> state == AIState.IDLE;
-			case "NPC_STATE_GOTO_WAYPOINT" -> state == AIState.WALKING && subState == AISubState.WALK_PATH;
-			case "NPC_STATE_RANDOM_MOVE" -> state == AIState.WALKING && subState == AISubState.WALK_RANDOM;
-			case "NPC_STATE_FLEE" -> state == AIState.FEAR;
-			case "NPC_STATE_USE_SKILL" -> subState == AISubState.CAST;
-			case "NPC_STATE_WAKE_UP" -> wakingUp;
-			case "NPC_STATE_GOTO_POINT" -> goingToPoint;
-			default -> false;
-		};
+								   boolean goingToPoint) {
+		switch (retailState) {
+			case "NPC_STATE_ATTACK":
+				return state == AIState.FIGHT;
+			case "NPC_STATE_IDLE":
+				return state == AIState.IDLE;
+			case "NPC_STATE_GOTO_WAYPOINT":
+				return state == AIState.WALKING && subState == AISubState.WALK_PATH;
+			case "NPC_STATE_RANDOM_MOVE":
+				return state == AIState.WALKING && subState == AISubState.WALK_RANDOM;
+			case "NPC_STATE_FLEE":
+				return state == AIState.FEAR;
+			case "NPC_STATE_USE_SKILL":
+				return subState == AISubState.CAST;
+			case "NPC_STATE_WAKE_UP":
+				return wakingUp;
+			case "NPC_STATE_GOTO_POINT":
+				return goingToPoint;
+			default:
+				return false;
+		}
 	}
 
 	private static boolean matchesRetailAbnormal(Creature creature, String retailState) {
@@ -2563,47 +2882,82 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	static Integer retailAbnormalMask(String retailState) {
-		return switch (retailState) {
-			case "ABNSTATEI_NONE" -> 0;
-			case "ABNSTATEI_POISON" -> 0x00000001;
-			case "ABNSTATEI_BLEED" -> 0x00000002;
-			case "ABNSTATEI_PARALYZE" -> 0x00000004;
-			case "ABNSTATEI_SLEEP" -> 0x00000008;
-			case "ABNSTATEI_ROOT" -> 0x00000010;
-			case "ABNSTATEI_BLIND" -> 0x00000020;
-			case "ABNSTATEI_CHARM" -> 0x00000040;
-			case "ABNSTATEI_DISEASE" -> 0x00000080;
-			case "ABNSTATEI_SILENCE" -> 0x00000100;
-			case "ABNSTATEI_FEAR" -> 0x00000200;
-			case "ABNSTATEI_CURSE" -> 0x00000400;
-			case "ABNSTATEI_CONFUSE" -> 0x00000800;
-			case "ABNSTATEI_STUN" -> 0x00001000;
-			case "ABNSTATEI_PETRIFICATION" -> 0x00002000;
-			case "ABNSTATEI_STUMBLE" -> 0x00004000;
-			case "ABNSTATEI_STAGGER" -> 0x00008000;
-			case "ABNSTATEI_OPEN_AERIAL" -> 0x00010000;
-			case "ABNSTATEI_SNARE" -> 0x00020000;
-			case "ABNSTATEI_SLOW" -> 0x00040000;
-			case "ABNSTATEI_SPIN" -> 0x00080000;
-			case "ABNSTATEI_BIND" -> 0x00100000;
-			case "ABNSTATEI_DEFORM" -> 0x00200000;
-			case "ABNSTATEI_PULLED" -> 0x00400000;
-			case "ABNSTATEI_INVISIBLE" -> 0x20000000;
-			case "ABNSTATEI_SANCTUARY" -> 0x80000000;
-			case "ABNSTATEI_CANNOT_MOVE_GROUP" -> 0x0749f05c;
-			case "ABNSTATEI_CANNOT_ACT_GROUP" -> 0x0649f04c;
-			case "ABNSTATEI_NO_PHYSICAL_SKILL_GROUP" -> 0x14100008;
-			case "ABNSTATEI_NO_MAGICAL_SKILL_GROUP" -> 0x0c000108;
-			case "ABNSTATEI_STUN_LIKE_GROUP" -> 0x0009d040;
-			case "ABNSTATEI_PHYSICAL_GROUP" -> 0x101620b7;
-			case "ABNSTATEI_MENTAL_GROUP" -> 0x0c800f48;
-			case "ABNSTATEI_INVULNERABLE_WING" -> 0x0000001e;
-			default -> null;
-		};
+		switch (retailState) {
+			case "ABNSTATEI_NONE":
+				return 0;
+			case "ABNSTATEI_POISON":
+				return 0x00000001;
+			case "ABNSTATEI_BLEED":
+				return 0x00000002;
+			case "ABNSTATEI_PARALYZE":
+				return 0x00000004;
+			case "ABNSTATEI_SLEEP":
+				return 0x00000008;
+			case "ABNSTATEI_ROOT":
+				return 0x00000010;
+			case "ABNSTATEI_BLIND":
+				return 0x00000020;
+			case "ABNSTATEI_CHARM":
+				return 0x00000040;
+			case "ABNSTATEI_DISEASE":
+				return 0x00000080;
+			case "ABNSTATEI_SILENCE":
+				return 0x00000100;
+			case "ABNSTATEI_FEAR":
+				return 0x00000200;
+			case "ABNSTATEI_CURSE":
+				return 0x00000400;
+			case "ABNSTATEI_CONFUSE":
+				return 0x00000800;
+			case "ABNSTATEI_STUN":
+				return 0x00001000;
+			case "ABNSTATEI_PETRIFICATION":
+				return 0x00002000;
+			case "ABNSTATEI_STUMBLE":
+				return 0x00004000;
+			case "ABNSTATEI_STAGGER":
+				return 0x00008000;
+			case "ABNSTATEI_OPEN_AERIAL":
+				return 0x00010000;
+			case "ABNSTATEI_SNARE":
+				return 0x00020000;
+			case "ABNSTATEI_SLOW":
+				return 0x00040000;
+			case "ABNSTATEI_SPIN":
+				return 0x00080000;
+			case "ABNSTATEI_BIND":
+				return 0x00100000;
+			case "ABNSTATEI_DEFORM":
+				return 0x00200000;
+			case "ABNSTATEI_PULLED":
+				return 0x00400000;
+			case "ABNSTATEI_INVISIBLE":
+				return 0x20000000;
+			case "ABNSTATEI_SANCTUARY":
+				return 0x80000000;
+			case "ABNSTATEI_CANNOT_MOVE_GROUP":
+				return 0x0749f05c;
+			case "ABNSTATEI_CANNOT_ACT_GROUP":
+				return 0x0649f04c;
+			case "ABNSTATEI_NO_PHYSICAL_SKILL_GROUP":
+				return 0x14100008;
+			case "ABNSTATEI_NO_MAGICAL_SKILL_GROUP":
+				return 0x0c000108;
+			case "ABNSTATEI_STUN_LIKE_GROUP":
+				return 0x0009d040;
+			case "ABNSTATEI_PHYSICAL_GROUP":
+				return 0x101620b7;
+			case "ABNSTATEI_MENTAL_GROUP":
+				return 0x0c800f48;
+			case "ABNSTATEI_INVULNERABLE_WING":
+				return 0x0000001e;
+			default:
+				return null;
+		}
 	}
 
 	private void schedule(String timer, int delay, String event, boolean zeroCancels, Creature eventTarget,
-			RetailMessage message) {
+						  RetailMessage message) {
 		Future<?> previous = timers.get(timer);
 		if (previous != null && !previous.isDone()) {
 			previous.cancel(false);
@@ -2661,14 +3015,14 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	 * the same template already exists in the instance, so a working pattern never produces a second copy. Coordinates,
 	 * heading and the aerial flag all come from the retail action itself.
 	 *
-	 * @param instance 目标实例 / target instance
+	 * @param instance   目标实例 / target instance
 	 * @param ownerNpcId 触发 NPC 的模板 ID / template id of the triggering NPC
-	 * @param event 真端事件名 / retail event name
-	 * @param npcNameId 动作中的 {@code npc_nameid} / {@code npc_nameid} used by the action
+	 * @param event      真端事件名 / retail event name
+	 * @param npcNameId  动作中的 {@code npc_nameid} / {@code npc_nameid} used by the action
 	 * @return 刷出的对象；已存在或数据缺失时返回 null / spawned object, or null when it already exists or data is missing
 	 */
 	public static VisibleObject spawnRetailActionNpc(WorldMapInstance instance, int ownerNpcId, String event,
-			String npcNameId) {
+													 String npcNameId) {
 		if (instance == null || DataManager.RETAIL_AI_DATA == null) {
 			return null;
 		}
@@ -2696,7 +3050,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	static Point3D resolveSpawnPoint(Operation action, float ownerX, float ownerY, float ownerZ,
-			WalkerTemplate walker) {
+									 WalkerTemplate walker) {
 		if (value(action, "spawn_location_type").equals("SPAWN_LOCATION_WAY_POINT_START")) {
 			if (walker == null || walker.getRouteSteps() == null || walker.getRouteSteps().isEmpty()) {
 				return null;
@@ -2754,18 +3108,23 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	static <T> List<T> selectMultiTargets(List<T> candidates, Comparator<? super T> comparator, String order, int count) {
 		List<T> selected = new ArrayList<>(candidates);
 		switch (order) {
-			case "ORDERI_ASCENDING" -> selected.sort(comparator);
-			case "ORDERI_DESCENDING" -> selected.sort(comparator.reversed());
-			case "ORDERI_RANDOM" -> Collections.shuffle(selected);
-			default -> {
+			case "ORDERI_ASCENDING":
+				selected.sort(comparator);
+				break;
+			case "ORDERI_DESCENDING":
+				selected.sort(comparator.reversed());
+				break;
+			case "ORDERI_RANDOM":
+				Collections.shuffle(selected);
+				break;
+			default:
 				return List.of();
-			}
 		}
 		return selected.stream().limit(Math.min(count, selected.size())).toList();
 	}
 
 	private void spawnAt(Operation action, int npcId, float x, float y, float z, byte heading, Creature attackTarget,
-			String walkerId) {
+						 String walkerId) {
 		int count = Math.max(1, integer(action, "num_to_spawn"));
 		float range = decimal(action, "spawn_range");
 		for (int i = 0; i < count; i++) {
@@ -2833,7 +3192,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	 * 子对象是否与生成者的状态重置解耦。
 	 * Whether a child spawn keeps its lifetime independent of the spawner's state reset.
 	 *
-	 * @param liveTime 自带存活秒数 / own lifetime in seconds
+	 * @param liveTime        自带存活秒数 / own lifetime in seconds
 	 * @param spawnerEndEvent 是否在生成者生命周期结束事件链中生成 / whether it was spawned by a spawner-ending event chain
 	 * @return 解耦返回 {@code true} / {@code true} when the spawn survives the spawner's reset
 	 */
@@ -2946,7 +3305,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			case "is_target_quest_state" -> supportsObject(event, value(condition, "target"))
 				&& integerInRange(condition, "quest_id", 1, Integer.MAX_VALUE)
 				&& Set.of("QSTATEI_NONE", "QSTATEI_ACQUIRED", "QSTATEI_SUCCEED")
-					.contains(value(condition, "quest_progress"));
+				.contains(value(condition, "quest_progress"));
 			case "is_hp_lower_than" -> supportsObject(event, value(condition, "who"))
 				&& integerInRange(condition, "percent", 0, 100);
 			case "is_hp_in_boundary" -> supportsObject(event, value(condition, "who"))
@@ -2963,9 +3322,10 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			case "is_event_skill_id" -> Set.of("on_spelled", "on_damaged", "on_friend_spelling", "on_friend_spelled",
 				"on_see_master_spelling", "on_see_master_spelled", "on_casted", "on_see_spell").contains(event)
 				&& !value(condition, "skill_id").isBlank();
-			case "is_event_skill_category" -> Set.of("on_spelled", "on_damaged", "on_friend_spelling", "on_friend_spelled",
-				"on_see_master_spelling", "on_see_master_spelled", "on_casted", "on_see_spell").contains(event)
-				&& !value(condition, "skill_category").isBlank();
+			case "is_event_skill_category" ->
+				Set.of("on_spelled", "on_damaged", "on_friend_spelling", "on_friend_spelled",
+					"on_see_master_spelling", "on_see_master_spelled", "on_casted", "on_see_spell").contains(event)
+					&& !value(condition, "skill_category").isBlank();
 			case "is_user_flying" -> supportsUser(event, value(condition, "user"));
 			case "is_race" -> supportsObject(event, value(condition, "from"))
 				&& isRetailRace(value(condition, "race_type"));
@@ -2975,12 +3335,13 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				&& isInteger(condition, "lower_bound") && isInteger(condition, "upper_bound")
 				&& integer(condition, "lower_bound") < integer(condition, "upper_bound")
 				&& Set.of("TRUE", "FALSE").contains(value(condition, "be_true_only_when_hit_the_bound"));
-			case "set_intvar_if_larger_than", "set_intvar_if_less_than" -> !value(condition, "intvar_indicator").isBlank()
-				&& isInteger(condition, "intvar_to_set") && isInteger(condition, "comparand");
+			case "set_intvar_if_larger_than", "set_intvar_if_less_than" ->
+				!value(condition, "intvar_indicator").isBlank()
+					&& isInteger(condition, "intvar_to_set") && isInteger(condition, "comparand");
 			case "is_npc_state" -> value(condition, "who").equals("NPCI_SELF")
 				&& Set.of("NPC_STATE_ATTACK", "NPC_STATE_IDLE", "NPC_STATE_GOTO_WAYPOINT", "NPC_STATE_RANDOM_MOVE",
 					"NPC_STATE_FLEE", "NPC_STATE_USE_SKILL", "NPC_STATE_WAKE_UP", "NPC_STATE_GOTO_POINT")
-					.contains(value(condition, "state"));
+				.contains(value(condition, "state"));
 			case "is_user_class" -> supportsUser(event, value(condition, "user"))
 				&& isRetailPlayerClass(value(condition, "class"));
 			case "set_world_flag_var", "unset_world_flag_var" -> !value(condition, "flagvar_indicator").isBlank();
@@ -3005,7 +3366,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				&& integerInRange(condition, "level_min", 0, Integer.MAX_VALUE)
 				&& integerInRange(condition, "level_max", 0, Integer.MAX_VALUE)
 				&& (integer(condition, "level_min") == 0 || integer(condition, "level_max") == 0
-					|| integer(condition, "level_min") <= integer(condition, "level_max"));
+				|| integer(condition, "level_min") <= integer(condition, "level_max"));
 			case "is_user_gender" -> supportsUser(event, value(condition, "user"))
 				&& Set.of("GENDERI_MALE", "GENDERI_FEMALE").contains(value(condition, "gender"));
 			case "is_my_curent_target" -> supportsObject(event, value(condition, "who"));
@@ -3046,7 +3407,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				&& integerInRange(action, "skill_level", 0, Integer.MAX_VALUE);
 			case "activate_skillarea" -> integerInRange(action, "areaid", 1, Integer.MAX_VALUE)
 				&& isSkillIndex(action) && (value(action, "skill_level").isBlank()
-					|| integerInRange(action, "skill_level", 0, Integer.MAX_VALUE))
+				|| integerInRange(action, "skill_level", 0, Integer.MAX_VALUE))
 				&& Set.of("CASTOR", "AREA").contains(value(action, "broadcast_type"));
 			case "open_directportal", "close_directportal" ->
 				integerInRange(action, "direct_portal_id", 1, Integer.MAX_VALUE);
@@ -3054,7 +3415,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				&& value(action, "requestuser").equals("USERI_TALKER")
 				&& integerInRange(action, "direct_portal_id", 1, Integer.MAX_VALUE);
 			case "enable_area" -> Set.of("AI_CONTROL_AREA_RESURRECT", "AI_CONTROL_AREA_QUESTSCRIPT",
-				"AI_CONTROL_AREA_LIMIT_NOPARK", "AI_CONTROL_AREA_LIMIT_NORECALL", "AI_CONTROL_AREA_GROUPCTRL")
+					"AI_CONTROL_AREA_LIMIT_NOPARK", "AI_CONTROL_AREA_LIMIT_NORECALL", "AI_CONTROL_AREA_GROUPCTRL")
 				.contains(value(action, "area_type"))
 				&& !value(action, "area_name").isBlank()
 				&& integerInRange(action, "op_code", 0, 1);
@@ -3073,12 +3434,12 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			case "set_idle_timer" -> integerInRange(action, "delay", 0, Integer.MAX_VALUE);
 			case "spawn" -> !value(action, "npc_nameid").isBlank() && !value(action, "spawn_id").isBlank()
 				&& Set.of("SPAWN_LOCATION_MY_POINT", "SPAWN_LOCATION_ABSOLUTE", "SPAWN_LOCATION_RELATIVE",
-					"SPAWN_LOCATION_WAY_POINT_START").contains(value(action, "spawn_location_type"))
+				"SPAWN_LOCATION_WAY_POINT_START").contains(value(action, "spawn_location_type"))
 				&& Set.of("TRUE", "FALSE").contains(value(action, "despawn_at_attack_state"))
 				&& Set.of("TRUE", "FALSE").contains(value(action, "is_aerial_spawn"))
 				&& integerInRange(action, "except_specialize", 0, Integer.MAX_VALUE)
 				&& (!value(action, "spawn_location_type").equals("SPAWN_LOCATION_WAY_POINT_START")
-					|| !value(action, "pathname").isBlank())
+				|| !value(action, "pathname").isBlank())
 				&& integerInRange(action, "num_to_spawn", 1, Integer.MAX_VALUE) && isInteger(action, "dir")
 				&& integerInRange(action, "live_time", 0, Integer.MAX_VALUE) && decimals(action, "x", "y", "z")
 				&& decimalInRange(action, "spawn_range", 0);
@@ -3105,7 +3466,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				&& !value(action, "spawn_id").isBlank()
 				&& Set.of("TRUE", "FALSE").contains(value(action, "despawn_at_attack_state"))
 				&& Set.of("ORDERI_ASCENDING", "ORDERI_DESCENDING", "ORDERI_RANDOM")
-					.contains(value(action, "order_in_attacker_list"))
+				.contains(value(action, "order_in_attacker_list"))
 				&& Set.of("TRUE", "FALSE").contains(value(action, "attack_target_after_spawn"))
 				&& integerInRange(action, "num_to_spawn", 1, Integer.MAX_VALUE)
 				&& integerInRange(action, "live_time", 0, Integer.MAX_VALUE)
@@ -3159,9 +3520,9 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				&& integerInRange(action, "cutscene_id", 1, Integer.MAX_VALUE)
 				&& integer(action, "quest_id") == 0
 				&& Set.of("CUTSCENE_PLAY_TO_USER", "CUTSCENE_PLAY_TO_PARTY", "CUTSCENE_PLAY_TO_ALLIANCE")
-					.contains(value(action, "play_target_type"))
+				.contains(value(action, "play_target_type"))
 				&& (value(action, "teleport_alias").isBlank()
-					|| value(action, "play_target_type").equals("CUTSCENE_PLAY_TO_USER"));
+				|| value(action, "play_target_type").equals("CUTSCENE_PLAY_TO_USER"));
 			case "add_hate_point" -> supportsObject(event, value(action, "target"))
 				&& integerInRange(action, "point_to_add", 0, Integer.MAX_VALUE);
 			case "switch_target" -> supportsObject(event, value(action, "target"))
@@ -3188,29 +3549,41 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	private static boolean supportsScoreTarget(String event, String target) {
-		return switch (target) {
-			case "USERI_TALKER" -> event.equals("on_talked_by_user");
-			case "USERI_KILLER" -> event.equals("on_killed_by_user");
-			case "USERI_EVENT_MAKER" -> Set.of("on_die", "on_killed_by_user").contains(event);
-			default -> false;
-		};
+		switch (target) {
+			case "USERI_TALKER":
+				return event.equals("on_talked_by_user");
+			case "USERI_KILLER":
+				return event.equals("on_killed_by_user");
+			case "USERI_EVENT_MAKER":
+				return Set.of("on_die", "on_killed_by_user").contains(event);
+			default:
+				return false;
+		}
 	}
 
 	private static boolean supportsRewardTarget(String event, String target) {
-		return switch (target) {
-			case "USERI_ATTACKER" -> event.equals("on_attacked");
-			case "USERI_KILLER" -> event.equals("on_killed_by_user");
-			default -> false;
-		};
+		switch (target) {
+			case "USERI_ATTACKER":
+				return event.equals("on_attacked");
+			case "USERI_KILLER":
+				return event.equals("on_killed_by_user");
+			default:
+				return false;
+		}
 	}
 
 	private static boolean supportsNpcPartyMessageObject(String event, String paramObject) {
-		return switch (event) {
-			case "on_battle_timer" -> Set.of("OBJI_SELF", "OBJI_CUR_TARGET").contains(paramObject);
-			case "on_killed_by_user" -> paramObject.equals("OBJI_KILLER");
-			case "on_attacked", "on_spelled" -> paramObject.equals("OBJI_SELF");
-			default -> false;
-		};
+		switch (event) {
+			case "on_battle_timer":
+				return Set.of("OBJI_SELF", "OBJI_CUR_TARGET").contains(paramObject);
+			case "on_killed_by_user":
+				return paramObject.equals("OBJI_KILLER");
+			case "on_attacked":
+			case "on_spelled":
+				return paramObject.equals("OBJI_SELF");
+			default:
+				return false;
+		}
 	}
 
 	static boolean supportsNpcScore(int scoreApplyType, int equalizingScore) {
@@ -3269,37 +3642,58 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	}
 
 	private static boolean supportsCutsceneTarget(String event, String target) {
-		return switch (target) {
-			case "USERI_KILLER" -> event.equals("on_killed_by_user");
-			case "USERI_EVENT_MAKER" -> Set.of("on_user_enter_sensory_area", "on_user_leave_sensory_area").contains(event);
-			case "USERI_MASTER" -> true;
-			case "USERI_SEEN" -> event.equals("on_see_user");
-			case "USERI_TALKER" -> event.equals("on_hyperlink_clicked");
-			case "USERI_EVENT_TARGET" -> TARGET_EVENTS.contains(event);
-			default -> false;
-		};
+		switch (target) {
+			case "USERI_KILLER":
+				return event.equals("on_killed_by_user");
+			case "USERI_EVENT_MAKER":
+				return Set.of("on_user_enter_sensory_area", "on_user_leave_sensory_area").contains(event);
+			case "USERI_MASTER":
+				return true;
+			case "USERI_SEEN":
+				return event.equals("on_see_user");
+			case "USERI_TALKER":
+				return event.equals("on_hyperlink_clicked");
+			case "USERI_EVENT_TARGET":
+				return TARGET_EVENTS.contains(event);
+			default:
+				return false;
+		}
 	}
 
 	private static boolean supportsObject(String event, String indicator) {
-		return switch (indicator) {
-			case "OBJI_SELF", "OBJI_CUR_TARGET" -> true;
-			case "OBJI_EVENT_TARGET" -> TARGET_EVENTS.contains(event);
-			case "OBJI_CASTER" -> Set.of("on_attacked", "on_spelled", "on_enter_abnormal_state", "on_leave_abnormal_state", "on_friend_spelled",
-				"on_see_master_spelling", "on_see_master_spelled", "on_casted", "on_see_spell",
-				"on_party_mbr_spelled").contains(event);
-			case "OBJI_ATTACKER" -> Set.of("on_attacked", "on_spelled", "on_damaged", "on_see_friend_attacked", "on_friend_spelled",
-				"on_master_attacked", "on_see_attacked", "on_party_mbr_attacked").contains(event);
-			case "OBJI_PARTY_MEMBER" -> Set.of("on_party_mbr_attacked", "on_party_mbr_spelled").contains(event);
-			case "OBJI_FRIEND" -> FRIEND_EVENTS.contains(event);
-			case "OBJI_FLEE_FROM" -> event.equals("on_stop_to_flee");
-			case "OBJI_KILLER" -> Set.of("on_die", "on_killed_by_user", "on_killed_by_npc", "on_see_friend_killed_by_user",
-				"on_sense_friend_killed_by_user").contains(event);
-			case "OBJI_SEEN" -> Set.of("on_see_user", "on_see_npc", "on_see_user_move", "on_see_npc_move").contains(event);
-			case "OBJI_TALKER" -> Set.of("on_talked_by_user", "on_hyperlink_clicked", "on_gauge_begin",
-				"on_gauge_stop", "on_gauge_end").contains(event);
-			case "OBJI_MESSAGE_SENDER", "OBJI_MESSAGE_PARAM" -> event.equals("on_message");
-			default -> false;
-		};
+		switch (indicator) {
+			case "OBJI_SELF":
+			case "OBJI_CUR_TARGET":
+				return true;
+			case "OBJI_EVENT_TARGET":
+				return TARGET_EVENTS.contains(event);
+			case "OBJI_CASTER":
+				return Set.of("on_attacked", "on_spelled", "on_enter_abnormal_state", "on_leave_abnormal_state", "on_friend_spelled",
+					"on_see_master_spelling", "on_see_master_spelled", "on_casted", "on_see_spell",
+					"on_party_mbr_spelled").contains(event);
+			case "OBJI_ATTACKER":
+				return Set.of("on_attacked", "on_spelled", "on_damaged", "on_see_friend_attacked", "on_friend_spelled",
+					"on_master_attacked", "on_see_attacked", "on_party_mbr_attacked").contains(event);
+			case "OBJI_PARTY_MEMBER":
+				return Set.of("on_party_mbr_attacked", "on_party_mbr_spelled").contains(event);
+			case "OBJI_FRIEND":
+				return FRIEND_EVENTS.contains(event);
+			case "OBJI_FLEE_FROM":
+				return event.equals("on_stop_to_flee");
+			case "OBJI_KILLER":
+				return Set.of("on_die", "on_killed_by_user", "on_killed_by_npc", "on_see_friend_killed_by_user",
+					"on_sense_friend_killed_by_user").contains(event);
+			case "OBJI_SEEN":
+				return Set.of("on_see_user", "on_see_npc", "on_see_user_move", "on_see_npc_move").contains(event);
+			case "OBJI_TALKER":
+				return Set.of("on_talked_by_user", "on_hyperlink_clicked", "on_gauge_begin",
+					"on_gauge_stop", "on_gauge_end").contains(event);
+			case "OBJI_MESSAGE_SENDER":
+			case "OBJI_MESSAGE_PARAM":
+				return event.equals("on_message");
+			default:
+				return false;
+		}
 	}
 
 	private static boolean isRetailRace(String race) {

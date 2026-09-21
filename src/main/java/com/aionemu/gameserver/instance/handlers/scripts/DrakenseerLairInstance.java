@@ -44,7 +44,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	protected boolean isInstanceDestroyed = false;
 		/** drakenseerlair 任务 / drakenseer lair task */
-		private final List<Future<?>> drakenseerLairTask = new ArrayList<Future<?>>();
+		private final List<Future<?>> drakenseerLairTask = new ArrayList<>();
 
 	/**
 	 * NPC 掉落表注册时处理。
@@ -123,15 +123,15 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 		    if (!isStartTimer) {
 			    isStartTimer = true;
 			    System.currentTimeMillis();
-			    instance.doOnAllPlayers(new Visitor<Player>() {
-			        /**
-			         * 处理 visit。
-			         * Handle visit.
-			         *
-			         * @param player 玩家 / player
-			         */
-			        @Override
-			        public void visit(Player player) {
+			    instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
 						if (player.isOnline()) {
 							startDrakenseerLairTimer();
 							PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 600));
@@ -169,18 +169,18 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
              */
             @Override
             public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
-				    /**
-				     * 处理 visit。
-				     * Handle visit.
-				     *
-				     * @param player 玩家 / player
-				     */
-				    @Override
-				    public void visit(Player player) {
-					    onExitInstance(player);
-				    }
-			    });
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 *
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
+						onExitInstance(player);
+					}
+				});
 				onInstanceDestroy();
             }
         }, 600000)); //10 Minutes.
@@ -211,7 +211,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 				    sendMsgByRace(1403381, Race.PC_ALL, 2000);
 					Npc akhalTheOracle = instance.getNpc(220450); //Akhal The Oracle.
 					akhalTheOracle.getEffectController().removeEffect(21791); //Turning Tide.
-					instance.doOnAllPlayers(new Visitor<Player>() {
+					instance.doOnAllPlayers(new Visitor<>() {
 						/**
 						 * 处理 visit。
 						 * Handle visit.
@@ -252,7 +252,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
     }
 
 	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -282,7 +282,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.

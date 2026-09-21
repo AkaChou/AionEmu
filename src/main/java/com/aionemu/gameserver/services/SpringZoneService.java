@@ -26,7 +26,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 @Slf4j
 public class SpringZoneService {
 	private static volatile ObjectProvider<SpringZoneService> instanceProvider;
-	private final List<SpringObject> springObjects = new ArrayList<SpringObject>();
+	private final List<SpringObject> springObjects = new ArrayList<>();
 
 	/**
 	 * 构造服务：刷出泉水对象并启动定时效果任务。
@@ -46,19 +46,15 @@ public class SpringZoneService {
 	 * Periodically applies skill 17560 to players in spring range without the effect.
 	 */
 	private void startSpring() {
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			public void run() {
-				for (final SpringObject obj : springObjects)
-					obj.getKnownList().doOnAllPlayers(new Visitor<Player>() {
-						public void visit(Player player) {
-							if ((MathUtil.isIn3dRange(obj, player, obj.getRange()))
-									&& (!player.getEffectController().hasAbnormalEffect(17560))) { // Bless Of Guardian
-																									// 泉。 / Spring.
-								GameEngineServices.skillEngine().getSkill(player, 17560, 1, player).useNoAnimationSkill();
-							}
-						}
-					});
-			}
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			for (final SpringObject obj : springObjects)
+				obj.getKnownList().doOnAllPlayers(player -> {
+					if ((MathUtil.isIn3dRange(obj, player, obj.getRange()))
+							&& (!player.getEffectController().hasAbnormalEffect(17560))) { // Bless Of Guardian
+																							// 泉。 / Spring.
+						GameEngineServices.skillEngine().getSkill(player, 17560, 1, player).useNoAnimationSkill();
+					}
+				});
 		}, 1000, 1000);
 	}
 

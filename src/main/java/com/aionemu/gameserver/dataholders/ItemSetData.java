@@ -37,8 +37,8 @@ public class ItemSetData {
 	 * After JAXB unmarshalling, builds dual indexes by set id and part item id.
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		sets = new IntObjectHashMap<ItemSetTemplate>();
-		setItems = new IntObjectHashMap<ItemSetTemplate>();
+		sets = new IntObjectHashMap<>();
+		setItems = new IntObjectHashMap<>();
 
 		for (ItemSetTemplate set : itemsetList) {
 			sets.put(set.getId(), set);

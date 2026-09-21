@@ -69,12 +69,7 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
                 context.close();
                 return;
             }
-            runInConnectionContext(new Runnable() {
-                @Override
-                public void run() {
-                    connection.initialized();
-                }
-            });
+            runInConnectionContext(() -> connection.initialized());
         }
     }
 
@@ -88,12 +83,7 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     @Override
     public void channelRead(ChannelHandlerContext context, Object message) {
         if (connection != null) {
-            runInConnectionContext(new Runnable() {
-                @Override
-                public void run() {
-                    read(context, message);
-                }
-            });
+            runInConnectionContext(() -> read(context, message));
             return;
         }
         read(context, message);
@@ -196,12 +186,7 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     @Override
     public void enableWriteInterest() {
         if (context != null) {
-            context.executor().execute(new Runnable() {
-                @Override
-                public void run() {
-                    flushWrites();
-                }
-            });
+            context.executor().execute(() -> flushWrites());
         }
     }
 

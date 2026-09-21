@@ -48,35 +48,26 @@ public class KamarGeneralAI2 extends AggressiveNpcAI2
 	}
 
 	private void announceIDKamarLightGeneral() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 代理指挥官克里斯平遭受攻击。 / Acting Commander Crispin is under attack.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDKamar_LightGeneral_Hit);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 代理指挥官克里斯平遭受攻击。 / Acting Commander Crispin is under attack.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDKamar_LightGeneral_Hit);
 			}
 		});
 	}
 	private void announceIDKamarDarkGeneral() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 代理指挥官特佩斯遭受攻击。 / Acting Commander Tepes is under attack.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDKamar_DarkGeneral_Hit);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 代理指挥官特佩斯遭受攻击。 / Acting Commander Tepes is under attack.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDKamar_DarkGeneral_Hit);
 			}
 		});
 	}
 	private void announceIDKamarDrakanGeneral() {
-		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 瓦尔加指挥官遭受攻击。 / Commander Varga is under attack.
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDKamar_DrakanGeneral_Hit);
-				}
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 瓦尔加指挥官遭受攻击。 / Commander Varga is under attack.
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDKamar_DrakanGeneral_Hit);
 			}
 		});
 	}

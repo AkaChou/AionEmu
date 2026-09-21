@@ -32,7 +32,7 @@ class PetitionServiceTest {
 	@Test
 	void getRegisteredPetitionsReturnsSnapshot() throws ReflectiveOperationException {
 		PetitionService service = objenesis.newInstance(PetitionService.class);
-		SortedMap<Integer, Petition> petitions = new TreeMap<Integer, Petition>();
+		SortedMap<Integer, Petition> petitions = new TreeMap<>();
 		petitions.put(1, new Petition(1));
 		petitions.put(2, new Petition(2));
 		replacePetitions(petitions);

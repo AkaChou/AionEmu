@@ -86,11 +86,11 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		if (group == null) {
 			return;
 		}
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
+			 * <p>
 			 * opponent
 			 */
 			@Override
@@ -329,7 +329,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	}
 
 	private void sendPacket(final AionServerPacket packet) {
-		instance.doOnAllPlayers(new Visitor<Player>() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -375,7 +375,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 			 */
 			@Override
 			public void run() {
-				instance.doOnAllPlayers(new Visitor<Player>() {
+				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
 					 * Handle visit.

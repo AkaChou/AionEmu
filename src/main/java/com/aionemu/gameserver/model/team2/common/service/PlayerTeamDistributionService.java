@@ -180,7 +180,7 @@ public class PlayerTeamDistributionService {
 	}
 
 	private static class PlayerTeamRewardStats implements Predicate<Player> {
-		final List<Player> players = new ArrayList<Player>();
+		final List<Player> players = new ArrayList<>();
 		int partyLvlSum = 0;
 		int highestLevel = 0;
 		int mentorCount = 0;

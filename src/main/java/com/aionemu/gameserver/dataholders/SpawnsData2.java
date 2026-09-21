@@ -90,36 +90,36 @@ public class SpawnsData2 {
 	@XmlElement(name = "spawn_map", type = SpawnMap.class)
 	protected List<SpawnMap> templates;
 
-	private final IntObjectHashMap<Map<Integer, SimpleEntry<SpawnGroup2, Spawn>>> allSpawnMaps = new IntObjectHashMap<Map<Integer, SimpleEntry<SpawnGroup2, Spawn>>>();
-	private final IntObjectHashMap<Map<Integer, List<SpawnGroup2>>> normalSpawnVariants = new IntObjectHashMap<Map<Integer, List<SpawnGroup2>>>();
-	private final IntObjectHashMap<List<SpawnGroup2>> siegeSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private final IntObjectHashMap<List<SpawnGroup2>> baseSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private final IntObjectHashMap<List<SpawnGroup2>> vortexSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private final IntObjectHashMap<List<SpawnGroup2>> riftSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private final IntObjectHashMap<List<SpawnGroup2>> beritraSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private final IntObjectHashMap<List<SpawnGroup2>> agentSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private final IntObjectHashMap<List<SpawnGroup2>> anohaSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private final IntObjectHashMap<List<SpawnGroup2>> rvrSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private final IntObjectHashMap<List<SpawnGroup2>> svsSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private final IntObjectHashMap<List<SpawnGroup2>> iuSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private final IntObjectHashMap<List<SpawnGroup2>> dynamicRiftSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private final IntObjectHashMap<List<SpawnGroup2>> instanceRiftSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private final IntObjectHashMap<List<SpawnGroup2>> idianDepthsSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private final IntObjectHashMap<List<SpawnGroup2>> nightmareCircusSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private final IntObjectHashMap<List<SpawnGroup2>> legionDominionSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private final IntObjectHashMap<List<SpawnGroup2>> zorshivDredgionSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private final IntObjectHashMap<List<SpawnGroup2>> moltenusSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private final IntObjectHashMap<List<SpawnGroup2>> conquestSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private final IntObjectHashMap<List<SpawnGroup2>> landingSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private final IntObjectHashMap<List<SpawnGroup2>> landingSpecialSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private final IntObjectHashMap<List<SpawnGroup2>> towerOfEternitySpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private final IntObjectHashMap<List<SpawnGroup2>> outpostSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
-	private final IntObjectHashMap<Spawn> customs = new IntObjectHashMap<Spawn>();
+	private final IntObjectHashMap<Map<Integer, SimpleEntry<SpawnGroup2, Spawn>>> allSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<Map<Integer, List<SpawnGroup2>>> normalSpawnVariants = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> siegeSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> baseSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> vortexSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> riftSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> beritraSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> agentSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> anohaSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> rvrSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> svsSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> iuSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> dynamicRiftSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> instanceRiftSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> idianDepthsSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> nightmareCircusSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> legionDominionSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> zorshivDredgionSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> moltenusSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> conquestSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> landingSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> landingSpecialSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> towerOfEternitySpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> outpostSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<Spawn> customs = new IntObjectHashMap<>();
 
 	private Map<Integer, SimpleEntry<SpawnGroup2, Spawn>> spawnIndexForWorld(int mapId) {
 		Map<Integer, SimpleEntry<SpawnGroup2, Spawn>> worldSpawns = allSpawnMaps.get(mapId);
 		if (worldSpawns == null) {
-			worldSpawns = new LinkedHashMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>();
+			worldSpawns = new LinkedHashMap<>();
 			allSpawnMaps.put(mapId, worldSpawns);
 		}
 		return worldSpawns;
@@ -128,7 +128,7 @@ public class SpawnsData2 {
 	private Map<Integer, List<SpawnGroup2>> normalSpawnVariantsForWorld(int mapId) {
 		Map<Integer, List<SpawnGroup2>> variants = normalSpawnVariants.get(mapId);
 		if (variants == null) {
-			variants = new LinkedHashMap<Integer, List<SpawnGroup2>>();
+			variants = new LinkedHashMap<>();
 			normalSpawnVariants.put(mapId, variants);
 		}
 		return variants;
@@ -137,7 +137,7 @@ public class SpawnsData2 {
 	private List<SpawnGroup2> spawnGroupsFor(IntObjectHashMap<List<SpawnGroup2>> spawnMaps, int id) {
 		List<SpawnGroup2> spawnGroups = spawnMaps.get(id);
 		if (spawnGroups == null) {
-			spawnGroups = new ArrayList<SpawnGroup2>();
+			spawnGroups = new ArrayList<>();
 			spawnMaps.put(id, spawnGroups);
 		}
 		return spawnGroups;
@@ -667,7 +667,7 @@ public class SpawnsData2 {
 		if (!allSpawnMaps.containsKey(worldId)) {
 			return Collections.emptyList();
 		}
-		List<SpawnGroup2> result = new ArrayList<SpawnGroup2>();
+		List<SpawnGroup2> result = new ArrayList<>();
 		Map<Integer, List<SpawnGroup2>> normalSpawns = normalSpawnVariants.get(worldId);
 		for (SimpleEntry<SpawnGroup2, Spawn> spawnEntry : allSpawnMaps.get(worldId).values()) {
 			List<SpawnGroup2> variants = normalSpawns == null ? null : normalSpawns.get(spawnEntry.getValue().getNpcId());
@@ -1051,7 +1051,7 @@ public class SpawnsData2 {
 
 		SpawnMap map = null;
 		if (data.templates == null) {
-			data.templates = new ArrayList<SpawnMap>();
+			data.templates = new ArrayList<>();
 			map = new SpawnMap(spawn.getWorldId());
 			data.templates.add(map);
 		} else {
@@ -1172,7 +1172,7 @@ public class SpawnsData2 {
 	 */
 	public void addNewSpawnMap(SpawnMap spawnMap) {
 		if (templates == null) {
-			templates = new ArrayList<SpawnMap>();
+			templates = new ArrayList<>();
 		}
 		templates.add(spawnMap);
 	}

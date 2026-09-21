@@ -23,7 +23,7 @@ public record MacroList(Map<Integer, String> macrosses) {
 	 * Creates an empty macro list.
 	 */
 	public MacroList() {
-		this(new HashMap<Integer, String>(12));
+		this(new HashMap<>(12));
 	}
 
 	/**
@@ -101,7 +101,7 @@ public record MacroList(Map<Integer, String> macrosses) {
 	 * @return 该包内的宏片段 / macros for this packet part
 	 */
 	public Map<Integer, String> getMarcosPart(int packet) {
-		Map<Integer, String> macrosPart = new LinkedHashMap<Integer, String>();
+		Map<Integer, String> macrosPart = new LinkedHashMap<>();
 		int currentIndex;
 		int endIndex;
 		if (packet == 1) {

@@ -80,41 +80,35 @@ public class KromedeTheCorruptAI2 extends AggressiveNpcAI2
 	}
 
 	private void startMiserablyStruggle() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelPhaseTask();
-				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 17056, 1, getOwner()).useNoAnimationSkill(); // 痛苦的挣扎。 / Miserably Struggle.
-				}
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelPhaseTask();
+			} else {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 17056, 1, getOwner()).useNoAnimationSkill(); // 痛苦的挣扎。 / Miserably Struggle.
 			}
 		}, 3000, 10000);
 	}
 
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelPhaseTask();
-				} else {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 16674, 1, getOwner()).useNoAnimationSkill(); // 有罪判决。 / Guilty Verdict.
-					List<Player> players = getLifedPlayers();
-					if (!players.isEmpty()) {
-						int size = players.size();
-						if (players.size() < 4) {
-							for (Player p: players) {
-								spawnStickyTrap(p);
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			if (isAlreadyDead()) {
+				cancelPhaseTask();
+			} else {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 16674, 1, getOwner()).useNoAnimationSkill(); // 有罪判决。 / Guilty Verdict.
+				List<Player> players = getLifedPlayers();
+				if (!players.isEmpty()) {
+					int size = players.size();
+					if (players.size() < 4) {
+						for (Player p: players) {
+							spawnStickyTrap(p);
+						}
+					} else {
+						int count = Rnd.get(3, size);
+						for (int i = 0; i < count; i++) {
+							if (players.isEmpty()) {
+								break;
 							}
-						} else {
-							int count = Rnd.get(3, size);
-							for (int i = 0; i < count; i++) {
-								if (players.isEmpty()) {
-									break;
-								}
-								spawnStickyTrap(players.get(Rnd.get(players.size())));
-							}
+							spawnStickyTrap(players.get(Rnd.get(players.size())));
 						}
 					}
 				}
@@ -127,19 +121,16 @@ public class KromedeTheCorruptAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						spawn(281243, x, y, z, (byte) 0); // 粘性陷阱。 / Sticky Trap.
-					}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				if (!isAlreadyDead()) {
+					spawn(281243, x, y, z, (byte) 0); // 粘性陷阱。 / Sticky Trap.
 				}
 			}, 3000);
 		}
 	}
 
 	private List<Player> getLifedPlayers() {
-		List<Player> players = new ArrayList<Player>();
+		List<Player> players = new ArrayList<>();
 		for (Player player: getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);

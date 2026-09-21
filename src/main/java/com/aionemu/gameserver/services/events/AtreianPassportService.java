@@ -34,9 +34,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class AtreianPassportService {
 
 	private static volatile ObjectProvider<AtreianPassportService> instanceProvider;
-	private final Map<Integer, AtreianPassport> basic = new HashMap<Integer, AtreianPassport>(1);
-	private final Map<Integer, AtreianPassport> anny = new HashMap<Integer, AtreianPassport>(1);
-	public Map<Integer, AtreianPassport> data = new HashMap<Integer, AtreianPassport>(1);
+	private final Map<Integer, AtreianPassport> basic = new HashMap<>(1);
+	private final Map<Integer, AtreianPassport> anny = new HashMap<>(1);
+	public Map<Integer, AtreianPassport> data = new HashMap<>(1);
 
 	/**
 	 * getPlayerPassports 方法。
@@ -46,7 +46,7 @@ public class AtreianPassportService {
 	 * result
 	 */
 	public Map<Integer, AtreianPassport> getPlayerPassports(int accountId) {
-		Map<Integer, AtreianPassport> passports = new HashMap<Integer, AtreianPassport>();
+		Map<Integer, AtreianPassport> passports = new HashMap<>();
 		List<Integer> ids = DAOManager.getDAO(PlayerPassportsDAO.class).getPassports(accountId);
 		for (Integer i : ids) {
 			passports.put(i, data.get(i));

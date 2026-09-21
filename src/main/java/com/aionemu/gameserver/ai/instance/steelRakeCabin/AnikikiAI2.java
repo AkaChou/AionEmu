@@ -78,12 +78,9 @@ public class AnikikiAI2 extends AggressiveNpcAI2 {
 		super.handleSpawned();
 		if (getNpcId() != 219040) {
 			// 生成的巡逻怪 5 秒后获得增益并回满血。 / Spawned patrol mobs get the buff and full HP after 5 seconds.
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 18189, 20, getOwner()).useNoAnimationSkill();
-					getLifeStats().setCurrentHp(getLifeStats().getMaxHp());
-				}
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 18189, 20, getOwner()).useNoAnimationSkill();
+				getLifeStats().setCurrentHp(getLifeStats().getMaxHp());
 			}, 5000);
 		}
 	}

@@ -78,16 +78,13 @@ public class Investigative_BastielAI2 extends GeneralNpcAI2
 					WalkManager.startWalking(this);
 					getOwner().setState(1);
 					PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							if (!isAlreadyDead()) {
-								WorldPosition worldPosition = player.getPosition();
-								if (worldPosition.isInstanceMap()) {
-									if (worldPosition.getMapId() == 302340000) { // 灵魂堡垒 5.5。 / Bastion Of Souls 5.5.
-										WorldMapInstance worldMapInstance = worldPosition.getWorldMapInstance();
-										killNpc(worldMapInstance.getNpcs(731795)); // 监狱门。 / Prison Door.
-									}
+					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						if (!isAlreadyDead()) {
+							WorldPosition worldPosition = player.getPosition();
+							if (worldPosition.isInstanceMap()) {
+								if (worldPosition.getMapId() == 302340000) { // 灵魂堡垒 5.5。 / Bastion Of Souls 5.5.
+									WorldMapInstance worldMapInstance = worldPosition.getWorldMapInstance();
+									killNpc(worldMapInstance.getNpcs(731795)); // 监狱门。 / Prison Door.
 								}
 							}
 						}

@@ -36,9 +36,17 @@ public enum QuestRewardKind {
 	}
 
 	public boolean isCurrency() {
-		return switch (this) {
-			case GOLD, KINAH, AP, GP, DP, CP, ABYSS_OP -> true;
-			default -> false;
-		};
+        switch (this) {
+            case GOLD:
+            case KINAH:
+            case AP:
+            case GP:
+            case DP:
+            case CP:
+            case ABYSS_OP:
+                return true;
+            default:
+                return false;
+        }
 	}
 }

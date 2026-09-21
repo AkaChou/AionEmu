@@ -223,7 +223,7 @@ public class DisassemblyAction extends AbstractItemAction
 	 */
 	private List<DisassembleItem> calculateItemchance(Player player, List<DisassembleItemGroups> finalGroups, boolean isSelect)
 	{
-		List<DisassembleItem> newItemCollection = new ArrayList<DisassembleItem>();
+		List<DisassembleItem> newItemCollection = new ArrayList<>();
 		if (isSelect) {
 			for (DisassembleItemGroups group : finalGroups) {
 				List<DisassembleItems> itemList = group.getGroupItems();
@@ -287,7 +287,7 @@ public class DisassemblyAction extends AbstractItemAction
 	 */
 	private List<DisassembleItemGroups> calculateGroupChance(List<DisassembleItemGroups> filteredList, Player player, Item parentitem)
 	{
-		List<DisassembleItemGroups> newCollection = new ArrayList<DisassembleItemGroups>();
+		List<DisassembleItemGroups> newCollection = new ArrayList<>();
 		for (DisassembleItemGroups group : filteredList) {
 			int rnd = Rnd.get(0, 1000);
 			if (rnd < group.getGroupProb())
@@ -308,7 +308,7 @@ public class DisassemblyAction extends AbstractItemAction
 		int playerLevel = player.getLevel();
 		Race playerRace = player.getRace();
 		PlayerClass pClass = player.getPlayerClass();
-		List<DisassembleItemGroups> newCollection = new ArrayList<DisassembleItemGroups>();
+		List<DisassembleItemGroups> newCollection = new ArrayList<>();
 		for (DisassembleItemGroups group : collection) {
 			if (group.getRace() != Race.PC_ALL && group.getRace() != playerRace)
 				continue;

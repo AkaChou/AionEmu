@@ -73,7 +73,7 @@ public class Dynamic_Norsvold_MonsterAI2 extends AggressiveNpcAI2
 		}
 		super.handleDied();
 	}
-	
+
 	private void spawnDF6EventDoor() {
 		switch (Rnd.get(1, 4)) {
 			case 1:
@@ -117,14 +117,11 @@ public class Dynamic_Norsvold_MonsterAI2 extends AggressiveNpcAI2
 				spawn(240973, 1133.7673f, 2570.3909f, 235.72313f, (byte) 0); //Guardian Scout.
 			break;
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				despawnNpc(241054); //传送门。 / Portal.
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			despawnNpc(241054); //传送门。 / Portal.
 		}, 60000);
     }
-	
+
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);

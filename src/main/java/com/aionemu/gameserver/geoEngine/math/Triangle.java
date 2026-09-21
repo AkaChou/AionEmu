@@ -14,12 +14,12 @@ import lombok.NoArgsConstructor;
 public class Triangle extends AbstractTriangle implements Reusable {
 
 	/** 对象工厂。 / Object factory. */
-	private static final ObjectFactory<Object> FACTORY = new ObjectFactory<Object>() {
+	private static final ObjectFactory<Object> FACTORY = new ObjectFactory<>() {
 
-		public Object create() {
-			return new Triangle();
-		}
-	};
+        public Object create() {
+            return new Triangle();
+        }
+    };
 	/** 顶点 A / Vertex A */
 	private Vector3f pointa = new Vector3f();
 	/** 顶点 B / Vertex B */

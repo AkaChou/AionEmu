@@ -73,7 +73,7 @@ public final class ThreadPoolManager {
 		this.maxRuntimeInMillisWithoutWarning = config.getRuntime();
 		final int instantPoolSize = instantPoolSize(config.getThreadPoolSize());
 		instantPool = new ThreadPoolExecutor(instantPoolSize, instantPoolSize, 0, TimeUnit.SECONDS,
-				new ArrayBlockingQueue<Runnable>(100000),
+			new ArrayBlockingQueue<>(100000),
 				new PriorityThreadFactory("InstantPool", config.isUsepriority() ? 7 : Thread.NORM_PRIORITY));
 		instantPool.setRejectedExecutionHandler(new AionRejectedExecutionHandler());
 		instantPool.prestartAllCoreThreads();
@@ -83,7 +83,7 @@ public final class ThreadPoolManager {
 		scheduledPool.prestartAllCoreThreads();
 		int longRunningPoolSize = longRunningPoolSize();
 		longRunningPool = new ThreadPoolExecutor(longRunningPoolSize, longRunningPoolSize, 0, TimeUnit.SECONDS,
-				new ArrayBlockingQueue<Runnable>(LONG_RUNNING_QUEUE_CAPACITY),
+			new ArrayBlockingQueue<>(LONG_RUNNING_QUEUE_CAPACITY),
 				new PriorityThreadFactory("LongRunningPool", Thread.NORM_PRIORITY));
 		longRunningPool.setRejectedExecutionHandler(new AionRejectedExecutionHandler());
 		longRunningPool.prestartAllCoreThreads();
@@ -91,12 +91,7 @@ public final class ThreadPoolManager {
 		workStealingPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors(), forkJoinThreadFactory,
 				new ThreadUncaughtExceptionHandler(), true);
 		forkJoinThreadFactory.setDefaultPool(workStealingPool);
-		scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				purge();
-			}
-		}, 1000000, 1000000);
+		scheduleAtFixedRate(() -> purge(), 1000000, 1000000);
 	}
 
 	static int instantPoolSize(int configuredPoolSize) {
@@ -291,7 +286,7 @@ public final class ThreadPoolManager {
 	 * @return 统计文本行列表 / List of stats lines
 	 */
 	public List<String> getStats() {
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		list.add("");
 		list.add("Scheduled pool:");
 		list.add("=================================================");

@@ -25,12 +25,12 @@ public class IDTransformTransRoom01AI2 extends NpcAI2
     protected void handleCreatureSee(Creature creature) {
         checkDistance(this, creature);
     }
-	
+
     @Override
     protected void handleCreatureMoved(Creature creature) {
         checkDistance(this, creature);
     }
-	
+
 	/**
 	 * 检测进入 15 米范围内的玩家，按其等级（66–75）触发对应的房间变换逻辑。
 	 * Detects players within 15m and triggers the room transformation matching their level (66-75).
@@ -60,7 +60,7 @@ public class IDTransformTransRoom01AI2 extends NpcAI2
         	}
         }
     }
-	
+
 	// 玩家等级 66 / Player Lvl 66
 	private void IDTransformTransRoom01_66() {
     	// 暗影 A。 / Shadow A.
@@ -75,14 +75,11 @@ public class IDTransformTransRoom01AI2 extends NpcAI2
 		spawn(245402, 762.08215f, 514.16248f, 346.31735f, (byte) 0, 18);
 		spawn(245402, 762.08215f, 514.16248f, 346.31735f, (byte) 0, 107);
 		AI2Actions.deleteOwner(IDTransformTransRoom01AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				spawn(244454, 758.6982f, 516.9711f, 339.81848f, (byte) 100);
-				spawn(244455, 763.16156f, 510.3873f, 339.81848f, (byte) 41);
-				spawn(244456, 764.7666f, 516.008f, 339.81848f, (byte) 71);
-				spawn(244457, 757.1974f, 511.36588f, 339.81848f, (byte) 11);
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(244454, 758.6982f, 516.9711f, 339.81848f, (byte) 100);
+			spawn(244455, 763.16156f, 510.3873f, 339.81848f, (byte) 41);
+			spawn(244456, 764.7666f, 516.008f, 339.81848f, (byte) 71);
+			spawn(244457, 757.1974f, 511.36588f, 339.81848f, (byte) 11);
 		}, 2000);
     }
 	// 玩家等级 67 / Player Lvl 67
@@ -99,14 +96,11 @@ public class IDTransformTransRoom01AI2 extends NpcAI2
 		spawn(245402, 762.08215f, 514.16248f, 346.31735f, (byte) 0, 18);
 		spawn(245402, 762.08215f, 514.16248f, 346.31735f, (byte) 0, 107);
 		AI2Actions.deleteOwner(IDTransformTransRoom01AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				spawn(244495, 758.6982f, 516.9711f, 339.81848f, (byte) 100);
-				spawn(244496, 763.16156f, 510.3873f, 339.81848f, (byte) 41);
-				spawn(244497, 764.7666f, 516.008f, 339.81848f, (byte) 71);
-				spawn(244498, 757.1974f, 511.36588f, 339.81848f, (byte) 11);
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(244495, 758.6982f, 516.9711f, 339.81848f, (byte) 100);
+			spawn(244496, 763.16156f, 510.3873f, 339.81848f, (byte) 41);
+			spawn(244497, 764.7666f, 516.008f, 339.81848f, (byte) 71);
+			spawn(244498, 757.1974f, 511.36588f, 339.81848f, (byte) 11);
 		}, 2000);
     }
 	// 玩家等级 68 / Player Lvl 68
@@ -123,14 +117,11 @@ public class IDTransformTransRoom01AI2 extends NpcAI2
 		spawn(245402, 762.08215f, 514.16248f, 346.31735f, (byte) 0, 18);
 		spawn(245402, 762.08215f, 514.16248f, 346.31735f, (byte) 0, 107);
 		AI2Actions.deleteOwner(IDTransformTransRoom01AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				spawn(244536, 758.6982f, 516.9711f, 339.81848f, (byte) 100);
-				spawn(244537, 763.16156f, 510.3873f, 339.81848f, (byte) 41);
-				spawn(244538, 764.7666f, 516.008f, 339.81848f, (byte) 71);
-				spawn(244539, 757.1974f, 511.36588f, 339.81848f, (byte) 11);
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(244536, 758.6982f, 516.9711f, 339.81848f, (byte) 100);
+			spawn(244537, 763.16156f, 510.3873f, 339.81848f, (byte) 41);
+			spawn(244538, 764.7666f, 516.008f, 339.81848f, (byte) 71);
+			spawn(244539, 757.1974f, 511.36588f, 339.81848f, (byte) 11);
 		}, 2000);
     }
 	// 玩家等级 69 / Player Lvl 69
@@ -147,14 +138,11 @@ public class IDTransformTransRoom01AI2 extends NpcAI2
 		spawn(245402, 762.08215f, 514.16248f, 346.31735f, (byte) 0, 18);
 		spawn(245402, 762.08215f, 514.16248f, 346.31735f, (byte) 0, 107);
 		AI2Actions.deleteOwner(IDTransformTransRoom01AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				spawn(244577, 758.6982f, 516.9711f, 339.81848f, (byte) 100);
-				spawn(244578, 763.16156f, 510.3873f, 339.81848f, (byte) 41);
-				spawn(244579, 764.7666f, 516.008f, 339.81848f, (byte) 71);
-				spawn(244580, 757.1974f, 511.36588f, 339.81848f, (byte) 11);
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(244577, 758.6982f, 516.9711f, 339.81848f, (byte) 100);
+			spawn(244578, 763.16156f, 510.3873f, 339.81848f, (byte) 41);
+			spawn(244579, 764.7666f, 516.008f, 339.81848f, (byte) 71);
+			spawn(244580, 757.1974f, 511.36588f, 339.81848f, (byte) 11);
 		}, 2000);
     }
 	// 玩家等级 70 / Player Lvl 70
@@ -171,14 +159,11 @@ public class IDTransformTransRoom01AI2 extends NpcAI2
 		spawn(245402, 762.08215f, 514.16248f, 346.31735f, (byte) 0, 18);
 		spawn(245402, 762.08215f, 514.16248f, 346.31735f, (byte) 0, 107);
 		AI2Actions.deleteOwner(IDTransformTransRoom01AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				spawn(244618, 758.6982f, 516.9711f, 339.81848f, (byte) 100);
-				spawn(244619, 763.16156f, 510.3873f, 339.81848f, (byte) 41);
-				spawn(244620, 764.7666f, 516.008f, 339.81848f, (byte) 71);
-				spawn(244621, 757.1974f, 511.36588f, 339.81848f, (byte) 11);
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(244618, 758.6982f, 516.9711f, 339.81848f, (byte) 100);
+			spawn(244619, 763.16156f, 510.3873f, 339.81848f, (byte) 41);
+			spawn(244620, 764.7666f, 516.008f, 339.81848f, (byte) 71);
+			spawn(244621, 757.1974f, 511.36588f, 339.81848f, (byte) 11);
 		}, 2000);
     }
 	// 玩家等级 71 / Player Lvl 71
@@ -195,14 +180,11 @@ public class IDTransformTransRoom01AI2 extends NpcAI2
 		spawn(245402, 762.08215f, 514.16248f, 346.31735f, (byte) 0, 18);
 		spawn(245402, 762.08215f, 514.16248f, 346.31735f, (byte) 0, 107);
 		AI2Actions.deleteOwner(IDTransformTransRoom01AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				spawn(244659, 758.6982f, 516.9711f, 339.81848f, (byte) 100);
-				spawn(244660, 763.16156f, 510.3873f, 339.81848f, (byte) 41);
-				spawn(244661, 764.7666f, 516.008f, 339.81848f, (byte) 71);
-				spawn(244662, 757.1974f, 511.36588f, 339.81848f, (byte) 11);
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(244659, 758.6982f, 516.9711f, 339.81848f, (byte) 100);
+			spawn(244660, 763.16156f, 510.3873f, 339.81848f, (byte) 41);
+			spawn(244661, 764.7666f, 516.008f, 339.81848f, (byte) 71);
+			spawn(244662, 757.1974f, 511.36588f, 339.81848f, (byte) 11);
 		}, 2000);
     }
 	// 玩家等级 72 / Player Lvl 72
@@ -219,14 +201,11 @@ public class IDTransformTransRoom01AI2 extends NpcAI2
 		spawn(245402, 762.08215f, 514.16248f, 346.31735f, (byte) 0, 18);
 		spawn(245402, 762.08215f, 514.16248f, 346.31735f, (byte) 0, 107);
 		AI2Actions.deleteOwner(IDTransformTransRoom01AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				spawn(244700, 758.6982f, 516.9711f, 339.81848f, (byte) 100);
-				spawn(244701, 763.16156f, 510.3873f, 339.81848f, (byte) 41);
-				spawn(244702, 764.7666f, 516.008f, 339.81848f, (byte) 71);
-				spawn(244703, 757.1974f, 511.36588f, 339.81848f, (byte) 11);
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(244700, 758.6982f, 516.9711f, 339.81848f, (byte) 100);
+			spawn(244701, 763.16156f, 510.3873f, 339.81848f, (byte) 41);
+			spawn(244702, 764.7666f, 516.008f, 339.81848f, (byte) 71);
+			spawn(244703, 757.1974f, 511.36588f, 339.81848f, (byte) 11);
 		}, 2000);
     }
 	// 玩家等级 73 / Player Lvl 73
@@ -243,14 +222,11 @@ public class IDTransformTransRoom01AI2 extends NpcAI2
 		spawn(245402, 762.08215f, 514.16248f, 346.31735f, (byte) 0, 18);
 		spawn(245402, 762.08215f, 514.16248f, 346.31735f, (byte) 0, 107);
 		AI2Actions.deleteOwner(IDTransformTransRoom01AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				spawn(244741, 758.6982f, 516.9711f, 339.81848f, (byte) 100);
-				spawn(244742, 763.16156f, 510.3873f, 339.81848f, (byte) 41);
-				spawn(244743, 764.7666f, 516.008f, 339.81848f, (byte) 71);
-				spawn(244744, 757.1974f, 511.36588f, 339.81848f, (byte) 11);
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(244741, 758.6982f, 516.9711f, 339.81848f, (byte) 100);
+			spawn(244742, 763.16156f, 510.3873f, 339.81848f, (byte) 41);
+			spawn(244743, 764.7666f, 516.008f, 339.81848f, (byte) 71);
+			spawn(244744, 757.1974f, 511.36588f, 339.81848f, (byte) 11);
 		}, 2000);
     }
 	// 玩家等级 74 / Player Lvl 74
@@ -267,14 +243,11 @@ public class IDTransformTransRoom01AI2 extends NpcAI2
 		spawn(245402, 762.08215f, 514.16248f, 346.31735f, (byte) 0, 18);
 		spawn(245402, 762.08215f, 514.16248f, 346.31735f, (byte) 0, 107);
 		AI2Actions.deleteOwner(IDTransformTransRoom01AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				spawn(244782, 758.6982f, 516.9711f, 339.81848f, (byte) 100);
-				spawn(244783, 763.16156f, 510.3873f, 339.81848f, (byte) 41);
-				spawn(244784, 764.7666f, 516.008f, 339.81848f, (byte) 71);
-				spawn(244785, 757.1974f, 511.36588f, 339.81848f, (byte) 11);
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(244782, 758.6982f, 516.9711f, 339.81848f, (byte) 100);
+			spawn(244783, 763.16156f, 510.3873f, 339.81848f, (byte) 41);
+			spawn(244784, 764.7666f, 516.008f, 339.81848f, (byte) 71);
+			spawn(244785, 757.1974f, 511.36588f, 339.81848f, (byte) 11);
 		}, 2000);
     }
 	// 玩家等级 75–83 / Player Lvl 75-83
@@ -291,17 +264,14 @@ public class IDTransformTransRoom01AI2 extends NpcAI2
 		spawn(245402, 762.08215f, 514.16248f, 346.31735f, (byte) 0, 18);
 		spawn(245402, 762.08215f, 514.16248f, 346.31735f, (byte) 0, 107);
 		AI2Actions.deleteOwner(IDTransformTransRoom01AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				spawn(244823, 758.6982f, 516.9711f, 339.81848f, (byte) 100);
-				spawn(244824, 763.16156f, 510.3873f, 339.81848f, (byte) 41);
-				spawn(244825, 764.7666f, 516.008f, 339.81848f, (byte) 71);
-				spawn(244826, 757.1974f, 511.36588f, 339.81848f, (byte) 11);
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(244823, 758.6982f, 516.9711f, 339.81848f, (byte) 100);
+			spawn(244824, 763.16156f, 510.3873f, 339.81848f, (byte) 41);
+			spawn(244825, 764.7666f, 516.008f, 339.81848f, (byte) 71);
+			spawn(244826, 757.1974f, 511.36588f, 339.81848f, (byte) 11);
 		}, 2000);
     }
-	
+
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);
@@ -310,7 +280,7 @@ public class IDTransformTransRoom01AI2 extends NpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

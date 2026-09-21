@@ -25,18 +25,15 @@ import java.util.List;
 @AIName("vritra_power_device")
 public class GuardPostGeneratorAI2 extends NpcAI2
 {
-	private final Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+	private final Map<Integer, VisibleObject> objects = new LinkedHashMap<>();
 
 	@Override
     protected void handleSpawned() {
         super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 22776, 1, getOwner()).useNoAnimationSkill();
-				GameEngineServices.skillEngine().getSkill(getOwner(), 22781, 1, getOwner()).useNoAnimationSkill();
-				GameEngineServices.skillEngine().getSkill(getOwner(), 22783, 1, getOwner()).useNoAnimationSkill();
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			GameEngineServices.skillEngine().getSkill(getOwner(), 22776, 1, getOwner()).useNoAnimationSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), 22781, 1, getOwner()).useNoAnimationSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), 22783, 1, getOwner()).useNoAnimationSkill();
 		}, 1000);
     }
 
@@ -48,30 +45,24 @@ public class GuardPostGeneratorAI2 extends NpcAI2
 				deviceBroken1.setEntityId(951);
 				objects.put(230417, SpawnEngine.spawnObject(deviceBroken1, 1));
 				AI2Actions.deleteOwner(GuardPostGeneratorAI2.this);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						despawnNpc(230417);
-						SpawnTemplate deviceBroken2 = SpawnEngine.addNewSingleTimeSpawn(210070000, 230413, 1513.6941f, 2400.3616f, 190.09221f, (byte) 0);
-						deviceBroken2.setEntityId(953);
-						objects.put(230413, SpawnEngine.spawnObject(deviceBroken2, 1));
-				    }
-			    }, 300000); //5 分钟。 / 5 Minutes.
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					despawnNpc(230417);
+					SpawnTemplate deviceBroken2 = SpawnEngine.addNewSingleTimeSpawn(210070000, 230413, 1513.6941f, 2400.3616f, 190.09221f, (byte) 0);
+					deviceBroken2.setEntityId(953);
+					objects.put(230413, SpawnEngine.spawnObject(deviceBroken2, 1));
+				}, 300000); //5 分钟。 / 5 Minutes.
 			break;
 			case 230416: //Guard Post Generator.
 				SpawnTemplate deviceBroken3 = SpawnEngine.addNewSingleTimeSpawn(210070000, 230417, 1755.8412f, 1714.2434f, 199.66138f, (byte) 0);
 				deviceBroken3.setEntityId(1192);
 				objects.put(230417, SpawnEngine.spawnObject(deviceBroken3, 1));
 				AI2Actions.deleteOwner(GuardPostGeneratorAI2.this);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-					@Override
-					public void run() {
-						despawnNpc(230417);
-						SpawnTemplate deviceBroken4 = SpawnEngine.addNewSingleTimeSpawn(210070000, 230416, 1755.8412f, 1714.2434f, 199.66138f, (byte) 0);
-						deviceBroken4.setEntityId(1191);
-						objects.put(230416, SpawnEngine.spawnObject(deviceBroken4, 1));
-				    }
-			    }, 300000); //5 分钟。 / 5 Minutes.
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					despawnNpc(230417);
+					SpawnTemplate deviceBroken4 = SpawnEngine.addNewSingleTimeSpawn(210070000, 230416, 1755.8412f, 1714.2434f, 199.66138f, (byte) 0);
+					deviceBroken4.setEntityId(1191);
+					objects.put(230416, SpawnEngine.spawnObject(deviceBroken4, 1));
+				}, 300000); //5 分钟。 / 5 Minutes.
 			break;
 		}
 	}

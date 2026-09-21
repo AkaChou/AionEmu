@@ -36,13 +36,9 @@ public class DelayedSpellAttackInstantEffect extends DamageEffect {
 	 */
 	@Override
 	public void applyEffect(final Effect effect) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				if (effect.getEffector().isEnemy(effect.getEffected())) {
-					calculateAndApplyDamage(effect);
-				}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			if (effect.getEffector().isEnemy(effect.getEffected())) {
+				calculateAndApplyDamage(effect);
 			}
 		}, calculateDelay(effect.getSkillLevel()));
 	}

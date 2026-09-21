@@ -23,7 +23,7 @@ import java.util.List;
 public class Sealed_Reian_RelicAI2 extends ActionItemNpcAI2
 {
     private boolean isRewarded; // 是否已发放过奖励 / whether the reward was already granted
-	
+
     @Override
     protected void handleDialogStart(Player player) {
         InstanceReward<?> instance = getPosition().getWorldMapInstance().getInstanceHandler().getInstanceReward();
@@ -32,7 +32,7 @@ public class Sealed_Reian_RelicAI2 extends ActionItemNpcAI2
         }
         super.handleDialogStart(player);
     }
-	
+
     @Override
     protected void handleUseItemFinish(Player player) {
         // 仅首次使用生效：发放奖励并替换为本阵营的堡垒战争阶段 NPC。
@@ -54,17 +54,14 @@ public class Sealed_Reian_RelicAI2 extends ActionItemNpcAI2
 							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403439));
 					    break;
 					}
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							spawn(833898, 264.65891f, 259.27396f, 88.502739f, (byte) 0, 60); //Sealed Reian Relic.
-						}
+					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						spawn(833898, 264.65891f, 259.27396f, 88.502739f, (byte) 0, 60); //Sealed Reian Relic.
 					}, 30000);
 				break;
 			}
         }
     }
-	
+
 	private void IDFortressWarElyos() {
 		// 天族路径：清除魔族阵营的旗帜与周期装置，部署天族阵营的对应装置。
 		// Elyos path: removes Asmodian flags and cycle devices, deploys the Elyos counterparts.
@@ -82,32 +79,20 @@ public class Sealed_Reian_RelicAI2 extends ActionItemNpcAI2
 		despawnNpc(806378); //IDFortressWar_Sub_Jewel_D04.
 	    spawn(806276, 264.65891f, 259.27396f, 88.502739f, (byte) 0); //IDFortressWar_v01_Flag_L.
 	    spawn(806325, 264.65494f, 259.27081f, 88.502739f, (byte) 0, 147); //IDFortressWar_Main_Cycle_L01.
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-		    @Override
-			public void run() {
-				spawn(806343, 264.20355f, 273.34286f, 85.728119f, (byte) 0, 191); //IDFortressWar_Sub_Jewel_L01.
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(806343, 264.20355f, 273.34286f, 85.728119f, (byte) 0, 191); //IDFortressWar_Sub_Jewel_L01.
 		}, 5000);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-		    @Override
-			public void run() {
-				spawn(806344, 265.11926f, 245.07037f, 85.728119f, (byte) 0, 158); //IDFortressWar_Sub_Jewel_L02.
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(806344, 265.11926f, 245.07037f, 85.728119f, (byte) 0, 158); //IDFortressWar_Sub_Jewel_L02.
 		}, 10000);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-		    @Override
-			public void run() {
-				spawn(806345, 250.49094f, 258.72949f, 85.728119f, (byte) 0, 163); //IDFortressWar_Sub_Jewel_L03.
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(806345, 250.49094f, 258.72949f, 85.728119f, (byte) 0, 163); //IDFortressWar_Sub_Jewel_L03.
 		}, 15000);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-		    @Override
-			public void run() {
-				spawn(806346, 278.78870f, 259.61780f, 85.728119f, (byte) 0, 155); //IDFortressWar_Sub_Jewel_L04.
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(806346, 278.78870f, 259.61780f, 85.728119f, (byte) 0, 155); //IDFortressWar_Sub_Jewel_L04.
 		}, 20000);
 	}
-	
+
 	private void IDFortressWarAsmodians() {
 		// 魔族路径：清除天族阵营的旗帜与周期装置，部署魔族阵营的对应装置。
 		// Asmodian path: removes Elyos flags and cycle devices, deploys the Asmodian counterparts.
@@ -125,32 +110,20 @@ public class Sealed_Reian_RelicAI2 extends ActionItemNpcAI2
 		despawnNpc(806346); //IDFortressWar_Sub_Jewel_L04.
 		spawn(806277, 264.65891f, 259.27396f, 88.502739f, (byte) 0); //IDFortressWar_v01_Flag_D.
 		spawn(806326, 264.65494f, 259.27081f, 88.502739f, (byte) 0, 115); //IDFortressWar_Main_Cycle_D01.
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-		    @Override
-			public void run() {
-				spawn(806375, 264.20355f, 273.34286f, 85.728119f, (byte) 0, 190); //IDFortressWar_Sub_Jewel_D01.
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(806375, 264.20355f, 273.34286f, 85.728119f, (byte) 0, 190); //IDFortressWar_Sub_Jewel_D01.
 		}, 5000);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-		    @Override
-			public void run() {
-				spawn(806376, 265.11926f, 245.07037f, 85.728119f, (byte) 0, 157); //IDFortressWar_Sub_Jewel_D02.
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(806376, 265.11926f, 245.07037f, 85.728119f, (byte) 0, 157); //IDFortressWar_Sub_Jewel_D02.
 		}, 10000);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-		    @Override
-			public void run() {
-				spawn(806377, 250.49094f, 258.72949f, 85.728119f, (byte) 0, 159); //IDFortressWar_Sub_Jewel_D03.
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(806377, 250.49094f, 258.72949f, 85.728119f, (byte) 0, 159); //IDFortressWar_Sub_Jewel_D03.
 		}, 15000);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-		    @Override
-			public void run() {
-				spawn(806378, 278.78870f, 259.61780f, 85.728119f, (byte) 0, 156); //IDFortressWar_Sub_Jewel_D04.
-			}
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(806378, 278.78870f, 259.61780f, 85.728119f, (byte) 0, 156); //IDFortressWar_Sub_Jewel_D04.
 		}, 20000);
 	}
-	
+
 	private void despawnNpc(int npcId) {
 		// 按 ID 移除副本内所有同 ID 的 NPC。
 		// Removes all NPCs with the given ID from the instance.
@@ -161,7 +134,7 @@ public class Sealed_Reian_RelicAI2 extends ActionItemNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean isMoveSupported() {
 		return false;

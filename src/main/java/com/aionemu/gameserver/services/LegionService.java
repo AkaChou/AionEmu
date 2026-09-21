@@ -961,7 +961,7 @@ public class LegionService {
 			int storageId = StorageType.LEGION_WAREHOUSE.getId();
 			boolean isEmpty = items.isEmpty();
 			if (!isEmpty) {
-				ListSplitter<Item> splitter = new ListSplitter<Item>(items, 10);
+				ListSplitter<Item> splitter = new ListSplitter<>(items, 10);
 				while (!splitter.isLast()) {
 					PacketSendUtility.sendPacket(player,
 							new SM_WAREHOUSE_INFO(splitter.getNext(), storageId, whLvl, splitter.isFirst(), player));

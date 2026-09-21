@@ -35,7 +35,7 @@ public class LunaData {
 	 * After JAXB unmarshalling, indexes by id, groups by race, then clears the raw list.
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		lunaData = new IntObjectHashMap<LunaTemplate>();
+		lunaData = new IntObjectHashMap<>();
 		elyos = new ArrayList<>();
 		asmos = new ArrayList<>();
 		any = new ArrayList<>();

@@ -21,9 +21,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class KiskService {
 	private static volatile ObjectProvider<KiskService> instanceProvider;
 	/** 已绑定但离线的玩家 → 基斯克。 / Bound-but-offline players to their kisk. */
-	private final ConcurrentMap<Integer, Kisk> boundButOfflinePlayer = new ConcurrentHashMap<Integer, Kisk>();
+	private final ConcurrentMap<Integer, Kisk> boundButOfflinePlayer = new ConcurrentHashMap<>();
 	/** 基斯克拥有者 → 基斯克。 / Kisk owners to their kisk. */
-	private final ConcurrentMap<Integer, Kisk> ownerPlayer = new ConcurrentHashMap<Integer, Kisk>();
+	private final ConcurrentMap<Integer, Kisk> ownerPlayer = new ConcurrentHashMap<>();
 
 	/**
 	 * 移除基斯克并清理所有绑定成员的状态。

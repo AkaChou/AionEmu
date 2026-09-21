@@ -98,7 +98,7 @@ public abstract class BuffEffect extends EffectTemplate {
 		int skillId = effect.getSkillId();
 		int skillLvl = effect.getSkillLevel();
 
-		List<IStatFunction> modifiers = new ArrayList<IStatFunction>();
+		List<IStatFunction> modifiers = new ArrayList<>();
 
 		for (Change changeItem : change) {
 			if (changeItem.getStat() == null) {

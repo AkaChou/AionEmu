@@ -99,12 +99,7 @@ public class SummonSkillAreaEffect extends SummonServantEffect {
 		final Servant servant = spawnServant(effect, useTime, NpcObjectType.SKILLAREA, x, y, z);
 		final int finalSkillId = servant.getSkillList() != null ? servant.getSkillList().getRandomSkill().getSkillId()
 				: 0;
-		Future<?> task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				servant.getController().useSkill(finalSkillId);
-			}
-		}, 0, 3000);
+		Future<?> task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> servant.getController().useSkill(finalSkillId), 0, 3000);
 		servant.getController().addTask(TaskId.SKILL_USE, task);
 	}
 }

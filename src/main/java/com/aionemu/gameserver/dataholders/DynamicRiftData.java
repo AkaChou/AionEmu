@@ -28,7 +28,7 @@ public class DynamicRiftData {
 	private List<DynamicRiftTemplate> dynamicRiftTemplates;
 
 	@XmlTransient
-	private final Map<Integer, DynamicRiftLocation> dynamicRift = new LinkedHashMap<Integer, DynamicRiftLocation>();
+	private final Map<Integer, DynamicRiftLocation> dynamicRift = new LinkedHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，将模板转换为地点实例并写入索引。

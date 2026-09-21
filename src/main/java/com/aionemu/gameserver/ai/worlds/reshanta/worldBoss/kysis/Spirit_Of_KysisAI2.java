@@ -28,64 +28,47 @@ public class Spirit_Of_KysisAI2 extends AggressiveNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 	}
-	
+
 	@Override
     protected void handleSpawned() {
         super.handleSpawned();
 		startLifeTask();
 		announceSpiritOfKysis();
     }
-	
+
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			        @Override
-			        public void visit(Player player) {
-						AI2Actions.deleteOwner(Spirit_Of_KysisAI2.this);
-						// 基西斯狂战士之魂已消失。 / The Kysis Berserker Soul has disappeared.
-						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Despawn_dkisas);
-			        }
-				});
-			}
-		}, 1800000); //30 Minutes.
+		GameThreadPoolServices.threadPoolManager().schedule(() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			AI2Actions.deleteOwner(Spirit_Of_KysisAI2.this);
+			// 基西斯狂战士之魂已消失。 / The Kysis Berserker Soul has disappeared.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Despawn_dkisas);
+		}), 1800000); //30 Minutes.
 	}
-	
+
 	private void announceSpiritOfKysis() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 基西斯守护者出现。 / Kysis Guardian Appears.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Dkisas_Named_Spawn_In);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 基西斯守护者出现。 / Kysis Guardian Appears.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Dkisas_Named_Spawn_In);
 		});
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		updateKysisLanding();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 基西斯狂战士之魂已被击杀。 / The Kysis Berserker Soul has been slain.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Die_dkisas);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 基西斯狂战士之魂已被击杀。 / The Kysis Berserker Soul has been slain.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Die_dkisas);
 		});
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}
-	
+
 	private void updateKysisLanding() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
-					if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-						GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ASMODIANS, 15, 0);
-					} else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-						GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ELYOS, 3, 0);
-					}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
+				if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
+					GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ASMODIANS, 15, 0);
+				} else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
+					GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ELYOS, 3, 0);
 				}
 			}
 		});

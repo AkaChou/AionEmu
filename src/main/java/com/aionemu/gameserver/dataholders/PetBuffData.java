@@ -27,7 +27,7 @@ public class PetBuffData {
 	protected List<PetBonusAttr> petBonusattr;
 
 	@XmlTransient
-	private final IntObjectHashMap<PetBonusAttr> templates = new IntObjectHashMap<PetBonusAttr>();
+	private final IntObjectHashMap<PetBonusAttr> templates = new IntObjectHashMap<>();
 
 	/**
 	 * JAXB 反序列化完成后，按 buffId 与 foodCount 写入索引并释放列表。

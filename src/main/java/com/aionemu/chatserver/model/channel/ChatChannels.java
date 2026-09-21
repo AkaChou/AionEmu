@@ -27,7 +27,7 @@ public class ChatChannels {
      * 已注册频道列表。
      * Registered channel list.
      */
-    private static final List<Channel> channels = new ArrayList<Channel>();
+    private static final List<Channel> channels = new ArrayList<>();
 
     static {
         // 寻找小队频道 / LFG channels
@@ -498,7 +498,7 @@ public class ChatChannels {
 			addJobChannel(Gender.MALE, PlayerClass.RIDER, "job_Aethertech");
             addJobChannel(Gender.MALE, PlayerClass.ARTIST, "job_Kuenstler");
             addJobChannel(Gender.MALE, PlayerClass.BARD, "job_Barde");
-            
+
             // 女性测试 / Femaletest
             addJobChannel(Gender.FEMALE, PlayerClass.WARRIOR, "job_Krieger[f:" + '"' + "Kriegerin" + '"' + "]");
             addJobChannel(Gender.FEMALE, PlayerClass.GLADIATOR, "job_Gladiator[f:" + '"' + "Gladiatorin" + '"' + "]");

@@ -81,25 +81,19 @@ public class Armored_Transport_AlphaAI2 extends GeneralNpcAI2
 	}
 
 	private void announceF6RaidSumAtta01Light() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 敌人正在取回我们的碎片。 / The enemy is retrieving our fragment.
-					// 摧毁敌方运输体，阻止其夺走碎片！ / Destroy the enemy's carrier and stop them from taking the fragment!
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1404264));
-				}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 敌人正在取回我们的碎片。 / The enemy is retrieving our fragment.
+				// 摧毁敌方运输体，阻止其夺走碎片！ / Destroy the enemy's carrier and stop them from taking the fragment!
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1404264));
 			}
 		});
 	}
 	private void announceF6RaidSumKill01DarkDie() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (player.isOnline()) {
-					// 装甲运输阿尔法被摧毁，部分玩家获得特殊效果。 / Armored Transport Alpha was destroyed, and some users were given a special effect.
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1404267));
-				}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			if (player.isOnline()) {
+				// 装甲运输阿尔法被摧毁，部分玩家获得特殊效果。 / Armored Transport Alpha was destroyed, and some users were given a special effect.
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1404267));
 			}
 		});
 	}

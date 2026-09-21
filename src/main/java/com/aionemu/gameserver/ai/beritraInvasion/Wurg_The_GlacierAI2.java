@@ -28,38 +28,29 @@ public class Wurg_The_GlacierAI2 extends AggressiveNpcAI2
 		announceEreshkigalDie();
 		super.handleDied();
 	}
-	
+
 	private void addGpPlayer() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
-					AbyssPointsService.addGp(player, 500);
-				}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
+				AbyssPointsService.addGp(player, 500);
 			}
 		});
 	}
 	private void announceEreshkigalDie() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				// 埃雷什基伽尔军团的魔法武器已被摧毁。 / The Ereshkigal Legion's magic weapon has been destroyed.
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_Ere_MESSAGE_DIE_01);
-			}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			// 埃雷什基伽尔军团的魔法武器已被摧毁。 / The Ereshkigal Legion's magic weapon has been destroyed.
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_Ere_MESSAGE_DIE_01);
 		});
 	}
-	
+
 	private void updateWurgLanding() {
 		final com.aionemu.gameserver.model.gameobjects.Creature mostHated = getOwner().getAggroList().getMostHated();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-			@Override
-			public void visit(Player player) {
-				if (mostHated != null && MathUtil.isIn3dRange(mostHated, getOwner(), 20)) {
-					if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-						GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ASMODIANS, 23, 0);
-					} else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-						GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ELYOS, 11, 0);
-					}
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			if (mostHated != null && MathUtil.isIn3dRange(mostHated, getOwner(), 20)) {
+				if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
+					GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ASMODIANS, 23, 0);
+				} else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
+					GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ELYOS, 11, 0);
 				}
 			}
 		});
