@@ -61,12 +61,9 @@ import com.aionemu.gameserver.questEngine.runtime.QuestInteractionObjectValidato
 import com.aionemu.gameserver.questEngine.runtime.QuestProductionDispatcher;
 import com.aionemu.gameserver.questEngine.runtime.QuestRouteResult;
 import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeComposition;
-import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeResources;
 import com.aionemu.gameserver.services.QuestService;
-import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 import lombok.extern.slf4j.Slf4j;
@@ -1404,7 +1401,7 @@ public class QuestEngine implements GameEngine {
 	 * Dispatch an enter-windstream event.
 	 *
 	 * @param env 任务环境 / Quest environment
-	 * @param loc 位置 / 世界标识 / Location or world id
+	 * @param teleportId 传送点 ID / teleport id
 	 */
 	public void onEnterWindStream(QuestEnv env, int teleportId) {
 		if (env == null || env.getPlayer() == null || teleportId <= 0) {

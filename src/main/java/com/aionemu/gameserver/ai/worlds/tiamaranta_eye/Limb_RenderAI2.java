@@ -5,8 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
-import com.aionemu.gameserver.skillengine.SkillEngine;
-import com.aionemu.gameserver.services.NpcShoutsService;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 
 import java.util.concurrent.atomic.AtomicBoolean;

@@ -5,7 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
-import com.aionemu.gameserver.services.ExchangeService;
 
 /**
  * 在交易窗口中添加物品的客户端包。

@@ -1,6 +1,5 @@
 package com.aionemu.chatserver.model.channel;
 
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 import com.aionemu.chatserver.model.ChannelType;

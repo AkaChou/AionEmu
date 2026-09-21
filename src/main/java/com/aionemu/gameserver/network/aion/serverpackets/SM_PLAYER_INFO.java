@@ -22,8 +22,6 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.services.EnchantService;
 import com.aionemu.gameserver.services.events.DisplayService;
-import com.aionemu.gameserver.services.events.FFAService;
-import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.events.bg.DeathmatchBg;
 import com.aionemu.gameserver.services.events.bg.SoloSurvivorBg;
 import com.aionemu.gameserver.model.account.Account;

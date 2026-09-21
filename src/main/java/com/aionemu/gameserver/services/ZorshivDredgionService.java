@@ -35,7 +35,6 @@ import com.aionemu.gameserver.services.zorshivdredgionservice.Zorshiv;
 import com.aionemu.gameserver.services.zorshivdredgionservice.ZorshivDredgion;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**

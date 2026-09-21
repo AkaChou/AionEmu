@@ -8,7 +8,6 @@ import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
 /**
  * 物品工厂，按模板与数量创建物品实例。

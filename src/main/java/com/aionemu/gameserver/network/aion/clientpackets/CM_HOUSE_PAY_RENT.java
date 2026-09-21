@@ -9,7 +9,6 @@ import java.time.ZonedDateTime;
 import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.house.House;
-import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_PAY_RENT;

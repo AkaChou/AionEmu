@@ -5,7 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
-import com.aionemu.gameserver.services.mail.MailService;
 
 /**
  * 客户端读取邮件请求包。

@@ -5,7 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
-import com.aionemu.gameserver.services.AStationService;
 
 /**
  * 跨服 A-Station 传送（前往或返回）的客户端包。

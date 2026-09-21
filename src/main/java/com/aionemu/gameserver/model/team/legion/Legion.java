@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.aionemu.gameserver.configs.main.LegionConfig;
 import com.aionemu.gameserver.model.bonus_service.ServiceBuff;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.world.World;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -4,7 +4,6 @@ import com.aionemu.gameserver.configs.main.PunishmentConfig;
 import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUIT_RESPONSE;
-import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.services.PunishmentService;
 
 /**

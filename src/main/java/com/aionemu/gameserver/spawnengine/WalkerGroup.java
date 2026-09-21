@@ -2,7 +2,6 @@ package com.aionemu.gameserver.spawnengine;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import java.util.Collections;
 import java.util.Comparator;

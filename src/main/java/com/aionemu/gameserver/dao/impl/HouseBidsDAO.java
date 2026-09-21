@@ -8,8 +8,6 @@ import com.aionemu.gameserver.model.house.PlayerHouseBid;
 import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.Map;
 
 /**
  * 房屋竞拍出价 DAO 的 MySQL 8 实现。

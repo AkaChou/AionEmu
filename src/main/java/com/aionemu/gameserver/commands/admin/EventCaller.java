@@ -8,7 +8,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_RESURRECT;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
-import com.aionemu.gameserver.world.World;
 import java.util.Collection;
 import java.util.Iterator;
 

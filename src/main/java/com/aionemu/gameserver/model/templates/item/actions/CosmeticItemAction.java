@@ -14,7 +14,6 @@ import com.aionemu.gameserver.model.gameobjects.player.PlayerAppearance;
 import com.aionemu.gameserver.model.templates.cosmeticitems.CosmeticItemTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAYER_INFO;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 外观物品动作模板（静态数据/XML）。

@@ -11,7 +11,6 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CHARACTER_SELECT;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DELETE_CHARACTER;
-import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.services.player.PlayerEnterWorldService;
 import com.aionemu.gameserver.services.player.PlayerService;
 

@@ -6,7 +6,6 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 管理员基纳发放命令：向自身、指定或目标玩家添加基纳（道具 182400001）。

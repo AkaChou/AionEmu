@@ -7,7 +7,6 @@ import java.sql.Timestamp;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_MACBAN_CONTROL;
 
 /**

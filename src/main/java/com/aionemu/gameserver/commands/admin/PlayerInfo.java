@@ -14,7 +14,6 @@ import com.aionemu.gameserver.utils.ChatUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
-import com.aionemu.gameserver.world.World;
 import com.google.common.base.Predicate;
 
 import java.util.ArrayList;

@@ -11,9 +11,7 @@ import com.aionemu.gameserver.model.autogroup.AutoGroupType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
-import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
-import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**

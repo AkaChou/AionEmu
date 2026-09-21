@@ -7,7 +7,6 @@ import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.network.loginserver.LsClientPacket;
-import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 
 /**
  * 登录服角色转移流程响应包。

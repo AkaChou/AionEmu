@@ -4,7 +4,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.util.concurrent.Future;
 
-import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.controllers.CreatureController;
 import com.aionemu.gameserver.controllers.SummonController;
 import com.aionemu.gameserver.controllers.attack.AggroList;

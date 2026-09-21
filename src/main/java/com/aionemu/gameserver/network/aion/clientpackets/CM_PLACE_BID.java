@@ -6,7 +6,6 @@ import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
-import com.aionemu.gameserver.services.HousingBidService;
 
 /**
  * 客户端房屋拍卖出价请求包。

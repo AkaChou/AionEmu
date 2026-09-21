@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
-import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 
 /** 向其他任务广播区域任务结束事件的类型化边界。 / Typed boundary for broadcasting a zone-mission-end event to other quests. */
 public interface QuestBroadcastPort {

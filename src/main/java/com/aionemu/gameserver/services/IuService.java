@@ -31,7 +31,6 @@ import com.aionemu.gameserver.services.iuservice.CircusBound;
 import com.aionemu.gameserver.services.iuservice.Iu;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**

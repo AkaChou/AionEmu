@@ -8,7 +8,6 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.network.GameServerAuthFailure;
-import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.LoginServerConnection.State;
 import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_ACCOUNT_LIST;

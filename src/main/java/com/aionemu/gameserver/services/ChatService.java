@@ -2,9 +2,7 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CHAT_INIT;
-import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 聊天服务器桥接服务，管理玩家聊天鉴权与连接信息。

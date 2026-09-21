@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_RANKING_LEGIONS;
-import com.aionemu.gameserver.services.abyss.AbyssRankingCache;
 
 /**
  * 请求指定种族欧比斯军团排行榜的客户端包。

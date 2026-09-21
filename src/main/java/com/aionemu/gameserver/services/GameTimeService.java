@@ -13,7 +13,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_GAME_TIME;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 游戏时间同步服务，定期向在线玩家推送游戏时间并持久化。

@@ -91,7 +91,7 @@ public class WrappingAction extends AbstractItemAction {
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1402022));
 					return;
 				}
-				if (targetItem.getItemTemplate().getItemQuality() != targetItem.getItemTemplate().getItemQuality()) {
+				if (targetItem.getItemTemplate().getItemQuality() != parentItem.getItemTemplate().getItemQuality()) {
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1402018, new DescriptionId(nameId)));
 					return;
 				}

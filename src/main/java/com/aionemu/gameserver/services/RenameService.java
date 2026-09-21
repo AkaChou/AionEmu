@@ -15,7 +15,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 重命名服务，处理角色与军团的改名（含优惠券消耗与广播）。

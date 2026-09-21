@@ -4,7 +4,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * Transidium Annex 副本 NPC AI：Hangar Barricade（@AIName "hangar_barricade"），继承 NpcAI2。

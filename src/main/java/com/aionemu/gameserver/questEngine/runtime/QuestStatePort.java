@@ -3,6 +3,8 @@ package com.aionemu.gameserver.questEngine.runtime;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import com.aionemu.gameserver.questEngine.model.QuestState;
+
 /** 规范 QuestStatus + quest_vars 投影的类型化边界。 / Typed boundary for the canonical QuestStatus + quest_vars projection. */
 public interface QuestStatePort {
 	/**

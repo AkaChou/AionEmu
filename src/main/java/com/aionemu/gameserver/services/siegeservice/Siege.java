@@ -24,8 +24,6 @@ import com.aionemu.gameserver.model.siege.SiegeModType;
 import com.aionemu.gameserver.model.siege.SiegeRace;
 import com.aionemu.gameserver.model.templates.npc.AbyssNpcType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SIEGE_LOCATION_STATE;
-import com.aionemu.gameserver.services.SiegeService;
-import com.aionemu.gameserver.world.World;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.RequiredArgsConstructor;

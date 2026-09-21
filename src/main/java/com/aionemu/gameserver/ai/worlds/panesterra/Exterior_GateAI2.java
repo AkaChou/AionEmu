@@ -2,7 +2,6 @@ package com.aionemu.gameserver.ai.worlds.panesterra;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AI2Request;
 import com.aionemu.gameserver.ai2.AIName;
@@ -17,7 +16,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**

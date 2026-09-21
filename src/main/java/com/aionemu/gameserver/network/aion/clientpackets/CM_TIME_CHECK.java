@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 
-import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionConnection.State;

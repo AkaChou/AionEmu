@@ -21,13 +21,11 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.PunishmentService;
 import com.aionemu.gameserver.services.RespawnService;
-import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.skillengine.task.GatheringTask;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.RndSelector;
 import com.aionemu.gameserver.utils.captcha.CAPTCHAUtil;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 可采集物控制器，管理采集校验、任务、奖励与采集保护。

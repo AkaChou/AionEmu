@@ -35,8 +35,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.item.ItemFactory;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 系统邮件服务，向在线/离线玩家投递系统信件与模板奖励。

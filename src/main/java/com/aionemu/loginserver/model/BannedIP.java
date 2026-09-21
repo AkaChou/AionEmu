@@ -60,7 +60,7 @@ public class BannedIP {
             return false;
         }
 
-		return !(!Objects.equals(mask, bannedIP.mask));
+		return Objects.equals(mask, bannedIP.mask);
     }
 
     /**

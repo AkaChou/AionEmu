@@ -136,7 +136,7 @@ public class Account {
             return false;
         }
 
-        return !(!Objects.equals(passwordHash, account.passwordHash));
+        return Objects.equals(passwordHash, account.passwordHash);
 
     }
 

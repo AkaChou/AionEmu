@@ -9,7 +9,6 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.team2.TemporaryPlayerTeam;
-import com.aionemu.gameserver.services.OutpostService;
 
 /**
  * 前哨 BOSS 死亡监听器，按最大伤害方切换前哨归属。

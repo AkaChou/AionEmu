@@ -4,7 +4,6 @@ import com.aionemu.gameserver.dao.PlayerQuestListDAO;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.model.QuestState;
-import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 import java.sql.Connection;
 import java.sql.SQLException;

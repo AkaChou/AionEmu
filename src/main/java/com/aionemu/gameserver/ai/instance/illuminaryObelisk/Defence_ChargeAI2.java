@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.illuminaryObelisk;
 
-import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;

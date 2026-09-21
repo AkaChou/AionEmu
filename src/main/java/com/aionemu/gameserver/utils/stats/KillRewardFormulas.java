@@ -1,16 +1,11 @@
 package com.aionemu.gameserver.utils.stats;
 
-import com.aionemu.gameserver.configs.main.RateConfig;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.siege.SiegeNpc;
 import com.aionemu.gameserver.model.gameobjects.player.RewardType;
 import com.aionemu.gameserver.model.templates.npc.NpcRating;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.stats.calc.Stat2;
-import com.aionemu.gameserver.model.stats.container.PlayerGameStats;
-import com.aionemu.gameserver.model.stats.container.StatEnum;
-import com.aionemu.gameserver.utils.MathUtil;
 
 /**
  * 击杀奖励公式域：独立/组队经验、DP 奖励与 PVP 点数（AP/GP/XP/DP）得失计算。

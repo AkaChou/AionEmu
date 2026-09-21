@@ -8,7 +8,6 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Future;
@@ -16,7 +15,6 @@ import java.util.concurrent.Future;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
 import com.aionemu.gameserver.dao.SurveyControllerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -28,7 +26,6 @@ import com.aionemu.gameserver.model.templates.survey.SurveyItem;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import lombok.extern.slf4j.Slf4j;
 
 /**

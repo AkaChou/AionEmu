@@ -21,7 +21,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_TERRITORY_LIST;
 import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 
 /**

@@ -1,8 +1,6 @@
 package com.aionemu.chatserver.model.message;
 
 
-import com.aionemu.boot.i18n.I18n;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 import com.aionemu.chatserver.model.ChatClient;

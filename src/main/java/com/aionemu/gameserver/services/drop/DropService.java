@@ -49,7 +49,6 @@ import com.aionemu.gameserver.services.item.ItemService.ItemUpdatePredicate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.configs.main.GroupConfig;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**

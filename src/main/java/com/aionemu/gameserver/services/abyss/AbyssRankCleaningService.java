@@ -17,7 +17,6 @@ import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.model.AbyssRankingResult;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 欧比斯排行清理服务：按配置周期剔除长期未登录上榜玩家。

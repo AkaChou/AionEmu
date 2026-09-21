@@ -2,7 +2,6 @@ package com.aionemu.gameserver.world;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.instance.handlers.InstanceHandler;
 
 /**

@@ -3,7 +3,6 @@ package com.aionemu.gameserver.network.aion.clientpackets;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.configs.main.HousingConfig;
-import com.aionemu.gameserver.controllers.HouseController;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.model.house.HouseStatus;
@@ -12,7 +11,6 @@ import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_OWNER_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.HousingBidService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**

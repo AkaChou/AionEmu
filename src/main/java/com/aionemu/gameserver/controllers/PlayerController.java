@@ -1050,11 +1050,10 @@ public class PlayerController extends CreatureController<Player> {
 	 * 处理对话选项选择。
 	 * Handles dialog option selection.
 	 *
-	 * dialog id
-	 * 玩家 / player
-	 * quest id
+	 * @param dialogId 对话 ID / dialog id
+	 * @param player 玩家 / player
+	 * @param questId 任务 ID / quest id
 	 * @param extendedRewardIndex 扩展奖励索引 / extended reward index
-	 * @param unk 未知参数 / unknown parameter
 	 */
 	@Override
 	public void onDialogSelect(int dialogId, Player player, int questId, int extendedRewardIndex) {

@@ -11,7 +11,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.ChatUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 客户端队伍/联盟/军团同盟邀请请求包。

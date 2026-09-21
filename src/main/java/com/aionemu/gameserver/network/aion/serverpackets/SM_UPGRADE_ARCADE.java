@@ -9,7 +9,6 @@ import com.aionemu.gameserver.model.templates.arcadeupgrade.ArcadeTab;
 import com.aionemu.gameserver.model.templates.arcadeupgrade.ArcadeTabItem;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
-import com.aionemu.gameserver.services.events.ArcadeUpgradeService;
 import lombok.RequiredArgsConstructor;
 
 /**

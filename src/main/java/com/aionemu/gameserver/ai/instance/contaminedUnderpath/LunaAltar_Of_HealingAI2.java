@@ -8,7 +8,6 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.handler.CreatureEventHandler;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * Contamined Underpath 副本 NPC AI：Luna Altar Of Healing（@AIName "LunaAltar_Of_Healing"），继承 AggressiveNpcAI2。

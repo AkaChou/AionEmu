@@ -158,7 +158,7 @@ public class AtreianPassportService {
 	 * getPassports 方法。
 	 * getPassports method.
 	 *
-	 * @param AtreianPassport 阿特雷亚通行证 / AtreianPassport
+	 * @param raw 原始通行证映射 / raw passport data
 	 */
 	public void getPassports(Map<Integer, AtreianPassport> raw) {
 		data.putAll(raw);

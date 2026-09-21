@@ -15,7 +15,6 @@ import com.aionemu.gameserver.model.stats.listeners.TitleChangeListener;
 import com.aionemu.gameserver.model.templates.TitleTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TITLE_INFO;
-import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.Getter;
 import lombok.Setter;

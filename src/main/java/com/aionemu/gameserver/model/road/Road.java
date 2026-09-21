@@ -7,7 +7,6 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.road.RoadTemplate;
 import com.aionemu.gameserver.model.utils3d.Plane3D;
 import com.aionemu.gameserver.model.utils3d.Point3D;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.SphereKnownList;
 import lombok.Getter;

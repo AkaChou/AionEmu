@@ -1,7 +1,6 @@
 package com.aionemu.chatserver.common.netty;
 
 import io.netty.buffer.ByteBuf;
-import lombok.RequiredArgsConstructor;
 
 /**
  * 基于 Netty {@link ByteBuf} 的数据包写入实现。

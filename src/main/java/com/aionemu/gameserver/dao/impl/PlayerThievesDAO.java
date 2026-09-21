@@ -125,7 +125,7 @@ public class PlayerThievesDAO extends PlayerThievesListDAO {
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
 	 *
-	 * @param databaseName 数据库名 / database name
+	 * @param database 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version
 	 * @return 是否支持 / whether supported

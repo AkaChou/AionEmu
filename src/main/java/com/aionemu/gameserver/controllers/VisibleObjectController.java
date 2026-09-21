@@ -2,7 +2,6 @@ package com.aionemu.gameserver.controllers;
 
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
-import com.aionemu.gameserver.world.World;
 import lombok.Getter;
 import lombok.Setter;
 

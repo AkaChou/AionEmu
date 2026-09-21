@@ -13,11 +13,9 @@ import com.aionemu.gameserver.model.team.legion.LegionRank;
 import com.aionemu.gameserver.model.team.legion.LegionTerritory;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LEGION_UPDATE_MEMBER;
 import com.aionemu.gameserver.services.LegionService;
-import com.aionemu.gameserver.services.territory.TerritoryService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
-import com.aionemu.gameserver.world.World;
 
 import java.util.ArrayList;
 import java.util.List;

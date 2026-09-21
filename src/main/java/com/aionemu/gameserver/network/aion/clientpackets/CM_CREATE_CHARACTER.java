@@ -25,7 +25,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_CREATE_CHARACTER;
 import com.aionemu.gameserver.services.NameRestrictionService;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.Util;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
 /**
  * 请求创建角色的客户端包。

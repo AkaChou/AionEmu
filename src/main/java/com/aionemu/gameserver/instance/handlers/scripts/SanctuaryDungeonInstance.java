@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import java.util.*;
 
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;

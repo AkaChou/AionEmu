@@ -5,7 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection;
-import com.aionemu.gameserver.services.territory.TerritoryService;
 
 /**
  * 客户端石矛要塞（领地）攻城信息请求包。

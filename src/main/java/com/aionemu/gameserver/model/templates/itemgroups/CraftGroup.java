@@ -10,7 +10,6 @@ import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.rewards.CraftReward;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.Getter;
 

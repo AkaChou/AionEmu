@@ -12,7 +12,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.TeamType;
 import com.aionemu.gameserver.model.team2.TemporaryPlayerTeam;
 import com.aionemu.gameserver.model.team2.league.League;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.google.common.base.Preconditions;
 import lombok.Getter;
 import lombok.Setter;

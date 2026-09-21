@@ -7,7 +7,6 @@ import com.aionemu.gameserver.services.PunishmentService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 管理员角色封禁命令：按角色名封禁指定天数并记录原因。

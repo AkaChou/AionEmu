@@ -15,7 +15,6 @@ import com.aionemu.gameserver.services.NameRestrictionService;
 import com.aionemu.gameserver.services.player.PlayerChatService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
-import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 
 /**

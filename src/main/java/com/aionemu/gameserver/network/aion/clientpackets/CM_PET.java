@@ -14,10 +14,8 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PET;
 import com.aionemu.gameserver.services.NameRestrictionService;
-import com.aionemu.gameserver.services.toypet.MinionService;
 import com.aionemu.gameserver.services.toypet.PetAdoptionService;
 import com.aionemu.gameserver.services.toypet.PetMoodService;
-import com.aionemu.gameserver.services.toypet.PetService;
 import com.aionemu.gameserver.services.toypet.PetSpawnService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 

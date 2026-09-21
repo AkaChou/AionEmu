@@ -215,7 +215,7 @@ class GeoWorldLoaderAionServerFormatTest {
 					.forEach(terrainMaps::add);
 		}
 		pathMaps.removeAll(terrainMaps);
-		assertEquals(pathMaps, GeoWorldLoader.TERRAIN_DISABLED_MAPS);
+		assertEquals(GeoWorldLoader.TERRAIN_DISABLED_MAPS, pathMaps);
 
 		oldDataDir = System.getProperty("aion.game.data.dir");
 		oldGeoDir = System.getProperty("aion.game.geo.dir");

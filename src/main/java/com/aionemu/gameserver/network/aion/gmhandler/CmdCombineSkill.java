@@ -2,7 +2,6 @@ package com.aionemu.gameserver.network.aion.gmhandler;
 
 import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.configs.Config;
-import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.xml.JAXBUtil;
@@ -12,7 +11,6 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import java.io.File;
 import java.util.List;
 import java.util.Collection;
-import com.aionemu.gameserver.world.World;
 
 
 import jakarta.xml.bind.annotation.XmlAccessType;

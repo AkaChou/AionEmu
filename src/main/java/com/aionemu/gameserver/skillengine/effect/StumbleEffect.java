@@ -19,7 +19,6 @@ import com.aionemu.gameserver.skillengine.model.SkillMoveType;
 import com.aionemu.gameserver.skillengine.model.SpellStatus;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 踉跄效果：短距击退并施加 STUMBLE 物理控制。

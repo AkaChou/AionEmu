@@ -6,7 +6,6 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 物品移除指令；从在线玩家背包中按物品 ID 删除指定数量。

@@ -2,7 +2,6 @@ package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 import com.aionemu.gameserver.controllers.HouseController;

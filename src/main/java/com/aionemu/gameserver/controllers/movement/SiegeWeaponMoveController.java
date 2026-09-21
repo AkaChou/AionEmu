@@ -5,10 +5,8 @@ import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
 import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.model.gameobjects.Summon;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
-import com.aionemu.gameserver.taskmanager.tasks.MoveTaskManager;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 攻城兵器召唤物移动控制器，持续追踪目标位置并插值推进。

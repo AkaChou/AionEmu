@@ -15,7 +15,6 @@ import com.aionemu.gameserver.skillengine.model.DashStatus;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.utils.MathUtil;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 冲刺效果：对目标造成物理伤害，并将施法者位移到目标附近（避免完全重叠）。

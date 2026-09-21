@@ -16,7 +16,6 @@ import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 反作弊服务，检测异常移动与加速外挂。

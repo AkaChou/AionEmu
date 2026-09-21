@@ -5,7 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.taskmanager.tasks.MovementNotifyTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.WorldMapInstance;

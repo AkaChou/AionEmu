@@ -13,7 +13,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAYER_SEARCH;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 客户端玩家搜索请求包，按名称/区域/职业/等级/LFG 等条件筛选在线玩家。

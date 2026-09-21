@@ -251,39 +251,36 @@ public class PetService {
 			action = 0;
 		} else if (action == 3) {
 			List<Item> items = player.getInventory().getItemsByItemId(itemId);
-			for (;;) {
-				Item useItem = items.get(0);
-				ItemActions itemActions = useItem.getItemTemplate().getActions();
-				ItemUseLimits limit = new ItemUseLimits();
-				int useDelay = player.getItemCooldown(useItem.getItemTemplate()) / 3;
-				if (useDelay < 3000) {
-					useDelay = 3000;
-				}
-				limit.setDelayId(useItem.getItemTemplate().getUseLimits().getDelayId());
-				limit.setDelayTime(useDelay);
-				if (player.isItemUseDisabled(limit)) {
-					final int useAction = action;
-					final int useItemId = itemId;
-					final int useSlot = slot;
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-						@Override
-						public void run() {
-							PacketSendUtility.sendPacket(player, new SM_PET(useAction, useItemId, useSlot));
-						}
-					}, useDelay);
-					return;
-				}
-				if (!RestrictionsManager.canUseItem(player, useItem) || player.isProtectionActive()) {
-					player.addItemCoolDown(limit.getDelayId(), System.currentTimeMillis() + useDelay, useDelay / 1000);
-					break;
-				}
+			Item useItem = items.get(0);
+			ItemActions itemActions = useItem.getItemTemplate().getActions();
+			ItemUseLimits limit = new ItemUseLimits();
+			int useDelay = player.getItemCooldown(useItem.getItemTemplate()) / 3;
+			if (useDelay < 3000) {
+				useDelay = 3000;
+			}
+			limit.setDelayId(useItem.getItemTemplate().getUseLimits().getDelayId());
+			limit.setDelayTime(useDelay);
+			if (player.isItemUseDisabled(limit)) {
+				final int useAction = action;
+				final int useItemId = itemId;
+				final int useSlot = slot;
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					@Override
+					public void run() {
+						PacketSendUtility.sendPacket(player, new SM_PET(useAction, useItemId, useSlot));
+					}
+				}, useDelay);
+				return;
+			}
+			if (!RestrictionsManager.canUseItem(player, useItem) || player.isProtectionActive()) {
+				player.addItemCoolDown(limit.getDelayId(), System.currentTimeMillis() + useDelay, useDelay / 1000);
+			} else {
 				player.getController().cancelCurrentSkill();
 				for (AbstractItemAction itemAction : itemActions.getItemActions()) {
 					if (itemAction.canAct(player, useItem, null)) {
 						itemAction.act(player, useItem, null);
 					}
 				}
-				break;
 			}
 		}
 		PacketSendUtility.sendPacket(player, new SM_PET(action, itemId, slot));

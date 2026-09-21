@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai2.manager;
 
-import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;

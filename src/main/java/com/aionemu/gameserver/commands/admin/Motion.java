@@ -7,7 +7,6 @@ import com.aionemu.gameserver.model.stats.calc.StatOwner;
 import com.aionemu.gameserver.model.stats.calc.functions.IStatFunction;
 import com.aionemu.gameserver.model.stats.calc.functions.StatAddFunction;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
-import com.aionemu.gameserver.services.MotionLoggingService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 

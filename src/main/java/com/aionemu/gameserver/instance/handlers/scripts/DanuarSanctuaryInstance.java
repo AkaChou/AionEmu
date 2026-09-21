@@ -22,7 +22,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 import java.util.ArrayList;
 import java.util.List;

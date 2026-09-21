@@ -8,7 +8,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.LOG;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SUMMON_UPDATE;
-import com.aionemu.gameserver.services.LifeStatsRestoreService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**

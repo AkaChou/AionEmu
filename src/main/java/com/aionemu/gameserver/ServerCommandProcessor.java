@@ -22,7 +22,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUIT_RESPONSE;
 import com.aionemu.gameserver.services.PunishmentService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 简易 AWT 管理面板：关服、在线查询、踢人、发物、公告与监狱等控制台操作。

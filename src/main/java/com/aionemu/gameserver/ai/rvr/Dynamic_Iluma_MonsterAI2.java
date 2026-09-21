@@ -3,16 +3,10 @@ package com.aionemu.gameserver.ai.rvr;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
-import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.List;
 
 /**

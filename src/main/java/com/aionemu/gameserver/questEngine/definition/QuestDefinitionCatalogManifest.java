@@ -101,8 +101,6 @@ public final class QuestDefinitionCatalogManifest {
 			Schema definitionSchema = QuestDefinitionXmlCompiler.loadSchema(definitionSchemaInput);
 			QuestDefinitionCatalogManifest parsed = load(catalog, catalogSchema);
 			return compile(parsed, resource -> openExternalResource(directory, resource), definitionSchema);
-		} catch (QuestCompilationException e) {
-			throw e;
 		} catch (IOException e) {
 			throw new QuestCompilationException("PRODUCTION_CATALOG_READ_FAILED",
 				e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage());

@@ -6,7 +6,6 @@ import com.aionemu.gameserver.controllers.MathController;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.CreatureAwareKnownList;
 import com.aionemu.gameserver.world.knownlist.NpcKnownList;

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.templates.tradelist.TradeListTemplate;
 import com.aionemu.gameserver.model.templates.tradelist.TradeListTemplate.TradeTab;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
-import com.aionemu.gameserver.services.LimitedItemTradeService;
 
 /**
  * 打开 NPC 普通商店交易列表的服务端包（含限购信息）。

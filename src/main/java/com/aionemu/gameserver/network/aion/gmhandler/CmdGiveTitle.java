@@ -4,7 +4,6 @@ import com.aionemu.gameserver.configs.administration.PanelConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
-import com.aionemu.gameserver.world.World;
 
 /**
  * GM 指令：为目标玩家授予称号。

@@ -21,10 +21,8 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplateType;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.outpostspawns.OutpostSpawnTemplate;
-import com.aionemu.gameserver.services.OutpostService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
-import com.aionemu.gameserver.world.World;
 import lombok.Getter;
 
 /**

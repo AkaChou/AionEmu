@@ -78,7 +78,7 @@ public class GeneralNpcAI2 extends NpcAI2
 	 * 玩家结束与本 NPC 对话。
 	 * Player finishes dialog with this NPC.
 	 *
-	 * @param player 玩家 / player
+	 * @param creature 玩家 / player
 	 */
 	@Override
 	protected void handleDialogFinish(Player creature) {

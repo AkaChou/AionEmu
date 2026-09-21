@@ -5,7 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
-import com.aionemu.gameserver.services.drop.DropDistributionService;
 
 /**
  * 小队/联盟掉落分配（掷骰或竞价）的客户端包。

@@ -10,12 +10,10 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.springzone.SpringObject;
 import com.aionemu.gameserver.model.templates.springzones.SpringTemplate;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 

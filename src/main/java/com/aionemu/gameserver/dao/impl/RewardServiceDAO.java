@@ -6,11 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.model.templates.rewards.RewardEntryItem;
 import java.util.ArrayList;
-import java.util.List;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -33,15 +31,14 @@ public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDA
      * 是否支持当前数据库。
      * Whether the current database is supported.
      *
-     * @param arg0 数据库名 / database name
-     * @param databaseName 数据库名 / database name
+     * @param database 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version
      * @return 是否支持 / whether supported
      */
     @Override
-    public boolean supports(String arg0, int arg1, int arg2) {
-        return DAOUtils.supports(arg0, arg1, arg2);
+    public boolean supports(String database, int majorVersion, int minorVersion) {
+        return DAOUtils.supports(database, majorVersion, minorVersion);
     }
 
     /**

@@ -5,7 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
-import com.aionemu.gameserver.services.events.ArcadeUpgradeService;
 
 /**
  * 客户端街机升级活动操作请求包（开启/关闭/尝试/领奖等）。

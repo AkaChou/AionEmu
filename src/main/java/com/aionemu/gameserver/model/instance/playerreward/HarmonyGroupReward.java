@@ -5,7 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import java.util.List;
 
 import com.aionemu.gameserver.model.autogroup.AGPlayer;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import lombok.Getter;
 
 /**

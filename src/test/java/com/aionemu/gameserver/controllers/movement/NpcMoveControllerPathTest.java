@@ -604,8 +604,6 @@ class NpcMoveControllerPathTest {
 		assertFalse(NpcMoveController.shouldUseAttackSlot(false, 8));
 		assertFalse(NpcMoveController.shouldUseAttackSlot(false, 2, true));
 		assertTrue(NpcMoveController.shouldUseAttackSlot(false, 2, false));
-		assertEquals(NpcMoveController.attackSlotOffsetDegrees(10, 20),
-				NpcMoveController.attackSlotOffsetDegrees(10, 20));
 		assertNotEquals(NpcMoveController.attackSlotOffsetDegrees(10, 20), NpcMoveController.attackSlotOffsetDegrees(11, 20));
 
 		float[] slot = NpcMoveController.attackSlotCandidate(10, 0, 0, 0, 5, 1.5f, 0);

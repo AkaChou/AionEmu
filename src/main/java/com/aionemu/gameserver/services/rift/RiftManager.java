@@ -20,7 +20,6 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.vortex.VortexLocation;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.NpcKnownList;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -129,6 +128,16 @@ public class RiftManager {
 		rifts.add(npc);
 
 		return npc;
+	}
+
+	/**
+	 * 从已生成裂隙注册表移除指定 NPC（裂隙 NPC 删除时调用）。
+	 * Removes the given NPC from the spawned-rift registry (called when a rift NPC is deleted).
+	 *
+	 * @param npc 裂隙 NPC / the rift NPC
+	 */
+	public static void removeSpawned(Npc npc) {
+		rifts.remove(npc);
 	}
 
 	/**

@@ -13,7 +13,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FLY_TIME;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STATUPDATE_HP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STATUPDATE_MP;
-import com.aionemu.gameserver.services.LifeStatsRestoreService;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster.BroadcastMode;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 

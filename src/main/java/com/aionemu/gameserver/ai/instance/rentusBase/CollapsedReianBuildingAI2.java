@@ -4,7 +4,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * Rentus Base 副本 NPC AI：Collapsed Reian Building（@AIName "collapsed_reian_building"），继承 NpcAI2。

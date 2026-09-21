@@ -14,7 +14,6 @@ import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAllianceMember;
 import com.aionemu.gameserver.model.team2.common.legacy.LootGroupRules;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;

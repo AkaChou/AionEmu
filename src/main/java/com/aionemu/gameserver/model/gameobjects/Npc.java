@@ -8,10 +8,8 @@ import java.util.Iterator;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.ai2.AITemplate;
 import com.aionemu.gameserver.ai2.poll.AIQuestion;
-import com.aionemu.gameserver.configs.main.AIConfig;
 import com.aionemu.gameserver.controllers.NpcController;
 import com.aionemu.gameserver.controllers.movement.NpcMoveController;
 import com.aionemu.gameserver.dataholders.DataManager;

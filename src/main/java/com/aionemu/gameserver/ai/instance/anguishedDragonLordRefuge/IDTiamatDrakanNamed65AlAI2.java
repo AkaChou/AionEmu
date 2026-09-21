@@ -7,11 +7,8 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
-import com.aionemu.gameserver.services.NpcShoutsService;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * Anguished Dragon Lord Refuge 副本 NPC AI：ID Tiamat Drakan Named65 Al（@AIName "tiamat_woman_form2"），继承 AggressiveNpcAI2。

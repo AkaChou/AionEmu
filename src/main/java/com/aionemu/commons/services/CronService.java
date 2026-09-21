@@ -28,8 +28,6 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
-import org.quartz.impl.matchers.GroupMatcher;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import lombok.NoArgsConstructor;
 import lombok.AccessLevel;

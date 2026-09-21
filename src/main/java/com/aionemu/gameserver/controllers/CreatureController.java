@@ -42,17 +42,14 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.LOG;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SKILL_CANCEL;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.HealType;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.skillengine.model.Skill.SkillMethod;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.skillengine.model.SkillType;
-import com.aionemu.gameserver.taskmanager.tasks.MovementNotifyTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
-import com.aionemu.gameserver.world.zone.ZoneUpdateService;
 
 import java.util.Map;
 
@@ -452,11 +449,10 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 * 处理对话选项选择。
 	 * Handles dialog option selection.
 	 *
-	 * dialog id
-	 * 玩家 / player
-	 * quest id
+	 * @param dialogId 对话 ID / dialog id
+	 * @param player 玩家 / player
+	 * @param questId 任务 ID / quest id
 	 * @param extendedRewardIndex 扩展奖励索引 / extended reward index
-	 * @param unk 未知参数 / unknown parameter
 	 */
 	public void onDialogSelect(int dialogId, Player player, int questId, int extendedRewardIndex) {
 	}

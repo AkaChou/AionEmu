@@ -3,10 +3,8 @@ package com.aionemu.gameserver.commands.admin;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.services.NightmareCircusService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import org.apache.commons.lang3.math.NumberUtils;
 

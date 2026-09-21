@@ -4,7 +4,6 @@ import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.questEngine.definition.ProgressLayout;
 import com.aionemu.gameserver.questEngine.definition.QuestCondition;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
-import com.aionemu.gameserver.questEngine.definition.QuestMembershipPermission;
 import com.aionemu.gameserver.questEngine.definition.QuestNpcAttackFacts;
 
 import java.util.List;

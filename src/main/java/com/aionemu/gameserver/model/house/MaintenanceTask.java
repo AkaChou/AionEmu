@@ -7,7 +7,6 @@ import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
-import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,11 +22,9 @@ import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_ACQUIRE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_OWNER_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.HousingBidService;
 import com.aionemu.gameserver.services.mail.MailFormatter;
 import com.aionemu.gameserver.taskmanager.AbstractCronTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 
 /**
  * Maintenance 任务，用于房屋相关逻辑。

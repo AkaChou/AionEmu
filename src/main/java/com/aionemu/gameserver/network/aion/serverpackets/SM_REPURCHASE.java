@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
-import com.aionemu.gameserver.services.RepurchaseService;
 
 /**
  * 向客户端同步可回购物品列表（NPC 回购窗口）。

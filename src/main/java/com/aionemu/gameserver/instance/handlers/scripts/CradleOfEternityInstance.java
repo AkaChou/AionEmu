@@ -22,7 +22,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 import java.util.Map;
 import java.util.Set;

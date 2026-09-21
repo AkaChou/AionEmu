@@ -5,7 +5,6 @@ import com.aionemu.gameserver.services.CubeExpandService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 管理员扩展魔立方命令：为指定在线玩家增加一档背包格子。

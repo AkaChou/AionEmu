@@ -9,7 +9,6 @@ import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.network.BannedMacManager;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

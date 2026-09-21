@@ -4,7 +4,6 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
-import com.aionemu.gameserver.services.NpcShoutsService;
 
 /**
  * Empyrean Crucible 副本 NPC AI：Empyrean Administrator Arminos（@AIName "empadministratorarminos"），继承 NpcAI2。

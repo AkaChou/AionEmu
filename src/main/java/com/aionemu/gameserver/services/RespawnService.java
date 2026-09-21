@@ -14,7 +14,6 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
-import com.aionemu.gameserver.world.World;
 
 /**
  * NPC 尸体消散与重生调度服务。

@@ -7,7 +7,6 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
@@ -31,9 +30,7 @@ import com.aionemu.gameserver.model.templates.challenge.ContributionReward;
 import com.aionemu.gameserver.model.town.Town;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CHALLENGE_LIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -5,7 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.F2pDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

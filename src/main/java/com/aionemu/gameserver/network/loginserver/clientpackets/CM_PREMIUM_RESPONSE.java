@@ -2,7 +2,6 @@ package com.aionemu.gameserver.network.loginserver.clientpackets;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
-import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 
 /**

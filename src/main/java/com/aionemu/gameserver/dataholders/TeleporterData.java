@@ -8,8 +8,6 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.teleport.TeleporterTemplate;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;

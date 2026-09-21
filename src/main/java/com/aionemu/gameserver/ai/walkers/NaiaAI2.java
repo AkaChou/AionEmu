@@ -9,7 +9,6 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.templates.npcshout.NpcShout;
 import com.aionemu.gameserver.model.templates.npcshout.ShoutEventType;
-import com.aionemu.gameserver.services.NpcShoutsService;
 import com.aionemu.gameserver.utils.MathUtil;
 
 import java.util.List;

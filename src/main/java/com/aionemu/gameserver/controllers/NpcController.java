@@ -42,7 +42,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.RewardType;
 import com.aionemu.gameserver.model.gameobjects.siege.SiegeNpc;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
-import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.model.team2.TemporaryPlayerTeam;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
 import com.aionemu.gameserver.model.team2.common.service.PlayerTeamDistributionService;
@@ -54,20 +53,15 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.DialogService;
 import com.aionemu.gameserver.services.RespawnService;
-import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.services.drop.DropService;
 import com.aionemu.gameserver.services.instance.InstanceScaler;
-import com.aionemu.gameserver.services.player.AtreianBestiaryService;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.StatFunctions;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 /**
@@ -414,11 +408,10 @@ public class NpcController extends CreatureController<Npc> {
 	 * 处理 NPC 对话选项选择。
 	 * Handles NPC dialog option selection.
 	 *
-	 * dialog id
-	 * 玩家 / player
-	 * quest id
+	 * @param dialogId 对话 ID / dialog id
+	 * @param player 玩家 / player
+	 * @param questId 任务 ID / quest id
 	 * @param extendedRewardIndex 扩展奖励索引 / extended reward index
-	 * @param unk 未知参数 / unknown parameter
 	 */
 	@Override
 	public void onDialogSelect(int dialogId, final Player player, int questId, int extendedRewardIndex) {

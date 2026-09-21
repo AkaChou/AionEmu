@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.taskmanager.parallel;
 
-import com.aionemu.boot.i18n.I18n;
 import java.util.Collection;
 
 import java.util.concurrent.CountedCompleter;

@@ -27,7 +27,6 @@ import com.aionemu.gameserver.model.templates.housing.HousingUseableItem;
 import com.aionemu.gameserver.model.templates.housing.PlaceableHouseObject;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.templates.item.actions.SummonHouseObjectAction;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
 /**
  * 房屋物件工厂，按模板创建房屋可放置对象。

@@ -33,7 +33,6 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
-import com.aionemu.gameserver.world.World;
 import lombok.Getter;
 
 /**

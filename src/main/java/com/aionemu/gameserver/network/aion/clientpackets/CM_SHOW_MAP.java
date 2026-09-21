@@ -5,7 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
-import com.aionemu.gameserver.services.ProtectorConquerorService;
 
 /**
  * 客户端打开地图时更新保护者/征服者图标请求包。

@@ -15,7 +15,6 @@ import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -79,7 +78,6 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 /**
  * 任务服务，处理任务开始/完成、掉落、计时器与放弃等核心流程。
@@ -239,7 +237,7 @@ public final class QuestService {
 					questItems.add(selectebleRewardItem);
 				}
 			}
-		} else if (dialogId == 23 && dialogId != 0 && !extended) {
+		} else if (dialogId == 23 && !extended) {
 			QuestState qs = player.getQuestStateList().getQuestState(id);
 			boolean isLastRepeat = qs.getCompleteCount() == template.getMaxRepeatCount() - 1 && template.getMaxRepeatCount() < 255;
 			if (isLastRepeat && template.isUseSingleClassReward() || template.isUseRepeatedClassReward()) {

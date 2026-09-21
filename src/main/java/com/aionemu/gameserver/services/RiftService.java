@@ -27,7 +27,6 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.rift.RiftLocation;
 import com.aionemu.gameserver.services.rift.RiftInformer;
-import com.aionemu.gameserver.services.rift.RiftManager;
 
 /**
  * 裂隙服务，管理世界裂隙开关、刷怪与定时计划。

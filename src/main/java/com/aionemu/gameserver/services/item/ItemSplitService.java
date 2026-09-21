@@ -14,7 +14,6 @@ import com.aionemu.gameserver.model.items.storage.IStorage;
 import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CUBE_UPDATE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.ExchangeService;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 

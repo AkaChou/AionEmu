@@ -24,7 +24,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.gametime.DayTime;
 import com.aionemu.gameserver.utils.gametime.GameTime;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 天气服务，按地图区域维护天气条目，并在变更时同步客户端与攻城系统。
@@ -109,7 +108,9 @@ public class WeatherService {
 
 		@Override
 		public boolean equals(Object o) {
-			WeatherKey other = (WeatherKey) o;
+			if (!(o instanceof WeatherKey other)) {
+				return false;
+			}
 			return this.mapId == other.mapId;
 		}
 

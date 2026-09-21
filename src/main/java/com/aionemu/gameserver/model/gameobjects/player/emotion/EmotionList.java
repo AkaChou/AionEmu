@@ -12,7 +12,6 @@ import com.aionemu.gameserver.configs.main.MembershipConfig;
 import com.aionemu.gameserver.dao.PlayerEmotionListDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION_LIST;
-import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.RequiredArgsConstructor;
 

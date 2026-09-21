@@ -3,7 +3,6 @@ package com.aionemu.gameserver.instance.handlers.scripts;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.commons.network.util.ThreadPoolManager;
 
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;

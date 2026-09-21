@@ -41,7 +41,6 @@ import com.aionemu.gameserver.utils.TimeUtil;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 
-import java.util.LinkedHashMap;
 
 /**
  * 玩家队伍服务，用于团队2相关逻辑。

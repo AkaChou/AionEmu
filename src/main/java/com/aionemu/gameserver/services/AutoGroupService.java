@@ -18,9 +18,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.model.autogroup.AGPlayer;
 import com.aionemu.gameserver.model.autogroup.AGQuestion;
 import com.aionemu.gameserver.model.autogroup.AutoGroupType;
@@ -49,12 +47,10 @@ import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMap;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldMapInstanceFactory;
 
-import java.util.List;
 import java.util.Map;
 /**
  * 自动组队/匹配服务：管理副本排队、入场确认、实例创建与登录/登出时的匹配状态恢复。

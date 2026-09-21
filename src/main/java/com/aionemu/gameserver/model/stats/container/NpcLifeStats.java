@@ -5,7 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameGameplayServices;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.LOG;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
-import com.aionemu.gameserver.services.LifeStatsRestoreService;
 
 /**
  * NPC 的生命值/魔法值属性与恢复逻辑。

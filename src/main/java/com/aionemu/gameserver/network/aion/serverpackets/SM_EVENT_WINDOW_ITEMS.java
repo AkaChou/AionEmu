@@ -4,7 +4,6 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 

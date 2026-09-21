@@ -10,8 +10,6 @@ import com.aionemu.gameserver.model.templates.assemblednpc.AssembledNpcTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_NPC_ASSEMBLER;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
-import com.aionemu.gameserver.world.World;
 
 import java.util.ArrayList;
 import java.util.Iterator;

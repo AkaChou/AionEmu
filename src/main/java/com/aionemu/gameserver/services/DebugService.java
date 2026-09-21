@@ -10,7 +10,6 @@ import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
-import com.aionemu.gameserver.world.World;
 import lombok.extern.slf4j.Slf4j;
 
 /**

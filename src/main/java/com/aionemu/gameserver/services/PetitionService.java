@@ -19,7 +19,6 @@ import com.aionemu.gameserver.model.Petition;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PETITION;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 客服请愿（Petition）服务，管理工单注册、回复与排队。

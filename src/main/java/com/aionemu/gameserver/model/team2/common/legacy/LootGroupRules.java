@@ -11,7 +11,6 @@ import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.player.InRoll;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.item.ItemQuality;
-import com.aionemu.gameserver.services.drop.DropDistributionService;
 
 import java.util.ArrayList;
 import java.util.List;

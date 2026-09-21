@@ -3,7 +3,6 @@ package com.aionemu.gameserver.instance.handlers.scripts;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 import java.util.ArrayList;
 import java.util.List;

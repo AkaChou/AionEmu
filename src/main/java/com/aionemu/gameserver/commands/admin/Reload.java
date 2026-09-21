@@ -20,8 +20,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 
@@ -148,7 +146,7 @@ public class Reload extends AdminCommand {
 	 * Atomically replaces quest data/scripts; rolls back and reloads previous data on failure.
 	 *
 	 * @param quests 新任务模板列表 / new quest templates
-	 * @param scripts 新 XML 任务脚本列表 / new XML quest scripts
+	 * @param prepared 预编译任务定义与脚本 / prepared quest definitions and scripts
 	 */
 	private void reloadQuests(List<QuestTemplate> quests,
 			QuestEngine.PreparedProductionDefinitions prepared) {

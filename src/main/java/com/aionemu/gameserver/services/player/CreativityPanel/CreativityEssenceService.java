@@ -23,12 +23,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_CREATIVITY_POINTS_AP
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.SkillLearnService;
-import com.aionemu.gameserver.services.player.CreativityPanel.stats.Agility;
-import com.aionemu.gameserver.services.player.CreativityPanel.stats.Health;
-import com.aionemu.gameserver.services.player.CreativityPanel.stats.Knowledge;
-import com.aionemu.gameserver.services.player.CreativityPanel.stats.Power;
-import com.aionemu.gameserver.services.player.CreativityPanel.stats.Precision;
-import com.aionemu.gameserver.services.player.CreativityPanel.stats.Will;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**

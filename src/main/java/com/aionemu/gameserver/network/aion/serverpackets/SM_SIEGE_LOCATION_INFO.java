@@ -17,7 +17,6 @@ import com.aionemu.gameserver.model.team.legion.LegionEmblem;
 import com.aionemu.gameserver.model.team.legion.LegionEmblemType;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
-import com.aionemu.gameserver.services.SiegeService;
 /**
  * 向客户端同步全部或单个攻城地点信息。
  * Server packet synchronizing all or a single siege location info to the client.

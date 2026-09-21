@@ -8,7 +8,6 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * Pvp Arenas 副本 NPC AI：Anti Air Craft Gun（@AIName "antiaircraftgun"），继承 ActionItemNpcAI2。

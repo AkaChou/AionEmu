@@ -5,7 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
-import com.aionemu.gameserver.services.events.ShugoSweepService;
 
 /**
  * 客户端术古扫雷活动操作请求包（重置棋盘或投掷骰子）。

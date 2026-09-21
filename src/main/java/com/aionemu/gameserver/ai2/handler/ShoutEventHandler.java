@@ -18,7 +18,6 @@ import com.aionemu.gameserver.model.templates.npcshout.NpcShout;
 import com.aionemu.gameserver.model.templates.npcshout.ShoutEventType;
 import com.aionemu.gameserver.model.templates.npcshout.ShoutType;
 import com.aionemu.gameserver.model.templates.walker.WalkerTemplate;
-import com.aionemu.gameserver.services.NpcShoutsService;
 
 /**
  * NPC 喊话事件处理器，按各类战斗 / 行走 / 死亡事件触发模板喊话。

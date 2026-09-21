@@ -5,10 +5,8 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * Empyrean Crucible 副本 NPC AI：Spark Of Darkness（@AIName "spark_of_darkness"），继承 GeneralNpcAI2。

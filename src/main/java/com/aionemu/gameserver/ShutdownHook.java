@@ -23,11 +23,8 @@ import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.network.chatserver.ChatServer;
-import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.services.player.PlayerLeaveWorldService;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
-import com.aionemu.gameserver.world.World;
 
 /**
  * JVM 关闭钩子：倒计时公告、踢线、落盘并按模式 halt/重启进程。

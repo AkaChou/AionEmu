@@ -4,7 +4,6 @@ import com.aionemu.gameserver.ai2.AI2Logger;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.ai2.NpcAI2;
-import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.manager.AttackManager;
 import com.aionemu.gameserver.ai2.manager.EmoteManager;
 import com.aionemu.gameserver.ai2.manager.WalkManager;

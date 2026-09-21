@@ -1,3 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<global_rules>
+<!-- 本文件仅为 global_rules.xml 格式的编写示例文档，不参与静态数据加载。
+     This file is only a documentation sample of the global_rules.xml format; it is never loaded as static data. -->
 <!--
 Tutorial:
 ==========================================================
@@ -42,3 +46,4 @@ You can add more "Rating" one below the other !!!
 <gd_item id="190000083" name="Golden Narki's Egg"/> [ItemId + Item Name]
 ==========================================================
 -->
+</global_rules>

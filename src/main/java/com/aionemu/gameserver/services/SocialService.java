@@ -13,7 +13,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_FRIEND_LIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FRIEND_NOTIFY;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FRIEND_RESPONSE;
 import com.aionemu.gameserver.services.player.PlayerService;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 社交服务，处理好友与黑名单的增删改。

@@ -15,7 +15,6 @@ import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.model.team.legion.LegionHistoryType;
 import com.aionemu.gameserver.model.team.legion.LegionJoinRequest;
 import com.aionemu.gameserver.model.team.legion.LegionJoinRequestState;
-import com.aionemu.gameserver.model.team.legion.LegionMember;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LEGION_EDIT;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LEGION_REQUEST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LEGION_REQUEST_INFO;

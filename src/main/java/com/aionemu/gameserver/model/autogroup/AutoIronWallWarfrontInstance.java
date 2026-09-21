@@ -9,7 +9,6 @@ import com.aionemu.gameserver.model.instance.instancereward.IronWallWarfrontRewa
 import com.aionemu.gameserver.model.team2.TeamType;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
-import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
 
 /**
  * 自动 IronWallWarfront 副本，用于 autogroup 相关逻辑。

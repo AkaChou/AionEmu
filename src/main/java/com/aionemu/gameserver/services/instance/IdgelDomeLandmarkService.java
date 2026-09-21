@@ -14,13 +14,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 
 
 /**

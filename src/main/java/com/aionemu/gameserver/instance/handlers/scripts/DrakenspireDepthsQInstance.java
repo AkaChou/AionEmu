@@ -4,8 +4,6 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
-import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
@@ -22,7 +20,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.NpcShoutsService;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.model.Effect;
@@ -32,7 +29,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 import java.util.ArrayList;
 import java.util.List;

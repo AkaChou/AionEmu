@@ -3,7 +3,6 @@ package com.aionemu.gameserver.network.loginserver.clientpackets;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 登录服对封禁请求的响应包，向发起封禁的管理员回传结果消息。

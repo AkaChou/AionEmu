@@ -8,9 +8,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.shield.Shield;
 import com.aionemu.gameserver.model.siege.FortressLocation;
 import com.aionemu.gameserver.model.siege.SiegeRace;
-import com.aionemu.gameserver.services.ShieldService;
-import com.aionemu.gameserver.services.SiegeService;
-import com.aionemu.gameserver.world.World;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

@@ -4,7 +4,6 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
 import com.aionemu.gameserver.model.ChatType;
 import com.aionemu.gameserver.model.Race;

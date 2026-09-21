@@ -5,7 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.model.Petition;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
-import com.aionemu.gameserver.services.PetitionService;
 import lombok.AllArgsConstructor;
 
 /**

@@ -108,11 +108,7 @@ class TemporarySpawnEngineTest {
 	private static void despawn() throws ReflectiveOperationException {
 		Method method = TemporarySpawnEngine.class.getDeclaredMethod("despawn");
 		method.setAccessible(true);
-		try {
-			method.invoke(null);
-		} catch (ReflectiveOperationException e) {
-			throw e;
-		}
+		method.invoke(null);
 	}
 
 	private static <T> T field(String name, Class<T> type) throws ReflectiveOperationException {

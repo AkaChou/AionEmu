@@ -12,7 +12,6 @@ import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
 import com.aionemu.chatserver.service.ChatService;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 /**

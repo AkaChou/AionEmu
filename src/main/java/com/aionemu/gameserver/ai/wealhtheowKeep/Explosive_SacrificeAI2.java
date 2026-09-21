@@ -5,10 +5,8 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * 维尔索要塞相关 NPC AI：Explosive Sacrifice（@AIName "explosive_sacrifice"），继承 AggressiveNpcAI2。

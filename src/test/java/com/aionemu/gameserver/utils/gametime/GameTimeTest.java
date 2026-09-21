@@ -18,8 +18,8 @@ class GameTimeTest {
 		assertEquals(first, same);
 		assertEquals(first.hashCode(), same.hashCode());
 		assertEquals(1, new HashSet<>(List.of(first, same)).size());
-		assertNotEquals(first, new GameTime(1235));
-		assertNotEquals(first, null);
-		assertNotEquals(first, 1234);
+		assertNotEquals(new GameTime(1235), first);
+		assertNotEquals(null, first);
+		assertNotEquals(new Object(), first);
 	}
 }

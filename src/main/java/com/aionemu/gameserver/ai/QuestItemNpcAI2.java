@@ -19,7 +19,6 @@ import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.model.templates.quest.QuestNpc;
 import com.aionemu.gameserver.services.QuestService;
-import com.aionemu.gameserver.services.drop.DropService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import java.util.ArrayList;
 import java.util.List;

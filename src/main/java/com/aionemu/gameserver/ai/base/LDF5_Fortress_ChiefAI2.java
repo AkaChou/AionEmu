@@ -4,7 +4,6 @@ import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 据点/基地相关 NPC AI：LDF5 Fortress Chief（@AIName "ldf5_fortress_chief"），继承 AggressiveNpcAI2。

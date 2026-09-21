@@ -2,7 +2,6 @@ package com.aionemu.gameserver.ai.instance.transidiumAnnex;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.NpcType;

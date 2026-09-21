@@ -4,11 +4,9 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * Rentus Base 副本 NPC AI：Flame Smash（@AIName "flame_smash"），继承 NpcAI2。

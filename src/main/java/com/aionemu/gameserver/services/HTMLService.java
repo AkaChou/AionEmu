@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
 import com.aionemu.gameserver.dao.GuideDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -24,8 +23,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTIONNAIRE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**

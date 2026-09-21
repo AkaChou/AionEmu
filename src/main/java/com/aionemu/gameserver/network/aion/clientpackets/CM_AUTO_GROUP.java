@@ -13,18 +13,6 @@ import com.aionemu.gameserver.model.autogroup.EntryRequestType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
-import com.aionemu.gameserver.services.events.LadderService;
-import com.aionemu.gameserver.services.instance.AsyunatarService;
-import com.aionemu.gameserver.services.instance.DredgionService2;
-import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
-import com.aionemu.gameserver.services.instance.GrandArenaTrainingCampService;
-import com.aionemu.gameserver.services.instance.HallOfTenacityService;
-import com.aionemu.gameserver.services.instance.IDRunService;
-import com.aionemu.gameserver.services.instance.IdgelDomeLandmarkService;
-import com.aionemu.gameserver.services.instance.IdgelDomeService;
-import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
-import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
-import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**

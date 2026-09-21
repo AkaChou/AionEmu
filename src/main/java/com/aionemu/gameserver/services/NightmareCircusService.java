@@ -34,7 +34,6 @@ import com.aionemu.gameserver.services.nightmarecircusservice.CircusInstance;
 import com.aionemu.gameserver.services.nightmarecircusservice.Nightmare;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**

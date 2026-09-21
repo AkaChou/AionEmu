@@ -43,20 +43,12 @@ public class BIHTree implements CollisionData {
 	private int[] triIndices;
 	/** 交换三角形时的临时缓冲。 / Temporary buffer for triangle swaps. */
 	private transient float[] bihSwapTmp;
-	/** 按轴的三角形比较器。 / Per-axis triangle comparators. */
-	private static final TriangleAxisComparator[] comparators = new TriangleAxisComparator[3];
-
 	/**
 	 * 包围盒预剪枝复用的 t 区间缓冲（每线程一份，避免每次查询分配）。
 	 * Scratch t-range buffer reused by the bound pre-cull (one per thread, so no allocation per query).
 	 */
 	private static final ThreadLocal<float[]> BOUND_RANGE = ThreadLocal.withInitial(() -> new float[2]);
 
-	static {
-		comparators[0] = new TriangleAxisComparator(0);
-		comparators[1] = new TriangleAxisComparator(1);
-		comparators[2] = new TriangleAxisComparator(2);
-	}
 
 	/**
 	 * 从顶点/索引缓冲初始化展平三角形列表与下标映射。

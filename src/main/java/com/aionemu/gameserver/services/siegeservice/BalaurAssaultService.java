@@ -12,7 +12,6 @@ import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -27,15 +26,11 @@ import com.aionemu.gameserver.model.assemblednpc.AssembledNpcPart;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.siege.ArtifactLocation;
 import com.aionemu.gameserver.model.siege.FortressLocation;
-import com.aionemu.gameserver.model.siege.Influence;
 import com.aionemu.gameserver.model.siege.SiegeRace;
 import com.aionemu.gameserver.model.templates.assemblednpc.AssembledNpcTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_NPC_ASSEMBLER;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**

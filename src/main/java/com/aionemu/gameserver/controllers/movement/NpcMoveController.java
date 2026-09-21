@@ -2046,7 +2046,7 @@ public class NpcMoveController
      */
     public void setCurrentRoute(List<RouteStep> currentRoute) {
         if (currentRoute == null) {
-            AI2Logger.info(owner.getAi2(), String.format("MC: setCurrentRoute is setting route to null (NPC id: {})!!!", owner.getNpcId()));
+            AI2Logger.info(owner.getAi2(), String.format("MC: setCurrentRoute is setting route to null (NPC id: %d)!!!", owner.getNpcId()));
         } else {
             this.currentRoute = currentRoute;
         }

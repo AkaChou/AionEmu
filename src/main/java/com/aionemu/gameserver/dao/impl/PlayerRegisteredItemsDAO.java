@@ -15,8 +15,6 @@ import com.aionemu.gameserver.model.house.HouseRegistry;
 import com.aionemu.gameserver.model.templates.housing.HouseType;
 import com.aionemu.gameserver.model.templates.housing.PartType;
 import com.aionemu.gameserver.services.item.HouseObjectFactory;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
-import com.aionemu.gameserver.world.World;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;

@@ -618,7 +618,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 		spawn(npc1, 837.0000f, 578.00000f, 118.7500f, (byte) 84);
 		spawn(npc2, 650.4983f, 139.6467f, 102.64614f, (byte) 36);
 		spawn(npc3, 584.8461f, 162.49805f, 104.1250f, (byte) 21);
-		spawn(npc4, 583.2826f, 230.01761f, 106.8750f, (byte) 05);
+		spawn(npc4, 583.2826f, 230.01761f, 106.8750f, (byte) 5);
 	}
 
 	private void startPrepareTimer() {

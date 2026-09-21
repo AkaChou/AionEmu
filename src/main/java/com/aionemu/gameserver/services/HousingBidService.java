@@ -9,14 +9,12 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
-import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -52,7 +50,6 @@ import com.aionemu.gameserver.services.mail.AuctionResult;
 import com.aionemu.gameserver.services.mail.MailFormatter;
 import com.aionemu.gameserver.taskmanager.AbstractCronTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapType;
 
 import java.util.LinkedHashMap;

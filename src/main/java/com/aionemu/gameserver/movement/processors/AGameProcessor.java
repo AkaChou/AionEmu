@@ -2,7 +2,6 @@ package com.aionemu.gameserver.movement.processors;
 
 
 import com.aionemu.boot.i18n.I18n;
-import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;

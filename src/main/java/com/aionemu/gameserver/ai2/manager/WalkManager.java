@@ -19,7 +19,6 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.configs.main.AIConfig;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.geoEngine.bounding.BoundingBox;
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.model.gameobjects.Npc;

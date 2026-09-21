@@ -8,7 +8,6 @@ import com.aionemu.gameserver.model.templates.robot.RobotInfo;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapType;
 
 /**

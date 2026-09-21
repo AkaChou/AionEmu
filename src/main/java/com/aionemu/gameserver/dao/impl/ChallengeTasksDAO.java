@@ -11,7 +11,6 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.templates.challenge.ChallengeQuestTemplate;
 import com.aionemu.gameserver.model.templates.challenge.ChallengeType;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;

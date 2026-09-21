@@ -3,7 +3,6 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import java.util.List;
 
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -53,7 +52,6 @@ import com.aionemu.gameserver.model.instance.playerreward.StonespearReachPlayerR
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

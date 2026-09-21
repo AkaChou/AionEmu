@@ -6,7 +6,6 @@ import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
-import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.Set;
 

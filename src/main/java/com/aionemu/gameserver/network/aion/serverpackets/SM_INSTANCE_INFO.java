@@ -8,7 +8,6 @@ import com.aionemu.gameserver.model.templates.InstanceCooltime;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**

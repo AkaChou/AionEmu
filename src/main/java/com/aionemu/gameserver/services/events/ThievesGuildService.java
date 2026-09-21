@@ -3,9 +3,7 @@ package com.aionemu.gameserver.services.events;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameGameplayServices;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 

@@ -2,12 +2,9 @@ package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerABDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.atreian_bestiary.AtreianBestiaryTemplate;
-import com.aionemu.gameserver.services.player.AtreianBestiaryService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 

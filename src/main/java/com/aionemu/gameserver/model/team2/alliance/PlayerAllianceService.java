@@ -40,7 +40,6 @@ import com.aionemu.gameserver.model.team2.common.legacy.PlayerAllianceEvent;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
-import com.aionemu.gameserver.services.VortexService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.TimeUtil;
 import com.google.common.base.Preconditions;

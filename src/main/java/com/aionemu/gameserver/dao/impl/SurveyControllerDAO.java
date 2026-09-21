@@ -10,7 +10,6 @@ import java.util.List;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * 问卷控制器 DAO 的 MySQL 8 实现。
@@ -33,15 +32,14 @@ public class SurveyControllerDAO extends com.aionemu.gameserver.dao.SurveyContro
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
 	 *
-	 * @param arg0 数据库名 / database name
-	 * @param databaseName 数据库名 / database name
+	 * @param database 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version
 	 * @return 是否支持 / whether supported
 	 */
 	@Override
-	public boolean supports(String arg0, int arg1, int arg2) {
-		return DAOUtils.supports(arg0, arg1, arg2);
+	public boolean supports(String database, int majorVersion, int minorVersion) {
+		return DAOUtils.supports(database, majorVersion, minorVersion);
 	}
 
 	/**

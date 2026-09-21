@@ -158,7 +158,7 @@ public class BannedIpDAO extends com.aionemu.loginserver.dao.BannedIpDAO {
     }
 
     @Override
-    public boolean supports(String s, int i, int i1) {
-        return DAOUtils.supports(s, i, i1);
+    public boolean supports(String database, int majorVersion, int minorVersion) {
+        return DAOUtils.supports(database, majorVersion, minorVersion);
     }
 }

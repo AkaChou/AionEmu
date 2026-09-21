@@ -17,14 +17,14 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 任务计时器注册表：可见/不可见计时器的启动、取消，以及按玩家、任务、副本维度的清理。
  *
- * <p>状态与并发语义刻意集中在这里：单把 {@link #lock} 保护注册表，替换计时器时先取消旧任务再注册
+ * <p>状态与并发语义刻意集中在这里：单把 {@link #questTimerLock} 保护注册表，替换计时器时先取消旧任务再注册
  * 新任务，超时回调只在"确实从注册表移除"时触发，避免重复投递。{@link QuestService} 保留同签名的
  * 静态门面，既有调用方（任务脚本、任务引擎端口、GM 命令）无需改动。</p>
  *
  * Quest timer registry: start, cancel and player/quest/instance-scoped cleanup of visible and
  * invisible quest timers.
  *
- * <p>State and concurrency semantics deliberately live here: a single {@link #lock} guards the
+ * <p>State and concurrency semantics deliberately live here: a single {@link #questTimerLock} guards the
  * registry, a replacement cancels the old task before registering the new one, and the expiry
  * callback only runs when the entry was really removed, so a timer cannot fire twice.
  * {@link QuestService} keeps the same static facade so existing callers (quest scripts, the quest

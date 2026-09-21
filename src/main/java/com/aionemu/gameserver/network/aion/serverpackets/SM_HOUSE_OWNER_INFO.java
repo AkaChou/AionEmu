@@ -9,12 +9,10 @@ import java.time.ZonedDateTime;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerHouseOwnerFlags;
 import com.aionemu.gameserver.model.house.House;
-import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.model.templates.housing.HouseType;
 import com.aionemu.gameserver.model.town.Town;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
-import com.aionemu.gameserver.services.TownService;
 import lombok.AllArgsConstructor;
 
 /**

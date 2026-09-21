@@ -3,7 +3,6 @@ package com.aionemu.gameserver.commands.admin;
 import com.aionemu.gameserver.lifecycle.GameEventServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 

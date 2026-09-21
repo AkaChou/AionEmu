@@ -18,7 +18,6 @@ import com.aionemu.gameserver.instance.handlers.InstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.GameEngine;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 

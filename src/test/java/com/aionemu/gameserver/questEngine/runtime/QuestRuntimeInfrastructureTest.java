@@ -94,7 +94,7 @@ class QuestRuntimeInfrastructureTest {
 
 		assertEquals(List.of(1561), index.routesFor(new QuestEvent.ItemPlay(182201728, 0)).stream()
 			.map(QuestEventIndex.Route::questId).toList());
-		assertEquals(3000, index.itemPlayAnimationMillis(182201728).getAsInt());
+		assertEquals(3000, index.itemPlayAnimationMillis(182201728).orElseThrow());
 		assertTrue(index.itemPlayAnimationMillis(182201729).isEmpty());
 	}
 

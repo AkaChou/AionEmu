@@ -9,9 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import com.aionemu.commons.database.DB;
 import com.aionemu.commons.database.DatabaseFactory;
-import com.aionemu.commons.database.IUStH;
 import com.aionemu.loginserver.model.Account;
 
 /**

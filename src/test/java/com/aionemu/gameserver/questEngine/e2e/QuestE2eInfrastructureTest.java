@@ -411,7 +411,7 @@ class QuestE2eInfrastructureTest {
 		QuestE2eAuditRow row = QuestE2eBatchAudit.auditTransition(definition, transition, oracle);
 		assertEquals("FAST", row.validationMode());
 		assertEquals(QuestE2eTransitionMatch.EXPECTED_TRANSITION_MATCHED, row.transitionMatch(), row::toString);
-		assertNotSame(row.status(), QuestE2eStatus.INVALID_DIALOG_PACKET, row::toString);
+		assertNotSame(QuestE2eStatus.INVALID_DIALOG_PACKET, row.status(), row::toString);
 	}
 
 	@Test

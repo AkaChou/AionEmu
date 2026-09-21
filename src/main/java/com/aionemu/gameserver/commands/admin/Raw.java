@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_CUSTOM_PACKET;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CUSTOM_PACKET.PacketElementType;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.util.List;
 

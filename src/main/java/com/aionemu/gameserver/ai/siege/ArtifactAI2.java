@@ -27,7 +27,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_ARTIFACT_INFO3
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_USE_OBJECT;
-import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.skillengine.properties.TargetSpeciesAttribute;
 import com.aionemu.gameserver.utils.MathUtil;

@@ -2,7 +2,6 @@ package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
@@ -30,21 +29,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_NOTIFY_VIP_ICON;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAYER_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
-import com.aionemu.gameserver.services.AStationService;
-import com.aionemu.gameserver.services.OutpostService;
-import com.aionemu.gameserver.services.ProtectorConquerorService;
-import com.aionemu.gameserver.services.SiegeService;
-import com.aionemu.gameserver.services.TownService;
-import com.aionemu.gameserver.services.WeatherService;
 import com.aionemu.gameserver.services.rift.RiftInformer;
 import com.aionemu.gameserver.services.summons.SummonsService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.services.territory.TerritoryService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapType;
 
 /**

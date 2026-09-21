@@ -4,7 +4,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * Dredgion Defense 副本 NPC AI：Dredgion Power Core（@AIName "Dredgion_Power_Core"），继承 NpcAI2。

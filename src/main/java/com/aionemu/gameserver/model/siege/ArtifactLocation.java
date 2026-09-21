@@ -6,7 +6,6 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.templates.siegelocation.ArtifactActivation;
 import com.aionemu.gameserver.model.templates.siegelocation.SiegeLocationTemplate;
-import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import lombok.Setter;
 

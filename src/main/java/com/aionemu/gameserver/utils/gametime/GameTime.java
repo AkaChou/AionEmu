@@ -4,7 +4,6 @@ import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import java.security.InvalidParameterException;
 
-import com.aionemu.gameserver.services.WeatherService;
 import com.aionemu.gameserver.spawnengine.TemporarySpawnEngine;
 
 /**

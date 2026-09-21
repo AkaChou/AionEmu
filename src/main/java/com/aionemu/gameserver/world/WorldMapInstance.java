@@ -32,7 +32,6 @@ import com.aionemu.gameserver.model.templates.quest.QuestNpc;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.model.templates.zone.ZoneClassName;
 import com.aionemu.gameserver.model.templates.zone.ZoneType;
-import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.world.exceptions.DuplicateAionObjectException;
 import com.aionemu.gameserver.world.knownlist.Visitor;

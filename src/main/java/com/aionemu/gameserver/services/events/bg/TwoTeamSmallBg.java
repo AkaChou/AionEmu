@@ -6,7 +6,6 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
@@ -15,7 +14,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -852,8 +850,6 @@ public class TwoTeamSmallBg extends Battleground {
 		super.onDieDefault(player, lastAttacker);
 		if (lastAttacker instanceof Player killer && lastAttacker.getObjectId() != player.getObjectId()) {
 			if (killer.getPlayerGroup2() != null) {
-				for (Iterator<Player> iterator = killer.getPlayerGroup2().getMembers().iterator(); iterator.hasNext();) {
-				}
 				int deadCounter = 0;
 				for (Player pl : player.getPlayerGroup2().getMembers()) {
 					if (pl.getLifeStats().isAlreadyDead() || pl.isAfk()) {

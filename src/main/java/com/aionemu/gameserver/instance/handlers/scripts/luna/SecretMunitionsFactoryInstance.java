@@ -880,7 +880,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * @param message 消息 / message
+	 * @param msg 消息 / message
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */

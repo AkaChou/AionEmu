@@ -7,7 +7,6 @@ import com.aionemu.gameserver.model.templates.challenge.ChallengeType;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.ChallengeTaskService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**

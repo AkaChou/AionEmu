@@ -13,7 +13,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.player.PlayerChatService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 玩家命令：阵营（种族）聊天频道发言。

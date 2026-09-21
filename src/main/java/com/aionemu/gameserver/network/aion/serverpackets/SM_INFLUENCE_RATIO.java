@@ -7,7 +7,6 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.model.siege.Influence;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
-import com.aionemu.gameserver.services.SiegeService;
 
 /**
  * 向客户端同步全局及分地图势力影响力比例的服务端包。

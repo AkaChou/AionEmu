@@ -6,7 +6,6 @@ import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
-import com.aionemu.gameserver.services.EventService;
 
 /**
  * 未知 opcode 0x168 的服务端包，携带角色重入、装饰与活动类型等杂项客户端标志。

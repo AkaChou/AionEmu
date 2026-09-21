@@ -38,7 +38,6 @@ import com.aionemu.gameserver.services.abysslandingservice.AbyssLanding;
 import com.aionemu.gameserver.services.abysslandingservice.Landing;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
@@ -101,8 +100,6 @@ public class AbyssLandingService {
 	 * spawn state
 	 */
 	public static void spawn(LandingLocation loc, LandingStateType estate) {
-		if (estate.equals(estate)) {
-		}
 		List<SpawnGroup2> locSpawns = DataManager.SPAWNS_DATA2.getLandingSpawnsByLocId(loc.getId());
 		for (SpawnGroup2 group : locSpawns) {
 			for (SpawnTemplate st : group.getSpawnTemplates()) {

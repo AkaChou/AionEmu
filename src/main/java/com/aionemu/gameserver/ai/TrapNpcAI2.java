@@ -90,8 +90,8 @@ public class TrapNpcAI2 extends NpcAI2
 				|| ownerName.equals("trap of silence")
 				|| ownerName.equals("propelling trap")
 				|| ownerName.equals("spike bite trap")
-				|| ownerName.equals("EV_RA_N_Light_SleepingTrap_G1_NPC")
-				|| ownerName.equals("EV_RA_N_Dark_SleepingTrap_G1_NPC")) {
+				|| ownerName.equals("ev_ra_n_light_sleepingtrap_g1_npc")
+				|| ownerName.equals("ev_ra_n_dark_sleepingtrap_g1_npc")) {
 				sensoryRange = 4;
 			} else if (ownerName.equals("trap")
 				|| ownerName.equals("web trap")
@@ -117,9 +117,9 @@ public class TrapNpcAI2 extends NpcAI2
 				|| ownerName.equals("symbol of castle wall")
 				|| ownerName.equals("scrapped mechanisms")
 				|| ownerName.equals("trap of infernal blaze")
-				|| ownerName.equals("Highdeva_Fire_NPC_L_G1")
-				|| ownerName.equals("Highdeva_Fire_NPC_D_G1")
-				|| ownerName.equals("IDEvent_Solo_Paralyze_NPC")) {
+				|| ownerName.equals("highdeva_fire_npc_l_g1")
+				|| ownerName.equals("highdeva_fire_npc_d_g1")
+				|| ownerName.equals("idevent_solo_paralyze_npc")) {
 				sensoryRange = 10;
 			}
 		}

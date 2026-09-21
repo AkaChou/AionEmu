@@ -14,7 +14,6 @@ import com.aionemu.gameserver.model.templates.SkillSkinTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SKILL_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
-import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.Getter;
 import lombok.Setter;

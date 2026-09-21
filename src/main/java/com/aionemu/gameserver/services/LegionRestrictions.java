@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.services;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.database.dao.DAOManager;
@@ -10,17 +8,12 @@ import com.aionemu.gameserver.dao.LegionDAO;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.items.storage.IStorage;
 import com.aionemu.gameserver.model.team.legion.Legion;
-import com.aionemu.gameserver.model.team.legion.LegionHistoryType;
-import com.aionemu.gameserver.model.team.legion.LegionJoinRequest;
 import com.aionemu.gameserver.model.team.legion.LegionMember;
 import com.aionemu.gameserver.model.team.legion.LegionMemberEx;
 import com.aionemu.gameserver.model.team.legion.LegionPermissionsMask;
 import com.aionemu.gameserver.model.team.legion.LegionWarehouse;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_LEGION_REQUEST_INFO;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_LEGION_REQUEST_PLAYER;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;

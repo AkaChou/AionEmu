@@ -8,7 +8,6 @@ import com.aionemu.gameserver.ai2.handler.CreatureEventHandler;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * Cygnea 区域 NPC AI：Lightbinder（@AIName "lightbinder"），继承 AggressiveNpcAI2。

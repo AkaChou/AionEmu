@@ -5,8 +5,6 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -16,7 +14,6 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.rewards.RewardEntryItem;
-import com.aionemu.gameserver.services.mail.SystemMailService;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -63,7 +63,6 @@ import com.aionemu.gameserver.model.templates.spawns.zorshivdredgionspawns.Zorsh
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMap;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;

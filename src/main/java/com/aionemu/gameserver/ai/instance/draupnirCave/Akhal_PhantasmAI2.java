@@ -7,7 +7,6 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
-import com.aionemu.gameserver.services.NpcShoutsService;
 
 /**
  * Draupnir Cave 副本 NPC AI：Akhal Phantasm（@AIName "akhal_phantasm"），继承 NpcAI2。

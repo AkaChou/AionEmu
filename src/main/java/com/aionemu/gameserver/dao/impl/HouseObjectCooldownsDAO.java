@@ -8,7 +8,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 房屋物件冷却 DAO 的 MySQL 8 实现。

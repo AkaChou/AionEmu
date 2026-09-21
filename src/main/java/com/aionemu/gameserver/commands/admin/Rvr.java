@@ -3,7 +3,6 @@ package com.aionemu.gameserver.commands.admin;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.services.RvrService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import org.apache.commons.lang3.math.NumberUtils;

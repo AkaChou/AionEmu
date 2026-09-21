@@ -4,7 +4,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * Seized Danuar Sanctuary 副本 NPC AI：Unyielding Boulder（@AIName "unyielding_boulder"），继承 NpcAI2。

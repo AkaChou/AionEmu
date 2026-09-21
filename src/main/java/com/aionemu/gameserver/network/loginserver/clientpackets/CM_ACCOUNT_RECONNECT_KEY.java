@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.network.loginserver.clientpackets;
 
-import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 
 /**

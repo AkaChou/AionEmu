@@ -13,8 +13,6 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.vortex.VortexLocation;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.RiftService;
-import com.aionemu.gameserver.services.VortexService;
 import com.aionemu.gameserver.services.rift.RiftEnum;
 import com.aionemu.gameserver.services.rift.RiftInformer;
 import com.aionemu.gameserver.services.rift.RiftManager;
@@ -210,7 +208,7 @@ public class RVController extends NpcController {
 	@Override
 	public void onDelete() {
 		RiftInformer.sendRiftDespawn(getOwner().getWorldId(), getOwner().getObjectId());
-		RiftManager.getSpawned().remove(getOwner());
+		RiftManager.removeSpawned(getOwner());
 		super.onDelete();
 	}
 

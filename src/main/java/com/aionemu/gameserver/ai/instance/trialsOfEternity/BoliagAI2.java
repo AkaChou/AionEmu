@@ -4,13 +4,9 @@ import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 
 import java.util.*;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
-import com.aionemu.commons.utils.Rnd;
 
 import com.aionemu.gameserver.ai2.*;
-import com.aionemu.gameserver.model.*;
 import com.aionemu.gameserver.model.gameobjects.*;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.utils.*;
 import com.aionemu.gameserver.world.*;

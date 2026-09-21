@@ -42,7 +42,6 @@ import com.aionemu.gameserver.model.templates.zone.WorldZoneTemplate;
 import com.aionemu.gameserver.model.templates.zone.ZoneInfo;
 import com.aionemu.gameserver.model.templates.zone.ZoneTemplate;
 import com.aionemu.gameserver.model.vortex.VortexLocation;
-import com.aionemu.gameserver.services.ShieldService;
 import com.aionemu.gameserver.world.zone.handler.MaterialZoneHandler;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandlerClassListener;

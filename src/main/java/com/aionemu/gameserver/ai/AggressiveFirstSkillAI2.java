@@ -3,7 +3,6 @@ package com.aionemu.gameserver.ai;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AIName;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * 主动攻击且优先技能的 NPC AI：首轮攻击意图优先选择技能。

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.siege.FortressLocation;
 import com.aionemu.gameserver.model.siege.Influence;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
-import com.aionemu.gameserver.services.SiegeService;
 
 /**
  * 要塞/影响力全局状态包：各区域种族影响力与要塞下一状态。

@@ -8,7 +8,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
-import com.aionemu.gameserver.controllers.HouseController;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.HouseDecoration;
 import com.aionemu.gameserver.model.gameobjects.HouseObject;
@@ -23,12 +22,10 @@ import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_EDIT;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_REGISTRY;
-import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.item.HouseObjectFactory;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemDeleteType;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
 /**
  * 房屋编辑模式（进入/退出装修、放置/移除家具等）的客户端包。
@@ -178,9 +175,8 @@ public class CM_HOUSE_EDIT extends AionClientPacket {
 	 * 移除装修优惠券并刷新房屋装修状态。
 	 * Removes the renovation coupon and refreshes house renovation state.
 	 *
-	 * 玩家 / player
-	 * house
-	 * @param type 装修类型 / renovation type
+	 * @param player 玩家 / player
+	 * @param house 房屋 / house
 	 */
 	private boolean removeRenovationCoupon(Player player, House house) {
 		int typeId = house.getHouseType().getId();

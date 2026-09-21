@@ -6,7 +6,6 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.world.World;
 import lombok.extern.slf4j.Slf4j;
 import lombok.AllArgsConstructor;
 import lombok.AccessLevel;

@@ -7,7 +7,6 @@ import java.util.Collection;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.TeamType;
 import com.aionemu.gameserver.model.team2.TemporaryPlayerTeam;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

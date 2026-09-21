@@ -6,7 +6,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.shield.Shield;
 import com.aionemu.gameserver.model.utils3d.Point3D;
-import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 

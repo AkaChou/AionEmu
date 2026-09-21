@@ -8,8 +8,6 @@ import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.model.team.legion.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;

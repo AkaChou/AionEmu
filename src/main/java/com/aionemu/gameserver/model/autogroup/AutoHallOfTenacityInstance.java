@@ -5,7 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameBattlefieldServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.instance.instancereward.HallOfTenacityReward;
 import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
-import com.aionemu.gameserver.services.instance.HallOfTenacityService;
 
 /**
  * 自动 HallOfTenacity 副本，用于 autogroup 相关逻辑。

@@ -128,13 +128,13 @@ public interface Area {
 
 	/**
 	 * 返回区域到给定点的最近点；Z 坐标在范围内时与二维最近点一致，否则取最近的 Z 边界。
-	 * Returns closest point of area to given point.<br> Works exactly like {@link #getClosestPoint(int, int)} if {@link #isInsideZ(int)} returns true.<br> In other case closest z edge is set as z coord.
+	 * Returns closest point of area to given point.<br> Works exactly like {@link #getClosestPoint(float, float)} if {@link #isInsideZ(float)} returns true.<br> In other case closest z edge is set as z coord.
 	 */
 	Point3D getClosestPoint(Point3D point);
 
 	/**
 	 * 返回区域到给定坐标的最近点；Z 坐标在范围内时与二维最近点一致，否则取最近的 Z 边界。
-	 * Returns closest point of area to given coords.<br> Works exactly like {@link #getClosestPoint(int, int)} if {@link #isInsideZ(int)} returns true.<br> In other case closest z edge is set as z coord.
+	 * Returns closest point of area to given coords.<br> Works exactly like {@link #getClosestPoint(float, float)} if {@link #isInsideZ(float)} returns true.<br> In other case closest z edge is set as z coord.
 	 */
 	Point3D getClosestPoint(float x, float y, float z);
 

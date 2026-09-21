@@ -2,10 +2,7 @@ package com.aionemu.gameserver.instance.handlers.scripts.crucible;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.gameserver.ai2.NpcAI2;
-import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -25,7 +22,6 @@ import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
-import com.aionemu.gameserver.services.ranking.SeasonRankingService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;

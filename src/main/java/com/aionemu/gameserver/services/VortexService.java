@@ -35,12 +35,10 @@ import com.aionemu.gameserver.model.vortex.VortexLocation;
 import com.aionemu.gameserver.model.vortex.VortexStateType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.rift.RiftInformer;
-import com.aionemu.gameserver.services.rift.RiftManager;
 import com.aionemu.gameserver.services.vortexservice.DimensionalVortex;
 import com.aionemu.gameserver.services.vortexservice.Invasion;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**

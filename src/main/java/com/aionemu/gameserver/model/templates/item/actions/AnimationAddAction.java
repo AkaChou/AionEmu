@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.model.templates.item.actions;
 
 
-import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;

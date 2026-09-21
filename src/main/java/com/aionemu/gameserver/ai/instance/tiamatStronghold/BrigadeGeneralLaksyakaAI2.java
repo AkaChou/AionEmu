@@ -33,7 +33,6 @@ public class BrigadeGeneralLaksyakaAI2 extends AggressiveNpcAI2
 	private Future<?> phaseTask;
 	private Future<?> skeletonTask;
 	private boolean canThink = true;
-	private final AtomicBoolean isHome = new AtomicBoolean(true);
 	private final AtomicBoolean isAggred = new AtomicBoolean(false);
 	private final AtomicBoolean isStartedEvent = new AtomicBoolean(false);
 	private final AtomicBoolean isStartedEvent2 = new AtomicBoolean(false);
@@ -212,7 +211,6 @@ public class BrigadeGeneralLaksyakaAI2 extends AggressiveNpcAI2
 		cancelTask();
 		cancelPhaseTask();
 		canThink = true;
-		isHome.set(true);
 		isAggred.set(false);
 		isFinalBuff = false;
 		isStartedEvent.set(false);

@@ -5,7 +5,6 @@ import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUIT_RESPONSE;
-import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.services.player.PlayerLeaveWorldService;
 
 /**

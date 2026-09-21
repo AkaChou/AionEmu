@@ -48,7 +48,6 @@ import com.aionemu.gameserver.services.AccountService;
 import com.aionemu.gameserver.services.item.ItemSocketService;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
 /**
  * 角色信息解析包，从跨服转移二进制流中反序列化并在目标服重建完整角色。

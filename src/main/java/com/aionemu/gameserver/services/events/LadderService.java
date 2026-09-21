@@ -8,11 +8,9 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -23,11 +21,9 @@ import com.aionemu.gameserver.dao.LadderDAO;
 import com.aionemu.gameserver.eventEngine.Event;
 import com.aionemu.gameserver.eventEngine.events.BattlegroundEvent;
 import com.aionemu.gameserver.model.PlayerClass;
-import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team.legion.LegionEmblem;
-import com.aionemu.gameserver.model.team.legion.LegionEmblemType;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
 import com.aionemu.gameserver.services.events.bg.Battleground;
@@ -36,7 +32,6 @@ import com.aionemu.gameserver.services.events.bg.SoloSurvivorBg;
 import com.aionemu.gameserver.services.events.bg.TwoTeamBg;
 import com.aionemu.gameserver.services.events.bg.TwoTeamSmallBg;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.LinkedHashMap;

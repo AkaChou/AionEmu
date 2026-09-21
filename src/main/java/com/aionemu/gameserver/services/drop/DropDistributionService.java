@@ -197,7 +197,7 @@ public class DropDistributionService {
 			}
 			PacketSendUtility.sendPacket(member, new SM_GROUP_LOOT(dropNpc.getLootingTeamId(),
 					requestedItem.getWinningPlayer() != null ? requestedItem.getWinningPlayer().getObjectId() : 1,
-					itemId, dropNpc.getObjectId(), dropNpc.getDistributionId(), 0xFFFFFFFF, requestedItem.getIndex()));
+					itemId, dropNpc.getObjectId(), dropNpc.getDistributionId(), 0xFFFFFFFFL, requestedItem.getIndex()));
 		}
 
 		LootGroupRules lgr = dropNpc.getLootGroupRules();

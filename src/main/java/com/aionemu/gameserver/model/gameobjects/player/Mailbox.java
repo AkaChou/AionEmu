@@ -14,7 +14,6 @@ import java.util.TreeSet;
 import com.aionemu.gameserver.model.gameobjects.Letter;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MAIL_SERVICE;
-import com.aionemu.gameserver.services.mail.MailService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.LinkedHashMap;

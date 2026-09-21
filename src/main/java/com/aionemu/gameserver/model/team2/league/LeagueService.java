@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.model.team2.league;
 
 
-import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 

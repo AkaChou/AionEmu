@@ -4,7 +4,6 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
 import com.aionemu.gameserver.model.DialogPage;
 import com.aionemu.gameserver.model.TaskId;

@@ -6,7 +6,6 @@ import java.util.Iterator;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 玩家命令：报名参加 GM 正在举办的活动队列。

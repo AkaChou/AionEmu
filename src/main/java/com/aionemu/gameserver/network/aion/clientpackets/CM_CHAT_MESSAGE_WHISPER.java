@@ -17,7 +17,6 @@ import com.aionemu.gameserver.services.NameRestrictionService;
 import com.aionemu.gameserver.utils.ChatUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 发送密语聊天消息的客户端包。

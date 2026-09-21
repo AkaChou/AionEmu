@@ -9,7 +9,6 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
@@ -22,7 +21,6 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**

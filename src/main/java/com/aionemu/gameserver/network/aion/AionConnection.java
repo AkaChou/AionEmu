@@ -22,7 +22,6 @@ import com.aionemu.gameserver.network.Crypt;
 import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_KEY;
 import com.aionemu.gameserver.network.factories.AionPacketHandlerFactory;
-import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_MAC;
 import com.aionemu.gameserver.services.player.PlayerLeaveWorldService;
 import com.google.common.base.Preconditions;

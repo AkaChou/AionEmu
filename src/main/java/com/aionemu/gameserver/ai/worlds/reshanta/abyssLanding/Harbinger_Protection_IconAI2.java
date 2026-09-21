@@ -5,7 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
-import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * Reshanta 区域 NPC AI：Harbinger Protection Icon（@AIName "harbinger_protection_icon"），继承 AggressiveNpcAI2。

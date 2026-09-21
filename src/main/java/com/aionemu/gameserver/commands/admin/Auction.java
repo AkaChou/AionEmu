@@ -9,7 +9,6 @@ import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.model.house.HouseBidEntry;
 import com.aionemu.gameserver.model.house.HouseStatus;
 import com.aionemu.gameserver.model.templates.housing.HouseType;
-import com.aionemu.gameserver.services.HousingBidService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.zone.ZoneName;

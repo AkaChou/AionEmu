@@ -53,7 +53,7 @@ public abstract class PlaceableHouseObject extends AbstractHouseObject {
 	}
 
 	/**
-	 * @return 对象允许放置在何处？ / Where the object is allowed to be placed on? {@link LimitType.NONE} if no restriction
+	 * @return 对象允许放置在何处？ / Where the object is allowed to be placed on? {@code LimitType.NONE} if no restriction
 	 */
 	public LimitType getPlacementLimit() {
 		if (limit == null) {

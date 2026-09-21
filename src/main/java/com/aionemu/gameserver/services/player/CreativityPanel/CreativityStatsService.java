@@ -6,12 +6,6 @@ import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CREATIVITY_POINTS_APPLY;
-import com.aionemu.gameserver.services.player.CreativityPanel.stats.Agility;
-import com.aionemu.gameserver.services.player.CreativityPanel.stats.Health;
-import com.aionemu.gameserver.services.player.CreativityPanel.stats.Knowledge;
-import com.aionemu.gameserver.services.player.CreativityPanel.stats.Power;
-import com.aionemu.gameserver.services.player.CreativityPanel.stats.Precision;
-import com.aionemu.gameserver.services.player.CreativityPanel.stats.Will;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**

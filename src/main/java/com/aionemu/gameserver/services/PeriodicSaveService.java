@@ -21,7 +21,6 @@ import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.services.player.PlayerEnterWorldService;
 import com.aionemu.gameserver.services.toypet.PetSpawnService;
 
-import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 

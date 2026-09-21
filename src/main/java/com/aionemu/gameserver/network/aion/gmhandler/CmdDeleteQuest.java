@@ -12,7 +12,6 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
-import com.aionemu.gameserver.world.World;
 
 /**
  * GM 指令：删除目标玩家的指定任务进度。

@@ -19,7 +19,6 @@ import com.aionemu.gameserver.skillengine.model.SkillMoveType;
 import com.aionemu.gameserver.skillengine.model.SpellStatus;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 
 /**
  * 踉跄失衡效果：将目标击退一段距离并施加 STAGGER 物理控制。

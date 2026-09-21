@@ -28,7 +28,6 @@ import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.InstanceConfig;
 import com.aionemu.gameserver.configs.main.MembershipConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -327,7 +326,7 @@ public class InstanceService {
 	 * Registers a player alliance with the instance.
 	 *
 	 * @param instance 副本实例 / instance
-	 * @param alliance 联盟 / alliance
+	 * @param group 联盟 / alliance
 	 */
 	public static void registerAllianceWithInstance(WorldMapInstance instance, PlayerAlliance group) {
 		instance.registerGroup(group);
@@ -338,7 +337,7 @@ public class InstanceService {
 	 * Registers a league with the instance.
 	 *
 	 * @param instance 副本实例 / instance
-	 * @param league 战团 / league
+	 * @param group 战团 / league
 	 */
 	public static void registerLeagueWithInstance(WorldMapInstance instance, League group) {
 		instance.registerGroup(group);
@@ -525,7 +524,7 @@ public class InstanceService {
 	 * 启动副本空闲检查（创建后即调度重置任务）。
 	 * Starts empty-instance checking by scheduling a reset task.
 	 *
-	 * @param instance 副本实例 / instance
+	 * @param worldMapInstance 副本实例 / instance
 	 */
 	private static void startInstanceChecker(WorldMapInstance worldMapInstance) {
 		scheduleResetIfEmpty(worldMapInstance);

@@ -14,11 +14,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledFuture;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.dao.LadderDAO;
 import com.aionemu.gameserver.model.EmotionType;
@@ -46,9 +44,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SKILL_COOLDOWN;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TARGET_SELECTED;
-import com.aionemu.gameserver.services.DuelService;
-import com.aionemu.gameserver.services.StaticDoorService;
-import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
@@ -57,7 +52,6 @@ import com.aionemu.gameserver.skillengine.effect.EffectTemplate;
 import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
 
@@ -94,7 +88,6 @@ public abstract class Battleground {
 		{
 			put("[DeathMatch]", DeathmatchBg.class);
 			put("[1 VS 1]", SoloSurvivorBg.class);
-			put("[Team VS Team]", TwoTeamBg.class);
 			put("[Team VS Team]", TwoTeamSmallBg.class);
 		}
 	};
