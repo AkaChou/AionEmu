@@ -40,6 +40,19 @@ MISSING_LAST_OUTPUT = Path(__file__).resolve().parent / "audit-missing-last-row.
 CANDIDATE_OUTPUT = Path(__file__).resolve().parent / "audit-qe051-candidates.tsv"
 
 # 已被 QE-045 回归锁按“进入 REWARD 前的 packed step”固定的任务；本审计与它们结论冲突时需客户端复测。
+# 已核实的“var0 不是任务书行号”例外（审计会判 ROW_WITHOUT_STATE，但不是缺陷）：
+# - 30203 / 30303（贝希蒙迪尔寺院组队任务）：var0..var3 是 4 只守护者的击杀标志位，
+#   旧 handler `_30203GroupHalttheCeremony` 用 setQuestVarById(0..3, 1) 逐个置位、集齐后
+#   setStatus(REWARD)（领奖态就是 var0..3=1，与当前 reward 投影一致）；客户端 quest_script 也是
+#   Progress(SECTION_0<1)…Progress(SECTION_3<1) 的四个标志位声明，任务书 3 行由 SECTION 标志位
+#   与 visible 槽位驱动，不能按“行号 = var0”改投影（改了会打断其余三只的击杀路线）。
+# Verified "var0 is not the journal row index" exceptions (audited as ROW_WITHOUT_STATE, not defects):
+# - 30203 / 30303: var0..var3 are four guardian kill flags (legacy _30203GroupHalttheCeremony sets each
+#   via setQuestVarById, then setStatus(REWARD) with var0..3=1 matching the current reward projection);
+#   the client script declares Progress(SECTION_0<1)..Progress(SECTION_3<1), so the three journal rows are
+#   driven by those flags/visible slots rather than by var0.
+VAR0_FLAG_EXCEPTIONS = {30203, 30303}
+
 QE045_LOCKED = {2393, 3722, 4722, 11149, 13965, 14010, 14015, 14020, 14040, 14050,
                 15674, 23965, 24010, 24020, 24040, 24050, 25674, 30057, 30158, 30208}
 

@@ -22,7 +22,15 @@
       <var name="var0" value="0"/>
       <var name="var1" value="0"/>
     </node>
-    <node label="started" status="START"/>
+    <!-- QE-051 行状态：客户端 quest_q28932.html 共 2 行（第 1 行消灭德拉克忍者、第 2 行向 Olivia 报告），
+         started 态对应第 1 行；这里只声明行号 var0=0、不声明 var1 计数器，否则“满计数恢复路线”
+         （var1>=1 的对话报告）会被投影挡掉，与天族镜像 18932 同形。
+         QE-051 row state: quest_q28932.html has 2 rows (kill the Drakan, then report to Olivia) and the
+         START state owns row 1; only the row number var0=0 is declared so the var1>=1 recovery dialog
+         routes keep matching, mirroring the Elyos counterpart 18932. -->
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
     <node label="reward" status="REWARD">
       <var name="var0" value="1"/>
       <var name="var1" value="1"/>

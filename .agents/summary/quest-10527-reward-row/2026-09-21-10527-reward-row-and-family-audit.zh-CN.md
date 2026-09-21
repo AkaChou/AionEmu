@@ -759,3 +759,44 @@ QuestCollectProgressAlignmentGateTest,QuestDialogOrderAuditTest,QuestDefinitionD
   `ROW_WITHOUT_STATE 567`、`ALIGNED 2380`、`MISSING_LAST_ROW 121`（28208/28209 只增加完成路线，
   不影响行/状态判定）。
 - 客户端复测仍为 **PENDING_CLIENT**（含 10522 的新 `REWARD/var0=1` 合同与 28208/28209 的 Anja 领奖链）。
+
+## 十三、批次 9：自闭合 started 节点行状态 + var0 标志位例外判定（2026-09-21）
+
+### 十三之一、候选与证据
+
+审计在“行 ↔ 状态”维度剩下三类未收口（`ROW_BEHIND` 246 / `ROW_WITHOUT_STATE` 567 / `INTERIOR_GAP` 266），
+本批次先处理证据最硬的两小类：
+
+| 组 | 任务 | 现象 | 证据 |
+| --- | --- | --- | --- |
+| A（1） | 28932 | `started` 节点是**自闭合**（`<node label="started" status="START"/>`，无任何 var 投影），审计判 `INTERIOR_GAP` + `ROW_WITHOUT_STATE`，`visible_state_var0` 只有 1 | 客户端 `quest_q28932.html` 2 行（消灭 Dreadgion 德拉克忍者 → 向 `DF6_Olivia_E` 报告）；天族镜像 **18932 已声明 `started` 的 var0=0** 且审计为 `ALIGNED`——单侧缺投影 |
+| B（2） | 30203 / 30303 | 同样是自闭合 `started`，但客户端 3 行、`reward` 投影 var0=1、审计判 `INTERIOR_GAP` + `ROW_WITHOUT_STATE` | **不能按行号改**：`origin/history` 的 `_30203GroupHalttheCeremony` 把 var0..var3 当作 4 只守护者（216175/216177/216179/216181）的击杀标志位逐个 `setQuestVarById(n, 1)`、集齐后对 216263 置 `REWARD`（领奖态 = var0..3=1，与当前 `reward` 投影一致）；客户端 `quest_script_monster.csv` 同样是 `Progress(SECTION_0<1) … Progress(SECTION_3<1)` 四个标志位 + `Progress(266305)` |
+
+### 十三之二、修复（仅 A 组）
+
+- `28932.xml`：`started` 由自闭合改成显式节点，**只声明行号** `<var name="var0" value="0"/>`
+  （不声明 var1 击杀计数），并写入中英双语 QE-051 注释说明“与天族镜像 18932 同形”。
+- 只声明 var0 的原因：28932 的“满计数恢复路线”（`started` + `var1>=1` 的 QUEST_SELECT /
+  SELECT_QUEST_REWARD 对话）依赖 `started` 匹配 `var0=0、var1=1` 的旧存档；若照着 `reward` 的投影把
+  var1 也钉成 0，这些恢复路线会全部失配（`QuestMutationPlanner#matchesSourceNode` 要求声明变量全等）。
+- B 组不改动：属“var0 是标志位而非行号”的已核实例外，已在审计脚本头部以
+  `VAR0_FLAG_EXCEPTIONS = {30203, 30303}` 记录证据（不改判定，仅防止后续误修）。
+- 新增门禁 `src/test/java/com/aionemu/gameserver/questEngine/definition/Quest28932RewardRowContractTest.java`
+  （3 条合同）：`started` 只声明 var0=0（且与 18932 同形）、`reward` 投影领奖行 var0=1/var1=1、
+  单次击杀路线（`kill-npc npc-ids=243953`）计划到 `REWARD` 且打包 var0=1/var1=1、
+  `var0=0、var1=1` 的满计数旧存档在 806261/806260 两个 NPC 的 QUEST_SELECT 与
+  SELECT_QUEST_REWARD 上都能被 planner 规划到领奖行（防止未来把 var1 钉进投影）。
+
+### 十三之三、验证（2026-09-21，用户授权后执行）
+
+- `mvn -B test -Dtest='Quest28932RewardRowContractTest,ArenaPhaseRowContractTest,QuestClientContractGateTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest'`
+  → `Tests run: 21, Failures: 0, Errors: 0`；`PRODUCTION_COMPILE_OK=6189`、`PRODUCTION_COMPILE_FAILURES=0`。
+- `xmllint --noout --schema quest_definition.xsd` 28932 `validates`。
+- 全库审计同工作树前后对照（先回放 HEAD 版 28932、跑完再回放修复版）：
+  `ROW_STATE_ALIGNED 2380 → 2381`、`ROW_WITHOUT_STATE 567 → 566`、`ALIGNED 2380 → 2381`、
+  `INTERIOR_GAP 267 → 266`（`ROW_ALIGNED 2599`、`ROW_BEHIND 246`、`MISSING_LAST_ROW 121`、
+  `BOTH_MISALIGNED 177` 不变）；两轮审计输出逐行 diff 只有 28932 一行
+  （`last_start_var0` 由 `None` 变为 `0`）。
+- 客户端复测路径（PENDING_CLIENT）：接取 28932 后任务书应停在第 1 行（消灭德拉克忍者），
+  击杀后切到第 2 行“和 Olivia 对话”并可在两名 NPC 处领奖；旧存档（击杀已记录但未进领奖）与
+  NPC 对话仍应能进入领奖。
