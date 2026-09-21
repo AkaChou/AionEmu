@@ -17,7 +17,7 @@ import java.util.concurrent.Future;
  *
  * @author Encom
  */
-@AIName("calindisummon")
+@AIName("anguished_dragon_lord_refuge_calindisummon")
 public class CalindiSummonsAI2 extends AggressiveNpcAI2
 {
 	private Future<?> task;

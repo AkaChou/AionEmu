@@ -14,7 +14,7 @@ import com.aionemu.gameserver.ai2.AIName;
  *
  * @author Encom
  */
-@AIName("infinite_pain")
+@AIName("anguished_dragon_lord_refuge_infinite_pain")
 public class InfinitePainAI2 extends AggressiveNpcAI2
 {
 	@Override

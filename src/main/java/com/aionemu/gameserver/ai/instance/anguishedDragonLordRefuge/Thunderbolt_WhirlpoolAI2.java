@@ -14,7 +14,7 @@ import com.aionemu.gameserver.ai2.AIName;
  *
  * @author Encom
  */
-@AIName("thunderbolt_whirlpool")
+@AIName("anguished_dragon_lord_refuge_thunderbolt_whirlpool")
 public class Thunderbolt_WhirlpoolAI2 extends AggressiveNpcAI2
 {
 	@Override

@@ -12,7 +12,7 @@ import com.aionemu.gameserver.ai2.AIName;
  *
  * @author Encom
  */
-@AIName("divisive_creation")
+@AIName("anguished_dragon_lord_refuge_divisive_creation")
 public class DivisiveCreationAI2 extends AggressiveNpcAI2
 {
 	@Override

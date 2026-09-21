@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * @author Encome
  */
-@AIName("kaliga_the_unjust")
+@AIName("crucible_challenge_kaliga_the_unjust")
 public class Kaliga_The_UnjustAI2 extends AggressiveNpcAI2
 {
 	private Future<?> phaseTask;

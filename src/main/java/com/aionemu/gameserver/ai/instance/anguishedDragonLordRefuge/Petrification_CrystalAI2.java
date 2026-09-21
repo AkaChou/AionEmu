@@ -14,7 +14,7 @@ import com.aionemu.gameserver.ai2.AIName;
  *
  * @author Encom
  */
-@AIName("petrification_crystal")
+@AIName("anguished_dragon_lord_refuge_petrification_crystal")
 public class Petrification_CrystalAI2 extends AggressiveNpcAI2
 {
 	@Override

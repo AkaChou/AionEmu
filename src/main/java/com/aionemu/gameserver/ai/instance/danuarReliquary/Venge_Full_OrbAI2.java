@@ -14,7 +14,7 @@ import java.util.concurrent.Future;
  *
  * @author Encom
  */
-@AIName("venge_full_orb")
+@AIName("danuar_reliquary_venge_full_orb")
 public class Venge_Full_OrbAI2 extends AggressiveNpcAI2
 {
 	private Future<?> task;

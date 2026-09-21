@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * @author Encom
  */
-@AIName("cursed_queen_modor")
+@AIName("danuar_reliquary_cursed_queen_modor")
 public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
 {
 	private Future<?> skillTask;

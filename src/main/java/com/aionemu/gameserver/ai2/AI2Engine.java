@@ -4,13 +4,13 @@ package com.aionemu.gameserver.ai2;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.TreeSet;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
-
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.scripting.classlistener.AggregatedClassListener;
@@ -103,7 +103,13 @@ public class AI2Engine implements GameEngine {
 	public void registerAI(Class<? extends AbstractAI> class1) {
 		AIName nameAnnotation = class1.getAnnotation(AIName.class);
 		if (nameAnnotation != null) {
-			aiMap.put(nameAnnotation.value(), class1);
+			String aiName = nameAnnotation.value();
+			Class<? extends AbstractAI> registeredClass = aiMap.get(aiName);
+			if (registeredClass != null && !registeredClass.equals(class1)) {
+				throw new IllegalStateException(I18n.get("log.ai_engine.duplicate_name", aiName,
+					registeredClass.getName(), class1.getName()));
+			}
+			aiMap.put(aiName, class1);
 		}
 	}
 
@@ -176,9 +182,37 @@ public class AI2Engine implements GameEngine {
 		for (NpcTemplate npcTemplate : DataManager.NPC_DATA.getNpcData().values()) {
 			npcAINames.add(npcTemplate.getAi());
 		}
-		npcAINames.removeAll(aiMap.keySet());
-		if (npcAINames.size() > 0) {
-			log.warn(I18n.get("log.84b7db63f072", StringUtils.join(npcAINames, ", ")));
+		validateScripts(npcAINames);
+	}
+
+	/**
+	 * 校验 NPC 引用覆盖与全部注册 AI 的无参构造可用性。
+	 * Validates NPC reference coverage and no-argument construction of every registered AI.
+	 *
+	 * @param referencedAiNames NPC 模板引用的 AI 名称 / AI names referenced by NPC templates
+	 */
+	void validateScripts(Collection<String> referencedAiNames) {
+		Set<String> missingAiNames = new TreeSet<>(referencedAiNames);
+		missingAiNames.removeAll(aiMap.keySet());
+		if (!missingAiNames.isEmpty()) {
+			throw new IllegalStateException(I18n.get("log.ai_engine.missing_npc_ai", String.join(", ", missingAiNames)));
+		}
+
+		Collection<String> constructionFailures = new ArrayList<>();
+		aiMap.entrySet().stream()
+			.sorted(Map.Entry.comparingByKey())
+			.forEach(entry -> {
+				try {
+					entry.getValue().getDeclaredConstructor().newInstance();
+				} catch (Exception | LinkageError exception) {
+					String failure = exception.getCause() == null ? exception.toString() : exception.getCause().toString();
+					constructionFailures.add(entry.getKey() + "=" + entry.getValue().getName()
+						+ ": " + failure);
+				}
+			});
+		if (!constructionFailures.isEmpty()) {
+			throw new IllegalStateException(I18n.get("log.ai_engine.constructor_failed",
+				String.join("; ", constructionFailures)));
 		}
 	}
 

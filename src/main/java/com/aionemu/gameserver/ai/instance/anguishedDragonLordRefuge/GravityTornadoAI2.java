@@ -14,7 +14,7 @@ import com.aionemu.gameserver.ai2.AIName;
  *
  * @author Encom
  */
-@AIName("gravity_tornado")
+@AIName("anguished_dragon_lord_refuge_gravity_tornado")
 public class GravityTornadoAI2 extends AggressiveNpcAI2
 {
 	@Override

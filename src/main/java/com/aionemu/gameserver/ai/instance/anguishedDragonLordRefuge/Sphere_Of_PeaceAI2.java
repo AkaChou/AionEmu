@@ -14,7 +14,7 @@ import com.aionemu.gameserver.ai2.AIName;
  *
  * @author Encom
  */
-@AIName("sphere_of_peace")
+@AIName("anguished_dragon_lord_refuge_sphere_of_peace")
 public class Sphere_Of_PeaceAI2 extends AggressiveNpcAI2
 {
 	@Override

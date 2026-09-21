@@ -14,7 +14,7 @@ import com.aionemu.gameserver.ai2.AIName;
  *
  * @author Encom
  */
-@AIName("collapsing_earth")
+@AIName("anguished_dragon_lord_refuge_collapsing_earth")
 public class Collapsing_EarthAI2 extends AggressiveNpcAI2
 {
 	@Override

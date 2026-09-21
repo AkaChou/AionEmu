@@ -14,7 +14,7 @@ import com.aionemu.gameserver.ai2.AIName;
  *
  * @author Encom
  */
-@AIName("rockslam")
+@AIName("anguished_dragon_lord_refuge_rockslam")
 public class RockslamAI2 extends AggressiveNpcAI2
 {
 	@Override
