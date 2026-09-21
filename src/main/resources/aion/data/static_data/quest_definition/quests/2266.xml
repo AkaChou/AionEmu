@@ -30,7 +30,17 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="203558" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <!-- 接取发放：旧 handler `_2266A_Trustworthy_Messenger` 在 ACCEPT_QUEST 分支
+         `giveQuestItem(env, 182203244, 1)`（doc_quest_2266a「军团长命令书」）；typed XML 迁移丢失后
+         玩家接不到任务道具，203654 交还时也没有可交的物品。
+         Accept-time grant: the legacy handler `_2266A_Trustworthy_Messenger` ran
+         `giveQuestItem(env, 182203244, 1)` (doc_quest_2266a, "Brigade General's Order") in its
+         ACCEPT_QUEST branch; the typed XML migration dropped it, so the hand-in step at 203654 had no item. -->
+    <dialog type="NPC_START" npc-id="203558" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
+      <accept-actions>
+        <give-item item-id="182203244" count="1"/>
+      </accept-actions>
+    </dialog>
     <!-- 契约外报告页换无按钮反馈。 -->
     <transition source="started" target="started">
       <event>

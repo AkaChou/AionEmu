@@ -30,7 +30,16 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="830392" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <!-- 接取发放：旧 handler `_28808OpenSaysMe` 在 ACCEPT_QUEST_SIMPLE 分支
+         `giveQuestItem(env, 182213216, 1)`（quest_28808a「阿鲁扎的锁箱」）。
+         Accept-time grant: the legacy handler `_28808OpenSaysMe` ran
+         `giveQuestItem(env, 182213216, 1)` (quest_28808a, "Aruza's Padlocked Chest") in its
+         ACCEPT_QUEST_SIMPLE branch; the typed migration dropped it. -->
+    <dialog type="NPC_START" npc-id="830392" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
+      <accept-actions>
+        <give-item item-id="182213216" count="1"/>
+      </accept-actions>
+    </dialog>
     <dialog type="NPC_REPORT" npc-id="730534" source="started" target="reward" page="SELECT5"/>
     <npc-complete npc-id="730534" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>

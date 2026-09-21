@@ -33,7 +33,16 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="798144" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <!-- 接取发放：旧 handler `_3085TheRiddlePoem` 在 ACCEPT_QUEST 分支
+         `giveQuestItem(env, 182208048, 1)`（doc_quest_3085a「石板地图」），交出页 203830 再 remove。
+         Accept-time grant: the legacy handler `_3085TheRiddlePoem` ran
+         `giveQuestItem(env, 182208048, 1)` (doc_quest_3085a, "Stone Plate Map") in its ACCEPT_QUEST branch
+         and removed it again at the hand-in page of 203830; the typed migration dropped both. -->
+    <dialog type="NPC_START" npc-id="798144" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
+      <accept-actions>
+        <give-item item-id="182208048" count="1"/>
+      </accept-actions>
+    </dialog>
     <!-- 契约外报告页换无按钮反馈。 -->
     <transition source="started" target="started">
       <event>

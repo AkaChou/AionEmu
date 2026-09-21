@@ -1,0 +1,19 @@
+quest_id	legacy_accept_items	definition_give_items	definition_accept_items	verdict	evidence
+1146	182200519	182200519		COVERED	src/main/java/com/aionemu/gameserver/quest/handlers/verteron/_1146Delicate_Mandrake.java:46 ACCEPT_QUEST
+1345	182201320	182201320		COVERED	src/main/java/com/aionemu/gameserver/quest/handlers/eltnen/_1345BearerOfBadNews.java:63 ACCEPT_QUEST
+2266	182203244	182203244	182203244	COVERED	src/main/java/com/aionemu/gameserver/quest/handlers/altgard/_2266A_Trustworthy_Messenger.java:45 ACCEPT_QUEST
+2533	182204425	182204425 182204426		COVERED	src/main/java/com/aionemu/gameserver/quest/handlers/beluslan/_2533BeritrasCurse.java:63 ACCEPT_QUEST
+2620	182204498	182204498	182204498	COVERED	src/main/java/com/aionemu/gameserver/quest/handlers/beluslan/_2620SummoningPhagrasul.java:84 ACCEPT_QUEST
+3085	182208048	182208048	182208048	COVERED	src/main/java/com/aionemu/gameserver/quest/handlers/theobomos/_3085TheRiddlePoem.java:50 ACCEPT_QUEST
+3100	182208072	182208072	182208072	COVERED	src/main/java/com/aionemu/gameserver/quest/handlers/theobomos/_3100AShugosBestFriend.java:48 ACCEPT_QUEST
+4542	182215327			MISSING_DEFINITION_GRANT	src/main/java/com/aionemu/gameserver/quest/handlers/beluslan/_4542The_Secret_Of_The_Seiren_Treasure.java:42 ACCEPT_QUEST_SIMPLE
+4937	182207112	182207112 182207113	182207112	COVERED	src/main/java/com/aionemu/gameserver/quest/handlers/fenris_fang/_4937Recognition_Of_The_Preceptors.java:44 ACCEPT_QUEST
+15545	190080010	190080010	190080010	COVERED	src/main/java/com/aionemu/gameserver/quest/handlers/iluma/_15545A_New_Friend_For_A_Archdaeva.java:42 ACCEPT_QUEST_SIMPLE
+18738	164000342	164000342		COVERED	src/main/java/com/aionemu/gameserver/quest/handlers/raksang_ruins/_18738Test_Bomb_Test_Bomb.java:47 ACCEPT_QUEST_SIMPLE
+18808	188051194			MISSING_DEFINITION_GRANT	src/main/java/com/aionemu/gameserver/quest/handlers/oriel/_18808FoolproofPackaging.java:42 ACCEPT_QUEST_SIMPLE
+25545	190080011	190080011	190080011	COVERED	src/main/java/com/aionemu/gameserver/quest/handlers/norsvold/_25545A_New_Comrade_For_A_Archdaeva.java:42 ACCEPT_QUEST_SIMPLE
+28738	164000342	164000342		COVERED	src/main/java/com/aionemu/gameserver/quest/handlers/raksang_ruins/_28738Bombs_For_Everyone.java:46 ACCEPT_QUEST_SIMPLE
+28808	182213216	182213216	182213216	COVERED	src/main/java/com/aionemu/gameserver/quest/handlers/pernon/_28808OpenSaysMe.java:42 ACCEPT_QUEST_SIMPLE
+30056	182209223	182209223	182209223	COVERED	src/main/java/com/aionemu/gameserver/quest/handlers/silentera_canyon/_30056DirvisiasSorrow.java:47 ACCEPT_QUEST
+30156	182209253	182209253	182209253	COVERED	src/main/java/com/aionemu/gameserver/quest/handlers/silentera_canyon/_30156NepsLove.java:47 ACCEPT_QUEST
+30157	182209254	182209254	182209254	COVERED	src/main/java/com/aionemu/gameserver/quest/handlers/silentera_canyon/_30157VilisMind.java:47 ACCEPT_QUEST

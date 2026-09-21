@@ -21,6 +21,51 @@ class QuestMinionTutorialRetailAlignmentTest {
 		assertTutorial(29900, 2009, 190080021, 836074);
 	}
 
+	@Test
+	void archDaevaMinionChainGrantsItsOwnContractOnAccept() {
+		// 66+ 守护灵教学链：接取时必须发放本任务专属契约书，MinionService 只认该 id 才会把任务推进到 REWARD。
+		// Level-66+ minion tutorial chain: accepting must grant the quest-specific contract, because
+		// MinionService only advances the quest to REWARD for that exact item id.
+		assertAcceptGrant(15545, 835514, 190080010, List.of(new QuestReward("ITEM", 190080012, 1)));
+		assertAcceptGrant(25545, 835515, 190080011, List.of(new QuestReward("ITEM", 190080012, 1)));
+	}
+
+	@Test
+	void legacyAcceptItemGrantsSurviveTheTypedMigration() {
+		// 这三个任务的旧 handler 都在接取分支 giveQuestItem，而当前目录没有任何其它产出源；
+		// 缺少发放会让任务道具在交出/完成页根本不存在。奖励物品不在此断言范围。
+		// Their legacy handlers all granted the work item in the accept branch and the production catalog has
+		// no other source, so a dropped grant leaves the hand-in step with nothing to hand over. Reward items
+		// are intentionally not asserted here.
+		assertAcceptGrant(2266, 203558, 182203244, null);
+		assertAcceptGrant(3085, 798144, 182208048, null);
+		assertAcceptGrant(28808, 830392, 182213216, null);
+	}
+
+	private static void assertAcceptGrant(int questId, int npcId, int workItemId, List<QuestReward> expectedRewards) {
+		QuestDefinition definition = load(questId).definition();
+
+		assertEquals(List.of(new QuestItemRequirement(workItemId, 1)),
+			definition.metadata().questWorkItems(), "quest " + questId + " quest work items");
+		if (expectedRewards != null) {
+			assertEquals(expectedRewards, definition.metadata().rewards(), "quest " + questId + " rewards");
+		}
+
+		for (QuestDialogAction acceptAction : List.of(
+			QuestDialogAction.QUEST_ACCEPT_1, QuestDialogAction.QUEST_ACCEPT_SIMPLE)) {
+			QuestTransition accept = definition.transitions().stream()
+				.filter(t -> t.sourceNode().equals("unaccepted") && t.targetNode().equals("started"))
+				.filter(t -> t.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == npcId
+					&& Integer.valueOf(acceptAction.id()).equals(talk.dialogId()))
+				.findFirst().orElseThrow(() -> new AssertionError(
+					"quest " + questId + "缺少 NPC " + npcId + " 的接取动作 " + acceptAction));
+			assertEquals(List.of(new QuestCondition.StartEligible()), accept.conditions(),
+				"quest " + questId + " accept conditions");
+			assertTrue(accept.actions().contains(new QuestAction.GiveItem(workItemId, 1)),
+				"quest " + questId + " 接取时必须发放任务工作物品 " + workItemId);
+		}
+	}
+
 	private static void assertTutorial(int questId, int prerequisiteId, int workItemId, int npcId) {
 		CompiledQuestDefinition compiled = load(questId);
 		QuestDefinition definition = compiled.definition();

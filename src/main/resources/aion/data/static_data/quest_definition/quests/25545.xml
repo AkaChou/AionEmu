@@ -29,7 +29,15 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="835515" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
+    <!-- 天族镜像任务的阿斯莫德分支：旧 handler `_25545A_New_Comrade_For_A_Archdaeva` 在
+         ACCEPT_QUEST_SIMPLE 发放 190080011（quest_25545a 下级宠物精灵契约书），typed XML 迁移同样丢失。
+         Asmodian mirror of the Elyos contract: the legacy handler `_25545A_New_Comrade_For_A_Archdaeva`
+         granted 190080011 (quest_25545a) on ACCEPT_QUEST_SIMPLE and the typed XML migration dropped it too. -->
+    <dialog type="NPC_START" npc-id="835515" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE">
+      <accept-actions>
+        <give-item item-id="190080011" count="1"/>
+      </accept-actions>
+    </dialog>
     <dialog type="NPC_REPORT" npc-id="835515" source="started" target="reward" page="DEFAULT_SUCCESS"/>
     <!-- 领奖态入口页：MinionService 在使用召唤契约后把任务推进到 REWARD(var0=1)，玩家随后在 835515 上
          选择任务行（客户端动作 31）时必须拿回 select_success(10002)，其按钮 1009 再打开奖励窗口。

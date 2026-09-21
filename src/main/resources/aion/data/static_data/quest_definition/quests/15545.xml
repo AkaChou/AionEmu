@@ -29,7 +29,20 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="835514" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
+    <!-- 旧 handler `_15545A_New_Friend_For_A_Archdaeva` 在 ACCEPT_QUEST_SIMPLE 发放任务工作物品
+         190080010（quest_15545a 下级宠物精灵契约书）；typed XML 迁移时丢失该发放，玩家因此拿不到本任务
+         指定的契约书。`MinionService#checkQuest` 只认 190080010，玩家用其它同名“下级宠物精灵契约书”
+         （190080005/190080009/190080019/190089999）召唤守护灵时任务永远停在 START。
+         The legacy handler `_15545A_New_Friend_For_A_Archdaeva` granted quest work item 190080010
+         (quest_15545a, "Lesser Familiar Contract") on ACCEPT_QUEST_SIMPLE; the typed XML migration dropped
+         that grant, so the player never receives the contract this quest requires. `MinionService#checkQuest`
+         only accepts 190080010, so summoning a familiar with any other same-named contract
+         (190080005/190080009/190080019/190089999) leaves the quest stuck at START. -->
+    <dialog type="NPC_START" npc-id="835514" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE">
+      <accept-actions>
+        <give-item item-id="190080010" count="1"/>
+      </accept-actions>
+    </dialog>
     <dialog type="NPC_REPORT" npc-id="835514" source="started" target="reward" page="DEFAULT_SUCCESS"/>
     <!-- 领奖态入口页：MinionService 在使用召唤契约后把任务推进到 REWARD(var0=1)，玩家随后在 835514 上
          选择任务行（客户端动作 31）时必须拿回 select_success(10002)，其按钮 1009 再打开奖励窗口。
