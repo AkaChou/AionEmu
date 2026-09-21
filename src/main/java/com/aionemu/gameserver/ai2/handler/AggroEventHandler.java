@@ -37,7 +37,16 @@ public class AggroEventHandler {
 	 * @param myTarget 仇恨目标生物 / creature being aggroed
 	 */
 	public static void onAggro(NpcAI2 npcAI, final Creature myTarget) {
+		if (npcAI == null || myTarget == null) {
+			return;
+		}
+		if (myTarget.getLifeStats() != null && myTarget.getLifeStats().isAlreadyDead()) {
+			return;
+		}
 		final Npc owner = npcAI.getOwner();
+		if (owner == null || (owner.getLifeStats() != null && owner.getLifeStats().isAlreadyDead())) {
+			return;
+		}
 		if (myTarget.getAdminNeutral() == 1 || myTarget.getAdminNeutral() == 3 || myTarget.getAdminEnmity() == 1
 				|| myTarget.getAdminEnmity() == 3) {
 			return;
@@ -57,9 +66,18 @@ public class AggroEventHandler {
 	 * @return 是否成功进入支援 / whether support was engaged
 	 */
 	public static boolean onCreatureNeedsSupport(NpcAI2 npcAI, Creature notMyTarget) {
+		if (npcAI == null || notMyTarget == null) {
+			return false;
+		}
+		if (notMyTarget.getLifeStats() != null && notMyTarget.getLifeStats().isAlreadyDead()) {
+			return false;
+		}
 		Npc owner = npcAI.getOwner();
+		if (owner == null || (owner.getLifeStats() != null && owner.getLifeStats().isAlreadyDead())) {
+			return false;
+		}
 		VisibleObject myTarget = notMyTarget.getTarget();
-		if (myTarget instanceof Creature targetCreature) {
+		if (myTarget instanceof Creature targetCreature && (targetCreature.getLifeStats() == null || !targetCreature.getLifeStats().isAlreadyDead())) {
 			if (canReceiveSupport(owner, notMyTarget, targetCreature, owner.getAggroRange(),
 					GameWorldServices.geoService()::canSee)) {
 				if (npcAI.poll(AIQuestion.CAN_SHOUT)) {
@@ -87,7 +105,8 @@ public class AggroEventHandler {
 	 */
 	static boolean canReceiveSupport(Npc owner, Creature notMyTarget, Creature targetCreature, float supportRange,
 			BiPredicate<VisibleObject, VisibleObject> canSee) {
-		return notMyTarget.isSupportFrom(owner)
+		return owner != null && notMyTarget != null && targetCreature != null
+				&& notMyTarget.isSupportFrom(owner)
 				&& MathUtil.isIn3dRange(owner, notMyTarget, supportRange)
 				&& canSee.test(owner, notMyTarget)
 				&& canSee.test(owner, targetCreature);
@@ -103,13 +122,22 @@ public class AggroEventHandler {
 	 * @return 是否成功建立守卫仇恨 / whether guard hate was started
 	 */
 	public static boolean onGuardAgainstAttacker(NpcAI2 npcAI, Creature attacker) {
+		if (npcAI == null || attacker == null) {
+			return false;
+		}
+		if (attacker.getLifeStats() != null && attacker.getLifeStats().isAlreadyDead()) {
+			return false;
+		}
 		Npc owner = npcAI.getOwner();
+		if (owner == null || (owner.getLifeStats() != null && owner.getLifeStats().isAlreadyDead())) {
+			return false;
+		}
 		TribeClass tribe = owner.getTribe();
 		if (!tribe.isGuard() && owner.getObjectTemplate().getNpcTemplateType() != NpcTemplateType.GUARD) {
 			return false;
 		}
 		VisibleObject target = attacker.getTarget();
-		if (target != null && target instanceof Player playerTarget) {
+		if (target instanceof Player playerTarget && (playerTarget.getLifeStats() == null || !playerTarget.getLifeStats().isAlreadyDead())) {
 			if (!owner.isEnemy(playerTarget) && owner.isEnemy(attacker)
 					&& MathUtil.isInRange(owner, playerTarget, owner.getAggroRange())
 					&& GameWorldServices.geoService().canSee(owner, attacker)) {
@@ -146,7 +174,12 @@ public class AggroEventHandler {
 
 		@Override
 		public void run() {
-			aggressive.getAggroList().addHate(target, 1);
+			if (aggressive == null || (aggressive.getLifeStats() != null && aggressive.getLifeStats().isAlreadyDead())) {
+				return;
+			}
+			if (target != null && (target.getLifeStats() == null || !target.getLifeStats().isAlreadyDead())) {
+				aggressive.getAggroList().addHate(target, 1);
+			}
 			if (broadcast) {
 				aggressive.getKnownList().doOnAllNpcs(new Visitor<Npc>() {
 

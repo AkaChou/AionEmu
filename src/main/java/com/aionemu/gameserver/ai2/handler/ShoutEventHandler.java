@@ -78,8 +78,8 @@ public final class ShoutEventHandler {
 			if (Rnd.get(stepCount) < 2) {
 				List<NpcShout> shouts = DataManager.NPC_SHOUT_DATA.getNpcShouts(npc.getPosition().getMapId(),
 						npc.getNpcId(), shoutType, null, 0);
-				if (npc.getTarget() instanceof Creature) {
-					GameFeatureServices.npcShoutsService().shout(npc, (Creature) npc.getTarget(), shouts, 0, false);
+				if (npc.getTarget() instanceof Creature targetCreature) {
+					GameFeatureServices.npcShoutsService().shout(npc, targetCreature, shouts, 0, false);
 				} else {
 					GameFeatureServices.npcShoutsService().shout(npc, null, shouts, 0, false);
 				}

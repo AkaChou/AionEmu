@@ -31,6 +31,22 @@ class AggroEventHandlerTest {
 				(object, other) -> other != target));
 	}
 
+	@Test
+	void guardAgainstAttackerSafelyHandlesNullAndDeadCreatures() {
+		assertFalse(AggroEventHandler.onGuardAgainstAttacker(null, null));
+
+		Npc supporter = npcAt(0, 0, 0);
+		assertFalse(AggroEventHandler.onGuardAgainstAttacker(null, supporter));
+	}
+
+	@Test
+	void creatureNeedsSupportSafelyHandlesNullAndDeadCreatures() {
+		assertFalse(AggroEventHandler.onCreatureNeedsSupport(null, null));
+
+		TestCreature requester = creatureAt(0, 0, 0, true);
+		assertFalse(AggroEventHandler.onCreatureNeedsSupport(null, requester));
+	}
+
 	private static Npc npcAt(float x, float y, float z) {
 		Npc npc = new ObjenesisStd().newInstance(Npc.class);
 		npc.setPosition(position(x, y, z));

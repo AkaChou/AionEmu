@@ -687,10 +687,10 @@ public abstract class AbstractAI implements AI2 {
 			break;
 		case CREATURE_NEEDS_SUPPORT:
 			if (!handleCreatureNeedsSupport(creature)) {
-				if (creature.getTarget() instanceof Creature) {
-					if (!handleCreatureNeedsSupport((Creature) creature.getTarget())
+				if (creature.getTarget() instanceof Creature targetCreature) {
+					if (!handleCreatureNeedsSupport(targetCreature)
 							&& !handleGuardAgainstAttacker(creature)) {
-						handleGuardAgainstAttacker((Creature) creature.getTarget());
+						handleGuardAgainstAttacker(targetCreature);
 					}
 				}
 			}

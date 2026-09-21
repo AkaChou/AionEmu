@@ -132,7 +132,7 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 	 */
 	@Override
 	protected boolean handleGuardAgainstAttacker(Creature attacker) {
-		return AggroEventHandler.onGuardAgainstAttacker(this, attacker);
+		return attacker != null && AggroEventHandler.onGuardAgainstAttacker(this, attacker);
 	}
 
 	/**

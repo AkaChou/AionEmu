@@ -44,8 +44,8 @@ public class EmoteManager {
 	 */
 	public static final void emoteStopAttacking(Npc owner) {
 		owner.unsetState(CreatureState.WEAPON_EQUIPPED);
-		if (owner.getTarget() != null && owner.getTarget() instanceof Player) {
-			PacketSendUtility.sendPacket((Player) owner.getTarget(), SM_SYSTEM_MESSAGE.STR_UI_COMBAT_NPC_RETURN(owner.getObjectTemplate().getNameId()));
+		if (owner.getTarget() instanceof Player playerTarget) {
+			PacketSendUtility.sendPacket(playerTarget, SM_SYSTEM_MESSAGE.STR_UI_COMBAT_NPC_RETURN(owner.getObjectTemplate().getNameId()));
 		}
 	}
 
