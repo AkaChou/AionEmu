@@ -14,6 +14,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * @author Encom
  */
 @AIName("postbox")
+@SuppressWarnings("unused")
 public class PostboxAI2 extends NpcAI2
 {
 	/**
@@ -32,7 +33,7 @@ public class PostboxAI2 extends NpcAI2
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 18));
 		player.getMailbox().sendMailList(false);
 	}
-	
+
 	/**
 	 * 玩家结束与本 NPC 对话。
 	 * Player finishes dialog with this NPC.
