@@ -17,9 +17,9 @@
     </rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var1" offset="2" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
-    <bit-field name="var2" offset="3" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="3" min="0" max="4" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var2" offset="12" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -58,13 +58,34 @@
       <var name="var2" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="3"/>
+      <var name="var0" value="4"/>
       <var name="var1" value="0"/>
       <var name="var2" value="0"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
+    <!-- 领奖行合同：客户端任务书行索引 = SECTION_0(var0)，5 行里的最后一行是
+         “向 LF2A_NPC_Morati 报告”（QUEST_Q3090.html 第 4 行），即领奖行。
+         Reward row contract: the journal row index is SECTION_0 (var0); the last of the five
+         QUEST_Q3090.html rows ("report to LF2A_NPC_Morati") is the reward row. -->
+    <!-- 旧存档修复：此前 reward 投影停在 3（“找到皮皮”一行），进入世界时纠正为 4。
+         Legacy save repair: saves persisted as REWARD/var0=3 are rewritten on enter-world. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="3"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="4"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <!-- 798182: the retail start dialog and acceptance flow. -->
     <transition source="unaccepted" target="unaccepted">
       <event>

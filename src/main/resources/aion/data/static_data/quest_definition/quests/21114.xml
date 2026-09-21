@@ -43,13 +43,32 @@
       <var name="var0" value="4"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="4"/>
+      <var name="var0" value="5"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- QE-051 领奖行合同：客户端 quest_q21114.html 的 quest_summary 共 6 行，末行是领奖行
+         （STR_DIC_N_Martinez，对应该任务的领奖 NPC）；旧投影停在 4，进入世界时纠正为 5 并下发状态包，与镜像 11114 对照。
+         Reward row contract (QE-051): the last of the 6 quest_q21114 journal rows is the reward row
+         (STR_DIC_N_Martinez, the reward NPC of this quest); saves persisted at 4 are repaired to 5 on enter-world, matching mirror 11114. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="4"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="5"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <transition source="s0" target="s0">
       <event>
         <can-act template-id="700727" action-type="ACTION_ITEM_USE"/>

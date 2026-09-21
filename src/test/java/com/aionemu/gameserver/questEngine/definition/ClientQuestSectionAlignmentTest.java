@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -22,6 +25,17 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 class ClientQuestSectionAlignmentTest {
 	private static final Set<Integer> EXTENDED_COUNTER_QUESTS = Set.of(1842, 1843, 1844, 2843, 2844, 2845);
+	/**
+	 * 使用 varN 命名、但计数槽仍压在别的 SECTION 上的历史任务。客户端任务书行索引读
+	 * SECTION_0（bit 0..5），var1 起必须落在 6N 才能与客户端脚本的 SECTION_N 对齐；
+	 * 这 14 个任务是 2026-09-21 审计时仅存的例外（全库 6161 个带位段任务），逐个收口前先锁定清单。
+	 * Legacy quests that name counters varN yet still park them outside SECTION_N. The client journal
+	 * row index reads SECTION_0 (bits 0..5), so var1 and later must sit at 6N to line up with the
+	 * client script's SECTION_N; these fourteen are the only remaining exceptions.
+	 */
+	private static final Set<Integer> SECTION_LAYOUT_DEBT = Set.of(
+		1842, 1843, 1844, 2843, 2844, 2845,
+		4928, 16800, 18738, 19078, 20034, 28738, 29074, 29078);
 	private static final List<Integer> VILLAGE_HUNT_QUESTS = List.of(
 		17106, 17108, 17110, 17112, 17114, 17116, 17118, 17120, 17122, 17124, 17126, 17128,
 		17130, 17132, 17134, 17136, 17138, 17140, 17142, 17144, 17146, 17148, 17150, 17152,
@@ -146,6 +160,26 @@ class ClientQuestSectionAlignmentTest {
 			assertEquals(7, layout.field("var0").width());
 			assertEquals(7, layout.field("var1").offset());
 		}
+	}
+
+	@Test
+	void sectionNamedCountersStayAtTheirFixedSixBitOffset() {
+		QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(
+			Path.of("src/main/resources/aion/data/static_data/quest_definition"));
+		Set<Integer> offenders = new TreeSet<>();
+		for (CompiledQuestDefinition definition : catalog.executables()) {
+			for (BitField field : definition.definition().progressLayout().fields()) {
+				Matcher matcher = Pattern.compile("var(\\d+)").matcher(field.name());
+				if (!matcher.matches() || "0".equals(matcher.group(1))) {
+					continue;
+				}
+				if (field.offset() != Integer.parseInt(matcher.group(1)) * 6) {
+					offenders.add(definition.id());
+				}
+			}
+		}
+		assertEquals(SECTION_LAYOUT_DEBT, offenders,
+			"quests whose varN counters overlap the client journal SECTION_0");
 	}
 
 	private static String touchedField(QuestAction action) {

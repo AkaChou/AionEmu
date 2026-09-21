@@ -67,11 +67,30 @@
       <var name="var0" value="8"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="8"/>
+      <var name="var0" value="9"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
+    <!-- QE-051 领奖行合同：客户端 quest_q20530.html 的 quest_summary 共 10 行，末行是领奖行
+         （STR_DIC_N_Balder，对应该任务的领奖 NPC）；旧投影停在 8，进入世界时纠正为 9 并下发状态包，与镜像 10530 对照。
+         Reward row contract (QE-051): the last of the 10 quest_q20530 journal rows is the reward row
+         (STR_DIC_N_Balder, the reward NPC of this quest); saves persisted at 8 are repaired to 9 on enter-world, matching mirror 10530. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="8"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="9"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <transition source="unaccepted" target="started">
       <event>
         <level-up/>

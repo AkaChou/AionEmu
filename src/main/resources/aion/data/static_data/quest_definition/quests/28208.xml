@@ -14,45 +14,164 @@
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="3" min="0" max="4" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var2" offset="12" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
+    <!-- 计数位不写进节点投影：投影会参与 source 匹配，自环累加后 packed 值必须仍匹配本节点。
+         The counters are intentionally left out of the node projections: projections take part in source
+         matching, so a self-loop that increments them must keep matching its own source node. -->
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
     </node>
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
-    <node label="k1" status="START">
+    <node label="s1" status="START">
       <var name="var0" value="1"/>
     </node>
-    <node label="k2" status="START">
-      <var name="var0" value="2"/>
-    </node>
-    <node label="k3" status="START">
-      <var name="var0" value="3"/>
-    </node>
-    <node label="k4" status="START">
-      <var name="var0" value="4"/>
-    </node>
-    <node label="k5" status="START">
-      <var name="var0" value="5"/>
-    </node>
-    <node label="k6" status="START">
-      <var name="var0" value="6"/>
-    </node>
-    <node label="k7" status="START">
-      <var name="var0" value="7"/>
-    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="7"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- 客户端任务书三行 ↔ 服务端阶段：第 1 行“消灭最终训练对象 ([%2]/5)”= var0=0 时用 var1 计 5 次击杀，
+         第 2 行“穿过…消灭 quest_18208a ([%5]/1)”= var0=1 时用 var2 计 1 次精英击杀，
+         第 3 行“和 Molfus 对话”= REWARD 领奖行（var0=2，与 2620/4210 的 QE-051 领奖行合同一致）。
+         客户端 quest_script 声明 `SECTION_0==0; SECTION_1<5` 与
+         `SECTION_0==1; SECTION_2<1`，旧 handler 同样用 var0 0 -> 1、var1 0..4、var2 0 -> 1 并置 REWARD；
+         迁移把天族侧的击杀路线整条丢掉、魔族侧改成 var0=1..7 的逐杀阶段，两边都与客户端声明冲突。
+         Journal rows vs server stages: row 1 counts five 217819 kills in var1 while var0=0, row 2 counts the
+         single elite kill of 218185 218200 in var2 while var0=1, and row 3 is the reward row (var0=2, the same
+         QE-051 reward-row contract used by 2620/4210). The client script
+         declares SECTION_0==0; SECTION_1<5 and SECTION_0==1; SECTION_2<1, and the legacy handlers used the
+         same var0 0 -> 1, var1 0..4, var2 0 -> 1 progression before committing REWARD. -->
+    <!-- 旧存档修复：迁移版魔族把每个击杀都当成 var0 阶段（k1..k7 = var0 1..7，天族旧投影只有 var0=0），
+         本版 var0 只表示任务书行（0=第 1 行、1=第 2 行、2=领奖行），因此旧 START 存档里 var0>=2 的存档
+         不再匹配任何节点、旧 REWARD 存档里 var0!=2 的存档打不开领奖路线，必须在进入世界时收敛到新行号。
+         - 旧 k2..k4（第一行进行中）：回第 1 行重新累计（旧版没有把击杀数写进 var1，无法恢复计数）；
+         - 旧 k5..k7（第一行已杀满、含已杀精英）：进入第 2 行并补 var1=4；
+         - 旧 REWARD/var0<2（天族旧投影或“对话即领奖”捷径）与 var0>=3（魔族旧 k3..k7）统一收敛到领奖行。
+         Legacy-save repair: the migrated Asmodian build used one var0 stage per kill (k1..k7 = var0 1..7; the
+         Elyos projection only ever held var0=0), while this version uses var0 as the journal row (0 = row 1,
+         1 = row 2, 2 = reward row). Legacy START saves with var0>=2 match no node and legacy REWARD saves with
+         var0!=2 cannot open the reward route, so they are collapsed onto the new row numbers on enter-world. -->
+    <transition target="started">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-at-least field="var0" value="1"/>
+        <variable-below field="var0" value="5"/>
+        <variable-below field="var1" value="4"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="s1">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-at-least field="var0" value="5"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="4"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-below field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-at-least field="var0" value="3"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <dialog type="NPC_START" npc-id="205320" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <transition source="k7" target="k7">
+    <dialog type="NPC_START" npc-id="205321" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
+    <!-- 第 1 行：5 次 217819 击杀，var1 0..4 累加，第 5 次把阶段推进到 s1（与旧 handler 一致）。
+         Row 1: five 217819 kills accumulate var1 0..4; the fifth one advances the stage to s1. -->
+    <transition source="started" target="started">
+      <event>
+        <kill-npc npc-id="217819"/>
+      </event>
+      <conditions>
+        <variable-below field="var1" value="4"/>
+      </conditions>
+      <actions>
+        <increment-variable field="var1" delta="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="s1">
+      <event>
+        <kill-npc npc-id="217819"/>
+      </event>
+      <conditions>
+        <variable-is field="var1" value="4"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 第 2 行：精英击杀（H1 龙族贵族 / H2 神殿守护者）写入 var2 并直接进入领奖阶段。
+         Row 2: the elite kill (218185 218200) writes var2 and commits the reward stage. -->
+    <transition source="s1" target="reward">
+      <event>
+        <kill-npc npc-ids="218185 218200"/>
+      </event>
+      <conditions>
+        <variable-is field="var2" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var2" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 迁移既有的“直接报告”捷径（retail 旧 handler 只在 REWARD 态处理领奖 NPC），本轮保留不收紧。
+         The migrated talk-to-report shortcut is intentionally kept (the legacy handler only answered the
+         reward NPC in REWARD state); this round does not tighten it. -->
+    <dialog type="NPC_REPORT" npc-id="205320" source="started" target="reward" page="DEFAULT_SUCCESS"/>
+    <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="205320" action="QUEST_SELECT"/>
       </event>
@@ -60,67 +179,16 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <kill-chain nodes="started k1 k2 k3 k4 k5">
+    <transition source="reward" target="reward">
       <event>
-        <kill-npc npc-id="217819"/>
-      </event>
-    </kill-chain>
-    <transition source="k5" target="k6">
-      <event>
-        <kill-npc npc-id="218185"/>
+        <dialog type="TALK_TO_NPC" npc-id="205321" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k6" target="k7">
-      <event>
-        <kill-npc npc-id="218192"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-      </after-commit>
-    </transition>
-    <transition source="k7" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="205320" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="205320" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <dialog type="NPC_START" npc-id="205321" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
-    <transition source="k7" target="k7">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="205321" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
-      </after-commit>
-    </transition>
-    <transition source="k7" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="205321" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <npc-complete npc-id="205321" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-        <transition source="reward" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="205321" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
-      </after-commit>
-    </transition>
-</transitions>
+  </transitions>
 </quest-definition>

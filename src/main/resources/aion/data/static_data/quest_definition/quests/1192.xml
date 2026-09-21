@@ -20,37 +20,36 @@
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
     </node>
-    <node label="started" status="START">
+    <!-- 客户端 quest_summary 三行各要有一个 var0==行号的进行中状态（QE-051）：
+         行 0 = 极乐世界拉比临托斯(203701)、行 1 = 贤者书库科赛诺芬(203833)、行 2 = 贝尔特伦要塞斯帕塔洛斯(203098)。 -->
+    <node label="started0" status="START">
       <var name="var0" value="0"/>
+    </node>
+    <node label="started1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="started2" status="START">
+      <var name="var0" value="2"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
-      <var name="var0" value="0"/>
+      <var name="var0" value="2"/>
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="203098" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
+    <!-- 接取：三个 NPC 都能发布任务，客户端 select1 为接取页。 -->
+    <dialog type="NPC_START" npc-id="203098" source="unaccepted" target="started0" selection-sources="unaccepted started0 started1 started2" start-page="SELECT1">
       <accept-actions>
         <give-item item-id="182200556" count="1"/>
       </accept-actions>
     </dialog>
-    <!-- 契约外报告页换无按钮反馈。 -->
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203098" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
-      </after-commit>
-    </transition>
+    <dialog type="NPC_START" npc-id="203701" source="unaccepted" target="started0" selection-sources="unaccepted started0 started1 started2" start-page="SELECT1"/>
+    <dialog type="NPC_START" npc-id="203833" source="unaccepted" target="started0" selection-sources="unaccepted started0 started1 started2" start-page="SELECT1"/>
 
-    <npc-complete npc-id="203098" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="203701" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <transition source="started" target="started">
+    <!-- 步骤 1：极乐世界把书信交给拉比临托斯(203701) → 进入步骤 2。 -->
+    <transition source="started0" target="started0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203701" action="QUEST_SELECT"/>
       </event>
@@ -58,55 +57,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203701" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <actions>
-        <remove-item item-id="182200556" count="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <npc-complete npc-id="203701" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="203833" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <!-- retail 步骤(zz_retail_simple_quests.xml):type="TALK" ids="203833";对话链按客户端按钮图重建。 -->
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203833" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203833" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203833" action="SETPRO1"/>
-      </event>
-      <actions>
-        <!-- 无物品变更 -->
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <npc-complete npc-id="203833" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <transition source="started" target="started">
+    <transition source="started0" target="started0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203701" action="SELECT2_1"/>
       </event>
@@ -114,7 +65,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
-  <transition source="started" target="reward">
+    <transition source="started0" target="started1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203701" action="SETPRO1"/>
       </event>
@@ -127,5 +78,71 @@
         <close-dialog/>
       </after-commit>
     </transition>
-</transitions>
+
+    <!-- 步骤 2：贤者书库找科赛诺芬(203833) → 进入步骤 3。 -->
+    <transition source="started1" target="started1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203833" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+      </after-commit>
+    </transition>
+    <transition source="started1" target="started1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203833" action="SELECT3_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started1" target="started2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203833" action="SETPRO2"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <!-- 步骤 3：回贝尔特伦要塞向斯帕塔洛斯(203098)报告 → 领奖。 -->
+    <transition source="started2" target="started2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203098" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
+    <transition source="started2" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203098" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="203098" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+
+    <!-- 旧存档自愈：迁移前 REWARD 的投影是 var0=0，重映射到客户端领奖行 var0=2（QE-051）。 -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+  </transitions>
 </quest-definition>

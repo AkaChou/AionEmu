@@ -36,13 +36,32 @@
       <var name="var0" value="3"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="3"/>
+      <var name="var0" value="4"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- QE-051 领奖行合同：客户端 quest_q28602.html 的 quest_summary 共 5 行，末行是领奖行
+         （STR_DIC_N_Bridget）；旧投影停在 3，进入世界时纠正为 4 并下发状态包，与镜像 18602 一致。
+         Reward row contract (QE-051): the last of the 5 quest_q28602 journal rows is the reward row
+         (STR_DIC_N_Bridget); saves persisted at 3 are repaired to 4 on enter-world, matching mirror 18602. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="3"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="4"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <!-- 205234 Robstin：未接取对话（START_DIALOG → 4762，其余走默认接取/拒绝）。 -->
     <transition source="unaccepted" target="unaccepted">
       <event>

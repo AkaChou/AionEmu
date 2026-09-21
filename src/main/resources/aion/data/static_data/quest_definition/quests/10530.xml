@@ -61,11 +61,34 @@
       <var name="var0" value="8"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="8"/>
+      <var name="var0" value="9"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
+    <!-- 领奖行合同：客户端任务书行索引 = SECTION_0(var0)，quest_q10530.html 的可见槽位集合
+         与魔族镜像 20530 完全一致（10 个状态），末行“再次和 Jucleas 对话”是领奖行；
+         旧投影停在 8（“倾听 Jucleas 的故事”一行）。
+         Reward row contract: the journal row index is SECTION_0 (var0); quest_q10530.html has
+         the same ten visible slots as the Asmodian mirror 20530, and the final row
+         ("talk to Jucleas again") is the reward row. -->
+    <!-- 旧存档修复：此前 reward 投影停在 8，进入世界时纠正为 9 并下发状态包。
+         Legacy save repair: saves persisted as REWARD/var0=8 are rewritten on enter-world. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="8"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="9"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <transition source="unaccepted" target="started">
       <event>
         <level-up/>

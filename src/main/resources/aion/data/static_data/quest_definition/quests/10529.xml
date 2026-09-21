@@ -27,7 +27,7 @@
     </start-conditions>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="4" min="0" max="10" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="4" min="0" max="11" persistence="PERSISTENT" scope="LOCAL"/>
     <bit-field name="var1" offset="6" width="4" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/>
     <bit-field name="var2" offset="12" width="4" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
@@ -65,12 +65,38 @@
     <node label="s9" status="START">
       <var name="var0" value="9"/>
     </node>
-    <node label="reward" status="REWARD">
+    <node label="s10" status="START">
       <var name="var0" value="10"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="11"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
+    <!-- 领奖行合同：客户端任务书行索引 = SECTION_0(var0)，quest_q10529.html 共 12 行，
+         第 10 行“带上陷入沉睡的德扎波波，向代理人维达报告”是 START（s10），
+         第 11 行“和代理人维达对话”才是领奖行；旧投影把 REWARD 压在报告行（10）上。
+         Reward row contract: the journal row index is SECTION_0 (var0); row 10 of the 12
+         quest_q10529.html rows ("carry the sleeping Dejabobo back and report") is a START step,
+         and row 11 ("talk to agent Weatha") is the reward row. -->
+    <!-- 旧存档修复：此前 reward 投影停在 10，进入世界时纠正为 11 并下发状态包。
+         Legacy save repair: saves persisted as REWARD/var0=10 are rewritten on enter-world. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="10"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="11"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <transition source="unaccepted" target="started">
       <event>
         <level-up/>
@@ -400,7 +426,9 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT10_1"/>
       </after-commit>
     </transition>
-    <transition source="s9" target="reward">
+    <!-- 806294（德扎波波）：拿回沉睡的德扎波波并回到主城，这一步是报告行（var0=10）。
+         806294 (Dejabobo): take the sleeping Dejabobo back to the city; this is the report row (var0=10). -->
+    <transition source="s9" target="s10">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806294" action="SETPRO10"/>
       </event>
@@ -410,6 +438,44 @@
       </actions>
       <after-commit>
         <teleport-player-current-or-default world-id="210100000" x="639.8976" y="2404.188" z="248.18759" heading="79"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 806075（代理人维达）：报告沉睡的德扎波波后进入领奖行（var0=11）。
+         806075 (agent Weatha): report the sleeping Dejabobo, then enter the reward row (var0=11). -->
+    <transition source="s10" target="s10">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806075" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT11"/>
+      </after-commit>
+    </transition>
+    <transition source="s10" target="s10">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806075" action="SELECT11_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT11_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s10" target="s10">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806075" action="SELECT11_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT11_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s10" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806075" action="SET_SUCCEED"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="11"/>
+      </actions>
+      <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>

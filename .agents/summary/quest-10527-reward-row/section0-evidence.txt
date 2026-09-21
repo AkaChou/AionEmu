@@ -1,0 +1,685 @@
+
+=== quest 1607 (3 行) ===
+    row0 %0: 和[%dic:STR_DIC_N_Kuobe]对话
+    row1 %3: 侦察[%dic:STR_DIC_W_LF3_SZ_003]的地下实验室 [%dic:STR_DIC_E_SEN_LF3_SensoryArea_Q1607a][%8] [%dic:
+    row2 %18: 向[%dic:STR_DIC_N_Kalendros]报告
+    script: Progress(SECTION_1==0; SECTION_0==1) | Progress(SECTION_2==0; SECTION_0==1) | Progress(SECTION_3==0; SECTION_0==1) | Progress(SECTION_4==0; SECTION_0==1)
+  server:
+    var0_max=31 increments_var0=False reward={'var0': 1} recovery=False
+    visible_rows=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    handovers=['abc->reward[enter-zone]', 'abd->reward[enter-zone]', 'acd->reward[enter-zone]', 'bcd->reward[enter-zone]', 'reward->reward[use-item]', 'reward->reward[dialog]', 'reward->reward[dialog]'] writes=[]
+      unaccepted NONE var0=0
+      started START var0=0
+      v1 START var0=1
+      a START var0=2
+      b START var0=3
+      c START var0=4
+      d START var0=5
+      ab START var0=6
+      ac START var0=7
+      ad START var0=8
+      bc START var0=9
+      bd START var0=10
+      cd START var0=11
+      abc START var0=12
+      abd START var0=13
+      acd START var0=14
+      bcd START var0=15
+      reward REWARD var0=1
+      complete COMPLETE var0=1
+
+=== quest 1922 (10 行) ===
+    row0 %0: 和[%dic:STR_DIC_N_Vatonia]%对话
+    row1 %3: 和[%dic:STR_DIC_N_Telemachus]%对话
+    row2 %6: 和[%dic:STR_DIC_N_Epeios]%对话
+    row3 %9: 去莫尔海姆拿回[%dic:STR_DIC_I_QUEST_1922a]，然后交给[%dic:STR_DIC_N_Telemachus][%collectitem]
+    row4 %12: 清除埃尔特内的猛兽 [%dic:STR_DIC_M_Baku_25_An]([%14]/3) [%dic:STR_DIC_M_Cures_25_An]([%17]/3) [%dic
+    row5 %21: 向[%dic:STR_DIC_N_Telemachus]报告
+    row6 %24: 消灭极乐世界地下竞技场的猛兽10头以上([%26]/10)
+    row7 %27: 成功！和[%dic:STR_DIC_N_Epeios]对话
+    row8 %30: 失败！重新和[%dic:STR_DIC_N_Epeios]对话
+    row9 %33: 和[%dic:STR_DIC_N_Telemachus]对话
+    script: Progress(SECTION_1<3; SECTION_0==2) | Progress(SECTION_2<3; SECTION_0==2) | Progress(SECTION_4<9; SECTION_0==5)
+  server:
+    var0_max=7 increments_var0=False reward={'var0': 7} recovery=False
+    visible_rows=[0, 4, 5, 7]
+    handovers=['s7->reward[dialog]', 'reward->reward[dialog]'] writes=[]
+      unaccepted NONE var0=0
+      started START var0=0
+      s4 START var0=4
+      s5 START var0=5
+      s7 START var0=7
+      reward REWARD var0=7
+      complete COMPLETE var0=0
+
+=== quest 1990 (6 行) ===
+    row0 %0: 去埃尔特内的埃拉库斯沙漠搜集[%dic:STR_DIC_I_QUEST_1990a]，然后交给佩尔米娜[%collectitem]
+    row1 %3: 和[%dic:STR_DIC_N_Fermina]对话
+    row2 %6: 去因特尔蒂卡要塞聚集古代亚特雷亚的力量 [%dic:STR_DIC_M_Fethlot_30_n]([%11]/30) [%dic:STR_DIC_M_Ettin_30_An]([
+    row3 %18: 回去见见[%dic:STR_DIC_N_Fermina]
+    row4 %21: 蓄满神圣力，把[%dic:STR_DIC_LC_relic_weapon_30]交给[%dic:STR_DIC_N_Fermina]
+    row5 %24: 从[%dic:STR_DIC_N_Fermina]那里获取圣灵守护者武器
+    script: Progress7(SECTION_1<30; SECTION_0==2) | Progress7(SECTION_2<30; SECTION_0==2) | Progress7(SECTION_3<30; SECTION_0==2)
+  server:
+    var0_max=None increments_var0=False reward={'step': 3, 'abex': 30, 'ettin': 30, 'worg': 30, 'hunt-complete': 60} recovery=False
+    visible_rows=[]
+    handovers=['started3->reward[dialog]'] writes=[]
+      unaccepted NONE var0=?
+      started0 START var0=?
+      started1 START var0=?
+      started2 START var0=?
+      started2-complete START var0=?
+      started3 START var0=?
+      reward REWARD var0=?
+      complete COMPLETE var0=?
+
+=== quest 2947 (10 行) ===
+    row0 %0: 和[%dic:STR_DIC_N_Kvasir]%对话
+    row1 %3: 和[%dic:STR_DIC_N_Aegir]对话
+    row2 %6: 和[%dic:STR_DIC_N_Galm]对话
+    row3 %9: 找到[%dic:STR_DIC_I_quest_2947a]，并交给[%dic:STR_DIC_N_Aegir][%collectitem]
+    row4 %12: 去莫尔海姆清除凶恶的生命体 [%dic:STR_DIC_M_CuresD_25_An]([%14]/3) [%dic:STR_DIC_M_NeutL1D_25_An]([%17]/
+    row5 %21: 向[%dic:STR_DIC_N_Aegir]报告
+    row6 %24: 去特里尼埃尔地下竞技场清除[%dic:STR_DIC_M_2947_all]%([%26]/10)
+    row7 %27: 成功！和 [%dic:STR_DIC_N_Galm]对话
+    row8 %30: 失败！重新和[%dic:STR_DIC_N_Galm]对话
+    row9 %33: 和[%dic:STR_DIC_N_Aegir]对话
+    script: Progress(SECTION_1<3; SECTION_0==2) | Progress(SECTION_2<3; SECTION_0==2) | Progress(SECTION_3<3; SECTION_0==2) | Progress(SECTION_4<9; SECTION_0==5)
+  server:
+    var0_max=9 increments_var0=False reward={} recovery=False
+    visible_rows=[0, 4, 5, 9]
+    handovers=[] writes=[]
+      unaccepted NONE var0=0
+      s0 START var0=0
+      s4 START var0=4
+      s5 START var0=5
+      s9 REWARD var0=9
+      complete COMPLETE var0=0
+
+=== quest 2990 (6 行) ===
+    row0 %0: 去摩尔海姆的穆斯费尔火山和红色熔岩山崖搜集[%dic:STR_DIC_I_QUEST_2990a]，然后交给[%dic:STR_DIC_N_Kanensa][%collectite
+    row1 %3: 和[%dic:STR_DIC_N_Kanensa]对话
+    row2 %6: 前往贝鲁斯兰要塞，在体内积聚太古的气息 [%dic:STR_DIC_M_CrestlichReD_30_n]([%11]/30) [%dic:STR_DIC_M_VespaD_30
+    row3 %18: 回去见见[%dic:STR_DIC_N_Kanensa]
+    row4 %21: 充满神圣力，购买[%dic:STR_DIC_DC_relic_weapon_30]，然后交给卡南萨
+    row5 %24: 从[%dic:STR_DIC_N_Kanensa]那里获取圣灵守护者防具
+    script: Progress7(SECTION_1<30; SECTION_0==2) | Progress7(SECTION_2<30; SECTION_0==2) | Progress7(SECTION_3<30; SECTION_0==2)
+  server:
+    var0_max=None increments_var0=False reward={'step': 3, 'crestlich': 30, 'monitor': 30, 'vespine': 30, 'hunt-complete': 60} recovery=False
+    visible_rows=[]
+    handovers=['started3->reward[dialog]'] writes=[]
+      unaccepted NONE var0=?
+      started0 START var0=?
+      started1 START var0=?
+      started2 START var0=?
+      started2-complete START var0=?
+      started3 START var0=?
+      reward REWARD var0=?
+      complete COMPLETE var0=?
+
+=== quest 3031 (2 行) ===
+    row0 %0: 清除悬赏通缉的海盗团员 [%dic:STR_DIC_M_LF2A_TesinonSeamanM_46_An]([%2]/15) [%dic:STR_DIC_M_LF2A_Tesin
+    row1 %6: 去行政官[%dic:STR_DIC_N_Eunomia]那里领取赏金
+    script: Progress(SECTION_0==0; SECTION_1<15) | Progress(SECTION_0==0; SECTION_2<12)
+  server:
+    var0_max=None increments_var0=False reward={} recovery=False
+    visible_rows=[]
+    handovers=['started->reward[kill-npc]', 'started->reward[kill-npc]', 'started->reward[kill-npc]', 'started->reward[kill-npc]', 'reward->reward[dialog]', 'reward->reward[dialog]'] writes=[]
+      unaccepted NONE var0=?
+
+=== quest 3502 (5 行) ===
+    row0 %0: 前往黑暗普埃塔寻找[%dic:STR_DIC_FOBJ_IDLF1_Scroll_Q3502]
+    row1 %3: 破坏[%dic:STR_DIC_M_IDLF1_BionicCPU_50_Ah]([%5]/1)
+    row2 %6: 破坏动力供给装置，关闭[%dic:STR_DIC_OBJ_Dragonportal_IDLF1] [%dic:STR_DIC_M_IDLF1_Generator1_50_Ah] (
+    row3 %18: 清除[%dic:STR_DIC_M_IDLF1_H_DrakanFiName_50_Ah]([%20]/1)
+    row4 %21: 向[%dic:STR_DIC_W_LF3_SZ_004]的神官[%dic:STR_DIC_N_Maloren]报告
+    script: Progress(SECTION_1==1; SECTION_0==2) | Progress(SECTION_2==1; SECTION_0==2) | Progress(SECTION_3==1; SECTION_0==2) | Progress(SECTION_3==1; SECTION_2==1; SECTION_1==1; SECTION_0==2)
+  server:
+    var0_max=63 increments_var0=False reward={'var0': 2, 'var1': 1, 'var2': 1, 'var3': 1} recovery=False
+    visible_rows=[0, 1, 2]
+    handovers=['hunt->reward[kill-npc]', 'reward->reward[dialog]'] writes=[]
+      unaccepted NONE var0=0
+      started START var0=0
+      gate START var0=1
+      hunt START var0=2
+      reward REWARD var0=2
+      complete COMPLETE var0=0
+
+=== quest 3725 (2 行) ===
+    row0 %0: 去德雷得奇安执行战斗任务，消灭[%dic:STR_DIC_M_IDDreadgion_02_DrakanFiHigh_55_Ae]% 在德雷得奇安内部战斗([%2]/6) 第51德
+    row1 %6: 和[%dic:STR_DIC_N_Yulia]%对话
+    script: Progress(SECTION_0==0; SECTION_2<15)
+  server:
+    var0_max=None increments_var0=False reward={'var1': 6, 'var2': 15} recovery=False
+    visible_rows=[]
+    handovers=['started->reward[dialog]', 'reward->reward[dialog]', 'reward->reward[dialog]'] writes=[]
+      unaccepted NONE var0=?
+      started START var0=?
+      complete COMPLETE var0=?
+
+=== quest 4725 (2 行) ===
+    row0 %0: 去德雷得奇安执行战斗任务，消灭[%dic:STR_DIC_M_IDDreadgion_02_DrakanFiHigh_55_Ae]% 德雷得奇安内部战斗([%2]/6) 第51德拉
+    row1 %6: 和[%dic:STR_DIC_N_Barretta]%对话
+    script: Progress(SECTION_0==0; SECTION_2<15)
+  server:
+    var0_max=None increments_var0=False reward={'var1': 6, 'var2': 15} recovery=False
+    visible_rows=[]
+    handovers=['started->reward[dialog]', 'reward->reward[dialog]', 'reward->reward[dialog]'] writes=[]
+      unaccepted NONE var0=?
+      started START var0=?
+      complete COMPLETE var0=?
+
+=== quest 11149 (2 行) ===
+    row0 %0: 调查英吉斯温深渊的间歇泉 调查[%dic:STR_DIC_SEN_LF4_SensoryArea_Q11149A][%5] 调查[%dic:STR_DIC_SEN_LF4_Sens
+    row1 %12: 和[%dic:STR_DIC_N_LF4_Gateway_Li_Guard_Boss_Q05]对话
+    script: Progress(SECTION_0==0; SECTION_1<1) | Progress(SECTION_0==0; SECTION_2<1) | Progress(SECTION_0==0; SECTION_3<1)
+  server:
+    var0_max=1 increments_var0=False reward={'var0': 0} recovery=True
+    visible_rows=[0]
+    handovers=['started->reward[dialog]'] writes=[]
+      unaccepted NONE var0=0
+      started START var0=0
+      reward REWARD var0=0
+      complete COMPLETE var0=0
+
+=== quest 11468 (2 行) ===
+    row0 %0: 从[%dic:STR_DIC_M_IDElim_keynamed]身上搜集拥有强大力量的东西，并使用它们 [%dic:STR_DIC_I_KASPA_DAMAGE_ITEM]([%
+    row1 %12: 和[%dic:STR_DIC_N_CaspaGhost_01]对话
+    script: Progress(SECTION_0==0; SECTION_1<10) | Progress(SECTION_0==0; SECTION_2<5) | Progress(SECTION_0==0; SECTION_3<3)
+  server:
+    var0_max=None increments_var0=False reward={} recovery=False
+    visible_rows=[]
+    handovers=['started->reward[use-skill]', 'started->reward[use-skill]', 'started->reward[use-skill]', 'started->reward[dialog]', 'started->reward[dialog]'] writes=[]
+      unaccepted NONE var0=?
+  mirror 21468 (2 行) script: Progress(SECTION_0==0; SECTION_1<10) | Progress(SECTION_0==0; SECTION_2<5) | Progress(SECTION_0==0; SECTION_3<3)
+    server:
+    var0_max=None increments_var0=False reward={} recovery=False
+    visible_rows=[]
+    handovers=['started->reward[use-skill]', 'started->reward[use-skill]', 'started->reward[use-skill]', 'started->reward[dialog]', 'started->reward[dialog]'] writes=[]
+      unaccepted NONE var0=?
+
+=== quest 14012 (4 行) ===
+    row0 %0: 和[%dic:STR_DIC_FLA10]的[%dic:STR_DIC_LA154]%对话
+    row1 %3: 消灭正在杜卡基采掘场精炼奥德石的布洛尼和克拉尔 [%dic:STR_DIC_MLA124]([%8]/5) [%dic:STR_DIC_M_TKrallKeeper_15_An](
+    row2 %12: 和[%dic:STR_DIC_FLA10]的[%dic:STR_DIC_LA154]%对话
+    row3 %15: 向[%dic:STR_DIC_FLA09]的[%dic:STR_DIC_LA19]%报告
+    script: Progress(SECTION_1<=4; SECTION_0==1) | Progress(SECTION_2<=2; SECTION_0==1)
+  server:
+    var0_max=1 increments_var0=False reward={'var0': 1, 'var1': 5, 'var2': 3} recovery=False
+    visible_rows=[0, 1]
+    handovers=['s1->reward[dialog]', 's1->reward[dialog]'] writes=[]
+      unaccepted NONE var0=0
+      started START var0=0
+      s1 START var0=1
+      reward REWARD var0=1
+  mirror 24012 (4 行) script: (无)
+    server:
+    var0_max=5 increments_var0=False reward={'var0': 5} recovery=False
+    visible_rows=[0, 1, 2, 3, 4, 5]
+    handovers=['s5->reward[dialog]', 'reward->reward[dialog]'] writes=[]
+      unaccepted NONE var0=0
+      started START var0=0
+      s1 START var0=1
+      s2 START var0=2
+      s3 START var0=3
+      s4 START var0=4
+      s5 START var0=5
+      reward REWARD var0=5
+
+=== quest 14013 (4 行) ===
+    row0 %0: 和[%dic:STR_DIC_FLA10]的[%dic:STR_DIC_LA154]%对话
+    row1 %3: 消灭托尔巴斯森林中不断增长的龙蜥兽 [%dic:STR_DIC_MLA17_3]([%8]/5) [%dic:STR_DIC_MLA17_4]([%11]/7)
+    row2 %12: 去[%dic:STR_DIC_FLA15]%消灭[%dic:STR_DIC_MLA17_5]%([%14]/1)
+    row3 %15: 和[%dic:STR_DIC_FLA10]的[%dic:STR_DIC_LA154]%对话
+    script: Progress(SECTION_1<=4; SECTION_0==1) | Progress(SECTION_2<=6; SECTION_0==1) | Progress(SECTION_2==7; SECTION_1==5; SECTION_0==1)
+  server:
+    var0_max=1 increments_var0=False reward={'var0': 1, 'var1': 5, 'var2': 7} recovery=False
+    visible_rows=[0, 1]
+    handovers=['hunting->reward[kill-npc]'] writes=[]
+      unaccepted NONE var0=0
+      started START var0=0
+      hunting START var0=1
+      reward REWARD var0=1
+      complete COMPLETE var0=0
+  mirror 24013 (5 行) script: (无)
+    server:
+    var0_max=7 increments_var0=False reward={'var0': 7} recovery=False
+    visible_rows=[0, 1, 2, 3, 4, 5, 6, 7]
+    handovers=['s7->reward[kill-npc]', 'reward->reward[dialog]'] writes=[]
+      unaccepted NONE var0=0
+      started START var0=0
+      s1 START var0=1
+      s2 START var0=2
+      s3 START var0=3
+      s4 START var0=4
+      s5 START var0=5
+      s6 START var0=6
+      s7 START var0=7
+      reward REWARD var0=7
+
+=== quest 14054 (9 行) ===
+    row0 %0: 和[%dic:STR_DIC_W_LF3_SZ_004]%的[%dic:STR_DIC_N_Atalante]对话
+    row1 %3: 和讨伐队前进基地的[%dic:STR_DIC_N_Javlantia]%进行对话
+    row2 %6: 消灭克拉尔图玛格纳洞穴的英德拉图军团败兵，找到隐藏的兵器并破坏掉。 [%dic:STR_DIC_M_LF3E3_FeA_Lizard_Ae_all]([%11]/6) [%dic:
+    row3 %15: 消灭克拉尔图玛格纳洞穴的英德拉图军团纳加士兵，破坏龙族守护石 [%dic:STR_DIC_M_LF3E3_FeA_Lizard_Ae_all2]([%20]/6) [%dic:ST
+    row4 %24: 找到潜入[%dic:STR_DIC_W_LF3_SZ_009]的[%dic:STR_DIC_N_LF3_Barantina_E]%，并与其对话
+    row5 %27: 消灭[%dic:STR_DIC_M_NagaFighterNM_47_AhN]%([%29]/1)
+    row6 %30: 消灭[%dic:STR_DIC_M_LF3_NagaFighterNM_47_Q_Ah]%([%32]/1)
+    row7 %33: 找到潜入[%dic:STR_DIC_W_LF3_SZ_009]的[%dic:STR_DIC_N_LF3_Barantina_E]%，重新与其对话
+    row8 %36: 向讨伐队前进基地的[%dic:STR_DIC_N_Javlantia]报告
+    script: Progress(SECTION_1<6; SECTION_0==12) | Progress(SECTION_1<6; SECTION_0==2) | Progress(SECTION_1==6; SECTION_2==3; SECTION_0==13) | Progress(SECTION_1==6; SECTION_2==3; SECTION_0==3) | Progress(SECTION_2<3; SECTION_0==12) | Progress(SECTION_2<3; SECTION_0==2)
+  server:
+    var0_max=4 increments_var0=False reward={'var0': 4} recovery=False
+    visible_rows=[0, 1, 2, 3, 4]
+    handovers=['s4->reward[dialog]', 'reward->reward[dialog]'] writes=[]
+      unaccepted NONE var0=0
+      started START var0=0
+      s1 START var0=1
+      s2 START var0=2
+      s3 START var0=3
+      s4 START var0=4
+      reward REWARD var0=4
+  mirror 24054 (8 行) script: (无)
+    server:
+    var0_max=7 increments_var0=False reward={'var0': 6} recovery=False
+    visible_rows=[0, 1, 2, 5, 6]
+    handovers=['s6->reward[dialog]', 'reward->reward[dialog]'] writes=[]
+      unaccepted NONE var0=0
+      s0 START var0=0
+      s1 START var0=1
+      s2 START var0=2
+      s5 START var0=5
+      s6 START var0=6
+      reward REWARD var0=6
+      complete COMPLETE var0=0
+
+=== quest 17511 (12 行) ===
+    row0 %0: 消灭[%dic:STR_DIC_E_IDTransform_Drakan_All]%([%2]/5)
+    row1 %3: 前往[%dic:STR_DIC_W_IDTransform_SZ_A_01]%
+    row2 %6: 回想起古代高级守护者的记忆，变身为水之化身
+    row3 %9: 回想起古代高级守护者的记忆，变身为风之化身
+    row4 %12: 消灭[%dic:STR_DIC_E_IDTransform_Drakan_All]%([%14]/5)
+    row5 %15: 前往[%dic:STR_DIC_W_IDTransform_SZ_B_01]%
+    row6 %18: 回想起古代高级守护者的记忆，变身为火之化身
+    row7 %21: 回想起古代高级守护者的记忆，变身为地之化身
+    row8 %24: 消灭[%dic:STR_DIC_E_IDTransform_Drakan_All]%([%26]/5)
+    row9 %27: 前往[%dic:STR_DIC_W_IDTransform_SZ_C_01]%
+    row10 %30: 消灭[%dic:STR_DIC_M_IDTransform_Boss]%([%32]/1)
+    row11 %33: 在任务窗口按下[%dic:STR_DIC_S_Quest_Get_Reward]%或向代理人[%dic:STR_DIC_N_LF6_Weatha_E]报告
+    script: Progress(SECTION_0==10) | Progress(SECTION_1<=4; SECTION_0==0) | Progress(SECTION_1<=4; SECTION_0==4) | Progress(SECTION_1<=4; SECTION_0==8)
+  server:
+    var0_max=12 increments_var0=False reward={'var0': 11} recovery=False
+    visible_rows=[0, 1, 4, 5, 8, 9, 10, 11]
+    handovers=['s10->reward[kill-npc]', 'reward->reward[dialog]'] writes=['var0=11']
+      unaccepted NONE var0=0
+      started START var0=0
+      s1 START var0=1
+      s4 START var0=4
+      s5 START var0=5
+      s8 START var0=8
+      s9 START var0=9
+      s10 START var0=10
+      reward REWARD var0=11
+  mirror 27511 (12 行) script: Progress(SECTION_0==10) | Progress(SECTION_1<=4; SECTION_0==0) | Progress(SECTION_1<=4; SECTION_0==4) | Progress(SECTION_1<=4; SECTION_0==8)
+    server:
+    var0_max=12 increments_var0=False reward={'var0': 11} recovery=False
+    visible_rows=[0, 1, 4, 5, 8, 9, 10, 11]
+    handovers=['s10->reward[kill-npc]', 'reward->reward[dialog]'] writes=['var0=11']
+      unaccepted NONE var0=0
+      started START var0=0
+      s1 START var0=1
+      s4 START var0=4
+      s5 START var0=5
+      s8 START var0=8
+      s9 START var0=9
+      s10 START var0=10
+      reward REWARD var0=11
+
+=== quest 18208 (3 行) ===
+    row0 %0: 打倒第2神庙训练所的最终训练对象[%dic:STR_DIC_E_IDArena_Solo_S6_VanqJr_55_An]([%2]/5)
+    row1 %3: 穿过[%dic:STR_DIC_E_IDArena_Solo_Bonus_In]，消灭[%dic:STR_DIC_M_quest_18208a]([%5]/1)
+    row2 %6: 和[%dic:STR_DIC_N_Molfus]%对话
+    script: Progress(SECTION_0==0; SECTION_1<5) | Progress(SECTION_0==1; SECTION_2<1)
+  server:
+    var0_max=63 increments_var0=False reward={'var0': 0} recovery=False
+    visible_rows=[0]
+    handovers=['started->reward[]'] writes=[]
+      unaccepted NONE var0=0
+      started START var0=0
+      reward REWARD var0=0
+      complete COMPLETE var0=0
+  mirror 28208 (3 行) script: Progress(SECTION_0==0; SECTION_1<5) | Progress(SECTION_0==1; SECTION_2<1)
+    server:
+    var0_max=63 increments_var0=False reward={'var0': 7} recovery=False
+    visible_rows=[0, 1, 2, 3, 4, 5, 6, 7]
+    handovers=['k7->reward[dialog]', 'k7->reward[dialog]', 'reward->reward[dialog]'] writes=[]
+      unaccepted NONE var0=0
+      started START var0=0
+      k1 START var0=1
+      k2 START var0=2
+      k3 START var0=3
+      k4 START var0=4
+      k5 START var0=5
+      k6 START var0=6
+      k7 START var0=7
+      reward REWARD var0=7
+      complete COMPLETE var0=0
+
+=== quest 18209 (3 行) ===
+    row0 %0: 消灭第2神庙训练所的最终训练对象[%dic:STR_DIC_E_IDArena_Solo_S6_VanqJr_55_An]([%2]/5)
+    row1 %3: 穿过[%dic:STR_DIC_E_IDArena_Solo_Bonus_In]，消灭[%dic:STR_DIC_M_quest_18208a]([%5]/1)
+    row2 %6: 和[%dic:STR_DIC_N_Molfus]%对话
+    script: Progress(SECTION_0==0; SECTION_1<5) | Progress(SECTION_0==1; SECTION_2<1)
+  server:
+    var0_max=63 increments_var0=False reward={'var0': 0} recovery=False
+    visible_rows=[0]
+    handovers=['started->reward[]'] writes=[]
+      unaccepted NONE var0=0
+      started START var0=0
+      reward REWARD var0=0
+      complete COMPLETE var0=0
+  mirror 28209 (3 行) script: Progress(SECTION_0==0; SECTION_1<5) | Progress(SECTION_0==1; SECTION_2<1)
+    server:
+    var0_max=63 increments_var0=False reward={'var0': 7} recovery=False
+    visible_rows=[0, 1, 2, 3, 4, 5, 6, 7]
+    handovers=['k7->reward[dialog]', 'reward->reward[dialog]', 'started->reward[dialog]'] writes=[]
+      unaccepted NONE var0=0
+      started START var0=0
+      k1 START var0=1
+      k2 START var0=2
+      k3 START var0=3
+      k4 START var0=4
+      k5 START var0=5
+      k6 START var0=6
+      k7 START var0=7
+      reward REWARD var0=7
+      complete COMPLETE var0=0
+
+=== quest 21468 (2 行) ===
+    row0 %0: 从[%dic:STR_DIC_M_IDElim_keynamed]身上搜集拥有强大力量的东西，并使用它们 [%dic:STR_DIC_I_KASPA_DAMAGE_ITEM]([%
+    row1 %12: 和[%dic:STR_DIC_N_CaspaGhost_01]对话
+    script: Progress(SECTION_0==0; SECTION_1<10) | Progress(SECTION_0==0; SECTION_2<5) | Progress(SECTION_0==0; SECTION_3<3)
+  server:
+    var0_max=None increments_var0=False reward={} recovery=False
+    visible_rows=[]
+    handovers=['started->reward[use-skill]', 'started->reward[use-skill]', 'started->reward[use-skill]', 'started->reward[dialog]', 'started->reward[dialog]'] writes=[]
+      unaccepted NONE var0=?
+  mirror 11468 (2 行) script: Progress(SECTION_0==0; SECTION_1<10) | Progress(SECTION_0==0; SECTION_2<5) | Progress(SECTION_0==0; SECTION_3<3)
+    server:
+    var0_max=None increments_var0=False reward={} recovery=False
+    visible_rows=[]
+    handovers=['started->reward[use-skill]', 'started->reward[use-skill]', 'started->reward[use-skill]', 'started->reward[dialog]', 'started->reward[dialog]'] writes=[]
+      unaccepted NONE var0=?
+
+=== quest 27511 (12 行) ===
+    row0 %0: 消灭[%dic:STR_DIC_E_IDTransform_Drakan_All]%([%2]/5)
+    row1 %3: 前往[%dic:STR_DIC_W_IDTransform_SZ_A_01]%
+    row2 %6: 回想起古代高级守护者的记忆，变身为水之化身
+    row3 %9: 回想起古代高级守护者的记忆，变身为风之化身
+    row4 %12: 消灭[%dic:STR_DIC_E_IDTransform_Drakan_All]%([%14]/5)
+    row5 %15: 前往[%dic:STR_DIC_W_IDTransform_SZ_B_01]%
+    row6 %18: 回想起古代高级守护者的记忆，变身为火之化身
+    row7 %21: 回想起古代高级守护者的记忆，变身为地之化身
+    row8 %24: 消灭[%dic:STR_DIC_E_IDTransform_Drakan_All]%([%26]/5)
+    row9 %27: 前往[%dic:STR_DIC_W_IDTransform_SZ_C_01]%
+    row10 %30: 消灭[%dic:STR_DIC_M_IDTransform_Boss]%([%32]/1)
+    row11 %33: 在任务窗口按下[%dic:STR_DIC_S_Quest_Get_Reward]%或是向代理人[%dic:STR_DIC_N_DF6_Feregran_E]报告
+    script: Progress(SECTION_0==10) | Progress(SECTION_1<=4; SECTION_0==0) | Progress(SECTION_1<=4; SECTION_0==4) | Progress(SECTION_1<=4; SECTION_0==8)
+  server:
+    var0_max=12 increments_var0=False reward={'var0': 11} recovery=False
+    visible_rows=[0, 1, 4, 5, 8, 9, 10, 11]
+    handovers=['s10->reward[kill-npc]', 'reward->reward[dialog]'] writes=['var0=11']
+      unaccepted NONE var0=0
+      started START var0=0
+      s1 START var0=1
+      s4 START var0=4
+      s5 START var0=5
+      s8 START var0=8
+      s9 START var0=9
+      s10 START var0=10
+      reward REWARD var0=11
+  mirror 17511 (12 行) script: Progress(SECTION_0==10) | Progress(SECTION_1<=4; SECTION_0==0) | Progress(SECTION_1<=4; SECTION_0==4) | Progress(SECTION_1<=4; SECTION_0==8)
+    server:
+    var0_max=12 increments_var0=False reward={'var0': 11} recovery=False
+    visible_rows=[0, 1, 4, 5, 8, 9, 10, 11]
+    handovers=['s10->reward[kill-npc]', 'reward->reward[dialog]'] writes=['var0=11']
+      unaccepted NONE var0=0
+      started START var0=0
+      s1 START var0=1
+      s4 START var0=4
+      s5 START var0=5
+      s8 START var0=8
+      s9 START var0=9
+      s10 START var0=10
+      reward REWARD var0=11
+
+=== quest 28208 (3 行) ===
+    row0 %0: 打倒第2神庙训练所的最终训练对象[%dic:STR_DIC_E_IDArena_Solo_S6_VanqJr_55_An]([%2]/5)
+    row1 %3: 穿过[%dic:STR_DIC_E_IDArena_Solo_Bonus_In]，消灭[%dic:STR_DIC_M_quest_28208a]([%5]/1)
+    row2 %6: 和[%dic:STR_DIC_N_Anja]%对话
+    script: Progress(SECTION_0==0; SECTION_1<5) | Progress(SECTION_0==1; SECTION_2<1)
+  server:
+    var0_max=63 increments_var0=False reward={'var0': 7} recovery=False
+    visible_rows=[0, 1, 2, 3, 4, 5, 6, 7]
+    handovers=['k7->reward[dialog]', 'k7->reward[dialog]', 'reward->reward[dialog]'] writes=[]
+      unaccepted NONE var0=0
+      started START var0=0
+      k1 START var0=1
+      k2 START var0=2
+      k3 START var0=3
+      k4 START var0=4
+      k5 START var0=5
+      k6 START var0=6
+      k7 START var0=7
+      reward REWARD var0=7
+      complete COMPLETE var0=0
+  mirror 18208 (3 行) script: Progress(SECTION_0==0; SECTION_1<5) | Progress(SECTION_0==1; SECTION_2<1)
+    server:
+    var0_max=63 increments_var0=False reward={'var0': 0} recovery=False
+    visible_rows=[0]
+    handovers=['started->reward[]'] writes=[]
+      unaccepted NONE var0=0
+      started START var0=0
+      reward REWARD var0=0
+      complete COMPLETE var0=0
+
+=== quest 28209 (3 行) ===
+    row0 %0: 消灭第2神庙训练所的最终训练对象[%dic:STR_DIC_E_IDArena_Solo_S6_VanqJr_55_An]([%2]/5)
+    row1 %3: 穿过[%dic:STR_DIC_E_IDArena_Solo_Bonus_In]，消灭[%dic:STR_DIC_M_quest_28208a]([%5]/1)
+    row2 %6: 和[%dic:STR_DIC_N_Anja]%对话
+    script: Progress(SECTION_0==0; SECTION_1<5) | Progress(SECTION_0==1; SECTION_2<1)
+  server:
+    var0_max=63 increments_var0=False reward={'var0': 7} recovery=False
+    visible_rows=[0, 1, 2, 3, 4, 5, 6, 7]
+    handovers=['k7->reward[dialog]', 'reward->reward[dialog]', 'started->reward[dialog]'] writes=[]
+      unaccepted NONE var0=0
+      started START var0=0
+      k1 START var0=1
+      k2 START var0=2
+      k3 START var0=3
+      k4 START var0=4
+      k5 START var0=5
+      k6 START var0=6
+      k7 START var0=7
+      reward REWARD var0=7
+      complete COMPLETE var0=0
+  mirror 18209 (3 行) script: Progress(SECTION_0==0; SECTION_1<5) | Progress(SECTION_0==1; SECTION_2<1)
+    server:
+    var0_max=63 increments_var0=False reward={'var0': 0} recovery=False
+    visible_rows=[0]
+    handovers=['started->reward[]'] writes=[]
+      unaccepted NONE var0=0
+      started START var0=0
+      reward REWARD var0=0
+      complete COMPLETE var0=0
+
+=== quest 28932 (2 行) ===
+    row0 %0: 消灭[%dic:STR_DIC_M_IDDreadgion_04_DrakanWi_DrakanNinja_Ah]%([%2]/1)
+    row1 %3: 和[%dic:STR_DIC_N_DF6_Olivia_E]%对话
+    script: Progress(SECTION_0==0; SECTION_2<10)
+  server:
+    var0_max=63 increments_var0=False reward={'var0': 1, 'var1': 1} recovery=False
+    visible_rows=[1]
+    handovers=['started->reward[kill-npc]', 'started->reward[dialog]', 'started->reward[dialog]', 'reward->reward[dialog]', 'started->reward[dialog]', 'started->reward[dialog]', 'reward->reward[dialog]'] writes=['var0=1', 'var1=1', 'var0=1', 'var0=1', 'var0=1', 'var0=1']
+      unaccepted NONE var0=0
+      started START var0=1
+      complete COMPLETE var0=0
+  mirror 18932 (2 行) script: Progress(SECTION_0==0; SECTION_2<10)
+    server:
+    var0_max=63 increments_var0=False reward={'var0': 1} recovery=False
+    visible_rows=[0, 1]
+    handovers=['started->reward[kill-npc]', 'reward->reward[dialog]', 'started->reward[dialog]', 'started->reward[dialog]'] writes=['var0=1']
+      unaccepted NONE var0=0
+      started START var0=0
+      reward REWARD var0=1
+      complete COMPLETE var0=0
+
+=== quest 30203 (3 行) ===
+    row0 %0: 消灭帕休曼迪尔寺院的守护者 [%dic:STR_DIC_M_IDCatacombsN_DrakanMonk1Nmd_55_Ah] ([%2]/1) [%dic:STR_DIC_M_
+    row1 %12: 消灭[%dic:STR_DIC_E_IDCatacombsN_DrakanMonkBossNmd_55_Ah]([%14]/1)
+    row2 %15: 和[%dic:STR_DIC_N_Cainus]对话
+    script: Progress(SECTION_0<1)
+  server:
+    var0_max=1 increments_var0=False reward={'var0': 1, 'var1': 1, 'var2': 1, 'var3': 1} recovery=False
+    visible_rows=[1]
+    handovers=['started->reward[kill-npc]', 'reward->reward[dialog]'] writes=[]
+      unaccepted NONE var0=0
+      started START var0=1
+      complete COMPLETE var0=0
+
+=== quest 30303 (3 行) ===
+    row0 %0: 消灭帕休曼迪尔寺院的守护者 [%dic:STR_DIC_M_IDCatacombsN_DrakanMonk1Nmd_55_Ah] ([%2]/1) [%dic:STR_DIC_M_
+    row1 %12: 消灭[%dic:STR_DIC_E_IDCatacombsN_DrakanMonkBossNmd_55_Ah]([%14]/1)
+    row2 %15: 和[%dic:STR_DIC_N_Hler]对话
+    script: Progress(SECTION_0<1)
+  server:
+    var0_max=1 increments_var0=False reward={'var0': 1, 'var1': 1, 'var2': 1, 'var3': 1} recovery=False
+    visible_rows=[1]
+    handovers=['started->reward[kill-npc]', 'reward->reward[dialog]'] writes=[]
+      unaccepted NONE var0=0
+      started START var0=1
+      complete COMPLETE var0=0
+
+=== quest 30614 (2 行) ===
+    row0 %0: 在萨德哈德雷得奇安进行战斗，消灭掉第53德拉坎战斗士官% 德雷得奇安的战斗([%2]/6) [%dic:STR_DIC_M_IDDreadgion_03_DrakanFi_Nobl
+    row1 %6: 向[%dic:STR_DIC_N_Astella]报告
+    script: Progress(SECTION_0==0; SECTION_2<15)
+  server:
+    var0_max=63 increments_var0=False reward={'var0': 0, 'var1': 6, 'var2': 15} recovery=False
+    visible_rows=[0]
+    handovers=['a0b6c15->reward[]'] writes=[]
+      unaccepted NONE var0=0
+      a0b0c0 START var0=0
+      a0b0c1 START var0=0
+      a0b0c2 START var0=0
+      a0b0c3 START var0=0
+      a0b0c4 START var0=0
+      a0b0c5 START var0=0
+      a0b0c6 START var0=0
+      a0b0c7 START var0=0
+      a0b0c8 START var0=0
+      a0b0c9 START var0=0
+      a0b0c10 START var0=0
+      a0b0c11 START var0=0
+      a0b0c12 START var0=0
+      a0b0c13 START var0=0
+      a0b0c14 START var0=0
+      a0b0c15 START var0=0
+      a0b1c0 START var0=0
+      a0b1c1 START var0=0
+      a0b1c2 START var0=0
+      a0b1c3 START var0=0
+      a0b1c4 START var0=0
+      a0b1c5 START var0=0
+      a0b1c6 START var0=0
+      a0b1c7 START var0=0
+      a0b1c8 START var0=0
+      a0b1c9 START var0=0
+      a0b1c10 START var0=0
+      a0b1c11 START var0=0
+      a0b1c12 START var0=0
+      a0b1c13 START var0=0
+      a0b1c14 START var0=0
+      a0b1c15 START var0=0
+      a0b2c0 START var0=0
+      a0b2c1 START var0=0
+      a0b2c2 START var0=0
+      a0b2c3 START var0=0
+      a0b2c4 START var0=0
+      a0b2c5 START var0=0
+      a0b2c6 START var0=0
+      a0b2c7 START var0=0
+      a0b2c8 START var0=0
+      a0b2c9 START var0=0
+      a0b2c10 START var0=0
+      a0b2c11 START var0=0
+      a0b2c12 START var0=0
+      a0b2c13 START var0=0
+      a0b2c14 START var0=0
+      a0b2c15 START var0=0
+      a0b3c0 START var0=0
+      a0b3c1 START var0=0
+      a0b3c2 START var0=0
+      a0b3c3 START var0=0
+      a0b3c4 START var0=0
+      a0b3c5 START var0=0
+      a0b3c6 START var0=0
+      a0b3c7 START var0=0
+      a0b3c8 START var0=0
+      a0b3c9 START var0=0
+      a0b3c10 START var0=0
+      a0b3c11 START var0=0
+      a0b3c12 START var0=0
+      a0b3c13 START var0=0
+      a0b3c14 START var0=0
+      a0b3c15 START var0=0
+      a0b4c0 START var0=0
+      a0b4c1 START var0=0
+      a0b4c2 START var0=0
+      a0b4c3 START var0=0
+      a0b4c4 START var0=0
+      a0b4c5 START var0=0
+      a0b4c6 START var0=0
+      a0b4c7 START var0=0
+      a0b4c8 START var0=0
+      a0b4c9 START var0=0
+      a0b4c10 START var0=0
+      a0b4c11 START var0=0
+      a0b4c12 START var0=0
+      a0b4c13 START var0=0
+      a0b4c14 START var0=0
+      a0b4c15 START var0=0
+      a0b5c0 START var0=0
+      a0b5c1 START var0=0
+      a0b5c2 START var0=0
+      a0b5c3 START var0=0
+      a0b5c4 START var0=0
+      a0b5c5 START var0=0
+      a0b5c6 START var0=0
+      a0b5c7 START var0=0
+      a0b5c8 START var0=0
+      a0b5c9 START var0=0
+      a0b5c10 START var0=0
+      a0b5c11 START var0=0
+      a0b5c12 START var0=0
+      a0b5c13 START var0=0
+      a0b5c14 START var0=0
+      a0b5c15 START var0=0
+      a0b6c0 START var0=0
+      a0b6c1 START var0=0
+      a0b6c2 START var0=0
+      a0b6c3 START var0=0
+      a0b6c4 START var0=0
+      a0b6c5 START var0=0
+      a0b6c6 START var0=0
+      a0b6c7 START var0=0
+      a0b6c8 START var0=0
+      a0b6c9 START var0=0
+      a0b6c10 START var0=0
+      a0b6c11 START var0=0
+      a0b6c12 START var0=0
+      a0b6c13 START var0=0
+      a0b6c14 START var0=0
+      a0b6c15 START var0=0
+      reward REWARD var0=0
+      complete COMPLETE var0=0

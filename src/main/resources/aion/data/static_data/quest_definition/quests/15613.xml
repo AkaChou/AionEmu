@@ -21,7 +21,7 @@
     </drops>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="4" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="4" min="0" max="6" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -46,11 +46,30 @@
       <var name="var0" value="5"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="5"/>
+      <var name="var0" value="6"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
+    <!-- QE-051 领奖行合同：客户端 quest_q15613.html 的 quest_summary 共 7 行，末行是领奖行
+         （STR_DIC_N_LF6_Volter_E，对应该任务的领奖 NPC）；旧投影停在 5，进入世界时纠正为 6 并下发状态包，与镜像 25613 对照。
+         Reward row contract (QE-051): the last of the 7 quest_q15613 journal rows is the reward row
+         (STR_DIC_N_LF6_Volter_E, the reward NPC of this quest); saves persisted at 5 are repaired to 6 on enter-world, matching mirror 25613. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="5"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="6"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806113" action="QUEST_SELECT"/>

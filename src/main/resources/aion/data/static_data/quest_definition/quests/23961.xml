@@ -21,13 +21,32 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- QE-051 领奖行合同：客户端 quest_q23961.html 的 quest_summary 共 2 行，末行是领奖行
+         （STR_DIC_N_IDEternity_War_D_WPSeller）；旧投影停在 0，进入世界时纠正为 1 并下发状态包，与镜像 13961 一致。
+         Reward row contract (QE-051): the last of the 2 quest_q23961 journal rows is the reward row
+         (STR_DIC_N_IDEternity_War_D_WPSeller); saves persisted at 0 are repaired to 1 on enter-world, matching mirror 13961. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <!-- 进入风之峡谷 302350000 自动接取任务。 Entering Windy Gorge 302350000 auto-starts the quest. -->
     <transition source="unaccepted" target="started">
       <event>

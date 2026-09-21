@@ -11,7 +11,7 @@
     </rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="1" min="0" max="0" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -21,11 +21,30 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
+    <!-- QE-051 领奖行合同：客户端 quest_q13961.html 的 quest_summary 共 2 行，末行是领奖行
+         （STR_DIC_N_IDEternity_War_L_WPSeller）；旧投影停在 0，进入世界时纠正为 1 并下发状态包，与镜像 23961 一致。
+         Reward row contract (QE-051): the last of the 2 quest_q13961 journal rows is the reward row
+         (STR_DIC_N_IDEternity_War_L_WPSeller); saves persisted at 0 are repaired to 1 on enter-world, matching mirror 23961. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <!-- 进入永风峡谷副本自动接取。Auto-start on entering the Evergale Canyon instance. -->
     <transition source="unaccepted" target="started">
       <event>

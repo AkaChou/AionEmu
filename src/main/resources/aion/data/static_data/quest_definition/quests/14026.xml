@@ -45,7 +45,7 @@
     </start-conditions>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="3" min="0" max="4" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="3" min="0" max="5" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -67,13 +67,32 @@
       <var name="var0" value="4"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="4"/>
+      <var name="var0" value="5"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="4"/>
     </node>
   </nodes>
   <transitions>
+    <!-- QE-051 领奖行合同：客户端 quest_q14026.html 的 quest_summary 共 6 行，末行是领奖行
+         （STR_DIC_N_Telemachus）；旧投影停在 4，进入世界时纠正为 5 并下发状态包，与镜像 24026 一致。
+         Reward row contract (QE-051): the last of the 6 quest_q14026 journal rows is the reward row
+         (STR_DIC_N_Telemachus); saves persisted at 4 are repaired to 5 on enter-world, matching mirror 24026. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="4"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="5"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <transition source="unaccepted" target="started">
       <event>
         <zone-mission-end/>

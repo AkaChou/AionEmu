@@ -21,14 +21,37 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="s1" status="START">
+      <var name="var0" value="1"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- QE-051 领奖行合同：客户端 quest_q28036.html 的 quest_summary 共 2 行，末行是领奖行
+         （LDF5b_Latkel_E，NPC id 801280，对应该任务的领奖 NPC）；旧投影停在 0，进入世界时纠正为 1 并下发状态包。
+         Reward row contract (QE-051): the last of the 2 quest_q28036 journal rows is
+         the reward row (LDF5b_Latkel_E, npc id 801280, the reward NPC of this quest); saves persisted
+         at 0 are repaired to 1 on enter-world. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <dialog type="NPC_START" npc-id="801280" source="unaccepted" target="started" start-page="SELECT_NONE"/>
     <transition source="started" target="started">
       <event>
@@ -38,7 +61,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <transition source="started" target="s1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="802015" action="SETPRO1"/>
       </event>
@@ -53,7 +76,7 @@
     <npc-complete npc-id="801280" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <transition source="started" target="started">
+    <transition source="s1" target="s1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="801280" action="QUEST_SELECT"/>
       </event>
@@ -64,7 +87,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <transition source="s1" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="801280" action="SELECT_QUEST_REWARD"/>
       </event>

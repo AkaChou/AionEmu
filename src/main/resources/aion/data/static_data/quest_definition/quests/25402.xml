@@ -27,13 +27,32 @@
       <var name="var0" value="2"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="2"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- QE-051 领奖行合同：客户端 quest_q25402.html 的 quest_summary 共 4 行，末行是领奖行
+         （STR_DIC_N_Ab1_Darmian_E）；旧投影停在 2，进入世界时纠正为 3 并下发状态包，与镜像 15402 一致。
+         Reward row contract (QE-051): the last of the 4 quest_q25402 journal rows is the reward row
+         (STR_DIC_N_Ab1_Darmian_E); saves persisted at 2 are repaired to 3 on enter-world, matching mirror 15402. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="3"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <dialog type="NPC_START" npc-id="805356" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <transition source="started" target="started">
       <event>

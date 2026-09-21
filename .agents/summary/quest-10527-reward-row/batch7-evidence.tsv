@@ -1,0 +1,22 @@
+quest_id	group	client_rows	reward_row	stale_rows	reward_npc_id	reward_npc_name	last_row_text	client_rows_observed	client_last_row_text
+19672	A	2	1	0	806698	LC1_L_grow_npc_Rena_01	向成长支援教官报告	2	向[%dic:STR_DIC_N_Grow_Main_NPC_L]报告
+19677	A	2	1	0	806698	LC1_L_grow_npc_Rena_01	向成长支援教官报告	2	向[%dic:STR_DIC_N_Grow_Main_NPC_L]报告
+19684	A	2	1	0	806698	LC1_L_grow_npc_Rena_01	向成长支援教官报告	2	向[%dic:STR_DIC_N_Grow_Main_NPC_L]报告
+19685	A	2	1	0	806698	LC1_L_grow_npc_Rena_01	向成长支援教官报告	2	向[%dic:STR_DIC_N_Grow_Main_NPC_L]报告
+19686	A	2	1	0	806698	LC1_L_grow_npc_Rena_01	向成长支援教官报告	2	向[%dic:STR_DIC_N_Grow_Main_NPC_L]报告
+19687	A	2	1	0	806698	LC1_L_grow_npc_Rena_01	向成长支援教官报告	2	向[%dic:STR_DIC_N_Grow_Main_NPC_L]报告
+19688	A	2	1	0	806698	LC1_L_grow_npc_Rena_01	向成长支援教官报告	2	向[%dic:STR_DIC_N_Grow_Main_NPC_L]报告
+19689	A	2	1	0	806698	LC1_L_grow_npc_Rena_01	向成长支援教官报告	2	向[%dic:STR_DIC_N_Grow_Main_NPC_L]报告
+19694	A	2	1	0	806698	LC1_L_grow_npc_Rena_01	向成长支援教官报告	2	向[%dic:STR_DIC_N_Grow_Main_NPC_L]报告
+29672	A	2	1	0	806700	DC1_D_grow_npc_Melrania_01	向成长支援教官报告	2	向[%dic:STR_DIC_N_Grow_Main_NPC_D]报告
+29677	A	2	1	0	806700	DC1_D_grow_npc_Melrania_01	向成长支援教官报告	2	向[%dic:STR_DIC_N_Grow_Main_NPC_D]报告
+29684	A	2	1	0	806700	DC1_D_grow_npc_Melrania_01	向成长支援教官报告	2	向[%dic:STR_DIC_N_Grow_Main_NPC_D]报告
+29685	A	2	1	0	806700	DC1_D_grow_npc_Melrania_01	向成长支援教官报告	2	向[%dic:STR_DIC_N_Grow_Main_NPC_D]报告
+29686	A	2	1	0	806700	DC1_D_grow_npc_Melrania_01	向成长支援教官报告	2	向[%dic:STR_DIC_N_Grow_Main_NPC_D]报告
+29687	A	2	1	0	806700	DC1_D_grow_npc_Melrania_01	向成长支援教官报告	2	向[%dic:STR_DIC_N_Grow_Main_NPC_D]报告
+29688	A	2	1	0	806700	DC1_D_grow_npc_Melrania_01	向成长支援教官报告	2	向[%dic:STR_DIC_N_Grow_Main_NPC_D]报告
+29689	A	2	1	0	806700	DC1_D_grow_npc_Melrania_01	向成长支援教官报告	2	向[%dic:STR_DIC_N_Grow_Main_NPC_D]报告
+29694	A	2	1	0	806700	DC1_D_grow_npc_Melrania_01	向成长支援教官报告	2	向[%dic:STR_DIC_N_Grow_Main_NPC_D]报告
+3210	B	3	2	0,1	798331	Shugo_Shulack_02	和 Shugo_Shulack_02 对话	3	和[%dic:STR_DIC_N_Shugo_Shulack_02]对话
+18036	C	2	1	0	801281	LDF5b_Demades_E	向 LDF5b_Demades_E 报告	2	向[%dic:STR_DIC_N_LDF5b_Demades_E]%报告
+28036	C	2	1	0	801280	LDF5b_Latkel_E	向 LDF5b_Latkel_E 报告	2	向[%dic:STR_DIC_N_LDF5b_Latkel_E]%报告

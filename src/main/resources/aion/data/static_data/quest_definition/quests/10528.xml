@@ -69,11 +69,35 @@
       <var name="var0" value="11"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="11"/>
+      <var name="var0" value="12"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
+    <!-- 领奖行合同：客户端任务书行索引 = SECTION_0(var0)，交付后应指向任务书最后一行
+         “和代理人维达对话”（客户端 quest_q10528.html 第 12 行），与魔族镜像 20528 一致。
+         Reward row contract: the client journal row index is SECTION_0 (var0); after the turn-in
+         it must point at the final row "talk to agent Vida" (client row 12), matching the
+         Asmodian mirror 20528. -->
+    <!-- 旧存档修复：2026-09-21 之前的错误投影把领奖态落盘为 REWARD/var0=11，
+         进入世界时纠正为 12 并下发状态包，避免旧存档因 reward 节点源匹配失败而无法领奖。
+         Legacy save repair: saves persisted as REWARD/var0=11 by the earlier projection are
+         rewritten on enter-world so the reward routes match again. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="11"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="12"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <transition source="unaccepted" target="started">
       <event>
         <level-up/>
@@ -420,7 +444,7 @@
         <dialog type="TALK_TO_NPC" npc-id="806292" action="SET_SUCCEED"/>
       </event>
       <actions>
-        <set-variable field="var0" value="11"/>
+        <set-variable field="var0" value="12"/>
         <remove-item item-id="182216076" count="1"/>
       </actions>
       <after-commit>

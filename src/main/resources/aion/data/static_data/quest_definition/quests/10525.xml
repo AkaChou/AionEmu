@@ -35,7 +35,7 @@
        (bits 1/2/4/8) and must stay in SECTION_1 (offset 6), otherwise its low bits pollute the
        SECTION_0 row index. -->
   <progress>
-    <bit-field name="var0" offset="0" width="4" min="0" max="6" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="4" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/>
     <bit-field name="var1" offset="6" width="4" min="0" max="15" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
@@ -64,11 +64,35 @@
       <var name="var0" value="6"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="6"/>
+      <var name="var0" value="7"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
+    <!-- 领奖行合同：客户端任务书行索引 = SECTION_0(var0)。quest_q10525.html 的 quest_summary 有 8 行（0..7），
+         第 6 行是“在巨大永恒之塔碎片前使用 quest_10525d”、第 7 行才是“和代理人维达对话”（领奖行）；
+         旧投影只到 6，第 7 行没有任何状态可指向。
+         Reward row contract: the client journal row index is SECTION_0 (var0); quest_q10525 has 8 rows and
+         row 7 is the "talk to agent Vida" reward row, which the previous projection (6) could never reach. -->
+    <!-- 旧存档修复：2026-09-21 之前的错误投影把领奖态落盘为 REWARD/var0=6，
+         进入世界时纠正为 7 并下发状态包，避免旧存档因 reward 节点源匹配失败而无法领奖。
+         Legacy save repair: saves persisted as REWARD/var0=6 by the earlier projection are rewritten on
+         enter-world so the reward routes match again. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="6"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="7"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <transition source="unaccepted" target="started">
       <event>
         <level-up/>

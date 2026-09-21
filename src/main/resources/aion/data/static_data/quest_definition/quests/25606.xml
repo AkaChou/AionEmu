@@ -20,7 +20,7 @@
     </rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="4" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="4" min="0" max="8" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -51,11 +51,30 @@
       <var name="var0" value="7"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="7"/>
+      <var name="var0" value="8"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
+    <!-- QE-051 领奖行合同：客户端 quest_q25606.html 的 quest_summary 共 9 行，末行是领奖行
+         （STR_DIC_N_DF6_Chaelsean_E，对应该任务的领奖 NPC）；旧投影停在 7，进入世界时纠正为 8 并下发状态包，与镜像 15606 对照。
+         Reward row contract (QE-051): the last of the 9 quest_q25606 journal rows is the reward row
+         (STR_DIC_N_DF6_Chaelsean_E, the reward NPC of this quest); saves persisted at 7 are repaired to 8 on enter-world, matching mirror 15606. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="7"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="8"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806175" action="QUEST_SELECT"/>

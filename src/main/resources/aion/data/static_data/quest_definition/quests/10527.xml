@@ -76,11 +76,35 @@
       <var name="var0" value="14"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="14"/>
+      <var name="var0" value="15"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
+    <!-- 领奖行合同：客户端任务书行索引 = SECTION_0(var0)，使用 182216075 后应指向任务书最后一行
+         “和代理人维达对话”（客户端 quest_q10527.html 第 15 行），与魔族镜像 20527 的 reward 投影一致。
+         Reward row contract: the client journal row index is SECTION_0 (var0); after using
+         182216075 it must point at the final row "talk to agent Vida" (client row 15), matching
+         the Asmodian mirror 20527 reward projection. -->
+    <!-- 旧存档修复：2026-09-21 之前的错误投影把领奖态落盘为 REWARD/var0=14，
+         进入世界时纠正为 15 并下发状态包，避免旧存档因 reward 节点源匹配失败而无法领奖。
+         Legacy save repair: saves persisted as REWARD/var0=14 by the earlier projection are
+         rewritten on enter-world so the reward routes match again. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="14"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="15"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <transition source="unaccepted" target="started">
       <event>
         <level-up/>

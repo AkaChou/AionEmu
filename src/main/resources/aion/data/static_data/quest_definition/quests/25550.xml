@@ -24,13 +24,34 @@
       <var name="var0" value="1"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="1"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- QE-051 领奖行合同：客户端 quest_q25550.html 的 quest_summary 共 3 行——第 1 行“和
+         DF6_Svanhild_E 对话”、第 2 行“和 DF6_Conrto_E 对话”、第 3 行“和 DF6_Vadorei_E 对话”（领奖 NPC 806101）
+         才是领奖行；旧投影把 REWARD 压在第 2 行（var0=1）。
+         Reward row contract (QE-051): quest_q25550.html lists three journal rows and only the third one
+         ("talk to DF6_Vadorei_E", reward NPC 806101) is the reward row; the migrated projection parked
+         REWARD on row 2 (var0=1), so the reward state must project the last row (var0=2). -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <dialog type="NPC_START" npc-id="806116" source="unaccepted" target="s0" selection-sources="unaccepted" start-page="SELECT_NONE"/>
     <transition source="s0" target="s0">
       <event>
@@ -89,7 +110,7 @@
         <dialog type="TALK_TO_NPC" npc-id="806135" action="SELECT_QUEST_REWARD"/>
       </event>
       <actions>
-        <set-variable field="var0" value="1"/>
+        <set-variable field="var0" value="2"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>

@@ -27,7 +27,7 @@
     </start-conditions>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="3" min="0" max="4" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -46,13 +46,32 @@
       <var name="var0" value="3"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="3"/>
+      <var name="var0" value="4"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- QE-051 领奖行合同：客户端 quest_q11076.html 的 quest_summary 共 5 行，末行是领奖行
+         （STR_DIC_N_Laokoon，对应该任务的领奖 NPC）；旧投影停在 3，进入世界时纠正为 4 并下发状态包，与镜像 21076 对照。
+         Reward row contract (QE-051): the last of the 5 quest_q11076 journal rows is the reward row
+         (STR_DIC_N_Laokoon, the reward NPC of this quest); saves persisted at 3 are repaired to 4 on enter-world, matching mirror 21076. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="3"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="4"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <!-- NPC 799025 接取对话与接受/拒绝分支。 NPC 799025 start dialog and accept/refuse branches. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
