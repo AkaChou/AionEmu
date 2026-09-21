@@ -12,13 +12,14 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public abstract class PlayerCommand extends ChatCommand {
 
 	/**
-	 * 以给定别名构造玩家命令。
-	 * Construct a player command with the given alias.
+	 * 以给定别名（可附带额外别名）构造玩家命令。
+	 * Construct a player command with the given alias and optional additional aliases.
 	 *
-	 * @param alias 命令别名 / Command alias
+	 * @param alias 主别名 / Primary alias
+	 * @param alternateAliases 额外别名 / Additional aliases
 	 */
-	public PlayerCommand(String alias) {
-		super(alias);
+	public PlayerCommand(String alias, String... alternateAliases) {
+		super(alias, alternateAliases);
 	}
 
 	/**
@@ -26,11 +27,12 @@ public abstract class PlayerCommand extends ChatCommand {
 	 * Check whether the player has the required permission.
 	 *
 	 * @param player 玩家 / Player
+	 * @param alias 实际使用的别名 / Alias that was used
 	 * @return 有权限则为 true / True if allowed
 	 */
 	@Override
-	public boolean checkLevel(Player player) {
-		return player.havePermission(getLevel());
+	public boolean checkLevel(Player player, String alias) {
+		return player.havePermission(getLevel(alias));
 	}
 
 	/**
@@ -43,16 +45,19 @@ public abstract class PlayerCommand extends ChatCommand {
 	 */
 	@Override
 	boolean process(Player player, String text) {
-		if (!checkLevel(player)) {
+		String alias = resolveAlias(text);
+
+		if (!checkLevel(player, alias)) {
 			PacketSendUtility.sendMessage(player, "You not have permission for use this command.");
 			return true;
 		}
 
 		boolean success = false;
-		if (text.length() == getAlias().length()) {
+		String arguments = argumentsOf(text);
+		if (arguments.isEmpty()) {
 			success = this.run(player, EMPTY_PARAMS);
 		} else {
-			success = this.run(player, text.substring(getAlias().length() + 1).split(" "));
+			success = this.run(player, arguments.split("\\s+"));
 		}
 		return success;
 	}

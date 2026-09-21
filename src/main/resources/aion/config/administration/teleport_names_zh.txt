@@ -1,0 +1,367 @@
+# 中文传送地点别名表（GM 命令 //移动 使用） / Chinese teleport-location alias table (used by the //移动 GM command)
+#
+# 格式 / Format: <loc_id>\t<中文名>\t<英文名>
+#   loc_id 对应 data/static_data/teleport_location.xml，坐标以该文件为准（本表不复制坐标）。
+#   loc_id refers to data/static_data/teleport_location.xml, which stays the single source of coordinates.
+# 来源 / Source: 国服 5.8 客户端 L10N/CHS/Data/data.pak → Strings/client_strings_level.xml 等字符串表，
+#               按 teleport_location.xml 的 name_id 连接；生成脚本见
+#               .agents/summary/chinese-gm-commands/generate_teleport_names_zh.py
+# 说明 / Notes: 无服务端坐标的条目是客户端飞行传送点，//移动 会明确提示不支持直接传送；
+#               手工补充别名（例如同一地点的其它叫法）可直接在本文件追加一行。
+#               Entries without server coordinates are client-side flight teleports; //移动 reports them
+#               instead of failing silently. Extra aliases can be appended by hand.
+# 条目 / Entries: 353（有服务端坐标 / with coordinates: 269）
+
+2	极乐世界	Sanctum
+3	普埃塔	Poeta
+4	贝尔特伦	Verteron
+5	埃尔特内	Eltnen
+6	因特尔蒂卡	Heiron
+7	伏魔殿	Pandaemonium
+8	伊斯夏尔肯	Ishalgen
+9	阿尔特盖德	Altgard
+10	莫尔海姆	Morheim
+11	贝鲁斯兰	Beluslan
+12	阿卡利奥斯村	Akarios Village
+13	梅尔普内营地	Melponeh's Campsite
+14	贝尔特伦要塞	Verteron Citadel
+15	巡礼者的休息处	Pilgrims Respite
+16	贝尔特伦结界塔	Verteron Observatory
+17	阿戴尔村	Aldelle Village
+18	安图仁三岔路	Anturoon Crossing
+19	阿尔特盖德要塞	Altgard Fortress
+20	贸易团港口	Trader's Berth
+21	埃尔特内要塞	Eltnen Fortress
+22	金刺军团驻地	Golden Bough Garrison
+23	阿盖伦村	Agairon Village
+24	千人大广场	Elyos Square
+25	神圣之街	Divine Road
+28	因特尔蒂卡要塞	New Heiron Gate
+29	因特尔蒂卡结界塔	Heiron Observatory
+30	帕塞尔塔村	Arbolu's Haven
+31	尤普罗西内村	Jeiaparan Village
+32	巴斯佩尔特村	Basfelt Village
+33	非普洛斯特桥	Vifrost Bridge
+34	繁荣之街	Prosperity Road
+35	特米伦据点	Teminon Landing
+36	希埃尔西部要塞	Siel's Western Fortress
+37	希埃尔东部要塞	Siel's Eastern Fortress
+38	普利姆据点	Primum Landing
+39	硫磺树要塞	Sulfur Fortress
+40	拉特斯兰的东侧茎干	Eastern Shard Of Latesran
+41	拉特斯兰的东侧茎干	Eastern Shard Of Latesran
+42	拉特斯兰的西侧茎干	Western Shard Of Latesran
+43	拉特斯兰的西侧茎干	Western Shard Of Latesran
+45	克罗坦要塞	Krotan Refuge
+46	德奇沙斯要塞	Kysis Fortress
+47	拉米兰要塞	Miren Fortress
+50	拉特斯兰之东侧茎	Eastern Shard Of Latesran
+51	拉特斯兰之东侧茎	Eastern Shard Of Latesran
+52	拉特斯兰的西侧茎干	Western Shard Of Latesran
+53	拉特斯兰的西侧茎干	Western Shard Of Latesran
+54	希埃尔西部要塞	Siel's Western Fortress
+55	希埃尔东部要塞	Siel's Eastern Fortress
+56	硫磺树要塞	Sulfur Fortress
+57	克罗坦要塞	Krotan Refuge
+58	德奇沙斯要塞	Kysis Fortress
+59	拉米兰要塞	Miren Fortress
+63	莫尔海姆冰冻要塞	Morheim Ice Fortress
+64	盐漠监视基地	Desert Garrison
+65	伊拉西克村	Alsig Village
+72	克罗坦要塞周边	Krotan Refuge Area
+73	德奇沙斯要塞周边	Kysis Fortress Area
+74	拉米兰要塞周边	Miren Fortress Area
+75	克罗坦要塞周边	Krotan Refuge Area
+76	德奇沙斯要塞周边	Kysis Fortress Area
+77	拉米兰要塞周边	Miren Fortress Area
+78	贝鲁斯兰要塞	Beluslan Fortress
+79	贝鲁斯兰难民村	Besfer Refugee Camp
+80	红鬃洞穴村	Red Mane Cavern
+81	泰奥勃莫斯	Theobomos
+82	布鲁斯特豪宁	Brusthonin
+83	美华灵发掘工会窝棚	Meniherk Excavation Camp
+84	结界塔村	Observatory Village
+85	扎马努克旅馆	Jamanok Inn
+86	定居者营地	Settlers Campsite
+87	贝达扎尔村	Baltasar Hill Village
+88	蹦蹦部落	BuBu Village
+95	极乐世界外港	Outer Dock
+96	英吉斯温外港	Outer Port Of Inggison
+97	伏魔殿飞艇搭乘场	Pandaemonium Airship Dock
+98	格尔克马洛斯飞艇搭乘场	Gelkmaros Airship Dock
+99	英吉斯温幻影要塞	Inggison Illusion Fortress
+100	索泰利亚圣地村	Soteria Sanctuary
+101	地下要塞监视基地	Undirborg Observation Post
+102	格尔克马洛斯要塞	Gelkmaros Fortress
+103	隆博斯难民村	Rhonnam Refugee Village
+104	地下城市监视哨所	Subterranea Observation Post
+105	极乐世界外港	Outer Dock
+106	克兰戴尔地区	Crandale District
+111	托尔巴斯村	Tolbas Village
+112	埃尔德斯神殿	Ardus Shrine
+113	遗迹警戒哨所	Novan's Crossing
+114	埃尔特内结界塔	Eltnen Observatory
+115	岩石山监视基地	Kuriullu Outpost
+116	美华灵阿郎凯发掘场	Anangke Excavation Camp
+117	皮格马利安的营帐	Josnack's Vigil
+118	塞内莫内亚的野营地	Senea's Campsite
+119	奇夏尔监视基地	Kishar Observation Post
+120	天加隆野营地	Changarnerk's Campsite
+121	因派图西姆的心脏	Heart Of Impetusium
+122	阿尔特盖德结界塔	Altgard Observatory
+123	甘达尔芬的草屋	Kellan's Cabin
+124	火山调查基地	Slag Bulwark
+125	建筑基地监视哨所	Halabana Outpost
+126	莫尔海姆结界塔	Morheim Observatory
+127	峡谷调查基地	Edge Of Torment
+128	伊奥鲁侦察哨所	Iollu Overlook
+129	奇多伦野营地	Kidorun's Campsite
+130	火花的守护者野营地	Camp Kistenian
+131	霜眉避难处	Hoarfrost Shelter
+132	荣光之路	Path Of Glory
+133	伏魔殿广场	Path Of Gold
+139	埃利安广场	Oriel Plaza
+140	丰裕之光村	Prosperity's Light Village
+141	黄金峡谷村	Goldendell Village
+142	岩梅村	Glimmertree Village
+143	紫枫村	Vibrant Garden Village
+144	落日海岸村	Sunset Coast Village
+145	荆棘村	Thorn Tree Village
+146	胜利石像村	Seapath Village
+147	野花村	Brilliant Isle Village
+148	椰树村	Palmcrest Village
+149	银色石山村	Silverspire Village
+150	幻影花村	Summerfield Village
+151	珍珠贝村	Sandbank Village
+152	矮石墙村	Pearl Cove Village
+153	草香村	Rockroof Village
+154	长篱笆村	Stonecrest Village
+155	苇塘村	Reedpond Village
+156	绿径村	Peaks Crown Village
+157	间歇泉村	Elroco Hill Village
+158	丘陵地带村	Hillclimb Village
+159	小灯村	Betua Glen Village
+160	千年古树村	Millennium Tree Village
+161	清井村	Riverwell Village
+162	雾原村	Misty Vista Village
+163	治愈温泉村	Hotsprings Village
+164	风车山丘村	Mill Ridge Village
+165	佩尔农广场	Pernon Plaza
+166	荣耀之光村	Glory's Light Village
+167	阳光港口村	Sunny Harbor Village
+168	银树村	Silver Tree Village
+169	金色落日村	Golden Sunset Village
+170	蓝莲花村	Spire Isle Village
+171	晨雾村	Morning Mist Village
+172	春山村	Spring Hill Village
+173	海岸森林村	Coast Road Village
+174	山阳村	Azure Inlet Village
+175	红枫村	Greenleaf Village
+176	蓝雾村	Mistcloak Village
+177	千里山峰村	Longhill Pass Village
+178	四季树村	Spindletree Village
+179	微风村	Zephyr Village
+180	绿色地平村	Verdant Ridge Village
+181	野花庭院村	Spruce Ridge Village
+182	候鸟巢穴村	Aironroost Village
+183	花径石墙村	Stonewall Village
+184	岩石丘陵村	Brightleaf Village
+185	蓝蝴蝶村	Hallowed Falls Village
+186	山脚盆地村	Foothill Basin Village
+187	花路村	Bloomroad Village
+188	雪山村	Shepherd's Peak Village
+189	绿草地村	Seven Peaks Village
+190	岩山村	Alpindell Village
+191	埃利安	Oriel
+192	佩尔农	Pernon
+203	埃利安	Oriel
+204	佩尔农	Pernon
+209	符文神殿	Danuar Spire
+210	阴影森林防御基地	Adumbral Forest Enclave
+211	重建的光之塔	Kaisinel's Beacon
+212	普罗提斯防御基地	Pantager Base
+213	马伊灵工会事务所	Mairinerk's League Office
+214	马伊灵工会事务所	Mairinerk's League Office
+215	克雷隆工会事务所	Crerunerk League Office
+216	克雷隆工会事务所	Crerunerk League Office
+219	第75基地	Broken Cliff Camp
+220	第75基地	Broken Cliff Camp
+223	第76基地	Irigani Keep
+226	第77基地	Crumbling Redoubt
+229	第78基地	Windswept Camp
+230	第78基地	Windswept Camp
+233	第79基地	Sillus Pass Watchpost
+234	第79基地	Sillus Pass Watchpost
+235	希鲁斯要塞	Sillus Fortress
+236	希鲁斯要塞	Sillus Fortress
+237	希鲁斯要塞	Sillus Fortress
+238	希鲁斯要塞	Sillus Fortress
+241	讨伐军关卡哨所	Battlegroup Outpost
+242	派遣队关卡哨所	Detachment Outpost
+243	拉格托斯海岸探查基地	Latheron Coast Base Camp
+244	浑格拉斯营地	Hongras Campsite
+245	海岸警戒哨所	Coast Watchers Post
+246	讨伐队前进基地	Reaper Outpost
+247	卡姆斯托的营帐	Kamstow's Barracks
+248	查卡塔的隐身处	Chaikata's Hideout
+299	北部卡塔拉姆	Katalam
+300	北部卡塔拉姆	Katalam
+313	英吉斯温	Outer Port Of Inggison
+314	格尔克马洛斯	Gelkmaros Airship Dock
+316	英雄废墟	Hero's Fall (Elyos)
+317	英雄废墟	Hero's Fall (Asmodians)
+318	北部前哨基地	Shatterbark Wood 1 (Elyos)
+319	北部前哨基地	Shatterbark Wood 1 (Asmodians)
+320	南部前哨基地	Splitwood 1 (Elyos)
+321	南部前哨基地	Splitwood 1 (Asmodians)
+322	阿诺哈要塞	Wealhtheow's Keep (Elyos)
+323	阿诺哈要塞	Wealhtheow's Keep (Asmodians)
+324	北部前哨基地前面	Shatterbark Wood 2 (Elyos)
+325	北部前哨基地前面	Shatterbark Wood 2 (Asmodians)
+326	南部前哨基地前面	Splitwood 2 (Elyos)
+327	南部前哨基地前面	Splitwood 2 (Asmodians)
+328	卡多尔	Rubirinerk's Settlement
+329	卡多尔	Saparinerk's Settlement
+332	艾格尔远征队侦察基地	Lumewillow Glade Scout Base (Elyos)
+333	赫尔昆特派遣队前哨基地	Pinacle Cataract Outpost (Asmodians)
+334	查皮勒群落	Lobneru Lagoon
+336	波波古巢穴	Whisperleaf Forest
+338	巴甫尔亚高原	Valpura Heights
+339	远征队进攻通道	Lawbringer's Cut
+342	基地方向	Belani Fort
+343	基地方向	Belfarth Fort
+344	基地方向	Beling Fort
+345	基地方向	Belsal Fort
+346	基地方向	Aspamon Hold
+347	基地方向	Aspatyr Hold
+348	基地方向	Aspar Hold
+349	基地方向	Aspal Hold
+350	基地方向	Atasin Post
+351	基地方向	Atair Post
+352	基地方向	Atangal Post
+353	基地方向	Ataj Post
+354	基地方向	Disilgot Redoubt
+355	基地方向	Disilveir Redoubt
+356	基地方向	Disiltroll Redoubt
+357	基地方向	Disilheim Redoubt
+358	阿诺哈要塞	Wealhtheow's Keep (Elyos)
+359	阿诺哈要塞	Wealhtheow's Keep (Asmodians)
+364	北部前哨基地	Shatterbark Wood 1 (Elyos)
+365	北部前哨基地	Shatterbark Wood 1 (Asmodians)
+366	南部前哨基地	Splitwood 1 (Elyos)
+367	南部前哨基地	Splitwood 1 (Asmodians)
+368	英雄废墟	Hero's Fall (Elyos)
+369	英雄废墟	Hero's Fall (Asmodians)
+370	燃烧之眼	Ashen Glade (Elyos)
+371	燃烧之眼	Ashen Glade (Asmodians)
+372	暗影之地	Molten Cliffs (Elyos)
+373	暗影之地	Molten Cliffs (Asmodians)
+376	哥尔哈	Lumewillow Glade Scout Base (Elyos)
+377	哥尔哈	Pinacle Cataract Outpost (Asmodians)
+378	第73基地	Beritran Foothold (Base Asmodians)
+379	第74基地	Primeval Ruin (Base Asmodians)
+380	第73基地	Beritran Foothold (Base Elyos)
+381	第74基地	Primeval Ruin (Base Elyos)
+382	遗忘龙帝寺院	Dragon Rest Temple
+383	夕阳寺院	Dawnbreak Temple
+384	绿洲寺院	Whirlpool Temple
+385	遗忘龙帝寺院	Dragon Rest Temple
+386	夕阳寺院	Dawnbreak Temple
+387	绿洲寺院	Whirlpool Temple
+388	亚门特领地村	Arden Village
+389	塞塔斯领地村	Cet Village
+390	拜尔亚德领地村	Bomire Village
+391	命运之天平军团进击地	Fatebound Legion Outpost
+400	希哥尼亚	Aequis Expedition Headquarters
+401	黎明之光远征总部	Aequis Expedition Headquarters
+402	黎明之光前进总部	Aequis Advance Post
+403	黎明之光前哨总部	Aequis Outpost
+404	黎明之光远征总部	Aequis Expedition Headquarters
+405	黎明之光前进总部	Aequis Advance Post
+406	黎明之光前哨总部	Aequis Outpost
+407	哈诺勒领地村	Henor Territory Village
+408	安德雷亚领地村	Aedra Territory Village
+409	埃提卡领地村	Erivale Territory Village
+410	黎明之光派遣哨所	Aequis Detachment Post
+415	厄夏勒	Dragon Rest Temple
+416	拉格纳顿号	Habrok
+417	埃尔盖夫号	Griffoen
+418	亚门特领地村	Arden Village
+419	塞塔斯领地村	Cet Village
+420	拜尔亚德领地村	Bomire Village
+421	空中要塞渗透作战地	Sky Fortress Insurgent Post
+422	兰图斯夺回基地	Rentus Recovery Base
+423	坠落的龙帝之眼	Dragonfall's Glare
+424	勒门图渗透地	Raksang Ruins Entrance
+425	佩尔金追踪团野营地	Perkin Chase
+426	符文安息处调查团营帐	Danuar Sanctuary Investigation Area
+427	龙帝之绝唱	Shriekfang Crown
+428	哈诺勒领地村	Henor Territory Village
+429	安德雷亚领地村	Aedra Territory Village
+430	埃提卡领地村	Erivale Territory Village
+431	阿图拉姆作战哨所	Sky Fortress Operation Post
+432	鸢族避难处	Reian Refugee Camp
+433	坠落的城堡残骸	Ruihold Scatterings
+434	不详礼堂入口	Twilight Temple
+435	佩尔金追踪地	Perkin Chase
+436	符文安息处调查团野营地	Danuar Sanctuary Inspector Camp
+437	悲鸣之龙岩峡谷	Wailing Dunes
+438	诺斯珀德	Norsvold
+439	阿斯佩尔神庙寺院	Azphel's Sanctuary
+440	受诅咒的峡谷	Canyon Of Lost Souls
+441	审判之高原	Plateau Of Aetheric Gales
+442	生命之湖	Aetherspring Lake
+443	萨波拉森林	Nightbloom Forest
+444	阿斯泰拉	Iluma
+445	阿里埃神庙圣所	Basedes Canyon
+446	五色湿地	Polten Marsh
+447	寂静之精灵森林	Ariel's Rest
+448	西风高原	Zephyr Vale
+449	红蘑菇峡谷	Kojol Valley
+450	千人大广场	Elyos Square
+451	神圣之路	Divine Road
+452	极乐世界外港	Outer Port Of Sanctum
+453	荣光之路	Exalted Path
+454	非普洛斯特桥	Vifrost Bridge
+455	黄金会堂	Temple Of Gold
+456	克兰戴尔地区	Crandale District
+458	极乐世界西部激战场下部飞艇	Sanctum Airship Dock - Lower
+460	伏魔殿南部激战场上部飞艇	Pandaemonium Airship Dock - Upper
+461	极乐世界西部激战场上部飞艇	Sanctum Airship Dock - Upper
+462	伏魔殿南部激战场下部飞艇	Pandaemonium Airship Dock - Lower
+477	玛高斯	Redemption Landing
+478	托斯卡努	Harbinger's Landing
+487	留下的祭坛	Ancient Altar
+488	祈愿圣殿	Temple Of Origin
+489	万古的毛鲁	Eon Anvil
+490	千古的毛鲁	Eternal Anvil
+491	留下的祭坛	Ancient Altar
+492	祈愿圣殿	Temple Of Origin
+493	万古的毛鲁	Eon Anvil
+494	千古的毛鲁	Eternal Anvil
+495	留下的祭坛	Ancient Altar
+496	祈愿圣殿	Temple Of Origin
+497	万古的毛鲁	Eon Anvil
+498	千古的毛鲁	Eternal Anvil
+499	留下的祭坛	Ancient Altar
+500	祈愿圣殿	Temple Of Origin
+501	万古的毛鲁	Eon Anvil
+502	千古的毛鲁	Eternal Anvil
+523	神圣要塞	Divine Fortress (Elyos)
+524	神圣要塞	Divine Fortress (Asmodians)
+526	第208基地-战场的激励	Airport_B2_Artifact (Asmodians)
+527	第209基地-激战的援手	Airport_D_Artifact (Asmodians)
+528	第210基地-战场的激励	Airport_F2_Artifact (Asmodians)
+529	第211基地-激战的援手	Airport_H_Artifact (Asmodians)
+530	第208基地-战场的激励	Airport_B2_Artifact (Elyos)
+531	第209基地-激战的援手	Airport_D_Artifact (Elyos)
+532	第210基地-战场的激励	Airport_F2_Artifact (Elyos)
+533	第211基地-激战的援手	Airport_H_Artifact (Elyos)
+535	第108基地-战场的激励	Airport_B2_Artifact (Elyos)
+536	第109基地-激战的援手	Airport_D_Artifact (Elyos)
+537	第110基地-战场的激励	Airport_F2_Artifact (Elyos)
+538	第111基地-激战的援手	Airport_H_Artifact (Elyos)
+539	第108基地-战场的激励	Airport_B2_Artifact (Asmodians)
+540	第109基地-激战的援手	Airport_D_Artifact (Asmodians)
+541	第110基地-战场的激励	Airport_F2_Artifact (Asmodians)
+542	第111基地-激战的援手	Airport_H_Artifact (Asmodians)

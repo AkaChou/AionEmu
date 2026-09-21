@@ -2,7 +2,12 @@ package com.aionemu.gameserver.utils.chathandlers;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -13,7 +18,6 @@ import com.aionemu.commons.scripting.classlistener.AggregatedClassListener;
 import com.aionemu.commons.scripting.classlistener.OnClassLoadUnloadListener;
 import com.aionemu.commons.scripting.classlistener.ScheduledTaskClassListener;
 import com.aionemu.commons.scripting.CompiledScriptLoader;
-import com.aionemu.commons.utils.PropertiesUtils;
 import com.aionemu.gameserver.GameServerError;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -124,22 +128,29 @@ public class ChatProcessor implements GameEngine {
 	}
 
 	/**
-	 * 注册命令并绑定配置中的访问等级。
-	 * Register a command and bind its access level from config.
+	 * 注册命令的全部别名，并逐个绑定配置中的访问等级。
+	 * Registers every alias of a command and binds each alias's access level from config.
+	 * <p>
+	 * 单个别名缺少配置时只跳过该别名（例如升级时运行期配置尚未补充中文别名），
+	 * 其余别名仍照常注册。
+	 * A single alias without a config entry is skipped on its own (for example a Chinese alias that a
+	 * runtime config has not been updated with yet), while the other aliases stay registered.
 	 *
 	 * Command
 	 */
 	public void registerCommand(ChatCommand cmd) {
-		if (commands.containsKey(cmd.getAlias())) {
-			log.warn(I18n.get("log.c03ebfafc509", cmd.getAlias()));
-			return;
+		for (String alias : cmd.getAliases()) {
+			if (commands.containsKey(alias)) {
+				log.warn(I18n.get("log.c03ebfafc509", alias));
+				continue;
+			}
+			if (!accessLevel.containsKey(alias)) {
+				log.warn(I18n.get("log.8812baf3b55e", alias));
+				continue;
+			}
+			cmd.setAccessLevel(alias, accessLevel.get(alias));
+			commands.put(alias, cmd);
 		}
-		if (!accessLevel.containsKey(cmd.getAlias())) {
-			log.warn(I18n.get("log.8812baf3b55e", cmd.getAlias()));
-			return;
-		}
-		cmd.setAccessLevel(accessLevel.get(cmd.getAlias()));
-		commands.put(cmd.getAlias(), cmd);
 	}
 
 	/**
@@ -164,7 +175,14 @@ public class ChatProcessor implements GameEngine {
 	private void loadLevels() {
 		accessLevel.clear();
 		try {
-			java.util.Properties props = PropertiesUtils.load(Config.configFile("administration/commands.properties").getPath());
+			File configFile = Config.configFile("administration/commands.properties");
+			java.util.Properties props = new java.util.Properties();
+			// 别名键含中文（如 移动/掉落），必须以 UTF-8 读取，不能用 Properties 默认的 ISO-8859-1。
+			// Alias keys contain Chinese characters (移动/掉落), so read the file as UTF-8 instead of
+			// the ISO-8859-1 default used by Properties.load(InputStream).
+			try (Reader reader = new InputStreamReader(new FileInputStream(configFile), StandardCharsets.UTF_8)) {
+				props.load(reader);
+			}
 
 			for (Object key : props.keySet()) {
 				String str = (String) key;

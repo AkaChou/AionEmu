@@ -20,11 +20,11 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 public class DropInfo extends AdminCommand {
 
 	/**
-	 * 注册命令名为 {@code dropinfo}。
-	 * Registers the command name {@code dropinfo}.
+	 * 注册命令名 {@code dropinfo} 与中文别名 {@code 掉落}。
+	 * Registers the command name {@code dropinfo} and its Chinese alias {@code 掉落}.
 	 */
 	public DropInfo() {
-		super("dropinfo");
+		super("dropinfo", "掉落");
 	}
 
 	/**

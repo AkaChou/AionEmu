@@ -18,13 +18,14 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public abstract class AdminCommand extends ChatCommand {
 
 	/**
-	 * 以给定别名构造管理员命令。
-	 * Construct an admin command with the given alias.
+	 * 以给定别名（可附带额外别名）构造管理员命令。
+	 * Construct an admin command with the given alias and optional additional aliases.
 	 *
-	 * @param alias 命令别名 / Command alias
+	 * @param alias 主别名 / Primary alias
+	 * @param alternateAliases 额外别名 / Additional aliases
 	 */
-	public AdminCommand(String alias) {
-		super(alias);
+	public AdminCommand(String alias, String... alternateAliases) {
+		super(alias, alternateAliases);
 	}
 
 	/**
@@ -32,11 +33,13 @@ public abstract class AdminCommand extends ChatCommand {
 	 * Check whether the player's access level is sufficient.
 	 *
 	 * @param player 玩家 / Player
+	 * @param alias 实际使用的别名 / Alias that was used
 	 * @return 有权限则为 true / True if allowed
 	 */
 	@Override
-	public boolean checkLevel(Player player) {
-		return player.getAccessLevel() >= getLevel();
+	public boolean checkLevel(Player player, String alias) {
+		Byte level = getLevel(alias);
+		return level != null && player.getAccessLevel() >= level;
 	}
 
 	/**
@@ -50,21 +53,22 @@ public abstract class AdminCommand extends ChatCommand {
 	@Override
 	boolean process(Player player, String text) {
 
-		if (!checkLevel(player)) {
+		String alias = resolveAlias(text);
+
+		if (!checkLevel(player, alias)) {
 			if (LoggingConfig.LOG_GMAUDIT) {
-				log.info(I18n.get("log.47c48a6b530f", player.getName(), getAlias()));
+				log.info(I18n.get("log.47c48a6b530f", player.getName(), alias));
 			}
 			if (player.isGM()) {
 				PacketSendUtility.sendMessage(player,
-						"[WARN] You need to have access level " + this.getLevel() + " or more to use " + getAlias());
+						"[WARN] You need to have access level " + this.getLevel(alias) + " or more to use " + alias);
 				return true;
 			}
 			return false;
 		}
 
 		boolean success = false;
-		String arguments = text.length() > getAlias().length()
-			? text.substring(getAlias().length() + 1).trim() : "";
+		String arguments = argumentsOf(text);
 		if (arguments.isEmpty()) {
 			success = this.run(player, EMPTY_PARAMS);
 		} else {

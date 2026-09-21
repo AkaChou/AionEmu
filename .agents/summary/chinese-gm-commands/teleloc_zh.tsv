@@ -1,0 +1,358 @@
+loc_id	mapid	en_name	name_id	zh_key	zh_name	client_file	posX	posY	posZ
+2	110010000	Sanctum	400489	STR_LC1_Airport_ZONE	极乐世界	client_strings_level.xml	1313.25	1512.011	568.107
+3	210010000	Poeta	400490	STR_LF1_Airport_ZONE	普埃塔	client_strings_level.xml	805.9061	1242.6946	118.75
+4	210030000	Verteron	400491	STR_LF1A_Airport_ZONE	贝尔特伦	client_strings_level.xml	1640.76	1500.32	119.70999
+5	210020000	Eltnen	400492	STR_LF2_Airport_ZONE	埃尔特内	client_strings_level.xml	344.48312	2723.4956	263.88733
+6	210040000	Heiron	400493	STR_LF3_Airport_ZONE	因特尔蒂卡	client_strings_level.xml	2542.2327	339.2828	411.66394
+7	120010000	Pandaemonium	400494	STR_DC1_Airport_ZONE	伏魔殿	client_strings_level.xml	1685.7	1400.5	195.48618
+8	220010000	Ishalgen	400495	STR_DF1_Airport_ZONE	伊斯夏尔肯	client_strings_level.xml	570.4143	2457.6738	280.74136
+9	220030000	Altgard	400496	STR_DF1A_Airport_ZONE	阿尔特盖德	client_strings_level.xml	1752.5322	1806.6096	254.66133
+10	220020000	Morheim	400497	STR_DF2_Airport_ZONE	莫尔海姆	client_strings_level.xml	309.53	2271.51	449.41266
+11	220040000	Beluslan	400498	STR_DF3_Airport_ZONE	贝鲁斯兰	client_strings_level.xml	398.3	400.8	222.79721
+12	210010000	Akarios Village	400499	STR_LF1_Airport_SUB_Akarios	阿卡利奥斯村	client_strings_level.xml	-	-	-
+13	210010000	Melponeh's Campsite	400500	STR_LF1_Airport_SUB_Melpone	梅尔普内营地	client_strings_level.xml	-	-	-
+14	210030000	Verteron Citadel	400501	STR_LF1A_Airport_SUB_Verterron	贝尔特伦要塞	client_strings_level.xml	-	-	-
+15	210030000	Pilgrims Respite	400502	STR_LF1A_Airport_SUB_Artamia	巡礼者的休息处	client_strings_level.xml	-	-	-
+16	210030000	Verteron Observatory	400503	STR_LF1A_Airport_SUB_Kantas	贝尔特伦结界塔	client_strings_level.xml	-	-	-
+17	220010000	Aldelle Village	400504	STR_DF1_Airport_SUB_Alder	阿戴尔村	client_strings_level.xml	-	-	-
+18	220010000	Anturoon Crossing	400505	STR_DF1_Airport_SUB_Anturn	安图仁三岔路	client_strings_level.xml	-	-	-
+19	220030000	Altgard Fortress	400506	STR_DF1A_Airport_SUB_Altgard	阿尔特盖德要塞	client_strings_level.xml	-	-	-
+20	220030000	Trader's Berth	400507	STR_DF1A_Airport_SUB_Urtumheim	贸易团港口	client_strings_level.xml	-	-	-
+21	210020000	Eltnen Fortress	400593	STR_LF2_Airport_SUB_Elthenen	埃尔特内要塞	client_strings_level.xml	-	-	-
+22	210020000	Golden Bough Garrison	400594	STR_LF2_Airport_SUB_MirageCorps	金刺军团驻地	client_strings_level.xml	-	-	-
+23	210020000	Agairon Village	400595	STR_LF2_Airport_SUB_Ageiron	阿盖伦村	client_strings_level.xml	-	-	-
+24	110010000	Elyos Square	400508	STR_LC1_Airport_SPOT_Bank	千人大广场	client_strings_level.xml	1458.6332	1450.5676	572.87573
+25	110010000	Divine Road	400509	STR_LC1_Airport_SPOT_Library	神圣之街	client_strings_level.xml	1930.9808	1514.3209	590.01074
+28	210040000	New Heiron Gate	400596	STR_LF3_Airport_SUB_Interdica	因特尔蒂卡要塞	client_strings_level.xml	-	-	-
+29	210040000	Heiron Observatory	400597	STR_LF3_Airport_SUB_Tower	因特尔蒂卡结界塔	client_strings_level.xml	-	-	-
+30	210040000	Arbolu's Haven	400598	STR_LF3_Airport_SUB_NorthernTown	帕塞尔塔村	client_strings_level.xml	-	-	-
+31	210040000	Jeiaparan Village	400599	STR_LF3_Airport_SUB_EasternTown	尤普罗西内村	client_strings_level.xml	-	-	-
+32	220030000	Basfelt Village	400600	STR_DF1A_Airport_SUB_Basfelt	巴斯佩尔特村	client_strings_level.xml	-	-	-
+33	120010000	Vifrost Bridge	400606	STR_DC1_Airport_SPOT_Bridge	非普洛斯特桥	client_strings_level.xml	1601.8434	1412.9706	193.1286
+34	120010000	Prosperity Road	400607	STR_LC1_Airport_SPOT_Street	繁荣之街	client_strings_level.xml	1034.8004	1473.1919	213.4775
+35	400010000	Teminon Landing	400658	STR_Ab1_Airport_SUB_1111	特米伦据点	client_strings_level.xml	2253.6558	669.215	1528.1271
+36	400010000	Siel's Western Fortress	400659	STR_Ab1_DynAirport_SUB_L_1131	希埃尔西部要塞	client_strings_level.xml	2070.3755	2039.4363	1504.0714
+37	400010000	Siel's Eastern Fortress	400660	STR_Ab1_DynAirport_SUB_L_1132	希埃尔东部要塞	client_strings_level.xml	1795.5652	2237.606	1506.5228
+38	400010000	Primum Landing	400661	STR_Ab1_Airport_SUB_1121	普利姆据点	client_strings_level.xml	585.4649	2533.379	1636.5851
+39	400010000	Sulfur Fortress	400662	STR_Ab1_DynAirport_SUB_L_1141	硫磺树要塞	client_strings_level.xml	846.4512	774.1685	1514.6663
+40	400010000	Eastern Shard Of Latesran	400666	STR_Ab1_Airport_SUB_L_1132_4	拉特斯兰的东侧茎干	client_strings_level.xml	1346.9381	2870.5657	1668.9768
+41	400010000	Eastern Shard Of Latesran	400667	STR_Ab1_Airport_SUB_L_1251_3	拉特斯兰的东侧茎干	client_strings_level.xml	1346.9381	2870.5657	1668.9768
+42	400010000	Western Shard Of Latesran	400668	STR_Ab1_Airport_SUB_L_1141_4	拉特斯兰的西侧茎干	client_strings_level.xml	1389.7644	356.04156	1568.9745
+43	400010000	Western Shard Of Latesran	400669	STR_Ab1_Airport_SUB_L_1211_2	拉特斯兰的西侧茎干	client_strings_level.xml	1389.7644	356.04156	1568.9745
+45	400010000	Krotan Refuge	400686	STR_Ab1_DynAirport_SUB_L_1221	克罗坦要塞	client_strings_level.xml	1419.9374	926.7138	2963.5466
+46	400010000	Kysis Fortress	400687	STR_Ab1_DynAirport_SUB_L_1231	德奇沙斯要塞	client_strings_level.xml	1929.1255	1682.7465	3015.9988
+47	400010000	Miren Fortress	400688	STR_Ab1_DynAirport_SUB_L_1241	拉米兰要塞	client_strings_level.xml	1182.3955	1946.9685	2949.673
+50	400010000	Eastern Shard Of Latesran	400721	STR_Ab1_Airport_SUB_D_1132_4	拉特斯兰之东侧茎	client_strings_level.xml	1348.5076	2706.0017	1667.1489
+51	400010000	Eastern Shard Of Latesran	400722	STR_Ab1_Airport_SUB_D_1251_3	拉特斯兰之东侧茎	client_strings_level.xml	1348.5076	2706.0017	1667.1489
+52	400010000	Western Shard Of Latesran	400723	STR_Ab1_Airport_SUB_D_1141_4	拉特斯兰的西侧茎干	client_strings_level.xml	1392.8948	190.54343	1567.1466
+53	400010000	Western Shard Of Latesran	400724	STR_Ab1_Airport_SUB_D_1211_2	拉特斯兰的西侧茎干	client_strings_level.xml	1392.8948	190.54343	1567.1466
+54	400010000	Siel's Western Fortress	400725	STR_Ab1_DynAirport_SUB_D_1131	希埃尔西部要塞	client_strings_level.xml	2070.3755	2039.4363	1504.0714
+55	400010000	Siel's Eastern Fortress	400726	STR_Ab1_DynAirport_SUB_D_1132	希埃尔东部要塞	client_strings_level.xml	1795.5652	2237.606	1506.5228
+56	400010000	Sulfur Fortress	400662	STR_Ab1_DynAirport_SUB_L_1141	硫磺树要塞	client_strings_level.xml	846.4512	774.1685	1514.6663
+57	400010000	Krotan Refuge	400729	STR_Ab1_DynAirport_SUB_D_1221	克罗坦要塞	client_strings_level.xml	1419.9374	926.7138	2963.5466
+58	400010000	Kysis Fortress	400730	STR_Ab1_DynAirport_SUB_D_1231	德奇沙斯要塞	client_strings_level.xml	1929.1255	1682.7465	3015.9988
+59	400010000	Miren Fortress	400731	STR_Ab1_DynAirport_SUB_D_1241	拉米兰要塞	client_strings_level.xml	1182.3955	1946.9685	2949.673
+63	220020000	Morheim Ice Fortress	400740	STR_DF2_Airport_SUB_Morheim	莫尔海姆冰冻要塞	client_strings_level.xml	-	-	-
+64	220020000	Desert Garrison	400741	STR_DF2_Airport_SUB_TauricCamp	盐漠监视基地	client_strings_level.xml	-	-	-
+65	220020000	Alsig Village	400742	STR_DF2_Airport_SUB_Iralsig	伊拉西克村	client_strings_level.xml	-	-	-
+72	400010000	Krotan Refuge Area	400882	STR_Ab1_DynAirport_SUB_L_1221_1	克罗坦要塞周边	client_strings_level.xml	1419.9374	926.7138	2963.5466
+73	400010000	Kysis Fortress Area	400883	STR_Ab1_DynAirport_SUB_L_1231_1	德奇沙斯要塞周边	client_strings_level.xml	1929.1255	1682.7465	3015.9988
+74	400010000	Miren Fortress Area	400884	STR_Ab1_DynAirport_SUB_L_1241_1	拉米兰要塞周边	client_strings_level.xml	1182.3955	1946.9685	2949.673
+75	400010000	Krotan Refuge Area	400885	STR_Ab1_DynAirport_SUB_D_1221_1	克罗坦要塞周边	client_strings_level.xml	1419.9374	926.7138	2963.5466
+76	400010000	Kysis Fortress Area	400886	STR_Ab1_DynAirport_SUB_D_1231_1	德奇沙斯要塞周边	client_strings_level.xml	1929.1255	1682.7465	3015.9988
+77	400010000	Miren Fortress Area	400887	STR_Ab1_DynAirport_SUB_D_1241_1	拉米兰要塞周边	client_strings_level.xml	1182.3955	1946.9685	2949.673
+78	220040000	Beluslan Fortress	400929	STR_DF3_Airport_SUB_Bellusran	贝鲁斯兰要塞	client_strings_level.xml	-	-	-
+79	220040000	Besfer Refugee Camp	400930	STR_DF3_Airport_SUB_Amsnir	贝鲁斯兰难民村	client_strings_level.xml	-	-	-
+80	220040000	Red Mane Cavern	400931	STR_DF3_Airport_SUB_RedmaneTown	红鬃洞穴村	client_strings_level.xml	-	-	-
+81	210060000	Theobomos	400939	STR_LF2a_Airport_ZONE	泰奥勃莫斯	client_strings_level.xml	1396.1299	1559.8954	30.875
+82	220050000	Brusthonin	400940	STR_DF2a_Airport_ZONE	布鲁斯特豪宁	client_strings_level.xml	2917.251	2417.4087	15.24525
+83	210060000	Meniherk Excavation Camp	401080	STR_LF2A_Airport_SUB_Meihualin	美华灵发掘工会窝棚	client_strings_level.xml	-	-	-
+84	210060000	Observatory Village	401081	STR_LF2A_Airport_SUB_Sanctuary	结界塔村	client_strings_level.xml	-	-	-
+85	210060000	Jamanok Inn	401082	STR_LF2A_Airport_SUB_Jamanok	扎马努克旅馆	client_strings_level.xml	-	-	-
+86	220050000	Settlers Campsite	401083	STR_DF2A_Airport_SUB_Camp	定居者营地	client_strings_level.xml	-	-	-
+87	220050000	Baltasar Hill Village	401084	STR_DF2A_Airport_SUB_Veldazar	贝达扎尔村	client_strings_level.xml	-	-	-
+88	220050000	BuBu Village	401085	STR_DF2A_Airport_SUB_Bumbum	蹦蹦部落	client_strings_level.xml	-	-	-
+95	110010000	Outer Dock	401542	STR_LC1_Airport_ZONE_Port	极乐世界外港	client_strings_level.xml	1743.5588	2059.158	518.0106
+96	210050000	Outer Port Of Inggison	401543	STR_LF4_Airport_ZONE	英吉斯温外港	client_strings_level.xml	1369.6293	360.29944	589.57605
+97	120010000	Pandaemonium Airship Dock	401544	STR_DC1_Airport_ZONE_Port	伏魔殿飞艇搭乘场	client_strings_level.xml	943.9	1126.1	206.9
+98	220070000	Gelkmaros Airship Dock	401545	STR_DF4_Airport_ZONE	格尔克马洛斯飞艇搭乘场	client_strings_level.xml	1888.2524	2847.2727	554.9964
+99	210050000	Inggison Illusion Fortress	401546	STR_LF4_Airport_SUB_IngisonOP	英吉斯温幻影要塞	client_strings_level.xml	-	-	-
+100	210050000	Soteria Sanctuary	401547	STR_LF4_Airport_SUB_SoteriaTown	索泰利亚圣地村	client_strings_level.xml	-	-	-
+101	210050000	Undirborg Observation Post	401548	STR_LF4_Airport_SUB_B5spot	地下要塞监视基地	client_strings_level.xml	-	-	-
+102	220070000	Gelkmaros Fortress	401549	STR_DF4_Airport_SUB_GelkmarosOP	格尔克马洛斯要塞	client_strings_level.xml	-	-	-
+103	220070000	Rhonnam Refugee Village	401550	STR_DF4_Airport_SUB_RhombusTown	隆博斯难民村	client_strings_level.xml	-	-	-
+104	220070000	Subterranea Observation Post	401551	STR_DF4_Airport_SUB_B6spot	地下城市监视哨所	client_strings_level.xml	-	-	-
+105	110010000	Outer Dock	401552	STR_LC1_Airport_SPOT_Dock	极乐世界外港	client_strings_level.xml	1817.1605	2154.2178	527.9301
+106	120010000	Crandale District	401553	STR_DC1_Airport_SPOT_Westside	克兰戴尔地区	client_strings_level.xml	1175.7998	1167.0049	207.97896
+111	210030000	Tolbas Village	401640	STR_LF1A_Airport_SUB_TOLVAS	托尔巴斯村	client_strings_level.xml	-	-	-
+112	210030000	Ardus Shrine	401641	STR_LF1A_Airport_SUB_ELDES	埃尔德斯神殿	client_strings_level.xml	-	-	-
+113	210020000	Novan's Crossing	401642	STR_LF2_Airport_SUB_RUIN	遗迹警戒哨所	client_strings_level.xml	-	-	-
+114	210020000	Eltnen Observatory	401643	STR_LF2_Airport_SUB_SANCTUARY	埃尔特内结界塔	client_strings_level.xml	-	-	-
+115	210020000	Kuriullu Outpost	401644	STR_LF2_Airport_SUB_ROCKMT	岩石山监视基地	client_strings_level.xml	-	-	-
+116	210060000	Anangke Excavation Camp	401645	STR_LF2A_Airport_SUB_ANANGKE	美华灵阿郎凯发掘场	client_strings_level.xml	-	-	-
+117	210060000	Josnack's Vigil	401646	STR_LF2A_Airport_SUB_DIRMOI	皮格马利安的营帐	client_strings_level.xml	-	-	-
+118	210040000	Senea's Campsite	401647	STR_LF3_Airport_SUB_SENEMONEA	塞内莫内亚的野营地	client_strings_level.xml	-	-	-
+119	210040000	Kishar Observation Post	401648	STR_LF3_Airport_SUB_KISHAR	奇夏尔监视基地	client_strings_level.xml	-	-	-
+120	210040000	Changarnerk's Campsite	401649	STR_LF3_Airport_SUB_CHENGARUNG	天加隆野营地	client_strings_level.xml	-	-	-
+121	220030000	Heart Of Impetusium	401650	STR_DF1A_Airport_SUB_IMPETOSIUM	因派图西姆的心脏	client_strings_level.xml	-	-	-
+122	220030000	Altgard Observatory	401651	STR_DF1A_Airport_SUB_SANCTUARY	阿尔特盖德结界塔	client_strings_level.xml	-	-	-
+123	220020000	Kellan's Cabin	401652	STR_DF2_Airport_SUB_CABIN	甘达尔芬的草屋	client_strings_level.xml	-	-	-
+124	220020000	Slag Bulwark	401653	STR_DF2_Airport_SUB_MUSPEL	火山调查基地	client_strings_level.xml	-	-	-
+125	220020000	Halabana Outpost	401654	STR_DF2_Airport_SUB_HALABANA	建筑基地监视哨所	client_strings_level.xml	-	-	-
+126	220020000	Morheim Observatory	401655	STR_DF2_Airport_SUB_SANCTUARY	莫尔海姆结界塔	client_strings_level.xml	309.0768	2272.7947	449.41266
+127	220050000	Edge Of Torment	401656	STR_DF2A_Airport_SUB_DEATHVALLEY	峡谷调查基地	client_strings_level.xml	-	-	-
+128	220050000	Iollu Overlook	401657	STR_DF2A_Airport_SUB_IULRU	伊奥鲁侦察哨所	client_strings_level.xml	-	-	-
+129	220040000	Kidorun's Campsite	401658	STR_DF3_Airport_SUB_KIDORUN	奇多伦野营地	client_strings_level.xml	-	-	-
+130	220040000	Camp Kistenian	401659	STR_DF3_Airport_SUB_WESTCAMP	火花的守护者野营地	client_strings_level.xml	-	-	-
+131	220040000	Hoarfrost Shelter	401660	STR_DF3_Airport_SUB_SOUTHHAVEN	霜眉避难处	client_strings_level.xml	-	-	-
+132	110010000	Path Of Glory	404675	STR_LC1_Airport_SPOT_Glory	荣光之路	client_strings_level.xml	1363.1033	1481.7102	569.0385
+133	120010000	Path Of Gold	404676	STR_DC1_Airport_SPOT_Gold	伏魔殿广场	client_strings_level.xml	1314.9084	1426.8268	209.09084
+139	700010000	Oriel Plaza	402109	STR_HLFP_Airport_Level	埃利安广场	client_strings_level.xml	1260	1837	97.625
+140	700010000	Prosperity's Light Village	402110	STR_HLFP_Airport_A	丰裕之光村	client_strings_level.xml	684.418	2271.943	162.25377
+141	700010000	Goldendell Village	402111	STR_HLFP_Airport_A_1	黄金峡谷村	client_strings_level.xml	231.96844	2023.8032	121.73419
+142	700010000	Glimmertree Village	402112	STR_HLFP_Airport_A_2	岩梅村	client_strings_level.xml	272.97052	2625.6702	265.6273
+143	700010000	Vibrant Garden Village	402113	STR_HLFP_Airport_A_3	紫枫村	client_strings_level.xml	976.0596	2624.8945	106.22417
+144	700010000	Sunset Coast Village	402114	STR_HLFP_Airport_B	落日海岸村	client_strings_level.xml	693.3599	1057.5583	95.30991
+145	700010000	Thorn Tree Village	402115	STR_HLFP_Airport_B_1	荆棘村	client_strings_level.xml	797.11334	1525.7024	101.64358
+146	700010000	Seapath Village	402116	STR_HLFP_Airport_B_2	胜利石像村	client_strings_level.xml	394.45938	1408.7224	85.68491
+147	700010000	Brilliant Isle Village	402117	STR_HLFP_Airport_B_3	野花村	client_strings_level.xml	270.70224	396.1502	127.921524
+148	700010000	Palmcrest Village	402118	STR_HLFP_Airport_B_4	椰树村	client_strings_level.xml	557.7419	641.31055	85.40572
+149	700010000	Silverspire Village	402119	STR_HLFP_Airport_B_5	银色石山村	client_strings_level.xml	705.896	339.62515	119.273705
+150	700010000	Summerfield Village	402120	STR_HLFP_Airport_B_6	幻影花村	client_strings_level.xml	1269.7871	1177.5679	102.30991
+151	700010000	Sandbank Village	402121	STR_HLFP_Airport_B_7	珍珠贝村	client_strings_level.xml	988.5063	786.4083	82.29926
+152	700010000	Pearl Cove Village	402122	STR_HLFP_Airport_B_8	矮石墙村	client_strings_level.xml	1256.6743	512.704	109.5923
+153	700010000	Rockroof Village	402123	STR_HLFP_Airport_C	草香村	client_strings_level.xml	2542.1484	1637.929	180.90013
+154	700010000	Stonecrest Village	402124	STR_HLFP_Airport_C_1	长篱笆村	client_strings_level.xml	2034.9452	1334.5454	80.26341
+155	700010000	Reedpond Village	402125	STR_HLFP_Airport_C_2	苇塘村	client_strings_level.xml	2029.0403	1961.8074	81.18491
+156	700010000	Peaks Crown Village	402126	STR_HLFP_Airport_C_3	绿径村	client_strings_level.xml	2065.7412	891.1591	85.671364
+157	700010000	Elroco Hill Village	402127	STR_HLFP_Airport_C_4	间歇泉村	client_strings_level.xml	2749.0925	1071.6727	191.80992
+158	700010000	Hillclimb Village	402128	STR_HLFP_Airport_C_5	丘陵地带村	client_strings_level.xml	2375.6008	2183.6294	136.97652
+159	700010000	Betua Glen Village	402129	STR_HLFP_Airport_C_6	小灯村	client_strings_level.xml	1535.5198	2717.588	85.18491
+160	700010000	Millennium Tree Village	402130	STR_HLFP_Airport_C_7	千年古树村	client_strings_level.xml	1635.4989	2239.8318	84.30991
+161	700010000	Riverwell Village	402131	STR_HLFP_Airport_C_8	清井村	client_strings_level.xml	2126.8948	442.12808	84.77892
+162	700010000	Misty Vista Village	402132	STR_HLFP_Airport_C_9	雾原村	client_strings_level.xml	2012.9377	2661.8462	156.89427
+163	700010000	Hotsprings Village	402133	STR_HLFP_Airport_C_10	治愈温泉村	client_strings_level.xml	2562.4922	662.8415	137.76797
+164	700010000	Mill Ridge Village	402134	STR_HLFP_Airport_C_11	风车山丘村	client_strings_level.xml	2475.8518	2604.844	183.18492
+165	710010000	Pernon Plaza	402177	STR_HDFP_Airport_Level	佩尔农广场	client_strings_level.xml	1071.561	1538.3507	97.99502
+166	710010000	Glory's Light Village	402178	STR_HDFP_Airport_A	荣耀之光村	client_strings_level.xml	909.1477	932.90045	135.85416
+167	710010000	Sunny Harbor Village	402179	STR_HDFP_Airport_A_1	阳光港口村	client_strings_level.xml	1071.135	212.12553	73.49216
+168	710010000	Silver Tree Village	402180	STR_HDFP_Airport_A_2	银树村	client_strings_level.xml	485.65146	387.6844	197.625
+169	710010000	Golden Sunset Village	402181	STR_HDFP_Airport_A_3	金色落日村	client_strings_level.xml	361.56342	1080.169	167.48328
+170	710010000	Spire Isle Village	402182	STR_HDFP_Airport_B	蓝莲花村	client_strings_level.xml	2195.5305	910.12665	77.75
+171	710010000	Morning Mist Village	402183	STR_HDFP_Airport_B_1	晨雾村	client_strings_level.xml	1688.8514	923.16986	72.25
+172	710010000	Spring Hill Village	402184	STR_HDFP_Airport_B_2	春山村	client_strings_level.xml	1628.7767	401.26392	84.0
+173	710010000	Coast Road Village	402185	STR_HDFP_Airport_B_3	海岸森林村	client_strings_level.xml	2167.597	303.38992	76.375
+174	710010000	Azure Inlet Village	402186	STR_HDFP_Airport_B_4	山阳村	client_strings_level.xml	2769.9849	371.96484	76.5
+175	710010000	Greenleaf Village	402187	STR_HDFP_Airport_B_5	红枫村	client_strings_level.xml	1764.1644	1486.6857	111.625
+176	710010000	Mistcloak Village	402188	STR_HDFP_Airport_B_6	蓝雾村	client_strings_level.xml	2295.1084	1406.6738	78.375
+177	710010000	Longhill Pass Village	402189	STR_HDFP_Airport_B_7	千里山峰村	client_strings_level.xml	2733.2883	806.1624	83.875
+178	710010000	Spindletree Village	402190	STR_HDFP_Airport_B_8	四季树村	client_strings_level.xml	2852.249	1352.2986	75.875
+179	710010000	Zephyr Village	402191	STR_HDFP_Airport_C	微风村	client_strings_level.xml	1745.9618	2640.552	230.75
+180	710010000	Verdant Ridge Village	402192	STR_HDFP_Airport_C_1	绿色地平村	client_strings_level.xml	1149.6129	2157.3887	189.125
+181	710010000	Spruce Ridge Village	402193	STR_HDFP_Airport_C_2	野花庭院村	client_strings_level.xml	1642.2921	2091.8486	222.875
+182	710010000	Aironroost Village	402194	STR_HDFP_Airport_C_3	候鸟巢穴村	client_strings_level.xml	2220.5867	1994.5643	238.75
+183	710010000	Stonewall Village	402195	STR_HDFP_Airport_C_4	花径石墙村	client_strings_level.xml	770.25397	2092.3303	168.625
+184	710010000	Brightleaf Village	402196	STR_HDFP_Airport_C_5	岩石丘陵村	client_strings_level.xml	336.80817	1803.5692	137.5
+185	710010000	Hallowed Falls Village	402197	STR_HDFP_Airport_C_6	蓝蝴蝶村	client_strings_level.xml	2689.6335	2068.2654	341.25
+186	710010000	Foothill Basin Village	402198	STR_HDFP_Airport_C_7	山脚盆地村	client_strings_level.xml	274.02444	2276.584	197.25
+187	710010000	Bloomroad Village	402199	STR_HDFP_Airport_C_8	花路村	client_strings_level.xml	771.70917	2699.471	212.0
+188	710010000	Shepherd's Peak Village	402200	STR_HDFP_Airport_C_9	雪山村	client_strings_level.xml	2416.2876	2565.7197	323.125
+189	710010000	Seven Peaks Village	402201	STR_HDFP_Airport_C_10	绿草地村	client_strings_level.xml	2751.6755	2496.0825	360.24484
+190	710010000	Alpindell Village	402202	STR_HDFP_Airport_C_11	岩山村	client_strings_level.xml	370.3637	2669.6338	210.25
+191	700010000	Oriel	403254	STR_HLFPlevel_Airport_Level	埃利安	client_strings_level.xml	1259.6345	1837.169	97.64784
+192	710010000	Pernon	403255	STR_HDFPlevel_Airport_Level	佩尔农	client_strings_level.xml	1071.561	1538.3507	97.99502
+203	700010000	Oriel	403254	STR_HLFPlevel_Airport_Level	埃利安	client_strings_level.xml	1259.6345	1837.169	97.64784
+204	710010000	Pernon	403255	STR_HDFPlevel_Airport_Level	佩尔农	client_strings_level.xml	1071.561	1538.3507	97.99502
+209	600050000	Danuar Spire	403575	STR_LDF5a_Airport_SUB_OP_D	符文神殿	client_strings_level.xml	360.45178	382.44104	281.87354
+210	600050000	Adumbral Forest Enclave	403576	STR_LDF5a_Airport_SUB_C2_D	阴影森林防御基地	client_strings_level.xml	-	-	-
+211	600050000	Kaisinel's Beacon	403577	STR_LDF5a_Airport_SUB_OP_L	重建的光之塔	client_strings_level.xml	405.14328	2715.871	142.39162
+212	600050000	Pantager Base	403578	STR_LDF5a_Airport_SUB_G2_L	普罗提斯防御基地	client_strings_level.xml	-	-	-
+213	600050000	Mairinerk's League Office	403579	STR_LDF5a_Airport_SUB_E3_D	马伊灵工会事务所	client_strings_level.xml	2835.62817	247.391983	292.5
+214	600050000	Mairinerk's League Office	403580	STR_LDF5a_Airport_SUB_E3_L	马伊灵工会事务所	client_strings_level.xml	2835.62817	247.391983	292.5
+215	600050000	Crerunerk League Office	403581	STR_LDF5a_Airport_SUB_E7_D	克雷隆工会事务所	client_strings_level.xml	2783.7708	2575.02	259.2965
+216	600050000	Crerunerk League Office	403582	STR_LDF5a_Airport_SUB_E7_L	克雷隆工会事务所	client_strings_level.xml	2783.7708	2575.02	259.2965
+219	600050000	Broken Cliff Camp	403585	STR_LDF5a_Airport_SUB_B6_5_D	第75基地	client_strings_level.xml	1488.1138	1515.6654	117.89414
+220	600050000	Broken Cliff Camp	403586	STR_LDF5a_Airport_SUB_B6_5_L	第75基地	client_strings_level.xml	1524.3763	1611.3085	123.21577
+223	600050000	Irigani Keep	403589	STR_LDF5a_Airport_SUB_B3_6_D	第76基地	client_strings_level.xml	1632.0428	802.85156	155.7956
+226	600050000	Crumbling Redoubt	403592	STR_LDF5a_Airport_SUB_B9_7_L	第77基地	client_strings_level.xml	1749.924	2333.8499	174.15424
+229	600050000	Windswept Camp	403595	STR_LDF5a_Airport_SUB_E1_8_D	第78基地	client_strings_level.xml	1969.9484	1159.0249	252.4893
+230	600050000	Windswept Camp	403596	STR_LDF5a_Airport_SUB_E1_8_L	第78基地	client_strings_level.xml	2081.3662	1218.382	243.12259
+233	600050000	Sillus Pass Watchpost	403599	STR_LDF5a_Airport_SUB_E2_9_D	第79基地	client_strings_level.xml	2546.1182	2053.2297	345.8746
+234	600050000	Sillus Pass Watchpost	403600	STR_LDF5a_Airport_SUB_E2_9_L	第79基地	client_strings_level.xml	2446.3455	2059.925	286.52032
+235	600050000	Sillus Fortress	403601	STR_LDF5a_DynAirport_5011_D	希鲁斯要塞	client_strings_level.xml	1967.99963	1924.41431	334.622864
+236	600050000	Sillus Fortress	403602	STR_LDF5a_DynAirport_5011_L	希鲁斯要塞	client_strings_level.xml	1967.99963	1924.41431	334.622864
+237	600050000	Sillus Fortress	403603	STR_LDF5a_MistOffAirport_5011_D	希鲁斯要塞	client_strings_level.xml	1967.99963	1924.41431	334.622864
+238	600050000	Sillus Fortress	403604	STR_LDF5a_MistOffAirport_5011_L	希鲁斯要塞	client_strings_level.xml	1967.99963	1924.41431	334.622864
+241	600050000	Battlegroup Outpost	403607	STR_LDF5a_Airport_SUB_E5_D	讨伐军关卡哨所	client_strings_level.xml	2954.2673	1504.3882	420.26672
+242	600050000	Detachment Outpost	403608	STR_LDF5a_Airport_SUB_E5_L	派遣队关卡哨所	client_strings_level.xml	2918.2622	1866.9161	396.125
+243	210060000	Latheron Coast Base Camp	403615	STR_LF2A_Airport_SUB_B2	拉格托斯海岸探查基地	client_strings_level.xml	-	-	-
+244	210060000	Hongras Campsite	403616	STR_LF2A_Airport_SUB_C5	浑格拉斯营地	client_strings_level.xml	-	-	-
+245	210040000	Coast Watchers Post	403617	STR_LF3_Airport_SUB_F3	海岸警戒哨所	client_strings_level.xml	-	-	-
+246	210040000	Reaper Outpost	403618	STR_LF3_Airport_SUB_E	讨伐队前进基地	client_strings_level.xml	-	-	-
+247	220050000	Kamstow's Barracks	403619	STR_DF2A_Airport_SUB_C3	卡姆斯托的营帐	client_strings_level.xml	-	-	-
+248	220020000	Chaikata's Hideout	403723	STR_DF2_Airport_SUB_CHAIKATA	查卡塔的隐身处	client_strings_level.xml	2292.6716	1512.6804	120.875
+299	600050000	Katalam	403933	STR_LDF5a_Airport_ZONE_OP_L	北部卡塔拉姆	client_strings_level.xml	402.64386	2715.041	142.391632
+300	600050000	Katalam	403934	STR_LDF5a_Airport_ZONE_OP_D	北部卡塔拉姆	client_strings_level.xml	360.9616	382.9373	281.873566
+313	210050000	Outer Port Of Inggison	403989	STR_LF4_Airport_ZONE_OP	英吉斯温	client_strings_level.xml	1369.6293	360.29944	589.57605
+314	220070000	Gelkmaros Airship Dock	403990	STR_DF4_Airport_ZONE_OP	格尔克马洛斯	client_strings_level.xml	1888.2524	2847.2727	554.9964
+316	600090000	Hero's Fall (Elyos)	404261	STR_LDF5_Fortress_Airport_SUB_7012_L	英雄废墟	client_strings_level.xml	863.2553	804.6878	164.80492
+317	600090000	Hero's Fall (Asmodians)	404262	STR_LDF5_Fortress_Airport_SUB_7012_D	英雄废墟	client_strings_level.xml	863.2553	804.6878	164.80492
+318	600090000	Shatterbark Wood 1 (Elyos)	404263	STR_LDF5_Fortress_Airport_SUB_A1_L	北部前哨基地	client_strings_level.xml	340.27243	1069.663	124.05519
+319	600090000	Shatterbark Wood 1 (Asmodians)	404264	STR_LDF5_Fortress_Airport_SUB_A1_D	北部前哨基地	client_strings_level.xml	340.27243	1069.663	124.05519
+320	600090000	Splitwood 1 (Elyos)	404265	STR_LDF5_Fortress_Airport_SUB_A2_L	南部前哨基地	client_strings_level.xml	1098.5002	1250.8628	177.8723
+321	600090000	Splitwood 1 (Asmodians)	404266	STR_LDF5_Fortress_Airport_SUB_A2_D	南部前哨基地	client_strings_level.xml	1098.5002	1250.8628	177.8723
+322	600090000	Wealhtheow's Keep (Elyos)	404267	STR_LDF5_Fortress_Airport_DYN_7011_L	阿诺哈要塞	client_strings_level.xml	755.8279	274.5816	155.6706
+323	600090000	Wealhtheow's Keep (Asmodians)	404268	STR_LDF5_Fortress_Airport_DYN_7011_D	阿诺哈要塞	client_strings_level.xml	755.8279	274.5816	155.6706
+324	600090000	Shatterbark Wood 2 (Elyos)	404269	STR_LDF5_Fortress_Airport_SUB_A1_Front_L	北部前哨基地前面	client_strings_level.xml	457.55423	1267.0055	130.6557
+325	600090000	Shatterbark Wood 2 (Asmodians)	404270	STR_LDF5_Fortress_Airport_SUB_A1_Front_D	北部前哨基地前面	client_strings_level.xml	457.55423	1267.0055	130.6557
+326	600090000	Splitwood 2 (Elyos)	404271	STR_LDF5_Fortress_Airport_SUB_A2_Front_L	南部前哨基地前面	client_strings_level.xml	1208.5062	1164.5486	173.43425
+327	600090000	Splitwood 2 (Asmodians)	404272	STR_LDF5_Fortress_Airport_SUB_A2_Front_D	南部前哨基地前面	client_strings_level.xml	1208.5062	1164.5486	173.43425
+328	600090000	Rubirinerk's Settlement	404273	STR_LDF5_Fortress_Airport_ZONE_A1_OP	卡多尔	client_strings_level.xml	408.1886	1359.2572	163.51178
+329	600090000	Saparinerk's Settlement	404274	STR_LDF5_Fortress_Airport_ZONE_A2_OP	卡多尔	client_strings_level.xml	1302.5714	1315.4507	199.75026
+332	600100000	Lumewillow Glade Scout Base (Elyos)	404277	STR_LDF4_Advance_Airport_SUB_OP_L	艾格尔远征队侦察基地	client_strings_level.xml	115.27089	128.20848	347.8555
+333	600100000	Pinacle Cataract Outpost (Asmodians)	404278	STR_LDF4_Advance_Airport_SUB_OP_D	赫尔昆特派遣队前哨基地	client_strings_level.xml	1842.7148	1772.413	305.20532
+334	600100000	Lobneru Lagoon	404279	STR_LDF4_Advance_Airport_SUB_D1	查皮勒群落	client_strings_level.xml	-	-	-
+336	600100000	Whisperleaf Forest	404281	STR_LDF4_Advance_Airport_SUB_I1	波波古巢穴	client_strings_level.xml	-	-	-
+338	600100000	Valpura Heights	404283	STR_LDF4_Advance_Airport_SUB_J1	巴甫尔亚高原	client_strings_level.xml	1073.4718	1493.0555	273.14166
+339	600100000	Lawbringer's Cut	404284	STR_LDF4_Advance_Airport_SUB_E1	远征队进攻通道	client_strings_level.xml	951.724927	684.57874	284.86478
+342	400020000	Belani Fort	404290	STR_GAb1_01_Airport_v01_L	基地方向	client_strings_level.xml	209.47366	175.34723	1489.4998
+343	400020000	Belfarth Fort	404291	STR_GAb1_01_Airport_v02_L	基地方向	client_strings_level.xml	175.95262	1838.0282	1489.4702
+344	400020000	Beling Fort	404292	STR_GAb1_01_Airport_v03_L	基地方向	client_strings_level.xml	1844.2397	1868.1226	1489.5593
+345	400020000	Belsal Fort	404293	STR_GAb1_01_Airport_v04_L	基地方向	client_strings_level.xml	1875.5597	202.80507	1489.649
+346	400040000	Aspamon Hold	404294	STR_GAb1_02_Airport_v01_L	基地方向	client_strings_level.xml	209.47366	175.34723	1489.4998
+347	400040000	Aspatyr Hold	404295	STR_GAb1_02_Airport_v02_L	基地方向	client_strings_level.xml	175.95262	1838.0282	1489.4702
+348	400040000	Aspar Hold	404296	STR_GAb1_02_Airport_v03_L	基地方向	client_strings_level.xml	1844.2397	1868.1226	1489.5593
+349	400040000	Aspal Hold	404297	STR_GAb1_02_Airport_v04_L	基地方向	client_strings_level.xml	1875.5597	202.80507	1489.649
+350	400050000	Atasin Post	404298	STR_GAb1_03_Airport_v01_L	基地方向	client_strings_level.xml	209.47366	175.34723	1489.4998
+351	400050000	Atair Post	404299	STR_GAb1_03_Airport_v02_L	基地方向	client_strings_level.xml	175.95262	1838.0282	1489.4702
+352	400050000	Atangal Post	404300	STR_GAb1_03_Airport_v03_L	基地方向	client_strings_level.xml	1844.2397	1868.1226	1489.5593
+353	400050000	Ataj Post	404301	STR_GAb1_03_Airport_v04_L	基地方向	client_strings_level.xml	1875.5597	202.80507	1489.649
+354	400060000	Disilgot Redoubt	404302	STR_GAb1_04_Airport_v01_L	基地方向	client_strings_level.xml	209.47366	175.34723	1489.4998
+355	400060000	Disilveir Redoubt	404303	STR_GAb1_04_Airport_v02_L	基地方向	client_strings_level.xml	175.95262	1838.0282	1489.4702
+356	400060000	Disiltroll Redoubt	404304	STR_GAb1_04_Airport_v03_L	基地方向	client_strings_level.xml	1844.2397	1868.1226	1489.5593
+357	400060000	Disilheim Redoubt	404305	STR_GAb1_04_Airport_v04_L	基地方向	client_strings_level.xml	1875.5597	202.80507	1489.649
+358	600090000	Wealhtheow's Keep (Elyos)	404267	STR_LDF5_Fortress_Airport_DYN_7011_L	阿诺哈要塞	client_strings_level.xml	755.8279	274.5816	155.6706
+359	600090000	Wealhtheow's Keep (Asmodians)	404268	STR_LDF5_Fortress_Airport_DYN_7011_D	阿诺哈要塞	client_strings_level.xml	755.8279	274.5816	155.6706
+364	600090000	Shatterbark Wood 1 (Elyos)	404407	STR_LDF5_F_Airport_SUB_A1_A_L	北部前哨基地	client_strings_level.xml	340.27243	1069.663	124.05519
+365	600090000	Shatterbark Wood 1 (Asmodians)	404408	STR_LDF5_F_Airport_SUB_A1_A_D	北部前哨基地	client_strings_level.xml	340.27243	1069.663	124.05519
+366	600090000	Splitwood 1 (Elyos)	404409	STR_LDF5_F_Airport_SUB_A2_A_L	南部前哨基地	client_strings_level.xml	1098.5002	1250.8628	177.8723
+367	600090000	Splitwood 1 (Asmodians)	404410	STR_LDF5_F_Airport_SUB_A2_A_D	南部前哨基地	client_strings_level.xml	1098.5002	1250.8628	177.8723
+368	600090000	Hero's Fall (Elyos)	404411	STR_LDF5_F_Airport_DYN_7012_L	英雄废墟	client_strings_level.xml	863.2553	804.6878	164.80492
+369	600090000	Hero's Fall (Asmodians)	404412	STR_LDF5_F_Airport_DYN_7012_D	英雄废墟	client_strings_level.xml	863.2553	804.6878	164.80492
+370	600090000	Ashen Glade (Elyos)	404413	STR_LDF5_F_Airport_DYN_7013_L	燃烧之眼	client_strings_level.xml	507.20117	472.81064	151.95007
+371	600090000	Ashen Glade (Asmodians)	404414	STR_LDF5_F_Airport_DYN_7013_D	燃烧之眼	client_strings_level.xml	507.20117	472.81064	151.95007
+372	600090000	Molten Cliffs (Elyos)	404415	STR_LDF5_F_Airport_DYN_7014_L	暗影之地	client_strings_level.xml	1223.4508	232.77756	136.86725
+373	600090000	Molten Cliffs (Asmodians)	404416	STR_LDF5_F_Airport_DYN_7014_D	暗影之地	client_strings_level.xml	1223.4508	232.77756	136.86725
+376	600100000	Lumewillow Glade Scout Base (Elyos)	404429	STR_LDF4_Advance_Airport_OP_L	哥尔哈	client_strings_level.xml	115.27089	128.20848	347.8555
+377	600100000	Pinacle Cataract Outpost (Asmodians)	404430	STR_LDF4_Advance_Airport_OP_D	哥尔哈	client_strings_level.xml	1842.7148	1772.413	305.20532
+378	600050000	Beritran Foothold (Base Asmodians)	404431	STR_LDF5a_Airport_SUB_A3_D	第73基地	client_strings_level.xml	1064.5366	344.04404	186.41261
+379	600050000	Primeval Ruin (Base Asmodians)	404432	STR_LDF5a_Airport_SUB_A4_D	第74基地	client_strings_level.xml	783.3526	2619.8684	215.09322
+380	600050000	Beritran Foothold (Base Elyos)	404433	STR_LDF5a_Airport_SUB_A3_L	第73基地	client_strings_level.xml	967.71124	396.22546	187.12152
+381	600050000	Primeval Ruin (Base Elyos)	404434	STR_LDF5a_Airport_SUB_A4_L	第74基地	client_strings_level.xml	963.1022	2784.7249	205.23875
+382	220080000	Dragon Rest Temple	404550	STR_DF5_Airport_SUB_OP1_Fly	遗忘龙帝寺院	client_strings_level.xml	-	-	-
+383	220080000	Dawnbreak Temple	404551	STR_DF5_Airport_SUB_OP2_Fly	夕阳寺院	client_strings_level.xml	-	-	-
+384	220080000	Whirlpool Temple	404552	STR_DF5_Airport_SUB_OP3_Fly	绿洲寺院	client_strings_level.xml	-	-	-
+385	220080000	Dragon Rest Temple	404553	STR_DF5_Airport_SUB_OP1_Tele	遗忘龙帝寺院	client_strings_level.xml	471.00113	2340.8035	216.72331
+386	220080000	Dawnbreak Temple	404554	STR_DF5_Airport_SUB_OP2_Tele	夕阳寺院	client_strings_level.xml	2677.9238	1396.5533	336.15005
+387	220080000	Whirlpool Temple	404555	STR_DF5_Airport_SUB_OP3_Tele	绿洲寺院	client_strings_level.xml	1591.6001	154.62932	186.81342
+388	220080000	Arden Village	404556	STR_DF5_Airport_SUB_Vil1_Tele	亚门特领地村	client_strings_level.xml	1770.8252	2535.3325	298.0000
+389	220080000	Cet Village	404557	STR_DF5_Airport_SUB_Vil2_Tele	塞塔斯领地村	client_strings_level.xml	1509.0227	1725.0443	328.31528
+390	220080000	Bomire Village	404558	STR_DF5_Airport_SUB_Vil3_Tele	拜尔亚德领地村	client_strings_level.xml	756.71674	1253.5146	251.5000
+391	220080000	Fatebound Legion Outpost	404559	STR_DF5_Airport_SUB_Vil4_Tele	命运之天平军团进击地	client_strings_level.xml	2389.7625	795.2537	286.92163
+400	210070000	Aequis Expedition Headquarters	404568	STR_LF5_Airport_SUB_OP1_Line	希哥尼亚	client_strings_level.xml	2938.8386	850.36816	571.088
+401	210070000	Aequis Expedition Headquarters	404569	STR_LF5_Airport_SUB_OP1_Fly	黎明之光远征总部	client_strings_level.xml	-	-	-
+402	210070000	Aequis Advance Post	404570	STR_LF5_Airport_SUB_OP2_Fly	黎明之光前进总部	client_strings_level.xml	-	-	-
+403	210070000	Aequis Outpost	404571	STR_LF5_Airport_SUB_OP3_Fly	黎明之光前哨总部	client_strings_level.xml	-	-	-
+404	210070000	Aequis Expedition Headquarters	404572	STR_LF5_Airport_SUB_OP1_Tele	黎明之光远征总部	client_strings_level.xml	2938.8386	850.36816	571.088
+405	210070000	Aequis Advance Post	404573	STR_LF5_Airport_SUB_OP2_Tele	黎明之光前进总部	client_strings_level.xml	507.6797	1895.5385	467.20273
+406	210070000	Aequis Outpost	404574	STR_LF5_Airport_SUB_OP3_Tele	黎明之光前哨总部	client_strings_level.xml	2144.7974	2937.4211	330.30264
+407	210070000	Henor Territory Village	404575	STR_LF5_Airport_SUB_Vil1_Tele	哈诺勒领地村	client_strings_level.xml	1393.2283	604.04767	581.372
+408	210070000	Aedra Territory Village	404576	STR_LF5_Airport_SUB_Vil2_Tele	安德雷亚领地村	client_strings_level.xml	1160.847	1579.1193	465.75
+409	210070000	Erivale Territory Village	404577	STR_LF5_Airport_SUB_Vil3_Tele	埃提卡领地村	client_strings_level.xml	2397.352	1501.9462	437.625
+410	210070000	Aequis Detachment Post	404578	STR_LF5_Airport_SUB_Vil4_Tele	黎明之光派遣哨所	client_strings_level.xml	1135.5297	2916.5142	291.375
+415	220080000	Dragon Rest Temple	404617	STR_DF5_Airport_SUB_OP1_Zone	厄夏勒	client_strings_level.xml	471.00113	2340.8035	216.72331
+416	220090000	Habrok	404619	STR_DF5_Ship_Airport_Zone	拉格纳顿号	client_strings_level.xml	253.53067	190.31093	503.51117
+417	210080000	Griffoen	404620	STR_ZONE_NAME_LF5_Ship	埃尔盖夫号	client_strings_level.xml	263.519	208.50888	498.76456
+418	220080000	Arden Village	404623	STR_DF5_Airport_SUB_Vil1_ID	亚门特领地村	client_strings_level.xml	1770.8252	2535.3325	298.0000
+419	220080000	Cet Village	404624	STR_DF5_Airport_SUB_Vil2_ID	塞塔斯领地村	client_strings_level.xml	1509.0227	1725.0443	328.31528
+420	220080000	Bomire Village	404625	STR_DF5_Airport_SUB_Vil3_ID	拜尔亚德领地村	client_strings_level.xml	756.71674	1253.5146	251.5000
+421	220080000	Sky Fortress Insurgent Post	404626	STR_DF5_Airport_SUB_ID_01	空中要塞渗透作战地	client_strings_level.xml	703.0914	2852.3518	215.72034
+422	220080000	Rentus Recovery Base	404627	STR_DF5_Airport_SUB_ID_02	兰图斯夺回基地	client_strings_level.xml	1995.318	2026.5698	328.29263
+423	220080000	Dragonfall's Glare	404628	STR_DF5_Airport_SUB_ID_03	坠落的龙帝之眼	client_strings_level.xml	2831.7195	1672.0333	300.71286
+424	220080000	Raksang Ruins Entrance	404629	STR_DF5_Airport_SUB_ID_04	勒门图渗透地	client_strings_level.xml	411.14304	1451.4464	274.5000
+425	220080000	Perkin Chase	404630	STR_DF5_Airport_SUB_ID_05	佩尔金追踪团野营地	client_strings_level.xml	491.7192	95.14694	198.74918
+426	220080000	Danuar Sanctuary Investigation Area	404631	STR_DF5_Airport_SUB_ID_06	符文安息处调查团营帐	client_strings_level.xml	1680.8341	559.4868	255.90947
+427	220080000	Shriekfang Crown	404632	STR_DF5_Airport_SUB_ID_07	龙帝之绝唱	client_strings_level.xml	2955.2986	398.10565	296.19955
+428	210070000	Henor Territory Village	404633	STR_LF5_Airport_SUB_Vil1_ID	哈诺勒领地村	client_strings_level.xml	1393.2283	604.04767	581.372
+429	210070000	Aedra Territory Village	404634	STR_LF5_Airport_SUB_Vil2_ID	安德雷亚领地村	client_strings_level.xml	1160.847	1579.1193	465.75
+430	210070000	Erivale Territory Village	404635	STR_LF5_Airport_SUB_Vil3_ID	埃提卡领地村	client_strings_level.xml	2397.352	1501.9462	437.625
+431	210070000	Sky Fortress Operation Post	404636	STR_LF5_Airport_SUB_ID_01	阿图拉姆作战哨所	client_strings_level.xml	2417.6965	635.2806	548.125
+432	210070000	Reian Refugee Camp	404637	STR_LF5_Airport_SUB_ID_02	鸢族避难处	client_strings_level.xml	1137.9482	794.7239	562.75
+433	210070000	Ruihold Scatterings	404638	STR_LF5_Airport_SUB_ID_03	坠落的城堡残骸	client_strings_level.xml	110.294	1456.0262	491.484
+434	210070000	Twilight Temple	404639	STR_LF5_Airport_SUB_ID_04	不详礼堂入口	client_strings_level.xml	2661.6003	1474.2921	431.58176
+435	210070000	Perkin Chase	404640	STR_LF5_Airport_SUB_ID_05	佩尔金追踪地	client_strings_level.xml	2781.9282	2997.7004	274.875
+436	210070000	Danuar Sanctuary Inspector Camp	404641	STR_LF5_Airport_SUB_ID_06	符文安息处调查团野营地	client_strings_level.xml	2098.4492	2289.5332	294.625
+437	210070000	Wailing Dunes	404642	STR_LF5_Airport_SUB_ID_07	悲鸣之龙岩峡谷	client_strings_level.xml	136.14838	2734.6653	212.1573
+438	220110000	Norsvold	404778	STR_DF6_Airport_OP_Zone	诺斯珀德	client_strings_level.xml	1797.097	1990.2124	198.29883
+439	220110000	Azphel's Sanctuary	404779	STR_DF6_Airport_SUB_OP_Fly	阿斯佩尔神庙寺院	client_strings_level.xml	-	-	-
+440	220110000	Canyon Of Lost Souls	404780	STR_DF6_Airport_SUB_C_Fly	受诅咒的峡谷	client_strings_level.xml	-	-	-
+441	220110000	Plateau Of Aetheric Gales	404781	STR_DF6_Airport_SUB_E_Fly	审判之高原	client_strings_level.xml	-	-	-
+442	220110000	Aetherspring Lake	404782	STR_DF6_Airport_SUB_G_Fly	生命之湖	client_strings_level.xml	-	-	-
+443	220110000	Nightbloom Forest	404783	STR_DF6_Airport_SUB_I_Fly	萨波拉森林	client_strings_level.xml	-	-	-
+444	210100000	Iluma	404827	STR_LF6_Airport_OP_Zone	阿斯泰拉	client_strings_level.xml	1423.9753	1258.997	336.60352
+445	210100000	Basedes Canyon	404828	STR_LF6_Airport_SUB_OP_Fly	阿里埃神庙圣所	client_strings_level.xml	-	-	-
+446	210100000	Polten Marsh	404829	STR_LF6_Airport_SUB_C_Fly	五色湿地	client_strings_level.xml	-	-	-
+447	210100000	Ariel's Rest	404830	STR_LF6_Airport_SUB_E_Fly	寂静之精灵森林	client_strings_level.xml	-	-	-
+448	210100000	Zephyr Vale	404831	STR_LF6_Airport_SUB_G_Fly	西风高原	client_strings_level.xml	-	-	-
+449	210100000	Kojol Valley	404832	STR_LF6_Airport_SUB_I_Fly	红蘑菇峡谷	client_strings_level.xml	-	-	-
+450	302200000	Elyos Square	405011	STR_LC1_D_Airport_SP_Bank	千人大广场	client_strings_level.xml	1458.6332	1450.5676	572.87573
+451	302200000	Divine Road	405012	STR_LC1_D_Airport_SP_Library	神圣之路	client_strings_level.xml	1930.9808	1514.3209	590.01074
+452	302200000	Outer Port Of Sanctum	405013	STR_LC1_D_Airport_SP_Dock	极乐世界外港	client_strings_level.xml	1817.1605	2154.2178	527.9301
+453	302200000	Exalted Path	405014	STR_LC1_D_Airport_SP_Glory	荣光之路	client_strings_level.xml	1363.1033	1481.7102	569.0385
+454	302300000	Vifrost Bridge	405015	STR_DC1_D_Airport_SP_Bridge	非普洛斯特桥	client_strings_level.xml	1601.8434	1412.9706	193.1286
+455	302300000	Temple Of Gold	405016	STR_DC1_D_Airport_SP_Street	黄金会堂	client_strings_level.xml	1034.8004	1473.1919	213.4775
+456	302300000	Crandale District	405017	STR_DC1_D_Airport_SP_Westside	克兰戴尔地区	client_strings_level.xml	1175.7998	1167.0049	207.97896
+458	302200000	Sanctum Airship Dock - Lower	405019	STR_LC1_D_Airport_SP_Fly_2	极乐世界西部激战场下部飞艇	client_strings_level.xml	-	-	-
+460	302300000	Pandaemonium Airship Dock - Upper	405021	STR_DC1_D_Airport_SP_Fly_2	伏魔殿南部激战场上部飞艇	client_strings_level.xml	-	-	-
+461	302200000	Sanctum Airship Dock - Upper	405022	STR_LC1_D_Airport_SP_Fly_3	极乐世界西部激战场上部飞艇	client_strings_level.xml	-	-	-
+462	302300000	Pandaemonium Airship Dock - Lower	405023	STR_DC1_D_Airport_SP_Fly_3	伏魔殿南部激战场下部飞艇	client_strings_level.xml	-	-	-
+477	400010000	Redemption Landing	405082	STR_Ab1_Airport_SUB_L_UpBase	玛高斯	client_strings_level.xml	1778.00	178.00	2938.00
+478	400010000	Harbinger's Landing	405083	STR_Ab1_Airport_SUB_D_UpBase	托斯卡努	client_strings_level.xml	982.00	2847.00	3033.00
+487	302350000	Ancient Altar	405158	STR_SZ_IDEternity_War_09	留下的祭坛	client_strings_level.xml	725.25134	399.6973	307.875
+488	302350000	Temple Of Origin	405153	STR_SZ_IDEternity_War_04	祈愿圣殿	client_strings_level.xml	746.64526	856.7903	349.815
+489	302350000	Eon Anvil	405156	STR_SZ_IDEternity_War_07	万古的毛鲁	client_strings_level.xml	456.32364	1083.2435	349.02142
+490	302350000	Eternal Anvil	405160	STR_SZ_IDEternity_War_11	千古的毛鲁	client_strings_level.xml	1032.2965	1061.0446	352.45233
+491	302350000	Ancient Altar	405158	STR_SZ_IDEternity_War_09	留下的祭坛	client_strings_level.xml	725.25134	399.6973	307.875
+492	302350000	Temple Of Origin	405153	STR_SZ_IDEternity_War_04	祈愿圣殿	client_strings_level.xml	746.64526	856.7903	349.815
+493	302350000	Eon Anvil	405156	STR_SZ_IDEternity_War_07	万古的毛鲁	client_strings_level.xml	456.32364	1083.2435	349.02142
+494	302350000	Eternal Anvil	405160	STR_SZ_IDEternity_War_11	千古的毛鲁	client_strings_level.xml	1032.2965	1061.0446	352.45233
+495	302350000	Ancient Altar	405158	STR_SZ_IDEternity_War_09	留下的祭坛	client_strings_level.xml	725.25134	399.6973	307.875
+496	302350000	Temple Of Origin	405153	STR_SZ_IDEternity_War_04	祈愿圣殿	client_strings_level.xml	746.64526	856.7903	349.815
+497	302350000	Eon Anvil	405156	STR_SZ_IDEternity_War_07	万古的毛鲁	client_strings_level.xml	456.32364	1083.2435	349.02142
+498	302350000	Eternal Anvil	405160	STR_SZ_IDEternity_War_11	千古的毛鲁	client_strings_level.xml	1032.2965	1061.0446	352.45233
+499	302350000	Ancient Altar	405158	STR_SZ_IDEternity_War_09	留下的祭坛	client_strings_level.xml	725.25134	399.6973	307.875
+500	302350000	Temple Of Origin	405153	STR_SZ_IDEternity_War_04	祈愿圣殿	client_strings_level.xml	746.64526	856.7903	349.815
+501	302350000	Eon Anvil	405156	STR_SZ_IDEternity_War_07	万古的毛鲁	client_strings_level.xml	456.32364	1083.2435	349.02142
+502	302350000	Eternal Anvil	405160	STR_SZ_IDEternity_War_11	千古的毛鲁	client_strings_level.xml	1032.2965	1061.0446	352.45233
+523	400010000	Divine Fortress (Elyos)	400690	STR_Ab1_DynAirport_SUB_L_1011	神圣要塞	client_strings_level.xml	1543.9111	1564.3759	2309.061
+524	400010000	Divine Fortress (Asmodians)	400733	STR_Ab1_DynAirport_SUB_D_1011	神圣要塞	client_strings_level.xml	1543.9111	1564.3759	2309.061
+526	220110000	Airport_B2_Artifact (Asmodians)	405268	STR_DF6_Airport_B2_Artifact	第208基地-战场的激励	client_strings_level.xml	2308.3528	683.0181	297.53165
+527	220110000	Airport_D_Artifact (Asmodians)	405269	STR_DF6_Airport_D_Artifact	第209基地-激战的援手	client_strings_level.xml	2486.6614	2564.7234	309.16248
+528	220110000	Airport_F2_Artifact (Asmodians)	405270	STR_DF6_Airport_F2_Artifact	第210基地-战场的激励	client_strings_level.xml	317.02524	2683.4536	245.12564
+529	220110000	Airport_H_Artifact (Asmodians)	405271	STR_DF6_Airport_H_Artifact	第211基地-激战的援手	client_strings_level.xml	975.2951	849.9423	282.5036
+530	220110000	Airport_B2_Artifact (Elyos)	405268	STR_DF6_Airport_B2_Artifact	第208基地-战场的激励	client_strings_level.xml	2308.3528	683.0181	297.53165
+531	220110000	Airport_D_Artifact (Elyos)	405269	STR_DF6_Airport_D_Artifact	第209基地-激战的援手	client_strings_level.xml	2486.6614	2564.7234	309.16248
+532	220110000	Airport_F2_Artifact (Elyos)	405270	STR_DF6_Airport_F2_Artifact	第210基地-战场的激励	client_strings_level.xml	317.02524	2683.4536	245.12564
+533	220110000	Airport_H_Artifact (Elyos)	405271	STR_DF6_Airport_H_Artifact	第211基地-激战的援手	client_strings_level.xml	975.2951	849.9423	282.5036
+535	210100000	Airport_B2_Artifact (Elyos)	405273	STR_LF6_Airport_B2_Artifact	第108基地-战场的激励	client_strings_level.xml	2564.5986	2566.6292	217.25
+536	210100000	Airport_D_Artifact (Elyos)	405274	STR_LF6_Airport_D_Artifact	第109基地-激战的援手	client_strings_level.xml	2375.57	727.7937	234.66476
+537	210100000	Airport_F2_Artifact (Elyos)	405275	STR_LF6_Airport_F2_Artifact	第110基地-战场的激励	client_strings_level.xml	327.79056	608.9343	287.67853
+538	210100000	Airport_H_Artifact (Elyos)	405276	STR_LF6_Airport_H_Artifact	第111基地-激战的援手	client_strings_level.xml	848.3803	2489.7908	356.04993
+539	210100000	Airport_B2_Artifact (Asmodians)	405273	STR_LF6_Airport_B2_Artifact	第108基地-战场的激励	client_strings_level.xml	2564.5986	2566.6292	217.25
+540	210100000	Airport_D_Artifact (Asmodians)	405274	STR_LF6_Airport_D_Artifact	第109基地-激战的援手	client_strings_level.xml	2375.57	727.7937	234.66476
+541	210100000	Airport_F2_Artifact (Asmodians)	405275	STR_LF6_Airport_F2_Artifact	第110基地-战场的激励	client_strings_level.xml	327.79056	608.9343	287.67853
+542	210100000	Airport_H_Artifact (Asmodians)	405276	STR_LF6_Airport_H_Artifact	第111基地-激战的援手	client_strings_level.xml	848.3803	2489.7908	356.04993
+591	600200000	Lakrum	405444	-	-	-	-	-	-
+592	600200000	Lakrum	405445	-	-	-	-	-	-
+599	600300000	Dumah	405668	-	-	-	-	-	-
+600	600300000	Dumah	405669	-	-	-	-	-	-

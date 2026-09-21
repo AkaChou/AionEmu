@@ -29,11 +29,11 @@ import java.util.regex.Pattern;
 public class Quest extends AdminCommand {
 
     /**
-     * 以别名 {@code quest} 构造命令。
-     * Construct the command with alias {@code quest}.
+     * 以别名 {@code quest} 与中文别名 {@code 任务} 构造命令。
+     * Construct the command with alias {@code quest} and its Chinese alias {@code 任务}.
      */
     public Quest() {
-        super("quest");
+        super("quest", "任务");
     }
 
     /**

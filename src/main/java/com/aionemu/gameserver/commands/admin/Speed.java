@@ -20,7 +20,18 @@ import java.util.List;
  *
  * @author ATracer
  */
-public class Speed extends AdminCommand implements StatOwner {
+public class Speed extends AdminCommand {
+
+	/**
+	 * {@code //speed} 与 {@code //gm} 共用的速度覆盖所有者。
+	 * Speed-override owner shared by {@code //speed} and {@code //gm}.
+	 * <p>
+	 * 固定使用同一个 owner，两个命令互相覆盖同一份效果而不是各挂一份，重复执行也不会残留旧效果。
+	 * Keeping one fixed owner makes both commands replace the same effect instead of stacking their own, and
+	 * repeated execution leaves no stale effect behind.
+	 */
+	public static final StatOwner SPEED_OWNER = new StatOwner() {
+	};
 
 	/**
 	 * 构造 speed 命令。
@@ -58,11 +69,23 @@ public class Speed extends AdminCommand implements StatOwner {
 			return;
 		}
 
-		admin.getGameStats().endEffect(this);
+		applyPercent(admin, parameter);
+	}
+
+	/**
+	 * 按百分比覆盖行走与飞行速度（{@code //speed} 与 {@code //gm} 共用）。
+	 * Overrides walk and fly speed by the given percent (shared by {@code //speed} and {@code //gm}).
+	 *
+	 * @param admin 执行 GM / Admin player
+	 * @param percent 速度百分比 0–1000 / Speed percent 0–1000
+	 */
+	public static void applyPercent(Player admin, int percent) {
 		List<IStatFunction> functions = new ArrayList<IStatFunction>();
-		functions.add(new SpeedFunction(StatEnum.SPEED, parameter));
-		functions.add(new SpeedFunction(StatEnum.FLY_SPEED, parameter));
-		admin.getGameStats().addEffect(this, functions);
+		functions.add(new SpeedFunction(StatEnum.SPEED, percent));
+		functions.add(new SpeedFunction(StatEnum.FLY_SPEED, percent));
+
+		admin.getGameStats().endEffect(SPEED_OWNER);
+		admin.getGameStats().addEffect(SPEED_OWNER, functions);
 
 		PacketSendUtility.broadcastPacket(admin, new SM_EMOTION(admin, EmotionType.START_EMOTE2, 0, 0), true);
 	}
@@ -81,7 +104,7 @@ public class Speed extends AdminCommand implements StatOwner {
 	 * 速度/飞行速度百分比修正函数。
 	 * Percent modifier for walk and fly speed.
 	 */
-	class SpeedFunction extends StatFunction {
+	static class SpeedFunction extends StatFunction {
 
 		static final int speed = 6000;
 		static final int flyspeed = 9000;

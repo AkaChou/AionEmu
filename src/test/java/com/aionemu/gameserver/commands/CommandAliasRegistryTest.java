@@ -24,9 +24,11 @@ import org.junit.jupiter.api.Test;
  *
  * <p>命令类由 {@code ChatProcessor#init} 经 {@code CompiledScriptLoader} 按包反射注册，别名只写在
  * 构造器的 {@code super("...")} 中，因此静态引用永远为零；配置里的别名一旦缺少对应类（或反之），
- * 命令只会静默失效而不会编译失败。
+ * 命令只会静默失效而不会编译失败。中文别名（例如 {@code 移动}）同样以别名键写进同一份配置，
+ * 因此也受本守卫覆盖。
  * Command classes are registered reflectively by package scan, so a missing class silently disables a
- * command instead of failing the build.
+ * command instead of failing the build. Chinese aliases (for example {@code 移动}) are configured as
+ * ordinary alias keys in the same config file, so this gate covers them as well.
  */
 class CommandAliasRegistryTest {
 
@@ -39,10 +41,17 @@ class CommandAliasRegistryTest {
 	private static final Path ACCESS_LEVEL_CONFIG = Path.of(
 		"src/main/resources/aion/config/administration/commands.properties");
 
-	/** 命令类构造器里的别名声明。 / Alias declaration in the command constructor. */
-	private static final Pattern DECLARED_ALIAS = Pattern.compile("super\\(\\s*\"([A-Za-z0-9_]+)\"\\s*\\)");
-	/** 配置行 {@code alias = level}。 / Config line {@code alias = level}. */
-	private static final Pattern CONFIGURED_ALIAS = Pattern.compile("^\\s*([A-Za-z0-9_]+)\\s*=");
+	/**
+	 * 命令类构造器里的别名声明，捕获 {@code super(...)} 的整个参数列表（支持多别名与中文别名）。
+	 * Alias declaration in the command constructor, capturing the whole {@code super(...)} argument list
+	 * (several aliases and non-ASCII aliases supported).
+	 */
+	private static final Pattern DECLARED_ALIAS_DECLARATION = Pattern.compile(
+		"super\\(\\s*((?:\"[^\"]*\"\\s*,?\\s*)+)\\)");
+	/** {@code super(...)} 参数列表中的单个字符串字面量。 / Single string literal inside a {@code super(...)} list. */
+	private static final Pattern ALIAS_LITERAL = Pattern.compile("\"([^\"]*)\"");
+	/** 配置行 {@code alias = level}，别名允许中文。 / Config line {@code alias = level}; alias may be non-ASCII. */
+	private static final Pattern CONFIGURED_ALIAS = Pattern.compile("^\\s*([^\\s=#]+)\\s*=");
 
 	/**
 	 * 配置里的每个别名都必须有命令类，否则该命令在运行期静默失效。
@@ -71,19 +80,31 @@ class CommandAliasRegistryTest {
 	}
 
 	/**
-	 * 每个命令源文件必须且只能声明一个别名，保证上面的解析结果完整可信。
-	 * Every command source must declare exactly one alias so the parsing above stays complete.
+	 * 每个命令源文件必须且只能有一次 {@code super(...)} 别名声明，保证上面的解析结果完整可信。
+	 * Every command source must declare its aliases in exactly one {@code super(...)} call so the parsing above stays complete.
 	 */
 	@Test
-	void everyCommandClassDeclaresExactlyOneAlias() throws IOException {
+	void everyCommandClassDeclaresAliasesInExactlyOneSuperCall() throws IOException {
 		for (Path source : commandSources()) {
 			int declarations = 0;
-			Matcher matcher = DECLARED_ALIAS.matcher(Files.readString(source));
+			Matcher matcher = DECLARED_ALIAS_DECLARATION.matcher(Files.readString(source));
 			while (matcher.find()) {
 				declarations++;
 			}
 			assertEquals(1, declarations,
-				source + " must declare exactly one super(\"alias\") command name");
+				source + " must declare all aliases in exactly one super(\"alias\", ...) call");
+		}
+	}
+
+	/**
+	 * 别名不能包含空白，否则命中判定与参数切分会错位。
+	 * Aliases must not contain whitespace, otherwise routing and argument splitting break.
+	 */
+	@Test
+	void everyAliasIsWhitespaceFree() throws IOException {
+		for (Map.Entry<String, Path> entry : declaredAliases().entrySet()) {
+			assertTrue(entry.getKey().indexOf(' ') < 0 && entry.getKey().indexOf('\t') < 0,
+				entry.getValue() + " declares an alias containing whitespace: '" + entry.getKey() + "'");
 		}
 	}
 
@@ -97,11 +118,14 @@ class CommandAliasRegistryTest {
 	private static Map<String, Path> declaredAliases() throws IOException {
 		Map<String, Path> aliases = new TreeMap<String, Path>();
 		for (Path source : commandSources()) {
-			Matcher matcher = DECLARED_ALIAS.matcher(Files.readString(source));
-			while (matcher.find()) {
-				Path previous = aliases.put(matcher.group(1), source);
-				assertTrue(previous == null,
-					"duplicate command alias " + matcher.group(1) + " declared by " + previous + " and " + source);
+			Matcher declaration = DECLARED_ALIAS_DECLARATION.matcher(Files.readString(source));
+			while (declaration.find()) {
+				Matcher literal = ALIAS_LITERAL.matcher(declaration.group(1));
+				while (literal.find()) {
+					Path previous = aliases.put(literal.group(1), source);
+					assertTrue(previous == null,
+						"duplicate command alias " + literal.group(1) + " declared by " + previous + " and " + source);
+				}
 			}
 		}
 		return aliases;
@@ -117,6 +141,9 @@ class CommandAliasRegistryTest {
 	private static TreeSet<String> configuredAliases() throws IOException {
 		TreeSet<String> aliases = new TreeSet<String>();
 		for (String line : Files.readAllLines(ACCESS_LEVEL_CONFIG)) {
+			if (line.trim().startsWith("#")) {
+				continue;
+			}
 			Matcher matcher = CONFIGURED_ALIAS.matcher(line);
 			if (matcher.find()) {
 				aliases.add(matcher.group(1));
