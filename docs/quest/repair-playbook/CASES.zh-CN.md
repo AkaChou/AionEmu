@@ -737,3 +737,33 @@
 - 验证命令和结果：静态 `xmllint --schema quest_definition.xsd` 5/5 通过；同类审计脚本修复前命中 7 个任务、修复后剩 4542/18808；聚焦回归 `mvn -B -Dtest=QuestMinionTutorialRetailAlignmentTest,QuestMinionTutorialProductionFlowTest,MinionServiceTest,ExternalRewardAdvanceReentryContractTest test` -> 27/27 全绿；生产目录门禁 `ProductionCatalogWhitelistVerificationTest` + `QuestDefinitionCatalogManifestTest` + `QuestDefinitionDirectoryLoaderTest` -> 13/13 全绿（PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / WHITELIST_VIOLATIONS=0）；客户端契约门禁 `QuestClientContractGateTest` + `QuestDialogOrderAuditTest` + `QuestStepDialogTerminationTest` -> 19/19 全绿（含 `-Dquest.client.contract.failOnStaleBaseline=true`）。客户端实机：用户 2026-09-21 回复「客户端验证成功」-> 15545 `CLIENT_ACCEPTED`；同批 25545/2266/3085/28808 仍 `PENDING`，未捕获协议/日志附件。
 - 复用边界：只适用于「旧 handler 在接取分支发过任务工作物品、而 typed 定义只剩 `<work-items>` 声明」的任务，且必须先用审计脚本确认该物品没有掉落/其它任务等第二产出源；若物品本就由掉落或后续步发放，缺的可能是交付侧 `remove-item`（复用 `WORK_ITEM_DECLARATION_LOST_ON_MIGRATION` 或 `COLLECT_ITEM_TURNIN_REMOVAL_MISSING`）。retail 用「发包袱 → 玩家拆解」两步实现时（如 188058502 → 190080010/190080011），发包袱还是发契约书要做 1:1 复刻决策，并连拆解选盒链路一起验收。多步换物链（4542 的 a→b→收集→d）不能只补接取发放，必须逐步重建。
 - commit：`08f834870`。
+
+## 8.47 击杀任务进度不涨：击杀目标只登记零刷新的 base 模板
+
+- Pattern ID：`KILL_TARGET_COVERS_CLIENT_VARIANT_FAMILY`（memory-bank `QE-048`）。
+- 代表任务：15546「[每日]雷欧娜的委托」（ELYOS 66+ SIGNIFICANT 每日，接取/完成 NPC 835514）；同因任务 25546（镜像）与 43 个 Iluma/Norsvold 子区任务按同一合同修复，不重复建立案例。
+- 搜索症状：击杀任务进度不涨、四个 `[%n]/4` 计数条一动不动、任务说明点名的怪杀了不算、同族 `T_` 变体不计数、日常永远停在 0/4。
+- 玩家可见症状：接取 15546 后击杀任务说明里的怪（星光精灵 / 达鲁 / 波波库 / 木特西农），客户端计数条始终 0/4，任务不推进，也没有任何报错或 QUEST_AUDIT 失败。
+- 根因：`7e9f0316c`（Java handler → typed XML）把击杀目标写成 base 模板 `240475/240483/240495/240497`，而这 4 个模板在 `spawns/**` 中零刷新（Iluma 只刷同族 `T_` 变体 `241656/241657/241664/241665/241676/241677/241678/241679`）。`QuestEngine.onKill` 先用 `getQuestNpc(npc.getNpcId()).getOnKillEvent()` 判断 owner，而该索引只由编译后的击杀转换填充（`installProductionDefinitions` 的 `KillNpc/KillNpcSet` 分支），因此该任务永远收不到击杀事实，`var1..var4` 恒为 0。同类「登记目标全无刷新但同族有刷新」的硬缺陷在 HEAD 命中 42 个任务。
+- 修复层：任务 XML（击杀目标集合与 `<metadata><kills>` 口径）+ 全库审计与契约快照门禁；不改任何计数门控、打包与投影。
+- 修改文件：`src/main/resources/aion/data/static_data/quest_definition/quests/{15546,25546,25500,25501,25503,25504,25506,25507,25509,25510,25512,25513,25515,25516,25518,25519,25521,25522,25524,25525,25527,25528,25530,25533,25534,25640,42001,42002,42003,42004,42005,42006,42103,42104,42105,42106,51077,51078,80891,80892,80897,80898,80927,80928,80929}.xml`、`src/test/java/com/aionemu/gameserver/questEngine/definition/QuestIlumaNorsvoldKillTargetCoverageTest.java`、`src/test/java/com/aionemu/gameserver/questEngine/definition/QuestA03ShardRetailAlignmentTest.java`（25533/25640 期望改为「零售名单 ⊆ 客户端契约快照」）、`src/test/resources/quest/iluma-norsvold-kill-target-contract.tsv`、审计与生成脚本 `.agents/summary/quest-15546-kill-progress/`。
+- 第一检查点：把该任务全部击杀目标 ID 与 `spawns/**` 的 `npc_id` 取交集；交集为空（或只剩客户端没声明的模板）即命中本 Pattern，再按客户端 `quest_monster` / SECTION 名单经 `npc_template` 名称解析补齐同族全部变体并同步 `<metadata><kills>`。
+- 代表测试：`QuestIlumaNorsvoldKillTargetCoverageTest#killTargetsMatchTheReviewedClientVariantContract`、`QuestIlumaNorsvoldKillTargetCoverageTest#everyReviewedQuestKeepsTargetsThatTheActiveMapSpawns`、`QuestIlumaNorsvoldKillTargetCoverageTest#spawnedVariantsOfLeonaAndArundFavorAreRoutedAndCounted`。
+- 验证命令和结果：`xmllint --schema quest_definition.xsd` 45/45 通过；`audit_hard_broken_kill_routes.py` 修复前 HEAD 42 命中 -> 修复后 0；契约快照生成自检 45/45 无缺口（25533=175、25640=117 与客户端名单逐条一致，零售名单是其子集）；聚焦 88/88 全绿（`PRODUCTION_COMPILE_OK=6189`、`FAILURES=0`、`INTERACTION_OBJECT_FAILURES=0`、`WHITELIST_VIOLATIONS=0`）；全量 questEngine 1561 run / 5 failures / 6 errors，与修复前同一批既有失败。客户端实机：用户 2026-09-21 回复「客户端复测成功」-> 15546 `CLIENT_ACCEPTED`；同批其余任务仍 `PENDING`，未捕获协议/日志附件。
+- 复用边界：只适用于「击杀路线登记的模板从未在活跃地图刷出、而客户端声明的同族变体有刷新」的任务；名称解析是 `npc_template.name_desc` 的大小写不敏感精确匹配，客户端存在别名或重名时必须人工确认；零售 `data_driven_quest.xml` 的 progress_info 名单可能只是变体子集，只能作为 `containsAll` 下界；`600200000_Lakrum` 在 `world_maps.xml` 被注释，其刷怪文件不参与可达性判定；契约快照只守 45 个 Iluma/Norsvold 任务，其他区域需另跑审计脚本。
+- commit：`2813dd5e4`。
+
+## 8.48 计数器打满后多杀仍提示「任务更新」
+
+- Pattern ID：`SATURATED_COUNTER_EXTRA_KILL_SILENT`（memory-bank `QE-050`）。
+- 代表任务：15546「[每日]雷欧娜的委托」；镜像 25546 与引擎护栏同批修复。
+- 搜索症状：进度不涨却提示任务更新、任务闪一下更新、计数满后多杀还提示、多杀一只数值没变但任务书刷新。
+- 玩家可见症状：某族计数打到 4/4、其他族未满时继续击杀同一族怪，计数不再增长（这一点正确），但客户端仍闪一次「任务更新」。
+- 根因：引擎不变量为「状态未变化的执行不得下发任务状态更新」。第 4 次击杀由「收口」自环路线写入（`variable-at-least varN 3 -> set varN 4`），该守卫只有下界，计数器已经等于 4 时仍然命中，`QuestMutationPlanner` 于是产出与当前 packed 状态完全相同的计划；`QuestExecutionCoordinator.requiresStatePersistence` 判定无需写库（`statePort` 正确跳过），但 after-commit 的 `sync-quest-state PACKET_ONLY` 仍会执行，`PlayerQuestStateSyncPort.sync()` 下发 `SM_QUEST_ACTION.updateQuest(...)`，客户端把它渲染成一次任务更新通知。全库同形自环 26 条、分布在 12 个任务（15546/25546、25406/25407/25408、25580、26802、30600/30610、10112/20112、13705、17510/27510）。
+- 修复层：引擎（提交后协议动作过滤 `QuestExecutionCoordinator#withoutRedundantStateSync`）+ 15546/25546 计数边界（累加 `variable-below 4`、越界自愈 `variable-at-least 5 -> set 4`）；不改变任何计数语义（仍是逐次 1/2/3/4）。
+- 修改文件：`src/main/java/com/aionemu/gameserver/questEngine/runtime/QuestExecutionCoordinator.java`、`src/main/resources/aion/data/static_data/quest_definition/quests/{15546,25546}.xml`、`src/test/java/com/aionemu/gameserver/questEngine/runtime/Quest15546KillCounterSaturationFlowTest.java`、`src/test/java/com/aionemu/gameserver/questEngine/runtime/QuestExecutionCoordinatorTest.java`、`src/test/java/com/aionemu/gameserver/questEngine/definition/QuestIlumaNorsvoldKillTargetCoverageTest.java`。
+- 第一检查点：出现「进度没变却有任务更新」时，先看该击杀路线的条件是否只有下界（`variable-at-least`）而动作是 `set` 到上限；确认 planner 产出的 packed 与当前快照相同，再查 after-commit 是否带 `sync-quest-state`；全库定位用 `.agents/summary/quest-15546-kill-progress/audit_saturated_kill_selfloops.py`。
+- 代表测试：`Quest15546KillCounterSaturationFlowTest#extraKillsOfASaturatedFamilyDoNotAnnounceAQuestUpdate`、`QuestExecutionCoordinatorTest#stateIdenticalExecutionDropsTheRedundantStateSync`、`QuestIlumaNorsvoldKillTargetCoverageTest#saturatedCountersRejectExtraKillsWithoutMatchingAnyRoute`。
+- 验证命令和结果：隔离证据（临时禁用引擎护栏）`QuestExecutionCoordinatorTest` 报 `expected: <[]> but was: <[SyncQuestState[mode=PACKET_ONLY]]>`；修复后聚焦 88/88 全绿，全量 questEngine 1561 run / 5 failures / 6 errors（与修复前同一批既有失败）；饱和自环审计 26 -> 18；客户端实机：用户 2026-09-21 回复「客户端复测成功」，打满后多杀不再出现「任务更新」，四族仍逐次推进。
+- 复用边界：引擎护栏只在「状态未变化且没有任何必需动作」时丢弃状态同步，奖励/物品/货币等持久副作用照常下发；余下 18 条只带下界的收口自环仍会在饱和后匹配（提交一笔空事务、不再发通知），收紧它们需要逐任务的客户端上限证据；不覆盖「刻意重复下发状态包以修复客户端脱同步」的自愈流程。
+- commit：`2813dd5e4`。
