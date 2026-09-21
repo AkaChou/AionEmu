@@ -41,7 +41,6 @@ class QuestPrematureRewardRouteExclusionTest {
 			counter(19638, 10, 799022),
 			counter(19642, 10, 798926),
 			stage(2569, 1, -1, 1, "s1", 204768),
-			stage(28208, 7, -1, 7, "k7", 205320, 205321),
 			counter(28743, 1, 206395, 206396, 206397, 804732),
 			counter(28932, 1, 806261, 806260),
 			counter(28951, 25, 209743, 804738),
@@ -90,6 +89,28 @@ class QuestPrematureRewardRouteExclusionTest {
 	@Test
 	void alternate2569ReportStageRemainsUsable() {
 		assertCompletedReport(load(2569), stage(2569, 2, -1, 2, "s2", 204768));
+	}
+
+	/**
+	 * 竞技场两阶段任务（18208/18209/28208/28209）的领奖入口只在 REWARD 态。迁移期遗留的“对话即领奖”捷径
+	 * （NPC_REPORT 生成的 started + 1009 无门禁路线）会让玩家跳过两行击杀直接进入 REWARD，旧 k7 阶段案例
+	 * 已被批次 6 的“任务书行号”模型取代；这里对完整 START 变量域做 fail-closed 扫描，任何 START 侧对话路线
+	 * 都不得进入 REWARD/奖励窗口。行推进与领奖态入口分别由 ArenaPhaseRowContractTest 与客户端契约门禁锁定。
+	 * The arena quests expose their reward entrance in the REWARD state only; the migrated talk-to-report
+	 * shortcut skipped both journal rows and the old k7 stage case was replaced by the batch-6 journal-row
+	 * model. This sweeps the whole START variable space and fails closed.
+	 */
+	@ParameterizedTest
+	@ValueSource(ints = {18208, 18209, 28208, 28209})
+	void arenaJournalRowsKeepTheRewardEntranceInTheRewardState(int questId) {
+		CompiledQuestDefinition compiled = load(questId);
+		for (int var0 = 0; var0 <= 3; var0++) {
+			for (int var1 = 0; var1 <= 4; var1++) {
+				for (int var2 = 0; var2 <= 1; var2++) {
+					assertNoPrematureReward(compiled, Map.of("var0", var0, "var1", var1, "var2", var2));
+				}
+			}
+		}
 	}
 
 	@ParameterizedTest

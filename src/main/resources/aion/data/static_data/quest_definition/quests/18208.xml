@@ -166,10 +166,14 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <!-- 迁移既有的“直接报告”捷径（retail 旧 handler 只在 REWARD 态处理领奖 NPC），本轮保留不收紧。
-         The migrated talk-to-report shortcut is intentionally kept (the legacy handler only answered the
-         reward NPC in REWARD state); this round does not tighten it. -->
-    <dialog type="NPC_REPORT" npc-id="205309" source="started" target="reward" page="DEFAULT_SUCCESS"/>
+    <!-- 领奖入口只保留在领奖态：迁移期的“对话即领奖”捷径（NPC_REPORT）生成的是无门禁的
+         started + 1009 -> reward 路线，玩家不做两行击杀就能直接进入 REWARD；retail 旧 handler 只在
+         REWARD 态响应领奖 NPC，因此删除该捷径。行推进仍由上面两条击杀路线收口，满计数/旧存档由
+         enter-world 收敛边修复（QuestPrematureRewardRouteExclusionTest 守卫“未完成不得进入领奖”）。
+         The reward entrance stays in the REWARD state: the migrated NPC_REPORT shortcut compiled to an
+         unguarded started + 1009 -> reward route that skipped both journal rows, while the retail handler
+         only answered the reward NPC in REWARD state. Row progression remains with the two kill routes
+         above and legacy saves are repaired by the enter-world collapse edges. -->
     <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="205309" action="QUEST_SELECT"/>
