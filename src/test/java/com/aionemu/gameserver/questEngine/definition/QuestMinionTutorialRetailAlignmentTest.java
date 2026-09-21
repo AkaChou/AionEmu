@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,7 +55,7 @@ class QuestMinionTutorialRetailAlignmentTest {
 		for (QuestDialogAction acceptAction : List.of(
 			QuestDialogAction.QUEST_ACCEPT_1, QuestDialogAction.QUEST_ACCEPT_SIMPLE)) {
 			QuestTransition accept = definition.transitions().stream()
-				.filter(t -> t.sourceNode().equals("unaccepted") && t.targetNode().equals("started"))
+				.filter(t -> Objects.equals(t.sourceNode(), "unaccepted") && t.targetNode().equals("started"))
 				.filter(t -> t.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == npcId
 					&& Integer.valueOf(acceptAction.id()).equals(talk.dialogId()))
 				.findFirst().orElseThrow(() -> new AssertionError(
@@ -82,7 +83,7 @@ class QuestMinionTutorialRetailAlignmentTest {
 		assertStartTransition(definition, new QuestEvent.EnterWorld(), workItemId);
 
 		QuestTransition itemPlay = definition.transitions().stream()
-			.filter(t -> t.sourceNode().equals("started") && t.targetNode().equals("reward")
+			.filter(t -> Objects.equals(t.sourceNode(), "started") && t.targetNode().equals("reward")
 				&& t.event() instanceof QuestEvent.ItemPlay play
 				&& play.itemId() == workItemId)
 			.findFirst().orElseThrow();
@@ -98,7 +99,7 @@ class QuestMinionTutorialRetailAlignmentTest {
 			t.event() instanceof QuestEvent.UseItem use && use.itemId() == workItemId));
 
 		assertTrue(definition.transitions().stream().anyMatch(t ->
-			t.sourceNode().equals("unaccepted") && t.event() instanceof QuestEvent.TalkToNpc talk
+			Objects.equals(t.sourceNode(), "unaccepted") && t.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == npcId && Integer.valueOf(31).equals(talk.dialogId())));
 		assertTrue(definition.nodes().stream()
 			.filter(n -> n.label().equals("reward") || n.label().equals("complete"))
@@ -113,7 +114,7 @@ class QuestMinionTutorialRetailAlignmentTest {
 
 	private static void assertStartTransition(QuestDefinition definition, QuestEvent event, int workItemId) {
 		QuestTransition start = definition.transitions().stream()
-			.filter(t -> t.sourceNode().equals("unaccepted") && t.targetNode().equals("started")
+			.filter(t -> Objects.equals(t.sourceNode(), "unaccepted") && t.targetNode().equals("started")
 				&& t.event().equals(event))
 			.findFirst().orElseThrow();
 		assertTrue(start.actions().contains(new QuestAction.GiveItem(workItemId, 1)));

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -29,7 +30,10 @@ class Quest14051ClientDialogAlignmentTest {
 		assertNode(definition, "s1", QuestStatus.START, Map.of("var0", 1));
 		assertNode(definition, "s2", QuestStatus.START, Map.of("var0", 2));
 		assertNode(definition, "s3", QuestStatus.START, Map.of("var0", 3));
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 3));
+		// QE-051：客户端 quest_q14051.html 共 5 行，末行为领奖行，reward 投影 = 4（批次 1-7 已收口）。
+		// QE-051: quest_q14051.html has 5 journal rows and the last one is the reward row, so the REWARD
+		// projection is 4 (closed by batches 1-7).
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 4));
 		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 3));
 
 		// 204549 的三页介绍必须先按客户端 action 链翻页，再用 SETPRO2 进入 var0=2。
@@ -107,7 +111,7 @@ class Quest14051ClientDialogAlignmentTest {
 	private static QuestTransition transition(QuestDefinition definition, String source, String target,
 			QuestEvent event) {
 		return definition.transitions().stream()
-			.filter(candidate -> candidate.sourceNode().equals(source)
+			.filter(candidate -> Objects.equals(candidate.sourceNode(), source)
 				&& candidate.targetNode().equals(target) && candidate.event().equals(event))
 			.findFirst().orElseThrow();
 	}
@@ -115,7 +119,7 @@ class Quest14051ClientDialogAlignmentTest {
 	private static QuestTransition transition(QuestDefinition definition, String source, String target,
 			QuestEvent event, int priority) {
 		return definition.transitions().stream()
-			.filter(candidate -> candidate.sourceNode().equals(source)
+			.filter(candidate -> Objects.equals(candidate.sourceNode(), source)
 				&& candidate.targetNode().equals(target)
 				&& candidate.event().equals(event)
 				&& Integer.valueOf(priority).equals(candidate.priority()))

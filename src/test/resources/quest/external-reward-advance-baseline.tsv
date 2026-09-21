@@ -1,11 +1,11 @@
 # questId	writerEvidence	writerStep	rewardProjection	completionNpcIds	staleRewardSteps
-10522	src/main/java/com/aionemu/gameserver/network/aion/clientpackets/CM_CREATIVITY_POINTS.java#checkQuestCompletion	0	0	806075	1
-15542	src/main/java/com/aionemu/gameserver/services/item/CoalescenceService.java#updateQuestsOnCoalescenceComplete	0	0	806074	-
+10522	src/main/java/com/aionemu/gameserver/network/aion/clientpackets/CM_CREATIVITY_POINTS.java#checkQuestCompletion	1	1	806075	0
+15542	src/main/java/com/aionemu/gameserver/services/item/CoalescenceService.java#updateQuestsOnCoalescenceComplete	1	1	806074	0
 15545	src/main/java/com/aionemu/gameserver/services/toypet/MinionService.java#checkQuest	1	1	835514	0
-20522	src/main/java/com/aionemu/gameserver/network/aion/clientpackets/CM_CREATIVITY_POINTS.java#checkQuestCompletion	0	0	806079	1
-25542	src/main/java/com/aionemu/gameserver/services/item/CoalescenceService.java#updateQuestsOnCoalescenceComplete	0	0	806078	-
+20522	src/main/java/com/aionemu/gameserver/network/aion/clientpackets/CM_CREATIVITY_POINTS.java#checkQuestCompletion	1	1	806079	0
+25542	src/main/java/com/aionemu/gameserver/services/item/CoalescenceService.java#updateQuestsOnCoalescenceComplete	1	1	806078	0
 25545	src/main/java/com/aionemu/gameserver/services/toypet/MinionService.java#checkQuest	1	1	835515	0
-30211	src/main/java/com/aionemu/gameserver/ai/instance/beshmundirTemple/RiftOrbAI2.java#forQuest	0	0	730275 798941	-
-30213	src/main/java/com/aionemu/gameserver/ai/instance/beshmundirTemple/RiftOrbAI2.java#forQuest	0	0	730275 798926 798941	-
-30311	src/main/java/com/aionemu/gameserver/ai/instance/beshmundirTemple/RiftOrbAI2.java#forQuest	0	0	730275 799322	-
-30313	src/main/java/com/aionemu/gameserver/ai/instance/beshmundirTemple/RiftOrbAI2.java#forQuest	0	0	799225 799322	-
+30211	src/main/java/com/aionemu/gameserver/ai/instance/beshmundirTemple/RiftOrbAI2.java#forQuest	1	1	730275 798941	0
+30213	src/main/java/com/aionemu/gameserver/ai/instance/beshmundirTemple/RiftOrbAI2.java#forQuest	1	1	730275 798926 798941	0
+30311	src/main/java/com/aionemu/gameserver/ai/instance/beshmundirTemple/RiftOrbAI2.java#forQuest	1	1	730275 799322	0
+30313	src/main/java/com/aionemu/gameserver/ai/instance/beshmundirTemple/RiftOrbAI2.java#forQuest	1	1	799225 799322	0

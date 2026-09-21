@@ -35,13 +35,30 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- QE-046/QE-051 领奖行合同：客户端 quest_q30213.html 的 quest_summary 共 2 行，末行是领奖行
+         （和 Cainus 对话，NPC id 798926）；写入方在该行推进 var0=1 后置 REWARD，旧存档 REWARD/var0=0 由本边按 reward 投影自愈。
+         Reward row contract (QE-051/QE-046): the last of the 2 quest_q30213.html journal
+         rows is the reward row (和 Cainus 对话, npc id 798926); the engine-external writer now leaves
+         var0=1 before REWARD, and this edge repairs saves persisted at REWARD/var0=0. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <dialog type="NPC_START" npc-id="798941" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <dialog type="NPC_REPORT" npc-id="798941" source="started" target="reward" page="DEFAULT_SUCCESS"/>
     <transition source="started" target="reward" priority="0">

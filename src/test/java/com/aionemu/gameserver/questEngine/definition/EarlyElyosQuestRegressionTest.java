@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -89,7 +90,7 @@ class EarlyElyosQuestRegressionTest {
 		route(definition, "reward", "complete", new QuestEvent.TalkToNpc(798003, 8));
 
 		assertFalse(definition.definition().transitions().stream().anyMatch(transition ->
-			transition.sourceNode().equals("unaccepted")
+			Objects.equals(transition.sourceNode(), "unaccepted")
 				&& transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& (talk.npcId() == 700003 || talk.npcId() == 798003)));
 	}
@@ -110,7 +111,7 @@ class EarlyElyosQuestRegressionTest {
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.CloseDialog()), seal.afterCommit());
 		assertFalse(definition.definition().transitions().stream().anyMatch(transition ->
-			transition.sourceNode().equals("started")
+			Objects.equals(transition.sourceNode(), "started")
 				&& transition.event().equals(new QuestEvent.TalkToNpc(700003, QuestDialogAction.QUEST_SELECT.id()))));
 		assertNoUnacceptedObjectRoute(definition, 700003);
 	}
@@ -179,7 +180,7 @@ class EarlyElyosQuestRegressionTest {
 			CompiledQuestDefinition definition = load(questId);
 
 			assertTrue(definition.definition().transitions().stream().anyMatch(transition ->
-				transition.sourceNode().equals("unaccepted") && transition.targetNode().equals("started")
+				Objects.equals(transition.sourceNode(), "unaccepted") && transition.targetNode().equals("started")
 					&& transition.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == startNpc
 					&& transition.actions().contains(new QuestAction.GiveItem(workItem, 1))));
 			assertObjectGate(definition, "started", objectNpc);
@@ -287,7 +288,7 @@ class EarlyElyosQuestRegressionTest {
 	void fossilCollectionPublishesProgressAndFinalNpcConsumesOnlyTheCollectedItem() {
 		CompiledQuestDefinition definition = load(1137);
 		QuestTransition collection = definition.definition().transitions().stream()
-			.filter(route -> route.sourceNode().equals("started")
+			.filter(route -> Objects.equals(route.sourceNode(), "started")
 				&& route.targetNode().equals("started")
 				&& route.event().equals(new QuestEvent.CollectItem(182200513, 1)))
 			.findFirst().orElseThrow();
@@ -336,7 +337,7 @@ class EarlyElyosQuestRegressionTest {
 	private static QuestTransition route(CompiledQuestDefinition definition, String source, String target,
 			QuestEvent event) {
 		return definition.definition().transitions().stream()
-			.filter(route -> route.sourceNode().equals(source) && route.targetNode().equals(target)
+			.filter(route -> Objects.equals(route.sourceNode(), source) && route.targetNode().equals(target)
 				&& route.event().equals(event))
 			.findFirst().orElseThrow();
 	}
@@ -350,7 +351,7 @@ class EarlyElyosQuestRegressionTest {
 
 	private static void assertNoUnacceptedObjectRoute(CompiledQuestDefinition definition, int npcId) {
 		assertFalse(definition.definition().transitions().stream().anyMatch(transition ->
-			transition.sourceNode().equals("unaccepted")
+			Objects.equals(transition.sourceNode(), "unaccepted")
 				&& ((transition.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == npcId)
 					|| (transition.event() instanceof QuestEvent.CanAct canAct
 						&& canAct.templateId() == npcId))));

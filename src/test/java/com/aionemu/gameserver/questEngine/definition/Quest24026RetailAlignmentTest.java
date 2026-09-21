@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -90,10 +91,10 @@ class Quest24026RetailAlignmentTest {
 		assertTrue(defenseKill.afterCommit().contains(new AfterCommitAction.AttackNpcTemplate("defense-mob", 204432)));
 
 		assertTrue(transitions.stream().anyMatch(t -> t.event() instanceof QuestEvent.QuestTimerEnd
-			&& t.sourceNode().equals("defense") && t.targetNode().equals("defense-done")));
+			&& Objects.equals(t.sourceNode(), "defense") && t.targetNode().equals("defense-done")));
 		for (QuestEvent event : new QuestEvent[] {new QuestEvent.Die(), new QuestEvent.LogOut(null)}) {
 			assertTrue(transitions.stream().anyMatch(t -> t.event().equals(event)
-				&& t.sourceNode().equals("defense") && t.targetNode().equals("s2")
+				&& Objects.equals(t.sourceNode(), "defense") && t.targetNode().equals("s2")
 				&& t.afterCommit().contains(new AfterCommitAction.CancelQuestTimer(
 					new QuestTimerPolicy.Identity("24026-defense", QuestTimerPolicy.Scope.PLAYER_QUEST)))));
 		}
@@ -110,7 +111,7 @@ class Quest24026RetailAlignmentTest {
 		assertTrue(returnToReward.actions().contains(new QuestAction.RemoveItem(182215371, 1)));
 
 		var completions = transitions.stream()
-			.filter(t -> t.sourceNode().equals("reward") && t.targetNode().equals("complete")
+			.filter(t -> Objects.equals(t.sourceNode(), "reward") && t.targetNode().equals("complete")
 				&& t.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == 204301
 				&& talk.dialogId() != null && talk.dialogId() >= 8 && talk.dialogId() <= 13)
 			.toList();

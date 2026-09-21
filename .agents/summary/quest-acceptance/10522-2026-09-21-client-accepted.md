@@ -39,3 +39,17 @@ remaining risks: 同批 20522/15542/25542/15545/25545/30211/30213/30311/30313 �
 - 引擎外写入方审计脚本与基线：`.agents/summary/quest-10522-reward-reentry/audit_external_reward_advance.py`、`external-reward-advance-before-fix.tsv`、`external-reward-advance.tsv`
 - 契约回归测试：`ExternalRewardAdvanceReentryContractTest`（2/2 PASS）、`Quest10522AutoStartDialogTest`（1/1 PASS）、`Quest20522AutoStartDialogTest`（1/1 PASS）
 - 生产目录与客户端契约门禁：`ProductionCatalogWhitelistVerificationTest`（PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / WHITELIST_VIOLATIONS=0）、`QuestDefinitionCatalogManifestTest`、`QuestDefinitionDirectoryLoaderTest`（13/13 PASS）、`QuestClientContractGateTest` + `QuestDialogOrderAuditTest` + `QuestStepDialogTerminationTest`（19/19 PASS，含 `-Dquest.client.contract.failOnStaleBaseline=true`）
+
+## 状态更新（2026-09-21，批次 8 之后）
+
+> **本记录的验收结论已被批次 8 取代，需重新实机复测（PENDING_CLIENT）。**
+
+- 本记录验收的是旧合同：`REWARD/var0=0`（写入方 `CM_CREATIVITY_POINTS` 只置状态不写 packed step）
+  加上新补的领奖态入口页。
+- 批次 8 按 `QE-051` 把该族 8 个任务（10522/20522、15542/25542、30211/30213/30311/30313）统一到客户端
+  任务书领奖行：写入方在 `setStatus(REWARD)` 前写 `qs.setQuestVarById(0, 1)`，`reward` 投影 `0 → 1`，
+  旧自愈边改为 `var0==0`，并重刷 `external-reward-advance-baseline.tsv`（`writer step=1 / projection=1`）。
+- 因此 10522 领奖时客户端任务书应停在第 2 行“和代理人维达对话”（而非第 1 行），入口页与奖励窗口流程不变；
+  复测时请同时确认旧存档 `REWARD/var0=0` 登录后自愈为 1。
+- 证据：`.agents/summary/quest-10527-reward-row/2026-09-21-10527-reward-row-and-family-audit.zh-CN.md` §十二、
+  `.agents/summary/quest-10522-reward-reentry/2026-09-20-external-reward-advance-reentry.zh-CN.md` 的“批次 8”小节。

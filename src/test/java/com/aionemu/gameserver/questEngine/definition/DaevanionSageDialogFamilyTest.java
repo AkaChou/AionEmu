@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -30,7 +31,10 @@ class DaevanionSageDialogFamilyTest {
 			assertNode(definition, "s0", 0);
 			assertNode(definition, "s1", 1);
 			assertNode(definition, "s2", 2);
-			assertNode(definition, "reward", QuestStatus.REWARD, 2);
+			// QE-051：客户端 QUEST_Q1988/Q2988 各 4 行，末行为领奖行，reward 投影 = 3（批次 1-7 已收口）。
+			// QE-051: QUEST_Q1988/Q2988 each have 4 journal rows and the last one is the reward row, so the
+			// REWARD projection is 3 (closed by batches 1-7).
+			assertNode(definition, "reward", QuestStatus.REWARD, 3);
 			assertStartContract(definition, contract.startNpc(), "s0");
 
 			assertPage(definition, "s0", contract.firstNpc(),
@@ -149,7 +153,7 @@ class DaevanionSageDialogFamilyTest {
 			QuestDialogAction action, List<QuestCondition> conditions) {
 		QuestEvent.TalkToNpc event = new QuestEvent.TalkToNpc(npcId, action.id());
 		return definition.transitions().stream()
-			.filter(candidate -> candidate.sourceNode().equals(source))
+			.filter(candidate -> Objects.equals(candidate.sourceNode(), source))
 			.filter(candidate -> candidate.event().equals(event))
 			.filter(candidate -> candidate.conditions().equals(conditions))
 			.findFirst()

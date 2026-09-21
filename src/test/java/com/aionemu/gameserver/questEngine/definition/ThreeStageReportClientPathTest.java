@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -27,7 +28,10 @@ class ThreeStageReportClientPathTest {
 			assertEquals(List.of(contract.race()), definition.metadata().permittedRaces().stream().toList());
 			assertNode(definition, "s0", 0);
 			assertNode(definition, "s1", 1);
-			assertNode(definition, "reward", QuestStatus.REWARD, 1);
+			// QE-051：客户端 quest_q15550/q25550 各 3 行，末行为领奖行，reward 投影 = 2（批次 5 已收口）。
+			// QE-051: quest_q15550/q25550 each have 3 journal rows and the last one is the reward row, so the
+			// REWARD projection is 2 (closed by batch 5).
+			assertNode(definition, "reward", QuestStatus.REWARD, 2);
 			assertStartContract(definition, contract.startNpc());
 
 			assertPage(definition, "s0", contract.firstNpc(),
@@ -46,9 +50,11 @@ class ThreeStageReportClientPathTest {
 				QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT3);
 			assertPage(definition, "s1", contract.secondNpc(),
 				QuestDialogAction.SELECT3_1, QuestDialogPage.SELECT3_1);
+			// 领奖交接写的就是客户端领奖行 2（批次 5 把 reward 从第 2 行推到第 3 行）。
+			// The reward hand-over writes the client reward row 2 (batch 5 moved REWARD from row 2 to row 3).
 			assertTalk(definition, "s1", "reward", contract.secondNpc(),
 				QuestDialogAction.SELECT_QUEST_REWARD, List.of(),
-				List.of(new QuestAction.SetVariable("var0", 1)),
+				List.of(new QuestAction.SetVariable("var0", 2)),
 				List.of(new AfterCommitAction.SyncQuestState(
 						QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 					new AfterCommitAction.ShowQuestDialog(
@@ -117,7 +123,7 @@ class ThreeStageReportClientPathTest {
 			QuestDialogAction action, List<QuestCondition> conditions) {
 		QuestEvent.TalkToNpc event = new QuestEvent.TalkToNpc(npcId, action.id());
 		return definition.transitions().stream()
-			.filter(candidate -> candidate.sourceNode().equals(source))
+			.filter(candidate -> Objects.equals(candidate.sourceNode(), source))
 			.filter(candidate -> candidate.event().equals(event))
 			.filter(candidate -> candidate.conditions().equals(conditions))
 			.findFirst()

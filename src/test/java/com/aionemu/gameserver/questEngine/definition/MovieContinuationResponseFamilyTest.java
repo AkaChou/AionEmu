@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -134,7 +135,7 @@ class MovieContinuationResponseFamilyTest {
 	private static QuestTransition talk(QuestDefinition definition, String source, String target, int npcId,
 			QuestDialogAction action) {
 		return definition.transitions().stream()
-			.filter(candidate -> candidate.sourceNode().equals(source)
+			.filter(candidate -> Objects.equals(candidate.sourceNode(), source)
 				&& candidate.targetNode().equals(target)
 				&& candidate.event().equals(new QuestEvent.TalkToNpc(npcId, action.id())))
 			.findFirst().orElseThrow();

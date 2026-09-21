@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -24,7 +25,10 @@ class SequentialItemCheckQuestFamilyTest {
 		assertNode(definition, "collect0", QuestStatus.START, 0);
 		assertNode(definition, "collected", QuestStatus.START, 1);
 		assertNode(definition, "ready", QuestStatus.START, 2);
-		assertNode(definition, "reward", QuestStatus.REWARD, 2);
+		// QE-051：客户端 QUEST_Q3082.html 共 4 行，末行为领奖行，reward 投影 = 3（批次 1-7 已收口）。
+		// QE-051: QUEST_Q3082.html has 4 journal rows and the last one is the reward row, so the REWARD
+		// projection is 3 (closed by batches 1-7).
+		assertNode(definition, "reward", QuestStatus.REWARD, 3);
 
 		assertPage(definition, "unaccepted", 798116,
 			QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT_NONE);
@@ -200,7 +204,7 @@ class SequentialItemCheckQuestFamilyTest {
 			QuestDialogAction action, List<QuestCondition> conditions) {
 		QuestEvent.TalkToNpc event = new QuestEvent.TalkToNpc(npcId, action.id());
 		return definition.transitions().stream()
-			.filter(candidate -> candidate.sourceNode().equals(source))
+			.filter(candidate -> Objects.equals(candidate.sourceNode(), source))
 			.filter(candidate -> candidate.event().equals(event))
 			.filter(candidate -> candidate.conditions().equals(conditions))
 			.findFirst()

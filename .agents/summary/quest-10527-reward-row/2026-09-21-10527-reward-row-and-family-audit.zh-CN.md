@@ -582,8 +582,9 @@ packed 值全等（`src/main/java/com/aionemu/gameserver/questEngine/runtime/Que
   26838 的镜像 16838 用 `k1(var0=1)` 覆盖第 2 行（reward 仍投影 0），形状被判 `ALIGNED`，本批次未改动它。
 - **QE-046 引擎外写入者 8 个不得只改 XML**：10522 / 20522 / 15542 / 25542 / 30211 / 30213 / 30311 / 30313 的
   reward 投影必须等于写入方（`CM_CREATIVITY_POINTS`、`CoalescenceService`、`RiftOrbAI2`）留下的 packed step
-  （现为 0），`ExternalRewardAdvanceReentryContractTest` 会直接校验；要修必须先改写入方并重刷
-  `src/test/resources/quest/external-reward-advance-baseline.tsv`。
+  （批次 7 时为 0），`ExternalRewardAdvanceReentryContractTest` 会直接校验；要修必须先改写入方并重刷
+  `src/test/resources/quest/external-reward-advance-baseline.tsv`。**该挂账已由批次 8 收口（见 §十二）**：
+  写入方改为先写领奖行 `var0=1` 再置 `REWARD`，投影同步 `0 → 1`，基线重刷为 `writer step=1 / projection=1`。
 - **其余未收口候选**：`started` 无 var 投影导致行 0 缺状态的 28932 / 30203 / 30303；多阶段/内部缺口
   （`INTERIOR_GAP` / `MISSING_TAIL_ROWS`）的 1607 / 1990 / 2990 / 3502 / 14012 / 14013 / 17511 / 27511；
   领奖 NPC 待核实的 19064 / 29064；legacy 从未实现的 1922 / 2947 / 14054（见第十节）。
@@ -632,3 +633,129 @@ mvn -B test -Dtest='ReportRowRewardProjectionContractTest,ArenaPhaseRowContractT
 15542 / 25542 / 30211 / 30213 / 30311 / 30313（QE-046 引擎外写入者，见 §十一之三）；28932 / 30203 / 30303
 （`started` 节点无 var 投影，行 0 缺状态，需要补投影）；1607 / 1990 / 2990 / 3502 / 14012 / 14013 / 17511 / 27511
 （多阶段或内部缺口，需要独立的阶段设计）。
+
+## 十二、批次 8：QE-046 引擎外写入者与领奖行求交（8 个任务，2026-09-21 用户授权后执行）
+
+### 十二之一、候选与证据（两条合同在同一批任务上冲突）
+
+批次 2 与批次 7 都把 10522 / 20522 / 15542 / 25542 / 30211 / 30213 / 30311 / 30313 排除在外，理由是它们被
+`QE-046`（引擎外写入者）基线锁住：`src/test/resources/quest/external-reward-advance-baseline.tsv` 要求
+`reward` 投影必须等于写入方留下的 packed step（当时为 0）。但 `QE-051` 要求 `reward` 投影等于客户端
+`quest_summary` 的领奖行；这两条合同对这 8 个任务给出的值不同，**只有让写入方同时写领奖行才能同时成立**——
+这与同族模板 15545 / 25545（`MinionService#checkQuest` 已 `setQuestVar(1)` + `setStatus(REWARD)`）一致。
+
+| 组 | 任务 | 客户端行清单 | 引擎外写入方 | 领奖 NPC | 旧 reward 投影 |
+| --- | --- | --- | --- | --- | --- |
+| A（2） | 10522 / 20522 | 2 行：`quest_q10522.html`（和代理人 Weatha 对话）/ `quest_q20522.html`（和代理人 Feregran 对话，客户端字典写作 `LF6_Weatha_E`） | `CM_CREATIVITY_POINTS#checkQuestCompletion` | 806075 / 806079 | 0（且已有 `var0==1` 自愈边） |
+| B（2） | 15542 / 25542 | 2 行：和 `LF6_Felen_E` / `DF6_Edorin_E` 对话 | `CoalescenceService#updateQuestsOnCoalescenceComplete` | 806074 / 806078 | 0（无自愈边） |
+| C（4） | 30211 / 30213 / 30311 / 30313 | 2 行：和 `Pilomenes` / `Cainus` / `Herka` / `Hler` 对话（贝希蒙德神殿裂隙宝珠） | `RiftOrbAI2#forQuest`（一处代码覆盖 4 个任务） | 798941 / 798926 / 799322 / 799225 | 0（无自愈边） |
+
+- 客户端行清单与末行 NPC 已由 `audit_reward_row_vs_client_steps.py` 逐任务核对（末行文本与任务内 NPC、
+  入口页 NPC 一致）；8 个任务的行数都是 2，因此 `var0` 只有 0（进行行）与 1（领奖行）两个合法值。
+- 语义依据：`QuestMutationPlanner#matchesSourceNode`（`src/main/java/com/aionemu/gameserver/questEngine/runtime/QuestMutationPlanner.java:340`）
+  只比较 **source 节点投影里声明过的变量**，因此写入方只要把 `var0` 写到 1 就能匹配 `reward` 节点的领奖行投影；
+  `QuestVars#setVarById(0, 1)` 即 packed `var0=1`（`var1..var5` 保持 0，不污染其它槽位）。
+
+### 十二之二、修复
+
+- **写入方（3 个文件、8 个任务）**：在每个任务的 `setStatus(QuestStatus.REWARD)` 之前插入
+  `qs.setQuestVarById(0, 1);` 与中英双语 `QE-046/QE-051` 注释：
+  `CM_CREATIVITY_POINTS#checkQuestCompletion`（10522、20522）、
+  `CoalescenceService#updateQuestsOnCoalescenceComplete`（15542、25542）、
+  `RiftOrbAI2#forQuest`（30211 / 30213 / 30311 / 30313，循环内插入一次）。
+- **定义（8 个 XML）**：`reward` 节点投影 `0 → 1`；补（A 组为改写）无 source 的 `enter-world` 自愈边
+  `status=REWARD && var0==0`（**无 actions**，仅 `LEVEL_AND_VISIBILITY_REFRESH`，步数由 `reward` 投影补足）。
+  A 组原有的 `var0==1` 自愈边在写入方改为写 1 之后已无对象，改为 `var0==0` 并重写注释说明覆盖的是旧存档。
+- 可重放脚本：`.agents/summary/quest-10522-reward-reentry/apply_batch8_external_writer_reward_row.py`
+  （`--check` 只校验，默认应用；复跑输出 `BATCH8_VERIFY_OK quests=8`）。
+- 基线重刷：`src/test/resources/quest/external-reward-advance-baseline.tsv` 由
+  `.agents/summary/quest-10522-reward-reentry/audit_external_reward_advance.py --out ...` 重生成，
+  10 个任务全部 `writer step=1 / projection=1 aligned / entry-page-ok / recovery=[0]`，
+  `verify_external_reward_reentry_contract.py` 输出 `static contract verified for 10 quests`。
+- 门禁更新：`Quest10522AutoStartDialogTest` 的 `reward` 投影断言 `var0 0 → 1`、自愈边断言 `var0==1 → ==0`
+  （注释同步改写为“领奖行 = 与代理人维达对话”）。
+
+### 十二之三、边界与已知偏差
+
+- **只有引擎外写入者才需要这批改法**：写入方与定义必须同时改，只改 XML 会被 `ExternalRewardAdvanceReentryContractTest`
+  的基线校验直接拒绝；反过来只改写入方会让客户端行清单与投影不一致（QE-051 的原始报障形态）。
+- **15545 / 25545 未纳入**：它们走的是 `MinionService#checkQuest` 的 `setQuestVar(1)`（`var0..var5` 全 1），
+  `var0` 同为 1，与领奖行一致且已有基线记录，本轮不改。
+- **`setQuestVar(1)` 与 `setQuestVarById(0, 1)` 不等价**：前者把 6 个槽位都写成 1，后者只写 `var0`。
+  本批次统一使用 `setQuestVarById(0, 1)`，避免把未声明的 `var1..var5` 写脏；若后续有任务在客户端脚本里
+  使用 `SECTION_1` 以上槽位，必须先按 `check_section0_requirements.py` 核对该任务的槽位声明再决定写法。
+- **自愈边只在登录/切图触发**：在线且不重登、不切图的旧存档（`REWARD/var0=0`）不会立即纠正；
+  这是 `enter-world` 边的既有边界，与批次 1-7 相同。
+- **这批只覆盖“2 行任务”**：客户端 3 行以上的引擎外写入者任务（若有）需要单独核对领奖行号，不能套用 1。
+- 剩余 `MISSING_LAST_ROW` 从 129 降到 121，其中 61 个末行 NPC 对不上任务内 NPC、32 个末行是其它目标；
+  仍按“客户端行清单 + 末行 NPC 命中 reward 路线 + 镜像/同型模板”三证据逐批收口，禁止机械推进。
+
+### 十二之四、验证（2026-09-21，用户授权后执行）
+
+```bash
+mvn -B test -Dtest='ExternalRewardAdvanceReentryContractTest,Quest10522AutoStartDialogTest,Quest30313RetailAlignmentTest,Quest10520ClientDialogAlignmentTest,BroadcastZoneMissionEndDefinitionTest,ReportRowRewardProjectionContractTest,ArenaPhaseRowContractTest,SensoryAreaRideRowContractTest,JournalReportRowSplitContractTest,JournalRewardRowRepairContractTest,ClientQuestSectionAlignmentTest,ArchdaevaRewardRowContractTest,AlignedMirrorRewardRowContractTest,MirrorPairRewardRowContractTest,ProductionCatalogWhitelistVerificationTest,QuestDefinitionCatalogManifestTest,QuestCollectProgressAlignmentGateTest'
+```
+
+- 结果：`Tests run: 84, Failures: 0, Errors: 0, Skipped: 0`（17 个测试类）；`PRODUCTION_COMPILE_OK=6189`、
+  `PRODUCTION_COMPILE_FAILURES=0`、`PRODUCTION_INTERACTION_OBJECT_FAILURES=0`、`PRODUCTION_WHITELIST_VIOLATIONS=0`。
+  首轮（更新测试前）暴露且已修的两处断言：`reward` 投影 `0 → 1` 与自愈边 `var0==1 → ==0`。
+- 静态：`xmllint --noout --schema src/main/resources/aion/data/static_data/quest_definition/quest_definition.xsd`
+  8 个文件全部 `validates`；IDE lint 0 警告（Java 侧仅有既存的风格类 warning，与本次 hunk 无关）；
+  `git diff --check` 干净；`apply_batch8_external_writer_reward_row.py --check` 幂等通过。
+- 全库审计同工作树前后对照（先回放批 8 前的 8 个 XML 取基线，跑完审计再回放修复版本）：
+  `ROW_ALIGNED 2591 → 2599`、`ROW_BEHIND 254 → 246`、`ROW_STATE_ALIGNED 2372 → 2380`、
+  `ROW_WITHOUT_STATE 575 → 567`、`ALIGNED 2372 → 2380`、`MISSING_LAST_ROW 129 → 121`
+  （`ROW_AHEAD 2591`、`STATE_OUT_OF_RANGE 2448`、`INTERIOR_GAP 267`、`MISSING_TAIL_ROWS 90`、
+  `STATES_BEYOND_ROWS 2625`、`BOTH_MISALIGNED 177` 不变）；两轮审计输出逐行 diff 只有这 8 个任务变化，
+  全部由 `ROW_BEHIND + MISSING_LAST_ROW + ROW_WITHOUT_STATE` 转 `ROW_ALIGNED + ALIGNED + ROW_STATE_ALIGNED`。
+- 客户端复测路径（PENDING_CLIENT）：
+  1. 10522 / 20522：在创造力面板分配或重置点数触发 `CM_CREATIVITY_POINTS` 后，任务书应切到第 2 行
+     “和代理人 Weatha / Feregran 对话”并能打开奖励窗口；旧存档 `REWARD/var0=0` 登录后自愈为 1。
+  2. 15542 / 25542：融合成功后任务书应切到第 2 行“和 LF6_Felen_E / DF6_Edorin_E 对话”。
+  3. 30211 / 30213 / 30311 / 30313：贝希蒙德神殿裂隙宝珠触发完成后，任务书应切到第 2 行
+     “和 Pilomenes / Cainus / Herka / Hler 对话”，点任务行能打开 `select_success(10002)` 与奖励窗口。
+
+### 十二之五、批次 1-7 的隐藏回归收口（同一批任务，2026-09-21）
+
+批次 1-7 给 375 个任务补了**无 source 的 `enter-world` 自愈边**，但当时只跑了 12-13 个测试类。
+本批次接着做了一次定向回归扫描：先枚举 `HEAD` 提交里改过的 375 个任务，再挑出「引用了这些任务 id 且
+用 `X.sourceNode().equals(...)` 过滤」的 43 个测试类，一次性跑完 —— 结果 **259 例里 36 例失败**，分三类：
+
+| 类别 | 数量 | 代表 | 原因与处置 |
+| --- | --- | --- | --- |
+| 测试 helper 空指针 | 21 个类 | `Quest18602ClientDialogAlignmentTest`、`LegacyKillFlowRepairDefinitionTest`、`MigratedQuestRepairDefinitionTest`、`EarlyElyosQuestRegressionTest`、`CollectTurnInClientActionAlignmentBatchTest`、`Quest2634/2669/24026/14026/14051/1553…` | helper 用 `candidate.sourceNode().equals(source)` 过滤，新自愈边的 `sourceNode()` 为 null 直接 NPE；改为 `Objects.equals(candidate.sourceNode(), source)`（21 个文件、约 70 处） |
+| 期望值过期 | 7 个任务 | 1553（3 行→领奖行 2）、1988/2988（4 行→3）、3082（4 行→3）、14026/24026（6 行→5）、14051（5 行→4）、15550/25550（3 行→2，且交接写 2）、24030（10 行→9） | 这些测试写的是批次前的旧 reward 投影；按客户端 `quest_summary` 行数更新断言并补 QE-051 双语注释（`mvn` 已复核全部转为客户端领奖行） |
+| 客户端契约门禁新指纹 | 2 个任务 | `QuestClientContractGateTest` 报 `BUTTON_WITHOUT_ROUTE|28208/28209|reward|205321|31|10002|1009` | 见下 |
+
+**28208 / 28209 的领奖人补全**：客户端 `quest_q28208.html` / `quest_q28209.html` 的 quest_summary 末行是
+“和 **Anja** 对话”，而 `npcs_unpacked/client_npcs_npc.xml` 里 **Anja = npc 205321**（205320 = Inggness）。
+批次 6 只给 205321 加了 reward 态入口页（`QUEST_SELECT → DEFAULT_SUCCESS`），却没有对应的
+`SELECT_QUEST_REWARD(1009)` 完成路线 —— 玩家按任务书找到 Anja、点开 10002 页后按钮无效。本批次按迁移既有
+的 205320 块补上 `<npc-complete npc-id="205321" …>`（`<preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>`），
+205320 的既有路线保留（列为领奖 NPC），并把客户端证据写进中英双语注释。
+
+**顺带发现（非本批引入）**：`QuestMovieAndDialogLoopRegressionTest#quest15301And25301AcceptanceAdvancesToStarted`
+在 `HEAD` 就已红 —— 任务 15301/25301 的三段流程在 98b34418a（2026-09-20，另一个任务的提交）把首段节点
+`started` 改名为 `s0`，但该测试仍断言 `started`。本批次按新节点名对齐断言（接取事件
+`QUEST_ACCEPT_1 → s0` + `SHOW_QUEST_PAGE QUEST_ACCEPT_1` 不变），并在注释里标注来源。
+
+### 十二之六、验证（批次 8 + 回归收口，2026-09-21 用户授权后执行）
+
+```bash
+mvn -B test -Dtest='<43 个定向回归类>,QuestClientContractGateTest,Quest20522AutoStartDialogTest,Quest10522AutoStartDialogTest,
+ExternalRewardAdvanceReentryContractTest,Quest30311RetailAlignmentTest,BroadcastZoneMissionEndDefinitionTest,
+ReportRowRewardProjectionContractTest,JournalReportRowSplitContractTest,JournalRewardRowRepairContractTest,
+ClientQuestSectionAlignmentTest,ArchdaevaRewardRowContractTest,AlignedMirrorRewardRowContractTest,
+MirrorPairRewardRowContractTest,ProductionCatalogWhitelistVerificationTest,QuestDefinitionCatalogManifestTest,
+QuestCollectProgressAlignmentGateTest,QuestDialogOrderAuditTest,QuestDefinitionDirectoryLoaderTest'
+```
+
+- 结果：`Tests run: 302, Failures: 0, Errors: 0, Skipped: 0`；`PRODUCTION_COMPILE_OK=6189`、
+  `PRODUCTION_COMPILE_FAILURES=0`、`PRODUCTION_INTERACTION_OBJECT_FAILURES=0`、`PRODUCTION_WHITELIST_VIOLATIONS=0`。
+- `QuestClientContractGateTest` 的两条新指纹（28208/28209）已归零；批次 8 的 10 个 XML（含 28208/28209）
+  `xmllint --schema quest_definition.xsd` 全部 `validates`；IDE lint 无 error；`git diff --check` 干净
+  （`audit-missing-last-row.tsv` 的 trailing tab 是该审计产物的既有格式，与批次 7 提交一致）。
+- 全库行审计重跑与批次 8 收口前一致：`ROW_ALIGNED 2599`、`ROW_BEHIND 246`、`ROW_STATE_ALIGNED 2380`、
+  `ROW_WITHOUT_STATE 567`、`ALIGNED 2380`、`MISSING_LAST_ROW 121`（28208/28209 只增加完成路线，
+  不影响行/状态判定）。
+- 客户端复测仍为 **PENDING_CLIENT**（含 10522 的新 `REWARD/var0=1` 合同与 28208/28209 的 Anja 领奖链）。

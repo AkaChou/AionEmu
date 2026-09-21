@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -254,7 +255,7 @@ class CollectTurnInClientActionAlignmentBatchTest {
 	private static QuestTransition transition(QuestDefinition definition, String source, String target,
 			QuestEvent event) {
 		return definition.transitions().stream()
-			.filter(candidate -> candidate.sourceNode().equals(source)
+			.filter(candidate -> Objects.equals(candidate.sourceNode(), source)
 				&& candidate.targetNode().equals(target) && candidate.event().equals(event))
 			.findFirst().orElseThrow();
 	}

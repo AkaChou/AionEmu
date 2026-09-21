@@ -20,10 +20,12 @@ class Quest10522AutoStartDialogTest {
 		QuestDefinition definition = definition().definition();
 		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0));
 		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
-		// 领奖态投影必须等于引擎外写入方（CM_CREATIVITY_POINTS）留下的打包步数，否则该状态匹配不到领奖路由。
-		// The REWARD projection must equal the packed step left by the engine-external writer
-		// (CM_CREATIVITY_POINTS); otherwise the state matches no reward route.
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 0));
+		// 领奖态投影必须等于引擎外写入方（CM_CREATIVITY_POINTS#checkQuestCompletion）写入的打包步数 1，
+		// 即客户端任务摘要末行（与代理人维达对话）对应的投影行；否则该状态匹配不到领奖路由。
+		// The REWARD projection must equal packed step 1 written by the engine-external writer
+		// (CM_CREATIVITY_POINTS#checkQuestCompletion), matching the client summary tail row so the
+		// reward route stays reachable.
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 1));
 		assertEquals(List.of(List.of("finished:10521")), startConditionGroups(definition));
 
 		assertAutoStart(definition, new QuestEvent.LevelUp());
@@ -62,13 +64,15 @@ class Quest10522AutoStartDialogTest {
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
 			rewardEntry.afterCommit());
 
-		// 旧存档自愈：旧写入方只置 REWARD 而不写打包步数，定义又曾投影 var0=1，这类存档进入世界时归零。
-		// Legacy save recovery: the old writer only set REWARD without writing the packed step while the
-		// definition projected var0=1, so such saves are normalized on enter-world.
+		// 旧存档自愈：批次 8 之前的写入方只置 REWARD 而不写打包步数，这类存档停在 REWARD/var0=0，
+		// 而领奖行投影现在是 var0=1；进入世界时按 reward 节点投影把步数推进到领奖行并同步给客户端。
+		// Legacy save recovery: writers predating batch 8 only set REWARD without writing the packed step,
+		// leaving saves at REWARD/var0=0 while the reward row now projects var0=1; entering the world
+		// advances the packed step to the reward row and re-syncs the client.
 		QuestTransition recovery = unsourcedTransition(definition, new QuestEvent.EnterWorld(), "reward");
 		assertEquals(List.of(
 			new QuestCondition.StatusIs(QuestStatus.REWARD),
-			new QuestCondition.QuestVariableIs("var0", 1)), recovery.conditions());
+			new QuestCondition.QuestVariableIs("var0", 0)), recovery.conditions());
 		assertEquals(List.of(), recovery.actions());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
 			QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), recovery.afterCommit());

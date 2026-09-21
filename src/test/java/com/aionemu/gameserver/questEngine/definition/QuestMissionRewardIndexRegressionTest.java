@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -27,8 +28,12 @@ class QuestMissionRewardIndexRegressionTest {
 		assertEquals(List.of("reward"), definition.nodes().stream()
 			.filter(node -> node.projection().status() == QuestStatus.REWARD)
 			.map(QuestNode::label).toList());
-		assertNode(definition, "reward", QuestStatus.REWARD);
-		assertNode(definition, "complete", QuestStatus.COMPLETE);
+		// QE-051：客户端 quest_q14026/q24026 各 6 行，末行为领奖行，reward 投影 = 5、complete 回到 4
+		//（批次 1-7 已收口）。
+		// QE-051: quest_q14026/q24026 each have 6 journal rows and the last one is the reward row, so the
+		// REWARD projection is 5 while COMPLETE returns to 4 (closed by batches 1-7).
+		assertNode(definition, "reward", QuestStatus.REWARD, 5);
+		assertNode(definition, "complete", QuestStatus.COMPLETE, 4);
 
 		for (QuestDialogAction action : List.of(QuestDialogAction.QUEST_SELECT,
 				QuestDialogAction.USE_OBJECT, QuestDialogAction.SELECT_QUEST_REWARD)) {
@@ -54,7 +59,7 @@ class QuestMissionRewardIndexRegressionTest {
 			.filter(transition -> transition.actions().stream().anyMatch(QuestAction.CompleteQuest.class::isInstance))
 			.count());
 		assertEquals(9, definition.transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("reward")).count());
+			.filter(transition -> Objects.equals(transition.sourceNode(), "reward")).count());
 
 		for (int choice = 0; choice < choices.size(); choice++) {
 			QuestTransition completion = route(definition, questId, choices.get(choice));
@@ -113,17 +118,18 @@ class QuestMissionRewardIndexRegressionTest {
 	private static QuestTransition route(QuestDefinition definition, int questId, QuestDialogAction action) {
 		QuestEvent event = new QuestEvent.TalkToNpc(questId == 14026 ? 203901 : 204301, action.id());
 		List<QuestTransition> routes = definition.transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("reward") && transition.event().equals(event))
+			.filter(transition -> Objects.equals(transition.sourceNode(), "reward") && transition.event().equals(event))
 			.toList();
 		assertEquals(1, routes.size(), "quest=" + questId + " action=" + action);
 		return routes.getFirst();
 	}
 
-	private static void assertNode(QuestDefinition definition, String label, QuestStatus status) {
+	private static void assertNode(QuestDefinition definition, String label, QuestStatus status,
+			int var0) {
 		QuestNode node = definition.nodes().stream()
 			.filter(candidate -> candidate.label().equals(label)).findFirst().orElseThrow();
 		assertEquals(status, node.projection().status());
-		assertEquals(Map.of("var0", 4), node.projection().variables());
+		assertEquals(Map.of("var0", var0), node.projection().variables());
 	}
 
 	private static QuestDefinition load(int questId) throws Exception {

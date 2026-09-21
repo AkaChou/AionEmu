@@ -98,7 +98,7 @@ class MigratedQuestRepairDefinitionTest {
 
 		CompiledQuestDefinition fissure = load(17510);
 		assertTrue(fissure.definition().transitions().stream().anyMatch(transition ->
-			transition.sourceNode().equals("s4")
+			Objects.equals(transition.sourceNode(), "s4")
 				&& transition.afterCommit().contains(new AfterCommitAction.RemoveEffect(4808))
 				&& transition.afterCommit().contains(new AfterCommitAction.RemoveEffect(4836))));
 	}
@@ -139,16 +139,16 @@ class MigratedQuestRepairDefinitionTest {
 			definition.definition().metadata().prerequisites());
 		assertEquals(3, definition.definition().transitions().stream()
 			.filter(transition -> transition.event() instanceof QuestEvent.KillNpcSet
-				&& transition.sourceNode().equals("defense"))
+				&& Objects.equals(transition.sourceNode(), "defense"))
 			.flatMap(transition -> ((QuestEvent.KillNpcSet) transition.event()).npcIds().stream())
 			.distinct().count());
 		assertTrue(definition.definition().transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("defense"))
+			.filter(transition -> Objects.equals(transition.sourceNode(), "defense"))
 			.flatMap(transition -> transition.afterCommit().stream())
 			.anyMatch(action -> action instanceof AfterCommitAction.SpawnNpcRandom random
 				&& random.variants().stream().noneMatch(variant -> variant.templateId() == 213579)));
 		List<QuestTransition> completion = definition.definition().transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("reward")
+			.filter(transition -> Objects.equals(transition.sourceNode(), "reward")
 				&& transition.targetNode().equals("complete"))
 			.toList();
 		assertEquals(Set.of(8, 9, 10, 11, 12, 13), completion.stream()
@@ -232,14 +232,14 @@ class MigratedQuestRepairDefinitionTest {
 		int s1Packed = definition.definition().progressLayout().pack(Map.of("var0", 1, "var1", 0, "var2", 0));
 		QuestSnapshot s1 = new QuestSnapshot(7, 3090, QuestStatus.START, s1Packed, Map.of());
 		QuestTransition ribbonFirst = definition.definition().transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("s1")
+			.filter(transition -> Objects.equals(transition.sourceNode(), "s1")
 				&& transition.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == 700420)
 			.findFirst().orElseThrow();
 		assertTrue(QuestMutationPlanner.plan(definition, s1, new QuestEvent.TalkToNpc(700420), ribbonFirst).isPresent());
 		int s1ZonePacked = definition.definition().progressLayout().pack(Map.of("var0", 1, "var1", 1, "var2", 0));
 		QuestSnapshot s1Zone = new QuestSnapshot(7, 3090, QuestStatus.START, s1ZonePacked, Map.of());
 		QuestTransition zoneSecond = definition.definition().transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("s1-zone")).findFirst().orElseThrow();
+			.filter(transition -> Objects.equals(transition.sourceNode(), "s1-zone")).findFirst().orElseThrow();
 		assertTrue(QuestMutationPlanner.plan(definition, s1Zone, new QuestEvent.TalkToNpc(700420), zoneSecond)
 			.isPresent());
 
@@ -280,7 +280,7 @@ class MigratedQuestRepairDefinitionTest {
 		assertTrue(report.afterCommit().contains(new AfterCommitAction.ShowQuestDialog(5)));
 
 		QuestTransition completion = definition.definition().transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("reward")
+			.filter(transition -> Objects.equals(transition.sourceNode(), "reward")
 				&& transition.targetNode().equals("complete"))
 			.findFirst().orElseThrow();
 		assertTrue(completion.actions().contains(new QuestAction.GrantReward(
@@ -299,7 +299,7 @@ class MigratedQuestRepairDefinitionTest {
 		assertEquals(7, definition.definition().progressLayout().field("var0").width());
 
 		List<QuestTransition> classChoices = definition.definition().transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("s5")
+			.filter(transition -> Objects.equals(transition.sourceNode(), "s5")
 				&& transition.targetNode().equals("reward")
 				&& transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == 790001)
@@ -335,7 +335,7 @@ class MigratedQuestRepairDefinitionTest {
 		assertEquals(6, failureRoutes);
 
 		List<QuestTransition> completion = definition.definition().transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("reward")
+			.filter(transition -> Objects.equals(transition.sourceNode(), "reward")
 				&& transition.targetNode().equals("complete"))
 			.toList();
 		assertEquals(16, completion.size());
@@ -361,7 +361,7 @@ class MigratedQuestRepairDefinitionTest {
 				.collect(java.util.stream.Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().size())));
 
 		List<QuestTransition> classCompletions = definition.definition().transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("reward")
+			.filter(transition -> Objects.equals(transition.sourceNode(), "reward")
 				&& transition.targetNode().equals("complete")
 				&& transition.conditions().stream().anyMatch(QuestCondition.AdvancedClassIs.class::isInstance))
 			.toList();
@@ -381,7 +381,7 @@ class MigratedQuestRepairDefinitionTest {
 		assertTrue(QuestMutationPlanner.plan(definition, equipped, startDialog, equippedRoute).isPresent());
 
 		QuestTransition dpRoute = definition.definition().transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("started3")
+			.filter(transition -> Objects.equals(transition.sourceNode(), "started3")
 				&& transition.event().equals(new QuestEvent.TalkToNpc(203771, 2035))
 				&& transition.targetNode().equals("reward"))
 			.findFirst().orElseThrow();
@@ -395,7 +395,7 @@ class MigratedQuestRepairDefinitionTest {
 		assertTrue(dpPlan.requiredActions().contains(new QuestAction.SetCurrency(QuestRewardKind.DP, 0)));
 
 		QuestTransition finalAbex = definition.definition().transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("started2")
+			.filter(transition -> Objects.equals(transition.sourceNode(), "started2")
 				&& transition.targetNode().equals("started2-complete")
 				&& transition.event() instanceof QuestEvent.KillNpcSet
 				&& transition.conditions().contains(new QuestCondition.VariableBelow("abex", 30)))
@@ -425,7 +425,7 @@ class MigratedQuestRepairDefinitionTest {
 		assertEquals(102000593, metadata.classRewards().get("SONGWEAVER").get(0).id());
 
 		List<QuestTransition> classCompletions = definition.definition().transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("reward")
+			.filter(transition -> Objects.equals(transition.sourceNode(), "reward")
 				&& transition.targetNode().equals("complete")
 				&& transition.conditions().stream().anyMatch(QuestCondition.AdvancedClassIs.class::isInstance))
 			.toList();
@@ -442,7 +442,7 @@ class MigratedQuestRepairDefinitionTest {
 		assertTrue(QuestMutationPlanner.plan(definition, equipped, startDialog, equippedRoute).isPresent());
 
 		QuestTransition dpRoute = definition.definition().transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("started3")
+			.filter(transition -> Objects.equals(transition.sourceNode(), "started3")
 				&& transition.event().equals(new QuestEvent.TalkToNpc(204146, 2035))
 				&& transition.targetNode().equals("reward"))
 			.findFirst().orElseThrow();
@@ -456,7 +456,7 @@ class MigratedQuestRepairDefinitionTest {
 		assertTrue(dpPlan.requiredActions().contains(new QuestAction.SetCurrency(QuestRewardKind.DP, 0)));
 
 		QuestTransition finalCrestlich = definition.definition().transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("started2")
+			.filter(transition -> Objects.equals(transition.sourceNode(), "started2")
 				&& transition.targetNode().equals("started2-complete")
 				&& transition.event() instanceof QuestEvent.KillNpcSet
 				&& transition.conditions().contains(new QuestCondition.VariableBelow("crestlich", 30)))
@@ -482,7 +482,7 @@ class MigratedQuestRepairDefinitionTest {
 		assertEquals(11, metadata.classRewards().size());
 
 		QuestTransition movieEnd = definition.definition().transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("instance95")
+			.filter(transition -> Objects.equals(transition.sourceNode(), "instance95")
 				&& transition.targetNode().equals("movie96")
 				&& transition.event().equals(new QuestEvent.MovieEnd(156)))
 			.findFirst().orElseThrow();
@@ -503,14 +503,14 @@ class MigratedQuestRepairDefinitionTest {
 			QuestCondition.EquippedItem notEquipped = new QuestCondition.EquippedItem(entry.getValue(), 1, false);
 
 			QuestTransition alreadyEquipped = definition.definition().transitions().stream()
-				.filter(transition -> transition.sourceNode().equals("movie96")
+				.filter(transition -> Objects.equals(transition.sourceNode(), "movie96")
 					&& transition.targetNode().equals("movie96") && transition.event().equals(selectStone)
 					&& transition.conditions().contains(classCondition))
 				.findFirst().orElseThrow();
 			assertTrue(alreadyEquipped.conditions().contains(equipped));
 
 			QuestTransition grant = definition.definition().transitions().stream()
-				.filter(transition -> transition.sourceNode().equals("movie96")
+				.filter(transition -> Objects.equals(transition.sourceNode(), "movie96")
 					&& transition.targetNode().equals("equipped99") && transition.event().equals(selectStone)
 					&& transition.conditions().contains(classCondition))
 				.findFirst().orElseThrow();
@@ -518,7 +518,7 @@ class MigratedQuestRepairDefinitionTest {
 			assertTrue(grant.actions().contains(new QuestAction.GiveItem(entry.getValue(), 1)));
 
 			QuestTransition prompt = definition.definition().transitions().stream()
-				.filter(transition -> transition.sourceNode().equals("equipped99")
+				.filter(transition -> Objects.equals(transition.sourceNode(), "equipped99")
 					&& transition.event().equals(useObject) && transition.conditions().contains(classCondition))
 				.findFirst().orElseThrow();
 			assertTrue(prompt.conditions().contains(notEquipped));
@@ -529,7 +529,7 @@ class MigratedQuestRepairDefinitionTest {
 			.withPlayerClass(PlayerClass.GLADIATOR)
 			.withEquipmentFacts(new QuestEquipmentFacts(Map.of(), Map.of(140000003, 1)));
 		QuestTransition gladiatorClose = definition.definition().transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("movie96")
+			.filter(transition -> Objects.equals(transition.sourceNode(), "movie96")
 				&& transition.targetNode().equals("movie96") && transition.event().equals(selectStone)
 				&& transition.conditions().contains(new QuestCondition.AdvancedClassIs(PlayerClass.GLADIATOR)))
 			.findFirst().orElseThrow();
@@ -549,7 +549,7 @@ class MigratedQuestRepairDefinitionTest {
 		assertEquals(5, failedDeathRoutes);
 
 		QuestTransition memberSkip = definition.definition().transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("unaccepted")
+			.filter(transition -> Objects.equals(transition.sourceNode(), "unaccepted")
 				&& transition.targetNode().equals("complete")
 				&& transition.event() instanceof QuestEvent.LevelUp)
 			.findFirst().orElseThrow();
@@ -581,7 +581,7 @@ class MigratedQuestRepairDefinitionTest {
 			.map(QuestReward::id).collect(java.util.stream.Collectors.toSet());
 		assertEquals(selectableItems, declaredSelectable);
 		List<QuestTransition> completionRoutes = definition.definition().transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("reward")
+			.filter(transition -> Objects.equals(transition.sourceNode(), "reward")
 				&& transition.targetNode().equals("complete")
 				&& transition.event() instanceof QuestEvent.TalkToNpc talk
 					&& talk.npcId() == rewardNpcId)

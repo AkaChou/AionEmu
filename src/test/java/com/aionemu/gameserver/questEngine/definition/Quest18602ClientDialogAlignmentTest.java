@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -45,7 +46,7 @@ class Quest18602ClientDialogAlignmentTest {
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT2_1.id())), examine.afterCommit());
 
 		List<QuestTransition> usePotionRoutes = definition.transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("s1"))
+			.filter(transition -> Objects.equals(transition.sourceNode(), "s1"))
 			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == POTION_NPC && Integer.valueOf(QuestDialogAction.SETPRO2.id()).equals(talk.dialogId()))
 			.toList();
@@ -127,7 +128,7 @@ class Quest18602ClientDialogAlignmentTest {
 	private static QuestTransition route(QuestDefinition definition, String sourceNode, int npcId,
 		QuestDialogAction action) {
 		return definition.transitions().stream()
-			.filter(transition -> transition.sourceNode().equals(sourceNode))
+			.filter(transition -> Objects.equals(transition.sourceNode(), sourceNode))
 			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == npcId && Integer.valueOf(action.id()).equals(talk.dialogId()))
 			.findFirst().orElseThrow();

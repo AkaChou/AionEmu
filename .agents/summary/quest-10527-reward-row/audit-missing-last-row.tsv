@@ -1,69 +1,67 @@
 quest_id	client_rows	last_row_kind	last_row_text	reward_var0	last_start_node	last_start_var0	handover_writes	recovery	qe045_locked	verdict	row_state_verdict	client_section0	mirror_id	mirror_shape	mirror_reward_var0	mirror_last_row_text
-1005	10	DIALOG	和[%dic:STR_DIC_LA139]对话	8	None	None		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-1114	6	OTHER	接受[%dic:STR_DIC_LA10]的奖赏	None	None	None		False	False	NO_REWARD_ROW	ROW_WITHOUT_STATE
-1123	2	DIALOG	任务完成！和[%dic:STR_DIC_LA12]%对话。	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-1149	3	DIALOG	和[%dic:STR_DIC_LA159]对话	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-1157	2	OTHER	要[%dic:STR_DIC_LA45]履行承诺，说出取下印章的方法。	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-1170	2	OTHER	将找到的石像头放回石像顶部。	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-1466	2	DIALOG	向[%dic:STR_DIC_N_Valerius]报告	None	started	0	var0=2	False	False	NO_REWARD_ROW	ROW_WITHOUT_STATE
-1479	3	DIALOG	和[%dic:STR_DIC_N_Memnes]对话	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-1527	2	OTHER	去见见[%dic:STR_DIC_N_Raninia]%吧	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-1528	2	OTHER	为[%dic:STR_DIC_N_Senemonea]带去发生异变的噬人虫皮。	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-1721	3	DIALOG	和[%dic:STR_DIC_N_Erinyes]百夫长对话	0	stage1	1		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-1722	9	DIALOG	把[%dic:STR_DIC_I_QUEST_1722a]交给[%dic:STR_DIC_N_Rastin]	7	s7	7		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-1724	3	DIALOG	把莱奥斯的信交给[%dic:STR_DIC_N_Chrysaor]	0	stage1	1		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-1725	2	DIALOG	把补给品交给[%dic:STR_DIC_N_Dactyl]	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-1876	3	DIALOG	向[%dic:STR_DIC_N_Taranis]报告	1	s1	1		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-1920	3	DIALOG	和[%dic:STR_DIC_N_Jucleas]对话	1	started1	1		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-1926	2	DIALOG	和[%dic:STR_DIC_N_Latri]对话	0	started	0		True	False	ROW_BEHIND	ROW_WITHOUT_STATE
-2006	3	DIALOG	和[%dic:STR_DIC_LA494]%对话。	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-2007	10	DIALOG	和[%dic:STR_DIC_LA494]对话	8	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-2135	2	DIALOG	和[%dic:STR_DIC_N_DF1_Fisher]对话。	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-2247	2	OTHER	送给[%dic:STR_DIC_N_NPC_Gerger_3]	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-2266	2	OTHER	把[%dic:STR_DIC_I_doc_quest_2266a]给[%dic:STR_DIC_N_Aurtri]送过去。	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-2303	4	DIALOG	和[%dic:STR_DIC_N_Fathir]%对话	None	started	0		False	False	NO_REWARD_ROW	ROW_WITHOUT_STATE
-2484	2	DIALOG	和[%dic:STR_DIC_N_Hippolyta]对话。	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-2600	3	DIALOG	重新和[%dic:STR_DIC_N_Shugo_DF3_12]对话	0	s1	1		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-2633	4	DIALOG	向德拉乌伯尼尔洞穴入口附近的[%dic:STR_DIC_N_DF3_Alberihi_E]报告	2	s2	2		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-2646	4	OTHER	回复[%dic:STR_DIC_N_Svafnir]。	0	stage2	2		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-2692	4	OTHER	将八音盒给[%dic:STR_DIC_N_LabB_BeholderNamedQ_43_Ae]送去。	0	stage2	2		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-2722	9	DIALOG	把伊拉西克特产酒交给[%dic:STR_DIC_N_Bord]	7	started7	7		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-2767	3	DIALOG	和[%dic:STR_DIC_N_Shugo_AB1_D2]对话	0	stage1	1		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-2842	2	DIALOG	和[%dic:STR_DIC_N_Herz]%对话	0	None	None		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-2876	3	DIALOG	向[%dic:STR_DIC_N_Votan]报告	1	s1	1		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-2925	7	OTHER	安慰[%dic:STR_DIC_N_Daskair]	5	None	None		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-2938	2	DIALOG	和[%dic:STR_DIC_N_Izwin]对话	0	started	0		True	False	ROW_BEHIND	ROW_WITHOUT_STATE
-2945	3	DIALOG	和[%dic:STR_DIC_N_Balder]对话	1	started1	1		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-3087	2	OTHER	将找到的东西送到[%dic:STR_DIC_N_Talos]那里	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-3722	2	DIALOG	向[%dic:STR_DIC_N_Yannis]报告结果	0	started	0		True	True	ROW_BEHIND	ROW_WITHOUT_STATE
-3732	3	DIALOG	向[%dic:STR_DIC_N_LF2_Brando]报告	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-3933	8	DIALOG	向[%dic:STR_DIC_LA80]报告	6	s6	6	var0=6	False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-3934	10	DIALOG	向[%dic:STR_DIC_LA80]报告	8	s8	8	var0=8	False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-3935	6	DIALOG	和[%dic:STR_DIC_N_Lavirintos]对话	4	s4	4	var0=4	False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-3939	5	DIALOG	和[%dic:STR_DIC_N_Lavirintos]对话	3	s3	3	var0=3	False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-4020	2	OTHER	将余款送到[%dic:STR_DIC_N_Blume]那里	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-4200	5	OTHER	向使节团团长[%dic:STR_DIC_N_DF3_Fairringring_E]转告哈奥隆的消息	3	s3	3		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-4712	2	DIALOG	向[%dic:STR_DIC_N_Henir]报告	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-4722	2	DIALOG	向[%dic:STR_DIC_N_Yorgen]%报告结果	0	started	0		True	True	ROW_BEHIND	ROW_WITHOUT_STATE
+1005	10	DIALOG	和[%dic:STR_DIC_LA139]对话	8	None	None		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+1114	6	OTHER	接受[%dic:STR_DIC_LA10]的奖赏	None	None	None		False	False	NO_REWARD_ROW	ROW_WITHOUT_STATE					
+1123	2	DIALOG	任务完成！和[%dic:STR_DIC_LA12]%对话。	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+1149	3	DIALOG	和[%dic:STR_DIC_LA159]对话	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+1157	2	OTHER	要[%dic:STR_DIC_LA45]履行承诺，说出取下印章的方法。	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+1170	2	OTHER	将找到的石像头放回石像顶部。	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+1466	2	DIALOG	向[%dic:STR_DIC_N_Valerius]报告	None	started	0	var0=2	False	False	NO_REWARD_ROW	ROW_WITHOUT_STATE					
+1479	3	DIALOG	和[%dic:STR_DIC_N_Memnes]对话	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+1527	2	OTHER	去见见[%dic:STR_DIC_N_Raninia]%吧	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+1528	2	OTHER	为[%dic:STR_DIC_N_Senemonea]带去发生异变的噬人虫皮。	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+1721	3	DIALOG	和[%dic:STR_DIC_N_Erinyes]百夫长对话	0	stage1	1		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+1722	9	DIALOG	把[%dic:STR_DIC_I_QUEST_1722a]交给[%dic:STR_DIC_N_Rastin]	7	s7	7		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+1724	3	DIALOG	把莱奥斯的信交给[%dic:STR_DIC_N_Chrysaor]	0	stage1	1		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+1725	2	DIALOG	把补给品交给[%dic:STR_DIC_N_Dactyl]	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+1876	3	DIALOG	向[%dic:STR_DIC_N_Taranis]报告	1	s1	1		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+1920	3	DIALOG	和[%dic:STR_DIC_N_Jucleas]对话	1	started1	1		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+1926	2	DIALOG	和[%dic:STR_DIC_N_Latri]对话	0	started	0		True	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+2006	3	DIALOG	和[%dic:STR_DIC_LA494]%对话。	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+2007	10	DIALOG	和[%dic:STR_DIC_LA494]对话	8	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+2135	2	DIALOG	和[%dic:STR_DIC_N_DF1_Fisher]对话。	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+2247	2	OTHER	送给[%dic:STR_DIC_N_NPC_Gerger_3]	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+2266	2	OTHER	把[%dic:STR_DIC_I_doc_quest_2266a]给[%dic:STR_DIC_N_Aurtri]送过去。	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+2303	4	DIALOG	和[%dic:STR_DIC_N_Fathir]%对话	None	started	0		False	False	NO_REWARD_ROW	ROW_WITHOUT_STATE					
+2484	2	DIALOG	和[%dic:STR_DIC_N_Hippolyta]对话。	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+2600	3	DIALOG	重新和[%dic:STR_DIC_N_Shugo_DF3_12]对话	0	s1	1		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+2633	4	DIALOG	向德拉乌伯尼尔洞穴入口附近的[%dic:STR_DIC_N_DF3_Alberihi_E]报告	2	s2	2		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+2646	4	OTHER	回复[%dic:STR_DIC_N_Svafnir]。	0	stage2	2		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+2692	4	OTHER	将八音盒给[%dic:STR_DIC_N_LabB_BeholderNamedQ_43_Ae]送去。	0	stage2	2		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+2722	9	DIALOG	把伊拉西克特产酒交给[%dic:STR_DIC_N_Bord]	7	started7	7		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+2767	3	DIALOG	和[%dic:STR_DIC_N_Shugo_AB1_D2]对话	0	stage1	1		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+2842	2	DIALOG	和[%dic:STR_DIC_N_Herz]%对话	0	None	None		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+2876	3	DIALOG	向[%dic:STR_DIC_N_Votan]报告	1	s1	1		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+2925	7	OTHER	安慰[%dic:STR_DIC_N_Daskair]	5	None	None		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+2938	2	DIALOG	和[%dic:STR_DIC_N_Izwin]对话	0	started	0		True	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+2945	3	DIALOG	和[%dic:STR_DIC_N_Balder]对话	1	started1	1		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+3087	2	OTHER	将找到的东西送到[%dic:STR_DIC_N_Talos]那里	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+3722	2	DIALOG	向[%dic:STR_DIC_N_Yannis]报告结果	0	started	0		True	True	ROW_BEHIND	ROW_WITHOUT_STATE					
+3732	3	DIALOG	向[%dic:STR_DIC_N_LF2_Brando]报告	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+3933	8	DIALOG	向[%dic:STR_DIC_LA80]报告	6	s6	6	var0=6	False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+3934	10	DIALOG	向[%dic:STR_DIC_LA80]报告	8	s8	8	var0=8	False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+3935	6	DIALOG	和[%dic:STR_DIC_N_Lavirintos]对话	4	s4	4	var0=4	False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+3939	5	DIALOG	和[%dic:STR_DIC_N_Lavirintos]对话	3	s3	3	var0=3	False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+4020	2	OTHER	将余款送到[%dic:STR_DIC_N_Blume]那里	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+4200	5	OTHER	向使节团团长[%dic:STR_DIC_N_DF3_Fairringring_E]转告哈奥隆的消息	3	s3	3		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+4712	2	DIALOG	向[%dic:STR_DIC_N_Henir]报告	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+4722	2	DIALOG	向[%dic:STR_DIC_N_Yorgen]%报告结果	0	started	0		True	True	ROW_BEHIND	ROW_WITHOUT_STATE					
 10100	6	DIALOG	重新和[%dic:STR_DIC_N_LDF4_Advance_L_Kahrun]%对话	4	s4	4		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		20100	MISSING_LAST_ROW	4	重新和[%dic:STR_DIC_N_LDF4_Advance_D_Kahrun]%对话
-10522	2	DIALOG	和代理人[%dic:STR_DIC_N_LF6_Weatha_E]%对话	0	started	0		True	False	ROW_BEHIND	ROW_WITHOUT_STATE		20522	MISSING_LAST_ROW	0	和代理人[%dic:STR_DIC_N_LF6_Weatha_E]%对话
 10530	11	DIALOG	再次和[%dic:STR_DIC_N_Jucleas]%对话	9	s8	8		True	False	ROW_BEHIND	ROW_WITHOUT_STATE		20530	ALIGNED	9	再次和[%dic:STR_DIC_N_Balder]%对话
-11010	4	DIALOG	和[%dic:STR_DIC_N_Naiting]对话	0	stage2	2		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-11040	3	OTHER	护送成功！回到[%dic:STR_DIC_N_Tuca_01]那里	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-11147	6	DIALOG	和[%dic:STR_DIC_N_Rollia]对话	4	s4	4		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-11149	2	DIALOG	和[%dic:STR_DIC_N_LF4_Gateway_Li_Guard_Boss_Q05]对话	0	started	0		True	True	ROW_BEHIND	ROW_WITHOUT_STATE	Progress(SECTION_0==0; SECTION_1<1) | Progress(SECTION_0==0; SECTION_2<1) | Progress(SECTION_0==0; SECTION_3<1)
+11010	4	DIALOG	和[%dic:STR_DIC_N_Naiting]对话	0	stage2	2		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+11040	3	OTHER	护送成功！回到[%dic:STR_DIC_N_Tuca_01]那里	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+11147	6	DIALOG	和[%dic:STR_DIC_N_Rollia]对话	4	s4	4		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+11149	2	DIALOG	和[%dic:STR_DIC_N_LF4_Gateway_Li_Guard_Boss_Q05]对话	0	started	0		True	True	ROW_BEHIND	ROW_WITHOUT_STATE	Progress(SECTION_0==0; SECTION_1<1) | Progress(SECTION_0==0; SECTION_2<1) | Progress(SECTION_0==0; SECTION_3<1)				
 11467	5	OTHER	去见见[%dic:STR_DIC_N_CaspaGhost_01]	None	s3	3		False	False	NO_REWARD_ROW	ROW_WITHOUT_STATE		21467	MISSING_TAIL_ROWS	None	去见见[%dic:STR_DIC_N_CaspaGhost_01]
 13965	2	DIALOG	与[%dic:STR_DIC_N_LF6_Benian_E]%对话	0	started	0		True	True	ROW_BEHIND	ROW_WITHOUT_STATE		23965	MISSING_LAST_ROW	0	与[%dic:STR_DIC_N_DF6_Ottar_E]%对话
 14016	4	DIALOG	向[%dic:STR_DIC_FLA09]的[%dic:STR_DIC_LA19]报告	2	s2	2		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		24016	MISSING_TAIL_ROWS	4	向[%dic:STR_DIC_N_Sueron]报告
 14041	8	DIALOG	和[%dic:STR_DIC_N_Claudia]对话	6	s6	6		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		24041	MISSING_LAST_ROW	6	和[%dic:STR_DIC_N_Spyr]进行对话
 14042	6	DIALOG	向[%dic:STR_DIC_N_Nereus]报告结果	4	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		24042	MISSING_LAST_ROW	4	向[%dic:STR_DIC_N_Lakadi]报告结果
 14044	5	DIALOG	和[%dic:STR_DIC_N_Ab1_NPC_LugBug]进行对话	3	s3	3		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		24044	MISSING_LAST_ROW	6	向[%dic:STR_DIC_N_Scoda]报告结果
-14047	8	DIALOG	向[%dic:STR_DIC_N_Juditio]报告结果	6	s6	6		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
+14047	8	DIALOG	向[%dic:STR_DIC_N_Juditio]报告结果	6	s6	6		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
 14112	3	DIALOG	和[%dic:STR_DIC_LA54]%对话	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		24112	MISSING_TAIL_ROWS	0	告诉[%dic:STR_DIC_N_DF1A_Brodir_E]
 14123	3	DIALOG	向[%dic:STR_DIC_W_LF2_SZ_E2_SUB_1]的[%dic:STR_DIC_N_Dionera]%报告	0	started	0	var0=0,var0=0,var0=0,var0=0	False	False	ROW_BEHIND	ROW_WITHOUT_STATE		24123	MISSING_LAST_ROW	1	向[%dic:STR_DIC_W_DF2_SUB_E2_1]的[%dic:STR_DIC_N_DF2_NPC_Ananta]%报告
 15300	15	DIALOG	在希哥尼亚和代理人[%dic:STR_DIC_N_LF5_Dike_E]%对话	13	s13	13		True	False	ROW_BEHIND	ROW_WITHOUT_STATE		25300	MISSING_LAST_ROW	13	和厄夏勒的代理人[%dic:STR_DIC_N_DF5_Skuldun_E]%对话
 15307	2	OTHER	通过[%dic:STR_DIC_N_IDRuneWeapon_Q_Dike_E]进行起誓之誓约	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		25307	MISSING_LAST_ROW	0	通过[%dic:STR_DIC_N_IDRuneWeapon_Q_Skuldun_E]进行守护之誓约
-15542	2	DIALOG	和[%dic:STR_DIC_N_LF6_Felen_E]%对话	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		25542	MISSING_LAST_ROW	0	和[%dic:STR_DIC_N_DF6_Edorin_E]%对话
 15674	2	DIALOG	再次与[%dic:STR_DIC_N_LF6_Ilisia_E]%对话	0	started	0		True	True	ROW_BEHIND	ROW_WITHOUT_STATE		25674	MISSING_LAST_ROW	0	再次与[%dic:STR_DIC_N_DF6_Reinhard_E]%对话
 16800	3	DIALOG	向在[%dic:STR_DIC_W_IDEternity_01]等待的代理人维达报告	1	started	0	var0=1,var0=1,var0=1	False	False	ROW_BEHIND	ROW_WITHOUT_STATE		26800	STATES_BEYOND_ROWS	3	向在[%dic:STR_DIC_W_IDEternity_01]等待的代理人佩莱格兰报告
 18500	5	OTHER	进入[%dic:STR_DIC_OBJ_Instance_Entrance]，追踪[%dic:STR_DIC_N_Shugo_IDNovice_1]	3	s3	3		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		28500	MISSING_LAST_ROW	3	进入[%dic:STR_DIC_OBJ_Instance_Entrance_Da]，追踪[%dic:STR_DIC_N_Shugo_IDNovice_1]
@@ -76,7 +74,6 @@ quest_id	client_rows	last_row_kind	last_row_text	reward_var0	last_start_node	las
 19038	13	OTHER	去[%dic:STR_DIC_N_Luelas]那里重新领取名人考试所需的第四份料理图案	11	s11	11		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		29038	MISSING_LAST_ROW	11	去[%dic:STR_DIC_N_Daraia]那里重新领取名人考试所需的第四份料理图案
 19064	2	DIALOG	带着米拉詹特圣骑士徽章和[%dic:STR_DIC_I_relic_02]，和[%dic:STR_DIC_N_Jucleas]对话[%collectitem]	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		29064	MISSING_LAST_ROW	0	带着潘利尔的犬牙徽章和[%dic:STR_DIC_I_relic_d_02]，和[%dic:STR_DIC_N_Balder]对话[%collectitem]
 20100	6	DIALOG	重新和[%dic:STR_DIC_N_LDF4_Advance_D_Kahrun]%对话	4	s4	4		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		10100	MISSING_LAST_ROW	4	重新和[%dic:STR_DIC_N_LDF4_Advance_L_Kahrun]%对话
-20522	2	DIALOG	和代理人[%dic:STR_DIC_N_LF6_Weatha_E]%对话	0	started	0		True	False	ROW_BEHIND	ROW_WITHOUT_STATE		10522	MISSING_LAST_ROW	0	和代理人[%dic:STR_DIC_N_LF6_Weatha_E]%对话
 21075	4	DIALOG	和[%dic:STR_DIC_N_Gyorvin]对话。	None	started0	0		False	False	NO_REWARD_ROW	ROW_WITHOUT_STATE		11075	STATES_BEYOND_ROWS	1	去[%dic:STR_DIC_N_Jienia]那里听取间歇泉的说明
 21455	2	DIALOG	把奥德解毒剂交给[%dic:STR_DIC_N_Unset]	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		11455	ALIGNED	1	和[%dic:STR_DIC_N_Kailaus]对话
 23965	2	DIALOG	与[%dic:STR_DIC_N_DF6_Ottar_E]%对话	0	started	0		True	True	ROW_BEHIND	ROW_WITHOUT_STATE		13965	MISSING_LAST_ROW	0	与[%dic:STR_DIC_N_LF6_Benian_E]%对话
@@ -89,7 +86,6 @@ quest_id	client_rows	last_row_kind	last_row_text	reward_var0	last_start_node	las
 24123	3	DIALOG	向[%dic:STR_DIC_W_DF2_SUB_E2_1]的[%dic:STR_DIC_N_DF2_NPC_Ananta]%报告	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		14123	MISSING_LAST_ROW	0	向[%dic:STR_DIC_W_LF2_SZ_E2_SUB_1]的[%dic:STR_DIC_N_Dionera]%报告
 25300	15	DIALOG	和厄夏勒的代理人[%dic:STR_DIC_N_DF5_Skuldun_E]%对话	13	s13	13		True	False	ROW_BEHIND	ROW_WITHOUT_STATE		15300	MISSING_LAST_ROW	13	在希哥尼亚和代理人[%dic:STR_DIC_N_LF5_Dike_E]%对话
 25307	2	OTHER	通过[%dic:STR_DIC_N_IDRuneWeapon_Q_Skuldun_E]进行守护之誓约	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		15307	MISSING_LAST_ROW	0	通过[%dic:STR_DIC_N_IDRuneWeapon_Q_Dike_E]进行起誓之誓约
-25542	2	DIALOG	和[%dic:STR_DIC_N_DF6_Edorin_E]%对话	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		15542	MISSING_LAST_ROW	0	和[%dic:STR_DIC_N_LF6_Felen_E]%对话
 25608	7	DIALOG	从[%dic:STR_DIC_M_DF6_I_6_Named_NoName_68_Ah]那里获得[%dic:STR_DIC_I_quest_25608a]%，交给[%dic:STR_DIC_N_DF6_op_goods_Seller][%collectitem]	5	step4	4	var0=5	False	False	ROW_BEHIND	ROW_WITHOUT_STATE		15608	ALIGNED	4	向[%dic:STR_DIC_N_LF6_Canella_E]报告
 25674	2	DIALOG	再次与[%dic:STR_DIC_N_DF6_Reinhard_E]%对话	0	started	0		True	True	ROW_BEHIND	ROW_WITHOUT_STATE		15674	MISSING_LAST_ROW	0	再次与[%dic:STR_DIC_N_LF6_Ilisia_E]%对话
 26838	2	DIALOG	再次与[%dic:STR_DIC_N_IDEternity_03_Jarik01_E]对话	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		16838	ALIGNED	0	再次与[%dic:STR_DIC_N_IDEternity_03_Ostia01_E]对话
@@ -102,29 +98,25 @@ quest_id	client_rows	last_row_kind	last_row_text	reward_var0	last_start_node	las
 29032	3	OTHER	重新去[%dic:STR_DIC_N_Grad]那里购买名人考试所需的图案	1	started1	1		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		19032	MISSING_LAST_ROW	1	重新去[%dic:STR_DIC_N_Diana]那里购买名人考试所需的图案
 29038	13	OTHER	去[%dic:STR_DIC_N_Daraia]那里重新领取名人考试所需的第四份料理图案	11	s11	11		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		19038	MISSING_LAST_ROW	11	去[%dic:STR_DIC_N_Luelas]那里重新领取名人考试所需的第四份料理图案
 29064	2	DIALOG	带着潘利尔的犬牙徽章和[%dic:STR_DIC_I_relic_d_02]，和[%dic:STR_DIC_N_Balder]对话[%collectitem]	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		19064	MISSING_LAST_ROW	0	带着米拉詹特圣骑士徽章和[%dic:STR_DIC_I_relic_02]，和[%dic:STR_DIC_N_Jucleas]对话[%collectitem]
-30057	2	DIALOG	向[%dic:STR_DIC_N_Asinelli]报告	0	started	0		True	True	ROW_BEHIND	ROW_WITHOUT_STATE
-30158	2	DIALOG	向[%dic:STR_DIC_N_Vergelan]报告	0	started	0		True	True	ROW_BEHIND	ROW_WITHOUT_STATE
-30208	2	DIALOG	和[%dic:STR_DIC_N_Pilomenes]对话	0	started	0		True	True	ROW_BEHIND	ROW_WITHOUT_STATE
-30211	2	DIALOG	和[%dic:STR_DIC_N_Pilomenes]对话	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-30213	2	DIALOG	和[%dic:STR_DIC_N_Cainus]对话	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-30311	2	DIALOG	和[%dic:STR_DIC_N_Herka]对话	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-30313	2	DIALOG	和[%dic:STR_DIC_N_Hler]对话	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-30614	2	DIALOG	向[%dic:STR_DIC_N_Astella]报告	0	None	None		False	False	ROW_BEHIND	ROW_WITHOUT_STATE	Progress(SECTION_0==0; SECTION_2<15)
-39003	2	DIALOG	和[%dic:STR_DIC_NPC_DF2a_Nevma_G_LHM]对话	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-49003	2	DIALOG	和[%dic:STR_DIC_N_dromik]对话	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-50008	2	DIALOG	与[%dic:STR_DIC_N_LC1_ChristmasEvent_Santa]对话	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-51008	2	DIALOG	和[%dic:STR_DIC_E_DF_ChristmasEvent_Santa]对话	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-51010	3	DIALOG	和[%dic:STR_DIC_E_single_shugo_d]见面	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-51020	3	DIALOG	和[%dic:STR_DIC_E_single_shugo_d]对话	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-51022	3	DIALOG	在[%dic:STR_DIC_E_FOBJ_Event_Cargobox]里找到铁锹，然后交给[%dic:STR_DIC_E_white_single_d][%collectitem]	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-80255	2	DIALOG	和帕尔图对话	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-80256	2	DIALOG	和布巴纳对话	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-80291	2	OTHER	从[%dic:STR_DIC_N_EVENT_Zephyrin]那里获得圣灵守护者武器	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-80295	2	OTHER	从[%dic:STR_DIC_N_EVENT_Lilyolin]那里获得圣灵守护者武器	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-80601	2	DIALOG	向伊斯达报告	0	started	0	var0=1	False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-80606	2	DIALOG	向夏尔梅因报告	0	started	0	var0=1	False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-80690	3	DIALOG	请向[%dic:STR_DIC_NPC_IDSweep_IN_NPC03]报告	1	None	None		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-80735	2	DIALOG	和未完成的术古罗伯对话	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-80736	2	DIALOG	和未完成的术古罗伯对话	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-80989	2	DIALOG	回到大城市，再次和咕咕咻对话吧。	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
-80990	2	DIALOG	回到大城市，再次和咕咕咻对话吧。	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
+30057	2	DIALOG	向[%dic:STR_DIC_N_Asinelli]报告	0	started	0		True	True	ROW_BEHIND	ROW_WITHOUT_STATE					
+30158	2	DIALOG	向[%dic:STR_DIC_N_Vergelan]报告	0	started	0		True	True	ROW_BEHIND	ROW_WITHOUT_STATE					
+30208	2	DIALOG	和[%dic:STR_DIC_N_Pilomenes]对话	0	started	0		True	True	ROW_BEHIND	ROW_WITHOUT_STATE					
+30614	2	DIALOG	向[%dic:STR_DIC_N_Astella]报告	0	None	None		False	False	ROW_BEHIND	ROW_WITHOUT_STATE	Progress(SECTION_0==0; SECTION_2<15)				
+39003	2	DIALOG	和[%dic:STR_DIC_NPC_DF2a_Nevma_G_LHM]对话	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+49003	2	DIALOG	和[%dic:STR_DIC_N_dromik]对话	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+50008	2	DIALOG	与[%dic:STR_DIC_N_LC1_ChristmasEvent_Santa]对话	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+51008	2	DIALOG	和[%dic:STR_DIC_E_DF_ChristmasEvent_Santa]对话	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+51010	3	DIALOG	和[%dic:STR_DIC_E_single_shugo_d]见面	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+51020	3	DIALOG	和[%dic:STR_DIC_E_single_shugo_d]对话	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+51022	3	DIALOG	在[%dic:STR_DIC_E_FOBJ_Event_Cargobox]里找到铁锹，然后交给[%dic:STR_DIC_E_white_single_d][%collectitem]	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+80255	2	DIALOG	和帕尔图对话	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+80256	2	DIALOG	和布巴纳对话	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+80291	2	OTHER	从[%dic:STR_DIC_N_EVENT_Zephyrin]那里获得圣灵守护者武器	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+80295	2	OTHER	从[%dic:STR_DIC_N_EVENT_Lilyolin]那里获得圣灵守护者武器	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+80601	2	DIALOG	向伊斯达报告	0	started	0	var0=1	False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+80606	2	DIALOG	向夏尔梅因报告	0	started	0	var0=1	False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+80690	3	DIALOG	请向[%dic:STR_DIC_NPC_IDSweep_IN_NPC03]报告	1	None	None		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+80735	2	DIALOG	和未完成的术古罗伯对话	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+80736	2	DIALOG	和未完成的术古罗伯对话	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+80989	2	DIALOG	回到大城市，再次和咕咕咻对话吧。	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+80990	2	DIALOG	回到大城市，再次和咕咕咻对话吧。	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					

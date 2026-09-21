@@ -29,7 +29,6 @@ quest_id	client_rows	reward_var0	last_start_node	last_start_var0	recovery	client
 3939	5	3	s3	3	False	QUEST_Q3939.html		和[%dic:STR_DIC_N_Lavirintos]对话					NO
 4712	2	0	started	0	False	QUEST_Q4712.html		向[%dic:STR_DIC_N_Henir]报告					NO
 10100	6	4	s4	4	False	quest_q10100.html		重新和[%dic:STR_DIC_N_LDF4_Advance_L_Kahrun]%对话	20100	MISSING_LAST_ROW	4	重新和[%dic:STR_DIC_N_LDF4_Advance_D_Kahrun]%对话	NO
-10522	2	0	started	0	True	quest_q10522.html		和代理人[%dic:STR_DIC_N_LF6_Weatha_E]%对话	20522	MISSING_LAST_ROW	0	和代理人[%dic:STR_DIC_N_LF6_Weatha_E]%对话	NO
 10530	11	9	s8	8	True	quest_q10530.html		再次和[%dic:STR_DIC_N_Jucleas]%对话	20530	ALIGNED	9	再次和[%dic:STR_DIC_N_Balder]%对话	NO
 11010	4	0	stage2	2	False	QUEST_Q11010.html		和[%dic:STR_DIC_N_Naiting]对话					NO
 11147	6	4	s4	4	False	quest_q11147.html		和[%dic:STR_DIC_N_Rollia]对话					NO
@@ -41,12 +40,10 @@ quest_id	client_rows	reward_var0	last_start_node	last_start_var0	recovery	client
 14112	3	1	started	0	False	quest_q14112.html		和[%dic:STR_DIC_LA54]%对话	24112	MISSING_TAIL_ROWS	0	告诉[%dic:STR_DIC_N_DF1A_Brodir_E]	NO
 14123	3	0	started	0	False	quest_q14123.html		向[%dic:STR_DIC_W_LF2_SZ_E2_SUB_1]的[%dic:STR_DIC_N_Dionera]%报告	24123	MISSING_LAST_ROW	1	向[%dic:STR_DIC_W_DF2_SUB_E2_1]的[%dic:STR_DIC_N_DF2_NPC_Ananta]%报告	NO
 15300	15	13	s13	13	True	quest_q15300.html		在希哥尼亚和代理人[%dic:STR_DIC_N_LF5_Dike_E]%对话	25300	MISSING_LAST_ROW	13	和厄夏勒的代理人[%dic:STR_DIC_N_DF5_Skuldun_E]%对话	NO
-15542	2	0	started	0	False	quest_q15542.html		和[%dic:STR_DIC_N_LF6_Felen_E]%对话	25542	MISSING_LAST_ROW	0	和[%dic:STR_DIC_N_DF6_Edorin_E]%对话	NO
 16800	3	1	started	0	False	quest_q16800.html		向在[%dic:STR_DIC_W_IDEternity_01]等待的代理人维达报告	26800	STATES_BEYOND_ROWS	3	向在[%dic:STR_DIC_W_IDEternity_01]等待的代理人佩莱格兰报告	NO
 18805	3	1	s1	1	False	quest_q18805.html		和[%dic:STR_DIC_N_Shugo_housing_rec]对话	28805	MISSING_LAST_ROW	1	同[%dic:STR_DIC_N_Shugo_housing_drec]对话	NO
 19064	2	0	started	0	False	quest_q19064.html		带着米拉詹特圣骑士徽章和[%dic:STR_DIC_I_relic_02]，和[%dic:STR_DIC_N_Jucleas]对话[%collectitem]	29064	MISSING_LAST_ROW	0	带着潘利尔的犬牙徽章和[%dic:STR_DIC_I_relic_d_02]，和[%dic:STR_DIC_N_Balder]对话[%collectitem]	NO
 20100	6	4	s4	4	False	quest_q20100.html		重新和[%dic:STR_DIC_N_LDF4_Advance_D_Kahrun]%对话	10100	MISSING_LAST_ROW	4	重新和[%dic:STR_DIC_N_LDF4_Advance_L_Kahrun]%对话	NO
-20522	2	0	started	0	True	quest_q20522.html		和代理人[%dic:STR_DIC_N_LF6_Weatha_E]%对话	10522	MISSING_LAST_ROW	0	和代理人[%dic:STR_DIC_N_LF6_Weatha_E]%对话	NO
 21455	2	0	started	0	False	QUEST_Q21455.html		把奥德解毒剂交给[%dic:STR_DIC_N_Unset]	11455	ALIGNED	1	和[%dic:STR_DIC_N_Kailaus]对话	YES
 24041	8	6	s6	6	False	quest_q24041.html		和[%dic:STR_DIC_N_Spyr]进行对话	14041	MISSING_LAST_ROW	6	和[%dic:STR_DIC_N_Claudia]对话	NO
 24042	6	4	started	0	False	quest_q24042.html		向[%dic:STR_DIC_N_Lakadi]报告结果	14042	MISSING_LAST_ROW	4	向[%dic:STR_DIC_N_Nereus]报告结果	NO
@@ -56,16 +53,11 @@ quest_id	client_rows	reward_var0	last_start_node	last_start_var0	recovery	client
 24120	3	1	started	0	False	quest_q24120.html		和[%dic:STR_DIC_W_DF2_SUB_A3]的[%dic:STR_DIC_N_Tree_Move_Nabalu]%对话	14120	ALIGNED	1	去[%dic:STR_DIC_W_LF2_SZ_A2]的[%dic:STR_DIC_E_LF2_Cherubim_Basket]中搜集水罐，然后交给[%dic:STR_DIC_W_LF2_SZ_B]的[%dic:STR_DIC_N_Tree_NoMove_Lodas]%[%collectitem]	NO
 24123	3	1	started	0	False	quest_q24123.html		向[%dic:STR_DIC_W_DF2_SUB_E2_1]的[%dic:STR_DIC_N_DF2_NPC_Ananta]%报告	14123	MISSING_LAST_ROW	0	向[%dic:STR_DIC_W_LF2_SZ_E2_SUB_1]的[%dic:STR_DIC_N_Dionera]%报告	NO
 25300	15	13	s13	13	True	quest_q25300.html		和厄夏勒的代理人[%dic:STR_DIC_N_DF5_Skuldun_E]%对话	15300	MISSING_LAST_ROW	13	在希哥尼亚和代理人[%dic:STR_DIC_N_LF5_Dike_E]%对话	NO
-25542	2	0	started	0	False	quest_q25542.html		和[%dic:STR_DIC_N_DF6_Edorin_E]%对话	15542	MISSING_LAST_ROW	0	和[%dic:STR_DIC_N_LF6_Felen_E]%对话	NO
 25608	7	5	step4	4	False	quest_q25608.html		从[%dic:STR_DIC_M_DF6_I_6_Named_NoName_68_Ah]那里获得[%dic:STR_DIC_I_quest_25608a]%，交给[%dic:STR_DIC_N_DF6_op_goods_Seller][%collectitem]	15608	ALIGNED	4	向[%dic:STR_DIC_N_LF6_Canella_E]报告	NO
 26838	2	0	started	0	False	quest_q26838.html		再次与[%dic:STR_DIC_N_IDEternity_03_Jarik01_E]对话	16838	ALIGNED	0	再次与[%dic:STR_DIC_N_IDEternity_03_Ostia01_E]对话	NO
 28805	3	1	s1	1	False	quest_q28805.html		同[%dic:STR_DIC_N_Shugo_housing_drec]对话	18805	MISSING_LAST_ROW	1	和[%dic:STR_DIC_N_Shugo_housing_rec]对话	NO
 29002	2	0	started	0	False	quest_q29002.html		把[%dic:STR_DIC_E_QUEST_19002]交给[%dic:STR_DIC_N_Resberg][%collectitem]	19002	ALIGNED	1	把[%dic:STR_DIC_E_QUEST_19002]交给[%dic:STR_DIC_N_Bacchus][%collectitem]	YES
 29064	2	0	started	0	False	quest_q29064.html		带着潘利尔的犬牙徽章和[%dic:STR_DIC_I_relic_d_02]，和[%dic:STR_DIC_N_Balder]对话[%collectitem]	19064	MISSING_LAST_ROW	0	带着米拉詹特圣骑士徽章和[%dic:STR_DIC_I_relic_02]，和[%dic:STR_DIC_N_Jucleas]对话[%collectitem]	NO
-30211	2	0	started	0	False	quest_q30211.html		和[%dic:STR_DIC_N_Pilomenes]对话					NO
-30213	2	0	started	0	False	quest_q30213.html		和[%dic:STR_DIC_N_Cainus]对话					NO
-30311	2	0	started	0	False	quest_q30311.html		和[%dic:STR_DIC_N_Herka]对话					NO
-30313	2	0	started	0	False	quest_q30313.html		和[%dic:STR_DIC_N_Hler]对话					NO
 30614	2	0	None	None	False	quest_q30614.html	Progress(SECTION_0==0; SECTION_2<15)	向[%dic:STR_DIC_N_Astella]报告					NO
 39003	2	0	started	0	False	quest_q39003.html		和[%dic:STR_DIC_NPC_DF2a_Nevma_G_LHM]对话					NO
 49003	2	0	started	0	False	quest_q49003.html		和[%dic:STR_DIC_N_dromik]对话					NO

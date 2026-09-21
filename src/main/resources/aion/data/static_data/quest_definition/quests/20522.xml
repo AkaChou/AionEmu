@@ -22,7 +22,7 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -83,19 +83,18 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <!-- 旧存档自愈：旧版 CM_CREATIVITY_POINTS 领取创造力点数时只写状态不写打包步数，而本定义曾把 reward
-         投影写成 var0=1，使这类存档停在 REWARD 却没有可匹配的领奖路由；进入世界时按 reward 节点投影
-         把错位步数归零并同步给客户端。
-         Legacy save recovery: applying creativity points only wrote the status, while this definition used to
-         project var0=1 at REWARD, leaving such saves with no matching reward route; entering the world
-         normalizes the misplaced packed step to the reward projection and re-syncs the client. -->
+    <!-- QE-046/QE-051 领奖行合同：客户端 quest_q20522.html 的 quest_summary 共 2 行，末行是领奖行
+         （和代理人 Feregran 对话（客户端字典写作 LF6_Weatha_E），NPC id 806079）；写入方在该行推进 var0=1 后置 REWARD，旧存档 REWARD/var0=0 由本边按 reward 投影自愈。
+         Reward row contract (QE-051/QE-046): the last of the 2 quest_q20522.html journal
+         rows is the reward row (和代理人 Feregran 对话（客户端字典写作 LF6_Weatha_E）, npc id 806079); the engine-external writer now leaves
+         var0=1 before REWARD, and this edge repairs saves persisted at REWARD/var0=0. -->
     <transition target="reward">
       <event>
         <enter-world/>
       </event>
       <conditions>
         <status-is status="REWARD"/>
-        <variable-is field="var0" value="1"/>
+        <variable-is field="var0" value="0"/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>

@@ -167,10 +167,14 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <!-- 迁移既有的“直接报告”捷径（retail 旧 handler 只在 REWARD 态处理领奖 NPC），本轮保留不收紧。
-         The migrated talk-to-report shortcut is intentionally kept (the legacy handler only answered the
-         reward NPC in REWARD state); this round does not tighten it. -->
-    <dialog type="NPC_REPORT" npc-id="205320" source="started" target="reward" page="DEFAULT_SUCCESS"/>
+    <!-- 领奖入口只保留在领奖态：迁移期的“对话即领奖”捷径（NPC_REPORT）生成的是无门禁的
+         started + 1009 -> reward 路线，玩家不做两行击杀就能直接进入 REWARD；retail 旧 handler 只在
+         REWARD 态响应领奖 NPC，因此删除该捷径。行推进仍由上面两条击杀路线收口，满计数/旧存档由
+         enter-world 收敛边修复（QuestPrematureRewardRouteExclusionTest 守卫“未完成不得进入领奖”）。
+         The reward entrance stays in the REWARD state: the migrated NPC_REPORT shortcut compiled to an
+         unguarded started + 1009 -> reward route that skipped both journal rows, while the retail handler
+         only answered the reward NPC in REWARD state. Row progression remains with the two kill routes
+         above and legacy saves are repaired by the enter-world collapse edges. -->
     <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="205320" action="QUEST_SELECT"/>
@@ -188,6 +192,18 @@
       </after-commit>
     </transition>
     <npc-complete npc-id="205320" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+    <!-- QE-046/QE-051 领奖链补全：客户端 quest_q28208.html 的 quest_summary 末行是“和 Anja 对话”，Anja = npc 205321；reward 态入口页（QUEST_SELECT -> DEFAULT_SUCCESS）此前已存在，但该页唯一按钮
+         SELECT_QUEST_REWARD(1009) 没有完成路线，玩家按任务书去找 Anja 也打不开奖励窗口（客户端契约门禁
+         QuestClientContractGateTest 报 BUTTON_WITHOUT_ROUTE）。这里与 205320（Inggness，迁移既有路线）并列为
+         领奖 NPC，保留既有行为并补齐客户端指定的领奖人。
+         Reward-chain completion for the client-designated NPC: the last quest_summary row of quest_q28208.html is
+         “和 Anja 对话” (Anja = npc 205321). Its REWARD-state entry page existed but the page's only button
+         SELECT_QUEST_REWARD(1009) had no completion route, so following the journal never opened the reward
+         window (QuestClientContractGateTest: BUTTON_WITHOUT_ROUTE). 205321 is registered alongside the
+         migrated 205320 (Inggness) route. -->
+    <npc-complete npc-id="205321" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>

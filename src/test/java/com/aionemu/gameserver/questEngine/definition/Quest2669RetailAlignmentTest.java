@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -65,7 +66,7 @@ class Quest2669RetailAlignmentTest {
 
 		for (QuestEvent event : new QuestEvent[] {new QuestEvent.NpcLostTarget(), new QuestEvent.LogOut(null)}) {
 			assertTrue(transitions.stream().anyMatch(t -> t.event().equals(event)
-				&& t.sourceNode().equals("following") && t.targetNode().equals("started")
+				&& Objects.equals(t.sourceNode(), "following") && t.targetNode().equals("started")
 				&& t.actions().contains(new QuestAction.SetVariable("var0", 0))));
 		}
 	}
@@ -74,7 +75,7 @@ class Quest2669RetailAlignmentTest {
 	void retainsFourDistinctSelectableCompletionBranches() throws Exception {
 		var transitions = load().definition().transitions();
 		var completions = transitions.stream()
-			.filter(t -> t.sourceNode().equals("reward") && t.targetNode().equals("complete")
+			.filter(t -> Objects.equals(t.sourceNode(), "reward") && t.targetNode().equals("complete")
 				&& t.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == 204777 && talk.dialogId() != null
 				&& talk.dialogId() >= 8 && talk.dialogId() <= 11)

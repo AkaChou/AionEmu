@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -34,12 +35,12 @@ class AcceptAndConfirmationEntryContractTest {
 		// route owns acceptance and the select_none briefing page stays a managed exception.
 		QuestDefinition definition = compile(1877);
 		assertTrue(definition.transitions().stream().noneMatch(transition ->
-				transition.sourceNode() != null && transition.sourceNode().equals("unaccepted")
+				transition.sourceNode() != null && Objects.equals(transition.sourceNode(), "unaccepted")
 					&& transition.event() instanceof QuestEvent.TalkToNpc),
 			"quest 1877 unaccepted must stay free of dialog routes");
 		QuestTransition start = definition.transitions().stream()
 			.filter(transition -> transition.sourceNode() != null
-				&& transition.sourceNode().equals("unaccepted")
+				&& Objects.equals(transition.sourceNode(), "unaccepted")
 				&& transition.event().equals(new QuestEvent.EnterZone("TEMINON_LANDING_400010000")))
 			.findFirst().orElseThrow();
 		assertEquals(List.of(new QuestCondition.StartEligible()), start.conditions(),
@@ -55,7 +56,7 @@ class AcceptAndConfirmationEntryContractTest {
 		// the reward is claimed through the REWARD-state entry.
 		QuestDefinition definition = compile(1636);
 		QuestTransition success = definition.transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("v1")
+			.filter(transition -> Objects.equals(transition.sourceNode(), "v1")
 				&& transition.targetNode().equals("v2")
 				&& transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == 203792 && talk.dialogId() == 39)

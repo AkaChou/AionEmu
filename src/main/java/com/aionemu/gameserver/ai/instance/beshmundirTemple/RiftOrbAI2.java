@@ -64,6 +64,9 @@ public class RiftOrbAI2 extends NpcAI2 {
     for (int questId : questsToComplete) {
         final QuestState qs = player.getQuestStateList().getQuestState(questId);
         if (qs != null && qs.getStatus() == QuestStatus.START) {
+            // QE-046/QE-051 领奖行：写入方把 var0 推进到末行（和 NPC 对话）再置 REWARD，与 reward 节点投影一致。
+            // QE-046/QE-051 reward row: the writer advances var0 to the last journal row (talk to the NPC) before REWARD so it matches the reward projection.
+            qs.setQuestVarById(0, 1);
             qs.setStatus(QuestStatus.REWARD);
             PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, qs.getStatus(), qs.getQuestVars().getQuestVars()));
             }

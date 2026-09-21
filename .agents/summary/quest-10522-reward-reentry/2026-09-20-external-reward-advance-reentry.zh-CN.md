@@ -215,3 +215,52 @@ mvn -B -Dtest='com.aionemu.gameserver.questEngine.definition.*Test' test
 - 审计脚本按方法体正则扫描写入方；若写入方被重构为非方法体直写或改走 typed 引擎，需重跑脚本刷新基线，
   `ExternalRewardAdvanceReentryContractTest` 会因任务清单变化直接失败。
 - 未跑 Maven，因此编译期歧义（`AMBIGUOUS_TRANSITION`）、生产目录编译与客户端契约门禁尚未在本机确认。
+
+## 批次 8：写入方改为写领奖行（2026-09-21，用户授权后执行）
+
+### 背景
+
+本批次的 10 个任务（10522/20522、15542/25542、15545/25545、30211/30213/30311/30313）此前按 `QE-046`
+收口：写入方只置 `REWARD`、`reward` 投影等于写入方留下的 packed step（10522/20522 为 0，15545/25545 为 1）。
+但 `QE-051` 要求 `reward` 投影等于客户端 `quest_summary` 的领奖行。两者对这 8 个任务给出的值不同，
+因此本批次采用同族模板（15545/25545 的 `MinionService#checkQuest` 先写 packed step 再置 `REWARD`）的写法，
+把**写入方、投影、基线**三处一起改到领奖行 1。
+
+### 变更
+
+- 写入方（3 个文件）：
+  - `CM_CREATIVITY_POINTS#checkQuestCompletion`：20522、10522 在 `setStatus(REWARD)` 前补 `qs.setQuestVarById(0, 1);`
+  - `CoalescenceService#updateQuestsOnCoalescenceComplete`：15542、25542 同上
+  - `RiftOrbAI2#forQuest`：循环内补一次，覆盖 30211 / 30213 / 30311 / 30313
+  - 三处均带中英双语 `QE-046/QE-051` 注释说明“写入方把 var0 推进到末行（和 NPC 对话）再置 REWARD”
+- 定义（8 个 XML）：`reward` 投影 `0 → 1`；补/改无 source `enter-world` 自愈边 `status=REWARD && var0==0`
+  （无 actions，仅 `LEVEL_AND_VISIBILITY_REFRESH`）。10522/20522 原有的 `var0==1` 自愈边改为 `var0==0`
+  （写入方已写 1，旧值只剩 0）；其余 6 个任务新增该边。
+- 基线：`src/test/resources/quest/external-reward-advance-baseline.tsv` 重刷为
+  `writer step=1 / projection=1 / recovery=[0]`（10 行，含未改动的 15545/25545）。
+- 门禁：`Quest10522AutoStartDialogTest` 的 reward 投影断言 `0 → 1`、自愈边断言 `var0==1 → ==0`。
+
+### 验证（2026-09-21，用户授权后执行）
+
+- `audit_external_reward_advance.py --out ...` + `verify_external_reward_reentry_contract.py`：
+  10 任务全部 `writer step=1 / projection=1 aligned / entry-page-ok / recovery=[0]`，
+  输出 `static contract verified for 10 quests`；`apply_batch8_external_writer_reward_row.py --check` 报
+  `BATCH8_VERIFY_OK quests=8`（幂等）。
+- `mvn -B test -Dtest='ExternalRewardAdvanceReentryContractTest,Quest10522AutoStartDialogTest,Quest30313RetailAlignmentTest,Quest10520ClientDialogAlignmentTest,BroadcastZoneMissionEndDefinitionTest,ReportRowRewardProjectionContractTest,ArenaPhaseRowContractTest,SensoryAreaRideRowContractTest,JournalReportRowSplitContractTest,JournalRewardRowRepairContractTest,ClientQuestSectionAlignmentTest,ArchdaevaRewardRowContractTest,AlignedMirrorRewardRowContractTest,MirrorPairRewardRowContractTest,ProductionCatalogWhitelistVerificationTest,QuestDefinitionCatalogManifestTest,QuestCollectProgressAlignmentGateTest'`
+  → `Tests run: 84, Failures: 0, Errors: 0`；`PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。
+- `xmllint --noout --schema quest_definition.xsd` 8 文件 `validates`；IDE lint 0 警告；`git diff --check` 干净。
+- 全库行审计（`.agents/summary/quest-10527-reward-row/`）：`ROW_ALIGNED 2591 → 2599`、`ROW_BEHIND 254 → 246`、
+  `ROW_STATE_ALIGNED 2372 → 2380`、`ROW_WITHOUT_STATE 575 → 567`、`MISSING_LAST_ROW 129 → 121`，
+  逐行 diff 仅这 8 个任务变化（详见该目录报告 §十二）。
+
+### 与既有客户端验收的关系（重要）
+
+- 2026-09-21 的 `10522 CLIENT_ACCEPTED` 记录针对的是**旧合同**：`REWARD/var0=0` + 补领奖态入口页。
+  本批次把 10522 的领奖态改为 `REWARD/var0=1`（客户端任务书第 2 行 = 领奖行），
+  **该验收所覆盖的状态已被取代**，任务书可见行由第 1 行（进行行）变为第 2 行（领奖行），
+  需按新的 `REWARD/var0=1` 重新实机复测（PENDING_CLIENT）。
+- 入口页合同（`reward + QUEST_SELECT(31) → DEFAULT_SUCCESS(10002)` → `1009` → 奖励窗口 5）未变，
+  但只有步数匹配 `reward` 投影的存档（新写入方写入，或旧存档经 `enter-world` 自愈）才能命中；
+  在线且不重登/不切图的旧存档仍不会被纠正。
+- `setQuestVarById(0, 1)` 与 15545/25545 的 `setQuestVar(1)` 不等价（后者把 `var1..var5` 也写成 1），
+  本批次统一只写 `var0` 槽位。

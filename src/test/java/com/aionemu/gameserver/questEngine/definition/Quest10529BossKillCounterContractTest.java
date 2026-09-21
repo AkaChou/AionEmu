@@ -98,7 +98,7 @@ class Quest10529BossKillCounterContractTest {
 	private static QuestTransition transition(QuestDefinition definition, String source, String target,
 			QuestEvent event) {
 		List<QuestTransition> matches = definition.transitions().stream()
-			.filter(candidate -> candidate.sourceNode().equals(source))
+			.filter(candidate -> Objects.equals(candidate.sourceNode(), source))
 			.filter(candidate -> candidate.targetNode().equals(target))
 			.filter(candidate -> candidate.event().equals(event))
 			.toList();

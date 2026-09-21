@@ -108,6 +108,9 @@ public class CM_CREATIVITY_POINTS extends AionClientPacket {
 		if (player.getQuestStateList().hasQuest(20522)) {
 			QuestState qs = player.getQuestStateList().getQuestState(20522);
 			if (qs != null && qs.getStatus() == QuestStatus.START) {
+				// QE-046/QE-051 领奖行：写入方把 var0 推进到末行（和代理人对话）再置 REWARD，与 reward 节点投影一致。
+				// QE-046/QE-051 reward row: the writer advances var0 to the last journal row (talk to the agent) before REWARD so it matches the reward projection.
+				qs.setQuestVarById(0, 1);
 				qs.setStatus(QuestStatus.REWARD);
 				PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(20522, qs.getStatus(), qs.getQuestVars().getQuestVars()));
 				player.getController().updateNearbyQuests();
@@ -116,6 +119,9 @@ public class CM_CREATIVITY_POINTS extends AionClientPacket {
 		if (player.getQuestStateList().hasQuest(10522)) {
 			QuestState qs = player.getQuestStateList().getQuestState(10522);
 			if (qs != null && qs.getStatus() == QuestStatus.START) {
+				// QE-046/QE-051 领奖行：写入方把 var0 推进到末行（和代理人对话）再置 REWARD，与 reward 节点投影一致。
+				// QE-046/QE-051 reward row: the writer advances var0 to the last journal row (talk to the agent) before REWARD so it matches the reward projection.
+				qs.setQuestVarById(0, 1);
 				qs.setStatus(QuestStatus.REWARD);
 				PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(10522, qs.getStatus(), qs.getQuestVars().getQuestVars()));
 				player.getController().updateNearbyQuests();

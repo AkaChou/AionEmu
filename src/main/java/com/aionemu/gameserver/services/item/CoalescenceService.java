@@ -152,6 +152,9 @@ public class CoalescenceService {
 		if (player.getQuestStateList().hasQuest(15542)) {
 			QuestState qs = player.getQuestStateList().getQuestState(15542);
 			if (qs != null && qs.getStatus() == QuestStatus.START) {
+				// QE-046/QE-051 领奖行：写入方把 var0 推进到末行（和代理人对话）再置 REWARD，与 reward 节点投影一致。
+				// QE-046/QE-051 reward row: the writer advances var0 to the last journal row (talk to the agent) before REWARD so it matches the reward projection.
+				qs.setQuestVarById(0, 1);
 				qs.setStatus(QuestStatus.REWARD);
 				PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(15542, qs.getStatus(), qs.getQuestVars().getQuestVars()));
 				player.getController().updateNearbyQuests();
@@ -161,6 +164,9 @@ public class CoalescenceService {
 		if (player.getQuestStateList().hasQuest(25542)) {
 			QuestState qs = player.getQuestStateList().getQuestState(25542);
 			if (qs != null && qs.getStatus() == QuestStatus.START) {
+				// QE-046/QE-051 领奖行：写入方把 var0 推进到末行（和代理人对话）再置 REWARD，与 reward 节点投影一致。
+				// QE-046/QE-051 reward row: the writer advances var0 to the last journal row (talk to the agent) before REWARD so it matches the reward projection.
+				qs.setQuestVarById(0, 1);
 				qs.setStatus(QuestStatus.REWARD);
 				PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(25542, qs.getStatus(), qs.getQuestVars().getQuestVars()));
 				player.getController().updateNearbyQuests();

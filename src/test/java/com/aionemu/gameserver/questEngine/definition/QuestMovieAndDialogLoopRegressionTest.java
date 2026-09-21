@@ -124,8 +124,11 @@ class QuestMovieAndDialogLoopRegressionTest {
 		for (int qid : List.of(15301, 25301)) {
 			QuestDefinition def = definition(qid).definition();
 			int npcId = qid == 15301 ? 805327 : 805339;
+			// Daevanion 三段对话流程（98b34418a）把首段节点由 started 改名为 s0；接取合同不变。
+			// The Daevanion three-stage flow renamed the first stage node from started to s0; the
+			// acceptance contract itself is unchanged.
 			QuestTransition accept = def.transitions().stream()
-				.filter(t -> "unaccepted".equals(t.sourceNode()) && "started".equals(t.targetNode())
+				.filter(t -> "unaccepted".equals(t.sourceNode()) && "s0".equals(t.targetNode())
 					&& t.event() instanceof QuestEvent.TalkToNpc ttn && ttn.npcId() == npcId
 					&& Integer.valueOf(QuestDialogAction.QUEST_ACCEPT_1.id()).equals(ttn.dialogId()))
 				.findFirst().orElseThrow();

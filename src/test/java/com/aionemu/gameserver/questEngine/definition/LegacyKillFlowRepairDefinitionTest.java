@@ -70,14 +70,14 @@ class LegacyKillFlowRepairDefinitionTest {
 	void missionKillChainsPreserveTheirDialogZoneAndItemStages() {
 		CompiledQuestDefinition totem = load(24015);
 		assertEquals("s2", totem.definition().transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("s1")
+			.filter(transition -> Objects.equals(transition.sourceNode(), "s1")
 				&& transition.event().equals(new QuestEvent.EnterZone("BLACK_CLAW_OUTPOST_220030000")))
 			.findFirst().orElseThrow().targetNode());
 		assertEquals(List.of("s3", "s4", "reward"), totem.definition().transitions().stream()
 			.filter(transition -> transition.event().equals(new QuestEvent.KillNpc(700099)))
 			.map(QuestTransition::targetNode).toList());
 		assertTrue(totem.definition().transitions().stream()
-			.filter(transition -> transition.sourceNode().equals("reward")
+			.filter(transition -> Objects.equals(transition.sourceNode(), "reward")
 				&& transition.targetNode().equals("complete"))
 			.allMatch(transition -> ((QuestEvent.TalkToNpc) transition.event()).npcId() == 203557));
 
@@ -171,7 +171,7 @@ class LegacyKillFlowRepairDefinitionTest {
 	private static QuestTransition transition(CompiledQuestDefinition definition, String source,
 			Predicate<QuestTransition> predicate) {
 		return definition.definition().transitions().stream()
-			.filter(transition -> transition.sourceNode().equals(source) && predicate.test(transition))
+			.filter(transition -> Objects.equals(transition.sourceNode(), source) && predicate.test(transition))
 			.findFirst().orElseThrow();
 	}
 

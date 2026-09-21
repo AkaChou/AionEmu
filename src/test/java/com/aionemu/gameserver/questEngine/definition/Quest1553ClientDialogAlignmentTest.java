@@ -32,7 +32,10 @@ class Quest1553ClientDialogAlignmentTest {
 		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0));
 		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
 		assertNode(definition, "stage1", QuestStatus.START, Map.of("var0", 1));
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 0));
+		// QE-051：客户端 QUEST_Q1553.html 共 3 行，末行为领奖行，reward 投影 = 2（批次 1-7 已收口）。
+		// QE-051: QUEST_Q1553.html has 3 journal rows and the last one is the reward row, so the REWARD
+		// projection is 2 (closed by batches 1-7).
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 2));
 		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0));
 
 		// 1. 迪亚娜 (203786) 为唯一的接任务 NPC
@@ -150,7 +153,7 @@ class Quest1553ClientDialogAlignmentTest {
 
 	private static List<QuestTransition> routes(QuestDefinition definition, String source, int npcId) {
 		return definition.transitions().stream()
-			.filter(transition -> transition.sourceNode().equals(source))
+			.filter(transition -> Objects.equals(transition.sourceNode(), source))
 			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == npcId)
 			.toList();

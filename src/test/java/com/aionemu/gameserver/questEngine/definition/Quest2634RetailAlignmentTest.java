@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -80,7 +81,7 @@ class Quest2634RetailAlignmentTest {
 
 		for (QuestEvent event : new QuestEvent[] {new QuestEvent.NpcLostTarget(), new QuestEvent.LogOut(null)}) {
 			QuestTransition recovery = transitions.stream()
-				.filter(t -> t.event().equals(event) && t.sourceNode().equals("following")
+				.filter(t -> t.event().equals(event) && Objects.equals(t.sourceNode(), "following")
 					&& t.targetNode().equals("started"))
 				.findFirst().orElseThrow();
 			assertTrue(recovery.actions().contains(new QuestAction.SetVariable("var0", 0)));
@@ -88,7 +89,7 @@ class Quest2634RetailAlignmentTest {
 		}
 
 		QuestTransition completion = transitions.stream()
-			.filter(t -> t.sourceNode().equals("reward") && t.targetNode().equals("complete")
+			.filter(t -> Objects.equals(t.sourceNode(), "reward") && t.targetNode().equals("complete")
 				&& t.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == 204828
 				&& Integer.valueOf(8).equals(talk.dialogId()))
 			.findFirst().orElseThrow();
