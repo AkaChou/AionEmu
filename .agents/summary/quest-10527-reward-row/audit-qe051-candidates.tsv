@@ -18,7 +18,6 @@ quest_id	client_rows	reward_var0	last_start_node	last_start_var0	recovery	client
 3934	10	8	s8	8	False	QUEST_Q3934.html		向[%dic:STR_DIC_LA80]报告					NO
 3935	6	4	s4	4	False	QUEST_Q3935.html		和[%dic:STR_DIC_N_Lavirintos]对话					NO
 3939	5	3	s3	3	False	QUEST_Q3939.html		和[%dic:STR_DIC_N_Lavirintos]对话					NO
-4712	2	0	started	0	False	QUEST_Q4712.html		向[%dic:STR_DIC_N_Henir]报告					NO
 10100	6	4	s4	4	False	quest_q10100.html		重新和[%dic:STR_DIC_N_LDF4_Advance_L_Kahrun]%对话	20100	MISSING_LAST_ROW	4	重新和[%dic:STR_DIC_N_LDF4_Advance_D_Kahrun]%对话	NO
 10530	11	9	s8	8	True	quest_q10530.html		再次和[%dic:STR_DIC_N_Jucleas]%对话	20530	ALIGNED	9	再次和[%dic:STR_DIC_N_Balder]%对话	NO
 11010	4	0	stage2	2	False	QUEST_Q11010.html		和[%dic:STR_DIC_N_Naiting]对话					NO

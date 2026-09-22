@@ -24,7 +24,7 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -33,6 +33,29 @@
   <transitions>
     <dialog type="NPC_START" npc-id="279042" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <dialog type="NPC_REPORT" npc-id="279042" source="started" target="reward" page="DEFAULT_SUCCESS"/>
+    <!-- QE-051 领奖行 + QE-052 领奖 owner：客户端 quest_q4712.html 只有 2 行（行 0 开监狱门并与囚犯对话、
+         行 1 向 Henir 报告）；legacy `_4712Escape_From_The_Dredgion` 在囚犯 798327/798330 处
+         defaultCloseDialog(env, 0, 1, true, false)（写 var0=1 并置 REWARD，囚犯随即 onDelete），
+         REWARD 态只在 279042 处发送 10002/结束对话。Henir 解键：同族 4713/4714/4716 的 completion
+         owner 全部是 279042（客户端行内 STR_DIC_N_Henir）。因此 reward 投影固定为领奖行 1，
+         自愈旧存档 REWARD/var0=0，并删除囚犯上的 npc-complete（保留其入口路由）。
+         Reward-row + ownership contract: the second journal row reports to Henir(279042) and the legacy
+         handler entered REWARD on the prisoners with var0=1 while only 279042 ever ends the quest. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="279042" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
       <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
       <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
@@ -41,19 +64,7 @@
     </npc-complete>
 
     <dialog type="NPC_REPORT" npc-id="798327" source="started" target="reward" page="DEFAULT_SUCCESS"/>
-    <npc-complete npc-id="798327" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
-      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
-      <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
 
     <dialog type="NPC_REPORT" npc-id="798330" source="started" target="reward" page="DEFAULT_SUCCESS"/>
-    <npc-complete npc-id="798330" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
-      <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
-      <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
 </transitions>
 </quest-definition>

@@ -1743,7 +1743,7 @@ quest_id	reward_var0	last_start_node	last_start_var0	handovers	handover_writes	r
 4539	6	None	None	a6b4->reward[]		False	False	2	1	DIALOG	ROW_AHEAD	STATES_BEYOND_ROWS	STATE_OUT_OF_RANGE	0 1 2 3 4 5 6		2 3 4 5 6	False		和[%dic:STR_DIC_N_Byggvir]%对话	quest_q4539.html	63	True	True	Byggvir	True
 4542	5	s5	5	s5->reward[dialog]		True	False	6	5	DIALOG	ROW_ALIGNED	ALIGNED	ROW_STATE_ALIGNED	0 1 2 3 4 5			False		向[%dic:STR_DIC_N_Sleipnirr]报告	quest_q4542.html	63	True	True	Sleipnirr	True
 4711	0	started	None	started->reward[kill-npc] started->reward[]		False	False	4	3	DIALOG	ROW_BEHIND	MISSING_TAIL_ROWS	ROW_WITHOUT_STATE	0	1 2 3		False		向[%dic:STR_DIC_N_Votan]报告	QUEST_Q4711.html	63	True	True	Votan	False
-4712	0	started	0	started->reward[] started->reward[] started->reward[]		False	False	2	1	DIALOG	ROW_BEHIND	MISSING_LAST_ROW	ROW_WITHOUT_STATE	0	1		False		向[%dic:STR_DIC_N_Henir]报告	QUEST_Q4712.html	63	True	True	Henir	False
+4712	1	started	0	started->reward[] started->reward[] started->reward[]		True	False	2	1	DIALOG	ROW_ALIGNED	ALIGNED	ROW_STATE_ALIGNED	0 1			False		向[%dic:STR_DIC_N_Henir]报告	QUEST_Q4712.html	63	True	True	Henir	False
 4713	1	None	None	a1b20->reward[]		False	False	2	1	DIALOG	ROW_ALIGNED	ALIGNED	ROW_STATE_ALIGNED	0 1			False		向[%dic:STR_DIC_N_Henir]报告	QUEST_Q4713.html	63	True	True	Henir	False
 4714	1	started	0	k1->reward[]		False	False	2	1	DIALOG	ROW_ALIGNED	ALIGNED	ROW_STATE_ALIGNED	0 1			False		向[%dic:STR_DIC_N_Henir]报告	QUEST_Q4714.html	63	True	True	Henir	False
 4715	1	started	0	started->reward[] started->reward[dialog]		False	False	1	0	DIALOG	ROW_AHEAD	STATES_BEYOND_ROWS	STATE_OUT_OF_RANGE	0 1		1	False		搜集[%dic:STR_DIC_I_quest_3715a]，然后交给[%dic:STR_DIC_N_Henir][%collectitem]	QUEST_Q4715.html	1	True	True	Henir	False

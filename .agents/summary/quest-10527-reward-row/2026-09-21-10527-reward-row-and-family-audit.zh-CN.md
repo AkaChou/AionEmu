@@ -1276,3 +1276,55 @@ var0 当 0→2 的投递计数，且客户端行内 `HousingLf_Event_ShugoSanta`
   明确挂账（1466 锁、4712 归属、2842 计数槽、50008/51008 计数槽 + 客户端表缺名）。
 - 剩余 `MISSING_LAST_ROW 87`：10 个 QE-045 锁（含 13965 族，等一次客户端观测）、30 个镜像同缺末行、
   47 个待逐族取证（多为 `INTERIOR_GAP`/`MISSING_TAIL_ROWS`/`STATES_BEYOND_ROWS` 阶段语义，禁止按行号机械推进）。
+
+---
+
+## 二十、批次 16：领奖 owner 收敛（4712 / 2484，2026-09-22）
+
+### 二十之一、候选与证据
+
+批次 15 之后同形候选里剩下的“owner 不唯一”题只有两个，本批逐个取证：
+
+| 任务 | 行 1（客户端 quest_summary） | 证据 |
+|---|---|---|
+| 4712（[Group] Escape From The Dredgion!，魔族） | 向 `STR_DIC_N_Henir` 报告 | legacy `_4712Escape_From_The_Dredgion`（`7e9f0316c^`）：START 态囚犯 798327/798330 的 `STEP_TO_1` 调 `defaultCloseDialog(env, 0, 1, true, false)`（**写 var0=1 并置 REWARD**，囚犯随即 `onDelete`），REWARD 态只处理 **279042**（`sendQuestDialog(10002)` / `sendQuestEndDialog`）。Henir 解键：同族 **4713/4714/4715/4716 行内都写 `STR_DIC_N_Henir` 且 `npc-complete` owner 全部 = 279042**（审计 4713/4714/4716 均 `ROW_ALIGNED`、reward=1）→ Henir = 279042。即 279042 = 领奖台，囚犯只是行 0 的开监狱门交互 |
+| 2484（[Spy] Our Man in Elysea，魔族） | 和 Hippolyta 对话 | 批次 15 已把 reward 投影收到行 1，但 completion 仍同时登记在 **204407（接取）/ 700267（烽火对象）/ 203331（Hippolyta_Q2484）**；legacy `_2484OurManInElysea` 只在 203331 处 `setStatus(REWARD)`，700267 只 `setQuestVarById(0, 1)`、204407 只负责接取 → 领奖 owner 必须唯一收敛到 203331 |
+
+**同批登记、不改的边界**：28208/28209 的 Inggness(205320) 与 Anja(205321) 仍并存为领奖 NPC（客户端是否两个都能领奖未取证，禁止先收敛）；26838/16838 的 `Jarik01/Ostia01`(806574/806565) vs 定义 `Jarik02/Ostia02`(806575/806566) 01/02 变体分歧仍需真端绑定。
+
+### 二十之二、修复
+
+- **4712**：`reward` 投影 `0 -> 1` + 无 source 的 `REWARD && var0==0 -> set var0=1`（`LEVEL_AND_VISIBILITY_REFRESH`，无 priority）自愈边；**删除囚犯 798327/798330 的 `npc-complete`**，保留它们的 `NPC_REPORT -> reward` 入口路由（行 0 的“开监狱门并与囚犯对话”）。
+- **2484**：**删除 204407/700267 的 `npc-complete`**，保留三条 `NPC_REPORT -> reward` 入口路由；领奖唯一落在 203331。
+- 脚本 `.agents/summary/quest-10527-reward-row/apply_batch16_reward_owner_trim.py`（`--check` 幂等 2/2）；4712.xml 内写入 QE-051/QE-052 双语注释。
+
+### 二十之三、验证（2026-09-22）
+
+- **单任务审计**：4712 `ROW_BEHIND / MISSING_LAST_ROW / ROW_WITHOUT_STATE`（`visible=0`、`recovery=False`）
+  → `ROW_ALIGNED / ALIGNED / ROW_STATE_ALIGNED`（`visible 0 1`、`recovery=True`）；2484 批次 15 已对齐，本批 owner 收敛后判定不变。
+- **全库快照**：`ROW_ALIGNED 2645 -> 2646`、`ROW_BEHIND 199 -> 198`、`ROW_STATE_ALIGNED 2423 -> 2424`、
+  `ROW_WITHOUT_STATE 524 -> 523`、`MISSING_LAST_ROW 87 -> 86`（`last_row_npc_matches_quest` 2216/4006 不变）。
+- **结构校验**：`xmllint --noout --schema quest_definition.xsd` 2/2 `validates`；IDEA lint 0 problem；
+  `git diff --check` 干净。
+- **门禁测试**：`src/test/java/com/aionemu/gameserver/questEngine/definition/RewardOwnerTrimContractTest.java`
+  7 例——① 领奖 completion owner 唯一且 = 领奖行 NPC；② 行 0 入口路由 owner 集合保真（4712 = 279042/798327/798330，
+  2484 = 204407/700267/203331）；③ 被裁剪 owner 不再有 `npc-complete` 且每个任务恰好一个 `npc-complete`；
+  ④ 投影 = 行 1 且 `started` 保持 0；⑤ 自愈边唯一且 planner 可收敛；⑥ 无 target=reward 事务写非领奖行 var0；
+  ⑦ Henir 解键护栏（4713/4714/4716 的 completion owner 必须都是 279042）。
+- **Maven（授权后执行，2026-09-22 12:13）**：`mvn -Dtest='RewardOwnerTrimContractTest,RewardRowResidualTwoRowContractTest,
+  RewardRowEventTwoRowContractTest,RewardRowTwoRowTalkFamilyContractTest,RewardNpcOwnershipContractTest,
+  RetailSingleStepRewardRowContractTest,LegacyRewardStepProjectionRegressionTest,QuestClientContractGateTest,
+  QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest' test` → **10 个测试类 48 例全绿**
+  （新增 `RewardOwnerTrimContractTest` 7/7），`PRODUCTION_COMPILE_OK=6189 / FAILURES=0 /
+  INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`；覆盖本批 2 个 XML 的生产目录编译。
+- 客户端实机复测：**PENDING_CLIENT**。复测要点：① 4712 救出囚犯后任务书切到行 1，与 Henir(279042) 对话领奖，
+  且囚犯身上不再能直接领奖；② 2484 点燃烽火后任务书切到行 1，与 Hippolyta 对话领奖，接取 NPC 与烽火对象
+  不再弹奖励窗（旧存档登录/切图时由自愈边纠正）。
+
+### 二十之四、结论与后续
+
+- 新增模式卡 **QE-052**（领奖 owner 必须等于客户端任务书领奖行 NPC，`REWARD_OWNER_MUST_BE_JOURNAL_REWARD_ROW_NPC`）：
+  QE-051 管投影（var0 = 行号），QE-052 管 owner 集合，两者判定口径互不替代。
+- 剩余 `MISSING_LAST_ROW 86`（其中 QE-045 锁 10 个；其余按镜像/逐族取证，禁止按行号机械推进）。
+- Maven 已按上述命令执行（48 例全绿），后续批次沿用同一命令再加新门禁类；历史待授权命令：
+  `mvn -Dtest='RewardOwnerTrimContractTest,RewardRowResidualTwoRowContractTest,RewardRowEventTwoRowContractTest,RewardRowTwoRowTalkFamilyContractTest,RewardNpcOwnershipContractTest,RetailSingleStepRewardRowContractTest,LegacyRewardStepProjectionRegressionTest,QuestClientContractGateTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest' test`

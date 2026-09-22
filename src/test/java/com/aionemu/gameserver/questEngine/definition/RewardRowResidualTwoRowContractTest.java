@@ -69,10 +69,13 @@ class RewardRowResidualTwoRowContractTest {
 
 	@Test
 	void rewardOwnerIsTheSecondRowNpc() throws Exception {
-		/* 本批只收口行投影：行 1 NPC 必须是领奖 owner 之一（2484 另有烽火对象 700267 与接取 NPC 204407
-		   的备用完成路径，是否收敛到单一 owner 由批次 16 的归属取证决定）。 */
-		/* This batch only aligns the journal row: the row-1 NPC must be one of the reward completion owners
-		   (2484 additionally keeps the beacon object 700267 and the start NPC 204407 as alternate paths). */
+		/* 本批只收口行投影：行 1 NPC 必须是领奖 owner 之一，此时 2484 另有烽火对象 700267 与接取 NPC
+		   204407 的备用完成路径；批次 16 已按 legacy 归属把 owner 收敛到行 1 NPC（见
+		   RewardOwnerTrimContractTest 的唯一性断言）。 */
+		/* This batch only aligns the journal row: the row-1 NPC must be one of the reward completion owners;
+		   at that time 2484 still kept the beacon object 700267 and the start NPC 204407 as alternate paths.
+		   Batch 16 trimmed those owners to the reward-row NPC (uniqueness is locked by
+		   RewardOwnerTrimContractTest). */
 		for (Contract contract : CONTRACTS) {
 			assertTrue(rewardOwners(definition(contract.questId()).definition())
 					.contains(contract.rowNpcId()),

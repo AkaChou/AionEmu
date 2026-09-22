@@ -57,14 +57,8 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="204407" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
     <dialog type="NPC_START" npc-id="700267" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
     <dialog type="NPC_REPORT" npc-id="700267" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="700267" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
     <dialog type="NPC_START" npc-id="203331" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
     <dialog type="NPC_REPORT" npc-id="203331" source="started" target="reward" page="SELECT2"/>
     <npc-complete npc-id="203331" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">

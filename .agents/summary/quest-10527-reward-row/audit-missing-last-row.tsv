@@ -26,7 +26,6 @@ quest_id	client_rows	last_row_kind	last_row_text	reward_var0	last_start_node	las
 3935	6	DIALOG	和[%dic:STR_DIC_N_Lavirintos]对话	4	s4	4	var0=4	False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
 3939	5	DIALOG	和[%dic:STR_DIC_N_Lavirintos]对话	3	s3	3	var0=3	False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
 4200	5	OTHER	向使节团团长[%dic:STR_DIC_N_DF3_Fairringring_E]转告哈奥隆的消息	3	s3	3		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
-4712	2	DIALOG	向[%dic:STR_DIC_N_Henir]报告	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
 4722	2	DIALOG	向[%dic:STR_DIC_N_Yorgen]%报告结果	0	started	0		True	True	ROW_BEHIND	ROW_WITHOUT_STATE					
 10100	6	DIALOG	重新和[%dic:STR_DIC_N_LDF4_Advance_L_Kahrun]%对话	4	s4	4		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		20100	MISSING_LAST_ROW	4	重新和[%dic:STR_DIC_N_LDF4_Advance_D_Kahrun]%对话
 10530	11	DIALOG	再次和[%dic:STR_DIC_N_Jucleas]%对话	9	s8	8		True	False	ROW_BEHIND	ROW_WITHOUT_STATE		20530	ALIGNED	9	再次和[%dic:STR_DIC_N_Balder]%对话
