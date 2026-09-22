@@ -28,12 +28,24 @@
   </nodes>
   <transitions>
     <dialog type="NPC_START" npc-id="790001" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1"/>
-    <transition source="started" target="reward">
+    <!-- QE-024：进入感应区只播片（自环），行推进交给客户端影片结束回调——过场遮罩期间下发状态
+         刷新会被客户端丢弃，任务书停在行 0（用户 2026-09-22 真机反馈“看完剧情后没有推进到下一步”）。
+         同族 1336（ProgressAll + sensoryArea ×12）就是 enter-zone 播片自环 + movie-end 落行的写法。
+         QE-024: the sensory zone only plays the movie; the journal row lands on the client's movie-end
+         callback (CM_PLAY_MOVIE_END), matching the sibling family 1336. -->
+    <transition source="started" target="started">
       <event>
         <enter-zone zone="LF1_SENSORY_AREA_Q1123_210010000"/>
       </event>
       <after-commit>
         <play-movie movie-id="11"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward">
+      <event>
+        <movie-end movie-id="11"/>
+      </event>
+      <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>

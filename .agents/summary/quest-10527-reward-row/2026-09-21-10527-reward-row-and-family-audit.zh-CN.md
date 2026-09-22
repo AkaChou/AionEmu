@@ -3827,3 +3827,79 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
 - 剩余 `MISSING_TAIL_ROWS 40`（34 个待逐族收口 + 6 个已登记例外）；其它挂账
   `STATES_BEYOND_ROWS 2620`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 77`、`ROW_BEHIND 137`。
   既有红沿用 `QuestInteractionObjectCatalogTest` 8 条资格缺口（13809/23809/30504/30554）。
+
+## 五十、批次 46：1123 感应区影片结束回调再落领奖行（2026-09-22，用户真机回归）
+
+### 五十之一、报障与现场 trace
+
+用户真机复测批次 15 的 1123（Where's Tutty? / 失踪的托蒂1，Elyos，NPC 790001）时反馈
+“看完剧情后没有推进到下一步”，并给出 QUEST-TRACE：
+
+```
+20:23:49 [S->C] SM_DIALOG_WINDOW 玩家=Qq targetObj=14532 questId=0  下发页=10          （select1）
+20:23:50 [C->S] CM_DIALOG_SELECT 上一页=10   动作=31                              （SELECT1_1）
+20:23:50 [S->C] 下发页=1011                                                        （select1_1）
+20:23:51 [C->S] 上一页=1011 动作=1012
+20:23:51 [S->C] 下发页=1012
+20:23:52 [C->S] 上一页=1012 动作=1007                                              （ASK_QUEST_ACCEPT）
+20:23:52 [S->C] 下发页=4                                                            （接取确认窗口）
+20:23:53 [C->S] 上一页=4    动作=1002                                              （QUEST_ACCEPT_1）
+20:23:53 [S->C] SM_QUEST_ACTION 任务=1123 状态=3 步数=0                            （START / 行 0）
+20:23:53 [S->C] 下发页=1003                                                        （quest_accept_1）
+20:24:01 [S->C] SM_QUEST_ACTION 任务=1123 状态=4 步数=1                            （REWARD / 行 1）
+```
+
+- **服务端侧已被 trace 证明是对的**：接取落 `START/var0=0`，进入
+  `LF1_SENSORY_AREA_Q1123_210010000` 后落 `REWARD/var0=1`（即批次 15 的领奖行投影），
+  与审计的 `ROW_ALIGNED | ALIGNED | ROW_STATE_ALIGNED` 一致。
+- **剩余失败点在客户端刷新时机**：旧定义在 enter-zone 的同一个事务里“播片 + 落 REWARD”，
+  状态刷新是在过场遮罩期间下发的，客户端任务书停在行 0。
+- 1123 的客户端脚本是 `Quest_unpacked/quest_script_monster.csv` 的
+  `1123,ProgressAll,,sensoryArea,,1,LF1_SensoryArea_Q88`（客户端 npc 表 206001 =
+  `LF1_SensoryArea_Q88`，服务端 spawn 于 `210010000_Poeta.xml` (228.68, 1905.85, 171)，
+  与 `zones_quest.xml` 的球体 (225.62, 1905.94, 170.40, r=10) 吻合），属 `ProgressAll +
+  sensoryArea` 族；同族 **1336**（12 个感应区影片）的既定写法正是“enter-zone 只播片自环 +
+  `movie-end` 落行”。QE-024 的边界（影片推进必须实现明确状态迁移，不得留纯电影自环）也指向同一范式。
+
+### 五十之二、落点
+
+- `1123` 的 `started` 上 `enter-zone LF1_SENSORY_AREA_Q1123_210010000` 改为**只播片自环**
+  （after-commit 仅 `play-movie movie-id="11"`）。
+- 新增 `started -> reward` 的 `<movie-end movie-id="11"/>` 路由，after-commit 为
+  `sync-quest-state LEVEL_AND_VISIBILITY_REFRESH`：任务书行 1 在客户端影片结束回调之后才刷新。
+- 领奖行投影（`reward var0=1`）、`REWARD/var0=0` 自愈边、`select2` 领奖页与
+  `npc-complete 790001 complete-reward-index=0` 全部保持不变。
+- 自环不消费状态：若客户端未回影片结束事件，玩家重新进入同一感应区即可重放影片并再次触发，
+  不存在死锁；`QuestMovieAndDialogLoopRegressionTest`（纯电影自环门禁）在本批仍全绿。
+
+### 五十之三、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 1/1 validates；
+  `apply_batch46_movie_end_row_advance.py --apply` 后 `--check` 幂等 OK。
+- **门禁**：新增 `Batch46MovieEndRowAdvanceContractTest` 5 例（感应区只播片且不带状态刷新 /
+  行 1 落在 movie-end 且 `reward var0=1` / 同族 1336 保持同一影片合同 / 旧存档 REWARD/var0=0
+  自愈到行 1 / 领奖页与 completion 仍归 790001）5/5 绿；同步改写批次 15 的
+  `RewardRowResidualTwoRowContractTest#rewardEntryRoutesKeepTheirRegisteredOwners`
+  （原断言锁的是“enter-zone 内播片+落行”的旧形状，本批按新合同改判，行投影/自愈/owner 断言不动）。
+- **回归**：`QuestMovieAndDialogLoopRegressionTest`、`ProductionCatalogWhitelistVerificationTest`
+  （`PRODUCTION_COMPILE_OK=6191 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 /
+  WHITELIST_VIOLATIONS=0`）、`QuestPageButtonAuditTest`、`QuestHandoverContinuationAuditTest`、
+  `QuestE2eInfrastructureTest`、`AcceptAndConfirmationEntryContractTest`、
+  `QuestClientContractGateTest`、`QuestPacketOrderRegressionTest` 全绿。
+- **全库行号审计**：1123 判定不变（`ROW_ALIGNED | ALIGNED | ROW_STATE_ALIGNED`），唯一变化是
+  `handovers` 由 `started->reward[enter-zone]` 变为 `started->reward[movie-end]`；
+  全库计数与批次 45 相同（`MISSING_TAIL_ROWS 40`、`ROW_BEHIND 137`、`ROW_ALIGNED 2713`），
+  明细见 [batch46-evidence.tsv](batch46-evidence.tsv)。
+- **客户端实机 PENDING_CLIENT**：① 接取后行 0；② 进入 LF1 感应区先播影片 11（任务书仍行 0）；
+  ③ **影片结束后**任务书切行 1 并出现“任务完成！和 Pernos 对话”；④ 与 790001 对话出现
+  `select2`，点“回答被烤着吃了”弹奖励窗口并完成；⑤ 若影片结束事件丢失，离开再进入感应区应重放影片
+  并再次落行 1（不卡死）；⑥ 旧存档 `REWARD/var0=0` 登录/切图自愈到行 1。
+
+### 五十之四、边界与后续
+
+- 本批只改 1123 的**刷新时机**，不动行号/owner/奖励合同；服务端推进逻辑与批次 15 一致，
+  因此不产生新的存档语义。
+- 同类“enter-zone + play-movie 在同事务内落状态”的任务（`10101/16800/16821/16823/16836/20101/
+  24024/24053/26800/26821/26823/26836/28500`，共 13 个）**未在本批扩围**：它们多为单行/计数型，
+  且 24053 是已登记 fallback 例外；若后续出现同类“影片后任务书不刷新”报障，按本批模板
+  （enter-zone 播片自环 + `movie-end` 落行 + sync）逐任务取证后再改。

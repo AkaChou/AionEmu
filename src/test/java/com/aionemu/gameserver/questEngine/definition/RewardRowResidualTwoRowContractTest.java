@@ -85,18 +85,28 @@ class RewardRowResidualTwoRowContractTest {
 
 	@Test
 	void rewardEntryRoutesKeepTheirRegisteredOwners() throws Exception {
-		/* 1123：REWARD 由 LF1 感应区进入（客户端行 0 的目标就是“到 FLA07 寻找踪迹”），全任务唯一 NPC 是 790001。 */
-		/* 1123 enters REWARD through the LF1 sensory zone and its only NPC is 790001. */
+		/* 1123：REWARD 由 LF1 感应区影片推进进入（客户端行 0 的目标就是“到 FLA07 寻找踪迹”），
+		   全任务唯一 NPC 是 790001。批次 46 起入口拆成两步：enter-zone 只播片自环，行 1 在客户端
+		   影片结束回调（movie-end 11）落盘——过场遮罩期间下发状态刷新会被客户端丢弃（用户真机反馈
+		   “看完剧情后没有推进到下一步”，详见 Batch46MovieEndRowAdvanceContractTest）。
+		   Batch 46 splits the entry: the LF1 zone only plays movie 11, and the reward row lands on the
+		   client movie-end callback. */
 		List<QuestTransition> tuttyRoutes = definition(1123).definition().transitions().stream()
 			.filter(route -> "started".equals(route.sourceNode()))
 			.filter(route -> "reward".equals(route.targetNode()))
 			.toList();
 		assertEquals(1, tuttyRoutes.size(), "1123 reward entry route");
-		assertEquals(QuestEvent.EnterZone.class, tuttyRoutes.getFirst().event().getClass(),
-			"1123 must keep the LF1_SENSORY_AREA_Q1123 zone entry");
-		assertEquals(List.of(new AfterCommitAction.PlayMovie(11),
-				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
-			tuttyRoutes.getFirst().afterCommit(), "1123 zone entry after-commit");
+		assertEquals(new QuestEvent.MovieEnd(11), tuttyRoutes.getFirst().event(),
+			"1123 must land REWARD on the LF1 sensory-area movie-end callback");
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
+				QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
+			tuttyRoutes.getFirst().afterCommit(), "1123 reward entry after-commit");
+		List<QuestTransition> tuttyZone = definition(1123).definition().transitions().stream()
+			.filter(route -> route.event() instanceof QuestEvent.EnterZone)
+			.toList();
+		assertEquals(1, tuttyZone.size(), "1123 must keep the LF1_SENSORY_AREA_Q1123 zone entry");
+		assertEquals(List.of(new AfterCommitAction.PlayMovie(11)), tuttyZone.getFirst().afterCommit(),
+			"1123 zone entry only plays movie 11");
 
 		/* 2484：legacy 登记了 204407（接取）、700267（烽火对象写 var0=1）、203331（Hippolyta 领奖）三条 talk 路线。 */
 		/* 2484 keeps the three legacy talk routes: 204407 (start), 700267 (beacon writes var0=1), 203331 (Hippolyta). */
