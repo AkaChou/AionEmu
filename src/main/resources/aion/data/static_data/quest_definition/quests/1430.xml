@@ -28,10 +28,59 @@
     </node>
   </nodes>
   <transitions>
-    <!-- QE-051 领奖行合同：客户端 quest_q1430.html 的 quest_summary 共 2 行，末行是领奖行
-         （STR_DIC_N_Sonirim，对应该任务的领奖 NPC）；旧投影停在 0，进入世界时纠正为 1 并下发状态包。
-         Reward row contract (QE-051): the last of the 2 quest_q1430 journal rows is the reward row
-         (STR_DIC_N_Sonirim, the reward NPC of this quest); saves persisted at 0 are repaired to 1 on enter-world. -->
+    <!-- 接取：奥内希姆斯(203919) 只发布任务。 Accept: Onesimus only offers the quest. -->
+    <dialog type="NPC_START" npc-id="203919" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
+    <!-- 领奖行：客户端 quest_q1430.html 末行「回到天界，和 Sonirim 对话」，只有 Sonirim 能领奖。
+         Reward row: the last client journal row is Sonirim, so only 203337 owns the completion. -->
+    <npc-complete npc-id="203337" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+    <!-- 步骤：Sonirim(203337) 收下奥内希姆斯的话，客户端 select1 -> select1_1 -> select1_1_1 以 SETPRO1 收口，
+         旧 handler 在此把玩家传送到艾特南 (220020000, 638/2337/425, heading 20) 并进入领奖态。 -->
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203337" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203337" action="SELECT1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203337" action="SELECT1_1_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203337" action="SETPRO1"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <teleport-player-fixed-instance instance-id="1" world-id="220020000" x="638" y="2337" z="425" heading="20"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 领奖行入口页：客户端 select_success（10002） → 领奖窗口。 -->
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203337" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <!-- 旧存档自愈：迁移前 REWARD 的投影是 var0=0，重映射到客户端领奖行 var0=1（QE-051）。 -->
     <transition target="reward">
       <event>
         <enter-world/>
@@ -47,31 +96,5 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <dialog type="NPC_START" npc-id="203919" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="203919" source="started" target="reward" page="DEFAULT_SUCCESS"/>
-    <npc-complete npc-id="203919" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-
-    <dialog type="NPC_REPORT" npc-id="203337" source="started" target="reward" page="DEFAULT_SUCCESS"/>
-    <npc-complete npc-id="203337" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203337" action="SELECT1_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203337" action="SELECT1_1_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1"/>
-      </after-commit>
-    </transition>
-</transitions>
+  </transitions>
 </quest-definition>

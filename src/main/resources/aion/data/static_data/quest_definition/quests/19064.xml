@@ -24,27 +24,93 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="s1" status="START">
+      <var name="var0" value="1"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- QE-051 + 领奖 NPC 归属：客户端 quest_q19064.html 只有 2 行 —
+         行 0 和 Undin(798450) 对话（select2/1352），行 1 带着徽章和圣物与
+         Jucleas(203752) 对话（select5/2375）。retail data_driven_quest
+         end_npc_ids=203752、step0 TALK 798450、step1 COLLECT_ITEM 203752；
+         legacy handler 在 798450 的 STEP_TO_1 写 var0=1、在 203752
+         用 checkQuestItemsSimple(1,2,true,5) 进入 REWARD。reward 投影按 QE-051 固定为
+         客户端领奖行 1；旧存档 reward var0=0（旧 typed 投影）与 var0=2（旧 handler 的 +1
+         语义）在进入世界时自愈到 1。客户端没有 DEFAULT_SUCCESS(10002) 页，领奖态入口直接
+         打开 select_quest_reward1(5) 奖励窗口。
+         Reward-row and reward-NPC contract (QE-051): the two client rows are Undin
+         then Jucleas; retail end_npc_ids=203752 matches the legacy handler
+         (var0 0->1 at 798450, completion at 203752). Stale reward rows 0/2 heal to 1. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <dialog type="NPC_START" npc-id="203701" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <!-- 行 0：Undin(798450)。legacy handler: START_DIALOG -> 1352 / STEP_TO_1 -> var0 0->1 -->
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203701" action="QUEST_SELECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798450" action="SETPRO1"/>
+      </event>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 行 1：Jucleas(203752)。legacy handler: var0==1 -> 2375；CHECK_COLLECTED_ITEMS_SIMPLE -> REWARD + 奖励窗口 -->
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
-    <!-- 客户端 select5 按钮 20002 (CHECK_USER_HAS_QUEST_ITEM_SIMPLE) 请求举行神圣仪式：校验徽章(182213237)与闪光的誓约之石(186000081) -->
-    <transition source="started" target="reward" priority="0">
+    <transition source="s1" target="reward" priority="0">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203701" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/>
       </event>
       <conditions>
         <has-item item-id="182213237" count="1"/>
@@ -59,64 +125,40 @@
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started" priority="1">
+    <transition source="s1" target="s1" priority="1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203701" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/>
       </event>
       <after-commit>
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward" priority="0">
+    <transition source="s1" target="s1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203701" action="SELECT_QUEST_REWARD"/>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="FINISH_DIALOG"/>
       </event>
-      <conditions>
-        <has-item item-id="182213237" count="1"/>
-        <has-item item-id="186000081" count="1"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="182213237" count="1"/>
-        <remove-item item-id="186000081" count="1"/>
-      </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 领奖态入口：客户端没有 DEFAULT_SUCCESS 页，点任务行直接打开奖励窗口 -->
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203701" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203701" action="SETPRO1"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203701" action="FINISH_DIALOG"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203701" action="QUEST_SELECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="203701" source="reward" target="complete" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="203752" source="reward" target="complete" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>

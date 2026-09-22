@@ -16,68 +16,54 @@
   </metadata>
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <!-- var1 记录报告分支（0 = 说在乌云贸易团根据地见到他，1 = 说见到尸体），只用于选择领奖窗口档位。
+         var1 records the report branch (0 = base sighting, 1 = seen dead); it only selects the reward window tier.
+         旧存档只写过 var0，位 6 恒为 0，布局向后兼容。 -->
+    <bit-field name="var1" offset="6" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
     <node label="started" status="START">
       <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
-    <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+    <node label="s1" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="0"/>
+    </node>
+    <node label="s2" status="START">
+      <var name="var0" value="2"/>
+      <var name="var1" value="0"/>
+    </node>
+    <node label="reward1" status="REWARD">
+      <var name="var0" value="2"/>
+      <var name="var1" value="0"/>
+    </node>
+    <node label="reward2" status="REWARD">
+      <var name="var0" value="2"/>
+      <var name="var1" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- 接取：司鲁德盖密尔(204253) 发布任务（旧 handler 开始态对它只有 1693 报告页）。 -->
     <dialog type="NPC_START" npc-id="204253" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="204253" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="204253" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
-      <choice action="SELECTED_QUEST_REWARD2" reward-index="1"/>
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-
-    <dialog type="NPC_REPORT" npc-id="278067" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="278067" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
-      <choice action="SELECTED_QUEST_REWARD2" reward-index="1"/>
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-
-    <dialog type="NPC_REPORT" npc-id="278137" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="278137" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
-      <choice action="SELECTED_QUEST_REWARD2" reward-index="1"/>
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
+    <!-- 步骤 1：贝尔格(278067)，客户端 select1 -> select1_1 -> select1_1_1 以 SETPRO1 收口（旧 handler STEP_TO_1: var0 0 -> 1）。 -->
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="204253" action="SELECT2_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="278067" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="278067" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="278137" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="278067" action="SELECT1_1"/>
       </event>
@@ -85,15 +71,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="278137" action="SELECT1_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
+    <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="278067" action="SELECT1_1_1"/>
       </event>
@@ -101,40 +79,127 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1"/>
       </after-commit>
     </transition>
-    <transition source="unaccepted" target="unaccepted">
+    <transition source="started" target="s1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="278137" action="SELECT1_1_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204253" action="SETPRO2"/>
+        <dialog type="TALK_TO_NPC" npc-id="278067" action="SETPRO1"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <!-- 步骤 2：追踪雅芬哈尔(278137) 的行踪，客户端 select2 -> select2_1 以 SETPRO2 收口（旧 handler STEP_TO_2: var0 1 -> 2）。 -->
+    <transition source="s1" target="s1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="278067" action="SETPRO2"/>
+        <dialog type="TALK_TO_NPC" npc-id="278137" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="278137" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="278137" action="SETPRO2"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 步骤 3：向司鲁德盖密尔(204253) 报告。客户端 select3 有两个互为跳转的分支页，
+         select3_1 / select3_2 分别以 SETPRO3（报「在根据地见到他」）/ SETPRO4（报「见到尸体」）进入两个领奖档位。
+         Step 3: two client branch pages converge into SETPRO3 / SETPRO4, selecting the two reward tiers. -->
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204253" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204253" action="SELECT3_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204253" action="SELECT3_2"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_2"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="reward1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204253" action="SETPRO3"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="reward2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204253" action="SETPRO4"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 领奖行：只有 204253 能领奖，两个分支各带自己的领奖窗口（页面 5 / 6，与客户端 select_quest_reward1/2 一致）。 -->
+    <transition source="reward1" target="reward1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204253" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+      </after-commit>
+    </transition>
+    <transition source="reward2" target="reward2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204253" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_2"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="204253" source="reward1" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+    <npc-complete npc-id="204253" source="reward2" target="complete" fixed-reward-indices="0" complete-reward-index="1" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="1"/>
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+    <!-- 旧存档自愈：迁移前 REWARD 的投影是 var0=0，重映射到客户端领奖行 var0=2（QE-051）。 -->
+    <transition target="reward1">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
   </transitions>
+
 </quest-definition>

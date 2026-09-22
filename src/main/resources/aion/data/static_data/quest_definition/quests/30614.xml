@@ -582,7 +582,7 @@
       <var name="var2" value="15"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
       <var name="var1" value="6"/>
       <var name="var2" value="15"/>
     </node>
@@ -9077,9 +9077,40 @@
         <kill-npc npc-id="219245"/>
       </event>
     </kill-chain>
+    <!-- QE-051 领奖行合同：客户端 quest_q30614.html 只有 2 行（战斗行 0 + 报告行 1），
+         旧 reward 投影停在 0；retail monster_hunt start_npc_ids=800326 与 legacy 模板 end=800326
+         确认领奖 NPC 仍是 800326（客户端文本 Astella=800327 属已核实例外）。旧存档
+         REWARD/var0=0 在进入世界时自愈到 1。
+         Reward-row contract (QE-051): the client has two rows and the reward row is 1; the reward
+         NPC stays 800326 per retail monster_hunt and the legacy template, and stale reward rows
+         heal from 0 to 1 on enter-world. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <dialog type="NPC_REPORT" npc-id="800326" source="a0b6c15" target="reward" page="DEFAULT_SUCCESS"/>
     <npc-complete npc-id="800326" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
+    <!-- 领奖态入口页：reward + 800326 QUEST_SELECT(31) -> DEFAULT_SUCCESS(10002) -->
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="800326" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>
