@@ -241,6 +241,21 @@ BATCH35_VALENTINE_TOWER_ROW_LADDER = {50019, 51019}
 BATCH36_EVENT_ROW_LADDER = {50020, 50021, 50022, 51021, 51022,
                             80300, 80301, 80302, 80303, 80306, 80307, 80308, 80309}
 
+# 批次 37 登记（2026-09-22）：两条“交谈 -> 击杀 -> 报告”任务书的整行阶梯。
+# - 26905/26906/26908（Asmodian bounty，三行）：接取 NPC 只管接取，进度/报告/领奖 owner 收敛到
+#   任务书点名的 end NPC；页链 select2 SETPRO1 -> kill -> select5 SELECT_QUEST_REWARD。
+# - 3711/4711（Dredgion 舰长，四行）：行 0 接取对话、行 1 术古情报、行 2 击杀 DrakanBoss、
+#   行 3 向 Taranis/Votan 报告；reward 投影改为末行。
+# 门禁 Batch37TalkKillReportRowLadderContractTest。
+BATCH37_TALK_KILL_REPORT_ROW_LADDER = {26905, 26906, 26908, 3711, 4711}
+
+# 批次 38 登记（2026-09-22）：活动阵营选择族的三行状态与完成奖励索引。
+# 80298/80299（Elyos）与 80304/80305（Asmodian）客户端 quest_summary 三行、槽位 %0/%3/%6：
+# 行 0 回答有恋人/孤单一人，SETPRO1 投影 reward1(var0=1, 情侣)，SETPRO2 投影 reward(var0=2, 单身)；
+# complete-reward-index 1/2 是后续 80300-80309 reward-mode 的分流标志。旧定义把两行塌陷成 var0=0。
+# 门禁 Batch38BranchChoiceRewardIndexContractTest。
+BATCH38_BRANCH_CHOICE_REWARD_INDEX = {80298, 80299, 80304, 80305}
+
 # 批次 26 登记（2026-09-22）：30600/30610 是 Named/Boss 双层计数（var0/var1 组合，客户端 select5 报告行由计数饱和驱动），
 # var0 不承载任务书行号；行号口径把它们判成 MISSING_TAIL_ROWS。批次 26 的自愈边与
 # Quest15546KillCounterSaturationFlowTest 锁定这两个任务，禁止按客户端行号补阶梯。
@@ -619,12 +634,12 @@ def main() -> int:
             single = bool(mirror and mirror["client_rows"] == row["client_rows"]
                           and mirror["row_state_verdict"] == "ROW_STATE_ALIGNED"
                           and mirror["verdict"] == "ROW_ALIGNED")
-            out.write("\t".join(str(row[column]) for column in candidate_order) + "\t" + "\t".join([
+            out.write(("\t".join(str(row[column]) for column in candidate_order) + "\t" + "\t".join([
                 str(mirror["quest_id"]) if mirror else "",
                 mirror["shape"] if mirror else "",
                 str(mirror["reward_var0"]) if mirror else "",
                 mirror["last_row_text"] if mirror else "",
-                "YES" if single else "NO"]) + "\n")
+                "YES" if single else "NO"])).rstrip() + "\n")
 
     order = ["quest_id", "client_rows", "last_row_kind", "last_row_text", "reward_var0",
              "last_start_node", "last_start_var0", "handover_writes", "recovery", "qe045_locked",
@@ -634,11 +649,11 @@ def main() -> int:
                                      "mirror_last_row_text"]) + "\n")
         for row in missing:
             mirror = index.get(mirror_of(row["quest_id"]))
-            out.write("\t".join(str(row[column]) for column in order) + "\t" + "\t".join([
+            out.write(("\t".join(str(row[column]) for column in order) + "\t" + "\t".join([
                 str(mirror["quest_id"]) if mirror else "",
                 mirror["shape"] if mirror else "",
                 str(mirror["reward_var0"]) if mirror else "",
-                mirror["last_row_text"] if mirror else ""]) + "\n")
+                mirror["last_row_text"] if mirror else ""])).rstrip() + "\n")
 
     beyond = [row for row in rows if row["shape"] == "STATES_BEYOND_ROWS"]
     print(f"\n[6] 状态越过客户端行数（STATES_BEYOND_ROWS）={len(beyond)}：")
@@ -709,19 +724,23 @@ def main() -> int:
           "门禁 CutsceneHiddenQuestFamilyContractTest")
     print(f"  仍隔离（无定义、无任务书行，只登记证据）={sorted(CLIENT_ONLY_ISOLATED_QUESTS)}")
 
-    print("\n[11] 缺尾部多行（MISSING_TAIL_ROWS）逐族盘点（批次 36）：")
+    print("\n[11] 缺尾部多行（MISSING_TAIL_ROWS）逐族盘点（批次 38）：")
     tail = [row for row in rows if row["shape"] == "MISSING_TAIL_ROWS"]
     tail_ids = {row["quest_id"] for row in tail}
     fixed = sorted(BATCH31_GELKMAROS_ROW_LADDER | BATCH32_KALDOR_ROW_LADDER
                    | BATCH34_RENTUS_BASE_ROW_LADDER | BATCH35_VALENTINE_TOWER_ROW_LADDER
-                   | BATCH36_EVENT_ROW_LADDER)
+                   | BATCH36_EVENT_ROW_LADDER | BATCH37_TALK_KILL_REPORT_ROW_LADDER
+                   | BATCH38_BRANCH_CHOICE_REWARD_INDEX)
     registered_ids = (BLANK_JOURNAL_SLOT_EXCEPTIONS | CLIENT_ONLY_ISOLATED_QUESTS
                       | COUNTER_SLOT_EXCEPTIONS | MULTI_LAYER_COUNTER_EXCEPTIONS
                       | SHARED_VISIBLE_SLOT_EXCEPTIONS | QE045_LOCKED) & tail_ids
     residual = [row for row in tail if row["quest_id"] not in set(fixed) | registered_ids]
-    print(f"  MISSING_TAIL_ROWS={len(tail)}；已修复族（批次 31 Gelkmaros 三行阶梯、批次 32 卡多尔迎新两阶段阶梯、批次 34 Rentus Base 营救 Paios、批次 35 情人节巧克力塔（5/5），批次 36 活动巧克力塔族 + 术古货箱族共 13 个，均已转 ALIGNED）={fixed}")
+    print(f"  MISSING_TAIL_ROWS={len(tail)}；已修复族（批次 31 Gelkmaros、批次 32 卡多尔迎新、"
+          f"批次 34 Rentus Base、批次 35 情人节巧克力塔、批次 36 活动两族共 13 个、"
+          f"批次 37 交谈击杀报告两族 5 个、批次 38 阵营选择族 4 个，均已转 ALIGNED）={fixed}")
     stuck = sorted((BATCH31_GELKMAROS_ROW_LADDER | BATCH32_KALDOR_ROW_LADDER | BATCH34_RENTUS_BASE_ROW_LADDER
-                    | BATCH35_VALENTINE_TOWER_ROW_LADDER | BATCH36_EVENT_ROW_LADDER) & tail_ids)
+                    | BATCH35_VALENTINE_TOWER_ROW_LADDER | BATCH36_EVENT_ROW_LADDER
+                    | BATCH37_TALK_KILL_REPORT_ROW_LADDER | BATCH38_BRANCH_CHOICE_REWARD_INDEX) & tail_ids)
     if stuck:
         print(f"  ⚠ 本批修复清单仍在缺尾桶={stuck}")
     print(f"  已登记例外（空槽位/客户端隔离/计数槽/双层计数/共享槽位/QE-045 锁）={len(registered_ids)} {sorted(registered_ids)}")

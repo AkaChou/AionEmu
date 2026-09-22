@@ -3168,3 +3168,99 @@ SELECT_QUEST_REWARD 和 npc-complete），同时把 end NPC 的行 0 对话写�
   `13918/23918`、`18213/28213`、`80298/80299/80304/80305`（活动“去见单身部队成员”族）等。
 - 其它挂账不变：`STATES_BEYOND_ROWS 2620`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 77`、
   `section0 residual 837`（沿用批次 35 专项口径）、客户端隔离族 8 个、3 例 HEAD 即红。
+
+## 四十二、批次 38：活动阵营选择族（80298/80299/80304/80305，2026-09-22）
+
+### 四十二之一、族判据与证据（客户端任务书 + quest_data 前置条件）
+
+批次 37 之后 `MISSING_TAIL_ROWS 57`（含 6 个已登记例外）。本批收口活动“Lover or Loner? /
+Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行、槽位 `%0/%3/%6`：
+
+| quest | 阵营 | 行 0 | 行 1（完成索引 1） | 行 2（完成索引 2） | 后续任务 |
+|---|---|---|---|---|---|
+| 80298 | ELYOS | 坦坦荡荡的回答到底是有恋人，还是孤单一人吧！ | 去见坠入爱河的术古 | 去见单身部队成员 | 80300（mode 1）/ 80301（mode 2） |
+| 80299 | ELYOS | 同上 | 同上 | 同上 | 80302（mode 1）/ 80303（mode 2） |
+| 80304 | ASMODIANS | 同上 | 同上 | 同上 | 80306（mode 1）/ 80307（mode 2） |
+| 80305 | ASMODIANS | 同上 | 同上 | 同上 | 80308（mode 1）/ 80309（mode 2） |
+
+客户端页链（四个任务相同）：
+`select_none(4762)` 的 `SELECT1_1` → `select1_1(1012)` 的 `SELECT2_1`/`SELECT2_2` →
+`select2_1(1353)`/`select2_2(1438)`/`select2_1_1(1354)` 的 `SELECT3_1`/`SELECT3_2` →
+`select3_1(1694)` 的 `SETPRO1` / `select3_2(1779)` 的 `SETPRO2`。
+`docs/quest/client-dialog-mapping/quest-dialog-action-details.csv` 记录这四个任务是
+`HACTION_SELECT1_1 → HACTION_SELECT2_1/2 → HACTION_SELECT3_1/2 → HACTION_SETPRO1/2`
+的活动页链；`client_dialog_contract.tsv` 也把 1012/1353/1354/1438/1694/1779 六个页完整登记在
+`80298/80299/80304/80305` 名下。
+
+零售 `Quest_unpacked/quest.xml` 的 `finished_quest_cond1` 给出分流硬证据：
+`80300/80302/80306/80308 = Q80298/Q80299/Q80304/Q80305:1`，
+`80301/80303/80307/80309 = ...:2`；服务端迁移后的 `start-conditions`
+已经保留为 `reward-mode=1/2`。因此 `SETPRO1`/`SETPRO2` 不是“接受”或“中间对话行”，
+而是完成奖励索引（分支标志）1/2 的写入点。
+
+旧定义把两行塌陷成：
+`unaccepted --SETPRO2--> reward(var0=0)`、`unaccepted --SETPRO1--> started(var0=0)`，
+于是审计判成 `MISSING_TAIL_ROWS | ROW_BEHIND | ROW_WITHOUT_STATE(1 2) | visible=0`。
+
+### 四十二之二、落点（分支行 = REWARD 投影，完成索引 = 后续接取标志）
+
+- **节点**：`unaccepted(0) / started(START,0) / reward1(REWARD,1) / reward(REWARD,2) / complete(0)`。
+  行 0 由 `started` 承载；行 1、行 2 是两个互斥的 REWARD 投影，`reward` 仍作为审计和
+  `npc-complete` 的末行 owner。
+- **页链**：`unaccepted` 与 `started` 都保留完整客户端页链（未先走通用接取窗口时，
+  `SETPRO1/SETPRO2` 带 `start-eligible` 跨过 NONE 边界；已接取后走 `started` 的同一页链）。
+  `started --SETPRO1--> reward1` 显示 `SHOW_SELECT_QUEST_REWARD_WINDOW1`；
+  `started --SETPRO2--> reward` 显示 `SHOW_SELECT_QUEST_REWARD_WINDOW2`。
+- **完成索引**：两个分支各用一条 `npc-complete`：
+  `reward1 + complete-reward-index=1`、`reward + complete-reward-index=2`，动作覆盖
+  `SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD`，固定奖励仍为物理组 0 的 EXP 1600。
+  `QuestXmlBlockExpander.rewardGroup` 对“单物理奖励组 + 非零完成索引”保留状态语义，
+  不会把索引 1/2 误当成物理奖励档位。
+- **窗口防重映射**：显式补 `reward1 --USE_OBJECT/SELECT_QUEST_REWARD--> window1`、
+  `reward --USE_OBJECT/SELECT_QUEST_REWARD--> window2` 四条预览路由；否则
+  `restoreRewardPreviewContract` 会按 `rewardWindowForTier(1/2)` 自动推成窗口 2/3，
+  其中窗口 3 不在本任务的客户端 HTML 里。
+- **自愈边**：`REWARD && var0==0`（旧 SETPRO2 单人分支的唯一旧落盘值）无 source
+  `enter-world` → `reward(var0=2)`；`REWARD && var0==1` 已天然就是 `reward1` 行，不做降级覆盖。
+
+### 四十二之三、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 4/4 validates；
+  `apply_batch38_branch_choice_reward_index.py --apply` 后 `--check` 幂等 4/4 OK。
+- **全库行号审计（脚本 [11] 节已改为批次 38，并补登批次 37/38 修复族）**：
+  `MISSING_TAIL_ROWS 57 -> 53`（-4）、`ROW_BEHIND 154 -> 150`（-4）、
+  `ROW_WITHOUT_STATE 486 -> 482`（-4）、`ROW_ALIGNED 2696 -> 2700`（+4）、
+  `ROW_STATE_ALIGNED 2468 -> 2472`（+4）；4 个任务全部
+  `ALIGNED + ROW_ALIGNED + ROW_STATE_ALIGNED + visible=0 1 2 + recovery=True`，逐任务前后见
+  [batch38-evidence.tsv](batch38-evidence.tsv)。
+- **Maven（授权后执行）**：新增 `Batch38BranchChoiceRewardIndexContractTest`（4 例：
+  每行一个状态 + 两个 REWARD 分支 / 客户端页链和窗口 1/2 / `CompleteQuest(1/2)` 与后续
+  `reward-mode=1/2` / 旧 `REWARD var0=0` 自愈）4/4 绿；同批回归
+  `Batch36EventRowLadderContractTest` 5/5、`Batch37TalkKillReportRowLadderContractTest` 4/4；
+  `ProductionCatalogWhitelistVerificationTest` 1/1，`PRODUCTION_COMPILE_OK=6191 / FAILURES=0 /
+  INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`；`QuestPageButtonAuditTest`(2)、
+  `QuestHandoverContinuationAuditTest`(2)、`QuestE2eInfrastructureTest`(41)、
+  `AcceptAndConfirmationEntryContractTest`(2) 共 51 例绿。
+- **既有红登记（非本批引入）**：`QuestInteractionObjectCatalogTest#productionQuestUseItemTalkRoutesDeclareActionEligibility`
+  仍列出 `13809/23809/30504/30554` 共 8 条 `TALK_TO_NPC dialog=-1` 路由缺少同 source 的
+  `CanAct(ACTION_ITEM_USE)` 资格；四个本批任务（80298/80299/80304/80305）不在该清单内，
+  工作树与 HEAD 对这 8 条路由均无 `can-act`，故按既有债务登记，不在本批扩围修改。
+- **客户端实机 PENDING_CLIENT**：① 80298/80299（天族）与 80304/80305（魔族）接取后任务书停在行 0；
+  ② 走 `select1_1 → select2_1 → select3_1 → SETPRO1`，任务书切行 1 并打开奖励窗口 1，确认后完成，
+  应能接取 `80300/80302/80306/80308`（reward-mode=1）；③ 重复选择单身分支
+  `select2_2 → select3_2 → SETPRO2`，任务书切行 2 并打开奖励窗口 2，确认后应能接取
+  `80301/80303/80307/80309`（reward-mode=2）；④ REWARD 态再次点 NPC 用 `USE_OBJECT`/1009
+  重开窗口时，情侣分支必须是窗口 1、单身分支必须是窗口 2，不能出现窗口 3；
+  ⑤ 旧存档 `REWARD + var0=0` 登录或切图后应自愈到单身行 2；⑥ 完成一个分支后另一分支的后续任务不应可接取。
+
+### 四十二之四、边界与后续
+
+- 本族行 1/2 是互斥分支而非顺序阶梯；审计口径只要求每个客户端行号都有一个 START/REWARD
+  状态，本批用 `reward1`/`reward` 两个 REWARD 节点满足，未把两条分支误接成可顺序全走。
+- `complete-reward-index=1/2` 是后续任务的接取资格标志，不是物理奖励档位；当前元数据仍是
+  单物理组 EXP 1600。后续若增加奖励组，必须同步重验 `rewardGroup`、窗口预览和 `reward-mode` 合同。
+- 剩余 `MISSING_TAIL_ROWS 53`（其中 47 个待逐族收口 + 6 个已登记例外）。其它挂账不变：
+  `STATES_BEYOND_ROWS 2620`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 77`、`section0 residual 837`
+  （沿用批次 35 专项口径）、客户端隔离族 8 个
+  （3959/4963/16984/18706/20015/26984/28706/29706）；已知 HEAD/既有红除原有 3 例外，
+  另有本次登记的 `QuestInteractionObjectCatalogTest` 8 条资格缺口。
