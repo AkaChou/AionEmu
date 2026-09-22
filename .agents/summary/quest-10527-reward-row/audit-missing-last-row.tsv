@@ -82,6 +82,4 @@ quest_id	client_rows	last_row_kind	last_row_text	reward_var0	last_start_node	las
 51010	3	DIALOG	和[%dic:STR_DIC_E_single_shugo_d]见面	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
 51020	3	DIALOG	和[%dic:STR_DIC_E_single_shugo_d]对话	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
 51022	3	DIALOG	在[%dic:STR_DIC_E_FOBJ_Event_Cargobox]里找到铁锹，然后交给[%dic:STR_DIC_E_white_single_d][%collectitem]	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
-80291	2	OTHER	从[%dic:STR_DIC_N_EVENT_Zephyrin]那里获得圣灵守护者武器	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
-80295	2	OTHER	从[%dic:STR_DIC_N_EVENT_Lilyolin]那里获得圣灵守护者武器	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
 80690	3	DIALOG	请向[%dic:STR_DIC_NPC_IDSweep_IN_NPC03]报告	1	None	None		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					

@@ -22,7 +22,7 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="1"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -121,6 +121,28 @@
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- QE-051 领奖行（批次 17，圣灵守护者武器事件族）：客户端 quest_q80290.html 的 quest_summary 只有 1 行，
+         行 0 = “收集10个 STR_DIC_LC_relic_armor_30，交给 STR_DIC_N_EVENT_Zephyrin”；同族护甲变体的 reward
+         投影却是 1，领奖态落在客户端不存在的行号上（审计 STATE_OUT_OF_RANGE）→ 投影改回行 0，并补
+         REWARD/var0=1 -> 0 的 enter-world 自愈边。迁移前仓库没有该任务的 legacy handler，证据是客户端行数
+         （1 行）与同族 80291 的 legacy nextStep。
+         Reward-row contract (batch 17): the armour variant has a single journal row, so the reward projection
+         must be 0 (the weapon variant 80291 keeps the legacy nextStep 1). -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="831384" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">

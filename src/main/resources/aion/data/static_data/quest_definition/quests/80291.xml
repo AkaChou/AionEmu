@@ -45,7 +45,7 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -98,6 +98,28 @@
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <!-- QE-051 领奖行（批次 17，圣灵守护者武器事件族）：客户端 quest_q80291.html 的 quest_summary 共 2 行，
+         行 1 = “从 STR_DIC_N_EVENT_Zephyrin 那里获得圣灵守护者武器”。legacy
+         `_80291Durable_Daevanion_Weapon` 的 checkQuestItems(env, 0, 1, true, 5, 0) 把 packed step 从 0 推到 1
+         并置 REWARD，迁移把 nextStep=1 丢了（reward 投影仍是 0）→ 投影改 1，并补 REWARD/var0=0 -> 1 的
+         enter-world 自愈边（旧存档登录/切图时纠正）。
+         Reward-row contract (batch 17): the second journal row is the reward row; legacy pushed step 0 -> 1
+         before entering REWARD, so the reward projection must be 1. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="831384" source="reward" target="complete" fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">

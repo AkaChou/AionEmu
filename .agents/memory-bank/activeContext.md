@@ -118,6 +118,23 @@
     （禁止先收敛）；26838/16838 的 `Jarik01/Ostia01` vs `Jarik02/Ostia02` 01/02 变体分歧仍未收敛；
     删除 completion owner 必须以保留 `NPC_REPORT -> reward` 入口为前提（删多留少会让行 0 无法推进），
     且 `npc-complete` 与领奖态入口页必须落在同一 owner 上。
+  - **批次 17 完成（2026-09-22，圣灵守护者武器事件族 80290/80291/80294/80295）**：先做族级扫描
+    （新工具 `.agents/summary/quest-10527-reward-row/audit_legacy_reward_entry_steps.py` → `legacy-reward-entry-scan.tsv`，
+    扫描迁移前 651 个 handler 任务的 `useQuestItem`/`defaultCloseDialog`/`checkQuestItems`/`checkQuestItemsSimple`/
+    `changeQuestStep`）——“nextStep 被迁移丢弃”的完整集合 = 15300/25300（QE-045 基线，测试锁定）+ 80291/80295。
+    80291/80295（客户端 2 行）legacy `checkQuestItems(env, 0, 1, true, 5, 0)` → 投影 `0->1` + 自愈边；
+    80290/80294（客户端仅 1 行、原投影 1 属 `STATE_OUT_OF_RANGE`）投影 `1->0` + 自愈边；owner 唯一
+    （831384 = event_Zephyrin / 831387 = event_Lilyolin）。门禁 `DurableDaevanionWeaponRewardRowContractTest`
+    （7 例）；单任务审计 4/4 `ROW_ALIGNED / ROW_STATE_ALIGNED`，全库 `ROW_ALIGNED 2646->2650`、
+    `ROW_BEHIND 198->196`、`ROW_AHEAD 2591->2589`、`ROW_STATE_ALIGNED 2424->2428`、
+    `ROW_WITHOUT_STATE 523->521`、`STATE_OUT_OF_RANGE 2448->2446`、`MISSING_LAST_ROW 86->84`；
+    族级扫描复核 `LEGACY_NEXTSTEP_DROPPED` 为空；xmllint 4/4 validates、IDEA lint 0、`git diff --check` 干净；
+    Maven 已授权 12 个测试类 **58 例全绿**（含本批门禁 7/7，PRODUCTION_COMPILE_OK=6189 / FAILURES=0）、客户端 **PENDING_CLIENT**。
+    脚本 `apply_batch17_daevanion_durable_weapon.py`
+    （--check 4/4）、证据 `batch17-evidence.tsv`、报告 §二十一。
+  - **批次 17 边界（下一批前必读）**：`STEP_EQUALS_NEXTSTEP` 的 392 个任务（2600/1920/2945 等
+    `defaultCloseDialog(env, s, s, true, ...)`）与 QE-045 基线（15300/25300 的 reward=13）不得按客户端末行机械推进；
+    剩余 `MISSING_LAST_ROW 84` 多为这类任务或多阶段/计数族，必须逐族取客户端观测或 legacy 证据。
   - **批次 10 边界（下一批前必读）**：21455 的领奖 NPC 归属已在批次 12 收口（领奖/completion 799404 → Unset 799244，accept 仍是 799404 Miener）；25608 已在批次 11 收口（实际缺 ENTER_AREA 206534 与 ENTER_AREA 206542 两行；修复为 step2/step5 两个 enter-zone、HUNT→step3、Mumu SELECT5→step4、交付行归 step6、reward 5→6，并从客户端 DF6 Level.pak 的 mission_mission0.xml 触发点注册两个 sensory zone）；10530 第 8 行是与第 9 行共槽的空 `<p>`（镜像 20530 无此行），已在审计脚本登记 `DUPLICATE_VISIBLE_SLOT_BLANK_ROWS`，禁止按行号加一；19008/19014/19020/19026/19032 等“名人考试”族的 reward=1 属 legacy 语义（19057/29057 的 handler 另有 var0=2 的失败分支），不得按“末行行号 2”改；剩余 MISSING_LAST_ROW 95 个（镜像同缺 32、QE-045 锁 10）需逐族 legacy/retail 证据。
 - **批次 8 边界（下一批前必读）**：10522/20522/15542/25542/30211/30213/30311/30313 的 QE-046 基线已随写入方一起改到领奖行 1，后续再改这 8 个任务的 reward 投影必须同时改写入方并重刷基线；19064/29064/21455/30614 的领奖 NPC 归属已在批次 12 收口（30614 按客户端行内命名回滚为 Astella 800327，禁止再按 `terath_dredgion.xml` 单源改回 Aluna 800326）；26838（末行 Jarik01=806574，定义 806575）仍需先核实领奖 NPC 身份；28932/30203/30303 需要给无投影的 `started` 节点补 var0；1607/1990/2990/3502/14012/14013/17511/27511 属多阶段/内部缺口（INTERIOR_GAP、MISSING_TAIL_ROWS），必须单独设计阶段推进；脚本 `apply_batch8_external_writer_reward_row.py`（`--check` 幂等）、门禁 `ExternalRewardAdvanceReentryContractTest` 与 `Quest10522AutoStartDialogTest`。
   - **批次 7 边界（下一批前必读）**：10522/20522/15542/25542/30211/30213/30311/30313 的 QE-046 基线（reward 投影必须等于引擎外写入方的 packed step）已由批次 8 一并改到领奖行 1（写入方 + 投影 + 基线 TSV 三处同改）；30614/26838/19064/29064 的末行 NPC 与定义 NPC 不一致，需先核实领奖 NPC 身份；28932/30203/30303 需要给无投影的 `started` 节点补 var0；1607/1990/2990/3502/14012/14013/17511/27511 属多阶段/内部缺口（INTERIOR_GAP、MISSING_TAIL_ROWS），必须单独设计阶段推进。脚本 `apply_batch7_report_row_contract.py`、证据 `batch7-evidence.tsv`、门禁 `ReportRowRewardProjectionContractTest`（5 条合同）。

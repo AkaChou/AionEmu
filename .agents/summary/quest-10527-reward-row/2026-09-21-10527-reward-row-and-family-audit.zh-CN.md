@@ -1328,3 +1328,59 @@ var0 当 0→2 的投递计数，且客户端行内 `HousingLf_Event_ShugoSanta`
 - 剩余 `MISSING_LAST_ROW 86`（其中 QE-045 锁 10 个；其余按镜像/逐族取证，禁止按行号机械推进）。
 - Maven 已按上述命令执行（48 例全绿），后续批次沿用同一命令再加新门禁类；历史待授权命令：
   `mvn -Dtest='RewardOwnerTrimContractTest,RewardRowResidualTwoRowContractTest,RewardRowEventTwoRowContractTest,RewardRowTwoRowTalkFamilyContractTest,RewardNpcOwnershipContractTest,RetailSingleStepRewardRowContractTest,LegacyRewardStepProjectionRegressionTest,QuestClientContractGateTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest' test`
+
+---
+
+## 二十一、批次 17：圣灵守护者武器事件族（80290/80291/80294/80295，2026-09-22）
+
+### 二十一之一、族级证据链（先做全库扫描，再定族）
+
+本批先用 **legacy 入口 helper 全库扫描** 定位“nextStep 被迁移丢弃”的完整族（新工具
+`.agents/summary/quest-10527-reward-row/audit_legacy_reward_entry_steps.py`，输出 `legacy-reward-entry-scan.tsv`）：
+
+| 口径 | 数量 | 说明 |
+|---|---|---|
+| 迁移前 handler 里进入 REWARD 的调用（`useQuestItem` / `defaultCloseDialog` / `checkQuestItems` / `checkQuestItemsSimple` / `changeQuestStep`，`reward=true`，`step != nextStep`） | 651 个任务 | 来源 commit `7e9f0316c^` 的 `quest/handlers/**`，签名见同 commit 的 `QuestHandler` |
+| 其中当前 reward 投影 == legacy `nextStep`（迁移正确） | 86 | 例如 4712/10527/10528/11216/14023 |
+| `LEGACY_NEXTSTEP_DROPPED`（当前投影 == `step` 且 `nextStep` == 客户端末行） | **4 → 2 → 0** | 收口前 = 15300/25300（QE-045 基线，`Quest15300And25300RewardProjectionTest` 锁定，不得动）+ 80291/80295（本批收口）；收口后为空 |
+| `STEP_EQUALS_NEXTSTEP`（legacy 本身保持进入前的 packed step，QE-045 语义） | 392 | 例如 2600/1920/2945 的 `defaultCloseDialog(env, s, s, true, ...)`，禁止按行号机械推进 |
+
+### 二十一之二、四个任务的证据
+
+| 任务 | 客户端 quest_summary | 当前投影 | 证据 | 修复 |
+|---|---|---|---|---|
+| 80291（Durable Daevanion Weapon，天） | 2 行：行 0「收集 5 个 `relic_weapon_30`，交给 `EVENT_Zephyrin`」、行 1「从 `EVENT_Zephyrin` 那里获得圣灵守护者武器」 | 0 | legacy `checkQuestItems(env, 0, 1, true, 5, 0)`：packed step 0 → **1** 并置 REWARD；迁移丢了 nextStep | 投影 `0→1` + `REWARD/var0=0 → 1` 自愈边 |
+| 80295（魔族镜像） | 同上（`EVENT_Lilyolin` / 831387） | 0 | legacy `checkQuestItems(env, 0, 1, true, 5, 0)` 同上 | 同上 |
+| 80290（护甲变体，天） | **1 行**：「收集 10 个 `relic_armor_30`，交给 `EVENT_Zephyrin`」 | 1 | 投影 1 落在客户端不存在的行号上（审计 `STATE_OUT_OF_RANGE`），领奖态任务书无行可高亮；迁移前仓库无该任务 handler，证据 = 客户端行数 + 同族 80291 的 legacy nextStep | 投影 `1→0` + `REWARD/var0=1 → 0` 自愈边 |
+| 80294（护甲变体，魔） | 1 行（`EVENT_Lilyolin` / 831387） | 1 | 同 80290 | 同上 |
+
+领奖 owner（QE-052）：四个任务的 `npc-complete` 都只有一个，且等于客户端行内 NPC（831384 = `event_Zephyrin`、
+831387 = `event_Lilyolin`），行 0/行 1 同一 NPC，无需 owner 收敛。
+
+### 二十一之三、修复与验证（2026-09-22）
+
+- 脚本 `.agents/summary/quest-10527-reward-row/apply_batch17_daevanion_durable_weapon.py`（`--check` 幂等 4/4）。
+- **单任务审计**：80291/80295 `ROW_BEHIND / ROW_WITHOUT_STATE`（`visible=0`）→ `ROW_ALIGNED / ROW_STATE_ALIGNED`（`visible 0 1`、`recovery=True`）；
+  80290/80294 `ROW_AHEAD / STATE_OUT_OF_RANGE`（`visible 0 1`）→ `ROW_ALIGNED / ROW_STATE_ALIGNED`（`visible 0`、`recovery=True`）。
+- **全库快照**：`ROW_ALIGNED 2646 -> 2650`、`ROW_BEHIND 198 -> 196`、`ROW_AHEAD 2591 -> 2589`、
+  `ROW_STATE_ALIGNED 2424 -> 2428`、`ROW_WITHOUT_STATE 523 -> 521`、`STATE_OUT_OF_RANGE 2448 -> 2446`、
+  `MISSING_LAST_ROW 86 -> 84`。
+- **族级扫描复核**：`LEGACY_NEXTSTEP_DROPPED` 由 `[15300, 25300, 80291, 80295]` 收敛为 `[]`（15300/25300 转入 `TEST_LOCKED` 基线）。
+- **结构校验**：`xmllint --schema` 4/4 validates；IDEA lint 0 problem；`git diff --check` 干净。
+- **门禁测试**：`src/test/java/com/aionemu/gameserver/questEngine/definition/DurableDaevanionWeaponRewardRowContractTest.java`
+  7 例——① 武器变体投影行 1；② 护甲变体投影行 0 且不得暴露行 1；③ 领奖 owner 唯一 = 族 NPC；④ 同族兄弟共用事件 NPC
+  且行数不同；⑤ 自愈边唯一 + planner 收敛（武器 0→1、护甲 1→0）；⑥ 无 target=reward 事务写非领奖行 var0；
+  ⑦ 15300/25300 保持 legacy packed step 13（QE-045 基线护栏）。
+- **Maven（授权后执行，2026-09-22 12:31）**：12 个测试类 **58 例全绿**（含本批新增 `DurableDaevanionWeaponRewardRowContractTest` 7/7），
+  `PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`；
+  覆盖本批 4 个 XML 的生产目录编译与 `QuestItemSourceContractGateTest` 的 80291/80295 交付物合同。
+- 客户端实机复测：**PENDING_CLIENT**。要点：① 80291/80295 交满 5 个武器残骸后任务书切到行 1 并与 Zephyrin/Lilyolin 领奖；
+  ② 80290/80294 交满 10 个护甲残骸后任务书停留在唯一行且奖励窗正常打开（旧存档登录/切图时由自愈边纠正）。
+
+### 二十一之四、结论与后续
+
+- “legacy nextStep 被丢弃”的族至此**清空**：全库扫描后仅剩 `TEST_LOCKED`（15300/25300）与 `QE045_LOCKED`（3722/4722 等）两个基线集合。
+- 剩余 `MISSING_LAST_ROW 84`：多为 `STEP_EQUALS_NEXTSTEP`（legacy 本身保持进入前 step，需客户端观测才能改）与
+  多阶段/计数任务，禁止按行号机械推进。
+- 本批 Maven 命令（已执行，58 例全绿；后续批次沿用并追加新门禁类）：
+  `mvn -Dtest='DurableDaevanionWeaponRewardRowContractTest,RewardOwnerTrimContractTest,RewardRowResidualTwoRowContractTest,RewardRowEventTwoRowContractTest,RewardRowTwoRowTalkFamilyContractTest,RewardNpcOwnershipContractTest,RetailSingleStepRewardRowContractTest,LegacyRewardStepProjectionRegressionTest,QuestClientContractGateTest,QuestItemSourceContractGateTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest' test`
