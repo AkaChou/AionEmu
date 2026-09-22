@@ -115,7 +115,7 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="700313"/>
+        <dialog type="TALK_TO_NPC" npc-id="700313"/>
       </event>
     </transition>
     <transition source="started" target="started">
@@ -125,7 +125,7 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="700314"/>
+        <dialog type="TALK_TO_NPC" npc-id="700314"/>
       </event>
     </transition>
     <transition source="started" target="started">
@@ -135,7 +135,7 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="700315"/>
+        <dialog type="TALK_TO_NPC" npc-id="700315"/>
       </event>
     </transition>
     <transition source="started" target="started">

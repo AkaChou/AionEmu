@@ -95,7 +95,7 @@
     <!-- 700954 对话无操作。 Dialog with 700954 is a no-op. -->
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="700954"/>
+        <dialog type="TALK_TO_NPC" npc-id="700954"/>
       </event>
     </transition>
     <!-- 与 730359 交互：检查收集物或领取任务道具。 Interact with 730359: check collect items or take the quest item. -->

@@ -14,8 +14,9 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.model.QuestActionType;
-import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.model.templates.quest.QuestNpc;
 import com.aionemu.gameserver.services.QuestService;
@@ -59,7 +60,7 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 	}
 
 	static List<Integer> dialogIds() {
-		return List.of(QuestDialog.USE_OBJECT.id(), QuestDialog.START_DIALOG.id());
+		return List.of(QuestDialogAction.USE_OBJECT.id(), QuestDialogAction.QUEST_SELECT.id());
 	}
 
 	/**
@@ -79,7 +80,7 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 		}
 		if (dialogResult == null || !dialogResult.isSuccess()) {
 			if (isDialogNpc()) {
-				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), QuestDialog.SELECT_ACTION_1011.id()));
+				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), QuestDialogPage.SELECT1.id()));
 			}
 			return;
 		}

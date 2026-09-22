@@ -6,13 +6,13 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.aionemu.gameserver.questEngine.model.QuestDialog;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 
 class PortalDialogAI2Test {
 
 	@Test
 	void fissureOrbTriesTheQuestStartActionBeforeShowingThePortalMenu() {
-		assertEquals(List.of(QuestDialog.START_DIALOG.id()), PortalDialogAI2.questFirstDialogIds(834194, 29));
+		assertEquals(List.of(QuestDialogAction.QUEST_SELECT.id()), PortalDialogAI2.questFirstDialogIds(834194, 29));
 	}
 
 	@Test

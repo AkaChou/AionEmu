@@ -16,6 +16,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.function.Supplier;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.boot.i18n.I18n;
@@ -51,7 +52,6 @@ import com.aionemu.gameserver.questEngine.definition.QuestNode;
 import com.aionemu.gameserver.questEngine.definition.QuestPvpCreditSource;
 import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
 import com.aionemu.gameserver.questEngine.model.QuestActionType;
-import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -76,7 +76,13 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class QuestEngine implements GameEngine {
-	/** Spring ObjectProvider 覆盖钩子 / Spring ObjectProvider override hook */
+	/** Spring ObjectProvider 覆盖钩子 / Spring ObjectProvider override hook
+	 * -- SETTER --
+	 *  设置 Spring ObjectProvider 覆盖点。
+	 *  Install a Spring ObjectProvider override.
+	 *  Spring provider
+	 */
+	@Setter
 	private static volatile ObjectProvider<QuestEngine> instanceProvider;
 	/** NPC 关联任务索引 / NPC-related quest index */
 	private final IntObjectHashMap<QuestNpc> questNpcs = new IntObjectHashMap<>();
@@ -114,8 +120,6 @@ public class QuestEngine implements GameEngine {
 	private final Map<Integer, IntArrayList> questOnKillInWorld = new LinkedHashMap<>();
 	/** 使用技能监听 / Skill-use listeners */
 	private final IntObjectHashMap<IntArrayList> questOnUseSkill = new IntObjectHashMap<>();
-	/** 对话框 ID → 枚举映射 / dialogId → enum map */
-	private final Map<Integer, QuestDialog> dialogMap = new LinkedHashMap<>();
 	/** 制作失败监听 / Fail-craft listeners */
 	private final Map<Integer, Integer> questOnFailCraft = new HashMap<>();
 	/** 装备物品监听 / Equip-item listeners */
@@ -207,16 +211,6 @@ public class QuestEngine implements GameEngine {
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
 		return provided;
-	}
-
-	/**
-	 * 设置 Spring ObjectProvider 覆盖点。
-	 * Install a Spring ObjectProvider override.
-	 *
-	 * Spring provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<QuestEngine> provider) {
-		instanceProvider = provider;
 	}
 
 	/**
@@ -1895,22 +1889,6 @@ public class QuestEngine implements GameEngine {
 	}
 
 	/**
-	 * 按对话框 ID 查询枚举。
-	 * Look up a {@link QuestDialog} by dialog id.
-	 *
-	 * Dialog id
-	 *
-	 * @param dialogId
-	 * @return 枚举值；不存在时 null / Enum value, or {@code null}
-	 */
-	public QuestDialog getDialog(int dialogId) {
-		if (dialogMap.containsKey(dialogId)) {
-			return dialogMap.get(dialogId);
-		}
-		return null;
-	}
-
-	/**
 	 * 查询穿过飞行环关联任务。
 	 * Look up quests related to passing a flying ring.
 	 *
@@ -2250,9 +2228,6 @@ public class QuestEngine implements GameEngine {
 			}
 		}
 		addMessageSendingTask();
-		for (QuestDialog d : QuestDialog.values()) {
-			dialogMap.put(d.id(), d);
-		}
 	}
 
 	/**

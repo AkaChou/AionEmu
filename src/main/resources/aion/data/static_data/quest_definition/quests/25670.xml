@@ -105,22 +105,22 @@
     </transition>
     <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="703439"/>
+        <dialog type="TALK_TO_NPC" npc-id="703439"/>
       </event>
     </transition>
     <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="703440"/>
+        <dialog type="TALK_TO_NPC" npc-id="703440"/>
       </event>
     </transition>
     <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="703441"/>
+        <dialog type="TALK_TO_NPC" npc-id="703441"/>
       </event>
     </transition>
     <transition source="s1" target="s1">
       <event>
-        <talk-to-npc npc-id="703442"/>
+        <dialog type="TALK_TO_NPC" npc-id="703442"/>
       </event>
     </transition>
     <transition source="s1" target="s1">

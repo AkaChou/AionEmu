@@ -228,27 +228,21 @@ public final class QuestProductionJourneyAudit {
 	}
 
 	private static int npcId(com.aionemu.gameserver.questEngine.definition.QuestEvent event) {
-		switch (event) {
-			case com.aionemu.gameserver.questEngine.definition.QuestEvent.TalkToNpc talk:
-				return talk.npcId();
-			case com.aionemu.gameserver.questEngine.definition.QuestEvent.KillNpc kill:
-				return kill.npcId();
-			case com.aionemu.gameserver.questEngine.definition.QuestEvent.AttackNpc attack:
-				return attack.npcId();
-			default:
-				return 0;
-		}
+		return switch (event) {
+			case com.aionemu.gameserver.questEngine.definition.QuestEvent.TalkToNpc talk -> talk.npcId();
+			case com.aionemu.gameserver.questEngine.definition.QuestEvent.KillNpc kill -> kill.npcId();
+			case com.aionemu.gameserver.questEngine.definition.QuestEvent.AttackNpc attack -> attack.npcId();
+			default -> 0;
+		};
 	}
 
 	private static int dialogId(com.aionemu.gameserver.questEngine.definition.QuestEvent event) {
-        switch (event) {
-            case com.aionemu.gameserver.questEngine.definition.QuestEvent.TalkToNpc talk:
-                return talk.dialogId() == null ? 0 : talk.dialogId();
-            case com.aionemu.gameserver.questEngine.definition.QuestEvent.QuestDialog dialog:
-                return dialog.dialogId();
-            default:
-                return 0;
-        }
+        return switch (event) {
+            case com.aionemu.gameserver.questEngine.definition.QuestEvent.TalkToNpc talk ->
+                    talk.dialogId() == null ? 0 : talk.dialogId();
+            case com.aionemu.gameserver.questEngine.definition.QuestEvent.QuestDialog dialog -> dialog.dialogId();
+            default -> 0;
+        };
 	}
 
 	private static String requireText(String value, String field) {

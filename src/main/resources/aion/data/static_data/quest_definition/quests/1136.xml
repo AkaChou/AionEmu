@@ -139,7 +139,7 @@
     <!-- 交互物 700116 的对话被吞掉，掉落由 quest_data 的 quest_drop 驱动 / Action item 700116 talk is swallowed; drops are driven by quest_drop in quest_data -->
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="700116"/>
+        <dialog type="TALK_TO_NPC" npc-id="700116"/>
       </event>
       <after-commit>
         <close-dialog/>

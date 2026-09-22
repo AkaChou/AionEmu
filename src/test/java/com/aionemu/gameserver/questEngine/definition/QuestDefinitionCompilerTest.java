@@ -72,7 +72,7 @@ class QuestDefinitionCompilerTest {
 						  </nodes>
 						  <transitions>
 						    <transition target="reward">
-						      <event><talk-to-npc npc-id="700001"/></event>
+						      <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
 						      <conditions><status-is status="START"/><has-item item-id="182400001" count="5"/></conditions>
 						      <actions><remove-item item-id="182400001" count="5"/><set-variable field="var1" value="1"/></actions>
 						      <after-commit><close-dialog/></after-commit>
@@ -90,7 +90,7 @@ class QuestDefinitionCompilerTest {
 
 	@Test
 	void taskXmlRejectsMigrationAnnotations() {
-		String valid = xmlWithTransition("<event><talk-to-npc npc-id=\"700001\"/></event>", "");
+		String valid = xmlWithTransition("<event><dialog type=\"TALK_TO_NPC\" npc-id=\"700001\"/></event>", "");
 		List<String> invalid = List.of(
 			valid.replace("version=\"1\"", "version=\"1\" ownership=\"CURRENT\""),
 			valid.replace("<metadata", "<evidence><ref source=\"test\" locator=\"x\" statement=\"y\"/></evidence><metadata"),
@@ -100,31 +100,6 @@ class QuestDefinitionCompilerTest {
 			assertEquals("INVALID_XML", assertThrows(QuestCompilationException.class,
 				() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
 					xml.getBytes(StandardCharsets.UTF_8)))).code());
-		}
-	}
-
-	@Test
-	void talkDialogIdSetsExpandToTypedTransitionsAndRejectAmbiguity() {
-		String expanded = xmlWithTransition(
-			"<event><talk-to-npc npc-id=\"700001\" dialog-ids=\"-1 8..10 2147483646..2147483647\"/></event>", "");
-		CompiledQuestDefinition definition = QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
-			expanded.getBytes(StandardCharsets.UTF_8)));
-		assertEquals(List.of(-1, 8, 9, 10, 2147483646, 2147483647),
-			definition.definition().transitions().stream()
-			.map(QuestTransition::event).map(QuestEvent.TalkToNpc.class::cast)
-			.map(QuestEvent.TalkToNpc::dialogId).toList());
-
-		Map<String, String> invalid = Map.of(
-			"AMBIGUOUS_DIALOG_EVENT",
-			"<event><talk-to-npc npc-id=\"700001\" dialog-id=\"8\" dialog-ids=\"8..10\"/></event>",
-			"INVALID_DIALOG_ID_RANGE",
-			"<event><talk-to-npc npc-id=\"700001\" dialog-ids=\"10..8\"/></event>",
-			"DUPLICATE_DIALOG_ID",
-			"<event><talk-to-npc npc-id=\"700001\" dialog-ids=\"8 8\"/></event>");
-		for (Map.Entry<String, String> entry : invalid.entrySet()) {
-			assertEquals(entry.getKey(), assertThrows(QuestCompilationException.class,
-				() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
-					xmlWithTransition(entry.getValue(), "").getBytes(StandardCharsets.UTF_8)))).code());
 		}
 	}
 
@@ -334,7 +309,7 @@ class QuestDefinitionCompilerTest {
 						<quest-definition id="1001" version="1">
 						  <metadata name="a" display-name-id="1" min-level="0" max-level="1" category="QUEST"/>
 						  <nodes><node label="start" status="START"/></nodes>
-						  <transitions><transition target="start"><event><talk-to-npc npc-id="1"/></event><actions><arbitrary-service-call/></actions></transition></transitions>
+						  <transitions><transition target="start"><event><dialog type="TALK_TO_NPC" npc-id="1"/></event><actions><arbitrary-service-call/></actions></transition></transitions>
 						</quest-definition>
 
 				""";
@@ -351,7 +326,7 @@ class QuestDefinitionCompilerTest {
 				.on(talkToNpc(700001))
 				.when(statusIs(QuestStatus.START))
 				.goTo("start")
-				.afterCommit(showQuestDialog(1011))
+				.afterCommit(showQuestDialog(QuestDialogPage.SELECT1))
 				.compile();
 
 		String xml = """
@@ -364,9 +339,9 @@ class QuestDefinitionCompilerTest {
 						  </nodes>
 						  <transitions>
 						    <transition target="start">
-						      <event><talk-to-npc npc-id="700001"/></event>
+						      <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
 						      <conditions><status-is status="START"/></conditions>
-						      <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
+						      <after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT1"/></after-commit>
 						    </transition>
 						  </transitions>
 						</quest-definition>
@@ -389,7 +364,7 @@ class QuestDefinitionCompilerTest {
 			.then(grantQuestBaseReward("GOLD", 0, 120)).then(completeQuest(0))
 			.goTo("complete").afterCommit(refreshPlayerStats())
 			.afterCommit(syncQuestState(QuestStateSyncMode.COMPLETION))
-			.afterCommit(showQuestSelectionDialog(10))
+			.afterCommit(showQuestSelectionDialog(QuestDialogPage.SELECT_QUEST))
 			.compile();
 
 		String xml = """
@@ -401,10 +376,10 @@ class QuestDefinitionCompilerTest {
 					    <node label="complete" status="COMPLETE"/>
 					  </nodes>
 					  <transitions><transition source="reward" target="complete">
-					    <event><talk-to-npc npc-id="700001" dialog-id="8"/></event>
+					    <event><dialog type="TALK_TO_NPC" npc-id="700001" action="SELECTED_QUEST_REWARD1"/></event>
 					    <conditions><status-is status="REWARD"/><start-eligible/></conditions>
 					    <actions><grant-reward kind="GOLD" id="0" amount="120" amount-mode="QUEST_BASE"/><complete-quest reward-index="0"/></actions>
-					    <after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit>
+					    <after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/></after-commit>
 					  </transition></transitions>
 					</quest-definition>
 
@@ -480,7 +455,7 @@ class QuestDefinitionCompilerTest {
 						<quest-definition id="1001" version="1">
 					  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
 					  <nodes><node label="start" status="START"/></nodes>
-					  <transitions><transition target="start"><event><talk-to-npc npc-id="700001"/></event>
+					  <transitions><transition target="start"><event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
 					    <actions><grant-reward kind="GOLD" id="0" amount="120" amount-mode="SCALED"/></actions>
 					  </transition></transitions>
 					</quest-definition>
@@ -499,7 +474,7 @@ class QuestDefinitionCompilerTest {
 						<quest-definition id="1001" version="1">
 					  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
 					  <nodes><node label="start" status="START"/></nodes>
-					  <transitions><transition target="start"><event><talk-to-npc npc-id="700001"/></event>
+					  <transitions><transition target="start"><event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
 					    <after-commit><sync-quest-state/></after-commit>
 					  </transition></transitions>
 					</quest-definition>
@@ -518,7 +493,7 @@ class QuestDefinitionCompilerTest {
 						<quest-definition id="1001" version="1">
 						  <metadata name="a" display-name-id="1" min-level="0" max-level="1" category="QUEST"/>
 						  <nodes><node label="start" status="START"/></nodes>
-						  <transitions><transition target="start"><event><talk-to-npc npc-id="1"/></event><after-commit><arbitrary-effect/></after-commit></transition></transitions>
+						  <transitions><transition target="start"><event><dialog type="TALK_TO_NPC" npc-id="1"/></event><after-commit><arbitrary-effect/></after-commit></transition></transitions>
 						</quest-definition>
 
 				""";
@@ -548,7 +523,7 @@ class QuestDefinitionCompilerTest {
 						  </nodes>
 						  <transitions>
 						    <transition target="start">
-						      <event><talk-to-npc npc-id="700001"/></event>
+						      <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
 						      <conditions><status-is status="START"/></conditions>
 						      <after-commit><teleport-player-current-or-default world-id="110010000" x="1474" y="1352" z="564" heading="21"/></after-commit>
 						    </transition>
@@ -576,9 +551,9 @@ class QuestDefinitionCompilerTest {
 		assertThrows(IllegalArgumentException.class, () -> new AfterCommitAction.ShowDialogWindow(0));
 
 		for (String tag : List.of("show-quest-dialog", "show-quest-selection-dialog", "show-dialog-window")) {
-			String xml = xmlWithTransition("<event><talk-to-npc npc-id=\"700001\"/></event>",
+			String xml = xmlWithTransition("<event><dialog type=\"TALK_TO_NPC\" npc-id=\"700001\"/></event>",
 				"<after-commit><" + tag + " dialog-id=\"0\"/></after-commit>");
-			assertEquals("INVALID_DIALOG_PAGE", assertThrows(QuestCompilationException.class,
+			assertEquals("INVALID_XML", assertThrows(QuestCompilationException.class,
 				() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
 					xml.getBytes(StandardCharsets.UTF_8)))).code());
 		}
@@ -618,7 +593,7 @@ class QuestDefinitionCompilerTest {
 						  </nodes>
 						  <transitions>
 						    <transition target="start">
-						      <event><talk-to-npc npc-id="700001"/></event>
+						      <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
 						      <conditions><status-is status="START"/></conditions>
 						      <after-commit><play-movie movie-id="12345"/></after-commit>
 						    </transition>
@@ -645,7 +620,7 @@ class QuestDefinitionCompilerTest {
 						<quest-definition id="1001" version="1">
 						  <metadata name="A test quest" display-name-id="1101001" min-level="0" max-level="2147483647" category="QUEST"/>
 						  <nodes><node label="start" status="START"/></nodes>
-						  <transitions><transition source="start" target="start"><event><talk-to-npc npc-id="700001"/></event>
+						  <transitions><transition source="start" target="start"><event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
 						    <after-commit><play-movie movie-id="30" type="CUTSCENE_MOVIE"/></after-commit>
 						  </transition></transitions>
 						</quest-definition>
@@ -684,7 +659,7 @@ class QuestDefinitionCompilerTest {
 						  </nodes>
 						  <transitions>
 						    <transition target="start">
-						      <event><talk-to-npc npc-id="700001"/></event>
+						      <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
 						      <conditions><status-is status="START"/></conditions>
 						      <after-commit><spawn-npc-current-or-default slot="guardian" world-id="310040000" template-id="204830" x="1" y="2" z="3" heading="95"/><spawn-npc-fixed-instance slot="fixed" world-id="310040000" instance-id="37" template-id="204831" x="4" y="5" z="6" heading="7"/><despawn-npc slot="guardian"/></after-commit>
 						    </transition>
@@ -736,7 +711,7 @@ class QuestDefinitionCompilerTest {
 						  </nodes>
 						  <transitions>
 						    <transition target="start">
-						      <event><talk-to-npc npc-id="700001"/></event>
+						      <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
 						      <conditions><status-is status="START"/></conditions>
 						      <after-commit><start-follow slot="guardian"/><stop-follow slot="guardian"/><attack-target slot="guardian"/><start-walking slot="guardian"/></after-commit>
 						    </transition>
@@ -965,7 +940,7 @@ class QuestDefinitionCompilerTest {
 						  </nodes>
 						  <transitions>
 						    <transition target="start">
-						      <event><talk-to-npc npc-id="700001"/></event>
+						      <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
 						      <conditions><status-is status="START"/></conditions>
 						      <after-commit><start-quest-timer seconds="300" timer-id="visible" scope="PLAYER_QUEST" persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/><start-invisible-timer seconds="60" timer-id="invisible" scope="PLAYER_QUEST" persistence="SESSION" overwrite="REPLACE" delivery="AT_MOST_ONCE"/><cancel-quest-timer timer-id="visible" scope="PLAYER_QUEST"/></after-commit>
 						    </transition>
@@ -999,7 +974,7 @@ class QuestDefinitionCompilerTest {
 			.compile();
 
 		CompiledQuestDefinition fromXml = QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
-			xmlWithTransition("<event><talk-to-npc npc-id=\"700001\"/></event>",
+			xmlWithTransition("<event><dialog type=\"TALK_TO_NPC\" npc-id=\"700001\"/></event>",
 				"<after-commit><start-quest-timer seconds=\"15\" timer-id=\"cinematic\" scope=\"PLAYER_QUEST\" persistence=\"SESSION\" overwrite=\"KEEP_EXISTING\" delivery=\"AT_MOST_ONCE\"/><cancel-quest-timer timer-id=\"cinematic\" scope=\"PLAYER_QUEST\"/></after-commit>")
 				.getBytes(StandardCharsets.UTF_8)));
 
@@ -1016,14 +991,14 @@ class QuestDefinitionCompilerTest {
 
 		QuestCompilationException oldSpawn = assertThrows(QuestCompilationException.class,
 			() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
-				xmlWithTransition("<event><talk-to-npc npc-id=\"700001\"/></event>",
+				xmlWithTransition("<event><dialog type=\"TALK_TO_NPC\" npc-id=\"700001\"/></event>",
 					"<after-commit><spawn-npc-fixed slot=\"guardian\" world-id=\"310040000\" template-id=\"204830\" x=\"1\" y=\"2\" z=\"3\" heading=\"0\"/></after-commit>")
 					.getBytes(StandardCharsets.UTF_8))));
 		assertEquals("INVALID_XML", oldSpawn.code());
 
 		QuestCompilationException missingInstance = assertThrows(QuestCompilationException.class,
 			() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
-				xmlWithTransition("<event><talk-to-npc npc-id=\"700001\"/></event>",
+				xmlWithTransition("<event><dialog type=\"TALK_TO_NPC\" npc-id=\"700001\"/></event>",
 					"<after-commit><spawn-npc-fixed-instance slot=\"guardian\" world-id=\"310040000\" template-id=\"204830\" x=\"1\" y=\"2\" z=\"3\" heading=\"0\"/></after-commit>")
 					.getBytes(StandardCharsets.UTF_8))));
 		assertEquals("INVALID_XML", missingInstance.code());

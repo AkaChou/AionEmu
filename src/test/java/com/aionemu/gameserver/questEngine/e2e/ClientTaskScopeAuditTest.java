@@ -1,16 +1,14 @@
 package com.aionemu.gameserver.questEngine.e2e;
 
-import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
-import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.e2e.client.ClientResourceOracle;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -56,8 +54,8 @@ class ClientTaskScopeAuditTest {
 			  <nodes><node label="unaccepted" status="NONE"/></nodes>
 			  <transitions>
 			    <transition source="unaccepted" target="unaccepted">
-			      <event><talk-to-npc npc-id="203098" dialog-id="31"/></event>
-			      <after-commit><show-quest-dialog dialog-id="1352"/></after-commit>
+			      <event><dialog type="TALK_TO_NPC" npc-id="203098" action="QUEST_SELECT"/></event>
+			      <after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT2"/></after-commit>
 			    </transition>
 			  </transitions>
 			</quest-definition>

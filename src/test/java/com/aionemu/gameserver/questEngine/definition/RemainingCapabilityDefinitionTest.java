@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
@@ -35,8 +34,8 @@ class RemainingCapabilityDefinitionTest {
 	@Test
 	void currentHandlerBackedEventsCompileThroughDslAndXml() {
 		assertEquivalent(14211, addAggroList(277224), "<add-aggro-list npc-id=\"277224\"/>");
-		assertEquivalent(14212, QuestDsl.questDialog(QuestDialog.ACCEPT_QUEST),
-			"<quest-dialog dialog=\"ACCEPT_QUEST\"/>");
+		assertEquivalent(14212, QuestDsl.questDialog(QuestDialogAction.QUEST_ACCEPT_1),
+			"<dialog type=\"QUEST_ACTION\" action=\"QUEST_ACCEPT_1\"/>");
 		assertEquivalent(18830, houseItemUse(3420021), "<house-item-use item-id=\"3420021\"/>");
 		assertEquivalent(1354, passFlyingRing("ERACUS_TEMPLE_AIR_BOOSTER_1"),
 			"<pass-flying-ring ring=\"ERACUS_TEMPLE_AIR_BOOSTER_1\"/>");
@@ -92,8 +91,8 @@ class RemainingCapabilityDefinitionTest {
 			new QuestEvent.ItemPlay(182201728, 3000)));
 		assertFalse(QuestEvent.matches(new QuestEvent.ItemPlay(182201728, 3000),
 			new QuestEvent.ItemPlay(182201728, 0)));
-		assertTrue(QuestEvent.matches(new QuestEvent.QuestDialog(QuestDialog.ACCEPT_QUEST.id()),
-			new QuestEvent.QuestDialog(QuestDialog.ACCEPT_QUEST.id())));
+		assertTrue(QuestEvent.matches(new QuestEvent.QuestDialog(QuestDialogAction.QUEST_ACCEPT_1.id()),
+			new QuestEvent.QuestDialog(QuestDialogAction.QUEST_ACCEPT_1.id())));
 		assertTrue(QuestEvent.matches(
 			new QuestEvent.TalkToNpc(800937, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()),
 			new QuestEvent.TalkToNpc(800937, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id())));
@@ -119,7 +118,7 @@ class RemainingCapabilityDefinitionTest {
 			.progress(QuestDsl.bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("start", project(QuestStatus.START, vars("var0", 0)))
 			.node("done", project(QuestStatus.REWARD, vars("var0", 1)))
-			.on(QuestDsl.questDialog(QuestDialog.ACCEPT_QUEST)).from("start")
+			.on(QuestDsl.questDialog(QuestDialogAction.QUEST_ACCEPT_1)).from("start")
 			.when(statusIs(QuestStatus.START))
 			.then(QuestDsl.removeAllItem(182200501))
 			.then(QuestDsl.setVariable("var0", 1))
@@ -135,7 +134,7 @@ class RemainingCapabilityDefinitionTest {
 					  <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
 					  <nodes><node label="start" status="START"><var name="var0" value="0"/></node>
 					    <node label="done" status="REWARD"><var name="var0" value="1"/></node></nodes>
-					  <transitions><transition source="start" target="done"><event><quest-dialog dialog="ACCEPT_QUEST"/></event>
+					  <transitions><transition source="start" target="done"><event><dialog type="QUEST_ACTION" action="QUEST_ACCEPT_1"/></event>
 					    <conditions><status-is status="START"/></conditions>
 					    <actions><remove-item item-id="182200501" count="ALL"/><set-variable field="var0" value="1"/></actions>
 					    <after-commit><player-emotion emotion="STAND"/><broadcast-interaction-npc-emotion emotion="NO"/><add-npc-aggro npc-id="203175" damage="50"/></after-commit>

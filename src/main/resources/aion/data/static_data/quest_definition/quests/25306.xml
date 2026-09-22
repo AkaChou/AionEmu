@@ -112,15 +112,15 @@
       <after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/></after-commit>
     </transition>
     <transition source="s1" target="s1">
-      <event><talk-to-npc npc-id="805340" dialog-id="1438"/></event>
+      <event><dialog type="TALK_TO_NPC" npc-id="805340" action="SELECT2_2"/></event>
       <after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT2_2"/></after-commit>
     </transition>
     <transition source="s1" target="s1">
-      <event><talk-to-npc npc-id="805340" dialog-id="1523"/></event>
+      <event><dialog type="TALK_TO_NPC" npc-id="805340" action="SELECT2_3"/></event>
       <after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT2_3"/></after-commit>
     </transition>
     <transition source="s1" target="s1">
-      <event><talk-to-npc npc-id="805340" dialog-id="1608"/></event>
+      <event><dialog type="TALK_TO_NPC" npc-id="805340" action="SELECT2_4"/></event>
       <after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT2_4"/></after-commit>
     </transition>
     <transition source="s1" target="s2" priority="0">

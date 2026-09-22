@@ -10,7 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.questEngine.model.QuestDialog;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -54,6 +54,6 @@ public class QuestStartAction extends AbstractItemAction {
 	@Override
 	public void act(Player player, Item parentItem, Item targetItem) {
 
-		GameEngineServices.questEngine().onDialog(new QuestEnv(null, player, questid, QuestDialog.ASK_ACCEPTION.id()));
+		GameEngineServices.questEngine().onDialog(new QuestEnv(null, player, questid, QuestDialogAction.ASK_QUEST_ACCEPT.id()));
 	}
 }

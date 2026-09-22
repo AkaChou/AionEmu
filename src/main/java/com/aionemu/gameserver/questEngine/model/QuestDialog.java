@@ -6,6 +6,11 @@ package com.aionemu.gameserver.questEngine.model;
  * <p>
  * 涵盖：奖励选择、接/拒任务、步骤推进、SELECT_ACTION_* 脚本分支、特殊操作等。
  * Covers: reward selection, accept/refuse, step progression, SELECT_ACTION_* script branches, special actions, etc.
+ *
+ * @deprecated 客户端动作与页面是两个独立 ID 空间；新代码应分别使用
+ *             {@code QuestDialogAction} 与 {@code QuestDialogPage}。本枚举仅保留兼容。 /
+ *             Client actions and pages are separate id spaces; new code must use
+ *             {@code QuestDialogAction} and {@code QuestDialogPage} respectively. This enum is compatibility-only.
  */
 @Deprecated(forRemoval = false)
 public enum QuestDialog {

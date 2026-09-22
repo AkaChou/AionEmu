@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.questEngine.model;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-
 import com.aionemu.gameserver.model.gameobjects.Gatherable;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.StaticObject;
@@ -79,20 +77,6 @@ public class QuestEnv {
 	}
 
 	/**
-	 * 将当前 dialogId 解析为 {@link QuestDialog} 枚举；未知 ID 返回 {@link QuestDialog#NULL}。
-	 * Resolves the current dialogId to a {@link QuestDialog} enum; unknown ids yield {@link QuestDialog#NULL}.
-	 *
-	 * @return 对话框枚举 / Dialog enum
-	 */
-	public QuestDialog getDialog() {
-		QuestDialog dialog = GameEngineServices.questEngine().getDialog(dialogId);
-		if (dialog == null) {
-			return QuestDialog.NULL;
-		}
-		return dialog;
-	}
-
-	/**
 	 * 设置对话框 ID。
 	 * Sets the dialog id.
 	 *
@@ -109,17 +93,12 @@ public class QuestEnv {
 	 * @return 目标模板 ID / Target template id
 	 */
 	public int getTargetId() {
-        switch (visibleObject) {
-            case null:
-                return 0;
-            case Npc npc:
-                return npc.getNpcId();
-            case Gatherable gatherable:
-                return gatherable.getObjectTemplate().getTemplateId();
-            case StaticObject staticObject:
-                return visibleObject.getObjectTemplate().getTemplateId();
-            default:
-                return 0;
-        }
+        return switch (visibleObject) {
+            case null -> 0;
+            case Npc npc -> npc.getNpcId();
+            case Gatherable gatherable -> gatherable.getObjectTemplate().getTemplateId();
+            case StaticObject staticObject -> visibleObject.getObjectTemplate().getTemplateId();
+            default -> 0;
+        };
 	}
 }

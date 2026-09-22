@@ -7,10 +7,8 @@ import com.aionemu.gameserver.questEngine.runtime.QuestStartEligibility;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
-import java.util.List;
 import java.util.Map;
 
-import static com.aionemu.gameserver.questEngine.definition.QuestDsl.bitField;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.collectItem;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.killNpc;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.itemPlay;

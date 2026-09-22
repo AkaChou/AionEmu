@@ -1,10 +1,8 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.stats.container.NpcLifeStats;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestSpawnLocation;
 import com.aionemu.gameserver.questEngine.definition.QuestSpawnVariant;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -12,7 +10,6 @@ import com.aionemu.gameserver.world.WorldPosition;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 

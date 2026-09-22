@@ -4,7 +4,7 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
-import com.aionemu.gameserver.questEngine.model.QuestDialog;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
@@ -45,7 +45,7 @@ public class DivineBonfireAI2 extends GeneralNpcAI2 {
 
             //
             GameEngineServices.skillEngine().getSkill(getOwner(), 21493, 1, player).useWithoutPropSkill();
-        } else if (dialogId == QuestDialog.START_DIALOG.id() && questId != 0) {
+        } else if (dialogId == QuestDialogAction.QUEST_SELECT.id() && questId != 0) {
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), dialogId, questId));
         }
         return true;

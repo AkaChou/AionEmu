@@ -3,7 +3,6 @@ package com.aionemu.gameserver.questEngine.runtime;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestLureCompletion;
 import com.aionemu.gameserver.questEngine.definition.QuestNpcEmotion;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;

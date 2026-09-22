@@ -113,7 +113,7 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="700834"/>
+        <dialog type="TALK_TO_NPC" npc-id="700834"/>
       </event>
     </transition>
     <transition source="started" target="started">

@@ -218,11 +218,11 @@
 
     <transition source="s10" target="s10">
       <event><dialog type="TALK_TO_NPC" npc-id="805349" action="QUEST_SELECT"/></event>
-      <after-commit><show-quest-dialog dialog-id="6500"/></after-commit>
+      <after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT11"/></after-commit>
     </transition>
     <transition source="s10" target="s10">
-      <event><talk-to-npc npc-id="805349" dialog-id="6501"/></event>
-      <after-commit><show-quest-dialog dialog-id="6501"/></after-commit>
+      <event><dialog type="TALK_TO_NPC" npc-id="805349" action="SELECT11_1"/></event>
+      <after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT11_1"/></after-commit>
     </transition>
     <transition source="s10" target="s11">
       <event><dialog type="TALK_TO_NPC" npc-id="805349" action="SETPRO11"/></event>

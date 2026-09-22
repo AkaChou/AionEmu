@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai;
 
-import com.aionemu.gameserver.questEngine.model.QuestDialog;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -20,7 +20,7 @@ class QuestItemNpcAI2Test {
 
 	@Test
 	void triesUseObjectBeforeFallingBackToTheStartDialog() {
-		assertEquals(List.of(QuestDialog.USE_OBJECT.id(), QuestDialog.START_DIALOG.id()),
+		assertEquals(List.of(QuestDialogAction.USE_OBJECT.id(), QuestDialogAction.QUEST_SELECT.id()),
 			QuestItemNpcAI2.dialogIds());
 	}
 }

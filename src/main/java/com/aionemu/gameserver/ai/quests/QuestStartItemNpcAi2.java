@@ -8,7 +8,8 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
-import com.aionemu.gameserver.questEngine.model.QuestDialog;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -38,14 +39,14 @@ public class QuestStartItemNpcAi2 extends ActionItemNpcAI2 {
 			}
 		}
 		if (isDialogNpc()) {
-			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), QuestDialog.SELECT_ACTION_1011.id()));
+			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), QuestDialogPage.SELECT1.id()));
 		}
 	}
 
 	static List<Integer> dialogIdsFor(boolean hasQuestStart) {
 		return hasQuestStart
-			? List.of(QuestDialog.USE_OBJECT.id(), QuestDialog.START_DIALOG.id())
-			: List.of(QuestDialog.USE_OBJECT.id());
+			? List.of(QuestDialogAction.USE_OBJECT.id(), QuestDialogAction.QUEST_SELECT.id())
+			: List.of(QuestDialogAction.USE_OBJECT.id());
 	}
 
 	private boolean isDialogNpc() {

@@ -240,7 +240,7 @@
     </transition>
     <transition source="s1" target="s1-object">
       <event>
-        <talk-to-npc npc-id="700420"/>
+        <dialog type="TALK_TO_NPC" npc-id="700420"/>
       </event>
       <actions>
         <set-variable field="var2" value="1"/>
@@ -251,7 +251,7 @@
     </transition>
     <transition source="s1-zone" target="s2">
       <event>
-        <talk-to-npc npc-id="700420"/>
+        <dialog type="TALK_TO_NPC" npc-id="700420"/>
       </event>
       <actions>
         <set-variable field="var1" value="0"/>

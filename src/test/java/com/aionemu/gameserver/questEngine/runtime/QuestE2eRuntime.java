@@ -3,7 +3,6 @@ package com.aionemu.gameserver.questEngine.runtime;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
-import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
 import com.aionemu.gameserver.model.gameobjects.player.npcFaction.ENpcFactionQuestState;
 import com.aionemu.gameserver.questEngine.e2e.client.ClientActionRequest;
 import com.aionemu.gameserver.questEngine.e2e.client.QuestHeadlessClient;
@@ -22,14 +21,11 @@ import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestInstanceTarget;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.definition.QuestMembershipPermission;
-import com.aionemu.gameserver.questEngine.definition.QuestNpcEmotion;
 import com.aionemu.gameserver.questEngine.definition.QuestNpcAttackFacts;
 import com.aionemu.gameserver.questEngine.definition.QuestPvpCreditSource;
 import com.aionemu.gameserver.questEngine.definition.QuestPvpKillFacts;
 import com.aionemu.gameserver.questEngine.definition.QuestRewardKind;
-import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
-import com.aionemu.gameserver.questEngine.e2e.world.VirtualClock;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.model.QuestState;
@@ -44,7 +40,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Future;
 
 /**
  * 通过正式 QuestProductionDispatcher/QuestExecutionCoordinator 执行一个独立任务场景，并以真实 typed
@@ -569,19 +564,13 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 		List<QuestEventIndex.Route> routes = eventIndex.routesFor(request.event(), definition.id());
 		routeCandidateCount = routes.size();
 		List<QuestTransition> sourceCandidates = List.copyOf(attributableBefore);
-		List<QuestTransition> attributed;
-		switch (routeResult) {
-			case HANDLED:
-			case BLOCKED:
-				attributed = sourceCandidates.stream()
-					.filter(transition -> transitionResultMatches(transition, beforePackedVariables,
-						state.status(), state.packedVariables()))
-					.toList();
-				break;
-			default:
-				attributed = sourceCandidates;
-				break;
-		}
+		List<QuestTransition> attributed = switch (routeResult) {
+			case HANDLED, BLOCKED -> sourceCandidates.stream()
+				.filter(transition -> transitionResultMatches(transition, beforePackedVariables,
+					state.status(), state.packedVariables()))
+				.toList();
+			default -> sourceCandidates;
+		};
 		matchedTransitionCandidates = List.copyOf(attributed);
 		matchedTransition = attributed.size() == 1 ? attributed.getFirst() : null;
 		matchedRouteResult = routeResult;

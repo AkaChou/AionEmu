@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.runtime.QuestCraftSnapshot;
 import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
@@ -86,9 +85,9 @@ class CraftRepresentativeQuestDefinitionTest {
 			.node("none", project(QuestStatus.NONE, Map.of()))
 			.node("start", project(QuestStatus.START, Map.of()))
 			.node("complete", project(QuestStatus.COMPLETE, Map.of()))
-			.on(talkToNpc(203788, QuestDialog.ACCEPT_QUEST)).from("none")
+			.on(talkToNpc(203788, QuestDialogAction.QUEST_ACCEPT_1)).from("none")
 			.then(learnRecipe(155004001, QuestRecipeOwnership.QUEST_OWNED)).goTo("start")
-			.on(talkToNpc(203788, QuestDialog.SELECT_REWARD)).from("start")
+			.on(talkToNpc(203788, QuestDialogAction.SELECT_QUEST_REWARD)).from("start")
 			.then(forgetRecipe(155004001)).then(completeQuest(0)).goTo("complete")
 			.afterCommit(syncQuestState(QuestStateSyncMode.COMPLETION))
 			.compile());
@@ -101,7 +100,7 @@ class CraftRepresentativeQuestDefinitionTest {
 		CompiledQuestDefinition definition = quest(1941)
 			.node("start", project(QuestStatus.START, Map.of()))
 			.node("reward", project(QuestStatus.REWARD, Map.of()))
-			.on(talkToNpc(203700, QuestDialog.SELECT_REWARD)).from("start")
+			.on(talkToNpc(203700, QuestDialogAction.SELECT_QUEST_REWARD)).from("start")
 			.when(canGrantCraftSkill(40002, 400)).goTo("reward")
 			.afterCommit(playMovie(93))
 			.on(movieEnd(93)).from("reward").when(canGrantCraftSkill(40002, 400))
@@ -129,7 +128,7 @@ class CraftRepresentativeQuestDefinitionTest {
 		QuestSnapshot unknown = new QuestSnapshot(7, 5000, QuestStatus.NONE, 0, Map.of());
 
 		assertFalse(QuestMutationPlanner.plan(definition, unknown,
-			talkToNpc(203788, QuestDialog.ACCEPT_QUEST), definition.definition().transitions().get(0)).isPresent());
+			talkToNpc(203788, QuestDialogAction.QUEST_ACCEPT_1), definition.definition().transitions().get(0)).isPresent());
 	}
 
 	private static void assertFailCraftRollback(int itemId, int from, int to) {
@@ -161,12 +160,12 @@ class CraftRepresentativeQuestDefinitionTest {
 			.node("none", project(QuestStatus.NONE, Map.of()))
 			.node("start", project(QuestStatus.START, Map.of()))
 			.node("complete", project(QuestStatus.COMPLETE, Map.of()))
-			.on(talkToNpc(203788, QuestDialog.ACCEPT_QUEST)).from("none")
+			.on(talkToNpc(203788, QuestDialogAction.QUEST_ACCEPT_1)).from("none")
 			.when(recipeNotKnown(155004001))
 			.then(grantReward("ITEM", 182290000, 4))
 			.then(learnRecipe(155004001, QuestRecipeOwnership.QUEST_OWNED)).goTo("start")
 			.on(abandon()).from("start").then(forgetRecipe(155004001)).goTo("none")
-			.on(talkToNpc(203788, QuestDialog.SELECT_REWARD)).from("start")
+			.on(talkToNpc(203788, QuestDialogAction.SELECT_QUEST_REWARD)).from("start")
 			.then(forgetRecipe(155004001)).then(completeQuest(0)).goTo("complete")
 			.afterCommit(syncQuestState(QuestStateSyncMode.COMPLETION))
 			.compile();
@@ -183,12 +182,12 @@ class CraftRepresentativeQuestDefinitionTest {
 					    <node label="complete" status="COMPLETE"/>
 					  </nodes>
 					  <transitions>
-					    <transition source="none" target="start"><event><talk-to-npc npc-id="203788" dialog="ACCEPT_QUEST"/></event>
+					    <transition source="none" target="start"><event><dialog type="TALK_TO_NPC" npc-id="203788" action="QUEST_ACCEPT_1"/></event>
 					      <conditions><recipe-known recipe-id="155004001" expected="false"/></conditions>
 					      <actions><grant-reward kind="ITEM" id="182290000" amount="4"/><learn-recipe recipe-id="155004001" ownership="QUEST_OWNED"/></actions>
 					    </transition>
 					    <transition source="start" target="none"><event><abandon/></event><actions><forget-recipe recipe-id="155004001"/></actions></transition>
-					    <transition source="start" target="complete"><event><talk-to-npc npc-id="203788" dialog="SELECT_REWARD"/></event><actions><forget-recipe recipe-id="155004001"/><complete-quest reward-index="0"/></actions><after-commit><sync-quest-state mode="COMPLETION"/></after-commit></transition>
+					    <transition source="start" target="complete"><event><dialog type="TALK_TO_NPC" npc-id="203788" action="SELECT_QUEST_REWARD"/></event><actions><forget-recipe recipe-id="155004001"/><complete-quest reward-index="0"/></actions><after-commit><sync-quest-state mode="COMPLETION"/></after-commit></transition>
 					  </transitions>
 					</quest-definition>
 
@@ -202,7 +201,7 @@ class CraftRepresentativeQuestDefinitionTest {
 					  <metadata name="quest-1941" display-name-id="0" min-level="0" max-level="2147483647" category="QUEST"/>
 					  <nodes><node label="start" status="START"/><node label="reward" status="REWARD"/></nodes>
 					  <transitions>
-					    <transition source="start" target="reward"><event><talk-to-npc npc-id="203700" dialog="SELECT_REWARD"/></event>
+					    <transition source="start" target="reward"><event><dialog type="TALK_TO_NPC" npc-id="203700" action="SELECT_QUEST_REWARD"/></event>
 					      <conditions><can-grant-craft-skill skill-id="40002" target-level="400"/></conditions>
 					      <after-commit><play-movie movie-id="93"/></after-commit>
 					    </transition>

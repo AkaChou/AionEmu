@@ -101,7 +101,7 @@
     <!-- 掉落源 NPC 对话无操作。 Drop-source NPC dialog is a no-op. -->
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="700954"/>
+        <dialog type="TALK_TO_NPC" npc-id="700954"/>
       </event>
     </transition>
     <!-- 大锅对话显示提示。 Cauldron dialog shows the prompt. -->

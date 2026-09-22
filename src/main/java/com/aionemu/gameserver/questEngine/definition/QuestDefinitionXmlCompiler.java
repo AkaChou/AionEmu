@@ -2,7 +2,6 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Gender;
-import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -442,19 +441,23 @@ public final class QuestDefinitionXmlCompiler {
 		validateDialogShape(element, type == QuestDialogType.TALK_TO_NPC
 			? Set.of("type", "npc-id", "action", "actions")
 			: Set.of("type", "action", "actions"), false);
-		List<QuestDialogAction> actions = dialogActions(element);
 		switch (type) {
 			case TALK_TO_NPC:
 				if (!element.hasAttribute("npc-id")) {
 					return fail("DIALOG_NPC_ID_REQUIRED", "event dialog TALK_TO_NPC requires npc-id");
 				}
 				int npcId = integer(element, "npc-id");
+				if (!element.hasAttribute("action") && !element.hasAttribute("actions")) {
+					return List.<QuestEvent>of(new QuestEvent.TalkToNpc(npcId));
+				}
+				List<QuestDialogAction> actions = dialogActions(element);
 				return actions.stream().map(action -> (QuestEvent) new QuestEvent.TalkToNpc(npcId, action.id())).toList();
 			case QUEST_ACTION:
 				if (element.hasAttribute("npc-id")) {
 					return fail("DIALOG_NPC_ID_NOT_ALLOWED", "event dialog QUEST_ACTION must not declare npc-id");
 				}
-				return actions.stream().map(action -> (QuestEvent) new QuestEvent.QuestDialog(action.id())).toList();
+				List<QuestDialogAction> targetlessActions = dialogActions(element);
+				return targetlessActions.stream().map(action -> (QuestEvent) new QuestEvent.QuestDialog(action.id())).toList();
 			default:
 				throw new AssertionError(type);
 		}
@@ -629,96 +632,53 @@ public final class QuestDefinitionXmlCompiler {
 	}
 
 	private static QuestEvent parseEvent(Element element) {
-		switch (element.getTagName()) {
-			case "dialog":
-				return onlyDialogEvent(element);
-			case "talk-to-npc":
-				return parseTalkEvent(element);
-			case "kill-npc":
-				return parseKillNpc(element);
-			case "attack-npc":
-				return new QuestEvent.AttackNpc(integer(element, "npc-id"));
-			case "use-item":
-				return new QuestEvent.UseItem(integer(element, "item-id"));
-			case "quest-dialog":
-				return new QuestEvent.QuestDialog(parseQuestDialogId(element));
-			case "collect-item":
-				return new QuestEvent.CollectItem(integer(element, "item-id"), integer(element, "count"));
-			case "item-play":
-				return new QuestEvent.ItemPlay(integer(element, "item-id"), integer(element, "animation-millis"));
-			case "house-item-use":
-				return new QuestEvent.HouseItemUse(integer(element, "item-id"));
-			case "get-item":
-				return new QuestEvent.GetItem(integer(element, "item-id"));
-			case "level-up":
-				return new QuestEvent.LevelUp();
-			case "zone-mission-end":
-				return new QuestEvent.ZoneMissionEnd();
-			case "event-quest-refresh":
-				return new QuestEvent.EventQuestRefresh();
-			case "die":
-				return new QuestEvent.Die();
-			case "log-out":
-				return new QuestEvent.LogOut();
-			case "abandon":
-				return new QuestEvent.Abandon();
-			case "enter-world":
-				return new QuestEvent.EnterWorld();
-			case "enter-zone":
-				return new QuestEvent.EnterZone(attribute(element, "zone"));
-			case "leave-zone":
-				return new QuestEvent.LeaveZone(attribute(element, "zone"));
-			case "pass-flying-ring":
-				return new QuestEvent.PassFlyingRing(attribute(element, "ring"));
-			case "movie-end":
-				return new QuestEvent.MovieEnd(integer(element, "movie-id"));
-			case "quest-timer-end":
-				return new QuestEvent.QuestTimerEnd();
-			case "invisible-timer-end":
-				return new QuestEvent.InvisibleTimerEnd();
-			case "kill-ranked":
-				return new QuestEvent.KillRanked(integer(element, "rank-id"));
-			case "kill-in-world":
-				return new QuestEvent.KillInWorld(integer(element, "world-id"));
-			case "use-skill":
-				return new QuestEvent.UseSkill(integer(element, "skill-id"));
-			case "fail-craft":
-				return new QuestEvent.FailCraft(integer(element, "item-id"));
-			case "equip-item":
-				return new QuestEvent.EquipItem(integer(element, "item-id"));
-			case "can-act":
-				return new QuestEvent.CanAct(integer(element, "template-id"), attribute(element, "action-type"));
-			case "dredgion-reward":
-				return new QuestEvent.DredgionReward();
-			case "kamar-reward":
-				return new QuestEvent.KamarReward();
-			case "ophidan-reward":
-				return new QuestEvent.OphidanReward();
-			case "bastion-reward":
-				return new QuestEvent.BastionReward();
-			case "bonus-apply":
-				return new QuestEvent.BonusApply(attribute(element, "bonus-type"));
-			case "add-aggro-list":
-				return new QuestEvent.AddAggroList(integer(element, "npc-id"));
-			case "at-distance":
-				return new QuestEvent.AtDistance(integer(element, "npc-id"));
-			case "protect-end":
-				return new QuestEvent.ProtectEnd();
-			case "protect-fail":
-				return new QuestEvent.ProtectFail();
-			case "enter-wind-stream":
-				return new QuestEvent.EnterWindStream(integer(element, "teleport-id"));
-			case "ride-action":
-				return new QuestEvent.RideAction(integer(element, "item-id"));
-			case "creativity-point":
-				return new QuestEvent.CreativityPoint();
-			case "npc-reach-target":
-				return new QuestEvent.NpcReachTarget();
-			case "npc-lost-target":
-				return new QuestEvent.NpcLostTarget();
-			default:
-				return fail("UNKNOWN_EVENT", element.getTagName());
-		}
+		return switch (element.getTagName()) {
+			case "dialog" -> onlyDialogEvent(element);
+			case "talk-to-npc" -> parseTalkEvent(element);
+			case "kill-npc" -> parseKillNpc(element);
+			case "attack-npc" -> new QuestEvent.AttackNpc(integer(element, "npc-id"));
+			case "use-item" -> new QuestEvent.UseItem(integer(element, "item-id"));
+			case "quest-dialog" -> new QuestEvent.QuestDialog(parseQuestDialogId(element));
+			case "collect-item" -> new QuestEvent.CollectItem(integer(element, "item-id"), integer(element, "count"));
+			case "item-play" ->
+				new QuestEvent.ItemPlay(integer(element, "item-id"), integer(element, "animation-millis"));
+			case "house-item-use" -> new QuestEvent.HouseItemUse(integer(element, "item-id"));
+			case "get-item" -> new QuestEvent.GetItem(integer(element, "item-id"));
+			case "level-up" -> new QuestEvent.LevelUp();
+			case "zone-mission-end" -> new QuestEvent.ZoneMissionEnd();
+			case "event-quest-refresh" -> new QuestEvent.EventQuestRefresh();
+			case "die" -> new QuestEvent.Die();
+			case "log-out" -> new QuestEvent.LogOut();
+			case "abandon" -> new QuestEvent.Abandon();
+			case "enter-world" -> new QuestEvent.EnterWorld();
+			case "enter-zone" -> new QuestEvent.EnterZone(attribute(element, "zone"));
+			case "leave-zone" -> new QuestEvent.LeaveZone(attribute(element, "zone"));
+			case "pass-flying-ring" -> new QuestEvent.PassFlyingRing(attribute(element, "ring"));
+			case "movie-end" -> new QuestEvent.MovieEnd(integer(element, "movie-id"));
+			case "quest-timer-end" -> new QuestEvent.QuestTimerEnd();
+			case "invisible-timer-end" -> new QuestEvent.InvisibleTimerEnd();
+			case "kill-ranked" -> new QuestEvent.KillRanked(integer(element, "rank-id"));
+			case "kill-in-world" -> new QuestEvent.KillInWorld(integer(element, "world-id"));
+			case "use-skill" -> new QuestEvent.UseSkill(integer(element, "skill-id"));
+			case "fail-craft" -> new QuestEvent.FailCraft(integer(element, "item-id"));
+			case "equip-item" -> new QuestEvent.EquipItem(integer(element, "item-id"));
+			case "can-act" -> new QuestEvent.CanAct(integer(element, "template-id"), attribute(element, "action-type"));
+			case "dredgion-reward" -> new QuestEvent.DredgionReward();
+			case "kamar-reward" -> new QuestEvent.KamarReward();
+			case "ophidan-reward" -> new QuestEvent.OphidanReward();
+			case "bastion-reward" -> new QuestEvent.BastionReward();
+			case "bonus-apply" -> new QuestEvent.BonusApply(attribute(element, "bonus-type"));
+			case "add-aggro-list" -> new QuestEvent.AddAggroList(integer(element, "npc-id"));
+			case "at-distance" -> new QuestEvent.AtDistance(integer(element, "npc-id"));
+			case "protect-end" -> new QuestEvent.ProtectEnd();
+			case "protect-fail" -> new QuestEvent.ProtectFail();
+			case "enter-wind-stream" -> new QuestEvent.EnterWindStream(integer(element, "teleport-id"));
+			case "ride-action" -> new QuestEvent.RideAction(integer(element, "item-id"));
+			case "creativity-point" -> new QuestEvent.CreativityPoint();
+			case "npc-reach-target" -> new QuestEvent.NpcReachTarget();
+			case "npc-lost-target" -> new QuestEvent.NpcLostTarget();
+			default -> fail("UNKNOWN_EVENT", element.getTagName());
+		};
 	}
 
 	private static QuestEvent onlyDialogEvent(Element element) {
@@ -780,7 +740,7 @@ public final class QuestDefinitionXmlCompiler {
 		}
 		Integer dialogId = null;
 		if (element.hasAttribute("dialog")) {
-			dialogId = enumValue(QuestDialog.class, element, "dialog").id();
+			dialogId = enumValue(QuestDialogAction.class, element, "dialog").id();
 		} else if (element.hasAttribute("dialog-id")) {
 			dialogId = integer(element, "dialog-id");
 		}
@@ -792,291 +752,197 @@ public final class QuestDefinitionXmlCompiler {
 			return fail("AMBIGUOUS_DIALOG_EVENT", "declare dialog or dialog-id, not both");
 		}
 		if (element.hasAttribute("dialog")) {
-			return enumValue(QuestDialog.class, element, "dialog").id();
+			return enumValue(QuestDialogAction.class, element, "dialog").id();
 		}
 		return integer(element, "dialog-id");
 	}
 
 	static QuestCondition parseCondition(Element element) {
-		switch (element.getTagName()) {
-			case "status-is":
-				return new QuestCondition.StatusIs(enumValue(QuestStatus.class, element, "status"));
-			case "has-item":
-				return new QuestCondition.HasItem(integer(element, "item-id"), integer(element, "count"),
-					booleanOrDefault(element, "expected", true));
-			case "variable-is":
-				return new QuestCondition.QuestVariableIs(attribute(element, "field"), integer(element, "value"));
-			case "variable-at-least":
-				return new QuestCondition.VariableAtLeast(attribute(element, "field"),
-					integer(element, "value"));
-			case "variable-below":
-				return new QuestCondition.VariableBelow(attribute(element, "field"),
-					integer(element, "value"));
-			case "variable-sum-is":
-				return new QuestCondition.VariableSumIs(parseFields(element),
-					integer(element, "value"));
-			case "variable-sum-below":
-				return new QuestCondition.VariableSumBelow(parseFields(element),
-					integer(element, "value"));
-			case "recipe-known":
-				return new QuestCondition.RecipeKnown(integer(element, "recipe-id"),
-					booleanOrDefault(element, "expected", false));
-			case "can-grant-craft-skill":
-				return new QuestCondition.CanGrantCraftSkill(
-					integer(element, "skill-id"), integer(element, "target-level"));
-			case "pvp-victim-level-delta":
-				return new QuestCondition.PvpVictimLevelDelta(
-					integer(element, "minimum"), integer(element, "maximum"));
-			case "pvp-recipient-in-zone":
-				return new QuestCondition.PvpRecipientInZone(
-					attribute(element, "zone"));
-			case "start-eligible":
-				return new QuestCondition.StartEligible();
-			case "player-class-is":
-				return new QuestCondition.PlayerClassIs(
-					PlayerClass.valueOf(attribute(element, "starting-class")));
-			case "advanced-class-is":
-				return new QuestCondition.AdvancedClassIs(
-					PlayerClass.valueOf(attribute(element, "class")));
-			case "gender-is":
-				return new QuestCondition.GenderIs(enumValue(Gender.class, element, "gender"));
-			case "player-race-is":
-				return new QuestCondition.PlayerRaceIs(
-					enumValue(com.aionemu.gameserver.model.Race.class, element, "race"));
-			case "player-in-group":
-				return new QuestCondition.PlayerInGroup(
-					booleanOrDefault(element, "expected", true));
-			case "world-is":
-				return new QuestCondition.WorldIs(integer(element, "world-id"),
-					booleanOrDefault(element, "expected", true));
-			case "world-npc-is":
-				return new QuestCondition.WorldNpcIs(integer(element, "npc-id"),
-					booleanOrDefault(element, "expected", true));
-			case "zone-is":
-				return new QuestCondition.ZoneIs(attribute(element, "zone"),
-					booleanOrDefault(element, "expected", true));
-			case "npc-hp-below-percent":
-				return new QuestCondition.NpcHpBelowPercent(
-					integer(element, "npc-id"), integer(element, "percent"));
-			case "currency-at-least":
-				return new QuestCondition.CurrencyAtLeast(
-					QuestRewardKind.fromWire(attribute(element, "kind")), longInteger(element, "amount"));
-			case "currency-below":
-				return new QuestCondition.CurrencyBelow(
-					QuestRewardKind.fromWire(attribute(element, "kind")), longInteger(element, "amount"));
-			case "quests-finished":
-				return new QuestCondition.QuestsFinished(parseQuestIdSet(element, "quest-ids"));
-			case "equipment-set-equipped":
-				return new QuestCondition.EquipmentSetEquipped(
-					parseIdSetAttribute(element, "set-ids"), integer(element, "count"),
-					booleanOrDefault(element, "expected", true));
-			case "equipped-item":
-				return new QuestCondition.EquippedItem(integer(element, "item-id"),
-					integerOrDefault(element, "count", 1), booleanOrDefault(element, "expected", true));
-			case "membership-permission":
-				return new QuestCondition.MembershipPermission(
-					QuestMembershipPermission.fromWire(attribute(element, "permission")),
-					booleanOrDefault(element, "expected", true));
-			case "dp-at-max":
-				return new QuestCondition.DpAtMax();
-			case "complete-count-is":
-				return new QuestCondition.CompleteCountIs(integer(element, "value"),
-					booleanOrDefault(element, "expected", true));
-			case "event-active":
-				return new QuestCondition.EventActive(integerOrDefault(element, "quest-id", 0),
-					booleanOrDefault(element, "expected", true));
-			default:
-				return fail("UNKNOWN_CONDITION", element.getTagName());
-		}
+		return switch (element.getTagName()) {
+			case "status-is" -> new QuestCondition.StatusIs(enumValue(QuestStatus.class, element, "status"));
+			case "has-item" -> new QuestCondition.HasItem(integer(element, "item-id"), integer(element, "count"),
+				booleanOrDefault(element, "expected", true));
+			case "variable-is" ->
+				new QuestCondition.QuestVariableIs(attribute(element, "field"), integer(element, "value"));
+			case "variable-at-least" -> new QuestCondition.VariableAtLeast(attribute(element, "field"),
+				integer(element, "value"));
+			case "variable-below" -> new QuestCondition.VariableBelow(attribute(element, "field"),
+				integer(element, "value"));
+			case "variable-sum-is" -> new QuestCondition.VariableSumIs(parseFields(element),
+				integer(element, "value"));
+			case "variable-sum-below" -> new QuestCondition.VariableSumBelow(parseFields(element),
+				integer(element, "value"));
+			case "recipe-known" -> new QuestCondition.RecipeKnown(integer(element, "recipe-id"),
+				booleanOrDefault(element, "expected", false));
+			case "can-grant-craft-skill" -> new QuestCondition.CanGrantCraftSkill(
+				integer(element, "skill-id"), integer(element, "target-level"));
+			case "pvp-victim-level-delta" -> new QuestCondition.PvpVictimLevelDelta(
+				integer(element, "minimum"), integer(element, "maximum"));
+			case "pvp-recipient-in-zone" -> new QuestCondition.PvpRecipientInZone(
+				attribute(element, "zone"));
+			case "start-eligible" -> new QuestCondition.StartEligible();
+			case "player-class-is" -> new QuestCondition.PlayerClassIs(
+				PlayerClass.valueOf(attribute(element, "starting-class")));
+			case "advanced-class-is" -> new QuestCondition.AdvancedClassIs(
+				PlayerClass.valueOf(attribute(element, "class")));
+			case "gender-is" -> new QuestCondition.GenderIs(enumValue(Gender.class, element, "gender"));
+			case "player-race-is" -> new QuestCondition.PlayerRaceIs(
+				enumValue(com.aionemu.gameserver.model.Race.class, element, "race"));
+			case "player-in-group" -> new QuestCondition.PlayerInGroup(
+				booleanOrDefault(element, "expected", true));
+			case "world-is" -> new QuestCondition.WorldIs(integer(element, "world-id"),
+				booleanOrDefault(element, "expected", true));
+			case "world-npc-is" -> new QuestCondition.WorldNpcIs(integer(element, "npc-id"),
+				booleanOrDefault(element, "expected", true));
+			case "zone-is" -> new QuestCondition.ZoneIs(attribute(element, "zone"),
+				booleanOrDefault(element, "expected", true));
+			case "npc-hp-below-percent" -> new QuestCondition.NpcHpBelowPercent(
+				integer(element, "npc-id"), integer(element, "percent"));
+			case "currency-at-least" -> new QuestCondition.CurrencyAtLeast(
+				QuestRewardKind.fromWire(attribute(element, "kind")), longInteger(element, "amount"));
+			case "currency-below" -> new QuestCondition.CurrencyBelow(
+				QuestRewardKind.fromWire(attribute(element, "kind")), longInteger(element, "amount"));
+			case "quests-finished" -> new QuestCondition.QuestsFinished(parseQuestIdSet(element, "quest-ids"));
+			case "equipment-set-equipped" -> new QuestCondition.EquipmentSetEquipped(
+				parseIdSetAttribute(element, "set-ids"), integer(element, "count"),
+				booleanOrDefault(element, "expected", true));
+			case "equipped-item" -> new QuestCondition.EquippedItem(integer(element, "item-id"),
+				integerOrDefault(element, "count", 1), booleanOrDefault(element, "expected", true));
+			case "membership-permission" -> new QuestCondition.MembershipPermission(
+				QuestMembershipPermission.fromWire(attribute(element, "permission")),
+				booleanOrDefault(element, "expected", true));
+			case "dp-at-max" -> new QuestCondition.DpAtMax();
+			case "complete-count-is" -> new QuestCondition.CompleteCountIs(integer(element, "value"),
+				booleanOrDefault(element, "expected", true));
+			case "event-active" -> new QuestCondition.EventActive(integerOrDefault(element, "quest-id", 0),
+				booleanOrDefault(element, "expected", true));
+			default -> fail("UNKNOWN_CONDITION", element.getTagName());
+		};
 	}
 
 	static QuestAction parseAction(Element element) {
-		switch (element.getTagName()) {
-			case "remove-item":
-				return new QuestAction.RemoveItem(integer(element, "item-id"), removalCount(element));
-			case "give-item":
-				return new QuestAction.GiveItem(integer(element, "item-id"), integer(element, "count"));
-			case "unequip-item":
-				return new QuestAction.UnequipItem(integer(element, "item-id"),
-					integerOrDefault(element, "remove-count", 0));
-			case "set-variable":
-				return new QuestAction.SetVariable(attribute(element, "field"), integer(element, "value"));
-			case "increment-variable":
-				return new QuestAction.IncrementVariable(attribute(element, "field"),
-					integer(element, "delta"));
-			case "block-default-item-use":
-				return new QuestAction.BlockDefaultItemUse();
-			case "set-status":
-				return new QuestAction.SetStatus(enumValue(QuestStatus.class, element, "status"));
-			case "grant-reward":
-				return parseGrantReward(element);
-			case "grant-selected-reward":
-				return new QuestAction.GrantSelectedReward(
-					integer(element, "reward-index"));
-			case "decrease-currency":
-				return new QuestAction.DecreaseCurrency(
-					QuestRewardKind.fromWire(attribute(element, "kind")), longInteger(element, "amount"));
-			case "set-currency":
-				return new QuestAction.SetCurrency(
-					QuestRewardKind.fromWire(attribute(element, "kind")), longInteger(element, "amount"));
-			case "reset-currency":
-				return new QuestAction.SetCurrency(
-					QuestRewardKind.fromWire(attribute(element, "kind")), 0);
-			case "complete-quest":
-				return new QuestAction.CompleteQuest(integer(element, "reward-index"));
-			case "promote-archdaeva":
-				return new QuestAction.PromoteArchDaeva();
-			case "learn-recipe":
-				return new QuestAction.LearnRecipe(integer(element, "recipe-id"),
-					enumValue(QuestRecipeOwnership.class, element, "ownership"));
-			case "forget-recipe":
-				return new QuestAction.ForgetRecipe(integer(element, "recipe-id"));
-			case "grant-craft-skill":
-				return new QuestAction.GrantCraftSkill(integer(element, "skill-id"),
-					integer(element, "target-level"), booleanOrDefault(element, "auto-learn-recipes", false));
-			case "abandon-quest":
-				return new QuestAction.AbandonQuest();
-			default:
-				return fail("UNKNOWN_ACTION", element.getTagName());
-		}
+		return switch (element.getTagName()) {
+			case "remove-item" -> new QuestAction.RemoveItem(integer(element, "item-id"), removalCount(element));
+			case "give-item" -> new QuestAction.GiveItem(integer(element, "item-id"), integer(element, "count"));
+			case "unequip-item" -> new QuestAction.UnequipItem(integer(element, "item-id"),
+				integerOrDefault(element, "remove-count", 0));
+			case "set-variable" -> new QuestAction.SetVariable(attribute(element, "field"), integer(element, "value"));
+			case "increment-variable" -> new QuestAction.IncrementVariable(attribute(element, "field"),
+				integer(element, "delta"));
+			case "block-default-item-use" -> new QuestAction.BlockDefaultItemUse();
+			case "set-status" -> new QuestAction.SetStatus(enumValue(QuestStatus.class, element, "status"));
+			case "grant-reward" -> parseGrantReward(element);
+			case "grant-selected-reward" -> new QuestAction.GrantSelectedReward(
+				integer(element, "reward-index"));
+			case "decrease-currency" -> new QuestAction.DecreaseCurrency(
+				QuestRewardKind.fromWire(attribute(element, "kind")), longInteger(element, "amount"));
+			case "set-currency" -> new QuestAction.SetCurrency(
+				QuestRewardKind.fromWire(attribute(element, "kind")), longInteger(element, "amount"));
+			case "reset-currency" -> new QuestAction.SetCurrency(
+				QuestRewardKind.fromWire(attribute(element, "kind")), 0);
+			case "complete-quest" -> new QuestAction.CompleteQuest(integer(element, "reward-index"));
+			case "promote-archdaeva" -> new QuestAction.PromoteArchDaeva();
+			case "learn-recipe" -> new QuestAction.LearnRecipe(integer(element, "recipe-id"),
+				enumValue(QuestRecipeOwnership.class, element, "ownership"));
+			case "forget-recipe" -> new QuestAction.ForgetRecipe(integer(element, "recipe-id"));
+			case "grant-craft-skill" -> new QuestAction.GrantCraftSkill(integer(element, "skill-id"),
+				integer(element, "target-level"), booleanOrDefault(element, "auto-learn-recipes", false));
+			case "abandon-quest" -> new QuestAction.AbandonQuest();
+			default -> fail("UNKNOWN_ACTION", element.getTagName());
+		};
 	}
 
 	static AfterCommitAction parseAfterCommitAction(Element action) {
-		switch (action.getTagName()) {
-			case "dialog":
-				return parseDialogAfterCommit(action);
-			case "close-dialog":
-				return new AfterCommitAction.CloseDialog();
-			case "sync-quest-state":
-				return new AfterCommitAction.SyncQuestState(
-					enumValue(QuestStateSyncMode.class, action, "mode"));
-			case "refresh-player-stats":
-				return new AfterCommitAction.RefreshPlayerStats();
-			case "show-quest-dialog":
-				return new AfterCommitAction.ShowQuestDialog(dialogPage(action));
-			case "show-quest-selection-dialog":
-				return new AfterCommitAction.ShowQuestSelectionDialog(
-					dialogPage(action));
-			case "show-dialog-window":
-				return new AfterCommitAction.ShowDialogWindow(dialogPage(action));
-			case "teleport-player-current-or-default":
-				return new AfterCommitAction.TeleportPlayer(
-					QuestInstanceTarget.currentOrDefault(), integer(action, "world-id"),
-					floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"),
-					byteValue(action, "heading"));
-			case "teleport-player-fixed-instance":
-				return new AfterCommitAction.TeleportPlayer(
-					QuestInstanceTarget.fixed(integer(action, "instance-id")), integer(action, "world-id"),
-					floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"),
-					byteValue(action, "heading"));
-			case "teleport-player-next-available-instance":
-				return new AfterCommitAction.TeleportPlayer(
-					QuestInstanceTarget.nextAvailable(integer(action, "world-id")), integer(action, "world-id"),
-					floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"),
-					byteValue(action, "heading"));
-			case "play-movie":
-				return new AfterCommitAction.PlayMovie(integer(action, "movie-id"),
-					enumValueOrDefault(QuestMovieType.class, action, "type", QuestMovieType.CUTSCENE));
-			case "morph":
-				return new AfterCommitAction.Morph(integer(action, "ascension-id"));
-			case "set-class":
-				return new AfterCommitAction.SetPlayerClass(
-					enumValue(PlayerClass.class, action, "class"));
-			case "apply-effect":
-				return new AfterCommitAction.ApplyEffect(integer(action, "skill-id"),
-					integer(action, "duration-ms"));
-			case "remove-effect":
-				return new AfterCommitAction.RemoveEffect(integer(action, "effect-id"));
-			case "system-message":
-				return parseSystemMessage(action);
-			case "player-emotion":
-				return new AfterCommitAction.PlayerEmotion(
-					enumValue(QuestPlayerEmotion.class, action, "emotion"));
-			case "add-npc-aggro":
-				return new AfterCommitAction.AddNpcAggro(
-					integer(action, "npc-id"), integer(action, "damage"));
-			case "flight-teleport":
-				return new AfterCommitAction.FlightTeleport(integer(action, "flight-teleport-id"));
-			case "delete-interaction-npc":
-				return new AfterCommitAction.DeleteInteractionNpc(
-					booleanOrDefault(action, "schedule-respawn", true));
-			case "delete-world-npcs":
-				return new AfterCommitAction.DeleteWorldNpcs();
-			case "broadcast-zone-mission-end":
-				return new AfterCommitAction.BroadcastZoneMissionEnd(
-					parseQuestIdArray(action, "quest-ids"));
-			case "schedule-event-quest-refresh":
-				return new AfterCommitAction.ScheduleEventQuestRefresh(
-					integer(action, "seconds"), parseQuestIdArray(action, "quest-ids"));
-			case "spawn-npc-current-or-default":
-				return new AfterCommitAction.SpawnNpc(attribute(action, "slot"),
-					integer(action, "template-id"), new QuestSpawnLocation.Fixed(integer(action, "world-id"),
-					QuestInstanceTarget.currentOrDefault(),
-					floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"),
-					byteValue(action, "heading")));
-			case "spawn-npc-random":
-				return parseRandomSpawn(action);
-			case "spawn-npc-fixed-instance":
-				return new AfterCommitAction.SpawnNpc(attribute(action, "slot"),
-					integer(action, "template-id"), new QuestSpawnLocation.Fixed(integer(action, "world-id"),
-					QuestInstanceTarget.fixed(integer(action, "instance-id")),
-					floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"),
-					byteValue(action, "heading")));
-			case "spawn-npc-at-player":
-				return new AfterCommitAction.SpawnNpc(attribute(action, "slot"),
-					integer(action, "template-id"), new QuestSpawnLocation.PlayerPosition(byteValue(action, "heading")));
-			case "despawn-npc":
-				return new AfterCommitAction.DespawnNpc(attribute(action, "slot"));
-			case "start-follow":
-				return new AfterCommitAction.StartFollow(attribute(action, "slot"));
-			case "start-follow-current-target":
-				return new AfterCommitAction.StartFollowCurrentTargetToPoint(
-					floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"));
-			case "start-follow-current-target-npc":
-				return new AfterCommitAction.StartFollowCurrentTargetToNpc(
-					integer(action, "npc-id"));
-			case "stop-follow":
-				return new AfterCommitAction.StopFollow(attribute(action, "slot"));
-			case "attack-target":
-				return new AfterCommitAction.AttackTarget(attribute(action, "slot"));
-			case "attack-npc-template":
-				return new AfterCommitAction.AttackNpcTemplate(attribute(action, "slot"),
-					integer(action, "template-id"));
-			case "start-walking":
-				return new AfterCommitAction.StartWalking(attribute(action, "slot"));
-			case "broadcast-npc-emotion":
-				return new AfterCommitAction.BroadcastNpcEmotion(
-					attribute(action, "slot"), enumValue(QuestNpcEmotion.class, action, "emotion"));
-			case "broadcast-interaction-npc-emotion":
-				return new AfterCommitAction.BroadcastInteractionNpcEmotion(
-					enumValue(QuestNpcEmotion.class, action, "emotion"));
-			case "watch-follow-zone":
-				return new AfterCommitAction.WatchFollowZone(
-					attribute(action, "slot"), attribute(action, "zone"));
-			case "watch-follow-coordinate":
-				return new AfterCommitAction.WatchFollowCoordinate(
-					attribute(action, "slot"), floatValue(action, "x"), floatValue(action, "y"),
-					floatValue(action, "z"));
-			case "watch-lured-npc-coordinate":
-				return new AfterCommitAction.WatchLuredNpcCoordinate(
-					floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"),
-					floatValue(action, "radius"), enumValueOrDefault(QuestLureCompletion.class, action,
-					"completion", QuestLureCompletion.DELETE));
-			case "start-quest-timer":
-				return new AfterCommitAction.StartQuestTimer(
-					integer(action, "seconds"), parseTimerPolicy(action));
-			case "start-invisible-timer":
-				return new AfterCommitAction.StartInvisibleTimer(
-					integer(action, "seconds"), parseTimerPolicy(action));
-			case "cancel-quest-timer":
-				return new AfterCommitAction.CancelQuestTimer(
-					new QuestTimerPolicy.Identity(attribute(action, "timer-id"),
-						enumValue(QuestTimerPolicy.Scope.class, action, "scope")));
-			case "play-movie-random":
-				return parsePlayMovieRandom(action);
-			default:
-				return fail("UNKNOWN_AFTER_COMMIT_ACTION", action.getTagName());
-		}
+		return switch (action.getTagName()) {
+			case "dialog" -> parseDialogAfterCommit(action);
+			case "close-dialog" -> new AfterCommitAction.CloseDialog();
+			case "sync-quest-state" -> new AfterCommitAction.SyncQuestState(
+				enumValue(QuestStateSyncMode.class, action, "mode"));
+			case "refresh-player-stats" -> new AfterCommitAction.RefreshPlayerStats();
+			case "show-quest-dialog" -> new AfterCommitAction.ShowQuestDialog(dialogPage(action));
+			case "show-quest-selection-dialog" -> new AfterCommitAction.ShowQuestSelectionDialog(
+				dialogPage(action));
+			case "show-dialog-window" -> new AfterCommitAction.ShowDialogWindow(dialogPage(action));
+			case "teleport-player-current-or-default" -> new AfterCommitAction.TeleportPlayer(
+				QuestInstanceTarget.currentOrDefault(), integer(action, "world-id"),
+				floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"),
+				byteValue(action, "heading"));
+			case "teleport-player-fixed-instance" -> new AfterCommitAction.TeleportPlayer(
+				QuestInstanceTarget.fixed(integer(action, "instance-id")), integer(action, "world-id"),
+				floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"),
+				byteValue(action, "heading"));
+			case "teleport-player-next-available-instance" -> new AfterCommitAction.TeleportPlayer(
+				QuestInstanceTarget.nextAvailable(integer(action, "world-id")), integer(action, "world-id"),
+				floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"),
+				byteValue(action, "heading"));
+			case "play-movie" -> new AfterCommitAction.PlayMovie(integer(action, "movie-id"),
+				enumValueOrDefault(QuestMovieType.class, action, "type", QuestMovieType.CUTSCENE));
+			case "morph" -> new AfterCommitAction.Morph(integer(action, "ascension-id"));
+			case "set-class" -> new AfterCommitAction.SetPlayerClass(
+				enumValue(PlayerClass.class, action, "class"));
+			case "apply-effect" -> new AfterCommitAction.ApplyEffect(integer(action, "skill-id"),
+				integer(action, "duration-ms"));
+			case "remove-effect" -> new AfterCommitAction.RemoveEffect(integer(action, "effect-id"));
+			case "system-message" -> parseSystemMessage(action);
+			case "player-emotion" -> new AfterCommitAction.PlayerEmotion(
+				enumValue(QuestPlayerEmotion.class, action, "emotion"));
+			case "add-npc-aggro" -> new AfterCommitAction.AddNpcAggro(
+				integer(action, "npc-id"), integer(action, "damage"));
+			case "flight-teleport" -> new AfterCommitAction.FlightTeleport(integer(action, "flight-teleport-id"));
+			case "delete-interaction-npc" -> new AfterCommitAction.DeleteInteractionNpc(
+				booleanOrDefault(action, "schedule-respawn", true));
+			case "delete-world-npcs" -> new AfterCommitAction.DeleteWorldNpcs();
+			case "broadcast-zone-mission-end" -> new AfterCommitAction.BroadcastZoneMissionEnd(
+				parseQuestIdArray(action, "quest-ids"));
+			case "schedule-event-quest-refresh" -> new AfterCommitAction.ScheduleEventQuestRefresh(
+				integer(action, "seconds"), parseQuestIdArray(action, "quest-ids"));
+			case "spawn-npc-current-or-default" -> new AfterCommitAction.SpawnNpc(attribute(action, "slot"),
+				integer(action, "template-id"), new QuestSpawnLocation.Fixed(integer(action, "world-id"),
+				QuestInstanceTarget.currentOrDefault(),
+				floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"),
+				byteValue(action, "heading")));
+			case "spawn-npc-random" -> parseRandomSpawn(action);
+			case "spawn-npc-fixed-instance" -> new AfterCommitAction.SpawnNpc(attribute(action, "slot"),
+				integer(action, "template-id"), new QuestSpawnLocation.Fixed(integer(action, "world-id"),
+				QuestInstanceTarget.fixed(integer(action, "instance-id")),
+				floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"),
+				byteValue(action, "heading")));
+			case "spawn-npc-at-player" -> new AfterCommitAction.SpawnNpc(attribute(action, "slot"),
+				integer(action, "template-id"), new QuestSpawnLocation.PlayerPosition(byteValue(action, "heading")));
+			case "despawn-npc" -> new AfterCommitAction.DespawnNpc(attribute(action, "slot"));
+			case "start-follow" -> new AfterCommitAction.StartFollow(attribute(action, "slot"));
+			case "start-follow-current-target" -> new AfterCommitAction.StartFollowCurrentTargetToPoint(
+				floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"));
+			case "start-follow-current-target-npc" -> new AfterCommitAction.StartFollowCurrentTargetToNpc(
+				integer(action, "npc-id"));
+			case "stop-follow" -> new AfterCommitAction.StopFollow(attribute(action, "slot"));
+			case "attack-target" -> new AfterCommitAction.AttackTarget(attribute(action, "slot"));
+			case "attack-npc-template" -> new AfterCommitAction.AttackNpcTemplate(attribute(action, "slot"),
+				integer(action, "template-id"));
+			case "start-walking" -> new AfterCommitAction.StartWalking(attribute(action, "slot"));
+			case "broadcast-npc-emotion" -> new AfterCommitAction.BroadcastNpcEmotion(
+				attribute(action, "slot"), enumValue(QuestNpcEmotion.class, action, "emotion"));
+			case "broadcast-interaction-npc-emotion" -> new AfterCommitAction.BroadcastInteractionNpcEmotion(
+				enumValue(QuestNpcEmotion.class, action, "emotion"));
+			case "watch-follow-zone" -> new AfterCommitAction.WatchFollowZone(
+				attribute(action, "slot"), attribute(action, "zone"));
+			case "watch-follow-coordinate" -> new AfterCommitAction.WatchFollowCoordinate(
+				attribute(action, "slot"), floatValue(action, "x"), floatValue(action, "y"),
+				floatValue(action, "z"));
+			case "watch-lured-npc-coordinate" -> new AfterCommitAction.WatchLuredNpcCoordinate(
+				floatValue(action, "x"), floatValue(action, "y"), floatValue(action, "z"),
+				floatValue(action, "radius"), enumValueOrDefault(QuestLureCompletion.class, action,
+				"completion", QuestLureCompletion.DELETE));
+			case "start-quest-timer" -> new AfterCommitAction.StartQuestTimer(
+				integer(action, "seconds"), parseTimerPolicy(action));
+			case "start-invisible-timer" -> new AfterCommitAction.StartInvisibleTimer(
+				integer(action, "seconds"), parseTimerPolicy(action));
+			case "cancel-quest-timer" -> new AfterCommitAction.CancelQuestTimer(
+				new QuestTimerPolicy.Identity(attribute(action, "timer-id"),
+					enumValue(QuestTimerPolicy.Scope.class, action, "scope")));
+			case "play-movie-random" -> parsePlayMovieRandom(action);
+			default -> fail("UNKNOWN_AFTER_COMMIT_ACTION", action.getTagName());
+		};
 	}
 
 	private static AfterCommitAction parseDialogAfterCommit(Element element) {
@@ -1089,14 +955,11 @@ public final class QuestDefinitionXmlCompiler {
 			return fail("DIALOG_PAGE_REQUIRED", "after-commit dialog requires page");
 		}
 		int pageId = dialogPageSymbol(element, "page").id();
-        switch (type) {
-            case SHOW_QUEST_PAGE:
-                return new AfterCommitAction.ShowQuestDialog(pageId);
-            case SHOW_SELECTION_PAGE:
-                return new AfterCommitAction.ShowQuestSelectionDialog(pageId);
-            default:
-                throw new AssertionError(type);
-        }
+		return switch (type) {
+			case SHOW_QUEST_PAGE -> new AfterCommitAction.ShowQuestDialog(pageId);
+			case SHOW_SELECTION_PAGE -> new AfterCommitAction.ShowQuestSelectionDialog(pageId);
+			default -> throw new AssertionError(type);
+		};
 	}
 
 	private static AfterCommitAction parsePlayMovieRandom(Element action) {

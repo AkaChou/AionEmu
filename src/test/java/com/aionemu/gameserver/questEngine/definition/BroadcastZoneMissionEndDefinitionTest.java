@@ -22,7 +22,7 @@ class BroadcastZoneMissionEndDefinitionTest {
 			.progress(bitField("var0", 0, 3, PersistenceMode.PERSISTENT))
 			.node("start", project(QuestStatus.START, vars("var0", 0)))
 			.node("done", project(QuestStatus.REWARD, vars("var0", 1)))
-			.on(talkToNpc(203057, com.aionemu.gameserver.questEngine.model.QuestDialog.START_DIALOG)).from("start").goTo("done")
+			.on(talkToNpc(203057, QuestDialogAction.QUEST_SELECT)).from("start").goTo("done")
 			.afterCommit(broadcastZoneMissionEnd(10521, 10522, 10523)).compile();
 
 		AfterCommitAction action = dsl.definition().transitions().getFirst().afterCommit().stream()

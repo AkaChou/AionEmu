@@ -5,6 +5,7 @@ import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDsl;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -245,7 +246,7 @@ class QuestProductionDispatcherTest {
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("started", project(QuestStatus.START, vars("var0", 0)))
 			.on(new QuestEvent.TalkToNpc(203057, 31)).from("started").goTo("started")
-			.afterCommit(QuestDsl.showQuestDialog(1011))
+			.afterCommit(QuestDsl.showQuestDialog(QuestDialogPage.SELECT1))
 			.compile();
 		List<Integer> pages = new ArrayList<>();
 		QuestProductionDispatcher dispatcher = new QuestProductionDispatcher(
@@ -360,7 +361,7 @@ class QuestProductionDispatcherTest {
 			.then(QuestDsl.completeQuest(0)).goTo("complete")
 			.afterCommit(QuestDsl.refreshPlayerStats())
 			.afterCommit(QuestDsl.syncQuestState(QuestStateSyncMode.COMPLETION))
-			.afterCommit(QuestDsl.showQuestSelectionDialog(10))
+			.afterCommit(QuestDsl.showQuestSelectionDialog(QuestDialogPage.SELECT_QUEST))
 			.compile();
 		List<String> calls = new ArrayList<>();
 		QuestProductionDispatcher dispatcher = dispatcher(List.of(definition), calls,
@@ -472,7 +473,7 @@ class QuestProductionDispatcherTest {
 			.node("reward", project(QuestStatus.REWARD, vars("step", 1)))
 			.on(new QuestEvent.TalkToNpc(798125, 31)).from("started").goTo("reward")
 			.on(new QuestEvent.TalkToNpc(798125, -1)).from("reward").goTo("reward")
-			.afterCommit(QuestDsl.showQuestDialog(1352))
+			.afterCommit(QuestDsl.showQuestDialog(QuestDialogPage.SELECT2))
 			.compile();
 		List<String> calls = new ArrayList<>();
 		QuestProductionDispatcher dispatcher = dispatcher(List.of(definition), calls,

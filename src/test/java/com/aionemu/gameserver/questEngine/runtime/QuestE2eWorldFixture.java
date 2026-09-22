@@ -41,13 +41,9 @@ import com.aionemu.gameserver.questEngine.e2e.client.ServerPacketObservation;
 import com.aionemu.gameserver.questEngine.e2e.client.VirtualClientState;
 import com.aionemu.gameserver.questEngine.e2e.client.QuestTrace;
 import com.aionemu.gameserver.questEngine.e2e.world.VirtualClock;
-import com.aionemu.gameserver.questEngine.definition.QuestInstanceTarget;
-import com.aionemu.gameserver.questEngine.definition.QuestNpcEmotion;
-import com.aionemu.gameserver.questEngine.definition.QuestSpawnLocation;
-import com.aionemu.gameserver.questEngine.model.QuestDialog;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.model.QuestActionType;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
-import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.KnownList;
 import org.objenesis.ObjenesisStd;
@@ -57,7 +53,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
 /**
@@ -609,10 +604,10 @@ public final class QuestE2eWorldFixture implements AutoCloseable {
 					getOwner(), player, 0, 0), getOwner().getNpcId(), QuestActionType.ACTION_ITEM_USE);
 			}
 			handled = GameEngineServices.questEngine().onDialog(new QuestEnv(
-				getOwner(), player, 0, QuestDialog.USE_OBJECT.id()));
+					getOwner(), player, 0, QuestDialogAction.USE_OBJECT.id()));
 			if (!handled) {
 				handled = GameEngineServices.questEngine().onDialog(new QuestEnv(
-					getOwner(), player, 0, QuestDialog.START_DIALOG.id()));
+					getOwner(), player, 0, QuestDialogAction.QUEST_SELECT.id()));
 			}
 		}
 

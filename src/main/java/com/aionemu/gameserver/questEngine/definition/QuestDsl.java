@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.questEngine.definition;
 
-import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
@@ -48,7 +47,7 @@ public final class QuestDsl {
 		return new QuestEvent.TalkToNpc(npcId);
 	}
 
-	public static QuestEvent talkToNpc(int npcId, QuestDialog dialog) {
+	public static QuestEvent talkToNpc(int npcId, QuestDialogAction dialog) {
 		return new QuestEvent.TalkToNpc(npcId, Objects.requireNonNull(dialog, "dialog").id());
 	}
 
@@ -80,7 +79,7 @@ public final class QuestDsl {
 		return new QuestEvent.QuestDialog(dialogId);
 	}
 
-	public static QuestEvent questDialog(QuestDialog dialog) {
+	public static QuestEvent questDialog(QuestDialogAction dialog) {
 		return new QuestEvent.QuestDialog(Objects.requireNonNull(dialog, "dialog").id());
 	}
 
@@ -524,6 +523,14 @@ public final class QuestDsl {
 	}
 
 	/**
+	 * 显示类型化的客户端任务页面。
+	 * Shows a typed client quest page.
+	 */
+	public static AfterCommitAction showQuestDialog(QuestDialogPage page) {
+		return showQuestDialog(Objects.requireNonNull(page, "page").id());
+	}
+
+	/**
 	 * 发送不附带任务 id 的原始 SM_DIALOG_WINDOW。
 	 * Sends a raw SM_DIALOG_WINDOW without attaching the quest id.
 	 */
@@ -533,6 +540,14 @@ public final class QuestDsl {
 
 	public static AfterCommitAction showQuestSelectionDialog(int dialogId) {
 		return new AfterCommitAction.ShowQuestSelectionDialog(dialogId);
+	}
+
+	/**
+	 * 显示类型化的客户端选择页面。
+	 * Shows a typed client selection page.
+	 */
+	public static AfterCommitAction showQuestSelectionDialog(QuestDialogPage page) {
+		return showQuestSelectionDialog(Objects.requireNonNull(page, "page").id());
 	}
 
 	public static AfterCommitAction teleportPlayer(int worldId, float x, float y, float z, byte heading) {
