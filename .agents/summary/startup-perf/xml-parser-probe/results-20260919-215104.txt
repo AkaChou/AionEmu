@@ -1,0 +1,50 @@
+== 静态数据解析器探针报告 / static-data parser probe report 2026-09-19 21:51:04 CST ==
+openjdk version "26.0.2.1" 2026-08-18
+OpenJDK Runtime Environment Zulu26.32+203-CA (build 26.0.2.1+1)
+OpenJDK 64-Bit Server VM Zulu26.32+203-CA (build 26.0.2.1+1, mixed mode, sharing)
+warmup=0 iterations=3
+### variant=jdk scenario=jaxb-item
+INFO java=26.0.2.1 scenario=jaxb-item file=/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/data/static_data/items/item/item_template_100000001_100601382.xml bytes=8306679 warmup=0 iterations=3
+INFO impl.sax=com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl
+INFO impl.stax=com.ctc.wstx.stax.WstxInputFactory
+RESULT label=jaxb:ItemData iterations=3 median_wall_ms=114.0 min_wall_ms=96.1 median_cpu_ms=113.1 median_alloc_mb=46.3 wall_ms=[336.4,114.0,96.1]
+### variant=jdk scenario=jaxb-npc
+INFO java=26.0.2.1 scenario=jaxb-npc file=/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/data/static_data/npcs/npc_template_200000_216188.xml bytes=9450416 warmup=0 iterations=3
+INFO impl.sax=com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl
+INFO impl.stax=com.ctc.wstx.stax.WstxInputFactory
+RESULT label=jaxb:NpcData iterations=3 median_wall_ms=110.3 min_wall_ms=99.5 median_cpu_ms=109.6 median_alloc_mb=43.3 wall_ms=[352.3,110.3,99.5]
+### variant=jdk scenario=stax-mappings
+INFO java=26.0.2.1 scenario=stax-mappings file=/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/definitions/compact/ai/npc-ai.xml bytes=27384476 warmup=0 iterations=3
+INFO impl.sax=com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl
+INFO impl.stax=com.ctc.wstx.stax.WstxInputFactory
+RESULT label=stax:loadMappings iterations=3 median_wall_ms=170.9 min_wall_ms=152.1 median_cpu_ms=169.9 median_alloc_mb=107.4 wall_ms=[223.5,170.9,152.1]
+### variant=jdk scenario=sax-skill-part
+INFO java=26.0.2.1 scenario=sax-skill-part file=/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/definitions/compact/skills/skill_templates_part_010.xml bytes=1178920 warmup=0 iterations=3
+INFO feature_compat=ok reader=com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser
+RESULT label=sax:skill-part-scan:skill_templates_part_010.xml iterations=3 median_wall_ms=28.5 min_wall_ms=17.8 median_cpu_ms=28.3 median_alloc_mb=0.2 wall_ms=[48.5,28.5,17.8]
+### variant=woodstox scenario=jaxb-item
+INFO java=26.0.2.1 scenario=jaxb-item file=/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/data/static_data/items/item/item_template_100000001_100601382.xml bytes=8306679 warmup=0 iterations=3
+INFO impl.sax=com.ctc.wstx.sax.WstxSAXParserFactory
+INFO impl.stax=com.ctc.wstx.stax.WstxInputFactory
+RESULT label=jaxb:ItemData iterations=3 median_wall_ms=101.4 min_wall_ms=75.2 median_cpu_ms=100.2 median_alloc_mb=52.9 wall_ms=[248.1,101.4,75.2]
+### variant=woodstox scenario=jaxb-npc
+INFO java=26.0.2.1 scenario=jaxb-npc file=/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/data/static_data/npcs/npc_template_200000_216188.xml bytes=9450416 warmup=0 iterations=3
+INFO impl.sax=com.ctc.wstx.sax.WstxSAXParserFactory
+INFO impl.stax=com.ctc.wstx.stax.WstxInputFactory
+RESULT label=jaxb:NpcData iterations=3 median_wall_ms=84.5 min_wall_ms=72.8 median_cpu_ms=83.5 median_alloc_mb=48.2 wall_ms=[246.6,84.5,72.8]
+### variant=woodstox scenario=stax-mappings
+INFO java=26.0.2.1 scenario=stax-mappings file=/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/definitions/compact/ai/npc-ai.xml bytes=27384476 warmup=0 iterations=3
+INFO impl.sax=com.ctc.wstx.sax.WstxSAXParserFactory
+INFO impl.stax=com.ctc.wstx.stax.WstxInputFactory
+RESULT label=stax:loadMappings iterations=3 median_wall_ms=172.6 min_wall_ms=150.2 median_cpu_ms=171.2 median_alloc_mb=107.4 wall_ms=[225.5,172.6,150.2]
+### variant=woodstox scenario=sax-skill-part
+INFO java=26.0.2.1 scenario=sax-skill-part file=/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/definitions/compact/skills/skill_templates_part_010.xml bytes=1178920 warmup=0 iterations=3
+WARN feature_compat=fail type=org.xml.sax.SAXNotRecognizedException message=Feature 'http://apache.org/xml/features/disallow-doctype-decl' not recognized
+INFO fallback=namespace-aware-only
+RESULT label=sax:skill-part-scan:skill_templates_part_010.xml iterations=3 median_wall_ms=14.3 min_wall_ms=8.2 median_cpu_ms=14.2 median_alloc_mb=0.6 wall_ms=[44.1,14.3,8.2]
+### same-JVM interleaved control
+INFO java=26.0.2.1 scenario=jaxb-item-explicit file=/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/data/static_data/items/item/item_template_100000001_100601382.xml bytes=8306679 warmup=0 iterations=3
+INFO variant=jdk reader=com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser
+INFO variant=woodstox reader=com.ctc.wstx.sax.WstxSAXParser
+RESULT label=jaxb-item-explicit:jdk iterations=3 median_wall_ms=112.7 min_wall_ms=101.8 median_cpu_ms=111.4 median_alloc_mb=46.3 wall_ms=[298.3,112.7,101.8]
+RESULT label=jaxb-item-explicit:woodstox iterations=3 median_wall_ms=90.5 min_wall_ms=79.9 median_cpu_ms=89.9 median_alloc_mb=52.9 wall_ms=[158.8,90.5,79.9]

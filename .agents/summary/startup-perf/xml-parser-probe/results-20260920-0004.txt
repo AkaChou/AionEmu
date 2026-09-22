@@ -1,0 +1,15 @@
+== Unmarshaller 复用对照 / Unmarshaller reuse A/B 2026-09-20 00:03:58 CST ==
+openjdk version "26.0.2.1" 2026-08-18
+OpenJDK Runtime Environment Zulu26.32+203-CA (build 26.0.2.1+1)
+OpenJDK 64-Bit Server VM Zulu26.32+203-CA (build 26.0.2.1+1, mixed mode, sharing)
+heap=-Xms512m -Xmx3g warmup=2 iterations=5
+INFO java=26.0.2.1 scenario=jaxb-reuse-ab file=src/main/resources/aion/data/static_data/items/item/item_template_100000001_100601382.xml bytes=8306679 warmup=2 iterations=5
+INFO ItemData retained_baseline_mb=13
+RESULT label=jaxb-ItemData-fresh iterations=5 median_wall_ms=92.4 min_wall_ms=91.2 median_cpu_ms=91.8 median_alloc_mb=46.3 wall_ms=[95.5,91.7,92.9,91.2,92.4]
+RESULT label=jaxb-ItemData-reused iterations=5 median_wall_ms=90.0 min_wall_ms=89.5 median_cpu_ms=89.7 median_alloc_mb=46.1 wall_ms=[94.0,96.0,90.0,89.5,89.6]
+INFO ItemData retained_after_reuse_mb=25 (reused Unmarshaller still reachable)
+INFO java=26.0.2.1 scenario=jaxb-reuse-ab file=src/main/resources/aion/data/static_data/npcs/npc_template_200000_216188.xml bytes=9450416 warmup=2 iterations=5
+INFO NpcData retained_baseline_mb=13
+RESULT label=jaxb-NpcData-fresh iterations=5 median_wall_ms=99.1 min_wall_ms=98.0 median_cpu_ms=98.4 median_alloc_mb=43.5 wall_ms=[100.8,99.9,98.0,98.6,99.1]
+RESULT label=jaxb-NpcData-reused iterations=5 median_wall_ms=99.1 min_wall_ms=97.7 median_cpu_ms=97.7 median_alloc_mb=43.3 wall_ms=[102.9,99.1,97.7,98.5,100.9]
+INFO NpcData retained_after_reuse_mb=20 (reused Unmarshaller still reachable)

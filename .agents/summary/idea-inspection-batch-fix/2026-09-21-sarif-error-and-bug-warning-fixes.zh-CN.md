@@ -1,6 +1,6 @@
 # IDEA 检查报告批量修复（2026-09-21）
 
-来源：`report_2026-09-21_09-18-16.sarif.json`（17,812 条结果）。验证方式：IDEA MCP 实时检查（`get_file_problems` / `lint_files`），按项目规则未执行 Maven 构建/测试。
+来源：IDEA 导出的一次性 SARIF 报告（17,812 条结果；导出文件约 16MB，未入库，可按需重新导出）。验证方式：IDEA MCP 实时检查（`get_file_problems` / `lint_files`），按项目规则未执行 Maven 构建/测试。
 
 ## 一、错误级（76 条 → 全部闭环）
 
@@ -89,7 +89,7 @@ JavadocReference 根因三类：
 ## 六轮：注释规则全仓清零（2026-09-22）
 
 - 范围：DanglingJavadoc / JavadocDeclaration / JavadocBlankLines + 重复 @param（main+test 5788 文件全扫）。
-- 工具链：`comment_wave_detect.py` 静态检测（javadoc 块解析 + 悬空判定 + 标签合法性）→ `comment_wave_fix.py` 按块修复（逐行内容校验，全量原状备份 backup.tar.gz；注意备份目录镜像会破坏 memory-bank 证据后缀唯一匹配，已归档）→ 检测器复检 → IDEA lint 抽样 → build_project 全量编译。
+- 工具链：`comment_wave_detect.py` 静态检测（javadoc 块解析 + 悬空判定 + 标签合法性）→ `comment_wave_fix.py` 按块修复（逐行内容校验；修复前做全量原状临时快照，改动进入 git 历史后快照即删除——快照目录镜像会破坏 memory-bank 证据后缀唯一匹配）→ 检测器复检 → IDEA lint 抽样 → build_project 全量编译。
 - 结果：3941 文件修改（17,926 行操作）：删悬空/仅标签垃圾块 370、悬空转行注释 3、块内空白行清理 28,582 行；非法 `@param`/`@return` 转文本或删除（PlayerAppearance 60、IStorage 整文件空标签接口块等）；重复 @param 5 处（含 Matrix4f.fromFrustum near/far/right/left 标签错配修正）；BoundingBox/BrokerItem 多变量声明中夹带的字段 Javadoc 拆分独立声明（语义等价）；SocialService/BlockListDAO 残句清理。
 - **误报教训（可复用）**：
   1. 悬空判定不能只看花括号深度——嵌套类成员 Javadoc 深度≥2 是合法的；必须看"块后第一个有效代码行是否为声明"；
