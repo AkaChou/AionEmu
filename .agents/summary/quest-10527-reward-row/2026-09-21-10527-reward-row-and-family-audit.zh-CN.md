@@ -3746,3 +3746,84 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
 - 剩余 `MISSING_TAIL_ROWS 42`（36 个待逐族收口 + 6 个已登记例外）。其它挂账不变：
   `STATES_BEYOND_ROWS 2620`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 73`、客户端隔离族 8 个；
   既有红沿用 `QuestInteractionObjectCatalogTest` 8 条资格缺口。
+
+## 四十九、批次 45：三行顺序族 1938 + 二选一分支族 2922（2026-09-22）
+
+### 四十九之一、取证
+
+- **1938（Elyos，36 级，Black Cloud Fakery，前置 1471）**：客户端任务书三行、槽位 `%0`/`%3`/`%6`：
+  行 0「和 Shugo_LF3_1 对话」、行 1「调查 LF3_Nakaching_E」、行 2「向 Likasas 报告」。
+  页链（`Dialogs/QUEST_Q1938.html`）：`select1`(ASK_QUEST_ACCEPT) -> `ask_quest_accept` ->
+  `quest_accept_1`（里卡萨斯委托）；行 0 = Shugo_LF3_1 的 `select2`(SELECT2_1「转达里卡萨斯的话」) ->
+  `select2_1`(SETPRO1)；行 1 = LF3_Nakaching_E 的 `select3`(SELECT3_1 威胁) -> `select3_1`(SETPRO2)；
+  行 2 = Likasas 的 `select5`(SELECT_QUEST_REWARD「报告结果」) -> `select_quest_reward1`。
+  **客户端名表**（`npcs_unpacked/client_npcs_npc.xml` 反查）：203703 = Likasas、
+  798069 = Shugo_LF3_1、805836 = LF3_Nakaching_E。旧定义把三行塌陷成 `started(0) -> reward(0)`
+  直跳（接取与报告都挂在 203703，行 0/行 1 的 NPC 完全没有路由），审计判
+  `MISSING_TAIL_ROWS | ROW_BEHIND | ROW_WITHOUT_STATE(1 2) | visible=0`。
+- **2922（Asmodian，21 级，Fascinating Gift，前置 2921）**：客户端任务书三行、槽位 `%0`/`%3`/`%6`：
+  行 0「接受 Daskair 的请求」、行 1「向 Shugo_DC1_3 定做箱子」、行 2「向 Lanse 定做耳坠」。
+  页链（`Dialogs/QUEST_Q2922.html`）：`select_none` -> `ask_quest_accept` -> `quest_accept_1`
+  （互斥按钮 SELECT1_1 箱子 / SELECT1_2 耳坠）-> `select1_1`(SETPRO10) / `select1_2`(SETPRO20)；
+  箱子分支 `select2`(SELECT_QUEST_REWARD) -> `select_quest_reward1`；耳坠分支
+  `select3`(SELECT_QUEST_REWARD) -> `select_quest_reward2`；走错人页 `select2_1`（Shugo_DC1_3：
+  「我只做箱子，不做耳环」）/ `select3_1`（Lanse：「我虽然制作各种手工品，但是不制作箱子」）。
+  **客户端名表**：204261 = Daskair、798058 = Shugo_DC1_3、204108 = Lanse。
+  **迁移前 Java handler `_2922FascinatingGift`**：`STEP_TO_10 -> setQuestVar(10) + REWARD`、
+  `STEP_TO_20 -> setQuestVar(20) + REWARD`（打包 step 而不是行号），此后在 798058/204108 上按
+  var0 分流领奖（798058 走 `sendQuestEndDialog(env)`，204108 走 `sendQuestEndDialog(env, 1)`）。
+  迁移把两个分支塌陷成 `started(0) -> reward(0)`，并在 204261/798058/204108 上各留一份重复的
+  接取/报告/领奖段；审计同样判 `MISSING_TAIL_ROWS | ROW_BEHIND | ROW_WITHOUT_STATE(1 2)`。
+
+### 四十九之二、落点
+
+- **1938 顺序阶梯**：`unaccepted(0) / started(START,0) / s1(START,1) / reward(REWARD,2) / complete`
+  ；行 0 = 798069 的 `QUEST_SELECT -> SELECT2`、`SELECT2_1 -> SELECT2_1`、`SETPRO1 -> s1`；
+  行 1 = 805836 的 `QUEST_SELECT -> SELECT3`、`SELECT3_1 -> SELECT3_1`、`SETPRO2 -> reward`；
+  行 2 = 203703 的 `NPC_REPORT page="SELECT5"`（唯一允许的 SELECT2/SELECT5/DEFAULT_SUCCESS 之一）
+  + `npc-complete complete-reward-index="0"`（preview 只保留 `USE_OBJECT`，避免与 NPC_REPORT
+  展开的 `SELECT_QUEST_REWARD` 撞 `AMBIGUOUS_TRANSITION`）。
+- **2922 互斥分支阶梯**：`unaccepted(0) / started(START,0) / reward1(REWARD,1 箱子) /
+  reward(REWARD,2 耳坠) / complete`，与批次 38 同型（两个分支各自投影一个 REWARD 行）。
+  行 0 -> 行 1/行 2 由 Daskair 204261 的 `SETPRO10/SETPRO20` 承担（迁移前同样是选择即领奖态）；
+  798058 在 `reward1` 上 `QUEST_SELECT -> SELECT2`、`SELECT_QUEST_REWARD -> 窗口 1`；
+  204108 在 `reward` 上 `QUEST_SELECT -> SELECT3`、`SELECT_QUEST_REWARD -> 窗口 1`；
+  错人页 `SELECT3_1`/`SELECT2_1` 与两侧 `FINISH_DIALOG` 都补了路由（页面按钮必须有落点）。
+  `complete-reward-index` 两支都用 0：2923/2924 只按 `finished 2922` 分支前置，不区分选择。
+- **自愈边**：1938 一条（`REWARD && var0==0 -> 2`，迁移直跳落盘）；2922 五条
+  （`START/var0=10 -> 1`、`START/var0=20 -> 2`、`REWARD/var0=10 -> 1`、`REWARD/var0=20 -> 2`
+  —— 迁移前 Java handler 的两段 step；`REWARD/var0=0 -> 1` —— 迁移后 XML 直落 REWARD，
+  按迁移后 `SELECT2` 页链默认归箱子行）。
+
+### 四十九之三、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 2/2 validates；
+  `apply_batch45_three_row_ladder_and_branch_reward.py --apply` 后 `--check` 幂等 2/2 OK。
+- **门禁测试**：新增 `Batch45ThreeRowLadderAndBranchRewardContractTest` 6 例（每行一个状态 /
+  1938 两段页链推进 / 1938 报告与领奖 owner / 2922 分支冻结与两侧窗口 / 2922 错人页与分支完成
+  / 两个任务的旧存档自愈）6/6 绿；同批回归 `Batch44FoamWispFiveRowContractTest`、
+  `ProductionCatalogWhitelistVerificationTest`、`QuestPageButtonAuditTest`、
+  `QuestHandoverContinuationAuditTest`、`QuestE2eInfrastructureTest`、
+  `AcceptAndConfirmationEntryContractTest`、`QuestClientContractGateTest` 全绿，
+  `PRODUCTION_COMPILE_OK=6191 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。
+- **全库行号审计**（`audit_reward_row_vs_client_steps.py`，[11] 节标题已改批次 45 并登记本族）：
+  `MISSING_TAIL_ROWS 42 -> 40`、`ROW_BEHIND 139 -> 137`、`ROW_WITHOUT_STATE 471 -> 469`、
+  `ROW_ALIGNED 2711 -> 2713`、`ALIGNED / ROW_STATE_ALIGNED 2483 -> 2485`；两个任务转为
+  `ALIGNED + ROW_ALIGNED + ROW_STATE_ALIGNED + visible=0 1 2`，明细见
+  [batch45-evidence.tsv](batch45-evidence.tsv)。
+  基线口径修正：`audit-missing-last-row.tsv`（HEAD 提交态）实际是 77 行数据，本会话早前记录的
+  `MISSING_LAST_ROW=73` 属笔误，本次以提交态文件为准重新记录。
+- **客户端实机 PENDING_CLIENT**：① 1938 与 798069 对话走 `select2 -> select2_1 -> 结束对话` 后
+  任务书切行 1；② 与 805836 走 `select3 -> select3_1` 后切行 2；③ 回 203703 出现 `select5`，
+  点“报告结果”弹奖励窗口 1 并完成；④ 2922 接取后选“箱子”任务书切行 1、选“耳坠”切行 2；
+  ⑤ 对应 NPC 的 `select2`/`select3` 点“定做”弹奖励窗口 1 并完成，走错人时出现
+  `select2_1`/`select3_1` 且“结束对话”可关闭；⑥ 旧存档 `var0=10/20`（或 REWARD/0）登录/切图后
+  自愈到行 1/行 2。
+
+### 四十九之四、边界与后续
+
+- 2922 的 `REWARD && var0==0` 自愈默认归**箱子行 1**：迁移后的直跳页链是 `SELECT2`（箱子 owner），
+  两条分支在客户端都能领奖，故按页链证据取一支并在实机验收里确认。
+- 剩余 `MISSING_TAIL_ROWS 40`（34 个待逐族收口 + 6 个已登记例外）；其它挂账
+  `STATES_BEYOND_ROWS 2620`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 77`、`ROW_BEHIND 137`。
+  既有红沿用 `QuestInteractionObjectCatalogTest` 8 条资格缺口（13809/23809/30504/30554）。
