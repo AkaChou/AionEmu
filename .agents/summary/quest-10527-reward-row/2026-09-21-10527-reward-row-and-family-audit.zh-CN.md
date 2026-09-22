@@ -2531,3 +2531,78 @@ reward1/reward2 投影 1/2 是行标记）、`50008/51008`（`ProgressAll` + sen
   `MISSING_DEFINITION 3959/4963/18706/18744/20015/28706/28744/29706`；`section0 residual 837`
   （COUNTER_CHAIN_OK 823 / 扩展例外 6 / 闭环 7 + `REVIEW_LEGACY_NO_VAR0 1`）；
   新增已知无关红 `QuestKillCounterRetailGateTest`（15101，见上）。
+
+## 三十四、批次 30：客户端独有“过场/影片播放隐藏任务”族（2026-09-22 用户授权后执行）
+
+### 三十四之一、族判据：真端 dev_name 与客户端空槽位
+
+批次 29 之后剩下的两个挂账桶（`NO_NODES 16984/26984`、`MISSING_DEFINITION 3959/4963/18706/18744/20015/28706/28744/29706`）
+在真端与客户端两侧都能定性，不再属于“未知缺口”。真端 58Server `Map/XML/quest.xml`（UTF-16，共 11.5 MB 转码后检索）
+里这 10 个 id 的 `dev_name` 直接写明用途：
+
+- `18744/28744` = 「타메스 컷신 재생용(천)」（泰梅斯过场播放用，天族/魔族各一条）；
+- `16984/26984` = 「룬의 안식처 컷신 재생용 히든 퀘스트 (천)」（符文圣所过场播放用隐藏任务）；
+- `20015` = 「[5.5 업데이트 인트로 영상 재생용 히든 퀘스트] 영상 재생용 히든 퀘스트 (천마공용)」（5.5 更新开场影片播放用隐藏任务，天/魔共用）；
+- `18706/28706` = 「진리는 세월과 함께 흐른다」等真实任务，但客户端 `minlevel_permitted=maxlevel_permitted=999`、前置 `Q18700/Q28700` 未实现；
+- `3959/4963` = 「파이널 미션 에필로그」，真端前置 `Q1099/Q2099` 被取消（`043426b47` 已删除，由
+  `DisabledClientQuestPlaceholderCatalogTest` 锁定“不得注册、不得打包”）；
+- `29706` 在客户端 `quest.xml` 与真端 `quest.xml` 中都不存在，只剩残留 HTML。
+
+客户端任务书行由 `quest_summary` 里的 `<step>` 槽表达（不是 `<p>`，批次 24 的扫描脚本口径）：`18744/28744/16984/26984`
+各 4 槽、`20015` 3 槽，槽内可见文本全为空（step0 只挂 `[%collectitem]` 占位）。这一族没有可点亮的任务书行，
+QE-051 的行号口径对它们不适用——本批把这点写进审计脚本的 `BLANK_JOURNAL_SLOT_EXCEPTIONS` / `CLIENT_ONLY_ISOLATED_QUESTS` 登记，
+判定保持不变。
+
+### 三十四之二、落点（18744/28744 补齐可执行定义）
+
+证据链：
+
+1. **模板**（客户端 5.8 `quest.xml` + 真端 `quest.xml` + 历史 `quest_data.xml` 条目）：`min-level 60`、
+   `maxlevel_permitted 0`（无上限）、`race pc_light/pc_dark`、`max_repeat_count 1`、
+   `reward_exp1 = reward_gold1 = 0`、`category QUEST`、名称 `1800942`「阿비소가 알려준 리멘투 정보」/
+   `1800950`「프로쿠라가 알려준 리멘투 정보」（CHS 表对应“阿比索提供的勒门图的情报/普罗库拉提供的勒门图的情报”）。
+2. **行为**：迁移前 handler `AbstractRaksangIntro`（`origin/history 77d99efd6` 的
+   `_18744Avisos_Intelligence`/`_28744Procuras_Intelligence`）：world `300610000`（Raksang Ruins）+
+   等级 >= 60 + 阵营相符 → 自动接取并播放过场；已接取/领奖的存档再次进入时重播；过场结束置 REWARD 并完成；
+   已完成（COMPLETE）不再触发。
+3. **资源**：过场 `912` = 客户端 `CutScenes.xml` 的 `CS_ID_132`（`cs_id_132.seq`），其文本 `cs_id_132.xml`
+   正是拉科兰遗迹开场（精神支配实验、三岔路、支援品）；`CutSceneMovies.xml` 只到 id 37，因此包类型必须是
+   `CUTSCENE`(0)——迁移前 handler 写的 `SM_PLAY_MOVIE(1, 912)` 指向影片表之外，不能照抄。
+   全库交叉验证：232 个 `play-movie type=CUTSCENE` 的 id 100% 落在 `CutScenes.xml`，8 个
+   `CUTSCENE_MOVIE` 的 id 100% 落在 `CutSceneMovies.xml`（1..37）。
+
+定义（`quests/18744.xml`、`quests/28744.xml`，目录 2 条 `EXECUTABLE`）：节点
+`unaccepted(0)/started(0)/complete(0)`（不造任务书行），三条转换：
+
+1. `unaccepted -> started`：`enter-world` + `world-is 300610000` + `start-eligible`（引擎元数据门控：等级、
+   阵营、已完成 `canRepeat=false` 全部生效）→ `play-movie 912 CUTSCENE` + `VISIBILITY_REFRESH`；
+2. `started -> started`：`enter-world` + `world-is` → `play-movie 912` + `PACKET_ONLY`（重播，旧 handler 的 REPLAY 分支）；
+3. `started -> complete`：`movie-end 912` → `complete-quest(0)` + `COMPLETION`（真端无奖励，故无 reward 行）。
+
+### 三十四之三、验证（2026-09-22）
+
+- **静态**：`xmllint + quest_definition.xsd` 2/2 validates；`quest_definition_catalog.xsd` validates；
+  `docs/QUEST_CATALOG.zh-CN.md` 补 2 行并把数据范围更新为 6224 条（`refresh_full_catalog.py` 重跑后行值幂等）。
+- **门禁**：新增 `CutsceneHiddenQuestFamilyContractTest`（4 例：自动接取/重播/过场结束完成 + 不造任务书行、
+  不挂对话 + `16984/26984` 保持 `METADATA_ONLY` + 其余 6 个保持未注册且未打包）。
+- **审计**（全库行号口径）：`NO_REWARD_ROW 178 -> 180`（新增的两行即这一族：4 个空槽、无奖励行）、
+  客户端任务书覆盖 `5572 -> 5574`；`MISSING_LAST_ROW 77`、`ROW_ALIGNED 2669`、`ROW_BEHIND 179` 不变；
+  脚本新增 `[10]` 节打印“已补定义 / 仍隔离”两个登记集。
+- **Maven**：`CutsceneHiddenQuestFamilyContractTest` 4 例全绿；引擎组合与目录门禁 90 例全绿
+  （含 `QuestEngineRuntimeCompositionTest`、`QuestRuntimeCompositionCatalogSnapshotTest`、`QuestRewardValueGateTest`、
+  `BlankJournalSlotBoundaryContractTest`、`DisabledClientQuestPlaceholderCatalogTest`）；
+  `PRODUCTION_COMPILE_OK=6191`（6189 + 2）、`FAILURES=0`、`INTERACTION_OBJECT_FAILURES=0`、`WHITELIST_VIOLATIONS=0`。
+- **客户端实机 PENDING_CLIENT**：进入拉科兰遗迹（300610000）应自动接取并播放过场 912，过场结束任务完成；
+  已完成的角色再次进入不应重播。`16984/26984` 仍不出现在任务书（`METADATA_ONLY`）。
+
+### 三十四之四、边界与后续
+
+- “过场/影片播放隐藏任务”族的**包类型必须由资源表决定**：id ∈ `CutScenes.xml` → `CUTSCENE`(0)，
+  id ∈ `CutSceneMovies.xml` → `CUTSCENE_MOVIE`(1)；迁移前 handler 的 `SM_PLAY_MOVIE(1, …)` 不是类型依据。
+- `16984/26984` 仍是 `METADATA_ONLY`：要补行为必须先取到它们各自的过场 id 与触发世界/区域；当前只有真端
+  `dev_name` 能证明用途（符文圣所过场），不足以写行为。
+- `20015`（5.5 开场影片，客户端还带 `check_user_item_ok/fail` 检查页）、`18706/28706`（等级 999 占位族）、
+  `3959/4963`（禁用占位）、`29706`（客户端数据集里不存在）继续隔离。
+- 挂账收敛：`NO_NODES` / `MISSING_DEFINITION` 两桶自此为“**1 族登记 + 2 个已实现**”，后续审计按 `[10]` 节登记集核对，
+  不得再把它们当成缺口批量补定义；其余挂账（`STATES_BEYOND_ROWS 2622`、`INTERIOR_GAP 263`、
+  `MISSING_TAIL_ROWS 80`、`section0 residual 837`）不变。

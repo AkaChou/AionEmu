@@ -165,6 +165,23 @@ COUNTER_SLOT_EXCEPTIONS = {
 # 需客户端/数据侧进一步取证，本批不改（判定保持不变）。
 NO_LEGACY_HANDLER_OBSERVED = {1005, 1479, 24120, 24123, 51010, 51020, 51022}
 
+# 批次 30 登记（2026-09-22）：真端 58Server `Map/XML/quest.xml` 的 `dev_name` 把这一族标成“过场/影片播放用隐藏任务”
+# （18744/28744 = 「타메스 컷신 재생용(천)」，16984/26984 = 「룬의 안식처 컷신 재생용 히든 퀘스트 (천)」，
+# 20015 = 「[5.5 업데이트 인트로 영상 재생용 히든 퀘스트]」），客户端 quest_summary 只有一个空槽，
+# 没有可以点亮的任务书行，行号口径对它们不适用。本批把证据链完整的 18744/28744 补成可执行定义
+# （进入拉科兰遗迹 300610000 + 等级 60 + 阵营自动接取，播放过场 912 = CutScenes.xml 的 CS_ID_132，过场结束即完成，
+# 门禁 CutsceneHiddenQuestFamilyContractTest）；其余 8 个保持隔离并登记证据：
+#   - 16984/26984：目录里是 METADATA_ONLY（符文圣所过场，过场 id 与触发世界未取证，不得凭空补）；
+#   - 20015：5.5 更新影片隐藏任务，客户端有 check_user_item 检查页但无行为/触发证据；
+#   - 18706/28706：客户端 minlevel=maxlevel=999 的占位族（前置 18700/28700 未实现），按等级 999 隔离规则处理；
+#   - 3959/4963：真端前置 Q1099/Q2099 被取消的禁用占位，DisabledClientQuestPlaceholderCatalogTest 锁定不得注册/打包；
+#   - 29706：客户端 quest.xml 与真端 quest.xml 中都不存在，只剩残留 HTML。
+# Batch 30 registration: the retail dev_name marks this family as cutscene/video-playback hidden quests with a single
+# blank journal slot, so the row-index lens does not apply. 18744/28744 now own executable definitions; the other
+# eight stay isolated with per-quest evidence.
+CUTSCENE_HIDDEN_QUEST_EXECUTABLE = {18744, 28744}
+CLIENT_ONLY_ISOLATED_QUESTS = {16984, 26984, 20015, 18706, 28706, 3959, 4963, 29706}
+
 # “和 X 对话 / 向 X 报告 / 去 X 那里”这一类末行 = 客户端领奖行（中/韩双语关键词）。
 DIALOG_ROW_RE = re.compile(r"对话|报告|见面|交谈|转达|传达|询问|汇报|告诉|通知|迎接|确认|拜访|交给|交付|递交|转交|归还|送达|대화|보고|만나")
 
@@ -618,6 +635,12 @@ def main() -> int:
                   f"missing={row['rows_without_state'] or '-'} "
                   f"out_of_range={row['states_out_of_range'] or '-'} "
                   f"writes={row['handover_writes'] or '-'} recovery={row['recovery']}")
+
+    print("\n[10] 客户端独有隐藏任务族（批次 30 登记）：")
+    print(f"  过场播放隐藏任务，本批已补 typed 定义={sorted(CUTSCENE_HIDDEN_QUEST_EXECUTABLE)}"
+          "：进入 300610000 + 等级 60 + 阵营门控自动接取，过场 912（CutScenes.xml 的 CS_ID_132）结束即完成，"
+          "门禁 CutsceneHiddenQuestFamilyContractTest")
+    print(f"  仍隔离（无定义、无任务书行，只登记证据）={sorted(CLIENT_ONLY_ISOLATED_QUESTS)}")
 
     if requested:
         print("\n[10] 单任务明细：")

@@ -24,7 +24,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * <p>
  * 同族边界（只登记、不在本批改定义）：`1400`（Paion's Worry）的行 1 是空槽，行 0 是“除掉作恶的特洛尔和托尔金 (/7)”，
  * `var0`/`var1` 是 8×4 的击杀计数组合（35 个节点）而不是行号，reward 投影 `var0=7,var1=3` 是计数饱和值；
- * 另有 10 个客户端有任务书但服务端暂无节点/定义的 id 登记在审计脚本的 BLANK_JOURNAL_SLOT_EXCEPTIONS。
+ * 另有 10 个客户端有任务书（全部 `<step>` 槽可见文本为空）但服务端没有可执行行为的 id 登记在审计脚本的
+ * BLANK_JOURNAL_SLOT_EXCEPTIONS / CLIENT_ONLY_ISOLATED_QUESTS：其中 18744/28744 已在批次 30 补成
+ * “进入拉科兰遗迹 300610000 → 播放过场 912 → 完成”的可执行定义（门禁 CutsceneHiddenQuestFamilyContractTest），
+ * 其余 8 个（16984/26984/20015/18706/28706/3959/4963/29706）按各自证据继续隔离。
  * <p>
  * Locks batch 24: the blank quest_summary slots of the prologue quests (1000/2000) and the counter-slot boundary of
  * 1400. The prologue template renders four empty rows and the Elyos/Asmodian prologue completes through the intro

@@ -1,7 +1,7 @@
 # Aion 任务目录（中英对照）
 
 > 生成日期：2026-09-18
-> 数据范围：`quest_definition/quests` 正式任务定义（6222 条）。
+> 数据范围：`quest_definition/quests` 正式任务定义（6224 条）。
 > 英文名称：任务 XML 的 `metadata/@name`。
 > 中文名称：Aion 5.8 客户端解包输出中的 `Strings/client_strings_quest.xml` 与 `display-name-id` 精确匹配的 `body`；未匹配项保留 `nameId`，不猜译。排查时缺少该客户端文件，应向用户请求提供。
 > 接取等级：`min-level`；存在有效 `max-level` 时输出区间，否则输出“起始等级+”。
@@ -3342,6 +3342,7 @@
 | 18741 | 60+ | A Versed Order | [副本]通过渗透以确保安全的命令 | 阵营: ELYOS；类别: PRIMARY；重复规则: max-repeat-count=10, cooldown-seconds=0, daily=false, weekly=false | 无 | enter-zone | [quest_definition/quests/18741.xml](../src/main/resources/aion/data/static_data/quest_definition/quests/18741.xml) |
 | 18742 | 60+ | [Daily/Coin] Import the Report | [副本/每日/铸币]训练的目的 | 阵营: ELYOS；类别: QUEST；重复规则: max-repeat-count=255, cooldown-seconds=0, daily=false, weekly=false | 无 | NPC 206378、NPC 206379、NPC 206380、NPC 804707 | [quest_definition/quests/18742.xml](../src/main/resources/aion/data/static_data/quest_definition/quests/18742.xml) |
 | 18743 | 60+ | Not So Fast, Nasto | [副本]统领大规模兵力的影子 | 阵营: ELYOS；类别: IMPORTANT；重复规则: max-repeat-count=10, cooldown-seconds=0, daily=false, weekly=false | 无 | NPC 206378、NPC 206379、NPC 206380、NPC 804707 | [quest_definition/quests/18743.xml](../src/main/resources/aion/data/static_data/quest_definition/quests/18743.xml) |
+| 18744 | 60+ | 阿比索提供的勒门图的情报 | 阿比索提供的勒门图的情报 | 阵营: ELYOS；类别: QUEST | 无 | 进入世界 | [quest_definition/quests/18744.xml](../src/main/resources/aion/data/static_data/quest_definition/quests/18744.xml) |
 | 18745 | 60+ | [Instance] Steal from the Stealers | [副本]被盗的符文族宝物 | 阵营: ELYOS；类别: IMPORTANT；重复规则: max-repeat-count=10, cooldown-seconds=0, daily=false, weekly=false | 无 | NPC 206378、NPC 206379、NPC 206380、NPC 804707、NPC 702958 | [quest_definition/quests/18745.xml](../src/main/resources/aion/data/static_data/quest_definition/quests/18745.xml) |
 | 18800 | 21+ | [Housing] The Living Is Easy | [学习住宅]到休息的地方埃利安去 | 阵营: ELYOS；类别: SEEN_MARKER；不可共享 | 无 | NPC 798458、NPC 830365 | [quest_definition/quests/18800.xml](../src/main/resources/aion/data/static_data/quest_definition/quests/18800.xml) |
 | 18801 | 21+ | [Housing] Heart Of Rock | [学习住宅]到草香村去 | 阵营: ELYOS；类别: SEEN_MARKER；不可共享 | 18832 | NPC 830001 | [quest_definition/quests/18801.xml](../src/main/resources/aion/data/static_data/quest_definition/quests/18801.xml) |
@@ -4408,6 +4409,7 @@
 | 28741 | 60+ | Securing the Route | [副本]通过渗透以确保安全的指令 | 阵营: ASMODIANS；类别: PRIMARY；重复规则: max-repeat-count=10, cooldown-seconds=0, daily=false, weekly=false | 无 | enter-zone | [quest_definition/quests/28741.xml](../src/main/resources/aion/data/static_data/quest_definition/quests/28741.xml) |
 | 28742 | 60+ | [Daily/Coin] A Flurry of Activity | [副本/每日/铸币]训练的意图 | 阵营: ASMODIANS；类别: QUEST；重复规则: max-repeat-count=255, cooldown-seconds=0, daily=false, weekly=false | 无 | NPC 206395、NPC 206396、NPC 206397、NPC 804732 | [quest_definition/quests/28742.xml](../src/main/resources/aion/data/static_data/quest_definition/quests/28742.xml) |
 | 28743 | 60+ | Take out the Mastermind | [副本]操纵大规模兵力的影子 | 阵营: ASMODIANS；类别: IMPORTANT；重复规则: max-repeat-count=10, cooldown-seconds=0, daily=false, weekly=false | 无 | NPC 206395、NPC 206396、NPC 206397、NPC 804732 | [quest_definition/quests/28743.xml](../src/main/resources/aion/data/static_data/quest_definition/quests/28743.xml) |
+| 28744 | 60+ | 普罗库拉提供的勒门图的情报 | 普罗库拉提供的勒门图的情报 | 阵营: ASMODIANS；类别: QUEST | 无 | 进入世界 | [quest_definition/quests/28744.xml](../src/main/resources/aion/data/static_data/quest_definition/quests/28744.xml) |
 | 28745 | 60+ | [Instance] Temporarily Stolen | [副本]被盗的符文族圣物 | 阵营: ASMODIANS；类别: IMPORTANT；重复规则: max-repeat-count=10, cooldown-seconds=0, daily=false, weekly=false | 无 | NPC 206395、NPC 206396、NPC 206397、NPC 804732、NPC 702958 | [quest_definition/quests/28745.xml](../src/main/resources/aion/data/static_data/quest_definition/quests/28745.xml) |
 | 28800 | 21+ | [Housing] Give My Regards To Pernon | [学习住宅]到休闲的地方佩尔农去 | 阵营: ASMODIANS；类别: SEEN_MARKER；不可共享 | 无 | NPC 798459、NPC 830532 | [quest_definition/quests/28800.xml](../src/main/resources/aion/data/static_data/quest_definition/quests/28800.xml) |
 | 28801 | 21+ | [Housing] Moving Up In The World | [学习住宅]公告官公布的传闻 | 阵营: ASMODIANS；类别: SEEN_MARKER；不可共享 | 28832 | NPC 830085 | [quest_definition/quests/28801.xml](../src/main/resources/aion/data/static_data/quest_definition/quests/28801.xml) |

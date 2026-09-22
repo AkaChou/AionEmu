@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 18744（阿比索提供的勒门图的情报）：真端 dev_name「타메스 컷신 재생용(천)」= 过场播放用隐藏任务，客户端 quest_summary 固定渲染 4 个空 <step> 槽（step0 只挂 [%collectitem] 占位、step1..3 为空），没有可点亮的目标行。
+     18744 (阿比索提供的勒门图的情报): retail dev_name "타메스 컷신 재생용(천)" marks a cutscene-playback hidden quest; the client
+     quest_summary renders four blank <step> slots, so this definition must not invent journal rows.
+     行为证据 / behaviour evidence: 迁移前 handler AbstractRaksangIntro（world 300610000、等级 >= 60、按阵营自动接取并播放过场，
+     过场结束时置 REWARD 并完成）；过场 912 = 客户端 CutScenes.xml 的 CS_ID_132（cs_id_132.seq，文本为拉科兰遗迹开场：
+     精神支配实验 / 三岔路），CutSceneMovies.xml 只到 37，故包类型必须是 CUTSCENE(0) 而不是 CUTSCENE_MOVIE(1)。 -->
+<quest-definition id="18744" version="1">
+  <metadata name="阿比索提供的勒门图的情报" display-name-id="1800942" min-level="60" max-level="2147483647" category="QUEST">
+    <races>
+      <race id="ELYOS"/>
+    </races>
+  </metadata>
+  <progress>
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+  </progress>
+  <nodes>
+    <node label="unaccepted" status="NONE">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+    </node>
+    <node label="complete" status="COMPLETE">
+      <var name="var0" value="0"/>
+    </node>
+  </nodes>
+  <transitions>
+    <!-- 进入拉科兰遗迹（300610000）：开始资格由元数据关卡门控（等级 >= 60、阵营、未完成），随后播放开场过场。
+         Entering Raksang Ruins: the metadata start gate (level >= 60, race, not completed) authorises the auto-start,
+         then the intro cutscene plays. -->
+    <transition source="unaccepted" target="started">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <world-is world-id="300610000"/>
+        <start-eligible/>
+      </conditions>
+      <after-commit>
+        <play-movie movie-id="912" type="CUTSCENE"/>
+        <sync-quest-state mode="VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 已接取/已领奖的存档再次进入时重播过场（旧 handler 的 REPLAY_MOVIE 分支）。
+         Replays the cutscene for persisted START saves, mirroring the legacy REPLAY_MOVIE branch. -->
+    <transition source="started" target="started">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <world-is world-id="300610000"/>
+      </conditions>
+      <after-commit>
+        <play-movie movie-id="912" type="CUTSCENE"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 过场结束即完成（真端无奖励：reward_exp1=0 / reward_gold1=0）。
+         Completes when the cutscene ends; retail grants no reward (reward_exp1=0 / reward_gold1=0). -->
+    <transition source="started" target="complete">
+      <event>
+        <movie-end movie-id="912"/>
+      </event>
+      <actions>
+        <complete-quest reward-index="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="COMPLETION"/>
+      </after-commit>
+    </transition>
+  </transitions>
+</quest-definition>

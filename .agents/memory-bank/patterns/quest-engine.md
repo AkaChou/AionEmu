@@ -2,10 +2,10 @@
 
 本文档记录 AionEmu 声明式 XML 任务系统、状态机与 NPC 交互的实战避坑经验。
 
-> Pattern IDs: `QE-001`–`QE-046`
+> Pattern IDs: `QE-001`–`QE-055`
 > card_status: ACTIVE; existing entries retain their historical evidence boundary
 > scope: production quest XML/compiler, Quest runtime, and Aion 5.8 client/legacy evidence
-> last_reviewed: 2026-09-20
+> last_reviewed: 2026-09-22
 
 ---
 
@@ -1236,3 +1236,29 @@ keywords: 领奖行、MISSING_LAST_ROW、legacy step、changeQuestStep、useQues
 - **代表案例（批次 29，全库 81 个 MISSING_LAST_ROW 的四族分类）**：族 A 只有 6 个真缺陷——1876/2876（`changeQuestStep(env, 1, 2, false)` 写 2 后 `setStatus(REWARD)`，旧投影写成 1）、14123（`defaultOnKillEvent(env, 206360, 0, 1)` 写 1，旧 XML 的 4 条交接又回写 `var0=0`）、2600（legacy 只在 `var0 == 1` 时响应 `SELECT_REWARD`，旧投影 0）、11010（`defaultCloseDialog(env, 2, 3)` 写 3，旧投影 0）、1466（两条进入路径分别落盘 0 与越界的 2，客户端只有 2 行，统一为 1），本批按 legacy 落盘值修投影并各补 `REWARD/旧值 -> 新值` 自愈边；族 B 62 个（`defaultFollowEndEvent(1,1,true,12)`、`defaultCloseDialog(1,1,true,false)`、`checkQuestItems(1,1,true,...)`、`changeQuestStep(13,14,true)`、`checkItemExistence(11,11,true,...)` 等形态）投影已经等于 legacy 落盘值，只是小于末行索引，全部登记为 `LEGACY_STEP_EXCEPTION`；族 C 6 个（2303 的 11..15/21..25 击杀计数、50008/51008 的 sensoryArea 计数、11467 的 reward0..3 四投影、1114 的分支领奖行、80690 的槽位 15）var0 不承载行号；族 D 7 个（1005/1479/24120/24123/51010/51020/51022）在 legacy 侧既无 handler 也无脚本，登记待取证。反例提醒：`useQuestItem` 并不写 newStep——10527 的 reward=15 来自它自己的客户端 16 行契约与用户报障，不是通用规则。
 - **代表案例（批次 27/28）**：18805/28805（批次 27，2026-09-22）：客户端 3 行、领奖行索引 2，legacy `_18805Going_Thrifting` / `_28805SomethingOld_SomethingNew` 用回收箱的 `STEP_TO_2 -> defaultCloseDialog(env, 1, 2)` 把 step 推到 2，回到旧货商主人的 `SELECT_REWARD` 才 `changeQuestStep(env, 2, 2, true)`（step 停 2）；旧 XML 投影写成 1 且交接回写 1，本批改为投影 2、删回写、补 `REWARD/var0=1` 自愈边，由 HousingRecycleRewardRowContractTest（5 例）锁定。反例（禁止按末行索引改）：15300/25300 的 `changeQuestStep(env, 13, 14, true)` -> step 停 13（真机已验收，reward=13）、10100/20100 的 `useQuestItem(env, item, 4, 4, true)` -> step=4（reward=4）。批次 28 补充同族第二个案例 16800/26800（客户端都 3 行，legacy `changeQuestStep(env, 2, 3, true)` 落盘 step 2，旧投影 16800=1 / 26800=3）：两侧重建 0/1/2 阶梯（塔感应区 zone 把 0 推到 1、Etezar/Enfitenta 的 SET_SUCCEED 把 1 推到 2、知识书库 zone 只置 REWARD 并播影片 931/932）、删掉 started 态直跳领奖的捷径与多余 owner，并各补 `REWARD/旧值 -> 2` 的自愈边，由 ArchivesRewardStepLadderContractTest（7 例）锁定。
 - **编号说明**：`QE-049`/`QE-050` 已被并行会话占用，`QE-051`（领奖行投影）/`QE-052`（owner 收敛）/`QE-053`（链式计数器）分别覆盖相邻主题，本卡片编号为 `QE-054`。
+
+---
+
+## [QE-055] 五十三、过场/影片播放隐藏任务族 (CUTSCENE_HIDDEN_QUESTS)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端标记为“过场/影片播放用”的隐藏任务：空任务书槽位的服务端行为（enter-world 自动接取 + 播放过场 + 过场结束完成）与 SM_PLAY_MOVIE 包类型选择
+first_seen: 2026-09-22
+last_verified: 2026-09-22
+symptom: 客户端任务书对应不上服务端的“缺口定义”——审计报 NO_NODES 或 MISSING_DEFINITION，任务书里却只有空槽；或按任务书行号口径去补定义/行节点，造出永远不显示的节点
+root_cause: 真端把这类任务当作“过场/影片播放用隐藏任务”（dev_name 直接写明），任务书没有可见目标行，行为只有“进入指定世界 → 播放过场/影片 → 结束即完成”；迁移时若只看服务端缺口清单，容易误判成“定义缺失需要按行号补齐”，也容易把过场 id 的包类型写错（CutScenes.xml 与 CutSceneMovies.xml 是两张不同的资源表）
+fix_or_guardrail: 1. 先读真端 quest.xml 的 dev_name 与客户端 quest_summary 的 <step> 槽：槽内可见文本全空 → 这一族没有可点亮的行，禁止按 QE-051 行号口径补节点；2. 行为按迁移前 handler 的 enter-world/replay/movie-end 三段落成 typed 定义：unaccepted -> started 用 enter-world + world-is + start-eligible（等级/阵营/已完成由引擎元数据门控），started -> started 重播，started -> complete 用 movie-end + complete-quest；3. 过场/影片 id 必须在客户端资源表里查证，包类型由表决定：CutScenes.xml -> CUTSCENE(0)，CutSceneMovies.xml -> CUTSCENE_MOVIE(1)，迁移前 handler 的 SM_PLAY_MOVIE(1, id) 不是类型依据；4. 没有过场 id 或触发世界证据的成员保持隔离（METADATA_ONLY 或不注册），不得凭空补行为
+evidence: src/main/resources/aion/data/static_data/quest_definition/quests/18744.xml 与 src/main/resources/aion/data/static_data/quest_definition/quests/28744.xml（批次 30：进入 300610000 自动接取 + 过场 912 -> 完成，三节点无行节点）；src/main/resources/aion/data/static_data/quest_definition/quests/16984.xml 与 src/main/resources/aion/data/static_data/quest_definition/quests/26984.xml（同族仍为 METADATA_ONLY，过场 id/触发世界未取证）；src/test/java/com/aionemu/gameserver/questEngine/definition/CutsceneHiddenQuestFamilyContractTest.java（4 例：自动接取/重播/过场结束完成、不造行不挂对话、METADATA_ONLY 保持、隔离成员未注册未打包）；src/test/java/com/aionemu/gameserver/questEngine/definition/BlankJournalSlotBoundaryContractTest.java（空槽位族边界，批次 24）；src/test/java/com/aionemu/gameserver/questEngine/definition/DisabledClientQuestPlaceholderCatalogTest.java（3959/4963 禁用占位锁定）；.agents/summary/quest-10527-reward-row/audit_reward_row_vs_client_steps.py（BLANK_JOURNAL_SLOT_EXCEPTIONS / CLIENT_ONLY_ISOLATED_QUESTS 登记与 [10] 节输出）；.agents/summary/quest-10527-reward-row/2026-09-21-10527-reward-row-and-family-audit.zh-CN.md（§三十四）；迁移前 handler `AbstractRaksangIntro` 与 _18744Avisos_Intelligence/_28744Procuras_Intelligence 仅存在于 origin/history commit 77d99efd6；真端 quest 模板 dev_name（18744/28744 = 타메스 컷신 재생용(천)、16984/26984 = 룬의 안식처 컷신 재생용 히든 퀘스트 (천)、20015 = 5.5 인트로 영상 재생용 히든 퀘스트）；Aion 5.8 客户端 CutScene 资源表的过场 912 = CS_ID_132（其过场文本为拉科兰遗迹开场）
+validation: static（xmllint + quest_definition.xsd 2/2 validates，catalog XSD validates，docs/QUEST_CATALOG.zh-CN.md 行刷新幂等）+ audit（全库行号审计 NO_REWARD_ROW 178 -> 180、客户端任务书覆盖 5572 -> 5574，MISSING_LAST_ROW 77 / ROW_ALIGNED 2669 / ROW_BEHIND 179 不变）+ focused-test（批次 30：CutsceneHiddenQuestFamilyContractTest 4 例、引擎组合与目录门禁 90 例全绿；PRODUCTION_COMPILE_OK=6191 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0）；客户端实机 PENDING_CLIENT
+boundaries: 只覆盖“任务书无可见行、任务本身只是播放过场/影片”的隐藏任务；正常有行目标的任务仍按 QE-051/QE-054 判；16984/26984 在拿到过场 id 与触发世界之前不得转成 EXECUTABLE；video 型（CutSceneMovies.xml）与 cutscene 型（CutScenes.xml）不得混用包类型；20015 还带客户端 check_user_item 检查页，属于另一个未取证形态，不得按本卡批量实现
+superseded_by: none
+first_check: 审计报 NO_NODES / MISSING_DEFINITION 且客户端 quest_summary 的 <step> 槽全空时，先查真端 quest.xml 的 dev_name 是否为“컷신/영상 재생용”，再查迁移前 handler 是否有 enter-world + movie 三段行为；有证据才落 typed 定义，并到 CutScenes.xml / CutSceneMovies.xml 里确认过场 id 属于哪张表
+keywords: 隐藏任务、过场播放、CutScenes.xml、CutSceneMovies.xml、CS_ID_132、Raksang Ruins、300610000、SM_PLAY_MOVIE、enter-world、movie-end、start-eligible、METADATA_ONLY、18744、28744、16984、26984、20015
+-->
+
+- **判定规则**：真端 `quest.xml` 的 `dev_name` 直接标成“컷신 재생용 / 영상 재생용 히든 퀘스트”的任务，客户端任务书只有空 `<step>` 槽（可见文本全空，最多挂 `[%collectitem]` 占位），服务端行为就是“进入指定世界 → 播放过场/影片 → 结束即完成”。这类任务**没有可点亮的行**，QE-051 的行号口径与 QE-054 的落盘 step 口径都不适用；它们出现在 `NO_NODES` / `MISSING_DEFINITION` 桶里是“清单口径问题”，不是“按行号补定义”的工单。
+- **为什么容易漏**：`quest_summary` 的行既可能写成 `<p>` 也可能写成 `<step>`，只看 `<p>` 会把这一族误判成“1 行”；包类型也常被迁移前 handler 的 `SM_PLAY_MOVIE(1, id)` 带偏——`CutScenes.xml`（990 条，`.seq`）与 `CutSceneMovies.xml`（38 条，`.bik`）是两张互斥资源表，id 落在哪张表决定包类型是 `CUTSCENE`(0) 还是 `CUTSCENE_MOVIE`(1)。
+- **代表案例（批次 30，2026-09-22）**：`18744/28744`（真端 dev_name「타메스 컷신 재생용(천)」）——客户端 4 个空槽、等级 60、`reward_exp1/gold1=0`；迁移前 `AbstractRaksangIntro` 在 world `300610000` 按等级+阵营自动接取并播放过场、已接取存档重播、过场结束置 REWARD 并完成；过场 `912` = `CutScenes.xml` 的 `CS_ID_132`（`cs_id_132.xml` 文本为拉科兰遗迹开场），故 typed 定义用 `CUTSCENE`(0) 而不是 handler 里的类型 1。同族隔离成员：`16984/26984`（METADATA_ONLY，过场 id/触发世界未取证）、`20015`（5.5 开场影片 + `check_user_item` 检查页）、`18706/28706`（客户端 999 级占位）、`3959/4963`（`DisabledClientQuestPlaceholderCatalogTest` 锁定的禁用占位）、`29706`（客户端与真端 `quest.xml` 都不存在）。
+- **全库交叉验证方法**：把 `quest_definition/quests/*.xml` 的 `play-movie movie-id` 与两张客户端资源表求交——当前 232 个 `CUTSCENE` 动作 100% 命中 `CutScenes.xml`，8 个 `CUTSCENE_MOVIE` 100% 命中 `CutSceneMovies.xml`（1..37）；任何新过场动作都应先过这道交叉检查再写。
+- **编号说明**：`QE-054`（legacy 落盘 step 权威值）与 `QE-051`（领奖行投影）覆盖有行任务，本卡片覆盖无行隐藏任务，三者按“任务书是否有可见目标行”分流。

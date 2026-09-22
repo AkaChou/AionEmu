@@ -351,6 +351,30 @@
     PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0；客户端实机 PENDING_CLIENT。
     产物：apply_batch29_reward_row_closure.py（--check 幂等）、batch29-evidence.tsv、batch29-triage.tsv（81 个任务逐条依据）、
     报告 §三十三、模式卡 QE-054（批次 29 补充）。
+  - **批次 30 完成（2026-09-22，客户端独有“过场/影片播放隐藏任务”族：18744/28744 补齐 + 8 个隔离登记）**：把批次 29 剩下的
+    `NO_NODES 16984/26984` 与 `MISSING_DEFINITION 3959/4963/18706/18744/20015/28706/28744/29706` 两个桶定性收口。
+    真端 `quest.xml` 的 `dev_name` 直接写明用途：18744/28744 =「타메스 컷신 재생용(천)」（泰梅斯过场播放用）、
+    16984/26984 =「룬의 안식처 컷신 재생용 히든 퀘스트 (천)」、20015 =「[5.5 업데이트 인트로 영상 재생용 히든 퀘스트]」；
+    客户端 quest_summary 的 `<step>` 槽可见文本全空（18744/28744 4 槽、20015 3 槽，step0 只挂 `[%collectitem]`），
+    没有可点亮的目标行，行号口径不适用。证据链完整的一对 **18744/28744 补齐 typed 定义**（`quests/18744.xml`、`quests/28744.xml`
+    + 目录 2 条 EXECUTABLE）：三节点 `unaccepted(0)/started(0)/complete(0)`（不造任务书行），`unaccepted -> started` 用
+    `enter-world + world-is 300610000 + start-eligible`（引擎按元数据门控等级 60/阵营/未完成）接取并播放过场，
+    `started -> started` 重播，`started -> complete` 用 `movie-end 912 -> complete-quest(0)`；过场 912 = 客户端 CutScenes 表的
+    CS_ID_132（文本即拉科兰遗迹开场），CutSceneMovies 表只到 37，故包类型是 `CUTSCENE`(0) 而不是迁移前 handler 的 `SM_PLAY_MOVIE(1, …)`。
+    其余 8 个登记隔离：16984/26984 保持 METADATA_ONLY（过场 id/触发世界未取证）、20015（5.5 开场影片 + check_user_item 页）、
+    18706/28706（客户端 999 级占位）、3959/4963（真端前置被取消的禁用占位，既有门禁锁定）、29706（客户端与真端 quest.xml 都不存在）。
+    验证：xmllint 2/2 + catalog XSD；docs/QUEST_CATALOG.zh-CN.md 补 2 行（6222 -> 6224 条，行刷新幂等）；行号审计
+    NO_REWARD_ROW 178 -> 180、客户端覆盖 5572 -> 5574（MISSING_LAST_ROW 77/ROW_ALIGNED 2669/ROW_BEHIND 179 不变，脚本新增 [10] 登记节）；
+    Maven 新增门禁 CutsceneHiddenQuestFamilyContractTest 4 例 + 引擎组合/目录门禁 90 例全绿（PRODUCTION_COMPILE_OK=6191=6189+2 /
+    FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0）；客户端实机 PENDING_CLIENT。
+    产物：报告 §三十四、模式卡 QE-055（新增）、审计脚本 CUTSCENE_HIDDEN_QUEST_EXECUTABLE/CLIENT_ONLY_ISOLATED_QUESTS 登记。
+  - **批次 30 边界（下一批前必读）**：过场/影片隐藏任务的**包类型由客户端资源表决定**——id 落在 CutScenes 表用 `CUTSCENE`(0)、
+    落在 CutSceneMovies 表（1..37）用 `CUTSCENE_MOVIE`(1)，全库交叉验证 232 个 `CUTSCENE` 动作 100% 命中前者、8 个 `CUTSCENE_MOVIE` 100% 命中后者；
+    迁移前 handler 的 `SM_PLAY_MOVIE(1, …)` 不是类型依据。`NO_NODES`/`MISSING_DEFINITION` 两桶自此是“1 族登记 + 2 个已实现”，
+    后续审计按 audit_reward_row_vs_client_steps.py 的 `[10]` 节核对，不得再当成缺口批量补定义；16984/26984 要转 EXECUTABLE 必须先取到
+    各自的过场 id 与触发世界/区域；20015 还带客户端 `check_user_item` 检查页，属另一形态。下一批建议转向：全库挂账
+    `STATES_BEYOND_ROWS 2622`、`INTERIOR_GAP 263`、`MISSING_TAIL_ROWS 80`、`section0 residual 837`，以及 3 例已知无关红
+    （MissionItemConsumptionBatchRegressionTest 的 20529/29064、QuestKillCounterRetailGateTest 的 15101）。
   - **批次 29 边界（下一批前必读）**：QE-054 的落盘口径已修正——`useQuestItem(env, item, old, new, true)` 与 `changeQuestStep(env, old, new, true)`
     都只 `setStatus(REWARD)`、**落盘 oldStep**（10527 的 reward=15 来自它自己的 16 行客户端契约 + 用户报障，不能推广成通用规则）；只有
     `setQuestVar(N)`/`setQuestVarById(0, N)`/`changeQuestStep(..., false)` 之后的 `setStatus(REWARD)` 才写 N，`defaultOnKillEvent(..., var, true)`
