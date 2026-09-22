@@ -1454,3 +1454,95 @@ var0 当 0→2 的投递计数，且客户端行内 `HousingLf_Event_ShugoSanta`
   （`MISSING_TAIL_ROWS` / `INTERIOR_GAP`），须逐族取 legacy/客户端证据。
 - 本批 Maven 命令（已执行，92 例全绿；后续批次沿用并追加新门禁类）：
   `mvn -Dtest='MirrorRewardProjectionLagContractTest,QuestPrematureRewardRouteExclusionTest,Quest11110And1548PostKillReportDialogTest,DurableDaevanionWeaponRewardRowContractTest,RewardOwnerTrimContractTest,RewardRowResidualTwoRowContractTest,RewardRowEventTwoRowContractTest,RewardRowTwoRowTalkFamilyContractTest,RewardNpcOwnershipContractTest,RetailSingleStepRewardRowContractTest,LegacyRewardStepProjectionRegressionTest,QuestClientContractGateTest,QuestItemSourceContractGateTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest' test`
+
+
+## 二十三、批次 19：单步塌陷对（Elyos 存根补回行状态阶梯，15000 / 15670，2026-09-22）
+
+### 二十三之一、族级定位方法（与批次 18 同源，落点不同）
+
+批次 18 收的是“**有完整状态、只有 reward 投影落后**”的镜像对；本批收的是同一镜像方法下更重的一类：
+
+1. 同形镜像对 `q` / `q±10000` 客户端 quest_summary **行数相同**、末行 NPC 都能在任务内对上；
+2. 镜像那一侧已经有完整的 `0..N-1` START/REWARD 阶梯（审计 `ROW_ALIGNED / ROW_STATE_ALIGNED`）；
+3. 落后那一侧被迁移**塌陷成“单步交接直接置 REWARD”**，只剩行 0 一个状态
+   （审计 `ROW_BEHIND / MISSING_TAIL_ROWS / ROW_WITHOUT_STATE`）。
+
+这类任务**不能只改 reward 投影**——改完会指向一个客户端有、服务端却没有状态的行，任务书在中间步骤会空白。
+必须按客户端对话页 `<Act href="HACTION_*">` 给出的动作序列把中间行补回来（本批两个任务的页动作链完整可见）。
+全库扫描（`audit-output.tsv` 与镜像列交叉）后，同形且镜像已对齐的塌陷任务共 7 个：
+`1000/11000`、`15000/25000`、`15670/25670`、`23809/13809`、`23918/13918`、`24046/14046`、`39713/49713`；
+本批先收**客户端页动作链可直接复原**、镜像结构干净的两个（15000、15670），其余 5 个挂账（见二十三之五）。
+
+### 二十三之二、两个任务的证据
+
+| 任务 | 镜像（参照） | 客户端 quest_summary | 客户端页动作链（解包 HTML） | 迁移前塌陷形态 |
+|---|---|---|---|---|
+| 15000（The Elyos stub） | 25000（4 行 / reward=3，结构干净） | 行 0 回收 `quest_15000a` 交给米利亚德 / 行 1 和米利亚德对话 / 行 2 在人工奥德生成器附近使用修理工具 / 行 3 和米利亚德对话 | `select1` → `HACTION_CHECK_USER_HAS_QUEST_ITEM`（交背囊 182215661）→ `check_user_item_ok` `HACTION_SELECT2`(1352) → `select2` `HACTION_SELECT2_1`(1353) → `select2_1` `HACTION_SETPRO2`(10001)（“从米利亚德那里接过修理工具”，give-item 182215662）→ 行 2 使用工作物品 → 行 3 `HACTION_SELECT_QUEST_REWARD` | legacy `_15000Not_Any_Fool_Tool` 只有 `checkQuestItems(env, 0, 0, true, 10000, 10001)`：交物品直接置 REWARD、`var0` 停在 0 |
+| 15670（Investigating the Ancient Archon Weapon Invasion） | 25670（4 行 / reward=3：行 0/1 布里兹内 806105、行 2 FOBJ 731794、行 3 莱茵哈特 806116） | 行 0 与赫梅洛斯对话 / 行 1 把 4 处痕迹的证据交给赫梅洛斯 / 行 2 调查第五处痕迹 `..._Q15670E` / 行 3 向伊利西亚报告 | `select1` → `HACTION_SETPRO1`(10000) → `select2` `HACTION_CHECK_USER_HAS_QUEST_ITEM`(39)（交 4 件证据 182216189-192）→ `select3` `HACTION_SET_SUCCEED`(10255) → `select_success` `HACTION_SELECT_QUEST_REWARD`(1009) | 迁移把**所有东西都挂到领奖 NPC 伊利西亚 806114**：NPC_START/NPC_REPORT/4 件证据交付一次性收口（旧 route `started --SELECT_QUEST_REWARD--> reward`） |
+
+天/魔 id 对照（客户端 `npcs_unpacked/client_npcs_npc.xml`，两列同名同角色）：
+米利亚德 804874 ↔ 柯格豪根 804718；赫梅洛斯 806093 ↔ 布里兹内 806105；`LF6_FOBJ_Od_Track_Q15670e` 731793 ↔ `DF6_FOBJ_Od_Track_Q25670e` 731794；
+伊利西亚 806114 ↔ 莱茵哈特 806116；4 处痕迹 703434-703437 ↔ 703439-703442。
+
+### 二十三之三、修复
+
+两个任务都按“**每行一个状态**”重建：`started(0) → s1(1) → s2(2) → reward(3)`，并补
+`status=REWARD && var0==0 -> set var0=3` 的无 source `enter-world` 自愈边——塌陷定义把“交完物品”的玩家
+直接写成 `REWARD + var0=0`，改完阶梯后这类旧存档匹配不到 reward 节点的投影，必须自愈到领奖行，
+否则连奖励对话都点不出来（与 10527/15300 的旧存档自愈边同形）。
+
+- **15000**：`started --CHECK_USER_HAS_QUEST_ITEM(39)--> s1`（条件 `has-item 182215661`、动作 remove-item），
+  `s1 --SELECT2(1352)--> page SELECT2`、`s1 --SELECT2_1(1353)--> page SELECT2_1`、
+  `s1 --SETPRO2(10001)--> s2`（`give-item 182215662`，工作物品已在 metadata 声明）、
+  `s2 --use-item 182215662--> reward`；领奖窗口仍由 `npc-complete` 的 preview 路由（`USE_OBJECT` / `SELECT_QUEST_REWARD`）承接。
+- **15670**：`started --SETPRO1(10000)--> s1`（在赫梅洛斯 806093 处）、
+  `s1 --CHECK_USER_HAS_QUEST_ITEM--> s2`（条件/动作 4 件证据）、4 处痕迹的 `TALK_TO_NPC`/`can-act` 自环
+  从行 0 **移到行 1**、`s2 --USE_OBJECT--> page SELECT3`、`s2 --SET_SUCCEED(10255)--> reward`（第五处痕迹 731793）、
+  行 3 在伊利西亚 806114 报告；metadata 里 4 处痕迹 drops 的 `collecting-step` 由 `0` 同步改为 `1`
+  （`QuestInteractionObjectValidator#validateCatalogDrops` 用 source 节点 var0 比对 collecting-step，镜像 25670 即 1）。
+
+### 二十三之四、验证（2026-09-22）
+
+- 脚本 `.agents/summary/quest-10527-reward-row/apply_batch19_collapsed_single_step_ladder.py`
+  （`--check` 改动前 PENDING → APPLY 2/2 → `--check` 2/2 幂等）。
+- **单任务审计**：15000/15670 `ROW_BEHIND / MISSING_TAIL_ROWS / ROW_WITHOUT_STATE`（`visible=0`、`rows_without_state=1 2 3`、`recovery=False`）
+  → `ROW_ALIGNED / ALIGNED / ROW_STATE_ALIGNED`（`visible=0 1 2 3`、`recovery=True`、`rows_without_state` 空）。
+- **全库快照**：`ROW_ALIGNED 2656 -> 2658`、`ROW_BEHIND 190 -> 188`、`ROW_STATE_ALIGNED 2428 -> 2430`、
+  `ROW_WITHOUT_STATE 521 -> 519`（`ROW_AHEAD 2589`、`STATE_OUT_OF_RANGE 2446`、`BOTH_MISALIGNED 177`、
+  `MISSING_LAST_ROW 84` 不变）——本批属“缺状态阶梯”形态，`MISSING_LAST_ROW` 名单不动。
+- **结构校验**：`xmllint --noout --schema quest_definition.xsd` 2/2 validates；`git diff --check` 干净。
+- **编译期冲突定位（本批新增经验）**：首轮 `npc-complete` 的 `<preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>`
+  已经展开出 `reward -reward / TalkToNpc(npc, 1009)` 与 `TalkToNpc(npc, USE_OBJECT=-1)` 两条路由，
+  再显式写一条 `reward --SELECT_QUEST_REWARD--> reward` 会触发 `AMBIGUOUS_TRANSITION`；
+  领奖窗口**必须留在 npc-complete 的 preview 上**，不要重复声明（15000/15670 均已按此处理）。
+- **门禁测试**：`src/test/java/com/aionemu/gameserver/questEngine/definition/CollapsedSingleStepLadderContractTest.java`
+  7 例——① 两个任务 reward 投影 == 镜像领奖行 3 且状态 REWARD；② 每行都有状态（行 0..2 为 START、行 3 为 REWARD）；
+  ③ 15000 页按钮链（`CHECK_USER_HAS_QUEST_ITEM` → `SELECT2`(1352) → `SELECT2_1`(1353) → `SETPRO2` → `use-item`）
+  与服务端页面/物品一一对应；④ 15670 阶梯 + 4 件证据消耗 + 领奖 owner 唯一（806114）；
+  ⑤ 4 处痕迹的 `can-act` 与 `collecting-step` 已移到行 1；⑥ 旧存档自愈边唯一 + `QuestMutationPlanner` 收敛到 3；
+  ⑦ 不再保留 `started -> reward` 塌陷跳转、reward 路由不写非领奖行 var0。
+- **Maven（授权后执行，2026-09-22 12:59）**：16 个测试类 **99 例全绿**（含本批新增 7 例），
+  `PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。
+  首轮 `QuestClientContractGateTest` 报 1 条真实断点
+  `BUTTON_WITHOUT_ROUTE|15000|s1|804874|31|1352|1353`——`select2` 页的 `HACTION_SELECT2_1(1353)` 没有对应路由
+  （且我当时把 1352 的落地页写成了 `SELECT2_1`）；已按客户端页按钮链拆成
+  `1352 -> page SELECT2` 与 `1353 -> page SELECT2_1` 两条路由并加入门禁断言，重跑全绿。
+- **证据表**：[batch19-evidence.tsv](batch19-evidence.tsv)。
+- 客户端实机复测：**PENDING_CLIENT**。要点：① 15000 在米利亚德处交背囊后任务书切到行 1、接过修理工具后切到行 2、
+  在人工奥德生成器附近使用修理工具后切到行 3 并可领奖；② 15670 与赫梅洛斯对话后行 1、调查 4 处痕迹后交出证据切到行 2、
+  调查第五处痕迹后行 3 向伊利西亚报告领奖；③ 老存档（历史上已交物品、`REWARD+var0=0`）登录/切图后应落在领奖行。
+
+### 二十三之五、结论与后续
+
+- “单步塌陷对”还剩 5 个挂账，均需逐族处理，**不能套用本批模板**：
+  - `23809/13809`（4 行，三棵 `DeadTree` 730969/730970/730971）：镜像 13809 自身也把树登记成 `NPC_START` + `npc-complete`
+    （owner 冗余），需要“补阶梯 + 领奖 owner 收敛（QE-052）”一起做；
+  - `23918/13918`（6 行）：客户端 `quest_monster.csv` 用 `SECTION_0..4` 串行门控 5 只精锐兵，而当前 23918 是
+    32 节点组合式模型，需先定“串行阶梯 vs 组合计数”的建模口径再动；
+  - `24046/14046`（8 行，`INTERIOR_GAP`：缺行 4、行 7）：两侧客户端页动作并不同形（24046 没有 14046 的
+    `select2`/`select3` 页），且 14046 侧有既有的 movie 翻页修复记录（`.agents/summary/quest-14045-14046-movie-page-turn/`），
+    需要单独设计；
+  - `1000/11000`（4 行）与 `39713/49713`（3 行，FACTION 日任、三名可互换报告 NPC）：两侧页动作链不同形，
+    需要先确定“谁是行内 NPC、谁是 owner”。
+- 本批 Maven 命令（已执行，99 例全绿；后续批次沿用并追加新门禁类）：
+  `mvn -Dtest='CollapsedSingleStepLadderContractTest,MirrorRewardProjectionLagContractTest,QuestPrematureRewardRouteExclusionTest,Quest11110And1548PostKillReportDialogTest,DurableDaevanionWeaponRewardRowContractTest,RewardOwnerTrimContractTest,RewardRowResidualTwoRowContractTest,RewardRowEventTwoRowContractTest,RewardRowTwoRowTalkFamilyContractTest,RewardNpcOwnershipContractTest,RetailSingleStepRewardRowContractTest,LegacyRewardStepProjectionRegressionTest,QuestClientContractGateTest,QuestItemSourceContractGateTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest' test`

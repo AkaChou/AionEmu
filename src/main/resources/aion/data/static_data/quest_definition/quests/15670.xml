@@ -15,10 +15,10 @@
       <reward kind="EXP" id="0" amount="15469350"/>
     </rewards>
     <drops>
-      <drop npc-id="703434" item-id="182216189" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="703435" item-id="182216190" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="703436" item-id="182216191" chance="100" each-member="true" collecting-step="0"/>
-      <drop npc-id="703437" item-id="182216192" chance="100" each-member="true" collecting-step="0"/>
+      <drop npc-id="703434" item-id="182216189" chance="100" each-member="true" collecting-step="1"/>
+      <drop npc-id="703435" item-id="182216190" chance="100" each-member="true" collecting-step="1"/>
+      <drop npc-id="703436" item-id="182216191" chance="100" each-member="true" collecting-step="1"/>
+      <drop npc-id="703437" item-id="182216192" chance="100" each-member="true" collecting-step="1"/>
     </drops>
     <start-conditions>
       <condition type="finished" quest-id="15550"/>
@@ -34,39 +34,75 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="s1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="s2" status="START">
+      <var name="var0" value="2"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <transition source="started" target="started">
+    <!-- QE-051 领奖行（批次 19，单步塌陷对） / Elyos 存根 15670）：客户端 quest_q15670.html 的 quest_summary 共 4 行
+         （行 0 与赫梅洛斯 806093 对话 → 行 1 调查 4 处痕迹后交出证据 → 行 2 调查第五处痕迹 731793 →
+         行 3 向伊利西亚 806114 报告），与镜像 25670（4 行、reward=3）同形：镜像把行 0/行 1 放在
+         布里兹内 806105、行 2 放在 FOBJ 731794、行 3 放在莱茵哈特 806116，本任务按其结构换回天族 id。
+         客户端页动作依次是 HACTION_SETPRO1 / HACTION_CHECK_USER_HAS_QUEST_ITEM / HACTION_SET_SUCCEED /
+         HACTION_SELECT_QUEST_REWARD；迁移前的塌陷定义把 4 件证据收在领奖 NPC 伊利西亚身上并直接置 REWARD。
+         Collapsed single-step shard (Elyos stub): mirror 25670 already has the full 4-row ladder; the client
+         pages give the same action sequence with the Elyos NPC/item/object ids. -->
+    <transition target="reward">
       <event>
-        <can-act template-id="703434" action-type="ACTION_ITEM_USE"/>
+        <enter-world/>
       </event>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <can-act template-id="703435" action-type="ACTION_ITEM_USE"/>
-      </event>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <can-act template-id="703436" action-type="ACTION_ITEM_USE"/>
-      </event>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <can-act template-id="703437" action-type="ACTION_ITEM_USE"/>
-      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="3"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
     </transition>
     <dialog type="NPC_START" npc-id="806114" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="806114" source="started" target="reward" page="DEFAULT_SUCCESS"/>
-    <transition source="started" target="reward" priority="0">
+    <!-- 行 0：与五色湿地侦察哨所的赫梅洛斯（806093）对话；Row 0: talk to Hemellos (806093). -->
+    <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="806114" action="SELECT_QUEST_REWARD"/>
+        <dialog type="TALK_TO_NPC" npc-id="806093" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806093" action="SETPRO1"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 行 1：调查 4 处痕迹（703434-703437）取证后交给赫梅洛斯。
+         Row 1: investigate the four traces (703434-703437) and hand the evidence to Hemellos. -->
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806093" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s2" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806093" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <conditions>
         <has-item item-id="182216189" count="1"/>
@@ -81,19 +117,109 @@
         <remove-item item-id="182216192" count="1"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started" priority="1">
+    <transition source="s1" target="s1" priority="1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="806114" action="SELECT_QUEST_REWARD"/>
+        <dialog type="TALK_TO_NPC" npc-id="806093" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started">
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806093" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="703434"/>
+      </event>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="703435"/>
+      </event>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="703436"/>
+      </event>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="703437"/>
+      </event>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <can-act template-id="703434" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <can-act template-id="703435" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <can-act template-id="703436" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <can-act template-id="703437" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <!-- 行 2：调查第五处痕迹（731793）后进入领奖行 3。
+         Row 2: investigate the fifth trace (731793), which advances into reward row 3. -->
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="731793" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="731793" action="SET_SUCCEED"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806093" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <can-act template-id="731793" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
+    <!-- 行 3（领奖行）：向伊利西亚军团长（806114）报告；领奖窗口由 npc-complete 的 preview 路由承接。
+         Row 3 (reward row): report to Ilisia (806114); the reward window stays on the npc-complete preview route. -->
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806114" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806114" action="FINISH_DIALOG"/>
       </event>
