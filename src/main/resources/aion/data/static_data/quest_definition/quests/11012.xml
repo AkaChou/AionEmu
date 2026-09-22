@@ -27,69 +27,149 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="stage1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="stage2" status="START">
+      <var name="var0" value="2"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="3"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="799071" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="799071" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="799071" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-
-    <dialog type="NPC_REPORT" npc-id="799072" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="799072" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-
-    <dialog type="NPC_REPORT" npc-id="799073" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="799073" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-
-    <dialog type="NPC_REPORT" npc-id="799074" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="799074" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <transition source="started" target="reward">
+    <!-- QE-051 领奖行合同 / QE-051 reward-row contract：客户端 quest_summary 共 4 行
+         （行 0/1/2 = 依次治疗 STR_DIC_NPC_LF4_patient_1/2/3（799072/799073/799074），行 3 = 和 STR_DIC_N_Naiting（799071）对话）。
+         旧定义把 4 个 NPC 都挂上 NPC_REPORT -> reward 直跳，行 1/2/3 没有状态；改后三名患者各推进一格并各消耗
+         1 个绷带 182206715，接取与领奖都收在 799071 上（QE-052 owner 收敛）。
+         The client journal declares 4 rows; the old definition let all four NPCs jump straight to
+         reward, so rows 1-3 had no states. Each patient now advances exactly one row and both the
+         offer and the completion stay on 799071. -->
+    <transition target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799071" action="SETPRO2"/>
+        <enter-world/>
       </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="3"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <transition target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799072" action="SETPRO2"/>
+        <enter-world/>
       </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="3"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <dialog type="NPC_START" npc-id="799071" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE">
+      <accept-actions>
+        <give-item item-id="182206715" count="3"/>
+      </accept-actions>
+    </dialog>
+
+    <!-- 行 0：LF4_patient_1（799072）；客户端页 select1(1011) 的按钮是 HACTION_SETPRO1(10000)，每次治疗消耗 1 个绷带。
+         Row 0: LF4_patient_1 (799072); the client page select1(1011) carries HACTION_SETPRO1(10000) and each
+         treatment consumes one bandage. -->
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799072" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
+      </after-commit>
+    </transition>
+    <transition source="started" target="stage1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799072" action="SETPRO1"/>
+      </event>
+      <actions>
+        <remove-item item-id="182206715" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <!-- 行 1：LF4_patient_2（799073）；客户端页 select2(1352) 的按钮是 HACTION_SETPRO2(10001)。
+         Row 1: LF4_patient_2 (799073); the client page select2(1352) carries HACTION_SETPRO2(10001). -->
+    <transition source="stage1" target="stage1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799073" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="stage1" target="stage2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799073" action="SETPRO2"/>
       </event>
+      <actions>
+        <remove-item item-id="182206715" count="1"/>
+      </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
+        <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+
+    <!-- 行 2：LF4_patient_3（799074）；客户端页 select3(1693) 的按钮是 HACTION_SETPRO3(10002)。
+         Row 2: LF4_patient_3 (799074); the client page select3(1693) carries HACTION_SETPRO3(10002). -->
+    <transition source="stage2" target="stage2">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799074" action="SETPRO2"/>
+        <dialog type="TALK_TO_NPC" npc-id="799074" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
+    <transition source="stage2" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799074" action="SETPRO3"/>
+      </event>
+      <actions>
+        <remove-item item-id="182206715" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+
+    <!-- 行 3（领奖行）：和 STR_DIC_N_Naiting（799071）对话；客户端页 select_success(10002 = DEFAULT_SUCCESS)
+         的按钮 HACTION_SELECT_QUEST_REWARD(1009) 由 npc-complete 的 preview 路由承接，避免 AMBIGUOUS_TRANSITION
+         （批次 19 教训）。
+         Row 3 (reward row): talk to Naiting (799071); the client select_success(10002) button stays on the
+         npc-complete preview route. -->
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799071" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+
+    <npc-complete npc-id="799071" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

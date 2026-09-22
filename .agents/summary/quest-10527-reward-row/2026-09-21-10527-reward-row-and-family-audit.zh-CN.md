@@ -3978,3 +3978,63 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
   1123 的 `REWARD/var0=0` 权威值、`REWARD/1 -> 0` 反向自愈边与 `Batch47ClientScriptedRewardRowContractTest` 门禁），
   并在 `QE-051` 的编号说明后加“批次 47 勘误”指向；`systemPatterns.md` 同步登记路由，
   `sync_memory_bank.py` 与 `verify_memory_bank.py` 全绿（ROUTER_IDS=97 / PATTERNS=97 / MEMORY_BANK_VERIFY_OK）。
+
+---
+
+## 五十二、批次 48：11012 因吉森护理四行阶梯（三患者 + 领奖 owner 收敛，2026-09-22）
+
+### 五十二之一、族判定与证据
+
+- **客户端行**（`QUEST_Q11012.html` 的 `quest_summary`，4 行）：行 0/1/2 = 治疗
+  `STR_DIC_NPC_LF4_patient_1/2/3`，行 3 = 和 `STR_DIC_N_Naiting` 对话。
+- **客户端按钮链**：页 `select1(1011)`/`select2(1352)`/`select3(1693)` 的按钮分别是
+  `HACTION_SETPRO1(10000)`/`SETPRO2(10001)`/`SETPRO3(10002)`；领奖页 `select_success(10002)` 的按钮是
+  `HACTION_SELECT_QUEST_REWARD(1009)`。
+- **迁移前 handler**（`_11012PracticalNursing`，`7e9f0316c^`）：799071 = 接取 + 领奖 owner；
+  799072(var0==0)/799073(var0==1)/799074(var0==2) 各 `removeQuestItem(182206715, 1)` 并把 var0 推一格
+  （`STEP_TO_1/2/3` = 新枚举 `SETPRO1/2/3`）；799074 处直接 `setStatus(REWARD)`；
+  接取 `sendQuestStartDialog(env, 182206715, 3)` 发 3 个绷带。
+- **缺陷**：typed 迁移把 4 个 NPC 都写成 `NPC_REPORT -> reward` + `npc-complete` 直跳
+  （行 1/2/3 没有状态、4 个 NPC 都能领奖），且没有接取发放；审计为
+  `ROW_BEHIND | MISSING_TAIL_ROWS | ROW_WITHOUT_STATE（visible=0）`。
+
+### 五十二之二、落点（`11012.xml` 6 处）
+
+1. 节点补 `stage1(var0=1)` / `stage2(var0=2)`，`reward` 投影 `0 -> 3`。
+2. 患者阶梯：`started --QUEST_SELECT--> SELECT1 页`、`started --SETPRO1--> stage1`（消耗 1 个绷带）；
+   `stage1/stage2` 同形（SELECT2/SETPRO2、SELECT3/SETPRO3），最后一步进 `reward`。
+3. 接取发放：`NPC_START(799071)` 加 `<accept-actions><give-item item-id="182206715" count="3"/></accept-actions>`
+   （QE-049：`work-items` 只声明不自动发放）。
+4. owner 收敛：799072/799073/799074 的 `NPC_REPORT` + `npc-complete` 删除，接取与领奖只留 799071（QE-052）。
+5. 领奖行入口：`reward --USE_OBJECT--> SHOW DEFAULT_SUCCESS(10002)`（客户端 select_success 页）；
+   `npc-complete` 的 preview 只留 `SELECT_QUEST_REWARD`（批次 19 教训：再加显式自环会 `AMBIGUOUS_TRANSITION`）。
+6. 自愈边：`REWARD/0 -> 3` 与 `REWARD/2 -> 3`（enter-world；覆盖 typed 旧投影 0 与 legacy 落盘 2 两条来源）。
+
+### 五十二之三、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd quests/11012.xml` validates；
+  `apply_batch48_inggison_nursing_row_ladder.py --apply` 后 `--check` 幂等 OK。
+- **门禁**：新增 `InggisonNursingRowLadderContractTest` 8 例（行状态/患者页与按钮/顺序 planner/接取发放/
+  owner 收敛/领奖页与单一领奖路由/自愈边/无直跳）；组合回归
+  `InggisonNursingRowLadderContractTest`、`TreeLadderOwnerTrimContractTest`、`RewardRowResidualTwoRowContractTest`、
+  `JavaHandlerFamilyDefinitionTest`、`ProductionCatalogWhitelistVerificationTest`、
+  `QuestDefinitionDirectoryLoaderTest`、`QuestDefinitionCatalogManifestTest`、`QuestClientContractGateTest`、
+  `QuestPageButtonAuditTest`、`QuestPacketOrderRegressionTest`、`QuestEngineNpcDialogDispatchTest` 全绿；
+  `PRODUCTION_COMPILE_OK=6191 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。
+- **全库行号审计**：11012 由 `ROW_BEHIND | MISSING_TAIL_ROWS | ROW_WITHOUT_STATE（visible 0）` 变为
+  `ROW_ALIGNED | ALIGNED | ROW_STATE_ALIGNED（visible 0 1 2 3）`；计数变化
+  `ROW_ALIGNED 2712 -> 2713`、`ROW_BEHIND 138 -> 137`、`MISSING_TAIL_ROWS 40 -> 39`、
+  `ROW_WITHOUT_STATE 470 -> 469`、`ROW_STATE_ALIGNED 2484 -> 2485`、`ALIGNED 2484 -> 2485`；
+  审计脚本 [11] 节登记为「批次 48 因吉森护理族 1 个」，剩余待逐族收口 34 -> 33。
+- **客户端实机 PENDING_CLIENT（请按此复测）**：① 接取后背包出现 3 个绷带、任务书行 0「治疗 patient_1」；
+  ② 依次治疗三名患者，每步消耗 1 个绷带并推进一格（行 0→1→2）；③ 治疗 patient_3 后任务书停在行 3
+  「和 Naiting 对话」（不再直接跳到领奖）；④ 与 Naiting 对话出现 select_success 页，点「报告结果」弹奖励
+  窗口并完成；⑤ 批次 47 及更早落盘的 `REWARD/var0=0` 或 `2` 旧存档在登录/切图时自愈到行 3。
+
+### 五十二之四、边界
+
+- 该族是「每个目标一格 + 报告行」的通用三阶梯形态（与批次 20 焦树族、批次 44 发光体五行族同型），
+  但 owner、消耗物与页映射各不相同；复查其余 `MISSING_TAIL_ROWS` 时必须逐个核对客户端行文本与 legacy
+  落盘 step，不得按本批数值套用。
+- `work-items` 只声明不发放（QE-049），本批用 `accept-actions` 补发 3 个绷带；任务 `cannot-share` 且非重复任务，
+  未做重复接取叠加验证。

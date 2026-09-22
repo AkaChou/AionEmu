@@ -325,6 +325,13 @@ BATCH44_FOAM_WISP_ROWS = {11118}
 # 门禁 Batch45ThreeRowLadderAndBranchRewardContractTest。
 BATCH45_THREE_ROW_AND_BRANCH_ROWS = {1938, 2922}
 
+# 批次 48 登记（2026-09-22）：11012（Practical Nursing）因吉森三患者四行阶梯 + 领奖 owner 收敛。
+# 客户端 quest_q11012.html 共 4 行（行 0/1/2 = 治疗 LF4_patient_1/2/3，行 3 = 和 Naiting 对话），
+# 页 select1/2/3 的 HACTION_SETPRO1/2/3 各推进一行并消耗 1 个绷带 182206715，799071 兼任接取与领奖，
+# reward 投影 0 -> 3 且补 REWARD/0,2 -> 3 自愈边；门禁 InggisonNursingRowLadderContractTest。
+# Batch 48 registration: 11012 Inggison nursing ladder (rows 0..3) with owner trim and heal edges.
+BATCH48_INGGISON_NURSING_ROWS = {11012}
+
 # 批次 26 登记（2026-09-22）：30600/30610 是 Named/Boss 双层计数（var0/var1 组合，客户端 select5 报告行由计数饱和驱动），
 # var0 不承载任务书行号；行号口径把它们判成 MISSING_TAIL_ROWS。批次 26 的自愈边与
 # Quest15546KillCounterSaturationFlowTest 锁定这两个任务，禁止按客户端行号补阶梯。
@@ -799,7 +806,7 @@ def main() -> int:
           "门禁 CutsceneHiddenQuestFamilyContractTest")
     print(f"  仍隔离（无定义、无任务书行，只登记证据）={sorted(CLIENT_ONLY_ISOLATED_QUESTS)}")
 
-    print("\n[11] 缺尾部多行（MISSING_TAIL_ROWS）逐族盘点（批次 45）：")
+    print("\n[11] 缺尾部多行（MISSING_TAIL_ROWS）逐族盘点（批次 48）：")
     tail = [row for row in rows if row["shape"] == "MISSING_TAIL_ROWS"]
     tail_ids = {row["quest_id"] for row in tail}
     fixed = sorted(BATCH31_GELKMAROS_ROW_LADDER | BATCH32_KALDOR_ROW_LADDER
@@ -808,7 +815,8 @@ def main() -> int:
                    | BATCH38_BRANCH_CHOICE_REWARD_INDEX | BATCH39_TURN_IN_TALK_REPORT_ROWS
                    | BATCH40_THREE_NPC_TALK_ROWS | BATCH41_PANGAIA_FORTRESS_ROWS
                    | BATCH42_TOMBSTONE_FLOWER_ROWS | BATCH43_MALODOR_ANTIDOTE_ROWS
-                   | BATCH44_FOAM_WISP_ROWS | BATCH45_THREE_ROW_AND_BRANCH_ROWS)
+                   | BATCH44_FOAM_WISP_ROWS | BATCH45_THREE_ROW_AND_BRANCH_ROWS
+                   | BATCH48_INGGISON_NURSING_ROWS)
     registered_ids = (BLANK_JOURNAL_SLOT_EXCEPTIONS | CLIENT_ONLY_ISOLATED_QUESTS
                       | COUNTER_SLOT_EXCEPTIONS | MULTI_LAYER_COUNTER_EXCEPTIONS
                       | SHARED_VISIBLE_SLOT_EXCEPTIONS | QE045_LOCKED
@@ -819,14 +827,15 @@ def main() -> int:
           f"批次 37 交谈击杀报告两族 5 个、批次 38 阵营选择族 4 个、"
           f"批次 39 交付-对话-报告族 3 个、批次 40 三 NPC 对话族 3 个、"
           f"批次 41 潘盖亚要塞战族 2 个、批次 42 献花族 1 个、批次 43 解毒剂族 1 个、"
-          f"批次 44 发光体五行族 1 个、批次 45 三行/分支族 2 个，均已转 ALIGNED）={fixed}")
+          f"批次 44 发光体五行族 1 个、批次 45 三行/分支族 2 个、批次 48 因吉森护理族 1 个，均已转 ALIGNED）={fixed}")
     stuck = sorted((BATCH31_GELKMAROS_ROW_LADDER | BATCH32_KALDOR_ROW_LADDER | BATCH34_RENTUS_BASE_ROW_LADDER
                     | BATCH35_VALENTINE_TOWER_ROW_LADDER | BATCH36_EVENT_ROW_LADDER
                     | BATCH37_TALK_KILL_REPORT_ROW_LADDER | BATCH38_BRANCH_CHOICE_REWARD_INDEX
                     | BATCH39_TURN_IN_TALK_REPORT_ROWS | BATCH40_THREE_NPC_TALK_ROWS
                     | BATCH41_PANGAIA_FORTRESS_ROWS | BATCH42_TOMBSTONE_FLOWER_ROWS
                     | BATCH43_MALODOR_ANTIDOTE_ROWS | BATCH44_FOAM_WISP_ROWS
-                    | BATCH45_THREE_ROW_AND_BRANCH_ROWS) & tail_ids)
+                    | BATCH45_THREE_ROW_AND_BRANCH_ROWS
+                    | BATCH48_INGGISON_NURSING_ROWS) & tail_ids)
     if stuck:
         print(f"  ⚠ 本批修复清单仍在缺尾桶={stuck}")
     print(f"  已登记例外（空槽位/客户端隔离/计数槽/双层计数/共享槽位/QE-045 锁）={len(registered_ids)} {sorted(registered_ids)}")
