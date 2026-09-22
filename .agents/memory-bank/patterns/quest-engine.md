@@ -295,11 +295,12 @@ superseded_by: none
 first_check: Quest.pak quest_script_monster.csv 的 SECTION_N、旧 handler setQuestVarById(N)、XML offset/width、任务说明行索引是否仍读取 SECTION_0
 -->
 
-- **判定规则**：5.8 客户端的 `SECTION_0..3` 分别对应 `quest_vars` 的 `0..5`、`6..11`、`12..17`、`18..23` 位段。任务 XML 中的 `varN` 若参与客户端摘要或脚本条件，必须与 `SECTION_N` 对齐，不能仅因为当前最大值较小就紧凑改到 `var(N-1)` 的位段。
+- **判定规则**：5.8 客户端的 `SECTION_0..3` 分别对应 `quest_vars` 的 `0..5`、`6..11`、`12..17`、`18..23` 位段。任务 XML 中的 `varN` 若参与客户端摘要或脚本条件，必须与 `SECTION_N` 对齐，不能仅因为当前最大值较小就紧凑改到 `var(N-1)` 的位段。客户端 `quest.xml` 的 `<collect_progress>N</collect_progress>` 给出收物/领奖行的 step 值，可用来判别该任务是 step 走行还是行号走行（N 超过任务书行数上限即 step 走行，2289 = 4 行 / step 7）。
 - **代表案例**：
   1. 11468/21468 需要 `SECTION_1<10`、`SECTION_2<5`、`SECTION_3<3`，且进行中要求 `SECTION_0==0`。旧 XML 把三个字段放在 `0/4/8`，第一次使用物品就把 `SECTION_0` 置 1，客户端摘要整体隐藏；修复为 `6/12/18` 后恢复计数段。
   2. 10032/20032：真机在服务端已到 s1（交换布局 wire=64，var1=1）时，客户端任务说明仍显示第 0 行；`//quest set 10032 START 65`（SECTION_0=1）后说明行立即前进，证明行索引读 SECTION_0。修正为 `var0=阶段(0..8, offset 0)`、`var1=眼泪次数(0..20, offset 6)`，掉落门禁恢复阶段 6；`Quest10032ItemPlayClientCounterProductionFlowTest` 锁定新合同，既有 `QuestPacketOrderRegressionTest` 的 `var0=7` 断言同时恢复通过。
   3. 10101/20101：客户端在 `quest_script_monster.csv` 声明为 `Progress(2~!4)`（单变量阶段行走），客户端无该任务的 `SECTION_2` 计数器。若在 `<progress>` 声明并写入 `var2`（offset 12），击杀 2 只后整型步数被打包为 `8196`（高位非零），破坏客户端步骤校验使任务追踪 HTML 完全空白；只有保持纯 `var0` 阶段行走（2→3→4）下发纯净整型步数，HTML 才能正常渲染并无缝前进。
+  4. 2289（Altgard Rampaging Mosbears）：客户端 `Progress(0~4)` 让行 0 的击杀计数占 SECTION_0 的 0..4（五次击杀），第 5 次击杀才把任务书推进到行 1（step 5），后续情报/收物行在 step 6/7；客户端 `collect_progress=7` 与 legacy `checkQuestItems(7, 7, true, 5, 2120)` 同时证明 reward 投影 = step 7，而按“末行索引 3”改投影会让行 0 的计数位顶掉整条阶梯。任何“var0 只当行号、把计数拆到高位 varN”的改法都会同时破坏客户端 step 校验与旧存档；门禁 `AltgardMosbearsCounterLadderContractTest`，报告 §五十四。
 
 ---
 
