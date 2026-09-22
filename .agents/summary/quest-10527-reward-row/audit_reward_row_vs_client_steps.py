@@ -210,6 +210,14 @@ BATCH32_KALDOR_ROW_LADDER = {13800, 23800}
 # Batch33SharedVisibleSlotContractTest。禁止按末行索引（=2）再补一行。
 SHARED_VISIBLE_SLOT_EXCEPTIONS = {25094}
 
+# 批次 34 登记（2026-09-22）：Rentus Base 营救 Paios 镜像族（30504 Elyos / 30554 Asmodian）。客户端
+# quest_summary 三行、槽位 %0/%3/%6；行 0 挪开柱子物件 701098（IDYun_Column_Q30504），行 1 是 Paios(799536)
+# 的遗言页 select2（SET_SUCCEED），行 2 是向 Lition(205438) 报告并领奖（select_success / SELECT_QUEST_REWARD）。
+# 旧定义把三行塌陷成「started 传 SET_SUCCEED(205438) 直达 reward」且 var0 只有 1 bit，柱物件从未接进 IR；
+# 本批重建 started(0)/s1(1)/reward(2)、owner 收敛到 205438、补 REWARD/var0=0 与 var0=1 两条自愈边，
+# 门禁 Batch34RentusBaseRowLadderContractTest。retail 的 end_npc_ids=799536 与客户端末行冲突，按客户端收敛。
+BATCH34_RENTUS_BASE_ROW_LADDER = {30504, 30554}
+
 # 批次 26 登记（2026-09-22）：30600/30610 是 Named/Boss 双层计数（var0/var1 组合，客户端 select5 报告行由计数饱和驱动），
 # var0 不承载任务书行号；行号口径把它们判成 MISSING_TAIL_ROWS。批次 26 的自愈边与
 # Quest15546KillCounterSaturationFlowTest 锁定这两个任务，禁止按客户端行号补阶梯。
@@ -678,16 +686,16 @@ def main() -> int:
           "门禁 CutsceneHiddenQuestFamilyContractTest")
     print(f"  仍隔离（无定义、无任务书行，只登记证据）={sorted(CLIENT_ONLY_ISOLATED_QUESTS)}")
 
-    print("\n[11] 缺尾部多行（MISSING_TAIL_ROWS）逐族盘点（批次 33）：")
+    print("\n[11] 缺尾部多行（MISSING_TAIL_ROWS）逐族盘点（批次 34）：")
     tail = [row for row in rows if row["shape"] == "MISSING_TAIL_ROWS"]
     tail_ids = {row["quest_id"] for row in tail}
-    fixed = sorted(BATCH31_GELKMAROS_ROW_LADDER | BATCH32_KALDOR_ROW_LADDER)
+    fixed = sorted(BATCH31_GELKMAROS_ROW_LADDER | BATCH32_KALDOR_ROW_LADDER | BATCH34_RENTUS_BASE_ROW_LADDER)
     registered_ids = (BLANK_JOURNAL_SLOT_EXCEPTIONS | CLIENT_ONLY_ISOLATED_QUESTS
                       | COUNTER_SLOT_EXCEPTIONS | MULTI_LAYER_COUNTER_EXCEPTIONS
                       | SHARED_VISIBLE_SLOT_EXCEPTIONS | QE045_LOCKED) & tail_ids
     residual = [row for row in tail if row["quest_id"] not in set(fixed) | registered_ids]
-    print(f"  MISSING_TAIL_ROWS={len(tail)}；已修复族（批次 31 Gelkmaros 三行阶梯 21217/21244/21249；批次 32 卡多尔迎新两阶段阶梯 13800/23800，均已转 ALIGNED）={fixed}")
-    stuck = sorted((BATCH31_GELKMAROS_ROW_LADDER | BATCH32_KALDOR_ROW_LADDER) & tail_ids)
+    print(f"  MISSING_TAIL_ROWS={len(tail)}；已修复族（批次 31 Gelkmaros 三行阶梯、批次 32 卡多尔迎新两阶段阶梯、批次 34 Rentus Base 营救 Paios 三行阶梯，均已转 ALIGNED）={fixed}")
+    stuck = sorted((BATCH31_GELKMAROS_ROW_LADDER | BATCH32_KALDOR_ROW_LADDER | BATCH34_RENTUS_BASE_ROW_LADDER) & tail_ids)
     if stuck:
         print(f"  ⚠ 本批修复清单仍在缺尾桶={stuck}")
     print(f"  已登记例外（空槽位/客户端隔离/计数槽/双层计数/共享槽位/QE-045 锁）={len(registered_ids)} {sorted(registered_ids)}")

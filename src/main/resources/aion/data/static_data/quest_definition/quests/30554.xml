@@ -20,7 +20,7 @@
     </start-condition-groups>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var0" offset="0" width="3" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -29,37 +29,102 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="s1" status="START">
+      <var name="var0" value="1"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="205438" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <transition source="started" target="reward">
+    <!-- QE-051 三行阶梯（批次 34）：客户端 quest_summary 三行（可见槽位 %0/%3/%6）——行 0“找到并救出
+         Paios(799536)”（挪开柱子物件 701098）、行 1“和 Paios 对话”（客户端 select2 页，按钮 SET_SUCCEED）、
+         行 2“和 Lition(205438) 对话”（客户端 select_success 页，按钮 SELECT_QUEST_REWARD）。retail 只登记一个
+         ACTION step（action_ids=701098），领奖合同是 REWARD 态 31 到 DEFAULT_SUCCESS(10002)、1009 到奖励窗口；
+         旧定义把 0 到 1 到 2 的三行塌陷成「started 传 SET_SUCCEED(205438) 直达 reward」——而 205438 的客户端页
+         里根本没有 SET_SUCCEED 按钮——reward 投影抄成 0，而且 progress 只有 1 bit（max=1）连领奖行都放不下，
+         柱子物件 701098 也从未接进 IR，玩家无法完成行 0。
+         Row ladder repair (batch 34): the client owns three rows (pull the column off Paios, hear his dying
+         words, report to Lition), while the migrated definition collapsed them into one SET_SUCCEED jump and
+         never wired the column object at all. -->
+    <transition target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="205438" action="SET_SUCCEED"/>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 接取：Lition 205438 委托营救被压在柱子下的 Paios。 / Accept from Lition. -->
+    <dialog type="NPC_START" npc-id="205438" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
+    <!-- 行 0：挪开柱子物件。 / Row 0: use the column object. -->
+    <transition source="started" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="701098" action="USE_OBJECT"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 行 1：Paios 的遗言（select2）——按钮 SET_SUCCEED 收入领奖行。 / Row 1: Paios' dying words. -->
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799536" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799536" action="SET_SUCCEED"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 行 2：向 Lition 报告 Paios 的死讯并领奖（合同 31 到 DEFAULT_SUCCESS，1009 到奖励窗口由 npc-complete
+         的 preview 展开；不得再显式声明 SELECT_QUEST_REWARD 自环，否则 AMBIGUOUS_TRANSITION）。
+         Row 2: report back to Lition and claim. -->
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="205438" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="799536" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <npc-complete npc-id="205438" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">
       <choice action="SELECTED_QUEST_REWARD1" reward-index="2"/>
       <choice action="SELECTED_QUEST_REWARD2" reward-index="3"/>
       <choice action="SELECTED_QUEST_REWARD3" reward-index="4"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-
-    <transition source="reward" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="799536" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
-      </after-commit>
-    </transition></transitions>
+  </transitions>
 </quest-definition>

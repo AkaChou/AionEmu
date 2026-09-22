@@ -2828,3 +2828,74 @@ QE-051 的行号口径对它们不适用——本批把这点写进审计脚本�
   handler**，只有 retail+客户端页链可依，需单独取证）留待后续批次。
 - 挂账不变：`STATES_BEYOND_ROWS 2622`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 78`、`section0 residual 837`、
   客户端隔离族 8 个（16984/26984/20015/18706/28706/3959/4963/29706）。
+
+## 三十八、批次 34：Rentus Base 营救 Paios 镜像族（30504 / 30554，2026-09-22 用户授权后执行）
+
+### 三十八之一、族判据与证据（柱物件 ACTION step + 三行任务书，迁移把三行塌陷成一个不存在的按钮）
+
+批次 33 之后全库还剩 **74 个 `MISSING_TAIL_ROWS`**。本批收口的是 retail 单步 `ACTION` 形态中唯一还未对齐的一族：
+
+| 项 | 证据 |
+|---|---|
+| 客户端 `quest_q30504/quest_q30554.html` | `quest_summary` 三行，槽位 `%0/%3/%6`（标准「槽位 = 3 × 状态号」）：行 0「找到并救出 Paios」、行 1「和 Paios 对话」、行 2「和 Lition 对话」；`quest_complete` 文案「把派奥斯的死讯告诉李迪安」 |
+| 客户端页链 | `select_none`(accept=true，Lition 委托营救) / `select2`(Paios 遗言，按钮 **SET_SUCCEED**) / `select_success`(Lition「我一直在等你。派奥斯怎么样了？」，按钮 **SELECT_QUEST_REWARD**) / `select_quest_reward1`(奖励窗) |
+| 客户端数据 | Lition = 205438、Paios = 799536（`npcs_unpacked/client_npcs_npc.xml`）；柱子物件 701098 = `IDYun_Column_Q30504`，静态刷在 `300280000_Rentus_base` 与 `300620000_Occupied_Rentus_Base` |
+| retail | `start_type="TALK" start_ids="205438" end_npc_ids="799536" reset_world_id="300280000"`，单步 `ACTION action_ids="701098"`；领奖合同 `31 -> DEFAULT_SUCCESS(10002)`、`1009 -> REWARD`、奖励页 `5 -> SHOW_SELECT_QUEST_REWARD_WINDOW1` |
+| 迁移前 handler | **不存在**（`git ls-tree 7e9f0316c^` 无 `30504/30554` 匹配），定义由 retail/数据驱动迁移生成 |
+
+三个要点：
+
+1. **迁移把三行塌陷成一行，而且按钮在客户端根本不存在**：旧定义只有 `started` 传 `SET_SUCCEED(205438)` 直达 `reward`，
+   但 205438(Lition) 的客户端页里没有 `SET_SUCCEED` 按钮（那是 Paios 的 `select2` 按钮）；`reward` 投影抄成 0，
+   `var0` 只有 1 bit（`max=1`）连第 2 行都放不下。
+2. **柱子物件从未接进 IR**：retail 的 `ACTION action_ids="701098"` 没有落成任何 transition，玩家无法完成行 0
+   （只能在 Lition 处点一个客户端不存在的按钮）。本批按同族先例（13809 焦树族的物件路由）补
+   `started --USE_OBJECT(701098)--> s1`。
+3. **领奖 owner 取客户端末行点名的 Lition(205438)（QE-052）**：客户端末行、`select_success/select_quest_reward1`
+   的说话人、`quest_complete` 三方一致；retail 的 `end_npc_ids=799536` 与之冲突，按客户端口径收敛并登记实机复测点
+   （见三十八之四）。逐任务证据见 [batch34-evidence.tsv](batch34-evidence.tsv)。
+
+### 三十八之二、落点（三行阶梯 + 柱物件接线 + 双自愈边）
+
+- `progress`：`var0` 由 `width=1/max=1` 放宽到 `width=3/max=7`（原字段放不下行 2；低位偏移不变，旧存档 0 仍是 0）。
+- 节点：`unaccepted(0) / started(0) / s1(1) / reward(2) / complete(0)`。
+- 行 0：`started --TALK_TO_NPC(701098) USE_OBJECT--> s1`（`LEVEL_AND_VISIBILITY_REFRESH`）。
+- 行 1：`s1 --TALK_TO_NPC(799536) QUEST_SELECT--> s1`（显示 `SELECT2` 遗言页）+ `s1 --SET_SUCCEED(799536)--> reward(2)`
+  （`LEVEL_AND_VISIBILITY_REFRESH` + `close-dialog`）。
+- 行 2：`reward + QUEST_SELECT(205438) -> DEFAULT_SUCCESS`（合同 31 → 10002）+ `npc-complete` owner 205438
+  （`<preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>` 展开 1009 奖励窗路由，不再显式声明同名自环以免
+  `AMBIGUOUS_TRANSITION`）。
+- 自愈边：无 source 的 `enter-world`，`REWARD && var0==0 -> 2` 与 `REWARD && var0==1 -> 2`，均 `LEVEL_AND_VISIBILITY_REFRESH`、无 priority。
+- **实作坑（已记入 QE-051）**：本任务同一个 NPC(205438) 同时是接取与领奖 NPC，`<dialog type="NPC_REPORT">` 与
+  `NPC_START` 的展开会撞 `AMBIGUOUS_TRANSITION: TALK_TO_NPC`，因此 REWARD 态入口改写成显式
+  `reward + QUEST_TO_NPC/QUEST_SELECT -> SHOW_QUEST_PAGE DEFAULT_SUCCESS`（与同链 30503 同形）。
+
+### 三十八之三、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 2/2 validates；`apply_batch34_rentus_base_row_ladder.py
+  --check` 幂等 2/2。
+- **全库行号审计**：`MISSING_TAIL_ROWS 76 -> 74`、`ROW_BEHIND 174 -> 172`、`ROW_WITHOUT_STATE 506 -> 504`、
+  `ROW_ALIGNED 2674 -> 2676`、`ROW_STATE_ALIGNED/ALIGNED 2446 -> 2448`；30504/30554 由
+  `MISSING_TAIL_ROWS + ROW_BEHIND + ROW_WITHOUT_STATE(1 2) + visible=0` 全部转
+  `ALIGNED + ROW_ALIGNED + ROW_STATE_ALIGNED + visible=0 1 2 + recovery=True`。
+- **审计脚本**：新增 `BATCH34_RENTUS_BASE_ROW_LADDER = {30504, 30554}`，[11] 节已修复族与残留计数同步刷新。
+- **Maven（授权后执行）**：30 个 reward/row/ladder/owner/catalog 测试类 **175 例全绿**，含新增
+  `Batch34RentusBaseRowLadderContractTest`（8 例：三行投影 + 字段上限 / 每行一个状态 / 柱物件接线 / 遗言行推进
+  + `select2` 页 / owner 收敛且被救者不得领奖 / `10002` 入口与 `1009` 领奖路由 / 0 与 1 两条自愈边 + planner 收敛 /
+  不再保留塌陷跳转与伪造的 `SET_SUCCEED`）；`PRODUCTION_COMPILE_OK=6191 / FAILURES=0 /
+  INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。
+- **客户端实机 PENDING_CLIENT**：① 接取后任务书应停在行 0「找到并救出派奥斯」；② 对柱子 701098 用/点后切到行 1
+  「和派奥斯对话」，与其对话出现遗言页、点“结束对话”后切到行 2「和李迪安对话」；③ 回去找 Lition 应能开奖励窗领奖；
+  ④ 旧存档（`REWARD + var0=0/1`）登录或切图后应直接落在行 2；⑤ **归属复测点**：若实机确认奖励窗只能在 Paios(799536)
+  打开（retail `end_npc_ids` 口径），则需把 owner 与 31 入口迁回 799536 并保留 205438 的入口路由。
+
+### 三十八之四、边界与后续
+
+- **retail `end_npc_ids` 与客户端末行冲突时的取舍**：本批按 QE-052（owner = 客户端 quest_summary 领奖行 NPC）取
+  205438；retail 口径未删除任何入口路由证据，冲突已登记为实机复测点，**不得**在未复测前把 owner 改回 799536。
+- 本批顺带确认 `var0` 字段宽度属于契约的一部分：原 `max=1` 无法容纳行 2，任何「按行号口径补阶梯」的批次都必须
+  同时检查 `progress` 字段上限（审计 [7b] 节已列同类候选 29 个）。
+- `MISSING_TAIL_ROWS` 剩余 68 个仍在 [11] 节列出；本批之后同形态候选只剩 **14200/24155**（`STATES_BEYOND_ROWS`
+  计数行）与 **10525/20525、10530**（槽位缺口/共用，需各自取证）。
+- 挂账不变：`STATES_BEYOND_ROWS 2622`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 78`、`section0 residual 837`、
+  客户端隔离族 8 个（16984/26984/20015/18706/28706/3959/4963/29706）。
