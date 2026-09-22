@@ -20,7 +20,7 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -43,6 +43,28 @@
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <!-- QE-051 领奖行：客户端 quest_q1123.html 只有 2 行（行 0 目标、行 1 与 Pernos 对话）；
+         旧 reward 投影停在 0，所以领奖态仍渲染行 0。证据：行 1 = “任务完成！和 STR_DIC_LA12 对话。”；STR_DIC_LA12 由同族 1006/1122/1124/30507 的 npc-complete owner 全部 = 790001 解出，客户端 NPC 表 790001 = Pernos；本任务 start owner 与 npc-complete owner 同为 790001；进入 REWARD 的 enter-zone 路由不写 var0。
+         因此 reward 投影固定为领奖行 1，并补 REWARD/var0=0 的 enter-world 自愈边（旧存档旧值
+         只会来自旧投影，语义无歧义）。
+         Reward-row contract (QE-051): the second client journal row talks to Pernos(790001) and the
+         definition's reward completion NPC is the same id, so the reward projection is 1 and stale
+         REWARD/var0=0 saves are healed on enter-world. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="790001" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1 SELECTED_QUEST_REWARD2 SELECTED_QUEST_REWARD3 SELECTED_QUEST_REWARD4 SELECTED_QUEST_REWARD5 SELECTED_QUEST_REWARD6 SELECTED_QUEST_REWARD7 SELECTED_QUEST_REWARD8 SELECTED_QUEST_REWARD9 SELECTED_QUEST_REWARD10 SELECTED_QUEST_REWARD11 SELECTED_QUEST_REWARD12 SELECTED_QUEST_REWARD13 SELECTED_QUEST_REWARD14 SELECTED_QUEST_REWARD15 SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">

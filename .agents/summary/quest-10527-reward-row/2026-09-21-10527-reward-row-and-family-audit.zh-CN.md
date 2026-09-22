@@ -1218,3 +1218,61 @@ var0 当 0→2 的投递计数，且客户端行内 `HousingLf_Event_ShugoSanta`
 - **剩余 MISSING_LAST_ROW 89 个**（其中 10 个 QE-045 锁、30 个镜像同缺末行、49 个待逐族取证）；
   `ROW_BEHIND 201` 多为 `MISSING_TAIL_ROWS 82` 与 `INTERIOR_GAP 266`，`STATES_BEYOND_ROWS 2625`
   里的 var0 多为计数/阶段槽 —— 一律禁止按行号机械推进。
+
+---
+
+## 十九、批次 15：残余“两行、末行是与领奖 NPC 的对话”族（1123 / 2484，2026-09-22）
+
+### 十九之一、候选与证据
+
+批次 13/14 之后，审计里同形（客户端 2 行 + 末行对话 + `[%3]` = 值 1）的候选只剩 11 个，逐个取证后
+只有两个可安全收口：
+
+| 任务 | 行 1 | 证据 |
+|---|---|---|
+| 1123（Where's Tutty?） | 任务完成！和 `STR_DIC_LA12` 对话 | 行 1 的键在客户端 **actor 名命名空间**（`STR_DIC_LA12`），不在 `client_npcs_npc.xml` 的 `STR_DIC_N_*` 表里，所以审计 `last_row_npc_matches_quest=False`。**解键**：同族的 1006（末行“和 STR_DIC_LA12 对话，选择将来之路”）、1122、1124、30507 四个任务的 `npc-complete` owner 全部是 790001，而客户端表 790001 = **Pernos**；1123 自己的 NPC_START 与 npc-complete owner 同为 790001，自洽。进入 REWARD 的唯一路由是 `LF1_SENSORY_AREA_Q1123_210010000` enter-zone + `play-movie 11`（不写 var0）→ 投影必须为 1 |
+| 2484（Our Man In Elysea） | 和 Hippolyta 对话 | legacy `_2484OurManInElysea` 在 **700267（烽火对象）处 `setQuestVarById(0, 1)`**，随后在 203331（`Hippolyta_Q2484`）处 `setStatus(REWARD)` → legacy 领奖行 = 1；typed 三条 `NPC_REPORT`（204407 Gelkugin / 700267 烽火 / 203331 Hippolyta → reward）都无 var0 动作，靠 reward 投影补足；客户端表 203331 = `Hippolyta_Q2484`（键名不同形 → `last_row_npc_matches_quest=False`，非缺陷） |
+
+**同形候选的处置边界（本批登记、不改）**：
+
+- **1466**：`reward` 节点**没有 var0 投影**（NO_REWARD_ROW），且被 `Quest1466ClientDialogAlignmentTest` 硬锁
+  ——该测试断言 `reward` 必须无投影、`SELECT_QUEST_REWARD` 路由必须写 `var0=2`，并有 headless retail
+  journey 通过。按 QE-051 收到行 1 需要同时改这条锁（补投影 + 自愈边 + 把报告路由的 2 改成 1），属
+  重定基线，需一次客户端观测（领奖态任务书显示行 0 / 行 1 / 空白）。
+- **4712**：行 1 要求“向 Henir 报告”，但 completion owner 是 279042（客户端表无名）与
+  798327/798330（`IDAB1_Dreadgion_prisoner_dark1/4`）——报告 NPC 未登记，属批次 12 同型的**归属核实题**。
+- **2842**：var0 是 0..39 的击杀计数（行 0 显示 `[%2]/39`），行 1 的可见槽位是 `[%15]`（= 值 5）而非
+  `[%3]`，属“var0 不是行索引”族。
+- **50008/51008**：legacy `setQuestVarById(0, var0 + 1)` 把 var0 当 0→2 的投递计数 + 行内 NPC 名不在
+  5.8 客户端 NPC 表里。
+
+### 十九之二、修复
+
+与批次 13/14 同一模板：`reward` 投影 `0 -> 1` + 无 source 的 `REWARD && var0==0 -> set var0=1`
+（`LEVEL_AND_VISIBILITY_REFRESH`，无 priority）自愈边。脚本
+`.agents/summary/quest-10527-reward-row/apply_batch15_residual_two_row_rows.py`（`--check` 幂等 2/2）。
+
+### 十九之三、验证（2026-09-22）
+
+- **单任务审计**：2/2 `ROW_BEHIND / MISSING_LAST_ROW / ROW_WITHOUT_STATE`（`visible=0`，`recovery=False`）
+  → `ROW_ALIGNED / ALIGNED / ROW_STATE_ALIGNED`（`visible 0 1`，`recovery=True`）。
+- **全库快照**：`ROW_ALIGNED 2643 -> 2645`、`ROW_BEHIND 201 -> 199`、`MISSING_LAST_ROW 89 -> 87`、
+  `ROW_STATE_ALIGNED 2421 -> 2423`。
+- **结构校验**：`xmllint --schema` 2/2 validates；IDEA lint 0 problem；`git diff --check` 干净。
+- **Maven（已授权范围的 8 个测试类重跑）**：35 例全绿，`PRODUCTION_COMPILE_OK=6189 / FAILURES=0 /
+  INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`（覆盖本批 2 个 XML 的生产目录编译）。
+- **门禁测试**：`src/test/java/com/aionemu/gameserver/questEngine/definition/RewardRowResidualTwoRowContractTest.java`
+  6 例——① 投影=1 且 started=0；② 领奖 owner = 行 1 NPC；③ **1123 的 REWARD 入口必须是 LF1 感应区
+  enter-zone + `play-movie 11`、2484 必须保留 legacy 的三条报告 route（204407/700267/203331）**；
+  ④ 自愈边唯一且 planner 可收敛；⑤ 无 target=reward 事务写非领奖行 var0；⑥ **STR_DIC_LA12 解键护栏**
+  （1006/1122/1124/30507 的 completion owner 必须都是 790001）。
+- **Maven（追加授权后执行，2026-09-22 12:03）**：9 个测试类 **41 例全绿**（含新增 `RewardRowResidualTwoRowContractTest` 6/6），`PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。首轮运行暴露两条**本测试自身过紧**的断言并已修正：2484 的 completion owner 实际是 3 条备用路径（204407/700267/203331，本批只收口行投影，断言改为“行 1 NPC 必须是 owner 之一”）、1122 的完成走 choice/select 事务而非 `TalkToNpc`（解键护栏改为直接断言原文件的 `<npc-complete npc-id="790001"`）
+- 客户端实机复测：**PENDING_CLIENT**。① 1123 进入 LF1 感应区看完影片后任务书切到行 1，与 Pernos
+  对话领奖；② 2484 点燃烽火后任务书切到行 1，与 Hippolyta 对话领奖（旧存档登录/切图时自愈）。
+
+### 十九之四、结论与后续
+
+- **“两行 + 末行对话”族已收口完毕**：批次 13/14/15 共收口 12 个（6 + 4 + 2），剩余同形候选全部转入
+  明确挂账（1466 锁、4712 归属、2842 计数槽、50008/51008 计数槽 + 客户端表缺名）。
+- 剩余 `MISSING_LAST_ROW 87`：10 个 QE-045 锁（含 13965 族，等一次客户端观测）、30 个镜像同缺末行、
+  47 个待逐族取证（多为 `INTERIOR_GAP`/`MISSING_TAIL_ROWS`/`STATES_BEYOND_ROWS` 阶段语义，禁止按行号机械推进）。

@@ -1,6 +1,5 @@
 quest_id	client_rows	reward_var0	last_start_node	last_start_var0	recovery	client_file	client_section0	last_row_text	mirror_id	mirror_shape	mirror_reward_var0	mirror_last_row_text	mirror_is_single_side
 1005	10	8	None	None	False	QUEST_Q1005.html		和[%dic:STR_DIC_LA139]对话					NO
-1123	2	0	started	0	False	QUEST_Q1123.html		任务完成！和[%dic:STR_DIC_LA12]%对话。					NO
 1149	3	1	started	0	False	QUEST_Q1149.html		和[%dic:STR_DIC_LA159]对话					NO
 1479	3	1	started	0	False	QUEST_Q1479.html		和[%dic:STR_DIC_N_Memnes]对话					NO
 1722	9	7	s7	7	False	QUEST_Q1722.html		把[%dic:STR_DIC_I_QUEST_1722a]交给[%dic:STR_DIC_N_Rastin]					NO
@@ -8,7 +7,6 @@ quest_id	client_rows	reward_var0	last_start_node	last_start_var0	recovery	client
 1920	3	1	started1	1	False	QUEST_Q1920.html		和[%dic:STR_DIC_N_Jucleas]对话					NO
 2006	3	1	started	0	False	QUEST_Q2006.html		和[%dic:STR_DIC_LA494]%对话。					NO
 2007	10	8	started	0	False	QUEST_Q2007.html		和[%dic:STR_DIC_LA494]对话					NO
-2484	2	0	started	0	False	QUEST_Q2484.html		和[%dic:STR_DIC_N_Hippolyta]对话。					NO
 2600	3	0	s1	1	False	QUEST_Q2600.html		重新和[%dic:STR_DIC_N_Shugo_DF3_12]对话					NO
 2633	4	2	s2	2	False	QUEST_Q2633.html		向德拉乌伯尼尔洞穴入口附近的[%dic:STR_DIC_N_DF3_Alberihi_E]报告					NO
 2722	9	7	started7	7	False	QUEST_Q2722.html		把伊拉西克特产酒交给[%dic:STR_DIC_N_Bord]					NO
