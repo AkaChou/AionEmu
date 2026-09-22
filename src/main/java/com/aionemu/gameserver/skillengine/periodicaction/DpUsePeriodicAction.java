@@ -25,7 +25,7 @@ public class DpUsePeriodicAction extends PeriodicAction {
 	 * 扣除施法玩家 DP；不足时结束效果。
 	 * Deducts caster DP; ends the effect if DP is insufficient.
 	 *
-	 * related effect
+	 * @param effect related effect
 	 */
 	@Override
 	public void act(final Effect effect) {

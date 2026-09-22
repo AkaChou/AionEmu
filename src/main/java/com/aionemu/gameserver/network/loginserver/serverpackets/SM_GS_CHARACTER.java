@@ -18,8 +18,8 @@ public class SM_GS_CHARACTER extends LsServerPacket {
 	 * 构造角色数量回报包。
 	 * Constructs a character-count report packet.
 	 *
-	 * 账号 ID / account id
-	 * character count
+	 * @param accountId 账号 ID / account id
+	 * @param characterCount character count
 	 */
 	public SM_GS_CHARACTER(final int accountId, final int characterCount) {
 		super(0x08);

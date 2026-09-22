@@ -27,7 +27,7 @@ public class SM_TITLE_INFO extends AionServerPacket {
 	 * 称号列表。
 	 * Title list.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public SM_TITLE_INFO(Player player) {
 		this.action = 0;
@@ -38,7 +38,7 @@ public class SM_TITLE_INFO extends AionServerPacket {
 	 * 自身称号设置。
 	 * Self title set.
 	 *
-	 * title id
+	 * @param titleId title id
 	 */
 	public SM_TITLE_INFO(int titleId) {
 		this.action = 1;
@@ -49,8 +49,8 @@ public class SM_TITLE_INFO extends AionServerPacket {
 	 * 广播称号设置。
 	 * Broadcast title set.
 	 *
-	 * 玩家 / player
-	 * title id
+	 * @param player 玩家 / player
+	 * @param titleId title id
 	 */
 	public SM_TITLE_INFO(Player player, int titleId) {
 		this.action = 3;
@@ -86,8 +86,8 @@ public class SM_TITLE_INFO extends AionServerPacket {
 	 * 奖励称号等其它 action。
 	 * Bonus title or other action.
 	 *
-	 * action type
-	 * bonus title id
+	 * @param action action type
+	 * @param bonusTitleId bonus title id
 	 */
 	public SM_TITLE_INFO(int action, int bonusTitleId) {
 		this.action = action;

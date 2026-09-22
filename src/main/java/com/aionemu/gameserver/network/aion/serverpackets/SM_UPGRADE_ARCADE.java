@@ -48,8 +48,8 @@ public class SM_UPGRADE_ARCADE extends AionServerPacket {
 	 * 会话初始化（狂热点数）。
 	 * Session init with frenzy points.
 	 *
-	 * frenzy points
-	 * frenzy count
+	 * @param frenzyPoints frenzy points
+	 * @param frenzyCount frenzy count
 	 */
 	public SM_UPGRADE_ARCADE(int frenzyPoints, int frenzyCount) {
 		this.action = 1;
@@ -61,9 +61,9 @@ public class SM_UPGRADE_ARCADE extends AionServerPacket {
 	 * 升级结果。
 	 * Upgrade result.
 	 *
-	 * action type
-	 * whether successful
-	 * frenzy points
+	 * @param action action type
+	 * @param success whether successful
+	 * @param frenzy frenzy points
 	 */
 	public SM_UPGRADE_ARCADE(int action, boolean success, int frenzy) {
 		this.action = action;
@@ -75,9 +75,9 @@ public class SM_UPGRADE_ARCADE extends AionServerPacket {
 	 * 等级相关。
 	 * Level-related.
 	 *
-	 * 玩家 / player
-	 * action type
-	 * level
+	 * @param player 玩家 / player
+	 * @param action action type
+	 * @param level level
 	 */
 	public SM_UPGRADE_ARCADE(Player player, int action, int level) {
 		this.action = action;
@@ -89,8 +89,8 @@ public class SM_UPGRADE_ARCADE extends AionServerPacket {
 	 * 奖励物品。
 	 * Reward item.
 	 *
-	 * action type
-	 * reward item
+	 * @param action action type
+	 * @param itemList reward item
 	 */
 	public SM_UPGRADE_ARCADE(int action, ArcadeTabItem itemList) {
 		this.action = action;

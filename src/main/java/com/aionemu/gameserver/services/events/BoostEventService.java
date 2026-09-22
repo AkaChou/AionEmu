@@ -89,7 +89,7 @@ public class BoostEventService implements StatOwner {
 	 * getBoostEvent 方法。
 	 * getBoostEvent method.
 	 *
-	 * BoostEvents
+	 * @param raw BoostEvents
 	 */
 	public void getBoostEvent(Map<Integer, BoostEvents> raw) {
 		data.putAll(raw);

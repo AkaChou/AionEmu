@@ -14,7 +14,7 @@ public abstract class PeriodicAction {
 	 * 在效果上执行一次周期动作。
 	 * Executes one periodic tick for the effect.
 	 *
-	 * related effect
+	 * @param effect related effect
 	 */
 	public abstract void act(Effect effect);
 }

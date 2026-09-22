@@ -99,7 +99,7 @@ public class BrokerService {
 	 * 注入 Spring ObjectProvider，供 getInstance 使用。
 	 * Inject the Spring ObjectProvider used by getInstance().
 	 *
-	 * Spring provider
+	 * @param instanceProvider Spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<BrokerService> instanceProvider) {
 		BrokerService.instanceProvider = instanceProvider;
@@ -787,8 +787,8 @@ public class BrokerService {
 	 * 计算并下发物品均价/最低/最高价窗口数据。
 	 * Calculate and send average/low/high price window data for an item.
 	 *
-	 * requesting player
-	 * item object id
+	 * @param player requesting player
+	 * @param itemUniqueId item object id
 	 */
 	public void CalcItemAveLowHigh(Player player, int itemUniqueId) {
 
@@ -810,8 +810,8 @@ public class BrokerService {
 	 * 打开经纪行上架确认窗口。
 	 * Open the broker add-item confirmation window.
 	 *
-	 * 玩家 / player
-	 * item object id
+	 * @param player 玩家 / player
+	 * @param itemObjectId item object id
 	 */
 	public void showAddItemWindow(Player player, int itemObjectId) {
 		Map<Integer, BrokerItem> brokerItems = getRaceBrokerItems(player.getRace());
@@ -948,7 +948,7 @@ public class BrokerService {
 	 * 向玩家展示已结算（可领取）物品/基纳。
 	 * Show the player settled items/kinah available for collection.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public void showSettledItems(Player player) {
 		Map<Integer, BrokerItem> brokerSettledItems = getRaceBrokerSettledItems(player.getRace());
@@ -1129,7 +1129,7 @@ public class BrokerService {
 	 * 玩家登录时通知是否有经纪行结算可领。
 	 * On login, notify the player if broker settlements are available.
 	 *
-	 * logging-in player
+	 * @param player logging-in player
 	 */
 	public void onPlayerLogin(Player player) {
 		Map<Integer, BrokerItem> brokerSettledItems = getRaceBrokerSettledItems(player.getRace());

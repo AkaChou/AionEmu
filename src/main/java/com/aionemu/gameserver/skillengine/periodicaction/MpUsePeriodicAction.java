@@ -27,7 +27,7 @@ public class MpUsePeriodicAction extends PeriodicAction {
 	 * 按最大 MP 百分比扣除 MP；不足时结束效果。
 	 * Reduces MP by a percent of max MP; ends the effect if insufficient.
 	 *
-	 * related effect
+	 * @param effect related effect
 	 */
 	@Override
 	public void act(Effect effect) {

@@ -21,8 +21,8 @@ public class SM_PLAY_MOVIE extends AionServerPacket {
 	 * 使用给定参数构造 SM_PLAY_MOVIE 包。
 	 * Creates a SM_PLAY_MOVIE packet with the given parameters.
 	 *
-	 * type
-	 * movie id
+	 * @param type type
+	 * @param movieId movie id
 	 */
 	public SM_PLAY_MOVIE(int type, int movieId) {
 		this.type = type;

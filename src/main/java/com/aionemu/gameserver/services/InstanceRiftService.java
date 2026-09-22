@@ -131,8 +131,8 @@ public class InstanceRiftService {
 	 * 按状态类型在地点刷出对应模板 NPC。
 	 * Spawns NPCs for the location matching the given state type.
 	 *
-	 * location
-	 * state type
+	 * @param loc location
+	 * @param estate state type
 	 */
 	public void spawn(InstanceRiftLocation loc, InstanceRiftStateType estate) {
 		List<SpawnGroup2> locSpawns = DataManager.SPAWNS_DATA2.getInstanceRiftSpawnsByLocId(loc.getId());
@@ -167,7 +167,7 @@ public class InstanceRiftService {
 	 * 清除地点上已刷出的对象（无仇恨时立即删除）。
 	 * Clears spawned objects at the location (deletes immediately when no aggro).
 	 *
-	 * location
+	 * @param loc location
 	 */
 	public void despawn(InstanceRiftLocation loc) {
 		if (loc.getSpawned() == null) {

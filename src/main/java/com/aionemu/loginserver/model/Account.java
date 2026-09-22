@@ -108,7 +108,7 @@ public class Account {
      * 设置回归标记。
      * Sets return flag.
      *
-     * Return flag
+     * @param isReturn Return flag
      */
     public void setReturn(byte isReturn) {
         this.isReturn = isReturn;

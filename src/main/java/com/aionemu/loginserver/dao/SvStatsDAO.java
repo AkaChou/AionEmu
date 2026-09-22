@@ -23,9 +23,9 @@ public abstract class SvStatsDAO implements DAO {
      * 更新指定服务器为离线状态及人数。
      * Updates a server as offline with current players.
      *
-     * Server id
-     * Status code
-     * Current players
+     * @param server Server id
+     * @param status Status code
+     * @param current Current players
      */
     public abstract void update_SvStats_Offline(int server, int status, int current);
 
@@ -33,8 +33,8 @@ public abstract class SvStatsDAO implements DAO {
      * 将全部服务器标记为离线。
      * Marks all servers offline with the given status and current count.
      *
-     * Status code
-     * Current players
+     * @param status Status code
+     * @param current Current players
      */
     public abstract void update_SvStats_All_Offline(int status, int current);
 

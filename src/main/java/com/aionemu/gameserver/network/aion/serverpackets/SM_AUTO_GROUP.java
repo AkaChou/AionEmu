@@ -26,7 +26,7 @@ public class SM_AUTO_GROUP extends AionServerPacket {
 	 * 按实例 mask 初始化副本匹配基础字段。
 	 * Initializes instance-match base fields from the instance mask id.
 	 *
-	 * instance mask id
+	 * @param instanceMaskId instance mask id
 	 */
 	public SM_AUTO_GROUP(int instanceMaskId) {
 		this.isBG = false;
@@ -115,9 +115,9 @@ public class SM_AUTO_GROUP extends AionServerPacket {
 	 * 战场通用选项包。
 	 * Generic battleground option packet.
 	 *
-	 * main option
-	 * world map id
-	 * special option
+	 * @param option main option
+	 * @param worldId world map id
+	 * @param specialOption special option
 	 */
 	public SM_AUTO_GROUP(int option, int worldId, int specialOption) {
 		this.isBG = true;

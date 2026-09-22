@@ -130,7 +130,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc npc
 	 */
 
 	public void onDropRegistered(Npc npc) {
@@ -160,8 +160,8 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
 	 *
-	 * 玩家 / player
-	 * npc
+	 * @param player 玩家 / player
+	 * @param npc npc
 	 */
 	@Override
     public void handleUseItemFinish(Player player, Npc npc) {
@@ -178,7 +178,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc npc
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -1185,8 +1185,8 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	 * 玩家打开门时处理。
 	 * Handle a player opening a door.
 	 *
-	 * 玩家 / player
-	 * doorId
+	 * @param player 玩家 / player
+	 * @param doorId doorId
 	 */
 	@Override
 	public void onOpenDoor(Player player, int doorId) {

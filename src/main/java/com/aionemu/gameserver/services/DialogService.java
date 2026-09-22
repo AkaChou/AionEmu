@@ -60,8 +60,8 @@ public class DialogService {
      * 关闭与 NPC 的对话框；对军团仓库管理员释放占用。
      * Close the NPC dialog; for legion warehouse keepers, release the warehouse user lock.
      *
-     * dialog NPC
-     * 玩家 / player
+     * @param npc dialog NPC
+     * @param player 玩家 / player
      */
 
     public static void onCloseDialog(Npc npc, Player player) {

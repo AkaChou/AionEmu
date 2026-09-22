@@ -16,7 +16,7 @@ public abstract class LsServerPacket extends BaseServerPacket {
 	 * 以指定 opcode 构造服务端封包。
 	 * Construct server packet with the given opcode.
 	 *
-	 * Packet opcode
+	 * @param opcode Packet opcode
 	 */
 	protected LsServerPacket(int opcode) {
 		super(opcode);

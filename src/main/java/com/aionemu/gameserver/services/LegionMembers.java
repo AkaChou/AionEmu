@@ -87,7 +87,7 @@ final class LegionMembers {
 	 * 存储军团成员。
 	 * Stores a legion member
 	 *
-	 * legion member
+	 * @param legionMember legion member
 	 */
 	void storeLegionMember(LegionMember legionMember) {
 		storeLegionMember(legionMember, false);
@@ -119,7 +119,7 @@ final class LegionMembers {
 	 * 将新军团成员加入缓存。
 	 * This method will add a new legion member to the cache
 	 *
-	 * legion member
+	 * @param legionMember legion member
 	 */
 	void addCachedLegionMember(LegionMember legionMember) {
 		this.allCachedLegionMembers().addMember(legionMember);
@@ -139,7 +139,7 @@ final class LegionMembers {
 	 * 从缓存与数据库移除军团成员。
 	 * This method will remove the legion member from cache and the database
 	 *
-	 * legion member
+	 * @param legionMember legion member
 	 */
 	void deleteLegionMemberFromDB(LegionMemberEx legionMember) {
 		this.allCachedLegionMembers().remove(legionMember);
@@ -213,8 +213,8 @@ final class LegionMembers {
 	 * 以志愿兵军阶将新成员加入军团。
 	 * This method will add a new legion member to a legion with VOLUNTEER rank
 	 *
-	 * legion
-	 * 玩家 / player
+	 * @param legion legion
+	 * @param player 玩家 / player
 	 */
 	void addLegionMember(Legion legion, Player player) {
 		addLegionMember(legion, player, LegionRank.VOLUNTEER);
@@ -224,9 +224,9 @@ final class LegionMembers {
 	 * 以指定军阶将新成员加入军团。
 	 * This method will add a new legion member to a legion with input rank
 	 *
-	 * legion
-	 * 玩家 / player
-	 * rank
+	 * @param legion legion
+	 * @param player 玩家 / player
+	 * @param rank rank
 	 */
 	void addLegionMember(Legion legion, Player player, LegionRank rank) {
 		player.setLegionMember(new LegionMember(player.getObjectId(), legion, rank));
@@ -331,7 +331,7 @@ final class LegionMembers {
 	 * 玩家登录时同步军团信息：成员列表、公告、解散状态与加成。
 	 * On login, syncs legion info: member list, announcement, disband state and bonuses.
 	 *
-	 * Logging-in player
+	 * @param activePlayer Logging-in player
 	 */
 	public void onLogin(Player activePlayer) {
 		Legion legion = activePlayer.getLegion();
@@ -367,7 +367,7 @@ final class LegionMembers {
 	 * 玩家下线时释放仓库占用、广播离线并持久化军团/成员数据。
 	 * On logout, releases warehouse lock, broadcasts offline status and persists legion/member data.
 	 *
-	 * Logging-out player
+	 * @param player Logging-out player
 	 */
 	public void onLogout(Player player) {
 		Legion legion = player.getLegion();

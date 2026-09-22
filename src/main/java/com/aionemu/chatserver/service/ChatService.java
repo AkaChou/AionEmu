@@ -56,7 +56,7 @@ public class ChatService {
      * 使用指定广播服务构造。
      * Construct with the given broadcast service.
      *
-     * Broadcast service
+     * @param broadcastService Broadcast service
      */
     public ChatService(BroadcastService broadcastService) {
         this.broadcastService = broadcastService;

@@ -18,8 +18,8 @@ public class SM_LEGION_UPDATE_SELF_INTRO extends AionServerPacket {
 	 * 使用玩家对象 ID 与自我介绍构造更新包。
 	 * Creates an update packet from a player object id and self-introduction text.
 	 *
-	 * player object id
-	 * self-introduction
+	 * @param playerObjId player object id
+	 * @param selfintro self-introduction
 	 */
 	public SM_LEGION_UPDATE_SELF_INTRO(int playerObjId, String selfintro) {
 		this.selfintro = selfintro;

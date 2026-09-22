@@ -184,8 +184,8 @@ public class AutoGroupService {
 	 * 玩家确认进入已匹配的副本。
 	 * Player confirms entry into a matched instance.
 	 *
-	 * 玩家 / player
-	 * instance mask id
+	 * @param player 玩家 / player
+	 * @param instanceMaskId instance mask id
 	 */
 	public synchronized void pressEnter(Player player, int instanceMaskId) {
 		AutoInstance instance = getAutoInstance(player, instanceMaskId);
@@ -222,8 +222,8 @@ public class AutoGroupService {
 	 * 取消玩家对指定副本的排队。
 	 * Unregisters the player from looking for the given instance.
 	 *
-	 * 玩家 / player
-	 * instance mask id
+	 * @param player 玩家 / player
+	 * @param instanceMaskId instance mask id
 	 */
 	public void unregisterLooking(Player player, byte instanceMaskId) {
 		Integer obj = player.getObjectId();
@@ -252,8 +252,8 @@ public class AutoGroupService {
 	 * 取消进入已匹配副本。
 	 * Cancels entry into a matched instance.
 	 *
-	 * 玩家 / player
-	 * instance mask id
+	 * @param player 玩家 / player
+	 * @param instanceMaskId instance mask id
 	 */
 	public void cancelEnter(Player player, int instanceMaskId) {
 		AutoInstance autoInstance = getAutoInstance(player, instanceMaskId);
@@ -318,7 +318,7 @@ public class AutoGroupService {
 	 * 登录时恢复/推送可用自动组队入口。
 	 * On login, restores/pushes available auto-group entry points.
 	 *
-	 * logging-in player
+	 * @param player logging-in player
 	 */
 	public void onPlayerLogin(Player player) {
 		if (GameFeatureServices.dredgionService().isDredgionAvailable() && player.getLevel() > DredgionService2.minLevel
@@ -512,7 +512,7 @@ public class AutoGroupService {
 	 * 登出时清理排队与自动实例状态。
 	 * On logout, cleans queue and auto-instance state.
 	 *
-	 * logging-out player
+	 * @param player logging-out player
 	 */
 	public void onPlayerLogOut(Player player) {
 		Integer obj = player.getObjectId();
@@ -883,7 +883,7 @@ public class AutoGroupService {
 	 * 注销指定副本 mask 的自动组队排队。
 	 * Unregisters auto-group queue entries for the given instance mask.
 	 *
-	 * instance mask id
+	 * @param instanceMaskId instance mask id
 	 */
 	public void unRegisterInstance(byte instanceMaskId) {
 		for (Map.Entry<Integer, LookingForParty> entry : searchers.entrySet()) {
@@ -983,7 +983,7 @@ public class AutoGroupService {
 	 * 注销并清理指定实例 ID 的自动组队实例。
 	 * Unregisters and cleans up the auto-group instance for the given instance id.
 	 *
-	 * instance id
+	 * @param instanceId instance id
 	 */
 	public void unRegisterInstance(Integer instanceId) {
 		AutoInstance autoInstance = autoInstances.remove(instanceId);

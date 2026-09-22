@@ -53,8 +53,8 @@ public class SM_SKILL_LIST extends AionServerPacket {
 	 * 使用给定参数构造 SM_SKILL_LIST 包。
 	 * Creates a SM_SKILL_LIST packet with the given parameters.
 	 *
-	 * 玩家 / player
-	 * stigma skill
+	 * @param player 玩家 / player
+	 * @param stigmaSkill stigma skill
 	 */
 	public SM_SKILL_LIST(Player player, PlayerSkillEntry stigmaSkill) {
 		this.skillList = new PlayerSkillEntry[] { stigmaSkill };

@@ -27,7 +27,7 @@ public abstract class PlayerTransferDAO implements DAO {
      * 更新转移任务状态与备注。
      * Updates a player transfer task status and comment.
      *
-     * Task to update
+     * @param task Task to update
      * @return 是否更新成功 / True if updated
      */
     public abstract boolean update(PlayerTransferTask task);

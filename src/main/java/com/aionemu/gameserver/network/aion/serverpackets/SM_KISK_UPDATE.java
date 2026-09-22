@@ -22,7 +22,7 @@ public class SM_KISK_UPDATE extends AionServerPacket {
 	 * 根据 Kisk 实例构造状态同步包。
 	 * Creates a Kisk status update packet from the given Kisk instance.
 	 *
-	 * target Kisk
+	 * @param kisk target Kisk
 	 */
 	public SM_KISK_UPDATE(Kisk kisk) {
 		this.objId = kisk.getObjectId();

@@ -22,7 +22,7 @@ public class PacketLoggerService {
 	 * 记录客户端包名（CM）。
 	 * Logs a client (CM) packet name.
 	 *
-	 * packet name
+	 * @param name packet name
 	 */
 	public void logPacketCM(String name) {
 		if (DeveloperConfig.SHOW_PACKETS) {
@@ -34,7 +34,7 @@ public class PacketLoggerService {
 	 * 记录服务端包名（SM）。
 	 * Logs a server (SM) packet name.
 	 *
-	 * packet name
+	 * @param name packet name
 	 */
 	public void logPacketSM(String name) {
 		if (DeveloperConfig.SHOW_PACKETS) {
@@ -69,7 +69,7 @@ public class PacketLoggerService {
 	 * 注入 Spring ObjectProvider，供 DI 覆盖静态单例。
 	 * Injects Spring ObjectProvider to override the static singleton.
 	 *
-	 * Spring provider
+	 * @param instanceProvider Spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<PacketLoggerService> instanceProvider) {
 		PacketLoggerService.instanceProvider = instanceProvider;

@@ -27,7 +27,7 @@ public class SM_MOTION extends AionServerPacket {
 	 * 同步玩家全部动作列表（action=1）。
 	 * Syncs the full motion list for a player (action=1).
 	 *
-	 * motion collection
+	 * @param motions motion collection
 	 */
 	public SM_MOTION(Collection<Motion> motions) {
 		this.action = 1;
@@ -64,7 +64,7 @@ public class SM_MOTION extends AionServerPacket {
 	 * 移除指定动作（action=6）。
 	 * Removes a motion (action=6).
 	 *
-	 * motion id
+	 * @param motionId motion id
 	 */
 	public SM_MOTION(short motionId) {
 		this.action = 6;

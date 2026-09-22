@@ -40,7 +40,7 @@ public class RestartService {
      * 按频率计算下次重启时间并调度任务。
      * Compute the next restart time by frequency and schedule the task.
      *
-     * Restart frequency
+     * @param frequency Restart frequency
      */
     private synchronized void setTimer(RestartFrequency frequency) {
         if (frequency == RestartFrequency.NEVER) {

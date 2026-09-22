@@ -41,8 +41,8 @@ public class SM_INSTANCE_INFO extends AionServerPacket {
 	 * 构造单个副本冷却同步包。
 	 * Creates a single-instance cooldown sync packet.
 	 *
-	 * target player
-	 * instance world id
+	 * @param player target player
+	 * @param instanceId instance world id
 	 */
 	public SM_INSTANCE_INFO(Player player, int instanceId) {
 		this.player = player;

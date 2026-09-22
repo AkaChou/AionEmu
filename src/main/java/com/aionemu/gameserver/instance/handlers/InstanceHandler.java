@@ -35,7 +35,7 @@ public interface InstanceHandler {
 	 * 玩家登录到该副本时回调。
 	 * Called when a player logs in while in this instance.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	void onPlayerLogin(Player player);
 
@@ -43,7 +43,7 @@ public interface InstanceHandler {
 	 * 玩家从该副本登出时回调。
 	 * Called when a player logs out from this instance.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	void onPlayerLogOut(Player player);
 
@@ -51,7 +51,7 @@ public interface InstanceHandler {
 	 * 玩家进入副本时回调。
 	 * Called when a player enters the instance.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	void onEnterInstance(Player player);
 
@@ -59,7 +59,7 @@ public interface InstanceHandler {
 	 * 玩家离开副本时回调。
 	 * Called when a player leaves the instance.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	void onLeaveInstance(Player player);
 
@@ -67,8 +67,8 @@ public interface InstanceHandler {
 	 * 玩家打开门时回调。
 	 * Called when a player opens a door.
 	 *
-	 * 玩家 / player
-	 * door id
+	 * @param player 玩家 / player
+	 * @param door door id
 	 */
 	void onOpenDoor(Player player, int door);
 
@@ -76,8 +76,8 @@ public interface InstanceHandler {
 	 * 玩家进入区域时回调。
 	 * Called when a player enters a zone.
 	 *
-	 * 玩家 / player
-	 * zone
+	 * @param player 玩家 / player
+	 * @param zone zone
 	 */
 	void onEnterZone(Player player, ZoneInstance zone);
 
@@ -85,8 +85,8 @@ public interface InstanceHandler {
 	 * 玩家离开区域时回调。
 	 * Called when a player leaves a zone.
 	 *
-	 * 玩家 / player
-	 * zone
+	 * @param player 玩家 / player
+	 * @param zone zone
 	 */
 	void onLeaveZone(Player player, ZoneInstance zone);
 
@@ -94,8 +94,8 @@ public interface InstanceHandler {
 	 * 玩家播放过场动画结束时回调。
 	 * Called when a player finishes playing a cutscene movie.
 	 *
-	 * 玩家 / player
-	 * movie id
+	 * @param player 玩家 / player
+	 * @param movieId movie id
 	 */
 	void onPlayMovieEnd(Player player, int movieId);
 
@@ -103,7 +103,7 @@ public interface InstanceHandler {
 	 * 处理玩家复活事件。
 	 * Handle a player revive event.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @return 已处理则为 {@code true} / {@code true} if handled
 	 */
 	boolean onReviveEvent(Player player);
@@ -112,7 +112,7 @@ public interface InstanceHandler {
 	 * 玩家请求退出副本时回调。
 	 * Called when a player requests to exit the instance.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	void onExitInstance(Player player);
 
@@ -120,7 +120,7 @@ public interface InstanceHandler {
 	 * 结算并发放玩家奖励。
 	 * Settle and grant rewards to the player.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	void doReward(Player player);
 
@@ -138,7 +138,7 @@ public interface InstanceHandler {
 	 * 玩家停止训练时回调。
 	 * Called when a player stops training.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	void onStopTraining(Player player);
 
@@ -146,7 +146,7 @@ public interface InstanceHandler {
 	 * NPC 死亡时回调。
 	 * Called when an NPC dies.
 	 *
-	 * dead NPC
+	 * @param npc dead NPC
 	 */
 	void onDie(Npc npc);
 
@@ -170,7 +170,7 @@ public interface InstanceHandler {
 	 * NPC 掉落表注册时回调。
 	 * Called when an NPC's drop table is registered.
 	 *
-	 * related NPC
+	 * @param npc related NPC
 	 */
 	void onDropRegistered(Npc npc);
 
@@ -178,8 +178,8 @@ public interface InstanceHandler {
 	 * 玩家采集完成时回调。
 	 * Called when a player finishes gathering.
 	 *
-	 * 玩家 / player
-	 * gatherable
+	 * @param player 玩家 / player
+	 * @param paramGatherable gatherable
 	 */
 	void onGather(Player player, Gatherable paramGatherable);
 
@@ -205,8 +205,8 @@ public interface InstanceHandler {
 	 * 玩家对 NPC 使用物品完成时回调。
 	 * Called when a player finishes using an item on an NPC.
 	 *
-	 * 玩家 / player
-	 * target NPC
+	 * @param player 玩家 / player
+	 * @param npcId target NPC
 	 */
 	void handleUseItemFinish(Player player, Npc npcId);
 

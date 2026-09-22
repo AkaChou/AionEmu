@@ -21,7 +21,7 @@ public class SM_ACCOUNT_RECONNECT_KEY extends LsServerPacket {
 	 * 构造账号重连密钥请求包。
 	 * Constructs a new account reconnect-key request packet.
 	 *
-	 * account identifier
+	 * @param accountId account identifier
 	 */
 	public SM_ACCOUNT_RECONNECT_KEY(int accountId) {
 		super(0x02);

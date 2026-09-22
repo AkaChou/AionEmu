@@ -21,7 +21,7 @@ public class SiegeWeaponController extends SummonController {
 	 * 根据 NPC 模板 ID 构造攻城兵器控制器。
 	 * Constructs a siege weapon controller from an NPC template id.
 	 *
-	 * NPC 模板 ID / NPC template id
+	 * @param npcId NPC 模板 ID / NPC template id
 	 */
 	public SiegeWeaponController(int npcId) {
 		skills = DataManager.NPC_SKILL_DATA.getNpcSkillList(npcId);
@@ -80,7 +80,7 @@ public class SiegeWeaponController extends SummonController {
 	 * 进入攻击模式并跟随指定目标。
 	 * Enters attack mode and follows the specified target.
 	 *
-	 * target object id
+	 * @param targetObjId target object id
 	 */
 	@Override
 	public void attackMode(int targetObjId) {

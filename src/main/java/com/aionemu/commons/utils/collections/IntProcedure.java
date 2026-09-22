@@ -11,7 +11,7 @@ public interface IntProcedure {
      * 处理单个 int 值。
      * Process a single int value.
      *
-     * Value
+     * @param value Value
      * @return 继续遍历返回 true，中断返回 false / True to continue, false to stop
      */
     boolean execute(int value);

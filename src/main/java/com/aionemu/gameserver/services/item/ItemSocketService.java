@@ -128,8 +128,8 @@ public class ItemSocketService {
 	 * 复制源物品的魔石与融合石到目标物品。
 	 * Copies manastones and fusion stones from source to target.
 	 *
-	 * source item
-	 * target item
+	 * @param source source item
+	 * @param target target item
 	 */
 	public static void copyManaStones(Item source, Item target) {
 		if (source.hasManaStones()) {
@@ -148,8 +148,8 @@ public class ItemSocketService {
 	 * 将源物品魔石复制为目标物品的融合石。
 	 * Copies source manastones onto the target as fusion stones.
 	 *
-	 * source item
-	 * target item
+	 * @param source source item
+	 * @param target target item
 	 */
 	public static void copyFusionStones(Item source, Item target) {
 		if (source.hasManaStones()) {
@@ -258,9 +258,9 @@ public class ItemSocketService {
 	 * 移除玩家物品指定槽位的魔石（含已装备）。
 	 * Removes a manastone at the given slot from inventory or equipped item.
 	 *
-	 * 玩家 / player
-	 * item object id
-	 * slot number
+	 * @param player 玩家 / player
+	 * @param itemObjId item object id
+	 * @param slotNum slot number
 	 */
 	public static void removeManastone(Player player, int itemObjId, int slotNum) {
 		Storage inventory = player.getInventory();
@@ -309,9 +309,9 @@ public class ItemSocketService {
 	 * 移除玩家物品指定槽位的融合石（含已装备）。
 	 * Removes a fusion stone at the given slot from inventory or equipped item.
 	 *
-	 * 玩家 / player
-	 * item object id
-	 * slot number
+	 * @param player 玩家 / player
+	 * @param itemObjId item object id
+	 * @param slotNum slot number
 	 */
 	public static void removeFusionstone(Player player, int itemObjId, int slotNum) {
 		Storage inventory = player.getInventory();
@@ -359,8 +359,8 @@ public class ItemSocketService {
 	 * 移除物品上全部魔石。
 	 * Removes all manastones from the item.
 	 *
-	 * 玩家 / player
-	 * item
+	 * @param player 玩家 / player
+	 * @param item item
 	 */
 	public static void removeAllManastone(Player player, Item item) {
 		if (item == null) {
@@ -383,8 +383,8 @@ public class ItemSocketService {
 	 * 移除物品上全部融合石。
 	 * Removes all fusion stones from the item.
 	 *
-	 * 玩家 / player
-	 * item
+	 * @param player 玩家 / player
+	 * @param item item
 	 */
 	public static void removeAllFusionStone(Player player, Item item) {
 		if (item == null) {
@@ -407,9 +407,9 @@ public class ItemSocketService {
 	 * 将神石镶嵌到武器（扣基纳、播放使用动画）。
 	 * Sockets a godstone onto a weapon (charges kinah and plays use animation).
 	 *
-	 * 玩家 / player
-	 * weapon object id
-	 * godstone object id
+	 * @param player 玩家 / player
+	 * @param weaponId weapon object id
+	 * @param stoneId godstone object id
 	 */
 	public static void socketGodstone(final Player player, int weaponId, int stoneId) {
 		final Item weaponItem = findGodstoneTarget(player, weaponId);
@@ -479,8 +479,8 @@ public class ItemSocketService {
 	 * 在背包或装备栏中查找神石镶嵌目标武器。
 	 * Finds the godstone target weapon in inventory or equipment.
 	 *
-	 * 玩家 / player
-	 * weapon object id
+	 * @param player 玩家 / player
+	 * @param weaponId weapon object id
 	 * @return 武器物品或 {@code null} / weapon item or {@code null}
 	 */
 	static Item findGodstoneTarget(Player player, int weaponId) {

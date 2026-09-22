@@ -119,7 +119,7 @@ public class LoginServer {
 	 * 注入 Spring ObjectProvider，供 DI 覆盖静态单例。
 	 * Injects Spring ObjectProvider to override the static singleton.
 	 *
-	 * Spring provider
+	 * @param instanceProvider Spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<LoginServer> instanceProvider) {
 		LoginServer.instanceProvider = instanceProvider;
@@ -429,8 +429,8 @@ public class LoginServer {
 	 * 由 CM_ACCOUNT_RECONNECT_KEY 调用，将重连密钥下发给请求重连的客户端。
 	 * Called by CM_ACCOUNT_RECONNECT_KEY to deliver the reconnection key to the requesting client.
 	 *
-	 * 账号 ID / Account id
-	 * Reconnection key
+	 * @param accountId 账号 ID / Account id
+	 * @param reconnectKey Reconnection key
 	 */
 	public void authReconnectionResponse(int accountId, int reconnectKey) {
 		AionConnection client = loginRequests.remove(accountId);

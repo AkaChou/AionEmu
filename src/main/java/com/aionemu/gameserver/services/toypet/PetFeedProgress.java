@@ -52,7 +52,7 @@ public final class PetFeedProgress {
 	 * 设置累计喂养积分（14 位掩码）。
 	 * Set total feed points (14-bit mask).
 	 *
-	 * Points
+	 * @param points Points
 	 */
 	public void setTotalPoints(int points) {
 		totalPoints = points & 0x3FFF;
@@ -72,7 +72,7 @@ public final class PetFeedProgress {
 	 * 设置普通食物已喂次数。
 	 * Set regular food consumption count.
 	 *
-	 * Count
+	 * @param count Count
 	 */
 	public void setRegularCount(short count) {
 		regularConsumed = count;
@@ -143,7 +143,7 @@ public final class PetFeedProgress {
 	 * 从存档/协议整型还原进度。
 	 * Restore progress from a saved/packet integer value.
 	 *
-	 * Saved data
+	 * @param savedData Saved data
 	 */
 	public void setData(int savedData) {
 		savedData >>= 4; // drop unk

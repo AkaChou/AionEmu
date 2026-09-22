@@ -174,8 +174,8 @@ public class RvrService {
 	 * 按状态在地点刷出对应 NPC。
 	 * Spawns NPCs for the location according to the given state.
 	 *
-	 * location
-	 * state type
+	 * @param loc location
+	 * @param rstate state type
 	 */
 	public void spawn(RvrLocation loc, RvrStateType rstate) {
 		List<SpawnGroup2> locSpawns = DataManager.SPAWNS_DATA2.getRvrSpawnsByLocId(loc.getId());
@@ -816,7 +816,7 @@ public class RvrService {
 	 * 清除地点已刷出的 NPC。
 	 * Despawns NPCs previously spawned at the location.
 	 *
-	 * location
+	 * @param loc location
 	 */
 	public void despawn(RvrLocation loc) {
 		if (loc.getSpawned() == null) {

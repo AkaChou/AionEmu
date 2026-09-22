@@ -60,7 +60,7 @@ public class ConquerorBuffs implements StatOwner {
 	 * 结束并移除玩家身上的征服者属性效果。
 	 * Ends and removes conqueror attribute effects from the player.
 	 *
-	 * target player
+	 * @param player target player
 	 */
 	public void endEffect(Player player) {
 		functions.clear();

@@ -32,7 +32,7 @@ public class PvPSpreeService {
 	 * 增加胜利者原始连杀数，并在达到阈值时升级连杀等级与奖励。
 	 * Increments the winner's raw kill count and upgrades spree level/rewards at thresholds.
 	 *
-	 * winner
+	 * @param winner winner
 	 */
 	public static void increaseRawKillCount(Player winner) {
 		int currentRawKillCount = winner.getRawKillCount();
@@ -142,9 +142,9 @@ public class PvPSpreeService {
 	 * 重置受害者连杀状态；若有连杀等级则广播终结消息。
 	 * Resets the victim's spree state; broadcasts end message if a spree level was active.
 	 *
-	 * victim
-	 * killer
-	 * whether PvP death
+	 * @param victim victim
+	 * @param killer killer
+	 * @param isPvPDeath whether PvP death
 	 */
 	public static void cancelSpree(Player victim, Creature killer, boolean isPvPDeath) {
 		int killsBeforeDeath = victim.getRawKillCount();

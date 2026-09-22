@@ -23,7 +23,7 @@ public abstract class AccountTimeDAO implements DAO {
      * 读取账号时间数据。
      * Loads {@link AccountTime} data of an account.
      *
-     * 账号 ID / Account id
+     * @param accountId 账号 ID / Account id
      * @return 账号时间；不存在时为 null / AccountTime, or null if missing
      */
     public abstract AccountTime getAccountTime(int accountId);

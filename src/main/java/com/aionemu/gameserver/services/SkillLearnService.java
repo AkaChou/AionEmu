@@ -98,10 +98,10 @@ public class SkillLearnService {
 	 * 按职业/等级/种族模板向玩家添加可学技能。
 	 * Adds learnable skills to the player from class/level/race templates.
 	 *
-	 * 玩家 / player
-	 * level
-	 * player class
-	 * player race
+	 * @param player 玩家 / player
+	 * @param level level
+	 * @param playerClass player class
+	 * @param playerRace player race
 	 */
 	public static void addSkills(Player player, int level, PlayerClass playerClass, Race playerRace) {
 		SkillLearnTemplate[] skillTemplates = DataManager.SKILL_TREE_DATA.getTemplatesFor(playerClass, level, playerRace);
@@ -147,8 +147,8 @@ public class SkillLearnService {
 	 * 通过技能书学习技能至玩家当前可达最高等级。
 	 * Learns a skill from a skill book up to the max level available for the player.
 	 *
-	 * 玩家 / player
-	 * skill id
+	 * @param player 玩家 / player
+	 * @param skillId skill id
 	 */
 	public static void learnSkillBook(Player player, int skillId) {
 		SkillLearnTemplate[] skillTemplates = null;
@@ -174,8 +174,8 @@ public class SkillLearnService {
 	 * 移除玩家技能并同步客户端（含异常效果清理）。
 	 * Removes a player skill and syncs the client (including abnormal effect cleanup).
 	 *
-	 * 玩家 / player
-	 * skill id
+	 * @param player 玩家 / player
+	 * @param skillId skill id
 	 */
 	public static void removeSkill(Player player, int skillId) {
 		if (player.getSkillList().isSkillPresent(skillId)) {
@@ -195,8 +195,8 @@ public class SkillLearnService {
 	 * 移除玩家链接技能并清空 linkedSkill 标记。
 	 * Removes a linked skill and clears the linkedSkill flag.
 	 *
-	 * 玩家 / player
-	 * skill id
+	 * @param player 玩家 / player
+	 * @param skillId skill id
 	 */
 	public static void removeLinkedSkill(Player player, int skillId) {
 		if (player.getSkillList().isSkillPresent(skillId)) {

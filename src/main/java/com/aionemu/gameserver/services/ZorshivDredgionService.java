@@ -169,8 +169,8 @@ public class ZorshivDredgionService {
 	 * 按状态在地点刷出对应 NPC。
 	 * Spawns NPCs for the location according to the given state.
 	 *
-	 * location
-	 * state type
+	 * @param loc location
+	 * @param zstate state type
 	 */
 	public void spawn(ZorshivDredgionLocation loc, ZorshivDredgionStateType zstate) {
 		List<SpawnGroup2> locSpawns = DataManager.SPAWNS_DATA2.getZorshivDredgionSpawnsByLocId(loc.getId());
@@ -322,7 +322,7 @@ public class ZorshivDredgionService {
 	 * 清除地点已刷出的 NPC。
 	 * Despawns NPCs previously spawned at the location.
 	 *
-	 * location
+	 * @param loc location
 	 */
 	public void despawn(ZorshivDredgionLocation loc) {
 		if (loc.getSpawned() == null) {

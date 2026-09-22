@@ -1162,7 +1162,7 @@ public class BeritraService {
 	 * 注入 Spring ObjectProvider，供 getInstance 使用。
 	 * Inject the Spring ObjectProvider used by getInstance().
 	 *
-	 * Spring provider
+	 * @param instanceProvider Spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<BeritraService> instanceProvider) {
 		BeritraService.instanceProvider = instanceProvider;

@@ -264,7 +264,7 @@ public class StigmaService {
 	 * 登录时重建烙印技能、校验槽位/前置技能/职业，并检查连结条件。
 	 * On login, rebuilds stigma skills, validates slots/prereqs/class, and checks linked conditions.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public static void onPlayerLogin(Player player) {
 		List<Item> equippedItems = player.getEquipment().getEquippedItemsAllStigma();

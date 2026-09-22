@@ -32,7 +32,7 @@ public class CryptEngine {
      * 更新后续包加解密使用的 Blowfish 密钥。
      * Update the Blowfish key used for subsequent packet crypto.
      *
-     * new Blowfish key
+     * @param newKey new Blowfish key
      */
     public void updateKey(byte[] newKey) {
         this.key = newKey;
@@ -87,9 +87,9 @@ public class CryptEngine {
      * 校验包尾校验和。
      * Verify the trailing packet checksum.
      *
-     * encrypted packet
-     * offset
-     * length
+     * @param data encrypted packet
+     * @param offset offset
+     * @param length length
      *
      * @return 校验和通过返回 true / true if checksum is ok
      */

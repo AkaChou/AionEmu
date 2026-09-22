@@ -21,7 +21,7 @@ public class SM_ACCOUNT_PROPERTIES extends AionServerPacket {
 	 * 仅设置 GM 标记的精简构造。
 	 * Minimal constructor that only sets the GM flag.
 	 *
-	 * whether the account is a GM
+	 * @param isGM whether the account is a GM
 	 */
 	public SM_ACCOUNT_PROPERTIES(boolean isGM) {
 		this.isGM = isGM;

@@ -35,8 +35,8 @@ public class SM_RIFT_ANNOUNCE extends AionServerPacket {
 	 * 使用给定参数构造 SM_RIFT_ANNOUNCE 包。
 	 * Creates a SM_RIFT_ANNOUNCE packet with the given parameters.
 	 *
-	 * gelkmaros flag
-	 * inggison flag
+	 * @param gelkmaros gelkmaros flag
+	 * @param inggison inggison flag
 	 */
 	public SM_RIFT_ANNOUNCE(boolean gelkmaros, boolean inggison) {
 		this.gelkmaros = gelkmaros ? 1 : 0;
@@ -60,7 +60,7 @@ public class SM_RIFT_ANNOUNCE extends AionServerPacket {
 	 * 使用给定参数构造 SM_RIFT_ANNOUNCE 包。
 	 * Rift despawn
 	 *
-	 * object id
+	 * @param objectId object id
 	 */
 	public SM_RIFT_ANNOUNCE(int objectId) {
 		this.objectId = objectId;

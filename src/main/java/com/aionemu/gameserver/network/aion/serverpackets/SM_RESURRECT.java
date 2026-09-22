@@ -20,7 +20,7 @@ public class SM_RESURRECT extends AionServerPacket {
 	 * 使用给定参数构造 SM_RESURRECT 包。
 	 * Creates a SM_RESURRECT packet with the given parameters.
 	 *
-	 * creature
+	 * @param creature creature
 	 */
 	public SM_RESURRECT(Creature creature) {
 		this(creature, 0);
@@ -30,8 +30,8 @@ public class SM_RESURRECT extends AionServerPacket {
 	 * 使用给定参数构造 SM_RESURRECT 包。
 	 * Creates a SM_RESURRECT packet with the given parameters.
 	 *
-	 * creature
-	 * skill id
+	 * @param creature creature
+	 * @param skillId skill id
 	 */
 	public SM_RESURRECT(Creature creature, int skillId) {
 		this.name = creature.getName();

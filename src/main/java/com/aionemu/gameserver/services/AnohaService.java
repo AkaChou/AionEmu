@@ -283,7 +283,7 @@ public class AnohaService {
 	 * 向玩家发送是否前往挑战狂暴阿诺哈的确认框。
 	 * Send the player a confirm dialog to teleport and fight Berserk Anoha.
 	 *
-	 * target player
+	 * @param player target player
 	 */
 	public void sendRequest(final Player player) {
 	    if (player.getLevel() < 75) {
@@ -409,7 +409,7 @@ public class AnohaService {
 	 * 注入 Spring ObjectProvider，供 getInstance 使用。
 	 * Inject the Spring ObjectProvider used by getInstance().
 	 *
-	 * Spring provider
+	 * @param instanceProvider Spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<AnohaService> instanceProvider) {
 		AnohaService.instanceProvider = instanceProvider;

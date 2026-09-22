@@ -95,9 +95,9 @@ public class ItemRemodelService {
 	 * 系统幻化物品。
 	 * System-remodels an item.
 	 *
-	 * 玩家 / player
-	 * keepItem
-	 * template
+	 * @param player 玩家 / player
+	 * @param keepItem keepItem
+	 * @param template template
 	 */
 	public static void systemRemodelItem(Player player, Item keepItem, ItemTemplate template) {
 		if (keepItem.getItemSkinSkill() > 0) {
@@ -159,10 +159,10 @@ public class ItemRemodelService {
 	 * 预览幻化。
 	 * Views remodel preview.
 	 *
-	 * 玩家 / player
-	 * item
-	 * template
-	 * duration
+	 * @param player 玩家 / player
+	 * @param item item
+	 * @param template template
+	 * @param duration duration
 	 */
 	public static void viewRemodelItem(final Player player, final Item item, ItemTemplate template, int duration) {
 		final ItemTemplate oldTemplate = item.getItemSkinTemplate();

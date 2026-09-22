@@ -44,7 +44,7 @@ public class FlyRingService {
 	 * 注入 Spring ObjectProvider 以覆盖默认单例。
 	 * Injects a Spring ObjectProvider to override the default singleton.
 	 *
-	 * Spring provider
+	 * @param instanceProvider Spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<FlyRingService> instanceProvider) {
 		FlyRingService.instanceProvider = instanceProvider;

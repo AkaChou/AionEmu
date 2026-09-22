@@ -62,7 +62,7 @@ public class MinionController extends VisibleObjectController<Minion> {
      * 开始跟随指定玩家，启动移动与瞬移检测任务。
      * Starts following the given player by scheduling move and teleport-check tasks.
      *
-     * master player
+     * @param player master player
      */
     public void startFollowing(Player player) {
         Minion minion = getOwner();
@@ -82,7 +82,7 @@ public class MinionController extends VisibleObjectController<Minion> {
      * 停止跟随并取消相关任务。
      * Stops following and cancels related tasks.
      *
-     * master player
+     * @param player master player
      */
     public void stopFollowing(Player player) {
         if (player != null) {
@@ -95,7 +95,7 @@ public class MinionController extends VisibleObjectController<Minion> {
      * 将小跟班瞬移到玩家当前位置。
      * Teleports the minion to the player's current position.
      *
-     * master player
+     * @param player master player
      */
     public void teleportToPlayer(Player player) {
         Minion minion = getOwner();
@@ -126,7 +126,7 @@ public class MinionController extends VisibleObjectController<Minion> {
          * 构造跟随任务。
          * Constructs a follow task.
          *
-         * master player
+         * @param player master player
          */
         public MinionFollowTask(Player player) {
             this.player = player;
@@ -190,7 +190,7 @@ public class MinionController extends VisibleObjectController<Minion> {
          * 构造瞬移检测任务。
          * Constructs a teleport-check task.
          *
-         * master player
+         * @param player master player
          */
         public MinionTeleportTask(Player player) {
             this.player = player;

@@ -37,8 +37,8 @@ public class ArenaOfChaosInstance extends PvPArenaInstance
 	 * 玩家采集完成时处理。
 	 * Handle player gathering completion.
 	 *
-	 * 玩家 / player
-	 * gatherable
+	 * @param player 玩家 / player
+	 * @param gatherable gatherable
 	 */
 	@Override
 	public void onGather(Player player, Gatherable gatherable) {

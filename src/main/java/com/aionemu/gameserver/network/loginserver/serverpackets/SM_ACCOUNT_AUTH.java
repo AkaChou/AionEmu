@@ -36,10 +36,10 @@ public class SM_ACCOUNT_AUTH extends LsServerPacket {
 	 * 构造账号会话校验包。
 	 * Constructs a new account session-auth packet.
 	 *
-	 * account identifier
-	 * loginOk part
-	 * playOk1 part
-	 * playOk2 part
+	 * @param accountId account identifier
+	 * @param loginOk loginOk part
+	 * @param playOk1 playOk1 part
+	 * @param playOk2 playOk2 part
 	 */
 	public SM_ACCOUNT_AUTH(int accountId, int loginOk, int playOk1, int playOk2) {
 		super(0x01);

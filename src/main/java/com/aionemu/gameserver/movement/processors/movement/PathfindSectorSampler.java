@@ -129,9 +129,9 @@ public class PathfindSectorSampler {
 	 * 在给定距离范围内尝试选取随机可走点（当前实现恒返回 null）。
 	 * Try to pick a random walkable point within a range (currently always returns null).
 	 *
-	 * Source creature
-	 * Minimum range
-	 * Maximum range
+	 * @param source Source creature
+	 * @param minRange Minimum range
+	 * @param maxRange Maximum range
 	 * @return 随机点，当前恒为 null / Random point; currently always null
 	 */
 	public static Vector3f getRandomPoint(Creature source, float minRange, float maxRange) {

@@ -191,7 +191,7 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
      * 持久化单颗 Idian 石。
      * Persists a single Idian stone.
      *
-     * Idian stone
+     * @param idianStone Idian stone
      */
     @Override
     public void storeIdianStones(IdianStone idianStone) {

@@ -53,8 +53,8 @@ public class SM_MY_HISTORY extends AionServerPacket {
 	 * 构造 6v6 竞技场历史包。
 	 * Builds an Arena 6v6 history packet.
 	 *
-	 * ranking table id
-	 * 6v6 rank data
+	 * @param tableId ranking table id
+	 * @param ranking 6v6 rank data
 	 */
 	public SM_MY_HISTORY(int tableId, Arena6V6Ranking ranking) {
 		this.tableId = tableId;

@@ -171,7 +171,7 @@ public class BlowfishCipher {
      * 使用给定密钥初始化 Blowfish 密码。
      * Initializes the Blowfish cipher with the given key.
      *
-     * Blowfish key
+     * @param blowfishKey Blowfish key
      */
     public BlowfishCipher(byte[] blowfishKey) {
         pArray = new int[18];
@@ -183,7 +183,7 @@ public class BlowfishCipher {
      * 用新密钥更新，并重新初始化 P 数组与 S-box。
      * Updates the Blowfish key and reinitializes P-array and S-boxes.
      *
-     * new Blowfish key
+     * @param blowfishKey new Blowfish key
      */
     public void updateKey(byte[] blowfishKey) {
         this.blowfishKey = blowfishKey;

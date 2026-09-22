@@ -27,8 +27,8 @@ public class SM_REPURCHASE extends AionServerPacket {
 	 * 使用给定参数构造 SM_REPURCHASE 包。
 	 * Creates a SM_REPURCHASE packet with the given parameters.
 	 *
-	 * 玩家 / player
-	 * npc id
+	 * @param player 玩家 / player
+	 * @param npcId npc id
 	 */
 	public SM_REPURCHASE(Player player, int npcId) {
 		this.player = player;

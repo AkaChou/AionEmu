@@ -18,7 +18,7 @@ public abstract class BannedIpDAO implements DAO {
      * 插入永久 IP 封禁（无过期时间）。
      * Inserts an IP mask with no expire time (never expires).
      *
-     * IP mask to ban
+     * @param mask IP mask to ban
      * @return 封禁对象；失败时为 null / BannedIP, or null on error
      */
     public abstract BannedIP insert(String mask);
@@ -27,8 +27,8 @@ public abstract class BannedIpDAO implements DAO {
      * 插入带过期时间的 IP 封禁；过期时间为 null 表示永久。
      * Inserts an IP mask with expire time; null means infinite ban.
      *
-     * IP mask to ban
-     * Expiration time of ban
+     * @param mask IP mask to ban
+     * @param expireTime Expiration time of ban
      * @return 封禁对象；失败时为 null / BannedIP, or null on error
      */
     public abstract BannedIP insert(String mask, Timestamp expireTime);
@@ -55,7 +55,7 @@ public abstract class BannedIpDAO implements DAO {
      * 按 IP 掩码删除封禁。
      * Removes ban by mask.
      *
-     * IP mask to remove
+     * @param mask IP mask to remove
      * @return 是否删除成功 / True if removed
      */
     public abstract boolean remove(String mask);

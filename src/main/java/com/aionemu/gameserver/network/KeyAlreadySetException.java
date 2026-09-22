@@ -31,8 +31,8 @@ public class KeyAlreadySetException extends RuntimeException {
 	 * 带消息与原因的构造。
 	 * Constructs with message and cause.
 	 *
-	 * exception description
-	 * cause
+	 * @param message exception description
+	 * @param cause cause
 	 */
 	public KeyAlreadySetException(String message, Throwable cause) {
 		super(message, cause);
@@ -42,7 +42,7 @@ public class KeyAlreadySetException extends RuntimeException {
 	 * 带原因的构造。
 	 * Constructs with cause.
 	 *
-	 * cause
+	 * @param cause cause
 	 */
 	public KeyAlreadySetException(Throwable cause) {
 		super(cause);

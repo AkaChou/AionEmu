@@ -29,7 +29,7 @@ public class PunishmentService {
 	 * 解除角色封禁。
 	 * Unbans a character.
 	 *
-	 * character id
+	 * @param playerId character id
 	 */
 	public static void unbanChar(int playerId) {
 		DAOManager.getDAO(PlayerPunishmentsDAO.class).unpunishPlayer(playerId, PunishmentType.CHARBAN);
@@ -137,7 +137,7 @@ public class PunishmentService {
 	 * 登录/状态刷新时恢复监狱计时，并确保玩家在监狱地图。
 	 * On login/status refresh, restores prison timer and ensures the player is on a prison map.
 	 *
-	 * target player
+	 * @param player target player
 	 */
 	public static void updatePrisonStatus(final Player player) {
 		if (player.isInPrison()) {
@@ -167,8 +167,8 @@ public class PunishmentService {
 	 * 调度监狱释放任务。
 	 * Schedules the prison release task.
 	 *
-	 * target player
-	 * remaining milliseconds
+	 * @param player target player
+	 * @param prisonTimer remaining milliseconds
 	 */
 	private static void schedulePrisonTask(final Player player, long prisonTimer) {
 		player.setPrisonTimer(prisonTimer);
@@ -238,7 +238,7 @@ public class PunishmentService {
 	 * 登录/状态刷新时恢复采集限制计时。
 	 * On login/status refresh, restores gather-restriction timer.
 	 *
-	 * target player
+	 * @param player target player
 	 * @author Cura
 	 */
 	public static void updateGatherableStatus(Player player) {
@@ -256,8 +256,8 @@ public class PunishmentService {
 	 * 调度采集限制解除任务。
 	 * Schedules the gather-restriction release task.
 	 *
-	 * target player
-	 * remaining milliseconds
+	 * @param player target player
+	 * @param gatherableTimer remaining milliseconds
 	 * @author Cura
 	 */
 	private static void scheduleGatherableTask(final Player player, long gatherableTimer) {

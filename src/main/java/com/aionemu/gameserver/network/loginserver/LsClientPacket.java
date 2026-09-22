@@ -19,7 +19,7 @@ public abstract class LsClientPacket extends BaseClientPacket<LoginServerConnect
 	 * 以指定 opcode 构造客户端封包；之后需手动设置 buffer 与 connection。
 	 * Construct client packet with the given opcode; buffer and connection must be set later.
 	 *
-	 * Packet opcode
+	 * @param opcode Packet opcode
 	 */
 	protected LsClientPacket(int opcode) {
 		super(opcode);

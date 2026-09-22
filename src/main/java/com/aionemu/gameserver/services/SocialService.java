@@ -88,8 +88,8 @@ public class SocialService {
 	 * 建立双向好友关系并同步双方好友列表。
 	 * Creates a mutual friendship and syncs both friend lists.
 	 *
-	 * first player
-	 * second player
+	 * @param friend1 first player
+	 * @param friend2 second player
 	 */
 	public static void makeFriends(Player friend1, Player friend2) {
 		DAOManager.getDAO(FriendListDAO.class).addFriends(friend1, friend2);
@@ -137,9 +137,9 @@ public class SocialService {
 	 * 设置好友备注并刷新好友列表包。
 	 * Sets a friend note and refreshes the friend list packet.
 	 *
-	 * operator
-	 * friend entry
-	 * note
+	 * @param player operator
+	 * @param friend friend entry
+	 * @param notice note
 	 */
 	public static void setFriendNote(Player player, Friend friend, String notice) {
 		friend.setNote(notice);

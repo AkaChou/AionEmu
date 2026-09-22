@@ -170,7 +170,7 @@ public class RiftService {
 	 * 开启指定裂隙地点并在结束后自动关闭。
 	 * Opens the given rift location and auto-closes after duration.
 	 *
-	 * rift location
+	 * @param location rift location
 	 */
 	public void openRifts(RiftLocation location) {
 		location.setOpened(true);
@@ -188,7 +188,7 @@ public class RiftService {
 	 * 关闭单个裂隙地点并删除刷怪。
 	 * Closes a single rift location and deletes its spawns.
 	 *
-	 * rift location
+	 * @param location rift location
 	 */
 	public void closeRift(RiftLocation location) {
 		location.setOpened(false);

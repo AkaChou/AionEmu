@@ -37,7 +37,7 @@ public class SM_ALLIANCE_INFO extends AionServerPacket {
 	 * 构造无系统消息的联盟信息包。
 	 * Creates an alliance info packet without a system message.
 	 *
-	 * player alliance
+	 * @param alliance player alliance
 	 */
 	public SM_ALLIANCE_INFO(PlayerAlliance alliance) {
 		this(alliance, 0, StringUtils.EMPTY);

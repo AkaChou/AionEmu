@@ -95,7 +95,7 @@ public class PetitionService {
 	 * 删除指定玩家的全部请愿并通知客户端。
 	 * Deletes all petitions for the given player and notifies the client.
 	 *
-	 * player object id
+	 * @param playerObjId player object id
 	 */
 	public void deletePetition(int playerObjId) {
 		Set<Petition> petitions = new HashSet<>();
@@ -119,7 +119,7 @@ public class PetitionService {
 	 * 标记请愿已回复并从队列移除。
 	 * Marks a petition as replied and removes it from the queue.
 	 *
-	 * petition id
+	 * @param petitionId petition id
 	 */
 	public void setPetitionReplied(int petitionId) {
 		int playerObjId = registeredPetitions.get(petitionId).getPlayerObjId();
@@ -170,8 +170,8 @@ public class PetitionService {
 	 * 向在线 GM 广播新请愿通知。
 	 * Broadcasts a new-petition notice to online GMs.
 	 *
-	 * sender
-	 * petition id
+	 * @param sender sender
+	 * @param petitionId petition id
 	 */
 	private void broadcastMessageToGM(Player sender, int petitionId) {
 		Iterator<Player> players = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();

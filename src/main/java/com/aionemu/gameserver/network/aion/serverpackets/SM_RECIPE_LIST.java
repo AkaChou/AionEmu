@@ -20,7 +20,7 @@ public class SM_RECIPE_LIST extends AionServerPacket {
 	 * 使用给定参数构造 SM_RECIPE_LIST 包。
 	 * Creates a SM_RECIPE_LIST packet with the given parameters.
 	 *
-	 * recipe id set
+	 * @param recipeIds recipe id set
 	 */
 	public SM_RECIPE_LIST(Set<Integer> recipeIds) {
 		this.recipeIds = recipeIds.toArray(new Integer[recipeIds.size()]);

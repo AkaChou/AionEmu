@@ -43,8 +43,8 @@ public abstract class PremiumDAO implements DAO {
      * 写回账号 Luna。
      * Updates account luna amount.
      *
-     * 账号 ID / Account id
-     * Luna amount
+     * @param accountId 账号 ID / Account id
+     * @param luna Luna amount
      * @return 是否更新成功 / True if updated
      */
     public abstract boolean updateLuna(int accountId, long luna);

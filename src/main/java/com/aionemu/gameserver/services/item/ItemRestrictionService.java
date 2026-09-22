@@ -22,9 +22,9 @@ public class ItemRestrictionService {
 	 * 检查玩家是否可从指定仓库移出物品。
 	 * Checks whether the player may move the item out of the given storage.
 	 *
-	 * 玩家 / player
-	 * item
-	 * storage type id
+	 * @param player 玩家 / player
+	 * @param item item
+	 * @param storage storage type id
 	 *
 	 * @return 受限（不可移出）则为 true / true if restricted (cannot remove)
 	 */
@@ -48,9 +48,9 @@ public class ItemRestrictionService {
 	 * 检查玩家是否可将物品移入指定仓库。
 	 * Checks whether the player may move the item into the given storage.
 	 *
-	 * 玩家 / player
-	 * item
-	 * storage type id
+	 * @param player 玩家 / player
+	 * @param item item
+	 * @param storage storage type id
 	 *
 	 * @return 受限（不可移入）则为 true / true if restricted (cannot deposit)
 	 */

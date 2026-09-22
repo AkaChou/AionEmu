@@ -20,8 +20,8 @@ public class SM_HOTSPOT_TELEPORT extends AionServerPacket {
 	 * 构造仅含动作与玩家 ID 的热点传送包（动作 0/2）。
 	 * Creates a hotspot teleport packet with action and player id only (actions 0/2).
 	 *
-	 * action type
-	 * player object id
+	 * @param action action type
+	 * @param playerObjId player object id
 	 */
 	public SM_HOTSPOT_TELEPORT(int action, int playerObjId) {
 		this.action = action;
@@ -32,9 +32,9 @@ public class SM_HOTSPOT_TELEPORT extends AionServerPacket {
 	 * 构造含传送点 ID 的热点传送包（动作 1）。
 	 * Creates a hotspot teleport packet with teleport id (action 1).
 	 *
-	 * action type
-	 * player object id
-	 * teleport id
+	 * @param action action type
+	 * @param playerObjId player object id
+	 * @param teleportId teleport id
 	 */
 	public SM_HOTSPOT_TELEPORT(int action, int playerObjId, int teleportId) {
 		this.action = action;
@@ -46,10 +46,10 @@ public class SM_HOTSPOT_TELEPORT extends AionServerPacket {
 	 * 构造含冷却时间的热点传送包（动作 3）。
 	 * Creates a hotspot teleport packet with cooldown (action 3).
 	 *
-	 * 玩家 / player
-	 * action type
-	 * teleport id
-	 * cooldown
+	 * @param player 玩家 / player
+	 * @param action action type
+	 * @param teleportId teleport id
+	 * @param cooldown cooldown
 	 */
 	public SM_HOTSPOT_TELEPORT(Player player, int action, int teleportId, int cooldown) {
 		this.playerObjId = player.getObjectId();

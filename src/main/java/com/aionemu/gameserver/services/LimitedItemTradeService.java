@@ -67,8 +67,8 @@ public class LimitedItemTradeService {
 	 * 按物品与 NPC 查询限购项。
 	 * Looks up a limited item by item id and NPC id.
 	 *
-	 * item id
-	 * npc id
+	 * @param itemId item id
+	 * @param npcId npc id
 	 * @return 限购项，不存在则为 null / limited item, or null
 	 */
 	public LimitedItem getLimitedItem(int itemId, int npcId) {
@@ -135,7 +135,7 @@ public class LimitedItemTradeService {
 	 * 注入 Spring ObjectProvider 以覆盖默认单例。
 	 * Injects a Spring ObjectProvider to override the default singleton.
 	 *
-	 * Spring provider
+	 * @param instanceProvider Spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<LimitedItemTradeService> instanceProvider) {
 		LimitedItemTradeService.instanceProvider = instanceProvider;

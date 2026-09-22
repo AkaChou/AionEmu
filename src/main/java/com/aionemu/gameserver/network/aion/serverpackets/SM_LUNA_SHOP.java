@@ -43,10 +43,10 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 	 * 卡鲁内克工坊（Karunerk's Workshop）制作结果。
 	 * Karunerk's Workshop craft result.
 	 *
-	 * action type
-	 * crafted item id
-	 * crafted item count
-	 * whether craft succeeded
+	 * @param actionId action type
+	 * @param craftItemId crafted item id
+	 * @param craftItemCount crafted item count
+	 * @param success whether craft succeeded
 	 */
 	public SM_LUNA_SHOP(int actionId, int craftItemId, int craftItemCount, boolean success) {
 		this.actionId = actionId;
@@ -100,9 +100,9 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 	 * 衣柜槽位/物品数量同步。
 	 * Wardrobe slot and item size sync.
 	 *
-	 * action type
-	 * slot size
-	 * item size
+	 * @param actionId action type
+	 * @param slotSize slot size
+	 * @param itemSize item size
 	 */
 	public SM_LUNA_SHOP(int actionId, int slotSize, int itemSize) {
 		this.actionId = actionId;
@@ -128,9 +128,9 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 	 * 物品奖励/展示（含数量）。
 	 * Item reward/display payload with count.
 	 *
-	 * action type
-	 * item id
-	 * item count
+	 * @param actionId action type
+	 * @param itemId item id
+	 * @param itemCount item count
 	 */
 	public SM_LUNA_SHOP(int actionId, int itemId, long itemCount) {
 		this.actionId = actionId;

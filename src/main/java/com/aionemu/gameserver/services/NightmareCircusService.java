@@ -131,8 +131,8 @@ public class NightmareCircusService {
 	 * 按状态在地点刷出对应 NPC。
 	 * Spawns NPCs for the location according to the given state.
 	 *
-	 * location
-	 * state type
+	 * @param loc location
+	 * @param nstate state type
 	 */
 	public void spawn(NightmareCircusLocation loc, NightmareCircusStateType nstate) {
 		List<SpawnGroup2> locSpawns = DataManager.SPAWNS_DATA2.getNightmareCircusSpawnsByLocId(loc.getId());
@@ -167,7 +167,7 @@ public class NightmareCircusService {
 	 * 清除地点已刷出的 NPC。
 	 * Despawns NPCs previously spawned at the location.
 	 *
-	 * location
+	 * @param loc location
 	 */
 	public void despawn(NightmareCircusLocation loc) {
 		if (loc.getSpawned() == null) {

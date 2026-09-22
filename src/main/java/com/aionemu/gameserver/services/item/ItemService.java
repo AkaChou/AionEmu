@@ -60,7 +60,7 @@ public class ItemService {
 	 * 从数据库批量加载物品镶嵌的魔石/神石。
 	 * Loads manastones/godstones for a collection of items from the database.
 	 *
-	 * item collection
+	 * @param itemList item collection
 	 */
 	public static void loadItemStones(Collection<Item> itemList) {
 		if (itemList != null && itemList.size() > 0) {
@@ -91,9 +91,9 @@ public class ItemService {
 	 * 向玩家发放指定数量物品（默认更新谓词）。
 	 * Grants items to the player with the default update predicate.
 	 *
-	 * 玩家 / player
-	 * item template id
-	 * count
+	 * @param player 玩家 / player
+	 * @param itemId item template id
+	 * @param count count
 	 *
 	 * @return 未能放入的剩余数量 / remaining count that could not be added
 	 */
@@ -207,10 +207,10 @@ public class ItemService {
 	 * 向玩家发放指定数量物品，使用自定义更新谓词。
 	 * Grants items to the player with a custom update predicate.
 	 *
-	 * 玩家 / player
-	 * item template id
-	 * count
-	 * update predicate
+	 * @param player 玩家 / player
+	 * @param itemId item template id
+	 * @param count count
+	 * @param predicate update predicate
 	 *
 	 * @return 未能放入的剩余数量 / remaining count that could not be added
 	 */
@@ -222,8 +222,8 @@ public class ItemService {
 	 * 按源物品全部属性拷贝发放新物品。
 	 * Grants a new item by copying all values from the source item.
 	 *
-	 * 玩家 / player
-	 * source item
+	 * @param player 玩家 / player
+	 * @param sourceItem source item
 	 *
 	 * @return 未能放入的剩余数量 / remaining count that could not be added
 	 */
@@ -236,9 +236,9 @@ public class ItemService {
 	 * 按源物品属性拷贝发放，并使用自定义更新谓词。
 	 * Grants by copying source-item values with a custom update predicate.
 	 *
-	 * 玩家 / player
-	 * source item
-	 * update predicate
+	 * @param player 玩家 / player
+	 * @param sourceItem source item
+	 * @param predicate update predicate
 	 *
 	 * @return 未能放入的剩余数量 / remaining count that could not be added
 	 */
@@ -264,11 +264,11 @@ public class ItemService {
 	 * 发放物品并设置强化等级。
 	 * Grants items and applies the given enchant level.
 	 *
-	 * 玩家 / player
-	 * item template id
-	 * count
-	 * 强化等级 / enchant level
-	 * update predicate
+	 * @param player 玩家 / player
+	 * @param itemId item template id
+	 * @param count count
+	 * @param enchantLevel 强化等级 / enchant level
+	 * @param predicate update predicate
 	 *
 	 * @return 未能放入的剩余数量 / remaining count that could not be added
 	 */
@@ -281,10 +281,10 @@ public class ItemService {
 	 * 发放物品并设置强化等级（默认更新谓词）。
 	 * Grants items with enchant level using the default update predicate.
 	 *
-	 * 玩家 / player
-	 * item template id
-	 * count
-	 * 强化等级 / enchant level
+	 * @param player 玩家 / player
+	 * @param itemId item template id
+	 * @param count count
+	 * @param enchantLevel 强化等级 / enchant level
 	 * @return 未能放入的剩余数量 / remaining count that could not be added
 	 */
 	public static long addItemAndEnchant(Player player, int itemId, long count, int enchantLevel) {
@@ -574,7 +574,7 @@ public class ItemService {
 	 * 回收单个物品的对象 ID。
 	 * Releases a single item object id back to the id factory.
 	 *
-	 * item
+	 * @param item item
 	 */
 	public static void releaseItemId(Item item) {
 		GameWorldBootstrapServices.idFactory().releaseId(item.getObjectId());
@@ -595,8 +595,8 @@ public class ItemService {
 	 * 按玩家对象 ID 向其背包投放 1 件物品。
 	 * Drops one item into the inventory of the player identified by object id.
 	 *
-	 * player object id
-	 * item template id
+	 * @param playerObjectId player object id
+	 * @param itemId item template id
 	 *
 	 * @return 是否投放成功 / true if granted successfully
 	 */
@@ -608,8 +608,8 @@ public class ItemService {
 	 * 向在线玩家背包投放 1 件物品。
 	 * Drops one item into an online player's inventory.
 	 *
-	 * 玩家 / player
-	 * item template id
+	 * @param player 玩家 / player
+	 * @param itemId item template id
 	 *
 	 * @return 是否投放成功 / true if granted successfully
 	 */
@@ -621,9 +621,9 @@ public class ItemService {
 	 * 向在线玩家背包投放指定数量物品；背包满且无堆叠空间时失败。
 	 * Drops items into an online player's inventory; fails when full with no free stack.
 	 *
-	 * 玩家 / player
-	 * item template id
-	 * count
+	 * @param player 玩家 / player
+	 * @param itemId item template id
+	 * @param count count
 	 *
 	 * @return 是否投放成功 / true if granted successfully
 	 */
@@ -698,8 +698,8 @@ public class ItemService {
 		 * 使用指定添加/更新类型构造谓词。
 		 * Constructs a predicate with the given add/update types.
 		 *
-		 * add type
-		 * update type
+		 * @param itemAddType add type
+		 * @param itemUpdateType update type
 		 */
 		public ItemUpdatePredicate(ItemAddType itemAddType, ItemUpdateType itemUpdateType) {
 			this.itemUpdateType = itemUpdateType;

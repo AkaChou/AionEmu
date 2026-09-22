@@ -15,7 +15,7 @@ public class DanuarHero extends BerserkAnoha<AnohaLocation> {
 	 * 绑定阿诺哈地点。
 	 * Binds the Anoha location.
 	 *
-	 * location
+	 * @param anoha location
 	 */
 	public DanuarHero(AnohaLocation anoha) {
 		super(anoha);

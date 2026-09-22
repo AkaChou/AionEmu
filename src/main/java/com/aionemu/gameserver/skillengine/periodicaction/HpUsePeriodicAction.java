@@ -31,7 +31,7 @@ public class HpUsePeriodicAction extends PeriodicAction {
 	 * 扣除受影响者 HP；当前 HP 低于 value 时结束效果。
 	 * Reduces effected HP; ends the effect if current HP is below value.
 	 *
-	 * related effect
+	 * @param effect related effect
 	 */
 	@Override
 	public void act(Effect effect) {

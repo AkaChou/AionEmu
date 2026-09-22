@@ -187,8 +187,8 @@ public abstract class ChatCommand {
 	 * 执行命令业务逻辑。
 	 * Execute the command business logic.
 	 *
-	 * 玩家 / Player
-	 * Arguments
+	 * @param player 玩家 / Player
+	 * @param params Arguments
 	 */
 	public abstract void execute(Player player, String... params);
 
@@ -196,8 +196,8 @@ public abstract class ChatCommand {
 	 * 执行失败时的默认反馈。
 	 * Default failure feedback.
 	 *
-	 * 玩家 / Player
-	 * Error message
+	 * @param player 玩家 / Player
+	 * @param message Error message
 	 */
 	public void onFail(Player player, String message) {
 		PacketSendUtility.sendMessage(player, message);

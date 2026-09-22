@@ -591,7 +591,7 @@ public class InstanceService {
 	 * 玩家进入副本：更新区域/任务、通知处理器并清理非本图归属物品。
 	 * On enter: update zone/quests, notify handler, drop non-owned-world items.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public static void onEnterInstance(Player player) {
 		player.getController().updateZone();

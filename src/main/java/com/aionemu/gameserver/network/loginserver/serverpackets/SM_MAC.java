@@ -18,8 +18,8 @@ public class SM_MAC extends LsServerPacket {
 	 * 构造 MAC 地址上报包。
 	 * Constructs a MAC address report packet.
 	 *
-	 * 账号 ID / account id
-	 * MAC address
+	 * @param accountId 账号 ID / account id
+	 * @param address MAC address
 	 */
 	public SM_MAC(int accountId, String address) {
 		super(13);

@@ -26,7 +26,7 @@ public abstract class BannedMacDAO implements DAO {
      * 按 MAC 地址删除封禁。
      * Removes ban by MAC address.
      *
-     * MAC address
+     * @param address MAC address
      * @return 是否删除成功 / True if removed
      */
     public abstract boolean remove(String address);

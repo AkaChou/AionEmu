@@ -28,7 +28,7 @@ public class ChatCommandsLoader implements ClassListener {
 	 * 类加载完成后实例化并注册命令。
 	 * After classes load, instantiate and register commands.
 	 *
-	 * Loaded classes
+	 * @param classes Loaded classes
 	 */
 	@Override
 	public void postLoad(Class<?>[] classes) {

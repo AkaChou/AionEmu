@@ -15,7 +15,7 @@ public class Offering extends ConquestOffering<ConquestLocation> {
 	 * 绑定征服地点。
 	 * Binds the conquest location.
 	 *
-	 * location
+	 * @param conquest location
 	 */
 	public Offering(ConquestLocation conquest) {
 		super(conquest);

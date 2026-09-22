@@ -20,7 +20,7 @@ public final class GameServerAuthFailure {
      * 对端未通过认证时的处理入口。
      * Entry point when this game server is not authenticated on the peer side.
      *
-     * peer name
+     * @param peerName peer name
      */
     public static void notAuthenticated(String peerName) {
         String message = "GameServer is not authenticated at " + peerName + " side";
@@ -35,7 +35,7 @@ public final class GameServerAuthFailure {
      * 测试用：注入退出动作。
      * Test-only: inject exit action.
      *
-     * exit action
+     * @param exitAction exit action
      */
     static void setExitActionForTesting(IntConsumer exitAction) {
         GameServerAuthFailure.exitAction = exitAction;

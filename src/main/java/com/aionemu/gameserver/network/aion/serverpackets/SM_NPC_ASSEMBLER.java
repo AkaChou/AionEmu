@@ -18,7 +18,7 @@ public class SM_NPC_ASSEMBLER extends AionServerPacket {
 	 * 构造组装 NPC 同步包。
 	 * Builds an assembled-NPC sync packet.
 	 *
-	 * assembled NPC entity
+	 * @param assembledNpc assembled NPC entity
 	 */
 	public SM_NPC_ASSEMBLER(AssembledNpc assembledNpc) {
 		this.assembledNpc = assembledNpc;

@@ -37,8 +37,8 @@ public class ClassStats {
 	 * 获取指定职业与等级的最大生命值
 	 * Get max HP for class and level
 	 *
-	 * Player class
-	 * Level
+	 * @param playerClass Player class
+	 * @param level Level
 	 * @return 最大生命值 / Max HP
 	 */
 	public static int getMaxHpFor(PlayerClass playerClass, int level) {

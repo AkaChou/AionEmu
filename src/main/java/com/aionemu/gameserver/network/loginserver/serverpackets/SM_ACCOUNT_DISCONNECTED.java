@@ -21,7 +21,7 @@ public class SM_ACCOUNT_DISCONNECTED extends LsServerPacket {
 	 * 构造账号断开通知包。
 	 * Constructs a new account-disconnected packet.
 	 *
-	 * 账号 ID / account id
+	 * @param accountId 账号 ID / account id
 	 */
 	public SM_ACCOUNT_DISCONNECTED(int accountId) {
 		super(0x03);

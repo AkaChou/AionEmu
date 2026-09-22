@@ -89,8 +89,8 @@ public class SM_MINIONS extends AionServerPacket {
 	 * 同步全部随从列表（action=0）。
 	 * Syncs the full minion list (action=0).
 	 *
-	 * operation type
-	 * minion collection
+	 * @param action operation type
+	 * @param minions minion collection
 	 */
 	public SM_MINIONS(int action, Collection<MinionCommonData> minions) {
 		this.action = action;
@@ -101,8 +101,8 @@ public class SM_MINIONS extends AionServerPacket {
 	 * 功能剩余时间（action=9）。
 	 * Function remaining time (action=9).
 	 *
-	 * operation type
-	 * remaining time
+	 * @param action operation type
+	 * @param timeLeft remaining time
 	 */
 	public SM_MINIONS(int action, long timeLeft) {
 		this.action = action;

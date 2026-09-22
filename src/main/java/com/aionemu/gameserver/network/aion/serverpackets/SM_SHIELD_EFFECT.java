@@ -22,7 +22,7 @@ public class SM_SHIELD_EFFECT extends AionServerPacket {
 	 * 使用给定参数构造 SM_SHIELD_EFFECT 包。
 	 * Creates a SM_SHIELD_EFFECT packet with the given parameters.
 	 *
-	 * location id
+	 * @param location location id
 	 */
 	public SM_SHIELD_EFFECT(int location) {
 		this.locations = new ArrayList<>();

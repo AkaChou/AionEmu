@@ -240,8 +240,8 @@ public class Terrain {
 	 * 按网格索引取高度；越界返回 NaN，边界返回 0。
 	 * Height at grid index; NaN if out of bounds, 0 on the outer border.
 	 *
-	 * X index
-	 * Y index
+	 * @param xIndex X index
+	 * @param yIndex Y index
 	 * @return 世界高度或 NaN / world Z or NaN
 	 */
 	private float getZ(int xIndex, int yIndex) {

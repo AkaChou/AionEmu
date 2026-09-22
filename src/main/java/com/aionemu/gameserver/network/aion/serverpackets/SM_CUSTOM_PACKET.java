@@ -126,7 +126,7 @@ public class SM_CUSTOM_PACKET extends AionServerPacket {
 		 * 将本字段写入目标包。
 		 * Writes this field into the target packet.
 		 *
-		 * packet instance
+		 * @param packet packet instance
 		 */
 		public void writeValue(SM_CUSTOM_PACKET packet) {
 			type.write(packet, value);
@@ -147,7 +147,7 @@ public class SM_CUSTOM_PACKET extends AionServerPacket {
 	 * 追加一个已构造的元素。
 	 * Appends a pre-built element.
 	 *
-	 * element
+	 * @param packetElement element
 	 */
 	public void addElement(PacketElement packetElement) {
 		elements.add(packetElement);

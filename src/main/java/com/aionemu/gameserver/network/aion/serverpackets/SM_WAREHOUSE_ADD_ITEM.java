@@ -62,7 +62,7 @@ public class SM_WAREHOUSE_ADD_ITEM extends AionServerPacket {
 	 * 写出仓库物品信息。
 	 * Writes warehouse item info.
 	 *
-	 * item
+	 * @param item item
 	 */
 	private void writeItemInfo(Item item) {
 		ItemTemplate itemTemplate = item.getItemTemplate();

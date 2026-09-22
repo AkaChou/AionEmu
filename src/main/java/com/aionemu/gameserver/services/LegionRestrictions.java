@@ -548,11 +548,11 @@ final class LegionRestrictions {
 	 * 记录军团仓库存取物品历史（存入/取出）。
 	 * Records legion warehouse item deposit/withdraw history.
 	 *
-	 * Acting player
-	 * Item template id
-	 * Count
-	 * Source storage
-	 * Destination storage
+	 * @param player Acting player
+	 * @param itemId Item template id
+	 * @param count Count
+	 * @param sourceStorage Source storage
+	 * @param destStorage Destination storage
 	 */
 	void addWHItemHistory(Player player, int itemId, long count, IStorage sourceStorage, IStorage destStorage) {
 		joinRequests().addWHItemHistory(player, itemId, count, sourceStorage, destStorage);
@@ -574,8 +574,8 @@ final class LegionRestrictions {
 	 * 设置军团入团说明（仅旅长），并同步客户端与数据库。
 	 * Sets the legion join description (brigade general only) and syncs client/DB.
 	 *
-	 * Acting player
-	 * Join description
+	 * @param player Acting player
+	 * @param description Join description
 	 */
 	void setJoinDescription(Player player, String description) {
 		joinRequests().setJoinDescription(player, description);
@@ -585,8 +585,8 @@ final class LegionRestrictions {
 	 * 设置军团入团类型（仅旅长），并同步客户端与数据库。
 	 * Sets the legion join type (brigade general only) and syncs client/DB.
 	 *
-	 * Acting player
-	 * Join type
+	 * @param player Acting player
+	 * @param joinType Join type
 	 */
 	void setJoinType(Player player, int joinType) {
 		joinRequests().setJoinType(player, joinType);
@@ -596,8 +596,8 @@ final class LegionRestrictions {
 	 * 设置入团最低等级（仅旅长），并同步客户端与数据库。
 	 * Sets the minimum join level (brigade general only) and syncs client/DB.
 	 *
-	 * Acting player
-	 * Minimum level
+	 * @param player Acting player
+	 * @param minLevel Minimum level
 	 */
 	void setJoinMinLevel(Player player, int minLevel) {
 		joinRequests().setJoinMinLevel(player, minLevel);
@@ -618,7 +618,7 @@ final class LegionRestrictions {
 	 * 玩家进世界时，按 CommonData 中的申请军团 ID 重发入团申请信息包。
 	 * On enter-world, resends join-request info using the legion id stored in CommonData.
 	 *
-	 * Target player
+	 * @param player Target player
 	 */
 	void sendLegionJoinRequestPacketonEnterWorld(Player player) {
 		joinRequests().sendLegionJoinRequestPacketonEnterWorld(player);
@@ -628,10 +628,10 @@ final class LegionRestrictions {
 	 * 处理玩家入团申请：申请入队、直接加入或拒绝招募。
 	 * Handles a player join request: apply, direct join, or reject if not recruiting.
 	 *
-	 * Applying player
-	 * Target legion id
-	 * Join type
-	 * Application message
+	 * @param player Applying player
+	 * @param legionId Target legion id
+	 * @param joinType Join type
+	 * @param joinRequestMsg Application message
 	 */
 	void handleLegionJoinRequest(Player player, int legionId, int joinType, String joinRequestMsg) {
 		joinRequests().handleLegionJoinRequest(player, legionId, joinType, joinRequestMsg);
@@ -641,8 +641,8 @@ final class LegionRestrictions {
 	 * 取消玩家对指定军团的入团申请，并通知旅长。
 	 * Cancels the player join request for a legion and notifies the brigade general.
 	 *
-	 * Applying player
-	 * Legion id
+	 * @param player Applying player
+	 * @param legionId Legion id
 	 */
 	void handleJoinRequestCancel(Player player, int legionId) {
 		joinRequests().handleJoinRequestCancel(player, legionId);
@@ -652,7 +652,7 @@ final class LegionRestrictions {
 	 * 玩家侧处理入团申请结果（接受则入团，拒绝则清理申请）。
 	 * Applies join-request answer on the player side (join on accept, clear on deny).
 	 *
-	 * Applying player
+	 * @param player Applying player
 	 */
 	void handleJoinRequestGetAnswer(Player player) {
 		joinRequests().handleJoinRequestGetAnswer(player);
@@ -662,9 +662,9 @@ final class LegionRestrictions {
 	 * 旅长批复入团申请：在线则即时处理，离线则写库状态。
 	 * Brigade general answers a join request: handles online immediately or persists offline state.
 	 *
-	 * Brigade general player
-	 * Applicant object id
-	 * Whether accepted
+	 * @param brigadeGeneral Brigade general player
+	 * @param playerId Applicant object id
+	 * @param accept Whether accepted
 	 */
 	void handleJoinRequestGiveAnswer(Player brigadeGeneral, int playerId, boolean accept) {
 		joinRequests().handleJoinRequestGiveAnswer(brigadeGeneral, playerId, accept);

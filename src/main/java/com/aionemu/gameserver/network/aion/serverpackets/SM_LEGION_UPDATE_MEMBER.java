@@ -56,7 +56,7 @@ public class SM_LEGION_UPDATE_MEMBER extends AionServerPacket {
 	 * 使用玩家构造离线状态更新包。
 	 * Creates an offline-status update packet from a player.
 	 *
-	 * member player
+	 * @param player member player
 	 */
 	public SM_LEGION_UPDATE_MEMBER(Player player) {
 		this.player = player;

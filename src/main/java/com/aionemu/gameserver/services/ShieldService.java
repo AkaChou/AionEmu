@@ -78,7 +78,7 @@ public class ShieldService {
 	 * 加载指定地图的球形护盾模板。
 	 * Loads sphere shield templates for the given map.
 	 *
-	 * map id
+	 * @param mapId map id
 	 */
 	public void load(int mapId) {
 		for (ShieldTemplate template : DataManager.SHIELD_DATA.getShieldTemplates()) {
@@ -143,8 +143,8 @@ public class ShieldService {
 	 * 向指定世界注册攻城护盾。
 	 * Registers a siege shield for the given world.
 	 *
-	 * 世界 ID / world id
-	 * siege shield
+	 * @param worldId 世界 ID / world id
+	 * @param shield siege shield
 	 */
 	public void registerShield(int worldId, SiegeShield shield) {
 		List<SiegeShield> mapShields = registeredShields.get(worldId);
@@ -159,7 +159,7 @@ public class ShieldService {
 	 * 将位于据点区域内的攻城护盾绑定到该据点。
 	 * Attaches siege shields that lie inside the location zone to that siege location.
 	 *
-	 * siege location
+	 * @param location siege location
 	 */
 	public void attachShield(SiegeLocation location) {
 		List<SiegeShield> mapShields = registeredShields.get(location.getTemplate().getWorldId());

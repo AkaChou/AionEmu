@@ -64,8 +64,8 @@ public class BannedMacManager {
 	 * 解除指定 MAC 的封禁，并通知登录服。
 	 * Unbans the given MAC and notifies the login server.
 	 *
-	 * target MAC
-	 * details
+	 * @param address target MAC
+	 * @param details details
 	 *
 	 * @return 是否成功解除 / true if unbanned
 	 */

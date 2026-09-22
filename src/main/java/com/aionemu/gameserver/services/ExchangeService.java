@@ -93,8 +93,8 @@ public class ExchangeService {
 	 * 在双方通过限制校验后建立交易会话并互发请求包。
 	 * Opens an exchange session for both players after restriction checks and sends request packets.
 	 *
-	 * initiator
-	 * partner
+	 * @param player1 initiator
+	 * @param player2 partner
 	 */
 	public void registerExchange(Player player1, Player player2) {
 		if (!validateParticipants(player1, player2)) {
@@ -115,8 +115,8 @@ public class ExchangeService {
 	 * 校验双方是否允许交易。
 	 * Validates that both players are allowed to trade.
 	 *
-	 * player 1
-	 * player 2
+	 * @param player1 player 1
+	 * @param player2 player 2
 	 *
 	 * @return 是否可交易 / whether trade is allowed
 	 */
@@ -176,8 +176,8 @@ public class ExchangeService {
 	 * 向交易栏添加基纳并通知双方。
 	 * Adds kinah to the exchange offer and notifies both players.
 	 *
-	 * active player
-	 * kinah amount
+	 * @param activePlayer active player
+	 * @param itemCount kinah amount
 	 */
 	public void addKinah(Player activePlayer, long itemCount) {
 		Exchange currentExchange = getCurrentExchange(activePlayer);
@@ -287,7 +287,7 @@ public class ExchangeService {
 	 * 锁定己方交易栏并通知对方。
 	 * Locks this side of the exchange and notifies the partner.
 	 *
-	 * active player
+	 * @param activePlayer active player
 	 */
 	public void lockExchange(Player activePlayer) {
 		Exchange exchange = getCurrentExchange(activePlayer);
@@ -302,7 +302,7 @@ public class ExchangeService {
 	 * 取消交易并清理双方会话。
 	 * Cancels the exchange and cleans both sessions.
 	 *
-	 * active player
+	 * @param activePlayer active player
 	 */
 	public void cancelExchange(Player activePlayer) {
 		Player currentParter = getCurrentParter(activePlayer);
@@ -316,7 +316,7 @@ public class ExchangeService {
 	 * 确认交易；双方都确认后执行结算。
 	 * Confirms this side; when both confirmed, performs the trade.
 	 *
-	 * active player
+	 * @param activePlayer active player
 	 */
 	public void confirmExchange(Player activePlayer) {
 		if (activePlayer == null || !activePlayer.isOnline()) {
@@ -342,8 +342,8 @@ public class ExchangeService {
 	 * 执行交易：校验背包、扣物、入包并排队异步存库。
 	 * Performs the trade: validates bags, removes items, deposits them, and queues async inventory save.
 	 *
-	 * one player
-	 * partner
+	 * @param activePlayer one player
+	 * @param currentPartner partner
 	 */
 	private void performTrade(Player activePlayer, Player currentPartner) {
 		Exchange exchange1 = getCurrentExchange(activePlayer);
@@ -458,8 +458,8 @@ public class ExchangeService {
 	 * 校验双方背包空间是否足以接收对方物品。
 	 * Validates both inventories have room for the partner's items.
 	 *
-	 * one player
-	 * partner
+	 * @param activePlayer one player
+	 * @param currentPartner partner
 	 *
 	 * @return 是否通过校验 / whether validation passes
 	 */

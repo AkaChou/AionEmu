@@ -19,8 +19,8 @@ public class SM_SKILL_ACTIVATION extends AionServerPacket {
 	 * 使用给定参数构造 SM_SKILL_ACTIVATION 包。
 	 * For toggle skills
 	 *
-	 * skill id
-	 * active flag
+	 * @param skillId skill id
+	 * @param isActive active flag
 	 */
 	public SM_SKILL_ACTIVATION(int skillId, boolean isActive) {
 		this.skillId = skillId;
@@ -32,7 +32,7 @@ public class SM_SKILL_ACTIVATION extends AionServerPacket {
 	 * 使用给定参数构造 SM_SKILL_ACTIVATION 包。
 	 * For stigma remove should work in 1.5.1.15
 	 *
-	 * skill id
+	 * @param skillId skill id
 	 */
 	public SM_SKILL_ACTIVATION(int skillId) {
 		this.skillId = skillId;

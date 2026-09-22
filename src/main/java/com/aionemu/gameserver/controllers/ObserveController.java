@@ -63,7 +63,7 @@ public class ObserveController {
 	 * 附加一次性观察者，通知后移除。
 	 * Attaches a one-shot observer that is removed after notification.
 	 *
-	 * observer
+	 * @param observer observer
 	 */
 	public void attach(ActionObserver observer) {
 		observer.makeOneTimeUse();
@@ -79,7 +79,7 @@ public class ObserveController {
 	 * 添加常驻行为观察者。
 	 * Adds a persistent action observer.
 	 *
-	 * observer
+	 * @param observer observer
 	 */
 	public void addObserver(ActionObserver observer) {
 		writableObservers().add(observer);
@@ -129,7 +129,7 @@ public class ObserveController {
 	 * 添加攻击计算观察者。
 	 * Adds an attack-calculation observer.
 	 *
-	 * observer
+	 * @param observer observer
 	 */
 	public void addAttackCalcObserver(AttackCalcObserver observer) {
 		writableAttackCalcObservers().add(observer);
@@ -139,7 +139,7 @@ public class ObserveController {
 	 * 移除行为观察者（含一次性列表）。
 	 * Removes an action observer (including from the one-shot list).
 	 *
-	 * observer
+	 * @param observer observer
 	 */
 	public void removeObserver(ActionObserver observer) {
 		if (observer == null) {
@@ -163,7 +163,7 @@ public class ObserveController {
 	 * 移除攻击计算观察者。
 	 * Removes an attack-calculation observer.
 	 *
-	 * observer
+	 * @param observer observer
 	 */
 	public void removeAttackCalcObserver(AttackCalcObserver observer) {
 		Collection<AttackCalcObserver> current = attackCalcObservers;
@@ -309,7 +309,7 @@ public class ObserveController {
 	 * 通知被攻击观察者。
 	 * Notifies attacked observers.
 	 *
-	 * the attacker
+	 * @param creature the attacker
 	 */
 	public void notifyAttackedObservers(Creature creature) {
 		notifyAttackedObservers(creature, false);
@@ -327,8 +327,8 @@ public class ObserveController {
 	 * 通知 DoT 命中观察者。
 	 * Notifies DoT-hit observers.
 	 *
-	 * the attacker
-	 * related effect
+	 * @param creature the attacker
+	 * @param effect related effect
 	 */
 	public void notifyDotAttackedObservers(Creature creature, Effect effect) {
 		notifyObservers(ObserverType.DOT_ATTACKED, creature, effect);
@@ -388,7 +388,7 @@ public class ObserveController {
 	 * 通知 NPC 对话请求观察者。
 	 * Notifies NPC dialog-request observers.
 	 *
-	 * dialog NPC
+	 * @param npc dialog NPC
 	 */
 	public void notifyRequestDialogObservers(Npc npc) {
 		notifyObservers(ObserverType.NPCDIALOGREQUEST, npc);

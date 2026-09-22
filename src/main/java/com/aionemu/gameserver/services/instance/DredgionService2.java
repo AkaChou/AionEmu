@@ -135,7 +135,7 @@ public class DredgionService2 {
 	 * 获取玩家的报名掩码 ID；等级不符时返回 0。
 	 * Returns the registration mask id for the player, or 0 if level mismatch.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @return 结果 / result
 	 */
 	public byte getInstanceMaskId(Player player) {
@@ -166,7 +166,7 @@ public class DredgionService2 {
 	 * 是否处于冷却。
 	 * Whether cooldown is active.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 * @return 结果 / result
 	 */
 	public boolean hasCoolDown(Player player) {

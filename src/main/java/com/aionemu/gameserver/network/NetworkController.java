@@ -31,7 +31,7 @@ public class NetworkController {
 	 * 注入 Spring ObjectProvider，供 DI 覆盖静态单例。
 	 * Injects Spring ObjectProvider to override the static singleton.
 	 *
-	 * Spring provider
+	 * @param instanceProvider Spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<NetworkController> instanceProvider) {
 		NetworkController.instanceProvider = instanceProvider;
@@ -54,7 +54,7 @@ public class NetworkController {
 	 * 设置可见游戏服数量。
 	 * Sets visible game-server count.
 	 *
-	 * server count
+	 * @param count server count
 	 */
 	public final void setServerCount(byte count) {
 		this.serverCount = count;

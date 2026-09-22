@@ -124,9 +124,9 @@ public class CrucibleInstance extends GeneralInstanceHandler
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
 	 *
-	 * message
-	 * 阵营 / race
-	 * time
+	 * @param msg message
+	 * @param race 阵营 / race
+	 * @param time time
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
@@ -158,7 +158,7 @@ public class CrucibleInstance extends GeneralInstanceHandler
 	 * 移除指定 NPC。
 	 * Despawn the given NPC.
 	 *
-	 * npc
+	 * @param npc npc
 	 */
 
 	protected void despawnNpc(Npc npc) {
@@ -170,7 +170,7 @@ public class CrucibleInstance extends GeneralInstanceHandler
 	 * 处理 despawnNpcs。
 	 * Handle despawnNpcs.
 	 *
-	 * npcs
+	 * @param npcs npcs
 	 */
 
 	protected void despawnNpcs(List<Npc> npcs) {

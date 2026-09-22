@@ -15,7 +15,7 @@ public class Nightmare extends CircusInstance<NightmareCircusLocation> {
 	 * 绑定梦魇马戏团地点。
 	 * Binds the Nightmare Circus location.
 	 *
-	 * location
+	 * @param nightmareCircus location
 	 */
 	public Nightmare(NightmareCircusLocation nightmareCircus) {
 		super(nightmareCircus);

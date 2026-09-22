@@ -83,8 +83,8 @@ public class RespawnService {
 	 * 在指定副本实例中执行一次重生。
 	 * Performs a single respawn in the given instance.
 	 *
-	 * spawn template
-	 * instance id
+	 * @param spawnTemplate spawn template
+	 * @param instanceId instance id
 	 * @return 重生后的可见对象，不可重生时为 null / respawned object, or null if not allowed
 	 */
 	private static final VisibleObject respawn(SpawnTemplate spawnTemplate, final int instanceId) {

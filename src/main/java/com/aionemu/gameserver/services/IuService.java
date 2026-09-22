@@ -113,8 +113,8 @@ public class IuService {
 	 * 按状态类型在地点刷出对应模板 NPC。
 	 * Spawns NPCs for the location matching the given state type.
 	 *
-	 * location
-	 * state type
+	 * @param loc location
+	 * @param iustate state type
 	 */
 	public void spawn(IuLocation loc, IuStateType iustate) {
 		List<SpawnGroup2> locSpawns = DataManager.SPAWNS_DATA2.getIuSpawnsByLocId(loc.getId());
@@ -170,7 +170,7 @@ public class IuService {
 	 * 清除地点上已刷出的对象（无仇恨时立即删除）。
 	 * Clears spawned objects at the location (deletes immediately when no aggro).
 	 *
-	 * location
+	 * @param loc location
 	 */
 	public void despawn(IuLocation loc) {
 		if (loc.getSpawned() == null) {

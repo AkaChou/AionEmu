@@ -205,7 +205,7 @@ public class GeneralInstanceHandler implements InstanceHandler {
 	 * 向副本内发送默认样式系统消息。
 	 * Send a default-style system message inside the instance.
 	 *
-	 * message id
+	 * @param msg message id
 	 */
 	protected void sendMsg(int msg) {
 		sendMsg(msg, 0, false, 25);

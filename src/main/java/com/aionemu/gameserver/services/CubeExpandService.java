@@ -31,8 +31,8 @@ public class CubeExpandService {
 	 * 通过 NPC 发起背包扩展确认与扣费。
 	 * Starts a cube expand confirmation and kinah charge via NPC.
 	 *
-	 * 玩家 / player
-	 * expand NPC
+	 * @param player 玩家 / player
+	 * @param npc expand NPC
 	 */
 	public static void expandCube(final Player player, Npc npc) {
 		final CubeExpandTemplate expandTemplate = DataManager.CUBEEXPANDER_DATA
@@ -107,8 +107,8 @@ public class CubeExpandService {
 	 * 判断玩家是否可用指定等级的扩展票继续扩展。
 	 * Returns whether the player can expand further with a ticket of the given level.
 	 *
-	 * 玩家 / player
-	 * ticket level
+	 * @param player 玩家 / player
+	 * @param ticketLevel ticket level
 	 *
 	 * @return 允许扩展背包时为 {@code true} / {@code true} if allowed
 	 */

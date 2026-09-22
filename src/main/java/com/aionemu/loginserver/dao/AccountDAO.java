@@ -18,7 +18,7 @@ public abstract class AccountDAO implements DAO {
      * 按名称查询账号。
      * Returns account by name, or null if not found.
      *
-     * Account name
+     * @param name Account name
      * @return 账号对象；不存在时为 null / Account object, or null
      */
     public abstract Account getAccount(String name);
@@ -36,7 +36,7 @@ public abstract class AccountDAO implements DAO {
      * 按名称查询账号 ID。
      * not found.
      *
-     * Account name
+     * @param name Account name
      * @return 账号 ID；失败时为 -1 / Id, or -1 on error
      */
     public abstract int getAccountId(String name);
@@ -104,8 +104,8 @@ public abstract class AccountDAO implements DAO {
      * 更新账号最近登录 MAC。
      * Updates last MAC that was used to access an account.
      *
-     * 账号 ID / Account id
-     * MAC address
+     * @param accountId 账号 ID / Account id
+     * @param mac MAC address
      * @return 是否更新成功 / True if updated
      */
     public abstract boolean updateLastMac(int accountId, String mac);
@@ -114,7 +114,7 @@ public abstract class AccountDAO implements DAO {
      * 在会员过期后恢复旧会员等级。
      * Updates account membership when membership has expired.
      *
-     * 账号 ID / Account id
+     * @param accountId 账号 ID / Account id
      * @return 是否更新成功 / True if updated
      */
     public abstract boolean updateMembership(int accountId);

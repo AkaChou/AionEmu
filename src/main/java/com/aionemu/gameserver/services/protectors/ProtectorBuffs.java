@@ -92,7 +92,7 @@ public class ProtectorBuffs implements StatOwner {
 	 * 结束并移除玩家身上的守护者属性效果。
 	 * Ends and removes protector attribute effects from the player.
 	 *
-	 * target player
+	 * @param player target player
 	 */
 	public void endEffect(Player player) {
 		functions.clear();

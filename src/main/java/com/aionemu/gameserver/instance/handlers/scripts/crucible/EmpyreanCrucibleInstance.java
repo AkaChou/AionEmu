@@ -173,7 +173,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	 * 处理死亡事件。
 	 * Handle a death event.
 	 *
-	 * npc
+	 * @param npc npc
 	 */
 	@Override
 	public void onDie(Npc npc) {
@@ -2190,7 +2190,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
 	 *
-	 * npc
+	 * @param npc npc
 	 */
 	@Override
 	public void onDropRegistered(Npc npc) {

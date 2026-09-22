@@ -43,7 +43,7 @@ public class PetMoodService {
 	 * 在心情达标且冷却结束时发放礼物。
 	 * Grant a gift when mood threshold is met and cooldown is over.
 	 *
-	 * Pet
+	 * @param pet Pet
 	 */
 	private static void requestPresent(Pet pet) {
 		if (pet.getCommonData().getMoodPoints(false) < 9000) {
@@ -72,8 +72,8 @@ public class PetMoodService {
 	 * 与宠物互动（抚摸）并提升心情。
 	 * Interact (shuggle) with the pet and raise mood.
 	 *
-	 * Pet
-	 * Shuggle emotion id
+	 * @param pet Pet
+	 * @param shuggleEmotion Shuggle emotion id
 	 */
 	private static void interactWithPet(Pet pet, int shuggleEmotion) {
 		if (pet.getCommonData() != null) {
@@ -88,7 +88,7 @@ public class PetMoodService {
 	 * 向客户端发送当前心情状态。
 	 * Send current mood state to the client.
 	 *
-	 * Pet
+	 * @param pet Pet
 	 */
 	private static void startCheckingMood(Pet pet) {
 		PacketSendUtility.sendPacket(pet.getMaster(), new SM_PET(pet, 0, 0));

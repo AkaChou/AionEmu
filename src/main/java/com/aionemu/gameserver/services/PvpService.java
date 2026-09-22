@@ -95,7 +95,7 @@ public class PvpService {
 	 * 注入 Spring ObjectProvider。
 	 * Injects the Spring ObjectProvider.
 	 *
-	 * provider
+	 * @param provider provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<PvpService> provider) {
 		instanceProvider = provider;

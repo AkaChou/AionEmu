@@ -80,7 +80,7 @@ public class SM_NPC_INFO extends AionServerPacket {
 	 * 由召唤物构造信息包（主人信息写入 creator/masterName）。
 	 * Builds an info packet from a summon (master written as creator/masterName).
 	 *
-	 * summon entity
+	 * @param summon summon entity
 	 */
 	public SM_NPC_INFO(Summon summon) {
 		this._npc = summon;

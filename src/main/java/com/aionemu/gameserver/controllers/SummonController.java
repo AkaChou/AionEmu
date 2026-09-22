@@ -112,7 +112,7 @@ public class SummonController extends CreatureController<Summon> {
 	 * 切换到攻击模式（目标须为生物）。
 	 * Switches to attack mode (target must be a creature).
 	 *
-	 * target object id
+	 * @param targetObjId target object id
 	 */
 	public void attackMode(int targetObjId) {
 		VisibleObject obj = getOwner().getKnownList().getObject(targetObjId);
@@ -210,8 +210,8 @@ public class SummonController extends CreatureController<Summon> {
 	 * 使用召唤物技能；成功后可按配置自动解除。
 	 * Uses a summon skill; may auto-release after a successful cast.
 	 *
-	 * skill id
-	 * skill target
+	 * @param skillId skill id
+	 * @param target skill target
 	 */
 	public void useSkill(int skillId, Creature target) {
 		Creature creature = getOwner();

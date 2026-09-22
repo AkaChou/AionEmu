@@ -57,8 +57,8 @@ public class SM_MAIL_SERVICE extends MailServicePacket {
 	 * 下发邮件列表（serviceId = 2）。
 	 * Delivers the letter list (serviceId = 2).
 	 *
-	 * target player
-	 * letter collection
+	 * @param player target player
+	 * @param letters letter collection
 	 */
 	public SM_MAIL_SERVICE(Player player, Collection<Letter> letters) {
 		super(player);
@@ -85,9 +85,9 @@ public class SM_MAIL_SERVICE extends MailServicePacket {
 	 * 打开/阅读单封信件（serviceId = 3）。
 	 * Opens/reads a single letter (serviceId = 3).
 	 *
-	 * target player
-	 * letter
-	 * timestamp
+	 * @param player target player
+	 * @param letter letter
+	 * @param time timestamp
 	 */
 	public SM_MAIL_SERVICE(Player player, Letter letter, long time) {
 		super(player);
@@ -100,8 +100,8 @@ public class SM_MAIL_SERVICE extends MailServicePacket {
 	 * 更新信件附件状态（serviceId = 5）。
 	 * Updates letter attachment state (serviceId = 5).
 	 *
-	 * letter id
-	 * attachment type
+	 * @param letterId letter id
+	 * @param attachmentType attachment type
 	 */
 	public SM_MAIL_SERVICE(int letterId, int attachmentType) {
 		super(null);

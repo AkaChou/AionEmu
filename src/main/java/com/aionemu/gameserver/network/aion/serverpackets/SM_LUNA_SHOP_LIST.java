@@ -30,8 +30,8 @@ public class SM_LUNA_SHOP_LIST extends AionServerPacket {
 	 * 同步月之点数。
 	 * Syncs Luna points.
 	 *
-	 * action type
-	 * Luna points
+	 * @param actionId action type
+	 * @param points Luna points
 	 */
 	public SM_LUNA_SHOP_LIST(int actionId, long points) {
 		this.actionId = actionId;
@@ -80,9 +80,9 @@ public class SM_LUNA_SHOP_LIST extends AionServerPacket {
 	 * 同步指定表的消耗/费用 ID。
 	 * Syncs cost id for a given table.
 	 *
-	 * action type
-	 * table id
-	 * cost id
+	 * @param actionId action type
+	 * @param tableId table id
+	 * @param costId cost id
 	 */
 	public SM_LUNA_SHOP_LIST(int actionId, int tableId, int costId) {
 		this.actionId = actionId;

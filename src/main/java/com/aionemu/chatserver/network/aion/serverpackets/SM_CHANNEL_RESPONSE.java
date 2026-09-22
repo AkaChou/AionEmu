@@ -20,8 +20,8 @@ public class SM_CHANNEL_RESPONSE extends AbstractServerPacket {
      * 构造频道响应服务端包。
      * Constructs a channel response server packet.
      *
-     * channel instance
-     * channel index
+     * @param channel channel instance
+     * @param channelIndex channel index
      */
     public SM_CHANNEL_RESPONSE(Channel channel, int channelIndex) {
         super(0x11);

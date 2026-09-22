@@ -32,8 +32,8 @@ public class WarehouseService {
 	 * 通过 NPC 发起仓库扩容请求（弹窗确认并扣费）。
 	 * Initiates warehouse expansion via NPC (confirmation dialog and fee deduction).
 	 *
-	 * 玩家 / player
-	 * expansion NPC
+	 * @param player 玩家 / player
+	 * @param npc expansion NPC
 	 */
 	public static void expandWarehouse(final Player player, Npc npc) {
 		final WarehouseExpandTemplate expandTemplate = DataManager.WAREHOUSEEXPANDER_DATA

@@ -23,8 +23,8 @@ public class SM_SELL_ITEM extends AionServerPacket
 	 * 使用给定参数构造 SM_SELL_ITEM 包。
 	 * Normal sell
 	 *
-	 * target object id
-	 * price modifier
+	 * @param targetObjectId target object id
+	 * @param priceModifier price modifier
 	 */
 	public SM_SELL_ITEM(int targetObjectId, int priceModifier)
 	{

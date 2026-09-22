@@ -141,7 +141,7 @@ public class SummonsService {
 	 * 将召唤物切换为休息模式并触发恢复任务。
 	 * Switch the summon to rest mode and trigger restore task.
 	 *
-	 * Summon
+	 * @param summon Summon
 	 */
 	public static final void restMode(final Summon summon) {
 		summon.getController().cancelCurrentSkill();
@@ -156,7 +156,7 @@ public class SummonsService {
 	 * 将召唤物切换为未知/过渡模式。
 	 * Switch the summon to unknown/transitional mode.
 	 *
-	 * Summon
+	 * @param summon Summon
 	 */
 	public static final void setUnkMode(final Summon summon) {
 		summon.setMode(SummonMode.UNK);
@@ -168,7 +168,7 @@ public class SummonsService {
 	 * 将召唤物切换为守卫模式并触发恢复任务。
 	 * Switch the summon to guard mode and trigger restore task.
 	 *
-	 * Summon
+	 * @param summon Summon
 	 */
 	public static final void guardMode(final Summon summon) {
 		summon.getController().cancelCurrentSkill();
@@ -183,7 +183,7 @@ public class SummonsService {
 	 * 将召唤物切换为攻击模式并取消恢复任务。
 	 * Switch the summon to attack mode and cancel restore task.
 	 *
-	 * Summon
+	 * @param summon Summon
 	 */
 	public static final void attackMode(final Summon summon) {
 		summon.setMode(SummonMode.ATTACK);
@@ -197,8 +197,8 @@ public class SummonsService {
 	 * 按模式驱动召唤物行为（无目标、无解散类型）。
 	 * Drive summon behavior by mode (no target, no unsummon type).
 	 *
-	 * Target mode
-	 * Summon
+	 * @param summonMode Target mode
+	 * @param summon Summon
 	 */
 	public static final void doMode(SummonMode summonMode, Summon summon) {
 		doMode(summonMode, summon, 0, null);
@@ -208,9 +208,9 @@ public class SummonsService {
 	 * 按模式驱动召唤物行为（指定解散类型）。
 	 * Drive summon behavior by mode with an unsummon type.
 	 *
-	 * Target mode
-	 * Summon
-	 * Unsummon reason
+	 * @param summonMode Target mode
+	 * @param summon Summon
+	 * @param unsummonType Unsummon reason
 	 */
 	public static final void doMode(SummonMode summonMode, Summon summon, UnsummonType unsummonType) {
 		doMode(summonMode, summon, 0, unsummonType);

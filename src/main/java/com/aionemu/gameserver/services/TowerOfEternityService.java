@@ -101,8 +101,8 @@ public class TowerOfEternityService {
 	 * 按状态在地点刷出对应 NPC 并广播旗帜更新。
 	 * Spawns NPCs for the location by state and broadcasts flag updates.
 	 *
-	 * location
-	 * state type
+	 * @param loc location
+	 * @param tstate state type
 	 */
 	public void spawn(TowerOfEternityLocation loc, TowerOfEternityStateType tstate) {
 		List<SpawnGroup2> locSpawns = DataManager.SPAWNS_DATA2.getTowerOfEternitySpawnsByLocId(loc.getId());
@@ -121,7 +121,7 @@ public class TowerOfEternityService {
 	 * 清除地点已刷出的 NPC 并广播旗帜消失。
 	 * Despawns NPCs at the location and broadcasts flag despawn.
 	 *
-	 * location
+	 * @param loc location
 	 */
 	public void despawn(TowerOfEternityLocation loc) {
 		if (loc.getSpawned() == null) {

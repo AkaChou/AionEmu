@@ -69,8 +69,8 @@ public class ItemChargeService {
 			 * 接受请求。
 			 * Accepts the request.
 			 *
-			 * requester
-			 * responder
+			 * @param requester requester
+			 * @param responder responder
 			 */
 			public void acceptRequest(Creature requester, Player responder) {
 				if (processPayment(player, chargeWay, payAmount)) {
@@ -85,8 +85,8 @@ public class ItemChargeService {
 			 * 拒绝请求。
 			 * Denies the request.
 			 *
-			 * requester
-			 * responder
+			 * @param requester requester
+			 * @param responder responder
 			 */
 			public void denyRequest(Creature requester, Player responder) {
 			}
@@ -124,9 +124,9 @@ public class ItemChargeService {
 	 * 充能物品。
 	 * Charges an item.
 	 *
-	 * 玩家 / player
-	 * item
-	 * level
+	 * @param player 玩家 / player
+	 * @param item item
+	 * @param level level
 	 */
 	public static void chargeItem(Player player, Item item, int level) {
 		Improvement improvement = item.getImprovement();

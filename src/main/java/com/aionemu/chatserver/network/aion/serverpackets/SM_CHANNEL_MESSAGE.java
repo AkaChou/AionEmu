@@ -19,7 +19,7 @@ public class SM_CHANNEL_MESSAGE extends AbstractServerPacket {
      * 构造频道消息服务端包。
      * Constructs a channel message server packet.
      *
-     * chat message
+     * @param message chat message
      */
     public SM_CHANNEL_MESSAGE(Message message) {
         super(0x1A);

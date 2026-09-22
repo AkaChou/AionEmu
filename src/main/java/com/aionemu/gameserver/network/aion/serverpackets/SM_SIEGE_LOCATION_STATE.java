@@ -19,7 +19,7 @@ public class SM_SIEGE_LOCATION_STATE extends AionServerPacket {
 	 * 使用给定参数构造 SM_SIEGE_LOCATION_STATE 包。
 	 * Creates a SM_SIEGE_LOCATION_STATE packet with the given parameters.
 	 *
-	 * location id
+	 * @param location location id
 	 */
 	public SM_SIEGE_LOCATION_STATE(SiegeLocation location) {
 		locationId = location.getLocationId();

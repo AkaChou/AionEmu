@@ -23,8 +23,8 @@ public class SM_SKILL_ANIMATION extends AionServerPacket {
 	 * 使用给定参数构造 SM_SKILL_ANIMATION 包。
 	 * Creates a SM_SKILL_ANIMATION packet with the given parameters.
 	 *
-	 * skill skin id
-	 * expire time
+	 * @param skillSkinId skill skin id
+	 * @param expire expire time
 	 */
 	public SM_SKILL_ANIMATION(int skillSkinId, int expire) {
 		action = 0;
@@ -37,7 +37,7 @@ public class SM_SKILL_ANIMATION extends AionServerPacket {
 	 * 使用给定参数构造 SM_SKILL_ANIMATION 包。
 	 * Creates a SM_SKILL_ANIMATION packet with the given parameters.
 	 *
-	 * 玩家 / player
+	 * @param player 玩家 / player
 	 */
 	public SM_SKILL_ANIMATION(Player player) {
 		action = 1;

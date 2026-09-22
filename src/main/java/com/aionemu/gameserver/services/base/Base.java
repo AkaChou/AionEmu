@@ -103,7 +103,7 @@ public class Base<BL extends BaseLocation> {
 	 * 以据点位置模板创建运行时实例。
 	 * Creates a runtime instance from a base location template.
 	 *
-	 * base location
+	 * @param baseLocation base location
 	 */
 	public Base(BL baseLocation) {
 		list.add(Race.ASMODIANS);
