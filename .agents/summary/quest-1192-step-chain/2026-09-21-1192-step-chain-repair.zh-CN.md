@@ -99,6 +99,27 @@
 - 噪声边界：候选含 `NO_STATE`（9554-9557、1908）与带未使用备用页的任务；批量修复前必须逐个比对客户端页面链与 NPC，
   **不得**按动作名机械补路由。候选清单仅作为分批修复的输入。
 
+### 5.1 最新复核（2026-09-21 23:5x，HEAD `8623f4406`）
+
+完整复核见同目录 `2026-09-21-candidate-sweep.zh-CN.md` 与 `candidate-sweep.tsv`：
+
+- 客户端推进动作无路由：83 → **80**。修正了审计脚本漏解析 `actions="X Y"` 多动作写法的缺陷，
+  去除 3 个假阳性（4338 `actions="SETPRO3 SELECT3"`、2443 `actions="SETPRO1 QUEST_ACCEPT_1"`、
+  2002 `<preview actions="SELECT_QUEST_REWARD SETPRO8"/>`）；**1192 不在清单内**。
+- 旧 67 候选的现状：**29 个**的行/状态已被当日「领奖行批次 1-9」（`7a7d27809` 等）收口
+  （wiki 侧不再是同一条 `START 0`），但客户端推进动作路由一条未补；**37 个**仍缺行/状态；
+  1 个（2002）为审计假阳性。
+- 当前 72 个仍缺路由 = 66 个「客户端页面从未被 IR 下发」+ 6 个「页面已下发但按钮无路由」
+  （1430、1643、2449、2513、2962、4542）；另有 8 个噪声（单行 9554-9557、无对话页 1000/2000、
+  stub 1489/1908）。
+- 与 1192 完全同型（多行 + 状态缺口 + 动作无路由）的仍有 **29 个**（1183、1371、1479、1514、1582、1643、
+  1721、1724、1922、1938、2223、2239、2289、2307、2372、2600、2646、2692、2767、2947、2962、3050、
+  3088、3966、3968、4501、4542、4712、4942）。
+- 生产门禁 `QuestClientContractGateTest` / `QuestPrematureRewardRouteAudit` 当前 0 违规，但门禁不把
+  「客户端页面从未被 IR 下发」（`CLIENT_PAGE_UNREACHED`，`EVIDENCE_REQUIRED`）计入失败——1192 正是该口径漏掉的实例。
+
+结论：候选**未修复**，唯一修复的是 1192 本身；批量修复需单独授权。
+
 ## 6. 未完成项
 
 - 客户端实机验收（PENDING_CLIENT）：需确认 203701 → 203833 → 203098 三步顺序推进、任务书三行高亮、领奖窗口只在斯帕塔洛斯处出现。
@@ -109,6 +130,8 @@
 - `src/test/java/com/aionemu/gameserver/questEngine/definition/Quest1192StepChainContractTest.java`
 - `.agents/summary/quest-1192-step-chain/`：本文件、`audit_reward_row_vs_client_steps.py`（副本）、`audit_unrouted_progress_actions.py`、
   `audit-output.tsv`、`audit-run.log`、`unrouted-progress-actions.tsv`、`audit-cross.tsv`
+- 2026-09-21 复核新增/更新（未提交）：`2026-09-21-candidate-sweep.zh-CN.md`、`candidate_sweep.py`、`candidate-sweep.tsv`，
+  以及修正 `actions="X Y"` 解析后的 `audit_unrouted_progress_actions.py` / `unrouted-progress-actions.tsv`
 
 ## 8. Playbook / memory-bank 归属判定
 

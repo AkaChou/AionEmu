@@ -23,21 +23,26 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
-    <node label="stage1" status="START"><var name="var0" value="1"/></node>
+    <node label="s1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="s2" status="START">
+      <var name="var0" value="2"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- 客户端逐行对话链合同：每行一个 START/REWARD 状态，每步使用该行客户端的页面与按钮动作。 Client step-chain contract: one state per quest_summary row, each step uses that row's client page/action. -->
     <dialog type="NPC_START" npc-id="278519" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
       <accept-actions>
         <give-item item-id="182202152" count="1"/>
       </accept-actions>
     </dialog>
-    <!-- 契约外报告页换无按钮反馈。 -->
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="278519" action="QUEST_SELECT"/>
@@ -46,16 +51,25 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-
-    <npc-complete npc-id="278519" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
     <dialog type="NPC_START" npc-id="278591" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
       <accept-actions>
         <give-item item-id="182202152" count="1"/>
       </accept-actions>
     </dialog>
-    <!-- retail 步骤0(zz_retail_simple_quests.xml):type="TALK" ids="278591";对话链按客户端按钮图重建。 -->
+    <dialog type="NPC_START" npc-id="278599" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
+      <accept-actions>
+        <give-item item-id="182202152" count="1"/>
+      </accept-actions>
+    </dialog>
+    <dialog type="NPC_START" npc-id="278594" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
+      <accept-actions>
+        <give-item item-id="182202152" count="1"/>
+      </accept-actions>
+    </dialog>
+    <npc-complete npc-id="278594" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+    <!-- 步骤 278591：SELECT2 -> SELECT2_1 → SETPRO1 (client select2) -->
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="278591" action="QUEST_SELECT"/>
@@ -72,7 +86,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="stage1">
+    <transition source="started" target="s1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="278591" action="SETPRO1"/>
       </event>
@@ -84,34 +98,26 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="278591" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="278599" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
-      <accept-actions>
-        <give-item item-id="182202152" count="1"/>
-      </accept-actions>
-    </dialog>
-    <!-- retail 步骤1(zz_retail_simple_quests.xml):type="TALK" ids="278599" give_item_id="182202152" give_item_count="1";对话链按客户端按钮图重建。 -->
-    <transition source="stage1" target="stage1">
+    <!-- 步骤 278599：SELECT3 -> SELECT3_1 → SETPRO2 (client select3) -->
+    <transition source="s1" target="s1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="278599" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
       </after-commit>
     </transition>
-    <transition source="stage1" target="stage1">
+    <transition source="s1" target="s1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="278599" action="SELECT2_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="278599" action="SELECT3_1"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
       </after-commit>
     </transition>
-    <transition source="stage1" target="reward">
+    <transition source="s1" target="s2">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="278599" action="SETPRO1"/>
+        <dialog type="TALK_TO_NPC" npc-id="278599" action="SETPRO2"/>
       </event>
       <actions>
         <give-item item-id="182202152" count="1"/>
@@ -121,26 +127,23 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="278599" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="278594" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
-      <accept-actions>
-        <give-item item-id="182202152" count="1"/>
-      </accept-actions>
-    </dialog>
-    <!-- 契约外报告页换无按钮反馈。 -->
-    <transition source="started" target="started">
+    <!-- 领奖行 278594：客户端领奖页 → 领奖窗口（进入 REWARD 由本行自己的客户端动作触发） -->
+    <transition source="s2" target="s2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="278594" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
-
-    <npc-complete npc-id="278594" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
+    <transition source="s2" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="278594" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

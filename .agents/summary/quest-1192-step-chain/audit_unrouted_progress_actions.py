@@ -67,8 +67,13 @@ def client_progress_actions(path: Path) -> set[str]:
 
 
 def xml_actions(path: Path) -> set[str]:
+    """XML 中显式路由的动作。dialog 既支持 action="X" 也支持 actions="X Y"（多动作同边），
+    后者若漏解析会把已路由的动作误报为无路由（2026-09-21 复核 4338 时发现）。"""
     text = path.read_text(encoding="utf-8")
-    return set(re.findall(r'action="([A-Z0-9_]+)"', text))
+    declared = set(re.findall(r'\baction="([A-Z0-9_]+)"', text))
+    for group in re.findall(r'\bactions="([^"]+)"', text):
+        declared.update(token for token in group.split() if re.fullmatch(r"[A-Z0-9_]+", token))
+    return declared
 
 
 def main() -> int:
