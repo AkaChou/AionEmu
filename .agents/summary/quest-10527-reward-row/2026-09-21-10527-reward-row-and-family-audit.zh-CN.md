@@ -1384,3 +1384,73 @@ var0 当 0→2 的投递计数，且客户端行内 `HousingLf_Event_ShugoSanta`
   多阶段/计数任务，禁止按行号机械推进。
 - 本批 Maven 命令（已执行，58 例全绿；后续批次沿用并追加新门禁类）：
   `mvn -Dtest='DurableDaevanionWeaponRewardRowContractTest,RewardOwnerTrimContractTest,RewardRowResidualTwoRowContractTest,RewardRowEventTwoRowContractTest,RewardRowTwoRowTalkFamilyContractTest,RewardNpcOwnershipContractTest,RetailSingleStepRewardRowContractTest,LegacyRewardStepProjectionRegressionTest,QuestClientContractGateTest,QuestItemSourceContractGateTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest' test`
+
+
+## 二十二、批次 18：镜像单侧投影落后族（11110/14201/16974/17160/17161/17526，2026-09-22）
+
+### 二十二之一、族级定位方法（先扫全库，再定族）
+
+批次 1-3 已用过的镜像方法在本批固化为可复用判据：**对每一对同形镜像 `q` / `q±10000`（天/魔）**，
+
+1. 客户端 `quest_summary` **行数相同**；
+2. **末行 NPC 都能在该任务自己的 `npc-*` 路由里对上**（`last_row_npc_matches_quest=True`）；
+3. 但只有**一侧**的 `reward` 投影等于领奖行（末行行号），另一侧仍停在行 0。
+
+此时**已对齐的那一侧就是另一侧的参照基线**——两侧客户端任务书同形，行号语义相同，没有理由只有一侧进入领奖行。
+本批 6 个成员都满足上述三条，且**都已具备完整的 `0..N-1` 行状态**（`rows_without_state` 为空、`row_state` 已是
+`ROW_STATE_ALIGNED`），差别只在 `reward` 节点这一行投影——所以修复是纯投影 + 自愈，不需要补状态阶梯。
+
+### 二十二之二、六个任务的证据
+
+| 任务 | 镜像（参照） | 客户端 quest_summary | reward 投影 | 证据 | 修复 |
+|---|---|---|---|---|---|
+| 11110 | 21110 | 2 行：行 0「消灭工房巨人（[%2]/10）」、行 1「和 Suleion 对话」 | 0 → 1 | 镜像 21110 的 reward 投影已是 1；两侧行数/NPC 对齐 | 投影 `0→1` + `REWARD/var0=0 → 1` 自愈边 |
+| 14201 | 24201 | **3 行**：行 0 Honglas、行 1 Serimnir、行 2「向 Atropos 报告（collectitem）」 | 0 → 2 | 镜像 24201 reward=2；迁移前 legacy `changeQuestStep(2->2)` 独立印证领奖态保持 packed step 2 | 投影 `0→2` + `REWARD/var0=0 → 2` 自愈边 |
+| 16974 | 26974 | 2 行：行 0「消灭贝尔库勒军团长（[%2]/1）」、行 1「和 IDLDF5_Under_01_Theano_E 对话」 | 0 → 1 | 镜像 26974 reward=1 | 投影 `0→1` + 自愈边 |
+| 17160 | 27160 | 2 行：行 0「在 LF5 消灭 IDLegion_Q17160（[%2]/10）」、行 1「向 LF5_Atmos_E 报告」 | 0 → 1 | 镜像 27160 reward `var0=1`（**另带 `var1=10`**，属镜像侧独有计数槽，本批只对齐行号 `var0`） | 投影 `0→1` + 自愈边 |
+| 17161 | 27161 | 2 行：行 0「去 DF5 消灭 IDLegion_Q17161（[%2]/10）」、行 1「向 LF5_Atmos_E 报告」 | 0 → 1 | 镜像 27161 reward `var0=1`（同样带 `var1=10`） | 投影 `0→1` + 自愈边 |
+| 17526 | 27526 | 2 行：行 0「前往 IDAbRe_Core_03 消灭 Witch_Boss_Ae（[%2]/1）」、行 1「向 Ab1_Plania_E 报告」 | 0 → 1 | 镜像 27526 reward=1 | 投影 `0→1` + 自愈边 |
+
+领奖 owner（QE-052）：6 个任务的客户端末行 NPC 与任务内 `npc-complete` 一致（799075 = Suleion、798155 = Atropos、
+801763 = IDLDF5_Under_01_Theano_E、804699 = LF5_Atmos_E（17160/17161 共用）、806781 = Ab1_Plania_E），无需 owner 收敛。
+14201 侧另有 798212 = Serimnir、800407 = honglas 两个前置交付 NPC，均落在行 0/行 1，不冲突。
+
+### 二十二之三、同族但锁定、本批不改
+
+`16837 / 16986 / 16988` 属同一“镜像单侧落后”形态，但被既有门禁
+`QuestPrematureRewardRouteExclusionTest` 的 `RewardCase.reward = {var0: 0}` 断言锁定（完成报告后 packed `var0`
+**保持 0**）。这是仓库里与镜像推断相反的既有契约，**在拿到客户端观测前不得按镜像推进**；本批把这三个任务写进
+`MirrorRewardProjectionLagContractTest` 的 `LOCKED_MIRROR_SIBLINGS` 护栏。
+
+### 二十二之四、修复与验证（2026-09-22）
+
+- 脚本 `.agents/summary/quest-10527-reward-row/apply_batch18_mirror_projection_lag.py`
+  （`--check` 改动前 FAIL → APPLY 6/6 OK → `--check` 6/6 幂等）。
+- **单任务审计**（6/6）：`ROW_BEHIND / ROW_STATE_ALIGNED`（`visible = 0 1`，14201 为 `0 1 2`，`recovery=False`）
+  → `ROW_ALIGNED / ROW_STATE_ALIGNED`（`visible` 不变、`recovery=True`、`rows_without_state` 空）。
+- **全库快照**：`ROW_ALIGNED 2650 -> 2656`、`ROW_BEHIND 196 -> 190`（`ROW_AHEAD 2589`、`NO_CLIENT_HTML 608`、
+  `NO_REWARD_ROW 179` 不变）；`row_state` 计数不变（`ROW_STATE_ALIGNED 2428`、`ROW_WITHOUT_STATE 521`、
+  `STATE_OUT_OF_RANGE 2446`、`BOTH_MISALIGNED 177`）——本批属“有状态、只落后投影”形态，不动 `MISSING_LAST_ROW`
+  （仍 84 行数据）。
+- **结构校验**：`xmllint --noout --schema quest_definition.xsd` 6/6 `validates`；IDEA lint 0 problem；`git diff --check` 干净。
+- **门禁测试**：`src/test/java/com/aionemu/gameserver/questEngine/definition/MirrorRewardProjectionLagContractTest.java`
+  5 例——① 落后侧投影 == 镜像领奖行且 `status=REWARD`；② 自愈边唯一 + `QuestMutationPlanner` 收敛到镜像行；
+  ③ 无 `target=reward` 事务写非领奖行 `var0`；④ `16837/16986/16988` 保持 `var0=0`（锁定兄弟护栏）；
+  ⑤ 镜像两侧领奖行 `var0` 一致（只比行号：27160/27161 另有 `var1=10` 计数槽，不参与比较）。
+- **Maven（授权后执行，2026-09-22 12:37）**：15 个测试类 **92 例全绿**（含本批新增
+  `MirrorRewardProjectionLagContractTest` 5/5），
+  `PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。
+  第 1 轮曾因测试自身过紧（整张投影 Map 比较，27160/27161 的 `var1=10` 造成假失败）在 92 例中失败 1 例，
+  已改为只比较 `var0` 后重跑全绿——**生产 XML 未因该断言改动**。
+- **证据表**：[batch18-evidence.tsv](batch18-evidence.tsv)（含 3 个锁定兄弟行）。
+- 客户端实机复测：**PENDING_CLIENT**。要点：① 已进入 `REWARD/var0=0` 的旧存档在登录/切图时由自愈边纠正到镜像领奖行；
+  ② 六个任务领奖对话正常打开、任务书高亮末行（14201 为第 3 行）。17160/17161 另需确认 `var1=10` 是否随领奖态保留。
+
+### 二十二之五、结论与后续
+
+- “镜像单侧投影落后”形态本批清空（参考族剩 `16837/16986/16988` 锁定三例，需客户端观测）。
+- 下一批（批次 19）转向**镜像单侧 `ROW_BEHIND` 且需要补中间状态阶梯**的 B 组：`15000/15670`（rows=4，reward 0→3）、
+  `23809`（0→3）、`23918`（1→5）、`24046`（6→7，镜像行状态本身有缺口）。这些**不能只改投影**，要补 `START` 状态阶梯
+  （`MISSING_TAIL_ROWS` / `INTERIOR_GAP`），须逐族取 legacy/客户端证据。
+- 本批 Maven 命令（已执行，92 例全绿；后续批次沿用并追加新门禁类）：
+  `mvn -Dtest='MirrorRewardProjectionLagContractTest,QuestPrematureRewardRouteExclusionTest,Quest11110And1548PostKillReportDialogTest,DurableDaevanionWeaponRewardRowContractTest,RewardOwnerTrimContractTest,RewardRowResidualTwoRowContractTest,RewardRowEventTwoRowContractTest,RewardRowTwoRowTalkFamilyContractTest,RewardNpcOwnershipContractTest,RetailSingleStepRewardRowContractTest,LegacyRewardStepProjectionRegressionTest,QuestClientContractGateTest,QuestItemSourceContractGateTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest' test`

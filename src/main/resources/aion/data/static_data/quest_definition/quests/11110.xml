@@ -30,7 +30,7 @@
       <var name="var0" value="1"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -125,6 +125,27 @@
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <!-- QE-051 领奖行（批次 18，镜像单侧投影落后族）：镜像对 11110 / 21110 的客户端 quest_summary
+         行数相同、末行 NPC 都能在任务内对上，但 21110 的 reward 投影已经是 1（领奖行），
+         11110 却仍停在行 0——一族里已对齐的那一侧就是参照基线：行 1 = “和 Suleion（799075）对话”。
+         因此 11110 的 reward 投影固定为 1，并补 REWARD/var0=0 -> 1 的 enter-world 自愈边。
+         Mirror-pair reward-row contract (batch 18): the aligned shard projects row 1, so this shard
+         must project the same row and heal stale REWARD/var0=0 saves. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="799075" source="reward" target="complete" fixed-reward-indices="0 1" complete-reward-index="0" finish="SELECTION_DIALOG">

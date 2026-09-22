@@ -38,7 +38,7 @@
     <node label="stage1" status="START"><var name="var0" value="1"/></node>
     <node label="stage2" status="START"><var name="var0" value="2"/></node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -76,6 +76,27 @@
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- QE-051 领奖行（批次 18，镜像单侧投影落后族）：镜像对 14201 / 24201 的客户端 quest_summary
+         行数相同、末行 NPC 都能在任务内对上，但 24201 的 reward 投影已经是 2（领奖行），
+         14201 却仍停在行 0——一族里已对齐的那一侧就是参照基线：行 2 = “和 Atropos 对话（legacy changeQuestStep(2->2) 亦确认领奖态保持 packed step 2）”。
+         因此 14201 的 reward 投影固定为 2，并补 REWARD/var0=0 -> 2 的 enter-world 自愈边。
+         Mirror-pair reward-row contract (batch 18): the aligned shard projects row 2, so this shard
+         must project the same row and heal stale REWARD/var0=0 saves. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="798155" source="reward" target="complete" fixed-reward-indices="0 1 2 3 4" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">

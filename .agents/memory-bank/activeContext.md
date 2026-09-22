@@ -135,6 +135,20 @@
   - **批次 17 边界（下一批前必读）**：`STEP_EQUALS_NEXTSTEP` 的 392 个任务（2600/1920/2945 等
     `defaultCloseDialog(env, s, s, true, ...)`）与 QE-045 基线（15300/25300 的 reward=13）不得按客户端末行机械推进；
     剩余 `MISSING_LAST_ROW 84` 多为这类任务或多阶段/计数族，必须逐族取客户端观测或 legacy 证据。
+  - **批次 18 完成（2026-09-22，镜像单侧投影落后族 11110/14201/16974/17160/17161/17526）**：族级判据——同形镜像对
+    （q / q±10000）客户端 quest_summary 行数相同、末行 NPC 都能在任务内对上，但只有一侧 reward 投影等于领奖行；
+    **已对齐的那一侧即参照基线**（11110/21110=1、14201/24201=2、16974/26974=1、17160/27160=1、17161/27161=1、17526/27526=1）。
+    6 个任务本就有完整 0..N-1 行状态（rows_without_state 空、row_state 已 ROW_STATE_ALIGNED），修复 = reward 投影 + 无 source
+    `REWARD/var0=0 -> 镜像行` enter-world 自愈边（LEVEL_AND_VISIBILITY_REFRESH）。门禁 `MirrorRewardProjectionLagContractTest`（5 例）；
+    单任务审计 6/6 `ROW_BEHIND -> ROW_ALIGNED`（recovery=True）；全库 `ROW_ALIGNED 2650->2656`、`ROW_BEHIND 196->190`
+    （row_state 计数与 `MISSING_LAST_ROW 84` 不变）；xmllint 6/6 validates、IDEA lint 0、`git diff --check` 干净；
+    Maven 已授权 15 个测试类 **92 例全绿**（含本批门禁 5/5，PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / WHITELIST_VIOLATIONS=0）、
+    客户端 **PENDING_CLIENT**。脚本 `apply_batch18_mirror_projection_lag.py`（--check 6/6）、证据 `batch18-evidence.tsv`、报告 §二十二。
+  - **批次 18 边界（下一批前必读）**：镜像两侧投影比较只比行号 `var0`——镜像侧可另有计数槽（27160/27161 带 `var1=10`）；
+    16837/16986/16988 属同形但被 `QuestPrematureRewardRouteExclusionTest` 的 `RewardCase.reward={var0:0}` 锁定
+    （完成报告后 packed var0 保持 0），未取到客户端观测前**禁止按镜像推进**；本批只覆盖“有完整状态、仅投影落后”形态，
+    下一批（批次 19）转向需要补中间状态阶梯的 B 组：15000/15670（rows=4，reward 0→3）、23809（0→3）、23918（1→5）、
+    24046（6→7，镜像行状态本身有缺口），不能只改投影。
   - **批次 10 边界（下一批前必读）**：21455 的领奖 NPC 归属已在批次 12 收口（领奖/completion 799404 → Unset 799244，accept 仍是 799404 Miener）；25608 已在批次 11 收口（实际缺 ENTER_AREA 206534 与 ENTER_AREA 206542 两行；修复为 step2/step5 两个 enter-zone、HUNT→step3、Mumu SELECT5→step4、交付行归 step6、reward 5→6，并从客户端 DF6 Level.pak 的 mission_mission0.xml 触发点注册两个 sensory zone）；10530 第 8 行是与第 9 行共槽的空 `<p>`（镜像 20530 无此行），已在审计脚本登记 `DUPLICATE_VISIBLE_SLOT_BLANK_ROWS`，禁止按行号加一；19008/19014/19020/19026/19032 等“名人考试”族的 reward=1 属 legacy 语义（19057/29057 的 handler 另有 var0=2 的失败分支），不得按“末行行号 2”改；剩余 MISSING_LAST_ROW 95 个（镜像同缺 32、QE-045 锁 10）需逐族 legacy/retail 证据。
 - **批次 8 边界（下一批前必读）**：10522/20522/15542/25542/30211/30213/30311/30313 的 QE-046 基线已随写入方一起改到领奖行 1，后续再改这 8 个任务的 reward 投影必须同时改写入方并重刷基线；19064/29064/21455/30614 的领奖 NPC 归属已在批次 12 收口（30614 按客户端行内命名回滚为 Astella 800327，禁止再按 `terath_dredgion.xml` 单源改回 Aluna 800326）；26838（末行 Jarik01=806574，定义 806575）仍需先核实领奖 NPC 身份；28932/30203/30303 需要给无投影的 `started` 节点补 var0；1607/1990/2990/3502/14012/14013/17511/27511 属多阶段/内部缺口（INTERIOR_GAP、MISSING_TAIL_ROWS），必须单独设计阶段推进；脚本 `apply_batch8_external_writer_reward_row.py`（`--check` 幂等）、门禁 `ExternalRewardAdvanceReentryContractTest` 与 `Quest10522AutoStartDialogTest`。
   - **批次 7 边界（下一批前必读）**：10522/20522/15542/25542/30211/30213/30311/30313 的 QE-046 基线（reward 投影必须等于引擎外写入方的 packed step）已由批次 8 一并改到领奖行 1（写入方 + 投影 + 基线 TSV 三处同改）；30614/26838/19064/29064 的末行 NPC 与定义 NPC 不一致，需先核实领奖 NPC 身份；28932/30203/30303 需要给无投影的 `started` 节点补 var0；1607/1990/2990/3502/14012/14013/17511/27511 属多阶段/内部缺口（INTERIOR_GAP、MISSING_TAIL_ROWS），必须单独设计阶段推进。脚本 `apply_batch7_report_row_contract.py`、证据 `batch7-evidence.tsv`、门禁 `ReportRowRewardProjectionContractTest`（5 条合同）。
