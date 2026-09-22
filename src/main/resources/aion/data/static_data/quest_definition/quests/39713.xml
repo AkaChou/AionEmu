@@ -15,7 +15,10 @@
     </rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
+    <!-- 行号阶梯：var0 是任务书行号（0..2），与魔族镜像 49713 同形。
+         Journal row index: var0 holds the quest_summary row (0..2); identical in shape to
+         the Asmodian twin 49713. -->
+    <bit-field name="var0" offset="0" width="2" min="0" max="3" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -24,8 +27,14 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="powder-received" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="powder-used" status="START">
+      <var name="var0" value="2"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -111,21 +120,29 @@
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
+    <!-- 行 1「把净化粉末撒在遗忘沼泽的污染根源上」：先向三名支部成员中任意一位领取粉末，
+         行号推进到 1；旧定义在这里直接跳到领奖态，行 1/行 2 都永远不亮。
+         Row 1 ("scatter the powder over the swamp"): the player first receives the powder from
+         any of the three branch members and the journal advances by exactly one step; the legacy
+         definition jumped straight to the reward state, so rows 1 and 2 never lit up. -->
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="800936" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <npc-item-report npc-id="800936" source="started" target="reward" item-id="182215285" required="1" failure-page="CLOSE"/>
-    <transition source="started" target="reward">
+    <transition source="started" target="powder-received">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="800936" action="SET_SUCCEED"/>
+        <dialog type="TALK_TO_NPC" npc-id="800936" action="SETPRO1"/>
       </event>
+      <actions>
+        <give-item item-id="182215285" count="1"/>
+        <set-variable field="var0" value="1"/>
+      </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
     </transition>
@@ -214,16 +231,19 @@
         <dialog type="TALK_TO_NPC" npc-id="800937" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <npc-item-report npc-id="800937" source="started" target="reward" item-id="182215285" required="1" failure-page="CLOSE"/>
-    <transition source="started" target="reward">
+    <transition source="started" target="powder-received">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="800937" action="SET_SUCCEED"/>
+        <dialog type="TALK_TO_NPC" npc-id="800937" action="SETPRO1"/>
       </event>
+      <actions>
+        <give-item item-id="182215285" count="1"/>
+        <set-variable field="var0" value="1"/>
+      </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
     </transition>
@@ -312,47 +332,122 @@
         <dialog type="TALK_TO_NPC" npc-id="800938" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <npc-item-report npc-id="800938" source="started" target="reward" item-id="182215285" required="1" failure-page="CLOSE"/>
-    <transition source="started" target="reward">
+    <transition source="started" target="powder-received">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="800938" action="SET_SUCCEED"/>
+        <dialog type="TALK_TO_NPC" npc-id="800938" action="SETPRO1"/>
       </event>
+      <actions>
+        <give-item item-id="182215285" count="1"/>
+        <set-variable field="var0" value="1"/>
+      </actions>
       <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
       </after-commit>
     </transition>
     <npc-complete npc-id="800938" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-      <transition source="started" target="reward">
+    <!-- 行 2「向绿林团南部卡塔拉姆支部报告」前的使用步骤：在污染区域使用净化粉末，
+         消耗道具并把行号推进到 2（魔族镜像 49713 同形）。
+         The step before row 2 ("report to the South Katalam branch"): use the powder at the
+         contamination site, consume it and advance the journal to row 2 (mirrors 49713). -->
+    <transition source="powder-received" target="powder-used">
+      <event>
+        <use-item item-id="182215285"/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="1"/>
+        <has-item item-id="182215285" count="1"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182215285" count="1"/>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <transition source="powder-used" target="powder-used">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="800936" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
+    <transition source="powder-used" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="800936" action="SELECT_QUEST_REWARD"/>
       </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <transition source="powder-used" target="powder-used">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="800937" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
+    <transition source="powder-used" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="800937" action="SELECT_QUEST_REWARD"/>
       </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <transition source="powder-used" target="powder-used">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="800938" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
+    <transition source="powder-used" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="800938" action="SELECT_QUEST_REWARD"/>
       </event>
+      <conditions>
+        <variable-is field="var0" value="2"/>
+      </conditions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <!-- QE-051 旧存档自愈：reward 态但 packed var0 仍是旧投影 0 的存档
+         （修复前任意一名成员的报告直跳都会留下这种存档）在进入世界时纠正到领奖行 2。
+         QE-051 self-heal: a REWARD save whose packed var0 is still the legacy projection 0 (left by
+         any of the old unguarded report jumps) is repaired to the reward row 2 on enter-world. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
 </transitions>

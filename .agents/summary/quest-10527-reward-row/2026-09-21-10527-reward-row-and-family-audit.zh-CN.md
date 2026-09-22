@@ -1843,3 +1843,97 @@ QC 判据（与批次 18/19 同源，但落点不同）：同形镜像对 `q` / 
   24112、24201、28030/28033、28313、28915、30600/30610、39001/39002、49002）待逐族判定。
 - 本批 Maven 命令（已执行，44 例全绿；后续批次沿用并追加新门禁类）：
   `mvn -Dtest='ShadowCourtRowLadderContractTest,JournalRewardRowRepairContractTest,Quest14045And14046MoviePageTurnContractTest,CoreCapabilityRepresentativeDefinitionTest,QuestClientContractGateTest,QuestDialogOrderAuditTest,QuestItemSourceContractGateTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest' test`
+
+---
+
+## 二十七、批次 23：领奖行阶梯 39713（[Daily] Fresh Powder，2026-09-22）
+
+### 二十七之一、族级判据与证据
+
+- 客户端 `quest_q39713.html` 的 `quest_summary` **3 行**（与魔族镜像 49713 同形，只有道具名不同）：
+  行 0 和 `[%dic:STR_DIC_E_LDF5a_Greenhat_BA]` 对话；**行 1 把 `[%dic:STR_DIC_I_quest_39713a]` 撒在 `[%dic:STR_DIC_W_LDF5b_SZ_G1_001]` 上**；
+  行 2 向 `[%dic:STR_DIC_E_LDF5a_Greenhat_BA]` 报告。
+- 两侧客户端页/按钮完全同形：`select2` = `HACTION_SETPRO1`（收下净化粉末）、`select5` = `HACTION_SELECT_QUEST_REWARD`（报告结果）、
+  `ask_quest_accept` = `HACTION_FINISH_DIALOG`、`select_quest_reward1` 无 `Act`（奖励页）。
+- **owner 有独立文本证据**：末行的 `STR_DIC_E_LDF5a_Greenhat_BA` 是“绿林团南部卡塔拉姆支部”的集合名，
+  其正文点名 `STR_DIC_N_LDF5b_Ubarung_Greenhat` / `LDF5b_Dieroonroon_Greenhat` / `LDF5b_Argarung_Greenhat`，
+  客户端 NPC 表对应 **800936 / 800937 / 800938**；天族侧沿用这三名成员不是归属错误（本批未收敛 owner）。
+- `quest_monster.csv` 两侧同形：`39713,Progress(1),quest_39713a,itemUseArea,,1,usearea_ldf5b_itemusearea_q39713`
+  —— 行 1 是**道具使用区域**目标，权威口径是 QE-051 的**行号口径**（行 n ↔ var0=n），不是批次 21 的 `COUNTER_CHAIN`（没有 `SECTION_0` 判定）。
+- `var0` 是行号，`SECTION_0` 仍是 offset 0；位域只需容纳末行 2（本批与镜像对齐到 `width=2/max=3`）。
+- 迁移证据：`527dc4017^` 的生成物 `Quest39713.java` 已把当时的 XML 形态固化（`var0` 1 bit、节点只有 `unaccepted/started/reward/complete`、
+  9 条 `started -> reward`），与迁移前 legacy 的“无阶梯直跳”一致；本批按客户端行清单重建（同族 49713 在更早批次已重建，可作模板）。
+
+### 二十七之二、旧模型缺陷
+
+- **行 1、行 2 没有任何状态**：旧定义把整条阶梯塌陷成 9 条无守卫的 `started -> reward` 直跳
+  （`npc-item-report` ×3 + `SET_SUCCEED` ×3 + `SELECT_QUEST_REWARD` ×3），客户端第 2、3 行在整个流程里都高亮不起来
+  （审计 `MISSING_TAIL_ROWS`、`rows_without_state=1 2`、`visible=0`）。
+- **行 0 打开了错误的页**：`started --QUEST_SELECT--> started` 显示 `SELECT5`（“你从遗忘沼泽回来了吗”报告页），
+  而领粉末页是 `SELECT2`（“我把净化粉末给你”）—— 玩家在行 0 点任务行会看到报告页、却在同一 NPC 上用 `SETPRO1` 发粉。
+- **领奖行错位（QE-051）**：reward 节点投影 `var0=0`，而客户端末行是 2；同时 `var0` 只有 1 bit（`max=1`），连行 2 都表达不了
+  （`last_row_within_field_max=False`）。
+- **报告路由重复索取道具**：`npc-item-report item-id="182215285" required="1"` 要求报告时仍持有净化粉末，
+  但该粉末在行 1 就被 `use-item` 消耗掉了（镜像 49713 的报告路由不要求任何物品）。
+
+### 二十七之三、落点
+
+- `var0`：`width=1 min=0 max=1` → **`width=2 min=0 max=3`**（与 49713 同形；offset 0 不变）。
+- 节点：`unaccepted(0)/started(0)`、补 **`powder-received(1)`** 与 **`powder-used(2)`**（均 `START`）、`reward` 投影 `0 -> 2`、`complete(0)`。
+- 阶梯（每位支部成员各一套，与 49713 同形；各自的物品 id 独立：天族 182215285 / 魔族 182215277）：
+  - `started --QUEST_SELECT--> started`：改开 `SELECT2`（领取粉末页）；
+  - `started --SETPRO1--> powder-received`：`give-item 182215285` + `set var0=1`，`PACKET_ONLY` + `close-dialog`；
+  - `powder-received --use-item 182215285--> powder-used`：条件 `var0==1` + `has-item`，动作 `remove-item` + `set var0=2`，`PACKET_ONLY`；
+  - `powder-used --QUEST_SELECT--> powder-used`：显示 `SELECT5`（报告页）；
+  - `powder-used --SELECT_QUEST_REWARD--> reward`：条件 `var0==2`，`LEVEL_AND_VISIBILITY_REFRESH` + `SHOW_SELECT_QUEST_REWARD_WINDOW1`；
+  - 删除 9 条 `started -> reward` 直跳与 3 条 `npc-item-report`（报告不再要求道具）。
+- 旧存档：补无 source 的 `REWARD && var0==0 -> reward(2)` `enter-world` 自愈边（`LEVEL_AND_VISIBILITY_REFRESH`），
+  与 `JournalRewardRowRepairContractTest` 的 `Contract(39713, 2, 0)` 同形。
+- `npc-complete`（reward 预览 + `reward -> complete` ×3）与 completion owner（800936/800937/800938）保持不动（QE-052 不适用本批）。
+- 接取口径保持族内既有差异：天族经支部 NPC 对话接取（`TALK_TO_NPC`），魔族走无目标 `QUEST_ACTION` —— 本批不动接取，只改行阶梯。
+
+### 二十七之四、验证（2026-09-22）
+
+- 脚本 `.agents/summary/quest-10527-reward-row/apply_batch23_faction_daily_rows.py`（`--check` PENDING → APPLY → `--check` 幂等）。
+- 结构校验：`xmllint --noout --schema quest_definition.xsd` 1/1 validates；`git diff --check` 干净。
+- **单任务审计**：39713 由 `ROW_BEHIND / MISSING_TAIL_ROWS / ROW_WITHOUT_STATE`
+  （`visible=0`、`rows_without_state=1 2`、`var0_max=1`、`reward_var0=0`、9 条 `started->reward` 直跳、`recovery=False`）
+  → `ROW_ALIGNED / ALIGNED / ROW_STATE_ALIGNED`（`visible=0 1 2`、`var0_max=3`、`reward_var0=2`、`recovery=True`）；
+  镜像 49713 保持 `ROW_ALIGNED / ALIGNED / ROW_STATE_ALIGNED`（本批未改动）。
+- **全库快照**（before → after，同一脚本两次全库运行）：`ROW_ALIGNED 2659 -> 2660`、`ROW_BEHIND 187 -> 186`、
+  `ALIGNED 2431 -> 2432`、`MISSING_TAIL_ROWS 80 -> 79`、`ROW_STATE_ALIGNED 2431 -> 2432`、`ROW_WITHOUT_STATE 518 -> 517`；
+  `MISSING_LAST_ROW 84`、`NO_STATE 89`、`INTERIOR_GAP 265`、`STATES_BEYOND_ROWS 2623`、`ROW_AHEAD 2589`、`BOTH_MISALIGNED 177`、
+  `STATE_OUT_OF_RANGE 2446`、`NO_CLIENT_HTML 650` 均不变 —— 全部变化都来自 39713 一个任务
+  （`audit-output.tsv` 仅 39713 一行变化，`audit-missing-last-row.tsv` / `audit-qe051-candidates.tsv` 逐字节不变）。
+- **门禁测试**：
+  - 新增 `src/test/java/com/aionemu/gameserver/questEngine/definition/FactionDailyRowLadderContractTest.java`（7 例）：
+    ① 两侧 3 行各有 START/REWARD 状态、reward 投影 = 2、`var0` 在 `SECTION_0` 且与镜像同形（2 bit / max 3）、可见行 = 0/1/2；
+    ② 行 1 由三名支部成员任一位发放本侧粉末并推进一步、行 0 的 `QUEST_SELECT` 打开 `select2`；
+    ③ `use-item` 消耗粉末并推进到行 2、条件含 `var0==1` 与持有道具、行 2 的报告页自环给 `select5`；
+    ④ 无 `started -> reward` 直跳、领奖路由只挂行 2 且条件 `var0==2`、领奖/完成/预览 owner 保持三名成员；
+    ⑤ planner 逐格推进（0→1→2→REWARD）、同一动作在其他行号或无道具时不产生计划；
+    ⑥ 39713 的 `REWARD + var0==0` 自愈边唯一且只改行号、已修复存档不再改写，且 49713 不得长出多余自愈边；
+    ⑦ 两侧物品互不污染（39713 只碰 182215285、49713 只碰 182215277）、接取口径各自独立。
+  - `JournalRewardRowRepairContractTest` 登记 `Contract(39713, 2, 0)`（reward 投影/自愈边/无陈旧行写入三条断言同时覆盖）。
+- **Maven（授权后执行，2026-09-22 14:44）**：27 个测试类 **174 例全绿**（含本批新增 7 例、`Quest49713RetailFlowAlignmentTest`
+  同族镜像锁与扩表后的 `JournalRewardRowRepairContractTest` 3 例），`PRODUCTION_COMPILE_OK=6189 / FAILURES=0 /
+  INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。
+- **已知无关红（不在本批范围，未修）**：`MissionItemConsumptionBatchRegressionTest` 断言 `20529 s9 -> reward` 与
+  `29064 started -> reward` 两条转换存在，而这两条在 **HEAD（未改动的 XML）里本来就不存在**，属既有失败；本批的 Maven 选择器不含该类。
+- **证据表**：[batch23-evidence.tsv](batch23-evidence.tsv)。
+- 客户端实机复测：**PENDING_CLIENT**。要点：① 接任务后任务书停在行 0（和支部对话）；② 与任一名支部成员对话并点“收下净化粉末”后
+  任务书切到行 1（把粉末撒在污染根源上）且背包拿到 182215285；③ 在污染区域使用粉末后任务书切到行 2（向支部报告）且粉末被消耗；
+  ④ 再与任一名成员对话应看到报告页并可直接领奖（领奖行不再停在行 0）；⑤ 旧存档（`REWARD + var0=0`）登录/切图后任务书应自动落在行 2。
+
+### 二十七之五、边界与后续
+
+- owner **不由本批收敛**：三名支部成员（800936/800937/800938）既是报告人也是领奖人，是客户端集合名文本的明确点名；
+  同族 49713 同形（不必、也不要照 QE-052 收敛成单点）。
+- 镜像 49713 **不得**被套用本批的自愈边：它本就把领奖态写在行 2，多出来的 `REWARD/var0=0 -> 2` 边会与 `RewardRowEventTwoRow`
+  一类断言冲突（本批门禁显式锁这一点）。
+- 接取路径两侧不同形（天族 `TALK_TO_NPC`、魔族 `QUEST_ACTION`）是既有实现，本批未改；若要统一必须先单独取证客户端接取按钮链。
+- 剩余“单步塌陷/错位”挂账：`1000/11000`（4 行，1000 侧 `NO_REWARD_ROW`、客户端文件名大写 `QUEST_Q1000.html`、`quest_monster` 无条目）；
+  另有 `COUNTER_CHAIN_GAP` 族（1842-1844、2842-2845、13910、16962、17016、18033、21292/21305、23703、23905-23908/23910/23917、
+  24112、24201、28030/28033、28313、28915、30600/30610、39001/39002、49002）待逐族判定。
+- 本批 Maven 命令（已执行，全绿；后续批次沿用并追加新门禁类）：
+  `mvn -Dtest='FactionDailyRowLadderContractTest,Quest49713RetailFlowAlignmentTest,QuestWorldReachabilityOracleTest,ShadowCourtRowLadderContractTest,JournalRewardRowRepairContractTest,Quest14045And14046MoviePageTurnContractTest,CoreCapabilityRepresentativeDefinitionTest,QuestClientContractGateTest,QuestDialogOrderAuditTest,QuestItemSourceContractGateTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest,ChainEliteLadderContractTest,QuestMonsterProgressContractAuditTest,TreeLadderOwnerTrimContractTest,CollapsedSingleStepLadderContractTest,MirrorRewardProjectionLagContractTest,QuestPrematureRewardRouteExclusionTest,Quest11110And1548PostKillReportDialogTest,DurableDaevanionWeaponRewardRowContractTest,RewardOwnerTrimContractTest,RewardRowResidualTwoRowContractTest,RewardRowEventTwoRowContractTest,RewardRowTwoRowTalkFamilyContractTest,RewardNpcOwnershipContractTest,RetailSingleStepRewardRowContractTest,LegacyRewardStepProjectionRegressionTest' test`

@@ -214,6 +214,30 @@
     剩余“单步塌陷/错位”挂账：`1000/11000`（4 行，1000 侧 NO_REWARD_ROW）、`39713/49713`（3 行 FACTION 日任、三名可互换报告 NPC），
     以及 `COUNTER_CHAIN_GAP` 族（1842-1844、2842-2845、13910、16962、17016、18033、21292/21305、23703、23905-23908/23910/23917、
     24112、24201、28030/28033、28313、28915、30600/30610、39001/39002、49002）。
+  - **批次 23 完成（2026-09-22，领奖行阶梯 39713 / 镜像 49713）**：族级判据——两侧客户端 quest_q39713/quest_q49713 的 quest_summary 都是 3 行
+    （行 0 和绿林团南部卡塔拉姆支部对话、行 1 把净化粉末撒在遗忘沼泽的污染根源上、行 2 向支部报告），页/按钮也同形
+    （select2 = HACTION_SETPRO1、select5 = HACTION_SELECT_QUEST_REWARD、ask_quest_accept = HACTION_FINISH_DIALOG），
+    quest_monster 只声明 itemUseArea（没有 SECTION_0），所以权威口径是 QE-051 的**行号口径**；末行的 STR_DIC_E_LDF5a_Greenhat_BA 是支部集合名，
+    正文点名 LDF5b_Ubarung/Dieroonroon/Argarung_Greenhat = 客户端 NPC 800936/800937/800938，owner 有独立文本证据（本批不收敛 owner）。
+    39713 侧被迁移塌陷成 9 条无守卫 started -> reward 直跳（npc-item-report ×3 + SET_SUCCEED ×3 + SELECT_QUEST_REWARD ×3）：
+    行 1/行 2 无任何 START/REWARD 状态（客户端那两行永不亮）、started --QUEST_SELECT 错开成报告页 select5、
+    reward 投影停在 0（客户端领奖行 2）、npc-item-report 还重复要求已用掉的 182215285。落点：var0 width=1/max=1 -> width=2/max=3；
+    补 powder-received(1)/powder-used(2) 两个 START 节点、reward 投影 0->2；每位支部成员一套 started --SETPRO1--> powder-received
+    （发本侧粉末 + set var0=1）与 powder-used --SELECT_QUEST_REWARD--> reward（var0==2）、powder-received --use-item--> powder-used
+    （remove-item + set var0=2）、started/powder-used 的 QUEST_SELECT 分别给 select2/select5；补无 source REWARD/var0=0 -> 2 自愈边；
+    npc-complete（预览 + reward->complete ×3）与 owner 保持不动。验证：xmllint 1/1 validates；单任务审计
+    ROW_BEHIND/MISSING_TAIL_ROWS/ROW_WITHOUT_STATE -> ROW_ALIGNED/ALIGNED/ROW_STATE_ALIGNED（visible=0 1 2、var0_max=3、recovery=True）；
+    全库 ROW_ALIGNED 2659->2660、ROW_BEHIND 187->186、ALIGNED 2431->2432、MISSING_TAIL_ROWS 80->79、
+    ROW_STATE_ALIGNED 2431->2432、ROW_WITHOUT_STATE 518->517（其余计数不变，变化全部来自 39713）；Maven 已授权 27 个测试类
+    **174 例全绿**（含新增 FactionDailyRowLadderContractTest 7 例与扩表的 JournalRewardRowRepairContractTest 3 例，
+    PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / WHITELIST_VIOLATIONS=0）、客户端 **PENDING_CLIENT**。
+    脚本 apply_batch23_faction_daily_rows.py（--check 幂等）、证据 batch23-evidence.tsv、报告 §二十七、模式卡 QE-051/QE-052（批次 23 补充）。
+  - **批次 23 边界（下一批前必读）**：owner 是三名可互换成员（800936/800937/800938 任一都可报告/领奖），不要照 QE-052 收敛成单点；
+    镜像 49713 **不得**补自愈边（它本来就把领奖态写在行 2，多出的 REWARD/var0=0 -> 2 会与既有断言冲突）；
+    接取路径两侧不同形（天族 TALK_TO_NPC、魔族 QUEST_ACTION）是既有实现，统一前必须先取客户端接取按钮证据；
+    剩余“单步塌陷/错位”挂账：`1000/11000`（4 行，1000 侧 NO_REWARD_ROW、客户端文件名大写 QUEST_Q1000.html、quest_monster 无条目），
+    以及 `COUNTER_CHAIN_GAP` 族（1842-1844、2842-2845、13910、16962、17016、18033、21292/21305、23703、23905-23908/23910/23917、
+    24112、24201、28030/28033、28313、28915、30600/30610、39001/39002、49002）。
   - **批次 10 边界（下一批前必读）**：21455 的领奖 NPC 归属已在批次 12 收口（领奖/completion 799404 → Unset 799244，accept 仍是 799404 Miener）；25608 已在批次 11 收口（实际缺 ENTER_AREA 206534 与 ENTER_AREA 206542 两行；修复为 step2/step5 两个 enter-zone、HUNT→step3、Mumu SELECT5→step4、交付行归 step6、reward 5→6，并从客户端 DF6 Level.pak 的 mission_mission0.xml 触发点注册两个 sensory zone）；10530 第 8 行是与第 9 行共槽的空 `<p>`（镜像 20530 无此行），已在审计脚本登记 `DUPLICATE_VISIBLE_SLOT_BLANK_ROWS`，禁止按行号加一；19008/19014/19020/19026/19032 等“名人考试”族的 reward=1 属 legacy 语义（19057/29057 的 handler 另有 var0=2 的失败分支），不得按“末行行号 2”改；剩余 MISSING_LAST_ROW 95 个（镜像同缺 32、QE-045 锁 10）需逐族 legacy/retail 证据。
 - **批次 8 边界（下一批前必读）**：10522/20522/15542/25542/30211/30213/30311/30313 的 QE-046 基线已随写入方一起改到领奖行 1，后续再改这 8 个任务的 reward 投影必须同时改写入方并重刷基线；19064/29064/21455/30614 的领奖 NPC 归属已在批次 12 收口（30614 按客户端行内命名回滚为 Astella 800327，禁止再按 `terath_dredgion.xml` 单源改回 Aluna 800326）；26838（末行 Jarik01=806574，定义 806575）仍需先核实领奖 NPC 身份；28932/30203/30303 需要给无投影的 `started` 节点补 var0；1607/1990/2990/3502/14012/14013/17511/27511 属多阶段/内部缺口（INTERIOR_GAP、MISSING_TAIL_ROWS），必须单独设计阶段推进；脚本 `apply_batch8_external_writer_reward_row.py`（`--check` 幂等）、门禁 `ExternalRewardAdvanceReentryContractTest` 与 `Quest10522AutoStartDialogTest`。
   - **批次 7 边界（下一批前必读）**：10522/20522/15542/25542/30211/30213/30311/30313 的 QE-046 基线（reward 投影必须等于引擎外写入方的 packed step）已由批次 8 一并改到领奖行 1（写入方 + 投影 + 基线 TSV 三处同改）；30614/26838/19064/29064 的末行 NPC 与定义 NPC 不一致，需先核实领奖 NPC 身份；28932/30203/30303 需要给无投影的 `started` 节点补 var0；1607/1990/2990/3502/14012/14013/17511/27511 属多阶段/内部缺口（INTERIOR_GAP、MISSING_TAIL_ROWS），必须单独设计阶段推进。脚本 `apply_batch7_report_row_contract.py`、证据 `batch7-evidence.tsv`、门禁 `ReportRowRewardProjectionContractTest`（5 条合同）。
