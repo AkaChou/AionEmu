@@ -3083,3 +3083,88 @@ QE-051 的行号口径对它们不适用——本批把这点写进审计脚本�
   `section0 residual 837`（沿用批次 35 专项口径，本批未重跑该专项）、客户端隔离族 8 个
   （3959/4963/16984/18706/20015/26984/28706/29706）、3 例 HEAD 即红
   （`MissionItemConsumptionBatchRegressionTest` 20529/29064、`QuestKillCounterRetailGateTest#singleCounterQuestsRequireExactlyTheClientGate` 15101）。
+
+## 四十一、批次 37：交谈/情报 → 击杀 → 报告两族（26905/26906/26908 + 3711/4711，2026-09-22）
+
+### 四十一之一、族判据与证据（客户端任务书 + legacy 合同双证）
+
+批次 36 之后 `MISSING_TAIL_ROWS 72 -> 62`（其中 6 个已登记例外）。本批从剩余清单里取两组
+“每一行都是对话/击杀/报告”的任务，共 5 个：
+
+#### A. Asmodian bounty 三行族（26905/26906/26908，monster_hunt）
+
+| quest | 任务书行 0 / 1 / 2 | start NPC（legacy） | end NPC（任务书点名） | 击杀目标 |
+|---|---|---|---|---|
+| 26905 | 和火山调查基地的 Gangleri 对话 / 消灭 DF2_1 Dark_Raider([%11]/1) / 向 Gangleri 报告 | 204301 Aegir | 204372 Gangleri | 231555 231556 |
+| 26906 | 和 DF2_SUB_E1 的 Tyr 对话 / 消灭 DF2_2 Dark_Raider([%11]/1) / 向 Tyr 报告 | 204301 Aegir | 204369 Tyr | 231558 231559 |
+| 26908 | 和 DF3_SZ_G2 的 Svafnir 对话 / 消灭 DF3_2 Dark_Raider([%11]/1) / 向 Svafnir 报告 | 204702 Nerthus | 204817 Svafnir | 231570 231571 |
+
+客户端页链：`select2` 的 `SETPRO1`（行 0 → 行 1）→ 击杀（行 1 → 行 2）→ `select5` 的
+`SELECT_QUEST_REWARD`（行 2 → REWARD + 奖励窗）。`docs/quest/client-dialog-mapping/legacy-quest-dialog-contracts.csv`
+给出 `start_npc_ids=204301/204301/204702`、`end_npc_ids=204372/204369/204817`：**接取 NPC 与
+任务书点名的进度/报告 NPC 是两个不同实体**。旧定义把两个实体都写成完整任务链（两边都有 kill、
+SELECT_QUEST_REWARD 和 npc-complete），同时把 end NPC 的行 0 对话写成 `started -> reward` 直跳、
+`reward` 投影 0，于是行 1/2 永远没有状态；start NPC 还能直接领奖（违反 QE-052 的 owner 收敛）。
+
+#### B. Dredgion 舰长四行族（3711/4711，data_driven_quest）
+
+| quest | 行 0 / 1 / 2 / 3 | 行 0 NPC | 行 1 NPC | 行 2 击杀 | 行 3 报告 NPC（合同 end） |
+|---|---|---|---|---|---|
+| 3711 | 和 Mias 对话 / 获取德雷得奇安结构情报 / 除掉 DrakanBoss [%8] / 向 Taranis 报告 | 279045 | 730196 术古 | 214823 | 278501 Taranis |
+| 4711 | 和 Henir 对话 / 搜集德雷得奇安结构情报 / 清除 DrakanBoss [%8] / 向 Votan 报告 | 279042 | 730196 术古 | 214823 | 278001 Votan |
+
+客户端页链：行 0 的 `select1/select1_1/select1_1_1` → `SETPRO1`；行 1 的 730196
+`select2 → select2_1 → SETPRO2`；行 2 击杀 214823；行 3 的 `select3` 报告。legacy 合同
+`start_npc_ids=end_npc_ids=278501/278001`、`report_source_status=REWARD`、
+`report_open_action=QUEST_SELECT(31) -> DEFAULT_SUCCESS(10002)`、`report_action=SELECT_QUEST_REWARD(1009) -> REWARD`
+（奖励页 `SHOW_SELECT_QUEST_REWARD_WINDOW1`）。旧定义在 `started` 上有 `started -> reward` 直跳、
+末尾还有一个 `278501/278001 SETPRO2` 的跳行路由，因此行 1/2/3 都没有服务端状态。
+
+### 四十一之二、落点（两族阶梯 + owner 收敛）
+
+- **三行族**：`unaccepted(0) / started(0) / t1(1) / k2(2) / reward(2) / complete(0)`。
+  - start NPC 只保留 `NPC_START(selection-sources=unaccepted)`；删除它的 `QUEST_SELECT`、
+    `SETPRO1`、kill、`SELECT_QUEST_REWARD` 与 `npc-complete`（接取 NPC 不再能领奖）。
+  - end NPC：`started --QUEST_SELECT--> SELECT2`（行 0 页）、`started --SETPRO1--> t1`（写 var0=1）、
+    `t1 --kill--> k2`、`k2 --QUEST_SELECT--> SELECT5`（行 2 报告页）、
+    `k2 --SELECT_QUEST_REWARD--> reward`（奖励窗）+ `npc-complete`（唯一 reward owner）。
+  - 行 1 补 `t1 --QUEST_SELECT--> DEFAULT_SUCCESS` 的进行中反馈，避免击杀行对话无路由。
+  - 自愈边：`REWARD && var0==0/1 -> 2`。
+- **四行族**：`unaccepted(0) / started(0) / s1(1) / s2(2) / reward(3) / complete(0)`。
+  - `279045/279042 --SETPRO1--> s1`（0→1）；`730196 --QUEST_SELECT/SELECT2_1--> s1` 页、
+    `730196 --SETPRO2--> s2`（1→2）；`s2 --kill 214823--> reward`（2→3）；删除 `started -> reward`
+    直跳与 `278501/278001 SETPRO2` 跳行路由。
+  - `reward --QUEST_SELECT(278501/278001)--> DEFAULT_SUCCESS(10002)` 承担合同 `report_open_action`；
+    1009 奖励窗由 `npc-complete` 预览展开。
+  - 自愈边：`REWARD && var0==0/1/2 -> 3`。
+- 两族都**不再允许** `started -> reward` 直跳；三行族额外禁止 start NPC 出现在任何 `target=complete`
+  路由上（QE-052 owner 收敛）。
+
+### 四十一之三、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 5/5 validates；
+  `apply_batch37_talk_kill_report_row_ladder.py --check` 幂等 5/5 OK。
+- **全库行号审计**：`MISSING_TAIL_ROWS 62 -> 57`（-5）、`ROW_BEHIND 159 -> 154`（-5）、
+  `ROW_WITHOUT_STATE 491 -> 486`（-5）、`ROW_ALIGNED 2691 -> 2696`（+5）、
+  `ROW_STATE_ALIGNED 2463 -> 2468`（+5）；5 个任务全部 `ALIGNED + ROW_ALIGNED + ROW_STATE_ALIGNED +
+  visible=行全量 + recovery=True`，逐任务前后见 [batch37-evidence.tsv](batch37-evidence.tsv)。
+- **Maven（授权后执行）**：36 个 reward/row/ladder/owner/catalog 测试类全绿（批次 36 的 35 类 + 新增
+  `Batch37TalkKillReportRowLadderContractTest` 4 例：每行一个状态 / 三行族 start-end 分离与 owner 收敛 /
+  四行族 Mias+术古+击杀+报告链 / 0..领奖行自愈边 + planner 收敛）；
+  `PRODUCTION_COMPILE_OK=6191 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。
+- **客户端实机 PENDING_CLIENT**：① 26905/26906/26908 从 Aegir/Nerthus 接取后任务书停在行 0
+  （和 Gangleri/Tyr/Svafnir 对话）；② 对话结束切行 1，击杀对应 Dark Raider 后切行 2（报告）；
+  ③ 向同一 NPC 报告开奖励窗领奖；④ 3711/4711 接取后停在行 0（Mias/Henir），对话后切行 1（情报），
+  与 730196 术古对话后切行 2（击杀），击杀 214823 后切行 3（向 Taranis/Votan 报告）；
+  ⑤ 旧存档（`REWARD + var0=0/1(/2)`）登录或切图后应直接落在领奖行；⑥ 接取 NPC 不应能直接领奖。
+
+### 四十一之四、边界与后续
+
+- 本批按 legacy 合同区分“接取 NPC”和“任务书报告 NPC”；仅当合同明确给出两个不同 `start_npc_ids/end_npc_ids`
+  时才允许拆 owner（26905/26906/26908）。3711/4711 的 start=end 同为报告 NPC，owner 保持不变。
+- 剩余 `MISSING_TAIL_ROWS 57`（含 6 个已登记例外）的下一批候选：镜像可直接取模板的 **11118**
+  （镜像 1118 ALIGNED）、**14012/24012**（镜像 4012 ALIGNED）、**14053/24053**（镜像 4053 ALIGNED）、
+  **26905/26906/26908 已完成**；此外还有 `2411/2922/4732`、`3013/3217/4217`、`11072/21081/24150`、
+  `13918/23918`、`18213/28213`、`80298/80299/80304/80305`（活动“去见单身部队成员”族）等。
+- 其它挂账不变：`STATES_BEYOND_ROWS 2620`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 77`、
+  `section0 residual 837`（沿用批次 35 专项口径）、客户端隔离族 8 个、3 例 HEAD 即红。
