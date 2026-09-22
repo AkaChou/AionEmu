@@ -182,6 +182,21 @@ NO_LEGACY_HANDLER_OBSERVED = {1005, 1479, 24120, 24123, 51010, 51020, 51022}
 CUTSCENE_HIDDEN_QUEST_EXECUTABLE = {18744, 28744}
 CLIENT_ONLY_ISOLATED_QUESTS = {16984, 26984, 20015, 18706, 28706, 3959, 4963, 29706}
 
+# 批次 31 登记（2026-09-22）：Gelkmaros 三行交接塌陷族（21217 Wolfgang / 21244 Batalrion+Helen / 21249 Tonistar_Drakan）
+# 已按 legacy 事件链重建行阶梯：started(0) -> s1(1) -> reward(2)，领奖 owner 收敛到客户端第三行点名的 NPC
+# （799226 Barretta / 799317 Tanar / 799417 Javis），并补旧存档 REWARD/var0=0 -> 2 的 enter-world 自愈边；
+# 旧定义把全部 NPC 塌陷成“接取 + 一步领奖”，这三个任务原来判 MISSING_TAIL_ROWS + ROW_WITHOUT_STATE，
+# 本批后转为 ALIGNED + ROW_STATE_ALIGNED（门禁 Batch31GelkmarosRowLadderContractTest）。
+# Batch 31 rebuilds the three-row Gelkmaros hand-over ladder (legacy event order + client page chain) and
+# collapses the reward owner onto the third journal row's NPC.
+BATCH31_GELKMAROS_ROW_LADDER = {21217, 21244, 21249}
+
+# 批次 26 登记（2026-09-22）：30600/30610 是 Named/Boss 双层计数（var0/var1 组合，客户端 select5 报告行由计数饱和驱动），
+# var0 不承载任务书行号；行号口径把它们判成 MISSING_TAIL_ROWS。批次 26 的自愈边与
+# Quest15546KillCounterSaturationFlowTest 锁定这两个任务，禁止按客户端行号补阶梯。
+# Batch 26 registration: 30600/30610 are two-layer kill counters, not journal rows.
+MULTI_LAYER_COUNTER_EXCEPTIONS = {30600, 30610}
+
 # “和 X 对话 / 向 X 报告 / 去 X 那里”这一类末行 = 客户端领奖行（中/韩双语关键词）。
 DIALOG_ROW_RE = re.compile(r"对话|报告|见面|交谈|转达|传达|询问|汇报|告诉|通知|迎接|确认|拜访|交给|交付|递交|转交|归还|送达|대화|보고|만나")
 
@@ -641,6 +656,23 @@ def main() -> int:
           "：进入 300610000 + 等级 60 + 阵营门控自动接取，过场 912（CutScenes.xml 的 CS_ID_132）结束即完成，"
           "门禁 CutsceneHiddenQuestFamilyContractTest")
     print(f"  仍隔离（无定义、无任务书行，只登记证据）={sorted(CLIENT_ONLY_ISOLATED_QUESTS)}")
+
+    print("\n[11] 缺尾部多行（MISSING_TAIL_ROWS）逐族盘点（批次 31）：")
+    tail = [row for row in rows if row["shape"] == "MISSING_TAIL_ROWS"]
+    tail_ids = {row["quest_id"] for row in tail}
+    fixed = sorted(BATCH31_GELKMAROS_ROW_LADDER)
+    registered_ids = (BLANK_JOURNAL_SLOT_EXCEPTIONS | CLIENT_ONLY_ISOLATED_QUESTS
+                      | COUNTER_SLOT_EXCEPTIONS | MULTI_LAYER_COUNTER_EXCEPTIONS
+                      | QE045_LOCKED) & tail_ids
+    residual = [row for row in tail if row["quest_id"] not in set(fixed) | registered_ids]
+    print(f"  MISSING_TAIL_ROWS={len(tail)}；本批修复（Gelkmaros 三行阶梯，已转 ALIGNED）={fixed}")
+    stuck = sorted(BATCH31_GELKMAROS_ROW_LADDER & tail_ids)
+    if stuck:
+        print(f"  ⚠ 本批修复清单仍在缺尾桶={stuck}")
+    print(f"  已登记例外（空槽位/客户端隔离/计数槽/双层计数/QE-045 锁）={len(registered_ids)} {sorted(registered_ids)}")
+    print(f"  其余待逐族收口={len(residual)}；样例："
+          + "; ".join(f"{row['quest_id']}(rows={row['client_rows']},缺={row['rows_without_state']})"
+                      for row in residual[:12]))
 
     if requested:
         print("\n[10] 单任务明细：")

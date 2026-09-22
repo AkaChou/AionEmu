@@ -2606,3 +2606,71 @@ QE-051 的行号口径对它们不适用——本批把这点写进审计脚本�
 - 挂账收敛：`NO_NODES` / `MISSING_DEFINITION` 两桶自此为“**1 族登记 + 2 个已实现**”，后续审计按 `[10]` 节登记集核对，
   不得再把它们当成缺口批量补定义；其余挂账（`STATES_BEYOND_ROWS 2622`、`INTERIOR_GAP 263`、
   `MISSING_TAIL_ROWS 80`、`section0 residual 837`）不变。
+
+## 三十五、批次 31：Gelkmaros 三行交接塌陷族（21217 / 21244 / 21249，2026-09-22 用户授权后执行）
+
+### 三十五之一、族判据与证据（MISSING_TAIL_ROWS 桶的第一族收口）
+
+批次 30 之后全库还剩 **82 个 `MISSING_TAIL_ROWS`**（服务端可见状态是 `0..k-1` 的完整阶梯，但 k < 客户端行数）。
+本批先用「legacy 事件链 vs 客户端行数 vs 当前 XML 阶梯」三向比对做全量 triage，再挑出形态最干净的一族落地：
+
+| 任务 | 客户端 3 行（quest_summary） | legacy 事件链 | 旧定义（塌陷） |
+|---|---|---|---|
+| 21217 New Research Plan | 行 0 把伊塔尔的报告书交给 Wolfgang(799239) / 行 1 交给 Fjoersvith(798713) / 行 2 交给 Barretta(799226) | 799316 接取并给报告书 182207890；799239 `defaultCloseDialog(0, 1)` 写 1；798713 `setQuestVar(2)` + `defaultCloseDialog(2, 2, true, false)` 写 2 并置 REWARD；799226 领奖 | 4 个 NPC 全部 `NPC_START + started -> reward`（SELECT_QUEST_REWARD / SETPRO1），行 1/行 2 无状态 |
+| 21244 Search For The Biolab | 行 0 向 Batalrion(799318) 转达 / 行 1 向 Helen(799320) 转达 / 行 2 把卷轴交给 Tanar(799317) | 799318 `defaultCloseDialog(0, 1)`；799320 `giveQuestItem(182207924)` + `setQuestVar(2)` + `defaultCloseDialog(2, 2, true, false)`；799317 REWARD 态 `removeQuestItem(182207924)` 后结束对话 | 3 个 NPC 全部 `NPC_START + started -> reward`，工作物品在接取时就发 |
+| 21249 The Invincible Starket | 行 0 和 Tonistar(799416) 对话 / 行 1 和变身成德拉坎的 Tonistar(799529) 对话 / 行 2 向 Javis(799417) 转达 | 799416 `defaultCloseDialog(0, 1)`（并删除本体、生成 799529）；799529 `setQuestVar(2)` + `defaultCloseDialog(2, 2, true, false)`；799417 REWARD 态结束对话 | 3 个 NPC 都是 `NPC_REPORT started -> reward` + `SET_SUCCEED` 直跳 |
+
+三个要点：
+
+1. **reward 投影取 legacy 落盘值 2（QE-054）**：三条 legacy 都在最后一步用 `setQuestVar(2)` 或等价写入把 packed step 推到 2，
+   再 `setStatus(REWARD)`；`changeQuestStep(..., true)` / `defaultCloseDialog(..., true, false)` 的 reward 分支只换状态、不写 nextStep，
+   所以落盘值恒等于进入领奖前的 2，而不是客户端末行索引之外的任何值。
+2. **每一行都要有状态（QE-051）**：客户端 3 行分别由 `started(0)`、`s1(1)`、`reward(2)` 承载；旧定义把 NPC 全塌陷成
+   “接取 + 一步领奖”，审计判 `MISSING_TAIL_ROWS + ROW_WITHOUT_STATE(1 2)`，行 1/行 2 永远拿不到 START/REWARD 状态。
+3. **页面按钮链必须留在 IR 里**（`QuestClientContractGateTest` 会报 `BUTTON_WITHOUT_ROUTE`）：
+   21217/21244 的行 0 是 `select2 -> SELECT2_1(1353) -> SETPRO1(10000)`，行 1 是 `select3 -> SELECT3_1(1694) -> SETPRO2(10001)`，
+   行 2 是 `select5 -> SELECT_QUEST_REWARD(1009)`；21249 是 `select1 -> SETPRO1`、`select2 -> SET_SUCCEED(10255)`、
+   `select_success(10002 = DEFAULT_SUCCESS) -> SELECT_QUEST_REWARD`。逐任务证据见 [batch31-evidence.tsv](batch31-evidence.tsv)。
+
+### 三十五之二、落点（三节点阶梯 + 自愈边 + owner 收敛）
+
+统一模板：`unaccepted(0) / started(0) / s1(1) / reward(2) / complete(0)`，并补齐 legacy 的推进事件：
+
+- 21217：`started --SETPRO1(799239)--> s1`、`s1 --SETPRO2(798713)--> reward`；接取给报告书 182207890，
+  开奖励窗口时 `remove-item 182207890`，`npc-complete` owner = 799226。
+- 21244：`started --SETPRO1(799318)--> s1`、`s1 --SETPRO2(799320)--> reward`（同一 transaction 里 `give-item 182207924`）；
+  工作物品从“接取时给”改成“行 1 交接时给”（与 legacy 一致），开奖励窗口时 `remove-item 182207924`，owner = 799317。
+- 21249：`started --SETPRO1(799416)--> s1`、`s1 --SET_SUCCEED(799529)--> reward`；owner = 799417。
+- 三边都补无 source 的 `REWARD && var0 == 0 -> set var0 = 2`（`enter-world` + `LEVEL_AND_VISIBILITY_REFRESH`，无 priority），
+  把旧定义“一步领奖”留下的旧存档投影纠正到领奖行；正规态（已是 2）不重复提示。
+- `execute` 顺序：`defined(...)` → transition 级 `conditions` 只允许 var0 与源行匹配（0/1），阶梯内部禁止回写 var0=0。
+
+### 三十五之三、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 3/3 validates；`apply_batch31_gelkmaros_row_ladder.py --check`
+  幂等（`BATCH31_OK 21217/21244/21249 already-applied`）。
+- **全库行号审计**：`MISSING_TAIL_ROWS 82 -> 79`、`ROW_BEHIND 179 -> 176`、`ROW_WITHOUT_STATE 511 -> 508`、
+  `ROW_ALIGNED 2669 -> 2672`、`ROW_STATE_ALIGNED 2441 -> 2444`、`ALIGNED 2441 -> 2444`；`STATES_BEYOND_ROWS 2622`、
+  `INTERIOR_GAP 263`、`MISSING_LAST_ROW 77`、`NO_REWARD_ROW 180` 不变。三个任务由
+  `ROW_BEHIND / MISSING_TAIL_ROWS / ROW_WITHOUT_STATE` 全部转 `ROW_ALIGNED / ALIGNED / ROW_STATE_ALIGNED`（`visible=0 1 2`、`recovery=True`）。
+- **审计脚本新增 [11] 节**：`MISSING_TAIL_ROWS` 逐族盘点——本批修复 3 个、已登记例外 6 个（1000/2000/18744/28744 空槽位族 +
+  30600/30610 双层计数族；30600/30610 由 `MULTI_LAYER_COUNTER_EXCEPTIONS` 登记，批次 26 的自愈边与
+  `Quest15546KillCounterSaturationFlowTest` 已锁定）、其余 73 个待逐族收口。
+- **Maven（授权后执行）**：27 个 reward/row/ladder/owner/catalog 测试类 **151 例全绿**，含新增
+  `Batch31GelkmarosRowLadderContractTest`（8 例：三行投影 / 每行一个状态 / legacy 推进链 / 领奖 owner / 奖励窗口路由 /
+  工作物品生命周期 / 旧存档自愈 + planner 收敛 / 不再保留 `started -> reward` 塌陷跳转）；
+  `PRODUCTION_COMPILE_OK=6191 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。
+- **客户端实机 PENDING_CLIENT**：① 21217 接取后任务书应停在行 0，与 Wolfgang 交报告书后切到行 1（Fjoersvith）、
+  再切到行 2（Barretta）并开奖励窗口；② 21244 同形（Batalrion -> Helen -> Tanar，卷轴在行 1 过手）；
+  ③ 21249 与 Tonistar 对话切行 1、与变身成德拉坎的 Tonistar 对话切行 2（Javis）并领奖；④ 旧存档
+  （历史上被旧定义一步写成 REWARD + var0=0）登录/切图后应落在领奖行，正规态不重复提示“任务更新”。
+
+### 三十五之四、边界与后续
+
+- 21249 的换装召唤（legacy 在行 0 删除 799416 并 `addNewSpawn(..., 799529, ...)`）**未在本批落地**：本批只重建行阶梯，
+  行 1 仍按现状依赖世界中的 799529；若实机发现 799529 不在场，需要单独按 spawn 契约补，并追加对应运行时证据。
+- `MISSING_TAIL_ROWS` 剩下的 73 个已按 [11] 节列出（样例：1582/1634/1938/2223/2239/2289/2307/2372/2411/2922/3013/3217 …），
+  形态包含“legacy 递增但客户端行更多（需先判 var0 是否行号）”“legacy 阶梯短于客户端末行（末行不亮，属 legacy 行为）”
+  “无 legacy handler（需数据侧取证）”三类，**禁止按客户端行号机械补阶梯**；后续批次按族继续收口。
+- 挂账不变：`STATES_BEYOND_ROWS 2622`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 77`（全部已登记）、
+  `section0 residual 837`、客户端隔离族 8 个（16984/26984/20015/18706/28706/3959/4963/29706）。
