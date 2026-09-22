@@ -26,11 +26,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 真实代表任务逐能力纵向验证 (D-0024 / D-0025 路线)。
- *
  * 每个能力从真实 handler 源码提取固定可投影事实 (字面量), 经 DSL 编译为 IR,
  * 断言 after-commit action 精确忠实投影。运行时来源的值 (如玩家坐标) 用示例值
  * 演示并标注, 不作为静态事实伪造。
- *
  * 代表任务:
  *   2533  Beritras Curse        → 定时器   (questTimerStart 300 / questTimerEnd)
  *   2333  A Ribbit Out Of Water → 刷怪+AI  (spawn 204416 + startWalking + FOLLOW_ME)

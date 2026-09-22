@@ -23,12 +23,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 任务道具来源契约门禁：收集类事件必须监听本任务自己声明/发放的道具，且跨任务道具引用必须与真端角色一致。
- *
  * Quest item source contract gate. A {@code collect-item} event decides when the client progress
  * refresh fires, so it may only watch an item the quest itself declares (metadata items /
  * inventory-items / work-items), drops, grants, or reports. A quest that watches a neighbouring
  * quest's item never refreshes progress and can leave the collection stage stalled.
- *
  * <p>此外锁定 2026-09-17 修复的 20 个任务：7 个"引用邻居任务道具"的任务其交付条件必须使用本任务在真端
  * collect_item/check_item 中声明的道具（开发名见 item_template 的 name_desc），另有 7 个 COLLECT_ITEM 交付缺失
  * has-item 的任务必须重新校验并扣除自己的任务道具。</p>
@@ -101,12 +99,7 @@ class QuestItemSourceContractGateTest {
 			() -> "every reward-entry branch must verify the quest's own collected items: " + violations);
 	}
 
-	/**
-	 * 既在 <items> 声明、又由本任务掉落的收集道具（这类道具若不在交付时校验，玩家即可零进度领奖）。
-	 * Items that the quest both declares and drops itself.
-	 */
-
-	/**
+    /**
 	 * 既有无条件交付分支清单（逐条评审前不做全库豁免）。
 	 * Recorded pre-existing ungated hand-in branches; reviewed one by one, never a quest-wide wildcard.
 	 */

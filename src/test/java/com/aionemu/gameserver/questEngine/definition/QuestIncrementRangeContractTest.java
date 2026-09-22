@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 全服门禁：被精确匹配（variable-is）消费的进度字段，其增量动作必须携带上限守卫且不得越过声明范围。
  * Production gate: a progress field consumed by exact matching (variable-is) must bound its increment actions
  * inside the declared field range.
- *
  * <p>背景：{@code IncrementVariable} 与解包后的存档值合并后由 {@code ProgressLayout#pack} 校验范围，
  * 越界即抛 IllegalArgumentException，使整笔对话或击杀在 PLAN 阶段失败（QUEST_AUDIT 记录根因
  * value out of range for progress field）。精确匹配的完成阈值只接受单一取值，因此缺少上限守卫的自环

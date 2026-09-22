@@ -38,7 +38,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 /**
  * 验证 NPC 对话在 questId==0 时按 legacy 引擎的通用顺序派发。
  * Verifies the generic legacy-ordered NPC dialog dispatch for questId==0.
- *
  * <p>legacy 引擎（参考实现 /Users/mc/IdeaProjects/AionEmu 的 QuestEngine.onDialog）在 questId==0 时
  * 按 NPC 任务顺序逐个尝试，让第一个真正处理该动作的 owner 胜出；任何候选都不会被“必须先在任务列表
  * 里选一次”挡掉。本仓库保留同一通用规则，并让客户端可见/进行中/已由任务列表行选择的任务优先。</p>

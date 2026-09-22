@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * 锁定任务 1192「贝尔特伦要塞的支援请求 / Verteron Reinforcements」的三段交付链。
  * Locks the three-step hand-over chain of quest 1192.
- *
  * <p>Aion 5.8 客户端 quest_summary 声明了三行：极乐世界把书信交给拉比临托斯(203701)、
  * 贤者书库和科赛诺芬(203833)对话、回贝尔特伦要塞和斯帕塔洛斯(203098)对话，三条对话链各自以
  * {@code HACTION_SETPRO1}、{@code HACTION_SETPRO2}、{@code HACTION_SELECT_QUEST_REWARD} 收口。

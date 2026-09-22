@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * 电影 self-loop 家族回归：翻页动作必须在 play-movie 后下发客户端目标页，不能只有影片副作用。
  * Family regression for movie self-loops: the page-turn action must emit its client target page after play-movie.
- *
  * <p>24053 的 step1-step4 仍保留旧 handler switch fallthrough 的 movie-only 路由；那些状态不在
  * 客户端 1011->1012->10000 可达链上，本测试只锁定可达链。</p>
  * <p>24053 keeps the old-handler switch-fallthrough movie-only routes in step1-step4; those states are

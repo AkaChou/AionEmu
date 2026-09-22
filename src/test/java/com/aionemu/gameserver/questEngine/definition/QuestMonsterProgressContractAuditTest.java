@@ -649,11 +649,7 @@ class QuestMonsterProgressContractAuditTest {
 		}
 	}
 
-	/**
-	 * 任务说明行在半路推进时（击杀阶段结束、感应区/交付步切换），提交后同步必须带可见性刷新。
-	 * Mid-route journal-row advances must carry a visibility refresh when the row changes.
-	 */
-	/**
+    /**
 	 * 10526/20526：在 s11 向觉醒的德贾博 (806292 / 806297) 结算切入 REWARD 态，
 	 * 仅需扣除真正持有的任务道具 (182216074 / 182216086)，严禁因未曾发放的幻象道具 (164002347 / 164002348) 阻断交付。
 	 * 10526/20526: settling with Awakened Dezabo (806292 / 806297) at s11 into REWARD status

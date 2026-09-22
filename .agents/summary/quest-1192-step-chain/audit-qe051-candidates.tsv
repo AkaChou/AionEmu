@@ -3,17 +3,17 @@ quest_id	client_rows	reward_var0	last_start_node	last_start_var0	recovery	client
 1123	2	0	started	0	False	QUEST_Q1123.html		任务完成！和[%dic:STR_DIC_LA12]%对话。					NO
 1149	3	1	started	0	False	QUEST_Q1149.html		和[%dic:STR_DIC_LA159]对话					NO
 1479	3	1	started	0	False	QUEST_Q1479.html		和[%dic:STR_DIC_N_Memnes]对话					NO
-1722	9	7	s7	7	False	QUEST_Q1722.html		把[%dic:STR_DIC_I_QUEST_1722a]交给[%dic:STR_DIC_N_Rastin]					NO
 1876	3	1	s1	1	False	quest_q1876.html		向[%dic:STR_DIC_N_Taranis]报告					NO
 1920	3	1	started1	1	False	QUEST_Q1920.html		和[%dic:STR_DIC_N_Jucleas]对话					NO
+1926	2	0	started	0	True	QUEST_Q1926.html		和[%dic:STR_DIC_N_Latri]对话					NO
 2006	3	1	started	0	False	QUEST_Q2006.html		和[%dic:STR_DIC_LA494]%对话。					NO
 2007	10	8	started	0	False	QUEST_Q2007.html		和[%dic:STR_DIC_LA494]对话					NO
 2484	2	0	started	0	False	QUEST_Q2484.html		和[%dic:STR_DIC_N_Hippolyta]对话。					NO
 2600	3	0	s1	1	False	QUEST_Q2600.html		重新和[%dic:STR_DIC_N_Shugo_DF3_12]对话					NO
 2633	4	2	s2	2	False	QUEST_Q2633.html		向德拉乌伯尼尔洞穴入口附近的[%dic:STR_DIC_N_DF3_Alberihi_E]报告					NO
-2722	9	7	started7	7	False	QUEST_Q2722.html		把伊拉西克特产酒交给[%dic:STR_DIC_N_Bord]					NO
 2842	2	0	None	None	False	QUEST_Q2842.html		和[%dic:STR_DIC_N_Herz]%对话					NO
 2876	3	1	s1	1	False	quest_q2876.html		向[%dic:STR_DIC_N_Votan]报告					NO
+2938	2	0	started	0	True	QUEST_Q2938.html		和[%dic:STR_DIC_N_Izwin]对话					NO
 2945	3	1	started1	1	False	QUEST_Q2945.html		和[%dic:STR_DIC_N_Balder]对话					NO
 3732	3	1	started	0	False	quest_q3732.html		向[%dic:STR_DIC_N_LF2_Brando]报告					NO
 3933	8	6	s6	6	False	QUEST_Q3933.html		向[%dic:STR_DIC_LA80]报告					NO
@@ -35,6 +35,7 @@ quest_id	client_rows	reward_var0	last_start_node	last_start_var0	recovery	client
 15300	15	13	s13	13	True	quest_q15300.html		在希哥尼亚和代理人[%dic:STR_DIC_N_LF5_Dike_E]%对话	25300	MISSING_LAST_ROW	13	和厄夏勒的代理人[%dic:STR_DIC_N_DF5_Skuldun_E]%对话	NO
 16800	3	1	started	0	False	quest_q16800.html		向在[%dic:STR_DIC_W_IDEternity_01]等待的代理人维达报告	26800	STATES_BEYOND_ROWS	3	向在[%dic:STR_DIC_W_IDEternity_01]等待的代理人佩莱格兰报告	NO
 18805	3	1	s1	1	False	quest_q18805.html		和[%dic:STR_DIC_N_Shugo_housing_rec]对话	28805	MISSING_LAST_ROW	1	同[%dic:STR_DIC_N_Shugo_housing_drec]对话	NO
+19064	2	0	started	0	False	quest_q19064.html		带着米拉詹特圣骑士徽章和[%dic:STR_DIC_I_relic_02]，和[%dic:STR_DIC_N_Jucleas]对话[%collectitem]	29064	MISSING_LAST_ROW	0	带着潘利尔的犬牙徽章和[%dic:STR_DIC_I_relic_d_02]，和[%dic:STR_DIC_N_Balder]对话[%collectitem]	NO
 20100	6	4	s4	4	False	quest_q20100.html		重新和[%dic:STR_DIC_N_LDF4_Advance_D_Kahrun]%对话	10100	MISSING_LAST_ROW	4	重新和[%dic:STR_DIC_N_LDF4_Advance_L_Kahrun]%对话	NO
 24041	8	6	s6	6	False	quest_q24041.html		和[%dic:STR_DIC_N_Spyr]进行对话	14041	MISSING_LAST_ROW	6	和[%dic:STR_DIC_N_Claudia]对话	NO
 24042	6	4	started	0	False	quest_q24042.html		向[%dic:STR_DIC_N_Lakadi]报告结果	14042	MISSING_LAST_ROW	4	向[%dic:STR_DIC_N_Nereus]报告结果	NO
@@ -45,13 +46,18 @@ quest_id	client_rows	reward_var0	last_start_node	last_start_var0	recovery	client
 24123	3	1	started	0	False	quest_q24123.html		向[%dic:STR_DIC_W_DF2_SUB_E2_1]的[%dic:STR_DIC_N_DF2_NPC_Ananta]%报告	14123	MISSING_LAST_ROW	0	向[%dic:STR_DIC_W_LF2_SZ_E2_SUB_1]的[%dic:STR_DIC_N_Dionera]%报告	NO
 25300	15	13	s13	13	True	quest_q25300.html		和厄夏勒的代理人[%dic:STR_DIC_N_DF5_Skuldun_E]%对话	15300	MISSING_LAST_ROW	13	在希哥尼亚和代理人[%dic:STR_DIC_N_LF5_Dike_E]%对话	NO
 28805	3	1	s1	1	False	quest_q28805.html		同[%dic:STR_DIC_N_Shugo_housing_drec]对话	18805	MISSING_LAST_ROW	1	和[%dic:STR_DIC_N_Shugo_housing_rec]对话	NO
+29064	2	0	started	0	False	quest_q29064.html		带着潘利尔的犬牙徽章和[%dic:STR_DIC_I_relic_d_02]，和[%dic:STR_DIC_N_Balder]对话[%collectitem]	19064	MISSING_LAST_ROW	0	带着米拉詹特圣骑士徽章和[%dic:STR_DIC_I_relic_02]，和[%dic:STR_DIC_N_Jucleas]对话[%collectitem]	NO
+30614	2	0	None	None	False	quest_q30614.html	Progress(SECTION_0==0; SECTION_2<15)	向[%dic:STR_DIC_N_Astella]报告					NO
+39003	2	0	started	0	False	quest_q39003.html		和[%dic:STR_DIC_NPC_DF2a_Nevma_G_LHM]对话					NO
+49003	2	0	started	0	False	quest_q49003.html		和[%dic:STR_DIC_N_dromik]对话					NO
 50008	2	0	started	0	False	quest_q50008.html		与[%dic:STR_DIC_N_LC1_ChristmasEvent_Santa]对话					NO
 51008	2	0	started	0	False	quest_q51008.html		和[%dic:STR_DIC_E_DF_ChristmasEvent_Santa]对话					NO
 51010	3	1	started	0	False	quest_q51010.html		和[%dic:STR_DIC_E_single_shugo_d]见面					NO
 51020	3	1	started	0	False	quest_q51020.html		和[%dic:STR_DIC_E_single_shugo_d]对话					NO
-51022	3	1	started	0	False	quest_q51022.html		在[%dic:STR_DIC_E_FOBJ_Event_Cargobox]里找到铁锹，然后交给[%dic:STR_DIC_E_white_single_d][%collectitem]					NO
 80255	2	0	started	0	False	quest_q80255.html		和帕尔图对话					NO
 80256	2	0	started	0	False	quest_q80256.html		和布巴纳对话					NO
 80601	2	0	started	0	False	quest_q80601.html		向伊斯达报告					NO
 80606	2	0	started	0	False	quest_q80606.html		向夏尔梅因报告					NO
 80690	3	1	None	None	False	quest_q80690.html		请向[%dic:STR_DIC_NPC_IDSweep_IN_NPC03]报告					NO
+80989	2	0	started	0	False	QUEST_Q80989.html		回到大城市，再次和咕咕咻对话吧。					NO
+80990	2	0	started	0	False	QUEST_Q80990.html		回到大城市，再次和咕咕咻对话吧。					NO

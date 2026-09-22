@@ -23,41 +23,51 @@
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
     </node>
+    <!-- 客户端 quest_summary 五行各要一个 var0==行号的进行中状态（QE-051）：行 0/3 = 埃拉罗(204630)、
+         行 1 = 跟随引领参观仪式（无按钮的演出行）、行 2 = 普拉佩罗的冤魂(204614)、行 4 = 利希迪盖(204545) 报告。
+         Each of the 5 quest_q1643 journal rows needs a START state with var0 == row index (QE-051):
+         row 0/3 Erato (204630), row 1 the scripted ceremony (no client button), row 2 the Prapero spirit
+         (204614), row 4 the report to Lisidike (204545). -->
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="s1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="s2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="s3" status="START">
+      <var name="var0" value="3"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="4"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="204545" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="204545" source="started" target="reward" page="SELECT2"/>
+    <!-- 接取：利希迪盖(204545) 发布任务并发放工作物品 182201764（旧 handler sendQuestStartDialog(env, 182201764, 1)）。 -->
+    <dialog type="NPC_START" npc-id="204545" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE">
+      <accept-actions>
+        <give-item item-id="182201764" count="1"/>
+      </accept-actions>
+    </dialog>
+    <!-- 领奖行：客户端末行「向利希迪盖报告」= 利希迪盖(204545)，只有它能领奖（旧 handler REWARD + 204545 -> 页 5）。 -->
     <npc-complete npc-id="204545" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-
-    <dialog type="NPC_REPORT" npc-id="204630" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="204630" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-
-    <dialog type="NPC_REPORT" npc-id="204614" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="204614" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <transition source="unaccepted" target="unaccepted">
+    <!-- 行 0：客户端 select1 -> select1_1 以 SETPRO1 收口；旧 handler 在此交出 182201764 并 var0 0->1。 -->
+    <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="204614" action="SELECT1_1"/>
+        <dialog type="TALK_TO_NPC" npc-id="204630" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
-    <transition source="unaccepted" target="unaccepted">
+    <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204630" action="SELECT1_1"/>
       </event>
@@ -65,31 +75,92 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <transition source="started" target="s1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="204545" action="SETPRO2"/>
+        <dialog type="TALK_TO_NPC" npc-id="204630" action="SETPRO1"/>
       </event>
+      <actions>
+        <!-- 交出工作物品；用 ALL 表达「有则交出、旧存档缺失也不阻断」。 Hand over the work item; ALL keeps legacy saves playable. -->
+        <remove-item item-id="182201764" count="ALL"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <!-- 行 2：客户端 select2 以 SETPRO2 收口；旧 handler 在 var0==1 下发该页（演出行 1 与冤魂对话共用这一段）。 -->
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204614" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204614" action="SETPRO2"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <!-- 行 3：客户端 select3 以 SET_SUCCEED 收口；旧 handler 在 var0==2 下发该页并直接进 REWARD。
+         本定义把「开对话 ⇒ 高亮行 3」与「结束对话 ⇒ 进领奖」拆开，使行 3 也有独立状态与 GM 命令。 -->
+    <transition source="s2" target="s3">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="204630" action="SETPRO2"/>
+        <dialog type="TALK_TO_NPC" npc-id="204630" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204630" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204630" action="SET_SUCCEED"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 领奖行入口页：客户端 select_success（10002）→ 领奖窗口（旧 handler dialogId 1009 -> 页 5）。 -->
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204545" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+    <!-- 领奖窗口由 npc-complete 的 preview 路由下发（行动 SELECT_QUEST_REWARD -> WINDOW1，与旧 handler dialogId 1009 -> 页 5 一致）；
+         这里不再单独声明，否则与 preview 路由同源同动作会触发 AMBIGUOUS_TRANSITION。
+         The reward window is opened by the npc-complete preview route (SELECT_QUEST_REWARD -> WINDOW1, matching the legacy
+         handler's dialogId 1009 -> page 5); an extra explicit route on the same source/npc/action is rejected as AMBIGUOUS_TRANSITION. -->
+    <!-- 旧存档自愈：迁移前的 REWARD 投影是 var0=2（旧 handler 在 var0==2 直接进领奖），
+         重映射到客户端领奖行 var0=4（QE-051）。 Legacy saves that entered REWARD at var0<4 are repaired on enter-world. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-below field="var0" value="4"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="4"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
   </transitions>

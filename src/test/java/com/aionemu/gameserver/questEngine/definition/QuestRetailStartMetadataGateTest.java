@@ -124,7 +124,6 @@ class QuestRetailStartMetadataGateTest {
 		assertFalse(production.isEmpty(), "production catalog must not be empty");
 	}
 
-	/** METADATA_ONLY 条目不经过执行编译器，按其 resource XML 解析接取元数据。 */
 	/** 供同类门禁复用：METADATA_ONLY 条目的 resource 元数据解析。 */
 	static List<Integer> metadataOnlyQuestIds() throws Exception {
 		return metadataOnlyQuestIdsInternal();

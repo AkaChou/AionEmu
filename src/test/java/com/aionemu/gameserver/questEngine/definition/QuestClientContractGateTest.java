@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 锁定的全量客户端任务契约门禁：当前 IR 不得产生新的任务页缺失或可见按钮无路由。
  * Locked full-catalog client quest contract gate: the current IR must not introduce a missing task page or a
  * visible button without a route.
- *
  * <p>已有缺陷保存在 TSV 基线中，出现新问题则直接失败；该门禁不把尚无权威页面的历史缺口当作已修复，也不
  * 允许使用任务级通配豁免。默认允许尚未来得及清理的旧指纹，启用
  * {@code -Dquest.client.contract.failOnStaleBaseline=true} 后要求基线同步删除已修复项。</p>

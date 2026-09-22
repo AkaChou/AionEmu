@@ -31,7 +31,6 @@ import java.util.concurrent.locks.ReentrantLock;
  * 并在关闭时恢复全部静态 provider。
  * Executes real CM_DIALOG_SELECT, CM_SHOW_DIALOG, CM_USE_ITEM packets and item-play completion callbacks against an
  * isolated test engine, then restores every static provider on close.
- *
  * <p>该夹具持有进程级锁，生命周期内必须使用 try-with-resources；它不启动网络线程，也不访问数据库。
  * The fixture holds a process-wide lock and must be scoped with try-with-resources; it starts no network thread and
  * accesses no database.</p>
@@ -83,7 +82,6 @@ public final class QuestProtocolLoop implements AutoCloseable {
 	/**
 	 * 通过真实客户端包读取和运行路径执行一个请求。
 	 * Executes one request through real client-packet decoding and run paths.
-	 *
 	 * @param request 无头客户端请求 / headless-client request
 	 * @return 状态、失败和有序出站包观察 / state, failure, and ordered outbound-packet observations
 	 */

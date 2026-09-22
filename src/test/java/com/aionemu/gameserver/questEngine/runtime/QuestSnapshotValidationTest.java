@@ -14,7 +14,6 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 /**
  * {@link QuestSnapshot} 容器校验与冻结契约。
  * Container validation and freeze contract for {@link QuestSnapshot}.
- *
  * <p>背景：紧凑构造器对背包/货币等容器做“不可变化 + 逐条目校验”，但每个 {@code withXxx} 都会重新进入构造器，
  * 逐次遍历会产生大量 {@code KeyValueHolder}。现在只在入参还不是不可变副本时校验（即首建路径校验一次），
  * 因此这里锁定“可变入参仍会被校验、快照结果仍被冻结”两条契约。 Background: the canonical constructor copies and

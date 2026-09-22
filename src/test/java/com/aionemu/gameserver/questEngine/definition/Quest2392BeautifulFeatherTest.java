@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 验证任务 2392 的分支交付、奖励预览与最终交任务合同：
  * 选定分支羽毛在 started->rN 阶段已交出并扣除，进入 REWARD 后三类羽毛整叠移除保持可选，
  * 缺物时绝不能因严格正数扣除阻断奖励窗口预览或最终交任务。
- *
  * Verifies quest 2392's branch turn-in, reward preview, and final turn-in contract:
  * the selected branch feather is already turned in and removed during started->rN;
  * in REWARD status, removing the three feather types as whole stacks remains optional,

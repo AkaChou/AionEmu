@@ -141,18 +141,15 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <!-- 领奖态入口：客户端没有 DEFAULT_SUCCESS 页，点任务行直接打开奖励窗口 -->
+    <!-- 领奖态入口：客户端没有 DEFAULT_SUCCESS 页，点任务行直接打开奖励窗口（QUEST_SELECT）。
+         领奖窗口在本行仍由 npc-complete 的 preview 路由下发；这里不再单独声明 SELECT_QUEST_REWARD，
+         否则与已展开的 preview 同源同动作会触发 AMBIGUOUS_TRANSITION。
+         Reward-row entry (QUEST_SELECT) opens the window directly because the client ships no
+         DEFAULT_SUCCESS page; SELECT_QUEST_REWARD stays owned by the npc-complete preview, since
+         declaring it again on the same source/npc/action is rejected as AMBIGUOUS_TRANSITION. -->
     <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="203752" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="reward" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="203752" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>

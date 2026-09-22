@@ -17,7 +17,6 @@ import java.util.Set;
  * 用生产 IR 与真实 {@link QuestMutationPlanner} 模拟连续击杀，得到"引擎口径下完成所需击杀数"。
  * Simulates consecutive kills through the production IR and the real planner to derive the
  * engine-side number of kills a quest requires.
- *
  * <p>模拟不读客户端数据，只回答"按当前 XML 玩家要杀几只"；与客户端门控的比对由门禁测试完成。
  * The simulator never reads client data: it answers "how many kills does the current XML require".
  */

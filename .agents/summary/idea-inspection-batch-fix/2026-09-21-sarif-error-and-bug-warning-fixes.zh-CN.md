@@ -89,7 +89,7 @@ JavadocReference 根因三类：
 ## 六轮：注释规则全仓清零（2026-09-22）
 
 - 范围：DanglingJavadoc / JavadocDeclaration / JavadocBlankLines + 重复 @param（main+test 5788 文件全扫）。
-- 工具链：`comment_wave_detect.py` 静态检测（javadoc 块解析 + 悬空判定 + 标签合法性）→ `comment_wave_fix.py` 按块修复（逐行内容校验，backup/ 全量原状备份）→ 检测器复检 → IDEA lint 抽样 → build_project 全量编译。
+- 工具链：`comment_wave_detect.py` 静态检测（javadoc 块解析 + 悬空判定 + 标签合法性）→ `comment_wave_fix.py` 按块修复（逐行内容校验，全量原状备份 backup.tar.gz；注意备份目录镜像会破坏 memory-bank 证据后缀唯一匹配，已归档）→ 检测器复检 → IDEA lint 抽样 → build_project 全量编译。
 - 结果：3941 文件修改（17,926 行操作）：删悬空/仅标签垃圾块 370、悬空转行注释 3、块内空白行清理 28,582 行；非法 `@param`/`@return` 转文本或删除（PlayerAppearance 60、IStorage 整文件空标签接口块等）；重复 @param 5 处（含 Matrix4f.fromFrustum near/far/right/left 标签错配修正）；BoundingBox/BrokerItem 多变量声明中夹带的字段 Javadoc 拆分独立声明（语义等价）；SocialService/BlockListDAO 残句清理。
 - **误报教训（可复用）**：
   1. 悬空判定不能只看花括号深度——嵌套类成员 Javadoc 深度≥2 是合法的；必须看"块后第一个有效代码行是否为声明"；

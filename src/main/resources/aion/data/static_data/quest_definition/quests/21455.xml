@@ -39,15 +39,18 @@
     </node>
   </nodes>
   <transitions>
-    <!-- QE-051 领奖行合同：retail 单步任务（start + 1 step）的客户端 quest_q21455.html
-         quest_summary 共 2 行，末行是领奖/交付行（Unset（typed 定义的领奖 NPC 归属待单独核实））；末行当前没有任何 START/REWARD 状态。
-         retail end_npc_ids=799244，typed 定义当前用 799404，NPC 归属待单独核实。
-         同族 249 个 retail 单步任务中 184 个已是 reward var0=1，旧投影停在 0 属族内落后项；
-         进入世界时把旧存档纠正为 1 并下发状态包。
-         Reward row contract (QE-051): for retail single-step quests the last of the 2
-         quest_q21455 journal rows is the reward row (Unset); the old
-         projection stopped at 0 while 184 of 249 sibling retail single-step quests already
-         project 1. Saves persisted at 0 are repaired on enter-world. -->
+    <!-- QE-051 领奖行 + 领奖 NPC 归属：客户端 quest_q21455.html 的 quest_summary 共 2 行 —
+         行 0「在果实失效之前，交给 Schiemann」、行 1「把奥德解毒剂交给 Unset」。retail
+         end_npc_ids=799244 与 legacy `_21455Ingredients_For_The_Antidote`（799240 STEP_TO_1
+         换物品、799244 进 REWARD）一致；客户端 select2_1 的 HACTION_SETPRO1 与 select5 的
+         CHECK_USER_HAS_QUEST_ITEM_SIMPLE 也与该归属吻合，accept 仍是 799404（Miener）。末行
+         旧投影停在 0，属同族 249 个 retail 单步任务中 184 个已对齐后的落后项；进入世界时把旧存档
+         纠正为 1 并下发状态包。
+         Reward-row and reward-NPC ownership (QE-051): the second journal row hands the antidote to
+         Unset(799244), matching retail end_npc_ids=799244 and the legacy handler (item swap at
+         799240, REWARD at 799244); the accept NPC stays Miener(799404). The old projection stopped
+         at row 0 while 184 of 249 sibling retail single-step quests already project 1, and saves
+         persisted at 0 are repaired on enter-world. -->
     <transition target="reward">
       <event>
         <enter-world/>

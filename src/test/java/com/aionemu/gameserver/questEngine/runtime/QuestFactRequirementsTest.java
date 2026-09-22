@@ -22,7 +22,6 @@ import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 /**
  * {@link QuestFactRequirements} 的推导契约。
  * Derivation contract for {@link QuestFactRequirements}.
- *
  * <p>背景：快照里最贵的事实族只在少数条件/动作里被读取，推导必须做到「读什么就采什么」；漏采会让读取方
  * fail-closed（条件不匹配或抛异常），多采只损失性能。这里的用例锁定每类读取者的映射，并锁定 sealed
  * switch 带来的“新增类型必须显式分类”约束（编译期保证，无法用运行时断言表达）。

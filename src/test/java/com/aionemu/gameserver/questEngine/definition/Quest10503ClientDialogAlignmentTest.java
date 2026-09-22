@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 /**
  * 锁定任务 10503「提亚马特结界守护者 / Guard Down, Secrets Out」步骤 1 杀怪计数清零、步骤 2 收集交付与步骤 3 对话续接的客户端对齐合同。
  * Locks the step 1 kill counter reset, step 2 collection handover, and step 3 dialog continuation client contract for quest 10503.
- *
  * <p>Aion 5.8 客户端在 collect_progress=2 时以 progress==2 (var0==2) 校验背包装有古老龙族文件 (182215603)，
  * 并在尤碧亚 (804705) 头顶显示任务标记，进入 select3(1693) -> check_user_has_quest_item(39)。
  * 步骤 1 (s1) 杀怪完成推进到 s2 时，必须显式将 var1 计数清零，严禁残留 var1=2 污染打包整型为 130（导致客户端无法对齐 step 2 对白）。

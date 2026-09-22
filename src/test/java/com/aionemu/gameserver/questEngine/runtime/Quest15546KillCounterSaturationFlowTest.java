@@ -29,7 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 15546《[每日]雷欧娜的委托》计数器饱和后的额外击杀合同。
  * Oversaturation contract for the four-counter daily 15546: while other families are still incomplete, a kill of an
  * already saturated family must not change quest state and must not announce a quest update to the client.
- *
  * <p>回归背景：四个 SECTION 各自计数上限为 4（客户端 {@code Progress(SECTION_n<4)}）。原先第 4 次击杀由
  * "收口"路线（{@code variable-at-least 3 -> set 4}）写入；该路线在计数器到达 4 之后仍然命中，
  * 于是超额击杀会提交一笔状态未变化的空事务，并因 {@code sync-quest-state PACKET_ONLY} 下发一次

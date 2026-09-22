@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * 全库掉落契约门禁：生产任务的掉落形态不得低于真端 quest.xml 记录的契约。
  * Catalog drop-contract gate: production drops must not fall below the retail quest.xml contract.
- *
  * <p>真端以道具与怪物名描述掉落，离线无法把名称映射回 ID，因此基线 TSV 记录的是名称无关的结构：
  * 每个概率档覆盖了多少只怪（允许生产把同一批怪拆成多行、也允许生产比真端多来源），以及掉落道具种数。
  * 生产少怪物或少道具种数即视为丢失掉落来源，必须修复或写入有证据的豁免清单。</p>

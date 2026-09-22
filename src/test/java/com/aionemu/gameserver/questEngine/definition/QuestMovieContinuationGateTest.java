@@ -26,15 +26,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Phase 1/2 硬门禁：生产契约里的同状态 movie-only page-turn 必须与显式 ledger 完全一致。
  * Phase 1/2 hard gate: same-state movie-only page turns in the production contract must match the explicit ledger.
- *
  * <p>生产编译器已在 `QuestDefinitionCompiler` 中 fail-closed；本测试额外验证 ledger 没有遗留条目，
  * 即修复后的 ledger 也必须同步缩小。Production compilation already fails closed in
  * `QuestDefinitionCompiler`; this test additionally verifies there are no stale ledger entries.</p>
- *
  * <p>同时校验签入的契约 TSV 与 tracked 客户端 CSV 的源哈希一致，避免契约腐烂后编译期检查静默失效。
  * It also verifies the checked-in contract TSV still matches the tracked client mapping CSVs, so a
  * stale contract cannot silently disable the compile-time check.</p>
- *
  * <p>最后锁定生产加载路径：契约优先来自外部 definitions 目录，只有该目录没有副本时才回退 classpath。
  * Finally it locks the production loading path: the contract comes from the external definitions
  * directory first and only falls back to the classpath when that directory has no copy.</p>

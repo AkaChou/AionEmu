@@ -159,13 +159,18 @@
         <close-dialog/>
       </after-commit>
     </transition>
-    <!-- 领奖行：只有 204253 能领奖，两个分支各带自己的领奖窗口（页面 5 / 6，与客户端 select_quest_reward1/2 一致）。 -->
+    <!-- 领奖行：只有 204253 能领奖，两个分支各带自己的领奖窗口（页面 5 / 6，与客户端 select_quest_reward1/2 一致）。
+         领奖态入口必须下发本档领奖窗口，不能回退到步骤 3 的分支页 select3_1(1694)/select3_2(1779)：这两页的可见
+         按钮（SETPRO3/SETPRO4 与两个分支互跳）只从 s2 路由，领奖态下点下去没有反应，会直接把玩家卡在对话里
+         （客户端契约门禁的 BUTTON_WITHOUT_ROUTE）。 Reward-row entry must serve this tier's own reward window
+         instead of the step-3 branch pages select3_1(1694)/select3_2(1779), whose visible buttons (SETPRO3/SETPRO4
+         plus the two branch links) are only routed from s2 and would dead-end the player in the reward state. -->
     <transition source="reward1" target="reward1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204253" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="reward2" target="reward2">
@@ -173,7 +178,7 @@
         <dialog type="TALK_TO_NPC" npc-id="204253" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_2"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW2"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="204253" source="reward1" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">

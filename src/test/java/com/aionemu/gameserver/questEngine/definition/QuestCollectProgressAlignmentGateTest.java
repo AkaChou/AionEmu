@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * 全服任务收集进度 (collect_progress) 与交付对白契约对齐门禁测试。
  * Global quest collect_progress and handover dialog contract alignment gate test.
- *
  * <p>锁定同类任务族群：
  * 1. 10503 & 10530 & 20530：客户端 collect_progress 声明的步骤必须与服务端的 CHECK_USER_HAS_QUEST_ITEM 步骤严格对齐，
  *    严禁在拾取物/祭坛交互时抢跑推进 var0，避免玩家持物前往 NPC 时因步骤脱节导致对话失效（下发通用第 10 页）。

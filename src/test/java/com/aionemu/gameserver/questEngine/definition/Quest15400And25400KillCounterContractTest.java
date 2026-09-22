@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 验证多杀任务自环累加、收口推进与跨阶段计数器清零契约。
  * Verifies multi-kill counters: self-loop accumulation, closure advancement, and the
  * cross-stage counter reset contract.
- *
  * <p>覆盖两类历史手写缺陷：
  * <ul>
  *   <li>收口条件阈值配置过小（A &lt; required - 1）导致“少杀怪就提前跳步”。</li>

@@ -25,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 必须始终对齐。
  * Locks the contract of quests advanced to REWARD outside the typed engine: the packed step left by the writer,
  * the reward node projection, the reward-state entry page and the legacy-save recovery must stay aligned.
- *
  * <p>这些任务的 REWARD 不是由 `SELECT_QUEST_REWARD` 事务写入的，而是由客户端包（`CM_CREATIVITY_POINTS`）、
  * 服务（`CoalescenceService`、`MinionService`）或 AI（`RiftOrbAI2`）直接 `setStatus(QuestStatus.REWARD)`。typed
  * 引擎按 (status, packed step) 匹配路由，因此只要写入方的步数与 reward 节点投影不一致，或定义没有注册
@@ -35,7 +34,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * The typed engine matches routes by (status, packed step), so a writer step that differs from the reward
  * projection, or a missing `reward + QUEST_SELECT(31) -> DEFAULT_SUCCESS` entry page, leaves the player with the
  * generic end-dialog page after selecting the quest row.</p>
- *
  * <p>基线 `src/test/resources/quest/external-reward-advance-baseline.tsv` 由只读审计脚本
  * `.agents/summary/quest-10522-reward-reentry/audit_external_reward_advance.py` 生成；新增引擎外写入方时先重跑
  * 脚本刷新基线，本测试会立刻要求新条目提供同样的入口页与自愈证据。

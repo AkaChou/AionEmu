@@ -13,14 +13,12 @@ import org.junit.jupiter.api.Test;
 /**
  * 防止“任务发放道具 -> 使用道具 -> 进入 REWARD”丢失任务侧扣除。
  * Prevents a quest-granted item from surviving a use-item route into REWARD.
- *
  * <p>旧的 work-item 审计只以 {@code quest_data.xml} 的 {@code <quest_work_items>} 为宇宙；
  * 10100/20100 这类由 {@code give-item} 发放、旧 handler 用
  * {@code useQuestItem(..., true)} 消耗、但 quest_data 未声明 work item 的道具会漏掉。
  * 本门禁直接检查编译后 IR 的 item lifecycle，不依赖 quest_data 声明。</p>
  * The old work-item audit only covered quests declared in
  * {@code quest_data.xml}; this gate checks the compiled item lifecycle directly.</p>
- *
  * <p>边界：只检查 {@code give-item} 发放并由 {@code use-item} 进入 REWARD 的道具；
  * 普通收集物和掉落物的交付扣除仍由 collect-item/collect-turn-in 门禁覆盖。</p>
  * Boundary: this gate only covers quest-granted items used to enter REWARD; collect-item and drop

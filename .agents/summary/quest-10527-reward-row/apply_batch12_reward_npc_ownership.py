@@ -13,9 +13,12 @@
   领奖 NPC 是 799244（客户端末行“交给 Unset”）；旧 typed 把领奖/completion 放在 799404。
   同时把换物品动作移到客户端 select2_1 页的 SETPRO1 路由，删除没有客户端按钮的 SETPRO2 死路由。
 - 30614：客户端 quest_summary 只有 2 行（战斗行 0 + 向 Astella 报告行 1），旧 reward 投影停在
-  行 0；retail `monster_hunt start_npc_ids=800326` 与 legacy 模板 end=800326 都确认领奖 NPC
-  仍是 800326（客户端文本 Astella=800327 与实现 NPC 不一致，属已核实例外）。补 enter-world
-  自愈边与 reward + QUEST_SELECT(31) -> DEFAULT_SUCCESS 入口页。
+  行 0；领奖 NPC 归属核实为 Astella=800327（客户端行 1 的命名 NPC 与同文件 quest_complete
+  「阿斯泰拉说…」一致，同族 30610/30611/30612/30613 的「客户端命名 NPC ↔ 定义 NPC」4/4
+  一致，2026-08-06 客户端/真端交叉审计 f737cfef1 亦使用 800327）；legacy contract
+  `terath_dredgion.xml` 的 start_npc_ids=800326 是单一派生源，2026-09-13 的自动对齐
+  10a2e7e57 仅据此把 800327 改成 800326。本修订恢复 800327，并补 enter-world 自愈边与
+  reward + QUEST_SELECT(31) -> DEFAULT_SUCCESS 入口页。
 
 Batch 12: reward-NPC ownership audit family plus the 30614 report-row fix. Idempotent and
 replayable; `--check` verifies the target contract without writing.
@@ -273,12 +276,28 @@ def apply_construction(quest_id: int, case: dict[str, object], check: bool) -> b
 
 def contract_21455_ok(text: str) -> bool:
     return ('action="SETPRO2"' not in text
+            and '领奖 NPC 归属' in text
             and '<npc-complete npc-id="799244"' in text
             and 'npc-id="799404" action="SELECT_QUEST_REWARD"' not in text
             and 'npc-id="799404" action="QUEST_SELECT"' not in text
             and 'npc-id="799244" action="QUEST_SELECT"' in text
             and 'action="SETPRO1"/>\n      </event>\n      <conditions>\n'
                 '        <has-item item-id="182209514" count="1"/>' in text)
+
+
+HEADER_21455_NEW = """    <!-- QE-051 领奖行 + 领奖 NPC 归属：客户端 quest_q21455.html 的 quest_summary 共 2 行 —
+         行 0「在果实失效之前，交给 Schiemann」、行 1「把奥德解毒剂交给 Unset」。retail
+         end_npc_ids=799244 与 legacy `_21455Ingredients_For_The_Antidote`（799240 STEP_TO_1
+         换物品、799244 进 REWARD）一致；客户端 select2_1 的 HACTION_SETPRO1 与 select5 的
+         CHECK_USER_HAS_QUEST_ITEM_SIMPLE 也与该归属吻合，accept 仍是 799404（Miener）。末行
+         旧投影停在 0，属同族 249 个 retail 单步任务中 184 个已对齐后的落后项；进入世界时把旧存档
+         纠正为 1 并下发状态包。
+         Reward-row and reward-NPC ownership (QE-051): the second journal row hands the antidote to
+         Unset(799244), matching retail end_npc_ids=799244 and the legacy handler (item swap at
+         799240, REWARD at 799244); the accept NPC stays Miener(799404). The old projection stopped
+         at row 0 while 184 of 249 sibling retail single-step quests already project 1, and saves
+         persisted at 0 are repaired on enter-world. -->
+"""
 
 
 def apply_21455(check: bool) -> bool:
@@ -296,6 +315,8 @@ def apply_21455(check: bool) -> bool:
     new_text = new_text.replace(
         '<npc-complete npc-id="799404"', '<npc-complete npc-id="799244"')
     new_text = SELECT5_ON_START_ROUTE_21455.sub("", new_text, count=1)
+    new_text = re.sub(r'    <!-- QE-051 领奖行.*?-->',
+                      HEADER_21455_NEW.rstrip("\n"), new_text, count=1, flags=re.S)
     marker = '    <npc-complete npc-id="799244"'
     if REWARD_SELECT_21455_NEW not in new_text:
         new_text = new_text.replace(marker, REWARD_SELECT_21455_NEW + marker, 1)
@@ -303,11 +324,33 @@ def apply_21455(check: bool) -> bool:
     return contract_21455_ok(new_text)
 
 
+COMMENT_30614 = """    <!-- QE-051 领奖行 + 领奖 NPC 归属：客户端 quest_q30614.html 只有 2 行（战斗行 0 + 报告行 1
+         「向 Astella 报告」），旧 reward 投影停在行 0。领奖 NPC 核实为 Astella=800327：
+         ① 客户端行 1 直指 Astella；② 同文件 quest_complete「阿斯泰拉说必须…」与同族
+         30610/30611/30612/30613 的「客户端命名 NPC ↔ 定义 NPC」4/4 一致；③ 2026-08-06
+         客户端/真端交叉审计 f737cfef1 即使用 800327。legacy contract terath_dredgion.xml 的
+         start_npc_ids=800326 是单一派生源（该文件对 30610 也丢掉了中间的 Aluna 对话步骤），
+         10a2e7e57 仅据此把 800327 改成 800326，本修订恢复 800327。旧存档 REWARD/var0=0
+         在进入世界时自愈到 1。
+         Reward-row and reward-NPC ownership (QE-051): the client journal's second row reports to
+         Astella and quest_complete names the same NPC; siblings 30610-30613 confirm the naming
+         convention and the 2026-08-06 client/live-server cross audit already used 800327. The
+         legacy contract is a single derived source and was the only input of the 2026-09-13
+         automated pass that broke it, so this repair restores 800327 for start, report,
+         completion and the reward entry page. -->
+"""
+
+
 def contract_30614_ok(text: str) -> bool:
     return ('<var name="var0" value="1"/>\n      <var name="var1" value="6"/>' in text
             and 'enter-world/>' in text
-            and 'npc-id="800326" action="QUEST_SELECT"' in text
+            and '<dialog type="NPC_START" npc-id="800327"' in text
+            and '<dialog type="NPC_REPORT" npc-id="800327"' in text
+            and '<npc-complete npc-id="800327"' in text
+            and 'npc-id="800327" action="QUEST_SELECT"' in text
             and 'page="DEFAULT_SUCCESS"' in text
+            and 'npc-id="800326"' not in text
+            and text.count('领奖态入口页') == 1
             and '      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>\n    <!-- 领奖态入口页' not in text)
 
 
@@ -329,13 +372,12 @@ def apply_30614(check: bool) -> bool:
                   '      <var name="var2" value="15"/>\n'
                   '    </node>')
     new_text = text.replace(reward_old, reward_new, 1)
-    heal = """    <!-- QE-051 领奖行合同：客户端 quest_q30614.html 只有 2 行（战斗行 0 + 报告行 1），
-         旧 reward 投影停在 0；retail monster_hunt start_npc_ids=800326 与 legacy 模板 end=800326
-         确认领奖 NPC 仍是 800326（客户端文本 Astella=800327 属已核实例外）。旧存档
-         REWARD/var0=0 在进入世界时自愈到 1。
-         Reward-row contract (QE-051): the client has two rows and the reward row is 1; the reward
-         NPC stays 800326 per retail monster_hunt and the legacy template, and stale reward rows
-         heal from 0 to 1 on enter-world. -->
+    # 领奖 NPC 归属：撤回 10a2e7e57 仅依据 legacy contract 单源做的 800327 -> 800326 对齐。
+    # Reward-NPC ownership: undo the single-source (legacy contract) 800327 -> 800326 alignment.
+    new_text = new_text.replace('npc-id="800326"', 'npc-id="800327"')
+    new_text = re.sub(r'    <!-- QE-051 领奖行合同：客户端 quest_q30614\.html.*?-->',
+                      COMMENT_30614.rstrip("\n"), new_text, count=1, flags=re.S)
+    heal = COMMENT_30614 + """    <transition target="reward">
     <transition target="reward">
       <event>
         <enter-world/>
@@ -352,13 +394,13 @@ def apply_30614(check: bool) -> bool:
       </after-commit>
     </transition>
 """
-    report_marker = '    <dialog type="NPC_REPORT" npc-id="800326" source="a0b6c15" target="reward" page="DEFAULT_SUCCESS"/>'
+    report_marker = '    <dialog type="NPC_REPORT" npc-id="800327" source="a0b6c15" target="reward" page="DEFAULT_SUCCESS"/>'
     if report_marker in new_text and 'enter-world/>\n      </event>\n      <conditions>\n        <status-is status="REWARD"/>\n        <variable-is field="var0" value="0"/>' not in new_text:
         new_text = new_text.replace(report_marker, heal + report_marker, 1)
-    entry = """    <!-- 领奖态入口页：reward + 800326 QUEST_SELECT(31) -> DEFAULT_SUCCESS(10002) -->
+    entry = """    <!-- 领奖态入口页：reward + 800327 QUEST_SELECT(31) -> DEFAULT_SUCCESS(10002) -->
     <transition source="reward" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="800326" action="QUEST_SELECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="800327" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
@@ -367,6 +409,13 @@ def apply_30614(check: bool) -> bool:
 """
     # 若旧版本曾把入口页误插进 npc-complete 内部，先移出，再插到完成块之后。
     # If an earlier revision placed the entry route inside npc-complete, move it after the block.
+    new_text = new_text.replace(
+        '    <!-- 领奖态入口页：reward + 800326 QUEST_SELECT(31) -> DEFAULT_SUCCESS(10002) -->',
+        '    <!-- 领奖态入口页：reward + 800327 QUEST_SELECT(31) -> DEFAULT_SUCCESS(10002) -->')
+    # 同一入口页只允许出现一次；旧修订曾因注释文本不同而重复插入。
+    # The reward entry page must appear exactly once; an earlier revision duplicated it.
+    while new_text.count(entry) > 1:
+        new_text = new_text.replace(entry, '', 1)
     misplaced = '      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>\n' + entry
     if misplaced in new_text:
         new_text = new_text.replace(

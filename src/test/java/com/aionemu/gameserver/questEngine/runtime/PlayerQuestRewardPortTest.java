@@ -63,7 +63,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Real {@link QuestRewardPort}: durable (non-currency) rewards are applied to the
  * live player and persisted through the transactional DAO on the caller-owned
  * connection, so rewards commit atomically with the quest state.
- *
  * <p>EXP 数值发放依赖 {@code DataManager.PLAYER_EXPERIENCE_TABLE}（单测不可用），
  * 因此 EXP apply 用例用 {@code noExp} 短路验证端口路径（调用 addExp + 持久化）；
  * 实际数值由 PlayerCommonData 承担。AURA_OF_GROWTH/EXP_BOOST 依赖 level>=66 且

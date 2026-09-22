@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * 锁定任务 10031/20031 领奖区的区域任务结束广播合同：只广播给真正拥有 zone-mission-end 路由的后续任务，
  * 且完成方绝不把自己列为目标；广播位置与 after-commit 顺序同时锁定。
- *
  * Locks the 10031/20031 reward-stage zone-mission-end broadcast contract: only follow-ups that really own a
  * zone-mission-end route may be targeted, the completing owner must never target itself, and both the
  * broadcast placement and after-commit ordering stay fixed.

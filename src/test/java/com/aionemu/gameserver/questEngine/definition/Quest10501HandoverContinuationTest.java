@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 /**
  * 锁定任务 10501「被毁的遗迹 / Research the Ruins」上交龙族证物后的对话续接合同。
  * Locks the post hand-over dialog continuation contract of quest 10501.
- *
  * <p>Aion 5.8 客户端把 check_user_item_ok(10000) 页的唯一按钮渲染为 {@code HACTION_FINISH_DIALOG}（"递过证物"）；
  * 真实客户端点击后只关闭窗口并发送 {@code CM_CLOSE_DIALOG}，服务端收不到 FINISH_DIALOG(1008) 任务动作
  * （2026-09-19 实机 trace：10000 之后没有 CM_DIALOG_SELECT 1008，玩家必须重新对话才收到 10002）。因此该页

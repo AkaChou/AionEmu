@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * 锁定任务 1347 的报告 NPC（203966）、报告页（1352/SELECT2）与奖励归属合同。
  * Locks quest 1347's report NPC (203966), report page (1352/SELECT2) and reward owner contract.
- *
  * <p>legacy 合同（origin/history zz_retail_simple_quests.xml）写明：start_npc=203965、
  * end_npc=203966、report_open_action=31、report_page=SELECT2(1352)、report_source_status=START、
  * report_action=1009、report_target_status=REWARD、reward_page=5。客户端 QUEST_Q1347.html 同样只在

@@ -25,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 验证 10525/20525 四位证人证言计数器的 SECTION_1 布局、增量上限守卫与旧存档自愈。
  * Verifies the SECTION_1 layout, bounded increments and legacy-save healing of the four-witness testimony
  * counter shared by quests 10525 and 20525.
- *
  * <p>报障复盘：旧定义把 var1 紧凑放在 offset 4/width 5，且四条证言自环没有任何上限守卫。
  * 玩家反复点击同一名证人即可让 var1 累加（实测 packed 步数 130/258/386 对应 var1 8/16/24），
  * 下一次 +8 得到 32，被 {@code ProgressLayout.pack} 判为越界抛出 IllegalArgumentException，

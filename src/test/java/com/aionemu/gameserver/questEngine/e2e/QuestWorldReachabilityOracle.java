@@ -48,7 +48,6 @@ final class QuestWorldReachabilityOracle {
 	/**
 	 * 从指定地图文件和 spawn 目录构建只读索引。
 	 * Builds a read-only index from the supplied world-map file and spawn directory.
-	 *
 	 * @param worldMapsFile 生产 world_maps.xml 路径 / production world_maps.xml path
 	 * @param spawnsDirectory 生产 spawn XML 根目录 / production spawn XML root directory
 	 */

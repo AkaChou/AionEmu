@@ -593,7 +593,7 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="800326" source="unaccepted" target="a0b0c0" selection-sources="unaccepted a0b0c0" start-page="SELECT_NONE"/>
+    <dialog type="NPC_START" npc-id="800327" source="unaccepted" target="a0b0c0" selection-sources="unaccepted a0b0c0" start-page="SELECT_NONE"/>
     <transition source="a0b0c0" target="a0b1c0">
       <event>
         <kill-npc npc-id="219240"/>
@@ -9077,13 +9077,20 @@
         <kill-npc npc-id="219245"/>
       </event>
     </kill-chain>
-    <!-- QE-051 领奖行合同：客户端 quest_q30614.html 只有 2 行（战斗行 0 + 报告行 1），
-         旧 reward 投影停在 0；retail monster_hunt start_npc_ids=800326 与 legacy 模板 end=800326
-         确认领奖 NPC 仍是 800326（客户端文本 Astella=800327 属已核实例外）。旧存档
-         REWARD/var0=0 在进入世界时自愈到 1。
-         Reward-row contract (QE-051): the client has two rows and the reward row is 1; the reward
-         NPC stays 800326 per retail monster_hunt and the legacy template, and stale reward rows
-         heal from 0 to 1 on enter-world. -->
+    <!-- QE-051 领奖行 + 领奖 NPC 归属：客户端 quest_q30614.html 只有 2 行（战斗行 0 + 报告行 1
+         「向 Astella 报告」），旧 reward 投影停在行 0。领奖 NPC 核实为 Astella=800327：
+         ① 客户端行 1 直指 Astella；② 同文件 quest_complete「阿斯泰拉说必须…」与同族
+         30610/30611/30612/30613 的「客户端命名 NPC ↔ 定义 NPC」4/4 一致；③ 2026-08-06
+         客户端/真端交叉审计 f737cfef1 即使用 800327。legacy contract terath_dredgion.xml 的
+         start_npc_ids=800326 是单一派生源（该文件对 30610 也丢掉了中间的 Aluna 对话步骤），
+         10a2e7e57 仅据此把 800327 改成 800326，本修订恢复 800327。旧存档 REWARD/var0=0
+         在进入世界时自愈到 1。
+         Reward-row and reward-NPC ownership (QE-051): the client journal's second row reports to
+         Astella and quest_complete names the same NPC; siblings 30610-30613 confirm the naming
+         convention and the 2026-08-06 client/live-server cross audit already used 800327. The
+         legacy contract is a single derived source and was the only input of the 2026-09-13
+         automated pass that broke it, so this repair restores 800327 for start, report,
+         completion and the reward entry page. -->
     <transition target="reward">
       <event>
         <enter-world/>
@@ -9099,14 +9106,14 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <dialog type="NPC_REPORT" npc-id="800326" source="a0b6c15" target="reward" page="DEFAULT_SUCCESS"/>
-    <npc-complete npc-id="800326" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <dialog type="NPC_REPORT" npc-id="800327" source="a0b6c15" target="reward" page="DEFAULT_SUCCESS"/>
+    <npc-complete npc-id="800327" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    <!-- 领奖态入口页：reward + 800326 QUEST_SELECT(31) -> DEFAULT_SUCCESS(10002) -->
+    <!-- 领奖态入口页：reward + 800327 QUEST_SELECT(31) -> DEFAULT_SUCCESS(10002) -->
     <transition source="reward" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="800326" action="QUEST_SELECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="800327" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>

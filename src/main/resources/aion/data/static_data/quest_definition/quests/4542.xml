@@ -28,153 +28,58 @@
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
     </node>
+    <!-- 客户端 quest_summary 六行各要一个 var0==行号的进行中状态（QE-051）：行 0 卢佩里克(204743)、
+         行 1 斯雷伊尼尔(204768)、行 2/3/4 埃斯努(204808)、行 5 斯雷伊尼尔报告（领奖行）。
+         Each of the 6 quest_q4542 journal rows needs a START state with var0 == row index (QE-051):
+         row 0 Rubelik (204743), row 1 Sleipnir (204768), rows 2/3/4 Esnu (204808), row 5 the report to Sleipnir. -->
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="s1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="s2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="s3" status="START">
+      <var name="var0" value="3"/>
+    </node>
+    <node label="s4" status="START">
+      <var name="var0" value="4"/>
+    </node>
+    <node label="s5" status="START">
+      <var name="var0" value="5"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="5"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="204768" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="204768" source="started" target="reward" page="SELECT2"/>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204768" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <conditions>
-        <has-item item-id="182215329" count="1"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="182215329" count="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204768" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204768" action="FINISH_DIALOG"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-
+    <!-- 接取：斯雷伊尼尔(204768) 发布任务，客户端 select_none(4762) 的「接受」按钮为 QUEST_ACCEPT_SIMPLE；
+         旧 handler 在此发放工作物品 182215327（原信件）。 -->
+    <dialog type="NPC_START" npc-id="204768" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE">
+      <accept-actions>
+        <give-item item-id="182215327" count="1"/>
+      </accept-actions>
+    </dialog>
+    <!-- 领奖行：客户端末行「向斯雷伊尼尔报告」= 斯雷伊尼尔(204768)，只有它能领奖。
+         Reward row: the last journal row is the report to Sleipnir, so only 204768 owns completion. -->
     <npc-complete npc-id="204768" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-
-    <dialog type="NPC_REPORT" npc-id="204743" source="started" target="reward" page="SELECT2"/>
-    <transition source="started" target="reward" priority="0">
+    <!-- 行 0：客户端 select1 -> select1_1 -> select1_2 以 SETPRO1 收口；旧 handler 在此发放复原后的信 182215328 并 var0 0->1。 -->
+    <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="204743" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <conditions>
-        <has-item item-id="182215329" count="1"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="182215329" count="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204743" action="SELECT_QUEST_REWARD"/>
+        <dialog type="TALK_TO_NPC" npc-id="204743" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204743" action="FINISH_DIALOG"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-
-    <npc-complete npc-id="204743" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-
-    <dialog type="NPC_REPORT" npc-id="204808" source="started" target="reward" page="SELECT2"/>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204808" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <conditions>
-        <has-item item-id="182215329" count="1"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="182215329" count="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204808" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204808" action="FINISH_DIALOG"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-
-    <npc-complete npc-id="204808" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204743" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204768" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204808" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204743" action="SELECT1_1"/>
       </event>
@@ -182,39 +87,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
       </after-commit>
     </transition>
-    <transition source="unaccepted" target="unaccepted">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204808" action="SELECT1_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_1"/>
-      </after-commit>
-    </transition>
     <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204743" action="SELECT2_2"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_2"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204768" action="SELECT2_2"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_2"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204808" action="SELECT2_2"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_2"/>
-      </after-commit>
-    </transition>
-    <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204743" action="SELECT1_2"/>
       </event>
@@ -222,47 +95,101 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1_2"/>
       </after-commit>
     </transition>
-    <transition source="unaccepted" target="unaccepted">
+    <transition source="started" target="s1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="204808" action="SELECT1_2"/>
+        <dialog type="TALK_TO_NPC" npc-id="204743" action="SETPRO1"/>
       </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT1_2"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204743" action="SETPRO2"/>
-      </event>
-      <conditions>
-        <has-item item-id="182215329" count="1"/>
-      </conditions>
       <actions>
-        <remove-item item-id="182215329" count="1"/>
+        <give-item item-id="182215328" count="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <!-- 行 1：客户端 select2 -> select2_1 -> select2_2 以 SETPRO2 收口；旧 handler 在此播放影片 239 并 var0 1->2。 -->
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204768" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204768" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204768" action="SELECT2_2"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_2"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s2">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204768" action="SETPRO2"/>
       </event>
-      <conditions>
-        <has-item item-id="182215329" count="1"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="182215329" count="1"/>
-      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <play-movie movie-id="239"/>
+        <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <!-- 行 2：客户端 select3 -> select3_1 -> select3_2 以 SETPRO3 收口；旧 handler 在此播放影片 240 并 var0 2->3。 -->
+    <transition source="s2" target="s2">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="204808" action="SETPRO2"/>
+        <dialog type="TALK_TO_NPC" npc-id="204808" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204808" action="SELECT3_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204808" action="SELECT3_2"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_2"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204808" action="SETPRO3"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <play-movie movie-id="240"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 行 3：收集交付步。客户端 select4(2034) 的按钮是 CHECK_USER_HAS_QUEST_ITEM，成功页 10000 / 失败页 10001；
+         旧 handler checkQuestItems(env, 3, 4, false, 10000, 10001) 校验并扣除艾卡的钥匙 182215329。 -->
+    <transition source="s3" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204808" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s4" priority="0">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204808" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <conditions>
         <has-item item-id="182215329" count="1"/>
@@ -272,7 +199,112 @@
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s3" priority="1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204808" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204808" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 行 4：客户端 select5 -> select5_1 以 SETPRO5 收口；旧 handler 在此发放金喇叭神殿的钥匙 182215330。 -->
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204808" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204808" action="SELECT5_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204808" action="SETPRO5"/>
+      </event>
+      <actions>
+        <give-item item-id="182215330" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s4" target="s4">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204808" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 行 5：客户端 select6 同时带「拿出钥匙」SELECT_QUEST_REWARD 与「不给他钥匙」SELECT6_1 -> SETPRO6；
+         说谎分支不推进任务书行号，只关闭对话（GM 仍可用 //quest set 4542 START 5 回到该行）。 -->
+    <transition source="s5" target="s5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204768" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="s5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204768" action="SELECT6_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT6_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="s5">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204768" action="SETPRO6"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s5" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204768" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <!-- 旧存档自愈：迁移前的 REWARD 投影是 var0=0，重映射到客户端领奖行 var0=5（QE-051）。
+         Legacy saves persisted at 0 are repaired to the client reward row on enter-world. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-below field="var0" value="5"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="5"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
   </transitions>

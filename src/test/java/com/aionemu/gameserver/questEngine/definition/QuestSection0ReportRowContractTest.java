@@ -26,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 校验击杀计数任务的 SECTION_0 报告行闭环合同：计数打满进入 REWARD 时，任务说明行索引
  * 必须等于客户端报告行（stage+1），continue 自环必须钉住所在阶段，且旧存档由 ENTER_WORLD
  * 迁移路线修复。
- *
  * <p>Verifies the SECTION_0 report-row closure contract for kill-counter quests: the journal row
  * index must advance to the client report row when the counters saturate, continuing self-loops must
  * pin their stage, and legacy REWARD saves must be repaired by a source-less ENTER_WORLD route.

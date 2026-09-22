@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 锁定 25608 [Group] Oh, Bother 的 7 步真端行对齐。
- *
  * <p>客户端 quest_q25608.html 的 quest_summary 有 7 个可见槽位（0/3/6/9/12/15/18），retail
  * 定义同样是 7 步：TALK 806177 → TALK 806197 → ENTER_AREA 206534 → HUNT 241235 x10 →
  * TALK 806197 → ENTER_AREA 206542 → COLLECT_ITEM 805964。旧迁移跳过了两个 ENTER_AREA 行，
@@ -28,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 修复后 step0..step6 与行 0..6 一一对应，reward 投影为领奖行 6，旧 REWARD/var0=5 存档通过
  * 无 source 的 enter-world 或 QUEST_SELECT 自愈边回到行 6；两个 ENTER_AREA 触发器注册在
  * zones_quest.xml，坐标取自客户端 DF6 mission level 的 sensory NPC。</p>
- *
  * <p>Locks the seven-step retail journal alignment for quest 25608: the client quest_summary has
  * seven visible slots matching the retail steps TALK, TALK, ENTER_AREA 206534, HUNT x10, TALK,
  * ENTER_AREA 206542 and COLLECT_ITEM. The old migration skipped both ENTER_AREA rows and left the

@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * 锁定任务 10530「打开结界 / Trouble Back Home」步骤 7 收集交付与步骤 8 对话续接的客户端对齐合同。
  * Locks the step 7 collection handover and step 8 dialog continuation client contract for quest 10530.
- *
  * <p>Aion 5.8 客户端在 collect_progress=7 时以 progress==7 (var0==7) 校验背包持有魔法阵染料 (182216164) 与咒语书碎片 (182216167)，
  * 并在尤克莱亚斯 (203752) 处交互 select8 -> check_user_has_quest_item。
  * 严禁在祭坛 (703387) 交互时抢跑推进 var0=8（这会导致客户端判定不在收集步而不发任务对话）。

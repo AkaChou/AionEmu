@@ -37,13 +37,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Coverage gate for the Aion 5.8 Iluma/Norsvold kill quests: every variant the Aion 5.8 client counts
  * for a hunting step must be registered by the quest, and each registered family must keep at least one
  * target that the production spawn data actually places in an active map.
- *
  * <p>回归背景：15546《雷欧娜的委托》只登记了世界中不刷新的基础模板（240475/240483/240495/240497），
  * 而客户端对话与计数条目的目标是同族的 T_ 变体（241656/241664/241676/241678 等），
  * 因此 {@code QuestEngine.onKill} 拿不到该任务的 onKill owner，击杀不会下发到任务、进度不更新。
  * Regression background: quest 15546 registered only the base templates that are never spawned, so the
  * spawned {@code T_} variants of the same family never reached the quest owner and the counters stayed 0.
- *
  * <p>契约快照 {@code iluma-norsvold-kill-target-contract.tsv} 由客户端 {@code quest_monster.csv}
  * 的怪物名单经 npc_template 名称解析后生成，见 {@code .agents/summary/quest-15546-kill-progress/}。
  */

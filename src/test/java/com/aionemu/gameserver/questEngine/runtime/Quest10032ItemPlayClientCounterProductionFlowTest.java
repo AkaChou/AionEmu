@@ -30,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 验证卡斯帕任务把「阶段索引」放在客户端任务说明行索引读取的 SECTION_0（var0），
  * 把「眼泪使用次数」放在 SECTION_1（var1，offset 6），并保证离开副本/死亡/下线的
  * 回退在缺少道具时仍能生效。
- *
  * Verifies the Caspa chain keeps the stage index in SECTION_0 (var0), the slot the 5.8 client
  * journal line index reads, keeps the Taloc's Tears use counter in SECTION_1 (var1, offset 6),
  * and still rolls back on instance exit, death, or logout even when the quest items are gone.

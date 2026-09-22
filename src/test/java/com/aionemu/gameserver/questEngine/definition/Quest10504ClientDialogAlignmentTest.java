@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * 锁定任务 10504「没收石板 / Confiscate the Slate」步骤 1 杀怪计数清零、步骤 2/3 石板采集与步骤 3 交付的客户端对齐合同。
  * Locks the step 1 kill counter reset, step 2/3 slate collection, and step 3 handover client contract for quest 10504.
- *
  * <p>Aion 5.8 客户端在 collect_progress=3 时以 progress==3 (var0==3) 要求持有破碎石板 (182215607) 交付给阿斯特拉佩 (804706)。
  * 步骤 1 杀怪推进到 s2 时，必须将 var1 计数清零，严禁残留 var1=4 污染打包整型步数。
  * 玩家在步骤 2 击杀精英怪 (236255) 会推进至 var0=3。

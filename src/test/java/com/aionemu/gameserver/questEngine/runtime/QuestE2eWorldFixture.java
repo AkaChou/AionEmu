@@ -68,7 +68,6 @@ public final class QuestE2eWorldFixture implements AutoCloseable {
 	/**
 	 * 结束测试回环首次加载 AionConnection 时创建的包处理 worker。
 	 * Stops the packet-processing worker created when the test loop first loads AionConnection.
-	 *
 	 * <p>仅供命令行报告退出前清理测试线程，不触碰真实服务器生命周期。
 	 * This is only for command-line report cleanup and does not touch a real server lifecycle.</p>
 	 */
@@ -292,7 +291,6 @@ public final class QuestE2eWorldFixture implements AutoCloseable {
 	/**
 	 * 标记下一次对象对话必须先经过 ACTION_ITEM_USE gate。
 	 * Marks the next object dialog as requiring the ACTION_ITEM_USE gate first.
-	 *
 	 * @param objectId 权威交互对象 ID / authoritative interaction object ID
 	 */
 	public void expectActionItemUse(int objectId) {
@@ -303,7 +301,6 @@ public final class QuestE2eWorldFixture implements AutoCloseable {
 	/**
 	 * 消费并返回上一次对象对话的 ACTION_ITEM_USE gate 结果。
 	 * Consumes and returns the ACTION_ITEM_USE gate result from the last object dialog.
-	 *
 	 * @param objectId 权威交互对象 ID / authoritative interaction object ID
 	 * @return gate 是否允许 / whether the gate allowed the interaction
 	 */
@@ -635,7 +632,6 @@ public final class QuestE2eWorldFixture implements AutoCloseable {
 		/**
 		 * 返回并清除最近一次 ACTION_ITEM_USE 检查结果。
 		 * Returns and clears the most recent ACTION_ITEM_USE check result.
-		 *
 		 * @return gate 是否允许 / whether the gate allowed the interaction
 		 */
 		private boolean consumeActionItemAllowed() {

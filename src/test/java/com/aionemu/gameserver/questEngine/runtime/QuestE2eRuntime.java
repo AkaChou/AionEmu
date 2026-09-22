@@ -169,7 +169,6 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	/**
 	 * 用指定计数替换场景中已捕获的装备物品事实。
 	 * Replaces the scenario's captured equipped-item facts with the supplied counts.
-	 *
 	 * @param equippedItems 物品模板 ID 到已装备数量 / item-template ids to equipped counts
 	 */
 	public void replaceEquippedItemFacts(Map<Integer, Integer> equippedItems) {
@@ -180,7 +179,6 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	/**
 	 * 替换整条持续 Journey 使用的玩家职业事实。
 	 * Replaces the player-class fact used by the entire persistent journey.
-	 *
 	 * @param playerClass 规划器选定的具体玩家职业 / concrete player class selected by the planner
 	 */
 	public void replacePlayerClassFacts(PlayerClass playerClass) {
@@ -191,7 +189,6 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	/**
 	 * 种入规划路径开始前已经由前置任务或世界行为提供的背包事实。
 	 * Seeds inventory facts already supplied by prerequisite quests or world behavior before the planned path starts.
-	 *
 	 * @param initialInventory 物品模板 ID 到最小初始数量 / item-template ids to minimum initial counts
 	 */
 	public void seedInitialInventoryFacts(Map<Integer, Integer> initialInventory) {
@@ -207,7 +204,6 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	 * 应用一次由生产 metadata 明确声明且概率为 100% 的交互物掉落；它是世界掉落事实，不伪装成任务 transition。
 	 * Applies one deterministic (100%) interaction-object drop declared by production metadata; this remains a
 	 * world-drop fact and is never presented as a quest transition.
-	 *
 	 * @param npcId 产生掉落的交互物模板 ID / interaction-object template id producing the drop
 	 * @param itemId 已获得的任务物品模板 ID / acquired quest-item template id
 	 */
@@ -224,7 +220,6 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	/**
 	 * 种入规划路径中不会由任务状态迁移改变的角色、资格和能力条件。
 	 * Seeds character, eligibility, and capability conditions that quest-state transitions do not mutate.
-	 *
 	 * @param transitions 已选择路径上的生产 transition / production transitions on the selected path
 	 */
 	public void seedPersistentJourneyConditions(List<QuestTransition> transitions) {
@@ -266,7 +261,6 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	/**
 	 * 在单步请求前物化该 transition 所需的动态世界事实，但不重新投影任务状态。
 	 * Materializes dynamic world facts required by one transition before its request without re-projecting quest state.
-	 *
 	 * @param transition 即将执行的生产 transition / production transition about to execute
 	 */
 	public void seedStepConditions(QuestTransition transition) {
@@ -342,7 +336,6 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	 * 不改变任务、背包或世界进度。
 	 * Re-establishes event authority for one continuous-session request and clears attribution owned only by the
 	 * previous route without changing quest, inventory, or world progress.
-	 *
 	 * @param request 即将进入任务运行时的客户端请求 / client request about to enter the quest runtime
 	 */
 	public void beginRequest(ClientActionRequest request) {
@@ -448,7 +441,6 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	/**
 	 * 为跨越未接取节点的场景选择一个最小满足的元数据起始条件组。
 	 * Seeds one minimal satisfying metadata start-condition group for a transition crossing the unaccepted node.
-	 *
 	 * <p>生产 planner 会独立评估这些条件；测试场景不能只复制 transition 自身的条件，否则真实可接取
 	 * 任务会被错误降级为 {@code NO_MATCH}。</p>
 	 * <p>The production planner evaluates these conditions independently; a test scenario must not copy only
@@ -621,7 +613,6 @@ public final class QuestE2eRuntime implements QuestHeadlessClient.ActionBridge, 
 	/**
 	 * 将生产 XML transition 的声明事件具体化为运行时入口会收到的权威事件。
 	 * Materializes a production-XML transition event into the authoritative event received by runtime ingress.
-	 *
 	 * @param transition 生产目录编译出的 transition / transition compiled from the production directory
 	 * @return 可直接分发的运行时事件 / runtime event ready for dispatch
 	 */

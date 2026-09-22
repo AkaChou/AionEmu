@@ -20,7 +20,7 @@
       <var name="var0" value="0" />
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0" />
+      <var name="var0" value="1" />
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0" />
@@ -29,6 +29,28 @@
   <transitions>
     <dialog type="NPC_START" npc-id="800502" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1" />
     <dialog type="NPC_REPORT" npc-id="800505" source="started" target="reward" page="SELECT5" />
+    <!-- QE-051 领奖行：客户端 quest_q49003.html 只有 2 行（行 0 目标/交付、行 1 与 dromik 对话）；
+         旧 reward 投影停在 0，所以领奖态仍渲染行 0。证据：客户端行 0 = Noorn(800511) SETPRO1、行 1 = STR_DIC_N_dromik(800505) SELECT5；定义 NPC_REPORT 与 npc-complete 都在 800505。
+         因此 reward 投影固定为领奖行 1，并补 REWARD/var0=0 的 enter-world 自愈边（旧存档旧值
+         只会来自旧投影，语义无歧义）。
+         Reward-row contract (QE-051): the second client journal row talks to dromik(800505) and the
+         legacy handler enters REWARD on that same NPC, so the reward projection is 1 and stale
+         REWARD/var0=0 saves are healed on enter-world. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="800505" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD" />
     </npc-complete>

@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Locks the batch-7 report/hand-over reward-row contract: when the last journal row asks the player to report
  * to an NPC, the reward projection must sit on that row, a source-less enter-world recovery edge must repair
  * stale saves, and the hand-over transaction must target a START node whose projection matches.
- *
  * <p>三组证据：A 组 18 个成长任务（19672..19694 / 29672..29694，客户端 2 行“收集成长货币 → 向成长支援教官
  * 报告”，定义里唯一 NPC 806698 / 806700 既接取又领奖）；B 组 3210（客户端 3 行，末行“和 Shugo_Shulack_02
  * 对话”，镜像 4210 的 reward 已是 2）；C 组 18036/28036（客户端 2 行“和德拉坎战士对话 → 向 Demades/Latkel

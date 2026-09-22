@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * 锁定任务 20530「打开深渊之门 / The Aether Field」步骤 7 收集交付与步骤 8 对话续接的客户端对齐合同。
  * Locks the step 7 collection handover and step 8 dialog continuation client contract for quest 20530.
- *
  * <p>Aion 5.8 客户端在 collect_progress=7 时以 progress==7 (var0==7) 校验背包持有魔法阵染料 (182216166) 与咒语书碎片 (182216168)，
  * 并在巴尔德尔 (204075) 处交互 select8 -> check_user_has_quest_item。
  * 严禁在祭坛 (703389) 交互时抢跑推进 var0=8（这会导致客户端判定不在收集步而不发任务对话）。

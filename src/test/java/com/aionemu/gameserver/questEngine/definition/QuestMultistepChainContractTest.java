@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * 锁定「客户端任务书逐行对话链」批量修复合同（13 个任务）。
  * Locks the batch repair contract for client journal row-by-row talk chains (13 quests).
- *
  * <p>这一族的原始缺陷是同一形状：客户端 quest_summary 逐行列出 n 个步骤（末行领奖），
  * 但服务端把整条链压成一个 {@code started(var0=0)} 状态，所有步骤 NPC 共用同一个
  * {@code HACTION_SETPRO1} 并直接跳 reward。玩家跟第 1 个 NPC 说完话就能领奖，第 2..n 行永远不可达；
@@ -28,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * server compressed the chain into a single {@code started(var0=0)} state whose NPCs all shared one
  * {@code HACTION_SETPRO1} and jumped straight to reward, so row 2..n were unreachable and every wiki
  * GM command collapsed to {@code //quest set <id> START 0}.</p>
- *
  * <p>修复后的合同与已提交的 1192 一致：每行一个 START 状态（var0 = 行号 0..n-1），末行另有同 var0 的
  * REWARD 状态；第 i 行由该行客户端 NPC 的 {@code SETPROi} 推进到下一行状态，领奖行由自己的客户端
  * {@code SELECT_QUEST_REWARD} 进入 REWARD，入口页取自该行客户端链；只有领奖行 NPC 能完成任务。

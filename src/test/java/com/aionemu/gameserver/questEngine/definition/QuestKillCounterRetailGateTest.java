@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 用客户端击杀门控（quest_monster.csv 的 SECTION_1&lt;N）校验生产任务"完成所需击杀数"。
  * 击杀数由 {@link QuestKillCounterSimulator} 经真实 planner 模拟得出，而不是从 XML 形状反推，
  * 因此既能抓住 13758 族那种"客户端 5 杀、XML 要 15 杀"的漂移，也不会被 +1 记账形态误伤。
- *
  * <p>Validates the production "kills required" against the client kill gate by simulating kills through
  * the real planner. The simulator is shape-independent: it catches drift without guessing accounting forms.
  */

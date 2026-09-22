@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 不得丢失 legacy {@code quest_work_items} 的迁移。
  * Locks quest 1192's work-item contract and audits that every production
  * definition preserves its legacy {@code quest_work_items} migration.
- *
  * <p>权威来源是 {@code quest_data.xml} 的 {@code <quest_work_items>}。旧引擎
  * {@code QuestService.setFinishingState} 在完成时无条件清理这些物品；typed
  * 引擎只在 metadata 声明了 {@code <work-items>} 时执行同样的清理
@@ -35,7 +34,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * mirrors that when the metadata declares {@code <work-items>}. A definition that
  * dropped the declaration and carries no explicit {@code remove-item} for the item
  * necessarily leaves it in the inventory, which is quest 1192's 182200556.</p>
- *
  * <p>quest_data.xml 未声明 work item、但旧 handler 在 use-item 中消费的道理由
  * {@link QuestUseItemRewardCleanupGateTest} 覆盖；两道门禁共同覆盖两种消费语义来源。</p>
  * Items consumed by a legacy {@code use-item} handler without a quest_data work-item declaration

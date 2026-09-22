@@ -953,3 +953,204 @@ QuestCollectProgressAlignmentGateTest,QuestDialogOrderAuditTest,QuestDefinitionD
 - **zone 名按同族命名规则推断**：A/B 后缀与 `DYNAMIC_ENV` 采用 15608/25601 的 `zones_quest.xml`
   既有规则；坐标来自客户端 level 触发点（同族坐标同样来自客户端/零售位置），仍需实机确认
   enter-zone 能触发。
+
+## 十六、批次 12：领奖 NPC 归属核实族 + 30614 报告行（4 个任务，2026-09-22）
+
+### 十六之一、候选与证据（归属口径 = 客户端 quest_summary 行内 NPC）
+
+候选来自审计的「末行 NPC 与定义领奖 NPC 不一致」族：`19064`、`29064`、`21455`、`30614`
+（`26838` 的 806574/806575 仍待单独取证，本批不动）。判定口径固定为：
+**客户端 `quest_summary` 末行写明的 NPC = 实现侧的领奖/completion NPC；起始 NPC 不得兼任领奖。**
+
+| 任务 | 客户端行 | 行内 NPC（客户端解包 id） | 修复前领奖/completion | 修复后 |
+|---|---|---|---|---|
+| 19064 | 行 0 Undin、行 1 徽章+圣物交 Jucleas | Jucleas = 203752 | 203701（起始 NPC Lavirintos 兼任） | 203752 |
+| 29064 | 行 0 Darfen、行 1 徽章+圣物交 Balder | Balder = 204075 | 204053（起始 NPC Kvasir 兼任） | 204075 |
+| 21455 | 行 0 交给 Schiemann、行 1 解毒剂交 Unset | Unset = 799244 | 799404（起始 NPC Miener 兼任） | 799244 |
+| 30614 | 行 0 战斗 6/15、行 1 向 Astella 报告 | Astella = 800327 | 800326（Aluna） | 800327 |
+
+补充证据：
+
+- 19064 / 29064：legacy `_19064Templar_Of_Construction`、`_29064Fang_Of_Construction` 注册
+  `{起点, 中间, 领奖}` 三个 NPC，中间 NPC 的 `STEP_TO_1` 写 `var0=1`（旧 typed 投影因此在领奖前
+  停在行 0），领奖 NPC 用 `checkQuestItemsSimple(1,2,true,5)` 进 REWARD；retail 侧
+  `end_npc_ids=203752/204075` 与客户端行 1 一致。
+- 21455：legacy `_21455Ingredients_For_The_Antidote` 的 `npc_ids={799404,799240,799244}` 中，
+  799240 走 `STEP_TO_1` 换物品、799244 进 REWARD；retail `end_npc_ids=799244`；accept 仍是
+  799404（客户端 `quest_complete`「米埃奈尔说果实经过一段时间之后效果就会消失」）。
+- 30614：见十六之三（首轮判断被修订）。
+
+### 十六之二、修复（首轮）
+
+- **19064 / 29064**：新增 `s1(START,var0=1)`；行 0 路由改到 798450/798452（`QUEST_SELECT` → SELECT2、
+  `SETPRO1` 写 `var0=1`）；行 1 与领奖/completion 全部改到 203752/204075（`QUEST_SELECT` → SELECT5、
+  `CHECK_USER_HAS_QUEST_ITEM_SIMPLE` 校验并回收徽章+圣物后进 REWARD）；`reward` 投影 0→1；
+  旧存档 `reward/var0=0`（旧 typed 投影）与 `var0=2`（旧 handler 的 `var0+1` 语义）各补一条
+  enter-world 自愈边。
+- **21455**：领奖/completion 由 799404 改到 799244；删除客户端没有按钮的 `SETPRO2` 死路由，把
+  换物品（182209514 → 182209515）并入客户端 `select2_1` 的 `SETPRO1`；删除
+  `started + 799404 QUEST_SELECT -> SELECT5` 死路由，改由 `reward + 799244 QUEST_SELECT`
+  打开奖励窗口。
+- **30614**：`reward` 投影 0→1；补 `REWARD/var0=0` 的 enter-world 自愈边；补领奖态入口页
+  `reward + QUEST_SELECT(31) -> DEFAULT_SUCCESS(10002)`，并保证入口页位于 `npc-complete` **之后**
+  （首版脚本曾把它插进 `npc-complete` 内部，导致 XSD 报错，已修并加防重入断言）。
+
+### 十六之三、修订：30614 的领奖 NPC 由 800326 回滚为 800327（Astella）
+
+首轮把 30614 的领奖 NPC 留在 Aluna(800326)，理由是「retail `start_npc_ids=800326` 与 legacy 模板
+双源确认」。复核发现**这两个来源是同一个文件**（`docs/quest/client-dialog-mapping/legacy-quest-dialog-*.csv`
+的 `source_resource` 都是 3.0/4.5 期手写脚本 `terath_dredgion.xml`），属单源重复计数；支持
+Astella(800327) 的证据链反而更强：
+
+1. 客户端 `quest_summary` 行 1 直接写「向 Astella 报告」（`STR_DIC_N_Astella`）。
+2. 同文件 `quest_complete`：「阿斯泰拉说必须对萨德哈德雷得奇安进行持续的进攻，让你继续渗入到那里
+   进行战斗」——同族中该句主语与接取 NPC 一致。
+3. 同族命名规则 4/4 成立：30611/30612 行内是 Aluna(800326)、实现 NPC 也是 800326；30610/30613
+   行内是 Astella(800327)、实现 NPC 也是 800327。
+4. 2026-08-06「全量 6021 任务客户端/真端交叉审计修正」(`f737cfef1`) 原本就把该任务改成 800327。
+5. 反向证据只有 `terath_dredgion.xml` 单文件，且它对该族同样不完整（30610 的中间 Aluna 对话步骤
+   在该文件里不存在）；`10a2e7e57`（2026-09-13「批量对齐 69 个任务 report/completion NPC」）仅依据
+   它把 800327 改成 800326，并把该次改动登记进 `.agents/summary/quest-report-npc-mismatch/report-npc-mismatch.csv`
+   第 64 行（`30614,800327,800326,...`）。本次修订即回滚该次回归，并把 NPC_START / NPC_REPORT /
+   npc-complete / 领奖态入口页统一到 800327。
+
+### 十六之四、验证（2026-09-22）
+
+- **XSD**：`xmllint --noout --schema quest_definition.xsd` 对 19064 / 29064 / 21455 / 30614
+  4/4 `validates`。
+- **可重放脚本**：`.agents/summary/quest-10527-reward-row/apply_batch12_reward_npc_ownership.py`
+  `--check` 4/4 `BATCH12_CHECK_OK`（幂等；含入口页误插搬出、重复入口页去重、旧修订注释同步）。
+- **单任务审计**（`audit_reward_row_vs_client_steps.py`，同一工作树前后对照）：
+
+| 任务 | 修复前 | 修复后 |
+|---|---|---|
+| 19064 | `ROW_BEHIND / MISSING_LAST_ROW / ROW_WITHOUT_STATE`，reward_var0=0，`last_row_npc_matches_quest=False` | `ROW_ALIGNED / ALIGNED / ROW_STATE_ALIGNED`，reward_var0=1，`True` |
+| 29064 | 同上 | 同上 |
+| 21455 | `ROW_ALIGNED / ALIGNED`，但 `last_row_npc_matches_quest=False`（领奖在起始 NPC 上） | `ROW_STATE_ALIGNED`，`True` |
+| 30614 | `ROW_BEHIND / MISSING_LAST_ROW`，reward_var0=0，`last_row_npc_matches_quest=False`（Aluna 800326） | `ROW_ALIGNED / ALIGNED / ROW_STATE_ALIGNED`，reward_var0=1，`True` |
+
+  全库快照（同一次刷新）：`ROW_ALIGNED 2633`、`ROW_BEHIND 211`、`NO_REWARD_ROW 179`、
+  `ROW_AHEAD 2591`、`NO_CLIENT_HTML 608`；`last_row_npc_matches_quest=False` 由 523 降到 519，
+  正好是本批 4 个任务。快照同时包含并行任务（1430/1643/2513/2962/4542 族）的改动，不能只用差值
+  归因本批次。
+- **门禁测试**：`src/test/java/com/aionemu/gameserver/questEngine/definition/RewardNpcOwnershipContractTest.java`
+  6 例——① 领奖/completion owner 必须是客户端行内 NPC 且不再落在起始 NPC；② 各任务 talk 路线 NPC
+  集合精确相等（防止再出现向 Aluna 汇报的残留路由）；③ Terath Dredgion 族命名规则
+  （30610/30611/30612/30613 参照 + 30614 只允许 800327）；④ 旧存档自愈边（0 → 1、2 → 1）与
+  planner 计划结果；⑤ 30614 领奖态入口页必须唯一且位于 `npc-complete` 之后；⑥ 21455 不再保留
+  `SETPRO2` 与 799404 的领奖路由。
+- **Maven**：PENDING_MAVEN（未获授权，未执行）。拟在同一口径的临时 worktree 上运行
+  `mvn -Dtest='RewardNpcOwnershipContractTest,RetailSingleStepRewardRowContractTest,QuestClientContractGateTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest' test`。
+- 客户端实机复测：**PENDING_CLIENT**。复测要点：① 19064/29064 行 0 与 Undin/Darfen 对话后任务书
+  切到行 1，行 1 与 Jucleas/Balder 对话可开奖励窗口并完成；② 21455 与 Schiemann 对话换到解毒剂、
+  与 Unset 对话领奖；③ 30614 领奖态在 Astella(800327) 处显示“?”并可打开 `DEFAULT_SUCCESS`
+  与奖励窗口。
+
+### 十六之五、边界与后续
+
+- **归属验收口径**：客户端行内命名 NPC 优先于 legacy/retail 单文件登记；两者冲突时必须给出客户端
+  命名规则或族内一致性证据（本批 30614 即按该口径回滚）。`report-npc-mismatch.csv` 第 64 行是
+  2026-09-13 批次的历史登记，本批不改写它，但该行结论已被本次修订取代。
+- **`last_row_npc_matches_quest` 不是缺陷总数**：全库仍有 519 个 False，多数属于（a）末行是中间
+  对话对象（如 30610 行 0 的 Aluna、收集类行的交付 NPC 与定义注册 NPC 不同）或（b）定义确实未注册
+  该 NPC；只能用作族内一致性定位，逐族收口时仍要回到客户端行 + 真端/legacy 三方证据。
+- **剩余 MISSING_LAST_ROW 99 个**（75 DIALOG + 24 OTHER，均 `ROW_WITHOUT_STATE`）继续逐族收口；
+  另有 `ROW_BEHIND 211`（多为 `MISSING_TAIL_ROWS`）与 `STATES_BEYOND_ROWS` 族，禁止按行号机械推进。
+- **旧存档**：19064/29064 的 `reward/var0=2` 是旧 handler `var0+1` 语义留下的中间值，本批按自愈边
+  归一到 1；`START` 态旧存档不做迁移（会由行 0 路由重新推进）。
+- **26838 仍待取证，本批不改**：客户端两行都写 `IDEternity_03_Jarik01_E`（客户端解包 id = 806574），
+  而 legacy `_26838Some_Sorcerer_Records` 与 typed 定义都用 806575（`IDEternity_03_Jarik02_E`）；
+  天族镜像 16838 呈同一形态（客户端行内 `Ostia01_E` vs 定义/legacy 806566 = `Ostia02_E`），
+  说明这是「01/02 变体」的族级分歧而不是单任务接错。可用证据目前为空：806565/806566/806574/806575
+  在 `spawns/**` 都没有静态 spawn（该 NPC 由任务/事件动态生成），`quest.xml` 与真端 `NPCS.xml`
+  都不含 NPC→任务绑定。下一批若要收口，需先用「真端 NPC 绑定或实机观察哪个 NPC 显示 ? 并打开
+  reward 窗口」二选一取证，禁止仅凭客户端行内名字直接改 id（与 30614 不同：30614 还有
+  `f737cfef1` 真端交叉审计与同族 4/4 命名规则做旁证）。
+
+---
+
+## 十七、批次 13：“两行、末行是与领奖 NPC 的对话”族（6 个任务，2026-09-22）
+
+### 十七之一、候选与证据
+
+族定义：客户端 `quest_summary` **恰好 2 行** —— 行 0 是“前往/交付/进入/接取对话”，行 1 是
+“（再次）与 X 对话 / 向 X 报告”，并且**行 1 点名的 NPC 就是定义里的领奖/完成 NPC**。定义原先把
+`reward` 投影停在 0，于是 REWARD 态在任务书里仍然渲染已完成的行 0，行 1 永远拿不到 START/REWARD
+状态（审计 `MISSING_LAST_ROW` + `ROW_WITHOUT_STATE`）。
+
+| 任务 | 行 0 | 行 1（领奖/完成 NPC） | legacy / 定义证据 |
+|---|---|---|---|
+| 1926 | 去找 Lavirintos 获取推荐信 | 和 Latri 对话（203894） | `_1926Secret_Library_Access`（`7e9f0316c^`）203894 处 `giveQuestItem(182206022)` + `setStatus(REWARD)`，REWARD 态在 203894 开 `10002 -> 5`；`npc-complete` owner = 203894 |
+| 2938 | 去找 Sueron 获取推荐信 | 和 Izwin 对话（204267） | `_2938Secret_Library_Access` 同 1926 结构；`npc-complete` owner = 204267 |
+| 39003 | 和 DF2a_Ionia_E_LHW（800512）对话 | 和 DF2a_Nevma_G_LHM（800504）对话 | 定义 `NPC_START=800500`、`NPC_REPORT=800504(page SELECT5)`、`npc-complete` owner = 800504；客户端行 0 的 800512 只发 `SETPRO1` |
+| 49003 | 和 Noorn（800511）对话 | 和 dromik（800505）对话 | 定义 `NPC_REPORT=800505(page SELECT5)`、`npc-complete` owner = 800505；客户端行 1 的 `STR_DIC_N_dromik` ↔ 客户端表 `800505 = LF2a_dromik_G_DHM`（带前缀，故 `last_row_npc_matches_quest=False`，非缺陷） |
+| 80989 | 进入 IDRun 战场见咕咕咻 | 回到大城市再次和咕咕咻对话 | 客户端表 `836196 = IDRUN_Entrance_guide`；定义 `SET_SUCCEED/DEFAULT_SUCCESS` 与 `npc-complete` 都在 836196 |
+| 80990 | 同 80989（另一阵营事件变体） | 同 80989 | 定义 NPC 与领奖 owner 同为 836196 |
+
+**QE-045 边界打回（本批最重要的判断）**：同形的 `13965/23965`（enter-zone 置 REWARD）与
+`15674/25674`（`CHECK_COLLECTED_ITEMS` 置 REWARD）**不属于本批**。它们虽然是同样的 2 行结构（行 1
+= 与 835217/835220/806114/806116 对话），但 `reward` 投影 0 与 `REWARD && var0==1` 恢复边是
+commit `f6aff952a`“保留 legacy packed step”（2026-09-09，共 22 个任务）的基线，并被
+`LegacyRewardStepProjectionRegressionTest` 的 20 例硬锁（改投影会同时打破该测试的
+`reward var0 == 0`、`recovery route == 1`、`recovery.actions() == List.of()` 三条断言）。按 QE-045
+boundary，投影重定基线必须先有客户端验收证据，因此**本批只登记证据、不改这 4 个任务**，与批次 2
+“排除 QE-045 锁任务”的口径一致。
+
+（同批脚本另登记 50008/51008 为不可机械套用的边界：legacy 用 `setQuestVarById(0, var0 + 1)` 把
+var0 当 0→2 的投递计数，且客户端行内 `HousingLf_Event_ShugoSanta` / `E_HousingDF_Event_ShugaShugo`
+在 5.8 客户端 NPC 表中不存在，归属无法核对。）
+
+### 十七之二、修复
+
+统一模板（与批次 10 的 retail 单步族同形）：
+
+1. `<node label="reward" status="REWARD">` 的 `var0` 投影 `0 -> 1`（领奖行 = 客户端行 1）；
+2. 补一条**无 source** 的 `enter-world` 自愈边 `REWARD && var0 == 0 -> set-variable var0 = 1`
+   （`LEVEL_AND_VISIBILITY_REFRESH`，无 priority），把旧存档的旧投影纠正为 1；否则
+   `QuestMutationPlanner#matchesSourceNode` 的“投影变量必须全等”语义会让这些存档匹配不到任何领奖路由；
+3. 1926/2938 迁移期已有的 `REWARD && var0 == 1` 入口边**保留**（与自愈边条件互斥，不会产生
+   `AMBIGUOUS_TRANSITION`；39003/49003/80989/80990 原本没有该边，本批不新增）。
+
+脚本：`.agents/summary/quest-10527-reward-row/apply_batch13_two_row_talk_rows.py`
+（`--check` 幂等，6/6 `BATCH13_CHECK_OK`；`QE045_DEFERRED` 常量登记 4 个锁任务）。
+逐任务证据：`.agents/summary/quest-10527-reward-row/batch13-evidence.tsv`。
+
+### 十七之三、验证（2026-09-22，用户授权后执行）
+
+- **单任务审计**（`audit_reward_row_vs_client_steps.py 1926 2938 39003 49003 80989 80990`）：
+  6/6 `ROW_BEHIND / MISSING_LAST_ROW / ROW_WITHOUT_STATE`（`visible_state_var0=0`）
+  → `ROW_ALIGNED / ALIGNED / ROW_STATE_ALIGNED`（`visible_state_var0=0 1`）；39003/49003/80989/80990
+  的 `recovery` 由 `False` 转 `True`。
+- **全库快照**（同一次刷新）：`ROW_ALIGNED 2633 -> 2639`、`ROW_BEHIND 211 -> 205`、
+  `MISSING_LAST_ROW 99 -> 93`、`ROW_AHEAD 2591`、`NO_REWARD_ROW 179`、`NO_CLIENT_HTML 608`；
+  形状 `ALIGNED` +6。快照同样包含并行任务（1430/1643/2513/2962/4542/10525 等族）的改动，
+  不能只用差值归因本批次；4 个 QE-045 锁任务在这一步保持 `ROW_BEHIND / MISSING_LAST_ROW` 不变。
+- **结构校验**：`xmllint --noout --schema quest_definition.xsd` 6/6 `validates`；IDEA lint 0 problems；
+  `git diff --check` 干净。
+- **门禁测试**：`src/test/java/com/aionemu/gameserver/questEngine/definition/RewardRowTwoRowTalkFamilyContractTest.java`
+  6 例——① `reward` 投影 = 1 且 `started` 保持 0；② 领奖 owner 必须等于客户端行 1 的 NPC；
+  ③ 自愈边唯一（`var0==0 -> 1`，无 priority）且 `QuestMutationPlanner` 对 `REWARD/var0=0` 计划出
+  `var0=1`；④ 迁移期 `REWARD/var0==1` 入口边按任务保留/缺失（1926/2938 保留）；⑤ 任何 target=reward
+  的事务都不许写非领奖行的 `var0`；⑥ QE-045 锁的 4 个同形姊妹任务必须保持 `reward var0=0`
+  （把“本批故意不收口”写成可执行边界）。
+- **Maven**：PENDING_MAVEN（未获授权，未执行）。拟在同一口径的临时 worktree 上运行
+  `mvn -Dtest='RewardRowTwoRowTalkFamilyContractTest,RewardNpcOwnershipContractTest,RetailSingleStepRewardRowContractTest,LegacyRewardStepProjectionRegressionTest,QuestClientContractGateTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest' test`。
+- 客户端实机复测：**PENDING_CLIENT**。复测要点：① 1926/2938 与 Lavirintos/Sueron 交付后任务书切到
+  行 1，与 Latri/Izwin 对话开奖励窗口；② 39003/49003 与行 0 NPC 对话推进后，行 1 高亮，与
+  DF2a_Nevma_G_LHM/dromik 对话领奖；③ 80989/80990 事件链在 IDRun 再次对话后行 1 高亮。
+
+### 十七之四、边界与后续
+
+- **QE-045 与 QE-051 的正面冲突已挂账（需一次客户端观测）**：13965/23965/15674/25674 在 QE-051
+  口径下缺行 1 状态，在 QE-045 口径下则是“retail 忠实投影”。判定取舍只需一次实机观测：
+  **在 REWARD 态（可开奖励窗口时）看任务书高亮的是行 0 还是行 1**——若显示行 1，则 QE-045 的
+  packed-step 基线在这 4 个任务上需要按客户端证据重定基线（同时改 XML + 锁测试 + 审计常量）；
+  若显示行 0，则保留现状并在审计里把“末行不可达”记为零售原样。观测前禁止批量翻动这 20 个锁任务。
+- **`last_row_npc_matches_quest` 不是缺陷数**：本批 6 个任务里 1926/2938 为 `True`，
+  39003/49003/80989/80990 为 `False`，后者是客户端表名（`LF2a_dromik_G_DHM`、
+  `DF2a_Nevma_G_LHM`、`IDRUN_Entrance_guide`）与行内 `STR_DIC_*` key 不同形造成的，不是归属错误；
+  该列只能做族内一致性定位。§十六 记录的 523→519 是当时的窄口径统计，本次刷新按全列统计为 2216
+  （含 `STATES_BEYOND_ROWS` 等非缺陷族），两者不可直接比较，逐任务真值以 `batch13-evidence.tsv` 为准。
+- **剩余 MISSING_LAST_ROW 93 个**（69 DIALOG + 24 OTHER）：其中 10 个为 QE-045 锁（含本批挂账的 4 个）、
+  30 个镜像同缺末行、其余 53 个继续逐族收口；`ROW_BEHIND 205` 多为 `MISSING_TAIL_ROWS`（82），
+  与 `STATES_BEYOND_ROWS 2625`、`INTERIOR_GAP 266` 一样禁止按行号机械推进。

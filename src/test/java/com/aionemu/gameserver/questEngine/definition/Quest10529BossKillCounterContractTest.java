@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 验证 10529/20529 破坏圣物 2 的 boss 击杀在客户端 /1 步骤内一次推进，并清零 s6 计数残留。
  * Verifies that the Protection Artifact 2 boss kill of quests 10529/20529 advances in the client /1 step
  * and clears the s6 counter residue.
- *
  * <p>旧定义在 s8 沿用旧 handler 的“var1 != 0 时只累加”分支：var1 上限为 7，而 s7→s8 不清零 var1
  * （s6 计数残留 6/7），因此第一次击杀即得到 7、第二次击杀计算到 8，被 {@code ProgressLayout.pack}
  * 判为越界并整笔失败，玩家永久卡在“消灭潜入部队军团长 (0/1)”这一步。现在 s8 击杀只依据 var0 推进，
