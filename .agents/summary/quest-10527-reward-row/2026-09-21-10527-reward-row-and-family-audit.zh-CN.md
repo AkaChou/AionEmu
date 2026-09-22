@@ -4194,3 +4194,65 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
   客户端 `collect_progress`、legacy 阶梯与页链后再落码，不得按本批数值套用（18301 行 0 是破坏 7 个
   监视水晶球的物件计数、21467 是 4 段限时击杀播报 + 1 行报告，形态与 2289 相近但证据链尚未取证）。
 - `var0` 的 `max=63` 未改动；本批没有新增 bit-field，`ClientQuestSectionAlignmentTest` 的 6N 约束不受影响。
+
+## 五十五、批次 51：3938/4942 神圣圣殿骑士晋级双子末两行状态（2026-09-22）
+
+### 五十五之一、族判定与证据（客户端任务书 + legacy 阶梯双证）
+
+批次 50 之后 `MISSING_TAIL_ROWS` 还剩 35 个，其中 3938（Well Rounded，ELYOS）与 4942
+（Proving Proficiency，ASMODIANS）是同一张 11 行任务书的天/魔镜像，也是本批唯一“阶梯只缺尾部、
+没有内容缺口”的一对：
+
+| 行 | 客户端文字（两阵营同形） | step | 证据 |
+|---|---|---|---|
+| 0 | 和 Lavirintos(203701)/Kvasir(204053) 对话，选择制造技术 | 0 | `select1` 的 `SETPRO1..6`（10000..10005）六选一 |
+| 1..6 | 和六位制造名人之一对话并交付圣物 | 1..6 | 各名人 `STEP_TO_7` 交圣物后统一推进到 7 |
+| 7 | 和制造名人对话 | 7 | 798316(3938)/798317(4942) 处 `CHECK_COLLECTED_ITEMS` 收 186000077 |
+| 8 | 带着圣物去见大神官 Jucleas(203752)/Balder(204075) 举行神圣仪式 | 8 | `select9_1` 的 `SET_SUCCEED` |
+| 9 | 举行仪式 | 9 | 大神官处收仪式道具 186000081/186000085 |
+| 10 | 回 Lavirintos/Kvasir 出示徽章领奖 | 10 | `select_success` 的 `SELECT_QUEST_REWARD` |
+
+- 11 行任务书的可见槽位是 `0/3/6/…/30`（每行 3 个槽位：visible/color + 保留位），
+  即每行都必须有一个 step 状态。
+- 迁移前 handler `origin/history:.../miragent_holy_templar/_3938Well_Rounded.java` 的阶梯正是
+  `0 → 1..6 → 7 → 8（大神官处 SET_REWARD 收仪式道具）→ REWARD（回 Lavirintos 出示徽章领奖）`：
+  末两行分别对应 step 9（仪式完成）与 step 10（领奖行）。
+- 现状缺陷：typed 定义的 START/REWARD 阶梯只到 s8（var0 = 0..8，9 个状态），`reward` 投影停在
+  8（3938）或 0（4942），于是第 9/10 行永远没有状态、任务书在仪式后就停在行 8
+  （审计 `ROW_BEHIND | MISSING_TAIL_ROWS | ROW_WITHOUT_STATE`，缺行 9、10）。
+
+### 五十五之二、落点（3938.xml / 4942.xml）
+
+1. 新增 `<node label="s9" status="START">`（step 9 = 大神官处仪式完成）与
+   `<node label="s10" status="REWARD">`（step 10 = 回起始 NPC 出示徽章领奖），删除旧 `reward` 节点；
+2. 大神官处 `SET_SUCCEED` 收仪式道具路由 `s8 -> s9`，并补 `var0=8` 门控（4942 迁移时漏写）；
+3. 起始 NPC 处补末行领取路由 `s9 -> s10`：`SELECT_QUEST_REWARD` 出示徽章刷新到末行并下发奖励窗
+   （priority 0），同事件的失败回落页 priority 1；
+4. `npc-complete` 归属迁到 s10（领奖行），preview 只保留 `USE_OBJECT`（避免与领取路由同事件重复）；
+5. 无 source 的 `REWARD/var0<10 -> s10` 自愈边，让迁移期停在 var0=0/8 的领奖存档登录后落到末行。
+
+### 五十五之三、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 两个文件 validates；apply 脚本
+  `--check` 幂等 2/2、`git diff --check` 干净。
+- **新增门禁**：`HolyTemplarFinalRowPairContractTest`（6 例）锁定 11 个 step 状态、六条工艺分支、
+  仪式道具消耗与页面链、末行领取路由、唯一 completion owner（起始 NPC）、自愈边
+  （`REWARD/var0<10 -> s10`，planner 实测 nextStatus=REWARD/step=10）。
+- **全库行号审计**：3938/4942 由 `ROW_BEHIND | MISSING_TAIL_ROWS | ROW_WITHOUT_STATE（visible 0..8）`
+  变为 `ROW_ALIGNED | ALIGNED | ROW_STATE_ALIGNED（visible 0..10）`；`MISSING_TAIL_ROWS 37 -> 35`，
+  待逐族收口 31 -> 29；两者因不再保留 `label="reward"` 节点，被登记为
+  `BATCH51_HOLY_TEMPLAR_FINAL_ROW_PAIR`（审计的 label 投影探针报 `NO_REWARD_ROW`，行/状态口径已对齐）。
+- **客户端实机 PENDING_CLIENT（请按此复测）**：① 与起始 NPC 对话六选一后任务书切到行 1；
+  ② 逐个完成工艺名人的圣物交付，任务书依次推进到行 7；③ 在制造名人处交付 186000077 切到行 8；
+  ④ 在大神官处交付 186000081（魔：186000085）后任务书切到行 9 且**不再提前弹奖励窗**；
+  ⑤ 回起始 NPC 出示徽章，任务书切到行 10 并弹出奖励窗，领取后完成；
+  ⑥ 旧存档 `REWARD/var0=0/8` 登录自愈到末行 10。
+
+### 五十五之四、边界
+
+- 3938/4942 属 QE-051「行号 = var0」族：11 行任务书的 step 就是行号 0..10，与批次 50 的 2289
+  （var0 是客户端 step，击杀行占 0..4）分属不同合同，禁止互相套用数值。
+- 本批只收口“阶梯齐全、仅缺尾行”的一对；其余同形任务（1582/1634/2223/2307/2372/2411/3502/4732/
+  13918/14012/14013/14053/14054/14152/17500/18213/18301/18911/21080/21138/21467/23918/24016/24053/
+  24203/27500/28213/28911/29008）继续逐个核对 `collect_progress`、legacy 阶梯与页链后再落码。
+- `var0` 的 `max=63` 未改动；本批没有新增 bit-field，`ClientQuestSectionAlignmentTest` 的 6N 约束不受影响。

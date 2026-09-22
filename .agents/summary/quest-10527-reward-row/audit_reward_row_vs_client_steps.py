@@ -174,6 +174,15 @@ CLIENT_SCRIPTED_ROW_EXCEPTIONS = {1123}
 # report/intel/collect 5/6/7), so the row-index lens reports ROW_AHEAD by design.
 BATCH50_ALTGARD_MOSBEARS_COUNTER_ROW = {2289}
 
+# 批次 51（2026-09-22）：3938/4942（神圣圣殿骑士晋级双子）副本把旧的单一 `reward` 节点拆成
+# s9（仪式行，START）与 s10（领奖行，REWARD，var0=10），因此本审计按 label=="reward" 找投影时
+# 报 NO_REWARD_ROW；行/状态口径已由 ROW_STATE_ALIGNED 覆盖（visible 0..10）。权威门禁
+# HolyTemplarFinalRowPairContractTest。
+# Batch 51 registration: 3938/4942 replace the collapsed `reward` node with s9 (ritual row) plus
+# s10 (claim row, REWARD/var0=10), so the label-based projection probe reports NO_REWARD_ROW while
+# the row/state lens is fully aligned.
+BATCH51_HOLY_TEMPLAR_FINAL_ROW_PAIR = {3938, 4942}
+
 COUNTER_SLOT_EXCEPTIONS = {
     2303,   # var0 = 11..15 / 21..25 击杀计数（quest_script Progress(11~14)/(15)/(21~24)/(25)）
     50008,  # ProgressAll + sensoryArea 计数，末行槽位 15 不是 3×行号
@@ -182,6 +191,8 @@ COUNTER_SLOT_EXCEPTIONS = {
     1114,   # 行 4/5 是两条分支各自的领奖行，没有单一 reward 投影可对齐
     80690,  # 末行槽位 15（击杀计数族），不是 3×行号
     2289,   # 击杀行占 var0 = 0..4（Progress(0~4)），行 1/2/3 = 5/6/7（collect_progress=7）
+    3938,   # 末两行 = s9(仪式,START) / s10(领奖,REWARD,var0=10)，无 label=="reward" 节点
+    4942,   # 同上（魔族镜像）
 }
 
 # 批次 29 登记（2026-09-22）：legacy 侧没有 Java handler 也没有 quest_script_data 脚本
@@ -827,7 +838,7 @@ def main() -> int:
           "门禁 CutsceneHiddenQuestFamilyContractTest")
     print(f"  仍隔离（无定义、无任务书行，只登记证据）={sorted(CLIENT_ONLY_ISOLATED_QUESTS)}")
 
-    print("\n[11] 缺尾部多行（MISSING_TAIL_ROWS）逐族盘点（批次 50）：")
+    print("\n[11] 缺尾部多行（MISSING_TAIL_ROWS）逐族盘点（批次 51）：")
     tail = [row for row in rows if row["shape"] == "MISSING_TAIL_ROWS"]
     tail_ids = {row["quest_id"] for row in tail}
     fixed = sorted(BATCH31_GELKMAROS_ROW_LADDER | BATCH32_KALDOR_ROW_LADDER
@@ -838,7 +849,8 @@ def main() -> int:
                    | BATCH42_TOMBSTONE_FLOWER_ROWS | BATCH43_MALODOR_ANTIDOTE_ROWS
                    | BATCH44_FOAM_WISP_ROWS | BATCH45_THREE_ROW_AND_BRANCH_ROWS
                    | BATCH48_INGGISON_NURSING_ROWS | BATCH49_GELKMAROS_KANTELE_ROWS
-                   | BATCH50_ALTGARD_MOSBEARS_COUNTER_ROW)
+                   | BATCH50_ALTGARD_MOSBEARS_COUNTER_ROW
+                   | BATCH51_HOLY_TEMPLAR_FINAL_ROW_PAIR)
     registered_ids = (BLANK_JOURNAL_SLOT_EXCEPTIONS | CLIENT_ONLY_ISOLATED_QUESTS
                       | COUNTER_SLOT_EXCEPTIONS | MULTI_LAYER_COUNTER_EXCEPTIONS
                       | SHARED_VISIBLE_SLOT_EXCEPTIONS | QE045_LOCKED
@@ -850,7 +862,7 @@ def main() -> int:
           f"批次 39 交付-对话-报告族 3 个、批次 40 三 NPC 对话族 3 个、"
           f"批次 41 潘盖亚要塞战族 2 个、批次 42 献花族 1 个、批次 43 解毒剂族 1 个、"
           f"批次 44 发光体五行族 1 个、批次 45 三行/分支族 2 个、批次 48 因吉森护理族 1 个、批次 49 格尔克马洛斯 Kantele 族 1 个、"
-          f"批次 50 奥特加德棕熊计数行 1 个，均已转 ALIGNED）={fixed}")
+          f"批次 50 奥特加德棕熊计数行 1 个、批次 51 神圣圣殿骑士晋级双子 2 个，均已转 ALIGNED）={fixed}")
     stuck = sorted((BATCH31_GELKMAROS_ROW_LADDER | BATCH32_KALDOR_ROW_LADDER | BATCH34_RENTUS_BASE_ROW_LADDER
                     | BATCH35_VALENTINE_TOWER_ROW_LADDER | BATCH36_EVENT_ROW_LADDER
                     | BATCH37_TALK_KILL_REPORT_ROW_LADDER | BATCH38_BRANCH_CHOICE_REWARD_INDEX
@@ -859,7 +871,8 @@ def main() -> int:
                     | BATCH43_MALODOR_ANTIDOTE_ROWS | BATCH44_FOAM_WISP_ROWS
                     | BATCH45_THREE_ROW_AND_BRANCH_ROWS
                     | BATCH48_INGGISON_NURSING_ROWS | BATCH49_GELKMAROS_KANTELE_ROWS
-                    | BATCH50_ALTGARD_MOSBEARS_COUNTER_ROW) & tail_ids)
+                    | BATCH50_ALTGARD_MOSBEARS_COUNTER_ROW
+                   | BATCH51_HOLY_TEMPLAR_FINAL_ROW_PAIR) & tail_ids)
     if stuck:
         print(f"  ⚠ 本批修复清单仍在缺尾桶={stuck}")
     print(f"  已登记例外（空槽位/客户端隔离/计数槽/双层计数/共享槽位/QE-045 锁）={len(registered_ids)} {sorted(registered_ids)}")

@@ -1,0 +1,325 @@
+=== 1582 ===
+  file: _1582ThePriestsNightmare.java
+    qe.registerQuestNpc(204560).addOnQuestStart(questId);
+    qe.registerQuestNpc(204560).addOnTalkEvent(questId);
+    qe.registerQuestNpc(700196).addOnTalkEvent(questId);
+    qe.registerQuestNpc(204573).addOnTalkEvent(questId);
+    return sendQuestDialog(env, 4762);
+    qs.setQuestVarById(0, qs.getQuestVarById(0) + 1);
+    return sendQuestDialog(env, 1352);
+    qs.setQuestVarById(0, qs.getQuestVarById(0) + 1);
+    return sendQuestDialog(env, 1693);
+    qs.setStatus(QuestStatus.REWARD);
+    qs.setStatus(QuestStatus.REWARD);
+=== 1634 ===
+  file: _1634TheWreckOfTheArgos.java
+    qe.registerQuestNpc(204547).addOnQuestStart(questId);
+    qe.registerQuestNpc(204547).addOnTalkEvent(questId);
+    qe.registerQuestNpc(204540).addOnTalkEvent(questId);
+    qe.registerQuestNpc(790018).addOnTalkEvent(questId);
+    qe.registerQuestNpc(204541).addOnTalkEvent(questId);
+    return sendQuestDialog(env, 4762);
+    return sendQuestDialog(env, 1011);
+    qs.setQuestVarById(0, qs.getQuestVarById(0) + 1);
+    return sendQuestDialog(env, 1693);
+    qs.setQuestVarById(0, qs.getQuestVarById(0) + 1);
+    return sendQuestDialog(env, 2034);
+    qs.setQuestVarById(0, qs.getQuestVarById(0) + 1);
+    qs.setStatus(QuestStatus.REWARD);
+    return sendQuestDialog(env, 2375);
+    return sendQuestDialog(env, 5);
+=== 2223 ===
+  file: _2223AMythicalMonster.java
+    qe.registerQuestNpc(203616).addOnQuestStart(questId);
+    qe.registerQuestNpc(203616).addOnTalkEvent(questId);
+    qe.registerQuestNpc(700134).addOnTalkEvent(questId);
+    qe.registerQuestNpc(211621).addOnKillEvent(questId);
+    return sendQuestDialog(env, 1011);
+    return sendQuestDialog(env, 1352);
+    return sendQuestDialog(env, 1694);
+    return sendQuestDialog(env, 1779);
+    return defaultCloseDialog(env, 0, 1, 182203217, 1, 0, 0); // 1
+    return defaultOnKillEvent(env, 211621, 1, true); // reward
+=== 2307 ===
+  file: _2307IrresistibleSoup.java
+    qe.registerQuestNpc(204378).addOnQuestStart(questId); // Favyr
+    qe.registerQuestNpc(204378).addOnTalkEvent(questId);
+    qe.registerQuestNpc(204336).addOnTalkEvent(questId); // Spedor
+    qe.registerQuestNpc(700247).addOnTalkEvent(questId); // Aromatic Soup
+    return sendQuestDialog(env, 4762);
+    return sendQuestDialog(env, 1011);
+    qs.setStatus(QuestStatus.REWARD);
+    qs.setStatus(QuestStatus.REWARD);
+    qs.setStatus(QuestStatus.REWARD);
+=== 2372 ===
+  (no legacy handler)
+=== 2411 ===
+  file: _24114You_Gotta_Stop_Umkata.java
+    qe.registerQuestNpc(203649).addOnQuestStart(questId); //Gulkalla
+    qe.registerQuestNpc(203649).addOnTalkEvent(questId); //Gulkalla
+    qe.registerQuestNpc(700097).addOnTalkEvent(questId); //Umkata's Jewel Box
+    qe.registerQuestNpc(700098).addOnTalkEvent(questId); //Umkata's Grave
+    qe.registerQuestNpc(210752).addOnKillEvent(questId); //Umkata
+    qe.registerQuestNpc(mob).addOnKillEvent(questId);
+    return sendQuestDialog(env, 4762);
+    return sendQuestDialog(env, 1011);
+    return sendQuestDialog(env, 2375);
+    return defaultCloseDialog(env, 3, 4);
+    return sendQuestDialog(env, 1693);
+    return checkQuestItems(env, 4, 4, false, 0, 0);
+    return sendQuestDialog(env, 1352);
+    return sendQuestDialog(env, 5);
+    return defaultOnKillEvent(env, heroSpirit, var, var + 1);
+    return defaultOnKillEvent(env, 210752, 4, true);
+=== 3502 ===
+  file: _3502Nereus_Need_You.java
+    qe.registerQuestNpc(204656).addOnQuestStart(questId);
+    qe.registerQuestNpc(204656).addOnTalkEvent(questId);
+    qe.registerQuestNpc(730192).addOnTalkEvent(questId);
+    qe.registerQuestNpc(mob).addOnKillEvent(questId);
+    return sendQuestDialog(env, 4762);
+    return sendQuestDialog(env, 4);
+    return sendQuestDialog(env, 1011);
+    changeQuestStep(env, 0, 1, false);
+    return sendQuestDialog(env, 10002);
+    return sendQuestDialog(env, 5);
+    return defaultOnKillEvent(env, 214894, 1, 2, 0);
+    defaultOnKillEvent(env, 214895, 0, 1, 1);
+    defaultOnKillEvent(env, 214896, 0, 1, 2);
+    defaultOnKillEvent(env, 214897, 0, 1, 3);
+    return defaultOnKillEvent(env, 214904, 2, true);
+=== 3938 ===
+  file: _3938Well_Rounded.java
+    qe.registerQuestNpc(203701).addOnQuestStart(questId);
+    qe.registerQuestNpc(npc).addOnTalkEvent(questId);
+    return sendQuestDialog(env, 4762);
+    return sendQuestDialog(env, 1011);
+    return defaultCloseDialog(env, 0, 1);
+    return defaultCloseDialog(env, 0, 2);
+    return defaultCloseDialog(env, 0, 3);
+    return defaultCloseDialog(env, 0, 4);
+    return defaultCloseDialog(env, 0, 5);
+    return defaultCloseDialog(env, 0, 6);
+    return sendQuestDialog(env, 1352);
+    return defaultCloseDialog(env, 1, 7, 152201596, 1, 0, 0);
+    return sendQuestDialog(env, 1693);
+    return defaultCloseDialog(env, 2, 7, 152201639, 1, 0, 0);
+    return sendQuestDialog(env, 2034);
+    return defaultCloseDialog(env, 3, 7, 152201615, 1, 0, 0);
+    return sendQuestDialog(env, 2375);
+    return defaultCloseDialog(env, 4, 7, 152201632, 1, 0, 0);
+    return sendQuestDialog(env, 2716);
+    return defaultCloseDialog(env, 5, 7, 152201644, 1, 0, 0);
+    return sendQuestDialog(env, 3057);
+    return defaultCloseDialog(env, 6, 7, 152201643, 1, 0, 0);
+    return sendQuestDialog(env, 3398);
+    return sendQuestDialog(env, 3739);
+    return defaultCloseDialog(env, 8, 8, true, false, 0);
+    return sendQuestDialog(env, 3825);
+    return sendQuestDialog(env, 10002);
+=== 4732 ===
+  file: _4732General_Malevolence.java
+    qe.registerQuestNpc(800519).addOnQuestStart(questId); //Kelmar.
+    qe.registerQuestNpc(800519).addOnTalkEvent(questId); //Kelmar.
+    qe.registerQuestNpc(256694).addOnKillEvent(questId);
+    qe.registerQuestNpc(256693).addOnKillEvent(questId);
+    return sendQuestDialog(env, 4762);
+    return sendQuestDialog(env, 10002);
+    return defaultOnKillEvent(env, 256694, 0, 1);
+    return defaultOnKillEvent(env, 256693, 1, true);
+=== 4942 ===
+  file: _4942Proving_Proficiency.java
+    qe.registerQuestNpc(204053).addOnQuestStart(questId);
+    qe.registerQuestNpc(npc).addOnTalkEvent(questId);
+    return sendQuestDialog(env, 4762);
+    return sendQuestDialog(env, 1011);
+    return defaultCloseDialog(env, 0, 1);
+    return defaultCloseDialog(env, 0, 2);
+    return defaultCloseDialog(env, 0, 3);
+    return defaultCloseDialog(env, 0, 4);
+    return defaultCloseDialog(env, 0, 5);
+    return defaultCloseDialog(env, 0, 6);
+    return sendQuestDialog(env, 1352);
+    return defaultCloseDialog(env, 1, 7, 152206598, 1, 0, 0);
+    return sendQuestDialog(env, 1693);
+    return defaultCloseDialog(env, 2, 7, 152206641, 1, 0, 0);
+    return sendQuestDialog(env, 2034);
+    return defaultCloseDialog(env, 3, 7, 152206617, 1, 0, 0);
+    return sendQuestDialog(env, 2375);
+    return defaultCloseDialog(env, 4, 7, 152206634, 1, 0, 0);
+    return sendQuestDialog(env, 2716);
+    return defaultCloseDialog(env, 5, 7, 152206646, 1, 0, 0);
+    return sendQuestDialog(env, 3057);
+    return defaultCloseDialog(env, 6, 7, 152206645, 1, 0, 0);
+    return sendQuestDialog(env, 3398);
+    return sendQuestDialog(env, 3740);
+    return defaultCloseDialog(env, 8, 8, true, false, 0);
+    return sendQuestDialog(env, 3825);
+    return sendQuestDialog(env, 10002);
+=== 13918 ===
+  (no legacy handler)
+=== 14012 ===
+  file: _14012Dukaki_Mischief.java
+    qe.registerQuestNpc(203129).addOnTalkEvent(questId);
+    qe.registerQuestNpc(203098).addOnTalkEvent(questId);
+    qe.registerQuestNpc(mob).addOnKillEvent(questId);
+    return sendQuestDialog(env, 1011);
+    return sendQuestDialog(env, 1693);
+    return defaultCloseDialog(env, 0, 1);
+    qs.setStatus(QuestStatus.REWARD);
+    return defaultOnKillEvent(env, dukaki, 0, 5, 1);
+    return defaultOnKillEvent(env, tursin, 0, 3, 2);
+=== 14013 ===
+  file: _14013A_Frill_Of_A_Fuss.java
+    qe.registerQuestNpc(203129).addOnTalkEvent(questId);
+    qe.registerQuestNpc(mob).addOnKillEvent(questId);
+    return sendQuestDialog(env, 1011);
+    return defaultCloseDialog(env, 0, 1);
+    return defaultOnKillEvent(env, rakeclaw, 0, 5, 1);
+    return defaultOnKillEvent(env, giantrakeclaw, 0, 7, 2);
+    return defaultOnKillEvent(env, trandila, 1, true);
+=== 14053 ===
+  file: _14053Danger_Cubed.java
+    qe.registerQuestNpc(204020).addOnTalkEvent(questId);
+    qe.registerQuestNpc(204602).addOnTalkEvent(questId);
+    return sendQuestDialog(env, 1011);
+    return sendQuestDialog(env, 1693);
+    return sendQuestDialog(env, 2034);
+    qs.setQuestVarById(0, var + 1);
+    qs.setStatus(QuestStatus.REWARD);
+    return sendQuestDialog(env, 5);
+    return sendQuestDialog(env, 10001);
+    qs.setQuestVarById(0, var + 1);
+    return sendQuestDialog(env, 1352);
+    qs.setQuestVarById(0, var + 1);
+=== 14054 ===
+  file: _14054Kralling_To_Kralltumagna.java
+    qe.registerQuestNpc(204602).addOnTalkEvent(questId);
+    qe.registerQuestNpc(800413).addOnTalkEvent(questId);
+    qe.registerQuestNpc(802050).addOnTalkEvent(questId);
+    qe.registerQuestNpc(mob).addOnKillEvent(questId);
+    return sendQuestDialog(env, 1011);
+    return sendQuestDialog(env, 1012);
+    changeQuestStep(env, 0, 1, false);
+    return sendQuestDialog(env, 1352);
+    return sendQuestDialog(env, 1353);
+    changeQuestStep(env, 1, 2, false);
+    return sendQuestDialog(env, 2034);
+    return sendQuestDialog(env, 2716);
+    return sendQuestDialog(env, 2035);
+    changeQuestStep(env, 2, 3, false);
+    return defaultCloseDialog(env, 4, 4, true, false);
+    qs.setQuestVarById(1, qs.getQuestVarById(1) + 1);
+    qs.setQuestVarById(2, qs.getQuestVarById(2) + 1);
+    qs.setQuestVarById(0, var + 1);
+=== 14152 ===
+  file: _14152_Spoiler_Alert.java
+    qe.registerQuestNpc(204504).addOnQuestStart(questId); // Sofne
+    qe.registerQuestNpc(204504).addOnTalkEvent(questId);// Sofne
+    qe.registerQuestNpc(204574).addOnTalkEvent(questId); // Finn
+    qe.registerQuestNpc(203705).addOnTalkEvent(questId); // Jumentis
+    qe.registerQuestNpc(212151).addOnKillEvent(questId); // Chairman Garnis
+    return sendQuestDialog(env, 1011);
+    return sendQuestDialog(env, 4);
+    qs.setQuestVarById(5, 1);
+    return sendQuestDialog(env, 1352);
+    qs.setQuestVarById(5, 2);
+    return sendQuestDialog(env, 1693);
+    qs.setQuestVarById(5, 0);
+    qs.setQuestVarById(0, 0);
+    return sendQuestDialog(env, 2375);
+    qs.setStatus(QuestStatus.REWARD);
+    qs.setQuestVarById(0, 1);
+=== 17500 ===
+  (no legacy handler)
+=== 18213 ===
+  (no legacy handler)
+=== 18301 ===
+  file: _18301MyPrec_H_ious.java
+    qe.registerQuestNpc(799530).addOnQuestStart(questId);
+    qe.registerQuestNpc(799530).addOnTalkEvent(questId);
+    qe.registerQuestNpc(730373).addOnTalkEvent(questId);
+    qe.registerQuestNpc(730374).addOnTalkEvent(questId);
+    return sendQuestDialog(env, 4762);
+    return sendQuestDialog(env, 1011);
+    qs.setQuestVarById(0, var + 1);
+    return sendQuestDialog(env, 1352);
+    qs.setStatus(QuestStatus.REWARD);
+    return sendQuestDialog(env, 10002);
+    return sendQuestDialog(env, 5);
+=== 18911 ===
+  (no legacy handler)
+=== 21080 ===
+  file: _21080MessageInAWindstream.java
+    qe.registerQuestNpc(799231).addOnQuestStart(questId);
+    qe.registerQuestNpc(799231).addOnTalkEvent(questId);
+    qe.registerQuestNpc(799427).addOnTalkEvent(questId);
+    return sendQuestDialog(env, 4762);
+    return sendQuestDialog(env, 2034);
+    return defaultCloseDialog(env, 3, 4);
+    return sendQuestDialog(env, 10002);
+    changeQuestStep(env, var, var + 1, false);
+    changeQuestStep(env, 4, 4, true);
+=== 21138 ===
+  (no legacy handler)
+=== 21467 ===
+  file: _21467SpawningTheSapSuckers.java
+    qe.registerQuestNpc(799527).addOnQuestStart(questId);
+    qe.registerQuestNpc(799503).addOnTalkEvent(questId);
+    qe.registerQuestNpc(215480).addOnKillEvent(questId);
+    return sendQuestDialog(env, 4762);
+    return sendQuestDialog(env, 10002);
+    changeQuestStep(env, var, var, true);
+    changeQuestStep(env, 0, 1, false);
+    changeQuestStep(env, 1, 2, false);
+    changeQuestStep(env, 2, 3, false);
+    qs.setStatus(QuestStatus.NONE);
+    qs.setStatus(QuestStatus.NONE);
+=== 23918 ===
+  (no legacy handler)
+=== 24016 ===
+  file: _24016A_Strange_New_Threat.java
+    qe.registerQuestNpc(233876).addOnKillEvent(questId);
+    qe.registerQuestNpc(npc).addOnTalkEvent(questId);
+    return sendQuestDialog(env, 1011);
+    changeQuestStep(env, 0, 1, false); // 1
+    return sendQuestDialog(env, 1013);
+    return sendQuestDialog(env, 1352);
+    changeQuestStep(env, 2, 1, false);
+    changeQuestStep(env, 1, 2, false);
+    changeQuestStep(env, 2, 1, false);
+    return defaultOnKillEvent(env, 233876, 3, 4);
+=== 24053 ===
+  file: _24053The_Mauling_Of_The_Mau.java
+    qe.registerQuestNpc(npc_id).addOnTalkEvent(questId);
+    return sendQuestDialog(env, 10002);
+    return sendQuestDialog(env, 1011);
+    return sendQuestDialog(env, 2375);
+    qs.setQuestVarById(0, var + 1);
+    qs.setStatus(QuestStatus.REWARD);
+    return sendQuestDialog(env, 1352);
+    qs.setQuestVarById(0, var + 1);
+    return sendQuestDialog(env, 1693);
+    qs.setQuestVarById(0, var + 1);
+    qs.setQuestVarById(0, 4);
+=== 24203 ===
+  (no legacy handler)
+=== 27500 ===
+  (no legacy handler)
+=== 28213 ===
+  (no legacy handler)
+=== 28911 ===
+  (no legacy handler)
+=== 29008 ===
+  file: _29008MasterWeaponsmithsPotential.java
+    qe.registerQuestNpc(204104).addOnQuestStart(questId);
+    qe.registerQuestNpc(204104).addOnTalkEvent(questId);
+    qe.registerQuestNpc(204105).addOnTalkEvent(questId);
+    return sendQuestDialog(env, 4762);
+    return sendQuestDialog(env, 1011);
+    qs.setQuestVarById(0, 1);
+    qs.setQuestVarById(0, 1);
+    qs.setStatus(QuestStatus.REWARD);
+    return sendQuestDialog(env, 1352);
+    return sendQuestDialog(env, 10001);
+    return sendQuestDialog(env, 5);

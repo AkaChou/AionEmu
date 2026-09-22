@@ -1,0 +1,196 @@
+=== 1582 rows=4 file=QUEST_Q1582.html ===
+  [0] 寻找[%dic:STR_DIC_W_LF3_SZ_006]中奇兰内的坟墓
+  [1] 向[%dic:STR_DIC_N_Trou]报告
+  [2] 和[%dic:STR_DIC_N_Nerison]对话
+  [3] 和[%dic:STR_DIC_N_Kirene]对话
+=== 1634 rows=5 file=QUEST_Q1634.html ===
+  [0] 从[%dic:STR_DIC_M_UndeadLightFi_44_An_2]和[%dic:STR_DIC_M_UndeadLightWi_44_An_2]找到项链并带回给[%dic:STR_DIC_N_Antione]。[%collectitem]
+  [1] 与[%dic:STR_DIC_N_Antione]对话
+  [2] 把项链交给[%dic:STR_DIC_N_Lantis]
+  [3] 把项链交给[%dic:STR_DIC_N_Hellione]
+  [4] 把项链交给[%dic:STR_DIC_N_Camana]
+=== 2223 rows=4 file=QUEST_Q2223.html ===
+  [0] 和[%dic:STR_DIC_N_Lamir]对话。
+  [1] 在[%dic:STR_DIC_E_16]点香引出怪物并消灭它。([%5]/1)
+  [2] 和[%dic:STR_DIC_N_Gefion]对话。
+  [3] 再次和[%dic:STR_DIC_N_Lamir]对话。
+=== 2307 rows=3 file=QUEST_Q2307.html ===
+  [0] 搜集用来诱惑[%dic:STR_DIC_N_Spedor]的[%dic:STR_DIC_E_soup_choice]，让后放到[%dic:STR_DIC_E_DF2_FOBJ_Soup_Q2307]里[%collectitem]
+  [1] 用汤诱惑[%dic:STR_DIC_N_Spedor]
+  [2] 把结果告诉[%dic:STR_DIC_N_Fathir]
+=== 2372 rows=6 file=QUEST_Q2372.html ===
+  [0] 去见见[%dic:STR_DIC_N_Shugo_DF2_4]
+  [1] 去伊拉西克村见见[%dic:STR_DIC_N_Shugo_DF2_9]
+  [2] 打猎[%dic:STR_DIC_M_VespaReD_30_n]%和[%dic:STR_DIC_M_HellhoundD_28_An]%，搜集材料，然后回去见见[%dic:STR_DIC_N_Shugo_DF2_9][%collectitem]
+  [3] 把酒交给[%dic:STR_DIC_N_Bulagan]
+  [4] 去见见[%dic:STR_DIC_N_Shugo_DF2_3]
+  [5] 和[%dic:STR_DIC_N_Shugo_DF2_3]对话
+=== 2411 rows=3 file=QUEST_Q2411.html ===
+  [0] 去[%dic:STR_DIC_N_Tyr]哪里选择打猎的对象
+  [1] 和[%dic:STR_DIC_N_Angrboda]对话
+  [2] 和[%dic:STR_DIC_N_Gullveig]对话
+=== 3502 rows=5 file=QUEST_Q3502.html ===
+  [0] 前往黑暗普埃塔寻找[%dic:STR_DIC_FOBJ_IDLF1_Scroll_Q3502]
+  [1] 破坏[%dic:STR_DIC_M_IDLF1_BionicCPU_50_Ah]([%5]/1)
+  [2] 破坏动力供给装置，关闭[%dic:STR_DIC_OBJ_Dragonportal_IDLF1] [%dic:STR_DIC_M_IDLF1_Generator1_50_Ah] ([%11]/1) [%dic:STR_DIC_M_IDLF1_Generator2_50_Ah] ([%14]/1) [%dic:STR_DIC_M_IDLF1_Generator3_50_Ah] ([%17]/1)
+  [3] 清除[%dic:STR_DIC_M_IDLF1_H_DrakanFiName_50_Ah]([%20]/1)
+  [4] 向[%dic:STR_DIC_W_LF3_SZ_004]的神官[%dic:STR_DIC_N_Maloren]报告
+=== 3938 rows=11 file=QUEST_Q3938.html ===
+  [0] 和[%dic:STR_DIC_N_Lavirintos]对话，选择制造技术
+  [1] 和武器名人[%dic:STR_DIC_N_Anteros]对话
+  [2] 和手工名人[%dic:STR_DIC_N_Utisda]对话
+  [3] 和防具名人[%dic:STR_DIC_N_Vulcanus]对话
+  [4] 和裁缝名人[%dic:STR_DIC_N_Daphnis]对话
+  [5] 和料理名人[%dic:STR_DIC_N_Hestia]对话
+  [6] 和炼金术名人[%dic:STR_DIC_N_Diana]对话
+  [7] 和制造名人对话
+  [8] 把[%dic:STR_DIC_I_4942a]交给[%dic:STR_DIC_N_Anusis][%collectitem]
+  [9] 带着[%dic:STR_DIC_I_relic_02]去见见大神官[%dic:STR_DIC_N_Jucleas]，举行神圣仪式
+  [10] 和[%dic:STR_DIC_N_Lavirintos]对话，选择制造技术
+=== 4732 rows=3 file=quest_q4732.html ===
+  [0] 进入[%dic:STR_DIC_W_IDAb1_MiniCastle_SZ_D]，利用攻城兵器破坏[%dic:STR_DIC_M_Mini_Castle_Door_Dr]
+  [1] 消灭[%dic:STR_DIC_M_Mini_Castle_DrakanFi_27_Ah][%5]
+  [2] 向[%dic:STR_DIC_N_DF2_Kelmar]报告
+=== 4942 rows=11 file=QUEST_Q4942.html ===
+  [0] 和[%dic:STR_DIC_N_Kvasir]对话，并选择制作技术
+  [1] 和武器制作名人[%dic:STR_DIC_N_Logi]对话
+  [2] 和手工名人[%dic:STR_DIC_N_Lanse]对话
+  [3] 和金属盔甲制作名人[%dic:STR_DIC_N_Kinterun]对话
+  [4] 和裁缝名人[%dic:STR_DIC_N_Zyakia]对话
+  [5] 和料理名人[%dic:STR_DIC_N_Lainita]对话
+  [6] 和炼金术名人[%dic:STR_DIC_N_Honir]对话
+  [7] 和制作名人对话
+  [8] 把[%dic:STR_DIC_I_4942a]交给[%dic:STR_DIC_N_Usener][%collectitem]
+  [9] 带着[%dic:STR_DIC_I_relic_d_02]去见[%dic:STR_DIC_N_Balder]大神官，举行净化仪式
+  [10] 和[%dic:STR_DIC_N_Kvasir]对话
+=== 13918 rows=6 file=quest_q13918.html ===
+  [0] 消灭袭击指挥官的[%dic:STR_DIC_M_LDF4_Advance_B_Killer_Dr_65_Ae]%([%2]/1)
+  [1] 消灭袭击指挥官的[%dic:STR_DIC_M_LDF4_Advance_B_Killer_Dr_65_Ah]%([%5]/1)
+  [2] 消灭袭击指挥官的[%dic:STR_DIC_M_LDF4_Advance_B1_Killer_Dr_65_Ah]%([%8]/1)
+  [3] 消灭袭击指挥官的[%dic:STR_DIC_M_LDF4_Advance_B_Killer_Da_65_Al]%([%11]/1)
+  [4] 消灭袭击指挥官的[%dic:STR_DIC_M_LDF4_Advance_B1_Killer_Da_65_Al]%([%14]/1)
+  [5] 和[%dic:STR_DIC_N_LDF4_Advance_Elger_E]%对话
+=== 14012 rows=4 file=quest_q14012.html ===
+  [0] 和[%dic:STR_DIC_FLA10]的[%dic:STR_DIC_LA154]%对话
+  [1] 消灭正在杜卡基采掘场精炼奥德石的布洛尼和克拉尔 [%dic:STR_DIC_MLA124]([%8]/5) [%dic:STR_DIC_M_TKrallKeeper_15_An]([%11]/3)
+  [2] 和[%dic:STR_DIC_FLA10]的[%dic:STR_DIC_LA154]%对话
+  [3] 向[%dic:STR_DIC_FLA09]的[%dic:STR_DIC_LA19]%报告
+=== 14013 rows=4 file=quest_q14013.html ===
+  [0] 和[%dic:STR_DIC_FLA10]的[%dic:STR_DIC_LA154]%对话
+  [1] 消灭托尔巴斯森林中不断增长的龙蜥兽 [%dic:STR_DIC_MLA17_3]([%8]/5) [%dic:STR_DIC_MLA17_4]([%11]/7)
+  [2] 去[%dic:STR_DIC_FLA15]%消灭[%dic:STR_DIC_MLA17_5]%([%14]/1)
+  [3] 和[%dic:STR_DIC_FLA10]的[%dic:STR_DIC_LA154]%对话
+=== 14053 rows=6 file=quest_q14053.html ===
+  [0] 和[%dic:STR_DIC_W_LF3_SZ_004]%的[%dic:STR_DIC_N_Atalante]%对话
+  [1] 和[%dic:STR_DIC_W_LF2_SZ_E1_SUB_1]%的[%dic:STR_DIC_N_NPC_Mabangta]%对话
+  [2] 重新和[%dic:STR_DIC_W_LF3_SZ_004]%的[%dic:STR_DIC_N_Atalante]%对话
+  [3] 消灭[%dic:STR_DIC_M_KrallFighterMadQ_42_AeN]%，搜集[%dic:STR_DIC_I_quest_14053a]%，然后交给[%dic:STR_DIC_N_Atalante][%collectitem]
+  [4] 消灭[%dic:STR_DIC_M_KrallFighterMadQ_42_Ae]%
+  [5] 向[%dic:STR_DIC_W_LF3_SZ_004]%的[%dic:STR_DIC_N_Atalante]报告
+=== 14054 rows=9 file=quest_q14054.html ===
+  [0] 和[%dic:STR_DIC_W_LF3_SZ_004]%的[%dic:STR_DIC_N_Atalante]对话
+  [1] 和讨伐队前进基地的[%dic:STR_DIC_N_Javlantia]%进行对话
+  [2] 消灭克拉尔图玛格纳洞穴的英德拉图军团败兵，找到隐藏的兵器并破坏掉。 [%dic:STR_DIC_M_LF3E3_FeA_Lizard_Ae_all]([%11]/6) [%dic:STR_DIC_OBJ_LF3_DragonRobot_Q14054]([%14]/3)
+  [3] 消灭克拉尔图玛格纳洞穴的英德拉图军团纳加士兵，破坏龙族守护石 [%dic:STR_DIC_M_LF3E3_FeA_Lizard_Ae_all2]([%20]/6) [%dic:STR_DIC_E_LF3_DragonObelisk_Q1062]([%23]/3)
+  [4] 找到潜入[%dic:STR_DIC_W_LF3_SZ_009]的[%dic:STR_DIC_N_LF3_Barantina_E]%，并与其对话
+  [5] 消灭[%dic:STR_DIC_M_NagaFighterNM_47_AhN]%([%29]/1)
+  [6] 消灭[%dic:STR_DIC_M_LF3_NagaFighterNM_47_Q_Ah]%([%32]/1)
+  [7] 找到潜入[%dic:STR_DIC_W_LF3_SZ_009]的[%dic:STR_DIC_N_LF3_Barantina_E]%，重新与其对话
+  [8] 向讨伐队前进基地的[%dic:STR_DIC_N_Javlantia]报告
+=== 14152 rows=4 file=quest_q14152.html ===
+  [0] 去见见[%dic:STR_DIC_W_LF3_SZ_C5]的[%dic:STR_DIC_N_Kalendros]%
+  [1] 把[%dic:STR_DIC_I_QUEST_14152a]%交给极乐世界[%dic:STR_DIC_FLA29]的[%dic:STR_DIC_N_Juventus]
+  [2] 去革命团研究基地消灭[%dic:STR_DIC_M_LabPo_LehparAsNamed_43_Ae]%([%11]/1)
+  [3] 和[%dic:STR_DIC_W_LF3_SZ_A1]的[%dic:STR_DIC_N_Sofne]%对话
+=== 17500 rows=4 file=quest_q17500.html ===
+  [0] 支援[%dic:STR_DIC_W_IDLDF5_Fortress_War]任务[%2]
+  [1] 和[%dic:STR_DIC_N_IDLDF5_Fortress_War_Neleus_E]%对话
+  [2] 进入[%dic:STR_DIC_W_IDLDF5_Fortress_War_SZ_sqaure]%
+  [3] 和[%dic:STR_DIC_N_LF6_Morise_E]对话
+=== 18213 rows=4 file=quest_q18213.html ===
+  [0] 和[%dic:STR_DIC_N_Inggril]%对话
+  [1] 和[%dic:STR_DIC_N_Romedon]%对话
+  [2] 破坏破碎的徽章，完成沉默的约定[%8]
+  [3] 和[%dic:STR_DIC_N_Romedon]%对话
+=== 18301 rows=3 file=quest_q18301.html ===
+  [0] 破坏设置在[%dic:STR_DIC_W_IDStation_SZ_01_A]的[%dic:STR_DIC_N_IDStation_FOBJ_Dr_CM]%([%2]/7)
+  [1] 获得消灭[%dic:STR_DIC_M_IDStation_Hugen_NM_58An]%后分离出来的[%dic:STR_DIC_N_IDStation_FOBJ_BOMB]%
+  [2] 把[%dic:STR_DIC_N_Hariken]交给[%dic:STR_DIC_N_IDStation_FOBJ_BOMB]%
+=== 18911 rows=6 file=quest_q18911.html ===
+  [0] 消灭[%dic:STR_DIC_M_IDVritra_Base_Drakan_As_65_Ae2_Nmd]%([%2]/1)
+  [1] 消灭[%dic:STR_DIC_M_IDVritra_Base_Drakan_Gi_65_Ae2_Nmd]%([%5]/1)
+  [2] 消灭[%dic:STR_DIC_M_IDVritra_Base_Drakan_Wi_65_Ae2_Nmd]%([%8]/1)
+  [3] 消灭[%dic:STR_DIC_M_IDVritra_Base_Drakan_Fi_65_Ae2_Nmd]%([%11]/1)
+  [4] 消灭[%dic:STR_DIC_M_IDVritra_Base_Drakan_Guardian_65_Ae2_Nmd]%([%14]/1)
+  [5] 向[%dic:STR_DIC_N_LDF5_Kanix_E]报告
+=== 21080 rows=6 file=quest_q21080.html ===
+  [0] 通过[%dic:STR_DIC_DF4_SensoryArea_Q21080A]，移动到 [%dic:STR_DIC_W_SZ_DF4_A2]
+  [1] 通过[%dic:STR_DIC_W_SZ_DF4_A2]风路，移动到 [%dic:STR_DIC_W_SZ_DF4_A6]。
+  [2] 从风路出来后，降落到[%dic:STR_DIC_NPC_Vafuth]悬崖。
+  [3] 把沃夫冈的信交给[%dic:STR_DIC_NPC_Vafuth]
+  [4] 通过[%dic:STR_DIC_NPC_Vafuth] 风路，回到格尔克马洛斯要塞。
+  [5] 向[%dic:STR_DIC_N_Niamela]报告结果。
+=== 21138 rows=4 file=quest_q21138.html ===
+  [0] 把树叶编成的袋子交给[%dic:STR_DIC_N_Ratman_DF4_01]
+  [1] 把树叶编成的袋子交给[%dic:STR_DIC_N_Brauni_DF4_02]
+  [2] 把树叶编成的袋子交给[%dic:STR_DIC_N_Shulack_DF4_5]
+  [3] 把巨大的衣服包袱交给[%dic:STR_DIC_N_Owlau_DF4_01]
+=== 21467 rows=5 file=quest_q21467.html ===
+  [0] [%dic:STR_DIC_M_IDElim_2F_NeutWorkmanfly_Qeen_52_Ae]将在8分钟后产卵！必须在这之前消灭掉它
+  [1] [%dic:STR_DIC_M_IDElim_2F_NeutWorkmanfly_Qeen_52_Ae]将在4分钟后再次产卵！必须在这之前消灭掉它
+  [2] [%dic:STR_DIC_M_IDElim_2F_NeutWorkmanfly_Qeen_52_Ae]将在4分钟后最后一次产卵！必须在这之前消灭掉它
+  [3] 消灭[%dic:STR_DIC_M_IDElim_2F_NeutWorkmanfly_Qeen_52_Ae]
+  [4] 去见见[%dic:STR_DIC_N_CaspaGhost_01]
+=== 23918 rows=6 file=quest_q23918.html ===
+  [0] 消灭袭击指挥官的[%dic:STR_DIC_M_LDF4_Advance_B_Killer_Dr_65_Ae]%([%2]/1)
+  [1] 消灭袭击指挥官的[%dic:STR_DIC_M_LDF4_Advance_B_Killer_Dr_65_Ah]%([%5]/1)
+  [2] 消灭袭击指挥官的[%dic:STR_DIC_M_LDF4_Advance_B1_Killer_Dr_65_Ah]%([%8]/1)
+  [3] 消灭袭击指挥官的[%dic:STR_DIC_M_LDF4_Advance_B_Killer_Li_65_Al]%([%11]/1)
+  [4] 消灭袭击指挥官的[%dic:STR_DIC_M_LDF4_Advance_B1_Killer_Li_65_Al]%([%14]/1)
+  [5] 和[%dic:STR_DIC_N_LDF4_Advance_Helgund_E]%对话
+=== 24016 rows=7 file=quest_q24016.html ===
+  [0] 和[%dic:STR_DIC_N_Sueron]对话
+  [1] 去[%dic:STR_DIC_W_DF1A_31]找到[%dic:STR_DIC_E_14]，进入封印的空间
+  [2] 破坏维持[%dic:STR_DIC_E_14]的次元之门守护石[%8]
+  [3] 消灭[%dic:STR_DIC_E_IDAbGateD1_Noble_Vritra_High_As_20_Q_An]%[%11]
+  [4] 破坏[%dic:STR_DIC_M_NagaFighterSQ_20_An]%[%14]
+  [5] 破坏和龙界相连的[%dic:STR_DIC_E_14][%17]
+  [6] 向[%dic:STR_DIC_N_Sueron]报告
+=== 24053 rows=7 file=quest_q24053.html ===
+  [0] 和[%dic:STR_DIC_W_STR_DF3_SZ_F]%的[%dic:STR_DIC_N_DF3_NPC_Akigatan]进行对话
+  [1] 和[%dic:STR_DIC_W_STR_DF3_SZ_G2_3]%的[%dic:STR_DIC_N_DF3_NPC_Hasyaditan]进行对话
+  [2] 和[%dic:STR_DIC_N_DF3_NPC_Arita]进行对话
+  [3] 将[%dic:STR_DIC_N_LycanSurvivor_Q2059]护送到[%dic:STR_DIC_NPC_DF3_NPC_Kalitan]那里
+  [4] 和[%dic:STR_DIC_N_DF3_NPC_Akigatan]进行对话
+  [5] 向[%dic:STR_DIC_N_Thor]报告
+  [6] 护送失败！回去找[%dic:STR_DIC_N_DF3_NPC_Molota]
+=== 24203 rows=8 file=quest_q24203.html ===
+  [0] 去[%dic:STR_DIC_N_Surt]那里了解任务的详情
+  [1] 和[%dic:STR_DIC_W_DF2B_SZ_B2_1]外围的[%dic:STR_DIC_N_DF2a_Seiren_Sahnu]对话
+  [2] 去阿鲁齐纳的宫殿搜集[%dic:STR_DIC_I_QUEST_2094a]，然后交给[%dic:STR_DIC_W_DF2B_SZ_B2_1]外围的[%dic:STR_DIC_N_DF2a_Seiren_Sahnu][%collectitem]
+  [3] 重新和[%dic:STR_DIC_N_DF2a_Seiren_Sahnu]对话
+  [4] 进入[%dic:STR_DIC_E_Q2094]，消灭[%dic:STR_DIC_E_DF2B_Q2094][%14]
+  [5] 和[%dic:STR_DIC_W_DF2B_SZ_A_Town]的[%dic:STR_DIC_N_Heintz]%对话
+  [6] 敲打[%dic:STR_DIC_OBJ_DF2A_TombStoneCenter_Q2094]，召唤比尔凯的灵魂
+  [7] 向伏魔殿中央议事堂的[%dic:STR_DIC_N_Sigyn]报告
+=== 27500 rows=4 file=quest_q27500.html ===
+  [0] 支援[%dic:STR_DIC_W_IDLDF5_Fortress_War]任务[%2]
+  [1] 和[%dic:STR_DIC_N_IDLDF5_Fortress_War_Zaiksene_E]%对话
+  [2] 进入[%dic:STR_DIC_W_IDLDF5_Fortress_War_SZ_sqaure]%
+  [3] 和[%dic:STR_DIC_N_DF6_Ilmarinen_E]对话
+=== 28213 rows=4 file=quest_q28213.html ===
+  [0] 把血染的徽章交给[%dic:STR_DIC_N_Inggness]
+  [1] 把血染的徽章交给[%dic:STR_DIC_N_Kijan]
+  [2] 破坏血染的徽章[%8]
+  [3] 和[%dic:STR_DIC_N_Kijan]对话
+=== 28911 rows=6 file=quest_q28911.html ===
+  [0] 消灭[%dic:STR_DIC_M_IDVritra_Base_Drakan_As_65_Ae2_Nmd]%([%2]/1)
+  [1] 消灭[%dic:STR_DIC_M_IDVritra_Base_Drakan_Gi_65_Ae2_Nmd]%([%5]/1)
+  [2] 消灭[%dic:STR_DIC_M_IDVritra_Base_Drakan_Wi_65_Ae2_Nmd]%([%8]/1)
+  [3] 消灭[%dic:STR_DIC_M_IDVritra_Base_Drakan_Fi_65_Ae2_Nmd]%([%11]/1)
+  [4] 消灭[%dic:STR_DIC_M_IDVritra_Base_Drakan_Guardian_65_Ae2_Nmd]%([%14]/1)
+  [5] 向[%dic:STR_DIC_N_LDF5_Giriltia_E]报告
+=== 29008 rows=3 file=quest_q29008.html ===
+  [0] 去[%dic:STR_DIC_N_Mime]那里购买图案
+  [1] 制作[%dic:STR_DIC_E_QUEST_29008]，然后交给[%dic:STR_DIC_N_Logi][%collectitem]
+  [2] 重新去[%dic:STR_DIC_N_Mime]那里购买图案和原型
