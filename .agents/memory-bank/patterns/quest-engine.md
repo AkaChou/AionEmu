@@ -1170,6 +1170,15 @@ keywords: 领奖任务书不切换、10527、reward 投影、SECTION_0、quest_s
   「阶梯齐全、仅缺尾行」的行号族；2289 那类是客户端 step（击杀计数占多个 slot），按 `Progress(a~b)` +
   `collect_progress` 判定，禁止互相套用；此外 `npc-complete` 的 source 节点必须投影 REWARD、
   `complete` 必须可达，把「领奖行」定在最后一行时只能有一个 reward 角色节点。
+- **批次 52 补充判据（2026-09-22）**：同形「计数行走行」族的副本对象 id 必须成对登记。18301/28301
+  （阿图拉姆空中要塞监视水晶球）的客户端脚本声明 `Progress(0~6)`——七个水晶球占 step 0..6、第七个把
+  SECTION_0 推到 7，H-Core 由副本脚本在 Weapon Hugen 死亡时生成，领奖态与满计数同为 step 7（与批次 50 的
+  2289 同类合同）；同一水晶球在普通副本 300240000 与活动副本 300241000 分别以 **702656 / 730373** 生成，
+  `kill-npc` 必须同时登记两个 id（同族 18314/28314 的既有口径），否则只覆盖一种副本。天族 18301 原本被塌陷成
+  `started -> reward`（reward 投影 0），本批与魔族镜像 28301 收敛成同形：唯一 Hariken(799530) owner、
+  装置只在 H-Core(730374) 的 `SETPRO2` 发放、`REWARD/var0<7 -> 7` 自愈边；门禁
+  `AturamSkyFortressCrystalLadderContractTest`，报告 §五十六。边界：严格线性口径（reward=8）与 legacy、
+  镜像 28301、同副本 18302（5 座塔 -> reward=5）都不一致，未采纳。
 - **批次 47 勘误（2026-09-22）**：`1123` 属客户端脚本驱动行（`ProgressAll` + `sensoryArea`），其 reward 投影权威值是 `REWARD/var0=0`；本节元数据里批次 15 记录的“1123 投影 0 -> 1”与 `REWARD/0 -> 1` 自愈边已被推翻，详见 `QE-056`。
 
 
