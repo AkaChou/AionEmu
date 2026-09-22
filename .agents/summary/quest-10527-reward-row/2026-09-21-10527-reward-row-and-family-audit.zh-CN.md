@@ -2674,3 +2674,77 @@ QE-051 的行号口径对它们不适用——本批把这点写进审计脚本�
   “无 legacy handler（需数据侧取证）”三类，**禁止按客户端行号机械补阶梯**；后续批次按族继续收口。
 - 挂账不变：`STATES_BEYOND_ROWS 2622`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 77`（全部已登记）、
   `section0 residual 837`、客户端隔离族 8 个（16984/26984/20015/18706/28706/3959/4963/29706）。
+
+## 三十六、批次 32：卡多尔迎新两阶段阶梯（13800 / 23800，2026-09-22 用户授权后执行）
+
+### 三十六之一、族判据与证据（MISSING_TAIL_ROWS 第二族：客户端页链长于 legacy 一跳）
+
+批次 31 之后全库还剩 **77 个 `MISSING_TAIL_ROWS`**。本批把「retail `zz_retail_simple_quests.xml` 的 step 数 vs 客户端
+`quest_summary` 行数」交叉筛了一遍：**1 retail step + 3 客户端行**的只有 7 个（13800、14200、23800、24155、25094、30504、30554），
+其中 **13800/23800 是阵营镜像对且形态最干净**（14200/24155 属 `STATES_BEYOND_ROWS` 计数行，25094 是 use-item 族，
+30504/30554 是 `SET_SUCCEED` 塌陷族，留待后续批次）。
+
+| 任务 | 客户端 3 行（quest_summary） | 客户端页链 | legacy handler（迁移前） | 旧定义（塌陷） |
+|---|---|---|---|---|
+| 13800 New Lands to Behold | 行 0 带上 `quest_13800a` 去找 `LF5_OP1_ZoneTeleport_L`(804782) / 行 1 移动到卡多尔，和 `LDF5_Fortress_Alphion_E`(802431) 对话 / 行 2 再次和 Alphion 对话 | `select2 -> SELECT2_1(1353) -> SETPRO1(10000)`、`select3 -> SELECT3_1(1694) -> SELECT3_1_1(1695) -> SETPRO2(10001)`、`select5(2375) -> SELECT_QUEST_REWARD(1009)` | 804782 的 `STEP_TO_1`：`setQuestVarById(0, +1)` 写 1；802431 的 `SELECT_REWARD`：只 `setStatus(REWARD)`（落盘恒为 1，跳过 select3 段） | 804699/804782/802431 三个 NPC 全部 `NPC_START + started -> reward`，行 1/行 2 无状态，reward 投影停在 0 |
+| 23800 A Full New World | 行 0 带上 `quest_23800a` 去找 `DF5_OP1_ZoneTeleport_D`(804753) / 行 1 前往卡多尔，和 `LDF5_Fortress_Pintz_E`(802433) 对话 / 行 2 再次和 Pintz 对话 | 同形页链 | 804753 的 `STEP_TO_1` 写 1；802433 的 `SELECT_REWARD` 只 `setStatus(REWARD)` | 804719/804753/802433 三个 NPC 全部 `NPC_START + started -> reward`，且三处都能领奖，行 1/行 2 无状态 |
+
+三个要点：
+
+1. **legacy 落盘 step=1 只解释旧存档为什么会停在行 1；行阶梯按客户端页链推到 2（QE-054 解释存档值 + QE-051 决定投影）**：legacy 的 `setStatus(REWARD)`
+   不写 nextStep，所以旧存档里 `REWARD` 会带 `var0=1`；而客户端 `quest_summary` 有 3 行、页链给出两次推进
+   （`SETPRO1` 与 `SETPRO2`），因此本批按客户端页链重建 `started(0) -> s1(1) -> reward(2)`，**并且**为 `var0=0`（旧定义
+   一步领奖留下的更早存档）与 `var0=1`（legacy 一跳留下的存档）各补一条 enter-world 自愈边。
+2. **每一行都要有状态（QE-051）**：旧定义判 `MISSING_TAIL_ROWS + ROW_WITHOUT_STATE(1 2)`；本批后三行分别由
+   `started(0)`、`s1(1)`、`reward(2)` 承载，`visible=0 1 2`。
+3. **领奖 owner 必须收敛到末行点名的 NPC**：旧定义让传送点（804782/804753）也能 `started -> reward` 领奖；
+   本批把 `npc-complete` 收到 802431/802433，并保留 `reward` 态 `select5` 开奖励页、`SELECT_QUEST_REWARD` 开奖励窗口。
+   逐任务证据见 [batch32-evidence.tsv](batch32-evidence.tsv)。
+
+### 三十六之二、落点（两阶段阶梯 + 双自愈边 + letter 生命周期）
+
+统一模板：`unaccepted(0) / started(0) / s1(1) / reward(2) / complete(0)`：
+
+- `started --SETPRO1(传送点)--> s1`：条件 `var0 == 0`，动作 `set var0 = 1`，
+  after-commit = `PACKET_ONLY` + `close-dialog`（行 0 只是“拿出书信”，不刷新任务书）。
+- `s1 --SETPRO2(迎宾 NPC)--> reward`：条件 `var0 == 1`，动作 `set var0 = 2`，
+  after-commit = `LEVEL_AND_VISIBILITY_REFRESH` + `close-dialog`（行 1 的说明段收口后行 2 立即点亮）。
+- 两条无 source 的 `enter-world` 自愈边：`REWARD && var0 == 0 -> set var0 = 2` 与 `REWARD && var0 == 1 -> set var0 = 2`，
+  均带 `LEVEL_AND_VISIBILITY_REFRESH`、无 priority。
+- 书信生命周期跟随客户端交接：接取（`NPC_START` 的 `accept-actions`）发 `182215482` / `182215490`，开奖励窗口时 `remove-item`。
+- 页面按钮链全部落在 IR 里：`SELECT2 -> SHOW SELECT2`、`SELECT2_1 -> SHOW SELECT2_1`、`SELECT3/SELECT3_1/SELECT3_1_1`
+  与 `SELECT5` 同理，避免 `QuestClientContractGateTest` 的 `BUTTON_WITHOUT_ROUTE`。
+- `unaccepted --SELECT1_1--> unaccepted`（`SHOW_QUEST_PAGE SELECT1_1`，页 1012）保留，衔接客户端的
+  `SELECT1_1 -> ASK_QUEST_ACCEPT(1007)` 前置页。
+
+### 三十六之三、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 2/2 validates；`apply_batch32_kaldor_row_ladder.py --check`
+  幂等（`BATCH32_OK 13800/23800 already-applied`）。
+- **全库行号审计**：`MISSING_TAIL_ROWS 79 -> 77`、`ROW_BEHIND 176 -> 174`、`ROW_WITHOUT_STATE 508 -> 506`、
+  `ROW_ALIGNED 2672 -> 2674`、`ROW_STATE_ALIGNED 2444 -> 2446`、`ALIGNED 2444 -> 2446`；`STATES_BEYOND_ROWS 2622`、
+  `INTERIOR_GAP 263`、`MISSING_LAST_ROW 77`、`NO_REWARD_ROW 180` 不变。两个任务由
+  `ROW_BEHIND / MISSING_TAIL_ROWS / ROW_WITHOUT_STATE` 全部转 `ROW_ALIGNED / ALIGNED / ROW_STATE_ALIGNED`
+  （`visible=0 1 2`、`recovery=True`）。
+- **审计脚本**：`BATCH32_KALDOR_ROW_LADDER = {13800, 23800}` 登记进 `audit_reward_row_vs_client_steps.py`，
+  [11] 节改为双批次合并（批次 31 修复 3 个 + 批次 32 修复 2 个、已登记例外 6 个、其余 71 个待逐族收口）。
+- **Maven（授权后执行）**：28 个 reward/row/ladder/owner/catalog 测试类 **159 例全绿**，含新增
+  `Batch32KaldorRowLadderContractTest`（8 例：三行投影 / 每行一个状态 / 两阶段页链推进（条件 + 动作 + after-commit）/ 领奖 owner
+  收敛且传送点不能领奖 / `select5` 与 `SELECT_QUEST_REWARD` 路由 / 书信生命周期 / **两条**旧存档自愈 + planner 收敛 /
+  不再保留 `started -> reward` 塌陷跳转）；`PRODUCTION_COMPILE_OK=6191 / FAILURES=0 /
+  INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。
+- **客户端实机 PENDING_CLIENT**：① 13800 接取后任务书应停在行 0，向传送点 804782 出示书信（`select2_1` 拿出书信）后切到行 1；
+  与 Alphion(802431) 走完 `select3/select3_1/select3_1_1` 说明段并 `SETPRO2` 后切到行 2 并开奖励窗口；
+  ② 23800 同形（804753 传送点 -> Pintz(802433)）；③ 旧存档（`REWARD` + `var0=0` 或 `var0=1`）登录/切图后应直接落在领奖行，
+  且正规态（已是 2）不重复提示“任务更新”。
+
+### 三十六之四、边界与后续
+
+- 本批**没有**改动 13800/23800 的接取前置（retail `start_ids=804699/804719`、`TALK` 型、阵营 ELYOS/ASMODIANS 各自一侧），
+  也没有改奖励内容；只重建行阶梯、owner、letter 生命周期与自愈边。
+- `MISSING_TAIL_ROWS` 剩下的 71 个仍在 [11] 节逐族列出；本批筛出的同形态候选中 **14200/24155**（`STATES_BEYOND_ROWS` 计数行）、
+  **25094**（行 0 接取 / 行 1 use-item / 行 2 领奖，retail `COLLECT_ITEM 702768`）、**30504/30554**
+  （retail `ACTION 701098`，旧定义 `started --SET_SUCCEED--> reward` 塌陷）留待后续批次；
+  其余大批形态是「legacy 递增但客户端行更多」，**必须先判 `var0` 是否行号**，禁止机械补阶梯。
+- 挂账不变：`STATES_BEYOND_ROWS 2622`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 77`（全部已登记）、
+  `section0 residual 837`、客户端隔离族 8 个（16984/26984/20015/18706/28706/3959/4963/29706）。
