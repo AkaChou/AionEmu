@@ -1937,3 +1937,68 @@ QC 判据（与批次 18/19 同源，但落点不同）：同形镜像对 `q` / 
   24112、24201、28030/28033、28313、28915、30600/30610、39001/39002、49002）待逐族判定。
 - 本批 Maven 命令（已执行，全绿；后续批次沿用并追加新门禁类）：
   `mvn -Dtest='FactionDailyRowLadderContractTest,Quest49713RetailFlowAlignmentTest,QuestWorldReachabilityOracleTest,ShadowCourtRowLadderContractTest,JournalRewardRowRepairContractTest,Quest14045And14046MoviePageTurnContractTest,CoreCapabilityRepresentativeDefinitionTest,QuestClientContractGateTest,QuestDialogOrderAuditTest,QuestItemSourceContractGateTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest,ChainEliteLadderContractTest,QuestMonsterProgressContractAuditTest,TreeLadderOwnerTrimContractTest,CollapsedSingleStepLadderContractTest,MirrorRewardProjectionLagContractTest,QuestPrematureRewardRouteExclusionTest,Quest11110And1548PostKillReportDialogTest,DurableDaevanionWeaponRewardRowContractTest,RewardOwnerTrimContractTest,RewardRowResidualTwoRowContractTest,RewardRowEventTwoRowContractTest,RewardRowTwoRowTalkFamilyContractTest,RewardNpcOwnershipContractTest,RetailSingleStepRewardRowContractTest,LegacyRewardStepProjectionRegressionTest' test`
+
+---
+
+## 二十八、批次 24：空槽位族登记与序幕边界（1000/2000/1400/11000，2026-09-22）
+
+### 二十八之一、族级判据与证据
+
+- 挂账 `1000/11000` 从批次 20 起被列为“剩余单步塌陷/错位”，本批取证后判定**两者都不是 QE-051 缺陷**：
+  - `11000`（幻想之光军团工作态度调查，ELYOS min-level 50）是正常 4 行任务，定义早已对齐（`ROW_ALIGNED/ALIGNED/ROW_STATE_ALIGNED`），
+    只是与 1000 数字上相差 10000；两者同属天族、**不是镜像对**（1000 是序幕）。
+  - `1000`（Prologue，ELYOS min-level 1）的客户端 `quest_summary` 固定渲染 4 个 `<step>`，但每一步的可见文本都是空白：
+    `<step><p visible="[%0]"><font color="[%1]"> </font></p>[%collectitem]</step>` —— 行 0 只挂 `[%collectitem]` 占位符，
+    而 `Quest_unpacked/quest.xml` 里 1000 既没有 `collect_item`、也没有任何 start/end NPC（`reward_exp1=1`、`cannot_giveup=1`）。
+  - 服务端实现（迁移前 `527dc4017^` 的 `Quest1000.java` 与当前 XML 同形）是
+    `AKARIOS_PLAINS_210010000` enter-zone 接取 → `play-movie 1` → `movie-end` 直接 `complete`，**没有 REWARD 节点、没有领奖行**。
+  - 因此审计的行号口径（`NO_REWARD_ROW / MISSING_TAIL_ROWS / ROW_WITHOUT_STATE`、`rows_without_state=1 2 3`、`visible=0`）
+    是**误报**：这些空槽不是“永不亮的任务书行”，按行号补 `s1/s2/s3` 只会造出永远不显示的节点。
+- 全库只读扫描（新增脚本 `.agents/summary/quest-10527-reward-row/audit_blank_journal_slots.py`，覆盖 9116 个客户端任务书）
+  找到 **13 个空槽位任务**，明细见 `blank-journal-slots.tsv`：
+
+  | 分类 | 任务 | 形态 | 服务端现状 |
+  |---|---|---|---|
+  | ALL_BLANK | 1000、2000 | 4 个空槽 + 行 0 的 `[%collectitem]` | 序幕：enter-zone → movie → complete（无 REWARD） |
+  | ALL_BLANK | 16984、26984 | 4 个空槽 | 服务端 XML 存在但**没有 `<nodes>`**（属“无状态”族） |
+  | ALL_BLANK | 3959、4963、18706、18744、20015、28706、28744、29706 | 4~8 个空槽 | **服务端没有定义文件**（属“缺定义”族） |
+  | TRAILING_BLANK | 1400 | 行 0 = 击杀计数、行 1 空 | `var0/var1` 是 8×4 击杀计数组合（35 节点），reward = 计数饱和值 |
+
+- `2000` 与 `1000` 完全同形（魔族序幕：`ALDELLE_BASIN_220010000` → `play-movie 2` → `complete`）。
+- `1400`（Paion's Worry，ELYOS min-level 34）：客户端 `QUEST_Q1400.html` 只有 1 个可见行“除掉作恶的特洛尔和托尔金 (/7)”，
+  行 1 是空槽；服务端是 32 个 `aNbM` 计数组合 + `unaccepted/reward/complete`，领奖路由 `a7b3 --NPC_REPORT 203941--> reward`（page SELECT2），
+  reward 投影 `var0=7/var1=3` 是计数饱和值 —— 行号口径的 `ROW_AHEAD / STATES_BEYOND_ROWS / STATE_OUT_OF_RANGE` 同属误报。
+
+### 二十八之二、落点（不改任何任务定义）
+
+- 审计脚本登记 `BLANK_JOURNAL_SLOT_EXCEPTIONS`（13 个 id，双语注释说明“判定不变、只登记证据”），
+  与既有 `VAR0_FLAG_EXCEPTIONS` / `DUPLICATE_VISIBLE_SLOT_BLANK_ROWS` 同一形式。
+- 新增只读扫描脚本 `audit_blank_journal_slots.py`（`--out-csv` 生成 `blank-journal-slots.tsv`），
+  以后新增客户端任务书可按同一口径复查空槽位族。
+- 新增门禁 `src/test/java/com/aionemu/gameserver/questEngine/definition/BlankJournalSlotBoundaryContractTest.java`（4 例）：
+  ① 1000/2000 无 REWARD 节点、无任何 `target=reward` 路由；② 序幕触发器保持（enter-zone 接取 + 重播 + `movie-end` 完成，影片 1/2）；
+  ③ 序幕不得长出 NPC 对话或 `s1/s2/s3` 行节点、`var0` 保持 6-bit 打包槽；④ 1400 保持 35 节点计数组合、`reward var0=7/var1=3`、领奖路由在 `a7b3`、owner 203941。
+- **本批没有任何 XML 改动**（0 个任务定义被修改），因此全库审计计数与批次 23 后完全一致。
+
+### 二十八之三、验证（2026-09-22）
+
+- 扫描：`audit_blank_journal_slots.py` 覆盖 9116 个任务书 → `ALL_BLANK=12 / TRAILING_BLANK=1`；
+  交叉 `audit-output.tsv`：1000/2000/16984/26984 判 `NO_REWARD_ROW`、1400 判 `ROW_AHEAD`，8 个缺定义任务不参与（无 XML）。
+- 审计脚本改动后重跑全库：三份 TSV 与批次 23 提交逐字节一致（`git status` 对三份 TSV 无差异）。
+- **Maven（授权后执行，2026-09-22 14:51）**：7 个测试类 **32 例全绿**（含新增 `BlankJournalSlotBoundaryContractTest` 4 例、
+  批次 23 的 `FactionDailyRowLadderContractTest` 7 例与 `Quest49713RetailFlowAlignmentTest` 6 例），
+  `PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。
+- **证据表**：[batch24-evidence.tsv](batch24-evidence.tsv)、[blank-journal-slots.tsv](blank-journal-slots.tsv)。
+
+### 二十八之四、边界与后续
+
+- 序幕/空槽位任务**不得**按 QE-051 行号口径补阶梯：任务书上没有行，补出来的节点永远不会显示；
+  同类任务先跑 `audit_blank_journal_slots.py`，空槽必须用客户端 `quest.xml`（collect_item/NPC/reward 字段）交叉核对。
+- `1400` 的 `var0/var1` 是击杀计数组合，`reward` 投影是饱和值；若将来要按 QE-051 口径核对它，
+  必须先有“任务书可点亮行”的客户端证据（当前只有 1 行可见文本）。
+- **新挂账（属独立族，本批未修）**：
+  - `NO_NODES`：16984、26984（客户端有任务书、服务端 XML 无 `<nodes>`）—— 需要先取客户端目标链再建状态；
+  - `MISSING_DEFINITION`：3959、4963、18706、18744、20015、28706、28744、29706（客户端有任务书、服务端无 XML）—— 属定义缺口族。
+- 批次 20 起挂账的“剩余单步塌陷/错位”清单至此只剩 `COUNTER_CHAIN_GAP` 族
+  （1842-1844、2842-2845、13910、16962、17016、18033、21292/21305、23703、23905-23908/23910/23917、24112、24201、
+  28030/28033、28313、28915、30600/30610、39001/39002、49002）。

@@ -1,0 +1,14 @@
+quest_id	verdict	rows	blank_slots	non_blank_prefix	client_file
+1000	ALL_BLANK	4	0 1 2 3		QUEST_Q1000.html
+1400	TRAILING_BLANK	2	1	除掉作恶的特洛尔和托尔金 (/7)	QUEST_Q1400.html
+2000	ALL_BLANK	4	0 1 2 3		QUEST_Q2000.html
+3959	ALL_BLANK	4	0 1 2 3		QUEST_Q3959.html
+4963	ALL_BLANK	4	0 1 2 3		QUEST_Q4963.html
+16984	ALL_BLANK	4	0 1 2 3		quest_q16984.html
+18706	ALL_BLANK	8	0 1 2 3 4 5 6 7		quest_q18706.html
+18744	ALL_BLANK	4	0 1 2 3		quest_q18744.html
+20015	ALL_BLANK	3	0 1 2		quest_q20015.html
+26984	ALL_BLANK	4	0 1 2 3		quest_q26984.html
+28706	ALL_BLANK	8	0 1 2 3 4 5 6 7		QUEST_Q28706.html
+28744	ALL_BLANK	4	0 1 2 3		quest_q28744.html
+29706	ALL_BLANK	8	0 1 2 3 4 5 6 7		QUEST_Q29706.html

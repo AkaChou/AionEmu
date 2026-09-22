@@ -74,6 +74,28 @@ VAR0_FLAG_EXCEPTIONS = {30203, 30303, 13918, 23918}
 # "last row index 10" reading is not mechanically repaired later. The verdict itself is unchanged.
 DUPLICATE_VISIBLE_SLOT_BLANK_ROWS = {10530}
 
+# 已核实的“整段空槽位”例外（批次 24，2026-09-22）：客户端 quest_summary 固定渲染若干 <step>，但每一步的
+# 可见文本都是空白（序幕 1000/2000 的 4 个空槽只挂了 [%collectitem] 占位符，quest.xml 里既没有 collect_item
+# 也没有任何 NPC），本审计会把空槽当成“没有状态的客户端行”，判成 NO_REWARD_ROW / MISSING_TAIL_ROWS /
+# ROW_WITHOUT_STATE。这些任务没有可以点亮的任务书行，按行号补阶梯只会造出永远不显示的节点；判定保持不变，
+# 这里只登记证据（扫描脚本 .agents/summary/quest-10527-reward-row/audit_blank_journal_slots.py，
+# 明细 blank-journal-slots.tsv）：
+#   ALL_BLANK（全部 step 为空，12 个）：1000/2000（序幕 enter-zone + movie -> complete，无 REWARD 节点，
+#     由 BlankJournalSlotBoundaryContractTest 锁定）；16984/26984（服务端暂无 <nodes>，属“无状态”族）；
+#     3959/4963/18706/18744/20015/28706/28744/29706（客户端有任务书但服务端没有定义文件，属“缺定义”族）。
+#   TRAILING_BLANK（末尾 step 为空）：1400 —— 行 0 是“除掉作恶的特洛尔和托尔金 (/7)”，var0/var1 是 8x4 的
+#     击杀计数组合（35 个节点），reward 投影 var0=7/var1=3 是计数饱和值，所以本审计的行号口径会判
+#     ROW_AHEAD / STATES_BEYOND_ROWS / STATE_OUT_OF_RANGE，空槽不承载任何目标。
+# Verified "blank journal slots" exceptions (batch 24): the client quest_summary renders fixed <step> slots whose
+# visible text is entirely blank (the prologue 1000/2000 rows only carry a [%collectitem] placeholder while their
+# quest.xml declares neither collect_item nor any NPC), so this row-index lens reports NO_REWARD_ROW /
+# MISSING_TAIL_ROWS / ROW_WITHOUT_STATE. Those quests have no journal row to light up; the verdicts are unchanged
+# and this entry only records the evidence. 1400 is the trailing-blank case: row 0 is the /7 kill counter and
+# var0/var1 are its 8x4 combination, so its saturated reward projection is a counter value rather than a row index.
+BLANK_JOURNAL_SLOT_EXCEPTIONS = {
+    1000, 2000, 3959, 4963, 16984, 18706, 18744, 20015, 26984, 28706, 28744, 29706, 1400,
+}
+
 QE045_LOCKED = {2393, 3722, 4722, 11149, 13965, 14010, 14015, 14020, 14040, 14050,
                 15674, 23965, 24010, 24020, 24040, 24050, 25674, 30057, 30158, 30208}
 
