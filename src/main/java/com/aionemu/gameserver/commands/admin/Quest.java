@@ -14,6 +14,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_COMPLETED_LIST
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.model.QuestVars;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
@@ -165,6 +166,11 @@ public class Quest extends AdminCommand {
 		int varNum = 0;
 		QuestStatus questStatus;
 
+		if (params.length != 4 && params.length != 5) {
+			PacketSendUtility.sendMessage(admin, "syntax //quest set <questId status var [varNum]>");
+			return;
+		}
+
 		try {
 			String quest = params[1];
 			Pattern id = Pattern.compile("\\[quest:([^%]+)]");
@@ -180,9 +186,19 @@ public class Quest extends AdminCommand {
 					"<status is one of START, NONE, REWARD, COMPLETE; got '" + params[2] + "'>");
 				return;
 			}
-			var = Integer.valueOf(params[3]);
-			if (params.length == 5 && params[4] != null && !params[4].isEmpty()) {
-				varNum = Integer.valueOf(params[4]);
+			var = Integer.parseInt(params[3]);
+			if (params.length == 5) {
+				varNum = Integer.parseInt(params[4]);
+				if (!QuestVars.isValidVarId(varNum)) {
+					PacketSendUtility.sendMessage(admin,
+						"<varNum must be between 0 and 5; got '" + varNum + "'>");
+					return;
+				}
+				if (!QuestVars.isValidVarValue(var)) {
+					PacketSendUtility.sendMessage(admin,
+						"<var must be between 0 and 63 when varNum is specified; got '" + var + "'>");
+					return;
+				}
 			}
 		}
 		catch (NumberFormatException e) {
