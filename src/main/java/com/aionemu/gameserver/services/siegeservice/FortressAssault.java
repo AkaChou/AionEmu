@@ -10,7 +10,6 @@ import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.siege.SiegeModType;
 import com.aionemu.gameserver.model.siege.SiegeRace;
 import com.aionemu.gameserver.model.templates.npc.AbyssNpcType;
@@ -21,7 +20,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 要塞龙族突击：按延迟调度并在首领附近刷出突击部队。
@@ -121,7 +119,7 @@ public class FortressAssault extends Assault<FortressSiege> {
 			}
 			templateId = (i <= commanderCount) ? idList.get(0) : idList.get(Rnd.get(1, idList.size() - 1));
 			Npc attaker;
-			if ((i > Math.round(amount / 3)) && !spawnLocations.isEmpty()) {
+			if ((i > amount / 3) && !spawnLocations.isEmpty()) {
 				float[] coords = spawnLocations.get(Rnd.get(spawnLocations.size()));
 				spawn = SpawnEngine.addNewSiegeSpawn(worldId, templateId, locationId, SiegeRace.BALAUR,
 						SiegeModType.ASSAULT, coords[0], coords[1], coords[2], heading);

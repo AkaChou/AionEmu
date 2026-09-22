@@ -38,7 +38,7 @@ public class AccountTimeController {
 
         int lastLoginDay = getDays(accountTime.getLastLoginTime().getTime());
         int currentDay = getDays(System.currentTimeMillis());
-        int returnday = getDays(accountTime.getLastLoginTime().getTime() + + 30L * 24 * 60 * 60 * 1000);
+        int returnday = getDays(accountTime.getLastLoginTime().getTime() + 30L * 24 * 60 * 60 * 1000);
 
         /**
          * 非当日登录则清零当日累计在线/休息时间。

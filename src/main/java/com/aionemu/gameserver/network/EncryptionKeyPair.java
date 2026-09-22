@@ -136,7 +136,7 @@ public class EncryptionKeyPair {
 		}
 
 		/** 旧密钥为长整型 / old key as long */
-		long oldKey = (((long) clientPacketKey[0] & 0xff) << 0) | (((long) clientPacketKey[1] & 0xff) << 8)
+		long oldKey = ((long) clientPacketKey[0] & 0xff) | (((long) clientPacketKey[1] & 0xff) << 8)
 				| (((long) clientPacketKey[2] & 0xff) << 16) | (((long) clientPacketKey[3] & 0xff) << 24)
 				| (((long) clientPacketKey[4] & 0xff) << 32) | (((long) clientPacketKey[5] & 0xff) << 40)
 				| (((long) clientPacketKey[6] & 0xff) << 48) | (((long) clientPacketKey[7] & 0xff) << 56);
@@ -146,7 +146,7 @@ public class EncryptionKeyPair {
 
 		if (validateClientPacket(buf)) {
 			/** 写回新密钥 / write new key value */
-			clientPacketKey[0] = (byte) (oldKey >> 0 & 0xff);
+			clientPacketKey[0] = (byte) (oldKey & 0xff);
 			clientPacketKey[1] = (byte) (oldKey >> 8 & 0xff);
 			clientPacketKey[2] = (byte) (oldKey >> 16 & 0xff);
 			clientPacketKey[3] = (byte) (oldKey >> 24 & 0xff);
@@ -186,7 +186,7 @@ public class EncryptionKeyPair {
 		}
 
 		/** 旧密钥为长整型 / old key as long */
-		long oldKey = (((long) serverPacketKey[0] & 0xff) << 0) | (((long) serverPacketKey[1] & 0xff) << 8)
+		long oldKey = ((long) serverPacketKey[0] & 0xff) | (((long) serverPacketKey[1] & 0xff) << 8)
 				| (((long) serverPacketKey[2] & 0xff) << 16) | (((long) serverPacketKey[3] & 0xff) << 24)
 				| (((long) serverPacketKey[4] & 0xff) << 32) | (((long) serverPacketKey[5] & 0xff) << 40)
 				| (((long) serverPacketKey[6] & 0xff) << 48) | (((long) serverPacketKey[7] & 0xff) << 56);
@@ -195,7 +195,7 @@ public class EncryptionKeyPair {
 		oldKey += size;
 
 		/** 写回新密钥 / write new key value */
-		serverPacketKey[0] = (byte) (oldKey >> 0 & 0xff);
+		serverPacketKey[0] = (byte) (oldKey & 0xff);
 		serverPacketKey[1] = (byte) (oldKey >> 8 & 0xff);
 		serverPacketKey[2] = (byte) (oldKey >> 16 & 0xff);
 		serverPacketKey[3] = (byte) (oldKey >> 24 & 0xff);

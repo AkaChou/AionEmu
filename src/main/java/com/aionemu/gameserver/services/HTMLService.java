@@ -23,7 +23,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTIONNAIRE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * HTML 问卷/引导服务，向客户端推送原始 HTML 并处理引导奖励。
@@ -90,7 +89,7 @@ public class HTMLService {
 	 * HTML content
 	 */
 	public static void sendData(Player player, int messageId, String html) {
-		byte packet_count = (byte) Math.ceil(html.length() / (Short.MAX_VALUE - 8) + 1);
+		byte packet_count = (byte) (html.length() / (Short.MAX_VALUE - 8) + 1);
 		if (packet_count < 256) {
 			for (byte i = 0; i < packet_count; i++) {
 				try {
