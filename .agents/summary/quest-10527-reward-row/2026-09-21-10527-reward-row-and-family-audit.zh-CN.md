@@ -2400,3 +2400,134 @@ legacy 证据（迁移前 commit `7e9f0316c^`）：
 - **下一批（批次 29）候选**：剩余 80 个 `MISSING_LAST_ROW`（61 个其它 handler 形态 + 9 个无 legacy +
   口径例外）按 QE-054 同口径逐族分类；全库挂账 `NO_NODES 16984/26984`、
   `MISSING_DEFINITION 3959/4963/18706/18744/20015/28706/28744/29706`。
+
+## 三十三、批次 29：剩余 MISSING_LAST_ROW 逐族收口（2026-09-22 用户授权后执行）
+
+### 三十三之一、族级判据与证据
+
+批次 28 之后全库还有 **81 个 `MISSING_LAST_ROW`**。本批把 QE-054 口径推广到全部 81 个任务：对每个任务从
+迁移前的 legacy handler（`7e9f0316c^` 的 `src/main/java/com/aionemu/gameserver/quest/handlers/**`，解包在
+`/tmp/b25/legacy`）提取“进入 REWARD 时真正落盘的 `var0`”，再与当前 XML 的 reward 投影逐一比对。完整明细见
+[batch29-triage.tsv](batch29-triage.tsv)（81 行，含 `legacy_persisted` 与逐任务依据）。
+
+legacy 落盘规则的复述（与批次 27/28 同一份代码依据，`QuestHandler`）：
+
+- `changeQuestStep(env, step, nextStep, reward=true)` —— **只 `setStatus(REWARD)`，不写 nextStep**，所以落盘值恒等于
+  调用点的 `step`（即进入领奖时已有的 `var0`）；`defaultCloseDialog` / `checkQuestItems` /
+  `checkItemExistence` / `useQuestItem` / `useQuestObject` / `defaultFollowEndEvent` / `checkQuestItemsSimple`
+  的 reward 分支最终都走这一条；
+- `qs.setQuestVar(N)` / `qs.setQuestVarById(0, N)` / `changeQuestStep(..., reward=false)` 之后的
+  `setStatus(REWARD)` 才把 `var0` 写成 N；
+- `defaultOnKillEvent(env, npcId, var, true)` 的 `var` 是**匹配值**（`var0 == var` 时只置 REWARD）。
+
+按此把 81 个任务分成四族：
+
+| 族 | 数量 | 判定 | 处置 |
+|---|---|---|---|
+| 族 A：legacy 落盘 ≠ XML 投影 | 6 | 真缺陷 | **本批修复**（1876/2876/14123/2600/11010/1466） |
+| 族 B：legacy 落盘 = XML 投影，但 < 末行索引 | 62 | 行号口径误报 | 登记 `LEGACY_STEP_EXCEPTION`（判定不变） |
+| 族 C：var0 不是任务书行号（计数器 / 标志位 / 分支领奖行） | 6 | 口径不适用 | 登记 `COUNTER_SLOT_EXCEPTIONS`（判定不变） |
+| 族 D：legacy 无 handler 也无脚本 | 7 | 缺依据 | 登记 `NO_LEGACY_HANDLER_OBSERVED`（判定不变） |
+
+族 A 逐一取证（`legacy_persisted` 列）与修复落点见 [batch29-evidence.tsv](batch29-evidence.tsv)。要点：
+
+- **1876/2876**（Taranis / Votan Emergency Orders）：客户端 3 行（0 = 和 Sakmis/Lisya 对话、1 = 和
+  Ascalon/Semotor 对话、2 = 向 Taranis/Votan 报告）。legacy 在 278503/278017 的 `SET_REWARD` 上先
+  `changeQuestStep(env, 1, 2, false)` **写 2**、再 `setStatus(REWARD)`，领奖态落盘 2；旧 XML 投影写成 1。
+  本批投影 1→2 + 自愈边 `REWARD && var0=1 -> 2`。
+- **14123**（The Shadow Of Vengeance）：客户端 3 行（槽位 0/9/24，行 1/2 不是 3×行号）。legacy
+  `defaultOnKillEvent(env, 206360, 0, 1)` 写 1，`SELECT_REWARD` 只 setStatus，落盘 1；旧 XML 的 4 条
+  `report -> reward` 交接又显式写 `set-variable var0=0` 把领奖态打回行 0。本批投影 0→1、4 处交接
+  `var0 0 -> 1`、自愈边 `REWARD && var0=0 -> 1`；末行索引 2 属行号口径误报（同批登记 `LEGACY_STEP_EXCEPTION`）。
+- **2600**（Humongous Malek）：legacy 只在 `var0 == 1` 时响应 204734 的 `SELECT_REWARD` 并 setStatus，落盘 1；
+  旧 XML 投影写成 0。本批投影 0→1 + 自愈边 `0 -> 1`（末行索引 2 同步登记为例外）。
+- **11010**（Angel To The Wounded）：客户端 4 行。legacy 730323 的 `defaultCloseDialog(env, 2, 3)` 写 3，
+  随后 799071 的 `SELECT_REWARD` 只 setStatus，落盘 3；旧 XML 只有 `started(0)/stage1(1)/stage2(2)` 且 reward
+  投影写成 0。本批投影 0→3（`stage2 -> reward` 由 target 投影生效）+ 自愈边 `0 -> 3`。
+- **1466**（Respect For Deltras）：客户端只有 2 行（0 = 燃放奥德爆竹、1 = 向 Valerius 报告）。legacy 两条进入
+  REWARD 的路径分别落盘 0（道具 `setStatus(REWARD)`）与 2（203903 的 `qs.setQuestVar(2)`，**越出 0..1**，任务书
+  会空白）。本批统一落盘 1：reward 节点补 `var0=1`、203903 交接 `2 -> 1`、道具交接补 `set-variable var0=1`，
+  两条自愈边 `0 -> 1` 与 `2 -> 1`。
+
+族 B 的代表（62 个，全部保留 legacy 落盘值）：`1149`（`defaultFollowEndEvent(1,1,true,12)` 停 1）、
+`1920/2945`（`defaultCloseDialog(1,1,true,false)` 停 1）、`2006`（`checkQuestItems(1,1,true,...)` 停 1）、
+`2007`（`setQuestVar(8)` 后 setStatus → 8）、`2633`（`var0 == 2` 时 setStatus）、`4200`（`var0 == 3`）、
+`3933/3934/3935/3939`（`defaultCloseDialog(6,6)/(8,8)/(4,4)/(3,3,true,false,0)`）、`10100/20100`
+（`useQuestItem(...,4,4,true)`，已有门禁）、`15300/25300`（`changeQuestStep(13,14,true)` 停 13，已有真机验收）、
+`19008..19038` / `29014..29038`（制作名人族的 `setQuestVarById(0,1)` 与 `checkItemExistence(11,11,true,...)`）等。
+
+族 C：`2303`（var0 = 11..15 / 21..25 击杀计数，客户端 `Progress(11~14)/(15)/(21~24)/(25)` 驱动行；XML 的
+reward1/reward2 投影 1/2 是行标记）、`50008/51008`（`ProgressAll` + sensoryArea 计数，末行槽位 15）、
+`11467`（reward0..3 四条投影覆盖 `changeQuestStep(var,var,true)` 的 0..3）、`1114`（行 4/5 是两条分支各自的
+领奖行）、`80690`（末行槽位 15，击杀计数族）。
+
+族 D：`1005/1479/24120/24123/51010/51020/51022` 在 legacy 侧既无 Java handler、也无
+`quest_script_data/*.xml` 脚本（`quest_data.xml` 只有奖励元数据），迁移投影比客户端末行少一行；缺 legacy
+依据无法判定正误，本批登记为待取证（不改）。
+
+### 三十三之二、落点（6 个 XML）
+
+- `1876.xml` / `2876.xml`：reward 投影 `var0 1 -> 2`；追加无 source 的 `ENTER_WORLD` 自愈边
+  `REWARD && var0=1 -> reward(set var0=2)`。
+- `14123.xml`：reward 投影 `0 -> 1`；4 条 `report -> reward` 交接的 `set-variable var0 0 -> 1`；
+  自愈边 `REWARD && var0=0 -> 1`。
+- `2600.xml`：reward 投影 `0 -> 1`；自愈边 `REWARD && var0=0 -> 1`。
+- `11010.xml`：reward 投影 `0 -> 3`；自愈边 `REWARD && var0=0 -> 3`。
+- `1466.xml`：reward 节点补 `var0=1`；道具交接新增 `set-variable var0=1`；203903 交接 `var0 2 -> 1`；
+  两条自愈边 `REWARD && var0=0 -> 1` 与 `REWARD && var0=2 -> 1`。
+- 应用脚本：`.agents/summary/quest-10527-reward-row/apply_batch29_reward_row_closure.py`（`--check` 幂等，
+  6/6 指纹校验；自愈边插入 `</transitions>` 之前）。
+- 审计脚本登记集：`.agents/summary/quest-10527-reward-row/audit_reward_row_vs_client_steps.py` 的
+  `LEGACY_STEP_EXCEPTION`（64 项）、`COUNTER_SLOT_EXCEPTIONS`（6 项）、`NO_LEGACY_HANDLER_OBSERVED`（7 项），
+  报告第 [5] 节会直接列出三组已登记任务。
+
+### 三十三之三、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 6/6 validates；`apply_batch29_*.py --check`
+  幂等（`BATCH29_APPLIED`×6 → `BATCH29_OK all 6 quests already-applied`）。
+- **全库行号审计**：`MISSING_LAST_ROW 81 -> 77`（1466/1876/2876/11010 由 `ROW_BEHIND`/`NO_REWARD_ROW` 转
+  **`ALIGNED`**；14123/2600 按 QE-054 保留 legacy 落盘值 1，转入登记例外）；`ROW_ALIGNED 2665 -> 2669`、
+  `ROW_BEHIND 182 -> 179`、`NO_REWARD_ROW 179 -> 178`，其余桶不变。剩余 77 个 `MISSING_LAST_ROW` 现在
+  **100% 落在三组登记集合内**（62 + 6 + 7 + 已登记 2 = 77）。
+- **section0 审计**：`residual rows 837` 与批次 26/27/28 完全一致（`COUNTER_CHAIN_OK 823` / 扩展例外 6 /
+  闭环 7 + `REVIEW_LEGACY_NO_VAR0 1`），本批不涉及 COUNTER_CHAIN 族。
+- **Maven（授权后执行）**：reward/row/ladder/journal/counter 相关 **65 个测试类 299 例**，其中与本次改动相关
+  的全绿；新增 `Batch29RewardRowClosureContractTest`（4 例）与同步更新的
+  `Quest1466ClientDialogAlignmentTest`（reward 投影 `{} -> {var0=1}`、道具交接新增 `SetVariable(var0,1)`、
+  203903 交接 `var0 2 -> 1`）；`PRODUCTION_COMPILE_OK=6189 / FAILURES=0 /
+  INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。
+  （已知无关红，HEAD 本就不成立，本批不修：`MissionItemConsumptionBatchRegressionTest` 2 例
+  （20529 `s9 -> reward`、29064 `started -> reward`）；`QuestKillCounterRetailGateTest
+  .singleCounterQuestsRequireExactlyTheClientGate` 1 例（15101 在 `c44c50bd0` 加了 var0 行索引字段，
+  与 `30d2daff9` 的单计数器契约冲突，两个提交都在本批之前）。）
+- **证据表**：[batch29-evidence.tsv](batch29-evidence.tsv)（6 个修复 + 3 个族的登记汇总）。
+- **客户端实机：PENDING_CLIENT**。
+
+客户端复测路径（PENDING_CLIENT）：
+
+1. 1876：与 Sakmis（278502）对话后任务书切到行 1；与 Calon（278503）对话进入领奖态，任务书应停在
+   **行 2“向 Taranis 报告”**（修复前停在行 1）；向 278501 领奖后完成。2876 同形（Lisya → Semotor → Votan）。
+2. 14123：接取后击杀结界塔后空地的 hippolyta 一次，任务书应切到“向 Dionera 报告”所在行；与 Dionera 领奖后完成。
+3. 2600：与 Shugo 对话拿到守护石、召唤并击杀 Malek 拿到原石后，回 Shugo 处领奖，任务书应显示
+   `var0=1` 对应的“搜集原石交给 Shugo”行（修复前停在行 0）。
+4. 11010：Naiting → Lionel → 调查 Supply_Box → 回 Naiting 领奖；领奖时任务书应显示 **行 3“和 Naiting 对话”**
+   （修复前停在行 0）。
+5. 1466：在指定区域燃放奥德爆竹后任务书切到行 1“向 Valerius 报告”，与 203903 领奖后完成；两条路径都
+   不应出现任务书空白。
+6. 旧存档：处于 REWARD 且 `var0` 等于各任务旧值（1876/2876=1、14123/2600/11010/1466=0、1466 的越界 2）
+   的角色登录/切图时应自愈到新值，正规态（已是新值）不重复提示“任务更新”。
+
+### 三十三之四、边界与后续
+
+- 行号口径（QE-051）依旧只是**发现工具**：本批 81 个任务里只有 6 个属于“legacy 落盘 ≠ XML 投影”的真缺陷，
+  其余 75 个要么是 legacy 落盘值与投影一致的误报，要么是 var0 不承载行号的计数器族、要么缺 legacy 依据；
+  禁止按末行索引批量替换（`15300/25300` 真机验收、`10100/20100` 道具消耗门禁都会被打断）。
+- 族 B 的“末行不亮”是 legacy 行为（领奖态停在前一行），本批按 QE-054 保留；若后续客户端复测认为末行必须
+  点亮，需要**先**确认 legacy 是否本来就有写入缺口，再逐族重开，而不是直接改投影。
+- 族 D（`1005/1479/24120/24123/51010/51020/51022`）需要客户端/数据侧进一步取证：迁移投影比客户端末行少
+  一行，但 legacy 侧没有任何进入 REWARD 的写入可供比对。
+- **剩余挂账（不要遗忘）**：`MISSING_LAST_ROW 77`（全部已登记，等待客户端复测或进一步取证）、
+  `STATES_BEYOND_ROWS 2622`、`INTERIOR_GAP 263`、`MISSING_TAIL_ROWS 80`、`NO_NODES 16984/26984`、
+  `MISSING_DEFINITION 3959/4963/18706/18744/20015/28706/28744/29706`；`section0 residual 837`
+  （COUNTER_CHAIN_OK 823 / 扩展例外 6 / 闭环 7 + `REVIEW_LEGACY_NO_VAR0 1`）；
+  新增已知无关红 `QuestKillCounterRetailGateTest`（15101，见上）。

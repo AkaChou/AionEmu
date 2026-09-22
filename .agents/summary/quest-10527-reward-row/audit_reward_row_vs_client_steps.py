@@ -137,7 +137,33 @@ QE045_LOCKED = {2393, 3722, 4722, 11149, 13965, 14010, 14015, 14020, 14040, 1405
 # Verified "reward projection == legacy persisted step, the last row index is not authoritative" exceptions
 # (QE-054): registered evidence only, the verdicts stay unchanged. 15300/25300 stop at the pre-REWARD step 13
 # (client-accepted 2026-09-19/20), 10100/20100 persist step 4 through useQuestItem(..., 4, 4, true).
-LEGACY_STEP_EXCEPTION = {15300, 25300, 10100, 20100}
+LEGACY_STEP_EXCEPTION = {
+    # 批次 27/28 登记（有真机验收或门禁锁定）
+    15300, 25300, 10100, 20100,
+    # 批次 29 逐任务取证（2026-09-22，明细 batch29-triage.tsv / batch29-evidence.tsv：
+    # legacy handler 进入 REWARD 时落盘的 step 与当前 XML reward 投影逐一对上）
+    1149, 1157, 1170, 14123, 1722, 1920, 2006, 2007, 2600, 2633, 2722, 2925, 2945, 3722,
+    3732, 3933, 3934, 3935, 3939, 4200, 4722, 11040, 11147, 11149, 13965, 14016, 14041,
+    14042, 14044, 14047, 14112, 15307, 15674, 18500, 19008, 19014, 19020, 19026, 19032,
+    19038, 21075, 23965, 24041, 24042, 24043, 24044, 24045, 24112, 25307, 25674, 28500,
+    29014, 29020, 29026, 29032, 29038, 30057, 30158, 30208,
+}
+
+# 批次 29 登记（2026-09-22）：var0 不是任务书行号（计数器 / 标志位 / 末行槽位不是 3×行号 /
+# 同一任务有多条分支领奖行），行号口径（QE-051）不适用；判定保持不变，只登记证据。
+COUNTER_SLOT_EXCEPTIONS = {
+    2303,   # var0 = 11..15 / 21..25 击杀计数（quest_script Progress(11~14)/(15)/(21~24)/(25)）
+    50008,  # ProgressAll + sensoryArea 计数，末行槽位 15 不是 3×行号
+    51008,  # 同上（魔族镜像）
+    11467,  # reward0..3 四条投影覆盖 var0=0..3（var 为分支编号）
+    1114,   # 行 4/5 是两条分支各自的领奖行，没有单一 reward 投影可对齐
+    80690,  # 末行槽位 15（击杀计数族），不是 3×行号
+}
+
+# 批次 29 登记（2026-09-22）：legacy 侧没有 Java handler 也没有 quest_script_data 脚本
+# （quest_data.xml 只有元数据），迁移投影比客户端末行少一行；行号口径无法判定正误，
+# 需客户端/数据侧进一步取证，本批不改（判定保持不变）。
+NO_LEGACY_HANDLER_OBSERVED = {1005, 1479, 24120, 24123, 51010, 51020, 51022}
 
 # “和 X 对话 / 向 X 报告 / 去 X 那里”这一类末行 = 客户端领奖行（中/韩双语关键词）。
 DIALOG_ROW_RE = re.compile(r"对话|报告|见面|交谈|转达|传达|询问|汇报|告诉|通知|迎接|确认|拜访|交给|交付|递交|转交|归还|送达|대화|보고|만나")
@@ -466,6 +492,10 @@ def main() -> int:
           f"{sum(1 for row in missing if row['qe045_locked'])}")
     print(f"  其中已登记 QE-054 legacy 落盘 step 例外（禁止按末行索引改）："
           f"{sorted(row['quest_id'] for row in missing if int(row['quest_id']) in LEGACY_STEP_EXCEPTION)}")
+    print(f"  其中已登记计数器/标志位族（var0 不是行号）："
+          f"{sorted(row['quest_id'] for row in missing if int(row['quest_id']) in COUNTER_SLOT_EXCEPTIONS)}")
+    print(f"  其中 legacy 无 handler / 无脚本（待取证，本批不改）："
+          f"{sorted(row['quest_id'] for row in missing if int(row['quest_id']) in NO_LEGACY_HANDLER_OBSERVED)}")
     mirrored_missing = [row for row in missing
                         if (mirror := index.get(mirror_of(row["quest_id"])))
                         and mirror["client_rows"] == row["client_rows"]

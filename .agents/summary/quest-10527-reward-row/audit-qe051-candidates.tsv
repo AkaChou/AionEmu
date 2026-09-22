@@ -3,14 +3,12 @@ quest_id	client_rows	reward_var0	last_start_node	last_start_var0	recovery	client
 1149	3	1	started	0	False	QUEST_Q1149.html		和[%dic:STR_DIC_LA159]对话					NO
 1479	3	1	started	0	False	QUEST_Q1479.html		和[%dic:STR_DIC_N_Memnes]对话					NO
 1722	9	7	s7	7	False	QUEST_Q1722.html		把[%dic:STR_DIC_I_QUEST_1722a]交给[%dic:STR_DIC_N_Rastin]					NO
-1876	3	1	s1	1	False	quest_q1876.html		向[%dic:STR_DIC_N_Taranis]报告					NO
 1920	3	1	started1	1	False	QUEST_Q1920.html		和[%dic:STR_DIC_N_Jucleas]对话					NO
 2006	3	1	started	0	False	QUEST_Q2006.html		和[%dic:STR_DIC_LA494]%对话。					NO
 2007	10	8	started	0	False	QUEST_Q2007.html		和[%dic:STR_DIC_LA494]对话					NO
-2600	3	0	s1	1	False	QUEST_Q2600.html		重新和[%dic:STR_DIC_N_Shugo_DF3_12]对话					NO
+2600	3	1	s1	1	True	QUEST_Q2600.html		重新和[%dic:STR_DIC_N_Shugo_DF3_12]对话					NO
 2633	4	2	s2	2	False	QUEST_Q2633.html		向德拉乌伯尼尔洞穴入口附近的[%dic:STR_DIC_N_DF3_Alberihi_E]报告					NO
 2722	9	7	started7	7	False	QUEST_Q2722.html		把伊拉西克特产酒交给[%dic:STR_DIC_N_Bord]					NO
-2876	3	1	s1	1	False	quest_q2876.html		向[%dic:STR_DIC_N_Votan]报告					NO
 2945	3	1	started1	1	False	QUEST_Q2945.html		和[%dic:STR_DIC_N_Balder]对话					NO
 3732	3	1	started	0	False	quest_q3732.html		向[%dic:STR_DIC_N_LF2_Brando]报告					NO
 3933	8	6	s6	6	False	QUEST_Q3933.html		向[%dic:STR_DIC_LA80]报告					NO
@@ -19,7 +17,6 @@ quest_id	client_rows	reward_var0	last_start_node	last_start_var0	recovery	client
 3939	5	3	s3	3	False	QUEST_Q3939.html		和[%dic:STR_DIC_N_Lavirintos]对话					NO
 10100	6	4	s4	4	False	quest_q10100.html		重新和[%dic:STR_DIC_N_LDF4_Advance_L_Kahrun]%对话	20100	MISSING_LAST_ROW	4	重新和[%dic:STR_DIC_N_LDF4_Advance_D_Kahrun]%对话	NO
 10530	11	9	s8	8	True	quest_q10530.html		再次和[%dic:STR_DIC_N_Jucleas]%对话	20530	ALIGNED	9	再次和[%dic:STR_DIC_N_Balder]%对话	NO
-11010	4	0	stage2	2	False	QUEST_Q11010.html		和[%dic:STR_DIC_N_Naiting]对话					NO
 11147	6	4	s4	4	False	quest_q11147.html		和[%dic:STR_DIC_N_Rollia]对话					NO
 14016	4	2	s2	2	False	quest_q14016.html		向[%dic:STR_DIC_FLA09]的[%dic:STR_DIC_LA19]报告	24016	MISSING_TAIL_ROWS	4	向[%dic:STR_DIC_N_Sueron]报告	NO
 14041	8	6	s6	6	False	quest_q14041.html		和[%dic:STR_DIC_N_Claudia]对话	24041	MISSING_LAST_ROW	6	和[%dic:STR_DIC_N_Spyr]进行对话	NO
@@ -27,7 +24,7 @@ quest_id	client_rows	reward_var0	last_start_node	last_start_var0	recovery	client
 14044	5	3	s3	3	False	quest_q14044.html		和[%dic:STR_DIC_N_Ab1_NPC_LugBug]进行对话	24044	MISSING_LAST_ROW	6	向[%dic:STR_DIC_N_Scoda]报告结果	NO
 14047	8	6	s6	6	False	quest_q14047.html		向[%dic:STR_DIC_N_Juditio]报告结果					NO
 14112	3	1	started	0	False	quest_q14112.html		和[%dic:STR_DIC_LA54]%对话	24112	MISSING_LAST_ROW	1	告诉[%dic:STR_DIC_N_DF1A_Brodir_E]	NO
-14123	3	0	started	0	False	quest_q14123.html		向[%dic:STR_DIC_W_LF2_SZ_E2_SUB_1]的[%dic:STR_DIC_N_Dionera]%报告	24123	MISSING_LAST_ROW	1	向[%dic:STR_DIC_W_DF2_SUB_E2_1]的[%dic:STR_DIC_N_DF2_NPC_Ananta]%报告	NO
+14123	3	1	started	0	True	quest_q14123.html		向[%dic:STR_DIC_W_LF2_SZ_E2_SUB_1]的[%dic:STR_DIC_N_Dionera]%报告	24123	MISSING_LAST_ROW	1	向[%dic:STR_DIC_W_DF2_SUB_E2_1]的[%dic:STR_DIC_N_DF2_NPC_Ananta]%报告	NO
 15300	15	13	s13	13	True	quest_q15300.html		在希哥尼亚和代理人[%dic:STR_DIC_N_LF5_Dike_E]%对话	25300	MISSING_LAST_ROW	13	和厄夏勒的代理人[%dic:STR_DIC_N_DF5_Skuldun_E]%对话	NO
 20100	6	4	s4	4	False	quest_q20100.html		重新和[%dic:STR_DIC_N_LDF4_Advance_D_Kahrun]%对话	10100	MISSING_LAST_ROW	4	重新和[%dic:STR_DIC_N_LDF4_Advance_L_Kahrun]%对话	NO
 24041	8	6	s6	6	False	quest_q24041.html		和[%dic:STR_DIC_N_Spyr]进行对话	14041	MISSING_LAST_ROW	6	和[%dic:STR_DIC_N_Claudia]对话	NO
@@ -37,7 +34,7 @@ quest_id	client_rows	reward_var0	last_start_node	last_start_var0	recovery	client
 24045	6	4	s4	4	False	quest_q24045.html		向[%dic:STR_DIC_N_Holm]报告结果	14045	STATES_BEYOND_ROWS	12	向[%dic:STR_DIC_N_Shugo_AB1_13]报告	NO
 24112	3	1	started	0	True	quest_q24112.html		告诉[%dic:STR_DIC_N_DF1A_Brodir_E]	14112	MISSING_LAST_ROW	1	和[%dic:STR_DIC_LA54]%对话	NO
 24120	3	1	started	0	False	quest_q24120.html		和[%dic:STR_DIC_W_DF2_SUB_A3]的[%dic:STR_DIC_N_Tree_Move_Nabalu]%对话	14120	ALIGNED	1	去[%dic:STR_DIC_W_LF2_SZ_A2]的[%dic:STR_DIC_E_LF2_Cherubim_Basket]中搜集水罐，然后交给[%dic:STR_DIC_W_LF2_SZ_B]的[%dic:STR_DIC_N_Tree_NoMove_Lodas]%[%collectitem]	NO
-24123	3	1	started	0	False	quest_q24123.html		向[%dic:STR_DIC_W_DF2_SUB_E2_1]的[%dic:STR_DIC_N_DF2_NPC_Ananta]%报告	14123	MISSING_LAST_ROW	0	向[%dic:STR_DIC_W_LF2_SZ_E2_SUB_1]的[%dic:STR_DIC_N_Dionera]%报告	NO
+24123	3	1	started	0	False	quest_q24123.html		向[%dic:STR_DIC_W_DF2_SUB_E2_1]的[%dic:STR_DIC_N_DF2_NPC_Ananta]%报告	14123	MISSING_LAST_ROW	1	向[%dic:STR_DIC_W_LF2_SZ_E2_SUB_1]的[%dic:STR_DIC_N_Dionera]%报告	NO
 25300	15	13	s13	13	True	quest_q25300.html		和厄夏勒的代理人[%dic:STR_DIC_N_DF5_Skuldun_E]%对话	15300	MISSING_LAST_ROW	13	在希哥尼亚和代理人[%dic:STR_DIC_N_LF5_Dike_E]%对话	NO
 50008	2	0	started	0	False	quest_q50008.html		与[%dic:STR_DIC_N_LC1_ChristmasEvent_Santa]对话					NO
 51008	2	0	started	0	False	quest_q51008.html		和[%dic:STR_DIC_E_DF_ChristmasEvent_Santa]对话					NO

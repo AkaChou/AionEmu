@@ -45,7 +45,9 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
-    <node label="reward" status="REWARD"/>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="1"/>
+    </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
@@ -64,6 +66,7 @@
         <zone-is zone="EXECUTION_GROUND_OF_DELTRAS_220020000"/>
       </conditions>
       <actions>
+        <set-variable field="var0" value="1"/>
         <remove-item item-id="182201385" count="1"/>
       </actions>
       <after-commit>
@@ -83,7 +86,7 @@
         <dialog type="TALK_TO_NPC" npc-id="203903" action="SELECT_QUEST_REWARD"/>
       </event>
       <actions>
-        <set-variable field="var0" value="2"/>
+        <set-variable field="var0" value="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
@@ -97,5 +100,37 @@
       <choice action="SELECTED_QUEST_REWARD4" reward-index="7"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
+
+    <!-- QE-054 自愈边：旧存档（道具路径停在 0、对话路径写成越界的 2）进入世界时统一纠正为 1。 -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
   </transitions>
 </quest-definition>

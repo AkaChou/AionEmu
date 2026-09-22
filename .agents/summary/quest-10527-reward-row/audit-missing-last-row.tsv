@@ -4,18 +4,15 @@ quest_id	client_rows	last_row_kind	last_row_text	reward_var0	last_start_node	las
 1149	3	DIALOG	和[%dic:STR_DIC_LA159]对话	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
 1157	2	OTHER	要[%dic:STR_DIC_LA45]履行承诺，说出取下印章的方法。	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
 1170	2	OTHER	将找到的石像头放回石像顶部。	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
-1466	2	DIALOG	向[%dic:STR_DIC_N_Valerius]报告	None	started	0	var0=2	False	False	NO_REWARD_ROW	ROW_WITHOUT_STATE					
 1479	3	DIALOG	和[%dic:STR_DIC_N_Memnes]对话	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
 1722	9	DIALOG	把[%dic:STR_DIC_I_QUEST_1722a]交给[%dic:STR_DIC_N_Rastin]	7	s7	7		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
-1876	3	DIALOG	向[%dic:STR_DIC_N_Taranis]报告	1	s1	1		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
 1920	3	DIALOG	和[%dic:STR_DIC_N_Jucleas]对话	1	started1	1		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
 2006	3	DIALOG	和[%dic:STR_DIC_LA494]%对话。	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
 2007	10	DIALOG	和[%dic:STR_DIC_LA494]对话	8	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
 2303	4	DIALOG	和[%dic:STR_DIC_N_Fathir]%对话	None	started	0		False	False	NO_REWARD_ROW	ROW_WITHOUT_STATE					
-2600	3	DIALOG	重新和[%dic:STR_DIC_N_Shugo_DF3_12]对话	0	s1	1		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
+2600	3	DIALOG	重新和[%dic:STR_DIC_N_Shugo_DF3_12]对话	1	s1	1		True	False	ROW_BEHIND	ROW_WITHOUT_STATE					
 2633	4	DIALOG	向德拉乌伯尼尔洞穴入口附近的[%dic:STR_DIC_N_DF3_Alberihi_E]报告	2	s2	2		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
 2722	9	DIALOG	把伊拉西克特产酒交给[%dic:STR_DIC_N_Bord]	7	started7	7		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
-2876	3	DIALOG	向[%dic:STR_DIC_N_Votan]报告	1	s1	1		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
 2925	7	OTHER	安慰[%dic:STR_DIC_N_Daskair]	5	None	None		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
 2945	3	DIALOG	和[%dic:STR_DIC_N_Balder]对话	1	started1	1		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
 3722	2	DIALOG	向[%dic:STR_DIC_N_Yannis]报告结果	0	started	0		True	True	ROW_BEHIND	ROW_WITHOUT_STATE					
@@ -28,7 +25,6 @@ quest_id	client_rows	last_row_kind	last_row_text	reward_var0	last_start_node	las
 4722	2	DIALOG	向[%dic:STR_DIC_N_Yorgen]%报告结果	0	started	0		True	True	ROW_BEHIND	ROW_WITHOUT_STATE					
 10100	6	DIALOG	重新和[%dic:STR_DIC_N_LDF4_Advance_L_Kahrun]%对话	4	s4	4		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		20100	MISSING_LAST_ROW	4	重新和[%dic:STR_DIC_N_LDF4_Advance_D_Kahrun]%对话
 10530	11	DIALOG	再次和[%dic:STR_DIC_N_Jucleas]%对话	9	s8	8		True	False	ROW_BEHIND	ROW_WITHOUT_STATE		20530	ALIGNED	9	再次和[%dic:STR_DIC_N_Balder]%对话
-11010	4	DIALOG	和[%dic:STR_DIC_N_Naiting]对话	0	stage2	2		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
 11040	3	OTHER	护送成功！回到[%dic:STR_DIC_N_Tuca_01]那里	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
 11147	6	DIALOG	和[%dic:STR_DIC_N_Rollia]对话	4	s4	4		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
 11149	2	DIALOG	和[%dic:STR_DIC_N_LF4_Gateway_Li_Guard_Boss_Q05]对话	0	started	0		True	True	ROW_BEHIND	ROW_WITHOUT_STATE	Progress(SECTION_0==0; SECTION_1<1) | Progress(SECTION_0==0; SECTION_2<1) | Progress(SECTION_0==0; SECTION_3<1)				
@@ -40,7 +36,7 @@ quest_id	client_rows	last_row_kind	last_row_text	reward_var0	last_start_node	las
 14044	5	DIALOG	和[%dic:STR_DIC_N_Ab1_NPC_LugBug]进行对话	3	s3	3		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		24044	MISSING_LAST_ROW	6	向[%dic:STR_DIC_N_Scoda]报告结果
 14047	8	DIALOG	向[%dic:STR_DIC_N_Juditio]报告结果	6	s6	6		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
 14112	3	DIALOG	和[%dic:STR_DIC_LA54]%对话	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		24112	MISSING_LAST_ROW	1	告诉[%dic:STR_DIC_N_DF1A_Brodir_E]
-14123	3	DIALOG	向[%dic:STR_DIC_W_LF2_SZ_E2_SUB_1]的[%dic:STR_DIC_N_Dionera]%报告	0	started	0	var0=0,var0=0,var0=0,var0=0	False	False	ROW_BEHIND	ROW_WITHOUT_STATE		24123	MISSING_LAST_ROW	1	向[%dic:STR_DIC_W_DF2_SUB_E2_1]的[%dic:STR_DIC_N_DF2_NPC_Ananta]%报告
+14123	3	DIALOG	向[%dic:STR_DIC_W_LF2_SZ_E2_SUB_1]的[%dic:STR_DIC_N_Dionera]%报告	1	started	0	var0=1,var0=1,var0=1,var0=1	True	False	ROW_BEHIND	ROW_WITHOUT_STATE		24123	MISSING_LAST_ROW	1	向[%dic:STR_DIC_W_DF2_SUB_E2_1]的[%dic:STR_DIC_N_DF2_NPC_Ananta]%报告
 15300	15	DIALOG	在希哥尼亚和代理人[%dic:STR_DIC_N_LF5_Dike_E]%对话	13	s13	13		True	False	ROW_BEHIND	ROW_WITHOUT_STATE		25300	MISSING_LAST_ROW	13	和厄夏勒的代理人[%dic:STR_DIC_N_DF5_Skuldun_E]%对话
 15307	2	OTHER	通过[%dic:STR_DIC_N_IDRuneWeapon_Q_Dike_E]进行起誓之誓约	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		25307	MISSING_LAST_ROW	0	通过[%dic:STR_DIC_N_IDRuneWeapon_Q_Skuldun_E]进行守护之誓约
 15674	2	DIALOG	再次与[%dic:STR_DIC_N_LF6_Ilisia_E]%对话	0	started	0		True	True	ROW_BEHIND	ROW_WITHOUT_STATE		25674	MISSING_LAST_ROW	0	再次与[%dic:STR_DIC_N_DF6_Reinhard_E]%对话
@@ -61,7 +57,7 @@ quest_id	client_rows	last_row_kind	last_row_text	reward_var0	last_start_node	las
 24045	6	DIALOG	向[%dic:STR_DIC_N_Holm]报告结果	4	s4	4		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		14045	STATES_BEYOND_ROWS	12	向[%dic:STR_DIC_N_Shugo_AB1_13]报告
 24112	3	DIALOG	告诉[%dic:STR_DIC_N_DF1A_Brodir_E]	1	started	0		True	False	ROW_BEHIND	ROW_WITHOUT_STATE		14112	MISSING_LAST_ROW	1	和[%dic:STR_DIC_LA54]%对话
 24120	3	DIALOG	和[%dic:STR_DIC_W_DF2_SUB_A3]的[%dic:STR_DIC_N_Tree_Move_Nabalu]%对话	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		14120	ALIGNED	1	去[%dic:STR_DIC_W_LF2_SZ_A2]的[%dic:STR_DIC_E_LF2_Cherubim_Basket]中搜集水罐，然后交给[%dic:STR_DIC_W_LF2_SZ_B]的[%dic:STR_DIC_N_Tree_NoMove_Lodas]%[%collectitem]
-24123	3	DIALOG	向[%dic:STR_DIC_W_DF2_SUB_E2_1]的[%dic:STR_DIC_N_DF2_NPC_Ananta]%报告	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		14123	MISSING_LAST_ROW	0	向[%dic:STR_DIC_W_LF2_SZ_E2_SUB_1]的[%dic:STR_DIC_N_Dionera]%报告
+24123	3	DIALOG	向[%dic:STR_DIC_W_DF2_SUB_E2_1]的[%dic:STR_DIC_N_DF2_NPC_Ananta]%报告	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		14123	MISSING_LAST_ROW	1	向[%dic:STR_DIC_W_LF2_SZ_E2_SUB_1]的[%dic:STR_DIC_N_Dionera]%报告
 25300	15	DIALOG	和厄夏勒的代理人[%dic:STR_DIC_N_DF5_Skuldun_E]%对话	13	s13	13		True	False	ROW_BEHIND	ROW_WITHOUT_STATE		15300	MISSING_LAST_ROW	13	在希哥尼亚和代理人[%dic:STR_DIC_N_LF5_Dike_E]%对话
 25307	2	OTHER	通过[%dic:STR_DIC_N_IDRuneWeapon_Q_Skuldun_E]进行守护之誓约	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		15307	MISSING_LAST_ROW	0	通过[%dic:STR_DIC_N_IDRuneWeapon_Q_Dike_E]进行起誓之誓约
 25674	2	DIALOG	再次与[%dic:STR_DIC_N_DF6_Reinhard_E]%对话	0	started	0		True	True	ROW_BEHIND	ROW_WITHOUT_STATE		15674	MISSING_LAST_ROW	0	再次与[%dic:STR_DIC_N_LF6_Ilisia_E]%对话

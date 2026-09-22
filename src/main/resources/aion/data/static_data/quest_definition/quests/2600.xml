@@ -33,7 +33,7 @@
       <var name="var0" value="1"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -151,5 +151,22 @@
         <close-dialog/>
       </after-commit>
     </transition>
-</transitions>
+
+    <!-- QE-054 自愈边：旧投影 0 的存档进入世界时纠正为 1 并下发状态包。 -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+  </transitions>
 </quest-definition>

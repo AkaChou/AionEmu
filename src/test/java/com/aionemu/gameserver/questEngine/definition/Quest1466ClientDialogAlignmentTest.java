@@ -44,7 +44,12 @@ class Quest1466ClientDialogAlignmentTest {
 		assertEquals(List.of(new QuestItemRequirement(WORK_ITEM_ID, 1)), definition.metadata().questWorkItems());
 		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0));
 		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of());
+		// 批次 29（QE-054）：客户端 quest_summary 只有 2 行（0 = 燃放奥德爆竹、1 = 向 Valerius 报告），
+		// legacy 两条进入领奖的路径分别落盘 0（道具）与 2（203903 显式 setQuestVar(2)，越界），
+		// 本批统一为末行索引 1；领奖态投影必须等于该落盘行。
+		// Batch 29 (QE-054): the client journal has two rows only, so both legacy reward entries
+		// (var0=0 through the item and var0=2 through 203903) are unified to the last row 1.
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 1));
 		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0));
 		assertTrue(routes(definition, "unaccepted", REPORT_NPC_ID).isEmpty());
 		assertTrue(routes(definition, "reward", START_NPC_ID).isEmpty());
@@ -63,7 +68,9 @@ class Quest1466ClientDialogAlignmentTest {
 		assertEquals("reward", itemPlay.targetNode());
 		assertEquals(new QuestEvent.ItemPlay(WORK_ITEM_ID, 3_000), itemPlay.event());
 		assertEquals(List.of(new QuestCondition.ZoneIs(EXECUTION_GROUND, true)), itemPlay.conditions());
-		assertEquals(List.of(new QuestAction.RemoveItem(WORK_ITEM_ID, 1)), itemPlay.actions());
+		assertEquals(List.of(
+			new QuestAction.SetVariable("var0", 1),
+			new QuestAction.RemoveItem(WORK_ITEM_ID, 1)), itemPlay.actions());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
 			itemPlay.afterCommit());
 		assertFalse(itemPlay.afterCommit().stream().anyMatch(AfterCommitAction.ShowQuestDialog.class::isInstance));
@@ -74,7 +81,7 @@ class Quest1466ClientDialogAlignmentTest {
 		QuestTransition report = route(definition, "started", REPORT_NPC_ID,
 			QuestDialogAction.SELECT_QUEST_REWARD);
 		assertEquals("reward", report.targetNode());
-		assertEquals(List.of(new QuestAction.SetVariable("var0", 2)), report.actions());
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), report.actions());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),

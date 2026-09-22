@@ -2,7 +2,7 @@
 
 记录当前正在推进的任务与未解决的问题焦点。跨 Agent 接力时，先读此文件了解当前状态。
 
-> last_updated: 2026-09-21
+> last_updated: 2026-09-22
 > status: ACTIVE
 > scope: current checkout only
 > owner: shared agents
@@ -336,6 +336,29 @@
     的 reward 3->2 与 ClientQuestSectionAlignmentTest 的 SECTION_LAYOUT_DEBT 名单；PRODUCTION_COMPILE_OK=6189 / FAILURES=0 /
     INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0）；客户端实机 PENDING_CLIENT。
     产物：apply_batch28_archives_reward_row.py（--check 幂等）、batch28-evidence.tsv、报告 §三十二、模式卡 QE-054（批次 28 补充）。
+  - **批次 29 完成（2026-09-22，全库 MISSING_LAST_ROW 四族分类 / 6 个真缺陷收口）**：把 QE-054 口径推广到剩余 81 个 MISSING_LAST_ROW，按 legacy 落盘 step 逐族分类。
+    **族 A 真缺陷 6 个**：1876/2876（legacy `changeQuestStep(env, 1, 2, false)` 写 2 后 `setStatus(REWARD)`，旧投影写成 1）、
+    14123（`defaultOnKillEvent(env, 206360, 0, 1)` 落盘 1，旧 XML 又有 4 条交接回写 `var0=0`）、2600（legacy 只在 `var0 == 1` 时响应
+    `SELECT_REWARD`，旧投影 0）、11010（`defaultCloseDialog(env, 2, 3)` 落盘 3，旧投影 0）、1466（两条进入路径分别落盘 0 与越界的 2，
+    客户端只有 2 行，统一为 1）——本批按 legacy 落盘值修 reward 投影、清掉交接回写，并各补 `REWARD/旧值 -> 新值` 的 enter-world 自愈边；
+    **族 B 62 个**投影本就等于 legacy 落盘值（只是 < 末行索引）、**族 C 6 个** var0 不承载行号（击杀/sensoryArea 计数、四投影、分支领奖行、
+    槽位 15）、**族 D 7 个** legacy 侧既无 handler 也无脚本依据，三者共 75 个只登记不改数据（audit_reward_row_vs_client_steps.py 的
+    `LEGACY_STEP_EXCEPTION` 扩到 64 项，另加 `COUNTER_SLOT_EXCEPTIONS` 与 `NO_LEGACY_HANDLER_OBSERVED`，判决口径不变、只登记证据）。
+    验证：xmllint + quest_definition.xsd 6/6 validates；apply_batch29_reward_row_closure.py --check 幂等 6/6；行号审计 MISSING_LAST_ROW
+    81 -> 77（1466/1876/2876/11010 转 ALIGNED，14123/2600 按 QE-054 保留 legacy 落盘 1 转入登记例外）、ROW_ALIGNED 2665 -> 2669、
+    ROW_BEHIND 182 -> 179、NO_REWARD_ROW 179 -> 178，重跑与 TSV 逐字节一致；section0 residual 837 不变；Maven 新增门禁
+    Batch29RewardRowClosureContractTest 4 例全绿 + 聚焦组 18 个测试类 96 例全绿 + 扩展组 65 个测试类 299 例（3 例已知无关红见下）；
+    PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0；客户端实机 PENDING_CLIENT。
+    产物：apply_batch29_reward_row_closure.py（--check 幂等）、batch29-evidence.tsv、batch29-triage.tsv（81 个任务逐条依据）、
+    报告 §三十三、模式卡 QE-054（批次 29 补充）。
+  - **批次 29 边界（下一批前必读）**：QE-054 的落盘口径已修正——`useQuestItem(env, item, old, new, true)` 与 `changeQuestStep(env, old, new, true)`
+    都只 `setStatus(REWARD)`、**落盘 oldStep**（10527 的 reward=15 来自它自己的 16 行客户端契约 + 用户报障，不能推广成通用规则）；只有
+    `setQuestVar(N)`/`setQuestVarById(0, N)`/`changeQuestStep(..., false)` 之后的 `setStatus(REWARD)` 才写 N，`defaultOnKillEvent(..., var, true)`
+    取匹配值 var。剩余 77 个 MISSING_LAST_ROW 已 100% 落在三组登记集合（LEGACY_STEP_EXCEPTION 64 / 计数器族 6 / 无 legacy 依据 7），
+    复核时先查登记集再谈改动，禁止按末行索引批量加一。下一批起转向非行号挂账：NO_NODES `16984/26984`、MISSING_DEFINITION
+    `3959/4963/18706/18744/20015/28706/28744/29706`、STATES_BEYOND_ROWS 2622、INTERIOR_GAP 263、MISSING_TAIL_ROWS 80、
+    section0 residual 837，以及 3 例已知无关红（MissionItemConsumptionBatchRegressionTest 的 20529/29064、
+    QuestKillCounterRetailGateTest#singleCounterQuestsRequireExactlyTheClientGate 的 15101 行号字段冲突，三例在 HEAD 上就红）。
   - **批次 28 边界（下一批前必读）**：QE-054 的两侧旧投影可能不同（16800=1、26800=3），自愈边只按各自旧值写，不能共用一条；
     进入领奖的路线（含 reward 自环）一律不得再写行号，行阶梯必须由 legacy 事件（zone/dialog）逐段推进，禁止保留
     `started -> reward` 的捷径或把 owner 留在非任务书 NPC 上；`LEGACY_STEP_EXCEPTION={15300,25300,10100,20100}` 已按批次 27 挂账补进
@@ -343,7 +366,8 @@
     （61 个其它 handler 形态 + 9 个无 legacy + 口径例外）按同口径逐族分类，以及全库挂账的 NO_NODES 16984/26984、
     MISSING_DEFINITION 3959/4963/18706/18744/20015/28706/28744/29706。
   - **批次 27 边界（下一批前必读）**：任何 MISSING_LAST_ROW 在改 reward 投影前，必须先提取 legacy 落盘 step
-    （useQuestItem 取 newStep、changeQuestStep(..., true) 取 oldStep），XML 投影与之一致时只能登记例外，禁止按末行索引批量改
+    （`changeQuestStep(env, old, new, true)` 与 `useQuestItem(..., old, new, true)` 都只 `setStatus(REWARD)`、**落盘 oldStep**，批次 29 修正），
+    XML 投影与之一致时只能登记例外，禁止按末行索引批量改
     （15300/25300、10100/20100 都是已验收/已锁定的正确值）。下一批 = 16800/26800（真缺陷：legacy step=2，16800 投影 1、
     26800 投影 3，客户端都是 3 行；需补 0/1/2 阶梯 + LF_TOWER_SENSORY_AREA_Q16800_210110000 / IDETERNITY_01_Q16800_301540000
     两个 zone 触发点 + 931 movie），随后继续把剩余 70 个 MISSING_LAST_ROW（61 其它形态 + 9 无 legacy）按同口径分类，
