@@ -525,49 +525,9 @@ class QuestMonsterProgressContractAuditTest {
 		}
 	}
 
-	/**
-	 * 23918：SECTION_0..4 链式门控 5 名精锐兵（旧 XML 误配 EvGuard 怪物与 4 维计数）。
-	 * 23918: SECTION_0..4 chain the five elite raiders (the previous XML used the wrong EvGuard mobs).
-	 */
-	@Test
-	void quest23918ChainsFiveKillerCountersOnTheClientSections() throws Exception {
-		CompiledQuestDefinition compiled = load(23918);
-		QuestDefinition definition = compiled.definition();
-		ProgressLayout layout = definition.progressLayout();
-		Map<Integer, String> counters = new LinkedHashMap<>();
-		counters.put(235559, "var0");
-		counters.put(235560, "var1");
-		counters.put(235561, "var2");
-		counters.put(235326, "var3");
-		counters.put(235327, "var4");
-		int index = 0;
-		for (Map.Entry<Integer, String> entry : counters.entrySet()) {
-			BitField field = layout.field(entry.getValue());
-			assertNotNull(field, () -> "quest 23918 must declare " + entry.getValue());
-			assertEquals(6 * index, field.offset(), () -> entry.getValue() + " must map its client SECTION");
-			// counter-grid 逐维展开成单 npc 的 KillNpc 路线（不是 KillNpcSet），计数靠目标节点投影推进。
-			// The counter-grid expands one single-NPC KillNpc route per dimension and advances via the target projection.
-			assertTrue(definition.transitions().stream()
-					.filter(transition -> transition.event() instanceof QuestEvent.KillNpc kill
-						&& kill.npcId() == entry.getKey())
-					.anyMatch(transition -> definition.nodes().stream()
-						.filter(node -> node.label().equals(transition.targetNode()))
-						.anyMatch(node -> Integer.valueOf(1).equals(
-							node.projection().variables().get(entry.getValue())))),
-				() -> "quest 23918 must count " + entry.getKey() + " on " + entry.getValue());
-			index++;
-		}
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of(
-			"var0", 1, "var1", 1, "var2", 1, "var3", 1, "var4", 1));
-
-		QuestSnapshot state = new QuestSnapshot(7, 23918, QuestStatus.START, 0, Map.of());
-		for (int npcId : counters.keySet()) {
-			state = apply(compiled, state, new QuestEvent.KillNpc(npcId));
-		}
-		assertEquals(Map.of("var0", 1, "var1", 1, "var2", 1, "var3", 1, "var4", 1), unpack(state, layout));
-		state = apply(compiled, state, new QuestEvent.TalkToNpc(802347, QuestDialogAction.SELECT_QUEST_REWARD.id()));
-		assertEquals(QuestStatus.REWARD, state.status());
-	}
+	// 23918 / 13918：SECTION_0..4 链式门控 5 名精锐兵 —— 该族的完整合同（含镜像、owner、奖励索引与旧存档迁移）
+	// 已由批次 21 的 ChainEliteLadderContractTest 单独锁定，此处不再重复维护第二份断言。
+	// 23918/13918 (five chained SECTION counters) is fully locked by ChainEliteLadderContractTest since batch 21.
 
 	/**
 	 * 10101/20101：按客户端 Progress(2~!4) 仅通过单变量 var0 进行阶段行走（2->3->4）。

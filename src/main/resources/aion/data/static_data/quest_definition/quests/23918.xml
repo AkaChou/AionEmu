@@ -9,16 +9,37 @@
       <reward kind="EXP" id="0" amount="7927072"/>
       <reward kind="ITEM" id="169405255" amount="6"/>
     </rewards>
+    <kills>
+      <kill sequence="1">
+        <npc id="235559"/>
+      </kill>
+      <kill sequence="2">
+        <npc id="235560"/>
+      </kill>
+      <kill sequence="3">
+        <npc id="235561"/>
+      </kill>
+      <kill sequence="4">
+        <npc id="235326"/>
+      </kill>
+      <kill sequence="5">
+        <npc id="235327"/>
+      </kill>
+    </kills>
     <start-conditions>
       <condition type="finished" quest-id="23917"/>
     </start-conditions>
   </metadata>
   <progress>
-    <!-- 客户端 quest_monster.csv 依次门控 SECTION_0<1(无前置)、SECTION_1<1/前置 SECTION_0==1、
-         SECTION_2<1/前置 SECTION_1==1、SECTION_3<1/前置 SECTION_2==1、SECTION_4<1/前置 SECTION_3==1：
-         5 只特殊精锐兵各自占 SECTION_n 计数，前一只打掉后下一行才可见。
-         Client quest_monster.csv chains SECTION_0..4: each elite raider owns one SECTION_n counter and
-         the next journal row only counts the next monster after its predecessor is at 1. -->
+    <!-- 客户端 quest_monster.csv 的五行是链式 0/1 计数槽：行 0 = SECTION_0<1 且 SECTION_5==0，
+         行 n = SECTION_n<1 且 SECTION_(n-1)==1。var0..var4 就是这五个槽（各占 SECTION_n = 6n 位），
+         每只精锐兵只把自己那一槽推到 1，行随之沉下、下一行亮起；var5 不声明（SECTION_5 必须保持 0）。
+         位域保留 6 bit（而不是 1 bit）：旧 step 模型把 var0 写成 0..5，只有 6 bit 才能读到并迁移这些存档，
+         新模型自身只写 0/1（节点投影与自愈动作都由门禁锁死）。
+         Client quest_monster.csv chains five 0/1 counter slots (row n shows while SECTION_n<1 and
+         SECTION_(n-1)==1); var0..var4 are exactly those slots, so each elite owns one counter at 6n and
+         SECTION_5 (never declared) stays 0. The 6-bit width is kept so legacy step-model saves
+         (var0 = 2..5) stay readable for the migration edges below; the new model only ever writes 0/1. -->
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
     <bit-field name="var1" offset="6" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
     <bit-field name="var2" offset="12" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
@@ -33,224 +54,42 @@
       <var name="var3" value="0"/>
       <var name="var4" value="0"/>
     </node>
-    <node label="a0b0c0d0e0" status="START">
+    <node label="started" status="START">
       <var name="var0" value="0"/>
       <var name="var1" value="0"/>
       <var name="var2" value="0"/>
       <var name="var3" value="0"/>
       <var name="var4" value="0"/>
     </node>
-    <node label="a0b0c0d0e1" status="START">
-      <var name="var0" value="0"/>
-      <var name="var1" value="0"/>
-      <var name="var2" value="0"/>
-      <var name="var3" value="0"/>
-      <var name="var4" value="1"/>
-    </node>
-    <node label="a0b0c0d1e0" status="START">
-      <var name="var0" value="0"/>
-      <var name="var1" value="0"/>
-      <var name="var2" value="0"/>
-      <var name="var3" value="1"/>
-      <var name="var4" value="0"/>
-    </node>
-    <node label="a0b0c0d1e1" status="START">
-      <var name="var0" value="0"/>
-      <var name="var1" value="0"/>
-      <var name="var2" value="0"/>
-      <var name="var3" value="1"/>
-      <var name="var4" value="1"/>
-    </node>
-    <node label="a0b0c1d0e0" status="START">
-      <var name="var0" value="0"/>
-      <var name="var1" value="0"/>
-      <var name="var2" value="1"/>
-      <var name="var3" value="0"/>
-      <var name="var4" value="0"/>
-    </node>
-    <node label="a0b0c1d0e1" status="START">
-      <var name="var0" value="0"/>
-      <var name="var1" value="0"/>
-      <var name="var2" value="1"/>
-      <var name="var3" value="0"/>
-      <var name="var4" value="1"/>
-    </node>
-    <node label="a0b0c1d1e0" status="START">
-      <var name="var0" value="0"/>
-      <var name="var1" value="0"/>
-      <var name="var2" value="1"/>
-      <var name="var3" value="1"/>
-      <var name="var4" value="0"/>
-    </node>
-    <node label="a0b0c1d1e1" status="START">
-      <var name="var0" value="0"/>
-      <var name="var1" value="0"/>
-      <var name="var2" value="1"/>
-      <var name="var3" value="1"/>
-      <var name="var4" value="1"/>
-    </node>
-    <node label="a0b1c0d0e0" status="START">
-      <var name="var0" value="0"/>
-      <var name="var1" value="1"/>
-      <var name="var2" value="0"/>
-      <var name="var3" value="0"/>
-      <var name="var4" value="0"/>
-    </node>
-    <node label="a0b1c0d0e1" status="START">
-      <var name="var0" value="0"/>
-      <var name="var1" value="1"/>
-      <var name="var2" value="0"/>
-      <var name="var3" value="0"/>
-      <var name="var4" value="1"/>
-    </node>
-    <node label="a0b1c0d1e0" status="START">
-      <var name="var0" value="0"/>
-      <var name="var1" value="1"/>
-      <var name="var2" value="0"/>
-      <var name="var3" value="1"/>
-      <var name="var4" value="0"/>
-    </node>
-    <node label="a0b1c0d1e1" status="START">
-      <var name="var0" value="0"/>
-      <var name="var1" value="1"/>
-      <var name="var2" value="0"/>
-      <var name="var3" value="1"/>
-      <var name="var4" value="1"/>
-    </node>
-    <node label="a0b1c1d0e0" status="START">
-      <var name="var0" value="0"/>
-      <var name="var1" value="1"/>
-      <var name="var2" value="1"/>
-      <var name="var3" value="0"/>
-      <var name="var4" value="0"/>
-    </node>
-    <node label="a0b1c1d0e1" status="START">
-      <var name="var0" value="0"/>
-      <var name="var1" value="1"/>
-      <var name="var2" value="1"/>
-      <var name="var3" value="0"/>
-      <var name="var4" value="1"/>
-    </node>
-    <node label="a0b1c1d1e0" status="START">
-      <var name="var0" value="0"/>
-      <var name="var1" value="1"/>
-      <var name="var2" value="1"/>
-      <var name="var3" value="1"/>
-      <var name="var4" value="0"/>
-    </node>
-    <node label="a0b1c1d1e1" status="START">
-      <var name="var0" value="0"/>
-      <var name="var1" value="1"/>
-      <var name="var2" value="1"/>
-      <var name="var3" value="1"/>
-      <var name="var4" value="1"/>
-    </node>
-    <node label="a1b0c0d0e0" status="START">
+    <node label="k1" status="START">
       <var name="var0" value="1"/>
       <var name="var1" value="0"/>
       <var name="var2" value="0"/>
       <var name="var3" value="0"/>
       <var name="var4" value="0"/>
     </node>
-    <node label="a1b0c0d0e1" status="START">
-      <var name="var0" value="1"/>
-      <var name="var1" value="0"/>
-      <var name="var2" value="0"/>
-      <var name="var3" value="0"/>
-      <var name="var4" value="1"/>
-    </node>
-    <node label="a1b0c0d1e0" status="START">
-      <var name="var0" value="1"/>
-      <var name="var1" value="0"/>
-      <var name="var2" value="0"/>
-      <var name="var3" value="1"/>
-      <var name="var4" value="0"/>
-    </node>
-    <node label="a1b0c0d1e1" status="START">
-      <var name="var0" value="1"/>
-      <var name="var1" value="0"/>
-      <var name="var2" value="0"/>
-      <var name="var3" value="1"/>
-      <var name="var4" value="1"/>
-    </node>
-    <node label="a1b0c1d0e0" status="START">
-      <var name="var0" value="1"/>
-      <var name="var1" value="0"/>
-      <var name="var2" value="1"/>
-      <var name="var3" value="0"/>
-      <var name="var4" value="0"/>
-    </node>
-    <node label="a1b0c1d0e1" status="START">
-      <var name="var0" value="1"/>
-      <var name="var1" value="0"/>
-      <var name="var2" value="1"/>
-      <var name="var3" value="0"/>
-      <var name="var4" value="1"/>
-    </node>
-    <node label="a1b0c1d1e0" status="START">
-      <var name="var0" value="1"/>
-      <var name="var1" value="0"/>
-      <var name="var2" value="1"/>
-      <var name="var3" value="1"/>
-      <var name="var4" value="0"/>
-    </node>
-    <node label="a1b0c1d1e1" status="START">
-      <var name="var0" value="1"/>
-      <var name="var1" value="0"/>
-      <var name="var2" value="1"/>
-      <var name="var3" value="1"/>
-      <var name="var4" value="1"/>
-    </node>
-    <node label="a1b1c0d0e0" status="START">
+    <node label="k2" status="START">
       <var name="var0" value="1"/>
       <var name="var1" value="1"/>
       <var name="var2" value="0"/>
       <var name="var3" value="0"/>
       <var name="var4" value="0"/>
     </node>
-    <node label="a1b1c0d0e1" status="START">
-      <var name="var0" value="1"/>
-      <var name="var1" value="1"/>
-      <var name="var2" value="0"/>
-      <var name="var3" value="0"/>
-      <var name="var4" value="1"/>
-    </node>
-    <node label="a1b1c0d1e0" status="START">
-      <var name="var0" value="1"/>
-      <var name="var1" value="1"/>
-      <var name="var2" value="0"/>
-      <var name="var3" value="1"/>
-      <var name="var4" value="0"/>
-    </node>
-    <node label="a1b1c0d1e1" status="START">
-      <var name="var0" value="1"/>
-      <var name="var1" value="1"/>
-      <var name="var2" value="0"/>
-      <var name="var3" value="1"/>
-      <var name="var4" value="1"/>
-    </node>
-    <node label="a1b1c1d0e0" status="START">
+    <node label="k3" status="START">
       <var name="var0" value="1"/>
       <var name="var1" value="1"/>
       <var name="var2" value="1"/>
       <var name="var3" value="0"/>
       <var name="var4" value="0"/>
     </node>
-    <node label="a1b1c1d0e1" status="START">
-      <var name="var0" value="1"/>
-      <var name="var1" value="1"/>
-      <var name="var2" value="1"/>
-      <var name="var3" value="0"/>
-      <var name="var4" value="1"/>
-    </node>
-    <node label="a1b1c1d1e0" status="START">
+    <node label="k4" status="START">
       <var name="var0" value="1"/>
       <var name="var1" value="1"/>
       <var name="var2" value="1"/>
       <var name="var3" value="1"/>
       <var name="var4" value="0"/>
     </node>
-    <node label="a1b1c1d1e1" status="START">
+    <node label="k5" status="START">
       <var name="var0" value="1"/>
       <var name="var1" value="1"/>
       <var name="var2" value="1"/>
@@ -273,50 +112,24 @@
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="802347" source="unaccepted" target="a0b0c0d0e0" selection-sources="unaccepted a0b0c0d0e0" start-page="SELECT1"/>
-    <!-- 依次消灭 5 名袭击指挥官的龙族/守护者精锐兵（客户端 SECTION_n 链式门控）。 -->
-    <!-- Kill the five elite raiders in the client-chained SECTION_n order. -->
-    <counter-grid>
-      <dimension field="var0" required="1" npc-ids="235559"/> <!-- LDF4_Advance_B_Killer_Dr_01_65_Ae -->
-      <dimension field="var1" required="1" npc-ids="235560"/> <!-- LDF4_Advance_B_Killer_Dr_01_65_Ah -->
-      <dimension field="var2" required="1" npc-ids="235561"/> <!-- LDF4_Advance_B1_Killer_Dr_01_65_Ah -->
-      <dimension field="var3" required="1" npc-ids="235326"/> <!-- LDF4_Advance_B_Killer_Li_65_Al -->
-      <dimension field="var4" required="1" npc-ids="235327"/> <!-- LDF4_Advance_B1_Killer_Li_65_Al -->
-    </counter-grid>
-    <dialog type="NPC_REPORT" npc-id="802347" source="a1b1c1d1e1" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="802347" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <!-- 报告行自愈：跨部署在线旧存档（旧 reward 投影 var0=1）第一次点击 802347 即修复。 -->
-    <!-- Report-row self-heal for stale saving rows that stayed online across a deployment. -->
-    <transition target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="802347" action="QUEST_SELECT"/>
-      </event>
-      <conditions>
-        <status-is status="REWARD"/>
-        <variable-below field="var0" value="1"/>
-      </conditions>
-      <actions>
-        <set-variable field="var0" value="1"/>
-        <set-variable field="var1" value="1"/>
-        <set-variable field="var2" value="1"/>
-        <set-variable field="var3" value="1"/>
-        <set-variable field="var4" value="1"/>
-      </actions>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
-      </after-commit>
-    </transition>
-    <!-- 迁移修复：旧存档 REWARD 但五段计数未落齐（旧 XML 的 reward 投影只覆盖 4 段）。 -->
-    <!-- Migration repair for legacy REWARD saves whose five counters were never projected. -->
+    <!-- QE-051 领奖行合同 / QE-051 reward-row contract：客户端 quest_q23918.html 的 quest_summary 共 6 行
+         （行 0..4 = 依次消灭五只特殊精锐兵，行 5 = 向 STR_DIC_N_LDF4_Advance_Helgund_E（802353）报告）。
+         quest_monster.csv 的门控是链式的，因此服务端必须是串行 0/1 阶梯：乱序击杀不计数，
+         客户端任务书任何时刻都只亮“当前该打的那一只”。接取 owner = 802347（行 0 前的接受页），
+         报告与领奖 owner = 802353（行 5 的 NPC，QE-052）。
+         The client chained SECTION gates make this a strictly serial 0/1 ladder: out-of-order kills do not
+         count, so the journal only ever highlights the elite the player still owes. Offer owner stays
+         802347; report and completion owner is the row-5 NPC 802353. -->
+    <!-- 迁移自愈 / Migration repair：旧领奖存档匹配不到本轮的五槽全 1 领奖投影
+         （QuestMutationPlanner#matchesSourceNode 逐字段全等），登录/切图或点报告 NPC 时补正；
+         旧 step 模型领奖投影是 var0=5,var1..3=1，旧 4 维网格领奖投影只落到 var0..var3。 -->
     <transition target="reward">
       <event>
         <enter-world/>
       </event>
       <conditions>
         <status-is status="REWARD"/>
-        <variable-below field="var0" value="1"/>
+        <variable-at-least field="var0" value="2"/>
       </conditions>
       <actions>
         <set-variable field="var0" value="1"/>
@@ -329,5 +142,117 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
+    <transition target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="802353" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-at-least field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="1"/>
+        <set-variable field="var2" value="1"/>
+        <set-variable field="var3" value="1"/>
+        <set-variable field="var4" value="1"/>
+      </actions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-sum-below fields="var0 var1 var2 var3 var4" value="5"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="1"/>
+        <set-variable field="var2" value="1"/>
+        <set-variable field="var3" value="1"/>
+        <set-variable field="var4" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="802353" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-sum-below fields="var0 var1 var2 var3 var4" value="5"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="1"/>
+        <set-variable field="var2" value="1"/>
+        <set-variable field="var3" value="1"/>
+        <set-variable field="var4" value="1"/>
+      </actions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <dialog type="NPC_START" npc-id="802347" source="unaccepted" target="started" selection-sources="unaccepted k5" start-page="SELECT1"/>
+    <!-- 第 1 只（行 0：LDF4_Advance_B_Killer_Dr_65_Ae / _01_65_Ae）：只推进 SECTION_0，
+         行 0 计数满 1 后下沉，行 1（SECTION_1<1 且 SECTION_0==1）亮起。 -->
+    <transition source="started" target="k1">
+      <event>
+        <kill-npc npc-id="235559"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 第 2 只（行 1：LDF4_Advance_B_Killer_Dr_65_Ah / _01_65_Ah）：只推进 SECTION_1，
+         行 1 计数满 1 后下沉，行 2（SECTION_2<1 且 SECTION_1==1）亮起。 -->
+    <transition source="k1" target="k2">
+      <event>
+        <kill-npc npc-id="235560"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 第 3 只（行 2：LDF4_Advance_B1_Killer_Dr_65_Ah / _01_65_Ah）：只推进 SECTION_2，
+         行 2 计数满 1 后下沉，行 3（SECTION_3<1 且 SECTION_2==1）亮起。 -->
+    <transition source="k2" target="k3">
+      <event>
+        <kill-npc npc-id="235561"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 第 4 只（行 3：LDF4_Advance_B_Killer_Da_65_Al / _Li_65_Al）：只推进 SECTION_3，
+         行 3 计数满 1 后下沉，行 4（SECTION_4<1 且 SECTION_3==1）亮起。 -->
+    <transition source="k3" target="k4">
+      <event>
+        <kill-npc npc-id="235326"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 第 5 只（行 4：LDF4_Advance_B1_Killer_Da_65_Al / _Li_65_Al）：只推进 SECTION_4，
+         行 4 计数满 1 后下沉，行 5（SECTION_5<1 且 SECTION_4==1）亮起。 -->
+    <transition source="k4" target="k5">
+      <event>
+        <kill-npc npc-id="235327"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <dialog type="NPC_REPORT" npc-id="802353" source="k5" target="reward" page="SELECT2"/>
+    <npc-complete npc-id="802353" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
   </transitions>
 </quest-definition>

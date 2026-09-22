@@ -168,6 +168,27 @@
     npc-complete）、`23918/13918`（客户端 quest_monster.csv 用 SECTION_0..4 串行门控 5 只精锐兵，而 23918 现为 32 节点
     组合式模型，需先定建模口径）、`24046/14046`（INTERIOR_GAP 缺行 4/7，两侧页动作不同形、14046 侧另有 movie 翻页修复记录）、
     `1000/11000`、`39713/49713`（页动作链不同形，需先定行内 NPC 与 owner）。
+  - **批次 21 完成（2026-09-22，精锐兵链式计数族 23918 / 13918）**：族级判据——客户端 quest_summary 6 行
+    （行 0..4 各一只特殊精锐兵、行 5 向 Elger(13918=802350)/Helgund(23918=802353) 报告）+ quest_monster 的
+    `SECTION_0<1; SECTION_5==0` .. `SECTION_4<1; SECTION_3==1` **链式串行 0/1 计数槽** + 领奖行 NPC 与 owner 对齐；
+    本族 `var0` 不是行号，权威口径是 `audit_section0_report_row_closure.py` 的 `COUNTER_CHAIN`（QE-053）。
+    改前 23918 是 32 节点 `<counter-grid>` 自由组合（任意顺序击杀与客户端门控冲突 + owner 错挂接取 NPC 802347 +
+    `fixed-reward-indices="0 1"` 吞掉 ITEM 169405255×6 + 无 kills），13918 是单槽 `var0=0..5` 步骤号且缺 var4
+    （owner 同样错挂 802328）。本批两侧同形重建：`var0..var4` 各占 `SECTION_n = 6n` 的 0/1 槽、9 节点串行阶梯
+    （k1..k5，每只怪只推自己那一槽、`PACKET_ONLY`）、owner 收敛到领奖行 NPC、`fixed-reward-indices="0 1 2"` 恢复道具格、
+    23918 补 `<kills>` 五条、迁移自愈 6 条（13918 的 `START var0=2..5` 步骤号迁移 + 两侧 `REWARD`/`var0>=2` 与
+    `sum(var0..var4)<5` 补齐到全 1）。验证：xmllint 2/2 validates、两侧 `COUNTER_CHAIN_OK`（改前 13918 为
+    `COUNTER_CHAIN_GAP`）、`QuestDialogOrderAudit` 无 `CLIENT_PAGE_UNREACHED`、planner 探针乱序/回看无计划、
+    全库快照变化（`ROW_ALIGNED 2659->2658`、`ROW_BEHIND 187->188`）全部归因于 13918 由“行号口径误判对齐”转为
+    登记例外 `VAR0_FLAG_EXCEPTIONS`；Maven 已授权 21 个测试类 **149 例全绿**（含 `ChainEliteLadderContractTest` 7 例，
+    PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / WHITELIST_VIOLATIONS=0）、客户端 **PENDING_CLIENT**。
+    脚本 `apply_batch21_chain_elite_ladder.py`（--check 2/2 幂等）、证据 `batch21-evidence.tsv`、报告 §二十五、模式卡 QE-053。
+  - **批次 21 边界（下一批前必读）**：本族位宽**必须保留 6 bit**（1-bit 位域无法表示旧 step 存档的 `var0=2..5`，
+    `VariableIs` 自愈边会被 `ProgressLayout.pack` 上界校验拒绝）；`var5` 不声明（客户端 `SECTION_5==0` 是报告行门控）；
+    不得按 `audit_reward_row_vs_client_steps.py` 的行号口径给本族“修正” reward 投影（已登记例外，权威口径是
+    COUNTER_CHAIN）；`npc-complete` 的 preview 已展开 SELECT_QUEST_REWARD，不得再显式声明 reward 自环
+    （AMBIGUOUS_TRANSITION）。剩余“单步塌陷/错位”挂账：`24046/14046`（8 行、两侧页动作不同形 + 既有 movie 翻页修复记录）、
+    `1000/11000`（4 行）、`39713/49713`（3 行 FACTION 日任、三名可互换报告 NPC）。
   - **批次 10 边界（下一批前必读）**：21455 的领奖 NPC 归属已在批次 12 收口（领奖/completion 799404 → Unset 799244，accept 仍是 799404 Miener）；25608 已在批次 11 收口（实际缺 ENTER_AREA 206534 与 ENTER_AREA 206542 两行；修复为 step2/step5 两个 enter-zone、HUNT→step3、Mumu SELECT5→step4、交付行归 step6、reward 5→6，并从客户端 DF6 Level.pak 的 mission_mission0.xml 触发点注册两个 sensory zone）；10530 第 8 行是与第 9 行共槽的空 `<p>`（镜像 20530 无此行），已在审计脚本登记 `DUPLICATE_VISIBLE_SLOT_BLANK_ROWS`，禁止按行号加一；19008/19014/19020/19026/19032 等“名人考试”族的 reward=1 属 legacy 语义（19057/29057 的 handler 另有 var0=2 的失败分支），不得按“末行行号 2”改；剩余 MISSING_LAST_ROW 95 个（镜像同缺 32、QE-045 锁 10）需逐族 legacy/retail 证据。
 - **批次 8 边界（下一批前必读）**：10522/20522/15542/25542/30211/30213/30311/30313 的 QE-046 基线已随写入方一起改到领奖行 1，后续再改这 8 个任务的 reward 投影必须同时改写入方并重刷基线；19064/29064/21455/30614 的领奖 NPC 归属已在批次 12 收口（30614 按客户端行内命名回滚为 Astella 800327，禁止再按 `terath_dredgion.xml` 单源改回 Aluna 800326）；26838（末行 Jarik01=806574，定义 806575）仍需先核实领奖 NPC 身份；28932/30203/30303 需要给无投影的 `started` 节点补 var0；1607/1990/2990/3502/14012/14013/17511/27511 属多阶段/内部缺口（INTERIOR_GAP、MISSING_TAIL_ROWS），必须单独设计阶段推进；脚本 `apply_batch8_external_writer_reward_row.py`（`--check` 幂等）、门禁 `ExternalRewardAdvanceReentryContractTest` 与 `Quest10522AutoStartDialogTest`。
   - **批次 7 边界（下一批前必读）**：10522/20522/15542/25542/30211/30213/30311/30313 的 QE-046 基线（reward 投影必须等于引擎外写入方的 packed step）已由批次 8 一并改到领奖行 1（写入方 + 投影 + 基线 TSV 三处同改）；30614/26838/19064/29064 的末行 NPC 与定义 NPC 不一致，需先核实领奖 NPC 身份；28932/30203/30303 需要给无投影的 `started` 节点补 var0；1607/1990/2990/3502/14012/14013/17511/27511 属多阶段/内部缺口（INTERIOR_GAP、MISSING_TAIL_ROWS），必须单独设计阶段推进。脚本 `apply_batch7_report_row_contract.py`、证据 `batch7-evidence.tsv`、门禁 `ReportRowRewardProjectionContractTest`（5 条合同）。

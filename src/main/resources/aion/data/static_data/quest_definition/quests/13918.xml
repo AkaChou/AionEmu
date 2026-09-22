@@ -31,10 +31,20 @@
     </start-conditions>
   </metadata>
   <progress>
+    <!-- 客户端 quest_monster.csv 的五行是链式 0/1 计数槽：行 0 = SECTION_0<1 且 SECTION_5==0，
+         行 n = SECTION_n<1 且 SECTION_(n-1)==1。var0..var4 就是这五个槽（各占 SECTION_n = 6n 位），
+         每只精锐兵只把自己那一槽推到 1，行随之沉下、下一行亮起；var5 不声明（SECTION_5 必须保持 0）。
+         位域保留 6 bit（而不是 1 bit）：旧 step 模型把 var0 写成 0..5，只有 6 bit 才能读到并迁移这些存档，
+         新模型自身只写 0/1（节点投影与自愈动作都由门禁锁死）。
+         Client quest_monster.csv chains five 0/1 counter slots (row n shows while SECTION_n<1 and
+         SECTION_(n-1)==1); var0..var4 are exactly those slots, so each elite owns one counter at 6n and
+         SECTION_5 (never declared) stays 0. The 6-bit width is kept so legacy step-model saves
+         (var0 = 2..5) stay readable for the migration edges below; the new model only ever writes 0/1. -->
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
     <bit-field name="var1" offset="6" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
     <bit-field name="var2" offset="12" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
     <bit-field name="var3" offset="18" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var4" offset="24" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -42,39 +52,228 @@
       <var name="var1" value="0"/>
       <var name="var2" value="0"/>
       <var name="var3" value="0"/>
+      <var name="var4" value="0"/>
     </node>
     <node label="started" status="START">
       <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
+      <var name="var3" value="0"/>
+      <var name="var4" value="0"/>
     </node>
     <node label="k1" status="START">
       <var name="var0" value="1"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
+      <var name="var3" value="0"/>
+      <var name="var4" value="0"/>
     </node>
     <node label="k2" status="START">
-      <var name="var0" value="2"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="0"/>
+      <var name="var3" value="0"/>
+      <var name="var4" value="0"/>
     </node>
     <node label="k3" status="START">
-      <var name="var0" value="3"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="1"/>
+      <var name="var3" value="0"/>
+      <var name="var4" value="0"/>
     </node>
     <node label="k4" status="START">
-      <var name="var0" value="4"/>
-    </node>
-    <node label="k5" status="START">
-      <var name="var0" value="5"/>
-    </node>
-    <node label="reward" status="REWARD">
-      <var name="var0" value="5"/>
+      <var name="var0" value="1"/>
       <var name="var1" value="1"/>
       <var name="var2" value="1"/>
       <var name="var3" value="1"/>
+      <var name="var4" value="0"/>
+    </node>
+    <node label="k5" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="1"/>
+      <var name="var3" value="1"/>
+      <var name="var4" value="1"/>
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="1"/>
+      <var name="var3" value="1"/>
+      <var name="var4" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
       <var name="var1" value="0"/>
       <var name="var2" value="0"/>
       <var name="var3" value="0"/>
+      <var name="var4" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- QE-051 领奖行合同 / QE-051 reward-row contract：客户端 quest_q13918.html 的 quest_summary 共 6 行
+         （行 0..4 = 依次消灭五只特殊精锐兵，行 5 = 向 STR_DIC_N_LDF4_Advance_Elger_E（802350）报告）。
+         quest_monster.csv 的门控是链式的，因此服务端必须是串行 0/1 阶梯：乱序击杀不计数，
+         客户端任务书任何时刻都只亮“当前该打的那一只”。接取 owner = 802328（行 0 前的接受页），
+         报告与领奖 owner = 802350（行 5 的 NPC，QE-052）。
+         The client chained SECTION gates make this a strictly serial 0/1 ladder: out-of-order kills do not
+         count, so the journal only ever highlights the elite the player still owes. Offer owner stays
+         802328; report and completion owner is the row-5 NPC 802350. -->
+    <!-- 迁移自愈 / Migration repair：旧领奖存档匹配不到本轮的五槽全 1 领奖投影
+         （QuestMutationPlanner#matchesSourceNode 逐字段全等），登录/切图或点报告 NPC 时补正；
+         旧 step 模型领奖投影是 var0=5,var1..3=1，旧 4 维网格领奖投影只落到 var0..var3。 -->
+    <!-- 旧 step 模型（var0 = 已击杀数 0..5）的无损迁移：var0=2..5 分别落到 k2..k5。
+         Legacy step-model saves (var0 = kills done) map losslessly onto k2..k5. -->
+    <transition target="k5">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-is field="var0" value="5"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="1"/>
+        <set-variable field="var2" value="1"/>
+        <set-variable field="var3" value="1"/>
+        <set-variable field="var4" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="k4">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-is field="var0" value="4"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="1"/>
+        <set-variable field="var2" value="1"/>
+        <set-variable field="var3" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="k3">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-is field="var0" value="3"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="1"/>
+        <set-variable field="var2" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="k2">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-at-least field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="1"/>
+        <set-variable field="var2" value="1"/>
+        <set-variable field="var3" value="1"/>
+        <set-variable field="var4" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="802350" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-at-least field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="1"/>
+        <set-variable field="var2" value="1"/>
+        <set-variable field="var3" value="1"/>
+        <set-variable field="var4" value="1"/>
+      </actions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-sum-below fields="var0 var1 var2 var3 var4" value="5"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="1"/>
+        <set-variable field="var2" value="1"/>
+        <set-variable field="var3" value="1"/>
+        <set-variable field="var4" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="802350" action="QUEST_SELECT"/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-sum-below fields="var0 var1 var2 var3 var4" value="5"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="1"/>
+        <set-variable field="var2" value="1"/>
+        <set-variable field="var3" value="1"/>
+        <set-variable field="var4" value="1"/>
+      </actions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <dialog type="NPC_START" npc-id="802328" source="unaccepted" target="started" selection-sources="unaccepted k5" start-page="SELECT1"/>
+    <!-- 第 1 只（行 0：LDF4_Advance_B_Killer_Dr_65_Ae / _01_65_Ae）：只推进 SECTION_0，
+         行 0 计数满 1 后下沉，行 1（SECTION_1<1 且 SECTION_0==1）亮起。 -->
     <transition source="started" target="k1">
       <event>
         <kill-npc npc-id="235321"/>
@@ -83,6 +282,8 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <!-- 第 2 只（行 1：LDF4_Advance_B_Killer_Dr_65_Ah / _01_65_Ah）：只推进 SECTION_1，
+         行 1 计数满 1 后下沉，行 2（SECTION_2<1 且 SECTION_1==1）亮起。 -->
     <transition source="k1" target="k2">
       <event>
         <kill-npc npc-id="235322"/>
@@ -91,6 +292,8 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <!-- 第 3 只（行 2：LDF4_Advance_B1_Killer_Dr_65_Ah / _01_65_Ah）：只推进 SECTION_2，
+         行 2 计数满 1 后下沉，行 3（SECTION_3<1 且 SECTION_2==1）亮起。 -->
     <transition source="k2" target="k3">
       <event>
         <kill-npc npc-id="235323"/>
@@ -99,6 +302,8 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <!-- 第 4 只（行 3：LDF4_Advance_B_Killer_Da_65_Al / _Li_65_Al）：只推进 SECTION_3，
+         行 3 计数满 1 后下沉，行 4（SECTION_4<1 且 SECTION_3==1）亮起。 -->
     <transition source="k3" target="k4">
       <event>
         <kill-npc npc-id="235324"/>
@@ -107,6 +312,8 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <!-- 第 5 只（行 4：LDF4_Advance_B1_Killer_Da_65_Al / _Li_65_Al）：只推进 SECTION_4，
+         行 4 计数满 1 后下沉，行 5（SECTION_5<1 且 SECTION_4==1）亮起。 -->
     <transition source="k4" target="k5">
       <event>
         <kill-npc npc-id="235325"/>
@@ -115,9 +322,8 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <dialog type="NPC_START" npc-id="802328" source="unaccepted" target="started" selection-sources="unaccepted k5" start-page="SELECT1"/>
-    <dialog type="NPC_REPORT" npc-id="802328" source="k5" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="802328" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+    <dialog type="NPC_REPORT" npc-id="802350" source="k5" target="reward" page="SELECT2"/>
+    <npc-complete npc-id="802350" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>

@@ -1639,3 +1639,113 @@ QC 判据（与批次 18/19 同源，但落点不同）：同形镜像对 `q` / 
   本族无 `quest_drop`，因此无行为差异，留待 metadata 对齐批次处理。
 - 本批 Maven 命令（已执行，109 例全绿；后续批次沿用并追加新门禁类）：
   `mvn -Dtest='TreeLadderOwnerTrimContractTest,CollapsedSingleStepLadderContractTest,MirrorRewardProjectionLagContractTest,JournalRewardRowRepairContractTest,QuestPrematureRewardRouteExclusionTest,Quest11110And1548PostKillReportDialogTest,DurableDaevanionWeaponRewardRowContractTest,RewardOwnerTrimContractTest,RewardRowResidualTwoRowContractTest,RewardRowEventTwoRowContractTest,RewardRowTwoRowTalkFamilyContractTest,RewardNpcOwnershipContractTest,RetailSingleStepRewardRowContractTest,LegacyRewardStepProjectionRegressionTest,QuestClientContractGateTest,QuestItemSourceContractGateTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest' test`
+
+
+---
+
+## 二十五、批次 21：精锐兵链式计数族 23918 / 13918（SECTION_0..4 串行 0/1 阶梯 + owner 收敛，2026-09-22）
+
+### 二十五之一、族级判据与证据
+
+- 客户端 `quest_q13918.html` / `quest_q23918.html` 的 `quest_summary` **6 行**：行 0..4 依次消灭袭击指挥官的五名特殊精锐兵
+  （每行 `([%n]/1)`），行 5 = 和 `STR_DIC_N_LDF4_Advance_Elger_E`(13918) / `STR_DIC_N_LDF4_Advance_Helgund_E`(23918) 对话。
+- 权威门控在 `quest_monster.csv`：`SECTION_0<1; SECTION_5==0`、`SECTION_1<1; SECTION_0==1`、`SECTION_2<1; SECTION_1==1`、
+  `SECTION_3<1; SECTION_2==1`、`SECTION_4<1; SECTION_3==1` —— 五个 **0/1 计数槽 + 链式串行**：行 n 只在
+  `SECTION_n<1` 且 `SECTION_(n-1)==1` 时成立，前一只打掉后下一行才亮。
+- 因此 QE-051 的“`var0` = 行号”口径对本族不适用：`audit_reward_row_vs_client_steps.py` 已登记
+  `VAR0_FLAG_EXCEPTIONS = {30203, 30303, 13918, 23918}`，本族权威口径是
+  `audit_section0_report_row_closure.py` 的 `COUNTER_CHAIN`。
+- 领奖行 NPC（客户端 NPC 表解键）：13918 → `802350 LDF4_Advance_Elger_E`（接取 NPC 是 `802328 LDF4_Advance_Village_Guard09_L`）；
+  23918 → `802353 LDF4_Advance_Helgund_E`（接取 NPC 是 `802347 LDF4_Advance_Village_Guard09_D`）。
+
+### 二十五之二、旧模型的两侧缺陷
+
+**13918（天族侧）**：
+
+- `<progress>` 只声明 `var0..var3`，**缺 var4**（客户端的 `SECTION_4`），审计报 `COUNTER_CHAIN_GAP`；
+  `k1..k5` 把 `var0` 写成 0..5 的“步骤号”，reward 投影 `var0=5` —— 既不是 0/1 计数槽，也没覆盖第 5 只精锐兵。
+- 后果：打掉第 2 只精锐兵后 `var0=2`，行 0 要求 `SECTION_0<1`、行 1 要求 `SECTION_0==1`，两者同时不成立，行 1..4 也因前置槽为 0
+  全部不成立——中间段不再显示任何一行（只有 `SECTION_5==0` 的报告行保持可见），与用户报的“下一步该和 NPC 对话 / 任务列表不前进”同形。
+- `NPC_START` / `NPC_REPORT` / `npc-complete` 全挂在 `802328`（接取守卫），客户端行 5 点名的 `802350` 根本接不到报告/领奖对话（QE-052 owner 错位）。
+- `audit_section0_report_row_closure.py` 改前明确报 `235322`-`235325` 未计入链式口径。
+
+**23918（魔族侧）**：
+
+- 定义是 `<counter-grid>` 五维**自由组合**（32 个 `a1b1c1d1e1` 式节点 = 2^5，每维独立 `required=1`）：五只精锐兵可以任意顺序击杀，
+  与客户端“前一只打掉后下一行才可见”的串行门控直接冲突（先打第 3 只 → 行 0/1 都不满足条件，任务书错位）。
+- owner 同样错挂 `802347`（接取 NPC），行 5 的 `802353` 没有报告/领奖对话。
+- `npc-complete` 的 `fixed-reward-indices="0 1"` 把客户端 `select_quest_reward1` 的 **ITEM `169405255`×6** 丢掉
+  （只剩 GOLD 451980 / EXP 7927072）。
+- 本侧**没有 `<kills>` metadata**。
+
+### 二十五之三、落点（两侧同形重建）
+
+- **五槽计数**：`<progress>` 声明 `var0..var4`，各占 `SECTION_n = 6n` 位（`offset=0/6/12/18/24`，`width=6 min=0 max=63`）；
+  **不声明 var5**（客户端 `SECTION_5==0` 是报告行门控）。
+  位宽保留 6 bit 而不是 1 bit：旧 step 模型把 `var0` 写成 0..5，只有 6 bit 才能读到并迁移这些存档
+  （`VariableIs` 条件会被 `ProgressLayout.pack` 的上界校验用上）；新模型自身只写 0/1（节点投影与自愈动作都由门禁锁死）。
+- **9 节点串行阶梯**：`unaccepted(全0) / started(全0) / k1(1,0,0,0,0) / k2(1,1,0,0,0) / k3(1,1,1,0,0) / k4(1,1,1,1,0) /
+  k5(全1) / reward(全1) / complete(全0)`；每只精锐兵只把自己那一槽推到 1，同步 `PACKET_ONLY`
+  （START 态只发 `SM_QUEST_ACTION`）；23918 的 32 节点组合网格删除，替换成同一 9 节点形态。
+- **owner 收敛（QE-052）**：`NPC_START` 留在接取守卫（`802328`/`802347`），`NPC_REPORT` 与 `npc-complete` 都收在领奖行 NPC
+  （`802350`/`802353`）；`k5 --QUEST_SELECT--> SELECT2` 打开报告页，`1009` 与领奖窗口继续由 `npc-complete` 的
+  `preview`（`USE_OBJECT SELECT_QUEST_REWARD`）承接，**不再显式声明 SELECT_QUEST_REWARD 自环**（批次 19 的
+  `AMBIGUOUS_TRANSITION` 教训）。
+- **奖励索引**：`fixed-reward-indices="0 1 2"`（GOLD/EXP/ITEM）恢复 `169405255`×6，`complete-reward-index="0"`。
+- **kills metadata**：两侧各五条（13918: `235321`-`235325`；23918: `235559`/`235560`/`235561`/`235326`/`235327`，本批补回）。
+- **迁移自愈 6 条**：
+  - 13918 专有 4 条 `START && variable-is var0==N`（N=2..5）+ `enter-world` → 按前 N 槽补齐并落到 `k2..k5`
+    （旧“步骤号”存档无损迁移；**23918 定义里不得出现这类边**，由门禁反向断言）；
+  - 两侧各 2 条 `REWARD` 自愈：`variable-at-least var0>=2`（旧步骤投影）与
+    `variable-sum-below "var0 var1 var2 var3 var4" < 5`（旧组合网格/领奖投影）→ 补齐全 1，`enter-world` 与
+    `TALK_TO_NPC` 各一条（后者 after-commit `SHOW_QUEST_PAGE SELECT2`）。
+
+### 二十五之四、验证（2026-09-22）
+
+- 脚本 `.agents/summary/quest-10527-reward-row/apply_batch21_chain_elite_ladder.py`（`--check` 2/2 幂等 → APPLY 2/2 → `--check` 2/2）。
+- 结构校验：`xmllint --noout --schema quest_definition.xsd` 2/2 validates；`git diff --check` 干净。
+- **COUNTER_CHAIN 口径**：`audit_section0_report_row_closure.py` 两侧 `COUNTER_CHAIN_OK`（改前 13918 = `COUNTER_CHAIN_GAP`），
+  `field_alignment_problems` / `monster_alignment_problems` 空、`reward: var0=1;var1=1;var2=1;var3=1;var4=1`、
+  `kills: k1;k2;k3;k4;k5`。
+- **行号口径（已登记例外）**：两侧现为 `ROW_BEHIND / MISSING_TAIL_ROWS / ROW_WITHOUT_STATE`（`visible=0 1`、
+  `rows_without_state=2 3 4 5`、`recovery=True`）——这是本族按 `VAR0_FLAG_EXCEPTIONS` 登记的**预期**结果，不是回归；
+  改前 13918 在行号口径下反而显示 `ROW_ALIGNED`，正说明“行号口径会误放行本族”。
+- **全库快照（口径变化）**：`ROW_ALIGNED 2659 -> 2658`、`ROW_BEHIND 187 -> 188`、`ROW_STATE_ALIGNED 2431 -> 2430`、
+  `ROW_WITHOUT_STATE 518 -> 519`、`ALIGNED 2431 -> 2430`、`MISSING_TAIL_ROWS 79 -> 80` —— 全部由 13918 从
+  “行号口径误判对齐”转为登记例外引起；`MISSING_LAST_ROW 84`、`INTERIOR_GAP 266`、`NO_STATE 89`、
+  `STATES_BEYOND_ROWS 2623`、`ROW_AHEAD 2589`、`BOTH_MISALIGNED 177`、`STATES_OUT_OF_RANGE 0` 均不变。
+- **客户端页路由审计**（`QuestDialogOrderAudit` 全库跑）：改前报告页只挂在接取 NPC 上；改后两侧报告/领奖页全部落在
+  `802350`/`802353`，无 `CLIENT_PAGE_UNREACHED`；全库 `PAGE_ACTION_MATCHED 101205 -> 101206`、
+  `TERMINAL_PAGE_REACHED 16723 -> 16724`、`CLIENT_PAGE_UNREACHED 1368` 不变。
+- **planner 探针**（`/tmp/b21/ProbeBatch21.java`）：两侧顺序击杀逐槽推进、乱序/回看无计划、`k5` 报告页与领奖窗口可开、
+  完成事务消费 5 只怪并发放 GOLD/EXP/ITEM；13918 旧“步骤号”存档与两侧旧 REWARD 投影存档都被自愈边补齐到全 1。
+- **门禁测试**：`src/test/java/com/aionemu/gameserver/questEngine/definition/ChainEliteLadderContractTest.java` 7 例——
+  ① 五槽 6n 对齐 + 只声明 `var0..var4` + 9 节点投影 + 镜像同形 + `kills` 五只；
+  ② 每只精锐兵只推自己那一槽且 `PACKET_ONLY`；③ 乱序/回看/领奖态击杀无计划；
+  ④ owner 唯一（接取 ≠ 报告/领奖）、`k5 -> SELECT2`、reward 自带 `LEVEL_AND_VISIBILITY_REFRESH` + 领奖窗口；
+  ⑤ 完成发 GOLD/EXP/ITEM×6 并移除 5 只怪；⑥ 13918 `START var0=2..5` 无损迁移、23918 **无**此类边；
+  ⑦ REWARD 旧投影（步骤号 / 四维全 0）在 `enter-world` 与 `TALK` 下各 heal 到全 1，正规全 1 不被改写且能开领奖窗完成。
+  同批删除 `QuestMonsterProgressContractAuditTest#quest23918ChainsFiveKillerCountersOnTheClientSections`
+  （它锁定旧的组合网格模型），原地留注释指向新门禁。
+- **Maven（授权后执行，2026-09-22）**：21 个测试类 **149 例全绿**（含本批新增 7 例），
+  `PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。
+- **证据表**：[batch21-evidence.tsv](batch21-evidence.tsv)。
+- 客户端实机复测：**PENDING_CLIENT**。要点：① `802328`/`802347` 接取后任务书停在行 0（消灭第一只精锐兵）；
+  ② **必须按行 0→4 的顺序击杀**（五只怪各自占 `SECTION_n` 门控），乱序击杀不计数、任务书不动；
+  每杀一只任务书下沉一行、下一行亮起；③ 五只打完后任务书停在行 5（和 Elger/Helgund 对话），
+  此时 `802350`/`802353` 的报告页是“报告结果。”，点按钮弹奖励窗口，能领到 GOLD + EXP + 道具×6；
+  ④ 13918 的旧“步骤号”存档与两侧旧的 `REWARD + 计数未落齐` 存档登录/切图后应落在第 6 行（行 5）；
+  ⑤ 五只精锐兵在未接取或非本行时击杀应无计数。
+
+### 二十五之五、边界与后续
+
+- 本族**唯一权威口径**是 `quest_monster.csv` 的 `SECTION_n` 链式门控 + 客户端行数；`audit_reward_row_vs_client_steps.py`
+  的行号口径对本族必然给 `ROW_BEHIND`，已登记 `VAR0_FLAG_EXCEPTIONS`，**不得**据此再去“修正” reward 投影。
+- 位宽**必须保留 6 bit**：1-bit 位域无法表示旧 step 存档的 `var0=2..5`，`VariableIs` 自愈边会被 `ProgressLayout.pack`
+  的上界校验拒绝，旧存档会永久卡在中间行。
+- `var5` 不声明（客户端 `SECTION_5==0` 是报告行门控）；将来若要把报告行也纳入计数槽，必须同时改 `quest_monster.csv`
+  口径与客户端行可见性，不得只在服务端补位域。
+- 剩余“单步塌陷/错位”挂账：`24046/14046`（8 行、两侧页动作不同形 + 既有 movie 翻页修复记录
+  `.agents/summary/quest-14045-14046-movie-page-turn/`）、`1000/11000`（4 行）、`39713/49713`（3 行 FACTION 日任、三名可互换报告 NPC）。
+- 本批 Maven 命令（已执行，149 例全绿；后续批次沿用并追加新门禁类）：
+  `mvn -Dtest='ChainEliteLadderContractTest,QuestMonsterProgressContractAuditTest,TreeLadderOwnerTrimContractTest,CollapsedSingleStepLadderContractTest,MirrorRewardProjectionLagContractTest,JournalRewardRowRepairContractTest,QuestPrematureRewardRouteExclusionTest,Quest11110And1548PostKillReportDialogTest,DurableDaevanionWeaponRewardRowContractTest,RewardOwnerTrimContractTest,RewardRowResidualTwoRowContractTest,RewardRowEventTwoRowContractTest,RewardRowTwoRowTalkFamilyContractTest,RewardNpcOwnershipContractTest,RetailSingleStepRewardRowContractTest,LegacyRewardStepProjectionRegressionTest,QuestClientContractGateTest,QuestDialogOrderAuditTest,QuestItemSourceContractGateTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest' test`

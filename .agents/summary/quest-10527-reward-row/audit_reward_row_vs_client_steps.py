@@ -51,7 +51,15 @@ CANDIDATE_OUTPUT = Path(__file__).resolve().parent / "audit-qe051-candidates.tsv
 #   via setQuestVarById, then setStatus(REWARD) with var0..3=1 matching the current reward projection);
 #   the client script declares Progress(SECTION_0<1)..Progress(SECTION_3<1), so the three journal rows are
 #   driven by those flags/visible slots rather than by var0.
-VAR0_FLAG_EXCEPTIONS = {30203, 30303}
+VAR0_FLAG_EXCEPTIONS = {30203, 30303, 13918, 23918}
+# 追加登记（批次 21，2026-09-22）：13918 / 23918 与 30203/30303 同族 —— 客户端 quest_monster.csv 的
+# SECTION_0..4 是五个链式 0/1 计数槽（行 n 只在 SECTION_n<1 且 SECTION_{n-1}==1 时可见），
+# var0 不是行号，所以本审计的行号口径会判 ROW_BEHIND / MISSING_TAIL_ROWS / ROW_WITHOUT_STATE；
+# 该族的权威口径是 .agents/summary/quest-15001-multicounter-step/audit_section0_report_row_closure.py
+# 的 COUNTER_CHAIN 判定（两侧 COUNTER_CHAIN_OK：字段落在 6n、每只精锐兵只推自己那一槽、领奖投影全 1）。
+# Batch 21 registration: 13918/23918 are the same shape as 30203/30303 -- the client chains five 0/1
+# SECTION slots, so var0 is a counter rather than the journal row index and this row-index lens reports
+# ROW_BEHIND/ROW_WITHOUT_STATE; the authoritative lens is the COUNTER_CHAIN verdict of the section0 audit.
 
 # 已核实的“客户端空行”例外：客户端 HTML 里存在与相邻行共用 visible 槽位的空 <p>，审计会把它当成一行
 # （client_rows 比真实状态数多 1）。10530（天族）第 8 行是空的 `<p visible="[%24]"></font></p>`，
