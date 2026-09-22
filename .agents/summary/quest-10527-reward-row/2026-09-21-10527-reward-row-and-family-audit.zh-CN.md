@@ -3452,3 +3452,80 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
 - 剩余 `MISSING_TAIL_ROWS 47`（41 个待逐族收口 + 6 个已登记例外）。其它挂账不变：
   `STATES_BEYOND_ROWS 2620`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 73`、客户端隔离族 8 个；
   既有红沿用 `QuestInteractionObjectCatalogTest` 8 条资格缺口。
+
+## 四十五、批次 41：潘盖亚要塞战三行族（14220 天族 / 24220 魔族）
+
+### 四十五之一、族判据与证据（2026-09-22）
+
+| 任务 | 接取/报告 NPC | 行 0 NPC | 行 1 NPC（潘盖亚情报员） |
+|---|---|---|---|
+| 14220（天族） | Carley 802540 | Astarin 802541 | 4 个变体 802544/802545/802546/802547 |
+| 24220（魔族） | Leaivink 802542 | Krondel 802543 | 同上 |
+
+- **客户端任务书行**（`Dialogs/10000_19999/quest_q14220.html`、
+  `Dialogs/20000_29999/quest_q24220.html`）：三行绑定 `[%0]`/`[%3]`/`[%6]`，
+  行 1 是“参加潘盖亚要塞战，和 `STR_DIC_N_GAb1_Ag_all` 对话”。
+- **客户端页链**（两任务一致）：`select_none`（按钮 QUEST_ACCEPT_SIMPLE/QUEST_REFUSE_SIMPLE）
+  → 行 0 的 `select1`（唯一按钮 SETPRO1，文本“参加要塞战的时候，请一定要去见见 Ag_all”）
+  → 行 1 的 `select2`（按钮 SELECT2_1）→ `select2_1`（按钮 SETPRO2，文本“点头”）
+  → 行 2 的 `select_success`(10002)（按钮 SELECT_QUEST_REWARD）→ `select_quest_reward1`。
+- **owner 证据**：
+  - `client_npcs_npc.xml`：GAb1_Carley_E=802540、GAb1_Astarin_E=802541、GAb1_Leaivink_E=802542、
+    GAb1_Krondel_E=802543、GAb1_01_BelosAg01_E=802544、02_AspidaAg01_E=802545、
+    03_AthantosAg01_E=802546、04_DysilonAg01_E=802547。
+  - `client_strings_dic_etc.xml` 的 `STR_DIC_N_GAb1_Ag_all`（“潘盖亚情报员”）明确说明按要塞战
+    入口位置存在四个变体（Belos/Aspida/Athantos/Dysilon），即 802544-802547（race=BROWNIE，中立），
+    两个任务共用。
+  - 行 0/行 2 的归属由 quest_complete 文本锁定：14220“荣誉殿堂中的卡勒莱伊…去见见阿斯塔林”、
+    24220“荣誉会堂中的雷斌克…去见见克伦德尔”——卡勒莱伊/雷斌克就是接取 NPC，也正是行 2 的报告人。
+- **旧定义错位**：`NPC_REPORT 802540/802542 started->reward page=SELECT2` + `SETPRO2 -> reward`
+  直跳，把行 1 的 select2 链错误地挂在接取 NPC 上；行 0 的 Astarin/Krondel 与 4 个情报员变体
+  完全没有路由。审计判成 `MISSING_TAIL_ROWS | ROW_BEHIND | ROW_WITHOUT_STATE(1 2) | visible=0`。
+
+### 四十五之二、落点（行阶梯 = START/START/REWARD）
+
+- **节点**：`unaccepted(0) / started(START,0) / s1(START,1) / reward(REWARD,2) / complete(0)`。
+- **接取**：接取 NPC 的 `NPC_START`（`start-page=SELECT_NONE`，保留 `selection-sources`）。
+- **行 0 → 行 1**：行 0 NPC 的 `QUEST_SELECT -> SELECT1`、`SETPRO1 -> s1`（带
+  `LEVEL_AND_VISIBILITY_REFRESH`）。
+- **行 1 → 行 2**：4 个情报员变体各一组 `QUEST_SELECT -> SELECT2`、`SELECT2_1 -> SELECT2_1`、
+  `SETPRO2 -> reward`（不同 NPC，编译无歧义）。
+- **行 2**：接取 NPC 的 `NPC_REPORT source=reward target=reward page=DEFAULT_SUCCESS`
+  展开 `QUEST_SELECT -> select_success` + `SELECT_QUEST_REWARD -> 奖励窗口 1`；
+  `npc-complete` 收敛到该 NPC（固定索引 0/1，动作范围沿用迁移前定义）；preview 只保留 `USE_OBJECT`。
+- **自愈边**：`REWARD && var0==0` 无 source `enter-world` → `reward(var0=2)`。
+
+### 四十五之三、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 2/2 validates；
+  `apply_batch41_pangaia_fortress_three_row_ladder.py --apply` 后 `--check` 幂等 2/2 OK。
+- **全库行号审计（脚本 [11] 节已改为批次 41，并补登本族）**：
+  `MISSING_TAIL_ROWS 47 -> 45`（-2）、`ROW_BEHIND 144 -> 142`（-2）、
+  `ROW_WITHOUT_STATE 476 -> 474`（-2）、`ROW_ALIGNED 2706 -> 2708`（+2）、
+  `ROW_STATE_ALIGNED 2478 -> 2480`（+2）；两个任务全部
+  `ALIGNED + ROW_ALIGNED + ROW_STATE_ALIGNED + visible=0 1 2 + recovery=True`，
+  逐任务前后见 [batch41-evidence.tsv](batch41-evidence.tsv)。
+- **Maven（授权后执行）**：新增 `Batch41PangaiaFortressRowContractTest`（5 例：每行一个状态 /
+  接取页与行 0 推进 / 4 个情报员变体都能推进行 1 / 行 2 报告与窗口 1 只在接取 NPC 上 /
+  旧 `REWARD var0=0` 自愈）5/5 绿；同批回归 `Batch40ThreeNpcTalkLadderContractTest` 5/5、
+  `Batch39TurnInTalkReportRowContractTest` 5/5、`ProductionCatalogWhitelistVerificationTest` 1/1
+  （`PRODUCTION_COMPILE_OK=6191 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 /
+  WHITELIST_VIOLATIONS=0`）、`QuestPageButtonAuditTest`(2)、`QuestHandoverContinuationAuditTest`(2)、
+  `QuestE2eInfrastructureTest`(41)、`AcceptAndConfirmationEntryContractTest`(2)、
+  `QuestClientContractGateTest` 全绿。
+- **既有红登记（非本批引入）**：`QuestInteractionObjectCatalogTest` 同一批 8 条
+  `TALK_TO_NPC dialog=-1` 资格缺口（13809/23809/30504/30554），本批不在清单内。
+- **客户端实机 PENDING_CLIENT**：① 接取时只看到 `select_none`，行 0 提示去见 Astarin/Krondel；
+  ② 行 0 对话点“结束对话”（SETPRO1）后任务书切行 1；③ 在要塞战入口找到对应变体的情报员
+  （Belos/Aspida/Athantos/Dysilon 之一），`select2 → select2_1 → 点头`（SETPRO2）后切行 2；
+  ④ 回接取 NPC 对话（`select_success`）点“报告结果”弹出奖励窗口 1 并完成；
+  ⑤ 行 0 的 Astarin/Krondel 处不应出现领奖窗口；⑥ 旧存档 `REWARD + var0=0` 登录或切图后自愈到行 2。
+
+### 四十五之四、边界与后续
+
+- 行 1 的“参加潘盖亚要塞战”本身是战场入场行为，本批只收口对话/状态阶梯；要塞战的入场与
+  战绩判定不在本批范围，若后续要做需要单独的门禁与实例取证。
+- 情报员按入口位置有 4 个中立变体，本批给 4 个变体都挂了同一套页链，避免只在某一个营地可推进。
+- 剩余 `MISSING_TAIL_ROWS 45`（39 个待逐族收口 + 6 个已登记例外）。其它挂账不变：
+  `STATES_BEYOND_ROWS 2620`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 73`、客户端隔离族 8 个；
+  既有红沿用 `QuestInteractionObjectCatalogTest` 8 条资格缺口。
