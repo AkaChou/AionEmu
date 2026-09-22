@@ -53,6 +53,19 @@ CANDIDATE_OUTPUT = Path(__file__).resolve().parent / "audit-qe051-candidates.tsv
 #   driven by those flags/visible slots rather than by var0.
 VAR0_FLAG_EXCEPTIONS = {30203, 30303}
 
+# 已核实的“客户端空行”例外：客户端 HTML 里存在与相邻行共用 visible 槽位的空 <p>，审计会把它当成一行
+# （client_rows 比真实状态数多 1）。10530（天族）第 8 行是空的 `<p visible="[%24]"></font></p>`，
+# 第 9 行“倾听 Jucleas 的故事”同样是 `[%24]`，第 10 行才是 `[%27]`；魔族镜像 20530 没有这个空行，
+# 两阵营的“槽位 = 3 × 逻辑行号”完全一致，行数多的那一行只是客户端数据里的空段落。批次 4 已把
+# 10530 的 reward 对齐到镜像的 9，这里只登记证据、不改判定（否则会按“末行行号 10”误修）。
+# Verified "client blank row" exception: the client HTML contains an empty <p> that shares its visible
+# slot with the following row, so the audit counts one row too many. Elyos 10530 row 8 is an empty
+# `<p visible="[%24]"></font></p>` and row 9 ("listen to Jucleas") also uses [%24] while row 10 uses [%27];
+# the Asmodian mirror 20530 has no such blank row and both sides agree on slot == 3 * logical row index.
+# Batch 4 already aligned 10530's reward to the mirror's 9; this entry only records the evidence so the
+# "last row index 10" reading is not mechanically repaired later. The verdict itself is unchanged.
+DUPLICATE_VISIBLE_SLOT_BLANK_ROWS = {10530}
+
 QE045_LOCKED = {2393, 3722, 4722, 11149, 13965, 14010, 14015, 14020, 14040, 14050,
                 15674, 23965, 24010, 24020, 24040, 24050, 25674, 30057, 30158, 30208}
 

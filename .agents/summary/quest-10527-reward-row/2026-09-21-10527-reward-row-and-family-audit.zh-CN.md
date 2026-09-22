@@ -800,3 +800,156 @@ QuestCollectProgressAlignmentGateTest,QuestDialogOrderAuditTest,QuestDefinitionD
 - 客户端复测路径（PENDING_CLIENT）：接取 28932 后任务书应停在第 1 行（消灭德拉克忍者），
   击杀后切到第 2 行“和 Olivia 对话”并可在两名 NPC 处领奖；旧存档（击杀已记录但未进领奖）与
   NPC 对话仍应能进入领奖。
+
+## 十四、批次 10：retail“单步任务”族 + 镜像单侧的领奖行收口（18 个任务，2026-09-22）
+
+### 十四之一、候选与证据（retail 源定义 + 族内模板 + 镜像）
+
+- **retail 源定义**：`origin/history:src/main/resources/aion/definitions/compact/quests/scripts/zz_retail_simple_quests.xml`
+  里这批任务都是 `data_driven_quest` 的**单 step** 结构（start + 1 个交付/收集 step），
+  与客户端 `quest_summary` 的 2 行一一对应。
+- **族内模板**：同族 249 个 retail 单步任务中 **184 个**已经是 `reward var0=1`（末行）且形状统一
+  （`unaccepted/started(0) + reward(1) + complete(0)` + 无 source 的 `enter-world` 自愈边，样例
+  1526、21458、11455）；本批 18 个的 `reward var0` 停在 `0`，其中
+  - **A 组（12 个，末行完全没有 START/REWARD 状态，审计 `MISSING_LAST_ROW`）**：
+    1527、1528、1725、2135、2247、2266、3087、4020、21455、26838、80735、80736；
+  - **B 组（5 个，末行已有 `s1`/`k1`（var0=1）中间态，但领奖态仍显示上一行）**：
+    1963、1964、16838、16977、18035；
+  - **C 组（1 个，对侧镜像已对齐的单侧缺陷）**：29002 —— 镜像 19002 的 `reward` 投影已是 1，
+    且旧 handler `origin/history:.../crafting/_29002ExpertAethertappersTest` 在 NPC 204099 的
+    `STEP_TO_1` 里 `qs.setQuestVarById(0, 1)`、在 204257 领奖时只 `setStatus(REWARD)`（var0 保持 1）。
+- **客户端行清单**（`quest_q<id>.html` 的 `quest_summary`，2 行）：末行都是领奖/交付行
+  （交给/送给/报告/再次对话），末行 NPC 与任务定义内的领奖 NPC 一致（唯一例外 21455，见十四之四）。
+  逐任务证据见 `batch10-evidence.tsv`（client_rows=2、领奖行 1、旧投影 0、领奖 NPC id/名、末行文案）。
+
+### 十四之二、修复
+
+- 18 个 XML 的 `reward` 节点投影 `var0`：`0 → 1`（= 客户端领奖行）；
+- 每个任务补一条无 source 的 `enter-world` 自愈边：
+  `status-is REWARD && variable-is var0==0 → set-variable var0=1`，
+  after-commit 仅 `sync-quest-state mode=LEVEL_AND_VISIBILITY_REFRESH`（与族内模板同形）；
+  不加这条边时旧存档（`REWARD/var0=0`）会因 `QuestMutationPlanner#matchesSourceNode`
+  的“投影变量必须全等”语义匹配不到任何领奖路由。
+- 可重放脚本 `apply_batch10_retail_single_step_rows.py`（`--check` 幂等）与证据表 `batch10-evidence.tsv`。
+- 审计脚本新增证据常量 `DUPLICATE_VISIBLE_SLOT_BLANK_ROWS = {10530}`（只登记证据、不改判定）。
+
+### 十四之三、验证（2026-09-22，用户授权后执行）
+
+- `xmllint --noout --schema quest_definition.xsd`：18/18 `validates`。
+- **聚焦 Maven**：主工作树当时被并行任务的 `PlayerCommonData.java` / `CM_HOTSPOT_TELEPORT.java`
+  留在编辑中的语法错误态（mtime 23:59 / 00:01，非本任务文件），按项目规则改用**临时 worktree**
+  验证（`git worktree add --detach /tmp/aionemu-verify-batch10b HEAD`，拷入本批 18 个 XML + 新测试），
+  验证后已 `git worktree remove --force` + `git worktree prune`：
+  `mvn -B test -Dtest='RetailSingleStepRewardRowContractTest,MirrorPairRewardRowContractTest,JournalRewardRowRepairContractTest,QuestClientContractGateTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest,QuestDialog31RegressionTest,QuestMinionTutorialRetailAlignmentTest,ItemCollectingDialogProtocolAlignmentTest,QuestHandoverContinuationAuditTest,QuestRepeatLifecycleTest'`
+  → **Tests run: 38, Failures: 0, Errors: 0**；`PRODUCTION_COMPILE_OK=6189`、`PRODUCTION_COMPILE_FAILURES=0`、
+  `PRODUCTION_INTERACTION_OBJECT_FAILURES=0`、`PRODUCTION_WHITELIST_VIOLATIONS=0`。
+- **全库审计同工作树前后对照**（先跑 HEAD 版得基线，再跑修复版）：
+  `ROW_ALIGNED 2599 → 2617`、`ROW_BEHIND 246 → 228`、`ROW_STATE_ALIGNED 2381 → 2394`、
+  `ROW_WITHOUT_STATE 566 → 553`、`ALIGNED 2381 → 2394`、`MISSING_LAST_ROW 121 → 108`
+  （`ROW_AHEAD 2591`、`STATE_OUT_OF_RANGE 2448`、`INTERIOR_GAP 266`、`MISSING_TAIL_ROWS 90`、
+  `STATES_BEYOND_ROWS 2625`、`BOTH_MISALIGNED 177`、`NO_REWARD_ROW 178`、`NO_CLIENT_HTML 608/650` 均不变）；
+  `audit-output.tsv` 逐行 diff 只有这 18 个任务，`audit-missing-last-row.tsv` 减 13 行、
+  `audit-qe051-candidates.tsv` 减 7 行。
+- 新增门禁 `RetailSingleStepRewardRowContractTest`（4 条合同）：reward 投影 = 领奖行且 `started` 保持行 0、
+  同族已对齐参照（1526/21458/11455）与 C 组镜像 19002 同值、自愈边的条件/动作/after-commit/priority
+  与 planner 计划结果（`REWARD/var0=0 → 1`）、任何进入 `reward` 的路线都不得写回旧行号 0。
+- 客户端实机复测：**PENDING_CLIENT**（本批 18 个任务的领奖态应显示末行文案）。
+
+### 十四之四、边界与后续（下一批前必读）
+
+- **21455 的领奖 NPC 归属待核实**：retail `end_npc_ids=799244`（server `name_desc=Unset`，与客户端
+  `STR_DIC_N_Unset` 一致），typed 定义把领奖/completion 放在起始 NPC 799404 上；本批只收口行投影，
+  NPC 归属归入“领奖 NPC 待核实”族（30614、26838、19064/29064 同族）。
+- **25608 需补中间行**：retail 7 step ↔ 客户端 7 行，定义缺“前往 SZ_I_Queen”（ENTER_AREA 206542）
+  这一行的状态，需要新增 `step5` 并把 reward 推到 6 —— 归入下一批“多阶段/内部缺口”范围。
+- **10530 是审计误报（已登记）**：客户端第 8 行是空 `<p visible="[%24]"></font></p>`，第 9 行
+  “倾听 Jucleas 的故事”同样是 `[%24]`（镜像 20530 没有这个空行），`client_rows` 比真实状态多 1；
+  批次 4 已按镜像把 reward 对齐到 9，本批把证据写进审计脚本 `DUPLICATE_VISIBLE_SLOT_BLANK_ROWS`。
+- **“名人考试”族不得按行号加一**：19008/19014/19020/19026/19032（镜像 29014/29020/29026/29032）
+  的 `reward=1` 属 legacy 语义 —— `_19008MasterWeaponsmithsPotential` 在收材料时 `setQuestVarById(0,1)`、
+  领奖只置状态；`_19057MasterConstructorsPotential` 另有“缺材料/图纸”的 `setQuestVar(2)` 失败分支
+  （19057/29057 因此同时有 var0=1 与 var0=2 两个状态），所以“末行行号 2”不是这批的领奖行。
+- **其余 `MISSING_LAST_ROW` 108 个**（本批前 121 − 13）中：镜像两侧同缺 32、QE-045 锁 10、
+  末行是“其它目标”（非对话/报告）26，其余需逐族 legacy/retail 证据，禁止按行号机械推进。
+- memory-bank 同批更新：`patterns/quest-engine.md` 的 QE-051（fix_or_guardrail 第 9/10 条、boundaries、
+  validation、keywords）与 `activeContext.md`（批次 10 完成 + 批次 10 边界）；
+  `sync_memory_bank.py` + `verify_memory_bank.py` 通过（并顺手把并行提交顶到 407 字符的 QE-051
+  keywords 行裁回 255 字符，修复了结构校验失败）。
+
+## 十五、批次 11：25608 七步真端行对齐 + 两个 ENTER_AREA 触发器（2026-09-22）
+
+### 十五之一、候选与证据（客户端行槽位 + retail 七步 + 客户端 level 坐标）
+
+- **客户端行清单**：`data_unpacked/Dialogs/20000_29999/quest_q25608.html` 的 `quest_summary`
+  有 8 个 `<p>`，其中第 3、4 行共用 `visible="[%9]"`（“萨波拉开花了…” + “消灭库库勒工人 (x/10)”），
+  去重后正好 7 个可见槽位 `0/3/6/9/12/15/18`，即行 0..6：
+  `和 DF6_Mondhes_E 对话 → 向 DF6_Mumu01_E 询问 → 前往 DF6_SZ_I → 消灭库库勒工人 x/10 →
+  和 DF6_Mumu01_E 对话 → 前往 DF6_SZ_I_Queen → 从 Named 怪获得 quest_25608a 交给 DF6_op_goods_Seller`。
+- **retail 源定义**：`git show 9c0d44eb0:src/main/resources/aion/definitions/compact/quests/scripts/zz_retail_simple_quests.xml`
+  中 `data_driven_quest id="25608"` 恰为 7 步：`TALK 806177 → TALK 806197 → ENTER_AREA 206534 →
+  HUNT 241235 x10 → TALK 806197 → ENTER_AREA 206542 → COLLECT_ITEM 805964`。
+- **客户端任务数据**：`Quest_unpacked/quest.xml` 的 25608 节点声明 `collect_progress=6`，
+  与末行（COLLECT_ITEM / 领奖行 6）一致。
+- **旧定义错位**：旧迁移只有 5 个进度状态（`step1..step4` + `reward`）：把 HUNT 放在 var0=2、
+  把 Mumu 对话放在 var0=3、把交付行放在 var0=4、reward 停在 var0=5 —— 行 2（前往 SZ_I）与
+  行 5（前往 SZ_I_Queen）没有任何 START/REWARD 状态，且所有后续状态都比客户端行号小 1。
+- **历史缺口**：`zones_quest.xml` 从未注册 25608 的两个 sensory zone；`a2306c8e2` 的提交说明明确记录
+  “25608 (no spawn coordinates anywhere in history)”并因此把它留在 `METADATA_ONLY`。本次从本机
+  Aion 5.8 客户端 `Levels/DF6/Level.pak` 解包 `mission_mission0.xml`，取到两个触发点：
+  `DF6_SensoryArea_Q25608a_Dynamic_Env @ (1540.3777, 556.31085, 310)` 与
+  `DF6_SensoryArea_Q25608b_Named @ (1513.4391, 544.90009, 295.16571)`。
+
+### 十五之二、修复
+
+- `quests/25608.xml`：
+  - 节点重排为 `started(0) → step1(1) → step2(2, ENTER_AREA 206534) → step3(3, HUNT) →
+    step4(4, Mumu SELECT5) → step5(5, ENTER_AREA 206542) → step6(6, COLLECT_ITEM) → reward(6)`；
+    `step6` 与 `reward` 投影同为 var0=6，但 status 分别为 `START`/`REWARD`（交付行在任务书里
+    即领奖行，符合 QE-051）。
+  - HUNT 自环与收尾路线改为 `step3 → step3`（var1<9，自增）与 `step3 → step4`
+    （var1>=9，var0=4 且 var1=0）。
+  - 新增两条 `enter-zone` 转换：`step2→step3`（A 区）、`step5→step6`（B 区），条件为对应
+    var0 投影，after-commit 仅 `PACKET_ONLY`。
+  - 旧领奖态自愈：无 source 的 `enter-world`（REWARD + var0<6 → var0=6 +
+    `LEVEL_AND_VISIBILITY_REFRESH`）与无 source 的 `QUEST_SELECT`（同样条件 → var0=6 +
+    `DEFAULT_SUCCESS`），修复旧存档 `REWARD/var0=5` 匹配不到任何领奖路由的问题。
+  - `drop collecting-step` 由 0 改为 6，与客户端 `collect_progress=6` 一致。
+- `zones_quest.xml`：在 220110000 段新增 `DF6_SENSORY_AREA_Q25608_A_DYNAMIC_ENV_220110000`
+  与 `DF6_SENSORY_AREA_Q25608_B_DYNAMIC_ENV_220110000` 两个 SPHERE/SUB zone，坐标取客户端
+  level 触发点、半径 10（与同族 sensory zone 一致）。
+- 新增门禁 `Quest25608RetailSevenStepAlignmentTest`（6 条合同）：七步行覆盖、两个 enter-zone
+  事件与 zones_quest.xml 注册/坐标、HUNT 自环与收尾、交付行归属 reward、两条旧存档自愈边、
+  drop collecting-step 与客户端 collect_progress 一致。
+
+### 十五之三、验证（2026-09-22，用户授权后执行）
+
+- `xmllint --noout --schema quest_definition.xsd` → 25608 `validates`；
+  `xmllint --noout --schema zones.xsd zones_quest.xml` → `validates`。
+- **主工作树被并行任务的 13 个 XML 阻塞**：`QuestDefinitionCatalogManifestTest` 报
+  `AMBIGUOUS_TRANSITION: TALK_TO_NPC`，逐文件编译定位为并行任务未提交改动
+  `1183/1319/1483/1514/1721/1724/2449/2646/2692/2767/3966/3968/4501`（均不在本批范围；
+  本批 25608 单独编译通过）。按项目规则改用**临时 worktree**（`git worktree add --detach
+  /tmp/aion-q25608-verify-20260922 HEAD`，HEAD=`79775ca10`，拷入本批 25608.xml + zones_quest.xml +
+  新测试），验证后已 `git worktree remove --force` + `git worktree prune`：
+  `mvn -Dtest='Quest25608RetailSevenStepAlignmentTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest,QuestInteractionObjectCatalogTest,Quest30721And30771RetailFlowTest,QuestClientContractGateTest' test`
+  → **Tests run: 28, Failures: 0, Errors: 0**；`PRODUCTION_COMPILE_OK=6189`、
+  `PRODUCTION_COMPILE_FAILURES=0`、`PRODUCTION_INTERACTION_OBJECT_FAILURES=0`、
+  `PRODUCTION_WHITELIST_VIOLATIONS=0`。worktree 中 `QuestDefinitionCatalogManifestTest` 10 例全绿，
+  证明主工作树的 6 个 error 全部来自并行任务改动。
+- **单任务审计回放**：25608 由 `ROW_BEHIND / MISSING_LAST_ROW`（reward_var0=5、visible 0..5、
+  rows_without_state=6）变为 `ROW_ALIGNED / ALIGNED`（reward_var0=6、visible 0..6、
+  rows_without_state 空）；`audit-output.tsv` 中该行是本批唯一的单任务 diff。
+- **全库快照**（`audit_reward_row_vs_client_steps.py`）：当前 `ROW_ALIGNED 2628`、`ROW_BEHIND 217`、
+  `ROW_STATE_ALIGNED 2405`、`ROW_WITHOUT_STATE 542`、`ALIGNED 2405`、`MISSING_LAST_ROW 102`；
+  该快照同时包含并行任务已提交的修复，不能只用差值归因本批次。
+- 客户端实机复测：**PENDING_CLIENT**。路径：接取 25608 后任务书应依次高亮 7 行；与 Mumu 对话后
+  进入 A 区自动切到“消灭库库勒工人 (x/10)”，10 只后与 Mumu 对话进入 B 区，再击杀 Named 怪获得
+  `quest_25608a` 交付 Bindeil（805964），领奖态任务书应停在末行且 `DEFAULT_SUCCESS` 可打开奖励窗口。
+
+### 十五之四、边界
+
+- **旧 START 存档不做自愈**：旧 `START/var0=2/3/4` 在新链里的语义分别变为“前往 A 区/HUNT/和 Mumu 对话”，
+  条件无法与新存档区分，因此只能由玩家重做对应步骤；只有旧领奖态 `REWARD/var0=5` 有无歧义自愈边。
+- **zone 名按同族命名规则推断**：A/B 后缀与 `DYNAMIC_ENV` 采用 15608/25601 的 `zones_quest.xml`
+  既有规则；坐标来自客户端 level 触发点（同族坐标同样来自客户端/零售位置），仍需实机确认
+  enter-zone 能触发。

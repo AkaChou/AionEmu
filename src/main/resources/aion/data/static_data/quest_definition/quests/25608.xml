@@ -24,7 +24,7 @@
       </group>
     </reward-groups>
     <drops>
-      <drop npc-id="241234" item-id="182216007" chance="100" each-member="true" collecting-step="0" scope="GROUP" />
+      <drop npc-id="241234" item-id="182216007" chance="100" each-member="true" collecting-step="6" scope="GROUP" />
     </drops>
   </metadata>
   <progress>
@@ -38,6 +38,12 @@
     <node label="started" status="START">
       <var name="var0" value="0" />
     </node>
+    <!-- 客户端 quest_q25608.html 的 quest_summary 共 7 个可见槽位（0/3/6/9/12/15/18），
+         retail 定义同形：TALK 806177 → TALK 806197 → ENTER_AREA 206534 → HUNT 241235 x10
+         → TALK 806197 → ENTER_AREA 206542 → COLLECT_ITEM 805964。step0..step6 与行 0..6 一一对应。
+         The client quest_q25608.html quest_summary has seven visible slots (0/3/6/9/12/15/18)
+         matching the retail step list: TALK, TALK, ENTER_AREA 206534, HUNT x10, TALK,
+         ENTER_AREA 206542, COLLECT_ITEM. step0..step6 map to journal rows 0..6. -->
     <node label="step1" status="START">
       <var name="var0" value="1" />
     </node>
@@ -50,14 +56,58 @@
     <node label="step4" status="START">
       <var name="var0" value="4" />
     </node>
-    <node label="reward" status="REWARD">
+    <node label="step5" status="START">
       <var name="var0" value="5" />
+    </node>
+    <node label="step6" status="START">
+      <var name="var0" value="6" />
+    </node>
+    <node label="reward" status="REWARD">
+      <var name="var0" value="6" />
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0" />
     </node>
   </nodes>
   <transitions>
+    <!-- QE-051 领奖行合同：旧投影把领奖态停在行 5（交付行），客户端 quest_summary 的末行是行 6
+         （从 Named 怪获得 182216007 交给 805964）。旧存档 status=REWARD/var0=5 在进入世界或
+         点击任务行时自愈到行 6，否则 QuestMutationPlanner#matchesSourceNode 的“源节点投影全等”
+         语义会让它匹配不到任何领奖路由，任务书继续停在上一行。
+         Reward-row contract (QE-051): the old projection stopped at row 5 while the client reward
+         row is row 6. Saves persisted at REWARD/var0=5 are healed on enter-world or on the quest-row
+         select, because the planner only matches routes whose source projection equals the packed
+         variables. -->
+    <transition target="reward">
+      <event>
+        <enter-world />
+      </event>
+      <conditions>
+        <status-is status="REWARD" />
+        <variable-below field="var0" value="6" />
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="6" />
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH" />
+      </after-commit>
+    </transition>
+    <transition target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="805964" action="QUEST_SELECT" />
+      </event>
+      <conditions>
+        <status-is status="REWARD" />
+        <variable-below field="var0" value="6" />
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="6" />
+      </actions>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS" />
+      </after-commit>
+    </transition>
     <dialog type="NPC_START" npc-id="805964" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE" />
 
     <!-- step 0: 806177 Mondhes -->
@@ -98,7 +148,7 @@
       </after-commit>
     </transition>
 
-    <!-- step 1: 806197 Mumu beekeeper -->
+    <!-- step 1: 806197 Mumu beekeeper → step 2: travel to the night SZ_I area -->
     <transition source="step1" target="step1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806197" action="QUEST_SELECT" />
@@ -128,8 +178,24 @@
       </after-commit>
     </transition>
 
-    <!-- step 2: kill 10 of 241235 -->
-    <transition source="step2" target="step2" priority="1">
+    <!-- step 2: enter area 206534 (DF6_SensoryArea_Q25608a_Dynamic_Env) -->
+    <transition source="step2" target="step3">
+      <event>
+        <enter-zone zone="DF6_SENSORY_AREA_Q25608_A_DYNAMIC_ENV_220110000" />
+      </event>
+      <conditions>
+        <variable-is field="var0" value="2" />
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="3" />
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY" />
+      </after-commit>
+    </transition>
+
+    <!-- step 3: kill 10 of 241235 -->
+    <transition source="step3" target="step3" priority="1">
       <event>
         <kill-npc npc-id="241235" />
       </event>
@@ -143,7 +209,7 @@
         <sync-quest-state mode="PACKET_ONLY" />
       </after-commit>
     </transition>
-    <transition source="step2" target="step3" priority="0">
+    <transition source="step3" target="step4" priority="0">
       <event>
         <kill-npc npc-id="241235" />
       </event>
@@ -151,7 +217,7 @@
         <variable-at-least field="var1" value="9" />
       </conditions>
       <actions>
-        <set-variable field="var0" value="3" />
+        <set-variable field="var0" value="4" />
         <set-variable field="var1" value="0" />
       </actions>
       <after-commit>
@@ -159,8 +225,8 @@
       </after-commit>
     </transition>
 
-    <!-- step 3: 806197 Mumu beekeeper -->
-    <transition source="step3" target="step3">
+    <!-- step 4: 806197 Mumu beekeeper (client page SELECT5) → step 5: travel to the queen area -->
+    <transition source="step4" target="step4">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806197" action="QUEST_SELECT" />
       </event>
@@ -168,19 +234,19 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT5" />
       </after-commit>
     </transition>
-    <transition source="step3" target="step4">
+    <transition source="step4" target="step5">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806197" action="SETPRO5" />
       </event>
       <actions>
-        <set-variable field="var0" value="4" />
+        <set-variable field="var0" value="5" />
       </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY" />
         <close-dialog />
       </after-commit>
     </transition>
-    <transition source="step3" target="step3">
+    <transition source="step4" target="step4">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806197" action="FINISH_DIALOG" />
       </event>
@@ -189,8 +255,24 @@
       </after-commit>
     </transition>
 
-    <!-- step 4: turn in 182216007 to 805964 Bindeil -->
-    <transition source="step4" target="step4">
+    <!-- step 5: enter area 206542 (DF6_SensoryArea_Q25608b_Named) -->
+    <transition source="step5" target="step6">
+      <event>
+        <enter-zone zone="DF6_SENSORY_AREA_Q25608_B_DYNAMIC_ENV_220110000" />
+      </event>
+      <conditions>
+        <variable-is field="var0" value="5" />
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="6" />
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY" />
+      </after-commit>
+    </transition>
+
+    <!-- step 6: turn in 182216007 to 805964 Bindeil（客户端领奖行 6） -->
+    <transition source="step6" target="step6">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="805964" action="QUEST_SELECT" />
       </event>
@@ -198,7 +280,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT7" />
       </after-commit>
     </transition>
-    <transition source="step4" target="reward" priority="0">
+    <transition source="step6" target="reward" priority="0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="805964" action="CHECK_USER_HAS_QUEST_ITEM" />
       </event>
@@ -207,14 +289,14 @@
       </conditions>
       <actions>
         <remove-item item-id="182216007" count="1" />
-        <set-variable field="var0" value="5" />
+        <set-variable field="var0" value="6" />
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH" />
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK" />
       </after-commit>
     </transition>
-    <transition source="step4" target="step4" priority="1">
+    <transition source="step6" target="step6" priority="1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="805964" action="CHECK_USER_HAS_QUEST_ITEM" />
       </event>
@@ -222,7 +304,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL" />
       </after-commit>
     </transition>
-    <transition source="step4" target="step4">
+    <transition source="step6" target="step6">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="805964" action="FINISH_DIALOG" />
       </event>

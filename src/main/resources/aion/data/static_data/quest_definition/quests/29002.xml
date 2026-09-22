@@ -27,13 +27,35 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- QE-051 领奖行合同：客户端 quest_q29002.html
+         quest_summary 共 2 行，末行是领奖/交付行（Resberg，NPC id 204099）；对侧镜像已对齐，本侧投影停在行 0。
+         旧 handler _29002ExpertAethertappersTest 在 204099 的 STEP_TO_1 写 setQuestVarById(0, 1)、在 204257 领奖时只 setStatus(REWARD)（var0 保持 1），镜像 19002 的投影也已是 1，本侧停在 0 属单侧缺陷；
+         进入世界时把旧存档纠正为 1 并下发状态包。
+         Reward row contract (QE-051): the last of the 2
+         quest_q29002 journal rows is the reward row (Resberg, npc id 204099); the old
+         projection stopped at 0. The mirror 19002 already projects 1. Saves persisted at 0 are repaired on enter-world. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <dialog type="NPC_START" npc-id="204257" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <transition source="started" target="started">
       <event>

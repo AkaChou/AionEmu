@@ -31,13 +31,36 @@
       <var name="var0" value="1"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- QE-051 领奖行合同：retail 单步任务（start + 1 step）的客户端 quest_q18035.html
+         quest_summary 共 2 行，末行是领奖/交付行（LF5_Brontte_E，NPC id 800527）；末行已有中间行状态但 reward 投影仍停在行 0，领奖态在任务书里停在上一行。
+         同族 249 个 retail 单步任务中 184 个已是 reward var0=1，旧投影停在 0 属族内落后项；
+         进入世界时把旧存档纠正为 1 并下发状态包。
+         Reward row contract (QE-051): for retail single-step quests the last of the 2
+         quest_q18035 journal rows is the reward row (LF5_Brontte_E, npc id 800527); the old
+         projection stopped at 0 while 184 of 249 sibling retail single-step quests already
+         project 1. Saves persisted at 0 are repaired on enter-world. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <!-- 接取:使用信件 182213483 触发(旧 handler onItemUseEvent → 1011 → ACCEPT_QUEST_SIMPLE 接取)。 -->
     <transition source="unaccepted" target="unaccepted">
       <event>

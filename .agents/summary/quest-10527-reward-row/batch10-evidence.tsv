@@ -1,0 +1,19 @@
+quest_id	group	client_rows	reward_row	stale_row	reward_npc_id	reward_npc_name	client_rows_observed	client_last_row_text	fixed_shape_before
+1527	A	2	1	0	205229	Raninia	2	去见见[%dic:STR_DIC_N_Raninia]%吧	末行无状态
+1528	A	2	1	0	204583	Senemonea	2	为[%dic:STR_DIC_N_Senemonea]带去发生异变的噬人虫皮。	末行无状态
+1725	A	2	1	0	278590	Dactyl	2	把补给品交给[%dic:STR_DIC_N_Dactyl]	末行无状态
+2135	A	2	1	0	203532	DF1_Fisher	2	和[%dic:STR_DIC_N_DF1_Fisher]对话。	末行无状态
+2247	A	2	1	0	203645	NPC_Gerger_3	2	送给[%dic:STR_DIC_N_NPC_Gerger_3]	末行无状态
+2266	A	2	1	0	203654	Aurtri	2	把[%dic:STR_DIC_I_doc_quest_2266a]给[%dic:STR_DIC_N_Aurtri]送过去。	末行无状态
+3087	A	2	1	0	798144	Talos	2	将找到的东西送到[%dic:STR_DIC_N_Talos]那里	末行无状态
+4020	A	2	1	0	205120	Blume	2	将余款送到[%dic:STR_DIC_N_Blume]那里	末行无状态
+21455	A	2	1	0		Unset	2	把奥德解毒剂交给[%dic:STR_DIC_N_Unset]	末行无状态
+26838	A	2	1	0	806575	IDEternity_03_Jarik01_E	2	再次与[%dic:STR_DIC_N_IDEternity_03_Jarik01_E]对话	末行无状态
+80735	A	2	1	0	833544	未完成的术古罗伯	2	和未完成的术古罗伯对话	末行无状态
+80736	A	2	1	0	833546	未完成的术古罗伯	2	和未完成的术古罗伯对话	末行无状态
+1963	B	2	1	0	203726	Polyidus	2	和[%dic:STR_DIC_N_Polyidus]对话	末行有状态/reward停行0
+1964	B	2	1	0	203726	Polyidus	2	和[%dic:STR_DIC_N_Polyidus]对话	末行有状态/reward停行0
+16838	B	2	1	0	806566	IDEternity_03_Ostia01_E	2	再次与[%dic:STR_DIC_N_IDEternity_03_Ostia01_E]对话	末行有状态/reward停行0
+16977	B	2	1	0	801762	LDF5_Under_Timarchus_E	2	和[%dic:STR_DIC_N_LDF5_Under_Timarchus_E]对话	末行有状态/reward停行0
+18035	B	2	1	0	800527	LF5_Brontte_E	2	向[%dic:STR_DIC_N_LF5_Brontte_E]%报告	末行有状态/reward停行0
+29002	C	2	1	0	204099	Resberg	2	把[%dic:STR_DIC_E_QUEST_19002]交给[%dic:STR_DIC_N_Resberg][%collectitem]	镜像已对齐的单侧缺陷
