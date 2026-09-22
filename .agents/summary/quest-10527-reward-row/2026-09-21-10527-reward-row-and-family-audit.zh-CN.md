@@ -4038,3 +4038,63 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
   落盘 step，不得按本批数值套用。
 - `work-items` 只声明不发放（QE-049），本批用 `accept-actions` 补发 3 个绷带；任务 `cannot-share` 且非重复任务，
   未做重复接取叠加验证。
+
+---
+
+## 五十三、批次 49：21027 格尔克马洛斯 Kantele 三行阶梯（交付 + 领奖 owner 收敛，2026-09-22）
+
+### 五十三之一、族判定与证据
+
+- **客户端行**（`quest_q21027.html` 的 `quest_summary`，3 行）：行 0 = 找到被关押的 Kantele（799255），
+  行 1 = 从 Owllau 精锐身上找钥匙 `STR_DIC_I_QUEST_21027a`（182207824）交给 Kantele，行 2 = 和 Asathor（799254）
+  对话报平安。
+- **客户端页链**：`select1(1011)` 的按钮 `HACTION_SELECT1_1(1012)` → `select1_1(1012)` 的按钮
+  `HACTION_SETPRO1(10000)`；`select2(1352)` 的按钮 `HACTION_CHECK_USER_HAS_QUEST_ITEM(39)` →
+  成功页 `check_user_item_ok(10000)` / 失败页 `check_user_item_fail(10001)`（两页按钮都是
+  `HACTION_FINISH_DIALOG(1008)`）；领奖页 `select_success(10002)` 的按钮 `HACTION_SELECT_QUEST_REWARD(1009)`。
+- **迁移前 handler**（`_21027FearlessKantele`，`7e9f0316c^`）：799254 = 接取 + REWARD 领奖 owner；
+  Kantele 799255 在 var0==0 显示 1011、`STEP_TO_1` → `defaultCloseDialog(0, 1)`；var0==1 显示 1352、
+  `checkQuestItems(1, 2, true, 10000, 10001)` 交付钥匙（落盘 var0=2 + REWARD）。
+- **缺陷**：typed 迁移把交错状态塌陷成 Asathor 上的 `NPC_REPORT -> reward` 直跳 + reward 投影 0，
+  行 1/2 没有状态（审计 `ROW_BEHIND | MISSING_TAIL_ROWS | ROW_WITHOUT_STATE`，visible=0）。
+
+### 五十三之二、落点（`21027.xml`）
+
+1. 节点补 `stage1(var0=1)`，`reward` 投影 `0 -> 2`。
+2. Kantele 阶梯：`started --QUEST_SELECT--> SELECT1`、`started --SELECT1_1--> SELECT1_1`、
+   `started --SETPRO1--> stage1`（`PACKET_ONLY` + 关闭窗口）；`stage1 --QUEST_SELECT--> SELECT2`。
+3. 交付门控：`stage1 --CHECK_USER_HAS_QUEST_ITEM[priority 0]--> reward`（`has-item 182207824 ×1` +
+   `remove-item ×1` + `LEVEL_AND_VISIBILITY_REFRESH` + `CHECK_USER_ITEM_OK`）；缺钥匙走
+   `stage1 --CHECK_USER_HAS_QUEST_ITEM[priority 1]--> stage1 + CHECK_USER_ITEM_FAIL`。
+4. 结果页关闭路由：`stage1/reward` 各补 `799255 + FINISH_DIALOG -> close-dialog`（ok/fail 页的 1008 按钮；
+   否则 `QuestClientContractGateTest` 报 `BUTTON_WITHOUT_ROUTE`）。
+5. 领奖行入口：`reward --QUEST_SELECT--> SHOW DEFAULT_SUCCESS(10002)`；`npc-complete` 保留
+   `preview = USE_OBJECT SELECT_QUEST_REWARD`。
+6. 自愈边：`REWARD/0 -> 2`、`REWARD/1 -> 2`（enter-world）。
+
+### 五十三之三、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd quests/21027.xml` validates；
+  `apply_batch49_gelkmaros_kantele_row_ladder.py --apply` 后 `--check` 幂等 OK。
+- **门禁**：新增 `GelkmarosKanteleRowLadderContractTest` 9 例（行状态/页链/钥匙门控与失败分支/结果页关闭路由/
+  领奖行与 preview/owner 收敛/planner 顺序/自愈边/无直跳）；组合回归 12 个测试 66 例全绿，含
+  `QuestClientContractGateTest`（`-Dquest.client.contract.failOnStaleBaseline=true`）与
+  `ProductionCatalogWhitelistVerificationTest`（`PRODUCTION_COMPILE_OK=6191 / FAILURES=0 /
+  INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`）。
+- **全库行号审计**：21027 由 `ROW_BEHIND | MISSING_TAIL_ROWS | ROW_WITHOUT_STATE（visible 0）` 变为
+  `ROW_ALIGNED | ALIGNED | ROW_STATE_ALIGNED（visible 0 1 2）`；计数变化
+  `ROW_ALIGNED 2713 -> 2714`、`ROW_BEHIND 137 -> 136`、`MISSING_TAIL_ROWS 39 -> 38`、
+  `ROW_WITHOUT_STATE 469 -> 468`、`ROW_STATE_ALIGNED 2485 -> 2486`、`ALIGNED 2485 -> 2486`；
+  审计脚本 [11] 节登记「批次 49 格尔克马洛斯 Kantele 族 1 个」，剩余待逐族收口 33 -> 32。
+- **客户端实机 PENDING_CLIENT（请按此复测）**：① 接取后任务书行 0「找到 Kantele」，与 799255 对话读
+  两段说明后任务书切行 1；② 从 Owllau 精锐身上打出钥匙 182207824，交给 Kantele：有钥匙弹
+  「没错，就是这把钥匙」页并切行 2，没钥匙弹失败页；③ 与 Asathor 对话出现 select_success 页，点「报告结果」
+  弹奖励窗口并完成；④ 旧存档（`REWARD/var0=0/1`）登录/切图自愈到行 2。
+
+### 五十三之四、边界
+
+- 该族是「囚禁 NPC 交钥匙 + 回报发布者」形态：交付在中间 NPC 上、领奖在发布者上，与批次 48 的
+  「三目标 + 报告行」不同；其余 `MISSING_TAIL_ROWS` 必须逐个核对客户端页链（尤其是结果页的 1008 按钮）
+  后再落路由，不得按本批数值套用。
+- `CHECK_USER_HAS_QUEST_ITEM` 成功/失败双路由依赖 priority 0/1；同页两个结果页的 `FINISH_DIALOG` 关闭路由
+  必须落在各自渲染状态（`reward` / `stage1`），这是 `QuestClientContractGateTest` 的硬门禁。
