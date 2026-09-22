@@ -97,25 +97,27 @@ transition 内部顺序固定：`event` → `conditions` → `actions` → `afte
               source="reward"
               target="complete"
               fixed-reward-indices="0 1"
-              dialog-ids="8..23"
+              actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"
               complete-reward-index="0"
-              preview-dialog-ids="-1 1009"
-              finish="SELECTION_DIALOG"/>
+              finish="SELECTION_DIALOG">
+  <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+</npc-complete>
 ```
 
-奖励索引对应 `complete-reward-index` 选中的有序 reward group；单组 `<rewards>` 等价于 group 0。固定奖励索引不得指向 `SELECTABLE_ITEM`。N 选 1 奖励应省略 `dialog-ids`，逐项声明客户端选择映射；`fallback` 表示只发固定奖励：
+奖励索引对应 `complete-reward-index` 选中的有序 reward group；单组 `<rewards>` 等价于 group 0。固定奖励索引不得指向 `SELECTABLE_ITEM`。N 选 1 奖励应省略顶层 `actions`，逐项声明客户端选择映射；`fallback` 表示只发固定奖励：
 
 ```xml
 <npc-complete npc-id="203123" source="reward" target="complete"
               fixed-reward-indices="0 1" complete-reward-index="0"
-              preview-dialog-ids="-1 1009" finish="CLOSE_DIALOG">
-  <choice dialog-id="8" reward-index="2"/>
-  <choice dialog-id="9" reward-index="3"/>
-  <fallback dialog-ids="23"/>
+              finish="CLOSE_DIALOG">
+  <choice actions="SELECTED_QUEST_REWARD1" reward-index="2"/>
+  <choice actions="SELECTED_QUEST_REWARD2" reward-index="3"/>
+  <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+  <fallback actions="SELECTED_QUEST_NOREWARD"/>
 </npc-complete>
 ```
 
-choice 索引必须指向 `SELECTABLE_ITEM`，编译器会把该 metadata 条目降为具体 `ITEM` 奖励。preview、普通领取、choice、fallback 的 dialog ID 不能重复。source 必须投影为 `REWARD`，target 必须投影为 `COMPLETE`。每条完成路径的动作顺序固定为：固定奖励、可选的 choice 奖励、`complete-quest`；提交后始终执行 `refresh-player-stats`、`sync-quest-state mode="COMPLETION"`，最后按 `SELECTION_DIALOG`、`CLOSE_DIALOG`、`NONE` 三选一结束。预览路径固定显示 page 5。普通 NPC 默认 `SELECTION_DIALOG`；`useitem`、`quest_use_item`、`quest_start_use_item` 交互物默认 `CLOSE_DIALOG`。`NONE` 只允许有旧包序列或真实行为证据的白名单任务。
+choice 索引必须指向 `SELECTABLE_ITEM`，编译器会把该 metadata 条目降为具体 `ITEM` 奖励。preview、普通领取、choice、fallback 的客户端动作 ID 不能重复。source 必须投影为 `REWARD`，target 必须投影为 `COMPLETE`。每条完成路径的动作顺序固定为：固定奖励、可选的 choice 奖励、`complete-quest`；提交后始终执行 `refresh-player-stats`、`sync-quest-state mode="COMPLETION"`，最后按 `SELECTION_DIALOG`、`CLOSE_DIALOG`、`NONE` 三选一结束。预览路径固定显示 page 5。普通 NPC 默认 `SELECTION_DIALOG`；`useitem`、`quest_use_item`、`quest_start_use_item` 交互物默认 `CLOSE_DIALOG`。`NONE` 只允许有旧包序列或真实行为证据的白名单任务。
 
 只有整个展开结果都正确时才使用积木。接取附加条件、非标准 dialog/page、领奖事务动作或额外 after-commit 副作用都必须写显式 `<transition>`。编译失败使用稳定的 `QuestCompilationException` code，并指出任务、积木和出错属性。
 
@@ -132,7 +134,7 @@ choice 索引必须指向 `SELECTABLE_ITEM`，编译器会把该 metadata 条目
 
 ```xml
 <npc-report npc-id="203941"
-            source="started" target="reward" page="1352"/>
+            source="started" target="reward" page="SELECT2"/>
 ```
 
 固定展开为两条边：dialog 31 在 START 节点自环并显示显式 `page`，dialog 1009 进入 REWARD，依次执行 `PACKET_ONLY` 同步和页面 5。`page` 只允许真实协议页面 `1352`、`2375`、`10002`；source 必须投影 START，target 必须投影 REWARD。成长任务中的 10000/10001、4762 或其他特殊页面协议不使用此积木。
@@ -245,35 +247,35 @@ choice 索引必须指向 `SELECTABLE_ITEM`，编译器会把该 metadata 条目
     <!-- 接取 NPC 203110 -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="203110" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203110" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="203110" dialog-id="1007"/>
+        <dialog type="TALK_TO_NPC" npc-id="203110" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="203110" dialog-id="1002"/>
+        <dialog type="TALK_TO_NPC" npc-id="203110" action="QUEST_ACCEPT_1"/>
       </event>
       <conditions>
         <start-eligible/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="203110" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="203110" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -285,7 +287,7 @@ choice 索引必须指向 `SELECTABLE_ITEM`，编译器会把该 metadata 条目
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="203110" dialog-ids="1003 1004 20001"/>
+        <dialog type="TALK_TO_NPC" npc-id="203110" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -293,49 +295,49 @@ choice 索引必须指向 `SELECTABLE_ITEM`，编译器会把该 metadata 条目
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="203110" dialog-id="1008"/>
+        <dialog type="TALK_TO_NPC" npc-id="203110" action="FINISH_DIALOG"/>
       </event>
       <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="203110" dialog-id="1008"/>
+        <dialog type="TALK_TO_NPC" npc-id="203110" action="FINISH_DIALOG"/>
       </event>
       <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- 报告 NPC 203123 -->
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="203123" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203123" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
     <transition source="started" target="reward">
       <event>
-        <talk-to-npc npc-id="203123" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="203123" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="203123" dialog-ids="-1 1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="203123" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="203123" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="203123" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <grant-reward kind="GOLD" id="0" amount="1440" amount-mode="QUEST_BASE"/>
@@ -345,7 +347,7 @@ choice 索引必须指向 `SELECTABLE_ITEM`，编译器会把该 metadata 条目
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>
@@ -354,11 +356,11 @@ choice 索引必须指向 `SELECTABLE_ITEM`，编译器会把该 metadata 条目
 
 关键约定：
 
-- **dialog 语义**（客户端对话协议，勿随意改）：`31`=查看任务信息、`1007`=任务剧情说明、`1002`/`20000`=接受任务（需 `start-eligible` 条件）、`1003 1004 20001`=接受后的常规关闭、`1008`=打开任务列表、`1009`=报告完成（START→REWARD）、`8..23`=领取奖励（REWARD→COMPLETE）、`-1`=关闭对话。
+- **typed dialog 语义**（客户端对话协议，勿随意改）：`QUEST_SELECT(31)`=查看任务信息、`ASK_QUEST_ACCEPT(1007)`=任务剧情说明、`QUEST_ACCEPT_1(1002)`/`QUEST_ACCEPT_SIMPLE(20000)`=接受任务（需 `start-eligible` 条件）、`QUEST_REFUSE_1(1003)`/`QUEST_REFUSE_2(1004)`/`QUEST_REFUSE_SIMPLE(20001)`=接受后的常规关闭、`FINISH_DIALOG(1008)`=打开任务列表、`SELECT_QUEST_REWARD(1009)`=报告完成（START→REWARD）、`SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD(8..23)`=领取奖励（REWARD→COMPLETE）、`USE_OBJECT(-1)`=关闭对话。事件动作使用 `QuestDialogAction` 符号，任务页面使用 `QuestDialogPage` 符号。
 - **`start-eligible`**：接受类过渡的条件，由服务端检查等级/前置/阵营等接取资格。
 - **同步**：状态变化后必须 `sync-quest-state`（VISIBILITY_REFRESH / LEVEL_AND_VISIBILITY_REFRESH / COMPLETION / PACKET_ONLY），让客户端刷新。
 - **奖励结算**：`grant-reward` 与 metadata `rewards` 一一对应；GOLD/EXP 用 `amount-mode="QUEST_BASE"`（金额受任务等级加成），ITEM/TITLE 用默认 `EXACT`。
-- **`dialog-ids="8..23"`**：区间写法，等于逐个列出 8 到 23。
+- **`actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"`**：符号区间写法，等于逐个列出该客户端动作 ID 区间内的全部已声明枚举。
 
 ### 3.5 进阶示例：1002「Request Of The Elim」（真实任务，选择奖励 + drops + 前置）
 
@@ -399,7 +401,7 @@ choice 索引必须指向 `SELECTABLE_ITEM`，编译器会把该 metadata 条目
 ```xml
 <transition source="reward" target="complete">
   <event>
-    <talk-to-npc npc-id="203067" dialog-id="8"/>
+    <dialog type="TALK_TO_NPC" npc-id="203067" action="SELECTED_QUEST_REWARD1"/>
   </event>
   <actions>
     <grant-reward kind="EXP" id="0" amount="5943" amount-mode="QUEST_BASE"/>
@@ -410,10 +412,10 @@ choice 索引必须指向 `SELECTABLE_ITEM`，编译器会把该 metadata 条目
   <after-commit>
     <refresh-player-stats/>
     <sync-quest-state mode="COMPLETION"/>
-    <show-quest-selection-dialog dialog-id="10"/>
+    <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
   </after-commit>
 </transition>
-<!-- dialog-id 9、10、11、12、13 各一条，ITEM 换成其余五个武器 -->
+<!-- SELECTED_QUEST_REWARD2..SELECTED_QUEST_REWARD6 各一条，ITEM 换成其余五个武器 -->
 ```
 
 - `drops`：**必填，勿省略**——省略会导致任务物品不掉落、任务无法推进。`collecting-step` 对应击杀计数步进（见下），`chance` 默认 100，`each-member="true"` 表示队伍每人独立掉落。
@@ -439,7 +441,7 @@ choice 索引必须指向 `SELECTABLE_ITEM`，编译器会把该 metadata 条目
 
 - 接受过渡（dialog 1002/20000）：actions 加 `<give-item item-id="<id>" count="<n>"/>`。
 - 报告过渡（dialog 1009，started→reward）：conditions 加 `<has-item item-id="<id>" count="<n>"/>`，actions 加 `<remove-item item-id="<id>" count="<n>"/>`。
-- 追加一条 `priority="1"` 的拒绝分支：同 dialog 无物品时保持 started，`show-quest-selection-dialog dialog-id="10"`（参考 `quests/1142.xml`）。**运行时不会自动移除 work item，必须显式 remove。**
+- 追加一条 `priority="1"` 的拒绝分支：同 dialog 动作无物品时保持 started，`SHOW_SELECTION_PAGE page="SELECT_QUEST"`（参考 `quests/1142.xml`）。**运行时不会自动移除 work item，必须显式 remove。**
 
 ## 4. 编写 Java DSL
 
@@ -461,18 +463,18 @@ CompiledQuestDefinition motherWorry1138() {
         .node("reward",     project(QuestStatus.REWARD, vars("var0", 1)))
         .node("complete",   project(QuestStatus.COMPLETE, vars("var0", 0)))
         // 接取 NPC 203110：dialog 1002 接受
-        .on(talkToNpc(203110, QuestDialog.ACCEPT_QUEST))
+        .on(talkToNpc(203110, QuestDialogAction.QUEST_ACCEPT_1))
         .when(startEligible())
         .afterCommit(syncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH))
-        .afterCommit(showQuestDialog(1003))
+        .afterCommit(showQuestDialog(QuestDialogPage.QUEST_ACCEPT_1))
         .goTo("started")
         // 报告 NPC 203123：dialog 1009 进入奖励
-        .on(talkToNpc(203123, QuestDialog.SELECT_REWARD))
+        .on(talkToNpc(203123, QuestDialogAction.SELECT_QUEST_REWARD))
         .afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
-        .afterCommit(showQuestDialog(5))
+        .afterCommit(showQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1))
         .goTo("reward")
         // 领奖：dialog 8..23 结算，每档一条过渡
-        .on(talkToNpc(203123, QuestDialog.SELECTED_QUEST_REWARD1))  // dialog 8
+        .on(talkToNpc(203123, QuestDialogAction.SELECTED_QUEST_REWARD1))  // dialog action 8
         .then(grantQuestBaseReward("GOLD", 0, 1440))
         .then(grantQuestBaseReward("EXP", 0, 5730))
         .then(completeQuest(0))
@@ -504,7 +506,7 @@ private static QuestDsl.QuestBuilder simpleCollect1103() {
 要点：
 
 - `quest(id)` → `QuestBuilder`，`.on(event)` → `TransitionBuilder`：`.when(条件)`、`.then(动作)`、`.afterCommit(副作用)`、`.from(源节点)`、`.goTo(目标节点)`、`.priority(n)`、`.compile()`。
-- `QuestDialog` 枚举封装了客户端 dialog 常量（如 `QuestDialog.ACCEPT`=1002、`REPORT`=1009），也可直接传 dialog int。
+- `QuestDialogAction` 封装客户端动作常量（如 `QUEST_ACCEPT_1`=1002、`SELECT_QUEST_REWARD`=1009），`QuestDialogPage` 封装客户端页面常量；两个 ID 空间必须保持分离。
 - DSL 与 XML 走同一 compiler；测试用 `assertEquivalent` 断言 `dsl.compile().definition()` 与 `QuestDefinitionXmlCompiler.compile(xml)` 完全相等。**新增 XML 能力时若 DSL 缺工厂方法，两者必须同步补。**
 
 ## 5. 常用模式速查（真实任务参考）
@@ -514,7 +516,7 @@ private static QuestDsl.QuestBuilder simpleCollect1103() {
 | report_to（无 work item） | 见 §3.4 | `quests/1138.xml` |
 | report_to（有 work item） | give/has/remove-item + priority=1 拒绝分支 | `quests/1106.xml` |
 | monster_hunt（击杀计数） | var0 逐级推进，每 NPC 一条 kill transition，`source=k{i} target=k{i+1}`，after-commit `sync PACKET_ONLY`；终态报告 dialog 1009 → reward | `quests/1120.xml`（单组）、`quests/1112.xml`（双组，var0/var1 交叉，offset 0/6） |
-| item_collecting | end NPC dialog 39 上交检查：has-item（每个 collect_item）+ remove-item；无物品时 priority=1 fallback `show-quest-dialog 2716`；metadata 必须有 drops | `quests/1129.xml` |
+| item_collecting | end NPC 动作 `CHECK_USER_HAS_QUEST_ITEM(39)` 上交检查：has-item（每个 collect_item）+ remove-item；无物品时 priority=1 fallback `SHOW_QUEST_PAGE page="SELECT6"`；metadata 必须有 drops | `quests/1129.xml` |
 | item_order | start_item_id 接取时 give-item，talk_npc 对话推进 var，end_npc 报告 | `quests/2146.xml`、`quests/2210.xml` |
 | xml_quest（复杂） | 每 var 值一个 node，每 dialog 分支一条 transition | `quests/1115.xml`、`quests/1127.xml` |
 | 选择奖励（N 选 1） | metadata `SELECTABLE_ITEM` × N；reward→complete 按 dialog 8、9、10... 拆 N 条，公共奖励重复 + 各一条 ITEM | `quests/1002.xml`（6 选 1）、`quests/1686.xml`（2 选 1） |
@@ -548,7 +550,7 @@ private static QuestDsl.QuestBuilder simpleCollect1103() {
 4. 接受类过渡带 `start-eligible`；状态变更后带 `sync-quest-state`。
 5. `grant-reward` 与选中的有序 reward group 一一对应（GOLD/EXP 用 QUEST_BASE）；多组不扁平化。
 6. 有 drops 的任务 metadata 已写 `<drops>` 段；有 work item 的任务 give/has/remove 齐全且无物品拒绝分支存在。
-7. 连续重复动作（连续 refresh/sync/show-quest-selection-dialog）视为错误，除非旧逻辑明确要求。
+7. 连续重复动作（连续 refresh/sync/`SHOW_SELECTION_PAGE`）视为错误，除非旧逻辑明确要求。
 8. 奖励结算使用合法 `npc-complete`，或保持 `source="reward" target="complete"` + `complete-quest` + `refresh-player-stats` + `sync COMPLETION` 结尾，并按 NPC/交互物规则收尾窗口。
 9. 开始条件保持组内 AND、组间 OR；任务交互物走 catalog route/drop 索引，`ChestAI2` 宝箱保持在宝箱/实例掉落域。
 

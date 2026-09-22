@@ -419,18 +419,7 @@ public final class QuestDefinitionXmlCompiler {
 		if ("dialog".equals(element.getTagName())) {
 			return parseDialogEvents(element);
 		}
-		if (!"talk-to-npc".equals(element.getTagName()) || !element.hasAttribute("dialog-ids")) {
-			return List.of(parseEvent(element));
-		}
-		if (element.hasAttribute("dialog") || element.hasAttribute("dialog-id")) {
-			return fail("AMBIGUOUS_DIALOG_EVENT", "declare one of dialog, dialog-id, or dialog-ids");
-		}
-		int npcId = integer(element, "npc-id");
-		List<QuestEvent> events = new ArrayList<>();
-		for (int dialogId : dialogIds(element, "dialog-ids")) {
-			events.add(new QuestEvent.TalkToNpc(npcId, dialogId));
-		}
-		return List.copyOf(events);
+		return List.of(parseEvent(element));
 	}
 
 	private static List<QuestEvent> parseDialogEvents(Element element) {
@@ -575,70 +564,12 @@ public final class QuestDefinitionXmlCompiler {
 		}
 	}
 
-	/**
-	 * talk-to-npc.dialog-ids 与 npc-dialog.dialog-ids 共用的严格对话 id 列表/区间解析器。
-	 * Shared strict dialog-id list/range parser used by talk-to-npc.dialog-ids and npc-dialog.dialog-ids.
-	 */
-	static List<Integer> dialogIds(Element element, String attributeName) {
-		String raw = attribute(element, attributeName);
-		List<Integer> dialogIds = new ArrayList<>();
-		Set<Integer> seen = new java.util.LinkedHashSet<>();
-		for (String token : raw.trim().split("[\\s,]+")) {
-			int delimiter = token.indexOf("..");
-			if (delimiter < 0) {
-					addDialogId(seen, parseDialogId(token), element, attributeName);
-				continue;
-			}
-			if (delimiter == 0 || delimiter + 2 == token.length()
-					|| token.indexOf("..", delimiter + 2) >= 0) {
-				return fail("INVALID_DIALOG_ID_SET", token);
-			}
-			int first = parseDialogId(token.substring(0, delimiter));
-			int last = parseDialogId(token.substring(delimiter + 2));
-			if (first > last || (long) last - first >= 256) {
-				return fail("INVALID_DIALOG_ID_RANGE", token);
-			}
-			for (int dialogId = first; ; dialogId++) {
-					addDialogId(seen, dialogId, element, attributeName);
-				if (dialogId == last) {
-					break;
-				}
-			}
-		}
-		if (seen.isEmpty()) {
-			return fail("EMPTY_DIALOG_ID_SET", element.getTagName() + "." + attributeName);
-		}
-		for (int dialogId : seen) {
-			dialogIds.add(dialogId);
-		}
-		return List.copyOf(dialogIds);
-	}
-
-	private static int parseDialogId(String token) {
-		try {
-			return Integer.parseInt(token);
-		} catch (NumberFormatException e) {
-			return fail("INVALID_DIALOG_ID_SET", token);
-		}
-	}
-
-	private static void addDialogId(Set<Integer> dialogIds, int dialogId, Element element, String attributeName) {
-		if (!dialogIds.contains(dialogId) && dialogIds.size() >= 256) {
-			fail("TOO_MANY_DIALOG_IDS", element.getTagName() + "." + attributeName + " must contain at most 256 ids");
-		}
-		if (!dialogIds.add(dialogId)) {
-			fail("DUPLICATE_DIALOG_ID", element.getTagName() + "." + attributeName + " contains " + dialogId + " more than once");
-		}
-	}
-
 	private static QuestEvent parseEvent(Element element) {
 		return switch (element.getTagName()) {
 			case "dialog" -> onlyDialogEvent(element);
-			case "talk-to-npc" -> parseTalkEvent(element);
 			case "kill-npc" -> parseKillNpc(element);
 			case "attack-npc" -> new QuestEvent.AttackNpc(integer(element, "npc-id"));
 			case "use-item" -> new QuestEvent.UseItem(integer(element, "item-id"));
-			case "quest-dialog" -> new QuestEvent.QuestDialog(parseQuestDialogId(element));
 			case "collect-item" -> new QuestEvent.CollectItem(integer(element, "item-id"), integer(element, "count"));
 			case "item-play" ->
 				new QuestEvent.ItemPlay(integer(element, "item-id"), integer(element, "animation-millis"));
@@ -732,29 +663,6 @@ public final class QuestDefinitionXmlCompiler {
 		} catch (NumberFormatException e) {
 			return fail("INVALID_NPC_IDS", "kill-npc npc-ids contains non-numeric '" + token + "'");
 		}
-	}
-
-	private static QuestEvent parseTalkEvent(Element element) {
-		if (element.hasAttribute("dialog") && element.hasAttribute("dialog-id")) {
-			return fail("AMBIGUOUS_DIALOG_EVENT", "declare dialog or dialog-id, not both");
-		}
-		Integer dialogId = null;
-		if (element.hasAttribute("dialog")) {
-			dialogId = enumValue(QuestDialogAction.class, element, "dialog").id();
-		} else if (element.hasAttribute("dialog-id")) {
-			dialogId = integer(element, "dialog-id");
-		}
-		return new QuestEvent.TalkToNpc(integer(element, "npc-id"), dialogId);
-	}
-
-	private static int parseQuestDialogId(Element element) {
-		if (element.hasAttribute("dialog") && element.hasAttribute("dialog-id")) {
-			return fail("AMBIGUOUS_DIALOG_EVENT", "declare dialog or dialog-id, not both");
-		}
-		if (element.hasAttribute("dialog")) {
-			return enumValue(QuestDialogAction.class, element, "dialog").id();
-		}
-		return integer(element, "dialog-id");
 	}
 
 	static QuestCondition parseCondition(Element element) {
@@ -859,9 +767,6 @@ public final class QuestDefinitionXmlCompiler {
 			case "sync-quest-state" -> new AfterCommitAction.SyncQuestState(
 				enumValue(QuestStateSyncMode.class, action, "mode"));
 			case "refresh-player-stats" -> new AfterCommitAction.RefreshPlayerStats();
-			case "show-quest-dialog" -> new AfterCommitAction.ShowQuestDialog(dialogPage(action));
-			case "show-quest-selection-dialog" -> new AfterCommitAction.ShowQuestSelectionDialog(
-				dialogPage(action));
 			case "show-dialog-window" -> new AfterCommitAction.ShowDialogWindow(dialogPage(action));
 			case "teleport-player-current-or-default" -> new AfterCommitAction.TeleportPlayer(
 				QuestInstanceTarget.currentOrDefault(), integer(action, "world-id"),

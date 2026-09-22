@@ -155,7 +155,7 @@ class XmlQuestFamilyDefinitionTest {
 			.findFirst().orElse(null);
 	}
 
-	/** Flattened action set shared by every reward->complete route (dialog-ids="8..23"). */
+	/** Flattened action set shared by every reward->complete route. */
 	private static List<QuestAction> completions(List<QuestTransition> transitions, String source) {
 		return transitions.stream().filter(t -> t.sourceNode().equals(source) && t.targetNode().equals("complete"))
 			.flatMap(t -> t.actions().stream()).toList();

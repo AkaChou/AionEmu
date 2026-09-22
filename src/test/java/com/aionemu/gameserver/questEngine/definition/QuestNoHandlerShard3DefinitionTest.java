@@ -142,7 +142,7 @@ class QuestNoHandlerShard3DefinitionTest {
 			.filter(t -> t.event().equals(new QuestEvent.TalkToNpc(804879, 10000))).toList();
 		assertEquals(1, stepRoutes.size());
 		assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), stepRoutes.get(0).actions());
-		// dialog-ids="-1 1009" 在 reward 节点另有一条同事件过渡，推进路由以 source="s1" 区分。
+		// USE_OBJECT 与 SELECT_QUEST_REWARD 在 reward 节点另有同事件过渡，推进路由以 source="s1" 区分。
 		List<QuestTransition> selectRoutes = compiled.definition().transitions().stream()
 			.filter(t -> "s1".equals(t.sourceNode())
 				&& t.event().equals(new QuestEvent.TalkToNpc(804879, 1009))).toList();

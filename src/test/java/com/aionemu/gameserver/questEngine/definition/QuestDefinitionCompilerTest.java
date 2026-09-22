@@ -550,13 +550,19 @@ class QuestDefinitionCompilerTest {
 		assertThrows(IllegalArgumentException.class, () -> new AfterCommitAction.ShowQuestDialog(0));
 		assertThrows(IllegalArgumentException.class, () -> new AfterCommitAction.ShowDialogWindow(0));
 
-		for (String tag : List.of("show-quest-dialog", "show-quest-selection-dialog", "show-dialog-window")) {
+		for (String tag : List.of("show-quest-dialog", "show-quest-selection-dialog")) {
 			String xml = xmlWithTransition("<event><dialog type=\"TALK_TO_NPC\" npc-id=\"700001\"/></event>",
 				"<after-commit><" + tag + " dialog-id=\"0\"/></after-commit>");
 			assertEquals("INVALID_XML", assertThrows(QuestCompilationException.class,
 				() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
 					xml.getBytes(StandardCharsets.UTF_8)))).code());
 		}
+
+		String genericWindow = xmlWithTransition("<event><dialog type=\"TALK_TO_NPC\" npc-id=\"700001\"/></event>",
+			"<after-commit><show-dialog-window dialog-id=\"0\"/></after-commit>");
+		assertEquals("INVALID_DIALOG_PAGE", assertThrows(QuestCompilationException.class,
+			() -> QuestDefinitionXmlCompiler.compile(new ByteArrayInputStream(
+				genericWindow.getBytes(StandardCharsets.UTF_8)))).code());
 	}
 
 	@Test

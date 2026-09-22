@@ -97,25 +97,27 @@ Standard NPC reward settlement:
               source="reward"
               target="complete"
               fixed-reward-indices="0 1"
-              dialog-ids="8..23"
+              actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"
               complete-reward-index="0"
-              preview-dialog-ids="-1 1009"
-              finish="SELECTION_DIALOG"/>
+              finish="SELECTION_DIALOG">
+  <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+</npc-complete>
 ```
 
-Reward indices refer to the ordered reward group selected by `complete-reward-index`; shorthand `<rewards>` is group 0. Fixed indices must not point to `SELECTABLE_ITEM`. For N-choose-1 rewards, omit `dialog-ids` and map each client choice explicitly; `fallback` completes with fixed rewards only:
+Reward indices refer to the ordered reward group selected by `complete-reward-index`; shorthand `<rewards>` is group 0. Fixed indices must not point to `SELECTABLE_ITEM`. For N-choose-1 rewards, omit the top-level `actions` and map each client choice explicitly; `fallback` completes with fixed rewards only:
 
 ```xml
 <npc-complete npc-id="203123" source="reward" target="complete"
               fixed-reward-indices="0 1" complete-reward-index="0"
-              preview-dialog-ids="-1 1009" finish="CLOSE_DIALOG">
-  <choice dialog-id="8" reward-index="2"/>
-  <choice dialog-id="9" reward-index="3"/>
-  <fallback dialog-ids="23"/>
+              finish="CLOSE_DIALOG">
+  <choice actions="SELECTED_QUEST_REWARD1" reward-index="2"/>
+  <choice actions="SELECTED_QUEST_REWARD2" reward-index="3"/>
+  <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+  <fallback actions="SELECTED_QUEST_NOREWARD"/>
 </npc-complete>
 ```
 
-Choice indices must point to `SELECTABLE_ITEM`; the compiler lowers that metadata entry to the concrete `ITEM` reward. Dialog IDs must be unique across preview, generic, choice, and fallback routes. The source must project `REWARD`, the target `COMPLETE`. Every completion route orders actions as fixed rewards, optional choice reward, `complete-quest`; after commit it always runs `refresh-player-stats`, `sync-quest-state mode="COMPLETION"`, then exactly one finish policy. Ordinary NPCs default to `SELECTION_DIALOG`; `useitem`, `quest_use_item`, and `quest_start_use_item` interaction objects default to `CLOSE_DIALOG`. `NONE` requires an evidence-backed whitelist. Preview routes display page 5.
+Choice indices must point to `SELECTABLE_ITEM`; the compiler lowers that metadata entry to the concrete `ITEM` reward. Client action IDs must be unique across preview, generic, choice, and fallback routes. The source must project `REWARD`, the target `COMPLETE`. Every completion route orders actions as fixed rewards, optional choice reward, `complete-quest`; after commit it always runs `refresh-player-stats`, `sync-quest-state mode="COMPLETION"`, then exactly one finish policy. Ordinary NPCs default to `SELECTION_DIALOG`; `useitem`, `quest_use_item`, and `quest_start_use_item` interaction objects default to `CLOSE_DIALOG`. `NONE` requires an evidence-backed whitelist. Preview routes display page 5.
 
 Use these blocks only when the entire expansion is correct. Extra conditions on acquisition, nonstandard dialogs/pages, reward-side mutations, or any additional after-commit effect require explicit `<transition>` elements. Compiler failures use stable `QuestCompilationException` codes and identify the quest, block, and offending attribute.
 
@@ -132,7 +134,7 @@ Standard NPC report:
 
 ```xml
 <npc-report npc-id="203941"
-            source="started" target="reward" page="1352"/>
+            source="started" target="reward" page="SELECT2"/>
 ```
 
 This always emits two edges: dialog 31 self-loops at the START node and shows the explicit `page`; dialog 1009 enters REWARD, then sends `PACKET_ONLY` and shows page 5. `page` is restricted to the retail protocol pages `1352`, `2375`, and `10002`; source must project START and target must project REWARD. Growth quests using 10000/10001, 4762, or another special page protocol must remain explicit.
@@ -216,35 +218,35 @@ File `quests/1138.xml` (level-11 ELYOS quest, accept from NPC 203110, report to 
     <!-- Accept NPC 203110 -->
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="203110" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203110" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="1011"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="203110" dialog-id="1007"/>
+        <dialog type="TALK_TO_NPC" npc-id="203110" action="ASK_QUEST_ACCEPT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="4"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="203110" dialog-id="1002"/>
+        <dialog type="TALK_TO_NPC" npc-id="203110" action="QUEST_ACCEPT_1"/>
       </event>
       <conditions>
         <start-eligible/>
       </conditions>
       <after-commit>
         <sync-quest-state mode="VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="1003"/>
+        <dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/>
       </after-commit>
     </transition>
     <transition source="unaccepted" target="started">
       <event>
-        <talk-to-npc npc-id="203110" dialog-id="20000"/>
+        <dialog type="TALK_TO_NPC" npc-id="203110" action="QUEST_ACCEPT_SIMPLE"/>
       </event>
       <conditions>
         <start-eligible/>
@@ -256,7 +258,7 @@ File `quests/1138.xml` (level-11 ELYOS quest, accept from NPC 203110, report to 
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="203110" dialog-ids="1003 1004 20001"/>
+        <dialog type="TALK_TO_NPC" npc-id="203110" actions="QUEST_REFUSE_1 QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/>
       </event>
       <after-commit>
         <close-dialog/>
@@ -264,49 +266,49 @@ File `quests/1138.xml` (level-11 ELYOS quest, accept from NPC 203110, report to 
     </transition>
     <transition source="unaccepted" target="unaccepted">
       <event>
-        <talk-to-npc npc-id="203110" dialog-id="1008"/>
+        <dialog type="TALK_TO_NPC" npc-id="203110" action="FINISH_DIALOG"/>
       </event>
       <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="203110" dialog-id="1008"/>
+        <dialog type="TALK_TO_NPC" npc-id="203110" action="FINISH_DIALOG"/>
       </event>
       <after-commit>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
     <!-- Report NPC 203123 -->
     <transition source="started" target="started">
       <event>
-        <talk-to-npc npc-id="203123" dialog-id="31"/>
+        <dialog type="TALK_TO_NPC" npc-id="203123" action="QUEST_SELECT"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="2375"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT5"/>
       </after-commit>
     </transition>
     <transition source="started" target="reward">
       <event>
-        <talk-to-npc npc-id="203123" dialog-id="1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="203123" action="SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="reward" target="reward">
       <event>
-        <talk-to-npc npc-id="203123" dialog-ids="-1 1009"/>
+        <dialog type="TALK_TO_NPC" npc-id="203123" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
       </event>
       <after-commit>
-        <show-quest-dialog dialog-id="5"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
     <transition source="reward" target="complete">
       <event>
-        <talk-to-npc npc-id="203123" dialog-ids="8..23"/>
+        <dialog type="TALK_TO_NPC" npc-id="203123" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
       </event>
       <actions>
         <grant-reward kind="GOLD" id="0" amount="1440" amount-mode="QUEST_BASE"/>
@@ -316,7 +318,7 @@ File `quests/1138.xml` (level-11 ELYOS quest, accept from NPC 203110, report to 
       <after-commit>
         <refresh-player-stats/>
         <sync-quest-state mode="COMPLETION"/>
-        <show-quest-selection-dialog dialog-id="10"/>
+        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
   </transitions>
@@ -325,11 +327,11 @@ File `quests/1138.xml` (level-11 ELYOS quest, accept from NPC 203110, report to 
 
 Key conventions:
 
-- **dialog semantics** (client dialog protocol, don't change freely): `31`=view quest info, `1007`=quest story text, `1002`/`20000`=accept quest (requires the `start-eligible` condition), `1003 1004 20001`=normal close after accept, `1008`=open quest list, `1009`=report completion (START→REWARD), `8..23`=claim reward (REWARD→COMPLETE), `-1`=close dialog.
+- **typed dialog semantics** (client dialog protocol, don't change freely): `QUEST_SELECT(31)`=view quest info, `ASK_QUEST_ACCEPT(1007)`=quest story text, `QUEST_ACCEPT_1(1002)`/`QUEST_ACCEPT_SIMPLE(20000)`=accept quest (requires the `start-eligible` condition), `QUEST_REFUSE_1(1003)`/`QUEST_REFUSE_2(1004)`/`QUEST_REFUSE_SIMPLE(20001)`=normal close after accept, `FINISH_DIALOG(1008)`=open quest list, `SELECT_QUEST_REWARD(1009)`=report completion (START→REWARD), `SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD(8..23)`=claim reward (REWARD→COMPLETE), and `USE_OBJECT(-1)`=close dialog. Event actions use `QuestDialogAction` symbols; quest pages use `QuestDialogPage` symbols.
 - **`start-eligible`**: the condition on accept transitions; the server checks level/prerequisites/race eligibility.
 - **Sync**: every status change must be followed by `sync-quest-state` (VISIBILITY_REFRESH / LEVEL_AND_VISIBILITY_REFRESH / COMPLETION / PACKET_ONLY) so the client refreshes.
 - **Reward settlement**: `grant-reward` must mirror the metadata `rewards` one-to-one; GOLD/EXP use `amount-mode="QUEST_BASE"` (amount scales with quest level), ITEM/TITLE use the default `EXACT`.
-- **`dialog-ids="8..23"`**: range shorthand, equivalent to listing 8 through 23 individually.
+- **`actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"`**: symbol-range shorthand, equivalent to listing every declared enum action in that client-id interval.
 
 ### 3.5 Advanced Example: 1002 "Request Of The Elim" (real quest: selectable rewards + drops + prerequisites)
 
@@ -370,7 +372,7 @@ Metadata from file `quests/1002.xml` (level-3 ELYOS MISSION, prerequisite 1100, 
 ```xml
 <transition source="reward" target="complete">
   <event>
-    <talk-to-npc npc-id="203067" dialog-id="8"/>
+    <dialog type="TALK_TO_NPC" npc-id="203067" action="SELECTED_QUEST_REWARD1"/>
   </event>
   <actions>
     <grant-reward kind="EXP" id="0" amount="5943" amount-mode="QUEST_BASE"/>
@@ -381,10 +383,10 @@ Metadata from file `quests/1002.xml` (level-3 ELYOS MISSION, prerequisite 1100, 
   <after-commit>
     <refresh-player-stats/>
     <sync-quest-state mode="COMPLETION"/>
-    <show-quest-selection-dialog dialog-id="10"/>
+    <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
   </after-commit>
 </transition>
-<!-- one more transition each for dialog-id 9, 10, 11, 12, 13, swapping the ITEM for the other five weapons -->
+<!-- one more transition each for SELECTED_QUEST_REWARD2..SELECTED_QUEST_REWARD6, swapping the ITEM for the other five weapons -->
 ```
 
 - `drops`: **mandatory, never omit** — omitting it means the quest item never drops and the quest cannot progress. `collecting-step` ties into the kill-count step (below), `chance` defaults to 100, `each-member="true"` means every group member gets an independent drop.
@@ -410,7 +412,7 @@ When `quest_data.xml` has `<quest_work_items>` (e.g. 1106):
 
 - Accept transitions (dialog 1002/20000): add `<give-item item-id="<id>" count="<n>"/>` to actions.
 - Report transition (dialog 1009, started→reward): add `<has-item item-id="<id>" count="<n>"/>` to conditions and `<remove-item item-id="<id>" count="<n>"/>` to actions.
-- Add a `priority="1"` rejection branch: same dialog without the item stays in started and shows `show-quest-selection-dialog dialog-id="10"` (see `quests/1142.xml`). **Work items are never removed automatically — remove them explicitly.**
+- Add a `priority="1"` rejection branch: the same dialog action without the item stays in started and shows `SHOW_SELECTION_PAGE page="SELECT_QUEST"` (see `quests/1142.xml`). **Work items are never removed automatically — remove them explicitly.**
 
 ## 4. Writing Java DSL
 
@@ -433,18 +435,18 @@ CompiledQuestDefinition motherWorry1138() {
         .node("reward",     project(QuestStatus.REWARD, vars("var0", 1)))
         .node("complete",   project(QuestStatus.COMPLETE, vars("var0", 0)))
         // Accept NPC 203110: dialog 1002
-        .on(talkToNpc(203110, QuestDialog.ACCEPT_QUEST))
+        .on(talkToNpc(203110, QuestDialogAction.QUEST_ACCEPT_1))
         .when(startEligible())
         .afterCommit(syncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH))
-        .afterCommit(showQuestDialog(1003))
+        .afterCommit(showQuestDialog(QuestDialogPage.QUEST_ACCEPT_1))
         .goTo("started")
         // Report NPC 203123: dialog 1009 enters reward
-        .on(talkToNpc(203123, QuestDialog.SELECT_REWARD))
+        .on(talkToNpc(203123, QuestDialogAction.SELECT_QUEST_REWARD))
         .afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
-        .afterCommit(showQuestDialog(5))
+        .afterCommit(showQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1))
         .goTo("reward")
         // Claim reward: dialog 8..23, one transition per slot
-        .on(talkToNpc(203123, QuestDialog.SELECTED_QUEST_REWARD1))  // dialog 8
+        .on(talkToNpc(203123, QuestDialogAction.SELECTED_QUEST_REWARD1))  // dialog action 8
         .then(grantQuestBaseReward("GOLD", 0, 1440))
         .then(grantQuestBaseReward("EXP", 0, 5730))
         .then(completeQuest(0))
@@ -476,7 +478,7 @@ private static QuestDsl.QuestBuilder simpleCollect1103() {
 Key points:
 
 - `quest(id)` → `QuestBuilder`; `.on(event)` → `TransitionBuilder`: `.when(condition)`, `.then(action)`, `.afterCommit(side effect)`, `.from(sourceNode)`, `.goTo(targetNode)`, `.priority(n)`, `.compile()`.
-- `QuestDialog` wraps the client dialog constants (`QuestDialog.ACCEPT_QUEST`=1002, `SELECT_REWARD`=1009, `SELECTED_QUEST_REWARD1`=8, ...); you can also pass a raw dialog int where the API allows.
+- `QuestDialogAction` wraps client action constants (`QUEST_ACCEPT_1`=1002, `SELECT_QUEST_REWARD`=1009, `SELECTED_QUEST_REWARD1`=8, ...) and `QuestDialogPage` wraps client page constants; both ID spaces must remain separate.
 - The DSL and XML share one compiler; tests assert `dsl.compile().definition()` equals `QuestDefinitionXmlCompiler.compile(xml)` exactly via `assertEquivalent`. **When a new XML capability is added, the DSL factory must be added in the same change.**
 
 ## 5. Common Pattern Quick Reference (real quests)
@@ -486,7 +488,7 @@ Key points:
 | report_to (no work item) | see §3.4 | `quests/1138.xml` |
 | report_to (with work item) | give/has/remove-item + priority=1 rejection branch | `quests/1106.xml` |
 | monster_hunt (kill counter) | var0 advances step by step, one kill transition per NPC, `source=k{i} target=k{i+1}`, after-commit `sync PACKET_ONLY`; final report dialog 1009 → reward | `quests/1120.xml` (single group), `quests/1112.xml` (two groups, var0/var1 interleaved, offsets 0/6) |
-| item_collecting | end NPC dialog 39 turn-in check: has-item (per collect_item) + remove-item; priority=1 fallback `show-quest-dialog 2716` when items are missing; metadata must carry `drops` | `quests/1129.xml` |
+| item_collecting | end NPC action `CHECK_USER_HAS_QUEST_ITEM(39)` turn-in check: has-item (per collect_item) + remove-item; priority=1 fallback `SHOW_QUEST_PAGE page="SELECT6"` when items are missing; metadata must carry `drops` | `quests/1129.xml` |
 | item_order | start_item_id given on accept, talk_npc dialog advances var, end_npc report | `quests/2146.xml`, `quests/2210.xml` |
 | xml_quest (complex) | one node per var value, one transition per dialog branch | `quests/1115.xml`, `quests/1127.xml` |
 | selectable rewards (N-choose-1) | metadata `SELECTABLE_ITEM` × N; reward→complete split into N transitions by dialog 8, 9, 10..., shared rewards repeated + one ITEM each | `quests/1002.xml` (6 options), `quests/1686.xml` (2 options) |
@@ -520,7 +522,7 @@ When the delay expires, the runtime resolves the live player again and sends the
 4. Accept transitions carry `start-eligible`; status changes carry `sync-quest-state`.
 5. `grant-reward` mirrors the selected ordered reward group one-to-one (GOLD/EXP as QUEST_BASE); do not flatten groups.
 6. Quests with drops have a `<drops>` section; quests with work items have give/has/remove and the missing-item rejection branch.
-7. Consecutive duplicate actions (repeated refresh/sync/show-quest-selection-dialog) are an error unless the old logic explicitly required both.
+7. Consecutive duplicate actions (repeated refresh/sync/`SHOW_SELECTION_PAGE`) are an error unless the old logic explicitly required both.
 8. Reward settlement uses a valid `npc-complete` block or ends with `source="reward" target="complete"` + `complete-quest` + `refresh-player-stats` + `sync COMPLETION`, followed by the correct NPC/interaction-object window policy.
 9. Start conditions retain AND-within-group and OR-between-groups. Quest interaction objects use catalog route/drop indices; `ChestAI2` chests remain in the chest/instance-drop domain.
 

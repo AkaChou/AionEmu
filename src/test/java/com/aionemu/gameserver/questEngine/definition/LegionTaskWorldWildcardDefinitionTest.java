@@ -39,7 +39,7 @@ class LegionTaskWorldWildcardDefinitionTest {
 
 	@Test
 	void bothLegionTaskWorldQuestsCompileFromProductionXml() {
-		// 与同族已注册任务 17012 完全同构（dialog-ids 展开后条数一致）。
+		// 与同族已注册任务 17012 完全同构（typed actions 展开后条数一致）。
 		int siblingTransitions = compile(17012).definition().transitions().size();
 		for (int questId : QUEST_IDS) {
 			CompiledQuestDefinition definition = compile(questId);

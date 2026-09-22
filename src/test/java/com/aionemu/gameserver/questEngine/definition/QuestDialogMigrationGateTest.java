@@ -23,13 +23,18 @@ class QuestDialogMigrationGateTest {
 		Pattern.compile("<talk-to-npc\\b"),
 		Pattern.compile("<quest-dialog\\b"),
 		Pattern.compile("<show-quest-dialog\\b"),
-		Pattern.compile("<show-quest-selection-dialog\\b"));
+		Pattern.compile("<show-quest-selection-dialog\\b"),
+		Pattern.compile("\\b(?:start-dialog-id|preview-dialog-ids|dialog-ids)\\s*="));
+
+	@Test
+	void legacyQuestDialogEnumStaysDeleted() {
+		assertFalse(Files.exists(LEGACY_ENUM), () -> LEGACY_ENUM + " must not be restored");
+	}
 
 	@Test
 	void productionSourcesDoNotUseTheLegacyQuestDialogEnum() throws Exception {
 		try (Stream<Path> paths = Files.walk(Path.of("src/main/java"))) {
-			(paths.filter(path -> path.toString().endsWith(".java"))
-				.filter(path -> !path.equals(LEGACY_ENUM))).forEach(path -> {
+			paths.filter(path -> path.toString().endsWith(".java")).forEach(path -> {
 				String source = read(path);
 				assertFalse(source.contains("questEngine.model.QuestDialog"),
 					() -> path + " imports the legacy QuestDialog enum");
@@ -41,8 +46,11 @@ class QuestDialogMigrationGateTest {
 
 	@Test
 	void productionQuestXmlUsesTypedDialogActionsAndPages() throws Exception {
-		try (Stream<Path> paths = Files.walk(Path.of("src/main/resources/aion/data/static_data/quest_definition/quests"))) {
-			paths.filter(path -> path.toString().endsWith(".xml")).forEach(path -> {
+		try (Stream<Path> paths = Files.walk(Path.of("src/main/resources/aion/data/static_data/quest_definition"))) {
+			paths.filter(path -> {
+				String name = path.toString();
+				return name.endsWith(".xml") || name.endsWith(".xsd");
+			}).forEach(path -> {
 				String source = read(path);
 				for (Pattern pattern : LEGACY_QUEST_XML_SYNTAX) {
 					assertFalse(pattern.matcher(source).find(),
@@ -50,6 +58,13 @@ class QuestDialogMigrationGateTest {
 				}
 			});
 		}
+	}
+
+	@Test
+	void dialogEnumGeneratorDoesNotScanLegacySyntax() {
+		Path generator = Path.of(".agents/summary/quest/generate_quest_dialog_enums.py");
+		assertFalse(LEGACY_QUEST_XML_SYNTAX.stream().anyMatch(pattern -> pattern.matcher(read(generator)).find()),
+			() -> generator + " scans legacy quest-dialog syntax");
 	}
 
 	private static String read(Path path) {

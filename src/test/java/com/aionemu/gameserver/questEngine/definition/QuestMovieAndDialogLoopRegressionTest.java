@@ -376,8 +376,7 @@ class QuestMovieAndDialogLoopRegressionTest {
 				QuestDefinition definition = compiled.get().definition();
 				for (int index = 0; index < blocks.getLength(); index++) {
 					Element block = (Element) blocks.item(index);
-					boolean previewed = block.getElementsByTagName("preview").getLength() > 0
-						|| !block.getAttribute("preview-dialog-ids").isBlank();
+					boolean previewed = block.getElementsByTagName("preview").getLength() > 0;
 					if (!previewed) {
 						continue;
 					}

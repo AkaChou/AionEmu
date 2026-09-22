@@ -155,13 +155,15 @@ class QuestDialogXmlSyntaxTest {
 	}
 
 	@Test
-	void legacyDialogTagsRemainReadable() {
-		QuestDefinition definition = parse("""
-			<transition source="unaccepted" target="unaccepted"><event><dialog type="TALK_TO_NPC" npc-id="203758" action="QUEST_REFUSE_1"/></event><after-commit><dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/></after-commit></transition>
-		""");
-		assertEquals(new QuestEvent.TalkToNpc(203758, 1003), definition.transitions().getFirst().event());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1003)),
-			definition.transitions().getFirst().afterCommit());
+	void legacyDialogTagsAreRejected() {
+		assertCode("INVALID_XML",
+			"<transition source=\"unaccepted\" target=\"unaccepted\"><event><talk-to-npc npc-id=\"203758\" action=\"QUEST_SELECT\"/></event></transition>");
+		assertCode("INVALID_XML",
+			"<transition source=\"unaccepted\" target=\"unaccepted\"><event><quest-dialog action=\"QUEST_SELECT\"/></event></transition>");
+		assertCode("INVALID_XML",
+			"<transition source=\"unaccepted\" target=\"unaccepted\"><event><dialog type=\"QUEST_ACTION\" action=\"FINISH_DIALOG\"/></event><after-commit><show-quest-dialog page=\"SELECT1\"/></after-commit></transition>");
+		assertCode("INVALID_XML",
+			"<transition source=\"unaccepted\" target=\"unaccepted\"><event><dialog type=\"QUEST_ACTION\" action=\"FINISH_DIALOG\"/></event><after-commit><show-quest-selection-dialog page=\"SELECT_QUEST\"/></after-commit></transition>");
 	}
 
 	private static void assertCode(String expected, String transitions) {

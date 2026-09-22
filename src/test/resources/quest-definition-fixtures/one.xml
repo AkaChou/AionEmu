@@ -6,7 +6,7 @@
   </nodes>
   <transitions>
     <transition source="start" target="start">
-      <event><talk-to-npc npc-id="700001"/></event>
+      <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
     </transition>
   </transitions>
 </quest-definition>

@@ -9,6 +9,6 @@
   </nodes>
   <transitions>
     <transition source="unaccepted" target="item-used"><event><use-item item-id="182200501"/></event><actions><set-variable field="var0" value="1"/></actions></transition>
-    <transition source="item-used" target="reward-npc"><event><talk-to-npc npc-id="203075"/></event><conditions><status-is status="START"/><variable-is field="var0" value="1"/></conditions><actions><set-status status="REWARD"/></actions></transition>
+    <transition source="item-used" target="reward-npc"><event><dialog type="TALK_TO_NPC" npc-id="203075"/></event><conditions><status-is status="START"/><variable-is field="var0" value="1"/></conditions><actions><set-status status="REWARD"/></actions></transition>
   </transitions>
 </quest-definition>

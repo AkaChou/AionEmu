@@ -19,10 +19,10 @@
   </nodes>
   <transitions>
     <transition source="unaccepted" target="started">
-      <event><talk-to-npc npc-id="203075"/></event>
+      <event><dialog type="TALK_TO_NPC" npc-id="203075"/></event>
     </transition>
     <transition source="started" target="feira-spoken">
-      <event><talk-to-npc npc-id="203072"/></event>
+      <event><dialog type="TALK_TO_NPC" npc-id="203072"/></event>
       <conditions>
         <status-is status="START"/>
         <variable-is field="var0" value="0"/>
@@ -30,7 +30,7 @@
       <actions><set-variable field="var0" value="1"/></actions>
     </transition>
     <transition source="feira-spoken" target="reward">
-      <event><talk-to-npc npc-id="203058"/></event>
+      <event><dialog type="TALK_TO_NPC" npc-id="203058"/></event>
       <conditions>
         <status-is status="START"/>
         <variable-is field="var0" value="1"/>

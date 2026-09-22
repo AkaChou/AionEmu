@@ -46,12 +46,12 @@ class QuestXmlDomainBlocksTest {
 	}
 
 	@Test
-	void npcStartHonorsExplicitStartDialogId() {
-		// 部分 quest (如 luna 80875/80876) 客户端 html 只有 page 4762, 旧版 start_dialog_id 即 4762。
+	void npcStartHonorsExplicitStartPage() {
+		// 部分 quest (如 luna 80875/80876) 客户端 html 只有 page 4762。
 		// npc-start 必须能显式指定, 否则下发默认 1011 会让客户端找不到页面 (load fail)。
 		String block = """
 			<npc-start npc-id="834166" source="unaccepted" target="started"
-			    selection-sources="unaccepted started" start-dialog-id="4762"/>
+			    selection-sources="unaccepted started" start-page="SELECT_NONE"/>
 			""";
 		String expanded = """
 			<transition source="unaccepted" target="unaccepted"><event><dialog type="TALK_TO_NPC" npc-id="834166" action="QUEST_SELECT"/></event><after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/></after-commit></transition>
@@ -226,10 +226,11 @@ class QuestXmlDomainBlocksTest {
 		String block = """
 			<npc-complete npc-id="203123" source="reward" target="complete"
 			    fixed-reward-indices="0 1" complete-reward-index="0"
-			    preview-dialog-ids="-1 1009" finish="SELECTION_DIALOG">
-			  <choice dialog-id="8" reward-index="2"/>
-			  <choice dialog-id="9" reward-index="3"/>
-			  <fallback dialog-ids="23"/>
+			    finish="SELECTION_DIALOG">
+			  <choice actions="SELECTED_QUEST_REWARD1" reward-index="2"/>
+			  <choice actions="SELECTED_QUEST_REWARD2" reward-index="3"/>
+			  <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+			  <fallback actions="SELECTED_QUEST_NOREWARD"/>
 			</npc-complete>
 			""";
 		String fixed = """
@@ -376,8 +377,8 @@ class QuestXmlDomainBlocksTest {
 					  </metadata>
 					  <nodes><node label="reward" status="REWARD"/><node label="complete" status="COMPLETE"/></nodes>
 					  <transitions><npc-complete npc-id="203123" source="reward" target="complete"
-					      fixed-reward-indices="0" dialog-ids="8" complete-reward-index="1"
-					      preview-dialog-ids="1009" finish="CLOSE_DIALOG"/></transitions>
+					      fixed-reward-indices="0" actions="SELECTED_QUEST_REWARD1" complete-reward-index="1"
+					      finish="CLOSE_DIALOG"><preview actions="SELECT_QUEST_REWARD"/></npc-complete></transitions>
 					</quest-definition>
 
 			""";
@@ -397,7 +398,8 @@ class QuestXmlDomainBlocksTest {
 					  <metadata name="rewardless-complete" display-name-id="1" min-level="0" max-level="99" category="QUEST"/>
 					  <nodes><node label="reward" status="REWARD"/><node label="complete" status="COMPLETE"/></nodes>
 					  <transitions><npc-complete npc-id="203123" source="reward" target="complete"
-					      dialog-ids="8" complete-reward-index="0" preview-dialog-ids="1009" finish="CLOSE_DIALOG"/></transitions>
+					      actions="SELECTED_QUEST_REWARD1" complete-reward-index="0"
+					      finish="CLOSE_DIALOG"><preview actions="SELECT_QUEST_REWARD"/></npc-complete></transitions>
 					</quest-definition>
 
 			""";
@@ -487,7 +489,8 @@ class QuestXmlDomainBlocksTest {
 					    <npc-start npc-id="203110" source="unaccepted" target="started" selection-sources="unaccepted started"/>
 					    <transition source="started" target="reward"><event><dialog type="TALK_TO_NPC" npc-id="203120" action="SELECT_QUEST_REWARD"/></event></transition>
 					    <npc-complete npc-id="203123" source="reward" target="complete" fixed-reward-indices="0"
-					        dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="NONE"/>
+					        actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0"
+					        finish="NONE"><preview actions="USE_OBJECT SELECT_QUEST_REWARD"/></npc-complete>
 					  </transitions>
 					</quest-definition>
 
@@ -582,7 +585,7 @@ class QuestXmlDomainBlocksTest {
 	void npcReportSupportsRewardStatePreparedBeforeTheDialog() {
 		String preparation = "<transition source=\"started\" target=\"reward\"><event><kill-npc npc-id=\"210001\"/></event></transition>";
 		String block = preparation
-			+ "<npc-report npc-id=\"203941\" source=\"reward\" target=\"reward\" page=\"10002\"/>";
+			+ "<npc-report npc-id=\"203941\" source=\"reward\" target=\"reward\" page=\"DEFAULT_SUCCESS\"/>";
 		String expanded = """
 			%s
 			<transition source="reward" target="reward"><event><dialog type="TALK_TO_NPC" npc-id="203941" action="QUEST_SELECT"/></event><after-commit><dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/></after-commit></transition>
@@ -595,7 +598,7 @@ class QuestXmlDomainBlocksTest {
 	@Test
 	void npcReportSuppressesRoutesOverriddenByExplicitTransitions() {
 		String transitions = """
-			<npc-report npc-id="203941" source="started" target="reward" page="1352"/>
+			<npc-report npc-id="203941" source="started" target="reward" page="SELECT2"/>
 			<transition source="started" target="reward">
 			  <event><dialog type="TALK_TO_NPC" npc-id="203941" action="SELECT_QUEST_REWARD"/></event>
 			  <after-commit><dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/></after-commit>
@@ -612,8 +615,8 @@ class QuestXmlDomainBlocksTest {
 	@Test
 	void npcReportRejectsInvalidPagesAndStatuses() {
 		String valid = reportDefinition(
-			"<npc-report npc-id=\"203941\" source=\"started\" target=\"reward\" page=\"1352\"/>");
-		assertCode("NPC_REPORT_INVALID_PAGE", valid.replace("page=\"1352\"", "page=\"2716\""));
+			"<npc-report npc-id=\"203941\" source=\"started\" target=\"reward\" page=\"SELECT2\"/>");
+		assertCode("NPC_REPORT_INVALID_PAGE", valid.replace("page=\"SELECT2\"", "page=\"SELECT6\""));
 		assertCode("NPC_REPORT_SOURCE_STATUS", valid.replace("label=\"started\" status=\"START\"",
 			"label=\"started\" status=\"COMPLETE\""));
 		assertCode("NPC_REPORT_TARGET_STATUS", valid.replace("label=\"reward\" status=\"REWARD\"",
@@ -751,7 +754,7 @@ class QuestXmlDomainBlocksTest {
 					  <transitions>
 					    <kill-routes source="started" target="k1" npc-ids="215468 215469"/>
 					    <transition source="k1" target="reward"><event><dialog type="TALK_TO_NPC" npc-id="203941" action="SELECT_QUEST_REWARD"/></event></transition>
-					    <npc-report npc-id="203941" source="started" target="reward" page="1352"/>
+					    <npc-report npc-id="203941" source="started" target="reward" page="SELECT2"/>
 					  </transitions>
 					</quest-definition>
 
@@ -768,8 +771,9 @@ class QuestXmlDomainBlocksTest {
 		String valid = completionDefinition("""
 			<npc-complete npc-id="203123" source="reward" target="complete"
 			    fixed-reward-indices="0 1" complete-reward-index="0"
-			    preview-dialog-ids="-1 1009" finish="NONE">
-			  <choice dialog-id="8" reward-index="2"/>
+			    finish="NONE">
+			  <choice actions="SELECTED_QUEST_REWARD1" reward-index="2"/>
+			  <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
 			</npc-complete>
 			""");
 		assertCode("NPC_COMPLETE_REWARD_INDEX_OUT_OF_RANGE",
@@ -779,7 +783,8 @@ class QuestXmlDomainBlocksTest {
 		assertCode("NPC_COMPLETE_CHOICE_REWARD_TYPE",
 			valid.replace("reward-index=\"2\"", "reward-index=\"1\""));
 		assertCode("NPC_COMPLETE_DUPLICATE_DIALOG_ID",
-			valid.replace("preview-dialog-ids=\"-1 1009\"", "preview-dialog-ids=\"-1 8\""));
+			valid.replace("<preview actions=\"USE_OBJECT SELECT_QUEST_REWARD\"/>",
+				"<preview actions=\"USE_OBJECT SELECTED_QUEST_REWARD1\"/>"));
 		assertCode("NPC_COMPLETE_INVALID_COMPLETE_REWARD_INDEX",
 			valid.replace("complete-reward-index=\"0\"", "complete-reward-index=\"-1\""));
 		assertCode("NPC_COMPLETE_SOURCE_STATUS",
@@ -796,7 +801,7 @@ class QuestXmlDomainBlocksTest {
 	}
 
 	@Test
-	void npcCompleteRejectsLegacyAndTypedDialogAttributeConflicts() {
+	void npcCompleteRejectsLegacyDialogAttributesAndTypedConflicts() {
 		String typed = completionDefinition("""
 			<npc-complete npc-id="203123" source="reward" target="complete"
 			    fixed-reward-indices="0 1"
@@ -805,10 +810,10 @@ class QuestXmlDomainBlocksTest {
 			  <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
 			</npc-complete>
 			""");
-		assertCode("DIALOG_LEGACY_ATTRIBUTE_CONFLICT", typed.replace(
+		assertCode("INVALID_XML", typed.replace(
 			"actions=\"SELECTED_QUEST_REWARD1\"",
 			"dialog-ids=\"8\" actions=\"SELECTED_QUEST_REWARD1\""));
-		assertCode("DIALOG_LEGACY_ATTRIBUTE_CONFLICT", typed.replace(
+		assertCode("INVALID_XML", typed.replace(
 			"complete-reward-index=\"0\"",
 			"preview-dialog-ids=\"-1 1009\" complete-reward-index=\"0\""));
 		assertCode("DIALOG_ACTION_ATTRIBUTE_CONFLICT", typed.replace(
@@ -821,7 +826,7 @@ class QuestXmlDomainBlocksTest {
 			"<preview actions=\"USE_OBJECT SELECT_QUEST_REWARD\"/>",
 			"<choice dialog-id=\"8\" action=\"SELECTED_QUEST_REWARD1\" reward-index=\"2\"/>\n"
 				+ "  <preview actions=\"USE_OBJECT SELECT_QUEST_REWARD\"/>");
-		assertCode("DIALOG_LEGACY_ATTRIBUTE_CONFLICT", choice);
+		assertCode("INVALID_XML", choice);
 
 		String fallback = typed.replace(
 			"actions=\"SELECTED_QUEST_REWARD1\"",
@@ -829,7 +834,7 @@ class QuestXmlDomainBlocksTest {
 			"<preview actions=\"USE_OBJECT SELECT_QUEST_REWARD\"/>",
 			"<preview actions=\"USE_OBJECT SELECT_QUEST_REWARD\"/>\n"
 				+ "  <fallback dialog-ids=\"8\" actions=\"SELECTED_QUEST_REWARD1\"/>");
-		assertCode("DIALOG_LEGACY_ATTRIBUTE_CONFLICT", fallback);
+		assertCode("INVALID_XML", fallback);
 		assertCode("INVALID_DIALOG_ACTION_RANGE", typed.replace(
 			"SELECTED_QUEST_REWARD1\"", "SELECTED_QUEST_REWARD3..SELECTED_QUEST_REWARD1\""));
 	}
@@ -839,7 +844,7 @@ class QuestXmlDomainBlocksTest {
 		String block = """
 			<npc-dialog source="started"
 			    npc-ids="203097 799093"
-			    dialog-ids="31">
+			    action="QUEST_SELECT">
 			  <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
 			</npc-dialog>
 			""";
@@ -853,9 +858,9 @@ class QuestXmlDomainBlocksTest {
 	}
 
 	@Test
-	void npcDialogSupportsAllThreeResponsesAndDialogIdForms() {
+	void npcDialogSupportsAllThreeResponsesAndActionForms() {
 		CompiledQuestDefinition definition = compile(npcDialogDefinition("""
-			<npc-dialog source="started" npc-ids="203097 799093" dialog-ids="31">
+			<npc-dialog source="started" npc-ids="203097 799093" action="QUEST_SELECT">
 			  <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
 			</npc-dialog>
 			"""));
@@ -871,24 +876,26 @@ class QuestXmlDomainBlocksTest {
 				&& transition.actions().isEmpty()));
 
 		CompiledQuestDefinition selection = compile(npcDialogDefinition("""
-			<npc-dialog source="started" npc-ids="203097 799093" dialog-ids="31,32">
+			<npc-dialog source="started" npc-ids="203097 799093"
+			    actions="QUEST_SELECT CHECK_USER_HAS_QUEST_ITEM">
 			  <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
 			</npc-dialog>
 			"""));
-		assertEquals(List.of(new QuestEvent.TalkToNpc(203097, 31), new QuestEvent.TalkToNpc(203097, 32),
-			new QuestEvent.TalkToNpc(799093, 31), new QuestEvent.TalkToNpc(799093, 32)),
+		assertEquals(List.of(new QuestEvent.TalkToNpc(203097, 31), new QuestEvent.TalkToNpc(203097, 39),
+			new QuestEvent.TalkToNpc(799093, 31), new QuestEvent.TalkToNpc(799093, 39)),
 			selection.definition().transitions().stream().map(QuestTransition::event).toList());
 		assertTrue(selection.definition().transitions().stream().allMatch(transition ->
 			transition.afterCommit().equals(List.of(new AfterCommitAction.ShowQuestSelectionDialog(10)))));
 
 		CompiledQuestDefinition close = compile(npcDialogDefinition("""
-			<npc-dialog source="started" npc-ids="203097 799093" dialog-ids="1..3">
+			<npc-dialog source="started" npc-ids="203097 799093"
+			    actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_REWARD3">
 			  <close-dialog/>
 			</npc-dialog>
-			"""));
-		assertEquals(List.of(new QuestEvent.TalkToNpc(203097, 1), new QuestEvent.TalkToNpc(203097, 2),
-			new QuestEvent.TalkToNpc(203097, 3), new QuestEvent.TalkToNpc(799093, 1),
-			new QuestEvent.TalkToNpc(799093, 2), new QuestEvent.TalkToNpc(799093, 3)),
+		"""));
+		assertEquals(List.of(new QuestEvent.TalkToNpc(203097, 8), new QuestEvent.TalkToNpc(203097, 9),
+			new QuestEvent.TalkToNpc(203097, 10), new QuestEvent.TalkToNpc(799093, 8),
+			new QuestEvent.TalkToNpc(799093, 9), new QuestEvent.TalkToNpc(799093, 10)),
 			close.definition().transitions().stream().map(QuestTransition::event).toList());
 		assertTrue(close.definition().transitions().stream().allMatch(transition ->
 			transition.afterCommit().equals(List.of(new AfterCommitAction.CloseDialog()))));
@@ -905,10 +912,10 @@ class QuestXmlDomainBlocksTest {
 			  </nodes>
 			  <transitions>
 			    <transition source="started" target="started"><event><dialog type="TALK_TO_NPC" npc-id="203097" action="SELECTED_QUEST_REWARD2"/></event></transition>
-			    <npc-dialog source="started" npc-ids="203097 799093" dialog-ids="31">
+			    <npc-dialog source="started" npc-ids="203097 799093" action="QUEST_SELECT">
 			      <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
 			    </npc-dialog>
-			    <npc-report npc-id="800001" source="started" target="reward" page="1352"/>
+			    <npc-report npc-id="800001" source="started" target="reward" page="SELECT2"/>
 			  </transitions>
 			</quest-definition>
 			""";
@@ -928,7 +935,7 @@ class QuestXmlDomainBlocksTest {
 	@Test
 	void npcDialogRejectsInvalidStructureAndContent() {
 		String valid = npcDialogDefinition("""
-			<npc-dialog source="started" npc-ids="203097 799093" dialog-ids="31">
+			<npc-dialog source="started" npc-ids="203097 799093" action="QUEST_SELECT">
 			  <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
 			</npc-dialog>
 			""");
@@ -938,29 +945,38 @@ class QuestXmlDomainBlocksTest {
 		assertCode("XML_BLOCK_INVALID_INTEGER_SET", valid.replace("npc-ids=\"203097 799093\"", "npc-ids=\"203097 x\""));
 		assertCode("XML_BLOCK_INVALID_POSITIVE_INTEGER", valid.replace("npc-ids=\"203097 799093\"", "npc-ids=\"203097 0\""));
 		assertCode("XML_BLOCK_INVALID_POSITIVE_INTEGER", valid.replace("npc-ids=\"203097 799093\"", "npc-ids=\"203097 -1\""));
-		assertCode("INVALID_DIALOG_ID_RANGE", valid.replace("dialog-ids=\"31\"", "dialog-ids=\"10..8\""));
-		assertCode("DUPLICATE_DIALOG_ID", valid.replace("dialog-ids=\"31\"", "dialog-ids=\"31 31\""));
-		assertCode("INVALID_DIALOG_ID_SET", valid.replace("dialog-ids=\"31\"", "dialog-ids=\"x\""));
-		assertCode("TOO_MANY_DIALOG_IDS", valid.replace("dialog-ids=\"31\"", "dialog-ids=\"1..256 257\""));
-		assertCode("MISSING_ATTRIBUTE", valid.replace("dialog-ids=\"31\"", "dialog-ids=\"\""));
+		assertCode("INVALID_DIALOG_ACTION_RANGE",
+			valid.replace("action=\"QUEST_SELECT\"", "actions=\"QUEST_REFUSE_2..QUEST_REFUSE_1\""));
+		assertCode("DUPLICATE_DIALOG_ACTION",
+			valid.replace("action=\"QUEST_SELECT\"", "actions=\"QUEST_SELECT QUEST_SELECT\""));
+		assertCode("UNKNOWN_DIALOG_ACTION", valid.replace("action=\"QUEST_SELECT\"", "action=\"NOT_AN_ACTION\""));
+		assertCode("INVALID_DIALOG_ACTION_RANGE", valid.replace("action=\"QUEST_SELECT\"",
+			"actions=\"SELECTED_QUEST_REWARD1..SELECT_NONE_1\""));
+		assertCode("DIALOG_ACTION_REQUIRED", valid.replace("action=\"QUEST_SELECT\"", ""));
+		assertCode("DIALOG_ACTION_REQUIRED", valid.replace("action=\"QUEST_SELECT\"", "action=\"\""));
+		assertCode("DIALOG_ACTION_ATTRIBUTE_CONFLICT", valid.replace("action=\"QUEST_SELECT\"",
+			"action=\"QUEST_SELECT\" actions=\"QUEST_REFUSE_1\""));
 		assertCode("INVALID_XML", valid.replace("source=\"started\" ", ""));
 		assertCode("INVALID_XML", valid.replace("npc-ids=\"203097 799093\" ", ""));
-		assertCode("INVALID_XML", valid.replace("dialog-ids=\"31\"", ""));
+		assertCode("INVALID_XML", valid.replace("action=\"QUEST_SELECT\"",
+			"action=\"QUEST_SELECT\" arbitrary=\"x\""));
 		assertCode("INVALID_XML", valid.replace("<dialog type=\"SHOW_QUEST_PAGE\" page=\"SELECT2\"/>", ""));
 		assertCode("INVALID_XML", valid.replace("<dialog type=\"SHOW_QUEST_PAGE\" page=\"SELECT2\"/>", "<show-quest-dialog/>"));
-		assertCode("NPC_DIALOG_RESPONSE_INVALID", valid.replace("dialog-id=\"1352\"", "dialog-id=\"-1\""));
+		assertCode("NPC_DIALOG_RESPONSE_INVALID", valid.replace("page=\"SELECT2\"", "page=\"NOT_A_PAGE\""));
 		assertCode("INVALID_XML", valid.replace("<dialog type=\"SHOW_QUEST_PAGE\" page=\"SELECT2\"/>",
 			"<dialog type=\"SHOW_QUEST_PAGE\" page=\"SELECT2\"/><close-dialog/>"));
 		assertCode("INVALID_XML", valid.replace("<dialog type=\"SHOW_QUEST_PAGE\" page=\"SELECT2\"/>",
 			"<show-dialog-window dialog-id=\"1352\"/>"));
 		assertCode("INVALID_XML", valid.replace("<dialog type=\"SHOW_QUEST_PAGE\" page=\"SELECT2\"/>",
 			"<sync-quest-state mode=\"PACKET_ONLY\"/>"));
+		assertCode("INVALID_XML", valid.replace("<dialog type=\"SHOW_QUEST_PAGE\" page=\"SELECT2\"/>",
+			"<dialog type=\"SHOW_QUEST_PAGE\" page=\"SELECT2\" arbitrary=\"x\"/>"));
 	}
 
 	@Test
 	void npcDialogRejectsForbiddenAttributesAndNestedWrappers() {
 		String valid = npcDialogDefinition("""
-			<npc-dialog source="started" npc-ids="203097 799093" dialog-ids="31">
+			<npc-dialog source="started" npc-ids="203097 799093" action="QUEST_SELECT">
 			  <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
 			</npc-dialog>
 			""");
@@ -969,11 +985,14 @@ class QuestXmlDomainBlocksTest {
 		assertCode("INVALID_XML", valid.replace("npc-ids=\"203097 799093\"", "npc-ids=\"203097 799093\" target=\"started\""));
 		assertCode("INVALID_XML", valid.replace("npc-ids=\"203097 799093\"", "npc-ids=\"203097 799093\" priority=\"1\""));
 		assertCode("INVALID_XML", valid.replace("npc-ids=\"203097 799093\"", "npc-ids=\"203097 799093\" conditions=\"x\""));
-		assertCode("INVALID_XML", valid.replace("npc-ids=\"203097 799093\"", "npc-ids=\"203097 799093\" actions=\"x\""));
+		assertCode("DIALOG_ACTION_ATTRIBUTE_CONFLICT", valid.replace("npc-ids=\"203097 799093\"",
+			"npc-ids=\"203097 799093\" actions=\"QUEST_REFUSE_1\""));
 		assertCode("INVALID_XML", valid.replace("</npc-dialog>", "<conditions/></npc-dialog>"));
 		assertCode("INVALID_XML", valid.replace("</npc-dialog>", "<actions/></npc-dialog>"));
-		assertCode("INVALID_XML", valid.replace("dialog-ids=\"31\"", "dialog-ids=\"31\" arbitrary=\"x\""));
-		assertCode("INVALID_XML", valid.replace("dialog-id=\"1352\"", "dialog-id=\"1352\" arbitrary=\"x\""));
+		assertCode("INVALID_XML", valid.replace("action=\"QUEST_SELECT\"",
+			"action=\"QUEST_SELECT\" arbitrary=\"x\""));
+		assertCode("INVALID_XML", valid.replace("<dialog type=\"SHOW_QUEST_PAGE\" page=\"SELECT2\"/>",
+			"<dialog type=\"SHOW_QUEST_PAGE\" page=\"SELECT2\" arbitrary=\"x\"/>"));
 	}
 
 	private static String npcDialogDefinition(String transitions) {
@@ -991,7 +1010,9 @@ class QuestXmlDomainBlocksTest {
 	private static QuestTransition completionTransition(String finish) {
 		CompiledQuestDefinition definition = compile(completionDefinition("""
 			<npc-complete npc-id="203123" source="reward" target="complete" fixed-reward-indices="0"
-			    dialog-ids="8" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="%s"/>
+			    actions="SELECTED_QUEST_REWARD1" complete-reward-index="0" finish="%s">
+			  <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+			</npc-complete>
 			""".formatted(finish)));
 		return definition.definition().transitions().stream()
 			.filter(t -> t.targetNode().equals("complete")).findFirst().orElseThrow();

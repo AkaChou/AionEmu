@@ -116,7 +116,7 @@ class MonsterHuntFamilyDefinitionTest {
 			new QuestAction.CompleteQuest(0))));
 
 		CompiledQuestDefinition fishing = definition("1112.xml");
-		// dialog-ids="8..23" expands to sixteen identical completion routes.
+		// The typed reward-action range expands to sixteen identical completion routes.
 		List<List<QuestAction>> fishingCompletions = completionActions(fishing);
 		assertEquals(16, fishingCompletions.size());
 		List<QuestAction> expectedFishing = List.of(

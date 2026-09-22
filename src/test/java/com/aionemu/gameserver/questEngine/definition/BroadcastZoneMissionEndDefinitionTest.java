@@ -86,7 +86,8 @@ class BroadcastZoneMissionEndDefinitionTest {
 + "    <node label=\"reward\" status=\"REWARD\"><var name=\"var0\" value=\"1\"/></node>\n"
 + "    <node label=\"complete\" status=\"COMPLETE\"><var name=\"var0\" value=\"0\"/></node>\n"
 + "  </nodes>\n"
-+ "  <transitions><npc-complete npc-id=\"203057\" source=\"reward\" target=\"complete\" dialog-ids=\"8\" preview-dialog-ids=\"-1 1009\" complete-reward-index=\"0\" finish=\"SELECTION_DIALOG\">\n"
++ "  <transitions><npc-complete npc-id=\"203057\" source=\"reward\" target=\"complete\" actions=\"SELECTED_QUEST_REWARD1\" complete-reward-index=\"0\" finish=\"SELECTION_DIALOG\">\n"
++ "    <preview actions=\"USE_OBJECT SELECT_QUEST_REWARD\"/>\n"
 + "    <after-commit><broadcast-zone-mission-end quest-ids=\"10521 10522\"/></after-commit>\n"
 + "  </npc-complete></transitions>\n"
 + "</quest-definition>\n").getBytes(java.nio.charset.StandardCharsets.UTF_8)));
@@ -115,7 +116,8 @@ class BroadcastZoneMissionEndDefinitionTest {
 + "    <node label=\"reward\" status=\"REWARD\"><var name=\"var0\" value=\"1\"/></node>\n"
 + "    <node label=\"complete\" status=\"COMPLETE\"><var name=\"var0\" value=\"0\"/></node>\n"
 + "  </nodes>\n"
-+ "  <transitions><npc-complete npc-id=\"203057\" source=\"reward\" target=\"complete\" dialog-ids=\"8\" preview-dialog-ids=\"-1 1009\" complete-reward-index=\"0\" finish=\"NONE\">\n"
++ "  <transitions><npc-complete npc-id=\"203057\" source=\"reward\" target=\"complete\" actions=\"SELECTED_QUEST_REWARD1\" complete-reward-index=\"0\" finish=\"NONE\">\n"
++ "    <preview actions=\"USE_OBJECT SELECT_QUEST_REWARD\"/>\n"
 + "    <after-commit><broadcast-zone-mission-end quest-ids=\"not-a-quest-id\"/></after-commit>\n"
 + "  </npc-complete></transitions>\n"
 + "</quest-definition>\n").getBytes(java.nio.charset.StandardCharsets.UTF_8))));

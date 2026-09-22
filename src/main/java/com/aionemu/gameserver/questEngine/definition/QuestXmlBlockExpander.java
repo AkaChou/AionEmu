@@ -411,29 +411,24 @@ final class QuestXmlBlockExpander {
 					"duplicate NPC id " + npcId);
 			}
 		}
-		List<Integer> dialogIds = QuestDefinitionXmlCompiler.dialogIds(block, "dialog-ids");
+		List<QuestDialogAction> dialogActions = QuestDefinitionXmlCompiler.dialogActions(block);
 		List<Element> responses = children(block, null);
 		if (responses.size() != 1) {
 			return fail("NPC_DIALOG_RESPONSE_COUNT", context, "npc-dialog", "element",
 				"exactly one response child is required, found " + responses.size());
 		}
 		Element response = responses.getFirst();
-		String responseTag = response.getTagName();
-		if (!Set.of("show-quest-dialog", "show-quest-selection-dialog", "close-dialog").contains(responseTag)) {
-			return fail("NPC_DIALOG_RESPONSE_INVALID", context, "npc-dialog", responseTag,
-				"must be show-quest-dialog, show-quest-selection-dialog, or close-dialog");
-		}
 		AfterCommitAction afterCommit;
 		try {
 			afterCommit = QuestDefinitionXmlCompiler.parseAfterCommitAction(response);
 		} catch (RuntimeException e) {
-			return fail("NPC_DIALOG_RESPONSE_INVALID", context, "npc-dialog", responseTag,
-				responseTag + ": " + e.getMessage());
+			return fail("NPC_DIALOG_RESPONSE_INVALID", context, "npc-dialog", response.getTagName(),
+				response.getTagName() + ": " + e.getMessage());
 		}
-		List<QuestTransition> result = new ArrayList<>(npcIds.size() * dialogIds.size());
+		List<QuestTransition> result = new ArrayList<>(npcIds.size() * dialogActions.size());
 		for (int npcId : npcIds) {
-			for (int dialogId : dialogIds) {
-				result.add(new QuestTransition(new QuestEvent.TalkToNpc(npcId, dialogId), List.of(), List.of(),
+			for (QuestDialogAction action : dialogActions) {
+				result.add(new QuestTransition(new QuestEvent.TalkToNpc(npcId, action.id()), List.of(), List.of(),
 					source, List.of(afterCommit), null, source));
 			}
 		}
@@ -562,22 +557,13 @@ final class QuestXmlBlockExpander {
 				"node " + target + " must project START");
 		}
 		int npcId = positiveInteger(context, block, "npc-start", "npc-id");
-		// NONE 状态首次开启对话时下发的页。默认 1011;部分 quest (如 luna 80875/80876) 旧版
-		// start_dialog_id 为 4762, 客户端只有该页的 html, 必须显式指定才能命中客户端资源。
-		// The page sent when the dialog opens for the first time from NONE state. Default is 1011; some quests
-		// (e.g. luna 80875/80876) used 4762 as legacy start_dialog_id, and the client only has HTML for that page.
-		if (block.hasAttribute("start-page") && block.hasAttribute("start-dialog-id")) {
-			fail("DIALOG_LEGACY_ATTRIBUTE_CONFLICT", context, "dialog", "start-page",
-				"declare start-page or start-dialog-id, not both");
-		}
-		int startDialogId;
-		if (block.hasAttribute("start-page")) {
-			startDialogId = QuestDefinitionXmlCompiler.dialogPageSymbol(block, "start-page").id();
-		} else {
-			String startDialogAttr = attribute(block, "start-dialog-id");
-			startDialogId = startDialogAttr.isBlank() ? QuestDialogPage.SELECT1.id()
-				: positiveInteger(context, block, "npc-start", "start-dialog-id");
-		}
+		// NONE 状态首次开启对话时下发的页。默认 SELECT1；部分 quest（如 luna 80875/80876）
+		// 客户端只有 SELECT_NONE 的 html，必须显式指定才能命中客户端资源。
+		// The page sent when the dialog opens for the first time from NONE state. Default is SELECT1; some quests
+		// (e.g. luna 80875/80876) have HTML only for SELECT_NONE and must declare it explicitly.
+		int startDialogId = block.hasAttribute("start-page")
+			? QuestDefinitionXmlCompiler.dialogPageSymbol(block, "start-page").id()
+			: QuestDialogPage.SELECT1.id();
 		List<String> selectionSources = block.hasAttribute("selection-sources")
 			? tokens(context, block, "npc-start", "selection-sources", true) : List.of();
 		for (String selectionSource : selectionSources) {
@@ -675,9 +661,7 @@ final class QuestXmlBlockExpander {
 				"node " + target + " must project REWARD");
 		}
 		int npcId = positiveInteger(context, block, "npc-report", "npc-id");
-		int page = "dialog".equals(block.getTagName())
-			? QuestDefinitionXmlCompiler.dialogPageSymbol(block, "page").id()
-			: integer(context, block, "npc-report", "page");
+		int page = QuestDefinitionXmlCompiler.dialogPageSymbol(block, "page").id();
 		if (!Set.of(QuestDialogPage.SELECT2.id(), QuestDialogPage.SELECT5.id(),
 			QuestDialogPage.DEFAULT_SUCCESS.id()).contains(page)) {
 			fail("NPC_REPORT_INVALID_PAGE", context, "npc-report", "page",
@@ -1310,14 +1294,8 @@ final class QuestXmlBlockExpander {
 		}
 
 		DialogIds dialogs = new DialogIds(context, "npc-complete");
-		boolean oldPreview = block.hasAttribute("preview-dialog-ids");
 		Element preview = child(block, "preview");
-		if (oldPreview && preview != null) {
-			fail("DIALOG_LEGACY_ATTRIBUTE_CONFLICT", context, "npc-complete", "preview",
-				"declare preview-dialog-ids or preview action/actions, not both");
-		}
-		List<Integer> previewDialogIds = oldPreview ? dialogs.add(block, "preview-dialog-ids")
-			: preview == null ? List.of() : dialogs.addActions(preview, "preview");
+		List<Integer> previewDialogIds = preview == null ? List.of() : dialogs.addActions(preview, "preview");
 		List<AfterCommitAction> extraAfterCommit = new ArrayList<>();
 		Element afterCommitElement = child(block, "after-commit");
 		if (afterCommitElement != null) {
@@ -1331,15 +1309,7 @@ final class QuestXmlBlockExpander {
 			}
 		}
 		List<CompletionRoute> routes = new ArrayList<>();
-		if (block.hasAttribute("dialog-ids") && block.hasAttribute("actions")) {
-			fail("DIALOG_LEGACY_ATTRIBUTE_CONFLICT", context, "npc-complete", "actions",
-				"declare dialog-ids or actions, not both");
-		}
-		if (block.hasAttribute("dialog-ids")) {
-			for (int dialogId : dialogs.add(block, "dialog-ids")) {
-				routes.add(new CompletionRoute(dialogId, null));
-			}
-		} else if (block.hasAttribute("actions")) {
+		if (block.hasAttribute("actions")) {
 			for (int dialogId : dialogs.addActions(block, "actions")) {
 				routes.add(new CompletionRoute(dialogId, null));
 			}
@@ -1351,20 +1321,7 @@ final class QuestXmlBlockExpander {
 				fail("NPC_COMPLETE_CHOICE_REWARD_TYPE", context, "npc-complete", "choice.reward-index",
 					"reward index " + rewardIndex + " is not SELECTABLE_ITEM");
 			}
-			boolean oldChoice = choice.hasAttribute("dialog-id");
-			boolean newChoice = choice.hasAttribute("action") || choice.hasAttribute("actions");
-			if (oldChoice == newChoice) {
-				fail(oldChoice ? "DIALOG_LEGACY_ATTRIBUTE_CONFLICT" : "DIALOG_ACTION_REQUIRED", context,
-					"npc-complete", "choice", "declare dialog-id or action/actions");
-			}
-			List<Integer> choiceDialogIds;
-			if (oldChoice) {
-				int dialogId = integer(context, choice, "npc-complete", "dialog-id");
-				dialogs.addSingle(dialogId, "choice.dialog-id");
-				choiceDialogIds = List.of(dialogId);
-			} else {
-				choiceDialogIds = dialogs.addActions(choice, "choice");
-			}
+			List<Integer> choiceDialogIds = dialogs.addActions(choice, "choice");
 			for (int dialogId : choiceDialogIds) {
 				routes.add(new CompletionRoute(dialogId,
 					rewardAction(context, "choice.reward-index", rewardIndex, reward)));
@@ -1372,21 +1329,14 @@ final class QuestXmlBlockExpander {
 		}
 		Element fallback = child(block, "fallback");
 		if (fallback != null) {
-			boolean oldFallback = fallback.hasAttribute("dialog-ids");
-			boolean newFallback = fallback.hasAttribute("action") || fallback.hasAttribute("actions");
-			if (oldFallback == newFallback) {
-				fail(oldFallback ? "DIALOG_LEGACY_ATTRIBUTE_CONFLICT" : "DIALOG_ACTION_REQUIRED", context,
-					"npc-complete", "fallback", "declare dialog-ids or action/actions");
-			}
-			List<Integer> fallbackIds = oldFallback ? dialogs.add(fallback, "dialog-ids")
-				: dialogs.addActions(fallback, "fallback");
+			List<Integer> fallbackIds = dialogs.addActions(fallback, "fallback");
 			for (int dialogId : fallbackIds) {
 				routes.add(new CompletionRoute(dialogId, null));
 			}
 		}
 		if (routes.isEmpty()) {
-			fail("NPC_COMPLETE_NO_COMPLETION_ROUTE", context, "npc-complete", "dialog-ids",
-				"declare dialog-ids, choice, or fallback");
+			fail("NPC_COMPLETE_NO_COMPLETION_ROUTE", context, "npc-complete", "actions",
+				"declare actions, choice, or fallback");
 		}
 		Finish finish;
 		try {
@@ -1699,44 +1649,6 @@ final class QuestXmlBlockExpander {
 			this.block = block;
 		}
 
-		private List<Integer> add(Element element, String attribute) {
-			String raw = QuestXmlBlockExpander.attribute(element, attribute).trim();
-			if (raw.isEmpty()) {
-				return fail("NPC_COMPLETE_EMPTY_DIALOG_SET", context, block, attribute, "must not be empty");
-			}
-			List<Integer> result = new ArrayList<>();
-			for (String token : raw.split("[\\s,]+")) {
-				int delimiter = token.indexOf("..");
-				if (delimiter < 0) {
-					int dialogId = parse(token, attribute);
-					addSingle(dialogId, attribute);
-					result.add(dialogId);
-					continue;
-				}
-				if (delimiter == 0 || delimiter + 2 == token.length()
-					|| token.indexOf("..", delimiter + 2) >= 0) {
-					return fail("NPC_COMPLETE_INVALID_DIALOG_SET", context, block, attribute, token);
-				}
-				int first = parse(token.substring(0, delimiter), attribute);
-				int last = parse(token.substring(delimiter + 2), attribute);
-				if (first > last || (long) last - first >= 256) {
-					return fail("NPC_COMPLETE_INVALID_DIALOG_RANGE", context, block, attribute, token);
-				}
-				for (int dialogId = first; ; dialogId++) {
-					addSingle(dialogId, attribute);
-					result.add(dialogId);
-					if (dialogId == last) {
-						break;
-					}
-				}
-			}
-			if (result.size() > 256) {
-				return fail("NPC_COMPLETE_TOO_MANY_DIALOG_IDS", context, block, attribute,
-					"must contain at most 256 ids");
-			}
-			return List.copyOf(result);
-		}
-
 		private List<Integer> addActions(Element element, String attribute) {
 			List<Integer> result = new ArrayList<>();
 			for (QuestDialogAction action : QuestDefinitionXmlCompiler.dialogActions(element)) {
@@ -1744,14 +1656,6 @@ final class QuestXmlBlockExpander {
 				result.add(action.id());
 			}
 			return List.copyOf(result);
-		}
-
-		private int parse(String token, String attribute) {
-			try {
-				return Integer.parseInt(token);
-			} catch (NumberFormatException e) {
-				return fail("NPC_COMPLETE_INVALID_DIALOG_SET", context, block, attribute, token);
-			}
 		}
 
 		private void addSingle(int dialogId, String attribute) {

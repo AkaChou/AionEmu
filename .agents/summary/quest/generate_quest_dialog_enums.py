@@ -6,10 +6,12 @@ import re
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-from quest_dialog_symbols import LEGACY_ACTION_ALIASES, action_expression, attributes, load_maps
+from quest_dialog_symbols import attributes, load_maps
 
 
-TAG_PATTERN = re.compile(r"<(?:dialog|talk-to-npc|quest-dialog|show-quest-dialog|show-quest-selection-dialog|npc-start|npc-report|npc-complete|choice|preview|fallback|category|equipment|reward-group)\b[^>]*>")
+TAG_PATTERN = re.compile(
+    r"<(?:dialog|npc-start|npc-report|npc-complete|npc-dialog|choice|preview|fallback|category|equipment|reward-group)\b[^>]*>"
+)
 STANDARD_ACTIONS = {
     "QUEST_SELECT", "SELECT1_1", "ASK_QUEST_ACCEPT", "QUEST_ACCEPT_1", "QUEST_ACCEPT_SIMPLE",
     "QUEST_REFUSE_1", "QUEST_REFUSE_2", "QUEST_REFUSE_SIMPLE", "FINISH_DIALOG",
@@ -34,7 +36,6 @@ def collect(
     root: Path,
     actions_by_id: dict[int, str],
     actions_by_name: dict[str, int],
-    pages_by_id: dict[int, str],
 ) -> tuple[set[str], set[str]]:
     actions = set(STANDARD_ACTIONS)
     pages = set(STANDARD_PAGES)
@@ -53,33 +54,16 @@ def collect(
                     pages.add(attrs["page"])
                 elif attrs.get("type") == "NPC_START":
                     pages.add(attrs.get("start-page", "SELECT1"))
-            elif name in {"talk-to-npc", "quest-dialog"}:
-                if "dialog" in attrs:
-                    actions.add(LEGACY_ACTION_ALIASES[attrs["dialog"]])
-                for key in ("dialog-id", "dialog-ids"):
-                    if key in attrs:
-                        add_symbol_expression(actions, action_expression(attrs[key], actions_by_id),
-                                              actions_by_id, actions_by_name)
-            elif name in {"show-quest-dialog", "show-quest-selection-dialog"}:
-                pages.add(pages_by_id[int(attrs["dialog-id"])])
             elif name == "npc-start":
-                pages.add(pages_by_id[int(attrs["start-dialog-id"])] if "start-dialog-id" in attrs else "SELECT1")
+                pages.add(attrs.get("start-page", "SELECT1"))
             elif name == "npc-report":
-                pages.add(pages_by_id[int(attrs["page"])])
+                pages.add(attrs["page"])
             elif name == "npc-complete":
-                if "dialog-ids" in attrs:
-                    add_symbol_expression(actions, action_expression(attrs["dialog-ids"], actions_by_id),
-                                          actions_by_id, actions_by_name)
-                if "preview-dialog-ids" in attrs:
-                    add_symbol_expression(actions, action_expression(attrs["preview-dialog-ids"], actions_by_id),
-                                          actions_by_id, actions_by_name)
                 add_symbol_expression(actions, attrs.get("actions", ""), actions_by_id, actions_by_name)
+            elif name == "npc-dialog":
+                add_symbol_expression(actions, attrs.get("action") or attrs.get("actions", ""),
+                                      actions_by_id, actions_by_name)
             elif name in {"choice", "preview", "fallback"}:
-                if "dialog-id" in attrs:
-                    actions.add(actions_by_id[int(attrs["dialog-id"])])
-                if "dialog-ids" in attrs:
-                    add_symbol_expression(actions, action_expression(attrs["dialog-ids"], actions_by_id),
-                                          actions_by_id, actions_by_name)
                 add_symbol_expression(actions, attrs.get("action") or attrs.get("actions", ""),
                                       actions_by_id, actions_by_name)
             elif name in {"category", "equipment", "reward-group"} and "action" in attrs:
@@ -264,8 +248,8 @@ public enum {class_name} {{
 def main() -> None:
     args = parse_args()
     root = args.root.resolve()
-    actions_by_id, actions_by_name, pages_by_id, pages_by_name = load_maps(root)
-    actions, pages = collect(root, actions_by_id, actions_by_name, pages_by_id)
+    actions_by_id, actions_by_name, _pages_by_id, pages_by_name = load_maps(root)
+    actions, pages = collect(root, actions_by_id, actions_by_name)
     output_dir = root / "src/main/java/com/aionemu/gameserver/questEngine/definition"
     outputs = {
         output_dir / "QuestDialogAction.java": enum_source(
