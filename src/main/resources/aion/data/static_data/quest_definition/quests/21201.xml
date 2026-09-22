@@ -4,6 +4,9 @@
     <races>
       <race id="ASMODIANS"/>
     </races>
+    <prerequisites>
+      <quest id="21200"/>
+    </prerequisites>
     <items>
       <item id="182207868" count="5"/>
       <item id="182207869" count="5"/>

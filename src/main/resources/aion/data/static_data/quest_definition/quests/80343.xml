@@ -5,6 +5,9 @@
       <race id="PC_ALL"/>
     </races>
     <repeat max-repeat-count="1" cooldown-seconds="0" daily="false" weekly="false"/>
+    <prerequisites>
+      <quest id="80341"/>
+    </prerequisites>
     <rewards>
       <reward kind="ITEM" id="188600241" amount="1"/>
     </rewards>

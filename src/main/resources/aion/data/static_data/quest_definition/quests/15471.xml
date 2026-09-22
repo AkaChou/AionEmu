@@ -5,6 +5,9 @@
       <race id="ELYOS"/>
     </races>
     <repeat max-repeat-count="255" cooldown-seconds="0" daily="false" weekly="true" cycles="MON"/>
+    <prerequisites>
+      <quest id="15402"/>
+    </prerequisites>
     <rewards>
       <reward kind="EXP" id="0" amount="39767625"/>
       <reward kind="AP" id="0" amount="3000"/>
