@@ -39,7 +39,7 @@ quest_id	client_rows	last_row_kind	last_row_text	reward_var0	last_start_node	las
 14042	6	DIALOG	向[%dic:STR_DIC_N_Nereus]报告结果	4	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		24042	MISSING_LAST_ROW	4	向[%dic:STR_DIC_N_Lakadi]报告结果
 14044	5	DIALOG	和[%dic:STR_DIC_N_Ab1_NPC_LugBug]进行对话	3	s3	3		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		24044	MISSING_LAST_ROW	6	向[%dic:STR_DIC_N_Scoda]报告结果
 14047	8	DIALOG	向[%dic:STR_DIC_N_Juditio]报告结果	6	s6	6		False	False	ROW_BEHIND	ROW_WITHOUT_STATE					
-14112	3	DIALOG	和[%dic:STR_DIC_LA54]%对话	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		24112	MISSING_TAIL_ROWS	0	告诉[%dic:STR_DIC_N_DF1A_Brodir_E]
+14112	3	DIALOG	和[%dic:STR_DIC_LA54]%对话	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		24112	MISSING_LAST_ROW	1	告诉[%dic:STR_DIC_N_DF1A_Brodir_E]
 14123	3	DIALOG	向[%dic:STR_DIC_W_LF2_SZ_E2_SUB_1]的[%dic:STR_DIC_N_Dionera]%报告	0	started	0	var0=0,var0=0,var0=0,var0=0	False	False	ROW_BEHIND	ROW_WITHOUT_STATE		24123	MISSING_LAST_ROW	1	向[%dic:STR_DIC_W_DF2_SUB_E2_1]的[%dic:STR_DIC_N_DF2_NPC_Ananta]%报告
 15300	15	DIALOG	在希哥尼亚和代理人[%dic:STR_DIC_N_LF5_Dike_E]%对话	13	s13	13		True	False	ROW_BEHIND	ROW_WITHOUT_STATE		25300	MISSING_LAST_ROW	13	和厄夏勒的代理人[%dic:STR_DIC_N_DF5_Skuldun_E]%对话
 15307	2	OTHER	通过[%dic:STR_DIC_N_IDRuneWeapon_Q_Dike_E]进行起誓之誓约	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		25307	MISSING_LAST_ROW	0	通过[%dic:STR_DIC_N_IDRuneWeapon_Q_Skuldun_E]进行守护之誓约
@@ -61,6 +61,7 @@ quest_id	client_rows	last_row_kind	last_row_text	reward_var0	last_start_node	las
 24043	8	DIALOG	向[%dic:STR_DIC_N_Herz]报告结果	6	s6	6		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		14043	STATES_BEYOND_ROWS	None	和[%dic:STR_DIC_N_Ventus]进行对话
 24044	8	DIALOG	向[%dic:STR_DIC_N_Scoda]报告结果	6	s6	6		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		14044	MISSING_LAST_ROW	3	和[%dic:STR_DIC_N_Ab1_NPC_LugBug]进行对话
 24045	6	DIALOG	向[%dic:STR_DIC_N_Holm]报告结果	4	s4	4		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		14045	STATES_BEYOND_ROWS	12	向[%dic:STR_DIC_N_Shugo_AB1_13]报告
+24112	3	DIALOG	告诉[%dic:STR_DIC_N_DF1A_Brodir_E]	1	started	0		True	False	ROW_BEHIND	ROW_WITHOUT_STATE		14112	MISSING_LAST_ROW	1	和[%dic:STR_DIC_LA54]%对话
 24120	3	DIALOG	和[%dic:STR_DIC_W_DF2_SUB_A3]的[%dic:STR_DIC_N_Tree_Move_Nabalu]%对话	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		14120	ALIGNED	1	去[%dic:STR_DIC_W_LF2_SZ_A2]的[%dic:STR_DIC_E_LF2_Cherubim_Basket]中搜集水罐，然后交给[%dic:STR_DIC_W_LF2_SZ_B]的[%dic:STR_DIC_N_Tree_NoMove_Lodas]%[%collectitem]
 24123	3	DIALOG	向[%dic:STR_DIC_W_DF2_SUB_E2_1]的[%dic:STR_DIC_N_DF2_NPC_Ananta]%报告	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE		14123	MISSING_LAST_ROW	0	向[%dic:STR_DIC_W_LF2_SZ_E2_SUB_1]的[%dic:STR_DIC_N_Dionera]%报告
 25300	15	DIALOG	和厄夏勒的代理人[%dic:STR_DIC_N_DF5_Skuldun_E]%对话	13	s13	13		True	False	ROW_BEHIND	ROW_WITHOUT_STATE		15300	MISSING_LAST_ROW	13	在希哥尼亚和代理人[%dic:STR_DIC_N_LF5_Dike_E]%对话

@@ -11,41 +11,122 @@
     </rewards>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL" />
+    <!-- 客户端 quest_monster.csv 的行是链式 0/1 计数槽：
+         行 1 = SECTION_0<1 且 SECTION_5==0（头目苏马尔浑）。
+         var0 就是这些计数槽（各占 SECTION_n = 6n 位），var5（SECTION_5）是简报标志位：
+         接取时置 1（任务书亮“去见简报 NPC”那一行），与简报 NPC 对话后清 0，击杀计数行才出现；
+         客户端 script 的 SECTION_5==0 门控即由此满足。
+         Client quest_monster.csv chains a single 0/1 counter slot: row 1 shows while
+         SECTION_0<1 with the briefing flag clear.
+         var0 are those slots at 6n and var5 is the briefing flag, raised on accept and
+         cleared by the briefing talk so the client's SECTION_5==0 gate matches the journal. -->
+    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var5" offset="30" width="2" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
-      <var name="var0" value="0" />
+      <var name="var0" value="0"/>
+      <var name="var5" value="0"/>
     </node>
     <node label="started" status="START">
-      <var name="var0" value="0" />
+      <var name="var0" value="0"/>
+      <var name="var5" value="1"/>
+    </node>
+    <node label="briefed" status="START">
+      <var name="var0" value="0"/>
+      <var name="var5" value="0"/>
+    </node>
+    <node label="killed" status="START">
+      <var name="var0" value="1"/>
+      <var name="var5" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0" />
+      <var name="var0" value="1"/>
+      <var name="var5" value="0"/>
     </node>
     <node label="complete" status="COMPLETE">
-      <var name="var0" value="0" />
+      <var name="var0" value="0"/>
+      <var name="var5" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="203631" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1" />
+    <!-- 接取：Nokir 203631；目标节点 started 的投影把 var5 置 1（行 0「去见 Brodir」由此点亮）。
+         Accept from Nokir; the started projection raises the briefing flag var5. -->
+    <dialog type="NPC_START" npc-id="203631" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1"/>
+    <!-- 行 0a：向 Brodir 832821 对话，展示简报页 select2（状态不变，标志位保持）。
+         Row 0a: talking to the briefing NPC opens the select2 page without touching the flag. -->
     <transition source="started" target="started">
       <event>
-        <kill-npc npc-id="210510" />
+        <dialog type="TALK_TO_NPC" npc-id="832821" action="QUEST_SELECT"/>
       </event>
-      <conditions>
-        <variable-is field="var0" value="0" />
-      </conditions>
-      <actions>
-        <set-variable field="var0" value="1" />
-      </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY" />
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <dialog type="NPC_REPORT" npc-id="832821" source="started" target="reward" page="SELECT5" />
+    <!-- 行 0b：点击简报页的“结束对话”（SETPRO1=10000）后清 var5，让击杀计数行（SECTION_5==0）亮起。
+         Row 0b: the visible end-dialog button clears var5 so the SECTION_5==0 kill row becomes visible. -->
+    <transition source="started" target="briefed">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="832821" action="SETPRO1"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 行 1：消灭 LehparAsChD_15_An 210510，只推自己那一槽（SECTION_0）。
+         Row 1: the named kill advances only its own slot. -->
+    <transition source="briefed" target="killed">
+      <event>
+        <kill-npc npc-id="210510"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 行 2：向 Brodir 报告（客户端 select5）；只有击杀完成后才有这条入口，
+         旧定义的 started->reward 直跳已删除。
+         Row 2: report to Brodir; the entry exists only after the kill. -->
+    <dialog type="NPC_REPORT" npc-id="832821" source="killed" target="reward" page="SELECT5"/>
     <npc-complete npc-id="832821" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD" />
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-    </transitions>
+    <!-- 旧存档迁移 1：接取后没听简报就先杀怪的存档（var0=1 且 var5=1）归一化到 killed。
+         Legacy saves that killed the named mob before the briefing normalize onto killed. -->
+    <transition target="killed">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-is field="var0" value="1"/>
+        <variable-is field="var5" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var5" value="0"/>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 旧存档迁移 2：旧定义（reward 投影 var0=0）留下的领奖态存档补齐到饱和投影 (1,0)。
+         Reward saves left by the previous definition are completed to the saturated (1,0). -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-below field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var5" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+  </transitions>
 </quest-definition>

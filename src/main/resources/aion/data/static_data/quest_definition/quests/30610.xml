@@ -12,117 +12,145 @@
     </rewards>
   </metadata>
   <progress>
+    <!-- 客户端 quest_monster.csv 的行是链式 0/1 计数槽：
+         行 1 = SECTION_0<1 且 SECTION_5==0（核控制室的 Named 指挥官），
+         行 2 = SECTION_1<1 且 SECTION_0==1（舰长室的舰长）。
+         var0/var1 就是这些计数槽（各占 SECTION_n = 6n 位），var5（SECTION_5）是简报标志位：
+         接取时置 1（任务书亮“去见简报 NPC”那一行），与简报 NPC 对话后清 0，击杀计数行才出现；
+         客户端 script 的 SECTION_5==0 门控即由此满足。
+         Client quest_monster.csv chains 0/1 counter slots: row 1 shows while SECTION_0<1
+         with the briefing flag clear, row 2 while SECTION_1<1 and SECTION_0==1.
+         var0/var1 are those slots at 6n and var5 is the briefing flag, raised on accept and
+         cleared by the briefing talk so the client's SECTION_5==0 gate matches the journal. -->
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var5" offset="30" width="2" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var5" value="0"/>
     </node>
-    <node label="started" status="START"/>
+    <node label="started" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var5" value="1"/>
+    </node>
+    <node label="briefed" status="START">
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var5" value="0"/>
+    </node>
+    <node label="k1" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="0"/>
+      <var name="var5" value="0"/>
+    </node>
+    <node label="k2" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
+      <var name="var5" value="0"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="2"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
+      <var name="var5" value="0"/>
     </node>
     <node label="complete" status="COMPLETE">
-      <var name="var0" value="2"/>
+      <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var5" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <dialog type="NPC_START" npc-id="205864" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <!-- 接取与报告都落在任务书点名的 NPC（行 0 的简报 NPC 与行 3 的报告 NPC）；目标节点 started 的投影把 var5 置 1。
+         Accept and report both use the journal NPCs; the started projection raises var5. -->
+    <dialog type="NPC_START" npc-id="800327" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1"/>
+    <!-- 行 0a：向 Aluna 800326 对话，展示简报页 select2（状态不变，标志位保持）。
+         Row 0a: talking to the briefing NPC opens the select2 page without touching the flag. -->
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="205864" action="QUEST_SELECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="800326" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <!-- 行 0b：点击简报页的“结束对话”（SETPRO1=10000）后清 var5，让击杀计数行（SECTION_5==0）亮起。
+         Row 0b: the visible end-dialog button clears var5 so the SECTION_5==0 kill row becomes visible. -->
+    <transition source="started" target="briefed">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="205864" action="SETPRO1"/>
+        <dialog type="TALK_TO_NPC" npc-id="800326" action="SETPRO1"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
-
-    <!-- 阶段 1:击杀萨德哈 Named 指挥官 219256/219257 任一 1 个(var0 0→1)。Stage 1: kill a Named commander 219256/219257 (var0 0→1). -->
-    <transition source="started" target="started" priority="1">
+    <!-- 行 1：核控制室 Named 指挥官 219256/219257 任一 1 只，只推 SECTION_0。
+         Row 1: either named commander advances only SECTION_0. -->
+    <transition source="briefed" target="k1">
       <event>
         <kill-npc npc-ids="219256 219257"/>
       </event>
-      <conditions>
-        <variable-below field="var0" value="1"/>
-      </conditions>
-      <actions>
-        <increment-variable field="var0" delta="1"/>
-      </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 阶段 2:击杀萨德哈 指挥官 Wi_Boss 219264 完成(var0 1→2)。Stage 2: kill commander Wi_Boss 219264 (var0 1→2). -->
-    <transition source="started" target="started" priority="0">
+    <!-- 行 2：舰长室 IDDreadgion_03_DrakanWi_Boss_Ah 219264，只推 SECTION_1（客户端行 2 的门控是 SECTION_1<1 且 SECTION_0==1）。
+         Row 2: the boss advances only SECTION_1. -->
+    <transition source="k1" target="k2">
       <event>
         <kill-npc npc-id="219264"/>
       </event>
-      <conditions>
-        <variable-at-least field="var0" value="1"/>
-      </conditions>
-      <actions>
-        <set-variable field="var0" value="2"/>
-      </actions>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="205864" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <conditions>
-        <variable-at-least field="var0" value="2"/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <npc-complete npc-id="205864" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="800327" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="800327" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="800327" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <conditions>
-        <variable-at-least field="var0" value="2"/>
-      </conditions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
+    <!-- 行 3：向 Astella 800327 报告（客户端 select5）并领奖；旧定义的无守卫 SETPRO1 直跳已删除。
+         Row 3: report to Astella and claim the reward. -->
+    <dialog type="NPC_REPORT" npc-id="800327" source="k2" target="reward" page="SELECT5"/>
     <npc-complete npc-id="800327" source="reward" target="complete" fixed-reward-indices="0 1 2 3" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-  <transition source="started" target="reward">
+    <!-- 旧存档迁移 1：旧“步骤号”定义打完舰长写 var0=2，START 存档映射到 k2。
+         The legacy step model wrote var0=2 after the boss kill; START var0=2 maps onto k2. -->
+    <transition target="k2">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="800327" action="SETPRO1"/>
+        <enter-world/>
       </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="1"/>
+        <set-variable field="var5" value="0"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <close-dialog/>
       </after-commit>
     </transition>
-</transitions>
+    <!-- 旧存档迁移 2：旧 REWARD 投影 var0=2（var1 从未写过）补齐到饱和投影 (1,1)。
+         The old REWARD projection var0=2 is completed to the saturated (1,1). -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="1"/>
+        <set-variable field="var5" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+  </transitions>
 </quest-definition>

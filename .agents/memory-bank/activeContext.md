@@ -279,6 +279,32 @@
     reward 投影 0 + legacy _24112NoLaissezfaireforLepharists）与 30600/30610（SECTION_0<1;SECTION_1<1 + 4 个 html step +
     reward 投影 2 + legacy handler），需先解钩怪名 lehparaschd_15_an 与 iddreadgion_03_drakanfinamedaa_60_ae /
     iddreadgion_03_drakanwi_boss_ah，并核对镜像与领奖 NPC 归属。
+  - **批次 26 完成（2026-09-22，简报标志位 + Named/Boss 双层计数 24112/30600/30610）**：section0 审计 COUNTER_CHAIN_GAP
+    由 3 收到 **0**（收口全部 COUNTER_CHAIN 挂账）。族级判据：客户端 quest_monster 的计数行显式带 `SECTION_5==0` 门控，
+    且 legacy handler 在第 5 号变量上读写简报标志（24112：接取 `setQuestVarById(5,1)`、与 Brodir 的 STEP_TO_1 清 0）；
+    没有这条门控的 SECTION_0 任务不得套用本族。24112（ASMODIAN，min-level 14）单槽 210510（lehparaschd_15_an）：
+    旧定义无 var5 槽、reward 投影 var0=0 而击杀已写 1，领奖态存档既不匹配 reward 节点也不匹配任何路线（Brodir 处卡死）；
+    本批重建 started(0,1)/briefed(0,0)/killed(1,0)，owner 收敛 Nokir 203631 接取 + Brodir 832821 报告/领奖。
+    30600/30610（min-level 56）双层：Named 219256/219257 → SECTION_0、舰长 219264 → SECTION_1；旧定义只有一个步骤号
+    var0=0/1/2、var1 缺失（客户端行 2 计数永远 0/1），并有两条无守卫 `started --SETPRO1--> reward` 直跳，owner
+    205842(Ancanus)/205864(Udvi) 在静态 spawn 与实例/AI 代码里都没有出场点；本批按客户端任务书 NPC 收敛：
+    30600 接取/报告 800325(Hejitor) + 简报 800324(Linocus)，30610 接取/报告 800327(Astella) + 简报 800326(Aluna)，
+    重建 k1/k2 串行阶梯与旧步骤号 enter-world 自愈边。**门禁暴露并定案的第三类缺陷**：把简报对话直接挂在 QUEST_SELECT(31) 上
+    会触发 QuestClientContractGateTest 的 BUTTON_WITHOUT_ROUTE —— 客户端 select2 页（1352）只暴露一个可见按钮
+    HACTION_SETPRO1(10000)（“结束对话”），正确形状是两段式 `QUEST_SELECT -> 同状态 + SHOW_QUEST_PAGE SELECT2`（保持标志位）
+    + `SETPRO1 -> briefed`（清 var5、LEVEL_AND_VISIBILITY_REFRESH、close-dialog）。验证：xmllint 3/3 validates；
+    section0 `COUNTER_CHAIN_GAP 3 -> 0`、`COUNTER_CHAIN_OK 820 -> 823`；全库行号审计变化任务恰好 3 个（三个任务换桶，
+    已登记 `VAR0_FLAG_EXCEPTIONS`），全库 MISSING_LAST_ROW 83->84 / MISSING_TAIL_ROWS 79->80 / INTERIOR_GAP 265->263；
+    Maven 31 个测试类 **199 例全绿**（含新增 CounterChainBriefingStageContractTest 6 例与修复后的 QuestClientContractGateTest；
+    PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / WHITELIST_VIOLATIONS=0）；客户端实机 PENDING_CLIENT。
+    脚本 apply_batch26_briefing_and_named_ladders.py（--check 幂等）、证据 batch26-evidence.tsv、报告 §三十。
+  - **批次 26 边界（下一批前必读）**：select2 页（1352）只有 SETPRO1(10000) 一个可见动作，推进逻辑必须挂在它上面；
+    同类任务改 owner 前必须先读 docs/quest/client-dialog-mapping/quest-dialog-action-details.csv 的任务页按钮集合。
+    owner 收敛依据是客户端任务书行 NPC + 静态 spawn；legacy 里才有、且静态 spawn/实例 AI 都无出场点的 owner 不得保留。
+    `COUNTER_CHAIN_GAP` 已归零，后续不要再按“SECTION_n == 6n”给已登记例外（1842-1844/2843-2845 的 7-bit 大值域、
+    18033/28033/28313 三槽、24112/30600/30610 标志位族）做重复改动。剩余全库挂账：NO_NODES = 16984/26984，
+    MISSING_DEFINITION = 3959/4963/18706/18744/20015/28706/28744/29706，与行号口径的 MISSING_LAST_ROW 84 /
+    ROW_BEHIND 185 / BOTH_MISALIGNED 178 / ROW_WITHOUT_STATE 516 等，按族继续收口。
   - **批次 24 边界（下一批前必读）**：序幕/空槽位任务**不得**按 QE-051 行号口径补阶梯（任务书上没有行，补出来的节点永远不显示），
     先跑 `audit_blank_journal_slots.py` 找空槽、再用客户端 quest.xml 的 collect_item/NPC/reward 字段交叉核对；
     1400 的 var0/var1 是击杀计数组合（reward 投影 7/3 是饱和值），要按行号改它必须先拿到“可点亮任务书行”的客户端证据。

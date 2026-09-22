@@ -2095,3 +2095,91 @@ QC 判据（与批次 18/19 同源，但落点不同）：同形镜像对 `q` / 
 - **下一批（批次 26）**：剩余 `COUNTER_CHAIN_GAP` 三个 —— `24112`（`SECTION_0<1` + 3 个 html step + reward 投影 0 + legacy
   `_24112NoLaissezfaireforLepharists`）、`30600`/`30610`（`SECTION_0<1; SECTION_1<1` + 4 个 html step + reward 投影 2 + legacy handler），
   需先解钩怪名 `lehparaschd_15_an` 与 `iddreadgion_03_drakanfinamedaa_60_ae`/`iddreadgion_03_drakanwi_boss_ah` 并核对镜像与领奖 NPC 归属。
+
+## 三十、批次 26：简报标志位 + Named/Boss 双层计数（24112/30600/30610，2026-09-22）
+
+### 三十之一、族级判据与证据
+
+批次 25 后 section0 审计只剩 3 个 `COUNTER_CHAIN_GAP`：`24112`、`30600`、`30610`。三者同属
+**`SECTION_5` 简报标志位 + 链式 0/1 计数** 族（客户端 `quest_monster` 的计数行都带 `SECTION_5==0` 门控）：
+
+- `24112`（No Laissez-faire for Lepharists，ASMODIAN，min-level 14，IMPORTANT，Algard）：
+  单条链式 `Progress(SECTION_0<1; SECTION_5==0)`，怪名 `lehparaschd_15_an` → 服务端 **210510**
+  （`LehparAsChD_15_An`）；`quest_summary` 3 行 = 去 DF1A 入口处见见 Brodir / 消灭头目 ([%11]/1) / 告诉 Brodir。
+- `30600` / `30610`（[Group] Fight Of The Navigators / The Good News, And Bad，min-level 56）：
+  两条链式记录 `Progress(SECTION_0<1; SECTION_5==0)` → `iddreadgion_03_drakanfinamedaa_60_ae` = **219256**
+  （另一变体 219257，Named 指挥官）、`Progress(SECTION_1<1; SECTION_0==1)` → `iddreadgion_03_drakanwi_boss_ah` = **219264**
+  （舰长）；`quest_summary` 4 行 = 和 Linocus/Aluna 对话 / 击杀 Named ([%11]/1) / 击杀舰长 ([%14]/1) / 向 Hejitor/Astella 报告。
+- legacy handler 直接给出 `SECTION_5` 的语义：`_24112NoLaissezfaireforLepharists` 在 `ACCEPT_QUEST_SIMPLE` 里
+  `setQuestVarById(5, 1)`、与 Brodir 的 `STEP_TO_1` 里 `setQuestVarById(5, 0)`、击杀 210510 时
+  `setQuestVarById(0, 1)`、`SELECT_REWARD` 置 REWARD（var0=1、var5=0）。
+- 任务书 NPC 解键（服务端 `npc_template` + 静态 spawn）：`Linocus=800324`、`Hejitor=800325`、`Aluna=800326`、
+  `Astella=800327`（`spawns/Npcs/210070000_Cygnea.xml`、`220080000_Enshar.xml`）；旧 owner `205842`(Ancanus)/
+  `205864`(Udvi) 在静态 spawn 与实例/AI 代码里都**没有任何出场点**。
+
+### 三十之二、旧模型缺陷
+
+- `24112`：旧定义只有 `var0`（无 `var5` 槽），`reward` 投影是 **var0=0**，而击杀已把 var0 推到 1 ——
+  领奖态存档既不匹配 `reward` 节点也不匹配任何路线（`QuestMutationPlanner#matchesSourceNode` 逐字段全等），
+  玩家在 Brodir 处**卡死**；行 0/行 2 也没有对应状态。
+- `30600`/`30610`：旧定义只有一个步骤号 `var0`（0/1/2），**`var1` 缺失**（客户端行 2 的计数永远是 0/1），
+  还有两条**无守卫**的 `started --SETPRO1--> reward` 直跳（接取后即可领奖），领奖 owner 落在无出场点的
+  205842/205864 上。
+- **门禁暴露的第三类缺陷（本批定案）**：把简报对话直接挂在 `QUEST_SELECT(31)` 上会触发
+  `QuestClientContractGateTest` 的 `BUTTON_WITHOUT_ROUTE` —— 客户端 `select2` 页（page **1352**）只暴露
+  **一个**可见按钮 `HACTION_SETPRO1(10000)`（"结束对话"），`QUEST_SELECT` 只负责打开页面。族级正确形状是
+  两段式：`started --QUEST_SELECT--> started + SHOW_QUEST_PAGE SELECT2`（保持标志位），
+  `started --SETPRO1--> briefed`（清 `var5`、`LEVEL_AND_VISIBILITY_REFRESH`、`close-dialog`）。
+
+### 三十之三、落点
+
+- `24112`：`var0 @ 0`（6 bit）+ `var5 @ 30`（2 bit，max 1）；节点
+  `unaccepted(0,0) / started(0,1) / briefed(0,0) / killed(1,0) / reward(1,0) / complete(0,0)`；
+  接取 Nokir 203631、行 0 两段式对话 + Brodir 832821、行 1 击杀 210510 只推 `var0`、行 2
+  `killed --NPC_REPORT--> reward`（page SELECT5）与 `npc-complete`（`fixed-reward-indices="0 1 2"`）都在 Brodir；
+  自愈边：START `var0=1 && var5=1 -> killed`、REWARD `var0<1 -> (1,0)`。
+- `30600`/`30610`：`var0 @ 0` + `var1 @ 6` + `var5 @ 30`；节点
+  `unaccepted(0,0,0) / started(0,0,1) / briefed(0,0,0) / k1(1,0,0) / k2(1,1,0) / reward(1,1,0) / complete(0,0,0)`；
+  接取/报告 `800325`(30600)/`800327`(30610)，简报 `800324`/`800326`；行 1 的 219256/219257 任一 1 只只推 `var0`，
+  行 2 的 219264 只推 `var1`（客户端门控是 `SECTION_1<1` 且 `SECTION_0==1`）；
+  `k2 --NPC_REPORT--> reward`（page SELECT5）+ `npc-complete`（`fixed-reward-indices="0 1 2 3"`）；
+  自愈边：START `var0=2 -> k2`、REWARD `var0=2 -> (1,1)`。
+- 应用脚本：`.agents/summary/quest-10527-reward-row/apply_batch26_briefing_and_named_ladders.py`
+  （`--check` 幂等，`BATCH26_APPLIED` → 再跑 `BATCH26_OK ... already-applied`）。
+- 审计口径登记：`audit_reward_row_vs_client_steps.py` 新增
+  `VAR0_FLAG_EXCEPTIONS = {30203, 30303, 13918, 23918, 24112, 30600, 30610}`（var0/var1 是逐行计数器，
+  权威口径是 section0 的 `COUNTER_CHAIN_OK`）。
+
+### 三十之四、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 3 个任务全 `validates`；旧 owner 205842/205864 与
+  `started -> reward` 直跳计数都是 **0**；`SETPRO1` 各只有 1 条（简报推进）。
+- **section0 审计**（`--npcs-root` 用客户端解包目录）：`COUNTER_CHAIN_GAP 3 -> 0`；
+  `residual rows: 837 -> {'COUNTER_CHAIN_EXTENDED_EXCEPTION': 6, 'COUNTER_CHAIN_OK': 823, 'REVIEW_LEGACY_NO_VAR0': 1, 'SAME_CLASS_CONFIRMED': 7}`；
+  三个任务由 `COUNTER_CHAIN_GAP` 全部转为 `COUNTER_CHAIN_OK`（24112 `reward_projection var0=1;var5=0`、
+  30600/30610 `var0=1;var1=1;var5=0`，`kill_route_targets` = `killed` / `k1;k2`，`migration_repair=True`）。
+- **全库行号审计**（`audit_reward_row_vs_client_steps.py`，对比 HEAD 的 `audit-output.tsv`，变化任务恰好 3 个）：
+  - `24112`：`MISSING_TAIL_ROWS -> MISSING_LAST_ROW`、`handovers started->reward[] -> killed->reward[]`、`recovery False -> True`、`visible_state_var0 0 -> 0 1`；
+  - `30600`/`30610`：`INTERIOR_GAP -> MISSING_TAIL_ROWS`、`handovers started->reward[dialog]x4 -> k2->reward[]`、`recovery False -> True`、`visible_state_var0 2 -> 0 1`；
+  - 全库换桶：`MISSING_LAST_ROW 83 -> 84`、`MISSING_TAIL_ROWS 79 -> 80`、`INTERIOR_GAP 265 -> 263`（三任务换桶，均已登记 `VAR0_FLAG_EXCEPTIONS`），
+    领奖行与行↔状态桶不变。
+- **Maven（授权后执行，2026-09-22）**：31 个测试类 **199 例全绿**（批次 25 的 30 类 193 例 + 本批新增
+  `CounterChainBriefingStageContractTest` 6 例）；`PRODUCTION_COMPILE_OK=6189 / FAILURES=0 /
+  INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。含 `QuestClientContractGateTest`（修复 `BUTTON_WITHOUT_ROUTE` 后转绿）
+  与 `QuestDialogOrderAuditTest` 17 例。
+  （已知无关红：`MissionItemConsumptionBatchRegressionTest` 的断言在 HEAD 本就不成立，本批不运行、不修。）
+- **证据表**：[batch26-evidence.tsv](batch26-evidence.tsv)。
+- **客户端实机：PENDING_CLIENT**（静态、Maven 与真机验收分层，未做真机复测）。
+
+### 三十之五、边界与后续
+
+- 本族判据是客户端 `quest_monster` 的计数行**显式带 `SECTION_5==0`**，且 legacy handler 在接取/简报处读写第 5 号变量；
+  没有这条门控的 `SECTION_0` 任务不得套用"简报标志位"。
+- `select2` 页（1352）只允许 `SETPRO1(10000)` 一种可见动作；把推进逻辑挂在 `QUEST_SELECT` 会立刻被
+  `QuestClientContractGateTest` 判 `BUTTON_WITHOUT_ROUTE`，后续同类任务必须先读
+  `docs/quest/client-dialog-mapping/quest-dialog-action-details.csv` 再决定动作拆分。
+- owner 收敛依据是**客户端任务书行 NPC + 静态 spawn**；205842/205864 这类只在 legacy 里出现的 owner
+  不得因为迁移省事而保留。
+- **批次 26 后 `COUNTER_CHAIN_GAP` 归零**。剩余全库挂账：`NO_NODES`（16984、26984）、
+  `MISSING_DEFINITION`（3959、4963、18706、18744、20015、28706、28744、29706）与行号口径的
+  `MISSING_LAST_ROW 84 / ROW_BEHIND 185 / BOTH_MISALIGNED 178 / ROW_WITHOUT_STATE 516` 等，按族继续收口。

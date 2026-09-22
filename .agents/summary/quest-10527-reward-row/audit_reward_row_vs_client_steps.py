@@ -51,7 +51,18 @@ CANDIDATE_OUTPUT = Path(__file__).resolve().parent / "audit-qe051-candidates.tsv
 #   via setQuestVarById, then setStatus(REWARD) with var0..3=1 matching the current reward projection);
 #   the client script declares Progress(SECTION_0<1)..Progress(SECTION_3<1), so the three journal rows are
 #   driven by those flags/visible slots rather than by var0.
-VAR0_FLAG_EXCEPTIONS = {30203, 30303, 13918, 23918}
+VAR0_FLAG_EXCEPTIONS = {30203, 30303, 13918, 23918, 24112, 30600, 30610}
+# 追加登记（批次 26，2026-09-22）：24112（单槽 Named：SECTION_0<1 且 SECTION_5==0）与
+# 30600/30610（双层 Named/Boss：SECTION_0<1;SECTION_5==0 + SECTION_1<1;SECTION_0==1）的 var0/var1
+# 都是**逐行计数器**而不是行号：客户端任务书第二/第三行由 `SECTION_n<1` 饱和驱动（行 2/行 3 在计数满格后
+# 自动亮起），因此本审计的行号口径会把 24112 判成 MISSING_LAST_ROW、把 30600/30610 判成 MISSING_TAIL_ROWS；
+# 权威口径是 .agents/summary/quest-15001-multicounter-step/audit_section0_report_row_closure.py 的
+# COUNTER_CHAIN_OK（reward 投影 = 计数饱和值 + 存在 report 路由），门禁是 CounterChainBriefingStageContractTest。
+# 若把 reward 投影机械改成“末行行号”（24112=2、30600/30610=3），客户端行 2 的门控 SECTION_0==1 会失效、
+# 任务书反而退回上一行，属于 QE-053 明确禁止的反向修正。
+# Batch 26 registration: 24112's var0 and 30600/30610's var0/var1 are per-row counters, not the journal row
+# index, so this row-index lens reports MISSING_LAST_ROW / MISSING_TAIL_ROWS; the authoritative lens is the
+# section0 audit's COUNTER_CHAIN_OK verdict.
 # 追加登记（批次 21，2026-09-22）：13918 / 23918 与 30203/30303 同族 —— 客户端 quest_monster.csv 的
 # SECTION_0..4 是五个链式 0/1 计数槽（行 n 只在 SECTION_n<1 且 SECTION_{n-1}==1 时可见），
 # var0 不是行号，所以本审计的行号口径会判 ROW_BEHIND / MISSING_TAIL_ROWS / ROW_WITHOUT_STATE；
