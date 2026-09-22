@@ -3264,3 +3264,100 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
   （沿用批次 35 专项口径）、客户端隔离族 8 个
   （3959/4963/16984/18706/20015/26984/28706/29706）；已知 HEAD/既有红除原有 3 例外，
   另有本次登记的 `QuestInteractionObjectCatalogTest` 8 条资格缺口。
+
+## 四十三、批次 39：三行「交付物品 → 对话/招供 → 向最终 NPC 报告并领奖」族（3013/3217/4217）
+
+### 四十三之一、族判据与证据（2026-09-22）
+
+本批收口 47 个残留下来的第一族：**3013（天族 23 级）/ 3217（天族 43 级，副本组队）/
+4217（魔族 43 级，副本组队）**。三家任务书结构完全同型——三行、槽位 `%0/%3/%6`：
+
+| 任务 | 行 0 | 行 1 | 行 2 | 交付/对话 NPC | 最终报告 NPC |
+|---|---|---|---|---|---|
+| 3013 | 搜 DigCherubimL/Cherubim2Wp 把撕碎信纸交给 Shugo_LF2a_1 | 让 Hecuba 招供 | 向 Shugo_LF2a_1 报告结果 | 798132 交付、798146 招供 | 798132 |
+| 3217 | 找回侦察报告书交给 Nasuri | 和 Nasuri 对话 | 和 Gorgos 对话 | 798335 | 204590 |
+| 4217 | 找回旧包袱交给 Parten | 和 Parten 对话 | 和 Savrina 对话 | 798336 | 204773 |
+
+证据链：
+
+- **客户端任务书行**（`Dialogs/quest_q3013.html` / `QUEST_Q3217.html` / `QUEST_Q4217.html`）：
+  quest_summary 三行分别绑定 `visible="[%0]"`、`[%3]`、`[%6]`，与批次 33/38 锁定的
+  “槽位 = 3 × 状态号”一致，即真实状态是 0/1/2。
+- **客户端页链**：
+  - 三家都有 `select1`（唯一按钮 `HACTION_CHECK_USER_HAS_QUEST_ITEM`）→
+    `check_user_item_ok` / `check_user_item_fail`；`select_success` 的唯一按钮是
+    `HACTION_SELECT_QUEST_REWARD`，映射 `HtmlPages.xml` 的 `DEFAULT_SUCCESS(10002)`。
+  - 3013 行 1 是 Hecuba 的三段链：`select2`(1352) → `HACTION_SELECT2_1` → `select2_1`(1353) →
+    `HACTION_SELECT2_1_1` → `select2_1_1`(1354) → `HACTION_SET_SUCCEED`；行 0 的
+    `check_user_item_ok` 按钮是“结束对话”（`HACTION_FINISH_DIALOG`）。
+  - 3217/4217 行 1 就在交付 NPC 的 `check_user_item_ok` 页上：唯一按钮是 `HACTION_SET_SUCCEED`。
+- **客户端 NPC 名表**（`npcs_unpacked/client_npcs_npc.xml` + `strings_unpacked/client_strings_dic_people.xml`）：
+  `STR_NPC_Gorgos = 204590`、`STR_NPC_Savrina = 204773`、`STR_NPC_Hecuba = 798146`、
+  `STR_NPC_Nasuri = 798335`、`STR_NPC_Parten = 798336`——证实 3217 行 2 的对话 owner 是 204590
+  而不是 798335，4217 行 2 是 204773 而不是 798336（4217 正文仍写 Anita，属客户端历史文本差异，
+  任务书行号以 quest_summary 的 Savrina 为准）。
+- **旧定义错位**：三家都是 `started(0) -> reward(0)` 直跳；3217/4217 还在“交付 NPC”和
+  “报告 NPC”上各挂一份 `NPC_REPORT + SELECT_QUEST_REWARD`（同一进度两条领奖口），3013 把 798132
+  的报告页写成 Hecuba 的 `SELECT2`，并把 `SET_SUCCEED` 挂在两个 NPC 上直跳 reward。
+  审计因此判成 `MISSING_TAIL_ROWS | ROW_BEHIND | ROW_WITHOUT_STATE(1 2) | visible=0`。
+
+### 四十三之二、落点（行阶梯 = START/START/REWARD）
+
+- **节点**：`unaccepted(0) / started(START,0) / s1(START,1) / reward(REWARD,2) / complete(0)`。
+- **行 0 → 行 1**：交付 NPC 的 `CHECK_USER_HAS_QUEST_ITEM`（`priority=0`，条件
+  `has-item` 1×182208008 / 3×182209095 / 3×182209110）`started -> s1`，动作
+  `set-variable var0=1` + `remove-item`，落点页 `CHECK_USER_ITEM_OK`；`priority=1` 的失败分支
+  保持 `started -> started` 并显示 `CHECK_USER_ITEM_FAIL`。玩家重新对话走 `started` 的
+  `QUEST_SELECT -> SELECT1`。
+- **行 1 → 行 2**：Hecuba（3013）/ 交付 NPC（3217/4217）的 `SET_SUCCEED` `s1 -> reward`，
+  客户端语义是 `check_user_item_ok` 页的结束按钮；3013 的 `select2` 三段链用
+  `s1` 自环 + `SHOW_QUEST_PAGE` 逐页下发。
+- **行 2（报告领奖）**：`NPC_REPORT` 改为挂在真正的报告 NPC（3013/798132、3217/204590、
+  4217/204773）的 `reward -> reward`，展开成 `QUEST_SELECT -> DEFAULT_SUCCESS`（客户端
+  `select_success`）+ `SELECT_QUEST_REWARD -> SHOW_SELECT_QUEST_REWARD_WINDOW1`；`npc-complete`
+  也收敛到该 NPC（3013 固定索引 0/1/2 + 选择 3/4，3217/4217 固定 0/1）。
+- **preview 收敛**：`preview` 只保留 `USE_OBJECT`。`SELECT_QUEST_REWARD` 已由 reward 态
+  `NPC_REPORT` 展开提供，若 preview 再声明一次，同 NPC 同动作会触发
+  `AMBIGUOUS_TRANSITION`（本批编译实测）。
+- **自愈边**：`REWARD && var0==0`（旧直跳唯一落盘值，物品已被收走）无 source `enter-world`
+  → `reward(var0=2)`，登录/切图后任务书落到“报告领奖”行。
+
+### 四十三之三、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 3/3 validates；
+  `apply_batch39_turn_in_talk_report_rows.py --apply` 后 `--check` 幂等 3/3 OK；
+  `git diff --check` 干净。
+- **全库行号审计（脚本 [11] 节已改为批次 39，并补登本族）**：
+  `MISSING_TAIL_ROWS 53 -> 50`（-3）、`ROW_BEHIND 150 -> 147`（-3）、
+  `ROW_WITHOUT_STATE 482 -> 479`（-3）、`ROW_ALIGNED 2700 -> 2703`（+3）、
+  `ROW_STATE_ALIGNED 2472 -> 2475`（+3）；3 个任务全部
+  `ALIGNED + ROW_ALIGNED + ROW_STATE_ALIGNED + visible=0 1 2 + recovery=True`，
+  逐任务前后见 [batch39-evidence.tsv](batch39-evidence.tsv)。
+- **Maven（授权后执行）**：新增 `Batch39TurnInTalkReportRowContractTest`（5 例：每行一个状态 /
+  交付行推进到行 1 并回收物品（含失败页）/ `SET_SUCCEED` 收口行 1 且行 2 由报告 NPC 打开窗口 1 +
+  完成索引 / 交付页与 Hecuba 三段链路由 / 旧 `REWARD var0=0` 自愈）5/5 绿；同批回归
+  `Batch38BranchChoiceRewardIndexContractTest` 4/4、`ProductionCatalogWhitelistVerificationTest` 1/1
+  （`PRODUCTION_COMPILE_OK=6191 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 /
+  WHITELIST_VIOLATIONS=0`）、`QuestPageButtonAuditTest`(2)、`QuestHandoverContinuationAuditTest`(2)、
+  `QuestE2eInfrastructureTest`(41)、`AcceptAndConfirmationEntryContractTest`(2)、
+  `QuestClientContractGateTest` 全绿。
+- **既有红登记（非本批引入）**：`QuestInteractionObjectCatalogTest#productionQuestUseItemTalkRoutesDeclareActionEligibility`
+  仍为同一批 8 条（`13809/23809/30504/30554`）`TALK_TO_NPC dialog=-1` 路由缺少同 source 的
+  `CanAct(ACTION_ITEM_USE)`；本批三个任务（3013/3217/4217）不在清单内，未扩围修改。
+- **客户端实机 PENDING_CLIENT**：① 接取后任务书停在行 0，交付收集物后切行 1 并显示
+  `check_user_item_ok`；② 3217/4217 点“结束对话”（SET_SUCCEED）切行 2，3013 需走完
+  Hecuba 的 `select2 → SELECT2_1 → SELECT2_1_1 → SET_SUCCEED` 切行 2；③ 行 2 找
+  Gorgos/Savrina/Shugo_LF2a_1 打开 `select_success`，点“报告”弹出奖励窗口 1 并完成；
+  ④ 旧存档 `REWARD + var0=0` 登录或切图后自愈到行 2；⑤ 3217/4217 不应再出现
+  “交付 NPC 处也能直接领奖”的双口。
+
+### 四十三之四、边界与后续
+
+- 三家的行 1 是“继续对话/招供”行，不是**第二个**可领奖口；3217/4217 旧定义在交付 NPC 上
+  多挂的一份领奖合同本批删除，README/legacy 合同若仍记录两条领奖口应视为过期。
+- 4217 的对话正文提到 Anita，但任务书行 2 与客户端 NPC 名表都是 Savrina(204773)；
+  行号 owner 以 quest_summary + `client_npcs_npc.xml` 为准，文本差异不改行归属。
+- 剩余 `MISSING_TAIL_ROWS 50`（44 个待逐族收口 + 6 个已登记例外）。其它挂账不变：
+  `STATES_BEYOND_ROWS 2620`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 73`、客户端隔离族 8 个
+  （3959/4963/16984/18706/20015/26984/28706/29706）；既有红除登记例外另有本次沿用的
+  `QuestInteractionObjectCatalogTest` 8 条资格缺口。

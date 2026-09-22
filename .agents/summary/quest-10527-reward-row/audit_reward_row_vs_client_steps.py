@@ -256,6 +256,16 @@ BATCH37_TALK_KILL_REPORT_ROW_LADDER = {26905, 26906, 26908, 3711, 4711}
 # 门禁 Batch38BranchChoiceRewardIndexContractTest。
 BATCH38_BRANCH_CHOICE_REWARD_INDEX = {80298, 80299, 80304, 80305}
 
+# 批次 39 登记（2026-09-22）：三行“交付物品 -> 对话/招供 -> 向最终 NPC 报告并领奖”族。
+# 3013（Elyos 23 级）行 0 交撕碎信纸给 Shugo_LF2a_1、行 1 让 Hecuba 招供（798146 的 select2 ->
+# SELECT2_1 -> SELECT2_1_1 -> SET_SUCCEED）、行 2 向 Shugo_LF2a_1 报告领奖；3217（Nasuri 798335 ->
+# Gorgos 204590）与 4217（Parten 798336 -> Savrina 204773）行 1 就在交付 NPC 的 check_user_item_ok 页
+# 以 SET_SUCCEED 收尾。三家客户端 quest_summary 都是三行、槽位 %0/%3/%6，页链 select1
+# (CHECK_USER_HAS_QUEST_ITEM) -> check_user_item_ok -> select_success(SELECT_QUEST_REWARD)。
+# 旧定义把三行塌陷成 started(0) -> reward(0)，且报告页/owner 挂错 NPC。
+# 门禁 Batch39TurnInTalkReportRowContractTest。
+BATCH39_TURN_IN_TALK_REPORT_ROWS = {3013, 3217, 4217}
+
 # 批次 26 登记（2026-09-22）：30600/30610 是 Named/Boss 双层计数（var0/var1 组合，客户端 select5 报告行由计数饱和驱动），
 # var0 不承载任务书行号；行号口径把它们判成 MISSING_TAIL_ROWS。批次 26 的自愈边与
 # Quest15546KillCounterSaturationFlowTest 锁定这两个任务，禁止按客户端行号补阶梯。
@@ -724,23 +734,25 @@ def main() -> int:
           "门禁 CutsceneHiddenQuestFamilyContractTest")
     print(f"  仍隔离（无定义、无任务书行，只登记证据）={sorted(CLIENT_ONLY_ISOLATED_QUESTS)}")
 
-    print("\n[11] 缺尾部多行（MISSING_TAIL_ROWS）逐族盘点（批次 38）：")
+    print("\n[11] 缺尾部多行（MISSING_TAIL_ROWS）逐族盘点（批次 39）：")
     tail = [row for row in rows if row["shape"] == "MISSING_TAIL_ROWS"]
     tail_ids = {row["quest_id"] for row in tail}
     fixed = sorted(BATCH31_GELKMAROS_ROW_LADDER | BATCH32_KALDOR_ROW_LADDER
                    | BATCH34_RENTUS_BASE_ROW_LADDER | BATCH35_VALENTINE_TOWER_ROW_LADDER
                    | BATCH36_EVENT_ROW_LADDER | BATCH37_TALK_KILL_REPORT_ROW_LADDER
-                   | BATCH38_BRANCH_CHOICE_REWARD_INDEX)
+                   | BATCH38_BRANCH_CHOICE_REWARD_INDEX | BATCH39_TURN_IN_TALK_REPORT_ROWS)
     registered_ids = (BLANK_JOURNAL_SLOT_EXCEPTIONS | CLIENT_ONLY_ISOLATED_QUESTS
                       | COUNTER_SLOT_EXCEPTIONS | MULTI_LAYER_COUNTER_EXCEPTIONS
                       | SHARED_VISIBLE_SLOT_EXCEPTIONS | QE045_LOCKED) & tail_ids
     residual = [row for row in tail if row["quest_id"] not in set(fixed) | registered_ids]
     print(f"  MISSING_TAIL_ROWS={len(tail)}；已修复族（批次 31 Gelkmaros、批次 32 卡多尔迎新、"
           f"批次 34 Rentus Base、批次 35 情人节巧克力塔、批次 36 活动两族共 13 个、"
-          f"批次 37 交谈击杀报告两族 5 个、批次 38 阵营选择族 4 个，均已转 ALIGNED）={fixed}")
+          f"批次 37 交谈击杀报告两族 5 个、批次 38 阵营选择族 4 个、"
+          f"批次 39 交付-对话-报告族 3 个，均已转 ALIGNED）={fixed}")
     stuck = sorted((BATCH31_GELKMAROS_ROW_LADDER | BATCH32_KALDOR_ROW_LADDER | BATCH34_RENTUS_BASE_ROW_LADDER
                     | BATCH35_VALENTINE_TOWER_ROW_LADDER | BATCH36_EVENT_ROW_LADDER
-                    | BATCH37_TALK_KILL_REPORT_ROW_LADDER | BATCH38_BRANCH_CHOICE_REWARD_INDEX) & tail_ids)
+                    | BATCH37_TALK_KILL_REPORT_ROW_LADDER | BATCH38_BRANCH_CHOICE_REWARD_INDEX
+                    | BATCH39_TURN_IN_TALK_REPORT_ROWS) & tail_ids)
     if stuck:
         print(f"  ⚠ 本批修复清单仍在缺尾桶={stuck}")
     print(f"  已登记例外（空槽位/客户端隔离/计数槽/双层计数/共享槽位/QE-045 锁）={len(registered_ids)} {sorted(registered_ids)}")
