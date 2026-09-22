@@ -1749,3 +1749,97 @@ QC 判据（与批次 18/19 同源，但落点不同）：同形镜像对 `q` / 
   `.agents/summary/quest-14045-14046-movie-page-turn/`）、`1000/11000`（4 行）、`39713/49713`（3 行 FACTION 日任、三名可互换报告 NPC）。
 - 本批 Maven 命令（已执行，149 例全绿；后续批次沿用并追加新门禁类）：
   `mvn -Dtest='ChainEliteLadderContractTest,QuestMonsterProgressContractAuditTest,TreeLadderOwnerTrimContractTest,CollapsedSingleStepLadderContractTest,MirrorRewardProjectionLagContractTest,JournalRewardRowRepairContractTest,QuestPrematureRewardRouteExclusionTest,Quest11110And1548PostKillReportDialogTest,DurableDaevanionWeaponRewardRowContractTest,RewardOwnerTrimContractTest,RewardRowResidualTwoRowContractTest,RewardRowEventTwoRowContractTest,RewardRowTwoRowTalkFamilyContractTest,RewardNpcOwnershipContractTest,RetailSingleStepRewardRowContractTest,LegacyRewardStepProjectionRegressionTest,QuestClientContractGateTest,QuestDialogOrderAuditTest,QuestItemSourceContractGateTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest' test`
+
+
+---
+
+## 二十六、批次 22：副本段行阶梯 24046（The Shadow Calls，2026-09-22）
+
+### 二十六之一、族级判据与证据
+
+- 客户端 `quest_q24046.html` 的 `quest_summary` **8 行**：行 0 到 DF2A 和 `Phyper`(798300) 见面；行 1 查看 Phyper 的预言是否会成为现实；
+  行 2 收到了传票！到 `Srudgelmir`(204253) 去看一下；行 3 和竞技场管理员 `Galm`(204089) 进行对话；
+  **行 4 进入 `DC1_door_Q2076` 寻找沉默审判官**；**行 5 找到 `IDDC1_Arena_3F_Exit`(700369) 逃出秘密监狱**；
+  行 6 和 `Srudgelmir` 进行对话；行 7 向伊斯夏尔肯的 `Muninn`(203550) 报告监狱里发生的事情。
+- 本族**没有** `quest_monster` 门控（该 CSV 里 24046 无任何行进），所以权威口径是 QE-051 的**行号口径**（行 n ↔ var0=n），
+  不是批次 21 的 `COUNTER_CHAIN`；`var0` 是行号，位域只需容纳末行 7。
+- 迁移前 legacy handler（`git show '7e9f0316c^:…/mission/_24046The_Shadow_Calls.java'`）是行阶梯的原始证据：
+  `798300` STEP_TO_1 → 1；`BALTASAR_HILL_VILLAGE_220050000` 离区 + `giveQuestItem(182205502)` → 2；
+  `204253` STEP_TO_3（移除 182205502）→ 3；**`204089` STEP_TO_4 = `getNextAvailableInstance(320120000)` +
+  `changeQuestStep(env, 3, 5, false)`**；`700369` USE_OBJECT（var==5）→ 传送 120010000 + `changeQuestStep(5, 6)`；
+  `204253` `defaultCloseDialog(env, 6, 6, true, false)` → REWARD；`onDie`/`onEnterWorld` 在 var==5 时回退 3。
+- 行 4 的物件 `DC1_door_Q2076` 实为 **700368**（客户端 NPC 表），但它在 `spawns/Npcs/120010000_Panium.xml` ×
+  `portals/portal_template2.xml` 里是**地下竞技场入口 portal（loc_id 3200900）**，不是本任务的审判所副本；
+  副本 320120000 里只有出口 `700369`（`spawns/Instances/320120000_Shadow_Court_Dungeon.xml`）。
+  因此**保留 legacy 的“与加尔姆对话即传送进副本”**，不把行 4 改成走 700368。
+
+### 二十六之二、旧模型缺陷
+
+- **行 4 没有任何状态**：legacy `changeQuestStep(3, 5)` 把“进副本/找审判官”这一格整体跳过，客户端第 5 行永远不亮
+  （审计 `INTERIOR_GAP`、`rows_without_state=4 7`）。
+- **领奖行与行 6 共用投影**：reward 节点投影 `var0=6`，而客户端末行是行 7 —— 玩家在领奖态看到的是“和 Srudgelmir 进行对话”，
+  且 `var0_max=6` 连行 7 都表达不了（`last_row_within_field_max=False`）。这与用户报障同形（“下一步该找 NPC 对话/任务列表不前进”）。
+
+### 二十六之三、落点
+
+- `var0`：`width=4 min=0 max=6` → **`width=3 min=0 max=7`**（仍是 `SECTION_0` offset 0；行号口径不需要 6-bit 位段）。
+- 节点：补 `s4(START, var0=4)`，`reward` 投影 `6 -> 7`；`started(0)/s1(1)…s6(6)/reward(7)` 八行齐备。
+- 副本段（每步只推一格）：
+  - `s3 --204089 SETPRO4--> s4`：`set var0=4` **并保留** `teleport-player-next-available-instance world-id="320120000"`；
+  - `s4 --enter-world(world-is 320120000)--> s5`：`set var0=5`（行 5“在副本里找出口”是可持续的副本内状态）；
+  - `s4 --enter-world(world-is 320120000 expected="false")--> s3`：传送未生效/掉线时回退到“找加尔姆再进”，避免卡在无对话的行 4；
+  - `s5 --700369 USE_OBJECT--> s6`（传送回 120010000）与 `s5 --die--> s3`、`s5 --enter-world(副本外)--> s3` 原样保留；
+  - `s6 --204253 SET_SUCCEED--> reward`（投影给出行 7）。
+- 旧存档：补无 source `REWARD && var0==6 -> 7` 的 `enter-world` 自愈边（`LEVEL_AND_VISIBILITY_REFRESH`），
+  与天族镜像 14046 的 `Contract(14046, 7, 6)` 同形；领奖/完成 owner 唯一 = `Muninn(203550)`（QE-052）。
+
+### 二十六之四、验证（2026-09-22）
+
+- 脚本 `.agents/summary/quest-10527-reward-row/apply_batch22_shadow_court_row_ladder.py`（`--check` PENDING → APPLY → `--check` 幂等）。
+- 结构校验：`xmllint --noout --schema quest_definition.xsd` 1/1 validates；`git diff --check` 干净。
+- **单任务审计**：24046 由 `ROW_BEHIND / INTERIOR_GAP / ROW_WITHOUT_STATE`
+  （`visible=0 1 2 3 5 6`、`rows_without_state=4 7`、`var0_max=6`、`recovery=False`）
+  → `ROW_ALIGNED / ALIGNED / ROW_STATE_ALIGNED`（`visible=0 1 2 3 4 5 6 7`、`var0_max=7`、`recovery=True`）；
+  镜像 14046 保持 `ROW_ALIGNED / ALIGNED / ROW_STATE_ALIGNED`（本批未改动）。
+- **全库快照**：`ROW_ALIGNED 2658 -> 2659`、`ROW_BEHIND 188 -> 187`、`ALIGNED 2430 -> 2431`、
+  `INTERIOR_GAP 266 -> 265`、`ROW_STATE_ALIGNED 2430 -> 2431`、`ROW_WITHOUT_STATE 519 -> 518`；
+  `MISSING_LAST_ROW 84`、`MISSING_TAIL_ROWS 80`、`NO_STATE 89`、`STATES_BEYOND_ROWS 2623`、`ROW_AHEAD 2589`、
+  `BOTH_MISALIGNED 177`、`STATE_OUT_OF_RANGE 2446` 均不变 —— 全部变化都来自 24046 一个任务。
+- **门禁测试**：
+  - 新增 `src/test/java/com/aionemu/gameserver/questEngine/definition/ShadowCourtRowLadderContractTest.java`（6 例）：
+    ① 两侧 8 行各有 START/REWARD 状态、reward 投影 = 7、`var0` 在 `SECTION_0` 且 `max=7`；
+    ② 副本段每步只推一格（3→4 带副本传送、4→5 需身处副本世界、4→3 是副本外回退、5→6 经 700369 逃出并传送回主城、
+       6→reward 由 203550 承接），且旧的 3→5 跳格已删除；
+    ③ planner 逐行推进 0→7 每步只进一格、同一动作在其他行号（回看/乱序）不产生计划、副本外触发 4→3 回退而副本内不触发；
+    ④ `REWARD + var0==6` 的 `enter-world` 自愈边唯一且只改行号，已修复存档不再改写；
+    ⑤ 700369 的 `can-act` 只在 `s5`、`s5` 的 die / 副本外 enter-world 回退保留；
+    ⑥ 两侧变体不互相污染（天族用道具+影片推进行 4、魔族用副本世界推进；天族不得传送进 320120000）。
+  - `JournalRewardRowRepairContractTest` 登记 `Contract(24046, 7, 6)`（reward 投影/自愈边/无陈旧行写入三条断言同时覆盖）。
+- **Maven（授权后执行，2026-09-22 14:24）**：9 个测试类 **44 例全绿**（含本批新增 6 例与扩表后的
+  `JournalRewardRowRepairContractTest` 3 例），`PRODUCTION_COMPILE_OK=6189 / FAILURES=0 /
+  INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。
+- **提交时复跑（更宽的回归面）**：24 个测试类 **158 例全绿**（上表 9 类 + 批次 15–21 的门禁类，`PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`）。
+- **已知无关红（不在本批范围，未修）**：`MissionItemConsumptionBatchRegressionTest` 断言 `20529 s9 -> reward` 与
+  `29064 started -> reward` 两条转换存在，而这两条在 **HEAD（未改动的 XML）里本来就不存在**（`git show HEAD:…` 计数为 0），
+  属既有失败，与本批无关；本批的 Maven 选择器因此不含该类。
+- **证据表**：[batch22-evidence.tsv](batch22-evidence.tsv)。
+- 客户端实机复测：**PENDING_CLIENT**。要点：① 与 Phyper/Srudgelmir/Galm 逐行推进时，任务书依次停在行 0→1→2→3；
+  ② 与加尔姆对话结束的瞬间任务书应切到行 4（进副本），进入审判所副本后切到行 5（找 3F 出口）；
+  ③ 用出口逃出并传送回主城后停在行 6（和 Srudgelmir 对话），对话结束任务书切到行 7（向 Muninn 报告）；
+  ④ 在 Muninn 处应能直接领奖（GOLD/EXP/AP/TITLE/道具），领奖行不再是“和 Srudgelmir 对话”；
+  ⑤ 旧存档（`REWARD + var0=6`）登录/切图后任务书应自动落在行 7。
+
+### 二十六之五、边界与后续
+
+- **行 4 是“与加尔姆对话后、进入副本世界前”的那一格**（legacy 自动传送，所以只有极短窗口可见）；副本内可持续的状态是行 5。
+  不要把行 4 改成“与 700368 交互”：700368 是 `portal_template2.xml` 里通往 3200900（地下竞技场）的入口，不是本任务副本。
+- `s4` 的两条 `enter-world` 边靠 `world-is 320120000` 的 true/false 互斥（编译器 `factConditionsAreMutuallyExclusive` 认这一对），
+  新增同类边必须保持条件互斥，否则 `AMBIGUOUS_TRANSITION`。
+- 本任务 `var0` 是行号而**不是** `SECTION_n` 计数槽，因此 `width=3/max=7` 足够；不要照搬批次 21 精锐兵族的 6-bit 约束。
+- reward 投影从 6 改到 7 属于 QE-046/QE-051 的“投影变更必须配自愈边”形态：跨部署在线的 `REWARD+6` 存档只靠 `enter-world` 自愈，
+  若后续要覆盖“在线不重登”的窗口，需要按 QE-046 追加同 owner 的领奖态入口自愈（本批未加，与镜像 14046 保持一致）。
+- 剩余“单步塌陷/错位”挂账：`1000/11000`（4 行，1000 侧 `NO_REWARD_ROW`）、`39713/49713`（3 行 FACTION 日任、三名可互换报告 NPC）；
+  另有 `COUNTER_CHAIN_GAP` 族（1842-1844、2842-2845、13910、16962、17016、18033、21292/21305、23703、23905-23908/23910/23917、
+  24112、24201、28030/28033、28313、28915、30600/30610、39001/39002、49002）待逐族判定。
+- 本批 Maven 命令（已执行，44 例全绿；后续批次沿用并追加新门禁类）：
+  `mvn -Dtest='ShadowCourtRowLadderContractTest,JournalRewardRowRepairContractTest,Quest14045And14046MoviePageTurnContractTest,CoreCapabilityRepresentativeDefinitionTest,QuestClientContractGateTest,QuestDialogOrderAuditTest,QuestItemSourceContractGateTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest' test`

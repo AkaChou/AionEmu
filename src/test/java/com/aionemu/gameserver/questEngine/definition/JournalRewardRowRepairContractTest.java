@@ -192,6 +192,7 @@ class JournalRewardRowRepairContractTest {
 		new Contract(24024, 5, 4),
 		new Contract(24025, 4, 3),
 		new Contract(24030, 9, 8),
+		new Contract(24046, 7, 6),
 		new Contract(24051, 6, 5),
 		new Contract(24121, 2, 0),
 		new Contract(24201, 2, 1),

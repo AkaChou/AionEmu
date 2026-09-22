@@ -189,6 +189,31 @@
     COUNTER_CHAIN）；`npc-complete` 的 preview 已展开 SELECT_QUEST_REWARD，不得再显式声明 reward 自环
     （AMBIGUOUS_TRANSITION）。剩余“单步塌陷/错位”挂账：`24046/14046`（8 行、两侧页动作不同形 + 既有 movie 翻页修复记录）、
     `1000/11000`（4 行）、`39713/49713`（3 行 FACTION 日任、三名可互换报告 NPC）。
+  - **批次 22 完成（2026-09-22，副本段行阶梯 24046 / 镜像 14046）**：族级判据——两侧客户端 quest_summary 都是 8 行
+    （末行向领奖 NPC 报告：24046 = Muninn 203550、14046 = Boreas 203704），且本族在 quest_monster 里没有任何门控行，
+    权威口径是 QE-051 的**行号口径**（行 n ↔ var0=n），不是批次 21 的 COUNTER_CHAIN。24046 侧迁移前的 legacy
+    `changeQuestStep(env, 3, 5, false)`（与加尔姆对话即传送进审判所副本 320120000）把行 4「进入 DC1_door_Q2076 寻找沉默审判官」
+    整格跳过、reward 投影又停在 6（客户端末行是 7），于是行 4 永不亮、领奖行与行 6 共用投影。行 4 点名的物件
+    `DC1_door_Q2076` 实为 700368，在 `portals/portal_template2.xml` 里通往 3200900（地下竞技场）而不是本任务副本，
+    因此**保留**“对话即传送进副本”的 legacy 行为。落点：`var0` `width=4/max=6 -> width=3/max=7`、补 `s4(START,var0=4)`、
+    `reward 6 -> 7`、`s3 --SETPRO4--> s4`（保留副本传送）、`s4 --enter-world(world-is 320120000)--> s5`、
+    `s4 --enter-world(expected=false)--> s3`、`s5 --700369 USE_OBJECT--> s6`（传送回 120010000）与 `s5` 的 die/副本外回退原样保留、
+    无 source `REWARD/var0=6 -> 7` 自愈边；owner 唯一 = 203550（QE-052）。验证：xmllint 1/1 validates；单任务审计
+    `ROW_BEHIND/INTERIOR_GAP/ROW_WITHOUT_STATE` -> `ROW_ALIGNED/ALIGNED/ROW_STATE_ALIGNED`（`visible=0..7`、`var0_max=7`、`recovery=True`）；
+    全库 `ROW_ALIGNED 2658->2659`、`ROW_BEHIND 188->187`、`ALIGNED 2430->2431`、`INTERIOR_GAP 266->265`、
+    `ROW_STATE_ALIGNED 2430->2431`、`ROW_WITHOUT_STATE 519->518`（其余计数不变，变化全部来自 24046）；
+    Maven 已授权 9 个测试类 **44 例全绿**（含新增 `ShadowCourtRowLadderContractTest` 6 例与扩表的
+    `JournalRewardRowRepairContractTest` 3 例，PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / WHITELIST_VIOLATIONS=0）、
+    客户端 **PENDING_CLIENT**。脚本 `apply_batch22_shadow_court_row_ladder.py`（--check 幂等）、证据 `batch22-evidence.tsv`、
+    报告 §二十六、模式卡 QE-051（批次 22 补充）。
+  - **批次 22 边界（下一批前必读）**：行 4 只存在于“与加尔姆对话之后、进入副本世界之前”的窗口（legacy 自动传送），
+    副本内可持续的状态是行 5；不要把行 4 改成与 700368 交互（那是通往 3200900 的 portal）。`s4` 的两条 enter-world 边靠
+    `world-is 320120000` 的 true/false 互斥，新增同类边必须保持条件互斥（否则 AMBIGUOUS_TRANSITION）。本任务 `var0` 是行号
+    而**不是** SECTION 计数槽，`width=3/max=7` 足够，**不要**照搬批次 21 精锐兵族的 6-bit 约束。已知既有红（与本批无关、未修）：
+    `MissionItemConsumptionBatchRegressionTest` 断言的 `20529 s9 -> reward` 与 `29064 started -> reward` 在 HEAD 里就不存在。
+    剩余“单步塌陷/错位”挂账：`1000/11000`（4 行，1000 侧 NO_REWARD_ROW）、`39713/49713`（3 行 FACTION 日任、三名可互换报告 NPC），
+    以及 `COUNTER_CHAIN_GAP` 族（1842-1844、2842-2845、13910、16962、17016、18033、21292/21305、23703、23905-23908/23910/23917、
+    24112、24201、28030/28033、28313、28915、30600/30610、39001/39002、49002）。
   - **批次 10 边界（下一批前必读）**：21455 的领奖 NPC 归属已在批次 12 收口（领奖/completion 799404 → Unset 799244，accept 仍是 799404 Miener）；25608 已在批次 11 收口（实际缺 ENTER_AREA 206534 与 ENTER_AREA 206542 两行；修复为 step2/step5 两个 enter-zone、HUNT→step3、Mumu SELECT5→step4、交付行归 step6、reward 5→6，并从客户端 DF6 Level.pak 的 mission_mission0.xml 触发点注册两个 sensory zone）；10530 第 8 行是与第 9 行共槽的空 `<p>`（镜像 20530 无此行），已在审计脚本登记 `DUPLICATE_VISIBLE_SLOT_BLANK_ROWS`，禁止按行号加一；19008/19014/19020/19026/19032 等“名人考试”族的 reward=1 属 legacy 语义（19057/29057 的 handler 另有 var0=2 的失败分支），不得按“末行行号 2”改；剩余 MISSING_LAST_ROW 95 个（镜像同缺 32、QE-045 锁 10）需逐族 legacy/retail 证据。
 - **批次 8 边界（下一批前必读）**：10522/20522/15542/25542/30211/30213/30311/30313 的 QE-046 基线已随写入方一起改到领奖行 1，后续再改这 8 个任务的 reward 投影必须同时改写入方并重刷基线；19064/29064/21455/30614 的领奖 NPC 归属已在批次 12 收口（30614 按客户端行内命名回滚为 Astella 800327，禁止再按 `terath_dredgion.xml` 单源改回 Aluna 800326）；26838（末行 Jarik01=806574，定义 806575）仍需先核实领奖 NPC 身份；28932/30203/30303 需要给无投影的 `started` 节点补 var0；1607/1990/2990/3502/14012/14013/17511/27511 属多阶段/内部缺口（INTERIOR_GAP、MISSING_TAIL_ROWS），必须单独设计阶段推进；脚本 `apply_batch8_external_writer_reward_row.py`（`--check` 幂等）、门禁 `ExternalRewardAdvanceReentryContractTest` 与 `Quest10522AutoStartDialogTest`。
   - **批次 7 边界（下一批前必读）**：10522/20522/15542/25542/30211/30213/30311/30313 的 QE-046 基线（reward 投影必须等于引擎外写入方的 packed step）已由批次 8 一并改到领奖行 1（写入方 + 投影 + 基线 TSV 三处同改）；30614/26838/19064/29064 的末行 NPC 与定义 NPC 不一致，需先核实领奖 NPC 身份；28932/30203/30303 需要给无投影的 `started` 节点补 var0；1607/1990/2990/3502/14012/14013/17511/27511 属多阶段/内部缺口（INTERIOR_GAP、MISSING_TAIL_ROWS），必须单独设计阶段推进。脚本 `apply_batch7_report_row_contract.py`、证据 `batch7-evidence.tsv`、门禁 `ReportRowRewardProjectionContractTest`（5 条合同）。

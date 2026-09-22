@@ -17,7 +17,10 @@
     </start-conditions>
   </metadata>
   <progress>
-    <bit-field name="var0" offset="0" width="4" min="0" max="6" persistence="PERSISTENT" scope="LOCAL"/>
+    <!-- 行号阶梯：var0 是任务书行号（0..7），不是客户端 SECTION 计数槽；与天族镜像 14046 同形。
+         Journal row index: var0 holds the quest_summary row (0..7), not a SECTION counter
+         slot; identical in shape to the Elyos twin 14046. -->
+    <bit-field name="var0" offset="0" width="3" min="0" max="7" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
@@ -35,6 +38,9 @@
     <node label="s3" status="START">
       <var name="var0" value="3"/>
     </node>
+    <node label="s4" status="START">
+      <var name="var0" value="4"/>
+    </node>
     <node label="s5" status="START">
       <var name="var0" value="5"/>
     </node>
@@ -42,11 +48,32 @@
       <var name="var0" value="6"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="6"/>
+      <var name="var0" value="7"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
+    <!-- 领奖行合同（QE-051）：客户端 quest_q24046.html 的 quest_summary 共 8 行，
+         末行是向 Muninn(203550) 报告；旧投影停在 6（第 7 行），进入世界时纠正为 7，
+         与天族镜像 14046 的 `REWARD && var0==6 -> 7` 自愈边同形。
+         Reward-row contract (QE-051): the eight quest_q24046 journal rows end with the
+         report to Muninn(203550); saves persisted at row 6 are repaired to row 7 on
+         enter-world, mirroring the Elyos twin 14046. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="6"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="7"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <transition source="unaccepted" target="started">
       <event>
         <level-up/>
@@ -146,7 +173,12 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
       </after-commit>
     </transition>
-    <transition source="s3" target="s5">
+    <!-- 行 4「进入 DC1_door_Q2076 寻找沉默审判官」：与竞技场管理员加尔姆对话后传送进审判所副本，
+         行号只推进一格（旧 handler 从 3 直接跳到 5，客户端第 5 行永远不亮）。
+         Row 4 ("enter the DC1 door and look for the silent judge"): the arena manager Garm teleports
+         the player into the Shadow Court instance and the journal row advances by exactly one step;
+         the legacy handler jumped 3 -> 5, so the client's fifth row never lit up. -->
+    <transition source="s3" target="s4">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204089" action="SETPRO4"/>
       </event>
@@ -154,12 +186,51 @@
         <variable-is field="var0" value="3"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="5"/>
+        <set-variable field="var0" value="4"/>
       </actions>
       <after-commit>
         <teleport-player-next-available-instance world-id="320120000" x="591.47894" y="420.20865" z="202.97754" heading="0"/>
         <sync-quest-state mode="PACKET_ONLY"/>
         <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 行 5「找到 IDDC1_Arena_3F_Exit 逃出秘密监狱」：踏入审判所副本世界即亮起
+         （旧 handler 用 var0=5 表示副本内状态）。
+         Row 5 ("find the 3F exit and escape the secret prison"): lights up as soon as the player is
+         inside the Shadow Court instance (the legacy handler used var0=5 for the in-instance state). -->
+    <transition source="s4" target="s5">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="4"/>
+        <world-is world-id="320120000" expected="true"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="5"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 传送未生效（副本已满 / 掉线）时把行 4 存档退回行 3，玩家可重新找加尔姆进入，
+         避免卡在无对话的行 4。
+         When the instance teleport never took effect (instance full, disconnect), a row-4 save rolls
+         back to row 3 so the player can re-enter through Garm instead of being stuck on a row without
+         dialogue. -->
+    <transition source="s4" target="s3">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <variable-is field="var0" value="4"/>
+        <world-is world-id="320120000" expected="false"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="3"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
     <transition source="s5" target="s6">
