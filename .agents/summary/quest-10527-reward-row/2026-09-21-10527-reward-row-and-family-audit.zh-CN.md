@@ -3529,3 +3529,71 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
 - 剩余 `MISSING_TAIL_ROWS 45`（39 个待逐族收口 + 6 个已登记例外）。其它挂账不变：
   `STATES_BEYOND_ROWS 2620`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 73`、客户端隔离族 8 个；
   既有红沿用 `QuestInteractionObjectCatalogTest` 8 条资格缺口。
+
+## 四十六、批次 42：布鲁斯特豪宁献花族 4033（A Bloom in Brusthonin）
+
+### 四十六之一、族判据与证据（2026-09-22）
+
+- **客户端任务书行**（`Dialogs/QUEST_Q4033.html`）：三行绑定 `[%0]`/`[%3]`/`[%6]`：
+  行 0「采集 DF2B_herb_d_n_c_40a 并交给 Heintz[collectitem]」、行 1「把花环献给
+  OBJ_DF2A_Tombstone_Q4033」、行 2「与 Heintz 对话」。
+- **客户端页链**：接取 `select1`（按钮 SELECT1_1）→ `select1_1`（ASK_QUEST_ACCEPT）→
+  `ask_quest_accept` → `quest_accept_1`；行 0 `select2`（CHECK_USER_HAS_QUEST_ITEM）→
+  `select2_1`（SELECT2_1_1）→ `select2_1_1`（SETPRO1，文本“请代我将花环送到 [墓碑]”），
+  缺少水仙花时走 `select2_2`；行 1 墓碑物件 700379 的 `select3`（SELECT3_1）→
+  `select3_1`（“将花环放在墓碑前。结束观察”）；行 2 Heintz 的 `select4`（SELECT_QUEST_REWARD）
+  → `select_quest_reward1` 领奖页。页 id：SELECT2=1352 / SELECT2_1=1353 / SELECT2_1_1=1354 /
+  SELECT2_2=1438 / SELECT3=1693 / SELECT3_1=1694 / SELECT4=2034。
+- **物品合同**：行 0 交 5 个 152000463（水仙花）换工作物品 182209042（花环，SETPRO1 的 give-item），
+  行 1 墓碑吃掉 182209042。
+- **旧定义错位**：`SETPRO1` 是 `started -> started` 自环（只发花环、不推进），墓碑 `SELECT3_1`
+  从 `started` 直接进 reward，行 2 用 `SELECT_QUEST_REWARD` 落回 reward/var0=0；行 1/行 2
+  没有状态。审计判成 `MISSING_TAIL_ROWS | ROW_BEHIND | ROW_WITHOUT_STATE(1 2) | visible=0`。
+
+### 四十六之二、落点（行阶梯 = START/START/REWARD）
+
+- **节点**：`unaccepted(0) / started(START,0) / s1(START,1) / reward(REWARD,2) / complete(0)`。
+- **行 0**：`started` 的 `select2` 链保持不变（CHECK 成功→`select2_1`，失败→`select2_2`），
+  `SETPRO1` 改为 `started -> s1` 并保留 `give-item 182209042`。
+- **行 1**：墓碑 700379 的 `USE_OBJECT -> SELECT3` 与 `SELECT3_1 -> reward`（条件 `has-item`
+  花环 1 个 + 移除）都收敛到 `s1`；同 source 保留
+  `can-act template-id=700379 action-type=ACTION_ITEM_USE` 资格声明。
+- **行 2**：`reward` 态用显式路由 `QUEST_SELECT -> SELECT4`、`SELECT_QUEST_REWARD ->
+  SHOW_SELECT_QUEST_REWARD_WINDOW1`（客户端行 2 的页是 `select4`，不在 `NPC_REPORT` 允许的
+  SELECT2/SELECT5/DEFAULT_SUCCESS 集合里，因此不能用 npc-report 块）；`npc-complete` 留在
+  `reward -> complete`，preview 只保留 `USE_OBJECT`。
+- **自愈边**：`REWARD && var0==0` 无 source `enter-world` → `reward(var0=2)`。
+
+### 四十六之三、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 1/1 validates；
+  `apply_batch42_tombstone_flower_row_ladder.py --apply` 后 `--check` 幂等 OK。
+- **全库行号审计（脚本 [11] 节已改为批次 42，并补登本族）**：
+  `MISSING_TAIL_ROWS 45 -> 44`（-1）、`ROW_BEHIND 142 -> 141`（-1）、
+  `ROW_WITHOUT_STATE 474 -> 473`（-1）、`ROW_ALIGNED 2708 -> 2709`（+1）、
+  `ROW_STATE_ALIGNED 2480 -> 2481`（+1）；任务转为
+  `ALIGNED + ROW_ALIGNED + ROW_STATE_ALIGNED + visible=0 1 2 + recovery=True`，
+  前后见 [batch42-evidence.tsv](batch42-evidence.tsv)。
+- **Maven（授权后执行）**：新增 `Batch42TombstoneFlowerRowContractTest`（5 例：每行一个状态 /
+  交花与制作花环推进行 1 / 墓碑献花限定在行 1 且带 ACTION_ITEM_USE 资格 / 行 2 的 select4 与
+  窗口 1 / 旧 `REWARD var0=0` 自愈）5/5 绿；同批回归
+  `Batch41PangaiaFortressRowContractTest` 5/5、`Batch40ThreeNpcTalkLadderContractTest` 5/5、
+  `Batch39TurnInTalkReportRowContractTest` 5/5、`ProductionCatalogWhitelistVerificationTest` 1/1
+  （`PRODUCTION_COMPILE_OK=6191 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 /
+  WHITELIST_VIOLATIONS=0`）、`QuestPageButtonAuditTest`(2)、`QuestHandoverContinuationAuditTest`(2)、
+  `QuestE2eInfrastructureTest`(41)、`AcceptAndConfirmationEntryContractTest`(2)、
+  `QuestClientContractGateTest` 全绿；`QuestInteractionObjectCatalogTest` 仍是既有 8 条
+  （13809/23809/30504/30554），4033 不在其中。
+- **客户端实机 PENDING_CLIENT**：① 接取后行 0 提示采集水仙花，交出 5 个后看到 `select2_1`
+  与 `select2_1_1`，点“等待制作”拿到花环并切行 1；② 墓碑处必须能出现 `select3` 献花页，
+  献花后切行 2；③ 回 Heintz 出现 `select4` 报告页，点“报告结果”弹奖励窗口 1 并完成；
+  ④ 没有花环时点墓碑不应能进入 `select3_1`；⑤ 旧存档 `REWARD + var0=0` 登录/切图后自愈到行 2。
+
+### 四十六之四、边界与后续
+
+- 行 2 的客户端页是 `select4`（不是 `select_success`），因此本任务不能套用 `NPC_REPORT`
+  模板，必须走显式 `QUEST_SELECT/SELECT_QUEST_REWARD` 路由——后续同类任务（页名非
+  SELECT2/SELECT5/DEFAULT_SUCCESS）都要按这个模式处理。
+- 剩余 `MISSING_TAIL_ROWS 44`（38 个待逐族收口 + 6 个已登记例外）。其它挂账不变：
+  `STATES_BEYOND_ROWS 2620`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 73`、客户端隔离族 8 个；
+  既有红沿用 `QuestInteractionObjectCatalogTest` 8 条资格缺口。
