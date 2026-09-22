@@ -1546,3 +1546,96 @@ var0 当 0→2 的投递计数，且客户端行内 `HousingLf_Event_ShugoSanta`
     需要先确定“谁是行内 NPC、谁是 owner”。
 - 本批 Maven 命令（已执行，99 例全绿；后续批次沿用并追加新门禁类）：
   `mvn -Dtest='CollapsedSingleStepLadderContractTest,MirrorRewardProjectionLagContractTest,QuestPrematureRewardRouteExclusionTest,Quest11110And1548PostKillReportDialogTest,DurableDaevanionWeaponRewardRowContractTest,RewardOwnerTrimContractTest,RewardRowResidualTwoRowContractTest,RewardRowEventTwoRowContractTest,RewardRowTwoRowTalkFamilyContractTest,RewardNpcOwnershipContractTest,RetailSingleStepRewardRowContractTest,LegacyRewardStepProjectionRegressionTest,QuestClientContractGateTest,QuestItemSourceContractGateTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest' test`
+
+---
+
+## 二十四、批次 20：焦树族 23809 / 13809（三棵 DeadTree + 领奖 owner 收敛，2026-09-22）
+
+### 二十四之一、族级判据与证据
+
+QC 判据（与批次 18/19 同源，但落点不同）：同形镜像对 `q` / `q±10000` 的客户端 `quest_summary` **行数相同**、
+末行都指向任务内的 NPC，而**两侧都不满足**“每行一个状态 + owner 唯一”：
+23809 被迁移塌陷（`ROW_BEHIND / MISSING_TAIL_ROWS / ROW_WITHOUT_STATE`、`visible=0`、缺行 1 2 3），
+13809 阶梯已对却让三棵树同时兼任接取与领奖（QE-052 owner 冗余）。
+
+- **迁移前 legacy handler**（`git show '7e9f0316c^:.../kaldor/_23809Scar_Of_The_Past.java'` 与
+  `_13809Tree_Is_Company.java`，**两侧逐行同形**）：`802429`(Vidarr/23809) 与 `802427`(Caetess/13809)
+  负责接取（`sendQuestDialog(env, 1011)`）、对话（`START_DIALOG -> 2375`）、领奖
+  （`SELECT_REWARD -> changeQuestStep(env, 3, 4, true)`、`REWARD -> sendQuestEndDialog`）；
+  `730969`/`730970`/`730971` 三棵树只做 `useQuestObject(env, 0,1 / 1,2 / 2,3, false, 0)`。
+  第 5 个参数是 `varNum`（`QuestHandler` 签名 `useQuestObject(env, step, nextStep, reward, varNum, ...)`），
+  **不发放物品**；`changeQuestStep(step,nextStep,true)` 在旧 helper 里只 `setStatus(REWARD)`、保留 packed step，
+  因此领奖态仍是 packed step 3（QE-045/QE-051 同形）。
+- **客户端页动作**（`Dialogs/20000_29999/quest_q23809.html` 与 `Dialogs/10000_19999/quest_q13809.html`，两侧同形）：
+  `select1`(accept) / `select2`(1352, `HACTION_SETPRO1`=10000) / `select3`(1693, `HACTION_SETPRO2`=10001) /
+  `select4`(2034, `HACTION_SETPRO3`=10002) / `select5`(2375, `HACTION_SELECT_QUEST_REWARD`=1009)；
+  `quest_summary` 行 0/1/2 = 依次调查 `DeadTree_a/b/c` 并采集 `quest_<id>a/b/c`，行 3 = 向守卫报告。
+- **owner 归属**：`client_npcs_npc.xml` 里 `802429 = LDF5_Fortress_Village_Guard01_D`、
+  `802427 = LDF5_Fortress_Village_Guard01_L`，与行 3 的行内字典键完全一致；三棵树是**天/魔共用世界物件**
+  （`LDF5_Fortress_FOBJ_B1_DeadTree_a|b|c`，`ai="quest_use_item"`，spawn 在 `600090000_Kaldor.xml`）。
+- **物品来源**：`quest_data.xml` 两侧都只声明 `<quest_work_items>`（182215485-487 / 182215493-495），
+  **没有** `quest_drop`、也没有 `collect_items`；三棵树 template 虽是 `quest_use_item`，但没有 quest drop，
+  所以采集物只能由任务自身发放——这是 13809 侧缺失 `give-item` 的判据（23809 侧原本就有）。
+
+### 二十四之二、改动（两侧同形，脚本 `apply_batch20_tree_ladder_owner_trim.py`）
+
+节点统一为 `unaccepted(0) / started(0) / stage1(1) / stage2(2) / reward(3) / complete(0)`（`var0` 仍 6 位宽）：
+
+- **每棵树两条边**：`USE_OBJECT` 显示本树页（730969→`SELECT2`、730970→`SELECT3`、730971→`SELECT4`），
+  `SETPRO1/2/3` 推进一格并按行发放本行采集物（`give-item`）。
+  同步模式按 legacy `sendUpdatePacket` 逐字对齐：START 行只发 `SM_QUEST_ACTION`（`PACKET_ONLY`），
+  最后一行进入 REWARD 时 legacy 额外 `onLvlUp + updateZone + updateNearbyQuests`
+  （即 `LEVEL_AND_VISIBILITY_REFRESH`）。
+- **owner 收敛（QE-052）**：`NPC_START` 与 `npc-complete` 都只留领奖 NPC（23809=802429、13809=802427），
+  三棵树不再接取/完成；删除 13809 侧 `started --802427 SETPRO1--> stage1` 的重复边
+  （它只是为 `select2` 页的 10000 按钮凑路由，掩盖了“树页挂在 NPC 上”的错位）。
+- **行 3（领奖行）**：`reward --QUEST_SELECT(领奖 NPC)--> reward` 显示客户端 `select5`；
+  `1009` 与领奖窗口继续由 `npc-complete` 的 `preview`（`USE_OBJECT SELECT_QUEST_REWARD`）承接，
+  **不再显式声明 SELECT_QUEST_REWARD 自环**（批次 19 的 `AMBIGUOUS_TRANSITION` 教训）。
+- **旧存档自愈**：`status=REWARD && var0==0 -> var0=3` 的无 source `enter-world` 边（两侧各一条，与
+  `JournalRewardRowRepairContractTest(13809, 3, 0)` 合同一致；塌陷定义把“在三棵树处一次性交付”的玩家写成 `REWARD+var0=0`）。
+
+### 二十四之三、验证（2026-09-22）
+
+- 脚本：`--check` 改动前 `BATCH20_PENDING` 2/2 → APPLY 2/2 → `--check` 2/2 幂等。
+- **单任务审计**：23809 `ROW_BEHIND / MISSING_TAIL_ROWS / ROW_WITHOUT_STATE`（`visible=0`、`rows_without_state=1 2 3`）
+  → `ROW_ALIGNED / ALIGNED / ROW_STATE_ALIGNED`（`visible=0 1 2 3`、`recovery=True`）；
+  13809 保持 `ROW_ALIGNED / ALIGNED / ROW_STATE_ALIGNED`（owner 由 4 条收敛为 1 条）。
+- **全库快照**：`ROW_ALIGNED 2658 -> 2659`、`ROW_BEHIND 188 -> 187`、`ROW_STATE_ALIGNED 2430 -> 2431`、
+  `ROW_WITHOUT_STATE 519 -> 518`（`ROW_AHEAD 2589`、`STATE_OUT_OF_RANGE 2446`、`BOTH_MISALIGNED 177`、
+  `MISSING_LAST_ROW 84`、`MISSING_TAIL_ROWS 79` 不变）——本批属“缺状态阶梯 + owner 冗余”形态。
+- **客户端页路由审计**（`QuestDialogOrderAudit` 全库跑，`docs/quest/client-dialog-mapping/*.csv` 为客户端页索引）：
+  两侧从 before 的 `select3(1693)/select4(2034)/select5(2375)` 三条 `CLIENT_PAGE_UNREACHED`（每侧 3 条，共 6 条）
+  变为 **0 条**：`1352 -> 10000`、`1693 -> 10001`、`2034 -> 10002`、`2375 -> 1009` 全部 `PAGE_ACTION_MATCHED`；
+  全库 `CLIENT_PAGE_UNREACHED 1374 -> 1368`、`TERMINAL_PAGE_REACHED 16727 -> 16723`（三棵树的 `npc-complete` preview 行消失）。
+- **结构校验**：`xmllint --noout --schema quest_definition.xsd` 2/2 validates；`git diff --check` 干净。
+- **IDEA lint / 脚本语法**：新门禁 `TreeLadderOwnerTrimContractTest.java` 经 IDEA 检查**无 error**（仅 2 条 helper 形参恒定值 warning）；`apply_batch20_tree_ladder_owner_trim.py` 语法检查通过并 `--check` 幂等。
+- **门禁测试**：`src/test/java/com/aionemu/gameserver/questEngine/definition/TreeLadderOwnerTrimContractTest.java` 7 例——
+  ① 每行一个状态（行 0..2 START、行 3 REWARD）且与镜像同形、领奖行落在 `var0` 位域内；
+  ② 每棵树只开自己的页（`SELECT2/3/4`）、只推一格、发放本行采集物、`PACKET_ONLY`→`LEVEL_AND_VISIBILITY_REFRESH` 同步；
+  ③ `QuestMutationPlanner` 逐行走阶梯（0→1→2→3 且状态 REWARD），**跳行/回看任何一行都无计划**（顺序门禁）；
+  ④ 接取与完成 owner 唯一 = 行内 NPC，talk 路由集合恰好 = 三棵树 + 领奖 NPC；
+  ⑤ 行 3 显示 `select5`、`1009` 只有 preview 一条路由（无重复自环）、完成计划移除三件 work item；
+  ⑥ 不再保留 `started/stage1 -> reward` 的塌陷跳转，reward 只能从行 2（或行 3 自身/自愈边）进入；
+  ⑦ 旧存档自愈边唯一且收敛到 3。
+- **Maven（授权后执行，2026-09-22 13:21）**：18 个测试类 **109 例全绿**（含本批新增 7 例），
+  `PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`
+  （三棵 `quest_use_item` 树在 `QuestInteractionObjectValidator` 下仍满足“显式 TALK 路由或 catalog drop”合同）。
+- **证据表**：[batch20-evidence.tsv](batch20-evidence.tsv)。
+- 客户端实机复测：**PENDING_CLIENT**。要点：① 802429/802427 接取后任务书停在第 1 行；
+  ② 依次使用三棵树（天/魔共用 730969/730970/730971），每棵树的页分别是“烧焦/烧剩/烧成灰烬”文案，
+  点“结束调查”后任务书前进一行并拿到对应采集物；
+  ③ 三棵树调查完后任务书停在第 4 行（向守卫报告），此时守卫页是“拿出采集到的东西，报告调查结果”，
+  点按钮应弹奖励窗口并可领奖；④ 老存档（历史上在三棵树处一次性交付、`REWARD+var0=0`）登录/切图后应落在领奖行；
+  ⑤ 三棵树在未接取/非本行时点击应无对话或无推进。
+
+### 二十四之四、后续
+
+- “单步塌陷对”剩余 4 个挂账：`23918/13918`（6 行、`SECTION_0..4` 串行门控 vs 32 节点组合计数模型）、
+  `24046/14046`（8 行、两侧页动作不同形 + 既有 movie 翻页修复）、`1000/11000`（4 行）、
+  `39713/49713`（3 行、FACTION 日任、三名可互换报告 NPC）。
+- 本批还顺带暴露一个**非本批范围**的镜像残留：13809 的 `<items>`（itemRequirements）在 23809 侧不存在，
+  两侧 `quest_data.xml` 都只声明 `quest_work_items`；该字段仅参与掉落上限判定（`QuestService`），
+  本族无 `quest_drop`，因此无行为差异，留待 metadata 对齐批次处理。
+- 本批 Maven 命令（已执行，109 例全绿；后续批次沿用并追加新门禁类）：
+  `mvn -Dtest='TreeLadderOwnerTrimContractTest,CollapsedSingleStepLadderContractTest,MirrorRewardProjectionLagContractTest,JournalRewardRowRepairContractTest,QuestPrematureRewardRouteExclusionTest,Quest11110And1548PostKillReportDialogTest,DurableDaevanionWeaponRewardRowContractTest,RewardOwnerTrimContractTest,RewardRowResidualTwoRowContractTest,RewardRowEventTwoRowContractTest,RewardRowTwoRowTalkFamilyContractTest,RewardNpcOwnershipContractTest,RetailSingleStepRewardRowContractTest,LegacyRewardStepProjectionRegressionTest,QuestClientContractGateTest,QuestItemSourceContractGateTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest' test`
