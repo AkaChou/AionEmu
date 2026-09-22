@@ -68,14 +68,14 @@ class NpcFactionQuestMutationPlannerTest {
 						  </nodes>
 						  <transitions>
 						    <transition source="unaccepted" target="started">
-						      <event><talk-to-npc npc-id="700001" dialog-id="1002"/></event>
+						      <event><dialog type="TALK_TO_NPC" npc-id="700001" action="QUEST_ACCEPT_1"/></event>
 						      <conditions><start-eligible/></conditions>
 						    </transition>
 						    <transition source="started" target="reward">
-						      <event><talk-to-npc npc-id="700001" dialog-id="1"/></event>
+						      <event><dialog type="TALK_TO_NPC" npc-id="700001" action="FINISH_DIALOG"/></event>
 						    </transition>
 						    <transition source="reward" target="complete">
-						      <event><talk-to-npc npc-id="700001" dialog-id="8"/></event>
+						      <event><dialog type="TALK_TO_NPC" npc-id="700001" action="SELECTED_QUEST_REWARD1"/></event>
 						      <actions><complete-quest reward-index="0"/></actions>
 						      <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
 						    </transition>

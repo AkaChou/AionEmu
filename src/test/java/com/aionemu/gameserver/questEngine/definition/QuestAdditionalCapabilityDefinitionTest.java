@@ -26,7 +26,7 @@ class QuestAdditionalCapabilityDefinitionTest {
 						  <metadata name="stigma-capabilities" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
 						  <nodes><node label="started" status="START"/></nodes>
 						  <transitions><transition source="started" target="started">
-						    <event><talk-to-npc npc-id="204264" dialog-id="3058"/></event>
+						    <event><dialog type="TALK_TO_NPC" npc-id="204264" action="SELECT7_1"/></event>
 						    <conditions>
 						      <equipped-item item-id="140000003" count="1"/>
 						      <membership-permission permission="STIGMA_SLOT_QUEST"/>
@@ -62,7 +62,7 @@ class QuestAdditionalCapabilityDefinitionTest {
 						  <metadata name="missing-item" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
 						  <nodes><node label="started" status="START"/></nodes>
 						  <transitions><transition source="started" target="started">
-						    <event><talk-to-npc npc-id="799513"/></event>
+						    <event><dialog type="TALK_TO_NPC" npc-id="799513"/></event>
 						    <conditions><has-item item-id="182203009" count="1" expected="false"/></conditions>
 						  </transition></transitions>
 						</quest-definition>
@@ -91,7 +91,7 @@ class QuestAdditionalCapabilityDefinitionTest {
 						  </metadata>
 						  <nodes><node label="started" status="START"/></nodes>
 						  <transitions><transition source="started" target="started">
-						    <event><talk-to-npc npc-id="799513"/></event>
+						    <event><dialog type="TALK_TO_NPC" npc-id="799513"/></event>
 						    <actions><grant-selected-reward reward-index="1"/></actions>
 						  </transition></transitions>
 						</quest-definition>
@@ -121,7 +121,7 @@ class QuestAdditionalCapabilityDefinitionTest {
 						    <node label="complete" status="COMPLETE"/>
 						  </nodes>
 						  <transitions><transition source="started" target="complete">
-						    <event><talk-to-npc npc-id="799513" dialog-id="8"/></event>
+						    <event><dialog type="TALK_TO_NPC" npc-id="799513" action="SELECTED_QUEST_REWARD1"/></event>
 						    <actions>
 						      <grant-selected-reward reward-index="0"/>
 						      <complete-quest reward-index="0"/>
@@ -153,7 +153,7 @@ class QuestAdditionalCapabilityDefinitionTest {
 						  <metadata name="capabilities" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
 						  <nodes><node label="started" status="START"/></nodes>
 						  <transitions><transition source="started" target="started">
-						    <event><talk-to-npc npc-id="799513"/></event>
+						    <event><dialog type="TALK_TO_NPC" npc-id="799513"/></event>
 						    <conditions>
 						      <player-in-group/>
 						      <advanced-class-is class="GLADIATOR"/>
@@ -182,7 +182,7 @@ class QuestAdditionalCapabilityDefinitionTest {
 						  <metadata name="class-change" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
 						  <nodes><node label="started" status="START"/></nodes>
 						  <transitions><transition source="started" target="started">
-						    <event><talk-to-npc npc-id="799513"/></event>
+						    <event><dialog type="TALK_TO_NPC" npc-id="799513"/></event>
 						    <after-commit><set-class class="GLADIATOR"/></after-commit>
 						  </transition></transitions>
 						</quest-definition>
@@ -226,7 +226,7 @@ class QuestAdditionalCapabilityDefinitionTest {
 						  <metadata name="currency" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
 						  <nodes><node label="started" status="START"/></nodes>
 						  <transitions><transition source="started" target="started">
-						    <event><talk-to-npc npc-id="211043"/></event>
+						    <event><dialog type="TALK_TO_NPC" npc-id="211043"/></event>
 						    <conditions><currency-at-least kind="GOLD" amount="20000"/></conditions>
 						    <actions><decrease-currency kind="GOLD" amount="20000"/></actions>
 						  </transition></transitions>
@@ -252,7 +252,7 @@ class QuestAdditionalCapabilityDefinitionTest {
 						  <metadata name="prerequisite-condition" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
 						  <nodes><node label="started" status="START"/></nodes>
 						  <transitions><transition source="started" target="started">
-						    <event><talk-to-npc npc-id="211043"/></event>
+						    <event><dialog type="TALK_TO_NPC" npc-id="211043"/></event>
 						    <conditions><quests-finished quest-ids="14020 14021"/></conditions>
 						  </transition></transitions>
 						</quest-definition>
@@ -282,7 +282,7 @@ class QuestAdditionalCapabilityDefinitionTest {
 						  <metadata name="currency-below" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
 						  <nodes><node label="started" status="START"/></nodes>
 						  <transitions><transition source="started" target="started">
-						    <event><talk-to-npc npc-id="211043"/></event>
+						    <event><dialog type="TALK_TO_NPC" npc-id="211043"/></event>
 						    <conditions><currency-below kind="GOLD" amount="6500"/></conditions>
 						  </transition></transitions>
 						</quest-definition>
@@ -309,8 +309,8 @@ class QuestAdditionalCapabilityDefinitionTest {
 						    <node label="solo" status="START"><var name="step" value="2"/></node>
 						  </nodes>
 						  <transitions>
-						    <transition source="started" target="grouped"><event><talk-to-npc npc-id="799513"/></event><conditions><player-in-group/></conditions></transition>
-						    <transition source="started" target="solo"><event><talk-to-npc npc-id="799513"/></event><conditions><player-in-group expected="false"/></conditions></transition>
+						    <transition source="started" target="grouped"><event><dialog type="TALK_TO_NPC" npc-id="799513"/></event><conditions><player-in-group/></conditions></transition>
+						    <transition source="started" target="solo"><event><dialog type="TALK_TO_NPC" npc-id="799513"/></event><conditions><player-in-group expected="false"/></conditions></transition>
 						  </transitions>
 						</quest-definition>
 
@@ -330,7 +330,7 @@ class QuestAdditionalCapabilityDefinitionTest {
 						  <metadata name="escort" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
 						  <nodes><node label="started" status="START"/></nodes>
 						  <transitions><transition source="started" target="started">
-						    <event><talk-to-npc npc-id="799036" dialog-id="10000"/></event>
+						    <event><dialog type="TALK_TO_NPC" npc-id="799036" action="SETPRO1"/></event>
 						    <after-commit><start-follow-current-target x="292.63895" y="489.47452" z="574.2429"/></after-commit>
 						  </transition></transitions>
 						</quest-definition>
@@ -355,7 +355,7 @@ class QuestAdditionalCapabilityDefinitionTest {
 						  <metadata name="defense" display-name-id="0" min-level="1" max-level="55" category="QUEST"/>
 						  <nodes><node label="started" status="START"/></nodes>
 						  <transitions><transition source="started" target="started">
-						    <event><talk-to-npc npc-id="799513"/></event>
+						    <event><dialog type="TALK_TO_NPC" npc-id="799513"/></event>
 						    <after-commit>
 						      <spawn-npc-random slot="defense-mob" replace-existing="true">
 						        <variant template-id="213576" world-id="310040000" x="254.74" y="236.72" z="217.48" heading="95"/>
@@ -388,7 +388,7 @@ class QuestAdditionalCapabilityDefinitionTest {
 						    <node label="step94" status="START"><var name="step" value="94"/></node>
 						  </nodes>
 						  <transitions>
-						    <transition source="step93" target="step94"><event><talk-to-npc npc-id="799513"/></event></transition>
+						    <transition source="step93" target="step94"><event><dialog type="TALK_TO_NPC" npc-id="799513"/></event></transition>
 						    <transition target="step93"><event><die/></event><conditions><status-is status="START"/><variable-at-least field="step" value="93"/><variable-below field="step" value="99"/></conditions></transition>
 						  </transitions>
 						</quest-definition>

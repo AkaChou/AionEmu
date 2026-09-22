@@ -157,7 +157,7 @@ class QuestDialogXmlSyntaxTest {
 	@Test
 	void legacyDialogTagsRemainReadable() {
 		QuestDefinition definition = parse("""
-			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203758" dialog-id="1003"/></event><after-commit><show-quest-dialog dialog-id="1003"/></after-commit></transition>
+			<transition source="unaccepted" target="unaccepted"><event><dialog type="TALK_TO_NPC" npc-id="203758" action="QUEST_REFUSE_1"/></event><after-commit><dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/></after-commit></transition>
 		""");
 		assertEquals(new QuestEvent.TalkToNpc(203758, 1003), definition.transitions().getFirst().event());
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1003)),

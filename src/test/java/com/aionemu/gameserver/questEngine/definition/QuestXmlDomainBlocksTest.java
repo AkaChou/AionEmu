@@ -32,14 +32,14 @@ class QuestXmlDomainBlocksTest {
 			</npc-start>
 			""";
 		String expanded = """
-			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203110" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1011"/></after-commit></transition>
-			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203110" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
-			<transition source="unaccepted" target="started"><event><talk-to-npc npc-id="203110" dialog-id="1002"/></event><conditions><start-eligible/></conditions><actions><give-item item-id="182400001" count="1"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
-			<transition source="unaccepted" target="started"><event><talk-to-npc npc-id="203110" dialog-id="20000"/></event><conditions><start-eligible/></conditions><actions><give-item item-id="182400001" count="1"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
-			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203110" dialog-id="1003"/></event><after-commit><show-quest-dialog dialog-id="1004"/></after-commit></transition>
-			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203110" dialog-ids="1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
-			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="203110" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-			<transition source="started" target="started"><event><talk-to-npc npc-id="203110" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+			<transition source="unaccepted" target="unaccepted"><event><dialog type="TALK_TO_NPC" npc-id="203110" action="QUEST_SELECT"/></event><after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT1"/></after-commit></transition>
+			<transition source="unaccepted" target="unaccepted"><event><dialog type="TALK_TO_NPC" npc-id="203110" action="ASK_QUEST_ACCEPT"/></event><after-commit><dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/></after-commit></transition>
+			<transition source="unaccepted" target="started"><event><dialog type="TALK_TO_NPC" npc-id="203110" action="QUEST_ACCEPT_1"/></event><conditions><start-eligible/></conditions><actions><give-item item-id="182400001" count="1"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/></after-commit></transition>
+			<transition source="unaccepted" target="started"><event><dialog type="TALK_TO_NPC" npc-id="203110" action="QUEST_ACCEPT_SIMPLE"/></event><conditions><start-eligible/></conditions><actions><give-item item-id="182400001" count="1"/></actions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+			<transition source="unaccepted" target="unaccepted"><event><dialog type="TALK_TO_NPC" npc-id="203110" action="QUEST_REFUSE_1"/></event><after-commit><dialog type="SHOW_QUEST_PAGE" page="QUEST_REFUSE_1"/></after-commit></transition>
+			<transition source="unaccepted" target="unaccepted"><event><dialog type="TALK_TO_NPC" npc-id="203110" actions="QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/></event><after-commit><close-dialog/></after-commit></transition>
+			<transition source="unaccepted" target="unaccepted"><event><dialog type="TALK_TO_NPC" npc-id="203110" action="FINISH_DIALOG"/></event><after-commit><dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/></after-commit></transition>
+			<transition source="started" target="started"><event><dialog type="TALK_TO_NPC" npc-id="203110" action="FINISH_DIALOG"/></event><after-commit><dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/></after-commit></transition>
 			""";
 
 		assertEquals(compile(startDefinition(block)).definition(), compile(startDefinition(expanded)).definition());
@@ -54,15 +54,15 @@ class QuestXmlDomainBlocksTest {
 			    selection-sources="unaccepted started" start-dialog-id="4762"/>
 			""";
 		String expanded = """
-			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="834166" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="4762"/></after-commit></transition>
-			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="834166" dialog-id="4763"/></event><after-commit><show-quest-dialog dialog-id="4763"/></after-commit></transition>
-			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="834166" dialog-id="1007"/></event><after-commit><show-quest-dialog dialog-id="4"/></after-commit></transition>
-			<transition source="unaccepted" target="started"><event><talk-to-npc npc-id="834166" dialog-id="1002"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="1003"/></after-commit></transition>
-			<transition source="unaccepted" target="started"><event><talk-to-npc npc-id="834166" dialog-id="20000"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
-			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="834166" dialog-id="1003"/></event><after-commit><show-quest-dialog dialog-id="1004"/></after-commit></transition>
-			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="834166" dialog-ids="1004 20001"/></event><after-commit><close-dialog/></after-commit></transition>
-			<transition source="unaccepted" target="unaccepted"><event><talk-to-npc npc-id="834166" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
-			<transition source="started" target="started"><event><talk-to-npc npc-id="834166" dialog-id="1008"/></event><after-commit><show-quest-selection-dialog dialog-id="10"/></after-commit></transition>
+			<transition source="unaccepted" target="unaccepted"><event><dialog type="TALK_TO_NPC" npc-id="834166" action="QUEST_SELECT"/></event><after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE"/></after-commit></transition>
+			<transition source="unaccepted" target="unaccepted"><event><dialog type="TALK_TO_NPC" npc-id="834166" action="SELECT_NONE_1"/></event><after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT_NONE_1"/></after-commit></transition>
+			<transition source="unaccepted" target="unaccepted"><event><dialog type="TALK_TO_NPC" npc-id="834166" action="ASK_QUEST_ACCEPT"/></event><after-commit><dialog type="SHOW_QUEST_PAGE" page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/></after-commit></transition>
+			<transition source="unaccepted" target="started"><event><dialog type="TALK_TO_NPC" npc-id="834166" action="QUEST_ACCEPT_1"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><dialog type="SHOW_QUEST_PAGE" page="QUEST_ACCEPT_1"/></after-commit></transition>
+			<transition source="unaccepted" target="started"><event><dialog type="TALK_TO_NPC" npc-id="834166" action="QUEST_ACCEPT_SIMPLE"/></event><conditions><start-eligible/></conditions><after-commit><sync-quest-state mode="VISIBILITY_REFRESH"/><close-dialog/></after-commit></transition>
+			<transition source="unaccepted" target="unaccepted"><event><dialog type="TALK_TO_NPC" npc-id="834166" action="QUEST_REFUSE_1"/></event><after-commit><dialog type="SHOW_QUEST_PAGE" page="QUEST_REFUSE_1"/></after-commit></transition>
+			<transition source="unaccepted" target="unaccepted"><event><dialog type="TALK_TO_NPC" npc-id="834166" actions="QUEST_REFUSE_2 QUEST_REFUSE_SIMPLE"/></event><after-commit><close-dialog/></after-commit></transition>
+			<transition source="unaccepted" target="unaccepted"><event><dialog type="TALK_TO_NPC" npc-id="834166" action="FINISH_DIALOG"/></event><after-commit><dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/></after-commit></transition>
+			<transition source="started" target="started"><event><dialog type="TALK_TO_NPC" npc-id="834166" action="FINISH_DIALOG"/></event><after-commit><dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/></after-commit></transition>
 			""";
 
 		assertEquals(compile(startDefinition(block)).definition(), compile(startDefinition(expanded)).definition());
@@ -216,7 +216,7 @@ class QuestXmlDomainBlocksTest {
 		assertCode("KILL_CHAIN_DUPLICATE_NODE", valid.replace("v1 v2 v3", "v1 v2 v2"));
 		assertCode("XML_BLOCK_BAD_NODE_REFERENCE", valid.replace("v1 v2 v3", "v1 missing v3"));
 		assertCode("KILL_CHAIN_EVENT_TYPE", valid.replace(
-			"<kill-npc npc-id=\"210001\"/>", "<talk-to-npc npc-id=\"210001\" dialog-id=\"31\"/>"));
+			"<kill-npc npc-id=\"210001\"/>", "<dialog type=\"TALK_TO_NPC\" npc-id=\"210001\" action=\"QUEST_SELECT\"/>"));
 		assertCode("KILL_CHAIN_EVENT_INVALID", valid.replace(
 			"npc-id=\"210001\"", "npc-id=\"210001\" npc-ids=\"210002\""));
 	}
@@ -237,21 +237,21 @@ class QuestXmlDomainBlocksTest {
 			<grant-reward kind="ITEM" id="188000001" amount="2"/>
 			""";
 		String after = """
-			<after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><show-quest-selection-dialog dialog-id="10"/></after-commit>
+			<after-commit><refresh-player-stats/><sync-quest-state mode="COMPLETION"/><dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/></after-commit>
 			""";
 		String expanded = """
-			<transition source="reward" target="reward"><event><talk-to-npc npc-id="203123" dialog-ids="-1 1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
-			<transition source="reward" target="complete"><event><talk-to-npc npc-id="203123" dialog-id="8"/></event><actions>
+			<transition source="reward" target="reward"><event><dialog type="TALK_TO_NPC" npc-id="203123" actions="USE_OBJECT SELECT_QUEST_REWARD"/></event><after-commit><dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/></after-commit></transition>
+			<transition source="reward" target="complete"><event><dialog type="TALK_TO_NPC" npc-id="203123" action="SELECTED_QUEST_REWARD1"/></event><actions>
 			""" + fixed + """
 			  <grant-reward kind="ITEM" id="100000001" amount="1"/><complete-quest reward-index="0"/></actions>
 			""" + after + """
 			</transition>
-			<transition source="reward" target="complete"><event><talk-to-npc npc-id="203123" dialog-id="9"/></event><actions>
+			<transition source="reward" target="complete"><event><dialog type="TALK_TO_NPC" npc-id="203123" action="SELECTED_QUEST_REWARD2"/></event><actions>
 			""" + fixed + """
 			  <grant-reward kind="ITEM" id="100000002" amount="1"/><complete-quest reward-index="0"/></actions>
 			""" + after + """
 			</transition>
-			<transition source="reward" target="complete"><event><talk-to-npc npc-id="203123" dialog-id="23"/></event><actions>
+			<transition source="reward" target="complete"><event><dialog type="TALK_TO_NPC" npc-id="203123" action="SELECTED_QUEST_NOREWARD"/></event><actions>
 			""" + fixed + """
 			  <complete-quest reward-index="0"/></actions>
 			""" + after + """
@@ -485,7 +485,7 @@ class QuestXmlDomainBlocksTest {
 					  </nodes>
 					  <transitions>
 					    <npc-start npc-id="203110" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-					    <transition source="started" target="reward"><event><talk-to-npc npc-id="203120" dialog-id="1009"/></event></transition>
+					    <transition source="started" target="reward"><event><dialog type="TALK_TO_NPC" npc-id="203120" action="SELECT_QUEST_REWARD"/></event></transition>
 					    <npc-complete npc-id="203123" source="reward" target="complete" fixed-reward-indices="0"
 					        dialog-ids="8..23" complete-reward-index="0" preview-dialog-ids="-1 1009" finish="NONE"/>
 					  </transitions>
@@ -566,12 +566,13 @@ class QuestXmlDomainBlocksTest {
 
 	@Test
 	void npcReportEqualsSupportedPagesAndPreservesAfterCommitOrder() {
-		for (int page : List.of(1352, 2375, 10002)) {
+		for (QuestDialogPage page : List.of(QuestDialogPage.SELECT2, QuestDialogPage.SELECT5,
+				QuestDialogPage.DEFAULT_SUCCESS)) {
 			String block = "<npc-report npc-id=\"203941\" source=\"started\" target=\"reward\" page=\""
 				+ page + "\"/>";
 			String expanded = """
-				<transition source="started" target="started"><event><talk-to-npc npc-id="203941" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="%d"/></after-commit></transition>
-				<transition source="started" target="reward"><event><talk-to-npc npc-id="203941" dialog-id="1009"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
+				<transition source="started" target="started"><event><dialog type="TALK_TO_NPC" npc-id="203941" action="QUEST_SELECT"/></event><after-commit><dialog type="SHOW_QUEST_PAGE" page="%s"/></after-commit></transition>
+				<transition source="started" target="reward"><event><dialog type="TALK_TO_NPC" npc-id="203941" action="SELECT_QUEST_REWARD"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/></after-commit></transition>
 				""".formatted(page);
 			assertEquals(compile(reportDefinition(block)).definition(), compile(reportDefinition(expanded)).definition());
 		}
@@ -584,8 +585,8 @@ class QuestXmlDomainBlocksTest {
 			+ "<npc-report npc-id=\"203941\" source=\"reward\" target=\"reward\" page=\"10002\"/>";
 		String expanded = """
 			%s
-			<transition source="reward" target="reward"><event><talk-to-npc npc-id="203941" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="10002"/></after-commit></transition>
-			<transition source="reward" target="reward"><event><talk-to-npc npc-id="203941" dialog-id="1009"/></event><after-commit><show-quest-dialog dialog-id="5"/></after-commit></transition>
+			<transition source="reward" target="reward"><event><dialog type="TALK_TO_NPC" npc-id="203941" action="QUEST_SELECT"/></event><after-commit><dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/></after-commit></transition>
+			<transition source="reward" target="reward"><event><dialog type="TALK_TO_NPC" npc-id="203941" action="SELECT_QUEST_REWARD"/></event><after-commit><dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/></after-commit></transition>
 			""".formatted(preparation);
 
 		assertEquals(compile(reportDefinition(block)).definition(), compile(reportDefinition(expanded)).definition());
@@ -596,8 +597,8 @@ class QuestXmlDomainBlocksTest {
 		String transitions = """
 			<npc-report npc-id="203941" source="started" target="reward" page="1352"/>
 			<transition source="started" target="reward">
-			  <event><talk-to-npc npc-id="203941" dialog-id="1009"/></event>
-			  <after-commit><show-quest-dialog dialog-id="5"/></after-commit>
+			  <event><dialog type="TALK_TO_NPC" npc-id="203941" action="SELECT_QUEST_REWARD"/></event>
+			  <after-commit><dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/></after-commit>
 			</transition>
 			""";
 		CompiledQuestDefinition compiled = compile(reportDefinition(transitions));
@@ -626,10 +627,10 @@ class QuestXmlDomainBlocksTest {
 				item-id="182215285" required="1"/>
 			""";
 		String expanded = """
-			<transition source="started" target="reward" priority="0"><event><talk-to-npc npc-id="800937" dialog-id="39"/></event><conditions><has-item item-id="182215285" count="1"/></conditions><actions><remove-item item-id="182215285" count="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
-			<transition source="started" target="started" priority="1"><event><talk-to-npc npc-id="800937" dialog-id="39"/></event><after-commit><show-quest-dialog dialog-id="2716"/></after-commit></transition>
-			<transition source="started" target="reward" priority="0"><event><talk-to-npc npc-id="800937" dialog-id="20002"/></event><conditions><has-item item-id="182215285" count="1"/></conditions><actions><remove-item item-id="182215285" count="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><show-quest-dialog dialog-id="5"/></after-commit></transition>
-			<transition source="started" target="started" priority="1"><event><talk-to-npc npc-id="800937" dialog-id="20002"/></event><after-commit><close-dialog/></after-commit></transition>
+			<transition source="started" target="reward" priority="0"><event><dialog type="TALK_TO_NPC" npc-id="800937" action="CHECK_USER_HAS_QUEST_ITEM"/></event><conditions><has-item item-id="182215285" count="1"/></conditions><actions><remove-item item-id="182215285" count="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/></after-commit></transition>
+			<transition source="started" target="started" priority="1"><event><dialog type="TALK_TO_NPC" npc-id="800937" action="CHECK_USER_HAS_QUEST_ITEM"/></event><after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT6"/></after-commit></transition>
+			<transition source="started" target="reward" priority="0"><event><dialog type="TALK_TO_NPC" npc-id="800937" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/></event><conditions><has-item item-id="182215285" count="1"/></conditions><actions><remove-item item-id="182215285" count="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/></after-commit></transition>
+			<transition source="started" target="started" priority="1"><event><dialog type="TALK_TO_NPC" npc-id="800937" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/></event><after-commit><close-dialog/></after-commit></transition>
 			""";
 		assertEquals(compile(itemReportDefinition(block)).definition(), compile(itemReportDefinition(expanded)).definition());
 
@@ -749,7 +750,7 @@ class QuestXmlDomainBlocksTest {
 					  </nodes>
 					  <transitions>
 					    <kill-routes source="started" target="k1" npc-ids="215468 215469"/>
-					    <transition source="k1" target="reward"><event><talk-to-npc npc-id="203941" dialog-id="1009"/></event></transition>
+					    <transition source="k1" target="reward"><event><dialog type="TALK_TO_NPC" npc-id="203941" action="SELECT_QUEST_REWARD"/></event></transition>
 					    <npc-report npc-id="203941" source="started" target="reward" page="1352"/>
 					  </transitions>
 					</quest-definition>
@@ -839,12 +840,12 @@ class QuestXmlDomainBlocksTest {
 			<npc-dialog source="started"
 			    npc-ids="203097 799093"
 			    dialog-ids="31">
-			  <show-quest-dialog dialog-id="1352"/>
+			  <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
 			</npc-dialog>
 			""";
 		String expanded = """
-			<transition source="started" target="started"><event><talk-to-npc npc-id="203097" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
-			<transition source="started" target="started"><event><talk-to-npc npc-id="799093" dialog-id="31"/></event><after-commit><show-quest-dialog dialog-id="1352"/></after-commit></transition>
+			<transition source="started" target="started"><event><dialog type="TALK_TO_NPC" npc-id="203097" action="QUEST_SELECT"/></event><after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT2"/></after-commit></transition>
+			<transition source="started" target="started"><event><dialog type="TALK_TO_NPC" npc-id="799093" action="QUEST_SELECT"/></event><after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT2"/></after-commit></transition>
 			""";
 
 		assertEquals(compile(npcDialogDefinition(block)).definition(),
@@ -855,7 +856,7 @@ class QuestXmlDomainBlocksTest {
 	void npcDialogSupportsAllThreeResponsesAndDialogIdForms() {
 		CompiledQuestDefinition definition = compile(npcDialogDefinition("""
 			<npc-dialog source="started" npc-ids="203097 799093" dialog-ids="31">
-			  <show-quest-dialog dialog-id="1352"/>
+			  <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
 			</npc-dialog>
 			"""));
 		assertEquals(List.of(
@@ -871,7 +872,7 @@ class QuestXmlDomainBlocksTest {
 
 		CompiledQuestDefinition selection = compile(npcDialogDefinition("""
 			<npc-dialog source="started" npc-ids="203097 799093" dialog-ids="31,32">
-			  <show-quest-selection-dialog dialog-id="10"/>
+			  <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
 			</npc-dialog>
 			"""));
 		assertEquals(List.of(new QuestEvent.TalkToNpc(203097, 31), new QuestEvent.TalkToNpc(203097, 32),
@@ -903,9 +904,9 @@ class QuestXmlDomainBlocksTest {
 			    <node label="reward" status="REWARD"/>
 			  </nodes>
 			  <transitions>
-			    <transition source="started" target="started"><event><talk-to-npc npc-id="203097" dialog-id="9"/></event></transition>
+			    <transition source="started" target="started"><event><dialog type="TALK_TO_NPC" npc-id="203097" action="SELECTED_QUEST_REWARD2"/></event></transition>
 			    <npc-dialog source="started" npc-ids="203097 799093" dialog-ids="31">
-			      <show-quest-dialog dialog-id="1352"/>
+			      <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
 			    </npc-dialog>
 			    <npc-report npc-id="800001" source="started" target="reward" page="1352"/>
 			  </transitions>
@@ -928,7 +929,7 @@ class QuestXmlDomainBlocksTest {
 	void npcDialogRejectsInvalidStructureAndContent() {
 		String valid = npcDialogDefinition("""
 			<npc-dialog source="started" npc-ids="203097 799093" dialog-ids="31">
-			  <show-quest-dialog dialog-id="1352"/>
+			  <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
 			</npc-dialog>
 			""");
 		assertCode("XML_BLOCK_BAD_NODE_REFERENCE", valid.replace("source=\"started\"", "source=\"missing\""));
@@ -945,14 +946,14 @@ class QuestXmlDomainBlocksTest {
 		assertCode("INVALID_XML", valid.replace("source=\"started\" ", ""));
 		assertCode("INVALID_XML", valid.replace("npc-ids=\"203097 799093\" ", ""));
 		assertCode("INVALID_XML", valid.replace("dialog-ids=\"31\"", ""));
-		assertCode("INVALID_XML", valid.replace("<show-quest-dialog dialog-id=\"1352\"/>", ""));
-		assertCode("INVALID_XML", valid.replace("<show-quest-dialog dialog-id=\"1352\"/>", "<show-quest-dialog/>"));
+		assertCode("INVALID_XML", valid.replace("<dialog type=\"SHOW_QUEST_PAGE\" page=\"SELECT2\"/>", ""));
+		assertCode("INVALID_XML", valid.replace("<dialog type=\"SHOW_QUEST_PAGE\" page=\"SELECT2\"/>", "<show-quest-dialog/>"));
 		assertCode("NPC_DIALOG_RESPONSE_INVALID", valid.replace("dialog-id=\"1352\"", "dialog-id=\"-1\""));
-		assertCode("INVALID_XML", valid.replace("<show-quest-dialog dialog-id=\"1352\"/>",
-			"<show-quest-dialog dialog-id=\"1352\"/><close-dialog/>"));
-		assertCode("INVALID_XML", valid.replace("<show-quest-dialog dialog-id=\"1352\"/>",
+		assertCode("INVALID_XML", valid.replace("<dialog type=\"SHOW_QUEST_PAGE\" page=\"SELECT2\"/>",
+			"<dialog type=\"SHOW_QUEST_PAGE\" page=\"SELECT2\"/><close-dialog/>"));
+		assertCode("INVALID_XML", valid.replace("<dialog type=\"SHOW_QUEST_PAGE\" page=\"SELECT2\"/>",
 			"<show-dialog-window dialog-id=\"1352\"/>"));
-		assertCode("INVALID_XML", valid.replace("<show-quest-dialog dialog-id=\"1352\"/>",
+		assertCode("INVALID_XML", valid.replace("<dialog type=\"SHOW_QUEST_PAGE\" page=\"SELECT2\"/>",
 			"<sync-quest-state mode=\"PACKET_ONLY\"/>"));
 	}
 
@@ -960,11 +961,11 @@ class QuestXmlDomainBlocksTest {
 	void npcDialogRejectsForbiddenAttributesAndNestedWrappers() {
 		String valid = npcDialogDefinition("""
 			<npc-dialog source="started" npc-ids="203097 799093" dialog-ids="31">
-			  <show-quest-dialog dialog-id="1352"/>
+			  <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
 			</npc-dialog>
 			""");
-		assertCode("INVALID_XML", valid.replace("<show-quest-dialog dialog-id=\"1352\"/>",
-			"<after-commit><show-quest-dialog dialog-id=\"1352\"/></after-commit>"));
+		assertCode("INVALID_XML", valid.replace("<dialog type=\"SHOW_QUEST_PAGE\" page=\"SELECT2\"/>",
+			"<after-commit><dialog type=\"SHOW_QUEST_PAGE\" page=\"SELECT2\"/></after-commit>"));
 		assertCode("INVALID_XML", valid.replace("npc-ids=\"203097 799093\"", "npc-ids=\"203097 799093\" target=\"started\""));
 		assertCode("INVALID_XML", valid.replace("npc-ids=\"203097 799093\"", "npc-ids=\"203097 799093\" priority=\"1\""));
 		assertCode("INVALID_XML", valid.replace("npc-ids=\"203097 799093\"", "npc-ids=\"203097 799093\" conditions=\"x\""));

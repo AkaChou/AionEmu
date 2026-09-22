@@ -37,7 +37,7 @@ class QuestMetadataXmlTest {
 						  </metadata>
 						  <nodes><node label="start" status="START"/></nodes>
 						  <transitions><transition source="start" target="start">
-						    <event><talk-to-npc npc-id="700001"/></event>
+						    <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
 						  </transition></transitions>
 						</quest-definition>
 
@@ -76,7 +76,7 @@ class QuestMetadataXmlTest {
 						    </start-condition-groups>
 						  </metadata>
 						  <nodes><node label="start" status="START"/></nodes>
-						  <transitions><transition source="start" target="start"><event><talk-to-npc npc-id="700001"/></event></transition></transitions>
+						  <transitions><transition source="start" target="start"><event><dialog type="TALK_TO_NPC" npc-id="700001"/></event></transition></transitions>
 						</quest-definition>
 
 				""";

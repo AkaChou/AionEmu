@@ -262,7 +262,7 @@ class QuestMutationPlannerTest {
 						  </metadata>
 						  <nodes><node label="started" status="START"/></nodes>
 						  <transitions><transition source="started" target="started">
-						    <event><talk-to-npc npc-id="700001"/></event>
+						    <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
 						    <actions><grant-selected-reward reward-index="1"/></actions>
 						  </transition></transitions>
 						</quest-definition>
@@ -291,7 +291,7 @@ class QuestMutationPlannerTest {
 						  </metadata>
 						  <nodes><node label="reward" status="REWARD"/><node label="complete" status="COMPLETE"/></nodes>
 						  <transitions><transition source="reward" target="complete">
-						    <event><talk-to-npc npc-id="700001"/></event>
+						    <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
 						    <actions><complete-quest reward-index="0"/></actions>
 						    <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
 						  </transition></transitions>
@@ -325,7 +325,7 @@ class QuestMutationPlannerTest {
 						    </start-condition-groups>
 						  </metadata>
 						  <nodes><node label="none" status="NONE"/><node label="started" status="START"/></nodes>
-						  <transitions><transition source="none" target="started"><event><talk-to-npc npc-id="700001"/></event></transition></transitions>
+						  <transitions><transition source="none" target="started"><event><dialog type="TALK_TO_NPC" npc-id="700001"/></event></transition></transitions>
 						</quest-definition>
 
 				""";
@@ -366,7 +366,7 @@ class QuestMutationPlannerTest {
 						  </nodes>
 						  <transitions>
 						    <transition source="none" target="started">
-						      <event><talk-to-npc npc-id="700001"/></event>
+						      <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
 						    </transition>
 						  </transitions>
 						</quest-definition>
@@ -539,7 +539,7 @@ class QuestMutationPlannerTest {
 						  </nodes>
 						  <transitions>
 						    <transition source="reward" target="complete">
-						      <event><talk-to-npc npc-id="700001"/></event>
+						      <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
 						      <actions><complete-quest reward-index="0"/></actions>
 						      <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
 						    </transition>
@@ -574,7 +574,7 @@ class QuestMutationPlannerTest {
 						  </nodes>
 						  <transitions>
 						    <transition source="reward" target="complete">
-						      <event><talk-to-npc npc-id="700001"/></event>
+						      <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
 						      <actions>
 						        <remove-item item-id="182400006" count="ALL"/>
 						        <complete-quest reward-index="0"/>
@@ -614,7 +614,7 @@ class QuestMutationPlannerTest {
 						  </nodes>
 						  <transitions>
 						    <transition source="reward" target="complete">
-						      <event><talk-to-npc npc-id="700001"/></event>
+						      <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
 						      <actions><complete-quest reward-index="0"/></actions>
 						      <after-commit><sync-quest-state mode="COMPLETION"/></after-commit>
 						    </transition>

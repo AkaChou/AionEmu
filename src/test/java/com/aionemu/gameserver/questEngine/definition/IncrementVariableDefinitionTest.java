@@ -133,7 +133,7 @@ class IncrementVariableDefinitionTest {
 						  <metadata name="below-xml" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
 						  <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
 						  <nodes><node label="start" status="START"><var name="var0" value="0"/></node><node label="done" status="REWARD"><var name="var0" value="1"/></node></nodes>
-						  <transitions><transition source="start" target="done"><event><talk-to-npc npc-id="203057" dialog-id="31"/></event><conditions><variable-below field="var0" value="1"/></conditions></transition></transitions>
+						  <transitions><transition source="start" target="done"><event><dialog type="TALK_TO_NPC" npc-id="203057" action="QUEST_SELECT"/></event><conditions><variable-below field="var0" value="1"/></conditions></transition></transitions>
 						</quest-definition>
 
 				""";
