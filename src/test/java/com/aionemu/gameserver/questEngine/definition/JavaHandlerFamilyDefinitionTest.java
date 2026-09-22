@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -333,7 +334,10 @@ class JavaHandlerFamilyDefinitionTest {
 	}
 
 	private static List<QuestAction> completions(List<QuestTransition> transitions, String source) {
-		return transitions.stream().filter(t -> t.sourceNode().equals(source) && t.targetNode().equals("complete"))
+		// 无 source 的 enter-world 自愈边会让 sourceNode() 为 null，必须用 null-safe 比较。
+		// Source-less enter-world heal routes have a null sourceNode, so compare null-safely.
+		return transitions.stream()
+			.filter(t -> Objects.equals(t.sourceNode(), source) && "complete".equals(t.targetNode()))
 			.flatMap(t -> t.actions().stream()).toList();
 	}
 

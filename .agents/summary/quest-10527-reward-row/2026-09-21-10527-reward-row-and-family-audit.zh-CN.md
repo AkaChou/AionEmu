@@ -3830,6 +3830,10 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
 
 ## 五十、批次 46：1123 感应区影片结束回调再落领奖行（2026-09-22，用户真机回归）
 
+> **批次 47 勘误（2026-09-22）**：本节的“影片结束回调落行 1”被用户真机判定推翻——1123 的客户端脚本是
+> `ProgressAll + sensoryArea`，任务说明行 = 客户端自身进度 + 服务端 `SECTION_0`，领奖态必须保持 legacy 的
+> `REWARD/var0=0`（抬到 1 会让任务说明整块空白）。落点见 §五十一；本节保留作为取证过程记录。
+
 ### 五十之一、报障与现场 trace
 
 用户真机复测批次 15 的 1123（Where's Tutty? / 失踪的托蒂1，Elyos，NPC 790001）时反馈
@@ -3903,3 +3907,71 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
   24024/24053/26800/26821/26823/26836/28500`，共 13 个）**未在本批扩围**：它们多为单行/计数型，
   且 24053 是已登记 fallback 例外；若后续出现同类“影片后任务书不刷新”报障，按本批模板
   （enter-zone 播片自环 + `movie-end` 落行 + sync）逐任务取证后再改。
+
+## 五十一、批次 47：1123 领奖态回到 `REWARD/var0=0`（客户端脚本驱动行，2026-09-22 用户真机判定）
+
+### 五十一之一、用户判定与新证据
+
+- 用户真机判定原文：“**看完影片，状态应该是 reward 0**”，并给出现场截图：影片结束后任务说明**整块空白**
+  （`任务说明` 下只剩任务名 + `显示地图` + 描述 + 基本奖励，两条 `<step>` 一条都不显示）。
+- 这与仓库既有先例同型：批次 29 的 1466（“legacy 落盘 2，**越出 0..1**，任务书会空白”，修法是归一化到范围内）。
+- 机制：1123 是本族里**唯一带客户端脚本**的任务——
+  `Quest_unpacked/quest_script_monster.csv`: `1123,ProgressAll,,sensoryArea,,1,LF1_SensoryArea_Q88`；
+  客户端自己累计感应区进度，任务说明行 = **客户端自身进度 + 服务端 `SECTION_0`**。批次 15 把服务端
+  `SECTION_0` 从 0 抬到 1，合计越出任务书声明的两行（槽位 `[%0]`/`[%3]`），两条都不亮。
+- 同型旁证：全库另外两个 `ProgressAll + sensoryArea` 任务 `50008/51008`（同样两行、槽位 0/3）早已在审计
+  脚本里登记为「var0 不是任务书行号」；同族 1122/1124/30507 **没有客户端脚本行**（纯服务端 var0 驱动），
+  所以批次 15 的“最后一行 = 1”只适用于它们，不适用于 1123。
+- 迁移前 Java handler `_1123Wheres_Tutty#onEnterZoneEvent` = `playQuestMovie(env, 11)` + `setStatus(REWARD)`
+  （**不写 var0**，落盘 0），与用户判定一致。
+
+### 五十一之二、落点（`1123.xml` 4 处）
+
+1. `reward` 节点投影 `var0 1 -> 0`（回到 legacy / 用户判定值）。
+2. enter-zone 事务恢复 legacy 同序：`play-movie 11` + 落 `REWARD/var0=0` +
+   `sync-quest-state LEVEL_AND_VISIBILITY_REFRESH`（保留批次 46 的“过场结束后不再刷新”教训：影片结束仍可能
+   丢刷新，但状态本身不再依赖客户端回调，因此不会卡死）。
+3. 新增 `reward -> reward` 的 `<movie-end movie-id="11"/>` 重同步：过场结束后再刷一次任务书。
+4. 自愈边反向：`REWARD/var0=1 -> 0`（把批次 15～46 期间已落盘的错值拉回 0；原先的
+   `REWARD/var0=0 -> 1` 正是会让任务书变空白的边，已删除）。
+
+### 五十一之三、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 1/1 validates；
+  `apply_batch47_client_scripted_reward_row.py --apply` 后 `--check` 幂等 OK。
+- **门禁**：新增 `Batch47ClientScriptedRewardRowContractTest` 5 例（领奖态保持 0 且全任务不得再写 `var0=1` /
+  感应区事务为 legacy 播片+落状态+刷新 / 影片结束重同步 / `REWARD/1 -> 0` 自愈 / 领奖页与 completion 仍归
+  790001）5/5 绿；批次 46 的 `Batch46MovieEndRowAdvanceContractTest` 因合同被本批取代而删除。
+- **回归**：`RewardRowResidualTwoRowContractTest`（1123 退出“末行 = 领奖行”合同，只保留 2484）、
+  `JavaHandlerFamilyDefinitionTest`、`QuestMovieAndDialogLoopRegressionTest`、
+  `QuestEngineNpcDialogDispatchTest`、`ProductionCatalogWhitelistVerificationTest`
+  （`PRODUCTION_COMPILE_OK=6191 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`）、
+  `QuestPageButtonAuditTest`、`QuestHandoverContinuationAuditTest`、`QuestE2eInfrastructureTest`、
+  `AcceptAndConfirmationEntryContractTest`、`QuestClientContractGateTest`、
+  `QuestPacketOrderRegressionTest` 共 99 例全绿。
+- **顺手修复的既有红**：`JavaHandlerFamilyDefinitionTest#tuttySearchAdvancesViaZoneEntryAndMovie` 的
+  `completions()` 辅助方法用 `t.sourceNode().equals(...)` 过滤，遇到 1123 的**无 source 自愈边**
+  （批次 15 起就存在）直接 NPE；本批按既有约定改为 `Objects.equals(...)` 空安全比较（该红与本批改动无关，
+  但属同一任务的测试代码）。
+- **全库行号审计**：1123 由 `ROW_ALIGNED | ALIGNED | ROW_STATE_ALIGNED（visible 0 1）` 变为
+  `ROW_BEHIND | MISSING_LAST_ROW | ROW_WITHOUT_STATE（visible 0）` —— 这是**口径预期变化**：行号口径对
+  客户端脚本驱动行不适用，审计脚本已新增 `CLIENT_SCRIPTED_ROW_EXCEPTIONS = {1123}` 登记并加注释，
+  [5] 节单独列出“已登记客户端脚本驱动行（ProgressAll + sensoryArea，领奖态保持 REWARD/var0=0）”。
+  计数变化：`ROW_ALIGNED 2713 -> 2712`、`ROW_BEHIND 137 -> 138`、`ROW_STATE_ALIGNED 2485 -> 2484`、
+  `ROW_WITHOUT_STATE 469 -> 470`、`MISSING_LAST_ROW 77 -> 78`、`MISSING_TAIL_ROWS 40` 不变。
+  另收紧一处口径：QE-051 候选列表（`audit-qe051-candidates.tsv`）现在排除已登记例外
+  （`COUNTER_SLOT/SHARED_VISIBLE/BLANK/NO_LEGACY/CLIENT_SCRIPTED`），候选数 `43 -> 33`，属口径修正而非新修复。
+- **客户端实机 PENDING_CLIENT（请按此复测）**：① 接取后任务说明显示行 0「到[FLA07]去寻找[LA53]的踪迹」；
+  ② 进入 LF1 感应区 → 播影片 11，服务端此时落 `REWARD/0`；③ **影片结束后任务说明不再空白**，应显示
+  「任务完成！和 Pernos 对话」（若仍空白，请把 `//quest set 1123 REWARD 0/1/2` 三种值的显示结果告诉我，
+  用于确认客户端行索引的确切公式）；④ 与 790001 对话出现 `select2`，点“回答被烤着吃了”弹奖励窗口并完成；
+  ⑤ 批次 15～46 期间已落盘 `REWARD/1` 的旧存档在登录/切图时自愈到 0。
+
+### 五十一之四、边界
+
+- **本批把“客户端脚本驱动行”提升为独立例外族**：凡 `quest_script_monster.csv` 里出现
+  `ProgressAll`（尤其 `sourceType=sensoryArea`）的任务，服务端 `reward` 投影**不得**按“末行索引”机械抬升，
+  必须保留 legacy/用户真机值；同族清单：`1123`（已登记）、`50008/51008`（早已登记为 var0 非行号）、
+  `1336/1661/1670/16920`（多感应区组合，行由客户端进度驱动，禁止按行号补阶梯）。
+- 建议后续把该边界提升为 memory-bank Pattern（QE-051 的客户端脚本驱动行补充），本轮因
+  `.agents/memory-bank/patterns/quest-engine.md` 正被并行任务编辑，未动该文件，仅在本报告留证。

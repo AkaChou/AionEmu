@@ -20,7 +20,7 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="1"/>
+      <var name="var0" value="0"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -28,20 +28,24 @@
   </nodes>
   <transitions>
     <dialog type="NPC_START" npc-id="790001" source="unaccepted" target="started" selection-sources="unaccepted" start-page="SELECT1"/>
-    <!-- QE-024：进入感应区只播片（自环），行推进交给客户端影片结束回调——过场遮罩期间下发状态
-         刷新会被客户端丢弃，任务书停在行 0（用户 2026-09-22 真机反馈“看完剧情后没有推进到下一步”）。
-         同族 1336（ProgressAll + sensoryArea ×12）就是 enter-zone 播片自环 + movie-end 落行的写法。
-         QE-024: the sensory zone only plays the movie; the journal row lands on the client's movie-end
-         callback (CM_PLAY_MOVIE_END), matching the sibling family 1336. -->
-    <transition source="started" target="started">
+    <!-- 客户端脚本驱动的任务书行（ProgressAll + sensoryArea）：1123 的客户端会自己累计感应区进度，
+         任务说明行 = 客户端进度 + 服务端 SECTION_0，所以服务端这里必须保持 legacy 的 `REWARD/var0=0`
+         （用户 2026-09-22 真机判定：“看完影片，状态应该是 reward 0”）；抬到 1 会让任务说明整块空白。
+         进入感应区：播片 11 + 落 REWARD/var0=0 + 刷新（与 legacy `playQuestMovie` + `setStatus(REWARD)` 同序）。
+         Client-scripted journal (ProgressAll + sensoryArea): the client adds its own sensory progress to
+         SECTION_0, so the server keeps the legacy REWARD/var0=0; raising it to 1 blanks the journal. -->
+    <transition source="started" target="reward">
       <event>
         <enter-zone zone="LF1_SENSORY_AREA_Q1123_210010000"/>
       </event>
       <after-commit>
         <play-movie movie-id="11"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <!-- 过场结束后再刷一次任务书（客户端 CM_PLAY_MOVIE_END 回调）。
+         Re-sync the journal on the client movie-end callback. -->
+    <transition source="reward" target="reward">
       <event>
         <movie-end movie-id="11"/>
       </event>
@@ -70,10 +74,10 @@
       </event>
       <conditions>
         <status-is status="REWARD"/>
-        <variable-is field="var0" value="0"/>
+        <variable-is field="var0" value="1"/>
       </conditions>
       <actions>
-        <set-variable field="var0" value="1"/>
+        <set-variable field="var0" value="0"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>

@@ -151,6 +151,17 @@ LEGACY_STEP_EXCEPTION = {
 
 # 批次 29 登记（2026-09-22）：var0 不是任务书行号（计数器 / 标志位 / 末行槽位不是 3×行号 /
 # 同一任务有多条分支领奖行），行号口径（QE-051）不适用；判定保持不变，只登记证据。
+# 批次 47 登记（2026-09-22，用户真机判定）：客户端脚本驱动的任务书行（ProgressAll + sensoryArea）。
+# 1123（Where's Tutty?）的客户端脚本是 `1123,ProgressAll,,sensoryArea,,1,LF1_SensoryArea_Q88`：
+# 客户端自己累计感应区进度，任务说明行 = 客户端进度 + 服务端 SECTION_0。用户真机验收“看完影片，
+# 状态应该是 reward 0”，服务端因此保持 legacy 的 `REWARD/var0=0`；批次 15 把它投影成 1 会让任务说明的
+# 两条 `<p visible="[%0]"/[%3]">` 全部不亮（整块空白，截图见 batch47-evidence.tsv 说明；同型先例 1466
+# 越界 0..1 同样空白），同族的 50008/51008 也早已登记为“var0 不是任务书行号”。
+# 行号口径对 1123 不适用，禁止按“末行索引 = 1”把它改回 1；门禁 Batch47ClientScriptedRewardRowContractTest。
+# Batch 47 registration: 1123's journal rows are client-scripted (ProgressAll + sensoryArea), so the
+# server keeps the legacy REWARD/var0=0 the user confirmed in-game; projecting 1 blanks the journal.
+CLIENT_SCRIPTED_ROW_EXCEPTIONS = {1123}
+
 COUNTER_SLOT_EXCEPTIONS = {
     2303,   # var0 = 11..15 / 21..25 击杀计数（quest_script Progress(11~14)/(15)/(21~24)/(25)）
     50008,  # ProgressAll + sensoryArea 计数，末行槽位 15 不是 3×行号
@@ -651,6 +662,8 @@ def main() -> int:
           f"{sorted(row['quest_id'] for row in missing if int(row['quest_id']) in COUNTER_SLOT_EXCEPTIONS)}")
     print(f"  其中已登记共享可见槽位族（行号口径多算一行，已按槽位口径收口）："
           f"{sorted(row['quest_id'] for row in missing if int(row['quest_id']) in SHARED_VISIBLE_SLOT_EXCEPTIONS)}")
+    print(f"  其中已登记客户端脚本驱动行（ProgressAll + sensoryArea，领奖态保持 REWARD/var0=0）："
+          f"{sorted(row['quest_id'] for row in missing if int(row['quest_id']) in CLIENT_SCRIPTED_ROW_EXCEPTIONS)}")
     print(f"  其中 legacy 无 handler / 无脚本（待取证，本批不改）："
           f"{sorted(row['quest_id'] for row in missing if int(row['quest_id']) in NO_LEGACY_HANDLER_OBSERVED)}")
     mirrored_missing = [row for row in missing
@@ -666,8 +679,12 @@ def main() -> int:
     for row, mirror in aligned_mirror[:20]:
         print(f"    {row['quest_id']} (reward={row['reward_var0']}) vs 镜像 "
               f"{mirror['quest_id']} (reward={mirror['reward_var0']}, 对齐)")
+    registered_exceptions = (COUNTER_SLOT_EXCEPTIONS | CLIENT_SCRIPTED_ROW_EXCEPTIONS
+                             | SHARED_VISIBLE_SLOT_EXCEPTIONS | MULTI_LAYER_COUNTER_EXCEPTIONS
+                             | BLANK_JOURNAL_SLOT_EXCEPTIONS | NO_LEGACY_HANDLER_OBSERVED)
     direct = [row for row in missing
               if row["last_row_kind"] == "DIALOG" and not row["qe045_locked"]
+              and int(row["quest_id"]) not in registered_exceptions
               and row["verdict"] in ("ROW_BEHIND", "ROW_AHEAD")]
     singles = [row for row in direct
                if (mirror := index.get(mirror_of(row["quest_id"])))
@@ -794,7 +811,8 @@ def main() -> int:
                    | BATCH44_FOAM_WISP_ROWS | BATCH45_THREE_ROW_AND_BRANCH_ROWS)
     registered_ids = (BLANK_JOURNAL_SLOT_EXCEPTIONS | CLIENT_ONLY_ISOLATED_QUESTS
                       | COUNTER_SLOT_EXCEPTIONS | MULTI_LAYER_COUNTER_EXCEPTIONS
-                      | SHARED_VISIBLE_SLOT_EXCEPTIONS | QE045_LOCKED) & tail_ids
+                      | SHARED_VISIBLE_SLOT_EXCEPTIONS | QE045_LOCKED
+                      | CLIENT_SCRIPTED_ROW_EXCEPTIONS) & tail_ids
     residual = [row for row in tail if row["quest_id"] not in set(fixed) | registered_ids]
     print(f"  MISSING_TAIL_ROWS={len(tail)}；已修复族（批次 31 Gelkmaros、批次 32 卡多尔迎新、"
           f"批次 34 Rentus Base、批次 35 情人节巧克力塔、批次 36 活动两族共 13 个、"

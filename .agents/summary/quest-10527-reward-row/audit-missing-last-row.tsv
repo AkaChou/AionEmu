@@ -1,6 +1,7 @@
 quest_id	client_rows	last_row_kind	last_row_text	reward_var0	last_start_node	last_start_var0	handover_writes	recovery	qe045_locked	verdict	row_state_verdict	client_section0	mirror_id	mirror_shape	mirror_reward_var0	mirror_last_row_text
 1005	10	DIALOG	和[%dic:STR_DIC_LA139]对话	8	None	None		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
 1114	6	OTHER	接受[%dic:STR_DIC_LA10]的奖赏	None	None	None		False	False	NO_REWARD_ROW	ROW_WITHOUT_STATE
+1123	2	DIALOG	任务完成！和[%dic:STR_DIC_LA12]%对话。	0	started	0		True	False	ROW_BEHIND	ROW_WITHOUT_STATE
 1149	3	DIALOG	和[%dic:STR_DIC_LA159]对话	1	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
 1157	2	OTHER	要[%dic:STR_DIC_LA45]履行承诺，说出取下印章的方法。	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE
 1170	2	OTHER	将找到的石像头放回石像顶部。	0	started	0		False	False	ROW_BEHIND	ROW_WITHOUT_STATE

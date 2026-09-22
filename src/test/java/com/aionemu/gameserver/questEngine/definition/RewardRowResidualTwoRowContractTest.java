@@ -22,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 锁定批次 15：残余“两行、末行是与领奖 NPC 的对话”族的领奖行合同（1123 / 2484）。
+ * 批次 47 起 1123 改判为“客户端脚本驱动行索引”（领奖态保持 REWARD/var0=0，见
+ * Batch47ClientScriptedRewardRowContractTest），本类只保留 2484 的“末行 = 领奖行”合同。
  * 1123 的行 1 写 `STR_DIC_LA12`（客户端 actor 名命名空间，不在 `STR_DIC_N_*` 键里，所以审计的
  * `last_row_npc_matches_quest` 是 False）；本批用同族交叉证据解键：1006/1122/1124/30507 四个任务的
  * `npc-complete` owner 全部是 790001，而客户端 NPC 表 790001 = Pernos，即 STR_DIC_LA12 = Pernos，
@@ -45,7 +47,6 @@ class RewardRowResidualTwoRowContractTest {
 	/* 批次 15 收口的两个任务：行 1 NPC 与 legacy/定义登记的报告 owner 集合。 */
 	/* The two quests closed by batch 15 with their row-1 NPC and the registered report owners. */
 	private static final List<Contract> CONTRACTS = List.of(
-		new Contract(1123, 790001),
 		new Contract(2484, 203331)
 	);
 
@@ -85,28 +86,24 @@ class RewardRowResidualTwoRowContractTest {
 
 	@Test
 	void rewardEntryRoutesKeepTheirRegisteredOwners() throws Exception {
-		/* 1123：REWARD 由 LF1 感应区影片推进进入（客户端行 0 的目标就是“到 FLA07 寻找踪迹”），
-		   全任务唯一 NPC 是 790001。批次 46 起入口拆成两步：enter-zone 只播片自环，行 1 在客户端
-		   影片结束回调（movie-end 11）落盘——过场遮罩期间下发状态刷新会被客户端丢弃（用户真机反馈
-		   “看完剧情后没有推进到下一步”，详见 Batch46MovieEndRowAdvanceContractTest）。
-		   Batch 46 splits the entry: the LF1 zone only plays movie 11, and the reward row lands on the
-		   client movie-end callback. */
+		/* 1123：批次 47 已按用户真机判定改判——本任务客户端脚本是 ProgressAll + sensoryArea，
+		   任务说明行 = 客户端自身进度 + 服务端 SECTION_0，因此领奖态必须保持 legacy 的 REWARD/var0=0
+		   （抬到 1 会让任务说明整块空白，见 Batch47ClientScriptedRewardRowContractTest）。
+		   入口仍是 LF1 感应区：播片 11 + 落 REWARD + 刷新，影片结束再重同步一次。 */
+		/* 1123 left this "last row = reward row" contract in batch 47: its client journal is scripted
+		   (ProgressAll + sensoryArea), so the server keeps the legacy REWARD/var0=0. */
 		List<QuestTransition> tuttyRoutes = definition(1123).definition().transitions().stream()
 			.filter(route -> "started".equals(route.sourceNode()))
 			.filter(route -> "reward".equals(route.targetNode()))
 			.toList();
 		assertEquals(1, tuttyRoutes.size(), "1123 reward entry route");
-		assertEquals(new QuestEvent.MovieEnd(11), tuttyRoutes.getFirst().event(),
-			"1123 must land REWARD on the LF1 sensory-area movie-end callback");
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
-				QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
-			tuttyRoutes.getFirst().afterCommit(), "1123 reward entry after-commit");
-		List<QuestTransition> tuttyZone = definition(1123).definition().transitions().stream()
-			.filter(route -> route.event() instanceof QuestEvent.EnterZone)
-			.toList();
-		assertEquals(1, tuttyZone.size(), "1123 must keep the LF1_SENSORY_AREA_Q1123 zone entry");
-		assertEquals(List.of(new AfterCommitAction.PlayMovie(11)), tuttyZone.getFirst().afterCommit(),
-			"1123 zone entry only plays movie 11");
+		assertEquals(QuestEvent.EnterZone.class, tuttyRoutes.getFirst().event().getClass(),
+			"1123 must keep the LF1_SENSORY_AREA_Q1123 zone entry");
+		assertEquals(List.of(new AfterCommitAction.PlayMovie(11),
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
+			tuttyRoutes.getFirst().afterCommit(), "1123 zone entry after-commit");
+		assertEquals(0, node(definition(1123).definition(), "reward").projection().variables().get("var0"),
+			"1123 keeps the client-scripted REWARD/var0=0 projection");
 
 		/* 2484：legacy 登记了 204407（接取）、700267（烽火对象写 var0=1）、203331（Hippolyta 领奖）三条 talk 路线。 */
 		/* 2484 keeps the three legacy talk routes: 204407 (start), 700267 (beacon writes var0=1), 203331 (Hippolyta). */
