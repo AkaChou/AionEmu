@@ -2748,3 +2748,83 @@ QE-051 的行号口径对它们不适用——本批把这点写进审计脚本�
   其余大批形态是「legacy 递增但客户端行更多」，**必须先判 `var0` 是否行号**，禁止机械补阶梯。
 - 挂账不变：`STATES_BEYOND_ROWS 2622`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 77`（全部已登记）、
   `section0 residual 837`、客户端隔离族 8 个（16984/26984/20015/18706/28706/3959/4963/29706）。
+
+## 三十七、批次 33：共享可见槽位族（25094，2026-09-22 用户授权后执行）
+
+### 三十七之一、族判据与证据（quest_summary 可见槽位重复 = 行号口径多算一行）
+
+批次 32 之后全库还剩 **76 个 `MISSING_TAIL_ROWS`**。本批先把 `quest_summary` 的 `visible="[%N]"` 槽位序列
+全量扫了一遍：绝大多数任务满足「槽位 = 3 × 状态号」（10527/20527 的 16 行是 `0,3,6,...,45`，其 reward=15
+已由用户在客户端验收；13800/23800/21217 的 3 行是 `0,3,6`），**3 行任务里只有 25094 是重复槽位形态
+`%0 / %3 / %3`**——行 1「和 Bakring 对话」与行 2「把贝克灵的礼物交给 Daruku」共用同一个槽位。
+
+| 项 | 证据 |
+|---|---|
+| 客户端 `quest_q25094.html` | `quest_summary` 3 行，槽位 `%0 / %3 / %3`；页链 `select1`(CHECK_USER_HAS_QUEST_ITEM) → `check_user_item_ok`(FINISH_DIALOG)、`select2`(SET_SUCCEED)、`select_success`(SELECT_QUEST_REWARD) |
+| 客户端 `quest.xml` | `collect_item1 quest_25094a 10` / `check_item1_1 quest_25094a 10` / `drop_monster_1 DF5_FOBJ_dragonbone_Q25094` |
+| retail `zz_retail_simple_quests.xml` | `start_type="TALK" start_ids="804929" end_npc_ids="804740" reset_world_id="300280000"`，单步 `COLLECT_ITEM ids="804929" action_ids="702768"` |
+| 领奖合同 | `report_open=31/QUEST_SELECT -> 10002/DEFAULT_SUCCESS`、`report_action=1009/SELECT_QUEST_REWARD -> REWARD`、`reward_page=5/SHOW_SELECT_QUEST_REWARD_WINDOW1` |
+| 迁移前 handler | `_25094An_Offering_Of_Friendship`：804929 的 `CHECK_COLLECTED_ITEMS` → `checkQuestItems(env, 0, 1, true, 10000, 10001)`；804740 的 REWARD 态 `sendQuestEndDialog` |
+
+三个要点：
+
+1. **槽位=3×状态号 ⇒ 真实状态只有 2 个**：25094 的客户端状态 0 = 行 0（采集龙骨），状态 1 = 行 1 + 行 2
+   （交骨骸给 Bakring 之后同时显示“和 Bakring 对话 / 把礼物交给 Daruku”）。行号口径（client_rows=3）多算
+   一行，这正是审计把它判成 `MISSING_TAIL_ROWS + ROW_WITHOUT_STATE(1 2)` 的原因，也是 QE-051 boundaries 里
+   登记过的“相邻状态共用 visible 槽位”形态。
+2. **legacy 意图与槽位口径一致（QE-054 解释旧存档）**：旧 handler 的 `checkQuestItems(env, 0, 1, true, ...)`
+   参数就是 0 -> 1 且置 REWARD，与客户端的状态 1 吻合；但旧 helper 的 reward 分支只 `setStatus(REWARD)`、
+   不写 nextStep（QE-054），所以旧存档实际落盘 `var0=0`，领奖态任务书会停在“把龙骨交给 Bakring”那一行。
+3. **reward 投影取 1（不是行号 2）**：按槽位口径，领奖行与行 1 同槽；本批把 `reward` 投影改成 1 并补
+   `REWARD/var0=0 -> 1` 的 enter-world 自愈边，同时补上缺失的 `s1(1)` START 状态。逐任务证据见
+   [batch33-evidence.tsv](batch33-evidence.tsv)。
+
+### 三十七之二、落点（两状态阶梯 + 双入口 + 共享槽位自愈边）
+
+- `started(0)`：龙骨物件 702768 的 `can-act ACTION_ITEM_USE` 与 `TALK_TO_NPC/USE_OBJECT` 自环保留，
+  `drop ... collecting-step="0"` 不变。
+- `started --CHECK_USER_HAS_QUEST_ITEM(804929)--> s1(1)`：条件 `has-item 182215736 ×10`，动作
+  `set var0=1` + `remove-item ×10`，after-commit = `LEVEL_AND_VISIBILITY_REFRESH` + 显示 `CHECK_USER_ITEM_OK`；
+  失败分支（无 source 条件）`priority=1` 显示 `CHECK_USER_ITEM_FAIL`。
+- `s1(1)` 上保留 `QUEST_SELECT` → `SELECT2`（客户端“好了，完成啦。你把这个交给 Daruku 吧”页）与
+  `FINISH_DIALOG` → `close-dialog`（`check_user_item_ok` 页唯一按钮；缺它 `QuestClientContractGateTest`
+  会报 `BUTTON_WITHOUT_ROUTE|25094|started|804929|39|10000|1008`）。
+- `s1 --SET_SUCCEED(804929)--> reward(1)`（`LEVEL_AND_VISIBILITY_REFRESH` + `close-dialog`）为规范路径；
+  另加防呆入口 `s1 --QUEST_SELECT(804740)--> reward(1)`（显示 `DEFAULT_SUCCESS`），保证玩家直接去找
+  Daruku 也不会卡死在状态 1。
+- `reward(1)`：`NPC_REPORT 804740 -> DEFAULT_SUCCESS`（合同 31 -> 10002）与 `SELECT_QUEST_REWARD ->
+  SHOW_SELECT_QUEST_REWARD_WINDOW1`，`npc-complete` owner 仍为 804740。
+- 自愈边：无 source 的 `enter-world`，条件 `REWARD && var0 == 0` → `set var0 = 1` + `LEVEL_AND_VISIBILITY_REFRESH`，
+  无 priority；已经是 1 的存档不重复提示。
+
+### 三十七之三、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 1/1 validates；`apply_batch33_shared_visible_slot_row.py
+  --check` 幂等（`BATCH33_OK 25094 already-applied`）。
+- **全库行号审计**：`MISSING_TAIL_ROWS 77 -> 76`、`MISSING_LAST_ROW 77 -> 78`（25094 从“缺两行”变成
+  “只差共享槽位那一行”），`ROW_ALIGNED/ROW_STATE_ALIGNED/ALIGNED/STATES_BEYOND_ROWS/INTERIOR_GAP` 不变；
+  25094 由 `ROW_BEHIND + ROW_WITHOUT_STATE(1 2) + visible=0` 变为 `visible=0 1 + recovery=True`，并在 [5] 节
+  登记为 **共享可见槽位族例外**（行号口径多算一行，禁止按末行索引 2 再补一行）。
+- **审计脚本**：新增 `SHARED_VISIBLE_SLOT_EXCEPTIONS = {25094}` 与 [5] 节对应打印行，[11] 节例外集合同步并入。
+- **Maven（授权后执行）**：29 个 reward/row/ladder/owner/catalog 测试类 **167 例全绿**，含新增
+  `Batch33SharedVisibleSlotContractTest`（8 例：两状态投影 / 每个可见槽位都有状态 / 采集交接推进 /
+  `SET_SUCCEED` 收尾 + `FINISH_DIALOG` 路由 / 奖励 NPC 防呆入口 / 领奖窗口与 owner / 旧存档自愈 + planner 收敛 /
+  不再保留 `started -> reward` 塌陷跳转且无越界写 2）；`PRODUCTION_COMPILE_OK=6191 / FAILURES=0 /
+  INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。修复过程中 `QuestClientContractGateTest` 先报出
+  `check_user_item_ok` 页按钮缺路由，已按门禁补 `FINISH_DIALOG` 自环后再跑全绿。
+- **客户端实机 PENDING_CLIENT**：① 接取后任务书应停在行 0“把灼热的龙族骨骸交给贝克灵”；② 交满 10 个骨骸
+  并和 Bakring 对话（拿出骨骸）后，任务书应立即切到“和贝克灵对话 / 把贝克灵的礼物交给达鲁库”两行
+  （同槽同时可见），而不是仍然显示交骨骸；③ 按 `select2` 的“结束对话”或直接找 Daruku，都应进入领奖态并能在
+  Daruku 的开奖励窗口里领奖；④ 旧存档（历史上被写成 `REWARD + var0=0`）登录/切图后应直接落在共享槽位那一行。
+
+### 三十七之四、边界与后续
+
+- **本族的判据是“槽位重复”而不是“行数”**：只有确认 `quest_summary` 的两行共用同一个 `%N` 时才能少算一行；
+  槽位序列为 `0,3,6,...`（大多数任务）时行号与状态号一致，仍按 QE-051 的行号口径处理。
+- 已知未收口的同类形态：`10525/20525` 的槽位是 `0,3,6,18,21,24,27,30`（状态 3/4/5 缺槽、行号口径与槽位口径
+  不一致），`10530` 的第 8/9 行共用槽位——这两个族需要各自的客户端证据，**不要**用 25094 的结论直接套改。
+- `MISSING_TAIL_ROWS` 剩余 70 个仍在 [11] 节列出；本批筛出的同形态候选 **14200/24155**（`STATES_BEYOND_ROWS`
+  计数行）、**30504/30554**（retail `ACTION 701098`，旧定义 `started --SET_SUCCEED--> reward` 塌陷，**无迁移前
+  handler**，只有 retail+客户端页链可依，需单独取证）留待后续批次。
+- 挂账不变：`STATES_BEYOND_ROWS 2622`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 78`、`section0 residual 837`、
+  客户端隔离族 8 个（16984/26984/20015/18706/28706/3959/4963/29706）。

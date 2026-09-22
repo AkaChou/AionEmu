@@ -35,6 +35,7 @@ quest_id	client_rows	reward_var0	last_start_node	last_start_var0	recovery	client
 24112	3	1	started	0	True	quest_q24112.html		告诉[%dic:STR_DIC_N_DF1A_Brodir_E]	14112	MISSING_LAST_ROW	1	和[%dic:STR_DIC_LA54]%对话	NO
 24120	3	1	started	0	False	quest_q24120.html		和[%dic:STR_DIC_W_DF2_SUB_A3]的[%dic:STR_DIC_N_Tree_Move_Nabalu]%对话	14120	ALIGNED	1	去[%dic:STR_DIC_W_LF2_SZ_A2]的[%dic:STR_DIC_E_LF2_Cherubim_Basket]中搜集水罐，然后交给[%dic:STR_DIC_W_LF2_SZ_B]的[%dic:STR_DIC_N_Tree_NoMove_Lodas]%[%collectitem]	NO
 24123	3	1	started	0	False	quest_q24123.html		向[%dic:STR_DIC_W_DF2_SUB_E2_1]的[%dic:STR_DIC_N_DF2_NPC_Ananta]%报告	14123	MISSING_LAST_ROW	1	向[%dic:STR_DIC_W_LF2_SZ_E2_SUB_1]的[%dic:STR_DIC_N_Dionera]%报告	NO
+25094	3	1	s1	1	True	quest_q25094.html		把贝克灵的礼物交给[%dic:STR_DIC_N_DF5_Daruku_E]%					NO
 25300	15	13	s13	13	True	quest_q25300.html		和厄夏勒的代理人[%dic:STR_DIC_N_DF5_Skuldun_E]%对话	15300	MISSING_LAST_ROW	13	在希哥尼亚和代理人[%dic:STR_DIC_N_LF5_Dike_E]%对话	NO
 50008	2	0	started	0	False	quest_q50008.html		与[%dic:STR_DIC_N_LC1_ChristmasEvent_Santa]对话					NO
 51008	2	0	started	0	False	quest_q51008.html		和[%dic:STR_DIC_E_DF_ChristmasEvent_Santa]对话					NO

@@ -202,6 +202,14 @@ BATCH31_GELKMAROS_ROW_LADDER = {21217, 21244, 21249}
 # and collapses the reward owner onto the NPC named by the third journal row.
 BATCH32_KALDOR_ROW_LADDER = {13800, 23800}
 
+# 批次 33 登记（2026-09-22）：客户端 quest_summary 可见槽位重复的“共享槽位”族（25094 An Offering of
+# Friendship）。客户端 3 行的槽位是 `%0 / %3 / %3`——行 1「和 Bakring 对话」与行 2「把礼物交给 Daruku」
+# 共用同一个槽位，客户端真实状态只有 2 个（状态 0 = 行 0，状态 1 = 行 1 + 行 2），行号口径多算一行；
+# 槽位与状态的关系由已客户端验收的 10527（16 行 → 槽位 0,3,6,...,45，reward=15）锁定为“槽位 = 3 × 状态号”。
+# 本批按槽位口径把 reward 投影定为 1，补 s1(1) START 状态与 `REWARD/var0=0 -> 1` 自愈边；门禁
+# Batch33SharedVisibleSlotContractTest。禁止按末行索引（=2）再补一行。
+SHARED_VISIBLE_SLOT_EXCEPTIONS = {25094}
+
 # 批次 26 登记（2026-09-22）：30600/30610 是 Named/Boss 双层计数（var0/var1 组合，客户端 select5 报告行由计数饱和驱动），
 # var0 不承载任务书行号；行号口径把它们判成 MISSING_TAIL_ROWS。批次 26 的自愈边与
 # Quest15546KillCounterSaturationFlowTest 锁定这两个任务，禁止按客户端行号补阶梯。
@@ -537,6 +545,8 @@ def main() -> int:
           f"{sorted(row['quest_id'] for row in missing if int(row['quest_id']) in LEGACY_STEP_EXCEPTION)}")
     print(f"  其中已登记计数器/标志位族（var0 不是行号）："
           f"{sorted(row['quest_id'] for row in missing if int(row['quest_id']) in COUNTER_SLOT_EXCEPTIONS)}")
+    print(f"  其中已登记共享可见槽位族（行号口径多算一行，已按槽位口径收口）："
+          f"{sorted(row['quest_id'] for row in missing if int(row['quest_id']) in SHARED_VISIBLE_SLOT_EXCEPTIONS)}")
     print(f"  其中 legacy 无 handler / 无脚本（待取证，本批不改）："
           f"{sorted(row['quest_id'] for row in missing if int(row['quest_id']) in NO_LEGACY_HANDLER_OBSERVED)}")
     mirrored_missing = [row for row in missing
@@ -668,19 +678,19 @@ def main() -> int:
           "门禁 CutsceneHiddenQuestFamilyContractTest")
     print(f"  仍隔离（无定义、无任务书行，只登记证据）={sorted(CLIENT_ONLY_ISOLATED_QUESTS)}")
 
-    print("\n[11] 缺尾部多行（MISSING_TAIL_ROWS）逐族盘点（批次 32）：")
+    print("\n[11] 缺尾部多行（MISSING_TAIL_ROWS）逐族盘点（批次 33）：")
     tail = [row for row in rows if row["shape"] == "MISSING_TAIL_ROWS"]
     tail_ids = {row["quest_id"] for row in tail}
     fixed = sorted(BATCH31_GELKMAROS_ROW_LADDER | BATCH32_KALDOR_ROW_LADDER)
     registered_ids = (BLANK_JOURNAL_SLOT_EXCEPTIONS | CLIENT_ONLY_ISOLATED_QUESTS
                       | COUNTER_SLOT_EXCEPTIONS | MULTI_LAYER_COUNTER_EXCEPTIONS
-                      | QE045_LOCKED) & tail_ids
+                      | SHARED_VISIBLE_SLOT_EXCEPTIONS | QE045_LOCKED) & tail_ids
     residual = [row for row in tail if row["quest_id"] not in set(fixed) | registered_ids]
     print(f"  MISSING_TAIL_ROWS={len(tail)}；已修复族（批次 31 Gelkmaros 三行阶梯 21217/21244/21249；批次 32 卡多尔迎新两阶段阶梯 13800/23800，均已转 ALIGNED）={fixed}")
     stuck = sorted((BATCH31_GELKMAROS_ROW_LADDER | BATCH32_KALDOR_ROW_LADDER) & tail_ids)
     if stuck:
         print(f"  ⚠ 本批修复清单仍在缺尾桶={stuck}")
-    print(f"  已登记例外（空槽位/客户端隔离/计数槽/双层计数/QE-045 锁）={len(registered_ids)} {sorted(registered_ids)}")
+    print(f"  已登记例外（空槽位/客户端隔离/计数槽/双层计数/共享槽位/QE-045 锁）={len(registered_ids)} {sorted(registered_ids)}")
     print(f"  其余待逐族收口={len(residual)}；样例："
           + "; ".join(f"{row['quest_id']}(rows={row['client_rows']},缺={row['rows_without_state']})"
                       for row in residual[:12]))
