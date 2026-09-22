@@ -3597,3 +3597,69 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
 - 剩余 `MISSING_TAIL_ROWS 44`（38 个待逐族收口 + 6 个已登记例外）。其它挂账不变：
   `STATES_BEYOND_ROWS 2620`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 73`、客户端隔离族 8 个；
   既有红沿用 `QuestInteractionObjectCatalogTest` 8 条资格缺口。
+
+## 四十七、批次 43：食人花解毒剂族 2239（Malodor Antidote）
+
+### 四十七之一、族判据与证据（2026-09-22）
+
+- **客户端任务书行**（`Dialogs/QUEST_Q2239.html`）：三行绑定 `[%0]`/`[%3]`/`[%6]`：
+  行 0「和 Vovetirn 对话。」、行 1「把 quest_2239a 交给 Vovetirn[collectitem]」、
+  行 2「把食人花解毒剂交给 Gilungk。」
+- **页链**：接取 `select1` → `select1_1` → `ask_quest_accept` → `quest_accept_1`（Gilungk 203613
+  委托“去问问 Vovetirn 该怎么办”）；行 0 Vovetirn 203630 的 `select2`（“转达基隆克的话”）→
+  `select2_1`（SELECT2_1_1）→ `select2_1_1`（SETPRO1，“请您快去搜集食人花的外皮”）；行 1
+  `select3`（CHECK_USER_HAS_QUEST_ITEM，“拿出食人花的外皮”）→ 成功 `select3_2`（SETPRO2，
+  “好了…快去把解毒剂给基隆克吧”）/ 失败 `select3_1`；行 2 Gilungk 的 `select4`（SETPRO3，
+  “拿出食人花解毒剂”）→ `select_quest_reward1`。页 id：SELECT2=1352 / SELECT2_1=1353 /
+  SELECT2_1_1=1354 / SELECT3=1693 / SELECT3_1=1694 / SELECT3_2=1779 / SELECT4=2034。
+- **物品合同**：行 1 交 3 个 182203228（食人花外皮，掉落 210482/210483），Vovetirn 发出
+  工作物品 182203227（食人花解毒剂）；行 2 交给 Gilungk。
+- **旧定义错位**：Gilungk 与 Vovetirn 都是 `NPC_START + NPC_REPORT + npc-complete`，
+  `SETPRO1` 直接 `started -> reward`（顺手移除 3 个外皮），行 1 的 select3 链与行 2 的 select4
+  完全缺失。审计判成 `MISSING_TAIL_ROWS | ROW_BEHIND | ROW_WITHOUT_STATE(1 2) | visible=0`。
+
+### 四十七之二、落点（行阶梯 = START/START/REWARD）
+
+- **节点**：`unaccepted(0) / started(START,0) / s1(START,1) / reward(REWARD,2) / complete(0)`。
+- **接取**：只保留 Gilungk 的 `NPC_START`（`start-page=SELECT1`）+ `SELECT1_1` 第二页。
+- **行 0**：Vovetirn 的 `select2` 链在 `started`，`SETPRO1 -> s1`。
+- **行 1**：Vovetirn 的 `select3` 链在 `s1`，`CHECK_USER_HAS_QUEST_ITEM`（3 个外皮，
+  成功→`select3_2`、失败→`select3_1`），`SETPRO2 -> reward` 并 `give-item 182203227`。
+- **行 2**：Gilungk 的 `select4`（`reward` 态的 `QUEST_SELECT`）与 `SETPRO3`（交出解毒剂 +
+  `SHOW_SELECT_QUEST_REWARD_WINDOW1`）；客户端按钮名虽然是 SETPRO3，落点仍是 var0=2 的 REWARD 行
+  （三行任务的槽位只到 2，不能写 var0=3）。`npc-complete` 收敛到 Gilungk，preview 只保留 `USE_OBJECT`。
+- **自愈边**：`REWARD && var0==0` 无 source `enter-world` → `reward(var0=2)`；Vovetirn 不再有领奖口。
+
+### 四十七之三、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 1/1 validates；
+  `apply_batch43_malodor_antidote_row_ladder.py --apply` 后 `--check` 幂等 OK。
+- **全库行号审计（脚本 [11] 节已改为批次 43，并补登本族）**：
+  `MISSING_TAIL_ROWS 44 -> 43`（-1）、`ROW_BEHIND 141 -> 140`（-1）、
+  `ROW_WITHOUT_STATE 473 -> 472`（-1）、`ROW_ALIGNED 2709 -> 2710`（+1）、
+  `ROW_STATE_ALIGNED 2481 -> 2482`（+1）；任务转为
+  `ALIGNED + ROW_ALIGNED + ROW_STATE_ALIGNED + visible=0 1 2 + recovery=True`，
+  前后见 [batch43-evidence.tsv](batch43-evidence.tsv)。
+- **Maven（授权后执行）**：新增 `Batch43MalodorAntidoteRowContractTest`（5 例：每行一个状态 /
+  接取只在 Gilungk / Vovetirn 的 select2 链与 select3 交皮链 + 解毒剂发放 / 行 2 的 select4 与
+  窗口 1 且 Vovetirn 无领奖口 / 旧 `REWARD var0=0` 自愈）5/5 绿；同批回归
+  `Batch42TombstoneFlowerRowContractTest` 5/5、`Batch41PangaiaFortressRowContractTest` 5/5、
+  `Batch40ThreeNpcTalkLadderContractTest` 5/5、`ProductionCatalogWhitelistVerificationTest` 1/1
+  （`PRODUCTION_COMPILE_OK=6191 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 /
+  WHITELIST_VIOLATIONS=0`）、`QuestPageButtonAuditTest`(2)、`QuestHandoverContinuationAuditTest`(2)、
+  `QuestE2eInfrastructureTest`(41)、`AcceptAndConfirmationEntryContractTest`(2)、
+  `QuestClientContractGateTest` 全绿，合计 76 例中唯一红仍是既有
+  `QuestInteractionObjectCatalogTest` 的 8 条（13809/23809/30504/30554），2239 不在其中。
+- **客户端实机 PENDING_CLIENT**：① 接取后行 0 只有 Gilungk 有接取对话、Vovetirn 的 select2 链可达；
+  ② 行 1 交 3 个外皮后必须看到 `select3_2` 并拿到解毒剂，任务书切行 2；
+  ③ 行 2 找 Gilungk 出现 `select4`，点“拿出解毒剂”弹奖励窗口 1 并完成；
+  ④ 外皮不足时点 CHECK 必须走 `select3_1` 且不掉解毒剂；⑤ Vovetirn 处不应出现领奖窗口；
+  ⑥ 旧存档 `REWARD + var0=0` 登录/切图后自愈到行 2。
+
+### 四十七之四、边界与后续
+
+- 客户端按钮 `SETPRO3` 是任务书最后一行的“交出解毒剂”动作，不是第四个状态；本批把它落在
+  reward 自环上并复用窗口 1，未把 var0 写成 3（三行任务的状态上限是 2）。
+- 剩余 `MISSING_TAIL_ROWS 43`（37 个待逐族收口 + 6 个已登记例外）。其它挂账不变：
+  `STATES_BEYOND_ROWS 2620`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 73`、客户端隔离族 8 个；
+  既有红沿用 `QuestInteractionObjectCatalogTest` 8 条资格缺口。
