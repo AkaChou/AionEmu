@@ -314,6 +314,34 @@
     Maven 32 个测试类 **204 例全绿**（含新增 HousingRecycleRewardRowContractTest 5 例；PRODUCTION_COMPILE_OK=6189 /
     FAILURES=0 / WHITELIST_VIOLATIONS=0）；客户端实机 PENDING_CLIENT。脚本 apply_batch27_housing_reward_row.py（--check 幂等）、
     证据 batch27-evidence.tsv、报告 §三十一、模式卡 QE-054。
+  - **批次 28 完成（2026-09-22，legacy 落盘 step + 三段行阶梯 16800/26800）**：收口 QE-054 首轮分类里剩下的两个真缺陷。
+    客户端 quest_q16800.html / quest_q26800.html 的 quest_summary 都是 3 行（行 0 使用激活的塔碎片进入 LF_Tower/DF_Tower、
+    行 1 和永恒之塔警备组长 Etezar 806232 / Enfitenta 806233 对话、行 2 向代理人维达 806148 / 佩莱格兰 806149 报告）；
+    legacy `_16800Into_The_Archives` / `_26800A_Call_For_Champions` 的落盘 step 链是
+    `changeQuestStep(env, 0, 1, false)`（LF/DF 感应区）→ `changeQuestStep(env, 1, 2, false)`（806232/806233 的 SET_REWARD）→
+    `playQuestMovie(931/932)` + `changeQuestStep(env, 2, 3, true)`（知识书库 IDETERNITY_01_Q16800_301540000），
+    而迁移前 `QuestHandler.changeQuestStep` 的 reward 分支只 `setStatus(REWARD)`、**不写 nextStep**，所以领奖态落盘 step = 2
+    （= 客户端末行索引）。旧 XML 把领奖态分别写成 **16800=1**（var0 只有 1 bit、没有 s1/s2 阶梯、用 at-distance 206535 +
+    var1 影片旗标代替 zone，且 806075/806148/806232 在 started 态各有 SELECT_QUEST_REWARD/SET_SUCCEED 直跳领奖的捷径）
+    与 **26800=3**（s2 -> reward 又显式回写 var0=3）。本批两侧同形重建 `unaccepted(0)/started(0)/s1(1)/s2(2)/reward(2)/complete(0)`：
+    16800 的 var0 改 width 2 / max 3 并删除 var1 旗标、恢复两条 zone 推进与 806232 的 SELECT2/SELECT2_1 阶梯页、
+    领奖 owner 收敛到任务书点名的代理人 806148（806075/806232 的 npc-complete 一并移除）；26800 的 s2 -> reward 不再回写 step；
+    两侧各补无 source 的 ENTER_WORLD 自愈边（16800 `REWARD && var0=1 -> 2`、26800 `REWARD && var0=3 -> 2`，
+    LEVEL_AND_VISIBILITY_REFRESH），正规态 var0=2 不重放。验证：xmllint + quest_definition.xsd 2/2 validates；
+    apply_batch28_archives_reward_row.py --check 幂等；行号审计 16800（MISSING_LAST_ROW）与 26800（STATES_BEYOND_ROWS）
+    双双转为 **ALIGNED / ROW_ALIGNED / ROW_STATE_ALIGNED / recovery=True**、visible_state_var0=0 1 2
+    （全库 MISSING_LAST_ROW 82->81、ROW_ALIGNED 2663->2665、ROW_STATE_ALIGNED 2435->2437、ROW_WITHOUT_STATE 514->513、
+    STATES_BEYOND_ROWS 2623->2622、ROW_AHEAD 2589->2588、ROW_BEHIND 183->182）；section0 审计 residual 837 不变；
+    Maven 27 个测试类 **146 例全绿**（含新增 ArchivesRewardStepLadderContractTest 7 例，同步更新 Quest26800ClientDialogAlignmentTest
+    的 reward 3->2 与 ClientQuestSectionAlignmentTest 的 SECTION_LAYOUT_DEBT 名单；PRODUCTION_COMPILE_OK=6189 / FAILURES=0 /
+    INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0）；客户端实机 PENDING_CLIENT。
+    产物：apply_batch28_archives_reward_row.py（--check 幂等）、batch28-evidence.tsv、报告 §三十二、模式卡 QE-054（批次 28 补充）。
+  - **批次 28 边界（下一批前必读）**：QE-054 的两侧旧投影可能不同（16800=1、26800=3），自愈边只按各自旧值写，不能共用一条；
+    进入领奖的路线（含 reward 自环）一律不得再写行号，行阶梯必须由 legacy 事件（zone/dialog）逐段推进，禁止保留
+    `started -> reward` 的捷径或把 owner 留在非任务书 NPC 上；`LEGACY_STEP_EXCEPTION={15300,25300,10100,20100}` 已按批次 27 挂账补进
+    audit_reward_row_vs_client_steps.py（只登记证据、判定不变，重跑确认桶分布不变）。下一批 = 剩余 80 个 MISSING_LAST_ROW
+    （61 个其它 handler 形态 + 9 个无 legacy + 口径例外）按同口径逐族分类，以及全库挂账的 NO_NODES 16984/26984、
+    MISSING_DEFINITION 3959/4963/18706/18744/20015/28706/28744/29706。
   - **批次 27 边界（下一批前必读）**：任何 MISSING_LAST_ROW 在改 reward 投影前，必须先提取 legacy 落盘 step
     （useQuestItem 取 newStep、changeQuestStep(..., true) 取 oldStep），XML 投影与之一致时只能登记例外，禁止按末行索引批量改
     （15300/25300、10100/20100 都是已验收/已锁定的正确值）。下一批 = 16800/26800（真缺陷：legacy step=2，16800 投影 1、

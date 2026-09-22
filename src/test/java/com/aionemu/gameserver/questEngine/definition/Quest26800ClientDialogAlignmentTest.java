@@ -19,7 +19,10 @@ import org.w3c.dom.NodeList;
 
 /**
  * 锁定任务 26800 的 Aion 5.8 客户端页面、跨地图阶段和最终领奖 owner。
- * Locks quest 26800 to the Aion 5.8 client pages, cross-map stages, and final reward owner.
+ * 领奖态 packed step 由批次 28 按 QE-054 校正为 legacy 落盘值 2（客户端 quest_summary 末行索引），
+ * 旧投影遗留的 REWARD/var0=3 由无 source 的 enter-world 自愈边纠正。
+ * Locks quest 26800 to the Aion 5.8 client pages, cross-map stages, and final reward owner. Batch 28 pins
+ * the reward step to the legacy-persisted 2 (QE-054) and repairs stale REWARD/var0=3 saves on enter-world.
  */
 class Quest26800ClientDialogAlignmentTest {
 	private static final int START_NPC = 806079;
@@ -41,7 +44,8 @@ class Quest26800ClientDialogAlignmentTest {
 		assertNode(definition, "started", QuestStatus.START, 0);
 		assertNode(definition, "s1", QuestStatus.START, 1);
 		assertNode(definition, "s2", QuestStatus.START, 2);
-		assertNode(definition, "reward", QuestStatus.REWARD, 3);
+		// legacy changeQuestStep(env, 2, 3, true) 只置 REWARD、step 停在 2，与客户端末行索引一致。
+		assertNode(definition, "reward", QuestStatus.REWARD, 2);
 		assertNode(definition, "complete", QuestStatus.COMPLETE, 0);
 
 		assertPage(definition, "unaccepted", START_NPC, QuestDialogAction.QUEST_SELECT,
@@ -90,7 +94,8 @@ class Quest26800ClientDialogAlignmentTest {
 		QuestTransition archivesArrival = transition(definition, "s2", "reward",
 			new QuestEvent.EnterZone("IDETERNITY_01_Q16800_301540000"));
 		assertEquals(List.of(new QuestCondition.QuestVariableIs("var0", 2)), archivesArrival.conditions());
-		assertEquals(List.of(new QuestAction.SetVariable("var0", 3)), archivesArrival.actions());
+		// 交接不再回写 step：target 投影（var0=2）就是 legacy 落盘值。
+		assertEquals(List.of(), archivesArrival.actions());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.PlayMovie(932)), archivesArrival.afterCommit());

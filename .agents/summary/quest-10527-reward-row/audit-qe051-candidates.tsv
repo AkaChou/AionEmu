@@ -29,7 +29,6 @@ quest_id	client_rows	reward_var0	last_start_node	last_start_var0	recovery	client
 14112	3	1	started	0	False	quest_q14112.html		和[%dic:STR_DIC_LA54]%对话	24112	MISSING_LAST_ROW	1	告诉[%dic:STR_DIC_N_DF1A_Brodir_E]	NO
 14123	3	0	started	0	False	quest_q14123.html		向[%dic:STR_DIC_W_LF2_SZ_E2_SUB_1]的[%dic:STR_DIC_N_Dionera]%报告	24123	MISSING_LAST_ROW	1	向[%dic:STR_DIC_W_DF2_SUB_E2_1]的[%dic:STR_DIC_N_DF2_NPC_Ananta]%报告	NO
 15300	15	13	s13	13	True	quest_q15300.html		在希哥尼亚和代理人[%dic:STR_DIC_N_LF5_Dike_E]%对话	25300	MISSING_LAST_ROW	13	和厄夏勒的代理人[%dic:STR_DIC_N_DF5_Skuldun_E]%对话	NO
-16800	3	1	started	0	False	quest_q16800.html		向在[%dic:STR_DIC_W_IDEternity_01]等待的代理人维达报告	26800	STATES_BEYOND_ROWS	3	向在[%dic:STR_DIC_W_IDEternity_01]等待的代理人佩莱格兰报告	NO
 20100	6	4	s4	4	False	quest_q20100.html		重新和[%dic:STR_DIC_N_LDF4_Advance_D_Kahrun]%对话	10100	MISSING_LAST_ROW	4	重新和[%dic:STR_DIC_N_LDF4_Advance_L_Kahrun]%对话	NO
 24041	8	6	s6	6	False	quest_q24041.html		和[%dic:STR_DIC_N_Spyr]进行对话	14041	MISSING_LAST_ROW	6	和[%dic:STR_DIC_N_Claudia]对话	NO
 24042	6	4	started	0	False	quest_q24042.html		向[%dic:STR_DIC_N_Lakadi]报告结果	14042	MISSING_LAST_ROW	4	向[%dic:STR_DIC_N_Nereus]报告结果	NO

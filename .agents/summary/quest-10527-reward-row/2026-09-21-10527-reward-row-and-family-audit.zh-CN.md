@@ -2271,3 +2271,132 @@ legacy 进入 REWARD 时真正落盘的 step，而不是一律等于客户端末
     `LF_TOWER_SENSORY_AREA_Q16800_210110000` / `IDETERNITY_01_Q16800_301540000` 两个 zone 触发点与 931 movie）；
   - 继续对剩余 70 个 `MISSING_LAST_ROW`（61 个其它 handler 形态 + 9 个无 legacy）做同口径分类，把
     `LEGACY_STEP_EXCEPTION` 集补进审计脚本的登记表。
+
+## 三十二、批次 28：永恒档案馆领奖阶（16800/26800，2026-09-22 用户授权后执行）
+
+### 三十二之一、候选与证据（批次 27 首轮分类里剩下的真缺陷）
+
+批次 27 用 QE-054 口径对 84 个 `MISSING_LAST_ROW` 做过首轮自动分类，真缺陷候选有 3 个：
+`18805/28805`（同批收口）与 **`16800/26800`**（留待本批）。两个任务都来自
+`archives_of_eternity`，客户端任务书都是 3 行，legacy 落盘 step 都是 2，而迁移后的 XML 分别写成
+`16800 = 1`、`26800 = 3`。
+
+客户端证据（`quest_q16800.html` / `quest_q26800.html` 的 `quest_summary`）：
+
+| 任务 | 行 0 | 行 1 | 行 2（领奖行） |
+| --- | --- | --- | --- |
+| 16800（ELYOS） | 使用激活的塔碎片进入 `STR_DIC_W_LF_Tower` | 和永恒之塔警备组长 `STR_DIC_N_LF_Tower_Etezar_E`（806232）对话 | 向在 `STR_DIC_W_IDEternity_01` 等待的代理人维达（806148）报告 |
+| 26800（ASMODIAN） | 使用激活的塔碎片进入 `STR_DIC_W_DF_Tower` | 和永恒之塔警备组长 `STR_DIC_N_DF_Tower_Enfitenta_E`（806233）对话 | 向在 `STR_DIC_W_IDEternity_01` 等待的代理人佩莱格兰（806149）报告 |
+
+两个客户端的任务书 HTML 都只有 `select_none`(4762) / `select_none_1`(4763) / `select2`(1352, 按钮
+`HACTION_SET_SUCCEED`) / `select_success`(10002, 按钮 `HACTION_SELECT_QUEST_REWARD`) 四个任务页，
+与 legacy 的接取页链（4762/4763）和警备组长页（1352/1353）一一对应。
+
+legacy 证据（迁移前 commit `7e9f0316c^`）：
+
+- `_16800Into_The_Archives` / `_26800A_Call_For_Champions` 的 `onEnterZoneEvent`：
+  `LF_TOWER_SENSORY_AREA_Q16800_210110000` / `DF_TOWER_SENSORY_AREA_Q26800_220120000` 上
+  `changeQuestStep(env, 0, 1, false)`（写 1）；`IDETERNITY_01_Q16800_301540000` 上
+  `playQuestMovie(env, 931/932)` + `changeQuestStep(env, 2, 3, true)`；
+- 警备组长 806232 / 806233 的 `SET_REWARD` 走 `changeQuestStep(env, 1, 2, false)`（写 2）；
+- 领奖/完成 owner 是代理人 806148（`IDEternity_Q_Weatha_E`）/ 806149（`IDEternity_Q_Feregran_E`），
+  即任务书行 2 点名的 NPC；
+- 迁移前 `QuestHandler.changeQuestStep(env, step, nextStep, reward)` 的 **reward 分支只
+  `setStatus(REWARD)`、不写 nextStep**（该 commit 的 `questEngine/handlers/QuestHandler.java` 第 99-113 行），
+  所以 `changeQuestStep(env, 2, 3, true)` 的落盘 step 是 **2 = 客户端末行索引**，与 QE-051 的行号口径一致。
+
+### 三十二之二、旧模型缺陷
+
+- **16800**：`var0` 只有 1 bit（`width=1 max=1`）、另开 `var1` 影片旗标；节点只有
+  `unaccepted(0)/started(0)/reward(var0=1)/complete(0)`，没有 s1/s2 阶梯；行推进用
+  `at-distance npc-id="206535"` + `var1` 自环代替 legacy 的感应区（`LF_TOWER_SENSORY_AREA_Q16800_210110000`
+  这条 zone 在 `zones_quest.xml:426` 已声明但 XML 从未引用）；`806075/806148/806232` 三个 NPC 在
+  `started` 态各有 `SELECT_QUEST_REWARD`（显式写 `var0=1`）与 `SET_SUCCEED` 直跳 `reward` 的捷径
+  （共 6 条），其中两个 NPC 还挂着 `npc-complete`。玩家只要在领奖态，任务书就停在行 0/行 1
+  （行 2 永远不亮），与 10527 的报障同型。
+- **26800**：阶梯与 zone 触发已经在，但 `reward` 投影被迁移读成 `nextStep=3`，`s2 -> reward` 交接又显式
+  回写 `set-variable var0=3`。客户端只有 0..2 三行，领奖态行索引越界（审计判 `STATES_BEYOND_ROWS /
+  ROW_AHEAD / STATE_OUT_OF_RANGE`）。
+- **门禁把误读固化**：`Quest26800ClientDialogAlignmentTest` 此前锁的就是迁移误读
+  （`assertNode(..., "reward", REWARD, 3)` 与 `SetVariable("var0", 3)`），本批按 QE-054 改为 2 并在测试里写明依据。
+
+### 三十二之三、落点（两侧同形 `unaccepted(0)/started(0)/s1(1)/s2(2)/reward(2)/complete(0)`）
+
+1. **16800**
+   - `var0` 改 `width=2 min=0 max=3`，删除 offset 1 的 `var1` 影片旗标；
+   - 补 `s1(1)` / `s2(2)` 节点，`reward` 投影 `var0 = 2`；
+   - `started --enter-zone LF_TOWER_SENSORY_AREA_Q16800_210110000--> s1`（条件 `var0=0`、动作 `var0=1`、
+     `PACKET_ONLY`）；
+   - `s1` 上补 806232 的 `QUEST_SELECT -> SELECT2`、`SELECT2_1 -> SELECT2_1` 页与
+     `SET_SUCCEED -> s2`（条件 `var0=1`、动作 `var0=2`、`PACKET_ONLY` + `close-dialog`）；
+   - `s2 --enter-zone IDETERNITY_01_Q16800_301540000--> reward`（条件 `var0=2`、无写回、
+     `LEVEL_AND_VISIBILITY_REFRESH` + `play-movie 931`）；
+   - 删除 806075/806148/806232 在 `started` 态的 6 条直跳捷径与 806075/806232 的 `npc-complete`；
+     领奖 owner 收敛到任务书行 2 点名的 806148（`reward --QUEST_SELECT--> DEFAULT_SUCCESS(10002)` +
+     `npc-complete` 领奖窗口）；
+   - 无 source 的 `ENTER_WORLD` 自愈边：`REWARD && var0=1 -> 2`（旧投影留下的 1 号存档）。
+2. **26800**
+   - `reward` 投影 `3 -> 2`；
+   - 删除 `s2 -> reward` 交接里的 `set-variable var0=3`（改由 target 投影生效）；
+   - 无 source 的 `ENTER_WORLD` 自愈边：`REWARD && var0=3 -> 2`（旧投影留下的 3 号存档）。
+3. 应用脚本：`.agents/summary/quest-10527-reward-row/apply_batch28_archives_reward_row.py`（`--check` 幂等，
+   带旧 XML 指纹校验；16800 的 `at-distance 206535` / `var1` 位段 / 两个多余 `npc-complete` 缺一即报
+   `BATCH28_16800_FINGERPRINT_MISSING`）。
+4. 逐行进度只有在行阶梯完整时才对得上：`visible_state_var0 = 0 1 2`（三行各有 START/REWARD 状态），
+   领奖态 `ROW_ALIGNED`。
+
+### 三十二之四、口径例外登记补录（批次 27 挂账）
+
+把批次 27 证据表里的 4 个 `LEGACY_STEP_EXCEPTION`（15300/25300 的 `changeQuestStep(env, 13, 14, true)`
+落盘 13；10100/20100 的 `useQuestItem(env, item, 4, 4, true)` 落盘 4）按双语注释补进
+`audit_reward_row_vs_client_steps.py`，并在审计输出的 `[5]` 段落直接打印已登记的例外清单；
+**只登记证据、判定不变**：重跑后所有桶的分布与本批修复前完全一致（见三十二之五）。
+
+### 三十二之五、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 2/2 validates；
+  `apply_batch28_archives_reward_row.py --check` 幂等（`BATCH28_APPLIED` → `BATCH28_OK ... already-applied`）；
+  IDE lint 0 error（仅 3 条“形参取值恒定”的既有风格提示）。
+- **全库行号审计**（`audit_reward_row_vs_client_steps.py`）：16800 由 `MISSING_LAST_ROW / ROW_BEHIND /
+  ROW_WITHOUT_STATE / recovery=False`、26800 由 `STATES_BEYOND_ROWS / ROW_AHEAD / STATE_OUT_OF_RANGE /
+  recovery=False` 双双转为 **`ALIGNED / ROW_ALIGNED / ROW_STATE_ALIGNED / recovery=True`**
+  （`visible_state_var0=0 1 2`、`handover_writes` 清空）；全库
+  `MISSING_LAST_ROW 82 -> 81`、`ROW_ALIGNED 2663 -> 2665`、`ROW_STATE_ALIGNED 2435 -> 2437`、
+  `ROW_WITHOUT_STATE 514 -> 513`、`STATES_BEYOND_ROWS 2623 -> 2622`、`ROW_AHEAD 2589 -> 2588`、
+  `ROW_BEHIND 183 -> 182`；`INTERIOR_GAP 263`、`MISSING_TAIL_ROWS 80`、`NO_STATE 89` 不变。
+- **section0 审计**：`residual rows 837` 与批次 26/27 完全一致（`COUNTER_CHAIN_OK 823` / 例外 6 /
+  闭环 7 + `REVIEW_LEGACY_NO_VAR0 1`），本批不涉及 COUNTER_CHAIN 族。
+- **legacy 落盘 step 扫描**（`audit_legacy_reward_entry_steps.py`）：重跑后 16800/26800 由
+  `ROW_BEHIND/ROW_WITHOUT_STATE` 与 `ROW_AHEAD/STATE_OUT_OF_RANGE` 转为 `ROW_ALIGNED/ROW_STATE_ALIGNED`；
+  同一文件同时刷新了批次 17 挂账后累积的另外 6 行（14201、15000、18805、23809、24046、28805，属批次
+  19/20/22/27 的既有修复），共 8 行变化。
+- **Maven（授权后执行）**：27 个测试类 **146 例全绿**，含本批新增
+  `ArchivesRewardStepLadderContractTest`（7 例）与同步更新的 `Quest26800ClientDialogAlignmentTest`、
+  `ClientQuestSectionAlignmentTest`（16800 退役 `var1` 后从 `SECTION_LAYOUT_DEBT` 名单移出，13 个剩余例外）；
+  `PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。
+  （已知无关红：`MissionItemConsumptionBatchRegressionTest` 的断言在 HEAD 本就不成立，本批不运行、不修。）
+- **证据表**：[batch28-evidence.tsv](batch28-evidence.tsv)（2 个修复）。
+- **客户端实机：PENDING_CLIENT**（静态、Maven 与真机验收分层，未做真机复测）。
+
+客户端复测路径（PENDING_CLIENT）：
+
+1. 16800：从代理人维达接取后，任务书应逐行推进——行 0“使用激活的塔碎片进入 LF_Tower”在进入
+   `LF_TOWER_SENSORY_AREA_Q16800_210110000` 后切到行 1；与 Etezar 806232 对话（`select2` 页只有一个
+   `SET_SUCCEED` 按钮）后切到行 2“向代理人维达报告”；进入知识书库 `IDETERNITY_01_Q16800_301540000`
+   播放影片 931 并进入领奖态，任务书停在行 2；与 806148 对话领奖后完成。
+2. 26800：同形路径（`DF_TOWER_SENSORY_AREA_Q26800_220120000` → Enfitenta 806233 → 知识书库影片 932 →
+   佩莱格兰 806149 领奖）。
+3. 旧存档：16800 的 `REWARD/var0=1` 与 26800 的 `REWARD/var0=3` 在登录/切图时应自愈为 2，任务书显示
+   领奖行（行 2），且不重复提示“任务更新”。
+
+### 三十二之六、边界与后续
+
+- QE-054 的“旧投影值”是**逐侧**的：16800 旧投影 1、26800 旧投影 3，正确值都是 2，自愈边必须按各自旧值写，
+  不能两侧共用一条；只在旧值上做等值判断，正规态 `var0=2` 不会被重放。
+- 修投影时必须同时重建行阶梯：删掉 `started -> reward` 之类的直跳捷径与多余 owner，否则玩家仍能绕过
+  legacy 的 0/1/2 步链，任务书行号会再次与状态脱节（本批 16800 的 6 条捷径就是这类残留）。
+- 行阶梯的推进点必须来自 legacy 事件（感应区 zone / 对话 action），`<play-movie>` 与 REWARD 迁移留在同一
+  条 `s2 -> reward` 边，保持 legacy 的“先置 REWARD 再播影片”顺序。
+- **下一批（批次 29）候选**：剩余 80 个 `MISSING_LAST_ROW`（61 个其它 handler 形态 + 9 个无 legacy +
+  口径例外）按 QE-054 同口径逐族分类；全库挂账 `NO_NODES 16984/26984`、
+  `MISSING_DEFINITION 3959/4963/18706/18744/20015/28706/28744/29706`。

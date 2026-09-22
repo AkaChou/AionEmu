@@ -126,6 +126,19 @@ BLANK_JOURNAL_SLOT_EXCEPTIONS = {
 QE045_LOCKED = {2393, 3722, 4722, 11149, 13965, 14010, 14015, 14020, 14040, 14050,
                 15674, 23965, 24010, 24020, 24040, 24050, 25674, 30057, 30158, 30208}
 
+# 已核实的“reward 投影 = legacy 落盘 step，行号口径算出的末行索引不是权威值”例外（QE-054，批次 27 登记证据、
+# 批次 28 补进本脚本；判定保持不变，只是登记，防止后续把这几行当成 MISSING_LAST_ROW 真缺陷批量改）：
+# - 15300/25300（Taking Arms / A Bloody Battle with Beritra）：legacy `changeQuestStep(env, 13, 14, true)`
+#   只置 REWARD、step 停在 13，已由 2026-09-19/20 用户真机全程验收（含领奖）并由
+#   Quest15300And25300RewardProjectionTest 锁定；
+# - 10100/20100（Kahrun Intrigue / Ghost Of A Bygone Age）：legacy `useQuestItem(env, item, 4, 4, true)`
+#   落盘 step=4，由 Quest10100And20100ItemUseRemovalTest 锁定；同系列的 10101/10110 投影等于末行索引，
+#   说明同一系列内两种口径并存，必须逐任务看 legacy，禁止按行号或任务号区间批量替换。
+# Verified "reward projection == legacy persisted step, the last row index is not authoritative" exceptions
+# (QE-054): registered evidence only, the verdicts stay unchanged. 15300/25300 stop at the pre-REWARD step 13
+# (client-accepted 2026-09-19/20), 10100/20100 persist step 4 through useQuestItem(..., 4, 4, true).
+LEGACY_STEP_EXCEPTION = {15300, 25300, 10100, 20100}
+
 # “和 X 对话 / 向 X 报告 / 去 X 那里”这一类末行 = 客户端领奖行（中/韩双语关键词）。
 DIALOG_ROW_RE = re.compile(r"对话|报告|见面|交谈|转达|传达|询问|汇报|告诉|通知|迎接|确认|拜访|交给|交付|递交|转交|归还|送达|대화|보고|만나")
 
@@ -451,6 +464,8 @@ def main() -> int:
           f"；末行是其它目标：{sum(1 for row in missing if row['last_row_kind'] == 'OTHER')}")
     print(f"  其中 QE-045 锁（reward 保持旧 packed step）："
           f"{sum(1 for row in missing if row['qe045_locked'])}")
+    print(f"  其中已登记 QE-054 legacy 落盘 step 例外（禁止按末行索引改）："
+          f"{sorted(row['quest_id'] for row in missing if int(row['quest_id']) in LEGACY_STEP_EXCEPTION)}")
     mirrored_missing = [row for row in missing
                         if (mirror := index.get(mirror_of(row["quest_id"])))
                         and mirror["client_rows"] == row["client_rows"]

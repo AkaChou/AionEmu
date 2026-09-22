@@ -26,13 +26,37 @@
       <var name="var0" value="2"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="3"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- QE-054 领奖阶合同：客户端 quest_q26800.html 的 quest_summary 共 3 行（行 0 使用激活的塔碎片进入
+         DF_Tower、行 1 和 DF_Tower_Enfitenta_E 对话、行 2 向代理人佩莱格兰报告）。legacy
+         `_26800A_Call_For_Champions` 的落盘 step 是 2：DF_TOWER_SENSORY_AREA_Q26800_220120000 把 step 0
+         推到 1、Enfitenta（806233）的 SET_REWARD 把 1 推到 2、IDETERNITY_01_Q16800_301540000 的
+         changeQuestStep(env, 2, 3, true) 只置 REWARD、step 停在 2。旧投影把领奖态写成 3，进入世界时
+         纠正为 2 并下发状态包。
+         Reward step contract (QE-054): the legacy handler persists step 2 when entering REWARD because
+         changeQuestStep(..., true) only flips the status; saves persisted at var0=3 are repaired on
+         enter-world. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="3"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <!-- 费雷甘 (806079) 使用 Aion 5.8 客户端的简易接取页面链。 / Feregan (806079) uses the Aion 5.8 client simple-accept page chain. -->
     <transition source="unaccepted" target="unaccepted">
       <event>
@@ -164,9 +188,6 @@
       <conditions>
         <variable-is field="var0" value="2"/>
       </conditions>
-      <actions>
-        <set-variable field="var0" value="3"/>
-      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <play-movie movie-id="932"/>
