@@ -1154,3 +1154,67 @@ var0 当 0→2 的投递计数，且客户端行内 `HousingLf_Event_ShugoSanta`
 - **剩余 MISSING_LAST_ROW 93 个**（69 DIALOG + 24 OTHER）：其中 10 个为 QE-045 锁（含本批挂账的 4 个）、
   30 个镜像同缺末行、其余 53 个继续逐族收口；`ROW_BEHIND 205` 多为 `MISSING_TAIL_ROWS`（82），
   与 `STATES_BEYOND_ROWS 2625`、`INTERIOR_GAP 266` 一样禁止按行号机械推进。
+
+---
+
+## 十八、批次 14：事件族“两行、末行是与领奖 NPC 的对话”（4 个任务，2026-09-22）
+
+### 十八之一、候选与证据
+
+沿用批次 13 的族定义（客户端 2 行：行 0 目标、行 1 与领奖 NPC 对话），本批从刷新后的审计里挑出
+两组**互相独立**的证据链：
+
+| 任务 | 行 1 | 客户端 NPC 表 | 证据 |
+|---|---|---|---|
+| 80255 | 和帕尔图对话 | `831163 = event_Parutoo` | 行程第 1 行用**字面中文名**（无 `STR_DIC_N_` 键），所以批次 1-7 按“末行 NPC 键”筛选时漏掉；同族 `80257/80258/80259/80260` 已在 `7a7d27809`（批次 1-7）改成 `reward var0=1` + 同形自愈边，本批两个是族内漏网项；`npc-complete` owner = 831163 |
+| 80256 | 和布巴纳对话 | `831164 = event_Boobanah` | 同 80255；owner = 831164 |
+| 80601 | 向伊斯达报告 | `831831 = event_Isda` | legacy `_80601Fight_Of_The_Navigators`（`7e9f0316c^`）击杀分支 `setQuestVarById(1, +1)` 计数后 **`setQuestVarById(0, 1)` + `setStatus(REWARD)`** → legacy 领奖行就是 1；typed 击杀事务也保留 `set-variable var0=1`，但 `reward` 节点投影仍是 0，于是经**无 actions 的 `NPC_REPORT`** 进入领奖态的存档（投影补足为 0）匹配不到任何 reward 路由（`matchesSourceNode` 要求投影变量全等），必须同时补投影与自愈边 |
+| 80606 | 向夏尔梅因报告 | `831832 = event_Charmeine` | legacy `_80606The_Good_News_And_Bad` 与 80601 同结构；owner = 831832 |
+
+族内边界（本批不改，登记在 `batch14-evidence.tsv`）：
+
+- `80602/80603/80604/80605/80607/80608/80609/80610`：客户端同样 2 行，但 `reward var0 = 3/4/5/9`
+  是**阶段计数**（审计 `STATES_BEYOND_ROWS`，客户端只有 2 行），属“var0 不是行索引”族，禁止按行号
+  机械压成 1。
+- `50008/51008`：legacy 用 `setQuestVarById(0, var0 + 1)` 把 var0 当 0→2 的投递计数；行内
+  `HousingLf_Event_ShugoSanta` 在 5.8 客户端 NPC 表里不存在（表内的 `831036 = Housing_lf_ChristmasEvent_Sugo`），
+  归属无法核对 → 单独设计。
+- `1123/1466/2484/2842/4712`：同形候选但证据不足——1123 行内是 `STR_DIC_LA12/STR_DIC_FLA07/STR_DIC_LA53`
+  等非 NPC 键；1466 的 `reward` 节点**没有 var0 投影**（审计 `NO_REWARD_ROW`）；2484/4712 的 completion
+  owner 不唯一（203331/204407/700267、279042/798327/798330）；2842 由击杀自环推进（`hunting->reward`）。
+
+### 十八之二、修复
+
+与批次 13 同一模板：`reward` 投影 `0 -> 1` + 无 source 的 `REWARD && var0==0 -> set var0=1`
+（`LEVEL_AND_VISIBILITY_REFRESH`，无 priority）自愈边；80255/80256/80601/80606 原本都没有
+`REWARD/var0==1` 入口边，本批不新增。脚本：
+`.agents/summary/quest-10527-reward-row/apply_batch14_event_two_row_rows.py`（`--check` 幂等 4/4）。
+
+### 十八之三、验证（2026-09-22，用户授权后执行）
+
+- **单任务审计**：4/4 `ROW_BEHIND / MISSING_LAST_ROW / ROW_WITHOUT_STATE`（`visible_state_var0=0`，
+  `recovery=False`）→ `ROW_ALIGNED / ALIGNED / ROW_STATE_ALIGNED`（`visible 0 1`，`recovery=True`）。
+- **全库快照**：`ROW_ALIGNED 2639 -> 2643`、`ROW_BEHIND 205 -> 201`、`MISSING_LAST_ROW 93 -> 89`、
+  `ROW_AHEAD 2591`、`NO_REWARD_ROW 179`、`NO_CLIENT_HTML 608`；`ROW_STATE_ALIGNED 2417 -> 2421`。
+- **结构校验**：`xmllint --noout --schema quest_definition.xsd` 4/4 `validates`；IDEA lint 0 problems；
+  `git diff --check` 干净。
+- **Maven（原授权范围的同一条命令重跑）**：29 例全绿，`PRODUCTION_COMPILE_OK=6189 / FAILURES=0 /
+  INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0` —— 覆盖本批 4 个 XML 的生产目录编译与
+  既有 24 例门禁（`RewardRowTwoRowTalkFamilyContractTest` 6/6、`LegacyRewardStepProjectionRegressionTest` 1/1 等）。
+- **门禁测试**：`src/test/java/com/aionemu/gameserver/questEngine/definition/RewardRowEventTwoRowContractTest.java`
+  6 例——① `reward` 投影=1 且 `started` 保持 0；② 领奖 owner = 行 1 NPC；③ 自愈边唯一（`var0==0 -> 1`，
+  无 priority）且 planner 可收敛；④ 无 target=reward 事务写非领奖行 var0；⑤ 同族已对齐参照
+  80257-80260 必须保持 `reward var0=1`（族级模板护栏）；⑥ 80601/80606 的击杀事务必须保留
+  legacy 的 `set-variable var0=1` 且以 `var0==0` 为门控。**已按追加授权跑 Maven：8 个测试类 35 例全绿**（下条）。
+- 客户端实机复测：**PENDING_CLIENT**。复测要点：① 80255/80256 使用烟花道具后任务书切到行 1，
+  与帕尔图/布巴纳对话可开奖励窗口；② 80601/80606 击杀 Boss 后行 1 高亮，与伊斯达/夏尔梅因对话领奖
+  （旧存档在登录/切图时由自愈边纠正）。
+
+### 十八之四、边界与后续
+
+- **Maven（追加授权后执行，2026-09-22 11:52）**：`mvn -Dtest='RewardRowEventTwoRowContractTest,RewardRowTwoRowTalkFamilyContractTest,RewardNpcOwnershipContractTest,RetailSingleStepRewardRowContractTest,LegacyRewardStepProjectionRegressionTest,QuestClientContractGateTest,QuestDefinitionCatalogManifestTest,ProductionCatalogWhitelistVerificationTest' test` → **35 例全绿**（新增 `RewardRowEventTwoRowContractTest` 6/6、`RewardRowTwoRowTalkFamilyContractTest` 6/6、`RetailSingleStepRewardRowContractTest` 4/4、`RewardNpcOwnershipContractTest` 6/6、`LegacyRewardStepProjectionRegressionTest` 1/1、`QuestDefinitionCatalogManifestTest` 10/10、`QuestClientContractGateTest` 1/1、`ProductionCatalogWhitelistVerificationTest` 1/1），`PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。
+- **同形候选清单（下一批可选）**：`1123 / 1466 / 2484 / 2842 / 4712`（各缺一项证据：非 NPC 行内键、
+  缺 reward 投影、owner 不唯一、击杀自环），以及 `50008/51008`（var0 是投递计数 + 客户端表缺名）。
+- **剩余 MISSING_LAST_ROW 89 个**（其中 10 个 QE-045 锁、30 个镜像同缺末行、49 个待逐族取证）；
+  `ROW_BEHIND 201` 多为 `MISSING_TAIL_ROWS 82` 与 `INTERIOR_GAP 266`，`STATES_BEYOND_ROWS 2625`
+  里的 var0 多为计数/阶段槽 —— 一律禁止按行号机械推进。

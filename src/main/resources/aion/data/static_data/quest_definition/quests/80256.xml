@@ -24,7 +24,7 @@
       <var name="var0" value="0"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
@@ -115,6 +115,28 @@
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- QE-051 领奖行：客户端 quest_q80256.html 只有 2 行（行 0 目标、行 1 与 布巴纳 对话）；
+         旧 reward 投影停在 0，所以领奖态仍渲染行 0。证据：客户端行 1 = 和布巴纳对话（行内无 dic 键），客户端 NPC 表 831164 = event_Boobanah；npc-complete owner = 831164；同族 80257-80260 已是 reward var0=1 + 自愈边（7a7d27809）。
+         因此 reward 投影固定为领奖行 1，并补 REWARD/var0=0 的 enter-world 自愈边（旧存档旧值
+         只会来自旧投影，语义无歧义）。
+         Reward-row contract (QE-051): the second client journal row talks to 布巴纳(831164) and the
+         definition's reward completion NPC is the same id, so the reward projection is 1 and stale
+         REWARD/var0=0 saves are healed on enter-world. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <npc-complete npc-id="831164" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
