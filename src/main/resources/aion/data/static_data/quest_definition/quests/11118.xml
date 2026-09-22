@@ -22,6 +22,11 @@
       <condition type="finished" quest-id="11117"/>
     </start-conditions>
   </metadata>
+  <!-- QE-051 行阶梯收口（批次 44）：发光体玻璃瓶五行族。
+       客户端任务书五行、槽位 %0/%3/%6/%9/%12：行 0 问 Cinisca、行 1 交 20 个发光体换玻璃瓶、
+       行 2 在妹妹 Shulack_LF4_2 798986 身边打开瓶子、行 3 和妹妹对话、
+       行 4 回哥哥 Shulack_LF4_1 798985 报告领奖。
+       Row ladder closure (batch 44): five journal rows, one state each. -->
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
@@ -38,17 +43,53 @@
     <node label="s2" status="START">
       <var name="var0" value="2"/>
     </node>
+    <node label="s3" status="START">
+      <var name="var0" value="3"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="4"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <!-- 接取:798985,31 显示 4762,1002 接取。 -->
+    <!-- 旧存档自愈：迁移前的 REWARD 可能带 var0=0（迁移后 XML 落盘）或 var0=3（迁移前 Java
+         handler 的 setQuestVarById(0, var+1)），两种都提到行 4。
+         / Heal both pre-migration REWARD saves (var0=0 from the typed XML, var0=3 from the Java handler). -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="4"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="3"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="4"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 接取：哥哥 Shulack_LF4_1 798985。 / Accept from the brother. -->
     <dialog type="NPC_START" npc-id="798985" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <!-- 798963:var0=0,31 显示 1011,STEP_TO_1(10000) 推进 var0=1。 -->
+    <!-- 行 0：向补给兵 Cinisca 798963 征询意见（select1 -> SETPRO1）。 -->
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798963" action="QUEST_SELECT"/>
@@ -62,11 +103,19 @@
         <dialog type="TALK_TO_NPC" npc-id="798963" action="SETPRO1"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
-    <!-- 798963:var0=1,31 显示 1352,CHECK_COLLECTED_ITEMS(39) 收 182206794×20 换 182206795,var0=2。 -->
+    <transition source="started" target="started">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798963" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 行 1：交 20 个发光体换玻璃瓶（select2 的 CHECK 链）。 / Row 1: hand the wisps over. -->
     <transition source="s1" target="s1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798963" action="QUEST_SELECT"/>
@@ -75,7 +124,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <transition source="s1" target="s2">
+    <transition source="s1" target="s2" priority="0">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798963" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
@@ -91,7 +140,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
       </after-commit>
     </transition>
-    <transition source="s1" target="s1">
+    <transition source="s1" target="s1" priority="1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798963" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
@@ -102,25 +151,88 @@
         <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
       </after-commit>
     </transition>
-    <!-- 798984:var0=2,31 显示 2034,SET_REWARD(10255) 推进 var0=3+REWARD。 -->
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798963" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- CHECK 成功时状态已经切到 s2，而客户端 check_user_item_ok 页的唯一按钮是“结束对话”，
+         s2 必须保留 FINISH_DIALOG 路由，否则 QuestClientContractGateTest 报 BUTTON_WITHOUT_ROUTE。 -->
     <transition source="s2" target="s2">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="798984" action="QUEST_SELECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="798963" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 行 2 -> 行 3：在妹妹 Shulack_LF4_2 798986 身边打开瓶子（select4 页）。
+         客户端 select4 页的按钮是 SET_SUCCEED，两条入口（对话/使用瓶子）都进 select4。
+         Row 2 to row 3: open the bottle by the sister. -->
+    <transition source="s2" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798986" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
+      </after-commit>
+    </transition>
+    <transition source="s2" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798986" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
+      </after-commit>
+    </transition>
+    <!-- 行 3 -> 行 4：和妹妹对话结束（select4 的“结束对话”）。 / Row 3 to row 4. -->
+    <transition source="s3" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798986" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT4"/>
       </after-commit>
     </transition>
-    <transition source="s2" target="reward">
+    <transition source="s3" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="798984" action="SET_SUCCEED"/>
+        <dialog type="TALK_TO_NPC" npc-id="798986" action="SET_SUCCEED"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
-    <!-- 完成:798985 REWARD→COMPLETE,-1 显示 10002,1009 显示 5,8..23 完成。 -->
+    <transition source="s2" target="s2">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798986" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <transition source="s3" target="s3">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798986" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 行 4：回哥哥 798985 报告领奖（客户端 select_success 的 SELECT_QUEST_REWARD）。 -->
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798985" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
     <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="798985" action="USE_OBJECT"/>
@@ -129,24 +241,22 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <npc-complete npc-id="798985" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <preview actions="SELECT_QUEST_REWARD"/>
-    </npc-complete>
-      <transition source="s1" target="s1">
+    <transition source="reward" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="798963" action="FINISH_DIALOG"/>
+        <dialog type="TALK_TO_NPC" npc-id="798985" action="SELECT_QUEST_REWARD"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+      </after-commit>
+    </transition>
+    <npc-complete npc-id="798985" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG"/>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="798985" action="FINISH_DIALOG"/>
       </event>
       <after-commit>
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="s2" target="s2">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="798963" action="FINISH_DIALOG"/>
-      </event>
-      <after-commit>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-</transitions>
+  </transitions>
 </quest-definition>

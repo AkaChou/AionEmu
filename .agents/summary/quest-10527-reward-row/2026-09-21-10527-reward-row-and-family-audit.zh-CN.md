@@ -3663,3 +3663,86 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
 - 剩余 `MISSING_TAIL_ROWS 43`（37 个待逐族收口 + 6 个已登记例外）。其它挂账不变：
   `STATES_BEYOND_ROWS 2620`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 73`、客户端隔离族 8 个；
   既有红沿用 `QuestInteractionObjectCatalogTest` 8 条资格缺口。
+
+## 四十八、批次 44：发光体玻璃瓶五行族 11118（Making Setzkiki Laugh）
+
+### 四十八之一、族判据与证据（2026-09-22）
+
+- **客户端任务书行**（`Dialogs/10000_19999/QUEST_Q11118.html`）：五行绑定
+  `[%0]`/`[%3]`/`[%6]`/`[%9]`/`[%12]`：行 0「向 Cinisca 征询意见」、
+  行 1「把昏掉的 Foam Wisp 装进瓶子，交给 Cinisca[collectitem]」、
+  行 2「带着装有发光体的玻璃瓶，在 Shulack_LF4_2 身边打开」、
+  行 3「和 Shulack_LF4_2 对话」、行 4「和 Shulack_LF4_1 对话」。
+- **页链**：`select_none` → `ask_quest_accept` → `quest_accept_1`（哥哥 Shulack_LF4_1 798985 委托）；
+  Cinisca 798963 的 `select1`（SETPRO1）与 `select2`（CHECK_USER_HAS_QUEST_ITEM）→
+  `check_user_item_ok`/`check_user_item_fail`；妹妹 Shulack_LF4_2 的 `select4`（SET_SUCCEED）；
+  哥哥的 `select_success`（SELECT_QUEST_REWARD）→ `select_quest_reward1`。
+  物品：20 个 182206794（发光体）换工作物品 182206795（装光玻璃瓶）。
+- **迁移前 Java handler 的 owner 笔误（关键证据）**：
+  `_11118MakingSetzkikiLaugh`（提交 7e9f0316c 前）声明
+  `npc_ids = {798985, 798963, 798986}`，但正文分支写成 `else if (targetId == 798984)`
+  —— 798984 是 Shugo_LF4_5（术古商人），且**从未 `registerQuestNpc(...).addOnTalkEvent`**，
+  因此该分支在旧引擎里永远不会触发；798986（Shulack_LF4_2，妹妹）被注册却没有任何分支。
+  迁移把 798984 固化成 select4 的 owner，并把 reward 投影写成 0。
+- **客户端名表**：798985=Shulack_LF4_1（塞伊金，哥哥）、798986=Shulack_LF4_2（塞茨奇奇，妹妹）、
+  798984=Shugo_LF4_5——与任务书行 2/3 点名的 NPC 完全对上 798986。
+- **旧定义错位**：`started(0)/s1(1)/s2(2)` + `reward(0)`，行 3/行 4 没有状态；审计判成
+  `MISSING_TAIL_ROWS | ROW_BEHIND | ROW_WITHOUT_STATE(3 4) | visible=0 1 2`。
+
+### 四十八之二、落点（五行阶梯 = START×4 + REWARD）
+
+- **节点**：`unaccepted(0) / started(START,0) / s1(START,1) / s2(START,2) / s3(START,3) /
+  reward(REWARD,4) / complete(0)`。
+- **行 0/行 1**：Cinisca 的 `select1/SETPRO1 -> s1`、`select2` 的 CHECK（20 个发光体换瓶子，成功
+  `-> s2`、失败留在 `s1`）保持原语义；新增 `s2` 的 `FINISH_DIALOG` 路由——CHECK 成功时状态已经
+  切到 s2，而客户端 `check_user_item_ok` 页的唯一按钮是“结束对话”，缺这条路由会被
+  `QuestClientContractGateTest` 判 `BUTTON_WITHOUT_ROUTE`（本批实测）。
+- **行 2/行 3**：妹妹 798986 的 `QUEST_SELECT`/`USE_OBJECT` 从 `s2 -> s3` 并显示 `select4`
+  （打开瓶子、妹妹看到光），`s3` 的 `SET_SUCCEED -> reward`（结束对话）。
+- **行 4**：哥哥 798985 的 `QUEST_SELECT`/`USE_OBJECT` 显示 `DEFAULT_SUCCESS`（客户端
+  `select_success`），`SELECT_QUEST_REWARD` 打开奖励窗口 1；`npc-complete` 留在哥哥身上，
+  用 `actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"`（不开 preview，避免与显式
+  USE_OBJECT 路由撞车）。
+- **自愈边（两条）**：`REWARD && var0==0`（迁移后 XML 落盘）与 `REWARD && var0==3`
+  （迁移前 Java handler 的 `setQuestVarById(0, var+1)`）都提到 `reward(var0=4)`。
+
+### 四十八之三、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 1/1 validates；
+  `apply_batch44_foam_wisp_five_row_ladder.py --apply` 后 `--check` 幂等 OK。
+- **门禁**：首轮 `QuestClientContractGateTest` 报
+  `BUTTON_WITHOUT_ROUTE|11118|s1|798963|39|10000|1008`（CHECK 成功后显示页的“结束对话”按钮无路由），
+  补 `s2` 的 `FINISH_DIALOG` 路由后转绿；该用例已写入 `Batch44FoamWispFiveRowContractTest`。
+- **全库行号审计（脚本 [11] 节已改为批次 44，并补登本族）**：
+  `MISSING_TAIL_ROWS 43 -> 42`（-1）、`ROW_BEHIND 140 -> 139`（-1）、
+  `ROW_WITHOUT_STATE 472 -> 471`（-1）、`ROW_ALIGNED 2710 -> 2711`（+1）、
+  `ROW_STATE_ALIGNED 2482 -> 2483`（+1）；任务转为
+  `ALIGNED + ROW_ALIGNED + ROW_STATE_ALIGNED + visible=0 1 2 3 4 + recovery=True`，
+  前后见 [batch44-evidence.tsv](batch44-evidence.tsv)。
+- **Maven（授权后执行）**：新增 `Batch44FoamWispFiveRowContractTest`（5 例：五行各一个状态 /
+  Cinisca 前两行与 s2 收尾按钮 / 妹妹 owner 修正与行 2-3 推进 / 哥哥领奖与窗口 1 /
+  两条旧存档自愈）5/5 绿；同批回归 `Batch43MalodorAntidoteRowContractTest` 5/5、
+  `Batch42TombstoneFlowerRowContractTest` 5/5、`Batch41PangaiaFortressRowContractTest` 5/5、
+  `Batch40ThreeNpcTalkLadderContractTest` 5/5、`ProductionCatalogWhitelistVerificationTest` 1/1
+  （`PRODUCTION_COMPILE_OK=6191 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 /
+  WHITELIST_VIOLATIONS=0`）、`QuestPageButtonAuditTest`(2)、`QuestHandoverContinuationAuditTest`(2)、
+  `QuestE2eInfrastructureTest`(41)、`AcceptAndConfirmationEntryContractTest`(2)、
+  `QuestClientContractGateTest` 全绿；合计 81 例中唯一红仍是既有
+  `QuestInteractionObjectCatalogTest` 8 条（13809/23809/30504/30554），11118 不在其中。
+- **客户端实机 PENDING_CLIENT**：① 哥哥接取后行 0 提示去找 Cinisca，`select1` 后切行 1；
+  ② 交 20 个发光体后出现 `check_user_item_ok` 并拿到玻璃瓶，任务书切行 2，“结束对话”可正常关闭；
+  ③ 到妹妹 Shulack_LF4_2 处（对话或使用瓶子）出现 `select4` 并切行 3，点“结束对话”切行 4；
+  ④ 回哥哥对话出现 `select_success`，点“讲述经过”弹奖励窗口 1 并完成；
+  ⑤ 妹妹处不应再出现 Shugo_LF4_5(798984) 的任何页面；⑥ 旧存档 `REWARD + var0=0/3`
+  登录或切图后自愈到行 4。
+
+### 四十八之四、边界与后续
+
+- **本批是第一批把“迁移前 Java handler 的内部矛盾”作为 owner 权威依据的收口**：当 typed XML 的
+  owner 与客户端任务书冲突时，优先比对 `npc_ids` 声明、注册监听与任务书逐行点名，三者一致才认。
+  同类可疑任务（正文 NPC 不在 `npc_ids` 里）建议后续用相同口径专项扫描。
+- CHECK 成功即切状态的任务，必须在**目标状态**上保留客户端结果页的按钮路由（本例 FINISH_DIALOG）；
+  这是 `QuestClientContractGateTest` 的硬约束，后续同类收口应默认检查。
+- 剩余 `MISSING_TAIL_ROWS 42`（36 个待逐族收口 + 6 个已登记例外）。其它挂账不变：
+  `STATES_BEYOND_ROWS 2620`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 73`、客户端隔离族 8 个；
+  既有红沿用 `QuestInteractionObjectCatalogTest` 8 条资格缺口。

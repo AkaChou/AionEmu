@@ -297,6 +297,15 @@ BATCH42_TOMBSTONE_FLOWER_ROWS = {4033}
 # 旧定义两个 NPC 都能接取/领奖，SETPRO1 直跳 reward。门禁 Batch43MalodorAntidoteRowContractTest。
 BATCH43_MALODOR_ANTIDOTE_ROWS = {2239}
 
+# 批次 44 登记（2026-09-22）：发光体玻璃瓶五行族 11118（Making Setzkiki Laugh）。
+# 行 0 向 Cinisca 798963 征询（select1/SETPRO1）、行 1 交 20 个 182206794 换玻璃瓶 182206795
+# （select2/CHECK）、行 2 在妹妹 Shulack_LF4_2 身边打开瓶子（select4）、行 3 和妹妹对话
+# （SET_SUCCEED）、行 4 回哥哥 Shulack_LF4_1 798985 报告领奖（select_success）。
+# 迁移前 Java handler 的 npc_ids 是 {798985, 798963, 798986}，正文却误写 798984（Shugo_LF4_5
+# 且未注册监听）；本批修正 owner 为 798986，reward 投影 0 -> 4，并补 REWARD/var0=0 与
+# REWARD/var0=3（迁移前 Java 落盘）两条自愈边。门禁 Batch44FoamWispFiveRowContractTest。
+BATCH44_FOAM_WISP_ROWS = {11118}
+
 # 批次 26 登记（2026-09-22）：30600/30610 是 Named/Boss 双层计数（var0/var1 组合，客户端 select5 报告行由计数饱和驱动），
 # var0 不承载任务书行号；行号口径把它们判成 MISSING_TAIL_ROWS。批次 26 的自愈边与
 # Quest15546KillCounterSaturationFlowTest 锁定这两个任务，禁止按客户端行号补阶梯。
@@ -765,7 +774,7 @@ def main() -> int:
           "门禁 CutsceneHiddenQuestFamilyContractTest")
     print(f"  仍隔离（无定义、无任务书行，只登记证据）={sorted(CLIENT_ONLY_ISOLATED_QUESTS)}")
 
-    print("\n[11] 缺尾部多行（MISSING_TAIL_ROWS）逐族盘点（批次 43）：")
+    print("\n[11] 缺尾部多行（MISSING_TAIL_ROWS）逐族盘点（批次 44）：")
     tail = [row for row in rows if row["shape"] == "MISSING_TAIL_ROWS"]
     tail_ids = {row["quest_id"] for row in tail}
     fixed = sorted(BATCH31_GELKMAROS_ROW_LADDER | BATCH32_KALDOR_ROW_LADDER
@@ -773,7 +782,8 @@ def main() -> int:
                    | BATCH36_EVENT_ROW_LADDER | BATCH37_TALK_KILL_REPORT_ROW_LADDER
                    | BATCH38_BRANCH_CHOICE_REWARD_INDEX | BATCH39_TURN_IN_TALK_REPORT_ROWS
                    | BATCH40_THREE_NPC_TALK_ROWS | BATCH41_PANGAIA_FORTRESS_ROWS
-                   | BATCH42_TOMBSTONE_FLOWER_ROWS | BATCH43_MALODOR_ANTIDOTE_ROWS)
+                   | BATCH42_TOMBSTONE_FLOWER_ROWS | BATCH43_MALODOR_ANTIDOTE_ROWS
+                   | BATCH44_FOAM_WISP_ROWS)
     registered_ids = (BLANK_JOURNAL_SLOT_EXCEPTIONS | CLIENT_ONLY_ISOLATED_QUESTS
                       | COUNTER_SLOT_EXCEPTIONS | MULTI_LAYER_COUNTER_EXCEPTIONS
                       | SHARED_VISIBLE_SLOT_EXCEPTIONS | QE045_LOCKED) & tail_ids
@@ -782,14 +792,14 @@ def main() -> int:
           f"批次 34 Rentus Base、批次 35 情人节巧克力塔、批次 36 活动两族共 13 个、"
           f"批次 37 交谈击杀报告两族 5 个、批次 38 阵营选择族 4 个、"
           f"批次 39 交付-对话-报告族 3 个、批次 40 三 NPC 对话族 3 个、"
-          f"批次 41 潘盖亚要塞战族 2 个、批次 42 献花族 1 个、批次 43 解毒剂族 1 个，"
-          f"均已转 ALIGNED）={fixed}")
+          f"批次 41 潘盖亚要塞战族 2 个、批次 42 献花族 1 个、批次 43 解毒剂族 1 个、"
+          f"批次 44 发光体五行族 1 个，均已转 ALIGNED）={fixed}")
     stuck = sorted((BATCH31_GELKMAROS_ROW_LADDER | BATCH32_KALDOR_ROW_LADDER | BATCH34_RENTUS_BASE_ROW_LADDER
                     | BATCH35_VALENTINE_TOWER_ROW_LADDER | BATCH36_EVENT_ROW_LADDER
                     | BATCH37_TALK_KILL_REPORT_ROW_LADDER | BATCH38_BRANCH_CHOICE_REWARD_INDEX
                     | BATCH39_TURN_IN_TALK_REPORT_ROWS | BATCH40_THREE_NPC_TALK_ROWS
                     | BATCH41_PANGAIA_FORTRESS_ROWS | BATCH42_TOMBSTONE_FLOWER_ROWS
-                    | BATCH43_MALODOR_ANTIDOTE_ROWS) & tail_ids)
+                    | BATCH43_MALODOR_ANTIDOTE_ROWS | BATCH44_FOAM_WISP_ROWS) & tail_ids)
     if stuck:
         print(f"  ⚠ 本批修复清单仍在缺尾桶={stuck}")
     print(f"  已登记例外（空槽位/客户端隔离/计数槽/双层计数/共享槽位/QE-045 锁）={len(registered_ids)} {sorted(registered_ids)}")
