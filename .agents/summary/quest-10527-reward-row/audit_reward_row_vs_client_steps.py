@@ -162,6 +162,18 @@ LEGACY_STEP_EXCEPTION = {
 # server keeps the legacy REWARD/var0=0 the user confirmed in-game; projecting 1 blanks the journal.
 CLIENT_SCRIPTED_ROW_EXCEPTIONS = {1123}
 
+# 批次 50 登记（2026-09-22，已落码）：2289（Rampaging Mosbears）的 var0 不是任务书行号，而是客户端
+# quest_script 声明的 step 值：`quest_script_monster.csv` 把 210564/210584 声明为 `Progress(0~4)`，
+# 客户端 quest.xml 的 `collect_progress=7` 又把收物行钉在 step 7，legacy `_2289RampagingMosbears`
+# 走的正是同一条阶梯（击杀 0->5、Gefion 5->6、Skanin 6->7 并发放 182203017、Gefion 在 7 用
+# checkQuestItems(7,7,true,5,2120) 收角进 REWARD）。4 行任务书的行 0 因此占 var0 = 0..4，
+# 行 1/2/3 = 5/6/7；本审计的行号口径必然报 ROW_AHEAD / STATES_BEYOND_ROWS（visible 0..7），
+# 权威口径是客户端 Progress 声明 + collect_progress + legacy 阶梯，禁止按“末行索引 3”改回。
+# 门禁 AltgardMosbearsCounterLadderContractTest。
+# Batch 50 registration: 2289's var0 carries the client's declared step values (kill row 0..4,
+# report/intel/collect 5/6/7), so the row-index lens reports ROW_AHEAD by design.
+BATCH50_ALTGARD_MOSBEARS_COUNTER_ROW = {2289}
+
 COUNTER_SLOT_EXCEPTIONS = {
     2303,   # var0 = 11..15 / 21..25 击杀计数（quest_script Progress(11~14)/(15)/(21~24)/(25)）
     50008,  # ProgressAll + sensoryArea 计数，末行槽位 15 不是 3×行号
@@ -169,6 +181,7 @@ COUNTER_SLOT_EXCEPTIONS = {
     11467,  # reward0..3 四条投影覆盖 var0=0..3（var 为分支编号）
     1114,   # 行 4/5 是两条分支各自的领奖行，没有单一 reward 投影可对齐
     80690,  # 末行槽位 15（击杀计数族），不是 3×行号
+    2289,   # 击杀行占 var0 = 0..4（Progress(0~4)），行 1/2/3 = 5/6/7（collect_progress=7）
 }
 
 # 批次 29 登记（2026-09-22）：legacy 侧没有 Java handler 也没有 quest_script_data 脚本
@@ -814,7 +827,7 @@ def main() -> int:
           "门禁 CutsceneHiddenQuestFamilyContractTest")
     print(f"  仍隔离（无定义、无任务书行，只登记证据）={sorted(CLIENT_ONLY_ISOLATED_QUESTS)}")
 
-    print("\n[11] 缺尾部多行（MISSING_TAIL_ROWS）逐族盘点（批次 49）：")
+    print("\n[11] 缺尾部多行（MISSING_TAIL_ROWS）逐族盘点（批次 50）：")
     tail = [row for row in rows if row["shape"] == "MISSING_TAIL_ROWS"]
     tail_ids = {row["quest_id"] for row in tail}
     fixed = sorted(BATCH31_GELKMAROS_ROW_LADDER | BATCH32_KALDOR_ROW_LADDER
@@ -824,7 +837,8 @@ def main() -> int:
                    | BATCH40_THREE_NPC_TALK_ROWS | BATCH41_PANGAIA_FORTRESS_ROWS
                    | BATCH42_TOMBSTONE_FLOWER_ROWS | BATCH43_MALODOR_ANTIDOTE_ROWS
                    | BATCH44_FOAM_WISP_ROWS | BATCH45_THREE_ROW_AND_BRANCH_ROWS
-                   | BATCH48_INGGISON_NURSING_ROWS | BATCH49_GELKMAROS_KANTELE_ROWS)
+                   | BATCH48_INGGISON_NURSING_ROWS | BATCH49_GELKMAROS_KANTELE_ROWS
+                   | BATCH50_ALTGARD_MOSBEARS_COUNTER_ROW)
     registered_ids = (BLANK_JOURNAL_SLOT_EXCEPTIONS | CLIENT_ONLY_ISOLATED_QUESTS
                       | COUNTER_SLOT_EXCEPTIONS | MULTI_LAYER_COUNTER_EXCEPTIONS
                       | SHARED_VISIBLE_SLOT_EXCEPTIONS | QE045_LOCKED
@@ -835,7 +849,8 @@ def main() -> int:
           f"批次 37 交谈击杀报告两族 5 个、批次 38 阵营选择族 4 个、"
           f"批次 39 交付-对话-报告族 3 个、批次 40 三 NPC 对话族 3 个、"
           f"批次 41 潘盖亚要塞战族 2 个、批次 42 献花族 1 个、批次 43 解毒剂族 1 个、"
-          f"批次 44 发光体五行族 1 个、批次 45 三行/分支族 2 个、批次 48 因吉森护理族 1 个、批次 49 格尔克马洛斯 Kantele 族 1 个，均已转 ALIGNED）={fixed}")
+          f"批次 44 发光体五行族 1 个、批次 45 三行/分支族 2 个、批次 48 因吉森护理族 1 个、批次 49 格尔克马洛斯 Kantele 族 1 个、"
+          f"批次 50 奥特加德棕熊计数行 1 个，均已转 ALIGNED）={fixed}")
     stuck = sorted((BATCH31_GELKMAROS_ROW_LADDER | BATCH32_KALDOR_ROW_LADDER | BATCH34_RENTUS_BASE_ROW_LADDER
                     | BATCH35_VALENTINE_TOWER_ROW_LADDER | BATCH36_EVENT_ROW_LADDER
                     | BATCH37_TALK_KILL_REPORT_ROW_LADDER | BATCH38_BRANCH_CHOICE_REWARD_INDEX
@@ -843,7 +858,8 @@ def main() -> int:
                     | BATCH41_PANGAIA_FORTRESS_ROWS | BATCH42_TOMBSTONE_FLOWER_ROWS
                     | BATCH43_MALODOR_ANTIDOTE_ROWS | BATCH44_FOAM_WISP_ROWS
                     | BATCH45_THREE_ROW_AND_BRANCH_ROWS
-                    | BATCH48_INGGISON_NURSING_ROWS | BATCH49_GELKMAROS_KANTELE_ROWS) & tail_ids)
+                    | BATCH48_INGGISON_NURSING_ROWS | BATCH49_GELKMAROS_KANTELE_ROWS
+                    | BATCH50_ALTGARD_MOSBEARS_COUNTER_ROW) & tail_ids)
     if stuck:
         print(f"  ⚠ 本批修复清单仍在缺尾桶={stuck}")
     print(f"  已登记例外（空槽位/客户端隔离/计数槽/双层计数/共享槽位/QE-045 锁）={len(registered_ids)} {sorted(registered_ids)}")

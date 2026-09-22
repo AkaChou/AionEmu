@@ -1,4 +1,35 @@
-<?xml version="1.0" encoding="UTF-8"?>
+#!/usr/bin/env python3
+"""批次 50：2289（Rampaging Mosbears / 巴斯佩尔特村的棕熊）恢复击杀计数行 + 三行对话阶梯。
+
+证据链 / Evidence chain:
+- 客户端 quest_q2289.html 的 quest_summary 共 4 行：行 0 = 消灭 MosbearS_13/14（计数槽 [%2]/5），
+  行 1 = 回巴斯佩尔特村找 Gefion（203616），行 2 = 从 Skanin（203618）处获取情报，
+  行 3 = 杀掉 MosbearNamed_17_An 并把角带给 Gefion（[%collectitem]）。
+- 客户端 quest_script_monster.csv：`2289,Progress(0~4),,killedByUser,,1,MosbearS_13_An` 与
+  `...MosbearS_14_An` —— 击杀行占 SECTION_0 = 0..4（五次击杀），第 5 次把 var0 推到 5；
+  客户端 quest.xml 的 `<collect_progress>7</collect_progress>` 把收物行钉在 step 7。
+- 迁移前 handler `_2289RampagingMosbears`（origin/history）用同一条阶梯：
+  `defaultOnKillEvent(env, {210564,210584}, 0, 5)` 把 var0 推到 5；Gefion 在 var0==5 显示 1352，
+  `STEP_TO_2` = defaultCloseDialog(5, 6)；Skanin 在 var0==6 显示 1693，`STEP_TO_3` =
+  defaultCloseDialog(6, 7, 182203017, 1, 0, 0)（给 Hunter's Secret Remedy）；Gefion 在 var0==7 显示 2034，
+  `CHECK_COLLECTED_ITEMS` = checkQuestItems(7, 7, true, 5, 2120)（成功页 5 = 奖励窗、失败页 2120 = select4_2）。
+- 迁移把整条击杀阶梯丢掉、reward 投影停在 var0=0，行 1/2/3 永远不亮
+  （审计 ROW_BEHIND | MISSING_TAIL_ROWS | ROW_WITHOUT_STATE，visible=0）；同一时段 `<drops>` 的
+  collecting-step 仍是 0，角（182203016）在击杀行就能掉。
+
+参考先例 / Precedents: 2303（客户端 Progress(11~14)/(15) 与 legacy var0 11..15 同口径）、
+10101/20101（Progress(2~!4) 单变量阶梯 + 奖励行投影 = 最后一行）、QE-012 判定规则（SECTION_n = 6n）。
+"""
+from __future__ import annotations
+
+import argparse
+import re
+import sys
+from pathlib import Path
+
+QUEST = Path('src/main/resources/aion/data/static_data/quest_definition/quests/2289.xml')
+
+HEADER = """<?xml version="1.0" encoding="UTF-8"?>
 <!--
   2289 巴斯佩尔特村的棕熊：击杀计数行（0..4）+ 三行对话阶梯（批次 50，QE-012/QE-051）。
   Client journal (quest_q2289.html, 4 rows): row 0 kills MosbearS_13/14 ([%2]/5), row 1 reports to
@@ -8,33 +39,14 @@
   step 7, the same ladder the legacy handler walked. The migrated definition dropped the kill phase
   and projected REWARD at var0=0, so rows 1..3 could never light up.
 -->
-<quest-definition id="2289" version="1">
-  <metadata name="Rampaging Mosbears" display-name-id="1103389" min-level="13" max-level="2147483647" category="QUEST" cannot-share="true">
-    <races>
-      <race id="ASMODIANS"/>
-    </races>
-    <items>
-      <item id="182203016" count="1"/>
-    </items>
-    <work-items>
+"""
+
+NEW_METADATA_ADDITIONS = """    <work-items>
       <item id="182203017" count="1"/>
     </work-items>
-    <rewards>
-      <reward kind="GOLD" id="0" amount="10370"/>
-      <reward kind="EXP" id="0" amount="43350"/>
-      <reward kind="TITLE" id="56" amount="1"/>
-    </rewards>
-    <drops>
-      <drop npc-id="210442" item-id="182203016" chance="100" each-member="true" collecting-step="7"/>
-    </drops>
-    <start-conditions>
-      <condition type="finished" quest-id="2288"/>
-    </start-conditions>
-  </metadata>
-  <progress>
-    <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
-  </progress>
-  <nodes>
+"""
+
+NEW_NODES = """  <nodes>
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
     </node>
@@ -69,7 +81,9 @@
       <var name="var0" value="0"/>
     </node>
   </nodes>
-  <transitions>
+"""
+
+NEW_TRANSITIONS = """  <transitions>
     <!-- 自愈边：迁移期 reward 投影停在 0，领奖态旧存档进世界时补到收物/领奖行 7。
          Heal edge: the migrated REWARD projection stopped at 0, so stale reward saves move to step 7. -->
     <transition target="reward">
@@ -302,4 +316,65 @@
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
   </transitions>
-</quest-definition>
+"""
+
+
+def apply_sections(current: str) -> str:
+    if '<work-items>' in current:
+        raise SystemExit('FAIL: 2289 已经包含 work-items，请人工确认 / work-items already present')
+    if 'collecting-step="0"' not in current:
+        raise SystemExit('FAIL: 2289 的 drops 没有 collecting-step="0" 前置条件 / pre-condition missing')
+    if '<dialog type="NPC_REPORT" npc-id="203616" source="started" target="reward" page="SELECT2"/>' not in current:
+        raise SystemExit('FAIL: 2289 不是迁移期折叠形态 / unexpected pre-state')
+
+    updated, header_replaced = re.subn(r'\A<\?xml version="1\.0" encoding="UTF-8"\?>\n',
+                                       HEADER, current, count=1)
+    if header_replaced != 1:
+        raise SystemExit('FAIL: 2289 头部未替换 / header was not replaced')
+
+    updated, items_replaced = re.subn(r'(    </items>\n)',
+                                      r'\1' + NEW_METADATA_ADDITIONS, updated, count=1)
+    if items_replaced != 1:
+        raise SystemExit('FAIL: 2289 items 段未定位 / items block was not located')
+
+    updated, drop_replaced = re.subn(r'collecting-step="0"', 'collecting-step="7"', updated, count=1)
+    if drop_replaced != 1:
+        raise SystemExit('FAIL: 2289 collecting-step 未改写 / collecting-step was not rewritten')
+
+    updated, nodes_replaced = re.subn(r'  <nodes>.*?</nodes>', NEW_NODES.rstrip('\n'), updated,
+                                      count=1, flags=re.S)
+    if nodes_replaced != 1:
+        raise SystemExit('FAIL: 2289 nodes 段未替换 / nodes block was not replaced')
+
+    updated, transitions_replaced = re.subn(r'  <transitions>.*?</transitions>',
+                                            NEW_TRANSITIONS.rstrip('\n'), updated,
+                                            count=1, flags=re.S)
+    if transitions_replaced != 1:
+        raise SystemExit('FAIL: 2289 transitions 段未替换 / transitions block was not replaced')
+    return updated
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--apply', action='store_true')
+    parser.add_argument('--check', action='store_true')
+    args = parser.parse_args()
+    if not args.apply and not args.check:
+        parser.error('use --check or --apply')
+    current = QUEST.read_text(encoding='utf-8')
+    done = (HEADER in current and NEW_METADATA_ADDITIONS in current
+            and 'collecting-step="7"' in current and NEW_NODES in current and NEW_TRANSITIONS in current)
+    if done:
+        print('CHECK_OK 2289 already at batch-50 target state')
+        return 0
+    expected = apply_sections(current)
+    if args.check:
+        print('CHECK_PENDING 2289 needs batch-50 apply')
+        return 0
+    QUEST.write_text(expected, encoding='utf-8')
+    print('APPLIED 2289 -> kill counter row (SECTION_0 0..4) + report/intel/collect ladder, reward var0=7')
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

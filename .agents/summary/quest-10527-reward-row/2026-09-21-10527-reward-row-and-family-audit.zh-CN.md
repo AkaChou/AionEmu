@@ -4098,3 +4098,99 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
   后再落路由，不得按本批数值套用。
 - `CHECK_USER_HAS_QUEST_ITEM` 成功/失败双路由依赖 priority 0/1；同页两个结果页的 `FINISH_DIALOG` 关闭路由
   必须落在各自渲染状态（`reward` / `stage1`），这是 `QuestClientContractGateTest` 的硬门禁。
+
+---
+
+## 五十四、批次 50：2289 奥特加德棕熊击杀计数行 + 三行对话阶梯（2026-09-22）
+
+### 五十四之一、族判定与证据
+
+- **客户端行**（`quest_q2289.html` 的 `quest_summary`，4 行）：行 0 = 消灭 MosbearS_13/14
+  （`visible="[%0]"`，计数显示在行 0 的取值槽 `[%2]/5`），行 1 = 回巴斯佩尔特村找 Gefion（`[%3]`），
+  行 2 = 从被关着的 Skanin 处获取情报（`[%6]`），行 3 = 杀掉 MosbearNamed_17_An 把角带给 Gefion
+  （`[%9]` + `[%collectitem]`）。
+- **客户端 step 声明**：`quest_script_monster.csv` 对 210564（MosbearS_13_An）与 210584（MosbearS_14_An）
+  都声明 `Progress(0~4)`，即击杀行占 SECTION_0 = 0..4（五次击杀），第 5 次把 var0 推到 5；
+  客户端 `quest.xml` 的 `<collect_progress>7</collect_progress>` 把收物/领奖行钉在 step 7。
+- **客户端页链**：`select1(1011)` 的按钮 `ASK_QUEST_ACCEPT(1007)` → `ask_quest_accept(4)` 的按钮
+  `QUEST_ACCEPT_1(1002)` → `quest_accept_1(1003)` 的按钮 `SETPRO1(10000)`；
+  `select2(1352) --SELECT2_1(1353)--> select2_1(1353) --SELECT2_1_1(1354)--> select2_1_1(1354)
+  --SETPRO2(10001)-->`；`select3(1693) --SELECT3_1(1694)--> select3_1(1694) --SETPRO3(10002)-->`；
+  `select4(2034) --CHECK_USER_HAS_QUEST_ITEM(39)-->`（成功页 5 = `select_quest_reward1` /
+  失败页 2120 = `select4_2`，`select4_2` 的唯一按钮是 `FINISH_DIALOG(1008)`）。
+- **legacy handler**（`origin/history:.../handlers/altgard/_2289RampagingMosbears.java`）：
+  `defaultOnKillEvent(env, {210564,210584}, 0, 5)` 让 var0 随击杀累加 0→5；Gefion 在 var0==5 开 1352，
+  `STEP_TO_2` = `defaultCloseDialog(5, 6)`；Skanin 在 var0==6 开 1693，`STEP_TO_3` =
+  `defaultCloseDialog(6, 7, 182203017, 1, 0, 0)`（HUNTERS_SECRET_REMEDY，`quest_2289b`）；
+  Gefion 在 var0==7 开 2034，`CHECK_COLLECTED_ITEMS` = `checkQuestItems(7, 7, true, 5, 2120)`
+  （消耗角 182203016 进 REWARD，成功页 5、失败页 2120）。
+- **迁移缺陷**：typed 迁移把整条击杀阶梯与两次对话交接丢掉，只剩 `NPC_REPORT -> reward` 折叠路由，
+  reward 投影停在 var0=0，行 1/2/3 永远不亮（审计 `ROW_BEHIND | MISSING_TAIL_ROWS | ROW_WITHOUT_STATE`，
+  visible=0）；同一份定义的 `<drops>` 还是 `collecting-step="0"`，角在击杀行就能掉。
+- **勘误（必须记录）**：本报告 §五十四 此前（取证轮）曾假设“var0 = 行号 0/1/2/3 + var2 @ offset 12 计数槽”。
+  该假设已被推翻：客户端 `Progress(0~4)` 是**单变量 step 走行**（与 10101/20101 的 `Progress(2~!4)`、
+  2303 的 `Progress(11~14)/(15)` 同形，2303 的 legacy var0 恰好就是 11..15/21..25），
+  2289 客户端 `collect_progress=7` 进一步证明收物行读的是 step 7 而不是行号 3；四行任务书的第一行
+  本来就占 0..4 五个 step 值。因此权威模型 = legacy 线性阶梯（0..4 击杀、5 报告、6 情报、7 收物），
+  **不得**按“末行索引 3”改投影，也不得新增 var2 计数槽（多声明的高位会让客户端 step 校验读到脏值）。
+
+### 五十四之二、落点（`2289.xml`）
+
+1. 节点补 `s1..s7`（var0 = 1..7），`reward` 投影 `0 -> 7`（= 客户端 `collect_progress`），
+   保留 `started(var0=0)` 与 `complete(var0=0)`。
+2. 击杀阶梯：`started -> s1 -> s2 -> s3 -> s4` 各自守卫 `var0==n`、`set-variable var0=n+1`，
+   事件统一为 `kill-npc npc-ids="210564 210584"`；前四次 `PACKET_ONLY`（只刷计数显示），
+   `s4 -> s5`（第 5 次击杀）用 `VISIBILITY_REFRESH` 切到行 1。
+3. 行 1（Gefion 203616）：`QUEST_SELECT -> SELECT2`、`SELECT2_1 -> SELECT2_1`、
+   `SELECT2_1_1 -> play-movie 62 + SELECT2_1_1`（legacy `SELECT_ACTION_1354` 先播影片 62 再下 1354 页）、
+   `SETPRO2 -> s6`（`VISIBILITY_REFRESH` + 关窗）。
+4. 行 2（Skanin 203618）：`QUEST_SELECT -> SELECT3`、`SELECT3_1 -> SELECT3_1`、
+   `SETPRO3 -> s7` + `give-item 182203017 x1`（`VISIBILITY_REFRESH` + 关窗）；182203017 进
+   `<work-items>`，随完成/放弃清理（`QuestMutationPlanner` 的 work-item 清理合同）。
+5. 行 3（Gefion 203616）：`QUEST_SELECT -> SELECT4` + `npc-item-report`（`item-id=182203016`
+   `required=1` `failure-page=SELECT4_2`）展开出 `CHECK_USER_HAS_QUEST_ITEM(39)` 的成功（has-item +
+   remove + `LEVEL_AND_VISIBILITY_REFRESH` + 奖励窗页 5）与失败（priority 1 + `SELECT4_2`）双路由；
+   `s7 + FINISH_DIALOG -> close-dialog` 承接 `select4_2` 的 1008 按钮。
+6. `<drops>` 的 `collecting-step` `0 -> 7`：角（182203016）只在收物行掉落。
+7. 领奖 owner 收敛：只保留 203616 的 `npc-complete`（`fixed-reward-indices="0 1 2"`，
+   `preview = USE_OBJECT SELECT_QUEST_REWARD`），删除 203618 的 `NPC_REPORT`/`npc-complete`；
+   `reward + QUEST_SELECT -> SHOW_SELECT_QUEST_REWARD_WINDOW1`（客户端 2289 没有 select_success，
+   领奖页就是 5 = `select_quest_reward1`）。
+8. 自愈边：`REWARD/var0=0 -> 7`（迁移把领奖投影停在 0）与 `START + has-item 182203016 -> s7`
+   （迁移期 `collecting-step=0` 让角提前掉落，已持角存档不必重打五次）。
+
+### 五十四之三、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd quests/2289.xml` validates；
+  `apply_batch50_altgard_mosbears_counter_ladder.py --apply` 后 `--check` 幂等 OK；
+  `git diff --check` 干净。
+- **门禁**：新增 `AltgardMosbearsCounterLadderContractTest` 7 例（step 状态 0..7 / 五次击杀阶梯与同步模式 /
+  Gefion 页链与影片 62 / Skanin 情报与 182203017 / 角门控与失败页关闭 / 唯一 owner 与 preview /
+  自愈边 planner 顺序 + 禁止 `started -> reward` 直跳）；组合回归 13 个测试类 88 例全绿，含
+  `QuestClientContractGateTest`（`-Dquest.client.contract.failOnStaleBaseline=true`，2289 无基线指纹进出）
+  与 `ProductionCatalogWhitelistVerificationTest`（`PRODUCTION_COMPILE_OK=6191 / FAILURES=0 /
+  INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`）。
+- **全库行号审计**：2289 由 `ROW_BEHIND | MISSING_TAIL_ROWS | ROW_WITHOUT_STATE（visible 0）` 变为
+  `ROW_AHEAD | STATES_BEYOND_ROWS | STATE_OUT_OF_RANGE（visible 0 1 2 3 4 5 6 7）`；计数变化
+  `ROW_AHEAD 2586 -> 2587`、`ROW_BEHIND 136 -> 135`、`MISSING_TAIL_ROWS 38 -> 37`、
+  `ROW_WITHOUT_STATE 468 -> 467`、`STATE_OUT_OF_RANGE 2442 -> 2443`、`STATES_BEYOND_ROWS 2620 -> 2621`
+  （`ROW_ALIGNED 2714`、`ROW_STATE_ALIGNED 2486`、`ALIGNED 2486` 不变——计数行走行的任务不落在行号桶）；
+  审计脚本 [11] 节登记「批次 50 奥特加德棕熊计数行 1 个」，剩余待逐族收口 32 -> 31；单任务明细
+  `recovery=True`、`last_row_npc_key=Gefion`、`last_row_npc_matches_quest=True`。
+- **客户端实机 PENDING_CLIENT（请按此复测）**：① 接取后打 5 只 MosbearS_13/14，任务书行 0 应显示
+  `n/5` 并在第 5 只后切到行 1「回去找 Gefion」；② 与 Gefion 走两页说明并在影片 62 结束后切到行 2；
+  ③ 与 Skanin 对话拿到 HUNTERS_SECRET_REMEDY 后切到行 3；④ 击杀 MosbearNamed_17_An 掉出高姆的角，
+  交给 Gefion 弹奖励窗并领奖完成；⑤ 旧存档 `REWARD/var0=0` 登录自愈到 7、迁移期已持角的 START 存档
+  登录直接落到收物行。
+
+### 五十四之四、边界
+
+- 本族是「行 0 是多次击杀计数、后续为对话/收物行」的 step 走行形态（客户端 `Progress(a~b)` 单变量声明）。
+  它与 QE-053 的 `Progress(SECTION_0==n; SECTION_i<M)` 链式计数族、以及 QE-051 的“行号 = var0”族
+  是三种不同合同：本族 var0 是客户端 step，不能按行号补投影，也不能把计数拆到高位槽（多声明的高位
+  会让客户端 step 校验读到脏值，见 10101 的 8196 案例）。
+- 同形的其它待收口任务（`Progress(a~b)` 多值声明，如 18301 `Progress(0~6)`、21467 `Progress(0~3)`、
+  2633 `Progress(1~2)`、3940/4944 `Progress(6~!306)`、24054 `Progress(2~4)/(12~14)`）必须逐个核对
+  客户端 `collect_progress`、legacy 阶梯与页链后再落码，不得按本批数值套用（18301 行 0 是破坏 7 个
+  监视水晶球的物件计数、21467 是 4 段限时击杀播报 + 1 行报告，形态与 2289 相近但证据链尚未取证）。
+- `var0` 的 `max=63` 未改动；本批没有新增 bit-field，`ClientQuestSectionAlignmentTest` 的 6N 约束不受影响。
