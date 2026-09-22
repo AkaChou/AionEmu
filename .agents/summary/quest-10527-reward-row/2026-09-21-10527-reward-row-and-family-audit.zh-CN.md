@@ -2965,3 +2965,121 @@ QE-051 的行号口径对它们不适用——本批把这点写进审计脚本�
   须先判 `var0` 是否行号（QE-051 vs QE-054）。
 - 挂账不变：`STATES_BEYOND_ROWS 2622`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 78`、`section0 residual 837`、
   客户端隔离族 8 个（16984/26984/20015/18706/28706/3959/4963/29706）。
+
+## 四十、批次 36：活动巧克力塔族 + 术古货箱族（13 任务，2026-09-22 用户授权后执行）
+
+### 四十之一、族判据与证据（同一三行槽位下的两条页链）
+
+批次 35 之后全库还剩 **72 个 `MISSING_TAIL_ROWS`**。本批按「同槽位 + 同页链 + 同客户端行文本形态」把情人节事件余族拆成两组，
+13 个任务一次收口；两族都是客户端 `quest_summary` 三行、槽位 `%0/%3/%6`，且与 50019/51019 同属一个活动，
+但**页链与收集进度不同，不得互相套用物件 id**。
+
+#### A. 活动巧克力塔族（select1 / check_user_item_ok 页链，客户端 collect_progress=0）
+
+| quest | NPC | 收集物（quest_data quest_drop） | 塔物件 | 活动怪 |
+|---|---|---|---|---|
+| 50020 | 202549 Single_Shugo | 182215173 ×3 | 701466 Light_Chocolate_Tower | 219316 |
+| 80300 | 799763 | 182215288 ×3 | 831402 | 219639 |
+| 80301 | 799763 | 182215289 ×3 | 831402 | 219640 |
+| 80306 | 799763 | 182215294 ×3 | 831403 | 219639 |
+| 80307 | 799763 | 182215295 ×3 | 831403 | 219640 |
+
+客户端行：行 0「击杀活动怪并抢夺巧克力、交给术古」([collectitem])、行 1「在爱情巧克力塔上使用工作物」、行 2「和术古对话」。
+页链：`select1`(1011) 的 `CHECK_USER_HAS_QUEST_ITEM` → `check_user_item_ok`(10000) 的 `SETPRO2` → 塔 `USE_OBJECT` →
+`select_success`(10002) 的 `SELECT_QUEST_REWARD` → 奖励窗 1009。50019/51019（批次 35）是本族模板。
+
+#### B. 术古货箱族（select4 / select5 页链，客户端 collect_progress=4）
+
+| quest | NPC | 收集物（quest_drop npc_id=货箱，collecting_step=4） | 货箱 | 行 0 活动怪 |
+|---|---|---|---|---|
+| 50021 | 202549 | 182215176 ×3 | 701470 Event_Cargobox | Brownie_Solo |
+| 51021 | 202549 | 182215182 ×3 | 701470 Event_Cargobox | Brownie_Solo |
+| 50022 | 202549 | 182215177 ×3 | 701470 Event_Cargobox | Shulack_Couple |
+| 51022 | 202549 | 182215183 ×3 | 701470 Event_Cargobox | Shulack_Couple |
+| 80302 | 799763 | 182215292 ×3 | 701774 world_event_Cargobox | Brownie_Solo |
+| 80303 | 799763 | 182215293 ×3 | 701774 world_event_Cargobox | Shulack_Couple |
+| 80308 | 799763 | 182215298 ×3 | 701774 world_event_Cargobox | Brownie_Solo |
+| 80309 | 799763 | 182215299 ×3 | 701774 world_event_Cargobox | Shulack_Couple |
+
+客户端行：行 0「消灭活动怪 ([%2]/3)」、行 1「和术古对话」、行 2「在术古货物箱里找到道具并交给术古」([collectitem])。
+页链：`select4`(2034) 的 `SETPRO2` → 行 1；同一 select4 的 `SETPRO2` → 行 2；`select5`(2375) 的 `CHECK_USER_HAS_QUEST_ITEM`
+成功 → `select_success`(10002)、失败 → `check_user_item_fail`(10001)（`FINISH_DIALOG` 关闭）。
+
+#### 共同证据与三个关键判读
+
+1. **旧定义三种残留形态**（HEAD 审计，逐任务见 [batch36-evidence.tsv](batch36-evidence.tsv)）：
+   - 塔族 5 个 + 货箱族的 50022/80302/80303/80308/80309：reward 节点 `var0=0`，`npc-item-report` 或交付直跳 REWARD，行 1/2 没有状态；
+   - **50021/51021**：`a3`/`k15` 交付后落 reward `var0=15`，出现 `ROW_AHEAD / STATES_BEYOND_ROWS`：50021 的可见槽为
+     `0 1 2 3 15`、51021 为 `0..15`。这与用户报障 10527 的「var0=15 被写成 14、下一步不显示」是同一类越界计数残留，
+     本批按行号口径归零重建；
+   - **51022**：reward `var0=1` 且缺末行（`MISSING_LAST_ROW`，可见槽 `0 1`）。
+2. **客户端 `collect_progress` 决定页链**：塔族=0（检查收集物后切塔行）、货箱族=4（先走 select4 结束击杀行，
+   再在 select5 交物）。零售 `quest_data.xml` 中货箱族的 `quest_drop collecting_step="4"` 对应客户端第二组 3 bit 槽位
+   （3..5），即**行 1**；生产门禁 `QuestInteractionObjectValidator` 要求 `quest_use_item` 货箱的资格路由落在
+   START 态且 `var0 == collecting_step`，因此本批把 701470/701774 的 `collecting_step` 统一收敛为 **1**（与 s1 的
+   `var0=1` 对齐），而不是保留 4。
+3. **活动内容由活动系统下发**：NPC 202549/799763、活动怪 219315/219316/219639/219640、塔 701466/701467/831402/831403、
+   货箱 701470/701774 在本检出内都没有静态 spawn；`quest_data.xml` 的 `quest_drop` 是物品→活动怪的权威链接
+   （例如 50020 的 182215173 钩在 219316、80300 的 182215288 钩在 219639）。整族按批次 35 口径只重建行阶梯、
+   不新增「未击杀即锁死」的门。
+
+### 四十之二、落点（两族三行阶梯 + 三处编译期门禁规避）
+
+- **节点统一**：`unaccepted(0) / started(0) / s1(1) / reward(2) / complete(0)`；`var0` 宽度统一为 6 bit（max 63），
+  51022 由原来的 width=1 放宽，50021/51021 由 a/k 计数形态收敛到行号。
+- **塔族**：`started --CHECK_USER_HAS_QUEST_ITEM(has-item×3 + remove-item×3)--> s1`；`s1` 的 `SETPRO2` 只做
+  `close-dialog`（不额外推进）；`s1 --塔 USE_OBJECT--> reward`；保留 `s1 --QUEST_SELECT(NPC)--> reward` 防呆入口
+  （活动塔未刷出时仍能推进）；reward 行用 `QUEST_SELECT` 显示 `DEFAULT_SUCCESS`(10002)，1009 奖励窗由既有
+  `USE_OBJECT SELECT_QUEST_REWARD` 结算路由展开。
+- **货箱族**：`started --QUEST_SELECT--> SELECT4 页` + `started --SETPRO2--> s1`；`s1 --QUEST_SELECT--> SELECT4 页` +
+  `s1 --SETPRO2--> reward`；`s1` 挂 `can-act template-id=货箱 ACTION_ITEM_USE`；reward 行用 `QUEST_SELECT` 显示 SELECT5 页，
+  `CHECK_USER_HAS_QUEST_ITEM` priority=0 成功 → `DEFAULT_SUCCESS`(10002)，priority=1 失败 → `CHECK_USER_ITEM_FAIL`(10001)。
+- **自愈边**：13 个任务全部补 `REWARD && var0==0 → reward(2)` 与 `REWARD && var0==1 → reward(2)` 两条无 source 的
+  `enter-world` 边（`LEVEL_AND_VISIBILITY_REFRESH`、无 priority），覆盖旧存档停在 0/1；50021/51021 旧的 15
+  不再作为可见槽，51022 旧的 1 会被自愈到行 2。
+- **编译期门禁（已修，勿回退）**：
+  1. `AMBIGUOUS_TRANSITION`：货箱族 reward 行一度同时挂 `QUEST_SELECT→SELECT5` 与 `QUEST_SELECT→DEFAULT_SUCCESS`
+     两条无 priority 路由；最终去掉 reward 行直达 10002，领奖入口由交付成功 CHECK 路由打开的 `select_success`(10002) 承担。
+  2. `QuestInteractionObjectValidator` / `PRODUCTION_INTERACTION_OBJECT_FAILURES`：`can-act` 必须落在 START 态且
+     `var0 == collecting_step`，故把 can-act 放到 s1 并把 collecting-step 由 4 收敛为 1。
+  3. `NPC_ITEM_REPORT_TARGET_STATUS`：删除 `npc-item-report`，交付改显式 CHECK 路由。
+
+### 四十之三、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 13/13 validates；
+  `apply_batch36_event_row_ladder.py --apply` 后 `--check` 幂等 13/13 OK。
+- **全库行号审计（脚本 [11] 节已改为批次 36）**：`MISSING_TAIL_ROWS 72 -> 62`（-10）、`MISSING_LAST_ROW 78 -> 77`（-1）、
+  `ROW_BEHIND 170 -> 159`（-11）、`ROW_WITHOUT_STATE 502 -> 491`（-11）、`ROW_ALIGNED 2678 -> 2691`（+13）、
+  `ROW_STATE_ALIGNED 2450 -> 2463`（+13）、`STATES_BEYOND_ROWS 2622 -> 2620`（-2，50021/51021 从越界计数形态转出）。
+  13 个任务全部 `ALIGNED + ROW_ALIGNED + ROW_STATE_ALIGNED + visible=0 1 2 + recovery=True`；逐任务前后见
+  [batch36-evidence.tsv](batch36-evidence.tsv)。
+- **Maven（授权后执行）**：批次 35 的 31 类 + `Batch29RewardRowClosureContractTest`、
+  `CutsceneHiddenQuestFamilyContractTest`、`Batch31`–`Batch36` 共 **35 个测试类全绿**，新增
+  `Batch36EventRowLadderContractTest`（5 例：三行投影 + 禁直跳 / 塔族交付与装饰 / 货箱族 SETPRO2+can-act+
+  collecting-step=1+1009 / reward owner 唯一 / 0/1 双自愈边 + planner 收敛）；
+  `PRODUCTION_COMPILE_OK=6191 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。
+- **客户端实机 PENDING_CLIENT**：① 接取后任务书停在行 0；② 塔族交满 3 个收集物后切行 1（check_ok 页确认即关闭）；
+  ③ 在爱情巧克力塔上使用工作物后切行 2；④ 回术古处开奖励窗领奖；⑤ 旧存档（`REWARD + var0=0/1`）登录或切图后落行 2；
+  ⑥ 货箱族按 select4 结束 → 行 2 用 select5 交付；⑦ 塔/箱未刷出时应能走防呆路径；⑧ 50021/51021 旧存档
+  `var0=15` 不得再出现，51022 旧存档 `var0=1` 应被自愈到行 2。
+
+### 四十之四、边界与后续
+
+- **活动内容无静态 spawn**：NPC/怪/塔/箱均由活动系统运行时下发，本批不做「未击杀即锁死」的门，避免活动未开时不可完成；
+  整族行阶梯只依赖客户端页链与 `quest_data` 的 drop 记录。
+- **同活动未收口**：`80304/80305`（Asmodian「Bitter or Sweet?」）是另一形态——三行 = 回答 → 去见坠入爱河的术古/
+  单身部队成员，页链 `select1_1 / select2_1 / select2_2 / select2_1_1 / select3_1 / select3_2` + `SETPRO1/SETPRO2`，
+  无 items/drop；本批未动，登记下一批。
+- **`MISSING_TAIL_ROWS` 剩余 56 的族分组（批次 37 候选）**：
+  - `3711/4711/18213/28213`（rows=4、slots=(0,3,6,9)、retail 双 TALK）——最干净的候选；
+  - `2411/2922/4732`（rows=3，adv `FINISH_DIALOG/SELECT_QUEST_REWARD`）；
+  - `3013/3217/4217`（rows=3，adv `CHECK_USER_HAS_QUEST_ITEM/SET_SUCCEED`）；
+  - `11072/21081/24150`（rows=3，retail 双 TALK）；
+  - `13918/18911/23918/28911`（rows=6，含 `STATES_BEYOND_ROWS`）；
+  - `26905/26906/26908`（slots=(0,9,24)）、`3938/4942`（rows=11）、`14220/24220`、`17500/27500`。
+  - 其余样例：1582(rows=4,缺=1 2 3)、1634(rows=5,缺=3 4)、1938(rows=3)、2223(rows=4)、2239(rows=3)、
+    2289(rows=4)、2307(rows=3)、2372(rows=6)、2411(rows=3)、2922(rows=3)、3013(rows=3)、3217(rows=3)。
+- **其它挂账**：`STATES_BEYOND_ROWS 2620`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 77`、
+  `section0 residual 837`（沿用批次 35 专项口径，本批未重跑该专项）、客户端隔离族 8 个
+  （3959/4963/16984/18706/20015/26984/28706/29706）、3 例 HEAD 即红
+  （`MissionItemConsumptionBatchRegressionTest` 20529/29064、`QuestKillCounterRetailGateTest#singleCounterQuestsRequireExactlyTheClientGate` 15101）。

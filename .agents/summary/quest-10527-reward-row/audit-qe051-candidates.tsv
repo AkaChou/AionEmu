@@ -41,5 +41,4 @@ quest_id	client_rows	reward_var0	last_start_node	last_start_var0	recovery	client
 51008	2	0	started	0	False	quest_q51008.html		和[%dic:STR_DIC_E_DF_ChristmasEvent_Santa]对话					NO
 51010	3	1	started	0	False	quest_q51010.html		和[%dic:STR_DIC_E_single_shugo_d]见面					NO
 51020	3	1	started	0	False	quest_q51020.html		和[%dic:STR_DIC_E_single_shugo_d]对话					NO
-51022	3	1	started	0	False	quest_q51022.html		在[%dic:STR_DIC_E_FOBJ_Event_Cargobox]里找到铁锹，然后交给[%dic:STR_DIC_E_white_single_d][%collectitem]					NO
 80690	3	1	None	None	False	quest_q80690.html		请向[%dic:STR_DIC_NPC_IDSweep_IN_NPC03]报告					NO

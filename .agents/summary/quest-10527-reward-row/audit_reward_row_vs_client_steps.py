@@ -227,6 +227,20 @@ BATCH34_RENTUS_BASE_ROW_LADDER = {30504, 30554}
 # 塔由活动系统刷出（本检出无静态 spawn），故保留防呆入口避免卡行。
 BATCH35_VALENTINE_TOWER_ROW_LADDER = {50019, 51019}
 
+# 批次 36 登记（2026-09-22）：活动收集/交付两族的行阶梯收口。
+# - 巧克力塔族（select1 / check_user_item_ok 页链，客户端 collect_progress=0）：50020（Elyos 超苦巧克力，塔 701466）、
+#   80300 / 80301（Elyos 世界活动，塔 831402）、80306 / 80307（Asmodian 世界活动，塔 831403）。
+# - 术古货箱族（select4 / select5 页链，客户端 collect_progress=4 = 零售 collecting_step=4）：
+#   50021 / 50022（Elyos，货箱 701470）、51021 / 51022（Asmodian，货箱 701470）、80302 / 80303（Elyos，货箱 701774）、
+#   80308 / 80309（Asmodian，货箱 701774）。
+# 两族都是客户端 quest_summary 三行、槽位 %0/%3/%6；塔族行 0 交付收集物（CHECK_USER_HAS_QUEST_ITEM）、
+# 行 1 对活动塔 USE_OBJECT、行 2 对话领奖；货箱族行 0 击杀计数、行 1 对话（select4 的 SETPRO2）、行 2 在货箱取物
+# 并交付（select5 的 CHECK_USER_HAS_QUEST_ITEM，货箱 collecting-step 收敛到收物行 2）。本批把 13 个任务从
+# “交付直达 reward / 缺行 1 2 / 状态越行”统一重建为 started(0)/s1(1)/reward(2) + 0/1 两条自愈边，
+# 门禁 Batch36EventRowLadderContractTest；活动 NPC/怪物/塔/货箱在本检出内都没有静态 spawn，故不给活动怪加锁死门。
+BATCH36_EVENT_ROW_LADDER = {50020, 50021, 50022, 51021, 51022,
+                            80300, 80301, 80302, 80303, 80306, 80307, 80308, 80309}
+
 # 批次 26 登记（2026-09-22）：30600/30610 是 Named/Boss 双层计数（var0/var1 组合，客户端 select5 报告行由计数饱和驱动），
 # var0 不承载任务书行号；行号口径把它们判成 MISSING_TAIL_ROWS。批次 26 的自愈边与
 # Quest15546KillCounterSaturationFlowTest 锁定这两个任务，禁止按客户端行号补阶梯。
@@ -695,18 +709,19 @@ def main() -> int:
           "门禁 CutsceneHiddenQuestFamilyContractTest")
     print(f"  仍隔离（无定义、无任务书行，只登记证据）={sorted(CLIENT_ONLY_ISOLATED_QUESTS)}")
 
-    print("\n[11] 缺尾部多行（MISSING_TAIL_ROWS）逐族盘点（批次 35）：")
+    print("\n[11] 缺尾部多行（MISSING_TAIL_ROWS）逐族盘点（批次 36）：")
     tail = [row for row in rows if row["shape"] == "MISSING_TAIL_ROWS"]
     tail_ids = {row["quest_id"] for row in tail}
     fixed = sorted(BATCH31_GELKMAROS_ROW_LADDER | BATCH32_KALDOR_ROW_LADDER
-                   | BATCH34_RENTUS_BASE_ROW_LADDER | BATCH35_VALENTINE_TOWER_ROW_LADDER)
+                   | BATCH34_RENTUS_BASE_ROW_LADDER | BATCH35_VALENTINE_TOWER_ROW_LADDER
+                   | BATCH36_EVENT_ROW_LADDER)
     registered_ids = (BLANK_JOURNAL_SLOT_EXCEPTIONS | CLIENT_ONLY_ISOLATED_QUESTS
                       | COUNTER_SLOT_EXCEPTIONS | MULTI_LAYER_COUNTER_EXCEPTIONS
                       | SHARED_VISIBLE_SLOT_EXCEPTIONS | QE045_LOCKED) & tail_ids
     residual = [row for row in tail if row["quest_id"] not in set(fixed) | registered_ids]
-    print(f"  MISSING_TAIL_ROWS={len(tail)}；已修复族（批次 31 Gelkmaros 三行阶梯、批次 32 卡多尔迎新两阶段阶梯、批次 34 Rentus Base 营救 Paios、批次 35 情人节巧克力塔，均已转 ALIGNED）={fixed}")
+    print(f"  MISSING_TAIL_ROWS={len(tail)}；已修复族（批次 31 Gelkmaros 三行阶梯、批次 32 卡多尔迎新两阶段阶梯、批次 34 Rentus Base 营救 Paios、批次 35 情人节巧克力塔（5/5），批次 36 活动巧克力塔族 + 术古货箱族共 13 个，均已转 ALIGNED）={fixed}")
     stuck = sorted((BATCH31_GELKMAROS_ROW_LADDER | BATCH32_KALDOR_ROW_LADDER | BATCH34_RENTUS_BASE_ROW_LADDER
-                    | BATCH35_VALENTINE_TOWER_ROW_LADDER) & tail_ids)
+                    | BATCH35_VALENTINE_TOWER_ROW_LADDER | BATCH36_EVENT_ROW_LADDER) & tail_ids)
     if stuck:
         print(f"  ⚠ 本批修复清单仍在缺尾桶={stuck}")
     print(f"  已登记例外（空槽位/客户端隔离/计数槽/双层计数/共享槽位/QE-045 锁）={len(registered_ids)} {sorted(registered_ids)}")

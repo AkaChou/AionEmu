@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  80300 活动巧克力塔族：客户端任务书三行阶梯（QE-051 批次 36）。
+  Client journal rows (quest_q80300.html): row 0 collect+hand-in ([%collectitem]), row 1 decorate the
+  love chocolate tower (831402), row 2 report back to 799763. Pages: select1 CHECK_USER_HAS_QUEST_ITEM ->
+  check_user_item_ok SETPRO2 -> select_success SELECT_QUEST_REWARD; select_quest_reward1 = reward window.
+  行 0「收集 182215288 x3 交给 799763」-> 行 1「在爱情巧克力塔(831402)上使用工作物」-> 行 2「和 799763 对话」。
+  Migrated definition collapsed rows 1/2 (npc-item-report straight into REWARD, tower never wired).
+-->
 <quest-definition id="80300" version="1">
   <metadata name="[Event/Daily] Sweetie Choco Wuv-ums" display-name-id="1199853" min-level="9" max-level="2147483647" category="EVENT" cannot-share="true">
     <races>
@@ -33,14 +41,52 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="s1" status="START">
+      <var name="var0" value="1"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- QE-051 自愈边：旧存档停在 REWARD 但 packed 行仍是 0，进入世界时补到领奖行 2。
+         Heal edges: stale REWARD saves with packed row 0 are pushed to the reward row. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- QE-051 自愈边：旧存档停在 REWARD 但 packed 行仍是 1，进入世界时补到领奖行 2。
+         Heal edges: stale REWARD saves with packed row 1 are pushed to the reward row. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 接取：起始对话 / start dialogs -->
     <transition source="unaccepted" target="unaccepted">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799763" action="QUEST_SELECT"/>
@@ -109,6 +155,8 @@
         <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
       </after-commit>
     </transition>
+    <!-- 行 0：交出收集物（客户端 select1 页的“交出”按钮 = CHECK_USER_HAS_QUEST_ITEM），任务书切到行 1。
+         Row 0 -> row 1: hand in the collected chocolate and move the journal to the tower row. -->
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799763" action="QUEST_SELECT"/>
@@ -117,70 +165,55 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward" priority="0">
+    <transition source="started" target="s1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799763" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <conditions>
         <has-item item-id="182215288" count="3"/>
-        <has-item item-id="182215290" count="1"/>
       </conditions>
       <actions>
         <remove-item item-id="182215288" count="3"/>
-        <remove-item item-id="182215290" count="1"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
       </after-commit>
     </transition>
-    <transition source="started" target="started" priority="1">
+    <!-- check_user_item_ok 页的确认按钮（SETPRO2）：此刻已在行 1，就地关闭对话框，不再额外推进。 -->
+    <transition source="s1" target="s1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799763" action="CHECK_USER_HAS_QUEST_ITEM"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_FAIL"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward" priority="0">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="799763" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/>
-      </event>
-      <conditions>
-        <has-item item-id="182215288" count="3"/>
-        <has-item item-id="182215290" count="1"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="182215288" count="3"/>
-        <remove-item item-id="182215290" count="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started" priority="1">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="799763" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/>
+        <dialog type="TALK_TO_NPC" npc-id="799763" action="SETPRO2"/>
       </event>
       <after-commit>
         <close-dialog/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
+    <!-- 行 1 -> 行 2：在爱情巧克力塔上使用工作物（塔由活动系统刷出）。 -->
+    <transition source="s1" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="799763" action="SET_SUCCEED"/>
+        <dialog type="TALK_TO_NPC" npc-id="831402" action="USE_OBJECT"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
+    <!-- 防呆：活动塔未刷出时直接找术古对话也能进入领奖行，避免卡在行 1。 -->
+    <transition source="s1" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799763" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
+
     <npc-complete npc-id="799763" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-
+    <!-- 领奖态入口页（10002）与 check_user_item_fail 的关闭按钮。 -->
     <transition source="reward" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799763" action="QUEST_SELECT"/>
@@ -189,7 +222,6 @@
         <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
-    <!-- 客户端 check_user_item_fail 页：物品不足时显示确认，FINISH_DIALOG 关闭。 -->
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="799763" action="FINISH_DIALOG"/>
@@ -197,5 +229,6 @@
       <after-commit>
         <close-dialog/>
       </after-commit>
-    </transition></transitions>
+    </transition>
+  </transitions>
 </quest-definition>
