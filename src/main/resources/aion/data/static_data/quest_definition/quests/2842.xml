@@ -18,8 +18,12 @@
       <var name="var0" value="0"/>
     </node>
     <node label="hunting" status="START"/>
+    <!-- 39 杀计数路线的最后一只把 var0 递增到 39；reward 投影必须是饱和值，
+         否则 matchesSourceNode 逐字段全等会把领奖态存档挡在所有 reward 路由之外。
+         The final kill of the 39-count route increments var0 to 39; the reward projection
+         must carry that saturated counter or the reward save matches no reward route. -->
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="39"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>

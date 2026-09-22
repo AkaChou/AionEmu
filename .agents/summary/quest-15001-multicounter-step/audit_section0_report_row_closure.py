@@ -31,6 +31,18 @@ CATALOG = REPO_ROOT / "src/main/resources/aion/data/static_data/quest_definition
 SECTION_LT_RE = re.compile(r"SECTION_(\d+)\s*<\s*(\d+)")
 SECTION_EQ_RE = re.compile(r"SECTION_(\d+)\s*==\s*(\d+)")
 
+# 扩展计数器口径例外 / Extended-counter calibration exceptions
+# 这 6 个任务的客户端行不是链式 0/1 槽，而是“80 只普通怪 + 1 只将军”：
+#   Progress(SECTION_0<80; SECTION_5==0) + Progress(SECTION_1<1; SECTION_5==0)
+# var0 需要 7 bit 才装得下 80，于是 var1 只能落在 bit 7，本审计“SECTION_n == 6n”的
+# 对齐断言对这种值域不成立（不是任务数据错，而是审计口径没覆盖大值域计数器）。
+# 该族已由 ClientQuestSectionAlignmentTest.EXTENDED_COUNTER_QUESTS 显式锁定为
+# var0 width=7 / var1 offset=7，因此这里登记为例外而不是 GAP。
+# These six ship an 80-kill counter plus a general kill, so var0 must be 7 bits wide and
+# var1 lands at bit 7; the "SECTION_n == 6n" assertion does not apply. The family is
+# already pinned by ClientQuestSectionAlignmentTest.EXTENDED_COUNTER_QUESTS.
+EXTENDED_COUNTER_EXCEPTIONS = {1842, 1843, 1844, 2843, 2844, 2845}
+
 
 def executable_ids() -> set[int]:
     text = CATALOG.read_text(encoding="utf-8")
@@ -392,7 +404,13 @@ def audit_quest(quest: int, records: list[dict], npc_index: dict[str, int],
                     for section, threshold in counters.items())
     report_route = any(route["target"] == "reward" and not route["kill"] for route in transitions)
     ok = (not problems and not monster_problems and (saturated or report_route))
-    result["verdict"] = "COUNTER_CHAIN_OK" if ok else "COUNTER_CHAIN_GAP"
+    if ok:
+        result["verdict"] = "COUNTER_CHAIN_OK"
+    elif quest in EXTENDED_COUNTER_EXCEPTIONS:
+        # 大值域计数器（SECTION_0<80）不以 6N 对齐承载，已由对齐门禁单独锁定。
+        result["verdict"] = "COUNTER_CHAIN_EXTENDED_EXCEPTION"
+    else:
+        result["verdict"] = "COUNTER_CHAIN_GAP"
     return result
 
 

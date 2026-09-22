@@ -16,83 +16,110 @@
     </start-conditions>
   </metadata>
   <progress>
+    <!-- 客户端 quest_monster.csv 的行是链式 0/1 计数槽：行 0 = SECTION_0<1 且 SECTION_5==0，
+         行 1 = SECTION_1<1，行 2 = SECTION_2<1。var0..var2 就是这三个槽（各占 SECTION_n = 6n 位），
+         每只（组）怪只把自己那一槽推到 1，行随之沉下、下一行亮起；SECTION_5 不声明（必须保持 0）。
+         Client quest_monster.csv chains three 0/1 counter slots (row n shows while SECTION_n<1 and
+         SECTION_5==0); var0..var2 are exactly those slots, so every target owns one counter at 6n and
+         SECTION_5 (never declared) stays 0. -->
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var2" offset="12" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
     </node>
     <node label="started" status="START">
       <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
     </node>
     <node label="k1" status="START">
       <var name="var0" value="1"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
+    </node>
+    <node label="k2" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="0"/>
+    </node>
+    <node label="k3" status="START">
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="1"/>
     </node>
     <node label="reward" status="REWARD">
       <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
     </node>
   </nodes>
   <transitions>
-    <!-- 接取：预览、拒绝与选择对话 / Accept: preview, decline and selection dialogs -->
+    <!-- 接取 owner 保持 801047（行 0 前的接受页）；报告与领奖收敛到客户端行 1 点名的
+         801280（QE-052）。
+         Accept owner stays 801047; the report/reward owner is the row-1 NPC named by the
+         client journal, 801280 (QE-052). -->
     <dialog type="NPC_START" npc-id="801047" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SHOW_ASK_QUEST_ACCEPT_WINDOW"/>
-    <!-- 击杀：230744/230745/230749 任一一只 var0+1 / kills: +1 var0 per any of 230744/230745/230749 -->
-    <counter-grid>
-      <dimension field="var0" required="1" npc-ids="230744 230745 230749"/>
-    </counter-grid>
-    <!-- 终态：报告 / terminal: report to 801047 -->
-    <transition source="k1" target="k1">
+    <!-- 三只怪各推自己那一槽（230744 -> var0、230745 -> var1、230749 -> var2）；乱序击杀不计数。
+         Each target owns its own slot (230744/230745/230749 -> var0/var1/var2). -->
+    <transition source="started" target="k1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="801047" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
-      </after-commit>
-    </transition>
-    <transition source="k1" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="801280" action="SELECT_QUEST_REWARD"/>
+        <kill-npc npc-ids="230744"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
-    <transition source="reward" target="reward">
+    <transition source="k1" target="k2">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="801280" actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+        <kill-npc npc-ids="230745"/>
       </event>
       <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
+        <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
-    <!-- 奖励：发放并完成 / reward: grant and complete -->
-    <transition source="reward" target="complete">
+    <transition source="k2" target="k3">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="801280" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"/>
+        <kill-npc npc-ids="230749"/>
       </event>
+      <after-commit>
+        <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 旧网格/步骤模型存档（REWARD + 只写到旧投影）在进入世界时补齐三槽，
+         否则 QuestMutationPlanner#matchesSourceNode 匹配不到新的 (1,1,1) 领奖投影；条件排除三槽已饱和的正规领奖态（旧网格领奖投影只有 var0=1）。
+         Legacy grid/step saves (REWARD carrying only the old projection) are completed to all three
+         slots on enter-world; the condition excludes the saturated projection so a legitimate
+         reward save is never replayed -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-sum-below fields="var0 var1 var2" value="3"/>
+      </conditions>
       <actions>
-        <grant-reward kind="GOLD" id="0" amount="903960" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="EXP" id="0" amount="9133366" amount-mode="QUEST_BASE"/>
-        <grant-reward kind="ITEM" id="186000469" amount="30"/>
-        <complete-quest reward-index="0"/>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="1"/>
+        <set-variable field="var2" value="1"/>
       </actions>
       <after-commit>
-        <refresh-player-stats/>
-        <sync-quest-state mode="COMPLETION"/>
-        <dialog type="SHOW_SELECTION_PAGE" page="SELECT_QUEST"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-  <transition source="k1" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="801047" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-</transitions>
+    <dialog type="NPC_REPORT" npc-id="801280" source="k3" target="reward" page="SELECT2"/>
+    <npc-complete npc-id="801280" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
+    </npc-complete>
+  </transitions>
 </quest-definition>

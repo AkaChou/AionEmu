@@ -249,6 +249,36 @@
     序幕无 reward 行/触发器保真/不得长行节点、1400 计数槽与 owner）；**本批 0 个 XML 改动**，三份全库 TSV 与批次 23 逐字节一致；
     Maven 已授权 7 个测试类 **32 例全绿**（PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / WHITELIST_VIOLATIONS=0）；
     报告 §二十八、证据 batch24-evidence.tsv，模式卡 QE-051（批次 24 补充）。
+  - **批次 25 完成（2026-09-22，COUNTER_CHAIN 三槽族 18033/28033/28313 + 2842 饱和领奖投影）**：section0 审计的 COUNTER_CHAIN_GAP
+    由 13 收到 **3**（余 24112/30600/30610）。三类判定：① 口径例外 6 个（1842/1843/1844/2843/2844/2845）——客户端是
+    `SECTION_0<80; SECTION_5==0` + `SECTION_1<1; SECTION_5==0`（80 只普通怪 + 1 只将军），var0 需 7 bit、var1 只能落 bit 7，
+    “SECTION_n == 6n”断言不成立，已在审计里登记 `EXTENDED_COUNTER_EXCEPTIONS` → `COUNTER_CHAIN_EXTENDED_EXCEPTION`（不改数据）；
+    ② 真三槽族 18033/28033（同盟任务，三条 0/1 链式记录 230744/230745/230749：旧定义是单维 counter-grid，SECTION_1/2 永远为 0；
+    报告/领奖还挂在行 0 前的接取 NPC 801037/801047 上）与 28313（旧“步骤号单槽” var0=0..3；击杀只登记 217371/217373/217376 三个变体）；
+    ③ 剩余 GAP 3 个留待批次 26。落点：三槽族统一重建 var0/var1/var2 @ 0/6/12（6 bit 保留旧存档可读）、串行阶梯
+    started(0,0,0)/k1(1,0,0)/k2(1,1,0)/k3(1,1,1)/reward(1,1,1)/complete(0,0,0)、每只（组）怪只推自己那一槽、乱序/回看无计划；
+    owner 收敛 18033: 801037→801281（LDF5b_Demades_E）、28033: 801047→801280（LDF5b_Latkel_E，并删旧报告边与重复 k1->reward 边），
+    28313 的 Nineveh(804821) 同时是接取与报告 NPC（客户端同形，不收敛）；28313 用精确锚点只换三条击杀 transition，
+    **保留 27 条按职业展开的 reward -> complete 分支**（11 个进阶职业、SELECTED_QUEST_REWARD1..6）。旧存档自愈：
+    18033/28033 用 `variable-sum-below (var0,var1,var2) < 3`（旧网格只写 var0=1，避免重放正规领奖态）、
+    28313 用 START var0=2→k2 / var0=3→k3 与 REWARD var0=3；2842（The Zephyr Island Treasure Chamber）客户端门控是
+    `SECTION_0<39; SECTION_5==0` 的单行狩猎计数，reward 投影 0→**39**（旧值 0 让 matchesSourceNode 的逐字段全等把
+    REWARD/var0=39 的存档挡在所有领奖路由外，玩家卡在领奖态），与天族镜像 1841（早已 39）对齐。
+    验证：xmllint 4/4 validates；section0 审计 GAP 13→3、COUNTER_CHAIN_OK 816→820；全库行号审计变化任务恰好 4 个
+    （28313 ROW_AHEAD→ROW_ALIGNED，18033/28033 handover k1->reward→k3->reward + recovery True + 末行 NPC 命中，
+    2842 reward_var0 0→39），全库 ROW_ALIGNED 2660→2661 / ROW_BEHIND 186→185 / MISSING_LAST_ROW 84→83 /
+    ROW_STATE_ALIGNED 2432→2433 / ROW_WITHOUT_STATE 517→516 / STATE_OUT_OF_RANGE 2446→2445 / BOTH_MISALIGNED 177→178（=2842 换桶）；
+    Maven 30 个测试类 **193 例全绿**（含新增 CounterChainTripletContractTest 8 例；PRODUCTION_COMPILE_OK=6189 / FAILURES=0 /
+    WHITELIST_VIOLATIONS=0）；客户端实机 PENDING_CLIENT。脚本 apply_batch25_counter_chain_triplets.py（--check 幂等）、
+    证据 batch25-evidence.tsv、报告 §二十九、模式卡 QE-052/QE-053（批次 25 补充）。
+  - **批次 25 边界（下一批前必读）**：`SECTION_0<80` 这类大值域计数器必须走 7-bit 口径（EXTENDED_COUNTER_EXCEPTIONS），
+    禁止把 80 压进 6 bit 或把 var1 挪回 bit 6；28313 的 27 条职业奖励分支是客户端兑奖证据，不得用 `fixed-reward-indices` 覆盖或删除；
+    自愈边条件必须排除已饱和的正规领奖态（`variable-sum-below` 或与新版不可能混淆的旧值），否则每次进入世界都会重放刷新；
+    2842/1841 的行号口径 ROW_AHEAD/STATES_BEYOND_ROWS 属登记误报（`COUNTER_SATURATED_REWARD_ROWS`），
+    权威口径是 section0 的 COUNTER_CHAIN_OK。下一批 = 剩余 COUNTER_CHAIN_GAP 三个：24112（SECTION_0<1 + 3 个 html step +
+    reward 投影 0 + legacy _24112NoLaissezfaireforLepharists）与 30600/30610（SECTION_0<1;SECTION_1<1 + 4 个 html step +
+    reward 投影 2 + legacy handler），需先解钩怪名 lehparaschd_15_an 与 iddreadgion_03_drakanfinamedaa_60_ae /
+    iddreadgion_03_drakanwi_boss_ah，并核对镜像与领奖 NPC 归属。
   - **批次 24 边界（下一批前必读）**：序幕/空槽位任务**不得**按 QE-051 行号口径补阶梯（任务书上没有行，补出来的节点永远不显示），
     先跑 `audit_blank_journal_slots.py` 找空槽、再用客户端 quest.xml 的 collect_item/NPC/reward 字段交叉核对；
     1400 的 var0/var1 是击杀计数组合（reward 投影 7/3 是饱和值），要按行号改它必须先拿到“可点亮任务书行”的客户端证据。

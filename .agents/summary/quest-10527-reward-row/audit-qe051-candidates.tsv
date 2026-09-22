@@ -10,7 +10,6 @@ quest_id	client_rows	reward_var0	last_start_node	last_start_var0	recovery	client
 2600	3	0	s1	1	False	QUEST_Q2600.html		重新和[%dic:STR_DIC_N_Shugo_DF3_12]对话					NO
 2633	4	2	s2	2	False	QUEST_Q2633.html		向德拉乌伯尼尔洞穴入口附近的[%dic:STR_DIC_N_DF3_Alberihi_E]报告					NO
 2722	9	7	started7	7	False	QUEST_Q2722.html		把伊拉西克特产酒交给[%dic:STR_DIC_N_Bord]					NO
-2842	2	0	None	None	False	QUEST_Q2842.html		和[%dic:STR_DIC_N_Herz]%对话					NO
 2876	3	1	s1	1	False	quest_q2876.html		向[%dic:STR_DIC_N_Votan]报告					NO
 2945	3	1	started1	1	False	QUEST_Q2945.html		和[%dic:STR_DIC_N_Balder]对话					NO
 3732	3	1	started	0	False	quest_q3732.html		向[%dic:STR_DIC_N_LF2_Brando]报告					NO

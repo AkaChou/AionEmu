@@ -16,36 +16,61 @@
     </start-conditions>
   </metadata>
   <progress>
+    <!-- 客户端 quest_monster.csv 的行是链式 0/1 计数槽：行 0 = SECTION_0<1 且 SECTION_5==0，
+         行 1 = SECTION_1<1，行 2 = SECTION_2<1。var0..var2 就是这三个槽（各占 SECTION_n = 6n 位），
+         每只（组）怪只把自己那一槽推到 1，行随之沉下、下一行亮起；SECTION_5 不声明（必须保持 0）。
+         Client quest_monster.csv chains three 0/1 counter slots (row n shows while SECTION_n<1 and
+         SECTION_5==0); var0..var2 are exactly those slots, so every target owns one counter at 6n and
+         SECTION_5 (never declared) stays 0. -->
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var1" offset="6" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
+    <bit-field name="var2" offset="12" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
   <nodes>
     <node label="unaccepted" status="NONE">
       <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
     </node>
     <node label="started" status="START">
       <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
     </node>
     <node label="k1" status="START">
       <var name="var0" value="1"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
     </node>
     <node label="k2" status="START">
-      <var name="var0" value="2"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="0"/>
     </node>
     <node label="k3" status="START">
-      <var name="var0" value="3"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="1"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="3"/>
+      <var name="var0" value="1"/>
+      <var name="var1" value="1"/>
+      <var name="var2" value="1"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
+      <var name="var1" value="0"/>
+      <var name="var2" value="0"/>
     </node>
   </nodes>
   <transitions>
     <dialog type="NPC_START" npc-id="804821" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
+    <!-- 三组强敌各推自己那一槽（217371/246131/248077 -> var0，217373/246132/248078 -> var1，
+         217376/246133/248079 -> var2）；乱序击杀不计数。
+         Each elite group owns its own slot; kills out of order do not count. -->
     <transition source="started" target="k1">
       <event>
-        <kill-npc npc-id="217371"/>
+        <kill-npc npc-ids="217371 246131 248077"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -53,7 +78,7 @@
     </transition>
     <transition source="k1" target="k2">
       <event>
-        <kill-npc npc-id="217373"/>
+        <kill-npc npc-ids="217373 246132 248078"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
@@ -61,10 +86,69 @@
     </transition>
     <transition source="k2" target="k3">
       <event>
-        <kill-npc npc-id="217376"/>
+        <kill-npc npc-ids="217376 246133 248079"/>
       </event>
       <after-commit>
         <sync-quest-state mode="PACKET_ONLY"/>
+      </after-commit>
+    </transition>
+    <!-- 旧步骤模型（var0 = 已完成组数 0..3）的无损迁移：var0=1 与新 k1 同形无需转换，
+         var0=2 -> k2、var0=3 -> k3；旧领奖投影 var0=3 补齐到 (1,1,1)。
+         Legacy step-model saves (var0 = completed groups) map onto k2/k3; the old reward
+         projection var0=3 is completed to (1,1,1). -->
+    <transition target="k2">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-is field="var0" value="2"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="1"/>
+        <set-variable field="var2" value="0"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="k3">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="START"/>
+        <variable-is field="var0" value="3"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="1"/>
+        <set-variable field="var2" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 旧网格/步骤模型存档（REWARD + 只写到旧投影）在进入世界时补齐三槽，
+         否则 QuestMutationPlanner#matchesSourceNode 匹配不到新的 (1,1,1) 领奖投影。
+         Legacy grid/step saves (REWARD with only the old projection written) are completed to all
+         three slots on enter-world; otherwise they cannot match the new (1,1,1) reward projection. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="3"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="1"/>
+        <set-variable field="var1" value="1"/>
+        <set-variable field="var2" value="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <dialog type="NPC_REPORT" npc-id="804821" source="k3" target="reward" page="SELECT2"/>

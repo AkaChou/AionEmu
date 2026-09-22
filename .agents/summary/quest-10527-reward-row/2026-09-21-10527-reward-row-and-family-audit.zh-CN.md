@@ -2002,3 +2002,96 @@ QC 判据（与批次 18/19 同源，但落点不同）：同形镜像对 `q` / 
 - 批次 20 起挂账的“剩余单步塌陷/错位”清单至此只剩 `COUNTER_CHAIN_GAP` 族
   （1842-1844、2842-2845、13910、16962、17016、18033、21292/21305、23703、23905-23908/23910/23917、24112、24201、
   28030/28033、28313、28915、30600/30610、39001/39002、49002）。
+
+---
+
+## 二十九、批次 25：COUNTER_CHAIN 三槽族与 2842 饱和领奖投影（18033/28033/28313/2842，2026-09-22）
+
+### 二十九之一、族级判据与证据
+
+- `audit_section0_report_row_closure.py` 的 `COUNTER_CHAIN_GAP` 在批次 24 后仍有 13 个。逐族取证后分三类：
+  1. **口径例外 6 个**：`1842/1843/1844/2843/2844/2845` —— 客户端 `quest_monster.csv` 不是链式 0/1 槽，而是
+     `Progress(SECTION_0<80; SECTION_5==0)` + `Progress(SECTION_1<1; SECTION_5==0)`（80 只普通怪 + 1 只将军）：
+     `var0` 需要 **7 bit** 才装得下 80，`var1` 只能落在 bit 7，本审计“`SECTION_n == 6n`”的对齐断言对这种值域不成立。
+     该族早已由 `ClientQuestSectionAlignmentTest.EXTENDED_COUNTER_QUESTS` 显式锁定（`var0` width=7 / `var1` offset=7），
+     本批只在 section0 审计里登记 `EXTENDED_COUNTER_EXCEPTIONS`，判为 `COUNTER_CHAIN_EXTENDED_EXCEPTION`（**不是** GAP、不改任务数据）。
+  2. **真正的三槽族 3 个**：`18033/28033/28313`（本批修复）。
+  3. **剩余 GAP 3 个**：`24112 / 30600 / 30610`（批次 26 处理）。
+- 三槽族的客户端证据（`quest_monster.csv` 三条链式记录 + `quest_summary` 2 行）：
+
+  | 任务 | 行 0 计数（SECTION_0/1/2 三条 0/1 记录） | 行 1 报告 NPC |
+  |---|---|---|
+  | 18033 [Alliance] Retreat Into Death（ELYOS，前置 18036） | `idf5_td_nor_fi_n_65_ae`=230744 / `idf5_td_nor_kn_n_65_ae`=230745 / `idf5_td_nor_ra_n_65_ae`=230749 | `LDF5b_Demades_E` = **801281** |
+  | 28033 [Alliance] Confusing the Chain of Command（ASMODIAN，前置 28036） | 同上三只 | `LDF5b_Latkel_E` = **801280** |
+  | 28313 A Wealthy Patron（ASMODIAN） | `IDStation_Hugen_NM_58An` 系列 217371/246131/248077、`IDStation_ShulackFlight_NM_58_An` 系列 217373/246132/248078、`IDStation_DrakanNinja_NM_58An` 系列 217376/246133/248079 | `DF5_Nineveh_E` = 804821（同时是接取 NPC） |
+
+- `2842`（The Zephyr Island Treasure Chamber，ASMODIAN，repeat）与其天族镜像 `1841` 的客户端门控是
+  `Progress(SECTION_0<39; SECTION_5==0)` —— **单行狩猎计数**，`var0` 是 0..39 的击杀数而不是行号；
+  两侧 `quest_summary` 都是 2 行（行 0 = `([%2]/39)`，行 1 = 和 Herz/Sakmis 对话），
+  镜像 `1841` 的 reward 投影早已是饱和值 **39**。
+
+### 二十九之二、旧模型缺陷
+
+- `18033` / `28033`：三条链式记录被压成一个 `<counter-grid>`（单维 `var0` `required=1`，任意一只怪即可满足），
+  `SECTION_1/SECTION_2` 永远为 0 → 行 0 里第 2、3 个计数永远显示 `0/1`、任务书行永不沉下（QE-053 症状）；
+  报告与领奖还挂在**行 0 之前**的接取 NPC 上（18033: 801037 `LDF5_Village_Guard11_L`/Stifas；28033: 801047 `LDF5_Village_Guard11_D`/Tobald），
+  28033 更并存 801047 的旧 `NPC_REPORT` 与重复的 `k1 -> reward` 边（QE-052）。
+- `28313`：旧定义是“步骤号”单槽（`var0` = 已完成组数 0..3，节点 `started/k1/k2/k3` 投影 0/1/2/3、reward=3），
+  `SECTION_1/SECTION_2` 永远为 0；击杀路线只按 217371/217373/217376 三个基础变体登记，另 6 个难度变体不计数。
+- `2842`：`hunting --kill--> hunting`（`variable-below var0=38` 累加）与 `hunting --kill--> reward`
+  （`variable-at-least var0=38` 后 `+1`，最后一只写到 **39**）是正确路线，但 `reward` 节点投影仍是 **0**；
+  `QuestMutationPlanner#matchesSourceNode` 要求 source 节点投影与存档逐字段全等，于是 **REWARD/var0=39 的领奖态存档匹配不到任何 reward 路由**，
+  玩家在领奖阶段卡死（`npc-complete` 的 `source="reward"` 永不满足）。
+
+### 二十九之三、落点
+
+- 三槽族统一重建为 `var0/var1/var2` @ offset **0/6/12**（各 6 bit，保留旧存档可读宽度），节点
+  `unaccepted(0,0,0) / started(0,0,0) / k1(1,0,0) / k2(1,1,0) / k3(1,1,1) / reward(1,1,1) / complete(0,0,0)`，
+  每只（组）怪只推自己那一槽、`PACKET_ONLY` 同步、乱序与回看击杀无计划；报告路由 `k3 --NPC_REPORT--> reward`（page SELECT2）
+  与 `npc-complete`（`fixed-reward-indices="0 1 2"`、`preview actions="USE_OBJECT SELECT_QUEST_REWARD"`）落在客户端行 1 的 NPC 上。
+- `18033`：报告/领奖 owner 801037 → **801281**；`28033`：801047 → **801280**，并删除 801047 的旧报告边与重复边。
+- `28313`：**精确锚点**只替换三条击杀 transition（补 6 个难度变体）与 `<progress>/<nodes>`，
+  **保留 27 条按职业展开的 `reward -> complete` 分支**（`GLADIATOR`×6、`TEMPLAR/RANGER/ASSASSIN`×3、`SORCERER/CLERIC/CHANTER/GUNSLINGER`×2、
+  `SPIRIT_MASTER`×2、`SONGWEAVER/AETHERTECH`×1，覆盖 `SELECTED_QUEST_REWARD1..6`）与全部 `grant-reward`/`complete-quest`；
+  owner 804821 同时是接取与报告 NPC（客户端同形，不收敛）。
+- 旧存档自愈（无 source 的 `enter-world` 边，`LEVEL_AND_VISIBILITY_REFRESH`）：
+  - `18033/28033` 的旧 0/1 网格（START 节点只有 `var0=0/1`、领奖投影只写 `var0=1`）：条件用
+    `variable-sum-below fields="var0 var1 var2" value="3"`，只补齐未饱和的旧存档，**不重放正规领奖态**；
+  - `28313` 的旧步骤号：START `var0=2 -> k2(1,1,0)`、START `var0=3 -> k3(1,1,1)`、REWARD `var0=3 -> reward(1,1,1)`（条件 `variable-is var0=3`，与新版不可能混淆）。
+- `2842`：`reward` 节点投影 `var0=0 -> 39`（双语注释说明饱和值与 planner 语义），与镜像 1841 一致；本批**不改**击杀路线、节点集与 owner。
+- 应用脚本：`.agents/summary/quest-10527-reward-row/apply_batch25_counter_chain_triplets.py`（`--check` 幂等，`BATCH25_APPLIED` → 再跑 `BATCH25_OK ... already-applied`）。
+- 审计口径登记：
+  - `audit_section0_report_row_closure.py` 新增 `EXTENDED_COUNTER_EXCEPTIONS = {1842,1843,1844,2843,2844,2845}` →
+    `COUNTER_CHAIN_EXTENDED_EXCEPTION`（6 个）；
+  - `audit_reward_row_vs_client_steps.py` 新增 `COUNTER_SATURATED_REWARD_ROWS = {1841,2842}`（2842 的行号口径 `ROW_AHEAD/STATES_BEYOND_ROWS` 属误报，
+    权威口径是 section0 的 `COUNTER_CHAIN_OK`）。
+
+### 二十九之四、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 4 个任务全 `validates`；`git diff --check` 干净。
+- **section0 审计**：`COUNTER_CHAIN_GAP` **13 → 3**（余 24112/30600/30610）；
+  `COUNTER_CHAIN_OK 816 → 820`（18033/28033/28313 + 2842 侧稳定）；新增 `COUNTER_CHAIN_EXTENDED_EXCEPTION 6`；
+  `ROW_INDEX_CLOSED` 680 与 `SAME_CLASS_CONFIRMED 7` 不变。
+- **全库行号审计**（`audit_reward_row_vs_client_steps.py`，header 对比 HEAD 的 `audit-output.tsv`，变化任务恰好 4 个）：
+  - `28313`：`ROW_AHEAD/STATES_BEYOND_ROWS/STATE_OUT_OF_RANGE` → **`ROW_ALIGNED/ALIGNED/ROW_STATE_ALIGNED`**（visible 0..3 → 0..1）；
+  - `18033/28033`：`handovers k1->reward[]` → `k3->reward[]`、`recovery False → True`、末行 NPC 命中 → True（`ROW_ALIGNED` 保持不变）；
+  - `2842`：`reward_var0 0 → 39`（行号口径 `MISSING_LAST_ROW` → `STATES_BEYOND_ROWS`，属登记误报）；
+  - 全库计数：`ROW_ALIGNED 2660→2661`、`ROW_BEHIND 186→185`、`MISSING_LAST_ROW 84→83`、`ROW_STATE_ALIGNED 2432→2433`、
+    `ROW_WITHOUT_STATE 517→516`、`STATE_OUT_OF_RANGE 2446→2445`、`BOTH_MISALIGNED 177→178`（=2842 换桶），
+    `MISSING_TAIL_ROWS 79 / INTERIOR_GAP 265 / NO_STATE 89 / STATES_BEYOND_ROWS 2623 / ROW_AHEAD 2589 / NO_CLIENT_HTML 650` 不变。
+- **Maven（授权后执行，2026-09-22 15:15）**：30 个测试类 **193 例全绿**，含新增
+  `CounterChainTripletContractTest` 8 例与批次 24 的 `BlankJournalSlotBoundaryContractTest` 4 例；
+  `PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。
+  （已知无关红：`MissionItemConsumptionBatchRegressionTest` 的断言在 HEAD 本就不成立，本批不运行、不修。）
+- **证据表**：[batch25-evidence.tsv](batch25-evidence.tsv)。
+- **客户端实机：PENDING_CLIENT**（静态、Maven 与真机验收分层，未做真机复测）。
+
+### 二十九之五、边界与后续
+
+- 本卡只适用于客户端 `quest_monster` 明确写成**三条链式 0/1 记录**的族；`SECTION_0<80` 这类大值域计数器必须按
+  `EXTENDED_COUNTER_EXCEPTIONS` 走 7-bit 口径，禁止把 80 压进 6 bit 或把 `var1` 挪回 bit 6。
+- 28313 的 27 条职业奖励分支是**客户端兑奖证据**，任何后续重构都不得用 `fixed-reward-indices` 覆盖/删除。
+- 自愈边条件必须排除已饱和的正规领奖态（`variable-sum-below` 或与新版不可能混淆的旧值），否则每次进入世界都会重放刷新。
+- **下一批（批次 26）**：剩余 `COUNTER_CHAIN_GAP` 三个 —— `24112`（`SECTION_0<1` + 3 个 html step + reward 投影 0 + legacy
+  `_24112NoLaissezfaireforLepharists`）、`30600`/`30610`（`SECTION_0<1; SECTION_1<1` + 4 个 html step + reward 投影 2 + legacy handler），
+  需先解钩怪名 `lehparaschd_15_an` 与 `iddreadgion_03_drakanfinamedaa_60_ae`/`iddreadgion_03_drakanwi_boss_ah` 并核对镜像与领奖 NPC 归属。

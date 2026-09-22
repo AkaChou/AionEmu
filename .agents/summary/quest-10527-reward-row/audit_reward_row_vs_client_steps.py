@@ -61,6 +61,22 @@ VAR0_FLAG_EXCEPTIONS = {30203, 30303, 13918, 23918}
 # SECTION slots, so var0 is a counter rather than the journal row index and this row-index lens reports
 # ROW_BEHIND/ROW_WITHOUT_STATE; the authoritative lens is the COUNTER_CHAIN verdict of the section0 audit.
 
+# 追加登记（批次 25，2026-09-22）：2842（魔族）/ 1841（天族）这一对镜像的客户端门控是
+# Progress(SECTION_0<39; SECTION_5==0) —— 单行狩猎的击杀计数，不是行阶梯：var0 是 0..39 的击杀数，
+# 任务书的第二个可见行（“和 Herz / Sakmis 对话”）由计数满格与领奖态驱动，不承载行号状态。
+# 领奖投影必须是饱和值 39（1841 早已是 39，批次 25 把 2842 从 0 对齐到 39 —— 旧值 0 会让
+# QuestMutationPlanner#matchesSourceNode 的逐字段全等把领奖态存档挡在所有 reward 路由之外）。
+# 因此本审计的行号口径会判 ROW_AHEAD / STATES_BEYOND_ROWS（2842 = BOTH_MISALIGNED、1841 = STATE_OUT_OF_RANGE），
+# 权威口径是 .agents/summary/quest-15001-multicounter-step/audit_section0_report_row_closure.py 的
+# COUNTER_CHAIN_OK（reward 投影计数饱和 + 存在 report 路由），门禁是 CounterChainTripletContractTest。
+# Batch 25 registration: the mirror pair 2842/1841 gates on Progress(SECTION_0<39; SECTION_5==0), a
+# single-row hunt counter, so var0 is a 0..39 kill count rather than the journal row index; the reward
+# projection must carry the saturated 39 (1841 already did; batch 25 aligned 2842 from 0 to 39, because 0
+# blocked every reward route through the all-fields-equal source-node match). The row-index lens therefore
+# reports ROW_AHEAD/STATES_BEYOND_ROWS for both sides; the authoritative lens is the section0 audit's
+# COUNTER_CHAIN_OK verdict and CounterChainTripletContractTest.
+COUNTER_SATURATED_REWARD_ROWS = {1841, 2842}
+
 # 已核实的“客户端空行”例外：客户端 HTML 里存在与相邻行共用 visible 槽位的空 <p>，审计会把它当成一行
 # （client_rows 比真实状态数多 1）。10530（天族）第 8 行是空的 `<p visible="[%24]"></font></p>`，
 # 第 9 行“倾听 Jucleas 的故事”同样是 `[%24]`，第 10 行才是 `[%27]`；魔族镜像 20530 没有这个空行，
