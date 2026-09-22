@@ -245,16 +245,11 @@ public abstract class Rates {
 	 * rates instance
 	 */
 	public static Rates getRatesFor(byte membership) {
-		switch (membership) {
-		case 0:
-		case 1:
-			return new RegularRates();
-		case 2:
-			return new PremiumRates();
-		case 3:
-			return new VipRates();
-		default:
-			return new VipRates();
-		}
+        return switch (membership) {
+            case 0, 1 -> new RegularRates();
+            case 2 -> new PremiumRates();
+            case 3 -> new VipRates();
+            default -> new VipRates();
+        };
 	}
 }

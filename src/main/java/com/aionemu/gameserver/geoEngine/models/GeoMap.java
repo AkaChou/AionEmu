@@ -225,24 +225,15 @@ public class GeoMap extends Node {
 		if (world == null) {
 			return Set.of();
 		}
-        switch (world) {
-            case RENTUS_BASE:
-            case OCCUPIED_RENTUS_BASE:
-                return Set.of(145);
-            case ABYSSAL_SPLINTER:
-            case UNSTABLE_ABYSSAL_SPLINTER:
-                return Set.of(15, 16, 18, 69);
-            case ATURAM_SKY_FORTRESS:
-                return Set.of(128, 138, 308, 307);
-            case ESOTERRACE:
-                return Set.of(78);
-            case RAKSANG_RUINS:
-                return Set.of(219);
-            case KAMAR_BATTLEFIELD:
-                return Set.of(5, 144);
-            default:
-                return Set.of();
-        }
+        return switch (world) {
+            case RENTUS_BASE, OCCUPIED_RENTUS_BASE -> Set.of(145);
+            case ABYSSAL_SPLINTER, UNSTABLE_ABYSSAL_SPLINTER -> Set.of(15, 16, 18, 69);
+            case ATURAM_SKY_FORTRESS -> Set.of(128, 138, 308, 307);
+            case ESOTERRACE -> Set.of(78);
+            case RAKSANG_RUINS -> Set.of(219);
+            case KAMAR_BATTLEFIELD -> Set.of(5, 144);
+            default -> Set.of();
+        };
 	}
 
 	/**

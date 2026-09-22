@@ -107,15 +107,15 @@ public class Stats extends AdminCommand implements StatOwner {
 					break;
 				case POWER :
 					short modifierPower = (short) modifier;
-					stat.setBase(Math.round(modifierPower));
+					stat.setBase(modifierPower);
 					break;
 				case MAXHP:
 					float modifierHp = (float) modifier;
-					stat.setBase(Math.round(modifierHp));
+					stat.setBase(modifierHp);
 					break;
 				case MAXMP:
 					float modifierMp = (float) modifier;
-					stat.setBase(Math.round(modifierMp));
+					stat.setBase(modifierMp);
 					break;
 				case REGEN_HP:
 					int baseHp = stat.getOwner().getLevel() + 3;
@@ -130,308 +130,308 @@ public class Stats extends AdminCommand implements StatOwner {
 					break;
 				case ALLRESIST:
 					short modifierALLR = (short) modifier;
-					stat.setBase(Math.round(modifierALLR));
+					stat.setBase(modifierALLR);
 					break;
 				case ABNORMAL_RESISTANCE_ALL:
 					short modifierAbnormalALLR = (short) modifier;
-					stat.setBase(Math.round(modifierAbnormalALLR));
+					stat.setBase(modifierAbnormalALLR);
 					break;
 				case STRVIT:
 					short modifierStrvit = (short) modifier;
-					stat.setBase(Math.round(modifierStrvit));
+					stat.setBase(modifierStrvit);
 					break;
 				case KNOWIL:
 					short modifierKnowil = (short) modifier;
-					stat.setBase(Math.round(modifierKnowil));
+					stat.setBase(modifierKnowil);
 					break;
 				case AGIDEX:
 					short modifierAgidex = (short) modifier;
-					stat.setBase(Math.round(modifierAgidex));
+					stat.setBase(modifierAgidex);
 					break;
 				case HEALTH:
 					short modifierHealth = (short) modifier;
-					stat.setBase(Math.round(modifierHealth));
+					stat.setBase(modifierHealth);
 					break;
 				case ACCURACY:
 					short modifierAccuracy = (short) modifier;
-					stat.setBase(Math.round(modifierAccuracy));
+					stat.setBase(modifierAccuracy);
 					break;
 				case AGILITY:
 					short modifierAgility = (short) modifier;
-					stat.setBase(Math.round(modifierAgility));
+					stat.setBase(modifierAgility);
 					break;
 				case KNOWLEDGE:
 					short modifierKnow = (short) modifier;
-					stat.setBase(Math.round(modifierKnow));
+					stat.setBase(modifierKnow);
 					break;
 				case WILL:
 					short modifierWill = (short) modifier;
-					stat.setBase(Math.round(modifierWill));
+					stat.setBase(modifierWill);
 					break;
 				case WATER_RESISTANCE:
 					short modifierWaterRes = (short) modifier;
-					stat.setBase(Math.round(modifierWaterRes));
+					stat.setBase(modifierWaterRes);
 					break;
 				case WIND_RESISTANCE:
 					short modifierWindRes = (short) modifier;
-					stat.setBase(Math.round(modifierWindRes));
+					stat.setBase(modifierWindRes);
 					break;
 				case EARTH_RESISTANCE:
 					short modifierEarthRes = (short) modifier;
-					stat.setBase(Math.round(modifierEarthRes));
+					stat.setBase(modifierEarthRes);
 					break;
 				case FIRE_RESISTANCE:
 					short modifierFireRes = (short) modifier;
-					stat.setBase(Math.round(modifierFireRes));
+					stat.setBase(modifierFireRes);
 					break;
 				case REGEN_FP:
-					stat.setBase(Math.round(modifier));
+					stat.setBase(modifier);
 					break;
 				case PHYSICAL_DEFENSE:
-					stat.setBase(Math.round(modifier));
+					stat.setBase(modifier);
 					break;
 				case MAGICAL_ATTACK:
 					short modifierMAttack = (short) modifier;
-					stat.setBase(Math.round(modifierMAttack));
+					stat.setBase(modifierMAttack);
 					break;
 				case MAGICAL_RESIST:
 					short modifierMResist = (short) modifier;
-					stat.setBase(Math.round(modifierMResist));
+					stat.setBase(modifierMResist);
 					break;
 				case ATTACK_SPEED:
 					short modifierASpeed = (short) modifier;
-					stat.setBase(Math.round(modifierASpeed / 2));
+					stat.setBase(modifierASpeed / 2);
 					break;
 				case EVASION:
 					short modifierEvasion = (short) modifier;
-					stat.setBase(Math.round(modifierEvasion));
+					stat.setBase(modifierEvasion);
 					break;
 				case PARRY:
 					short modifierParry = (short) modifier;
-					stat.setBase(Math.round(modifierParry));
+					stat.setBase(modifierParry);
 					break;
 				case BLOCK:
 					short modifierBlock = (short) modifier;
-					stat.setBase(Math.round(modifierBlock));
+					stat.setBase(modifierBlock);
 					break;
 				case PHYSICAL_CRITICAL:
 					short modifierPCrit = (short) modifier;
-					stat.setBase(Math.round(modifierPCrit));
+					stat.setBase(modifierPCrit);
 					break;
 				case HIT_COUNT:
 					short modifierHCount = (short) modifier;
-					stat.setBase(Math.round(modifierHCount));
+					stat.setBase(modifierHCount);
 					break;
 				case ATTACK_RANGE:
 					float modifierARange = (float) modifier;
-					stat.setBase(Math.round(modifierARange));
+					stat.setBase(modifierARange);
 					break;
 				case MAGICAL_CRITICAL:
 					short modifierMCrit = (short) modifier;
-					stat.setBase(Math.round(modifierMCrit));
+					stat.setBase(modifierMCrit);
 					break;
 				case CONCENTRATION:
 					short modifierConcentration = (short) modifier;
-					stat.setBase(Math.round(modifierConcentration));
+					stat.setBase(modifierConcentration);
 					break;
 				case POISON_RESISTANCE:
 					short modifierPResist = (short) modifier;
-					stat.setBase(Math.round(modifierPResist));
+					stat.setBase(modifierPResist);
 					break;
 				case BLEED_RESISTANCE:
 					short modifierBResist = (short) modifier;
-					stat.setBase(Math.round(modifierBResist));
+					stat.setBase(modifierBResist);
 					break;
 				case PARALYZE_RESISTANCE:
 					short modifierPAResist = (short) modifier;
-					stat.setBase(Math.round(modifierPAResist));
+					stat.setBase(modifierPAResist);
 					break;
 				case SLEEP_RESISTANCE:
 					short modifierSResist = (short) modifier;
-					stat.setBase(Math.round(modifierSResist));
+					stat.setBase(modifierSResist);
 					break;
 				case ROOT_RESISTANCE:
 					short modifierRResist = (short) modifier;
-					stat.setBase(Math.round(modifierRResist));
+					stat.setBase(modifierRResist);
 					break;
 				case BLIND_RESISTANCE:
 					short modifierBLResist = (short) modifier;
-					stat.setBase(Math.round(modifierBLResist));
+					stat.setBase(modifierBLResist);
 					break;
 				case CHARM_RESISTANCE:
 					short modifierCResist = (short) modifier;
-					stat.setBase(Math.round(modifierCResist));
+					stat.setBase(modifierCResist);
 					break;
 				case DISEASE_RESISTANCE:
 					short modifierDResist = (short) modifier;
-					stat.setBase(Math.round(modifierDResist));
+					stat.setBase(modifierDResist);
 					break;
 				case SILENCE_RESISTANCE:
 					short modifierSIResist = (short) modifier;
-					stat.setBase(Math.round(modifierSIResist));
+					stat.setBase(modifierSIResist);
 					break;
 				case FEAR_RESISTANCE:
 					short modifierFResist = (short) modifier;
-					stat.setBase(Math.round(modifierFResist));
+					stat.setBase(modifierFResist);
 					break;
 				case CURSE_RESISTANCE:
 					short modifierCUResist = (short) modifier;
-					stat.setBase(Math.round(modifierCUResist));
+					stat.setBase(modifierCUResist);
 					break;
 				case CONFUSE_RESISTANCE:
 					short modifierCOResist = (short) modifier;
-					stat.setBase(Math.round(modifierCOResist));
+					stat.setBase(modifierCOResist);
 					break;
 				case STUN_RESISTANCE:
 					short modifierSTResist = (short) modifier;
-					stat.setBase(Math.round(modifierSTResist));
+					stat.setBase(modifierSTResist);
 					break;
 				case PERIFICATION_RESISTANCE:
 					short modifierPEResist = (short) modifier;
-					stat.setBase(Math.round(modifierPEResist));
+					stat.setBase(modifierPEResist);
 					break;
 				case STUMBLE_RESISTANCE:
 					short modifierSTUResist = (short) modifier;
-					stat.setBase(Math.round(modifierSTUResist));
+					stat.setBase(modifierSTUResist);
 					break;
 				case STAGGER_RESISTANCE:
 					short modifierSTAResist = (short) modifier;
-					stat.setBase(Math.round(modifierSTAResist));
+					stat.setBase(modifierSTAResist);
 					break;
 				case OPENAREIAL_RESISTANCE:
 					short modifierOResist = (short) modifier;
-					stat.setBase(Math.round(modifierOResist));
+					stat.setBase(modifierOResist);
 					break;
 				case SNARE_RESISTANCE:
 					short modifierSNResist = (short) modifier;
-					stat.setBase(Math.round(modifierSNResist));
+					stat.setBase(modifierSNResist);
 					break;
 				case SLOW_RESISTANCE:
 					short modifierSLResist = (short) modifier;
-					stat.setBase(Math.round(modifierSLResist));
+					stat.setBase(modifierSLResist);
 					break;
 				case SPIN_RESISTANCE:
 					short modifierSPResist = (short) modifier;
-					stat.setBase(Math.round(modifierSPResist));
+					stat.setBase(modifierSPResist);
 					break;
 				case POISON_RESISTANCE_PENETRATION:
 					short modifierPRP = (short) modifier;
-					stat.setBase(Math.round(modifierPRP));
+					stat.setBase(modifierPRP);
 					break;
 				case BLEED_RESISTANCE_PENETRATION:
 					short modifierBRP = (short) modifier;
-					stat.setBase(Math.round(modifierBRP));
+					stat.setBase(modifierBRP);
 					break;
 				case PARALYZE_RESISTANCE_PENETRATION:
 					short modifierPARP = (short) modifier;
-					stat.setBase(Math.round(modifierPARP));
+					stat.setBase(modifierPARP);
 					break;
 				case SLEEP_RESISTANCE_PENETRATION:
 					short modifierSRP = (short) modifier;
-					stat.setBase(Math.round(modifierSRP));
+					stat.setBase(modifierSRP);
 					break;
 				case ROOT_RESISTANCE_PENETRATION:
 					short modifierRRP = (short) modifier;
-					stat.setBase(Math.round(modifierRRP));
+					stat.setBase(modifierRRP);
 					break;
 				case BLIND_RESISTANCE_PENETRATION:
 					short modifierBLRP = (short) modifier;
-					stat.setBase(Math.round(modifierBLRP));
+					stat.setBase(modifierBLRP);
 					break;
 				case CHARM_RESISTANCE_PENETRATION:
 					short modifierCRP = (short) modifier;
-					stat.setBase(Math.round(modifierCRP));
+					stat.setBase(modifierCRP);
 					break;
 				case DISEASE_RESISTANCE_PENETRATION:
 					short modifierDRP = (short) modifier;
-					stat.setBase(Math.round(modifierDRP));
+					stat.setBase(modifierDRP);
 					break;
 				case SILENCE_RESISTANCE_PENETRATION:
 					short modifierSIRP = (short) modifier;
-					stat.setBase(Math.round(modifierSIRP));
+					stat.setBase(modifierSIRP);
 					break;
 				case FEAR_RESISTANCE_PENETRATION:
 					short modifierFRP = (short) modifier;
-					stat.setBase(Math.round(modifierFRP));
+					stat.setBase(modifierFRP);
 					break;
 				case CURSE_RESISTANCE_PENETRATION:
 					short modifierCURP = (short) modifier;
-					stat.setBase(Math.round(modifierCURP));
+					stat.setBase(modifierCURP);
 					break;
 				case CONFUSE_RESISTANCE_PENETRATION:
 					short modifierCORP = (short) modifier;
-					stat.setBase(Math.round(modifierCORP));
+					stat.setBase(modifierCORP);
 					break;
 				case STUN_RESISTANCE_PENETRATION:
 					short modifierSTRP = (short) modifier;
-					stat.setBase(Math.round(modifierSTRP));
+					stat.setBase(modifierSTRP);
 					break;
 				case PERIFICATION_RESISTANCE_PENETRATION:
 					short modifierPERP = (short) modifier;
-					stat.setBase(Math.round(modifierPERP));
+					stat.setBase(modifierPERP);
 					break;
 				case STUMBLE_RESISTANCE_PENETRATION:
 					short modifierSTURP = (short) modifier;
-					stat.setBase(Math.round(modifierSTURP));
+					stat.setBase(modifierSTURP);
 					break;
 				case STAGGER_RESISTANCE_PENETRATION:
 					short modifierSTARP = (short) modifier;
-					stat.setBase(Math.round(modifierSTARP));
+					stat.setBase(modifierSTARP);
 					break;
 				case OPENAREIAL_RESISTANCE_PENETRATION:
 					short modifierORP = (short) modifier;
-					stat.setBase(Math.round(modifierORP));
+					stat.setBase(modifierORP);
 					break;
 				case SNARE_RESISTANCE_PENETRATION:
 					short modifierSNRP = (short) modifier;
-					stat.setBase(Math.round(modifierSNRP));
+					stat.setBase(modifierSNRP);
 					break;
 				case SLOW_RESISTANCE_PENETRATION:
 					short modifierSLRP = (short) modifier;
-					stat.setBase(Math.round(modifierSLRP));
+					stat.setBase(modifierSLRP);
 					break;
 				case SPIN_RESISTANCE_PENETRATION:
 					short modifierSPRP = (short) modifier;
-					stat.setBase(Math.round(modifierSPRP));
+					stat.setBase(modifierSPRP);
 					break;
 				case BOOST_MAGICAL_SKILL:
 					short modifierBMSkill = (short) modifier;
-					stat.setBase(Math.round(modifierBMSkill));
+					stat.setBase(modifierBMSkill);
 					break;
 				case MAGICAL_ACCURACY:
 					short modifierMAccuracy = (short) modifier;
-					stat.setBase(Math.round(modifierMAccuracy));
+					stat.setBase(modifierMAccuracy);
 					break;
 				case BOOST_CASTING_TIME:
 					short modifierBCTime = (short) modifier;
-					stat.setBase(Math.round(modifierBCTime));
+					stat.setBase(modifierBCTime);
 					break;
 				case HEAL_BOOST:
 					short modifierHBoost = (short) modifier;
-					stat.setBase(Math.round(modifierHBoost));
+					stat.setBase(modifierHBoost);
 					break;
 				case PHYSICAL_CRITICAL_RESIST:
 					short modifierPCResist = (short) modifier;
-					stat.setBase(Math.round(modifierPCResist));
+					stat.setBase(modifierPCResist);
 					break;
 				case MAGICAL_CRITICAL_RESIST:
 					short modifierMCResist = (short) modifier;
-					stat.setBase(Math.round(modifierMCResist));
+					stat.setBase(modifierMCResist);
 					break;
 				case PHYSICAL_CRITICAL_DAMAGE_REDUCE:
 					short modifierPCDReduce = (short) modifier;
-					stat.setBase(Math.round(modifierPCDReduce));
+					stat.setBase(modifierPCDReduce);
 					break;
 				case MAGICAL_CRITICAL_DAMAGE_REDUCE:
 					short modifierMCDReduce = (short) modifier;
-					stat.setBase(Math.round(modifierMCDReduce));
+					stat.setBase(modifierMCDReduce);
 					break;
 				case MAGICAL_DEFEND:
-					stat.setBase(Math.round(modifier));
+					stat.setBase(modifier);
 					break;
 				case MAGIC_SKILL_BOOST_RESIST:
 					short modifierMSBResist = (short) modifier;
-					stat.setBase(Math.round(modifierMSBResist));
+					stat.setBase(modifierMSBResist);
 					break;
 				default:
 					break;

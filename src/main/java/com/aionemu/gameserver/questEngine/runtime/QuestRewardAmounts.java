@@ -13,23 +13,17 @@ final class QuestRewardAmounts {
 		if (reward.amountMode() == QuestRewardAmountMode.EXACT) {
 			return reward.amount();
 		}
-        switch (reward.rewardKind()) {
-            case GOLD:
-            case KINAH:
-                return (long) (player.getRates().getQuestKinahRate() * reward.amount());
-            case AP:
-                return (long) (player.getRates().getQuestApRate() * reward.amount());
-            case GP:
-                return (long) (player.getRates().getQuestGpRate() * reward.amount());
-            // RewardType.QUEST 在 PlayerCommonData 内解析配置的 XP 倍率；
-            // EXACT 使用 RewardType.EXACT 并绕过该来源倍率。
-            // RewardType.QUEST resolves the configured XP rate inside PlayerCommonData;
-            // EXACT uses RewardType.EXACT and bypasses that source rate.
-            case EXP:
-                return reward.amount();
-            default:
-                throw new IllegalArgumentException(
-                        "QUEST_BASE is unsupported for reward kind " + reward.rewardKind());
-        }
+		return switch (reward.rewardKind()) {
+			case GOLD, KINAH -> (long) (player.getRates().getQuestKinahRate() * reward.amount());
+			case AP -> (long) (player.getRates().getQuestApRate() * reward.amount());
+			case GP -> (long) (player.getRates().getQuestGpRate() * reward.amount());
+			// RewardType.QUEST 在 PlayerCommonData 内解析配置的 XP 倍率；
+			// EXACT 使用 RewardType.EXACT 并绕过该来源倍率。
+			// RewardType.QUEST resolves the configured XP rate inside PlayerCommonData;
+			// EXACT uses RewardType.EXACT and bypasses that source rate.
+			case EXP -> reward.amount();
+			default -> throw new IllegalArgumentException(
+				"QUEST_BASE is unsupported for reward kind " + reward.rewardKind());
+		};
 	}
 }

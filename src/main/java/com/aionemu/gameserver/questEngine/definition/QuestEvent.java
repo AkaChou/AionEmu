@@ -689,49 +689,30 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 	 */
 	static QuestEvent routeKey(QuestEvent event) {
 		Objects.requireNonNull(event, "event");
-		switch (event) {
-			case TalkToNpc talk:
-				return new TalkToNpc(talk.npcId());
-			case AttackNpc attack:
-				return new AttackNpc(attack.npcId());
-			case UseItem useItem:
-				return new UseItem(useItem.itemId());
+		return switch (event) {
+			case TalkToNpc talk -> new TalkToNpc(talk.npcId());
+			case AttackNpc attack -> new AttackNpc(attack.npcId());
+			case UseItem useItem -> new UseItem(useItem.itemId());
 // 收集路由以物品为键；执行路由时按权威背包快照校验数量。
 // Collection routes are keyed by item; the count is checked against the
 // authoritative inventory snapshot when the route is executed.
-			case CollectItem collectItem:
-				return new CollectItem(collectItem.itemId(), 1);
-			case ItemPlay itemPlay:
-				return new ItemPlay(itemPlay.itemId(), 0);
-			case KillRanked killRanked:
-				return new KillRanked(1);
-			case KillInWorld kill:
-				return new KillInWorld(kill.worldId());
-			case AtDistance atDistance:
-				return new AtDistance(atDistance.npcId());
-			case HouseItemUse houseItemUse:
-				return new HouseItemUse(houseItemUse.itemId());
-			case AddAggroList addAggroList:
-				return new AddAggroList(addAggroList.npcId());
-			case PassFlyingRing passFlyingRing:
-				return new PassFlyingRing(passFlyingRing.ring());
-			case EnterWindStream enterWindStream:
-				return new EnterWindStream(enterWindStream.teleportId());
-			case UseSkill useSkill:
-				return new UseSkill(useSkill.skillId());
-			case DredgionReward dredgionReward:
-				return new DredgionReward();
-			case KamarReward kamarReward:
-				return new KamarReward();
-			case OphidanReward ophidanReward:
-				return new OphidanReward();
-			case BastionReward bastionReward:
-				return new BastionReward();
-			case LogOut logOut:
-				return new LogOut();
-			default:
-				return event;
-		}
+			case CollectItem collectItem -> new CollectItem(collectItem.itemId(), 1);
+			case ItemPlay itemPlay -> new ItemPlay(itemPlay.itemId(), 0);
+			case KillRanked killRanked -> new KillRanked(1);
+			case KillInWorld kill -> new KillInWorld(kill.worldId());
+			case AtDistance atDistance -> new AtDistance(atDistance.npcId());
+			case HouseItemUse houseItemUse -> new HouseItemUse(houseItemUse.itemId());
+			case AddAggroList addAggroList -> new AddAggroList(addAggroList.npcId());
+			case PassFlyingRing passFlyingRing -> new PassFlyingRing(passFlyingRing.ring());
+			case EnterWindStream enterWindStream -> new EnterWindStream(enterWindStream.teleportId());
+			case UseSkill useSkill -> new UseSkill(useSkill.skillId());
+			case DredgionReward dredgionReward -> new DredgionReward();
+			case KamarReward kamarReward -> new KamarReward();
+			case OphidanReward ophidanReward -> new OphidanReward();
+			case BastionReward bastionReward -> new BastionReward();
+			case LogOut logOut -> new LogOut();
+			default -> event;
+		};
 	}
 
 	/**
@@ -820,33 +801,23 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 	static boolean overlaps(QuestEvent left, QuestEvent right) {
 		Objects.requireNonNull(left, "left");
 		Objects.requireNonNull(right, "right");
-        switch (left) {
-            case TalkToNpc a when right instanceof TalkToNpc b:
-                return a.npcId() == b.npcId()
-                        && (a.dialogId() == null || b.dialogId() == null || a.dialogId().equals(b.dialogId()));
-            case UseItem a when right instanceof UseItem b:
-                return a.itemId() == b.itemId();
-            case AttackNpc a when right instanceof AttackNpc b:
-                return a.npcId() == b.npcId();
-            case ItemPlay a when right instanceof ItemPlay b:
-                return a.itemId() == b.itemId();
-            case QuestDialog(int dialogId1) when right instanceof QuestDialog(int dialogId):
-                return dialogId1 == dialogId;
-            case KillRanked killRanked when right instanceof KillRanked:
-                return true;
-            case AtDistance a when right instanceof AtDistance b:
-                return a.npcId() == b.npcId();
-            case KillInWorld a when right instanceof KillInWorld b:
-                return a.worldId() == 0 || b.worldId() == 0 || a.worldId() == b.worldId();
-            case KillNpcSet(Set<Integer> npcIds2) when right instanceof KillNpcSet(Set<Integer> npcIds1):
-                return !java.util.Collections.disjoint(npcIds2, npcIds1);
-            case KillNpcSet(Set<Integer> ids) when right instanceof KillNpc(int id):
-                return ids.contains(id);
-            case KillNpc(int npcId) when right instanceof KillNpcSet(Set<Integer> npcIds):
-                return npcIds.contains(npcId);
-            default:
-                return left.equals(right);
-        }
+        return switch (left) {
+            case TalkToNpc a when right instanceof TalkToNpc b -> a.npcId() == b.npcId()
+                    && (a.dialogId() == null || b.dialogId() == null || a.dialogId().equals(b.dialogId()));
+            case UseItem a when right instanceof UseItem b -> a.itemId() == b.itemId();
+            case AttackNpc a when right instanceof AttackNpc b -> a.npcId() == b.npcId();
+            case ItemPlay a when right instanceof ItemPlay b -> a.itemId() == b.itemId();
+            case QuestDialog(int dialogId1) when right instanceof QuestDialog(int dialogId) -> dialogId1 == dialogId;
+            case KillRanked killRanked when right instanceof KillRanked -> true;
+            case AtDistance a when right instanceof AtDistance b -> a.npcId() == b.npcId();
+            case KillInWorld a when right instanceof KillInWorld b ->
+                    a.worldId() == 0 || b.worldId() == 0 || a.worldId() == b.worldId();
+            case KillNpcSet(Set<Integer> npcIds2) when right instanceof KillNpcSet(Set<Integer> npcIds1) ->
+                    !java.util.Collections.disjoint(npcIds2, npcIds1);
+            case KillNpcSet(Set<Integer> ids) when right instanceof KillNpc(int id) -> ids.contains(id);
+            case KillNpc(int npcId) when right instanceof KillNpcSet(Set<Integer> npcIds) -> npcIds.contains(npcId);
+            default -> left.equals(right);
+        };
 	}
 
 	/**

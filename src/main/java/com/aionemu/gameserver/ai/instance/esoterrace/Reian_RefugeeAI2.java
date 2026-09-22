@@ -31,24 +31,16 @@ public class Reian_RefugeeAI2 extends NpcAI2
 
     private void spawnReianRefugee() {
         size++;
-        int refugee = 0;
-        switch (Rnd.get(1, 2)) {
-            case 1:
-                refugee = 799626;
-			break;
-            case 2:
-                refugee = 799627;
-			break;
-        }
-		int msg = 0;
-        switch (Rnd.get(1, 2)) {
-            case 1:
-                msg = 340937;
-            break;
-            case 2:
-                msg = 340955;
-            break;
-        }
+        int refugee = switch (Rnd.get(1, 2)) {
+	        case 1 -> 799626;
+	        case 2 -> 799627;
+	        default -> 0;
+        };
+		int msg = switch (Rnd.get(1, 2)) {
+            case 1 -> 340937;
+            case 2 -> 340955;
+            default -> 0;
+        };
         Npc npc = (Npc) spawn(refugee, 391.13388f, 542.73413f, 319.51218f, (byte) 79);
         npc.getSpawn().setWalkerId("Reian_Refugee_1");
         WalkManager.startWalking((NpcAI2) npc.getAi2());

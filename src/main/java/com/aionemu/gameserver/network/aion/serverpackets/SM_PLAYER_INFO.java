@@ -121,14 +121,11 @@ public class SM_PLAYER_INFO extends AionServerPacket {
 		if (player.getClientConnection() != null) {
 			// * = 高级与 VIP 会员 / * = Premium & VIP Membership
 			if (MembershipConfig.PREMIUM_TAG_DISPLAY_ENABLE) {
-				switch (player.getClientConnection().getAccount().getMembership()) {
-				case 1:
-					nameFormat = sb.replace(0, sb.length(), MembershipConfig.TAG_PREMIUM).toString();
-					break;
-				case 2:
-					nameFormat = sb.replace(0, sb.length(), MembershipConfig.TAG_VIP).toString();
-					break;
-				}
+				nameFormat = switch (player.getClientConnection().getAccount().getMembership()) {
+					case 1 -> sb.replace(0, sb.length(), MembershipConfig.TAG_PREMIUM).toString();
+					case 2 -> sb.replace(0, sb.length(), MembershipConfig.TAG_VIP).toString();
+					default -> nameFormat;
+				};
 			}
 
 			/**
@@ -144,23 +141,14 @@ public class SM_PLAYER_INFO extends AionServerPacket {
 
 			// * = 服务器职员访问等级 / * = Server Staff Access Level
 			if (AdminConfig.ADMIN_TAG_ENABLE) {
-				switch (player.getClientConnection().getAccount().getAccessLevel()) {
-				case 1:
-					nameFormat = AdminConfig.ADMIN_TAG_1.replace("%s", sb.toString());
-					break;
-				case 2:
-					nameFormat = AdminConfig.ADMIN_TAG_2.replace("%s", sb.toString());
-					break;
-				case 3:
-					nameFormat = AdminConfig.ADMIN_TAG_3.replace("%s", sb.toString());
-					break;
-				case 4:
-					nameFormat = AdminConfig.ADMIN_TAG_4.replace("%s", sb.toString());
-					break;
-				case 5:
-					nameFormat = AdminConfig.ADMIN_TAG_5.replace("%s", sb.toString());
-					break;
-				}
+                nameFormat = switch (player.getClientConnection().getAccount().getAccessLevel()) {
+                    case 1 -> AdminConfig.ADMIN_TAG_1.replace("%s", sb.toString());
+                    case 2 -> AdminConfig.ADMIN_TAG_2.replace("%s", sb.toString());
+                    case 3 -> AdminConfig.ADMIN_TAG_3.replace("%s", sb.toString());
+                    case 4 -> AdminConfig.ADMIN_TAG_4.replace("%s", sb.toString());
+                    case 5 -> AdminConfig.ADMIN_TAG_5.replace("%s", sb.toString());
+                    default -> nameFormat;
+                };
 			}
 		}
 

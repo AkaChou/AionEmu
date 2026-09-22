@@ -17,24 +17,12 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 public class MarabataControllerAI2 extends NpcAI2
 {
 	private Npc getBoss() {
-		Npc npc = null;
-		switch (getNpcId()) {
-			case 700443:
-			case 700444:
-			case 700442:
-				npc = getPosition().getWorldMapInstance().getNpc(214850);
-			break;
-			case 700446:
-			case 700447:
-			case 700445:
-				npc = getPosition().getWorldMapInstance().getNpc(214851);
-			break;
-			case 700440:
-			case 700441:
-			case 700439:
-				npc = getPosition().getWorldMapInstance().getNpc(214849);
-			break;
-		}
+		Npc npc = switch (getNpcId()) {
+			case 700443, 700444, 700442 -> getPosition().getWorldMapInstance().getNpc(214850);
+			case 700446, 700447, 700445 -> getPosition().getWorldMapInstance().getNpc(214851);
+			case 700440, 700441, 700439 -> getPosition().getWorldMapInstance().getNpc(214849);
+			default -> null;
+		};
 		return npc;
 	}
 
@@ -86,24 +74,12 @@ public class MarabataControllerAI2 extends NpcAI2
 			return;
 		}
 		AI2Actions.targetSelf(this);
-		int skill = 0;
-		switch (getNpcId()) {
-			case 700443:
-			case 700446:
-			case 700440:
-				skill = 18554;
-			break;
-			case 700444:
-			case 700447:
-			case 700441:
-				skill = 18555;
-			break;
-			case 700442:
-			case 700445:
-			case 700439:
-				skill = 18553;
-			break;
-		}
-		AI2Actions.useSkill(this, skill);
+		int skill = switch (getNpcId()) {
+            case 700443, 700446, 700440 -> 18554;
+            case 700444, 700447, 700441 -> 18555;
+            case 700442, 700445, 700439 -> 18553;
+            default -> 0;
+        };
+        AI2Actions.useSkill(this, skill);
 	}
 }

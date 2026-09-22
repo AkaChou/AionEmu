@@ -30,13 +30,10 @@ public enum LegionDominionRace {
 
 	/** 返回对应种族 / Returns the matching race */
 	public static LegionDominionRace getByRace(Race race) {
-		switch (race) {
-		case ASMODIANS:
-			return LegionDominionRace.ASMODIANS;
-		case ELYOS:
-			return LegionDominionRace.ELYOS;
-		default:
-			return LegionDominionRace.BALAUR;
-		}
+        return switch (race) {
+            case ASMODIANS -> LegionDominionRace.ASMODIANS;
+            case ELYOS -> LegionDominionRace.ELYOS;
+            default -> LegionDominionRace.BALAUR;
+        };
 	}
 }

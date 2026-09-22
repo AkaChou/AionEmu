@@ -178,21 +178,16 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	}
 
 	private int getNpcBonus(int npcId) {
-		switch (npcId) {
-			case 207102:
-			case 207116:
-			case 243678: //Roaming Volcanic Petrahulk.
-				return 400;
-			case 207099:
-				return 200;
-			case 243679: //Heated Negotiator Grangvolkan.
-				return 100;
-			case 219328: //Plaza Wall.
-			case 243680: //Lurking Fangwing.
-				return 50;
-			default:
-				return 0;
-		}
+        return switch (npcId) {
+            case 207102, 207116, 243678 -> //Roaming Volcanic Petrahulk.
+                    400;
+            case 207099 -> 200;
+            case 243679 -> //Heated Negotiator Grangvolkan.
+                    100; //Plaza Wall.
+            case 219328, 243680 -> //Lurking Fangwing.
+                    50;
+            default -> 0;
+        };
 	}
 
 	private int getTime() {

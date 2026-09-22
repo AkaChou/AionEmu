@@ -92,7 +92,6 @@ import com.aionemu.gameserver.utils.collections.cachemap.CacheMap;
 import com.aionemu.gameserver.utils.collections.cachemap.CacheMapFactory;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.KnownList;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 

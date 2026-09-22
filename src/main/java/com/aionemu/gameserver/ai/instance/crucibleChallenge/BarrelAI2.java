@@ -16,15 +16,13 @@ public class BarrelAI2 extends NpcAI2
 	@Override
 	protected void handleDied() {
 		super.handleDied();
-		int npcId = 0;
-		switch (getNpcId()) {
-			case 217840: // 肉桶 / Meat Barrel.
-				npcId = 217841; // 超薄肉片 / Wafer Thin Meat.
-			break;
-			case 218560: // 奥德桶 / Aether Barrel.
-				npcId = 218561; // 奥德块 / Aether Lump.
-			break;
-		}
+		int npcId = switch (getNpcId()) {
+			case 217840 -> // 肉桶 / Meat Barrel.
+				217841; // 超薄肉片 / Wafer Thin Meat.
+			case 218560 -> // 奥德桶 / Aether Barrel.
+				218561;
+			default -> 0; // 奥德块 / Aether Lump.
+		};
 		spawn(npcId, 1298.4448f, 1728.3262f, 316.8472f, (byte) 63);
 		AI2Actions.deleteOwner(this);
 	}

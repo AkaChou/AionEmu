@@ -33,13 +33,10 @@ public enum SiegeRace {
 
 	/** 按通用种族映射为要塞种族 / Returns the siege race for a race */
 	public static SiegeRace getByRace(Race race) {
-		switch (race) {
-		case ASMODIANS:
-			return SiegeRace.ASMODIANS;
-		case ELYOS:
-			return SiegeRace.ELYOS;
-		default:
-			return SiegeRace.BALAUR;
-		}
+        return switch (race) {
+            case ASMODIANS -> SiegeRace.ASMODIANS;
+            case ELYOS -> SiegeRace.ELYOS;
+            default -> SiegeRace.BALAUR;
+        };
 	}
 }

@@ -14,10 +14,8 @@ import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.curingzone.CuringObject;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.curingzones.CuringTemplate;
 import com.aionemu.gameserver.utils.MathUtil;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 治愈区域服务，生成治愈物并周期性对范围内玩家施加治愈效果。

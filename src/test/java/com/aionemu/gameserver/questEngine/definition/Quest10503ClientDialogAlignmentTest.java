@@ -7,7 +7,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 锁定任务 10503「提亚马特结界守护者 / Guard Down, Secrets Out」步骤 1 杀怪计数清零、步骤 2 收集交付与步骤 3 对话续接的客户端对齐合同。

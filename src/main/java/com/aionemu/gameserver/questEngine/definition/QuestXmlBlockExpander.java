@@ -100,16 +100,12 @@ final class QuestXmlBlockExpander {
 			return fail("REPORTED_REWARD_MODE_INVALID", context, "transitions", "reported-reward-mode",
 				"must be FIXED, CHOICE, or CLASS");
 		}
-		switch (mode) {
-			case FIXED:
-				return expandFixedReportedReward(context, transitions);
-			case CHOICE:
-				return expandChoiceReportedRewards(context, transitions);
-			case CLASS:
-				return expandClassReportedRewards(context, transitions);
-			default:
-				throw new IllegalArgumentException();
-		}
+		return switch (mode) {
+			case FIXED -> expandFixedReportedReward(context, transitions);
+			case CHOICE -> expandChoiceReportedRewards(context, transitions);
+			case CLASS -> expandClassReportedRewards(context, transitions);
+			default -> throw new IllegalArgumentException();
+		};
 	}
 
 	private static List<QuestTransition> expandFixedReportedReward(Context context,
@@ -241,32 +237,20 @@ final class QuestXmlBlockExpander {
 	}
 
 	private static String classRewardKey(PlayerClass playerClass) {
-		switch (playerClass) {
-			case GLADIATOR:
-				return "FIGHTER";
-			case TEMPLAR:
-				return "KNIGHT";
-			case RANGER:
-				return "RANGER";
-			case ASSASSIN:
-				return "ASSASSIN";
-			case SORCERER:
-				return "WIZARD";
-			case SPIRIT_MASTER:
-				return "ELEMENTALIST";
-			case CLERIC:
-				return "PRIEST";
-			case CHANTER:
-				return "CHANTER";
-			case GUNSLINGER:
-				return "GUNSLINGER";
-			case SONGWEAVER:
-				return "SONGWEAVER";
-			case AETHERTECH:
-				return "AETHERTECH";
-			default:
-				throw new IllegalArgumentException("unsupported advanced class " + playerClass);
-		}
+		return switch (playerClass) {
+			case GLADIATOR -> "FIGHTER";
+			case TEMPLAR -> "KNIGHT";
+			case RANGER -> "RANGER";
+			case ASSASSIN -> "ASSASSIN";
+			case SORCERER -> "WIZARD";
+			case SPIRIT_MASTER -> "ELEMENTALIST";
+			case CLERIC -> "PRIEST";
+			case CHANTER -> "CHANTER";
+			case GUNSLINGER -> "GUNSLINGER";
+			case SONGWEAVER -> "SONGWEAVER";
+			case AETHERTECH -> "AETHERTECH";
+			default -> throw new IllegalArgumentException("unsupported advanced class " + playerClass);
+		};
 	}
 
 	private static List<QuestReward> selectableRewards(Context context) {
@@ -403,14 +387,13 @@ final class QuestXmlBlockExpander {
 
 	private static List<QuestTransition> expandDialog(Context context, Element block) {
 		QuestDialogType type = QuestDefinitionXmlCompiler.dialogType(block);
-		switch (type) {
-			case NPC_START:
-			case NPC_REPORT:
+		return switch (type) {
+			case NPC_START, NPC_REPORT -> {
 				QuestDefinitionXmlCompiler.validateTransitionDialogShape(block, type);
-				return type == QuestDialogType.NPC_START ? expandNpcStart(context, block) : expandNpcReport(context, block);
-			default:
-				return fail("DIALOG_TYPE_NOT_ALLOWED_IN_TRANSITIONS", context, "dialog", "type", type.name());
-		}
+				yield type == QuestDialogType.NPC_START ? expandNpcStart(context, block) : expandNpcReport(context, block);
+			}
+			default -> fail("DIALOG_TYPE_NOT_ALLOWED_IN_TRANSITIONS", context, "dialog", "type", type.name());
+		};
 	}
 
 	private static List<QuestTransition> expandNpcDialog(Context context, Element block) {
@@ -1500,19 +1483,10 @@ final class QuestXmlBlockExpander {
 											QuestReward reward) {
 		QuestRewardKind kind = rewardKind(context, attribute, rewardIndex, reward);
 		QuestRewardKind actionKind = kind == QuestRewardKind.SELECTABLE_ITEM ? QuestRewardKind.ITEM : kind;
-		QuestRewardAmountMode amountMode;
-		switch (actionKind) {
-			case GOLD:
-			case KINAH:
-			case EXP:
-			case AP:
-			case GP:
-				amountMode = QuestRewardAmountMode.QUEST_BASE;
-				break;
-			default:
-				amountMode = QuestRewardAmountMode.EXACT;
-				break;
-		}
+		QuestRewardAmountMode amountMode = switch (actionKind) {
+			case GOLD, KINAH, EXP, AP, GP -> QuestRewardAmountMode.QUEST_BASE;
+			default -> QuestRewardAmountMode.EXACT;
+		};
 		return new QuestAction.GrantReward(actionKind.name(), reward.id(), reward.amount(), amountMode);
 	}
 

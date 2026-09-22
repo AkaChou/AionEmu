@@ -710,19 +710,14 @@ public final class FastMath {
 		if ((half & 0x7c00) == 0x7c00 && (half & 0x03ff) != 0) {
 			return Float.intBitsToFloat(((half & 0x8000) << 16) | 0x7f800000 | ((half & 0x03ff) << 13));
 		}
-		switch (half) {
-		case 0x0000:
-			return 0f;
-		case 0x8000:
-			return -0f;
-		case 0x7c00:
-			return Float.POSITIVE_INFINITY;
-		case 0xfc00:
-			return Float.NEGATIVE_INFINITY;
-		default:
-			return Float.intBitsToFloat(
-					((half & 0x8000) << 16) | (((half & 0x7c00) + 0x1C000) << 13) | ((half & 0x03FF) << 13));
-		}
+        return switch (half) {
+            case 0x0000 -> 0f;
+            case 0x8000 -> -0f;
+            case 0x7c00 -> Float.POSITIVE_INFINITY;
+            case 0xfc00 -> Float.NEGATIVE_INFINITY;
+            default -> Float.intBitsToFloat(
+                    ((half & 0x8000) << 16) | (((half & 0x7c00) + 0x1C000) << 13) | ((half & 0x03FF) << 13));
+        };
 	}
 
 	/**

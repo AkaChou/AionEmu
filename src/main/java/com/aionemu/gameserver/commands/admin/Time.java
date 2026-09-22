@@ -6,7 +6,6 @@ import com.aionemu.gameserver.spawnengine.TemporarySpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 设置游戏内时间（时段或小时）的管理员命令。

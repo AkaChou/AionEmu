@@ -223,26 +223,14 @@ class Quest2008RetailAlignmentTest {
 	}
 
 	private static PlayerClass startingClass(PlayerClass advancedClass) {
-        switch (advancedClass) {
-            case GLADIATOR:
-            case TEMPLAR:
-                return PlayerClass.WARRIOR;
-            case ASSASSIN:
-            case RANGER:
-                return PlayerClass.SCOUT;
-            case SORCERER:
-            case SPIRIT_MASTER:
-                return PlayerClass.MAGE;
-            case CLERIC:
-            case CHANTER:
-                return PlayerClass.PRIEST;
-            case GUNSLINGER:
-            case AETHERTECH:
-                return PlayerClass.TECHNIST;
-            case SONGWEAVER:
-                return PlayerClass.MUSE;
-            default:
-                throw new IllegalArgumentException("not an ascension class: " + advancedClass);
-        }
+		return switch (advancedClass) {
+			case GLADIATOR, TEMPLAR -> PlayerClass.WARRIOR;
+			case ASSASSIN, RANGER -> PlayerClass.SCOUT;
+			case SORCERER, SPIRIT_MASTER -> PlayerClass.MAGE;
+			case CLERIC, CHANTER -> PlayerClass.PRIEST;
+			case GUNSLINGER, AETHERTECH -> PlayerClass.TECHNIST;
+			case SONGWEAVER -> PlayerClass.MUSE;
+			default -> throw new IllegalArgumentException("not an ascension class: " + advancedClass);
+		};
 	}
 }

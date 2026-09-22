@@ -42,11 +42,9 @@ public class TremoringGroundAI2 extends GeneralNpcAI2 {
 
 	@Override
 	public AIAnswer ask(AIQuestion question) {
-		switch (question) {
-			case CAN_ATTACK_PLAYER:
-				return AIAnswers.POSITIVE;
-			default:
-				return AIAnswers.NEGATIVE;
-		}
+        return switch (question) {
+            case CAN_ATTACK_PLAYER -> AIAnswers.POSITIVE;
+            default -> AIAnswers.NEGATIVE;
+        };
 	}
 }

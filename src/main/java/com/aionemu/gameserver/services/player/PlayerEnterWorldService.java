@@ -133,7 +133,6 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.utils.collections.ListSplitter;
 import com.aionemu.gameserver.utils.rates.Rates;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 玩家进入世界服务：登录校验、进图初始化与周期任务调度。
@@ -307,22 +306,13 @@ public final class PlayerEnterWorldService {
 						}
 						long addResposeEnergy = (long) (hours / 24.0 * maxRespose);
 						if (player.getHouseOwnerId() / 10000 * 10000 == player.getWorldId()) {
-							switch (player.getActiveHouse().getHouseType()) {
-							case STUDIO:
-								addResposeEnergy = (long) ((float) addResposeEnergy * 1.05);
-								break;
-							case MANSION:
-								addResposeEnergy = (long) ((float) addResposeEnergy * 1.08);
-								break;
-							case ESTATE:
-								addResposeEnergy = (long) ((float) addResposeEnergy * 1.15);
-								break;
-							case PALACE:
-								addResposeEnergy = (long) ((float) addResposeEnergy * 1.50);
-								break;
-							default:
-								addResposeEnergy = (long) ((float) addResposeEnergy * 1.1);
-							}
+							addResposeEnergy = switch (player.getActiveHouse().getHouseType()) {
+								case STUDIO -> (long) ((float) addResposeEnergy * 1.05);
+								case MANSION -> (long) ((float) addResposeEnergy * 1.08);
+								case ESTATE -> (long) ((float) addResposeEnergy * 1.15);
+								case PALACE -> (long) ((float) addResposeEnergy * 1.50);
+								default -> (long) ((float) addResposeEnergy * 1.1);
+							};
 						}
 						pcd.addReposteEnergy(addResposeEnergy > maxRespose ? maxRespose : addResposeEnergy);
 					}
@@ -825,16 +815,12 @@ public final class PlayerEnterWorldService {
 	private static void showPremiumAccountInfo(AionConnection client, Account account) {
 		byte membership = account.getMembership();
 		if (membership > 0) {
-			String accountType = "";
-			switch (account.getMembership()) {
-			case 1:
-				accountType = "PREMIUM";
-				break;
-			case 2:
-				accountType = "VIP";
-				break;
-			}
-			client.sendPacket(new SM_MESSAGE(0, null, "Your account is " + accountType, ChatType.YELLOW));
+			String accountType = switch (account.getMembership()) {
+                case 1 -> "PREMIUM";
+                case 2 -> "VIP";
+                default -> "";
+            };
+            client.sendPacket(new SM_MESSAGE(0, null, "Your account is " + accountType, ChatType.YELLOW));
 		}
 	}
 

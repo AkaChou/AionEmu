@@ -6,9 +6,7 @@ import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.Race;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.MathUtil;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * Reshanta 区域 NPC AI：Siege Commander（@AIName "siege_commander"），继承 AggressiveNpcAI2。

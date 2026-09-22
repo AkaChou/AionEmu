@@ -84,23 +84,21 @@ public class LootGroupRules {
 	 * @return 是否按该品质规则分配 / Whether the rule applies
 	 */
 	public boolean getQualityRule(ItemQuality quality) {
-		switch (quality) {
-		case COMMON: // 白色 / White
-			return common_item_above != 0;
-		case RARE: // 绿色 / Green
-			return superior_item_above != 0;
-		case LEGEND: // 蓝色 / Blue
-			return heroic_item_above != 0;
-		case UNIQUE: // 黄色 / Yellow
-			return fabled_item_above != 0;
-		case MYTHIC: // 橙色 / Orange
-			return ethernal_item_above != 0;
-		case EPIC: // 紫色 / Purple
-			return true;
-		default:
-			break;
-		}
-		return false;
+		return switch (quality) {
+			case COMMON -> // 白色 / White
+				common_item_above != 0;
+			case RARE -> // 绿色 / Green
+				superior_item_above != 0;
+			case LEGEND -> // 蓝色 / Blue
+				heroic_item_above != 0;
+			case UNIQUE -> // 黄色 / Yellow
+				fabled_item_above != 0;
+			case MYTHIC -> // 橙色 / Orange
+				ethernal_item_above != 0;
+			case EPIC -> // 紫色 / Purple
+				true;
+			default -> false;
+		};
 	}
 
 	/**

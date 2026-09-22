@@ -31,18 +31,11 @@ public class PricesService {
 		if (!SiegeConfig.SIEGE_ENABLED) {
 			return defaultPrices;
 		}
-		float influenceValue = 0;
-		switch (playerRace) {
-		case ASMODIANS:
-			influenceValue = GameRuntimeServices.influence().getGlobalAsmodiansInfluence();
-			break;
-		case ELYOS:
-			influenceValue = GameRuntimeServices.influence().getGlobalElyosInfluence();
-			break;
-		default:
-			influenceValue = 0.5f;
-			break;
-		}
+		float influenceValue = switch (playerRace) {
+			case ASMODIANS -> GameRuntimeServices.influence().getGlobalAsmodiansInfluence();
+			case ELYOS -> GameRuntimeServices.influence().getGlobalElyosInfluence();
+			default -> 0.5f;
+		};
 		if (influenceValue == 0.5f) {
 			return defaultPrices;
 		} else if (influenceValue > 0.5f) {
@@ -77,19 +70,12 @@ public class PricesService {
 		if (!SiegeConfig.SIEGE_ENABLED) {
 			return defaultTax;
 		}
-		float influenceValue = 0;
-		switch (playerRace) {
-		case ASMODIANS:
-			influenceValue = GameRuntimeServices.influence().getGlobalAsmodiansInfluence();
-			break;
-		case ELYOS:
-			influenceValue = GameRuntimeServices.influence().getGlobalElyosInfluence();
-			break;
-		default:
-			influenceValue = 0.5f;
-			break;
-		}
-		if (influenceValue >= 0.5f) {
+		float influenceValue = switch (playerRace) {
+            case ASMODIANS -> GameRuntimeServices.influence().getGlobalAsmodiansInfluence();
+            case ELYOS -> GameRuntimeServices.influence().getGlobalElyosInfluence();
+            default -> 0.5f;
+        };
+        if (influenceValue >= 0.5f) {
 			return defaultTax;
 		}
 		float diff = 0.5f - influenceValue;

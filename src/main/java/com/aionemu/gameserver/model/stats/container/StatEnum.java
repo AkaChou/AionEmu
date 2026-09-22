@@ -131,21 +131,18 @@ public enum StatEnum {
 
 	/** 返回对应主/副手属性 / Returns the hand stat */
 	public StatEnum getHandStat(long itemSlot) {
-		switch (this) {
-		case MAGICAL_ATTACK:
-			return itemSlot == ItemSlot.MAIN_HAND.getSlotIdMask() ? MAIN_HAND_MAGICAL_ATTACK : OFF_HAND_MAGICAL_ATTACK;
-		case MAGICAL_ACCURACY:
-			return itemSlot == ItemSlot.MAIN_HAND.getSlotIdMask() ? MAIN_HAND_MAGICAL_ACCURACY
-					: OFF_HAND_MAGICAL_ACCURACY;
-		case PHYSICAL_ATTACK:
-			return itemSlot == ItemSlot.MAIN_HAND.getSlotIdMask() ? MAIN_HAND_POWER : OFF_HAND_POWER;
-		case PHYSICAL_ACCURACY:
-			return itemSlot == ItemSlot.MAIN_HAND.getSlotIdMask() ? MAIN_HAND_ACCURACY : OFF_HAND_ACCURACY;
-		case PHYSICAL_CRITICAL:
-			return itemSlot == ItemSlot.MAIN_HAND.getSlotIdMask() ? MAIN_HAND_CRITICAL : OFF_HAND_CRITICAL;
-		default:
-			return this;
-		}
+		return switch (this) {
+			case MAGICAL_ATTACK ->
+				itemSlot == ItemSlot.MAIN_HAND.getSlotIdMask() ? MAIN_HAND_MAGICAL_ATTACK : OFF_HAND_MAGICAL_ATTACK;
+			case MAGICAL_ACCURACY -> itemSlot == ItemSlot.MAIN_HAND.getSlotIdMask() ? MAIN_HAND_MAGICAL_ACCURACY
+				: OFF_HAND_MAGICAL_ACCURACY;
+			case PHYSICAL_ATTACK -> itemSlot == ItemSlot.MAIN_HAND.getSlotIdMask() ? MAIN_HAND_POWER : OFF_HAND_POWER;
+			case PHYSICAL_ACCURACY ->
+				itemSlot == ItemSlot.MAIN_HAND.getSlotIdMask() ? MAIN_HAND_ACCURACY : OFF_HAND_ACCURACY;
+			case PHYSICAL_CRITICAL ->
+				itemSlot == ItemSlot.MAIN_HAND.getSlotIdMask() ? MAIN_HAND_CRITICAL : OFF_HAND_CRITICAL;
+			default -> this;
+		};
 	}
 
 	/**
@@ -155,43 +152,25 @@ public enum StatEnum {
 	 * @return 是否为主手或副手属性 / Whether main or sub hand stat
 	 */
 	public boolean isMainOrSubHandStat() {
-		switch (this) {
-		case MAGICAL_ATTACK:
-		case MAGICAL_ACCURACY:
-		case PHYSICAL_ATTACK:
-		case POWER:
-		case PHYSICAL_ACCURACY:
-		case PHYSICAL_CRITICAL:
-			return true;
-		default:
-			return false;
-		}
+		return switch (this) {
+			case MAGICAL_ATTACK, MAGICAL_ACCURACY, PHYSICAL_ATTACK, POWER, PHYSICAL_ACCURACY, PHYSICAL_CRITICAL -> true;
+			default -> false;
+		};
 	}
 
 	/** 获取修正器。 / Returns the modifier. */
 	public static StatEnum getModifier(int skillId) {
-		switch (skillId) {
-		case 30001:
-		case 30002:
-			return BOOST_ESSENCETAPPING_XP_RATE;
-		case 30003:
-			return BOOST_AETHERTAPPING_XP_RATE;
-		case 40001:
-			return BOOST_COOKING_XP_RATE;
-		case 40002:
-			return BOOST_WEAPONSMITHING_XP_RATE;
-		case 40003:
-			return BOOST_ARMORSMITHING_XP_RATE;
-		case 40004:
-			return BOOST_TAILORING_XP_RATE;
-		case 40007:
-			return BOOST_ALCHEMY_XP_RATE;
-		case 40008:
-			return BOOST_HANDICRAFTING_XP_RATE;
-		case 40010:
-			return BOOST_MENUISIER_XP_RATE;
-		default:
-			return null;
-		}
+        return switch (skillId) {
+            case 30001, 30002 -> BOOST_ESSENCETAPPING_XP_RATE;
+            case 30003 -> BOOST_AETHERTAPPING_XP_RATE;
+            case 40001 -> BOOST_COOKING_XP_RATE;
+            case 40002 -> BOOST_WEAPONSMITHING_XP_RATE;
+            case 40003 -> BOOST_ARMORSMITHING_XP_RATE;
+            case 40004 -> BOOST_TAILORING_XP_RATE;
+            case 40007 -> BOOST_ALCHEMY_XP_RATE;
+            case 40008 -> BOOST_HANDICRAFTING_XP_RATE;
+            case 40010 -> BOOST_MENUISIER_XP_RATE;
+            default -> null;
+        };
 	}
 }

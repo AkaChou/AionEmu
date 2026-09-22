@@ -197,16 +197,16 @@ public class InstanceCooltimeData {
 	}
 
 	private int getDay(String day) {
-		switch (day) {
-			case "Mon": return 1;
-			case "Tue": return 2;
-			case "Wed": return 3;
-			case "Thu": return 4;
-			case "Fri": return 5;
-			case "Sat": return 6;
-			case "Sun": return 7;
-			default: throw new IllegalArgumentException("Invalid Day: " + day);
-		}
+		return switch (day) {
+			case "Mon" -> 1;
+			case "Tue" -> 2;
+			case "Wed" -> 3;
+			case "Thu" -> 4;
+			case "Fri" -> 5;
+			case "Sat" -> 6;
+			case "Sun" -> 7;
+			default -> throw new IllegalArgumentException("Invalid Day: " + day);
+		};
 	}
 
 	/**

@@ -127,16 +127,12 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 				}
 			}
 		}
-		List<Material> materials = null;
-		switch (result) {
-		case 1:
-			materials = template.getExtraMaterials().getMaterial();
-			break;
-		case 2:
-			materials = template.getMaterials().getMaterial();
-			break;
-		}
-		mats = new RndSelector<>();
+		List<Material> materials = switch (result) {
+            case 1 -> template.getExtraMaterials().getMaterial();
+            case 2 -> template.getMaterials().getMaterial();
+            default -> null;
+        };
+        mats = new RndSelector<>();
 		for (Material mat : materials) {
 			mats.add(mat, mat.getRate());
 		}

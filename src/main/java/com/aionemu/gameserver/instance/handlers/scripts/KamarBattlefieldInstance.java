@@ -689,23 +689,10 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 
 	@Override
 	public boolean supportsRetailNpcScore(int npcId) {
-        switch (npcId) {
-            case 232855:
-            case 232856:
-            case 730878:
-            case 730879:
-            case 730880:
-            case 801766:
-            case 801767:
-            case 801818:
-            case 801819:
-            case 801820:
-            case 801821:
-            case 801903:
-                return true;
-            default:
-                return false;
-        }
+        return switch (npcId) {
+            case 232855, 232856, 730878, 730879, 730880, 801766, 801767, 801818, 801819, 801820, 801821, 801903 -> true;
+            default -> false;
+        };
 	}
 
 	@Override

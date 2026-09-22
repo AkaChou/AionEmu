@@ -38,31 +38,14 @@ public class PvPRewardService {
 	 */
 	private static List<Integer> getRewardList(PlayerClass pc) {
 		List<Integer> rewardList = new ArrayList<>();
-		String rewardString = "";
-		switch (pc) {
-		case TEMPLAR:
-		case GLADIATOR:
-			rewardString = plate;
-			break;
-		case CLERIC:
-		case CHANTER:
-		case AETHERTECH:
-			rewardString = chain;
-			break;
-		case RANGER:
-		case ASSASSIN:
-		case GUNSLINGER:
-			rewardString = leather;
-			break;
-		case SORCERER:
-		case SONGWEAVER:
-		case SPIRIT_MASTER:
-			rewardString = cloth;
-			break;
-		default:
-			rewardString = null;
-		}
-		if (rewardString != null) {
+		String rewardString = switch (pc) {
+            case TEMPLAR, GLADIATOR -> plate;
+            case CLERIC, CHANTER, AETHERTECH -> chain;
+            case RANGER, ASSASSIN, GUNSLINGER -> leather;
+            case SORCERER, SONGWEAVER, SPIRIT_MASTER -> cloth;
+            default -> null;
+        };
+        if (rewardString != null) {
 			String[] parts = rewardString.split(",");
 			for (int i = 0; i < parts.length; i++) {
 				rewardList.add(Integer.valueOf(Integer.parseInt(parts[i])));

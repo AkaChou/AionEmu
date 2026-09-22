@@ -72,15 +72,13 @@ public class Field_GunAI2 extends NpcAI2
 	}
 
 	private int getMorphSkill() {
-		switch (getNpcId()) {
-			case 209472: // 可以搭乘的贝达扎尔村大炮 / Baltasar Hill Field Gun.
-			case 831339: // 可以搭乘的魔族大炮 / Asmodians Field Gun.
-				return 0x4F8D3C;
-			case 209471: // 可以搭乘的扎马努克旅馆大炮 / Jamanok Inn Field Gun.
-			case 831338: // 可以搭乘的天族大炮 / Elyos Field Gun.
-				return 0x4F8C3C;
-		}
-		return 0;
+		return switch (getNpcId()) { // 可以搭乘的贝达扎尔村大炮 / Baltasar Hill Field Gun.
+			case 209472, 831339 -> // 可以搭乘的魔族大炮 / Asmodians Field Gun.
+				0x4F8D3C; // 可以搭乘的扎马努克旅馆大炮 / Jamanok Inn Field Gun.
+			case 209471, 831338 -> // 可以搭乘的天族大炮 / Elyos Field Gun.
+				0x4F8C3C;
+			default -> 0;
+		};
 	}
 
 	protected int getTalkDelay() {

@@ -69,26 +69,19 @@ public class ZoneData {
 		int lastMapId = 0;
 		int weatherZoneId = 1;
 		for (ZoneTemplate zone : zoneList) {
-			Area area = null;
-			switch (zone.getAreaType()) {
-			case POLYGON:
-				area = new PolyArea(zone.getName(), zone.getMapid(), zone.getPoints().getPoint(),
-						zone.getPoints().getBottom(), zone.getPoints().getTop());
-				break;
-			case CYLINDER:
-				area = new CylinderArea(zone.getName(), zone.getMapid(), zone.getCylinder().getX(),
-						zone.getCylinder().getY(), zone.getCylinder().getR(), zone.getCylinder().getBottom(),
-						zone.getCylinder().getTop());
-				break;
-			case SPHERE:
-				area = new SphereArea(zone.getName(), zone.getMapid(), zone.getSphere().getX(), zone.getSphere().getY(),
-						zone.getSphere().getZ(), zone.getSphere().getR());
-				break;
-			case SEMISPHERE:
-				area = new SemisphereArea(zone.getName(), zone.getMapid(), zone.getSemisphere().getX(),
-						zone.getSemisphere().getY(), zone.getSemisphere().getZ(), zone.getSemisphere().getR());
-			}
-			if (area != null) {
+			Area area = switch (zone.getAreaType()) {
+                case POLYGON -> new PolyArea(zone.getName(), zone.getMapid(), zone.getPoints().getPoint(),
+                        zone.getPoints().getBottom(), zone.getPoints().getTop());
+                case CYLINDER -> new CylinderArea(zone.getName(), zone.getMapid(), zone.getCylinder().getX(),
+                        zone.getCylinder().getY(), zone.getCylinder().getR(), zone.getCylinder().getBottom(),
+                        zone.getCylinder().getTop());
+                case SPHERE ->
+                        new SphereArea(zone.getName(), zone.getMapid(), zone.getSphere().getX(), zone.getSphere().getY(),
+                                zone.getSphere().getZ(), zone.getSphere().getR());
+                case SEMISPHERE -> new SemisphereArea(zone.getName(), zone.getMapid(), zone.getSemisphere().getX(),
+                        zone.getSemisphere().getY(), zone.getSemisphere().getZ(), zone.getSemisphere().getR());
+            };
+            if (area != null) {
 				List<ZoneInfo> zones = zoneNameMap.get(zone.getMapid());
 				if (zones == null) {
 					zones = new ArrayList<>();

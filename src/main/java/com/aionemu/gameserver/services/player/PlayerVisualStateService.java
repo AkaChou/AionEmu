@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.services.player;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 玩家可视状态服务，校验隐身与可见性。

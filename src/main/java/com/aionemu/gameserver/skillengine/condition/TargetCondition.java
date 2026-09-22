@@ -57,16 +57,13 @@ public class TargetCondition extends Condition {
 				&& (skill.getEffector() == skill.getFirstTarget())) {
 			return true;
 		}
-		boolean result = false;
-		switch (value) {
-		case NPC:
-			result = skill.getFirstTarget() instanceof Npc;
-			break;
-		case PC:
-			result = skill.getFirstTarget() instanceof Player;
-		}
+		boolean result = switch (value) {
+            case NPC -> skill.getFirstTarget() instanceof Npc;
+            case PC -> skill.getFirstTarget() instanceof Player;
+            default -> false;
+        };
 
-		if ((!result) && ((skill.getEffector() instanceof Player))) {
+        if ((!result) && ((skill.getEffector() instanceof Player))) {
 			PacketSendUtility.sendPacket((Player) skill.getEffector(), SM_SYSTEM_MESSAGE.STR_SKILL_TARGET_IS_NOT_VALID);
 		}
 		return result;

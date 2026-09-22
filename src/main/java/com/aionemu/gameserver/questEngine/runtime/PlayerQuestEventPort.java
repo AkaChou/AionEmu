@@ -209,19 +209,12 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 	 * @return PvP 事实或 null / the PvP facts, or null
 	 */
 	private static QuestPvpKillFacts pvpFactsOf(QuestEvent event, int playerId) {
-		QuestPvpKillFacts facts;
-		switch (event) {
-			case QuestEvent.KillRanked ranked:
-				facts = ranked.facts();
-				break;
-			case QuestEvent.KillInWorld world:
-				facts = world.facts();
-				break;
-			default:
-				facts = null;
-				break;
-		}
-		if (facts == null) {
+		QuestPvpKillFacts facts = switch (event) {
+            case QuestEvent.KillRanked ranked -> ranked.facts();
+            case QuestEvent.KillInWorld world -> world.facts();
+            default -> null;
+        };
+        if (facts == null) {
 			return null;
 		}
 		if (facts.recipientId() != playerId) {

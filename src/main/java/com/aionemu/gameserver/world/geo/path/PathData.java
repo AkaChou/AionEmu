@@ -895,30 +895,16 @@ public final class PathData {
 				int blockColumn = blockId % blockColumns;
 				int blockRow = blockId / blockColumns;
 				for (int coordinate = 0; coordinate < 32; coordinate++) {
-					int gridX;
-					switch (direction) {
-						case 0:
-							gridX = blockColumn * 32 + 31;
-							break;
-						case 2:
-							gridX = blockColumn * 32;
-							break;
-						default:
-							gridX = blockColumn * 32 + coordinate;
-							break;
-					}
-					int gridY;
-					switch (direction) {
-						case 1:
-							gridY = blockRow * 32 + 31;
-							break;
-						case 3:
-							gridY = blockRow * 32;
-							break;
-						default:
-							gridY = blockRow * 32 + coordinate;
-							break;
-					}
+					int gridX = switch (direction) {
+						case 0 -> blockColumn * 32 + 31;
+						case 2 -> blockColumn * 32;
+						default -> blockColumn * 32 + coordinate;
+					};
+					int gridY = switch (direction) {
+						case 1 -> blockRow * 32 + 31;
+						case 3 -> blockRow * 32;
+						default -> blockRow * 32 + coordinate;
+					};
 					addBoundaryPortal(result, sector.simpleNode(gridX, gridY, terrain), direction, targetBlockId,
 						terrain, passability);
 				}
@@ -1283,26 +1269,17 @@ public final class PathData {
 		}
 
 		private static int payloadSize(int type) {
-			switch (type & ~1) {
-				case 0:
-					return 4;
-				case 2:
-					return 0;
-				case 4:
-					return 4096;
-				case 6:
-					return 128;
-				case 8:
-					return 264;
-				case 10:
-					return 568;
-				case 12:
-					return 1028;
-				case 14:
-					return 2052;
-				default:
-					throw new IllegalArgumentException("Unknown sector type " + type);
-			}
+			return switch (type & ~1) {
+				case 0 -> 4;
+				case 2 -> 0;
+				case 4 -> 4096;
+				case 6 -> 128;
+				case 8 -> 264;
+				case 10 -> 568;
+				case 12 -> 1028;
+				case 14 -> 2052;
+				default -> throw new IllegalArgumentException("Unknown sector type " + type);
+			};
 		}
 
 		private static float distance(Node first, Node second) {
@@ -1440,14 +1417,11 @@ public final class PathData {
 				for (int direction = 0; direction < 4; direction++) {
 					int mode = descriptor >>> (direction * 2) & 3;
 					if (direction == wantedDirection) {
-						switch (mode) {
-							case 1:
-								return (complexBase + uShortAt(cursor)) << 7 | layer;
-							case 2:
-								return intAt(cursor);
-							default:
-								return 0;
-						}
+						return switch (mode) {
+							case 1 -> (complexBase + uShortAt(cursor)) << 7 | layer;
+							case 2 -> intAt(cursor);
+							default -> 0;
+						};
 					}
 					cursor += mode == 1 ? 2 : mode == 2 ? 4 : 0;
 				}
@@ -1460,24 +1434,13 @@ public final class PathData {
 						Node node = complexNode(offset);
 						int localX = node == null ? -1 : node.gridX() & 31;
 						int localY = node == null ? -1 : node.gridY() & 31;
-						boolean onBoundary;
-						switch (direction) {
-							case 0:
-								onBoundary = localX == 31;
-								break;
-							case 1:
-								onBoundary = localY == 31;
-								break;
-							case 2:
-								onBoundary = localX == 0;
-								break;
-							case 3:
-								onBoundary = localY == 0;
-								break;
-							default:
-								onBoundary = false;
-								break;
-						}
+						boolean onBoundary = switch (direction) {
+							case 0 -> localX == 31;
+							case 1 -> localY == 31;
+							case 2 -> localX == 0;
+							case 3 -> localY == 0;
+							default -> false;
+						};
 						if (onBoundary && edge(offset, direction) != 0) {
 							return true;
 						}

@@ -113,14 +113,11 @@ public class ProvokerEffect extends ShieldEffect {
 	 * Resolves the provoke skill target selection.
 	 */
 	private Creature getProvokeTarget(ProvokeTarget provokeTarget, Creature effector, Creature target) {
-		switch (provokeTarget) {
-		case ME:
-			return effector;
-		case OPPONENT:
-			return target;
-		}
-		throw new IllegalArgumentException("Provoker target is invalid " + provokeTarget);
-	}
+        return switch (provokeTarget) {
+            case ME -> effector;
+            case OPPONENT -> target;
+        };
+    }
 
 	public int getTriggeredSkillLevel(int effectSkillLevel) {
 		return delta * effectSkillLevel + value;

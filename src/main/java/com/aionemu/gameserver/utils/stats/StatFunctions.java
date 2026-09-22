@@ -494,26 +494,14 @@ public class StatFunctions {
 	 */
 	public static int calculateRatingMultipler(NpcRating npcRating) {
 		// 兼容回退：正式服按 NPC 存 DP，当前模板未暴露。 / Compatibility fallback: retail stores DP per NPC, which current templates do not expose.
-		int multipler;
-		switch (npcRating) {
-		case JUNK:
-			multipler = 1;
-			break;
-		case NORMAL:
-			multipler = 2;
-			break;
-		case ELITE:
-			multipler = 3;
-			break;
-		case HERO:
-			multipler = 4;
-			break;
-		case LEGENDARY:
-			multipler = 5;
-			break;
-		default:
-			multipler = 1;
-		}
+		int multipler = switch (npcRating) {
+			case JUNK -> 1;
+			case NORMAL -> 2;
+			case ELITE -> 3;
+			case HERO -> 4;
+			case LEGENDARY -> 5;
+			default -> 1;
+		};
 		return multipler;
 	}
 
@@ -525,26 +513,14 @@ public class StatFunctions {
 	 * AP multiplier
 	 */
 	public static int ApNpcRating(NpcRating npcRating) {
-		int multipler;
-		switch (npcRating) {
-		case JUNK:
-			multipler = 1;
-			break;
-		case NORMAL:
-			multipler = 2;
-			break;
-		case ELITE:
-			multipler = 4;
-			break;
-		case HERO:
-			multipler = 5;
-			break;
-		case LEGENDARY:
-			multipler = 6;
-			break;
-		default:
-			multipler = 1;
-		}
+		int multipler = switch (npcRating) {
+			case JUNK -> 1;
+			case NORMAL -> 2;
+			case ELITE -> 4;
+			case HERO -> 5;
+			case LEGENDARY -> 6;
+			default -> 1;
+		};
 		return multipler;
 	}
 
@@ -687,20 +663,14 @@ public class StatFunctions {
 	}
 
 	static StatEnum getPveAttackRatioStat(Race race) {
-		switch (race) {
-			case TYPE_A:
-				return StatEnum.PVE_ATTACK_RATIO_TYPE_A;
-			case TYPE_B:
-				return StatEnum.PVE_ATTACK_RATIO_TYPE_B;
-			case TYPE_C:
-				return StatEnum.PVE_ATTACK_RATIO_TYPE_C;
-			case TYPE_D:
-				return StatEnum.PVE_ATTACK_RATIO_TYPE_D;
-			case TYPE_E:
-				return StatEnum.PVE_ATTACK_RATIO_TYPE_E;
-			default:
-				return null;
-		}
+		return switch (race) {
+			case TYPE_A -> StatEnum.PVE_ATTACK_RATIO_TYPE_A;
+			case TYPE_B -> StatEnum.PVE_ATTACK_RATIO_TYPE_B;
+			case TYPE_C -> StatEnum.PVE_ATTACK_RATIO_TYPE_C;
+			case TYPE_D -> StatEnum.PVE_ATTACK_RATIO_TYPE_D;
+			case TYPE_E -> StatEnum.PVE_ATTACK_RATIO_TYPE_E;
+			default -> null;
+		};
 	}
 
 	/**
@@ -1056,28 +1026,16 @@ public class StatFunctions {
 	}
 
 	static float applyMovementStatModifier(int heading, StatEnum stat, float value) {
-		switch (stat) {
-			case PHYSICAL_DEFENSE:
-			case MAGICAL_DEFEND:
-				return heading == 0 ? value * 0.8f : value;
-			case WATER_RESISTANCE:
-			case WIND_RESISTANCE:
-			case FIRE_RESISTANCE:
-			case EARTH_RESISTANCE:
-			case ELEMENTAL_RESISTANCE_DARK:
-			case ELEMENTAL_RESISTANCE_LIGHT:
-				return heading == 0 ? value * 0.5f : value;
-			case EVASION:
-				return heading != 0 && heading != 4 ? value + 300 : value;
-			case PARRY:
-			case BLOCK:
-				return heading >= 3 && heading <= 5 ? value + 500 : value;
-			case SPEED:
-				return heading == 2 || heading == 6 ? value * 0.8f
-					: heading >= 3 && heading <= 5 ? value * 0.6f : value;
-			default:
-				return value;
-		}
+        return switch (stat) {
+            case PHYSICAL_DEFENSE, MAGICAL_DEFEND -> heading == 0 ? value * 0.8f : value;
+            case WATER_RESISTANCE, WIND_RESISTANCE, FIRE_RESISTANCE, EARTH_RESISTANCE, ELEMENTAL_RESISTANCE_DARK,
+                 ELEMENTAL_RESISTANCE_LIGHT -> heading == 0 ? value * 0.5f : value;
+            case EVASION -> heading != 0 && heading != 4 ? value + 300 : value;
+            case PARRY, BLOCK -> heading >= 3 && heading <= 5 ? value + 500 : value;
+            case SPEED -> heading == 2 || heading == 6 ? value * 0.8f
+                    : heading >= 3 && heading <= 5 ? value * 0.6f : value;
+            default -> value;
+        };
 	}
 
 	private static float movementDamageBonus(Creature creature, float value) {

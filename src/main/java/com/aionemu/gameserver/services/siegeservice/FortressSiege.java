@@ -36,7 +36,6 @@ import com.aionemu.gameserver.services.mail.SiegeResult;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneName;
 import com.google.common.collect.Lists;
 /**

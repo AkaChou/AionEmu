@@ -183,31 +183,13 @@ public class MailService {
 			if (!GameRuntimeServices.adminService().canOperate(sender, null, senderItem, "mail")) {
 				return;
 			}
-			float qualityPriceRate;
-			switch (senderItem.getItemTemplate().getItemQuality()) {
-			case JUNK:
-			case COMMON:
-				qualityPriceRate = 0.02f;
-				break;
-
-			case RARE:
-				qualityPriceRate = 0.03f;
-				break;
-
-			case LEGEND:
-			case UNIQUE:
-				qualityPriceRate = 0.04f;
-				break;
-
-			case MYTHIC:
-			case EPIC:
-				qualityPriceRate = 0.05f;
-				break;
-
-			default:
-				qualityPriceRate = 0.02f;
-				break;
-			}
+			float qualityPriceRate = switch (senderItem.getItemTemplate().getItemQuality()) {
+				case JUNK, COMMON -> 0.02f;
+				case RARE -> 0.03f;
+				case LEGEND, UNIQUE -> 0.04f;
+				case MYTHIC, EPIC -> 0.05f;
+				default -> 0.02f;
+			};
 
 			if (senderItem.getItemCount() < attachedItemCount) {
 				return;// Client hack
@@ -537,32 +519,14 @@ public class MailService {
 			if (senderItem == null || senderItem.getItemTemplate() == null) {
 				return false;
 			}
-			float qualityPriceRate;
-			switch (senderItem.getItemTemplate().getItemQuality()) {
-			case JUNK:
-			case COMMON:
-				qualityPriceRate = 0.02f;
-				break;
-
-			case RARE:
-				qualityPriceRate = 0.03f;
-				break;
-
-			case LEGEND:
-			case UNIQUE:
-				qualityPriceRate = 0.04f;
-				break;
-
-			case MYTHIC:
-			case EPIC:
-				qualityPriceRate = 0.05f;
-				break;
-
-			default:
-				qualityPriceRate = 0.02f;
-				break;
-			}
-			itemMailCommission = Math
+			float qualityPriceRate = switch (senderItem.getItemTemplate().getItemQuality()) {
+                case JUNK, COMMON -> 0.02f;
+                case RARE -> 0.03f;
+                case LEGEND, UNIQUE -> 0.04f;
+                case MYTHIC, EPIC -> 0.05f;
+                default -> 0.02f;
+            };
+            itemMailCommission = Math
 					.round((senderItem.getItemTemplate().getPrice() * attachedItemCount) * qualityPriceRate);
 		}
 

@@ -455,17 +455,13 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 				DAOManager.getDAO(PlayerTitleListDAO.class).storeTitles(player, t);
 			}
 		}
-		String[] pos = null;
-		switch (player.getRace()) {
-		case ELYOS:
-			pos = PlayerTransferConfig.BIND_ELYOS.split(" ");
-			break;
-		case ASMODIANS:
-			pos = PlayerTransferConfig.BIND_ASMO.split(" ");
-			break;
-		}
+		String[] pos = switch (player.getRace()) {
+            case ELYOS -> PlayerTransferConfig.BIND_ELYOS.split(" ");
+            case ASMODIANS -> PlayerTransferConfig.BIND_ASMO.split(" ");
+            default -> null;
+        };
 
-		player.setBindPoint(new BindPointPosition(Integer.parseInt(pos[0]), Float.parseFloat(pos[1]),
+        player.setBindPoint(new BindPointPosition(Integer.parseInt(pos[0]), Float.parseFloat(pos[1]),
 				Float.parseFloat(pos[2]), Float.parseFloat(pos[3]), Byte.parseByte(pos[4])));
 		DAOManager.getDAO(PlayerBindPointDAO.class).store(player);
 

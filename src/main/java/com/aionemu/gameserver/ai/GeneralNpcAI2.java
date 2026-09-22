@@ -30,7 +30,7 @@ public class GeneralNpcAI2 extends NpcAI2
 	public void think() {
 		ThinkEventHandler.onThink(this);
 	}
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle death.
@@ -39,7 +39,7 @@ public class GeneralNpcAI2 extends NpcAI2
 	protected void handleDied() {
 		DiedEventHandler.onDie(this);
 	}
-	
+
 	/**
 	 * 处理受到攻击事件。
 	 * Handle being attacked.
@@ -50,7 +50,7 @@ public class GeneralNpcAI2 extends NpcAI2
 	protected void handleAttack(Creature creature) {
 		AttackEventHandler.onAttack(this, creature);
 	}
-	
+
 	/**
 	 * 处理盟友需要支援事件。
 	 * Handle ally needs-support.
@@ -62,7 +62,7 @@ public class GeneralNpcAI2 extends NpcAI2
 	protected boolean handleCreatureNeedsSupport(Creature creature) {
 		return AggroEventHandler.onCreatureNeedsSupport(this, creature);
 	}
-	
+
 	/**
 	 * 玩家开始与本 NPC 对话/交互。
 	 * Player starts dialog/interaction with this NPC.
@@ -73,7 +73,7 @@ public class GeneralNpcAI2 extends NpcAI2
 	protected void handleDialogStart(Player player) {
 		TalkEventHandler.onTalk(this, player);
 	}
-	
+
 	/**
 	 * 玩家结束与本 NPC 对话。
 	 * Player finishes dialog with this NPC.
@@ -84,7 +84,7 @@ public class GeneralNpcAI2 extends NpcAI2
 	protected void handleDialogFinish(Player creature) {
 		TalkEventHandler.onFinishTalk(this, creature);
 	}
-	
+
 	/**
 	 * 处理结束攻击事件。
 	 * Handle finish-attack.
@@ -93,7 +93,7 @@ public class GeneralNpcAI2 extends NpcAI2
 	protected void handleFinishAttack() {
 		AttackEventHandler.onFinishAttack(this);
 	}
-	
+
 	/**
 	 * 处理单次攻击完成事件。
 	 * Handle attack-complete.
@@ -102,7 +102,7 @@ public class GeneralNpcAI2 extends NpcAI2
 	protected void handleAttackComplete() {
 		AttackEventHandler.onAttackComplete(this);
 	}
-	
+
 	/**
 	 * 处理到达目标事件。
 	 * Handle target reached.
@@ -111,7 +111,7 @@ public class GeneralNpcAI2 extends NpcAI2
 	protected void handleTargetReached() {
 		TargetEventHandler.onTargetReached(this);
 	}
-	
+
 	/**
 	 * 处理不在出生点事件（开始归位）。
 	 * Handle not-at-home (start returning).
@@ -120,7 +120,7 @@ public class GeneralNpcAI2 extends NpcAI2
 	protected void handleNotAtHome() {
 		ReturningEventHandler.onNotAtHome(this);
 	}
-	
+
 	/**
 	 * 处理归位完成事件。
 	 * Handle back-home.
@@ -129,7 +129,7 @@ public class GeneralNpcAI2 extends NpcAI2
 	protected void handleBackHome() {
 		ReturningEventHandler.onBackHome(this);
 	}
-	
+
 	/**
 	 * 处理目标过远事件。
 	 * Handle target-too-far.
@@ -138,7 +138,7 @@ public class GeneralNpcAI2 extends NpcAI2
 	protected void handleTargetTooFar() {
 		TargetEventHandler.onTargetTooFar(this);
 	}
-	
+
 	/**
 	 * 处理放弃目标事件。
 	 * Handle target give-up.
@@ -147,7 +147,7 @@ public class GeneralNpcAI2 extends NpcAI2
 	protected void handleTargetGiveup() {
 		TargetEventHandler.onTargetGiveup(this);
 	}
-	
+
 	/**
 	 * 处理目标变更事件。
 	 * Handle target changed.
@@ -173,7 +173,7 @@ public class GeneralNpcAI2 extends NpcAI2
 			onGeneralEvent(AIEventType.TARGET_TOOFAR);
 		}
 	}
-	
+
 	/**
 	 * 校验当前移动是否仍有效。
 	 * Validate whether current movement is still valid.
@@ -182,7 +182,7 @@ public class GeneralNpcAI2 extends NpcAI2
 	protected void handleMoveValidate() {
 		MoveEventHandler.onMoveValidate(this);
 	}
-	
+
 	/**
 	 * 处理移动到达事件。
 	 * Handle move-arrived.
@@ -192,7 +192,7 @@ public class GeneralNpcAI2 extends NpcAI2
 		super.handleMoveArrived();
 		MoveEventHandler.onMoveArrived(this);
 	}
-	
+
 	/**
 	 * 处理生物移动事件。
 	 * Handle creature-moved.
@@ -203,7 +203,7 @@ public class GeneralNpcAI2 extends NpcAI2
 	protected void handleCreatureMoved(Creature creature) {
 		CreatureEventHandler.onCreatureMoved(this, creature);
 	}
-	
+
 	/**
 	 * 处理消失事件。
 	 * Handle despawn.
@@ -212,7 +212,7 @@ public class GeneralNpcAI2 extends NpcAI2
 	protected void handleDespawned() {
 		super.handleDespawned();
 	}
-	
+
 	/**
 	 * 判断是否可处理指定 AI 事件类型。
 	 * Whether the given AI event type can be handled.
@@ -223,15 +223,15 @@ public class GeneralNpcAI2 extends NpcAI2
 	@Override
 	protected boolean canHandleEvent(AIEventType eventType) {
 		boolean canHandle = super.canHandleEvent(eventType);
-		switch (eventType) {
-			case CREATURE_MOVED:
-				return canHandle || DataManager.NPC_SHOUT_DATA.hasAnyShout(getOwner().getWorldId(), getOwner().getNpcId(), ShoutEventType.SEE);
-			case CREATURE_NEEDS_SUPPORT:
-				return canHandle && isNonFightingState() && DataManager.TRIBE_RELATIONS_DATA.hasSupportRelations(getOwner().getTribe());
-		}
-		return canHandle;
-	}
-	
+        return switch (eventType) {
+            case CREATURE_MOVED ->
+                    canHandle || DataManager.NPC_SHOUT_DATA.hasAnyShout(getOwner().getWorldId(), getOwner().getNpcId(), ShoutEventType.SEE);
+            case CREATURE_NEEDS_SUPPORT ->
+                    canHandle && isNonFightingState() && DataManager.TRIBE_RELATIONS_DATA.hasSupportRelations(getOwner().getTribe());
+            default -> canHandle;
+        };
+    }
+
 	/**
 	 * 选择下一次攻击意图（普攻/技能/换目标/结束）。
 	 * Choose the next attack intention (simple/skill/switch/finish).

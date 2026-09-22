@@ -195,64 +195,27 @@ final class BattlegroundIdentity {
 	 * team name
 	 */
 	static String getNameByIndex(int bgIndex) {
-		String name;
-		switch (bgIndex + 1) {
-		case 1:
-			name = "Daeva Of Chaos";
-			break;
-		case 2:
-			name = "Until Death";
-			break;
-		case 3:
-			name = "Happy Tiger's";
-			break;
-		case 4:
-			name = "Abyssal Inquin's";
-			break;
-		case 5:
-			name = "Puffy Bear's";
-			break;
-		case 6:
-			name = "Mossy Treant's";
-			break;
-		case 7:
-			name = "Cursed Pirate's";
-			break;
-		case 8:
-			name = "Naughty Kerub's";
-			break;
-		case 9:
-			name = "Tundra Tiger's";
-			break;
-		case 10:
-			name = "Tiger Lover's";
-			break;
-		case 11:
-			name = "Screamer's";
-			break;
-		case 12:
-			name = "Ninja Balaur's";
-			break;
-		case 13:
-			name = "Summer Inquin's";
-			break;
-		case 14:
-			name = "Volcano Inquin's";
-			break;
-		case 15:
-			name = "Savana Inquin's";
-			break;
-		case 16:
-			name = "Tropical Inquin's";
-			break;
-		case 17:
-			name = "Walking Dead";
-			break;
-		default:
-			name = "Invalid";
-			break;
-		}
-		name += "Team";
+		String name = switch (bgIndex + 1) {
+            case 1 -> "Daeva Of Chaos";
+            case 2 -> "Until Death";
+            case 3 -> "Happy Tiger's";
+            case 4 -> "Abyssal Inquin's";
+            case 5 -> "Puffy Bear's";
+            case 6 -> "Mossy Treant's";
+            case 7 -> "Cursed Pirate's";
+            case 8 -> "Naughty Kerub's";
+            case 9 -> "Tundra Tiger's";
+            case 10 -> "Tiger Lover's";
+            case 11 -> "Screamer's";
+            case 12 -> "Ninja Balaur's";
+            case 13 -> "Summer Inquin's";
+            case 14 -> "Volcano Inquin's";
+            case 15 -> "Savana Inquin's";
+            case 16 -> "Tropical Inquin's";
+            case 17 -> "Walking Dead";
+            default -> "Invalid";
+        };
+        name += "Team";
 		return name;
 	}
 

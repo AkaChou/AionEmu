@@ -95,31 +95,21 @@ class QuestLunarEventDefinitionTest {
 	}
 
 	private static int collectItemOf(int questId) {
-		switch (questId) {
-			case 80034:
-			case 80037:
-				return 164002016;
-			case 80035:
-				return 164002017;
-			case 80036:
-				return 164002018;
-			default:
-				throw new IllegalArgumentException("unknown quest " + questId);
-		}
+		return switch (questId) {
+			case 80034, 80037 -> 164002016;
+			case 80035 -> 164002017;
+			case 80036 -> 164002018;
+			default -> throw new IllegalArgumentException("unknown quest " + questId);
+		};
 	}
 
 	private static int collectCountOf(int questId) {
-        switch (questId) {
-            case 80034:
-            case 80037:
-                return 10;
-            case 80035:
-                return 5;
-            case 80036:
-                return 1;
-            default:
-                throw new IllegalArgumentException("unknown quest " + questId);
-        }
+		return switch (questId) {
+			case 80034, 80037 -> 10;
+			case 80035 -> 5;
+			case 80036 -> 1;
+			default -> throw new IllegalArgumentException("unknown quest " + questId);
+		};
 	}
 
 	private static void assertLunar(int questId, String name, int displayNameId, String race,

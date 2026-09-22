@@ -52,21 +52,14 @@ public final class BufferUtils {
 	 * @throws UnsupportedOperationException 不支持的缓冲类型 / unsupported buffer type
 	 */
 	public static Buffer clone(Buffer buf) {
-        switch (buf) {
-            case FloatBuffer floatBuffer:
-                return clone(floatBuffer);
-            case ShortBuffer shortBuffer:
-                return clone(shortBuffer);
-            case ByteBuffer byteBuffer:
-                return clone(byteBuffer);
-            case IntBuffer intBuffer:
-                return clone(intBuffer);
-            case DoubleBuffer doubleBuffer:
-                return clone(doubleBuffer);
-            case null:
-            default:
-                throw new UnsupportedOperationException();
-        }
+		return switch (buf) {
+			case FloatBuffer floatBuffer -> clone(floatBuffer);
+			case ShortBuffer shortBuffer -> clone(shortBuffer);
+			case ByteBuffer byteBuffer -> clone(byteBuffer);
+			case IntBuffer intBuffer -> clone(intBuffer);
+			case DoubleBuffer doubleBuffer -> clone(doubleBuffer);
+			case null, default -> throw new UnsupportedOperationException();
+		};
 	}
 
 	//VECTOR3F METHODS -- ////

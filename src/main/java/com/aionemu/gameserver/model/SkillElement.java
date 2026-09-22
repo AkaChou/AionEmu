@@ -38,22 +38,14 @@ public enum SkillElement {
 
 	/** 返回元素的抗性 / Returns the resistance for element*/
 	public static StatEnum getResistanceForElement(SkillElement element) {
-		switch (element) {
-		case FIRE:
-			return StatEnum.FIRE_RESISTANCE;
-		case WATER:
-			return StatEnum.WATER_RESISTANCE;
-		case WIND:
-			return StatEnum.WIND_RESISTANCE;
-		case EARTH:
-			return StatEnum.EARTH_RESISTANCE;
-		case LIGHT:
-			return StatEnum.ELEMENTAL_RESISTANCE_LIGHT;
-		case DARK:
-			return StatEnum.ELEMENTAL_RESISTANCE_DARK;
-		default:
-			break;
-		}
-		return null;
-	}
+        return switch (element) {
+            case FIRE -> StatEnum.FIRE_RESISTANCE;
+            case WATER -> StatEnum.WATER_RESISTANCE;
+            case WIND -> StatEnum.WIND_RESISTANCE;
+            case EARTH -> StatEnum.EARTH_RESISTANCE;
+            case LIGHT -> StatEnum.ELEMENTAL_RESISTANCE_LIGHT;
+            case DARK -> StatEnum.ELEMENTAL_RESISTANCE_DARK;
+            default -> null;
+        };
+    }
 }

@@ -113,40 +113,20 @@ public final class QuestEventRouter {
 			: postCommitFailure != null ? postCommitFailure.stage() : QuestFailureStage.ROUTING;
 		boolean committed = executionFailure != null ? executionFailure.committed() : postCommitFailure != null;
 		Throwable root = rootCause(failure);
-		int npcId;
-		switch (event) {
-			case QuestEvent.TalkToNpc talk:
-				npcId = talk.npcId();
-				break;
-			case QuestEvent.KillNpc kill:
-				npcId = kill.npcId();
-				break;
-			case QuestEvent.AttackNpc attack:
-				npcId = attack.npcId();
-				break;
-			case QuestEvent.AtDistance distance:
-				npcId = distance.npcId();
-				break;
-			case QuestEvent.CanAct canAct:
-				npcId = canAct.templateId();
-				break;
-			default:
-				npcId = 0;
-				break;
-		}
-		int dialogId;
-		switch (event) {
-			case QuestEvent.TalkToNpc talk:
-				dialogId = talk.dialogId() == null ? 0 : talk.dialogId();
-				break;
-			case QuestEvent.QuestDialog dialog:
-				dialogId = dialog.dialogId();
-				break;
-			default:
-				dialogId = 0;
-				break;
-		}
-		return new QuestAuditEvent(route.questId(), event.type(), contract, result,
+		int npcId = switch (event) {
+			case QuestEvent.TalkToNpc talk -> talk.npcId();
+			case QuestEvent.KillNpc kill -> kill.npcId();
+			case QuestEvent.AttackNpc attack -> attack.npcId();
+			case QuestEvent.AtDistance distance -> distance.npcId();
+			case QuestEvent.CanAct canAct -> canAct.templateId();
+			default -> 0;
+		};
+		int dialogId = switch (event) {
+            case QuestEvent.TalkToNpc talk -> talk.dialogId() == null ? 0 : talk.dialogId();
+            case QuestEvent.QuestDialog dialog -> dialog.dialogId();
+            default -> 0;
+        };
+        return new QuestAuditEvent(route.questId(), event.type(), contract, result,
 			route.transition().sourceNode(), route.transition().targetNode(), npcId, dialogId,
 			stage, committed, root);
 	}

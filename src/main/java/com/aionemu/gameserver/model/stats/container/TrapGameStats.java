@@ -22,13 +22,13 @@ public class TrapGameStats extends NpcGameStats {
 		if (owner.getMaster() == null) {
 			return stat;
 		}
-		switch (statEnum) {
-		case BOOST_MAGICAL_SKILL:
-		case MAGICAL_ACCURACY:
-			// 加成按主人属性加成计算（仅绿色数值） / bonus is calculated from stat bonus of master (only green value)
-			stat.setBonusRate(0.7f);
-			return owner.getMaster().getGameStats().getItemStatBoost(statEnum, stat);
-		}
-		return stat;
+		return switch (statEnum) {
+			case BOOST_MAGICAL_SKILL, MAGICAL_ACCURACY -> {
+				// 加成按主人属性加成计算（仅绿色数值） / bonus is calculated from stat bonus of master (only green value)
+				stat.setBonusRate(0.7f);
+				yield owner.getMaster().getGameStats().getItemStatBoost(statEnum, stat);
+			}
+			default -> stat;
+		};
 	}
 }

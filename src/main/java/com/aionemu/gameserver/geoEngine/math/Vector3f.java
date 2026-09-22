@@ -915,18 +915,12 @@ public final class Vector3f implements Cloneable, Reusable {
 	 * @throws IllegalArgumentException 索引非法 / Invalid index
 	 */
 	public float get(int index) {
-		switch (index) {
-		case 0: {
-			return this.x;
-		}
-		case 1: {
-			return this.y;
-		}
-		case 2: {
-			return this.z;
-		}
-		}
-		throw new IllegalArgumentException("index must be either 0, 1 or 2");
+		return switch (index) {
+			case 0 -> this.x;
+			case 1 -> this.y;
+			case 2 -> this.z;
+			default -> throw new IllegalArgumentException("index must be either 0, 1 or 2");
+		};
 	}
 
 	/**

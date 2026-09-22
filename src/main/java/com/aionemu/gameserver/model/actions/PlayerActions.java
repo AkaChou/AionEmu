@@ -18,15 +18,11 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class PlayerActions extends CreatureActions {
 	/** 是否处于玩家模式 / Whether in player mode */
 	public static boolean isInPlayerMode(Player player, PlayerMode mode) {
-		switch (mode) {
-		case RIDE:
-			return player.ride != null;
-		case IN_ROLL:
-			return player.inRoll != null;
-		case WINDSTREAM:
-			return player.windstreamPath != null;
-		}
-		return false;
+		return switch (mode) {
+			case RIDE -> player.ride != null;
+			case IN_ROLL -> player.inRoll != null;
+			case WINDSTREAM -> player.windstreamPath != null;
+		};
 	}
 
 	/** 设置玩家模式 / Sets the player mode */

@@ -148,15 +148,11 @@ public class GoldenEyeMantutuAI2 extends AggressiveNpcAI2
 	private void doSchedule() {
 		hungerTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
 			int rnd = Rnd.get(1, 2);
-			int skill = 0;
-			switch (rnd) {
-				case 1:
-					skill = 20489; // 饥饿 / Hunger.
-				break;
-				case 2:
-					skill = 20490; // 口渴 / Thirst.
-				break;
-			}
+			int skill = switch (rnd) {
+				case 1 -> 20489; // 饥饿 / Hunger.
+				case 2 -> 20490;
+				default -> 0; // 口渴 / Thirst.
+			};
 			GameEngineServices.skillEngine().getSkill(getOwner(), skill, 20, getOwner()).useNoAnimationSkill();
 		}, 10000, 30000);
 	}

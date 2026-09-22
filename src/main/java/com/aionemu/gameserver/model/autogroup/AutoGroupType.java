@@ -844,145 +844,110 @@ public enum AutoGroupType {
 
 	/** 是否为无畏舰。 / Whether dredgion. */
 	public boolean isDredgion() {
-		switch (this) {
-		case BARANATH_DREDGION:
-		case CHANTRA_DREDGION:
-		case TERATH_DREDGION:
-			return true;
-		default:
-			break;
-		}
-		return false;
+		return switch (this) {
+			case BARANATH_DREDGION, CHANTRA_DREDGION, TERATH_DREDGION -> true;
+			default -> false;
+		};
 	}
 
 	/**
 	 * @return 是否为阿休纳塔尔无畏舰 / Whether asyunatar
 	 */
 	public boolean isAsyunatar() {
-		switch (this) {
-		case ASHUNATAL_DREDGION:
-			return true;
-		default:
-			break;
-		}
-		return false;
+		return switch (this) {
+			case ASHUNATAL_DREDGION -> true;
+			default -> false;
+		};
 	}
 
 	/**
 	 * @return 是否为卡玛尔战场 / Whether kamar battlefield
 	 */
 	public boolean isKamar() {
-		switch (this) {
-		case KAMAR_BATTLEFIELD:
-			return true;
-		default:
-			break;
-		}
-		return false;
+		return switch (this) {
+			case KAMAR_BATTLEFIELD -> true;
+			default -> false;
+		};
 	}
 
 	/**
 	 * @return 是否为吞噬奥菲丹桥 / Whether ophidan
 	 */
 	public boolean isOphidan() {
-		switch (this) {
-		case ENGULFED_OPHIDAN_BRIDGE:
-			return true;
-		default:
-			break;
-		}
-		return false;
+		return switch (this) {
+			case ENGULFED_OPHIDAN_BRIDGE -> true;
+			default -> false;
+		};
 	}
 
 	/**
 	 * @return 是否为可疑奥菲丹桥 / Whether suspicious ophidan
 	 */
 	public boolean isSuspiciousOphidan() {
-		switch (this) {
-		case OPHIDAN_WARPATH:
-			return true;
-		default:
-			break;
-		}
-		return false;
+		return switch (this) {
+			case OPHIDAN_WARPATH -> true;
+			default -> false;
+		};
 	}
 
 	/**
 	 * @return 是否为铁壁战线 / Whether bastion
 	 */
 	public boolean isBastion() {
-		switch (this) {
-		case IRON_WALL_WARFRONT:
-			return true;
-		default:
-			break;
-		}
-		return false;
+		return switch (this) {
+			case IRON_WALL_WARFRONT -> true;
+			default -> false;
+		};
 	}
 
 	/**
 	 * @return 是否为 Idgel Dome / Whether idgel dome
 	 */
 	public boolean isIdgelDome() {
-		switch (this) {
-		case IDGEL_DOME:
-			return true;
-		default:
-			break;
-		}
-		return false;
+		return switch (this) {
+			case IDGEL_DOME -> true;
+			default -> false;
+		};
 	}
 
 	/**
 	 * @return 是否为 Idgel Dome 地标 / Whether idgel dome landmark
 	 */
 	public boolean isIdgelDomeLandmark() {
-		switch (this) {
-		case IDGEL_DOME_LANDMARK:
-			return true;
-		default:
-			break;
-		}
-		return false;
+		return switch (this) {
+			case IDGEL_DOME_LANDMARK -> true;
+			default -> false;
+		};
 	}
 
 	/**
 	 * @return 是否为黄金神庙训练所 / Whether hall of tenacity
 	 */
 	public boolean isHallOfTenacity() {
-		switch (this) {
-		case HALL_OF_TENACITY:
-			return true;
-		default:
-			break;
-		}
-		return false;
+		return switch (this) {
+			case HALL_OF_TENACITY -> true;
+			default -> false;
+		};
 	}
 
 	/**
 	 * @return 是否为大竞技场训练营 / Whether grand arena training camp
 	 */
 	public boolean isGrandArenaTrainingCamp() {
-		switch (this) {
-		case IDTM_LOBBY_P_01:
-			return true;
-		default:
-			break;
-		}
-		return false;
+		return switch (this) {
+			case IDTM_LOBBY_P_01 -> true;
+			default -> false;
+		};
 	}
 
 	/**
 	 * @return 是否为 IDRun 类型 / Whether id run
 	 */
 	public boolean isIDRun() {
-		switch (this) {
-		case IDRUN:
-			return true;
-		default:
-			break;
-		}
-		return false;
+		return switch (this) {
+			case IDRUN -> true;
+			default -> false;
+		};
 	}
 
 	/** 按 mask id 返回 agt / Returns the agt by mask id */
@@ -1027,121 +992,78 @@ public enum AutoGroupType {
 
 	/** 是否为单人 PvP 竞技场 / Whether pv p solo arena */
 	public boolean isPvPSoloArena() {
-		switch (this) {
-		case ARENA_OF_DISCIPLINE_46_60_1:
-		case ARENA_OF_DISCIPLINE_46_60_2:
-		case ARENA_OF_DISCIPLINE_46_60_3:
-		case ARENA_OF_DISCIPLINE_61_65_1:
-		case ARENA_OF_DISCIPLINE_66_83_1:
-			return true;
-		default:
-			break;
-		}
-		return false;
+		return switch (this) {
+			case ARENA_OF_DISCIPLINE_46_60_1, ARENA_OF_DISCIPLINE_46_60_2, ARENA_OF_DISCIPLINE_46_60_3,
+			     ARENA_OF_DISCIPLINE_61_65_1, ARENA_OF_DISCIPLINE_66_83_1 -> true;
+			default -> false;
+		};
 	}
 
 	/** 是否为单人 PvP 修炼场 / Whether training pv p solo arena */
 	public boolean isTrainingPvPSoloArena() {
-		switch (this) {
-		case DISCIPLINE_TRAINING_GROUNDS_46_60_1:
-		case DISCIPLINE_TRAINING_GROUNDS_46_60_2:
-		case DISCIPLINE_TRAINING_GROUNDS_46_60_3:
-		case DISCIPLINE_TRAINING_GROUNDS_61_65_1:
-		case DISCIPLINE_TRAINING_GROUNDS_66_83_1:
-			return true;
-		default:
-			break;
-		}
-		return false;
+		return switch (this) {
+			case DISCIPLINE_TRAINING_GROUNDS_46_60_1, DISCIPLINE_TRAINING_GROUNDS_46_60_2,
+			     DISCIPLINE_TRAINING_GROUNDS_46_60_3, DISCIPLINE_TRAINING_GROUNDS_61_65_1,
+			     DISCIPLINE_TRAINING_GROUNDS_66_83_1 -> true;
+			default -> false;
+		};
 	}
 
 	/**
 	 * @return 是否为混沌竞技场 / Whether pvp ffa arena
 	 */
 	public boolean isPvPFFAArena() {
-		switch (this) {
-		case ARENA_OF_CHAOS_46_60_1:
-		case ARENA_OF_CHAOS_46_60_2:
-		case ARENA_OF_CHAOS_46_60_3:
-		case ARENA_OF_CHAOS_61_65_1:
-		case ARENA_OF_CHAOS_66_83_1:
-			return true;
-		default:
-			break;
-		}
-		return false;
+		return switch (this) {
+			case ARENA_OF_CHAOS_46_60_1, ARENA_OF_CHAOS_46_60_2, ARENA_OF_CHAOS_46_60_3, ARENA_OF_CHAOS_61_65_1,
+			     ARENA_OF_CHAOS_66_83_1 -> true;
+			default -> false;
+		};
 	}
 
 	/**
 	 * @return 是否为混沌修炼场 / Whether training pvp ffa arena
 	 */
 	public boolean isTrainingPvPFFAArena() {
-		switch (this) {
-		case CHAOS_TRAINING_GROUNDS_46_60_1:
-		case CHAOS_TRAINING_GROUNDS_46_60_2:
-		case CHAOS_TRAINING_GROUNDS_46_60_3:
-		case CHAOS_TRAINING_GROUNDS_61_65_1:
-		case CHAOS_TRAINING_GROUNDS_66_83_1:
-			return true;
-		default:
-			break;
-		}
-		return false;
+		return switch (this) {
+			case CHAOS_TRAINING_GROUNDS_46_60_1, CHAOS_TRAINING_GROUNDS_46_60_2, CHAOS_TRAINING_GROUNDS_46_60_3,
+			     CHAOS_TRAINING_GROUNDS_61_65_1, CHAOS_TRAINING_GROUNDS_66_83_1 -> true;
+			default -> false;
+		};
 	}
 
 	/**
 	 * @return 是否为合作修炼场 / Whether training harmony arena
 	 */
 	public boolean isTrainingHarmonyArena() {
-		switch (this) {
-		case HARMONY_TRAINING_GROUNDS_46_60_1:
-		case HARMONY_TRAINING_GROUNDS_46_60_2:
-		case HARMONY_TRAINING_GROUNDS_46_60_3:
-		case HARMONY_TRAINING_GROUNDS_61_65_1:
-		case HARMONY_TRAINING_GROUNDS_66_83_1:
-		case UNITY_TRAINING_GROUNDS_46_60_1:
-		case UNITY_TRAINING_GROUNDS_46_60_2:
-		case UNITY_TRAINING_GROUNDS_46_60_3:
-		case UNITY_TRAINING_GROUNDS_61_65_1:
-		case UNITY_TRAINING_GROUNDS_66_83_1:
-			return true;
-		default:
-			break;
-		}
-		return false;
+		return switch (this) {
+			case HARMONY_TRAINING_GROUNDS_46_60_1, HARMONY_TRAINING_GROUNDS_46_60_2, HARMONY_TRAINING_GROUNDS_46_60_3,
+			     HARMONY_TRAINING_GROUNDS_61_65_1, HARMONY_TRAINING_GROUNDS_66_83_1, UNITY_TRAINING_GROUNDS_46_60_1,
+			     UNITY_TRAINING_GROUNDS_46_60_2, UNITY_TRAINING_GROUNDS_46_60_3, UNITY_TRAINING_GROUNDS_61_65_1,
+			     UNITY_TRAINING_GROUNDS_66_83_1 -> true;
+			default -> false;
+		};
 	}
 
 	/**
 	 * @return 是否为合作竞技场 / Whether harmony arena
 	 */
 	public boolean isHarmonyArena() {
-		switch (this) {
-		case ARENA_OF_HARMONY_46_60_1:
-		case ARENA_OF_HARMONY_46_60_2:
-		case ARENA_OF_HARMONY_46_60_3:
-		case ARENA_OF_HARMONY_61_65_1:
-		case ARENA_OF_HARMONY_66_83_1:
-			return true;
-		default:
-			break;
-		}
-		return false;
+		return switch (this) {
+			case ARENA_OF_HARMONY_46_60_1, ARENA_OF_HARMONY_46_60_2, ARENA_OF_HARMONY_46_60_3, ARENA_OF_HARMONY_61_65_1,
+			     ARENA_OF_HARMONY_66_83_1 -> true;
+			default -> false;
+		};
 	}
 
 	/**
 	 * @return 是否为荣耀竞技场 / Whether glory arena
 	 */
 	public boolean isGloryArena() {
-		switch (this) {
-		case ARENA_OF_GLORY_46_60_1:
-		case ARENA_OF_GLORY_61_65_1:
-		case ARENA_OF_GLORY_66_83_1:
-			return true;
-		default:
-			break;
-		}
-		return false;
-	}
+        return switch (this) {
+            case ARENA_OF_GLORY_46_60_1, ARENA_OF_GLORY_61_65_1, ARENA_OF_GLORY_66_83_1 -> true;
+            default -> false;
+        };
+    }
 
 	/**
 	 * @return 是否为 PvP 竞技场 / Whether pvp arena

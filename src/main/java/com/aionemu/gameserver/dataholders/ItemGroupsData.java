@@ -681,52 +681,31 @@ public class ItemGroupsData {
 	}
 
 	private List<ItemRaceEntry> getPetFood(FoodType foodType) {
-		switch (foodType) {
-		case AETHER_CRYSTAL_BISCUIT:
-			return aetherCrystalBiscuit.getItems();
-		case AETHER_GEM_BISCUIT:
-			return aetherGemBiscuit.getItems();
-		case AETHER_POWDER_BISCUIT:
-			return aetherPowderBiscuit.getItems();
-		case ARMOR:
-			return feedArmor.getItems();
-		case BALAUR_SCALES:
-			return feedBalaurScales.getItems();
-		case BONES:
-			return feedBones.getItems();
-		case FLUIDS:
-			return feedFluids.getItems();
-		case SOULS:
-			return feedSouls.getItems();
-		case THORNS:
-			return feedThorns.getItems();
-		case HIGH_CRAFT_STEP:
-			return highCraftStep.getItems();
-		case HEALTHY_FOOD_ALL:
-			return healthyFoodAll.getItems();
-		case HEALTHY_FOOD_SPICY:
-			return healthyFoodSpicy.getItems();
-		case POPPY_SNACK:
-			return poppySnack.getItems();
-		case POPPY_SNACK_TASTY:
-			return poppySnackTasty.getItems();
-		case POPPY_SNACK_NUTRITIOUS:
-			return poppySnackNutritious.getItems();
-		case INFERNAL_DIABOL_AP:
-			return infernalDiabolAp.getItems();
-		case INNOCENT_MEREK_XP:
-			return innocentMerekXp.getItems();
-		case SHUGO_COIN:
-			return shugoCoin.getItems();
-		case NEW_YEAR_PET_FOOD:
-			return newYearPetFood.getItems();
-		case STINKY:
-			return stinkingJunk.getItems();
-		case EXCLUDES:
-			return feedExcludes.getItems();
-		}
-		return null;
-	}
+        return switch (foodType) {
+            case AETHER_CRYSTAL_BISCUIT -> aetherCrystalBiscuit.getItems();
+            case AETHER_GEM_BISCUIT -> aetherGemBiscuit.getItems();
+            case AETHER_POWDER_BISCUIT -> aetherPowderBiscuit.getItems();
+            case ARMOR -> feedArmor.getItems();
+            case BALAUR_SCALES -> feedBalaurScales.getItems();
+            case BONES -> feedBones.getItems();
+            case FLUIDS -> feedFluids.getItems();
+            case SOULS -> feedSouls.getItems();
+            case THORNS -> feedThorns.getItems();
+            case HIGH_CRAFT_STEP -> highCraftStep.getItems();
+            case HEALTHY_FOOD_ALL -> healthyFoodAll.getItems();
+            case HEALTHY_FOOD_SPICY -> healthyFoodSpicy.getItems();
+            case POPPY_SNACK -> poppySnack.getItems();
+            case POPPY_SNACK_TASTY -> poppySnackTasty.getItems();
+            case POPPY_SNACK_NUTRITIOUS -> poppySnackNutritious.getItems();
+            case INFERNAL_DIABOL_AP -> infernalDiabolAp.getItems();
+            case INNOCENT_MEREK_XP -> innocentMerekXp.getItems();
+            case SHUGO_COIN -> shugoCoin.getItems();
+            case NEW_YEAR_PET_FOOD -> newYearPetFood.getItems();
+            case STINKY -> stinkingJunk.getItems();
+            case EXCLUDES -> feedExcludes.getItems();
+            default -> null;
+        };
+    }
 
 	/**
 	 * 返回全部奖励组条目的总数（不含宠物饲料）。

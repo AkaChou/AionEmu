@@ -93,16 +93,12 @@ class QuestA03ShardRetailAlignmentTest {
 	}
 
 	private static long kindOrdinal(String kind) {
-        switch (kind) {
-            case "GOLD":
-                return 1;
-            case "EXP":
-                return 2;
-            case "ITEM":
-                return 3;
-            default:
-                throw new IllegalArgumentException("unexpected reward kind " + kind);
-        }
+		return switch (kind) {
+			case "GOLD" -> 1;
+			case "EXP" -> 2;
+			case "ITEM" -> 3;
+			default -> throw new IllegalArgumentException("unexpected reward kind " + kind);
+		};
 	}
 
 	@Test

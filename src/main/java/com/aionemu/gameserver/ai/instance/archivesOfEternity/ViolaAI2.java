@@ -56,19 +56,12 @@ public class ViolaAI2 extends GeneralNpcAI2
 			|| getPosition().getWorldMapInstance().getDoors() == null) {
 			return;
 		}
-		int doorId;
-		switch (Rnd.get(1, 3)) {
-			case 1:
-				doorId = 349;
-				break;
-			case 2:
-				doorId = 352;
-				break;
-			default:
-				doorId = 359;
-				break;
-		}
-		var door = getPosition().getWorldMapInstance().getDoors().get(doorId);
+		int doorId = switch (Rnd.get(1, 3)) {
+            case 1 -> 349;
+            case 2 -> 352;
+            default -> 359;
+        };
+        var door = getPosition().getWorldMapInstance().getDoors().get(doorId);
 		if (door == null) {
 			return;
 		}

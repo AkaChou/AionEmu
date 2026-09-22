@@ -207,59 +207,18 @@ public class EffectController {
 	 * @return true 若为奥德科技效果 / true if Aethertech effect
 	 */
 	public boolean isAethertechEffect(int skillId) { // 4.8
-		switch (skillId) {
-		// 登船 / Embark
-		case 2767:
-		case 2768:
-		case 2769:
-		case 2770:
-		case 2771:
-		case 2772:
-		case 2773:
-		case 2774:
-		case 2775:
-		case 2776:
-		case 2777:
-		case 2778:
+		return switch (skillId) {
+			// 登船 / Embark
 			// 动能电池 / Kinetic Battery
-		case 2440:
-		case 2441:
-		case 2442:
-		case 2443:
-		case 2444:
-		case 2445:
-		case 2446:
-		case 2447:
-		case 2448:
-		case 2449:
 			// 动能壁垒 / Kinetic Bulwark
-		case 2579:
-		case 2580:
-		case 2581:
 			// 机动推进器 / Mobility Thrusters
-		case 2421:
-		case 2422:
 			// 稳定推进器 / Stability Thrusters
-		case 2736:
-		case 2737:
-		case 2738:
-		case 2739:
-		case 2740:
 			// 骑乘挫败 / Mounting Frustration
-		case 2838:
-		case 2839:
-		case 2840:
-		case 2841:
-		case 2842:
-		case 2843:
-		case 2844:
-		case 2845:
-		case 2846:
-		case 2847:
-		case 2848:
-			return true;
-		}
-		return false;
+			case 2767, 2768, 2769, 2770, 2771, 2772, 2773, 2774, 2775, 2776, 2777, 2778, 2440, 2441, 2442, 2443, 2444,
+			     2445, 2446, 2447, 2448, 2449, 2579, 2580, 2581, 2421, 2422, 2736, 2737, 2738, 2739, 2740, 2838, 2839,
+			     2840, 2841, 2842, 2843, 2844, 2845, 2846, 2847, 2848 -> true;
+			default -> false;
+		};
 	}
 
 	/**
@@ -774,21 +733,10 @@ public class EffectController {
 	 */
 	private boolean isDispellableLongDurationEffect(Effect effect) {
 		int skillId = effect.getSkillId();
-		switch (skillId) {
-		case 20941:
-		case 20942:
-		case 19370:
-		case 19371:
-		case 19372:
-		case 20530:
-		case 20531:
-		case 19345:
-		case 19346:
-		case 21438:
-			return true;
-		default:
-			return false;
-		}
+		return switch (skillId) {
+			case 20941, 20942, 19370, 19371, 19372, 20530, 20531, 19345, 19346, 21438 -> true;
+			default -> false;
+		};
 	}
 
 	/**
@@ -1181,15 +1129,10 @@ public class EffectController {
 		if (delayId == 1) {
 			return;
 		}
-		switch (delayId) {
-		case 2005:
-		case 2022:
-		case 2024:
-		case 2026:
-		case 2028:
-			size = 2;
-			break;
-		}
+        size = switch (delayId) {
+            case 2005, 2022, 2024, 2026, 2028 -> 2;
+            default -> size;
+        };
 		rDelay = delayId;
 
 		if (delayId == rDelay && effects.size() >= size) {

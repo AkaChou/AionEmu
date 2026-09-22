@@ -48,16 +48,12 @@ class EquipmentSettingUseAction {
 	 * @return 是否变更成功 / whether changed
 	 */
 	boolean apply(EquipmentSettingUseTarget target) {
-		switch (action) {
-		case ACTION_EQUIP:
-			return target.equipItem(itemObjectId, slot);
-		case ACTION_UNEQUIP:
-			return target.unEquipItem(itemObjectId, slot);
-		case ACTION_SWITCH_HANDS:
-			return target.switchHands();
-		default:
-			return false;
-		}
+        return switch (action) {
+            case ACTION_EQUIP -> target.equipItem(itemObjectId, slot);
+            case ACTION_UNEQUIP -> target.unEquipItem(itemObjectId, slot);
+            case ACTION_SWITCH_HANDS -> target.switchHands();
+            default -> false;
+        };
 	}
 
 	static boolean applyAll(List<EquipmentSettingUseAction> actions, EquipmentSettingUseTarget target) {

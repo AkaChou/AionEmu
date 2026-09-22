@@ -38,56 +38,56 @@ public class MultiReturnService {
 	 * @return 映射后的 ID；未知地图返回 0 / Mapped id; 0 when unknown
 	 */
 	public static int getTeleportWorldId(int worldId, Race race) {
-		switch (worldId) {
-		// 天族 / Elyos
-		case 110010000: // Sanctum.
-			return 1100100;
-		case 110070000: // Kaisinel Academy.
-			return 1100702;
-		case 210020000: // Eltnen.
-			return 2100200;
-		case 210030000: // Verteron.
-			return 2100300;
-		case 210040000: // Heiron.
-			return 2100400;
-		case 210050000: // Inggison.
-			return 2100500;
-		case 210060000: // Theobomos.
-			return 2100600;
-		case 210070000: // Cygnea.
-			return 2100700;
-		case 210100000: // Iluma.
-			return 2101010;
-		case 700010000: // 奥雷内 / Oriel.
-			return 7000101;
-		// 魔族 / Asmodians
-		case 120010000: // Pandaemonium.
-			return 1200100;
-		case 120080000: // Marchutan Priory.
-			return 1200800;
-		case 220020000: // Morheim.
-			return 2200200;
-		case 220030000: // Altgard.
-			return 2200300;
-		case 220040000: // Beluslan.
-			return 2200400;
-		case 220050000: // Brusthonin.
-			return 2200500;
-			case 220070000: // Gelkmaros.
-				return 2200700;
-			case 220140000: // Gelkmaros [Master Server].
-				return 2201400;
-		case 220080000: // Enshar.
-			return 2200800;
-		case 220110000: // Norsvold.
-			return 2201110;
-		case 710010000: // Pernon.
-			return 7100100;
-		case 400010000: // Reshanta.
-			return (race == Race.ELYOS ? 4000100 : 4000101);
-		case 600100000: // Levinshor.
-			return (race == Race.ELYOS ? 6001001 : 6001000);
-		}
-		return 0;
+		return switch (worldId) {
+			// 天族 / Elyos
+			case 110010000 -> // Sanctum.
+				1100100;
+			case 110070000 -> // Kaisinel Academy.
+				1100702;
+			case 210020000 -> // Eltnen.
+				2100200;
+			case 210030000 -> // Verteron.
+				2100300;
+			case 210040000 -> // Heiron.
+				2100400;
+			case 210050000 -> // Inggison.
+				2100500;
+			case 210060000 -> // Theobomos.
+				2100600;
+			case 210070000 -> // Cygnea.
+				2100700;
+			case 210100000 -> // Iluma.
+				2101010;
+			case 700010000 -> // 奥雷内 / Oriel.
+				7000101;
+			// 魔族 / Asmodians
+			case 120010000 -> // Pandaemonium.
+				1200100;
+			case 120080000 -> // Marchutan Priory.
+				1200800;
+			case 220020000 -> // Morheim.
+				2200200;
+			case 220030000 -> // Altgard.
+				2200300;
+			case 220040000 -> // Beluslan.
+				2200400;
+			case 220050000 -> // Brusthonin.
+				2200500;
+			case 220070000 -> // Gelkmaros.
+				2200700;
+			case 220140000 -> // Gelkmaros [Master Server].
+				2201400;
+			case 220080000 -> // Enshar.
+				2200800;
+			case 220110000 -> // Norsvold.
+				2201110;
+			case 710010000 -> // Pernon.
+				7100100;
+			case 400010000 -> // Reshanta.
+				(race == Race.ELYOS ? 4000100 : 4000101);
+			case 600100000 -> // Levinshor.
+				(race == Race.ELYOS ? 6001001 : 6001000);
+			default -> 0;
+		};
 	}
 }

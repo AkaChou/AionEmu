@@ -25,17 +25,13 @@ class NpcSkillTemplateEntry extends NpcSkillEntry {
 			return false;
 		}
 
-		switch (template.getConjunctionType()) {
-		case XOR:
-			return (hpReady(hpPercentage) && !timeReady(fightingTimeInMSec))
-					|| (!hpReady(hpPercentage) && timeReady(fightingTimeInMSec));
-		case OR:
-			return hpReady(hpPercentage) || timeReady(fightingTimeInMSec);
-		case AND:
-			return hpReady(hpPercentage) && timeReady(fightingTimeInMSec);
-		default:
-			return false;
-		}
+        return switch (template.getConjunctionType()) {
+            case XOR -> (hpReady(hpPercentage) && !timeReady(fightingTimeInMSec))
+                    || (!hpReady(hpPercentage) && timeReady(fightingTimeInMSec));
+            case OR -> hpReady(hpPercentage) || timeReady(fightingTimeInMSec);
+            case AND -> hpReady(hpPercentage) && timeReady(fightingTimeInMSec);
+            default -> false;
+        };
 	}
 
 	/** 概率就绪 / chance Ready. */

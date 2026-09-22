@@ -42,30 +42,20 @@ public class SM_CREATIVITY_POINTS extends AionServerPacket {
 	}
 
 	private int CpByExp(int level) {
-		switch (level) {
-		case 66:
-			return 1 + 1;
-		case 67:
-			return 10 + 10;
-		case 68:
-			return 19 + 15;
-		case 69:
-			return 30 + 20;
-		case 70:
-			return 42 + 25;
-		case 71:
-			return 55 + 30;
-		case 72:
-			return 70 + 35;
-		case 73:
-			return 87 + 40;
-		case 74:
-			return 107 + 45;
-		case 75:
-			return 130 + 155;
-		}
-		return 285;
-	}
+        return switch (level) {
+            case 66 -> 1 + 1;
+            case 67 -> 10 + 10;
+            case 68 -> 19 + 15;
+            case 69 -> 30 + 20;
+            case 70 -> 42 + 25;
+            case 71 -> 55 + 30;
+            case 72 -> 70 + 35;
+            case 73 -> 87 + 40;
+            case 74 -> 107 + 45;
+            case 75 -> 130 + 155;
+            default -> 285;
+        };
+    }
 
 	@Override
 	protected void writeImpl(AionConnection con) {

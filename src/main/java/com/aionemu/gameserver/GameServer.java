@@ -1561,14 +1561,11 @@ public class GameServer {
 	 * @return 比例百分比，未知阵营为 0 / ratio percent, or 0 for unknown race
 	 */
 	public static double getRatiosFor(Race race) {
-		switch (race) {
-		case ASMODIANS:
-			return ASMOS_RATIO;
-		case ELYOS:
-			return ELYOS_RATIO;
-		default:
-			return 0.0;
-		}
+		return switch (race) {
+			case ASMODIANS -> ASMOS_RATIO;
+			case ELYOS -> ELYOS_RATIO;
+			default -> 0.0;
+		};
 	}
 
 	/**
@@ -1579,14 +1576,11 @@ public class GameServer {
 	 * @return 角色数，未知阵营为 0 / character count, or 0 for unknown race
 	 */
 	public static int getCountFor(Race race) {
-		switch (race) {
-		case ASMODIANS:
-			return ASMOS_COUNT;
-		case ELYOS:
-			return ELYOS_COUNT;
-		default:
-			return 0;
-		}
+        return switch (race) {
+            case ASMODIANS -> ASMOS_COUNT;
+            case ELYOS -> ELYOS_COUNT;
+            default -> 0;
+        };
 	}
 
 	/**

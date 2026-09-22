@@ -108,14 +108,11 @@ class QuestMissionRewardIndexRegressionTest {
 	}
 
 	private static List<Integer> selectedItems(int questId) {
-        switch (questId) {
-            case 14026:
-                return List.of(110101843, 110301826, 110301828, 110551154, 110551156, 110601629);
-            case 24026:
-                return List.of(114101704, 114301833, 114301835, 114501742, 114501744, 114601583);
-            default:
-                throw new IllegalArgumentException("unexpected quest " + questId);
-        }
+		return switch (questId) {
+			case 14026 -> List.of(110101843, 110301826, 110301828, 110551154, 110551156, 110601629);
+			case 24026 -> List.of(114101704, 114301833, 114301835, 114501742, 114501744, 114601583);
+			default -> throw new IllegalArgumentException("unexpected quest " + questId);
+		};
 	}
 
 	private static QuestTransition route(QuestDefinition definition, int questId, QuestDialogAction action) {

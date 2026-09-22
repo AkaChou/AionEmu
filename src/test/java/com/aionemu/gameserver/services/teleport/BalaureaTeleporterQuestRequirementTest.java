@@ -14,7 +14,6 @@ import com.aionemu.gameserver.dataholders.Portal2Data;
 import com.aionemu.gameserver.dataholders.PortalLocData;
 import com.aionemu.gameserver.dataholders.TeleporterData;
 import com.aionemu.gameserver.model.Race;
-import com.aionemu.gameserver.model.templates.portal.PortalDialog;
 import com.aionemu.gameserver.model.templates.portal.PortalPath;
 import com.aionemu.gameserver.model.templates.portal.PortalReq;
 import com.aionemu.gameserver.model.templates.portal.QuestReq;

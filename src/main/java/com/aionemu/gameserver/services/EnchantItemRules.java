@@ -30,170 +30,44 @@ final class EnchantItemRules {
 	 * 强化失败时物品不销毁，规则：0~10 降 1 级；11~14 降至 +10；15~19 降至 +15。 / - If Enchanting fails, the item is not destroyed and following rules apply. - 0~10: -1 Enchanting level - 11~14: Enchanting level drops to +10 - 15~19: Enchanting level drops to +15 - 20 and higher: Enchanting level drops to +20 - https://aionpowerbook.com/powerbook/KR_-_Update_September_20th_2017
 	 */
 	static boolean isEnhancedAncientFallusha(Item targetItem) {
-		switch (targetItem.getItemId()) {
-		case 100002363:
-		case 100101767:
-		case 100201949:
-		case 100501729:
-		case 100601833:
-		case 100901781:
-		case 101501785:
-		case 101701768:
-		case 101801523:
-		case 101901420:
-		case 102001544:
-		case 102101359:
-		case 115002341:
-		case 115002342:
-		case 110102319:
-		case 110102320:
-		case 110302303:
-		case 110302304:
-		case 110302307:
-		case 110302308:
-		case 110551695:
-		case 110551697:
-		case 110551700:
-		case 110551701:
-		case 110551702:
-		case 110602055:
-		case 110602056:
-		case 110602060:
-		case 110602061:
-		case 111102118:
-		case 111102121:
-		case 111102122:
-		case 111302256:
-		case 111302257:
-		case 111302260:
-		case 111302261:
-		case 111502266:
-		case 111502267:
-		case 111502268:
-		case 111502271:
-		case 111502272:
-		case 111502273:
-		case 111602025:
-		case 111602026:
-		case 111602030:
-		case 112102055:
-		case 112102056:
-		case 112102059:
-		case 112102060:
-		case 112302185:
-		case 112302186:
-		case 112302189:
-		case 112302190:
-		case 112502200:
-		case 112502201:
-		case 112502202:
-		case 112502205:
-		case 112502206:
-		case 112502207:
-		case 112602008:
-		case 112602009:
-		case 112602012:
-		case 112602013:
-		case 113102113:
-		case 113102114:
-		case 113102116:
-		case 113102117:
-		case 113302268:
-		case 113302269:
-		case 113302271:
-		case 113302272:
-		case 113502271:
-		case 113502272:
-		case 113502273:
-		case 113502275:
-		case 113502276:
-		case 113502277:
-		case 113601998:
-		case 113601999:
-		case 113602001:
-		case 113602002:
-		case 114102158:
-		case 114102159:
-		case 114102162:
-		case 114102163:
-		case 114302318:
-		case 114302319:
-		case 114302322:
-		case 114302323:
-		case 114502284:
-		case 114502285:
-		case 114502286:
-		case 114502289:
-		case 114502290:
-		case 114502291:
-		case 114602008:
-		case 114602009:
-		case 114602013:
-		case 114602014:
-		case 120001720:
-		case 120001721:
-		case 121001670:
-		case 121001671:
-		case 122001954:
-		case 122001955:
-		case 123001704:
-		case 123001705:
-		case 125005554:
-		case 125005555:
-		case 125005556:
-		case 125005557:
-		case 125005558:
-		case 125005559:
-		case 125005560:
-		case 125005561:
-		case 125005562:
-		case 187000257:
-			return true;
-		}
-		return false;
+		return switch (targetItem.getItemId()) {
+			case 100002363, 100101767, 100201949, 100501729, 100601833, 100901781, 101501785, 101701768, 101801523,
+			     101901420, 102001544, 102101359, 115002341, 115002342, 110102319, 110102320, 110302303, 110302304,
+			     110302307, 110302308, 110551695, 110551697, 110551700, 110551701, 110551702, 110602055, 110602056,
+			     110602060, 110602061, 111102118, 111102121, 111102122, 111302256, 111302257, 111302260, 111302261,
+			     111502266, 111502267, 111502268, 111502271, 111502272, 111502273, 111602025, 111602026, 111602030,
+			     112102055, 112102056, 112102059, 112102060, 112302185, 112302186, 112302189, 112302190, 112502200,
+			     112502201, 112502202, 112502205, 112502206, 112502207, 112602008, 112602009, 112602012, 112602013,
+			     113102113, 113102114, 113102116, 113102117, 113302268, 113302269, 113302271, 113302272, 113502271,
+			     113502272, 113502273, 113502275, 113502276, 113502277, 113601998, 113601999, 113602001, 113602002,
+			     114102158, 114102159, 114102162, 114102163, 114302318, 114302319, 114302322, 114302323, 114502284,
+			     114502285, 114502286, 114502289, 114502290, 114502291, 114602008, 114602009, 114602013, 114602014,
+			     120001720, 120001721, 121001670, 121001671, 122001954, 122001955, 123001704, 123001705, 125005554,
+			     125005555, 125005556, 125005557, 125005558, 125005559, 125005560, 125005561, 125005562, 187000257 ->
+				true;
+			default -> false;
+		};
 	}
 
 	/**
 	 * 灰狼饰品强化失败不销毁，重置为 +0；不可交易，仅可包装一次。 / - Gray Wolf Accessories will not be destroyed when the upgrading process fails and will reset to +0. - Gray Wolf Accessories cannot be traded and can only be wrapped once when the Upgrade level reaches +10. - Upgrading Gray Wolf Accessories increases PvE abilities. - https://aionpowerbook.com/powerbook/KR_-_Update_September_20th_2017
 	 */
 	static boolean isGrayWolfAccessories(Item targetItem) {
-		switch (targetItem.getItemId()) {
-		case 125005563:
-		case 125005564:
-		case 125005565:
-		case 125005566:
-		case 125005567:
-		case 125005568:
-		case 125005569:
-		case 125005570:
-		case 125005571:
-		case 120001718:
-		case 120001719:
-		case 121001668:
-		case 121001669:
-		case 122001952:
-		case 122001953:
-		case 123001702:
-		case 123001703:
-			return true;
-		}
-		return false;
+		return switch (targetItem.getItemId()) {
+			case 125005563, 125005564, 125005565, 125005566, 125005567, 125005568, 125005569, 125005570, 125005571,
+			     120001718, 120001719, 121001668, 121001669, 122001952, 122001953, 123001702, 123001703 -> true;
+			default -> false;
+		};
 	}
 
 	/**
 	 * 高阶守护者达努亚改型/重塑装备说明：强化销毁永不。 / - Archdaeva's Reformed Danuar - Archdaeva's Remodeled Danuar - Archdaeva's Restructured Danuar - Destroy Enchant: NEVER!!!
 	 */
 	static boolean isArchdaevaReformedDanuar(Item targetItem) {
-		switch (targetItem.getItemId()) {
-		case 110551314:
-		case 111501874:
-		case 112501810:
-		case 113501893:
-		case 114501901:
-		case 125004548:
-			return true;
-		}
-		return false;
+		return switch (targetItem.getItemId()) {
+			case 110551314, 111501874, 112501810, 113501893, 114501901, 125004548 -> true;
+			default -> false;
+		};
 	}
 
 	/**
@@ -204,47 +78,14 @@ final class EnchantItemRules {
 	 * @return 是否匹配 / whether matched
 	 */
 	static boolean isArchdaevaRemodeledDanuar(Item targetItem) {
-		switch (targetItem.getItemId()) {
-		case 100002007:
-		case 100101489:
-		case 100201670:
-		case 100501447:
-		case 100601565:
-		case 100901524:
-		case 101301408:
-		case 101501510:
-		case 101701505:
-		case 101801340:
-		case 101901245:
-		case 102001368:
-		case 102101183:
-		case 110101990:
-		case 110301967:
-		case 110551315:
-		case 110601755:
-		case 111101784:
-		case 111301906:
-		case 111501875:
-		case 111601719:
-		case 112101729:
-		case 112301843:
-		case 112501811:
-		case 112601700:
-		case 113101795:
-		case 113301937:
-		case 113501894:
-		case 113601702:
-		case 114101829:
-		case 114301974:
-		case 114501902:
-		case 114601708:
-		case 125004547:
-		case 125004552:
-		case 125004553:
-		case 115001961:
-			return true;
-		}
-		return false;
+		return switch (targetItem.getItemId()) {
+			case 100002007, 100101489, 100201670, 100501447, 100601565, 100901524, 101301408, 101501510, 101701505,
+			     101801340, 101901245, 102001368, 102101183, 110101990, 110301967, 110551315, 110601755, 111101784,
+			     111301906, 111501875, 111601719, 112101729, 112301843, 112501811, 112601700, 113101795, 113301937,
+			     113501894, 113601702, 114101829, 114301974, 114501902, 114601708, 125004547, 125004552, 125004553,
+			     115001961 -> true;
+			default -> false;
+		};
 	}
 
 	/**
@@ -255,50 +96,15 @@ final class EnchantItemRules {
 	 * @return 是否匹配 / whether matched
 	 */
 	static boolean isArchdaevaRestructuredDanuar(Item targetItem) {
-		switch (targetItem.getItemId()) {
-		case 100002008:
-		case 100101490:
-		case 100201671:
-		case 100501448:
-		case 100601566:
-		case 100901525:
-		case 101301409:
-		case 101501511:
-		case 101701506:
-		case 101801341:
-		case 101901246:
-		case 102001369:
-		case 102101184:
-		case 110101991:
-		case 110301966:
-		case 110551316:
-		case 110601754:
-		case 111101785:
-		case 111301905:
-		case 111501876:
-		case 111601718:
-		case 112101730:
-		case 112301842:
-		case 112501812:
-		case 112601699:
-		case 113101796:
-		case 113301936:
-		case 113501895:
-		case 113601701:
-		case 114101830:
-		case 114301973:
-		case 114501903:
-		case 114601707:
-		case 125004546:
-		case 125004549:
-		case 125004550:
-		case 125004551:
-		case 125004554:
-		case 115001962:
-			return true;
-		}
-		return false;
-	}
+        return switch (targetItem.getItemId()) {
+            case 100002008, 100101490, 100201671, 100501448, 100601566, 100901525, 101301409, 101501511, 101701506,
+                 101801341, 101901246, 102001369, 102101184, 110101991, 110301966, 110551316, 110601754, 111101785,
+                 111301905, 111501876, 111601718, 112101730, 112301842, 112501812, 112601699, 113101796, 113301936,
+                 113501895, 113601701, 114101830, 114301973, 114501903, 114601707, 125004546, 125004549, 125004550,
+                 125004551, 125004554, 115001962 -> true;
+            default -> false;
+        };
+    }
 
 	/**
 	 * 荣耀：护盾。 / 5.5 强化系统相关说明。 / http://aionpowerbook.com/powerbook/Glory:_Shield.

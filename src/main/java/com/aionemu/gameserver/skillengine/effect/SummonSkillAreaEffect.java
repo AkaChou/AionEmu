@@ -40,62 +40,19 @@ public class SummonSkillAreaEffect extends SummonServantEffect {
 			z = effected.getZ();
 		}
 		int useTime = time;
-		switch (effect.getSkillId()) {
-		// 冰面 4.8 / Ice Sheet 4.8
-		case 1308:
-		case 1309:
-		case 1310:
-		case 1311:
-		case 1312:
-		case 1313:
-		case 1314:
-		case 1315:
-		case 1316:
-		case 1317:
-		case 1318:
-		case 1319:
-		case 1320:
-		case 1321:
-		case 1322:
-		case 1323:
-			useTime = 15;
-			break;
-		// 骑乘爆炸 4.8 / Mounting Explosion 4.8
-		case 1431:
-		case 1432:
-			useTime = 30;
-			break;
-		// 显现龙卷 4.8 / Manifest Tornado 4.8
-		case 1460:
-		case 1461:
-		case 1462:
-		case 1463:
-		case 1464:
-		case 1465:
-		case 1466:
-		case 1467:
-		case 1468:
-		case 1469:
-		case 1470:
-		case 1471:
-		case 1472:
-		case 1473:
-		case 1474:
-		case 1475:
-			useTime = 3;
-			break;
-		// 战斗召唤 4.8 / Battle Call 4.8
-		case 3036:
-		case 3037:
-			useTime = 11;
-			break;
-		// 闪电原野 5.1 / Field Of Lightning 5.1
-		case 4770:
-		case 4771:
-		case 4826:
-			useTime = 9;
-			break;
-		}
+        useTime = switch (effect.getSkillId()) {
+            // 冰面 4.8 / Ice Sheet 4.8
+            case 1308, 1309, 1310, 1311, 1312, 1313, 1314, 1315, 1316, 1317, 1318, 1319, 1320, 1321, 1322, 1323 -> 15;
+            // 骑乘爆炸 4.8 / Mounting Explosion 4.8
+            case 1431, 1432 -> 30;
+            // 显现龙卷 4.8 / Manifest Tornado 4.8
+            case 1460, 1461, 1462, 1463, 1464, 1465, 1466, 1467, 1468, 1469, 1470, 1471, 1472, 1473, 1474, 1475 -> 3;
+            // 战斗召唤 4.8 / Battle Call 4.8
+            case 3036, 3037 -> 11;
+            // 闪电原野 5.1 / Field Of Lightning 5.1
+            case 4770, 4771, 4826 -> 9;
+            default -> useTime;
+        };
 		final Servant servant = spawnServant(effect, useTime, NpcObjectType.SKILLAREA, x, y, z);
 		final int finalSkillId = servant.getSkillList() != null ? servant.getSkillList().getRandomSkill().getSkillId()
 				: 0;

@@ -8,11 +8,9 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Creature;
-import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.MathUtil;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 延迟技能效果：效果持续结束后触发关联技能（可范围多目标）。

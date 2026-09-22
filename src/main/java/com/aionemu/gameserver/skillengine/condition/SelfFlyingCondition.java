@@ -34,13 +34,11 @@ public class SelfFlyingCondition extends Condition {
 		if (env.getEffector() == null) {
 			return false;
 		}
-		switch (restriction) {
-		case FLY:
-			return env.getEffector().isFlying();
-		case GROUND:
-			return !env.getEffector().isFlying();
-		}
-		return true;
+		return switch (restriction) {
+			case FLY -> env.getEffector().isFlying();
+			case GROUND -> !env.getEffector().isFlying();
+			default -> true;
+		};
 	}
 
 	/**
@@ -55,12 +53,10 @@ public class SelfFlyingCondition extends Condition {
 		if (effect.getEffector() == null) {
 			return false;
 		}
-		switch (restriction) {
-		case FLY:
-			return effect.getEffector().isFlying();
-		case GROUND:
-			return !effect.getEffector().isFlying();
-		}
-		return true;
-	}
+        return switch (restriction) {
+            case FLY -> effect.getEffector().isFlying();
+            case GROUND -> !effect.getEffector().isFlying();
+            default -> true;
+        };
+    }
 }

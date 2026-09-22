@@ -6,7 +6,6 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 玩家命令：向魔族频道发送付费世界消息。

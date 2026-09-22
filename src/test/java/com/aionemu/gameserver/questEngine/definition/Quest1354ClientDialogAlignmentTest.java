@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 锁定任务 1354（上级飞行术考试）的 120 秒飞行倒计时、飞行环推进与奖励归属合同。

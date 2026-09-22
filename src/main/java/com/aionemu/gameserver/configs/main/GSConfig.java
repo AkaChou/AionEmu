@@ -27,22 +27,17 @@ public class GSConfig {
 		}
 		// ponytail: JVM default locale only; override via gameserver.country.code if wrong
 		Locale locale = Locale.getDefault();
-        switch (locale.getLanguage()) {
-            case "zh":
-                return 5;
-            case "ja":
-                return 4;
-            case "ko":
-                return 0;
-            case "ru":
-                return 7;
-            default:
-                return switch (locale.getCountry()) {
-                    case "GB", "DE", "FR", "ES", "IT", "PL", "NL", "SE", "NO", "DK", "FI", "AT", "CH", "BE", "PT", "IE",
-                         "CZ", "HU", "RO", "GR" -> 2;
-                    default -> 1;
-                };
-        }
+        return switch (locale.getLanguage()) {
+            case "zh" -> 5;
+            case "ja" -> 4;
+            case "ko" -> 0;
+            case "ru" -> 7;
+            default -> switch (locale.getCountry()) {
+                case "GB", "DE", "FR", "ES", "IT", "PL", "NL", "SE", "NO", "DK", "FI", "AT", "CH", "BE", "PT", "IE",
+                     "CZ", "HU", "RO", "GR" -> 2;
+                default -> 1;
+            };
+        };
 	}
 
 	/** 将 99 解析为具体地区码并写回字段。 / Resolve 99 into a concrete code in-place. */

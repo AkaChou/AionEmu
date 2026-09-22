@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.math.MathObject;
 import com.aionemu.gameserver.model.gameobjects.math.MathObjectReaction;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

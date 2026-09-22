@@ -213,36 +213,25 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	}
 
 	private int getNpcBonus(int npcId) {
-		switch (npcId) {
-			case 243666: //Black Claw Scratcher.
-			case 243675: //Red Sand Brax.
-			case 243676: //Red Sand Tog.
-			case 243667: //Mutated Drakan Fighter.
-			    return 100;
-			case 243681: //Casus Manor Chief Maid.
-			    return 400;
-			case 243671: //Casus Manor Butler.
-			    return 650;
-			case 243672: //Casus Manor Noble.
-			    return 750;
-			case 243665: //Mumu Rake Gatherer.
-			    return 1250;
-			case 243673: //Pale Carmina.
-			case 243674: //Corrupt Casus.
-				return 1500;
+		return switch (npcId) { //Black Claw Scratcher.
+			//Red Sand Brax.
+			//Red Sand Tog.
+			case 243666, 243675, 243676, 243667 -> //Mutated Drakan Fighter.
+				100;
+			case 243681 -> //Casus Manor Chief Maid.
+				400;
+			case 243671 -> //Casus Manor Butler.
+				650;
+			case 243672 -> //Casus Manor Noble.
+				750;
+			case 243665 -> //Mumu Rake Gatherer.
+				1250; //Pale Carmina.
+			case 243673, 243674 -> //Corrupt Casus.
+				1500;
 			// 祝福遗物/诅咒遗物 / Blessed Relics/Cursed Relics
-			case 701173:
-			case 701174:
-			case 701187:
-			case 701188:
-			case 701201:
-			case 701202:
-			case 701834:
-			case 701835:
-			    return 1750;
-			default:
-				return 0;
-		}
+			case 701173, 701174, 701187, 701188, 701201, 701202, 701834, 701835 -> 1750;
+			default -> 0;
+		};
 	}
 
 	/**

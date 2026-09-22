@@ -50,16 +50,12 @@ class LoginProcessRuntimeBridgeTest {
 			new Class<?>[]{ObjectProvider.class},
 			(proxy, method, args) -> {
 				if (method.getDeclaringClass() == Object.class) {
-					switch (method.getName()) {
-						case "toString":
-							return "throwingProvider";
-						case "hashCode":
-							return System.identityHashCode(proxy);
-						case "equals":
-							return proxy == args[0];
-						default:
-							return null;
-					}
+					return switch (method.getName()) {
+						case "toString" -> "throwingProvider";
+						case "hashCode" -> System.identityHashCode(proxy);
+						case "equals" -> proxy == args[0];
+						default -> null;
+					};
 				}
 				throw exception;
 			}
@@ -73,16 +69,12 @@ class LoginProcessRuntimeBridgeTest {
 			new Class<?>[]{ObjectProvider.class},
 			(proxy, method, args) -> {
 				if (method.getDeclaringClass() == Object.class) {
-                    switch (method.getName()) {
-                        case "toString":
-                            return "oneShotProvider";
-                        case "hashCode":
-                            return System.identityHashCode(proxy);
-                        case "equals":
-                            return proxy == args[0];
-                        default:
-                            return null;
-                    }
+                    return switch (method.getName()) {
+                        case "toString" -> "oneShotProvider";
+                        case "hashCode" -> System.identityHashCode(proxy);
+                        case "equals" -> proxy == args[0];
+                        default -> null;
+                    };
 				}
 				if ("getIfAvailable".equals(method.getName())) {
 					if (!used.compareAndSet(false, true)) {

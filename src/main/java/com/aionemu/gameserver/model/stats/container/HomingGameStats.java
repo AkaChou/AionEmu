@@ -21,12 +21,13 @@ public class HomingGameStats extends SummonedObjectGameStats {
 		if (owner.getMaster() == null) {
 			return stat;
 		}
-		switch (statEnum) {
-		case MAGICAL_ATTACK:
-			stat.setBonusRate(0.2f);
-			return owner.getMaster().getGameStats().getItemStatBoost(statEnum, stat);
-		}
-		return stat;
+		return switch (statEnum) {
+			case MAGICAL_ATTACK -> {
+				stat.setBonusRate(0.2f);
+				yield owner.getMaster().getGameStats().getItemStatBoost(statEnum, stat);
+			}
+			default -> stat;
+		};
 	}
 
 	/** 返回魔法攻击（按等级定值）。 / Returns the magical attack (fixed value per level). */

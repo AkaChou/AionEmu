@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.services;
 
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
 import java.util.concurrent.ConcurrentMap;

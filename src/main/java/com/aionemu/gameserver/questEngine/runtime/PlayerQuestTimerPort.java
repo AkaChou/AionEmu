@@ -28,16 +28,12 @@ public final class PlayerQuestTimerPort implements QuestTimerPort {
 	public PlayerQuestTimerPort(QuestPlayerPort players) {
 		this(players, (player, questId, seconds, command, policy, identity) -> {
 			QuestEnv env = new QuestEnv(null, player, questId, 0);
-            switch (command) {
-                case START_QUEST:
-                    return QuestService.questTimerStart(env, seconds, policy);
-                case START_INVISIBLE:
-                    return QuestService.invisibleTimerStart(env, seconds, policy);
-                case CANCEL_QUEST:
-                    return QuestService.questTimerEnd(env, identity);
-                default:
-                    throw new IllegalArgumentException();
-            }
+			return switch (command) {
+				case START_QUEST -> QuestService.questTimerStart(env, seconds, policy);
+				case START_INVISIBLE -> QuestService.invisibleTimerStart(env, seconds, policy);
+				case CANCEL_QUEST -> QuestService.questTimerEnd(env, identity);
+				default -> throw new IllegalArgumentException();
+			};
 		});
 	}
 

@@ -3,11 +3,9 @@ package com.aionemu.gameserver.ai.instance.IDEvent_Def;
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 
 import com.aionemu.gameserver.ai2.AIName;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.*;
 import com.aionemu.gameserver.world.*;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * ID Event Def 副本 NPC AI：IDEVENT Def Mob（@AIName "IDEVENT_Def_Mob"），继承 AggressiveNpcAI2。

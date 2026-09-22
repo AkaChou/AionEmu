@@ -21,7 +21,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.CalculationType;
 import com.aionemu.gameserver.utils.stats.StatFunctions;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
@@ -967,20 +966,12 @@ public class AttackUtil {
 		}
 
 		if (StatFunctions.calculatePhysicalCriticalRate(attacker, attacked, isMainHand, criticalProb, isSkill)) {
-			switch (status) {
-			case BLOCK:
-				status = AttackStatus.CRITICAL_BLOCK;
-				break;
-			case PARRY:
-				status = AttackStatus.CRITICAL_PARRY;
-				break;
-			case DODGE:
-				status = AttackStatus.CRITICAL_DODGE;
-				break;
-			default:
-				status = AttackStatus.CRITICAL;
-				break;
-			}
+            status = switch (status) {
+                case BLOCK -> AttackStatus.CRITICAL_BLOCK;
+                case PARRY -> AttackStatus.CRITICAL_PARRY;
+                case DODGE -> AttackStatus.CRITICAL_DODGE;
+                default -> AttackStatus.CRITICAL;
+            };
 		}
 		return isMainHand ? status : AttackStatus.getOffHandStats(status);
 	}

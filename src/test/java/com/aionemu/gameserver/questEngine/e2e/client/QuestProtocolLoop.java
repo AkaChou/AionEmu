@@ -106,27 +106,15 @@ public final class QuestProtocolLoop implements AutoCloseable {
 		RuntimeException failure = null;
 		boolean handled = false;
 		try {
-            switch (request.kind()) {
-                case DIALOG_SELECT:
-                    handled = dialog(request);
-                    break;
-                case USE_OBJECT:
-                    handled = useObject(request);
-                    break;
-                case ACTION_ITEM_USE:
-                    handled = actionItemUse(request);
-                    break;
-                case USE_ITEM:
-                    handled = useItem(request);
-                    break;
-                case ITEM_PLAY:
-                    handled = itemPlay(request, packets);
-                    break;
-                case WORLD_EVENT:
-                    throw new IllegalStateException("world event was not delegated");
-                default:
-                    throw new IllegalArgumentException();
-            }
+            handled = switch (request.kind()) {
+                case DIALOG_SELECT -> dialog(request);
+                case USE_OBJECT -> useObject(request);
+                case ACTION_ITEM_USE -> actionItemUse(request);
+                case USE_ITEM -> useItem(request);
+                case ITEM_PLAY -> itemPlay(request, packets);
+                case WORLD_EVENT -> throw new IllegalStateException("world event was not delegated");
+                default -> throw new IllegalArgumentException();
+            };
 		} catch (RuntimeException exception) {
 			failure = exception;
 		}

@@ -7,7 +7,6 @@ import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.model.actions.PlayerMode;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;

@@ -11,7 +11,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAY_MOVIE;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.utils.*;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -57,19 +57,13 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	 * @return 顶点，否则为 null / vertex, or null
 	 */
 	public Vector3f get(int i) {
-		switch (i) {
-		case 0: {
-			return this.pointa;
-		}
-		case 1: {
-			return this.pointb;
-		}
-		case 2: {
-			return this.pointc;
-		}
-		}
-		return null;
-	}
+        return switch (i) {
+            case 0 -> this.pointa;
+            case 1 -> this.pointb;
+            case 2 -> this.pointc;
+            default -> null;
+        };
+    }
 
 	/**
 	 * 返回第一个顶点。

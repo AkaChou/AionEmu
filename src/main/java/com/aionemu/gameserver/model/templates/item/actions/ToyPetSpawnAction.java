@@ -63,31 +63,31 @@ public class ToyPetSpawnAction extends AbstractItemAction {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1390160));
 			return false;
 		}
-		switch (player.getWorldId()) {
-		// 限制天族生成 Kisk。 / Restriction Elyos Spawn Kisk.
-		case 110010000: // Sanctum.
-		case 110020000: // Cloister Of Kaisinel.
-		case 110070000: // Kaisinel Academy.
-		case 130090000: // Wisplight Abbey.
-		case 210010000: // Poeta.
-		case 210080000: // Griffoen.
-		case 210110000: // Tower Of Eternity E.
-		case 700010000: // 奥雷内 / Oriel.
+		return switch (player.getWorldId()) {
+			// 限制天族生成 Kisk。 / Restriction Elyos Spawn Kisk.
+			// Sanctum.
+			// Cloister Of Kaisinel.
+			// Kaisinel Academy.
+			// Wisplight Abbey.
+			// Poeta.
+			// Griffoen.
+			// Tower Of Eternity E.
+			// 奥雷内 / Oriel.
 			// 限制魔族生成 Kisk。 / Restriction Asmodians Spawn Kisk.
-		case 120010000: // Pandaemonium.
-		case 120020000: // Convent Of Marchutan.
-		case 120080000: // Marchutan Priory.
-		case 140010000: // Fatebound Abbey.
-		case 220010000: // Ishalgen.
-		case 220120000: // Tower Of Eternity A.
-		case 220090000: // Habrok.
-		case 710010000: // Pernon.
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_ITEM_INVALID_LOCATION);
-			return false;
-		default:
-			break;
-		}
-		return true;
+			// Pandaemonium.
+			// Convent Of Marchutan.
+			// Marchutan Priory.
+			// Fatebound Abbey.
+			// Ishalgen.
+			// Tower Of Eternity A.
+			// Habrok.
+			case 110010000, 110020000, 110070000, 130090000, 210010000, 210080000, 210110000, 700010000, 120010000,
+			     120020000, 120080000, 140010000, 220010000, 220120000, 220090000, 710010000 -> {
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_ITEM_INVALID_LOCATION);
+				yield false;
+			}
+			default -> true;
+		};
 	}
 
 	/** 执行 / act. */

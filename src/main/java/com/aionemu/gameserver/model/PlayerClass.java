@@ -79,35 +79,17 @@ public enum PlayerClass {
 
 	/** 返回初始职业 / Returns the starting class for*/
 	public static PlayerClass getStartingClassFor(PlayerClass pc) {
-		switch (pc) {
-		case ASSASSIN:
-		case RANGER:
-			return SCOUT;
-		case GLADIATOR:
-		case TEMPLAR:
-			return WARRIOR;
-		case CHANTER:
-		case CLERIC:
-			return PRIEST;
-		case SORCERER:
-		case SPIRIT_MASTER:
-			return MAGE;
-		// 资讯类 4.3/4.5 / News Class 4.3/4.5
-		case SONGWEAVER:
-			return MUSE;
-		case AETHERTECH:
-		case GUNSLINGER:
-			return TECHNIST;
-		case SCOUT:
-		case WARRIOR:
-		case PRIEST:
-		case MAGE:
-		case MUSE:
-		case TECHNIST:
-			return pc;
-		default:
-			throw new IllegalArgumentException("Given player class is starting class: " + pc);
-		}
+		return switch (pc) {
+			case ASSASSIN, RANGER -> SCOUT;
+			case GLADIATOR, TEMPLAR -> WARRIOR;
+			case CHANTER, CLERIC -> PRIEST;
+			case SORCERER, SPIRIT_MASTER -> MAGE;
+			// 资讯类 4.3/4.5 / News Class 4.3/4.5
+			case SONGWEAVER -> MUSE;
+			case AETHERTECH, GUNSLINGER -> TECHNIST;
+			case SCOUT, WARRIOR, PRIEST, MAGE, MUSE, TECHNIST -> pc;
+			default -> throw new IllegalArgumentException("Given player class is starting class: " + pc);
+		};
 	}
 
 	/** 按字符串返回玩家职业 / Returns the player class by string*/

@@ -24,36 +24,35 @@ public class DisplayService {
 	public static int getDisplayTemplate(Player player, Item item) {
 		if (player.isBandit() || player.isFFA()) {
 			if (item.getItemTemplate().isWeapon()) {
-				switch (item.getItemTemplate().getWeaponType()) {
-				case SWORD_1H: // 荣耀无界长剑 / Boundless Long Sword Of Glory.
-					return 100002013;
-				case MACE_1H: // 荣耀无界锤 / Boundless Mace Of Glory.
-					return 100101495;
-				case DAGGER_1H: // 荣耀无界匕首 / Boundless Dagger Of Glory.
-					return 100201676;
-				case ORB_2H: // 荣耀无界宝珠 / Boundless Orb Of Glory.
-					return 100501453;
-				case BOOK_2H: // 荣耀无界魔法书 / Boundless Spellbook Of Glory.
-					return 100601571;
-				case SWORD_2H: // 荣耀无界巨剑 / Boundless Great Sword Of Glory.
-					return 100901530;
-				case POLEARM_2H: // 荣耀无界长柄武器 / Boundless Polearm Of Glory.
-					return 101301414;
-				case STAFF_2H: // 荣耀无界法杖 / Boundless Staff Of Glory.
-					return 101501516;
-				case BOW: // 荣耀无界弓 / Boundless Bow Of Glory.
-					return 101701511;
-				case GUN_1H: // 荣耀无界魔法枪 / Boundless Magic Gun Of Glory.
-					return 101801346;
-				case CANNON_2H: // 荣耀无界魔法炮 / Boundless Magic Cannon Of Glory.
-					return 101901251;
-				case HARP_2H: // 荣耀无界弦乐器 / Boundless String Instrument Of Glory.
-					return 102001374;
-				case KEYBLADE_2H: // 荣耀无界钥匙剑 / Boundless Keyblade Of Glory.
-					return 102101189;
-				default:
-					return 100002013; // 默认值 / is by default.
-				}
+				return switch (item.getItemTemplate().getWeaponType()) {
+					case SWORD_1H -> // 荣耀无界长剑 / Boundless Long Sword Of Glory.
+						100002013;
+					case MACE_1H -> // 荣耀无界锤 / Boundless Mace Of Glory.
+						100101495;
+					case DAGGER_1H -> // 荣耀无界匕首 / Boundless Dagger Of Glory.
+						100201676;
+					case ORB_2H -> // 荣耀无界宝珠 / Boundless Orb Of Glory.
+						100501453;
+					case BOOK_2H -> // 荣耀无界魔法书 / Boundless Spellbook Of Glory.
+						100601571;
+					case SWORD_2H -> // 荣耀无界巨剑 / Boundless Great Sword Of Glory.
+						100901530;
+					case POLEARM_2H -> // 荣耀无界长柄武器 / Boundless Polearm Of Glory.
+						101301414;
+					case STAFF_2H -> // 荣耀无界法杖 / Boundless Staff Of Glory.
+						101501516;
+					case BOW -> // 荣耀无界弓 / Boundless Bow Of Glory.
+						101701511;
+					case GUN_1H -> // 荣耀无界魔法枪 / Boundless Magic Gun Of Glory.
+						101801346;
+					case CANNON_2H -> // 荣耀无界魔法炮 / Boundless Magic Cannon Of Glory.
+						101901251;
+					case HARP_2H -> // 荣耀无界弦乐器 / Boundless String Instrument Of Glory.
+						102001374;
+					case KEYBLADE_2H -> // 荣耀无界钥匙剑 / Boundless Keyblade Of Glory.
+						102101189;
+					default -> 100002013; // 默认值 / is by default.
+				};
 			} else if (player.isFFA() && item.getEquipmentSlot() == 8) { // 行刑者服装 / Executioner's Outfit.
 				return 110901014;
 			} else if (player.isFFA() && item.getEquipmentSlot() == 4) { // 行刑者面具 / Executioner's Mask.

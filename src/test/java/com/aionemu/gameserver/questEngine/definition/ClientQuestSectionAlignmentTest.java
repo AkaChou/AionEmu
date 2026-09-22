@@ -183,14 +183,11 @@ class ClientQuestSectionAlignmentTest {
 	}
 
 	private static String touchedField(QuestAction action) {
-        switch (action) {
-            case QuestAction.SetVariable set:
-                return set.field();
-            case QuestAction.IncrementVariable increment:
-                return increment.field();
-            default:
-                return null;
-        }
+        return switch (action) {
+            case QuestAction.SetVariable set -> set.field();
+            case QuestAction.IncrementVariable increment -> increment.field();
+            default -> null;
+        };
 	}
 
 	private static QuestSnapshot apply(CompiledQuestDefinition definition, QuestSnapshot snapshot,

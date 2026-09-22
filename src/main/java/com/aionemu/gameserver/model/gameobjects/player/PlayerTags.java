@@ -35,27 +35,15 @@ final class PlayerTags {
 	}
 
 	private static String getAccessTag(Player player) {
-		String accessTag = "%s";
-		switch (player.getClientConnection().getAccount().getAccessLevel()) {
-		case 1:
-			accessTag = AdminConfig.ADMIN_TAG_1;
-			break;
-		case 2:
-			accessTag = AdminConfig.ADMIN_TAG_2;
-			break;
-		case 3:
-			accessTag = AdminConfig.ADMIN_TAG_3;
-			break;
-		case 4:
-			accessTag = AdminConfig.ADMIN_TAG_4;
-			break;
-		case 5:
-			accessTag = AdminConfig.ADMIN_TAG_5;
-			break;
-		default:
-			accessTag = "%s";
-		}
-		return accessTag;
+		String accessTag = switch (player.getClientConnection().getAccount().getAccessLevel()) {
+            case 1 -> AdminConfig.ADMIN_TAG_1;
+            case 2 -> AdminConfig.ADMIN_TAG_2;
+            case 3 -> AdminConfig.ADMIN_TAG_3;
+            case 4 -> AdminConfig.ADMIN_TAG_4;
+            case 5 -> AdminConfig.ADMIN_TAG_5;
+            default -> "%s";
+        };
+        return accessTag;
 	}
 
 	private static String getAccountTag(Player player) {

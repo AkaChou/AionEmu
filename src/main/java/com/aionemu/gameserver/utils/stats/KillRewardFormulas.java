@@ -127,14 +127,11 @@ final class KillRewardFormulas {
 		if (difference > 4) {
 			pointsLost = Math.round(pointsLost * 0.1f);
 		} else {
-			switch (difference) {
-			case 3:
-				pointsLost = Math.round(pointsLost * 0.85f);
-				break;
-			case 4:
-				pointsLost = Math.round(pointsLost * 0.65f);
-				break;
-			}
+			pointsLost = switch (difference) {
+				case 3 -> Math.round(pointsLost * 0.85f);
+				case 4 -> Math.round(pointsLost * 0.65f);
+				default -> pointsLost;
+			};
 		}
 		return pointsLost;
 	}
@@ -156,20 +153,13 @@ final class KillRewardFormulas {
 		} else if (difference < -3) {
 			pointsGained = Math.round(pointsGained * 1.3f);
 		} else {
-			switch (difference) {
-			case 3:
-				pointsGained = Math.round(pointsGained * 0.85f);
-				break;
-			case 4:
-				pointsGained = Math.round(pointsGained * 0.65f);
-				break;
-			case -2:
-				pointsGained = Math.round(pointsGained * 1.1f);
-				break;
-			case -3:
-				pointsGained = Math.round(pointsGained * 1.2f);
-				break;
-			}
+			pointsGained = switch (difference) {
+				case 3 -> Math.round(pointsGained * 0.85f);
+				case 4 -> Math.round(pointsGained * 0.65f);
+				case -2 -> Math.round(pointsGained * 1.1f);
+				case -3 -> Math.round(pointsGained * 1.2f);
+				default -> pointsGained;
+			};
 		}
 		int winnerAbyssRank = maxRank;
 		int defeatedAbyssRank = defeated.getAbyssRank().getRank().getId();
@@ -197,14 +187,11 @@ final class KillRewardFormulas {
 		if (difference > 4) {
 			pointsLost = Math.round(pointsLost * 0.1f);
 		} else {
-			switch (difference) {
-			case 3:
-				pointsLost = Math.round(pointsLost * 0.85f);
-				break;
-			case 4:
-				pointsLost = Math.round(pointsLost * 0.65f);
-				break;
-			}
+			pointsLost = switch (difference) {
+				case 3 -> Math.round(pointsLost * 0.85f);
+				case 4 -> Math.round(pointsLost * 0.65f);
+				default -> pointsLost;
+			};
 		}
 		return pointsLost;
 	}
@@ -226,20 +213,13 @@ final class KillRewardFormulas {
 		} else if (difference < -3) {
 			pointsGained = Math.round(pointsGained * 1.3f);
 		} else {
-			switch (difference) {
-			case 3:
-				pointsGained = Math.round(pointsGained * 0.85f);
-				break;
-			case 4:
-				pointsGained = Math.round(pointsGained * 0.65f);
-				break;
-			case -2:
-				pointsGained = Math.round(pointsGained * 1.1f);
-				break;
-			case -3:
-				pointsGained = Math.round(pointsGained * 1.2f);
-				break;
-			}
+            pointsGained = switch (difference) {
+                case 3 -> Math.round(pointsGained * 0.85f);
+                case 4 -> Math.round(pointsGained * 0.65f);
+                case -2 -> Math.round(pointsGained * 1.1f);
+                case -3 -> Math.round(pointsGained * 1.2f);
+                default -> pointsGained;
+            };
 		}
 		int winnerAbyssRank = maxRank;
 		int defeatedAbyssRank = defeated.getAbyssRank().getRank().getId();

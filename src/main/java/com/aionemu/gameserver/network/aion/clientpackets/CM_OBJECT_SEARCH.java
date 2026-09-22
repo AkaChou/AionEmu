@@ -299,14 +299,11 @@ public class CM_OBJECT_SEARCH extends AionClientPacket {
 	 * fixed quest-zone target, or null when not recognized
 	 */
 	static SearchTarget resolveQuestSensorTarget(int requestedNpcId) {
-        switch (requestedNpcId) {
-            case ELYOS_SANCTUARY_SENSOR:
-                return fixedSearchTarget(210100000, 1456.6283f, 1299.3306f, 336.49023f);
-            case ASMODIAN_SANCTUARY_SENSOR:
-                return fixedSearchTarget(220110000, 1757.3667f, 2008.911f, 196.59653f);
-            default:
-                return null;
-        }
+        return switch (requestedNpcId) {
+            case ELYOS_SANCTUARY_SENSOR -> fixedSearchTarget(210100000, 1456.6283f, 1299.3306f, 336.49023f);
+            case ASMODIAN_SANCTUARY_SENSOR -> fixedSearchTarget(220110000, 1757.3667f, 2008.911f, 196.59653f);
+            default -> null;
+        };
 	}
 
 	private static SearchTarget fixedSearchTarget(int worldId, float x, float y, float z) {

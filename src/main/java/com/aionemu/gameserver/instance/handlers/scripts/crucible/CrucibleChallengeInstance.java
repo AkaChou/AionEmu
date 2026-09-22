@@ -325,26 +325,15 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				sendMsgByRace(1400928, Race.PC_ALL, 4000);
 				//你已清除第 %0 轮全部敌人。 / You have eliminated all enemies in Round %0.
 				sendMsgByRace(1400929, Race.PC_ALL, 0);
-				switch (Rnd.get(1, 6)) {
-					case 1:
-						npcId = 217806;
-					break;
-					case 2:
-						npcId = 217815;
-					break;
-					case 3:
-						npcId = 217818;
-					break;
-					case 4:
-						npcId = 218562;
-					break;
-					case 5:
-						npcId = 218564;
-					break;
-					case 6:
-						npcId = 218565;
-					break;
-				}
+				npcId = switch (Rnd.get(1, 6)) {
+					case 1 -> 217806;
+					case 2 -> 217815;
+					case 3 -> 217818;
+					case 4 -> 218562;
+					case 5 -> 218564;
+					case 6 -> 218565;
+					default -> npcId;
+				};
 				sp(npcId, 332.3786f, 349.31204f, 96.090935f, (byte) 0, 2000);
 			break;
 			case 217806:
@@ -496,15 +485,11 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	}
 
 	private void startStage3Round1_1(int npcId) {
-		int bossId = 0;
-		switch (npcId) {
-			case 217844:
-				bossId = 217845;
-			break;
-			case 217842:
-				bossId = 217843;
-			break;
-		}
+		int bossId = switch (npcId) {
+			case 217844 -> 217845;
+			case 217842 -> 217843;
+			default -> 0;
+		};
 		sp(bossId, 1287.6239f, 1724.2721f, 317.1485f, (byte) 6, 2000);
 		despawnNpcs(getNpcs(npcId));
 		despawnNpc(getNpc(217840));
@@ -814,14 +799,11 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			case START_STAGE_1_ROUND_1:
 				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 2000);
-				switch (Rnd.get(1, 2)) {
-					case 1:
-						npcId = 217784;
-					break;
-					case 2:
-						npcId = 217785;
-					break;
-				}
+				npcId = switch (Rnd.get(1, 2)) {
+					case 1 -> 217784;
+					case 2 -> 217785;
+					default -> npcId;
+				};
 				sp(npcId, 334.85098f, 1657.8495f, 95.77262f, (byte) 0, 2000);
 				sp(npcId, 334.74506f, 1668.7478f, 95.67427f, (byte) 0, 3000);
 				sp(npcId, 350.63846f, 1663.84f, 95.385f, (byte) 0, 4000);
@@ -868,17 +850,12 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			case START_HARAMEL_STAGE_4_ROUND_1:
 				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 2000);
-				switch (Rnd.get(1, 3)) {
-					case 1:
-						npcId = 217788;
-					break;
-					case 2:
-						npcId = 217789;
-					break;
-					case 3:
-						npcId = 217790;
-					break;
-				}
+				npcId = switch (Rnd.get(1, 3)) {
+					case 1 -> 217788;
+					case 2 -> 217789;
+					case 3 -> 217790;
+					default -> npcId;
+				};
 				sp(217786, 1263.4213f, 791.8533f, 436.64014f, (byte) 60, 2000);
 				sp(217786, 1267.2097f, 804.04456f, 436.64008f, (byte) 60, 3000);
 				sp(217786, 1267.0653f, 781.0253f, 436.64017f, (byte) 60, 4000);
@@ -887,17 +864,12 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			case START_KROMEDE_STAGE_4_ROUND_1:
 				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 2000);
-				switch (Rnd.get(1, 3)) {
-					case 1:
-						npcId = 217791;
-					break;
-					case 2:
-						npcId = 217792;
-					break;
-					case 3:
-						npcId = 217793;
-					break;
-				}
+				npcId = switch (Rnd.get(1, 3)) {
+					case 1 -> 217791;
+					case 2 -> 217792;
+					case 3 -> 217793;
+					default -> npcId;
+				};
 				sp(217787, 1252.525f, 248.50781f, 405.38016f, (byte) 60, 2000);
 				sp(217787, 1250.0901f, 237.69656f, 405.39676f, (byte) 60, 3000);
 				sp(217787, 1253.0117f, 225.77977f, 405.3801f, (byte) 60, 4000);
@@ -906,32 +878,17 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			case START_STAGE_5_ROUND_1:
 				//第 %0 轮开始！ / Round %0 begins!
 				sendMsgByRace(1400928, Race.PC_ALL, 2000);
-				switch (Rnd.get(1, 8)) {
-					case 1:
-						npcId = 217807;
-					break;
-					case 2:
-						npcId = 217808;
-					break;
-					case 3:
-						npcId = 217809;
-					break;
-					case 4:
-						npcId = 217810;
-					break;
-					case 5:
-						npcId = 217811;
-					break;
-					case 6:
-						npcId = 217812;
-					break;
-					case 7:
-						npcId = 217813;
-					break;
-					case 8:
-						npcId = 217814;
-					break;
-				}
+				npcId = switch (Rnd.get(1, 8)) {
+					case 1 -> 217807;
+					case 2 -> 217808;
+					case 3 -> 217809;
+					case 4 -> 217810;
+					case 5 -> 217811;
+					case 6 -> 217812;
+					case 7 -> 217813;
+					case 8 -> 217814;
+					default -> npcId;
+				};
 				sp(npcId, 335.7365f, 337.93097f, 96.0909f, (byte) 0, 2000);
 			break;
 			case START_STAGE_6_ROUND_1:
@@ -1062,43 +1019,28 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				int count = 0;
 				switch (rewardCount) {
 					case 0:
-						switch (Rnd.get(1, 3)) {
-							case 1:
-								count = 1;
-							break;
-							case 2:
-								count = 10;
-							break;
-							case 3:
-								count = 0;
-							break;
-						}
+						count = switch (Rnd.get(1, 3)) {
+							case 1 -> 1;
+							case 2 -> 10;
+							case 3 -> 0;
+							default -> count;
+						};
 					break;
 					case 1:
-						switch (Rnd.get(1, 3)) {
-							case 1:
-								count = 2;
-							break;
-							case 2:
-								count = 18;
-							break;
-							case 3:
-								count = 0;
-							break;
-						}
+						count = switch (Rnd.get(1, 3)) {
+							case 1 -> 2;
+							case 2 -> 18;
+							case 3 -> 0;
+							default -> count;
+						};
 					break;
 					case 2:
-						switch (Rnd.get(1, 3)) {
-							case 1:
-								count = 3;
-							break;
-							case 2:
-								count = 26;
-							break;
-							case 3:
-								count = 250;
-							break;
-						}
+                        count = switch (Rnd.get(1, 3)) {
+                            case 1 -> 3;
+                            case 2 -> 26;
+                            case 3 -> 250;
+                            default -> count;
+                        };
 					break;
 				} switch (npcId) {
 					case 217827: //Arminos' Treasure Chest.

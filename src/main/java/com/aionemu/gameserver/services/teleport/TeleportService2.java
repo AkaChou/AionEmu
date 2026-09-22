@@ -247,14 +247,11 @@ public class TeleportService2 {
 	}
 
 	static int getAbyssEntryQuestId(Race race) {
-		switch (race) {
-			case ELYOS:
-				return ELYOS_ABYSS_ENTRY_QUEST_ID;
-			case ASMODIANS:
-				return ASMODIAN_ABYSS_ENTRY_QUEST_ID;
-			default:
-				return 0;
-		}
+		return switch (race) {
+			case ELYOS -> ELYOS_ABYSS_ENTRY_QUEST_ID;
+			case ASMODIANS -> ASMODIAN_ABYSS_ENTRY_QUEST_ID;
+			default -> 0;
+		};
 	}
 
 	public static boolean isInggisonEntryWorld(int worldId) {
@@ -303,25 +300,19 @@ public class TeleportService2 {
 	}
 
 	static int getBalaureaEntryQuestId(Race race) {
-		switch (race) {
-			case ELYOS:
-				return ELYOS_BALAUREA_ENTRY_QUEST_ID;
-			case ASMODIANS:
-				return ASMODIAN_BALAUREA_ENTRY_QUEST_ID;
-			default:
-				return 0;
-		}
+		return switch (race) {
+			case ELYOS -> ELYOS_BALAUREA_ENTRY_QUEST_ID;
+			case ASMODIANS -> ASMODIAN_BALAUREA_ENTRY_QUEST_ID;
+			default -> 0;
+		};
 	}
 
 	static int getBalaureaEntryQuestStep(Race race) {
-		switch (race) {
-			case ELYOS:
-				return ELYOS_BALAUREA_ENTRY_QUEST_STEP;
-			case ASMODIANS:
-				return ASMODIAN_BALAUREA_ENTRY_QUEST_STEP;
-			default:
-				return 0;
-		}
+		return switch (race) {
+			case ELYOS -> ELYOS_BALAUREA_ENTRY_QUEST_STEP;
+			case ASMODIANS -> ASMODIAN_BALAUREA_ENTRY_QUEST_STEP;
+			default -> 0;
+		};
 	}
 
 	/**
@@ -355,14 +346,11 @@ public class TeleportService2 {
 	}
 
 	static int getKahrunEntryQuestId(Race race) {
-		switch (race) {
-			case ELYOS:
-				return ELYOS_KAHRUN_ENTRY_QUEST_ID;
-			case ASMODIANS:
-				return ASMODIAN_KAHRUN_ENTRY_QUEST_ID;
-			default:
-				return 0;
-		}
+		return switch (race) {
+			case ELYOS -> ELYOS_KAHRUN_ENTRY_QUEST_ID;
+			case ASMODIANS -> ASMODIAN_KAHRUN_ENTRY_QUEST_ID;
+			default -> 0;
+		};
 	}
 
 	/**
@@ -399,14 +387,11 @@ public class TeleportService2 {
 	}
 
 	static int getArchDaevaEntryQuestId(Race race, int targetWorldId) {
-        switch (race) {
-            case ELYOS:
-                return targetWorldId == ELYOS_ILUMA_WORLD_ID ? ELYOS_ARCHDAEVA_ENTRY_QUEST_ID : 0;
-            case ASMODIANS:
-                return targetWorldId == ASMODIAN_NORSVOLD_WORLD_ID ? ASMODIAN_ARCHDAEVA_ENTRY_QUEST_ID : 0;
-            default:
-                return 0;
-        }
+        return switch (race) {
+            case ELYOS -> targetWorldId == ELYOS_ILUMA_WORLD_ID ? ELYOS_ARCHDAEVA_ENTRY_QUEST_ID : 0;
+            case ASMODIANS -> targetWorldId == ASMODIAN_NORSVOLD_WORLD_ID ? ASMODIAN_ARCHDAEVA_ENTRY_QUEST_ID : 0;
+            default -> 0;
+        };
 	}
 
 	/**

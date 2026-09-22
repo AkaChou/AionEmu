@@ -284,35 +284,17 @@ public class Equip extends AdminCommand {
 	public int getRndSkills(Item item) {
 		if (item.getItemTemplate().getArmorType() == ArmorType.WING) {
 			return RndArray.get(skills4Wing);
-		} switch (item.getItemTemplate().getCategory()) {
-			case SWORD:
-			case DAGGER:
-			case MACE:
-			case ORB:
-			case SPELLBOOK:
-			case GREATSWORD:
-			case POLEARM:
-			case STAFF:
-			case BOW:
-			case GUN:
-			case CANNON:
-			case HARP:
-			case KEYBLADE:
-			case SHIELD:
-				return RndArray.get(skills4WeaponShield);
-			case JACKET:
-				return RndArray.get(skills4Jacket);
-			case PANTS:
-				return RndArray.get(skills4Pant);
-			case SHOULDERS:
-				return RndArray.get(skills4Shoulder);
-			case GLOVES:
-				return RndArray.get(skills4Glove);
-			case SHOES:
-				return RndArray.get(skills4Shoes);
-			default:
-				return 0;
 		}
+		return switch (item.getItemTemplate().getCategory()) {
+			case SWORD, DAGGER, MACE, ORB, SPELLBOOK, GREATSWORD, POLEARM, STAFF, BOW, GUN, CANNON, HARP, KEYBLADE,
+			     SHIELD -> RndArray.get(skills4WeaponShield);
+			case JACKET -> RndArray.get(skills4Jacket);
+			case PANTS -> RndArray.get(skills4Pant);
+			case SHOULDERS -> RndArray.get(skills4Shoulder);
+			case GLOVES -> RndArray.get(skills4Glove);
+			case SHOES -> RndArray.get(skills4Shoes);
+			default -> 0;
+		};
 	}
 
 	private static final int[] skills4WeaponShield = {
@@ -468,32 +450,16 @@ public class Equip extends AdminCommand {
 	 *
 	 */
 	public static int getMaxSlots(Item item) {
-		int slots = 0;
-		switch (item.getItemTemplate().getItemQuality()) {
-			case COMMON:
-			case JUNK:
-				slots = 1;
-			break;
-			case RARE:
-				slots = 2;
-			break;
-			case LEGEND:
-				slots = 3;
-			break;
-			case UNIQUE:
-				slots = 4;
-			break;
-			case EPIC:
-				slots = 5;
-			break;
-			case MYTHIC:
-				slots = 6;
-			break;
-			default:
-				slots = 0;
-			break;
-		}
-		if (item.getItemTemplate().getItemType() == ItemType.DRACONIC)
+		int slots = switch (item.getItemTemplate().getItemQuality()) {
+            case COMMON, JUNK -> 1;
+            case RARE -> 2;
+            case LEGEND -> 3;
+            case UNIQUE -> 4;
+            case EPIC -> 5;
+            case MYTHIC -> 6;
+            default -> 0;
+        };
+        if (item.getItemTemplate().getItemType() == ItemType.DRACONIC)
 			slots += 1;
 		if (item.getItemTemplate().getItemType() == ItemType.ABYSS)
 			slots += 2;

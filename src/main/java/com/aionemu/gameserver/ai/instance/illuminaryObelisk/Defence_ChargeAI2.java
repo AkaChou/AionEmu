@@ -3,10 +3,8 @@ package com.aionemu.gameserver.ai.instance.illuminaryObelisk;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * Illuminary Obelisk 副本 NPC AI：Defence Charge（@AIName "Defence_Charge"），继承 NpcAI2。

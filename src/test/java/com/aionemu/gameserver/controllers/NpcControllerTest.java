@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 
 class NpcControllerTest {

@@ -75,29 +75,29 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 			if (!isAlreadyDead()) {
 				GameEngineServices.skillEngine().getSkill(getOwner(), 20534, 60, getOwner()).useNoAnimationSkill();
 				int npcId1 = 0;
-				int npcId2 = 0;
-				switch (percent) {
-					case 80:
+				int npcId2 = switch (percent) {
+					case 80 -> {
 						npcId1 = 283010;
-						npcId2 = 283002;
-					break;
-					case 70:
+						yield 283002;
+					}
+					case 70 -> {
 						npcId1 = 283011;
-						npcId2 = 283003;
-					break;
-					case 50:
+						yield 283003;
+					}
+					case 50 -> {
 						npcId1 = 283011;
-						npcId2 = 283004;
-					break;
-					case 40:
+						yield 283004;
+					}
+					case 40 -> {
 						npcId1 = 283012;
-						npcId2 = 283004;
-					break;
-					case 25:
+						yield 283004;
+					}
+					case 25 -> {
 						npcId1 = 283012;
-						npcId2 = 283006;
-					break;
-				}
+						yield 283006;
+					}
+					default -> 0;
+				};
 				spawn(npcId2, 188.16568f, 414.03534f, 260.75488f, (byte) 0);
 				spawn(npcId1, 188.33f, 414.61f, 260.61f, (byte) 244);
 				final Npc buffNpc = (Npc) spawn(283007, 188.33f, 414.61f, 260.61f, (byte) 0);

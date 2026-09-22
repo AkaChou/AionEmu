@@ -240,18 +240,11 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
 
     @Override
     public void storeLetterInTransaction(Connection con, Timestamp time, Letter letter) throws SQLException {
-		boolean result;
-	    switch (letter.getLetterPersistentState()) {
-		    case NEW:
-			    result = saveLetter(con, time, letter);
-				break;
-			case UPDATE_REQUIRED:
-			    result = updateLetter(con, time, letter);
-				break;
-			default:
-			    result = true;
-				break;
-	    }
+		boolean result = switch (letter.getLetterPersistentState()) {
+			case NEW -> saveLetter(con, time, letter);
+			case UPDATE_REQUIRED -> updateLetter(con, time, letter);
+			default -> true;
+		};
 		if (!result) {
             throw new SQLException("No mail row changed for letter " + letter.getObjectId());
         }

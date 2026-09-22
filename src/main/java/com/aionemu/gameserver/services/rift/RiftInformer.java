@@ -12,7 +12,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_RIFT_ANNOUNCE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 裂隙信息同步器，负责向玩家广播裂隙开启/关闭与统计公告。
@@ -170,45 +169,44 @@ public class RiftInformer {
 	 * Returns the twin map id for cross-race rifts; 0 when none.
 	 */
 	private static int getTwinId(int worldId) {
-		switch (worldId) {
-		/**
-	 * 天族 / Elyos
-	 */
-		case 110070000: // Kaisinel Academy -> Brusthonin
-			return 220050000;
-		case 210020000: // Eltnen -> Morheim
-			return 220020000;
-		case 210040000: // Heiron -> Beluslan
-			return 220040000;
-		case 210050000: // Inggison -> Gelkmaros
-			return 220070000;
-		case 210070000: // Cygnea -> Enshar
-			return 220080000;
-		case 210060000: // Theobomos -> Marchutan Priory
-			return 120080000;
-		case 210100000: // Iluma -> Norsvold
-			return 220110000;
-		/**
-	 * 魔族 / Asmodians
-	 */
-		case 120080000: // Marchutan Priory -> Theobomos
-			return 210060000;
-		case 220020000: // Morheim -> Eltnen
-			return 210020000;
-		case 220040000: // Beluslan -> Heiron
-			return 210040000;
-		case 220050000: // Brusthonin -> Kaisinel Academy
-			return 110070000;
-		case 220070000: // Gelkmaros -> Inggison
-			return 210050000;
-		case 220140000: // Gelkmaros [Master Server] -> Inggison
-			return 210050000;
-		case 220080000: // Enshar -> Cygnea
-			return 210070000;
-		case 220110000: // Norsvold -> Iluma
-			return 210100000;
-		default:
-			return 0;
-		}
+		return switch (worldId) {
+			/**
+			 * 天族 / Elyos
+			 */
+			case 110070000 -> // Kaisinel Academy -> Brusthonin
+				220050000;
+			case 210020000 -> // Eltnen -> Morheim
+				220020000;
+			case 210040000 -> // Heiron -> Beluslan
+				220040000;
+			case 210050000 -> // Inggison -> Gelkmaros
+				220070000;
+			case 210070000 -> // Cygnea -> Enshar
+				220080000;
+			case 210060000 -> // Theobomos -> Marchutan Priory
+				120080000;
+			case 210100000 -> // Iluma -> Norsvold
+				220110000;
+			/**
+			 * 魔族 / Asmodians
+			 */
+			case 120080000 -> // Marchutan Priory -> Theobomos
+				210060000;
+			case 220020000 -> // Morheim -> Eltnen
+				210020000;
+			case 220040000 -> // Beluslan -> Heiron
+				210040000;
+			case 220050000 -> // Brusthonin -> Kaisinel Academy
+				110070000;
+			case 220070000 -> // Gelkmaros -> Inggison
+				210050000;
+			case 220140000 -> // Gelkmaros [Master Server] -> Inggison
+				210050000;
+			case 220080000 -> // Enshar -> Cygnea
+				210070000;
+			case 220110000 -> // Norsvold -> Iluma
+				210100000;
+			default -> 0;
+		};
 	}
 }

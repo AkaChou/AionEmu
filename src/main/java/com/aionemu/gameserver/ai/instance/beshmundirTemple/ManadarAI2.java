@@ -42,14 +42,11 @@ public class ManadarAI2 extends AggressiveNpcAI2
 			for (int i = 0; i < 5; i++) {
 				int distance = Rnd.get(4, 11);
 				int nrNpc = Rnd.get(1, 2);
-				switch (nrNpc) {
-					case 1:
-						nrNpc = 281545;
-					break;
-					case 2:
-						nrNpc = 281756;
-					break;
-				}
+                nrNpc = switch (nrNpc) {
+                    case 1 -> 281545;
+                    case 2 -> 281756;
+                    default -> nrNpc;
+                };
 				rndSpawnInRange(nrNpc, distance);
 			}
 			doSchedule();

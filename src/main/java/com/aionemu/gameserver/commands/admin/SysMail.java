@@ -54,16 +54,12 @@ public class SysMail extends AdminCommand {
 		 * @return 若 allowed 则为 true / True if allowed
 		 */
 		public boolean isAllowed(Race race) {
-			switch (this) {
-				case ELYOS:
-					return race == Race.ELYOS;
-				case ASMO:
-					return race == Race.ASMODIANS;
-				case ALL:
-					return race == Race.ELYOS || race == Race.ASMODIANS;
-				default:
-					return false;
-			}
+            return switch (this) {
+                case ELYOS -> race == Race.ELYOS;
+                case ASMO -> race == Race.ASMODIANS;
+                case ALL -> race == Race.ELYOS || race == Race.ASMODIANS;
+                default -> false;
+            };
 		}
 	}
 

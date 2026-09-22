@@ -6,7 +6,7 @@ import com.aionemu.gameserver.questEngine.e2e.client.ClientResourceOracle;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Objects;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,8 +34,8 @@ class QuestPageButtonAuditTest {
 			  <nodes><node label="unaccepted" status="NONE"/></nodes>
 			  <transitions>
 			    <transition source="unaccepted" target="unaccepted">
-			      <event><talk-to-npc npc-id="203755" dialog-id="31"/></event>
-			      <after-commit><show-quest-dialog dialog-id="1011"/></after-commit>
+			      <event><dialog type="TALK_TO_NPC" npc-id="203755" action="QUEST_SELECT"/></event>
+			      <after-commit><dialog type="SHOW_QUEST_PAGE" page="SELECT1"/></after-commit>
 			    </transition>
 			  </transitions>
 			</quest-definition>

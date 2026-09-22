@@ -778,17 +778,10 @@ private volatile byte packetBroadcastMask;
 	/** 是否为物理职业 / Whether physical class. */
 	public boolean isPhysClass(Creature creature) {
 		if (creature instanceof Player) {
-			switch (((Player) creature).getPlayerClass()) {
-			case GLADIATOR:
-			case TEMPLAR:
-			case ASSASSIN:
-			case RANGER:
-			case CLERIC:
-			case CHANTER:
-				return true;
-			default:
-				return false;
-			}
+			return switch (((Player) creature).getPlayerClass()) {
+				case GLADIATOR, TEMPLAR, ASSASSIN, RANGER, CLERIC, CHANTER -> true;
+				default -> false;
+			};
 		}
 		return false;
 	}
@@ -796,16 +789,10 @@ private volatile byte packetBroadcastMask;
 	/** 是否为魔法职业 / Whether magic class. */
 	public boolean isMagicClass(Creature creature) {
 		if (creature instanceof Player) {
-			switch (((Player) creature).getPlayerClass()) {
-			case SORCERER:
-			case SPIRIT_MASTER:
-			case AETHERTECH:
-			case GUNSLINGER:
-			case SONGWEAVER:
-				return true;
-			default:
-				return false;
-			}
+            return switch (((Player) creature).getPlayerClass()) {
+                case SORCERER, SPIRIT_MASTER, AETHERTECH, GUNSLINGER, SONGWEAVER -> true;
+                default -> false;
+            };
 		}
 		return false;
 	}

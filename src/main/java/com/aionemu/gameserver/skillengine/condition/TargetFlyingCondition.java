@@ -35,13 +35,11 @@ public class TargetFlyingCondition extends Condition {
 		if (env.getFirstTarget() == null) {
 			return false;
 		}
-		switch (restriction) {
-		case FLY:
-			return env.getFirstTarget().isFlying();
-		case GROUND:
-			return !env.getFirstTarget().isFlying();
-		}
-		return true;
+		return switch (restriction) {
+			case FLY -> env.getFirstTarget().isFlying();
+			case GROUND -> !env.getFirstTarget().isFlying();
+			default -> true;
+		};
 	}
 
 	/**
@@ -56,12 +54,10 @@ public class TargetFlyingCondition extends Condition {
 		if (effect.getEffected() == null) {
 			return false;
 		}
-		switch (restriction) {
-		case FLY:
-			return effect.getEffected().isFlying();
-		case GROUND:
-			return !effect.getEffected().isFlying();
-		}
-		return true;
-	}
+        return switch (restriction) {
+            case FLY -> effect.getEffected().isFlying();
+            case GROUND -> !effect.getEffected().isFlying();
+            default -> true;
+        };
+    }
 }

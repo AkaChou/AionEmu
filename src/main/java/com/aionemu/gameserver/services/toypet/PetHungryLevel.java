@@ -39,18 +39,13 @@ public enum PetHungryLevel {
 	 */
 	public PetHungryLevel getNextValue() {
 		byte levelValue = value;
-		switch (levelValue) {
-		case 0:
-			return CONTENT;
-		case 1:
-			return SEMIFULL;
-		case 2:
-			return FULL;
-		case 3:
-			return HUNGRY;
-		default:
-			return HUNGRY;
-		}
+        return switch (levelValue) {
+            case 0 -> CONTENT;
+            case 1 -> SEMIFULL;
+            case 2 -> FULL;
+            case 3 -> HUNGRY;
+            default -> HUNGRY;
+        };
 	}
 
 	/**

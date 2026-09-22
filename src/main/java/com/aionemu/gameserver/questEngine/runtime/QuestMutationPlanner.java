@@ -259,19 +259,10 @@ public final class QuestMutationPlanner {
 			QuestReward reward = metadataRewards.get(rewardIndex);
 			QuestRewardKind kind = QuestRewardKind.fromWire(reward.kind());
 			QuestRewardKind actionKind = kind == QuestRewardKind.SELECTABLE_ITEM ? QuestRewardKind.ITEM : kind;
-			QuestRewardAmountMode mode;
-			switch (actionKind) {
-				case GOLD:
-				case KINAH:
-				case AP:
-				case GP:
-				case EXP:
-					mode = QuestRewardAmountMode.QUEST_BASE;
-					break;
-				default:
-					mode = QuestRewardAmountMode.EXACT;
-					break;
-			}
+			QuestRewardAmountMode mode = switch (actionKind) {
+				case GOLD, KINAH, AP, GP, EXP -> QuestRewardAmountMode.QUEST_BASE;
+				default -> QuestRewardAmountMode.EXACT;
+			};
 			expanded.add(new QuestAction.GrantReward(actionKind.name(), reward.id(), reward.amount(), mode));
 		}
 		return expanded;
@@ -337,19 +328,10 @@ public final class QuestMutationPlanner {
 		}
 		for (QuestReward reward : definition.definition().metadata().extendedRewards()) {
 			QuestRewardKind kind = QuestRewardKind.fromWire(reward.kind());
-            QuestRewardAmountMode mode;
-            switch (kind) {
-                case GOLD:
-                case KINAH:
-                case EXP:
-                case AP:
-                case GP:
-                    mode = QuestRewardAmountMode.QUEST_BASE;
-                    break;
-                default:
-                    mode = QuestRewardAmountMode.EXACT;
-                    break;
-            }
+            QuestRewardAmountMode mode = switch (kind) {
+                case GOLD, KINAH, EXP, AP, GP -> QuestRewardAmountMode.QUEST_BASE;
+                default -> QuestRewardAmountMode.EXACT;
+            };
             actions.add(new QuestAction.GrantReward(reward.kind(), reward.id(), reward.amount(), mode));
 		}
 	}

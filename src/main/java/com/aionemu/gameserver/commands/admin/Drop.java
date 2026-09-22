@@ -29,25 +29,30 @@ public class Drop extends AdminCommand {
 	public void execute(Player player, String... params) {
 		int num = Integer.parseInt(params[0]);
 		int min = 0;
-		int max = 0;
-		switch (num) {
-			case 1:
-				min = 200000;max = 212500;
-				break;
-			case 2:
-				min = 212501;max = 215000;
-				break;
-			case 3:
-				min = 215001;max = 217500;
-				break;
-			case 4:
-				min = 217501;max = 260000;
-				break;
-			case 5:
-				min = 260001;max = 840000;
-				break;
-		}
-		DropLists.Xmlmian(min, max);
+		int max = switch (num) {
+            case 1 -> {
+                min = 200000;
+                yield 212500;
+            }
+            case 2 -> {
+                min = 212501;
+                yield 215000;
+            }
+            case 3 -> {
+                min = 215001;
+                yield 217500;
+            }
+            case 4 -> {
+                min = 217501;
+                yield 260000;
+            }
+            case 5 -> {
+                min = 260001;
+                yield 840000;
+            }
+            default -> 0;
+        };
+        DropLists.Xmlmian(min, max);
 	}
 
 }

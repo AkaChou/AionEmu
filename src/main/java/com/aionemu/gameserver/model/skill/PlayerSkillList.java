@@ -306,25 +306,11 @@ public final class PlayerSkillList implements SkillList<Player> {
 
 	/** 是否为制作技能。 / Whether craft skill. */
 	public boolean isCraftSkill(int skilId) {
-		switch (skilId) {
-		case 30001:
-		case 30002:
-		case 30003:
-		case 40001:
-		case 40002:
-		case 40003:
-		case 40004:
-		case 40005:
-		case 40006:
-		case 40007:
-		case 40008:
-		case 40009:
-		case 40010:
-		case 40011:
-			return true;
-		default:
-			return false;
-		}
+        return switch (skilId) {
+            case 30001, 30002, 30003, 40001, 40002, 40003, 40004, 40005, 40006, 40007, 40008, 40009, 40010, 40011 ->
+                    true;
+            default -> false;
+        };
 	}
 
 	/**

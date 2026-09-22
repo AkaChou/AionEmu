@@ -24,7 +24,7 @@ public class HomingNpcAI2 extends GeneralNpcAI2
 	@Override
 	public void think() {
 	}
-	
+
 	/**
 	 * 选择下一次攻击意图（普攻/技能/换目标/结束）。
 	 * Choose the next attack intention (simple/skill/switch/finish).
@@ -33,7 +33,7 @@ public class HomingNpcAI2 extends GeneralNpcAI2
 	public AttackIntention chooseAttackIntention() {
 		return AttackIntention.SIMPLE_ATTACK;
 	}
-	
+
 	/**
 	 * 处理单次攻击完成事件。
 	 * Handle attack-complete.
@@ -46,18 +46,14 @@ public class HomingNpcAI2 extends GeneralNpcAI2
 			AttackManager.scheduleNextAttack(this);
 		}
 	}
-	
+
 	@Override
 	protected AIAnswer pollInstance(AIQuestion question) {
-		switch (question) {
-			case SHOULD_DECAY:
-				return AIAnswers.NEGATIVE;
-			case SHOULD_RESPAWN:
-				return AIAnswers.NEGATIVE;
-			case SHOULD_REWARD:
-				return AIAnswers.NEGATIVE;
-			default:
-				return null;
-		}
+        return switch (question) {
+            case SHOULD_DECAY -> AIAnswers.NEGATIVE;
+            case SHOULD_RESPAWN -> AIAnswers.NEGATIVE;
+            case SHOULD_REWARD -> AIAnswers.NEGATIVE;
+            default -> null;
+        };
 	}
 }

@@ -45,21 +45,16 @@ public final class RetailAreaEngine {
 		if (DataManager.RETAIL_AI_DATA == null) {
 			return false;
 		}
-		switch (areaType) {
-			case "AI_CONTROL_AREA_RESURRECT":
-				return DataManager.RETAIL_AI_DATA.hasResurrectArea(worldId, prefix);
-			case "AI_CONTROL_AREA_QUESTSCRIPT":
-				return DataManager.RETAIL_AI_DATA.hasQuestArea(worldId, prefix)
-					&& DataManager.RETAIL_AI_DATA.findQuestAreas(worldId, prefix).stream().allMatch(RetailAreaEngine::hasQuestTemplates);
-			case "AI_CONTROL_AREA_LIMIT_NOPARK":
-			case "AI_CONTROL_AREA_LIMIT_NORECALL":
-				return !DataManager.RETAIL_AI_DATA.findLimitAreas(worldId, prefix).isEmpty()
-					&& DataManager.RETAIL_AI_DATA.findLimitAreas(worldId, prefix).stream().allMatch(LimitArea::dynamic);
-			case "AI_CONTROL_AREA_GROUPCTRL":
-				return RetailGroupControlEngine.supports(worldId, prefix);
-			default:
-				return false;
-		}
+        return switch (areaType) {
+            case "AI_CONTROL_AREA_RESURRECT" -> DataManager.RETAIL_AI_DATA.hasResurrectArea(worldId, prefix);
+            case "AI_CONTROL_AREA_QUESTSCRIPT" -> DataManager.RETAIL_AI_DATA.hasQuestArea(worldId, prefix)
+                    && DataManager.RETAIL_AI_DATA.findQuestAreas(worldId, prefix).stream().allMatch(RetailAreaEngine::hasQuestTemplates);
+            case "AI_CONTROL_AREA_LIMIT_NOPARK", "AI_CONTROL_AREA_LIMIT_NORECALL" ->
+                    !DataManager.RETAIL_AI_DATA.findLimitAreas(worldId, prefix).isEmpty()
+                            && DataManager.RETAIL_AI_DATA.findLimitAreas(worldId, prefix).stream().allMatch(LimitArea::dynamic);
+            case "AI_CONTROL_AREA_GROUPCTRL" -> RetailGroupControlEngine.supports(worldId, prefix);
+            default -> false;
+        };
 	}
 
 	public static boolean setEnabled(WorldMapInstance instance, String areaType, String prefix, boolean enabled) {

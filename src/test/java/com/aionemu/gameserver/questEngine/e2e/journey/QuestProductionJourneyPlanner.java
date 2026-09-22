@@ -273,58 +273,30 @@ public final class QuestProductionJourneyPlanner {
 	private static boolean conditionsMatch(CompiledQuestDefinition definition, QuestTransition transition,
 			PathState state) {
 		for (QuestCondition condition : transition.conditions()) {
-			boolean matches;
-			switch (condition) {
-				case QuestCondition.StatusIs required:
-					matches = required.status() == state.status();
-					break;
-				case QuestCondition.HasItem ignored when state.steps().isEmpty():
-					matches = true;
-					break;
-				case QuestCondition.QuestVariableIs ignored when state.steps().isEmpty():
-					matches = true;
-					break;
-				case QuestCondition.VariableAtLeast ignored when state.steps().isEmpty():
-					matches = true;
-					break;
-				case QuestCondition.VariableBelow ignored when state.steps().isEmpty():
-					matches = true;
-					break;
-				case QuestCondition.VariableSumIs ignored when state.steps().isEmpty():
-					matches = true;
-					break;
-				case QuestCondition.VariableSumBelow ignored when state.steps().isEmpty():
-					matches = true;
-					break;
-				case QuestCondition.HasItem item:
-					matches = (state.inventory().getOrDefault(item.itemId(), 0) >= item.count()) == item.expected();
-					break;
-				case QuestCondition.QuestVariableIs variable:
-					matches = state.variables().getOrDefault(variable.field(), 0) == variable.value();
-					break;
-				case QuestCondition.VariableAtLeast variable:
-					matches = state.variables().getOrDefault(variable.field(), 0) >= variable.value();
-					break;
-				case QuestCondition.VariableBelow variable:
-					matches = state.variables().getOrDefault(variable.field(), 0) < variable.value();
-					break;
-				case QuestCondition.VariableSumIs sum:
-					matches = variableSum(state, sum.fields()) == sum.value();
-					break;
-				case QuestCondition.VariableSumBelow sum:
-					matches = variableSum(state, sum.fields()) < sum.value();
-					break;
-				case QuestCondition.PlayerClassIs playerClass:
-					matches = PlayerClass.getStartingClassFor(state.playerClass()) == playerClass.startingClass();
-					break;
-				case QuestCondition.AdvancedClassIs playerClass:
-					matches = state.playerClass() == playerClass.playerClass();
-					break;
-				default:
-					matches = true;
-					break;
-			}
-			if (!matches) return false;
+			boolean matches = switch (condition) {
+                case QuestCondition.StatusIs required -> required.status() == state.status();
+                case QuestCondition.HasItem ignored when state.steps().isEmpty() -> true;
+                case QuestCondition.QuestVariableIs ignored when state.steps().isEmpty() -> true;
+                case QuestCondition.VariableAtLeast ignored when state.steps().isEmpty() -> true;
+                case QuestCondition.VariableBelow ignored when state.steps().isEmpty() -> true;
+                case QuestCondition.VariableSumIs ignored when state.steps().isEmpty() -> true;
+                case QuestCondition.VariableSumBelow ignored when state.steps().isEmpty() -> true;
+                case QuestCondition.HasItem item ->
+                        (state.inventory().getOrDefault(item.itemId(), 0) >= item.count()) == item.expected();
+                case QuestCondition.QuestVariableIs variable ->
+                        state.variables().getOrDefault(variable.field(), 0) == variable.value();
+                case QuestCondition.VariableAtLeast variable ->
+                        state.variables().getOrDefault(variable.field(), 0) >= variable.value();
+                case QuestCondition.VariableBelow variable ->
+                        state.variables().getOrDefault(variable.field(), 0) < variable.value();
+                case QuestCondition.VariableSumIs sum -> variableSum(state, sum.fields()) == sum.value();
+                case QuestCondition.VariableSumBelow sum -> variableSum(state, sum.fields()) < sum.value();
+                case QuestCondition.PlayerClassIs playerClass ->
+                        PlayerClass.getStartingClassFor(state.playerClass()) == playerClass.startingClass();
+                case QuestCondition.AdvancedClassIs playerClass -> state.playerClass() == playerClass.playerClass();
+                default -> true;
+            };
+            if (!matches) return false;
 		}
 		return true;
 	}

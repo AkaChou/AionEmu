@@ -35,7 +35,7 @@ public class Mighty_HeroAI2 extends GeneralNpcAI2
 			}
 		}
 	}
-	
+
 	/**
 	 * 对话选择处理：处理任务对话，并为玩家施加对应 NPC 的助威技能。
 	 * Handles dialog selection: processes quest dialogs and applies the matching cheer skill of the NPC.
@@ -47,16 +47,14 @@ public class Mighty_HeroAI2 extends GeneralNpcAI2
 		if (GameEngineServices.questEngine().onDialog(env) && dialogId != 1011) {
 			return true;
 		} if (dialogId == 10000) {
-			int skillId = 0;
-			switch (getNpcId()) {
-				case 832884: //技能支援 NPC：Lovely / Mighty Lovely.
-				    skillId = 21796; //Mighty 的热情助威 I / Mighty's Passionate Cheer I.
-				break;
-				case 832885: //技能支援 NPC：Mister / Mighty Mister.
-					skillId = 21797; //Mighty 的活力助威 I / Mighty's Energetic Cheer I.
-				break;
-			}
-			GameEngineServices.skillEngine().getSkill(getOwner(), skillId, 1, player).useWithoutPropSkill();
+			int skillId = switch (getNpcId()) {
+                case 832884 -> //技能支援 NPC：Lovely / Mighty Lovely.
+                        21796; //Mighty 的热情助威 I / Mighty's Passionate Cheer I.
+                case 832885 -> //技能支援 NPC：Mister / Mighty Mister.
+                        21797;
+                default -> 0; //Mighty 的活力助威 I / Mighty's Energetic Cheer I.
+            };
+            GameEngineServices.skillEngine().getSkill(getOwner(), skillId, 1, player).useWithoutPropSkill();
 		} else if (dialogId == 1011 && questId != 0) {
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), dialogId, questId));
 		}

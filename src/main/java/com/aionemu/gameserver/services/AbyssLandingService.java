@@ -38,7 +38,6 @@ import com.aionemu.gameserver.services.abysslandingservice.AbyssLanding;
 import com.aionemu.gameserver.services.abysslandingservice.Landing;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 欧比斯登陆点（Abyss Landing）服务：救赎/先驱登陆点等级、积分、刷怪与广播。

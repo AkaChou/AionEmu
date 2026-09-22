@@ -924,14 +924,14 @@ public class FissureOfOblivionInstance extends GeneralInstanceHandler {
         if (!playerReward.isRewarded()) {
             playerReward.setRewarded();
             int oblivionRank = instanceReward.getRank();
-            int amount = 0;
-            switch (oblivionRank) {
-                case 1: amount = 5; break;
-                case 2: amount = 4; break;
-                case 3: amount = 3; break;
-                case 4: amount = 2; break;
-                case 5: amount = 1; break;
-            }
+            int amount = switch (oblivionRank) {
+                case 1 -> 5;
+                case 2 -> 4;
+                case 3 -> 3;
+                case 4 -> 2;
+                case 5 -> 1;
+                default -> 0;
+            };
             if (amount > 0) {
                 playerReward.setFrozenMarbleOfMemory(amount);
                 ItemService.addItem(player, 186000448, amount);

@@ -8,11 +8,8 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.CountDownLatch;
 
-import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.model.GameEngine;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.services.instance.HallOfTenacityService;
-import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 

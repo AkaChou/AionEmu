@@ -13,7 +13,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.controllers.VisibleObjectController;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 import com.aionemu.gameserver.world.exceptions.DuplicateAionObjectException;
-import com.aionemu.gameserver.world.zone.ZoneInstance;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;

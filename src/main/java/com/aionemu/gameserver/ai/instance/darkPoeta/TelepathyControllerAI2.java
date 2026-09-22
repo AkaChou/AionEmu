@@ -43,14 +43,12 @@ public class TelepathyControllerAI2 extends AggressiveNpcAI2
 			for (int i = 0; i < 1; i++) {
 				int distance = Rnd.get(7, 10);
 				int nrNpc = Rnd.get(1, 2);
-				switch (nrNpc) {
-					case 1:
-						nrNpc = 281150; //Anuhart Escort.
-					break;
-					case 2:
-						nrNpc = 281334; // 仿生噬人虫。 / Bionic Clodworm.
-					break;
-				}
+                // 仿生噬人虫。 / Bionic Clodworm.
+                nrNpc = switch (nrNpc) {
+                    case 1 -> 281150; //Anuhart Escort.
+                    case 2 -> 281334;
+                    default -> nrNpc;
+                };
 				rndSpawnInRange(nrNpc, distance);
 			}
 		}

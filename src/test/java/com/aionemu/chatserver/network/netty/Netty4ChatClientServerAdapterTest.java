@@ -111,29 +111,25 @@ class Netty4ChatClientServerAdapterTest {
     private static Channel nettyChannelCapturingWrites(AtomicReference<ByteBuf> written, AtomicBoolean closed) {
         InvocationHandler handler = (proxy, method, args) -> {
             if (method.getDeclaringClass() == Object.class) {
-				switch (method.getName()) {
-		            case "equals":
-			            return proxy == args[0];
-					case "hashCode":
-			            return System.identityHashCode(proxy);
-					case "toString":
-			            return "capturing-netty-channel";
-					default:
-			            return null;
-	            }
+				return switch (method.getName()) {
+		            case "equals" -> proxy == args[0];
+		            case "hashCode" -> System.identityHashCode(proxy);
+		            case "toString" -> "capturing-netty-channel";
+		            default -> null;
+	            };
             }
-            switch (method.getName()) {
-                case "remoteAddress":
-                    return new InetSocketAddress("127.0.0.1", 2106);
-                case "writeAndFlush":
-                    written.set((ByteBuf) args[0]);
-                    return null;
-                case "close":
-                    closed.set(true);
-                    return null;
-                default:
-                    return defaultValue(method.getReturnType());
-            }
+			return switch (method.getName()) {
+		        case "remoteAddress" -> new InetSocketAddress("127.0.0.1", 2106);
+		        case "writeAndFlush" -> {
+					written.set((ByteBuf) args[0]);
+					yield null;
+				}
+		        case "close" -> {
+					closed.set(true);
+					yield null;
+				}
+		        default -> defaultValue(method.getReturnType());
+	        };
         };
         return (Channel) Proxy.newProxyInstance(Channel.class.getClassLoader(), new Class<?>[] {Channel.class}, handler);
     }

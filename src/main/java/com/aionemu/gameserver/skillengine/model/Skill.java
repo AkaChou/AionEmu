@@ -1167,75 +1167,77 @@ public class Skill {
 		if (!skillTemplate.isApplyCastingTimeBonus()) {
 			return true;
 		}
-		switch (this.getSkillId()) {
-		case 17: // Sleep: Scarecrow
-		case 18: // Sleep: Frightcorn
-		case 19: // Fear: Porgus
-		case 20: // 灵魂之呼喊：人参 / Fear: Ginseng
-		case 243: // 回程 / Return
-		case 245: // 绷带治疗 / Bandage Heal
-		case 246: // Herb Treatment I
-		case 247: // Herb Treatment II
-		case 251: // Herb Treatment III
-		case 253: // Herb Treatment IV
-		case 297: // Herb Treatment V
-		case 308: // Herb Treatment VI
-		case 309: // Herb Treatment VII
-		case 310: // Herb Treatment VIII
-		case 311: // Herb Treatment IX
-		case 312: // Herb Treatment X
-		case 313: // Herb Treatment XI
-		case 314: // Herb Treatment XII
-		case 249: // Mana Treatment I
-		case 250: // Mana Treatment II
-		case 252: // Mana Treatment III
-		case 254: // Mana Treatment IV
-		case 298: // Mana Treatment V
-		case 315: // Mana Treatment VI
-		case 316: // Mana Treatment VII
-		case 317: // Mana Treatment VIII
-		case 318: // Mana Treatment IX
-		case 319: // Mana Treatment X
-		case 320: // Mana Treatment XI
-		case 321: // Mana Treatment XII
-		case 302: // 紧急返回 / Escape
-		case 1337: // 睡眠 / Sleep
-		case 1338: // 睡眠之云 I / Tranquilizing Cloud
-		case 1339: // 睡眠暴风 I / Sleeping Storm.
-		case 1416: // 诅咒:古树 I / Curse Of Old Roots
-		case 1417: // 诅咒:树 I / Curse Of Roots
-		case 3589: // 恐怖的呼喊 I / Fear Shriek
-		case 3775: // 恐惧 / Fear
+		return switch (this.getSkillId()) { // Sleep: Scarecrow
+			// Sleep: Frightcorn
+			// Fear: Porgus
+			// 灵魂之呼喊：人参 / Fear: Ginseng
+			// 回程 / Return
+			// 绷带治疗 / Bandage Heal
+			// Herb Treatment I
+			// Herb Treatment II
+			// Herb Treatment III
+			// Herb Treatment IV
+			// Herb Treatment V
+			// Herb Treatment VI
+			// Herb Treatment VII
+			// Herb Treatment VIII
+			// Herb Treatment IX
+			// Herb Treatment X
+			// Herb Treatment XI
+			// Herb Treatment XII
+			// Mana Treatment I
+			// Mana Treatment II
+			// Mana Treatment III
+			// Mana Treatment IV
+			// Mana Treatment V
+			// Mana Treatment VI
+			// Mana Treatment VII
+			// Mana Treatment VIII
+			// Mana Treatment IX
+			// Mana Treatment X
+			// Mana Treatment XI
+			// Mana Treatment XII
+			// 紧急返回 / Escape
+			// 睡眠 / Sleep
+			// 睡眠之云 I / Tranquilizing Cloud
+			// 睡眠暴风 I / Sleeping Storm.
+			// 诅咒:古树 I / Curse Of Old Roots
+			// 诅咒:树 I / Curse Of Roots
+			// 恐怖的呼喊 I / Fear Shriek
+			// 恐惧 / Fear
 			// 高阶守护者变身 5.1【天族】 / ArchDaeva Transformation 5.1 [Elyos]
-		case 4752: // Transformation: Avatar Of Fire.
-		case 4757: // Transformation: Avatar Of Water.
-		case 4762: // Transformation: Avatar Of Earth.
-		case 4768: // Transformation: Avatar Of Wind.
+			// Transformation: Avatar Of Fire.
+			// Transformation: Avatar Of Water.
+			// Transformation: Avatar Of Earth.
+			// Transformation: Avatar Of Wind.
 			// 高阶守护者变身 5.1【魔族】 / ArchDaeva Transformation 5.1 [Asmodians]
-		case 4804: // Transformation: Avatar Of Fire.
-		case 4805: // Transformation: Avatar Of Water.
-		case 4806: // Transformation: Avatar Of Earth.
-		case 4807: // Transformation: Avatar Of Wind.
+			// Transformation: Avatar Of Fire.
+			// Transformation: Avatar Of Water.
+			// Transformation: Avatar Of Earth.
+			// Transformation: Avatar Of Wind.
 			// 遗忘裂隙 5.1 / Fissure Of Oblivion 5.1
-		case 4808: // Transformation: Avatar Of Fire.
-		case 4813: // Transformation: Avatar Of Water.
-		case 4818: // Transformation: Avatar Of Earth.
-		case 4824: // Transformation: Avatar Of Wind.
+			// Transformation: Avatar Of Fire.
+			// Transformation: Avatar Of Water.
+			// Transformation: Avatar Of Earth.
+			// Transformation: Avatar Of Wind.
 			// 天族【守护者将军】 / Elyos [Guardian General]
-		case 11885: // 变身:守护神将 / Transformation: Guardian General I
-		case 11886: // 变身:守护神将 / Transformation: Guardian General II
-		case 11887: // 变身:守护神将 / Transformation: Guardian General III
-		case 11888: // 变身:守护神将 / Transformation: Guardian General IV
-		case 11889: // 变身:守护神将 / Transformation: Guardian General V
+			// 变身:守护神将 / Transformation: Guardian General I
+			// 变身:守护神将 / Transformation: Guardian General II
+			// 变身:守护神将 / Transformation: Guardian General III
+			// 变身:守护神将 / Transformation: Guardian General IV
+			// 变身:守护神将 / Transformation: Guardian General V
 			// 魔族【守护者将军】 / Asmodians [Guardian General]
-		case 11890: // 变身:守护神将 / Transformation: Guardian General I
-		case 11891: // 变身:守护神将 / Transformation: Guardian General II
-		case 11892: // 变身:守护神将 / Transformation: Guardian General III
-		case 11893: // 变身:守护神将 / Transformation: Guardian General IV
-		case 11894: // 变身:守护神将 / Transformation: Guardian General V
-			return true;
-		}
-		return false;
+			// 变身:守护神将 / Transformation: Guardian General I
+			// 变身:守护神将 / Transformation: Guardian General II
+			// 变身:守护神将 / Transformation: Guardian General III
+			// 变身:守护神将 / Transformation: Guardian General IV
+			case 17, 18, 19, 20, 243, 245, 246, 247, 251, 253, 297, 308, 309, 310, 311, 312, 313, 314, 249, 250, 252,
+			     254, 298, 315, 316, 317, 318, 319, 320, 321, 302, 1337, 1338, 1339, 1416, 1417, 3589, 3775, 4752, 4757,
+			     4762, 4768, 4804, 4805, 4806, 4807, 4808, 4813, 4818, 4824, 11885, 11886, 11887, 11888, 11889, 11890,
+			     11891, 11892, 11893, 11894 -> // 变身:守护神将 / Transformation: Guardian General V
+				true;
+			default -> false;
+		};
 	}
 
 	/**

@@ -9,16 +9,12 @@ public enum RetailQuestState {
 
 	public boolean matches(QuestState questState) {
 		QuestStatus status = questState == null ? null : questState.getStatus();
-        switch (this) {
-            case QSTATEI_NONE:
-                return status != QuestStatus.START && status != QuestStatus.REWARD
-                        && status != QuestStatus.COMPLETE;
-            case QSTATEI_ACQUIRED:
-                return status == QuestStatus.START || status == QuestStatus.REWARD;
-            case QSTATEI_SUCCEED:
-                return status == QuestStatus.COMPLETE;
-            default:
-                throw new IllegalArgumentException();
-        }
+		return switch (this) {
+			case QSTATEI_NONE -> status != QuestStatus.START && status != QuestStatus.REWARD
+				&& status != QuestStatus.COMPLETE;
+			case QSTATEI_ACQUIRED -> status == QuestStatus.START || status == QuestStatus.REWARD;
+			case QSTATEI_SUCCEED -> status == QuestStatus.COMPLETE;
+			default -> throw new IllegalArgumentException();
+		};
 	}
 }

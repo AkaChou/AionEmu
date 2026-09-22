@@ -732,18 +732,16 @@ public class Effect implements StatOwner {
 	 */
 	public boolean isRangerBuff() {
 		int skillId = skillTemplate.getSkillId();
-		switch (skillId) {
-		case 796: // 强化之眼 I / Strong Shots.
-		case 809: // 警戒之眼 I / Dodging.
-		case 813: // 攻击之眼 I / Focused Shots.
-		case 888: // 猎人的决心 I / Hunter's Might.
-		case 889: // 速射之眼 I / Bestial Fury.
-		case 1053: // 集中之眼 I / Aiming.
-		case 1099: // 透视之眼 I / Hunter's Eye.
-			return true;
-		default:
-			return false;
-		}
+		return switch (skillId) { // 强化之眼 I / Strong Shots.
+			// 警戒之眼 I / Dodging.
+			// 攻击之眼 I / Focused Shots.
+			// 猎人的决心 I / Hunter's Might.
+			// 速射之眼 I / Bestial Fury.
+			// 集中之眼 I / Aiming.
+			case 796, 809, 813, 888, 889, 1053, 1099 -> // 透视之眼 I / Hunter's Eye.
+				true;
+			default -> false;
+		};
 	}
 
 	/**
@@ -1480,20 +1478,9 @@ public class Effect implements StatOwner {
 	}
 
 	private boolean isOpenAerialSkill() {
-		switch (getSkillId()) {
-		case 8224:
-		case 8678:
-		case 9173:
-		case 19552:
-		case 20371:
-		case 20680:
-		case 20872:
-		case 21133:
-		case 21476:
-		case 21529:
-		case 21911:
-			return true;
-		}
-		return false;
-	}
+        return switch (getSkillId()) {
+            case 8224, 8678, 9173, 19552, 20371, 20680, 20872, 21133, 21476, 21529, 21911 -> true;
+            default -> false;
+        };
+    }
 }

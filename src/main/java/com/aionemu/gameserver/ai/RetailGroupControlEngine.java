@@ -218,20 +218,14 @@ public final class RetailGroupControlEngine {
 	}
 
 	private static TeamType teamType(int controlTargetType) {
-		switch (controlTargetType) {
-			case 0:
-				return TeamType.IN_AREA_DEFAULT;
-			case 1:
-				return TeamType.IN_AREA_TARGET_1;
-			case 2:
-				return TeamType.IN_AREA_TARGET_2;
-			case 3:
-				return TeamType.IN_AREA_TARGET_3;
-			case 4:
-				return TeamType.IN_AREA_TARGET_4;
-			default:
-				throw new IllegalArgumentException("Unsupported GROUPCTRL target type: " + controlTargetType);
-		}
+		return switch (controlTargetType) {
+			case 0 -> TeamType.IN_AREA_DEFAULT;
+			case 1 -> TeamType.IN_AREA_TARGET_1;
+			case 2 -> TeamType.IN_AREA_TARGET_2;
+			case 3 -> TeamType.IN_AREA_TARGET_3;
+			case 4 -> TeamType.IN_AREA_TARGET_4;
+			default -> throw new IllegalArgumentException("Unsupported GROUPCTRL target type: " + controlTargetType);
+		};
 	}
 
 	private static boolean matchesPrefix(String name, String prefix) {
@@ -336,22 +330,12 @@ public final class RetailGroupControlEngine {
 		}
 
 		private void remove(Player player, boolean transfer) {
-			int messageId;
-			switch (definition.type()) {
-				case 1:
-					messageId = 1403202;
-					break;
-				case 2:
-					messageId = 1403203;
-					break;
-				case 5:
-				case 6:
-					messageId = 1403229;
-					break;
-				default:
-					messageId = 0;
-					break;
-			}
+			int messageId = switch (definition.type()) {
+				case 1 -> 1403202;
+				case 2 -> 1403203;
+				case 5, 6 -> 1403229;
+				default -> 0;
+			};
 			if (transfer && messageId != 0) {
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(messageId));
 			}

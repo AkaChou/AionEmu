@@ -22,14 +22,12 @@ public class Venge_Full_OrbAI2 extends AggressiveNpcAI2
     @Override
     protected void handleSpawned() {
   	    super.handleSpawned();
-		final int skill;
-		switch (getNpcId()) {
-			case 284443: //Sorcerer Queen Modor.
-				skill = 21178;
-		    break;
-			default:
-				skill = 0;
-		} if (skill == 0) {
+		final int skill = switch (getNpcId()) {
+			case 284443 -> //Sorcerer Queen Modor.
+				21178;
+			default -> 0;
+		};
+		if (skill == 0) {
 			return;
 		}
 		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> AI2Actions.useSkill(Venge_Full_OrbAI2.this, skill),0, 2000);

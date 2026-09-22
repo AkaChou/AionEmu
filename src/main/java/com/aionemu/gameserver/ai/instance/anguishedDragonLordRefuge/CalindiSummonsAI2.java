@@ -43,15 +43,11 @@ public class CalindiSummonsAI2 extends AggressiveNpcAI2
 
 	@Override
 	protected AIAnswer pollInstance(AIQuestion question) {
-		switch (question) {
-			case SHOULD_DECAY:
-				return AIAnswers.NEGATIVE;
-			case SHOULD_RESPAWN:
-				return AIAnswers.NEGATIVE;
-			case SHOULD_REWARD:
-				return AIAnswers.NEGATIVE;
-			default:
-				return null;
-		}
+        return switch (question) {
+            case SHOULD_DECAY -> AIAnswers.NEGATIVE;
+            case SHOULD_RESPAWN -> AIAnswers.NEGATIVE;
+            case SHOULD_REWARD -> AIAnswers.NEGATIVE;
+            default -> null;
+        };
 	}
 }

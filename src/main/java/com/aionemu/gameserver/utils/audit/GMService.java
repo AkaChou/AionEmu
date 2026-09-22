@@ -128,14 +128,11 @@ public class GMService {
 
 			// * = 高级与 VIP 会员 / * = Premium & VIP Membership
 			if (MembershipConfig.PREMIUM_TAG_DISPLAY_ENABLE) {
-				switch (player.getClientConnection().getAccount().getMembership()) {
-					case 1:
-						adminTag = sb.replace(0, sb.length(), MembershipConfig.TAG_PREMIUM).toString();
-						break;
-					case 2:
-						adminTag = sb.replace(0, sb.length(), MembershipConfig.TAG_VIP).toString();
-						break;
-					}
+				adminTag = switch (player.getClientConnection().getAccount().getMembership()) {
+					case 1 -> sb.replace(0, sb.length(), MembershipConfig.TAG_PREMIUM).toString();
+					case 2 -> sb.replace(0, sb.length(), MembershipConfig.TAG_VIP).toString();
+					default -> adminTag;
+				};
 				}
 
 			Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
@@ -159,23 +156,14 @@ public class GMService {
 
 		// * = 服务器职员访问等级 / * = Server Staff Access Level
 		if (AdminConfig.ADMIN_TAG_ENABLE && player.isGmMode()) {
-			switch (player.getClientConnection().getAccount().getAccessLevel()) {
-			case 1:
-				adminTag = AdminConfig.ADMIN_TAG_1.replace("%s", sb.toString());
-				break;
-			case 2:
-				adminTag = AdminConfig.ADMIN_TAG_2.replace("%s", sb.toString());
-				break;
-			case 3:
-				adminTag = AdminConfig.ADMIN_TAG_3.replace("%s", sb.toString());
-				break;
-			case 4:
-				adminTag = AdminConfig.ADMIN_TAG_4.replace("%s", sb.toString());
-				break;
-			case 5:
-				adminTag = AdminConfig.ADMIN_TAG_5.replace("%s", sb.toString());
-				break;
-			}
+            adminTag = switch (player.getClientConnection().getAccount().getAccessLevel()) {
+                case 1 -> AdminConfig.ADMIN_TAG_1.replace("%s", sb.toString());
+                case 2 -> AdminConfig.ADMIN_TAG_2.replace("%s", sb.toString());
+                case 3 -> AdminConfig.ADMIN_TAG_3.replace("%s", sb.toString());
+                case 4 -> AdminConfig.ADMIN_TAG_4.replace("%s", sb.toString());
+                case 5 -> AdminConfig.ADMIN_TAG_5.replace("%s", sb.toString());
+                default -> adminTag;
+            };
 		}
 
 		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
