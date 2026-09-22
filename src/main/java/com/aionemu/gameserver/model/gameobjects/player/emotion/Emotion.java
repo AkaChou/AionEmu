@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 /**
  * 表情游戏对象。
  * Emotion game object.
- *
  * @author MrPoke
  */
 @Getter
@@ -17,8 +16,6 @@ public class Emotion implements IExpirable {
 	/**
 	 * 获取表情 ID。
 	 * Returns the emotion id.
-	 *
-	 * @return 表情 ID / emotion id
 	 */
 	private final int id;
 	private final int dispearTime;

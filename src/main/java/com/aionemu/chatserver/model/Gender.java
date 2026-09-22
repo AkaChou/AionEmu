@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 角色性别枚举。
  * Player gender enumeration.
- *
  * @author ATracer
  */
 public enum Gender {
@@ -29,7 +28,6 @@ public enum Gender {
     /**
      * 构造性别枚举。
      * Constructs a gender enum value.
-     *
      * @param genderId 性别 ID / gender id
      */
 	Gender(int genderId) {

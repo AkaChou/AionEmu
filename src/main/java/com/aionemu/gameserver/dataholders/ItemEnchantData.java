@@ -17,7 +17,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 物品强化 / 授权模板数据容器，按类型与 ID 索引 {@link ItemEnchantTemplate}。
  * authorize template data holder, indexing {@link ItemEnchantTemplate} by type and id.
- *
  * @author Ranastic (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -53,7 +52,6 @@ public class ItemEnchantData {
 	/**
 	 * 按强化类型与 ID 获取强化模板。
 	 * Returns the enchant template for the given type and id.
-	 *
 	 * @param type 强化类型 / enchant type
 	 * @param id 模板 ID / template id
 	 * @return 强化模板或 null / enchant template or null
@@ -68,7 +66,6 @@ public class ItemEnchantData {
 	/**
 	 * 返回强化与授权模板的总数量。
 	 * Returns the total number of enchant and authorize templates.
-	 *
 	 * @return 模板总数 / total template count
 	 */
 	public int size() {

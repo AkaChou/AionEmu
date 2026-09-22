@@ -45,7 +45,6 @@ import java.util.Map;
 /**
  * 技能动作时间采集服务：记录客户端动作耗时，支持 SQL 持久化与 XML 导出，用于校准技能动作时间表。
  * Skill motion timing service: records client motion times, supports SQL persistence and XML export for calibrating skill motion tables.
- *
  * @author kecimis
  */
 @Slf4j
@@ -55,8 +54,6 @@ public class MotionLoggingService {
 	 * -- SETTER --
 	 *  注入 Spring 的实例提供者。
 	 *  Injects the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / instance provider
 	 */
 	@Setter
 	private static volatile ObjectProvider<MotionLoggingService> instanceProvider;
@@ -67,8 +64,7 @@ public class MotionLoggingService {
 	 * -- SETTER --
 	 *  开关高级日志输出。
 	 *  Toggles advanced logging output.
-	 *
-	 * @param bol 是否开启 / whether enabled
+	 * 是否开启 / whether enabled
 	 */
 	@Setter
 	private boolean advancedLog = false;
@@ -78,11 +74,9 @@ public class MotionLoggingService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -114,7 +108,6 @@ public class MotionLoggingService {
 	/**
 	 * 记录玩家某次技能动作的客户端时间与距离。
 	 * Logs client time and distance for a player skill motion.
-	 *
 	 * 玩家 / player
 	 * @param sk 技能模板 / skill template
 	 * @param clientTime 客户端时间 / client time
@@ -335,7 +328,6 @@ public class MotionLoggingService {
 	/**
 	 * 将模板对象 JAXB 序列化到文件。
 	 * Marshals a template object to a file via JAXB.
-	 *
 	 * template object
 	 * @param file 输出路径 / output path
 	 */
@@ -549,7 +541,6 @@ public class MotionLoggingService {
 	/**
 	 * 添加或更新一条动作时间样本。
 	 * Adds or updates a motion time sample.
-	 *
 	 * motion name
 	 * @param weapon 武器类型包装 / weapon wrapper
 	 * skill id
@@ -576,7 +567,6 @@ public class MotionLoggingService {
 	/**
 	 * 是否开启高级日志。
 	 * Whether advanced logging is enabled.
-	 *
 	 * whether enabled
 	 */
 	public boolean getAdvancedLog() {
@@ -725,27 +715,9 @@ public class MotionLoggingService {
 
 	private class WeaponTime {
 		private final TreeMap<WeaponTypeWrapper, List<Integer>> values = new TreeMap<>();
-		/**
-		 * -- GETTER --
-		 *
-		 *
-		 * -- SETTER --
-		 *
-		 @return the race
-		  * @param race the race to set
-		 */
 		@Setter
 		@Getter
 		private Race race;
-        /**
-         * -- GETTER --
-         *
-         *
-		 * -- SETTER --
-		 *
-		 @return the gender
-		  * @param gender the gender to set
-         */
         @Setter
         @Getter
         private Gender gender;

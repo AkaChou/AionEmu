@@ -33,7 +33,6 @@ import com.aionemu.gameserver.model.drop.NpcDrop;
 /**
  * NPC 掉落数据容器，支持公共掉落组展开、分片合并与按 NPC ID 索引。
  * NPC drop data holder supporting common drop-group expansion, multi-file merge and indexing by npc id.
- *
  * @author MrPoke
  */
 @XmlRootElement(name = "npc_drops")
@@ -60,7 +59,6 @@ public class NpcDropData {
 	/**
 	 * 从目录急切加载全部 NPC 掉落分片与公共掉落组。
 	 * Eagerly loads all NPC drop part files and common drop groups from the given directory.
-	 *
 	 * @param npcDropsDirectory NPC 掉落数据目录 / npc drops directory
 	 * @return 已加载的掉落数据 / loaded drop data
 	 */
@@ -96,7 +94,6 @@ public class NpcDropData {
 	/**
 	 * 返回全部 NPC 掉落列表。
 	 * Returns the full NPC drop list.
-	 *
 	 * @return NPC 掉落列表 / npc drop list
 	 */
 	public List<NpcDrop> getNpcDrop() {
@@ -106,7 +103,6 @@ public class NpcDropData {
 	/**
 	 * 设置 NPC 掉落列表并重建索引。
 	 * Sets the NPC drop list and rebuilds the index.
-	 *
 	 * @param npcDrop NPC 掉落列表 / npc drop list
 	 */
 	public void setNpcDrop(List<NpcDrop> npcDrop) {
@@ -133,7 +129,6 @@ public class NpcDropData {
 	/**
 	 * 返回已加载的 NPC 掉落数量。
 	 * Returns the number of loaded NPC drops.
-	 *
 	 * @return 掉落条目数量 / drop entry count
 	 */
 	public int size() {
@@ -143,7 +138,6 @@ public class NpcDropData {
 	/**
 	 * 按 NPC ID 获取掉落配置。
 	 * Returns the drop configuration for the given npc id.
-	 *
 	 * @param npcId NPC ID / npc id
 	 * @return 掉落配置或 null / drop config or null
 	 */

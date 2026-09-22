@@ -30,7 +30,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 前哨（Outpost）服务，管理前哨点位初始化、占领、重置与旗帜广播。
  * Outpost service managing location init, capture, weekly reset, and flag broadcast.
- *
  * @author Wnkrz
  */
 @Slf4j
@@ -107,7 +106,6 @@ public class OutpostService {
 	/**
 	 * 获取全部前哨点位。
 	 * Returns all outpost locations.
-	 *
 	 * location map
 	 */
 	public Map<Integer, OutpostLocation> getOutpostLocations() {
@@ -117,7 +115,6 @@ public class OutpostService {
 	/**
 	 * 按 ID 获取前哨点位。
 	 * Returns an outpost location by id.
-	 *
 	 * @param id 前哨 ID / outpost id
 	 * location
 	 */
@@ -128,7 +125,6 @@ public class OutpostService {
 	/**
 	 * 启动指定前哨；若已活跃则忽略。
 	 * Starts the given outpost; no-ops if already active.
-	 *
 	 * @param id 前哨 ID / outpost id
 	 */
 	public void start(final int id) {
@@ -142,7 +138,6 @@ public class OutpostService {
 	/**
 	 * 停止指定前哨并立即重新启动。
 	 * Stops the given outpost and restarts it immediately.
-	 *
 	 * @param id 前哨 ID / outpost id
 	 */
 	public void stop(int id) {
@@ -158,7 +153,6 @@ public class OutpostService {
 	/**
 	 * 将前哨占领权设为指定种族并广播更新。
 	 * Sets outpost ownership to the given race and broadcasts the update.
-	 *
 	 * @param id 前哨 ID / outpost id
 	 * @param race 占领种族 / capturing race
 	 */
@@ -178,7 +172,6 @@ public class OutpostService {
 	/**
 	 * 同步占领与前哨绑定的神器据点。
 	 * Captures the artifact siege location bound to the outpost.
-	 *
 	 * @param id 前哨 ID / outpost id
 	 * @param race 占领种族 / capturing race
 	 */
@@ -205,7 +198,6 @@ public class OutpostService {
 	/**
 	 * 判断前哨是否处于活跃状态。
 	 * Returns whether the outpost is currently active.
-	 *
 	 * @param id 前哨 ID / outpost id
 	 * active flag
 	 */
@@ -216,7 +208,6 @@ public class OutpostService {
 	/**
 	 * 获取活跃前哨实例。
 	 * Returns the active outpost instance.
-	 *
 	 * @param id 前哨 ID / outpost id
 	 * outpost instance
 	 */
@@ -227,7 +218,6 @@ public class OutpostService {
 	/**
 	 * 玩家进入前哨所在地图时下发旗帜信息并刷新区域/任务。
 	 * On map enter, sends flag info and refreshes zone/quests for matching outposts.
-	 *
 	 * @param player 进入地图的玩家 / entering player
 	 */
 	public void onEnterOutpostWorld(Player player) {
@@ -247,7 +237,6 @@ public class OutpostService {
 	/**
 	 * 向前哨地图内所有玩家广播旗帜与区域更新。
 	 * Broadcasts flag and zone updates to all players on the outpost map.
-	 *
 	 * outpost location
 	 */
 	public void broadcastUpdate(final OutpostLocation outpostLocation) {
@@ -266,7 +255,6 @@ public class OutpostService {
 	/**
 	 * 获取服务单例，优先走 Spring ObjectProvider。
 	 * Returns the service singleton, preferring Spring ObjectProvider when available.
-	 *
 	 * service instance
 	 */
 	public static OutpostService getInstance() {
@@ -280,7 +268,6 @@ public class OutpostService {
 	/**
 	 * 注入 Spring ObjectProvider。
 	 * Injects the Spring ObjectProvider.
-	 *
 	 * provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<OutpostService> instanceProvider) {
@@ -294,7 +281,6 @@ public class OutpostService {
 	/**
 	 * 获取前哨 DAO。
 	 * Returns the outpost DAO.
-	 *
 	 * DAO instance
 	 */
 	private OutpostDAO getDAO() {

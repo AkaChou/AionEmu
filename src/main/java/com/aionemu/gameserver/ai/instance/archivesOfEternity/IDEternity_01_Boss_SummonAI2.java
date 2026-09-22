@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Archives Of Eternity 副本 NPC AI：ID Eternity 01 Boss Summon（@AIName "IDEternity_01_Boss_Summon"），继承 ActionItemNpcAI2。
  * Archives Of Eternity instance NPC AI: ID Eternity 01 Boss Summon (@AIName "IDEternity_01_Boss_Summon"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("IDEternity_01_Boss_Summon")

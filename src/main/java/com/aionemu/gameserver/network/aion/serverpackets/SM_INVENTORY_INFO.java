@@ -13,11 +13,7 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
 /**
  * 向客户端发送背包物品信息的服务端包。
  * Server packet that sends inventory item information to the client.
- *
  * @author -Nemesiss-
- * @updater alexa026
- * @finisher Avol ;d modified by ATracer
- * @fixedby -Nemesiss- :D
  */
 public class SM_INVENTORY_INFO extends AionServerPacket {
 
@@ -35,7 +31,6 @@ public class SM_INVENTORY_INFO extends AionServerPacket {
 	/**
 	 * 构造完整背包信息包，包含物品列表与背包扩展容量。
 	 * Creates a full inventory info packet with items and cube expand sizes.
-	 *
 	 * @param isFirstPacket 是否为首包 / whether this is the first packet
 	 * @param items 物品列表 / list of items
 	 * @param npcExpandsSize NPC 背包扩展格数 / cube expand size from NPC

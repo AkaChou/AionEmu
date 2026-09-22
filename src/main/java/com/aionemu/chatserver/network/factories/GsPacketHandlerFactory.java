@@ -16,7 +16,6 @@ import com.aionemu.chatserver.network.gameserver.clientpackets.CM_PLAYER_LOGOUT;
 /**
  * 游戏服连接的数据包工厂（按状态/操作码分发）。
  * Packet factory for game-server connections (dispatches by state/opcode).
- *
  * @author -Nemesiss-
  */
 @Slf4j
@@ -26,7 +25,6 @@ public class GsPacketHandlerFactory {
     /**
      * 从给定缓冲区读取并构造一个游戏服客户端包。
      * Reads and constructs one game-server client packet from the given buffer.
-     *
      * @param data 原始数据缓冲区 / raw data buffer
      * @param client 游戏服连接 / game-server connection
      * @return 解析出的客户端包，未知时为 {@code null} / parsed client packet, or {@code null} if unknown
@@ -76,7 +74,6 @@ public class GsPacketHandlerFactory {
     /**
      * 记录未知数据包警告。
      * Logs a warning for an unknown packet.
-     *
      * @param state 当前连接状态 / current connection state
      * @param id 包操作码 / packet opcode
      */

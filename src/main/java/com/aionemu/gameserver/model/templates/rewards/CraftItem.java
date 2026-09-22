@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 制作物品奖励模板（静态数据/XML）。
  * XML template.
- *
  * @author Rolandas
  */
 @Getter

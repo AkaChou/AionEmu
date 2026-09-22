@@ -28,7 +28,6 @@ public class Terrain {
 	/**
 	 * 设置高度图；全同高度时压缩存储。
 	 * Sets the heightmap; compresses to a single value when all samples match.
-	 *
 	 * @param heightmap 高度采样 / height samples
 	 * size along X
 	 * size along Y
@@ -55,7 +54,6 @@ public class Terrain {
 	/**
 	 * 设置地形材质图。
 	 * Sets the terrain material map.
-	 *
 	 * @param materials 材质字节 / material bytes
 	 * size along X
 	 * size along Y
@@ -75,7 +73,6 @@ public class Terrain {
 	/**
 	 * 是否已设置高度图。
 	 * Whether a heightmap is present.
-	 *
 	 * @return 若 heightmap set 则为 true / true if heightmap set
 	 */
 	public boolean hasHeightmap() {
@@ -85,7 +82,6 @@ public class Terrain {
 	/**
 	 * 是否已设置材质图。
 	 * Whether a material map is present.
-	 *
 	 * @return 若 materials set 则为 true / true if materials set
 	 */
 	public boolean hasMaterials() {
@@ -118,7 +114,6 @@ public class Terrain {
 	/**
 	 * 在射线起点附近与地形做碰撞检测。
 	 * Collides the ray against terrain near the ray origin.
-	 *
 	 * @param ray 射线 / ray
 	 * @param results 碰撞结果收集器 / collision results collector
 	 */
@@ -131,7 +126,6 @@ public class Terrain {
 	/**
 	 * 沿射线 2D 投影路径逐步检测地形碰撞。
 	 * Walks the ray's 2D projection and tests terrain collision stepwise.
-	 *
 	 * @param ray 射线 / ray
 	 * target X
 	 * target Y
@@ -168,7 +162,6 @@ public class Terrain {
 	/**
 	 * 在 (x,y) 附近网格单元与射线做三角面相交检测。
 	 * Tests ray intersection with the terrain cell near (x, y).
-	 *
 	 * @param x 世界 X / world X
 	 * @param y 世界 Y / world Y
 	 * @param ray 射线 / ray
@@ -239,7 +232,6 @@ public class Terrain {
 	/**
 	 * 按网格索引取高度；越界返回 NaN，边界返回 0。
 	 * Height at grid index; NaN if out of bounds, 0 on the outer border.
-	 *
 	 * @param xIndex X index
 	 * @param yIndex Y index
 	 * @return 世界高度或 NaN / world Z or NaN
@@ -260,7 +252,6 @@ public class Terrain {
 	/**
 	 * 将 short 高度采样映射为世界 Z（-1 表示空洞）。
 	 * Maps an unsigned short height sample to world Z (-1 means hole).
-	 *
 	 * @param index 高度图索引 / heightmap index
 	 * @return 世界高度或 NaN / world Z or NaN
 	 */
@@ -271,7 +262,6 @@ public class Terrain {
 	/**
 	 * 采样 (x,y) 处的地形材质 ID。
 	 * Samples the terrain material id at (x, y).
-	 *
 	 * @param x 世界 X / world X
 	 * @param y 世界 Y / world Y
 	 * material id, or 0
@@ -306,14 +296,12 @@ public class Terrain {
 	/**
 	 * 判断目标点是否在有向线段左侧。
 	 * Whether the target point lies to the left of the directed segment.
-	 *
 	 * start X
 	 * start Y
 	 * end X
 	 * end Y
 	 * target X
 	 * target Y
-	 *
 	 * @return 是否在左侧 / true if left of the segment
 	 */
 	private boolean isLeft(float startX, float startY, float endX, float endY, float targetX, float targetY) {
@@ -323,7 +311,6 @@ public class Terrain {
 	/**
 	 * 三个顶点的最大 Z 差。
 	 * Maximum Z difference among three vertices.
-	 *
 	 * @param v1 顶点 1 / vertex 1
 	 * @param v2 顶点 2 / vertex 2
 	 * @param v3 顶点 3 / vertex 3

@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 聊天频道抽象基类，持有类型、标识与运行时频道 ID。
  * Abstract chat channel base holding type, identifier and runtime channel id.
- *
  * @author ATracer
  */
 public abstract class Channel {
@@ -42,7 +41,6 @@ public abstract class Channel {
     /**
      * 创建频道并分配运行时 ID。
      * Creates a channel and assigns a runtime id.
-     *
      * @param channelType 频道类型 / channel type
      * @param identifier 字符串标识 / string identifier
      */
@@ -56,7 +54,6 @@ public abstract class Channel {
     /**
      * 获取字符串形式的频道标识。
      * Returns the channel identifier as string.
-     *
      * @return 频道字符串标识 / channel identifier
      */
     public String getStringIdentifier() {

@@ -19,8 +19,7 @@ public class CreativitySkillService {
      * -- SETTER --
      *  setInstanceProvider 方法。
      *  setInstanceProvider method.
-     *
-     * @param provider 提供者 / provider
+     * 提供者 / provider
      */
     @Setter
     private static volatile ObjectProvider<CreativitySkillService> instanceProvider;
@@ -28,7 +27,6 @@ public class CreativitySkillService {
 	/**
 	 * 附魔技能。
 	 * Enchants a skill.
-	 *
 	 * 玩家 / player
 	 * @param id ID / id
 	 * @param point 点数 / point
@@ -53,7 +51,6 @@ public class CreativitySkillService {
 	/**
 	 * 学习技能。
 	 * Learns a skill.
-	 *
 	 * 玩家 / player
 	 * @param id ID / id
 	 * @param point 点数 / point
@@ -73,7 +70,6 @@ public class CreativitySkillService {
 	/**
 	 * 登录同步大天使技能。
 	 * Syncs daeva skills on login.
-	 *
 	 * 玩家 / player
 	 * @param id ID / id
 	 * @param point 点数 / point
@@ -93,11 +89,9 @@ public class CreativitySkillService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available

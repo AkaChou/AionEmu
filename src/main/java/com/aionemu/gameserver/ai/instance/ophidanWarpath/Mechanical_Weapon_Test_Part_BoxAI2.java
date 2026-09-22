@@ -11,7 +11,6 @@ import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 /**
  * Ophidan Warpath 副本 NPC AI：Mechanical Weapon Test Part Box（@AIName "Mechanical_Weapon_Test_Part_Box"），继承 ActionItemNpcAI2。
  * Ophidan Warpath instance NPC AI: Mechanical Weapon Test Part Box (@AIName "Mechanical_Weapon_Test_Part_Box"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("Mechanical_Weapon_Test_Part_Box")

@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 /**
  * Repurchase 列表，用于交易相关逻辑。
  * Repurchase List for trade logic.
- *
  * @author xTz
  */
 @RequiredArgsConstructor
@@ -21,11 +20,6 @@ public class RepurchaseList {
 	private final int sellerObjId;
 	private final List<Item> repurchases = new ArrayList<>();
 
-	/**
-	 * @param player
-	 * @param itemObjectId
-	 * @param count
-	 */
 	public void addRepurchaseItem(Player player, int itemObjectId, long count) {
 		Item item = GameFeatureServices.repurchaseService().getRepurchaseItem(player, itemObjectId);
 		if (item != null) {

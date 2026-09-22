@@ -28,7 +28,6 @@ public final class GameCraftServices implements DisposableBean {
     /**
      * 构造并注册制作相关服务的静态访问器。
      * Construct and register static accessors for craft services.
-     *
      * @param craftSkillUpdateServiceProvider 制作技能更新服务提供者 / Craft-skill update service provider
      * @param relinquishCraftStatusProvider 放弃制作状态服务提供者 / Relinquish-craft-status service provider
      */
@@ -43,7 +42,6 @@ public final class GameCraftServices implements DisposableBean {
     /**
      * 获取制作技能更新服务。
      * Obtain the craft-skill update service.
-     *
      * @return 服务实例 / Service instance
      */
     public static CraftSkillUpdateService craftSkillUpdateService() {
@@ -57,7 +55,6 @@ public final class GameCraftServices implements DisposableBean {
     /**
      * 获取放弃制作状态服务。
      * Obtain the relinquish-craft-status service.
-     *
      * @return 服务实例 / Service instance
      */
     public static RelinquishCraftStatus relinquishCraftStatus() {

@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * Collect 物品模板（静态数据/XML）。
  * XML template.
- *
  * @author MrPoke
  */
 @Getter
@@ -20,16 +19,14 @@ public class CollectItem {
 	/**
 	 * 返回物品 ID。
 	 * Returns the item id.
-	 *
-	 * @return 物品 ID / possible object is {@link Integer}
+	 * 物品 ID / possible object is {@link Integer}
 	 */
 	@XmlAttribute(name = "item_id")
 	protected Integer itemId;
 	/**
 	 * 返回所需数量。
 	 * Returns the required count.
-	 *
-	 * @return 数量 / possible object is {@link Integer}
+	 * 数量 / possible object is {@link Integer}
 	 */
 	@XmlAttribute
 	protected Integer count;

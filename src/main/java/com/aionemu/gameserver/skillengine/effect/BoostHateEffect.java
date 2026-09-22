@@ -7,7 +7,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 仇恨提升效果：通过 Buff 属性修正提高仇恨生成。
  * Boost-hate effect: increases hate generation via buff stat modifiers.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)

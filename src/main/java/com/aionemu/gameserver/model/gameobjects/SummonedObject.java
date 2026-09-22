@@ -13,7 +13,6 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 /**
  * 被召唤对象。
  * Summoned Object game object.
- *
  * @author ATracer
  */
 public class SummonedObject<T extends VisibleObject> extends Npc {
@@ -29,7 +28,6 @@ public class SummonedObject<T extends VisibleObject> extends Npc {
 	/**
 	 * 构造被召唤对象。
 	 * Constructs a summoned object.
-	 *
 	 * @param objId 对象 ID / object id
 	 * @param controller NPC 控制器 / NPC controller
 	 * @param spawnTemplate 生成模板 / spawn template

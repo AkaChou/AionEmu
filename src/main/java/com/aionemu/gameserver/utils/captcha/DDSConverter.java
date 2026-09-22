@@ -7,7 +7,6 @@ import java.nio.ByteOrder;
 /**
  * BufferedImage → DXT1 DDS 转换器（无透明），供 CAPTCHA 纹理下发客户端。
  * Converts {@link BufferedImage} to DXT1 DDS (no transparency) for CAPTCHA client textures.
- *
  * @author Cura
  */
 public class DDSConverter {
@@ -49,7 +48,6 @@ public class DDSConverter {
 		/**
 		 * 按 RGB 分量构造。
 		 * Constructs from RGB components.
-		 *
 		 * @param r 红 / red
 		 * @param g 绿 / green
 		 * @param b 蓝 / blue
@@ -97,7 +95,6 @@ public class DDSConverter {
 	/**
 	 * 将图片转为无透明 DXT1 DDS 字节缓冲。
 	 * Converts an image to a no-transparency DXT1 DDS byte buffer.
-	 *
 	 * @param image 源图；null 则返回 null / source image; null yields null
 	 * @return DDS 缓冲 / DDS buffer
 	 */
@@ -145,7 +142,6 @@ public class DDSConverter {
 	/**
 	 * 写入 DXT1 DDS 文件头。
 	 * Writes the DXT1 DDS file header.
-	 *
 	 * @param buffer 目标缓冲 / target buffer
 	 * @param width 宽度 / width
 	 * @param height 高度 / height
@@ -184,7 +180,6 @@ public class DDSConverter {
 	/**
 	 * 在 4x4 块中找欧氏距离最远的两个颜色索引。
 	 * Finds the two color indices with the largest Euclidean distance in a 4x4 block.
-	 *
 	 * @param colors 16 个颜色 / 16 colors
 	 * @return 端点索引 / endpoint indices
 	 */
@@ -208,7 +203,6 @@ public class DDSConverter {
 	/**
 	 * 按两端点插值调色板，为每像素选择最近索引并打包位掩码。
 	 * Builds interpolated palette from endpoints and packs nearest-index bitmask.
-	 *
 	 * @param colors 块内颜色 / block colors
 	 * @param extremaIndices 端点索引 / endpoint indices
 	 * @return 32 位索引掩码 / 32-bit index mask
@@ -246,7 +240,6 @@ public class DDSConverter {
 	/**
 	 * RGB888 颜色压成 RGB565 像素值。
 	 * Packs an RGB888 color into an RGB565 pixel value.
-	 *
 	 * @param color 颜色 / color
 	 * @return RGB565 值 / RGB565 value
 	 */
@@ -260,7 +253,6 @@ public class DDSConverter {
 	/**
 	 * 从 RGB565 像素还原颜色分量。
 	 * Expands an RGB565 pixel into color components.
-	 *
 	 * @param pixel RGB565 值 / RGB565 value
 	 * @return 颜色 / color
 	 */
@@ -277,7 +269,6 @@ public class DDSConverter {
 	/**
 	 * 从 ARGB 像素数组提取 RGB888 颜色。
 	 * Extracts RGB888 colors from ARGB pixel array.
-	 *
 	 * @param pixels ARGB 像素 / ARGB pixels
 	 * @return 颜色数组 / color array
 	 */
@@ -296,7 +287,6 @@ public class DDSConverter {
 	/**
 	 * 两颜色的平方欧氏距离。
 	 * Squared Euclidean distance between two colors.
-	 *
 	 * @param ca 颜色 A / color A
 	 * @param cb 颜色 B / color B
 	 * @return 平方距离 / squared distance

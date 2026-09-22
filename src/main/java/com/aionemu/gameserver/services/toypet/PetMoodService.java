@@ -20,7 +20,6 @@ public class PetMoodService {
 	/**
 	 * 按类型处理宠物心情相关客户端请求。
 	 * Handle pet-mood client requests by type.
-	 *
 	 * Pet
 	 * @param type 请求类型（0 查看 / 1 互动 / 3 领礼） / Request type (0 check / 1 interact / 3 gift)
 	 * Shuggle emotion id
@@ -42,7 +41,6 @@ public class PetMoodService {
 	/**
 	 * 在心情达标且冷却结束时发放礼物。
 	 * Grant a gift when mood threshold is met and cooldown is over.
-	 *
 	 * @param pet Pet
 	 */
 	private static void requestPresent(Pet pet) {
@@ -71,7 +69,6 @@ public class PetMoodService {
 	/**
 	 * 与宠物互动（抚摸）并提升心情。
 	 * Interact (shuggle) with the pet and raise mood.
-	 *
 	 * @param pet Pet
 	 * @param shuggleEmotion Shuggle emotion id
 	 */
@@ -87,7 +84,6 @@ public class PetMoodService {
 	/**
 	 * 向客户端发送当前心情状态。
 	 * Send current mood state to the client.
-	 *
 	 * @param pet Pet
 	 */
 	private static void startCheckingMood(Pet pet) {

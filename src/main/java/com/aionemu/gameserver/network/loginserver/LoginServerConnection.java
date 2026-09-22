@@ -20,7 +20,6 @@ import com.aionemu.gameserver.network.loginserver.serverpackets.SM_GS_AUTH;
 /**
  * 表示游戏服与登录服之间的一条网络连接。
  * Object representing a connection between LoginServer and GameServer.
- *
  * @author -Nemesiss-
  */
 @Slf4j
@@ -61,8 +60,6 @@ public class LoginServerConnection extends AConnection {
 	 *  设置当前连接状态。
 	 *  Sets the current connection state.
 	 *  New state
-
-
 	 */
 	@Setter
 	@Getter
@@ -77,7 +74,6 @@ public class LoginServerConnection extends AConnection {
 	/**
 	 * 基于传输层创建登录服连接。
 	 * Create a LoginServer connection over the given transport.
-	 *
 	 * Connection transport
 	 */
 	public LoginServerConnection(ConnectionTransport transport) {
@@ -102,16 +98,11 @@ public class LoginServerConnection extends AConnection {
 	 */
 	@Override
 	protected void initialized() {
-		/**
-		 * 发送首个封包 —— 游戏服认证。
-		 * Send first packet — GameServer authentication.
-		 */
 		this.sendPacket(new SM_GS_AUTH());
 	}
 	/**
 	 * 由传输层帧处理器调用；缓冲区中包含一个待处理封包。
 	 * Called by the transport frame handler; buffer holds one packet to process.
-	 *
 	 * @param data 封包数据 / Packet data
 	 * @return 是否处理成功；失败时应立即关闭连接 / True if processed OK; false to close connection now
 	 */
@@ -120,10 +111,6 @@ public class LoginServerConnection extends AConnection {
 		LsClientPacket pck = lsPacketHandler.handle(data, this);
 		log.debug("received packet: " + pck);
 
-		/**
-		 * 仅当封包存在且读取成功时才执行。
-		 * Execute packet only if it exists and was read successfully.
-		 */
 		if (pck != null && pck.read()) {
 			GameThreadPoolServices.threadPoolManager().executeLsPacket(pck);
 		}
@@ -133,7 +120,6 @@ public class LoginServerConnection extends AConnection {
 	/**
 	 * 由传输层反复调用直至返回 false，用于写出下一个待发封包。
 	 * Called repeatedly by the transport until false; writes the next pending packet.
-	 *
 	 * @param data 输出缓冲区 / Output buffer
 	 * @return 是否写入了数据；false 表示无更多数据 / True if data was written; false if nothing left
 	 */
@@ -152,7 +138,6 @@ public class LoginServerConnection extends AConnection {
 	/**
 	 * 传输层准备关闭连接时调用，返回 onDisconnect 延迟毫秒数。
 	 * Called by the transport when the connection is ready to close; returns delay before onDisconnect().
-	 *
 	 * @return 延迟毫秒，始终为 0 / Delay in ms; always 0
 	 */
 	@Override
@@ -181,15 +166,10 @@ public class LoginServerConnection extends AConnection {
 	/**
 	 * 向登录服发送服务端封包。
 	 * Send an LS server packet to the LoginServer.
-	 *
 	 * @param bp 待发送的服务端封包 / Server packet to send
 	 */
 	public final void sendPacket(LsServerPacket bp) {
 		synchronized (guard) {
-			/**
-			 * 连接已关闭或正在等待最后关闭包发送时忽略。
-			 * Ignore when connection is already closed or waiting for the last close packet.
-			 */
 			if (isWriteDisabled()) {
 				return;
 			}
@@ -203,7 +183,6 @@ public class LoginServerConnection extends AConnection {
 	/**
 	 * 保证 closePacket 在关闭前发出，之后清空队列；forced 在本实现中无效果。
 	 * Guarantees closePacket is sent before closing; clears past/future packets. forced has no effect here.
-	 *
 	 * @param closePacket 关闭前发送的封包 / Packet sent before closing
 	 * @param forced 强制关闭标志（本实现忽略） / Forced close flag (ignored in this implementation)
 	 */
@@ -225,7 +204,6 @@ public class LoginServerConnection extends AConnection {
 	/**
 	 * 返回本连接的字符串描述。
 	 * Returns a string description of this connection.
-	 *
 	 * Connection info
 	 */
 	@Override

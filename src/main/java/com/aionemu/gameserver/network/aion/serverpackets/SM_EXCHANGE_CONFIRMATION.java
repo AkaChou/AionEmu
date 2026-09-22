@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 交易确认状态包：同步锁定/确认/取消等交易动作。
  * Exchange confirmation packet: lock/confirm/cancel action codes.
- *
  * @author -Avol-
  */
 @AllArgsConstructor

@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Dark Poeta 副本 NPC AI：Calindi Flamelord（@AIName "calindiflamelord"），继承 AggressiveNpcAI2。
  * Dark Poeta instance NPC AI: Calindi Flamelord (@AIName "calindiflamelord"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("calindiflamelord")

@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 欧比斯排行结果。
  * Abyss Ranking Result model.
- *
  * @author zdead
  */
 @Getter

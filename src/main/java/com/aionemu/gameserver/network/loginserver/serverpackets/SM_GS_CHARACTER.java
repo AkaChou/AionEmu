@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.loginserver.LsServerPacket;
 /**
  * 游戏服向登录服回报指定账号角色数量的服务端包。
  * Server packet that reports a given account's character count to the login server.
- *
  * @author cura
  */
 public class SM_GS_CHARACTER extends LsServerPacket {
@@ -17,7 +16,6 @@ public class SM_GS_CHARACTER extends LsServerPacket {
 	/**
 	 * 构造角色数量回报包。
 	 * Constructs a character-count report packet.
-	 *
 	 * @param accountId 账号 ID / account id
 	 * @param characterCount character count
 	 */

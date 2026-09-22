@@ -12,10 +12,8 @@ public class NetworkUtils {
     /**
      * 检查 IP 是否匹配模式（支持 {@code *} 与区间）。
      * Check whether an IP matches a pattern ({@code *} and ranges supported).
-     *
      * @param pattern 匹配模式，如 {@code 192.168.*.*} 或 {@code 192.168.1-100.*} / Pattern, e.g. {@code 192.168.*.*} or {@code 192.168.1-100.*}
      * @param address 待检查 IP 地址 / IP address to check
-     *
      * @return 匹配时为 {@code true} / {@code true} if matched
      */
     public boolean checkIPMatching(String pattern, String address) {

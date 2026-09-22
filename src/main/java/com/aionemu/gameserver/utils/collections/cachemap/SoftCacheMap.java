@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
  * 值可长期驻留，但在内存紧张且无强引用时一定会被回收。
  * Values may stay for a long time, but will be reclaimed under low memory
  * when no strong references remain.
- *
  * @param <K> 键类型 / Key type
  * @param <V> 值类型 / Value type
  * @author Luno
@@ -24,7 +23,6 @@ class SoftCacheMap<K, V> extends AbstractCacheMap<K, V> implements CacheMap<K, V
 	/**
 	 * 带键信息的 {@link SoftReference}。
 	 * {@link SoftReference} that also holds the key.
-	 *
 	 * @author Luno
 	 */
 	private class SoftEntry extends SoftReference<V> {
@@ -38,7 +36,6 @@ class SoftCacheMap<K, V> extends AbstractCacheMap<K, V> implements CacheMap<K, V
 		/**
 		 * 使用键、引用对象与队列构造。
 		 * Construct with key, referent and queue.
-		 *
 	 * @param key 键 / Key
 	 * @param referent 引用对象 / Referent
 		 * @param q 引用队列 / Reference queue
@@ -51,7 +48,6 @@ class SoftCacheMap<K, V> extends AbstractCacheMap<K, V> implements CacheMap<K, V
 		/**
 		 * 返回关联键。
 		 * Return the associated key.
-		 *
 		 * @return 键 / Key
 		 */
 		K getKey() {
@@ -62,7 +58,6 @@ class SoftCacheMap<K, V> extends AbstractCacheMap<K, V> implements CacheMap<K, V
 	/**
 	 * 使用缓存名与值名构造。
 	 * Construct with cache name and value name.
-	 *
 	 * @param cacheName 缓存名称 / Cache name
 	 * @param valueName 值名称 / Value name
 	 */
@@ -90,7 +85,6 @@ class SoftCacheMap<K, V> extends AbstractCacheMap<K, V> implements CacheMap<K, V
 	/**
 	 * 创建带键的软引用。
 	 * Create a soft reference holding the key.
-	 *
 	 * @param key 键 / Key
 	 * @param value 值 / Value
 	 * @param vReferenceQueue 引用队列 / Reference queue

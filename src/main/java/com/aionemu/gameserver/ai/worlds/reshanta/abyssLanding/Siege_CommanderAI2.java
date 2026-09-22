@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * Reshanta 区域 NPC AI：Siege Commander（@AIName "siege_commander"），继承 AggressiveNpcAI2。
  * Reshanta zone NPC AI: Siege Commander (@AIName "siege_commander"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("siege_commander")

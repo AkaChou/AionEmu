@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * RvR 相关 NPC AI：Rvr Officer（@AIName "rvr_officer"），继承 AggressiveNpcAI2。
  * RvR-related NPC AI: Rvr Officer (@AIName "rvr_officer"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("rvr_officer")

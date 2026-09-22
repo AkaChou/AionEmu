@@ -11,7 +11,6 @@ import java.util.concurrent.Future;
 /**
  * Sauro Supply Base 副本 NPC AI：Corrupted Danuar（@AIName "corrupted_danuar"），继承 AggressiveNpcAI2。
  * Sauro Supply Base instance NPC AI: Corrupted Danuar (@AIName "corrupted_danuar"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("corrupted_danuar")

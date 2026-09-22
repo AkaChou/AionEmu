@@ -29,7 +29,6 @@ public abstract class BasePacket {
     /**
      * 构造带操作码的数据包。
      * Construct packet with opcode.
-     *
      * @param packetType 数据包类型 / Packet type
      * @param opcode 操作码 / Opcode
      */
@@ -41,7 +40,6 @@ public abstract class BasePacket {
     /**
      * 构造无操作码数据包。
      * Construct packet without opcode.
-     *
      * @param packetType 数据包类型 / Packet type
      */
     protected BasePacket(BasePacket.PacketType packetType) {
@@ -51,7 +49,6 @@ public abstract class BasePacket {
     /**
      * 设置操作码。
      * Set opcode.
-     *
      * @param opcode 操作码 / Opcode
      */
     protected void setOpcode(int opcode) {
@@ -61,7 +58,6 @@ public abstract class BasePacket {
     /**
      * 获取操作码。
      * Get opcode.
-     *
      * @return 操作码 / Opcode
      */
     public final int getOpcode() {
@@ -71,7 +67,6 @@ public abstract class BasePacket {
     /**
      * 获取数据包类型。
      * Get packet type.
-     *
      * @return 数据包类型 / Packet type
      */
     public final BasePacket.PacketType getPacketType() {
@@ -81,7 +76,6 @@ public abstract class BasePacket {
     /**
      * 获取数据包名称（类简名）。
      * Get packet name (simple class name).
-     *
      * @return 数据包名称 / Packet name
      */
     public String getPacketName() {
@@ -91,7 +85,6 @@ public abstract class BasePacket {
     /**
      * 转换为字符串表示。
      * Convert to string representation.
-     *
      * @return 字符串表示 / String representation
      */
     public String toString() {
@@ -113,15 +106,12 @@ public abstract class BasePacket {
          * -- GETTER --
          *  获取短名称。
          *  Get short name.
-         *
-         * @return 短名称 / Short name
          */
         private final String name;
 
         /**
          * 构造类型。
          * Construct type.
-         *
          * @param name 短名称 / Short name
          */
 		PacketType(String name) {

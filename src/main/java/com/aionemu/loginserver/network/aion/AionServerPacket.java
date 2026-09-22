@@ -6,7 +6,6 @@ import java.nio.ByteBuffer;
 /**
  * 所有登录服 → Aion 客户端服务端包的基类。
  * Base class for every login-server → Aion client server packet.
- *
  * @author -Nemesiss-
  */
 public abstract class AionServerPacket extends BaseServerPacket {
@@ -14,7 +13,6 @@ public abstract class AionServerPacket extends BaseServerPacket {
     /**
      * 以指定 opcode 构造服务端包。
      * Construct server packet with the given opcode.
-     *
      * @param opcode 包操作码 / Packet opcode
      */
     protected AionServerPacket(int opcode) {
@@ -24,7 +22,6 @@ public abstract class AionServerPacket extends BaseServerPacket {
     /**
      * 将本包写入并加密到连接缓冲。
      * Write and encrypt this packet into the connection buffer.
-     *
      * @param con 目标登录连接 / Target login connection
      */
     public final void write(LoginConnection con) {
@@ -43,7 +40,6 @@ public abstract class AionServerPacket extends BaseServerPacket {
     /**
      * 将包体数据写入缓冲（子类实现）。
      * Write packet payload to the buffer (implemented by subclasses).
-     *
      * @param con 目标登录连接 / Target login connection
      */
     protected abstract void writeImpl(LoginConnection con);

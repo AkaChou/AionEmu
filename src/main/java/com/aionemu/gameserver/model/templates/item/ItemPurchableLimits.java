@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 物品购买限制模板：最低军阶要求。
  * Item purchasable limits template: minimum rank requirement.
- *
  * @author Ranastic (Encom)
  */
 

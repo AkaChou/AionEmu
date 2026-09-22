@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Gelkmaros 区域 NPC AI：Worn Spell Scroll（@AIName "wornspellscroll"），继承 NpcAI2。
  * Gelkmaros zone NPC AI: Worn Spell Scroll (@AIName "wornspellscroll"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("wornspellscroll")

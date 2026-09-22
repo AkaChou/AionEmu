@@ -27,7 +27,6 @@ public class ItemChargeService {
 	/**
 	 * 按条件过滤可充能物品。
 	 * Filters chargeable items by condition.
-	 *
 	 * 玩家 / player
 	 * selectedItem
 	 * chargeWay
@@ -37,13 +36,7 @@ public class ItemChargeService {
 		if (selectedItem != null) {
 			return Collections.singletonList(selectedItem);
 		}
-		/**
-		 * 应用效果。
-		 * Applies the effect.
-		 *
-		 * item
-		 * result
-		 */return Collections2.filter(player.getEquipment().getEquippedItems(), item -> item.getChargeLevelMax() != 0 && item.getImprovement() != null
+		return Collections2.filter(player.getEquipment().getEquippedItems(), item -> item.getChargeLevelMax() != 0 && item.getImprovement() != null
 				 && item.getImprovement().getChargeWay() == chargeWay
 				 && item.getChargePoints() < ChargeInfo.LEVEL2);
 	}
@@ -51,7 +44,6 @@ public class ItemChargeService {
 	/**
 	 * 开始对已装备物品充能。
 	 * Starts charging equipped items.
-	 *
 	 * 玩家 / player
 	 * @param senderObj 发送者对象 / senderObj
 	 * chargeWay
@@ -65,13 +57,6 @@ public class ItemChargeService {
 		final long payAmount = calculatePrice(filteredItems);
 		RequestResponseHandler request = new RequestResponseHandler(player) {
 			@Override
-			/**
-			 * 接受请求。
-			 * Accepts the request.
-			 *
-			 * @param requester requester
-			 * @param responder responder
-			 */
 			public void acceptRequest(Creature requester, Player responder) {
 				if (processPayment(player, chargeWay, payAmount)) {
 					for (Item item : filteredItems) {
@@ -81,14 +66,7 @@ public class ItemChargeService {
 			}
 
 			@Override
-			/**
-			 * 拒绝请求。
-			 * Denies the request.
-			 *
-			 * @param requester requester
-			 * @param responder responder
-			 */
-			public void denyRequest(Creature requester, Player responder) {
+            public void denyRequest(Creature requester, Player responder) {
 			}
 		};
 		int msg = chargeWay == 1 ? SM_QUESTION_WINDOW.STR_ITEM_CHARGE_ALL_CONFIRM
@@ -109,7 +87,6 @@ public class ItemChargeService {
 	/**
 	 * 批量充能物品。
 	 * Charges multiple items.
-	 *
 	 * 玩家 / player
 	 * @param items 物品列表 / items
 	 * level
@@ -123,7 +100,6 @@ public class ItemChargeService {
 	/**
 	 * 充能物品。
 	 * Charges an item.
-	 *
 	 * @param player 玩家 / player
 	 * @param item item
 	 * @param level level
@@ -165,7 +141,6 @@ public class ItemChargeService {
 	/**
 	 * 处理支付。
 	 * Processes payment.
-	 *
 	 * 玩家 / player
 	 * item
 	 * level
@@ -178,7 +153,6 @@ public class ItemChargeService {
 	/**
 	 * 处理支付。
 	 * Processes payment.
-	 *
 	 * 玩家 / player
 	 * chargeWay
 	 * amount
@@ -195,7 +169,6 @@ public class ItemChargeService {
 	/**
 	 * 处理基纳支付。
 	 * Processes kinah payment.
-	 *
 	 * 玩家 / player
 	 * requiredKinah
 	 * result
@@ -207,7 +180,6 @@ public class ItemChargeService {
 	/**
 	 * 处理欧比斯点数支付。
 	 * Processes AP payment.
-	 *
 	 * 玩家 / player
 	 * @param requiredAP 所需欧比斯点 / requiredAP
 	 * result
@@ -223,7 +195,6 @@ public class ItemChargeService {
 	/**
 	 * getPayAmountForService 方法。
 	 * getPayAmountForService method.
-	 *
 	 * item
 	 * chargeLevel
 	 * result

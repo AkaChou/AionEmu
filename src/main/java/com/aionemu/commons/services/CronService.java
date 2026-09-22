@@ -35,10 +35,8 @@ import lombok.AccessLevel;
 /**
  * 定时任务调度服务类
  * Cron Task Scheduling Service Class
- *
  * 该类基于 Quartz 框架实现定时任务的调度管理，采用单例模式。
  * This class implements scheduled task management based on Quartz framework using Singleton pattern.
- *
  * 主要功能:
  * Main features:
  * 1. 支持基于 cron 表达式的任务调度
@@ -65,7 +63,6 @@ public final class CronService {
     /**
      * 获取 CronService 实例
      * Get CronService instance
-     *
      * @return CronService 单例实例 / CronService singleton instance
      */
     public static CronService getInstance() {
@@ -75,7 +72,6 @@ public final class CronService {
     /**
      * 获取当前上下文已初始化的 CronService，未初始化则抛异常
      * Get the initialized CronService for the current context, or throw if missing
-     *
      * @return 当前 CronService 实例 / current CronService instance
      * @throws CronServiceException 服务未初始化时 / When the service is not initialized
      */
@@ -90,7 +86,6 @@ public final class CronService {
     /**
      * 判断当前服务上下文的 CronService 是否已初始化
      * Check whether CronService is initialized for the current service context
-     *
      * @return 已初始化返回 true / True if initialized
      */
     public static boolean isInitialized() {
@@ -100,7 +95,6 @@ public final class CronService {
     /**
      * 若当前上下文已初始化则关闭并返回 true
      * Shutdown the current-context instance if initialized and return true
-     *
      * @return 执行了关闭返回 true，否则 false / True if a shutdown was performed, otherwise false
      */
     public static boolean shutdownCurrentIfInitialized() {
@@ -115,9 +109,7 @@ public final class CronService {
     /**
      * 初始化 CronService 单例
      * Initialize CronService singleton
-     *
      * @param runableRunner 任务执行器类 / Task executor class
-     *
      * @throws CronServiceException 如果服务已初始化 if service is already initialized
      */
     public static synchronized CronService initSingleton(Class<? extends RunnableRunner> runableRunner) {
@@ -136,9 +128,7 @@ public final class CronService {
     /**
      * 初始化调度器
      * Initialize scheduler
-     *
      * @param runnableRunner 任务执行器类 Task executor class
-     *
      * @throws CronServiceException 初始化失败时 when initialization fails
      */
     public synchronized void init(Class<? extends RunnableRunner> runnableRunner) {
@@ -196,7 +186,6 @@ public final class CronService {
     /**
      * 调度一个定时任务
      * Schedule a timed task
-     *
      * @param r 要执行的任务 / Task to execute
      * @param cronExpression cron 表达式 / Cron expression
      */
@@ -207,11 +196,9 @@ public final class CronService {
     /**
      * 调度一个定时任务，可指定是否为长时任务
      * Schedule a timed task with long-running option
-     *
      * @param r 要执行的任务 / Task to execute
      * @param cronExpression cron 表达式 / Cron expression
      * @param longRunning 是否为长时任务 / Whether it's a long-running task
-     *
      * @throws CronServiceException 调度失败时 when scheduling fails
      */
     public void schedule(Runnable r, String cronExpression, boolean longRunning) {
@@ -267,7 +254,6 @@ public final class CronService {
     /**
      * 取消一个已调度的任务
      * Cancel a scheduled task
-     *
      * @param r 要取消的任务 Task to cancel
      */
     public void cancel(Runnable r) {
@@ -279,9 +265,7 @@ public final class CronService {
     /**
      * 取消一个任务详情对应的调度任务
      * Cancel a scheduled task by job detail
-     *
      * @param jd 任务详情 Job detail
-     *
      * @throws CronServiceException 取消失败时 when cancellation fails
      */
     public void cancel(JobDetail jd) {
@@ -301,9 +285,7 @@ public final class CronService {
     /**
      * 获取所有任务详情
      * Get all job details
-     *
      * @return 任务详情集合 Collection of job details
-     *
      * @throws CronServiceException 获取失败时 when retrieval fails
      */
 	private Collection<JobDetail> getJobDetails() {
@@ -334,7 +316,6 @@ public final class CronService {
     /**
      * 获取所有运行中的任务映射
      * Get all running tasks mapping
-     *
      * @return 任务与详情的映射 Map of runnable to job detail
      */
     public Map<Runnable, JobDetail> getRunnables() {
@@ -360,7 +341,6 @@ public final class CronService {
     /**
      * 获取任务的触发器列表
      * Get triggers for a job
-     *
      * @param jd 任务详情 Job detail
      * @return 触发器列表 List of triggers
      */
@@ -371,10 +351,8 @@ public final class CronService {
     /**
      * 获取任务的触发器列表
      * Get triggers for a job
-     *
      * @param jk 任务键 Job key
      * @return 触发器列表 List of triggers
-     *
      * @throws CronServiceException 获取失败时 when retrieval fails
      */
     public List<? extends Trigger> getJobTriggers(JobKey jk) {

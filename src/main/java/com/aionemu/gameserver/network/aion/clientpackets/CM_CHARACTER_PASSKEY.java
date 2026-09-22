@@ -19,7 +19,6 @@ import java.nio.charset.StandardCharsets;
 /**
  * 角色二级密码（Passkey）设置/校验的客户端包。
  * Client packet for character passkey setup and verification.
- *
  * @author Rinzler
  */
 public class CM_CHARACTER_PASSKEY extends AionClientPacket {

@@ -23,7 +23,6 @@ import lombok.Getter;
 /**
  * 任务模板数据容器，按任务 ID 索引，并按 NPC 势力分组。
  * Quest template data holder, indexed by quest id and grouped by NPC faction.
- *
  * @author MrPoke
  */
 @Getter
@@ -34,8 +33,6 @@ public class QuestsData {
 	/**
 	 * 返回原始任务模板列表。
 	 * Returns the raw quest template list.
-	 *
-	 * @return 任务模板列表 / quest template list
 	 */
 	@XmlElement(name = "quest", required = true)
 	protected List<QuestTemplate> questsData;
@@ -70,7 +67,6 @@ public class QuestsData {
 	/**
 	 * 按任务 ID 获取任务模板。
 	 * Returns the quest template for the given quest id.
-	 *
 	 * @param id 任务 ID / quest id
 	 * @return 任务模板，不存在则为 null / quest template or null
 	 */
@@ -81,7 +77,6 @@ public class QuestsData {
 	/**
 	 * 返回指定 NPC 势力下、玩家当前可接取的任务列表。
 	 * Returns faction quests the player can currently start.
-	 *
 	 * @param npcFactionId NPC 势力 ID / NPC faction id
 	 * @param player 玩家 / player
 	 * @return 可接任务列表 / startable quest list
@@ -108,7 +103,6 @@ public class QuestsData {
 	/**
 	 * 返回已加载的任务模板数量。
 	 * Returns the number of loaded quest templates.
-	 *
 	 * @return 已加载的任务模板数量 / Returns the number of loaded quest templates.
 	 */
 	public int size() {
@@ -118,7 +112,6 @@ public class QuestsData {
 	/**
 	 * 设置任务模板列表并立即重建索引。
 	 * Sets the quest template list and rebuilds indexes immediately.
-	 *
 	 * @param questsData 任务模板列表 / quest template list
 	 */
 	public void setQuestsData(List<QuestTemplate> questsData) {

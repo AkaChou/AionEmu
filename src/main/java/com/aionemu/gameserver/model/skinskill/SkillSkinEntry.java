@@ -8,7 +8,6 @@ import lombok.AccessLevel;
 /**
  * 技能外观条目。
  * Skill Skin Entry model.
- *
  * @author Rinzler (Encom)
  */
 @AllArgsConstructor(access = AccessLevel.PACKAGE)

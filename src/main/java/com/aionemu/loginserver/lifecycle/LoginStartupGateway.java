@@ -25,7 +25,6 @@ public class LoginStartupGateway {
     /**
      * 注入可选的玩家转移服务提供者。
      * Inject optional player-transfer service provider.
-     *
      * @param playerTransferServiceProvider 玩家转移服务提供者 / player-transfer service provider
      */
     @Autowired(required = false)
@@ -36,7 +35,6 @@ public class LoginStartupGateway {
     /**
      * 注入可选的启动运行时桥接提供者。
      * Inject optional startup runtime-bridge provider.
-     *
      * @param runtimeBridgeProvider 运行时桥接提供者 / runtime-bridge provider
      */
     @Autowired(required = false)
@@ -120,7 +118,6 @@ public class LoginStartupGateway {
     /**
      * 初始化加密密钥生成器。
      * Initialize the crypto key generator.
-     *
      * @throws Exception 密钥生成失败时抛出 / thrown when key generation fails
      */
     public void initializeKeyGenerator() throws Exception {
@@ -130,7 +127,6 @@ public class LoginStartupGateway {
     /**
      * 记录密钥生成器初始化失败。
      * Log key-generator initialization failure.
-     *
      * @param e 异常 / exception
      */
     public void logKeyGeneratorFailure(Exception e) {
@@ -188,7 +184,6 @@ public class LoginStartupGateway {
     /**
      * 判断当前是否为嵌入式启动模式。
      * Whether the process is running in boot-embedded mode.
-     *
      * @return 嵌入式模式返回 true / true if boot-embedded
      */
     public boolean isBootEmbedded() {
@@ -230,7 +225,6 @@ public class LoginStartupGateway {
     /**
      * 返回当前系统时间毫秒数。
      * Return the current system time in milliseconds.
-     *
      * @return 当前时间毫秒 / current time millis
      */
     public long currentTimeMillis() {
@@ -240,7 +234,6 @@ public class LoginStartupGateway {
     /**
      * 解析玩家转移服务：优先 Spring 提供者，否则回退到运行时桥接。
      * Resolve player-transfer service: prefer Spring provider, else fall back to the runtime bridge.
-     *
      * @return 玩家转移服务 / player-transfer service
      */
     private PlayerTransferService playerTransferService() {
@@ -253,7 +246,6 @@ public class LoginStartupGateway {
     /**
      * 解析启动运行时桥接：优先 Spring 提供者，否则新建实例。
      * Resolve the startup runtime bridge: prefer Spring provider, else create a new instance.
-     *
      * @return 启动运行时桥接 / startup runtime bridge
      */
     private LoginStartupRuntimeBridge runtimeBridge() {

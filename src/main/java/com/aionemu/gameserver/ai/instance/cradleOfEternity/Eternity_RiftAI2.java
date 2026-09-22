@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Cradle Of Eternity 副本 NPC AI：Eternity Rift（@AIName "Eternity_Rift"），继承 NpcAI2。
  * Cradle Of Eternity instance NPC AI: Eternity Rift (@AIName "Eternity_Rift"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Eternity_Rift")

@@ -30,7 +30,6 @@ import java.util.List;
 /**
  * 攻击伤害与命中状态计算工具类。
  * Utility for attack damage and hit-status calculations.
- *
  * @author ATracer
  */
 public class AttackUtil {
@@ -38,10 +37,8 @@ public class AttackUtil {
 	/**
 	 * 计算物理自动攻击的结果列表。
 	 * Calculates physical auto-attack results.
-	 *
 	 * @param attacker 攻击者 / attacker
 	 * @param attacked 被攻击者 / attacked
-	 *
 	 * @return 攻击结果列表 / list of attack results
 	 */
 	public static List<AttackResult> calculateAutoAttackPhysical(Creature attacker, Creature attacked) {
@@ -67,7 +64,6 @@ public class AttackUtil {
 	/**
 	 * 应用物理自动攻击的防御与修正后伤害。
 	 * Applies physical auto-attack defense and damage adjustments.
-	 *
 	 * @param attacker 攻击者 / attacker
 	 * @param attacked 被攻击者 / attacked
 	 * @param damage 原始伤害 / raw damage
@@ -87,7 +83,6 @@ public class AttackUtil {
 	/**
 	 * 返回物理武器本次攻击的命中段数。
 	 * Returns the hit count for a physical weapon attack.
-	 *
 	 * @param attacker 攻击者 / attacker
 	 * @param mainHand 是否主手 / whether main hand
 	 * @return 命中段数 / hit count
@@ -104,7 +99,6 @@ public class AttackUtil {
 	/**
 	 * 对结果列表应用全局伤害倍率，并保证非闪避命中至少为 1。
 	 * Applies the global damage multiplier; non-dodge hits are at least 1.
-	 *
 	 * @param attackList 攻击结果列表 / attack result list
 	 */
 	private static void applyDamageMultiplier(List<AttackResult> attackList) {
@@ -122,7 +116,6 @@ public class AttackUtil {
 	/**
 	 * 若任一方为 NPC，则按 AI 修正结果列表中的伤害。
 	 * If either side is an NPC, adjusts damages via AI hooks.
-	 *
 	 * @param attacker 攻击者 / attacker
 	 * @param attacked 被攻击者 / attacked
 	 * @param attackResults 攻击结果列表 / attack results
@@ -139,7 +132,6 @@ public class AttackUtil {
 	/**
 	 * 按 NPC AI 修正单次伤害。
 	 * Adjusts a single damage value via NPC AI hooks.
-	 *
 	 * @param attacker 攻击者 / attacker
 	 * @param attacked 被攻击者 / attacked
 	 * @param damage 原始伤害 / raw damage
@@ -158,7 +150,6 @@ public class AttackUtil {
 	/**
 	 * 计算格挡后的伤害（官服 5.8 机制：盾牌/武器减伤与盾牌上限）。
 	 * Calculates blocked damage (retail 5.8: shield/weapon reduce and shield max block).
-	 *
 	 * @param attacker 攻击者 / attacker
 	 * @param attacked 被攻击者 / attacked
 	 * @param damage 原始伤害 / raw damage
@@ -209,12 +200,10 @@ public class AttackUtil {
 	/**
 	 * 计算魔法自动攻击结果。
 	 * Calculates magical auto-attack results.
-	 *
 	 * @param attacker 攻击者 / attacker
 	 * @param attacked 被攻击者 / attacked
 	 * @param elem 技能元素 / skill element
 	 * @param calculationTypes 附加计算类型 / additional calculation types
-	 *
 	 * @return 攻击结果列表 / list of attack results
 	 */
 	public static List<AttackResult> calculateMagAttackResult(Creature attacker, Creature attacked, SkillElement elem,
@@ -234,7 +223,6 @@ public class AttackUtil {
 	/**
 	 * 应用魔法自动攻击的防御、暴击与元素修正。
 	 * Applies magical auto-attack defense, critical and element adjustments.
-	 *
 	 * @param attacker 攻击者 / attacker
 	 * @param attacked 被攻击者 / attacked
 	 * @param elem 技能元素 / skill element
@@ -262,7 +250,6 @@ public class AttackUtil {
 	/**
 	 * 按武器命中段数追加额外物理命中。
 	 * Appends extra physical hits based on weapon hit count.
-	 *
 	 * @param attacker 攻击者 / attacker
 	 * @param status 攻击状态 / attack status
 	 * @param attackList 攻击结果列表 / attack result list
@@ -288,7 +275,6 @@ public class AttackUtil {
 	/**
 	 * 按真实随机伤害表的 20 个等概率区间对技能伤害做波动。
 	 * Randomizes skill damage using the retail table's 20 equally likely ranges.
-	 *
 	 * @param randomDamageType 随机伤害类型 / random damage type
 	 * @param damage 原始伤害 / raw damage
 	 * @return 波动后伤害 / randomized damage
@@ -323,10 +309,8 @@ public class AttackUtil {
 	/**
 	 * 计算物理攻击状态与伤害（委托自动攻击计算）。
 	 * Calculates physical attack status and damage (delegates to auto-attack).
-	 *
 	 * @param attacker 攻击者 / attacker
 	 * @param attacked 被攻击者 / attacked
-	 *
 	 * @return 攻击结果列表 / list of attack results
 	 */
 	public static List<AttackResult> calculatePhysicalAttackResult(Creature attacker, Creature attacked) {
@@ -336,7 +320,6 @@ public class AttackUtil {
 	/**
 	 * 按武器命中段数拆分物理伤害并生成攻击结果。
 	 * Splits physical damage by weapon hit count into attack results.
-	 *
 	 * @param attacker 攻击者 / attacker
 	 * @param attacked 被攻击者 / attacked
 	 * @param mainHand 是否主手 / whether main hand
@@ -406,7 +389,6 @@ public class AttackUtil {
 	/**
 	 * 将总伤害拆分为多段命中伤害数组。
 	 * Splits total damage into per-hit damage values.
-	 *
 	 * @param hitCount 命中段数 / hit count
 	 * @param damage 总伤害 / total damage
 	 * @return 分段伤害数组 / per-hit damages
@@ -423,7 +405,6 @@ public class AttackUtil {
 	/**
 	 * 计算武器暴击伤害（无额外暴击伤害加成）。
 	 * Calculates weapon critical damage (no extra crit add).
-	 *
 	 * @param attacker 攻击者 / attacker
 	 * @param attacked 被攻击者 / attacked
 	 * @param damages 原始伤害 / raw damage
@@ -439,7 +420,6 @@ public class AttackUtil {
 	/**
 	 * 计算武器暴击伤害（含额外暴击伤害加成）。
 	 * Calculates weapon critical damage including extra crit add.
-	 *
 	 * @param attacker 攻击者 / attacker
 	 * @param attacked 被攻击者 / attacked
 	 * @param damages 原始伤害 / raw damage
@@ -458,7 +438,6 @@ public class AttackUtil {
 	/**
 	 * 计算武器暴击倍率系数。
 	 * Calculates the weapon critical damage multiplier.
-	 *
 	 * @param weaponType 武器类型 / weapon type
 	 * @param stat 暴击减伤属性 / critical damage reduce stat
 	 * @param fortitude 坚韧/暴击减伤当前值 / fortitude current value
@@ -492,7 +471,6 @@ public class AttackUtil {
 	/**
 	 * 计算技能物理/主攻结果，写入 Effect 的伤害与攻击状态。
 	 * Calculates skill physical/main-attack result and writes damage/status into the Effect.
-	 *
 	 * @param effect 技能效果 / effect
 	 * @param skillDamage 技能伤害 / skill damage
 	 * @param modifier 伤害修正器 / damage modifier
@@ -645,7 +623,6 @@ public class AttackUtil {
 	/**
 	 * 将伤害结果写回 Effect，并可选触发护盾检测。
 	 * Writes the damage result back into the Effect and optionally checks shields.
-	 *
 	 * @param effect 技能效果 / effect
 	 * @param effected 受击者 / effected
 	 * @param damage 伤害值 / damage
@@ -716,7 +693,6 @@ public class AttackUtil {
 	/**
 	 * 计算持续魔法技能（DoT）的单次伤害。
 	 * Calculates a single tick of magical over-time (DoT) skill damage.
-	 *
 	 * @param effect 技能效果 / effect
 	 * @param skillDamage 技能伤害 / skill damage
 	 * @param element 技能元素 / skill element
@@ -772,7 +748,6 @@ public class AttackUtil {
 	/**
 	 * 计算魔法技能结果（使用默认参数的便捷重载）。
 	 * Calculates magical skill result (convenience overload with defaults).
-	 *
 	 * @param effect 技能效果 / effect
 	 * @param skillDamage 技能伤害 / skill damage
 	 * @param modifier 伤害修正器 / damage modifier
@@ -787,7 +762,6 @@ public class AttackUtil {
 	/**
 	 * 计算魔法技能完整结果并写入 Effect。
 	 * Calculates full magical skill result and writes it into the Effect.
-	 *
 	 * @param effect 技能效果 / effect
 	 * @param skillDamage 技能伤害 / skill damage
 	 * @param modifier 伤害修正器 / damage modifier
@@ -908,7 +882,6 @@ public class AttackUtil {
 	/**
 	 * 计算物理攻击状态（默认参数便捷重载）。
 	 * Calculates physical attack status (convenience overload with defaults).
-	 *
 	 * @param attacker 攻击者 / attacker
 	 * @param attacked 被攻击者 / attacked
 	 * @param isMainHand 是否主手 / whether main hand
@@ -921,7 +894,6 @@ public class AttackUtil {
 	/**
 	 * 计算物理攻击状态：闪避/格挡/招架与暴击组合。
 	 * Calculates physical attack status: dodge/block/parry and critical combinations.
-	 *
 	 * @param attacker 攻击者 / attacker
 	 * @param attacked 被攻击者 / attacked
 	 * @param isMainHand 是否主手 / whether main hand
@@ -956,11 +928,7 @@ public class AttackUtil {
 				status = AttackStatus.PARRY;
 			}
 		} else if (!alwaysHit) {
-			/**
-			 * 检查 AlwaysDodge / AlwaysParry / AlwaysBlock。
-			 * Check AlwaysDodge, AlwaysParry, AlwaysBlock
-			 */
-			StatFunctions.calculatePhysicalDodgeRate(attacker, attacked, accMod, isMainHand);
+            StatFunctions.calculatePhysicalDodgeRate(attacker, attacked, accMod, isMainHand);
 			StatFunctions.calculatePhysicalParryRate(attacker, attacked, accMod, isMainHand);
 			StatFunctions.calculatePhysicalBlockRate(attacker, attacked, accMod, isMainHand);
 		}
@@ -981,7 +949,6 @@ public class AttackUtil {
 	 * Calculates magical attack status (applies magical critical by default).
 	 * <p>
 	 * Every +100 delta of (MR - MA) = +10% resist; difference of 1000 = 100% resist.
-	 *
 	 * @param attacker 攻击者 / attacker
 	 * @param attacked 被攻击者 / attacked
 	 * @param criticalProb 暴击概率 / critical probability
@@ -996,7 +963,6 @@ public class AttackUtil {
 	/**
 	 * 计算魔法攻击状态：抵抗与魔法暴击。
 	 * Calculates magical attack status: resist and magical critical.
-	 *
 	 * @param attacker 攻击者 / attacker
 	 * @param attacked 被攻击者 / attacked
 	 * @param criticalProb 暴击概率 / critical probability
@@ -1024,7 +990,6 @@ public class AttackUtil {
 	/**
 	 * 取消所有以该目标为首目标的施法。
 	 * Cancels casts from anyone currently targeting this creature as first target.
-	 *
 	 * @param target 目标生物 / target creature
 	 */
 	public static void cancelCastOn(final Creature target) {
@@ -1044,7 +1009,6 @@ public class AttackUtil {
 	/**
 	 * 若生物正在对该目标施法则取消当前技能。
 	 * Cancels the creature's current skill if it is casting on the target.
-	 *
 	 * @param creature 施法者 / caster
 	 * @param target 目标 / target
 	 */
@@ -1059,7 +1023,6 @@ public class AttackUtil {
 	/**
 	 * 清除所有玩家对该生物的选中目标。
 	 * Clears this creature as the selected target for all observing players.
-	 *
 	 * @param object 目标生物 / target creature
 	 */
 	public static void removeTargetFrom(final Creature object) {
@@ -1069,7 +1032,6 @@ public class AttackUtil {
 	/**
 	 * 清除选中该生物的玩家目标；可选仅在不可见时清除。
 	 * Clears players targeting this creature; optionally only when they cannot see it.
-	 *
 	 * @param object 目标生物 / target creature
 	 * @param validateSee 是否校验可见性 / whether to validate visibility
 	 */
@@ -1092,7 +1054,6 @@ public class AttackUtil {
 	/**
 	 * 判断技能是否自带硬直类效果（暴击触发硬直时应跳过）。
 	 * Returns whether the skill already applies stagger/stumble-like effects (skip crit procs).
-	 *
 	 * @param skillId 技能 ID / skill id
 	 * @return 是否自带相关效果 / whether skill already applies the effect
 	 * @author KorLightNing
@@ -1104,7 +1065,6 @@ public class AttackUtil {
 	/**
 	 * 物理暴击时按武器类型尝试触发硬直/踉跄类效果。
 	 * On physical critical, attempts to apply stagger/stumble based on weapon type.
-	 *
 	 * @param attacker 攻击玩家 / attacking player
 	 * @param attacked 被攻击者 / attacked
 	 * @param returnSkill 触发来源技能 ID（0 表示普通攻击） / source skill id (0 for auto-attack)

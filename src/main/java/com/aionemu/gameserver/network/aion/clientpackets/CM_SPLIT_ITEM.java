@@ -8,7 +8,6 @@ import com.aionemu.gameserver.services.item.ItemSplitService;
 /**
  * 客户端拆分物品堆叠请求包。
  * Client packet for splitting an item stack into another slot or storage.
- *
  * @author kosyak
  */
 public class CM_SPLIT_ITEM extends AionClientPacket {

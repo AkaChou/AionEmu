@@ -8,7 +8,6 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 /**
  * Transidium Annex 副本 NPC AI：Hangar Barricade（@AIName "hangar_barricade"），继承 NpcAI2。
  * Transidium Annex instance NPC AI: Hangar Barricade (@AIName "hangar_barricade"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("hangar_barricade")

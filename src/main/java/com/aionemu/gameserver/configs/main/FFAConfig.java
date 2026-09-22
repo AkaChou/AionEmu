@@ -5,7 +5,6 @@ import com.aionemu.commons.configuration.Property;
 /**
  * FFA（自由混战）活动相关配置。
  * Free-for-all (FFA) event related configuration.
- *
  * @author Rinzler (Encom)
  */
 public class FFAConfig {

@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Cygnea 区域 NPC AI：Deadly Sunayaka（@AIName "deadly_sunayaka"），继承 AggressiveNpcAI2。
  * Cygnea zone NPC AI: Deadly Sunayaka (@AIName "deadly_sunayaka"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("deadly_sunayaka")

@@ -3,7 +3,6 @@ package com.aionemu.loginserver.service.ptransfer;
 /**
  * 玩家跨服转移任务数据模型（对应数据库任务行）。
  * Player cross-server transfer task data model (maps to a DB task row).
- *
  * @author KID
  */
 public class PlayerTransferTask {

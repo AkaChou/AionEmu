@@ -20,7 +20,6 @@ public class SiegeWeaponController extends SummonController {
 	/**
 	 * 根据 NPC 模板 ID 构造攻城兵器控制器。
 	 * Constructs a siege weapon controller from an NPC template id.
-	 *
 	 * @param npcId NPC 模板 ID / NPC template id
 	 */
 	public SiegeWeaponController(int npcId) {
@@ -30,7 +29,6 @@ public class SiegeWeaponController extends SummonController {
 	/**
 	 * 解除召唤时取消跟随任务并中止移动。
 	 * On release, cancels the follow task and aborts movement.
-	 *
 	 * @param unsummonType 解除召唤类型 / unsummon type
 	 */
 	@Override
@@ -79,7 +77,6 @@ public class SiegeWeaponController extends SummonController {
 	/**
 	 * 进入攻击模式并跟随指定目标。
 	 * Enters attack mode and follows the specified target.
-	 *
 	 * @param targetObjId target object id
 	 */
 	@Override
@@ -99,7 +96,6 @@ public class SiegeWeaponController extends SummonController {
 	/**
 	 * 死亡时取消跟随任务并执行召唤物死亡逻辑。
 	 * On death, cancels the follow task and runs summon death logic.
-	 *
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 */
 	@Override
@@ -111,7 +107,6 @@ public class SiegeWeaponController extends SummonController {
 	/**
 	 * 获取攻城兵器的 NPC 技能模板。
 	 * Gets the NPC skill templates for this siege weapon.
-	 *
 	 * NPC skill templates
 	 */
 	public NpcSkillTemplates getNpcSkillTemplates() {

@@ -11,7 +11,6 @@ import lombok.Getter;
 /**
  * 军团仓库，用于团队相关逻辑。
  * Legion Warehouse for team logic.
- *
  * @author Simple
  */
 @Getter

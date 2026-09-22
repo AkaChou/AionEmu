@@ -22,7 +22,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * RvR 相关 NPC AI：F6 Raid INVADE Direct Portal（@AIName "F6_Raid_INVADE_Direct_Portal"），继承 NpcAI2。
  * RvR-related NPC AI: F6 Raid INVADE Direct Portal (@AIName "F6_Raid_INVADE_Direct_Portal"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("F6_Raid_INVADE_Direct_Portal")

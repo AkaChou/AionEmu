@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 /**
  * 欧比斯着陆点生命周期抽象基类：启动/停止/更新与刷怪钩子。
  * Abstract abyss-landing lifecycle base: start/stop/update and spawn hooks.
- *
  * @param <RL> 着陆点位置类型 / Landing-location type
  */
 @Getter
@@ -27,9 +26,6 @@ public abstract class Landing<RL extends LandingLocation> {
 	 */
 	private int level;
 	private boolean started;
-	/**
-	 * @return 着陆点位置 / Landing location
-	 */
 	private final RL landingLocation;
 
 	/**
@@ -47,7 +43,6 @@ public abstract class Landing<RL extends LandingLocation> {
 	/**
 	 * 按等级启动着陆点刷怪。
 	 * Start landing spawns at the given level.
-	 *
 	 * @param level 着陆等级 / Landing level
 	 */
 	protected abstract void startLanding(int level);
@@ -57,7 +52,6 @@ public abstract class Landing<RL extends LandingLocation> {
 	/**
 	 * 幂等启动：已启动则直接返回。
 	 * Idempotent start; no-ops when already started.
-	 *
 	 * @param level 着陆等级 / Landing level
 	 */
 	public final void start(int level) {
@@ -94,7 +88,6 @@ public abstract class Landing<RL extends LandingLocation> {
 	/**
 	 * 按状态类型刷出 NPC。
 	 * Spawn NPCs for the given state type.
-	 *
 	 * @param type 着陆状态 / Landing state type
 	 */
 	protected void spawn(LandingStateType type) {
@@ -112,7 +105,6 @@ public abstract class Landing<RL extends LandingLocation> {
 	/**
 	 * 着陆点是否已关闭。
 	 * Whether the landing is closed.
-	 *
 	 * @return 是否已关闭 / closed flag
 	 */
 	public boolean isClosed() {

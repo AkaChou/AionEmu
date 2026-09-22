@@ -25,7 +25,6 @@ public class FormCondition extends Condition {
 	/**
 	 * 校验技能环境是否满足本条件。
 	 * Validates whether the skill environment satisfies this condition.
-	 *
 	 * @param env 技能环境 / skill environment
 	 * @return 是否有效 / whether valid
 	 */

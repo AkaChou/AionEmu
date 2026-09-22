@@ -103,19 +103,15 @@ class AionLegacyPropertySourceEnvironmentPostProcessorTest {
 
     /**
      * 回归：登录服与游戏服的 {@code database.properties} 同名不同值，镜像不得把登录服 URL 泄漏给游戏服。
-     *
      * <p>启动路径上解析器（{@link BootConfigSourceResolver}）优先于本地文件，一旦扁平镜像里只剩下
      * 登录服的 {@code database.url}，游戏服连接池就会指向 {@code al_server_ls}，随后所有玩家、背包、
      * 住宅、城镇表查询都会失败。因此这里同时断言镜像与遗留静态字段。</p>
-     *
      * Regression: the login and game {@code database.properties} files define the same key with
      * different values, so the mirror must not leak the login-server URL into the game server.
-     *
      * <p>The published resolver ({@link BootConfigSourceResolver}) outranks local files on the startup
      * path, so a flat mirror holding only the login-server {@code database.url} would point the game
      * connection pool at {@code al_server_ls} and break every player, inventory, house and town query.
      * The test therefore pins both the mirror and the legacy static fields.</p>
-     *
      * @throws Exception 临时配置写入失败 / when writing the temporary configuration fails
      */
     @Test
@@ -202,7 +198,6 @@ class AionLegacyPropertySourceEnvironmentPostProcessorTest {
      * 配置路径保持现状：{@code aion/config/main/main.properties} 里的点号长键必须既能进入 Spring
      * Environment，又能被 {@code @ConfigurationProperties} 配置类直接绑定（无需新建 application.yml 键，
      * 也无需移动任何配置文件）。
-     *
      * Configuration paths stay as they are: dotted keys in
      * {@code aion/config/main/main.properties} must both reach the Spring Environment and bind straight
      * onto {@code @ConfigurationProperties} beans, without new application.yml keys or moved files.
@@ -273,7 +268,6 @@ class AionLegacyPropertySourceEnvironmentPostProcessorTest {
     /**
      * 构造单键覆盖属性，模拟某一个服务自己加载的遗留属性。
      * Builds a single-key override set standing for the legacy properties one service loads itself.
-     *
      * @param key 配置键 / configuration key
      * @param value 配置值 / configuration value
      * @return 属性集 / properties

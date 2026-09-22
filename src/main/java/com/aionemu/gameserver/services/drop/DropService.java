@@ -53,7 +53,6 @@ import com.aionemu.gameserver.configs.main.GroupConfig;
 /**
  * 掉落服务，处理掉落列表展示、拾取与队伍分配。
  * Drop service handling loot list display, pickup, and group distribution.
- *
  * @author ATracer, xTz
  */
 @Slf4j
@@ -65,11 +64,9 @@ public class DropService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -93,7 +90,6 @@ public class DropService {
 	/**
 	 * 设置 Spring 实例提供者。
 	 * Sets the Spring instance provider.
-	 *
 	 * @param provider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<DropService> provider) {
@@ -104,7 +100,6 @@ public class DropService {
 	/**
 	 * 调度尸体进入自由拾取状态。
 	 * Schedules free-for-all looting on a corpse.
-	 *
 	 * NPC unique object id
 	 */
 	public void scheduleFreeForAll(final int npcUniqueId) {
@@ -130,7 +125,6 @@ public class DropService {
 	/**
 	 * 注销 NPC 掉落登记（重生/消失时）。
 	 * Unregisters drop data for an NPC (on respawn/despawn).
-	 *
 	 * target NPC
 	 */
 	public void unregisterDrop(Npc npc) {
@@ -144,7 +138,6 @@ public class DropService {
 	/**
 	 * 玩家点击尸体时请求掉落列表。
 	 * Requests the drop list when a player clicks a corpse.
-	 *
 	 * requesting player
 	 * NPC object id
 	 */
@@ -202,7 +195,6 @@ public class DropService {
 	/**
 	 * 关闭掉落列表并释放尸体占用。
 	 * Closes the drop list and releases corpse looting lock.
-	 *
 	 * acting player
 	 * NPC object id
 	 */
@@ -254,11 +246,8 @@ public class DropService {
 	/**
 	 * 判断物品是否可直接发放，或需进入掷骰/竞价流程。
 	 * Checks whether an item can be given directly or needs roll/bid.
-	 *
 	 * requesting player
-	 *
 	 * @param requestedItem 目标掉落物 / requested drop item
-	 * @param requestedItem
 	 * @return 可直接发放时为 true / true if direct distribution is allowed
 	 */
 	public boolean canDistribute(Player player, DropItem requestedItem) {
@@ -321,11 +310,8 @@ public class DropService {
 	/**
 	 * 判断是否允许自动拾取该掉落物。
 	 * Checks whether auto-loot is allowed for the drop item.
-	 *
 	 * requesting player
-	 *
 	 * @param requestedItem 目标掉落物 / requested drop item
-	 * @param requestedItem
 	 * @return 可自动拾取时为 true / true if auto-loot is allowed
 	 */
 	public boolean canAutoLoot(Player player, DropItem requestedItem) {
@@ -367,7 +353,6 @@ public class DropService {
 	/**
 	 * 请求拾取指定索引的掉落物（非自动拾取）。
 	 * Requests pickup of a drop item by index (non-auto loot).
-	 *
 	 * requesting player
 	 * NPC object id
 	 * drop index
@@ -379,7 +364,6 @@ public class DropService {
 	/**
 	 * 请求拾取指定索引的掉落物。
 	 * Requests pickup of a drop item by index.
-	 *
 	 * requesting player
 	 * NPC object id
 	 * drop index
@@ -648,7 +632,6 @@ public class DropService {
 	/**
 	 * 玩家看见尸体时同步掉落可用状态。
 	 * Syncs loot-available status when a player sees a corpse.
-	 *
 	 * observing player
 	 * corpse NPC
 	 */

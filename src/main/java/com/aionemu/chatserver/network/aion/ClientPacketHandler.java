@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 /**
  * 聊天客户端数据包分发处理器。
  * Dispatcher for chat client packets.
- *
  * @author ATracer
  */
 @RequiredArgsConstructor
@@ -36,7 +35,6 @@ public class ClientPacketHandler extends AbstractPacketHandler {
     /**
      * 根据连接状态与操作码解析并构造客户端包。
      * Resolves and constructs a client packet by connection state and opcode.
-     *
      * @param buf 包读取器 / packet reader
      * @param channelHandler 客户端通道处理器 / client channel handler
      * @return 客户端数据包，未知时为 {@code null} / client packet, or {@code null} if unknown

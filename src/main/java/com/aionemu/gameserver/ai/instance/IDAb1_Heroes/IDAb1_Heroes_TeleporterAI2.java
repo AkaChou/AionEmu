@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * ID Ab1 Heroes 副本 NPC AI：ID Ab1 Heroes Teleporter（@AIName "IDAb1_Heroes_Teleporter"），继承 GeneralNpcAI2。
  * ID Ab1 Heroes instance NPC AI: ID Ab1 Heroes Teleporter (@AIName "IDAb1_Heroes_Teleporter"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("IDAb1_Heroes_Teleporter")

@@ -31,7 +31,6 @@ public class ProcAtkInstantEffect extends DamageEffect {
 	/**
 	 * 对目标结算 PROCATKINSTANT 伤害，并在需要时通知施法者。
 	 * Applies PROCATKINSTANT damage and optionally notifies the effector.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -47,7 +46,6 @@ public class ProcAtkInstantEffect extends DamageEffect {
 	/**
 	 * 以魔法伤害类型计算触发攻击。
 	 * Calculates the proc attack as magical damage.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

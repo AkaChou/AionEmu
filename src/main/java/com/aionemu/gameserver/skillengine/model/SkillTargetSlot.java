@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 技能目标槽位：效果占用的 BUFF/DEBUFF 等槽位类别。
  * Skill target slot: buff/debuff/etc. slot class occupied by an effect.
- *
  * @author ATracer
  */
 @XmlType(name = "TargetSlot")

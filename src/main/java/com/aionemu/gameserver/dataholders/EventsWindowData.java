@@ -18,7 +18,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 活动窗口配置数据容器，按 ID 索引事件窗口模板。
  * Events window configuration data holder, indexed by event window id.
- *
  * @author Ranastic
  */
 @XmlRootElement(name = "events_window")
@@ -48,7 +47,6 @@ public class EventsWindowData {
 	/**
 	 * 返回事件窗口数量。
 	 * Returns the number of event windows.
-	 *
 	 * @return 事件窗口数量 / event window count
 	 */
 	public int size() {
@@ -58,7 +56,6 @@ public class EventsWindowData {
 	/**
 	 * 按 ID 获取事件窗口模板。
 	 * Returns the event window template for the given id.
-	 *
 	 * @param id 事件窗口 ID / event window id
 	 * @return 事件窗口模板，不存在则为 null / event window template, or null if absent
 	 */
@@ -69,7 +66,6 @@ public class EventsWindowData {
 	/**
 	 * 返回全部事件窗口映射。
 	 * Returns the map of all event windows.
-	 *
 	 * @return ID 到事件窗口的映射 / map of id to event window
 	 */
 	public Map<Integer, EventsWindow> getAllEvents() {

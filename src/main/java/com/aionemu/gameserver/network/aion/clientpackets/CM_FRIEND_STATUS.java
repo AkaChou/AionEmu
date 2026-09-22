@@ -19,7 +19,6 @@ public class CM_FRIEND_STATUS extends AionClientPacket {
 	/**
 	 * 构造客户端包实例。
 	 * Constructs a new client packet instance.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余允许状态 / additional allowed states

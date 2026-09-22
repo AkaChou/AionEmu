@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Shugo Emperor Vault 副本 NPC AI：Furious Gladiatorerk Soul（@AIName "gladiatorerk"），继承 NpcAI2。
  * Shugo Emperor Vault instance NPC AI: Furious Gladiatorerk Soul (@AIName "gladiatorerk"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("gladiatorerk")

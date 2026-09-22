@@ -36,7 +36,6 @@ public class GameSiegeScheduleGateway {
     /**
      * 注入攻城服务提供者。
      * Inject the siege service provider.
-     *
      * @param siegeServiceProvider 攻城服务提供者 / Siege service provider
      */
     @Autowired(required = false)
@@ -47,7 +46,6 @@ public class GameSiegeScheduleGateway {
     /**
      * 注入基地服务提供者。
      * Inject the base service provider.
-     *
      * @param baseServiceProvider 基地服务提供者 / Base service provider
      */
     @Autowired(required = false)
@@ -58,7 +56,6 @@ public class GameSiegeScheduleGateway {
     /**
      * 注入功能服务运行时桥接提供者。
      * Inject the feature-services runtime bridge provider.
-     *
      * @param runtimeBridgeProvider 运行时桥接提供者 / Runtime bridge provider
      */
     @Autowired(required = false)
@@ -79,7 +76,6 @@ public class GameSiegeScheduleGateway {
     /**
      * 解析攻城服务。
      * Resolve the siege service.
-     *
      * @return 攻城服务 / Siege service
      */
     private SiegeService siegeService() {
@@ -92,7 +88,6 @@ public class GameSiegeScheduleGateway {
     /**
      * 解析基地服务。
      * Resolve the base service.
-     *
      * @return 基地服务 / Base service
      */
     private BaseService baseService() {
@@ -105,7 +100,6 @@ public class GameSiegeScheduleGateway {
     /**
      * 解析功能服务运行时桥接。
      * Resolve the feature-services runtime bridge.
-     *
      * @return 运行时桥接 / Runtime bridge
      */
     private GameFeatureServicesRuntimeBridge runtimeBridge() {

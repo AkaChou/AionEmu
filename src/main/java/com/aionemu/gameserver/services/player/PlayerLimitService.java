@@ -17,7 +17,6 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * 玩家限制服务，管理出售限额等周期限制。
  * Player limit service managing periodic limits such as sell caps.
- *
  * @author Source
  */
 
@@ -29,7 +28,6 @@ public class PlayerLimitService {
 	/**
 	 * 更新出售限额，超出限额则拒绝并提示。
 	 * Updates the sell limit, rejecting and notifying when exceeded.
-	 *
 	 * @param player 玩家 / player
 	 * @param reward 本次出售所得 / reward gained
 	 * @return 是否允许出售 / whether selling is allowed
@@ -66,20 +64,15 @@ public class PlayerLimitService {
 	 * Schedules limit update.
 	 */
 	public void scheduleUpdate() {
-		/**
-		 * 执行任务。
-		 * Runs the task.
-		 */GameCronServices.cronService().schedule(() -> sellLimit.clear(), CustomConfig.LIMITS_UPDATE, true);
+        GameCronServices.cronService().schedule(() -> sellLimit.clear(), CustomConfig.LIMITS_UPDATE, true);
 	}
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -98,7 +91,6 @@ public class PlayerLimitService {
 	/**
 	 * setInstanceProvider 方法。
 	 * setInstanceProvider method.
-	 *
 	 * @param instanceProvider 副本提供者 / instanceProvider
 	 */
 	public static void setInstanceProvider(ObjectProvider<PlayerLimitService> instanceProvider) {

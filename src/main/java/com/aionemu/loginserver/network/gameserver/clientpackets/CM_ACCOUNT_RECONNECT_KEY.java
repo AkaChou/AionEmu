@@ -13,7 +13,6 @@ import com.aionemu.loginserver.network.gameserver.serverpackets.SM_ACCOUNT_RECON
 /**
  * GS→LS：玩家请求快速重连登录服，LS 回复 reconnectKey。
  * GS→LS: player requests fast reconnect to LoginServer; LS replies with reconnectKey.
- *
  * @author -Nemesiss-
  */
 @Slf4j

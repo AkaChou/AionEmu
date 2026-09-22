@@ -26,7 +26,6 @@ import lombok.Getter;
 /**
  * HallOfTenacity 奖励，用于副本相关逻辑。
  * Hall Of Tenacity Reward for instance logic.
- *
  * @author Ranastic
  */
 @Getter

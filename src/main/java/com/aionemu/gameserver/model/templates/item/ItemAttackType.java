@@ -7,7 +7,6 @@ import com.aionemu.gameserver.model.SkillElement;
 /**
  * 物品 Attack 类型枚举。
  * Item Attack Type enumeration.
- *
  * @author ATracer
  */
 @XmlEnum
@@ -34,7 +33,6 @@ public enum ItemAttackType {
 	/**
 	 * 是否为魔法攻击。
 	 * Whether this attack type is magical.
-	 *
 	 * @return 是否魔法 / Whether magical
 	 */
 	public boolean isMagical() {

@@ -20,7 +20,6 @@ import lombok.NoArgsConstructor;
 /**
  * 属性函数模型。
  * Stat Function model.
- *
  * @author ATracer
  */
 @Getter
@@ -120,7 +119,6 @@ public class StatFunction implements IStatFunction {
 
 	/**
 	 * 创建 final 列表的 modifierscombiningbonuses 带 randombonuses。 / Creates a final list of modifiers combining bonuses with random bonuses
-	 *
 	 * @param modifiers  - can be null if do not exist
 	 * @param rndBonuses - can be null if do not exist
 	 * @return a list of modifiers, empty if none

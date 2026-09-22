@@ -14,7 +14,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
  * Params: packet id (decimal or 0x hex), format string (d/h/c/f/e/q/s), then data values.
  * </p>
  * 示例 / Example: {@code //fsc 0xD8 cdds 8 50 80 someText}
- *
  * @author Luno
  */
 public class Fsc extends AdminCommand {
@@ -30,7 +29,6 @@ public class Fsc extends AdminCommand {
 	/**
 	 * 按包 ID 与格式串组装并发送自定义包。
 	 * Builds and sends a custom packet from id, format string and values.
-	 *
 	 * @param params 包 ID、格式串、数据值 / packet id, format string, data values
 	 */
 	@Override
@@ -59,7 +57,6 @@ public class Fsc extends AdminCommand {
 	/**
 	 * 执行失败时的语法提示。
 	 * Syntax hint on failure.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

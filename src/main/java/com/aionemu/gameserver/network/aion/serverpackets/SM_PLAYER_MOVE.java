@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 强制同步玩家坐标与朝向的服务端包。
  * Server packet that force-syncs the player's coordinates and heading.
- *
  * @author cura
  */
 @AllArgsConstructor

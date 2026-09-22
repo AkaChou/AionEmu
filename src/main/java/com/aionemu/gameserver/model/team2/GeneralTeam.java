@@ -19,7 +19,6 @@ import com.google.common.collect.Collections2;
 /**
  * 通用团队，用于团队2相关逻辑。
  * General Team for team 2 logic.
- *
  * @author ATracer
  */
 @Slf4j

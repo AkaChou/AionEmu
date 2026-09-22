@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Iluma 区域 NPC AI：Spirit Forest Worg Morpher（@AIName "spirit_forest_worg_morpher"），继承 AggressiveNpcAI2。
  * Iluma zone NPC AI: Spirit Forest Worg Morpher (@AIName "spirit_forest_worg_morpher"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("spirit_forest_worg_morpher")

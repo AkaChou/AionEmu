@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Cradle Of Eternity 副本 NPC AI：Fallen Sea Jotun（@AIName "Fallen_Sea_Jotun"），继承 AggressiveNpcAI2。
  * Cradle Of Eternity instance NPC AI: Fallen Sea Jotun (@AIName "Fallen_Sea_Jotun"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("Fallen_Sea_Jotun")

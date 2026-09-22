@@ -22,7 +22,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Steel Rake Cabin 副本 NPC AI：Anikiki（@AIName "anikiki"），继承 AggressiveNpcAI2。
  * Steel Rake Cabin instance NPC AI: Anikiki (@AIName "anikiki"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("anikiki")

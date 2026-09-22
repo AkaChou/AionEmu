@@ -3,7 +3,6 @@ package com.aionemu.gameserver.model.siege;
 /**
  * 神器状态枚举。
  * Artifact Status enumeration.
- *
  * @author MrPoke
  */
 public enum ArtifactStatus {

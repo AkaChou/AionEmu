@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Kaldor 区域 NPC AI：Anoha Sword（@AIName "anoha_sword"），继承 NpcAI2。
  * Kaldor zone NPC AI: Anoha Sword (@AIName "anoha_sword"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("anoha_sword")

@@ -23,7 +23,6 @@ public class QuestWorkItems {
 	/**
 	 * 返回任务工作物品列表（惰性初始化，修改会直接反映到 JAXB 对象）。
 	 * Returns the quest work item list (lazily initialized; modifications are reflected in the JAXB object).
-	 *
 	 * @return 工作物品列表 / list of {@link QuestItems}
 	 */
 	public List<QuestItems> getQuestWorkItem() {

@@ -21,7 +21,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * Tiamat Stronghold 副本 NPC AI：Surama The Traitor（@AIName "suramathetraitor"），继承 GeneralNpcAI2。
  * Tiamat Stronghold instance NPC AI: Surama The Traitor (@AIName "suramathetraitor"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("suramathetraitor")

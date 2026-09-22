@@ -14,7 +14,6 @@ public class GameRatioLimitGateway {
     /**
      * 种族比例限制是否已启用。
      * Whether race-ratio limitation is enabled.
-     *
      * @return 已启用为 {@code true} / {@code true} if enabled
      */
     public boolean isRatioLimitationEnabled() {
@@ -32,7 +31,6 @@ public class GameRatioLimitGateway {
     /**
      * 返回当前时间毫秒数。
      * Return the current time in milliseconds.
-     *
      * @return 当前时间毫秒 / Current time millis
      */
     public long currentTimeMillis() {

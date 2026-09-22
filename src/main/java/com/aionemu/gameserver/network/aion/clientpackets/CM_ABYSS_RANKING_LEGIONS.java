@@ -14,7 +14,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_RANKING_LEGION
 /**
  * 请求指定种族欧比斯军团排行榜的客户端包。
  * Client packet requesting abyss legion rankings for a race.
- *
  * @author SheppeR
  */
 @Slf4j

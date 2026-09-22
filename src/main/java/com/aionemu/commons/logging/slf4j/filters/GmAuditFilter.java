@@ -14,7 +14,6 @@ public class GmAuditFilter extends Filter<ILoggingEvent> {
     /**
      * 决定是否接受或拒绝日志事件
      * Decides whether to accept or deny a logging event
-     *
      * @param loggingEvent 待处理的日志事件 (The logging event to be processed)
      * @return FilterReply.ACCEPT 如果消息以[ADMIN COMMAND]开头；FilterReply.DENY 如果不是
      *         (FilterReply.ACCEPT if message starts with [ADMIN COMMAND]; FilterReply.DENY if not)

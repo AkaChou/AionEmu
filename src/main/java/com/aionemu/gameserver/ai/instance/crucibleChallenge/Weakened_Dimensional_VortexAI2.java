@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Crucible Challenge 副本 NPC AI：Weakened Dimensional Vortex（@AIName "weakened_dimensional_vortex"），继承 AggressiveNpcAI2。
  * Crucible Challenge instance NPC AI: Weakened Dimensional Vortex (@AIName "weakened_dimensional_vortex"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("weakened_dimensional_vortex")

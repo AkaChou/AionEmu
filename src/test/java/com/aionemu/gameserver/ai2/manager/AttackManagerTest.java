@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 /**
  * {@code AttackManager#targetTooFar} 对不可移动 NPC 的契约闸门。
  * Contract gate for {@code AttackManager#targetTooFar} and immobile NPCs.
- *
  * <p>背景：卵、固定炮台这类 0 移速但有伤害的 NPC 一旦在这里放弃目标，就会清空仇恨；下一次受击或视野事件会立刻把它
  * 拉回战斗，客户端因此反复播放脱战表现（Taloc's Hollow 的 mosqua egg 就是该症状）。真端数据里没有这个驱动
  * （0 移速不会产生寻路失败、{@code max_chase_time=0} 不设追击超时、pattern 在进入战斗时 {@code do_nothing}），
@@ -31,7 +30,6 @@ class AttackManagerTest {
 	/**
 	 * 不可移动的 NPC 不得因目标够不着而放弃目标。
 	 * Immobile NPCs must not give up a target they cannot reach.
-	 *
 	 * @throws IOException 读取源码失败 / when the source cannot be read
 	 */
 	@Test
@@ -47,12 +45,10 @@ class AttackManagerTest {
 	/**
 	 * 0 移速 NPC 够不着目标时必须继续重排攻击尝试，而不是让攻击链静默停摆。
 	 * Immobile NPCs must keep retrying attacks instead of silently dropping the attack chain.
-	 *
 	 * <p>同一入口也服务于受击复位（{@code AttackEventHandler#onAttack}）：任何重排都必须离开受击调用栈再执行，
 	 * 否则 {@code AggroList#addDamageInternal} → {@code onAttacked} → {@code scheduleNextAttack}
 	 * → {@code attackAction} → {@code CreatureController#attackTarget} 会跨生物无限递归直到 {@code StackOverflowError}。
 	 * The same entry point also serves the hit-driven resume: every reschedule must leave the hit stack first.</p>
-	 *
 	 * @throws IOException 读取源码失败 / when the source cannot be read
 	 */
 	@Test
@@ -98,7 +94,6 @@ class AttackManagerTest {
 	 * Attack scheduling must not run the chase-stop check early: once a {@code max_chase_time=sp} NPC is inside melee
 	 * range, it must not randomly return to spawn before each attack. The chase/return decision may run only from
 	 * {@code targetTooFar}, after {@code performAttack} reports {@code TARGET_TOOFAR}.
-	 *
 	 * @throws IOException 读取源码失败 / when the source cannot be read
 	 */
 	@Test
@@ -117,7 +112,6 @@ class AttackManagerTest {
 	/**
 	 * 按大括号配对提取指定方法体的源码片段。
 	 * Extracts a method body by brace matching.
-	 *
 	 * @param source 源码 / source
 	 * @param signature 方法签名 / method signature
 	 * @return 方法体源码；找不到时返回空串（使闸门失败） / the method body, or an empty string when missing

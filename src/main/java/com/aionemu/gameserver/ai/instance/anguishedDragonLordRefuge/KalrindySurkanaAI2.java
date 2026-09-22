@@ -13,7 +13,6 @@ import java.util.concurrent.Future;
 /**
  * Anguished Dragon Lord Refuge 副本 NPC AI：Kalrindy Surkana（@AIName "kalrindy_surkana"），继承 NpcAI2。
  * Anguished Dragon Lord Refuge instance NPC AI: Kalrindy Surkana (@AIName "kalrindy_surkana"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("kalrindy_surkana")

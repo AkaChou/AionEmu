@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 /**
  * 可比较的缓存键值对。
  * Comparable cache key-value pair.
- *
  * @param <K> 键类型，须可比较 / Key type, must be comparable
  * @param <V> 值类型 / Value type
  * @author Rolandas
@@ -29,7 +28,6 @@ public class CachePair<K extends Comparable, V> implements Comparable<CachePair>
 	/**
 	 * 按键值是否都相等判断相等。
 	 * Equality by both key and value.
-	 *
 	 * @param obj 比较对象 / Object to compare
 	 * @return 若 equal 则为 true / True if equal
 	 */
@@ -43,7 +41,6 @@ public class CachePair<K extends Comparable, V> implements Comparable<CachePair>
 	/**
 	 * 先比键，键相同且值可比较时再比值。
 	 * Compare by key first; if equal and value is comparable, compare values.
-	 *
 	 * @param p 另一对 / Other pair
 	 * @return 比较结果 / Comparison result
 	 */
@@ -57,7 +54,6 @@ public class CachePair<K extends Comparable, V> implements Comparable<CachePair>
 	/**
 	 * 基于键值的哈希码。
 	 * Hash code based on key and value.
-	 *
 	 * @return 哈希码 / Hash code
 	 */
 	@Override
@@ -70,7 +66,6 @@ public class CachePair<K extends Comparable, V> implements Comparable<CachePair>
 	/**
 	 * 格式化为 {@code key: value}。
 	 * Format as {@code key: value}.
-	 *
 	 * @return 字符串表示 / String representation
 	 */
 	@Override

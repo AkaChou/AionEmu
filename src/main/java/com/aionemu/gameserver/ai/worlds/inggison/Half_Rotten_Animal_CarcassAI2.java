@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Inggison 区域 NPC AI：Half Rotten Animal Carcass（@AIName "halfrottenanimalcarcass"），继承 NpcAI2。
  * Inggison zone NPC AI: Half Rotten Animal Carcass (@AIName "halfrottenanimalcarcass"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("halfrottenanimalcarcass")

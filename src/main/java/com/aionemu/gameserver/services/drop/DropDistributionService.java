@@ -22,7 +22,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 掉落分配服务，处理队伍掷骰与竞价分配。
  * Drop distribution service handling group roll and bid allocation.
- *
  * @author xTz
  */
 @Slf4j
@@ -32,8 +31,6 @@ public class DropDistributionService {
      * -- SETTER --
      *  设置 Spring 实例提供者。
      *  Sets the Spring instance provider.
-     *
-     * @param provider 实例提供者 / instance provider
      */
     @Setter
     private static volatile ObjectProvider<DropDistributionService> instanceProvider;
@@ -41,11 +38,9 @@ public class DropDistributionService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -64,7 +59,6 @@ public class DropDistributionService {
     /**
 	 * 处理玩家掷骰结果（来自 CM_GROUP_LOOT）。
 	 * Handles a player roll result (from CM_GROUP_LOOT).
-	 *
 	 * @param player 掷骰玩家 / rolling player
 	 * @param roll 掷骰值，0 表示放弃 / roll value, 0 means pass
 	 * @param itemId 物品 ID / item id
@@ -107,7 +101,6 @@ public class DropDistributionService {
 	/**
 	 * 处理玩家竞价结果（来自 CM_GROUP_LOOT）。
 	 * Handles a player bid result (from CM_GROUP_LOOT).
-	 *
 	 * @param player 竞价玩家 / bidding player
 	 * @param bid 出价金额，0 表示放弃 / bid amount, 0 means pass
 	 * @param itemId 物品 ID / item id
@@ -167,7 +160,6 @@ public class DropDistributionService {
 	/**
 	 * 全体玩家掷骰或竞价完成后分配战利品。
 	 * Distributes items after all players have rolled or bid accordingly.
-	 *
 	 * @param player 当前状态玩家 / current player
 	 * @param luckyPlayer 中标玩家对象 ID / lucky player object id
 	 * @param itemId 物品 ID / item id

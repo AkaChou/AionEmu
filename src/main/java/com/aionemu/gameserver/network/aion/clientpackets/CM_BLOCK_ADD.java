@@ -12,7 +12,6 @@ import com.aionemu.gameserver.services.SocialService;
 /**
  * 将玩家加入黑名单的客户端包。
  * Client packet to add a player to the block list.
- *
  * @author Ben
  */
 @Slf4j

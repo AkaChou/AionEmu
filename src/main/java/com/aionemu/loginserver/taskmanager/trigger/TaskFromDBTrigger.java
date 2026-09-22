@@ -7,7 +7,6 @@ import lombok.Setter;
 /**
  * 数据库任务触发器抽象基类：绑定处理器并定义校验/初始化/运行。
  * Abstract base for DB task triggers: binds a handler and defines validate/init/run.
- *
  * @author nrg
  */
 public abstract class TaskFromDBTrigger implements Runnable {
@@ -15,8 +14,6 @@ public abstract class TaskFromDBTrigger implements Runnable {
     /**
      * 获取将被触发的处理器。
      * Returns the handler to be triggered.
-     *
-     * @return 处理器 / handler
      */
     @Getter
     @Setter
@@ -24,8 +21,6 @@ public abstract class TaskFromDBTrigger implements Runnable {
     /**
      * 获取触发器参数。
      * Returns the trigger parameters.
-     *
-     * @return 参数 / parameters
      */
     @Getter
     @Setter
@@ -34,7 +29,6 @@ public abstract class TaskFromDBTrigger implements Runnable {
     /**
      * 获取关联任务 ID。
      * Returns the associated task id.
-     *
      * @return 任务 ID / task id
      */
     public int getTaskId() {
@@ -44,7 +38,6 @@ public abstract class TaskFromDBTrigger implements Runnable {
     /**
      * 综合校验：处理器非空、触发器自身有效且处理器参数有效。
      * Combined validation: handler non-null, trigger itself valid and handler params valid.
-     *
      * @return 是否有效 / whether valid
      */
     public final boolean isValid() {
@@ -54,7 +47,6 @@ public abstract class TaskFromDBTrigger implements Runnable {
     /**
      * 校验触发器自身参数。
      * Validates the trigger's own parameters.
-     *
      * @return 是否有效 / whether valid
      */
     public abstract boolean isValidTrigger();

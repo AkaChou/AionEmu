@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 炸弹集合：容纳单个炸弹模板。
  * Bomb container: holds a single bomb template.
- *
  * @author xTz
  */
 @Getter

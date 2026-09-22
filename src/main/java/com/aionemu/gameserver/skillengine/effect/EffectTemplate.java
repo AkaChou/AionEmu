@@ -44,7 +44,6 @@ import lombok.Getter;
 /**
  * 技能效果模板基类：计算、应用、开始/结束效果，并持有 XML 绑定字段。
  * Base skill effect template: calculate/apply/start/end effects; holds XML-bound fields.
- *
  * @author ATracer
  */
 @Getter
@@ -77,62 +76,47 @@ public abstract class EffectTemplate {
 	/**
 	 * 获取行动修正器集合。
 	 * Returns the action modifiers container.
-	 *
-	 * @return 修正器集合 / modifiers
 	 */
 	protected ActionModifiers modifiers;
 	/**
 	 * 获取属性变更列表。
 	 * Returns the stat change list.
-	 *
-	 * @return 属性变更列表 / changes
+	 * 属性变更列表 / changes
 	 */
 	protected List<Change> change;
 	/**
 	 * 获取效果 ID。
 	 * Returns the effect id.
-	 *
-	 * @return 效果 ID / effect id
 	 */
 	@XmlAttribute
 	protected int effectid;
 	/**
 	 * 获取第二时长参数（主持续时长）。
 	 * Returns the primary duration parameter (duration2).
-	 *
-	 * @return 第二时长参数 / duration2
 	 */
 	@XmlAttribute(required = true)
 	protected int duration2;
 	/**
 	 * 获取第一时长参数。
 	 * Returns the secondary duration parameter (duration1).
-	 *
-	 * @return 第一时长参数 / duration1
 	 */
 	@XmlAttribute
 	protected int duration1;
 	/**
 	 * 获取随机时间偏移。
 	 * Returns the random time offset.
-	 *
-	 * @return 随机时间偏移 / random time
 	 */
 	@XmlAttribute(name = "randomtime")
 	protected int randomTime;
 	/**
 	 * 获取效果在技能中的位置序号。
 	 * Returns the effect position index within the skill.
-	 *
-	 * @return 位置序号 / position
 	 */
 	@XmlAttribute(name = "e")
 	protected int position;
 	/**
 	 * 获取基础等级要求。
 	 * Returns the basic level requirement.
-	 *
-	 * @return 基础等级要求 / basic level
 	 */
 	@XmlAttribute(name = "basiclvl")
 	protected int basicLvl;
@@ -145,32 +129,24 @@ public abstract class EffectTemplate {
 	/**
 	 * 获取技能元素属性。
 	 * Returns the skill element.
-	 *
-	 * @return 元素属性 / element
 	 */
 	@XmlAttribute(name = "element")
 	protected SkillElement element = SkillElement.NONE;
 	/**
 	 * 获取子效果配置。
 	 * Returns the sub-effect configuration.
-	 *
-	 * @return 子效果配置 / sub-effect
 	 */
 	@XmlElement(name = "subeffect")
 	protected SubEffect subEffect;
 	/**
 	 * 获取效果条件集合。
 	 * Returns the effect conditions.
-	 *
-	 * @return 条件集合 / conditions
 	 */
 	@XmlElement(name = "conditions")
 	protected Conditions effectConditions;
 	/**
 	 * 获取子效果条件集合。
 	 * Returns the sub-effect conditions.
-	 *
-	 * @return 子效果条件 / sub-effect conditions
 	 */
 	@XmlElement(name = "subconditions")
 	protected Conditions effectSubConditions;
@@ -191,16 +167,12 @@ public abstract class EffectTemplate {
 	/**
 	 * 获取前置效果位置串（下划线分隔）。
 	 * Returns the pre-effect position string (underscore-separated).
-	 *
-	 * @return 前置效果串 / pre-effect string
 	 */
 	@XmlAttribute(name = "preeffect")
 	protected String preEffect;
 	/**
 	 * 获取前置效果触发概率（0–100）。
 	 * Returns the pre-effect trigger probability (0–100).
-	 *
-	 * @return 触发概率 / probability
 	 */
 	@XmlAttribute(name = "preeffect_prob")
 	protected int preEffectProb = 100;
@@ -209,8 +181,7 @@ public abstract class EffectTemplate {
 	/**
 	 * 获取暴击概率修正。
 	 * Returns the critical probability modifier.
-	 *
-	 * @return 暴击概率修正 / crit probability mod
+	 * 暴击概率修正 / crit probability mod
 	 */
 	@XmlAttribute(name = "critprobmod2")
 	protected int critProbMod2 = 100;
@@ -219,16 +190,12 @@ public abstract class EffectTemplate {
 	/**
 	 * 获取暴击附加伤害 1。
 	 * Returns critical bonus damage 1.
-	 *
-	 * @return 暴击附加伤害 / bonus damage
 	 */
 	@XmlAttribute(name = "critadddmg1")
 	protected int critAddDmg1 = 0;
 	/**
 	 * 获取暴击附加伤害 2。
 	 * Returns critical bonus damage 2.
-	 *
-	 * @return 暴击附加伤害 / bonus damage
 	 */
 	@XmlAttribute(name = "critadddmg2")
 	protected int critAddDmg2 = 0;
@@ -237,8 +204,6 @@ public abstract class EffectTemplate {
 	/**
 	 * 获取每技能等级的数值增量。
 	 * Returns the per-skill-level delta.
-	 *
-	 * @return 每级增量 / level delta
 	 */
 	@XmlAttribute
 	protected int delta;
@@ -247,20 +212,12 @@ public abstract class EffectTemplate {
 	/**
 	 * 获取效果类型（反序列化后缓存）。
 	 * Returns the effect type (cached after unmarshalling).
-	 *
-	 * @return 效果类型 / effect type
 	 */
 	@XmlTransient
 	protected EffectType effectType = null;
 	@XmlTransient
 
-	/**
-	 * 获取效果基础数值。
-	 * Returns the base effect value.
-	 *
-	 * @return 基础数值 / base value
-	 */
-	public int getValue() {
+    public int getValue() {
 		return value;
 	}
 
@@ -291,7 +248,6 @@ public abstract class EffectTemplate {
 	/**
 	 * 选取首个条件成立的行动修正器。
 	 * Selects the first action modifier whose condition matches.
-	 *
 	 * @param effect 运行中效果 / runtime effect
 	 * @return 匹配的修正器，无则 null / matching modifier, or null
 	 */
@@ -311,7 +267,6 @@ public abstract class EffectTemplate {
 	/**
 	 * 计算效果是否成功（无额外抗性参数）。
 	 * Calculates whether the effect succeeds (no extra resist params).
-	 *
 	 * @param effect 运行中效果 / runtime effect
 	 */
 	public void calculate(Effect effect) {
@@ -324,7 +279,6 @@ public abstract class EffectTemplate {
 	 * <p>
 	 * 步骤 / Steps: 1) conditions 2) pre-effect 3) effect resist 4) noresist
 	 * 5) physical/magical 6) cannotmiss 7) dodge/magic resist 8) add success
-	 *
 	 * @param effect 运行中效果 / runtime effect
 	 * @param statEnum 相关抗性属性，可为 null / related resist stat, may be null
 	 * @param spellStatus 成功时设置的法术状态，可为 null / spell status on success, may be null
@@ -452,7 +406,6 @@ public abstract class EffectTemplate {
 	/**
 	 * 将效果应用到被影响者。
 	 * Applies the effect to the effected creature.
-	 *
 	 * @param effect 运行中效果 / runtime effect
 	 */
 	public abstract void applyEffect(Effect effect);
@@ -460,7 +413,6 @@ public abstract class EffectTemplate {
 	/**
 	 * 在被影响者上开始效果（默认空实现）。
 	 * Starts the effect on the effected (empty by default).
-	 *
 	 * @param effect 运行中效果 / runtime effect
 	 */
 	public void startEffect(Effect effect) {
@@ -469,7 +421,6 @@ public abstract class EffectTemplate {
 	/**
 	 * 计算并初始化子效果。
 	 * Calculates and initializes the sub-effect.
-	 *
 	 * @param effect 运行中效果 / runtime effect
 	 */
 	public void calculateSubEffect(Effect effect) {
@@ -514,7 +465,6 @@ public abstract class EffectTemplate {
 	/**
 	 * 按 hop 类型累计仇恨（仅在效果成功时有效）。
 	 * Accumulates hate by hop type (only when the effect succeeded).
-	 *
 	 * @param effect 运行中效果 / runtime effect
 	 */
 	public void calculateHate(Effect effect) {
@@ -548,7 +498,6 @@ public abstract class EffectTemplate {
 	/**
 	 * 应用已计算的子效果。
 	 * Applies the already-calculated sub-effect.
-	 *
 	 * @param effect 运行中效果 / runtime effect
 	 */
 	public void startSubEffect(Effect effect) {
@@ -567,7 +516,6 @@ public abstract class EffectTemplate {
 	/**
 	 * 周期触发时的动作（默认空实现）。
 	 * Periodic tick action (empty by default).
-	 *
 	 * @param effect 运行中效果 / runtime effect
 	 */
 	public void onPeriodicAction(Effect effect) {
@@ -576,7 +524,6 @@ public abstract class EffectTemplate {
 	/**
 	 * 结束效果（默认空实现）。
 	 * Ends the effect (empty by default).
-	 *
 	 * @param effect 运行中效果 / runtime effect
 	 */
 	public void endEffect(Effect effect) {
@@ -585,7 +532,6 @@ public abstract class EffectTemplate {
 	/**
 	 * 计算效果抗性检定：true 表示未抵抗，false 表示被抵抗。
 	 * Rolls effect resistance: true = not resisted, false = resisted.
-	 *
 	 * @param effect 运行中效果 / runtime effect
 	 * @param statEnum 抗性属性，null 视为通过 / resist stat; null means pass
 	 * @return 是否通过抗性 / true if not resisted
@@ -704,8 +650,6 @@ public abstract class EffectTemplate {
 	 * 部分效果即使用于物理技能仍属魔法，含护法星/杀星/弓星等眩晕。
 	 * certain effects are magical even when used in physical skills; includes stuns from chanter/sin/ranger etc these effects(effecttemplates) are
 	 * dependent on magical accuracy and magical resist
-	 *
-	 * @return
 	 */
 	private boolean isMagicalEffectTemp() {
 		return this instanceof SilenceEffect || this instanceof SleepEffect || this instanceof RootEffect

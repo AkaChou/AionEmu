@@ -23,7 +23,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Steel Rake 副本 NPC AI：Tamer Anikiki（@AIName "tamer_anikiki"），继承 AggressiveNpcAI2。
  * Steel Rake instance NPC AI: Tamer Anikiki (@AIName "tamer_anikiki"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("tamer_anikiki")

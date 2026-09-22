@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端同步物品冷却时间的服务端包。
  * Server packet that synchronizes item cooldown timers to the client.
- *
  * @author ATracer
  */
 @AllArgsConstructor

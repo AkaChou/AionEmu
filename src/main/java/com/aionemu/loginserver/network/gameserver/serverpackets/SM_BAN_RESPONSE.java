@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * LS→GS：封禁请求处理结果响应。
  * LS→GS: ban request result response.
- *
  * @author Watson
  */
 @AllArgsConstructor

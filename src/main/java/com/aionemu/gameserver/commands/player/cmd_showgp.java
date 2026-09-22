@@ -7,7 +7,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：显示当前荣耀点数（GP）。
  * Player command: shows the player's current Glory Points (GP).
- *
  * @author Kill3r
  */
 public class cmd_showgp extends PlayerCommand {
@@ -23,7 +22,6 @@ public class cmd_showgp extends PlayerCommand {
     /**
      * 向玩家发送当前 GP 总量。
      * Sends the player's total GP amount.
-     *
      * @param player 执行命令的玩家 / invoking player
      * @param params 未使用的参数 / unused parameters
      */

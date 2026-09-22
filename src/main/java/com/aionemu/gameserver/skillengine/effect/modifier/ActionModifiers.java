@@ -12,7 +12,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 行动修正器集合：XML 绑定多种伤害/目标修正子类型。
  * Action modifiers container: JAXB binding for various damage/target modifier subtypes.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -29,7 +28,6 @@ public class ActionModifiers {
 	/**
 	 * 获取行动修正器列表（懒初始化）。
 	 * Returns the action modifiers list (lazy-initialized).
-	 *
 	 * @return 修正器列表 / modifiers list
 	 */
 	public List<ActionModifier> getActionModifiers() {

@@ -18,7 +18,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Drakenseer Lair 副本 NPC AI：IDF6 Dragon Artifact Boost B（@AIName "IDF6_Dragon_Artifact_Boost_B"），继承 NpcAI2。
  * Drakenseer Lair instance NPC AI: IDF6 Dragon Artifact Boost B (@AIName "IDF6_Dragon_Artifact_Boost_B"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("IDF6_Dragon_Artifact_Boost_B")

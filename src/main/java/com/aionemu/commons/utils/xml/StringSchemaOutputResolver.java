@@ -17,7 +17,6 @@ public class StringSchemaOutputResolver extends SchemaOutputResolver {
     /**
      * 创建 Schema 输出结果。
      * Create the schema output result.
-     *
      * Namespace URI
      * @param suggestedFileName 建议文件名 / Suggested file name
      * StreamResult
@@ -35,7 +34,6 @@ public class StringSchemaOutputResolver extends SchemaOutputResolver {
     /**
      * 获取已生成的 Schema 字符串。
      * Get the generated schema string.
-     *
      * @return Schema 文本，未初始化则为 null / Schema text, or null if not initialized
      */
     public String getSchema() {

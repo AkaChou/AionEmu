@@ -15,7 +15,6 @@ import lombok.Getter;
 /**
  * 代理人刷新点模板（静态数据/XML）。
  * XML template.
- *
  * @author Rinzler (Encom)
  */
 

@@ -9,7 +9,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Beshmundir Temple 副本 NPC AI：Isbariya Servants（@AIName "isbariyaServants"），继承 AggressiveNpcAI2。
  * Beshmundir Temple instance NPC AI: Isbariya Servants (@AIName "isbariyaServants"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("isbariyaServants")

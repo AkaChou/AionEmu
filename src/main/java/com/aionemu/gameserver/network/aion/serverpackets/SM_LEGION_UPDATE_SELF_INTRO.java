@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 向客户端同步军团成员自我介绍更新的服务端包。
  * Server packet that synchronizes a legion member self-introduction update to the client.
- *
  * @author Simple
  */
 public class SM_LEGION_UPDATE_SELF_INTRO extends AionServerPacket {
@@ -17,7 +16,6 @@ public class SM_LEGION_UPDATE_SELF_INTRO extends AionServerPacket {
 	/**
 	 * 使用玩家对象 ID 与自我介绍构造更新包。
 	 * Creates an update packet from a player object id and self-introduction text.
-	 *
 	 * @param playerObjId player object id
 	 * @param selfintro self-introduction
 	 */

@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Beshmundir Temple 副本 NPC AI：Lakhara（@AIName "lakhara"），继承 AggressiveNpcAI2。
  * Beshmundir Temple instance NPC AI: Lakhara (@AIName "lakhara"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("lakhara")

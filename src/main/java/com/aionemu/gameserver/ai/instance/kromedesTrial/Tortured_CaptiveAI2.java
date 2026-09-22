@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Kromedes Trial 副本 NPC AI：Tortured Captive（@AIName "tortured_captive"），继承 NpcAI2。
  * Kromedes Trial instance NPC AI: Tortured Captive (@AIName "tortured_captive"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("tortured_captive")

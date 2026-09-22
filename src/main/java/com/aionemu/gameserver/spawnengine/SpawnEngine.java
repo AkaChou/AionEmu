@@ -68,7 +68,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
  * <p>
  * 当前实现为临时方案，后续可能替换。
  * Current implementation is temporal and may be replaced.
- *
  * @author Luno
  * @author ATracer
  * @author Source
@@ -101,7 +100,6 @@ public class SpawnEngine {
 	/**
 	 * 根据刷怪模板创建并刷出 VisibleObject。
 	 * Creates and spawns a VisibleObject from the given spawn template.
-	 *
 	 * @param spawn 刷怪模板 / spawn template
 	 * @param instanceIndex 实例索引 / instance index
 	 * @return 已创建并刷出的可见对象 / created and spawned visible object
@@ -119,7 +117,6 @@ public class SpawnEngine {
 	/**
 	 * 按模板类型分派到具体刷怪实现。
 	 * Dispatches to a concrete spawner by template type.
-	 *
 	 * @param spawn 刷怪模板 / spawn template
 	 * @param instanceIndex 实例索引 / instance index
 	 * @return 刷出的可见对象 / spawned visible object
@@ -178,7 +175,6 @@ public class SpawnEngine {
 	/**
 	 * 创建基础刷怪模板（无重生、无主人）。
 	 * Creates a basic spawn template (no respawn, no master).
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param npcId NPC 模板 ID / npc template id
 	 * @param x X 坐标 / X
@@ -194,7 +190,6 @@ public class SpawnEngine {
 	/**
 	 * 创建带创建者与主人名的刷怪模板（如代码侧攻城刷怪）。
 	 * Creates a spawn template with creator and master name (e.g. code-side siege spawns).
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param npcId NPC 模板 ID / npc template id
 	 * @param x X 坐标 / X
@@ -216,7 +211,6 @@ public class SpawnEngine {
 	/**
 	 * 添加攻城刷怪模板（非 static_data，如 CustomBalaurAssault）。
 	 * Adds a siege spawn template from code rather than static_data (e.g. CustomBalaurAssault).
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param npcId NPC 模板 ID / npc template id
 	 * @param siegeId 攻城 ID / siege id
@@ -244,7 +238,6 @@ public class SpawnEngine {
 	 * <p>
 	 * 通过本方法创建的刷怪不会被 //save_spawn 持久化。
 	 * Spawns created this way are not saved by //save_spawn.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param npcId NPC 模板 ID / npc template id
 	 * @param x X 坐标 / X
@@ -264,7 +257,6 @@ public class SpawnEngine {
 	/**
 	 * 创建一次性、无重生的刷怪模板。
 	 * Creates a non-permanent spawn template with no respawn.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param npcId NPC 模板 ID / npc template id
 	 * @param x X 坐标 / X
@@ -280,7 +272,6 @@ public class SpawnEngine {
 	/**
 	 * 创建带创建者与主人名的一次性刷怪模板。
 	 * Creates a single-time spawn template with creator and master name.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param npcId NPC 模板 ID / npc template id
 	 * @param x X 坐标 / X
@@ -302,7 +293,6 @@ public class SpawnEngine {
 	/**
 	 * 将可见对象按刷怪模板坐标刷入指定实例。
 	 * Brings a visible object into the world using spawn template coordinates.
-	 *
 	 * @param visibleObject 可见对象 / the visible object
 	 * @param spawn 刷怪模板 / spawn template
 	 * @param instanceIndex 实例索引 / instance index
@@ -335,7 +325,6 @@ public class SpawnEngine {
 	 * 却有 geo 碰撞面与作者 Z 贴合时，采用的是该碰撞面而不是地形。
 	 * The terrain heightmap excludes prop meshes (rocks, buildings, bridges), so a geo collision
 	 * surface matching the authored Z wins over the terrain fallback.
-	 *
 	 * @param visibleObject 可见对象 / visible object
 	 * @param spawn 刷怪模板 / spawn template
 	 * @param projector PATH 地面投影 / PATH ground projector
@@ -398,7 +387,6 @@ public class SpawnEngine {
 	 * 判断是否为作者摆放的非生物对象（NON_ATTACKABLE / UNKNOWN），这类对象不参与 geo 贴地兜底。
 	 * Returns whether the NPC is an authored non-creature object (NON_ATTACKABLE / UNKNOWN), which must keep
 	 * its authored Z instead of being snapped to the geo surface.
-	 *
 	 * @param npc NPC / npc
 	 * @return 保留作者高度时为 true / true when the authored Z must be kept
 	 */
@@ -414,7 +402,6 @@ public class SpawnEngine {
 	/**
 	 * 将可见对象登记、定位并刷入世界。
 	 * Stores, positions and spawns a visible object into the world.
-	 *
 	 * @param visibleObject 可见对象 / the visible object
 	 * @param worldId 世界 ID / world id
 	 * @param instanceIndex 实例索引 / instance index
@@ -434,7 +421,6 @@ public class SpawnEngine {
 	/**
 	 * 将已有位置的可见对象登记并刷入世界。
 	 * Stores and spawns a visible object that already has a position.
-	 *
 	 * @param visibleObject 可见对象 / the visible object
 	 * @throws IllegalArgumentException 位置为空时 / when position is null
 	 */
@@ -503,7 +489,6 @@ public class SpawnEngine {
 	/**
 	 * 刷出指定世界地图（非副本）的全部刷怪。
 	 * Spawns all objects for the given non-instance world map.
-	 *
 	 * @param worldId 世界 ID / world id
 	 */
 	public static void spawnWorldMap(int worldId) {
@@ -516,7 +501,6 @@ public class SpawnEngine {
 	/**
 	 * 按世界模板刷出所有双子实例。
 	 * Spawns all twin instances defined by the world map template.
-	 *
 	 * @param worldMapTemplate 世界地图模板 / world map template
 	 */
 	private static void spawnBasedOnTemplate(WorldMapTemplate worldMapTemplate) {
@@ -532,7 +516,6 @@ public class SpawnEngine {
 	/**
 	 * 刷出指定世界实例（难度 0）。
 	 * Spawns the given world instance with difficulty 0.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param instanceId 实例 ID / instance id
 	 * @param difficultId 难度 ID / difficulty id
@@ -544,7 +527,6 @@ public class SpawnEngine {
 	/**
 	 * 刷出指定世界实例的门、NPC、静态物与房屋。
 	 * Spawns doors, NPCs, static objects and houses for the world instance.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param instanceId 实例 ID / instance id
 	 * @param difficultId 难度 ID / difficulty id
@@ -557,7 +539,6 @@ public class SpawnEngine {
 	/**
 	 * 刷出指定世界实例，并独立匹配难度与真端出生页。
 	 * Spawns a world instance while matching difficulty and retail spawn page independently.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param instanceId 实例 ID / instance id
 	 * @param difficultId 难度 ID / difficulty id
@@ -654,7 +635,6 @@ public class SpawnEngine {
 	/**
 	 * 校验池大小是否不超过可用模板数。
 	 * Validates that pool size does not exceed available templates.
-	 *
 	 * @param spawn 刷怪组 / the spawn group
 	 * @return 池大小有效则为 true / true if valid
 	 */
@@ -689,7 +669,6 @@ public class SpawnEngine {
 		 * NPC count.
          * -- GETTER --
          *  NPC 数量 / npc count
-
          */
 		int npcCount;
 
@@ -697,9 +676,6 @@ public class SpawnEngine {
 		 * 采集物计数。
 		 * Gatherable count.
          * -- GETTER --
-         *
-         * @return 采集物数量 / gatherable count
-
          */
 		int gatherableCount;
 
@@ -717,7 +693,6 @@ public class SpawnEngine {
 	/**
 	 * 按刷怪组在指定实例中刷出静态物体（原 StaticObjectSpawnManager）。
 	 * Spawns static objects from a spawn group into the given instance (merged from StaticObjectSpawnManager).
-	 *
 	 * @param spawn 刷怪组 / the spawn group
 	 * @param instanceIndex 实例索引 / instance index
 	 */

@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 飞行传送/气流移动过程中的位置同步客户端包。
  * Client packet for position sync during flight-teleport or windstream movement.
- *
  * @author -Nemesiss-, Sweetkr, KID
  */
 public class CM_MOVE_IN_AIR extends AionClientPacket {
@@ -23,7 +22,6 @@ public class CM_MOVE_IN_AIR extends AionClientPacket {
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余合法状态 / additional valid states

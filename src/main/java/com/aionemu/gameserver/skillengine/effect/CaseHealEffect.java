@@ -26,7 +26,6 @@ public class CaseHealEffect extends AbstractHealEffect {
 	/**
 	 * 返回当前 HP/MP。
 	 * Returns current HP/MP.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 * @return 当前属性值 / current stat value
 	 */
@@ -43,7 +42,6 @@ public class CaseHealEffect extends AbstractHealEffect {
 	/**
 	 * 返回 HP/MP 上限。
 	 * Returns max HP/MP.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 * @return 属性上限 / max stat value
 	 */
@@ -60,7 +58,6 @@ public class CaseHealEffect extends AbstractHealEffect {
 	/**
 	 * 将效果加入受影响者的效果控制器。
 	 * Adds the effect to the effected creature's effect controller.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	public void applyEffect(Effect effect) {
@@ -70,7 +67,6 @@ public class CaseHealEffect extends AbstractHealEffect {
 	/**
 	 * 移除受击观察者。
 	 * Removes the attacked observer.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	public void endEffect(Effect effect) {
@@ -83,7 +79,6 @@ public class CaseHealEffect extends AbstractHealEffect {
 	/**
 	 * 注册受击观察者：低于阈值时治疗并结束效果。
 	 * Registers an attacked observer: heals when below threshold and ends the effect.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	public void startEffect(final Effect effect) {

@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PositionUtil;
 /**
  * 正面方位条件：校验施法者是否位于目标正面。
  * Front position condition: validates the effector is in front of the target.
- *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -21,7 +20,6 @@ public class FrontCondition extends Condition {
 	/**
 	 * 校验技能环境是否满足本条件。
 	 * Validates whether the skill environment satisfies this condition.
-	 *
 	 * @param env 技能环境 / skill environment
 	 * @return 是否有效 / whether valid
 	 */
@@ -36,7 +34,6 @@ public class FrontCondition extends Condition {
 	/**
 	 * 校验效果环境是否满足本条件。
 	 * Validates whether the effect environment satisfies this condition.
-	 *
 	 * @param effect 效果环境 / effect environment
 	 * @return 是否有效 / whether valid
 	 */

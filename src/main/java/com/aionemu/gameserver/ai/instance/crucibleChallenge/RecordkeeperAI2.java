@@ -20,7 +20,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Crucible Challenge 副本 NPC AI：Recordkeeper（@AIName "recordkeeper"），继承 NpcAI2。
  * Crucible Challenge instance NPC AI: Recordkeeper (@AIName "recordkeeper"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("recordkeeper")

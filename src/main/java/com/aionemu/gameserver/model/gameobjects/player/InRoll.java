@@ -5,7 +5,6 @@ import lombok.Data;
 /**
  * InRoll 游戏对象。
  * In Roll game object.
- *
  * @author xTz
  */
 @Data

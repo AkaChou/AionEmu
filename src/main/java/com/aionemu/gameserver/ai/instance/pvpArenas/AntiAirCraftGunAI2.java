@@ -12,7 +12,6 @@ import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 /**
  * Pvp Arenas 副本 NPC AI：Anti Air Craft Gun（@AIName "antiaircraftgun"），继承 ActionItemNpcAI2。
  * Pvp Arenas instance NPC AI: Anti Air Craft Gun (@AIName "antiaircraftgun"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("antiaircraftgun")

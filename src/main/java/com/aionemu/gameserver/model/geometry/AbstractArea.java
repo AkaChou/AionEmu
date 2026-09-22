@@ -30,7 +30,6 @@ public abstract class AbstractArea implements Area {
 	/**
 	 * 创建带 minZ 和 maxZ 的 AbstractArea。
 	 * Creates new AbstractArea with min and max z.
-	 *
 	 * @param zoneName 区域名称 / zone name
 	 * @param worldId 世界 ID / world id
 	 * @param minZ 最小 Z 坐标 / minimal z

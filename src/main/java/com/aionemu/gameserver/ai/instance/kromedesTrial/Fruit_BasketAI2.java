@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Kromedes Trial 副本 NPC AI：Fruit Basket（@AIName "fruit_basket"），继承 NpcAI2。
  * Kromedes Trial instance NPC AI: Fruit Basket (@AIName "fruit_basket"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("fruit_basket")

@@ -18,7 +18,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 永恒之塔阶段奖励数据容器，按楼层索引奖励模板。
  * Tower stage-reward data holder, indexing reward templates by floor.
- *
  * @author Wnkrz
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -49,7 +48,6 @@ public class TowerRewardData {
 	/**
 	 * 返回已加载的奖励模板数量。
 	 * Returns the number of loaded reward templates.
-	 *
 	 * @return 已加载的奖励模板数量 / Returns the number of loaded reward templates.
 	 */
 	public int size() {
@@ -59,7 +57,6 @@ public class TowerRewardData {
 	/**
 	 * 按楼层获取塔奖励模板。
 	 * Returns the tower reward template for the given floor id.
-	 *
 	 * @param towerId 塔 ID / tower id
 	 * @return 奖励模板，不存在则为 null / reward template or null
 	 */
@@ -70,7 +67,6 @@ public class TowerRewardData {
 	/**
 	 * 返回全部塔奖励模板映射。
 	 * Returns the full map of tower reward templates.
-	 *
 	 * @return 奖励模板映射 / reward template map
 	 */
 	public Map<Integer, TowerStageRewardTemplate> getAll() {

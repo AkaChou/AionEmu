@@ -16,7 +16,6 @@ import com.aionemu.gameserver.services.summons.SummonsService;
 /**
  * 攻城战相关 NPC AI：Siege Weapon（@AIName "siege_weapon"），继承 AISummon。
  * Siege-related NPC AI: Siege Weapon (@AIName "siege_weapon"), extends AISummon.
- *
  * @author Encom
  */
 @AIName("siege_weapon")

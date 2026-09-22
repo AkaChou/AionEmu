@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Tiamat Stronghold 副本 NPC AI：Tahabata Statue（@AIName "tahabata_statue"），继承 NpcAI2。
  * Tiamat Stronghold instance NPC AI: Tahabata Statue (@AIName "tahabata_statue"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("tahabata_statue")

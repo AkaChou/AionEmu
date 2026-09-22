@@ -24,8 +24,6 @@ public abstract class DamageEffect extends EffectTemplate {
 	/**
 	 * 返回伤害结算模式（加值/百分比等）。
 	 * Returns the damage resolution mode (add/percent/etc.).
-	 *
-	 * @return 结算模式 / resolution mode
 	 */
 	@XmlAttribute
 	protected Func mode = Func.ADD;
@@ -43,7 +41,6 @@ public abstract class DamageEffect extends EffectTemplate {
 	/**
 	 * 对目标结算一次攻击伤害并通知攻击观察者。
 	 * Applies one attack hit to the target and notifies attack observers.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -58,10 +55,8 @@ public abstract class DamageEffect extends EffectTemplate {
 	/**
 	 * 按伤害类型计算技能伤害结果。
 	 * Calculates skill damage result by damage type.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 * @param damageType 伤害类型 / damage type
-	 *
 	 * @return 是否命中成功 / whether the hit succeeded
 	 */
 	public boolean calculate(Effect effect, DamageType damageType) {

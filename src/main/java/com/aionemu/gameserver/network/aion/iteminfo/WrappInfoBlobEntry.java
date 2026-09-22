@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
  * 已包装时写剩余可包装次数；未包装时写负数；否则写 0。
  * Blob for wrap/unwrap count info.
  * Writes remaining wrap count when packed, a negative count when unpacked, otherwise 0.
- *
  * @author Ranastic
  */
 public class WrappInfoBlobEntry extends ItemBlobEntry {

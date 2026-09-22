@@ -11,7 +11,6 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
  * 写入羽饰可装备的槽位掩码。
  * Blob for plume slot info.
  * Writes slot masks the plume can be equipped to.
- *
  * @author Ranastic (Encom)
  */
 public class PlumeInfoBlobEntry extends ItemBlobEntry {

@@ -16,7 +16,6 @@ public class FreezeEventHandler {
 	/**
 	 * 解除冻结：清除 FREEZE 子状态，按需恢复行走并触发思考。
 	 * Unfreezes AI: clears FREEZE sub-state, restores walking if needed, and triggers think.
-	 *
 	 * @param ai AI 实例 / AI instance
 	 */
 	public static void onUnfreeze(AbstractAI ai) {
@@ -40,7 +39,6 @@ public class FreezeEventHandler {
 	/**
 	 * 进入冻结：停止行走，设为空闲 + FREEZE，并清理仇恨与效果。
 	 * Freezes AI: stops walking, sets IDLE + FREEZE, and clears aggro and effects.
-	 *
 	 * @param ai AI 实例 / AI instance
 	 */
 	public static void onFreeze(AbstractAI ai) {

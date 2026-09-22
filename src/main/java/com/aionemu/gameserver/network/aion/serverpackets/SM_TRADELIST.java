@@ -14,7 +14,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 打开 NPC 普通商店交易列表的服务端包（含限购信息）。
  * Server packet that opens an NPC's normal trade list (including limited-item info).
- *
  * @author Dr.Nism
  */
 public class SM_TRADELIST extends AionServerPacket {

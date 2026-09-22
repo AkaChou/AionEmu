@@ -37,7 +37,6 @@ import java.util.concurrent.Future;
 /**
  * 传送门铸造厂副本实例处理器。
  * Instance handler for the Linkgate Foundry.
- *
  * @author Encom
  */
 

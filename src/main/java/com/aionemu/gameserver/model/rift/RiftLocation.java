@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 /**
  * 裂隙位置模型。
  * Rift Location model.
- *
  * @author Source
  */
 @Getter
@@ -20,9 +19,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RiftLocation {
 
-	/**
-	 * @return Whether opened
-	 */
 	private boolean opened;
 	protected RiftTemplate template;
 	/** 返回是否已刷新 / Returns the spawned */

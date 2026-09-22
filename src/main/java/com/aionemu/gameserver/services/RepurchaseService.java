@@ -21,7 +21,6 @@ import com.google.common.collect.Multimap;
 /**
  * 回购服务，缓存玩家卖出物品并支持从商店回购。
  * Repurchase service that caches sold items and allows buying them back from the shop.
- *
  * @author xTz
  */
 public class RepurchaseService {
@@ -30,8 +29,6 @@ public class RepurchaseService {
      * -- SETTER --
      *  设置 Spring 实例提供者。
      *  Sets the Spring instance provider.
-     *
-     * @param provider 实例提供者 / instance provider
      */
     @Setter
     private static volatile ObjectProvider<RepurchaseService> instanceProvider;
@@ -48,7 +45,6 @@ public class RepurchaseService {
 	/**
 	 * 为玩家登记可回购物品。
 	 * Registers items available for repurchase for this player.
-	 *
 	 * @param player 玩家 / player
 	 * @param items 物品列表 / item list
 	 */
@@ -59,7 +55,6 @@ public class RepurchaseService {
 	/**
 	 * 清除该玩家全部可回购物品。
 	 * Removes all repurchase items for this player.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void removeRepurchaseItems(Player player) {
@@ -69,7 +64,6 @@ public class RepurchaseService {
 	/**
 	 * 移除玩家的单个可回购物品。
 	 * Removes a single repurchase item for the player.
-	 *
 	 * @param player 玩家 / player
 	 * @param item 要移除的物品 / item
 	 */
@@ -80,10 +74,7 @@ public class RepurchaseService {
 	/**
 	 * 获取玩家当前可回购物品集合。
 	 * Returns the current repurchase item collection for the player.
-	 *
 	 * player object id
-	 *
-	 * @param playerObjectId
 	 * @return 可回购物品；无则空集合 / repurchase items, or empty if none
 	 */
 	public Collection<Item> getRepurchaseItems(int playerObjectId) {
@@ -94,7 +85,6 @@ public class RepurchaseService {
 	/**
 	 * 按物品 objectId 查找可回购物品。
 	 * Finds a repurchase item by item object id.
-	 *
 	 * 玩家 / player
 	 * item object id
 	 * @return 匹配物品，未找到返回 null / matching item, or null if not found
@@ -112,7 +102,6 @@ public class RepurchaseService {
 	/**
 	 * 按回购列表从商店回购物品，扣基纳并写审计日志。
 	 * Repurchases items from the shop per list, deducts kinah, and audits abuse.
-	 *
 	 * 玩家 / player
 	 * repurchase list
 	 */
@@ -146,11 +135,9 @@ public class RepurchaseService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available

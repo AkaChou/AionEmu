@@ -9,21 +9,14 @@ import lombok.Getter;
 /**
  * Survey 模板（静态数据/XML）。
  * Survey template (static data/XML).
- *
  * @author xTz
  */
 @Getter
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SurveyTemplate")
 public class SurveyTemplate {
-	/**
-	 * @return the itemId
-	 */
 	@XmlAttribute(name = "itemId")
 	private int itemId;
-	/**
-	 * @return the count
-	 */
 	@XmlAttribute(name = "count")
 	private long count;
 }

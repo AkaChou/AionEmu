@@ -17,7 +17,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 露娜骰子奖励表数据容器，按表 ID 索引奖励物品列表。
  * Luna dice reward-table data holder, indexing reward item lists by table id.
- *
  * Created by Wnkrz on 26/07/2017.
  */
 @XmlRootElement(name = "luna_dice")
@@ -43,7 +42,6 @@ public class LunaDiceData {
 	/**
 	 * 返回已加载的骰子表数量。
 	 * Returns the number of loaded dice tables.
-	 *
 	 * @return 已加载的骰子表数量 / Returns the number of loaded dice tables.
 	 */
 	public int size() {
@@ -53,7 +51,6 @@ public class LunaDiceData {
 	/**
 	 * 按表 ID 获取骰子奖励物品列表。
 	 * Returns the dice reward item list for the given table id.
-	 *
 	 * @param id 表 ID / table id
 	 * @return 奖励物品列表或 null / reward item list or null
 	 */
@@ -64,7 +61,6 @@ public class LunaDiceData {
 	/**
 	 * 返回全部骰子表模板列表。
 	 * Returns the full list of dice table templates.
-	 *
 	 * @return 骰子表列表 / dice table list
 	 */
 	public List<LunaDiceTable> getLunaDiceTabs() {

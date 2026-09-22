@@ -109,7 +109,6 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 	 * 从在线玩家冻结一个任务事件快照，不修改玩家状态；只采集 requirements 声明的事实族。
 	 * Freezes one quest-event snapshot from an online player without mutating player state, capturing only the
 	 * fact families declared by the requirements.
-	 *
 	 * @param player       在线玩家 / the online player
 	 * @param questId      任务 ID / quest id
 	 * @param event        事件 / the event
@@ -203,7 +202,6 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 	/**
 	 * 只接受服务端附加的 PvP 击杀事实；事实不属于该玩家时保持原异常。
 	 * Accepts only server-attached PvP kill facts and keeps the original failure when they belong to another player.
-	 *
 	 * @param event    事件 / the event
 	 * @param playerId 拥有者 / the owner
 	 * @return PvP 事实或 null / the PvP facts, or null
@@ -293,9 +291,8 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 	/**
 	 * 已完成与进行中任务 ID 的不可变事实。
 	 * Immutable facts for completed and in-progress quest ids.
-	 *
-	 * @param completed 已完成任务 ID / completed quest ids
-	 * @param active    进行中任务 ID / in-progress quest ids
+	 * 已完成任务 ID / completed quest ids
+	 * 进行中任务 ID / in-progress quest ids
 	 */
 	private record QuestIdFacts(Set<Integer> completed, Set<Integer> active) {
 	}
@@ -303,7 +300,6 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 	/**
 	 * 单次遍历任务状态视图，直接构造已完成/进行中任务 ID 的不可变集合。
 	 * Builds the immutable completed/in-progress quest-id sets from a single pass over the quest-state view.
-	 *
 	 * <p>任务状态视图来自 {@link QuestStateList} 的 TreeMap：键唯一且按任务 ID 升序，因此不需要哈希去重。
 	 * 旧实现先建可变 {@code HashSet}，再由 {@code QuestSnapshot} 紧凑构造器的 {@code Set.copyOf} 复制一遍
 	 * （内部分配第二套哈希表），同一个快照要为同一批 ID 付两份哈希表与节点（JFR 实测 31MB/300s）；这里按
@@ -313,7 +309,6 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 	 * again (a second hash table internally), paying twice for the same ids (31MB/300s measured). This version
 	 * pre-sizes {@code int} buffers from the state count, collects in one pass and lets {@code Set.of} lay out
 	 * the table once from the boxed ids.</p>
-	 *
 	 * @param player 玩家 / the player
 	 * @return 不可变的已完成/进行中任务 ID / immutable completed and in-progress quest ids
 	 */
@@ -346,7 +341,6 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 	/**
 	 * 保证任务 ID 缓冲可写入下一个位置。
 	 * Ensures the quest-id buffer can accept the next entry.
-	 *
 	 * @param ids  当前缓冲 / current buffer
 	 * @param size 已写入数量 / number of recorded ids
 	 * @return 可写入的缓冲 / a buffer with room for one more id
@@ -358,7 +352,6 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 	/**
 	 * 把已收集的任务 ID 装箱成不可变集合；空集合复用 {@code Set.of()}。
 	 * Boxes the collected quest ids into an immutable set; an empty collection reuses {@code Set.of()}.
-	 *
 	 * @param ids  任务 ID 缓冲 / quest-id buffer
 	 * @param size 已写入数量 / number of recorded ids
 	 * @return 不可变任务 ID 集合 / immutable quest-id set

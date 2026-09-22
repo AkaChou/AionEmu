@@ -15,7 +15,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Adma Stronghold 副本 NPC AI：Suspicious Coffin（@AIName "suspicious_coffin"），继承 AggressiveNpcAI2。
  * Adma Stronghold instance NPC AI: Suspicious Coffin (@AIName "suspicious_coffin"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("suspicious_coffin")

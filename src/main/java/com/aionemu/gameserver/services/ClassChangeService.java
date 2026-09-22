@@ -21,7 +21,6 @@ public class ClassChangeService {
 	/**
 	 * 满足等级与起始职业条件时弹出转职对话框。
 	 * Shows the class-change dialog when level and starting-class conditions are met.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static void showClassChangeDialog(Player player) {
@@ -86,7 +85,6 @@ public class ClassChangeService {
 	/**
 	 * 根据对话框选项完成职业切换，并奖励经验与完成转职任务。
 	 * Applies the class switch from dialog selection and grants exp plus the class-change quest.
-	 *
 	 * @param player 玩家 / player
 	 * @param dialogId 对话框选项 ID / dialog option id
 	 */
@@ -155,7 +153,6 @@ public class ClassChangeService {
 	/**
 	 * 将指定任务标记为完成。
 	 * Marks the given quest as complete for the player.
-	 *
 	 * 玩家 / player
 	 * quest id
 	 */
@@ -176,7 +173,6 @@ public class ClassChangeService {
 	/**
 	 * 在校验通过后设置玩家职业并升级角色数据。
 	 * Sets the player class after validation and upgrades player data.
-	 *
 	 * 玩家 / player
 	 * target class
 	 */
@@ -197,10 +193,8 @@ public class ClassChangeService {
 	/**
 	 * 校验转职条件：等级、是否起始职业、目标是否合法分支。
 	 * Validates class switch: level, starting class, and legal branch.
-	 *
 	 * 玩家 / player
 	 * target class
-	 *
 	 * @return 可转职时为 {@code true} / {@code true} if valid
 	 */
 	private static boolean validateSwitch(Player player, PlayerClass playerClass) {

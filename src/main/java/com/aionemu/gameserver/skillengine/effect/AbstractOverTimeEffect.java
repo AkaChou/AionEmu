@@ -18,7 +18,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 持续类效果基类：按 checktime 周期触发 onPeriodicAction（DoT/HoT 等）。
  * Base for over-time effects: runs onPeriodicAction on checktime intervals (DoT/HoT, etc.).
- *
  * @author kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -34,7 +33,6 @@ public abstract class AbstractOverTimeEffect extends EffectTemplate {
 	/**
 	 * 返回效果数值。
 	 * Returns the effect value.
-	 *
 	 * @return 效果数值 / value
 	 */
 	public int getValue() {
@@ -44,7 +42,6 @@ public abstract class AbstractOverTimeEffect extends EffectTemplate {
 	/**
 	 * 将效果加入受影响者的效果控制器。
 	 * Adds the effect to the effected creature's effect controller.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -55,7 +52,6 @@ public abstract class AbstractOverTimeEffect extends EffectTemplate {
 	/**
 	 * 启动持续效果（无异常状态）。
 	 * Starts the over-time effect without an abnormal state.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -66,7 +62,6 @@ public abstract class AbstractOverTimeEffect extends EffectTemplate {
 	/**
 	 * 启动持续效果：可选设置异常状态，并按 checktime 调度周期任务。
 	 * Starts the over-time effect: optional abnormal state, schedules periodic task by checktime.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 * @param abnormal 异常状态，可为 null / abnormal state, may be null
 	 */
@@ -92,7 +87,6 @@ public abstract class AbstractOverTimeEffect extends EffectTemplate {
 	/**
 	 * 结束持续效果并清除可选异常状态。
 	 * Ends the over-time effect and clears the optional abnormal state.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 * @param abnormal 异常状态，可为 null / abnormal state, may be null
 	 */

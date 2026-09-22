@@ -21,7 +21,6 @@ public class cmd_job extends PlayerCommand {
 	/**
 	 * 为玩家添加/提升采集与制作技能等级。
 	 * Adds or upgrades gathering and crafting skill ranks for the player.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 未使用的参数 / unused parameters
 	 */
@@ -44,7 +43,6 @@ public class cmd_job extends PlayerCommand {
 	/**
 	 * 参数错误时提示用法。
 	 * Shows usage when arguments are invalid.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param message 失败提示消息 / failure message
 	 */

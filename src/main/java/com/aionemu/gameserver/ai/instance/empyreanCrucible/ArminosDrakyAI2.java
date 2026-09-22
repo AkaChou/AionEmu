@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Empyrean Crucible 副本 NPC AI：Arminos Draky（@AIName "arminos_draky"），继承 GeneralNpcAI2。
  * Empyrean Crucible instance NPC AI: Arminos Draky (@AIName "arminos_draky"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("arminos_draky")

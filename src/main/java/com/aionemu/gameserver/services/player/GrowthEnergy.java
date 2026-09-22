@@ -28,8 +28,6 @@ public class GrowthEnergy {
      * -- SETTER --
      *  设置实例提供者（Spring 注入）。
      *  Sets the instance provider (Spring injection).
-     *
-     * @param provider 实例提供者 / instance provider
      */
     @Setter
     private static volatile ObjectProvider<GrowthEnergy> instanceProvider;
@@ -55,12 +53,7 @@ public class GrowthEnergy {
 	}
 
 	private void updateGrowthEnergy() {
-		/**
-		 * visit 方法。
-		 * visit method.
-		 *
-		 * @param player 玩家 / player
-		 */com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 			 player.getCommonData().setAuraOfGrowth(0);
 			 PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 			 DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
@@ -70,7 +63,6 @@ public class GrowthEnergy {
 	/**
 	 * 玩家登录时同步状态。
 	 * Syncs state when a player logs in.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onLogin(Player player) {
@@ -82,7 +74,6 @@ public class GrowthEnergy {
 	/**
 	 * 增加成长能量。
 	 * Adds growth energy.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void addGrowthEnergy(Player player) {
@@ -98,7 +89,6 @@ public class GrowthEnergy {
 	/**
 	 * 发送提示消息。
 	 * Sends a notice message.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void sendMessage(Player player) {
@@ -142,11 +132,9 @@ public class GrowthEnergy {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available

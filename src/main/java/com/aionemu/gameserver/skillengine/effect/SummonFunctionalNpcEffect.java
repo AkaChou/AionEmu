@@ -15,7 +15,6 @@ import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 /**
  * 召唤功能 NPC 效果：生成功能性 NPC（如商人等），超时后删除。
  * Summon functional NPC effect: spawns a utility NPC and deletes it after a timeout.
- *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)

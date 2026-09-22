@@ -18,7 +18,6 @@ import java.util.List;
 /**
  * Idian Depths 区域 NPC AI：Inspector Pidara（@AIName "inspector_pidara"），继承 AggressiveNpcAI2。
  * Idian Depths zone NPC AI: Inspector Pidara (@AIName "inspector_pidara"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("inspector_pidara")

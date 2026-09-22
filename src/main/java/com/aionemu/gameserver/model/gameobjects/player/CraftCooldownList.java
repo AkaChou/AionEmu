@@ -6,7 +6,6 @@ import java.util.Map;
 /**
  * 制作冷却列表。
  * Craft Cooldown List game object.
- *
  * @author synchro2
  */
 public class CraftCooldownList {

@@ -14,7 +14,6 @@ import lombok.Setter;
 /**
  * 玩家账号数据，用于账号相关逻辑。
  * Player Account Data for account logic.
- *
  * @author Luno
  */
 @Getter
@@ -22,26 +21,18 @@ import lombok.Setter;
 public class PlayerAccountData {
 
 	private final CharacterBanInfo cbi;
-	/**
-	 * @return 角色公共数据 / the playerCommonData
-	 */
 	private PlayerCommonData playerCommonData;
 	/**
 	 * 返回外观。
 	 * Returns the appearance
 	 */
 	private final PlayerAppearance appereance;
-	/**
-	 * @return 装备列表 / the equipment
-	 */
 	private List<Item> equipment;
 	/** 返回 creation date / Returns the creation date */
 	private Timestamp creationDate;
 	/**
 	 * 设置 deletiondate。
 	 * Sets deletion date
-	 *
-	 * @param deletionDate
 	 */
 	private Timestamp deletionDate;
 	private final LegionMember legionMember;
@@ -62,7 +53,6 @@ public class PlayerAccountData {
 	/**
 	 * 获取角色删除时间的 Unix 秒级时间戳。
 	 * Returns the character deletion time as Unix epoch seconds.
-	 *
 	 * @return 删除时间戳；未设置时返回 0 / deletion timestamp, or 0 when not scheduled
 	 */
 	public int getDeletionTimeInSeconds() {
@@ -82,7 +72,6 @@ public class PlayerAccountData {
 	/**
 	 * 返回该角色是否为军团成员。
 	 * Returns true if player is a legion member
-	 *
 	 * @return true 或 false / true or false
 	 */
 	public boolean isLegionMember() {

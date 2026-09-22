@@ -3,7 +3,6 @@ package com.aionemu.gameserver.model.iu;
 /**
  * IU 活动状态类型枚举。
  * Iu State Type enumeration.
- *
  * @author Rinzler (Encom)
  */
 

@@ -8,7 +8,6 @@ public interface QuestAiPort {
 	/**
 	 * 让 slot 的权威 NPC 跟随玩家（AIEventType.FOLLOW_ME，护送）。
 	 * Makes the slot's authoritative NPC follow the player (AIEventType.FOLLOW_ME, escort).
-	 *
 	 * @return true 表示已发出命令；false 表示 slot 无 handle / 玩家离线 / 失败（best-effort） / true if issued; false if the slot has no handle, the player is offline, or it failed (best-effort)
 	 */
 	boolean startFollow(QuestSnapshot snapshot, QuestMutationPlan plan, String slot);

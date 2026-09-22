@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Reshanta 区域 NPC AI：Krotan Crystal Sword（@AIName "krotan_crystal_sword"），继承 NpcAI2。
  * Reshanta zone NPC AI: Krotan Crystal Sword (@AIName "krotan_crystal_sword"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("krotan_crystal_sword")

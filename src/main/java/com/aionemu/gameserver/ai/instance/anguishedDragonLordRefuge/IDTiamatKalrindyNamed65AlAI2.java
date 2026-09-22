@@ -28,7 +28,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Anguished Dragon Lord Refuge 副本 NPC AI：ID Tiamat Kalrindy Named65 Al（@AIName "calindi2"），继承 AggressiveNpcAI2。
  * Anguished Dragon Lord Refuge instance NPC AI: ID Tiamat Kalrindy Named65 Al (@AIName "calindi2"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("calindi2")

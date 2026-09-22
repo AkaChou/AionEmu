@@ -8,9 +8,7 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 权限撤销指令；通过登录服将在线玩家的 accesslevel 或 membership 置零。
  * Admin command that clears an online player's accesslevel or membership via the login server.
- *
  * @author Cyrakuse
- * @modified By Aionchs-Wylovech
  */
 public class Revoke extends AdminCommand {
 
@@ -21,7 +19,6 @@ public class Revoke extends AdminCommand {
 	/**
 	 * 执行该管理指令。
 	 * Executes this admin command.
-	 *
 	 * @param admin 执行指令的管理员 / admin executing the command
 	 */
 	@Override
@@ -54,7 +51,6 @@ public class Revoke extends AdminCommand {
 	/**
 	 * 参数错误时输出用法。
 	 * Prints usage when arguments are invalid.
-	 *
 	 * @param player 接收提示的玩家 / player receiving the message
 	 */
 	@Override

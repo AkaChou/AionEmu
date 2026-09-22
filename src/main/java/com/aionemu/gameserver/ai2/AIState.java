@@ -3,7 +3,6 @@ package com.aionemu.gameserver.ai2;
 /**
  * AI 主状态枚举，描述 AI 生命周期与行为阶段。
  * Main AI state enumeration describing lifecycle and behavioral phases.
- *
  * @author ATracer
  */
 public enum AIState {

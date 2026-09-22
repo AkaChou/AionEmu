@@ -17,7 +17,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 副本增益属性数据容器，按 Buff ID 索引 {@link InstanceBonusAttr}。
  * Instance bonus attribute data holder, indexing {@link InstanceBonusAttr} by buff id.
- *
  * @author xTz
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -45,7 +44,6 @@ public class InstanceBuffData {
 	/**
 	 * 返回已加载的副本增益模板数量。
 	 * Returns the number of loaded instance bonus templates.
-	 *
 	 * @return 已加载的副本加成模板数量 / Returns the number of loaded instance bonus templates.
 	 */
 	public int size() {
@@ -55,7 +53,6 @@ public class InstanceBuffData {
 	/**
 	 * 按 Buff ID 获取副本增益属性模板。
 	 * Returns the instance bonus attribute template for the given buff id.
-	 *
 	 * @param buffId 增益 ID / buff id
 	 * @return 增益属性模板或 null / bonus attribute template or null
 	 */

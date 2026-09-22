@@ -35,7 +35,6 @@ public class GameCoreServicesRuntimeBridge {
     /**
      * 可选注入数据管理器 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of DataManager.
-     *
      * @param dataManagerProvider 数据管理器提供者 / DataManager provider
      */
     @Autowired(required = false)
@@ -46,7 +45,6 @@ public class GameCoreServicesRuntimeBridge {
     /**
      * 可选注入线程池管理器 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of ThreadPoolManager.
-     *
      * @param threadPoolManagerProvider 线程池管理器提供者 / Thread-pool manager provider
      */
     @Autowired(required = false)
@@ -57,7 +55,6 @@ public class GameCoreServicesRuntimeBridge {
     /**
      * 可选注入 HTML 缓存 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of HTMLCache.
-     *
      * @param htmlCacheProvider HTML 缓存提供者 / HTML cache provider
      */
     @Autowired(required = false)
@@ -68,7 +65,6 @@ public class GameCoreServicesRuntimeBridge {
     /**
      * 解析数据管理器：优先 Spring，否则回退。
      * Resolve DataManager: prefer Spring, otherwise fall back.
-     *
      * @return 数据管理器 / Data manager
      */
     public DataManager dataManager() {
@@ -81,7 +77,6 @@ public class GameCoreServicesRuntimeBridge {
     /**
      * 解析线程池管理器：优先 Spring，否则回退。
      * Resolve ThreadPoolManager: prefer Spring, otherwise fall back.
-     *
      * @return 线程池管理器 / Thread-pool manager
      */
     public ThreadPoolManager threadPoolManager() {
@@ -94,7 +89,6 @@ public class GameCoreServicesRuntimeBridge {
     /**
      * 解析 HTML 缓存：优先 Spring，否则回退。
      * Resolve HTMLCache: prefer Spring, otherwise fall back.
-     *
      * @return HTML 缓存 / HTML cache
      */
     public HTMLCache htmlCache() {

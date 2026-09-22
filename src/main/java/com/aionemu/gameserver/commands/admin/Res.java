@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 复活指令；对死亡目标玩家发送复活提示或立即技能复活。
  * Admin command that prompts or instantly skill-revives a dead target player.
- *
  * @author Sarynth
  */
 public class Res extends AdminCommand {
@@ -22,7 +21,6 @@ public class Res extends AdminCommand {
 	/**
 	 * 执行该管理指令。
 	 * Executes this admin command.
-	 *
 	 * @param admin 执行指令的管理员 / admin executing the command
 	 */
 	@Override

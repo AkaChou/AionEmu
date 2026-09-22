@@ -39,7 +39,6 @@ public class PlayerReviveService {
 	/**
 	 * 决斗复活。
 	 * Duel revive.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static final void duelRevive(Player player) {
@@ -57,7 +56,6 @@ public class PlayerReviveService {
 	/**
 	 * 技能复活。
 	 * Skill revive.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static final void skillRevive(Player player) {
@@ -87,7 +85,6 @@ public class PlayerReviveService {
 	/**
 	 * 重生复活。
 	 * Rebirth revive.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static final void rebirthRevive(Player player) {
@@ -125,7 +122,6 @@ public class PlayerReviveService {
 	/**
 	 * 绑点复活。
 	 * Bind-point revive.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static final void bindRevive(Player player) {
@@ -135,7 +131,6 @@ public class PlayerReviveService {
 	/**
 	 * 绑点复活。
 	 * Bind-point revive.
-	 *
 	 * @param player 玩家 / player
 	 * @param skillId 复活技能 ID / revive skill id
 	 */
@@ -176,7 +171,6 @@ public class PlayerReviveService {
 	/**
 	 * 基斯克复活。
 	 * Kisk revive.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static final void kiskRevive(Player player) {
@@ -186,7 +180,6 @@ public class PlayerReviveService {
 	/**
 	 * 基斯克复活。
 	 * Kisk revive.
-	 *
 	 * @param player 玩家 / player
 	 * @param skillId 复活技能 ID / revive skill id
 	 */
@@ -217,7 +210,6 @@ public class PlayerReviveService {
 	/**
 	 * 副本复活。
 	 * Instance revive.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static final void instanceRevive(Player player) {
@@ -227,7 +219,6 @@ public class PlayerReviveService {
 	/**
 	 * 副本复活。
 	 * Instance revive.
-	 *
 	 * @param player 玩家 / player
 	 * @param skillId 复活技能 ID / revive skill id
 	 */
@@ -272,7 +263,6 @@ public class PlayerReviveService {
 	/**
 	 * 执行复活。
 	 * Performs revive.
-	 *
 	 * @param player 玩家 / player
 	 * @param hpPercent 生命百分比 / hpPercent
 	 * @param mpPercent 魔法百分比 / mpPercent
@@ -281,12 +271,7 @@ public class PlayerReviveService {
 	 */
 	public static final void revive(final Player player, int hpPercent, int mpPercent, boolean setSoulsickness,
 			int resurrectionSkill) {
-		/**
-		 * 访问周围玩家：敌对目标改为注视复活者。
-		 * Visits nearby players: hostile targets switch to the reviving player.
-		 *
-		 * @param visitor 被访问玩家 / visited player
-		 */player.getKnownList().doOnAllPlayers(visitor -> {
+        player.getKnownList().doOnAllPlayers(visitor -> {
 			 VisibleObject target = visitor.getTarget();
 			 if (target != null && target.getObjectId() == player.getObjectId()
 					 && (visitor.getRace() != player.getRace())) {
@@ -324,7 +309,6 @@ public class PlayerReviveService {
 	/**
 	 * 道具自我复活。
 	 * Item self-revive.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static final void itemSelfRevive(Player player) {
@@ -365,7 +349,6 @@ public class PlayerReviveService {
 	/**
 	 * 土匪战复活。
 	 * Bandit revive.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static final void banditRevive(Player player) {
@@ -396,7 +379,6 @@ public class PlayerReviveService {
 	/**
 	 * 自由拾取（FFA）区域复活。
 	 * Free-for-all (FFA) area revive.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static final void ffaRevive(Player player) {
@@ -427,7 +409,6 @@ public class PlayerReviveService {
 	/**
 	 * 战场复活。
 	 * Battlefield (BG) revive.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static final void bgRevive(Player player) {
@@ -461,7 +442,6 @@ public class PlayerReviveService {
 	/**
 	 * 活动复活。
 	 * Event revive.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static final void eventRevive(Player player) {
@@ -495,7 +475,6 @@ public class PlayerReviveService {
 	/**
 	 * 起始位置复活。
 	 * Start-position revive.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static final void startPositionRevive(Player player) {
@@ -505,7 +484,6 @@ public class PlayerReviveService {
 	/**
 	 * 起始位置复活。
 	 * Start-position revive.
-	 *
 	 * @param player 玩家 / player
 	 * @param skillId 复活技能 ID / revive skill id
 	 */

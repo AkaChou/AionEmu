@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 /**
  * 熔岩魔位置模型。
  * Moltenus Location model.
- *
  * @author Rinzler (Encom)
  */
 
@@ -38,7 +37,6 @@ public class MoltenusLocation {
 	/**
 	 * 以模板构造位置。
 	 * Constructs a location from a template.
-	 *
 	 * @param template 位置模板 / location template
 	 */
 	public MoltenusLocation(MoltenusTemplate template) {

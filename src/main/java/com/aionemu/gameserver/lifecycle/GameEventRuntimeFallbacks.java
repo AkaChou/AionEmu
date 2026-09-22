@@ -24,7 +24,6 @@ final class GameEventRuntimeFallbacks {
     /**
      * 返回事件服务回退实例。
      * Return the event-service fallback instance.
-     *
      * @return 事件服务 / Event service
      */
     static EventService eventService() {
@@ -34,7 +33,6 @@ final class GameEventRuntimeFallbacks {
     /**
      * 返回玩家事件服务回退实例。
      * Return the player-event service fallback instance.
-     *
      * @return 玩家事件服务 / Player-event service
      */
     static PlayerEventService playerEventService() {
@@ -44,7 +42,6 @@ final class GameEventRuntimeFallbacks {
     /**
      * 返回疯狂守护者服务回退实例。
      * Return the Crazy-Daeva service fallback instance.
-     *
      * @return 疯狂守护者服务 / Crazy-Daeva service
      */
     static CrazyDaevaService crazyDaevaService() {
@@ -54,7 +51,6 @@ final class GameEventRuntimeFallbacks {
     /**
      * 返回欧比斯排名更新服务回退实例。
      * Return the abyss-rank update service fallback instance.
-     *
      * @return 欧比斯排名更新服务 / Abyss-rank update service
      */
     static AbyssRankUpdateService abyssRankUpdateService() {
@@ -64,7 +60,6 @@ final class GameEventRuntimeFallbacks {
     /**
      * 返回数据包广播器回退实例。
      * Return the packet-broadcaster fallback instance.
-     *
      * @return 数据包广播器 / Packet broadcaster
      */
     static PacketBroadcaster packetBroadcaster() {
@@ -75,7 +70,6 @@ final class GameEventRuntimeFallbacks {
      * 返回 EventScheduler：双源兜底已退役，交由 {@link EventScheduler#getInstance()} fail-fast。
      * Returns EventScheduler: the dual-source fallback is retired;
      * delegates to EventScheduler.getInstance() and fails fast.
-     *
      * @return EventScheduler 实例 / EventScheduler instance
      */
     static EventScheduler eventScheduler() {

@@ -16,7 +16,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 物品套装数据容器，按套装 ID 与部件物品 ID 索引 {@link ItemSetTemplate}。
  * Item-set data holder, indexing {@link ItemSetTemplate} by set id and part item id.
- *
  * @author ATracer
  */
 @XmlRootElement(name = "item_sets")
@@ -54,7 +53,6 @@ public class ItemSetData {
 	/**
 	 * 按套装 ID 获取套装模板。
 	 * Returns the item-set template for the given set id.
-	 *
 	 * @param itemSetId 物品套装 ID / item-set id
 	 * @return 套装模板或 null / item-set template or null
 	 */
@@ -65,7 +63,6 @@ public class ItemSetData {
 	/**
 	 * 按部件物品 ID 获取所属套装模板。
 	 * Returns the item-set template associated with the given part item id.
-	 *
 	 * @param itemId 部件物品 ID / part item id
 	 * @return 套装模板或 null / item-set template or null
 	 */
@@ -76,7 +73,6 @@ public class ItemSetData {
 	/**
 	 * 返回已加载的套装数量。
 	 * Returns the number of loaded item sets.
-	 *
 	 * @return 已加载的物品套装数量 / Returns the number of loaded item sets.
 	 */
 	public int size() {

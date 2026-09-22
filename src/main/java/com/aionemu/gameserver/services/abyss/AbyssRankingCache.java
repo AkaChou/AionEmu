@@ -31,16 +31,9 @@ public class AbyssRankingCache {
 	 * -- SETTER --
 	 *  注入 Spring 实例提供者。
 	 *  Inject the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / Instance provider
 	 */
 	@Setter
 	private static volatile ObjectProvider<AbyssRankingCache> instanceProvider;
-    /**
-     * -- GETTER --
-     *
-     * @return 上次刷新时间戳（秒） / Last-update epoch seconds
-     */
     @Getter
     private int lastUpdate;
 	private final Map<Race, List<SM_ABYSS_RANKING_PLAYERS>> players = new HashMap<>();
@@ -83,7 +76,6 @@ public class AbyssRankingCache {
 	/**
 	 * 重算指定种族的玩家排行数据包。
 	 * Rebuild player-ranking packets for the given race.
-	 *
 	 * @param race 阵营 / Race
 	 */
 	private void renewPlayerRanking(Race race) {
@@ -96,7 +88,6 @@ public class AbyssRankingCache {
 	/**
 	 * 按每页 44 条切分玩家排行结果为客户端包列表。
 	 * Split player ranking results into client packets of 44 entries per page.
-	 *
 	 * @param race 阵营 / Race
 	 * @return 分页数据包 / Paged packets
 	 */
@@ -142,11 +133,9 @@ public class AbyssRankingCache {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available

@@ -18,7 +18,6 @@ import lombok.Setter;
 /**
  * Instance 副本活动时间表配置。
  * Instance event schedule configuration.
- *
  * @author Rinzler (Encom)
  */
 @Setter
@@ -35,8 +34,6 @@ public class InstanceSchedule {
 	 * -- SETTER --
 	 *  设置 Instance 列表。
 	 *  Sets the instance list.
-
-
 	 */
 	@XmlElement(name = "instance", required = true)
 	private List<Instance> instancesList;
@@ -73,8 +70,6 @@ public class InstanceSchedule {
 		 * -- SETTER --
 		 *  设置 Instance ID。
 		 *  Sets the instance ID.
-
-
 		 */
 		@XmlAttribute(required = true)
 		private int id;
@@ -88,8 +83,6 @@ public class InstanceSchedule {
 		 * -- SETTER --
 		 *  设置副本时间列表。
 		 *  Sets the instance times.
-
-
 		 */
 		@XmlElement(name = "instanceTime", required = true)
 		private List<String> instanceTimes;

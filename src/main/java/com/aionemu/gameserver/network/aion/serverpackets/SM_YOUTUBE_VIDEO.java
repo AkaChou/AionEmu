@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 推送活动 YouTube 视频链接的服务端包。
  * Server packet that pushes an event YouTube video link.
- *
  * @author Rinzler (Encom)
  */
 public class SM_YOUTUBE_VIDEO extends AionServerPacket {

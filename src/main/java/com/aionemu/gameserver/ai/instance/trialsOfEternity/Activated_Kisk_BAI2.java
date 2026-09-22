@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Trials Of Eternity 副本 NPC AI：Activated Kisk B（@AIName "IDEternity_03_B_Save_Point"），继承 NpcAI2。
  * Trials Of Eternity instance NPC AI: Activated Kisk B (@AIName "IDEternity_03_B_Save_Point"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("IDEternity_03_B_Save_Point")

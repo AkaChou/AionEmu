@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 /**
  * 玩家团队 Member，用于团队2相关逻辑。
  * Player Team Member for team 2 logic.
- *
  * @author ATracer
  */
 @Getter

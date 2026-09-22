@@ -24,7 +24,6 @@ import java.util.List;
 /**
  * 自定义数据包发送指令；按 {@code ./data/packets} 下 XML 映射向目标客户端下发包序列。
  * Admin command that sends sequenced custom packets defined by XML mappings under {@code ./data/packets}.
- *
  * @author Aquanox
  */
 @Slf4j
@@ -49,7 +48,6 @@ public class Send extends AdminCommand {
 	/**
 	 * 执行该管理指令。
 	 * Executes this admin command.
-	 *
 	 * @param admin 执行指令的管理员 / admin executing the command
 	 */
 	@Override

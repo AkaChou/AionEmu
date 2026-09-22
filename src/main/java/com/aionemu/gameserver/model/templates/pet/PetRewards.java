@@ -13,7 +13,6 @@ import lombok.Getter;
 /**
  * 宠物奖励模板（静态数据/XML）。
  * Pet rewards template (static data / XML).
- *
  * @author Rolandas
  */
 @Getter
@@ -28,9 +27,6 @@ public class PetRewards {
 	@XmlAttribute(name = "group", required = true)
 	protected FoodType type;
 
-	/**
-	 * @return 是否为喜爱食物 / Whether loved
-	 */
 	@XmlAttribute
 	protected boolean loved = false;
 

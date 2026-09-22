@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 属性加成类型枚举。
  * Stat Bonus Type enumeration.
- *
  * @author Ranastic
  */
 @XmlType(name = "StatBonusType")

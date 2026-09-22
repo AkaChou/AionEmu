@@ -15,7 +15,6 @@ import java.util.Map;
 /**
  * 查看或修改目标生物状态位的管理员命令。
  * Admin command to show or change creature state bits on a target.
- *
  * @author Rolandas
  */
 public class State extends AdminCommand {
@@ -41,7 +40,6 @@ public class State extends AdminCommand {
 	/**
 	 * 显示或设置/清除目标生物状态位（1–16）。
 	 * Shows or sets/unsets target creature state bits (1–16).
-	 *
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -122,7 +120,6 @@ public class State extends AdminCommand {
 	/**
 	 * 参数错误时的回调（当前无操作）。
 	 * Failure callback (no-op).
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {
@@ -131,7 +128,6 @@ public class State extends AdminCommand {
 	/**
 	 * 将状态位掩码格式化为可读描述。
 	 * Formats a state bitmask into a readable description.
-	 *
 	 * @param state 状态掩码 / State mask
 	 */
 	String getStateDescription(short state) {

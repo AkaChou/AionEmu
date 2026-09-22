@@ -18,7 +18,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 邮件奖励模板数据容器，按奖励 ID 索引 {@link MailRewardTemplate}。
  * Mail reward template data holder, indexing {@link MailRewardTemplate} by reward id.
- *
  * Created by Wnkrz on 26/07/2017.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -50,7 +49,6 @@ public class MailRewardData {
 	/**
 	 * 返回已加载的邮件奖励数量。
 	 * Returns the number of loaded mail rewards.
-	 *
 	 * @return 已加载的邮件奖励数量 / Returns the number of loaded mail rewards.
 	 */
 	public int size() {
@@ -60,7 +58,6 @@ public class MailRewardData {
 	/**
 	 * 按奖励 ID 获取邮件奖励模板。
 	 * Returns the mail reward template for the given reward id.
-	 *
 	 * @param rewardId 奖励 ID / reward id
 	 * @return 邮件奖励模板或 null / mail reward template or null
 	 */
@@ -71,7 +68,6 @@ public class MailRewardData {
 	/**
 	 * 返回全部邮件奖励映射。
 	 * Returns the full mail reward map.
-	 *
 	 * @return ID 到奖励模板的映射 / map of id to reward template
 	 */
 	public Map<Integer, MailRewardTemplate> getAll() {

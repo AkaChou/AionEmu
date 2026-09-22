@@ -28,7 +28,6 @@ import lombok.Setter;
 /**
  * 召唤物游戏对象。
  * Summon game object.
- *
  * @author ATracer
  */
 @Getter
@@ -40,15 +39,12 @@ public class Summon extends Creature {
 	/**
 	 * 设置主人。
 	 * Sets the master.
-	 *
-	 * @param master 主人玩家 / the master to set
+	 * 主人玩家 / the master to set
 	 */
 	private Player master;
 	/**
 	 * 返回召唤模式。
 	 * Returns the summon mode.
-	 *
-	 * @return 模式 / the mode
 	 */
 	private SummonMode mode = SummonMode.GUARD;
 	private final byte level;
@@ -62,7 +58,6 @@ public class Summon extends Creature {
 	/**
 	 * 构造召唤物。
 	 * Constructs a summon.
-	 *
 	 * @param objId 对象 ID / object id
 	 * @param controller 生物控制器 / creature controller
 	 * @param spawnTemplate 生成模板 / spawn template
@@ -123,7 +118,6 @@ public class Summon extends Creature {
 	/**
 	 * 返回等级。
 	 * Returns the level.
-	 *
 	 * @return 等级 / the level
 	 */
 	@Override
@@ -150,7 +144,6 @@ public class Summon extends Creature {
 	/**
 	 * 返回 NPC 对象类型 SUMMON。
 	 * Returns NpcObjectType.SUMMON.
-	 *
 	 * @return NPC 对象类型 / NpcObjectType.SUMMON
 	 */
 	@Override
@@ -173,7 +166,6 @@ public class Summon extends Creature {
 	/**
 	 * 判断 NPC 是否为敌对目标。
 	 * Whether the NPC is an enemy.
-	 *
 	 * @param npc NPC / NPC
 	 * @return 是否敌对 / whether enemy
 	  */
@@ -185,7 +177,6 @@ public class Summon extends Creature {
 	/**
 	 * 判断玩家是否为敌对目标。
 	 * Whether the player is an enemy.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否敌对 / whether enemy
 	  */
@@ -206,7 +197,6 @@ public class Summon extends Creature {
 	/**
 	 * NPC 是否会对召唤物产生仇恨。
 	 * Whether the NPC aggroes on the summon.
-	 *
 	 * @param npc NPC / NPC
 	 * @return 是否产生仇恨 / whether aggro
 	  */
@@ -239,7 +229,6 @@ public class Summon extends Creature {
 	/**
 	 * 返回剩余存活秒数，永久召唤物返回 {@code 0}。
 	 * Returns remaining live time in seconds, or {@code 0} for a permanent summon.
-	 *
 	 * @return 剩余存活秒数 / remaining live time in seconds
 	 */
 	public int getLiveTime() {
@@ -269,7 +258,6 @@ public class Summon extends Creature {
 	/**
 	 * 设置存活时长（秒），0 表示永久。
 	 * Sets the live time in seconds, 0 for permanent.
-	 *
 	 * @param liveTime 存活秒数 / live time in sec.
 	 */
 	public void setLiveTime(int liveTime) {

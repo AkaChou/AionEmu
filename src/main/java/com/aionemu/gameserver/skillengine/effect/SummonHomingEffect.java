@@ -23,7 +23,6 @@ import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 /**
  * 召唤追踪弹/自导弹效果：生成若干次攻击次数受限的追踪单位。
  * Summon homing effect: spawns homing units limited by attack count.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)

@@ -28,7 +28,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Infernal Danuar Reliquary 副本 NPC AI：Vengeful Modor（@AIName "vengeful_modor"），继承 AggressiveNpcAI2。
  * Infernal Danuar Reliquary instance NPC AI: Vengeful Modor (@AIName "vengeful_modor"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("vengeful_modor")

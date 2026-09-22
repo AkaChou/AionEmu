@@ -21,7 +21,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 双重推进位移效果：按方向/距离计算冲刺落点并更新施法者位置。
  * Double-boost dash effect: computes a directional dash landing and updates effector position.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -35,7 +34,6 @@ public class DoubleBoostEffect extends EffectTemplate {
 	/**
 	 * 同步目标更新包并将施法者移动到技能坐标。
 	 * Sends target-update and moves the effector to the skill position.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -49,7 +47,6 @@ public class DoubleBoostEffect extends EffectTemplate {
 	/**
 	 * 标记冲刺成功并按朝向/距离/碰撞计算落点。
 	 * Marks dash success and computes landing by heading, distance, and collision.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

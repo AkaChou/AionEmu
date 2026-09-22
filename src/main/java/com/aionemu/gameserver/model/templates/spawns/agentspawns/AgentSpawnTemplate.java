@@ -10,7 +10,6 @@ import lombok.Setter;
 /**
  * 代理人刷新点模板（静态数据/XML）。
  * XML template.
- *
  * @author Rinzler (Encom)
  */
 
@@ -43,7 +42,6 @@ public class AgentSpawnTemplate extends SpawnTemplate {
 	/**
 	 * 是否处于代理战斗状态。
 	 * Whether agent fight.
-	 *
 	 * @return 战斗状态则为 true / true if fighting
 	 */
 	public final boolean isAgentFight() {
@@ -53,7 +51,6 @@ public class AgentSpawnTemplate extends SpawnTemplate {
 	/**
 	 * 是否处于代理和平状态。
 	 * Whether agent peace.
-	 *
 	 * @return 和平状态则为 true / true if at peace
 	 */
 	public final boolean isAgentPeace() {

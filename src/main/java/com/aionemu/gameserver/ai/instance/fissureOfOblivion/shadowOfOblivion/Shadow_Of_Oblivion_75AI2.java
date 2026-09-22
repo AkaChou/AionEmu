@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Fissure Of Oblivion 副本 NPC AI：Shadow Of Oblivion 75（@AIName "Shadow_Of_Oblivion_75"），继承 AggressiveNpcAI2。
  * Fissure Of Oblivion instance NPC AI: Shadow Of Oblivion 75 (@AIName "Shadow_Of_Oblivion_75"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("Shadow_Of_Oblivion_75")

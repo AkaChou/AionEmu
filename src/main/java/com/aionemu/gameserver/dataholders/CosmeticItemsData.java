@@ -16,7 +16,6 @@ import java.util.LinkedHashMap;
 /**
  * 外观物品数据容器，按外观名称索引模板。
  * Cosmetic item data holder, indexing templates by cosmetic name.
- *
  * @author xTz
  */
 @XmlRootElement(name = "cosmetic_items")
@@ -41,7 +40,6 @@ public class CosmeticItemsData {
 	/**
 	 * 返回已加载的外观物品数量。
 	 * Returns the number of loaded cosmetic items.
-	 *
 	 * @return 已加载的外观物品数量 / Returns the number of loaded cosmetic items.
 	 */
 	public int size() {
@@ -51,7 +49,6 @@ public class CosmeticItemsData {
 	/**
 	 * 按外观名称获取模板。
 	 * Returns the cosmetic item template for the given name.
-	 *
 	 * @param str 外观名称 / cosmetic name
 	 * @return 模板，不存在则为 null / template or null
 	 */

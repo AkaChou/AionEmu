@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Levinshor 区域 NPC AI：Vocolith（@AIName "vocolith"），继承 NpcAI2。
  * Levinshor zone NPC AI: Vocolith (@AIName "vocolith"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("vocolith")

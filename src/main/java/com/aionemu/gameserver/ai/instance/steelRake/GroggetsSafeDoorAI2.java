@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Steel Rake 副本 NPC AI：Groggets Safe Door（@AIName "groggetssafedoor"），继承 ActionItemNpcAI2。
  * Steel Rake instance NPC AI: Groggets Safe Door (@AIName "groggetssafedoor"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("groggetssafedoor")

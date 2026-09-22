@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 传送门/传送点 AI：Wisplight Abbey Portal（@AIName "wisplight"），继承 NpcAI2。
  * Portal/teleporter AI: Wisplight Abbey Portal (@AIName "wisplight"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("wisplight")

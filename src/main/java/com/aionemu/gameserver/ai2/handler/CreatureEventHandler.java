@@ -21,7 +21,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * 生物感知事件处理器，负责生物移动/可见时的仇恨检查与任务距离触发。
  * Handles creature perception events: aggro checks and quest distance triggers on move/see.
- *
  * @author ATracer
  */
 public class CreatureEventHandler {
@@ -29,7 +28,6 @@ public class CreatureEventHandler {
 	/**
 	 * 生物在已知列表中移动时触发：检查仇恨，并对玩家触发距离任务。
 	 * Fired when a creature moves in the known list: checks aggro and triggers distance quests for players.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param creature 移动的生物 / moving creature
 	 */
@@ -43,7 +41,6 @@ public class CreatureEventHandler {
 	/**
 	 * 生物进入视野时触发：恢复丢失目标、检查仇恨，并对玩家触发距离任务。
 	 * Fired when a creature enters sight: recovers lost target, checks aggro, and triggers distance quests for players.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param creature 进入视野的生物 / creature that became visible
 	 */
@@ -64,7 +61,6 @@ public class CreatureEventHandler {
 	/**
 	 * 检查生物是否触发仇恨（喊话范围、仇恨范围、敌对与视线）。
 	 * Checks whether the creature should trigger aggro (shout range, aggro range, hostility, and line of sight).
-	 *
 	 * @param ai NPC AI 实例 / NPC AI instance
 	 * @param creature 待检查的生物 / creature to evaluate
 	 */

@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Kromedes Trial 副本 NPC AI：Shadow Judge Kaliga（@AIName "shadow_judge"），继承 AggressiveNpcAI2。
  * Kromedes Trial instance NPC AI: Shadow Judge Kaliga (@AIName "shadow_judge"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("shadow_judge")

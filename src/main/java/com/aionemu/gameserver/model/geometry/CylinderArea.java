@@ -7,7 +7,6 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 /**
  * 圆柱区域，用于几何相关逻辑。
  * Cylinder Area for geometry logic.
- *
  * @author SoulKeeper
  */
 public class CylinderArea extends AbstractArea {
@@ -33,7 +32,6 @@ public class CylinderArea extends AbstractArea {
 	/**
 	 * 创建给定半径的圆柱区域。
 	 * Creates new cylinder with given radius.
-	 *
 	 * @param zoneName 区域名称 / zone name
 	 * @param worldId 世界 ID / world id
 	 * @param center 圆心 / center of the circle
@@ -48,7 +46,6 @@ public class CylinderArea extends AbstractArea {
 	/**
 	 * 创建给定半径的圆柱区域。
 	 * Creates new cylinder with given radius.
-	 *
 	 * @param zoneName 区域名称 / zone name
 	 * @param worldId 世界 ID / world id
 	 * @param x 圆心 X 坐标 / center x coord

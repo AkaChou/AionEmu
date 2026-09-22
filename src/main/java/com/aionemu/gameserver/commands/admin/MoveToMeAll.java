@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 将全服或按种族筛选的在线玩家批量传送到管理员身边的命令。
  * Admin command to mass-teleport all online players, or by race, to the admin.
- *
  * @author Shepper Helped by @alfa24t
  */
 public class MoveToMeAll extends AdminCommand {
@@ -26,7 +25,6 @@ public class MoveToMeAll extends AdminCommand {
 	/**
 	 * 按 {@code all|elyos|asmos} 将对应玩家传送到管理员位置。
 	 * Teleport matching players to the admin for {@code all|elyos|asmos}.
-	 *
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -82,7 +80,6 @@ public class MoveToMeAll extends AdminCommand {
 	/**
 	 * 参数错误时显示语法。
 	 * Show syntax when parameters are invalid.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

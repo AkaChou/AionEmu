@@ -10,7 +10,6 @@ import java.util.Map;
 /**
  * 军团成员容器：按 ID / 名称缓存 {@link LegionMember} 与 {@link LegionMemberEx}。
  * {@link LegionMemberEx}).
- *
  * @author Simple
  */
 public class LegionMemberContainer {
@@ -33,7 +32,6 @@ public class LegionMemberContainer {
 	/**
 	 * 添加基础军团成员（已存在则忽略）。
 	 * Adds a basic legion member (ignored if already present).
-	 *
 	 * @param legionMember 待添加成员 / member to add
 	 */
 	public synchronized void addMember(LegionMember legionMember) {
@@ -45,7 +43,6 @@ public class LegionMemberContainer {
 	/**
 	 * 按 objectId 获取基础成员。
 	 * Returns a basic member from the cache by objectId.
-	 *
 	 * @param memberObjId 成员 objectId / member objectId
 	 * @return 成员实例，不存在则返回 null / member instance, or null if absent
 	 */
@@ -56,7 +53,6 @@ public class LegionMemberContainer {
 	/**
 	 * 添加扩展军团成员；ID 或名称冲突时抛出 {@link DuplicateAionObjectException}。
 	 * Adds an extended legion member; throws {@link DuplicateAionObjectException} on ID or name conflict.
-	 *
 	 * @param legionMember 待添加扩展成员 / extended member to add
 	 */
 	public synchronized void addMemberEx(LegionMemberEx legionMember) {
@@ -70,7 +66,6 @@ public class LegionMemberContainer {
 	/**
 	 * 按 objectId 获取扩展成员。
 	 * Returns an extended member from the cache by objectId.
-	 *
 	 * @param memberObjId 成员 objectId / member objectId
 	 * @return 扩展成员实例，不存在则返回 null / extended member, or null if absent
 	 */
@@ -81,7 +76,6 @@ public class LegionMemberContainer {
 	/**
 	 * 按名称获取扩展成员。
 	 * Returns an extended member from the cache by name.
-	 *
 	 * @param memberName 成员名称 / member name
 	 * @return 扩展成员实例，不存在则返回 null / extended member, or null if absent
 	 */
@@ -92,7 +86,6 @@ public class LegionMemberContainer {
 	/**
 	 * 从容器中移除成员（同时清理基础与扩展索引）。
 	 * Removes the member from this container (clears both basic and extended indexes).
-	 *
 	 * @param legionMember 待移除扩展成员 / extended member to remove
 	 */
 	public synchronized void remove(LegionMemberEx legionMember) {
@@ -104,7 +97,6 @@ public class LegionMemberContainer {
 	/**
 	 * 是否缓存了指定 objectId 的基础成员。
 	 * Whether a basic member with the given objectId is cached.
-	 *
 	 * @param memberObjId 成员 objectId / member objectId
 	 * @return 存在则为 true / true if present
 	 */
@@ -115,7 +107,6 @@ public class LegionMemberContainer {
 	/**
 	 * 是否缓存了指定 objectId 的扩展成员。
 	 * Whether an extended member with the given objectId is cached.
-	 *
 	 * @param memberObjId 成员 objectId / member objectId
 	 * @return 存在则为 true / true if present
 	 */
@@ -126,7 +117,6 @@ public class LegionMemberContainer {
 	/**
 	 * 是否缓存了指定名称的扩展成员。
 	 * Whether an extended member with the given name is cached.
-	 *
 	 * @param memberName 成员名称 / member name
 	 * @return 存在则为 true / true if present
 	 */

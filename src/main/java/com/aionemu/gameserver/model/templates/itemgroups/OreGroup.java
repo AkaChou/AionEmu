@@ -13,7 +13,6 @@ import com.aionemu.gameserver.model.templates.rewards.IdReward;
 /**
  * 矿石奖励组：矿石物品种族条目。
  * Ore reward group: ore item race entries.
- *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)

@@ -14,7 +14,6 @@ import java.nio.ByteBuffer;
 /**
  * 客户端选服进入游戏请求：校验会话并回 SM_PLAY_OK / FAIL。
  * FAIL.
- *
  * @author -Nemesiss-
  */
 public class CM_PLAY extends AionClientPacket {
@@ -38,7 +37,6 @@ public class CM_PLAY extends AionClientPacket {
     /**
      * 构造 CM_PLAY 包。
      * Construct CM_PLAY packet.
-     *
      * @param buf 包体数据 / Packet data
      * @param client 登录连接 / Login connection
      */

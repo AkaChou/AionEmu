@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 管理休息能量/救赎点数的命令（{@code //energy}）。
  * Admin command that manages repose energy and salvation points ({@code //energy}).
- *
  * @author Source
  */
 public class EnergyBuff extends AdminCommand {
@@ -26,7 +25,6 @@ public class EnergyBuff extends AdminCommand {
 	/**
 	 * 对目标玩家查看、增加或重置休息/救赎能量，或刷新属性包。
 	 * Views, adds or resets repose/salvation energy on the target player, or refreshes stats.
-	 *
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -84,7 +82,6 @@ public class EnergyBuff extends AdminCommand {
 	/**
 	 * 执行失败时的语法提示。
 	 * Syntax hint on failure.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

@@ -10,7 +10,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 /**
  * 升级材料模板（静态数据/XML）。
  * Upgrade materials template (static data/XML).
- *
  * @author Ranastic (Encom)
  */
 

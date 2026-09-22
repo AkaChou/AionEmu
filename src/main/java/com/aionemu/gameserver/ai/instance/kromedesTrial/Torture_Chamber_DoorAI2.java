@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Kromedes Trial 副本 NPC AI：Torture Chamber Door（@AIName "torture_chamber_door"），继承 NpcAI2。
  * Kromedes Trial instance NPC AI: Torture Chamber Door (@AIName "torture_chamber_door"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("torture_chamber_door")

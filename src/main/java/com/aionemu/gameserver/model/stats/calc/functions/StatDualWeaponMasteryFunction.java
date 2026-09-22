@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.stats.CalculationType;
 /**
  * 属性 DualWeaponMastery 函数模型。
  * Stat Dual Weapon Mastery Function model.
- *
  * @author ATracer
  */
 public class StatDualWeaponMasteryFunction extends StatFunctionProxy {

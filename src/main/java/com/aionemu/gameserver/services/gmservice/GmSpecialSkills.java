@@ -51,7 +51,6 @@ public enum GmSpecialSkills {
 	/**
 	 * 构造权限等级条目。
 	 * Construct an access-level entry.
-	 *
 	 * @param id 权限等级 / Access level
 	 * @param name 显示名称标签 / Display name tag
 	 * @param status 状态显示名 / Status display name
@@ -67,7 +66,6 @@ public enum GmSpecialSkills {
 	/**
 	 * 获取权限显示名称标签。
 	 * Get the access-level display name tag.
-	 *
 	 * @return 名称标签 / name tag
 	 */
     public String getName() {
@@ -77,7 +75,6 @@ public enum GmSpecialSkills {
 	/**
 	 * 获取状态显示名（含 GM 前缀字符）。
 	 * Get the status display name (including GM prefix glyphs).
-	 *
 	 * Status name
 	 */
     public String getStatusName() {
@@ -87,7 +84,6 @@ public enum GmSpecialSkills {
     /**
 	 * 按权限等级查找对应枚举项。
 	 * Look up the enum constant by access level.
-	 *
 	 * @param level 权限等级 / Access level
 	 * @return 对应枚举，未找到返回 null / Matching enum, or null if not found
 	 */
@@ -103,7 +99,6 @@ public enum GmSpecialSkills {
 	/**
 	 * 按权限等级获取显示名称标签。
 	 * Get the display name tag by access level.
-	 *
 	 * @param level 权限等级 / Access level
 	 * @return 名称标签，未找到返回 "%s" / Name tag, or "%s" if not found
 	 */
@@ -119,7 +114,6 @@ public enum GmSpecialSkills {
 	/**
 	 * 获取玩家状态显示名：有 GM 权限则用 GM 状态名，否则用军团名。
 	 * Get player status display name: GM status if access level &gt; 0, otherwise legion name.
-	 *
 	 * @param player 玩家 / Player
 	 * @return 状态显示名 / Status display name
 	 */

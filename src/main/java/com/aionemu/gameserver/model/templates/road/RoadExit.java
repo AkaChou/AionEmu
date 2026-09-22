@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 道路 Exit 模板（静态数据/XML）。
  * XML template.
- *
  * @author SheppeR
  */
 @Getter

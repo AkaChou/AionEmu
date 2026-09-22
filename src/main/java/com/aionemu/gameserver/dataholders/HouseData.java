@@ -68,7 +68,6 @@ public class HouseData {
 	/**
 	 * 按世界 ID 获取该入口世界下的全部地块。
 	 * Returns all lands for the given entry world id.
-	 *
 	 * @param worldId 入口世界 ID / entry world id
 	 * @return 地块集合，不存在则为 null / set of lands, or null if absent
 	 */
@@ -79,7 +78,6 @@ public class HouseData {
 	/**
 	 * 在指定世界中按房屋类型尺寸查找匹配地块。
 	 * Finds a land in the given world that matches the house size type.
-	 *
 	 * @param worldId 入口世界 ID / entry world id
 	 * @param houseSize 房屋类型尺寸 / house size type
 	 * @return 匹配地块，不存在则为 null / matching land, or null if absent
@@ -102,7 +100,6 @@ public class HouseData {
 	/**
 	 * 按地块 ID 获取地块模板。
 	 * Returns the land template for the given land id.
-	 *
 	 * @param landId 领地 ID / land id
 	 * @return 地块模板，不存在则为 null / land template, or null if absent
 	 */
@@ -113,7 +110,6 @@ public class HouseData {
 	/**
 	 * 返回全部地块集合。
 	 * Returns all land templates.
-	 *
 	 * @return 全部领地模板 / Returns all land templates.
 	 */
 	public Collection<HousingLand> getLands() {
@@ -123,7 +119,6 @@ public class HouseData {
 	/**
 	 * 返回地块数量。
 	 * Returns the number of lands.
-	 *
 	 * @return 领地数量 / Returns the number of lands.
 	 */
 	public int size() {

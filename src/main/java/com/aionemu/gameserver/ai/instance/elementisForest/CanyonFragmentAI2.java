@@ -10,7 +10,6 @@ import java.util.concurrent.Future;
 /**
  * Elementis Forest 副本 NPC AI：Canyon Fragment（@AIName "canyonfragment"），继承 AggressiveNpcAI2。
  * Elementis Forest instance NPC AI: Canyon Fragment (@AIName "canyonfragment"), extends AggressiveNpcAI2.
- *
  * @author Luzien
  */
 @AIName("canyonfragment")

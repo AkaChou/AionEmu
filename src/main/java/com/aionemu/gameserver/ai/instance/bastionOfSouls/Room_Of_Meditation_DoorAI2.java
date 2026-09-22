@@ -17,7 +17,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Bastion Of Souls 副本 NPC AI：Room Of Meditation Door（@AIName "Prison_Door"），继承 NpcAI2。
  * Bastion Of Souls instance NPC AI: Room Of Meditation Door (@AIName "Prison_Door"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Prison_Door")

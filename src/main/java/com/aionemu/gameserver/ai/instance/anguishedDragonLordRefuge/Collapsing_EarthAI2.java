@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Anguished Dragon Lord Refuge 副本 NPC AI：Collapsing Earth（@AIName "collapsing_earth"），继承 AggressiveNpcAI2。
  * Anguished Dragon Lord Refuge instance NPC AI: Collapsing Earth (@AIName "collapsing_earth"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("anguished_dragon_lord_refuge_collapsing_earth")

@@ -7,7 +7,6 @@ import lombok.Getter;
  * 碰撞意图位掩码枚举，用于过滤几何体在射线/包围体检测中是否参与碰撞。
  * Bitmask enum of collision intentions used to filter which geometries
  * participate in ray/bounding-volume collision tests.
- *
  * @author Rolandas
  */
 @Getter
@@ -56,7 +55,6 @@ public enum CollisionIntention {
 	/**
 	 * 以整型位值构造意图。
 	 * Constructs an intention from an integer bit value.
-	 *
 	 * @param id 位值 / bit value
 	 */
 	CollisionIntention(int id) {
@@ -66,7 +64,6 @@ public enum CollisionIntention {
 	/**
 	 * 将整型掩码解析为意图枚举集合（跳过 {@link #NONE} 与 {@link #ALL}）。
 	 * Parses an integer mask into an EnumSet of intentions (skips {@link #NONE} and {@link #ALL}).
-	 *
 	 * @param value 整型掩码 / integer bitmask
 	 * @return 匹配的意图集合 / matched intention set
 	 */
@@ -86,7 +83,6 @@ public enum CollisionIntention {
 	/**
 	 * 将整型掩码格式化为逗号分隔的意图名字符串。
 	 * Formats an integer mask as a comma-separated list of intention names.
-	 *
 	 * @param value 整型掩码 / integer bitmask
 	 * @return 意图名列表字符串 / comma-separated intention names
 	 */

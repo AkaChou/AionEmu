@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Shugo Emperor Vault 副本 NPC AI：The Shugo Emperor Butler（@AIName "emperor_butler"），继承 NpcAI2。
  * Shugo Emperor Vault instance NPC AI: The Shugo Emperor Butler (@AIName "emperor_butler"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("emperor_butler")

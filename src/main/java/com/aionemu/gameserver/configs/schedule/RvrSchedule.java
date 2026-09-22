@@ -18,7 +18,6 @@ import lombok.Setter;
 /**
  * RvR（种族对战）活动时间表配置。
  * RvR (Race vs Race) event schedule configuration.
- *
  * @author Rinzler (Encom)
  */
 @Setter
@@ -35,8 +34,6 @@ public class RvrSchedule {
 	 * -- SETTER --
 	 *  设置 RvR 列表。
 	 *  Sets the RvR list.
-
-
 	 */
 	@XmlElement(name = "rvr", required = true)
 	private List<Rvr> rvrsList;
@@ -73,8 +70,6 @@ public class RvrSchedule {
 		 * -- SETTER --
 		 *  设置 RvR ID。
 		 *  Sets the RvR ID.
-
-
 		 */
 		@XmlAttribute(required = true)
 		private int id;
@@ -88,8 +83,6 @@ public class RvrSchedule {
 		 * -- SETTER --
 		 *  设置 RvR 时间列表。
 		 *  Sets the RvR times.
-
-
 		 */
 		@XmlElement(name = "rvrTime", required = true)
 		private List<String> rvrTimes;

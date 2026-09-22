@@ -41,8 +41,7 @@ public class CraftSkillUpdateService {
      * -- SETTER --
      *  注入 Spring ObjectProvider，用于容器管理的实例解析。
      *  Inject Spring ObjectProvider for container-managed instance resolution.
-     *
-     * @param provider 实例提供者 / Instance provider
+     * 实例提供者 / Instance provider
      */
     @Setter
     private static volatile ObjectProvider<CraftSkillUpdateService> instanceProvider;
@@ -57,11 +56,9 @@ public class CraftSkillUpdateService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -178,7 +175,6 @@ public class CraftSkillUpdateService {
 	/**
 	 * 玩家 10 级时按种族授予基础变形配方。
 	 * Grant basic morph recipes by race when the player reaches level 10.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public void setMorphRecipe(Player player) {
@@ -220,7 +216,6 @@ public class CraftSkillUpdateService {
 	/**
 	 * 向指定 NPC 学习/升级制作技能，校验等级、任务、名额与费用后弹窗确认。
 	 * Learn or upgrade a craft skill from the given NPC after level, quest, slot and cost checks.
-	 *
 	 * @param player 玩家 / Player
 	 * @param npc 技能导师 NPC / Skill mentor NPC
 	 */
@@ -328,7 +323,6 @@ public class CraftSkillUpdateService {
 	/**
 	 * 判断技能 ID 是否为可计名额的制作技能。
 	 * Check whether the skill id is a craft skill counted for expert/master slots.
-	 *
 	 * @param skillId 技能 ID / Skill id
 	 * @return 是否为制作技能 / Whether it is a craft skill
 	 */
@@ -345,7 +339,6 @@ public class CraftSkillUpdateService {
 	/**
 	 * 统计玩家当前专家级制作技能数量（等级 400–499）。
 	 * Count the player's expert craft skills (level 400–499).
-	 *
 	 * @param player 玩家 / Player
 	 * @return 专家技能数量 / Expert skill count
 	 */
@@ -368,7 +361,6 @@ public class CraftSkillUpdateService {
 	/**
 	 * 统计玩家当前大师级制作技能数量（等级 &gt; 499）。
 	 * Count the player's master craft skills (level &gt; 499).
-	 *
 	 * @param player 玩家 / Player
 	 * @return 大师技能数量 / Master skill count
 	 */
@@ -391,7 +383,6 @@ public class CraftSkillUpdateService {
 	/**
 	 * 判断玩家是否还能再学一个专家制作技能。
 	 * Check whether the player can still learn another expert craft skill.
-	 *
 	 * @param player 玩家 / Player
 	 * @return 是否可继续学习专家 / Whether another expert skill can be learned
 	 */
@@ -402,7 +393,6 @@ public class CraftSkillUpdateService {
 	/**
 	 * 判断玩家是否还能再学一个大师制作技能。
 	 * Check whether the player can still learn another master craft skill.
-	 *
 	 * @param player 玩家 / Player
 	 * @return 是否可继续学习大师 / Whether another master skill can be learned
 	 */

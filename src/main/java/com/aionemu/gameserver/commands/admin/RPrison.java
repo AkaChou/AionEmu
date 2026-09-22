@@ -12,7 +12,6 @@ import java.util.NoSuchElementException;
  * 将在线玩家从监狱释放的管理员命令。
  * Admin command to release an online player from prison.
  * Command: //rprison &lt;player&gt;
- *
  * @author lord_rex Command: //rprison <player> This command is removing player from prison.
  */
 public class RPrison extends AdminCommand {
@@ -28,7 +27,6 @@ public class RPrison extends AdminCommand {
 	/**
 	 * 解除指定在线玩家的监狱状态。
 	 * Clear the prison state of the named online player.
-	 *
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -56,7 +54,6 @@ public class RPrison extends AdminCommand {
 	/**
 	 * 参数错误时显示语法。
 	 * Show syntax when parameters are invalid.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

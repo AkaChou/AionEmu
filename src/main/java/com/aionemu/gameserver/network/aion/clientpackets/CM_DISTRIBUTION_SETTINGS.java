@@ -13,7 +13,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 更新队伍/联盟拾取分配规则的客户端包。
  * Client packet that updates party/alliance loot distribution settings.
- *
  * @author Lyahim, Simple, xTz
  */
 public class CM_DISTRIBUTION_SETTINGS extends AionClientPacket {
@@ -36,7 +35,6 @@ public class CM_DISTRIBUTION_SETTINGS extends AionClientPacket {
 	/**
 	 * 构造客户端包实例。
 	 * Constructs a new client packet instance.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余允许状态 / additional allowed states

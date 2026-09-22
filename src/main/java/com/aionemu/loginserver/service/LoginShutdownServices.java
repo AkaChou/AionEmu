@@ -18,7 +18,6 @@ public final class LoginShutdownServices implements DisposableBean {
     /**
      * 注入并设置关机协调器 provider。
      * Inject and set the shutdown coordinator provider.
-     *
      * @param shutdownProvider 关机协调器提供者 / shutdown provider
      */
     public LoginShutdownServices(ObjectProvider<Shutdown> shutdownProvider) {
@@ -28,7 +27,6 @@ public final class LoginShutdownServices implements DisposableBean {
     /**
      * 设置关机协调器 {@link ObjectProvider}。
      * Set the shutdown {@link ObjectProvider}.
-     *
      * @param shutdownProvider 关机协调器提供者 / shutdown provider
      */
     public static void setShutdownProvider(ObjectProvider<Shutdown> shutdownProvider) {
@@ -38,7 +36,6 @@ public final class LoginShutdownServices implements DisposableBean {
     /**
      * 获取 {@link Shutdown}；必要时使用回退实例并缓存。
      * Resolve {@link Shutdown}; cache a fallback instance when needed.
-     *
      * @return 关机协调器 / shutdown coordinator
      */
     public static Shutdown shutdown() {
@@ -65,7 +62,6 @@ public final class LoginShutdownServices implements DisposableBean {
     /**
      * 回退关机实例。
      * Fallback shutdown instance.
-     *
      * @return 回退实例 / fallback instance
      */
     private static Shutdown fallbackShutdown() {
@@ -75,7 +71,6 @@ public final class LoginShutdownServices implements DisposableBean {
     /**
      * 缓存已解析的关机实例。
      * Remember the resolved shutdown instance.
-     *
      * @param shutdown 关机协调器 / shutdown coordinator
      * @return 同一实例 / same instance
      */

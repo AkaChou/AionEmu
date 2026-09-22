@@ -8,7 +8,6 @@ import com.aionemu.commons.database.dao.DAO;
 /**
  * 玩家护照（Passports）数据访问对象。
  * Player passports data access object.
- *
  * @author Ghostfur (Aion-Unique)
  */
 public abstract class PlayerPassportsDAO implements DAO {
@@ -16,7 +15,6 @@ public abstract class PlayerPassportsDAO implements DAO {
 	/**
 	 * 插入一条护照记录。
 	 * Inserts a passport record.
-	 *
 	 * @param accountId 账号 ID / account id
 	 * @param passportId 通行证 ID / passport id
 	 * @param stamps 印章数 / stamps
@@ -27,7 +25,6 @@ public abstract class PlayerPassportsDAO implements DAO {
 	/**
 	 * 更新护照进度。
 	 * Updates passport progress.
-	 *
 	 * @param accountId 账号 ID / account id
 	 * @param passportId 通行证 ID / passport id
 	 * @param stamps 印章数 / stamps
@@ -40,7 +37,6 @@ public abstract class PlayerPassportsDAO implements DAO {
 	/**
 	 * 获取护照印章数。
 	 * Returns the stamp count for the passport.
-	 *
 	 * @param accountId 账号 ID / account id
 	 * @param passportId 通行证 ID / passport id
 	 * @return 印章数量 / stamp count
@@ -50,7 +46,6 @@ public abstract class PlayerPassportsDAO implements DAO {
 	/**
 	 * 获取护照最后时间戳。
 	 * Returns the last stamp timestamp for the passport.
-	 *
 	 * @param accountId 账号 ID / account id
 	 * @param passportId 通行证 ID / passport id
 	 * @return 最后时间戳 / last stamp
@@ -60,7 +55,6 @@ public abstract class PlayerPassportsDAO implements DAO {
 	/**
 	 * 获取账号下全部护照 ID。
 	 * Returns all passport IDs for the account.
-	 *
 	 * @param accountId 账号 ID / account id
 	 * @return 通行证 ID 列表 / list of passport ids
 	 */
@@ -69,7 +63,6 @@ public abstract class PlayerPassportsDAO implements DAO {
 	/**
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier of this DAO.
-	 *
 	 * @return DAO 类名 / DAO class name
 	 */
 	@Override

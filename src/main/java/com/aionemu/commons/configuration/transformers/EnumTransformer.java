@@ -7,7 +7,6 @@ import java.lang.reflect.Field;
 /**
  * 枚举属性转换器
  * Enum property transformer class that handles conversion of string values to Enum objects.
- *
  * 支持的输入格式:
  * Supported input format:
  * - 枚举常量名称 enum constant name (case-sensitive)
@@ -23,7 +22,6 @@ public class EnumTransformer implements PropertyTransformer<Enum<?>> {
     /**
      * 将字符串值转换为 Enum 对象
      * Transforms string value into Enum object
-     *
      * @param value 要转换的字符串值（枚举常量名称）/ String value to transform (enum constant name)
      * @param field 字段对象（必须是枚举类型）/ Field that will be transformed (must be an enum type)
      * @return 转换后的 Enum 对象 / Transformed Enum object

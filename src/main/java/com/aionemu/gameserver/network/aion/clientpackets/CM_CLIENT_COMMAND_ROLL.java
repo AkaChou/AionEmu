@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 处理客户端掷骰命令的包。
  * Client packet for the dice-roll client command.
- *
  * @author Rhys2002
  */
 public class CM_CLIENT_COMMAND_ROLL extends AionClientPacket {
@@ -21,7 +20,6 @@ public class CM_CLIENT_COMMAND_ROLL extends AionClientPacket {
 	/**
 	 * 构造客户端包实例。
 	 * Constructs a new client packet instance.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余允许状态 / additional allowed states

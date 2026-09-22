@@ -5,7 +5,6 @@ import com.aionemu.commons.configuration.Property;
 /**
  * 角色跨服转移相关配置。
  * Player server-transfer related configuration.
- *
  * @author KID
  */
 public class PlayerTransferConfig {

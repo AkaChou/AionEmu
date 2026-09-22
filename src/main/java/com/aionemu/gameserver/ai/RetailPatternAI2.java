@@ -158,7 +158,6 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	/**
 	 * 允许的 rule category 白名单。
 	 * Allowed rule-category whitelist.
-	 *
 	 * <p>原来写成内联 {@code Set.of(...)}，而它位于「每个 rule 一次」的判断里（JFR 实测该位置的
 	 * {@code Object[]} 分配达数 MB/300s），提为常量后不再逐次分配。The literal used to sit inside the per-rule
 	 * check (JFR showed megabytes of {@code Object[]} per 300s there); hoisting it removes that allocation.</p>
@@ -254,7 +253,6 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	 * （否则先加入的任务会落进被丢弃的集合，之后无法取消）。
 	 * Materialises the queued-action set with a double-checked {@code synchronized (this)} so concurrent first
 	 * writes converge on one set; otherwise the first tasks would land in a discarded set and never cancel.
-	 *
 	 * @return 可写集合 / writable set
 	 */
 	private Set<Future<?>> writableActionTasks() {
@@ -273,7 +271,6 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	/**
 	 * 物化终态动作集合（范式同 {@link #writableActionTasks()}；与前者共用占位符但各自独立实例）。
 	 * Materialises the terminal-action set like {@link #writableActionTasks()}.
-	 *
 	 * @return 可写集合 / writable set
 	 */
 	private Set<Future<?>> writableTerminalActionTasks() {
@@ -292,7 +289,6 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	/**
 	 * 物化感知区玩家集合（范式同 {@link #writableActionTasks()}）。
 	 * Materialises the sensory-area player set like {@link #writableActionTasks()}.
-	 *
 	 * @return 可写集合 / writable set
 	 */
 	private Set<Integer> writableUsersInSensoryArea() {
@@ -311,7 +307,6 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	/**
 	 * 物化延迟消失表：双检 + {@code synchronized (this)}，并发首次写入收敛到同一张表。
 	 * Materialises the delayed-despawn map with a double-checked {@code synchronized (this)}.
-	 *
 	 * @return 可写表 / writable map
 	 */
 	private Map<VisibleObject, Boolean> writableDespawnStates() {
@@ -330,7 +325,6 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	/**
 	 * 物化道具使用观察者表（范式同 {@link #writableDespawnStates()}）。
 	 * Materialises the item-use observer map like {@link #writableDespawnStates()}.
-	 *
 	 * @return 可写表 / writable map
 	 */
 	private Map<Player, ItemUseObserver> writableGaugeObservers() {
@@ -349,7 +343,6 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	/**
 	 * 物化待传送表（范式同 {@link #writableDespawnStates()}）。
 	 * Materialises the pending-cutscene-teleport map like {@link #writableDespawnStates()}.
-	 *
 	 * @return 可写表 / writable map
 	 */
 	private Map<Integer, PendingCutsceneTeleport> writablePendingCutsceneTeleports() {
@@ -370,7 +363,6 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	 * （否则先登记的定时器会落进被丢弃的表，之后无法取消）。
 	 * Materialises the timer registry with a double-checked {@code synchronized (this)} so concurrent first writes
 	 * converge on one map; otherwise the first timers would land in a discarded map and never cancel.
-	 *
 	 * @return 可写表 / writable map
 	 */
 	private Map<String, Future<?>> writableTimers() {
@@ -389,7 +381,6 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	/**
 	 * 物化临时刷怪登记表（范式同 {@link #writableTimers()}）。
 	 * Materialises the tracked-spawn map like {@link #writableTimers()}.
-	 *
 	 * @return 可写表 / writable map
 	 */
 	private Map<String, List<VisibleObject>> writableSpawned() {
@@ -408,7 +399,6 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	/**
 	 * 物化自管理子对象登记表（范式同 {@link #writableTimers()}）。
 	 * Materialises the self-managed spawn set like {@link #writableTimers()}.
-	 *
 	 * @return 可写集合 / writable set
 	 */
 	private Set<VisibleObject> writableSelfManagedSpawns() {
@@ -427,7 +417,6 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	/**
 	 * 物化 pattern 标记位集合（范式同 {@link #writableTimers()}）。
 	 * Materialises the pattern-flag set like {@link #writableTimers()}.
-	 *
 	 * @return 可写集合 / writable set
 	 */
 	private Set<String> writableFlags() {
@@ -446,7 +435,6 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	/**
 	 * 物化整型变量表（范式同 {@link #writableTimers()}）。
 	 * Materialises the integer-variable map like {@link #writableTimers()}.
-	 *
 	 * @return 可写表 / writable map
 	 */
 	private Map<String, Integer> writableIntVars() {
@@ -466,7 +454,6 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	 * 从延迟消失表移除：仍是空占位符时直接跳过（该对象本来就不在表里，跳过等价于移除，也不在共享实例上做变更）。
 	 * Removes from the delayed-despawn map, skipping the placeholder (the object cannot be in it, so skipping is
 	 * equivalent and the shared instance stays untouched).
-	 *
 	 * @param object 目标对象 / target object
 	 */
 	private void forgetDelayedDespawn(VisibleObject object) {
@@ -694,13 +681,11 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	/**
 	 * 模式里是否存在指定类型的动作。
 	 * Whether the pattern contains an action of the given type.
-	 *
 	 * <p>原先用 {@code values().stream().flatMap(List::stream).flatMap(rule -> rule.actions().stream())} 判定，
 	 * 而这段代码在每次 NPC 生成的模式校验里都会跑（JFR 实测该帧分配数 MB/300s 的管道对象、lambda 与迭代器）；
 	 * 普通嵌套循环语义相同且零分配。The stream pipeline used to run inside the per-spawn pattern validation (JFR
 	 * showed megabytes per 300s of pipeline objects, lambdas and iterators); a nested loop is allocation-free and
 	 * equivalent.</p>
-	 *
 	 * @param pattern    模式 / the pattern
 	 * @param actionType 动作类型 / action type
 	 * @return 是否存在该类型动作 / whether such an action exists
@@ -1034,7 +1019,6 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	/**
 	 * 判断是否为直接交互对话模式，避免向客户端发送不存在的默认 HTML 页。
 	 * Whether this is a direct-interaction talk pattern, so no default HTML page is sent.
-	 *
 	 * @param pattern 真端 NPC AI 模式 / retail NPC AI pattern
 	 * @return 是否直接交互 / whether direct interaction
 	 */
@@ -1074,7 +1058,6 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	/**
 	 * 判断模式是否没有任何可执行规则。
 	 * Whether the pattern contains no executable rules.
-	 *
 	 * @param pattern 真端 NPC AI 模式 / retail NPC AI pattern
 	 * @return 是否无规则 / whether no rules exist
 	 */
@@ -1389,7 +1372,6 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	/**
 	 * 返回生物的可读标识，用于 AI 调试日志。
 	 * Returns a readable creature identifier for AI debug logging.
-	 *
 	 * @param creature 生物 / creature
 	 * @return 标识文本 / identifier text
 	 */
@@ -2778,7 +2760,6 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	/**
 	 * 解析 spawn 动作的目标 NPC 模板，解析失败时记录告警。
 	 * Resolves the spawn action target and logs a warning when it cannot be resolved.
-	 *
 	 * @param action spawn 动作 / the spawn action
 	 * @return NPC 模板 ID；解析失败返回 null / npc template id, or null when unresolved
 	 */
@@ -2815,13 +2796,11 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	/**
 	 * 按真端 pattern 的 spawn 动作在实例里补刷目标对象（幂等）。
 	 * Spawns the object declared by a retail pattern spawn action, idempotently.
-	 *
 	 * <p>供实例脚本在真端 pattern 未接管时驱动同一份真端数据：同一实例内已存在同模板 NPC 时直接跳过，
 	 * 因此 pattern 正常执行时不会产生第二份实体；坐标、朝向与飞行标记全部取自真端动作本身。
 	 * Used by instance scripts to drive the same retail data when the pattern did not take over: it skips when an NPC of
 	 * the same template already exists in the instance, so a working pattern never produces a second copy. Coordinates,
 	 * heading and the aerial flag all come from the retail action itself.
-	 *
 	 * @param instance   目标实例 / target instance
 	 * @param ownerNpcId 触发 NPC 的模板 ID / template id of the triggering NPC
 	 * @param event      真端事件名 / retail event name
@@ -2998,7 +2977,6 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	/**
 	 * 子对象是否与生成者的状态重置解耦。
 	 * Whether a child spawn keeps its lifetime independent of the spawner's state reset.
-	 *
 	 * @param liveTime        自带存活秒数 / own lifetime in seconds
 	 * @param spawnerEndEvent 是否在生成者生命周期结束事件链中生成 / whether it was spawned by a spawner-ending event chain
 	 * @return 解耦返回 {@code true} / {@code true} when the spawn survives the spawner's reset
@@ -3010,7 +2988,6 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	/**
 	 * pattern 状态重置（回位/死亡/despawn）时是否释放登记的临时子对象。
 	 * Whether a tracked temporary spawn is released when the pattern state resets.
-	 *
 	 * @param independentLifetime 生命周期是否独立于生成者 / whether the spawn owns an independent lifetime
 	 * @return 需要释放返回 {@code true}，保留返回 {@code false} / {@code true} when it must be released
 	 */
@@ -3041,7 +3018,6 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	/**
 	 * 处理一个登记对象：自带 live_time 的保留登记，其余释放。
 	 * Handles one tracked spawn: self-managed ones stay tracked, the rest are released.
-	 *
 	 * @param object 登记对象 / tracked spawn
 	 * @return 已释放返回 {@code true}，保留登记返回 {@code false} / {@code true} when released
 	 */

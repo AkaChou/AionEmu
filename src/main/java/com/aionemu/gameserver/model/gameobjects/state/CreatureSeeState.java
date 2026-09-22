@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 生物视野状态枚举。
  * Creature See State enumeration.
- *
  * @author Sweetkr
  */
 @Getter
@@ -16,9 +15,6 @@ public enum CreatureSeeState {
 	SEARCH5(5), // 未知效果 / no idea :)
 	SEARCH10(10);
 
-	/**
-	 * @return the id
-	 */
 	private final int id;
 
 	CreatureSeeState(int id) {

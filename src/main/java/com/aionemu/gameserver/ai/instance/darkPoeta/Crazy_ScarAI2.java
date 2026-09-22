@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 /**
  * Dark Poeta 副本 NPC AI：Crazy Scar（@AIName "crazy_scar"），继承 AggressiveNpcAI2。
  * Dark Poeta instance NPC AI: Crazy Scar (@AIName "crazy_scar"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("crazy_scar")

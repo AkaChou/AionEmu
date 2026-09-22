@@ -22,7 +22,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Aturam Sky Fortress 副本 NPC AI：Ashunatal Shadowslip（@AIName "ashunatal_shadowslip"），继承 AggressiveNpcAI2。
  * Aturam Sky Fortress instance NPC AI: Ashunatal Shadowslip (@AIName "ashunatal_shadowslip"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("ashunatal_shadowslip")

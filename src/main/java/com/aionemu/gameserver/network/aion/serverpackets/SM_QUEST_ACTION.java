@@ -49,7 +49,6 @@ public class SM_QUEST_ACTION extends AionServerPacket {
 	/**
 	 * 构造任务插入动作包（action 1）。
 	 * Creates a quest-add packet (action 1).
-	 *
 	 * @param questId 任务 ID / quest id
 	 * @param status 任务状态 / quest status
 	 * @param step 任务步骤 / quest step
@@ -64,7 +63,6 @@ public class SM_QUEST_ACTION extends AionServerPacket {
 	/**
 	 * 构造任务更新动作包（action 2）。
 	 * Creates a quest-update packet (action 2).
-	 *
 	 * @param questId 任务 ID / quest id
 	 * @param status 任务状态 / quest status
 	 * @param step 任务步骤 / quest step
@@ -79,7 +77,6 @@ public class SM_QUEST_ACTION extends AionServerPacket {
 	/**
 	 * 构造任务移除动作包（action 3）。
 	 * Creates a quest-removal packet (action 3).
-	 *
 	 * @param questId 任务 ID / quest id
 	 */
 	public SM_QUEST_ACTION(int questId) {
@@ -90,7 +87,6 @@ public class SM_QUEST_ACTION extends AionServerPacket {
 	/**
 	 * 构造任务计时动作包（action 4）。
 	 * Creates a quest-timer packet (action 4).
-	 *
 	 * @param questId 任务 ID / quest id
 	 * @param timer 计时秒数 / timer seconds
 	 */
@@ -104,7 +100,6 @@ public class SM_QUEST_ACTION extends AionServerPacket {
 	/**
 	 * 构造任务共享动作包（action 5）。
 	 * Creates a quest-share packet (action 5).
-	 *
 	 * @param questId 任务 ID / quest id
 	 * @param sharerId 共享者 ID / sharer id
 	 * @param unk 未知字段 / unknown field
@@ -119,7 +114,6 @@ public class SM_QUEST_ACTION extends AionServerPacket {
 	/**
 	 * 构造任务窗口提示动作包（action 6）。
 	 * Creates a quest-notification packet (action 6).
-	 *
 	 * @param questId 任务 ID / quest id
 	 * @param fake 是否伪造 / whether fake
 	 */

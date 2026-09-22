@@ -13,7 +13,6 @@ import com.aionemu.gameserver.model.landing.LandingLocation;
 /**
  * 欧比斯着陆点积分定时重置服务（任务/纪念碑/设施/指挥官）。
  * Abyss-landing points reset scheduler (quest/monument/facility/commander).
- *
  * <p><b>WIP：</b> 仅文档化，逻辑未改动。 / <b>WIP:</b> docs only; logic untouched.</p>
  */
 @Slf4j
@@ -149,11 +148,9 @@ public class LandingUpdateService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
@@ -171,7 +168,6 @@ public class LandingUpdateService {
 	/**
 	 * 注入 Spring 实例提供者。
 	 * Inject the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / Instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<LandingUpdateService> instanceProvider) {

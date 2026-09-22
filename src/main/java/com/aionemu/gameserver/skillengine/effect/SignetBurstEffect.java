@@ -37,7 +37,6 @@ public class SignetBurstEffect extends DamageEffect {
 
 	/**
 	 * 查找印记效果，按层数调整伤害与命中修正，结算后结束印记。
-	 *
 	 * @param effect Finds the signet, scales damage / accuracy by level, calculates magical result, then ends the signet.
 	 */
 	@Override

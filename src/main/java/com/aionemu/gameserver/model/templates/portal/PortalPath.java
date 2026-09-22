@@ -13,7 +13,6 @@ import lombok.Setter;
 /**
  * 传送门路径模板（静态数据/XML）。
  * XML template.
- *
  * @author xTz
  */
 @Getter

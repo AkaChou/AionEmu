@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 /**
  * 好友条目更新包：刷新好友列表中单个好友的等级、在线、备注等。
  * Friend entry update: refreshes one friend entry (level, online, note, …).
- *
  * @author Ben
  */
 @Slf4j

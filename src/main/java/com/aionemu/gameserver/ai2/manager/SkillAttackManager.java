@@ -23,15 +23,12 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * NPC 技能攻击管理器：调度技能攻击、执行施法并选择下一个可用技能。
  * NPC skill-attack manager: schedules skill attacks, performs casting, and chooses the next ready skill.
- *
- * @modified Yon (Aion Reconstruction Project) -- removed extra delay from {@link #performAttack(NpcAI2, int)}
  */
 public class SkillAttackManager {
 
 	/**
 	 * 执行技能攻击：校验射程后进入施法子状态，可延迟或立即释放。
 	 * Performs a skill attack: validates range, enters CAST sub-state, then casts after optional delay.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param delay 攻击延迟（毫秒） / attack delay in milliseconds
 	 */
@@ -67,7 +64,6 @@ public class SkillAttackManager {
 	/**
 	 * 执行技能攻击动作：BUFF 去重、使用技能或在目标无效时放弃。
 	 * Executes the skill action: skips duplicate BUFF, uses skill, or gives up if the target is invalid.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	private static void skillAction(NpcAI2 npcAI, Creature target, int skillId, int skillLevel, long fightStartingTime) {
@@ -137,7 +133,6 @@ public class SkillAttackManager {
 	/**
 	 * 技能使用后的处理：清除施法子状态，仅在战斗中触发攻击完成事件。
 	 * Post-skill handling: clears CAST sub-state and fires ATTACK_COMPLETE only in combat.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void afterUseSkill(NpcAI2 npcAI) {
@@ -150,10 +145,7 @@ public class SkillAttackManager {
 	/**
 	 * 选择下一个就绪技能；施法中、沉默/束缚/恐惧或 CD 未好时返回 {@code null}。
 	 * Chooses the next ready skill; returns {@code null} while casting, silenced/bound/feared, or on cooldown.
-	 *
 	 * @return NPC AI 实例 / NPC AI instance
-	 *
-	 * @param npcAI
 	 * @return 下一个技能条目，无可用时为 {@code null} / next skill entry, or {@code null} if none
 	 */
 	public static NpcSkillEntry chooseNextSkill(NpcAI2 npcAI) {

@@ -288,7 +288,6 @@ public enum BrokerItemMask {
 	/**
 	 * 判断物品是否匹配该掩码过滤器。
 	 * Whether the item matches this mask filter.
-	 *
 	 * @param item 待匹配物品 / item
 	 * @return 是否匹配 / whether matches
 	 */
@@ -299,7 +298,6 @@ public enum BrokerItemMask {
 	/**
 	 * 判断掩码 ID 是否为当前掩码的父级掩码。
 	 * Whether the mask id is an ancestor of this mask.
-	 *
 	 * @param maskId 掩码 ID / mask id
 	 * @return 是否为父级掩码 / whether children mask
 	 */
@@ -325,7 +323,6 @@ public enum BrokerItemMask {
 	/**
 	 * 判断是否存在子分类。
 	 * Whether this mask has children.
-	 *
 	 * @return 是否有子分类 / whether children
 	 */
 	public boolean hasChildren() {

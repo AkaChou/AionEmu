@@ -52,7 +52,6 @@ public class GameCustomEventsGateway {
     /**
      * 可选注入 FFA 服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of FFA service.
-     *
      * @param ffaServiceProvider 服务提供者 / Service provider
      */
     @Autowired(required = false)
@@ -63,7 +62,6 @@ public class GameCustomEventsGateway {
     /**
      * 可选注入天梯服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of ladder service.
-     *
      * @param ladderServiceProvider 服务提供者 / Service provider
      */
     @Autowired(required = false)
@@ -74,7 +72,6 @@ public class GameCustomEventsGateway {
     /**
      * 可选注入 BG 服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of BG service.
-     *
      * @param bgServiceProvider 服务提供者 / Service provider
      */
     @Autowired(required = false)
@@ -85,7 +82,6 @@ public class GameCustomEventsGateway {
     /**
      * 可选注入强盗活动服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of bandit service.
-     *
      * @param banditServiceProvider 服务提供者 / Service provider
      */
     @Autowired(required = false)
@@ -96,7 +92,6 @@ public class GameCustomEventsGateway {
     /**
      * 可选注入功能服务运行时桥 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of feature-services runtime bridge.
-     *
      * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
      */
     @Autowired(required = false)
@@ -123,7 +118,6 @@ public class GameCustomEventsGateway {
     /**
      * 解析 FFA 服务：优先 Spring，否则经运行时桥回退。
      * Resolve FFA service: prefer Spring, otherwise fall back via runtime bridge.
-     *
      * @return 服务实例 / Service instance
      */
     private FFAService ffaService() {
@@ -136,7 +130,6 @@ public class GameCustomEventsGateway {
     /**
      * 解析天梯服务。
      * Resolve ladder service.
-     *
      * @return 服务实例 / Service instance
      */
     private LadderService ladderService() {
@@ -149,7 +142,6 @@ public class GameCustomEventsGateway {
     /**
      * 解析 BG 服务。
      * Resolve BG service.
-     *
      * @return 服务实例 / Service instance
      */
     private BGService bgService() {
@@ -162,7 +154,6 @@ public class GameCustomEventsGateway {
     /**
      * 解析强盗活动服务。
      * Resolve bandit service.
-     *
      * @return 服务实例 / Service instance
      */
     private BanditService banditService() {
@@ -175,7 +166,6 @@ public class GameCustomEventsGateway {
     /**
      * 解析功能服务运行时桥：优先 Spring，否则新建。
      * Resolve feature-services runtime bridge: prefer Spring, otherwise create new.
-     *
      * @return 运行时桥 / Runtime bridge
      */
     private GameFeatureServicesRuntimeBridge runtimeBridge() {

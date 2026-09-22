@@ -39,7 +39,6 @@ public final class GameGameplayServices implements DisposableBean {
     /**
      * 构造并注册各核心玩法实例提供者。
      * Construct and register instance providers for core gameplay services.
-     *
      * @param duelServiceProvider 决斗服务提供者 / Duel-service provider
      * @param lifeStatsRestoreServiceProvider 生命恢复服务提供者 / Life-stats restore service provider
      * @param seasonRankingServiceProvider 赛季排名服务提供者 / Season-ranking service provider
@@ -62,7 +61,6 @@ public final class GameGameplayServices implements DisposableBean {
     /**
      * 解析决斗服务。
      * Resolve the duel service.
-     *
      * @return 决斗服务 / Duel service
      */
     public static DuelService duelService() {
@@ -76,7 +74,6 @@ public final class GameGameplayServices implements DisposableBean {
     /**
      * 解析生命恢复服务。
      * Resolve the life-stats restore service.
-     *
      * @return 生命恢复服务 / Life-stats restore service
      */
     public static LifeStatsRestoreService lifeStatsRestoreService() {
@@ -90,7 +87,6 @@ public final class GameGameplayServices implements DisposableBean {
     /**
      * 解析赛季排名服务。
      * Resolve the season-ranking service.
-     *
      * @return 赛季排名服务 / Season-ranking service
      */
     public static SeasonRankingService seasonRankingService() {
@@ -104,7 +100,6 @@ public final class GameGameplayServices implements DisposableBean {
     /**
      * 解析裂隙管理器。
      * Resolve the rift manager.
-     *
      * @return 裂隙管理器 / Rift manager
      */
     public static RiftManager riftManager() {

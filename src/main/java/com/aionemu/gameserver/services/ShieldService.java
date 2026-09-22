@@ -37,11 +37,9 @@ public class ShieldService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -60,7 +58,6 @@ public class ShieldService {
 	/**
 	 * 注入 Spring 实例提供者。
 	 * Injects the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<ShieldService> instanceProvider) {
@@ -77,7 +74,6 @@ public class ShieldService {
 	/**
 	 * 加载指定地图的球形护盾模板。
 	 * Loads sphere shield templates for the given map.
-	 *
 	 * @param mapId map id
 	 */
 	public void load(int mapId) {
@@ -109,11 +105,8 @@ public class ShieldService {
 	/**
 	 * 按据点 ID 创建球形护盾观察者。
 	 * Creates a sphere shield observer for the given location id.
-	 *
 	 * location id
-	 *
 	 * @param observed 被观察生物 / observed creature
-	 * @param observed
 	 * @return 观察者，不存在时为 null / observer, or null if none
 	 */
 	public ActionObserver createShieldObserver(int locationId, Creature observed) {
@@ -125,7 +118,6 @@ public class ShieldService {
 	/**
 	 * 按攻城几何护盾创建碰撞死亡观察者（受 GEO 开关控制）。
 	 * Creates a collision-die observer for a siege geo shield (gated by GEO config).
-	 *
 	 * @param geoShield 攻城几何护盾 / siege geo shield
 	 * @param observed 被观察生物 / observed creature
 	 * @return 观察者，未启用时为 null / observer, or null if disabled
@@ -142,7 +134,6 @@ public class ShieldService {
 	/**
 	 * 向指定世界注册攻城护盾。
 	 * Registers a siege shield for the given world.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param shield siege shield
 	 */
@@ -158,7 +149,6 @@ public class ShieldService {
 	/**
 	 * 将位于据点区域内的攻城护盾绑定到该据点。
 	 * Attaches siege shields that lie inside the location zone to that siege location.
-	 *
 	 * @param location siege location
 	 */
 	public void attachShield(SiegeLocation location) {

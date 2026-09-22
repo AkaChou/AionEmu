@@ -20,7 +20,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 客户端自选物品箱选择奖励请求包。
  * Client packet for selecting a reward from a selectable item box.
- *
  * @author LightNing (ENCOM)
  */
 public class CM_SELECT_ITEM extends AionClientPacket

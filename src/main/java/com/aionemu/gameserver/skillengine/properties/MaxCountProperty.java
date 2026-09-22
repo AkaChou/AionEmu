@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * 最大目标数属性：对区域目标按距离截断到上限数量。
  * Max-count property: trims area targets to the configured maximum by distance.
- *
  * @author MrPoke
  */
 public class MaxCountProperty {
@@ -17,7 +16,6 @@ public class MaxCountProperty {
 	/**
 	 * 按距离优先截断区域目标列表至最大数量。
 	 * Trims the area effected list to max count, preferring nearer targets.
-	 *
 	 * @param skill 技能上下文 / skill context
 	 * @param properties 目标筛选属性 / target filter properties
 	 * @return 始终 true（首要目标缺失时为 false） / true, or false if first target is missing for AREA

@@ -19,7 +19,6 @@ import java.util.List;
 /**
  * Esoterrace 副本 NPC AI：Warden Surama（@AIName "wardensurama"），继承 AggressiveNpcAI2。
  * Esoterrace instance NPC AI: Warden Surama (@AIName "wardensurama"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("wardensurama")

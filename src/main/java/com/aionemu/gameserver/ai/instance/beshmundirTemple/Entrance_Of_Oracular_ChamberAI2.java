@@ -21,7 +21,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Beshmundir Temple 副本 NPC AI：Entrance Of Oracular Chamber（@AIName "entranceoforacularchamber"），继承 NpcAI2。
  * Beshmundir Temple instance NPC AI: Entrance Of Oracular Chamber (@AIName "entranceoforacularchamber"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("entranceoforacularchamber")

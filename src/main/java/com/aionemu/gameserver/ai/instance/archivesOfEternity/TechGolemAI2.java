@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 /**
  * Archives Of Eternity 副本 NPC AI：Tech Golem（@AIName "techgolem"），继承 AggressiveNpcAI2。
  * Archives Of Eternity instance NPC AI: Tech Golem (@AIName "techgolem"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("techgolem")

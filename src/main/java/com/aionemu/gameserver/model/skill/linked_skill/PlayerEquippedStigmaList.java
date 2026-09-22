@@ -17,7 +17,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * 玩家 EquippedStigma 列表，用于技能相关逻辑。
  * Player Equipped Stigma List for skill logic.
- *
  * @author Ranastic
  */
 public final class PlayerEquippedStigmaList {

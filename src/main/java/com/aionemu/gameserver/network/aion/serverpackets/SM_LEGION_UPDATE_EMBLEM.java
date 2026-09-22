@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端同步军团徽章更新结果的服务端包。
  * Server packet that synchronizes an updated legion emblem to the client.
- *
  * @author Simple modified cura
  */
 @AllArgsConstructor

@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 响应黑名单相关请求的服务端包（拉黑/解黑结果等）。
  * Server packet responding to block-list related requests (block/unblock results, etc.).
- *
  * @author Ben
  */
 @AllArgsConstructor

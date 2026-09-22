@@ -15,9 +15,7 @@ import java.sql.SQLException;
 /**
  * 玩家设置 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerSettingsDAO.
- *
  * Updated for MySQL 8 - Fixed connection leaks.
- *
  * @author ATracer
  */
 @Slf4j
@@ -32,7 +30,6 @@ public class PlayerSettingsDAO extends com.aionemu.gameserver.dao.PlayerSettings
 	/**
 	 * 加载玩家设置。
 	 * Loads player settings.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -78,7 +75,6 @@ public class PlayerSettingsDAO extends com.aionemu.gameserver.dao.PlayerSettings
 	/**
 	 * 保存玩家设置。
 	 * Saves player settings.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -149,7 +145,6 @@ public class PlayerSettingsDAO extends com.aionemu.gameserver.dao.PlayerSettings
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
-	 *
 	 * @param databaseName 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version

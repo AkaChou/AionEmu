@@ -35,9 +35,7 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 /**
  * 欧比斯军阶定时刷新与周奖励分发服务。
  * Abyss-rank scheduled refresh and weekly reward distribution service.
- *
  * <p><b>WIP：</b> 仅文档化，逻辑未改动。 / <b>WIP:</b> docs only; logic untouched.</p>
- *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -46,8 +44,6 @@ public class AbyssRankUpdateService {
      * -- SETTER --
      *  注入 Spring 实例提供者。
      *  Inject the Spring instance provider.
-     *
-     * @param provider 实例提供者 / Instance provider
      */
     @Setter
     private static volatile ObjectProvider<AbyssRankUpdateService> instanceProvider;
@@ -66,11 +62,9 @@ public class AbyssRankUpdateService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -246,7 +240,6 @@ public class AbyssRankUpdateService {
 	/**
 	 * 按 GP 降序为指定种族分配军官名额。
 	 * Assign officer quotas for a race by descending GP.
-	 *
 	 * @param race 阵营 / Race
 	 * @param gpLimit 最低 GP 门槛 / minimum GP threshold
 	 * @param activeAfterDays 活跃离线天数上限 / max offline days still considered active
@@ -271,7 +264,6 @@ public class AbyssRankUpdateService {
 	/**
 	 * 从 GP 列表头部按名额选取玩家写入军阶。
 	 * Take quota players from the head of the GP list and write their ranks.
-	 *
 	 * @param rank 目标军阶 / Target rank
 	 * @param playerGpEntries 按 GP 排序的条目列表 / ordered GP entries
 	 */
@@ -304,7 +296,6 @@ public class AbyssRankUpdateService {
 	/**
 	 * 剩余未占名额玩家回写为最高指挥官（原逻辑保留）。
 	 * Write remaining players to SUPREME_COMMANDER (original logic preserved).
-	 *
 	 * @param playerGpEntries 剩余 GP 条目 / remaining GP entries
 	 */
 	private void updateToNoQuotaGpRank(List<Entry<Integer, Integer>> playerGpEntries) {
@@ -316,7 +307,6 @@ public class AbyssRankUpdateService {
 	/**
 	 * 将 AP 军阶写入在线玩家或离线 DAO。
 	 * Write AP rank to an online player or offline DAO.
-	 *
 	 * @param newRank 新军阶 / new rank
 	 * @param playerId 玩家 ID / player id
 	 */
@@ -338,7 +328,6 @@ public class AbyssRankUpdateService {
 	/**
 	 * 将 GP 军阶写入在线玩家或离线 DAO。
 	 * Write GP rank to an online player or offline DAO.
-	 *
 	 * @param newRank 新军阶 / new rank
 	 * @param playerId 玩家 ID / player id
 	 */
@@ -360,7 +349,6 @@ public class AbyssRankUpdateService {
 	/**
 	 * 按 GP 降序比较的条目比较器。
 	 * Entry comparator ordering by GP descending.
-	 *
 	 * @param <K> 键类型 / Key type
 	 * @param <V> 可比较值类型 / Comparable value type
 	 */

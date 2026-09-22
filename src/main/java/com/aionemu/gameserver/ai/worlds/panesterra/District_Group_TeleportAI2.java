@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Panesterra 区域 NPC AI：District Group Teleport（@AIName "teleport_district"），继承 NpcAI2。
  * Panesterra zone NPC AI: District Group Teleport (@AIName "teleport_district"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("teleport_district")

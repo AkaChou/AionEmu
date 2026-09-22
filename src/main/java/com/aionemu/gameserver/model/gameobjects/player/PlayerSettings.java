@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 /**
  * 玩家 Settings 游戏对象。
  * Player Settings game object.
- *
  * @author ATracer
  */
 @Getter
@@ -16,30 +15,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PlayerSettings {
 
-	/**
-	 * @return the persistentState
-	 */
 	private PersistentState persistentState;
 
-	/**
-	 * @return the uiSettings
-	 */
 	private byte[] uiSettings;
-	/**
-	 * @return the shortcuts
-	 */
 	private byte[] shortcuts;
-	/**
-	 * @return the houseBuddies
-	 */
 	private byte[] houseBuddies;
-	/**
-	 * @return the deny
-	 */
 	private int deny = 0;
-	/**
-	 * @return the display
-	 */
 	private int display = 0;
 
 	public PlayerSettings(byte[] uiSettings, byte[] shortcuts, byte[] houseBuddies, int deny, int display) {

@@ -52,7 +52,6 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
     /**
      * 获取已占用的物品唯一 ID 列表，供 ID 工厂回收/分配使用。
      * Returns used item unique ids for ID factory allocation.
-     *
      * 已占用 ID 数组；出错时返回空数组。
      * used id array, or empty on error.
      */
@@ -82,7 +81,6 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
     /**
      * 加载玩家房屋注册物品与装饰部件到房屋注册表。
      * Loads the player's house registered items and decorations into the registry.
-     *
      * @param playerId 玩家对象 ID / player object id
      */
     @Override
@@ -206,10 +204,8 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
     /**
      * 按持久化状态批量保存房屋注册表（增删改），事务提交后更新内存状态并释放已删 ID。
      * Persists the house registry by persistent state (insert/update/delete), then updates in-memory state and releases deleted ids.
-     *
      * @param registry 房屋注册表 / house registry
      * @param playerId 玩家对象 ID / player object id
-     *
      * @return 是否保存成功 / whether store succeeded
      */
     @Override
@@ -433,9 +429,7 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
     /**
      * 删除指定玩家的全部房屋注册物品。
      * Deletes all house registered items for the given player.
-     *
      * player object id
-     *
      * @param playerId 玩家对象 ID / player object id
      * @return 是否删除成功 / whether delete succeeded
      */
@@ -457,7 +451,6 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
     /**
      * 重置玩家非装饰注册物品的摆放坐标与区域。
      * Resets placement coordinates and area for the player's non-decoration registered items.
-     *
      * @param playerId 玩家对象 ID / player object id
      */
     @Override
@@ -476,7 +469,6 @@ public class PlayerRegisteredItemsDAO extends com.aionemu.gameserver.dao.PlayerR
     /**
      * 判断当前数据库是否受本 DAO 支持（MySQL 8）。
      * Checks whether the given database is supported by this DAO (MySQL 8).
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

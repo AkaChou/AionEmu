@@ -18,7 +18,6 @@ import lombok.Setter;
 /**
  * Dredgion 欧比斯舰活动时间表配置。
  * Dredgion event schedule configuration.
- *
  * @author Rinzler (Encom)
  */
 @Getter
@@ -31,7 +30,6 @@ public class DredgionSchedule {
 	 * -- GETTER --
 	 *  获取 Dredgion 列表。
 	 *  Returns the dredgion list.
-
 	 */
 	@XmlElement(name = "dredgion", required = true)
 	private List<Dredgion> dredgionsList;
@@ -76,8 +74,6 @@ public class DredgionSchedule {
 		 * -- SETTER --
 		 *  设置 Dredgion ID。
 		 *  Sets the dredgion ID.
-
-
 		 */
 		@XmlAttribute(required = true)
 		private int id;
@@ -91,8 +87,6 @@ public class DredgionSchedule {
 		 * -- SETTER --
 		 *  设置 Zorshiv 时间列表。
 		 *  Sets the zorshiv times.
-
-
 		 */
 		@XmlElement(name = "zorshivTime", required = true)
 		private List<String> zorshivTimes;

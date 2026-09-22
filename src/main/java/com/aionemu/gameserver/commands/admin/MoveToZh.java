@@ -68,7 +68,6 @@ public class MoveToZh extends AdminCommand {
 	/**
 	 * 分发 npc / list / 地图 ID / 中文地点名四种用法。
 	 * Dispatches the npc, list, world id and Chinese location name usages.
-	 *
 	 * @param player 执行 GM / Admin executing the command
 	 * @param params 子命令与参数 / Subcommand and arguments
 	 */
@@ -101,7 +100,6 @@ public class MoveToZh extends AdminCommand {
 	/**
 	 * 传送到当前地图内指定 NPC 的刷点（与 {@code //movetonpc} 等价）。
 	 * Teleports to the spawn of the given NPC in the current world (same as {@code //movetonpc}).
-	 *
 	 * @param player 执行 GM / Admin executing the command
 	 * @param params NPC ID 或名称 / NPC id or name
 	 */
@@ -143,7 +141,6 @@ public class MoveToZh extends AdminCommand {
 	/**
 	 * 按地图 ID 传送：优先使用该地图在中文表里的入口坐标，其次使用世界复活起点。
 	 * Teleports by world id: prefers the world's entry coordinates from the CN table, then its revive start point.
-	 *
 	 * @param player 执行 GM / Admin executing the command
 	 * @param worldId 世界 ID / World id
 	 */
@@ -179,7 +176,6 @@ public class MoveToZh extends AdminCommand {
 	/**
 	 * 按中文地名传送；没有精确名称或名称跨多个地图时给出候选。
 	 * Teleports by Chinese location name, listing candidates when the name is unknown or spans several worlds.
-	 *
 	 * @param player 执行 GM / Admin executing the command
 	 * @param name 中文地点名 / Chinese location name
 	 */
@@ -237,7 +233,6 @@ public class MoveToZh extends AdminCommand {
 	/**
 	 * 列出中文地点名（可按关键字过滤），没有服务端坐标的条目会标注。
 	 * Lists Chinese location names, optionally filtered, marking entries without server coordinates.
-	 *
 	 * @param player 执行 GM / Admin executing the command
 	 * @param keyword 关键字，可为空 / Keyword, may be empty
 	 */
@@ -285,7 +280,6 @@ public class MoveToZh extends AdminCommand {
 	/**
 	 * 读取中文地点表（UTF-8，逐行 {@code loc_id<TAB>中文名<TAB>英文名}）。
 	 * Loads the Chinese location table (UTF-8, one {@code loc_id<TAB>zh name<TAB>en name} per line).
-	 *
 	 * @return 名称到 loc_id 列表的映射；文件缺失或不可读时返回 null / Name-to-loc-ids map, or null when unreadable
 	 */
 	private Map<String, List<Integer>> loadNameTable() {
@@ -326,7 +320,6 @@ public class MoveToZh extends AdminCommand {
 	/**
 	 * 取地图在中文表里最靠前且带坐标的传送点（loc_id 最小者即地图级入口）。
 	 * Returns the world's lowest-loc-id entry that carries coordinates (the map-level entry).
-	 *
 	 * @param table 中文地点表 / Chinese location table
 	 * @param worldId 世界 ID / World id
 	 * @return 传送点模板或 null / Telelocation template or null
@@ -352,7 +345,6 @@ public class MoveToZh extends AdminCommand {
 	/**
 	 * 把 loc_id 列表解析为仍然存在的传送模板。
 	 * Resolves loc ids into telelocation templates that still exist.
-	 *
 	 * @param locIds 候选 loc_id / Candidate loc ids
 	 * @return 传送模板列表 / Template list
 	 */
@@ -370,7 +362,6 @@ public class MoveToZh extends AdminCommand {
 	/**
 	 * 同一个中文名可能对应天/魔两条 loc_id，优先取当前阵营的模板。
 	 * A Chinese name may map to per-race loc ids; prefer the template of the player's race.
-	 *
 	 * @param player 执行 GM / Admin executing the command
 	 * @param templates 同一名称的模板 / Templates sharing the name
 	 * @return 选中的模板 / Chosen template
@@ -396,7 +387,6 @@ public class MoveToZh extends AdminCommand {
 	/**
 	 * 判断传送模板是否带服务端坐标。
 	 * Whether the telelocation template carries server-side coordinates.
-	 *
 	 * @param template 传送点模板 / Telelocation template
 	 * @return 任一座标非 0 时为 true / True when any coordinate is non-zero
 	 */
@@ -407,7 +397,6 @@ public class MoveToZh extends AdminCommand {
 	/**
 	 * 执行传送并回显结果。
 	 * Teleports and reports the outcome.
-	 *
 	 * @param player 执行 GM / Admin executing the command
 	 * @param location 传送点模板 / Telelocation template
 	 * @param label 回显用的地点名 / Label used in the feedback message
@@ -427,7 +416,6 @@ public class MoveToZh extends AdminCommand {
 	 * 玩家会被留在没有有效坐标的状态；这里与 GM 面板 {@code CmdTeleportTo} 的处理保持一致。
 	 * Teleporting an instance world with {@code instanceId=1} makes {@code World.setPosition} bail out silently and
 	 * leaves the player without a valid position, so this mirrors the GM-panel handler {@code CmdTeleportTo}.
-	 *
 	 * @param player 执行 GM / Admin executing the command
 	 * @param location 传送点模板 / Telelocation template
 	 * @return 是否发起传送 / Whether the teleport was initiated
@@ -447,7 +435,6 @@ public class MoveToZh extends AdminCommand {
 	/**
 	 * 中文地点表缺失时的提示。
 	 * Hint shown when the Chinese location table is missing.
-	 *
 	 * @param player 执行 GM / Admin executing the command
 	 */
 	private void reportMissingTable(Player player) {
@@ -458,7 +445,6 @@ public class MoveToZh extends AdminCommand {
 	/**
 	 * 打印用法。
 	 * Prints the usage.
-	 *
 	 * @param player 执行 GM / Admin executing the command
 	 */
 	private void showUsage(Player player) {
@@ -471,7 +457,6 @@ public class MoveToZh extends AdminCommand {
 	/**
 	 * 参数错误时显示语法。
 	 * Shows the usage when parameters are invalid.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

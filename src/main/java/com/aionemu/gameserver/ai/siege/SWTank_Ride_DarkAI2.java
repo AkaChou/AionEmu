@@ -18,7 +18,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 攻城战相关 NPC AI：SW Tank Ride Dark（@AIName "SWTank_Ride_Dark"），继承 NpcAI2。
  * Siege-related NPC AI: SW Tank Ride Dark (@AIName "SWTank_Ride_Dark"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("SWTank_Ride_Dark")

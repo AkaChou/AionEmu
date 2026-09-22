@@ -17,9 +17,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 返回出生点事件处理器，负责 NPC 不在家 / 回到家时的移动、重生与空闲恢复。
  * Handles return-home events: movement, respawn, and idle recovery when NPC is away from or back at home.
- *
  * @author ATracer
- * @modified Yon (Aion Reconstruction Project) -- added handling to {@link #onNotAtHome(NpcAI2)} for when the entity cannot move;
  * removed deprecated method calls
  */
 public class ReturningEventHandler {
@@ -27,7 +25,6 @@ public class ReturningEventHandler {
 	/**
 	 * 不在出生点时触发：进入 RETURNING，按路径行走、归家移动，或删除后在原点重生。
 	 * Fired when not at home: enters RETURNING, walks routes, moves home, or deletes and respawns at origin.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void onNotAtHome(NpcAI2 npcAI) {
@@ -68,7 +65,6 @@ public class ReturningEventHandler {
 	/**
 	 * 回到出生点时触发：切回空闲、播放空闲表情并通知控制器归家。
 	 * Fired when back at home: returns to idle, plays idle emote, and notifies controller of return.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void onBackHome(NpcAI2 npcAI) {

@@ -15,7 +15,6 @@ final class TargetDestinationChecker extends DestinationChecker {
 	/**
 	 * 构造目标生物目的地检查器。
 	 * Constructs a target-creature destination checker.
-	 *
 	 * @param follower 跟随生物 / follower creature
 	 * @param target 目标生物 / target creature
 	 */
@@ -27,7 +26,6 @@ final class TargetDestinationChecker extends DestinationChecker {
 	/**
 	 * 判断跟随者是否接近目标生物。
 	 * Returns whether the follower is near the target creature.
-	 *
 	 * @return 3D 距离 ≤ 10 时为 true / true if 3D distance ≤ 10
 	 */
 	@Override

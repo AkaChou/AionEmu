@@ -18,7 +18,6 @@ import lombok.Getter;
 /**
  * AI 模板数据容器，持有并索引全部 NPC AI 配置。
  * Container holding and indexing all NPC AI templates.
- *
  * @author xTz
  */
 @Getter
@@ -31,8 +30,7 @@ public class AIData {
 	/**
 	 * 返回全部 AI 模板映射。
 	 * Returns the full AI template map.
-	 *
-	 * @return NPC ID 到 AI 模板的映射 / map of NPC id to AI template
+	 * NPC ID 到 AI 模板的映射 / map of NPC id to AI template
 	 */
 	private final Map<Integer, AITemplate> aiTemplate = new LinkedHashMap<>();
 
@@ -50,7 +48,6 @@ public class AIData {
 	/**
 	 * 返回已加载的 AI 模板数量。
 	 * Returns the number of loaded AI templates.
-	 *
 	 * @return 已加载的AI 模板数量 / Returns the number of loaded AI templates.
 	 */
 	public int size() {

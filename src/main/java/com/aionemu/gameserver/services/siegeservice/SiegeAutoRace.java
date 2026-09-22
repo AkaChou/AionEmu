@@ -31,7 +31,6 @@ public class SiegeAutoRace {
 	/**
 	 * 执行自动种族切换。
 	 * Runs auto race switch.
-	 *
 	 * @param locid 据点 ID / location id
 	 */
 	public static void AutoSiegeRace(final int locid) {
@@ -63,7 +62,6 @@ public class SiegeAutoRace {
                 /**
                  * visit 方法。
                  * visit method.
-                 *
                  * @param player 玩家 / player
                  */
                 public void visit(Player player) {
@@ -90,7 +88,6 @@ public class SiegeAutoRace {
 	/**
 	 * 判断据点是否参与自动攻城。
 	 * Returns whether the location is auto-sieged.
-	 *
 	 * @param locId 据点 ID / location id
 	 * @return 是否自动攻城 / whether auto siege
 	 */
@@ -101,7 +98,6 @@ public class SiegeAutoRace {
 	/**
 	 * 光之部自动归属。
 	 * Elyos auto ownership.
-	 *
 	 * @param locId 据点 ID / location id
 	 * @return 是否天族自动归属 / whether Elyos auto ownership
 	 */
@@ -117,7 +113,6 @@ public class SiegeAutoRace {
 	/**
 	 * 暗之部自动归属。
 	 * Asmodian auto ownership.
-	 *
 	 * @param locId 据点 ID / location id
 	 * @return 是否魔族自动归属 / whether Asmodian auto ownership
 	 */

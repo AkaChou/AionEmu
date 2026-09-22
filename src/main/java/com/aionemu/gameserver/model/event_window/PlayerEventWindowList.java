@@ -14,7 +14,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * 玩家活动窗口列表，用于活动窗口相关逻辑。
  * Player Event Window List for event window logic.
- *
  * @author Ranastic
  */
 public class PlayerEventWindowList {
@@ -70,7 +69,6 @@ public class PlayerEventWindowList {
 	/**
 	 * 玩家活动窗口列表大小。
 	 * Size of the player event window list.
-	 *
 	 * @return 条目数量 / Number of entries
 	 */
 	public int size() {

@@ -12,7 +12,6 @@ import java.util.List;
 /**
  * RvR 相关 NPC AI：Dynamic Iluma Monster（@AIName "dynamic_iluma_monster"），继承 AggressiveNpcAI2。
  * RvR-related NPC AI: Dynamic Iluma Monster (@AIName "dynamic_iluma_monster"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("dynamic_iluma_monster")

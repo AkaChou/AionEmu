@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 客户端 MAC/硬件信息同步的服务端包。
  * Server packet that carries client MAC/hardware information.
- *
  * @author Ranastic
  */
 @AllArgsConstructor

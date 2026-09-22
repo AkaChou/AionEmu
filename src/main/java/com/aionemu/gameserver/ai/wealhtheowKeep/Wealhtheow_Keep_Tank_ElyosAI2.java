@@ -18,7 +18,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 维尔索要塞相关 NPC AI：Wealhtheow Keep Tank Elyos（@AIName "wealhtheow_keep_siege_elyos"），继承 NpcAI2。
  * Wealhtheow Keep related NPC AI: Wealhtheow Keep Tank Elyos (@AIName "wealhtheow_keep_siege_elyos"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("wealhtheow_keep_siege_elyos")

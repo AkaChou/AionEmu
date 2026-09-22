@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 角色阵营（种族）枚举。
  * Player race (faction) enumeration.
- *
  * @author ATracer
  */
 public enum Race {
@@ -29,7 +28,6 @@ public enum Race {
     /**
      * 构造种族枚举。
      * Constructs a race enum value.
-     *
      * @param raceId 种族 ID / race id
      */
 	Race(int raceId) {

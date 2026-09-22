@@ -72,7 +72,6 @@ public class Portal2Data {
 	/**
 	 * 返回三类传送配置的合计数量。
 	 * Returns the total count of all three portal configuration types.
-	 *
 	 * @return 配置总数 / total configuration count
 	 */
 	public int size() {
@@ -82,7 +81,6 @@ public class Portal2Data {
 	/**
 	 * 按 NPC、对话 ID 与阵营查找传送路径。
 	 * Finds a portal path by NPC, dialog id and race.
-	 *
 	 * @param npcId NPC ID / npc id
 	 * @param dialogId 对话 ID / dialog id
 	 * @param race 阵营 / race
@@ -104,7 +102,6 @@ public class Portal2Data {
 	/**
 	 * 判断指定 NPC 是否为传送门 NPC。
 	 * Returns whether the given NPC is a portal NPC.
-	 *
 	 * @param npcId NPC ID / npc id
 	 * @return 是否为传送门 / whether it is a portal NPC
 	 */
@@ -115,7 +112,6 @@ public class Portal2Data {
 	/**
 	 * 按 NPC ID 获取使用型传送门配置。
 	 * Returns the use-type portal configuration for the given NPC id.
-	 *
 	 * @param npcId NPC ID / npc id
 	 * @return 使用型传送配置，不存在则为 null / use portal or null
 	 */
@@ -126,7 +122,6 @@ public class Portal2Data {
 	/**
 	 * 按名称获取传送卷轴配置。
 	 * Returns the portal scroll configuration for the given name.
-	 *
 	 * @param name 卷轴名称 / scroll name
 	 * @return 传送卷轴，不存在则为 null / portal scroll or null
 	 */
@@ -137,7 +132,6 @@ public class Portal2Data {
 	/**
 	 * 返回指定 NPC 的传送对话 ID；无配置时默认 1011。
 	 * Returns the teleport dialog id for the NPC; defaults to 1011 when unset.
-	 *
 	 * @param npcId NPC ID / npc id
 	 * @return 传送对话 ID / teleport dialog id
 	 */

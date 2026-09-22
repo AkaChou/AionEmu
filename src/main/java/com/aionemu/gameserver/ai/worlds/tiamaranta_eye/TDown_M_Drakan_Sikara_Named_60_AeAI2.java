@@ -11,7 +11,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 /**
  * Tiamaranta eye 区域 NPC AI：T Down M Drakan Sikara Named 60 Ae（@AIName "TDown_M_Drakan_Sikara_Named_60_Ae"），继承 AggressiveNpcAI2。
  * Tiamaranta eye zone NPC AI: T Down M Drakan Sikara Named 60 Ae (@AIName "TDown_M_Drakan_Sikara_Named_60_Ae"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("TDown_M_Drakan_Sikara_Named_60_Ae")

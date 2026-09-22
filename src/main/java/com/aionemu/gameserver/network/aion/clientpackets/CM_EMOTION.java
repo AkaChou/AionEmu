@@ -18,9 +18,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 处理玩家动作/情绪状态变更的客户端包。
  * Client packet handling player emotion and state changes.
- *
  * @author SoulKeeper
- * @author_fix nerolory
  */
 @Slf4j
 public class CM_EMOTION extends AionClientPacket {
@@ -36,7 +34,6 @@ public class CM_EMOTION extends AionClientPacket {
 	/**
 	 * 构造客户端包实例。
 	 * Constructs a new client packet instance.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余允许状态 / additional allowed states
@@ -223,10 +220,6 @@ public class CM_EMOTION extends AionClientPacket {
 		return emotionType != EmotionType.SELECT_TARGET && (emotionType != EmotionType.JUMP || !noJumpCancel);
 	}
 
-	/**
-	 * @param player
-	 * @return
-	 */
 	private final int getTargetObjectId(Player player) {
 		int target = player.getTarget() == null ? 0 : player.getTarget().getObjectId();
 		return target != 0 ? target : this.targetObjectId;

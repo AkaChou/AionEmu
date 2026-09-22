@@ -12,7 +12,6 @@ import java.util.concurrent.Future;
 /**
  * Pvp Arenas 副本 NPC AI：Acid Sprayer（@AIName "acid_sprayer"），继承 AggressiveNpcAI2。
  * Pvp Arenas instance NPC AI: Acid Sprayer (@AIName "acid_sprayer"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("acid_sprayer")

@@ -12,7 +12,6 @@ import java.util.Set;
 /**
  * 炼金研究中心副本事件处理器。
  * Instance event handler for Alquimia Research Center.
- *
  * @author Encom
  */
 
@@ -22,7 +21,6 @@ public class AlquimiaResearchCenterInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 	public void onDropRegistered(Npc npc) {

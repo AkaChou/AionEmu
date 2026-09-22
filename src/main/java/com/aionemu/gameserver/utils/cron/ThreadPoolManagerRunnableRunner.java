@@ -12,7 +12,6 @@ public class ThreadPoolManagerRunnableRunner extends RunnableRunner {
 	/**
 	 * 在普通线程池中执行任务。
 	 * Execute a task on the standard thread pool.
-	 *
 	 * @param r 任务 / Runnable
 	 */
 	@Override
@@ -23,7 +22,6 @@ public class ThreadPoolManagerRunnableRunner extends RunnableRunner {
 	/**
 	 * 在长任务线程池中执行任务。
 	 * Execute a long-running task on the long-running pool.
-	 *
 	 * @param r 任务 / Runnable
 	 */
 	@Override

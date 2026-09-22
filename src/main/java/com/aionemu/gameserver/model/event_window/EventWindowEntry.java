@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 活动窗口条目。
  * Event Window Entry model.
- *
  * @author Ranastic
  */
 @Getter

@@ -9,7 +9,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Adma Stronghold 副本 NPC AI：Shape Change Zombie（@AIName "shape_change_zombie"），继承 AggressiveNpcAI2。
  * Adma Stronghold instance NPC AI: Shape Change Zombie (@AIName "shape_change_zombie"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("shape_change_zombie")

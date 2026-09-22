@@ -11,7 +11,6 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 /**
  * DP 条件：校验玩家当前斗志是否达到施放要求。
  * DP condition: validates the player's current DP meets cast requirements.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -24,7 +23,6 @@ public class DpCondition extends Condition {
 	/**
 	 * 校验技能环境是否满足本条件。
 	 * Validates whether the skill environment satisfies this condition.
-	 *
 	 * @param skill 技能环境 / skill environment
 	 * @return 是否有效 / whether valid
 	 */

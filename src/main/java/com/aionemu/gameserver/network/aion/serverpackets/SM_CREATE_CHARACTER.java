@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.aion.PlayerInfo;
 /**
  * 角色创建响应包：返回创建结果码；成功时附带新建角色的完整账号数据。
  * Response to CM_CREATE_CHARACTER: result code, and full account data of the new character on success.
- *
  * @author Nemesiss, AEJTester
  */
 public class SM_CREATE_CHARACTER extends PlayerInfo {
@@ -45,7 +44,6 @@ public class SM_CREATE_CHARACTER extends PlayerInfo {
 	/**
 	 * 构造角色创建响应。
 	 * Constructs a character-creation response.
-	 *
 	 * @param accPlData    新建角色的账号数据（成功时写入） / new character account data (written on success)
 	 * @param responseCode 结果码（成功、重名、禁用名等） / result code (ok, name taken, forbidden, …)
 	 */

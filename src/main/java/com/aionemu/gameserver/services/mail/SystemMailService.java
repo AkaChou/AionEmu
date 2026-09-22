@@ -60,11 +60,9 @@ public class SystemMailService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -91,7 +89,6 @@ public class SystemMailService {
 	/**
 	 * 发送系统邮件，可附带物品、基纳与欧比斯点数。
 	 * Sends a system mail with optional attached item, kinah, and abyss points.
-	 *
 	 * @param sender 发件人名称 / sender name
 	 * @param recipientName 收件人名称 / recipient name
 	 * @param title 邮件标题 / mail title
@@ -101,7 +98,6 @@ public class SystemMailService {
 	 * @param attachedKinahCount 附件基纳数量 / attached kinah count
 	 * @param attachedAPCount 附件欧比斯点数 / attached abyss points
 	 * letter type
-	 *
 	 * @return 是否发送成功 / whether the mail was sent successfully
 	 */
 	public boolean sendMail(String sender, String recipientName, String title, String message, int attachedItemObjId,
@@ -209,7 +205,6 @@ public class SystemMailService {
 	/**
 	 * 发送已构造附件物品的系统邮件。
 	 * Sends a system mail using a prebuilt attached item instance.
-	 *
 	 * @param sender 发件人名称 / sender name
 	 * mail title
 	 * mail body
@@ -297,7 +292,6 @@ public class SystemMailService {
 	/**
 	 * 获取玩家已加载的邮箱实例。
 	 * Returns the player's already loaded mailbox instance.
-	 *
 	 * 玩家 / player
 	 * mailbox or null
 	 */
@@ -308,7 +302,6 @@ public class SystemMailService {
 	/**
 	 * 判断邮箱是否已达上限。
 	 * Checks whether the mailbox has reached the given letter limit.
-	 *
 	 * @param recipientMailbox 已加载邮箱 / loaded mailbox
 	 * @param recipientCommonData 玩家公共数据 / player common data
 	 * @param limit 信件上限 / letter limit
@@ -321,7 +314,6 @@ public class SystemMailService {
 	/**
 	 * 更新离线玩家邮箱信件计数并写库。
 	 * Updates the offline mailbox letter counter and persists it.
-	 *
 	 * @param recipientCommonData 收件人公共数据 / recipient common data
 	 * @param recipient 在线玩家实例 / online player instance
 	 * @param recipientMailbox 已加载邮箱 / loaded mailbox
@@ -376,7 +368,6 @@ public class SystemMailService {
 	/**
 	 * 按奖励模板向玩家发送系统邮件。
 	 * Sends a system mail reward defined by the given template id.
-	 *
 	 * reward template id
 	 * @param playerData 玩家公共数据 / player common data
 	 */

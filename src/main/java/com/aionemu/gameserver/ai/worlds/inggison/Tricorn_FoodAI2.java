@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Inggison 区域 NPC AI：Tricorn Food（@AIName "tricornfood"），继承 NpcAI2。
  * Inggison zone NPC AI: Tricorn Food (@AIName "tricornfood"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("tricornfood")

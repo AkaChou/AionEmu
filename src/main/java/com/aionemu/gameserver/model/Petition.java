@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 请愿模型。
  * Petition model.
- *
  * @author zdead
  */
 @Getter
@@ -22,7 +21,6 @@ public class Petition {
 	/**
 	 * 仅含请愿 ID 的构造（其余字段置空/默认）。
 	 * Constructor with petition id only (other fields empty/default).
-	 *
 	 * @param petitionId 请愿 ID / petition id
 	 */
 	public Petition(int petitionId) {
@@ -38,7 +36,6 @@ public class Petition {
 	/**
 	 * 完整构造：将客户端类型/状态 ID 映射为对应枚举。
 	 * Full constructor: maps client type/status ids to the matching enums.
-	 *
 	 * @param petitionId 请愿 ID / petition id
 	 * @param playerObjId 玩家对象 ID / player object id
 	 * @param petitionTypeId 客户端类型 ID / client type id

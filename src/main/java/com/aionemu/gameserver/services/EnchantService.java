@@ -46,7 +46,6 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 /**
  * 附魔服务：装备强化、拆解、魔力石镶嵌、手镯/装备词条应用，以及相关套装与技能判定。
  * Enchant service: equipment enchanting, dismantling, manastone socketing, bracelet/item modifier application, and related set/skill checks.
- *
  * @author Ranastic (Encom)
  */
 @Slf4j
@@ -56,7 +55,6 @@ public class EnchantService {
 	/**
 	 * 获取装备最大强化等级（配置优先，默认 30）。
 	 * Returns max equipment enchant level (config first, default 30).
-	 *
 	 * @return 最大强化等级 / max enchant level
 	 */
 	public static int getMaxEquipmentEnchantLevel() {
@@ -66,7 +64,6 @@ public class EnchantService {
 	/**
 	 * 将强化等级限制在最大允许值内。
 	 * Caps an enchant level to the maximum allowed value.
-	 *
 	 * @param enchantLevel 原始强化等级 / raw enchant level
 	 * @return 限制后的等级 / capped level
 	 */
@@ -77,7 +74,6 @@ public class EnchantService {
 	/**
 	 * 拆解物品为强化石粉末等材料。
 	 * Breaks an item into materials such as enchantment stone dust.
-	 *
 	 * @param player 玩家 / player
 	 * @param targetItem 目标物品 / target item
 	 * @return 是否成功 / whether successful
@@ -144,7 +140,6 @@ public class EnchantService {
 	/**
 	 * 拆解所需基纳。
 	 * Kinah cost for breaking an item.
-	 *
 	 * @param item 目标物品 / item
 	 * @return 所需基纳 / kinah amount
 	 */
@@ -155,7 +150,6 @@ public class EnchantService {
 	/**
 	 * 执行 Estima 附魔流程。
 	 * Runs the Estima enchant flow.
-	 *
 	 * @param player 玩家 / player
 	 * @param parentItem 主物品 / parent item
 	 * @param targetItem 目标物品 / target item
@@ -214,7 +208,6 @@ public class EnchantService {
 	/**
 	 * 尝试对装备进行强化，计算成功率。
 	 * Attempts to enchant equipment and computes success chance.
-	 *
 	 * @param player 玩家 / player
 	 * @param parentItem 强化石 / enchant stone
 	 * @param targetItem 目标物品 / target item
@@ -313,7 +306,6 @@ public class EnchantService {
 	/**
 	 * 应用强化结果（成功加等级或失败处理）。
 	 * Applies enchant result (level-up on success or failure handling).
-	 *
 	 * @param player 玩家 / player
 	 * @param parentItem 强化石 / enchant stone
 	 * @param targetItem 目标物品 / target item
@@ -428,9 +420,6 @@ public class EnchantService {
 		currentEnchant = capEquipmentEnchantLevel(currentEnchant);
 		targetItem.setEnchantLevel(currentEnchant);
 
-		/**
-	 * 新注能开始最大强化，自动注能为真 / New Amplified Start MaxEnchant Auto Amplified True
-	 */
 		if (!targetItem.isAmplified() && targetItem.getEnchantLevel() == targetItem.getItemTemplate().getMaxEnchantLevel()) {
 			targetItem.setAmplification(true);
 		}
@@ -449,9 +438,6 @@ public class EnchantService {
 			targetItem.setPersistentState(PersistentState.UPDATE_REQUIRED);
 			PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, targetItem));
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_EXCEED_SKILL_ENCHANT(new DescriptionId(targetItem.getNameId()), targetItem.getEnchantLevel(), getRndSkills(targetItem)));
-			/**
-	 * 获得注能技能后，将属性加到被动技能（手套），无需重新装备。 / after we have recived amplification skill we need to add stats to passive skills4Glove same as just to not re equip item - add skill to skill list but iteam must be equiped
-	 */
 			if (targetItem.isEquipped()) {
 				player.getSkillList().addSkill(player, targetItem.getAmplificationSkill(), 1);
 				player.getController().updatePassiveStats();
@@ -554,7 +540,6 @@ public class EnchantService {
 	/**
 	 * 按物品类型随机获取技能 ID。
 	 * Picks a random skill id for the item type.
-	 *
 	 * @param item 目标物品 / item
 	 * @return 技能 ID / skill id
 	 */
@@ -577,7 +562,6 @@ public class EnchantService {
 	/**
 	 * 强化所需基纳。
 	 * Kinah cost for enchanting.
-	 *
 	 * @param item 目标物品 / item
 	 * @return 所需基纳 / kinah amount
 	 */
@@ -626,7 +610,6 @@ public class EnchantService {
 	/**
 	 * 尝试镶嵌魔力石并计算成功率。
 	 * Attempts manastone socketing and computes success chance.
-	 *
 	 * @param player 玩家 / player
 	 * @param parentItem 魔力石 / manastone
 	 * @param targetItem 目标物品 / target item
@@ -723,7 +706,6 @@ public class EnchantService {
 	/**
 	 * 应用魔力石镶嵌结果。
 	 * Applies the manastone socketing result.
-	 *
 	 * @param player 玩家 / player
 	 * @param parentItem 魔力石 / manastone
 	 * @param targetItem 目标物品 / target item
@@ -765,7 +747,6 @@ public class EnchantService {
 	/**
 	 * 手镯穿戴/卸下时应用或移除相关属性。
 	 * Applies or removes bracelet modifiers on equip/unequip.
-	 *
 	 * @param player 玩家 / player
 	 * @param item 手镯 / bracelet
 	 * @param isEquipped 是否穿戴 / equipped flag
@@ -877,7 +858,6 @@ public class EnchantService {
 	/**
 	 * 装备穿戴时应用强化相关属性修正。
 	 * Applies enchant-related stat modifiers when an item is equipped.
-	 *
 	 * @param player 玩家 / player
 	 * @param item 物品 / item
 	 */
@@ -924,11 +904,7 @@ public class EnchantService {
 					modifiers.add(new StatEnchantFunction(item, StatEnum.MAXHP, 0));
 					modifiers.add(new StatEnchantFunction(item, StatEnum.PHYSICAL_DEFENSE, 0));
 					modifiers.add(new StatEnchantFunction(item, StatEnum.MAGIC_SKILL_BOOST_RESIST, 0));
-				}
-				/**
-	 * 5.0 翅膀强化 / 5.0 Wings Enchant
-	 */
-				else if (item.getItemTemplate().getItemSlot() == 32768) {
+				} else if (item.getItemTemplate().getItemSlot() == 32768) {
 					modifiers.add(new StatEnchantFunction(item, StatEnum.PHYSICAL_ATTACK, 0));
 					modifiers.add(new StatEnchantFunction(item, StatEnum.BOOST_MAGICAL_SKILL, 0));
 					modifiers.add(new StatEnchantFunction(item, StatEnum.MAXHP, 0));
@@ -1062,7 +1038,6 @@ public class EnchantService {
 	/**
 	 * 计算强化相关等级系数。
 	 * Computes an enchant-related level factor.
-	 *
 	 * @param item 目标物品 / item
 	 * @return 等级系数 / level factor
 	 */
@@ -1128,7 +1103,6 @@ public class EnchantService {
 	/**
 	 * 应用物品推荐等级削减结果。
 	 * Applies recommended-level reduction result on an item.
-	 *
 	 * @param player 玩家 / player
 	 * @param parentItem 主物品 / parent item
 	 * @param targetItem 目标物品 / target item

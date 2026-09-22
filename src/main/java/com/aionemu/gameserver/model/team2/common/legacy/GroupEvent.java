@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 队伍活动枚举。
  * Group Event enumeration.
- *
  * @author Lyahim
  */
 @Getter

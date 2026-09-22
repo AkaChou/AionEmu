@@ -17,7 +17,6 @@ import java.util.Set;
 /**
  * 诺克萨纳训练营副本事件处理器。
  * Instance event handler for Nochsana Training Camp.
- *
  * @author Encom
  * @author MATTY (ADev.Team)
  */
@@ -25,17 +24,10 @@ import java.util.Set;
 @InstanceID(300030000)
 public class NochsanaTrainingCampInstance extends GeneralInstanceHandler
 {
-	/**
-	@Override
-    public void onEnterInstance(Player player) {
-		HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML("instances/nochsanaTrainingCamp.xhtml"));
-    }
-	 * */
 
-	/**
+    /**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -73,7 +65,6 @@ public class NochsanaTrainingCampInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
-	 *
 	 * @param player 玩家 / player
 	 * @param npc NPC / npc
 	 */
@@ -90,7 +81,6 @@ public class NochsanaTrainingCampInstance extends GeneralInstanceHandler
 	/**
 	 * 将军死亡后在其当前位置重建出口门，便于击杀后直接离开。
 	 * Recreate the exit gate at the General's current death position for a direct post-kill exit.
-	 *
 	 * @param npc 死亡的 NPC / the dead NPC
 	 */
 	@Override
@@ -106,7 +96,6 @@ public class NochsanaTrainingCampInstance extends GeneralInstanceHandler
             /**
              * 处理 visit。
              * Handle visit.
-             *
              * @param player 玩家 / player
              */
             @Override

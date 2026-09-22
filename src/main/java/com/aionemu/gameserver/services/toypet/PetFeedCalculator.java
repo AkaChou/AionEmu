@@ -17,7 +17,6 @@ import com.aionemu.gameserver.model.templates.pet.PetRewards;
 /**
  * 宠物喂养计算器，预计算积分表并更新喂养进度与奖励。
  * Pet feed calculator precomputing point tables and updating feed progress/rewards.
- *
  * <p>
  * 当前预计算值已乘以 4；协议中为 14 位。最大值 17600 / 4 为 13 位；喂养积分与零售包一致。
  * Current pre-calculated values multiplied by 4; in packet 14 bits. Max value:
@@ -40,7 +39,6 @@ import com.aionemu.gameserver.model.templates.pet.PetRewards;
  * { 880, 2200, 3520, 4400, 8800, 17600 } // level 56~60 items (feed points 88)
  * };
  * </pre>
- *
  * @author Rolandas
  */
 public final class PetFeedCalculator {
@@ -102,7 +100,6 @@ public final class PetFeedCalculator {
 	/**
 	 * 计算喂满 maxFeedCount 次后的累计积分。
 	 * Formula to calculate pointValues array entries.
-	 *
 	 * @param feedPoints 单次喂养积分 / Feed points per item
 	 * @param maxFeedCount 最大喂养次数 / Max feeding count
 	 * Accumulated points after all items are fed
@@ -134,7 +131,6 @@ public final class PetFeedCalculator {
 	/**
 	 * 按默认喂养倍率 1.0 更新喂养进度。
 	 * Update feed progress with default feeding rate 1.0.
-	 *
 	 * Feed progress
 	 * @param itemLevel 食物物品等级 / Food item level
 	 * @param maxFeedCount 最大喂养次数 / Max feed count
@@ -146,7 +142,6 @@ public final class PetFeedCalculator {
 	/**
 	 * 根据食物等级与喂养倍率更新喂养进度与饥饿等级。
 	 * Update feed progress and hunger level by food level and feeding rate.
-	 *
 	 * Feed progress
 	 * @param itemLevel 食物物品等级 / Food item level
 	 * @param maxFeedCount 最大喂养次数 / Max feed count
@@ -200,12 +195,10 @@ public final class PetFeedCalculator {
 	/**
 	 * 在吃饱后按积分与奖励组选取喂养奖励。
 	 * Select feed reward from reward group after the pet is full.
-	 *
 	 * @param fullCount 吃饱所需次数 / Full count
 	 * Reward group
 	 * Feed progress
 	 * Player level
-	 *
 	 * @return 奖励结果，不可领时为 null / Reward result, or null if none
 	 */
 	public static PetFeedResult getReward(int fullCount, PetRewards rewardGroup, PetFeedProgress progress,

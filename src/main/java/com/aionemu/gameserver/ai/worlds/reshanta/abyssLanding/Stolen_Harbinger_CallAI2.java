@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * Reshanta 区域 NPC AI：Stolen Harbinger Call（@AIName "stolen_harbinger_call"），继承 NpcAI2。
  * Reshanta zone NPC AI: Stolen Harbinger Call (@AIName "stolen_harbinger_call"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("stolen_harbinger_call")

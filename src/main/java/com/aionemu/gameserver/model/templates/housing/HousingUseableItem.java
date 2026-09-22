@@ -10,7 +10,6 @@ import lombok.Getter;
 /**
  * 住房 Useable 物品模板（静态数据/XML）。
  * XML template.
- *
  * @author Rolandas
  */
 @Getter
@@ -25,9 +24,6 @@ public class HousingUseableItem extends PlaceableHouseObject {
 	@XmlAttribute(required = true)
 	protected boolean owner;
 
-	/**
-	 * @return 无冷却时为 null / null if no cooltime is used
-	 */
 	@XmlAttribute
 	protected Integer cd;
 
@@ -35,15 +31,9 @@ public class HousingUseableItem extends PlaceableHouseObject {
 	@XmlAttribute(required = true)
 	protected int delay;
 
-	/**
-	 * @return 使用次数不受限时为 null / null if use is not restricted
-	 */
 	@XmlAttribute(name = "use_count")
 	protected Integer useCount;
 
-	/**
-	 * @return 无需物品时为 null / null if no item is required
-	 */
 	@XmlAttribute(name = "required_item")
 	protected Integer requiredItem;
 

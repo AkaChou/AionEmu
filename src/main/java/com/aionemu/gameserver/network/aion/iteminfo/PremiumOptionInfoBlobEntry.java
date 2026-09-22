@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
  * 写入加成编号、随机次数等字段。
  * Blob for premium/random option info.
  * Writes bonus number, random count, and related fields.
- *
  * @author Rolandas
  */
 public class PremiumOptionInfoBlobEntry extends ItemBlobEntry {

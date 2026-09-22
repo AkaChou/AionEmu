@@ -11,7 +11,6 @@ import java.util.concurrent.Future;
 /**
  * Infernal Danuar Reliquary 副本 NPC AI：Venge Full Orb（@AIName "venge_full_orb"），继承 NpcAI2。
  * Infernal Danuar Reliquary instance NPC AI: Venge Full Orb (@AIName "venge_full_orb"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("infernal_danuar_reliquary_venge_full_orb")

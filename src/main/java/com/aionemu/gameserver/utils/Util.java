@@ -14,7 +14,6 @@ public class Util {
 	/**
 	 * 打印带分隔线的章节标题。
 	 * Prints a section title with separator lines.
-	 *
 	 * @param s 章节标题 / Section title
 	 */
 	public static void printSection(String s) {
@@ -24,7 +23,6 @@ public class Util {
 	/**
 	 * 将 ByteBuffer 中的数据转为十六进制转储（含偏移与 ASCII 侧栏）。
 	 * Converts data from the given ByteBuffer into a hex dump with offsets and ASCII sidebar.
-	 *
 	 * @param data 字节缓冲 / Byte buffer
 	 * @return 十六进制转储字符串 / Hex dump string
 	 */
@@ -59,7 +57,6 @@ public class Util {
 	/**
 	 * 将 ByteBuffer 中的数据转为纯十六进制流（无偏移与 ASCII）。
 	 * Converts data from the given ByteBuffer into a plain hex stream (no offsets or ASCII).
-	 *
 	 * @param data 字节缓冲 / Byte buffer
 	 * @return 十六进制流字符串 / Hex stream string
 	 */
@@ -82,7 +79,6 @@ public class Util {
 	/**
 	 * 将最近读取的字节转为 ASCII 侧栏文本：可打印字符原样输出，其余输出点号。
 	 * Appends the last read bytes as ASCII sidebar text: printable chars as-is, others as dots.
-	 *
 	 * @param data 字节缓冲 / Byte buffer
 	 * @param result 结果构建器 / Result builder
 	 * @param cnt 字节数量 / Byte count
@@ -102,7 +98,6 @@ public class Util {
 	/**
 	 * 将角色名规范化为首字母大写、其余小写；若允许自定义名称则原样返回。
 	 * Normalizes a character name to title case; returns as-is when custom names are allowed.
-	 *
 	 * @param name 原始名称 / Original name
 	 * @return 规范化后的名称 / Normalized name
 	 */

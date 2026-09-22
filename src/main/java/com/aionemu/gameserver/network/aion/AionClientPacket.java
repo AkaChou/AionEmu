@@ -12,7 +12,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * Aion 客户端包基类：校验连接状态后执行业务逻辑。
  * Base class for Aion client packets; runs business logic only when connection state is valid.
- *
  * @author -Nemesiss-
  */
 @Slf4j
@@ -25,7 +24,6 @@ public abstract class AionClientPacket extends BaseClientPacket<AionConnection> 
 	/**
 	 * 构造客户端包原型；缓冲区与连接需稍后手动设置。
 	 * Constructs a client packet prototype; buffer and connection are set later manually.
-	 *
 	 * @param opcode 包 ID / packet id
 	 * @param state 合法连接状态 / valid connection state
 	 * @param restStates 其余合法状态（可选） / additional valid states (optional)
@@ -59,7 +57,6 @@ public abstract class AionClientPacket extends BaseClientPacket<AionConnection> 
 	/**
 	 * 向本包所属连接发送服务端包，等价于 getConnection().sendPacket(msg)。
 	 * Sends an AionServerPacket to this packet's owner connection.
-	 *
 	 * @param msg 服务端包 / server packet
 	 */
 	protected void sendPacket(AionServerPacket msg) {
@@ -69,7 +66,6 @@ public abstract class AionClientPacket extends BaseClientPacket<AionConnection> 
 	/**
 	 * 克隆本包对象（用于原型模式分发）。
 	 * Clones this packet object (prototype dispatch).
-	 *
 	 * @return 克隆实例，失败返回 null / clone, or null on failure
 	 */
 	public AionClientPacket clonePacket() {
@@ -83,7 +79,6 @@ public abstract class AionClientPacket extends BaseClientPacket<AionConnection> 
 	/**
 	 * 读取定长 UTF-16 字符串字段（含填充）。
 	 * Reads a fixed-size UTF-16 string field (including padding).
-	 *
 	 * @param size 字段总字节数 / total field size in bytes
 	 * @return 读取到的字符串 / read string
 	 */
@@ -100,7 +95,6 @@ public abstract class AionClientPacket extends BaseClientPacket<AionConnection> 
 	/**
 	 * 检查包对当前连接状态是否仍有效。
 	 * Checks whether the packet is still valid for its connection state.
-	 *
 	 * @return 是否应继续处理 / true if the packet should be processed
 	 */
 	public final boolean isValid() {

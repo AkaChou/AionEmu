@@ -11,7 +11,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 守护灵动作模板（静态数据/XML）。
  * Minion actions template (static data/XML).
- *
  * @author Falke_34
  */
 @XmlAccessorType(XmlAccessType.FIELD)

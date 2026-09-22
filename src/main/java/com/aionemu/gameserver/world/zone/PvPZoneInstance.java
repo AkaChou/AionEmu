@@ -13,7 +13,6 @@ public class PvPZoneInstance extends SiegeZoneInstance {
 	/**
 	 * 创建 PvP 区域实例。
 	 * Create a PvP zone instance.
-	 *
 	 * @param mapId 地图 ID / the map id
 	 * @param template 区域模板信息 / zone template info
 	 */
@@ -24,7 +23,6 @@ public class PvPZoneInstance extends SiegeZoneInstance {
 	/**
 	 * 进入 PvP 区并设置 PVP 区域类型。
 	 * Enter PvP zone and set the PVP zone type.
-	 *
 	 * @param creature 生物 / the creature
 	 * @return 是否成功进入 / whether enter succeeded
 	 */
@@ -41,7 +39,6 @@ public class PvPZoneInstance extends SiegeZoneInstance {
 	/**
 	 * 离开 PvP 区并清除 PVP 区域类型。
 	 * Leave PvP zone and clear the PVP zone type.
-	 *
 	 * @param creature 生物 / the creature
 	 * @return 是否成功离开 / whether leave succeeded
 	 */

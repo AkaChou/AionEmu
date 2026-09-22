@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 向客户端展示复活选项（复活者与技能信息）。
  * Server packet presenting resurrection options (resurrector and skill info) to the client.
- *
  * @author ATracer
  * @author Jego
  */
@@ -19,7 +18,6 @@ public class SM_RESURRECT extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_RESURRECT 包。
 	 * Creates a SM_RESURRECT packet with the given parameters.
-	 *
 	 * @param creature creature
 	 */
 	public SM_RESURRECT(Creature creature) {
@@ -29,7 +27,6 @@ public class SM_RESURRECT extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_RESURRECT 包。
 	 * Creates a SM_RESURRECT packet with the given parameters.
-	 *
 	 * @param creature creature
 	 * @param skillId skill id
 	 */

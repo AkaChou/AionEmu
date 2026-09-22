@@ -33,7 +33,6 @@ import java.util.Map;
  * 玩家跨服转移服务，协调源服校验、角色数据下发、目标服克隆以及成功/失败回执。
  * Player cross-server transfer service coordinating source validation, character payload delivery,
  * target-side cloning and success/error callbacks.
- *
  * @author KID
  */
 @Slf4j
@@ -51,11 +50,9 @@ public class PlayerTransferService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -74,7 +71,6 @@ public class PlayerTransferService {
 	/**
 	 * 注入 Spring 实例提供者。
 	 * Inject the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / Instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<PlayerTransferService> instanceProvider) {
@@ -114,7 +110,6 @@ public class PlayerTransferService {
 	/**
 	 * 玩家进入世界时处理转移后缀名与改名道具发放。
 	 * Handle transfer name-suffix messaging and rename-item grant when a player enters the world.
-	 *
 	 * @param player 进入世界的玩家 / Player entering the world
 	 */
 	public void onEnterWorld(Player player) {
@@ -136,7 +131,6 @@ public class PlayerTransferService {
 	 * 在源服发起角色转移：校验账户归属、军团、在线状态、冷却与资产限制后打包角色数据。
 	 * Start transfer on the source server: validate account ownership, legion, online state, cooldown and asset
 	 * limits, then package character data.
-	 *
 	 * @param accountId 源账号 ID / Source account ID
 	 * @param targetAccountId 目标账号 ID / Target account ID
 	 * @param playerId 角色 ID / Character ID
@@ -212,7 +206,6 @@ public class PlayerTransferService {
 	/**
 	 * 在目标服根据源服下发的角色二进制数据克隆角色。
 	 * Clone a character on the target server from the binary payload delivered by the source server.
-	 *
 	 * @param taskId 任务 ID / Task ID
 	 * @param targetAccountId 目标账号 ID / Target account ID
 	 * @param name 角色名 / Character name
@@ -262,7 +255,6 @@ public class PlayerTransferService {
 	/**
 	 * 目标服确认成功后，在源服删除原角色。
 	 * After target-server confirmation, delete the original character on the source server.
-	 *
 	 * @param taskId 任务 ID / Task ID
 	 */
 	public void onOk(int taskId) {
@@ -274,7 +266,6 @@ public class PlayerTransferService {
 	/**
 	 * 目标服返回错误时清理源服转移任务。
 	 * Clean up the source-side transfer task when the target server reports an error.
-	 *
 	 * @param taskId 任务 ID / Task ID
 	 * @param reason 失败原因 / Failure reason
 	 */

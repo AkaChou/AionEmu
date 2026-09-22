@@ -25,7 +25,6 @@ import java.util.concurrent.Future;
 /**
  * 卡普斯岛储藏室副本事件处理器。
  * Instance event handler for Carpus Isle Storeroom.
- *
  * @author Encom
  */
 
@@ -42,7 +41,6 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -53,7 +51,6 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 
@@ -97,7 +94,6 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家通过飞行环时处理。
 	 * Handle a player passing a flying ring.
-	 *
 	 * @param player 玩家 / player
 	 * @param flyingRing 飞行环标识 / flying-ring id
 	 * @return 结果 / result
@@ -112,7 +108,6 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -133,7 +128,6 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -166,7 +160,6 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -179,7 +172,6 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -190,7 +182,6 @@ public class CarpusIsleStoreroomInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override

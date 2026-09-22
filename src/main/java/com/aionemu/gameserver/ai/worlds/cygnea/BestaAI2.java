@@ -15,7 +15,6 @@ import java.util.List;
 /**
  * Cygnea 区域 NPC AI：Besta（@AIName "besta"），继承 NpcAI2。
  * Cygnea zone NPC AI: Besta (@AIName "besta"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("besta")

@@ -8,9 +8,7 @@ import lombok.Getter;
 /**
  * 集群巡逻 NPC 刷怪信息，用于组建巡逻队并生成 NPC。
  * Spawn data for a clustered walker NPC, used to form groups and spawn NPCs.
- *
  * @author vlog
- * @modified Rolandas
  */
 @Getter
 public class ClusteredNpc {
@@ -54,7 +52,6 @@ public class ClusteredNpc {
 	/**
 	 * 以 NPC、实例与巡逻模板构造集群数据。
 	 * Builds clustered data from an NPC, instance and walker template.
-	 *
 	 * @param npc 关联 NPC / the associated NPC
 	 * @param instance 实例 ID / the instance id
 	 * @param walkTemplate 巡逻路径模板 / the walker route template
@@ -71,7 +68,6 @@ public class ClusteredNpc {
 	/**
 	 * 将 NPC 以当前坐标刷入世界。
 	 * Brings the NPC into the world at the current coordinates.
-	 *
 	 * @param z 高度 / height Z
 	 */
 	public void spawn(float z) {
@@ -81,7 +77,6 @@ public class ClusteredNpc {
 	/**
 	 * 重生时替换底层 NPC，并迁移巡逻偏移与坐标。
 	 * Replaces the underlying NPC on respawn and migrates walker shift and coordinates.
-	 *
 	 * @param npc 新 NPC / the new NPC
 	 */
 	public void setNpc(Npc npc) {
@@ -94,7 +89,6 @@ public class ClusteredNpc {
 	/**
 	 * 相对路径第一步的 X 偏移。
 	 * X delta relative to the first route step.
-	 *
 	 * @return X 偏移 / the X delta
 	 */
 	public float getXDelta() {
@@ -104,7 +98,6 @@ public class ClusteredNpc {
 	/**
 	 * 设置 X 坐标并同步到刷怪模板。
 	 * Sets X and syncs it onto the spawn template.
-	 *
 	 * @param x X 坐标 / X coordinate
 	 */
 	public void setX(float x) {
@@ -115,7 +108,6 @@ public class ClusteredNpc {
 	/**
 	 * 相对路径第一步的 Y 偏移。
 	 * Y delta relative to the first route step.
-	 *
 	 * @return Y 偏移 / the Y delta
 	 */
 	public float getYDelta() {
@@ -125,7 +117,6 @@ public class ClusteredNpc {
 	/**
 	 * 设置 Y 坐标并同步到刷怪模板。
 	 * Sets Y and syncs it onto the spawn template.
-	 *
 	 * @param y Y 坐标 / Y coordinate
 	 */
 	public void setY(float y) {
@@ -136,7 +127,6 @@ public class ClusteredNpc {
 	/**
 	 * 巡逻成员序号。
 	 * Walker member index.
-	 *
 	 * @return 巡逻成员序号 / the walker index
 	 */
 	public int getWalkerIndex() {

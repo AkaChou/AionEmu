@@ -30,7 +30,6 @@ public class PlayerEnteredEvent implements Predicate<PlayerAllianceMember>, Team
 	/**
 	 * 检查事件条件（玩家尚未在联盟中）。
 	 * Checks the event condition (player not yet in the alliance).
-	 *
 	 * @return 条件是否满足 / whether the condition holds
 	 */
 	@Override

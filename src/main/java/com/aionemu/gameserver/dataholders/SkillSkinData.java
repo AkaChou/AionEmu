@@ -39,7 +39,6 @@ public class SkillSkinData {
 	/**
 	 * 按皮肤 ID 获取技能皮肤模板。
 	 * Returns the skill skin template for the given skin id.
-	 *
 	 * @param skinId 皮肤 ID / skin id
 	 * @return 技能皮肤模板，不存在则为 null / skill skin template or null
 	 */
@@ -50,7 +49,6 @@ public class SkillSkinData {
 	/**
 	 * 返回已加载的技能皮肤数量。
 	 * Returns the number of loaded skill skins.
-	 *
 	 * @return 已加载的技能皮肤数量 / Returns the number of loaded skill skins.
 	 */
 	public int size() {

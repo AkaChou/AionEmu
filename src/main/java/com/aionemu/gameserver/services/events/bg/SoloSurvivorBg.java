@@ -14,8 +14,7 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 /**
  * 1v1/小规模生存战：多回合击杀制，击杀最多者获胜。
  * Solo survivor battleground: multi-round kill race; most kills win.
- *
- * @Author Rinzler (Encom)
+ * @author Rinzler (Encom)
  */
 public class SoloSurvivorBg extends Battleground {
 	/** 最大回合数。 / Maximum rounds. */
@@ -775,7 +774,6 @@ public class SoloSurvivorBg extends Battleground {
 	/**
 	 * 从排队列表创建生存战对局。
 	 * Creates a solo survivor match from the queue.
-	 *
 	 * @param players 排队玩家对象 ID / queued player object ids
 	 */
 	public void createMatch(List<Integer> players) {
@@ -789,7 +787,6 @@ public class SoloSurvivorBg extends Battleground {
 	/**
 	 * 判断玩家是否在本战场地图内。
 	 * Whether the player is on this battleground map.
-	 *
 	 * @param player 玩家 / player
 	 * @return 若 inside 则为 true / true if inside
 	 */
@@ -827,13 +824,6 @@ public class SoloSurvivorBg extends Battleground {
 	}
 
 	@Override
-	/**
-	 * 创建生存战锦标赛对局。
-	 * Creates a solo survivor tournament match.
-	 *
-	 * @param players 各方玩家列表 / sides of players
-	 * @return 成功则 true / true on success
-	 */
 	public boolean createTournament(List<List<Player>> players) {
 		if (!super.createPlayers(players)) {
 			return false;
@@ -847,12 +837,6 @@ public class SoloSurvivorBg extends Battleground {
 	}
 
 	@Override
-	/**
-	 * 生存战限制隐身技能。
-	 * Solo survivor restricts stealth skills.
-	 *
-	 * @return 恒为 true / always true
-	 */
 	public boolean isStealthRestricted() {
 		return true;
 	}
@@ -860,7 +844,6 @@ public class SoloSurvivorBg extends Battleground {
 	/**
 	 * 处理死亡：计分并推进回合。
 	 * Handles death: scores and advances rounds.
-	 *
 	 * @param player 死亡玩家 / dead player
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 */
@@ -887,14 +870,6 @@ public class SoloSurvivorBg extends Battleground {
 	}
 
 	@Override
-	/**
-	 * 处理玩家离开生存战。
-	 * Handles a player leaving solo survivor.
-	 *
-	 * @param player 玩家 / player
-	 * @param isLogout 是否登出 / whether logout
-	 * @param isAfk 是否挂机 / whether AFK
-	 */
 	public void onLeave(Player player, boolean isLogout, boolean isAfk) {
 		super.onLeaveDefault(player, isLogout, isAfk);
 		if (super.getPlayers().size() <= 1) {
@@ -935,7 +910,6 @@ public class SoloSurvivorBg extends Battleground {
 	/**
 	 * 获取本回合胜者。
 	 * Returns the current round winner.
-	 *
 	 * @return 回合胜者 / winner player
 	 */
 	private Player getRoundWinner() {
@@ -952,7 +926,6 @@ public class SoloSurvivorBg extends Battleground {
 	/**
 	 * 获取整场胜者（击杀最多）。
 	 * Returns overall match winner (most kills).
-	 *
 	 * @return 整场胜者 / winner player
 	 */
 	private Player getWinner() {
@@ -976,7 +949,6 @@ public class SoloSurvivorBg extends Battleground {
 	/**
 	 * 结束生存战并结算奖励。
 	 * Ends the solo survivor match and settles rewards.
-	 *
 	 * @param isDraw 是否平局 / whether draw
 	 */
 	private void endSoloSurvivorMatch(boolean isDraw) {

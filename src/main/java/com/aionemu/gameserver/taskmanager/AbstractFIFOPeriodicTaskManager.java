@@ -12,9 +12,7 @@ import com.aionemu.commons.utils.concurrent.RunnableStatsManager;
 /**
  * FIFO 周期性任务管理器：每周期把入队任务批量取出并依次处理。
  * FIFO periodic task manager: each tick drains queued tasks and processes them in order.
- *
  * <p>基于 l2j-free 引擎思路。/ Based on l2j-free engines.</p>
- *
  * @param <T> 任务元素类型 / Task element type
  * @author lord_rex, MrPoke
  */
@@ -36,7 +34,6 @@ public abstract class AbstractFIFOPeriodicTaskManager<T> extends AbstractPeriodi
 	/**
 	 * 以给定周期构造 FIFO 任务管理器。
 	 * Construct a FIFO task manager with the given period.
-	 *
 	 * @param period 周期毫秒数 / Period in milliseconds
 	 */
 	public AbstractFIFOPeriodicTaskManager(int period) {
@@ -46,7 +43,6 @@ public abstract class AbstractFIFOPeriodicTaskManager<T> extends AbstractPeriodi
 	/**
 	 * 将任务加入待处理队列（写锁保护）。
 	 * Enqueue a task (write-locked).
-	 *
 	 * @param t 任务 / Task
 	 */
 	public final void add(T t) {
@@ -89,7 +85,6 @@ public abstract class AbstractFIFOPeriodicTaskManager<T> extends AbstractPeriodi
 	/**
 	 * 处理单个任务。
 	 * Process a single task.
-	 *
 	 * @param task 任务 / the task
 	 */
 	protected abstract void callTask(T task);
@@ -97,7 +92,6 @@ public abstract class AbstractFIFOPeriodicTaskManager<T> extends AbstractPeriodi
 	/**
 	 * 供耗时统计使用的被调方法名。
 	 * Method name used for runtime statistics.
-	 *
 	 * @return 被调方法名 / the method name
 	 */
 	protected abstract String getCalledMethodName();
@@ -105,7 +99,6 @@ public abstract class AbstractFIFOPeriodicTaskManager<T> extends AbstractPeriodi
 	/**
 	 * 从集合头部取出并移除第一个元素。
 	 * Remove and return the first element of the set.
-	 *
 	 * @param tasks 任务集合 / Task set
 	 * @return 首个任务；空则 null / First task, or null if empty
 	 */

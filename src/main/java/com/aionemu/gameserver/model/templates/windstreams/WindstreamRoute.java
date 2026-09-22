@@ -31,7 +31,6 @@ public final class WindstreamRoute {
 	/**
 	 * 返回经过指定毫秒数时的插值位置；越界返回 null。
 	 * Returns the interpolated position at the given elapsed time; null when out of range.
-	 *
 	 * @param elapsedMillis 经过毫秒数 / elapsed milliseconds
 	 * @return 位置或 null / position or null
 	 */
@@ -55,7 +54,6 @@ public final class WindstreamRoute {
 	/**
 	 * 判断给定坐标是否在指定时刻的路线位置附近（宽度范围内）。
 	 * Whether the given coordinates are within the route position at the given time plus width.
-	 *
 	 * @param elapsedMillis 经过毫秒数 / elapsed milliseconds
 	 * @param x X 坐标 / x coordinate
 	 * @param y Y 坐标 / y coordinate

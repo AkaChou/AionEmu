@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：向全服世界频道发送付费消息。
  * Player command: sends a paid message on the global world channel.
- *
  * @author Maestross
  */
 public class cmd_world_channel extends PlayerCommand {
@@ -22,7 +21,6 @@ public class cmd_world_channel extends PlayerCommand {
 	/**
 	 * 向在线玩家广播世界频道消息并扣费。
 	 * Broadcasts a world-channel message to online players and charges a fee.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 命令参数 / command parameters
 	 */
@@ -97,7 +95,6 @@ public class cmd_world_channel extends PlayerCommand {
 	/**
 	 * 参数错误时提示用法。
 	 * Shows usage when arguments are invalid.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param message 失败提示消息 / failure message
 	 */

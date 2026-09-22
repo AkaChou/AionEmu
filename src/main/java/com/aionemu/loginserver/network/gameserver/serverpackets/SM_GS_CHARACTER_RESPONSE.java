@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * LS→GS：角色相关应答（携带目标账号 ID）。
  * LS→GS: character-related response (carries target account id).
- *
  * @author cura
  */
 @AllArgsConstructor

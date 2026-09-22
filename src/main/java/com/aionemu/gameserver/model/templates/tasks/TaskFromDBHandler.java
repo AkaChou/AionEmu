@@ -7,14 +7,10 @@ import lombok.Setter;
 /**
  * 任务 FromDB 处理器模板（静态数据/XML）。
  * XML template.
- *
  * @author Divinity
  */
 public abstract class TaskFromDBHandler implements Runnable {
 
-	/**
-	 * @param id 设置任务 ID / Task's id
-	 */
 	@Setter
 	protected int id;
 	protected String[] params;
@@ -33,7 +29,6 @@ public abstract class TaskFromDBHandler implements Runnable {
 
 	/**
 	 * 检查任务参数是否有效。 / Check if the task's parameters are valid
-	 *
 	 * @return 有效返回 true，否则 false / true if valid, false otherwise
 	 */
 	public abstract boolean isValid();

@@ -7,7 +7,6 @@ import com.aionemu.gameserver.world.WorldPosition;
 /**
  * 活动事件 NPC AI：Beritora（@AIName "beritora"），继承 AggressiveNpcAI2。
  * Event NPC AI: Beritora (@AIName "beritora"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("beritora")

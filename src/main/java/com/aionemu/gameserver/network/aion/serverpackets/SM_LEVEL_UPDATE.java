@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端同步目标等级变化的服务端包。
  * Server packet that synchronizes a target's level change to the client.
- *
  * @author ATracer
  */
 @AllArgsConstructor

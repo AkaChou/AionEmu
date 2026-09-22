@@ -8,7 +8,6 @@ import lombok.Getter;
 /**
  * 自动队伍类型枚举。
  * Auto Group Type enumeration.
- *
  * @author Rinzler (Encom)
  */
 

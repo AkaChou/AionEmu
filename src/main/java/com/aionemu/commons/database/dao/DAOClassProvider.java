@@ -9,7 +9,6 @@ public interface DAOClassProvider {
 	/**
 	 * 获取服务上下文名称
 	 * Get the service context name
-	 *
 	 * @return 上下文名称 / Context name
 	 */
 	String contextName();
@@ -17,7 +16,6 @@ public interface DAOClassProvider {
 	/**
 	 * 获取该上下文下的 DAO 实现类数组
 	 * Get DAO implementation classes for this context
-	 *
 	 * @return DAO 实现类数组 / Array of DAO classes
 	 */
 	Class<?>[] daoClasses();

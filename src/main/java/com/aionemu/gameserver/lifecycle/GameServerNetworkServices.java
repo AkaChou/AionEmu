@@ -78,7 +78,6 @@ public final class GameServerNetworkServices implements DisposableBean {
     /**
      * 构造并绑定各网络服务的 instance provider。
      * Construct and bind instance providers for network services.
-     *
      * @param loginServerProvider 登录服连接提供者 / Login-server provider
      * @param chatServerProvider 聊天服连接提供者 / Chat-server provider
      * @param bannedMacManagerProvider MAC 封禁管理器提供者 / Banned-MAC manager provider
@@ -114,7 +113,6 @@ public final class GameServerNetworkServices implements DisposableBean {
     /**
      * 解析 MAC 封禁管理器。
      * Resolve the banned-MAC manager.
-     *
      * @return MAC 封禁管理器 / Banned MAC manager
      */
     public static BannedMacManager bannedMacManager() {
@@ -128,7 +126,6 @@ public final class GameServerNetworkServices implements DisposableBean {
     /**
      * 解析网络控制器。
      * Resolve the network controller.
-     *
      * @return 网络控制器 / Network controller
      */
     public static NetworkController networkController() {
@@ -142,7 +139,6 @@ public final class GameServerNetworkServices implements DisposableBean {
     /**
      * 解析数据包日志服务。
      * Resolve the packet-logger service.
-     *
      * @return 数据包日志服务 / Packet logger service
      */
     public static PacketLoggerService packetLoggerService() {
@@ -165,7 +161,6 @@ public final class GameServerNetworkServices implements DisposableBean {
     /**
      * 解析登录服连接。
      * Resolve the login-server connection.
-     *
      * @return 登录服连接 / Login server
      */
     public static LoginServer loginServer() {
@@ -179,7 +174,6 @@ public final class GameServerNetworkServices implements DisposableBean {
     /**
      * 解析聊天服连接。
      * Resolve the chat-server connection.
-     *
      * @return 聊天服连接 / Chat server
      */
     public static ChatServer chatServer() {
@@ -193,7 +187,6 @@ public final class GameServerNetworkServices implements DisposableBean {
     /**
      * 解析 Aion 数据包处理器工厂。
      * Resolve the Aion packet-handler factory.
-     *
      * @return Aion 数据包处理器工厂 / Aion packet-handler factory
      */
     public static AionPacketHandlerFactory aionPacketHandlerFactory() {
@@ -207,7 +200,6 @@ public final class GameServerNetworkServices implements DisposableBean {
     /**
      * 解析数据包洪水过滤器。
      * Resolve the packet flood filter.
-     *
      * @return 数据包洪水过滤器 / Packet flood filter
      */
     public static PacketFloodFilter packetFloodFilter() {
@@ -221,7 +213,6 @@ public final class GameServerNetworkServices implements DisposableBean {
     /**
      * 解析登录服数据包处理器工厂。
      * Resolve the login-server packet-handler factory.
-     *
      * @return 登录服数据包处理器工厂 / LS packet-handler factory
      */
     public static LsPacketHandlerFactory lsPacketHandlerFactory() {

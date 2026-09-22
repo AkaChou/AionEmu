@@ -25,7 +25,6 @@ public class RenameService {
 	/**
 	 * 使用改名券为玩家更名，并广播给所有在线玩家。
 	 * Renames a player with a rename coupon and broadcasts to all online players.
-	 *
 	 * 玩家 / player
 	 * old name
 	 * new name
@@ -77,7 +76,6 @@ public class RenameService {
 	/**
 	 * 使用军团改名券修改玩家所属军团名称。
 	 * Renames the player's legion with a legion rename coupon.
-	 *
 	 * @param player 玩家 / player
 	 * @param name 新军团名 / new legion name
 	 * @param item 改名券物品 objectId / rename coupon item object id

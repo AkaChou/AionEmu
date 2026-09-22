@@ -29,7 +29,6 @@ import lombok.Setter;
 /**
  * 召唤物控制器，管理模式切换、攻击、技能与与主人的距离解除。
  * Summon controller managing mode switches, attacks, skills and distance-based release.
- *
  * @author ATracer
  * @author RotO (Attack-speed hack protection) modified by Sippolo
  */
@@ -46,7 +45,6 @@ public class SummonController extends CreatureController<Summon> {
 	/**
 	 * 主人离开可视范围时按距离解除召唤。
 	 * Releases the summon by distance when the master leaves visibility range.
-	 *
 	 * @param object 离开视野的对象 / the object leaving sight
 	 * @param isOutOfRange 是否因超出距离离开 / whether the leave is due to being out of range
 	 */
@@ -66,7 +64,6 @@ public class SummonController extends CreatureController<Summon> {
 	/**
 	 * 按指定类型解除召唤。
 	 * Releases the summon with the given unsummon type.
-	 *
 	 * @param unsummonType 解除召唤类型 / unsummon type
 	 */
 	public void release(final UnsummonType unsummonType) {
@@ -76,7 +73,6 @@ public class SummonController extends CreatureController<Summon> {
 	/**
 	 * 获取所有者召唤物。
 	 * Gets the owner summon.
-	 *
 	 * summon
 	 */
 	@Override
@@ -111,7 +107,6 @@ public class SummonController extends CreatureController<Summon> {
 	/**
 	 * 切换到攻击模式（目标须为生物）。
 	 * Switches to attack mode (target must be a creature).
-	 *
 	 * @param targetObjId target object id
 	 */
 	public void attackMode(int targetObjId) {
@@ -124,7 +119,6 @@ public class SummonController extends CreatureController<Summon> {
 	/**
 	 * 攻击目标，含攻速反作弊校验。
 	 * Attacks a target with attack-speed anti-cheat checks.
-	 *
 	 * attack target
 	 * @param time 攻击时间参数 / attack timing parameter
 	 */
@@ -142,11 +136,7 @@ public class SummonController extends CreatureController<Summon> {
 		long milis = System.currentTimeMillis();
 
 		if (milis - lastAttackMilis + 300 < attackSpeed) {
-			/**
-			 * 权宜处理。
-			 * Hack!
-			 */
-			return;
+            return;
 		}
 		lastAttackMilis = milis;
 
@@ -156,7 +146,6 @@ public class SummonController extends CreatureController<Summon> {
 	/**
 	 * 受到攻击时广播伤害并更新主人面板。
 	 * On being attacked, broadcasts damage and updates the master's panel.
-	 *
 	 * @param creature 攻击者 / attacker
 	 * @param skillId 技能 ID / skill id
 	 * @param type 伤害类型 / damage type
@@ -185,7 +174,6 @@ public class SummonController extends CreatureController<Summon> {
 	/**
 	 * 召唤物死亡时解除召唤，并可能将仇恨转给主人。
 	 * On summon death, releases the summon and may transfer hate to the master.
-	 *
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 */
 	@Override
@@ -209,7 +197,6 @@ public class SummonController extends CreatureController<Summon> {
 	/**
 	 * 使用召唤物技能；成功后可按配置自动解除。
 	 * Uses a summon skill; may auto-release after a successful cast.
-	 *
 	 * @param skillId skill id
 	 * @param target skill target
 	 */
@@ -268,7 +255,6 @@ public class SummonController extends CreatureController<Summon> {
 	/**
 	 * 获取召唤物主人。
 	 * Gets the summon's master.
-	 *
 	 * master player
 	 */
 	protected Player getMaster() {

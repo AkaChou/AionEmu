@@ -772,7 +772,6 @@ public sealed interface QuestEvent permits QuestEvent.TalkToNpc, QuestEvent.Kill
 	 * 兼容不同客户端版本用于同一交付检查的 HACTION_CHECK_USER_HAS_QUEST_ITEM(39)
 	 * 与 HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE(20002)。该匹配仅补齐缺失动作，
 	 * 不改变编译期冲突检测或显式定义。
-	 *
 	 * Treats HACTION_CHECK_USER_HAS_QUEST_ITEM(39) and
 	 * HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE(20002), used by different client
 	 * revisions for the same turn-in check, as runtime aliases. This matching only

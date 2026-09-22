@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 玩家对目标对象施放使用动作（采集、交互进度等）的服务端包。
  * Server packet for a player using a target object (gathering, interaction progress, etc.).
- *
  * @author ATracer
  */
 public class SM_USE_OBJECT extends AionServerPacket {

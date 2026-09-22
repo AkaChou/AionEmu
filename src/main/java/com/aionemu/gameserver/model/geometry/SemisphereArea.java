@@ -6,7 +6,6 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 /**
  * 半球区域，用于几何相关逻辑。
  * Semisphere Area for geometry logic.
- *
  * @author Rolandas
  */
 public class SemisphereArea extends SphereArea {

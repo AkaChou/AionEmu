@@ -19,7 +19,6 @@ import lombok.Getter;
 /**
  * GM 指令：为目标玩家添加属性加成（Stat bonus）。
  * GM command handler that applies a temporary attribute/stat bonus to the target player.
- *
  * @author Encom
  */
 public class CmdAttrBonus extends AbstractGMHandler implements StatOwner {
@@ -27,7 +26,6 @@ public class CmdAttrBonus extends AbstractGMHandler implements StatOwner {
 	/**
 	 * 创建处理器并立即应用属性加成。
 	 * Creates the handler and immediately applies the attribute bonus.
-	 *
 	 * @param admin 执行指令的管理员 / the admin executing the command
 	 * @param params 属性名与数值（如 {@code SPEED 50}） / attribute name and value (e.g. {@code SPEED 50})
 	 */

@@ -13,7 +13,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 法术攻击吸血/吸魔瞬发：造成魔法伤害并按比例回复施法者 HP/MP。
  * Instant spell attack with drain: deals magical damage and restores effector HP/MP by percent.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)

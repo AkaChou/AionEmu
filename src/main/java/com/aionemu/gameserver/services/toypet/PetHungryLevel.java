@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 宠物饥饿等级。
  * Pet hunger level.
- *
  * @author Rolandas
  */
 @Getter
@@ -22,7 +21,6 @@ public enum PetHungryLevel {
 	/**
 	 * 返回等级对应的数值。
 	 * Returns the numeric value of this level.
-	 *
 	 * Level value
 	 */
 	private final byte value;
@@ -34,7 +32,6 @@ public enum PetHungryLevel {
 	/**
 	 * 返回下一饥饿等级；已满时回到饥饿。
 	 * Returns the next hunger level; wraps from full back to hungry.
-	 *
 	 * Next level
 	 */
 	public PetHungryLevel getNextValue() {
@@ -51,7 +48,6 @@ public enum PetHungryLevel {
 	/**
 	 * 按数值解析饥饿等级。
 	 * Resolve hunger level by numeric id.
-	 *
 	 * @param value 等级数值 / Level value
 	 * @return 对应枚举常量 / Matching enum constant
 	 */

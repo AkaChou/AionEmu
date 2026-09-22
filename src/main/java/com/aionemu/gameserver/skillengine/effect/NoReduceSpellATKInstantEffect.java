@@ -12,7 +12,6 @@ import lombok.Getter;
 /**
  * 不可减免的瞬时法术攻击：按配置直接结算魔法伤害（可百分比）。
  * Non-reducible instant spell attack: settles magic damage as configured (optional percent).
- *
  * @author Sippolo
  */
 @Getter

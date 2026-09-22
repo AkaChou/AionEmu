@@ -41,7 +41,6 @@ public class LandingData {
 	/**
 	 * 返回已加载的登陆据点数量。
 	 * Returns the number of loaded landing locations.
-	 *
 	 * @return 已加载的着陆点数量 / Returns the number of loaded landing locations.
 	 */
 	public int size() {
@@ -51,7 +50,6 @@ public class LandingData {
 	/**
 	 * 返回全部登陆据点映射。
 	 * Returns the full landing location map.
-	 *
 	 * @return ID 到地点的映射 / map of id to location
 	 */
 	public Map<Integer, LandingLocation> getLandingLocations() {

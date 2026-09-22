@@ -15,9 +15,7 @@ import java.sql.SQLException;
 /**
  * 玩家惩罚 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerPunishmentsDAO.
- *
  * Updated for MySQL 8 - Fixed connection leaks.
- *
  * @author lord_rex, Cura, nrg
  */
 @Slf4j
@@ -36,7 +34,6 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 	/**
 	 * 加载玩家惩罚数据。
 	 * Loads player punishments.
-	 *
 	 * @param player 玩家 / player
 	 * @param punishmentType 惩罚类型 / punishment type
 	 */
@@ -65,7 +62,6 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 	/**
 	 * 保存玩家惩罚数据。
 	 * Stores player punishments.
-	 *
 	 * @param player 玩家 / player
 	 * @param punishmentType 惩罚类型 / punishment type
 	 */
@@ -90,7 +86,6 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 	/**
 	 * 惩罚指定玩家。
 	 * Punishes a player by id.
-	 *
 	 * @param playerId 玩家 ID / player id
 	 * @param punishmentType 惩罚类型 / punishment type
 	 * @param duration 秒数时长 / duration in seconds
@@ -115,7 +110,6 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 	/**
 	 * 惩罚玩家（基于当前计时器）。
 	 * Punishes a player based on current timers.
-	 *
 	 * @param player 玩家 / player
 	 * @param punishmentType 惩罚类型 / punishment type
 	 * @param reason 原因 / reason
@@ -132,7 +126,6 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 	/**
 	 * 解除玩家惩罚。
 	 * Unpunishes a player.
-	 *
 	 * @param playerId 玩家 ID / player id
 	 * @param punishmentType 惩罚类型 / punishment type
 	 */
@@ -152,7 +145,6 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 	/**
 	 * 获取角色封禁信息。
 	 * Gets character ban info.
-	 *
 	 * @param playerId 玩家 ID / player id
 	 * @return 封禁信息 / ban info
 	 */
@@ -180,7 +172,6 @@ public class PlayerPunishmentsDAO extends com.aionemu.gameserver.dao.PlayerPunis
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
-	 *
 	 * @param database 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version

@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 兑换（以旧换新）物品模板：物品与价格。
  * Tradein item template: item and price.
- *
  * @author MrPoke
  */
 @Getter

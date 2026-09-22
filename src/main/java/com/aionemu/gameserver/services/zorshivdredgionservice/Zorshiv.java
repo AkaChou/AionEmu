@@ -6,7 +6,6 @@ import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionStateType;
 /**
  * 佐尔希夫挖掘舰默认实现：切入 LANDING / 回到 PEACE。
  * Default Zorshiv implementation switching to LANDING / back to PEACE.
- *
  * @author Rinzler (Encom)
  */
 public class Zorshiv extends ZorshivDredgion<ZorshivDredgionLocation> {
@@ -14,7 +13,6 @@ public class Zorshiv extends ZorshivDredgion<ZorshivDredgionLocation> {
 	/**
 	 * 绑定挖掘舰地点。
 	 * Binds the dredgion location.
-	 *
 	 * @param zorshivDredgion 挖掘舰地点 / dredgion location
 	 */
 	public Zorshiv(ZorshivDredgionLocation zorshivDredgion) {

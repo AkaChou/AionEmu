@@ -13,7 +13,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 法术攻击吸血/吸魔持续效果：周期性魔法伤害并按比例回复施法者。
  * Over-time spell attack with drain: periodic magical damage that heals the effector by percent.
- *
  * @author Sippolo
 @author kecimis
  */

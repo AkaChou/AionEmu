@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Norsvold 区域 NPC AI：Rejuvinating Wave Wave Tauric（@AIName "rejuvinating_wave_wave_tauric"），继承 AggressiveNpcAI2。
  * Norsvold zone NPC AI: Rejuvinating Wave Wave Tauric (@AIName "rejuvinating_wave_wave_tauric"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("rejuvinating_wave_wave_tauric")

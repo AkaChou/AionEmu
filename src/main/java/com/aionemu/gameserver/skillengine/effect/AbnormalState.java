@@ -28,8 +28,6 @@ public enum AbnormalState {
 	/**
 	 * 获取异常状态 ID（位掩码值）。
 	 * Returns the abnormal state id (bit-mask value).
-	 *
-	 * @return 状态 ID / state id
 	 */
 	private final int id;
 
@@ -40,7 +38,6 @@ public enum AbnormalState {
 	/**
 	 * 按枚举名查找异常状态。
 	 * Looks up an abnormal state by enum name.
-	 *
 	 * @param name 状态名称 / state name
 	 * @return 匹配的状态，未找到返回 null / matching state, or null if not found
 	 */
@@ -56,7 +53,6 @@ public enum AbnormalState {
 	/**
 	 * 按 ID 查找异常状态。
 	 * Looks up an abnormal state by id.
-	 *
 	 * @param id 状态 ID / state id
 	 * @return 匹配的状态，未找到返回 null / matching state, or null if not found
 	 */

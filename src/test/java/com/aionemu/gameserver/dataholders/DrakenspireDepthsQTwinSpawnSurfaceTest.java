@@ -17,7 +17,6 @@ import org.w3c.dom.NodeList;
 /**
  * 龙脊深渊任务副本双生守护者的真端出生面闸门。
  * Gate for the Drakenspire Depths quest-instance twin protector spawn surface.
- *
  * <p>背景：任务副本 301520000 曾经在真端出生面（531.088501 / 530.858398 的守护者之泉位置）之外，
  * 残留一对手写的旧出生点（545.58734 / 545.7349，来自非任务副本的 Lv2 形态布局），
  * 导致 237228（Lava Protector）与 237229（Heatvent Protector）各自刷出 2 个。

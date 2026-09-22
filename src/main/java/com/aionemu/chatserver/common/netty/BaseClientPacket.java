@@ -19,7 +19,6 @@ public abstract class BaseClientPacket extends AbstractPacket {
     /**
      * 使用读取器与操作码创建客户端包。
      * Creates a client packet with the given reader and opcode.
-     *
      * @param packetReader 数据包读取器 / Packet reader
      * @param opCode 操作码 / Opcode
      */
@@ -31,7 +30,6 @@ public abstract class BaseClientPacket extends AbstractPacket {
     /**
      * 返回缓冲区中剩余可读字节数。
      * Returns the number of remaining readable bytes in the buffer.
-     *
      * @return 剩余字节数 / Remaining bytes
      */
     public int getRemainingBytes() {
@@ -41,7 +39,6 @@ public abstract class BaseClientPacket extends AbstractPacket {
     /**
      * 执行数据包读取。
      * Performs packet reading.
-     *
      * @return 是否读取成功 / Whether reading succeeded
      */
     public boolean read() {
@@ -85,7 +82,6 @@ public abstract class BaseClientPacket extends AbstractPacket {
     /**
      * 从缓冲区读取 int。
      * Reads an int from this packet buffer.
-     *
      * @return 整数值，失败时返回 0 / Integer value, or 0 on failure
      */
     protected final int readD() {
@@ -100,7 +96,6 @@ public abstract class BaseClientPacket extends AbstractPacket {
     /**
      * 从缓冲区读取 byte（无符号）。
      * Reads a byte from this packet buffer.
-     *
      * @return 字节值，失败时返回 0 / Byte value, or 0 on failure
      */
     protected final int readC() {
@@ -115,7 +110,6 @@ public abstract class BaseClientPacket extends AbstractPacket {
     /**
      * 从缓冲区读取 short（无符号）。
      * Reads a short from this packet buffer.
-     *
      * @return 短整数值，失败时返回 0 / Short value, or 0 on failure
      */
     protected final int readH() {
@@ -130,7 +124,6 @@ public abstract class BaseClientPacket extends AbstractPacket {
     /**
      * 从缓冲区读取 double。
      * Reads a double from this packet buffer.
-     *
      * @return 双精度值，失败时返回 0 / Double value, or 0 on failure
      */
     protected final double readDF() {
@@ -145,7 +138,6 @@ public abstract class BaseClientPacket extends AbstractPacket {
     /**
      * 从缓冲区读取 float。
      * Reads a float from this packet buffer.
-     *
      * @return 单精度值，失败时返回 0 / Float value, or 0 on failure
      */
     protected final float readF() {
@@ -160,7 +152,6 @@ public abstract class BaseClientPacket extends AbstractPacket {
     /**
      * 从缓冲区读取 long。
      * Reads a long from this packet buffer.
-     *
      * @return 长整数值，失败时返回 0 / Long value, or 0 on failure
      */
     protected final long readQ() {
@@ -175,7 +166,6 @@ public abstract class BaseClientPacket extends AbstractPacket {
     /**
      * 从缓冲区读取以 \\0 结尾的字符串。
      * Reads a null-terminated string from this packet buffer.
-     *
      * @return 字符串值 / String value
      */
     protected final String readS() {
@@ -195,7 +185,6 @@ public abstract class BaseClientPacket extends AbstractPacket {
     /**
      * 从缓冲区读取指定长度的字节数组。
      * Reads n bytes from this packet buffer, where n is length.
-     *
      * @param length 要读取的字节数 / Number of bytes to read
      * @return 字节数组 / Byte array
      */

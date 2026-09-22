@@ -15,7 +15,6 @@ import lombok.Getter;
 /**
  * 守护灵游戏对象。
  * Minion game object.
- *
  * @author Falke_34
  */
 @Getter

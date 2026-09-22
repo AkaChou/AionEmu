@@ -28,7 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 可热重载静态数据基类，提供 Schema 加载与 XML 文件枚举辅助。
  * Abstract base for reloadable static data, providing Schema loading and XML file listing helpers.
- *
  * @author ViAl
  */
 @Slf4j(access = AccessLevel.PROTECTED)
@@ -37,7 +36,6 @@ public abstract class ReloadableData {
 	/**
 	 * 由管理员触发，重新加载本数据容器。
 	 * Reloads this data holder, triggered by an admin.
-	 *
 	 * @param admin 发起重载的管理员 / admin who requested the reload
 	 */
 	public abstract void reload(Player admin);
@@ -45,7 +43,6 @@ public abstract class ReloadableData {
 	/**
 	 * 返回当前持有的数据列表（子类实现）。
 	 * Returns the currently held data list (implemented by subclasses).
-	 *
 	 * @return 当前持有的数据列表（由子类实现） / Returns the currently held data list (implemented by subclasses).
 	 */
 	protected abstract List<?> getData();
@@ -53,7 +50,6 @@ public abstract class ReloadableData {
 	/**
 	 * 用新列表替换当前数据（子类实现）。
 	 * Replaces the current data with the given list (implemented by subclasses).
-	 *
 	 * @param data 新数据列表 / new data list
 	 */
 	protected abstract void setData(List<?> data);
@@ -61,7 +57,6 @@ public abstract class ReloadableData {
 	/**
 	 * 按路径加载 XML Schema。
 	 * Loads an XML Schema from the given path.
-	 *
 	 * @param xml_schema Schema 文件相对路径 / schema file relative path
 	 * @return Schema 实例 / schema instance
 	 */
@@ -79,7 +74,6 @@ public abstract class ReloadableData {
 	/**
 	 * 枚举目录下可见的 .xml 文件，忽略以 new 开头的文件与隐藏文件。
 	 * Lists visible .xml files under the root, ignoring files prefixed with "new" and hidden files.
-	 *
 	 * @param root 根目录 / root directory
 	 * @param recursive 是否递归子目录 / whether to recurse into subdirectories
 	 * @return 匹配的文件集合 / matching file collection

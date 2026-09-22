@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * ID Event Def 副本 NPC AI：IDEVENT Def SW Prototype 01a（@AIName "IDEVENT_Def_SWPrototype_01a"），继承 NpcAI2。
  * ID Event Def instance NPC AI: IDEVENT Def SW Prototype 01a (@AIName "IDEVENT_Def_SWPrototype_01a"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("IDEVENT_Def_SWPrototype_01a")

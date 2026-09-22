@@ -47,7 +47,6 @@ public class GameHousingRuntimeBridge {
     /**
      * 可选注入房屋竞拍服务提供者。
      * Optionally inject the housing-bid service provider.
-     *
      * @param housingBidServiceProvider 房屋竞拍服务提供者 / Housing-bid service provider
      */
     @Autowired(required = false)
@@ -58,7 +57,6 @@ public class GameHousingRuntimeBridge {
     /**
      * 可选注入房屋维护任务提供者。
      * Optionally inject the maintenance-task provider.
-     *
      * @param maintenanceTaskProvider 房屋维护任务提供者 / Maintenance-task provider
      */
     @Autowired(required = false)
@@ -69,7 +67,6 @@ public class GameHousingRuntimeBridge {
     /**
      * 可选注入城镇服务提供者。
      * Optionally inject the town-service provider.
-     *
      * @param townServiceProvider 城镇服务提供者 / Town-service provider
      */
     @Autowired(required = false)
@@ -80,7 +77,6 @@ public class GameHousingRuntimeBridge {
     /**
      * 可选注入房屋服务提供者。
      * Optionally inject the housing-service provider.
-     *
      * @param housingServiceProvider 房屋服务提供者 / Housing-service provider
      */
     @Autowired(required = false)
@@ -91,7 +87,6 @@ public class GameHousingRuntimeBridge {
     /**
      * 可选注入挑战任务服务提供者。
      * Optionally inject the challenge-task service provider.
-     *
      * @param challengeTaskServiceProvider 挑战任务服务提供者 / Challenge-task service provider
      */
     @Autowired(required = false)
@@ -110,7 +105,6 @@ public class GameHousingRuntimeBridge {
     /**
      * 解析房屋竞拍服务。
      * Resolve the housing-bid service.
-     *
      * @return 房屋竞拍服务 / Housing-bid service
      */
     public HousingBidService housingBidService() {
@@ -123,7 +117,6 @@ public class GameHousingRuntimeBridge {
     /**
      * 解析房屋维护任务。
      * Resolve the maintenance task.
-     *
      * @return 房屋维护任务 / Maintenance task
      */
     public MaintenanceTask maintenanceTask() {
@@ -136,7 +129,6 @@ public class GameHousingRuntimeBridge {
     /**
      * 解析城镇服务。
      * Resolve the town service.
-     *
      * @return 城镇服务 / Town service
      */
     public TownService townService() {
@@ -149,7 +141,6 @@ public class GameHousingRuntimeBridge {
     /**
      * 解析房屋服务。
      * Resolve the housing service.
-     *
      * @return 房屋服务 / Housing service
      */
     public HousingService housingService() {
@@ -162,7 +153,6 @@ public class GameHousingRuntimeBridge {
     /**
      * 解析挑战任务服务。
      * Resolve the challenge-task service.
-     *
      * @return 挑战任务服务 / Challenge-task service
      */
     public ChallengeTaskService challengeTaskService() {

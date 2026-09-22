@@ -8,7 +8,6 @@ import java.nio.ByteBuffer;
 /**
  * 客户端从游戏服重连登录服时的会话恢复包。
  * Client packet to restore session when reconnecting from game server to login server.
- *
  * @author -Nemesiss-
  */
 public class CM_UPDATE_SESSION extends AionClientPacket {
@@ -32,7 +31,6 @@ public class CM_UPDATE_SESSION extends AionClientPacket {
     /**
      * 构造 CM_UPDATE_SESSION 包。
      * Construct CM_UPDATE_SESSION packet.
-     *
      * @param buf 包体数据 / Packet data
      * @param client 登录连接 / Login connection
      */

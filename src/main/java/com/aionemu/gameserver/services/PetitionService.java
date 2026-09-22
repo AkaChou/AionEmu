@@ -23,7 +23,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 客服请愿（Petition）服务，管理工单注册、回复与排队。
  * Support petition service managing ticket registration, reply, and queueing.
- *
  * @author zdead
  */
 @Slf4j
@@ -36,11 +35,9 @@ public class PetitionService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -59,7 +56,6 @@ public class PetitionService {
 	/**
 	 * 注入 Spring 实例提供者。
 	 * Injects the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<PetitionService> instanceProvider) {
@@ -84,7 +80,6 @@ public class PetitionService {
 	/**
 	 * 返回当前已注册请愿的快照集合。
 	 * Returns a snapshot collection of currently registered petitions.
-	 *
 	 * petition collection
 	 */
 	public Collection<Petition> getRegisteredPetitions() {
@@ -94,7 +89,6 @@ public class PetitionService {
 	/**
 	 * 删除指定玩家的全部请愿并通知客户端。
 	 * Deletes all petitions for the given player and notifies the client.
-	 *
 	 * @param playerObjId player object id
 	 */
 	public void deletePetition(int playerObjId) {
@@ -118,7 +112,6 @@ public class PetitionService {
 	/**
 	 * 标记请愿已回复并从队列移除。
 	 * Marks a petition as replied and removes it from the queue.
-	 *
 	 * @param petitionId petition id
 	 */
 	public void setPetitionReplied(int petitionId) {
@@ -135,7 +128,6 @@ public class PetitionService {
 	/**
 	 * 注册新请愿并通知在线 GM。
 	 * Registers a new petition and notifies online GMs.
-	 *
 	 * sender
 	 * type id
 	 * title
@@ -169,7 +161,6 @@ public class PetitionService {
 	/**
 	 * 向在线 GM 广播新请愿通知。
 	 * Broadcasts a new-petition notice to online GMs.
-	 *
 	 * @param sender sender
 	 * @param petitionId petition id
 	 */
@@ -187,7 +178,6 @@ public class PetitionService {
 	/**
 	 * 判断玩家是否已有注册请愿。
 	 * Checks whether the player already has a registered petition.
-	 *
 	 * 玩家 / player
 	 * whether registered
 	 */
@@ -198,7 +188,6 @@ public class PetitionService {
 	/**
 	 * 判断玩家对象 ID 是否已有注册请愿。
 	 * Checks whether the player object id already has a registered petition.
-	 *
 	 * player object id
 	 * whether registered
 	 */
@@ -216,10 +205,7 @@ public class PetitionService {
 	/**
 	 * 获取玩家当前请愿。
 	 * Returns the player's current petition.
-	 *
 	 * player object id
-	 *
-	 * @param playerObjId
 	 * @return 请愿，不存在为 null / petition, or null if none
 	 */
 	public Petition getPetition(int playerObjId) {
@@ -234,7 +220,6 @@ public class PetitionService {
 	/**
 	 * 获取下一个可用请愿 ID（当前实现固定返回 0）。
 	 * Returns the next available petition id (current implementation always returns 0).
-	 *
 	 * petition id
 	 */
 	public synchronized int getNextAvailablePetitionId() {
@@ -244,7 +229,6 @@ public class PetitionService {
 	/**
 	 * 计算该玩家前方排队人数。
 	 * Counts how many petitioners are waiting ahead of this player.
-	 *
 	 * player object id
 	 * waiting count ahead
 	 */
@@ -262,10 +246,7 @@ public class PetitionService {
 	/**
 	 * 估算该玩家的等待时间（分钟相关单位）。
 	 * Estimates wait time for the player (time units related to minutes).
-	 *
 	 * player object id
-	 *
-	 * @param playerObjId
 	 * @return 估算等待时间 / estimated wait time
 	 */
 	public int calculateWaitTime(int playerObjId) {
@@ -285,7 +266,6 @@ public class PetitionService {
 	/**
 	 * 玩家登录时若有请愿则下发状态包。
 	 * On player login, sends petition status packet if one is registered.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onPlayerLogin(Player player) {

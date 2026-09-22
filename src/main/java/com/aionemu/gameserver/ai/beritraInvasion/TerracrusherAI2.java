@@ -18,7 +18,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 贝里特拉入侵相关 NPC AI：Terracrusher（@AIName "terracrusher"），继承 AggressiveNpcAI2。
  * Beritra-invasion related NPC AI: Terracrusher (@AIName "terracrusher"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("terracrusher")

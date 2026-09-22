@@ -15,7 +15,6 @@ import java.util.concurrent.Future;
 /**
  * Sauro Supply Base 副本 NPC AI：Research Teselik（@AIName "research_teselik"），继承 AggressiveNpcAI2。
  * Sauro Supply Base instance NPC AI: Research Teselik (@AIName "research_teselik"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("research_teselik")

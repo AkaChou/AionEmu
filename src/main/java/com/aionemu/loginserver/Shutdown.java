@@ -21,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 登录服关闭钩子：有序关闭网络、线程池与数据库。
  * LoginServer shutdown hook: orderly stop of network, pools and database.
- *
  * @author -Nemesiss-, nrg
  */
 @Slf4j
@@ -33,9 +32,7 @@ public class Shutdown extends Thread {
      * -- GETTER --
      *  获取关闭钩子单例（需外部注册到 Runtime）。
      *  Get the shutdown-hook singleton (must be registered externally).
-     *
-     * @return 关闭钩子实例 / Shutdown hook instance
-
+     * 关闭钩子实例 / Shutdown hook instance
      */
     @Getter
     private static final Shutdown instance = new Shutdown();
@@ -49,7 +46,6 @@ public class Shutdown extends Thread {
     /**
      * 设置是否仅重启。
      * Set whether to restart only.
-     *
      * @param restartOnly 仅重启则为 true / true for restart only
      */
     public void setRestartOnly(boolean restartOnly) {
@@ -68,7 +64,6 @@ public class Shutdown extends Thread {
     /**
      * 有序关闭登录服资源。
      * Orderly shut down LoginServer resources.
-     *
      * @param haltJvm 是否在结束后 halt JVM / Whether to halt JVM afterwards
      */
     public void shutdown(boolean haltJvm) {

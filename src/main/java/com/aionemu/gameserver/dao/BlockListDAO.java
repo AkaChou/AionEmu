@@ -7,7 +7,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * 负责保存与加载玩家黑名单数据。
  * Responsible for saving and loading data on players' block lists.
- *
  * @author Ben
  */
 public abstract class BlockListDAO implements DAO {
@@ -15,7 +14,6 @@ public abstract class BlockListDAO implements DAO {
 	/**
 	 * 加载指定玩家的黑名单。
 	 * Loads the blocklist for the given player.
-	 *
 	 * @param player 玩家 / player
 	 * @return 屏蔽名单 / block list
 	 */
@@ -24,7 +22,6 @@ public abstract class BlockListDAO implements DAO {
 	/**
 	 * 将目标对象 ID 加入指定玩家的黑名单。
 	 * Adds the given object ID to the list of blocked players for the given player.
-	 *
 	 * @param playerObjId 被编辑黑名单的玩家 ID / ID of player whose blocklist is edited
 	 * @param objIdToBlock 要加入黑名单的玩家 ID / ID of player to add to the blocklist
 	 * @param reason 屏蔽原因 / block reason
@@ -35,7 +32,6 @@ public abstract class BlockListDAO implements DAO {
 	/**
 	 * 从指定玩家的黑名单中删除目标对象 ID。
 	 * Deletes the given object ID from the list of blocked players for the given player.
-	 *
 	 * @param playerObjId 被编辑黑名单的玩家 ID / ID of player whose blocklist is edited
 	 * @param objIdToDelete 要从黑名单移除的玩家 ID / ID of player to remove from the blocklist
 	 * @return 是否成功 / whether successful
@@ -45,7 +41,6 @@ public abstract class BlockListDAO implements DAO {
 	/**
 	 * 设置屏蔽某玩家的原因。
 	 * Sets the reason for blocking a player.
-	 *
 	 * @param playerObjId 被编辑黑名单的玩家对象 ID / object ID of the player whose list is being edited
 	 * @param blockedObjId 被屏蔽玩家的对象 ID / object ID of the player whose reason is being edited
 	 * @param reason 要设置的原因 / the reason to be set
@@ -56,7 +51,6 @@ public abstract class BlockListDAO implements DAO {
 	/**
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier for this DAO.
-	 *
 	 * @return 类名 / class name
 	 */
 	@Override

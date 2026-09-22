@@ -15,7 +15,6 @@ public class AionProcessRuntimeBridge {
     /**
      * 以指定状态码正常退出当前进程。
      * Exit the current process with the given status code.
-     *
      * @param status 退出状态码 / exit status code
      */
     public void exit(int status) {
@@ -25,7 +24,6 @@ public class AionProcessRuntimeBridge {
     /**
      * 以指定状态码强制中止当前进程。
      * Halt the current process with the given status code.
-     *
      * @param status 中止状态码 / halt status code
      */
     public void halt(int status) {

@@ -8,7 +8,6 @@ import com.aionemu.gameserver.world.WorldPosition;
 /**
  * Theobomos 区域 NPC AI：Flame Eternal（@AIName "flame_eternal"），继承 NpcAI2。
  * Theobomos zone NPC AI: Flame Eternal (@AIName "flame_eternal"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("flame_eternal")

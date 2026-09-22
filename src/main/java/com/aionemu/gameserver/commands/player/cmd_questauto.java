@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：将白名单内进行中的任务直接设为可领奖。
  * Player command: sets a whitelisted in-progress quest directly to reward status.
- *
  * @author ATracer
  */
 public class cmd_questauto extends PlayerCommand {
@@ -34,7 +33,6 @@ public class cmd_questauto extends PlayerCommand {
 	/**
 	 * 若任务在支持列表且处于 START，则切换为 REWARD 并同步客户端。
 	 * If the quest is supported and START, switches it to REWARD and syncs the client.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 任务 ID / quest id
 	 */

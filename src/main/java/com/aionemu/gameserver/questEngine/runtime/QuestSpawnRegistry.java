@@ -14,7 +14,6 @@ import java.util.concurrent.Future;
 /**
  * 领域持有的 quest NPC handle 注册表。
  * Domain-owned registry for quest NPC handles.
- *
  * <p>key = {@code playerId:questId:slot}。slot 由任务编译期常量决定，despawn 只能通过
  * slot 反引用本注册表里 spawn 过的权威 handle；禁止凭 templateId 删任意同类，也禁止把
  * handle/实体状态编码进 quest_vars。任务完成/失败/实例销毁时按 (playerId, questId)
@@ -37,7 +36,6 @@ public final class QuestSpawnRegistry {
 	/**
 	 * 幂等注册：slot 已存在时跳过并返回 false。
 	 * Idempotent register: skips and returns false when the slot already exists.
-	 *
 	 * @return true 表示本次注册成功；false 表示该 slot 已有 handle（跳过，不重复刷怪） / true if registered; false if the slot already has a handle (skipped, no duplicate spawn)
 	 */
 	public boolean register(QuestSnapshot snapshot, String slot, Npc npc) {
@@ -53,7 +51,6 @@ public final class QuestSpawnRegistry {
 	/**
 	 * 权威反引用并删除该 slot 的 NPC（由调用方执行 onDelete）。
 	 * Authoritative dereference and removal of the slot's NPC (caller performs onDelete).
-	 *
 	 * @return 被删除的 handle，或 null 表示该 slot 无 handle / the removed handle, or null if the slot has none
 	 */
 	public Npc remove(QuestSnapshot snapshot, String slot) {
@@ -91,7 +88,6 @@ public final class QuestSpawnRegistry {
 	 * 用新 handle 取代调用方判定为陈旧的旧 handle；并发下保留其他线程已换入的 handle。
 	 * Replaces the handle the caller judged stale while keeping a handle another thread already
 	 * installed for the same slot.
-	 *
 	 * <p>任务 NPC 可能被注册表之外的路径销毁（世界级清理、其他玩家的击杀、实例场景清理）。
 	 * 此时 slot 上残留的 handle 已不能代表世界状态，必须允许后续生成重建；但如果并发执行已经
 	 * 换入了新 handle，则保留对方的权威，避免把刚生成的实体变成无人登记的孤儿。</p>
@@ -99,7 +95,6 @@ public final class QuestSpawnRegistry {
 	 * kill, instance scene teardown). The leftover handle no longer represents the world, so a
 	 * later spawn must be able to rebuild it; if a concurrent execution already installed its own
 	 * handle, that handle stays authoritative so no freshly spawned entity is left untracked.
-	 *
 	 * @param stale 调用方判定为陈旧的既有 handle（必须非 null） / the existing handle the caller judged stale
 	 * @param replacement 本次新生成的 handle / the freshly spawned replacement handle
 	 * @return true 表示新 handle 已成为权威；false 表示已有其他权威 handle（调用方须删除新 handle） /

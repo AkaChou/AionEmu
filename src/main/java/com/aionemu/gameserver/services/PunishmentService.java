@@ -20,7 +20,6 @@ import com.aionemu.gameserver.world.WorldMapType;
 /**
  * 惩罚服务，处理角色封禁、监狱与采集限制（验证码）相关逻辑。
  * Punishment service handling character bans, prison, and gather restrictions (captcha).
- *
  * @author lord_rex, Cura, nrg
  */
 public class PunishmentService {
@@ -28,7 +27,6 @@ public class PunishmentService {
 	/**
 	 * 解除角色封禁。
 	 * Unbans a character.
-	 *
 	 * @param playerId character id
 	 */
 	public static void unbanChar(int playerId) {
@@ -38,7 +36,6 @@ public class PunishmentService {
 	/**
 	 * 封禁角色；若在线则立即踢下线。
 	 * Bans a character and kicks them if currently online.
-	 *
 	 * character id
 	 * @param dayCount 封禁天数，0 表示永久 / ban days; 0 means permanent
 	 * ban reason
@@ -57,7 +54,6 @@ public class PunishmentService {
 	/**
 	 * 将天数换算为剩余秒数时间戳；0 天返回 {@link Integer#MAX_VALUE}。
 	 * Converts day count to remaining seconds; 0 days returns {@link Integer#MAX_VALUE}.
-	 *
 	 * day count
 	 * duration in seconds
 	 */
@@ -74,7 +70,6 @@ public class PunishmentService {
 	/**
 	 * 将玩家送入或放出监狱。
 	 * Sends a player into prison or releases them.
-	 *
 	 * target player
 	 * false 出狱 / true imprison / false release。
 	 * @param delayInMinutes 监禁分钟数 / prison minutes
@@ -115,7 +110,6 @@ public class PunishmentService {
 	/**
 	 * 停止监狱倒计时任务，可选保存剩余时间。
 	 * Stops the prison countdown task, optionally saving remaining time.
-	 *
 	 * target player
 	 * @param save 是否保存剩余计时 / whether to persist remaining timer
 	 */
@@ -136,7 +130,6 @@ public class PunishmentService {
 	/**
 	 * 登录/状态刷新时恢复监狱计时，并确保玩家在监狱地图。
 	 * On login/status refresh, restores prison timer and ensures the player is on a prison map.
-	 *
 	 * @param player target player
 	 */
 	public static void updatePrisonStatus(final Player player) {
@@ -166,7 +159,6 @@ public class PunishmentService {
 	/**
 	 * 调度监狱释放任务。
 	 * Schedules the prison release task.
-	 *
 	 * @param player target player
 	 * @param prisonTimer remaining milliseconds
 	 */
@@ -178,7 +170,6 @@ public class PunishmentService {
 	/**
 	 * 设置或解除采集限制（含验证码流程）。
 	 * Enables or clears gather restriction (including captcha flow).
-	 *
 	 * target player
 	 * @param captchaCount 验证码次数 / captcha attempt count
 	 * @param state true 禁止采集 / false 解除 / true restrict / false clear
@@ -214,7 +205,6 @@ public class PunishmentService {
 	/**
 	 * 停止采集限制任务，可选保存剩余时间。
 	 * Stops the gather-restriction task, optionally saving remaining time.
-	 *
 	 * target player
 	 * @param save 是否保存剩余计时 / whether to persist remaining timer
 	 * @author Cura
@@ -237,7 +227,6 @@ public class PunishmentService {
 	/**
 	 * 登录/状态刷新时恢复采集限制计时。
 	 * On login/status refresh, restores gather-restriction timer.
-	 *
 	 * @param player target player
 	 * @author Cura
 	 */
@@ -255,7 +244,6 @@ public class PunishmentService {
 	/**
 	 * 调度采集限制解除任务。
 	 * Schedules the gather-restriction release task.
-	 *
 	 * @param player target player
 	 * @param gatherableTimer remaining milliseconds
 	 * @author Cura
@@ -268,7 +256,6 @@ public class PunishmentService {
 	/**
 	 * 惩罚类型枚举。
 	 * Punishment type enum.
-	 *
 	 * @author Cura
 	 */
 	public enum PunishmentType {

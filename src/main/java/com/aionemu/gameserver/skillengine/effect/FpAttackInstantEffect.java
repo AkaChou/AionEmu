@@ -11,7 +11,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 飞行点瞬时削减效果：立即扣除目标 FP。
  * Instant FP attack effect: immediately reduces the target's flight points.
- *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)

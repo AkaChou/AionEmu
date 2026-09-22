@@ -46,7 +46,6 @@ import lombok.Setter;
 /**
  * 世界地图实例：区域划分与对象管理。
  * World map instance: region partitioning and object management.
- *
  * @author -Nemesiss-
  */
 @Getter
@@ -80,7 +79,6 @@ public abstract class WorldMapInstance {
 	 * 可见对象扫描缓存：对象表未变化时复用同一数组，避免每次实例广播都整表复制。
 	 * Cached visible-object scan array: reused while the object table is unchanged, so an instance-wide
 	 * broadcast does not copy the whole table every time.
-	 *
 	 * <p>数组只在 {@link #worldMapObjects} 的监视器内重建，对象表的每次增删都会清空缓存，因此语义与
 	 * 「每次锁内重新复制」一致：调用方拿到的仍是某个真实表状态的完整快照，变化后不会被继续沿用。
 	 * The array is only rebuilt under the {@link #worldMapObjects} monitor and every insert/removal clears the
@@ -129,7 +127,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 构造地图实例并初始化区域。
 	 * Construct a map instance and initialize regions.
-	 *
 	 * @param parent 父级世界地图 / parent world map
 	 * @param instanceId 实例 ID / instance id
 	 */
@@ -143,7 +140,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 返回世界地图 ID。
 	 * Return the world map id.
-	 *
 	 * @return 地图 ID / the map id
 	 */
 	public Integer getMapId() {
@@ -153,7 +149,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 返回地图模板。
 	 * Return the map template.
-	 *
 	 * @return 地图模板 / the map template
 	 */
 	public WorldMapTemplate getTemplate() {
@@ -163,7 +158,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 返回包含对象坐标的区域；不存在时由子类创建。
 	 * Return the region covering the object; subclasses may create missing regions.
-	 *
 	 * @param object 可见对象 / the visible object
 	 * @return 地图区域 / the map region
 	 */
@@ -174,7 +168,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 返回包含给定坐标的区域。
 	 * Return the region covering the given coordinates.
-	 *
 	 * @param x 坐标 X / X coordinate
 	 * @param y 坐标 Y / Y coordinate
 	 * @param z 坐标 Z / Z coordinate
@@ -185,7 +178,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 创建区域并建立邻接。
 	 * Create a region and wire neighbours.
-	 *
 	 * @param regionId 区域 ID / the region id
 	 * @return 新建的区域 / the newly created region
 	 */
@@ -200,7 +192,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 是否个人实例。
 	 * Whether this is a personal instance.
-	 *
 	 * @return 个人实例为 true / true if personal
 	 */
 	public abstract boolean isPersonal();
@@ -208,7 +199,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 个人实例所有者 ID。
 	 * Personal-instance owner id.
-	 *
 	 * @return 所有者 ID / the owner id
 	 */
 	public abstract int getOwnerId();
@@ -216,7 +206,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 返回所属世界。
 	 * Return the owning world.
-	 *
 	 * @return 所属世界 / the owning world
 	 */
 	public World getWorld() {
@@ -226,7 +215,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 将对象加入本实例（含任务 ID 与玩家表）。
 	 * Add an object into this instance (including quest ids and player table).
-	 *
 	 * @param object 可见对象 / the visible object
 	 */
 	public void addObject(VisibleObject object) {
@@ -262,7 +250,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 加入可见对象表；重复 objectId 抛异常。
 	 * Add to visible-object table; throws on duplicate objectId.
-	 *
 	 * @param object 可见对象 / the visible object
 	 */
 	private void addVisibleObject(VisibleObject object) {
@@ -280,7 +267,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 从可见对象表移除对象并使扫描缓存失效。
 	 * Removes an object from the visible-object table and invalidates the scan cache.
-	 *
 	 * @param objectId 对象 ID / object id
 	 */
 	private void removeVisibleObject(int objectId) {
@@ -293,7 +279,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 从 NPC 任务数据追加任务 ID。
 	 * Append quest ids from NPC quest data.
-	 *
 	 * @param object 可见对象 / the visible object
 	 * @return 本次新增的任务 ID / newly added quest ids
 	 */
@@ -320,7 +305,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 回滚刚加入的任务 ID。
 	 * Roll back newly added quest ids.
-	 *
 	 * @param addedQuestIds 需回滚的任务 ID / the ids to remove
 	 */
 	private void removeQuestIds(List<Integer> addedQuestIds) {
@@ -335,7 +319,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 从本实例移除对象。
 	 * Remove an object from this instance.
-	 *
 	 * @param object 对象 / the aion object
 	 */
 	public void removeObject(AionObject object) {
@@ -352,7 +335,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 按 NPC 模板 ID 查找首个 NPC。
 	 * Find the first NPC by template id.
-	 *
 	 * @param npcId NPC 模板 ID / the NPC template id
 	 * @return NPC 或 null / the NPC or null
 	 */
@@ -371,7 +353,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 本实例内全部玩家列表。
 	 * List of all players inside this instance.
-	 *
 	 * @return 玩家列表 / the player list
 	 */
 	public List<Player> getPlayersInside() {
@@ -386,7 +367,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 按 NPC 模板 ID 查找全部 NPC。
 	 * Find all NPCs with the given template id.
-	 *
 	 * @param npcId NPC 模板 ID / the NPC template id
 	 * @return 匹配的 NPC 列表 / the NPC list
 	 */
@@ -406,7 +386,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 本实例内全部 NPC。
 	 * All NPCs in this instance.
-	 *
 	 * @return 全部 NPC 列表 / the NPC list
 	 */
 	public List<Npc> getNpcs() {
@@ -425,7 +404,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 本实例内静态门（entityId → 门）。
 	 * Static doors in this instance (entityId → door).
-	 *
 	 * @return 门映射 / the door map
 	 */
 	public Map<Integer, StaticDoor> getDoors() {
@@ -442,7 +420,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 指定创建者的陷阱列表。
 	 * Traps created by the given creature.
-	 *
 	 * @param p 创建者 / creator
 	 * @return 陷阱列表 / the trap list
 	 */
@@ -462,7 +439,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 是否新手分流实例（instanceId 超过 twinCount）。
 	 * Whether this is a beginner overflow instance (id above twinCount).
-	 *
 	 * @return 新手实例为 true / true if beginner instance
 	 */
 	public final boolean isBeginnerInstance() {
@@ -482,7 +458,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 玩家是否在本实例内。
 	 * Whether a player is inside this instance.
-	 *
 	 * @param objId 玩家对象 ID / the player objectId
 	 * @return 若 inside 则为 true / true if inside
 	 */
@@ -493,7 +468,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 可见对象迭代器。
 	 * Iterator over visible objects.
-	 *
 	 * @return 可见对象迭代器 / the iterator
 	 */
 	public Iterator<VisibleObject> objectIterator() {
@@ -503,7 +477,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 玩家迭代器。
 	 * Iterator over players.
-	 *
 	 * @return 玩家迭代器 / the iterator
 	 */
 	public Iterator<Player> playerIterator() {
@@ -513,7 +486,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 注册玩家队伍。
 	 * Register a player group.
-	 *
 	 * @param group 玩家队伍 / the player group
 	 */
 	public void registerGroup(PlayerGroup group) {
@@ -524,7 +496,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 注册玩家联盟。
 	 * Register a player alliance.
-	 *
 	 * @param group 玩家联盟 / the player alliance
 	 */
 	public void registerGroup(PlayerAlliance group) {
@@ -535,7 +506,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 注册军团联盟。
 	 * Register a league.
-	 *
 	 * @param group 军团联盟 / league
 	 */
 	public void registerGroup(League group) {
@@ -546,7 +516,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 注册对象 ID。
 	 * Register an object id.
-	 *
 	 * @param objectId 对象 ID / the object id
 	 */
 	public void register(int objectId) {
@@ -556,7 +525,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 对象 ID 是否已注册。
 	 * Whether the object id is registered.
-	 *
 	 * @param objectId 对象 ID / the object id
 	 * @return 已注册返回 true / true if registered
 	 */
@@ -567,7 +535,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 本实例玩家数量。
 	 * Player count in this instance.
-	 *
 	 * @return 玩家数量 / the count
 	 */
 	public int playersCount() {
@@ -577,7 +544,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 本实例相关任务 ID 只读列表。
 	 * Read-only list of quest ids related to this instance.
-	 *
 	 * @return 任务 ID 列表 / the quest id list
 	 */
 	public List<Integer> getQuestIds() {
@@ -589,7 +555,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 返回副本处理器。
 	 * Return the instance handler.
-	 *
 	 * @return 副本处理器 / the instance handler
 	 */
 	public final InstanceHandler getInstanceHandler() {
@@ -599,7 +564,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 设置副本处理器。
 	 * Set the instance handler.
-	 *
 	 * @param instanceHandler 副本处理器 / the instance handler
 	 */
 	public final void setInstanceHandler(InstanceHandler instanceHandler) {
@@ -609,7 +573,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 按 objectId 查找玩家。
 	 * Find a player by objectId.
-	 *
 	 * @param object 玩家对象 ID / the player objectId
 	 * @return 玩家或 null / the player or null
 	 */
@@ -625,7 +588,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 对全部玩家执行访问者。
 	 * Visit all players.
-	 *
 	 * @param visitor 玩家访问者 / the player visitor
 	 */
 	public void doOnAllPlayers(Visitor<Player> visitor) {
@@ -643,7 +605,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 对全部 NPC 执行访问者：先在锁内取一次数组快照，再在锁外访问，避免构造中间集合。
 	 * Visits all NPCs: one array snapshot is taken under the map lock and visited outside it, so no intermediate collection is built.
-	 *
 	 * @param visitor NPC 访问者 / the NPC visitor
 	 */
 	public void doOnAllNpcs(Visitor<Npc> visitor) {
@@ -663,7 +624,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 过滤与矩形区域相交的 Zone。
 	 * Filter zones intersecting the rectangular region.
-	 *
 	 * @param mapId 地图 ID / the map id
 	 * @param regionId 区域 ID / the region id
 	 * @param startX 起始 X / the start X
@@ -689,7 +649,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 判断对象是否在指定 Zone 内。
 	 * Whether the object is inside the named zone.
-	 *
 	 * @param object 可见对象 / the visible object
 	 * @param zoneName Zone 名称 / the zone name
 	 * @return 若 inside 则为 true / true if inside
@@ -705,7 +664,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 判断位置是否在指定 Zone 内。
 	 * Whether the position is inside the named zone.
-	 *
 	 * @param pos 世界位置 / world position
 	 * @param zoneName Zone 名称 / the zone name
 	 * @return 若 inside 则为 true / true if inside
@@ -718,7 +676,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 设置单人所有者 objectId。
 	 * Set solo-owner objectId.
-	 *
 	 * @param obj objectId
 	 */
 	public void setSoloPlayerObj(Integer obj) {
@@ -728,7 +685,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 返回单人所有者 objectId。
 	 * Return solo-owner objectId.
-	 *
 	 * @return 单人所有者 objectId 或 null / objectId or null
 	 */
 	public Integer getSoloPlayerObj() {
@@ -738,7 +694,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 可见对象快照。
 	 * Snapshot of visible objects.
-	 *
 	 * @return 可见对象列表 / the object list
 	 */
 	private List<VisibleObject> worldMapObjectsSnapshot() {
@@ -751,7 +706,6 @@ public abstract class WorldMapInstance {
 	 * 可见对象数组快照：对象表未变化时复用缓存数组，变化后重建一次，供锁外遍历使用。
 	 * Array snapshot of visible objects: the cached array is reused while the object table is unchanged and
 	 * rebuilt once after a change, for iteration outside the lock.
-	 *
 	 * @return 可见对象数组 / the visible object array
 	 */
 	private VisibleObject[] worldMapObjectsArray() {
@@ -772,7 +726,6 @@ public abstract class WorldMapInstance {
 	/**
 	 * 玩家快照。
 	 * Snapshot of players.
-	 *
 	 * @return 玩家列表 / the player list
 	 */
 	private List<Player> worldMapPlayersSnapshot() {

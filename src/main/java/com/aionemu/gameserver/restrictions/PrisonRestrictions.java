@@ -142,7 +142,6 @@ public class PrisonRestrictions extends AbstractRestrictions {
 	/**
 	 * 是否在监狱状态或监狱地图。
 	 * Whether the player is imprisoned or on a prison map.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否在监狱 / whether in prison
 	 */

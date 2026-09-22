@@ -8,7 +8,6 @@ import lombok.Getter;
 /**
  * Absolute 属性 Owner 游戏对象。
  * Absolute Stat Owner game object.
- *
  * @author Rolandas
  */
 @Getter

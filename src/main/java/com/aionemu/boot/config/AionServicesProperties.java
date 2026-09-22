@@ -42,15 +42,12 @@ public class AionServicesProperties {
          * -- SETTER --
          *  设置原始传输模式字符串（由配置绑定写入）。
          *  Sets the raw transport mode string (written by configuration binding).
-         *
-         * @param mode 模式字符串 / mode string
          */
         private String mode = TransportMode.NETTY.name();
 
         /**
          * 解析传输模式；空值回落为 {@link TransportMode#NETTY}。
          * Resolves the transport mode; blank values fall back to {@link TransportMode#NETTY}.
-         *
          * @return 传输模式枚举 / transport mode enum
          */
         public TransportMode getMode() {

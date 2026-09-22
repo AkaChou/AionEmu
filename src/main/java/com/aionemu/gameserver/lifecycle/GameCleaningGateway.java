@@ -34,7 +34,6 @@ public class GameCleaningGateway {
     /**
      * 可选注入数据库清理服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of database cleaning service.
-     *
      * @param databaseCleaningServiceProvider 服务提供者 / Service provider
      */
     @Autowired(required = false)
@@ -45,7 +44,6 @@ public class GameCleaningGateway {
     /**
      * 可选注入欧比斯排名清理服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of abyss-rank cleaning service.
-     *
      * @param abyssRankCleaningServiceProvider 服务提供者 / Service provider
      */
     @Autowired(required = false)
@@ -56,7 +54,6 @@ public class GameCleaningGateway {
     /**
      * 可选注入运维服务运行时桥 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of maintenance-services runtime bridge.
-     *
      * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
      */
     @Autowired(required = false)
@@ -76,7 +73,6 @@ public class GameCleaningGateway {
     /**
      * 解析数据库清理服务：优先 Spring，否则经运行时桥回退。
      * Resolve database cleaning service: prefer Spring, otherwise fall back via runtime bridge.
-     *
      * @return 服务实例 / Service instance
      */
     private DatabaseCleaningService databaseCleaningService() {
@@ -89,7 +85,6 @@ public class GameCleaningGateway {
     /**
      * 解析欧比斯排名清理服务。
      * Resolve abyss-rank cleaning service.
-     *
      * @return 服务实例 / Service instance
      */
     private AbyssRankCleaningService abyssRankCleaningService() {
@@ -102,7 +97,6 @@ public class GameCleaningGateway {
     /**
      * 解析运维服务运行时桥：优先 Spring，否则新建。
      * Resolve maintenance-services runtime bridge: prefer Spring, otherwise create new.
-     *
      * @return 运行时桥 / Runtime bridge
      */
     private GameMaintenanceServicesRuntimeBridge runtimeBridge() {

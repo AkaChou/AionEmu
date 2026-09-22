@@ -14,7 +14,6 @@ import com.aionemu.gameserver.utils.Util;
 /**
  * 仓库扩展模板（静态数据/XML）。
  * Warehouse expand template (static data / XML).
- *
  * @author Simple
  */
 @XmlRootElement(name = "warehouse_npc")
@@ -54,7 +53,6 @@ public class WarehouseExpandTemplate {
 	/**
 	 * 获取 NPC 名称。
 	 * Gets the value of the name property
-	 *
 	 * @return NPC 名称字符串 / Possible object is {@link String }
 	 */
 	public String getName() {
@@ -64,7 +62,6 @@ public class WarehouseExpandTemplate {
 	/**
 	 * 判断扩展列表是否包含指定等级。
 	 * Returns true if list contains level
-	 *
 	 * @param level 要检查的等级 / Level to check
 	 * @return 包含则为 true / True or false
 	 */
@@ -80,7 +77,6 @@ public class WarehouseExpandTemplate {
 	/**
 	 * 按等级获取扩展项。
 	 * Returns the expand for the given level
-	 *
 	 * @param level 要查找的等级 / Level to look up
 	 * @return 扩展项 / Expand
 	 */

@@ -29,7 +29,6 @@ public class RunnableWrapper implements Runnable {
     /**
      * 使用默认最大运行时间创建包装器。
      * Create wrapper with default max runtime.
-     *
      * @param runnable 待包装任务 / Task to wrap
      */
     public RunnableWrapper(Runnable runnable) {
@@ -39,7 +38,6 @@ public class RunnableWrapper implements Runnable {
     /**
      * 使用指定最大运行时间创建包装器。
      * Create wrapper with the given max runtime.
-     *
      * @param runnable                   待包装任务 / Task to wrap
      * @param maxRuntimeMsWithoutWarning 无警告最大毫秒 / Max ms without warning
      */

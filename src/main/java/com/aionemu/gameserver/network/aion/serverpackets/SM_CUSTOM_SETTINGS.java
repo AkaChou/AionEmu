@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 玩家自定义显示/拒绝设置同步包。
  * Server packet syncing a player's custom display and deny settings.
- *
  * @author Sweetkr
  */
 public class SM_CUSTOM_SETTINGS extends AionServerPacket {
@@ -20,7 +19,6 @@ public class SM_CUSTOM_SETTINGS extends AionServerPacket {
 	/**
 	 * 按玩家自定义显示/拒绝设置构造同步包。
 	 * Creates a sync packet from the player's custom display/deny settings.
-	 *
 	 * @param player 目标玩家 / target player
 	 */
 	public SM_CUSTOM_SETTINGS(Player player) {
@@ -30,7 +28,6 @@ public class SM_CUSTOM_SETTINGS extends AionServerPacket {
 	/**
 	 * 按原始值构造自定义设置同步包。
 	 * Creates a custom settings sync packet from raw values.
-	 *
 	 * @param objectId 目标对象 ID / target object id
 	 * @param unk 未知字段 / unknown field
 	 * @param display 显示设置 / display settings

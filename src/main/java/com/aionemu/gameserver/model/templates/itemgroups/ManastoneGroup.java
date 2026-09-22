@@ -13,7 +13,6 @@ import com.aionemu.gameserver.model.templates.rewards.IdReward;
 /**
  * 魔石奖励组：魔石物品种族条目。
  * Manastone reward group: manastone item race entries.
- *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)

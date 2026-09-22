@@ -220,7 +220,6 @@ public class LunaShopService {
 	/**
 	 * 露娜点数控制。
 	 * Luna point controller.
-	 *
 	 * @param player 玩家 / player
 	 * @param point 点数 / points
 	 */
@@ -232,7 +231,6 @@ public class LunaShopService {
 	/**
 	 * Muni 钥匙控制器。
 	 * Muni keys controller.
-	 *
 	 * @param player 玩家 / player
 	 * @param keys 钥匙数量 / key count
 	 */
@@ -244,7 +242,6 @@ public class LunaShopService {
 	/**
 	 * 玩家登录时同步状态。
 	 * Syncs state when a player logs in.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onLogin(Player player) {
@@ -279,7 +276,6 @@ public class LunaShopService {
 	/**
 	 * 特殊设计处理。
 	 * Special design handler.
-	 *
 	 * @param player 玩家 / player
 	 * @param recipeId 配方 ID / recipe id
 	 */
@@ -322,7 +318,6 @@ public class LunaShopService {
 	/**
 	 * craftBox 方法。
 	 * craftBox method.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void craftBox(Player player) {
@@ -353,7 +348,6 @@ public class LunaShopService {
 	/**
 	 * 购买材料。
 	 * Buys materials.
-	 *
 	 * 玩家 / player
 	 * itemId
 	 * count
@@ -383,7 +377,6 @@ public class LunaShopService {
 	/**
 	 * dorinerkWardrobeLoad 方法。
 	 * dorinerkWardrobeLoad method.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void dorinerkWardrobeLoad(Player player) {
@@ -394,7 +387,6 @@ public class LunaShopService {
 	/**
 	 * dorinerkWardrobeAct 方法。
 	 * dorinerkWardrobeAct method.
-	 *
 	 * 玩家 / player
 	 * applySlot
 	 * itemObjId
@@ -416,7 +408,6 @@ public class LunaShopService {
 	/**
 	 * dorinerkWardrobeModifyAppearance 方法。
 	 * dorinerkWardrobeModifyAppearance method.
-	 *
 	 * 玩家 / player
 	 * applySlot
 	 * itemObjId
@@ -457,7 +448,6 @@ public class LunaShopService {
 	/**
 	 * dorinerkWardrobeExtendSlots 方法。
 	 * dorinerkWardrobeExtendSlots method.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void dorinerkWardrobeExtendSlots(Player player) {
@@ -475,7 +465,6 @@ public class LunaShopService {
 	/**
 	 * takiAdventure 方法。
 	 * takiAdventure method.
-	 *
 	 * 玩家 / player
 	 * indun_id
 	 */
@@ -486,7 +475,6 @@ public class LunaShopService {
 	/**
 	 * takiAdventureTeleport 方法。
 	 * takiAdventureTeleport method.
-	 *
 	 * 玩家 / player
 	 * @param indun_unk 副本未知字段 / indun_unk
 	 * indun_id
@@ -529,7 +517,6 @@ public class LunaShopService {
 	/**
 	 * teleport 方法。
 	 * teleport method.
-	 *
 	 * 玩家 / player
 	 * action
 	 * teleportId
@@ -550,7 +537,6 @@ public class LunaShopService {
 	/**
 	 * munirunerksTreasureChamber 方法。
 	 * munirunerksTreasureChamber method.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void munirunerksTreasureChamber(final Player player) {
@@ -637,10 +623,7 @@ public class LunaShopService {
 			Object key = crunchifyKeys[new Random().nextInt(crunchifyKeys.length)];
 			mt.put((int) key, hm.get(key));
 		}
-		/**
-		 * 执行任务。
-		 * Runs the task.
-		 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+        GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			 for (Map.Entry<Integer, Long> e : mt.entrySet()) {
 				 ItemService.addItem(player, e.getKey(), e.getValue());
 				 ItemTemplate t = DataManager.ITEM_DATA.getItemTemplate(e.getKey());
@@ -667,7 +650,6 @@ public class LunaShopService {
 	/**
 	 * 玩家登出时清理状态。
 	 * Cleans state when a player logs out.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onLogout(Player player) {
@@ -687,7 +669,6 @@ public class LunaShopService {
 	/**
 	 * diceGame 方法。
 	 * diceGame method.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void diceGame(Player player) {
@@ -723,7 +704,6 @@ public class LunaShopService {
 	/**
 	 * diceGameReward 方法。
 	 * diceGameReward method.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void diceGameReward(Player player) {
@@ -776,11 +756,9 @@ public class LunaShopService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available

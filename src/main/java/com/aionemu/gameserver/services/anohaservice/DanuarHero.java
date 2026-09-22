@@ -6,7 +6,6 @@ import com.aionemu.gameserver.model.anoha.AnohaStateType;
 /**
  * 狂暴阿诺哈默认实现：切入 FIGHT / 回到 PEACE。
  * Default Berserk Anoha implementation: switches to FIGHT / back to PEACE.
- *
  * @author Rinzler (Encom)
  */
 public class DanuarHero extends BerserkAnoha<AnohaLocation> {
@@ -14,7 +13,6 @@ public class DanuarHero extends BerserkAnoha<AnohaLocation> {
 	/**
 	 * 绑定阿诺哈地点。
 	 * Binds the Anoha location.
-	 *
 	 * @param anoha location
 	 */
 	public DanuarHero(AnohaLocation anoha) {

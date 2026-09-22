@@ -18,7 +18,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 攻城战相关 NPC AI：SW Flame Tank Dark（@AIName "SWFlameTank_Dark"），继承 NpcAI2。
  * Siege-related NPC AI: SW Flame Tank Dark (@AIName "SWFlameTank_Dark"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("SWFlameTank_Dark")

@@ -8,7 +8,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Dragon Lord Refuge 副本 NPC AI：Tiamat（@AIName "tiamat"），继承 AggressiveNpcAI2。
  * Dragon Lord Refuge instance NPC AI: Tiamat (@AIName "tiamat"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("tiamat")

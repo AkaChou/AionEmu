@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Levinshor 区域 NPC AI：Destoyer Feld（@AIName "destoyer_feld"），继承 AggressiveNpcAI2。
  * Levinshor zone NPC AI: Destoyer Feld (@AIName "destoyer_feld"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("destoyer_feld")

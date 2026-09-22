@@ -10,10 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 配置处理器类，用于处理带有@Property 注解的类字段的配置加载
  * Configuration processor class for handling configuration loading of class fields annotated with @Property
- *
  * 该类通过反射机制读取类的字段，并根据@Property 注解的配置从 Properties 中加载对应的值
  * This class uses reflection to read class fields and load corresponding values from Properties based on @Property annotations
- *
  * @author SunAion
  */
 @Slf4j
@@ -22,7 +20,6 @@ public class ConfigurableProcessor {
     /**
      * 处理对象或类的配置
      * Process configuration for an object or class
-     *
      * @param object 要处理的对象或类
      * @param properties 配置属性数组
      */
@@ -41,7 +38,6 @@ public class ConfigurableProcessor {
     /**
      * 递归处理类的字段配置
      * Recursively process class field configurations
-     *
      * @param clazz 要处理的类
      * @param obj 类的实例对象
      * @param props 配置属性数组
@@ -67,7 +63,6 @@ public class ConfigurableProcessor {
     /**
      * 处理类的所有带有@Property 注解的字段
      * Process all fields with @Property annotation in the class
-     *
      * @param clazz 要处理的类
      * @param obj 类的实例对象
      * @param props 配置属性数组
@@ -94,7 +89,6 @@ public class ConfigurableProcessor {
     /**
      * 处理单个字段的配置
      * Process configuration for a single field
-     *
      * @param f 要处理的字段
      * @param obj 字段所属的对象
      * @param props 配置属性数组
@@ -124,7 +118,6 @@ public class ConfigurableProcessor {
     /**
      * 获取字段的配置值
      * Get configuration value for a field
-     *
      * @param field 要获取值的字段
      * @param props 配置属性数组
      * @return 转换后的字段值 / transformed field value
@@ -162,7 +155,6 @@ public class ConfigurableProcessor {
     /**
      * 在配置属性数组中查找指定键的值
      * Find value for specified key in properties array
-     *
      * @param key 要查找的键
      * @param props 配置属性数组
      * @return 找到的值，如果未找到则返回 null / found value, or null if not found
@@ -184,7 +176,6 @@ public class ConfigurableProcessor {
     /**
      * 检查指定的键是否存在于配置属性数组中
      * Check if specified key exists in properties array
-     *
      * @param key 要检查的键
      * @param props 配置属性数组
      * @return 如果键存在则返回 true，否则返回 false / true if the key exists, false otherwise

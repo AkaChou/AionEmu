@@ -3,7 +3,6 @@ package com.aionemu.gameserver.geoEngine.math;
 /**
  * 简单对象工厂，支持创建与回收（回收时若实现 {@link Reusable} 则重置）。
  * Simple object factory supporting create and recycle (resets if {@link Reusable}).
- *
  * @param <T> 产物类型 / product type
  */
 abstract class ObjectFactory<T> {
@@ -11,7 +10,6 @@ abstract class ObjectFactory<T> {
 	/**
 	 * 获取（创建）一个实例。
 	 * Obtains (creates) an instance.
-	 *
 	 * @return 新实例 / new instance
 	 */
 	public T object() {
@@ -21,7 +19,6 @@ abstract class ObjectFactory<T> {
 	/**
 	 * 回收实例；若实现 {@link Reusable} 则先 {@link Reusable#reset()}。
 	 * Recycles an instance; resets first if it implements {@link Reusable}.
-	 *
 	 * @param object 待回收对象 / object to recycle
 	 */
 	public void recycle(T object) {
@@ -33,7 +30,6 @@ abstract class ObjectFactory<T> {
 	/**
 	 * 创建新实例。
 	 * Creates a new instance.
-	 *
 	 * @return 新实例 / new instance
 	 */
 	protected abstract T create();

@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.loginserver.LsServerPacket;
 /**
  * 游戏服向登录服同步账号通行点/月华余额的服务端包。
  * Server packet that syncs account toll and luna balances to the login server.
- *
  * @author xTz
  */
 public class SM_ACCOUNT_TOLL_INFO extends LsServerPacket {
@@ -19,7 +18,6 @@ public class SM_ACCOUNT_TOLL_INFO extends LsServerPacket {
 	/**
 	 * 构造账号通行点/月华信息包。
 	 * Constructs a new account toll/luna info packet.
-	 *
 	 * @param toll 通行点余额 / toll balance
 	 * @param luna 月华余额 / luna balance
 	 * @param accountName 账号名 / account name

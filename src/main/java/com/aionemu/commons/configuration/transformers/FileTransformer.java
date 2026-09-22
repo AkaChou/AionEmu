@@ -8,7 +8,6 @@ import java.lang.reflect.Field;
 /**
  * 文件属性转换器
  * File property transformer class that handles conversion of string values to File objects.
- *
  * 支持的输入格式:
  * Supported input format:
  * - 文件路径字符串 file path string
@@ -24,7 +23,6 @@ public class FileTransformer implements PropertyTransformer<File> {
     /**
      * 将字符串值转换为 File 对象
      * Transforms string value into File object
-     *
      * @param value 要转换的字符串值（文件路径）/ String value to transform (file path)
      * @param field 字段对象 / Field that will be transformed
      * @return 转换后的 File 对象 / Transformed File object

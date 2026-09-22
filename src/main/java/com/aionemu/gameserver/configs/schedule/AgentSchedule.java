@@ -18,7 +18,6 @@ import lombok.Setter;
 /**
  * Agent 活动时间表配置。
  * Agent event schedule configuration.
- *
  * @author Rinzler (Encom)
  */
 @Getter
@@ -31,7 +30,6 @@ public class AgentSchedule {
 	 * -- GETTER --
 	 *  获取 Agent 列表。
 	 *  Returns the agent list.
-
 	 */
 	@XmlElement(name = "agent", required = true)
 	private List<Agent> agentsList;
@@ -76,8 +74,6 @@ public class AgentSchedule {
 		 * -- SETTER --
 		 *  设置 Agent ID。
 		 *  Sets the agent ID.
-
-
 		 */
 		@XmlAttribute(required = true)
 		private int id;
@@ -91,8 +87,6 @@ public class AgentSchedule {
 		 * -- SETTER --
 		 *  设置战斗时间列表。
 		 *  Sets the fight times.
-
-
 		 */
 		@XmlElement(name = "fightTime", required = true)
 		private List<String> fightTimes;

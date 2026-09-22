@@ -13,12 +13,6 @@ import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 @AIName("legendary_toy_bear")
 // NPC 模板 ID：833669 / NPC template ID: 833669
 
-/**
- * 活动事件 NPC AI：Legendary Toy Bear（@AIName "legendary_toy_bear"），继承 ActionItemNpcAI2。
- * Event NPC AI: Legendary Toy Bear (@AIName "legendary_toy_bear"), extends ActionItemNpcAI2.
- *
- * @author Falke_34 & FrozenKiller
- */
 public class LegendaryToyBearAI2 extends ActionItemNpcAI2 {
 
 	@Override

@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Rentus Base 副本 NPC AI：Xasta Trap（@AIName "xastatrap"），继承 AggressiveNpcAI2。
  * Rentus Base instance NPC AI: Xasta Trap (@AIName "xastatrap"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("xastatrap")

@@ -23,7 +23,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Padmarashka Cave 副本 NPC AI：Padmarashka（@AIName "padmarashka"），继承 AggressiveNpcAI2。
  * Padmarashka Cave instance NPC AI: Padmarashka (@AIName "padmarashka"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("padmarashka")

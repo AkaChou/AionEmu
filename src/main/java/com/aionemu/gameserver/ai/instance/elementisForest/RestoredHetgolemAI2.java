@@ -23,7 +23,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Elementis Forest 副本 NPC AI：Restored Hetgolem（@AIName "restored_hetgolem"），继承 AggressiveNpcAI2。
  * Elementis Forest instance NPC AI: Restored Hetgolem (@AIName "restored_hetgolem"), extends AggressiveNpcAI2.
- *
  * @author xTz
  */
 @AIName("restored_hetgolem")

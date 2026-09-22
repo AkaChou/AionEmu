@@ -13,7 +13,6 @@ import java.util.Set;
 /**
  * 因德拉图要塞副本事件处理器。
  * Instance event handler for Indratu Fortress.
- *
  * @author Encom
  */
 
@@ -23,7 +22,6 @@ public class IndratuFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -34,7 +32,6 @@ public class IndratuFortressInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override

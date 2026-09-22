@@ -16,7 +16,6 @@ import java.util.LinkedHashMap;
 /**
  * 阿特里亚图鉴数据容器，分别按图鉴 ID 与 NPC ID 双索引。
  * Atreian bestiary data holder, dual-indexed by book id and NPC id.
- *
  * @author Ranastic
  */
 @XmlRootElement(name = "monster_books")
@@ -49,7 +48,6 @@ public class AtreianBestiaryData {
 	/**
 	 * 返回按图鉴 ID 索引的模板数量。
 	 * Returns the number of templates indexed by book id.
-	 *
 	 * @return 按图鉴 ID 索引的模板数量 / Returns the number of templates indexed by book id.
 	 */
 	public int size() {
@@ -59,7 +57,6 @@ public class AtreianBestiaryData {
 	/**
 	 * 按图鉴 ID 获取模板。
 	 * Returns the bestiary template for the given book id.
-	 *
 	 * @param id 图鉴 ID / book id
 	 * @return 模板，不存在则为 null / template or null
 	 */
@@ -70,7 +67,6 @@ public class AtreianBestiaryData {
 	/**
 	 * 返回按 NPC ID 索引的条目数量。
 	 * Returns the number of entries indexed by NPC id.
-	 *
 	 * @return 按 NPC ID 索引的条目数量 / Returns the number of entries indexed by NPC id.
 	 */
 	public int sizeByNpcId() {
@@ -80,7 +76,6 @@ public class AtreianBestiaryData {
 	/**
 	 * 按 NPC ID 获取图鉴模板。
 	 * Returns the bestiary template for the given NPC id.
-	 *
 	 * @param id NPC ID / npc id
 	 * @return 模板，不存在则为 null / template or null
 	 */

@@ -13,7 +13,6 @@ public final class ServiceContext {
         /**
 		 * 提供默认上下文名称
 		 * Provide the default context name
-		 *
 		 * @return 默认上下文 / Default context
 		 */
         @Override
@@ -28,7 +27,6 @@ public final class ServiceContext {
     /**
      * 获取当前线程的服务上下文名称
      * Get the current thread's service context name
-     *
      * @return 当前上下文名称 / Current context name
      */
     public static String current() {
@@ -38,7 +36,6 @@ public final class ServiceContext {
     /**
      * 切换当前线程服务上下文，返回可关闭的作用域
      * Switch the current thread service context and return a closable scope
-     *
      * @param name 上下文名称 / Context name
      * @return 作用域，关闭后恢复原上下文 / Scope that restores the previous context when closed
      */
@@ -51,7 +48,6 @@ public final class ServiceContext {
     /**
      * 使用当前上下文包装 Runnable
      * Wrap a Runnable with the current context
-     *
      * @param runnable 原始任务 / original runnable
      * @return 带上下文的任务 / Context-aware runnable
      */
@@ -62,7 +58,6 @@ public final class ServiceContext {
     /**
      * 使用指定上下文包装 Runnable
      * Wrap a Runnable with the given context
-     *
      * @param runnable 原始任务 / original runnable
      * @param context 上下文名称 / Context name
      * @return 带上下文的任务 / Context-aware runnable
@@ -86,7 +81,6 @@ public final class ServiceContext {
     /**
      * 规范化上下文名称
      * Normalize a context name
-     *
      * @param name 原始名称 / Original name
      * @return 规范化后的名称 / Normalized name
      */

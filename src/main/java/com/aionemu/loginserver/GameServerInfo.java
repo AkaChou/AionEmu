@@ -16,7 +16,6 @@ import lombok.Setter;
 /**
  * 登录服侧的游戏服信息（id、IP、在线账号等）。
  * GameServer representation on LoginServer side (id, IP, online accounts, etc.).
- *
  * @author -Nemesiss-
  */
 @RequiredArgsConstructor
@@ -84,7 +83,6 @@ public class GameServerInfo {
     /**
      * 判断游戏服是否在线。
      * Check whether this GameServer is online.
-     *
      * @return 已认证连接存在则为 true / true if an authenticated connection exists
      */
     public final boolean isOnline() {
@@ -94,7 +92,6 @@ public class GameServerInfo {
     /**
      * 判断账号是否已在本游戏服。
      * Check whether the account is already on this GameServer.
-     *
      * @param accountId 账号 ID / Account id
      * @return 存在则为 true / true if present
      */
@@ -105,7 +102,6 @@ public class GameServerInfo {
     /**
      * 从本游戏服移除账号。
      * Remove account from this GameServer.
-     *
      * @param accountId 账号 ID / Account id
      * @return 被移除的账号 / Removed account
      */
@@ -116,7 +112,6 @@ public class GameServerInfo {
     /**
      * 将账号加入本游戏服。
      * Add account to this GameServer.
-     *
      * @param acc 账号 / Account
      */
     public final void addAccountToGameServer(Account acc) {
@@ -126,7 +121,6 @@ public class GameServerInfo {
     /**
      * 按账号 ID 取本服账号对象。
      * Get account object by id on this GameServer.
-     *
      * @param accountId 账号 ID / Account id
      * @return 账号对象；不存在则为 null / Account or null
      */
@@ -145,7 +139,6 @@ public class GameServerInfo {
     /**
      * 当前在线人数。
      * Current online player count.
-     *
      * @return 在线人数 / Online count
      */
     public int getCurrentPlayers() {
@@ -155,7 +148,6 @@ public class GameServerInfo {
     /**
      * 是否已满员。
      * Whether the server is full.
-     *
      * @return 已满员时为 {@code true} / {@code true} if full
      */
     public boolean isFull() {
@@ -168,7 +160,6 @@ public class GameServerInfo {
      * <p>
      * 不同子网可能需要不同地址；离线时返回 127.0.0.1。
      * Different subnets may need different addresses; returns 127.0.0.1 when offline.
-     *
      * @param playerIp 玩家 IP / Player IP
      * @return 对该玩家有效的地址字节 / Address bytes valid for the player
      */

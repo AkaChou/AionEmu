@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 /**
  * 同步当前地图天气状态的服务端包。
  * Server packet that syncs the current map weather state.
- *
  * @author ATracer
  * @author Kwazar
  * @author Nemesiss :D:D

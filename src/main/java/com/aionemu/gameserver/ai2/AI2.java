@@ -11,7 +11,6 @@ import com.aionemu.gameserver.model.templates.item.ItemAttackType;
 /**
  * AI2 核心接口，定义 NPC/召唤物等生物的人工智能行为契约。
  * Core AI2 interface defining the artificial intelligence contract for creatures such as NPCs and summons.
- *
  * @author ATracer
  */
 public interface AI2 {
@@ -19,7 +18,6 @@ public interface AI2 {
 	/**
 	 * 处理与生物相关的 AI 事件。
 	 * Handles a creature-related AI event.
-	 *
 	 * @param event 事件类型 / event type
 	 * @param creature 相关生物 / related creature
 	 */
@@ -36,7 +34,6 @@ public interface AI2 {
 	/**
 	 * 处理技能成功作用事件。
 	 * Handles a successfully cast spell event.
-	 *
 	 * @param caster 施法者 / caster
 	 * @param skillId 技能 ID / skill id
 	 * @param skillLevel 技能等级 / skill level
@@ -145,7 +142,6 @@ public interface AI2 {
 	/**
 	 * 处理自定义 AI 事件。
 	 * Handles a custom AI event.
-	 *
 	 * @param eventId 自定义事件 ID / custom event id
 	 * @param args 事件参数 / event arguments
 	 */
@@ -154,7 +150,6 @@ public interface AI2 {
 	/**
 	 * 处理通用（无目标）AI 事件。
 	 * Handles a general (target-less) AI event.
-	 *
 	 * @param event 事件类型 / event type
 	 */
 	void onGeneralEvent(AIEventType event);
@@ -162,7 +157,6 @@ public interface AI2 {
 	/**
 	 * 处理玩家对话框选择；若已处理返回 true。
 	 * Handles player dialog selection; returns true if already handled.
-	 *
 	 * @param player 玩家 / player
 	 * @param dialogId 对话框 ID / dialog id
 	 * @param questId 任务 ID / quest id
@@ -180,7 +174,6 @@ public interface AI2 {
 	/**
 	 * 判断当前是否允许思考。
 	 * Returns whether thinking is currently allowed.
-	 *
 	 * @return 是否可思考 / whether the AI can think
 	 */
 	boolean canThink();
@@ -188,7 +181,6 @@ public interface AI2 {
 	/**
 	 * 获取当前主状态。
 	 * Returns the current main AI state.
-	 *
 	 * @return AI 主状态 / AI main state
 	 */
 	AIState getState();
@@ -196,7 +188,6 @@ public interface AI2 {
 	/**
 	 * 获取当前子状态。
 	 * Returns the current AI sub-state.
-	 *
 	 * @return AI 子状态 / AI sub-state
 	 */
 	AISubState getSubState();
@@ -204,7 +195,6 @@ public interface AI2 {
 	/**
 	 * 获取 AI 名称（通常来自 {@link AIName} 注解）。
 	 * Returns the AI name (usually from the {@link AIName} annotation).
-	 *
 	 * @return AI 名称 / AI name
 	 */
 	String getName();
@@ -212,7 +202,6 @@ public interface AI2 {
 	/**
 	 * 对指定问题进行投票式查询，返回是否肯定。
 	 * Polls the given question and returns whether the answer is positive.
-	 *
 	 * @param question 问题 / question
 	 * @return 答案是否肯定 / whether the answer is positive
 	 */
@@ -221,7 +210,6 @@ public interface AI2 {
 	/**
 	 * 询问指定问题并返回完整答案对象。
 	 * Asks the given question and returns a full answer object.
-	 *
 	 * @param question 问题 / question
 	 * @return 答案对象 / answer object
 	 */
@@ -230,7 +218,6 @@ public interface AI2 {
 	/**
 	 * 是否开启 AI 调试日志。
 	 * Returns whether AI debug logging is enabled.
-	 *
 	 * @return 是否记录日志 / whether logging is enabled
 	 */
 	boolean isLogging();
@@ -238,7 +225,6 @@ public interface AI2 {
 	/**
 	 * 获取剩余时间（例如限时 AI 行为）。
 	 * Returns remaining time (e.g. for timed AI behaviors).
-	 *
 	 * @return 剩余时间 / remaining time
 	 */
 	long getRemainigTime();
@@ -246,7 +232,6 @@ public interface AI2 {
 	/**
 	 * 修改对自身造成的伤害值。
 	 * Modifies incoming damage dealt to this AI's owner.
-	 *
 	 * @param damage 原始伤害 / original damage
 	 * @return 修正后伤害 / modified damage
 	 */
@@ -255,7 +240,6 @@ public interface AI2 {
 	/**
 	 * 修改所有者造成的伤害值。
 	 * Modifies outgoing damage dealt by this AI's owner.
-	 *
 	 * @param damage 原始伤害 / original damage
 	 * @return 修正后伤害 / modified damage
 	 */
@@ -264,7 +248,6 @@ public interface AI2 {
 	/**
 	 * 处理来自其他 NPC 的个体事件通知。
 	 * Handles an individual event notification from another NPC.
-	 *
 	 * @param npc 触发事件的生物 / creature that raised the event
 	 */
 	void onIndividualNpcEvent(Creature npc);
@@ -272,7 +255,6 @@ public interface AI2 {
 	/**
 	 * 修改治疗数值。
 	 * Modifies a heal value.
-	 *
 	 * @param value 原始治疗量 / original heal value
 	 * @return 修正后治疗量 / modified heal value
 	 */
@@ -281,7 +263,6 @@ public interface AI2 {
 	/**
 	 * 修改命中/精准相关数值。
 	 * Modifies a maccuracy (hit/accuracy) related value.
-	 *
 	 * @param value 原始值 / original value
 	 * @return 修正后值 / modified value
 	 */
@@ -290,7 +271,6 @@ public interface AI2 {
 	/**
 	 * 修改感知范围。
 	 * Modifies sensory/aggro range.
-	 *
 	 * @param value 原始范围 / original range
 	 * @return 修正后范围 / modified range
 	 */
@@ -299,7 +279,6 @@ public interface AI2 {
 	/**
 	 * 修改攻击类型。
 	 * Modifies the item attack type.
-	 *
 	 * @param type 原始攻击类型 / original attack type
 	 * @return 修正后攻击类型 / modified attack type
 	 */

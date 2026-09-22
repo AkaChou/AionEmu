@@ -14,7 +14,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 请求军团历史/仓库历史分页标签的客户端包。
  * Client packet requesting legion history/warehouse-history tab pages.
- *
  * @author Simple, xTz
  */
 @Slf4j
@@ -25,7 +24,6 @@ public class CM_LEGION_TABS extends AionClientPacket {
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余合法状态 / additional valid states
@@ -52,23 +50,14 @@ public class CM_LEGION_TABS extends AionClientPacket {
 
 		if (activePlayer.getLegion() != null) {
 
-			/**
-	 * 军团历史最多 16 页 / Max page is 16 for legion history
-	 */
 			if (page < 0 || page > 16) {
 				return;
 			}
 			switch (tab) {
-			/**
-	 * 历史页签 / History Tab
-	 */
-			case 0: // 军团历史 / legion history
+				case 0: // 军团历史 / legion history
 			case 2: // 军团仓库历史 / legion WH history
 				Collection<LegionHistory> history = activePlayer.getLegion().getLegionHistoryByTabId(tab);
-				/**
-	 * 若历史条数不足 page*8 则返回 / If history size is less than page*8 return
-	 */
-				if (history.size() < page * 8) {
+                if (history.size() < page * 8) {
 					return;
 				}
 				if (!history.isEmpty()) {

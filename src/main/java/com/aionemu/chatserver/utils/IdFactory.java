@@ -7,7 +7,6 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * 简化版 ID 工厂：基于 {@link BitSet} 分配递增可用 ID。
  * Simplified ID factory allocating the next free ID via a {@link BitSet}.
- *
  * @author ATracer
  */
 public class IdFactory {
@@ -19,7 +18,6 @@ public class IdFactory {
     /**
      * 在锁保护下分配下一个未使用的 ID。
      * Allocate the next unused ID under lock.
-     *
      * @return 新分配的 ID / newly allocated ID
      */
     public int nextId() {
@@ -37,7 +35,6 @@ public class IdFactory {
     /**
      * 遗留单例访问入口。
      * Legacy singleton access point.
-     *
      * @return {@link IdFactory} 单例 / the singleton instance
      * @deprecated boot 迁移后请使用 Spring Bean / Prefer the Spring bean after boot migration
      */

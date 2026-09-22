@@ -13,7 +13,6 @@ import java.util.Set;
 /**
  * 玩家请愿/客服工单 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PetitionDAO.
- *
  * @author zdead
  */
 @Slf4j
@@ -23,7 +22,6 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
     /**
      * 获取下一个可用的请愿工单 ID。
      * Returns the next available petition id.
-     *
      * @return 下一个工单 ID / next petition id
      */
     @Override
@@ -46,9 +44,7 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
     /**
      * 按 ID 查询请愿工单。
      * Loads a petition by its id.
-     *
      * petition id
-     *
      * @param petitionId 申诉 ID / petition id
      * @return 请愿工单，未找到时返回 null / petition, or null if not found
      */
@@ -85,7 +81,6 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
     /**
      * 查询所有待处理/处理中的请愿工单。
      * Loads all pending or in-progress petitions.
-     *
      * @return 请愿工单集合 / set of petitions
      */
     @Override
@@ -121,7 +116,6 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
     /**
      * 删除玩家当前待处理/处理中的请愿工单。
      * Deletes the player's pending or in-progress petitions.
-     *
      * @param playerObjId 玩家对象 ID / player object id
      */
     @Override
@@ -141,7 +135,6 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
     /**
      * 插入新的请愿工单。
      * Inserts a new petition.
-     *
      * @param petition 申诉 / petition
      */
     @Override
@@ -168,7 +161,6 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
     /**
      * 将请愿工单标记为已回复。
      * Marks a petition as replied.
-     *
      * @param petitionId 申诉 ID / petition id
      */
     @Override
@@ -188,7 +180,6 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
     /**
      * 将状态字符串解析为请愿状态枚举。
      * Parses a status string into a PetitionStatus enum value.
-     *
      * @param statusValue 状态字符串 / status string
      * @return 申诉状态 / petition status
      */
@@ -205,7 +196,6 @@ public class PetitionDAO extends com.aionemu.gameserver.dao.PetitionDAO {
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

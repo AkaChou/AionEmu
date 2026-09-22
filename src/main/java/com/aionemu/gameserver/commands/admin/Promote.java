@@ -8,9 +8,7 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 提升在线玩家访问等级或会员等级的管理员命令。
  * Admin command to promote an online player's access level or membership.
- *
  * @author Cyrakuse
- * @modified By Aionchs-Wylovech
  */
 public class Promote extends AdminCommand {
 
@@ -25,7 +23,6 @@ public class Promote extends AdminCommand {
 	/**
 	 * 向登录服发送 LS 控制包以设置 accesslevel（0–5）或 membership（0–10）。
 	 * Send an LS control packet to set accesslevel (0–5) or membership (0–10).
-	 *
 	 * @param admin 执行 GM / Admin player
 	 * @param params 角色名、类型与等级掩码 / Character name, type and level mask
 	 */
@@ -77,7 +74,6 @@ public class Promote extends AdminCommand {
 	/**
 	 * 参数错误时显示语法。
 	 * Show syntax when parameters are invalid.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

@@ -66,7 +66,6 @@ public class FollowMotor extends AMovementMotor {
 	/**
 	 * 创建跟随指定目标的电机。
 	 * Create a motor that follows the given target.
-	 *
 	 * @param parentProcessor 父移动处理器 / Parent movement processor
 	 * @param owner 所属 NPC / owner NPC
 	 * @param target 跟随目标 / follow target
@@ -104,7 +103,6 @@ public class FollowMotor extends AMovementMotor {
 	/**
 	 * 重算跟随目标点、广播移动并调度下一次位置插值。
 	 * Recompute the follow target, broadcast movement, and schedule the next position interpolation.
-	 *
 	 * @return 仍可继续跟随为 true / {@code true} if following can continue
 	 */
 	public boolean update() {
@@ -203,7 +201,6 @@ public class FollowMotor extends AMovementMotor {
 	/**
 	 * 判断 NPC 当前是否允许移动（非恐惧、可执行移动且未施法）。
 	 * Whether the NPC may move (not under fear, can perform move, and not casting).
-	 *
 	 * @return 允许移动时为 true / {@code true} if movement is allowed
 	 */
 	private boolean canMove() {

@@ -9,7 +9,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Tiamat Stronghold 副本 NPC AI：Laksyaka Offering（@AIName "laksyakaoffering"），继承 AggressiveNpcAI2。
  * Tiamat Stronghold instance NPC AI: Laksyaka Offering (@AIName "laksyakaoffering"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("laksyakaoffering")

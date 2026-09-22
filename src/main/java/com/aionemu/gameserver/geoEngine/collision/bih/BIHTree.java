@@ -53,7 +53,6 @@ public class BIHTree implements CollisionData {
 	/**
 	 * 从顶点/索引缓冲初始化展平三角形列表与下标映射。
 	 * Initializes the flattened triangle list and index mapping from vertex/index buffers.
-	 *
 	 * @param vb 顶点缓冲 / vertex buffer
 	 * @param ib 索引缓冲 / index buffer
 	 */
@@ -86,7 +85,6 @@ public class BIHTree implements CollisionData {
 	/**
 	 * 以网格与每节点最大三角形数构造 BIH 树（尚未建树，需调用 {@link #construct()}）。
 	 * Constructs a BIH tree from a mesh and max-tris-per-node (call {@link #construct()} to build).
-	 *
 	 * @param mesh 网格 / mesh
 	 * @param maxTrisPerNode 每节点最大三角形数 / max triangles per node
 	 */
@@ -109,7 +107,6 @@ public class BIHTree implements CollisionData {
 	/**
 	 * 以网格与默认每节点最大三角形数构造。
 	 * Constructs from a mesh with the default max triangles per node.
-	 *
 	 * @param mesh 网格 / mesh
 	 */
 	public BIHTree(Mesh mesh) {
@@ -128,7 +125,6 @@ public class BIHTree implements CollisionData {
 	/**
 	 * 为三角形区间 [{@code l}, {@code r}] 创建轴对齐包围盒。
 	 * Creates an AABB for triangle range [{@code l}, {@code r}].
-	 *
 	 * @param l 左下标 / left index
 	 * @param r 右下标 / right index
 	 * @return 包围盒 / bounding box
@@ -162,7 +158,6 @@ public class BIHTree implements CollisionData {
 	/**
 	 * 返回给定树内下标对应的原始三角形下标。
 	 * Returns the original triangle index for the given in-tree index.
-	 *
 	 * @param triIndex 树内下标 / in-tree index
 	 * @return 原始下标 / original index
 	 */
@@ -173,7 +168,6 @@ public class BIHTree implements CollisionData {
 	/**
 	 * 按分割值将区间内三角形划分为左右两侧，返回枢轴。
 	 * Partitions triangles in range by split value along an axis; returns the pivot.
-	 *
 	 * @param l 左下标 / left index
 	 * @param r 右下标 / right index
 	 * @param split 分割值 / split value
@@ -207,7 +201,6 @@ public class BIHTree implements CollisionData {
 	/**
 	 * 设置包围盒在指定轴上的最小或最大边界。
 	 * Sets the min or max bound of a bounding box on the given axis.
-	 *
 	 * @param bbox 包围盒 / bounding box
 	 * @param doMin {@code true} 设置最小，否则最大 / {@code true} for min, else max
 	 * @param axis 轴 / axis
@@ -229,7 +222,6 @@ public class BIHTree implements CollisionData {
 	/**
 	 * 读取包围盒在指定轴上的最小或最大边界。
 	 * Reads the min or max bound of a bounding box on the given axis.
-	 *
 	 * @param bbox 包围盒 / bounding box
 	 * @param doMin {@code true} 读最小，否则最大 / {@code true} for min, else max
 	 * @param axis 轴 / axis
@@ -325,7 +317,6 @@ public class BIHTree implements CollisionData {
 	 * 递归创建 BIH 节点：按外延差选轴、按中心分割三角形并构建左右子树。
 	 * Recursively creates a BIH node: picks axis by exterior extent, partitions
 	 * triangles by center and builds left/right children.
-	 *
 	 * @param l 左下标 / left index
 	 * @param r 右下标 / right index
 	 * @param nodeBbox 节点包围盒 / node bounding box
@@ -406,7 +397,6 @@ public class BIHTree implements CollisionData {
 	/**
 	 * 将树内下标对应的三角形三顶点写入输出向量。
 	 * Writes the three vertices of the triangle at the given in-tree index into the outputs.
-	 *
 	 * @param index 树内下标 / in-tree index
 	 * @param v1 顶点 1 输出 / vertex 1 output
 	 * @param v2 顶点 2 输出 / vertex 2 output
@@ -431,7 +421,6 @@ public class BIHTree implements CollisionData {
 	/**
 	 * 交换两个树内下标的三角形顶点数据与原始下标映射。
 	 * Swaps triangle vertex data and original-index mapping for two in-tree indices.
-	 *
 	 * @param index1 下标 1 / index 1
 	 * @param index2 下标 2 / index 2
 	 */
@@ -457,7 +446,6 @@ public class BIHTree implements CollisionData {
 	/**
 	 * 与射线做碰撞：先测世界包围体，再以 t 区间查询根节点。
 	 * Collides with a ray: tests the world bound first, then queries the root with a t-range.
-	 *
 	 * @param r 射线 / ray
 	 * @param worldMatrix 世界变换矩阵 / world matrix
 	 * @param worldBound 世界包围体 / world bound
@@ -529,7 +517,6 @@ public class BIHTree implements CollisionData {
 	/**
 	 * 与包围体做碰撞（目前仅支持 {@link BoundingBox}）。
 	 * Collides with a bounding volume (currently {@link BoundingBox} only).
-	 *
 	 * @param bv 包围体 / bounding volume
 	 * @param worldMatrix 世界变换矩阵 / world matrix
 	 * @param results 结果收集器 / collision results
@@ -551,7 +538,6 @@ public class BIHTree implements CollisionData {
 	/**
 	 * 与射线或包围体做碰撞检测。
 	 * Performs collision against a ray or bounding volume.
-	 *
 	 * @param other 另一可碰撞对象 / other collidable
 	 * @param worldMatrix 世界变换矩阵 / world matrix
 	 * @param worldBound 世界包围体 / world bound

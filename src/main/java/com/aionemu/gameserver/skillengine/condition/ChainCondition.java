@@ -12,7 +12,6 @@ import lombok.Getter;
 /**
  * 连锁技能条件：校验前序/自身连锁类别、次数与时间窗是否允许施放。
  * Chain skill condition: validates precursor/self chain category, count and time window allow casting.
- *
  * @author ATracer
  */
 @Getter
@@ -23,8 +22,6 @@ public class ChainCondition extends Condition {
 	/**
 	 * 获取自身连锁允许次数上限。
 	 * Gets the self-chain allowed count limit.
-	 *
-	 * @return 自身连锁次数 / self chain count
 	 */
 	@XmlAttribute(name = "selfcount")
 	private int selfCount;
@@ -33,8 +30,6 @@ public class ChainCondition extends Condition {
 	/**
 	 * 获取本技能所属连锁类别。
 	 * Gets the chain category this skill belongs to.
-	 *
-	 * @return 连锁类别 / chain category
 	 */
 	@XmlAttribute(name = "category")
 	private String category;
@@ -43,7 +38,6 @@ public class ChainCondition extends Condition {
 	/**
 	 * 获取连锁时间窗（毫秒）。
 	 * Gets the chain time window in milliseconds.
-	 *
 	 * time window
 	 */
 	@XmlAttribute(name = "time")
@@ -52,7 +46,6 @@ public class ChainCondition extends Condition {
 	/**
 	 * 校验技能环境是否满足本条件。
 	 * Validates whether the skill environment satisfies this condition.
-	 *
 	 * @param env 技能环境 / skill environment
 	 * @return 是否有效 / whether valid
 	 */

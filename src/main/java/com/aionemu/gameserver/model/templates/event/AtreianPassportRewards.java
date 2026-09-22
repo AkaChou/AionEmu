@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 艾特里亚 Passport 奖励模板（静态数据/XML）。
  * Atreian Passport Rewards Template (static data/XML).
- *
  * @author Falke_34
  */
 @Getter

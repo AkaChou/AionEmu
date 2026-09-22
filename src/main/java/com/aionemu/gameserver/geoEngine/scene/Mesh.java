@@ -55,7 +55,6 @@ public class Mesh {
 		TriangleStrip,
 		/** 三角形扇。 / Triangle fan. */
 		TriangleFan,
-		/** 混合模式（多段不同图元）。 / Hybrid mode with mixed primitive segments. */
 		Hybrid
 	}
 
@@ -75,8 +74,7 @@ public class Mesh {
 	 * -- GETTER --
 	 *  返回全部顶点缓冲映射。
 	 *  Returns the map of all vertex buffers.
-	 *
-	 * @return 缓冲映射 / buffer map
+	 * 缓冲映射 / buffer map
 	 */
 	@Getter
 	private final IntMap<VertexBuffer> buffers = new IntMap<>();
@@ -84,14 +82,9 @@ public class Mesh {
 	 * -- GETTER --
 	 *  返回点大小。
 	 *  Returns the point size.
-	 *
-	 *
 	 * -- SETTER --
 	 *  设置点大小。
 	 *  Sets the point size.
-	 *
-	 @return 点大小 / point size
-	  * @param pointSize 点大小 / point size
 	 */
 	@Setter
 	@Getter
@@ -100,14 +93,9 @@ public class Mesh {
 	 * -- GETTER --
 	 *  返回线宽。
 	 *  Returns the line width.
-	 *
-	 *
 	 * -- SETTER --
 	 *  设置线宽。
 	 *  Sets the line width.
-	 *
-	 @return 线宽 / line width
-	  * @param lineWidth 线宽 / line width
 	 */
 	@Setter
 	@Getter
@@ -122,14 +110,9 @@ public class Mesh {
 	 * -- GETTER --
 	 *  返回最大骨骼权重数。
 	 *  Returns the max number of bone weights.
-	 *
-	 *
 	 * -- SETTER --
 	 *  设置最大骨骼权重数。
 	 *  Sets the max number of bone weights.
-	 *
-	 @return 最大权重数 / max weights
-	  * @param maxNumWeights 最大权重数 / max weights
 	 */
 	@Setter
 	@Getter
@@ -138,14 +121,9 @@ public class Mesh {
 	 * -- GETTER --
 	 *  返回混合模式起始索引数组。
 	 *  Returns the hybrid mode-start index array.
-	 *
-	 *
 	 * -- SETTER --
 	 *  设置混合模式起始索引数组。
 	 *  Sets the hybrid mode-start index array.
-	 *
-	 @return 起始索引数组 / mode-start array
-	  * @param modeStart 起始索引数组 / mode-start array
 	 */
 	@Setter
 	@Getter
@@ -154,8 +132,6 @@ public class Mesh {
 	 * -- GETTER --
 	 *  返回图元模式。
 	 *  Returns the primitive mode.
-	 *
-	 * @return 图元模式 / primitive mode
 	 */
 	@Getter
 	private Mode mode = Mode.Triangles;
@@ -163,14 +139,9 @@ public class Mesh {
 	 * -- GETTER --
 	 *  返回碰撞标志。
 	 *  Returns collision flags.
-	 *
-	 *
 	 * -- SETTER --
 	 *  设置碰撞标志。
 	 *  Sets collision flags.
-	 *
-	 @return 碰撞标志 / collision flags
-	  * @param collisionFlags 碰撞标志 / collision flags
 	 */
 	@Setter
 	@Getter
@@ -186,7 +157,6 @@ public class Mesh {
 	/**
 	 * 设置图元模式并刷新计数。
 	 * Sets the primitive mode and refreshes counts.
-	 *
 	 * @param mode 图元模式 / primitive mode
 	 */
 	public void setMode(Mode mode) {
@@ -299,7 +269,6 @@ public class Mesh {
 	/**
 	 * 按图元模式将缓冲大小换算为元素个数。
 	 * Converts a buffer size to an element count based on the primitive mode.
-	 *
 	 * @param bufSize 缓冲元素规模 / buffer element size
 	 * @return 图元数 / primitive count
 	 */
@@ -339,7 +308,6 @@ public class Mesh {
 	/**
 	 * 返回指定 LOD 的三角形数（当前实现忽略 lod，等同 {@link #getTriangleCount()}）。
 	 * Returns the triangle count for the given LOD (currently ignores lod; same as {@link #getTriangleCount()}).
-	 *
 	 * @param lod LOD 级别（未使用） / LOD level (unused)
 	 * @return 三角形数 / triangle count
 	 */
@@ -350,7 +318,6 @@ public class Mesh {
 	/**
 	 * 返回三角形（图元）数。
 	 * Returns the triangle (element) count.
-	 *
 	 * @return 图元（元素）数 / element count
 	 */
 	public int getTriangleCount() {
@@ -360,7 +327,6 @@ public class Mesh {
 	/**
 	 * 返回顶点数。
 	 * Returns the vertex count.
-	 *
 	 * @return 顶点数 / vertex count
 	 */
 	public int getVertexCount() {
@@ -370,7 +336,6 @@ public class Mesh {
 	/**
 	 * 手动设置三角形数。
 	 * Manually sets the triangle count.
-	 *
 	 * @param count 三角形数 / triangle count
 	 */
 	public void setTriangleCount(int count) {
@@ -380,7 +345,6 @@ public class Mesh {
 	/**
 	 * 手动设置顶点数。
 	 * Manually sets the vertex count.
-	 *
 	 * @param count 顶点数 / vertex count
 	 */
 	public void setVertexCount(int count) {
@@ -390,7 +354,6 @@ public class Mesh {
 	/**
 	 * 将第 index 个三角形的三个顶点写入 v1/v2/v3（要求 Float 位置 + UnsignedShort 索引）。
 	 * Writes the three vertices of triangle index into v1/v2/v3 (requires Float positions and UnsignedShort indices).
-	 *
 	 * @param index 三角形索引 / triangle index
 	 * @param v1 顶点 1 输出 / vertex 1 out
 	 * @param v2 顶点 2 输出 / vertex 2 out
@@ -423,7 +386,6 @@ public class Mesh {
 	/**
 	 * 将第 index 个三角形写入 {@link Triangle}。
 	 * Writes triangle index into a {@link Triangle}.
-	 *
 	 * @param index 三角形索引 / triangle index
 	 * @param tri 输出三角形 / output triangle
 	 */
@@ -435,7 +397,6 @@ public class Mesh {
 	/**
 	 * 将第 index 个三角形的三个顶点索引写入数组（UnsignedShort 索引）。
 	 * Writes the three vertex indices of triangle index into the array (UnsignedShort indices).
-	 *
 	 * @param index 三角形索引 / triangle index
 	 * @param indices 长度至少 3 的输出数组 / output array of length ≥ 3
 	 */
@@ -456,7 +417,6 @@ public class Mesh {
 	/**
 	 * 返回顶点数组对象 ID。
 	 * Returns the vertex-array object id.
-	 *
 	 * @return 顶点数组对象 ID / VAO id
 	 */
 	public int getId() {
@@ -466,7 +426,6 @@ public class Mesh {
 	/**
 	 * 设置顶点数组对象 ID（仅可设置一次）。
 	 * Sets the vertex-array object id (only once).
-	 *
 	 * @param id 顶点数组对象 ID / VAO id
 	 */
 	public void setId(int id) {
@@ -498,7 +457,6 @@ public class Mesh {
 	/**
 	 * 使用碰撞树与可碰撞对象检测，结果写入 results。
 	 * Collides via the collision tree and writes hits into results.
-	 *
 	 * @param other 目标可碰撞对象 / target collidable
 	 * @param worldMatrix 世界变换 / world transform
 	 * @param worldBound 世界包围体 / world bound
@@ -519,7 +477,6 @@ public class Mesh {
 	/**
 	 * 设置或更新 Float 类型顶点缓冲。
 	 * Sets or updates a Float vertex buffer.
-	 *
 	 * @param type 缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
 	 * @param buf 数据 / data
@@ -544,7 +501,6 @@ public class Mesh {
 	/**
 	 * 以 float 数组设置 Float 缓冲。
 	 * Sets a Float buffer from a float array.
-	 *
 	 * @param type 缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
 	 * @param buf 数据 / data
@@ -556,7 +512,6 @@ public class Mesh {
 	/**
 	 * 设置 UnsignedInt 类型缓冲（仅在该类型尚不存在时）。
 	 * Sets an UnsignedInt buffer (only if that type is not already present).
-	 *
 	 * @param type 缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
 	 * @param buf 数据 / data
@@ -574,7 +529,6 @@ public class Mesh {
 	/**
 	 * 以 int 数组设置 UnsignedInt 缓冲。
 	 * Sets an UnsignedInt buffer from an int array.
-	 *
 	 * @param type 缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
 	 * @param buf 数据 / data
@@ -586,7 +540,6 @@ public class Mesh {
 	/**
 	 * 设置 UnsignedShort 类型缓冲（仅在该类型尚不存在时）。
 	 * Sets an UnsignedShort buffer (only if that type is not already present).
-	 *
 	 * @param type 缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
 	 * @param buf 数据 / data
@@ -604,7 +557,6 @@ public class Mesh {
 	/**
 	 * 以 byte 数组设置 UnsignedByte 缓冲。
 	 * Sets an UnsignedByte buffer from a byte array.
-	 *
 	 * @param type 缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
 	 * @param buf 数据 / data
@@ -616,7 +568,6 @@ public class Mesh {
 	/**
 	 * 设置 UnsignedByte 类型缓冲（仅在该类型尚不存在时）。
 	 * Sets an UnsignedByte buffer (only if that type is not already present).
-	 *
 	 * @param type 缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
 	 * @param buf 数据 / data
@@ -634,7 +585,6 @@ public class Mesh {
 	/**
 	 * 放入已构造好的 {@link VertexBuffer}（类型不可重复）。
 	 * Puts a prebuilt {@link VertexBuffer} (type must not already be set).
-	 *
 	 * @param vb 顶点缓冲 / vertex buffer
 	 */
 	public void setBuffer(VertexBuffer vb) {
@@ -648,7 +598,6 @@ public class Mesh {
 	/**
 	 * 移除指定类型的缓冲。
 	 * Removes the buffer of the given type.
-	 *
 	 * @param type 缓冲类型 / buffer type
 	 */
 	public void clearBuffer(VertexBuffer.Type type) {
@@ -658,7 +607,6 @@ public class Mesh {
 	/**
 	 * 以 short 数组设置 UnsignedShort 缓冲。
 	 * Sets an UnsignedShort buffer from a short array.
-	 *
 	 * @param type 缓冲类型 / buffer type
 	 * @param components 每顶点分量数 / components per vertex
 	 * @param buf 数据 / data
@@ -670,7 +618,6 @@ public class Mesh {
 	/**
 	 * 按类型获取顶点缓冲。
 	 * Gets the vertex buffer of the given type.
-	 *
 	 * @param type 缓冲类型 / buffer type
 	 * @return 顶点缓冲，可能为 null / vertex buffer, or null
 	 */
@@ -681,7 +628,6 @@ public class Mesh {
 	/**
 	 * 按类型获取 Float 数据缓冲。
 	 * Gets the Float data buffer of the given type.
-	 *
 	 * @param type 缓冲类型 / buffer type
 	 * @return FloatBuffer，或 null / FloatBuffer, or null
 	 */
@@ -696,7 +642,6 @@ public class Mesh {
 	/**
 	 * 按类型获取 Short 数据缓冲。
 	 * Gets the Short data buffer of the given type.
-	 *
 	 * @param type 缓冲类型 / buffer type
 	 * @return ShortBuffer，或 null / ShortBuffer, or null
 	 */
@@ -711,7 +656,6 @@ public class Mesh {
 	/**
 	 * 返回包装后的索引缓冲抽象（按底层类型选择实现）。
 	 * Returns a typed {@link IndexBuffer} wrapper over the index data.
-	 *
 	 * @return 索引缓冲，或无索引时为 null / index buffer, or null if none
 	 */
 	public IndexBuffer getIndexBuffer() {
@@ -732,7 +676,6 @@ public class Mesh {
 	/**
 	 * 按比例缩放 2D 纹理坐标（仅支持 Float、2 分量）。
 	 * Scales 2D texture coordinates by the given factor (Float format, 2 components only).
-	 *
 	 * @param scaleFactor 缩放因子 / scale factor
 	 */
 	public void scaleTextureCoordinates(Vector2f scaleFactor) {
@@ -779,7 +722,6 @@ public class Mesh {
 	/**
 	 * 返回网格包围体。
 	 * Returns the mesh bounding volume.
-	 *
 	 * @return 包围体 / bounding volume
 	 */
 	public BoundingVolume getBound() {
@@ -789,7 +731,6 @@ public class Mesh {
 	/**
 	 * 设置网格包围体。
 	 * Sets the mesh bounding volume.
-	 *
 	 * @param modelBound 包围体 / bounding volume
 	 */
 	public void setBound(BoundingVolume modelBound) {
@@ -799,7 +740,6 @@ public class Mesh {
 	/**
 	 * 从碰撞标志低 8 位取得材质 ID。
 	 * Returns the material id from the low 8 bits of collision flags.
-	 *
 	 * @return 材质 ID / material id
 	 */
 	public byte getMaterialId() {
@@ -809,7 +749,6 @@ public class Mesh {
 	/**
 	 * 从碰撞标志高 8 位取得碰撞意图掩码。
 	 * Returns the intention mask from the high 8 bits of collision flags.
-	 *
 	 * @return 碰撞意图掩码 / intention mask
 	 */
 	public byte getIntentions() {

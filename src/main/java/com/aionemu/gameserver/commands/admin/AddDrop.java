@@ -7,7 +7,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 管理员添加掉落命令（当前未实现，仅提示）。
  * Admin add-drop command (currently unimplemented; prints a notice only).
- *
  * @author ATracer
  */
 public class AddDrop extends AdminCommand {
@@ -23,7 +22,6 @@ public class AddDrop extends AdminCommand {
 	/**
 	 * 执行添加掉落：当前功能未实现。
 	 * Executes add-drop: currently not implemented.
-	 *
 	 * @param params 参数：怪物/物品/数量/几率 / mob, item, min/max, chance
 	 */
 	@Override
@@ -71,7 +69,6 @@ public class AddDrop extends AdminCommand {
 	/**
 	 * 参数错误时输出 {@code //adddrop} 用法。
 	 * Prints {@code //adddrop} usage on invalid arguments.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

@@ -26,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 自动公告服务，按间隔向在线玩家广播系统公告。
  * Automatic announcement service broadcasting system messages to online players on a schedule.
- *
  * @author Divinity
  */
 @Slf4j
@@ -50,11 +49,9 @@ public class AnnouncementService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
@@ -72,7 +69,6 @@ public class AnnouncementService {
 	/**
 	 * 注入 Spring ObjectProvider 以覆盖默认单例。
 	 * Injects a Spring ObjectProvider to override the default singleton.
-	 *
 	 * @param instanceProvider provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<AnnouncementService> instanceProvider) {
@@ -145,7 +141,6 @@ public class AnnouncementService {
 	/**
 	 * 新增一条公告到数据库。
 	 * Adds an announcement to the database.
-	 *
 	 * @param announce announcement
 	 */
 	public void addAnnouncement(Announcement announce) {
@@ -155,10 +150,7 @@ public class AnnouncementService {
 	/**
 	 * 按 ID 删除公告。
 	 * Deletes an announcement by id.
-	 *
 	 * announcement id
-	 *
-	 * @param idAnnounce
 	 * @return 删除成功返回 true / true if deleted
 	 */
 	public boolean delAnnouncement(final int idAnnounce) {
@@ -168,7 +160,6 @@ public class AnnouncementService {
 	/**
 	 * 获取数据库中的全部公告。
 	 * Returns all announcements from the database.
-	 *
 	 * announcement set
 	 */
 	public Set<Announcement> getAnnouncements() {
@@ -178,7 +169,6 @@ public class AnnouncementService {
 	/**
 	 * 获取公告 DAO 的快捷方法。
 	 * Shortcut to the announcements DAO.
-	 *
 	 * DAO instance
 	 */
 	private AnnouncementsDAO getDAO() {

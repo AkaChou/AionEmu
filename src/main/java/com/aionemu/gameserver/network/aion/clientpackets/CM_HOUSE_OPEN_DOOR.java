@@ -23,7 +23,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 打开/进入房屋门（或离开房屋）的客户端包。
  * Client packet for opening/entering a house door (or leaving a house).
- *
  * @author Wartraxx
  */
 public class CM_HOUSE_OPEN_DOOR extends AionClientPacket {
@@ -32,7 +31,6 @@ public class CM_HOUSE_OPEN_DOOR extends AionClientPacket {
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余合法状态 / additional valid states

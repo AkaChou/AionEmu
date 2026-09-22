@@ -38,7 +38,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 天族/魔族神代代理人（Agent / Empyrean Lord Agent）战斗活动服务。
  * Service for Empyrean Lord Agent fight events (scheduled world spawns and battle messages).
- *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -101,7 +100,6 @@ public class AgentService {
 	/**
 	 * 启动指定地点的代理人战斗，并在持续时长结束后自动停止。
 	 * Start the agent fight at the given location and auto-stop after the configured duration.
-	 *
 	 * @param id 活动地点 ID / agent location id
 	 */
 	public void startAgentFight(final int id) {
@@ -117,7 +115,6 @@ public class AgentService {
 	/**
 	 * 停止指定地点的代理人战斗。
 	 * Stop the agent fight at the given location.
-	 *
 	 * @param id 活动地点 ID / agent location id
 	 */
 	public void stopAgentFight(int id) {
@@ -131,7 +128,6 @@ public class AgentService {
 	/**
 	 * 按状态刷出代理人活动相关 NPC。
 	 * Spawn agent-event NPCs for the given location and state.
-	 *
 	 * @param loc 活动地点 / agent location
 	 * spawn state
 	 */
@@ -150,7 +146,6 @@ public class AgentService {
 	/**
 	 * 广播神代代理人倒计时系统消息。
 	 * Broadcast Empyrean Lord Agent countdown system messages.
-	 *
 	 * @param id 活动地点 ID / agent location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -174,7 +169,6 @@ public class AgentService {
 	/**
 	 * 广播代理人战斗 10 分钟预告。
 	 * Broadcast the 10-minute agent battle warning.
-	 *
 	 * @param id 活动地点 ID / agent location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -195,7 +189,6 @@ public class AgentService {
 	/**
 	 * 广播代理人战斗 5 分钟预告。
 	 * Broadcast the 5-minute agent battle warning.
-	 *
 	 * @param id 活动地点 ID / agent location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -216,7 +209,6 @@ public class AgentService {
 	/**
 	 * 广播提亚马特化身（Governor Sunayaka）出现消息。
 	 * Broadcast Governor Sunayaka (Tiamat incarnation) appearance messages.
-	 *
 	 * @param id 活动地点 ID / agent location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -239,7 +231,6 @@ public class AgentService {
 	/**
 	 * 广播狂暴提亚马特化身（Berserker Sunayaka）出现消息。
 	 * Broadcast Berserker Sunayaka (Tiamat incarnation) appearance messages.
-	 *
 	 * @param id 活动地点 ID / agent location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -262,7 +253,6 @@ public class AgentService {
 	/**
 	 * 清除指定地点已刷出的代理人活动 NPC。
 	 * Despawn agent-event NPCs at the given location.
-	 *
 	 * @param loc 活动地点 / agent location
 	 */
 	public void despawn(AgentLocation loc) {
@@ -283,7 +273,6 @@ public class AgentService {
 	/**
 	 * 判断指定地点是否正在进行代理人战斗。
 	 * Whether an agent fight is in progress at the given location.
-	 *
 	 * @param id 活动地点 ID / agent location id
 	 * @return 若 in progress 则为 true / true if in progress
 	 */
@@ -294,7 +283,6 @@ public class AgentService {
 	/**
 	 * 返回当前活跃的代理人战斗映射。
 	 * Return the map of currently active agent fights.
-	 *
 	 * @return 地点 ID → 战斗实例 / location id to fight instance
 	 */
 	public Map<Integer, AgentFight<?>> getActiveFights() {
@@ -304,7 +292,6 @@ public class AgentService {
 	/**
 	 * 返回代理人战斗持续时长（小时，来自配置）。
 	 * Return agent fight duration in hours (from config).
-	 *
 	 * @return 持续小时数 / duration hours
 	 */
 	public int getDuration() {
@@ -314,7 +301,6 @@ public class AgentService {
 	/**
 	 * 按 ID 获取代理人活动地点。
 	 * Get an agent location by id.
-	 *
 	 * @param id 活动地点 ID / agent location id
 	 * agent location
 	 */
@@ -325,7 +311,6 @@ public class AgentService {
 	/**
 	 * 返回全部代理人活动地点。
 	 * Return all agent locations.
-	 *
 	 * location map
 	 */
 	public Map<Integer, AgentLocation> getAgentLocations() {
@@ -335,7 +320,6 @@ public class AgentService {
 	/**
 	 * 获取 AgentService 单例（Spring 提供者优先，否则 holder）。
 	 * Return the AgentService singleton (Spring provider first, else holder).
-	 *
 	 * service instance
 	 */
 	public static AgentService getInstance() {
@@ -349,7 +333,6 @@ public class AgentService {
 	/**
 	 * 注入 Spring ObjectProvider，供 getInstance 使用。
 	 * Inject the Spring ObjectProvider used by getInstance().
-	 *
 	 * @param instanceProvider Spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<AgentService> instanceProvider) {

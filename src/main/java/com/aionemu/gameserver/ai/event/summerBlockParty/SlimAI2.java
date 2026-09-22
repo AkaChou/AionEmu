@@ -15,7 +15,6 @@ import java.time.ZonedDateTime;
 /**
  * Summer Block Party 活动 NPC AI：Slim（@AIName "slim"），继承 GeneralNpcAI2。
  * Summer Block Party event NPC AI: Slim (@AIName "slim"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("slim")

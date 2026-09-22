@@ -17,9 +17,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * 账号模型。
  * Account model.
- *
  * @author SoulKeeper
- * @modified cura
  */
 @Getter
 @Setter
@@ -46,9 +44,6 @@ public class Account implements Iterable<PlayerAccountData> {
 
 	private final Map<Integer, PlayerAccountData> players = new HashMap<>();
 
-	/**
-	 * @return 账号仓库 / the accountWarehouse
-	 */
 	private Storage accountWarehouse;
 
 	private int numberOfAsmos = 0;
@@ -103,17 +98,10 @@ public class Account implements Iterable<PlayerAccountData> {
 		return id;
 	}
 
-	/**
-	 * @param chaOid
-	 * @return PlayerAccountData
-	 */
 	public PlayerAccountData getPlayerAccountData(int chaOid) {
 		return players.get(chaOid);
 	}
 
-	/**
-	 * @param accPlData
-	 */
 	public void addPlayerAccountData(PlayerAccountData accPlData) {
 		players.put(accPlData.getPlayerCommonData().getPlayerObjId(), accPlData);
 		switch (accPlData.getPlayerCommonData().getRace()) {

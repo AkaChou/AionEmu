@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Rentus Base 副本 NPC AI：Broken Barrel（@AIName "broken_barrel"），继承 AggressiveNpcAI2。
  * Rentus Base instance NPC AI: Broken Barrel (@AIName "broken_barrel"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("broken_barrel")

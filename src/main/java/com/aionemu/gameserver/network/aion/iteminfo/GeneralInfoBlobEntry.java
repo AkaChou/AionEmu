@@ -12,9 +12,7 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
  * General item-info blob sent with almost all items.
  * It is the only block for non-equipable items, and the last block for equipable ones.
  * Includes mask, count, creator, expire time, temporary exchange time, and seal state.
- *
  * @author -Nemesiss-
- * @modified Rolandas
  */
 public class GeneralInfoBlobEntry extends ItemBlobEntry {
 

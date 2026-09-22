@@ -14,9 +14,6 @@ public abstract class GLObject implements Cloneable {
 	 * -- GETTER --
 	 *  返回对象 ID。多数情况下用户代码不应依赖此值。
 	 *  Returns the object ID. Should not be used by user code in most cases.
-	 *
-	 * @return 对象 ID / object ID
-
 	 */
 	@Getter
 	protected int id = -1;
@@ -31,9 +28,7 @@ public abstract class GLObject implements Cloneable {
      * -- GETTER --
      *  是否需要更新。
      *  Whether an update is needed.
-     *
-     * @return 需要更新则为 true / true if update is needed
-
+     * 需要更新则为 true / true if update is needed
      */
 	@Getter
     protected boolean updateNeeded = true;
@@ -69,7 +64,6 @@ public abstract class GLObject implements Cloneable {
 	/**
 	 * 按类型构造，并分配句柄引用。
 	 * Constructs by type and allocates a handle reference.
-	 *
 	 * @param type GL 对象类型 / GL object type
 	 */
 	public GLObject(Type type) {
@@ -80,7 +74,6 @@ public abstract class GLObject implements Cloneable {
 	/**
 	 * 受保护构造：不分配句柄引用，供子类 createDestructableClone() 使用。
 	 * Protected constructor that does not allocate a handle ref; used by subclasses for createDestructableClone().
-	 *
 	 * @param type GL 对象类型 / GL object type
 	 * @param id 已有对象 ID / existing object ID
 	 */
@@ -92,7 +85,6 @@ public abstract class GLObject implements Cloneable {
 	/**
 	 * 设置 GL 对象 ID。由渲染器使用，用户代码通常不应调用。
 	 * Sets the ID of the GLObject. Used by the renderer; must not be called by user code in most cases.
-	 *
 	 * @param id 要设置的 ID / ID to set
 	 */
 	public void setId(int id) {
@@ -127,7 +119,6 @@ public abstract class GLObject implements Cloneable {
 	/**
 	 * 创建深拷贝。浅拷贝请使用 createDestructableClone()。
 	 * Creates a deep clone. For a shallow clone, use createDestructableClone().
-	 *
 	 * @return 深拷贝实例 / deep clone instance
 	 */
 	@Override
@@ -162,7 +153,6 @@ public abstract class GLObject implements Cloneable {
 	/**
 	 * 创建本 GL 对象的浅拷贝；对该拷贝调用 deleteObject 应仍可用。
 	 * Creates a shallow clone of this GL object. The deleteObject method should remain functional for this clone.
-	 *
 	 * @return 可销毁的浅拷贝 / destructable shallow clone
 	 */
 	public abstract GLObject createDestructableClone();

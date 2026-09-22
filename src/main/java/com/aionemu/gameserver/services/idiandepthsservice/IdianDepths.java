@@ -11,10 +11,8 @@ import lombok.RequiredArgsConstructor;
 /**
  * 伊迪安深渊活动抽象基类。
  * Abstract base for Idian Depths world events.
- *
  * <p>封装启动/停止幂等守卫与按状态刷怪/清怪。
  * Encapsulates idempotent start/stop guards and spawn/despawn by state type.</p>
- *
  * @author Rinzler (Encom)
  * @param <IL> 伊迪安深渊地点类型 / Idian Depths location type
  */
@@ -26,8 +24,6 @@ public abstract class IdianDepths<IL extends IdianDepthsLocation> {
 	/**
 	 * 获取绑定地点。
 	 * Returns the bound location.
-	 *
-	 * @return 绑定地点 / bound location
 	 */
 	private final IL idianDepthsLocation;
 	private final AtomicBoolean closed = new AtomicBoolean();
@@ -76,7 +72,6 @@ public abstract class IdianDepths<IL extends IdianDepthsLocation> {
 	/**
 	 * 按状态类型刷新刷怪。
 	 * Spawns entities by state type.
-	 *
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(IdianDepthsStateType type) {
@@ -94,7 +89,6 @@ public abstract class IdianDepths<IL extends IdianDepthsLocation> {
 	/**
 	 * 是否已关闭。
 	 * Whether the event is closed.
-	 *
 	 * @return 已关闭则为 true / true if closed
 	 */
 	public boolean isClosed() {
@@ -104,7 +98,6 @@ public abstract class IdianDepths<IL extends IdianDepthsLocation> {
 	/**
 	 * 获取地点 ID。
 	 * Returns the location id.
-	 *
 	 * @return 地点 ID / location id
 	 */
 	public int getIdianDepthsLocationId() {

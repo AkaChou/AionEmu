@@ -22,7 +22,6 @@ import java.util.List;
 /**
  * Trials Of Eternity 副本 NPC AI：Red Energy Altar（@AIName "Altar_Red"），继承 NpcAI2。
  * Trials Of Eternity instance NPC AI: Red Energy Altar (@AIName "Altar_Red"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Altar_Red")

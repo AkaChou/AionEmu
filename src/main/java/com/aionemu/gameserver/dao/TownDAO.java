@@ -15,7 +15,6 @@ public abstract class TownDAO implements DAO {
 	/**
 	 * 按种族加载城镇数据。
 	 * Loads towns for the given race.
-	 *
 	 * @param race 阵营 / race
 	 * @return 城镇 ID 到城镇对象的映射 / map of town id to town
 	 */
@@ -24,7 +23,6 @@ public abstract class TownDAO implements DAO {
 	/**
 	 * 保存城镇数据。
 	 * Stores a town.
-	 *
 	 * @param town 城镇 / town
 	 */
 	public abstract void store(Town town);
@@ -32,7 +30,6 @@ public abstract class TownDAO implements DAO {
 	/**
 	 * 返回实现唯一类名标识。
 	 * Returns unique class name for all implementations.
-	 *
 	 * @return 完整类名 / fully qualified class name
 	 */
 	@Override

@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 管理员添加套装命令：按套装模板 ID 发放整套装备。
  * Admin add-set command: grants a full item set by set-template ID.
- *
  * @author Antivirus
  */
 public class AddSet extends AdminCommand {
@@ -28,7 +27,6 @@ public class AddSet extends AdminCommand {
 	/**
 	 * 执行添加套装：解析玩家与套装 ID 后逐件发放。
 	 * Executes add-set: resolves player and set id, then grants each part.
-	 *
 	 * @param params 参数：玩家名（可选）、套装 ID / optional player name, item-set id
 	 */
 	@Override
@@ -95,7 +93,6 @@ public class AddSet extends AdminCommand {
 	/**
 	 * 参数错误时输出 {@code //addset} 用法。
 	 * Prints {@code //addset} usage on invalid arguments.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

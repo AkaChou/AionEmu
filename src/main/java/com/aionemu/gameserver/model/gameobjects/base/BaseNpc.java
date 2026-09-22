@@ -10,7 +10,6 @@ import lombok.Getter;
 /**
  * 基础 NPC 游戏对象。
  * Base Npc game object.
- *
  * @author Ranastic
  */
 

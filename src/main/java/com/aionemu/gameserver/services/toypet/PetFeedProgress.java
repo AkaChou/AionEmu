@@ -6,7 +6,6 @@ import lombok.Setter;
 /**
  * 宠物喂养进度，记录积分、消耗次数与饥饿等级。
  * Pet feed progress tracking points, consumption counts and hunger level.
- *
  * @author Rolandas
  */
 @Getter
@@ -16,7 +15,6 @@ public final class PetFeedProgress {
 	/**
 	 * 返回累计喂养积分。
 	 * Returns total feed points.
-	 *
 	 * Total points
 	 */
 	private int totalPoints = 0;
@@ -25,7 +23,6 @@ public final class PetFeedProgress {
 	/**
 	 * 返回当前饥饿等级。
 	 * Returns current hunger level.
-	 *
 	 * Hungry level
 	 */
 	private PetHungryLevel hungryLevel = PetHungryLevel.HUNGRY;
@@ -33,15 +30,13 @@ public final class PetFeedProgress {
 	/**
 	 * 是否处于喜爱食物喂养流程。
 	 * Whether currently in loved-food feeding flow.
-	 *
-	 * @return 是否喜爱喂养 / Loved feeded flag
+	 * 是否喜爱喂养 / Loved feeded flag
 	 */
 	private boolean lovedFeeded = false;
 
 	/**
 	 * 以喜爱食物上限初始化喂养进度。
 	 * Initialize feed progress with loved-food limit.
-	 *
 	 * @param lovedFoodLimit 喜爱食物上限 / Loved food limit
 	 */
 	public PetFeedProgress(short lovedFoodLimit) {
@@ -51,7 +46,6 @@ public final class PetFeedProgress {
 	/**
 	 * 设置累计喂养积分（14 位掩码）。
 	 * Set total feed points (14-bit mask).
-	 *
 	 * @param points Points
 	 */
 	public void setTotalPoints(int points) {
@@ -61,7 +55,6 @@ public final class PetFeedProgress {
 	/**
 	 * 返回普通食物已喂次数。
 	 * Returns regular food consumption count.
-	 *
 	 * @return 普通食物次数 / Regular count
 	 */
 	public int getRegularCount() {
@@ -71,7 +64,6 @@ public final class PetFeedProgress {
 	/**
 	 * 设置普通食物已喂次数。
 	 * Set regular food consumption count.
-	 *
 	 * @param count Count
 	 */
 	public void setRegularCount(short count) {
@@ -81,7 +73,6 @@ public final class PetFeedProgress {
 	/**
 	 * 返回剩余可喂喜爱食物次数。
 	 * Returns remaining loved-food feed count.
-	 *
 	 * Remaining count
 	 */
 	public int getLovedFoodRemaining() {
@@ -99,7 +90,6 @@ public final class PetFeedProgress {
 	/**
 	 * 增加一次喂养计数。
 	 * Increment feed consumption count.
-	 *
 	 * @param lovedFood 是否喜爱食物 / Whether loved food
 	 */
 	public void incrementCount(boolean lovedFood) {
@@ -126,7 +116,6 @@ public final class PetFeedProgress {
 	/**
 	 * 将进度编码为协议包用整型值。
 	 * Encode progress into the integer value used by packets.
-	 *
 	 * @return 编码后的数据 / Encoded data
 	 */
 	public int getDataForPacket() {
@@ -142,7 +131,6 @@ public final class PetFeedProgress {
 	/**
 	 * 从存档/协议整型还原进度。
 	 * Restore progress from a saved/packet integer value.
-	 *
 	 * @param savedData Saved data
 	 */
 	public void setData(int savedData) {

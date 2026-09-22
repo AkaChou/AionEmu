@@ -12,7 +12,6 @@ public abstract class HouseScriptsDAO implements DAO {
 	/**
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier for this DAO.
-	 *
 	 * @return 类名 / class name
 	 */
 	@Override
@@ -23,7 +22,6 @@ public abstract class HouseScriptsDAO implements DAO {
 	/**
 	 * 获取玩家房屋脚本。
 	 * Gets player house scripts.
-	 *
 	 * @param paramInt 房屋/玩家相关 ID / house or player related ID
 	 * @return 玩家脚本 / player scripts
 	 */
@@ -32,7 +30,6 @@ public abstract class HouseScriptsDAO implements DAO {
 	/**
 	 * 添加房屋脚本。
 	 * Adds a house script.
-	 *
 	 * @param paramInt1 房屋/玩家相关 ID / house or player related ID
 	 * @param paramInt2 脚本索引 / script index
 	 * @param paramString 脚本内容 / script content
@@ -42,7 +39,6 @@ public abstract class HouseScriptsDAO implements DAO {
 	/**
 	 * 更新房屋脚本。
 	 * Updates a house script.
-	 *
 	 * @param paramInt1 房屋/玩家相关 ID / house or player related ID
 	 * @param paramInt2 脚本索引 / script index
 	 * @param paramString 脚本内容 / script content
@@ -52,7 +48,6 @@ public abstract class HouseScriptsDAO implements DAO {
 	/**
 	 * 删除房屋脚本。
 	 * Deletes a house script.
-	 *
 	 * @param paramInt1 房屋/玩家相关 ID / house or player related ID
 	 * @param paramInt2 脚本索引 / script index
 	 */

@@ -3,7 +3,6 @@ package com.aionemu.gameserver.spawnengine;
 /**
  * 巡逻队形类型枚举。
  * Walker group formation type enum.
- *
  * @author vlog
  */
 public enum WalkerGroupType {

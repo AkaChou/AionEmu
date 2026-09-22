@@ -17,7 +17,6 @@ import lombok.Setter;
 /**
  * NPC 的游戏属性：基础属性计算与缓存。
  * NPC game stats: base stat calculation and caching.
- *
  * @author xavier
  */
 @Getter
@@ -36,9 +35,6 @@ public class NpcGameStats extends CreatureGameStats<Npc> {
 	private long lastSpawnPointChaseCheck;
 	private int cachedState;
 	private Stat2 cachedSpeedStat;
-	/**
-	 * @param lastGeoZUpdate the lastGeoZUpdate to set
-	 */
 	private long lastGeoZUpdate;
 	private long lastChangeTarget = 0;
 	private int pAccuracy = 0;

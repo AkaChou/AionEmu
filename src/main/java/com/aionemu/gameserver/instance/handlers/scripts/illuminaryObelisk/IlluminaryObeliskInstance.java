@@ -32,7 +32,6 @@ import java.util.concurrent.Future;
 /**
  * 辉耀方尖碑副本事件处理器。
  * Instance event handler for Illuminary Obelisk.
- *
  * @author Encom
  */
 
@@ -128,15 +127,9 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 			case 702659: //高级修道院箱子。 / Noble Abbey Box.
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[活动] 高级修道院礼包。 / [Event] Noble Abbey Bundle.
 		    break;
-		   /**
-	 * 每台“护盾发生器”需要 3 个理念物品，共 12 个，可在副本各处找到 / Each "Shield Generator" unit needs 3 ide items, 12 items in total, you can find them all around the instance
-	 */
 			case 730884: //Flourishing Idium.
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000289, 3));
 			break;
-		   /**
-	 * 用于大炮的炸弹出现在副本各处的箱子中，位置每次不同，请一并收集 / Bombs to use the cannons appear in chests around the instance in a different place every time, collect them too
-	 */
 			case 730885: //Danuar Cannonballs.
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000290, 3));
 			break;
@@ -146,7 +139,6 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -179,7 +171,6 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -266,7 +257,6 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -277,9 +267,6 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 					}
 				});
 			break;
-		   /**
-	 * 防御加农：每个护盾单元配有防御加农。 / Defense Cannons: Each Shield Unit has a defense cannon that can be used. This cannons do powerful wide area damage attacks. In order to use them you need to have Bomb items. When a shield is charged completely a cannon will spawn to help in the defense of the area. Determining a person to use the cannon and positioning before the mobs come is a recommended. Bombs to use the cannons appear in chests around the instance in a different place every time, collect them too
-	 */
 			case 702009: //Danuar Cannon.
 			case 702021: //Danuar Cannon.
 			case 702022: //Danuar Cannon.
@@ -534,7 +521,6 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -611,7 +597,6 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -688,7 +673,6 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -765,7 +749,6 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -1364,7 +1347,6 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -1402,7 +1384,6 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
                     /**
                      * 处理 visit。
                      * Handle visit.
-                     *
                      * @param player 玩家 / player
                      */
                     @Override
@@ -1419,7 +1400,6 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -1430,7 +1410,6 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -1440,7 +1419,6 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	/**
 	 * 移除相关物品。
 	 * Remove related items.
-	 *
 	 * @param player 玩家 / player
 	 */
 
@@ -1521,7 +1499,6 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
-	 *
 	 * @param player 玩家 / player
 	 */
 

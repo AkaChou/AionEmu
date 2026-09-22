@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Reshanta 区域 NPC AI：Miren Crystal Sword（@AIName "miren_crystal_sword"），继承 NpcAI2。
  * Reshanta zone NPC AI: Miren Crystal Sword (@AIName "miren_crystal_sword"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("miren_crystal_sword")

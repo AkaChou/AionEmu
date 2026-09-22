@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端展示召唤物控制面板。
  * Server packet displaying the summon control panel on the client.
- *
  * @author ATracer, xTz
  */
 @AllArgsConstructor

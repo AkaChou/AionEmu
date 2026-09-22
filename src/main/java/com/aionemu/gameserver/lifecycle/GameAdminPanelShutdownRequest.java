@@ -29,7 +29,6 @@ public final class GameAdminPanelShutdownRequest implements DisposableBean {
     /**
      * 构造并注入进程运行时桥提供者。
      * Construct and inject the process-runtime-bridge provider.
-     *
      * @param processRuntimeBridgeProvider 进程运行时桥提供者 / Process-runtime-bridge provider
      */
     @Autowired
@@ -40,7 +39,6 @@ public final class GameAdminPanelShutdownRequest implements DisposableBean {
     /**
      * 设置进程运行时桥提供者（静态访问）。
      * Set the process-runtime-bridge provider (static access).
-     *
      * @param processRuntimeBridgeProvider 进程运行时桥提供者 / Process-runtime-bridge provider
      */
     public static void setProcessRuntimeBridgeProvider(ObjectProvider<AionProcessRuntimeBridge> processRuntimeBridgeProvider) {
@@ -74,7 +72,6 @@ public final class GameAdminPanelShutdownRequest implements DisposableBean {
     /**
      * 解析进程运行时桥：优先 Spring 提供，否则新建。
      * Resolve the process runtime bridge: prefer Spring provider, otherwise create new.
-     *
      * @return 进程运行时桥 / Process runtime bridge
      */
     private static AionProcessRuntimeBridge processRuntimeBridge() {

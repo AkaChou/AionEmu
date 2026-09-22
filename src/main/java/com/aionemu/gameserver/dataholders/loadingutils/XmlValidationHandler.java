@@ -10,7 +10,6 @@ import jakarta.xml.bind.ValidationEventLocator;
 /**
  * JAXB XML 校验事件处理器：致命/错误时记录行号并抛出 Error，其余事件放行。
  * JAXB XML validation-event handler: logs line/column and throws Error on fatal/error events, otherwise continues.
- *
  * @author Rolandas
  */
 @Slf4j
@@ -20,7 +19,6 @@ public class XmlValidationHandler implements ValidationEventHandler {
 	/**
 	 * 处理 JAXB 校验事件；致命错误与错误会中断加载。
 	 * Handles a JAXB validation event; fatal and error severities abort loading.
-	 *
 	 * @param event 校验事件 / validation event
 	 * @return 可继续则为 true / true if processing may continue
 	 */

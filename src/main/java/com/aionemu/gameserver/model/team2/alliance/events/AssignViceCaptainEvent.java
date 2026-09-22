@@ -27,7 +27,6 @@ public class AssignViceCaptainEvent extends AbstractTeamPlayerEvent<PlayerAllian
 	/**
 	 * 检查事件条件（玩家在线）。
 	 * Checks the event condition (player online).
-	 *
 	 * @return 条件是否满足 / whether the condition holds
 	 */
 	@Override

@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Kromedes Trial 副本 NPC AI：Maga Potion Manor Entrance（@AIName "maga_potion_2"），继承 NpcAI2。
  * Kromedes Trial instance NPC AI: Maga Potion Manor Entrance (@AIName "maga_potion_2"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("maga_potion_2")

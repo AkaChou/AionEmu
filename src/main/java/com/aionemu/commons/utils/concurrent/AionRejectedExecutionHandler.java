@@ -15,7 +15,6 @@ public final class AionRejectedExecutionHandler implements RejectedExecutionHand
     /**
      * 处理被拒绝的任务。
      * Handle a rejected task.
-     *
      * @param r        被拒绝任务 / Rejected task
      * @param executor 线程池 / Thread pool
      */

@@ -14,7 +14,6 @@ import lombok.Getter;
 /**
  * 艾特里亚图鉴模板（静态数据/XML）。
  * XML template.
- *
  * @author Ranastic
  */
 @XmlAccessorType(XmlAccessType.FIELD)

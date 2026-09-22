@@ -19,7 +19,6 @@ import lombok.Getter;
 /**
  * 宝箱模板数据容器，按 NPC ID 与名称索引宝箱配置。
  * Chest template data holder, indexing chest configs by NPC id and name.
- *
  * @author Wakizashi
  */
 @Getter
@@ -30,8 +29,6 @@ public class ChestData {
 	/**
 	 * 返回原始宝箱模板列表。
 	 * Returns the raw chest template list.
-	 *
-	 * @return 宝箱模板列表 / chest template list
 	 */
 	@XmlElement(name = "chest")
 	private List<ChestTemplate> chests;
@@ -61,7 +58,6 @@ public class ChestData {
 	/**
 	 * 返回已加载的宝箱数量。
 	 * Returns the number of loaded chests.
-	 *
 	 * @return 已加载的宝箱数量 / Returns the number of loaded chests.
 	 */
 	public int size() {
@@ -71,7 +67,6 @@ public class ChestData {
 	/**
 	 * 按 NPC ID 获取宝箱模板。
 	 * Returns the chest template for the given NPC id.
-	 *
 	 * @param npcId NPC ID / npc id
 	 * @return 模板，不存在则为 null / template or null
 	 */
@@ -82,7 +77,6 @@ public class ChestData {
 	/**
 	 * 设置宝箱列表并重建索引（用于热重载）。
 	 * Sets the chest list and rebuilds indexes (for reload).
-	 *
 	 * @param chests 宝箱模板列表 / chest template list
 	 */
 	public void setChests(List<ChestTemplate> chests) {

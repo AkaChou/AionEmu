@@ -11,7 +11,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * <p>
  * 访问或更新会将条目移到链表头部；超出容量时淘汰尾部最久未用项。
  * Access or update moves an entry to the list head; overflow evicts the least-recent tail.
- *
  * @param <K> 键类型，须可比较 / Key type, must be comparable
  * @param <V> 值类型 / Value type
  * @author Rolandas
@@ -64,7 +63,6 @@ public class LastUsedCache<K extends Comparable, V> implements Serializable {
 		/**
 		 * 使用键值构造。
 		 * Construct with key and value.
-		 *
 		 * @param k 键 / Key
 		 * @param v 值 / Value
 		 */
@@ -108,7 +106,6 @@ public class LastUsedCache<K extends Comparable, V> implements Serializable {
 	/**
 	 * 从双向链表中摘除节点。
 	 * Unlink an item from the doubly linked list.
-	 *
 	 * @param item 待移除节点 / Item to remove
 	 */
 	void removeItem(Item item) {
@@ -121,7 +118,6 @@ public class LastUsedCache<K extends Comparable, V> implements Serializable {
 	/**
 	 * 将节点插入到链表头部。
 	 * Insert an item at the list head.
-	 *
 	 * @param item 待插入节点 / Item to insert
 	 */
 	void insertHead(Item item) {
@@ -136,7 +132,6 @@ public class LastUsedCache<K extends Comparable, V> implements Serializable {
 	/**
 	 * 将已有节点移动到链表头部。
 	 * Move an existing item to the list head.
-	 *
 	 * @param item 待移动节点 / Item to move
 	 */
 	void moveToHead(Item item) {
@@ -153,7 +148,6 @@ public class LastUsedCache<K extends Comparable, V> implements Serializable {
 	/**
 	 * 使用最大容量构造。
 	 * Construct with a maximum object count.
-	 *
 	 * @param maxObjects 最大条目数，0 表示不限制 / Max entries, 0 means unlimited
 	 */
 	public LastUsedCache(int maxObjects) {
@@ -165,7 +159,6 @@ public class LastUsedCache<K extends Comparable, V> implements Serializable {
 	/**
 	 * 返回全部缓存键值对（按最近使用顺序）。
 	 * Return all cache pairs (most-recent first).
-	 *
 	 * @return 键值对数组 / Array of pairs
 	 */
 	public CachePair[] getAll() {
@@ -188,7 +181,6 @@ public class LastUsedCache<K extends Comparable, V> implements Serializable {
 	/**
 	 * 按键获取值；命中时提升为最近使用。未找到返回 null。
 	 * Get a value by key; promote to most-recent on hit. Returns null if not found.
-	 *
 	 * @param key 键 / Key
 	 * @return 缓存值，不存在时为 null / Value or null
 	 */
@@ -206,7 +198,6 @@ public class LastUsedCache<K extends Comparable, V> implements Serializable {
 	/**
 	 * 添加或更新缓存项；已存在则更新并提升；满则淘汰最久未用。
 	 * Add or renew a cache pair; update and promote if present; evict least-recent when full.
-	 *
 	 * @param key 键 / Key
 	 * @param value 值 / Value
 	 */
@@ -231,7 +222,6 @@ public class LastUsedCache<K extends Comparable, V> implements Serializable {
 	/**
 	 * 按键移除缓存项。
 	 * Remove a cache entry by key.
-	 *
 	 * @param key 键 / Key
 	 */
 	public void remove(K key) {
@@ -246,7 +236,6 @@ public class LastUsedCache<K extends Comparable, V> implements Serializable {
 	/**
 	 * 当前缓存大小。
 	 * Current cache size.
-	 *
 	 * @return 条目数 / Entry count
 	 */
 	public int size() {

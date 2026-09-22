@@ -20,7 +20,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Aturam Sky Fortress 副本 NPC AI：Alarm（@AIName "alarm"），继承 AggressiveNpcAI2。
  * Aturam Sky Fortress instance NPC AI: Alarm (@AIName "alarm"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("alarm")

@@ -20,7 +20,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * RvR 相关 NPC AI：Field Gun（@AIName "field_gun"），继承 NpcAI2。
  * RvR-related NPC AI: Field Gun (@AIName "field_gun"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("field_gun")

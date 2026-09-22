@@ -12,7 +12,6 @@ import com.aionemu.gameserver.ai2.AI2Actions;
 /**
  * RvR 相关 NPC AI：Guardian Scout（@AIName "guardian_scout"），继承 AggressiveNpcAI2。
  * RvR-related NPC AI: Guardian Scout (@AIName "guardian_scout"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("guardian_scout")

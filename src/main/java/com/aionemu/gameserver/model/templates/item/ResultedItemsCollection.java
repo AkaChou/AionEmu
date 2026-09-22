@@ -11,7 +11,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 产物物品集合模板：普通产物、随机产物与产物组。
  * Resulted items collection template: regular, random and set outputs.
- *
  * @author antness
  */
 @XmlType(name = "ResultedItemsCollection")

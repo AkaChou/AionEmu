@@ -16,7 +16,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Levinshor 区域 NPC AI：Cruel Lamia（@AIName "cruel_lamia"），继承 AggressiveNpcAI2。
  * Levinshor zone NPC AI: Cruel Lamia (@AIName "cruel_lamia"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("cruel_lamia")

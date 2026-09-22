@@ -8,7 +8,6 @@ import com.aionemu.loginserver.taskmanager.trigger.TaskFromDBTrigger;
 /**
  * 重启后触发：启动完成后延迟或阻塞执行任务。
  * After-restart trigger: run the task delayed or blocking once startup finishes.
- *
  * @author nrg
  */
 @Slf4j

@@ -44,7 +44,6 @@ public class PriorityThreadFactory implements ThreadFactory {
     /**
      * 使用名称与优先级创建工厂。
      * Create a factory with name and priority.
-     *
      * @param name 线程名前缀 / Thread name prefix
      * @param prio 线程优先级 / Thread priority
      */
@@ -58,7 +57,6 @@ public class PriorityThreadFactory implements ThreadFactory {
     /**
      * 使用名称与默认优先级 5，并绑定默认线程池。
      * Create with name, default priority 5, and bind a default pool.
-     *
      * @param name        线程名前缀 / Thread name prefix
      * @param defaultPool 默认线程池 / Default thread pool
      */
@@ -70,7 +68,6 @@ public class PriorityThreadFactory implements ThreadFactory {
     /**
      * 设置默认线程池。
      * Set the default thread pool.
-     *
      * @param pool 线程池 / Thread pool
      */
     protected void setDefaultPool(ExecutorService pool) {
@@ -80,7 +77,6 @@ public class PriorityThreadFactory implements ThreadFactory {
     /**
      * 获取默认线程池。
      * Get the default thread pool.
-     *
      * @return 线程池 / Thread pool
      */
     protected ExecutorService getDefaultPool() {
@@ -90,7 +86,6 @@ public class PriorityThreadFactory implements ThreadFactory {
     /**
      * 创建新线程。
      * Create a new thread.
-     *
      * @param r 任务 / Runnable task
      * @return 新线程 / New thread
      */

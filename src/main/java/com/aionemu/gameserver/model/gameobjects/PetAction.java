@@ -7,7 +7,6 @@ import lombok.Getter;
 /**
  * 宠物动作枚举。
  * Pet Action enumeration.
- *
  * @author ATracer
  */
 @Getter

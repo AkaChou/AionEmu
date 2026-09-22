@@ -14,7 +14,6 @@ import com.aionemu.gameserver.ai2.poll.AIQuestion;
 /**
  * Cygnea 区域 NPC AI：Exploding Pearl（@AIName "exploding_pearl"），继承 AggressiveNpcAI2。
  * Cygnea zone NPC AI: Exploding Pearl (@AIName "exploding_pearl"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("exploding_pearl")

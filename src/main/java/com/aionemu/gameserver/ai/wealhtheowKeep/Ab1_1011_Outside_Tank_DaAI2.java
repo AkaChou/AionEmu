@@ -18,7 +18,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 维尔索要塞相关 NPC AI：Ab1 1011 Outside Tank Da（@AIName "Ab1_1011_Outside_Tank_Da"），继承 NpcAI2。
  * Wealhtheow Keep related NPC AI: Ab1 1011 Outside Tank Da (@AIName "Ab1_1011_Outside_Tank_Da"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Ab1_1011_Outside_Tank_Da")

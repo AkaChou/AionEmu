@@ -7,7 +7,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 按分段导出掉落列表 XML 的管理命令（{@code //drop}）。
  * Admin command that exports drop lists to XML by segment ({@code //drop}).
- *
  * @author Phantom, ATracer
  */
 public class Drop extends AdminCommand {
@@ -23,7 +22,6 @@ public class Drop extends AdminCommand {
 	/**
 	 * 按分段编号导出对应 NPC ID 范围的掉落数据。
 	 * Exports drop data for the NPC id range of the given segment number.
-	 *
 	 */
 	@Override
 	public void execute(Player player, String... params) {

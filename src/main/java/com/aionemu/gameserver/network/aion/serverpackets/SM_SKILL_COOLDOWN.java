@@ -24,7 +24,6 @@ public class SM_SKILL_COOLDOWN extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_SKILL_COOLDOWN 包。
 	 * Creates a SM_SKILL_COOLDOWN packet with the given parameters.
-	 *
 	 * @param cooldowns cooldown map
 	 */
 	public SM_SKILL_COOLDOWN(Map<Integer, Long> cooldowns) {
@@ -34,7 +33,6 @@ public class SM_SKILL_COOLDOWN extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_SKILL_COOLDOWN 包。
 	 * Creates a SM_SKILL_COOLDOWN packet with the given parameters.
-	 *
 	 * cooldown map
 	 * @param isSkillRemove 是否因移除技能 / skill-remove flag
 	 */
@@ -51,7 +49,6 @@ public class SM_SKILL_COOLDOWN extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_SKILL_COOLDOWN 包。
 	 * Creates a SM_SKILL_COOLDOWN packet with the given parameters.
-	 *
 	 * 玩家 / player
 	 * cooldown map
 	 * @param isSkillRemove 是否因移除技能 / skill-remove flag

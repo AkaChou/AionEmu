@@ -11,7 +11,6 @@ import java.util.List;
 /**
  * RvR 相关 NPC AI：Guardian Frigate Special Grade Combat Captain（@AIName "LF6_Event_G1_S2_Fi_75_Al"），继承 AggressiveNpcAI2。
  * RvR-related NPC AI: Guardian Frigate Special Grade Combat Captain (@AIName "LF6_Event_G1_S2_Fi_75_Al"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("LF6_Event_G1_S2_Fi_75_Al")

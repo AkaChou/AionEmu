@@ -32,7 +32,6 @@ public class GameServerNetworkLifecycle {
     /**
      * 将本生命周期挂到 {@link GameServer} 后启动网络。
      * Attach this lifecycle to {@link GameServer}, then start networking.
-     *
      * @param server 游戏服实例 / Game-server instance
      */
     public void start(GameServer server) {
@@ -99,7 +98,6 @@ public class GameServerNetworkLifecycle {
     /**
      * 连接单个对等端：boot 嵌入式用异步，否则同步，并记录耗时。
      * Connect a single peer: async when boot-embedded, otherwise sync; log timing.
-     *
      * @param peerName 对等端名称（用于日志） / Peer name for logging
      * @param peer 网络对等端 / Network peer
      */

@@ -39,7 +39,6 @@ import lombok.Getter;
 /**
  * 地图分区：可见对象存放、邻接激活与 Zone 校验。
  * Map region: holds visible objects, neighbour activation and zone validation.
- *
  * @author -Nemesiss-
  */
 @Getter
@@ -85,7 +84,6 @@ public class MapRegion {
 	/**
 	 * 构造地图区域。
 	 * Construct a map region.
-	 *
 	 * @param id 区域 ID / region id
 	 * @param parent 父地图实例 / parent map instance
 	 * @param zones 关联 Zone 数组 / related zone array
@@ -101,7 +99,6 @@ public class MapRegion {
 	/**
 	 * 返回世界地图 ID。
 	 * Return the world map id.
-	 *
 	 * @return 地图 ID / the map id
 	 */
 	public Integer getMapId() {
@@ -111,7 +108,6 @@ public class MapRegion {
 	/**
 	 * 返回所属世界。
 	 * Return the owning world.
-	 *
 	 * @return 所属世界 / the owning world
 	 */
 	public World getWorld() {
@@ -121,7 +117,6 @@ public class MapRegion {
 	/**
 	 * 本区域内的静态门。
 	 * Static doors in this region.
-	 *
 	 * @return entityId → 门映射 / entity id to door map
 	 */
 	public Map<Integer, StaticDoor> getDoors() {
@@ -137,7 +132,6 @@ public class MapRegion {
 	/**
 	 * 添加邻接区域。
 	 * Add a neighbour region.
-	 *
 	 * @param neighbour 邻接区域 / the neighbour region
 	 */
 	void addNeighbourRegion(MapRegion neighbour) {
@@ -148,7 +142,6 @@ public class MapRegion {
 	/**
 	 * 将对象加入本区域；玩家增减触发激活检查。
 	 * Add an object to this region; player changes trigger activeness checks.
-	 *
 	 * @param object 可见对象 / the visible object
 	 */
 	void add(VisibleObject object) {
@@ -176,7 +169,6 @@ public class MapRegion {
 	/**
 	 * 从本区域移除对象。
 	 * Remove an object from this region.
-	 *
 	 * @param object 可见对象 / the visible object
 	 */
 	void remove(VisibleObject object) {
@@ -190,7 +182,6 @@ public class MapRegion {
 	/**
 	 * 根据是否有玩家决定激活/去激活调度。
 	 * Schedule activation/deactivation based on player presence.
-	 *
 	 * @param active 是否应激活 / whether should be active
 	 */
 	public final void checkActiveness(boolean active) {
@@ -283,7 +274,6 @@ public class MapRegion {
 	/**
 	 * 区域是否处于激活追踪状态。
 	 * Whether the region is considered active (respects WORLD_ACTIVE_TRACE).
-	 *
 	 * @return 若 active 则为 true / true if active
 	 */
 	public boolean isMapRegionActive() {
@@ -293,7 +283,6 @@ public class MapRegion {
 	/**
 	 * 邻接区域中是否有仍含玩家的激活区。
 	 * Whether any neighbour is active and still has players.
-	 *
 	 * @return 有活跃邻接返回 true / true if a neighbour is active with players
 	 */
 	boolean isNeighboursActive() {
@@ -309,7 +298,6 @@ public class MapRegion {
 	/**
 	 * 重校验生物所在全部 Zone 的 enter/leave。
 	 * Revalidate enter/leave for all zones covering the creature.
-	 *
 	 * @param creature 生物 / the creature
 	 */
 	public void revalidateZones(Creature creature) {
@@ -338,7 +326,6 @@ public class MapRegion {
 	/**
 	 * 返回包含该生物的 Zone 列表。
 	 * Return zones that contain the creature.
-	 *
 	 * @param creature 生物 / the creature
 	 * @return 包含生物的 Zone 列表 / the zone list
 	 */
@@ -358,7 +345,6 @@ public class MapRegion {
 	/**
 	 * 将死亡事件分发给包含目标的 Zone。
 	 * Dispatch death event to zones containing the target.
-	 *
 	 * @param attacker 攻击者 / the attacker
 	 * @param target 目标 / the target
 	 * @return 任一 Zone 处理返回 true / true if any zone handled it
@@ -380,7 +366,6 @@ public class MapRegion {
 	/**
 	 * 判断坐标是否在指定 Zone 内。
 	 * Whether coordinates lie inside the named zone.
-	 *
 	 * @param zoneName Zone 名称 / the zone name
 	 * @param x 坐标 X / X coordinate
 	 * @param y 坐标 Y / Y coordinate
@@ -403,7 +388,6 @@ public class MapRegion {
 	/**
 	 * 判断生物是否在指定 Zone 内。
 	 * Whether the creature is inside the named zone.
-	 *
 	 * @param zoneName Zone 名称 / the zone name
 	 * @param creature 生物 / the creature
 	 * @return 若 inside 则为 true / true if inside
@@ -424,7 +408,6 @@ public class MapRegion {
 	/**
 	 * 物品使用 Zone 校验（按 xml 名前缀匹配，因实例名不唯一）。
 	 * Item-use zone check (prefix-matches xml names because instance names are not unique).
-	 *
 	 * @param zoneName Zone 名称 / the zone name
 	 * @param creature 生物 / the creature
 	 * @return 若 inside 则为 true / true if inside
@@ -448,7 +431,6 @@ public class MapRegion {
 	/**
 	 * 按优先级/类型构建 Zone 分类表。
 	 * Build zone category map by priority/type.
-	 *
 	 * @param zones Zone 数组 / the zone array
 	 */
 	private void createZoneMap(ZoneInstance[] zones) {

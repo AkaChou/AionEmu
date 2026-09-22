@@ -23,7 +23,6 @@ public class Heal extends AdminCommand
 	/**
 	 * 治疗当前选中的生物：默认满 HP/MP 并清除 SPEC2 异常；子命令 dp/fp/repose/test。
 	 * Heal the selected creature: default full HP/MP and clear SPEC2 abnormals; subcommands dp/fp/repose/test.
-	 *
 	 * @param player 执行命令的管理员 / Admin executing the command
 	 * @param params 可选子命令 / Optional subcommand
 	 */
@@ -65,7 +64,6 @@ public class Heal extends AdminCommand
 	/**
 	 * 参数错误时显示命令语法。
 	 * Show command syntax on invalid arguments.
-	 *
 	 * @param player 接收提示的玩家 / Player receiving the hint
 	 */
 	@Override

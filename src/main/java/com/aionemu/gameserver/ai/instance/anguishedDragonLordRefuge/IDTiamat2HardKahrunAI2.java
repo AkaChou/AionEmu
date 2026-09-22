@@ -15,7 +15,6 @@ import java.util.Map;
 /**
  * Anguished Dragon Lord Refuge 副本 NPC AI：ID Tiamat2 Hard Kahrun（@AIName "kahrun3"），继承 NpcAI2。
  * Anguished Dragon Lord Refuge instance NPC AI: ID Tiamat2 Hard Kahrun (@AIName "kahrun3"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("kahrun3")

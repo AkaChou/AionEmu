@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 /**
  * 宠物商品条目模板（静态数据/XML）。
  * Pet merchandise entry template (static data / XML).
- *
  * @author Rinzler
  */
 

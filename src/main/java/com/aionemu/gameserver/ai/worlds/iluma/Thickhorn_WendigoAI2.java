@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Iluma 区域 NPC AI：Thickhorn Wendigo（@AIName "thickhorn_wendigo"），继承 AggressiveNpcAI2。
  * Iluma zone NPC AI: Thickhorn Wendigo (@AIName "thickhorn_wendigo"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("thickhorn_wendigo")

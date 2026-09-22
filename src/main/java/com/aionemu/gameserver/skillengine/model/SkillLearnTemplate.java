@@ -21,7 +21,6 @@ public class SkillLearnTemplate {
 	/**
 	 * 获取职业。
 	 * Gets player class.
-	 *
 	 */
 	@XmlAttribute(name = "classId", required = true)
 	private PlayerClass classId = PlayerClass.ALL;
@@ -29,7 +28,6 @@ public class SkillLearnTemplate {
 	/**
 	 * 获取技能 ID。
 	 * Gets skill id.
-	 *
 	 */
 	@XmlAttribute(name = "skillId", required = true)
 	private int skillId;
@@ -37,7 +35,6 @@ public class SkillLearnTemplate {
 	/**
 	 * 获取技能等级。
 	 * Gets skill level.
-	 *
 	 */
 	@XmlAttribute(name = "skillLevel", required = true)
 	private int skillLevel;
@@ -45,7 +42,6 @@ public class SkillLearnTemplate {
 	/**
 	 * 获取技能名称。
 	 * Gets skill name.
-	 *
 	 */
 	@XmlAttribute(name = "name", required = true)
 	private String name;
@@ -53,8 +49,6 @@ public class SkillLearnTemplate {
 	/**
 	 * 获取种族限制。
 	 * Gets race restriction.
-	 *
-	 * @return 阵营 / race
 	 */
 	@XmlAttribute(name = "race", required = true)
 	private Race race;
@@ -62,7 +56,6 @@ public class SkillLearnTemplate {
 	/**
 	 * 获取最低学习等级。
 	 * Gets minimum learn level.
-	 *
 	 */
 	@XmlAttribute(name = "minLevel", required = true)
 	private int minLevel;
@@ -73,7 +66,6 @@ public class SkillLearnTemplate {
 	/**
 	 * 是否自动学习。
 	 * Whether auto-learned.
-	 *
 	 */
 	@XmlAttribute
 	private boolean autoLearn;
@@ -81,7 +73,6 @@ public class SkillLearnTemplate {
 	/**
 	 * 是否烙印技能。
 	 * Whether this is a stigma skill.
-	 *
 	 */
 	@XmlAttribute
 	private boolean stigma = false;
@@ -89,7 +80,6 @@ public class SkillLearnTemplate {
 	/**
 	 * 获取技能分组。
 	 * Gets skill group.
-	 *
 	 */
 	public String getSkillGroup() {
 		return skill_group;

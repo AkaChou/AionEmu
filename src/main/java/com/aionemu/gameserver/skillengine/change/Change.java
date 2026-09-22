@@ -12,7 +12,6 @@ import com.aionemu.gameserver.skillengine.condition.Conditions;
 /**
  * 属性变更模板：描述对某项属性的加减/百分比/替换修改及可选条件。
  * Stat change template: add/percent/replace modification of a stat with optional conditions.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -57,7 +56,6 @@ public class Change {
 	/**
 	 * 获取目标属性。
 	 * Returns the target stat.
-	 *
 	 * @return 目标属性 / stat enum
 	 */
 	public final StatEnum getStat() {
@@ -67,7 +65,6 @@ public class Change {
 	/**
 	 * 获取变更函数。
 	 * Returns the change function.
-	 *
 	 * @return 变更函数 / change function
 	 */
 	public final Func getFunc() {
@@ -77,7 +74,6 @@ public class Change {
 	/**
 	 * 获取基础变更值。
 	 * Returns the base change value.
-	 *
 	 * @return 基础变更值 / base value
 	 */
 	public final int getValue() {
@@ -87,7 +83,6 @@ public class Change {
 	/**
 	 * 获取等级增量。
 	 * Returns the level delta.
-	 *
 	 * @return 等级增量 / delta
 	 */
 	public final int getDelta() {
@@ -97,7 +92,6 @@ public class Change {
 	/**
 	 * 获取应用条件。
 	 * Returns the apply conditions.
-	 *
 	 * @return 应用条件 / conditions
 	 */
 	public final Conditions getConditions() {

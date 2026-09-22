@@ -28,9 +28,6 @@ public class ContaminatedUnderpathPlayerReward extends InstancePlayerReward {
 	 * Returns the contaminated underpath special pouch.
 	 */
 	private int contaminatedUnderpathSpecialPouch;
-	/**
-	 * @return 是否已奖励 / whether rewarded
-	 */
 	private boolean isRewarded = false;
 
 	public ContaminatedUnderpathPlayerReward(Integer object) {

@@ -7,7 +7,6 @@ import lombok.Setter;
 /**
  * 交易物品模型。
  * Trade Item model.
- *
  * @author ATracer
  */
 @Getter

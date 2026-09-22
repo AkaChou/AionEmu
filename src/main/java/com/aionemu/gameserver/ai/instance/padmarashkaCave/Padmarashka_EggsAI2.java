@@ -8,7 +8,6 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 /**
  * Padmarashka Cave 副本 NPC AI：Padmarashka Eggs（@AIName "padmarashka_eggs"），继承 NpcAI2。
  * Padmarashka Cave instance NPC AI: Padmarashka Eggs (@AIName "padmarashka_eggs"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("padmarashka_eggs")

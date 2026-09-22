@@ -45,7 +45,6 @@ public class PortalLocData {
 	/**
 	 * 返回已加载的传送坐标数量。
 	 * Returns the number of loaded portal locations.
-	 *
 	 * @return 已加载的传送门地点数量 / Returns the number of loaded portal locations.
 	 */
 	public int size() {
@@ -55,7 +54,6 @@ public class PortalLocData {
 	/**
 	 * 按坐标 ID 获取传送门坐标。
 	 * Returns the portal location for the given location id.
-	 *
 	 * @param locId 地点 ID / location id
 	 * @return 传送坐标，不存在则为 null / portal location or null
 	 */

@@ -14,7 +14,6 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 /**
  * 元素森林副本事件处理器。
  * Instance event handler for Elementis Forest.
- *
  * @author Luzien
  */
 
@@ -26,7 +25,6 @@ public class ElementisForestInstance extends GeneralInstanceHandler {
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -50,7 +48,6 @@ public class ElementisForestInstance extends GeneralInstanceHandler {
 	/**
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
-	 *
 	 * @param player 玩家 / player
 	 * @param zone 区域 / zone
 	 */
@@ -73,7 +70,6 @@ public class ElementisForestInstance extends GeneralInstanceHandler {
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
-	 *
 	 * @param player 玩家 / player
 	 * @param npc NPC / npc
 	 */

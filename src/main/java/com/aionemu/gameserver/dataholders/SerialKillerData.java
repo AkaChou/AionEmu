@@ -43,7 +43,6 @@ public class SerialKillerData {
 	/**
 	 * 返回已加载的等级限制数量。
 	 * Returns the number of loaded rank restrictions.
-	 *
 	 * @return 已加载的排名限制数量 / Returns the number of loaded rank restrictions.
 	 */
 	public int size() {
@@ -53,7 +52,6 @@ public class SerialKillerData {
 	/**
 	 * 按等级编号获取连环杀手等级限制。
 	 * Returns the serial killer rank restriction for the given rank.
-	 *
 	 * @param rank 等级编号 / rank number
 	 * @return 等级限制，不存在则为 null / rank restriction or null
 	 */

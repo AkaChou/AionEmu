@@ -71,7 +71,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 拷贝构造。
 	 * Copy constructor.
-	 *
 	 * @param copy 源向量 / Source vector
 	 */
 	public Vector3f(Vector3f copy) {
@@ -81,7 +80,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 设置分量。
 	 * Sets the components.
-	 *
 	 * @param x X 分量 / X component
 	 * @param y Y 分量 / Y component
 	 * @param z Z 分量 / Z component
@@ -97,7 +95,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 从另一向量拷贝分量。
 	 * Copies components from another vector.
-	 *
 	 * @param vect 源向量 / Source vector
 	 * @return 本向量 / This vector
 	 */
@@ -111,7 +108,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 向量加法，返回新向量。
 	 * Adds another vector and returns a new vector.
-	 *
 	 * @param vec 另一向量 / Other vector
 	 * @return 结果向量；{@code vec} 为 null 时返回 null / Result vector; null if {@code vec} is null
 	 */
@@ -126,7 +122,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 向量加法，结果写入指定存储向量。
 	 * Adds another vector and stores the result.
-	 *
 	 * @param vec 另一向量 / Other vector
 	 * @param result 结果存储 / Result store
 	 * @return 结果向量 / Result vector
@@ -141,7 +136,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 就地向量加法。
 	 * Adds another vector in place.
-	 *
 	 * @param vec 另一向量 / Other vector
 	 * @return 本向量；{@code vec} 为 null 时返回 null / This vector; null if {@code vec} is null
 	 */
@@ -159,7 +153,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 加上给定分量，返回新向量。
 	 * Adds the given components and returns a new vector.
-	 *
 	 * @param addX X 增量 / X increment
 	 * @param addY Y 增量 / Y increment
 	 * @param addZ Z 增量 / Z increment
@@ -172,7 +165,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 就地加上给定分量。
 	 * Adds the given components in place.
-	 *
 	 * @param addX X 增量 / X increment
 	 * @param addY Y 增量 / Y increment
 	 * @param addZ Z 增量 / Z increment
@@ -188,7 +180,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 就地执行 {@code this = this * scalar + add}。
 	 * Performs {@code this = this * scalar + add} in place.
-	 *
 	 * @return 标量 / Scalar
 	 * @param add 加数向量 / Addend vector
 	 * @param scalar 本向量 / This vector
@@ -203,7 +194,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 就地执行 {@code this = mult * scalar + add}。
 	 * Performs {@code this = mult * scalar + add} in place.
-	 *
 	 * @return 标量 / Scalar
 	 * @param mult 被乘向量 / Multiplicand vector
 	 * @param add 加数向量 / Addend vector
@@ -219,7 +209,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 点积。
 	 * Computes the dot product.
-	 *
 	 * @param vec 另一向量 / Other vector
 	 * @return 点积；{@code vec} 为 null 时返回 0 / Dot product; 0 if {@code vec} is null
 	 */
@@ -234,7 +223,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 叉积，返回新向量。
 	 * Cross product returning a new vector.
-	 *
 	 * @param v 另一向量 / Other vector
 	 * @return 叉积结果 / Cross-product result
 	 */
@@ -245,7 +233,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 叉积，结果写入指定存储向量。
 	 * Cross product stored into the given result.
-	 *
 	 * @param v 另一向量 / Other vector
 	 * @param result 结果存储；为 null 时新建 / Result store; created if null
 	 * @return 结果向量 / Result vector
@@ -257,7 +244,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 与给定分量叉积，结果写入指定存储向量。
 	 * Cross product with given components, stored into the result.
-	 *
 	 * @param otherX 另一 X / Other X
 	 * @param otherY 另一 Y / Other Y
 	 * @param otherZ 另一 Z / Other Z
@@ -278,7 +264,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 就地叉积。
 	 * Cross product in place.
-	 *
 	 * @param v 另一向量 / Other vector
 	 * @return 本向量 / This vector
 	 */
@@ -289,7 +274,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 与给定分量就地叉积。
 	 * Cross product with given components in place.
-	 *
 	 * @param otherX 另一 X / Other X
 	 * @param otherY 另一 Y / Other Y
 	 * @param otherZ 另一 Z / Other Z
@@ -307,7 +291,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 投影到另一向量上，返回新向量。
 	 * Projects onto another vector and returns a new vector.
-	 *
 	 * @param other 投影方向 / Projection direction
 	 * @return 投影结果 / Projection result
 	 */
@@ -320,7 +303,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 向量长度（模）。
 	 * Vector length (magnitude).
-	 *
 	 * @return 长度 / Length
 	 */
 	public float length() {
@@ -330,7 +312,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 长度平方。
 	 * Squared length.
-	 *
 	 * @return 长度平方 / Squared length
 	 */
 	public float lengthSquared() {
@@ -340,7 +321,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 到另一向量的距离平方。
 	 * Squared distance to another vector.
-	 *
 	 * @param v 另一向量 / Other vector
 	 * @return 距离平方 / Squared distance
 	 */
@@ -354,7 +334,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 到另一向量的欧氏距离。
 	 * Euclidean distance to another vector.
-	 *
 	 * @param v 另一向量 / Other vector
 	 * @return 距离 / Distance
 	 */
@@ -365,7 +344,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 标量乘法，返回新向量。
 	 * Multiplies by a scalar and returns a new vector.
-	 *
 	 * @param scalar 标量 / Scalar
 	 * @return 结果向量 / Result vector
 	 */
@@ -376,7 +354,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 标量乘法，结果写入指定存储向量。
 	 * Multiplies by a scalar and stores the result.
-	 *
 	 * @return 标量 / Scalar
 	 * @param product 结果存储；为 null 时新建 / Result store; created if null
 	 * @param scalar 结果向量 / Result vector
@@ -394,7 +371,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 就地标量乘法。
 	 * Multiplies by a scalar in place.
-	 *
 	 * @param scalar 标量 / Scalar
 	 * @return 本向量 / This vector
 	 */
@@ -408,7 +384,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 就地分量乘法。
 	 * Multiplies component-wise in place.
-	 *
 	 * @param vec 另一向量 / Other vector
 	 * @return 本向量；{@code vec} 为 null 时返回 null / This vector; null if {@code vec} is null
 	 */
@@ -426,7 +401,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 就地与给定分量相乘。
 	 * Multiplies by the given components in place.
-	 *
 	 * @param x X 乘数 / X multiplier
 	 * @param y Y 乘数 / Y multiplier
 	 * @param z Z 乘数 / Z multiplier
@@ -442,7 +416,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 分量乘法，返回新向量。
 	 * Multiplies component-wise and returns a new vector.
-	 *
 	 * @param vec 另一向量 / Other vector
 	 * @return 结果向量；{@code vec} 为 null 时返回 null / Result vector; null if {@code vec} is null
 	 */
@@ -457,7 +430,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 分量乘法，结果写入指定存储向量。
 	 * Multiplies component-wise and stores the result.
-	 *
 	 * @param vec 另一向量 / Other vector
 	 * @param store 结果存储；为 null 时新建 / Result store; created if null
 	 * @return 结果向量；{@code vec} 为 null 时返回 null / Result vector; null if {@code vec} is null
@@ -476,7 +448,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 标量除法，返回新向量。
 	 * Divides by a scalar and returns a new vector.
-	 *
 	 * @param scalar 标量 / Scalar
 	 * @return 结果向量 / Result vector
 	 */
@@ -488,7 +459,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 就地标量除法。
 	 * Divides by a scalar in place.
-	 *
 	 * @param scalar 标量 / Scalar
 	 * @return 本向量 / This vector
 	 */
@@ -503,7 +473,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 分量除法，返回新向量。
 	 * Divides component-wise and returns a new vector.
-	 *
 	 * @param scalar 除数向量 / Divisor vector
 	 * @return 结果向量 / Result vector
 	 */
@@ -514,7 +483,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 就地分量除法。
 	 * Divides component-wise in place.
-	 *
 	 * @param scalar 除数向量 / Divisor vector
 	 * @return 本向量 / This vector
 	 */
@@ -528,7 +496,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 取反，返回新向量。
 	 * Negates and returns a new vector.
-	 *
 	 * @return 取反后的新向量 / Negated new vector
 	 */
 	public Vector3f negate() {
@@ -538,7 +505,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 就地取反。
 	 * Negates in place.
-	 *
 	 * @return 本向量 / This vector
 	 */
 	public Vector3f negateLocal() {
@@ -551,7 +517,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 向量减法，返回新向量。
 	 * Subtracts another vector and returns a new vector.
-	 *
 	 * @param vec 另一向量 / Other vector
 	 * @return 结果向量 / Result vector
 	 */
@@ -562,7 +527,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 就地向量减法。
 	 * Subtracts another vector in place.
-	 *
 	 * @param vec 另一向量 / Other vector
 	 * @return 本向量；{@code vec} 为 null 时返回 null / This vector; null if {@code vec} is null
 	 */
@@ -580,7 +544,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 向量减法，结果写入指定存储向量。
 	 * Subtracts another vector and stores the result.
-	 *
 	 * @param vec 另一向量 / Other vector
 	 * @param result 结果存储；为 null 时新建 / Result store; created if null
 	 * @return 结果向量 / Result vector
@@ -598,7 +561,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 减去给定分量，返回新向量。
 	 * Subtracts the given components and returns a new vector.
-	 *
 	 * @param subtractX 要减去的 X / X to subtract
 	 * @param subtractY 要减去的 Y / Y to subtract
 	 * @param subtractZ 要减去的 Z / Z to subtract
@@ -611,7 +573,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 就地减去给定分量。
 	 * Subtracts the given components in place.
-	 *
 	 * @param subtractX 要减去的 X / X to subtract
 	 * @param subtractY 要减去的 Y / Y to subtract
 	 * @param subtractZ 要减去的 Z / Z to subtract
@@ -627,7 +588,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 归一化，返回新单位向量。
 	 * Returns a new normalized unit vector.
-	 *
 	 * @return 单位向量 / Unit vector
 	 */
 	public Vector3f normalize() {
@@ -642,7 +602,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 就地归一化。
 	 * Normalizes in place.
-	 *
 	 * @return 本向量 / This vector
 	 */
 	public Vector3f normalizeLocal() {
@@ -659,7 +618,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 就地取各分量与另一向量的最大值。
 	 * Sets each component to the max of this and the other vector.
-	 *
 	 * @param other 另一向量 / Other vector
 	 */
 	public void maxLocal(Vector3f other) {
@@ -671,7 +629,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 就地取各分量与另一向量的最小值。
 	 * Sets each component to the min of this and the other vector.
-	 *
 	 * @param other 另一向量 / Other vector
 	 */
 	public void minLocal(Vector3f other) {
@@ -683,7 +640,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 将本向量置零。
 	 * Sets this vector to zero.
-	 *
 	 * @return 本向量 / This vector
 	 */
 	public Vector3f zero() {
@@ -696,7 +652,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 与另一向量的夹角（弧度，基于点积）。
 	 * Angle to another vector in radians (via dot product).
-	 *
 	 * @param otherVector 另一向量 / Other vector
 	 * @return 夹角（弧度） / Angle in radians
 	 */
@@ -709,7 +664,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 向目标向量线性插值（就地）。
 	 * Linearly interpolates toward a target vector in place.
-	 *
 	 * @param finalVec 目标向量 / Target vector
 	 * @param changeAmnt 插值因子 [0,1] / Interpolation factor [0,1]
 	 * @return 本向量 / This vector
@@ -724,7 +678,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 在起止向量之间线性插值，结果写入本向量。
 	 * Linearly interpolates between two vectors into this.
-	 *
 	 * @param beginVec 起始向量 / Start vector
 	 * @param finalVec 结束向量 / End vector
 	 * @param changeAmnt 插值因子 [0,1] / Interpolation factor [0,1]
@@ -740,7 +693,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 判断向量是否有效（非 null、非 NaN、非无穷）。
 	 * Checks whether a vector is valid (non-null, non-NaN, non-infinite).
-	 *
 	 * @param vector 待检查向量 / Vector to check
 	 * @return 若 valid 则为 true / True if valid
 	 */
@@ -757,7 +709,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 生成以 w 为法向的正交规范基 {u, v, w}。
 	 * Generates an orthonormal basis {u, v, w} with w as the normal.
-	 *
 	 * @param u 输出基向量 u / Output basis u
 	 * @param v 输出基向量 v / Output basis v
 	 * @param w 输入法向（将被归一化） / Input normal (normalized in place)
@@ -770,7 +721,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 给定单位向量 w，生成与之正交的补基 {u, v}。
 	 * Given unit vector w, generates the complementary basis {u, v}.
-	 *
 	 * @param u 输出基向量 u / Output basis u
 	 * @param v 输出基向量 v / Output basis v
 	 * @param w 单位法向 / Unit normal
@@ -798,7 +748,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 浅克隆。
 	 * Shallow clone.
-	 *
 	 * @return 克隆向量 / Cloned vector
 	 */
 	public Vector3f clone() {
@@ -812,7 +761,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 转为 float 数组。
 	 * Converts to a float array.
-	 *
 	 * @param floats 目标数组；为 null 时新建 / Target array; created if null
 	 * @return 数组（null 输入时含 x,y,z；非 null 时原样返回） / Array (with x,y,z if null input; otherwise returned as-is)
 	 */
@@ -826,7 +774,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 判断与另一对象是否分量相等。
 	 * Whether this equals another object by components.
-	 *
 	 * @param o 比较对象 / Object to compare
 	 * @return 若 equal 则为 true / True if equal
 	 */
@@ -849,7 +796,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 哈希码。
 	 * Hash code.
-	 *
 	 * @return 哈希值 / Hash value
 	 */
 	public int hashCode() {
@@ -863,7 +809,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 字符串表示，形如 {@code (x, y, z)}。
 	 * String representation of the form {@code (x, y, z)}.
-	 *
 	 * @return 字符串表示 / String
 	 */
 	public String toString() {
@@ -873,7 +818,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 设置 X 分量。
 	 * Sets the X component.
-	 *
 	 * @param x X 分量 / X component
 	 * @return 本向量 / This vector
 	 */
@@ -885,7 +829,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 设置 Y 分量。
 	 * Sets the Y component.
-	 *
 	 * @param y Y 分量 / Y component
 	 * @return 本向量 / This vector
 	 */
@@ -897,7 +840,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 设置 Z 分量。
 	 * Sets the Z component.
-	 *
 	 * @param z Z 分量 / Z component
 	 * @return 本向量 / This vector
 	 */
@@ -909,7 +851,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 按索引获取分量（0=x, 1=y, 2=z）。
 	 * Gets a component by index (0=x, 1=y, 2=z).
-	 *
 	 * @param index 分量索引 / Component index
 	 * @return 分量值 / Component value
 	 * @throws IllegalArgumentException 索引非法 / Invalid index
@@ -926,7 +867,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 按索引设置分量（0=x, 1=y, 2=z）。
 	 * Sets a component by index (0=x, 1=y, 2=z).
-	 *
 	 * @param index 分量索引 / Component index
 	 * @param value 分量值 / Component value
 	 * @throws IllegalArgumentException 索引非法 / Invalid index
@@ -962,7 +902,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 从对象池获取并置零的新实例。
 	 * Obtains a zeroed instance from the object pool.
-	 *
 	 * @return 池化向量实例 / Pooled vector instance
 	 */
 	public static Vector3f newInstance() {
@@ -976,7 +915,6 @@ public final class Vector3f implements Cloneable, Reusable {
 	/**
 	 * 将实例回收到对象池。
 	 * Recycles an instance into the object pool.
-	 *
 	 * @param instance 待回收实例 / Instance to recycle
 	 */
 	public static void recycle(Vector3f instance) {

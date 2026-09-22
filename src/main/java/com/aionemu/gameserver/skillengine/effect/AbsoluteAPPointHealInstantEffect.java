@@ -19,7 +19,6 @@ public class AbsoluteAPPointHealInstantEffect extends EffectTemplate {
 	/**
 	 * 为目标玩家增加指定欧比斯恩惠点数并同步属性包。
 	 * Adds the configured abyss-favor points to the target player and syncs stats.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	public void applyEffect(Effect effect) {

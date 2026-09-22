@@ -12,7 +12,6 @@ import com.aionemu.gameserver.geoEngine.math.Vector3f;
 /**
  * 静态门边界模板（静态数据/XML）。
  * XML template.
- *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)

@@ -20,7 +20,6 @@ public final class MailFormatter {
 	/**
 	 * 发送黑云商城购买邮件。
 	 * Sends a black-cloud cash purchase mail.
-	 *
 	 * @param recipientName 收件人名称 / recipient name
 	 * item template id
 	 * item count
@@ -52,7 +51,6 @@ public final class MailFormatter {
 	/**
 	 * 发送房屋维护逾期警告邮件。
 	 * Sends a house maintenance overdue warning mail.
-	 *
 	 * owned house
 	 * warning count (1-3)
 	 * @param impoundTime 扣押时间戳（毫秒） / impound timestamp in ms
@@ -94,7 +92,6 @@ public final class MailFormatter {
 	/**
 	 * 发送房屋拍卖结果邮件。
 	 * Sends a house auction result mail.
-	 *
 	 * owned house
 	 * @param playerData 玩家公共数据 / player common data
 	 * auction result
@@ -132,7 +129,6 @@ public final class MailFormatter {
 	/**
 	 * 发送欧比斯攻城奖励邮件（附基纳）。
 	 * Sends an abyss siege reward mail with attached kinah.
-	 *
 	 * siege location
 	 * @param playerData 玩家公共数据 / player common data
 	 * @param level 欧比斯攻城等级 / abyss siege level
@@ -173,7 +169,6 @@ public final class MailFormatter {
 	/**
 	 * 发送欧比斯攻城奖励邮件（附欧比斯点数）。
 	 * Sends an abyss siege reward mail with attached abyss points.
-	 *
 	 * siege location
 	 * @param playerData 玩家公共数据 / player common data
 	 * @param level 欧比斯攻城等级 / abyss siege level
@@ -214,7 +209,6 @@ public final class MailFormatter {
 	/**
 	 * 发送露娜奖励邮件。
 	 * Sends a luna reward mail.
-	 *
 	 * siege location
 	 * @param playerData 玩家公共数据 / player common data
 	 * @param level 欧比斯攻城等级 / abyss siege level

@@ -12,7 +12,6 @@ import lombok.AllArgsConstructor;
 /**
  * 队伍成员更新事件（团队2）。
  * Player Group Update Event for team 2 logic.
- *
  * @author ATracer
  */
 @AllArgsConstructor

@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Gelkmaros 区域 NPC AI：Vine Seed（@AIName "vineseed"），继承 NpcAI2。
  * Gelkmaros zone NPC AI: Vine Seed (@AIName "vineseed"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("vineseed")

@@ -12,7 +12,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Azoturan Fortress 副本 NPC AI：Betrayer Icaronix（@AIName "betrayer_icaronix"），继承 AggressiveNpcAI2。
  * Azoturan Fortress instance NPC AI: Betrayer Icaronix (@AIName "betrayer_icaronix"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("betrayer_icaronix")

@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 通知客户端移除指定技能。
  * Server packet notifying the client to remove a skill.
- *
  * @author xTz
  */
 @AllArgsConstructor

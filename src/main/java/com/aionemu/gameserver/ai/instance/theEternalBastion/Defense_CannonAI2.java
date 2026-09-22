@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * The Eternal Bastion 副本 NPC AI：Defense Cannon（@AIName "defense_cannon"），继承 NpcAI2。
  * The Eternal Bastion instance NPC AI: Defense Cannon (@AIName "defense_cannon"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("defense_cannon")

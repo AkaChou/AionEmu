@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
  * <p>
  * 通过 {@code action} 区分：图标显示、会话初始化、成功判定、等级、奖励、狂热状态与奖池等。
  * Uses {@code action} for: icon display, session init, success result, level, reward, frenzy state, and prize pool.
- *
  * @author Ranastic
  */
 @RequiredArgsConstructor
@@ -36,7 +35,6 @@ public class SM_UPGRADE_ARCADE extends AionServerPacket {
 	/**
 	 * 图标显示。
 	 * Icon display.
-	 *
 	 * @param showicon 是否显示图标 / whether to show the icon
 	 */
 	public SM_UPGRADE_ARCADE(boolean showicon) {
@@ -47,7 +45,6 @@ public class SM_UPGRADE_ARCADE extends AionServerPacket {
 	/**
 	 * 会话初始化（狂热点数）。
 	 * Session init with frenzy points.
-	 *
 	 * @param frenzyPoints frenzy points
 	 * @param frenzyCount frenzy count
 	 */
@@ -60,7 +57,6 @@ public class SM_UPGRADE_ARCADE extends AionServerPacket {
 	/**
 	 * 升级结果。
 	 * Upgrade result.
-	 *
 	 * @param action action type
 	 * @param success whether successful
 	 * @param frenzy frenzy points
@@ -74,7 +70,6 @@ public class SM_UPGRADE_ARCADE extends AionServerPacket {
 	/**
 	 * 等级相关。
 	 * Level-related.
-	 *
 	 * @param player 玩家 / player
 	 * @param action action type
 	 * @param level level
@@ -88,7 +83,6 @@ public class SM_UPGRADE_ARCADE extends AionServerPacket {
 	/**
 	 * 奖励物品。
 	 * Reward item.
-	 *
 	 * @param action action type
 	 * @param itemList reward item
 	 */
@@ -100,7 +94,6 @@ public class SM_UPGRADE_ARCADE extends AionServerPacket {
 	/**
 	 * 狂热时间与次数。
 	 * Frenzy time and count.
-	 *
 	 * action type
 	 * @param frenzyTime  狂热剩余时间 / remaining frenzy time
 	 * frenzy count

@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 开始或结束采集的客户端包。
  * Client packet that starts or finishes gathering.
- *
  * @author ATracer
  */
 public class CM_GATHER extends AionClientPacket {
@@ -19,7 +18,6 @@ public class CM_GATHER extends AionClientPacket {
 	/**
 	 * 构造客户端包实例。
 	 * Constructs a new client packet instance.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余允许状态 / additional allowed states

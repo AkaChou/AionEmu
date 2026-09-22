@@ -11,7 +11,6 @@ import com.aionemu.gameserver.configs.main.PvPConfig;
 /**
  * PvP 击杀记录表，按受害者 ID 记录击杀时间并支持链式击杀限制。
  * PvP kill list that tracks kill timestamps per victim and enforces chain-kill limits.
- *
  * @author Sarynth
  */
 public class KillList {
@@ -30,7 +29,6 @@ public class KillList {
 	/**
 	 * 返回在链式击杀时间窗口内对该受害者的有效击杀次数。
 	 * Returns the number of valid kills against the victim within the chain-kill window.
-	 *
 	 * @param victimId 受害者对象 ID / victim object id
 	 * @return 有效击杀次数 / valid kill count for the victim
 	 */
@@ -57,7 +55,6 @@ public class KillList {
 	/**
 	 * 记录一次对指定受害者的击杀。
 	 * Records a kill against the given victim.
-	 *
 	 * @param victimId 受害者对象 ID / victim object id
 	 */
 	public void addKillFor(int victimId) {

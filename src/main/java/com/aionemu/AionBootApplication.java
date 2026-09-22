@@ -28,7 +28,6 @@ public class AionBootApplication {
     /**
      * 启用内嵌运行模式、按需织入回调字节码后启动 Spring 应用。
      * Enables embedded runtime mode, then starts Spring.
-     *
      * @param args 命令行参数 / command-line arguments
      */
     public static void main(String[] args) {

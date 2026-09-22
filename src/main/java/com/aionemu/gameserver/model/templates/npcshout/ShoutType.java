@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * Shout 类型枚举。
  * Shout Type enumeration.
- *
  * @author Rolandas
  */
 

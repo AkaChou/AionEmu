@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Abbey 区域 NPC AI：South Balaurea Portal（@AIName "south_balaurea_portal"），继承 NpcAI2。
  * Abbey zone NPC AI: South Balaurea Portal (@AIName "south_balaurea_portal"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("south_balaurea_portal")

@@ -185,7 +185,6 @@ public class TemperingAction extends AbstractItemAction {
 	/**
 	 * 判定淬炼是否成功（按部位概率）。
 	 * Determines whether the tempering succeeds (per-slot probability).
-	 *
 	 * @param player 淬炼玩家 / the tempering player
 	 * @param item 被淬炼物品 / the item being tempered
 	 * @return 成功则为 true / true if successful

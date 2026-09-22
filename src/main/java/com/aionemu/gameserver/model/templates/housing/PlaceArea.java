@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * Place 区域枚举。
  * Place Area enumeration.
- *
  * @author Rolandas
  */
 @XmlType(name = "PlaceArea")

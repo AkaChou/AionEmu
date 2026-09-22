@@ -9,7 +9,6 @@ import lombok.AccessLevel;
 /**
  * 玩家队伍属性，用于团队2相关逻辑。
  * Player Group Stats for team 2 logic.
- *
  * @author ATracer
  */
 @Getter

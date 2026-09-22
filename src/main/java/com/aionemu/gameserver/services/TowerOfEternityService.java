@@ -38,7 +38,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 永恒之塔服务，管理塔地点开关、刷怪与旗帜同步。
  * Tower of Eternity service managing tower open/close, spawns, and flag sync.
- *
  * @author Wnkrz
  */
 @Slf4j
@@ -100,7 +99,6 @@ public class TowerOfEternityService {
 	/**
 	 * 按状态在地点刷出对应 NPC 并广播旗帜更新。
 	 * Spawns NPCs for the location by state and broadcasts flag updates.
-	 *
 	 * @param loc location
 	 * @param tstate state type
 	 */
@@ -120,7 +118,6 @@ public class TowerOfEternityService {
 	/**
 	 * 清除地点已刷出的 NPC 并广播旗帜消失。
 	 * Despawns NPCs at the location and broadcasts flag despawn.
-	 *
 	 * @param loc location
 	 */
 	public void despawn(TowerOfEternityLocation loc) {
@@ -143,7 +140,6 @@ public class TowerOfEternityService {
 	 * 在指定世界随机开启一个入口，并在开启前关闭该世界已开放的地点。
 	 * Opens a random entrance of the given world and closes the entrance that is currently open in the
 	 * same world, so a world never exposes more than one tower entrance.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @return 已开启的地点 ID；无地点数据时为 -1 / opened location id, or -1 when no location exists
 	 */
@@ -171,7 +167,6 @@ public class TowerOfEternityService {
 	/**
 	 * 关闭指定世界当前开放的永恒之塔（若存在）。
 	 * Closes the tower that is currently open in the given world, if any.
-	 *
 	 * @param worldId 世界 ID / world id
 	 */
 	private void closeActiveTowerOfWorld(int worldId) {
@@ -186,7 +181,6 @@ public class TowerOfEternityService {
 	/**
 	 * 启动指定 ID 的永恒之塔活动，并按持续时间挂载关闭计时器。
 	 * Starts the Tower of Eternity event for the given id and arms the duration timer that closes it.
-	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void startTowerOfEternity(final int id) {
@@ -207,7 +201,6 @@ public class TowerOfEternityService {
 	/**
 	 * 停止指定 ID 的永恒之塔活动。
 	 * Stops the Tower of Eternity event for the given id.
-	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void stopTowerOfEternity(int id) {
@@ -224,7 +217,6 @@ public class TowerOfEternityService {
 	 * 仅当指定实例仍注册在该地点时才停止，避免持续时间计时器误停同 ID 的新实例。
 	 * Stops only when the expected instance is still registered for the location, so a duration timer
 	 * cannot close a newer instance that reuses the same location id.
-	 *
 	 * @param id 地点 ID / location id
 	 * @param expected 计时器所属的实例 / instance that owns the timer
 	 * @return 是否停止 / whether the instance was stopped
@@ -244,7 +236,6 @@ public class TowerOfEternityService {
 	/**
 	 * 判断指定塔是否处于活动状态。
 	 * Checks whether the tower with the given id is active.
-	 *
 	 * @param id 地点 ID / location id
 	 * whether active
 	 */
@@ -255,7 +246,6 @@ public class TowerOfEternityService {
 	/**
 	 * 获取指定 ID 的活动塔实例。
 	 * Returns the active tower instance for the given id.
-	 *
 	 * @param id 地点 ID / location id
 	 * tower instance
 	 */
@@ -266,7 +256,6 @@ public class TowerOfEternityService {
 	/**
 	 * 玩家进入永恒之塔相关世界时同步旗帜信息。
 	 * Syncs flag info when a player enters a tower-related world.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onEnterTowerWorld(Player player) {
@@ -361,7 +350,6 @@ public class TowerOfEternityService {
 	/**
 	 * 判断指定永恒之塔是否进行中。
 	 * Checks whether the tower with the given id is in progress.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否进行中 / whether in progress
 	 */
@@ -372,7 +360,6 @@ public class TowerOfEternityService {
 	/**
 	 * 获取进行中的永恒之塔实例映射。
 	 * Returns the map of active tower instances.
-	 *
 	 * @return 活动实例映射 / active instances map
 	 */
 	public Map<Integer, TowerOfEternity<?>> getActiveTowerOfEternity() {
@@ -382,7 +369,6 @@ public class TowerOfEternityService {
 	/**
 	 * 按 ID 获取进行中的永恒之塔实例。
 	 * Returns the active tower instance by id.
-	 *
 	 * @param id 地点 ID / location id
 	 * tower instance
 	 */
@@ -393,7 +379,6 @@ public class TowerOfEternityService {
 	/**
 	 * 获取活动持续时长（小时）。
 	 * Returns the event duration in hours.
-	 *
 	 * @return 持续小时数 / duration hours
 	 */
 	public int getDuration() {
@@ -403,7 +388,6 @@ public class TowerOfEternityService {
 	/**
 	 * 按 ID 获取永恒之塔地点。
 	 * Returns the tower location by id.
-	 *
 	 * @param id 地点 ID / location id
 	 * location
 	 */
@@ -414,7 +398,6 @@ public class TowerOfEternityService {
 	/**
 	 * 获取全部永恒之塔地点。
 	 * Returns all tower locations.
-	 *
 	 * locations map
 	 */
 	public Map<Integer, TowerOfEternityLocation> getTowerOfEternityLocations() {
@@ -424,7 +407,6 @@ public class TowerOfEternityService {
 	/**
 	 * 获取服务单例（优先 Spring Provider）。
 	 * Returns the service singleton (prefers Spring provider).
-	 *
 	 * service instance
 	 */
 	public static TowerOfEternityService getInstance() {
@@ -438,7 +420,6 @@ public class TowerOfEternityService {
 	/**
 	 * 注入 Spring 的实例提供者。
 	 * Sets the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<TowerOfEternityService> instanceProvider) {

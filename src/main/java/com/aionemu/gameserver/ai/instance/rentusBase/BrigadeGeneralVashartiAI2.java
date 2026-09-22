@@ -26,7 +26,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Rentus Base 副本 NPC AI：Brigade General Vasharti（@AIName "brigade_general_vasharti"），继承 AggressiveNpcAI2。
  * Rentus Base instance NPC AI: Brigade General Vasharti (@AIName "brigade_general_vasharti"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("brigade_general_vasharti")

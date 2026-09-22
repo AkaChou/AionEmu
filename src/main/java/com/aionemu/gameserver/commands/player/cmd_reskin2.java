@@ -18,7 +18,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家 VIP 改模命令：消耗 Toll/材料更换双手武器外观。
  * Player VIP reskin command: spends Toll/materials to change two-handed weapon looks.
- *
  * @author Wakizashi
  * @author Imaginary
  * @author Eloann
@@ -32,7 +31,6 @@ public class cmd_reskin2 extends PlayerCommand {
 	/**
 	 * 解析目标玩家与物品并启动 VIP 改模流程。
 	 * Parses target player/item and starts the VIP reskin flow.
-	 *
 	 * @param admin 执行命令的玩家 / invoking player
 	 * @param params 命令参数 / command parameters
 	 */
@@ -167,7 +165,6 @@ public class cmd_reskin2 extends PlayerCommand {
 	/**
 	 * 弹出确认框，确认后执行外观替换与扣费。
 	 * Shows a confirmation dialog, then applies the look and charges costs.
-	 *
 	 * @param admin 执行命令的玩家 / invoking player
 	 * @param toll 点数费用 / toll cost
 	 * @param itemId 物品 ID / item id
@@ -204,7 +201,6 @@ public class cmd_reskin2 extends PlayerCommand {
 	/**
 	 * 参数错误时提示用法。
 	 * Shows usage when arguments are invalid.
-	 *
 	 * @param admin 执行命令的玩家 / invoking player
 	 * @param message 失败提示消息 / failure message
 	 */

@@ -20,7 +20,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Empyrean Crucible 副本 NPC AI：Warrior Preceptor（@AIName "warrior_preceptor"），继承 AggressiveNpcAI2。
  * Empyrean Crucible instance NPC AI: Warrior Preceptor (@AIName "warrior_preceptor"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("warrior_preceptor")

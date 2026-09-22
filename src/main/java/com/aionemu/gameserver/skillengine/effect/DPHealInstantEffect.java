@@ -11,7 +11,6 @@ import com.aionemu.gameserver.skillengine.model.HealType;
 /**
  * DP 瞬时治疗效果：立即恢复神圣力。
  * Instant DP heal effect: restores divine power immediately.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -21,7 +20,6 @@ public class DPHealInstantEffect extends AbstractHealEffect {
 	/**
 	 * 按 DP 治疗类型计算。
 	 * Calculates as DP heal.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -32,7 +30,6 @@ public class DPHealInstantEffect extends AbstractHealEffect {
 	/**
 	 * 应用 DP 治疗。
 	 * Applies DP heal.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -43,7 +40,6 @@ public class DPHealInstantEffect extends AbstractHealEffect {
 	/**
 	 * 返回当前 DP。
 	 * Returns current DP.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 * @return 当前 DP / current DP
 	 */
@@ -55,7 +51,6 @@ public class DPHealInstantEffect extends AbstractHealEffect {
 	/**
 	 * 返回 DP 上限。
 	 * Returns max DP.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 * @return DP 上限 / max DP
 	 */

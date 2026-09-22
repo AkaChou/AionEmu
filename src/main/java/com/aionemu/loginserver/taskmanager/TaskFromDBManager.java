@@ -11,7 +11,6 @@ import com.aionemu.loginserver.taskmanager.trigger.TaskFromDBTrigger;
 /**
  * 数据库任务管理器：启动时加载全部任务并注册有效触发器。
  * Database task manager: loads all tasks at startup and registers valid triggers.
- *
  * @author nrg
  */
 @Slf4j
@@ -48,7 +47,6 @@ public class TaskFromDBManager {
     /**
      * 获取 TaskFromDBDAO 快捷方法。
      * Shortcut to obtain {@link TaskFromDBDAO}.
-     *
      * @return DAO 实例 / DAO instance
      */
     private static TaskFromDBDAO getDAO() {
@@ -58,7 +56,6 @@ public class TaskFromDBManager {
     /**
      * 获取单例实例（已弃用，请走 boot 注入）。
      * Returns the singleton instance (deprecated; prefer boot injection).
-     *
      * @return 单例实例 / singleton instance
      */
     @Deprecated(since = "boot-migration")

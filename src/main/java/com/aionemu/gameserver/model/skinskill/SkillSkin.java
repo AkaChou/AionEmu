@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 /**
  * 技能外观模型。
  * Skill Skin model.
- *
  * @author Rinzler (Encom)
  */
 @Getter

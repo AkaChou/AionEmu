@@ -19,7 +19,6 @@ import java.util.concurrent.Future;
 /**
  * Tiamaranta eye 区域 NPC AI：Sunayaka（@AIName "sunayaka"），继承 AggressiveNpcAI2。
  * Tiamaranta eye zone NPC AI: Sunayaka (@AIName "sunayaka"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("sunayaka")
@@ -45,8 +44,7 @@ public class SunayakaAI2 extends AggressiveNpcAI2
 			switch (getNpcId()) {
 				case 218553: // 总督苏纳亚卡 / Governor Sunayaka.
 				case 219311: // 狂战士苏纳亚卡 / Berserker Sunayaka.
-				//////////////////////////////////
-				case 249144: // 总督苏纳亚卡 / Governor Sunayaka.
+                case 249144: // 总督苏纳亚卡 / Governor Sunayaka.
 				case 249145: // 狂战士苏纳亚卡 / Berserker Sunayaka.
 					// 狂战士苏纳亚卡在开战 15 分钟后狂暴。 / Berserker Sunayaka goes berserk 15 minutes after the battle starts.
 					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401459, 0);

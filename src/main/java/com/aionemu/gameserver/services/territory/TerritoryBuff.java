@@ -19,7 +19,6 @@ public class TerritoryBuff implements StatOwner {
 	/**
 	 * 对玩家施加领地增益效果。
 	 * Applies the territory buff effect to the player.
-	 *
 	 * @param player 目标玩家 / target player
 	 */
 	public void applyEffect(Player player) {
@@ -34,7 +33,6 @@ public class TerritoryBuff implements StatOwner {
 	/**
 	 * 是否已存在生效中的增益。
 	 * Whether an active buff is currently applied.
-	 *
 	 * @return 有增益时为 true / true if buff functions exist
 	 */
 	public boolean hasBuff() {
@@ -44,7 +42,6 @@ public class TerritoryBuff implements StatOwner {
 	/**
 	 * 结束并移除玩家身上的领地增益。
 	 * Ends and removes the territory buff from the player.
-	 *
 	 * @param player 目标玩家 / target player
 	 */
 	public void endEffect(Player player) {

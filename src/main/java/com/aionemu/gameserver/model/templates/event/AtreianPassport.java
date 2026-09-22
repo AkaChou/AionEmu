@@ -18,7 +18,6 @@ import lombok.Getter;
 /**
  * 艾特里亚 Passport 模板（静态数据/XML）。
  * Atreian Passport Template (static data/XML).
- *
  * @author Ghostfur (Aion-Unique)
  */
 @Getter

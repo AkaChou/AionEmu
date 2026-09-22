@@ -22,7 +22,6 @@ public class DelayedFpAtkInstantEffect extends EffectTemplate {
 	/**
 	 * 仅对玩家目标计算命中。
 	 * Calculates hit only when the target is a player.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	public void calculate(Effect effect) {
@@ -34,7 +33,6 @@ public class DelayedFpAtkInstantEffect extends EffectTemplate {
 	/**
 	 * 延迟后对敌对玩家结算 FP 伤害。
 	 * After delay, applies FP damage to an enemy player.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	public void applyEffect(final Effect effect) {
@@ -48,7 +46,6 @@ public class DelayedFpAtkInstantEffect extends EffectTemplate {
 	/**
 	 * 计算并削减目标 FP。
 	 * Calculates and reduces the target's FP.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	private void calculateAndApplyDamage(Effect effect) {

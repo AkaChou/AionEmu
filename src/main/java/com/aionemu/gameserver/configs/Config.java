@@ -86,7 +86,6 @@ public class Config {
 	/**
 	 * 配置目录路径。
 	 * Config directory path.
-	 *
 	 * @return 配置目录路径 / config directory path
 	 */
 	private static String configDir() {

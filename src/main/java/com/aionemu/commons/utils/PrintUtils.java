@@ -21,7 +21,6 @@ public class PrintUtils {
     /**
      * 打印分区标题与分隔线。
      * Print a section title with a rule line.
-     *
      * @param sectionName 分区名称 / Section name
      */
     public void printSection(String sectionName) {
@@ -36,7 +35,6 @@ public class PrintUtils {
     /**
      * 打印子分区标题。
      * Print a sub-section title.
-     *
      * @param title 子分区标题 / Sub-section title
      */
     public void printSubSection(String title) {
@@ -50,7 +48,6 @@ public class PrintUtils {
     /**
      * 通过 aion.console 输出原始横幅行（无时间戳样式）。
      * Print a raw banner line via aion.console (no timestamp pattern).
-     *
      * @param line 横幅内容 / Banner line
      */
     public void printBannerLine(String line) {
@@ -60,7 +57,6 @@ public class PrintUtils {
     /**
      * 规范化标题：去空白与装饰符号。
      * Normalize a title by trimming whitespace and decoration marks.
-     *
      * @param raw 原始标题 / Raw title
      * @return 规范化结果 / Normalized title
      */
@@ -87,7 +83,6 @@ public class PrintUtils {
     /**
      * 将十六进制字符串转为字节数组（忽略空白）。
      * Convert a hex string to bytes (whitespace ignored).
-     *
      * @param string 十六进制字符串 / Hex string
      * @return 字节数组 / Byte array
      */
@@ -105,7 +100,6 @@ public class PrintUtils {
     /**
      * 将字节数组转为连续十六进制字符串。
      * Convert bytes to a continuous hex string.
-     *
      * @param bytes 字节数组 / Byte array
      * @return 十六进制字符串 / Hex string
      */
@@ -126,7 +120,6 @@ public class PrintUtils {
     /**
      * 按字节反转十六进制字符串。
      * Reverse a hex string by byte pairs.
-     *
      * @param input 十六进制字符串 / Hex string
      * @return 反转后的十六进制字符串 / Reversed hex string
      */
@@ -146,7 +139,6 @@ public class PrintUtils {
     /**
      * 将 {@link ByteBuffer} 格式化为带偏移与 ASCII 侧栏的十六进制转储。
      * Format a {@link ByteBuffer} as a hex dump with offsets and ASCII side panel.
-     *
      * @param data 缓冲区（读取后恢复 position） / Buffer (position restored after read)
      * @return 十六进制转储文本 / Hex dump text
      */
@@ -186,7 +178,6 @@ public class PrintUtils {
     /**
      * 追加可读 ASCII 文本段。
      * Append a readable ASCII text segment.
-     *
      * @param data 缓冲区 / Buffer
      * @param result 输出构建器 / Output builder
      * @param cnt 字节数 / Byte count

@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Norsvold 区域 NPC AI：Bighorn Wendigo（@AIName "bighorn_wendigo"），继承 AggressiveNpcAI2。
  * Norsvold zone NPC AI: Bighorn Wendigo (@AIName "bighorn_wendigo"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("bighorn_wendigo")

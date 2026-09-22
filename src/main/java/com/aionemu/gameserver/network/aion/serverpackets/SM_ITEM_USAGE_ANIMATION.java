@@ -23,7 +23,6 @@ public class SM_ITEM_USAGE_ANIMATION extends AionServerPacket {
 	/**
 	 * 构造即时完成的物品使用动画包（目标为自己）。
 	 * Creates an immediate item usage animation packet targeting the caster.
-	 *
 	 * @param playerObjId 使用者对象 ID / caster object id
 	 * item object id
 	 * item template id
@@ -41,7 +40,6 @@ public class SM_ITEM_USAGE_ANIMATION extends AionServerPacket {
 	/**
 	 * 构造带读条时长与结束状态的物品使用动画包（目标为自己）。
 	 * Creates an item usage animation packet with cast time and end flag targeting the caster.
-	 *
 	 * @param playerObjId 使用者对象 ID / caster object id
 	 * item object id
 	 * item template id
@@ -60,7 +58,6 @@ public class SM_ITEM_USAGE_ANIMATION extends AionServerPacket {
 	/**
 	 * 构造带读条时长、结束状态与附加标志的物品使用动画包（目标为自己）。
 	 * Creates an item usage animation packet with cast time, end flag and extra flag targeting the caster.
-	 *
 	 * @param playerObjId 使用者对象 ID / caster object id
 	 * item object id
 	 * item template id

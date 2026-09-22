@@ -12,7 +12,6 @@ import lombok.Getter;
 /**
  * 血量百分比触发点：按血量阈值配置召唤物组与技能。
  * HP-percentage trigger: configures summon groups and a skill by HP threshold.
- *
  * @author xTz
  */
 @Getter
@@ -29,8 +28,7 @@ public class Percentage {
 	/**
 	 * 是否为独立召唤（按玩家分别触发）。
 	 * Whether the summons trigger individually per player.
-	 *
-	 * @return 是否独立召唤 / Whether individual
+	 * 是否独立召唤 / Whether individual
 	 */
 	@XmlAttribute(name = "isIndividual")
 	protected boolean isIndividual = false;

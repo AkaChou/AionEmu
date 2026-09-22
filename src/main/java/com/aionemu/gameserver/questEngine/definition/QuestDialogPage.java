@@ -205,7 +205,6 @@ public enum QuestDialogPage {
 	/**
 	 * 第 N 档（0 基）奖励在客户端渲染的奖励窗口页面。
 	 * Client reward-window page rendering the zero-based Nth reward tier.
-	 *
 	 * <p>客户端只声明 6 档奖励窗口：第 1~4 档对应页面 5..8，第 5/6 档对应页面 45/46；
 	 * 超过 6 档时没有可下发页面，调用方必须显式降级或拒绝，禁止再用线性偏移猜测页面号。
 	 * The client declares exactly six reward windows: tiers 1..4 map to pages 5..8 and tiers

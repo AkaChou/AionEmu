@@ -18,7 +18,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 皮肤技能数据容器，按 ID 与组名双索引 SkinSkillTemplate。
  * Skin skill data holder, dual-indexing SkinSkillTemplate by id and group name.
- *
  * @author Ranastic
  */
 @XmlRootElement(name = "skin_skills")
@@ -47,7 +46,6 @@ public class SkinSkillData {
 	/**
 	 * 返回已加载的皮肤技能数量。
 	 * Returns the number of loaded skin skills.
-	 *
 	 * @return 已加载的皮肤技能数量 / Returns the number of loaded skin skills.
 	 */
 	public int size() {
@@ -57,7 +55,6 @@ public class SkinSkillData {
 	/**
 	 * 按 ID 获取皮肤技能模板。
 	 * Returns the skin skill template for the given id.
-	 *
 	 * @param id 皮肤技能 ID / skin skill id
 	 * @return 模板，不存在则为 null / template or null
 	 */
@@ -68,7 +65,6 @@ public class SkinSkillData {
 	/**
 	 * 按组名获取皮肤技能模板。
 	 * Returns the skin skill template for the given group name.
-	 *
 	 * @param name 套装名 / set name
 	 * @return 模板，不存在则为 null / template or null
 	 */

@@ -28,7 +28,6 @@ public class SvStatsConfig {
     /**
      * 设置是否启用 SvStats，并同步更新静态字段。
      * Sets whether SvStats is enabled and synchronizes the static field.
-     *
      * @param enableSvstats 是否启用 / whether enabled
      */
     public void setEnableSvstats(boolean enableSvstats) {

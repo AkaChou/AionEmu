@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 钥匙物品模板（静态数据/XML）。
  * Key item template (static data / XML).
- *
  * @author Wakizashi
  */
 @Getter
@@ -17,16 +16,10 @@ import lombok.Getter;
 @XmlType(name = "KeyItem")
 public class KeyItem {
 
-	/**
-	 * @return 钥匙 ID / the id
-	 */
 	@XmlAttribute(name = "id")
 	protected int id;
 	@XmlAttribute(name = "itemid")
 	protected int itemid;
-	/**
-	 * @return 数量 / the quantity
-	 */
 	@XmlAttribute(name = "quantity")
 	protected int quantity;
 

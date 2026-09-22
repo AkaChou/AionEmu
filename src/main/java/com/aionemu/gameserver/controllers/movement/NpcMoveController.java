@@ -131,8 +131,6 @@ public class NpcMoveController
 	 * -- GETTER --
 	 *  返回当前路线点索引。
 	 *  Return the current route point index.
-	 *
-	 * @return 路线点索引 / Point index
 	 */
 	@Getter
     int currentPoint;
@@ -140,8 +138,6 @@ public class NpcMoveController
      * -- GETTER --
      *  返回当前路线点停顿时间（毫秒）。
      *  Return the current route-step rest time in milliseconds.
-     *
-     * @return 停顿毫秒数 / Rest time ms
      */
     @Getter
     int walkPause;
@@ -223,7 +219,6 @@ public class NpcMoveController
     /**
      * 使用指定 NPC 构造控制器。
      * Construct the controller for the given NPC.
-     *
      * @param owner NPC 所有者 / NPC owner
      */
     public NpcMoveController(Npc owner) {
@@ -254,7 +249,6 @@ public class NpcMoveController
     /**
      * 对目标应用跟随马达；目标不变时复用。
      * Apply a follow motor to the target; reuse when target is unchanged.
-     *
      * @param target 跟随目标 / Follow target
      */
     private void applyFollow(VisibleObject target) {
@@ -283,7 +277,6 @@ public class NpcMoveController
     /**
      * 路径是否包含中间路点。
      * Whether the path has intermediate waypoints.
-     *
      * @param path 路径点数组 / Path waypoints
      * @return 是否有中间点 / Whether intermediate exists
      */
@@ -334,7 +327,6 @@ public class NpcMoveController
     /**
      * 是否应向客户端广播移动状态变化。
      * Whether a movement state change should be broadcast to clients.
-     *
      * @param currentMask 当前掩码 / Current mask
      * @param newMask 新掩码 / New mask
      * @param destinationChanged 目标是否变化 / Whether destination changed
@@ -458,7 +450,6 @@ public class NpcMoveController
     /**
      * 开始向指定坐标点移动。
      * Start moving toward a specific point.
-     *
      * @param x 目标 X / Target X
      * @param y 目标 Y / Target Y
      * @param z 目标 Z / Target Z
@@ -702,7 +693,6 @@ public class NpcMoveController
     /**
      * 解析追击目标高度：地面怪物取目标脚下地表，空间寻路保留目标高度。
      * Resolve chase Z: ground movers use the surface below the target; spatial movers keep target Z.
-     *
      * @param spatialPath whether movement follows a spatial path
      * @param creature target creature
      * @return effective Z
@@ -944,7 +934,6 @@ public class NpcMoveController
     /**
      * 按速度插值向坐标推进，处理掩码广播与路径缓存消费。
      * Interpolate toward coordinates by speed; handle mask broadcast and path-cache consumption.
-     *
      * @param targetX 目标 X 坐标 / Target X
      * @param targetY 目标 Y 坐标 / Target Y
      * @param targetZ 目标 Z 坐标 / Target Z
@@ -1163,7 +1152,6 @@ public class NpcMoveController
     /**
      * 根据方向变化、AI 状态与速度加成计算移动掩码。
      * Compute the movement mask from direction change, AI state, and speed bonus.
-     *
      * @param directionChanged 方向是否变化 / Whether direction changed
      * @return 移动掩码 / Movement mask
      */
@@ -2000,13 +1988,11 @@ public class NpcMoveController
     /**
      * 判定归家是否已超时；超时则瞬移回出生点。
      * Evaluates the home-return timeout and teleports the NPC back to its spawn when exceeded.
-     *
      * <p>该判定必须发生在 {@link #moveToDestination()} 的所有提前返回之前：水中寻路持续失败时，
      * 早退分支会让 {@code case HOME} 永远不被执行，归家兜底也就永远不会触发。
      * This check must run before every early return of {@link #moveToDestination()}: while swimming,
      * failing pathing keeps the method from ever reaching {@code case HOME}, so the return-home
      * fallback could never fire.</p>
-     *
      * @return 本次移动帧是否因归家超时而中止 / whether this move frame was aborted by the home-return timeout
      */
     private boolean abortTimedOutHomeReturn() {
@@ -2056,7 +2042,6 @@ public class NpcMoveController
     /**
      * 设置当前巡逻路线并重置点索引。
      * Set the current walk route and reset the point index.
-     *
      * @param currentRoute 路线步骤列表 / Route step list
      */
     public void setCurrentRoute(List<RouteStep> currentRoute) {
@@ -2071,7 +2056,6 @@ public class NpcMoveController
     /**
      * 设置当前与上一路线步骤，处理编队偏移与地形高度。
      * Set current/previous route steps; handle formation offset and terrain Z.
-     *
      * @param paramRouteStep1 当前步骤 / Current step
      * @param paramRouteStep2 上一步骤 / Previous step
      */
@@ -2098,7 +2082,6 @@ public class NpcMoveController
 	/**
      * 是否已到达当前目标点。
      * Whether the current target point has been reached.
-     *
      * @return 是否已到达 / Whether reached
      */
     public boolean isReachedPoint() {
@@ -2129,7 +2112,6 @@ public class NpcMoveController
     /**
      * 是否正在转向（位于路线起点）。
      * Whether direction is changing (at route start).
-     *
      * @return 是否正在转向 / Whether changing direction
      */
     public boolean isChangingDirection() {
@@ -2139,7 +2121,6 @@ public class NpcMoveController
     /**
      * 返回目标 X；未启动时返回当前位置。
      * Return target X; current position when not started.
-     *
      * @return 目标 X / Target X
      */
     @Override
@@ -2150,7 +2131,6 @@ public class NpcMoveController
     /**
      * 返回目标 Y；未启动时返回当前位置。
      * Return target Y; current position when not started.
-     *
      * @return 目标 Y / Target Y
      */
     @Override
@@ -2161,7 +2141,6 @@ public class NpcMoveController
     /**
      * 返回目标 Z；未启动时返回当前位置。
      * Return target Z; current position when not started.
-     *
      * @return 目标 Z / Target Z
      */
     @Override
@@ -2172,7 +2151,6 @@ public class NpcMoveController
     /**
      * 是否正在跟随目标对象。
      * Whether currently following a target object.
-     *
      * @return 是否正在跟随 / Whether following
      */
     public boolean isFollowingTarget() {
@@ -2203,7 +2181,6 @@ public class NpcMoveController
     /**
      * 取回上一个回退步并设为目标；无记录时回退到出生点。
      * Recall the previous back-step as destination; fall back to spawn when none.
-     *
      * @return 回退点 / Recalled point
      */
     public Point3D recallPreviousStep() {

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 管理员封禁命令：按账号/IP/全量封禁玩家。
  * Admin ban command: bans a player by account, IP, or full.
- *
  * @author Watson
  */
 public class Ban extends AdminCommand {
@@ -26,7 +25,6 @@ public class Ban extends AdminCommand {
 	/**
 	 * 执行封禁：解析目标与类型后通知登录服。
 	 * Executes ban: resolves target and type, then notifies the login server.
-	 *
 	 * @param params 参数：玩家名、类型、时长 / player name, type, duration
 	 */
 	@Override
@@ -92,7 +90,6 @@ public class Ban extends AdminCommand {
 	/**
 	 * 参数错误时输出 {@code //ban} 用法。
 	 * Prints {@code //ban} usage on invalid arguments.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

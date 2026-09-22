@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Dredgion Defense 副本 NPC AI：Soirunerk（@AIName "Soirunerk"），继承 NpcAI2。
  * Dredgion Defense instance NPC AI: Soirunerk (@AIName "Soirunerk"), extends NpcAI2.
- *
  * @author Ghostfur & Unknown (Aion-Unique)
  */
 @AIName("Soirunerk")

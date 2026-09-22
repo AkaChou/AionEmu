@@ -14,29 +14,23 @@ public class ChainSkill {
 	/**
 	 * 获取连锁类别。
 	 * Gets chain category.
-	 *
-	 * @return 类别 / category
 	 */
 	private String category;
 	/**
 	 * 获取连击计数。
 	 * Gets chain count.
-	 *
-	 * @return 连击计数 / chain count
 	 */
 	private int chainCount = 0;
 	/**
 	 * 获取最近使用时间。
 	 * Gets last use timestamp.
-	 *
-	 * @return 毫秒时间戳 / epoch millis
+	 * 毫秒时间戳 / epoch millis
 	 */
 	private long useTime;
 
 	/**
 	 * 重置为新类别并清零计数、刷新使用时间。
 	 * Resets to a new category, clears count and refreshes use time.
-	 *
 	 * @param category 新连锁类别 / new chain category
 	 */
 	public void updateChainSkill(String category) {

@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 /**
  * 删除仓库物品包：按仓库类型、对象 ID 与删除类型移除。
  * Server packet that deletes a warehouse item by storage type, object id and delete type.
- *
  * @author kosyachok
  */
 @AllArgsConstructor

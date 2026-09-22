@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 /**
  * Idian Depths 区域 NPC AI：Blackened Grave（@AIName "blackened_grave"），继承 NpcAI2。
  * Idian Depths zone NPC AI: Blackened Grave (@AIName "blackened_grave"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("blackened_grave")

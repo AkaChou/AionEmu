@@ -18,7 +18,6 @@ import lombok.Setter;
 /**
  * Moltenus 活动时间表配置。
  * Moltenus event schedule configuration.
- *
  * @author Rinzler (Encom)
  */
 @Getter
@@ -31,7 +30,6 @@ public class MoltenusSchedule {
 	 * -- GETTER --
 	 *  获取 Moltenus 列表。
 	 *  Returns the moltenus list.
-
 	 */
 	@XmlElement(name = "moltenus", required = true)
 	private List<Moltenus> moltenussList;
@@ -76,8 +74,6 @@ public class MoltenusSchedule {
 		 * -- SETTER --
 		 *  设置 Moltenus ID。
 		 *  Sets the moltenus ID.
-
-
 		 */
 		@XmlAttribute(required = true)
 		private int id;
@@ -91,8 +87,6 @@ public class MoltenusSchedule {
 		 * -- SETTER --
 		 *  设置战斗时间列表。
 		 *  Sets the fight times.
-
-
 		 */
 		@XmlElement(name = "fightTime", required = true)
 		private List<String> fightTimes;

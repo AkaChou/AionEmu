@@ -18,7 +18,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 攻城战相关 NPC AI：SWAA Gun Ride Dark（@AIName "SWAAGun_Ride_Dark"），继承 NpcAI2。
  * Siege-related NPC AI: SWAA Gun Ride Dark (@AIName "SWAAGun_Ride_Dark"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("SWAAGun_Ride_Dark")

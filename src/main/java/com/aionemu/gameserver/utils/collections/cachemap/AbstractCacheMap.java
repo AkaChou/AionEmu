@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * {@link WeakCacheMap} 与 {@link SoftCacheMap} 的基类。
  * Base class for {@link WeakCacheMap} and {@link SoftCacheMap}.
- *
  * @param <K> 键类型 / Key type
  * @param <V> 值类型 / Value type
  * @author Luno
@@ -45,7 +44,6 @@ abstract class AbstractCacheMap<K, V> implements CacheMap<K, V> {
 	/**
 	 * 使用缓存名与值名构造。
 	 * Construct with cache name and value name.
-	 *
 	 * @param cacheName 缓存名称 / Cache name
 	 * @param valueName 值名称 / Value name
 	 */
@@ -119,7 +117,6 @@ abstract class AbstractCacheMap<K, V> implements CacheMap<K, V> {
 	/**
 	 * 创建包装键的引用实现。
 	 * Create a reference implementation that holds the key.
-	 *
 	 * @param key 键 / Key
 	 * @param value 值 / Value
 	 * @param queue 引用队列 / Reference queue

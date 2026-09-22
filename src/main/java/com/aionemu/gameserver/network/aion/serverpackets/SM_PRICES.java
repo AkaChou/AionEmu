@@ -7,7 +7,6 @@ import com.aionemu.gameserver.services.trade.PricesService;
 /**
  * 向客户端同步当前税率与物价比率（受势力影响）。
  * Server packet synchronizing current tax and price rates (influence-based) to the client.
- *
  * @author xavier, Sarynth, Wakizashi
  */
 public class SM_PRICES extends AionServerPacket {

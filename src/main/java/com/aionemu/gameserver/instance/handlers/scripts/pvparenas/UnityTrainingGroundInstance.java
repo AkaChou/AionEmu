@@ -13,7 +13,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * 团结训练场副本事件处理器。
  * Instance event handler for Unity Training Ground.
- *
  * @author Encom
  */
 
@@ -23,7 +22,6 @@ public class UnityTrainingGroundInstance extends HarmonyArenaInstance
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -297,7 +295,6 @@ public class UnityTrainingGroundInstance extends HarmonyArenaInstance
 	/**
 	 * 玩家通过飞行环时处理。
 	 * Handle a player passing a flying ring.
-	 *
 	 * 玩家 / player
 	 * @param flyingRing 飞行环标识 / flying-ring id
 	 * result
@@ -474,7 +471,6 @@ public class UnityTrainingGroundInstance extends HarmonyArenaInstance
 	/**
 	 * 返回 npc。
 	 * Return the npc.
-	 *
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z

@@ -24,7 +24,6 @@ public class ClassUtils {
     /**
      * 判断类 {@code a} 是否为 {@code b} 的子类或实现了接口 {@code b}。
      * Whether class {@code a} is a subclass of or implements {@code b}.
-     *
      * @param a 待检查类 / Class to check
      * @param b 目标父类或接口 / Target superclass or interface
      * @return 若是子类或实现类则为 true / True if subclass or implementor
@@ -54,10 +53,8 @@ public class ClassUtils {
     /**
      * 判断类是否属于指定包。
      * Whether the class belongs to the given package.
-     *
      * @param clazz 待检查类 / Class to check
      * @param packageName 包名 / Package name
-     *
      * @return 若 package member 则为 true / True if package member
      */
     public boolean isPackageMember(Class<?> clazz, String packageName) {
@@ -67,10 +64,8 @@ public class ClassUtils {
     /**
      * 判断类名是否属于指定包。
      * Whether the class name belongs to the given package.
-     *
      * @param className 类名 / Class name
      * @param packageName 包名 / Package name
-     *
      * @return 若 package member 则为 true / True if package member
      */
     public boolean isPackageMember(String className, String packageName) {
@@ -85,7 +80,6 @@ public class ClassUtils {
     /**
      * 从目录扫描全部类名。
      * Collect all class names under a directory.
-     *
      * @param directory 目录 / Directory
      * @return 类名集合 / Set of class names
      * @throws IllegalArgumentException 目录无效时 / When directory is invalid
@@ -101,7 +95,6 @@ public class ClassUtils {
     /**
      * 从包目录扫描类名。
      * Collect class names from a package directory.
-     *
      * @param directory 目录 / Directory
      * @param packageName 包名 / Package name
      * @param recursive 是否递归子目录 / Whether to recurse
@@ -137,7 +130,6 @@ public class ClassUtils {
     /**
      * 从 JAR（含嵌套 JAR 路径）读取类名。
      * Collect class names from a JAR (including nested JAR paths).
-     *
      * @param file JAR 文件 / JAR file
      * @return 类名集合 / Set of class names
      * @throws IOException 读取失败时 / On read failure
@@ -180,7 +172,6 @@ public class ClassUtils {
     /**
      * 从嵌套 JAR 路径（{@code outer.jar/!entry.jar}）读取类名。
      * Collect class names from a nested JAR path ({@code outer.jar/!entry.jar}).
-     *
      * @param file 嵌套路径文件对象 / Nested path file object
      * @return 类名集合；无法解析时返回 null / Class names, or null if unresolvable
      * @throws IOException 读取失败时 / On read failure

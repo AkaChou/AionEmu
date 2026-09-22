@@ -15,7 +15,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * Transidium Annex 副本 NPC AI：Bulwark Shield（@AIName "bulwark_shield"），继承 NpcAI2。
  * Transidium Annex instance NPC AI: Bulwark Shield (@AIName "bulwark_shield"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("bulwark_shield")

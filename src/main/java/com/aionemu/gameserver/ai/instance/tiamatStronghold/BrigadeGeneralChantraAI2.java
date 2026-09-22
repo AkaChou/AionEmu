@@ -15,7 +15,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Tiamat Stronghold 副本 NPC AI：Brigade General Chantra（@AIName "brigadegeneralchantra"），继承 AggressiveNpcAI2。
  * Tiamat Stronghold instance NPC AI: Brigade General Chantra (@AIName "brigadegeneralchantra"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("brigadegeneralchantra")

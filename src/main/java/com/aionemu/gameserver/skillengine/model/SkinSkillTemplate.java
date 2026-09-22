@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 皮肤技能模板：外观/皮肤关联的技能元数据。
  * Skin skill template: skill metadata linked to appearance/skin.
- *
  * @author Ranastic
  */
 @Getter
@@ -20,7 +19,6 @@ public class SkinSkillTemplate {
 	/**
 	 * 获取技能 ID。
 	 * Gets skill id.
-	 *
 	 */
 	@XmlAttribute(name = "id", required = true)
 	private int id;
@@ -28,7 +26,6 @@ public class SkinSkillTemplate {
 	/**
 	 * 获取名称。
 	 * Gets name.
-	 *
 	 */
 	@XmlAttribute(name = "name")
 	private String name = "";
@@ -36,7 +33,6 @@ public class SkinSkillTemplate {
 	/**
 	 * 获取描述。
 	 * Gets description.
-	 *
 	 */
 	@XmlAttribute(name = "desc")
 	private String desc = "";
@@ -47,7 +43,6 @@ public class SkinSkillTemplate {
 	/**
 	 * 获取技能分组。
 	 * Gets skill group.
-	 *
 	 */
 	public String getGroup() {
 		return skill_group;

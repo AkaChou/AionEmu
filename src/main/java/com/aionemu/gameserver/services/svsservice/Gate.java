@@ -6,7 +6,6 @@ import com.aionemu.gameserver.model.svs.SvsStateType;
 /**
  * 帕内斯特拉（SVS）大门默认实现：切入 SVS / 回到 PEACE。
  * Default Panesterra (SVS) gate implementation: switch to SVS / back to PEACE.
- *
  * @author Rinzler (Encom)
  */
 public class Gate extends Panesterra<SvsLocation> {
@@ -14,7 +13,6 @@ public class Gate extends Panesterra<SvsLocation> {
 	/**
 	 * 绑定 SVS 地点。
 	 * Binds the SVS location.
-	 *
 	 * @param svs SVS 地点 / SVS location
 	 */
 	public Gate(SvsLocation svs) {

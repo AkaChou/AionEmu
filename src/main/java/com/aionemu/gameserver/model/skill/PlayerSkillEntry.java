@@ -12,7 +12,6 @@ import lombok.Setter;
 /**
  * 玩家技能条目，用于技能相关逻辑。
  * Player Skill Entry for skill logic.
- *
  * @author ATracer
  */
 @Getter
@@ -21,39 +20,20 @@ public class PlayerSkillEntry extends SkillEntry {
 		boolean activated, int currentXp, PersistentState persistentState) {
 	}
 
-    /**
-     * -- GETTER --
-     *
-     * @return 是否为烙印之石技能 / Whether stigma skill
-     */
     private final boolean isStigma;
-    /**
-     * -- GETTER --
-     *
-     * @return 是否为关联技能 / Whether linked
-     */
     private final boolean isLinked;
 
 	/**
 	 * 制作技能的经验值。
 	 * for crafting skills
      * -- GETTER --
-     *
-     *
 	 * -- SETTER --
-	 *
-	 @return 当前经验 / Current XP
-	  * @param currentXp 设置的经验 / Current XP to set
-
+	 当前经验 / Current XP
+	  * 设置的经验 / Current XP to set
      */
 	@Setter
 	private int currentXp;
 
-    /**
-     * -- GETTER --
-     *
-     * @return 持久化状态 / Persistent state
-     */
     private PersistentState persistentState;
 
 	public PlayerSkillEntry(int skillId, boolean isStigma, boolean isLinked, int skillLvl, int skinId,
@@ -117,7 +97,6 @@ public class PlayerSkillEntry extends SkillEntry {
 	/**
 	 * 为制作技能添加经验，达到阈值时升级。
 	 * Add XP to a craft skill and level it up when the threshold is reached.
-	 *
 	 * @param player 玩家 / Player
 	 * @param xp 获得的经验 / XP gained
 	 * @return 是否升级 / Whether the skill leveled up

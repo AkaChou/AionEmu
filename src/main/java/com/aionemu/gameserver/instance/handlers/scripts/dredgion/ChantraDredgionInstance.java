@@ -50,7 +50,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * 钱特拉无渊号副本事件处理器。
  * Instance event handler for Chantra Dredgion.
- *
  * @author Encom
  * @author MATTY
  */
@@ -81,7 +80,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
-	 *
 	 * @param player 玩家 / player
 	 * @return 玩家奖励记录 / player reward record
 	 */
@@ -96,7 +94,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * 使指定房间被给定阵营占领。
 	 * Have the given room captured by the given race.
-	 *
 	 * @param race 占领阵营 / capturing race
 	 * @param roomId 房间 ID / room id
 	 */
@@ -115,7 +112,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc 掉落 NPC / dropper NPC
 	 */
 
@@ -197,9 +193,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 					}
 				}
 			break;
-		   /**
-	 * 击杀守门人萨尔塔获得船长钥匙，可打开船长室门。 / Obtain the Captain’s Key by killing Gatekeeper Sarta. The Captain’s Key opens the door to the Captain’s Cabin
-	 */
 			case 217037: //Gatekeeper Sarta.
 				for (Player player: instance.getPlayersInside()) {
 				    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000105, 1)); //Captain's Cabin Passage Key.
@@ -258,18 +251,12 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 				break;
 			}
 		}, 60000));
-	   /**
-	 * 钱特拉战舰内有多处传送装置。 / Chantra Dredgion Teleportation Devices: There are numerous teleportation devices located inside the Chantra Dredgion. These teleportation devices allow players to teleport to different areas of the Dredgion with ease. Central Teleporter: This teleporter activates 10 minutes after the Instanced Dungeon has begun
-	 */
 		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			// 紧急出口传送装置已激活。 / A teleport device has been activated in the Emergency Exit.
 			sendMsgByRace(1401424, Race.PC_ALL, 0);
 			spawn(730311, 415.07663f, 173.85265f, 432.53436f, (byte) 0, 34); //Portside Central Teleporter.
 			spawn(730312, 554.83081f, 173.87158f, 432.52448f, (byte) 0, 9); //Starboard Central Teleporter.
 		}, 600000));
-	   /**
-	 * 军官卡曼亚：位置重力控制室；经过 15 分钟；勇气 1000 点。 / Officer Kamanya: Location: Gravity Control Time Elapsed: 15 Minutes Valor: 1,000 Points
-	 */
 		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			// 军官卡曼亚已出现在重力控制室。 / Officer Kamanya has appeared in Gravity Control.
 			sendMsgByRace(1400633, Race.PC_ALL, 0);
@@ -286,7 +273,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc 死亡的 NPC / dying NPC
 	 */
 	@Override
@@ -298,16 +284,10 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
         }
 		Race race = mostPlayerDamage.getRace();
 		switch (npc.getObjectTemplate().getTemplateId()) {
-		   /**
-	 * 钱特拉战舰入口附近有 6 个武器箱，摧毁各得 100 分。 / There are six weapon chests located near the Chantra Dredgion entrance, and each chest awards 100 points if destroyed. These chests are also related to Quests for both Elyos and Asmodians
-	 */
-		    case 700836: //Weapon Chest.
+			case 700836: //Weapon Chest.
                 point = 100;
 				despawnNpc(npc);
             break;
-		   /**
-	 * 苏卡纳：摧毁各房间苏卡纳可获得更高分数。 / The Surkana: Destroy Surkana in each room can obtain a higher score. 2. When you add monsters to attack Surkana is around 20m range. First, it is safe to be cleaned up monsters. 3. When you destroy a race that destroyed Surkana is displayed on the map. It is through you can guess the path of the opposing faction. 4. Captain Room Teleport appeared to be destroyed 5 Surkana
-	 */
 			case 700838: //Armory Maintenance Surkana.
 			case 700839: //Armory Maintenance Surkana.
 			    despawnNpc(npc);
@@ -349,9 +329,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 				despawnNpc(npc);
 				onDieSurkan(npc, mostPlayerDamage, 1100);
 			break;
-		   /**
-	 * 船长室通道：二楼船长室左右有路但门被封，需特殊方式开启。 / Captain’s Cabin Passage: There are paths to the left and right of the Captain’s Cabin’s on the second floor, but the doors are blocked. These doors cannot be demolished, and can only be opened with a key dropped by a specific Named Monster. Groups desiring the Captain’s Cabin Passage Key will need to defeat "Sahadena The Abettor" in the center of the Dredgion. Only one Group can loot the key. The Captain’s Cabin Teleport Device is located just beyond the Barracks, and can make reaching Captain Zanata much easier
-	 */
 			case 216882: //Sahadena The Abettor.
 				if (race.equals(Race.ELYOS)) {
 				   // 船长室传送装置已在中庭尽头生成。 / Captain's Cabin teleport device has been created at the end of the Atrium.
@@ -364,9 +341,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 				}
 				point = 1000;
             break;
-		   /**
-	 * 补给室传送器：兵营中传送发生器被摧毁后激活 / Supply Room Teleporter: This teleporter activates after the destruction of the Teleporter Generator in the Barracks
-	 */
 			case 730349: //Portside Teleporter Generator.
                 despawnNpc(npc);
 				// 物资仓库传送装置已在副逃生舱口生成。 / Supplies Storage teleport device has been created at Escape Hatch.
@@ -379,9 +353,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 				sendMsgByRace(1400641, Race.PC_ALL, 0);
 				spawn(730315, 572.10443f, 185.23933f, 432.56024f, (byte) 0, 10); //Starboard Supply Room Teleporter.
             break;
-		   /**
-	 * 每台护盾发生器需要 3 个理念物品，共 12 个 / Defense Shield Generator: When the Defense Shield Generator on the Weapons Deck or Lower Weapons deck is demolished, a shield appears in Ready Room 1 or 2. This shield blocks access to the center of the Chantra Dredgion. The Ready Room is the shortest route to the center of the Dredgion, and the quickest route to the opposing race’s area. Different tactics can be used in this area to maximize the Group’s accumulation of points. For example, if one Group decides to destroy the opposing Group’s Shield Generator, it will make it difficult for the opposing Group to reach the center of the Dredgion. In some cases, it might wiser for one Group to destroy their own Defense Shield Generator, and delay engagement with the opposing race in order to accumulate more points
-	 */
 			case 730345: //Portside Defense Shield.
 			case 730346: //Starboard Defense Shield.
 				despawnNpc(npc);
@@ -398,9 +369,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 				sendMsgByRace(1400227, Race.PC_ALL, 0);
 				spawn(730346, 520.87555f, 493.40115f, 394.43292f, (byte) 0, 133);  // 生成屏障 / spawn barrier
 			break;
-		   /**
-	 * 舱壁：钱特拉哨兵开战时激活护盾，阻挡入口。 / The Bulkhead: These shields are activated by the Chantra Sentinel when first encountered at the beginning of the battle. These shields block the entrance from the Armories to Gravity Control, and can be demolished with attacks, but also have a significant amount of health. Groups often opt to move around the shields instead of demolishing them. It’s worth noting that after a certain amount of time has passed, Officer Kamanya spawns in the Gravity Control room, and gives 1,000 points when defeated. There is also a chance that Rajaya the Inquisitor, a Hero grade Named Monster, will spawn. Rajaya the Inquisitor has a chance to drop Fabled and Heroic accessories
-	 */
 			case 730353: //Port Bulkhead.
 			case 730354: //Starboard Bulkhead.
 				bulkhead++;
@@ -475,7 +443,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -489,7 +456,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -503,7 +469,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * 停止副本并结算。
 	 * Stop the instance and settle.
-	 *
 	 * @param race 阵营 / race
 	 */
 
@@ -561,7 +526,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * 处理玩家复活事件。
 	 * Handle a player revive event.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否接受复活 / whether the revive is accepted
 	 */
@@ -578,7 +542,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param player 玩家 / player
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 * @return 是否接受死亡 / whether the death is accepted
@@ -625,7 +588,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * 按击杀或死亡更新阵营与玩家分数，并让同组玩家共享分数。
 	 * Update race and player scores on kill or death, sharing points within the group.
-	 *
 	 * @param player 得分玩家 / scoring player
 	 * @param target 被击杀目标 / slain target
 	 * @param points 分数 / points
@@ -688,7 +650,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * 打开指定门。
 	 * Open the given door.
-	 *
 	 * @param doorId 门 ID / door id
 	 */
 
@@ -704,7 +665,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -716,7 +676,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * 延迟生成 NPC。
 	 * Spawn an NPC after a delay.
-	 *
 	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
@@ -731,7 +690,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * 延迟生成 NPC 并广播系统消息。
 	 * Spawn an NPC after a delay and broadcast a system message.
-	 *
 	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
@@ -748,7 +706,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * 延迟生成带实体 ID 的 NPC 并广播系统消息。
 	 * Spawn an NPC with an entity id after a delay and broadcast a system message.
-	 *
 	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
@@ -773,7 +730,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * 延迟生成沿指定巡行路线行走的 NPC。
 	 * Spawn an NPC after a delay that walks along the given route.
-	 *
 	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
@@ -795,7 +751,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * 延迟后向指定阵营广播系统消息。
 	 * Broadcast a system message to the given race after a delay.
-	 *
 	 * @param msg 系统消息 ID / system message id
 	 * @param race 目标阵营 / target race
 	 * @param time 延迟毫秒数 / delay in milliseconds
@@ -806,7 +761,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -829,7 +783,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
-	 *
 	 * @return 副本奖励 / instance reward
 	 */
 	@Override
@@ -840,7 +793,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -851,7 +803,6 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override

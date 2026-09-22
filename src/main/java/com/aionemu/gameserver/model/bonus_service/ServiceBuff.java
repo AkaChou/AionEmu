@@ -18,7 +18,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 服务 Buff，用于加成服务相关逻辑。
  * Service Buff for bonus service logic.
- *
  * @author Ranastic (Encom)
  */
 

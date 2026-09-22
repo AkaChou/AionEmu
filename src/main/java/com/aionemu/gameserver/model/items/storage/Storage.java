@@ -24,7 +24,6 @@ import java.util.ArrayList;
 /**
  * 仓库，用于物品相关逻辑。
  * Storage for items logic.
- *
  * @author KID, ATracer
  */
 public abstract class Storage implements IStorage {
@@ -85,7 +84,6 @@ public abstract class Storage implements IStorage {
 	 * 增加基纳但不发送客户端封包；事务调用方须在 JDBC 事务提交后才发布物品更新。
 	 * Increases kinah without sending a client packet. Transactional callers must
 	 * publish the item update only after their JDBC transaction commits.
-	 *
 	 * @return 无法装入基纳堆叠的剩余数量 / the amount that could not fit in the kinah stack
 	 */
 	public long increaseKinahSilently(long amount) {

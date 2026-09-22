@@ -50,7 +50,6 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
     /**
      * 配置游戏路径与遗留配置，并启动游戏启动序列。
      * Configures game paths and legacy settings, then starts the game startup sequence.
-     *
      * @param args 应用启动参数 / application arguments
      */
     @Override

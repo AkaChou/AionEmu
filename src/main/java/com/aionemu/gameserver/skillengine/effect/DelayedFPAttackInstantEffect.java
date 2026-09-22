@@ -13,7 +13,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 延迟飞行值攻击即时效果：延迟后按固定值或百分比削减目标 FP。
  * Delayed FP attack instant effect: after delay, reduces target FP by fixed or percent value.
- *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -28,7 +27,6 @@ public class DelayedFPAttackInstantEffect extends EffectTemplate {
 	/**
 	 * 仅对玩家目标计算 FP 削减量并写入 reserved2。
 	 * Calculates FP reduction for player targets into reserved2.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -48,7 +46,6 @@ public class DelayedFPAttackInstantEffect extends EffectTemplate {
 	/**
 	 * 延迟 delay 毫秒后削减目标 FP。
 	 * Schedules FP reduction after the configured delay milliseconds.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

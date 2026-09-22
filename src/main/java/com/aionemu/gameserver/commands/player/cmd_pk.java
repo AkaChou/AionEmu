@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：开启/关闭 PK（Bandit）模式。
  * Player command: toggles PK (Bandit) mode on or off.
- *
  * @author wanke
  */
 public class cmd_pk extends PlayerCommand
@@ -25,7 +24,6 @@ public class cmd_pk extends PlayerCommand
 	/**
 	 * 在 Bandit 状态之间切换。
 	 * Starts or stops Bandit mode for the player.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 未使用的参数 / unused parameters
 	 */

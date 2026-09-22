@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Iluma 区域 NPC AI：Crimson Crested Slink（@AIName "crimson_crested_slink"），继承 AggressiveNpcAI2。
  * Iluma zone NPC AI: Crimson Crested Slink (@AIName "crimson_crested_slink"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("crimson_crested_slink")

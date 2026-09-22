@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
  * <p>
  * 响应值示例：0x00=可用，0x0A=不可用（还有更多状态码）。
  * Response values e.g.: 0x00=ok, 0x0A=not ok (and more status codes).
- *
  * @author -Nemesiss-
  */
 @AllArgsConstructor
@@ -24,9 +23,6 @@ public class SM_NICKNAME_CHECK_RESPONSE extends AionServerPacket {
 	 */
 	@Override
 	protected void writeImpl(AionConnection con) {
-		/**
-	 * 部分消息码：0x00 成功，0x0A 失败等。 / Here is some msg: 0x00 = ok 0x0A = not ok and much more
-	 */
-		writeC(value);
+        writeC(value);
 	}
 }

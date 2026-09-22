@@ -9,7 +9,6 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 /**
  * 客户端返回战场/战斗前坐标请求包。
  * Client packet for teleporting back to battle-return coordinates.
- *
  * @author Falke_34
  */
 public class CM_TELEPORT_BACK extends AionClientPacket {

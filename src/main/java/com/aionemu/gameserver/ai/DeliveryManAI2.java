@@ -15,7 +15,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 快递/投递 NPC AI：由创建者派发并在超时后清理。
  * Delivery NPC AI spawned for a creator and cleaned up on timeout.
- *
  * @author Encom
  */
 @AIName("deliveryman")
@@ -50,7 +49,6 @@ public class DeliveryManAI2 extends FollowingNpcAI2
 	/**
 	 * 玩家开始与本 NPC 对话/交互。
 	 * Player starts dialog/interaction with this NPC.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -64,7 +62,6 @@ public class DeliveryManAI2 extends FollowingNpcAI2
 	/**
 	 * 处理生物移动事件。
 	 * Handle creature-moved.
-	 *
 	 * @param creature 生物 / creature
 	 */
 	@Override
@@ -77,7 +74,6 @@ public class DeliveryManAI2 extends FollowingNpcAI2
 	/**
 	 * 处理自定义事件。
 	 * Handle custom event.
-	 *
 	 * @param eventId 事件 ID / event id
 	 * @param args 附加参数 / extra args
 	 */

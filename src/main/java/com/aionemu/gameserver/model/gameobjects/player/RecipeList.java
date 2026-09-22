@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 /**
  * 配方列表。
  * Recipe List game object.
- *
  * @author MrPoke
  */
 @Getter

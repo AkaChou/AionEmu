@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 再次请求同步邮箱邮件列表的客户端包。
  * Client packet to re-sync the mailbox mail list.
- *
  * @author Rinzler (Encom)
  */
 public class CM_CHECK_MAIL_SIZE_2 extends AionClientPacket {

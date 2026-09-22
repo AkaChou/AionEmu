@@ -44,7 +44,6 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 	/**
 	 * 处理受到攻击事件。
 	 * Handle being attacked.
-	 *
 	 * @param creature 攻击者 / attacker
 	 */
 	@Override
@@ -55,7 +54,6 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
     /**
      * 处理看见生物事件。
      * Handle seeing a creature.
-     *
      * @param creature 生物 / creature
      */
 	@Override
@@ -66,7 +64,6 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
     /**
      * 处理生物移动事件。
      * Handle creature-moved.
-     *
      * @param creature 生物 / creature
      */
     @Override
@@ -77,7 +74,6 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 	/**
 	 * 处理对生物产生仇恨。
 	 * Handle aggro toward a creature.
-	 *
 	 * @param creature 生物 / creature
 	 */
     @Override
@@ -115,7 +111,6 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
     /**
      * 处理目标变更事件。
      * Handle target changed.
-     *
      * @param creature 新目标 / new target
      */
     @Override
@@ -126,7 +121,6 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 	/**
 	 * 处理守卫反击攻击者。
 	 * Handle guard response against an attacker.
-	 *
 	 * @param attacker 攻击者 / attacker
 	 * @return 是否已处理 / whether handled
 	 */
@@ -138,7 +132,6 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 	/**
 	 * 处理盟友需要支援事件。
 	 * Handle ally needs-support.
-	 *
 	 * @param creature 盟友 / ally
 	 * @return 是否已处理 / whether handled
 	 */
@@ -7205,8 +7198,7 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 			case 883065:
 			case 883070:
 			case 883071:
-			////////////
-			case 246556:
+            case 246556:
 			case 246557:
 			case 246559:
 			case 246561:

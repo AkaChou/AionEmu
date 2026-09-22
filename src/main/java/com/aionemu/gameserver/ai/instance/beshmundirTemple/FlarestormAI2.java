@@ -19,7 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Beshmundir Temple 副本 NPC AI：Flarestorm（@AIName "flarestorm"），继承 AggressiveNpcAI2。
  * Beshmundir Temple instance NPC AI: Flarestorm (@AIName "flarestorm"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("flarestorm")

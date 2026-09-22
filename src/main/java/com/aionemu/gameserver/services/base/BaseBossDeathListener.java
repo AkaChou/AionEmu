@@ -23,9 +23,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 基地 BOSS 死亡监听器，处理占领广播、种族切换、欧比斯登陆点与奖励。
  * Base boss death listener handling capture announce, race switch, abyss landing and rewards.
- *
  * @author Rinzler
- * @reworked Ranastic
  */
 @SuppressWarnings("rawtypes")
 public class BaseBossDeathListener implements AbstractAI.AiDeathListener {
@@ -34,7 +32,6 @@ public class BaseBossDeathListener implements AbstractAI.AiDeathListener {
 	/**
 	 * 绑定目标基地实例。
 	 * Binds the target base instance.
-	 *
 	 * Base
 	 */
 	public BaseBossDeathListener(Base base) {
@@ -44,7 +41,6 @@ public class BaseBossDeathListener implements AbstractAI.AiDeathListener {
 	/**
 	 * BOSS 死亡前结算归属、增益、登陆点与占领。
 	 * Before boss death, resolves ownership, buffs, landing points and capture.
-	 *
 	 * Dying AI
 	 */
 	@Override
@@ -91,7 +87,6 @@ public class BaseBossDeathListener implements AbstractAI.AiDeathListener {
 	/**
 	 * BOSS 死亡后回调（当前无额外逻辑）。
 	 * After-death callback (no-op currently).
-	 *
 	 * Dying AI
 	 */
 	@Override
@@ -101,7 +96,6 @@ public class BaseBossDeathListener implements AbstractAI.AiDeathListener {
 	/**
 	 * 向全服玩家广播基地被占领消息。
 	 * Announces base capture to all players.
-	 *
 	 * @param team 获胜队伍，可为 null / Winning team, may be null
 	 * @param kill 击杀生物，可为 null / Killing creature, may be null
 	 */
@@ -163,7 +157,6 @@ public class BaseBossDeathListener implements AbstractAI.AiDeathListener {
 	/**
 	 * 按地图向击杀者发送基地奖励 HTML 指南。
 	 * Sends base reward HTML guide to the killer by map.
-	 *
 	 * Killer player
 	 */
 	protected void giveBaseRewardsToPlayers(Player player) {
@@ -196,7 +189,6 @@ public class BaseBossDeathListener implements AbstractAI.AiDeathListener {
 	/**
 	 * 更新欧比斯登陆点因占领基地获得的积分。
 	 * Updates abyss landing points earned by winning a base.
-	 *
 	 * @param race 获胜种族 / Winning race
 	 */
 	public void landingWinBase(Race race) {
@@ -211,7 +203,6 @@ public class BaseBossDeathListener implements AbstractAI.AiDeathListener {
 	/**
 	 * 获取基地 DAO。
 	 * Returns the base DAO.
-	 *
 	 * Base DAO
 	 */
 	private BaseDAO getDAO() {

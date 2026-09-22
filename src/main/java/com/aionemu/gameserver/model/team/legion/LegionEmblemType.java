@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 军团徽章类型枚举。
  * Legion Emblem Type enumeration.
- *
  * @author cura
  */
 @Getter

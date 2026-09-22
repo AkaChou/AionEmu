@@ -47,7 +47,6 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
     /**
      * 获取所有已使用的房屋 ID。
      * Returns all used house ids.
-     *
      * 已使用 ID 数组。
      * used id array.
      */
@@ -77,7 +76,6 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version
@@ -91,9 +89,7 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
     /**
      * 判断指定房屋对象 ID 是否已使用。
      * Checks whether the given house object id is already used.
-     *
      * house object id
-     *
      * @param houseObjectId 房屋对象 ID / house object id
      * @return 是否已使用 / whether used
      */
@@ -118,7 +114,6 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
     /**
      * 持久化房屋（按状态执行插入或更新）。
      * Persists a house (insert or update depending on persistent state).
-     *
      * @param house 房屋 / house
      */
     @Override
@@ -134,7 +129,6 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
     /**
      * 插入新房屋记录。
      * Inserts a new house record.
-     *
      * @param house 房屋 / house
      */
     private void insertNewHouse(House house) {
@@ -185,7 +179,6 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
     /**
      * 更新已有房屋记录。
      * Updates an existing house record.
-     *
      * @param house 房屋 / house
      */
     private void updateHouse(House house) {
@@ -235,7 +228,6 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
     /**
      * 从数据库加载房屋（普通房或工作室）。
      * Loads houses from the database (regular houses or studios).
-     *
      * @param lands 地块模板集合 / housing land templates
      * @param studios 是否加载工作室 / whether to load studios
      * @return 房屋地图 / house map
@@ -338,7 +330,6 @@ public class HousesDAO extends com.aionemu.gameserver.dao.HousesDAO {
     /**
      * 删除指定玩家的房屋记录。
      * Deletes house records for the given player.
-     *
      * @param playerId 玩家 ID / player id
      */
     @Override

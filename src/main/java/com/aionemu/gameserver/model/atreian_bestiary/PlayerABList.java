@@ -13,7 +13,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * 玩家 AB 列表，用于艾特里亚图鉴相关逻辑。
  * Player AB List for atreian bestiary logic.
- *
  * @author Ranastic
  */
 

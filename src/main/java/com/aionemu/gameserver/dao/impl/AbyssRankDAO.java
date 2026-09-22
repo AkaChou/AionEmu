@@ -83,9 +83,7 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
     /**
      * 按玩家 ID 加载欧比斯军阶；无记录时创建默认 NEW 状态实例。
      * Loads abyss rank by player id; creates a default NEW instance when missing.
-     *
      * player id
-     *
      * @param playerId 玩家 ID / player id
      * @return 欧比斯军阶 / abyss rank
      */
@@ -135,7 +133,6 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
     /**
      * 加载并绑定玩家欧比斯军阶。
      * Loads and attaches abyss rank to the player.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -147,7 +144,6 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
     /**
      * 按持久化状态保存玩家欧比斯军阶。
      * Stores the player's abyss rank according to its persistent state.
-     *
      * @param player 玩家 / player
      * @return 保存成功则为 true / true if stored successfully
      */
@@ -179,7 +175,6 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
     /**
      * 插入新的欧比斯军阶记录。
      * Inserts a new abyss rank row.
-     *
      * @param con 玩家对象 ID / player object id
      * @param rank 欧比斯军阶 / abyss rank
      * @return 成功时为 true / true on success
@@ -211,7 +206,6 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
     /**
      * 更新已有欧比斯军阶记录。
      * Updates an existing abyss rank row.
-     *
      * @param con 玩家对象 ID / player object id
      * @param rank 欧比斯军阶 / abyss rank
      * @return 成功时为 true / true on success
@@ -243,7 +237,6 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
     /**
      * 获取指定阵营的玩家欧比斯排行榜。
      * Returns the player abyss ranking list for the given race.
-     *
      * @param race 阵营 / race
      * @return 排行结果列表 / ranking results
      */
@@ -294,7 +287,6 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
     /**
      * 获取指定阵营的军团欧比斯排行榜。
      * Returns the legion abyss ranking list for the given race.
-     *
      * @param race 阵营 / race
      * @return 排行结果列表 / ranking results
      */
@@ -331,7 +323,6 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
     /**
      * 统计军团成员数量。
      * Counts members of the given legion.
-     *
      * @param legionId 军团 ID / legion id
      * @return 成员数 / member count
      */
@@ -356,7 +347,6 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
     /**
      * 加载指定阵营玩家的 AP 映射；可限制活跃天数。
      * Loads player AP map for the race; optionally filters by offline days.
-     *
      * @param race 阵营 / race
      * lower AP limit
      * @param maxOfflineDays 最大离线天数，0 表示不过滤 / max offline days, 0 means no filter
@@ -394,7 +384,6 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
     /**
      * 加载指定阵营玩家的 GP 映射；可限制活跃天数。
      * Loads player GP map for the race; optionally filters by offline days.
-     *
      * @param race 阵营 / race
      * lower GP limit
      * @param maxOfflineDays 最大离线天数，0 表示不过滤 / max offline days, 0 means no filter
@@ -432,7 +421,6 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
     /**
      * 更新玩家欧比斯军阶枚举与名额。
      * Updates the player's abyss rank enum and top-ranking quota.
-     *
      * @param playerId 玩家 ID / player id
      * @param rankEnum 欧比斯等级枚举 / abyss rank enum
      */
@@ -506,7 +494,6 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
     /**
      * 批量删除玩家欧比斯军阶记录。
      * Batch-deletes abyss rank rows for the given players.
-     *
      * @param listP 玩家列表 / player list
      */
     @Override
@@ -538,8 +525,6 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
     /**
      * 是否支持该数据库。
      * Whether the database is supported.
-     *
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

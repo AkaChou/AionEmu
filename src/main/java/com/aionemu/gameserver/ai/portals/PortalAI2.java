@@ -20,7 +20,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 传送门/传送点 AI：Portal（@AIName "portal"），继承 ActionItemNpcAI2。
  * Portal/teleporter AI: Portal (@AIName "portal"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("portal")

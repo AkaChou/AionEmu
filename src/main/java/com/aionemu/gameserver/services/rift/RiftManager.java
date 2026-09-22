@@ -29,7 +29,6 @@ import java.util.List;
 /**
  * 裂隙管理器，负责裂隙/漩涡 NPC 的生成模板登记与实例生成。
  * Rift manager responsible for spawn-template registration and rift/vortex NPC spawning.
- *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -40,8 +39,6 @@ public class RiftManager {
      * -- SETTER --
      *  设置 Spring 实例提供者。
      *  Sets the Spring instance provider.
-     *
-     * @param provider 实例提供者 / Instance provider
      */
     @Setter
     private static volatile ObjectProvider<RiftManager> instanceProvider;
@@ -51,7 +48,6 @@ public class RiftManager {
 	/**
 	 * 登记裂隙生成组模板（按锚点名索引）。
 	 * Registers rift spawn-group templates (indexed by anchor name).
-	 *
 	 * @param spawn 生成组 / Spawn group
 	 */
 	public static void addRiftSpawnTemplate(SpawnGroup2 spawn) {
@@ -69,7 +65,6 @@ public class RiftManager {
 	/**
 	 * 在裂隙位置生成主从端裂隙 NPC。
 	 * Spawns master/slave rift NPCs at a rift location.
-	 *
 	 * @param loc 裂隙位置 / Rift location
 	 */
 	public void spawnRift(RiftLocation loc) {
@@ -80,7 +75,6 @@ public class RiftManager {
 	/**
 	 * 在漩涡位置生成次元漩涡主从端 NPC。
 	 * Spawns master/slave vortex NPCs at a vortex location.
-	 *
 	 * @param loc 漩涡位置 / Vortex location
 	 */
 	public void spawnVortex(VortexLocation loc) {
@@ -142,7 +136,6 @@ public class RiftManager {
 	/**
 	 * 从已生成裂隙注册表移除指定 NPC（裂隙 NPC 删除时调用）。
 	 * Removes the given NPC from the spawned-rift registry (called when a rift NPC is deleted).
-	 *
 	 * @param npc 裂隙 NPC / the rift NPC
 	 */
 	public static void removeSpawned(Npc npc) {
@@ -152,7 +145,6 @@ public class RiftManager {
 	/**
 	 * 返回当前已生成裂隙 NPC 的快照副本。
 	 * Returns a snapshot copy of currently spawned rift NPCs.
-	 *
 	 * @return 裂隙 NPC 列表 / Rift NPC list
 	 */
 	public static List<Npc> getSpawned() {
@@ -164,7 +156,6 @@ public class RiftManager {
 	/**
 	 * 获取 {@link RiftManager} 单例（优先 Spring 提供的实例）。
 	 * Returns the {@link RiftManager} singleton (prefers Spring-provided instance).
-	 *
 	 * @return 管理器实例 / Manager instance
 	 */
 	public static RiftManager getInstance() {

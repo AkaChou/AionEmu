@@ -11,7 +11,6 @@ public class Util {
     /**
      * 打印带分隔线的章节标题。
      * Prints a section heading with separators.
-     *
      * @param s 标题文本 / section title
      */
     public static void printSection(String s) {

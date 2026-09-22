@@ -6,7 +6,6 @@ import com.aionemu.gameserver.model.beritra.BeritraStateType;
 /**
  * 贝尔特拉入侵默认实现：切入 INVASION / 回到 PEACE。
  * Default Beritra invasion implementation: switches to INVASION / back to PEACE.
- *
  * @author Rinzler (Encom)
  */
 public class Invade extends BeritraInvasion<BeritraLocation> {
@@ -14,7 +13,6 @@ public class Invade extends BeritraInvasion<BeritraLocation> {
 	/**
 	 * 绑定入侵地点。
 	 * Binds the invasion location.
-	 *
 	 * @param beritra 入侵地点 / invasion location
 	 */
 	public Invade(BeritraLocation beritra) {

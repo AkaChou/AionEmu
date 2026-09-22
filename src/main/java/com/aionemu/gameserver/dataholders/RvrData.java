@@ -17,7 +17,6 @@ import com.aionemu.gameserver.model.templates.rvr.RvrTemplate;
 /**
  * RVR（阵营对抗）据点数据容器，按 ID 索引 RvrLocation。
  * RVR (race vs race) location data holder, indexed by id.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -42,7 +41,6 @@ public class RvrData {
 	/**
 	 * 返回已加载的 RVR 据点数量。
 	 * Returns the number of loaded RVR locations.
-	 *
 	 * @return 已加载的RVR 地点数量 / Returns the number of loaded RVR locations.
 	 */
 	public int size() {
@@ -52,7 +50,6 @@ public class RvrData {
 	/**
 	 * 返回全部 RVR 据点映射。
 	 * Returns the full RVR location map.
-	 *
 	 * @return ID 到据点的映射 / map of id to location
 	 */
 	public Map<Integer, RvrLocation> getRvrLocations() {

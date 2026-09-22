@@ -53,7 +53,6 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 /**
  * 玩家邮件服务：发送、阅读、领取附件、删除邮件，以及登录时加载邮箱。
  * Player mail service: send, read, claim attachments, delete mail, and load mailbox on login.
- *
  * @author kosyachok
  * @author ATracer
  */
@@ -70,11 +69,9 @@ public class MailService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
@@ -105,7 +102,6 @@ public class MailService {
 	/**
 	 * 注入 Spring ObjectProvider 以覆盖默认单例。
 	 * Injects a Spring ObjectProvider to override the default singleton.
-	 *
 	 * provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<MailService> provider) {
@@ -116,7 +112,6 @@ public class MailService {
 	/**
 	 * 玩家间发送邮件（含物品/基纳/欧比斯点附件与手续费结算）。
 	 * Sends player-to-player mail including item/kinah/AP attachments and commission settlement.
-	 *
 	 * sender player
 	 * @param recipientName 收件人角色名 / recipient character name
 	 * @param title 邮件标题 / mail title
@@ -237,10 +232,6 @@ public class MailService {
 					(attachedItem.getItemTemplate().getPrice() * attachedItem.getItemCount()) * qualityPriceRate);
 		}
 
-		/**
-		 * 计算附件基纳与手续费。
-		 * Calculate attached kinah and commission.
-		 */
 		if (attachedKinahCount > 0) {
 			if (senderInventory.getKinah() - attachedKinahCount >= 0) {
 				finalAttachedKinahCount = attachedKinahCount;
@@ -279,11 +270,7 @@ public class MailService {
 			return;
 		}
 		PacketSendUtility.sendPacket(sender, new SM_MAIL_SERVICE(MailMessage.MAIL_SEND_SECCESS));
-		/**
-		 * 在线收件人：写入邮箱并推送邮件相关数据包。
-		 * Online recipient: put letter into mailbox and push mail update packets.
-		 */
-		if (recipientMailbox != null) {
+        if (recipientMailbox != null) {
 			recipientMailbox.putLetterToMailbox(newLetter);
 
 			// 收件人的数据包 / packets for recipient
@@ -350,7 +337,6 @@ public class MailService {
 	/**
 	 * 阅读指定 ID 的信件并标记为已读。
 	 * Reads the letter with the given id and marks it as read.
-	 *
 	 * 玩家 / player
 	 * letter id
 	 */
@@ -367,7 +353,6 @@ public class MailService {
 	/**
 	 * 领取邮件附件（物品 / 基纳 / 欧比斯点）。
 	 * kinah / abyss points).
-	 *
 	 * 玩家 / player
 	 * letter id
 	 * @param attachmentType 附件类型：0 物品，1 基纳，2 欧比斯点 / attachment type: 0 item, 1 kinah, 2 AP
@@ -484,7 +469,6 @@ public class MailService {
 	/**
 	 * 删除玩家邮箱中的指定信件。
 	 * Deletes the specified letters from the player's mailbox.
-	 *
 	 * @param player 玩家 / player
 	 * @param mailObjId 要删除的信件 ID 数组 / letter id array to delete
 	 */
@@ -501,13 +485,10 @@ public class MailService {
 	/**
 	 * 校验发件人是否负担得起邮费（基础费 + 物品/基纳手续费）。
 	 * Validates that the sender can afford the mail fee (base + item/kinah commission).
-	 *
 	 * sender player
-	 *
 	 * @param attachedKinahCount 附件基纳数量 / attached kinah amount
 	 * @param attachedItemObjId 附件物品对象 ID / attached item object id
 	 * @param attachedItemCount 附件物品数量 / attached item count
-	 * @param attachedItemCount
 	 * @return 是否足够支付邮费 / whether the sender can pay the mail fee
 	 */
 	private boolean validateMailSendPrice(Player sender, int attachedKinahCount, int attachedItemObjId,
@@ -585,7 +566,6 @@ public class MailService {
 	/**
 	 * 玩家登录后延迟加载邮箱。
 	 * Schedules delayed mailbox loading after player login.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onPlayerLogin(Player player) {
@@ -595,7 +575,6 @@ public class MailService {
 	/**
 	 * 向客户端刷新当前邮箱状态与信件列表。
 	 * Refreshes the client with the current mailbox state and letter list.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void refreshMail(Player player) {
@@ -606,7 +585,6 @@ public class MailService {
 	/**
 	 * 延迟加载玩家全部邮件的任务。
 	 * Task that loads all player mail items after a delay.
-	 *
 	 * @author ATracer
 	 */
 	private class MailLoadTask implements Runnable {
@@ -617,7 +595,6 @@ public class MailService {
 		/**
 		 * 创建邮件加载任务。
 		 * Creates a mail load task for the given player.
-		 *
 		 * 玩家 / player
 		 */
 		private MailLoadTask(Player player) {

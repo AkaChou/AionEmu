@@ -19,7 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Dark Poeta 副本 NPC AI：Marabata Of Aether（@AIName "marabata_of_aether"），继承 AggressiveNpcAI2。
  * Dark Poeta instance NPC AI: Marabata Of Aether (@AIName "marabata_of_aether"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("marabata_of_aether")

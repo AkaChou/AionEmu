@@ -18,7 +18,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * KISK 复活点 AI：Kisk（@AIName "kisk"），继承 NpcAI2。
  * KISK resurrection-point AI: Kisk (@AIName "kisk"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("kisk")

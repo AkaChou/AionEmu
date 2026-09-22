@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端同步飞升任务变身状态的服务端包。
  * Server packet synchronizing ascension-quest morph state to the client.
- *
  * @author wylovech
  */
 @AllArgsConstructor

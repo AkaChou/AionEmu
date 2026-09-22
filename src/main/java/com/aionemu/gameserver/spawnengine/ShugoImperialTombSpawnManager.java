@@ -22,7 +22,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * 术古皇陵活动刷怪管理器：按 cron 定时开启裂隙并公告、定时回收。
  * Shugo Imperial Tomb event spawn manager: cron-spawns rifts, announces, and schedules despawn.
- *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -69,7 +68,6 @@ public class ShugoImperialTombSpawnManager {
 	/**
 	 * 刷出一个皇陵裂隙并登记定时删除与公告。
 	 * Spawns one imperial tomb rift, schedules delete and announces.
-	 *
 	 * @param rift 裂隙定义 / rift definition
 	 */
 	private static void spawnImperialTomb(RiftEnum rift) {
@@ -84,7 +82,6 @@ public class ShugoImperialTombSpawnManager {
 	/**
 	 * 在配置时长后删除裂隙对象。
 	 * Schedules deletion of the rift object after the configured duration.
-	 *
 	 * @param visObj 裂隙可见对象 / the visible rift object
 	 */
 	private static void scheduleDelete(final VisibleObject visObj) {
@@ -99,7 +96,6 @@ public class ShugoImperialTombSpawnManager {
 	/**
 	 * 向玩家推送同地图上当前皇陵状态消息。
 	 * Sends imperial tomb status messages for rifts on the player's map.
-	 *
 	 * @param activePlayer 玩家 / player
 	 */
 	public static void sendImperialStatus(Player activePlayer) {
@@ -113,7 +109,6 @@ public class ShugoImperialTombSpawnManager {
 	/**
 	 * 向裂隙所在地图的所有在线玩家公告开启。
 	 * Announces rift open to all online players on the rift's map.
-	 *
 	 * @param visObj 裂隙可见对象 / rift visible object
 	 */
 	public static void sendAnnounce(final VisibleObject visObj) {
@@ -130,7 +125,6 @@ public class ShugoImperialTombSpawnManager {
 	/**
 	 * 按 NPC 模板 ID 发送系统公告。
 	 * Sends a system message based on the NPC template id.
-	 *
 	 * @param player 玩家 / the player
 	 * @param npc_id NPC 模板 ID / the npc template id
 	 */
@@ -171,7 +165,6 @@ public class ShugoImperialTombSpawnManager {
 		 * World id.
 		 * -- GETTER --
 		 *  世界 ID / world id
-
 		 */
 		@Getter
 		private final int worldId;
@@ -181,7 +174,6 @@ public class ShugoImperialTombSpawnManager {
 		 * X coordinate.
 		 * -- GETTER --
 		 *  X 坐标 / X coordinate
-
 		 */
 		@Getter
 		private final float x;
@@ -191,7 +183,6 @@ public class ShugoImperialTombSpawnManager {
 		 * Y coordinate.
 		 * -- GETTER --
 		 *  Y 坐标 / Y coordinate
-
 		 */
 		@Getter
 		private final float y;
@@ -201,7 +192,6 @@ public class ShugoImperialTombSpawnManager {
 		 * Z coordinate.
          * -- GETTER --
          *  Z 坐标 / Z coordinate
-
          */
 		@Getter
         private final float z;
@@ -215,7 +205,6 @@ public class ShugoImperialTombSpawnManager {
 		/**
 		 * 构造裂隙刷怪点。
 		 * Builds a rift spawn point.
-		 *
 		 * @param npc_id NPC 模板 ID / npc template id
 		 * @param worldId 世界 ID / world id
 		 * @param x X 坐标 / X
@@ -250,11 +239,9 @@ public class ShugoImperialTombSpawnManager {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -273,7 +260,6 @@ public class ShugoImperialTombSpawnManager {
 	/**
 	 * 设置 Spring 实例提供者。
 	 * Sets the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<ShugoImperialTombSpawnManager> instanceProvider) {

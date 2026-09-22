@@ -13,7 +13,6 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 /**
  * 技能条件基类：定义技能施放、效果应用与属性计算时的条件校验契约。
  * Skill condition base class: defines the validation contract for skill cast, effect apply, and stat calculation.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -23,7 +22,6 @@ public abstract class Condition implements StatCondition {
 	/**
 	 * 校验技能环境是否满足模板中指定的条件。
 	 * Validates whether the skill environment satisfies the condition specified in the template.
-	 *
 	 * @param env 技能环境 / skill environment
 	 * @return 是否有效 / whether valid
 	 */
@@ -32,7 +30,6 @@ public abstract class Condition implements StatCondition {
 	/**
 	 * 校验属性计算环境是否满足本条件；默认恒为通过。
 	 * Validates whether the stat calculation environment satisfies this condition; default always passes.
-	 *
 	 * @param stat 属性对象 / stat object
 	 * @param statFunction 属性函数 / stat function
 	 * @return 是否有效 / whether valid
@@ -45,7 +42,6 @@ public abstract class Condition implements StatCondition {
 	/**
 	 * 校验效果环境是否满足本条件；默认恒为通过。
 	 * Validates whether the effect environment satisfies this condition; default always passes.
-	 *
 	 * @param effect 效果环境 / effect environment
 	 * @return 是否有效 / whether valid
 	 */

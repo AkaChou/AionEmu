@@ -7,7 +7,6 @@ import lombok.Getter;
 /**
  * 宠物 Emote 枚举。
  * Pet Emote enumeration.
- *
  * @author ATracer
  */
 @Getter

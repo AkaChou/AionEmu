@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 回复客户端 L2 认证登录校验结果的服务端包。
  * Server packet that replies with L2-auth login check result.
- *
  * @author -Nemesiss-
  */
 @AllArgsConstructor

@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.AI2Actions;
 /**
  * Beshmundir Temple 副本 NPC AI：Macunbello Right Hand（@AIName "MacunbelloRightHand"），继承 AggressiveNpcAI2。
  * Beshmundir Temple instance NPC AI: Macunbello Right Hand (@AIName "MacunbelloRightHand"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("MacunbelloRightHand")

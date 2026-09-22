@@ -12,7 +12,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * 战场同盟相关 NPC AI：Kysis Fortress Control Tower（@AIName "Kysis_Fortress_Control_Tower"），继承 NpcAI2。
  * Battlefield-union related NPC AI: Kysis Fortress Control Tower (@AIName "Kysis_Fortress_Control_Tower"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Kysis_Fortress_Control_Tower")

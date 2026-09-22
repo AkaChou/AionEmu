@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.*;
 /**
  * Trials Of Eternity 副本 NPC AI：Boliag Tentacles（@AIName "Dimension_Boss_Portal"），继承 AggressiveNpcAI2。
  * Trials Of Eternity instance NPC AI: Boliag Tentacles (@AIName "Dimension_Boss_Portal"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("Dimension_Boss_Portal")

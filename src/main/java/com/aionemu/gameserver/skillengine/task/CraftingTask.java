@@ -78,7 +78,6 @@ public class CraftingTask extends AbstractCraftTask {
 	/**
 	 * 构造单次制作任务。
 	 * Creates a single-craft task.
-	 *
 	 * @param requestor 发起制作的玩家 / requesting player
 	 * @param responder 制作台等静态对象 / craft station static object
 	 * @param recipeTemplate 配方模板 / recipe template
@@ -92,7 +91,6 @@ public class CraftingTask extends AbstractCraftTask {
 	/**
 	 * 构造可批量制作的任务。
 	 * Creates a craft task with optional multi-craft count.
-	 *
 	 * @param requestor 发起制作的玩家 / requesting player
 	 * @param responder 制作台等静态对象 / craft station static object
 	 * @param recipeTemplate 配方模板 / recipe template
@@ -111,7 +109,6 @@ public class CraftingTask extends AbstractCraftTask {
 	/**
 	 * 计算一次尝试后的剩余制作次数。
 	 * Computes remaining craft attempts after one try.
-	 *
 	 * @param remainingCrafts 当前剩余次数 / current remaining count
 	 * @return 尝试后剩余次数 / remaining after attempt
 	 */
@@ -178,7 +175,6 @@ public class CraftingTask extends AbstractCraftTask {
 	/**
 	 * 成功完成：处理连击暴击升级或结算产物。
 	 * Success finish: handles combo-crit upgrades or final product settlement.
-	 *
 	 * @return true 表示整次任务结束 / true if the whole task ends
 	 */
 	@Override
@@ -211,7 +207,6 @@ public class CraftingTask extends AbstractCraftTask {
 	/**
 	 * 完成一次制作尝试：递减剩余次数，必要时开始下一次。
 	 * Finishes one craft attempt: decrements remaining count or starts the next craft.
-	 *
 	 * @return true 表示全部次数完成 / true if all attempts are done
 	 */
 	protected boolean finishCraftAttempt() {
@@ -327,7 +322,6 @@ public class CraftingTask extends AbstractCraftTask {
 	/**
 	 * 执行一次制作交互 tick。
 	 * Performs one crafting interaction tick.
-	 *
 	 * @return true 表示任务应停止 / true if the task should stop
 	 */
 	@Override
@@ -347,7 +341,6 @@ public class CraftingTask extends AbstractCraftTask {
 	/**
 	 * 检查并应用连击暴击产物切换。
 	 * Checks and applies combo-crit product switching.
-	 *
 	 * @return 是否发生了暴击产物切换 / true if a crit product switch occurred
 	 */
 	private boolean checkCrit() {

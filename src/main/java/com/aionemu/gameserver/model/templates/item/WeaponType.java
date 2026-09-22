@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 武器类型：所需技能与占用槽位。
  * Weapon type: required skills and slots.
- *
  * @author Rinzler (Encom)
  */
 @XmlType(name = "weapon_type")

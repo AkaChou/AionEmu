@@ -21,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 网络相关线程池管理器：定时任务、数据包池与死锁检测。
  * Network thread-pool manager for scheduled tasks, packet pool, and deadlock detection.
- *
  * @author -Nemesiss-, Rolandas
  */
 @Slf4j
@@ -39,7 +38,6 @@ public class ThreadPoolManager implements Executor {
     /**
      * 获取单例实例。
      * Get singleton instance.
-     *
      * @return 线程池管理器 / Thread pool manager
      */
     public static final ThreadPoolManager getInstance() {
@@ -87,7 +85,6 @@ public class ThreadPoolManager implements Executor {
     /**
      * 计算数据包池大小。
      * Compute packet pool size.
-     *
      * @return 数据包池大小 / Packet pool size
      */
     private int packetPoolSize() {
@@ -97,7 +94,6 @@ public class ThreadPoolManager implements Executor {
     /**
      * 执行数据包任务。
      * Execute packet task.
-     *
      * @param pkt 数据包任务 / Packet task
      */
     @Override
@@ -108,7 +104,6 @@ public class ThreadPoolManager implements Executor {
     /**
      * 获取数据包线程池。
      * Get packet thread pool.
-     *
      * @return 可监听执行器 / Listening executor
      */
     public ListeningExecutorService getPacketsThreadPool() {
@@ -118,7 +113,6 @@ public class ThreadPoolManager implements Executor {
     /**
      * 延迟调度任务。
      * Schedule task after delay.
-     *
      * @param <T> 任务类型 / Task type
      * @param r 任务 / Task
      * @param delay 延迟毫秒 / Delay in milliseconds
@@ -140,7 +134,6 @@ public class ThreadPoolManager implements Executor {
     /**
      * 固定频率调度任务。
      * Schedule task at fixed rate.
-     *
      * @param <T> 任务类型 / Task type
      * @param r 任务 / Task
      * @param initial 初始延迟毫秒 / Initial delay in milliseconds

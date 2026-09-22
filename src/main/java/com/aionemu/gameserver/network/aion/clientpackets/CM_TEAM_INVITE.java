@@ -15,7 +15,6 @@ import com.aionemu.gameserver.utils.Util;
 /**
  * 客户端队伍/联盟/军团同盟邀请请求包。
  * Client packet for inviting a player to group, alliance, or league.
- *
  * @author Lyahim, ATracer Modified by Simple
  */
 public class CM_TEAM_INVITE extends AionClientPacket {

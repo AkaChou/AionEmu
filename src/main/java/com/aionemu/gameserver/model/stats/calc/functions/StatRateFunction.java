@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 /**
  * 属性比率函数模型。
  * Stat Rate Function model.
- *
  * @author ATracer
  */
 @NoArgsConstructor

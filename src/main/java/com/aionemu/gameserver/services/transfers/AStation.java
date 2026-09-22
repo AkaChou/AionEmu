@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * A-Station（跨服站点）配置数据，描述目标服务器 ID、图标集以及等级限制。
  * A-Station (cross-server station) configuration holding server ID, icon set and level limits.
- *
  * @author Ranastic
  */
 @Getter
@@ -18,7 +17,6 @@ public class AStation {
 	/**
 	 * 构造跨服站点配置。
 	 * Construct a cross-server station configuration.
-	 *
 	 * @param serverId 目标服务器 ID / target server id
 	 * @param sendIcon 是否使用主服图标集（true=主服 257，false=正式服 513） / Whether to use master-server icon set
 	 * @param minLevel 最低等级 / minimum level
@@ -34,7 +32,6 @@ public class AStation {
 	/**
 	 * 获取最低等级限制。
 	 * Get the minimum level limit.
-	 *
 	 * @return 最低等级 / minimum level
 	 */
 	public int getMinLevel() {
@@ -44,7 +41,6 @@ public class AStation {
 	/**
 	 * 获取最高等级限制。
 	 * Get the maximum level limit.
-	 *
 	 * @return 最高等级 / maximum level
 	 */
 	public int getMaxLevel() {

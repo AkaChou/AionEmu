@@ -27,7 +27,6 @@ public class GameStaticDataGateway {
     /**
      * 注入 DataManager 提供者。
      * Inject the DataManager provider.
-     *
      * @param dataManagerProvider DataManager 提供者 / DataManager provider
      */
     @Autowired(required = false)
@@ -38,7 +37,6 @@ public class GameStaticDataGateway {
     /**
      * 注入核心服务运行时桥提供者。
      * Inject the core-services runtime-bridge provider.
-     *
      * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
      */
     @Autowired(required = false)
@@ -49,7 +47,6 @@ public class GameStaticDataGateway {
     /**
      * 加载静态数据：解析 DataManager Bean（轻量构造）后显式触发加载。
      * Load static data: resolve the DataManager bean (cheap construction), then trigger loading explicitly.
-     *
      * <p>加载必须发生在 Bean 创建回调之外：Spring 创建单例期间持有全局 singletonLock，
      * 若加载在构造中进行，并行加载线程解析任何懒加载 Bean 都会与主线程互相等待形成死锁。
      * Loading must happen outside bean-creation callbacks: Spring holds its global singleton lock
@@ -63,7 +60,6 @@ public class GameStaticDataGateway {
     /**
      * 解析 DataManager：优先 Spring，否则走运行时桥。
      * Resolve DataManager: prefer Spring, otherwise the runtime bridge.
-     *
      * @return DataManager 实例 / DataManager instance
      */
     private DataManager dataManager() {
@@ -76,7 +72,6 @@ public class GameStaticDataGateway {
     /**
      * 解析核心服务运行时桥：优先 Spring，否则新建。
      * Resolve the core-services runtime bridge: prefer Spring, otherwise create new.
-     *
      * @return 运行时桥 / Runtime bridge
      */
     private GameCoreServicesRuntimeBridge runtimeBridge() {

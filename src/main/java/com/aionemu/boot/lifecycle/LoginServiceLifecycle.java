@@ -46,7 +46,6 @@ public class LoginServiceLifecycle implements AionServiceLifecycle {
     /**
      * 配置登录路径与遗留配置后启动；失败时立即 stop 清理。
      * Configures login paths and legacy settings, then starts; stops immediately on failure.
-     *
      * @param args 应用启动参数 / application arguments
      */
     @Override

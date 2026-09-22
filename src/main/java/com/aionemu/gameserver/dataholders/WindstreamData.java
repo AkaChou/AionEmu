@@ -21,7 +21,6 @@ import lombok.NoArgsConstructor;
 /**
  * 风道数据容器，按地图 ID 索引风道模板。
  * Windstream data holder, indexing windstream templates by map id.
- *
  * @author LokiReborn
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -69,7 +68,6 @@ public class WindstreamData {
 	/**
 	 * 按地图 ID 获取风道模板。
 	 * Returns the windstream template for the given map id.
-	 *
 	 * @param mapId 地图 ID / map id
 	 * @return 风道模板，不存在则为 null / windstream template or null
 	 */
@@ -85,7 +83,6 @@ public class WindstreamData {
 	/**
 	 * 返回已加载的风道模板数量。
 	 * Returns the number of loaded windstream templates.
-	 *
 	 * @return 已加载的气流模板数量 / Returns the number of loaded windstream templates.
 	 */
 	public int size() {

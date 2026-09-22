@@ -23,7 +23,6 @@ public class Rvr extends AdminCommand
 	/**
 	 * 执行该管理指令。
 	 * Executes this admin command.
-	 *
 	 * @param player 执行指令的管理员 / admin executing the command
 	 */
 	@Override

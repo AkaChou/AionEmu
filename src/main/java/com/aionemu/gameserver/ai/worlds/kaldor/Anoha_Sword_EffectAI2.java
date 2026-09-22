@@ -9,7 +9,6 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 /**
  * Kaldor 区域 NPC AI：Anoha Sword Effect（@AIName "anoha_sword_effect"），继承 NpcAI2。
  * Kaldor zone NPC AI: Anoha Sword Effect (@AIName "anoha_sword_effect"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("anoha_sword_effect")

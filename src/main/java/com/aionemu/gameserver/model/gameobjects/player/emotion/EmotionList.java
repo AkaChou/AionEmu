@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 /**
  * 表情列表。
  * Emotion List game object.
- *
  * @author MrPoke
  */
 @RequiredArgsConstructor
@@ -61,7 +60,6 @@ public class EmotionList {
 	/**
 	 * 判断表情是否可使用。
 	 * Returns whether the emotion can be used.
-	 *
 	 * @param emotionId 表情 ID / emotion id
 	 * @return 是否可使用 / whether use
 	 */

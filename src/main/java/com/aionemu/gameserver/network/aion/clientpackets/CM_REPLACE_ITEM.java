@@ -11,7 +11,6 @@ import com.aionemu.gameserver.services.item.ItemMoveService;
  * <p>
  * 通过拖拽仓库与背包中的物品触发。
  * Triggered by dragging items between warehouse and bag.
- *
  * @author kosyachok
  */
 public class CM_REPLACE_ITEM extends AionClientPacket {

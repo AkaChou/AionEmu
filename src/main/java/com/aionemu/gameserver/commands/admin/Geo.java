@@ -24,7 +24,6 @@ public class Geo extends AdminCommand {
 	/**
 	 * 执行地理/寻路诊断：输出玩家高度或 PathService 与 NPC 移动恢复的队列指标。
 	 * Executes geo/path diagnostics: prints player height or PathService and NPC move-recovery queue metrics.
-	 *
 	 * @param params 参数：z 或 path / z or path
 	 */
 	@Override

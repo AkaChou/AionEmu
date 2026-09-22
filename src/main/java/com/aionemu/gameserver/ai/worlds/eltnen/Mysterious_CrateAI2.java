@@ -8,7 +8,6 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 /**
  * Eltnen 区域 NPC AI：Mysterious Crate（@AIName "mysterious_crate"），继承 NpcAI2。
  * Eltnen zone NPC AI: Mysterious Crate (@AIName "mysterious_crate"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("mysterious_crate")

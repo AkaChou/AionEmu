@@ -24,7 +24,6 @@ public class ShieldController extends VisibleObjectController<Shield> {
 	/**
 	 * 敌对玩家进入护盾范围时注册护盾观察者。
 	 * Registers a shield observer when an enemy player enters the shield range.
-	 *
 	 * @param object 进入视野的可见对象 / the visible object entering sight
 	 */
 	@Override
@@ -45,7 +44,6 @@ public class ShieldController extends VisibleObjectController<Shield> {
 	/**
 	 * 敌对玩家离开护盾范围时移除护盾观察者。
 	 * Removes the shield observer when an enemy player leaves the shield range.
-	 *
 	 * @param object 离开视野的可见对象 / the visible object leaving sight
 	 * @param isOutOfRange 是否因超出距离离开 / whether the leave is due to being out of range
 	 */

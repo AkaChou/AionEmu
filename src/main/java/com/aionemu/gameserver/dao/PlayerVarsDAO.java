@@ -7,7 +7,6 @@ import com.aionemu.commons.database.dao.DAO;
 /**
  * 玩家自定义变量数据访问抽象层。
  * DAO for player custom key-value variables persistence.
- *
  * @author KID
  */
 public abstract class PlayerVarsDAO implements DAO {
@@ -15,7 +14,6 @@ public abstract class PlayerVarsDAO implements DAO {
 	/**
 	 * 返回实现唯一类名标识。
 	 * Returns unique class name for all implementations.
-	 *
 	 * @return 完整类名 / fully qualified class name
 	 */
 	@Override
@@ -26,7 +24,6 @@ public abstract class PlayerVarsDAO implements DAO {
 	/**
 	 * 加载玩家全部自定义变量。
 	 * Loads all custom variables for the player.
-	 *
 	 * @param playerId 玩家对象 ID / player object id
 	 * @return 键值变量映射 / key-value variable map
 	 */
@@ -35,7 +32,6 @@ public abstract class PlayerVarsDAO implements DAO {
 	/**
 	 * 设置玩家自定义变量。
 	 * Sets a custom variable for the player.
-	 *
 	 * @param playerId 玩家对象 ID / player object id
 	 * @param key 变量键 / variable key
 	 * @param value 变量值 / variable value
@@ -46,7 +42,6 @@ public abstract class PlayerVarsDAO implements DAO {
 	/**
 	 * 移除玩家自定义变量。
 	 * Removes a custom variable for the player.
-	 *
 	 * @param playerId 玩家对象 ID / player object id
 	 * @param key 变量键 / variable key
 	 * @return 是否移除成功 / true if removed

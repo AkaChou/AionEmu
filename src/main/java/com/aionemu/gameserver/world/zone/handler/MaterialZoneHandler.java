@@ -17,7 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 材质碰撞区域处理器：进入时挂载材质技能观察者，离开时卸载。
  * Material-collision zone handler: attaches a material-skill observer on enter and removes it on leave.
- *
  * @author Rolandas
  */
 public class MaterialZoneHandler implements ZoneHandler {
@@ -37,7 +36,6 @@ public class MaterialZoneHandler implements ZoneHandler {
 	/**
 	 * 创建材质区域处理器。
 	 * Create a material zone handler.
-	 *
 	 * @param geometry 材质几何体 / geometry
 	 * @param template 材质模板 / material template
 	 */
@@ -56,7 +54,6 @@ public class MaterialZoneHandler implements ZoneHandler {
 	/**
 	 * 进入材质区：为匹配目标挂载碰撞材质观察者。
 	 * Enter material zone: attach a collision-material observer for matching targets.
-	 *
 	 * @param creature 进入的生物 / creature
 	 * @param zone 区域实例 / zone instance
 	 */
@@ -88,7 +85,6 @@ public class MaterialZoneHandler implements ZoneHandler {
 	/**
 	 * 离开材质区：移除并中止材质观察者。
 	 * Leave material zone: remove and abort the material observer.
-	 *
 	 * @param creature 离开的生物 / creature
 	 * @param zone 区域实例 / zone instance
 	 */

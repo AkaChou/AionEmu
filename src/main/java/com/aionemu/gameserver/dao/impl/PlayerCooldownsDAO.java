@@ -14,7 +14,6 @@ import java.util.function.Predicate;
 /**
  * 玩家技能冷却 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerCooldownsDAO.
- *
  * @author nrg, Updated for MySQL 8
  */
 @Slf4j
@@ -42,7 +41,6 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
     /**
      * 从数据库加载玩家技能冷却并应用到玩家对象。
      * Loads player skill cooldowns from the database and applies them to the player.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -81,7 +79,6 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
     /**
      * 将玩家当前有效技能冷却持久化到数据库。
      * Persists the player's currently valid skill cooldowns to the database.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -150,7 +147,6 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
     /**
      * 删除玩家的全部冷却记录。
      * Deletes all cooldown records for the player.
-     *
      * @param player 玩家 / player
      */
     private void deletePlayerCooldowns(Player player) {
@@ -172,7 +168,6 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
     /**
      * 删除全局已过期的冷却记录。
      * Deletes globally expired cooldown records.
-     *
      * @return 删除行数 / deleted row count
      */
     public int deleteExpiredCooldowns() {
@@ -197,9 +192,7 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
     /**
      * 获取玩家当前仍有效的冷却数量。
      * Returns the count of currently active cooldowns for a player.
-     *
      * player id
-     *
      * @param playerId 玩家 ID / player id
      * @return 有效冷却数量 / active cooldown count
      */
@@ -226,10 +219,8 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
     /**
      * 删除玩家的指定冷却条目。
      * Deletes a specific cooldown entry for a player.
-     *
      * @param playerId 玩家 ID / player id
      * @param cooldownId 冷却 ID / cooldown id
-     *
      * @return 是否删除成功 / whether deleted
      */
     public boolean deletePlayerCooldown(int playerId, int cooldownId) {
@@ -253,7 +244,6 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
     /**
      * 判断玩家是否仍持有指定冷却。
      * Checks whether the player still has the specified active cooldown.
-     *
      * @param playerId 玩家 ID / player id
      * @param cooldownId 冷却 ID / cooldown id
      * @return 是否存在 / whether present
@@ -284,7 +274,6 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
     /**
      * 批量存储多名玩家的冷却数据。
      * Batch-stores cooldowns for multiple players.
-     *
      * @param playersCooldowns 玩家到冷却映射 / player-to-cooldown map
      */
     public void storeMultiplePlayersCooldowns(Map<Player, Map<Integer, Long>> playersCooldowns) {
@@ -349,7 +338,6 @@ public class PlayerCooldownsDAO extends com.aionemu.gameserver.dao.PlayerCooldow
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

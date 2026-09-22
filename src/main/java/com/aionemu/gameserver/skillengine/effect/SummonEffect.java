@@ -19,7 +19,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 召唤效果基类：为玩家创建召唤物，并在时限到达后自动解散。
  * Base summon effect: creates a player summon and auto-releases it after the configured time.
- *
  * @author Simple
  */
 @XmlAccessorType(XmlAccessType.FIELD)

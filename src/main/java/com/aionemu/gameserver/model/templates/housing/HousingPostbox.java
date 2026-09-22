@@ -7,7 +7,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 住房 Postbox 模板（静态数据/XML）。
  * XML template.
- *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)

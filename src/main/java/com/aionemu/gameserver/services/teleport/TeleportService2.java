@@ -114,7 +114,6 @@ public class TeleportService2 {
 	/**
 	 * 按传送员模板将玩家传送到指定地点（含飞行传送与费用校验）。
 	 * Teleports a player via teleporter template to a location (flight travel and fee checks included).
-	 *
 	 * @param template 传送员模板 / Teleporter template
 	 * @param locId 目标地点 ID / Target location id
 	 * @param player 玩家 / Player
@@ -220,7 +219,6 @@ public class TeleportService2 {
 	/**
 	 * 判断目标世界是否为欧比斯入口世界。
 	 * Returns whether the target world is the Abyss entry world.
-	 *
 	 * @param worldId 世界 ID / World id
 	 * @return 是否为欧比斯 / whether it is the Abyss
 	 */
@@ -231,7 +229,6 @@ public class TeleportService2 {
 	/**
 	 * 检查玩家是否已完成本阵营的欧比斯入场任务。
 	 * Checks whether the player completed the racial Abyss entry quest.
-	 *
 	 * @param player 玩家 / Player
 	 * @return 是否允许进入欧比斯 / whether Abyss entry is allowed
 	 */
@@ -269,7 +266,6 @@ public class TeleportService2 {
 	/**
 	 * 将英吉斯温镜像服世界 ID 归一为实际可玩的英吉斯温世界。
 	 * Normalizes the Inggison mirror-server world id to the live Inggison world.
-	 *
 	 * @param worldId 目标世界 ID / Target world id
 	 * @return 实际可玩世界 ID / Live world id
 	 */
@@ -318,7 +314,6 @@ public class TeleportService2 {
 	/**
 	 * 判断目标世界是否为哥尔哈。
 	 * Returns whether the target world is Kahrun.
-	 *
 	 * @param worldId 世界 ID / World id
 	 * @return 是否为哥尔哈 / whether it is Kahrun
 	 */
@@ -329,7 +324,6 @@ public class TeleportService2 {
 	/**
 	 * 检查玩家是否已通过本阵营 65 级使命抵达哥尔哈。
 	 * Checks whether the player has reached Kahrun through the racial level-65 mission.
-	 *
 	 * @param player 玩家 / Player
 	 * @return 是否允许前往哥尔哈 / whether Kahrun travel is allowed
 	 */
@@ -356,7 +350,6 @@ public class TeleportService2 {
 	/**
 	 * 判断目标世界是否为本阵营高阶守护者新大陆（伊鲁玛/诺斯珀德）。
 	 * Returns whether the target world is a racial ArchDaeva continent (Iluma/Norsvold).
-	 *
 	 * @param worldId 目标世界 ID / Target world id
 	 * @return 是否为高阶守护者新大陆 / whether it is an ArchDaeva continent
 	 */
@@ -369,7 +362,6 @@ public class TeleportService2 {
 	 * 本阵营世界必须由该阵营 10520/20520 的传送步骤解锁；敌对阵营沿用裂隙等既有规则。
 	 * Checks whether the player may enter the target ArchDaeva continent. A race's home world requires
 	 * that race's 10520/20520 teleport step; the opposite race keeps its existing rift rules.
-	 *
 	 * @param player 玩家 / Player
 	 * @param targetWorldId 目标世界 ID / Target world id
 	 * @return 是否允许进入 / whether entry is allowed
@@ -397,7 +389,6 @@ public class TeleportService2 {
 	/**
 	 * 判断副本的配置出口是否位于欧比斯。
 	 * Returns whether the instance's configured exit leads into the Abyss.
-	 *
 	 * @param worldId 副本世界 ID / Instance world id
 	 * @param race 玩家种族 / Player race
 	 * @return 是否出口通往欧比斯 / whether the exit leads into the Abyss
@@ -413,7 +404,6 @@ public class TeleportService2 {
 	/**
 	 * 判断进入该副本是否可能获得通往欧比斯的入口（配置出口或在副本内部传送门）。
 	 * Returns whether entering the instance can grant a route into the Abyss, either by its exit data or an in-instance portal.
-	 *
 	 * @param worldId 副本世界 ID / Instance world id
 	 * @param race 玩家种族 / Player race
 	 * @return 是否需要欧比斯入场资格 / whether Abyss entry qualification is required
@@ -471,7 +461,6 @@ public class TeleportService2 {
 	/**
 	 * 将玩家传送到世界坐标位置（同图更新或跨图传送）。
 	 * Teleports a player to a world position (same-map update or cross-map travel).
-	 *
 	 * @param player 玩家 / Player
 	 * @param pos 目标位置 / Target position
 	 */
@@ -544,7 +533,6 @@ public class TeleportService2 {
 	/**
 	 * 以死亡状态将玩家传送到指定坐标（不复活）。
 	 * Teleports a dead player to coordinates without reviving.
-	 *
 	 * @param player 玩家 / Player
 	 * @param worldId 世界 ID / World id
 	 * @param instanceId 实例 ID / Instance id
@@ -569,7 +557,6 @@ public class TeleportService2 {
 	/**
 	 * 传送到指定世界坐标（使用玩家当前朝向）。
 	 * Teleports to world coordinates (uses player heading).
-	 *
 	 * @param player 玩家 / Player
 	 * @param worldId 世界 ID / World id
 	 * @param x X 坐标 / X
@@ -584,7 +571,6 @@ public class TeleportService2 {
 	/**
 	 * 传送到指定世界坐标与朝向（默认光束动画）。
 	 * Teleports to world coordinates with heading (default beam animation).
-	 *
 	 * @param player 玩家 / Player
 	 * @param worldId 世界 ID / World id
 	 * @param x X 坐标 / X
@@ -604,7 +590,6 @@ public class TeleportService2 {
 	/**
 	 * 传送到指定世界坐标与朝向，可指定动画。
 	 * Teleports to world coordinates with heading and animation.
-	 *
 	 * @param player 玩家 / Player
 	 * @param worldId 世界 ID / World id
 	 * @param x X 坐标 / X
@@ -612,7 +597,6 @@ public class TeleportService2 {
 	 * @param z Z 坐标 / Z
 	 * @param h 朝向 / Heading
 	 * @param animation 传送动画 / Teleport animation
-	 *
 	 * @return 是否发起传送 / Whether teleport was initiated
 	 */
 	public static boolean teleportTo(Player player, int worldId, float x, float y, float z, byte h, TeleportAnimation animation) {
@@ -626,7 +610,6 @@ public class TeleportService2 {
 	/**
 	 * 传送到指定世界/实例坐标（默认光束动画）。
 	 * Teleports to world/instance coordinates (default beam animation).
-	 *
 	 * @param player 玩家 / Player
 	 * @param worldId 世界 ID / World id
 	 * @param instanceId 实例 ID / Instance id
@@ -643,7 +626,6 @@ public class TeleportService2 {
 	/**
 	 * 传送到指定世界/实例坐标（使用玩家朝向与默认动画）。
 	 * Teleports to world/instance coordinates (player heading, default animation).
-	 *
 	 * @param player 玩家 / Player
 	 * @param worldId 世界 ID / World id
 	 * @param instanceId 实例 ID / Instance id
@@ -659,7 +641,6 @@ public class TeleportService2 {
 	/**
 	 * 完整传送入口：处理决斗中断、离图与动画/无动画换位。
 	 * Full teleport entry: ends duel, leave-world and animated/no-anim position change.
-	 *
 	 * @param player 玩家 / Player
 	 * @param worldId 世界 ID / World id
 	 * @param instanceId 实例 ID / Instance id
@@ -668,7 +649,6 @@ public class TeleportService2 {
 	 * @param z Z 坐标 / Z
 	 * @param heading 朝向 / Heading
 	 * @param animation 传送动画 / Teleport animation
-	 *
 	 * @return 是否发起传送；死亡中返回 {@code false} / Whether initiated; {@code false} if dead
 	 */
 	public static boolean teleportTo(final Player player, final int worldId, final int instanceId, final float x, final float y, final float z, final byte heading, TeleportAnimation animation) {
@@ -810,7 +790,6 @@ public class TeleportService2 {
 	/**
 	 * 根据主手武器皮肤解析机器人信息。
 	 * Resolves robot info from the main-hand weapon skin.
-	 *
 	 * @param player 玩家 / Player
 	 * @return 机器人信息 / Robot info
 	 */
@@ -832,7 +811,6 @@ public class TeleportService2 {
 	/**
 	 * 向玩家打开传送员地图界面。
 	 * Opens the teleporter map UI for the player.
-	 *
 	 * @param player 玩家 / Player
 	 * @param targetObjectId 目标对象 ID / Target object id
 	 * @param npcId 传送员 NPC ID / Teleporter NPC id
@@ -856,7 +834,6 @@ public class TeleportService2 {
 	/**
 	 * 按 NPC ID 获取传送员模板。
 	 * Returns teleporter template by NPC id.
-	 *
 	 * @param npcId NPC ID / NPC id
 	 * @return 传送员模板 / Teleporter template
 	 */
@@ -867,7 +844,6 @@ public class TeleportService2 {
 	/**
 	 * 将玩家传送到 Kisk（复活石）位置。
 	 * Teleports the player to a Kisk location.
-	 *
 	 * @param player 玩家 / Player
 	 * @param kisk Kisk 位置 / Kisk position
 	 */
@@ -883,7 +859,6 @@ public class TeleportService2 {
 	/**
 	 * 按种族将玩家送入监狱地图。
 	 * Teleports the player into the race prison map.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public static void teleportToPrison(Player player) {
@@ -897,7 +872,6 @@ public class TeleportService2 {
 	/**
 	 * 将玩家传送到当前世界中指定 NPC 的生成点。
 	 * Teleports the player to the spawn of the given NPC in the current world.
-	 *
 	 * @param player 玩家 / Player
 	 * @param npcId NPC ID / NPC id
 	 */
@@ -948,7 +922,6 @@ public class TeleportService2 {
 	/**
 	 * 向客户端发送绑定点（回城点）信息。
 	 * Sends bind-point info to the client.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public static void sendSetBindPoint(Player player) {
@@ -973,7 +946,6 @@ public class TeleportService2 {
 	/**
 	 * 将玩家送回绑定点；可选是否走完整传送流程。
 	 * Moves the player to bind point; optionally via full teleport.
-	 *
 	 * @param player 玩家 / Player
 	 * @param useTeleport {@code true} 使用传送路径 / {@code true} to use teleport path
 	 */
@@ -1009,7 +981,6 @@ public class TeleportService2 {
 	/**
 	 * 将玩家传送到副本出口；无配置时回绑定点。
 	 * Teleports the player to instance exit; falls back to bind point.
-	 *
 	 * @param player 玩家 / Player
 	 * @param worldId 副本世界 ID / Instance world id
 	 * @param race 玩家种族 / Player race
@@ -1040,7 +1011,6 @@ public class TeleportService2 {
 	/**
 	 * 登出时处理敌对地图（阿斯泰拉/诺斯珀德）的位置修正。
 	 * On logout, corrects position when on the opposite-race map (Iluma/Norsvold).
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public static void onLogOutOppositeMap(Player player) {
@@ -1061,7 +1031,6 @@ public class TeleportService2 {
 	/**
 	 * 获取副本出口模板。
 	 * Returns instance-exit template.
-	 *
 	 * @param worldId 世界 ID / World id
 	 * @param race 阵营 / Race
 	 * @return 出口模板 / exit template
@@ -1073,7 +1042,6 @@ public class TeleportService2 {
 	/**
 	 * 获取副本复活起点模板。
 	 * Returns instance revive start-point template.
-	 *
 	 * @param worldId 世界 ID / World id
 	 * @return 复活起点 / revive start point
 	 */
@@ -1084,7 +1052,6 @@ public class TeleportService2 {
 	/**
 	 * 获取世界复活起点模板。
 	 * Returns world revive start-point template.
-	 *
 	 * @param worldId 世界 ID / World id
 	 * @param race 阵营 / Race
 	 * @param level 等级 / Level
@@ -1097,7 +1064,6 @@ public class TeleportService2 {
 	/**
 	 * 使用传送卷轴按门户名传送到目标世界。
 	 * Uses a portal scroll to teleport by portal name into a world.
-	 *
 	 * @param player 玩家 / Player
 	 * @param portalName 门户名称 / Portal name
 	 * @param worldId 目标世界 ID / Target world id
@@ -1147,7 +1113,6 @@ public class TeleportService2 {
 	/**
 	 * 将玩家置于世界复活起点（无完整传送动画）。
 	 * Places the player at the world revive start point (no full teleport anim).
-	 *
 	 * @param player 玩家 / Player
 	 * @param worldId 世界 ID / World id
 	 */
@@ -1175,7 +1140,6 @@ public class TeleportService2 {
 	/**
 	 * 将玩家置于副本复活起点。
 	 * Places the player at the instance revive start point.
-	 *
 	 * @param player 玩家 / Player
 	 * @param worldId 世界 ID / World id
 	 */
@@ -1203,7 +1167,6 @@ public class TeleportService2 {
 	/**
 	 * 切换玩家所在频道（同图不同实例线）。
 	 * Changes the player's channel (same map, different instance line).
-	 *
 	 * @param player 玩家 / Player
 	 * @param channel 频道序号（0 起） / Channel index (0-based)
 	 */
@@ -1221,7 +1184,6 @@ public class TeleportService2 {
 	/**
 	 * 处理 A-Station 跨服进出位置同步。
 	 * Handles A-Station cross-server enter/leave position sync.
-	 *
 	 * @param player 玩家 / Player
 	 * @param serverId 对方服务器 ID / Peer server id
 	 * @param back {@code true} 返回本服 / {@code true} return to home server
@@ -1257,7 +1219,6 @@ public class TeleportService2 {
 	/**
 	 * 从数据库加载并同步玩家变形状态到客户端。
 	 * Loads and syncs player transformation state to the client.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public static void playerTransformation(Player player) {
@@ -1271,7 +1232,6 @@ public class TeleportService2 {
 	 * Archdaeva Transformation 5.1: If a player is under one of the following effects, and uses a
 	 * "Teleport/Fly/Hotspot/Return Scroll" or admin command "goto/movetoplayer/movetonpc",
 	 * the skill panel linked to this effect must not disappear.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public static void archdaevaTransformation(Player player) {
@@ -1285,7 +1245,6 @@ public class TeleportService2 {
 	 * Instance + Event Transformation: If a player is under one of the following effects, and uses a
 	 * "Teleport/Fly/Hotspot/Return Scroll" or admin command "goto/movetoplayer/movetonpc",
 	 * the skill panel linked to this effect must not disappear.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public static void instanceTransformation(Player player) {
@@ -1295,7 +1254,6 @@ public class TeleportService2 {
 	/**
 	 * 按种族将玩家传送到主城（无特殊动画）。
 	 * Teleports the player to capital city by race (no special animation).
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public static void teleportToCapital(Player player) {
@@ -1314,7 +1272,6 @@ public class TeleportService2 {
 	/**
 	 * 按种族将玩家传送到主城（跳跃动画）。
 	 * Teleports the player to capital city by race (jump animation).
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public static void teleportToCapital2(Player player) {

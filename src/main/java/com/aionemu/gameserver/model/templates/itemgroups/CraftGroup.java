@@ -17,20 +17,12 @@ import lombok.Getter;
 /**
  * 制作奖励组：按等级范围索引的制作奖励。
  * Craft reward group: craft rewards indexed by level range.
- *
  * @author Rolandas
  */
 @Setter
 @Getter
 public abstract class CraftGroup extends BonusItemGroup {
 
-	/**
-	 *
-     * -- SETTER --
-     *
-     @return the dataHolder
-      * @param dataHolder the dataHolder to set
-	 */
 	@XmlTransient
 	private Map<Integer, Map<Range<Integer>, List<CraftReward>>> dataHolder;
 

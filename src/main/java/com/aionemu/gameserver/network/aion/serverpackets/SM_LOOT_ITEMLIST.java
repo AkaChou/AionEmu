@@ -29,7 +29,6 @@ public class SM_LOOT_ITEMLIST extends AionServerPacket {
 	/**
 	 * 构造玩家可见的掉落物品列表包。
 	 * Builds the loot item list visible to the given player.
-	 *
 	 * drop NPC
 	 * @param setItems 掉落物品集合 / set of drop items
 	 * @param player 接收列表的玩家 / player receiving the list

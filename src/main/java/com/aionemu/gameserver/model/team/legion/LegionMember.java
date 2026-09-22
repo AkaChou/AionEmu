@@ -7,36 +7,17 @@ import lombok.NoArgsConstructor;
 /**
  * 军团 Member，用于团队相关逻辑。
  * Legion Member for team logic.
- *
  * @author Simple
  */
 @Getter
 @Setter
 @NoArgsConstructor
 public class LegionMember {
-	/**
-	 * @param objectId the objectId to set
-	 */
 	private int objectId = 0;
-	/**
-	 * @param legion the legion to set
-	 */
 	protected Legion legion = null;
-	/**
-	 * @param nickname the nickname to set
-	 */
 	protected String nickname = "";
-	/**
-	 * @param selfIntro the selfIntro to set
-	 */
 	protected String selfIntro = "";
-	/**
-	 * @return the challengeScore
-	 */
 	protected int challengeScore;
-	/**
-	 * @param rank the rank to set
-	 */
 	protected LegionRank rank = LegionRank.VOLUNTEER;
 
 	/**
@@ -64,9 +45,6 @@ public class LegionMember {
 		return rank == LegionRank.BRIGADE_GENERAL;
 	}
 
-	/**
-	 * @param amount
-	 */
 	public void increaseChallengeScore(int amount) {
 		this.challengeScore += amount;
 	}
@@ -74,7 +52,6 @@ public class LegionMember {
 	/**
 	 * 检查成员是否拥有指定权限。
 	 * Checks whether the member has the given rights.
-	 *
 	 * @param permissions 权限掩码 / permissions mask
 	 * @return 是否拥有权限 / whether the member has the rights
 	 */

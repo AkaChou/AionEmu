@@ -9,7 +9,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 魔法值持续削减效果：周期扣除目标 MP。
  * MP drain-over-time effect: periodically reduces the target's magic points.
- *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)

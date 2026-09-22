@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 管理员小队召唤命令：将指定玩家所在小队成员传送至管理员身边。
  * Admin group-to-me command: teleport members of a named player's group to the admin.
- *
  * @author Source
  */
 public class GroupToMe extends AdminCommand {
@@ -21,7 +20,6 @@ public class GroupToMe extends AdminCommand {
 	/**
 	 * 将目标玩家小队（除管理员自身）传送到管理员坐标。
 	 * Teleport the target player's group (except the admin) to the admin's position.
-	 *
 	 * @param admin 执行命令的管理员 / Admin executing the command
 	 * @param params 目标玩家名 / Target player name
 	 */
@@ -55,7 +53,6 @@ public class GroupToMe extends AdminCommand {
 	/**
 	 * 参数错误时显示命令语法。
 	 * Show command syntax on invalid arguments.
-	 *
 	 * @param player 接收提示的玩家 / Player receiving the hint
 	 */
 	@Override

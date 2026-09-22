@@ -16,7 +16,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Archives Of Eternity 副本 NPC AI：ID Eternity 01 A Save Point（@AIName "IDEternity01Teleporter"），继承 NpcAI2。
  * Archives Of Eternity instance NPC AI: ID Eternity 01 A Save Point (@AIName "IDEternity01Teleporter"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("IDEternity01Teleporter")

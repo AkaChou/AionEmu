@@ -12,7 +12,6 @@ import lombok.Getter;
 /**
  * 制作奖励模板（静态数据/XML）。
  * XML template.
- *
  * @author Rolandas
  */
 @Getter
@@ -24,7 +23,7 @@ public abstract class CraftReward extends ItemRaceEntry {
 	/**
 	 * 获取 skill 属性值。
 	 * Gets the value of the skill property
-	 * @return 可能的对象类型 / possible object is {@link Integer }
+	 * 可能的对象类型 / possible object is {@link Integer }
 	 */
 	@XmlAttribute(name = "skill")
 	protected Integer skill;

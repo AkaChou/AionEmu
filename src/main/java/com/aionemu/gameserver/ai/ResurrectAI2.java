@@ -30,7 +30,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * 复活点 AI：为玩家提供复活交互。
  * Resurrection-point AI that offers revive interaction to players.
- *
  * @author Encom
  */
 @AIName("resurrect")
@@ -42,7 +41,6 @@ public class ResurrectAI2 extends NpcAI2
     /**
      * 处理看见生物事件。
      * Handle seeing a creature.
-     *
      * @param creature 生物 / creature
      */
 	@Override
@@ -53,7 +51,6 @@ public class ResurrectAI2 extends NpcAI2
 	/**
 	 * 处理生物移动事件。
 	 * Handle creature-moved.
-	 *
 	 * @param creature 移动的生物 / moved creature
 	 */
 	@Override
@@ -75,7 +72,6 @@ public class ResurrectAI2 extends NpcAI2
 	/**
 	 * 玩家开始与本 NPC 对话/交互。
 	 * Player starts dialog/interaction with this NPC.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override

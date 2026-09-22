@@ -27,7 +27,6 @@ public class Svs extends AdminCommand
 	/**
 	 * 按 start/stop 与地点 ID 控制 S.v.s。
 	 * Controls S.v.s by start/stop and location id.
-	 *
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -42,7 +41,6 @@ public class Svs extends AdminCommand
 	/**
 	 * 处理 start/stop 分支。
 	 * Handles start/stop branches.
-	 *
 	 */
 	protected void handleStartStopSvs(Player player, String... params) {
 		if (params.length != 2 || !NumberUtils.isDigits(params[1])) {
@@ -73,8 +71,6 @@ public class Svs extends AdminCommand
 	/**
 	 * 校验 S.v.s 地点 ID 是否存在。
 	 * Validates that the S.v.s location id exists.
-	 *
-	 *
 	 * @return 若 valid 则为 true / True if valid
 	 */
 	protected boolean isValidSvsLocationId(Player player, int svsId) {
@@ -88,7 +84,6 @@ public class Svs extends AdminCommand
 	/**
 	 * 显示用法帮助。
 	 * Shows usage help.
-	 *
 	 * @param player 执行 GM / Admin player
 	 */
 	protected void showHelp(Player player) {

@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 请求丢弃/销毁背包物品的客户端包。
  * Client packet requesting deletion of an inventory item.
- *
  * @author Avol
  */
 public class CM_DELETE_ITEM extends AionClientPacket {
@@ -23,7 +22,6 @@ public class CM_DELETE_ITEM extends AionClientPacket {
 	/**
 	 * 构造客户端包实例。
 	 * Constructs a new client packet instance.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余允许状态 / additional allowed states

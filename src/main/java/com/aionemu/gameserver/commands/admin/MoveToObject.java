@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 按世界对象 ID 传送到该可见对象刷怪点的管理员命令。
  * Admin command to teleport to a visible object spawn by world object id.
- *
  * @author Rolandas
  */
 public class MoveToObject extends AdminCommand {
@@ -25,7 +24,6 @@ public class MoveToObject extends AdminCommand {
 	/**
 	 * 按 object id 查找可见对象并传送到其刷怪坐标。
 	 * Find a visible object by object id and teleport to its spawn coordinates.
-	 *
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -59,7 +57,6 @@ public class MoveToObject extends AdminCommand {
 	/**
 	 * 参数错误时显示语法。
 	 * Show syntax when parameters are invalid.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

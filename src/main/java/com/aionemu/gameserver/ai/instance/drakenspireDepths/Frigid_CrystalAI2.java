@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Drakenspire Depths 副本 NPC AI：Frigid Crystal（@AIName "frigid_crystal"），继承 AggressiveNpcAI2。
  * Drakenspire Depths instance NPC AI: Frigid Crystal (@AIName "frigid_crystal"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("frigid_crystal")

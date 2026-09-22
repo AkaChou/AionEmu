@@ -16,7 +16,6 @@ public final class LoginShutdownRequest implements DisposableBean {
     /**
      * 注入关机协调器 provider 并注册到静态桥。
      * Inject the shutdown coordinator provider into the static bridge.
-     *
      * @param shutdownProvider 关机协调器提供者 / shutdown provider
      */
     @Autowired
@@ -27,7 +26,6 @@ public final class LoginShutdownRequest implements DisposableBean {
     /**
      * 设置关机协调器 provider（遗留静态 API）。
      * Set the shutdown provider (legacy static API).
-     *
      * @param shutdownProvider 关机协调器提供者 / shutdown provider
      * @deprecated 迁移期兼容入口 / compatibility entry during boot migration
      */
@@ -47,7 +45,6 @@ public final class LoginShutdownRequest implements DisposableBean {
     /**
      * 启动关机或仅重启流程。
      * Start shutdown or restart-only flow.
-     *
      * @param restartOnly true 表示仅重启 / true means restart only
      */
     public static void startShutdown(boolean restartOnly) {
@@ -68,7 +65,6 @@ public final class LoginShutdownRequest implements DisposableBean {
     /**
      * 解析当前 {@link Shutdown} 实例。
      * Resolve the current {@link Shutdown} instance.
-     *
      * @return 关机协调器 / shutdown coordinator
      */
     private static Shutdown shutdown() {

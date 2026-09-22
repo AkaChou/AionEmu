@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 活动事件 NPC AI：Ayas Support（@AIName "ayas_support"），继承 GeneralNpcAI2。
  * Event NPC AI: Ayas Support (@AIName "ayas_support"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("ayas_support")

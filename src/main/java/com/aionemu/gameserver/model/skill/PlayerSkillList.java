@@ -23,7 +23,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 玩家技能列表，用于技能相关逻辑。
  * Player Skill List for skill logic.
- *
  * @author IceReaper, orfeo087, Avol, AEJTester
  */
 public final class PlayerSkillList implements SkillList<Player> {
@@ -223,7 +222,6 @@ public final class PlayerSkillList implements SkillList<Player> {
 	/**
 	 * 添加临时技能（不保存到数据库）。
 	 * Add a temporary skill which will not be saved in db.
-	 *
 	 * @param player 玩家 / Player
 	 * @param skillId 技能 ID / Skill ID
 	 * @param skillLevel 技能等级 / Skill level
@@ -316,7 +314,6 @@ public final class PlayerSkillList implements SkillList<Player> {
 	/**
 	 * 为制作技能添加经验。
 	 * Add XP to a craft skill.
-	 *
 	 * @param player 玩家 / Player
 	 * @param skillId 技能 ID / Skill ID
 	 * @param xpReward 奖励经验 / XP reward
@@ -417,7 +414,6 @@ public final class PlayerSkillList implements SkillList<Player> {
 	/**
 	 * 发送技能列表更新消息给玩家。
 	 * Send skill list update message to the player.
-	 *
 	 * @param player 玩家 / Player
 	 * @param skillId 技能 ID / Skill ID
 	 * @param isNew 是否为新增技能 / Whether newly added

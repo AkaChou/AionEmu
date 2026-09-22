@@ -10,7 +10,6 @@ import com.aionemu.gameserver.ai.GeneralNpcAI2;
 /**
  * Heiron 区域 NPC AI：Gojira Egg（@AIName "GojiraEgg"），继承 GeneralNpcAI2。
  * Heiron zone NPC AI: Gojira Egg (@AIName "GojiraEgg"), extends GeneralNpcAI2.
- *
  * @author cheatkiller
  */
 @AIName("GojiraEgg")
@@ -24,7 +23,6 @@ public class GojiraEggAI2 extends GeneralNpcAI2 {
 	/**
 	 * 受击处理：当对应 NPC 不存在且 10% 概率触发时，生成 NPC 并静默死亡。
 	 * Attack handler: spawns the NPC with a 10% chance when absent, then dies silently.
-	 *
 	 * @param creature 攻击者 / attacker
 	 */
 	@Override

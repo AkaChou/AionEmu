@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 校验邮箱信件数量并同步邮件列表的客户端包。
  * Client packet to verify mailbox letter count and sync the mail list.
- *
  * @author Rinzler (Encom)
  */
 public class CM_CHECK_MAIL_SIZE extends AionClientPacket {

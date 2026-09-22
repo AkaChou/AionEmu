@@ -11,7 +11,6 @@ import lombok.Getter;
 /**
  * NPC 喊话条目模板（静态数据/XML）。
  * XML template.
- *
  * @author Rolandas
  */
 @Getter
@@ -29,7 +28,7 @@ public class NpcShout {
 	/**
 	 * 获取 when 属性值。
 	 * Gets the value of the when property
-	 * @return 可能的对象类型 / possible object is {@link ShoutEventType }
+	 * 可能的对象类型 / possible object is {@link ShoutEventType }
 	 */
 	@XmlAttribute(name = "when", required = true)
 	protected ShoutEventType when;
@@ -37,7 +36,7 @@ public class NpcShout {
 	/**
 	 * 获取 pattern 属性值。
 	 * Gets the value of the pattern property
-	 * @return 可能的对象类型 / possible object is {@link String }
+	 * 可能的对象类型 / possible object is {@link String }
 	 */
 	@XmlAttribute(name = "pattern")
 	protected String pattern;
@@ -45,7 +44,7 @@ public class NpcShout {
 	/**
 	 * 获取 param 属性值。
 	 * Gets the value of the param property
-	 * @return 可能的对象类型 / possible object is {@link String }
+	 * 可能的对象类型 / possible object is {@link String }
 	 */
 	@XmlAttribute(name = "param")
 	protected String param;

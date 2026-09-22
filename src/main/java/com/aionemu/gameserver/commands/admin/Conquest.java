@@ -27,7 +27,6 @@ public class Conquest extends AdminCommand
 	/**
 	 * 执行征服活动启停。
 	 * Executes Conquest start/stop.
-	 *
 	 * @param params 参数：start|stop 与地点 ID / start|stop and location id
 	 */
 	@Override
@@ -43,7 +42,6 @@ public class Conquest extends AdminCommand
 	/**
 	 * 处理指定地点的征服活动开始或停止。
 	 * Handles starting or stopping Conquest at a location.
-	 *
 	 */
 	protected void handleStartStop(Player player, String... params) {
 		if (params.length != 2 || !NumberUtils.isDigits(params[1])) {
@@ -74,8 +72,6 @@ public class Conquest extends AdminCommand
 	/**
 	 * 校验征服地点 ID 是否有效。
 	 * Validates whether the Conquest location id is valid.
-	 *
-	 *
 	 * @return 若 valid 则为 true / true if valid
 	 */
 	protected boolean isValidConquestLocationId(Player player, int conquestId) {
@@ -89,7 +85,6 @@ public class Conquest extends AdminCommand
 	/**
 	 * 显示命令用法帮助。
 	 * Shows command usage help.
-	 *
 	 */
 	protected void showHelp(Player player) {
 		PacketSendUtility.sendMessage(player, "AdminCommand //conquest start|stop <Id>");

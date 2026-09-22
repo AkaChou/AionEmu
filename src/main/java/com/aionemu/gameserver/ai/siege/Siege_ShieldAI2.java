@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 攻城战相关 NPC AI：Siege Shield（@AIName "siege_shield"），继承 NpcAI2。
  * Siege-related NPC AI: Siege Shield (@AIName "siege_shield"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("siege_shield")

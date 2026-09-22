@@ -6,7 +6,6 @@ import com.aionemu.gameserver.dataholders.DataManager;
 /**
  * 世界区域模板（静态数据/XML）。
  * XML template.
- *
  * @author Rolandas
  */
 public class WorldZoneTemplate extends ZoneTemplate {

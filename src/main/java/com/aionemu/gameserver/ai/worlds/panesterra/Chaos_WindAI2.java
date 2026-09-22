@@ -19,7 +19,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Panesterra 区域 NPC AI：Chaos Wind（@AIName "chaos_wind"），继承 NpcAI2。
  * Panesterra zone NPC AI: Chaos Wind (@AIName "chaos_wind"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("chaos_wind")

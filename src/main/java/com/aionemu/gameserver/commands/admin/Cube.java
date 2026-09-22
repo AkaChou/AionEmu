@@ -8,7 +8,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 将管理员背包扩展到最大格数的命令（{@code // 背包 / cube}）。
  * Admin command that expands the inventory cube to maximum ({@code // 背包 / cube}).
- *
  * @author Kamui
  */
 public class Cube extends AdminCommand {
@@ -24,7 +23,6 @@ public class Cube extends AdminCommand {
 	/**
 	 * 循环扩展背包直至满级（9 次）。
 	 * Expands the inventory cube up to the maximum (9 expansions).
-	 *
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -41,7 +39,6 @@ public class Cube extends AdminCommand {
 	/**
 	 * 执行失败时的语法提示。
 	 * Syntax hint on failure.
-	 *
 	 */
 	@Override
 	public void onFail(Player admin, String message) {

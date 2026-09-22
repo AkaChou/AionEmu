@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端同步玩家个人商店名称。
  * Server packet synchronizing a player's private-store name to the client.
- *
  * @author Simple
  */
 @AllArgsConstructor

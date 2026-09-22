@@ -12,21 +12,14 @@ import lombok.Getter;
 /**
  * 城镇等级模板（静态数据/XML）。
  * XML template.
- *
  * @author ViAl
  */
 @Getter
 @XmlType(name = "town_level")
 public class TownLevel {
 
-	/**
-	 * @return the level
-	 */
 	@XmlAttribute(name = "level")
 	protected int level;
-	/**
-	 * @return the spawn
-	 */
 	@XmlElement(name = "spawn")
 	protected List<Spawn> spawns;
 }

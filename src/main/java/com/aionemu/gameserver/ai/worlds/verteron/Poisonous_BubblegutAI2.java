@@ -8,7 +8,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Verteron 区域 NPC AI：Poisonous Bubblegut（@AIName "poisonous_bubblegut"），继承 AggressiveNpcAI2。
  * Verteron zone NPC AI: Poisonous Bubblegut (@AIName "poisonous_bubblegut"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("poisonous_bubblegut")

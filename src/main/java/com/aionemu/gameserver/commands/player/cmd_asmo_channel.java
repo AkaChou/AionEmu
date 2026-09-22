@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：向魔族频道发送付费世界消息。
  * Player command: sends a paid world message to the Asmodian channel.
- *
  * @author Maestros
  */
 public class cmd_asmo_channel extends PlayerCommand {
@@ -22,7 +21,6 @@ public class cmd_asmo_channel extends PlayerCommand {
 	/**
 	 * 向同种族在线玩家广播频道消息并扣费。
 	 * Broadcasts a channel message to same-race online players and charges a fee.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 命令参数 / command parameters
 	 */
@@ -96,7 +94,6 @@ public class cmd_asmo_channel extends PlayerCommand {
 	/**
 	 * 参数错误时提示用法。
 	 * Shows usage when arguments are invalid.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param message 失败提示消息 / failure message
 	 */

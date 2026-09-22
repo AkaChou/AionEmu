@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Cygnea 区域 NPC AI：Fierce Sandmane Tigric（@AIName "fierce_sandmane_tigric"），继承 AggressiveNpcAI2。
  * Cygnea zone NPC AI: Fierce Sandmane Tigric (@AIName "fierce_sandmane_tigric"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("fierce_sandmane_tigric")

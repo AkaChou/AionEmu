@@ -11,7 +11,6 @@ import com.aionemu.gameserver.network.loginserver.LsServerPacket;
 /**
  * 游戏服向登录服注册自身的认证服务端包。
  * Authentication packet that the game server sends to the login server for registration.
- *
  * @author -Nemesiss-
  */
 public class SM_GS_AUTH extends LsServerPacket {

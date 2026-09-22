@@ -19,7 +19,6 @@ public class EscapeEffect extends EffectTemplate {
 	/**
 	 * 处理副本离开并传送回绑定点。
 	 * Handles instance leave and teleports to bind location.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -33,7 +32,6 @@ public class EscapeEffect extends EffectTemplate {
 	/**
 	 * 目标已生成时标记效果成功。
 	 * Marks success when the target is spawned.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

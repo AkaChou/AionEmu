@@ -60,7 +60,6 @@ public class RVController extends NpcController {
 	/**
 	 * 根据从端 NPC 与裂隙模板构造控制器。
 	 * Constructs the controller from a slave NPC and rift template.
-	 *
 	 * @param slave 从端 NPC，主端时非 null / slave NPC, non-null on master side
 	 * @param riftTemplate 裂隙模板 / rift template
 	 */
@@ -85,7 +84,6 @@ public class RVController extends NpcController {
 	/**
 	 * 处理玩家对话请求，弹出通行确认窗。
 	 * Handles player dialog requests and shows the entry confirmation window.
-	 *
 	 * @param player 请求的玩家 / requesting player
 	 */
 	@Override
@@ -99,7 +97,6 @@ public class RVController extends NpcController {
 	/**
 	 * 按旋涡或普通裂隙弹出确认并在同意后传送。
 	 * Shows vortex or normal-rift confirmation and teleports on accept.
-	 *
 	 * @param player 请求的玩家 / requesting player
 	 */
 	private void onRequest(Player player) {
@@ -166,7 +163,6 @@ public class RVController extends NpcController {
 	/**
 	 * 校验玩家是否允许通行（等级、人数、接受状态等）。
 	 * Validates whether the player is allowed to pass (level, capacity, accepting state, etc.).
-	 *
 	 * @param player 请求的玩家 / requesting player
 	 * @return 是否允许通行 / whether passage is allowed
 	 */
@@ -193,7 +189,6 @@ public class RVController extends NpcController {
 	/**
 	 * 玩家拒绝通行确认。
 	 * Handles player denial of the entry confirmation.
-	 *
 	 * @param player 拒绝的玩家 / denying player
 	 * @return 恒为 true / always true
 	 */
@@ -215,7 +210,6 @@ public class RVController extends NpcController {
 	/**
 	 * 获取剩余存活秒数。
 	 * Gets remaining lifetime in seconds.
-	 *
 	 * @return 剩余秒数 / remaining seconds
 	 */
 	public int getRemainTime() {
@@ -225,7 +219,6 @@ public class RVController extends NpcController {
 	/**
 	 * 同步已通行人数并广播裂隙信息。
 	 * Syncs used entries and broadcasts rift info.
-	 *
 	 * @param invasion 是否为入侵旋涡模式 / whether invasion vortex mode
 	 */
 	public void syncPassed(boolean invasion) {
@@ -236,7 +229,6 @@ public class RVController extends NpcController {
 	/**
 	 * 构建需要同步的世界 ID 列表。
 	 * Builds the list of world ids that need sync.
-	 *
 	 * @param controller 裂隙控制器 / rift controller
 	 * @return 世界 ID 数组 / world id array
 	 */

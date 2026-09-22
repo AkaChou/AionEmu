@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Cygnea 区域 NPC AI：Frostgullet Kirrin（@AIName "frostgullet_kirrin"），继承 AggressiveNpcAI2。
  * Cygnea zone NPC AI: Frostgullet Kirrin (@AIName "frostgullet_kirrin"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("frostgullet_kirrin")

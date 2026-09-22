@@ -20,7 +20,6 @@ import java.util.List;
 /**
  * Seized Danuar Sanctuary 副本 NPC AI：Steel Rose Cannon（@AIName "steelrosecannon2"），继承 ActionItemNpcAI2。
  * Seized Danuar Sanctuary instance NPC AI: Steel Rose Cannon (@AIName "steelrosecannon2"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("steelrosecannon2")

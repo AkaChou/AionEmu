@@ -16,7 +16,6 @@ import java.util.LinkedHashMap;
 /**
  * 组装 NPC 数据容器，按编号索引组装 NPC 模板。
  * Assembled NPC data holder, indexing assembled NPC templates by number.
- *
  * @author xTz
  */
 @XmlRootElement(name = "assembled_npcs")
@@ -42,7 +41,6 @@ public class AssembledNpcsData {
 	/**
 	 * 返回已加载的模板数量。
 	 * Returns the number of loaded templates.
-	 *
 	 * @return 已加载的模板数量 / Returns the number of loaded templates.
 	 */
 	public int size() {
@@ -52,7 +50,6 @@ public class AssembledNpcsData {
 	/**
 	 * 按编号获取组装 NPC 模板。
 	 * Returns the assembled NPC template for the given number.
-	 *
 	 * @param i 组装编号 / assembly number
 	 * @return 模板，不存在则为 null / template or null
 	 */

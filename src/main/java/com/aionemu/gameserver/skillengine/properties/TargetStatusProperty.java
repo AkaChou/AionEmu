@@ -14,7 +14,6 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 /**
  * 目标状态属性：要求首要目标处于指定异常状态之一。
  * Target status property: requires the first target to have one of the listed abnormal states.
- *
  * @author kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -24,7 +23,6 @@ public class TargetStatusProperty {
 	/**
 	 * 校验首要目标是否拥有配置的异常状态之一（仅支持单一目标）。
 	 * Validates that the single first target has one of the configured abnormal states.
-	 *
 	 * @param skill 技能上下文 / skill context
 	 * @param properties 目标筛选属性 / target filter properties
 	 * @return 目标数不为 1 时 false；否则是否匹配任一状态 / false if not exactly one target; else whether any status matches

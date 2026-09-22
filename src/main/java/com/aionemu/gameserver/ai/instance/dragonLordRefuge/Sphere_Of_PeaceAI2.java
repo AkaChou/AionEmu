@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Dragon Lord Refuge 副本 NPC AI：Sphere Of Peace（@AIName "sphere_of_peace"），继承 AggressiveNpcAI2。
  * Dragon Lord Refuge instance NPC AI: Sphere Of Peace (@AIName "sphere_of_peace"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("sphere_of_peace")

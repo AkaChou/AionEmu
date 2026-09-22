@@ -18,7 +18,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Trials Of Eternity 副本 NPC AI：Kontesius Gampt 3（@AIName "IDEternity_03_Event_Guard_03"），继承 AggressiveNpcAI2。
  * Trials Of Eternity instance NPC AI: Kontesius Gampt 3 (@AIName "IDEternity_03_Event_Guard_03"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("IDEternity_03_Event_Guard_03")

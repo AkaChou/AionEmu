@@ -15,7 +15,6 @@ import com.aionemu.loginserver.model.Account;
 /**
  * 账号 DAO 的 MySQL 8 实现。
  * MySQL 8 AccountDAO implementation.
- *
  * @author Updated for MySQL 8
  */
 @Slf4j

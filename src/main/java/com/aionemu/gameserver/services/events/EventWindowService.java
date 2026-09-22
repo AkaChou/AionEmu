@@ -30,9 +30,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 活动窗口服务，管理限时活动计时器与登录同步。
  * Event window service managing timed event timers and login sync.
- *
  * @author Rinzler (Encom)
- * @rework FrozenKiller
  */
 
 @Slf4j
@@ -64,8 +62,6 @@ public class EventWindowService {
 	/**
 	 * 获取 eventswindowstartend 时间。
 	 * get events window start and end time
-	 *
-	 * @return
 	 */
 	public Map<Integer, EventsWindow> getActiveEvents(Player player) {
 		ZonedDateTime now = ZonedDateTime.now();
@@ -112,10 +108,7 @@ public class EventWindowService {
 				playerEventsWindowDAO.store(accountId, eventsWindow.getId(), new Timestamp(System.currentTimeMillis()), elapsed); // 临时用于更新时间戳 / temp for updating Timestamp
 			}
 			log.info(I18n.get("log.e1c6fecfcb1f", eventsWindow.getId(), eventsWindow.getRemainingTime()));
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
 				 if (player.isOnline()) {
 					 if (recivedCount == eventsWindow.getMaxCountOfDay()) {
 						 sendActiveEventsForPlayer.remove(eventsWindow.getId());
@@ -137,7 +130,6 @@ public class EventWindowService {
 	/**
 	 * 重启计时器。
 	 * Restarts the timer.
-	 *
 	 * 玩家 / player
 	 * eventId
 	 */
@@ -156,10 +148,7 @@ public class EventWindowService {
 				continue;
 			}
 			if (eventsWindow.getId() == eventId) {
-				/**
-				 * 执行任务。
-				 * Runs the task.
-				 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+                GameThreadPoolServices.threadPoolManager().schedule(() -> {
 					 if (player.isOnline()) {
 						 if (recivedCount == eventsWindow.getMaxCountOfDay()) {
 							 sendActiveEventsForPlayer.remove(eventsWindow.getId());
@@ -198,11 +187,9 @@ public class EventWindowService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available

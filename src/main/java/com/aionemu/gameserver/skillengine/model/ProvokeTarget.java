@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 激怒触发目标：自身或对手。
  * Provoke target: self or opponent.
- *
  * @author ATracer
  */
 @XmlType(name = "ProvokeTarget")

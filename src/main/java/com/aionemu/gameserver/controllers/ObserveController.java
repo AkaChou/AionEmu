@@ -32,7 +32,6 @@ import com.aionemu.gameserver.skillengine.model.SkillType;
  * <p>
  * Notes: onceUsedObservers 需加锁；迭代前检查集合大小以减少内存分配。
  * Notes: lock onceUsedObservers; check collection size before iteration to reduce allocations.
- *
  * @author ATracer
  * @author Cura
  */
@@ -62,7 +61,6 @@ public class ObserveController {
 	/**
 	 * 附加一次性观察者，通知后移除。
 	 * Attaches a one-shot observer that is removed after notification.
-	 *
 	 * @param observer observer
 	 */
 	public void attach(ActionObserver observer) {
@@ -78,7 +76,6 @@ public class ObserveController {
 	/**
 	 * 添加常驻行为观察者。
 	 * Adds a persistent action observer.
-	 *
 	 * @param observer observer
 	 */
 	public void addObserver(ActionObserver observer) {
@@ -90,7 +87,6 @@ public class ObserveController {
 	 * （否则先加入的观察者会落进被丢弃的列表而永久丢失）。读路径不调用本方法。
 	 * Materialises the persistent observer collection with a double-checked {@code synchronized (this)} so
 	 * concurrent first writes converge on one list; a reader never needs to materialise.
-	 *
 	 * @return 可写集合 / writable collection
 	 */
 	private Collection<ActionObserver> writableObservers() {
@@ -109,7 +105,6 @@ public class ObserveController {
 	/**
 	 * 物化攻击计算观察者集合（范式同 {@link #writableObservers()}）。
 	 * Materialises the attack-calculation observer collection like {@link #writableObservers()}.
-	 *
 	 * @return 可写集合 / writable collection
 	 */
 	private Collection<AttackCalcObserver> writableAttackCalcObservers() {
@@ -128,7 +123,6 @@ public class ObserveController {
 	/**
 	 * 添加攻击计算观察者。
 	 * Adds an attack-calculation observer.
-	 *
 	 * @param observer observer
 	 */
 	public void addAttackCalcObserver(AttackCalcObserver observer) {
@@ -138,7 +132,6 @@ public class ObserveController {
 	/**
 	 * 移除行为观察者（含一次性列表）。
 	 * Removes an action observer (including from the one-shot list).
-	 *
 	 * @param observer observer
 	 */
 	public void removeObserver(ActionObserver observer) {
@@ -162,7 +155,6 @@ public class ObserveController {
 	/**
 	 * 移除攻击计算观察者。
 	 * Removes an attack-calculation observer.
-	 *
 	 * @param observer observer
 	 */
 	public void removeAttackCalcObserver(AttackCalcObserver observer) {
@@ -175,7 +167,6 @@ public class ObserveController {
 	/**
 	 * 按类型通知所有匹配的观察者。
 	 * Notifies all matching observers of the given type.
-	 *
 	 * @param type 观察类型 / observer type
 	 * @param object 通知参数 / notification arguments
 	 */
@@ -218,7 +209,6 @@ public class ObserveController {
 	/**
 	 * 根据类型分发到观察者对应回调。
 	 * Dispatches to the observer callback matching the type.
-	 *
 	 * @param type 观察类型 / observer type
 	 * @param observer 目标观察者 / target observer
 	 * @param object 通知参数 / notification arguments
@@ -272,7 +262,6 @@ public class ObserveController {
 	/**
 	 * 通知死亡观察者。
 	 * Notifies death observers.
-	 *
 	 * @param creature 死亡的生物 / the creature that died
 	 */
 	public void notifyDeathObservers(Creature creature) {
@@ -290,7 +279,6 @@ public class ObserveController {
 	/**
 	 * 通知攻击观察者。
 	 * Notifies attack observers.
-	 *
 	 * @param creature 被攻击目标 / the attacked creature
 	 */
 	public void notifyAttackObservers(Creature creature) {
@@ -308,7 +296,6 @@ public class ObserveController {
 	/**
 	 * 通知被攻击观察者。
 	 * Notifies attacked observers.
-	 *
 	 * @param creature the attacker
 	 */
 	public void notifyAttackedObservers(Creature creature) {
@@ -326,7 +313,6 @@ public class ObserveController {
 	/**
 	 * 通知 DoT 命中观察者。
 	 * Notifies DoT-hit observers.
-	 *
 	 * @param creature the attacker
 	 * @param effect related effect
 	 */
@@ -337,7 +323,6 @@ public class ObserveController {
 	/**
 	 * 通知技能使用观察者。
 	 * Notifies skill-use observers.
-	 *
 	 * @param skill 使用的技能 / skill used
 	 */
 	public void notifySkilluseObservers(Skill skill) {
@@ -355,7 +340,6 @@ public class ObserveController {
 	/**
 	 * 通知装备物品观察者。
 	 * Notifies item-equip observers.
-	 *
 	 * @param item 装备物品 / equipped item
 	 * @param owner 装备玩家 / equipping player
 	 */
@@ -366,7 +350,6 @@ public class ObserveController {
 	/**
 	 * 通知卸下物品观察者。
 	 * Notifies item-unequip observers.
-	 *
 	 * @param item 卸下物品 / unequipped item
 	 * @param owner 卸下玩家 / unequipping player
 	 */
@@ -377,7 +360,6 @@ public class ObserveController {
 	/**
 	 * 通知物品使用观察者。
 	 * Notifies item-use observers.
-	 *
 	 * @param item 使用的物品 / used item
 	 */
 	public void notifyItemuseObservers(Item item) {
@@ -387,7 +369,6 @@ public class ObserveController {
 	/**
 	 * 通知 NPC 对话请求观察者。
 	 * Notifies NPC dialog-request observers.
-	 *
 	 * @param npc dialog NPC
 	 */
 	public void notifyRequestDialogObservers(Npc npc) {
@@ -397,7 +378,6 @@ public class ObserveController {
 	/**
 	 * 通知异常状态设置观察者。
 	 * Notifies abnormal-state-set observers.
-	 *
 	 * @param state 异常状态 / abnormal state
 	 */
 	public void notifyAbnormalSettedObservers(AbnormalState state) {
@@ -415,10 +395,7 @@ public class ObserveController {
 	/**
 	 * 检查攻击状态是否被观察者改写。
 	 * Checks whether an attack status is rewritten by observers.
-	 *
 	 * attack status
-	 *
-	 * @param status
 	 * @return 任一观察者匹配则为 true / true if any observer matches
 	 */
 	public boolean checkAttackStatus(AttackStatus status) {
@@ -435,10 +412,7 @@ public class ObserveController {
 	/**
 	 * 检查攻击者状态是否被观察者改写。
 	 * Checks whether an attacker status is rewritten by observers.
-	 *
 	 * attack status
-	 *
-	 * @param status
 	 * @return 任一观察者匹配则为 true / true if any observer matches
 	 */
 	public boolean checkAttackerStatus(AttackStatus status) {
@@ -491,11 +465,8 @@ public class ObserveController {
 	/**
 	 * 检查攻击者暴击状态。
 	 * Checks attacker critical status.
-	 *
 	 * attack status
-	 *
 	 * @param isSkill 是否技能攻击 / whether it is a skill attack
-	 * @param isSkill
 	 * @return 暴击状态结果 / critical status result
 	 */
 	public AttackerCriticalStatus checkAttackerCriticalStatus(AttackStatus status, boolean isSkill) {
@@ -513,7 +484,6 @@ public class ObserveController {
 	/**
 	 * 通过观察者处理护盾减免。
 	 * Processes shield mitigation via observers.
-	 *
 	 * @param attackList 攻击结果列表 / attack result list
 	 * @param effect 关联效果 / related effect
 	 * @param attacker 攻击者 / attacker
@@ -530,7 +500,6 @@ public class ObserveController {
 	/**
 	 * 获取基础物理伤害倍率（各观察者相乘）。
 	 * Gets the base physical damage multiplier (product of observers).
-	 *
 	 * @param isSkill 是否技能攻击 / whether it is a skill attack
 	 * @return 伤害倍率 / damage multiplier
 	 */
@@ -547,7 +516,6 @@ public class ObserveController {
 	/**
 	 * 获取基础魔法伤害倍率（各观察者相乘）。
 	 * Gets the base magical damage multiplier (product of observers).
-	 *
 	 * damage multiplier
 	 */
 	public float getBaseMagicalDamageMultiplier() {

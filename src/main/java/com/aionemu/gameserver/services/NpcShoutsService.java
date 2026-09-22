@@ -29,7 +29,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * NPC 喊话服务，处理 IDLE 轮询喊话、事件喊话与系统消息下发。
  * NPC shout service handling IDLE poll shouts, event shouts, and system message delivery.
- *
  * @author Rolandas
  */
 @Slf4j
@@ -92,7 +91,6 @@ public class NpcShoutsService {
 	/**
 	 * 对目标播放一组喊话（顺序或随机）。
 	 * Plays a list of shouts to the target (sequential or random).
-	 *
 	 * shouting NPC
 	 * target creature
 	 * shout list
@@ -126,7 +124,6 @@ public class NpcShoutsService {
 	/**
 	 * 对目标播放单条喊话，并解析 username 等参数。
 	 * Plays a single shout to the target, resolving params such as username.
-	 *
 	 * shouting NPC
 	 * target creature
 	 * @param shout 喊话模板 / shout template
@@ -169,7 +166,6 @@ public class NpcShoutsService {
 	/**
 	 * 向 NPC 知会范围内玩家发送系统消息（默认非喊话、颜色 25）。
 	 * Sends a system message to players knowing the NPC (default non-shout, color 25).
-	 *
 	 * source NPC
 	 * message id
 	 * @param Obj 对象参数 / object parameter
@@ -183,7 +179,6 @@ public class NpcShoutsService {
 	/**
 	 * 向 NPC 知会范围内玩家发送系统消息。
 	 * Sends a system message to players knowing the NPC.
-	 *
 	 * source NPC
 	 * message id
 	 * @param Obj 对象参数 / object parameter
@@ -198,7 +193,6 @@ public class NpcShoutsService {
 	/**
 	 * 向 NPC 知会范围内玩家发送系统消息（简化参数）。
 	 * Sends a system message to players knowing the NPC (simplified args).
-	 *
 	 * source NPC
 	 * message id
 	 * @param delay 延迟毫秒 / delay ms
@@ -210,7 +204,6 @@ public class NpcShoutsService {
 	/**
 	 * 立即向 NPC 知会范围内玩家发送系统消息。
 	 * Immediately sends a system message to players knowing the NPC.
-	 *
 	 * source NPC
 	 * message id
 	 */
@@ -221,7 +214,6 @@ public class NpcShoutsService {
 	/**
 	 * 向副本内全部玩家发送系统消息。
 	 * Sends a system message to all players in the map instance.
-	 *
 	 * map instance
 	 * message id
 	 * @param Obj 对象参数 / object parameter
@@ -236,7 +228,6 @@ public class NpcShoutsService {
 	/**
 	 * 向副本内全部玩家发送系统消息（简化参数）。
 	 * Sends a system message to all players in the map instance (simplified args).
-	 *
 	 * map instance
 	 * message id
 	 * @param delay 延迟毫秒 / delay ms
@@ -248,7 +239,6 @@ public class NpcShoutsService {
 	/**
 	 * 延迟后向 NPC 知会玩家或副本内玩家广播系统消息。
 	 * After delay, broadcasts a system message to NPC known players or instance players.
-	 *
 	 * @param npc 来源 NPC，可为 null / source NPC, may be null
 	 * @param instance 地图实例，可为 null / map instance, may be null
 	 * message id
@@ -271,11 +261,9 @@ public class NpcShoutsService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -294,7 +282,6 @@ public class NpcShoutsService {
 	/**
 	 * 注入 Spring 实例提供者。
 	 * Injects the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<NpcShoutsService> instanceProvider) {

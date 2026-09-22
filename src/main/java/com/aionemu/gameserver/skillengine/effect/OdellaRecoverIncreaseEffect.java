@@ -9,7 +9,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 奥德拉恢复提升效果：作为 Buff 壳，提高 Odella 恢复相关收益。
  * Odella recover increase effect: buff shell that boosts Odella recovery gains.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)

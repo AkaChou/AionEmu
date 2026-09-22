@@ -11,9 +11,7 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
  * 写入盾牌可装备的槽位掩码。
  * Blob sent for shields.
  * Writes slot masks the shield can be equipped to.
- *
  * @author -Nemesiss-
- * @modified Rolandas
  */
 public class ShieldInfoBlobEntry extends ItemBlobEntry {
 

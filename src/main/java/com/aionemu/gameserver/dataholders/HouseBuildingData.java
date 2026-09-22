@@ -17,7 +17,6 @@ import com.aionemu.gameserver.model.templates.housing.Building;
 /**
  * 房屋建筑配置数据容器，按建筑 ID 索引建筑模板。
  * House building configuration data holder, indexed by building id.
- *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -49,7 +48,6 @@ public class HouseBuildingData {
 	/**
 	 * 按建筑 ID 获取建筑模板。
 	 * Returns the building template for the given building id.
-	 *
 	 * @param buildingId 建筑 ID / building id
 	 * @return 建筑模板，不存在则为 null / building template, or null if absent
 	 */
@@ -60,7 +58,6 @@ public class HouseBuildingData {
 	/**
 	 * 返回建筑模板数量。
 	 * Returns the number of building templates.
-	 *
 	 * @return 房屋建筑模板数量 / Returns the number of building templates.
 	 */
 	public int size() {

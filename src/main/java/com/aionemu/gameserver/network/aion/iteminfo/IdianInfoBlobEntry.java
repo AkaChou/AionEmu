@@ -10,7 +10,6 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
  * 写入艾帝安石当前抛光充能值。
  * Blob for Idian (polish) charge info.
  * Writes the current polish charge of the Idian stone.
- *
  * @author Ranastic
  */
 public class IdianInfoBlobEntry extends ItemBlobEntry {

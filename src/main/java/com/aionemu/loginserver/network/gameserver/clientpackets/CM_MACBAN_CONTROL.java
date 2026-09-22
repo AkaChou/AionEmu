@@ -6,7 +6,6 @@ import com.aionemu.loginserver.service.LoginProtectionServices;
 /**
  * GS→LS：MAC 封禁/解封控制。
  * GS→LS: MAC ban/unban control.
- *
  * @author KID
  */
 public class CM_MACBAN_CONTROL extends GsClientPacket {

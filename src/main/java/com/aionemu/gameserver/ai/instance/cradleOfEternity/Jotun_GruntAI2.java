@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Cradle Of Eternity 副本 NPC AI：Jotun Grunt（@AIName "Jotun_Grunt"），继承 AggressiveNpcAI2。
  * Cradle Of Eternity instance NPC AI: Jotun Grunt (@AIName "Jotun_Grunt"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("Jotun_Grunt")

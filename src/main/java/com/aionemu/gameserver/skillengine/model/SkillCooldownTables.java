@@ -3,7 +3,6 @@ package com.aionemu.gameserver.skillengine.model;
 /**
  * 技能冷却查表：烙印强化技能按技能 ID 的冷却缩减表。
  * Skill cooldown tables: stigma-enchant cooldown reductions keyed by skill id.
- *
  * <p>该类型只服务 {@link Skill}：纯静态查表（技能 ID → 冷却缩减秒数），不持有状态、
  * 不创建对象；对外仍通过 {@link Skill} 的原 public 方法访问（门面签名不变）。
  * This type only serves {@link Skill}: a pure static lookup (skill id to cooldown reduction)
@@ -22,7 +21,6 @@ final class SkillCooldownTables {
 	/**
 	 * 计算烙印附魔冷却。
 	 * Computes stigma enchant cooldown.
-	 *
 	 * @param skill 技能实例 / skill
 	 * @param cooldown 基础冷却 / base cooldown
 	 * @return 最终冷却 / final cooldown

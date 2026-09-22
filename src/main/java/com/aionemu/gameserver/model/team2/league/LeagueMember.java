@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 战团成员，用于团队 2 相关逻辑。
  * League member for team 2 logic.
- *
  * @author ATracer
  */
 @AllArgsConstructor

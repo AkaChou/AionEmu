@@ -7,13 +7,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MACRO_RESULT;
 import com.aionemu.gameserver.services.player.PlayerService;
 
 /**
-	 * 负责删除宏的数据包。 / Packet that is responsible for macro deletion.<br> Client sends id in the macro list.<br> For instance client has 4 macros and we are going to delete macro #3.<br> Client sends request to delete macro #3.<br> And macro #4 becomes macro #3.<br> So we have to use a list to store macros properly.
-	 */
-
-/**
  * 删除指定槽位宏的客户端包。
  * Client packet for deleting a macro by slot.
- *
  * @author SoulKeeper
  */
 @Slf4j
@@ -26,7 +21,6 @@ public class CM_MACRO_DELETE extends AionClientPacket {
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余合法状态 / additional valid states

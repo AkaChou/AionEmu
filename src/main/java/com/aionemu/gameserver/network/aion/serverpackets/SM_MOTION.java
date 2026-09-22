@@ -26,7 +26,6 @@ public class SM_MOTION extends AionServerPacket {
 	/**
 	 * 同步玩家全部动作列表（action=1）。
 	 * Syncs the full motion list for a player (action=1).
-	 *
 	 * @param motions motion collection
 	 */
 	public SM_MOTION(Collection<Motion> motions) {
@@ -37,7 +36,6 @@ public class SM_MOTION extends AionServerPacket {
 	/**
 	 * 同步指定动作的剩余时间（action=2）。
 	 * Syncs remaining time for a motion (action=2).
-	 *
 	 * motion id
 	 * @param remainingTime 剩余时间（秒） / remaining time in seconds
 	 */
@@ -50,7 +48,6 @@ public class SM_MOTION extends AionServerPacket {
 	/**
 	 * 激活/切换动作类型（action=5）。
 	 * Activates or switches a motion type (action=5).
-	 *
 	 * motion id
 	 * @param type 动作类型标志 / motion type flag
 	 */
@@ -63,7 +60,6 @@ public class SM_MOTION extends AionServerPacket {
 	/**
 	 * 移除指定动作（action=6）。
 	 * Removes a motion (action=6).
-	 *
 	 * @param motionId motion id
 	 */
 	public SM_MOTION(short motionId) {
@@ -74,7 +70,6 @@ public class SM_MOTION extends AionServerPacket {
 	/**
 	 * 同步其他玩家当前激活的动作槽（action=7）。
 	 * Syncs another player's currently active motion slots (action=7).
-	 *
 	 * player object id
 	 * @param activeMotions 槽位→动作映射 / slot-to-motion map
 	 */

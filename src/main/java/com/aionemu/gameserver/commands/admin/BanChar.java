@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 管理员角色封禁命令：按角色名封禁指定天数并记录原因。
  * Admin character-ban command: bans a character by name for N days with a reason.
- *
  * @author nrg
  */
 public class BanChar extends AdminCommand {
@@ -27,7 +26,6 @@ public class BanChar extends AdminCommand {
 	/**
 	 * 执行角色封禁：解析角色、天数与原因后调用惩罚服务。
 	 * Executes character ban: resolves char, days and reason, then calls punishment service.
-	 *
 	 * @param params 参数：玩家名、天数、原因 / player name, days, reason
 	 */
 	@Override
@@ -84,7 +82,6 @@ public class BanChar extends AdminCommand {
 	/**
 	 * 参数错误时输出 {@code //banchar} 用法。
 	 * Prints {@code //banchar} usage on invalid arguments.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {
@@ -94,7 +91,6 @@ public class BanChar extends AdminCommand {
 	/**
 	 * 向管理员发送 {@code //banchar} 语法说明。
 	 * Sends {@code //banchar} syntax help to the admin.
-	 *
 	 * @param withNote 是否附带天数说明 / whether to include the day-count note
 	 */
 	private void sendInfo(Player player, boolean withNote) {

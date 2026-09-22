@@ -17,7 +17,6 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 /**
  * PvP 奖励服务，按职业与连杀状态计算勋章/代币奖励。
  * PvP reward service computing medal/toll rewards by class and spree state.
- *
  * @author Rinzler (Encom)
  */
 @Slf4j(topic = "PVP_LOG")
@@ -32,7 +31,6 @@ public class PvPRewardService {
 	/**
 	 * 按职业返回高级奖励物品 ID 列表。
 	 * Returns advanced reward item ids for the given player class.
-	 *
 	 * @param pc 玩家职业 / player class
 	 * item id list
 	 */
@@ -59,7 +57,6 @@ public class PvPRewardService {
 	/**
 	 * 计算击杀奖励物品 ID（普通勋章或高级随机奖励）。
 	 * Computes the kill reward item id (normal medal or advanced random reward).
-	 *
 	 * winner
 	 * victim
 	 * @param isAdvanced 是否高级奖励 / whether advanced reward
@@ -85,7 +82,6 @@ public class PvPRewardService {
 	/**
 	 * 计算勋章奖励概率（受连杀与等级差影响）。
 	 * Computes medal reward chance (influenced by spree and level difference).
-	 *
 	 * winner
 	 * victim
 	 * @return 概率百分比 / chance percent
@@ -111,7 +107,6 @@ public class PvPRewardService {
 	/**
 	 * 计算勋章奖励数量。
 	 * Computes medal reward quantity.
-	 *
 	 * winner
 	 * victim
 	 * quantity
@@ -135,7 +130,6 @@ public class PvPRewardService {
 	/**
 	 * 计算代币（Toll）奖励概率。
 	 * Computes toll reward chance.
-	 *
 	 * winner
 	 * victim
 	 * @return 概率百分比 / chance percent
@@ -161,7 +155,6 @@ public class PvPRewardService {
 	/**
 	 * 计算代币（Toll）奖励数量。
 	 * Computes toll reward quantity.
-	 *
 	 * winner
 	 * victim
 	 * quantity
@@ -185,7 +178,6 @@ public class PvPRewardService {
 	/**
 	 * 获取击杀者当前等级段的高级奖励列表。
 	 * Returns advanced rewards for the winner's current level band.
-	 *
 	 * winner
 	 * item id list
 	 */
@@ -202,7 +194,6 @@ public class PvPRewardService {
 	/**
 	 * 按职业与物品等级过滤奖励列表。
 	 * Filters reward list by class and item level range.
-	 *
 	 * @param pc 玩家职业 / player class
 	 * @param minLevel 最小物品等级 / min item level
 	 * @param maxLevel 最大物品等级（不含） / max item level (exclusive)

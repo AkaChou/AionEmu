@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 物品强化规则查表：按物品 ID 判定强化失败规则与荣耀护盾技能授予。
  * Item enchant rule tables: item-id based failure rules and the Glory: Shield skill grant.
- *
  * <p>该类型只服务 {@link EnchantService}：全部为静态纯查表/规则函数，不持有状态、不创建对象。
  * 对外仍通过 {@link EnchantService} 的原 public static 方法访问（门面签名不变）。
  * This type only serves {@link EnchantService}: every function is a static pure table lookup or
@@ -73,7 +72,6 @@ final class EnchantItemRules {
 	/**
 	 * 是否为执政官改装达努亚系列。
 	 * Whether the item is Archdaeva remodeled Danuar gear.
-	 *
 	 * @param targetItem 目标物品 / target item
 	 * @return 是否匹配 / whether matched
 	 */
@@ -91,7 +89,6 @@ final class EnchantItemRules {
 	/**
 	 * 是否为执政官重构达努亚系列。
 	 * Whether the item is Archdaeva restructured Danuar gear.
-	 *
 	 * @param targetItem 目标物品 / target item
 	 * @return 是否匹配 / whether matched
 	 */

@@ -19,7 +19,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * GM 物品限制服务，控制管理员对受限物品的交易/操作权限。
  * Admin item-restriction service controlling GM trade and operation permissions for restricted items.
- *
  * @author KID
  */
 @Slf4j
@@ -35,11 +34,9 @@ public class AdminService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -58,7 +55,6 @@ public class AdminService {
 	/**
 	 * 注入 Spring ObjectProvider 以覆盖默认单例。
 	 * Injects a Spring ObjectProvider to override the default singleton.
-	 *
 	 * @param instanceProvider provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<AdminService> instanceProvider) {
@@ -112,7 +108,6 @@ public class AdminService {
 	/**
 	 * 检查玩家是否可对指定物品执行操作（基于 Item 对象）。
 	 * Checks whether the player may operate on the given item (Item overload).
-	 *
 	 * @param player 操作者 / operator
 	 * @param target 目标玩家，可为 null / target player, may be null
 	 * @param item 目标物品 / item
@@ -126,7 +121,6 @@ public class AdminService {
 	/**
 	 * 检查玩家是否可对指定物品 ID 执行操作。
 	 * Checks whether the player may operate on the given item ID.
-	 *
 	 * @param player 操作者 / operator
 	 * @param target 目标玩家，可为 null / target player, may be null
 	 * @param itemId 目标物品 ID / item id

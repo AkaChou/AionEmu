@@ -15,7 +15,6 @@ import lombok.Getter;
 /**
  * 修正器模板（静态数据/XML）。
  * XML template.
- *
  * @author xavier
  */
 @Getter
@@ -28,8 +27,7 @@ public class ModifiersTemplate {
 			@XmlElement(name = "add", type = com.aionemu.gameserver.model.stats.calc.functions.StatAddFunction.class),
 			@XmlElement(name = "rate", type = com.aionemu.gameserver.model.stats.calc.functions.StatRateFunction.class),
 			@XmlElement(name = "set", type = com.aionemu.gameserver.model.stats.calc.functions.StatSetFunction.class) })
-	/** 获取修正器。 / Returns the modifiers. */
-	private List<StatFunction> modifiers;
+    private List<StatFunction> modifiers;
 
 	/** 返回概率 / Returns the chance*/
 	@XmlAttribute

@@ -23,7 +23,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 街机升级活动服务，管理街机升级窗口、抽奖与奖励发放。
  * Arcade upgrade event service managing the upgrade window, rolls and rewards.
- *
  * @author Rinzler (Encom)
  */
 
@@ -44,7 +43,6 @@ public class ArcadeUpgradeService {
 	/**
 	 * 玩家进入世界时处理。
 	 * Handles player entering the world.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onEnterWorld(Player player) {
@@ -54,7 +52,6 @@ public class ArcadeUpgradeService {
 	/**
 	 * getRewardItem 方法。
 	 * getRewardItem method.
-	 *
 	 * 玩家 / player
 	 * result
 	 */
@@ -80,7 +77,6 @@ public class ArcadeUpgradeService {
 	/**
 	 * getSpecialRewardItem 方法。
 	 * getSpecialRewardItem method.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static boolean getSpecialRewardItem(Player player) {
@@ -110,11 +106,9 @@ public class ArcadeUpgradeService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -133,7 +127,6 @@ public class ArcadeUpgradeService {
     /**
 	 * 关闭窗口。
 	 * Closes the window.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void closeWindow(Player player) {
@@ -143,7 +136,6 @@ public class ArcadeUpgradeService {
 	/**
 	 * 打开街机升级。
 	 * Opens arcade upgrade.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void startArcadeUpgrade(Player player) {
@@ -158,7 +150,6 @@ public class ArcadeUpgradeService {
 	/**
 	 * 显示奖励列表。
 	 * Shows reward list.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void showRewardList(Player player) {
@@ -177,7 +168,6 @@ public class ArcadeUpgradeService {
 	/**
 	 * 尝试街机升级。
 	 * Attempts arcade upgrade.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void tryArcadeUpgrade(final Player player) {
@@ -213,33 +203,24 @@ public class ArcadeUpgradeService {
 	/**
 	 * getPlaySuccesArcade 方法。
 	 * getPlaySuccesArcade method.
-	 *
 	 * 玩家 / player
 	 * arcade
 	 */
 	public void getPlaySuccesArcade(final Player player, final PlayerUpgradeArcade arcade) {
 		arcade.setFrenzyLevel(arcade.getFrenzyLevel() + 1);
 		PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(3, true, arcade.getFrenzyPoints()));
-		/**
-		 * 执行任务。
-		 * Runs the task.
-		 */
 		GameThreadPoolServices.threadPoolManager().schedule(() -> PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(player, 4, arcade.getFrenzyLevel())), 3000);
 	}
 
 	/**
 	 * getPlayFailedArcade 方法。
 	 * getPlayFailedArcade method.
-	 *
 	 * 玩家 / player
 	 * arcade
 	 */
 	public void getPlayFailedArcade(final Player player, final PlayerUpgradeArcade arcade) {
 		PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(3, false, arcade.getFrenzyPoints()));
-		/**
-		 * 执行任务。
-		 * Runs the task.
-		 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			 PacketSendUtility.sendPacket(player,
 					 new SM_UPGRADE_ARCADE(player, 5, arcade.isReTry() ? arcade.getFailedLevel() : 1));
 			 if (arcade.getFrenzyLevel() < 8 && !arcade.isReTry()) {
@@ -257,7 +238,6 @@ public class ArcadeUpgradeService {
 	/**
 	 * getFrenzyArcade 方法。
 	 * getFrenzyArcade method.
-	 *
 	 * 玩家 / player
 	 * arcade
 	 */
@@ -276,10 +256,7 @@ public class ArcadeUpgradeService {
 		// 升级狂热！ / Upgrade Frenzy!
 		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GACHA_FEVERTIME_START);
 		PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(7, frenzyTime, arcade.getFrenzyCount()));
-		/**
-		 * 执行任务。
-		 * Runs the task.
-		 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+        GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			 PlayerUpgradeArcade arcade1 = player.getUpgradeArcade();
 			 PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(7, 0, arcade1.getFrenzyCount()));
 			 player.getUpgradeArcade().setFrenzy(false);
@@ -296,7 +273,6 @@ public class ArcadeUpgradeService {
 	/**
 	 * getReward 方法。
 	 * getReward method.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void getReward(Player player) {

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Shugo Imperial Tomb 副本 NPC AI：Delighted Admirer（@AIName "Delighted_Admirer"），继承 GeneralNpcAI2。
  * Shugo Imperial Tomb instance NPC AI: Delighted Admirer (@AIName "Delighted_Admirer"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("Delighted_Admirer")

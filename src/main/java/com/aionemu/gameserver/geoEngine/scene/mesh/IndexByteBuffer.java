@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 基于 {@link ByteBuffer} 的无符号字节索引缓冲实现。
  * {@link IndexBuffer} implementation backed by an unsigned-byte {@link ByteBuffer}.
- *
  * @author lex
  */
 @AllArgsConstructor
@@ -19,7 +18,6 @@ public class IndexByteBuffer extends IndexBuffer {
 	/**
 	 * 读取无符号字节索引（0–255）。
 	 * Reads an unsigned-byte index (0–255).
-	 *
 	 * @param i 索引位置 / index position
 	 * @return 无符号索引值 / unsigned index value
 	 */
@@ -31,7 +29,6 @@ public class IndexByteBuffer extends IndexBuffer {
 	/**
 	 * 写入字节索引值。
 	 * Writes a byte index value.
-	 *
 	 * @param i 索引位置 / index position
 	 * @param value 索引值 / index value
 	 */
@@ -43,7 +40,6 @@ public class IndexByteBuffer extends IndexBuffer {
 	/**
 	 * 返回缓冲 limit（元素个数）。
 	 * Returns the buffer limit (element count).
-	 *
 	 * @return 元素个数 / element count
 	 */
 	@Override
@@ -54,7 +50,6 @@ public class IndexByteBuffer extends IndexBuffer {
 	/**
 	 * 返回底层字节缓冲。
 	 * Returns the underlying byte buffer.
-	 *
 	 * @return 底层字节缓冲 / byte buffer
 	 */
 	@Override

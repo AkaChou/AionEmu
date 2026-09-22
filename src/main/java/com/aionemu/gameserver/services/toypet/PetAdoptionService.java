@@ -18,7 +18,6 @@ public class PetAdoptionService {
 	/**
 	 * 使用宠物蛋领养宠物。
 	 * Adopt a pet using a pet egg item.
-	 *
 	 * 玩家 / Player
 	 * @param eggObjId 宠物蛋物品对象 ID / Egg item object id
 	 * @param petId 宠物模板 ID / Pet template id
@@ -44,7 +43,6 @@ public class PetAdoptionService {
 	/**
 	 * 向玩家宠物列表添加宠物，并在有限期时注册过期任务。
 	 * Add a pet to the player's pet list and register expire task when limited.
-	 *
 	 * 玩家 / Player
 	 * @param petId 宠物模板 ID / Pet template id
 	 * @param name 宠物名称 / Pet name
@@ -64,7 +62,6 @@ public class PetAdoptionService {
 	/**
 	 * 校验领养请求是否合法（模板、动作、是否已拥有等）。
 	 * Validate whether the adoption request is legal (template, action, ownership, etc.).
-	 *
 	 * @param player 玩家 / Player
 	 * @param template 宠物蛋物品模板 / Egg item template
 	 * @param petId 宠物模板 ID / Pet template id
@@ -84,7 +81,6 @@ public class PetAdoptionService {
 	/**
 	 * 放弃（删除）指定宠物；若当前已召唤则先解散。
 	 * Surrender (delete) the given pet; dismiss first if currently summoned.
-	 *
 	 * @param player 玩家 / Player
 	 * @param petId 宠物模板 ID / Pet template id
 	 */

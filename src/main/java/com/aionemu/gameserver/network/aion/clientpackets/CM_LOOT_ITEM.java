@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 拾取掉落物品的客户端包。
  * Client packet for looting a dropped item.
- *
  * @author alexa026, ATracer
  */
 public class CM_LOOT_ITEM extends AionClientPacket {
@@ -19,7 +18,6 @@ public class CM_LOOT_ITEM extends AionClientPacket {
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余合法状态 / additional valid states

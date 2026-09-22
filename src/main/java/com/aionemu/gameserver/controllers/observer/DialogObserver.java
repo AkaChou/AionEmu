@@ -7,7 +7,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * 对话距离观察者：玩家移出最大对话距离时回调。
  * Dialog distance observer: callback when the player moves beyond max dialog range.
- *
  * @author nrg
  */
 public abstract class DialogObserver extends ActionObserver {
@@ -41,7 +40,6 @@ public abstract class DialogObserver extends ActionObserver {
 	/**
 	 * 玩家距离对话对象过远时调用。
 	 * Called when the player is too far from the dialog-serving object.
-	 *
 	 * @param requester 对话请求方 / dialog requester
 	 * @param responder 对话响应玩家 / responder player
 	 */

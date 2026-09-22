@@ -17,7 +17,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 传送门/传送点 AI：Match Maker（@AIName "match_maker"），继承 GeneralNpcAI2。
  * Portal/teleporter AI: Match Maker (@AIName "match_maker"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("match_maker")

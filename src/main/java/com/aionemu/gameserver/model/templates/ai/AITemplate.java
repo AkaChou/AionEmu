@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 /**
  * AI 模板（静态数据/XML）。
  * AI Template (static data/XML).
- *
  * @author xTz
  */
 @Getter

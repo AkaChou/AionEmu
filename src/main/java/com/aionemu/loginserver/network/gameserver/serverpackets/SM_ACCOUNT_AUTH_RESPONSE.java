@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 /**
  * LS→GS：账号鉴权结果响应（含账号名、在线/休息时间、权限与货币信息）。
  * LS→GS: account authentication result response (account name, online/rest time, access and currency).
- *
  * @author -Nemesiss-
  */
 @AllArgsConstructor

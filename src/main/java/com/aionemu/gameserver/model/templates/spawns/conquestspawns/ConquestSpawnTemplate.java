@@ -10,7 +10,6 @@ import lombok.Setter;
 /**
  * 征服刷新点模板（静态数据/XML）。
  * Conquest spawn template (static data/XML).
- *
  * @author Rinzler (Encom)
  */
 
@@ -48,7 +47,6 @@ public class ConquestSpawnTemplate extends SpawnTemplate {
 	/**
 	 * 是否为征服和平状态。
 	 * Whether this is a conquest peace state.
-	 *
 	 * @return 征服和平状态则为 true / true if conquest peace
 	 */
 	public final boolean isConquestPeace() {

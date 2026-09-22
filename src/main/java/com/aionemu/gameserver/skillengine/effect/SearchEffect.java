@@ -17,7 +17,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 探查/识破效果：提升目标的可见状态，用于发现隐身单位。
  * Search effect: raises the target see-state so hidden units can be revealed.
- *
  * @author Sweetkr
  */
 @XmlAccessorType(XmlAccessType.FIELD)

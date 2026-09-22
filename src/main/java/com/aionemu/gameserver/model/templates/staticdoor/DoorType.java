@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * Door 类型枚举。
  * Door Type enumeration.
- *
  * @author Rolandas
  */
 @XmlType(name = "DoorType")

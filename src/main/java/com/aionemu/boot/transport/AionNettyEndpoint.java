@@ -34,7 +34,6 @@ public final class AionNettyEndpoint {
     /**
      * 创建端点描述。
      * Create an endpoint descriptor.
-     *
      * @param name 逻辑名称 / Logical name
      * @param host 绑定主机，{@code "*"} 表示任意地址 / Bind host, {@code "*"} for any address
      * @param port 绑定端口 / Bind port
@@ -47,7 +46,6 @@ public final class AionNettyEndpoint {
     /**
      * 解析为 {@link InetSocketAddress}；主机为 {@code "*"} 时仅绑定端口。
      * Resolve to {@link InetSocketAddress}; when host is {@code "*"}, bind port only.
-     *
      * @return 套接字地址 / Socket address
      */
     public InetSocketAddress getAddress() {

@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 活动事件 NPC AI：Lief（@AIName "lief"），继承 GeneralNpcAI2。
  * Event NPC AI: Lief (@AIName "lief"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("lief")

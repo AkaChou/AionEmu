@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 游戏服向聊天服发起认证的客户端包。
  * Client packet used by a game server to authenticate with the chat server.
- *
  * @author ATracer
  */
 @Slf4j
@@ -42,7 +41,6 @@ public class CM_CS_AUTH extends GsClientPacket {
     /**
      * 构造认证客户端包。
      * Constructs the authentication client packet.
-     *
      * @param buf 原始字节缓冲 / raw byte buffer
      * @param connection 所属游戏服连接 / owning game-server connection
      */

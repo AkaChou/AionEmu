@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * NPC 支援/增益 AI：Mighty Hero（@AIName "mighty"），继承 GeneralNpcAI2。
  * NPC support/buff AI: Mighty Hero (@AIName "mighty"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("mighty")

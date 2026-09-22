@@ -15,7 +15,6 @@ import java.util.Set;
 /**
  * 幸运奥菲丹桥副本事件处理器。
  * Instance event handler for Lucky Ophidan Bridge.
- *
  * @author Encom
  */
 
@@ -25,7 +24,6 @@ public class Lucky_OphidanBridgeInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -140,7 +138,6 @@ public class Lucky_OphidanBridgeInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc 目标 NPC / target NPC
 	 */
 	
@@ -201,7 +198,6 @@ public class Lucky_OphidanBridgeInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc 目标 NPC / target NPC
 	 */
 	@Override

@@ -8,7 +8,6 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 /**
  * 客户端举报玩家请求包（/ReportAutoHunting）。
  * Client packet for reporting a player via /ReportAutoHunting.
- *
  * @author Jego
  */
 public class CM_REPORT_PLAYER extends AionClientPacket {

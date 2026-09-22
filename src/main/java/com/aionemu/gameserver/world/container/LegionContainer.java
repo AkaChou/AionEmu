@@ -29,7 +29,6 @@ public class LegionContainer implements Iterable<Legion> {
 	/**
 	 * 添加军团；ID 或名称冲突时抛出 {@link DuplicateAionObjectException}。
 	 * Adds a legion; throws {@link DuplicateAionObjectException} on ID or name conflict.
-	 *
 	 * @param legion 待添加军团 / legion to add
 	 */
 	public synchronized void add(Legion legion) {
@@ -47,7 +46,6 @@ public class LegionContainer implements Iterable<Legion> {
 	/**
 	 * 从容器中移除军团。
 	 * Removes the legion from this container.
-	 *
 	 * @param legion 待移除军团 / legion to remove
 	 */
 	public synchronized void remove(Legion legion) {
@@ -58,7 +56,6 @@ public class LegionContainer implements Iterable<Legion> {
 	/**
 	 * 按军团 ID 查找。
 	 * Looks up a legion by ID.
-	 *
 	 * @param legionId 军团 ID / legion ID
 	 * @return 军团实例，不存在则返回 null / legion instance, or null if absent
 	 */
@@ -69,7 +66,6 @@ public class LegionContainer implements Iterable<Legion> {
 	/**
 	 * 按军团名称（忽略大小写）查找。
 	 * Looks up a legion by name (case-insensitive).
-	 *
 	 * @param name 军团名称 / legion name
 	 * @return 军团实例，不存在则返回 null / legion instance, or null if absent
 	 */
@@ -80,7 +76,6 @@ public class LegionContainer implements Iterable<Legion> {
 	/**
 	 * 返回所有军团的快照列表。
 	 * Returns a snapshot list of all legions.
-	 *
 	 * @return 军团列表副本 / copy of the legion list
 	 */
 	public synchronized List<Legion> getAllLegions() {
@@ -90,7 +85,6 @@ public class LegionContainer implements Iterable<Legion> {
 	/**
 	 * 是否包含指定 ID 的军团。
 	 * Whether a legion with the given ID is present.
-	 *
 	 * @param legionId 军团 ID / legion ID
 	 * @return 存在则为 true / true if present
 	 */
@@ -101,7 +95,6 @@ public class LegionContainer implements Iterable<Legion> {
 	/**
 	 * 是否包含指定名称（忽略大小写）的军团。
 	 * Whether a legion with the given name is present (case-insensitive).
-	 *
 	 * @param name 军团名称 / legion name
 	 * @return 存在则为 true / true if present
 	 */
@@ -112,7 +105,6 @@ public class LegionContainer implements Iterable<Legion> {
 	/**
 	 * 返回按 ID 索引的军团迭代器（快照）。
 	 * Returns an iterator over legions by ID (snapshot).
-	 *
 	 * @return 军团迭代器 / legion iterator
 	 */
 	@Override

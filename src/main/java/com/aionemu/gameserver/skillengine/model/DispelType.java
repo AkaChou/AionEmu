@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 驱散方式：按效果 ID、类型或槽位匹配驱散目标。
  * Dispel type: match dispel targets by effect id, type or slot.
- *
  * @author ATracer
  */
 @XmlType(name = "DispelType")
@@ -25,7 +24,6 @@ public enum DispelType {
 	/**
 	 * 返回枚举名（JAXB 值）。
 	 * Returns enum name (JAXB value).
-	 *
 	 */
 	public String value() {
 		return name();
@@ -34,7 +32,6 @@ public enum DispelType {
 	/**
 	 * 由字符串解析驱散方式。
 	 * Parses dispel type from string.
-	 *
 	 * @param v 名称 / name
 	 */
 	public static DispelType fromValue(String v) {

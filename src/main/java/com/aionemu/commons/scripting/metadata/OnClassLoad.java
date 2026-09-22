@@ -9,11 +9,9 @@ import java.lang.annotation.Target;
 /**
  * 类加载注解，用于标记在类加载时需要执行的方法
  * Class loading annotation, used to mark methods that need to be executed when a class is loaded
- *
  * 该注解只能应用于方法级别，在类加载时由类加载监听器调用被注解的方法
  * This annotation can only be applied at method level and the annotated method
  * will be called by class load listener when the class is loaded
- *
  * 使用要求:
  * Usage requirements:
  * 1. 只能注解静态方法

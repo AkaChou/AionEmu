@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 验证码（Captcha）下发与校验结果的服务端包。
  * Server packet for captcha delivery and verification results.
- *
  * @author Cura
  */
 public class SM_CAPTCHA extends AionServerPacket {
@@ -21,7 +20,6 @@ public class SM_CAPTCHA extends AionServerPacket {
 	/**
 	 * 下发验证码图片数据。
 	 * Delivers captcha image data to the client.
-	 *
 	 * @param count 剩余尝试次数 / remaining attempt count
 	 * @param data 验证码图片字节 / captcha image bytes
 	 */
@@ -35,7 +33,6 @@ public class SM_CAPTCHA extends AionServerPacket {
 	/**
 	 * 返回验证码校验结果与封禁时长。
 	 * Returns captcha verification result and ban duration.
-	 *
 	 * @param isCorrect 是否通过校验 / whether verification succeeded
 	 * @param banTime 错误时的封禁秒数 / ban duration in seconds on failure
 	 */

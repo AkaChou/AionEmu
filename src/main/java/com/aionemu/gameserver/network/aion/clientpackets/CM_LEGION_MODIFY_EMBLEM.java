@@ -10,7 +10,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 修改军团徽章颜色/类型的客户端包。
  * Client packet for modifying the legion emblem colors/type.
- *
  * @author Simple modified cura
  */
 public class CM_LEGION_MODIFY_EMBLEM extends AionClientPacket {
@@ -25,7 +24,6 @@ public class CM_LEGION_MODIFY_EMBLEM extends AionClientPacket {
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余合法状态 / additional valid states

@@ -49,7 +49,6 @@ public class AbyssService {
 	/**
 	 * 判断玩家是否位于欧比斯/PvP 地图列表中。
 	 * Whether the player is on a listed abyss/PvP map.
-	 *
 	 * @param player 玩家 / Player
 	 * @return 在列表内则为 {@code true} / {@code true} if on a listed map
 	 */
@@ -67,7 +66,6 @@ public class AbyssService {
 	/**
 	 * 向同地图其他玩家广播高军阶玩家被击杀。
 	 * Announce a high-rank player's death to others on the same map.
-	 *
 	 * @param victim 被击杀玩家 / Victim player
 	 */
 	public static final void rankedKillAnnounce(final Player victim) {
@@ -82,7 +80,6 @@ public class AbyssService {
 	/**
 	 * 向同世界类型非副本玩家广播欧比斯技能释放。
 	 * Announce abyss-skill cast to non-instance players of the same world type.
-	 *
 	 * @param player 施法玩家 / Caster
 	 * @param nameId 技能名称描述 ID / Skill name description id
 	 */

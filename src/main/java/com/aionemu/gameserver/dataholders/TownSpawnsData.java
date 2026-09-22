@@ -40,7 +40,6 @@ public class TownSpawnsData {
 	/**
 	 * 统计全部城镇刷怪点数量。
 	 * Counts the total number of town spawn entries.
-	 *
 	 * @return 刷怪点总数 / total spawn count
 	 */
 	public int getSpawnsCount() {
@@ -58,7 +57,6 @@ public class TownSpawnsData {
 	/**
 	 * 按城镇 ID 与等级获取刷怪列表。
 	 * Returns the spawn list for the given town id and level.
-	 *
 	 * @param townId 城镇 ID / town id
 	 * @param townLevel 城镇等级 / town level
 	 * @return 刷怪列表，不存在则为 null / spawn list or null
@@ -76,7 +74,6 @@ public class TownSpawnsData {
 	/**
 	 * 按城镇 ID 查询所属世界地图 ID。
 	 * Returns the world map id that contains the given town.
-	 *
 	 * @param townId 城镇 ID / town id
 	 * @return 地图 ID，未找到则为 0 / map id, or 0 if not found
 	 */

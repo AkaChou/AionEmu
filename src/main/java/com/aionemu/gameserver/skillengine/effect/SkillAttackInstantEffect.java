@@ -13,7 +13,6 @@ import lombok.Getter;
 /**
  * 技能物理攻击瞬发：立即造成物理技能伤害。
  * Instant skill attack: deals physical skill damage immediately.
- *
  * @author ATracer
  */
 @Getter

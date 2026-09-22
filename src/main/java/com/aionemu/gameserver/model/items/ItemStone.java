@@ -7,7 +7,6 @@ import lombok.Getter;
 /**
  * 物品 Stone 模型。
  * Item Stone model.
- *
  * @author ATracer modified by Wakizashi
  */
 @Getter
@@ -35,7 +34,6 @@ public class ItemStone implements StatOwner {
 	/**
 	 * 构造物品镶嵌石。
 	 * Constructs an item stone.
-	 *
 	 * @param itemObjId 物品对象 ID / item object id
 	 * @param itemId 镶嵌石模板 ID / stone template id
 	 * @param slot 槽位 / slot
@@ -51,7 +49,6 @@ public class ItemStone implements StatOwner {
 	/**
 	 * 设置槽位。
 	 * Sets the slot.
-	 *
 	 * @param slot 槽位 / slot to set
 	 */
 	public void setSlot(int slot) {
@@ -62,7 +59,6 @@ public class ItemStone implements StatOwner {
 	/**
 	 * 设置持久化状态（NEW 状态下不可降级为 DELETED）。
 	 * Sets the persistent state (NEW cannot be downgraded to DELETED).
-	 *
 	 * @param persistentState 持久化状态 / persistent state
 	 */
 	public void setPersistentState(PersistentState persistentState) {

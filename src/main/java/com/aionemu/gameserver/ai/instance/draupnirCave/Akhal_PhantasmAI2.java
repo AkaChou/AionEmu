@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 /**
  * Draupnir Cave 副本 NPC AI：Akhal Phantasm（@AIName "akhal_phantasm"），继承 NpcAI2。
  * Draupnir Cave instance NPC AI: Akhal Phantasm (@AIName "akhal_phantasm"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("akhal_phantasm")

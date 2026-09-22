@@ -15,7 +15,6 @@ public abstract class BrokerDAO implements IDFactoryAwareDAO {
 	/**
 	 * 加载全部交易行物品。
 	 * Loads all broker items.
-	 *
 	 * @return 交易行物品列表 / broker item list
 	 */
 	public abstract List<BrokerItem> loadBroker();
@@ -23,7 +22,6 @@ public abstract class BrokerDAO implements IDFactoryAwareDAO {
 	/**
 	 * 存储交易行物品。
 	 * Stores a broker item.
-	 *
 	 * @param brokerItem 交易行物品 / broker item
 	 * @return 是否成功 / whether successful
 	 */
@@ -36,7 +34,6 @@ public abstract class BrokerDAO implements IDFactoryAwareDAO {
 	/**
 	 * 购买前校验物品是否仍可购买。
 	 * Pre-buy check whether the item is still available.
-	 *
 	 * @param itemForCheck 待校验物品 ID / item ID to check
 	 * @return 是否可购买 / whether available for purchase
 	 */
@@ -45,7 +42,6 @@ public abstract class BrokerDAO implements IDFactoryAwareDAO {
 	/**
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier for this DAO.
-	 *
 	 * @return 类名 / class name
 	 */
 	@Override

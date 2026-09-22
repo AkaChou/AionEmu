@@ -6,7 +6,6 @@ import lombok.Getter;
 /**
  * 玩家联盟队伍，用于团队2相关逻辑。
  * Player Alliance Group for team 2 logic.
- *
  * @author ATracer
  */
 @Getter

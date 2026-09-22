@@ -16,7 +16,6 @@ final class ChatServerStartupSequence {
     /**
      * 按依赖契约执行完整启动步骤并记录耗时。
      * Run the full startup steps via the dependency contract and log elapsed time.
-     *
      * @param dependencies 启动依赖 / Startup dependencies
      */
     static void start(ChatServerDependencies dependencies) {

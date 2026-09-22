@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 管理员聊天命令，基于访问等级鉴权并可选记录 GM 审计日志。
  * Admin chat command with access-level checks and optional GM audit logging.
- *
  * @author synchro2
  */
 @Slf4j(topic = "ADMINAUDIT_LOG")
@@ -20,7 +19,6 @@ public abstract class AdminCommand extends ChatCommand {
 	/**
 	 * 以给定别名（可附带额外别名）构造管理员命令。
 	 * Construct an admin command with the given alias and optional additional aliases.
-	 *
 	 * @param alias 主别名 / Primary alias
 	 * @param alternateAliases 额外别名 / Additional aliases
 	 */
@@ -31,7 +29,6 @@ public abstract class AdminCommand extends ChatCommand {
 	/**
 	 * 校验玩家访问等级是否足够。
 	 * Check whether the player's access level is sufficient.
-	 *
 	 * @param player 玩家 / Player
 	 * @param alias 实际使用的别名 / Alias that was used
 	 * @return 有权限则为 true / True if allowed
@@ -45,7 +42,6 @@ public abstract class AdminCommand extends ChatCommand {
 	/**
 	 * 处理管理员命令：鉴权、拆分参数、执行并写审计日志。
 	 * Process an admin command: authorize, split args, execute and audit-log.
-	 *
 	 * 玩家 / Player
 	 * @param text 去掉前缀后的命令文本 / Command text without prefix
 	 * @return 是否已处理 / Whether handled

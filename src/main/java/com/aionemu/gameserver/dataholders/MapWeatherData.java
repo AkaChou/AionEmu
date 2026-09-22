@@ -17,7 +17,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 地图天气数据容器，按地图 ID 索引 {@link WeatherTable}。
  * Map weather data holder, indexing {@link WeatherTable} by map id.
- *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -47,7 +46,6 @@ public class MapWeatherData {
 	/**
 	 * 按地图 ID 获取天气表。
 	 * Returns the weather table for the given map id.
-	 *
 	 * @param mapId 地图 ID / map id
 	 * @return 天气表或 null / weather table or null
 	 */
@@ -58,7 +56,6 @@ public class MapWeatherData {
 	/**
 	 * 返回已加载的地图天气表数量。
 	 * Returns the number of loaded map weather tables.
-	 *
 	 * @return 天气表数量 / weather table count
 	 */
 	public int size() {

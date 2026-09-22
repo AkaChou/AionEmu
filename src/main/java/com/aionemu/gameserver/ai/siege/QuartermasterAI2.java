@@ -13,7 +13,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * 攻城战相关 NPC AI：Quartermaster（@AIName "quartermaster"），继承 GeneralNpcAI2。
  * Siege-related NPC AI: Quartermaster (@AIName "quartermaster"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("quartermaster")

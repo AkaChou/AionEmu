@@ -11,7 +11,6 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 道路控制器，管理玩家进入/离开道路区域时的观察者。
  * Road controller that manages observers when players enter or leave a road area.
- *
  * @author SheppeR
  */
 public class RoadController extends VisibleObjectController<Road> {
@@ -22,7 +21,6 @@ public class RoadController extends VisibleObjectController<Road> {
 	/**
 	 * 玩家进入道路可视范围时注册观察者。
 	 * Registers an observer when a player enters the road's visibility range.
-	 *
 	 * @param object 进入视野的可见对象 / the visible object entering sight
 	 */
 	@Override
@@ -36,7 +34,6 @@ public class RoadController extends VisibleObjectController<Road> {
 	/**
 	 * 玩家离开道路可视范围时移除观察者。
 	 * Removes the observer when a player leaves the road's visibility range.
-	 *
 	 * @param object 离开视野的可见对象 / the visible object leaving sight
 	 * @param isOutOfRange 是否因超出距离离开 / whether the leave is due to being out of range
 	 */

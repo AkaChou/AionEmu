@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 装备类型：防具/武器/烙印之石/时装/饰品。
  * Equip type: armor/weapon/stigma/estima/accessory.
- *
  * @author ATracer
  */
 @XmlType(name = "equipType")

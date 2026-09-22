@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * ID Ab1 Heroes 副本 NPC AI：ID Ab1 Heroes Boss 73 Ah（@AIName "IDAb1_Heroes_Boss_73_Ah"），继承 AggressiveNpcAI2。
  * ID Ab1 Heroes instance NPC AI: ID Ab1 Heroes Boss 73 Ah (@AIName "IDAb1_Heroes_Boss_73_Ah"), extends AggressiveNpcAI2.
- *
  * @author Rinzler
  * @author Ranastic (Encom)
  */

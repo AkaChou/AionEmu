@@ -17,7 +17,6 @@ import java.util.concurrent.Future;
 /**
  * 随从/召唤物 AI：跟随主人并协助战斗。
  * Servant/summon AI that follows its master and assists in combat.
- *
  * @author Encom
  */
 @AIName("servant")

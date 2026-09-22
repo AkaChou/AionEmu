@@ -19,7 +19,6 @@ public class ConvertHealEffect extends ShieldEffect {
 	/**
 	 * 注册攻击护盾观察者，将伤害转化为治疗。
 	 * Registers an attack-shield observer that converts damage into heal.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -37,7 +36,6 @@ public class ConvertHealEffect extends ShieldEffect {
 	/**
 	 * 返回护盾类型标识。
 	 * Returns the shield type id.
-	 *
 	 * @return 类型标识 / type id
 	 */
 	public int getType() {

@@ -17,7 +17,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 服务加成数据容器，按 buffId 索引 BonusServiceAttr。
  * Service bonus data holder, indexing BonusServiceAttr by buff id.
- *
  * @author Ranastic (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -45,7 +44,6 @@ public class ServiceBuffData {
 	/**
 	 * 返回已加载的加成模板数量。
 	 * Returns the number of loaded bonus templates.
-	 *
 	 * @return 已加载的加成模板数量 / Returns the number of loaded bonus templates.
 	 */
 	public int size() {
@@ -55,7 +53,6 @@ public class ServiceBuffData {
 	/**
 	 * 按增益 ID 获取服务加成属性。
 	 * Returns the service bonus attribute for the given buff id.
-	 *
 	 * @param buffId 增益 ID / buff id
 	 * @return 加成属性，不存在则为 null / bonus attribute or null
 	 */

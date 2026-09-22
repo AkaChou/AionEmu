@@ -16,7 +16,6 @@ import lombok.Getter;
 /**
  * 游戏内一张地图及其全部实例的容器。
  * Container for one in-game map and all of its instances.
- *
  * @author -Nemesiss-
  */
 @Getter
@@ -41,7 +40,6 @@ public class WorldMap {
 	/**
 	 * 根据模板创建地图并初始化默认/双生实例。
 	 * Create a map from template and initialize default/twin instances.
-	 *
 	 * @param worldMapTemplate 地图模板 / the map template
 	 * @param world 所属世界 / owning world
 	 */
@@ -64,7 +62,6 @@ public class WorldMap {
 	/**
 	 * 地图名称。
 	 * Map name.
-	 *
 	 * @return 地图名称 / the name
 	 */
 	public String getName() {
@@ -74,7 +71,6 @@ public class WorldMap {
 	/**
 	 * 水位高度。
 	 * Water level height.
-	 *
 	 * @return 水位高度 / the water level
 	 */
 	public int getWaterLevel() {
@@ -84,7 +80,6 @@ public class WorldMap {
 	/**
 	 * 坠落死亡高度。
 	 * Death-fall height.
-	 *
 	 * @return 坠落死亡高度 / the death level
 	 */
 	public int getDeathLevel() {
@@ -94,7 +89,6 @@ public class WorldMap {
 	/**
 	 * 世界大类。
 	 * World type category.
-	 *
 	 * @return {@link WorldType}
 	 */
 	public WorldType getWorldType() {
@@ -104,7 +98,6 @@ public class WorldMap {
 	/**
 	 * 世界尺寸（边长）。
 	 * World size (edge length).
-	 *
 	 * @return 世界尺寸 / the size
 	 */
 	public int getWorldSize() {
@@ -114,7 +107,6 @@ public class WorldMap {
 	/**
 	 * 地图 ID。
 	 * Map id.
-	 *
 	 * @return 地图 ID / the map id
 	 */
 	public Integer getMapId() {
@@ -124,7 +116,6 @@ public class WorldMap {
 	/**
 	 * 是否允许飞行。
 	 * Whether flying is allowed.
-	 *
 	 * @return 允许飞行则为 true / true if flying allowed
 	 */
 	public boolean isPossibleFly() {
@@ -134,7 +125,6 @@ public class WorldMap {
 	/**
 	 * 是否排除 Buff 效果。
 	 * Whether buffs are excluded.
-	 *
 	 * @return 排除 Buff 则为 true / true if buffs are excluded
 	 */
 	public boolean isExceptBuff() {
@@ -144,7 +134,6 @@ public class WorldMap {
 	/**
 	 * 是否允许滑翔。
 	 * Whether gliding is allowed.
-	 *
 	 * @return 允许滑翔则为 true / true if gliding allowed
 	 */
 	public boolean canGlide() {
@@ -154,7 +143,6 @@ public class WorldMap {
 	/**
 	 * 是否允许放置 Kisk。
 	 * Whether placing a kisk is allowed.
-	 *
 	 * @return 允许放置 Kisk 则为 true / true if kisk placement allowed
 	 */
 	public boolean canPutKisk() {
@@ -164,7 +152,6 @@ public class WorldMap {
 	/**
 	 * 是否允许召回。
 	 * Whether recall is allowed.
-	 *
 	 * @return 允许召回则为 true / true if recall allowed
 	 */
 	public boolean canRecall() {
@@ -174,7 +161,6 @@ public class WorldMap {
 	/**
 	 * 是否允许骑乘。
 	 * Whether riding is allowed.
-	 *
 	 * @return 允许骑乘则为 true / true if riding allowed
 	 */
 	public boolean canRide() {
@@ -184,7 +170,6 @@ public class WorldMap {
 	/**
 	 * 是否允许飞行骑乘。
 	 * Whether fly-ride is allowed.
-	 *
 	 * @return 允许飞行骑乘 / fly-ride allowed
 	 */
 	public boolean canFlyRide() {
@@ -194,7 +179,6 @@ public class WorldMap {
 	/**
 	 * 是否允许 PvP。
 	 * Whether PvP is allowed.
-	 *
 	 * @return 允许 PvP 则为 true / true if PvP allowed
 	 */
 	public boolean isPvpAllowed() {
@@ -204,7 +188,6 @@ public class WorldMap {
 	/**
 	 * 是否允许同种族决斗。
 	 * Whether same-race duels are allowed.
-	 *
 	 * @return 允许同族决斗 / same-race duel allowed
 	 */
 	public boolean isSameRaceDuelsAllowed() {
@@ -214,7 +197,6 @@ public class WorldMap {
 	/**
 	 * 是否允许异种族决斗。
 	 * Whether other-race duels are allowed.
-	 *
 	 * @return 允许异族决斗 / other-race duel allowed
 	 */
 	public boolean isOtherRaceDuelsAllowed() {
@@ -224,7 +206,6 @@ public class WorldMap {
 	/**
 	 * 开启一项世界选项。
 	 * Enable a world option flag.
-	 *
 	 * @param option 世界选项 / the world option
 	 */
 	public void setWorldOption(ZoneAttributes option) {
@@ -234,7 +215,6 @@ public class WorldMap {
 	/**
 	 * 关闭一项世界选项。
 	 * Disable a world option flag.
-	 *
 	 * @param option 世界选项 / the world option
 	 */
 	public void removeWorldOption(ZoneAttributes option) {
@@ -244,7 +224,6 @@ public class WorldMap {
 	/**
 	 * 判断运行时选项是否相对模板发生了覆盖。
 	 * Whether the runtime option differs from the template flag.
-	 *
 	 * @param option 世界选项 / the world option
 	 * @return 已覆盖返回 true / true if overridden
 	 */
@@ -258,7 +237,6 @@ public class WorldMap {
 	/**
 	 * 配置的实例（双生）数量。
 	 * Configured instance (twin) count.
-	 *
 	 * @return 配置的实例数量 / the instance count
 	 */
 	public int getInstanceCount() {
@@ -269,7 +247,6 @@ public class WorldMap {
 	/**
 	 * 返回主实例（当前固定取 instanceId=1）。
 	 * Return the main instance (currently always instanceId=1).
-	 *
 	 * @return 主地图实例 / main world map instance
 	 */
 	public WorldMapInstance getMainWorldMapInstance() {
@@ -279,7 +256,6 @@ public class WorldMap {
 	/**
 	 * 按实例 ID 返回实例；双生数量校验失败时抛异常。
 	 * Return instance by id; throws if id exceeds twin count.
-	 *
 	 * @param instanceId 实例 ID / the instance id
 	 * @return 世界地图实例 / the world map instance
 	 */
@@ -296,7 +272,6 @@ public class WorldMap {
 	/**
 	 * 按实例 ID 取实例；0 视为 1。
 	 * Get instance by id; 0 is treated as 1.
-	 *
 	 * @param instanceId 实例 ID / the instance id
 	 * @return 世界地图实例 / the world map instance
 	 */
@@ -311,7 +286,6 @@ public class WorldMap {
 	/**
 	 * 按实例 ID 移除实例；0 视为 1。
 	 * Remove instance by id; 0 is treated as 1.
-	 *
 	 * @param instanceId 实例 ID / the instance id
 	 */
 	public void removeWorldMapInstance(int instanceId) {
@@ -325,7 +299,6 @@ public class WorldMap {
 	/**
 	 * 将实例加入本地图；0 视为 1。
 	 * Add an instance to this map; 0 is treated as 1.
-	 *
 	 * @param instanceId 实例 ID / the instance id
 	 * @param instance 地图实例 / the map instance
 	 */
@@ -340,7 +313,6 @@ public class WorldMap {
 	/**
 	 * 返回地图模板。
 	 * Return the map template.
-	 *
 	 * @return 地图模板 / the map template
 	 */
 	public final WorldMapTemplate getTemplate() {
@@ -350,7 +322,6 @@ public class WorldMap {
 	/**
 	 * 分配并返回下一个实例 ID。
 	 * Allocate and return the next instance id.
-	 *
 	 * @return 新实例 ID / the new instance id
 	 */
 	public int getNextInstanceId() {
@@ -360,7 +331,6 @@ public class WorldMap {
 	/**
 	 * 是否副本类型地图。
 	 * Whether this is an instance-type map.
-	 *
 	 * @return 副本地图为 true / true if instance type
 	 */
 	public boolean isInstanceType() {
@@ -370,7 +340,6 @@ public class WorldMap {
 	/**
 	 * 实例迭代器。
 	 * Iterator over instances.
-	 *
 	 * @return 实例迭代器 / the iterator
 	 */
 	public Iterator<WorldMapInstance> iterator() {
@@ -380,7 +349,6 @@ public class WorldMap {
 	/**
 	 * 当前全部可用实例 ID。
 	 * All currently available instance ids.
-	 *
 	 * @return 实例 ID 集合 / the instance id collection
 	 */
 	public Collection<Integer> getAvailableInstanceIds() {
@@ -392,7 +360,6 @@ public class WorldMap {
 	/**
 	 * 当前全部实例快照。
 	 * Snapshot of all current instances.
-	 *
 	 * @return 全部实例集合 / the instance collection
 	 */
 	public Collection<WorldMapInstance> getInstances() {
@@ -402,7 +369,6 @@ public class WorldMap {
 	/**
 	 * 掉落区域类型。
 	 * World drop type.
-	 *
 	 * @return {@link WorldDropType}
 	 */
 	public WorldDropType getWorldDropType() {
@@ -412,7 +378,6 @@ public class WorldMap {
 	/**
 	 * 实例值快照。
 	 * Snapshot of instance values.
-	 *
 	 * @return 实例列表 / the instance list
 	 */
 	private List<WorldMapInstance> instancesSnapshot() {

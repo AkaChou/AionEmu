@@ -22,7 +22,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Ophidan Bridge 副本 NPC AI：Fugitive Mazikin（@AIName "fugitive_mazikin"），继承 GeneralNpcAI2。
  * Ophidan Bridge instance NPC AI: Fugitive Mazikin (@AIName "fugitive_mazikin"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("fugitive_mazikin")

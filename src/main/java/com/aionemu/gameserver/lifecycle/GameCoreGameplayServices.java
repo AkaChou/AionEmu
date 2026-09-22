@@ -80,7 +80,6 @@ public final class GameCoreGameplayServices implements DisposableBean {
     /**
      * 构造并注册各核心玩法服务的静态访问器。
      * Construct and register static accessors for core gameplay services.
-     *
      * @param dropServiceProvider 掉落服务提供者 / Drop service provider
      * @param mailServiceProvider 邮件服务提供者 / Mail service provider
      * @param pvpServiceProvider PvP 服务提供者 / PvP service provider
@@ -123,7 +122,6 @@ public final class GameCoreGameplayServices implements DisposableBean {
     /**
      * 获取掉落服务。
      * Obtain the drop service.
-     *
      * @return 服务实例 / Service instance
      */
     public static DropService dropService() {
@@ -141,7 +139,6 @@ public final class GameCoreGameplayServices implements DisposableBean {
     /**
      * 获取邮件服务。
      * Obtain the mail service.
-     *
      * @return 服务实例 / Service instance
      */
     public static MailService mailService() {
@@ -159,7 +156,6 @@ public final class GameCoreGameplayServices implements DisposableBean {
     /**
      * 获取 PvP 服务。
      * Obtain the PvP service.
-     *
      * @return 服务实例 / Service instance
      */
     public static PvpService pvpService() {
@@ -177,7 +173,6 @@ public final class GameCoreGameplayServices implements DisposableBean {
     /**
      * 获取欧比斯排名缓存。
      * Obtain the abyss ranking cache.
-     *
      * @return 缓存实例 / Cache instance
      */
     public static AbyssRankingCache abyssRankingCache() {
@@ -195,7 +190,6 @@ public final class GameCoreGameplayServices implements DisposableBean {
     /**
      * 获取军团服务。
      * Obtain the legion service.
-     *
      * @return 服务实例 / Service instance
      */
     public static LegionService legionService() {
@@ -213,7 +207,6 @@ public final class GameCoreGameplayServices implements DisposableBean {
     /**
      * 获取自动组队服务。
      * Obtain the auto-group service.
-     *
      * @return 服务实例 / Service instance
      */
     public static AutoGroupService autoGroupService() {
@@ -231,7 +224,6 @@ public final class GameCoreGameplayServices implements DisposableBean {
     /**
      * 获取龙族袭击服务。
      * Obtain the Balaur assault service.
-     *
      * @return 服务实例 / Service instance
      */
     public static BalaurAssaultService balaurAssaultService() {
@@ -249,7 +241,6 @@ public final class GameCoreGameplayServices implements DisposableBean {
     /**
      * 获取战场联盟服务。
      * Obtain the battlefield union service.
-     *
      * @return 服务实例 / Service instance
      */
     public static BattlefieldUnionService battlefieldUnionService() {

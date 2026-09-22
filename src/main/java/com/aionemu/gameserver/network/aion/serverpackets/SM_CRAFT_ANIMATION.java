@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 制作动画包：广播施法者、工作台目标、技能与动作阶段。
  * Server packet for craft animation: caster, workbench target, skill and action phase.
- *
  * @author Mr. Poke
  */
 @AllArgsConstructor

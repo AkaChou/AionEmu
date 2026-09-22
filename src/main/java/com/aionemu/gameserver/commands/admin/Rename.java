@@ -23,7 +23,6 @@ import java.util.Iterator;
 /**
  * 角色改名指令；校验名称后重命名目标或指定玩家，并同步好友与军团。
  * Admin command that renames a targeted or named player after validation, syncing friends and legion.
- *
  * @author xTz
  */
 public class Rename extends AdminCommand {
@@ -35,7 +34,6 @@ public class Rename extends AdminCommand {
 	/**
 	 * 执行该管理指令。
 	 * Executes this admin command.
-	 *
 	 * @param admin 执行指令的管理员 / admin executing the command
 	 */
 	@Override
@@ -123,7 +121,6 @@ public class Rename extends AdminCommand {
 	/**
 	 * 向好友、军团与双方发送改名后的信息同步包。
 	 * Broadcasts post-rename info packets to friends, legion and both players.
-	 *
 	 * @param admin 执行改名的管理员 / admin who performed the rename
 	 * @param player 被改名的玩家 / renamed player
 	 */
@@ -147,7 +144,6 @@ public class Rename extends AdminCommand {
 	/**
 	 * 参数错误时输出用法。
 	 * Prints usage when arguments are invalid.
-	 *
 	 * @param player 接收提示的玩家 / player receiving the message
 	 */
 	@Override

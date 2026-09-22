@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Beshmundir Temple 副本 NPC AI：Grave Slime（@AIName "grave_slime"），继承 AggressiveNpcAI2。
  * Beshmundir Temple instance NPC AI: Grave Slime (@AIName "grave_slime"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("grave_slime")

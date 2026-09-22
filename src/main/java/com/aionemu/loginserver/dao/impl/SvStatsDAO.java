@@ -12,7 +12,6 @@ import com.aionemu.commons.database.DatabaseFactory;
 /**
  * 服务器在线统计 DAO 的 MySQL 8 实现。
  * MySQL 8 SvStatsDAO implementation (server online statistics).
- *
  * @author Updated for MySQL 8
  */
 @Slf4j
@@ -48,7 +47,6 @@ public class SvStatsDAO extends com.aionemu.loginserver.dao.SvStatsDAO {
     /**
      * 插入新的服务器统计行（更新未命中时调用）。
      * Inserts a new server stats row when update hits zero rows.
-     *
      * server id
      * status
      * current online

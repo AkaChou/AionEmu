@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.loginserver.LsServerPacket;
 /**
  * 游戏服向登录服同步当前已登录账号列表的服务端包。
  * Server packet that sends the list of currently logged-in accounts to the login server.
- *
  * @author SoulKeeper
  */
 public class SM_ACCOUNT_LIST extends LsServerPacket {
@@ -23,7 +22,6 @@ public class SM_ACCOUNT_LIST extends LsServerPacket {
 	/**
 	 * 构造已登录账号列表包。
 	 * Constructs a new logged-in account list packet.
-	 *
 	 * @param accounts 在线账号连接映射 / online account connection map
 	 */
 	public SM_ACCOUNT_LIST(Map<Integer, AionConnection> accounts) {

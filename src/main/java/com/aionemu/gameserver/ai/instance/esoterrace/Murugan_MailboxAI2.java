@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Esoterrace 副本 NPC AI：Murugan Mailbox（@AIName "murugan_mailbox"），继承 NpcAI2。
  * Esoterrace instance NPC AI: Murugan Mailbox (@AIName "murugan_mailbox"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("murugan_mailbox")

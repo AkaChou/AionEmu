@@ -16,7 +16,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * 房屋相关 NPC AI：Studio Portal（@AIName "studioportal"），继承 ActionItemNpcAI2。
  * Housing-related NPC AI: Studio Portal (@AIName "studioportal"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("studioportal")
@@ -26,13 +25,9 @@ public class StudioPortalAI2 extends ActionItemNpcAI2
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		return true;
 	}
-	
+
 	@Override
-	/**
-	 * 使用工作室传送门：将玩家传送进工作室，或从工作室内部返回其出口区域。
-	 * Uses the studio portal: teleports the player into the studio, or back to its exit area when already inside.
-	 */
-	protected void handleUseItemFinish(Player player) {
+    protected void handleUseItemFinish(Player player) {
 		int ownerId = player.getPosition().getWorldMapInstance().getOwnerId();
 		House studio = GameHousingServices.housingService().getPlayerStudio(player.getObjectId());
 		if (studio == null && ownerId == 0) {

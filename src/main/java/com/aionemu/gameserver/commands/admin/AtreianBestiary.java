@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 管理员亚特雷亚图鉴命令：为管理员增加指定 NPC 的图鉴击杀计数。
  * Admin Atreian Bestiary command: adds a bestiary kill count for a given NPC.
- *
  * @author Ranastic
  */
 public class AtreianBestiary extends AdminCommand {
@@ -27,7 +26,6 @@ public class AtreianBestiary extends AdminCommand {
 	/**
 	 * 执行图鉴击杀：校验模板后增加击杀计数。
 	 * Executes bestiary kill: validates the template then increments kill count.
-	 *
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -49,7 +47,6 @@ public class AtreianBestiary extends AdminCommand {
 	/**
 	 * 参数错误时输出 {@code //bestiary} 用法。
 	 * Prints {@code //bestiary} usage on invalid arguments.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

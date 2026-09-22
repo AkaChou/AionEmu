@@ -16,7 +16,6 @@ import lombok.AllArgsConstructor;
 /**
  * 玩家开始指导事件（团队2）。
  * Player Start Mentoring Event for team 2 logic.
- *
  * @author ATracer
  */
 @AllArgsConstructor

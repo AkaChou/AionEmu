@@ -24,7 +24,6 @@ import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 /**
  * 通过调用方事务持久化规范任务投影，不提前推进实时内存状态。
  * Persists the canonical quest projection through the caller-owned transaction without advancing live memory.
- *
  * <p>{@link #apply} 先写入暂存 {@link QuestState}，因此提交失败不会让玩家内存状态领先数据库；
  * {@link #publish} 仅在事务提交后原子发布到实时状态并标记为已持久化。
  * {@link #apply} first writes a staged {@link QuestState}; {@link #publish} atomically publishes it only after commit.</p>

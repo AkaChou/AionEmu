@@ -11,7 +11,6 @@ import java.sql.*;
 /**
  * 玩家变身 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerTransformDAO.
- *
  * Updated for MySQL 8.
  */
 @Slf4j
@@ -32,7 +31,6 @@ public class PlayerTransfoDAO extends PlayerTransformDAO {
     /**
      * 加载玩家变身数据。
      * Loads player transform data.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -60,7 +58,6 @@ public class PlayerTransfoDAO extends PlayerTransformDAO {
     /**
      * 保存玩家变身数据。
      * Stores player transform data.
-     *
      * @param playerId 玩家 ID / player id
      * @param panelId 面板 ID / panel id
      * @param itemId 物品 ID / item id
@@ -87,7 +84,6 @@ public class PlayerTransfoDAO extends PlayerTransformDAO {
     /**
      * 删除玩家变身数据。
      * Deletes player transform data.
-     *
      * @param playerId 玩家 ID / player id
      * @return 是否成功 / whether successful
      */
@@ -110,7 +106,6 @@ public class PlayerTransfoDAO extends PlayerTransformDAO {
     /**
      * 更新玩家变身数据；若无记录则插入。
      * Updates player transform data; inserts if no row exists.
-     *
      * @param playerId 玩家 ID / player id
      * @param panelId 面板 ID / panel id
      * @param itemId 物品 ID / item id
@@ -141,7 +136,6 @@ public class PlayerTransfoDAO extends PlayerTransformDAO {
     /**
      * 保存玩家当前变身模型状态。
      * Saves the player's current transform model state.
-     *
      * @param player 玩家 / player
      * @return 是否成功 / whether successful
      */
@@ -159,7 +153,6 @@ public class PlayerTransfoDAO extends PlayerTransformDAO {
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

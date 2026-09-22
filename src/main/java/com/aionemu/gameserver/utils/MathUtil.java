@@ -22,7 +22,6 @@ public class MathUtil {
 	/**
 	 * 计算两点（2D 模板点）的欧氏距离。
 	 * Compute Euclidean distance between two 2D template points.
-	 *
 	 * @param point1 点 1 / Point 1
 	 * @param point2 点 2 / Point 2
 	 * @return 距离 / Distance
@@ -34,7 +33,6 @@ public class MathUtil {
 	/**
 	 * 计算二维坐标欧氏距离。
 	 * Compute 2D Euclidean distance.
-	 *
 	 * @param x1 点 1 的 X / X of point 1
 	 * @param y1 点 1 的 Y / Y of point 1
 	 * @param x2 点 2 的 X / X of point 2
@@ -50,7 +48,6 @@ public class MathUtil {
 	/**
 	 * 计算两点（3D）的欧氏距离；任一点为 null 时返回 0。
 	 * Compute 3D Euclidean distance; returns 0 if either point is null.
-	 *
 	 * @param point1 点 1 / Point 1
 	 * @param point2 点 2 / Point 2
 	 * @return 距离 / Distance
@@ -65,7 +62,6 @@ public class MathUtil {
 	/**
 	 * 计算三维坐标欧氏距离。
 	 * Compute 3D Euclidean distance.
-	 *
 	 * @param x1 点 1 的 X / X of point 1
 	 * @param y1 点 1 的 Y / Y of point 1
 	 * @param z1 点 1 的 Z / Z of point 1
@@ -84,7 +80,6 @@ public class MathUtil {
 	/**
 	 * 计算可见对象到目标坐标的 3D 距离。
 	 * Compute 3D distance from a visible object to a target position.
-	 *
 	 * @param object 可见对象 / Visible object
 	 * @param x 目标 X / Target X
 	 * @param y 目标 Y / Target Y
@@ -98,7 +93,6 @@ public class MathUtil {
 	/**
 	 * 计算两个可见对象之间的 3D 距离。
 	 * Compute 3D distance between two visible objects.
-	 *
 	 * @param object 对象 1 / Object 1
 	 * @param object2 对象 2 / Object 2
 	 * @return 距离 / Distance
@@ -110,7 +104,6 @@ public class MathUtil {
 	/**
 	 * 获取点到线段最近点（AWT Point 版本）。
 	 * Closest point on a segment to a given point (AWT Point version).
-	 *
 	 * @param ss 线段起点 / Segment start
 	 * @param se 线段终点 / Segment end
 	 * @param p 查询点 / Query point
@@ -123,7 +116,6 @@ public class MathUtil {
 	/**
 	 * 获取点到线段最近点（浮点坐标）。
 	 * Closest point on a segment to a given point (float coordinates).
-	 *
 	 * @param sx1 线段起点 X / Segment start X
 	 * @param sy1 线段起点 Y / Segment start Y
 	 * @param sx2 线段终点 X / Segment end X
@@ -154,7 +146,6 @@ public class MathUtil {
 	/**
 	 * 点到线段的距离（AWT Point 版本）。
 	 * Distance from a point to a segment (AWT Point version).
-	 *
 	 * @param ss 线段起点 / Segment start
 	 * @param se 线段终点 / Segment end
 	 * @param p 查询点 / Query point
@@ -167,7 +158,6 @@ public class MathUtil {
 	/**
 	 * 点到线段的距离（整型坐标）。
 	 * Distance from a point to a segment (integer coordinates).
-	 *
 	 * @param sx1 线段起点 X / Segment start X
 	 * @param sy1 线段起点 Y / Segment start Y
 	 * @param sx2 线段终点 X / Segment end X
@@ -184,7 +174,6 @@ public class MathUtil {
 	/**
 	 * 判断两对象是否在同一世界/实例且 2D 距离小于 range。
 	 * Whether two objects share world/instance and are within 2D range.
-	 *
 	 * @param object1 对象 1 / Object 1
 	 * @param object2 对象 2 / Object 2
 	 * @param range 范围半径 / Range radius
@@ -202,7 +191,6 @@ public class MathUtil {
 	/**
 	 * 判断两对象是否在同一世界/实例且 3D 距离小于 range。
 	 * Whether two objects share world/instance and are within 3D range.
-	 *
 	 * @param object1 对象 1 / Object 1
 	 * @param object2 对象 2 / Object 2
 	 * @param range 范围半径 / Range radius
@@ -221,12 +209,10 @@ public class MathUtil {
 	/**
 	 * 判断两对象 3D 距离是否落在 [minRange, maxRange) 区间。
 	 * Whether 3D distance between two objects is in [minRange, maxRange).
-	 *
 	 * @param object1 对象 1 / Object 1
 	 * @param object2 对象 2 / Object 2
 	 * @param minRange 最小范围 / Minimum range
 	 * @param maxRange 最大范围 / Maximum range
-	 *
 	 * @return 在区间内返回 true / True if within the band
 	 */
 	public static boolean isIn3dRangeLimited(VisibleObject object1, VisibleObject object2, float minRange,
@@ -243,7 +229,6 @@ public class MathUtil {
 	/**
 	 * 判断两组 3D 坐标是否在给定半径内。
 	 * Whether two 3D positions are within the given radius.
-	 *
 	 * @param obj1X Object 1 X / Object 1 X
 	 * @param obj1Y Object 1 Y / Object 1 Y
 	 * @param obj1Z Object 1 Z / Object 1 Z
@@ -264,13 +249,11 @@ public class MathUtil {
 	/**
 	 * 判断可见对象是否在以中心点为球心的球体内。
 	 * Whether a visible object lies inside a sphere.
-	 *
 	 * @param obj 对象 / Object
 	 * @param centerX 球心 X / Sphere center X
 	 * @param centerY 球心 Y / Sphere center Y
 	 * @param centerZ 球心 Z / Sphere center Z
 	 * @param radius 半径 / Radius
-	 *
 	 * @return 在球内返回 true / True if inside the sphere
 	 */
 	public static boolean isInSphere(final VisibleObject obj, final float centerX, final float centerY,
@@ -284,7 +267,6 @@ public class MathUtil {
 	/**
 	 * 计算从 (obj1X, obj1Y) 指向 (obj2X, obj2Y) 的角度（度，0–360）。
 	 * Angle in degrees from (obj1X, obj1Y) toward (obj2X, obj2Y), range 0–360.
-	 *
 	 * @param obj1X 原点 X / Origin X
 	 * @param obj1Y 原点 Y / Origin Y
 	 * @param obj2X 目标 X / Target X
@@ -302,7 +284,6 @@ public class MathUtil {
 	/**
 	 * 计算从 obj1 指向 obj2 的角度（度）。
 	 * Angle in degrees from obj1 toward obj2.
-	 *
 	 * @param obj1 起点对象 / Origin object
 	 * @param obj2 终点对象 / Target object
 	 * @return 角度（度） / Angle in degrees
@@ -314,7 +295,6 @@ public class MathUtil {
 	/**
 	 * 将客户端 Heading（0–120）转换为角度（度）。
 	 * Convert client heading (0–120) to degrees.
-	 *
 	 * @param clientHeading 客户端朝向 / Client heading
 	 * @return 度 / Degrees
 	 */
@@ -328,7 +308,6 @@ public class MathUtil {
 	 * Estimate heading from obj1 toward obj2.
 	 * 使用菱形角度算法优化计算性能。
 	 * Uses diamond-angle approximation for performance.
-	 *
 	 * @param obj1 起点对象 / Origin object
 	 * @param obj2 终点对象 / Target object
 	 * @return Estimated heading (0–120) / Estimated heading (0–120)
@@ -342,7 +321,6 @@ public class MathUtil {
 	 * Estimate heading from coordinate deltas.
 	 * 使用菱形角度算法优化计算性能。
 	 * Uses diamond-angle approximation for performance.
-	 *
 	 * @param deltaX X 增量 / X delta
 	 * @param deltaY Y 增量 / Y delta
 	 * @return Estimated heading (0–120) / Estimated heading (0–120)
@@ -356,7 +334,6 @@ public class MathUtil {
 	 * Diamond-angle algorithm.
 	 * 用于高效近似 atan2，避免耗时三角函数；结果与标准 atan2 一致量级。
 	 * Efficient atan2 approximation without expensive trig; consistent with atan2 scale.
-	 *
 	 * @param x X 坐标差值 / X delta
 	 * @param y Y 坐标差值 / Y delta
 	 * @return 角度值 (0–3 范围) / Angle value in range 0–3
@@ -372,7 +349,6 @@ public class MathUtil {
 	/**
 	 * 将角度（度）转换为客户端 Heading。
 	 * Convert degrees to client heading.
-	 *
 	 * @param angle 角度（度） / Angle in degrees
 	 * @return 朝向值 / Heading value
 	 */
@@ -383,13 +359,11 @@ public class MathUtil {
 	/**
 	 * 判断对象是否接近目标坐标（含移动检测偏移）。
 	 * Whether an object is near a target position (includes move-check offset).
-	 *
 	 * @param obj 对象 / Object
 	 * @param x 目标 X / Target X
 	 * @param y 目标 Y / Target Y
 	 * @param z 目标 Z / Target Z
 	 * @param offset 额外偏移 / Extra offset
-	 *
 	 * @return 若 near 则为 true / True if near
 	 */
 	public final static boolean isNearCoordinates(VisibleObject obj, float x, float y, float z, float offset) {
@@ -399,11 +373,9 @@ public class MathUtil {
 	/**
 	 * 判断两对象是否接近（含移动检测偏移）。
 	 * Whether two objects are near each other (includes move-check offset).
-	 *
 	 * @param obj 对象 1 / Object 1
 	 * @param obj2 对象 2 / Object 2
 	 * @param offset 额外偏移 / Extra offset
-	 *
 	 * @return 若 near 则为 true / True if near
 	 */
 	public final static boolean isNearCoordinates(VisibleObject obj, VisibleObject obj2, int offset) {
@@ -414,7 +386,6 @@ public class MathUtil {
 	/**
 	 * 判断是否在攻击范围内（含碰撞半径与移动补偿）。
 	 * Whether targets are within attack range (collision radii and move compensation).
-	 *
 	 * @param object1 生物 1 / Creature 1
 	 * @param object2 生物 2 / Creature 2
 	 * @param range 攻击范围 / Attack range
@@ -443,7 +414,6 @@ public class MathUtil {
 	/**
 	 * 判断 obj2 是否位于 obj1 朝向前/后的攻击圆柱体内。
 	 * Whether obj2 is inside the attack cylinder in front of or behind obj1.
-	 *
 	 * @param obj1 源对象 / Source object
 	 * @param obj2 目标对象 / Target object
 	 * @param length 柱体长度 / Cylinder length
@@ -471,7 +441,6 @@ public class MathUtil {
 	/**
 	 * 在圆内随机采样一个 2D 点。
 	 * Sample a random 2D point inside a circle.
-	 *
 	 * @param CenterX 中心 X / Center X
 	 * @param CenterY 中心 Y / Center Y
 	 * @param Radius 半径 / Radius
@@ -490,7 +459,6 @@ public class MathUtil {
 	/**
 	 * 按给定角度在圆周上取点。
 	 * Point on circle circumference for a given angle in degrees.
-	 *
 	 * @param CenterX 中心 X / Center X
 	 * @param CenterY 中心 Y / Center Y
 	 * @param Radius 半径 / Radius
@@ -507,7 +475,6 @@ public class MathUtil {
 	/**
 	 * 沿中心指向终点的方向，在给定半径圆周上取点。
 	 * Point on circumference along the direction from center toward end point.
-	 *
 	 * @param CenterPoint 中心点 / Center point
 	 * @param EndPoint 方向参考终点 / Direction end point
 	 * @param Radius 半径 / Radius
@@ -523,7 +490,6 @@ public class MathUtil {
 	/**
 	 * 计算从 P1 到 P2 的角度（度）。
 	 * Angle in degrees from P1 to P2.
-	 *
 	 * @param P1 起点 / Origin
 	 * @param P2 终点 / Target
 	 * @return 角度（度） / Angle in degrees
@@ -538,7 +504,6 @@ public class MathUtil {
 	/**
 	 * 圆上最接近给定点的点（投影到圆周）。
 	 * Point on the circle closest to the given point (radial projection).
-	 *
 	 * @param Center 中心 / Center
 	 * @param Radius 半径 / Radius
 	 * @param GivenPoint Reference point / Reference point
@@ -556,7 +521,6 @@ public class MathUtil {
 	/**
 	 * 在圆环（annulus）内随机采样一个 2D 点。
 	 * Sample a random 2D point inside an annulus.
-	 *
 	 * @param Center 中心 / Center
 	 * @param Radius1 外半径 / Outer radius
 	 * @param Radius2 内半径 / Inner radius
@@ -573,12 +537,10 @@ public class MathUtil {
 	/**
 	 * 判断对象是否位于 3D 圆环壳内（在大球内且不在小球内）。
 	 * Whether an object lies in a 3D annular shell (inside outer, outside inner sphere).
-	 *
 	 * @param obj 对象 / Object
 	 * @param Center 中心 / Center
 	 * @param Radius1 外半径 / Outer radius
 	 * @param Radius2 内半径 / Inner radius
-	 *
 	 * @return 在环壳内返回 true / True if inside the annulus
 	 */
 	public static boolean isInAnnulus(final VisibleObject obj, Point3D Center, float Radius1, float Radius2) {
@@ -597,7 +559,6 @@ public class MathUtil {
 	/**
 	 * 高精度 BigDecimal 平方根（牛顿迭代）。
 	 * High-precision BigDecimal square root (Newton iteration).
-	 *
 	 * @param squarD 开方值 / Value to take the square root of
 	 * @param rootMC 结果精度上下文 / Math context for the result
 	 * @return 平方根 / Square root

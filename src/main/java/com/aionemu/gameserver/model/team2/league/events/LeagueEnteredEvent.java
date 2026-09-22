@@ -23,7 +23,6 @@ public class LeagueEnteredEvent implements Predicate<LeagueMember>, TeamEvent {
 	/**
 	 * 检查被邀请联盟是否已在战团中。
 	 * Checks whether the invited alliance is already a member of the league.
-	 *
 	 * @return 可加入则为 true / true if joinable
 	 */
 	@Override

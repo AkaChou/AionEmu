@@ -39,7 +39,6 @@ public class GameMovementLoopGateway {
     /**
      * 可选注入移动通知任务提供者。
      * Optionally inject the movement-notify task provider.
-     *
      * @param movementNotifyTaskProvider 移动通知任务提供者 / Movement-notify task provider
      */
     @Autowired(required = false)
@@ -50,7 +49,6 @@ public class GameMovementLoopGateway {
     /**
      * 可选注入移动任务管理器提供者。
      * Optionally inject the move-task-manager provider.
-     *
      * @param moveTaskManagerProvider 移动任务管理器提供者 / Move-task-manager provider
      */
     @Autowired(required = false)
@@ -61,7 +59,6 @@ public class GameMovementLoopGateway {
     /**
      * 可选注入玩家移动任务管理器提供者。
      * Optionally inject the player-move-task-manager provider.
-     *
      * @param playerMoveTaskManagerProvider 玩家移动任务管理器提供者 / Player-move-task-manager provider
      */
     @Autowired(required = false)
@@ -72,7 +69,6 @@ public class GameMovementLoopGateway {
     /**
      * 可选注入区域更新服务提供者。
      * Optionally inject the zone-update service provider.
-     *
      * @param zoneUpdateServiceProvider 区域更新服务提供者 / Zone-update service provider
      */
     @Autowired(required = false)
@@ -94,7 +90,6 @@ public class GameMovementLoopGateway {
     /**
      * 解析移动通知任务：优先 Spring 提供者，否则单例。
      * Resolve the movement-notify task: prefer Spring provider, otherwise singleton.
-     *
      * @return 移动通知任务 / Movement-notify task
      */
     private MovementNotifyTask movementNotifyTask() {
@@ -107,7 +102,6 @@ public class GameMovementLoopGateway {
     /**
      * 解析移动任务管理器：优先 Spring 提供者，否则单例。
      * Resolve the move-task manager: prefer Spring provider, otherwise singleton.
-     *
      * @return 移动任务管理器 / Move-task manager
      */
     private MoveTaskManager moveTaskManager() {
@@ -120,7 +114,6 @@ public class GameMovementLoopGateway {
     /**
      * 解析玩家移动任务管理器：优先 Spring 提供者，否则单例。
      * Resolve the player-move-task manager: prefer Spring provider, otherwise singleton.
-     *
      * @return 玩家移动任务管理器 / Player-move-task manager
      */
     private PlayerMoveTaskManager playerMoveTaskManager() {
@@ -133,7 +126,6 @@ public class GameMovementLoopGateway {
     /**
      * 解析区域更新服务：优先 Spring 提供者，否则单例。
      * Resolve the zone-update service: prefer Spring provider, otherwise singleton.
-     *
      * @return 区域更新服务 / Zone-update service
      */
     private ZoneUpdateService zoneUpdateService() {

@@ -11,7 +11,6 @@ import com.google.common.base.Predicate;
 /**
  * 变更队伍队长事件（团队2）。
  * Change Group Leader Event for team 2 logic.
- *
  * @author ATracer
  */
 public class ChangeGroupLeaderEvent extends ChangeLeaderEvent<PlayerGroup> {

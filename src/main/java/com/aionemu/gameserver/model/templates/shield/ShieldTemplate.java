@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 /**
  * 护盾模板（静态数据/XML）。
  * XML template.
- *
  * @author M@xx, Wakizashi
  */
 @Getter
@@ -45,7 +44,6 @@ public class ShieldTemplate {
 	/**
 	 * 用给定名称、地图和中心点构造护盾模板，默认半径 6。
 	 * Constructs a shield template with the given name, map and center; default radius is 6.
-	 *
 	 * @param name 护盾名称 / shield name
 	 * @param mapId 地图 ID / map id
 	 * @param center 中心点 / center point

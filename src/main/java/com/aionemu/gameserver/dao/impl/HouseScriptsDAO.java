@@ -10,9 +10,7 @@ import java.sql.*;
 /**
  * 房屋脚本 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of HouseScriptsDAO.
- *
  * Updated for MySQL 8.
- *
  * @author Rolandas
  */
 @Slf4j
@@ -33,7 +31,6 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
     /**
      * 添加房屋脚本（合并写入）。
      * Adds a house script (merge write).
-     *
      * @param houseId 房屋 ID / house id
      * @param position script slot
      * script XML
@@ -46,9 +43,7 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
     /**
      * 获取房屋全部玩家脚本。
      * Gets all player scripts for a house.
-     *
      * house id
-     *
      * @param houseId 房屋 ID / house id
      * @return 玩家脚本集合 / player scripts
      */
@@ -79,7 +74,6 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
     /**
      * 更新房屋脚本。
      * Updates a house script.
-     *
      * @param houseId 房屋 ID / house id
      * @param position script slot
      * script XML
@@ -108,7 +102,6 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
     /**
      * 删除指定槽位脚本。
      * Deletes the script at the given slot.
-     *
      * @param houseId 房屋 ID / house id
      * @param position script slot
      */
@@ -129,7 +122,6 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
     /**
      * 删除房屋全部脚本。
      * Deletes all scripts of a house.
-     *
      * @param houseId 房屋 ID / house id
      */
     public void deleteAllScripts(int houseId) {
@@ -147,7 +139,6 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
     /**
      * 获取房屋脚本数量。
      * Gets the script count of a house.
-     *
      * @param houseId 房屋 ID / house id
      * @return script count
      */
@@ -173,7 +164,6 @@ public class HouseScriptsDAO extends com.aionemu.gameserver.dao.HouseScriptsDAO 
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

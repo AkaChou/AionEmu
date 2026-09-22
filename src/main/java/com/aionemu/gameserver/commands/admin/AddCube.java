@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 管理员扩展魔立方命令：为指定在线玩家增加一档背包格子。
  * Admin cube-expand command: expands inventory slots for a target online player.
- *
  * @author Kamui
  */
 public class AddCube extends AdminCommand {
@@ -25,7 +24,6 @@ public class AddCube extends AdminCommand {
 	/**
 	 * 执行魔立方扩展：定位在线玩家并调用扩展服务。
 	 * Executes cube expand: finds the online player and calls the expand service.
-	 *
 	 * @param params 参数：玩家名 / player name
 	 */
 	@Override
@@ -60,7 +58,6 @@ public class AddCube extends AdminCommand {
 	/**
 	 * 参数错误时输出 {@code //addcube} 用法。
 	 * Prints {@code //addcube} usage on invalid arguments.
-	 *
 	 */
 	@Override
 	public void onFail(Player admin, String message) {

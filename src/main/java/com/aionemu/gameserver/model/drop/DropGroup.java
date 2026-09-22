@@ -62,7 +62,6 @@ public class DropGroup implements DropCalculator {
 	/**
 	 * 返回掉落组名称。
 	 * Returns the drop group name.
-	 *
 	 * @return 名称，未设置时为空串 / the name, empty string if unset
 	 */
 	public String getGroupName() {
@@ -94,7 +93,6 @@ public class DropGroup implements DropCalculator {
 	/**
 	 * 掉落计算器：在候选掉落中按有效概率抽取至多 max_items 个掉落项。
 	 * Drop calculator: draws up to max_items drops from the candidates by effective chance.
-	 *
 	 * @param result 掉落物结果集 / drop-item result set
 	 * @param index 当前索引 / current index
 	 * @param dropModifiers 掉落修正器 / drop modifiers

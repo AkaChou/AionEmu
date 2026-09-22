@@ -6,7 +6,6 @@ import lombok.Getter;
 /**
  * 签到类型枚举。
  * Attend Type enumeration.
- *
  * @author Ranastic
  */
 

@@ -16,7 +16,6 @@ import lombok.AllArgsConstructor;
 /**
  * 玩家入队事件（团队2）。
  * Player Entered Event for team 2 logic.
- *
  * @author ATracer
  */
 @AllArgsConstructor
@@ -28,7 +27,6 @@ public class PlayerEnteredEvent implements Predicate<Player>, TeamEvent {
 	/**
 	 * 入队玩家必须尚未在队伍中。
 	 * Entered player should not be in group yet.
-	 *
 	 * @return 是否满足条件 / whether the condition holds
 	 */
 	@Override

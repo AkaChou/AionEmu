@@ -10,7 +10,6 @@ import com.aionemu.gameserver.services.AbyssLandingService;
 /**
  * 向客户端同步欧比斯着陆点各评分项（任务、要塞、神器等）的服务端包。
  * Server packet synchronizing Abyss landing location score categories (quest, fortress, artifact, etc.) to the client.
- *
  * @author Ranastic & Lightning (Encom)
  */
 public class SM_ABYSS_LANDING extends AionServerPacket {

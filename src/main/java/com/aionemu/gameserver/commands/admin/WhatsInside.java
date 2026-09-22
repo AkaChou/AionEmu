@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 /**
  * 列出分解/开箱物品掉落表的管理员命令。
  * Admin command to list disassembly/box drop tables for an item.
- *
  * @author BeckUp.Media
  */
 public class WhatsInside extends AdminCommand
@@ -32,7 +31,6 @@ public class WhatsInside extends AdminCommand
 	/**
 	 * 解析物品链接并输出分解组与掉落概率。
 	 * Parses an item link and prints disassembly groups and rates.
-	 *
 	 */
 	@Override
 	public void execute(Player player, String... params)

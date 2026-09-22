@@ -8,7 +8,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：消耗欧比斯点数（AP）兑换荣耀点数（GP）。
  * Player command: exchanges Abyss Points (AP) for Glory Points (GP).
- *
  * @author Waii
  */
 public class cmd_gp extends PlayerCommand {
@@ -24,7 +23,6 @@ public class cmd_gp extends PlayerCommand {
 	/**
 	 * 若 AP 足够则扣除 150000 AP 并增加 200 GP。
 	 * If AP is sufficient, deducts 150000 AP and grants 200 GP.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 未使用的参数 / unused parameters
 	 */

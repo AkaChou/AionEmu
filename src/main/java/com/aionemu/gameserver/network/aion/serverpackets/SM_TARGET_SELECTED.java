@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 向客户端反馈当前选中目标的等级、HP/MP 信息的服务端包。
  * Server packet that reports the currently selected target's level and HP/MP.
- *
  * @author Dr.Nism
  */
 public class SM_TARGET_SELECTED extends AionServerPacket {
@@ -24,7 +23,6 @@ public class SM_TARGET_SELECTED extends AionServerPacket {
 	/**
 	 * 根据玩家当前目标构造选中信息包。
 	 * Builds the selected-target info packet from the player's current target.
-	 *
 	 * @param player 选中目标的玩家 / player who selected the target
 	 */
 	public SM_TARGET_SELECTED(Player player) {

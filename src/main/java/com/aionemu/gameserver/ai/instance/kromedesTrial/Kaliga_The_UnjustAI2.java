@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Kromedes Trial 副本 NPC AI：Kaliga The Unjust（@AIName "kaliga_the_unjust"），继承 AggressiveNpcAI2。
  * Kromedes Trial instance NPC AI: Kaliga The Unjust (@AIName "kaliga_the_unjust"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("kaliga_the_unjust")

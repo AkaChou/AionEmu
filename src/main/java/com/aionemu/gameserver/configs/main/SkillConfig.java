@@ -42,7 +42,6 @@ public class SkillConfig {
 	/**
 	 * 按倍率缩放冷却时间；非正冷却保持 0。
 	 * Scales a cooldown by the multiplier; non-positive cooldowns stay 0.
-	 *
 	 * @param cooldown 原始冷却时间 / original cooldown
 	 * @return 缩放后的冷却时间，至少为 1 / scaled cooldown, at least 1
 	 */

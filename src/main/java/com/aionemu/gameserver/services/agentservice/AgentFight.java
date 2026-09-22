@@ -11,10 +11,8 @@ import lombok.RequiredArgsConstructor;
 /**
  * 代理战（Agent Fight）活动抽象基类。
  * Abstract base for Agent Fight world events.
- *
  * <p>封装启动/停止幂等守卫与按状态刷怪/清怪。
  * Encapsulates idempotent start/stop guards and spawn/despawn by state type.</p>
- *
  * @author Rinzler (Encom)
  * @param <AL> 代理地点类型 / agent location type
  */
@@ -26,8 +24,6 @@ public abstract class AgentFight<AL extends AgentLocation> {
 	/**
 	 * 获取绑定地点。
 	 * Returns the bound location.
-	 *
-	 * @return 位置 / location
 	 */
 	private final AL agentLocation;
 	private final AtomicBoolean finished = new AtomicBoolean();
@@ -76,7 +72,6 @@ public abstract class AgentFight<AL extends AgentLocation> {
 	/**
 	 * 按状态类型刷新刷怪。
 	 * Spawns entities by state type.
-	 *
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(AgentStateType type) {
@@ -94,7 +89,6 @@ public abstract class AgentFight<AL extends AgentLocation> {
 	/**
 	 * 是否已结束。
 	 * Whether the event has finished.
-	 *
 	 * @return 已结束则为 true / true if finished
 	 */
 	public boolean isFinished() {
@@ -104,7 +98,6 @@ public abstract class AgentFight<AL extends AgentLocation> {
 	/**
 	 * 获取地点 ID。
 	 * Returns the location id.
-	 *
 	 * @return 位置 ID / location id
 	 */
 	public int getAgentLocationId() {

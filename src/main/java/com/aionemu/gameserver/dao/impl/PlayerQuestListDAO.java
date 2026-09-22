@@ -18,10 +18,7 @@ import java.util.Collection;
 /**
  * 玩家任务列表 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerQuestListDAO.
- *
  * @author MrPoke
- * @modified vlog, Rolandas
- * @updated for MySQL 8 with optimizations
  */
 @Slf4j
 public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestListDAO {
@@ -50,7 +47,6 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	/**
 	 * 从数据库加载玩家的任务状态列表。
 	 * Loads the player's quest state list from the database.
-	 *
 	 * @param player 玩家 / player
 	 * @return 任务状态列表 / quest state list
 	 */
@@ -90,7 +86,6 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	/**
 	 * 将玩家任务状态列表持久化到数据库（按 NEW/UPDATE/DELETED 批量处理）。
 	 * Persists the player's quest state list (batch insert/update/delete by persistent state).
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -160,7 +155,6 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	/**
 	 * 批量插入新增任务状态。
 	 * Batch-inserts newly created quest states.
-	 *
 	 * @param con 数据库连接 / database connection
 	 * @param playerId 玩家 ID / player id
 	 * @param states 任务状态集合 / quest state collection
@@ -192,7 +186,6 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	/**
 	 * 设置插入语句参数。
 	 * Sets parameters for the insert prepared statement.
-	 *
 	 * @param ps 预处理语句 / prepared statement
 	 * @param playerId 玩家 ID / player id
 	 * @param qs 任务状态 / quest state
@@ -223,7 +216,6 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	/**
 	 * 批量更新已修改的任务状态。
 	 * Batch-updates quest states that require update.
-	 *
 	 * @param con 数据库连接 / database connection
 	 * @param playerId 玩家 ID / player id
 	 * @param states 任务状态集合 / quest state collection
@@ -255,7 +247,6 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	/**
 	 * 设置更新语句参数。
 	 * Sets parameters for the update prepared statement.
-	 *
 	 * @param ps 预处理语句 / prepared statement
 	 * @param playerId 玩家 ID / player id
 	 * @param qs 任务状态 / quest state
@@ -296,7 +287,6 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	/**
 	 * 批量删除标记为 DELETED 的任务状态。
 	 * Batch-deletes quest states marked as DELETED.
-	 *
 	 * @param con 数据库连接 / database connection
 	 * @param playerId 玩家 ID / player id
 	 * @param states 任务状态集合 / quest state collection
@@ -329,7 +319,6 @@ public class PlayerQuestListDAO extends com.aionemu.gameserver.dao.PlayerQuestLi
 	/**
 	 * 判断当前数据库是否受本 DAO 支持。
 	 * Checks whether the given database is supported by this DAO.
-	 *
 	 * @param databaseName 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version

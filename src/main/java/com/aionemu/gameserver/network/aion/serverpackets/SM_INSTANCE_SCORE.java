@@ -77,7 +77,6 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 	/**
 	 * 按类型同步计分，并附带目标对象、玩家状态与种族。
 	 * Syncs score by type with target object, player status, and race.
-	 *
 	 * @param type 同步类型 / sync type
 	 * @param instanceTime 副本剩余/经过时间 / instance time
 	 * @param instanceReward 副本奖励上下文 / instance reward context
@@ -100,7 +99,6 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 	/**
 	 * 按类型同步计分，并附带目标对象。
 	 * Syncs score by type with a target object.
-	 *
 	 * @param type 同步类型 / sync type
 	 * @param instanceTime 副本剩余/经过时间 / instance time
 	 * @param instanceReward 副本奖励上下文 / instance reward context
@@ -118,7 +116,6 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 	/**
 	 * 按玩家列表同步整场计分板。
 	 * Syncs the full scoreboard for a player list.
-	 *
 	 * @param instanceTime 副本剩余/经过时间 / instance time
 	 * @param instanceReward 副本奖励上下文 / instance reward context
 	 * player list
@@ -134,7 +131,6 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 	/**
 	 * 按类型与玩家列表同步计分（兼容重载，{@code tis} 未使用）。
 	 * Syncs score by type and player list (compat overload; {@code tis} unused).
-	 *
 	 * @param type 同步类型 / sync type
 	 * @param instanceTime 副本剩余/经过时间 / instance time
 	 * @param instanceReward 副本奖励上下文 / instance reward context
@@ -154,7 +150,6 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 	/**
 	 * 使用显式计分类型同步副本奖励。
 	 * Syncs instance reward with an explicit score type.
-	 *
 	 * @param instanceReward 副本奖励上下文 / instance reward context
 	 * score type
 	 */
@@ -167,7 +162,6 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 	/**
 	 * 使用奖励自带的计分类型同步。
 	 * Syncs using the score type carried by the reward.
-	 *
 	 * @param instanceReward 副本奖励上下文 / instance reward context
 	 */
 	public SM_INSTANCE_SCORE(InstanceReward instanceReward) {
@@ -179,7 +173,6 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 	/**
 	 * 按类型同步指定玩家的计分信息。
 	 * Syncs score info for a specific player by type.
-	 *
 	 * @param type 同步类型 / sync type
 	 * target player
 	 * @param instanceTime 副本剩余/经过时间 / instance time
@@ -197,7 +190,6 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 	/**
 	 * 按类型同步玩家与对手的计分信息（如 1v1 场景）。
 	 * Syncs score info for a player and opponent by type (e.g. 1v1).
-	 *
 	 * @param type 同步类型 / sync type
 	 * target player
 	 * opponent player

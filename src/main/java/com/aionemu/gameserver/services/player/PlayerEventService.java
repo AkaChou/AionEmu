@@ -22,8 +22,6 @@ public class PlayerEventService {
      * -- SETTER --
      * 设置实例提供者（Spring 注入）。
      *  Sets the instance provider (Spring injection).
-     *
-     *  @param instanceProvider 实例提供者 / instance provider
      */
     @Setter
     private static volatile ObjectProvider<PlayerEventService> instanceProvider;
@@ -68,13 +66,7 @@ public class PlayerEventService {
 
 	private static final class AnnounceVIPTickets implements Visitor<Player> {
 		@Override
-		/**
-		 * visit 方法。
-		 * visit method.
-		 *
-		 * @param player 玩家 / player
-		 */
-		public void visit(Player player) {
+        public void visit(Player player) {
 			if (EventsConfig.ENABLE_VIP_TICKETS) {
 				if (player.getClientConnection().getAccount().getMembership() == 1) {
 					HTMLService.sendGuideHtml(player, "Premium_Benefits");
@@ -94,13 +86,7 @@ public class PlayerEventService {
 
 	private static final class EventAwake implements Visitor<Player> {
 		@Override
-		/**
-		 * visit 方法。
-		 * visit method.
-		 *
-		 * @param player 玩家 / player
-		 */
-		public void visit(Player player) {
+        public void visit(Player player) {
 			if (EventsConfig.ENABLE_AWAKE_EVENT) {
 				if (player.getLevel() >= 10 && player.getLevel() <= 64) {
 					HTMLService.sendGuideHtml(player, "Event_Awake_10");
@@ -115,11 +101,9 @@ public class PlayerEventService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available

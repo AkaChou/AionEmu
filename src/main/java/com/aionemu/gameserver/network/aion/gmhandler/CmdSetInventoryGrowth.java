@@ -13,9 +13,7 @@ import java.util.Collection;
 /**
  * GM 指令：为指定玩家扩展背包（Cube）格子。
  * GM command handler that expands cube inventory slots for a named or targeted player.
- *
  * @author Waii
- * @modified Dezalmado
  */
 @Slf4j
 public final class CmdSetInventoryGrowth extends AbstractGMHandler {
@@ -23,7 +21,6 @@ public final class CmdSetInventoryGrowth extends AbstractGMHandler {
 	/**
 	 * 创建处理器，校验权限后执行背包扩展。
 	 * Creates the handler, checks access, then runs cube expansion.
-	 *
 	 * @param admin 执行指令的管理员 / the admin executing the command
 	 * @param params 可选玩家名 / optional player name
 	 */

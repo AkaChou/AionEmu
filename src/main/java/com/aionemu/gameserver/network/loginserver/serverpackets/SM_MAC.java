@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.loginserver.LsServerPacket;
 /**
  * 游戏服向登录服上报账号 MAC 地址的服务端包。
  * Server packet that reports an account MAC address to the login server.
- *
  * @author nrg
  */
 public class SM_MAC extends LsServerPacket {
@@ -17,7 +16,6 @@ public class SM_MAC extends LsServerPacket {
 	/**
 	 * 构造 MAC 地址上报包。
 	 * Constructs a MAC address report packet.
-	 *
 	 * @param accountId 账号 ID / account id
 	 * @param address MAC address
 	 */

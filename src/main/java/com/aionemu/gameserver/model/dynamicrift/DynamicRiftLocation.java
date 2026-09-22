@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 /**
  * 动态裂隙位置模型。
  * Dynamic Rift Location model.
- *
  * @author Rinzler (Encom)
  */
 

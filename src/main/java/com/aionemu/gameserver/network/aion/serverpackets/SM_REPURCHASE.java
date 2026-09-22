@@ -14,7 +14,6 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
 /**
  * 向客户端同步可回购物品列表（NPC 回购窗口）。
  * Server packet synchronizing the repurchase item list for an NPC buyback window.
- *
  * @author xTz, KID
  */
 public class SM_REPURCHASE extends AionServerPacket {
@@ -26,7 +25,6 @@ public class SM_REPURCHASE extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_REPURCHASE 包。
 	 * Creates a SM_REPURCHASE packet with the given parameters.
-	 *
 	 * @param player 玩家 / player
 	 * @param npcId npc id
 	 */

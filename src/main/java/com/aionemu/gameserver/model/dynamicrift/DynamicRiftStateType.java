@@ -3,7 +3,6 @@ package com.aionemu.gameserver.model.dynamicrift;
 /**
  * 动态裂隙状态类型枚举。
  * Dynamic Rift State Type enumeration.
- *
  * @author Rinzler (Encom)
  */
 

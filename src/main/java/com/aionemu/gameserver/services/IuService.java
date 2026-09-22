@@ -34,7 +34,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 现场演唱会（IU）服务：按计划开启 Live Party Concert Hall，管理传送门刷怪与倒计时消息。
  * IU (Live Party Concert) service: schedule-opens the concert hall and manages portal spawns/countdown.
- *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -82,7 +81,6 @@ public class IuService {
 	/**
 	 * 启动指定 ID 的演唱会，发送倒计时消息，并在持续时长后自动关闭。
 	 * Starts the concert for the given id, sends countdown messages, and auto-stops after duration.
-	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void startConcert(final int id) {
@@ -98,7 +96,6 @@ public class IuService {
 	/**
 	 * 停止指定 ID 的演唱会。
 	 * Stops the concert for the given id.
-	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void stopConcert(int id) {
@@ -112,7 +109,6 @@ public class IuService {
 	/**
 	 * 按状态类型在地点刷出对应模板 NPC。
 	 * Spawns NPCs for the location matching the given state type.
-	 *
 	 * @param loc location
 	 * @param iustate state type
 	 */
@@ -131,7 +127,6 @@ public class IuService {
 	/**
 	 * 现场演唱会入口关闭倒计时消息（90/60/30/15/10/5/3/2/1 分钟）。
 	 * Live Party Concert Hall entrance-close countdown messages (90/60/30/15/10/5/3/2/1 minutes).
-	 *
 	 * @param id 地点 ID / location id
 	 * 若 handled 则为 true / true if handled
 	 */
@@ -169,7 +164,6 @@ public class IuService {
 	/**
 	 * 清除地点上已刷出的对象（无仇恨时立即删除）。
 	 * Clears spawned objects at the location (deletes immediately when no aggro).
-	 *
 	 * @param loc location
 	 */
 	public void despawn(IuLocation loc) {
@@ -190,7 +184,6 @@ public class IuService {
 	/**
 	 * 指定演唱会是否正在进行中。
 	 * Whether the concert is in progress for the given id.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 若 active 则为 true / true if active
 	 */
@@ -201,7 +194,6 @@ public class IuService {
 	/**
 	 * 获取当前激活的演唱会映射。
 	 * Returns the map of active concerts.
-	 *
 	 * @return 激活演唱会 / active concerts
 	 */
 	public Map<Integer, Iu<?>> getActiveIu() {
@@ -211,7 +203,6 @@ public class IuService {
 	/**
 	 * 返回配置的持续时长（小时）。
 	 * Returns configured duration in hours.
-	 *
 	 * @return 持续小时数 / duration hours
 	 */
 	public int getDuration() {
@@ -221,7 +212,6 @@ public class IuService {
 	/**
 	 * 按 ID 获取地点。
 	 * Returns the location by id.
-	 *
 	 * @param id 地点 ID / location id
 	 * location
 	 */
@@ -232,7 +222,6 @@ public class IuService {
 	/**
 	 * 获取全部地点。
 	 * Returns all locations.
-	 *
 	 * location map
 	 */
 	public Map<Integer, IuLocation> getIuLocations() {
@@ -242,7 +231,6 @@ public class IuService {
 	/**
 	 * 获取服务单例（优先 Spring ObjectProvider，否则 holder）。
 	 * Returns the service singleton (Spring ObjectProvider if set, else holder).
-	 *
 	 * service instance
 	 */
 	public static IuService getInstance() {
@@ -256,7 +244,6 @@ public class IuService {
 	/**
 	 * 注入 Spring 实例提供者。
 	 * Sets the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<IuService> instanceProvider) {

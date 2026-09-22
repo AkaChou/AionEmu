@@ -18,7 +18,6 @@ import com.aionemu.gameserver.world.WorldType;
 /**
  * A-Station（快速通道）跨服服务，处理授权、迁入迁出与账号占用校验。
  * A-Station (fast-track) cross-server service handling auth, move-in/out, and account occupancy checks.
- *
  * @author Ranastic
  */
 @Slf4j
@@ -37,11 +36,9 @@ public class AStationService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -60,7 +57,6 @@ public class AStationService {
     /**
 	 * 校验等级后向客户端下发 A-Station 服务器列表。
 	 * After level check, sends the A-Station server list to the client.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void checkAuthorizationRequest(Player player) {
@@ -75,7 +71,6 @@ public class AStationService {
 	/**
 	 * 将玩家传送至 A-Station 服务器。
 	 * Teleports the player to the A-Station server.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void handleMoveThere(Player player) {
@@ -85,7 +80,6 @@ public class AStationService {
 	/**
 	 * 将玩家从 A-Station 传回原服。
 	 * Teleports the player back from A-Station to the home server.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void handleMoveBack(Player player) {
@@ -95,7 +89,6 @@ public class AStationService {
 	/**
 	 * 处理 A-Station 迁入/迁出后的账号占用与加成状态。
 	 * Handles account occupancy and bonus state after A-Station move-in/out.
-	 *
 	 * 玩家 / player
 	 * 账号 ID / account id
 	 * @param back 是否回原服 / whether returning home
@@ -130,7 +123,6 @@ public class AStationService {
 	/**
 	 * A-Station 进出时的加成钩子（当前为空实现）。
 	 * Bonus hook on A-Station enter/leave (currently a no-op).
-	 *
 	 * 玩家 / player
 	 * @param off 是否关闭加成 / whether turning bonus off
 	 */
@@ -140,7 +132,6 @@ public class AStationService {
 	/**
 	 * 判断是否为 PvP 类型地图。
 	 * Returns whether the world type is a PvP zone.
-	 *
 	 * @param wt 世界类型 / world type
 	 * whether PvP zone
 	 */
@@ -151,7 +142,6 @@ public class AStationService {
 	/**
 	 * 判断是否为普通大陆地图。
 	 * Returns whether the world type is a normal continent zone.
-	 *
 	 * @param wt 世界类型 / world type
 	 * @return 是否普通区 / whether normal zone
 	 */

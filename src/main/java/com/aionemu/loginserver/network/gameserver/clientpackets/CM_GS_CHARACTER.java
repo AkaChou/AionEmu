@@ -7,7 +7,6 @@ import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 /**
  * GS→LS：上报账号在本游戏服上的角色数量。
  * GS→LS: report character count of an account on this GameServer.
- *
  * @author cura
  */
 public class CM_GS_CHARACTER extends GsClientPacket {

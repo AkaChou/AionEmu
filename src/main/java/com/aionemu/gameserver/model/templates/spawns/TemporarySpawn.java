@@ -29,7 +29,6 @@ public class TemporarySpawn {
 	/**
 	 * 解析后的刷新时间窗缓存（小时/日/月；{@code *} 与缺省为 {@code null}）。
 	 * Cached parsed spawn window (hour/day/month; {@code *} and absent segments are {@code null}).
-	 *
 	 * <p>XML 在加载期一次性注入字符串，之后模板不再变化；因此首次使用时解析并缓存，避免每次
 	 * {@link #isInSpawnTime()} 都对同一字符串做 6 次 {@code String.split("\\.")}（JFR 实测 300s 内占 17.2% 分配）。
 	 * The XML injects the strings once at load time and templates never change afterwards, so the window is parsed on
@@ -71,7 +70,6 @@ public class TemporarySpawn {
 	/**
 	 * 刷新时间窗（首次调用时解析并缓存）。
 	 * The spawn window, parsed and cached on first use.
-	 *
 	 * @return 长度 3 的数组 / a three-element array
 	 */
 	private Integer[] spawnTimeParts() {
@@ -86,7 +84,6 @@ public class TemporarySpawn {
 	/**
 	 * 消失时间窗（首次调用时解析并缓存）。
 	 * The despawn window, parsed and cached on first use.
-	 *
 	 * @return 长度 3 的数组 / a three-element array
 	 */
 	private Integer[] despawnTimeParts() {
@@ -101,7 +98,6 @@ public class TemporarySpawn {
 	/**
 	 * 解析 {@code 时.日.月} 形式的时间窗；{@code *} 表示“不限”，整体为 {@code null} 时三段都是 {@code null}。
 	 * Parses a {@code hour.day.month} window; {@code *} means "any" and a {@code null} input yields three {@code null}s.
-	 *
 	 * @param time 原始时间串 / raw time string
 	 * @return 长度 3 的数组 / a three-element array
 	 */

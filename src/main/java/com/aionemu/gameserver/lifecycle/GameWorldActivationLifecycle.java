@@ -45,7 +45,6 @@ public class GameWorldActivationLifecycle {
     /**
      * 启动本阶段：激活世界并返回 GameServer。
      * Start this stage: activate the world and return the GameServer.
-     *
      * @return 激活后的 GameServer；已激活则返回缓存实例 / Activated GameServer; cached instance if already activated
      */
     public synchronized GameServer start() {
@@ -72,7 +71,6 @@ public class GameWorldActivationLifecycle {
     /**
      * 是否已激活。
      * Whether the world has been activated.
-     *
      * @return 已激活为 {@code true} / {@code true} if activated
      */
     public synchronized boolean isActivated() {
@@ -82,7 +80,6 @@ public class GameWorldActivationLifecycle {
     /**
      * 激活耗时毫秒。
      * Activation time in milliseconds.
-     *
      * @return 耗时毫秒，未启动为 -1 / Elapsed millis, or {@code -1} if not started
      */
     public synchronized long getActivationTimeMillis() {
@@ -92,7 +89,6 @@ public class GameWorldActivationLifecycle {
     /**
      * 最近失败。
      * Last failure.
-     *
      * @return 最近异常，无则为 null / Last throwable, or {@code null}
      */
     public synchronized Throwable getLastFailure() {

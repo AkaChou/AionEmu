@@ -34,7 +34,6 @@ import com.aionemu.gameserver.utils.PositionUtil;
 /**
  * 恐惧效果：强制目标逃跑/失控，可按抗性与抵抗几率被打断。
  * Fear effect: forces the target to flee/lose control; may break by resist chance.
- *
  * @author Sarynth
  */
 @XmlAccessorType(XmlAccessType.FIELD)

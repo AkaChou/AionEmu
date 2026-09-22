@@ -12,7 +12,6 @@ import lombok.Getter;
 /**
  * 传送师模板（静态数据/XML）。
  * Teleporter template (static data/XML).
- *
  * @author orz
  */
 @Getter
@@ -23,8 +22,7 @@ public class TeleporterTemplate {
 	/**
 	 * 返回关联的 NPC ID 列表。
 	 * Returns the bound npc ids.
-	 *
-	 * @return NPC ID 列表 / npc ids
+	 * NPC ID 列表 / npc ids
 	 */
 	@XmlAttribute(name = "npc_ids")
 	private List<Integer> npcIds;
@@ -32,8 +30,6 @@ public class TeleporterTemplate {
 	/**
 	 * 返回传送 ID。
 	 * Returns the teleport id.
-	 *
-	 * @return 传送 ID / teleport id
 	 */
 	@XmlAttribute(name = "teleportId", required = true)
 	private int teleportId = 0;
@@ -41,8 +37,6 @@ public class TeleporterTemplate {
 	/**
 	 * 返回地点 ID 数据。
 	 * Returns the tele-location-id data.
-	 *
-	 * @return 传送地点数据 / tele-location data
 	 */
 	@XmlElement(name = "locations")
 	private TeleLocIdData teleLocIdData;
@@ -50,7 +44,6 @@ public class TeleporterTemplate {
 	/**
 	 * 判断给定 NPC ID 是否绑定此传送师。
 	 * Whether the given npc id is bound to this teleporter.
-	 *
 	 * @param npcId NPC ID / npc id
 	 * @return 包含则为 true / true if contained
 	 */

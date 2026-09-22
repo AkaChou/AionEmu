@@ -58,7 +58,6 @@ public class RealGeoData implements GeoData {
 	/**
 	 * 按世界模板并行加载地形与物体到各地理地图。
 	 * Parallel-loads terrain and world objects into each geo map for every world template.
-	 *
 	 * @param models 已加载的网格模型表 / loaded mesh model table
 	 */
 	protected void loadWorldMaps(final Map<String, Spatial> models) {
@@ -123,7 +122,6 @@ public class RealGeoData implements GeoData {
 	/**
 	 * 从 {@code geo/models.mesh} 加载全部网格模型。
 	 * Loads all mesh models from {@code geo/models.mesh}.
-	 *
 	 * @return 名称 → 空间节点映射 / name → spatial map
 	 */
 	protected Map<String, Spatial> loadMeshes() {
@@ -138,7 +136,6 @@ public class RealGeoData implements GeoData {
 	/**
 	 * 碰撞树后台预构建；Mesh.collideWith 有懒加载兜底，此步仅为降低运行时首次碰撞卡顿。
 	 * Background pre-build of collision trees; Mesh.collideWith has a lazy fallback — this only reduces first-hit hitching at runtime.
-	 *
 	 * @param models 网格模型表 / mesh model table
 	 */
 	private void prebuildCollisionDataAsync(Map<String, Spatial> models) {
@@ -169,7 +166,6 @@ public class RealGeoData implements GeoData {
 	 * 将待处理项按轮转法切成指定数量的分片，保证顺序稳定且每项只出现一次。
 	 * Splits items into the requested number of partitions in round-robin order, so every item appears
 	 * exactly once while keeping a deterministic distribution.
-	 *
 	 * @param items 待处理项 / items to split
 	 * @param partitionCount 分片数量（正数）/ number of partitions (positive)
 	 * @param <T> 元素类型 / element type
@@ -193,7 +189,6 @@ public class RealGeoData implements GeoData {
 	/**
 	 * 递归收集场景树中的全部网格。
 	 * Recursively collects every mesh under a spatial tree.
-	 *
 	 * @param s 当前节点 / current spatial
 	 * @param out 输出集合 / output set
 	 */
@@ -210,7 +205,6 @@ public class RealGeoData implements GeoData {
 	/**
 	 * 按世界 ID 获取地理地图；缺失时回退到哑地图。
 	 * Returns the geo map for the world id, falling back to the dummy map when missing.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @return 地理地图或哑地图 / geo map or dummy map
 	 */
@@ -240,7 +234,6 @@ public class RealGeoData implements GeoData {
 	/**
 	 * 在升序世界中查找下标。
 	 * Finds the index of the world id in an ascending array.
-	 *
 	 * @param sortedIds 升序世界 ID 数组 / ascending world ids
 	 * @param worldId 目标世界 ID / target world id
 	 * @return 命中的下标，未命中为 -1 / matching index, or -1 when absent
@@ -265,9 +258,8 @@ public class RealGeoData implements GeoData {
 	/**
 	 * 世界 ID → 地理地图 的只读查找快照。
 	 * Read-only lookup snapshot from world id to geo map.
-	 *
-	 * @param ids 升序世界 ID 数组 / ascending world ids
-	 * @param maps 与 {@code ids} 一一对应的地理地图 / geo maps aligned with {@code ids}
+	 * 升序世界 ID 数组 / ascending world ids
+	 * 与 {@code ids} 一一对应的地理地图 / geo maps aligned with {@code ids}
 	 */
 	record WorldMapLookup(int[] ids, GeoMap[] maps) {
 
@@ -277,7 +269,6 @@ public class RealGeoData implements GeoData {
 		/**
 		 * 查找世界对应的地理地图。
 		 * Looks up the geo map of the world.
-		 *
 		 * @param worldId 世界 ID / world id
 		 * @return 地理地图，未命中为 {@code null} / geo map, or {@code null} when absent
 		 */

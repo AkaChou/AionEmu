@@ -38,7 +38,6 @@ public class NettyClient implements ServerTransport {
     /**
      * 使用默认断开连接执行器构造客户端。
      * Construct client with default disconnection executor.
-     *
      * @param address 远端地址 / Remote address
      * @param connectionName 连接名称 / Connection name
      * @param connectionFactory 连接工厂 / Connection factory
@@ -105,7 +104,6 @@ public class NettyClient implements ServerTransport {
     /**
      * 获取活跃连接数。
      * Get active connection count.
-     *
      * @return 活跃连接数 / Active connections
      */
     @Override

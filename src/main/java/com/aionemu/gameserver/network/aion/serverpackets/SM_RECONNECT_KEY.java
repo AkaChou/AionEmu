@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 对 CM_RECONNECT_AUTH 的应答，下发登录服重连认证密钥。
  * Response to CM_RECONNECT_AUTH providing a reconnection key for LoginServer auth.
- *
  * @author -Nemesiss-
  */
 @AllArgsConstructor

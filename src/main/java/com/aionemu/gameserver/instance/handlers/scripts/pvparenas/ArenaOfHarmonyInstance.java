@@ -7,7 +7,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * 合作竞技场副本事件处理器。
  * Instance event handler for Arena Of Harmony.
- *
  * @author Encom
  */
 
@@ -17,7 +16,6 @@ public class ArenaOfHarmonyInstance extends HarmonyArenaInstance
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override

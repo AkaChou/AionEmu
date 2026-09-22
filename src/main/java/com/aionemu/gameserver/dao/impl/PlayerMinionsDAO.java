@@ -14,7 +14,6 @@ import java.util.List;
 /**
  * 玩家随从（Minion）DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerMinionsDAO.
- *
  * @author Falke_34
  * Updated for MySQL 8 support
  */
@@ -46,7 +45,6 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
     /**
      * 插入新的玩家随从记录。
      * Inserts a new player minion record.
-     *
      * @param minionCommonData 随从公共数据 / minion common data
      */
     @Override
@@ -75,7 +73,6 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
     /**
      * 移除玩家的指定随从。
      * Removes the specified minion for the player.
-     *
      * @param player 玩家 / player
      * @param minionObjectId 仆从对象 ID / minion object id
      */
@@ -97,7 +94,6 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
     /**
      * 加载玩家的全部随从数据。
      * Loads all minions belonging to the player.
-     *
      * @param player 玩家 / player
      * @return 仆从列表 / minion list
      */
@@ -160,7 +156,6 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
     /**
      * 更新随从名称。
      * Updates the minion name.
-     *
      * @param minionCommonData 随从公共数据 / minion common data
      */
     @Override
@@ -182,7 +177,6 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
     /**
      * 更新玩家随从的成长点。
      * Updates the growth points of a player minion.
-     *
      * @param player 玩家 / player
      * @param minionCommonData 随从公共数据 / minion common data
      */
@@ -269,7 +263,6 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
     /**
      * 执行随从进化（更新 minion_id 与 level，重置成长点）。
      * Evolves a minion (updates minion_id and level, resets growth points).
-     *
      * @param player 玩家 / player
      * @param minionCommonData 随从公共数据 / minion common data
      */
@@ -293,7 +286,6 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
     /**
      * 锁定或解锁指定随从。
      * Locks or unlocks the specified minion.
-     *
      * @param player 玩家 / player
      * @param minionObjId 仆从对象 ID / minion object id
      * @param isLocked 锁定标记 / lock flag
@@ -317,7 +309,6 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
     /**
      * 保存随从的增益（doping）背包内容。
      * Saves the minion doping bag contents.
-     *
      * @param player 玩家 / player
      * @param minionCommonData 随从公共数据 / minion common data
      * @param bag 增益背包 / doping bag
@@ -372,7 +363,6 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
     /**
      * 从数据库读取并写回随从生日时间戳。
      * Loads the minion birthday timestamp from the database into the model.
-     *
      * @param minionCommonData 随从公共数据 / minion common data
      */
     @Override
@@ -396,7 +386,6 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
     /**
      * 清理所属玩家已不存在的孤儿随从记录。
      * Cleans orphaned minion rows whose owner player no longer exists.
-     *
      * @return 删除行数 / deleted row count
      */
     public int cleanOrphanedMinions() {
@@ -417,7 +406,6 @@ public class PlayerMinionsDAO extends com.aionemu.gameserver.dao.PlayerMinionsDA
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * RvR 相关 NPC AI：Elyos Turret（@AIName "LF6_Event_G1_SWHowitzer"），继承 ActionItemNpcAI2。
  * RvR-related NPC AI: Elyos Turret (@AIName "LF6_Event_G1_SWHowitzer"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("LF6_Event_G1_SWHowitzer")

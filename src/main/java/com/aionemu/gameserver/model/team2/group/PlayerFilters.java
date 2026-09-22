@@ -8,7 +8,6 @@ import com.google.common.base.Predicate;
 /**
  * 玩家 Filters，用于团队2相关逻辑。
  * Player Filters for team 2 logic.
- *
  * @author ATracer
  */
 public class PlayerFilters {

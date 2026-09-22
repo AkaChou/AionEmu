@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Kromedes Trial 副本 NPC AI：Grave Robber Corpse（@AIName "Grave_Robber_Corpse"），继承 NpcAI2。
  * Kromedes Trial instance NPC AI: Grave Robber Corpse (@AIName "Grave_Robber_Corpse"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Grave_Robber_Corpse")

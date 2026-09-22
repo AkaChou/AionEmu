@@ -32,7 +32,6 @@ public class PropertyTransformerFactory {
     /**
      * 创建新的属性转换器实例
      * Create a new property transformer instance
-     *
      * @param clazzToTransform 需要转换的目标类型 / Target class type to transform
      * @param tc 指定的转换器类型；为默认类型时根据目标类型自动选择 / Transformer type; the default selects by target type
      * @return 对应的属性转换器实例 / Corresponding property transformer instance

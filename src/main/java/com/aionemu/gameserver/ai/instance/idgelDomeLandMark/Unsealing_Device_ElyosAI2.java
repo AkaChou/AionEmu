@@ -19,7 +19,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Idgel Dome Land Mark 副本 NPC AI：Unsealing Device Elyos（@AIName "Unsealing_Device_Elyos"），继承 ActionItemNpcAI2。
  * Idgel Dome Land Mark instance NPC AI: Unsealing Device Elyos (@AIName "Unsealing_Device_Elyos"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("Unsealing_Device_Elyos")

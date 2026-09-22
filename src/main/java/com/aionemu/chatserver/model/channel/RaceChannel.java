@@ -7,7 +7,6 @@ import lombok.Getter;
 /**
  * 按种族划分的频道抽象基类。
  * Abstract base for race-scoped chat channels.
- *
  * @author ATracer
  */
 public abstract class RaceChannel extends Channel {
@@ -22,7 +21,6 @@ public abstract class RaceChannel extends Channel {
     /**
      * 创建种族频道。
      * Creates a race-scoped channel.
-     *
      * @param channelType 频道类型 / channel type
      * @param race 阵营 / race
      * @param identifier 字符串标识 / string identifier

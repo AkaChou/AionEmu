@@ -5,17 +5,14 @@ import java.util.Arrays;
 /**
  * 原始 long 键 → 对象的开放寻址哈希表（热路径专用，避免 {@link Long} 装箱）。
  * Open-addressing long-to-object hash map for hot paths (avoids {@link Long} boxing).
- *
  * <p>与 {@code HashMap<Long, V>} 的关键差异 / Key differences from {@code HashMap<Long, V>}：
  * 键为原始 {@code long}（int 键可直接传入，不会装箱）、不支持 {@code null} 值以外的容器语义、
  * 无迭代能力（本表只用于逐节点 put/get/clear 的场景）。
  * Keys are primitives (int keys widen implicitly without boxing), there is no iteration support,
  * and a stored {@code null} value is indistinguishable from "absent" via {@link #get(long)},
  * matching {@link java.util.HashMap#get(Object)} semantics.</p>
- *
  * <p>非线程安全；调用方负责独占使用（如各搜索线程自己的 workspace）。
  * Not thread-safe; the caller owns the instance (e.g. a per-thread search workspace).</p>
- *
  * @param <V> 值类型 / value type
  */
 public final class LongObjectHashMap<V> {
@@ -52,7 +49,6 @@ public final class LongObjectHashMap<V> {
     /**
      * 创建可容纳期望条目数而不立即扩容的映射。
      * Creates a map sized to hold the expected entry count without immediate resizing.
-     *
      * @param expectedSize 期望条目数 / expected number of entries
      */
     public LongObjectHashMap(int expectedSize) {
@@ -66,7 +62,6 @@ public final class LongObjectHashMap<V> {
     /**
      * 读取键对应的值；不存在返回 {@code null}。
      * Returns the value for the key, or {@code null} when absent.
-     *
      * @param key 原始 long 键 / primitive long key
      * @return 值或 null / value or null
      */
@@ -79,7 +74,6 @@ public final class LongObjectHashMap<V> {
     /**
      * 写入键值对，返回被覆盖的旧值。
      * Stores a key/value pair and returns the previous value.
-     *
      * @param key 原始 long 键 / primitive long key
      * @param value 值 / value
      * @return 旧值或 null / previous value or null
@@ -99,7 +93,6 @@ public final class LongObjectHashMap<V> {
     /**
      * 仅当键不存在时写入，返回已存在的值（存在时）或 {@code null}。
      * Stores only when the key is absent; returns the existing value, or {@code null} when inserted.
-     *
      * @param key 原始 long 键 / primitive long key
      * @param value 值 / value
      * @return 已存在的值或 null / existing value or null
@@ -117,7 +110,6 @@ public final class LongObjectHashMap<V> {
     /**
      * 返回当前条目数。
      * Returns the current entry count.
-     *
      * @return 条目数 / entry count
      */
     public int size() {
@@ -147,11 +139,9 @@ public final class LongObjectHashMap<V> {
     /**
      * 预分配到可容纳期望条目数，避免首次深搜时反复扩容搬移底层数组。
      * Pre-sizes the table for the expected entry count so a first deep search does not resize repeatedly.
-     *
      * <p>调用方必须保证当前表为空（例如搜索开始前刚执行过 {@link #clear()}），因为该方法会重建底层数组。
      * The caller must guarantee the map is empty (for example right after {@link #clear()}), because the backing
      * arrays are rebuilt.</p>
-     *
      * @param expectedEntries 期望条目数 / expected entry count
      */
     public void ensureCapacity(int expectedEntries) {
@@ -167,7 +157,6 @@ public final class LongObjectHashMap<V> {
     /**
      * 定位键所在槽位（命中返回该槽，未命中返回第一个空槽）。
      * Locates the slot for the key (existing slot on hit, first free slot on miss).
-     *
      * @param key 原始 long 键 / primitive long key
      * @return 槽位下标 / slot index
      */
@@ -192,7 +181,6 @@ public final class LongObjectHashMap<V> {
     /**
      * 记录一个新占用的槽位下标（超出当前数组时按需扩容）。
      * Records a newly taken slot index, growing the bookkeeping array on demand.
-     *
      * @param index 槽位下标 / slot index
      */
     private void recordSlot(int index) {
@@ -233,7 +221,6 @@ public final class LongObjectHashMap<V> {
     /**
      * 64 位键的混淆散列（Fibonacci 乘法 + 高低位异或）。
      * Spreads 64-bit keys (Fibonacci multiply plus high/low xor).
-     *
      * @param key 原始 long 键 / primitive long key
      * @return 散列值 / hash value
      */

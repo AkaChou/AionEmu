@@ -9,7 +9,6 @@ import java.util.Iterator;
 /**
  * 管理员全服公告命令：以匿名或实名向全服居中广播。
  * Admin announce command: center-broadcasts a message server-wide, anonymously or named.
- *
  * @author Ben, Ritsu
  */
 public class Announce extends AdminCommand {
@@ -25,7 +24,6 @@ public class Announce extends AdminCommand {
 	/**
 	 * 执行全服公告：按 anonymous/name 前缀组装消息并广播。
 	 * Executes server announce: builds the message from anonymous/name prefix and broadcasts.
-	 *
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -59,7 +57,6 @@ public class Announce extends AdminCommand {
 	/**
 	 * 参数错误时输出 {@code //announce} 用法。
 	 * Prints {@code //announce} usage on invalid arguments.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

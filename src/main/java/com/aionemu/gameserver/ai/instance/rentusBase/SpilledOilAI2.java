@@ -11,7 +11,6 @@ import java.util.concurrent.Future;
 /**
  * Rentus Base 副本 NPC AI：Spilled Oil（@AIName "spilled_oil"），继承 AggressiveNpcAI2。
  * Rentus Base instance NPC AI: Spilled Oil (@AIName "spilled_oil"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("spilled_oil")

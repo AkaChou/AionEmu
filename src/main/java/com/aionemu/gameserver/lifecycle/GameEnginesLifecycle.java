@@ -87,7 +87,6 @@ public class GameEnginesLifecycle {
     /**
      * 等待全部引擎加载完成；中断时记录警告并恢复中断标志。
      * Await completion of all engine loads; on interrupt log a warning and restore the interrupt flag.
-     *
      * @param progressLatch 进度闩 / Progress latch
      */
     private void await(CountDownLatch progressLatch) {
@@ -102,7 +101,6 @@ public class GameEnginesLifecycle {
     /**
      * 是否已成功加载。
      * Whether loading has completed successfully.
-     *
      * @return 已加载为 {@code true} / {@code true} if loaded
      */
     public synchronized boolean isLoaded() {
@@ -112,7 +110,6 @@ public class GameEnginesLifecycle {
     /**
      * 最近一次加载耗时（毫秒）。
      * Last load duration in milliseconds.
-     *
      * @return 耗时毫秒数；未启动为 -1 / Duration ms; -1 if never started
      */
     public synchronized long getLoadTimeMillis() {
@@ -122,7 +119,6 @@ public class GameEnginesLifecycle {
     /**
      * 最近一次失败原因。
      * Last failure cause.
-     *
      * @return 失败异常；成功为 {@code null} / Failure throwable; {@code null} on success
      */
     public synchronized Throwable getLastFailure() {

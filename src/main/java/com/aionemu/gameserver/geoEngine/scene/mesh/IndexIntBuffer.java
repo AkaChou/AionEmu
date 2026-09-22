@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 基于 {@link IntBuffer} 的整数索引缓冲实现。
  * {@link IndexBuffer} implementation backed by an {@link IntBuffer}.
- *
  * @author lex
  */
 @AllArgsConstructor
@@ -19,7 +18,6 @@ public class IndexIntBuffer extends IndexBuffer {
 	/**
 	 * 读取整数索引。
 	 * Reads an integer index.
-	 *
 	 * @param i 索引位置 / index position
 	 * @return 索引值 / index value
 	 */
@@ -31,7 +29,6 @@ public class IndexIntBuffer extends IndexBuffer {
 	/**
 	 * 写入整数索引。
 	 * Writes an integer index.
-	 *
 	 * @param i 索引位置 / index position
 	 * @param value 索引值 / index value
 	 */
@@ -43,7 +40,6 @@ public class IndexIntBuffer extends IndexBuffer {
 	/**
 	 * 返回缓冲 limit（元素个数）。
 	 * Returns the buffer limit (element count).
-	 *
 	 * @return 元素个数 / element count
 	 */
 	@Override
@@ -54,7 +50,6 @@ public class IndexIntBuffer extends IndexBuffer {
 	/**
 	 * 返回底层整型缓冲。
 	 * Returns the underlying int buffer.
-	 *
 	 * @return 底层整型缓冲 / int buffer
 	 */
 	@Override

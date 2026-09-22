@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * RvR 相关 NPC AI：Taina（@AIName "taina"），继承 AggressiveNpcAI2。
  * RvR-related NPC AI: Taina (@AIName "taina"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("taina")

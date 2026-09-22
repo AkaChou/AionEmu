@@ -11,7 +11,6 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 /**
  * MP 消耗动作：施法时从施法者扣除魔法值（可受技能消耗加成修正）。
  * MP cost action: reduces caster MP on cast (may apply skill-cost boost).
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -42,7 +41,6 @@ public class MpUseAction extends Action {
 	/**
 	 * 按等级、比例与技能消耗加成计算后扣除 MP。
 	 * Reduces MP after level delta, optional ratio, and skill-cost boost.
-	 *
 	 * @param skill 当前技能上下文 / current skill context
 	 */
 	@Override

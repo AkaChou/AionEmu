@@ -12,7 +12,6 @@ import lombok.Getter;
 /**
  * 可采集物模板（静态数据/XML）。
  * XML template.
- *
  * @author ATracer, KID
  */
 
@@ -23,7 +22,7 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	/**
 	 * 获取 materials 属性值。
 	 * Gets the value of the materials property
-	 * @return 可能的返回对象 / possible object is {@link Materials }
+	 * 可能的返回对象 / possible object is {@link Materials }
 	 */
 	@XmlElement(required = true)
 	protected Materials materials;
@@ -38,49 +37,49 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	/**
 	 * 获取 sourceType 属性值。
 	 * Gets the value of the sourceType property
-	 * @return 可能的返回对象 / possible object is {@link String }
+	 * 可能的返回对象 / possible object is {@link String }
 	 */
 	@XmlAttribute
 	protected String sourceType;
 	/**
 	 * 获取 harvestCount 属性值。
 	 * Gets the value of the harvestCount property
-	 * @return 可能的返回对象 / possible object is {@link Integer }
+	 * 可能的返回对象 / possible object is {@link Integer }
 	 */
 	@XmlAttribute
 	protected int harvestCount;
 	/**
 	 * 获取 skillLevel 属性值。
 	 * Gets the value of the skillLevel property
-	 * @return 可能的返回对象 / possible object is {@link Integer }
+	 * 可能的返回对象 / possible object is {@link Integer }
 	 */
 	@XmlAttribute
 	protected int skillLevel;
 	/**
 	 * 获取 harvestSkill 属性值。
 	 * Gets the value of the harvestSkill property
-	 * @return 可能的返回对象 / possible object is {@link Integer }
+	 * 可能的返回对象 / possible object is {@link Integer }
 	 */
 	@XmlAttribute
 	protected int harvestSkill;
 	/**
 	 * 获取 successAdj 属性值。
 	 * Gets the value of the successAdj property
-	 * @return 可能的返回对象 / possible object is {@link Integer }
+	 * 可能的返回对象 / possible object is {@link Integer }
 	 */
 	@XmlAttribute
 	protected int successAdj;
 	/**
 	 * 获取 failureAdj 属性值。
 	 * Gets the value of the failureAdj property
-	 * @return 可能的返回对象 / possible object is {@link Integer }
+	 * 可能的返回对象 / possible object is {@link Integer }
 	 */
 	@XmlAttribute
 	protected int failureAdj;
 	/**
 	 * 获取 aerialAdj 属性值。
 	 * Gets the value of the aerialAdj property
-	 * @return 可能的返回对象 / possible object is {@link Integer }
+	 * 可能的返回对象 / possible object is {@link Integer }
 	 */
 	@XmlAttribute
 	protected int aerialAdj;
@@ -115,7 +114,6 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 
 	/**
 	 * 获取名称属性值。 / Gets the value of the name property
-	 *
 	 * @return 可能的返回对象 / possible object is {@link String }
 	 */
 	@Override
@@ -126,7 +124,6 @@ public class GatherableTemplate extends VisibleObjectTemplate {
 	/**
 	 * 获取名称 ID。
 	 * Gets the name id.
-	 *
 	 * @return 名称 ID / the nameId
 	 */
 	@Override

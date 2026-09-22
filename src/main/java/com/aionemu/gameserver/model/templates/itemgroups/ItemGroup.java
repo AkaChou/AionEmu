@@ -13,7 +13,6 @@ import lombok.Getter;
 /**
  * 物品奖励组抽象基类：加成类型、概率与奖励条目。
  * Abstract item group: bonus type, chance and reward entries.
- *
  * @author Rolandas
  */
 @Getter
@@ -26,7 +25,7 @@ public abstract class ItemGroup {
 	/**
 	 * 获取 bonusType 属性值。
 	 * Gets the value of the bonusType property
-	 * @return possible object is {@link BonusType }
+	 * possible object is {@link BonusType }
 	 */
 	@XmlAttribute(name = "bonusType", required = true)
 	protected BonusType bonusType;

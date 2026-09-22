@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端下发安全令牌字符串。
  * Server packet delivering a security token string to the client.
- *
  * @author xXMashUpXx
  */
 @AllArgsConstructor

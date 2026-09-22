@@ -14,7 +14,6 @@ import lombok.AccessLevel;
 /**
  * 任务跟随 NPC 周期检查任务：监控玩家/NPC 存活与距离，以及是否到达目的地。
  * Periodic quest follow-NPC check task: monitors player/NPC life and distance, and destination arrival.
- *
  * @author ATracer
  */
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
@@ -48,7 +47,6 @@ public class FollowingNpcCheckTask implements Runnable {
 	/**
 	 * 跟随成功：停止跟随并通知任务引擎到达目标。
 	 * Follow succeeded: stop following and notify the quest engine that the target was reached.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 */
 	private final void onSuccess(QuestEnv env) {
@@ -59,7 +57,6 @@ public class FollowingNpcCheckTask implements Runnable {
 	/**
 	 * 跟随失败：停止跟随并通知任务引擎丢失目标。
 	 * Follow failed: stop following and notify the quest engine that the target was lost.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 */
 	protected void onFail(QuestEnv env) {
@@ -70,7 +67,6 @@ public class FollowingNpcCheckTask implements Runnable {
 	/**
 	 * 取消玩家跟随任务并停止 NPC 跟随 AI；非 following AI 则删除 NPC。
 	 * Cancels the player's follow task and stops the NPC follow AI; deletes the NPC if its AI is not "following".
-	 *
 	 * @param env 任务环境 / Quest environment
 	 */
 	private final void stopFollowing(QuestEnv env) {

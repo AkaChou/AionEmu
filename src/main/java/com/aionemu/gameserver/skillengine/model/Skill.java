@@ -67,7 +67,6 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 /**
  * 运行时技能实例：驱动施法流程、目标选择、效果应用与结束。
  * Runtime skill instance: drives cast flow, targeting, effect application and end.
- *
  * @author ATracer Modified by Wakzashi
  */
 @Slf4j
@@ -79,7 +78,6 @@ public class Skill {
 	/**
 	 * 设置多段施法标记（历史方法名，保留以兼容既有调用）。
 	 * Sets the multi-cast flag (legacy setter name kept for existing callers).
-	 *
 	 * @param isMultiCast 是否多段施法 / whether multi-cast
 	 */
 	public void setIsMultiCast(boolean isMultiCast) {
@@ -147,7 +145,6 @@ public class Skill {
 	/**
 	 * 构造运行时技能实例。
 	 * Constructs a runtime skill instance.
-	 *
 	 */
 	public Skill(SkillTemplate skillTemplate, Player effector, Creature firstTarget) {
 		this(skillTemplate, effector, effector.getSkillList().getSkillLevel(skillTemplate.getSkillId()), firstTarget, null);
@@ -156,7 +153,6 @@ public class Skill {
 	/**
 	 * 构造运行时技能实例。
 	 * Constructs a runtime skill instance.
-	 *
 	 */
 	public Skill(SkillTemplate skillTemplate, Player effector, Creature firstTarget, int skillLevel) {
 		this(skillTemplate, effector, skillLevel, firstTarget, null);
@@ -164,7 +160,6 @@ public class Skill {
 	/**
 	 * 构造运行时技能实例。
 	 * Constructs a runtime skill instance.
-	 *
 	 */
 	public Skill(SkillTemplate skillTemplate, Creature effector, int skillLvl, Creature firstTarget, ItemTemplate itemTemplate) {
 		this.effectedList = new ArrayList<>();
@@ -190,7 +185,6 @@ public class Skill {
 	/**
 	 * 校验当前是否可使用该技能。
 	 * Validates whether the skill can be used now.
-	 *
 	 * @return 是否可用 / whether usable
 	 */
 	public boolean canUseSkill() {
@@ -266,7 +260,6 @@ public class Skill {
 	/**
 	 * 使用技能（含动画）。
 	 * Uses the skill (with animation).
-	 *
 	 * @return 是否成功 / whether succeeded
 	 */
 	public boolean useSkill() {
@@ -290,7 +283,6 @@ public class Skill {
 	/**
 	 * 使用技能（无动画）。
 	 * Uses the skill without animation.
-	 *
 	 * @return 是否成功 / whether succeeded
 	 */
 	public boolean useNoAnimationSkill() {
@@ -300,7 +292,6 @@ public class Skill {
 	/**
 	 * 使用技能（跳过属性校验）。
 	 * Uses the skill without property checks.
-	 *
 	 * @return 是否成功 / whether succeeded
 	 */
 	public boolean useWithoutPropSkill() {
@@ -395,7 +386,6 @@ public class Skill {
 	/**
 	 * 按烙印强化查表缩减技能冷却。
 	 * Reduces the skill cooldown via the stigma-enchant table.
-	 *
 	 * @param skill 技能 / skill
 	 * @param cooldown 原始冷却毫秒 / raw cooldown in ms
 	 * @return 缩减后的冷却毫秒 / reduced cooldown in ms
@@ -450,16 +440,13 @@ public class Skill {
 	/**
 	 * 充能阶段的时间缩放系数，与客户端蓄力条同源。
 	 * Charge-stage time factor, shared with the client charge gauge.
-	 *
 	 * <p>客户端按 {@code SM_CASTSPELL} 下发的（已受速度修正的）施法时长缩放蓄力条，物理充能则按攻速比例缩放；
 	 * 因此阶段窗口与最小充能必须按同一比例缩放。旧实现只取该比例的一半（{@code 1 - (1 - ratio) * 0.5}），
 	 * 使服务器阶段窗口恒长于客户端，表现为客户端已进入第三阶段、服务器仍按前两阶段结算伤害。</p>
-	 *
 	 * <p>The client scales its gauge by the speed-corrected cast time sent in {@code SM_CASTSPELL}, and physical
 	 * charge skills by the attack-delay ratio, so stage windows must use that same ratio. The previous
 	 * half-weighted blend ({@code 1 - (1 - ratio) * 0.5}) kept the server's windows longer than the client's, so a
 	 * release the client showed as stage three could still be resolved as stage one or two.</p>
-	 *
 	 * @return 缩放系数 / scaling factor
 	 */
 	private float calculateChargeTimeMultiplier() {
@@ -490,10 +477,6 @@ public class Skill {
 			return true;
 		}
 
-		/**
-		 * 部分技能例外：药草/法力治疗、陷阱。
-		 * Exceptions for certain skills - herb and mana treatment - traps
-		 */
 		// 不检查草药、法力治疗与专注增强 / dont check herb , mana treatment and concentration enhancement
 		switch (this.getSkillId()) { // 4.8
 		case 245: // 绷带治疗 / Bandage Heal
@@ -694,7 +677,6 @@ public class Skill {
 	/**
 	 * 原子尝试取得施法取消权。
 	 * Atomically attempts to acquire cancellation ownership for this cast.
-	 *
 	 * @return 是否成功取得取消权 / whether cancellation ownership was acquired
 	 */
 	public boolean tryCancelCast() {
@@ -786,10 +768,6 @@ public class Skill {
 			AbyssService.rankerSkillAnnounce((Player) effector, this.getSkillTemplate().getNameId());
 		}
 
-		/**
-		 * 尝试移除物品；若不可行则返回以防止利用。
-	 * Try removing item; if not possible return to prevent exploits
-		 */
 		if (effector instanceof Player && skillMethod == SkillMethod.ITEM) {
 			Item item = ((Player) effector).getInventory().getItemByObjId(this.itemObjectId);
 			if (item == null)
@@ -802,10 +780,6 @@ public class Skill {
 				}
 			}
 		}
-		/**
-		 * 创建效果并预计算结果。
-	 * Create effects and precalculate result
-		 */
 
 		int spellStatus = 0;
 		int dashStatus = 0;
@@ -896,17 +870,10 @@ public class Skill {
 			this.chainSuccess = true;
 		}
 
-			/**
-		 * 设置连锁条件检查所需变量。
-		 * Set variables for chain condition check.
-		 */
 		if (effector instanceof Player && this.chainSuccess && this.chainCategory != null) {
 			((Player) effector).getChainSkills().addChainSkill(this.chainCategory, this.isMulticast());
 		}
 
-		/**
-	 * 执行必要动作（消耗 MP/DP、物品等）。 / Perform necessary actions (use mp,dp items etc)
-	 */
 		Actions skillActions = skillTemplate.getActions();
 		if (skillActions != null) {
 			for (Action action : skillActions.getActions()) {
@@ -943,14 +910,10 @@ public class Skill {
 	/**
 	 * 向受影响对象广播效果并执行惩罚技能。
 	 * Broadcasts effects to affected objects and runs the penalty skill.
-	 *
 	 * @param effects 效果列表 / effect list
 	 */
 	public void applyEffect(List<Effect> effects) {
 		Creature eventTarget = null;
-		/**
-	 * Apply effects to effected objects
-	 */
 		for (Effect effect : effects) {
 			effect.applyEffect();
 			if (isFullyDodgedNpc(effect)) {
@@ -977,10 +940,7 @@ public class Skill {
 				observer.getAi2().onSeeSpell(effector, target, skillTemplate.getSkillId(), skillLevel));
 		}
 
-		/**
-	 * 使用惩罚技能（当前 100% 成功）。 / Use penalty skill (now 100% success)
-	 */
-		if (!blockedPenaltySkill) {
+        if (!blockedPenaltySkill) {
 			startPenaltySkill();
 		}
 	}
@@ -993,7 +953,6 @@ public class Skill {
 	/**
 	 * 广播施法结束结果包（按目标类型分发）。
 	 * Broadcasts the cast-end result packet (dispatched by target type).
-	 *
 	 * @param spellStatus 法术状态码 / spell status code
 	 * @param dashStatus 位移状态码 / dash status code
 	 * @param effects 已计算的效果列表 / calculated effects
@@ -1044,7 +1003,6 @@ public class Skill {
 	/**
 	 * 调度技能动作/效果（引导类技能）。
 	 * Schedule actions/effects of skill (channeled skills).
-	 *
 	 * @param delay 延迟毫秒 / delay millis
 	 */
 	private void schedule(int delay) {
@@ -1073,7 +1031,6 @@ public class Skill {
 	/**
 	 * 获取技能 ID。
 	 * Gets skill id.
-	 *
 	 */
 	public int getSkillId() {
 		return skillTemplate.getSkillId();
@@ -1081,7 +1038,6 @@ public class Skill {
 	/**
 	 * 是否被动技能。
 	 * Whether passive skill.
-	 *
 	 */
 	public boolean isPassive() {
 		return skillTemplate.getActivationAttribute() == ActivationAttribute.PASSIVE;
@@ -1090,7 +1046,6 @@ public class Skill {
 	/**
 	 * 是否非指向 AOE。
 	 * Whether non-target AOE.
-	 *
 	 */
 	public boolean checkNonTargetAOE() {
 		return (firstTargetAttribute == FirstTargetAttribute.ME && targetRangeAttribute == TargetRangeAttribute.AREA);
@@ -1098,7 +1053,6 @@ public class Skill {
 	/**
 	 * 是否目标 AOE。
 	 * Whether target AOE.
-	 *
 	 */
 	public boolean isTargetAOE() {
 		return (firstTargetAttribute == FirstTargetAttribute.TARGET && targetRangeAttribute == TargetRangeAttribute.AREA);
@@ -1106,7 +1060,6 @@ public class Skill {
 	/**
 	 * 是否自身增益。
 	 * Whether self buff.
-	 *
 	 */
 	public boolean isSelfBuff() {
 		return (firstTargetAttribute == FirstTargetAttribute.ME && targetRangeAttribute == TargetRangeAttribute.ONLYONE && skillTemplate.getSubType() == SkillSubType.BUFF && !skillTemplate.isDeityAvatar());
@@ -1114,7 +1067,6 @@ public class Skill {
 	/**
 	 * 主目标是否自身。
 	 * Whether first target is self.
-	 *
 	 */
 	public boolean isFirstTargetSelf() {
 		return (firstTargetAttribute == FirstTargetAttribute.ME);
@@ -1122,7 +1074,6 @@ public class Skill {
 	/**
 	 * 是否地点技能。
 	 * Whether point skill.
-	 *
 	 */
 	public boolean isPointSkill() {
 		return (this.firstTargetAttribute == FirstTargetAttribute.POINT);
@@ -1130,7 +1081,6 @@ public class Skill {
 	/**
 	 * 设置目标类型与坐标。
 	 * Sets target type and coordinates.
-	 *
 	 * @param x X
 	 * @param y Y
 	 * @param z Z
@@ -1144,7 +1094,6 @@ public class Skill {
 	/**
 	 * 设置目标位置与朝向。
 	 * Sets target position and heading.
-	 *
 	 * @param x X
 	 * @param y Y
 	 * @param z Z
@@ -1243,7 +1192,6 @@ public class Skill {
 	/**
 	 * 是否地面技能。
 	 * Whether ground skill.
-	 *
 	 */
 	public boolean isGroundSkill() {
 		return skillTemplate.isGroundSkill();
@@ -1252,7 +1200,6 @@ public class Skill {
 	/**
 	 * 判断是否应影响该可见对象。
 	 * Whether the visible object should be affected.
-	 *
 	 */
 	public boolean shouldAffectTarget(VisibleObject object) {
 		// 生物离地至少 2 米时无法施加地面技能。 / If creature is at least 2 meters above the terrain, ground skill cannot be applied
@@ -1270,7 +1217,6 @@ public class Skill {
 	/**
 	 * 是否点对点技能。
 	 * Whether point-to-point skill.
-	 *
 	 */
 	public boolean isPointPointSkill() {
 		return this.getSkillTemplate().getProperties().getFirstTarget() == FirstTargetAttribute.POINT && this.getSkillTemplate().getProperties().getTargetType() == TargetRangeAttribute.POINT;
@@ -1279,7 +1225,6 @@ public class Skill {
 	/**
 	 * 是否多重施放。
 	 * Whether multicast.
-	 *
 	 */
 	public boolean isMulticast() {
 		return this.isMultiCast;
@@ -1288,7 +1233,6 @@ public class Skill {
 	/**
 	 * 停止充能。
 	 * Stops charging.
-	 *
 	 */
 	public void stopCharging() {
 		if (chargeTemplate == null) {

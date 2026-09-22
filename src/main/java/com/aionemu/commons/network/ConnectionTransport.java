@@ -9,7 +9,6 @@ public interface ConnectionTransport {
     /**
      * 获取对端 IP。
      * Get remote IP.
-     *
      * @return IP 地址 / IP address
      */
     String getIP();
@@ -23,7 +22,6 @@ public interface ConnectionTransport {
     /**
      * 关闭连接。
      * Close the connection.
-     *
      * @param forced 是否强制关闭 / Whether to force close
      */
     void close(boolean forced);
@@ -31,7 +29,6 @@ public interface ConnectionTransport {
     /**
      * 仅关闭底层资源（幂等）。
      * Close underlying resources only (idempotent).
-     *
      * @return 是否实际关闭 / Whether close was performed
      */
     boolean onlyClose();

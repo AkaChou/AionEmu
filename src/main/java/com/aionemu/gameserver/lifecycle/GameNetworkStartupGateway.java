@@ -28,7 +28,6 @@ public class GameNetworkStartupGateway {
     /**
      * 可选注入关闭钩子提供者。
      * Optionally inject the shutdown-hook provider.
-     *
      * @param shutdownHookProvider 关闭钩子提供者 / Shutdown-hook provider
      */
     @Autowired(required = false)
@@ -39,7 +38,6 @@ public class GameNetworkStartupGateway {
     /**
      * 可选注入运行时桥提供者。
      * Optionally inject the runtime-bridge provider.
-     *
      * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
      */
     @Autowired(required = false)
@@ -66,7 +64,6 @@ public class GameNetworkStartupGateway {
     /**
      * 是否处于 boot-embedded 运行模式。
      * Whether the process is in boot-embedded mode.
-     *
      * @return 处于 boot-embedded 模式为 {@code true} / {@code true} if boot-embedded
      */
     public boolean isBootEmbedded() {
@@ -76,7 +73,6 @@ public class GameNetworkStartupGateway {
     /**
      * 解析关闭钩子线程：优先 Spring 提供者，否则运行时桥回退。
      * Resolve the shutdown-hook thread: prefer Spring provider, otherwise runtime-bridge fallback.
-     *
      * @return 关闭钩子线程 / Shutdown-hook thread
      */
     public Thread shutdownHook() {
@@ -93,7 +89,6 @@ public class GameNetworkStartupGateway {
     /**
      * 向 JVM 注册关闭钩子。
      * Register the shutdown hook with the JVM.
-     *
      * @param shutdownHook 关闭钩子线程 / Shutdown-hook thread
      */
     public void registerShutdownHook(Thread shutdownHook) {
@@ -103,7 +98,6 @@ public class GameNetworkStartupGateway {
     /**
      * 返回当前时间毫秒数。
      * Return the current time in milliseconds.
-     *
      * @return 当前时间毫秒 / Current time millis
      */
     public long currentTimeMillis() {
@@ -113,7 +107,6 @@ public class GameNetworkStartupGateway {
     /**
      * 解析网络启动运行时桥：优先 Spring 提供者，否则新建。
      * Resolve the network-startup runtime bridge: prefer Spring provider, otherwise a new instance.
-     *
      * @return 运行时桥 / Runtime bridge
      */
     private GameNetworkStartupRuntimeBridge runtimeBridge() {

@@ -34,7 +34,6 @@ import lombok.Setter;
 /**
  * 据点运行时实例，管理占领、首领、袭击与相关广播。
  * Base runtime instance managing ownership, boss, assaults, and broadcasts.
- *
  * @author Rinzler
  */
 @Getter
@@ -48,7 +47,6 @@ public class Base<BL extends BaseLocation> {
 	 *  设置据点首领 NPC。
 	 *  Sets the base boss NPC.
 	 *  boss NPC
-
 	 */
     @Setter
     private Npc boss;
@@ -59,18 +57,12 @@ public class Base<BL extends BaseLocation> {
 	 *  flag NPC
 	 */
 	@Setter
-	private Npc /**
-	 * -- GETTER --
-	 *  获取据点旗帜 NPC。
-	 *  Returns the base flag NPC.
-	 *  flag NPC
-	 */
-	    flag;
+	private Npc
+            flag;
 	private boolean started;
 	/**
 	 * 获取据点位置模板。
 	 * Returns the base location template.
-	 *
 	 * base location
 	 */
 	private final BL baseLocation;
@@ -79,14 +71,12 @@ public class Base<BL extends BaseLocation> {
 	/**
 	 * 获取已刷新单位列表。
 	 * Returns the spawned unit list.
-	 *
-	 * @return 已刷新单位 / spawned units
+	 * 已刷新单位 / spawned units
 	 */
 	private final List<Npc> spawned = new ArrayList<>();
 	/**
 	 * 获取当前袭击单位列表。
 	 * Returns the current attacker list.
-	 *
 	 * attackers
 	 */
 	private final List<Npc> attackers = new ArrayList<>();
@@ -94,15 +84,12 @@ public class Base<BL extends BaseLocation> {
 	/**
 	 * 获取首领死亡监听器。
 	 * Returns the boss death listener.
-	 *
-	 * @return 死亡监听器 / death listener
 	 */
 	private final BaseBossDeathListener baseBossDeathListener = new BaseBossDeathListener(this);
 
 	/**
 	 * 以据点位置模板创建运行时实例。
 	 * Creates a runtime instance from a base location template.
-	 *
 	 * @param baseLocation base location
 	 */
 	public Base(BL baseLocation) {
@@ -179,7 +166,6 @@ public class Base<BL extends BaseLocation> {
 	/**
 	 * 按据点 ID 广播袭击/术古相关系统消息。
 	 * Broadcasts assault/Shugo system messages by base id.
-	 *
 	 * @param id 据点 ID / base id
 	 * @return 是否匹配并发送消息 / whether a message was sent
 	 */
@@ -600,7 +586,6 @@ public class Base<BL extends BaseLocation> {
 	/**
 	 * 按指定阵营刷新袭击单位。
 	 * Spawns assault attackers for the given race.
-	 *
 	 * @param race 袭击阵营 / attacking race
 	 */
 	public void spawnAttackers(Race race) {
@@ -638,7 +623,6 @@ public class Base<BL extends BaseLocation> {
 	/**
 	 * 是否仍有存活的袭击单位。
 	 * Whether any assault attackers are still alive.
-	 *
 	 * @return 被袭击中为 true / true if under attack
 	 */
 	public boolean isAttacked() {
@@ -685,7 +669,6 @@ public class Base<BL extends BaseLocation> {
 	/**
 	 * 据点是否已结束。
 	 * Whether the base instance is finished.
-	 *
 	 * @return 已结束时为 {@code true} / {@code true} if finished
 	 */
 	public boolean isFinished() {
@@ -695,7 +678,6 @@ public class Base<BL extends BaseLocation> {
 	/**
 	 * 获取据点 ID。
 	 * Returns the base id.
-	 *
 	 * base id
 	 */
 	public int getId() {
@@ -705,7 +687,6 @@ public class Base<BL extends BaseLocation> {
 	/**
 	 * 获取当前占领阵营。
 	 * Returns the current owning race.
-	 *
 	 * owning race
 	 */
 	public Race getRace() {
@@ -715,7 +696,6 @@ public class Base<BL extends BaseLocation> {
 	/**
 	 * 设置当前占领阵营。
 	 * Sets the current owning race.
-	 *
 	 * @param race 占领阵营 / owning race
 	 */
 	public void setRace(Race race) {

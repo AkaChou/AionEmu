@@ -16,7 +16,6 @@ import com.aionemu.gameserver.services.player.PlayerService;
 /**
  * 向客户端发送账号角色列表的服务端包。
  * Server packet that sends the account character list to the client.
- *
  * @author Nemesiss, AEJTester
  */
 @Slf4j
@@ -33,7 +32,6 @@ public class SM_CHARACTER_LIST extends PlayerInfo {
 	/**
 	 * 构造角色列表包。
 	 * Constructs a character-list packet.
-	 *
 	 * @param unkValue 协议阶段/未知值（0 或 2 等） / protocol stage / unknown value (0 or 2, etc.)
 	 * session token
 	 */

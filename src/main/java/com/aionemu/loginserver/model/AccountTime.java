@@ -8,7 +8,6 @@ import lombok.Setter;
 /**
  * 账号时间数据：上次登录、会话时长、当日累计在线/休息时间等。
  * Account time data: last login, session duration, accumulated online/rest time today.
- *
  * @author EvilSpirit
  */
 @Getter

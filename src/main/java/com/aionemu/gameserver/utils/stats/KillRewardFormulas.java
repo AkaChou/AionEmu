@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * 击杀奖励公式域：独立/组队经验、DP 奖励与 PVP 点数（AP/GP/XP/DP）得失计算。
  * Kill-reward formula domain: solo/group XP, DP rewards and PVP AP/GP/XP/DP gains and losses.
- *
  * <p>该类型只服务 {@link StatFunctions}：奖励数值公式随版本/配置调整，与战斗命中/伤害公式
  *（留在 {@link StatFunctions}）变化原因不同。全部为静态纯函数，不持有状态、不创建对象；
  * 对外仍通过 {@link StatFunctions} 的原 public static 方法访问（门面签名不变）。
@@ -31,7 +30,6 @@ final class KillRewardFormulas {
 	/**
 	 * 计算单人击杀目标的经验奖励
 	 * Calculate solo XP reward from target
-	 *
 	 * 玩家 / Player
 	 * Target
 	 * @return 单人经验奖励 / Solo XP reward
@@ -47,7 +45,6 @@ final class KillRewardFormulas {
 	/**
 	 * 计算队伍击杀目标的经验奖励（按范围内最高等级）
 	 * Calculate group XP reward from target using max level in range
-	 *
 	 * @param maxLevelInRange 范围内最高等级 / Max level in range
 	 * Target
 	 * @return 队伍经验奖励 / Group XP reward
@@ -62,7 +59,6 @@ final class KillRewardFormulas {
 	/**
 	 * 计算单人击杀目标的 DP 奖励
 	 * Calculate solo DP reward from target
-	 *
 	 * 玩家 / Player
 	 * Target
 	 * Solo DP reward
@@ -80,7 +76,6 @@ final class KillRewardFormulas {
 	/**
 	 * 计算队伍击杀目标的 DP 奖励
 	 * Calculate group DP reward from target
-	 *
 	 * 玩家 / Player
 	 * Target
 	 * Group DP reward
@@ -98,7 +93,6 @@ final class KillRewardFormulas {
 	/**
 	 * 计算 PvE 击杀获得的 AP
 	 * Calculate AP gained from PvE kill
-	 *
 	 * 玩家 / Player
 	 * Target
 	 * AP reward
@@ -115,7 +109,6 @@ final class KillRewardFormulas {
 	/**
 	 * 计算 PvP 死亡损失的 AP
 	 * Calculate AP lost on PvP death
-	 *
 	 * @param defeated 被击败玩家 / Defeated player
 	 * Winner
 	 * AP lost
@@ -139,7 +132,6 @@ final class KillRewardFormulas {
 	/**
 	 * 计算 PvP 击杀获得的 AP
 	 * Calculate AP gained from PvP kill
-	 *
 	 * @param defeated 被击败玩家 / Defeated player
 	 * @param maxRank 击杀方最高军衔 / Winner max rank
 	 * @param maxLevel 击杀方最高等级 / Winner max level
@@ -174,7 +166,6 @@ final class KillRewardFormulas {
 	/**
 	 * 计算 PvP 死亡损失的 GP
 	 * Calculate GP lost on PvP death
-	 *
 	 * @param defeated 被击败玩家 / Defeated player
 	 * Winner
 	 * GP lost
@@ -199,7 +190,6 @@ final class KillRewardFormulas {
 	/**
 	 * 计算 PvP 击杀获得的经验
 	 * Calculate XP gained from PvP kill
-	 *
 	 * @param defeated 被击败玩家 / Defeated player
 	 * @param maxRank 击杀方最高军衔 / Winner max rank
 	 * @param maxLevel 击杀方最高等级 / Winner max level
@@ -234,7 +224,6 @@ final class KillRewardFormulas {
 	/**
 	 * 计算 PvP 击杀获得的 DP
 	 * Calculate DP gained from PvP kill
-	 *
 	 * @param defeated 被击败玩家 / Defeated player
 	 * @param maxRank 击杀方最高军衔 / Winner max rank
 	 * @param maxLevel 击杀方最高等级 / Winner max level
@@ -252,7 +241,6 @@ final class KillRewardFormulas {
 	/**
 	 * 按等级差调整 PvP DP 奖励
 	 * Adjust PvP DP reward by level difference
-	 *
 	 * Base points
 	 * @param defeatedLvl 被击败等级 / Defeated level
 	 * @param killerLvl 击杀者等级 / Killer level

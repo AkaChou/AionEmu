@@ -13,7 +13,6 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 /**
  * Beshmundir Temple 副本 NPC AI：Sacrificial Soul（@AIName "templeSoul"），继承 AggressiveNpcAI2。
  * Beshmundir Temple instance NPC AI: Sacrificial Soul (@AIName "templeSoul"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("templeSoul")

@@ -17,7 +17,6 @@ import java.util.LinkedHashMap;
 /**
  * 蓄力技能数据容器，按 ID、套装名及技能阶段多路索引。
  * Charge skill data holder, multi-indexed by id, set name, and skill stages.
- *
  * @author Dr.Nism [Ranastic]
  */
 @XmlRootElement(name = "charge_skills")
@@ -51,7 +50,6 @@ public class ChargeSkillData {
 	/**
 	 * 返回已加载的蓄力技能数量。
 	 * Returns the number of loaded charge skills.
-	 *
 	 * @return 已加载的充能技能数量 / Returns the number of loaded charge skills.
 	 */
 	public int size() {
@@ -61,7 +59,6 @@ public class ChargeSkillData {
 	/**
 	 * 按 ID 获取蓄力技能模板。
 	 * Returns the charge skill template for the given id.
-	 *
 	 * @param id 模板 ID / template id
 	 * @return 模板，不存在则为 null / template or null
 	 */
@@ -72,7 +69,6 @@ public class ChargeSkillData {
 	/**
 	 * 按套装名获取蓄力技能模板。
 	 * Returns the charge skill template for the given set name.
-	 *
 	 * @param name 套装名 / set name
 	 * @return 模板，不存在则为 null / template or null
 	 */
@@ -83,7 +79,6 @@ public class ChargeSkillData {
 	/**
 	 * 按第一阶段技能 ID 获取蓄力技能模板。
 	 * Returns the charge skill template for the given first-stage skill id.
-	 *
 	 * @param skillId 第一阶段技能 ID / first-stage skill id
 	 * @return 模板，不存在则为 null / template or null
 	 */
@@ -94,7 +89,6 @@ public class ChargeSkillData {
 	/**
 	 * 按任意阶段技能 ID 获取蓄力技能模板。
 	 * Returns the charge skill template for any stage skill id.
-	 *
 	 * @param skillId 技能 ID / skill id
 	 * @return 模板，不存在则为 null / template or null
 	 */

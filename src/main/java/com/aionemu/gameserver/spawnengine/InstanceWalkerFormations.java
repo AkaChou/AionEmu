@@ -11,7 +11,6 @@ import java.util.Map;
 /**
  * 单个实例内的巡逻编队与候选 NPC 缓存。
  * Walker formations and candidate NPC cache within one instance.
- *
  * @author Rolandas
  */
 @Slf4j
@@ -47,7 +46,6 @@ public class InstanceWalkerFormations {
 	/**
 	 * 按路径 ID 获取已组建的巡逻队。
 	 * Returns the formed walker group for the route id.
-	 *
 	 * @param walkerId 巡逻路径 ID / walker route id
 	 * @return 巡逻队，可能为 null / walker group or null
 	 */
@@ -58,7 +56,6 @@ public class InstanceWalkerFormations {
 	/**
 	 * 缓存一个待编队的集群巡逻 NPC 候选。
 	 * Caches a clustered walker NPC candidate for later formation.
-	 *
 	 * @param npcWalker 集群巡逻 NPC / clustered npc
 	 * @return 是否加入成功 / whether added
 	 */
@@ -121,7 +118,6 @@ public class InstanceWalkerFormations {
 	 * <p>
 	 * 候选数恰好等于队形容量时视为一个完整编队；否则回退到近邻分组以处理复用路径或多余独立单位。
 	 * When candidate count matches formation capacity, treat as one complete formation; otherwise group by proximity to handle reused routes or extra independent units.
-	 *
 	 * @param candidates 候选列表 / candidate list
 	 * @return 候选坐标组 / candidate position groups
 	 */
@@ -151,7 +147,6 @@ public class InstanceWalkerFormations {
 	/**
 	 * 查找候选 NPC 所属的近邻组；每个组只与首个坐标比较，避免远距离点位串联合并。
 	 * Finds the proximity group for a candidate; compares only with the group anchor to prevent chain merging.
-	 *
 	 * @param grouped 已建立的近邻组 / established proximity groups
 	 * @param candidate 待分组候选 / candidate to group
 	 * @return 匹配的组，未找到时为 null / matching group or null

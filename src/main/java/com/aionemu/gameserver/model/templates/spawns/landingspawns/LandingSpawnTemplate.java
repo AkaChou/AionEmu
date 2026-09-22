@@ -46,7 +46,6 @@ public class LandingSpawnTemplate extends SpawnTemplate {
 	/**
 	 * 登陆是否关闭（无状态）。
 	 * Whether landing is closed (no state).
-	 *
 	 * @return 关闭则为 true / Whether landing closed
 	 */
 	public final boolean isLandingClosed() {

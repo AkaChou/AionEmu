@@ -12,7 +12,6 @@ import lombok.AllArgsConstructor;
 /**
  * 联盟拾取规则变更事件。
  * Change Alliance Loot Rules Event.
- *
  * @author ATracer
  */
 @AllArgsConstructor

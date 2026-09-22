@@ -18,7 +18,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 攻城战相关 NPC AI：Ab1 1011 Outside Tank Li（@AIName "Ab1_1011_Outside_Tank_Li"），继承 NpcAI2。
  * Siege-related NPC AI: Ab1 1011 Outside Tank Li (@AIName "Ab1_1011_Outside_Tank_Li"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Ab1_1011_Outside_Tank_Li")

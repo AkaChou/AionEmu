@@ -10,7 +10,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 减速效果：对目标施加 SLOW 异常，并按减速抗性结算。
  * Slow effect: applies SLOW abnormal and resolves against slow resistance.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -20,7 +19,6 @@ public class SlowEffect extends BuffEffect {
 	/**
 	 * 将效果加入受影响者的效果控制器。
 	 * Adds the effect to the effected creature's effect controller.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -31,7 +29,6 @@ public class SlowEffect extends BuffEffect {
 	/**
 	 * 按 SLOW_RESISTANCE 计算是否生效。
 	 * Calculates success against SLOW_RESISTANCE.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -42,7 +39,6 @@ public class SlowEffect extends BuffEffect {
 	/**
 	 * 设置 SLOW 异常状态。
 	 * Sets the SLOW abnormal state.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -55,7 +51,6 @@ public class SlowEffect extends BuffEffect {
 	/**
 	 * 清除 SLOW 异常状态。
 	 * Clears the SLOW abnormal state.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

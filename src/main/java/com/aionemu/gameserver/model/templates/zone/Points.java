@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 /**
  * 点模板（静态数据/XML）。
  * XML template.
- *
  * @author ATracer
  */
 @Getter
@@ -25,14 +24,8 @@ public class Points {
 
 	@XmlElement(required = true)
 	protected List<Point2D> point;
-	/**
-	 * @return the top
-	 */
 	@XmlAttribute(name = "top")
 	protected float top;
-	/**
-	 * @return the bottom
-	 */
 	@XmlAttribute(name = "bottom")
 	protected float bottom;
 

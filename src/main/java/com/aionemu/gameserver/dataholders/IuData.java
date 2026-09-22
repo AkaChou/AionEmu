@@ -18,7 +18,6 @@ import java.util.Map;
 /**
  * IU 活动地点数据容器，持有并索引全部 {@link IuLocation}。
  * IU event location data holder, indexing all {@link IuLocation} instances.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -43,7 +42,6 @@ public class IuData {
 	/**
 	 * 返回已加载的 IU 地点数量。
 	 * Returns the number of loaded IU locations.
-	 *
 	 * @return 已加载的IU 地点数量 / Returns the number of loaded IU locations.
 	 */
 	public int size() {
@@ -53,7 +51,6 @@ public class IuData {
 	/**
 	 * 返回全部 IU 地点映射。
 	 * Returns the full IU location map.
-	 *
 	 * @return ID 到地点的映射 / map of id to location
 	 */
 	public Map<Integer, IuLocation> getIuLocations() {

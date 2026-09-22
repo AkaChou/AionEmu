@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 /**
  * 基础位置模型。
  * Base Location model.
- *
  * @author Rinzler
  */
 

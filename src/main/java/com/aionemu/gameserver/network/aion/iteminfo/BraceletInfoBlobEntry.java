@@ -11,7 +11,6 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
  * 写入手环可装备的槽位掩码。
  * Blob for bracelet slot info.
  * Writes slot masks the bracelet can be equipped to.
- *
  * @author Ranastic (Encom)
  */
 public class BraceletInfoBlobEntry extends ItemBlobEntry {

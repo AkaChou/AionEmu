@@ -23,7 +23,6 @@ public class Iu extends AdminCommand
 	/**
 	 * 分发 start/stop 子命令。
 	 * Dispatch start/stop subcommands.
-	 *
 	 * @param player 执行命令的管理员 / Admin executing the command
 	 * @param params 子命令与演唱会地点 ID / Subcommand and concert location id
 	 */
@@ -40,7 +39,6 @@ public class Iu extends AdminCommand
 	/**
 	 * 启动或停止指定 Id 的演唱会。
 	 * Start or stop concert for the given location id.
-	 *
 	 * @param player 执行命令的管理员 / Admin executing the command
 	 * @param params start|stop and location id。
 	 */
@@ -73,7 +71,6 @@ public class Iu extends AdminCommand
 	/**
 	 * 校验演唱会地点 ID 是否有效。
 	 * Validate whether the concert location id exists.
-	 *
 	 * @param player 执行命令的管理员 / Admin executing the command
 	 * @param iuId 演唱会地点 ID / Concert location id
 	 * @return 若 valid 则为 true / True if valid
@@ -89,7 +86,6 @@ public class Iu extends AdminCommand
 	/**
 	 * 显示命令帮助。
 	 * Show command help.
-	 *
 	 * @param player 接收提示的玩家 / Player receiving the hint
 	 */
 	protected void showHelp(Player player) {

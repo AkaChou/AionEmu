@@ -7,7 +7,6 @@ import lombok.Getter;
 /**
  * 限定交易 NPC，用于 limiteditems 相关逻辑。
  * Limited Trade Npc for limiteditems logic.
- *
  * @author xTz
  */
 @Getter

@@ -25,7 +25,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 简易 AWT 管理面板：关服、在线查询、踢人、发物、公告与监狱等控制台操作。
  * Lightweight AWT admin panel for shutdown, online lookup, kick, item grant, announce and prison ops.
- *
  * @author PenguinJoe
  * @author yayaya
  */

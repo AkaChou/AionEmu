@@ -13,7 +13,6 @@ import java.util.concurrent.Future;
 /**
  * Dragon Lord Refuge 副本 NPC AI：Calindi Surkana（@AIName "calindi_surkana"），继承 NpcAI2。
  * Dragon Lord Refuge instance NPC AI: Calindi Surkana (@AIName "calindi_surkana"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("calindi_surkana")

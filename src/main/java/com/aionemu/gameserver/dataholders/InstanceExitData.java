@@ -49,7 +49,6 @@ public class InstanceExitData {
 	/**
 	 * 按世界 ID 与种族获取匹配的副本出口。
 	 * Returns the matching instance exit for the given world id and race.
-	 *
 	 * @param worldId 副本 ID / world / instance id。
 	 * @param race 玩家种族 / player race
 	 * @return 匹配的出口，不存在则为 null / matching exit or null
@@ -70,7 +69,6 @@ public class InstanceExitData {
 	/**
 	 * 返回已加载的副本出口数量。
 	 * Returns the number of loaded instance exits.
-	 *
 	 * @return 已加载的副本出口数量 / Returns the number of loaded instance exits.
 	 */
 	public int size() {

@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
  * 命令别名注册表守卫：配置别名与命令类声明的别名必须双向一致。
  * Command alias registry gate: aliases in the access-level config and aliases declared by command
  * classes must match in both directions.
- *
  * <p>命令类由 {@code ChatProcessor#init} 经 {@code CompiledScriptLoader} 按包反射注册，别名只写在
  * 构造器的 {@code super("...")} 中，因此静态引用永远为零；配置里的别名一旦缺少对应类（或反之），
  * 命令只会静默失效而不会编译失败。中文别名（例如 {@code 移动}）同样以别名键写进同一份配置，
@@ -111,7 +110,6 @@ class CommandAliasRegistryTest {
 	/**
 	 * 收集命令类声明的别名。
 	 * Collects aliases declared by command classes.
-	 *
 	 * @return 别名到源文件的映射 / Alias-to-source map
 	 * @throws IOException 读取命令源文件失败时 / When a command source cannot be read
 	 */
@@ -134,7 +132,6 @@ class CommandAliasRegistryTest {
 	/**
 	 * 读取访问等级配置里的别名集合。
 	 * Reads the configured alias set from the access-level config.
-	 *
 	 * @return 配置别名集合 / Configured alias set
 	 * @throws IOException 读取配置失败时 / When the config cannot be read
 	 */
@@ -155,7 +152,6 @@ class CommandAliasRegistryTest {
 	/**
 	 * 列出两个命令包下的全部源文件。
 	 * Lists all command sources under both command packages.
-	 *
 	 * @return 源文件列表 / Source file list
 	 * @throws IOException 遍历命令包失败时 / When the command packages cannot be walked
 	 */

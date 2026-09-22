@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 客户端技能皮肤/动画切换请求包。
  * Client packet for activating or deactivating a skill skin animation.
- *
  * @author FrozenKiller
  */
 public class CM_SKILL_ANIMATION extends AionClientPacket {

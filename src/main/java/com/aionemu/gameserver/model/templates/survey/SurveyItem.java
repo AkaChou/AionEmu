@@ -3,7 +3,6 @@ package com.aionemu.gameserver.model.templates.survey;
 /**
  * 调查问卷物品模板（静态数据/XML）。
  * Survey item template (static data / XML).
- *
  * @author KID
  */
 public class SurveyItem {

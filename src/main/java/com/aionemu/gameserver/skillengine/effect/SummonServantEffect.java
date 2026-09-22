@@ -27,7 +27,6 @@ import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 /**
  * 召唤侍从效果：生成会主动攻击的侍从型 NPC。
  * Summon servant effect: spawns a servant NPC that engages the target.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)

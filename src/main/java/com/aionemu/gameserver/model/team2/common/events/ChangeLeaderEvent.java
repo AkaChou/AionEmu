@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.team2.TemporaryPlayerTeam;
 /**
  * ChangeLeader 活动，用于团队2相关逻辑。
  * Change Leader Event for team 2 logic.
- *
  * @author ATracer
  */
 @Slf4j(topic = "com.aionemu.gameserver.model.team2.group.events.ChangeGroupLeaderEvent")

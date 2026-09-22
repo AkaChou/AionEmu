@@ -8,7 +8,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 同步 A-Station（跨服中转站）服务器切换信息的服务端包。
  * Server packet synchronizing A-Station (cross-server hub) server-switch information.
- *
  * @author Ranastic
  */
 public class SM_A_STATION extends AionServerPacket {

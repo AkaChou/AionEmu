@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Norsvold 区域 NPC AI：Masked Manduri Monkey King（@AIName "masked_manduri_monkey_king"），继承 AggressiveNpcAI2。
  * Norsvold zone NPC AI: Masked Manduri Monkey King (@AIName "masked_manduri_monkey_king"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("masked_manduri_monkey_king")

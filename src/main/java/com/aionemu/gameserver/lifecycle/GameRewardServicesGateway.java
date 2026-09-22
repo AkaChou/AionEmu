@@ -36,7 +36,6 @@ public class GameRewardServicesGateway {
     /**
      * 可选注入奖励服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of reward service.
-     *
      * @param rewardServiceProvider 服务提供者 / Service provider
      */
     @Autowired(required = false)
@@ -47,7 +46,6 @@ public class GameRewardServicesGateway {
     /**
      * 可选注入老兵奖励服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of veteran-rewards service.
-     *
      * @param veteranRewardsServiceProvider 服务提供者 / Service provider
      */
     @Autowired(required = false)
@@ -58,7 +56,6 @@ public class GameRewardServicesGateway {
     /**
      * 可选注入功能服务运行时桥 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of feature-services runtime bridge.
-     *
      * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
      */
     @Autowired(required = false)
@@ -82,7 +79,6 @@ public class GameRewardServicesGateway {
     /**
      * 解析奖励服务：优先 Spring，否则经运行时桥回退。
      * Resolve reward service: prefer Spring, otherwise fall back via runtime bridge.
-     *
      * @return 服务实例 / Service instance
      */
     private RewardService rewardService() {
@@ -95,7 +91,6 @@ public class GameRewardServicesGateway {
     /**
      * 解析老兵奖励服务：优先 Spring，否则经运行时桥回退。
      * Resolve veteran-rewards service: prefer Spring, otherwise fall back via runtime bridge.
-     *
      * @return 服务实例 / Service instance
      */
     private VeteranRewardsService veteranRewardsService() {
@@ -108,7 +103,6 @@ public class GameRewardServicesGateway {
     /**
      * 解析功能服务运行时桥：优先 Spring，否则新建。
      * Resolve feature-services runtime bridge: prefer Spring, otherwise create new.
-     *
      * @return 运行时桥实例 / Runtime-bridge instance
      */
     private GameFeatureServicesRuntimeBridge runtimeBridge() {

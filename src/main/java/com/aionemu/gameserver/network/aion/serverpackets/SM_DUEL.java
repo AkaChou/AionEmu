@@ -9,7 +9,6 @@ import lombok.AccessLevel;
 /**
  * 决斗状态包：通知决斗开始（请求者）或决斗结果。
  * Duel state packet: duel start (requester) or duel result.
- *
  * @author xavier
  */
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -23,7 +22,6 @@ public class SM_DUEL extends AionServerPacket {
 	/**
 	 * 决斗开始通知。
 	 * Duel-start notification.
-	 *
 	 * @param requesterObjId 发起者对象 ID / requester object id
 	 */
 	public static SM_DUEL SM_DUEL_STARTED(int requesterObjId) {
@@ -39,7 +37,6 @@ public class SM_DUEL extends AionServerPacket {
 	/**
 	 * 决斗结果通知。
 	 * Duel-result notification.
-	 *
 	 * @param result 决斗结果 / duel result
 	 * @param playerName 相关玩家名 / related player name
 	 */

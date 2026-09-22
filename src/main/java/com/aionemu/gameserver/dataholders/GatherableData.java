@@ -16,7 +16,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 可采集物配置数据容器，按模板 ID 索引采集物模板。
  * Gatherable configuration data holder, indexed by template id.
- *
  * @author ATracer
  */
 @XmlRootElement(name = "gatherable_templates")
@@ -49,7 +48,6 @@ public class GatherableData {
 	/**
 	 * 返回采集物模板数量。
 	 * Returns the number of gatherable templates.
-	 *
 	 * @return 采集物模板数量 / Returns the number of gatherable templates.
 	 */
 	public int size() {
@@ -59,7 +57,6 @@ public class GatherableData {
 	/**
 	 * 按 ID 获取采集物模板。
 	 * Returns the gatherable template for the given id.
-	 *
 	 * @param id 采集物模板 ID / gatherable template id
 	 * @return 采集物模板，不存在则为 null / gatherable template, or null if absent
 	 */

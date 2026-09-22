@@ -11,7 +11,6 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
  * 写入属性类型、数值及是否为比率修正。
  * Blob for item stat bonuses.
  * Writes stat type, value, and whether the modifier is rate-based.
- *
  * @author Rolandas
  */
 public class BonusInfoBlobEntry extends ItemBlobEntry {

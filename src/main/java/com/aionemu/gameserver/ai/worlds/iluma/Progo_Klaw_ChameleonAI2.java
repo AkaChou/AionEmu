@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Iluma 区域 NPC AI：Progo Klaw Chameleon（@AIName "progo_klaw_chameleon"），继承 AggressiveNpcAI2。
  * Iluma zone NPC AI: Progo Klaw Chameleon (@AIName "progo_klaw_chameleon"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("progo_klaw_chameleon")

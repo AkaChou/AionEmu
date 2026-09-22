@@ -19,7 +19,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 玩家的生命值/魔法值/飞行时间属性与恢复逻辑。
  * Player HP/MP/fly-time stats and restore logic.
- *
  * @author ATracer, sphinx
  */
 public class PlayerLifeStats extends CreatureLifeStats<Player> {
@@ -175,7 +174,6 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 	/**
 	 * 减少当前 FP，最低降至 0。
 	 * Reduces current FP, clamped at zero.
-	 *
 	 * @param value 要减少的 FP / FP to remove
 	 * @return 剩余 FP / remaining FP
 	 */

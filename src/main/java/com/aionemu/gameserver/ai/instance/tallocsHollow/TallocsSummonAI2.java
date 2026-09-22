@@ -16,7 +16,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Tallocs Hollow 副本 NPC AI：Tallocs Summon（@AIName "tallocssummon"），继承 NpcAI2。
  * Tallocs Hollow instance NPC AI: Tallocs Summon (@AIName "tallocssummon"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("tallocssummon")

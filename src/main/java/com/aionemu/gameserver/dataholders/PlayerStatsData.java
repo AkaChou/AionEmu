@@ -81,7 +81,6 @@ public class PlayerStatsData {
 	/**
 	 * 按玩家当前职业与等级获取属性模板；缺失时回退到 0 级模板。
 	 * Returns the stats template for the player's class and level; falls back to the level-0 template if missing.
-	 *
 	 * @param player 玩家 / player
 	 * @return 玩家属性模板，缺失时回退到 0 级模板 / player stats template, falls back to the level-0 template if missing
 	 */
@@ -96,7 +95,6 @@ public class PlayerStatsData {
 	/**
 	 * 按职业与等级获取属性模板；缺失时回退到 0 级模板。
 	 * Returns the stats template for the given class and level; falls back to the level-0 template if missing.
-	 *
 	 * @param playerClass 职业 / player class
 	 * @param level 等级 / level
 	 * @return 属性模板 / stats template
@@ -112,7 +110,6 @@ public class PlayerStatsData {
 	/**
 	 * 返回已加载的属性模板数量。
 	 * Returns the number of loaded stats templates.
-	 *
 	 * @return 已加载的属性模板数量 / Returns the number of loaded stats templates.
 	 */
 	public int size() {

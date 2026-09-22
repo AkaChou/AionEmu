@@ -14,7 +14,6 @@ import java.util.Map;
 /**
  * 奥德矿脉任务副本事件处理器。
  * Instance event handler for Aether Mine Q.
- *
  * @author Encom
  */
 
@@ -29,7 +28,6 @@ public class AetherMineQInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -50,7 +48,6 @@ public class AetherMineQInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override

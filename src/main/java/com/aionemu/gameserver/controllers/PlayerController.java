@@ -71,9 +71,7 @@ import lombok.Setter;
 /**
  * 玩家控制器，管理视野、区域、战斗、技能、死亡与姿态等玩家行为。
  * Player controller managing sight, zones, combat, skills, death and stance behaviors.
- *
  * @author -Nemesiss-, ATracer, xavier, Sarynth, RotO, xTz, KID
- * @modified Sippolo, yayaya
  */
 @Getter
 @Setter
@@ -83,8 +81,7 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 服务器是否处于关闭流程中。
 	 * Whether the server is in shutdown progress.
-	 *
-	 * @return 关闭中则为 true / true if shutting down
+	 * 关闭中则为 true / true if shutting down
 	 */
 	private boolean isInShutdownProgress;
 	private long lastAttackMilis = 0;
@@ -96,7 +93,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 玩家看到其他可见对象时同步状态包。
 	 * Syncs state packets when the player sees another visible object.
-	 *
 	 * @param object 进入视野的对象 / the object entering sight
 	 */
 	@Override
@@ -161,7 +157,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 对象离开玩家视野时回调。
 	 * Callback when an object leaves the player's sight.
-	 *
 	 * @param object 离开视野的对象 / the object leaving sight
 	 * @param isOutOfRange 是否因超出距离离开 / whether the leave is due to being out of range
 	 */
@@ -180,7 +175,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 更新附近可接任务提示。
 	 * Updates nearby quest availability hints.
-	 *
 	 */
 	public void updateNearbyQuests() {
 		var position = getOwner().getPosition();
@@ -208,7 +202,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 玩家进入区域时触发任务/事件逻辑。
 	 * Triggers quest/event logic when the player enters a zone.
-	 *
 	 * @param zone 进入的区域 / entered zone
 	 */
 	@Override
@@ -218,10 +211,6 @@ public class PlayerController extends CreatureController<Player> {
 			player.unsetPlayerMode(PlayerMode.RIDE);
 		}
 		if (zone.getZoneTemplate().getZoneType().equals(ZoneClassName.FORT) && (player.isInState(CreatureState.FLYING))) {
-			/**
-			 * 玩家飞行中进入「潘尼特拉要塞」区域时，系统强制降落。
-	 * If a player enters zone "Panesterra Fortress" while flying, the system will land the player.
-			 */
 			switch (player.getWorldId()) {
 			case 400020000: // 贝洛斯 / Belus.
 			case 400040000: // Aspida.
@@ -242,11 +231,6 @@ public class PlayerController extends CreatureController<Player> {
 		} else {
 			GameEngineServices.questEngine().onEnterZone(new QuestEnv(null, player, 0, 0), zone.getAreaTemplate().getZoneName());
 		}
-	/**
-		 * 这些副本传送门对敌对种族为「刷新并反向」。玩家进入部分区域时会出现传送门。
-	 * These instance portals are "spawn & reversed" to the opposite race. If a player enters a few areas, a portal will appear automatically. These portals
-		 * are only 2 minute ingame before despawn. PS: Please, check "portal/AI2" for these portal.
-		 */
 		SpawnTemplate template;
 		if (zone.getAreaTemplate().getZoneName() == ZoneName.get("REIAN_REFUGEE_CAMP_210070000")) {
 			switch (player.getRace()) {
@@ -359,10 +343,6 @@ public class PlayerController extends CreatureController<Player> {
 				break;
 			}
 		}
-	/**
-		 * 保护城市：敌对种族玩家进入这些区域时送回绑定点。
-	 * For Protect City: if an opposite-race player enters these zones, return to "Bind Location"
-		 */
 		if (player.getAccessLevel() == 0) {
 			if (
 			// 莫尔海姆 / Morheim
@@ -424,7 +404,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 玩家离开区域时回调。
 	 * Callback when the player leaves a zone.
-	 *
 	 * @param zone 离开的区域 / left zone
 	 */
 	@Override
@@ -440,12 +419,8 @@ public class PlayerController extends CreatureController<Player> {
 	}
 
 	/**
-	 * {@inheritDoc} 应仅从一处触发（生命值状态）。 / Should only be triggered from one place (life stats)
-	 */
-	/**
 	 * 玩家进入世界时的处理。
 	 * Processing when the player enters the world.
-	 *
 	 */
 	public void onEnterWorld() {
 		InstanceService.onEnterInstance(getOwner());
@@ -472,7 +447,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 玩家离开世界时的处理。
 	 * Processing when the player leaves the world.
-	 *
 	 */
 	public void onLeaveWorld() {
 		GameFeatureServices.protectorConquerorService().onLeaveMap(getOwner());
@@ -482,7 +456,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 校验登录落点区域是否合法。
 	 * Validates whether the login zone position is legal.
-	 *
 	 */
 	public void validateLoginZone() {
 		int mapId;
@@ -528,7 +501,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 玩家死亡完整处理（可选是否显示死亡包）。
 	 * Full player death handling (optionally showing the die packet).
-	 *
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 * @param showPacket 是否显示死亡包 / whether to show the die packet
 	 */
@@ -585,28 +557,16 @@ public class PlayerController extends CreatureController<Player> {
 			return;
 		}
 
-	/**
-	 * 释放召唤物。
-	 * Release Summon
-	 */
 		Summon summon = player.getSummon();
 		if (summon != null) {
 			SummonsService.doMode(SummonMode.RELEASE, summon, UnsummonType.UNSPECIFIED);
 		}
 
-	/**
-	 * 释放宠物。
-	 * Release Pet
-	 */
 		Pet pet = player.getPet();
 		if (pet != null) {
 			PetSpawnService.dismissPet(player, true);
 		}
 
-	/**
-	 * 释放守护灵。
-	 * Release Minion
-	 */
 		Minion minion = player.getMinion();
 		if (minion != null) {
 			GameEventBootstrapServices.minionService().despawnMinion(player, minion.getObjectId());
@@ -653,7 +613,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 玩家死亡（默认显示死亡包）。
 	 * Player death (shows the die packet by default).
-	 *
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 */
 	@Override
@@ -664,7 +623,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 向客户端发送死亡相关包。
 	 * Sends death-related packets to the client.
-	 *
 	 */
 	public void sendDie() {
 		sendDieFromCreature(getOwner(), true);
@@ -695,7 +653,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 处理玩家击杀奖励。
 	 * Handles player kill rewards.
-	 *
 	 */
 	@Override
 	public void doReward() {
@@ -705,7 +662,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 生成前处理。
 	 * Processing before spawn.
-	 *
 	 */
 	@Override
 	public void onBeforeSpawn() {
@@ -715,7 +671,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 生成前处理，可选闪烁保护。
 	 * Processing before spawn with optional blink protection.
-	 *
 	 * @param blink 是否启用闪烁保护 / whether blink protection is enabled
 	 */
 	public void onBeforeSpawn(boolean blink) {
@@ -734,7 +689,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 玩家攻击目标。
 	 * Player attacks a target.
-	 *
 	 * attack target
 	 * @param time 攻击时间参数 / attack timing parameter
 	 */
@@ -768,17 +722,12 @@ public class PlayerController extends CreatureController<Player> {
 		}
 		lastAttackMilis = milis;
 
-	/**
-	 * 通知攻击观察者。
-	 * Notify attack observers
-	 */
 		super.attackTarget(target, time);
 	}
 
 	/**
 	 * 玩家受到攻击时的处理。
 	 * Handles the player being attacked.
-	 *
 	 * @param creature 攻击者 / attacker
 	 * @param skillId 技能 ID / skill id
 	 * @param type 伤害类型 / damage type
@@ -808,7 +757,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 使用技能（客户端坐标与时间）。
 	 * Uses a skill with client coordinates and timing.
-	 *
 	 * skill id
 	 * target type
 	 * @param x X 坐标 / x coordinate
@@ -834,7 +782,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 使用技能模板施放技能。
 	 * Casts a skill from a skill template.
-	 *
 	 * @param template 技能模板 / skill template
 	 * @param targetType 目标类型 / target type
 	 * @param x X 坐标 / x coordinate
@@ -867,7 +814,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 玩家移动过程中回调。
 	 * Callback while the player is moving.
-	 *
 	 */
 	@Override
 	public void onMove() {
@@ -890,7 +836,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 玩家停止移动时回调。
 	 * Callback when the player stops moving.
-	 *
 	 */
 	@Override
 	public void onStopMove() {
@@ -905,7 +850,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 玩家开始移动时回调。
 	 * Callback when the player starts moving.
-	 *
 	 */
 	@Override
 	public void onStartMove() {
@@ -919,7 +863,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 取消当前技能。
 	 * Cancels the current skill.
-	 *
 	 */
 	@Override
 	public void cancelCurrentSkill() {
@@ -959,7 +902,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 取消物品使用。
 	 * Cancels item use.
-	 *
 	 */
 	@Override
 	public void cancelUseItem() {
@@ -974,7 +916,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 取消采集。
 	 * Cancels gathering.
-	 *
 	 */
 	public void cancelGathering() {
 		Player player = getOwner();
@@ -986,7 +927,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 更新被动属性。
 	 * Updates passive stats.
-	 *
 	 */
 	public void updatePassiveStats() {
 		Player player = getOwner();
@@ -1001,7 +941,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 获取所有者玩家。
 	 * Gets the owner player.
-	 *
 	 * @return 所有者玩家 / owner player
 	 */
 	@Override
@@ -1012,7 +951,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 恢复玩家属性。
 	 * Restores player stats.
-	 *
 	 * heal type
 	 * @param value 恢复数值 / restore value
 	 */
@@ -1029,16 +967,9 @@ public class PlayerController extends CreatureController<Player> {
 	}
 
 	/**
-	 * @param player
-	 * @return
-	 */
-	/**
 	 * 是否正在与指定玩家决斗。
 	 * Whether currently dueling the given player.
-	 *
 	 * opponent player
-	 *
-	 * @param player
 	 * @return 决斗中则为 true / true if dueling
 	 */
 	public boolean isDueling(Player player) {
@@ -1048,7 +979,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 处理对话选项选择。
 	 * Handles dialog option selection.
-	 *
 	 * @param dialogId 对话 ID / dialog id
 	 * @param player 玩家 / player
 	 * @param questId 任务 ID / quest id
@@ -1066,7 +996,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 提升/刷新玩家属性与状态。
 	 * Upgrades/refreshes player stats and state.
-	 *
 	 */
 	public void upgradePlayer() {
 		Player player = getOwner();
@@ -1141,11 +1070,7 @@ public class PlayerController extends CreatureController<Player> {
 			GameCoreGameplayServices.legionService().updateMemberInfo(player);
 		}
 
-	/**
-	 * 导师状态在条件满足时自动取消（队伍最低等级成员达到 51 级时）。
-	 * Mentor status cancels automatically as soon as the lowest level group member reaches level 51.
-	 */
-		if (level == 51) {
+        if (level == 51) {
 			PlayerGroupService.stopMentoring(player);
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_BE_MENTEE_BY_LEVEL_LIMIT);
 		}
@@ -1162,7 +1087,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 玩家升级到达某等级时的广播/处理。
 	 * Broadcasts/handles when a player reaches a level.
-	 *
 	 * leveling player
 	 */
 	public static final void reachedPlayerLvl(final Player player) {
@@ -1176,7 +1100,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 启动出生/传送保护任务。
 	 * Starts spawn/teleport protection task.
-	 *
 	 */
 	public void startProtectionActiveTask() {
 		if (!getOwner().isProtectionActive()) {
@@ -1195,7 +1118,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 停止保护任务。
 	 * Stops the protection task.
-	 *
 	 */
 	public void stopProtectionActiveTask() {
 		cancelTask(TaskId.PROTECTION_ACTIVE);
@@ -1210,7 +1132,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 飞行传送结束时的处理。
 	 * Processing when fly teleport ends.
-	 *
 	 */
 	public void onFlyTeleportEnd() {
 		Player player = getOwner();
@@ -1257,10 +1178,8 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 向玩家背包添加物品。
 	 * Adds items to the player inventory.
-	 *
 	 * item id
 	 * count
-	 *
 	 * @return whether successful / 是否成功 / whether successful。
 	 */
 	public boolean addItems(int itemId, int count) {
@@ -1270,7 +1189,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 开始姿态技能。
 	 * Starts a stance skill.
-	 *
 	 * stance skill id
 	 */
 	public void startStance(final int skillId) {
@@ -1285,7 +1203,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 停止当前姿态。
 	 * Stops the current stance.
-	 *
 	 */
 	public void stopStance() {
 		getOwner().getEffectController().removeEffect(stance);
@@ -1297,7 +1214,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 获取当前姿态技能 ID。
 	 * Gets the current stance skill id.
-	 *
 	 * @return stance skill id / 姿态技能 ID / stance skill id。
 	 */
 	public int getStanceSkillId() {
@@ -1307,7 +1223,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 是否处于姿态中。
 	 * Whether currently under stance.
-	 *
 	 * @return 处于姿态则为 true / true if under stance
 	 */
 	public boolean isUnderStance() {
@@ -1317,7 +1232,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 更新灵魂疾病效果。
 	 * Updates soul sickness effect.
-	 *
 	 * skill id
 	 */
 	public void updateSoulSickness(int skillId) {
@@ -1349,7 +1263,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 是否处于战斗状态。
 	 * Whether currently in combat.
-	 *
 	 * @return 战斗中则为 true / true if in combat / true if the player is actively in combat
 	 */
 	public boolean isInCombat() {
@@ -1359,7 +1272,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 是否有无死亡惩罚效果。
 	 * Whether a no-death-penalty effect is active.
-	 *
 	 * @return true if active / 有效则为 true / true if active。
 	 */
 	public boolean isNoDeathPenaltyInEffect() {
@@ -1376,7 +1288,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 是否有无死亡惩罚减免效果。
 	 * Whether a no-death-penalty-reduce effect is active.
-	 *
 	 * @return true if active / 有效则为 true / true if active。
 	 */
 	public boolean isNoDeathPenaltyReduceInEffect() {
@@ -1393,7 +1304,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 是否有死亡惩罚减免效果。
 	 * Whether a death-penalty-reduce effect is active.
-	 *
 	 * @return true if active / 有效则为 true / true if active。
 	 */
 	public boolean isDeathPenaltyReduceInEffect() {
@@ -1410,7 +1320,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 是否有无复活惩罚效果。
 	 * Whether a no-resurrect-penalty effect is active.
-	 *
 	 * @return true if active / 有效则为 true / true if active。
 	 */
 	public boolean isNoResurrectPenaltyInEffect() {
@@ -1427,7 +1336,6 @@ public class PlayerController extends CreatureController<Player> {
 	/**
 	 * 是否有 HiPass 效果。
 	 * Whether a HiPass effect is active.
-	 *
 	 * @return true if active / 有效则为 true / true if active。
 	 */
 	public boolean isHiPassInEffect() {

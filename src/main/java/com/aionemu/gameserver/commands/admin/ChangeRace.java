@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 切换管理员自身种族（天族/魔族）的命令（{@code //changerace}）。
  * Admin command that toggles the admin's race between Elyos and Asmodians ({@code //changerace}).
- *
  * @author ginho1
  */
 public class ChangeRace extends AdminCommand {
@@ -24,7 +23,6 @@ public class ChangeRace extends AdminCommand {
 	/**
 	 * 在天族与魔族之间切换管理员种族并刷新外观。
 	 * Toggles the admin race between Elyos and Asmodians and refreshes appearance.
-	 *
 	 */
 	@Override
 	public void execute(Player admin, String... params) {

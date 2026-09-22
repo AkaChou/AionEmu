@@ -19,7 +19,6 @@ import java.util.List;
 /**
  * Cygnea 区域 NPC AI：Guard Post Generator（@AIName "vritra_power_device"），继承 NpcAI2。
  * Cygnea zone NPC AI: Guard Post Generator (@AIName "vritra_power_device"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("vritra_power_device")

@@ -19,7 +19,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 艾特利亚图鉴服务，记录击杀与升级进度。
  * Atreian bestiary service tracking kill and level-up progress.
- *
  * @author Ranastic
  */
 
@@ -30,8 +29,6 @@ public class AtreianBestiaryService {
      * -- SETTER --
      *  设置实例提供者（Spring 注入）。
      *  Sets the instance provider (Spring injection).
-     *
-     * @param provider 实例提供者 / instance provider
      */
     @Setter
     private static volatile ObjectProvider<AtreianBestiaryService> instanceProvider;
@@ -39,7 +36,6 @@ public class AtreianBestiaryService {
 	/**
 	 * 玩家登录时同步状态。
 	 * Syncs state when a player logs in.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onLogin(Player player) {
@@ -49,7 +45,6 @@ public class AtreianBestiaryService {
 	/**
 	 * 击杀时处理：更新图鉴击杀计数并检查成就奖励。
 	 * Handles a kill event: updates the bestiary kill count and checks achievement rewards.
-	 *
 	 * @param player 玩家 / player
 	 * @param npcId 被击杀 NPC ID / killed NPC id
 	 */
@@ -84,7 +79,6 @@ public class AtreianBestiaryService {
 	/**
 	 * 升级时处理。
 	 * Handles level-up.
-	 *
 	 * @param player 玩家 / player
 	 * @param id ID / id
 	 */
@@ -112,11 +106,9 @@ public class AtreianBestiaryService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available

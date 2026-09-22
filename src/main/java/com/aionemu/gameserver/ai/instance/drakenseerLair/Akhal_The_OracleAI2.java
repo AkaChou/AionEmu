@@ -22,7 +22,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Drakenseer Lair 副本 NPC AI：Akhal The Oracle（@AIName "IDF6_Dragon_Messenger_69_Ah"），继承 AggressiveNpcAI2。
  * Drakenseer Lair instance NPC AI: Akhal The Oracle (@AIName "IDF6_Dragon_Messenger_69_Ah"), extends AggressiveNpcAI2.
- *
  * @author Rinzler
  * @author Ranastic (Encom)
  */

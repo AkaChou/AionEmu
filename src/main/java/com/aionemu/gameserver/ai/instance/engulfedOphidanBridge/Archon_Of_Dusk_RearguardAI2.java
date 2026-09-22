@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Engulfed Ophidan Bridge 副本 NPC AI：Archon Of Dusk Rearguard（@AIName "archon_of_dusk_rearguard"），继承 NpcAI2。
  * Engulfed Ophidan Bridge instance NPC AI: Archon Of Dusk Rearguard (@AIName "archon_of_dusk_rearguard"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("archon_of_dusk_rearguard")

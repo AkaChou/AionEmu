@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Norsvold 区域 NPC AI：Ravenous Vines（@AIName "ravenous_vines"），继承 NpcAI2。
  * Norsvold zone NPC AI: Ravenous Vines (@AIName "ravenous_vines"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("ravenous_vines")

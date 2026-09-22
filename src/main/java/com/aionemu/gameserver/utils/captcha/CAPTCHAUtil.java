@@ -13,7 +13,6 @@ import java.nio.ByteBuffer;
 /**
  * CAPTCHA 生成工具：随机词、绘制图片并转为 DXT1 DDS 缓冲。
  * CAPTCHA utility: random words, image drawing and DXT1 DDS conversion.
- *
  * @author Cura
  */
 @Slf4j
@@ -54,7 +53,6 @@ public class CAPTCHAUtil {
 	/**
 	 * 根据文本生成 CAPTCHA 的 DXT1 字节缓冲。
 	 * Creates a DXT1 byte buffer CAPTCHA for the given word.
-	 *
 	 * @param word 验证码文本 / CAPTCHA word
 	 * @return DXT1 缓冲 / DXT1 buffer
 	 */
@@ -70,7 +68,6 @@ public class CAPTCHAUtil {
 	/**
 	 * 绘制 CAPTCHA 图片。
 	 * Draws the CAPTCHA image.
-	 *
 	 * @param word 验证码文本 / CAPTCHA word
 	 * @return 位图；失败时为 null / image, or null on failure
 	 */
@@ -114,7 +111,6 @@ public class CAPTCHAUtil {
 	/**
 	 * 生成默认长度的随机验证码词。
 	 * Returns a random CAPTCHA word of default length.
-	 *
 	 * @return 随机验证码词 / random word
 	 */
 	public static String getRandomWord() {
@@ -124,7 +120,6 @@ public class CAPTCHAUtil {
 	/**
 	 * 按指定长度生成随机验证码词。
 	 * Builds a random CAPTCHA word of the given length.
-	 *
 	 * @param wordLength 词长度 / word length
 	 * @return 随机验证码词 / random word
 	 */

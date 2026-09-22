@@ -16,7 +16,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Cygnea 区域 NPC AI：Stygian Mist Protector（@AIName "lizardman_2"），继承 AggressiveNpcAI2。
  * Cygnea zone NPC AI: Stygian Mist Protector (@AIName "lizardman_2"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("lizardman_2")

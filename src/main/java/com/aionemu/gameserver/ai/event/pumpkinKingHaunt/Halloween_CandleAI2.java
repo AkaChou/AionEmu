@@ -20,7 +20,6 @@ import java.util.List;
 /**
  * Pumpkin King Haunt 活动 NPC AI：Halloween Candle（@AIName "Halloween_Candle"），继承 NpcAI2。
  * Pumpkin King Haunt event NPC AI: Halloween Candle (@AIName "Halloween_Candle"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Halloween_Candle")

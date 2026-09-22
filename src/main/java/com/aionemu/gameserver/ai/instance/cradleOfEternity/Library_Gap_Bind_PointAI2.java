@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Cradle Of Eternity 副本 NPC AI：Library Gap Bind Point（@AIName "Library_Gap_Bind_Point"），继承 NpcAI2。
  * Cradle Of Eternity instance NPC AI: Library Gap Bind Point (@AIName "Library_Gap_Bind_Point"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Library_Gap_Bind_Point")

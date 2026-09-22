@@ -51,7 +51,6 @@ public class AbyssPointsService {
 	/**
 	 * 带全局回调的 AP 增加入口（按击杀对象触发）。
 	 * AP-add entry with listener dispatch (keyed by killed object).
-	 *
 	 * @param player 玩家 / Player
 	 * @param obj 关联可见对象 / related visible object
 	 * @param value AP 变化量 / AP delta
@@ -64,7 +63,6 @@ public class AbyssPointsService {
 	/**
 	 * 带全局回调的 GP 增加入口（按击杀对象触发）。
 	 * GP-add entry with listener dispatch (keyed by killed object).
-	 *
 	 * @param player 玩家 / Player
 	 * @param obj 关联可见对象 / related visible object
 	 * @param value GP 变化量 / GP delta
@@ -99,7 +97,6 @@ public class AbyssPointsService {
 	/**
 	 * 增减 AP，提示玩家并同步军团贡献。
 	 * Add or subtract AP, notify the player, and sync legion contribution.
-	 *
 	 * @param player 玩家 / Player
 	 * @param value AP 变化量 / AP delta
 	 */
@@ -122,7 +119,6 @@ public class AbyssPointsService {
 	/**
 	 * 增减 GP 并提示玩家。
 	 * Add or subtract GP and notify the player.
-	 *
 	 * @param player 玩家 / Player
 	 * @param value GP 变化量 / GP delta
 	 */
@@ -141,7 +137,6 @@ public class AbyssPointsService {
 	/**
 	 * 同时增减 AP 与 GP。
 	 * Add or subtract both AP and GP in one call.
-	 *
 	 * @param player 玩家 / Player
 	 * @param ap AP 变化量 / AP delta
 	 * @param gp GP 变化量 / GP delta
@@ -171,7 +166,6 @@ public class AbyssPointsService {
 	/**
 	 * 将 AP 变化应用到军阶并在变更时广播。
 	 * Apply AP delta to the rank and broadcast on rank change.
-	 *
 	 * @param player 玩家 / Player
 	 * @param value AP 变化量 / AP delta
 	 */
@@ -190,7 +184,6 @@ public class AbyssPointsService {
 	/**
 	 * 将 GP 变化应用到军阶并下发军阶包。
 	 * Apply GP delta to the rank and send the abyss-rank packet.
-	 *
 	 * @param player 玩家 / Player
 	 * @param value GP 变化量 / GP delta
 	 */
@@ -206,7 +199,6 @@ public class AbyssPointsService {
 	/**
 	 * 军阶变化时广播外观、刷新军阶包并校验军阶限装。
 	 * On rank change: broadcast appearance, refresh rank packet, check rank-limited gear.
-	 *
 	 * @param player 玩家 / Player
 	 * @param oldAbyssRank 旧军阶 / old rank
 	 * @param newAbyssRank 新军阶 / new rank
@@ -224,7 +216,6 @@ public class AbyssPointsService {
 	/**
 	 * 荣耀军阶变化时广播、刷新限装并更新欧比斯技能。
 	 * On glory-rank change: broadcast, refresh gear limits, and update abyss skills.
-	 *
 	 * @param player 玩家 / Player
 	 * @param oldGloryRank 旧荣耀军阶 / Old glory rank
 	 * @param newGloryRank 新荣耀军阶 / New glory rank
@@ -243,7 +234,6 @@ public class AbyssPointsService {
 	/**
 	 * GP 不足军官门槛时，按 AP 区间回退到士兵军阶。
 	 * When GP is below officer threshold, fall back to soldier ranks by AP bands.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public static void AbyssRankCheck(Player player) {

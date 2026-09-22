@@ -10,14 +10,12 @@ import com.aionemu.gameserver.services.instance.InstanceService;
 /**
  * 多重回城服务，处理多目的地回城卷轴传送与世界 ID 映射。
  * Multi-return service handling multi-destination return-scroll teleports and world-id mapping.
- *
  * @author Rinzler (Encom)
  */
 public class MultiReturnService {
 	/**
 	 * 按传送点 ID 将玩家传送到目标世界。
 	 * Teleports the player to a target world by portal location id.
-	 *
 	 * @param player 玩家 / Player
 	 * @param LocId 传送点 ID / Portal location id
 	 * @param worldId 目标世界 ID / Target world id
@@ -32,7 +30,6 @@ public class MultiReturnService {
 	/**
 	 * 将世界地图 ID 映射为多重回城用的传送点/区域 ID。
 	 * Maps a world map id to the multi-return teleport/zone id.
-	 *
 	 * @param worldId 世界地图 ID / World map id
 	 * @param race 玩家种族（部分地图按种族区分） / Player race (some maps are race-split)
 	 * @return 映射后的 ID；未知地图返回 0 / Mapped id; 0 when unknown

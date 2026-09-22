@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * 代理人战争相关 NPC AI：Empowered Veille（@AIName "empowered_veille"），继承 AggressiveNpcAI2。
  * Agent-fight related NPC AI: Empowered Veille (@AIName "empowered_veille"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("empowered_veille")

@@ -9,7 +9,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Esoterrace 副本 NPC AI：Dalia Watcher（@AIName "daliawatcher"），继承 AggressiveNpcAI2。
  * Esoterrace instance NPC AI: Dalia Watcher (@AIName "daliawatcher"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("daliawatcher")

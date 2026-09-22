@@ -13,7 +13,6 @@ import lombok.Getter;
 /**
  * WeatherTable 模板（静态数据/XML）。
  * XML template.
- *
  * @author Rinzler (Encom)
  */
 
@@ -25,7 +24,6 @@ public class WeatherTable {
 	 * 区域天气条目；天气表允许为空（{@code weather_count="0"} 且无 {@code <table>} 子节点）时
 	 * JAXB 不会写入该字段，故必须初始化为空列表，否则 {@link #getWeathersForZone(int)} 与
 	 * {@link #getWeatherAfter(WeatherEntry)} 会空指针。
-	 *
 	 * Zone weather entries; when a table is empty (no {@code <table>} child) JAXB leaves this field
 	 * untouched, so it must start as an empty list to keep the lookup methods null-safe.
 	 */

@@ -8,7 +8,6 @@ import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 /**
  * 巡逻行走 NPC AI：Walk General Runner（@AIName "general_runner"），继承 GeneralNpcAI2。
  * Walker patrol NPC AI: Walk General Runner (@AIName "general_runner"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("general_runner")

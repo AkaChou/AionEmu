@@ -6,16 +6,12 @@ import lombok.Getter;
 /**
  * 宠物兴奋剂包模板（静态数据/XML）。
  * Pet doping bag template (static data / XML).
- *
  * @author Rolandas
  */
 @Getter
 public class PetDopingBag {
 
 	private int[] itemBag = null;
-	/**
-	 * @return 是否需要保存 / true if the bag needs saving
-	 */
 	private boolean isDirty = false;
 
 	/** 设置食物物品 / Sets the food item*/
@@ -46,7 +42,6 @@ public class PetDopingBag {
 
 	/**
 	 * 在指定槽位添加或移除物品。 / Adds or removes an item in the given slot.
-	 *
 	 * @param itemId 物品 ID，0 表示移除 / item Id, or 0 to remove
 	 * @param slot   槽位编号；0 为食物，1 为饮品，其余为卷轴 / slot number; 0 for food, 1 for drink, the rest for scrolls
 	 */

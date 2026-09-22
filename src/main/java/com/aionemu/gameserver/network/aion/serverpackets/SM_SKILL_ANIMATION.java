@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 向客户端同步技能皮肤/动画外观。
  * Server packet synchronizing skill skin/animation appearance to the client.
- *
  * @author FrozenKiller
  */
 public class SM_SKILL_ANIMATION extends AionServerPacket {
@@ -22,7 +21,6 @@ public class SM_SKILL_ANIMATION extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_SKILL_ANIMATION 包。
 	 * Creates a SM_SKILL_ANIMATION packet with the given parameters.
-	 *
 	 * @param skillSkinId skill skin id
 	 * @param expire expire time
 	 */
@@ -36,7 +34,6 @@ public class SM_SKILL_ANIMATION extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_SKILL_ANIMATION 包。
 	 * Creates a SM_SKILL_ANIMATION packet with the given parameters.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public SM_SKILL_ANIMATION(Player player) {

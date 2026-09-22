@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 /**
  * 阵营战位置模型。
  * Rvr Location model.
- *
  * @author Rinzler (Encom)
  */
 

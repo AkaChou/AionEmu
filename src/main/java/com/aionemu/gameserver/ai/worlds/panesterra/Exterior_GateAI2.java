@@ -20,7 +20,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Panesterra 区域 NPC AI：Exterior Gate（@AIName "Exterior_Gate"），继承 NpcAI2。
  * Panesterra zone NPC AI: Exterior Gate (@AIName "Exterior_Gate"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Exterior_Gate")

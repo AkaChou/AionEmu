@@ -27,7 +27,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 术古扫荡棋盘服务，管理骰子、棋盘进度与奖励。
  * Shugo Sweep board service managing dice, board progress, and rewards.
- *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -37,8 +36,6 @@ public class ShugoSweepService {
      * -- SETTER --
      *  注入 Spring ObjectProvider 以覆盖默认单例。
      *  Injects a Spring ObjectProvider that overrides the default singleton.
-     *
-     * @param provider 实例提供者 / instance provider
      */
 	@Setter
     private static volatile ObjectProvider<ShugoSweepService> instanceProvider;
@@ -59,7 +56,6 @@ public class ShugoSweepService {
 	/**
 	 * 登录时加载棋盘数据并同步客户端。
 	 * On login, loads board data and syncs the client.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onLogin(Player player) {
@@ -88,7 +84,6 @@ public class ShugoSweepService {
 	/**
 	 * 登出时持久化棋盘进度。
 	 * On logout, persists board progress.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onLogout(Player player) {
@@ -99,7 +94,6 @@ public class ShugoSweepService {
 	/**
 	 * 投掷骰子推进棋盘并结算奖励。
 	 * Rolls dice to advance the board and settle rewards.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void launchDice(final Player player) {
@@ -157,7 +151,6 @@ public class ShugoSweepService {
 	/**
 	 * 重置玩家棋盘进度。
 	 * Resets the player's board progress.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void resetBoard(Player player) {
@@ -172,7 +165,6 @@ public class ShugoSweepService {
 	/**
 	 * 延迟发放当前格子奖励。
 	 * Delays granting the reward for the current board step.
-	 *
 	 * @param player 玩家 / player
 	 * @param step 当前格子 / current step
 	 * @param move 步数（用于延迟） / move count (used for delay)
@@ -190,7 +182,6 @@ public class ShugoSweepService {
 	/**
 	 * 返回玩家公共数据。
 	 * Returns the player's common data.
-	 *
 	 * 玩家 / player
 	 * common data
 	 */
@@ -201,7 +192,6 @@ public class ShugoSweepService {
 	/**
 	 * 返回玩家扫荡棋盘状态。
 	 * Returns the player's sweep board state.
-	 *
 	 * 玩家 / player
 	 * sweep state
 	 */
@@ -212,7 +202,6 @@ public class ShugoSweepService {
 	/**
 	 * 按棋盘与格子查询奖励模板。
 	 * Looks up the reward template by board and step.
-	 *
 	 * board id
 	 * step
 	 * reward template
@@ -224,11 +213,9 @@ public class ShugoSweepService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available

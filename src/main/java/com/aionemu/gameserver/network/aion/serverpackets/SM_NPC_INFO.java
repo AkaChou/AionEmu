@@ -30,7 +30,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * 生命、移动与生成实体等字段。
  * Recalculates NPC type (attackable, aggressive, peace, non-attackable, etc.) based on
  * the observer's faction/relation, and writes equipment, life, movement, and spawn entity fields.
- *
  * Credits To Magenik and to the Cinus
  */
 public class SM_NPC_INFO extends AionServerPacket {
@@ -46,7 +45,6 @@ public class SM_NPC_INFO extends AionServerPacket {
 	/**
 	 * 由 NPC 与观察者玩家构造信息包（按关系重算类型）。
 	 * Builds an info packet from an NPC and the observing player (type recalculated by relation).
-	 *
 	 * target NPC
 	 * @param player 观察者玩家 / observing player
 	 */
@@ -79,7 +77,6 @@ public class SM_NPC_INFO extends AionServerPacket {
 	/**
 	 * 由召唤物构造信息包（主人信息写入 creator/masterName）。
 	 * Builds an info packet from a summon (master written as creator/masterName).
-	 *
 	 * @param summon summon entity
 	 */
 	public SM_NPC_INFO(Summon summon) {

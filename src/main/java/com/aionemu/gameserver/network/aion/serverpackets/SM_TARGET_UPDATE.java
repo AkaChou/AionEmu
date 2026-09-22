@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 /**
  * 广播玩家当前目标变更的服务端包。
  * Server packet that broadcasts a player's current target change.
- *
  * @author Sweetkr
  */
 @AllArgsConstructor

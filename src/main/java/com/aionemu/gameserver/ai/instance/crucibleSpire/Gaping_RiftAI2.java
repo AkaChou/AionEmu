@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 /**
  * Crucible Spire 副本 NPC AI：Gaping Rift（@AIName "tower_mine"），继承 AggressiveNpcAI2。
  * Crucible Spire instance NPC AI: Gaping Rift (@AIName "tower_mine"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("tower_mine")

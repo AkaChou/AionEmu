@@ -63,7 +63,6 @@ public class GameRatioLimitLifecycle {
     /**
      * 是否已加载。
      * Whether this stage is loaded.
-     *
      * @return 已加载为 {@code true} / {@code true} if loaded
      */
     public synchronized boolean isLoaded() {
@@ -73,7 +72,6 @@ public class GameRatioLimitLifecycle {
     /**
      * 加载耗时毫秒。
      * Load time in milliseconds.
-     *
      * @return 耗时毫秒，未启动为 -1 / Elapsed millis, or {@code -1} if not started
      */
     public synchronized long getLoadTimeMillis() {
@@ -83,7 +81,6 @@ public class GameRatioLimitLifecycle {
     /**
      * 最近失败。
      * Last failure.
-     *
      * @return 最近异常，无则为 null / Last throwable, or {@code null}
      */
     public synchronized Throwable getLastFailure() {

@@ -11,7 +11,6 @@ import com.aionemu.gameserver.skillengine.effect.FearEffect;
 /**
  * 运行时效果的成功模板集合。
  * Succeeded-template set of a runtime effect.
- *
  * <p>该类型只服务 {@link Effect}：维护通过命中/抗性判定的效果模板，提供位置、效果 ID 与恐惧效果查询，
  * 并保留原始集合视图。命中判定、生命周期与对外 API 仍由 {@link Effect} 负责。
  * This type only serves {@link Effect}: it owns the templates that passed hit/resistance resolution,
@@ -25,7 +24,6 @@ final class EffectSuccessSet implements Iterable<EffectTemplate> {
 	/**
 	 * 添加成功效果，重复添加保持原列表语义。
 	 * Adds a successful effect while preserving the original duplicate behavior.
-	 *
 	 * @param effect 效果模板 / effect template
 	 */
 	void add(EffectTemplate effect) {
@@ -37,7 +35,6 @@ final class EffectSuccessSet implements Iterable<EffectTemplate> {
 	/**
 	 * 替换全部成功效果。
 	 * Replaces all successful effects.
-	 *
 	 * @param templates 新模板集合 / new template collection
 	 */
 	void replaceWith(Collection<? extends EffectTemplate> templates) {
@@ -56,7 +53,6 @@ final class EffectSuccessSet implements Iterable<EffectTemplate> {
 	/**
 	 * 是否为空。
 	 * Whether this set is empty.
-	 *
 	 * @return 为空则为 true / true if empty
 	 */
 	boolean isEmpty() {
@@ -66,7 +62,6 @@ final class EffectSuccessSet implements Iterable<EffectTemplate> {
 	/**
 	 * 返回成功效果数量。
 	 * Returns the successful effect count.
-	 *
 	 * @return 数量 / count
 	 */
 	int size() {
@@ -76,7 +71,6 @@ final class EffectSuccessSet implements Iterable<EffectTemplate> {
 	/**
 	 * 按索引获取成功效果。
 	 * Returns the successful effect at the given index.
-	 *
 	 * @param index 索引 / index
 	 * @return 效果模板 / effect template
 	 */
@@ -87,7 +81,6 @@ final class EffectSuccessSet implements Iterable<EffectTemplate> {
 	/**
 	 * 返回原始列表视图。
 	 * Returns the backing list view.
-	 *
 	 * @return 列表视图 / list view
 	 */
 	List<EffectTemplate> asList() {
@@ -97,7 +90,6 @@ final class EffectSuccessSet implements Iterable<EffectTemplate> {
 	/**
 	 * 返回原始集合视图。
 	 * Returns the backing collection view.
-	 *
 	 * @return 集合视图 / collection view
 	 */
 	Collection<EffectTemplate> asCollection() {
@@ -107,7 +99,6 @@ final class EffectSuccessSet implements Iterable<EffectTemplate> {
 	/**
 	 * 是否包含指定位置的模板。
 	 * Whether the set contains a template at the given position.
-	 *
 	 * @param position 位置 / position
 	 * @return 包含则为 true / true if present
 	 */
@@ -123,7 +114,6 @@ final class EffectSuccessSet implements Iterable<EffectTemplate> {
 	/**
 	 * 是否包含指定效果 ID。
 	 * Whether the set contains the given effect id.
-	 *
 	 * @param effectId 效果 ID / effect id
 	 * @return 包含则为 true / true if present
 	 */
@@ -139,7 +129,6 @@ final class EffectSuccessSet implements Iterable<EffectTemplate> {
 	/**
 	 * 是否包含恐惧效果。
 	 * Whether the set contains a fear effect.
-	 *
 	 * @return 包含则为 true / true if present
 	 */
 	boolean containsFearEffect() {

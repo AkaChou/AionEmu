@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 攻城战相关 NPC AI：Siege Teleporter（@AIName "siege_teleporter"），继承 GeneralNpcAI2。
  * Siege-related NPC AI: Siege Teleporter (@AIName "siege_teleporter"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("siege_teleporter")

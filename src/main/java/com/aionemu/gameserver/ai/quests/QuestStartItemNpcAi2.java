@@ -15,7 +15,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 任务相关 NPC AI：Quest Start Item Npc Ai2（@AIName "quest_start_use_item"），继承 ActionItemNpcAI2。
  * Quest-related NPC AI: Quest Start Item Npc Ai2 (@AIName "quest_start_use_item"), extends ActionItemNpcAI2.
- *
  * @author Cheatkiller
  */
 @AIName("quest_start_use_item")
@@ -27,11 +26,7 @@ public class QuestStartItemNpcAi2 extends ActionItemNpcAI2 {
 	}
 
 	@Override
-	/**
-	 * 使用任务启动物品后，弹出与该物品关联任务的开始对话框。
-	 * After using the quest start item, opens the dialog to start the quests related to this NPC.
-	 */
-	protected void handleUseItemFinish(Player player) {
+    protected void handleUseItemFinish(Player player) {
 		List<Integer> relatedQuests = GameEngineServices.questEngine().getQuestNpc(getOwner().getNpcId()).getOnQuestStart();
 		for (int dialogId : dialogIdsFor(!relatedQuests.isEmpty())) {
 			if (AI2Actions.selectDialog(this, player, 0, dialogId).isSuccess()) {

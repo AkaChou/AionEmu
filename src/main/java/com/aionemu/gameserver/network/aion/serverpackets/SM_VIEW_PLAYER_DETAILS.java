@@ -12,7 +12,6 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
 /**
  * 查看其他玩家装备详情的服务端包。
  * Server packet for viewing another player's equipment details.
- *
  * @author Avol, xTz
  */
 public class SM_VIEW_PLAYER_DETAILS extends AionServerPacket {
@@ -47,7 +46,6 @@ public class SM_VIEW_PLAYER_DETAILS extends AionServerPacket {
 	/**
 	 * 写出单件装备详情。
 	 * Writes a single equipment item's details.
-	 *
 	 * @param item 装备物品 / equipment item
 	 */
 	private void writeItemInfo(Item item) {

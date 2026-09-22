@@ -48,13 +48,11 @@ class AttackEventHandlerTest {
 	/**
 	 * 已在 FIGHT 时再次受击必须重排攻击链，而不是把这次受击吞掉。
 	 * A hit that lands while already fighting must reschedule the attack chain instead of being swallowed.
-	 *
 	 * <p>背景：0 移速 NPC 在 {@code AttackManager#targetTooFar} 里既不能追击、也不会重排下一次攻击，攻击链
 	 * 就此静默停摆；此后每次受击都会因为“已经是 FIGHT”被 {@code tryEnterFight} 拒绝，NPC 只剩仇恨站桩。
 	 * Background: a zero-speed NPC can neither chase nor reschedule in {@code AttackManager#targetTooFar}, so its
 	 * attack chain stops silently; afterwards {@code tryEnterFight} rejects every new hit because the AI is already
 	 * in FIGHT, leaving the NPC holding hate without retaliating.</p>
-	 *
 	 * <p>回归约束：这里的复位必须异步。受击调用栈是 {@code AggroList#addDamageInternal} → {@code AbstractAI#onAttacked}
 	 * → 本方法，若同步调用 {@code AttackManager#scheduleNextAttack}，普攻会顺着
 	 * {@code SimpleAttackManager#attackAction} → {@code CreatureController#attackTarget} 打回对方并再次进入本方法；
@@ -63,7 +61,6 @@ class AttackEventHandlerTest {
 	 * {@code AggroList#addDamageInternal} via {@code AbstractAI#onAttacked}; a synchronous
 	 * {@code scheduleNextAttack} attacks back through {@code CreatureController#attackTarget} and re-enters this
 	 * handler, so two creatures with a zero attack interval recurse until {@code StackOverflowError}.</p>
-	 *
 	 * @throws IOException 读取源码失败 / when the source cannot be read
 	 */
 	@Test
@@ -84,7 +81,6 @@ class AttackEventHandlerTest {
 	/**
 	 * 按大括号配对提取指定方法体的源码片段。
 	 * Extracts a method body by brace matching.
-	 *
 	 * @param source 源码 / source
 	 * @param signature 方法签名 / method signature
 	 * @return 方法体源码；找不到时返回空串（使闸门失败） / the method body, or an empty string when missing

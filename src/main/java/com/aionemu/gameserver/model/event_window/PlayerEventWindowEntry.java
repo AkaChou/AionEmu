@@ -8,7 +8,6 @@ import lombok.Getter;
 /**
  * 玩家活动窗口条目，用于活动窗口相关逻辑。
  * Player Event Window Entry for event window logic.
- *
  * @author Ranastic
  */
 @Getter

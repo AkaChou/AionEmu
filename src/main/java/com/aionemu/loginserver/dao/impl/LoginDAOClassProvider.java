@@ -11,7 +11,6 @@ public class LoginDAOClassProvider implements DAOClassProvider {
 	/**
 	 * 返回 DAO 上下文名称。
 	 * Returns the DAO context name.
-	 *
 	 * context name
 	 */
 	@Override
@@ -22,7 +21,6 @@ public class LoginDAOClassProvider implements DAOClassProvider {
 	/**
 	 * 返回本提供器注册的全部 MySQL 8 DAO 类。
 	 * Returns all MySQL 8 DAO classes registered by this provider.
-	 *
 	 * array of DAO classes
 	 */
 	@Override

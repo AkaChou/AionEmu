@@ -15,9 +15,7 @@ import com.aionemu.gameserver.services.events.thievesguildservice.ThievesStatusL
 /**
  * 玩家盗贼公会状态 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerThievesListDAO.
- *
  * Updated for MySQL 8 - Fixed connection leaks.
- *
  * @author Dision
  */
 @Slf4j
@@ -33,9 +31,7 @@ public class PlayerThievesDAO extends PlayerThievesListDAO {
 	/**
 	 * 按玩家 ID 加载盗贼公会状态。
 	 * Loads thieves guild status by player id.
-	 *
 	 * player id
-	 *
 	 * @param playerId 玩家 ID / player id
 	 * @return 盗贼状态，不存在则 null / thieves status, or null if missing
 	 */
@@ -70,9 +66,7 @@ public class PlayerThievesDAO extends PlayerThievesListDAO {
 	/**
 	 * 保存新的盗贼公会状态。
 	 * Saves a new thieves guild status entry.
-	 *
 	 * thieves status
-	 *
 	 * @param thieves 窃贼状态 / thieves status
 	 * @return 是否写入成功 / whether the write succeeded
 	 */
@@ -99,7 +93,6 @@ public class PlayerThievesDAO extends PlayerThievesListDAO {
 	/**
 	 * 更新已有盗贼公会状态。
 	 * Updates an existing thieves guild status entry.
-	 *
 	 * @param thieves 窃贼状态 / thieves status
 	 */
 	@Override
@@ -124,7 +117,6 @@ public class PlayerThievesDAO extends PlayerThievesListDAO {
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
-	 *
 	 * @param database 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version

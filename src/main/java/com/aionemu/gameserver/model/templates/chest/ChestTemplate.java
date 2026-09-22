@@ -12,7 +12,6 @@ import lombok.Getter;
 /**
  * 宝箱模板（静态数据/XML）。
  * Chest template (static data / XML).
- *
  * @author Wakizashi
  */
 @Getter
@@ -20,19 +19,10 @@ import lombok.Getter;
 @XmlType(name = "Chest")
 public class ChestTemplate {
 
-	/**
-	 * @return NPC ID / the npcId
-	 */
 	@XmlAttribute(name = "npcid")
 	protected int npcId;
-	/**
-	 * @return 名称 / the name
-	 */
 	@XmlAttribute(name = "name")
 	protected String name;
-	/**
-	 * @return 钥匙物品列表 / the keyItem
-	 */
 	@XmlElement(name = "keyitem")
 	protected List<KeyItem> keyItem;
 }

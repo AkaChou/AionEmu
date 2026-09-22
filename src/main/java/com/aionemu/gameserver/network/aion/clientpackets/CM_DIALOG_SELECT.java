@@ -57,7 +57,6 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 	/**
 	 * 构造客户端包实例。
 	 * Constructs a new client packet instance.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余允许状态 / additional allowed states
@@ -80,12 +79,10 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 	/**
 	 * 判断客户端是否从通用任务选择页发起了非任务行动作。
 	 * Determines whether the client sent a non-quest-row action from the generic quest-selection page.
-	 *
 	 * <p>关闭 {@code show_acquirable_normal_quest} 后，5.8 客户端可能携带或不携带候选任务 ID；
 	 * 第 10 页中的非任务行动作不能建立任务上下文，只有携带 questId&gt;0 的任务行选择（31）可以。</p>
 	 * <p>When {@code show_acquirable_normal_quest} is disabled, the 5.8 client may or may not attach a candidate
 	 * quest id; only a quest-row selection (31) carrying questId&gt;0 can establish quest context on page 10.</p>
-	 *
 	 * @param dialogId 对话动作 ID / dialog action id
 	 * @param lastPage 客户端发包前所在页面 / page shown by the client before sending the packet
 	 * @return 是否为通用页中的非任务行动作 / whether this is a non-quest-row action from the generic page
@@ -108,7 +105,6 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 	/**
 	 * 判断 NPC 选择是否携带任务上下文；没有上下文的 NPC 选项按普通对话处理。
 	 * Determines whether an NPC selection carries quest context; NPC options without it are plain dialogs.
-	 *
 	 * @param npcTarget 目标是否为 NPC / whether the target is an NPC
 	 * @param routedQuestId 客户端携带或已记住的任务 ID / quest id from the client or remembered selection
 	 * @return 是否进入任务引擎 / whether to enter the quest engine
@@ -120,12 +116,10 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 	/**
 	 * 解析 NPC 对话应携带的任务上下文。
 	 * Resolves the quest context carried by an NPC dialog selection.
-	 *
 	 * <p>通用任务选择页上的非任务行动作永远不能建立任务上下文；其他页面优先使用客户端携带的任务
 	 * ID，客户端未携带时再使用同一 NPC 的任务行记忆。</p>
 	 * <p>A non-quest-row action from the generic quest-selection page can never establish quest context;
 	 * other pages prefer the client-provided quest id and fall back to the remembered quest-row selection.</p>
-	 *
 	 * @param clientQuestId 客户端携带的任务 ID / client-provided quest id
 	 * @param rememberedQuestId 同一 NPC 的任务行记忆 / remembered quest-row selection for the same NPC
 	 * @param genericQuestPage 是否为通用任务选择页上的非任务行动作 /
@@ -249,7 +243,6 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 	 * 跟踪同一个对话选择的连续重发；达到阈值时记录告警、清除对话上下文并关闭客户端窗口，打断死循环。
 	 * Tracks consecutive resends of the same dialog selection; on reaching the threshold it logs a
 	 * warning, clears the dialog context, and closes the client window to break the loop.
-	 *
 	 * <p>触发条件是「同一目标、同一上一页、同一动作、同一任务」按客户端重发节奏（间隔在
 	 * {@link #MIN_DIALOG_SELECT_RESEND_GAP_MILLIS} 与 {@link #DIALOG_SELECT_REPEAT_WINDOW_MILLIS} 之间）
 	 * 连续出现：这种情况下服务端仍然没有下发后续页，客户端会一直重发 {@code CM_DIALOG_SELECT}
@@ -259,7 +252,6 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 	 * {@link #DIALOG_SELECT_REPEAT_WINDOW_MILLIS}), which means the server still produced no continuation
 	 * and the client keeps resending {@code CM_DIALOG_SELECT} (for example a movie self-loop that lacks its
 	 * target page). Human rapid clicks are faster than that cadence and are excluded.</p>
-	 *
 	 * @param player 发包玩家 / sending player
 	 * @param targetObjectId 交互目标对象 ID / interaction target object id
 	 * @param dialogId 对话动作 ID / dialog action id

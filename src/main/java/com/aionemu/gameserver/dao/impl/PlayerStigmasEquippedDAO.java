@@ -49,9 +49,7 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
     /**
      * 加载玩家已装备灵魂石列表。
      * Loads the player's equipped stigma list.
-     *
      * player id
-     *
      * @param playerId 玩家 ID / player id
      * @return 已装备灵魂石列表 / equipped stigma list
      */
@@ -80,7 +78,6 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
     /**
      * 持久化玩家已装备灵魂石（含新增、更新与删除）。
      * Persists the player's equipped stigmas (insert, update, and delete).
-     *
      * @param player 玩家 / player
      * @return 是否成功 / whether successful
      */
@@ -115,7 +112,6 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
     /**
      * 批量插入新增的灵魂石条目。
      * Batch-inserts newly equipped stigma entries.
-     *
      * @param con 数据库连接 / database connection
      * @param player 玩家 / player
      * @param items 条目列表 / entry list
@@ -140,7 +136,6 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
     /**
      * 批量更新待更新的灵魂石条目。
      * Batch-updates stigma entries that require update.
-     *
      * @param con 数据库连接 / database connection
      * @param player 玩家 / player
      * @param skills 入场列表 / entry list
@@ -165,7 +160,6 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
     /**
      * 批量删除已标记删除的灵魂石条目。
      * Batch-deletes stigma entries marked as deleted.
-     *
      * @param con 数据库连接 / database connection
      * @param player 玩家 / player
      * @param skills 入场列表 / entry list
@@ -190,7 +184,6 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

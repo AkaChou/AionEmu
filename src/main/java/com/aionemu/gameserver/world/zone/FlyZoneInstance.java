@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 /**
  * 飞行区域实例：进出时设置/清除 {@link ZoneType#FLY} 标记，并审计非法飞行离开。
  * Fly zone instance: sets/clears the {@link ZoneType#FLY} flag on enter/leave, and audits illegal flying leave.
- *
  * @author MrPoke
  */
 public class FlyZoneInstance extends ZoneInstance {
@@ -18,7 +17,6 @@ public class FlyZoneInstance extends ZoneInstance {
 	/**
 	 * 创建飞行区域实例。
 	 * Create a fly zone instance.
-	 *
 	 * @param mapId 地图 ID / the map id
 	 * @param template 区域模板信息 / zone template info
 	 */
@@ -29,7 +27,6 @@ public class FlyZoneInstance extends ZoneInstance {
 	/**
 	 * 进入飞行区并设置 FLY 区域类型。
 	 * Enter fly zone and set the FLY zone type.
-	 *
 	 * @param creature 生物 / the creature
 	 * @return 是否成功进入 / whether enter succeeded
 	 */
@@ -46,7 +43,6 @@ public class FlyZoneInstance extends ZoneInstance {
 	/**
 	 * 离开飞行区并清除 FLY 区域类型；若仍处于飞行状态则记录审计。
 	 * Leave fly zone and clear the FLY zone type; audit if still flying.
-	 *
 	 * @param creature 生物 / the creature
 	 * @return 是否成功离开 / whether leave succeeded
 	 */

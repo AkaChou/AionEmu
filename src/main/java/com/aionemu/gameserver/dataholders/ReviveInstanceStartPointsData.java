@@ -17,7 +17,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 副本复活起始点数据容器，按世界 ID 索引。
  * Instance revive start-point data holder, indexed by world id.
- *
  * Created by Wnkrz on 27/08/2017.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -33,7 +32,6 @@ public class ReviveInstanceStartPointsData {
 	/**
 	 * 按世界 ID 获取副本复活起始点。
 	 * Returns the instance revive start point for the given world id.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @return 复活起始点，不存在则为 null / revive start point or null
 	 */
@@ -58,7 +56,6 @@ public class ReviveInstanceStartPointsData {
 	/**
 	 * 返回已加载的复活起始点数量。
 	 * Returns the number of loaded revive start points.
-	 *
 	 * @return 起始点数量 / start-point count
 	 */
 	public int size() {

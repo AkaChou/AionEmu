@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 将管理员传送到指定在线玩家位置的管理员命令。
  * Admin command to teleport the admin to a named online player.
- *
  * @author Tanelorn
  */
 public class MoveToPlayer extends AdminCommand {
@@ -25,7 +24,6 @@ public class MoveToPlayer extends AdminCommand {
 	/**
 	 * 传送到 {@code characterName} 的当前位置。
 	 * Teleport to the current location of {@code characterName}.
-	 *
 	 * @param admin 执行 GM / Admin player
 	 * @param params 目标角色名 / Target character name
 	 */
@@ -55,7 +53,6 @@ public class MoveToPlayer extends AdminCommand {
 	/**
 	 * 参数错误时显示语法。
 	 * Show syntax when parameters are invalid.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

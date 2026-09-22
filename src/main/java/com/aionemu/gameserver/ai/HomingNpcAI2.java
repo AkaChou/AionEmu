@@ -11,7 +11,6 @@ import com.aionemu.gameserver.model.gameobjects.Homing;
 /**
  * 追踪弹/制导体 AI：朝目标移动并在命中或超时后处理。
  * Homing projectile AI that moves toward a target and resolves on hit or timeout.
- *
  * @author Encom
  */
 @AIName("homing")

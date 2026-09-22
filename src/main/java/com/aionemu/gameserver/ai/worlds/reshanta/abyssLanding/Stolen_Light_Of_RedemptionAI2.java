@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * Reshanta 区域 NPC AI：Stolen Light Of Redemption（@AIName "stolen_light_of_redemption"），继承 NpcAI2。
  * Reshanta zone NPC AI: Stolen Light Of Redemption (@AIName "stolen_light_of_redemption"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("stolen_light_of_redemption")

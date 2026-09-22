@@ -15,7 +15,6 @@ public class CommonsNetworkSpringConfiguration {
     /**
      * 提供懒加载的网络线程池管理器 Bean。
      * Provide a lazy network thread-pool manager bean.
-     *
      * @return 线程池管理器 / Thread pool manager
      */
     @Bean

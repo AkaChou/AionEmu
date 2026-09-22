@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * GM 指令：为目标玩家启动指定任务。
  * GM command handler that starts a quest for the target player.
- *
  * @author Alcapwnd
  */
 public class CmdStartQuest extends AbstractGMHandler {
@@ -19,7 +18,6 @@ public class CmdStartQuest extends AbstractGMHandler {
 	/**
 	 * 创建处理器并立即启动任务。
 	 * Creates the handler and immediately starts the quest.
-	 *
 	 * @param admin 执行指令的管理员 / the admin executing the command
 	 * @param params 任务 ID 字符串 / quest id as string
 	 */

@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
  * Spring 迁移护栏：双源静态兜底已全部退役，冻结"零回落"并防止退役类复发。
  * Spring-migration guard: the dual-source static fallbacks are fully retired; freezes "zero fallback"
  * and prevents retired classes from regressing.
- *
  * <p>背景：一次未彻底完成的 Spring 改造留下了
  * {@code provider.getIfAvailable(() -> SingletonHolder.instance)}
  * 这种"Spring 优先、静态兜底"的双源写法；兜底一旦被走到，就会在容器之外静默创建第二套实例。

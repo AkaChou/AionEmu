@@ -17,7 +17,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * 活动事件 NPC AI：Live Party Concert Hall（@AIName "lpch"），继承 NpcAI2。
  * Event NPC AI: Live Party Concert Hall (@AIName "lpch"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("lpch")

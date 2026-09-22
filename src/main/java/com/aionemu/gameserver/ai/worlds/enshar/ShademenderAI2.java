@@ -12,7 +12,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * Enshar 区域 NPC AI：Shademender（@AIName "shademender"），继承 AggressiveNpcAI2。
  * Enshar zone NPC AI: Shademender (@AIName "shademender"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("shademender")
@@ -21,7 +20,6 @@ public class ShademenderAI2 extends AggressiveNpcAI2
 	/**
 	 * 生物移动检测：对接近的魔族玩家施放征服者之热情增益（若尚未存在）。
 	 * Creature-move handler: applies Conqueror's Passion to approaching Asmodian players if not already active.
-	 *
 	 * @param creature 移动的生物 / moving creature
 	 */
 	@Override

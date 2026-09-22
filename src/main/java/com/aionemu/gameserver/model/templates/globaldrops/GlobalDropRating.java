@@ -11,7 +11,6 @@ import lombok.Getter;
 /**
  * 全局掉落 Rating 模板（静态数据/XML）。
  * Global drop rating template (static data/XML).
- *
  * @author Wnkrz
  */
 @Getter

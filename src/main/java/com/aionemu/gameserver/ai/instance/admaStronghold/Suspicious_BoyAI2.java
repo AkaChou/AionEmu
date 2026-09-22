@@ -8,7 +8,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 /**
  * Adma Stronghold 副本 NPC AI：Suspicious Boy（@AIName "suspicious_boy"），继承 AggressiveNpcAI2。
  * Adma Stronghold instance NPC AI: Suspicious Boy (@AIName "suspicious_boy"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("suspicious_boy")

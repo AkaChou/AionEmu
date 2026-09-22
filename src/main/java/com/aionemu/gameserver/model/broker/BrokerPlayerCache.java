@@ -10,25 +10,15 @@ import lombok.Setter;
 /**
  * 经纪行玩家 Cache 模型。
  * Broker Player Cache model.
- *
  * @author ATracer
  */
 @Getter
 @Setter
 public class BrokerPlayerCache {
 
-	/**
-	 * @return the brokerListCache
-	 */
 	private BrokerItem[] brokerListCache = new BrokerItem[0];
-	/**
-	 * @return the brokerMaskCache
-	 */
 	private int brokerMaskCache;
 	private int brokerSoftTypeCache;
-	/**
-	 * @return the brokerStartPageCache
-	 */
 	private int brokerStartPageCache;
 	private List<Integer> itemList = new ArrayList<>();
 

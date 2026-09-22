@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Iluma 区域 NPC AI：LF6 Field Attraction（@AIName "lf6_field_attraction"），继承 NpcAI2。
  * Iluma zone NPC AI: LF6 Field Attraction (@AIName "lf6_field_attraction"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("lf6_field_attraction")

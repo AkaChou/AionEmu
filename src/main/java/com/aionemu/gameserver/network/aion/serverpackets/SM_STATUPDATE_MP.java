@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端更新当前/最大 MP 值。
  * Server packet updating current and max MP values on the client.
- *
  * @author Luno
  */
 @AllArgsConstructor

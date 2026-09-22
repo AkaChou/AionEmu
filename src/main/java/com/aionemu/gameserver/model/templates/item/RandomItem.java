@@ -13,7 +13,6 @@ import lombok.Getter;
 /**
  * 随机物品模板：随机数量或等级范围。
  * Random item template: random count or grade range.
- *
  * @author vlog
  */
 @Getter

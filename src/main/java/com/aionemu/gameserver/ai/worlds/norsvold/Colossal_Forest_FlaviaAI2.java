@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Norsvold 区域 NPC AI：Colossal Forest Flavia（@AIName "colossal_forest_flavia"），继承 AggressiveNpcAI2。
  * Norsvold zone NPC AI: Colossal Forest Flavia (@AIName "colossal_forest_flavia"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("colossal_forest_flavia")

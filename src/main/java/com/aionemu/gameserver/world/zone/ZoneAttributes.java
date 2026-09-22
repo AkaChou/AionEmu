@@ -10,7 +10,6 @@ import lombok.Getter;
 /**
  * 区域属性位标志（绑定点、召回、滑翔、飞行、坐骑、PvP、决斗等）。
  * Zone attribute bit-flags (bind, recall, glide, fly, ride, PvP, duel, etc.).
- *
  * @author Rolandas
  */
 @Getter
@@ -53,7 +52,6 @@ public enum ZoneAttributes {
 	/**
 	 * 将属性列表合并为整数位掩码。
 	 * Merge a list of attributes into an integer bit-mask.
-	 *
 	 * @param flagValues 属性列表 / the attribute list
 	 * @return 合并后的位掩码 / combined bit-mask
 	 */

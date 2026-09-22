@@ -3,7 +3,6 @@ package com.aionemu.gameserver.model.team.legion;
 /**
  * 军团军阶枚举。
  * Legion Rank enumeration.
- *
  * @author Simple
  */
 public enum LegionRank {
@@ -27,7 +26,6 @@ public enum LegionRank {
 	/**
 	 * 返回客户端使用的军阶 ID。
 	 * Returns client-side id for this.
-	 *
 	 * @return 军阶 ID / rank id
 	 */
 	public byte getRankId() {

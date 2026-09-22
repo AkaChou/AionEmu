@@ -31,7 +31,6 @@ public class PathfindSectorSampler {
 	/**
 	 * 从源生物到目标点选择下一步可通行位置（扇形采样）。
 	 * Select the next walkable step from a creature toward a target via sector sampling.
-	 *
 	 * @param source 源生物 / source creature
 	 * @param target 目标点 / target point
 	 * @return 最近可通行采样点，若无则为 null / closest walkable sample, or null
@@ -84,7 +83,6 @@ public class PathfindSectorSampler {
 	/**
 	 * 为跟随目标选择下一步位置；地图或实例不一致时返回 null。
 	 * Select the next follow step toward a visible target; returns null on map/instance mismatch.
-	 *
 	 * @param source 源生物 / source creature
 	 * @param target 跟随目标 / follow target
 	 * @return 下一步点，不可用为 null / next step, or null if unavailable
@@ -103,7 +101,6 @@ public class PathfindSectorSampler {
 	/**
 	 * 以源点为圆心、给定半径与角度偏移旋转目标，并采样地表高度。
 	 * Rotate a target around a center by radius and degree offset, then sample ground Z.
-	 *
 	 * @param owner 用于取世界/实例的生物 / Creature used for world/instance lookup
 	 * @param cx 圆心 X / Center X
 	 * @param cy 圆心 Y / Center Y
@@ -128,7 +125,6 @@ public class PathfindSectorSampler {
 	/**
 	 * 在给定距离范围内尝试选取随机可走点（当前实现恒返回 null）。
 	 * Try to pick a random walkable point within a range (currently always returns null).
-	 *
 	 * @param source Source creature
 	 * @param minRange Minimum range
 	 * @param maxRange Maximum range

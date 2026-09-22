@@ -16,7 +16,6 @@ import java.util.Map;
 /**
  * 活动物品计数 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of EventItemsDAO.
- *
  * Created by wanke on 03/03/2017.
  * Updated for MySQL 8 - Fixed connection leaks.
  */
@@ -35,7 +34,6 @@ public class EventItemsDAO extends com.aionemu.gameserver.dao.EventItemsDAO {
     /**
      * 加载玩家活动物品当日上限计数。
      * Loads daily event item max-count data for a player.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -60,7 +58,6 @@ public class EventItemsDAO extends com.aionemu.gameserver.dao.EventItemsDAO {
     /**
      * 保存玩家活动物品当日上限计数。
      * Stores daily event item max-count data for a player.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -101,7 +98,6 @@ public class EventItemsDAO extends com.aionemu.gameserver.dao.EventItemsDAO {
     /**
      * 按物品 ID 删除全部玩家的活动物品记录。
      * Deletes event item records for all players by item id.
-     *
      * @param itemId 物品 ID / item id
      */
     @Override
@@ -119,7 +115,6 @@ public class EventItemsDAO extends com.aionemu.gameserver.dao.EventItemsDAO {
     /**
      * 删除指定玩家的全部活动物品记录。
      * Deletes all event item records for a player.
-     *
      * @param player 玩家 / player
      */
     private void deleteItems(final Player player) {
@@ -136,7 +131,6 @@ public class EventItemsDAO extends com.aionemu.gameserver.dao.EventItemsDAO {
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.
-     *
      * @param database 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

@@ -12,7 +12,6 @@ public class ThreadPoolManagerRunnableRunner extends RunnableRunner {
     /**
      * 在瞬时线程池中执行 cron 任务。
      * Executes a cron runnable on the instant pool.
-     *
      * @param r 任务 / runnable
      */
     @Override
@@ -23,7 +22,6 @@ public class ThreadPoolManagerRunnableRunner extends RunnableRunner {
     /**
      * 在长任务线程池中执行 cron 任务。
      * Executes a long-running cron runnable on the long-running pool.
-     *
      * @param r 任务 / runnable
      */
     @Override

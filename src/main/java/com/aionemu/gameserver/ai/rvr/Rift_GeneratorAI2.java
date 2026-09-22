@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * RvR 相关 NPC AI：Rift Generator（@AIName "rift_generator"），继承 NpcAI2。
  * RvR-related NPC AI: Rift Generator (@AIName "rift_generator"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("rift_generator")

@@ -9,7 +9,6 @@ import java.lang.annotation.Target;
 /**
  * 限制优先级；数值越大越先执行。
  * Restriction priority; higher values run first.
- *
  * @author NB4L1
  */
 @Inherited
@@ -26,7 +25,6 @@ public @interface RestrictionPriority {
 	/**
 	 * 优先级值。
 	 * Priority value.
-	 *
 	 * @return 优先级值 / priority
 	 */
 	double value() default DEFAULT_PRIORITY;

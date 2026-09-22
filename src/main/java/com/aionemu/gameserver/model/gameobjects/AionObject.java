@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 /**
  * 所有可交互游戏对象的基类（玩家、NPC、物品等）。
  * Base class for all interactive in-game objects (players, NPCs, items, etc.).
- *
  * @author -Nemesiss-, SoulKeeper
  */
 @Getter
@@ -33,7 +32,6 @@ public abstract class AionObject {
 
 	/**
 	 * 返回名称的 object.<br>Unique 用于 players , common 用于 NPCs ,物品, etc。 / Returns name of the object.<br> Unique for players, common for NPCs, items, etc
-	 *
 	 * @return name of the object
 	 */
 	public abstract String getName();

@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 自定义调试发包：由管理员 //fsc 命令按元素类型动态组装的任意服务端包。
  * Custom admin debug packet assembled dynamically by //fsc from typed elements.
- *
  * @author Luno
  */
 public class SM_CUSTOM_PACKET extends AionServerPacket {
@@ -101,7 +100,6 @@ public class SM_CUSTOM_PACKET extends AionServerPacket {
 		/**
 		 * 按元素类型将 value 写入包缓冲。
 		 * Writes {@code value} into the packet buffer according to this element type.
-		 *
 		 * packet instance
 		 * @param value  元素字符串值 / element string value
 		 */
@@ -125,7 +123,6 @@ public class SM_CUSTOM_PACKET extends AionServerPacket {
 		/**
 		 * 将本字段写入目标包。
 		 * Writes this field into the target packet.
-		 *
 		 * @param packet packet instance
 		 */
 		public void writeValue(SM_CUSTOM_PACKET packet) {
@@ -146,7 +143,6 @@ public class SM_CUSTOM_PACKET extends AionServerPacket {
 	/**
 	 * 追加一个已构造的元素。
 	 * Appends a pre-built element.
-	 *
 	 * @param packetElement element
 	 */
 	public void addElement(PacketElement packetElement) {
@@ -156,7 +152,6 @@ public class SM_CUSTOM_PACKET extends AionServerPacket {
 	/**
 	 * 按类型与值追加元素。
 	 * Appends an element by type and value.
-	 *
 	 * @param type 元素类型 / element type
 	 * @param value 字符串值 / string value
 	 */

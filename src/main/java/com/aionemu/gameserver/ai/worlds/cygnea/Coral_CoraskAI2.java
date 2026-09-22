@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Cygnea 区域 NPC AI：Coral Corask（@AIName "coral_corask"），继承 AggressiveNpcAI2。
  * Cygnea zone NPC AI: Coral Corask (@AIName "coral_corask"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("coral_corask")

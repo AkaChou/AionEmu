@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * 玩家阿特雷亚图鉴 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerABDAO (Atreian Bestiary).
- *
  * @author Ranastic
  */
 @Slf4j
@@ -35,7 +34,6 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
     /**
      * 加载玩家图鉴列表。
      * Loads player Atreian bestiary list.
-     *
      * @param player 玩家 / player
      * @return 图鉴列表 / bestiary list
      */
@@ -67,7 +65,6 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
     /**
      * 存储图鉴条目。
      * Stores a bestiary entry.
-     *
      * @param objectId 玩家对象 ID / player object id
      * @param id 图鉴 ID / bestiary id
      * @param kill_count 击杀数 / kill count
@@ -96,7 +93,6 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
     /**
      * 删除图鉴条目。
      * Deletes a bestiary entry.
-     *
      * @param playerObjId 玩家对象 ID / player object id
      * @param id 图鉴 ID / bestiary id
      * @return 是否成功 / whether succeeded
@@ -119,7 +115,6 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
     /**
      * 按 ID 获取击杀数。
      * Gets kill count by id.
-     *
      * @param playerObjId 玩家对象 ID / player object id
      * @param id 图鉴 ID / bestiary id
      * @return 击杀数 / kill count
@@ -147,7 +142,6 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
     /**
      * 按 ID 获取等级。
      * Gets level by id.
-     *
      * @param playerObjId 玩家对象 ID / player object id
      * @param id 图鉴 ID / bestiary id
      * @return 等级 / level
@@ -175,7 +169,6 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
     /**
      * 按 ID 获取领奖状态。
      * Gets claim reward flag by id.
-     *
      * @param playerObjId 玩家对象 ID / player object id
      * @param id 图鉴 ID / bestiary id
      * @return 领取奖励标记 / claim reward flag
@@ -203,7 +196,6 @@ public class PlayerAtreianBestiaryDAO extends PlayerABDAO {
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 /**
  * 热点观战相关的客户端包（当前仅记录日志）。
  * Client packet related to hot spectate (currently logs only).
- *
  * @author Ranastic
  */
 @Slf4j
@@ -17,7 +16,6 @@ public class CM_HOT_SPECTATE extends AionClientPacket {
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余合法状态 / additional valid states

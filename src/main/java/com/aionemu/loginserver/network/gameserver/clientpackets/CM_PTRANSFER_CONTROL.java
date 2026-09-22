@@ -6,7 +6,6 @@ import com.aionemu.loginserver.service.LoginTransferServices;
 /**
  * GS→LS：角色转移任务控制（请求/错误/成功/停止）。
  * GS→LS: player-transfer task control (request/error/ok/stop).
- *
  * @author KID
  */
 public class CM_PTRANSFER_CONTROL extends GsClientPacket {

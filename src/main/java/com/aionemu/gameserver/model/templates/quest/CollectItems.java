@@ -11,7 +11,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * Collect 物品模板（静态数据/XML）。
  * XML template.
- *
  * @author MrPoke
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -24,7 +23,6 @@ public class CollectItems {
 	/**
 	 * 返回收集物品列表（惰性初始化，修改会直接反映到 JAXB 对象）。
 	 * Returns the collect item list (lazily initialized; modifications are reflected in the JAXB object).
-	 *
 	 * @return 收集物品列表 / list of {@link CollectItem}
 	 */
 	public List<CollectItem> getCollectItem() {

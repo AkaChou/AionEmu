@@ -24,7 +24,6 @@ public class cmd_view extends PlayerCommand
 	/**
 	 * 解析物品 ID 并启动外观预览。
 	 * Parses the item id and starts an appearance preview.
-	 *
 	 * @param admin 执行命令的玩家 / invoking player
 	 * @param params 物品 ID 参数 / item-id parameters
 	 */
@@ -46,7 +45,6 @@ public class cmd_view extends PlayerCommand
 	/**
 	 * 将可变参数转发到 {@link #executeCommand(Player, String[])}。
 	 * Forwards varargs to {@link #executeCommand(Player, String[])}.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 命令参数 / command parameters
 	 */

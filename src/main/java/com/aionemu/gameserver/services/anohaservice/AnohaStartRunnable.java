@@ -12,10 +12,8 @@ import lombok.AllArgsConstructor;
 /**
  * 狂暴阿诺哈活动启动定时任务。
  * Start runnable for the Berserk Anoha world event.
- *
  * <p>刷出剑特效、广播回归预告、分阶段倒计时，并在 30 分钟后启动地点。
  * Spawns sword effect, broadcasts return warnings, stages countdown, then starts the location after 30 minutes.</p>
- *
  * @author Rinzler (Encom)
  */
 @AllArgsConstructor

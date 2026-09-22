@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Stone Spear Reach 副本 NPC AI：Macadamic Jester（@AIName "Macadamic_Jester"），继承 GeneralNpcAI2。
  * Stone Spear Reach instance NPC AI: Macadamic Jester (@AIName "Macadamic_Jester"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("Macadamic_Jester")

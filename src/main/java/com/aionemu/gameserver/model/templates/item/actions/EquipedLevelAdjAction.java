@@ -91,11 +91,7 @@ public class EquipedLevelAdjAction extends AbstractItemAction {
 					player.getObserveController().removeObserver(observer);
 					EnchantService.reductItemAct(player, parentItem, targetItem, targetItem.getReductionLevel(),
 							isReductionSuccess, reductionCount);
-				}
-				/**
-	 * 杰作等级降低石 5.8：对可降低推荐等级的物品使用时 100% 降低 1 级。 / Masterwork Level Reduction Stone 5.8 When used on an item that can reduce the recommended level, it will have a 100% chance to reduce the level by 1
-	 */
-				else if (parentItem.getItemId() == 165061001 && parentItem.getItemId() == 165061002) {
+				} else if (parentItem.getItemId() == 165061001 && parentItem.getItemId() == 165061002) {
 					player.getController().cancelTask(TaskId.ITEM_USE);
 					player.getObserveController().removeObserver(observer);
 					player.getInventory().decreaseByObjectId(parentItem.getObjectId(), 1);

@@ -14,18 +14,15 @@ import java.util.Set;
 /**
  * 钢耙号船舱副本事件处理器。
  * Instance event handler for Steel Rake Cabine.
- *
  * @author Encom
  */
 
 @InstanceID(300460000)
 public class SteelRakeCabineInstance extends GeneralInstanceHandler {
-	/** 副本是否已销毁 / whether the instance is destroyed */
-	
-	/**
+
+    /**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -40,11 +37,10 @@ public class SteelRakeCabineInstance extends GeneralInstanceHandler {
 			break;
 		}
 	}
-	
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc 掉落 NPC / dropper NPC
 	 */
 	@Override
@@ -102,11 +98,10 @@ public class SteelRakeCabineInstance extends GeneralInstanceHandler {
 			break;
         }
     }
-	
+
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc 死亡的 NPC / dying NPC
 	 */
 	@Override
@@ -126,8 +121,8 @@ public class SteelRakeCabineInstance extends GeneralInstanceHandler {
 			break;
 		}
 	}
-	
-	
+
+
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();

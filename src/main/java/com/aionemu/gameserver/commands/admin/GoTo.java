@@ -19,11 +19,10 @@ public class GoTo extends AdminCommand
 	public GoTo() {
 		super("goto");
 	}
-	
+
 	/**
 	 * 按地点名称将管理员传送到预设坐标。
 	 * Teleport the admin to a preset destination by location name.
-	 *
 	 * @param player 执行命令的管理员 / Admin executing the command
 	 * @param params 地点名称（可多词） / Location name (may be multi-word)
 	 */
@@ -38,7 +37,7 @@ public class GoTo extends AdminCommand
 			sbDestination.append(p + " ");
 		}
 		String destination = sbDestination.toString().trim();
-		
+
 		if (destination.equalsIgnoreCase("Sanctum"))
 			goTo(player, WorldMapType.SANCTUM.getId(), 1322, 1511, 568);
 		else if (destination.equalsIgnoreCase("Kaisinel1"))
@@ -151,7 +150,7 @@ public class GoTo extends AdminCommand
 			goTo(player, WorldMapType.BELUSLAN.getId(), 1942, 513, 412);
 		else if (destination.equalsIgnoreCase("Hoarfrost"))
 			goTo(player, WorldMapType.BELUSLAN.getId(), 2431, 2063, 579);
-		
+
 		// 欧比斯与雷珊塔要塞 / Abyss & Reshanta Fortresses
 		else if (destination.equalsIgnoreCase("Siels Eastern Fortress") || destination.equalsIgnoreCase("sieleast"))
             goTo(player, 400010000, 1792, 2412, 1479);
@@ -171,8 +170,8 @@ public class GoTo extends AdminCommand
             goTo(player, 400010000, 2227, 456, 2894);
 		else if (destination.equalsIgnoreCase("Divine Fortress") || destination.equalsIgnoreCase("divine"))
             goTo(player, 400010000, 1580, 1759, 2316);
-		
-		
+
+
 		else if (destination.equalsIgnoreCase("haramel") || destination.equalsIgnoreCase("Haramel"))
 			goTo(player, 300200000, 176, 21, 144);
 		else if (destination.equalsIgnoreCase("nochsana") || destination.equalsIgnoreCase("Nochsana Training Camp"))
@@ -300,7 +299,7 @@ public class GoTo extends AdminCommand
 		else if (destination.equalsIgnoreCase("harmony") || destination.equalsIgnoreCase("Arena Of Harmony")) //3.9
 			goTo(player, 300450000, 500, 371, 211);
 		else if (destination.equalsIgnoreCase("cabin") || destination.equalsIgnoreCase("Steel Rake Cabin"))
-			goTo(player, 300460000, 248, 244, 189);	
+			goTo(player, 300460000, 248, 244, 189);
 		else if (destination.equalsIgnoreCase("sealed") || destination.equalsIgnoreCase("Sealed Danuar Mysticarium")) //4.8
 			goTo(player, 300480000, 179, 122, 231);
 		else if (destination.equalsIgnoreCase("stronghold") || destination.equalsIgnoreCase("Tiamat Stronghold")) //3.9
@@ -385,7 +384,6 @@ public class GoTo extends AdminCommand
 			goTo(player, 301500000, 219, 268, 96);
 		else if (destination.equalsIgnoreCase("manor") || destination.equalsIgnoreCase("Sealed Argent Manor")) //4.9.1
 			goTo(player, 301510000, 995, 1207, 65);
-		/////////////////////5.0///////////////////
 		else if (destination.equalsIgnoreCase("archives") || destination.equalsIgnoreCase("Archives Of Eternity")) //5.0
 			goTo(player, 301540000, 737, 511, 469);
 		else if (destination.equalsIgnoreCase("cradle") || destination.equalsIgnoreCase("Cradle Of Eternity")) //5.1
@@ -402,7 +400,6 @@ public class GoTo extends AdminCommand
 			goTo(player, 301610000, 219, 357, 202);
 		else if (destination.equalsIgnoreCase("dragon") || destination.equalsIgnoreCase("Drakenseer Lair")) //5.0
 			goTo(player, 301620000, 275, 349, 336);
-		/////////////////////5.0.5/////////////////
 		else if (destination.equalsIgnoreCase("underpath") || destination.equalsIgnoreCase("Contaminated Underpath")) //5.0.5
 			goTo(player, 301630000, 230, 169, 164);
 		else if (destination.equalsIgnoreCase("underpath2") || destination.equalsIgnoreCase("[Event] Contaminated Underpath")) //5.6
@@ -411,7 +408,6 @@ public class GoTo extends AdminCommand
 			goTo(player, 301632000, 230, 169, 164);
 		else if (destination.equalsIgnoreCase("factory") || destination.equalsIgnoreCase("Secret Munitions Factory")) //5.0.5
 			goTo(player, 301640000, 407, 292, 198);
-		/////////////////////5.1///////////////////
 		else if (destination.equalsIgnoreCase("dred4") || destination.equalsIgnoreCase("Ashunatal Dredgion")) //5.1
 			goTo(player, 301650000, 399, 169, 432);
 		else if (destination.equalsIgnoreCase("fallen") || destination.equalsIgnoreCase("Fallen Poeta")) //5.1
@@ -430,8 +426,7 @@ public class GoTo extends AdminCommand
 			goTo(player, 302100000, 916, 461, 352);
 		else if (destination.equalsIgnoreCase("oblivion2") || destination.equalsIgnoreCase("[Opportunity] Fissure Of Oblivion")) //5.6
 			goTo(player, 302110000, 916, 461, 352);
-		/////////////////////5.3-5.5///////////////////
-		else if (destination.equalsIgnoreCase("sanctum2") || destination.equalsIgnoreCase("Dredgion Defense: Sanctum"))
+        else if (destination.equalsIgnoreCase("sanctum2") || destination.equalsIgnoreCase("Dredgion Defense: Sanctum"))
 			goTo(player, 302200000, 1532, 1511, 565);
 		else if (destination.equalsIgnoreCase("pandae2") || destination.equalsIgnoreCase("Dredgion Defense: Panium"))
 			goTo(player, 302300000, 1274, 1357, 204);
@@ -573,7 +568,7 @@ public class GoTo extends AdminCommand
 		else
 			PacketSendUtility.sendMessage(player, "Could not find the specified destination !");
 	}
-	
+
 	private static void goTo(final Player player, int worldId, float x, float y, float z) {
 		WorldMap destinationMap = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
 		if (destinationMap.isInstanceType()) {
@@ -582,7 +577,7 @@ public class GoTo extends AdminCommand
 			TeleportService2.teleportTo(player, worldId, x, y, z, player.getHeading(), TeleportAnimation.NO_ANIMATION);
 		}
 	}
-	
+
 	private static int getInstanceId(int worldId, Player player) {
 		if (player.getWorldId() == worldId)	{
 			WorldMapInstance registeredInstance = InstanceService.getRegisteredInstance(worldId, player.getObjectId());
@@ -594,11 +589,10 @@ public class GoTo extends AdminCommand
 		InstanceService.registerPlayerWithInstance(newInstance, player);
 		return newInstance.getInstanceId();
 	}
-	
+
 	/**
 	 * 参数错误时显示命令语法。
 	 * Show command syntax on invalid arguments.
-	 *
 	 * @param player 接收提示的玩家 / Player receiving the hint
 	 */
 	@Override

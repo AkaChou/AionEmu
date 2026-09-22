@@ -20,20 +20,13 @@ import lombok.Setter;
 /**
  * Loot 队伍 Rules，用于团队2相关逻辑。
  * Loot Group Rules for team 2 logic.
- *
  * @author ATracer, xTz
  */
 @Getter
 @Setter
 public class LootGroupRules {
 
-	/**
-	 * @return 拾取规则 / The loot rule
-	 */
 	private final LootRuleType lootRule;
-	/**
-	 * @return 自动分配方式 / The autodistribution
-	 */
 	private final LootDistribution autodistribution;
 	private final int common_item_above;
 	private final int superior_item_above;
@@ -42,13 +35,7 @@ public class LootGroupRules {
 	private final int ethernal_item_above;
 	/** 返回 misc / Returns the misc */
 	private int misc;
-	/**
-	 * @return 杂项分配数量 / The nrMisc
-	 */
 	private int nrMisc;
-	/**
-	 * @return 轮转分配次数 / The nrRoundRobin
-	 */
 	private int nrRoundRobin;
 	/** 返回 items to be distributed / Returns the items to be distributed */
 	private final List<DropItem> itemsToBeDistributed = new ArrayList<>();
@@ -79,7 +66,6 @@ public class LootGroupRules {
 	/**
 	 * 按物品品质返回对应的分配规则。
 	 * Return the distribution rule for the given item quality.
-	 *
 	 * @param quality 物品品质 / Item quality
 	 * @return 是否按该品质规则分配 / Whether the rule applies
 	 */
@@ -104,7 +90,6 @@ public class LootGroupRules {
 	/**
 	 * 判断是否为杂项物品（垃圾品质且开启杂项分配）。
 	 * Whether the item is a misc item (junk quality with misc distribution enabled).
-	 *
 	 * @param quality 物品品质 / Item quality
 	 * @return 是否为杂项 / Whether misc
 	 */

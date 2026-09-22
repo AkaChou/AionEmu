@@ -18,7 +18,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 维尔索要塞相关 NPC AI：Wealhtheow Keep Tank Asmodians（@AIName "wealhtheow_keep_siege_asmodians"），继承 NpcAI2。
  * Wealhtheow Keep related NPC AI: Wealhtheow Keep Tank Asmodians (@AIName "wealhtheow_keep_siege_asmodians"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("wealhtheow_keep_siege_asmodians")

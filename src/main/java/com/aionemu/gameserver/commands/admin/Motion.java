@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * 动作（Motion）日志服务调试与攻击速度调整管理员命令。
  * Admin command for motion-logging service debugging and attack-speed tweaks.
- *
  * @author kecimis
  */
 public class Motion extends AdminCommand implements StatOwner {
@@ -32,7 +31,6 @@ public class Motion extends AdminCommand implements StatOwner {
 	/**
 	 * 执行子命令：help、start、analyze、createxml、savetosql、advanced、as。
 	 * Run subcommands: help, start, analyze, createxml, savetosql, advanced, as.
-	 *
 	 * @param player 执行 GM / Admin player
 	 * @param params 子命令与可选参数 / Subcommand and optional args
 	 */
@@ -103,7 +101,6 @@ public class Motion extends AdminCommand implements StatOwner {
 	/**
 	 * 参数错误时显示语法。
 	 * Show syntax when parameters are invalid.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

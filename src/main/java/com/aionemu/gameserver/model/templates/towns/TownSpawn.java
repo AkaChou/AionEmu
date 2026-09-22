@@ -14,16 +14,12 @@ import lombok.Getter;
 /**
  * 城镇刷新点模板（静态数据/XML）。
  * XML template.
- *
  * @author ViAl
  */
 @Getter
 @XmlType(name = "town_spawn")
 public class TownSpawn {
 
-	/**
-	 * @return the townId
-	 */
 	@XmlAttribute(name = "town_id")
 	private int townId;
 	@XmlElement(name = "town_level")
@@ -33,7 +29,6 @@ public class TownSpawn {
 	/**
 	 * 反序列化后将城镇等级列表转为按等级索引的映射。
 	 * Build the level-indexed map after unmarshalling.
-	 *
 	 * @param u JAXB 反序列化器 / Unmarshaller
 	 * @param parent 父对象 / Parent object
 	 */

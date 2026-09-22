@@ -7,7 +7,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 切换管理员点击传送（teleportation）模式。
  * Toggles admin click-to-teleport mode.
- *
  * @author cura
  */
 public class Teleportation extends AdminCommand {
@@ -23,7 +22,6 @@ public class Teleportation extends AdminCommand {
 	/**
 	 * 启用或禁用管理员传送状态。
 	 * Enables or disables admin teleportation state.
-	 *
 	 */
 	@Override
 	public void execute(Player player, String... params) {

@@ -12,7 +12,6 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 /**
  * 陷阱游戏对象。
  * Trap game object.
- *
  * @author ATracer
  */
 public class Trap extends SummonedObject<Creature> {
@@ -20,7 +19,6 @@ public class Trap extends SummonedObject<Creature> {
 	/**
 	 * 构造陷阱。
 	 * Constructs a trap.
-	 *
 	 * @param objId 对象 ID / object id
 	 * @param controller NPC 控制器 / NPC controller
 	 * @param spawnTemplate 生成模板 / spawn template
@@ -51,7 +49,6 @@ public class Trap extends SummonedObject<Creature> {
 	/**
 	 * 判断玩家是否为敌对目标。
 	 * Whether the player is an enemy.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否敌对 / whether enemy
 	  */
@@ -63,7 +60,6 @@ public class Trap extends SummonedObject<Creature> {
 	/**
 	 * 返回 NPC 对象类型 TRAP。
 	 * Returns NpcObjectType.TRAP.
-	 *
 	 * @return NPC 对象类型 / NpcObjectType.TRAP
 	 */
 	@Override

@@ -15,7 +15,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Empyrean Crucible 副本 NPC AI：Spectral Warrior（@AIName "spectral_warrior"），继承 AggressiveNpcAI2。
  * Empyrean Crucible instance NPC AI: Spectral Warrior (@AIName "spectral_warrior"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("spectral_warrior")

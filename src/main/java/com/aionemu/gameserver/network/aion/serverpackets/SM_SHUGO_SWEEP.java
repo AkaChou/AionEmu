@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 向客户端同步术古扫荡（Shugo Sweep）小游戏进度。
  * Server packet synchronizing Shugo Sweep mini-game progress to the client.
- *
  * @author Ghostfur
  */
 public class SM_SHUGO_SWEEP extends AionServerPacket {
@@ -25,7 +24,6 @@ public class SM_SHUGO_SWEEP extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_SHUGO_SWEEP 包。
 	 * Creates a SM_SHUGO_SWEEP packet with the given parameters.
-	 *
 	 * table id
 	 * current step
 	 * dice left

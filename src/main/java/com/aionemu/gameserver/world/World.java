@@ -90,11 +90,9 @@ public class World {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
@@ -112,7 +110,6 @@ public class World {
 	/**
 	 * 注入 Spring 实例提供者。
 	 * Inject the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<World> instanceProvider) {
@@ -122,7 +119,6 @@ public class World {
 	/**
 	 * 将对象登记到世界（玩家/NPC/本地索引）。
 	 * Store an object into the world (player/NPC/local indexes).
-	 *
 	 * @param object 可见对象 / the visible object
 	 */
 	public void storeObject(VisibleObject object) {
@@ -166,7 +162,6 @@ public class World {
 	/**
 	 * 加入全局可见对象表；重复 objectId 抛异常。
 	 * Add to the global visible-object table; throws on duplicate objectId.
-	 *
 	 * @param object 可见对象 / the visible object
 	 */
 	private void addVisibleObject(VisibleObject object) {
@@ -181,7 +176,6 @@ public class World {
 	/**
 	 * 按类型加入本地（攻城/基地/前哨）索引。
 	 * Add to local (siege/base/outpost) indexes by type.
-	 *
 	 * @param object 可见对象 / the visible object
 	 * @return 是否写入本地索引 / whether a local index was updated
 	 */
@@ -223,7 +217,6 @@ public class World {
 	/**
 	 * 从世界移除对象；Npc 也会从 NPC 表清除。
 	 * Remove an object from the world; NPCs are also cleared from the NPC table.
-	 *
 	 * @param object 可见对象 / the visible object
 	 */
 	public void removeObject(VisibleObject object) {
@@ -240,7 +233,6 @@ public class World {
 	/**
 	 * 从本地（攻城/基地/前哨）索引移除。
 	 * Remove from local (siege/base/outpost) indexes.
-	 *
 	 * @param object 可见对象 / the visible object
 	 */
 	private void removeLocalObject(VisibleObject object) {
@@ -271,7 +263,6 @@ public class World {
 	/**
 	 * 玩家迭代器。
 	 * Players iterator.
-	 *
 	 * @return 玩家迭代器 / player iterator
 	 */
 	public Iterator<Player> getPlayersIterator() {
@@ -281,7 +272,6 @@ public class World {
 	/**
 	 * 指定据点的攻城 NPC 快照。
 	 * Snapshot of siege NPCs for a location.
-	 *
 	 * @param locationId 据点 ID / the location id
 	 * @return 攻城 NPC 集合 / the NPC collection
 	 */
@@ -295,7 +285,6 @@ public class World {
 	/**
 	 * 指定基地的基地 NPC 快照。
 	 * Snapshot of base NPCs for a location.
-	 *
 	 * @param locationId 基地 ID / the base id
 	 * @return 基地 NPC 集合 / the NPC collection
 	 */
@@ -309,7 +298,6 @@ public class World {
 	/**
 	 * 指定前哨的前哨 NPC 快照。
 	 * Snapshot of outpost NPCs for a location.
-	 *
 	 * @param locationId 前哨 ID / the outpost id
 	 * @return 前哨 NPC 集合 / the NPC collection
 	 */
@@ -323,7 +311,6 @@ public class World {
 	/**
 	 * 全部 NPC 快照。
 	 * Snapshot of all NPCs.
-	 *
 	 * @return 全部 NPC 集合 / the NPC collection
 	 */
 	public Collection<Npc> getNpcs() {
@@ -335,7 +322,6 @@ public class World {
 	/**
 	 * 按名称查找玩家。
 	 * Find a player by name.
-	 *
 	 * @param name 玩家名 / the player name
 	 * @return 玩家或 null / the player or null
 	 */
@@ -346,7 +332,6 @@ public class World {
 	/**
 	 * 按 objectId 查找玩家。
 	 * Find a player by objectId.
-	 *
 	 * @param objectId 对象 ID / the object id
 	 * @return 玩家或 null / the player or null
 	 */
@@ -357,7 +342,6 @@ public class World {
 	/**
 	 * 按 objectId 查找可见对象。
 	 * Find a visible object by objectId.
-	 *
 	 * @param objectId 对象 ID / the object id
 	 * @return 可见对象或 null / visible object or null
 	 */
@@ -368,7 +352,6 @@ public class World {
 	/**
 	 * 对象是否已在世界中。
 	 * Whether the object is stored in the world.
-	 *
 	 * @param object 可见对象 / the visible object
 	 * @return 在世界中返回 true / true if in world
 	 */
@@ -379,7 +362,6 @@ public class World {
 	/**
 	 * 按地图 ID 返回世界地图；不存在时抛异常。
 	 * Return world map by id; throws if missing.
-	 *
 	 * @param id 地图 ID / map id
 	 * @return 世界地图 / the world map
 	 */
@@ -394,7 +376,6 @@ public class World {
 	/**
 	 * 更新对象位置并刷新已知列表。
 	 * Update object position and refresh known list.
-	 *
 	 * @param object 可见对象 / the visible object
 	 * @param newX 新 X / the new X
 	 * @param newY 新 Y / the new Y
@@ -408,7 +389,6 @@ public class World {
 	/**
 	 * 更新对象在同一地图实例内的位置；区域变化时迁移并重校验 Zone。
 	 * Update position within the same map instance; migrate regions and revalidate zones on change.
-	 *
 	 * @param object 可见对象 / the visible object
 	 * @param newX 新 X / the new X
 	 * @param newY 新 Y / the new Y
@@ -473,7 +453,6 @@ public class World {
 	/**
 	 * 设置对象位置但不生成（已生成则先 despawn）；保留同图实例 ID。
 	 * Set position without spawning (despawn first if spawned); keeps instance id on same map.
-	 *
 	 * @param object 可见对象 / the visible object
 	 * @param mapId 地图 ID / the map id
 	 * @param x 坐标 X / X coordinate
@@ -492,7 +471,6 @@ public class World {
 	/**
 	 * 设置对象到指定地图实例的位置（不生成）。
 	 * Set object position on a specific map instance (without spawning).
-	 *
 	 * @param object 可见对象 / the visible object
 	 * @param mapId 地图 ID / the map id
 	 * @param instance 实例 ID / the instance id
@@ -518,7 +496,6 @@ public class World {
 	/**
 	 * 创建并返回给定参数的 {@link WorldPosition}。
 	 * Create and return a {@link WorldPosition} for the given parameters.
-	 *
 	 * @param mapId 地图 ID / the map id
 	 * @param x 坐标 X / X coordinate
 	 * @param y 坐标 Y / Y coordinate
@@ -538,7 +515,6 @@ public class World {
 	/**
 	 * 玩家预生成：设 ACTIVE、加入区域与实例。
 	 * Pre-spawn a player: set ACTIVE, add to region and instance.
-	 *
 	 * @param object 玩家对象 / the player object
 	 */
 	public void preSpawn(VisibleObject object) {
@@ -552,7 +528,6 @@ public class World {
 	/**
 	 * 在当前位置生成对象，使其可见并更新已知列表。
 	 * Spawn the object at its current position so it becomes visible and updates known list.
-	 *
 	 * @param object 可见对象 / the visible object
 	 */
 	public void spawn(VisibleObject object) {
@@ -570,7 +545,6 @@ public class World {
 	/**
 	 * 取消生成并使对象不可见（默认清空已知列表）。
 	 * Despawn the object and make it invisible (clears known list by default).
-	 *
 	 * @param object 可见对象 / the visible object
 	 */
 	public void despawn(VisibleObject object) {
@@ -580,7 +554,6 @@ public class World {
 	/**
 	 * 取消生成；可选是否清空已知列表。
 	 * Despawn the object; optionally clear known list.
-	 *
 	 * @param object 可见对象 / the visible object
 	 * @param clearKnownlist 是否清空已知列表 / whether to clear known list
 	 */
@@ -604,7 +577,6 @@ public class World {
 	/**
 	 * 全部在线玩家。
 	 * All online players.
-	 *
 	 * @return 全部在线玩家 / the player collection
 	 */
 	public Collection<Player> getAllPlayers() {
@@ -614,7 +586,6 @@ public class World {
 	/**
 	 * 对全部玩家执行访问者。
 	 * Visit all players.
-	 *
 	 * @param visitor 玩家访问者 / the player visitor
 	 */
 	public void doOnAllPlayers(Visitor<Player> visitor) {
@@ -624,7 +595,6 @@ public class World {
 	/**
 	 * 对全部可见对象执行访问者。
 	 * Visit all visible objects.
-	 *
 	 * @param visitor 可见对象访问者 / the visible-object visitor
 	 */
 	public void doOnAllObjects(Visitor<VisibleObject> visitor) {
@@ -642,7 +612,6 @@ public class World {
 	/**
 	 * 全部可见对象快照。
 	 * Snapshot of all visible objects.
-	 *
 	 * @return 可见对象列表 / the object list
 	 */
 	private List<VisibleObject> allObjectsSnapshot() {

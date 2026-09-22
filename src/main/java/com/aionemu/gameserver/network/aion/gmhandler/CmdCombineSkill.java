@@ -25,9 +25,7 @@ import lombok.Getter;
 /**
  * GM 指令：从 skills.xml 解析并为玩家添加组合技能。
  * GM command handler that loads skills.xml and adds a combined skill to a player.
- *
  * @author ginho1
- * @modified Dezalmado
  */
 public final class CmdCombineSkill extends AbstractGMHandler {
 
@@ -36,7 +34,6 @@ public final class CmdCombineSkill extends AbstractGMHandler {
 	/**
 	 * 创建处理器并立即执行组合技能添加。
 	 * Creates the handler and immediately runs the combine-skill logic.
-	 *
 	 * @param admin 执行指令的管理员 / the admin executing the command
 	 * @param params 技能 ID/名称 [等级] [玩家名] / skill id/name [level] [player name]
 	 */

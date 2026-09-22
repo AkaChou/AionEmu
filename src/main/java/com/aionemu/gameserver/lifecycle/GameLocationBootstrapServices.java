@@ -34,7 +34,6 @@ import org.springframework.stereotype.Component;
  * LocationBootstrap services registry that stores Spring {@link ObjectProvider}s
  * in static fields, wires {@code setInstanceProvider} on location services,
  * and clears them on destroy.
- *
  * <p>实现 {@link DisposableBean}，容器关闭时清理静态引用，避免泄漏。
  * Implements {@link DisposableBean} so static references are cleared when the container shuts down.</p>
  */
@@ -166,7 +165,6 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * 构造并注册全部地点服务的 {@link ObjectProvider}，同时调用各服务的 {@code setInstanceProvider}。
      * Construct and register {@link ObjectProvider}s for all location services,
      * and call each service's {@code setInstanceProvider}.
-     *
      * <p>参数为各地点相关服务的 Spring 提供者，包括：漩涡、贝里特拉、代理人、阿诺哈、SvS、RvR、
      * IU、噩梦马戏团、动态/副本裂隙、攻城、基地、前哨、佐西夫战舰、熔岩巨兽、裂隙、征服、
      * 伊迪安深渊、永恒之塔、欧比斯登陆、登陆更新与特殊登陆。
@@ -174,7 +172,6 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * Vortex, Beritra, Agent, Anoha, SvS, RvR, IU, Nightmare Circus, Dynamic/Instance Rift,
      * Siege, Base, Outpost, Zorshiv Dredgion, Moltenus, Rift, Conquest, Idian Depths,
      * Tower of Eternity, Abyss Landing, Landing Update, and Abyss Landing Special.</p>
-     *
      * @param vortexServiceProvider 漩涡服务提供者 / Vortex service provider
      * @param beritraServiceProvider 贝里特拉服务提供者 / Beritra service provider
      * @param agentServiceProvider 代理人服务提供者 / Agent service provider
@@ -261,7 +258,6 @@ public final class GameLocationBootstrapServices implements DisposableBean {
     /**
      * 获取漩涡服务。
      * Obtain the vortex service.
-     *
      * @return 漩涡服务 / Vortex service
      */
     public static VortexService vortexService() {
@@ -271,7 +267,6 @@ public final class GameLocationBootstrapServices implements DisposableBean {
     /**
      * 获取贝里特拉服务。
      * Obtain the Beritra service.
-     *
      * @return 贝里特拉服务 / Beritra service
      */
     public static BeritraService beritraService() {
@@ -281,7 +276,6 @@ public final class GameLocationBootstrapServices implements DisposableBean {
     /**
      * 获取代理人服务。
      * Obtain the agent service.
-     *
      * @return 代理人服务 / Agent service
      */
     public static AgentService agentService() {
@@ -291,7 +285,6 @@ public final class GameLocationBootstrapServices implements DisposableBean {
     /**
      * 获取阿诺哈服务。
      * Obtain the Anoha service.
-     *
      * @return 阿诺哈服务 / Anoha service
      */
     public static AnohaService anohaService() {
@@ -301,7 +294,6 @@ public final class GameLocationBootstrapServices implements DisposableBean {
     /**
      * 获取 SvS 服务。
      * Obtain the SvS service.
-     *
      * @return SvS 服务 / SvS service
      */
     public static SvsService svsService() {
@@ -311,7 +303,6 @@ public final class GameLocationBootstrapServices implements DisposableBean {
     /**
      * 获取 RvR 服务。
      * Obtain the RvR service.
-     *
      * @return RvR 服务 / RvR service
      */
     public static RvrService rvrService() {
@@ -321,7 +312,6 @@ public final class GameLocationBootstrapServices implements DisposableBean {
     /**
      * 获取 IU 演唱会服务。
      * Obtain the IU concert service.
-     *
      * @return IU 服务 / IU service
      */
     public static IuService iuService() {
@@ -331,7 +321,6 @@ public final class GameLocationBootstrapServices implements DisposableBean {
     /**
      * 获取噩梦马戏团服务。
      * Obtain the Nightmare Circus service.
-     *
      * @return 噩梦马戏团服务 / Nightmare Circus service
      */
     public static NightmareCircusService nightmareCircusService() {
@@ -341,7 +330,6 @@ public final class GameLocationBootstrapServices implements DisposableBean {
     /**
      * 获取动态裂隙服务。
      * Obtain the Dynamic Rift service.
-     *
      * @return 动态裂隙服务 / Dynamic Rift service
      */
     public static DynamicRiftService dynamicRiftService() {
@@ -351,7 +339,6 @@ public final class GameLocationBootstrapServices implements DisposableBean {
     /**
      * 获取副本裂隙服务。
      * Obtain the Instance Rift service.
-     *
      * @return 副本裂隙服务 / Instance Rift service
      */
     public static InstanceRiftService instanceRiftService() {
@@ -361,7 +348,6 @@ public final class GameLocationBootstrapServices implements DisposableBean {
     /**
      * 获取前哨服务。
      * Obtain the outpost service.
-     *
      * @return 前哨服务 / Outpost service
      */
     public static OutpostService outpostService() {
@@ -371,7 +357,6 @@ public final class GameLocationBootstrapServices implements DisposableBean {
     /**
      * 获取佐西夫战舰服务。
      * Obtain the Zorshiv Dredgion service.
-     *
      * @return 佐西夫战舰服务 / Zorshiv Dredgion service
      */
     public static ZorshivDredgionService zorshivDredgionService() {
@@ -381,7 +366,6 @@ public final class GameLocationBootstrapServices implements DisposableBean {
     /**
      * 获取熔岩巨兽服务。
      * Obtain the Moltenus service.
-     *
      * @return 熔岩巨兽服务 / Moltenus service
      */
     public static MoltenusService moltenusService() {
@@ -391,7 +375,6 @@ public final class GameLocationBootstrapServices implements DisposableBean {
     /**
      * 获取裂隙服务。
      * Obtain the Rift service.
-     *
      * @return 裂隙服务 / Rift service
      */
     public static RiftService riftService() {
@@ -401,7 +384,6 @@ public final class GameLocationBootstrapServices implements DisposableBean {
     /**
      * 获取征服服务。
      * Obtain the Conquest service.
-     *
      * @return 征服服务 / Conquest service
      */
     public static ConquestService conquestService() {
@@ -411,7 +393,6 @@ public final class GameLocationBootstrapServices implements DisposableBean {
     /**
      * 获取伊迪安深渊服务。
      * Obtain the Idian Depths service.
-     *
      * @return 伊迪安深渊服务 / Idian Depths service
      */
     public static IdianDepthsService idianDepthsService() {
@@ -421,7 +402,6 @@ public final class GameLocationBootstrapServices implements DisposableBean {
     /**
      * 获取永恒之塔服务。
      * Obtain the Tower of Eternity service.
-     *
      * @return 永恒之塔服务 / Tower of Eternity service
      */
     public static TowerOfEternityService towerOfEternityService() {
@@ -431,7 +411,6 @@ public final class GameLocationBootstrapServices implements DisposableBean {
     /**
      * 获取欧比斯登陆服务。
      * Obtain the Abyss Landing service.
-     *
      * @return 欧比斯登陆服务 / Abyss Landing service
      */
     public static AbyssLandingService abyssLandingService() {
@@ -441,7 +420,6 @@ public final class GameLocationBootstrapServices implements DisposableBean {
     /**
      * 获取欧比斯特殊登陆服务。
      * Obtain the Abyss Landing special service.
-     *
      * @return 欧比斯特殊登陆服务 / Abyss Landing special service
      */
     public static AbyssLandingSpecialService abyssLandingSpecialService() {
@@ -451,7 +429,6 @@ public final class GameLocationBootstrapServices implements DisposableBean {
     /**
      * 在 {@link ObjectProvider} 可用时取 Bean，否则走单例回退。
      * Return the bean from {@link ObjectProvider} when available, otherwise use the singleton fallback.
-     *
      * @param provider 可选提供者 / Optional provider
      * @param fallback 单例回退供应器 / Singleton fallback supplier
      * @param <T> 服务类型 / Service type

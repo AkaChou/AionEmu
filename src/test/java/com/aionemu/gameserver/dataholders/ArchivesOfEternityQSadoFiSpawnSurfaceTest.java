@@ -15,7 +15,6 @@ import org.w3c.dom.NodeList;
 /**
  * 永恒档案库任务副本惩罚者麦孜莱姆的真端出生面闸门。
  * Gate for the retail spawn surface of Crystalized Shardgolem in the Archives Of Eternity quest instance.
- *
  * <p>背景：任务副本 301570000 曾同时保留手写 legacy 出生点与真端出生面，
  * 导致 857783 刷出 2 个。真端 {@code IDEternity_Q/world_N.xml} 中
  * {@code BIDEternity_Q_Sado_Fi_N_65_An_01} 只有 1 条 count=1 的出生记录，位置等于保留块。</p>

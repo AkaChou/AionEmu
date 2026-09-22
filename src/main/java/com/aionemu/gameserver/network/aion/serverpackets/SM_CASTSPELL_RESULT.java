@@ -29,7 +29,6 @@ public class SM_CASTSPELL_RESULT extends AionServerPacket {
 	/**
 	 * 构造技能施放结果包（默认目标类型 0）。
 	 * Builds a cast-result packet (default target type 0).
-	 *
 	 * @param skill 已施放技能 / cast skill
 	 * @param effects 生效效果列表 / applied effects
 	 * hit time
@@ -56,7 +55,6 @@ public class SM_CASTSPELL_RESULT extends AionServerPacket {
 	/**
 	 * 构造技能施放结果包，并指定目标类型。
 	 * Builds a cast-result packet with an explicit target type.
-	 *
 	 * @param skill 已施放技能 / cast skill
 	 * @param effects 生效效果列表 / applied effects
 	 * hit time
@@ -147,10 +145,7 @@ public class SM_CASTSPELL_RESULT extends AionServerPacket {
 			}
 			writeC((int) (100f * effector.getLifeStats().getCurrentHp() / effector.getLifeStats().getMaxHp()));
 
-			/**
-	 * 法术状态：1 踉跄；2 击退；4 开空；8 闭空；16 旋转；32 格挡；64 招架；128 闪避；256 抵抗 / Spell Status 1 : stumble 2 : knockback 4 : open aerial 8 : close aerial 16 : spin 32 : block 64 : parry 128 :dodge 256 : resist
-	 */
-			writeC(this.spellStatus);
+            writeC(this.spellStatus);
 			writeC(effect.getSkillMoveType().getId());
 			writeH(0);
 			writeC(effect.getCarvedSignet()); // current carve signet count

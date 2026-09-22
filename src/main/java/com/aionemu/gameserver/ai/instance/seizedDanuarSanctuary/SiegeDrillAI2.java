@@ -22,7 +22,6 @@ import java.util.List;
 /**
  * Seized Danuar Sanctuary 副本 NPC AI：Siege Drill（@AIName "siegedrill"），继承 NpcAI2。
  * Seized Danuar Sanctuary instance NPC AI: Siege Drill (@AIName "siegedrill"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("siegedrill")

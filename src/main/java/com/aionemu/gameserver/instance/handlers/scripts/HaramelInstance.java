@@ -25,7 +25,6 @@ import java.util.Set;
 /**
  * 哈拉梅尔副本事件处理器。
  * Instance event handler for Haramel.
- *
  * @author Encom
  */
 
@@ -38,7 +37,6 @@ public class HaramelInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -49,7 +47,6 @@ public class HaramelInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 
@@ -90,7 +87,6 @@ public class HaramelInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -132,7 +128,6 @@ public class HaramelInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
-	 *
 	 * @param msg 消息 / message
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
@@ -150,7 +145,6 @@ public class HaramelInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override

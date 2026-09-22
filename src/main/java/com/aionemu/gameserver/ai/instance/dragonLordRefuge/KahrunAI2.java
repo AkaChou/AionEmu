@@ -13,13 +13,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * 修改者：Ranastic (Encom)。
- * Modified by Ranastic (Encom).
- */
-/**
  * Dragon Lord Refuge 副本 NPC AI：Kahrun（@AIName "kahrun2"），继承 NpcAI2。
  * Dragon Lord Refuge instance NPC AI: Kahrun (@AIName "kahrun2"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("kahrun2")

@@ -15,7 +15,6 @@ import lombok.Getter;
 /**
  * 裂隙刷新点模板（静态数据/XML）。
  * Rift spawn template (static data / XML).
- *
  * @author Source
  */
 @Getter

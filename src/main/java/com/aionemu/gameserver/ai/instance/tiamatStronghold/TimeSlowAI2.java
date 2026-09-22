@@ -9,7 +9,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Tiamat Stronghold 副本 NPC AI：Time Slow（@AIName "timeslow"），继承 AggressiveNpcAI2。
  * Tiamat Stronghold instance NPC AI: Time Slow (@AIName "timeslow"), extends AggressiveNpcAI2.
- *
  * @author Ranastic (Encom)
  */
 @AIName("timeslow")

@@ -16,7 +16,6 @@ import java.util.Map;
 /**
  * 传送门冷却 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PortalCooldownsDAO.
- *
  * Updated for MySQL 8 - Fixed connection leaks.
  */
 @Slf4j
@@ -32,7 +31,6 @@ public class PortalCooldownsDAO extends com.aionemu.gameserver.dao.PortalCooldow
 	/**
 	 * 加载玩家传送门冷却。
 	 * Loads portal cooldowns for a player.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -64,7 +62,6 @@ public class PortalCooldownsDAO extends com.aionemu.gameserver.dao.PortalCooldow
 	/**
 	 * 保存玩家传送门冷却。
 	 * Stores portal cooldowns for a player.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -108,7 +105,6 @@ public class PortalCooldownsDAO extends com.aionemu.gameserver.dao.PortalCooldow
 	/**
 	 * 删除玩家全部传送门冷却。
 	 * Deletes all portal cooldowns for a player.
-	 *
 	 * @param player 玩家 / player
 	 */
 	private void deletePortalCooldowns(final Player player) {
@@ -125,7 +121,6 @@ public class PortalCooldownsDAO extends com.aionemu.gameserver.dao.PortalCooldow
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
-	 *
 	 * @param database 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version

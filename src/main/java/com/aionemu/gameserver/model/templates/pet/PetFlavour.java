@@ -18,7 +18,6 @@ import lombok.Getter;
 /**
  * 宠物口味模板（静态数据/XML）。
  * Pet flavour template (static data / XML).
- *
  * @author Rolandas
  */
 @Getter
@@ -55,7 +54,6 @@ public class PetFlavour {
 	/**
 	 * 按物品 ID 返回匹配的食物类型，无匹配返回空。
 	 * Returns a food group for the itemId. Null if doesn't match.
-	 *
 	 * @param itemId 物品 ID / item id
 	 * @return 匹配的食物类型 / matching food type
 	 */
@@ -71,7 +69,6 @@ public class PetFlavour {
 	/**
 	 * 若满足条件返回奖励详情，否则为空；自动更新进度。
 	 * Returns reward details if earned, otherwise null. Updates progress automatically.
-	 *
 	 * @param progress 喂食进度 / feeding progress
 	 * @param foodType 食物类型 / food type
 	 * @param itemLevel 物品等级 / item level
@@ -113,7 +110,6 @@ public class PetFlavour {
 	/**
 	 * 判断指定物品是否为喜爱的食物。
 	 * Checks whether the item is loved food.
-	 *
 	 * @param foodType 食物类型 / food type
 	 * @param itemId 物品 ID / item id
 	 * @return 是否为喜爱食物 / Whether loved food

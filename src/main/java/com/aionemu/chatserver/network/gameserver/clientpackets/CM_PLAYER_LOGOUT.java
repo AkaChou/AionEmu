@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 游戏服通知玩家登出聊天服的客户端包。
  * Client packet notifying the chat server that a player has logged out.
- *
  * @author ATracer
  */
 @Slf4j
@@ -27,7 +26,6 @@ public class CM_PLAYER_LOGOUT extends GsClientPacket {
     /**
      * 构造玩家登出客户端包。
      * Constructs the player logout client packet.
-     *
      * @param buf 原始字节缓冲 / raw byte buffer
      * @param connection 所属游戏服连接 / owning game-server connection
      */

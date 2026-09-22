@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 世界地图类型枚举：全部已知地图 ID 与是否个人住房标记。
  * World-map type enum: all known map ids and personal-housing flags.
- *
  * @author Rinzler (Encom)
  */
 @Getter
@@ -135,7 +134,6 @@ public enum WorldMapType {
 	/**
 	 * 非个人地图构造。
 	 * Non-personal map constructor.
-	 *
 	 * @param worldId 地图 ID / the map id
 	 */
 	WorldMapType(int worldId) {
@@ -145,7 +143,6 @@ public enum WorldMapType {
 	/**
 	 * 完整构造。
 	 * Full constructor.
-	 *
 	 * @param worldId 地图 ID / the map id
 	 * @param personal 是否个人地图 / whether personal
 	 */
@@ -157,7 +154,6 @@ public enum WorldMapType {
 	/**
 	 * 返回地图 ID。
 	 * Returns the map id.
-	 *
 	 * @return 地图 ID / the map id
 	 */
 	public int getId() {
@@ -167,7 +163,6 @@ public enum WorldMapType {
 	/**
 	 * 按地图 ID 查找枚举值。
 	 * Look up the enum value by map id.
-	 *
 	 * @param id 地图 ID / map id
 	 * @return 匹配项，未找到返回 null / match, or null if not found
 	 */

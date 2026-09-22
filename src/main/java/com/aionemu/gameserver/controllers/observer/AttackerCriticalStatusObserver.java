@@ -27,7 +27,6 @@ public class AttackerCriticalStatusObserver extends AttackCalcObserver {
 	/**
 	 * 获取剩余次数。
 	 * Get remaining count.
-	 *
 	 * @return 剩余次数 / remaining count
 	 */
 	public int getCount() {

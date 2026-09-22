@@ -9,25 +9,18 @@ import java.util.Objects;
 
 /**
  * 配置类静态字段的快照与还原工具。
- *
  * <p>大量测试会临时改写 {@code XxxConfig} 的静态字段，然后手写 getter/字段备份与 {@code @AfterEach}
  * 还原。这种样板容易漏还原、也容易在新增字段时忘记同步，从而把状态泄漏给后续测试。本工具用一次反射快照
  * 取代这段样板：</p>
- *
  * <pre>{@code
  * private final ConfigSnapshot configSnapshot = ConfigSnapshot.of(MembershipConfig.class,
  *     "STORE_WH_ALL", "TRADE_ALL");
- *
- * @AfterEach
  * void restoreConfig() {
  *     configSnapshot.restore();
  * }
  * }</pre>
- *
  * <p>{@link #of(Class, String...)} 要求目标字段存在且为 {@code static}，拼写错误会立刻失败而不是静默跳过。</p>
- *
  * Snapshot and restore helper for static configuration fields.
- *
  * <p>Many tests temporarily overwrite {@code XxxConfig} static fields and then hand-write the backup
  * plus an {@code @AfterEach} restore. That boilerplate is easy to get wrong and easy to forget when a
  * field is added, leaking state into later tests. This helper replaces it with a single reflective
@@ -60,7 +53,6 @@ public final class ConfigSnapshot {
     /**
      * 捕获指定配置类的一组静态字段。
      * Captures the named static fields of a configuration class.
-     *
      * @param configType 配置类 / configuration type
      * @param fieldNames 静态字段名 / static field names
      * @return 快照 / snapshot

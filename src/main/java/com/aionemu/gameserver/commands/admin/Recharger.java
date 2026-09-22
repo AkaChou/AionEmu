@@ -13,7 +13,6 @@ import java.util.Collection;
 /**
  * 充能 NPC 召唤指令；在管理员位置开关充能器（NPC 730397）。
  * Admin command that toggles a recharger NPC (id 730397) at the admin position.
- *
  * @author Kill3r
  */
 public class Recharger extends AdminCommand {
@@ -27,7 +26,6 @@ public class Recharger extends AdminCommand {
     /**
      * 按 {@code on}/{@code off} 生成或删除充能器 NPC。
      * Spawns or removes the recharger NPC based on {@code on}/{@code off}.
-     *
      * @param player 执行指令的管理员 / admin executing the command
      * {@code on} or {@code off}。
      */

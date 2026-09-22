@@ -22,7 +22,6 @@ import java.util.List;
  * //sys restart - 重启 / Call restart<br>
  * //sys threadpool - 线程池信息 / Thread pools info
  * </p>
- *
  * @author lord_rex
  */
 public class Sys extends AdminCommand {
@@ -38,7 +37,6 @@ public class Sys extends AdminCommand {
 	/**
 	 * 执行系统信息、内存、GC、关机、重启或线程池查询。
 	 * Runs system info, memory, GC, shutdown, restart, or thread-pool dump.
-	 *
 	 * @param player 执行 GM / Admin player
 	 * @param params 子命令与参数 / Subcommand and args
 	 */
@@ -122,7 +120,6 @@ public class Sys extends AdminCommand {
 	/**
 	 * 参数错误时的用法提示。
 	 * Usage hint on invalid parameters.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

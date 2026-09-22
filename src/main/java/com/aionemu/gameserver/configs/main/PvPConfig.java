@@ -5,7 +5,6 @@ import com.aionemu.commons.configuration.Property;
 /**
  * PvP 击杀奖励、连杀与限制相关配置。
  * PvP kill rewards, killing spree and restriction related configuration.
- *
  * @author Rinzler (Encom)
  */
 public class PvPConfig {

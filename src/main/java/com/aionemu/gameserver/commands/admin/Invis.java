@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 管理员隐身切换命令：在 HIDE3 隐身与可见状态间切换。
  * Admin invisibility toggle command: switch between HIDE3 invisibility and visible state.
- *
  * @author Divinity
  */
 public class Invis extends AdminCommand {
@@ -22,7 +21,6 @@ public class Invis extends AdminCommand {
 	/**
 	 * 切换执行者的隐身/可见状态并广播玩家状态包。
 	 * Toggle the invoker's invisibility/visibility and broadcast player state.
-	 *
 	 * @param player 执行命令的管理员 / Admin executing the command
 	 */
 	@Override

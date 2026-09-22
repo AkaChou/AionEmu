@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 效果结算结果：普通命中、被吸收或冲突覆盖。
  * Effect result: normal hit, absorbed, or conflict override.
- *
  * @author Cheatkiller
  */
 @Getter
@@ -21,7 +20,6 @@ public enum EffectResult {
 	/**
 	 * 获取协议 ID。
 	 * Gets protocol id.
-	 *
 	 */
 	private final int id;
 

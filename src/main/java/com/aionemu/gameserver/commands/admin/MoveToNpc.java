@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 按 NPC 模板 ID 或名称传送到该 NPC 的管理员命令。
  * Admin command to teleport to an NPC by template id or name.
- *
  * @author MrPoke, lord_rex and ginho1
  */
 public class MoveToNpc extends AdminCommand {
@@ -26,7 +25,6 @@ public class MoveToNpc extends AdminCommand {
 	/**
 	 * 按 NPC Id 或名称解析并传送；名称匹配多个时列出其余 Id。
 	 * Resolve NPC by id or name and teleport; list alternate ids when the name matches more than one.
-	 *
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -71,7 +69,6 @@ public class MoveToNpc extends AdminCommand {
 	/**
 	 * 参数错误时显示语法。
 	 * Show syntax when parameters are invalid.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

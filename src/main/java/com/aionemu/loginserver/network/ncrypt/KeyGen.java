@@ -16,7 +16,6 @@ import com.aionemu.commons.utils.Rnd;
 /**
  * 密钥生成器：生成 Blowfish 密钥与 RSA 密钥对。
  * Key generator that produces Blowfish keys and RSA key pairs.
- *
  * @author -Nemesiss-
  */
 @Slf4j
@@ -30,7 +29,6 @@ public class KeyGen {
     /**
      * RSA 密钥生成器并预热 RSA 解密。
      * Initialize Blowfish and RSA key generators and warm up RSA decrypt.
-     *
      * key algo init failed。
      */
     public static void init() throws GeneralSecurityException {
@@ -57,7 +55,6 @@ public class KeyGen {
     /**
      * 生成随机 Blowfish 密钥。
      * Generate a random Blowfish key.
-     *
      * random Blowfish key
      */
     public static SecretKey generateBlowfishKey() {
@@ -67,7 +64,6 @@ public class KeyGen {
     /**
      * 从池中随机取一对加密模数的 RSA 密钥对。
      * Pick a random encrypted-modulus RSA key pair from the pool.
-     *
      * @return 加密 RSA 密钥对 / encrypted RSA key pair
      */
     public static EncryptedRSAKeyPair getEncryptedRSAKeyPair() {

@@ -106,7 +106,6 @@ import ch.qos.logback.core.joran.spi.JoranException;
 /**
  * 游戏服务器主入口与启动编排：日志、生命周期服务、阵营比例与关停。
  * Main GameServer entry and startup orchestration: logging, lifecycle services, faction ratios and stop.
- *
  * @author Encom
  */
 @Slf4j
@@ -135,7 +134,6 @@ public class GameServer {
 	/**
 	 * 注册当前活动的 GameServer 实例。
 	 * Registers the currently active GameServer instance.
-	 *
 	 * @param server 活动实例 / active server
 	 */
 	public static void activateServer(GameServer server) {
@@ -145,7 +143,6 @@ public class GameServer {
 	/**
 	 * 绑定网络生命周期，供启停网络使用。
 	 * Attaches network lifecycle used to start/stop network services.
-	 *
 	 * @param networkLifecycle 网络生命周期 / network lifecycle
 	 */
 	public void attachNetworkLifecycle(GameServerNetworkLifecycle networkLifecycle) {
@@ -224,7 +221,6 @@ public class GameServer {
 	/**
 	 * 由 boot 管理的服务生命周期启动游戏服。
 	 * Starts GameServer from the boot-managed service lifecycle.
-	 *
 	 * @param args 启动参数 / startup arguments
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
@@ -235,7 +231,6 @@ public class GameServer {
 	/**
 	 * 以可选聊天服连接覆盖启动游戏服。
 	 * Starts GameServer with an optional chat-server connection override.
-	 *
 	 * @param args 启动参数 / startup arguments
 	 * @param chatServerEnabledOverride 聊天服启用覆盖，null 表示沿用配置 / chat-server enable override, null keeps config
 	 */
@@ -247,7 +242,6 @@ public class GameServer {
 	/**
 	 * 在 boot 嵌入时使用指定线程池生命周期启动游戏服。
 	 * Starts GameServer with a given thread-pool lifecycle when boot-embedded.
-	 *
 	 * @param args 启动参数 / startup arguments
 	 * @param chatServerEnabledOverride 聊天服启用覆盖 / chat-server enable override
 	 * @param threadPoolLifecycle 线程池生命周期 / thread-pool lifecycle
@@ -1357,7 +1351,6 @@ public class GameServer {
 	/**
 	 * 以默认 {@link ShutdownHook.ShutdownMode#SHUTDOWN} 模式停止活动实例。
 	 * Stops the active instance with default {@link ShutdownHook.ShutdownMode#SHUTDOWN}.
-	 *
 	 * @return 若存在活动实例并已处理返回 true / {@code true} if an active instance was stopped
 	 */
 	public static boolean stop() {
@@ -1367,7 +1360,6 @@ public class GameServer {
 	/**
 	 * 按指定模式停止活动实例网络并完成关服收尾（不 halt 进程）。
 	 * Stops the active instance network and completes shutdown for the given mode (does not halt process).
-	 *
 	 * @param mode 关闭模式 / shutdown mode
 	 * @return 若存在活动实例并已处理返回 true / {@code true} if an active instance was stopped
 	 */
@@ -1400,7 +1392,6 @@ public class GameServer {
 	/**
 	 * 初始化与 Aion GS 无直接耦合的工具服务与配置。
 	 * Initializes utility services and config not directly tied to Aion GS.
-	 *
 	 * @param threadPoolLifecycle 线程池生命周期 / thread-pool lifecycle
 	 */
 	private static void initUtilityServicesAndConfig(GameThreadPoolLifecycle threadPoolLifecycle) {
@@ -1410,7 +1401,6 @@ public class GameServer {
 	/**
 	 * 公开入口：初始化工具服务与配置。
 	 * Public entry: initialize utility services and config.
-	 *
 	 * @param threadPoolLifecycle 线程池生命周期 / thread-pool lifecycle
 	 */
 	public static void initializeUtilityServicesAndConfig(GameThreadPoolLifecycle threadPoolLifecycle) {
@@ -1420,7 +1410,6 @@ public class GameServer {
 	/**
 	 * 注册启动钩子；若钩子阶段已结束则立即执行。
 	 * Registers a startup hook; runs immediately if the hook phase already finished.
-	 *
 	 * @param hook 启动钩子 / startup hook
 	 */
 	public synchronized static void addStartupHook(StartupHook hook) {
@@ -1492,7 +1481,6 @@ public class GameServer {
 	/**
 	 * 按增量更新指定阵营角色计数并重算比例。
 	 * Updates the character count for a race by delta and recomputes ratios.
-	 *
 	 * @param race 阵营 / race
 	 * @param i 计数增量（可负） / count delta (may be negative)
 	 */
@@ -1536,7 +1524,6 @@ public class GameServer {
 	/**
 	 * 记录阵营比例状态；失衡超过 20% 时告警。
 	 * Logs faction ratio status; warns when imbalance exceeds 20%.
-	 *
 	 * @param updated 是否为更新后日志 / whether this is a post-update log
 	 */
     private static void displayRatios(boolean updated) {
@@ -1556,7 +1543,6 @@ public class GameServer {
 	/**
 	 * 返回指定阵营当前角色比例（百分比）。
 	 * Returns the current character ratio percent for the given race.
-	 *
 	 * @param race 阵营 / race
 	 * @return 比例百分比，未知阵营为 0 / ratio percent, or 0 for unknown race
 	 */
@@ -1571,7 +1557,6 @@ public class GameServer {
 	/**
 	 * 返回指定阵营当前角色计数。
 	 * Returns the current character count for the given race.
-	 *
 	 * @param race 阵营 / race
 	 * @return 角色数，未知阵营为 0 / character count, or 0 for unknown race
 	 */

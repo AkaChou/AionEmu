@@ -8,7 +8,6 @@ import lombok.Setter;
 /**
  * 玩家联盟 Member，用于团队2相关逻辑。
  * Player Alliance Member for team 2 logic.
- *
  * @author ATracer
  */
 public class PlayerAllianceMember extends PlayerTeamMember {

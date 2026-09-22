@@ -18,7 +18,6 @@ public final class LoginTransferServices implements DisposableBean {
     /**
      * 构造并注册 {@link PlayerTransferService} 的 Spring 提供者。
      * Construct and register the Spring provider for {@link PlayerTransferService}.
-     *
      * @param playerTransferServiceProvider 玩家转移服务提供者 / player-transfer service provider
      */
     public LoginTransferServices(ObjectProvider<PlayerTransferService> playerTransferServiceProvider) {
@@ -28,7 +27,6 @@ public final class LoginTransferServices implements DisposableBean {
     /**
      * 获取玩家转移服务：优先 Spring Bean，缓存解析结果，否则回退本地单例。
      * Obtain the player-transfer service: prefer Spring bean, cache the resolution, else fall back to a local singleton.
-     *
      * @return 玩家转移服务 / player-transfer service
      */
     public static PlayerTransferService playerTransferService() {
@@ -55,7 +53,6 @@ public final class LoginTransferServices implements DisposableBean {
     /**
      * 返回回退用的本地 {@link PlayerTransferService} 实例。
      * Return the local fallback {@link PlayerTransferService} instance.
-     *
      * @return 回退玩家转移服务 / fallback player-transfer service
      */
     private static PlayerTransferService fallbackPlayerTransferService() {
@@ -65,7 +62,6 @@ public final class LoginTransferServices implements DisposableBean {
     /**
      * 缓存并返回已解析的玩家转移服务。
      * Remember and return the resolved player-transfer service.
-     *
      * @param playerTransferService 已解析的服务 / resolved service
      * @return 同一实例 / the same instance
      */

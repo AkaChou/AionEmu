@@ -35,7 +35,6 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 	/**
 	 * 为指定神器据点创建攻城。
 	 * Creates a siege for the given artifact location.
-	 *
 	 * @param siegeLocation 神器据点 / artifact location
 	 */
 	public ArtifactSiege(ArtifactLocation siegeLocation) {
@@ -197,7 +196,6 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 	/**
 	 * 神器攻城为无限模式。
 	 * Artifact sieges are endless.
-	 *
 	 * @return 始终为 true / always true
 	 */
 	@Override
@@ -208,7 +206,6 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 	/**
 	 * 神器攻城不累计欧比斯点数（空实现）。
 	 * Artifact sieges do not accumulate abyss points (no-op).
-	 *
 	 * @param player 玩家 / player
 	 * @param abysPoints 欧比斯点数 / abyss points
 	 */

@@ -102,7 +102,6 @@ public final class QuestService {
 	/**
 	 * 以默认奖励索引完成任务。
 	 * Finishes the quest with the default reward index.
-	 *
 	 * @param env 任务环境 / quest environment
 	 * whether successful
 	 */
@@ -113,7 +112,6 @@ public final class QuestService {
 	/**
 	 * 完成任务并发放指定奖励。
 	 * Finishes the quest and grants the specified reward.
-	 *
 	 * @param env 任务环境 / quest environment
 	 * reward index
 	 * whether successful
@@ -466,7 +464,6 @@ public final class QuestService {
 	/**
 	 * 检查任务开始条件。
 	 * Checks quest start conditions.
-	 *
 	 * @param env 任务环境 / quest environment
 	 * @param warn 是否向玩家提示 / whether to warn the player
 	 * whether conditions are met
@@ -585,7 +582,6 @@ public final class QuestService {
 	/**
 	 * 以指定状态启动任务，是否警告取决于对话 ID。
 	 * Starts a quest with the given status; warn flag depends on dialog id.
-	 *
 	 * @param env 任务环境 / quest environment
 	 * initial status
 	 * whether successful
@@ -597,7 +593,6 @@ public final class QuestService {
 	/**
 	 * 以指定状态启动任务。
 	 * Starts a quest with the given status.
-	 *
 	 * @param env 任务环境 / quest environment
 	 * initial status
 	 * @param warn 是否向玩家提示失败原因 / whether to warn the player on failure
@@ -662,7 +657,6 @@ public final class QuestService {
 	/**
 	 * 以 START 状态启动任务。
 	 * Starts a quest with START status.
-	 *
 	 * @param env 任务环境 / quest environment
 	 * whether successful
 	 */
@@ -673,7 +667,6 @@ public final class QuestService {
 	/**
 	 * 启动主线/剧情任务（Mission）。
 	 * Starts a mission quest.
-	 *
 	 * @param env 任务环境 / quest environment
 	 * initial status
 	 */
@@ -691,7 +684,6 @@ public final class QuestService {
 	/**
 	 * 检查主线任务属性/职业等前置条件。
 	 * Checks mission stat/class and related prerequisites.
-	 *
 	 * @param env 任务环境 / quest environment
 	 * whether conditions are met
 	 */
@@ -741,7 +733,6 @@ public final class QuestService {
 	/**
 	 * 启动活动类任务。
 	 * Starts an event-category quest.
-	 *
 	 * @param env 任务环境 / quest environment
 	 * initial status
 	 * whether successful
@@ -792,7 +783,6 @@ public final class QuestService {
 	/**
 	 * 将旧版活动任务占位状态转换为客户端可用的初始状态。
 	 * Normalizes the legacy event-quest placeholder to a client-visible start state.
-	 *
 	 * @param status 持久化活动任务状态 / persisted event-quest status
 	 * @return 客户端与运行时使用的状态 / status used by the client and runtime
 	 */
@@ -807,7 +797,6 @@ public final class QuestService {
 	/**
 	 * 将任务标记为完成状态（不走完整奖励流程时使用）。
 	 * Marks the quest as complete (used when not running the full reward flow).
-	 *
 	 * @param env 任务环境 / quest environment
 	 * whether successful
 	 */
@@ -829,7 +818,6 @@ public final class QuestService {
 	/**
 	 * 检查（并可选移除）任务收集道具是否齐全。
 	 * Checks (and optionally removes) whether quest collect items are complete.
-	 *
 	 * @param env 任务环境 / quest environment
 	 * @param removeItem 是否扣除道具 / whether to remove items
 	 * whether items are sufficient
@@ -882,7 +870,6 @@ public final class QuestService {
 	/**
 	 * 检查背包是否持有任务要求的道具。
 	 * Checks whether the inventory holds required quest items.
-	 *
 	 * @param env 任务环境 / quest environment
 	 * @param showWarning 是否提示玩家 / whether to show a warning
 	 * whether items are present
@@ -911,7 +898,6 @@ public final class QuestService {
 	/**
 	 * 在指定实例生成一次性任务 NPC。
 	 * Spawns a one-time quest NPC in the given instance.
-	 *
 	 * 世界 ID / world id
 	 * instance id
 	 * NPC 模板 ID / NPC template id
@@ -928,7 +914,6 @@ public final class QuestService {
 	/**
 	 * 生成一次性任务相关生物（别名接口）。
 	 * Spawns a one-time quest-related creature (alias API).
-	 *
 	 * 世界 ID / world id
 	 * instance id
 	 * template id
@@ -945,7 +930,6 @@ public final class QuestService {
 	/**
 	 * 生成限时任务 NPC，到时后自动 despawn。
 	 * Spawns a timed quest NPC that despawns after the given minutes.
-	 *
 	 * 世界 ID / world id
 	 * instance id
 	 * template id
@@ -973,7 +957,6 @@ public final class QuestService {
 	/**
 	 * 计算 NPC 对玩家/队伍的任务掉落并写入 dropItems。
 	 * Computes quest drops from an NPC for player/group and appends them to dropItems.
-	 *
 	 * drop item set
 	 * @param index 起始索引 / start index
 	 * killed NPC
@@ -1070,9 +1053,7 @@ public final class QuestService {
 	 * 检查任务物品是否应该掉落
 	 * Check if quest item should drop
 	 * Player object
-	 *
 	 * @param drop 掉落物品信息 / Drop item information
-	 * @param drop
 	 * @return 是否允许掉落 / Whether dropping is allowed
 	 */
 	static boolean isQuestDrop(Player player, QuestCatalogDrop drop) {
@@ -1162,7 +1143,6 @@ public final class QuestService {
 	/**
 	 * 检查玩家等级是否满足任务最低要求。
 	 * Checks whether the player level meets the quest minimum.
-	 *
 	 * quest id
 	 * player level
 	 * whether met
@@ -1175,7 +1155,6 @@ public final class QuestService {
 	/**
 	 * 返回玩家相对任务最低等级的差值（不足时为正）。
 	 * Returns the level gap relative to the quest minimum (positive when under-leveled).
-	 *
 	 * quest id
 	 * player level
 	 * level difference
@@ -1206,7 +1185,6 @@ public final class QuestService {
 	/**
 	 * 启动可见的任务计时器。
 	 * Starts a visible quest timer.
-	 *
 	 * @param env 任务环境 / quest environment
 	 * @param timeInSeconds 计时秒数 / timer length in seconds
 	 * @return 是否已启动 / whether started
@@ -1218,7 +1196,6 @@ public final class QuestService {
 	/**
 	 * 以指定策略启动可见的任务计时器。
 	 * Starts a visible quest timer with the given policy.
-	 *
 	 * @param env 任务环境 / quest environment
 	 * @param timeInSeconds 计时秒数 / timer length in seconds
 	 * @param policy 计时器策略 / timer policy
@@ -1231,7 +1208,6 @@ public final class QuestService {
 	/**
 	 * 启动不可见任务计时器（超时回调引擎）。
 	 * Starts an invisible quest timer (engine callback on timeout).
-	 *
 	 * @param env 任务环境 / quest environment
 	 * @param timeInSeconds 计时秒数 / timer length in seconds
 	 * @return 是否已启动 / whether started
@@ -1243,7 +1219,6 @@ public final class QuestService {
 	/**
 	 * 以指定策略启动不可见任务计时器。
 	 * Starts an invisible quest timer with the given policy.
-	 *
 	 * @param env 任务环境 / quest environment
 	 * @param timeInSeconds 计时秒数 / timer length in seconds
 	 * @param policy 计时器策略 / timer policy
@@ -1256,7 +1231,6 @@ public final class QuestService {
 	/**
 	 * 结束并取消任务计时器。
 	 * Ends and cancels the quest timer.
-	 *
 	 * @param env 任务环境 / quest environment
 	 * @return 是否已处理 / whether handled
 	 */
@@ -1267,7 +1241,6 @@ public final class QuestService {
 	/**
 	 * 以指定身份结束并取消任务计时器。
 	 * Ends and cancels the quest timer with the given identity.
-	 *
 	 * @param env 任务环境 / quest environment
 	 * @param identity 计时器身份 / timer identity
 	 * @return 是否已处理 / whether handled
@@ -1279,7 +1252,6 @@ public final class QuestService {
 	/**
 	 * 清理指定玩家的指定任务计时器。
 	 * Cleans the timers of one quest for one player.
-	 *
 	 * @param playerId 玩家对象 ID / player object id
 	 * @param questId 任务 ID / quest id
 	 */
@@ -1290,7 +1262,6 @@ public final class QuestService {
 	/**
 	 * 清理指定玩家的全部任务计时器。
 	 * Cleans every quest timer of one player.
-	 *
 	 * @param playerId 玩家对象 ID / player object id
 	 */
 	public static void cleanupPlayerQuestTimers(int playerId) {
@@ -1300,7 +1271,6 @@ public final class QuestService {
 	/**
 	 * 清理指定副本的全部任务计时器。
 	 * Cleans every quest timer of one instance.
-	 *
 	 * @param instanceId 副本实例 ID / instance id
 	 */
 	public static void cleanupInstanceQuestTimers(int instanceId) {
@@ -1318,7 +1288,6 @@ public final class QuestService {
 	/**
 	 * 判断某玩家的某任务是否已有计时器在跑。
 	 * Reports whether a player has a running timer for a quest.
-	 *
 	 * @param playerId 玩家对象 ID / player object id
 	 * @param questId 任务 ID / quest id
 	 * @return 是否有计时器 / whether any timer is registered
@@ -1329,7 +1298,6 @@ public final class QuestService {
 	/**
 	 * 放弃任务并清理相关状态。
 	 * Abandons a quest and cleans related state.
-	 *
 	 * 玩家 / player
 	 * quest id
 	 * whether successful
@@ -1381,7 +1349,6 @@ public final class QuestService {
 	/**
 	 * 获取 NPC 关联的任务掉落配置。
 	 * Returns quest drop entries associated with an NPC.
-	 *
 	 * NPC 模板 ID / NPC template id
 	 * drop collection
 	 */
@@ -1403,7 +1370,6 @@ public final class QuestService {
 	/**
 	 * 注册 NPC 的任务掉落条目。
 	 * Registers a quest drop entry for an NPC.
-	 *
 	 * NPC 模板 ID / NPC template id
 	 * @param drop 掉落配置 / drop entry
 	 */
@@ -1418,7 +1384,6 @@ public final class QuestService {
 	/**
 	 * 返回小队中各自需要该任务掉落的成员列表。
 	 * Returns group members who each need the quest drop.
-	 *
 	 * player group
 	 * NPC 模板 ID / NPC template id
 	 * quest id
@@ -1443,7 +1408,6 @@ public final class QuestService {
 	/**
 	 * 返回联盟中各自需要该任务掉落的成员列表。
 	 * Returns alliance members who each need the quest drop.
-	 *
 	 * player alliance
 	 * NPC 模板 ID / NPC template id
 	 * quest id

@@ -12,7 +12,6 @@ import lombok.Getter;
 /**
  * 交换，用于交易相关逻辑。
  * Exchange for trade logic.
- *
  * @author ATracer
  */
 @Getter
@@ -45,16 +44,10 @@ public class Exchange {
 		this.locked = true;
 	}
 
-	/**
-	 * @param parentItemObjId
-	 */
 	public void addItem(int parentItemObjId, ExchangeItem exchangeItem) {
 		this.items.put(parentItemObjId, exchangeItem);
 	}
 
-	/**
-	 * @param countToAdd
-	 */
 	public void addKinah(long countToAdd) {
 		this.kinahCount += countToAdd;
 	}
@@ -64,9 +57,6 @@ public class Exchange {
 		return items.size() > 18;
 	}
 
-	/**
-	 * @param item
-	 */
 	public void addItemToUpdate(Item item) {
 		itemsToUpdate.add(item);
 	}

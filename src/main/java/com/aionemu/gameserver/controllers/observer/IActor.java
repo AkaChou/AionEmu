@@ -3,7 +3,6 @@ package com.aionemu.gameserver.controllers.observer;
 /**
  * 碰撞/区域行为执行者接口。
  * Actor interface for collision or zone-triggered behavior.
- *
  * @author Rolandas
  */
 public interface IActor {
@@ -17,7 +16,6 @@ public interface IActor {
 	/**
 	 * 启用或禁用该行为者。
 	 * Enable or disable this actor.
-	 *
 	 * @param enable 是否启用 / whether to enable
 	 */
 	void setEnabled(boolean enable);

@@ -8,7 +8,6 @@ import com.aionemu.gameserver.model.gameobjects.player.MacroList;
  * Player macros (Macrosses) data access object.
  * <p/>
  * Created on: 13.07.2009 17:05:56
- *
  * @author Aquanox
  */
 public abstract class PlayerMacrossesDAO implements DAO {
@@ -16,7 +15,6 @@ public abstract class PlayerMacrossesDAO implements DAO {
 	/**
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier of this DAO.
-	 *
 	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
@@ -27,7 +25,6 @@ public abstract class PlayerMacrossesDAO implements DAO {
 	/**
 	 * 加载玩家宏列表。
 	 * Restores the list of macros for the player.
-	 *
 	 * @param playerId 玩家对象 ID / player object id
 	 * @return 宏列表 / macro list
 	 */
@@ -36,7 +33,6 @@ public abstract class PlayerMacrossesDAO implements DAO {
 	/**
 	 * 向数据库添加一条宏。
 	 * Adds macro information into the database.
-	 *
 	 * @param playerId 玩家对象 ID / player object id
 	 * @param macroPosition 宏槽位序号 / macro order number
 	 * @param macro 宏内容 / macro contents
@@ -46,7 +42,6 @@ public abstract class PlayerMacrossesDAO implements DAO {
 	/**
 	 * 更新数据库中的宏。
 	 * Updates macro information in the database.
-	 *
 	 * @param playerId 玩家对象 ID / player object id
 	 * @param macroPosition 宏槽位序号 / macro order number
 	 * @param macro 宏内容 / macro contents
@@ -56,7 +51,6 @@ public abstract class PlayerMacrossesDAO implements DAO {
 	/**
 	 * 删除数据库中的宏。
 	 * Removes a macro from the database.
-	 *
 	 * @param playerId 玩家对象 ID / player object id
 	 * @param macroPosition 宏槽位序号 / order of macro in macro list
 	 */

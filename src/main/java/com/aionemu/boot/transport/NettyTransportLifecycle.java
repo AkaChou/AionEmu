@@ -50,7 +50,6 @@ public class NettyTransportLifecycle implements AionTransportLifecycle {
     /**
      * 在共享事件循环上绑定服务端端点。
      * Bind a server endpoint on the shared event loops.
-     *
      * @param endpoint 监听端点 / Listen endpoint
      * @param initializer 子通道初始化器 / Child channel initializer
      * @return 绑定完成的通道 Future / Channel future after bind completes

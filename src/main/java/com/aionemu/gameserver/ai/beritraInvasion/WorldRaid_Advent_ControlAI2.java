@@ -9,7 +9,6 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 /**
  * 贝里特拉入侵相关 NPC AI：World Raid Advent Control（@AIName "advent_control"），继承 NpcAI2。
  * Beritra-invasion related NPC AI: World Raid Advent Control (@AIName "advent_control"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("advent_control")

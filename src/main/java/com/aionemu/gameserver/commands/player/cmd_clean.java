@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 /**
  * 玩家命令：按物品 ID 或物品链接删除背包中的一件物品。
  * Player command: deletes one inventory item by item id or item link.
- *
  * @author Source
  */
 public class cmd_clean extends PlayerCommand {
@@ -28,7 +27,6 @@ public class cmd_clean extends PlayerCommand {
 	/**
 	 * 解析物品 ID/链接并从背包减少一件该物品。
 	 * Parses item id/link and decreases one matching item from inventory.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 物品 ID 或链接 / item id or link
 	 */
@@ -106,7 +104,6 @@ public class cmd_clean extends PlayerCommand {
 	/**
 	 * 参数错误时回显失败消息。
 	 * Echoes the failure message when arguments are invalid.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param message 失败提示消息 / failure message
 	 */

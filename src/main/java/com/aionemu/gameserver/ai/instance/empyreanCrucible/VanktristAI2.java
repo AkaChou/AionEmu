@@ -34,7 +34,6 @@ utilizing potions, DP, and high cooldown skills to make sure you are victorious!
 /**
  * Empyrean Crucible 副本 NPC AI：Vanktrist（@AIName "vanktrist"），继承 AggressiveNpcAI2。
  * Empyrean Crucible instance NPC AI: Vanktrist (@AIName "vanktrist"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("vanktrist")

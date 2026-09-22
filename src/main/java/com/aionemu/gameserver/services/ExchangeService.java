@@ -37,7 +37,6 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 /**
  * 玩家交易服务：管理面对面交易会话、物品/基纳挂牌、确认与最终结算落库。
  * Player exchange service: manages face-to-face trade sessions, item/kinah offers, confirmation and final inventory persistence.
- *
  * @author ATracer
  */
 @Slf4j(topic = "EXCHANGE_LOG")
@@ -52,11 +51,9 @@ public class ExchangeService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -75,7 +72,6 @@ public class ExchangeService {
 	/**
 	 * 注入 Spring 的实例提供者。
 	 * Injects the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<ExchangeService> instanceProvider) {
@@ -92,7 +88,6 @@ public class ExchangeService {
 	/**
 	 * 在双方通过限制校验后建立交易会话并互发请求包。
 	 * Opens an exchange session for both players after restriction checks and sends request packets.
-	 *
 	 * @param player1 initiator
 	 * @param player2 partner
 	 */
@@ -114,10 +109,8 @@ public class ExchangeService {
 	/**
 	 * 校验双方是否允许交易。
 	 * Validates that both players are allowed to trade.
-	 *
 	 * @param player1 player 1
 	 * @param player2 player 2
-	 *
 	 * @return 是否可交易 / whether trade is allowed
 	 */
 	private boolean validateParticipants(Player player1, Player player2) {
@@ -127,7 +120,6 @@ public class ExchangeService {
 	/**
 	 * 获取当前交易对方。
 	 * Returns the current trade partner.
-	 *
 	 * @param player 玩家 / player
 	 * @return 对方玩家，无会话则为 null / partner, or null
 	 */
@@ -139,7 +131,6 @@ public class ExchangeService {
 	/**
 	 * 获取玩家当前交易会话。
 	 * Returns the player's current exchange session.
-	 *
 	 * 玩家 / player
 	 * exchange session
 	 */
@@ -152,7 +143,6 @@ public class ExchangeService {
 	/**
 	 * 获取对方视角下的交易会话。
 	 * Returns the partner's exchange session for this player.
-	 *
 	 * @param player 玩家 / player
 	 * @return 对方交易会话 / partner exchange session
 	 */
@@ -164,7 +154,6 @@ public class ExchangeService {
 	/**
 	 * 判断玩家是否处于交易中。
 	 * Returns whether the player is currently in an exchange.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否交易中 / whether in exchange
 	 */
@@ -175,7 +164,6 @@ public class ExchangeService {
 	/**
 	 * 向交易栏添加基纳并通知双方。
 	 * Adds kinah to the exchange offer and notifies both players.
-	 *
 	 * @param activePlayer active player
 	 * @param itemCount kinah amount
 	 */
@@ -206,7 +194,6 @@ public class ExchangeService {
 	/**
 	 * 向交易栏添加物品（含可堆叠增量）并通知双方。
 	 * Adds an item to the exchange offer (including stack increments) and notifies both players.
-	 *
 	 * @param activePlayer 主动玩家 / active player
 	 * @param itemObjId 物品对象 ID / item object id
 	 * @param itemCount 数量 / count
@@ -286,7 +273,6 @@ public class ExchangeService {
 	/**
 	 * 锁定己方交易栏并通知对方。
 	 * Locks this side of the exchange and notifies the partner.
-	 *
 	 * @param activePlayer active player
 	 */
 	public void lockExchange(Player activePlayer) {
@@ -301,7 +287,6 @@ public class ExchangeService {
 	/**
 	 * 取消交易并清理双方会话。
 	 * Cancels the exchange and cleans both sessions.
-	 *
 	 * @param activePlayer active player
 	 */
 	public void cancelExchange(Player activePlayer) {
@@ -315,7 +300,6 @@ public class ExchangeService {
 	/**
 	 * 确认交易；双方都确认后执行结算。
 	 * Confirms this side; when both confirmed, performs the trade.
-	 *
 	 * @param activePlayer active player
 	 */
 	public void confirmExchange(Player activePlayer) {
@@ -341,7 +325,6 @@ public class ExchangeService {
 	/**
 	 * 执行交易：校验背包、扣物、入包并排队异步存库。
 	 * Performs the trade: validates bags, removes items, deposits them, and queues async inventory save.
-	 *
 	 * @param activePlayer one player
 	 * @param currentPartner partner
 	 */
@@ -389,7 +372,6 @@ public class ExchangeService {
 	/**
 	 * 清理交易会话与交易标记，取消或失败时释放临时拆分物品 ID。
 	 * Clears exchange sessions and flags, releasing temporary split-item ids on cancel or failure.
-	 *
 	 * @param releaseIds 是否释放临时物品 ID / whether temporary item ids should be released
 	 * exchange players
 	 */
@@ -415,7 +397,6 @@ public class ExchangeService {
 	/**
 	 * 从背包扣除交易物品与基纳。
 	 * Removes offered items and kinah from inventory.
-	 *
 	 * 玩家 / player
 	 * exchange session
 	 * whether successful
@@ -457,10 +438,8 @@ public class ExchangeService {
 	/**
 	 * 校验双方背包空间是否足以接收对方物品。
 	 * Validates both inventories have room for the partner's items.
-	 *
 	 * @param activePlayer one player
 	 * @param currentPartner partner
-	 *
 	 * @return 是否通过校验 / whether validation passes
 	 */
 	private boolean validateExchange(Player activePlayer, Player currentPartner) {
@@ -473,7 +452,6 @@ public class ExchangeService {
 	/**
 	 * 校验背包空位是否足够。
 	 * Validates free inventory slots are sufficient.
-	 *
 	 * 玩家 / player
 	 * @param exchange 待接收的交易内容 / exchange content to receive
 	 * whether enough free slots
@@ -486,7 +464,6 @@ public class ExchangeService {
 	/**
 	 * 将对方挂出的物品与基纳放入己方背包。
 	 * Deposits the partner's offered items and kinah into this inventory.
-	 *
 	 * receiver
 	 * @param exchange1 对方挂出内容 / partner offer
 	 * @param exchange2 己方会话（用于收集待更新物品） / own session (collects items to update)

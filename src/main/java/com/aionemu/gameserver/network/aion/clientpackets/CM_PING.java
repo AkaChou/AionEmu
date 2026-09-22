@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 /**
  * 客户端心跳包，用于保活并检测异常过快的 ping 间隔（加速外挂）。
  * Client keep-alive ping packet; detects abnormally fast ping intervals (timer cheats).
- *
  * @author -Nemesiss- modified by Undertrey
  */
 public class CM_PING extends AionClientPacket {

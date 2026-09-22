@@ -10,7 +10,6 @@ import com.aionemu.gameserver.skillengine.model.HealType;
 /**
  * 生命瞬时治疗效果：立即恢复目标 HP。
  * Instant HP heal effect: immediately restores the target's hit points.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)

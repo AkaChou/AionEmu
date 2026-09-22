@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.loginserver.LsServerPacket;
 /**
  * 游戏服对登录服心跳 Ping 的应答 Pong 服务端包。
  * Server packet that replies with a Pong to a login-server Ping heartbeat.
- *
  * @author KID
  */
 public class SM_LS_PONG extends LsServerPacket {
@@ -16,7 +15,6 @@ public class SM_LS_PONG extends LsServerPacket {
 	/**
 	 * 构造登录服 Pong 应答包。
 	 * Constructs a login-server Pong reply packet.
-	 *
 	 * @param pid 进程/心跳标识 / process or ping id
 	 */
 	public SM_LS_PONG(int pid) {

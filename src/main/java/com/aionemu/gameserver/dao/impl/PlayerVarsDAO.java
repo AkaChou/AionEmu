@@ -14,7 +14,6 @@ import java.sql.SQLException;
 /**
  * 玩家变量 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerVarsDAO.
- *
  * @author KID
  */
 @Slf4j
@@ -31,7 +30,6 @@ public class PlayerVarsDAO extends com.aionemu.gameserver.dao.PlayerVarsDAO {
     /**
      * 加载玩家全部自定义变量。
      * Loads all custom variables for a player.
-     *
      * @param playerId 玩家 ID / player id
      * @return 变量映射 / variable map
      */
@@ -60,11 +58,9 @@ public class PlayerVarsDAO extends com.aionemu.gameserver.dao.PlayerVarsDAO {
     /**
      * 设置玩家变量。
      * Sets a player variable.
-     *
      * @param playerId 玩家 ID / player id
      * @param key 变量键 / variable key
      * @param value 变量值 / variable value
-     *
      * @return 是否设置成功 / whether the set succeeded
      */
     @Override
@@ -86,10 +82,8 @@ public class PlayerVarsDAO extends com.aionemu.gameserver.dao.PlayerVarsDAO {
     /**
      * 删除玩家变量。
      * Removes a player variable.
-     *
      * @param playerId 玩家 ID / player id
      * @param key 变量键 / variable key
-     *
      * @return 是否删除成功 / whether the remove succeeded
      */
     @Override
@@ -110,7 +104,6 @@ public class PlayerVarsDAO extends com.aionemu.gameserver.dao.PlayerVarsDAO {
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.
-     *
      * @param database 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

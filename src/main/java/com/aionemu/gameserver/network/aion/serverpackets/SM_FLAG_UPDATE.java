@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 /**
  * 战场旗帜更新包：同步旗帜 NPC 模板 ID 与对象 ID。
  * Battlefield flag update packet: flag NPC template id and object id.
- *
  * @author wanke
  */
 @AllArgsConstructor

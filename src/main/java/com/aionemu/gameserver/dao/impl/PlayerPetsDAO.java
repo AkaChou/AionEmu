@@ -15,7 +15,6 @@ import java.util.List;
 /**
  * 玩家宠物数据 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerPetsDAO.
- *
  * @author M@xx, xTz, Rolandas
  */
 @Slf4j
@@ -24,7 +23,6 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
     /**
      * 保存宠物喂养状态。
      * Saves the pet feed status.
-     *
      * @param player 玩家 / player
      * @param petId 宠物 ID / pet id
      * @param hungryLevel hungry level
@@ -51,7 +49,6 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
     /**
      * 保存宠物增益包（食品/饮料/卷轴）。
      * Saves the pet doping bag (food/drink/scrolls).
-     *
      * @param player 玩家 / player
      * @param petId 宠物 ID / pet id
      * @param bag doping bag
@@ -81,7 +78,6 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
     /**
      * 设置宠物复用时间。
      * Sets the pet reuse time.
-     *
      * @param player 玩家 / player
      * @param petId 宠物 ID / pet id
      * @param time 复用时间 / reuse time
@@ -104,7 +100,6 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
     /**
      * 插入玩家宠物记录。
      * Inserts a player pet record.
-     *
      * @param petCommonData 宠物通用数据 / pet common data
      */
     @Override
@@ -128,7 +123,6 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
     /**
      * 删除玩家宠物记录。
      * Removes a player pet record.
-     *
      * @param player 玩家 / player
      * @param petId 宠物 ID / pet id
      */
@@ -149,7 +143,6 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
     /**
      * 加载玩家全部宠物数据。
      * Loads all pets for the player.
-     *
      * @param player 玩家 / player
      * @return 宠物数据列表 / list of pet common data
      */
@@ -224,7 +217,6 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
     /**
      * 更新宠物名称。
      * Updates the pet name.
-     *
      * @param petCommonData 宠物通用数据 / pet common data
      */
     @Override
@@ -245,7 +237,6 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
     /**
      * 保存宠物心情相关数据。
      * Saves pet mood related data.
-     *
      * @param petCommonData 宠物通用数据 / pet common data
      * @return 是否成功 / whether successful
      */
@@ -273,7 +264,6 @@ public class PlayerPetsDAO extends com.aionemu.gameserver.dao.PlayerPetsDAO {
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

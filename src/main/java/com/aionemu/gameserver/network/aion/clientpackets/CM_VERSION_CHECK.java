@@ -12,7 +12,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_VERSION_CHECK;
 /**
  * 客户端版本校验握手请求包，回复版本与若干初始化服务端包。
  * Client packet for version-check handshake; replies with version and init server packets.
- *
  * @author -Nemesiss-
  */
 public class CM_VERSION_CHECK extends AionClientPacket {

@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Enshar 区域 NPC AI：DF5 Field Attraction（@AIName "df5_field_attraction"），继承 NpcAI2。
  * Enshar zone NPC AI: DF5 Field Attraction (@AIName "df5_field_attraction"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("df5_field_attraction")
@@ -26,7 +25,6 @@ public class DF5_FieldAttractionAI2 extends NpcAI2
 	/**
 	 * 处理对话选择：按 NPC 将玩家传送到对应的飞行路径起始点。
 	 * Handles dialog selection: starts the matching flight path for the player by NPC.
-	 *
 	 * @param player 对话玩家 / dialog player
 	 * @param dialogId 对话框选项 ID / dialog option ID
 	 * @param questId 任务 ID / quest ID

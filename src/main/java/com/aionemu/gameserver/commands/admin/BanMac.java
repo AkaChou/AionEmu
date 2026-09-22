@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 管理员 MAC 封禁命令：按 MAC 地址封禁目标或指定地址。
  * Admin MAC-ban command: bans a MAC address from the target or a given value.
- *
  * @author KID, nrg
  */
 public class BanMac extends AdminCommand {
@@ -25,7 +24,6 @@ public class BanMac extends AdminCommand {
 	/**
 	 * 执行 MAC 封禁：解析时长与地址（或从目标玩家读取）后封禁。
 	 * Executes MAC ban: parses duration and address (or from target player), then bans.
-	 *
 	 * @param params 参数：时长（分钟）、MAC（可选） / duration in minutes, optional mac
 	 */
 	@Override
@@ -76,7 +74,6 @@ public class BanMac extends AdminCommand {
 	/**
 	 * 参数错误时输出 {@code //banmac} 用法或错误提示。
 	 * Prints {@code //banmac} usage or the error message on failure.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

@@ -21,7 +21,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 物品随机加成数据容器，按加成类型与选项集 ID 索引 {@link RandomBonus}。
  * Item random-bonus data holder, indexing {@link RandomBonus} by bonus type and option-set id.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -59,7 +58,6 @@ public class ItemRandomBonusData {
 	/**
 	 * 按权重随机抽取一组随机加成修正。
 	 * Randomly selects a modifiers set for the given bonus type and option set by weight.
-	 *
 	 * @param bonusType 加成类型 / bonus type
 	 * @param rndOptionSet 随机选项集 ID / random option-set id
 	 * @return 随机加成结果，无匹配则为 null / random bonus result or null
@@ -89,7 +87,6 @@ public class ItemRandomBonusData {
 	/**
 	 * 按加成类型、选项集与序号获取修正模板。
 	 * Returns the modifiers template for the given bonus type, option set and 1-based index.
-	 *
 	 * @param bonusType 加成类型 / bonus type
 	 * @param rndOptionSet 随机选项集 ID / random option-set id
 	 * @param number 1 起始的修正序号 / 1-based modifiers index
@@ -106,7 +103,6 @@ public class ItemRandomBonusData {
 	/**
 	 * 返回背包与抛光随机加成的总数量。
 	 * Returns the total number of inventory and polish random bonuses.
-	 *
 	 * @return 加成总数 / total bonus count
 	 */
 	public int size() {

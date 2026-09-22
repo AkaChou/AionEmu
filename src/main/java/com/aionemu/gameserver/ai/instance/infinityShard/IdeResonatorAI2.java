@@ -18,7 +18,6 @@ import java.util.concurrent.Future;
 /**
  * Infinity Shard 副本 NPC AI：Ide Resonator（@AIName "ide_resonator"），继承 AggressiveNpcAI2。
  * Infinity Shard instance NPC AI: Ide Resonator (@AIName "ide_resonator"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("ide_resonator")

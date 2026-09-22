@@ -23,7 +23,6 @@ final class GameWorldBootstrapFallbacks {
     /**
      * 返回 IDFactory：双源兜底已退役，交由 {@link IDFactory#getInstance()} fail-fast。
      * Returns IDFactory: the dual-source fallback is retired; delegates to IDFactory.getInstance() and fails fast.
-     *
      * @return IDFactory 实例 / IDFactory instance
      */
     static IDFactory idFactory() {
@@ -33,7 +32,6 @@ final class GameWorldBootstrapFallbacks {
     /**
      * 回退 ZoneService。
      * Fallback ZoneService.
-     *
      * @return ZoneService 单例 / ZoneService singleton
      */
     static ZoneService zoneService() {
@@ -43,7 +41,6 @@ final class GameWorldBootstrapFallbacks {
     /**
      * 回退 HotspotTeleportService。
      * Fallback HotspotTeleportService.
-     *
      * @return HotspotTeleportService 单例 / HotspotTeleportService singleton
      */
     static HotspotTeleportService hotspotTeleportService() {
@@ -53,7 +50,6 @@ final class GameWorldBootstrapFallbacks {
     /**
      * 回退 RoadService。
      * Fallback RoadService.
-     *
      * @return RoadService 单例 / RoadService singleton
      */
     static RoadService roadService() {
@@ -63,7 +59,6 @@ final class GameWorldBootstrapFallbacks {
     /**
      * 返回 World：双源兜底已退役，交由 {@link World#getInstance()} fail-fast。
      * Returns World: the dual-source fallback is retired; delegates to World.getInstance() and fails fast.
-     *
      * @return World 实例 / World instance
      */
     static World world() {

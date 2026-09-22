@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * Norsvold 区域 NPC AI：Archon Shadow Scout（@AIName "archon_shadow_scout"），继承 NpcAI2。
  * Norsvold zone NPC AI: Archon Shadow Scout (@AIName "archon_shadow_scout"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("archon_shadow_scout")

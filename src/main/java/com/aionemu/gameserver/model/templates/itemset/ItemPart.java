@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 套装部件模板（静态数据/XML）。
  * Item set part template (static data/XML).
- *
  * @author ATracer
  */
 @Getter
@@ -17,9 +16,6 @@ import lombok.Getter;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ItemPart {
 
-	/**
-	 * @return the itemid
-	 */
 	@XmlAttribute
 	protected int itemid;
 }

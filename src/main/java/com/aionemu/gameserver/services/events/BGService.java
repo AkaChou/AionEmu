@@ -15,7 +15,6 @@ import com.aionemu.gameserver.eventEngine.events.BattlegroundEvent;
 /**
  * 战场定时注册服务，按计划开启战场匹配入口。
  * Battleground schedule service that opens matchmaking windows on schedule.
- *
  * @author Rinzler (Encom)
  */
 
@@ -33,7 +32,6 @@ public class BGService {
 	/**
 	 * 注册调度任务。
 	 * Registers scheduled tasks.
-	 *
 	 * @param delay 延迟毫秒 / delay
 	 */
 	public void register(int delay) {
@@ -47,11 +45,9 @@ public class BGService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
@@ -69,7 +65,6 @@ public class BGService {
 	/**
 	 * setInstanceProvider 方法。
 	 * setInstanceProvider method.
-	 *
 	 * @param instanceProvider 副本提供者 / instanceProvider
 	 */
 	public static void setInstanceProvider(ObjectProvider<BGService> instanceProvider) {

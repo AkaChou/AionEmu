@@ -16,7 +16,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 延迟法术攻击效果：延迟后对敌对目标结算魔法伤害。
  * Delayed spell attack: after a delay, applies magical damage to an enemy target.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -31,7 +30,6 @@ public class DelayedSpellAttackInstantEffect extends DamageEffect {
 	/**
 	 * 延迟后对敌对目标计算并应用伤害。
 	 * After delay, calculates and applies damage to an enemy target.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -51,7 +49,6 @@ public class DelayedSpellAttackInstantEffect extends DamageEffect {
 	/**
 	 * 计算魔法技能伤害并立即结算。
 	 * Calculates magical skill damage and applies it immediately.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	private void calculateAndApplyDamage(Effect effect) {

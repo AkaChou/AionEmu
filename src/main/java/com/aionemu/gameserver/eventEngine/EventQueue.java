@@ -13,7 +13,6 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * 延迟事件阻塞优先队列：按 {@link DelayedEvent#compareTo} 排序，仅在到期后可取出。
  * Blocking priority queue of delayed events ordered by {@link DelayedEvent#compareTo}; only due items poll.
- *
  * @param <E> 延迟事件类型 / delayed event type
  * @author wanke
  */
@@ -47,7 +46,6 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 	/**
 	 * 以给定集合初始化。
 	 * Initializes from a collection.
-	 *
 	 * @param c 初始元素 / initial elements
 	 */
 	public EventQueue(Collection<? extends E> c) {
@@ -57,7 +55,6 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 	/**
 	 * 添加元素（等同 {@link #offer(DelayedEvent)}）。
 	 * Adds an element (same as {@link #offer(DelayedEvent)}).
-	 *
 	 * @param e 元素 / element
 	 * @return 恒为 true / always true
 	 */
@@ -68,7 +65,6 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 	/**
 	 * 入队；若成为新头则唤醒等待者。
 	 * Enqueues; signals waiters when the element becomes the new head.
-	 *
 	 * @param e 元素 / element
 	 * @return 恒为 true / always true
 	 */
@@ -90,7 +86,6 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 	/**
 	 * 阻塞入队（实际非阻塞，委托 {@link #offer(DelayedEvent)}）。
 	 * Blocking put (actually non-blocking; delegates to {@link #offer(DelayedEvent)}).
-	 *
 	 * @param e 元素 / element
 	 */
 	public void put(E e) {
@@ -100,7 +95,6 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 	/**
 	 * 带超时入队（忽略超时，委托 {@link #offer(DelayedEvent)}）。
 	 * Timed offer (timeout ignored; delegates to {@link #offer(DelayedEvent)}).
-	 *
 	 * @param e 元素 / element
 	 * @param timeout 超时（被忽略） / timeout (ignored)
 	 * @param unit 时间单位 / time unit
@@ -113,7 +107,6 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 	/**
 	 * 非阻塞取出已到期头元素；未到期或空则返回 null。
 	 * Non-blocking poll of a due head; returns null if empty or not yet due.
-	 *
 	 * @return 到期元素或 null / due element or null
 	 */
 	public E poll() {
@@ -139,7 +132,6 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 	/**
 	 * 阻塞直到有到期元素可取。
 	 * Blocks until a due element is available.
-	 *
 	 * @return 到期元素 / due element
 	 * @throws InterruptedException 等待被中断 / wait interrupted
 	 */
@@ -174,7 +166,6 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 	/**
 	 * 在超时内阻塞取出到期元素。
 	 * Timed blocking poll of a due element.
-	 *
 	 * @param timeout 超时时长 / timeout duration
 	 * @param unit 时间单位 / time unit
 	 * @return 到期元素或 null / due element or null
@@ -222,7 +213,6 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 	/**
 	 * 查看头元素（不移除，不论是否到期）。
 	 * Peeks head without removal (regardless of due time).
-	 *
 	 * @return 头元素或 null / head or null
 	 */
 	public E peek() {
@@ -238,7 +228,6 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 	/**
 	 * 当前元素数。
 	 * Current size.
-	 *
 	 * @return 大小 / size
 	 */
 	public int size() {
@@ -254,7 +243,6 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 	/**
 	 * 将所有已到期元素转移到目标集合。
 	 * Drains all due elements into the target collection.
-	 *
 	 * @param c 目标集合 / target collection
 	 * @return 转移数量 / transferred count
 	 */
@@ -289,7 +277,6 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 	/**
 	 * 将至多 {@code maxElements} 个已到期元素转移到目标集合。
 	 * Drains up to {@code maxElements} due elements into the target collection.
-	 *
 	 * @param c 目标集合 / target collection
 	 * @param maxElements 最大转移数 / max count
 	 * @return 转移数量 / transferred count
@@ -342,7 +329,6 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 	/**
 	 * 剩余容量（无界，返回 {@link Integer#MAX_VALUE}）。
 	 * Remaining capacity (unbounded, returns {@link Integer#MAX_VALUE}).
-	 *
 	 * @return 剩余容量 / remaining capacity
 	 */
 	public int remainingCapacity() {
@@ -352,7 +338,6 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 	/**
 	 * 快照数组。
 	 * Snapshot array.
-	 *
 	 * @return 元素数组 / element array
 	 */
 	public Object[] toArray() {
@@ -368,9 +353,7 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 	/**
 	 * 快照到给定数组。
 	 * Snapshot into the given array.
-	 *
 	 * @param a 目标数组 / target array
-	 *
 	 * @param <T> 数组元素类型 / array element type
 	 * @return 填充后的数组 / filled array
 	 */
@@ -387,7 +370,6 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 	/**
 	 * 移除指定对象。
 	 * Removes the given object.
-	 *
 	 * @param o 对象 / object
 	 * @return 是否移除 / whether removed
 	 */
@@ -404,7 +386,6 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 	/**
 	 * 基于快照的迭代器。
 	 * Snapshot-based iterator.
-	 *
 	 * @return 迭代器 / iterator
 	 */
 	public Iterator<E> iterator() {
@@ -438,7 +419,6 @@ public class EventQueue<E extends DelayedEvent> extends AbstractQueue<E> impleme
 		/**
 		 * 用快照数组构造迭代器。
 		 * Builds the iterator from a snapshot array.
-		 *
 		 * @param array 快照数组 / snapshot array
 		 */
 		Itr(Object[] array) {

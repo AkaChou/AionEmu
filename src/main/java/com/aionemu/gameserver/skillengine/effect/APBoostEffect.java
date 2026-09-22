@@ -9,7 +9,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 欧比斯点数加成效果：标记运行中效果启用 AP 提升。
  * Abyss Point boost effect: marks the runtime effect to enable AP gain increase.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -19,7 +18,6 @@ public class APBoostEffect extends BuffEffect {
 	/**
 	 * 标记本效果启用 AP 加成并记为成功。
 	 * Marks AP boost and records this effect as successful.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

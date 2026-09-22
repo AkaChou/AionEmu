@@ -8,7 +8,6 @@ import com.aionemu.gameserver.world.WorldPosition;
 /**
  * 静态对象。
  * Static Object game object.
- *
  * @author ATracer
  */
 public class StaticObject extends VisibleObject {

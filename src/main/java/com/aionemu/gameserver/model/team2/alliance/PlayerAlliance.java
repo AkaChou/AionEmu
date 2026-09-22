@@ -116,7 +116,6 @@ public class PlayerAlliance extends TemporaryPlayerTeam<PlayerAllianceMember> {
 	/**
 	 * 判断玩家是否为副队长。
 	 * Checks whether the player is a vice captain.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是副队长时为 {@code true} / {@code true} if vice captain
 	 */
@@ -127,7 +126,6 @@ public class PlayerAlliance extends TemporaryPlayerTeam<PlayerAllianceMember> {
 	/**
 	 * 判断玩家是否为队长或副队长。
 	 * Checks whether the player is the leader or a vice captain.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是队长或副队长时为 {@code true} / {@code true} if leader or vice captain
 	 */
@@ -149,7 +147,6 @@ public class PlayerAlliance extends TemporaryPlayerTeam<PlayerAllianceMember> {
 	/**
 	 * 是否已加入联合部队。
 	 * Whether the alliance is in a league.
-	 *
 	 * @return 已加入联合部队时为 {@code true} / {@code true} if in league
 	 */
 	public final boolean isInLeague() {

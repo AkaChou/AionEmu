@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 交易添加基纳包：同步己方/对方放入的基纳数量。
  * Exchange add-kinah packet: kinah amount placed by self or other.
- *
  * @author Avol
  */
 @AllArgsConstructor

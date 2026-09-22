@@ -12,7 +12,6 @@ import com.aionemu.gameserver.skillengine.model.SkillType;
 /**
  * 定身效果：施加 BIND 异常，中断正在读条的物理技能。
  * Bind effect: applies BIND abnormal and cancels casting physical skills.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -22,7 +21,6 @@ public class BindEffect extends EffectTemplate {
 	/**
 	 * 将效果加入受影响者的效果控制器。
 	 * Adds the effect to the effected creature's effect controller.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -33,7 +31,6 @@ public class BindEffect extends EffectTemplate {
 	/**
 	 * 按定身抗性计算是否命中。
 	 * Calculates hit using bind resistance.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -44,7 +41,6 @@ public class BindEffect extends EffectTemplate {
 	/**
 	 * 设置定身异常；若目标正在施放物理技能则取消。
 	 * Sets bind abnormal; cancels a physical skill being cast.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -61,7 +57,6 @@ public class BindEffect extends EffectTemplate {
 	/**
 	 * 清除定身异常。
 	 * Clears the bind abnormal.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

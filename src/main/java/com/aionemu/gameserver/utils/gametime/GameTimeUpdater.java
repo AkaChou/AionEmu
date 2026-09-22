@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 /**
  * 负责推进游戏时钟的定时任务。
  * Runnable responsible for advancing the game clock.
- *
  * @author Ben
  */
 @AllArgsConstructor

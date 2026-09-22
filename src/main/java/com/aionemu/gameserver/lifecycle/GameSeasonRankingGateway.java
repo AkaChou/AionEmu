@@ -29,7 +29,6 @@ public class GameSeasonRankingGateway {
     /**
      * 注入赛季排名更新服务提供者。
      * Inject the season ranking update service provider.
-     *
      * @param seasonRankingUpdateServiceProvider 更新服务提供者 / Update service provider
      */
     @Autowired(required = false)
@@ -40,7 +39,6 @@ public class GameSeasonRankingGateway {
     /**
      * 注入维护类运行时桥接提供者。
      * Inject the maintenance runtime bridge provider.
-     *
      * @param runtimeBridgeProvider 运行时桥接提供者 / Runtime bridge provider
      */
     @Autowired(required = false)
@@ -60,7 +58,6 @@ public class GameSeasonRankingGateway {
     /**
      * 解析赛季排名更新服务。
      * Resolve the season ranking update service.
-     *
      * @return 更新服务 / Update service
      */
     private SeasonRankingUpdateService seasonRankingUpdateService() {
@@ -73,7 +70,6 @@ public class GameSeasonRankingGateway {
     /**
      * 解析维护类运行时桥接。
      * Resolve the maintenance runtime bridge.
-     *
      * @return 运行时桥接 / Runtime bridge
      */
     private GameMaintenanceServicesRuntimeBridge runtimeBridge() {

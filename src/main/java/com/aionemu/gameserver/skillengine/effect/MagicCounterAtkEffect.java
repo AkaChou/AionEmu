@@ -21,7 +21,6 @@ import com.aionemu.gameserver.skillengine.model.SkillType;
 /**
  * 魔法反制效果：目标施法时对攻击者造成反击伤害（有上限）。
  * Magic counter-attack: damages the attacker when the target uses a skill (capped).
- *
  * @author ViAl
  */
 @XmlAccessorType(XmlAccessType.FIELD)

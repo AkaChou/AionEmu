@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 宏创建/删除操作结果的服务端包。
  * Server packet for macro create/delete operation results.
- *
  * @author xavier
  */
 @AllArgsConstructor

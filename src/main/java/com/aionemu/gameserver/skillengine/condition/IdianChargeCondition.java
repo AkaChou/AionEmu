@@ -13,7 +13,6 @@ import lombok.Getter;
 /**
  * 伊迪安充能条件：施放时消耗已装备武器上伊迪安石的抛光充能。
  * Idian charge condition: on cast, consumes polish charge from Idian stones on equipped weapons.
- *
  * @author Ranastic
  */
 @Getter
@@ -26,7 +25,6 @@ public class IdianChargeCondition extends ChargeCondition {
 	/**
 	 * 校验并消耗已装备武器上伊迪安石的抛光充能。
 	 * Validates and consumes polish charge from Idian stones on equipped weapons.
-	 *
 	 * @param env 技能环境 / skill environment
 	 * @return 恒为 true / always true
 	 */

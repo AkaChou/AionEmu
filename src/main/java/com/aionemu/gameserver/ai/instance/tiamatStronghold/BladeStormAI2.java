@@ -11,7 +11,6 @@ import java.util.concurrent.Future;
 /**
  * Tiamat Stronghold 副本 NPC AI：Blade Storm（@AIName "bladestorm"），继承 AggressiveNpcAI2。
  * Tiamat Stronghold instance NPC AI: Blade Storm (@AIName "bladestorm"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("bladestorm")

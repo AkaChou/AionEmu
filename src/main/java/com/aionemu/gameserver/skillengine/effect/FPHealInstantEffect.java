@@ -10,7 +10,6 @@ import com.aionemu.gameserver.skillengine.model.HealType;
 /**
  * 飞行点瞬时恢复效果：立即回复目标 FP。
  * Instant FP heal effect: immediately restores the target's flight points.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)

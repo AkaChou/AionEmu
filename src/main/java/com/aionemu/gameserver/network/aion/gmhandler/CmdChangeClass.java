@@ -7,16 +7,13 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * GM 指令：切换管理员自身职业。
  * GM command handler that switches the admin's player class.
- *
  * @author Alcapwnd
- * @modified dezalmado
  */
 public class CmdChangeClass extends AbstractGMHandler {
 
 	/**
 	 * 创建处理器并立即执行职业切换。
 	 * Creates the handler and immediately runs the class-change logic.
-	 *
 	 * @param admin 执行指令的管理员 / the admin executing the command
 	 * @param params 目标职业名（如 warrior、assassin） / target class name (e.g. warrior, assassin)
 	 */

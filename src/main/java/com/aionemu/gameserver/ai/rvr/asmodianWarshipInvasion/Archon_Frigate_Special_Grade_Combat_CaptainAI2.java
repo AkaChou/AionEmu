@@ -11,7 +11,6 @@ import java.util.List;
 /**
  * RvR 相关 NPC AI：Archon Frigate Special Grade Combat Captain（@AIName "DF6_Event_G1_S2_Fi_75_Al"），继承 AggressiveNpcAI2。
  * RvR-related NPC AI: Archon Frigate Special Grade Combat Captain (@AIName "DF6_Event_G1_S2_Fi_75_Al"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("DF6_Event_G1_S2_Fi_75_Al")
@@ -20,13 +19,9 @@ public class Archon_Frigate_Special_Grade_Combat_CaptainAI2 extends AggressiveNp
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
-	/**
-	 * 死亡后随机召唤一名指挥官（Suminid/Taina/Vasad），并清除突袭队长。
-	 * On death, randomly summons one of the commanders (Suminid/Taina/Vasad) and despawns the assault leader.
-	 */
-	protected void handleDied() {
+    protected void handleDied() {
 		switch (Rnd.get(1, 3)) {
 			case 1:
 				spawn(240669, 1409.9818f, 1369.7706f, 1336.7855f, (byte) 60); //Suminid.
@@ -42,7 +37,7 @@ public class Archon_Frigate_Special_Grade_Combat_CaptainAI2 extends AggressiveNp
 		despawnNpc(240668); //Archon Frigate Special Grade Assault Leader.
 		AI2Actions.deleteOwner(this);
 	}
-	
+
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);

@@ -11,7 +11,6 @@ import lombok.Getter;
 /**
  * 欧比斯 Op 模板（静态数据/XML）。
  * XML template.
- *
  * @author Rinzler (Encom)
  */
 

@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 客户端街机升级活动操作请求包（开启/关闭/尝试/领奖等）。
  * Client packet for arcade upgrade event actions (open/close/try/reward, etc.).
- *
  * @author Ranastic
  */
 public class CM_UPGRADE_ARCADE extends AionClientPacket {

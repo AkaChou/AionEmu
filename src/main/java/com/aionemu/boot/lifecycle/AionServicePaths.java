@@ -15,12 +15,10 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 /**
  * 内嵌 login/chat/game 运行时路径与默认资源落盘工具。
  * Utility for embedded login/chat/game runtime paths and default resource materialization.
- *
  * <p>目录来源按启动方式分派：本地 IDE/检出运行（未设置 {@code aion.home}）时配置目录与数据目录
  * 都优先使用 {@code src/main/resources/aion/**} 源码树；打包启动器（{@code -Daion.home=<部署目录>}）
  * 时配置目录固定为 {@code <aion.home>/config}（缺失时从 classpath 物化默认文件）。同一条判定保证
  * 一个进程不会出现"配置读部署目录、数据读源码树"的混搭。</p>
- *
  * <p>Directory sources follow the launch mode: an IDE/checkout run (no {@code aion.home}) prefers the
  * {@code src/main/resources/aion/**} source tree for configuration as well as data, while the packaged
  * launcher ({@code -Daion.home=<deploy dir>}) keeps configuration at {@code <aion.home>/config}
@@ -82,7 +80,6 @@ class AionServicePaths {
     /**
      * 若系统属性未设置，则写入基于 aion.home 的默认路径。
      * Sets a home-relative default path when the system property is absent.
-     *
      * @param property 系统属性名 / system property name
      * @param defaultPath 相对 aion.home 的默认路径 / default path relative to aion.home
      */
@@ -100,7 +97,6 @@ class AionServicePaths {
      * Configures the configuration directory: an explicit path wins, an IDE/checkout run (no
      * {@code aion.home}) prefers the source tree, and everything else uses {@code aion.home/config},
      * materializing classpath defaults when missing.
-     *
      * @param property 系统属性名 / system property name
      * @param defaultPath 默认目录路径 / default directory path
      * @param resourcePath classpath 资源根路径 / classpath resource root
@@ -115,7 +111,6 @@ class AionServicePaths {
     /**
      * 配置资源目录并在非显式路径时物化默认资源树。
      * Configures a resource directory and materializes defaults when the path is not explicit.
-     *
      * @param property 系统属性名 / system property name
      * @param defaultPath 默认目录路径 / default directory path
      * @param resourcePath classpath 资源根路径 / classpath resource root
@@ -131,7 +126,6 @@ class AionServicePaths {
     /**
      * 优先使用源码树中的 game 数据目录，否则回退到资源物化。
      * Prefers checkout game data under source tree; otherwise falls back to resource materialization.
-     *
      * @param property 系统属性名 / system property name
      * @param defaultPath 默认目录路径 / default directory path
      * @param resourcePath classpath 资源根路径 / classpath resource root
@@ -147,7 +141,6 @@ class AionServicePaths {
     /**
      * 优先使用源码树中的 geo 目录，否则仅设置默认路径（不强制物化）。
      * Prefers checkout geo under source tree; otherwise only sets the default path (no forced materialize).
-     *
      * @param property 系统属性名 / system property name
      * @param defaultPath 默认目录路径 / default directory path
      * @param resourcePath classpath 资源根路径 / classpath resource root
@@ -162,7 +155,6 @@ class AionServicePaths {
      * 未设置 {@code aion.home}（本地 IDE/检出运行）且源码树存在时，把属性直接指向源码树目录。
      * Points the property at the checkout source tree when {@code aion.home} is unset and the
      * directory exists.
-     *
      * @param property 系统属性名 / system property name
      * @param resourcePath 资源相对路径 / resource-relative path
      * @return 已指向源码树则为 true / true when the source tree was selected
@@ -184,7 +176,6 @@ class AionServicePaths {
     /**
      * 若存在源码 resources 下的目录，则直接指向该路径。
      * Points the property at a source-tree resources directory when present.
-     *
      * @param property 系统属性名 / system property name
      * @param resourcePath 资源相对路径 / resource-relative path
      * @return 已配置源码路径则为 true / true if a source path was configured
@@ -209,7 +200,6 @@ class AionServicePaths {
     /**
      * 将 classpath 下 resourcePath 树中的文件复制到目标目录（已存在则跳过）。
      * Copies files under a classpath resourcePath tree into the target directory (skip existing).
-     *
      * @param resourcePath classpath 资源根路径 / classpath resource root
      * @param targetDirectory 目标目录 / target directory
      */
@@ -228,7 +218,6 @@ class AionServicePaths {
     /**
      * 若目标文件不存在，则从 classpath 复制单个默认配置文件。
      * Copies a single default config file from the classpath when the target is missing.
-     *
      * @param resourcePath classpath 资源路径 / classpath resource path
      * @param targetFile 目标文件 / target file
      */
@@ -253,7 +242,6 @@ class AionServicePaths {
     /**
      * 将单个资源复制到目标目录中的相对路径位置。
      * Copies one resource into the target directory at its relative path.
-     *
      * @param resourcePath 资源根路径 / resource root path
      * @param resource Spring 资源 / Spring resource
      * @param targetDirectory 目标目录 / target directory
@@ -285,7 +273,6 @@ class AionServicePaths {
     /**
      * 从资源 URL 中截取相对 resourcePath 的路径片段。
      * Extracts the path segment relative to resourcePath from a resource URL.
-     *
      * @param resourcePath 资源根路径 / resource root path
      * @param url 资源 URL / resource URL
      * @return 相对路径，无法解析则为 null / relative path, or null if unresolvable
@@ -311,7 +298,6 @@ class AionServicePaths {
         /**
          * 是否已设置 aion.home。
          * Whether aion.home is set.
-         *
          * @return 已设置则为 true / true if set
          */
         private boolean hasHome() {
@@ -321,7 +307,6 @@ class AionServicePaths {
         /**
          * 是否已设置指定系统属性。
          * Whether the given system property is set.
-         *
          * @param property 系统属性名 / property name
          * @return 已设置则为 true / true if set
          */
@@ -332,7 +317,6 @@ class AionServicePaths {
         /**
          * 读取系统属性值。
          * Reads a system property value.
-         *
          * @param property 系统属性名 / property name
          * @return 系统属性值 / property value
          */
@@ -343,7 +327,6 @@ class AionServicePaths {
         /**
          * 将路径规范化后写入系统属性。
          * Writes a normalized path into a system property.
-         *
          * @param property 系统属性名 / property name
          * @param value 路径值 / path value
          */
@@ -354,7 +337,6 @@ class AionServicePaths {
         /**
          * 基于 aion.home（默认 aion）解析相对路径。
          * Resolves a path under aion.home (default aion).
-         *
          * @param path 相对路径 / relative path
          * @return 规范化绝对 / 相对结果路径 / normalized resolved path
          */

@@ -5,7 +5,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * 每次命中固定 1 点伤害的 NPC AI（通常用于练习/特殊目标）。
  * NPC AI that always deals 1 damage per hit (practice/special targets).
- *
  * @author Encom
  */
 @AIName("onedmgperhit")

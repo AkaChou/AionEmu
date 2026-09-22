@@ -19,7 +19,6 @@ public class DispelNpcDebuffEffect extends AbstractDispelEffect {
 	/**
 	 * 驱散目标身上的 NPC 减益。
 	 * Dispels NPC debuffs on the target.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	public void applyEffect(Effect effect) {

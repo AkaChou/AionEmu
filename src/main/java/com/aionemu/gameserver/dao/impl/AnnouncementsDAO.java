@@ -15,9 +15,7 @@ import java.util.Set;
 /**
  * 公告 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of AnnouncementsDAO.
- *
  * Updated for MySQL 8 - Fixed connection leaks.
- *
  * @author Divinity
  */
 @Slf4j
@@ -34,7 +32,6 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 	/**
 	 * 加载全部公告。
 	 * Loads all announcements.
-	 *
 	 * @return 公告集合 / announcement set
 	 */
 	@Override
@@ -63,7 +60,6 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 	/**
 	 * 添加公告。
 	 * Adds an announcement.
-	 *
 	 * @param announce 公告对象 / announcement object
 	 */
 	@Override
@@ -84,9 +80,7 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 	/**
 	 * 按 ID 删除公告。
 	 * Deletes an announcement by id.
-	 *
 	 * announcement id
-	 *
 	 * @param idAnnounce 公告 ID / announcement id
 	 * @return 是否删除成功 / whether the delete succeeded
 	 */
@@ -106,7 +100,6 @@ public class AnnouncementsDAO extends com.aionemu.gameserver.dao.AnnouncementsDA
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
-	 *
 	 * @param database 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version

@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Cygnea 区域 NPC AI：Chromaleaf Flowershot（@AIName "chromaleaf_flowershot"），继承 AggressiveNpcAI2。
  * Cygnea zone NPC AI: Chromaleaf Flowershot (@AIName "chromaleaf_flowershot"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("chromaleaf_flowershot")

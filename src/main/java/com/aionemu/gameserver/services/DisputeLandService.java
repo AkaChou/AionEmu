@@ -21,7 +21,6 @@ import com.aionemu.gameserver.world.zone.ZoneAttributes;
 /**
  * 纷争之地服务：按计划开启/关闭，并在指定地图广播与同步 PvP 状态。
  * Dispute Land service: schedules open/close and broadcasts/syncs PvP state for listed maps.
- *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -32,8 +31,7 @@ public class DisputeLandService {
      * -- GETTER --
      *  是否处于激活状态。
      *  Whether Dispute Land is currently active.
-     *
-     * @return 若 active 则为 true / true if active
+     * 若 active 则为 true / true if active
      */
     @Getter
     private boolean active;
@@ -49,7 +47,6 @@ public class DisputeLandService {
 	/**
 	 * 获取服务单例（优先 Spring ObjectProvider，否则 holder）。
 	 * Returns the service singleton (Spring ObjectProvider if set, else holder).
-	 *
 	 * service instance
 	 */
 	public static DisputeLandService getInstance() {
@@ -63,7 +60,6 @@ public class DisputeLandService {
 	/**
 	 * 注入 Spring 实例提供者。
 	 * Sets the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<DisputeLandService> instanceProvider) {
@@ -106,7 +102,6 @@ public class DisputeLandService {
     /**
 	 * 设置激活状态，同步世界 PvP 选项并向全体玩家广播。
 	 * Sets active state, syncs world PvP options, and broadcasts to all players.
-	 *
 	 * @param value 是否激活 / whether active
 	 */
 	public void setActive(boolean value) {
@@ -153,7 +148,6 @@ public class DisputeLandService {
 	/**
 	 * 玩家登录时下发当前纷争之地状态。
 	 * Sends current Dispute Land state to the player on login.
-	 *
 	 * logging-in player
 	 */
 	public void onLogin(Player player) {

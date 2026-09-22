@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 /**
  * 副本裂隙位置模型。
  * Instance Rift Location model.
- *
  * @author Rinzler (Encom)
  */
 

@@ -11,7 +11,6 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 /**
  * HP 消耗动作：施法时从施法者扣除生命值。
  * HP cost action: reduces the caster's HP on cast.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -42,7 +41,6 @@ public class HpUseAction extends Action {
 	/**
 	 * 按等级与比例计算后扣除施法者 HP。
 	 * Reduces caster HP after applying level delta and optional ratio.
-	 *
 	 * @param skill 当前技能上下文 / current skill context
 	 */
 	@Override

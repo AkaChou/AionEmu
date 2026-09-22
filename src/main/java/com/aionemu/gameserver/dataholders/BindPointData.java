@@ -15,7 +15,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 绑定点数据容器，按 NPC ID 索引绑定点模板。
  * Bind-point data holder, indexing bind-point templates by NPC id.
- *
  * @author avol
  */
 @XmlRootElement(name = "bind_points")
@@ -41,7 +40,6 @@ public class BindPointData {
 	/**
 	 * 返回已加载的绑定点数量。
 	 * Returns the number of loaded bind points.
-	 *
 	 * @return 已加载的绑定点数量 / Returns the number of loaded bind points.
 	 */
 	public int size() {
@@ -51,7 +49,6 @@ public class BindPointData {
 	/**
 	 * 按 NPC ID 获取绑定点模板。
 	 * Returns the bind-point template for the given NPC id.
-	 *
 	 * @param npcId NPC ID / npc id
 	 * @return 模板，不存在则为 null / template or null
 	 */

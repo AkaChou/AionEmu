@@ -14,7 +14,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 盾牌专精效果：将修饰器包装为盾牌专精属性函数。
  * Shield mastery effect: wraps modifiers as shield-mastery stat functions.
- *
  * @author VladimirZ
  */
 @XmlAccessorType(XmlAccessType.FIELD)

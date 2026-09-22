@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Norsvold 区域 NPC AI：Skulking Forsaken Zaif（@AIName "skulking_forsaken_zaif"），继承 AggressiveNpcAI2。
  * Norsvold zone NPC AI: Skulking Forsaken Zaif (@AIName "skulking_forsaken_zaif"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("skulking_forsaken_zaif")

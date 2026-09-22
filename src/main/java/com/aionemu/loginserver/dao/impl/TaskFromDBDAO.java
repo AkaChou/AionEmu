@@ -18,7 +18,6 @@ import com.aionemu.loginserver.taskmanager.trigger.TaskFromDBTriggerHolder;
 /**
  * 数据库定时任务 DAO 的 MySQL 8 实现。
  * MySQL 8 TaskFromDBDAO implementation.
- *
  * @author Updated for MySQL 8
  */
 @Slf4j

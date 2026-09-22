@@ -8,7 +8,6 @@ import com.aionemu.gameserver.ai2.event.AIEventType;
 /**
  * 状态允许的事件集合：限制特定 AI 状态下可处理的事件类型。
  * Allowed event sets per AI state: restricts which event types can be handled in a given state.
- *
  * @author ATracer
  */
 public enum StateEvents {
@@ -28,7 +27,6 @@ public enum StateEvents {
 	/**
 	 * 判断该状态是否允许指定事件。
 	 * Returns whether the given event is allowed for this state set.
-	 *
 	 * @param event 事件类型 / event type
 	 * @return 是否包含 / whether contained
 	 */

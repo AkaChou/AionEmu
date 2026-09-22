@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 /**
  * {@link TemporarySpawn} 时间窗解析与缓存契约的回归用例。
  * Regression coverage for {@link TemporarySpawn} time-window parsing and caching.
- *
  * <p>背景：时间窗以前每次调用都用 {@code String.split("\\.")} 重新解析（{@code .} 不是单字符快路径，会走正则编译），
  * 游戏内 300s JFR 显示该站点占 17.2% 采样分配。现在改为首次使用时解析并缓存，因此这里同时锁定“解析结果正确”与
  * “加载后不再重解析”两条契约。 Background: the window used to be re-parsed with {@code String.split("\\.")} on every call;
@@ -79,7 +78,6 @@ class TemporarySpawnTimeWindowTest {
 	/**
 	 * 构造一个仅注入时间窗字段的模板。
 	 * Builds a template with only the time-window fields injected.
-	 *
 	 * @param spawnTime 刷新时间 / spawn time
 	 * @param despawnTime 消失时间 / despawn time
 	 * @return 模板实例 / the template
@@ -95,7 +93,6 @@ class TemporarySpawnTimeWindowTest {
 	/**
 	 * 通过反射写入私有字段（XML 在加载期直接注入字段）。
 	 * Writes a private field via reflection, mirroring how the XML binder injects it at load time.
-	 *
 	 * @param spawn 模板 / the template
 	 * @param name 字段名 / field name
 	 * @param value 字段值 / field value

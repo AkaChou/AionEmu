@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 传送门/传送点 AI：Walk Of Honor（@AIName "walk_of_honor"），继承 GeneralNpcAI2。
  * Portal/teleporter AI: Walk Of Honor (@AIName "walk_of_honor"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("walk_of_honor")

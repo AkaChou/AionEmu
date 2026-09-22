@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 /**
  * 队伍解散事件（团队2）。
  * Group Disband Event for team 2 logic.
- *
  * @author ATracer
  */
 @AllArgsConstructor

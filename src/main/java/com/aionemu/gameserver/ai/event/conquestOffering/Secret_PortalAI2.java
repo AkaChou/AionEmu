@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Conquest Offering 活动 NPC AI：Secret Portal（@AIName "secret_portal"），继承 ActionItemNpcAI2。
  * Conquest Offering event NPC AI: Secret Portal (@AIName "secret_portal"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("secret_portal")

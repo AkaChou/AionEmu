@@ -13,7 +13,6 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 /**
  * 技能消耗降低效果：注册技能使用观察者，对后续技能设置消耗加成值。
  * Skill-cost boost effect: registers a skill-use observer that applies a cost boost value.
- *
  * @author Rama and Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -26,7 +25,6 @@ public class BoostSkillCostEffect extends BuffEffect {
 	/**
 	 * 启动效果并挂载技能使用观察者。
 	 * Starts the effect and attaches a skill-use observer.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -47,7 +45,6 @@ public class BoostSkillCostEffect extends BuffEffect {
 	/**
 	 * 结束效果并移除技能使用观察者。
 	 * Ends the effect and removes the skill-use observer.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

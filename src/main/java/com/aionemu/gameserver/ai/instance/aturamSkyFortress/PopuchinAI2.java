@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Aturam Sky Fortress 副本 NPC AI：Popuchin（@AIName "popuchin"），继承 AggressiveNpcAI2。
  * Aturam Sky Fortress instance NPC AI: Popuchin (@AIName "popuchin"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("popuchin")

@@ -16,7 +16,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 露娜配方模板数据容器，按 ID 索引并按种族分组。
  * Luna recipe template data holder, indexing by id and grouping by race.
- *
  * Made by Ghostfur (Aion-Unique)
  */
 @XmlRootElement(name = "luna_templates")
@@ -61,7 +60,6 @@ public class LunaData {
 	/**
 	 * 返回种族为 PC_ALL 的露娜配方列表。
 	 * Returns Luna templates available to all player races.
-	 *
 	 * @return 通用种族配方列表 / race-agnostic recipe list
 	 */
 	public List<LunaTemplate> getLunaTemplatesAny() {
@@ -71,7 +69,6 @@ public class LunaData {
 	/**
 	 * 按 ID 获取露娜配方模板。
 	 * Returns the Luna template for the given id.
-	 *
 	 * @param id 配方 ID / template id
 	 * @return 配方模板或 null / recipe template or null
 	 */
@@ -82,7 +79,6 @@ public class LunaData {
 	/**
 	 * 返回全部露娜配方映射。
 	 * Returns the full Luna template map.
-	 *
 	 * @return ID 到配方模板的映射 / map of id to recipe template
 	 */
 	public IntObjectHashMap<LunaTemplate> getLunaTemplates() {
@@ -92,7 +88,6 @@ public class LunaData {
 	/**
 	 * 返回已加载的露娜配方数量。
 	 * Returns the number of loaded Luna templates.
-	 *
 	 * @return 已加载的Luna 模板数量 / Returns the number of loaded Luna templates.
 	 */
 	public int size() {

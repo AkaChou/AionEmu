@@ -9,7 +9,6 @@ import lombok.Data;
 /**
  * 物品 Req 模板（静态数据/XML）。
  * XML template.
- *
  * @author xTz
  */
 @Data

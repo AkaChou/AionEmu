@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * 通用且优先技能的 NPC AI：选择攻击意图时优先技能。
  * General NPC AI that prefers a skill when choosing attack intention.
- *
  * @author Encom
  */
 @AIName("general_first_skill")

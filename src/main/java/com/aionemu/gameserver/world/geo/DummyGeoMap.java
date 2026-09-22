@@ -9,7 +9,6 @@ import com.aionemu.gameserver.geoEngine.scene.Spatial;
 /**
  * 空实现地理地图：碰撞与视线检查一律放行，高度原样返回。
  * Dummy geo map that always passes collision/LOS checks and returns heights as-is.
- *
  * @author ATracer
  */
 public class DummyGeoMap extends GeoMap {
@@ -17,7 +16,6 @@ public class DummyGeoMap extends GeoMap {
 	/**
 	 * 构造指定名称与世界尺寸的哑地图。
 	 * Constructs a dummy map with the given name and world size.
-	 *
 	 * @param name 地图名称 / map name
 	 * @param worldSize 世界尺寸 / world size
 	 */
@@ -28,7 +26,6 @@ public class DummyGeoMap extends GeoMap {
 	/**
 	 * 直接返回传入高度，不做地形采样。
 	 * Returns the given height as-is without terrain sampling.
-	 *
 	 * @param x X 坐标 / x coordinate
 	 * @param y Y 坐标 / y coordinate
 	 * @param z 参考高度 / reference height
@@ -43,7 +40,6 @@ public class DummyGeoMap extends GeoMap {
 	/**
 	 * 始终视为可见。
 	 * Always reports line of sight as clear.
-	 *
 	 * @param x 起点 X / start x
 	 * @param y 起点 Y / start y
 	 * @param z 起点 Z / start z
@@ -63,7 +59,6 @@ public class DummyGeoMap extends GeoMap {
 	/**
 	 * 始终视为可见（带忽略属性）。
 	 * Always reports line of sight as clear (with ignore properties).
-	 *
 	 * @param x 起点 X / start x
 	 * @param y 起点 Y / start y
 	 * @param z 起点 Z / start z
@@ -84,7 +79,6 @@ public class DummyGeoMap extends GeoMap {
 	/**
 	 * 返回目标点本身，表示无碰撞阻挡。
 	 * Returns the target point itself, meaning no collision blocks the path.
-	 *
 	 * @param x 起点 X / start x
 	 * @param y 起点 Y / start y
 	 * @param z 起点 Z / start z
@@ -106,7 +100,6 @@ public class DummyGeoMap extends GeoMap {
 	/**
 	 * 返回目标点本身（带忽略属性）。
 	 * Returns the target point itself (with ignore properties).
-	 *
 	 * @param x 起点 X / start x
 	 * @param y 起点 Y / start y
 	 * @param z 起点 Z / start z
@@ -129,7 +122,6 @@ public class DummyGeoMap extends GeoMap {
 	/**
 	 * 返回空的碰撞结果集。
 	 * Returns an empty collision-results collection.
-	 *
 	 * @param x 起点 X / start x
 	 * @param y 起点 Y / start y
 	 * @param z 起点 Z / start z
@@ -141,7 +133,6 @@ public class DummyGeoMap extends GeoMap {
 	 * @param instanceId 实例 ID / instance id
 	 * @param intentions 碰撞意图掩码 / collision intention mask
 	 * @param ignoreProperties 忽略属性 / ignore properties
-	 *
 	 * @return 空碰撞结果 / empty collision results
 	 */
 	@Override
@@ -153,7 +144,6 @@ public class DummyGeoMap extends GeoMap {
 	/**
 	 * 空操作：哑地图不维护门状态。
 	 * No-op: dummy maps do not track door state.
-	 *
 	 * @param instanceId 实例 ID / instance id
 	 * @param doorId 门 ID / door id
 	 * @param open 是否打开 / whether open
@@ -166,7 +156,6 @@ public class DummyGeoMap extends GeoMap {
 	/**
 	 * 空操作：哑地图不生成可放置物。
 	 * No-op: dummy maps do not spawn placeable objects.
-	 *
 	 * @param instanceId 实例 ID / instance id
 	 * @param staticId 静态物 ID / static object id
 	 */
@@ -178,7 +167,6 @@ public class DummyGeoMap extends GeoMap {
 	/**
 	 * 空操作：哑地图不销毁可放置物。
 	 * No-op: dummy maps do not despawn placeable objects.
-	 *
 	 * @param instanceId 实例 ID / instance id
 	 * @param staticId 静态物 ID / static object id
 	 */
@@ -190,7 +178,6 @@ public class DummyGeoMap extends GeoMap {
 	/**
 	 * 空操作：哑地图不更新城镇等级。
 	 * No-op: dummy maps do not update town levels.
-	 *
 	 * @param townId 城镇 ID / town id
 	 * @param level 目标等级 / target level
 	 */
@@ -202,7 +189,6 @@ public class DummyGeoMap extends GeoMap {
 	/**
 	 * 空操作：哑地图不维护房屋门状态。
 	 * No-op: dummy maps do not track house-door state.
-	 *
 	 * @param instanceId 实例 ID / instance id
 	 * @param houseAddress 房屋地址 / house address
 	 * @param open 是否打开 / whether open
@@ -215,7 +201,6 @@ public class DummyGeoMap extends GeoMap {
 	/**
 	 * 哑地图无地形材质。
 	 * Dummy maps have no terrain materials.
-	 *
 	 * @return 始终为 false / always false
 	 */
 	@Override
@@ -226,7 +211,6 @@ public class DummyGeoMap extends GeoMap {
 	/**
 	 * 空操作：不挂接子节点。
 	 * No-op: children are not attached.
-	 *
 	 * @param child 子节点 / child spatial
 	 * @return 始终为 0 / always 0
 	 */

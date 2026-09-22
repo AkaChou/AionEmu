@@ -11,7 +11,6 @@ import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 /**
  * 脚本类加载监听器：将有效的 {@link ZoneHandler} 实现注册到区域服务。
  * Script class-load listener: registers valid {@link ZoneHandler} implementations with the zone service.
- *
  * @author MrPoke
  */
 @Slf4j(topic = "com.aionemu.gameserver.instance.InstanceHandlerClassListener")
@@ -20,7 +19,6 @@ public class ZoneHandlerClassListener implements ClassListener {
 	/**
 	 * 类加载后扫描并注册区域处理器。
 	 * After classes are loaded, scan and register zone handlers.
-	 *
 	 * @param classes 已加载的类数组 / loaded class array
 	 */
 	@SuppressWarnings("unchecked")
@@ -46,7 +44,6 @@ public class ZoneHandlerClassListener implements ClassListener {
 	/**
 	 * 类卸载前记录调试日志。
 	 * Log debug messages before classes are unloaded.
-	 *
 	 * @param classes 待卸载的类数组 / classes about to be unloaded
 	 */
 	@Override
@@ -61,7 +58,6 @@ public class ZoneHandlerClassListener implements ClassListener {
 	/**
 	 * 判断类是否可作为区域处理器（公开、非抽象、非接口）。
 	 * Whether the class is a valid zone handler (public, non-abstract, non-interface).
-	 *
 	 * @param clazz 待检查的类 / class to check
 	 * @return 是否有效 / whether valid
 	 */

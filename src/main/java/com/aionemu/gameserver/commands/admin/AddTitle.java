@@ -23,7 +23,6 @@ public class AddTitle extends AdminCommand
 	/**
 	 * 执行添加称号：按种族偏移解析称号 ID 并授予目标。
 	 * Executes add-title: resolves race-offset title id and grants it to the target.
-	 *
 	 * @param params 参数：称号 ID、玩家名（可选） / title id, optional player name
 	 */
 	@Override
@@ -68,7 +67,6 @@ public class AddTitle extends AdminCommand
 	/**
 	 * 参数错误时输出 {@code //addtitle} 用法。
 	 * Prints {@code //addtitle} usage on invalid arguments.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

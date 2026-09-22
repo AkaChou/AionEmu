@@ -8,7 +8,6 @@ import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
 /**
  * 服务端频道加入响应包。
  * Server packet responding to a channel join request.
- *
  * @author ATracer
  */
 public class SM_CHANNEL_RESPONSE extends AbstractServerPacket {
@@ -19,7 +18,6 @@ public class SM_CHANNEL_RESPONSE extends AbstractServerPacket {
     /**
      * 构造频道响应服务端包。
      * Constructs a channel response server packet.
-     *
      * @param channel channel instance
      * @param channelIndex channel index
      */
@@ -32,7 +30,6 @@ public class SM_CHANNEL_RESPONSE extends AbstractServerPacket {
     /**
      * 写入频道索引与频道 ID。
      * Writes the channel index and channel id.
-     *
      * @param cHandler 客户端通道处理器 / client channel handler
      * @param buf 包写入器 / packet writer
      */

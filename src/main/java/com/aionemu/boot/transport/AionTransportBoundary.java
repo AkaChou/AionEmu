@@ -26,7 +26,6 @@ public class AionTransportBoundary implements DisposableBean {
     /**
      * Spring 注入：聚合全部传输生命周期实现。
      * Spring injection: aggregate all transport lifecycle implementations.
-     *
      * @param services 服务属性 / Service properties
      * @param transportLifecycles 传输生命周期列表 / Transport lifecycle list
      */
@@ -42,7 +41,6 @@ public class AionTransportBoundary implements DisposableBean {
     /**
      * 测试/手动装配：仅注入 Netty 传输实现。
      * Test/manual wiring: inject Netty transport only.
-     *
      * @param services 服务属性 / Service properties
      * @param nettyTransport Netty 传输生命周期 / Netty transport lifecycle
      */
@@ -82,7 +80,6 @@ public class AionTransportBoundary implements DisposableBean {
     /**
      * 按模式查找已注册的传输生命周期。
      * Look up the registered transport lifecycle by mode.
-     *
      * @param mode 传输模式 / Transport mode
      * @return 对应生命周期 / Matching lifecycle
      * @throws IllegalStateException 未注册该模式的实现 / No implementation registered for the mode
@@ -98,7 +95,6 @@ public class AionTransportBoundary implements DisposableBean {
     /**
      * 将生命周期列表索引为模式映射，并拒绝重复注册。
      * Index lifecycle list by mode and reject duplicate registrations.
-     *
      * @param transportLifecycles 生命周期列表 / Lifecycle list
      * @return 模式到实现的映射 / Mode-to-implementation map
      * @throws IllegalStateException 同一模式注册多次 / Same mode registered more than once

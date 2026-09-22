@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Aturam Sky Fortress 副本 NPC AI：Magma Tachypshere Mine（@AIName "magma_mine"），继承 AggressiveNpcAI2。
  * Aturam Sky Fortress instance NPC AI: Magma Tachypshere Mine (@AIName "magma_mine"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("magma_mine")

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
  * <p>
  * 开启时无敌并把移动/飞行速度覆盖为 300%，再执行一次则解除无敌并恢复基础速度。
  * Enabling grants invulnerability plus a 300% walk/fly speed override; running it again removes both.
- *
  * @author AionEmu
  */
 public class Gm extends AdminCommand {
@@ -29,7 +28,6 @@ public class Gm extends AdminCommand {
 	/**
 	 * 切换 GM 模式：无敌 + 300% 移动与飞行速度。
 	 * Toggles GM mode: invulnerability plus a 300% walk and fly speed override.
-	 *
 	 * @param player 执行 GM / Admin player
 	 */
 	@Override

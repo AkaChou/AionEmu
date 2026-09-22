@@ -22,7 +22,6 @@ public class ProcVPHealInstantEffect extends EffectTemplate {
 	/**
 	 * 在安息能量未达 value2% 上限时增加能量并同步经验包。
 	 * Adds repose energy while under the value2% cap and syncs the exp packet.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	public void applyEffect(Effect effect) {

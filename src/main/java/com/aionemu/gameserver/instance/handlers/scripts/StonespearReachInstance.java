@@ -36,7 +36,6 @@ import java.util.concurrent.Future;
 /**
  * 石矛高地副本事件处理器。
  * Instance event handler for Stonespear Reach.
- *
  * @author Encom
  */
 
@@ -112,8 +111,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 		 * -- GETTER --
 		 *  返回 first wave。
 		 *  Return the first wave.
-		 *
-		 * @return 结果 / result
+		 * 结果 / result
 		 */
 
 		private final int[] firstWave;
@@ -121,16 +119,14 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 				 * -- GETTER --
 				 *  返回 second wave。
 				 *  Return the second wave.
-				 *
-				 * @return 结果 / result
+				 * 结果 / result
 				 */
 				private final int[] secondWave;
 				/** third wave / third wave
 				 * -- GETTER --
 				 *  返回 third wave。
 				 *  Return the third wave.
-				 *
-				 * @return 结果 / result
+				 * 结果 / result
 				 */
 				private final int[] thirdWave;
 
@@ -143,7 +139,6 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	/**
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
-	 *
 	 * @param object 可见对象 / visible object
 	 * @return 结果 / result
 	 */
@@ -155,7 +150,6 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	/**
 	 * 处理 addPlayerReward。
 	 * Handle addPlayerReward.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@SuppressWarnings("unchecked")
@@ -170,7 +164,6 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	/**
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
-	 *
 	 * @return 结果 / result
 	 */
 	@Override
@@ -180,7 +173,6 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 
@@ -236,7 +228,6 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -383,7 +374,6 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 							/**
 							 * 处理 visit。
 							 * Handle visit.
-							 *
 							 * @param player 玩家 / player
 							 */
 							@Override
@@ -773,7 +763,6 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -816,7 +805,6 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -849,7 +837,6 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -886,7 +873,6 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -907,7 +893,6 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	/**
 	 * 停止副本并结算。
 	 * Stop the instance and settle.
-	 *
 	 * @param player 玩家 / player
 	 */
 
@@ -925,7 +910,6 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	/**
 	 * 结算并发放奖励。
 	 * Settle and grant rewards.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -952,7 +936,6 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -1008,7 +991,6 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -1049,7 +1031,6 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
-	 *
 	 * @param msg 消息 / message
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
@@ -1067,7 +1048,6 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -1084,7 +1064,6 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	/**
 	 * 处理玩家复活事件。
 	 * Handle a player revive event.
-	 *
 	 * @param player 玩家 / player
 	 * @return 结果 / result
 	 */
@@ -1098,7 +1077,6 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param p 玩家 / p
 			 */
 			@Override

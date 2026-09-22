@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 同步生物生命值相关状态变化（HP/MP/FP 增减、伤害、治疗、吸收等）的服务端包。
  * Server packet synchronizing creature vital-stat changes (HP/MP/FP gain/loss, damage, heal, absorb, etc.).
- *
  * @author alexa026
  * @author ATracer
  * @author kecimis

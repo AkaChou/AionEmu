@@ -37,8 +37,6 @@ public class CreativityEssenceService {
      * -- SETTER --
      *  注入 Spring ObjectProvider 以覆盖默认单例。
      *  Injects a Spring ObjectProvider to override the default singleton.
-     *
-     * @param provider 提供者 / provider
      */
 	@Setter
     private static volatile ObjectProvider<CreativityEssenceService> instanceProvider;
@@ -61,7 +59,6 @@ public class CreativityEssenceService {
 	/**
 	 * 玩家登录时同步创造力面板数据。
 	 * Syncs creativity panel data when the player logs in.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onLogin(Player player) {
@@ -87,7 +84,6 @@ public class CreativityEssenceService {
 	 * 按当前经验进度分阶段发放创造力精华点。
 	 * Grants creativity essence points in stages based on current exp progress.
 	 * http://aionpowerbook.com/powerbook/Creativity
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void pointPerExp(Player player) {
@@ -175,7 +171,6 @@ public class CreativityEssenceService {
 	 * Grants creativity essence points by level, including unpaid exp-step points.
 	 * KR - Update December 30th 2015
 	 * http://aionpowerbook.com/powerbook/KR_-_Update_December_30th_2015
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void pointPerLevel(Player player) {
@@ -254,7 +249,6 @@ public class CreativityEssenceService {
 	/**
 	 * 计算经验进度百分比。
 	 * Calculates exp progress percentage.
-	 *
 	 * @param current 当前经验 / current exp
 	 * @param total 升级所需经验 / exp needed
 	 * @return 百分比 / percentage
@@ -271,7 +265,6 @@ public class CreativityEssenceService {
 	/**
 	 * 应用基础属性槽位的创造力分配。
 	 * Applies creativity allocation to base stat slots.
-	 *
 	 * 玩家 / player
 	 * @param type 类型 / type
 	 * @param size 槽位大小 / slot size
@@ -314,7 +307,6 @@ public class CreativityEssenceService {
 	/**
 	 * 重置全部创造力分配并清除关联技能/属性。
 	 * Resets all creativity allocation and clears related skills/stats.
-	 *
 	 * 玩家 / player
 	 * @param plusSize 附加槽位尺寸 / additional slot size
 	 */
@@ -359,7 +351,6 @@ public class CreativityEssenceService {
 	/**
 	 * 应用技能类创造力分配（容器/化身或职业技能）。
 	 * Applies skill-type creativity allocation (vessel/avatar or class skills).
-	 *
 	 * 玩家 / player
 	 * @param type 类型 / type
 	 * @param size 槽位大小 / slot size
@@ -379,7 +370,6 @@ public class CreativityEssenceService {
 	/**
 	 * 应用职业技能创造力分配。
 	 * Applies class skill creativity allocation.
-	 *
 	 * @param player 玩家 / player
 	 * @param id 槽位 ID / slot id
 	 * @param point 分配点数 / allocated points
@@ -397,7 +387,6 @@ public class CreativityEssenceService {
 	/**
 	 * 应用大天使容器/化身技能创造力分配。
 	 * Applies ArchDaeva vessel/avatar skill creativity allocation.
-	 *
 	 * 玩家 / player
 	 * @param id 槽位 ID / slot id
 	 * @param point 分配点数 / allocated points
@@ -532,7 +521,6 @@ public class CreativityEssenceService {
 	/**
 	 * 装备 Estima 时增加对应 CP。
 	 * Adds CP granted by equipping an Estima item.
-	 *
 	 * @param player 玩家 / player
 	 * @param objId 装备物品对象 ID / equipped item object id
 	 */
@@ -572,7 +560,6 @@ public class CreativityEssenceService {
 	/**
 	 * 卸下 Estima 时扣减对应 CP；若已分配点数超出则强制重置。
 	 * Removes CP granted by an Estima item; force-resets if spent CP exceeds remaining total.
-	 *
 	 * 玩家 / player
 	 * @param item Estima 物品 / Estima item
 	 */
@@ -608,11 +595,9 @@ public class CreativityEssenceService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available

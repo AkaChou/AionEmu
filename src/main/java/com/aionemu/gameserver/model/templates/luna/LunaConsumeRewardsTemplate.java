@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * Luna 消费奖励模板（静态数据/XML）。
  * XML template.
- *
  * @author Ranastic
  */
 @Getter

@@ -14,7 +14,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 召唤物的游戏属性：继承主人属性加成并计算技能消耗等。
  * Summon game stats: inherits master's bonuses and computes skill costs.
- *
  * @author ATracer
  */
 public class SummonGameStats extends CreatureGameStats<Summon> {
@@ -22,10 +21,6 @@ public class SummonGameStats extends CreatureGameStats<Summon> {
 	private int cachedSpeed;
 	private final SummonStatsTemplate statsTemplate;
 
-	/**
-	 * @param owner
-	 * @param statsTemplate
-	 */
 	public SummonGameStats(Summon owner, SummonStatsTemplate statsTemplate) {
 		super(owner);
 		this.statsTemplate = statsTemplate;

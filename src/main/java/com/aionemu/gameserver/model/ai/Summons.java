@@ -11,7 +11,6 @@ import lombok.Getter;
 /**
  * 召唤物配置集合：按百分比阈值组织召唤物队伍。
  * Summon configuration set: organizes summon groups by percentage thresholds.
- *
  * @author xTz
  */
 @Getter

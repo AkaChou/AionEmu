@@ -15,7 +15,6 @@ import java.io.IOException;
 /**
  * NPC 生成指令；在管理员位置按模板 ID 生成单位，并可持久化到刷怪数据。
  * Admin command that spawns a template at the admin position and optionally persists the spawn.
- *
  * @author Luno
  */
 @Slf4j
@@ -28,7 +27,6 @@ public class SpawnNpc extends AdminCommand {
 	/**
 	 * 执行该管理指令。
 	 * Executes this admin command.
-	 *
 	 * @param admin 执行指令的管理员 / admin executing the command
 	 */
 	@Override
@@ -80,7 +78,6 @@ public class SpawnNpc extends AdminCommand {
 	/**
 	 * 参数错误时输出用法。
 	 * Prints usage when arguments are invalid.
-	 *
 	 * @param player 接收提示的玩家 / player receiving the message
 	 */
 	@Override

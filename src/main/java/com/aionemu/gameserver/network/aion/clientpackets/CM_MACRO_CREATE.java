@@ -7,13 +7,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MACRO_RESULT;
 import com.aionemu.gameserver.services.player.PlayerService;
 
 /**
-	 * 创建请求。 / Request to create.
-	 */
-
-/**
  * 创建或更新宏的客户端包。
  * Client packet for creating or updating a macro.
- *
  * @author SoulKeeper
  */
 @Slf4j
@@ -30,7 +25,6 @@ public class CM_MACRO_CREATE extends AionClientPacket {
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余合法状态 / additional valid states

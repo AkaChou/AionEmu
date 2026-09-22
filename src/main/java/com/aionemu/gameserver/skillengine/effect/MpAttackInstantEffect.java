@@ -10,7 +10,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 魔法值瞬时削减效果：立即扣除目标 MP。
  * Instant MP attack effect: immediately reduces the target's magic points.
- *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)

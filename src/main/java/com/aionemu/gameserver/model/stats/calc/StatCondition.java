@@ -5,7 +5,6 @@ import com.aionemu.gameserver.model.stats.calc.functions.IStatFunction;
 /**
  * 属性 Condition 接口。
  * Stat Condition interface.
- *
  * @author ATracer
  */
 public interface StatCondition {

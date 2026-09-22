@@ -26,8 +26,7 @@ public class Times {
 	/**
 	 * 获取原始时间字符串。
 	 * Gets raw times string.
-	 *
-	 * @return 逗号分隔时间 / comma-separated times
+	 * 逗号分隔时间 / comma-separated times
 	 */
 	@XmlAttribute(required = true)
 	protected String times;
@@ -38,7 +37,6 @@ public class Times {
 	/**
 	 * 按武器包装获取动作时间。
 	 * Gets motion time for a weapon wrapper.
-	 *
 	 */
 	public int getTimeForWeapon(WeaponTypeWrapper weapon) {
 		return timeForWeaponType.get(weapon);
@@ -47,7 +45,6 @@ public class Times {
 	/**
 	 * 反序列化后解析各武器类型时间。
 	 * Parses per-weapon times after unmarshalling.
-	 *
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		String[] tokens = times.split(",");

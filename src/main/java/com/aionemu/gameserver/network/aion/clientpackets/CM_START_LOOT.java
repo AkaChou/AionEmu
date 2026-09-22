@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 客户端打开/关闭掉落列表请求包。
  * Client packet for opening or closing a corpse drop list.
- *
  * @author alexa026, Correted by Metos, ATracer
  */
 public class CM_START_LOOT extends AionClientPacket {

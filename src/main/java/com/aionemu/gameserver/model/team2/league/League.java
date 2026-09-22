@@ -23,7 +23,6 @@ import lombok.Setter;
 /**
  * 战团，用于团队2相关逻辑。
  * League for team 2 logic.
- *
  * @author ATracer
  */
 @Setter
@@ -34,7 +33,6 @@ public class League extends GeneralTeam<PlayerAlliance, LeagueMember> {
      * 返回 loot group rules / Returns the loot group rules
 	 * -- SETTER --
 	 * 设置 loot group rules / Sets the loot group rules
-
 	 */
     private LootGroupRules lootGroupRules = new LootGroupRules();
 	private static final LeagueMemberComparator MEMBER_COMPARATOR = new LeagueMemberComparator();

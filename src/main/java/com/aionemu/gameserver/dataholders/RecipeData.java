@@ -17,7 +17,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 制作配方数据容器，按 ID 索引，并按阵营缓存自动学习配方。
  * Recipe data holder, indexing recipes by id and caching auto-learn recipes by race.
- *
  * @author ATracer, MrPoke, KID
  */
 @XmlRootElement(name = "recipe_templates")
@@ -60,7 +59,6 @@ public class RecipeData {
 	/**
 	 * 返回指定阵营、技能与技能等级上限下可自动学习的配方。
 	 * Returns auto-learn recipes for the given race, skill and max skill level.
-	 *
 	 * @param race 阵营 / race
 	 * @param skillId 技能 ID / skill id
 	 * @param maxLevel 技能等级上限 / max skill level
@@ -93,7 +91,6 @@ public class RecipeData {
 	/**
 	 * 按配方 ID 获取配方模板。
 	 * Returns the recipe template for the given id.
-	 *
 	 * @param id 配方 ID / recipe id
 	 * @return 配方模板，不存在则为 null / recipe template or null
 	 */
@@ -104,7 +101,6 @@ public class RecipeData {
 	/**
 	 * 返回全部配方模板映射。
 	 * Returns the full recipe template map.
-	 *
 	 * @return ID 到配方的映射 / map of id to recipe
 	 */
 	public IntObjectHashMap<RecipeTemplate> getRecipeTemplates() {
@@ -114,7 +110,6 @@ public class RecipeData {
 	/**
 	 * 返回已加载的配方数量。
 	 * Returns the number of loaded recipes.
-	 *
 	 * @return 已加载的制作配方数量 / Returns the number of loaded recipes.
 	 */
 	public int size() {

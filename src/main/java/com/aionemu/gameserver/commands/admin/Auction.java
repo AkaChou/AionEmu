@@ -19,9 +19,7 @@ import java.util.List;
 /**
  * 管理员房屋拍卖命令：按区域/类型上架、随机上架或下架房屋。
  * Admin housing-auction command: lists, randomly lists, or removes houses from auction.
- *
  * @author Rolandas
- * @modified Luzien
  */
 public class Auction extends AdminCommand {
 
@@ -36,7 +34,6 @@ public class Auction extends AdminCommand {
 	/**
 	 * 执行拍卖管理：add/remove/addrandom 子命令。
 	 * Executes auction management: add/remove/addrandom subcommands.
-	 *
 	 * @param params 参数：子命令与区域/类型/价格等 / subcommand and zone/type/price args
 	 */
 	@Override
@@ -295,7 +292,6 @@ public class Auction extends AdminCommand {
 	/**
 	 * 参数错误时输出 {@code //auction} 用法。
 	 * Prints {@code //auction} usage on invalid arguments.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

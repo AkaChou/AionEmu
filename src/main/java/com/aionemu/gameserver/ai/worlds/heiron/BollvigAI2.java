@@ -19,7 +19,6 @@ import java.util.concurrent.Future;
 /**
  * Heiron 区域 NPC AI：Bollvig（@AIName "bollvig"），继承 AggressiveFirstSkillAI2。
  * Heiron zone NPC AI: Bollvig (@AIName "bollvig"), extends AggressiveFirstSkillAI2.
- *
  * @author Encom
  */
 @AIName("bollvig")
@@ -58,7 +57,6 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 	/**
 	 * 按血量百分比（75%/50%/25%）触发技能链与召唤物生成。
 	 * Triggers skill chains and summon spawns by HP percentage (75%/50%/25%).
-	 *
 	 * @param hpPercentage 当前血量百分比 / current HP percentage
 	 */
 	private synchronized void checkPercentage(int hpPercentage) {

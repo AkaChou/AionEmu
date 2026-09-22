@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 单个世界下按实例划分的巡逻编队容器。
  * Holds per-instance walker formations for one world.
- *
  * @author Rolandas
  */
 public class WorldWalkerFormations {
@@ -28,7 +27,6 @@ public class WorldWalkerFormations {
 	/**
 	 * 获取指定实例的巡逻编队；不存在时自动创建。
 	 * Returns formations for the instance, creating if absent.
-	 *
 	 * @param instanceId 实例 ID / instance id
 	 * @return 实例巡逻编队 / instance walker formations
 	 */

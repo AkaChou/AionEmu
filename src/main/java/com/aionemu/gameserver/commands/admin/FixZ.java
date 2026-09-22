@@ -28,7 +28,6 @@ public class FixZ extends AdminCommand {
 	/**
 	 * 以管理员当前 Z 坐标重刷目标 NPC 并持久化。
 	 * Re-spawns the targeted NPC at the admin's current Z and persists it.
-	 *
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -88,7 +87,6 @@ public class FixZ extends AdminCommand {
 	/**
 	 * 按参数生成并刷出 NPC。
 	 * Creates and spawns an NPC from the given parameters.
-	 *
 	 * @param x X 坐标 / X coordinate
 	 * @param y Y 坐标 / Y coordinate
 	 * @param z Z 坐标 / Z coordinate

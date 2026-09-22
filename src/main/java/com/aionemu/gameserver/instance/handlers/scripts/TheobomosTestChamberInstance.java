@@ -22,7 +22,6 @@ import java.util.Set;
 /**
  * 泰奥勃莫斯试验室副本事件处理器。
  * Instance event handler for Theobomos Test Chamber.
- *
  * @author Encom
  */
 
@@ -35,7 +34,6 @@ public class TheobomosTestChamberInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -87,7 +85,6 @@ public class TheobomosTestChamberInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -99,7 +96,6 @@ public class TheobomosTestChamberInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -126,7 +122,6 @@ public class TheobomosTestChamberInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
-	 *
 	 * @param msg 消息 / message
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
@@ -144,7 +139,6 @@ public class TheobomosTestChamberInstance extends GeneralInstanceHandler
                     /**
                      * 处理 visit。
                      * Handle visit.
-                     *
                      * @param player 玩家 / player
                      */
                     @Override

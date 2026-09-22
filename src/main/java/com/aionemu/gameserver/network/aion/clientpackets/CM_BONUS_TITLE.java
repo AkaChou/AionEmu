@@ -8,7 +8,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 设置额外称号（Bonus Title）的客户端包。
  * Client packet to set the player's bonus title.
- *
  * @author Ranastic (Encom)
  */
 public class CM_BONUS_TITLE extends AionClientPacket {

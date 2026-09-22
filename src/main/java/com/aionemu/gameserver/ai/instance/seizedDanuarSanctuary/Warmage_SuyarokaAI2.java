@@ -15,7 +15,6 @@ import java.util.concurrent.Future;
 /**
  * Seized Danuar Sanctuary 副本 NPC AI：Warmage Suyaroka（@AIName "suyaroka"），继承 AggressiveNpcAI2。
  * Seized Danuar Sanctuary instance NPC AI: Warmage Suyaroka (@AIName "suyaroka"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("suyaroka")

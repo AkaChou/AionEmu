@@ -12,9 +12,7 @@ import java.sql.SQLException;
 /**
  * 旧角色名 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of OldNamesDAO.
- *
  * Updated for MySQL 8 - Fixed connection leaks.
- *
  * @author synchro2
  */
 @Slf4j
@@ -29,9 +27,7 @@ public class OldNamesDAO extends com.aionemu.gameserver.dao.OldNamesDAO {
 	/**
 	 * 判断名称是否曾被使用过。
 	 * Checks whether the name has been used before.
-	 *
 	 * character name
-	 *
 	 * @param name 角色名 / character name
 	 * @return 是否为旧名 / whether it is an old name
 	 */
@@ -54,7 +50,6 @@ public class OldNamesDAO extends com.aionemu.gameserver.dao.OldNamesDAO {
 	/**
 	 * 记录角色改名历史。
 	 * Records a character rename history entry.
-	 *
 	 * @param id 玩家 ID / player id
 	 * @param oldname 旧名 / old name
 	 * @param newname 新名 / new name
@@ -76,7 +71,6 @@ public class OldNamesDAO extends com.aionemu.gameserver.dao.OldNamesDAO {
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
-	 *
 	 * @param database 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version

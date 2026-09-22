@@ -11,7 +11,6 @@ import java.util.concurrent.Future;
 /**
  * 解除玩家禁言的管理员命令。
  * Admin command to remove a player's gag.
- *
  * @author Watson
  */
 public class UnGag extends AdminCommand {
@@ -27,7 +26,6 @@ public class UnGag extends AdminCommand {
 	/**
 	 * 取消目标玩家禁言状态与定时任务。
 	 * Clears gag flag and cancels gag task on the target player.
-	 *
 	 * @param admin 执行 GM / Admin player
 	 * @param params &lt;player&gt;。
 	 */
@@ -58,7 +56,6 @@ public class UnGag extends AdminCommand {
 	/**
 	 * 参数错误时的用法提示。
 	 * Usage hint on invalid parameters.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

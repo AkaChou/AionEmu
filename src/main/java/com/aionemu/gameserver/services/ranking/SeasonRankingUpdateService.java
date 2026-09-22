@@ -19,7 +19,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SEASON_RANKING;
 /**
  * 赛季排行榜刷新服务，启动时预加载各榜单缓存包供客户端拉取。
  * Season ranking refresh service that preloads cached ranking packets for client requests on startup.
- *
  * @author Wnkrz
  */
 @Slf4j(topic = "com.aionemu.gameserver.services.ranking.SeasonRankingService")
@@ -43,7 +42,6 @@ public class SeasonRankingUpdateService {
 	/**
 	 * 重新计算指定榜单并替换内存缓存。
 	 * Recalculate the given ranking table and replace the in-memory cache.
-	 *
 	 * @param tableId 排行表 ID / Ranking table ID
 	 * @param rankingName 排行名称 / Ranking name
 	 */
@@ -58,7 +56,6 @@ public class SeasonRankingUpdateService {
 	/**
 	 * 从 DAO 读取竞争排名并按 94 条分页组装下发包。
 	 * Load competition ranking from DAO and build dispatch packets in pages of 94 entries.
-	 *
 	 * @param tableid 排行表 ID / Ranking table ID
 	 * @return 排行下发包列表 / Ranking dispatch packets
 	 */
@@ -80,7 +77,6 @@ public class SeasonRankingUpdateService {
 	/**
 	 * 获取指定榜单的缓存下发包列表。
 	 * Get the cached dispatch packets for a ranking table.
-	 *
 	 * @param tableId 排行表 ID / Ranking table ID
 	 * @return 下发包列表 / Dispatch packets
 	 */
@@ -95,11 +91,9 @@ public class SeasonRankingUpdateService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -118,7 +112,6 @@ public class SeasonRankingUpdateService {
 	/**
 	 * 注入 Spring 实例提供者。
 	 * Inject the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / Instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<SeasonRankingUpdateService> instanceProvider) {

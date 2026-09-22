@@ -8,7 +8,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 客户端向登录服快速重连鉴权请求包。
  * Client packet requesting fast reconnection authentication to the LoginServer.
- *
  * @author -Nemesiss-
  */
 public class CM_RECONNECT_AUTH extends AionClientPacket {

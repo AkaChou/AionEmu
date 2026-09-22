@@ -13,7 +13,6 @@ import java.util.concurrent.Future;
 /**
  * 管理员禁言命令：对玩家施加聊天禁言，可指定分钟数并在到期后自动解除。
  * Admin gag command: mute a player's chat, optionally for a number of minutes with auto-ungag.
- *
  * @author Watson
  */
 public class Gag extends AdminCommand {
@@ -25,7 +24,6 @@ public class Gag extends AdminCommand {
 	/**
 	 * 对指定在线玩家禁言；可选时长（分钟），到期自动解除。
 	 * Gag the named online player; optional duration in minutes, auto-ungag when expired.
-	 *
 	 * @param admin 执行命令的管理员 / Admin executing the command
 	 * @param params 玩家名与可选禁言分钟数 / Player name and optional minutes
 	 */
@@ -73,7 +71,6 @@ public class Gag extends AdminCommand {
 	/**
 	 * 参数错误时显示命令语法。
 	 * Show command syntax on invalid arguments.
-	 *
 	 * @param player 接收提示的玩家 / Player receiving the hint
 	 */
 	@Override

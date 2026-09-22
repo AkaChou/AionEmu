@@ -60,11 +60,9 @@ public class PetService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -86,7 +84,6 @@ public class PetService {
 	/**
 	 * 重命名当前召唤中的宠物。
 	 * Rename the currently summoned pet.
-	 *
 	 * 玩家 / Player
 	 * New name
 	 */
@@ -102,7 +99,6 @@ public class PetService {
 	/**
 	 * 玩家登录时同步宠物列表到客户端。
 	 * Sync pet list to client on player login.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public void onPlayerLogin(Player player) {
@@ -115,7 +111,6 @@ public class PetService {
 	/**
 	 * 开始用物品喂养宠物。
 	 * Start feeding the pet with an inventory item.
-	 *
 	 * Item object id
 	 * @param count 喂养数量 / Feed count
 	 * Action type
@@ -202,7 +197,6 @@ public class PetService {
 	/**
 	 * 调整宠物增益背包中卷轴槽位。
 	 * Relocate doping bag scroll slots for the pet.
-	 *
 	 * 玩家 / Player
 	 * Source slot
 	 * Destination slot
@@ -230,7 +224,6 @@ public class PetService {
 	/**
 	 * 使用或配置宠物增益背包中的物品。
 	 * Use or configure items in the pet doping bag.
-	 *
 	 * 玩家 / Player
 	 * Action type
 	 * Item template id
@@ -293,7 +286,6 @@ public class PetService {
 	/**
 	 * 开启或关闭宠物自动拾取。
 	 * Enable or disable pet auto-loot.
-	 *
 	 * 玩家 / Player
 	 * Whether to activate
 	 */
@@ -318,7 +310,6 @@ public class PetService {
 	/**
 	 * 开启或关闭宠物欢呼增益（消耗奥德樱桃）。
 	 * Enable or disable pet cheer buff (consumes Aether Cherry).
-	 *
 	 * 玩家 / Player
 	 * Whether to activate
 	 */
@@ -350,7 +341,6 @@ public class PetService {
 	/**
 	 * 开启或关闭宠物自动出售。
 	 * Enable or disable pet auto-sell.
-	 *
 	 * 玩家 / Player
 	 * Whether to activate
 	 */
@@ -366,7 +356,6 @@ public class PetService {
 	/**
 	 * 玩家登出时关闭自动增益与自动出售。
 	 * Disable auto buff and auto sell on player logout.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public void onPlayerLogout(Player player) {
@@ -381,7 +370,6 @@ public class PetService {
 	/**
 	 * 强制关闭当前宠物欢呼增益。
 	 * Force-switch off the current pet cheer buff.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public void switchOffBuff(final Player player) {

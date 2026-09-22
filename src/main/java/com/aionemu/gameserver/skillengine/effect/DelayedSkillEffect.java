@@ -25,7 +25,6 @@ public class DelayedSkillEffect extends EffectTemplate {
 	/**
 	 * 将效果加入受影响者的效果控制器。
 	 * Adds the effect to the effected creature's effect controller.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	public void applyEffect(Effect effect) {
@@ -35,7 +34,6 @@ public class DelayedSkillEffect extends EffectTemplate {
 	/**
 	 * 在效果时长后施放关联技能。
 	 * Casts the linked skill after the effect duration.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -70,7 +68,6 @@ public class DelayedSkillEffect extends EffectTemplate {
 	/**
 	 * 结束延迟技能效果。
 	 * Ends the delayed skill effect.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

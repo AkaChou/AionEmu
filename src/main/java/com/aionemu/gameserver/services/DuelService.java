@@ -51,11 +51,9 @@ public class DuelService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -83,7 +81,6 @@ public class DuelService {
 	/**
 	 * 处理决斗请求：校验区域与状态后向对方发送确认框。
 	 * Handles a duel request: validates zone/state then sends confirmation to the responder.
-	 *
 	 * requester
 	 * responder
 	 */
@@ -123,7 +120,6 @@ public class DuelService {
 	/**
 	 * 向发起者弹出“是否撤回决斗请求”确认。
 	 * Shows the requester a withdraw-duel confirmation dialog.
-	 *
 	 * requester
 	 * responder
 	 */
@@ -150,7 +146,6 @@ public class DuelService {
 	/**
 	 * 拒绝决斗请求并通知双方。
 	 * Rejects a duel request and notifies both players.
-	 *
 	 * requester
 	 * responder
 	 */
@@ -162,7 +157,6 @@ public class DuelService {
 	/**
 	 * 撤回决斗请求并通知双方。
 	 * Cancels a duel request and notifies both players.
-	 *
 	 * @param owner 撤回请求者 / owner cancelling
 	 * @param target 目标玩家 / target
 	 */
@@ -174,7 +168,6 @@ public class DuelService {
 	/**
 	 * 正式开始决斗：发包、广播并创建超时任务。
 	 * Starts the duel: sends packets, broadcasts and creates a timeout task.
-	 *
 	 * @param requester 决斗发起者 / requester
 	 * @param responder 应战者 / responder
 	 */
@@ -189,7 +182,6 @@ public class DuelService {
 	/**
 	 * 向附近玩家广播决斗开始消息。
 	 * Broadcasts duel-start message to nearby players.
-	 *
 	 * @param player1 决斗玩家 1 / player 1
 	 * @param player2 决斗玩家 2 / player 2
 	 */
@@ -206,7 +198,6 @@ public class DuelService {
 	/**
 	 * 向附近玩家广播决斗胜负消息。
 	 * Broadcasts duel-lose message to nearby players.
-	 *
 	 * loser
 	 * winner
 	 */
@@ -223,7 +214,6 @@ public class DuelService {
 	/**
 	 * 向附近玩家广播决斗平局消息。
 	 * Broadcasts duel-draw message to nearby players.
-	 *
 	 * player 1
 	 * player 2
 	 */
@@ -240,7 +230,6 @@ public class DuelService {
 	/**
 	 * 处理决斗失败：清理 debuff/召唤物并通知胜负结果。
 	 * Handles duel loss: cleans debuffs/summons and notifies win/lose results.
-	 *
 	 * losing player
 	 */
 	public void loseDuel(Player player) {
@@ -276,7 +265,6 @@ public class DuelService {
 	/**
 	 * 竞技场决斗失败时的轻量清理（不广播普通决斗结果）。
 	 * Lightweight arena duel loss cleanup without normal duel result broadcast.
-	 *
 	 * losing player
 	 */
 	public void loseArenaDuel(Player player) {
@@ -297,7 +285,6 @@ public class DuelService {
 	/**
 	 * 创建 5 分钟决斗超时任务。
 	 * Creates a 5-minute duel timeout task.
-	 *
 	 * requester
 	 * responder
 	 */
@@ -321,10 +308,7 @@ public class DuelService {
 	/**
 	 * 判断玩家是否处于决斗中。
 	 * Returns whether the player is currently dueling.
-	 *
 	 * player object id
-	 *
-	 * @param playerObjId
 	 * @return 决斗中返回 true / true if dueling
 	 */
 	public boolean isDueling(int playerObjId) {
@@ -334,10 +318,8 @@ public class DuelService {
 	/**
 	 * 判断两名玩家是否正在互相对决。
 	 * Returns whether the two players are currently dueling each other.
-	 *
 	 * player object id
 	 * target object id
-	 *
 	 * @return 对决中返回 true / true if paired
 	 */
 	public boolean isDueling(int playerObjId, int targetObjId) {
@@ -347,7 +329,6 @@ public class DuelService {
 	/**
 	 * 建立双方决斗映射。
 	 * Creates bidirectional duel mapping for both players.
-	 *
 	 * requester object id
 	 * responder object id
 	 */
@@ -359,7 +340,6 @@ public class DuelService {
 	/**
 	 * 移除决斗映射并取消超时任务。
 	 * Removes duel mapping and cancels timeout tasks.
-	 *
 	 * requester object id
 	 * responder object id
 	 */
@@ -373,7 +353,6 @@ public class DuelService {
 	/**
 	 * 取消并移除玩家的超时任务。
 	 * Cancels and removes the timeout task for the player.
-	 *
 	 * player object id
 	 */
 	private void removeTask(int playerId) {

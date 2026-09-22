@@ -20,7 +20,6 @@ import java.util.Map;
 /**
  * 物品升级服务，校验升级材料并扣除消耗。
  * Item upgrade service validating upgrade materials and consuming costs.
- *
  * @author Ranastic (Encom)
  */
 
@@ -31,7 +30,6 @@ public class ItemUpgradeService {
 	/**
 	 * 校验物品升级条件。
 	 * Validates item upgrade conditions.
-	 *
 	 * 玩家 / player
 	 * baseItem
 	 * resultItemId
@@ -91,7 +89,6 @@ public class ItemUpgradeService {
 	/**
 	 * 扣除升级材料。
 	 * Consumes upgrade materials.
-	 *
 	 * 玩家 / player
 	 * baseItem
 	 * resultItemId

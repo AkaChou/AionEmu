@@ -18,7 +18,6 @@ public class GiveMissingSkills extends AdminCommand
 	/**
 	 * 为执行者补齐缺失技能。
 	 * Grant missing skills to the invoking player.
-	 *
 	 * @param player 执行命令的管理员 / Admin executing the command
 	 */
 	@Override
@@ -29,7 +28,6 @@ public class GiveMissingSkills extends AdminCommand
 	/**
 	 * 参数错误时显示命令语法。
 	 * Show command syntax on invalid arguments.
-	 *
 	 * @param player 接收提示的玩家 / Player receiving the hint
 	 */
 	@Override

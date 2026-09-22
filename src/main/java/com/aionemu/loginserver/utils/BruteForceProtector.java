@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 暴力破解防护：按 IP 记录登录失败次数，达到阈值时触发封禁判定。
  * Brute-force protector: tracks failed login attempts per IP and signals ban when the threshold is reached.
- *
  * @author Mr. Poke
  */
 public class BruteForceProtector {
@@ -23,17 +22,7 @@ public class BruteForceProtector {
     @Getter
     class FailedLoginInfo {
 
-        /**
-         * -- GETTER --
-         *
-         * @return 失败次数 / the count
-         */
         private int count;
-        /**
-         * -- GETTER --
-         *
-         * @return 记录时间戳 / the time
-         */
         private final long time;
 
         /**
@@ -55,7 +44,6 @@ public class BruteForceProtector {
     /**
      * 获取单例实例（已弃用，请走 boot 注入）。
      * Returns the singleton instance (deprecated; prefer boot injection).
-     *
      * @return 单例实例 / singleton instance
      */
     @Deprecated(since = "boot-migration")
@@ -66,7 +54,6 @@ public class BruteForceProtector {
     /**
      * 记录一次失败连接；若失败次数达到配置阈值则返回 true 表示应封禁。
      * Records a failed connection; returns true when the failure count reaches the ban threshold.
-     *
      * @param ip 客户端 IP / client IP
      * @return 是否应封禁该 IP / whether the IP should be banned
      */

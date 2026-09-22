@@ -29,7 +29,6 @@ public class SM_MESSAGE extends AionServerPacket {
 	/**
 	 * 由玩家对象构造聊天消息包（含坐标，用于喊话等）。
 	 * Builds a chat message from a player entity (includes coordinates for shout, etc.).
-	 *
 	 * sender player
 	 * message body
 	 * @param chatType 聊天频道类型 / chat channel type
@@ -49,7 +48,6 @@ public class SM_MESSAGE extends AionServerPacket {
 	/**
 	 * 由原始字段构造聊天消息包（系统消息、无玩家实体场景）。
 	 * no player entity).
-	 *
 	 * @param senderObjectId 发送者对象 ID / sender object id
 	 * @param senderName 发送者名称 / sender display name
 	 * message body

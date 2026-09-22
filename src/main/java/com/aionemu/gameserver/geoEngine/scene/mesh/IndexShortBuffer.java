@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 基于 {@link ShortBuffer} 的无符号 short 索引缓冲实现。
  * {@link IndexBuffer} implementation backed by an unsigned-short {@link ShortBuffer}.
- *
  * @author lex
  */
 @AllArgsConstructor
@@ -19,7 +18,6 @@ public class IndexShortBuffer extends IndexBuffer {
 	/**
 	 * 读取无符号 short 索引（0–65535）。
 	 * Reads an unsigned-short index (0–65535).
-	 *
 	 * @param i 索引位置 / index position
 	 * @return 无符号索引值 / unsigned index value
 	 */
@@ -31,7 +29,6 @@ public class IndexShortBuffer extends IndexBuffer {
 	/**
 	 * 写入 short 索引值。
 	 * Writes a short index value.
-	 *
 	 * @param i 索引位置 / index position
 	 * @param value 索引值 / index value
 	 */
@@ -43,7 +40,6 @@ public class IndexShortBuffer extends IndexBuffer {
 	/**
 	 * 返回缓冲 limit（元素个数）。
 	 * Returns the buffer limit (element count).
-	 *
 	 * @return 元素个数 / element count
 	 */
 	@Override
@@ -54,7 +50,6 @@ public class IndexShortBuffer extends IndexBuffer {
 	/**
 	 * 返回底层 short 缓冲。
 	 * Returns the underlying short buffer.
-	 *
 	 * @return 底层 short 缓冲 / short buffer
 	 */
 	@Override

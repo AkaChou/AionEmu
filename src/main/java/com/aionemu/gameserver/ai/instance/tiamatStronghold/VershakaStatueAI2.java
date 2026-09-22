@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Tiamat Stronghold 副本 NPC AI：Vershaka Statue（@AIName "vershakastatue"），继承 NpcAI2。
  * Tiamat Stronghold instance NPC AI: Vershaka Statue (@AIName "vershakastatue"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("vershakastatue")

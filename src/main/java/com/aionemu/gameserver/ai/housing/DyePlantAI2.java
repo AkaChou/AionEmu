@@ -10,7 +10,6 @@ import com.aionemu.gameserver.services.item.ItemService;
 /**
  * 房屋相关 NPC AI：Dye Plant（@AIName "dyeplant"），继承 ActionItemNpcAI2。
  * Housing-related NPC AI: Dye Plant (@AIName "dyeplant"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("dyeplant")

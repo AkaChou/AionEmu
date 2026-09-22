@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 寻找队伍游戏对象。
  * Find Group game object.
- *
  * @author MrPoke
  */
 @Getter
@@ -27,8 +26,7 @@ public class FindGroup {
 	/**
 	 * 返回最后更新时间。
 	 * Returns the last update time.
-	 *
-	 * @return 最后更新时间 / the lastUpdate
+	 * 最后更新时间 / the lastUpdate
 	 */
 	private int lastUpdate = (int) (System.currentTimeMillis() / 1000);
 
@@ -109,7 +107,6 @@ public class FindGroup {
 	/**
 	 * 返回队伍名称。
 	 * Returns the team name.
-	 *
 	 * @return 名称 / the name
 	 */
 	public String getName() {

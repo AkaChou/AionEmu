@@ -23,7 +23,6 @@ public class ItemRemodelService {
 	/**
 	 * 幻化物品。
 	 * Remodels an item appearance.
-	 *
 	 * @param player 玩家 / player
 	 * @param keepItemObjId 保留物品对象 ID / keepItemObjId
 	 * @param extractItemObjId 提取物品对象 ID / extractItemObjId
@@ -94,7 +93,6 @@ public class ItemRemodelService {
 	/**
 	 * 系统幻化物品。
 	 * System-remodels an item.
-	 *
 	 * @param player 玩家 / player
 	 * @param keepItem keepItem
 	 * @param template template
@@ -118,7 +116,6 @@ public class ItemRemodelService {
 	/**
 	 * 命令预览幻化。
 	 * Command preview remodel.
-	 *
 	 * 玩家 / player
 	 * itemId
 	 * duration
@@ -158,7 +155,6 @@ public class ItemRemodelService {
 	/**
 	 * 预览幻化。
 	 * Views remodel preview.
-	 *
 	 * @param player 玩家 / player
 	 * @param item item
 	 * @param template template
@@ -173,14 +169,8 @@ public class ItemRemodelService {
 				new SM_SYSTEM_MESSAGE(1300483, new DescriptionId(item.getItemTemplate().getNameId())));
 		PacketSendUtility.broadcastPacket(player, new SM_UPDATE_PLAYER_APPEARANCE(player.getObjectId(),
 				player.getEquipment().getEquippedItemsWithoutStigma()), true);
-		/**
-		 * 执行任务。
-		 * Runs the task.
-		 */GameThreadPoolServices.threadPoolManager().schedule(() -> item.setItemSkinTemplate(oldTemplate), 50);
-		/**
-		 * 执行任务。
-		 * Runs the task.
-		 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+        GameThreadPoolServices.threadPoolManager().schedule(() -> item.setItemSkinTemplate(oldTemplate), 50);
+        GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			 PacketSendUtility.sendPacket(player, new SM_UPDATE_PLAYER_APPEARANCE(player.getObjectId(),
 					 player.getEquipment().getEquippedForApparence()));
 			 PacketSendUtility.broadcastPacket(player, new SM_UPDATE_PLAYER_APPEARANCE(player.getObjectId(),

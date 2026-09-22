@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Transidium Annex 副本 NPC AI：Advance Corridor Shield（@AIName "advance_corridor_shield"），继承 NpcAI2。
  * Transidium Annex instance NPC AI: Advance Corridor Shield (@AIName "advance_corridor_shield"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("advance_corridor_shield")

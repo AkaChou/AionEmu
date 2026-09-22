@@ -58,7 +58,6 @@ public class Kisk extends SummonedObject<Player> {
 	/**
 	 * 判断 NPC 是否为敌对目标。
 	 * Whether the NPC is an enemy.
-	 *
 	 * @param npc NPC / NPC
 	 * @return 是否敌对 / whether enemy
 	  */
@@ -70,7 +69,6 @@ public class Kisk extends SummonedObject<Player> {
 	/**
 	 * 判断玩家是否为敌对目标。
 	 * Whether the player is an enemy.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否敌对 / whether enemy
 	  */

@@ -6,7 +6,6 @@ import lombok.Getter;
 /**
  * EquippedStigmas 条目，用于技能相关逻辑。
  * Equipped Stigmas Entry for skill logic.
- *
  * @author DrNism
  */
 @Getter

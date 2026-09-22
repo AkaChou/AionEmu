@@ -45,7 +45,6 @@ public class GlobalRule {
 	 * 返回规则名称。 / Returns the rule name.
 	 * -- SETTER --
 	 * 设置规则名称。 / Sets the rule name.
-
 	 */
 	@Setter
 	@Getter
@@ -73,7 +72,6 @@ public class GlobalRule {
 	 * 返回概率。 / Returns the chance.
 	 * -- SETTER --
 	 * 设置概率。 / Sets the chance.
-
 	 */
 	@Setter
 	@Getter
@@ -85,7 +83,6 @@ public class GlobalRule {
 	 * 返回最小等级差。 / Returns the min diff.
 	 * -- SETTER --
 	 * 设置最小等级差。 / Sets the min diff.
-
 	 */
 	@Setter
 	@Getter
@@ -97,7 +94,6 @@ public class GlobalRule {
 	 * 返回最大等级差。 / Returns the max diff.
 	 * -- SETTER --
 	 * 设置最大等级差。 / Sets the max diff.
-
 	 */
 	@Setter
 	@Getter
@@ -109,7 +105,6 @@ public class GlobalRule {
 	 * 返回种族限制。 / Returns the restriction race.
 	 * -- SETTER --
 	 * 设置种族限制。 / Sets the restriction race.
-
 	 */
 	@Setter
 	@Getter
@@ -129,7 +124,6 @@ public class GlobalRule {
      * 返回数量是否按 NPC 等级缩放。 / Returns whether counts scale with the NPC level.
 	 * -- SETTER --
 	 * 设置数量是否按 NPC 等级缩放。 / Sets whether counts scale with the NPC level.
-
 	 */
     @Setter
     @Getter

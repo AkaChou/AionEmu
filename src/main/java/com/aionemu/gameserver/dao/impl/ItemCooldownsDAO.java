@@ -16,9 +16,7 @@ import java.util.Map;
 /**
  * 物品冷却 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of ItemCooldownsDAO.
- *
  * Updated for MySQL 8 - Fixed connection leaks.
- *
  * @author ATracer
  */
 @Slf4j
@@ -34,7 +32,6 @@ public class ItemCooldownsDAO extends com.aionemu.gameserver.dao.ItemCooldownsDA
 	/**
 	 * 加载玩家物品冷却。
 	 * Loads item cooldowns for a player.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -63,7 +60,6 @@ public class ItemCooldownsDAO extends com.aionemu.gameserver.dao.ItemCooldownsDA
 	/**
 	 * 保存玩家物品冷却。
 	 * Stores item cooldowns for a player.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -110,7 +106,6 @@ public class ItemCooldownsDAO extends com.aionemu.gameserver.dao.ItemCooldownsDA
 	/**
 	 * 删除玩家全部物品冷却。
 	 * Deletes all item cooldowns for a player.
-	 *
 	 * @param player 玩家 / player
 	 */
 	private void deleteItemCooldowns(final Player player) {
@@ -127,7 +122,6 @@ public class ItemCooldownsDAO extends com.aionemu.gameserver.dao.ItemCooldownsDA
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
-	 *
 	 * @param database 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version

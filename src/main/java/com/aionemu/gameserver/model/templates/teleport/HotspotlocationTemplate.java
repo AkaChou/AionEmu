@@ -11,7 +11,6 @@ import lombok.Getter;
 /**
  * 热点地点模板（静态数据/XML）。
  * Hotspot location template (static data/XML).
- *
  * @author Rinzler (Encom)
  */
 @Getter

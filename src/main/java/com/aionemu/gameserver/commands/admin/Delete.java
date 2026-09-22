@@ -17,7 +17,6 @@ import java.io.IOException;
 /**
  * 删除当前目标 NPC 刷出并持久化的管理命令（{@code //delete}）。
  * Admin command that deletes the targeted NPC spawn and persists the change ({@code //delete}).
- *
  * @author Luno
  */
 @Slf4j
@@ -34,7 +33,6 @@ public class Delete extends AdminCommand {
 	/**
 	 * 删除目标 NPC 刷出（不支持池化/攻城刷出）。
 	 * Deletes the targeted NPC spawn (pooled/siege spawns are not allowed).
-	 *
 	 */
 	@Override
 	public void execute(Player player, String... params) {

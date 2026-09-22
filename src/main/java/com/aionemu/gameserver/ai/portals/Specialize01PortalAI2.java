@@ -22,7 +22,6 @@ import java.util.List;
 /**
  * 传送门/传送点 AI：Specialize01 Portal（@AIName "specialize_portal"），继承 PortalAI2。
  * Portal/teleporter AI: Specialize01 Portal (@AIName "specialize_portal"), extends PortalAI2.
- *
  * @author Encom
  */
 @AIName("specialize_portal")

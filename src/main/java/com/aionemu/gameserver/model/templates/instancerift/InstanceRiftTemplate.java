@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 副本裂隙模板（静态数据/XML）。
  * Instance rift template (static data/XML).
- *
  * @author Rinzler (Encom)
  */
 

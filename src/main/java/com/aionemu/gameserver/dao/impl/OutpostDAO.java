@@ -13,7 +13,6 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 前哨据点 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of OutpostDAO.
- *
  * Created by Wnkrz on 27/08/2017. Updated for MySQL 8.
  */
 @Slf4j
@@ -30,7 +29,6 @@ public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
     /**
      * 加载前哨据点；缺失记录会自动插入。
      * Loads outpost locations; missing rows are inserted automatically.
-     *
      * @param locations 前哨据点映射 / outpost location map
      * @return 是否成功 / whether successful
      */
@@ -71,7 +69,6 @@ public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
     /**
      * 更新前哨据点。
      * Updates an outpost location.
-     *
      * @param location 据点位置 / outpost location
      * @return 是否成功 / whether successful
      */
@@ -95,7 +92,6 @@ public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
     /**
      * 插入前哨据点（默认种族 NPC）。
      * Inserts an outpost location (default race NPC).
-     *
      * @param location 据点位置 / outpost location
      * @return 是否成功 / whether successful
      */
@@ -118,7 +114,6 @@ public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
     /**
      * 批量更新前哨据点。
      * Batch-updates outpost locations.
-     *
      * @param locations 前哨据点映射 / outpost location map
      * @return 是否成功 / whether successful
      */
@@ -153,7 +148,6 @@ public class OutpostDAO extends com.aionemu.gameserver.dao.OutpostDAO {
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

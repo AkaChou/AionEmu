@@ -15,7 +15,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * RvR 相关 NPC AI：Taina Comander（@AIName "taina_comander"），继承 AggressiveNpcAI2。
  * RvR-related NPC AI: Taina Comander (@AIName "taina_comander"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("taina_comander")

@@ -8,7 +8,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 入侵者扫描的客户端包。
  * Client packet for intruder scan.
- *
  * @author Ranastic (Encom)
  */
 @Slf4j
@@ -17,7 +16,6 @@ public class CM_INTRUDER_SCAN extends AionClientPacket {
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余合法状态 / additional valid states

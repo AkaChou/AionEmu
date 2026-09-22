@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Gelkmaros 区域 NPC AI：Soul Invocation Jar（@AIName "soulinvocationjar"），继承 NpcAI2。
  * Gelkmaros zone NPC AI: Soul Invocation Jar (@AIName "soulinvocationjar"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("soulinvocationjar")

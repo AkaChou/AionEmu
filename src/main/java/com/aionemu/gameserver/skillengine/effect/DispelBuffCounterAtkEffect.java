@@ -31,7 +31,6 @@ public class DispelBuffCounterAtkEffect extends DamageEffect {
 	/**
 	 * 应用伤害并按层数驱散 Buff。
 	 * Applies damage and dispels buffs by computed count.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -44,7 +43,6 @@ public class DispelBuffCounterAtkEffect extends DamageEffect {
 	/**
 	 * 按可驱散 Buff 数计算伤害与驱散参数。
 	 * Calculates damage and dispel params from removable buff count.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

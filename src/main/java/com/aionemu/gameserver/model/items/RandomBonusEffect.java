@@ -9,7 +9,6 @@ import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
 /**
  * Random 加成效果，用于物品相关逻辑。
  * Random Bonus Effect for items logic.
- *
  * @author Ranastic
  */
 public class RandomBonusEffect implements StatOwner {

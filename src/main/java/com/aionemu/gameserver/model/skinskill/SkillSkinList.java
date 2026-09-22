@@ -21,7 +21,6 @@ import lombok.Setter;
 /**
  * 技能外观列表。
  * Skill Skin List model.
- *
  * @author Rinzler (Encom)
  */
 public class SkillSkinList {

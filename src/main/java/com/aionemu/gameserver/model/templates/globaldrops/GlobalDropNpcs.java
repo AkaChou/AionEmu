@@ -11,7 +11,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 全局掉落 Npcs 模板（静态数据/XML）。
  * Global drop NPCs template (static data/XML).
- *
  * @author Wnkrz
  */
 @XmlAccessorType(XmlAccessType.FIELD)

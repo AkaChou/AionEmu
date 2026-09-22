@@ -27,7 +27,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * 生物仇恨列表：维护攻击者伤害/仇恨，并提供最高仇恨、最高伤害与掉落归属等查询。
  * Creature aggro list: tracks attacker damage/hate and provides most-hated, most-damage / loot ownership queries.
- *
  * @author ATracer, KKnD
  */
 @SuppressWarnings("rawtypes")
@@ -62,7 +61,6 @@ public class AggroList {
 	 * Materialises the damage-listener list with a double-checked {@code synchronized (this)} so concurrent first
 	 * registrations converge on one list; otherwise the first listeners would land in a discarded list and never
 	 * receive damage callbacks.
-	 *
 	 * @return 可写列表 / writable list
 	 */
 	private List<DamageListener> writableDamageListeners() {
@@ -97,7 +95,6 @@ public class AggroList {
 	/**
 	 * 为指定单位创建仇恨列表。
 	 * Creates an aggro list for the given owner.
-	 *
 	 * @param owner 列表所属单位 / list owner
 	 */
 	public AggroList(Creature owner) {
@@ -107,7 +104,6 @@ public class AggroList {
 	/**
 	 * 仅对敌人累加伤害与等量仇恨（召唤物/陷阱/宠物等计入，坠落伤害等不计入）。
 	 * Adds damage and equal hate only from enemies (includes summons/traps/pets; excludes fall damage, etc.).
-	 *
 	 * @param attacker 攻击者 / attacker
 	 * @param damage 伤害量 / damage amount
 	 */
@@ -125,11 +121,7 @@ public class AggroList {
 		}
 		Creature previousMostHated = getMostHated();
 		AggroInfo ai = getAggroInfo(attacker);
-		/**
-		 * 当前按每次受到伤害等量增加仇恨，并额外广播仇恨。
-		 * For now add hate equal to each damage received; additionally broadcast extra hate.
-		 */
-			synchronized (ai) {
+        synchronized (ai) {
 			ai.addDamage(damage);
 			ai.addHate(damage);
 		}
@@ -145,7 +137,6 @@ public class AggroList {
 	/**
 	 * 累加非伤害技能等产生的额外仇恨。
 	 * Adds extra hate received from non-damage skill effects.
-	 *
 	 * @param creature 仇恨来源 / hate source
 	 * @param hate 仇恨增量 / hate amount
 	 */
@@ -159,7 +150,6 @@ public class AggroList {
 	/**
 	 * 添加在指定时长后自动移除的临时仇恨。
 	 * Adds hate that is removed again after the supplied duration.
-	 *
 	 * @param creature 仇恨来源 / hate source
 	 * @param hate 仇恨增量 / hate amount
 	 * @param duration 持续时间（毫秒） / duration in milliseconds
@@ -184,7 +174,6 @@ public class AggroList {
 	/**
 	 * 以 1 点仇恨开始仇恨该生物。
 	 * Starts hating the creature by adding 1 hate.
-	 *
 	 * @param creature 目标生物 / target creature
 	 */
 	public void startHate(final Creature creature) {
@@ -194,7 +183,6 @@ public class AggroList {
 	/**
 	 * 内部：写入仇恨值并触发 AI/任务相关事件。
 	 * Internal: writes hate and fires AI/quest-related events.
-	 *
 	 * @param creature 仇恨来源 / hate source
 	 * @param hate 仇恨增量 / hate amount
 	 */
@@ -251,7 +239,6 @@ public class AggroList {
 	/**
 	 * 返回造成伤害最高的玩家/队伍/联盟对象。
 	 * Returns the player/group/alliance that dealt the most damage.
-	 *
 	 * @return 最高伤害来源 / most-damage source
 	 */
 	public AionObject getMostDamage() {
@@ -272,7 +259,6 @@ public class AggroList {
 	/**
 	 * 返回最高伤害玩家或队伍所属种族。
 	 * Returns the race of the most-damage player or group winner.
-	 *
 	 * @return 胜出种族，可能为 null / winner race, or null
 	 */
 	public Race getPlayerWinnerRace() {
@@ -288,7 +274,6 @@ public class AggroList {
 	/**
 	 * 返回造成伤害最高的玩家（含宠物伤害归并）。
 	 * Returns the player who dealt the most damage (pet damage merged).
-	 *
 	 * @return 最高伤害玩家 / most-damage player
 	 */
 	public Player getMostPlayerDamage() {
@@ -311,7 +296,6 @@ public class AggroList {
 	/**
 	 * 在指定队伍成员中返回造成伤害最高的玩家；导师则回退到最高等级成员。
 	 * Returns the most-damaging player among the team; mentors fall back to the highest-level member.
-	 *
 	 * @param team 队伍成员集合 / team members
 	 * @param highestLevel 队伍最高等级 / highest level in the team
 	 * @return 最高伤害玩家 / most-damage player
@@ -352,7 +336,6 @@ public class AggroList {
 	/**
 	 * 返回当前仇恨最高的生物；已死亡者仇恨清零。
 	 * Returns the most-hated creature; hate of dead attackers is zeroed.
-	 *
 	 * @return 最高仇恨生物 / most-hated creature
 	 */
 	public Creature getMostHated() {
@@ -383,7 +366,6 @@ public class AggroList {
 	/**
 	 * 判断指定生物是否为当前最高仇恨目标。
 	 * Returns whether the given creature is currently the most hated.
-	 *
 	 * @param creature 待判断生物 / creature to check
 	 * @return 是否最高仇恨 / whether most hated
 	 */
@@ -398,7 +380,6 @@ public class AggroList {
 	/**
 	 * 若已在仇恨列表中，则追加仇恨值。
 	 * Adds hate only if the creature is already on the hate list.
-	 *
 	 * @param creature 目标生物 / target creature
 	 * @param value 仇恨增量 / hate amount
 	 */
@@ -411,7 +392,6 @@ public class AggroList {
 	/**
 	 * 停止对该可见对象的仇恨（仇恨置 0，条目保留）。
 	 * Stops hating the visible object (sets hate to 0, keeps the entry).
-	 *
 	 * @param creature 目标对象 / target object
 	 */
 	public void stopHating(VisibleObject creature) {
@@ -426,7 +406,6 @@ public class AggroList {
 	/**
 	 * 从仇恨列表中完全移除该生物。
 	 * Completely removes the creature from the aggro list.
-	 *
 	 * @param creature 目标生物 / target creature
 	 */
 	public void remove(Creature creature) {
@@ -446,7 +425,6 @@ public class AggroList {
 	/**
 	 * 获取或创建指定生物的仇恨条目。
 	 * Gets or creates the aggro entry for the given creature.
-	 *
 	 * @param creature 目标生物 / target creature
 	 * @return 仇恨条目 / aggro entry
 	 */
@@ -465,7 +443,6 @@ public class AggroList {
 	/**
 	 * 判断是否已仇恨该生物。
 	 * Returns whether this list is already hating the creature.
-	 *
 	 * @param creature 目标生物 / target creature
 	 * @return 是否在列表中 / whether present
 	 */
@@ -476,7 +453,6 @@ public class AggroList {
 	/**
 	 * 返回仇恨条目快照集合。
 	 * Returns a snapshot collection of aggro entries.
-	 *
 	 * @return 仇恨列表快照 / aggro list snapshot
 	 */
 	public Collection<AggroInfo> getList() {
@@ -486,7 +462,6 @@ public class AggroList {
 	/**
 	 * 返回列表中所有攻击者的伤害总和。
 	 * Returns the sum of all damage recorded in the list.
-	 *
 	 * @return 总伤害 / total damage
 	 */
 	public int getTotalDamage() {
@@ -500,7 +475,6 @@ public class AggroList {
 	/**
 	 * 返回最终伤害列表：将 NPC/召唤物伤害归并到主人，可选合并队伍伤害。
 	 * Returns the final damage list with pet/summon damage merged to masters; optionally merges group damage.
-	 *
 	 * @param mergeGroupDamage 是否合并队伍伤害 / whether to merge group damage
 	 * @return 最终伤害条目集合 / final damage entries
 	 */
@@ -547,7 +521,6 @@ public class AggroList {
 	/**
 	 * 判断列表是否感知该生物（非自身，且敌对或部落敌对）。
 	 * Returns whether this list is aware of the creature (not self, and enemy or tribe-hostile).
-	 *
 	 * @param creature 待判断生物 / creature to check
 	 * @return 是否感知 / whether aware
 	 */

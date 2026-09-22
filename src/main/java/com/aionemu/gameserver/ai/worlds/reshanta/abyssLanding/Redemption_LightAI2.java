@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * Reshanta 区域 NPC AI：Redemption Light（@AIName "redemption_light"），继承 NpcAI2。
  * Reshanta zone NPC AI: Redemption Light (@AIName "redemption_light"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("redemption_light")

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * RvR 相关 NPC AI：Luluran（@AIName "luluran"），继承 AggressiveNpcAI2。
  * RvR-related NPC AI: Luluran (@AIName "luluran"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("luluran")

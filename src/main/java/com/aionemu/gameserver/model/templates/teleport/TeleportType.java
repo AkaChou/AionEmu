@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 传送类型枚举。
  * Teleport Type enumeration.
- *
  * @author ATracer
  */
 @XmlType(name = "type")

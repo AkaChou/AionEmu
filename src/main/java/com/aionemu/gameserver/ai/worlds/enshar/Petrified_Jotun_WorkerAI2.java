@@ -16,7 +16,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Enshar 区域 NPC AI：Petrified Jotun Worker（@AIName "nepilim_1"），继承 AggressiveNpcAI2。
  * Enshar zone NPC AI: Petrified Jotun Worker (@AIName "nepilim_1"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("nepilim_1")
@@ -31,7 +30,6 @@ public class Petrified_Jotun_WorkerAI2 extends AggressiveNpcAI2
 	/**
 	 * 生物移动检测：玩家进入 10 米范围时生成替代 NPC 并删除自身（事件只触发一次）。
 	 * Creature-move handler: when a player comes within 10 m, spawns the replacement NPC and deletes self (fires once).
-	 *
 	 * @param creature 移动的生物 / moving creature
 	 */
 	@Override

@@ -15,9 +15,6 @@ public class StonespearReachPlayerReward extends InstancePlayerReward {
 	private int scoreAP;
 	/** 返回 ceramium / Returns the ceramium */
 	private int ceramium;
-	/**
-	 * @return 是否已奖励 / whether rewarded
-	 */
 	private boolean isRewarded = false;
 	/** 是否玩家离开 / Whether player leave*/
 	private boolean isPlayerLeave = false;

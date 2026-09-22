@@ -29,7 +29,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 /**
  * 坚韧大厅副本事件处理器。
  * Instance event handler for Hall Of Tenacity.
- *
  * @author Encom
  */
 
@@ -49,7 +48,6 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 返回玩家奖励记录。
      * Return the player's reward record.
-     *
      * @param object 可见对象 / visible object
      * @return 结果 / result
      */
@@ -66,7 +64,6 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 返回本副本奖励对象。
      * Return this instance's reward object.
-     *
      * @return 结果 / result
      */
     @Override
@@ -77,7 +74,6 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 副本创建时初始化逻辑。
      * Initialize logic when the instance is created.
-     *
      * @param instance 世界地图实例 / world-map instance
      */
     @Override
@@ -91,7 +87,6 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 玩家进入副本时处理。
      * Handle a player entering the instance.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -107,7 +102,6 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 玩家请求退出副本时处理。
      * Handle a player exit request.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -118,7 +112,6 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 玩家离开副本时处理。
      * Handle a player leaving the instance.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -166,7 +159,6 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
 		/**
 		 * 处理 visit。
 		 * Handle visit.
-		 *
 		 * @param player 玩家 / player
 		 */
 		@Override
@@ -191,7 +183,6 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
 						/**
 						 * 处理 visit。
 						 * Handle visit.
-						 *
 						 * @param player 玩家 / player
 						 */
 						@Override
@@ -206,7 +197,6 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 处理 sendRequest。
      * Handle sendRequest.
-     *
      * @param player 玩家 / player
      */
 
@@ -215,7 +205,6 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
             /**
              * 处理 acceptRequest。
              * Handle acceptRequest.
-             *
              * @param requester 请求者 / requester
              * @param responder 响应者 / responder
              */
@@ -226,7 +215,6 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
             /**
              * 处理 denyRequest。
              * Handle denyRequest.
-             *
              * @param requester 请求者 / requester
              * @param responder 响应者 / responder
              */
@@ -242,7 +230,6 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 停止副本并结算。
      * Stop the instance and settle.
-     *
      * @param race 阵营 / race
      */
 
@@ -281,7 +268,6 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 向副本内玩家发送消息。
      * Send a message to players in the instance.
-     *
      * @param msg 消息 / message
      * @param race 阵营 / race
      * @param time 时间 / time
@@ -299,7 +285,6 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
                     /**
                      * 处理 visit。
                      * Handle visit.
-                     *
                      * @param player 玩家 / player
                      */
                     @Override

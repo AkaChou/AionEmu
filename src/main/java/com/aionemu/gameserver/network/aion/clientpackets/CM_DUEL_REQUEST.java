@@ -14,7 +14,6 @@ import com.aionemu.gameserver.services.DuelService;
 /**
  * 请求与目标玩家决斗的客户端包。
  * Client packet requesting a duel with a target player.
- *
  * @author xavier
  */
 public class CM_DUEL_REQUEST extends AionClientPacket {
@@ -25,7 +24,6 @@ public class CM_DUEL_REQUEST extends AionClientPacket {
 	/**
 	 * 构造客户端包实例。
 	 * Constructs a new client packet instance.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余允许状态 / additional allowed states

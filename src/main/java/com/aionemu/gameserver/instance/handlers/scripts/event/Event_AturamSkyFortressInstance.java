@@ -40,7 +40,6 @@ import java.util.concurrent.Future;
 /**
  * 活动·阿图拉姆天空要塞副本事件处理器。
  * Instance event handler for Event Aturam Sky Fortress.
- *
  * @author Encom
  */
 
@@ -49,7 +48,6 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 {
 	/** energy generators / energy generators */
 		private int energyGenerators;
-	/** balaur spy crystal / balaur spy crystal */
 	/** drakan chief of staff / drakan chief of staff */
 		private int drakanChiefOfStaff;
 	/** drakan petty officer / drakan petty officer */
@@ -66,7 +64,6 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -88,7 +85,6 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -103,7 +99,6 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 
@@ -170,7 +165,6 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc 死亡的 NPC / dead NPC
 	 */
 	@Override
@@ -333,7 +327,6 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家通过飞行环时处理。
 	 * Handle a player passing a flying ring.
-	 *
 	 * @param player 玩家 / player
 	 * @param flyingRing 飞行环标识 / flying-ring id
 	 * @return 是否已处理 / whether handled
@@ -346,7 +339,6 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
                     /**
                      * 处理 visit。
                      * Handle visit.
-                     *
                      * @param player 玩家 / player
                      */
                     @Override
@@ -362,7 +354,6 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
                     /**
                      * 处理 visit。
                      * Handle visit.
-                     *
                      * @param player 玩家 / player
                      */
                     @Override
@@ -378,7 +369,6 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
                     /**
                      * 处理 visit。
                      * Handle visit.
-                     *
                      * @param player 玩家 / player
                      */
                     @Override
@@ -451,7 +441,6 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -463,7 +452,6 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -486,7 +474,6 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
-	 *
 	 * @param player 玩家 / player
 	 * @param npc 目标 NPC / target NPC
 	 */
@@ -547,7 +534,6 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 延迟刷出 NPC。
 	 * Delayed NPC spawn.
-	 *
 	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
@@ -562,7 +548,6 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 延迟刷出 NPC 并广播消息。
 	 * Delayed NPC spawn with a broadcast message.
-	 *
 	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
@@ -579,7 +564,6 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 延迟刷出带实体 ID 的 NPC 并广播消息。
 	 * Delayed NPC spawn with entity id and a broadcast message.
-	 *
 	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
@@ -611,7 +595,6 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 延迟刷出带巡路线 NPC。
 	 * Delayed NPC spawn with a walker route.
-	 *
 	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
@@ -641,7 +624,6 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 按阵营广播系统消息。
 	 * Broadcasts a system message by race.
-	 *
 	 * @param msg 消息 ID / message id
 	 * @param race 目标阵营 / target race
 	 * @param time 延迟毫秒 / delay millis
@@ -659,7 +641,6 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
                     /**
                      * 处理 visit。
                      * Handle visit.
-                     *
                      * @param player 玩家 / player
                      */
                     @Override

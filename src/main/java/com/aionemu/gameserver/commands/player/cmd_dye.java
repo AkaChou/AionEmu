@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：按颜色名称或 RGB 为自身/装备染色。
  * Player command: dyes the player or equipment by color name or RGB.
- *
  * @author loleron
  */
 public class cmd_dye extends PlayerCommand {
@@ -24,7 +23,6 @@ public class cmd_dye extends PlayerCommand {
 	/**
 	 * 解析颜色参数并应用染色效果。
 	 * Parses color arguments and applies the dye effect.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 命令参数 / command parameters
 	 */

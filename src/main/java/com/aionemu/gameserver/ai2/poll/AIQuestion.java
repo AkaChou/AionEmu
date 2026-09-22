@@ -3,7 +3,6 @@ package com.aionemu.gameserver.ai2.poll;
 /**
  * AI 决策时可向 AI 实现发起的问题类型枚举。
  * Enumeration of question types that can be polled against an AI implementation.
- *
  * @author ATracer
  */
 public enum AIQuestion {

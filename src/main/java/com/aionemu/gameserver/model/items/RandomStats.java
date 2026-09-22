@@ -6,7 +6,6 @@ import com.aionemu.gameserver.model.templates.item.bonuses.StatBonusType;
 /**
  * Random 属性，用于物品相关逻辑。
  * Random Stats for items logic.
- *
  * @author Ranastic
  */
 

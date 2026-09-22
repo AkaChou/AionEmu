@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 绑定点模板（静态数据/XML 模板）。
  * Bind point template (static data / XML template).
- *
  * @author avol
  */
 @Getter

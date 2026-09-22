@@ -15,7 +15,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * RvR 相关 NPC AI：Mandos Comander（@AIName "mandos_comander"），继承 AggressiveNpcAI2。
  * RvR-related NPC AI: Mandos Comander (@AIName "mandos_comander"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("mandos_comander")

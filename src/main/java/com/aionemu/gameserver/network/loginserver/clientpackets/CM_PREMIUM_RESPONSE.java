@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 /**
  * 登录服回复商城点数/月华查询结果。
  * Login server reply for in-game shop points/luna query.
- *
  * @author KID
  */
 public class CM_PREMIUM_RESPONSE extends LsClientPacket {
@@ -19,7 +18,6 @@ public class CM_PREMIUM_RESPONSE extends LsClientPacket {
 	/**
 	 * 构造函数。
 	 * Constructor.
-	 *
 	 * @param opCode 操作码 opcode
 	 */
 	public CM_PREMIUM_RESPONSE(int opCode) {

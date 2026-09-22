@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Cradle Of Eternity 副本 NPC AI：Insane Jotun Warrior（@AIName "Insane_Jotun_Warrior"），继承 AggressiveNpcAI2。
  * Cradle Of Eternity instance NPC AI: Insane Jotun Warrior (@AIName "Insane_Jotun_Warrior"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("Insane_Jotun_Warrior")

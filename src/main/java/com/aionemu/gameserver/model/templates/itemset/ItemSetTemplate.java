@@ -15,7 +15,6 @@ import lombok.Getter;
 /**
  * 套装模板（静态数据/XML）。
  * Item set template (static data/XML).
- *
  * @author ATracer, modified by Antivirus
  */
 @Getter
@@ -23,35 +22,16 @@ import lombok.Getter;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ItemSetTemplate implements StatOwner {
 
-	/**
-	 * @return the itempart
-	 */
 	@XmlElement(required = true)
 	protected List<ItemPart> itempart;
-	/**
-	 * @return the partbonus
-	 */
 	@XmlElement(required = true)
 	protected List<PartBonus> partbonus;
-	/**
-	 * @return the fullbonus
-	 */
 	protected FullBonus fullbonus;
-	/**
-	 * @return the name
-	 */
 	@XmlAttribute
 	protected String name;
-	/**
-	 * @return the id
-	 */
 	@XmlAttribute
 	protected int id;
 
-	/**
-	 * @param u
-	 * @param parent
-	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		if (fullbonus != null) {
 			// 设置应用完整加成的物品数量 / Set number of items to apply the full bonus

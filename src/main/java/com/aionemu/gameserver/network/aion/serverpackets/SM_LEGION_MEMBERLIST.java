@@ -23,7 +23,6 @@ public class SM_LEGION_MEMBERLIST extends AionServerPacket {
 	/**
 	 * 构造军团成员列表包。
 	 * Creates a legion member list packet.
-	 *
 	 * @param legionMembers 成员扩展信息列表 / extended legion member list
 	 * @param result 结果标记（影响写入的成员数量符号） / result flag (affects signed member count written)
 	 * @param isFirst 是否为列表首包 / whether this is the first packet of the list

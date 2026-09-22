@@ -13,7 +13,6 @@ import com.aionemu.gameserver.model.templates.rewards.IdReward;
 /**
  * 采集奖励组：采集产出的物品种族条目。
  * Gather reward group: item race entries from gathering.
- *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)

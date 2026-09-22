@@ -14,7 +14,6 @@ import com.aionemu.loginserver.model.AccountTime;
 /**
  * 账号会话/惩罚时间 DAO 的 MySQL 8 实现。
  * MySQL 8 AccountTimeDAO implementation.
- *
  * @author Updated for MySQL 8
  */
 @Slf4j

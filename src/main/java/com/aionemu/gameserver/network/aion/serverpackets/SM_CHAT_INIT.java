@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 聊天服初始化令牌下发包：向客户端发送聊天鉴权 token。
  * Server packet that delivers the chat-server authentication token to the client.
- *
  * @author ATracer
  */
 @AllArgsConstructor

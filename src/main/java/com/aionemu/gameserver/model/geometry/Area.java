@@ -6,7 +6,6 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 /**
  * 区域接口。
  * Area interface.
- *
  * @author SoulKeeper
  */
 public interface Area {
@@ -14,7 +13,6 @@ public interface Area {
 	/**
 	 * 忽略 Z 值时返回该点是否在区域内。
 	 * Returns true if point is inside area ignoring z value.
-	 *
 	 * @param point 要检查的点 / point to check
 	 * @return 点是否在区域内 / point is inside or not
 	 */
@@ -23,7 +21,6 @@ public interface Area {
 	/**
 	 * 忽略 Z 值时返回坐标是否在区域内。
 	 * Returns true if coords are inside area ignoring z value.
-	 *
 	 * @param x x 坐标 / x coord
 	 * @param y y 坐标 / y coord
 	 * @return 坐标是否在区域内 / coords are inside or not
@@ -33,7 +30,6 @@ public interface Area {
 	/**
 	 * 返回该点是否在区域内。
 	 * Returns true if point is inside area.
-	 *
 	 * @param point 要检查的点 / point to check
 	 * @return 点是否在区域内 / true if point is inside
 	 */
@@ -42,7 +38,6 @@ public interface Area {
 	/**
 	 * 返回坐标是否在区域内。
 	 * Returns true if coords are inside area.
-	 *
 	 * @param x x 坐标 / x coord
 	 * @param y y 坐标 / y coord
 	 * @param z z 坐标 / z coord
@@ -53,7 +48,6 @@ public interface Area {
 	/**
 	 * 检查 Z 坐标是否在范围内。
 	 * Checks if z coord is inside.
-	 *
 	 * @param point 要检查的点 / point to check
 	 * @return Z 坐标是否在范围内 / is z inside or not
 	 */
@@ -62,7 +56,6 @@ public interface Area {
 	/**
 	 * 检查 Z 坐标是否在范围内。
 	 * Checks if z coord is inside.
-	 *
 	 * @param z z 坐标 / z coord
 	 * @return Z 坐标是否在范围内 / is z inside or not
 	 */
@@ -71,7 +64,6 @@ public interface Area {
 	/**
 	 * 返回点到区域最近点（忽略 Z）的距离；点在区域内时返回 0。
 	 * Returns distance from point to closest point of this area ignoring z.<br> Returns 0 if point is inside area.
-	 *
 	 * @param point 要计算距离的点 / point to calculate distance from
 	 * @return 距离，区域内为 0 / distance or 0 if is inside area
 	 */
@@ -80,7 +72,6 @@ public interface Area {
 	/**
 	 * 返回坐标到区域最近点（忽略 Z）的距离；点在区域内时返回 0。
 	 * Returns distance from coords to closest point of this area ignoring z.<br> Returns 0 if point is inside area.
-	 *
 	 * @param x x 坐标 / x coord
 	 * @param y y 坐标 / y coord
 	 * @return 距离，区域内为 0 / distance or 0 if is inside area
@@ -90,7 +81,6 @@ public interface Area {
 	/**
 	 * 返回点到区域的距离；点在区域内时返回 0。
 	 * Returns distance from point to this area.<br> Returns 0 if is inside.
-	 *
 	 * @param point 要检查的点 / point to check
 	 * @return 距离，区域内为 0 / distance or 0 if is inside
 	 */
@@ -99,7 +89,6 @@ public interface Area {
 	/**
 	 * 返回坐标到区域的距离；坐标在区域内时返回 0。
 	 * Returns distance from coords to this area.
-	 *
 	 * @param x x 坐标 / x coord
 	 * @param y y 坐标 / y coord
 	 * @param z z 坐标 / z coord
@@ -110,7 +99,6 @@ public interface Area {
 	/**
 	 * 返回区域到给定点的最近点；点在区域内时返回该点本身。
 	 * Returns closest point of area to given point.<br> Returns point with coords = point arg if is inside.
-	 *
 	 * @param point 要检查的点 / point to check
 	 * @return 最近点 / closest point
 	 */
@@ -119,7 +107,6 @@ public interface Area {
 	/**
 	 * 返回区域到给定坐标的最近点；坐标在区域内时返回该坐标点。
 	 * Returns closest point of area to given coords.<br> Returns point with coords x and y if coords are inside.
-	 *
 	 * @param x x 坐标 / x coord
 	 * @param y y 坐标 / y coord
 	 * @return 最近点 / closest point
@@ -141,7 +128,6 @@ public interface Area {
 	/**
 	 * 返回区域的最小 Z 值。
 	 * Return minimal z of this area.
-	 *
 	 * @return 区域的最小 Z 值 / minimal z of this area
 	 */
 	float getMinZ();
@@ -149,7 +135,6 @@ public interface Area {
 	/**
 	 * 返回区域的最大 Z 值。
 	 * Returns maximal z of this area.
-	 *
 	 * @return 区域的最大 Z 值 / maximal z of this area
 	 */
 	float getMaxZ();

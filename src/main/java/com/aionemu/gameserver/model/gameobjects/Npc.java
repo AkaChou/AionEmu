@@ -47,7 +47,6 @@ import lombok.Setter;
 /**
  * NPC 游戏对象。
  * Npc game object.
- *
  * @author Luno
  */
 @Getter
@@ -65,15 +64,12 @@ public class Npc extends Creature {
 	/**
 	 * 返回主人名称。
 	 * Returns the name of the master.
-	 *
-	 * @return 主人名称 / name of the master
 	 */
 	private String masterName = StringUtils.EMPTY;
 	/**
 	 * 返回创建此 NPC 的对象的唯一 ID（可能是玩家或房屋）。
 	 * Returns the unique id of the VisibleObject which created this Npc (player or house).
-	 *
-	 * @return 创建者唯一 ID / unique id of the creator
+	 * 创建者唯一 ID / unique id of the creator
 	 */
 	private int creatorId = 0;
 	private final Creature master;
@@ -131,7 +127,6 @@ public class Npc extends Creature {
 	/**
 	 * 初始化属性容器。
 	 * Sets up the stat containers.
-	 *
 	 * @param level 等级 / level
 	 */
 	protected void setupStatContainers(byte level) {
@@ -189,7 +184,6 @@ public class Npc extends Creature {
 	/**
 	 * 是否有巡逻路线。
 	 * Whether the NPC has walk routes.
-	 *
 	 * @return 是否有巡逻路线 / whether walk routes
 	 */
 	public boolean hasWalkRoutes() {
@@ -219,7 +213,6 @@ public class Npc extends Creature {
 	/**
 	 * 是否处于和平状态。
 	 * Whether the NPC is in peace state.
-	 *
 	 * @return 是否和平 / whether peace
 	  */
 	public boolean isPeace() {
@@ -276,7 +269,6 @@ public class Npc extends Creature {
 	/**
 	 * NPC 是否会对本 NPC 产生仇恨。
 	 * Whether the NPC aggroes on this NPC.
-	 *
 	 * @param npc NPC / NPC
 	 * @return 是否产生仇恨 / whether aggro
 	  */
@@ -310,7 +302,6 @@ public class Npc extends Creature {
 	/**
 	 * 与玩家是否无任何关系。
 	 * Whether there is no relation with the player.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否无关系 / whether none relation
 	 */
@@ -336,7 +327,6 @@ public class Npc extends Creature {
 	/**
 	 * 检查 NPC 是否位于初始生成点附近。
 	 * Checks whether the NPC is located near its initial spawn location.
-	 *
 	 * @return 是否在生成点附近 / true or false
 	 */
 	public boolean isAtSpawnLocation() {
@@ -346,7 +336,6 @@ public class Npc extends Creature {
 	/**
 	 * 返回到生成点的距离。
 	 * Returns the distance to the spawn location.
-	 *
 	 * @return 到生成点的距离 / distance to spawn location
 	 */
 	public double getDistanceToSpawnLocation() {
@@ -367,7 +356,6 @@ public class Npc extends Creature {
 	/**
 	 * 判断 NPC 是否为敌对目标。
 	 * Whether the NPC is an enemy.
-	 *
 	 * @param npc NPC / NPC
 	 * @return 是否敌对 / whether enemy
 	  */
@@ -382,7 +370,6 @@ public class Npc extends Creature {
 	/**
 	 * 判断玩家是否为敌对目标。
 	 * Whether the player is an enemy.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否敌对 / whether enemy
 	  */
@@ -412,7 +399,6 @@ public class Npc extends Creature {
 	/**
 	 * 是否是可攻击 NPC。
 	 * Whether the NPC is attackable.
-	 *
 	 * @return 是否可攻击 / whether attackable
 	 */
 	@Override
@@ -456,7 +442,6 @@ public class Npc extends Creature {
 	/**
 	 * 是否关联实体。
 	 * Whether the NPC has an associated entity.
-	 *
 	 * @return 是否有关联实体 / whether entity
 	 */
 	public boolean hasEntity() {

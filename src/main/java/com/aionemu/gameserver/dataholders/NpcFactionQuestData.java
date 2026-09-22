@@ -20,7 +20,6 @@ import lombok.Getter;
  * 每个条目描述某势力每日任务（按 quest id）在星期几可发放，数据源自真实
  * npcfactions_quest.xml（由 docs/quest/tools/retail-alignment/generate_npc_faction_quests.py 生成）。
  * 星期位全 0 表示该任务已禁用；未收录的任务按历史行为视为每天可发放（向后兼容）。
- *
  * @author AionEmu
  */
 @XmlRootElement(name = "npc_faction_quests")
@@ -45,7 +44,6 @@ public class NpcFactionQuestData {
 	/**
 	 * 判断给定任务在指定星期是否激活。
 	 * Returns whether the quest is active on the given calendar day of week.
-	 *
 	 * @param questId            任务 id / quest id
 	 * @param calendarDayOfWeek  {@link Calendar#DAY_OF_WEEK} 值（1=SUNDAY..7=SATURDAY）
 	 * @return 无该任务条目时返回 true（向后兼容，所有势力任务照旧每天可发放）

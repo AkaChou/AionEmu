@@ -20,7 +20,6 @@ public final class ChatNettyServers implements DisposableBean {
     /**
      * 注册 Spring 侧 {@link NettyServer} 提供者。
      * Register the Spring {@link NettyServer} provider.
-     *
      * @param nettyServerProvider Netty 服务端提供者 / Netty server provider
      */
     public ChatNettyServers(ObjectProvider<NettyServer> nettyServerProvider) {
@@ -30,7 +29,6 @@ public final class ChatNettyServers implements DisposableBean {
     /**
      * 获取当前可用的 {@link NettyServer}。
      * Obtain the currently available {@link NettyServer}.
-     *
      * @return Netty 服务端实例 / Netty server instance
      */
     public static NettyServer nettyServer() {
@@ -44,7 +42,6 @@ public final class ChatNettyServers implements DisposableBean {
     /**
      * 登记当前运行中的 Netty 服务端实例。
      * Register the currently running Netty server instance.
-     *
      * @param nettyServer 服务端实例 / server instance
      * @return 同一实例 / the same instance
      */
@@ -79,7 +76,6 @@ public final class ChatNettyServers implements DisposableBean {
     /**
      * 回退并登记本地 Netty 服务端。
      * Fall back to and register a local Netty server.
-     *
      * @return 回退实例 / fallback instance
      */
     private static NettyServer fallbackNettyServer() {

@@ -28,7 +28,6 @@ import java.util.List;
 /**
  * 传送门/传送点 AI：Portal Dialog（@AIName "portal_dialog"），继承 PortalAI2。
  * Portal/teleporter AI: Portal Dialog (@AIName "portal_dialog"), extends PortalAI2.
- *
  * @author Encom
  */
 @AIName("portal_dialog")

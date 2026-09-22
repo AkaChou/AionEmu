@@ -23,7 +23,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Esoterrace 副本 NPC AI：Dalia Charlands（@AIName "daliacharlands"），继承 AggressiveNpcAI2。
  * Esoterrace instance NPC AI: Dalia Charlands (@AIName "daliacharlands"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("daliacharlands")

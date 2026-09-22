@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端发送军团自定义徽章二进制数据块的服务端包。
  * Server packet that sends a binary data chunk of a custom legion emblem to the client.
- *
  * @author cura
  */
 @AllArgsConstructor

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.ObjectProvider;
 /**
  * 数据包广播任务：按掩码批量发送生物状态/特效等更新包。
  * Packet broadcast task: sends creature stat/effect update packets batched by mask.
- *
  * @author lord_rex, MrPoke
  */
 public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Creature> {
@@ -20,9 +19,6 @@ public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Cre
      * -- SETTER --
      *  注入 Spring 实例提供者。
      *  Inject the Spring instance provider.
-     *
-     * @param provider 实例提供者 / Provider
-
      */
 	@Setter
     private static volatile ObjectProvider<PacketBroadcaster> instanceProvider;
@@ -30,11 +26,9 @@ public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Cre
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -165,7 +159,6 @@ public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Cre
 		/**
 		 * 返回该模式的掩码位。
 		 * Return this mode's mask bit.
-		 *
 		 * @return 掩码 / Mask
 		 */
 		public byte mask() {
@@ -175,7 +168,6 @@ public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Cre
 		/**
 		 * 实际发送对应更新包。
 		 * Actually send the corresponding update packet.
-		 *
 		 * @param creature 目标生物 / Target creature
 		 */
 		protected abstract void sendPacket(Creature creature);
@@ -183,7 +175,6 @@ public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Cre
 		/**
 		 * 若掩码包含本模式则发送并清除该位。
 		 * If the mask includes this mode, send and clear the bit.
-		 *
 		 * @param creature 目标生物 / Target creature
 		 * @param mask     当前广播掩码 / Current broadcast mask
 		 */
@@ -209,7 +200,6 @@ public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Cre
 	/**
 	 * 按生物当前掩码逐模式发送更新包直至掩码清零。
 	 * Send updates for each mode bit on the creature until the mask is cleared.
-	 *
 	 * @param creature 目标生物 / Target creature
 	 */
 	@Override
@@ -224,7 +214,6 @@ public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Cre
 	/**
 	 * 耗时统计方法名。
 	 * Method name for runtime stats.
-	 *
 	 * @return 方法名 / Method name
 	 */
 	@Override

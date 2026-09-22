@@ -11,7 +11,6 @@ import java.util.concurrent.Future;
 /**
  * Dragon Lord Refuge 副本 NPC AI：Calindi Summons（@AIName "calindisummon"），继承 AggressiveNpcAI2。
  * Dragon Lord Refuge instance NPC AI: Calindi Summons (@AIName "calindisummon"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("calindisummon")

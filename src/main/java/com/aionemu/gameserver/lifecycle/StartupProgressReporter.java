@@ -9,7 +9,6 @@ interface StartupProgressReporter {
 	/**
 	 * 开始报告某分组的加载。
 	 * Start reporting load of a group.
-	 *
 	 * @param groupName 分组名 / Group name
 	 */
 	void start(String groupName);
@@ -17,7 +16,6 @@ interface StartupProgressReporter {
 	/**
 	 * 某步骤开始。
 	 * A step has started.
-	 *
 	 * @param stepName 步骤名 / Step name
 	 */
 	void stepStarted(String stepName);
@@ -25,7 +23,6 @@ interface StartupProgressReporter {
 	/**
 	 * 某步骤完成。
 	 * A step has finished.
-	 *
 	 * @param stepName 步骤名 / Step name
 	 */
 	void stepFinished(String stepName);
@@ -33,7 +30,6 @@ interface StartupProgressReporter {
 	/**
 	 * 结束某分组并报告耗时。
 	 * Finish a group and report elapsed time.
-	 *
 	 * @param groupName 分组名 / Group name
 	 * @param elapsedMillis 耗时毫秒 / Elapsed milliseconds
 	 */
@@ -48,7 +44,6 @@ interface StartupProgressReporter {
 	/**
 	 * 返回空操作实现（不输出任何进度）。
 	 * Return a no-op implementation (emits no progress output).
-	 *
 	 * @return 空操作进度报告器 / No-op progress reporter
 	 */
 	static StartupProgressReporter noop() {

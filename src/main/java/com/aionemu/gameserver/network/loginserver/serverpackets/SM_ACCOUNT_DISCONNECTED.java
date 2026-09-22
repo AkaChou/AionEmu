@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.loginserver.LsServerPacket;
 /**
  * 游戏服通知登录服某账号已断开连接的服务端包。
  * Server packet used by the game server to inform the login server that an account is no longer online.
- *
  * @author -Nemesiss-
  */
 public class SM_ACCOUNT_DISCONNECTED extends LsServerPacket {
@@ -20,7 +19,6 @@ public class SM_ACCOUNT_DISCONNECTED extends LsServerPacket {
 	/**
 	 * 构造账号断开通知包。
 	 * Constructs a new account-disconnected packet.
-	 *
 	 * @param accountId 账号 ID / account id
 	 */
 	public SM_ACCOUNT_DISCONNECTED(int accountId) {

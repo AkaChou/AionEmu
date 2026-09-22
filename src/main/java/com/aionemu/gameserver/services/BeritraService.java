@@ -37,7 +37,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 贝里特拉/艾雷什基伽尔入侵（Beritra / Ereshkigal Invasion）世界活动服务。
  * Service for Beritra and Ereshkigal world-invasion events (schedule, spawn, SP effects, messages).
- *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -110,7 +109,6 @@ public class BeritraService {
 	/**
 	 * 启动指定地点的入侵，并在持续时长结束后自动停止。
 	 * Start the invasion at the given location and auto-stop after the configured duration.
-	 *
 	 * @param id 入侵地点 ID / beritra location id
 	 */
 	public void startBeritraInvasion(final int id) {
@@ -125,7 +123,6 @@ public class BeritraService {
 	/**
 	 * 停止指定地点的入侵。
 	 * Stop the invasion at the given location.
-	 *
 	 * @param id 入侵地点 ID / beritra location id
 	 */
 	public void stopBeritraInvasion(int id) {
@@ -142,7 +139,6 @@ public class BeritraService {
 	/**
 	 * 清理指定活动阶段创建的临时特效对象。
 	 * Despawns temporary effect objects created by the given event stage.
-	 *
 	 * @param id 入侵地点 ID / invasion location id
 	 */
 	public void clearAdventObjects(int id) {
@@ -162,7 +158,6 @@ public class BeritraService {
 	/**
 	 * 清理一组临时特效对象并释放其引用。
 	 * Despawns one group of temporary effect objects and releases its references.
-	 *
 	 * @param objects 临时对象集合 / temporary objects
 	 */
 	private void despawnAdventObjects(List<VisibleObject> objects) {
@@ -179,7 +174,6 @@ public class BeritraService {
 	/**
 	 * 按状态刷出入侵相关 NPC。
 	 * Spawn invasion NPCs for the given location and state.
-	 *
 	 * @param loc 入侵地点 / beritra location
 	 * spawn state
 	 */
@@ -198,7 +192,6 @@ public class BeritraService {
 		/**
 	 * 广播贝里特拉入侵系统消息。
 	 * Broadcast Beritra invasion system messages.
-	 *
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -215,7 +208,6 @@ public class BeritraService {
 	/**
 	 * 广播入侵走廊相关消息。
 	 * Broadcast invasion-corridor messages.
-	 *
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -235,7 +227,6 @@ public class BeritraService {
 	/**
 	 * 广播魔族部队通过消息。
 	 * Broadcast devil-unit through messages.
-	 *
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -255,7 +246,6 @@ public class BeritraService {
 	/**
 	 * 广播魔族部队撤退消息。
 	 * Broadcast devil-unit return messages.
-	 *
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -275,7 +265,6 @@ public class BeritraService {
 		/**
 	 * 广播艾雷什基伽尔入侵消息。
 	 * Broadcast Ereshkigal invasion messages.
-	 *
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -292,7 +281,6 @@ public class BeritraService {
 	/**
 	 * 广播艾雷什基伽尔走廊消息。
 	 * Broadcast Ereshkigal corridor messages.
-	 *
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -312,7 +300,6 @@ public class BeritraService {
 	/**
 	 * 广播艾雷什基伽尔军团通过消息。
 	 * Broadcast Ereshkigal legion through messages.
-	 *
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -333,7 +320,6 @@ public class BeritraService {
 	/**
 	 * 广播贝里特拉军团撤退消息。
 	 * Broadcast Beritra legion return messages.
-	 *
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -353,7 +339,6 @@ public class BeritraService {
 		/**
 	 * 广播无舰防御相关消息。
 	 * Broadcast dredgion-defense messages.
-	 *
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -370,7 +355,6 @@ public class BeritraService {
 		/**
 	 * 刷出贝里特拉降临控制特效 NPC。
 	 * Spawn Beritra advent-control SP NPCs.
-	 *
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -515,7 +499,6 @@ public class BeritraService {
 	/**
 	 * 刷出贝里特拉降临效果特效 NPC。
 	 * Spawn Beritra advent-effect SP NPCs.
-	 *
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -660,7 +643,6 @@ public class BeritraService {
 	/**
 	 * 刷出贝里特拉降临传送门特效 NPC。
 	 * Spawn Beritra advent-portal SP NPCs.
-	 *
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -805,7 +787,6 @@ public class BeritraService {
 	/**
 	 * 刷出贝里特拉降临导向特效 NPC。
 	 * Spawn Beritra advent-directing SP NPCs.
-	 *
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -950,7 +931,6 @@ public class BeritraService {
 		/**
 	 * 刷出艾雷什基伽尔降临控制特效 NPC。
 	 * Spawn Ereshkigal advent-control SP NPCs.
-	 *
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -981,7 +961,6 @@ public class BeritraService {
 	/**
 	 * 刷出艾雷什基伽尔降临效果特效 NPC。
 	 * Spawn Ereshkigal advent-effect SP NPCs.
-	 *
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -1012,7 +991,6 @@ public class BeritraService {
 	/**
 	 * 刷出艾雷什基伽尔降临传送门特效 NPC。
 	 * Spawn Ereshkigal advent-portal SP NPCs.
-	 *
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -1043,7 +1021,6 @@ public class BeritraService {
 	/**
 	 * 刷出艾雷什基伽尔降临导向特效 NPC。
 	 * Spawn Ereshkigal advent-directing SP NPCs.
-	 *
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -1074,7 +1051,6 @@ public class BeritraService {
 	/**
 	 * 清除指定地点已刷出的入侵 NPC。
 	 * Despawn invasion NPCs at the given location.
-	 *
 	 * @param loc 入侵地点 / beritra location
 	 */
 	public void despawn(BeritraLocation loc) {
@@ -1095,7 +1071,6 @@ public class BeritraService {
 	/**
 	 * 判断指定地点是否正在入侵。
 	 * Whether an invasion is in progress at the given location.
-	 *
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 若 in progress 则为 true / true if in progress
 	 */
@@ -1106,7 +1081,6 @@ public class BeritraService {
 	/**
 	 * 返回当前活跃的入侵映射。
 	 * Return the map of currently active invasions.
-	 *
 	 * @return 地点 ID → 入侵实例 / location id to invasion instance
 	 */
 	public Map<Integer, BeritraInvasion<?>> getActiveInvasions() {
@@ -1116,7 +1090,6 @@ public class BeritraService {
 	/**
 	 * 返回入侵持续时长（小时，来自配置）。
 	 * Return invasion duration in hours (from config).
-	 *
 	 * @return 持续小时数 / duration hours
 	 */
 	public int getDuration() {
@@ -1126,7 +1099,6 @@ public class BeritraService {
 	/**
 	 * 按 ID 获取入侵地点。
 	 * Get a beritra location by id.
-	 *
 	 * @param id 入侵地点 ID / beritra location id
 	 * beritra location
 	 */
@@ -1137,7 +1109,6 @@ public class BeritraService {
 	/**
 	 * 返回全部入侵地点。
 	 * Return all beritra locations.
-	 *
 	 * location map
 	 */
 	public Map<Integer, BeritraLocation> getBeritraLocations() {
@@ -1147,7 +1118,6 @@ public class BeritraService {
 	/**
 	 * 获取 BeritraService 单例（Spring 提供者优先，否则 holder）。
 	 * Return the BeritraService singleton (Spring provider first, else holder).
-	 *
 	 * service instance
 	 */
 	public static BeritraService getInstance() {
@@ -1161,7 +1131,6 @@ public class BeritraService {
 	/**
 	 * 注入 Spring ObjectProvider，供 getInstance 使用。
 	 * Inject the Spring ObjectProvider used by getInstance().
-	 *
 	 * @param instanceProvider Spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<BeritraService> instanceProvider) {

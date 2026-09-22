@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_TIME_CHECK;
 /**
  * 客户端时间校验/心跳请求包，回传客户端时间戳用于同步。
  * Client packet for time check (ping/pong); echoes the client timestamp for sync.
- *
  * @author -Nemesiss-
  */
 public class CM_TIME_CHECK extends AionClientPacket {

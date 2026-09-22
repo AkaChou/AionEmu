@@ -21,7 +21,6 @@ public class PacketSendUtility {
 	/**
 	 * 向玩家发送金色（GOLDEN_YELLOW）系统消息。
 	 * Send a golden-yellow system message to a player.
-	 *
 	 * @param player 目标玩家 / Target player
 	 * @param msg 消息内容 / Message text
 	 */
@@ -32,7 +31,6 @@ public class PacketSendUtility {
 	/**
 	 * 向玩家发送白色消息。
 	 * Send a white message to a player.
-	 *
 	 * @param player 目标玩家 / Target player
 	 * @param msg 消息内容 / Message text
 	 */
@@ -43,7 +41,6 @@ public class PacketSendUtility {
 	/**
 	 * 向玩家发送居中白色消息。
 	 * Send a white center message to a player.
-	 *
 	 * @param player 目标玩家 / Target player
 	 * @param msg 消息内容 / Message text
 	 */
@@ -54,7 +51,6 @@ public class PacketSendUtility {
 	/**
 	 * 向玩家发送黄色消息。
 	 * Send a yellow message to a player.
-	 *
 	 * @param player 目标玩家 / Target player
 	 * @param msg 消息内容 / Message text
 	 */
@@ -65,7 +61,6 @@ public class PacketSendUtility {
 	/**
 	 * 向玩家发送居中黄色消息。
 	 * Send a yellow center message to a player.
-	 *
 	 * @param player 目标玩家 / Target player
 	 * @param msg 消息内容 / Message text
 	 */
@@ -76,7 +71,6 @@ public class PacketSendUtility {
 	/**
 	 * 向玩家发送亮黄消息。
 	 * Send a bright-yellow message to a player.
-	 *
 	 * @param player 目标玩家 / Target player
 	 * @param msg 消息内容 / Message text
 	 */
@@ -87,7 +81,6 @@ public class PacketSendUtility {
 	/**
 	 * 向玩家发送居中亮黄消息。
 	 * Send a bright-yellow center message to a player.
-	 *
 	 * @param player 目标玩家 / Target player
 	 * @param msg 消息内容 / Message text
 	 */
@@ -98,7 +91,6 @@ public class PacketSendUtility {
 	/**
 	 * 以小队队长频道样式发送系统消息。
 	 * Send a system message styled as group-leader chat.
-	 *
 	 * @param player 目标玩家 / Target player
 	 * @param sender 发送者显示名 / Sender display name
 	 * @param msg 消息内容 / Message text
@@ -110,7 +102,6 @@ public class PacketSendUtility {
 	/**
 	 * 以白色系统样式发送消息（sender 未使用）。
 	 * Send a white system-style message (sender unused).
-	 *
 	 * @param player 目标玩家 / Target player
 	 * @param sender 发送者（未使用） / Sender (unused)
 	 * @param msg 消息内容 / Message text
@@ -122,7 +113,6 @@ public class PacketSendUtility {
 	/**
 	 * 以命令频道样式发送系统消息。
 	 * Send a system message styled as command chat.
-	 *
 	 * @param player 目标玩家 / Target player
 	 * @param sender 发送者显示名 / Sender display name
 	 * @param msg 消息内容 / Message text
@@ -134,7 +124,6 @@ public class PacketSendUtility {
 	/**
 	 * 以军团频道样式发送系统消息。
 	 * Send a system message styled as legion chat.
-	 *
 	 * @param player 目标玩家 / Target player
 	 * @param sender 发送者显示名 / Sender display name
 	 * @param msg 消息内容 / Message text
@@ -146,7 +135,6 @@ public class PacketSendUtility {
 	/**
 	 * 以联军频道样式发送系统消息。
 	 * Send a system message styled as coalition chat.
-	 *
 	 * @param player 目标玩家 / Target player
 	 * @param sender 发送者显示名 / Sender display name
 	 * @param msg 消息内容 / Message text
@@ -158,7 +146,6 @@ public class PacketSendUtility {
 	/**
 	 * 以联盟频道样式发送系统消息。
 	 * Send a system message styled as league chat.
-	 *
 	 * @param player 目标玩家 / Target player
 	 * @param sender 发送者显示名 / Sender display name
 	 * @param msg 消息内容 / Message text
@@ -170,7 +157,6 @@ public class PacketSendUtility {
 	/**
 	 * 向玩家发送居中警告消息（联盟警报样式）。
 	 * Send a center warning message (league-alert style).
-	 *
 	 * @param player 目标玩家 / Target player
 	 * @param msg 消息内容 / Message text
 	 */
@@ -181,12 +167,10 @@ public class PacketSendUtility {
 	/**
 	 * 向玩家发送服务端数据包（玩家或连接不存在时静默跳过）。
 	 * Sends a server packet to a player, silently skipping when the player or the connection is absent.
-	 *
 	 * <p>实例脚本常把 {@code AggroList#getMostPlayerDamage()} 的结果直接传入（无玩家伤害时为 {@code null}），
 	 * 这里必须容忍 null，否则会在 NPC 死亡处理中途抛 NPE 并中断后续点位/刷怪逻辑。
 	 * Instance scripts commonly pass {@code AggroList#getMostPlayerDamage()} straight in (null when no player
 	 * dealt damage); this method must tolerate null, otherwise an NPE aborts the rest of the NPC death handling.</p>
-	 *
 	 * @param player 目标玩家，可为 {@code null} / target player, may be {@code null}
 	 * @param packet 服务器包 / Server packet
 	 */
@@ -199,7 +183,6 @@ public class PacketSendUtility {
 	/**
 	 * 延迟向玩家发送数据包。
 	 * Schedule a delayed packet send to a player.
-	 *
 	 * @param player 目标玩家 / Target player
 	 * @param packet 服务器包 / Server packet
 	 * @param time 延迟毫秒 / Delay in milliseconds
@@ -215,7 +198,6 @@ public class PacketSendUtility {
 	/**
 	 * 延迟向 NPC 已知列表中的在线玩家广播数据包。
 	 * Schedule a delayed packet broadcast to online players in an NPC known-list.
-	 *
 	 * @param npc 来源 NPC / Source NPC
 	 * @param packet 服务器包 / Server packet
 	 * @param time 延迟毫秒 / Delay in milliseconds
@@ -231,7 +213,6 @@ public class PacketSendUtility {
 	/**
 	 * 延迟向全服在线玩家发送金色消息。
 	 * Schedule a delayed golden message to all online players.
-	 *
 	 * @param player 触发上下文玩家（未用于过滤） / Context player (unused for filtering)
 	 * @param message 消息文本 / Message text
 	 * @param time 延迟毫秒 / Delay in milliseconds
@@ -247,7 +228,6 @@ public class PacketSendUtility {
 	/**
 	 * 向玩家已知列表广播包，可选同时发给自己。
 	 * Broadcast a packet to a player's known-list, optionally including self.
-	 *
 	 * @param player 来源玩家 / Source player
 	 * @param packet 服务器包 / Server packet
 	 * @param toSelf 是否发给自己 / Whether to send to self
@@ -262,7 +242,6 @@ public class PacketSendUtility {
 	/**
 	 * 向可见对象已知列表广播包，若自身是玩家则同时接收。
 	 * Broadcast to a visible object's known-list and also deliver to self if it is a player.
-	 *
 	 * @param visibleObject 源可见对象 / Source visible object
 	 * @param packet 服务器包 / Server packet
 	 */
@@ -276,7 +255,6 @@ public class PacketSendUtility {
 	/**
 	 * 向可见对象已知列表中的在线玩家广播包。
 	 * Broadcast a packet to online players in a visible object's known-list.
-	 *
 	 * @param visibleObject 源可见对象 / Source visible object
 	 * @param packet 服务器包 / Server packet
 	 */
@@ -291,7 +269,6 @@ public class PacketSendUtility {
 	/**
 	 * 向可见对象已知列表中通过过滤器的在线玩家广播包。
 	 * Broadcast a packet to online known-list players accepted by a filter.
-	 *
 	 * @param visibleObject 源可见对象 / Source visible object
 	 * @param packet 服务器包 / Server packet
 	 * @param filter 玩家过滤器 / Player filter
@@ -307,7 +284,6 @@ public class PacketSendUtility {
 	/**
 	 * 向玩家已知列表中通过过滤器的对象广播包，可选发给自己。
 	 * Broadcast to known-list players accepted by a filter, optionally including self.
-	 *
 	 * @param player 来源玩家 / Source player
 	 * @param packet 服务器包 / Server packet
 	 * @param toSelf 是否发给自己 / Whether to send to self
@@ -328,7 +304,6 @@ public class PacketSendUtility {
 	/**
 	 * 向 3D 距离内的已知玩家广播包。
 	 * Broadcast a packet to known players within a 3D distance.
-	 *
 	 * @param visibleObject 源可见对象 / Source visible object
 	 * @param packet 服务器包 / Server packet
 	 * @param distance 3D 距离 / 3D distance
@@ -345,7 +320,6 @@ public class PacketSendUtility {
 	/**
 	 * 向全服通过过滤器的玩家广播包。
 	 * Broadcast a packet to all world players accepted by a filter.
-	 *
 	 * @param packet 服务器包 / Server packet
 	 * @param filter 玩家过滤器 / Player filter
 	 */
@@ -360,7 +334,6 @@ public class PacketSendUtility {
 	/**
 	 * 向军团所有在线成员广播包。
 	 * Broadcast a packet to all online legion members.
-	 *
 	 * @param legion 军团 / Legion
 	 * @param packet 服务器包 / Server packet
 	 */
@@ -373,7 +346,6 @@ public class PacketSendUtility {
 	/**
 	 * 向军团在线成员广播包，排除指定玩家。
 	 * Broadcast a packet to online legion members excluding one player.
-	 *
 	 * @param legion 军团 / Legion
 	 * @param packet 服务器包 / Server packet
 	 * @param playerObjId 排除的玩家对象 ID / Excluded player object id
@@ -389,7 +361,6 @@ public class PacketSendUtility {
 	/**
 	 * 向攻城区域内所有玩家广播包。
 	 * Broadcast a packet to all players in a siege zone.
-	 *
 	 * @param zone 攻城区域 / Siege zone
 	 * @param packet 服务器包 / Server packet
 	 */

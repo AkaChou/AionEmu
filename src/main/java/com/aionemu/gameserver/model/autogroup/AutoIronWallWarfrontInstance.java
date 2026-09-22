@@ -13,7 +13,6 @@ import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 /**
  * 自动 IronWallWarfront 副本，用于 autogroup 相关逻辑。
  * Auto Iron Wall Warfront Instance for autogroup logic.
- *
  * @author Rinzler (Encom)
  */
 

@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * 巡逻行走 NPC AI：Naia（@AIName "naia"），继承 GeneralNpcAI2。
  * Walker patrol NPC AI: Naia (@AIName "naia"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("naia")

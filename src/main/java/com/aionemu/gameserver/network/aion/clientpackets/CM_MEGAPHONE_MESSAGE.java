@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 使用喇叭道具发送全服/阵营喊话的客户端包。
  * Client packet for megaphone shout messages (server/faction-wide).
- *
  * @author Ranastic
  */
 public class CM_MEGAPHONE_MESSAGE extends AionClientPacket {
@@ -22,7 +21,6 @@ public class CM_MEGAPHONE_MESSAGE extends AionClientPacket {
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余合法状态 / additional valid states

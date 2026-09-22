@@ -18,14 +18,12 @@ import org.junit.jupiter.api.Test;
 /**
  * {@code AggroList#getMostPlayerDamage()} 与 {@code #getMostPlayerDamageOfMembers} 全部消费点的判空闸门。
  * Null-guard gate for every consumer of {@code AggroList#getMostPlayerDamage()} / {@code #getMostPlayerDamageOfMembers}.
- *
  * <p>背景：这两个方法在没有“玩家类型”伤害条目时返回 {@code null}（无玩家伤害、来源不在已知列表等，见 IR-008），
  * 而实例脚本长期直接解引用该结果或把它交给不接受 null 的方法，导致 NPC 死亡处理中途抛 NPE，后续点位累加、
  * {@code deleteNpc}、刷怪全部不执行。本闸门把“判空”固化为构建期契约：<b>在任何消费点首次使用之前必须出现判空</b>。
  * Background: both methods return {@code null} when no player-typed damage entry survives (see IR-008). Instance scripts
  * used to dereference the value or hand it to a null-hostile method, which aborted the rest of the NPC death handling.
  * This gate turns "check for null" into a build-time contract: a null check must precede the first use.</p>
- *
  * <p>规则细节 / Rules:</p>
  * <ol>
  * <li>赋值形态 {@code Player x = ...getMostPlayerDamage...;}：在 {@code x} 首次被使用（{@code x.} 解引用或作为实参传给
@@ -63,7 +61,6 @@ class GetMostPlayerDamageNullGateTest {
 	/**
 	 * 闸门落地时的既有未判空站点基线：文件 → 允许的违规数。
 	 * Baseline of pre-existing unguarded sites: file → allowed violations.
-	 *
 	 * <p>当前为空：2026-09-15 已把全部真实 NPE 风险站点判空（{@code TalocsHollowInstance} 在运行态 NPE 后补齐，
 	 * 其余六处按“无玩家归属则跳过玩家奖励 / 回退到 NPC 坐标”处理），并把三条形参未被使用的 {@code stop*(player)}
 	 * 调用改为在调用点直接去掉未使用实参，因此任何未判空消费点都会直接失败。将来若确需豁免，在此登记并写明原因。
@@ -77,7 +74,6 @@ class GetMostPlayerDamageNullGateTest {
 	/**
 	 * 校验所有消费点，并输出违规清单。
 	 * Verifies every consumer and fails with the offending list.
-	 *
 	 * @throws IOException 读取源码失败 / when the sources cannot be read
 	 */
 	@Test
@@ -126,7 +122,6 @@ class GetMostPlayerDamageNullGateTest {
 	/**
 	 * 检查单个消费点是否满足判空契约。
 	 * Checks whether a single call site satisfies the null-guard contract.
-	 *
 	 * @param code 去注释源码 / comment-free source
 	 * @param file 相对路径 / relative path
 	 * @param start 消费点起点 / call site start
@@ -171,10 +166,8 @@ class GetMostPlayerDamageNullGateTest {
 	/**
 	 * 定位变量首次被“真正使用”的位置：解引用，或作为实参传给非 null 容忍的方法。
 	 * Locates the first real use of the variable: a dereference, or an argument passed to a method that is not null-tolerant.
-	 *
 	 * <p>判空比较自身、同名形参声明、以及成对的 null 容忍方法实参都不算使用。
 	 * A null comparison itself, a declaration, and arguments of paired null-tolerant methods do not count as uses.</p>
-	 *
 	 * @param scan 待扫描片段 / the fragment to scan
 	 * @param variable 变量名 / variable name
 	 * @return 首次使用下标，没有使用返回 -1 / index of the first use, or -1
@@ -204,7 +197,6 @@ class GetMostPlayerDamageNullGateTest {
 	/**
 	 * 判断下标处是不是针对该变量的 null 比较（{@code x == null} / {@code null != x}）。
 	 * Checks whether the index starts a null comparison involving the variable.
-	 *
 	 * @param scan 待扫描片段 / the fragment to scan
 	 * @param index 变量起始下标 / variable start index
 	 * @param variable 变量名 / variable name
@@ -221,7 +213,6 @@ class GetMostPlayerDamageNullGateTest {
 	/**
 	 * 定位变量最近的判空位置。
 	 * Locates the nearest null check for the variable.
-	 *
 	 * @param scan 待扫描片段 / the fragment to scan
 	 * @param variable 变量名 / variable name
 	 * @return 判空下标，没有返回 -1 / index of the null check, or -1
@@ -234,7 +225,6 @@ class GetMostPlayerDamageNullGateTest {
 	/**
 	 * 返回包含指定位置的代码块结束下标（大括号配对）。
 	 * Returns the end index of the block enclosing the position (brace matching).
-	 *
 	 * @param code 去注释源码 / comment-free source
 	 * @param position 位置 / position
 	 * @return 配对大括号下标，无法定位返回 -1 / matching brace index, or -1
@@ -270,7 +260,6 @@ class GetMostPlayerDamageNullGateTest {
 	/**
 	 * 去掉注释与字符串/字符字面量，保留原始换行位置。
 	 * Strips comments and string/char literals while preserving line positions.
-	 *
 	 * @param source 源码 / the source
 	 * @return 仅含代码的文本 / code-only text
 	 */
@@ -325,7 +314,6 @@ class GetMostPlayerDamageNullGateTest {
 	/**
 	 * 用空格替换片段中非换行字符，保持行列位置不变。
 	 * Replaces non-newline characters with spaces so line and column positions stay stable.
-	 *
 	 * @param out 输出缓冲 / output buffer
 	 * @param source 源文本 / source text
 	 * @param from 起始下标 / start index

@@ -42,7 +42,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 /**
  * 永恒试炼副本事件处理器。
  * Instance event handler for Trials Of Eternity.
- *
  * @author Encom
  */
 
@@ -96,7 +95,6 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -165,7 +163,6 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -182,7 +179,6 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家通过飞行环时处理。
 	 * Handle a player passing a flying ring.
-	 *
 	 * @param player 玩家 / player
 	 * @param flyingRing 飞行环标识 / flying-ring id
 	 * @return 结果 / result
@@ -194,7 +190,6 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				/**
 				 * 处理 visit。
 				 * Handle visit.
-				 *
 				 * @param player 玩家 / player
 				 */
 				@Override
@@ -222,7 +217,6 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -237,7 +231,6 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -348,7 +341,6 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -430,10 +422,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				spawn(835409, 222.53116f, 1019.2116f, 706.75494f, (byte) 105); //Treasure Chest B.
 				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <Trials Of Eternity>");
 			break;
-			/**
-			 * 击杀永恒试炼“波利亚之心”现获得 1200 GP（原 200）。 / You will now receive "1,200 GP" instead of "200 Gp" for killing "Heart Of Boliag" in the Trials of Eternity instance. http://aionpowerbook.com/powerbook/KR_-_Update_January_18th_2017
-			 */
-			case 246441: //Heart Of Boliag.
+            case 246441: //Heart Of Boliag.
 				// 无玩家归属时无人可领奖，跳过 GP 发放且不影响其它死亡逻辑。
 				// Without a player attribution there is nobody to reward, so the GP grant is skipped.
 				if (player != null) {
@@ -479,7 +468,6 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -614,7 +602,6 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -646,7 +633,6 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
-	 *
 	 * @param player 玩家 / player
 	 * @param npc NPC / npc
 	 */
@@ -1016,7 +1002,6 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -1054,7 +1039,6 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
                     /**
                      * 处理 visit。
                      * Handle visit.
-                     *
                      * @param player 玩家 / player
                      */
                     @Override
@@ -1080,7 +1064,6 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -1091,7 +1074,6 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override

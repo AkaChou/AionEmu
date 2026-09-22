@@ -47,7 +47,6 @@ final class DatabaseSchemaInitializer {
     /**
      * 使用指定 JDBC 连接信息在缺失表时初始化 schema
      * Initialize schema when tables are missing using the given JDBC settings
-     *
      * @param jdbcUrl JDBC URL / JDBC URL
      * @param user 用户名 / Username
      * @param password 密码 / Password
@@ -145,10 +144,8 @@ final class DatabaseSchemaInitializer {
     /**
      * 补齐登录服在线统计的最后更新时间字段，兼容已有数据库。
      * Add the login-server online-statistics last-update column for existing databases.
-     *
      * <p>该迁移仅在字段缺失且表已存在时执行，并且可重复运行。
      * This migration runs only when the table exists and the column is missing, so it is idempotent.</p>
-     *
      * @param connection 数据库连接 / Database connection
      * @param database 数据库名 / Database name
      * @throws SQLException schema 修复失败时 / When schema repair fails
@@ -240,7 +237,6 @@ final class DatabaseSchemaInitializer {
     /**
      * 根据库名解析内置基线 schema 资源路径
      * Resolve the bundled baseline schema resource path by database name
-     *
      * @param database 数据库名 / Database name
      * @return 资源路径，未配置时返回 null / Resource path, or null when not configured
      */
@@ -251,7 +247,6 @@ final class DatabaseSchemaInitializer {
     /**
      * 判断指定 schema 是否已有表
      * Check whether the given schema already contains tables
-     *
      * @param connection 服务器级连接 / Server-level connection
      * @param database 数据库名 / Database name
      * @return 已有表返回 true / True when tables exist
@@ -271,7 +266,6 @@ final class DatabaseSchemaInitializer {
     /**
      * 执行资源中的 SQL 脚本
      * Execute the SQL script from a classpath resource
-     *
      * @param connection 数据库连接 / Database connection
      * @param schemaResource 资源路径 / Schema resource path
      * @throws SQLException 执行 SQL 失败时 / When SQL execution fails
@@ -288,7 +282,6 @@ final class DatabaseSchemaInitializer {
     /**
      * 读取 classpath 中的 schema 资源文本
      * Read schema resource text from the classpath
-     *
      * @param schemaResource 资源路径 / Resource path
      * @return 脚本文本 / Script text
      * @throws IOException 资源缺失或读取失败时 / When the resource is missing or unreadable
@@ -316,7 +309,6 @@ final class DatabaseSchemaInitializer {
     /**
      * 按分号拆分 SQL 脚本，忽略引号内的分号
      * Split a SQL script by semicolons while ignoring semicolons inside quotes
-     *
      * @param script 脚本文本 / Script text
      * @return 语句列表 / Statement list
      */
@@ -364,7 +356,6 @@ final class DatabaseSchemaInitializer {
     /**
      * 将非空语句追加到列表
      * Append a non-empty statement to the list
-     *
      * @param statements 语句列表 / Statement list
      * @param current 当前缓冲区 / Current buffer
      */
@@ -378,9 +369,7 @@ final class DatabaseSchemaInitializer {
     /**
      * JDBC URL 解析结果：服务器 URL 与数据库名
      * Parsed JDBC URL target: server URL and database name
-     *
-     * @param serverUrl 不含库名的服务器 URL / Server URL without database name
-     * @param database 数据库名 / Database name
+     * 不含库名的服务器 URL / Server URL without database name
      */
     record JdbcTarget(String serverUrl, String database) {
 
@@ -389,7 +378,6 @@ final class DatabaseSchemaInitializer {
         /**
          * 从 MySQL JDBC URL 解析服务器地址与库名
          * Parse server URL and database name from a MySQL JDBC URL
-         *
          * @param jdbcUrl JDBC URL / JDBC URL
          * @return 解析后的目标 / Parsed target
          */

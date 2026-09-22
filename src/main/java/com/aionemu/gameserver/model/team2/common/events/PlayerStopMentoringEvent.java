@@ -12,7 +12,6 @@ import lombok.AllArgsConstructor;
 /**
  * 玩家 StopMentoring 活动，用于团队2相关逻辑。
  * Player Stop Mentoring Event for team 2 logic.
- *
  * @author ATracer
  */
 @AllArgsConstructor

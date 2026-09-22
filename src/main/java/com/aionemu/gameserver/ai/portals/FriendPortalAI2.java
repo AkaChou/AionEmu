@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 传送门/传送点 AI：Friend Portal（@AIName "friendportal"），继承 NpcAI2。
  * Portal/teleporter AI: Friend Portal (@AIName "friendportal"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("friendportal")

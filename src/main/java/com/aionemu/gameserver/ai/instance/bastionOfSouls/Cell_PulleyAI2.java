@@ -13,7 +13,6 @@ import java.util.List;
 /**
  * Bastion Of Souls 副本 NPC AI：Cell Pulley（@AIName "Prison_Lever"），继承 NpcAI2。
  * Bastion Of Souls instance NPC AI: Cell Pulley (@AIName "Prison_Lever"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Prison_Lever")

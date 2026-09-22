@@ -74,7 +74,6 @@ public class Drop {
 	/**
 	 * 是否不受基于等级的掉率衰减影响。
 	 * Whether reduction is disabled for this drop.
-	 *
 	 * @return 是否不衰减 / whether no reduction
 	 */
 	public boolean isNoReduction() {

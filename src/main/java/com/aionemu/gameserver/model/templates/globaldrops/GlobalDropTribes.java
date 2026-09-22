@@ -11,7 +11,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 全局掉落 Tribes 模板（静态数据/XML）。
  * Global drop tribes template (static data/XML).
- *
  * @author Wnkrz
  */
 @XmlAccessorType(XmlAccessType.FIELD)

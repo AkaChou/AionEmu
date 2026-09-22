@@ -8,7 +8,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 周期 MP 消耗：按固定值或最大 MP 百分比扣除受影响者 MP，不足则结束效果。
  * Periodic MP cost: reduces effected MP by a fixed value or max-MP percentage; ends effect if insufficient.
- *
  * @author antness
  */
 public class MpUsePeriodicAction extends PeriodicAction {
@@ -26,7 +25,6 @@ public class MpUsePeriodicAction extends PeriodicAction {
 	/**
 	 * 按最大 MP 百分比扣除 MP；不足时结束效果。
 	 * Reduces MP by a percent of max MP; ends the effect if insufficient.
-	 *
 	 * @param effect related effect
 	 */
 	@Override

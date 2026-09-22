@@ -8,7 +8,6 @@ import com.aionemu.gameserver.model.templates.item.ArmorType;
 /**
  * 外观展示服务，管理玩家展示用外观状态。
  * Display service managing player cosmetic/display appearance state.
- *
  * @author Rinzler (Encom)
  */
 
@@ -16,7 +15,6 @@ public class DisplayService {
 	/**
 	 * getDisplayTemplate 方法。
 	 * getDisplayTemplate method.
-	 *
 	 * 玩家 / player
 	 * item
 	 * result
@@ -76,7 +74,6 @@ public class DisplayService {
 	/**
 	 * getDisplayName 方法。
 	 * getDisplayName method.
-	 *
 	 * 玩家 / player
 	 * result
 	 */
@@ -95,7 +92,6 @@ public class DisplayService {
 	/**
 	 * getDisplayLegionName 方法。
 	 * getDisplayLegionName method.
-	 *
 	 * 玩家 / player
 	 * result
 	 */

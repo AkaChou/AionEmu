@@ -73,7 +73,6 @@ public final class GameEngineServices implements DisposableBean {
     /**
      * 构造并注册各引擎的实例提供者。
      * Construct and register instance providers for each engine.
-     *
      * @param questEngineProvider 任务引擎提供者 / Quest-engine provider
      * @param skillEngineProvider 技能引擎提供者 / Skill-engine provider
      * @param instanceEngineProvider 副本引擎提供者 / Instance-engine provider
@@ -105,7 +104,6 @@ public final class GameEngineServices implements DisposableBean {
     /**
      * 解析任务引擎：优先 Spring 提供者，否则回退工厂。
      * Resolve the quest engine: prefer Spring provider, otherwise fallback factory.
-     *
      * @return 任务引擎 / Quest engine
      */
     public static QuestEngine questEngine() {
@@ -128,7 +126,6 @@ public final class GameEngineServices implements DisposableBean {
     /**
      * 解析技能引擎：优先 Spring 提供者，否则回退工厂。
      * Resolve the skill engine: prefer Spring provider, otherwise fallback factory.
-     *
      * @return 技能引擎 / Skill engine
      */
     public static SkillEngine skillEngine() {
@@ -146,7 +143,6 @@ public final class GameEngineServices implements DisposableBean {
     /**
      * 解析副本引擎：优先 Spring 提供者，否则单例。
      * Resolve the instance engine: prefer Spring provider, otherwise singleton.
-     *
      * @return 副本引擎 / Instance engine
      */
     public static InstanceEngine instanceEngine() {
@@ -169,7 +165,6 @@ public final class GameEngineServices implements DisposableBean {
     /**
      * 解析 AI2 引擎：优先 Spring 提供者，否则单例。
      * Resolve the AI2 engine: prefer Spring provider, otherwise singleton.
-     *
      * @return AI2 引擎 / AI2 engine
      */
     public static AI2Engine ai2Engine() {
@@ -192,7 +187,6 @@ public final class GameEngineServices implements DisposableBean {
     /**
      * 解析聊天处理器：优先 Spring 提供者，否则单例。
      * Resolve the chat processor: prefer Spring provider, otherwise singleton.
-     *
      * @return 聊天处理器 / Chat processor
      */
     public static ChatProcessor chatProcessor() {
@@ -238,15 +232,11 @@ public final class GameEngineServices implements DisposableBean {
     /**
      * 引擎解析缓存条目：把已解析实例与产生它的 provider 绑定。
      * Resolved-engine cache entry binding a resolved instance to the provider that produced it.
-     *
      * <p>provider 身份变化即视为缓存失效，因此换装 provider 后不会继续返回上一套引擎；
      * 同一 provider 的重复解析仍然零分配，保持 {@code getIfAvailable} 热路径优化。</p>
      * <p>A different provider identity invalidates the entry, so a swapped provider never keeps
      * serving the previous engine, while repeated lookups on the same provider stay allocation-free
      * and keep the {@code getIfAvailable} hot-path saving.</p>
-     *
-     * @param provider 产生该实例的 provider / provider that produced the instance
-     * @param engine 已解析实例 / resolved instance
      * @param <T> 引擎类型 / engine type
      */
     private record ResolvedEngine<T>(ObjectProvider<T> provider, T engine) {

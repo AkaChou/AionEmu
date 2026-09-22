@@ -11,7 +11,6 @@ import java.util.concurrent.Future;
 /**
  * Fallen Poeta 副本 NPC AI：Balaur Explosives Stockpile（@AIName "Balaur_Explosives_Stockpile"），继承 AggressiveNpcAI2。
  * Fallen Poeta instance NPC AI: Balaur Explosives Stockpile (@AIName "Balaur_Explosives_Stockpile"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("Balaur_Explosives_Stockpile")

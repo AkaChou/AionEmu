@@ -24,7 +24,6 @@ public final class BIHTriangle {
 	/**
 	 * 以三顶点构造三角形并计算质心。
 	 * Constructs a triangle from three vertices and computes the centroid.
-	 *
 	 * @param p1 顶点 1 / vertex 1
 	 * @param p2 顶点 2 / vertex 2
 	 * @param p3 顶点 3 / vertex 3
@@ -40,7 +39,6 @@ public final class BIHTriangle {
 	/**
 	 * 返回顶点 A。
 	 * Returns vertex A.
-	 *
 	 * @return 顶点 A / vertex A
 	 */
 	public Vector3f get1() {
@@ -50,7 +48,6 @@ public final class BIHTriangle {
 	/**
 	 * 返回顶点 B。
 	 * Returns vertex B.
-	 *
 	 * @return 顶点 B / vertex B
 	 */
 	public Vector3f get2() {
@@ -60,7 +57,6 @@ public final class BIHTriangle {
 	/**
 	 * 返回顶点 C。
 	 * Returns vertex C.
-	 *
 	 * @return 顶点 C / vertex C
 	 */
 	public Vector3f get3() {
@@ -70,7 +66,6 @@ public final class BIHTriangle {
 	/**
 	 * 计算并返回单位法线（每次新建向量）。
 	 * Computes and returns the unit normal (allocates a new vector each call).
-	 *
 	 * @return 单位法线 / unit normal
 	 */
 	public Vector3f getNormal() {
@@ -83,7 +78,6 @@ public final class BIHTriangle {
 	/**
 	 * 返回指定轴上的最小（left）或最大（right）顶点分量。
 	 * Returns the minimum ({@code left}) or maximum (right) vertex component on the given axis.
-	 *
 	 * @param axis 轴索引 0/1/2 对应 x/y/z / axis index 0/1/2 for x/y/z
 	 * @param left {@code true} 取最小，否则取最大 / {@code true} for min, else max
 	 * @return 极值分量 / extreme component

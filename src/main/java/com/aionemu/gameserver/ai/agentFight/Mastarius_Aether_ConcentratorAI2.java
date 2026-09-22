@@ -14,7 +14,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 代理人战争相关 NPC AI：Mastarius Aether Concentrator（@AIName "mastarius_aether_concentrator"），继承 ActionItemNpcAI2。
  * Agent-fight related NPC AI: Mastarius Aether Concentrator (@AIName "mastarius_aether_concentrator"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("mastarius_aether_concentrator")

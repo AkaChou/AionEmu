@@ -10,7 +10,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 额外材料模板（静态数据/XML）。
  * XML template.
- *
  * @author KID
  */
 @XmlAccessorType(XmlAccessType.FIELD)

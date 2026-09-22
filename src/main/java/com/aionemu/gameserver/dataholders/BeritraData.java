@@ -18,7 +18,6 @@ import java.util.Map;
 /**
  * 贝里特拉入侵地点数据容器，持有并索引全部 Beritra 地点。
  * Beritra invasion location data holder, indexing all beritra locations.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -43,7 +42,6 @@ public class BeritraData {
 	/**
 	 * 返回已加载的地点数量。
 	 * Returns the number of loaded locations.
-	 *
 	 * @return 已加载的地点数量 / Returns the number of loaded locations.
 	 */
 	public int size() {
@@ -53,7 +51,6 @@ public class BeritraData {
 	/**
 	 * 返回全部 Beritra 地点映射。
 	 * Returns the full beritra location map.
-	 *
 	 * @return ID 到地点的映射 / map of id to location
 	 */
 	public Map<Integer, BeritraLocation> getBeritraLocations() {

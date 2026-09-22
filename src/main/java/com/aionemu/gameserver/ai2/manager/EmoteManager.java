@@ -19,7 +19,6 @@ public class EmoteManager {
 	/**
 	 * 开始攻击表情：取消行走状态并装备武器，广播攻击模式情绪。
 	 * Starts attack emote: clears walking state, equips weapon, and broadcasts attack-mode emotions.
-	 *
 	 * @param owner NPC 实例 / NPC instance
 	 */
 	public static final void emoteStartAttacking(Npc owner) {
@@ -40,7 +39,6 @@ public class EmoteManager {
 	 * 停止攻击表情：卸下武器状态，并在目标玩家仍能看见该 NPC 时发送“放弃追踪”提示。
 	 * Stops attack emote: clears the weapon state, and sends the give-up notice only while the target player
 	 * can still see the NPC.
-	 *
 	 * @param owner NPC 实例 / NPC instance
 	 */
 	public static final void emoteStopAttacking(Npc owner) {
@@ -54,7 +52,6 @@ public class EmoteManager {
 	/**
 	 * 判断脱战 NPC 是否仍在目标玩家的已知列表内（玩家客户端仍能看到它）。
 	 * Whether the disengaging NPC is still inside the target player's known list (the client still renders it).
-	 *
 	 * <p>背景：真端 {@code max_chase_time} 到期同样会结束战斗。克罗坦要塞的空中防空眼 276225
 	 * （{@code max_chase_time=8}、0 移速）追不上飞行玩家，8 秒后脱战返回出生点；此时目标玩家可能已在数百米外的
 	 * 空中，若仍无条件下发 {@code STR_UI_COMBAT_NPC_RETURN}(1300039)，玩家就会在周围无怪处看到
@@ -65,7 +62,6 @@ public class EmoteManager {
 	 * the target may already be hundreds of meters away, so an unconditional {@code STR_UI_COMBAT_NPC_RETURN}
 	 * (1300039) renders a phantom "gives up pursuit" notice in empty mid-air. Combat behaviour is unchanged; the
 	 * server just stops narrating the disengage to a player who can no longer see the NPC.</p>
-	 *
 	 * @param owner 脱战的 NPC / the disengaging NPC
 	 * @param playerTarget 该 NPC 当前的目标玩家 / the player currently targeted by the NPC
 	 * @return 目标玩家已知列表仍包含该 NPC 时返回 {@code true} / {@code true} when the player still knows the NPC
@@ -78,7 +74,6 @@ public class EmoteManager {
 	/**
 	 * 开始跟随表情：取消行走并广播中立模式情绪。
 	 * Starts follow emote: clears walking and broadcasts neutral-mode emotions.
-	 *
 	 * @param owner NPC 实例 / NPC instance
 	 */
 	public static final void emoteStartFollowing(Npc owner) {
@@ -90,7 +85,6 @@ public class EmoteManager {
 	/**
 	 * 开始行走表情：设置行走状态并广播行走情绪。
 	 * Starts walk emote: sets walking state and broadcasts walk emotion.
-	 *
 	 * @param owner NPC 实例 / NPC instance
 	 */
 	public static final void emoteStartWalking(Npc owner) {
@@ -101,7 +95,6 @@ public class EmoteManager {
 	/**
 	 * 停止行走表情：清除行走状态。
 	 * Stops walk emote: clears walking state.
-	 *
 	 * @param owner NPC 实例 / NPC instance
 	 */
 	public static final void emoteStopWalking(Npc owner) {
@@ -111,7 +104,6 @@ public class EmoteManager {
 	/**
 	 * 开始返回表情：广播中立模式情绪。
 	 * Starts return emote: broadcasts neutral-mode emotions.
-	 *
 	 * @param owner NPC 实例 / NPC instance
 	 */
 	public static final void emoteStartReturning(Npc owner) {
@@ -122,7 +114,6 @@ public class EmoteManager {
 	/**
 	 * 开始待机表情：设置行走状态并广播中立模式情绪。
 	 * Starts idle emote: sets walking state and broadcasts neutral-mode emotions.
-	 *
 	 * @param owner NPC 实例 / NPC instance
 	 */
 	public static final void emoteStartIdling(Npc owner) {

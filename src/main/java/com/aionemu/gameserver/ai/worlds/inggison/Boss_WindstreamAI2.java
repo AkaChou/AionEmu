@@ -20,7 +20,6 @@ import java.util.List;
 /**
  * Inggison 区域 NPC AI：Boss Windstream（@AIName "boss_windstream"），继承 AggressiveNpcAI2。
  * Inggison zone NPC AI: Boss Windstream (@AIName "boss_windstream"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("boss_windstream")
@@ -31,9 +30,6 @@ public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {
-		/**
-		 * 英吉斯温风道 / WINDSTREAM INGGISON
-		 */
 			case 215584: // 泰坦 Starturtle / Titan Starturtle.
 				announceWindBox();
 				SpawnTemplate CastShadowPLSM = SpawnEngine.addNewSingleTimeSpawn(getOwner().getWorldId(), 281817, 338.26440f, 573.72168f, 458.27939f, (byte) 0);
@@ -69,10 +65,7 @@ public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 				objects.put(281817, SpawnEngine.spawnObject(DisplayFilled, 1));
 				GameThreadPoolServices.threadPoolManager().schedule(() -> despawnNpc(281817), 300000); //5 分钟。 / 5 Minutes.
 			break;
-		/**
-		 * 格尔克马洛斯风道 / WINDSTREAM GELKMAROS
-		 */
-			case 216846: //Agrima / Agrima.
+            case 216846: //Agrima / Agrima.
 				announceWindBox();
 				SpawnTemplate FileLadderCGF = SpawnEngine.addNewSingleTimeSpawn(getOwner().getWorldId(), 281817, 1719.2194f, 2301.7344f, 318.70938f, (byte) 0);
 				FileLadderCGF.setEntityId(1821);

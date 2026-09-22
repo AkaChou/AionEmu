@@ -17,7 +17,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Norsvold 区域 NPC AI：Sky Island Rift Out Asmodians（@AIName "sky_island_rift_out_A"），继承 NpcAI2。
  * Norsvold zone NPC AI: Sky Island Rift Out Asmodians (@AIName "sky_island_rift_out_A"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("sky_island_rift_out_A")

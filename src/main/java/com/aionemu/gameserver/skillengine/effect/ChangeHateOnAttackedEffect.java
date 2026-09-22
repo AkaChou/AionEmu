@@ -14,7 +14,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 受击改仇恨效果：被 NPC 攻击时向其 aggro 列表追加固定仇恨值。
  * Change-hate-on-attacked effect: adds fixed hate to an NPC that attacks the bearer.
- *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -29,7 +28,6 @@ public class ChangeHateOnAttackedEffect extends EffectTemplate {
 	/**
 	 * 将效果加入受影响者的效果控制器。
 	 * Adds the effect to the effected creature's effect controller.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -40,7 +38,6 @@ public class ChangeHateOnAttackedEffect extends EffectTemplate {
 	/**
 	 * 注册受击观察者，向攻击自己的 NPC 追加仇恨。
 	 * Registers an attacked observer that adds hate to the attacking NPC.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -65,7 +62,6 @@ public class ChangeHateOnAttackedEffect extends EffectTemplate {
 	/**
 	 * 移除受击观察者。
 	 * Removes the attacked observer.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

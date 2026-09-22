@@ -12,7 +12,6 @@ import com.aionemu.gameserver.services.item.ItemUpgradeService;
 /**
  * 客户端物品精炼/升级（Purification）请求包。
  * Client packet for item purification/upgrade.
- *
  * @author Ranastic (Encom)
  */
 @Slf4j

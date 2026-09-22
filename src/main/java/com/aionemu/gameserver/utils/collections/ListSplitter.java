@@ -8,7 +8,6 @@ import java.util.List;
 /**
  * 将集合按固定块大小切分并顺序取出。
  * Split a collection into fixed-size chunks and yield them in order.
- *
  * @param <T> 元素类型 / Element type
  * @author xTz
  */
@@ -47,7 +46,6 @@ public class ListSplitter<T> {
 	/**
 	 * 用集合与切分大小构造。
 	 * Construct from a collection and split size.
-	 *
 	 * @param collection 源集合 / Source collection
 	 * @param splitCount 分块大小 / Chunk size
 	 */
@@ -64,7 +62,6 @@ public class ListSplitter<T> {
 	/**
 	 * 使用新的切分大小并取下一块。
 	 * Use a new split size and return the next chunk.
-	 *
 	 * @param splitCount 新的每块大小 / New chunk size
 	 * @return 下一块列表 / Next chunk as list
 	 */
@@ -76,7 +73,6 @@ public class ListSplitter<T> {
 	/**
 	 * 取下一块元素。
 	 * Return the next chunk of elements.
-	 *
 	 * @return 下一块列表 / Next chunk as list
 	 */
 	public List<T> getNext() {
@@ -92,7 +88,6 @@ public class ListSplitter<T> {
 	/**
 	 * 源集合总长度。
 	 * Total length of the source collection.
-	 *
 	 * @return 长度 / Length
 	 */
 	public int size() {
@@ -102,7 +97,6 @@ public class ListSplitter<T> {
 	/**
 	 * 是否仍在第一块范围内。
 	 * Whether still within the first chunk.
-	 *
 	 * @return 第一块则为 true / True if first chunk
 	 */
 	public boolean isFirst() {
@@ -112,7 +106,6 @@ public class ListSplitter<T> {
 	/**
 	 * 是否已取完所有元素。
 	 * Whether all elements have been consumed.
-	 *
 	 * @return 已取完则为 true / True if finished
 	 */
 	public boolean isLast() {

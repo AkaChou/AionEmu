@@ -9,7 +9,6 @@ import com.aionemu.loginserver.network.gameserver.serverpackets.SM_REQUEST_KICK_
 /**
  * GS→LS：上报当前已登录游戏服的账号名列表。
  * GS→LS: report the list of account names currently logged into this GameServer.
- *
  * @author SoulKeeper
  */
 public class CM_ACCOUNT_LIST extends GsClientPacket {

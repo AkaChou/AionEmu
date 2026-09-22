@@ -18,7 +18,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 游戏体验物品配置数据容器，按 ID 索引体验物品模板。
  * Game experience item configuration data holder, indexed by id.
- *
  * @author Rinzler (Encom)
  */
 @XmlRootElement(name = "game_experience_items")
@@ -47,7 +46,6 @@ public class GameExperienceData {
 	/**
 	 * 返回体验物品模板数量。
 	 * Returns the number of game experience templates.
-	 *
 	 * @return 游戏经验模板数量 / Returns the number of game experience templates.
 	 */
 	public int size() {
@@ -57,7 +55,6 @@ public class GameExperienceData {
 	/**
 	 * 按 ID 获取游戏体验物品模板。
 	 * Returns the game experience template for the given id.
-	 *
 	 * @param id 体验物品 ID / game experience id
 	 * @return 体验物品模板，不存在则为 null / game experience template, or null if absent
 	 */
@@ -68,7 +65,6 @@ public class GameExperienceData {
 	/**
 	 * 返回全部体验物品映射。
 	 * Returns the map of all game experience items.
-	 *
 	 * @return ID 到体验物品的映射 / map of id to game experience
 	 */
 	public Map<Integer, GameExperience> getAll() {

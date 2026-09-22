@@ -17,7 +17,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Morheim 区域 NPC AI：Chieftain Muhamurru（@AIName "chieftain_muhamurru"），继承 AggressiveNpcAI2。
  * Morheim zone NPC AI: Chieftain Muhamurru (@AIName "chieftain_muhamurru"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("chieftain_muhamurru")

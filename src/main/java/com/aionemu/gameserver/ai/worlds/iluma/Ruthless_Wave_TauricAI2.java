@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Iluma 区域 NPC AI：Ruthless Wave Tauric（@AIName "ruthless_wave_tauric"），继承 AggressiveNpcAI2。
  * Iluma zone NPC AI: Ruthless Wave Tauric (@AIName "ruthless_wave_tauric"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("ruthless_wave_tauric")

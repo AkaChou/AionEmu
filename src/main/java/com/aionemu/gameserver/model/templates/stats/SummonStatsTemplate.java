@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 召唤物属性模板（静态数据/XML）。
  * XML template.
- *
  * @author ATracer
  */
 @Getter
@@ -20,24 +19,18 @@ public class SummonStatsTemplate extends StatsTemplate {
 	/**
 	 * 返回物理防御。
 	 * Returns the physical defense.
-	 *
-	 * @return 物理防御 / the physical defense
 	 */
 	@XmlAttribute(name = "pdefense")
 	private int pdefense;
 	/**
 	 * 返回魔法抵抗。
 	 * Returns the magic resistance.
-	 *
-	 * @return 魔法抵抗 / the magic resistance
 	 */
 	@XmlAttribute(name = "mresist")
 	private int mresist;
 	/**
 	 * 返回魔法暴击。
 	 * Returns the magic critical.
-	 *
-	 * @return 魔法暴击 / the magic critical
 	 */
 	@XmlAttribute(name = "mcrit")
 	private int mcrit;

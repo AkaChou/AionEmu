@@ -180,7 +180,6 @@ public final class DataManager {
     /**
      * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
      * Returns the instance, which must be supplied by Spring.
-     *
      * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
      * 静态数据加载由启动流程（{@code GameStaticDataGateway.load()}）在 Spring 单例锁之外显式触发，
      * 本方法只负责解析实例，不再承担"补齐加载"的职责。
@@ -188,7 +187,6 @@ public final class DataManager {
      * a second instance outside the container. Static-data loading is triggered explicitly by the startup
      * flow ({@code GameStaticDataGateway.load()}) outside Spring's singleton lock; this method only
      * resolves the instance.</p>
-     *
      * @return  由 Spring 提供的 DataManager 实例 / the Spring-provided DataManager instance.
      * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
      *         when no provider or bean is available
@@ -207,7 +205,6 @@ public final class DataManager {
     /**
      * 注入 Spring 侧实例提供者，供容器接管单例解析。
      * Sets the Spring ObjectProvider used to resolve the singleton.
-     *
      * @param instanceProvider 实例提供者 / instance provider
      */
     public static void setInstanceProvider(ObjectProvider<DataManager> instanceProvider) {
@@ -217,20 +214,17 @@ public final class DataManager {
     /**
      * 构造 DataManager（轻量操作，不加载任何数据）。
      * Constructs the manager (cheap; loads nothing).
-     *
      * <p>重要：构造必须保持轻量。Spring 在创建单例 Bean 期间持有全局 singletonLock，
      * 若在构造中执行耗时的静态数据加载，加载期间任何后台线程解析其他懒加载 Bean 都会
      * 永久阻塞在该锁上，而主线程又在等待这些线程的加载结果，形成死锁（启动卡死的
      * 根因）。
      * 实际加载由 {@link #load()} 在生命周期阶段显式触发，此时不再持有任何 Spring 锁。
-     *
      * <p>Important: construction must stay cheap. Spring holds its global singleton lock while
      * creating a singleton bean. Loading static data inside the constructor blocks any background
      * thread resolving other lazy beans on that lock for the whole multi-minute load, while the
      * main thread waits for those same threads' results - a deadlock (the startup hang's root
      * cause). Actual loading is triggered explicitly via {@link #load()} from lifecycle code that
      * holds no Spring locks.
-     *
      * @throws IllegalStateException 重复构造时抛出 / on duplicate construction
      */
     public DataManager() {
@@ -242,7 +236,6 @@ public final class DataManager {
     /**
      * 加载全部静态数据并分配到各公共静态字段；幂等，重复调用直接返回。
      * Loads all static data into the public static fields; idempotent, later calls return immediately.
-     *
      * <p>必须在不持有任何 Spring 单例锁的上下文中调用（如启动生命周期的主流程），
      * 以便并行加载线程在此期间仍可正常解析懒加载 Bean。
      * Must be called from a context holding no Spring singleton locks (e.g. the main startup
@@ -284,7 +277,6 @@ public final class DataManager {
     /**
      * 将加载完成的静态数据分配到各公共静态字段，并应用物品清理规则。
      * Assigns the loaded static data to the public static fields and applies item cleanup rules.
-     *
      * @param data 主静态数据 / main static data
      * @param itemData 物品数据 / item data
      */
@@ -443,7 +435,6 @@ public final class DataManager {
      * Starts the static-data phase watchdog: when loading stalls, periodically dumps the stacks
      * (including lock waits) of the loading and static-data worker threads at ERROR level so a
      * silent hang identifies itself.
-     *
      * @param phaseDone 加载完成信号 / signal that loading finished
      */
     private static void startStallWatchdog(CountDownLatch phaseDone) {
@@ -498,7 +489,6 @@ public final class DataManager {
     /**
      * 并行加载主静态数据、物品数据与技能数据。
      * Loads main static data, item data, and skill data in parallel.
-     *
      * @param loader XML 数据加载器 / XML data loader
      * @return 已加载的静态数据与物品数据 / loaded static data and item data
      */
@@ -539,7 +529,6 @@ public final class DataManager {
     /**
      * 在线程池任务内部记录物品或技能阶段的实际执行耗时。
      * Records the actual execution time of the item or skill phase inside its pool task.
-     *
      * @param phaseName 阶段名称 / phase name
      * @param supplier 阶段加载任务 / phase loader
      * @param executor 执行器 / executor

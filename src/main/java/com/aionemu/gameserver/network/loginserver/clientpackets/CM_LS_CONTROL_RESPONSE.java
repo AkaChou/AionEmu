@@ -10,7 +10,6 @@ import com.aionemu.gameserver.world.World;
 /**
  * 登录服对账号权限/会员控制请求的响应包，同步本地账号并通知相关玩家。
  * LoginServer response for account access/membership control; updates local account and notifies players.
- *
  * @author Aionchs-Wylovech
  */
 public class CM_LS_CONTROL_RESPONSE extends LsClientPacket {
@@ -18,7 +17,6 @@ public class CM_LS_CONTROL_RESPONSE extends LsClientPacket {
 	/**
 	 * 构造函数。
 	 * Constructor.
-	 *
 	 * @param opCode 操作码 opcode
 	 */
 	public CM_LS_CONTROL_RESPONSE(int opCode) {

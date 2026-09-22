@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 /**
  * 物品换肤指令；将目标背包中旧物品的外观替换为新物品模板外观。
  * Admin command that applies another item template as the visual skin of an inventory item.
- *
  * @author Wakizashi, Imaginary
  */
 public class Reskin extends AdminCommand {
@@ -26,7 +25,6 @@ public class Reskin extends AdminCommand {
 	/**
 	 * 执行该管理指令。
 	 * Executes this admin command.
-	 *
 	 * @param admin 执行指令的管理员 / admin executing the command
 	 */
 	@Override
@@ -96,7 +94,6 @@ public class Reskin extends AdminCommand {
 	/**
 	 * 参数错误时输出用法。
 	 * Prints usage when arguments are invalid.
-	 *
 	 * @param admin 接收提示的管理员 / admin receiving the message
 	 */
 	@Override

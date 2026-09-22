@@ -15,7 +15,6 @@ import java.util.HashSet;
 /**
  * 老兵奖励 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of VeteranRewardsDAO.
- *
  * Updated for MySQL 8 - Fixed connection leaks.
  */
 @Slf4j
@@ -30,7 +29,6 @@ public class VeteranRewardsDAO extends com.aionemu.gameserver.dao.VeteranRewards
 	/**
 	 * 加载全部老兵奖励记录。
 	 * Loads all veteran reward records.
-	 *
 	 * @return 奖励集 / reward set
 	 */
 	@Override
@@ -63,7 +61,6 @@ public class VeteranRewardsDAO extends com.aionemu.gameserver.dao.VeteranRewards
 	/**
 	 * 按 ID 删除老兵奖励。
 	 * Deletes a veteran reward by id.
-	 *
 	 * @param id_veteran_reward 奖励 ID / reward id
 	 */
 	@Override
@@ -88,7 +85,6 @@ public class VeteranRewardsDAO extends com.aionemu.gameserver.dao.VeteranRewards
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
-	 *
 	 * @param databaseName 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version

@@ -10,7 +10,6 @@ import com.aionemu.loginserver.taskmanager.handler.TaskFromDBHandler;
 /**
  * 清理长期未活跃账号的数据库任务处理器。
  * DB task handler that deletes accounts inactive for a configured number of days.
- *
  * @author nrg
  */
 @Slf4j
@@ -22,7 +21,6 @@ public class CleanAccountsHandler extends TaskFromDBHandler {
     /**
      * 校验参数：需要恰好一个表示不活跃天数的参数。
      * Validates params: requires exactly one parameter (days of inactivity).
-     *
      * @return 参数是否有效 / whether params are valid
      */
     @Override

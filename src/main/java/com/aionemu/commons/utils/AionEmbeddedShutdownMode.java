@@ -26,7 +26,6 @@ public enum AionEmbeddedShutdownMode {
     /**
      * 返回对应进程退出码。
      * Return the associated process exit code.
-     *
      * @return 进程退出码 / Exit code
      */
     public int exitCode() {

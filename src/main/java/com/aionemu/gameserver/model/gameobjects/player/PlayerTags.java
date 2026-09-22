@@ -6,7 +6,6 @@ import com.aionemu.gameserver.configs.main.MembershipConfig;
 /**
  * 玩家展示标签域。
  * Player display-tag domain.
- *
  * <p>该类型只服务 {@link Player}：根据账号会员配置、特殊账号名和管理员访问等级生成展示标签。
  * 公开门面仍保留在 {@link Player}，此处为无状态静态策略。
  * This type only serves {@link Player}: it builds display tags from membership configuration,
@@ -21,7 +20,6 @@ final class PlayerTags {
 	/**
 	 * 返回玩家自定义展示标签。
 	 * Returns the player's custom display tag.
-	 *
 	 * @param player 玩家 / player
 	 * @param isForChatCommands 是否用于聊天命令 / whether the tag is for chat commands
 	 * @return 展示标签 / display tag

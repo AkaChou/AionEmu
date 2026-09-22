@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 游戏服请求为玩家注册聊天客户端的客户端包。
  * Client packet by which a game server registers a player chat client.
- *
  * @author ATracer
  */
 @Slf4j
@@ -43,7 +42,6 @@ public class CM_PLAYER_AUTH extends GsClientPacket {
     /**
      * 构造玩家认证客户端包。
      * Constructs the player authentication client packet.
-     *
      * @param buf 原始字节缓冲 / raw byte buffer
      * @param connection 所属游戏服连接 / owning game-server connection
      */

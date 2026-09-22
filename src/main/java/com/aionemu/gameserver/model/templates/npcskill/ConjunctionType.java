@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * Conjunction 类型枚举。
  * Conjunction Type enumeration.
- *
  * @author nrg
  */
 

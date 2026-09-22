@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 阿诺哈模板（静态数据/XML）。
  * Anoha template (static data/XML).
- *
  * @author Rinzler (Encom)
  */
 

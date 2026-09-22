@@ -9,7 +9,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 周期 DP 消耗：效果持续期间按间隔扣除施法玩家 DP，不足则结束效果。
  * Periodic DP cost: deducts caster DP each tick; ends the effect if insufficient.
- *
  * @author MATTY (ADev.Team)
  */
 public class DpUsePeriodicAction extends PeriodicAction {
@@ -24,7 +23,6 @@ public class DpUsePeriodicAction extends PeriodicAction {
 	/**
 	 * 扣除施法玩家 DP；不足时结束效果。
 	 * Deducts caster DP; ends the effect if DP is insufficient.
-	 *
 	 * @param effect related effect
 	 */
 	@Override

@@ -79,7 +79,6 @@ public abstract class AMovementMotor {
 	/**
 	 * 返回当前目标位置。
 	 * Return the current target position.
-	 *
 	 * @return 目标位置 / target position
 	 */
 	public Vector3f getCurrentTarget() {
@@ -89,7 +88,6 @@ public abstract class AMovementMotor {
 	/**
 	 * 返回当前移动掩码。
 	 * Return the current movement mask.
-	 *
 	 * @return 移动掩码 / movement mask
 	 */
 	public byte getMovementMask() {

@@ -14,7 +14,6 @@ import lombok.AllArgsConstructor;
 /**
  * 玩家断线事件（团队2）。
  * Player Disconnected Event for team 2 logic.
- *
  * @author ATracer
  */
 @AllArgsConstructor
@@ -26,7 +25,6 @@ public class PlayerDisconnectedEvent implements Predicate<Player>, TeamEvent {
 	/**
 	 * 断线前玩家必须已在队伍中。
 	 * Player should be in group before disconnection.
-	 *
 	 * @return 是否满足条件 / whether the condition holds
 	 */
 	@Override

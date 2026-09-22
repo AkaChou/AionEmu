@@ -23,7 +23,6 @@ import java.util.List;
 /**
  * 邮件系统 DAO 的 MySQL 8 实现，已修复连接泄漏。
  * MySQL 8 implementation of MailDAO with connection leak fixes.
- *
  * @author kosyachok
  */
 @Slf4j
@@ -50,7 +49,6 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
     /**
      * 加载玩家邮箱（含附件物品）。
      * Loads the player's mailbox including attached items.
-     *
      * @param player 玩家 / player
      * @return 信箱 / mailbox
      */
@@ -110,9 +108,7 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
     /**
      * 检查玩家是否有未读邮件。
      * Checks whether the player has unread mail.
-     *
      * player id
-     *
      * @param playerId 玩家 ID / player id
      * @return 是否有未读邮件 / whether unread mail exists
      */
@@ -137,9 +133,7 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
     /**
      * 加载邮箱附件物品列表。
      * Loads mailbox attachment items for the player.
-     *
      * player id
-     *
      * @param playerId 玩家 ID / player id
      * @return 附件物品列表 / list of attachment items
      */
@@ -202,7 +196,6 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
     /**
      * 持久化玩家邮箱中全部信件。
      * Persists all letters currently in the player's mailbox.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -221,7 +214,6 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
     /**
      * 按持久化状态插入或更新单封信件。
      * Inserts or updates a single letter according to its persistent state.
-     *
      * @param time 时间戳 / timestamp
      * @param letter 邮件 / letter
      * @return 是否成功 / whether successful
@@ -253,7 +245,6 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
     /**
      * 插入新信件。
      * Inserts a new letter.
-     *
      * @param con 时间戳 / timestamp
      * @param time 邮件 / letter
      * @return 是否成功 / whether successful
@@ -285,7 +276,6 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
     /**
      * 更新已有信件。
      * Updates an existing letter.
-     *
      * @param con 时间戳 / timestamp
      * @param time 邮件 / letter
      * @return 是否成功 / whether successful
@@ -324,7 +314,6 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
     /**
      * 删除指定信件。
      * Deletes the letter with the given id.
-     *
      * @param letterId 邮件 ID / letter id
      * @return 是否成功 / whether successful
      */
@@ -346,7 +335,6 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
     /**
      * 更新离线收件人的邮箱信件计数。
      * Updates the offline recipient's mailbox letter counter.
-     *
      * @param recipientCommonData 收件人公共数据 / recipient common data
      */
     @Override
@@ -366,7 +354,6 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
     /**
      * 返回邮件表中已占用的全部邮件 ID。
      * Returns all used mail unique ids from the mail table.
-     *
      * 已占用 ID 数组；失败时返回空数组。
      * used id array, or empty array on failure.
      */
@@ -396,7 +383,6 @@ public class MailDAO extends com.aionemu.gameserver.dao.MailDAO {
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

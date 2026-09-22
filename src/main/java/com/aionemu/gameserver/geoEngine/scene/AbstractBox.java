@@ -11,7 +11,6 @@ import com.aionemu.gameserver.geoEngine.math.Vector3f;
  * <p>
  * 本类不控制几何数据如何生成，具体实现见 {@link Box}。
  * This class does not control how geometry data is generated; see {@link Box} for that.
- *
  * @author <a href="mailto:ianp@ianp.org">Ian Phillips</a>
  * @version $Revision: 4131 $, $Date: 2009-03-19 16:15:28 -0400 (Thu, 19 Mar
  *          2009) $
@@ -34,7 +33,6 @@ public abstract class AbstractBox extends Mesh {
 	/**
 	 * 计算表示盒子 8 个顶点的向量数组。
 	 * Computes the array of vectors representing the 8 vertices of the box.
-	 *
 	 * @return 新创建的顶点向量数组 / a newly created array of vertex vectors
 	 */
 	protected final Vector3f[] computeVertices() {
@@ -71,7 +69,6 @@ public abstract class AbstractBox extends Mesh {
 	/**
 	 * 获取盒子中心点。
 	 * Gets the center point of this box.
-	 *
 	 * @return 盒子中心点 / center point
 	 */
 	public final Vector3f getCenter() {
@@ -81,7 +78,6 @@ public abstract class AbstractBox extends Mesh {
 	/**
 	 * 获取 X 轴半长。
 	 * Gets the x-axis size (extent) of this box.
-	 *
 	 * @return X 轴半长 / x extent
 	 */
 	public final float getXExtent() {
@@ -91,7 +87,6 @@ public abstract class AbstractBox extends Mesh {
 	/**
 	 * 获取 Y 轴半长。
 	 * Gets the y-axis size (extent) of this box.
-	 *
 	 * @return Y 轴半长 / y extent
 	 */
 	public final float getYExtent() {
@@ -101,7 +96,6 @@ public abstract class AbstractBox extends Mesh {
 	/**
 	 * 获取 Z 轴半长。
 	 * Gets the z-axis size (extent) of this box.
-	 *
 	 * @return Z 轴半长 / z extent
 	 */
 	public final float getZExtent() {
@@ -127,7 +121,6 @@ public abstract class AbstractBox extends Mesh {
 	 * <p>
 	 * 实际边长为半长的两倍，因盒子从中心向两侧延伸。
 	 * Note that actual side lengths are twice the given extents because the box extends both ways from the center.
-	 *
 	 * @param center 盒子中心 / center of the box
 	 * @param x X 方向半长 / x extent in each direction
 	 * @param y Y 方向半长 / y extent in each direction
@@ -149,7 +142,6 @@ public abstract class AbstractBox extends Mesh {
 	 * <p>
 	 * 盒子更新为以 {@code minPoint} 与 {@code maxPoint} 为对角，其余顶点由二者推导。
 	 * The box is updated so opposite corners are {@code minPoint} and {@code maxPoint}; other corners are derived from them.
-	 *
 	 * @param minPoint 新的最小点 / new minimum point of the box
 	 * @param maxPoint 新的最大点 / new maximum point of the box
 	 */

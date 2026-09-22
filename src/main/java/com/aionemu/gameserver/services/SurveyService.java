@@ -32,7 +32,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 问卷/调查奖励服务，轮询待领调查并向玩家发放奖励。
  * Survey reward service polling pending surveys and granting player rewards.
- *
  * @author KID
  */
 @Slf4j
@@ -42,8 +41,6 @@ public class SurveyService {
      * -- SETTER --
      *  注入 Spring 的实例提供者。
      *  Sets the Spring instance provider.
-     *
-     * @param provider 实例提供者 / instance provider
      */
     @Setter
     private static volatile ObjectProvider<SurveyService> instanceProvider;
@@ -54,7 +51,6 @@ public class SurveyService {
 	/**
 	 * 判断调查是否有效；若有效则触发领取流程。
 	 * Checks whether the survey is active; if so, requests the reward flow.
-	 *
 	 * 玩家 / player
 	 * survey id
 	 * whether active
@@ -92,7 +88,6 @@ public class SurveyService {
 	/**
 	 * 处理玩家领取调查奖励。
 	 * Handles a player claiming a survey reward.
-	 *
 	 * 玩家 / player
 	 * survey id
 	 */
@@ -167,7 +162,6 @@ public class SurveyService {
 	/**
 	 * 向玩家展示其可用的调查 HTML。
 	 * Shows available survey HTML pages to the player.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void showAvailable(Player player) {
@@ -197,11 +191,9 @@ public class SurveyService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available

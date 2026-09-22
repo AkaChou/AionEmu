@@ -10,8 +10,6 @@ import com.aionemu.gameserver.restrictions.RestrictionsManager;
 /**
  * 请求合成魔力石的客户端包。
  * Client packet requesting composition of manastones.
- *
- * @developer_note_dont_remove tool:165010001, 1st stone:166000094, 2nd stone: 166000095
  */
 public class CM_COMPOSITE_STONES extends AionClientPacket {
 	private int compinationToolItemObjectId;
@@ -21,7 +19,6 @@ public class CM_COMPOSITE_STONES extends AionClientPacket {
 	/**
 	 * 构造客户端包实例。
 	 * Constructs a new client packet instance.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余允许状态 / additional allowed states

@@ -21,7 +21,6 @@ public class ChatServerLifecycleGateway {
     /**
      * 注入可选的聊天服运行时提供者。
      * Injects an optional chat-server runtime provider.
-     *
      * @param chatServerRuntimeProvider 聊天服运行时提供者 / runtime ObjectProvider
      */
     @Autowired(required = false)
@@ -32,7 +31,6 @@ public class ChatServerLifecycleGateway {
     /**
      * 注入可选的聊天运行时桥提供者。
      * Injects an optional chat runtime-bridge provider.
-     *
      * @param runtimeBridgeProvider 运行时桥提供者 / runtime-bridge ObjectProvider
      */
     @Autowired(required = false)
@@ -43,7 +41,6 @@ public class ChatServerLifecycleGateway {
     /**
      * 启动聊天服：优先使用 Spring 管理的运行时，否则走桥接默认启动。
      * Starts the chat server: prefers a Spring-managed runtime, otherwise default bridge start.
-     *
      * @param args 启动参数 / startup arguments
      */
     public void start(String[] args) {
@@ -68,7 +65,6 @@ public class ChatServerLifecycleGateway {
     /**
      * 解析可选的聊天服运行时。
      * Resolves the optional chat-server runtime.
-     *
      * @return 运行时实例，不可用则为 null / runtime instance, or null if unavailable
      */
     private ChatServerRuntime chatServerRuntime() {
@@ -81,7 +77,6 @@ public class ChatServerLifecycleGateway {
     /**
      * 懒加载并缓存运行时桥；无 Provider 时新建默认实例。
      * Lazily loads and caches the runtime bridge; creates a default when no provider is present.
-     *
      * @return 运行时桥 / runtime bridge
      */
     private synchronized ChatServerRuntimeBridge runtimeBridge() {

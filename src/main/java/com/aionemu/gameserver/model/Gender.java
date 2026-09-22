@@ -6,7 +6,6 @@ import lombok.Getter;
 /**
  * 性别枚举。
  * Gender enumeration.
- *
  * @author SoulKeeper
  */
 @Getter

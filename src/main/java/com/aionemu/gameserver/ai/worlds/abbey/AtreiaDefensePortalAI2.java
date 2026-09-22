@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Abbey 区域 NPC AI：Atreia Defense Portal（@AIName "atreia_defense_portal"），继承 NpcAI2。
  * Abbey zone NPC AI: Atreia Defense Portal (@AIName "atreia_defense_portal"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("atreia_defense_portal")

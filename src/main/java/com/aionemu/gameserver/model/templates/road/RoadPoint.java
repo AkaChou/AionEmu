@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 /**
  * 道路点模板（静态数据/XML）。
  * XML template.
- *
  * @author SheppeR
  */
 @Getter

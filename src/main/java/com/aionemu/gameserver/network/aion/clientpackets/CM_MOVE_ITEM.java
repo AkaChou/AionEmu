@@ -8,7 +8,6 @@ import com.aionemu.gameserver.services.item.ItemMoveService;
 /**
  * 在背包/装备等仓库间移动物品的客户端包。
  * Client packet for moving an item between inventory/equipment storages.
- *
  * @author alexa026, kosyachok
  */
 public class CM_MOVE_ITEM extends AionClientPacket {
@@ -23,7 +22,6 @@ public class CM_MOVE_ITEM extends AionClientPacket {
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余合法状态 / additional valid states

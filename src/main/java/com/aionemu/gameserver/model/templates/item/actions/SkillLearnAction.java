@@ -17,7 +17,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 技能 Learn 动作模板（静态数据/XML）。
  * XML template.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)

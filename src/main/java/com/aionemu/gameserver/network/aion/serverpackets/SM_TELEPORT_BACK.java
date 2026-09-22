@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 通知客户端执行“传送回退”的空载荷服务端包。
  * Empty-payload server packet that notifies the client to perform a teleport-back.
- *
  * @author FrozenKiller
  */
 public class SM_TELEPORT_BACK extends AionServerPacket {

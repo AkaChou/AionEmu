@@ -31,7 +31,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Kaldor 区域 NPC AI：Berserk Anoha（@AIName "anoha"），继承 AggressiveNpcAI2。
  * Kaldor zone NPC AI: Berserk Anoha (@AIName "anoha"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("anoha")

@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 通知客户端移除召唤物所有者关联。
  * Server packet notifying the client to remove summon-owner association.
- *
  * @author ATracer
  */
 @AllArgsConstructor

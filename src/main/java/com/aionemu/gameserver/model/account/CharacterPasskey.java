@@ -6,7 +6,6 @@ import lombok.Setter;
 /**
  * 角色安全密码，用于账号相关逻辑。
  * Character Passkey for account logic.
- *
  * @author cura
  */
 @Getter

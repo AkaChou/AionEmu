@@ -9,7 +9,6 @@ import java.util.Calendar;
 /**
  * 定点时刻触发：按 HH:MM:SS 每日固定时间执行。
  * Fixed-in-time trigger: run daily at a fixed HH:MM:SS.
- *
  * @author nrg
  */
 @Slf4j

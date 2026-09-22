@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 同步可见对象朝向目标（Look-At）状态的服务端包。
  * Server packet that synchronizes a visible object's look-at target state.
- *
  * @author alexa026
  */
 public class SM_LOOKATOBJECT extends AionServerPacket {
@@ -19,7 +18,6 @@ public class SM_LOOKATOBJECT extends AionServerPacket {
 	/**
 	 * 根据对象当前目标构造朝向同步包。
 	 * Builds a look-at packet from the object's current target.
-	 *
 	 * @param visibleObject 需要同步朝向的可见对象 / visible object whose facing is synced
 	 */
 	public SM_LOOKATOBJECT(VisibleObject visibleObject) {

@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：消耗材料将已装备同类部位改模为指定外观。
  * Player command: spends material to remodel an equipped same-slot item to a given look.
- *
  * @author Kashim
  */
 public class cmd_remodel extends PlayerCommand {
@@ -32,7 +31,6 @@ public class cmd_remodel extends PlayerCommand {
 	/**
 	 * 扣除改模材料并对匹配装备执行系统改模。
 	 * Consumes remodel material and applies system remodel on a matching equipped item.
-	 *
 	 * @param admin 执行命令的玩家 / invoking player
 	 * @param params 目标外观物品 ID / target appearance item id
 	 */
@@ -95,7 +93,6 @@ public class cmd_remodel extends PlayerCommand {
 	/**
 	 * 将可变参数转发到 {@link #executeCommand(Player, String[])}。
 	 * Forwards varargs to {@link #executeCommand(Player, String[])}.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 命令参数 / command parameters
 	 */

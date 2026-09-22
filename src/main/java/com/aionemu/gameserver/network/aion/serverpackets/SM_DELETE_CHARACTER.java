@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 角色删除响应包：回应 CM_DELETE_CHARACTER，返回角色对象 ID 与删除时间戳。
  * Response to CM_DELETE_CHARACTER: character object id and deletion timestamp.
- *
  * @author -Nemesiss-
  */
 @AllArgsConstructor

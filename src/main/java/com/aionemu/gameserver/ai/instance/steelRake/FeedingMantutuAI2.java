@@ -11,7 +11,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * Steel Rake 副本 NPC AI：Feeding Mantutu（@AIName "feeding_mantutu"），继承 ShifterAI2。
  * Steel Rake instance NPC AI: Feeding Mantutu (@AIName "feeding_mantutu"), extends ShifterAI2.
- *
  * @author Encom
  */
 @AIName("feeding_mantutu")

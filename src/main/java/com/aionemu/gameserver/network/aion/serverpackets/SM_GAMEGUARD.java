@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端发送游戏守护校验数据的服务端包。
  * Server packet that sends GameGuard check data to the client.
- *
  * @author Alcapwnd
  */
 @AllArgsConstructor

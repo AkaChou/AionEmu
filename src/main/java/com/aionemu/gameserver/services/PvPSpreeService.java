@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * PvP 连杀（Spree）服务，统计连杀、升级公告与连杀终结。
  * PvP spree service tracking kill streaks, tier announcements, and spree ends.
- *
  * @author Rinzler (Encom)
  */
 @Slf4j(topic = "PVP_LOG")
@@ -31,7 +30,6 @@ public class PvPSpreeService {
 	/**
 	 * 增加胜利者原始连杀数，并在达到阈值时升级连杀等级与奖励。
 	 * Increments the winner's raw kill count and upgrades spree level/rewards at thresholds.
-	 *
 	 * @param winner winner
 	 */
 	public static void increaseRawKillCount(Player winner) {
@@ -77,7 +75,6 @@ public class PvPSpreeService {
 	/**
 	 * 更新连杀等级并广播公告。
 	 * Updates spree level and broadcasts the announcement.
-	 *
 	 * winner
 	 * @param level 连杀等级 / spree level
 	 */
@@ -89,7 +86,6 @@ public class PvPSpreeService {
 	/**
 	 * 向全服广播连杀等级升级消息。
 	 * Broadcasts spree-level upgrade message to all players.
-	 *
 	 * winner
 	 * @param level 连杀等级 / spree level
 	 */
@@ -141,7 +137,6 @@ public class PvPSpreeService {
 	/**
 	 * 重置受害者连杀状态；若有连杀等级则广播终结消息。
 	 * Resets the victim's spree state; broadcasts end message if a spree level was active.
-	 *
 	 * @param victim victim
 	 * @param killer killer
 	 * @param isPvPDeath whether PvP death
@@ -158,7 +153,6 @@ public class PvPSpreeService {
 	/**
 	 * 向全服广播连杀被终结的消息。
 	 * Broadcasts the spree-ended message to all players.
-	 *
 	 * victim
 	 * killer
 	 * whether PvP death

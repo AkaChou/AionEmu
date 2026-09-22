@@ -16,7 +16,6 @@ public class GameChatServerOverrideGateway {
     /**
      * 覆盖聊天服启用配置并记录日志。
      * Override the chat-server enabled flag and log it.
-     *
      * @param chatServerEnabled 是否启用聊天服 / Whether chat server is enabled
      */
     public void overrideChatServerEnabled(boolean chatServerEnabled) {
@@ -27,7 +26,6 @@ public class GameChatServerOverrideGateway {
     /**
      * 返回当前时间毫秒数。
      * Return the current time in milliseconds.
-     *
      * @return 当前时间毫秒 / Current time millis
      */
     public long currentTimeMillis() {

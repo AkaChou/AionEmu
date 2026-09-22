@@ -29,7 +29,6 @@ public class SummonsService {
 	/**
 	 * 为玩家创建召唤物；若已有召唤物则提示并返回。
 	 * Create a summon for the player; if one already exists, notify and return.
-	 *
 	 * Master player
 	 * Summon NPC id
 	 * Summon skill id
@@ -107,7 +106,6 @@ public class SummonsService {
 	/**
 	 * 释放/解散召唤物，按原因发送消息并安排延迟删除任务。
 	 * Release/unsummon the summon, send reason messages and schedule delayed deletion.
-	 *
 	 * Summon
 	 * Unsummon reason
 	 * @param isAttacked 主人是否处于被攻击状态 / Whether the master is under attack
@@ -140,7 +138,6 @@ public class SummonsService {
 	/**
 	 * 将召唤物切换为休息模式并触发恢复任务。
 	 * Switch the summon to rest mode and trigger restore task.
-	 *
 	 * @param summon Summon
 	 */
 	public static final void restMode(final Summon summon) {
@@ -155,7 +152,6 @@ public class SummonsService {
 	/**
 	 * 将召唤物切换为未知/过渡模式。
 	 * Switch the summon to unknown/transitional mode.
-	 *
 	 * @param summon Summon
 	 */
 	public static final void setUnkMode(final Summon summon) {
@@ -167,7 +163,6 @@ public class SummonsService {
 	/**
 	 * 将召唤物切换为守卫模式并触发恢复任务。
 	 * Switch the summon to guard mode and trigger restore task.
-	 *
 	 * @param summon Summon
 	 */
 	public static final void guardMode(final Summon summon) {
@@ -182,7 +177,6 @@ public class SummonsService {
 	/**
 	 * 将召唤物切换为攻击模式并取消恢复任务。
 	 * Switch the summon to attack mode and cancel restore task.
-	 *
 	 * @param summon Summon
 	 */
 	public static final void attackMode(final Summon summon) {
@@ -196,7 +190,6 @@ public class SummonsService {
 	/**
 	 * 按模式驱动召唤物行为（无目标、无解散类型）。
 	 * Drive summon behavior by mode (no target, no unsummon type).
-	 *
 	 * @param summonMode Target mode
 	 * @param summon Summon
 	 */
@@ -207,7 +200,6 @@ public class SummonsService {
 	/**
 	 * 按模式驱动召唤物行为（指定解散类型）。
 	 * Drive summon behavior by mode with an unsummon type.
-	 *
 	 * @param summonMode Target mode
 	 * @param summon Summon
 	 * @param unsummonType Unsummon reason
@@ -219,7 +211,6 @@ public class SummonsService {
 	/**
 	 * 按模式驱动召唤物行为：休息/攻击/守卫/释放等。
 	 * Drive summon behavior by mode: rest/attack/guard/release, etc.
-	 *
 	 * Target mode
 	 * Summon
 	 * @param targetObjId 攻击目标对象 ID / Attack target object id
@@ -275,7 +266,6 @@ public class SummonsService {
 		/**
 		 * 构造延迟释放任务。
 		 * Construct a delayed release task.
-		 *
 		 * Summon owner
 		 * Unsummon reason
 		 * @param isAttacked 主人是否被攻击 / Whether the master is under attack

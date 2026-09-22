@@ -22799,9 +22799,6 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_PARTY_CANT_ADD_INSTANCE_MAX_MEMBER = new SM_SYSTEM_MESSAGE(1404119);
 
 	/**
-	 * UI 区域消息 / UI Zone messages
-	 */
-	/**
 	 * 你已经学会该称号。 / You have already learned this title
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_TOOLTIP_LEARNED_TITLE = new SM_SYSTEM_MESSAGE(901714);

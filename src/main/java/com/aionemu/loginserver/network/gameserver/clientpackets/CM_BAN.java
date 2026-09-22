@@ -17,7 +17,6 @@ import com.aionemu.loginserver.network.gameserver.serverpackets.SM_BAN_RESPONSE;
 /**
  * GS→LS：统一账号/IP 封禁（或解封）请求。
  * GS→LS: universal account/IP ban (or unban) request.
- *
  * @author Watson
  */
 public class CM_BAN extends GsClientPacket {

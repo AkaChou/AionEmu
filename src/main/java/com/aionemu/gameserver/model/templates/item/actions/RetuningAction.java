@@ -18,10 +18,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TUNE_RESULT;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-/**
- * @author Ranastic
- * @reworked 修复鉴定动画播放问题，使用固定动画 ID 让客户端正确显示动画
- */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RetuningAction")

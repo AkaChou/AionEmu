@@ -7,7 +7,6 @@ import lombok.Getter;
 /**
  * 要塞种族枚举。
  * Siege Race enumeration.
- *
  * @author Sarynth
  */
 @Getter
@@ -21,9 +20,6 @@ public enum SiegeRace {
 
 	/** 返回种族 ID / Returns the race id */
 	private final int raceId;
-	/**
-	 * @return 描述 ID / the descriptionId
-	 */
 	private final DescriptionId descriptionId;
 
 	SiegeRace(int id, int descriptionId) {

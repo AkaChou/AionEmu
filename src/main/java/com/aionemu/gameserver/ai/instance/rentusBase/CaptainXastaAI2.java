@@ -23,7 +23,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Rentus Base 副本 NPC AI：Captain Xasta（@AIName "captain_xasta"），继承 AggressiveNpcAI2。
  * Rentus Base instance NPC AI: Captain Xasta (@AIName "captain_xasta"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("captain_xasta")

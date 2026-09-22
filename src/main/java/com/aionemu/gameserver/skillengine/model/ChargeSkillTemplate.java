@@ -12,7 +12,6 @@ import lombok.Getter;
 /**
  * 充能技能模板：一至三阶段技能、最小充能与加成类型。
  * Charge skill template: stage skills, min charge and bonus type.
- *
  * @author Dr.Nism
  */
 @Getter
@@ -23,7 +22,6 @@ public class ChargeSkillTemplate {
 	/**
 	 * 获取充能技能 ID。
 	 * Gets charge skill id.
-	 *
 	 */
 	@XmlAttribute(name = "id")
 	private int id;
@@ -46,7 +44,6 @@ public class ChargeSkillTemplate {
 	/**
 	 * 获取充能阶段列表。
 	 * Gets charge stage list.
-	 *
 	 */
 	@XmlElement(name = "charge")
 	private List<ChargeTemplate> charges;
@@ -57,7 +54,6 @@ public class ChargeSkillTemplate {
 	/**
 	 * 获取充能集合名称。
 	 * Gets charge set name.
-	 *
 	 */
 	public String getChargeSetName() {
 		return charge_set_name;
@@ -66,7 +62,6 @@ public class ChargeSkillTemplate {
 	/**
 	 * 获取第一阶段技能 ID。
 	 * Gets first-stage skill id.
-	 *
 	 */
 	public int getFirstId() {
 		return first;
@@ -75,7 +70,6 @@ public class ChargeSkillTemplate {
 	/**
 	 * 获取第二阶段技能 ID。
 	 * Gets second-stage skill id.
-	 *
 	 */
 	public int getSecondId() {
 		return second;
@@ -84,7 +78,6 @@ public class ChargeSkillTemplate {
 	/**
 	 * 获取第三阶段技能 ID。
 	 * Gets third-stage skill id.
-	 *
 	 */
 	public int getThirdId() {
 		return third;
@@ -93,7 +86,6 @@ public class ChargeSkillTemplate {
 	/**
 	 * 获取最小充能值。
 	 * Gets minimum charge value.
-	 *
 	 */
 	public int getMinCharge() {
 		return min_charge;
@@ -102,7 +94,6 @@ public class ChargeSkillTemplate {
 	/**
 	 * 获取充能加成类型。
 	 * Gets bonus charge type.
-	 *
 	 */
 	public BonusChargeType getBonusChargeType() {
 		return type;

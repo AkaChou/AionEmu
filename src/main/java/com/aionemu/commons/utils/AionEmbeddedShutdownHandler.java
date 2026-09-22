@@ -17,7 +17,6 @@ public class AionEmbeddedShutdownHandler {
     /**
      * 注册无模式参数的关闭回调。
      * Register a shutdown callback without mode argument.
-     *
      * @param handler 关闭处理器 / Shutdown handler
      */
     public void register(Runnable handler) {
@@ -28,7 +27,6 @@ public class AionEmbeddedShutdownHandler {
     /**
      * 注册带关闭模式的回调。
      * Register a shutdown callback that receives the mode.
-     *
      * @param handler 关闭处理器 / Shutdown handler
      */
     public void register(Consumer<AionEmbeddedShutdownMode> handler) {
@@ -39,7 +37,6 @@ public class AionEmbeddedShutdownHandler {
     /**
      * 按 {@link Runnable} 键清除回调。
      * Clear callback by {@link Runnable} key.
-     *
      * @param handler 注册时的处理器 / Originally registered handler
      */
     public void clear(Runnable handler) {
@@ -49,7 +46,6 @@ public class AionEmbeddedShutdownHandler {
     /**
      * 按 {@link Consumer} 键清除回调。
      * Clear callback by {@link Consumer} key.
-     *
      * @param handler 注册时的处理器 / Originally registered handler
      */
     public void clear(Consumer<AionEmbeddedShutdownMode> handler) {
@@ -67,7 +63,6 @@ public class AionEmbeddedShutdownHandler {
     /**
      * 以默认 {@link AionEmbeddedShutdownMode#SHUTDOWN} 请求关闭。
      * Request shutdown with default {@link AionEmbeddedShutdownMode#SHUTDOWN}.
-     *
      * @return 是否已成功派发 / Whether a handler was invoked
      */
     public boolean requestShutdown() {
@@ -77,7 +72,6 @@ public class AionEmbeddedShutdownHandler {
     /**
      * 以指定模式请求关闭。
      * Request shutdown with the given mode.
-     *
      * @param mode 关闭模式 / Shutdown mode
      * @return 是否已成功派发 / Whether a handler was invoked
      */
@@ -93,7 +87,6 @@ public class AionEmbeddedShutdownHandler {
     /**
      * 仅当 key 匹配时清除注册。
      * Clear registration only when key matches.
-     *
      * @param handler 注册键 / Registration key
      */
     private void clearByKey(Object handler) {
@@ -106,9 +99,8 @@ public class AionEmbeddedShutdownHandler {
     /**
      * 关闭处理器注册项。
      * Shutdown handler registration entry.
-     *
-     * @param key 注册键 / Registration key
-     * @param handler 回调 / Callback
+     * 注册键 / Registration key
+     * 回调 / Callback
      */
     private record Registration(Object key, Consumer<AionEmbeddedShutdownMode> handler) {
     }

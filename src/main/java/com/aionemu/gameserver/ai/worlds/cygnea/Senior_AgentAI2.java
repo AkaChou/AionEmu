@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Cygnea 区域 NPC AI：Senior Agent（@AIName "senior_agent"），继承 GeneralNpcAI2。
  * Cygnea zone NPC AI: Senior Agent (@AIName "senior_agent"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("senior_agent")

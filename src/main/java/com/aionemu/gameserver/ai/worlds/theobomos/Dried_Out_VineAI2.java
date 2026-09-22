@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Theobomos 区域 NPC AI：Dried Out Vine（@AIName "dried_out_vine"），继承 ActionItemNpcAI2。
  * Theobomos zone NPC AI: Dried Out Vine (@AIName "dried_out_vine"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("dried_out_vine")

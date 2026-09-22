@@ -9,7 +9,6 @@ import com.google.common.base.Predicate;
 /**
  * 团队接口。
  * Team interface.
- *
  * @author ATracer
  */
 public interface Team<M, TM extends TeamMember<M>> {

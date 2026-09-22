@@ -20,7 +20,6 @@ import lombok.NoArgsConstructor;
 /**
  * 巡逻模板（静态数据/XML）。
  * XML template.
- *
  * @author KKnD
  */
 @Getter
@@ -105,7 +104,6 @@ public class WalkerTemplate {
 	/**
 	 * 反序列化后处理：反转路线、链接步骤、解析队形与偏移配置。
 	 * Post-unmarshal handling: reverse the route, link steps, and parse formation and offset config.
-	 *
 	 * @param u JAXB 反序列化器 / JAXB unmarshaller
 	 * @param parent 父对象 / Parent object
 	 */
@@ -169,7 +167,6 @@ public class WalkerTemplate {
 	/**
 	 * 是否反转路线。
 	 * Whether the route is reversed.
-	 *
 	 * @return 反转时为 {@code true} / {@code true} if reversed
 	 */
 	public boolean isReversed() {
@@ -189,7 +186,6 @@ public class WalkerTemplate {
 	/**
 	 * 获取队形定义的人数容量。
 	 * Returns the member capacity defined by the formation.
-	 *
 	 * @return 队形人数，非方阵或偏移队形时返回 1 / formation member capacity, or 1 if not square/offset
 	 */
 	public int getFormationSize() {

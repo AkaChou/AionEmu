@@ -44,7 +44,6 @@ public class GameStartupLogLifecycle {
     /**
      * 幂等开始启动日志计时；已加载则返回缓存的起点时间。
      * Idempotently start startup-log timing; return cached epoch when already loaded.
-     *
      * @return 启动起点毫秒时间戳 / Startup epoch millis
      */
     public synchronized long start() {
@@ -71,7 +70,6 @@ public class GameStartupLogLifecycle {
     /**
      * 是否已成功加载。
      * Whether loading completed successfully.
-     *
      * @return 已加载为 {@code true} / {@code true} when loaded
      */
     public synchronized boolean isLoaded() {
@@ -81,7 +79,6 @@ public class GameStartupLogLifecycle {
     /**
      * 本阶段执行耗时（毫秒）。
      * Phase duration in milliseconds.
-     *
      * @return 耗时毫秒；未启动为 -1 / duration ms, or -1 if never started
      */
     public synchronized long getLoadTimeMillis() {
@@ -91,7 +88,6 @@ public class GameStartupLogLifecycle {
     /**
      * 最近一次失败异常。
      * Last failure throwable.
-     *
      * @return 失败异常，无则为 null / throwable or null
      */
     public synchronized Throwable getLastFailure() {

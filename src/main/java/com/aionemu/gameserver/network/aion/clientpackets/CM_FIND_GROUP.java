@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 查找队伍/申请组队相关操作的客户端包。
  * Client packet for find-group recruit and apply operations.
- *
  * @author cura, MrPoke
  */
 @Slf4j
@@ -35,7 +34,6 @@ public class CM_FIND_GROUP extends AionClientPacket {
 	/**
 	 * 构造客户端包实例。
 	 * Constructs a new client packet instance.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余允许状态 / additional allowed states

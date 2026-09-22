@@ -12,7 +12,6 @@ import java.util.concurrent.Future;
 /**
  * Pvp Arenas 副本 NPC AI：Lava Floor（@AIName "lava_floor"），继承 AggressiveNpcAI2。
  * Pvp Arenas instance NPC AI: Lava Floor (@AIName "lava_floor"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("lava_floor")

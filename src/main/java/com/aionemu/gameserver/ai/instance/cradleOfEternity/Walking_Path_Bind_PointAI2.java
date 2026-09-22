@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Cradle Of Eternity 副本 NPC AI：Walking Path Bind Point（@AIName "Walking_Path_Bind_Point"），继承 NpcAI2。
  * Cradle Of Eternity instance NPC AI: Walking Path Bind Point (@AIName "Walking_Path_Bind_Point"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Walking_Path_Bind_Point")

@@ -25,7 +25,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Tiamat Stronghold 副本 NPC AI：Traitor Kumbanda（@AIName "traitor_kumbanda"），继承 AggressiveNpcAI2。
  * Tiamat Stronghold instance NPC AI: Traitor Kumbanda (@AIName "traitor_kumbanda"), extends AggressiveNpcAI2.
- *
  * @author Ranastic (Encom)
  */
 @AIName("traitor_kumbanda")

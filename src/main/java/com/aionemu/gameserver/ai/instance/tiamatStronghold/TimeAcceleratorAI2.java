@@ -9,7 +9,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Tiamat Stronghold 副本 NPC AI：Time Accelerator（@AIName "timeaccelerator"），继承 AggressiveNpcAI2。
  * Tiamat Stronghold instance NPC AI: Time Accelerator (@AIName "timeaccelerator"), extends AggressiveNpcAI2.
- *
  * @author Ranastic (Encom)
  */
 @AIName("timeaccelerator")

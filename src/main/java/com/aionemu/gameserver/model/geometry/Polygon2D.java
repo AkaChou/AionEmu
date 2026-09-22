@@ -14,7 +14,6 @@ import java.io.Serializable;
 /**
  * 多边形2D，用于几何相关逻辑。
  * Polygon 2 D for geometry logic.
- *
  * @version $Id: Polygon2D.java 594018 2007-11-12 04:17:41Z cam $
  */
 public class Polygon2D implements Shape, Cloneable, Serializable {
@@ -245,7 +244,6 @@ public class Polygon2D implements Shape, Cloneable, Serializable {
 
 	/**
 	 * Returns the high precision bounding box of the {@link Shape}。
-	 *
 	 * @return a {@link Rectangle2D} that precisely bounds the <code>Shape< / code>.
 	 */
 	public Rectangle2D getBounds2D() {

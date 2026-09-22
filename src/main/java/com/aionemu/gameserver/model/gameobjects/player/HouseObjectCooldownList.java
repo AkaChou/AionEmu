@@ -8,7 +8,6 @@ import lombok.Setter;
 /**
  * 房屋对象冷却列表。
  * House Object Cooldown List game object.
- *
  * @author Rolandas
  */
 @Setter

@@ -54,7 +54,6 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
     /**
      * Spring 注入入口：使用进程运行时桥接的 halt。
      * Spring injection entry: uses process runtime bridge halt.
-     *
      * @param services 服务开关配置 / service enablement properties
      * @param transportBoundary 传输边界 / transport boundary
      * @param serviceLifecycles 各服务生命周期实现 / service lifecycle beans
@@ -73,7 +72,6 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
     /**
      * 测试用构造：使用默认进程桥接 halt。
      * Test constructor: uses a default process bridge halt.
-     *
      * @param services 服务开关配置 / service enablement properties
      * @param transportBoundary 传输边界 / transport boundary
      * @param serviceLifecycles 各服务生命周期实现 / service lifecycle beans
@@ -89,7 +87,6 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
     /**
      * 核心构造：按相位排序生命周期并绑定 halt 动作。
      * Core constructor: sorts lifecycles by phase and binds the halt action.
-     *
      * @param services 服务开关配置 / service enablement properties
      * @param transportBoundary 传输边界 / transport boundary
      * @param serviceLifecycles 各服务生命周期实现 / service lifecycle beans
@@ -112,7 +109,6 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
     /**
      * 应用启动后按配置启动各内嵌服务。
      * Starts each embedded service after application bootstrap according to config.
-     *
      * @param args 应用启动参数 / application arguments
      * @throws Exception 任一服务启动失败时抛出 / if any service fails to start
      */
@@ -153,7 +149,6 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
     /**
      * 保存可配置的应用上下文，供嵌入式关闭时关闭容器。
      * Stores the configurable application context for container close on embedded shutdown.
-     *
      * @param applicationContext Spring 应用上下文 / Spring application context
      */
     @Override
@@ -166,7 +161,6 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
     /**
      * 在服务上下文作用域内启动单个服务并记录日志。
      * Starts one service under its ServiceContext scope and logs progress.
-     *
      * @param serviceLifecycle 目标服务生命周期 / target service lifecycle
      * @param args 应用启动参数 / application arguments
      * @throws Exception 启动失败时抛出 / if start fails
@@ -184,7 +178,6 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
     /**
      * 仅执行一次的优雅关闭请求。
      * Runs a graceful shutdown request at most once.
-     *
      * @param shutdown 关闭动作 / shutdown action
      */
     void requestGracefulShutdown(Runnable shutdown) {
@@ -196,7 +189,6 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
     /**
      * 上下文关闭时：若 game 已启动且未在停止中，则等待玩家离线并完成 game 关闭。
      * On context close: if game started and not already stopping, wait for players and finish game shutdown.
-     *
      * @param event 上下文关闭事件 / context closed event
      */
     @Override
@@ -236,7 +228,6 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
     /**
      * 在服务上下文作用域内停止单个服务。
      * Stops one service under its ServiceContext scope.
-     *
      * @param serviceLifecycle 目标服务生命周期 / target service lifecycle
      */
     private void stopService(AionServiceLifecycle serviceLifecycle) {
@@ -264,7 +255,6 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
     /**
      * 处理嵌入式运行时失败：停止服务并关闭应用上下文。
      * Handles embedded runtime failure: stop services and close the application context.
-     *
      * @param failure 运行时失败 / runtime failure
      */
     private void handleEmbeddedFailure(RuntimeException failure) {
@@ -278,7 +268,6 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
     /**
      * 处理嵌入式关闭请求；若为 RESTART 则在关闭后 halt 进程。
      * Handles embedded shutdown requests; on RESTART, halt the process after close.
-     *
      * @param mode 关闭模式 / shutdown mode
      */
     private void handleEmbeddedShutdown(AionEmbeddedShutdownMode mode) {

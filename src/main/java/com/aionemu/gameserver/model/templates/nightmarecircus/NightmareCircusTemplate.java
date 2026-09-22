@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 梦魇马戏团模板（静态数据/XML）。
  * XML template.
- *
  * @author Rinzler (Encom)
  */
 

@@ -13,7 +13,6 @@ import lombok.Getter;
 /**
  * NPC 喊话分组模板（静态数据/XML）。
  * XML template.
- *
  * @author Rolandas
  */
 @Getter
@@ -27,7 +26,7 @@ public class ShoutGroup {
 	/**
 	 * 获取 clientAi 属性值。
 	 * Gets the value of the clientAi property
-	 * @return 可能的对象类型 / possible object is {@link String }
+	 * 可能的对象类型 / possible object is {@link String }
 	 */
 	@XmlAttribute(name = "client_ai")
 	protected String clientAi;

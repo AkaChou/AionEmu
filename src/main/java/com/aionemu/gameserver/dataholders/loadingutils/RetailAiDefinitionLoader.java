@@ -677,7 +677,6 @@ final class RetailAiDefinitionLoader {
 	 * 解析映射源：目录返回按起始 NPC ID 升序的 {@code npc-ai_<起始ID>_<结束ID>.xml} 分片，单体文件返回 {@code null}。
 	 * Resolves the mapping source: a directory yields {@code npc-ai_<firstId>_<lastId>.xml} shards ordered by the
 	 * first id, while a single file yields {@code null}.
-	 *
 	 * @param source 映射源文件或分片目录 / mapping source file or shard directory
 	 * @return 分片数组或 null / shard array or {@code null}
 	 */
@@ -700,7 +699,6 @@ final class RetailAiDefinitionLoader {
 	/**
 	 * 分片文件名中的起始 NPC ID，用于合并排序；无法解析时排到最后。
 	 * The first NPC id encoded in a shard file name, used for merge ordering; unparsable names sort last.
-	 *
 	 * @param file 分片文件 / shard file
 	 * @return 起始 NPC ID / first NPC id
 	 */
@@ -713,7 +711,6 @@ final class RetailAiDefinitionLoader {
 	/**
 	 * 扫描单个映射源文件，产出 NPC 映射与寻路行为。
 	 * Scans one mapping source file, producing NPC mappings and path behaviors.
-	 *
 	 * @param file 映射源文件 / mapping source file
 	 * @return 双产出 / dual result
 	 */

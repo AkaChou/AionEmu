@@ -18,7 +18,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * 玩家创造力点数（CP）DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerCreativityPointsDAO.
- *
  * Updated for MySQL 8 - Fixed connection leaks.
  */
 @Slf4j
@@ -39,7 +38,6 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 	/**
 	 * 加载玩家 CP 列表。
 	 * Loads the player's CP list.
-	 *
 	 * @param player 玩家 / player
 	 * CP list
 	 */
@@ -68,7 +66,6 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 	/**
 	 * 保存玩家 CP。
 	 * Stores a player CP entry.
-	 *
 	 * @param objectId 玩家对象 ID / player object id
 	 * @param slot 槽位 / slot
 	 * @param point 点数 / points
@@ -92,7 +89,6 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 	/**
 	 * 删除玩家 CP 槽位。
 	 * Deletes a player CP slot.
-	 *
 	 * @param objectId 玩家对象 ID / player object id
 	 * @param slot 槽位 / slot
 	 * @return 是否成功 / whether successful
@@ -114,7 +110,6 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 	/**
 	 * 获取玩家 CP 槽位数量。
 	 * Gets the player's CP slot count.
-	 *
 	 * @param playerObjId 玩家对象 ID / player object id
 	 * @return 槽位数量 / slot count
 	 */
@@ -139,7 +134,6 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 	/**
 	 * 获取玩家首个 CP 槽位 ID。
 	 * Gets the first CP slot id of a player.
-	 *
 	 * @param obj 玩家对象 ID / player object id
 	 * @return 槽位 ID / slot id
 	 */
@@ -164,7 +158,6 @@ public class PlayerCreativityPointsDAO extends com.aionemu.gameserver.dao.Player
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
-	 *
 	 * @param databaseName 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version

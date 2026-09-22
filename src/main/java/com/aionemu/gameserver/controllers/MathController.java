@@ -26,7 +26,6 @@ public class MathController extends VisibleObjectController<MathObject> {
 	/**
 	 * 符合反应类型的生物进入范围时注册观察者。
 	 * Registers an observer when a creature matching the reaction type enters range.
-	 *
 	 * @param object 进入视野的可见对象 / the visible object entering sight
 	 */
 	@Override
@@ -49,7 +48,6 @@ public class MathController extends VisibleObjectController<MathObject> {
 	/**
 	 * 生物离开范围时移除观察者并清理调度。
 	 * Removes the observer and clears schedules when a creature leaves range.
-	 *
 	 * @param object 离开视野的可见对象 / the visible object leaving sight
 	 * @param isOutOfRange 是否因超出距离离开 / whether the leave is due to being out of range
 	 */
@@ -87,7 +85,6 @@ public class MathController extends VisibleObjectController<MathObject> {
 	/**
 	 * 延迟后删除本数学对象。
 	 * Deletes this math object after a delay.
-	 *
 	 * @param delay 延迟毫秒数 / delay in milliseconds
 	 */
 	public void onDelete(int delay) {

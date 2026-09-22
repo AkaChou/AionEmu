@@ -133,7 +133,6 @@ public class TemporarySpawnEngine {
 	/**
 	 * 注册临时刷怪组及其实例。
 	 * Registers a temporary spawn group for an instance.
-	 *
 	 * @param spawn 临时刷怪组 / the temporary spawn group
 	 * @param instanceId 实例 ID / instance id
 	 */
@@ -152,7 +151,6 @@ public class TemporarySpawnEngine {
 	/**
 	 * 临时刷怪组列表快照，避免持锁遍历。
 	 * Snapshot of temporary spawn groups to avoid iterating under lock.
-	 *
 	 * @return 刷怪组副本 / copy of spawn groups
 	 */
 	private static List<SpawnGroup2> temporarySpawnsSnapshot() {
@@ -164,7 +162,6 @@ public class TemporarySpawnEngine {
 	/**
 	 * 指定刷怪组的实例 ID 快照。
 	 * Snapshot of instance ids for a spawn group.
-	 *
 	 * @param spawn 临时刷怪组 / the temporary spawn group
 	 * @return 实例 ID 集合副本 / copy of instance ids
 	 */

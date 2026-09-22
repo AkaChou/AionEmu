@@ -9,7 +9,6 @@ import com.aionemu.gameserver.services.PunishmentService;
 /**
  * 自动处罚：按 {@link PunishmentConfig} 类型对审计命中玩家执行踢线/封角色/封账号/封 IP/封 MAC。
  * Auto-ban that applies kick/char/account/IP/MAC punishments by {@link PunishmentConfig} type.
- *
  * @author synchro2
  */
 public class AutoBan {
@@ -17,7 +16,6 @@ public class AutoBan {
 	/**
 	 * 对玩家执行配置的自动处罚。
 	 * Applies the configured automatic punishment to the player.
-	 *
 	 * @param player 目标玩家 / target player
 	 * @param message 处罚原因消息 / punishment reason message
 	 */

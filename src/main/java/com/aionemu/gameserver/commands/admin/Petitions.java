@@ -19,7 +19,6 @@ import java.util.Collection;
 /**
  * 玩家工单（Petition）查询、删除与邮件回复的管理员命令。
  * Admin command to list, inspect, delete or mail-reply to player petitions.
- *
  * @author zdead
  */
 public class Petitions extends AdminCommand {
@@ -35,7 +34,6 @@ public class Petitions extends AdminCommand {
 	/**
 	 * 无参数列出待处理工单；{@code <id>} 查看详情；{@code <id> delete} 删除；{@code <id> reply ...} 邮件回复。
 	 * With no args list open petitions; {@code <id>} shows details; {@code <id> delete} removes; {@code <id> reply ...} mails a reply.
-	 *
 	 * @param admin 执行 GM / Admin player
 	 * @param params 工单 ID 与操作 / Petition id and action
 	 */
@@ -204,7 +202,6 @@ public class Petitions extends AdminCommand {
 	/**
 	 * 参数错误时显示语法。
 	 * Show syntax when parameters are invalid.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

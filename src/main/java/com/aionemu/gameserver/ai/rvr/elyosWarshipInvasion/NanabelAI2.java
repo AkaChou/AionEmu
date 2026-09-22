@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * RvR 相关 NPC AI：Nanabel（@AIName "nanabel"），继承 AggressiveNpcAI2。
  * RvR-related NPC AI: Nanabel (@AIName "nanabel"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("nanabel")

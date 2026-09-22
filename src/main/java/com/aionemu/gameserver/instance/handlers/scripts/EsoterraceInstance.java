@@ -25,7 +25,6 @@ import java.util.Set;
 /**
  * 秘境露台副本事件处理器。
  * Instance event handler for Esoterrace.
- *
  * @author Encom
  */
 
@@ -42,7 +41,6 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -53,7 +51,6 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -64,7 +61,6 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 
@@ -108,7 +104,6 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
-	 *
 	 * @param player 玩家 / player
 	 * @param npc NPC / npc
 	 */
@@ -126,16 +121,12 @@ public class EsoterraceInstance extends GeneralInstanceHandler
     /**
      * 处理死亡事件。
      * Handle a death event.
-     *
      * @param npc NPC / npc
      */
     @Override
     public void onDie(Npc npc) {
         Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
-			/**
-	 * 从主入口可进入伊索特拉斯秘密实验室较大半区；实验室中央有…… / From the main entrance, players have access to the larger half of the Esoterrace Secret Laboratory. In the middle of the Laboratory is a Surkana Feeder. Destroy this to face Warden Surama, the Hard Mode? final Named Monster. Leave it alone to face Kexkra, the normal final Named Monster
-	 */
 			case 282291: //Surkana Feeder.
 				despawnNpc(npc);
 				deleteNpc(217204); //Kexkra.
@@ -146,9 +137,6 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 				sendMsgByRace(1401037, Race.PC_ALL, 4000);
 				spawn(217205, 1315.99f, 1170.77f, 51.8004f, (byte) 87); //Kexkra Prototype.
 			break;
-			/**
-	 * “达莉亚·查兰兹”是伊索特拉斯首个命名怪；开战前请清理周边巡逻。 / "Dalia Charlands" is the first Named Monster of Esoterrace. Before engaging the boss, be sure to clear out the surrounding area of patrolling monsters. Dalia is a straightforward encounter that doesn't have a lot of gimmicks, just be sure to watch out for the occasional area of effect attack. When Dalia is defeated, Dalia's Watcher will appear, follow it to find the path to the next area. Be sure each player in the Group loots the Dalia Key from "Dalia Charlands" Like a Quest item, each player can loot this key, and earn access to one of the "Entwined Treasure Chest" nearby which contain Abyss relics! In addition to the "Entwined Treasure Chests" & "Huge Entwined Chest" will spawn beneath Dalia once it is defeated, which can be opened with the Swirl Key. Should the Group befall certain death after defeating Dalia, the Windstream found at the beginning of the Instanced Dungeon will now transport players directly to the Dalia Garden
-	 */
 			case 217185: //Dalia Charlands.
 			    // 达莉亚·查兰兹已消失。 / Dalia Charlands has vanished.
 				sendMsgByRace(1401036, Race.PC_ALL, 0);
@@ -186,9 +174,6 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 				spawn(799580, 1034.11f, 985.01f, 327.35095f, (byte) 105); // 爱哭鬼希罗金 / Keening Sirokin.
 				spawn(701025, 1038.636963f, 987.741455f, 328.356415f, (byte) 0, 725); //Sundries Box.
             break;
-			/**
-			 * 实验室空调室内将遭遇第二个命名怪“穆鲁甘队长”。 / Inside the Laboratory Air Conditioning Room, players will encounter the second Named Monster of Esoterrace, "Captain Murugan" Be wary of "Captain Murugan's" deadly combo skills, expect the primary target to take massive damage throughout the encounter! When Captain Murugan is defeated, two doors will open in the Laboratory Air Conditioning Room, granting access to Chilled Treasure chests which contain Abyss relics
-			 */
 			case 217195: //Captain Murugan.
 				switch (Rnd.get(1, 2)) {
 				    case 1:
@@ -221,10 +206,7 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 				// 生物实验室外墙已坍塌。 / The outer wall of the Bio Lab has collapsed.
 				sendMsgByRace(1400924, Race.PC_ALL, 0);
             break;
-			/**
-			 * 击败“凯克斯克拉”后刷新宝箱，含欧比斯遗物与白金勋章等。 / When "Kexkra" is defeated, a treasure chest will spawn containing Abyss relics and Platinum Medals. In addition, the treasure chest has a chance to contain Fabled armor from the Surama set
-			 */
-			case 217204: //Kexkra.
+            case 217204: //Kexkra.
 			    despawnNpc(npc);
 				spawn(701044, 1341.19f, 1181.25f, 51.515f, (byte) 67); //Esoterrace Dimensional Rift Exit.
 				spawn(701027, 1326.7705f, 1173.1145f, 51.493996f, (byte) 70, 726); //Laboratory Treasure Chest.
@@ -236,9 +218,6 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 				spawn(217206, 1315.99f, 1170.77f, 51.8004f, (byte) 87); //Warden Surama.
 				spawn(701047, 1316.5045f, 1171.0127f, 52.589924f, (byte) 0, 180); //Flame Wall.
             break;
-            /**
-             * 开战面对“凯克斯克拉原型”；随后典狱长苏拉玛会加入战斗。 / Players will start this encounter facing the "Kexkra Prototype" As the encounter wears on, an event will cause Warden Surama to join the battle. When Warden Surama is defeated, two treasure chests will spawn, one of which has a chance to contain Fabled armor from the Surama series, and the other Fabled weapons from the Surama series
-             */
             case 217206: //Warden Surama.
 				spawn(701044, 1341.19f, 1181.25f, 51.515f, (byte) 67); //Esoterrace Dimensional Rift Exit.
 				spawn(701027, 1326.7705f, 1173.1145f, 51.493996f, (byte) 70, 726); //Laboratory Treasure Chest.
@@ -262,7 +241,6 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
-	 *
 	 * @param msg 消息 / message
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
@@ -280,7 +258,6 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -297,7 +274,6 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -308,7 +284,6 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override

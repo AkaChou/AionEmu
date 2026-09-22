@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Dredgion Defense 副本 NPC AI：Eresukigal Bomb（@AIName "Eresukigal_Bomb"），继承 AggressiveNpcAI2。
  * Dredgion Defense instance NPC AI: Eresukigal Bomb (@AIName "Eresukigal_Bomb"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("Eresukigal_Bomb")

@@ -13,7 +13,6 @@ import com.aionemu.gameserver.world.WorldType;
 /**
  * 道路观察者：玩家穿过道路平面时按种族/地图传送到出口。
  * Road observer: teleports the player to the road exit when passing through the road plane.
- *
  * @author SheppeR
  */
 public class RoadObserver extends ActionObserver {

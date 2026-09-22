@@ -25,7 +25,6 @@ public class Set extends AdminCommand {
 	/**
 	 * 执行该管理指令。
 	 * Executes this admin command.
-	 *
 	 * @param admin 执行指令的管理员 / admin executing the command
 	 */
 	@Override
@@ -273,7 +272,6 @@ public class Set extends AdminCommand {
 	/**
 	 * 参数错误时输出用法。
 	 * Prints usage when arguments are invalid.
-	 *
 	 * @param player 接收提示的玩家 / player receiving the message
 	 */
 	@Override

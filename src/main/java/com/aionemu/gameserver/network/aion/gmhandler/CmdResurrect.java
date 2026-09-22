@@ -7,7 +7,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * GM 指令：复活已死亡的目标玩家。
  * GM command handler that resurrects a dead target player.
- *
  * @author Alcapwnd
  */
 public class CmdResurrect extends AbstractGMHandler {
@@ -15,7 +14,6 @@ public class CmdResurrect extends AbstractGMHandler {
 	/**
 	 * 创建处理器并立即尝试复活目标。
 	 * Creates the handler and immediately attempts resurrection.
-	 *
 	 * @param admin 执行指令的管理员 / the admin executing the command
 	 * @param params 指令参数（当前未使用） / command parameters (currently unused)
 	 */

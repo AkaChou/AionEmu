@@ -10,7 +10,6 @@ import java.util.List;
 /**
  * RvR 相关 NPC AI：Guardian Frigate Veteran Protectors Captain（@AIName "LF6_Event_G1_S1_Kn_75_Ah"），继承 AggressiveNpcAI2。
  * RvR-related NPC AI: Guardian Frigate Veteran Protectors Captain (@AIName "LF6_Event_G1_S1_Kn_75_Ah"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("LF6_Event_G1_S1_Kn_75_Ah")

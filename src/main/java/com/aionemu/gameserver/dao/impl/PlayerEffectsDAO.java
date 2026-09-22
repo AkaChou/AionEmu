@@ -15,7 +15,6 @@ import java.util.function.Predicate;
 /**
  * 玩家技能效果（Buff）持久化 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerEffectsDAO.
- *
  * @author ATracer, Updated for MySQL 8
  */
 @Slf4j
@@ -38,7 +37,6 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
     /**
      * 加载玩家技能效果到效果控制器。
      * Loads the player's skill effects into the effect controller.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -82,7 +80,6 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
     /**
      * 持久化玩家当前可保存的技能效果。
      * Persists the player's currently insertable skill effects.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -146,7 +143,6 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
     /**
      * 删除玩家全部效果记录。
      * Deletes all effect records of the player.
-     *
      * @param player 玩家 / player
      */
     private void deletePlayerEffects(Player player) {
@@ -184,7 +180,6 @@ public class PlayerEffectsDAO extends com.aionemu.gameserver.dao.PlayerEffectsDA
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

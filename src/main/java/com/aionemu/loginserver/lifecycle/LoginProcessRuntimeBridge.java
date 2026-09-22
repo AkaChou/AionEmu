@@ -22,7 +22,6 @@ public class LoginProcessRuntimeBridge {
     /**
      * 注入可选的 {@link Shutdown} 提供者，转交给关机服务静态注册。
      * Inject optional {@link Shutdown} provider and forward it to the shutdown-service static registry.
-     *
      * @param shutdownProvider 关机 Bean 提供者 / shutdown bean provider
      */
     @Autowired(required = false)
@@ -33,7 +32,6 @@ public class LoginProcessRuntimeBridge {
     /**
      * 返回可用作 JVM 关机钩子的 {@link Shutdown} 线程。
      * Return the {@link Shutdown} thread usable as a JVM shutdown hook.
-     *
      * @return 关机钩子线程 / shutdown-hook thread
      */
     public Thread shutdownHook() {
@@ -43,7 +41,6 @@ public class LoginProcessRuntimeBridge {
     /**
      * 将给定线程注册为 JVM 关机钩子。
      * Register the given thread as a JVM shutdown hook.
-     *
      * @param shutdownHook 关机钩子线程 / shutdown-hook thread
      */
     public void registerShutdownHook(Thread shutdownHook) {
@@ -53,7 +50,6 @@ public class LoginProcessRuntimeBridge {
     /**
      * 触发登录服优雅关机（可选重启）。
      * Trigger a graceful login-server shutdown (optionally with restart).
-     *
      * @param restart 是否重启 / whether to restart
      */
     public void shutdown(boolean restart) {
@@ -79,7 +75,6 @@ public class LoginProcessRuntimeBridge {
     /**
      * 以指定状态码退出进程。
      * Exit the process with the given status code.
-     *
      * @param status 退出状态码 / exit status
      */
     public void exit(int status) {
@@ -89,7 +84,6 @@ public class LoginProcessRuntimeBridge {
     /**
      * 懒加载并缓存 {@link Shutdown} 实例。
      * Lazily resolve and cache the {@link Shutdown} instance.
-     *
      * @return 关机处理器 / shutdown handler
      */
     private synchronized Shutdown shutdown() {

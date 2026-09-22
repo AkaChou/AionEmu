@@ -12,7 +12,6 @@ import lombok.Setter;
 /**
  * Artifact 位置，用于要塞相关逻辑。
  * Artifact Location for siege logic.
- *
  * @author Source
  */
 public class ArtifactLocation extends SiegeLocation {
@@ -20,8 +19,7 @@ public class ArtifactLocation extends SiegeLocation {
 	/**
 	 * 设置神器状态。
 	 * Sets the artifact status.
-	 *
-	 * @param status 要设置的状态 / the status to set
+	 * 要设置的状态 / the status to set
 	 */
 	@Setter
 	private ArtifactStatus status;
@@ -66,7 +64,6 @@ public class ArtifactLocation extends SiegeLocation {
 	/**
 	 * 返回描述此神器名称的 DescriptionId。
 	 * Returns DescriptionId that describes the name of this artifact.
-	 *
 	 * @return 含名称的 DescriptionId / DescriptionId with name
 	 */
 	public DescriptionId getNameAsDescriptionId() {
@@ -80,7 +77,6 @@ public class ArtifactLocation extends SiegeLocation {
 	/**
 	 * 判断神器是否独立存在（不属于任何要塞）。
 	 * Checks whether the artifact stands alone (not owned by any fortress).
-	 *
 	 * @return 是否独立 / Whether stand alone
 	 */
 	public boolean isStandAlone() {
@@ -95,7 +91,6 @@ public class ArtifactLocation extends SiegeLocation {
 	/**
 	 * 获取当前状态，空值时回落为空闲。
 	 * Gets the current status, falling back to IDLE when unset.
-	 *
 	 * @return 当前状态 / the status
 	 */
 	public ArtifactStatus getStatus() {

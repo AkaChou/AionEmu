@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 技能子类型：攻击、治疗、增益、召唤等功能分类。
  * Skill sub type: attack, heal, buff, summon and other functional classes.
- *
  * @author ATracer
  */
 @XmlType(name = "skillSubType")

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 无敌之翼效果：保护飞行中的玩家免受部分伤害/打断。
  * Invulnerable wing effect: protects a flying player from some damage/interrupts.
- *
  * @author VladimirZ
  * @author Sippolo
  */

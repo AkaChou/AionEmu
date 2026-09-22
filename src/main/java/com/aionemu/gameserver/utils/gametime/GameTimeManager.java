@@ -37,7 +37,6 @@ public class GameTimeManager {
 	/**
 	 * 获取当前游戏时间。
 	 * Get the current game time.
-	 *
 	 * @return 游戏时间实例 / GameTime instance
 	 */
 	public static GameTime getGameTime() {
@@ -60,7 +59,6 @@ public class GameTimeManager {
 	/**
 	 * 将当前游戏时间写入服务器变量。
 	 * Persist the current game time to server variables.
-	 *
 	 * @return 保存成功则为 true / True if stored
 	 */
 	public static boolean saveTime() {
@@ -70,7 +68,6 @@ public class GameTimeManager {
 	/**
 	 * 以指定分钟数重载游戏时间并重启时钟。
 	 * Reload game time to the given minutes value and restart the clock.
-	 *
 	 * @param time 自 01.01.0000 起的分钟数 / Minutes since 01.01.0000
 	 */
 	public static void reloadTime(int time) {

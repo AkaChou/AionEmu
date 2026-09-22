@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 全局掉落地图模板（静态数据/XML）。
  * Global drop map template (static data/XML).
- *
  * @author Wnkrz
  */
 @Getter

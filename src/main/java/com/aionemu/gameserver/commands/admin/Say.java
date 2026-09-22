@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 代言指令；让选中的玩家或 NPC 以普通聊天广播指定文本。
  * Admin command that makes the selected player or NPC broadcast text as normal chat.
- *
  * @author Divinity
  */
 public class Say extends AdminCommand {
@@ -23,7 +22,6 @@ public class Say extends AdminCommand {
 	/**
 	 * 执行该管理指令。
 	 * Executes this admin command.
-	 *
 	 * @param admin 执行指令的管理员 / admin executing the command
 	 */
 	@Override
@@ -61,7 +59,6 @@ public class Say extends AdminCommand {
 	/**
 	 * 参数错误时输出用法。
 	 * Prints usage when arguments are invalid.
-	 *
 	 * @param player 接收提示的玩家 / player receiving the message
 	 */
 	@Override

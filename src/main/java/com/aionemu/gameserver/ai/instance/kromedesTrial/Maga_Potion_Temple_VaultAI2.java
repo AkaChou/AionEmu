@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Kromedes Trial 副本 NPC AI：Maga Potion Temple Vault（@AIName "maga_potion_1"），继承 NpcAI2。
  * Kromedes Trial instance NPC AI: Maga Potion Temple Vault (@AIName "maga_potion_1"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("maga_potion_1")

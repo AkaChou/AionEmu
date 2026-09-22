@@ -16,7 +16,6 @@ import com.aionemu.gameserver.services.player.PlayerService;
 /**
  * 请求删除角色的客户端包。
  * Client packet requesting deletion of a character.
- *
  * @author -Nemesiss-
  */
 public class CM_DELETE_CHARACTER extends AionClientPacket {
@@ -30,7 +29,6 @@ public class CM_DELETE_CHARACTER extends AionClientPacket {
 	/**
 	 * 构造客户端包实例。
 	 * Constructs a new client packet instance.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余允许状态 / additional allowed states

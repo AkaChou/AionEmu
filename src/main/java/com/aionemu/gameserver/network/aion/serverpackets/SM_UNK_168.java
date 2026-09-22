@@ -10,7 +10,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 未知 opcode 0x168 的服务端包，携带角色重入、装饰与活动类型等杂项客户端标志。
  * Server packet for unknown opcode 0x168, carrying misc client flags such as reentry, decor, and event type.
- *
  * @author FrozenKiller
  */
 public class SM_UNK_168 extends AionServerPacket {

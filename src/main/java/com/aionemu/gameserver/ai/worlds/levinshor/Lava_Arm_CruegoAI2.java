@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Levinshor 区域 NPC AI：Lava Arm Cruego（@AIName "lava_arm_cruego"），继承 AggressiveNpcAI2。
  * Levinshor zone NPC AI: Lava Arm Cruego (@AIName "lava_arm_cruego"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("lava_arm_cruego")

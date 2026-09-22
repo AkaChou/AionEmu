@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 向客户端同步军团成员状态/信息更新的服务端包。
  * Server packet that synchronizes a legion member status or info update to the client.
- *
  * @author Simple
  */
 public class SM_LEGION_UPDATE_MEMBER extends AionServerPacket {
@@ -25,7 +24,6 @@ public class SM_LEGION_UPDATE_MEMBER extends AionServerPacket {
 	/**
 	 * 使用在线玩家构造成员更新包。
 	 * Creates a member-update packet from an online player.
-	 *
 	 * member player
 	 * message id
 	 * @param text 附加文本 / additional text
@@ -40,7 +38,6 @@ public class SM_LEGION_UPDATE_MEMBER extends AionServerPacket {
 	/**
 	 * 使用扩展成员信息构造成员更新包。
 	 * Creates a member-update packet from an extended legion member record.
-	 *
 	 * @param LM 扩展成员信息 / extended legion member
 	 * message id
 	 * @param text 附加文本 / additional text
@@ -55,7 +52,6 @@ public class SM_LEGION_UPDATE_MEMBER extends AionServerPacket {
 	/**
 	 * 使用玩家构造离线状态更新包。
 	 * Creates an offline-status update packet from a player.
-	 *
 	 * @param player member player
 	 */
 	public SM_LEGION_UPDATE_MEMBER(Player player) {

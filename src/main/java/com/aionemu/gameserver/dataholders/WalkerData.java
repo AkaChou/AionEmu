@@ -32,7 +32,6 @@ import java.util.Map;
 /**
  * NPC 巡逻路径静态数据容器，按路线 ID 索引 Walker 模板，并支持回写生成 XML。
  * NPC walker-route static-data holder, indexing walker templates by route id and supporting XML export.
- *
  * @author KKnD, Rolandas
  */
 @XmlRootElement(name = "npc_walker")
@@ -66,7 +65,6 @@ public class WalkerData {
 	/**
 	 * 返回已加载的巡逻路线数量。
 	 * Returns the number of loaded walker routes.
-	 *
 	 * @return 已加载的巡逻路线数量 / Returns the number of loaded walker routes.
 	 */
 	public int size() {
@@ -76,7 +74,6 @@ public class WalkerData {
 	/**
 	 * 按路线 ID 获取巡逻模板。
 	 * Returns the walker template for the given route id.
-	 *
 	 * @param routeId 路线 ID / route id
 	 * @return 巡逻模板，不存在或参数为 null 则为 null / walker template, or null if missing/null id
 	 */
@@ -94,7 +91,6 @@ public class WalkerData {
 	/**
 	 * 追加一条待导出的巡逻模板到内部列表。
 	 * Appends a walker template to the internal list for later export.
-	 *
 	 * @param newTemplate 待追加的巡逻模板 / walker template to append
 	 */
 	public void AddTemplate(WalkerTemplate newTemplate) {
@@ -106,7 +102,6 @@ public class WalkerData {
 	/**
 	 * 将当前待导出模板按指定路线 ID 序列化为生成的 NPC Walker XML。
 	 * Marshals pending templates into a generated NPC walker XML for the given route id.
-	 *
 	 * @param routeId 用于命名输出文件的路线 ID / route id used to name the output file
 	 */
 	public void saveData(String routeId) {
@@ -142,7 +137,6 @@ public class WalkerData {
 	/**
 	 * 返回全部已加载的巡逻模板集合。
 	 * Returns the collection of all loaded walker templates.
-	 *
 	 * @return 全部已加载巡逻模板的集合 / Returns the collection of all loaded walker templates.
 	 */
 	public Collection<WalkerTemplate> getTemplates() {

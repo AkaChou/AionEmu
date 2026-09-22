@@ -23,7 +23,6 @@ import java.util.function.BiFunction;
  * work items to the live player inventory, persisting dirty items through
  * {@link InventoryDAO}'s transaction-in-progress hook on the caller-owned
  * connection so the mutations commit atomically with the quest state.
- *
  * <p>Preflight fails closed when the snapshot did not capture inventory facts:
  * unknown counts are never guessed as zero.</p>
  */

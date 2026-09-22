@@ -5,7 +5,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * HallOfTenacity 副本坐标，用于副本相关逻辑。
  * Hall Of Tenacity Instance Position for instance logic.
- *
  * @author Ranastic
  */
 public class HallOfTenacityInstancePosition extends GenerealInstancePosition {

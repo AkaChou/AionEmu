@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 广播风道（Windstream）开启/关闭状态的服务端包。
  * Server packet that announces windstream open/close state.
- *
  * @author LokiReborn
  */
 @AllArgsConstructor

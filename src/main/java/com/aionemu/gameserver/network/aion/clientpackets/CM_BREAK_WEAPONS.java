@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 /**
  * 解除武器融合的客户端包。
  * Client packet to break (unfuse) weapons.
- *
  * @author zdead
  */
 public class CM_BREAK_WEAPONS extends AionClientPacket {

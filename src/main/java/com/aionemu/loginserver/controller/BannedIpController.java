@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * IP 封禁活动总控。
  * Controller for all IP banning activity.
- *
  * @author SoulKeeper
  */
 @Slf4j
@@ -66,7 +65,6 @@ public class BannedIpController {
     /**
      * 检查 IP（或是否命中掩码）是否被封禁。
      * Checks if IP (or matching mask) is banned.
-     *
      * @param ip 待检查 IP / IP address to check
      * @return 是否被封禁 / whether banned
      */
@@ -82,7 +80,6 @@ public class BannedIpController {
     /**
      * 永久封禁 IP 或掩码。
      * Bans IP or mask for an infinite period.
-     *
      * @param ip 待封 IP / IP to ban
      * @return 是否封禁成功 / Whether ban succeeded
      */
@@ -93,7 +90,6 @@ public class BannedIpController {
     /**
      * 封禁 IP（或掩码），可指定到期时间。
      * Bans IP (or mask) with optional expiration.
-     *
      * @param ip 待封 IP / IP to ban
      * @param expireTime 到期时间，null 表示永不过期 / Expiration time, null = never expires
      * @return 是否封禁成功 / Whether ban succeeded
@@ -119,7 +115,6 @@ public class BannedIpController {
     /**
      * 新增或更新 IP 封禁，变更会写库。
      * Adds or updates IP ban; changes are reflected in DB.
-     *
      * @param ipBan 封禁记录 / Banned IP entry
      * @return 是否更新成功 / Whether update succeeded
      */
@@ -137,7 +132,6 @@ public class BannedIpController {
     /**
      * 解除 IP 封禁。
      * Removes IP ban.
-     *
      * @param ip 待解封 IP / IP to unban
      * @return 是否解封成功 / Whether unban succeeded
      */
@@ -159,7 +153,6 @@ public class BannedIpController {
     /**
      * 获取 {@link BannedIpDAO} 快捷方法。
      * Shortcut for {@link BannedIpDAO}.
-     *
      * @return BannedIpDAO 实例 / Banned IP DAO
      */
     private BannedIpDAO getDAO() {

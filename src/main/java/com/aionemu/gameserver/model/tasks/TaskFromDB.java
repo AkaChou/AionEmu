@@ -6,7 +6,6 @@ import lombok.Getter;
 /**
  * 数据库任务配置。
  * Database-backed task configuration.
- *
  * @author Divinity
  */
 @Getter

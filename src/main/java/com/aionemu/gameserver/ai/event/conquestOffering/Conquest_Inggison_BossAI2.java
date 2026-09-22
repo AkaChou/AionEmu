@@ -17,7 +17,6 @@ import java.util.List;
 /**
  * Conquest Offering 活动 NPC AI：Conquest Inggison Boss（@AIName "conquest_inggison"），继承 AggressiveNpcAI2。
  * Conquest Offering event NPC AI: Conquest Inggison Boss (@AIName "conquest_inggison"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("conquest_inggison")

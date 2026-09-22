@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 /**
  * NPC 技能模板（静态数据/XML）。
  * XML template.
- *
  * @author AionChs Master, nrg
  */
 @Getter
@@ -22,31 +21,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NpcSkillTemplate {
 
-	/**
-	 * @return the id
-	 */
 	@XmlAttribute(name = "id")
 	protected int id;
-	/**
-	 * @return the skillid
-	 */
 	@XmlAttribute(name = "skillid")
 	protected int skillid;
 	@XmlAttribute(name = "skilllevel")
 	protected int skilllevel;
-	/**
-	 * @return the probability
-	 */
 	@XmlAttribute(name = "probability")
 	protected int probability;
-	/**
-	 * @return the minhp
-	 */
 	@XmlAttribute(name = "minhp")
 	protected int minhp = 0;
-	/**
-	 * @return the maxhp
-	 */
 	@XmlAttribute(name = "maxhp")
 	protected int maxhp = 0;
 	@XmlAttribute(name = "maxtime")
@@ -55,9 +39,6 @@ public class NpcSkillTemplate {
 	protected int mintime = 0;
 	@XmlAttribute(name = "conjunction")
 	protected ConjunctionType conjunction = ConjunctionType.AND;
-	/**
-	 * @return the cooldown
-	 */
 	@XmlAttribute(name = "cooldown")
 	protected int cooldown = 0;
 	@XmlAttribute(name = "useinspawned")

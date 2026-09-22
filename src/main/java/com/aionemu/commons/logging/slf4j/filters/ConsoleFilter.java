@@ -14,7 +14,6 @@ public class ConsoleFilter extends Filter<ILoggingEvent> {
     /**
      * 决定是否接受或拒绝日志事件
      * Decides whether to accept or deny a logging event
-     *
      * @param event 待处理的日志事件 (The logging event to be processed)
      * @return FilterReply.ACCEPT 如果消息不以指定前缀开头；FilterReply.DENY 如果消息以指定前缀开头
      *         (FilterReply.ACCEPT if message doesn't start with specified prefixes; FilterReply.DENY if it does)

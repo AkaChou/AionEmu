@@ -29,7 +29,6 @@ import lombok.Setter;
 /**
  * 前哨据点运行时对象，管理归属种族、旗帜/BOSS 与周期性袭击。
  * Runtime outpost object managing owning race, flag/boss and periodic assaults.
- *
  * @author Wnkrz
  * @param <OL> 前哨位置类型 / Outpost location type
  */
@@ -39,14 +38,9 @@ public class Outpost<OL extends OutpostLocation> {
      * -- GETTER --
      *  获取 BOSS NPC。
      *  Returns the boss NPC.
-     *
-     *
 	 * -- SETTER --
 	 *  设置 BOSS NPC。
 	 *  Sets the boss NPC.
-	 *
-	 @return BOSS NPC / boss NPC
-	  * @param boss BOSS NPC / boss NPC
      */
     @Setter
     private Npc boss;
@@ -54,24 +48,14 @@ public class Outpost<OL extends OutpostLocation> {
 	 * -- SETTER --
 	 *  设置旗帜 NPC。
 	 *  Sets the flag NPC.
-	 *
-	 * @param flag 旗帜 NPC / flag NPC
 	 */
 	@Setter
-	private Npc /**
-	 * -- GETTER --
-	 *  获取旗帜 NPC。
-	 *  Returns the flag NPC.
-	 *
-	 * @return 旗帜 NPC / flag NPC
-	 */
-	    flag;
+	private Npc
+            flag;
 	private boolean started;
 	/**
 	 * 获取前哨位置模板。
 	 * Returns the outpost location template.
-	 *
-	 * @return 位置模板 / location template
 	 */
 	private final OL outpostLocation;
 	private Future<?> startAssault, stopAssault;
@@ -79,15 +63,13 @@ public class Outpost<OL extends OutpostLocation> {
 	/**
 	 * 获取已生成单位列表。
 	 * Returns the spawned unit list.
-	 *
-	 * @return 已生成单位 / Spawned units
+	 * 已生成单位 / Spawned units
 	 */
 	private final List<Npc> spawned = new ArrayList<>();
 	/**
 	 * 获取袭击单位列表。
 	 * Returns the attacker list.
-	 *
-	 * @return 袭击单位列表 / attackers
+	 * 袭击单位列表 / attackers
 	 */
 	private final List<Npc> attackers = new ArrayList<>();
 	private final AtomicBoolean finished = new AtomicBoolean();
@@ -96,7 +78,6 @@ public class Outpost<OL extends OutpostLocation> {
 	/**
 	 * 以前哨位置模板构造运行时实例。
 	 * Constructs a runtime instance from an outpost location template.
-	 *
 	 * @param outpostLocation 前哨位置 / outpost location
 	 */
 	public Outpost(OL outpostLocation) {
@@ -138,7 +119,6 @@ public class Outpost<OL extends OutpostLocation> {
 	/**
 	 * 读取该前哨的刷怪配置。
 	 * Loads spawn groups for this outpost.
-	 *
 	 * @return 刷怪组列表 / Spawn group list
 	 */
 	private List<SpawnGroup2> getOutpostSpawns() {
@@ -171,7 +151,6 @@ public class Outpost<OL extends OutpostLocation> {
 	/**
 	 * 是否仍有存活的袭击单位。
 	 * Whether assault attackers are still alive.
-	 *
 	 * @return {@code true} 正在被袭击 / {@code true} if under attack
 	 */
 	public boolean isAttacked() {
@@ -186,7 +165,6 @@ public class Outpost<OL extends OutpostLocation> {
 	/**
 	 * 清理指定前哨的全部本地 NPC。
 	 * Despawns all local NPCs of the given outpost.
-	 *
 	 * @param outpostLocationId 前哨位置 ID / outpost location id
 	 */
 	protected void despawn(int outpostLocationId) {
@@ -224,7 +202,6 @@ public class Outpost<OL extends OutpostLocation> {
 	/**
 	 * 生成指定种族的袭击单位；区域非活跃时可能直接占领或改期。
 	 * Spawns attackers of the given race; may capture or reschedule if region inactive.
-	 *
 	 * @param race 袭击种族 / Attacking race
 	 */
 	public void spawnAttackers(Race race) {
@@ -274,7 +251,6 @@ public class Outpost<OL extends OutpostLocation> {
 	/**
 	 * 获取 BOSS 死亡监听器。
 	 * Returns the boss death listener.
-	 *
 	 * @return 死亡监听器 / death listener
 	 */
 	public OutpostBossDeathListener getOutpostBossDeathListener() {
@@ -284,7 +260,6 @@ public class Outpost<OL extends OutpostLocation> {
 	/**
 	 * 前哨是否已结束。
 	 * Whether the outpost is finished.
-	 *
 	 * @return 前哨已结束则为 true / true if finished
 	 */
 	public boolean isFinished() {
@@ -294,7 +269,6 @@ public class Outpost<OL extends OutpostLocation> {
 	/**
 	 * 获取前哨 ID。
 	 * Returns the outpost id.
-	 *
 	 * @return 前哨 ID / outpost id
 	 */
 	public int getId() {
@@ -304,7 +278,6 @@ public class Outpost<OL extends OutpostLocation> {
 	/**
 	 * 获取当前归属种族。
 	 * Returns the owning race.
-	 *
 	 * @return 阵营 / Race
 	 */
 	public Race getRace() {
@@ -314,7 +287,6 @@ public class Outpost<OL extends OutpostLocation> {
 	/**
 	 * 设置归属种族。
 	 * Sets the owning race.
-	 *
 	 * @param race 阵营 / Race
 	 */
 	public void setRace(Race race) {

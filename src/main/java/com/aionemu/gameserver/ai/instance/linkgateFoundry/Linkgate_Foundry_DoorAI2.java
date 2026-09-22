@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Linkgate Foundry 副本 NPC AI：Linkgate Foundry Door（@AIName "linkgate_foundry_door"），继承 NpcAI2。
  * Linkgate Foundry instance NPC AI: Linkgate Foundry Door (@AIName "linkgate_foundry_door"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("linkgate_foundry_door")
@@ -33,7 +32,6 @@ public class Linkgate_Foundry_DoorAI2 extends NpcAI2
 	/**
 	 * 使用物品交互的进度条流程：延迟结束后调用 {@link #handleUseItemFinish}。
 	 * Item-use interaction with a progress bar: calls {@link #handleUseItemFinish} after the delay.
-	 *
 	 * @param player 交互玩家 / interacting player
 	 */
 	protected void handleUseItemStart(final Player player) {

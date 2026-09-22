@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 向客户端同步技能激活/切换状态。
  * Server packet synchronizing skill activation/toggle state to the client.
- *
  * @author Sweetkr
  */
 public class SM_SKILL_ACTIVATION extends AionServerPacket {
@@ -18,7 +17,6 @@ public class SM_SKILL_ACTIVATION extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_SKILL_ACTIVATION 包。
 	 * For toggle skills
-	 *
 	 * @param skillId skill id
 	 * @param isActive active flag
 	 */
@@ -31,7 +29,6 @@ public class SM_SKILL_ACTIVATION extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_SKILL_ACTIVATION 包。
 	 * For stigma remove should work in 1.5.1.15
-	 *
 	 * @param skillId skill id
 	 */
 	public SM_SKILL_ACTIVATION(int skillId) {

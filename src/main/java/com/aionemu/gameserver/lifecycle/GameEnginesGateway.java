@@ -54,7 +54,6 @@ public class GameEnginesGateway {
     /**
      * 可选注入任务引擎提供者。
      * Optionally inject the quest-engine provider.
-     *
      * @param questEngineProvider 任务引擎提供者 / Quest-engine provider
      */
     @Autowired(required = false)
@@ -65,7 +64,6 @@ public class GameEnginesGateway {
     /**
      * 可选注入副本引擎提供者。
      * Optionally inject the instance-engine provider.
-     *
      * @param instanceEngineProvider 副本引擎提供者 / Instance-engine provider
      */
     @Autowired(required = false)
@@ -76,7 +74,6 @@ public class GameEnginesGateway {
     /**
      * 可选注入 AI2 引擎提供者。
      * Optionally inject the AI2-engine provider.
-     *
      * @param ai2EngineProvider AI2 引擎提供者 / AI2-engine provider
      */
     @Autowired(required = false)
@@ -87,7 +84,6 @@ public class GameEnginesGateway {
     /**
      * 可选注入聊天处理器提供者。
      * Optionally inject the chat-processor provider.
-     *
      * @param chatProcessorProvider 聊天处理器提供者 / Chat-processor provider
      */
     @Autowired(required = false)
@@ -98,7 +94,6 @@ public class GameEnginesGateway {
     /**
      * 可选注入线程池管理器提供者。
      * Optionally inject the thread-pool-manager provider.
-     *
      * @param threadPoolManagerProvider 线程池管理器提供者 / Thread-pool-manager provider
      */
     @Autowired(required = false)
@@ -109,7 +104,6 @@ public class GameEnginesGateway {
     /**
      * 可选注入运行时桥接提供者。
      * Optionally inject the runtime-bridge provider.
-     *
      * @param runtimeBridgeProvider 运行时桥接提供者 / Runtime-bridge provider
      */
     @Autowired(required = false)
@@ -136,7 +130,6 @@ public class GameEnginesGateway {
     /**
      * 返回待加载的游戏引擎列表。
      * Return the list of game engines to load.
-     *
      * @return 引擎列表 / Engine list
      */
     public List<GameEngine> engines() {
@@ -151,7 +144,6 @@ public class GameEnginesGateway {
     /**
      * 通过线程池异步执行任务。
      * Execute a task asynchronously via the thread pool.
-     *
      * @param runnable 待执行任务 / Task to run
      */
     public void execute(Runnable runnable) {
@@ -161,7 +153,6 @@ public class GameEnginesGateway {
     /**
      * 解析任务引擎。
      * Resolve the quest engine.
-     *
      * @return 任务引擎 / Quest engine
      */
     private QuestEngine questEngine() {
@@ -174,7 +165,6 @@ public class GameEnginesGateway {
     /**
      * 解析副本引擎。
      * Resolve the instance engine.
-     *
      * @return 副本引擎 / Instance engine
      */
     private InstanceEngine instanceEngine() {
@@ -187,7 +177,6 @@ public class GameEnginesGateway {
     /**
      * 解析 AI2 引擎。
      * Resolve the AI2 engine.
-     *
      * @return AI2 引擎 / AI2 engine
      */
     private AI2Engine ai2Engine() {
@@ -200,7 +189,6 @@ public class GameEnginesGateway {
     /**
      * 解析聊天处理器。
      * Resolve the chat processor.
-     *
      * @return 聊天处理器 / Chat processor
      */
     private ChatProcessor chatProcessor() {
@@ -213,7 +201,6 @@ public class GameEnginesGateway {
     /**
      * 解析线程池管理器。
      * Resolve the thread-pool manager.
-     *
      * @return 线程池管理器 / Thread-pool manager
      */
     private ThreadPoolManager threadPoolManager() {
@@ -226,7 +213,6 @@ public class GameEnginesGateway {
     /**
      * 解析运行时桥接。
      * Resolve the runtime bridge.
-     *
      * @return 运行时桥接 / Runtime bridge
      */
     private GameEnginesRuntimeBridge runtimeBridge() {

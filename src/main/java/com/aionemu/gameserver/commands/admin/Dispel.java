@@ -8,7 +8,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 驱散目标玩家全部增益/减益效果的管理命令（{@code //dispel}）。
  * Admin command that removes all buff/debuff effects from the targeted player ({@code //dispel}).
- *
  * @author Hilgert
  */
 public class Dispel extends AdminCommand {
@@ -24,7 +23,6 @@ public class Dispel extends AdminCommand {
 	/**
 	 * 移除目标玩家的全部效果。
 	 * Removes all effects from the targeted player.
-	 *
 	 */
 	@Override
 	public void execute(Player admin, String... params) {

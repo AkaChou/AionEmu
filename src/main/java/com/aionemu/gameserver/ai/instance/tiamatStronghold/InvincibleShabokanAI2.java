@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Tiamat Stronghold 副本 NPC AI：Invincible Shabokan（@AIName "invincibleshabokan"），继承 AggressiveNpcAI2。
  * Tiamat Stronghold instance NPC AI: Invincible Shabokan (@AIName "invincibleshabokan"), extends AggressiveNpcAI2.
- *
  * @author Rinzler
  * @author Ranastic (Encom)
  */

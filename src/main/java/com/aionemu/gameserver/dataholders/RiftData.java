@@ -17,7 +17,6 @@ import com.aionemu.gameserver.model.templates.rift.RiftTemplate;
 /**
  * 裂隙据点数据容器，按 ID 索引 RiftLocation。
  * Rift location data holder, indexed by id.
- *
  * @author Source
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -42,7 +41,6 @@ public class RiftData {
 	/**
 	 * 返回已加载的裂隙据点数量。
 	 * Returns the number of loaded rift locations.
-	 *
 	 * @return 已加载的裂缝地点数量 / Returns the number of loaded rift locations.
 	 */
 	public int size() {
@@ -52,7 +50,6 @@ public class RiftData {
 	/**
 	 * 返回全部裂隙据点映射。
 	 * Returns the full rift location map.
-	 *
 	 * @return ID 到据点的映射 / map of id to location
 	 */
 	public Map<Integer, RiftLocation> getRiftLocations() {

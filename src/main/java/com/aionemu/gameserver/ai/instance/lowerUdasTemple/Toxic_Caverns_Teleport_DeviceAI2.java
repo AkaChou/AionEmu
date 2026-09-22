@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Lower Udas Temple 副本 NPC AI：Toxic Caverns Teleport Device（@AIName "toxic_caverns_teleport_device"），继承 ActionItemNpcAI2。
  * Lower Udas Temple instance NPC AI: Toxic Caverns Teleport Device (@AIName "toxic_caverns_teleport_device"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("toxic_caverns_teleport_device")

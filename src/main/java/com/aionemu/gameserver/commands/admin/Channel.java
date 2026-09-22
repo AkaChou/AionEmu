@@ -10,7 +10,6 @@ import java.lang.reflect.Field;
 /**
  * 阵营频道（.faction）开关命令（{@code //channel}）。
  * Admin command that toggles the faction channel ({@code //channel}).
- *
  * @author SheppeR
  */
 public class Channel extends AdminCommand {
@@ -26,7 +25,6 @@ public class Channel extends AdminCommand {
 	/**
 	 * 开关 {@code FACTION_CMD_CHANNEL} 配置。
 	 * Toggles the {@code FACTION_CMD_CHANNEL} config flag.
-	 *
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -51,7 +49,6 @@ public class Channel extends AdminCommand {
 	/**
 	 * 执行失败时的语法提示。
 	 * Syntax hint on failure.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

@@ -29,7 +29,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 热点传送服务，处理地图热点（快捷传送点）的读条、打断与扣费传送。
  * Hotspot teleport service handling cast, interrupt and paid travel via map hotspots.
- *
  * @author Ranastic
  */
 @Slf4j
@@ -44,8 +43,6 @@ public class HotspotTeleportService {
      * -- SETTER --
      *  设置 Spring 实例提供者。
      *  Sets the Spring instance provider.
-     *
-     * @param provider 实例提供者 / Instance provider
      */
     @Setter
     private static volatile ObjectProvider<HotspotTeleportService> instanceProvider;
@@ -53,11 +50,9 @@ public class HotspotTeleportService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -85,7 +80,6 @@ public class HotspotTeleportService {
 	/**
 	 * 执行热点传送：按配置读条后传送并扣费，期间受击/异常/DoT 可打断。
 	 * Performs hotspot teleport after the configured cast time, then travels and charges the fee; interruptible by attack/abnormal/DoT.
-	 *
 	 * @param player 玩家 / Player
 	 * @param teleportId 热点传送点 ID / Hotspot teleport id
 	 * @param price 基纳费用 / Kinah price
@@ -158,7 +152,6 @@ public class HotspotTeleportService {
 	/**
 	 * 将热点配置中的镜像服世界 ID 归一为实际可玩的龙界世界。
 	 * Normalizes mirror-server world ids from hotspot data to the live Balaurea worlds.
-	 *
 	 * @param worldId 原始目标世界 ID / Configured target world id
 	 * @return 实际可玩世界 ID / Live world id
 	 */
@@ -177,7 +170,6 @@ public class HotspotTeleportService {
 	/**
 	 * 关闭当前玩家的据点传送辅助读条。
 	 * Closes the current player's hotspot teleport helper cast bar.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public static void cancelCastBar(Player player) {

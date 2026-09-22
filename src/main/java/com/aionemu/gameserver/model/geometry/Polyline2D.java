@@ -14,7 +14,6 @@ import java.io.Serializable;
 /**
  * Polyline2D，用于几何相关逻辑。
  * Polyline 2 D for geometry logic.
- *
  * @version $Id: Polyline2D.java 594018 2007-11-12 04:17:41Z cam $
  */
 class Polyline2D implements Shape, Cloneable, Serializable {
@@ -222,7 +221,6 @@ class Polyline2D implements Shape, Cloneable, Serializable {
 
 	/**
 	 * Returns the high precision bounding box of the {@link Shape}。
-	 *
 	 * @return a {@link Rectangle2D} that precisely bounds the <code>Shape< / code>.
 	 */
 	public Rectangle2D getBounds2D() {

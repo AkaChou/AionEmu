@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 贝里特拉入侵相关 NPC AI：Magnorion（@AIName "magnorion"），继承 AggressiveNpcAI2。
  * Beritra-invasion related NPC AI: Magnorion (@AIName "magnorion"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("magnorion")

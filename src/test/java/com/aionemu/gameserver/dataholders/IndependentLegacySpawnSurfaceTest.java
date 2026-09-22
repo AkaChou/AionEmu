@@ -20,7 +20,6 @@ import org.w3c.dom.NodeList;
 /**
  * 真端变体块叠加 legacy 块的同族出生面闸门。
  * Gate for legacy blocks that were left behind when retail variant blocks were added.
- *
  * <p>这些 NPC 同时存在初始导入的 legacy 块和真端 {@code initial_delay} 变体块，
  * 加载器会把两条块都实例化，导致重复刷出。真端出生数据只包含本测试列出的坐标，
  * 因此每条记录必须只剩一个全 {@code resolve_z="true"} 的真端块。</p>

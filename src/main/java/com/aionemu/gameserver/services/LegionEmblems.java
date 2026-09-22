@@ -22,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 军团徽章域：负责徽章的接收上传、扣费生效、历史记录与在线成员下发。
  * Legion emblem domain: owns emblem upload intake, charged activation, history and fan-out to online members.
- *
  * <p>该类型只服务 {@link LegionService}（与 {@link LegionMembers}/{@link LegionRestrictions} 同模式，
  * 持有宿主引用以回调历史记录与权限校验）。对外仍通过 {@link LegionService} 的原公开方法访问（门面签名不变）。
  * This type only serves {@link LegionService} (same pattern as {@link LegionMembers}/{@link LegionRestrictions},
@@ -42,7 +41,6 @@ final class LegionEmblems {
 	/**
 	 * 绑定宿主军团服务。
 	 * Binds the hosting legion service.
-	 *
 	 * @param legionService 宿主军团服务 / hosting legion service
 	 */
 	LegionEmblems(LegionService legionService) {
@@ -52,7 +50,6 @@ final class LegionEmblems {
 	/**
 	 * 保存自定义军团徽章并同步给所有在线成员。
 	 * Stores a custom legion emblem and syncs it to all online members.
-	 *
 	 * @param activePlayer 操作玩家 / acting player
 	 * @param customEmblem 自定义徽章 / custom emblem
 	 */
@@ -66,7 +63,6 @@ final class LegionEmblems {
 	/**
 	 * 保存预设/标准军团徽章（扣费、写历史、广播更新）。
 	 * Stores a standard/predefined legion emblem (charges kinah, writes history, broadcasts update).
-	 *
 	 * @param activePlayer 操作玩家 / acting player
 	 * @param legionId 军团 ID / legion id
 	 * @param emblemId 徽章模板 ID / emblem template id
@@ -94,7 +90,6 @@ final class LegionEmblems {
 	/**
 	 * 开始上传自定义徽章：记录颜色/类型与总字节数并进入上传中状态。
 	 * Starts custom emblem upload: records colors/type and total size, marks uploading.
-	 *
 	 * @param activePlayer 操作玩家 / acting player
 	 * @param totalSize 徽章数据总大小 / total emblem data size
 	 * @param color_r 红色分量 / red component
@@ -118,7 +113,6 @@ final class LegionEmblems {
 	/**
 	 * 接收自定义徽章分片数据；收齐后扣费并落库生效。
 	 * Receives a chunk of custom emblem data; when complete, charges kinah and persists the emblem.
-	 *
 	 * @param activePlayer 操作玩家 / acting player
 	 * @param size 本片字节数 / chunk size
 	 * @param data 本片数据 / chunk bytes
@@ -152,7 +146,6 @@ final class LegionEmblems {
 	/**
 	 * 向玩家分包发送自定义徽章二进制数据。
 	 * Sends custom emblem binary data to a player in packets.
-	 *
 	 * @param player 接收玩家 / receiving player
 	 * @param legionEmblem 徽章对象 / emblem object
 	 * @param legionId 军团 ID / legion id
@@ -193,7 +186,6 @@ final class LegionEmblems {
 	/**
 	 * 向每位在线军团成员广播徽章更新，自定义徽章附带分片数据。
 	 * Broadcasts the emblem update to every online legion member, including chunked data for custom emblems.
-	 *
 	 * @param legion 目标军团 / target legion
 	 * @param emblemType 徽章类型 / emblem type
 	 */

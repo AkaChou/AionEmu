@@ -11,7 +11,6 @@ import lombok.Getter;
 /**
  * 印记效果：在目标上挂载可被爆发消耗的印记。
  * Signet effect: places a signet on the target that can later be consumed by a burst.
- *
  * @author ATracer
  */
 @Getter

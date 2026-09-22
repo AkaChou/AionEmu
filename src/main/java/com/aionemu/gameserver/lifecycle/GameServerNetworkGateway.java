@@ -47,7 +47,6 @@ public class GameServerNetworkGateway {
     /**
      * 注入 MAC 封禁管理器提供者。
      * Inject the banned-MAC manager provider.
-     *
      * @param bannedMacManagerProvider MAC 封禁管理器提供者 / Banned-MAC manager provider
      */
     @Autowired(required = false)
@@ -58,7 +57,6 @@ public class GameServerNetworkGateway {
     /**
      * 注入登录服连接提供者。
      * Inject the login-server provider.
-     *
      * @param loginServerProvider 登录服连接提供者 / Login-server provider
      */
     @Autowired(required = false)
@@ -69,7 +67,6 @@ public class GameServerNetworkGateway {
     /**
      * 注入聊天服连接提供者。
      * Inject the chat-server provider.
-     *
      * @param chatServerProvider 聊天服连接提供者 / Chat-server provider
      */
     @Autowired(required = false)
@@ -80,7 +77,6 @@ public class GameServerNetworkGateway {
     /**
      * 注入网络运行时桥接提供者。
      * Inject the network runtime-bridge provider.
-     *
      * @param runtimeBridgeProvider 运行时桥接提供者 / Runtime bridge provider
      */
     @Autowired(required = false)
@@ -91,7 +87,6 @@ public class GameServerNetworkGateway {
     /**
      * 当前是否为 boot 嵌入式运行模式。
      * Whether the process is running in boot-embedded mode.
-     *
      * @return 处于 boot-embedded 模式为 {@code true} / {@code true} when boot-embedded
      */
     public boolean isBootEmbedded() {
@@ -101,7 +96,6 @@ public class GameServerNetworkGateway {
     /**
      * 是否启用聊天服务器连接。
      * Whether chat-server connectivity is enabled.
-     *
      * @return 启用为 {@code true} / {@code true} when chat server is enabled
      */
     public boolean isChatServerEnabled() {
@@ -111,7 +105,6 @@ public class GameServerNetworkGateway {
     /**
      * 创建绑定游戏端口的 Netty 客户端传输。
      * Create the Netty client transport bound to the game port.
-     *
      * @return 服务器传输 / Server transport
      */
     public ServerTransport createNettyTransport() {
@@ -129,7 +122,6 @@ public class GameServerNetworkGateway {
     /**
      * 包装登录服为网络对等端。
      * Wrap the login server as a network peer.
-     *
      * @return 登录服对等端 / Login-server peer
      */
     public GameServerNetworkLifecycle.NetworkPeer loginServer() {
@@ -139,7 +131,6 @@ public class GameServerNetworkGateway {
     /**
      * 包装聊天服为网络对等端。
      * Wrap the chat server as a network peer.
-     *
      * @return 聊天服对等端 / Chat-server peer
      */
     public GameServerNetworkLifecycle.NetworkPeer chatServer() {
@@ -149,7 +140,6 @@ public class GameServerNetworkGateway {
     /**
      * 当前时间毫秒数。
      * Current time in milliseconds.
-     *
      * @return 当前毫秒时间戳 / Current epoch millis
      */
     public long currentTimeMillis() {
@@ -159,7 +149,6 @@ public class GameServerNetworkGateway {
     /**
      * 解析 MAC 封禁管理器。
      * Resolve the banned-MAC manager.
-     *
      * @return MAC 封禁管理器 / Banned MAC manager
      */
     private BannedMacManager bannedMacManager() {
@@ -172,7 +161,6 @@ public class GameServerNetworkGateway {
     /**
      * 解析登录服连接实例。
      * Resolve the login-server instance.
-     *
      * @return 登录服连接 / Login server
      */
     private LoginServer loginServerInstance() {
@@ -185,7 +173,6 @@ public class GameServerNetworkGateway {
     /**
      * 解析聊天服连接实例。
      * Resolve the chat-server instance.
-     *
      * @return 聊天服连接 / Chat server
      */
     private ChatServer chatServerInstance() {
@@ -198,7 +185,6 @@ public class GameServerNetworkGateway {
     /**
      * 解析网络运行时桥接。
      * Resolve the network runtime bridge.
-     *
      * @return 运行时桥接 / Runtime bridge
      */
     private GameServerNetworkRuntimeBridge runtimeBridge() {
@@ -211,8 +197,6 @@ public class GameServerNetworkGateway {
 	/**
 	 * 登录服网络对等端适配器。
 	 * Adapter peer for the login server.
-	 *
-	 * @param loginServer 底层登录服连接。
 	 *                    Underlying login-server connection.
 	 */
 	private record LoginServerPeer(LoginServer loginServer) implements GameServerNetworkLifecycle.NetworkPeer {
@@ -257,8 +241,6 @@ public class GameServerNetworkGateway {
     /**
      * 聊天服网络对等端适配器。
      * Adapter peer for the chat server.
-     *
-     * @param chatServer 底层聊天服连接。
      *                   Underlying chat-server connection.
      */
         private record ChatServerPeer(ChatServer chatServer) implements GameServerNetworkLifecycle.NetworkPeer {

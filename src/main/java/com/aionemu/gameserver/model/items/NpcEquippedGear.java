@@ -15,7 +15,6 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 /**
  * NpcEquippedGear，用于物品相关逻辑。
  * Npc Equipped Gear for items logic.
- *
  * @author Luno
  */
 @XmlJavaTypeAdapter(NpcEquippedGearAdapter.class)
@@ -80,7 +79,6 @@ public class NpcEquippedGear implements Iterable<Entry<ItemSlot, ItemTemplate>> 
 	/**
 	 * 获取指定槽位的物品模板。
 	 * Returns the item template for the given slot.
-	 *
 	 * @param itemSlot 槽位 / item slot
 	 * @return 物品模板，未装备返回 null / item template, or null if not equipped
 	 */

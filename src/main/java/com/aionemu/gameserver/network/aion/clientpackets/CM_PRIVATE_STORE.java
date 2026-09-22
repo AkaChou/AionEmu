@@ -15,7 +15,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 客户端个人商店开店/上架物品请求包。
  * Client packet to open a private store and list items for sale.
- *
  * @author Simple
  */
 public class CM_PRIVATE_STORE extends AionClientPacket {
@@ -39,10 +38,7 @@ public class CM_PRIVATE_STORE extends AionClientPacket {
 
 	@Override
 	protected void readImpl() {
-		/**
-	 * 定义谁 wants 到创建 private 商店。 / Define who wants to create a private store
-	 */
-		activePlayer = getConnection().getActivePlayer();
+        activePlayer = getConnection().getActivePlayer();
 		int level = activePlayer.getLevel();
 		if (activePlayer == null) {
 			return;

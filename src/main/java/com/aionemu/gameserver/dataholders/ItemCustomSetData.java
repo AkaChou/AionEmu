@@ -29,7 +29,6 @@ public class ItemCustomSetData {
 	/**
 	 * 按 ID 获取物品自定义套装模板。
 	 * Returns the item custom-set template for the given id.
-	 *
 	 * @param id 套装 ID / set id
 	 * @return 自定义套装模板或 null / custom-set template or null
 	 */
@@ -54,7 +53,6 @@ public class ItemCustomSetData {
 	/**
 	 * 返回已加载的自定义套装数量。
 	 * Returns the number of loaded custom sets.
-	 *
 	 * @return 已加载的自定义套装数量 / Returns the number of loaded custom sets.
 	 */
 	public int size() {

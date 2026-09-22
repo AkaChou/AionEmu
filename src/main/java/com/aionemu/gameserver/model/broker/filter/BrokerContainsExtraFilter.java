@@ -7,7 +7,6 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 /**
  * 经纪行 ContainsExtraFilter 模型。
  * Broker Contains Extra Filter model.
- *
  * @author ATracer
  */
 public class BrokerContainsExtraFilter extends BrokerFilter {

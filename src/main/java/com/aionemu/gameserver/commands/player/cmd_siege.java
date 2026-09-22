@@ -15,7 +15,6 @@ import java.util.Calendar;
 /**
  * 玩家命令：按日程传送到攻城（Siege）活动地图。
  * Player command: teleports to scheduled Siege event maps.
- *
  * @author Ghostfur
  */
 public class cmd_siege extends PlayerCommand {
@@ -27,7 +26,6 @@ public class cmd_siege extends PlayerCommand {
     /**
      * 根据星期/活动状态选择并进入对应攻城地图。
      * Chooses and enters the matching Siege map by weekday/event state.
-     *
      * @param player 执行命令的玩家 / invoking player
      * @param param 命令参数 / command parameters
      */

@@ -32,7 +32,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * NPC 行走管理器：路径巡航与随机游荡、到达点切换、卡住/Z 轴校正与停止行走。
  * NPC walk manager: route patrol and random wander, waypoint transitions, stuck/Z correction, and walk stop.
- *
  * @author ATracer
  */
 public class WalkManager {
@@ -64,10 +63,7 @@ public class WalkManager {
 	/**
 	 * 开始行走：优先路径巡航，否则尝试随机游荡。
 	 * Starts walking: prefers route patrol, otherwise attempts random wander.
-	 *
 	 * NPC AI instance
-	 *
-	 * @param npcAI
 	 * @return 成功进入行走时为 {@code true} / {@code true} if walking started
 	 */
 	public static boolean startWalking(NpcAI2 npcAI) {
@@ -194,9 +190,7 @@ public class WalkManager {
 	/**
 	 * 判断 NPC 是否应进入行走（支持移动且有路径或为可攻击 NPC）。
 	 * Returns whether the NPC should walk (move supported and has routes or is attackable).
-	 *
 	 * NPC AI instance
-	 *
 	 * @param npcAI {@code true} if walking is applicable。
 	 */
 	public static boolean isWalking(NpcAI2 npcAI) {
@@ -206,9 +200,7 @@ public class WalkManager {
 	/**
 	 * 判断 NPC 是否配置了行走路径。
 	 * Returns whether the NPC has walk routes configured.
-	 *
 	 * NPC AI instance
-	 *
 	 * @param npcAI {@code true} if walk routes exist。
 	 */
 	public static boolean hasWalkRoutes(NpcAI2 npcAI) {
@@ -236,7 +228,6 @@ public class WalkManager {
 	/**
 	 * 到达路径点/随机点后的处理：切换下一步、等待组或中止交谈移动。
 	 * Handles arrival at a route/random point: next step, wait-group, or abort on talk.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void targetReached(final NpcAI2 npcAI) {
@@ -392,7 +383,6 @@ public class WalkManager {
 	/**
 	 * 停止行走：取消挂起任务、清理状态并中止移动。
 	 * Stops walking: cancels pending tasks, cleans state, and aborts movement.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void stopWalking(NpcAI2 npcAI) {
@@ -453,9 +443,7 @@ public class WalkManager {
 	/**
 	 * 判断移动控制器是否已到达当前点。
 	 * Returns whether the move controller has reached the current point.
-	 *
 	 * NPC AI instance
-	 *
 	 * @param npcAI {@code true} if arrived。
 	 */
 	public static boolean isArrivedAtPoint(NpcAI2 npcAI) {

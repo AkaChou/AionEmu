@@ -39,7 +39,6 @@ import java.util.Map;
 /**
  * 天梯 / 战场匹配服务，管理普通与活动队列、战场创建、排名与名称伪装。
  * battleground matchmaking service managing normal and event queues, BG creation, ranks, and name masking.
- *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -64,8 +63,7 @@ public class LadderService {
 	 * -- GETTER --
 	 *  返回普通战场是否处于报名中。
 	 *  Returns whether normal battleground registration is open.
-	 *
-	 * @return 是否报名中 / whether ready
+	 * 是否报名中 / whether ready
 	 */
 	@Getter
 	boolean normalReady = false;
@@ -73,8 +71,7 @@ public class LadderService {
      * -- GETTER --
      *  返回活动战场是否处于报名中。
      *  Returns whether event battleground registration is open.
-     *
-     * @return 是否报名中 / whether ready
+     * 是否报名中 / whether ready
      */
     @Getter
     boolean eventReady = false;
@@ -105,7 +102,6 @@ public class LadderService {
 	/**
 	 * 将玩家注册到普通战场队列。
 	 * Registers a player into the normal battleground queue.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否注册成功 / whether registration succeeded
 	 */
@@ -127,7 +123,6 @@ public class LadderService {
 	/**
 	 * 将玩家注册到活动战场队列。
 	 * Registers a player into the event battleground queue.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否注册成功 / whether registration succeeded
 	 */
@@ -149,7 +144,6 @@ public class LadderService {
 	/**
 	 * 将玩家从普通战场队列移除。
 	 * Removes a player from the normal battleground queue.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void unregisterForNormal(Player player) {
@@ -159,7 +153,6 @@ public class LadderService {
 	/**
 	 * 将玩家从活动战场队列移除。
 	 * Removes a player from the event battleground queue.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void unregisterForEvent(Player player) {
@@ -169,7 +162,6 @@ public class LadderService {
 	/**
 	 * 判断玩家是否已在任一队列中。
 	 * Returns whether the player is already in any queue.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否在队列中 / whether queued
 	 */
@@ -180,7 +172,6 @@ public class LadderService {
 	/**
 	 * 取消玩家在普通 / 活动队列中的全部报名并同步 UI。
 	 * Cancels all of a player's normal/event queue registrations and syncs the UI.
-	 *
 	 * 玩家 / player
 	 */
 	public void unregisterFromQueue(Player player) {
@@ -199,10 +190,7 @@ public class LadderService {
 	/**
 	 * 将队伍注册到普通战场队列。
 	 * Registers a party into the normal battleground queue.
-	 *
 	 * party
-	 *
-	 * @param group
 	 * @return 是否注册成功 / whether registration succeeded
 	 */
 	public boolean registerForNormal(PlayerGroup group) {
@@ -229,10 +217,7 @@ public class LadderService {
 	/**
 	 * 将队伍注册到活动战场队列。
 	 * Registers a party into the event battleground queue.
-	 *
 	 * party
-	 *
-	 * @param group
 	 * @return 是否注册成功 / whether registration succeeded
 	 */
 	public boolean registerForEvent(PlayerGroup group) {
@@ -257,7 +242,6 @@ public class LadderService {
 	/**
 	 * 将队伍从普通战场队列移除。
 	 * Removes a party from the normal battleground queue.
-	 *
 	 * party
 	 */
 	public void unregisterForNormal(PlayerGroup group) {
@@ -267,7 +251,6 @@ public class LadderService {
 	/**
 	 * 将队伍从活动战场队列移除。
 	 * Removes a party from the event battleground queue.
-	 *
 	 * party
 	 */
 	public void unregisterForEvent(PlayerGroup group) {
@@ -277,10 +260,7 @@ public class LadderService {
 	/**
 	 * 判断队伍是否已在任一队列中。
 	 * Returns whether the party is already in any queue.
-	 *
 	 * party
-	 *
-	 * @param group
 	 * @return 是否在队列中 / whether queued
 	 */
 	public boolean isInQueue(PlayerGroup group) {
@@ -290,7 +270,6 @@ public class LadderService {
 	/**
 	 * 取消队伍在普通 / 活动队列中的全部报名并同步 UI。
 	 * Cancels all of a party's normal/event queue registrations and syncs the UI.
-	 *
 	 * party
 	 */
 	public void unregisterFromQueue(PlayerGroup group) {
@@ -313,7 +292,6 @@ public class LadderService {
 	/**
 	 * 返回活动队列条目数（玩家或队伍条目）。
 	 * Returns the number of entries in the event queue (players or parties).
-	 *
 	 * @return 队列条目数 / queue entry count
 	 */
 	public int getEventQueueSize() {
@@ -323,7 +301,6 @@ public class LadderService {
 	/**
 	 * 统计活动队列中的实际玩家人数。
 	 * Counts the actual number of players in the event queue.
-	 *
 	 * player count
 	 */
 	public int getEventQueuePlayers() {
@@ -341,7 +318,6 @@ public class LadderService {
 	/**
 	 * 按是否仅队伍模式随机实例化一个战场类型。
 	 * Instantiates a random battleground type based on team-only mode.
-	 *
 	 * @param teamOnly 是否仅队伍模式 / whether team-only
 	 * battleground instance
 	 */
@@ -363,7 +339,6 @@ public class LadderService {
 	/**
 	 * 开启一轮普通战场报名，并在截止后处理匹配。
 	 * Opens one normal battleground registration window and processes matchmaking after the deadline.
-	 *
 	 * @param event 战场事件 / battleground event
 	 * @return 是否成功开启 / whether opened successfully
 	 */
@@ -393,7 +368,6 @@ public class LadderService {
 	/**
 	 * 开启一轮指定类型的活动战场报名。
 	 * Opens one event battleground registration window of the given type.
-	 *
 	 * @param bg 活动战场模板 / event battleground template
 	 * @param teamBased 是否按队伍匹配 / whether team-based
 	 * @return 是否成功开启 / whether opened successfully
@@ -433,7 +407,6 @@ public class LadderService {
 	/**
 	 * 处理普通队列匹配并创建战场。
 	 * Processes normal-queue matchmaking and creates battlegrounds.
-	 *
 	 * @param event 战场事件 / battleground event
 	 */
 	private void HandleNormalQueue(BattlegroundEvent event) {
@@ -721,7 +694,6 @@ public class LadderService {
 	/**
 	 * 向未在战场 / FFA 中的玩家广播系统消息。
 	 * Broadcasts a system message to players not currently in a BG/FFA.
-	 *
 	 * message
 	 */
 	private void announceAll(final String msg) {
@@ -735,7 +707,6 @@ public class LadderService {
 	/**
 	 * 分配下一个可用战场 ID。
 	 * Allocates the next available battleground id.
-	 *
 	 * @return 战场 ID，失败返回 -1 / bg id, or -1 on failure
 	 */
 	private Integer getNextAvailableBgId() {
@@ -750,7 +721,6 @@ public class LadderService {
 	/**
 	 * 战场结束时清理映射并回调事件引擎。
 	 * Cleans mappings when a battleground ends and notifies the event engine.
-	 *
 	 * @param bg 结束的战场 / finished battleground
 	 */
 	public void onBgEnd(Battleground bg) {
@@ -766,7 +736,6 @@ public class LadderService {
 	/**
 	 * 注册并启动一个战场实例。
 	 * Registers and starts a battleground instance.
-	 *
 	 * @param bg 战场 / battleground
 	 * @return 分配的战场 ID / allocated bg id
 	 */
@@ -780,7 +749,6 @@ public class LadderService {
 	/**
 	 * 返回活跃战场的不可变快照。
 	 * Returns an immutable snapshot of active battlegrounds.
-	 *
 	 * @return 战场映射快照 / battleground map snapshot
 	 */
 	public Map<Integer, Battleground> getBattlegrounds() {
@@ -792,7 +760,6 @@ public class LadderService {
 	/**
 	 * 复制当前活跃战场列表快照。
 	 * Copies a snapshot of the active battleground list.
-	 *
 	 * battleground list
 	 */
 	private List<Battleground> battlegroundsSnapshot() {
@@ -804,7 +771,6 @@ public class LadderService {
 	/**
 	 * 复制队列快照以便安全遍历。
 	 * Copies a queue snapshot for safe iteration.
-	 *
 	 * source queue
 	 * snapshot list
 	 */
@@ -817,7 +783,6 @@ public class LadderService {
 	/**
 	 * 查找玩家可重连的未结束战场。
 	 * Finds an unfinished battleground the player can rejoin.
-	 *
 	 * @param player 玩家 / player
 	 * @return 可重连战场，或 null / rejoinable battleground, or null
 	 */
@@ -835,7 +800,6 @@ public class LadderService {
 	/**
 	 * 按战场索引与种族返回伪装斗篷模板 ID。
 	 * Returns the disguise cloak template id by BG index and race.
-	 *
 	 * 玩家 / player
 	 * @param bgIndex 战场队伍索引 / battleground team index
 	 * cloak template id
@@ -847,7 +811,6 @@ public class LadderService {
 	/**
 	 * 返回战场内目标显示名（可能脱敏为 Contestant）。
 	 * Returns the in-BG display name for a target (may be masked as Contestant).
-	 *
 	 * viewer
 	 * target
 	 * display name
@@ -859,7 +822,6 @@ public class LadderService {
 	/**
 	 * 按战场队伍索引返回队伍名称。
 	 * Returns the team name for a battleground team index.
-	 *
 	 * team index
 	 * team name
 	 */
@@ -870,7 +832,6 @@ public class LadderService {
 	/**
 	 * 按战场队伍索引返回披风军团徽章样式。
 	 * Returns the cape legion-emblem style for a battleground team index.
-	 *
 	 * team index
 	 * emblem
 	 */
@@ -881,7 +842,6 @@ public class LadderService {
 	/**
 	 * 处理自动组队 / 战场报名窗口交互。
 	 * battleground registration window interactions.
-	 *
 	 * 玩家 / player
 	 * window id
 	 * dialog id
@@ -992,7 +952,6 @@ public class LadderService {
 	/**
 	 * 玩家登录时同步普通战场报名 UI 状态。
 	 * Syncs normal battleground registration UI state on player login.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onPlayerLogin(Player player) {
@@ -1004,7 +963,6 @@ public class LadderService {
 	/**
 	 * 按起始职业交叉排序参与者，尽量均衡职业分布。
 	 * Interleaves participants by starting class to balance class distribution.
-	 *
 	 * @param participants 参与者 objectId 列表 / participant objectId list
 	 */
 	private void SortParticipantList(List<Integer> participants) {
@@ -1092,7 +1050,6 @@ public class LadderService {
 	/**
 	 * 浅拷贝玩家列表。
 	 * Shallow-copies a player list.
-	 *
 	 * source list
 	 * clone
 	 */
@@ -1105,7 +1062,6 @@ public class LadderService {
 	/**
 	 * 向玩家发送（可延迟）系统公告，使用默认发送者图标。
 	 * Sends a (optionally delayed) system announcement to a player with the default sender icon.
-	 *
 	 * 玩家 / player
 	 * message
 	 * @param delay 延迟毫秒 / delay in ms
@@ -1117,7 +1073,6 @@ public class LadderService {
 	/**
 	 * 向玩家发送（可延迟）系统公告。
 	 * Sends a (optionally delayed) system announcement to a player.
-	 *
 	 * 玩家 / player
 	 * @param sender 发送者图标 / sender icon
 	 * message
@@ -1134,7 +1089,6 @@ public class LadderService {
 	/**
 	 * 获取天梯 DAO。
 	 * Returns the ladder DAO.
-	 *
 	 * DAO instance
 	 */
 	private LadderDAO getLadderDAO() {
@@ -1144,11 +1098,9 @@ public class LadderService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -1167,7 +1119,6 @@ public class LadderService {
 	/**
 	 * 注入 Spring 实例提供者。
 	 * Injects the Spring instance provider.
-	 *
 	 * provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<LadderService> instanceProvider) {

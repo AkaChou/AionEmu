@@ -13,7 +13,6 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
 /**
  * 同步仓库物品列表的服务端包（可分片发送）。
  * Server packet that syncs a warehouse item list (may be sent in chunks).
- *
  * @author kosyachok
  */
 public class SM_WAREHOUSE_INFO extends AionServerPacket {
@@ -59,7 +58,6 @@ public class SM_WAREHOUSE_INFO extends AionServerPacket {
 	/**
 	 * 写出仓库物品信息。
 	 * Writes warehouse item info.
-	 *
 	 * @param item item
 	 */
 	private void writeItemInfo(Item item) {

@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * GM 指令：取消管理员隐身，恢复可见。
  * GM command handler that makes the admin visible again.
- *
  * @author Alcapwnd
  */
 public class CmdVisible extends AbstractGMHandler {
@@ -17,7 +16,6 @@ public class CmdVisible extends AbstractGMHandler {
 	/**
 	 * 创建处理器并立即取消隐身。
 	 * Creates the handler and immediately removes invisibility.
-	 *
 	 * @param admin 执行指令的管理员 / the admin executing the command
 	 * @param params 指令参数（当前未使用） / command parameters (currently unused)
 	 */

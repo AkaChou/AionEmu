@@ -21,7 +21,6 @@ public class Whisper extends AdminCommand {
 	/**
 	 * on 开启接受密语，off 关闭。
 	 * on accepts whispers; off rejects them.
-	 *
 	 * @param admin 执行 GM / Admin player
 	 * @param params on|off。
 	 */
@@ -41,7 +40,6 @@ public class Whisper extends AdminCommand {
 	/**
 	 * 参数错误时的用法提示。
 	 * Usage hint on invalid parameters.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

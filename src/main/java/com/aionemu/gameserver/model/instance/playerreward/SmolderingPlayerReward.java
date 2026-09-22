@@ -13,9 +13,6 @@ import lombok.Setter;
 public class SmolderingPlayerReward extends InstancePlayerReward {
 	/** 返回 smoldering key / Returns the smoldering key */
 	private int smolderingKey;
-	/**
-	 * @return 是否已奖励 / whether rewarded
-	 */
 	private boolean isRewarded = false;
 
 	public SmolderingPlayerReward(Integer object) {

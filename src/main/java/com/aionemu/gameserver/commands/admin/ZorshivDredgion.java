@@ -27,7 +27,6 @@ public class ZorshivDredgion extends AdminCommand
 	/**
 	 * 按 start/stop 与地点 ID 控制 Zorshiv Dredgion。
 	 * Controls Zorshiv Dredgion by start/stop and location id.
-	 *
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -42,7 +41,6 @@ public class ZorshivDredgion extends AdminCommand
 	/**
 	 * 处理 start/stop 分支。
 	 * Handles start/stop branches.
-	 *
 	 */
 	protected void handleStartStop(Player player, String... params) {
 		if (params.length != 2 || !NumberUtils.isDigits(params[1])) {
@@ -74,8 +72,6 @@ public class ZorshivDredgion extends AdminCommand
 	/**
 	 * 校验 Zorshiv Dredgion 地点 ID 是否存在。
 	 * Validates that the Zorshiv Dredgion location id exists.
-	 *
-	 *
 	 * @return 若 valid 则为 true / True if valid
 	 */
 	protected boolean isValidZorshivDredgionLocationId(Player player, int zorshivDredgionId) {
@@ -89,7 +85,6 @@ public class ZorshivDredgion extends AdminCommand
 	/**
 	 * 显示用法帮助。
 	 * Shows usage help.
-	 *
 	 * @param player 执行 GM / Admin player
 	 */
 	protected void showHelp(Player player) {

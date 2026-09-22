@@ -17,7 +17,6 @@ import java.util.concurrent.Future;
 /**
  * Elementis Forest 副本 NPC AI：Jurdin The Cursed（@AIName "jurdin"），继承 SummonerAI2。
  * Elementis Forest instance NPC AI: Jurdin The Cursed (@AIName "jurdin"), extends SummonerAI2.
- *
  * @author Luzien
  */
 @AIName("jurdin")

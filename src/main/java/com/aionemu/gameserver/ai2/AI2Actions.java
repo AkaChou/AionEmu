@@ -21,7 +21,6 @@ import lombok.Getter;
 /**
  * AI2 常用动作工具类，封装对 AI 所有者的通用操作。
  * Common AI2 action helpers with access to the AI owner's operations.
- *
  * @author ATracer
  */
 public class AI2Actions {
@@ -29,7 +28,6 @@ public class AI2Actions {
 	/**
 	 * 删除并清理 AI 所有者。
 	 * Despawns and deletes the AI owner.
-	 *
 	 * @param ai2 AI 实例 / AI instance
 	 */
 	public static void deleteOwner(AbstractAI ai2) {
@@ -39,7 +37,6 @@ public class AI2Actions {
 	/**
 	 * 以 AI 所有者为最后攻击者静默击杀目标。
 	 * Silently kills the target using the AI owner as the last attacker.
-	 *
 	 * @param ai2 AI 实例 / AI instance
 	 * @param target 目标生物 / target creature
 	 */
@@ -50,7 +47,6 @@ public class AI2Actions {
 	/**
 	 * 让 AI 所有者被指定攻击者静默击杀。
 	 * Silently kills the AI owner by the given attacker.
-	 *
 	 * @param ai2 AI 实例 / AI instance
 	 * @param attacker 攻击者 / attacker
 	 */
@@ -61,7 +57,6 @@ public class AI2Actions {
 	/**
 	 * 使用技能（或加入使用意图，后续可扩展）。
 	 * Uses a skill (or queues an intention to use it later).
-	 *
 	 * @param ai2 AI 实例 / AI instance
 	 * @param skillId 技能 ID / skill id
 	 */
@@ -72,7 +67,6 @@ public class AI2Actions {
 	/**
 	 * 创建并强制对目标应用技能效果（100% 成功）。
 	 * Creates and force-applies a skill effect to the target with 100% success.
-	 *
 	 * @param ai2 AI 实例 / AI instance
 	 * @param template 技能模板 / skill template
 	 * @param target 目标生物 / target creature
@@ -87,7 +81,6 @@ public class AI2Actions {
 	/**
 	 * 对 AI 所有者自身应用技能效果。
 	 * Applies a skill effect to the AI owner itself.
-	 *
 	 * @param ai2 AI 实例 / AI instance
 	 * @param skillId 技能 ID / skill id
 	 */
@@ -101,7 +94,6 @@ public class AI2Actions {
 	/**
 	 * 将目标设为自身。
 	 * Sets the target to self.
-	 *
 	 * @param ai2 AI 实例 / AI instance
 	 */
 	public static void targetSelf(AbstractAI ai2) {
@@ -111,7 +103,6 @@ public class AI2Actions {
 	/**
 	 * 将目标设为指定生物。
 	 * Sets the target to the given creature.
-	 *
 	 * @param ai2 AI 实例 / AI instance
 	 * @param target 目标生物 / target creature
 	 */
@@ -122,7 +113,6 @@ public class AI2Actions {
 	/**
 	 * 通知副本处理器：玩家完成使用物品/交互。
 	 * Notifies the instance handler that a player finished using an item/interaction.
-	 *
 	 * @param ai2 AI 实例 / AI instance
 	 * 玩家 / player
 	 */
@@ -134,7 +124,6 @@ public class AI2Actions {
 	/**
 	 * 向目标 NPC 触发个体事件。
 	 * Fires an individual NPC event on the target.
-	 *
 	 * @param ai2 AI 实例 / AI instance
 	 * @param target 目标 NPC / target NPC
 	 */
@@ -145,7 +134,6 @@ public class AI2Actions {
 	/**
 	 * 触发副本内 NPC 死亡事件。
 	 * Fires an instance NPC-kill event.
-	 *
 	 * @param ai2 AI 实例 / AI instance
 	 * @param player 相关玩家 / related player
 	 */
@@ -156,7 +144,6 @@ public class AI2Actions {
 	/**
 	 * 注册掉落分配。
 	 * Registers drop distribution.
-	 *
 	 * @param ai2 AI 实例 / AI instance
 	 * @param player 主要玩家 / main player
 	 * @param registeredPlayers 已登记玩家集合 / registered players
@@ -168,7 +155,6 @@ public class AI2Actions {
 	/**
 	 * 安排 NPC 重生。
 	 * Schedules NPC respawn.
-	 *
 	 * @param ai2 NPC AI 实例 / NPC AI instance
 	 */
 	public static void scheduleRespawn(NpcAI2 ai2) {
@@ -178,12 +164,10 @@ public class AI2Actions {
 	/**
 	 * 处理任务对话框选择并返回结果。
 	 * Processes quest dialog selection and returns the result.
-	 *
 	 * @param ai2 AI 实例 / AI instance
 	 * @param player 玩家 / player
 	 * @param questId 任务 ID / quest id
 	 * @param dialogId 对话框 ID / dialog id
-	 *
 	 * @return 对话框选择结果 / dialog selection result
 	 */
 	public static SelectDialogResult selectDialog(AbstractAI ai2, Player player, int questId, int dialogId) {
@@ -202,16 +186,13 @@ public class AI2Actions {
          * -- GETTER --
          *  是否处理成功。
          *  Returns whether the dialog was handled successfully.
-         *
-         * @return 是否成功 / whether successful
+         * 是否成功 / whether successful
          */
         private final boolean success;
         /**
          * -- GETTER --
          *  获取任务环境。
          *  Returns the quest environment.
-         *
-         * @return 任务环境 / quest environment
          */
         private final QuestEnv env;
 
@@ -225,7 +206,6 @@ public class AI2Actions {
 	/**
 	 * 向玩家添加请求响应处理器，senderId 默认为 AI 所有者 objectId。
 	 * Adds a request/response handler to the player with senderId defaulting to the AI owner's objectId.
-	 *
 	 * @param ai2 AI 实例 / AI instance
 	 * @param player 玩家 / player
 	 * @param requestId 请求 ID / request id
@@ -240,7 +220,6 @@ public class AI2Actions {
 	/**
 	 * 向玩家添加请求响应处理器；超出范围时取消请求。
 	 * Adds a request/response handler to the player; cancels when moving out of range.
-	 *
 	 * @param ai2 AI 实例 / AI instance
 	 * @param player 玩家 / player
 	 * @param requestId 请求 ID / request id
@@ -282,7 +261,6 @@ public class AI2Actions {
 	/**
 	 * 向玩家添加请求响应处理器（不限制范围）。
 	 * Adds a request/response handler to the player (no range limit).
-	 *
 	 * @param ai2 AI 实例 / AI instance
 	 * @param player 玩家 / player
 	 * @param requestId 请求 ID / request id

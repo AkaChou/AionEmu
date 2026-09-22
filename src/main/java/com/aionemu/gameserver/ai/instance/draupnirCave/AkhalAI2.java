@@ -22,7 +22,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Draupnir Cave 副本 NPC AI：Akhal（@AIName "akhal"），继承 AggressiveNpcAI2。
  * Draupnir Cave instance NPC AI: Akhal (@AIName "akhal"), extends AggressiveNpcAI2.
- *
  * @author Rinzler
  * @author Ranastic (Encom)
  */

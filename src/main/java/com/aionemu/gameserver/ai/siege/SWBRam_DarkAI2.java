@@ -18,7 +18,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 攻城战相关 NPC AI：SWB Ram Dark（@AIName "SWBRam_Dark"），继承 NpcAI2。
  * Siege-related NPC AI: SWB Ram Dark (@AIName "SWBRam_Dark"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("SWBRam_Dark")

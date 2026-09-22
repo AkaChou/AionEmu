@@ -27,7 +27,6 @@ import java.util.List;
 /**
  * 任务交互物 AI：玩家使用后触发任务相关逻辑。
  * Quest interaction-item AI that runs quest logic when a player uses the object.
- *
  * @author Rinzler (Encom)
  */
 @AIName("quest_use_item")
@@ -38,7 +37,6 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 	/**
 	 * 玩家开始与本 NPC 对话/交互。
 	 * Player starts dialog/interaction with this NPC.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -66,7 +64,6 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 	/**
 	 * 使用交互物完成时的逻辑。
 	 * Logic when action-item use finishes.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -126,7 +123,6 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 	/**
 	 * 处理看见生物事件。
 	 * Handle seeing a creature.
-	 *
 	 * @param creature 生物 / creature
 	 */
 	@Override
@@ -137,7 +133,6 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 	/**
 	 * 处理生物移动事件。
 	 * Handle creature-moved.
-	 *
 	 * @param creature 移动的生物 / moved creature
 	 */
 	@Override

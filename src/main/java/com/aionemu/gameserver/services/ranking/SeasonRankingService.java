@@ -17,7 +17,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 赛季排行榜服务，负责加载玩家各类竞技/挑战积分并同步个人历史包。
  * Season ranking service loading player arena/challenge scores and syncing personal history packets.
- *
  * @author Wnkrz
  */
 public class SeasonRankingService {
@@ -25,8 +24,6 @@ public class SeasonRankingService {
      * -- SETTER --
      *  注入 Spring 实例提供者。
      *  Inject the Spring instance provider.
-     *
-     * @param provider 实例提供者 / Instance provider
      */
     @Setter
     private static volatile ObjectProvider<SeasonRankingService> instanceProvider;
@@ -34,7 +31,6 @@ public class SeasonRankingService {
 	/**
 	 * 按表 ID 加载玩家对应赛季排行数据并下发。
 	 * Load and dispatch the player's season ranking data by table ID.
-	 *
 	 * 玩家 / Player
 	 * @param tableid 排行表 ID / Ranking table ID
 	 */
@@ -53,7 +49,6 @@ public class SeasonRankingService {
 	/**
 	 * 加载黄金竞技场（坚韧殿堂）积分并下发历史包。
 	 * Load Gold Arena (Hall of Tenacity) score and send history packet.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public void loadGoldArenaScore(Player player) {
@@ -67,7 +62,6 @@ public class SeasonRankingService {
 	/**
 	 * 加载挑战之塔积分并下发历史包。
 	 * Load Tower of Challenge score and send history packet.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public void loadTowerScore(Player player) {
@@ -81,7 +75,6 @@ public class SeasonRankingService {
 	/**
 	 * 加载 6v6 竞技场积分并下发历史包。
 	 * Load Arena 6v6 score and send history packet.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public void loadArena6v6Score(Player player) {
@@ -94,7 +87,6 @@ public class SeasonRankingService {
 	/**
 	 * 加载孤独竞技场积分并下发历史包。
 	 * Load Arena of Tenacity score and send history packet.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public void loadArenaOfTenacityScore(Player player) {
@@ -108,7 +100,6 @@ public class SeasonRankingService {
 	/**
 	 * 保存熔炉尖塔（挑战之塔）通关时间并更新最佳/上次/当前记录。
 	 * Save Crusible Spire (Tower of Challenge) clear time and update best/last/current records.
-	 *
 	 * 玩家 / Player
 	 * @param newTime 新通关时间 / New clear time
 	 */
@@ -139,11 +130,9 @@ public class SeasonRankingService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available

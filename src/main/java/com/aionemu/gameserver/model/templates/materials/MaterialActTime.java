@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 材料 ActTime 枚举。
  * Material Act Time enumeration.
- *
  * @author Rolandas
  */
 @XmlType(name = "DayTime")

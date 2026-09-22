@@ -46,7 +46,6 @@ public class VeteranRewardsService {
 		/**
 		 * 判断该种族是否允许接收本类型奖励。
 		 * Whether the given race is allowed for this recipient type.
-		 *
 		 * 阵营 / Race
 		 * Whether allowed
 		 */
@@ -122,7 +121,6 @@ public class VeteranRewardsService {
 	/**
 	 * 校验单条数据库奖励并发送邮件，成功后回收记录。
 	 * Verify a single DB reward, mail it, then recycle the record on success.
-	 *
 	 * @param id      奖励记录 ID / Reward record ID
 	 * @param Player  接收玩家名 / Recipient player name
 	 * @param typeID  邮件类型 / Mail type
@@ -164,7 +162,6 @@ public class VeteranRewardsService {
 	/**
 	 * 按接收方类型发放老兵奖励（指定玩家或按种族广播）。
 	 * Deliver a veteran reward filtered by recipient type (specific player or race broadcast).
-	 *
 	 * @param id            奖励记录 ID / Reward record ID
 	 * @param Player        接收玩家名 / Recipient player name
 	 * Mail type
@@ -214,7 +211,6 @@ public class VeteranRewardsService {
 	/**
 	 * 向指定玩家发送老兵奖励邮件（在线推送，离线写库）。
 	 * Send a veteran reward mail to the given player (push if online, store if offline).
-	 *
 	 * Sender
 	 * Recipient name
 	 * Title
@@ -287,11 +283,9 @@ public class VeteranRewardsService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
@@ -309,7 +303,6 @@ public class VeteranRewardsService {
 	/**
 	 * 注入 Spring 实例提供者。
 	 * Inject the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / Instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<VeteranRewardsService> instanceProvider) {

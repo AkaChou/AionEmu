@@ -10,7 +10,6 @@ import lombok.AccessLevel;
 /**
  * 魔立方/仓库容量更新包：同步格子数与扩展次数，或进阶烙印槽位。
  * Cube/warehouse capacity update: slot counts and expands, or advanced stigma slots.
- *
  * @author Sweetkr
  */
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -29,7 +28,6 @@ public class SM_CUBE_UPDATE extends AionServerPacket {
 	/**
 	 * 进阶烙印槽位数量更新。
 	 * Advanced stigma slot-count update.
-	 *
 	 * @param slots 烙印槽位数 / stigma slot count
 	 */
 	public static SM_CUBE_UPDATE stigmaSlots(int slots) {
@@ -39,7 +37,6 @@ public class SM_CUBE_UPDATE extends AionServerPacket {
 	/**
 	 * 魔立方/仓库容量更新。
 	 * Cube/warehouse capacity update.
-	 *
 	 * @param type   存储类型 / storage type
 	 * @param player 目标玩家 / target player
 	 */

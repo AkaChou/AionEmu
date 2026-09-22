@@ -19,7 +19,6 @@ import lombok.AccessLevel;
 /**
  * 基于 Java 8 Time API 的日期时间工具，应用 GSConfig 时区并尽量保留日历字段。
  * Date/time utility using the Java 8 Time API; applies GSConfig zone while retaining calendar fields.
- *
  * @author Rolandas
  */
 @Slf4j
@@ -66,7 +65,6 @@ public final class DateTimeUtil {
 	/**
 	 * 返回配置时区下的当前日期时间。
 	 * Current date/time in the configured zone.
-	 *
 	 * @return 当前日期时间 / Current ZonedDateTime
 	 */
 	public static ZonedDateTime now() {
@@ -76,7 +74,6 @@ public final class DateTimeUtil {
 	/**
 	 * 从 ISO 字符串创建 ZonedDateTime（保留字段后应用配置时区）。
 	 * Create ZonedDateTime from an ISO string (retain fields, apply configured zone).
-	 *
 	 * @param isoDateTime ISO 日期时间字符串 / ISO date-time string
 	 * @return ZonedDateTime
 	 */
@@ -93,7 +90,6 @@ public final class DateTimeUtil {
 	/**
 	 * 按指定格式从字符串创建 ZonedDateTime。
 	 * Create ZonedDateTime from a string with the given formatter.
-	 *
 	 * @param dateTimeString 日期时间字符串 / Date-time string
 	 * @param formatter 格式化器 / Formatter
 	 * @return ZonedDateTime
@@ -111,7 +107,6 @@ public final class DateTimeUtil {
 	/**
 	 * 从 Calendar 创建 ZonedDateTime。
 	 * Create ZonedDateTime from a Calendar.
-	 *
 	 * @param calendar Calendar
 	 * @return ZonedDateTime
 	 */
@@ -125,7 +120,6 @@ public final class DateTimeUtil {
 	/**
 	 * 从 epoch 毫秒创建 ZonedDateTime。
 	 * Create ZonedDateTime from epoch millis.
-	 *
 	 * @param millisSinceEpoch 自 1970-01-01 起的毫秒 / Millis since epoch
 	 * @return ZonedDateTime
 	 */
@@ -136,7 +130,6 @@ public final class DateTimeUtil {
 	/**
 	 * 从 Instant 创建 ZonedDateTime。
 	 * Create ZonedDateTime from an Instant.
-	 *
 	 * @param instant Instant
 	 * @return ZonedDateTime
 	 */
@@ -150,7 +143,6 @@ public final class DateTimeUtil {
 	/**
 	 * 从游戏时间分钟数创建 ZonedDateTime（近似）。
 	 * Create ZonedDateTime from game-time minutes (approximation).
-	 *
 	 * @param gameTimeMinutes 游戏时间分钟 / Game-time minutes
 	 * @return 配置时区下的 ZonedDateTime / ZonedDateTime in configured zone
 	 */
@@ -164,7 +156,6 @@ public final class DateTimeUtil {
 	/**
 	 * 将 LocalDateTime 应用配置时区并保留字段值。
 	 * Apply configured zone to LocalDateTime while retaining field values.
-	 *
 	 * @param localDateTime 本地日期时间 / Local date-time
 	 * @return ZonedDateTime
 	 */
@@ -178,7 +169,6 @@ public final class DateTimeUtil {
 	/**
 	 * 将 ZonedDateTime 字段保留后改用配置时区。
 	 * Re-apply configured zone to a ZonedDateTime while retaining local fields.
-	 *
 	 * @param zonedDateTime 源日期时间 / Source zoned date-time
 	 * @return ZonedDateTime
 	 */
@@ -200,7 +190,6 @@ public final class DateTimeUtil {
 	/**
 	 * 是否正在使用配置时区。
 	 * Whether the configured zone is in use.
-	 *
 	 * @return 使用配置时区则为 true / True if configured zone is used
 	 */
 	public static boolean isConfiguredZoneUsed() {
@@ -210,7 +199,6 @@ public final class DateTimeUtil {
 	/**
 	 * 返回当前配置时区（未启用时回退系统默认）。
 	 * Current configured zone, or system default if disabled.
-	 *
 	 * @return ZoneId
 	 */
 	public static ZoneId getZone() {
@@ -220,7 +208,6 @@ public final class DateTimeUtil {
 	/**
 	 * 按指定格式格式化 ZonedDateTime。
 	 * Format a ZonedDateTime with the given formatter.
-	 *
 	 * @param dateTime 日期时间 / Date-time
 	 * @param formatter 格式化器 / Formatter
 	 * @return 格式化字符串 / Formatted string
@@ -235,7 +222,6 @@ public final class DateTimeUtil {
 	/**
 	 * 转为 GregorianCalendar。
 	 * Convert to GregorianCalendar.
-	 *
 	 * @param dateTime 日期时间 / Date-time
 	 * @return GregorianCalendar 或 null / GregorianCalendar or null
 	 */
@@ -249,7 +235,6 @@ public final class DateTimeUtil {
 	/**
 	 * 转为 java.util.Calendar（时区来自 dateTime）。
 	 * Convert to java.util.Calendar (zone taken from dateTime).
-	 *
 	 * @param dateTime 日期时间 / Date-time
 	 * @return Calendar 或 null / Calendar or null
 	 */
@@ -263,7 +248,6 @@ public final class DateTimeUtil {
 	/**
 	 * 返回 epoch 毫秒。
 	 * Epoch millis for the given ZonedDateTime.
-	 *
 	 * @param dateTime 日期时间 / Date-time
 	 * @return 毫秒，null 时为 0 / Millis, or 0 if null
 	 */
@@ -277,7 +261,6 @@ public final class DateTimeUtil {
 	/**
 	 * 返回 ISO 本地日期时间字符串。
 	 * ISO local date-time string representation.
-	 *
 	 * @param dateTime 日期时间 / Date-time
 	 * @return ISO 字符串 / ISO string
 	 */
@@ -291,7 +274,6 @@ public final class DateTimeUtil {
 	/**
 	 * 获取时区，未启用配置时回退系统默认。
 	 * Resolve zone with fallback to system default.
-	 *
 	 * @return ZoneId
 	 */
 	private static ZoneId getZoneWithFallback() {

@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Iluma 区域 NPC AI：Valley Torr Crumbler（@AIName "valley_torr_crumbler"），继承 AggressiveNpcAI2。
  * Iluma zone NPC AI: Valley Torr Crumbler (@AIName "valley_torr_crumbler"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("valley_torr_crumbler")

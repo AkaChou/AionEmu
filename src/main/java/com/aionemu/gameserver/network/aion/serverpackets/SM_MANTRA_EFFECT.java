@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 /**
  * 真言/曼陀罗（Mantra）特效同步的服务端包。
  * Server packet that synchronizes mantra visual effects.
- *
  * @author Sweetkr
  */
 @AllArgsConstructor

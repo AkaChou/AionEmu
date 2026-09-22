@@ -22,7 +22,6 @@ final class GameHousingFallbacks {
     /**
      * 返回房屋竞拍服务回退实例。
      * Return the housing-bid service fallback instance.
-     *
      * @return 房屋竞拍服务 / Housing-bid service
      */
     static HousingBidService housingBidService() {
@@ -32,7 +31,6 @@ final class GameHousingFallbacks {
     /**
      * 返回房屋维护任务回退实例。
      * Return the maintenance-task fallback instance.
-     *
      * @return 房屋维护任务 / Maintenance task
      */
     static MaintenanceTask maintenanceTask() {
@@ -42,7 +40,6 @@ final class GameHousingFallbacks {
     /**
      * 返回城镇服务回退实例。
      * Return the town-service fallback instance.
-     *
      * @return 城镇服务 / Town service
      */
     static TownService townService() {
@@ -52,7 +49,6 @@ final class GameHousingFallbacks {
     /**
      * 返回房屋服务回退实例。
      * Return the housing-service fallback instance.
-     *
      * @return 房屋服务 / Housing service
      */
     static HousingService housingService() {
@@ -62,7 +58,6 @@ final class GameHousingFallbacks {
     /**
      * 返回挑战任务服务回退实例。
      * Return the challenge-task service fallback instance.
-     *
      * @return 挑战任务服务 / Challenge-task service
      */
     static ChallengeTaskService challengeTaskService() {

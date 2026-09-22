@@ -33,8 +33,6 @@ public class SiegeSchedule {
 	 * -- SETTER --
 	 *  设置要塞列表。
 	 *  Sets the fortress list.
-
-
 	 */
 	@XmlElement(name = "fortress", required = true)
 	private List<Fortress> fortressesList;
@@ -73,8 +71,6 @@ public class SiegeSchedule {
 		 * -- SETTER --
 		 *  设置要塞 ID。
 		 *  Sets the fortress ID.
-
-
 		 */
 		@XmlAttribute(required = true)
 		private int id;
@@ -88,8 +84,6 @@ public class SiegeSchedule {
 		 * -- SETTER --
 		 *  设置攻城时间列表。
 		 *  Sets the siege times.
-
-
 		 */
 		@XmlElement(name = "siegeTime", required = true)
 		private List<String> siegeTimes;

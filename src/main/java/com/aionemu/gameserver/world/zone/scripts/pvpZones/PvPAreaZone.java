@@ -15,7 +15,6 @@ public class PvPAreaZone extends PvPZone {
 	/**
 	 * 按区域名称传送到对应复活点。
 	 * Teleport to the matching revive point by zone name.
-	 *
 	 * @param player 玩家 / player
 	 * @param zoneName 区域名称 / zone name
 	 */

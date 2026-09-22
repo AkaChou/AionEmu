@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 外观相关操作客户端包：改角色名、军团名或使用整容道具。
  * Client packet for appearance actions: rename character/legion or use cosmetic items.
- *
  * @author xTz
  */
 public class CM_APPEARANCE extends AionClientPacket {

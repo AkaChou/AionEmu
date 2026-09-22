@@ -15,7 +15,6 @@ import com.aionemu.gameserver.model.templates.globaldrops.GlobalRule;
 /**
  * 全局掉落规则配置数据容器，维护全部全局掉落规则。
  * Global drop rule configuration data holder for all global drop rules.
- *
  * Created by wanke on 19/02/2017.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -29,7 +28,6 @@ public class GlobalDropData {
 	/**
 	 * 返回全部全局掉落规则列表；若尚未初始化则创建空列表。
 	 * Returns all global drop rules; creates an empty list if not yet initialized.
-	 *
 	 * @return 全局掉落规则列表 / global drop rule list
 	 */
 	public List<GlobalRule> getAllRules() {
@@ -42,7 +40,6 @@ public class GlobalDropData {
 	/**
 	 * 返回全局掉落规则数量。
 	 * Returns the number of global drop rules.
-	 *
 	 * @return 全局掉落规则数量 / Returns the number of global drop rules.
 	 */
 	public int size() {

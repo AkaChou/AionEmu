@@ -16,7 +16,6 @@ import com.aionemu.gameserver.skillengine.change.Func;
 /**
  * Players 加成，用于加成服务相关逻辑。
  * Players Bonus for bonus service logic.
- *
  * @author Ranastic (Encom)
  */
 

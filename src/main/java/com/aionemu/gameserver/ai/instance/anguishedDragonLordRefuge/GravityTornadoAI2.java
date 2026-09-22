@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Anguished Dragon Lord Refuge 副本 NPC AI：Gravity Tornado（@AIName "gravity_tornado"），继承 AggressiveNpcAI2。
  * Anguished Dragon Lord Refuge instance NPC AI: Gravity Tornado (@AIName "gravity_tornado"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("anguished_dragon_lord_refuge_gravity_tornado")

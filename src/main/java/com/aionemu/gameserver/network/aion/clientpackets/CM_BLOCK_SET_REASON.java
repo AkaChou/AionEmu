@@ -10,7 +10,6 @@ import com.aionemu.gameserver.services.SocialService;
 /**
  * 设置黑名单备注原因的客户端包。
  * Client packet to set the reason/memo for a blocked player.
- *
  * @author Ben
  */
 public class CM_BLOCK_SET_REASON extends AionClientPacket {

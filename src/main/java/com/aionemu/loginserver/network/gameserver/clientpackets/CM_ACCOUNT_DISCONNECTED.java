@@ -7,7 +7,6 @@ import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 /**
  * GS→LS：通知某账号已从游戏服断开。
  * GS→LS: inform LoginServer that an account disconnected from GameServer.
- *
  * @author -Nemesiss-
  */
 public class CM_ACCOUNT_DISCONNECTED extends GsClientPacket {

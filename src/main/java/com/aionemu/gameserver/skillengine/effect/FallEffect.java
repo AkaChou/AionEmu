@@ -10,7 +10,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 强制落地效果：仅对玩家生效，立即结束飞行状态。
  * Forced fall effect: applies to players only and immediately ends flight.
- *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)

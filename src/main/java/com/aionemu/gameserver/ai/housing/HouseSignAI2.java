@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 房屋相关 NPC AI：House Sign（@AIName "housesign"），继承 GeneralNpcAI2。
  * Housing-related NPC AI: House Sign (@AIName "housesign"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("housesign")

@@ -7,7 +7,6 @@ import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
 /**
  * 服务端玩家聊天鉴权成功响应包。
  * Server packet for successful player chat authentication.
- *
  * @author ATracer
  */
 public class SM_PLAYER_AUTH_RESPONSE extends AbstractServerPacket {
@@ -23,7 +22,6 @@ public class SM_PLAYER_AUTH_RESPONSE extends AbstractServerPacket {
     /**
      * 写入鉴权成功固定字段。
      * Writes the fixed fields of the auth success response.
-     *
      * @param clientChannelHandler 客户端通道处理器 / client channel handler
      * @param buf 包写入器 / packet writer
      */

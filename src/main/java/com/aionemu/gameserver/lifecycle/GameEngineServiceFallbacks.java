@@ -23,7 +23,6 @@ final class GameEngineServiceFallbacks {
     /**
      * 返回任务引擎回退实例。
      * Return the quest-engine fallback instance.
-     *
      * @return 任务引擎 / Quest engine
      */
     static QuestEngine questEngine() {
@@ -33,7 +32,6 @@ final class GameEngineServiceFallbacks {
     /**
      * 返回技能引擎回退实例。
      * Return the skill-engine fallback instance.
-     *
      * @return 技能引擎 / Skill engine
      */
     static SkillEngine skillEngine() {
@@ -43,7 +41,6 @@ final class GameEngineServiceFallbacks {
     /**
      * 返回副本引擎回退实例。
      * Return the instance-engine fallback instance.
-     *
      * @return 副本引擎 / Instance engine
      */
     static InstanceEngine instanceEngine() {
@@ -53,7 +50,6 @@ final class GameEngineServiceFallbacks {
     /**
      * 返回 AI2 引擎回退实例。
      * Return the AI2-engine fallback instance.
-     *
      * @return AI2 引擎 / AI2 engine
      */
     static AI2Engine ai2Engine() {
@@ -63,7 +59,6 @@ final class GameEngineServiceFallbacks {
     /**
      * 返回聊天处理器回退实例。
      * Return the chat-processor fallback instance.
-     *
      * @return 聊天处理器 / Chat processor
      */
     static ChatProcessor chatProcessor() {
@@ -73,7 +68,6 @@ final class GameEngineServiceFallbacks {
     /**
      * 返回线程池管理器回退实例（委托核心服务回退）。
      * Return the thread-pool-manager fallback instance (delegates to core-service fallbacks).
-     *
      * @return 线程池管理器 / Thread-pool manager
      */
     static ThreadPoolManager threadPoolManager() {

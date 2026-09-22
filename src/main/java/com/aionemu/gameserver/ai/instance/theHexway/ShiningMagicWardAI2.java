@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * The Hexway 副本 NPC AI：Shining Magic Ward（@AIName "shiningmagicward"），继承 ActionItemNpcAI2。
  * The Hexway instance NPC AI: Shining Magic Ward (@AIName "shiningmagicward"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("shiningmagicward")

@@ -19,7 +19,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 变身效果基类：切换模型/面板，并在结束时恢复或叠加其他变身。
  * Base transform effect: switches model/panel and restores or stacks other transforms on end.
- *
  * @author Sweetkr, kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -63,7 +62,6 @@ public abstract class TransformEffect extends EffectTemplate {
 	/**
 	 * 结束变身：清除异常状态、恢复模型并广播。
 	 * Ends transform: clears abnormal, restores model and broadcasts.
-	 *
 	 * @param effect 运行中效果 / runtime effect
 	 * @param state 关联异常状态，可为 null / related abnormal state, may be null
 	 */
@@ -106,7 +104,6 @@ public abstract class TransformEffect extends EffectTemplate {
 	/**
 	 * 开始变身：设置异常状态、模型/面板并广播。
 	 * Starts transform: sets abnormal, model/panel and broadcasts.
-	 *
 	 * @param effect 运行中效果 / runtime effect
 	 * @param effectId 异常状态，可为 null / abnormal state, may be null
 	 */
@@ -167,7 +164,6 @@ public abstract class TransformEffect extends EffectTemplate {
 	/**
 	 * 获取变身类型。
 	 * Returns the transform type.
-	 *
 	 * @return 变身类型 / transform type
 	 */
 	public TransformType getTransformType() {
@@ -177,7 +173,6 @@ public abstract class TransformEffect extends EffectTemplate {
 	/**
 	 * 获取变身模型 ID。
 	 * Returns the transform model id.
-	 *
 	 * @return 模型 ID / model id
 	 */
 	public int getTransformId() {
@@ -187,7 +182,6 @@ public abstract class TransformEffect extends EffectTemplate {
 	/**
 	 * 获取变身面板 ID。
 	 * Returns the transform panel id.
-	 *
 	 * @return 面板 ID / panel id
 	 */
 	public int getPanelId() {

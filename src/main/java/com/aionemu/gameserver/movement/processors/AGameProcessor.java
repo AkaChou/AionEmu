@@ -34,7 +34,6 @@ public class AGameProcessor {
 	/**
 	 * 以遗留静态门面提供的告警阈值创建处理器。
 	 * Create a processor using the warning threshold from the legacy static facade.
-	 *
 	 * @param threadsCount 核心线程数 / Core thread count
 	 */
 	protected AGameProcessor(int threadsCount) {
@@ -44,7 +43,6 @@ public class AGameProcessor {
 	/**
 	 * 以显式告警阈值创建处理器并预启动全部核心线程。
 	 * Create a processor with an explicit warning threshold and prestart all core threads.
-	 *
 	 * @param threadsCount 核心线程数 / Core thread count
 	 * @param maxRuntimeInMillisWithoutWarning 无告警最大运行毫秒 / Max ms without warning
 	 */
@@ -58,7 +56,6 @@ public class AGameProcessor {
 	/**
 	 * 立即提交任务到线程池。
 	 * Submit a task for immediate execution.
-	 *
 	 * @param r 待执行任务 / Task to run
 	 */
 	public void execute(Runnable r) {
@@ -68,7 +65,6 @@ public class AGameProcessor {
 	/**
 	 * 延时调度任务；延时会被钳制到合法区间。
 	 * Schedule a delayed task; the delay is clamped to a valid range.
-	 *
 	 * @param r 待执行任务 / Task to run
 	 * @param delay 延时毫秒数 / Delay in milliseconds
 	 * @return 调度句柄 / Scheduled future
@@ -86,7 +82,6 @@ public class AGameProcessor {
 	/**
 	 * 固定周期调度任务；初始延时会被钳制到合法区间。
 	 * Schedule a fixed-rate task; the initial delay is clamped to a valid range.
-	 *
 	 * @param r 待执行任务 / Task to run
 	 * @param delay 初始延时毫秒数 / Initial delay in milliseconds
 	 * @param period 周期毫秒数 / Period in milliseconds
@@ -105,7 +100,6 @@ public class AGameProcessor {
 	/**
 	 * 延时调度并将句柄写入 {@link Task}；延时非法时返回 false。
 	 * Schedule a delayed task into a {@link Task} holder; returns false when delay is invalid.
-	 *
 	 * @param r 待执行任务 / Task to run
 	 * @param delay 延时毫秒数 / Delay in milliseconds
 	 * @param out 输出任务句柄容器 / Output task holder
@@ -138,7 +132,6 @@ public class AGameProcessor {
 		/**
 		 * 创建空任务容器。
 		 * Create an empty task holder.
-		 *
 		 * @return 新容器 / New holder
 		 */
 		public static Task create() {
@@ -148,7 +141,6 @@ public class AGameProcessor {
 		/**
 		 * 返回底层调度句柄。
 		 * Return the underlying scheduled future.
-		 *
 		 * @return 调度句柄，可能为 null / Scheduled future, may be null
 		 */
 		public ScheduledFuture<?> getTask() {
@@ -158,7 +150,6 @@ public class AGameProcessor {
 		/**
 		 * 设置底层调度句柄。
 		 * Set the underlying scheduled future.
-		 *
 		 * @param task 调度句柄 / Scheduled future
 		 */
 		private void setTask(ScheduledFuture<?> task) {
@@ -175,7 +166,6 @@ public class AGameProcessor {
 		/**
 		 * 使用全局线程配置中的最大无告警运行时间包装任务。
 		 * Wrap a runnable with the global max runtime without warning.
-		 *
 		 * @param runnable 原始任务 / Original runnable
 		 */
 		private RunnableTaskWrapper(Runnable runnable) {

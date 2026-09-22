@@ -21,7 +21,6 @@ public class SM_STATUPDATE_EXP extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_STATUPDATE_EXP 包。
 	 * Creates a SM_STATUPDATE_EXP packet with the given parameters.
-	 *
 	 * current exp
 	 * @param recoverableExp 可恢复经验 / recoverable exp
 	 * max exp

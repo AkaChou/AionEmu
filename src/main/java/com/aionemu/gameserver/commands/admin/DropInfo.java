@@ -14,7 +14,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 查看 NPC 掉落信息的管理命令（{@code //dropinfo}）。
  * Admin command that shows NPC drop information ({@code //dropinfo}).
- *
  * @author Oliver
  */
 public class DropInfo extends AdminCommand {
@@ -30,7 +29,6 @@ public class DropInfo extends AdminCommand {
 	/**
 	 * 按 NPC ID 或当前目标列出掉落组与掉落率。
 	 * Lists drop groups and chances by NPC id or current target.
-	 *
 	 */
 	@Override
 	public void execute(Player player, String... params) {

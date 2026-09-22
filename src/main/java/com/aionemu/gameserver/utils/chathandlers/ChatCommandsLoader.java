@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 /**
  * 聊天命令类加载监听器，将合法的 Admin/Player 命令注册到处理器。
  * Chat-command class loader that registers valid Admin/Player commands on the processor.
- *
  * @author Aquanox
  */
 @Slf4j
@@ -27,7 +26,6 @@ public class ChatCommandsLoader implements ClassListener {
 	/**
 	 * 类加载完成后实例化并注册命令。
 	 * After classes load, instantiate and register commands.
-	 *
 	 * @param classes Loaded classes
 	 */
 	@Override
@@ -51,7 +49,6 @@ public class ChatCommandsLoader implements ClassListener {
 	/**
 	 * 卸载前钩子（当前无操作）。
 	 * Pre-unload hook (no-op).
-	 *
 	 * @param classes 将卸载的类 / Classes about to unload
 	 */
 	@Override
@@ -61,7 +58,6 @@ public class ChatCommandsLoader implements ClassListener {
 	/**
 	 * 判断类是否为可注册的公开具体命令实现。
 	 * Whether the class is a public concrete Admin/Player command implementation.
-	 *
 	 * @param clazz 待检查类 / Class to check
 	 * 若 valid 则为 true / True if valid
 	 */

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 /**
  * Beshmundir Temple 副本 NPC AI：Manadar（@AIName "manadar"），继承 AggressiveNpcAI2。
  * Beshmundir Temple instance NPC AI: Manadar (@AIName "manadar"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("manadar")

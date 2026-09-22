@@ -13,7 +13,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * Steel Rake 副本 NPC AI：Engineer Lahulahu（@AIName "engineerlahulahu"），继承 AggressiveNpcAI2。
  * Steel Rake instance NPC AI: Engineer Lahulahu (@AIName "engineerlahulahu"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("engineerlahulahu")
@@ -64,7 +63,6 @@ public class EngineerLahulahuAI2 extends AggressiveNpcAI2
 	/**
 	 * 按血量百分比触发阶段技能：95% 时登记 NPC 并开始循环技能，25% 时切换为 18132。
 	 * Trigger phase skills by HP percentage: at 95% register NPCs and start the skill loop, at 25% switch to skill 18132.
-	 *
 	 * @param hpPercentage 当前血量百分比 / current HP percentage
 	 */
 	private void checkPercentage(int hpPercentage) {

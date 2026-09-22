@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * Reshanta 区域 NPC AI：Annihilation Monument（@AIName "annihilation_monument"），继承 NpcAI2。
  * Reshanta zone NPC AI: Annihilation Monument (@AIName "annihilation_monument"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("annihilation_monument")

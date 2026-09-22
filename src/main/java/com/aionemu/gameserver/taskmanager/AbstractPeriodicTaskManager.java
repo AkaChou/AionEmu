@@ -16,9 +16,7 @@ import java.util.concurrent.Future;
 /**
  * 周期性任务管理器抽象基类：服务器启动后按固定间隔调度 {@link #run()}。
  * Abstract base for periodic task managers: schedules {@link #run()} at a fixed interval after server startup.
- *
  * <p>基于 l2j-free 引擎思路。/ Based on l2j-free engines.</p>
- *
  * @author lord_rex, MrPoke
  */
 @Slf4j(access = AccessLevel.PROTECTED)
@@ -34,7 +32,6 @@ public abstract class AbstractPeriodicTaskManager extends AbstractLockManager im
 	/**
 	 * 以给定周期构造管理器，并注册到游戏服启动钩子。
 	 * Construct with the given period and register as a game-server startup hook.
-	 *
 	 * @param period 周期毫秒数 / Period in milliseconds
 	 */
 	public AbstractPeriodicTaskManager(int period) {
@@ -58,7 +55,6 @@ public abstract class AbstractPeriodicTaskManager extends AbstractLockManager im
 	/**
 	 * 以新周期重新调度固定周期执行。
 	 * Reschedules the fixed-rate execution with a new period.
-	 *
 	 * @param period 新的周期毫秒数 / the new period in milliseconds
 	 */
 	public final synchronized void reschedule(int period) {

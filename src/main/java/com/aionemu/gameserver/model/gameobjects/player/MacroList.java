@@ -10,8 +10,6 @@ import java.util.Map;
 /**
  * 宏列表。
  * Macro list.
- *
- * @param macrosses 宏容器：位置到 XML 的映射。
  *                  Container of macros: position to XML.
  * @author Aquanox, nrg
  */
@@ -29,8 +27,7 @@ public record MacroList(Map<Integer, String> macrosses) {
 	/**
 	 * 用已有映射创建宏列表。
 	 * Creates a macro list from an existing map.
-	 *
-	 * @param macrosses 位置到宏 XML 的映射 / map of position to macro XML
+	 * 位置到宏 XML 的映射 / map of position to macro XML
 	 */
 	public MacroList {
 	}
@@ -38,7 +35,6 @@ public record MacroList(Map<Integer, String> macrosses) {
 	/**
 	 * 返回全部宏的不可修改映射。
 	 * Returns an unmodifiable map of all macros.
-	 *
 	 * @return 全部宏 / all macros
 	 */
 	@Override
@@ -49,7 +45,6 @@ public record MacroList(Map<Integer, String> macrosses) {
 	/**
 	 * 向集合添加宏。
 	 * Adds a macro to the collection.
-	 *
 	 * @param macroPosition 宏槽位 / macro slot
 	 * @param macroXML      宏 XML 内容 / macro XML contents
 	 * @return 新增成功且可入库则为 true；覆盖已有槽位则为 false / true if newly added and storable; false if an existing slot was replaced
@@ -67,7 +62,6 @@ public record MacroList(Map<Integer, String> macrosses) {
 	/**
 	 * 从列表移除宏。
 	 * Removes a macro from the list.
-	 *
 	 * @param macroPosition 宏槽位 / macro slot
 	 * @return 删除成功则为 true / true if deletion succeeded
 	 */
@@ -84,7 +78,6 @@ public record MacroList(Map<Integer, String> macrosses) {
 	/**
 	 * 返回可用宏数量。
 	 * Returns the number of available macros.
-	 *
 	 * @return 宏数量 / macro count
 	 */
 	public int getSize() {
@@ -96,7 +89,6 @@ public record MacroList(Map<Integer, String> macrosses) {
 	 * 注意：零售端每包最多发 6 个宏，并保留原始槽位号。
 	 * Returns an unmodifiable map of macro id to macro contents.
 	 * NOTE: Retail sends at most 6 macros per packet, retaining their original slot numbers.
-	 *
 	 * @param packet 分包序号（1–4） / packet part index (1–4)
 	 * @return 该包内的宏片段 / macros for this packet part
 	 */

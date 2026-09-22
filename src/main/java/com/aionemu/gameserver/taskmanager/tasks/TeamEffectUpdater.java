@@ -22,9 +22,6 @@ public final class TeamEffectUpdater extends AbstractIterativePeriodicTaskManage
      * -- SETTER --
      *  注入 Spring 实例提供者。
      *  Inject the Spring instance provider.
-     *
-     * @param provider 实例提供者 / Provider
-
      */
 	@Setter
     private static volatile ObjectProvider<TeamEffectUpdater> instanceProvider;
@@ -32,11 +29,9 @@ public final class TeamEffectUpdater extends AbstractIterativePeriodicTaskManage
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -63,7 +58,6 @@ public final class TeamEffectUpdater extends AbstractIterativePeriodicTaskManage
 	/**
 	 * 若在线则同步队伍/联盟效果，并停止该玩家任务。
 	 * If online, sync group/alliance effects and stop this player's task.
-	 *
 	 * 玩家 / Player
 	 */
 	@Override
@@ -83,7 +77,6 @@ public final class TeamEffectUpdater extends AbstractIterativePeriodicTaskManage
 	/**
 	 * 耗时统计方法名。
 	 * Method name for runtime stats.
-	 *
 	 * @return 方法名 / Method name
 	 */
 	@Override

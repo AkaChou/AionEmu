@@ -11,7 +11,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * 材料 Target 枚举。
  * Material Target enumeration.
- *
  * @author Rolandas
  */
 @XmlType(name = "MaterialTarget")

@@ -15,7 +15,6 @@ import java.util.List;
 /**
  * Cygnea 区域 NPC AI：Mercurius（@AIName "mercurius"），继承 NpcAI2。
  * Cygnea zone NPC AI: Mercurius (@AIName "mercurius"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("mercurius")

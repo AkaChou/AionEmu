@@ -11,7 +11,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 普通攻击目标的客户端包。
  * Client packet to perform a basic attack on a target.
- *
  * @author alexa026, Avol, ATracer, KID
  */
 @Slf4j

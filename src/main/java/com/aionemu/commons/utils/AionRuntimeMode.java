@@ -26,7 +26,6 @@ public class AionRuntimeMode {
     /**
      * 判断当前是否为嵌入式启动。
      * Whether the process is in embedded boot mode.
-     *
      * @return 是否嵌入式 / Whether embedded
      */
     public boolean isBootEmbedded() {

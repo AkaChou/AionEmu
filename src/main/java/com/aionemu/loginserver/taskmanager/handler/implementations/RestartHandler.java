@@ -12,7 +12,6 @@ import com.aionemu.loginserver.taskmanager.handler.TaskFromDBHandler;
 /**
  * 重启登录服的数据库任务处理器。
  * DB task handler that restarts the login server.
- *
  * @author Divinity, nrg
  */
 @Slf4j
@@ -41,7 +40,6 @@ public class RestartHandler extends TaskFromDBHandler {
     /**
      * 本处理器无需参数，始终有效。
      * This handler needs no params and is always valid.
-     *
      * @return true
      */
     @Override

@@ -24,7 +24,6 @@ public class Reset extends AdminCommand {
 	/**
 	 * 处理 {@code instance} 子命令；副本内玩家会被传送到对应出口。
 	 * Handles the {@code instance} subcommand; players inside are moved to the matching exit.
-	 *
 	 * @param player 执行命令的管理员 / admin executing the command
 	 * @param params 子命令参数 / subcommand arguments
 	 */

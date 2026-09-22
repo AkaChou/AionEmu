@@ -12,7 +12,6 @@ import lombok.Setter;
 /**
  * 副本 Exit 模板（静态数据/XML）。
  * XML template.
- *
  * @author xTz
  */
 @Getter

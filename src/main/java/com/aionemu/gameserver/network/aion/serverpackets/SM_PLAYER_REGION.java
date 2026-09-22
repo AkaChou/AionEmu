@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 /**
  * 同步玩家当前子区域（Zone）信息的服务端包。
  * Server packet that synchronizes the player's current sub-zone information.
- *
  * @author LightNing
  */
 @AllArgsConstructor

@@ -24,7 +24,6 @@ import java.util.concurrent.Future;
 /**
  * Infinity Shard 副本 NPC AI：Hyperion（@AIName "hyperion"），继承 AggressiveNpcAI2。
  * Infinity Shard instance NPC AI: Hyperion (@AIName "hyperion"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("hyperion")

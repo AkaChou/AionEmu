@@ -15,9 +15,6 @@ public class ShugoEmperorVaultPlayerReward extends InstancePlayerReward {
 	private int scoreAP;
 	/** 返回 rusted vault key / Returns the rusted vault key */
 	private int rustedVaultKey;
-	/**
-	 * @return 是否已奖励 / whether rewarded
-	 */
 	private boolean isRewarded = false;
 
 	public ShugoEmperorVaultPlayerReward(Integer object) {

@@ -11,7 +11,6 @@ import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 /**
  * 登录服角色转移流程响应包。
  * Login server response for player transfer flow.
- *
  * @author KID
  */
 @Slf4j
@@ -19,7 +18,6 @@ public class CM_PTRANSFER_RESPONSE extends LsClientPacket {
 	/**
 	 * 构造函数。
 	 * Constructor.
-	 *
 	 * @param opCode 操作码 opcode
 	 */
 	public CM_PTRANSFER_RESPONSE(int opCode) {

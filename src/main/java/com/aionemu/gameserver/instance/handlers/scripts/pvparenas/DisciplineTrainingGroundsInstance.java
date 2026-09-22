@@ -13,7 +13,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * 纪律训练场副本事件处理器。
  * Instance event handler for Discipline Training Grounds.
- *
  * @author Encom
  */
 
@@ -23,7 +22,6 @@ public class DisciplineTrainingGroundsInstance extends PvPArenaInstance
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -36,7 +34,6 @@ public class DisciplineTrainingGroundsInstance extends PvPArenaInstance
 	/**
 	 * 玩家采集完成时处理。
 	 * Handle player gathering completion.
-	 *
 	 * @param player 玩家 / player
 	 * @param gatherable gatherable
 	 */

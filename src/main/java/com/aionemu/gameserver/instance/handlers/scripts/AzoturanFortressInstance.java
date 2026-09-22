@@ -13,7 +13,6 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 /**
  * 阿佐图兰要塞副本事件处理器。
  * Instance event handler for Azoturan Fortress.
- *
  * @author Encom
  */
 
@@ -23,7 +22,6 @@ public class AzoturanFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
-	 *
 	 * @param player 玩家 / player
 	 * @param zone 区域 / zone
 	 */
@@ -51,7 +49,6 @@ public class AzoturanFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -62,7 +59,6 @@ public class AzoturanFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override

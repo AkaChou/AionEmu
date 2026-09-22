@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Silentera Canyon 区域 NPC AI：High Elder Roamim（@AIName "roamim"），继承 AggressiveNpcAI2。
  * Silentera Canyon zone NPC AI: High Elder Roamim (@AIName "roamim"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("roamim")

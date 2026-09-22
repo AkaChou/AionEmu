@@ -28,7 +28,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Danuar Reliquary 副本 NPC AI：Cursed Queen Modor（@AIName "cursed_queen_modor"），继承 AggressiveNpcAI2。
  * Danuar Reliquary instance NPC AI: Cursed Queen Modor (@AIName "cursed_queen_modor"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("danuar_reliquary_cursed_queen_modor")

@@ -25,39 +25,32 @@ public class Motion implements IExpirable {
 		motionType.put(2, 2);
 		motionType.put(3, 3);
 		motionType.put(4, 4);
-		////////////////////
 		motionType.put(5, 1);
 		motionType.put(6, 2);
 		motionType.put(7, 3);
 		motionType.put(8, 4);
-		////////////////////
 		// 动作 3.9 / Motion 3.9
 		motionType.put(10, 1);
 		motionType.put(19, 2);
-		////////////////////
 		// 动作 4.5 / Motion 4.5
 		motionType.put(11, 1);
 		motionType.put(12, 2);
 		motionType.put(13, 3);
 		motionType.put(14, 4);
-		////////////////////
 		// 动作 4.7 / Motion 4.7
 		motionType.put(15, 1);
 		motionType.put(16, 2);
 		motionType.put(17, 3);
 		motionType.put(18, 4);
 		motionType.put(20, 1);
-		////////////////////
-		motionType.put(21, 1);
+        motionType.put(21, 1);
 		motionType.put(22, 2);
-		////////////////////
-		// 动作 4.8 / Motion 4.8
+        // 动作 4.8 / Motion 4.8
 		motionType.put(23, 1);
 		motionType.put(24, 2);
 		motionType.put(25, 3);
 		motionType.put(26, 4);
-		////////////////////
-		// 动作 5.0 / Motion 5.0
+        // 动作 5.0 / Motion 5.0
 		motionType.put(27, 1);
 		motionType.put(28, 2);
 		motionType.put(29, 3);

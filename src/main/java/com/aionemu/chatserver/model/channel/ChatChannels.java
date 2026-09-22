@@ -17,7 +17,6 @@ import com.aionemu.chatserver.service.GameServerService;
 /**
  * 聊天频道注册表：预置 LFG/交易/地区/职业等频道，并按标识解析频道。
  * Chat channel registry that seeds LFG/trade/region/job channels and resolves them by identifier.
- *
  * @author ATracer
  */
 @Slf4j
@@ -527,7 +526,6 @@ public class ChatChannels {
     /**
      * 按频道 ID 获取频道，未找到时抛异常。
      * Returns the channel by id, throws if none registered.
-     *
      * @param channelId 频道 ID / channel id
      * @return 匹配的频道 / matching channel
      * @throws IllegalArgumentException 未注册该 ID 的频道 / no channel registered for the id
@@ -547,7 +545,6 @@ public class ChatChannels {
     /**
      * 按标识符获取频道，未找到时返回 {@code null}。
      * Returns the channel by identifier, {@code null} if none registered.
-     *
      * @param identifier 标识字节 / identifier bytes
      * @return 匹配的频道，未找到为 null / matching channel, null if not found
      */
@@ -567,7 +564,6 @@ public class ChatChannels {
     /**
      * 添加 LFG 组队频道。
      * Adds an LFG party-find channel.
-     *
      * @param channelName 频道名 / channel name
      */
     private static void addGroupChannel(String channelName) {
@@ -578,7 +574,6 @@ public class ChatChannels {
     /**
      * 添加交易频道。
      * Adds a trade channel.
-     *
      * @param channelName 频道名 / channel name
      */
     private static void addTradeChannel(String channelName) {
@@ -589,7 +584,6 @@ public class ChatChannels {
     /**
      * 添加地区频道。
      * Adds a region channel.
-     *
      * @param mapId 地图 ID / map id
      * @param channelName 频道名 / channel name
      */

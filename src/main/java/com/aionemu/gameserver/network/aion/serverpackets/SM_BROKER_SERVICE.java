@@ -46,7 +46,6 @@ public class SM_BROKER_SERVICE extends AionServerPacket {
 	/**
 	 * 登记物品成功/结果反馈。
 	 * Registration result feedback for a broker item.
-	 *
 	 * @param brokerItem 登记的物品 / registered broker item
 	 * @param message 结果消息码 / result message code
 	 * @param itemsCount 当前已登记数量 / current registered item count
@@ -61,7 +60,6 @@ public class SM_BROKER_SERVICE extends AionServerPacket {
 	/**
 	 * 仅发送登记结果消息码（无物品详情）。
 	 * Sends only a registration result message code (no item details).
-	 *
 	 * @param message 结果消息码 / result message code
 	 */
 	public SM_BROKER_SERVICE(int message) {
@@ -72,7 +70,6 @@ public class SM_BROKER_SERVICE extends AionServerPacket {
 	/**
 	 * 同步玩家当前已登记在交易行的物品列表。
 	 * Synchronizes the player's currently registered broker items.
-	 *
 	 * @param brokerItems 已登记物品数组 / registered broker items
 	 */
 	public SM_BROKER_SERVICE(BrokerItem[] brokerItems) {
@@ -83,7 +80,6 @@ public class SM_BROKER_SERVICE extends AionServerPacket {
 	/**
 	 * 同步可结算物品列表与已结算基纳。
 	 * Synchronizes the settled-items list and settled kinah amount.
-	 *
 	 * @param brokerItems 可结算物品 / settled broker items
 	 * @param settled_kinah 已结算基纳 / settled kinah
 	 */
@@ -96,7 +92,6 @@ public class SM_BROKER_SERVICE extends AionServerPacket {
 	/**
 	 * 交易行搜索结果分页同步。
 	 * Paged broker search-result synchronization.
-	 *
 	 * @param brokerItems 当前页物品 / items on the current page
 	 * total hit count
 	 * start page
@@ -111,7 +106,6 @@ public class SM_BROKER_SERVICE extends AionServerPacket {
 	/**
 	 * 显示或移除交易行结算提示图标。
 	 * Shows or removes the broker settled-items notification icon.
-	 *
 	 * @param showSettledIcon 是否显示图标 / whether to show the icon
 	 * @param settled_kinah 已结算基纳 / settled kinah
 	 */
@@ -123,7 +117,6 @@ public class SM_BROKER_SERVICE extends AionServerPacket {
 	/**
 	 * 同步指定物品近 7 日均价与当前最低/最高价。
 	 * Synchronizes a given item's 7-day average price and current low/high prices.
-	 *
 	 * item unique id
 	 * 7-day average price
 	 * @param CurrentLow 当前最低价 / current low price

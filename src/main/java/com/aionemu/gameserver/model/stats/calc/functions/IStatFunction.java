@@ -8,7 +8,6 @@ import com.aionemu.gameserver.utils.stats.CalculationType;
 /**
  * 属性函数接口。
  * Stat Function interface.
- *
  * @author ATracer
  */
 public interface IStatFunction extends Comparable<IStatFunction> {

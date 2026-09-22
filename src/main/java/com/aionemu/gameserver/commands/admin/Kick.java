@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 管理员踢人命令：断开指定玩家或全部非 GM 玩家连接。
  * Admin kick command: disconnect a named player or all non-GM players.
- *
  * @author Elusive
  */
 public class Kick extends AdminCommand {
@@ -21,7 +20,6 @@ public class Kick extends AdminCommand {
 	/**
 	 * 踢出指定角色，或使用 All 踢出所有非 GM。
 	 * Kick the named character, or All for every non-GM.
-	 *
 	 * @param admin 执行命令的管理员 / Admin executing the command
 	 */
 	@Override
@@ -53,7 +51,6 @@ public class Kick extends AdminCommand {
 	/**
 	 * 参数错误时显示命令语法。
 	 * Show command syntax on invalid arguments.
-	 *
 	 * @param player 接收提示的玩家 / Player receiving the hint
 	 */
 	@Override

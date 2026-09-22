@@ -62,9 +62,6 @@ public class PvPArenaPlayerReward extends InstancePlayerReward {
 	/** 返回 life serum / Returns the life serum */
 	private int lifeSerum;
 	private long logoutTime;
-	/**
-	 * @return 是否已奖励 / whether rewarded
-	 */
 	private boolean isRewarded = false;
 	private final InstanceBuff boostMorale;
 

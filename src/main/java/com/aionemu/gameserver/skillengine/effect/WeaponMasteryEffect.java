@@ -17,7 +17,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 武器专精效果：按武器类型将属性修正映射为主手/副手或双手专精。
  * Weapon mastery effect: maps stat changes to main/off-hand or two-hand mastery by weapon type.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)

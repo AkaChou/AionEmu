@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 角色封禁信息。
  * Character ban information.
- *
  * @author nrg
  */
 @Getter

@@ -8,7 +8,6 @@ import lombok.Getter;
 /**
  * Parts 模板（静态数据/XML）。
  * XML template.
- *
  * @author Rolandas
  */
 @Getter
@@ -19,31 +18,31 @@ public class Parts {
 	/**
 	 * 获取 fence 属性值。
 	 * Gets the value of the fence property
-	 * @return possible object is {@link Integer }
+	 * possible object is {@link Integer }
 	 */
 	protected Integer fence;
 	/**
 	 * 获取 garden 属性值。
 	 * Gets the value of the garden property
-	 * @return possible object is {@link Integer }
+	 * possible object is {@link Integer }
 	 */
 	protected Integer garden;
 	/**
 	 * 获取 frame 属性值。
 	 * Gets the value of the frame property
-	 * @return possible object is {@link Integer }
+	 * possible object is {@link Integer }
 	 */
 	protected Integer frame;
 	/**
 	 * 获取 outwall 属性值。
 	 * Gets the value of the outwall property
-	 * @return possible object is {@link Integer }
+	 * possible object is {@link Integer }
 	 */
 	protected Integer outwall;
 	/**
 	 * 获取 roof 属性值。
 	 * Gets the value of the roof property
-	 * @return possible object is {@link Integer }
+	 * possible object is {@link Integer }
 	 */
 	protected Integer roof;
 	/**

@@ -22,7 +22,6 @@ import lombok.Setter;
 /**
  * 房屋对象。
  * House Object game object.
- *
  * @author Rolandas
  */
 @Getter
@@ -100,7 +99,6 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 	/**
 	 * 获取对象剩余可用秒数，无过期时间时返回 -1。
 	 * Gets seconds left for the object use, -1 if no expiration.
-	 *
 	 * @return 剩余秒数 / seconds left
 	 */
 	public int getUseSecondsLeft() {
@@ -126,8 +124,7 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 	}
 
 	@SuppressWarnings("unchecked")
-	/** 获取对象模板。 / Returns the object template. */
-	public T getObjectTemplate() {
+    public T getObjectTemplate() {
 		return (T) objectTemplate;
 	}
 
@@ -281,7 +278,6 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 	/**
 	 * 对象是否由玩家生成，而非游戏服务器侧。
 	 * Whether the object was spawned by the player rather than the game server.
-	 *
 	 * @return 是否由玩家生成 / whether spawned by the player
 	 */
 	public boolean isSpawnedByPlayer() {
@@ -289,8 +285,7 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 	}
 
 	@SuppressWarnings("unchecked")
-	/** 返回控制器 / Returns the controller */
-	@Override
+    @Override
 	public PlaceableObjectController<T> getController() {
 		return (PlaceableObjectController<T>) super.getController();
 	}

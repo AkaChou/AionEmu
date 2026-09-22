@@ -27,8 +27,6 @@ public class RandomBonus {
 	/**
 	 * 获取加成 ID。
 	 * Gets the bonus id.
-	 *
-	 * @return 加成 ID / Bonus id
 	 */
 	@XmlAttribute(required = true)
 	protected int id;

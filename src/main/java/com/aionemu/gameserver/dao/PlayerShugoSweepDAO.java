@@ -6,7 +6,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * 玩家术古扫荡（Shugo Sweep）数据访问抽象层。
  * DAO for player Shugo Sweep event data persistence.
- *
  * Created by Wnkrz on 24/10/2017.
  */
 public abstract class PlayerShugoSweepDAO implements DAO {
@@ -14,7 +13,6 @@ public abstract class PlayerShugoSweepDAO implements DAO {
 	/**
 	 * 返回实现唯一类名标识。
 	 * Returns unique class name for all implementations.
-	 *
 	 * @return 完整类名 / fully qualified class name
 	 */
 	@Override
@@ -25,7 +23,6 @@ public abstract class PlayerShugoSweepDAO implements DAO {
 	/**
 	 * 加载玩家术古扫荡数据。
 	 * Loads Shugo Sweep data for the player.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public abstract void load(Player player);
@@ -33,7 +30,6 @@ public abstract class PlayerShugoSweepDAO implements DAO {
 	/**
 	 * 新增玩家术古扫荡记录。
 	 * Adds a Shugo Sweep record for the player.
-	 *
 	 * @param playerId 玩家对象 ID / player object id
 	 * @param freeDice 免费骰子数 / free dice count
 	 * @param step 当前步数 / current step
@@ -45,7 +41,6 @@ public abstract class PlayerShugoSweepDAO implements DAO {
 	/**
 	 * 删除全部术古扫荡数据。
 	 * Deletes all Shugo Sweep data.
-	 *
 	 * @return 是否删除成功 / true if deleted
 	 */
 	public abstract boolean delete();
@@ -53,7 +48,6 @@ public abstract class PlayerShugoSweepDAO implements DAO {
 	/**
 	 * 保存玩家术古扫荡数据。
 	 * Stores Shugo Sweep data for the player.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否保存成功 / true if stored
 	 */
@@ -62,7 +56,6 @@ public abstract class PlayerShugoSweepDAO implements DAO {
 	/**
 	 * 按对象 ID 更新术古扫荡状态。
 	 * Updates Shugo Sweep state by player object id.
-	 *
 	 * @param obj 玩家对象 ID / player object id
 	 * @param freeDice 免费骰子数 / free dice count
 	 * @param step 当前步数 / current step

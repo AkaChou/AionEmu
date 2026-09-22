@@ -37,7 +37,6 @@ public class SleepEffect extends EffectTemplate {
 
 	/**
 	 * 中止移动与技能，施加 SLEEP，并设置受伤取消。
-	 *
 	 * @param effect Aborts move / skill, applies SLEEP, and marks cancel-on-damage.
 	 */
 	@Override

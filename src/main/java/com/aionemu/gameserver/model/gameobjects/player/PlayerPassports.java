@@ -9,7 +9,6 @@ import com.aionemu.gameserver.model.templates.event.AtreianPassport;
 /**
  * 玩家 Passports 游戏对象。
  * Player Passports game object.
- *
  * @author Ranastic
  */
 public class PlayerPassports {

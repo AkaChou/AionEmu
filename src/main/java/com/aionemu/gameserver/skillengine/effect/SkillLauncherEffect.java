@@ -15,7 +15,6 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 /**
  * 技能发射效果：立即以配置的 skill_id 对目标再施放一个技能。
  * Skill launcher effect: immediately applies another skill identified by skill_id.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)

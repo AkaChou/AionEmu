@@ -12,7 +12,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * Kromedes Trial 副本 NPC AI：Altar Of Healing（@AIName "Altar_Of_Healing"），继承 AggressiveNpcAI2。
  * Kromedes Trial instance NPC AI: Altar Of Healing (@AIName "Altar_Of_Healing"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("Altar_Of_Healing")

@@ -42,7 +42,6 @@ public final class GameTaskManagerServices implements DisposableBean {
     /**
      * 构造并注册各任务管理器组件的实例提供者。
      * Construct and register instance providers for task-manager components.
-     *
      * @param expireTimerTaskProvider 过期计时任务提供者 / Expire-timer-task provider
      * @param teamEffectUpdaterProvider 队伍效果更新器提供者 / Team-effect-updater provider
      * @param teamMoveUpdaterProvider 队伍移动更新器提供者 / Team-move-updater provider
@@ -65,7 +64,6 @@ public final class GameTaskManagerServices implements DisposableBean {
     /**
      * 解析 ExpireTimerTask：优先 Spring，否则 getInstance。
      * Resolve ExpireTimerTask: prefer Spring, otherwise {@code getInstance}.
-     *
      * @return ExpireTimerTask 实例 / ExpireTimerTask instance
      */
     public static ExpireTimerTask expireTimerTask() {
@@ -79,7 +77,6 @@ public final class GameTaskManagerServices implements DisposableBean {
     /**
      * 解析 TeamEffectUpdater：优先 Spring，否则 getInstance。
      * Resolve TeamEffectUpdater: prefer Spring, otherwise {@code getInstance}.
-     *
      * @return TeamEffectUpdater 实例 / TeamEffectUpdater instance
      */
     public static TeamEffectUpdater teamEffectUpdater() {
@@ -93,7 +90,6 @@ public final class GameTaskManagerServices implements DisposableBean {
     /**
      * 解析 TeamMoveUpdater：优先 Spring，否则 getInstance。
      * Resolve TeamMoveUpdater: prefer Spring, otherwise {@code getInstance}.
-     *
      * @return TeamMoveUpdater 实例 / TeamMoveUpdater instance
      */
     public static TeamMoveUpdater teamMoveUpdater() {
@@ -107,7 +103,6 @@ public final class GameTaskManagerServices implements DisposableBean {
     /**
      * 解析 TemporaryTradeTimeTask：优先 Spring，否则 getInstance。
      * Resolve TemporaryTradeTimeTask: prefer Spring, otherwise {@code getInstance}.
-     *
      * @return TemporaryTradeTimeTask 实例 / TemporaryTradeTimeTask instance
      */
     public static TemporaryTradeTimeTask temporaryTradeTimeTask() {

@@ -41,7 +41,6 @@ public class SM_PET extends AionServerPacket {
 	/**
 	 * 通用构造：指定子类型、动作、物品与数量。
 	 * General constructor with subtype, action, item and count.
-	 *
 	 * subtype
 	 * action id
 	 * item object id
@@ -60,7 +59,6 @@ public class SM_PET extends AionServerPacket {
 	/**
 	 * 指定动作与宠物的构造。
 	 * Constructor for an action against a single pet.
-	 *
 	 * action id
 	 * @param pet 宠物实例 / pet instance
 	 */
@@ -71,7 +69,6 @@ public class SM_PET extends AionServerPacket {
 	/**
 	 * 拾取功能开关（actionId=13, subType=3）。
 	 * Loot-function toggle (actionId=13, subType=3).
-	 *
 	 * @param isLooting 是否正在拾取 / whether looting is active
 	 */
 	public SM_PET(boolean isLooting) {
@@ -83,7 +80,6 @@ public class SM_PET extends AionServerPacket {
 	/**
 	 * 对指定 NPC 的拾取同步。
 	 * Loot sync for a specific NPC corpse.
-	 *
 	 * @param isLooting 是否正在拾取 / whether looting is active
 	 * target NPC id
 	 */
@@ -95,7 +91,6 @@ public class SM_PET extends AionServerPacket {
 	/**
 	 * 药剂/Buff 功能开关（actionId=13, subType=2）。
 	 * Dope/buff function toggle (actionId=13, subType=2).
-	 *
 	 * @param dopeAction 药剂子动作 / dope sub-action
 	 * @param isBuffing 是否处于 Buff 中 / whether buffing is active
 	 */
@@ -109,7 +104,6 @@ public class SM_PET extends AionServerPacket {
 	/**
 	 * 欢呼功能开关（actionId=13, subType=5）。
 	 * Cheer function toggle (actionId=13, subType=5).
-	 *
 	 * @param isCheering 是否欢呼中 / whether cheering is active
 	 * @param what 保留参数 / reserved
 	 * reserved
@@ -123,7 +117,6 @@ public class SM_PET extends AionServerPacket {
 	/**
 	 * 药剂槽位操作（装入/使用等）。
 	 * Dope-slot operation (insert/use, etc.).
-	 *
 	 * @param dopeAction 药剂子动作 / dope sub-action
 	 * item id
 	 * slot index
@@ -137,7 +130,6 @@ public class SM_PET extends AionServerPacket {
 	/**
 	 * 心情/抚摸相关同步（PetAction.MOOD）。
 	 * Mood/cuddle sync (PetAction.MOOD).
-	 *
 	 * @param pet 宠物实例 / pet instance
 	 * @param subType 心情子类型 / mood subtype
 	 * @param shuggleEmotion 抚摸情绪值 / shuggle emotion value
@@ -151,7 +143,6 @@ public class SM_PET extends AionServerPacket {
 	/**
 	 * 使用宠物公共数据的构造。
 	 * Constructor backed by pet common data.
-	 *
 	 * action id
 	 * @param commonData 宠物公共数据 / pet common data
 	 */
@@ -163,7 +154,6 @@ public class SM_PET extends AionServerPacket {
 	/**
 	 * 宠物列表同步构造。
 	 * Constructor for a collection of pets (list sync).
-	 *
 	 * action id
 	 * @param pets 宠物公共数据集合 / collection of pet common data
 	 */

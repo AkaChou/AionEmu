@@ -8,7 +8,6 @@ import com.aionemu.gameserver.geoEngine.scene.Spatial;
 /**
  * 材料区域模板（静态数据/XML）。
  * XML template.
- *
  * @author Rolandas
  */
 public class MaterialZoneTemplate extends ZoneTemplate {

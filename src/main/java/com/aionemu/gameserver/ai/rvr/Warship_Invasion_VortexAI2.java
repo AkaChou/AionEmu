@@ -22,7 +22,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * RvR 相关 NPC AI：Warship Invasion Vortex（@AIName "F6_INVADE_Direct_Portal_Start"），继承 NpcAI2。
  * RvR-related NPC AI: Warship Invasion Vortex (@AIName "F6_INVADE_Direct_Portal_Start"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("F6_INVADE_Direct_Portal_Start")

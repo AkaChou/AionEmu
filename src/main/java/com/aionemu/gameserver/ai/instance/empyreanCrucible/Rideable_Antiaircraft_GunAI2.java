@@ -12,7 +12,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Empyrean Crucible 副本 NPC AI：Rideable Antiaircraft Gun（@AIName "rideable_antiaircraft_gun"），继承 ActionItemNpcAI2。
  * Empyrean Crucible instance NPC AI: Rideable Antiaircraft Gun (@AIName "rideable_antiaircraft_gun"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("rideable_antiaircraft_gun")

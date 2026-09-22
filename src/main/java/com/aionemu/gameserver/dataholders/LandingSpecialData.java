@@ -41,7 +41,6 @@ public class LandingSpecialData {
 	/**
 	 * 返回已加载的特殊登陆据点数量。
 	 * Returns the number of loaded special landing locations.
-	 *
 	 * @return 已加载的特殊着陆点数量 / Returns the number of loaded special landing locations.
 	 */
 	public int size() {
@@ -51,7 +50,6 @@ public class LandingSpecialData {
 	/**
 	 * 返回全部特殊登陆据点映射。
 	 * Returns the full special landing location map.
-	 *
 	 * @return ID 到地点的映射 / map of id to location
 	 */
 	public Map<Integer, LandingSpecialLocation> getLandingSpecialLocations() {

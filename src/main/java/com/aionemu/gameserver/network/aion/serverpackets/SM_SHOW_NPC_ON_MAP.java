@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端在地图上高亮显示指定 NPC 位置。
  * Server packet highlighting an NPC position on the client map.
- *
  * @author Lyahim
  */
 @AllArgsConstructor

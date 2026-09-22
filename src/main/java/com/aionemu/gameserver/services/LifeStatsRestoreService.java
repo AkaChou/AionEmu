@@ -16,7 +16,6 @@ import com.aionemu.gameserver.model.templates.zone.ZoneType;
 /**
  * 生命值恢复服务，调度 HP/MP/飞行值的恢复与消耗任务。
  * Life stats restore service scheduling HP/MP/FP restore and reduce tasks.
- *
  * @author ATracer
  */
 public class LifeStatsRestoreService {
@@ -42,7 +41,6 @@ public class LifeStatsRestoreService {
 	/**
 	 * 调度 HP 与 MP 恢复任务。
 	 * Schedules an HP and MP restore task.
-	 *
 	 * life stats
 	 * scheduled future
 	 */
@@ -53,7 +51,6 @@ public class LifeStatsRestoreService {
 	/**
 	 * 调度仅恢复 HP 的任务。
 	 * Schedules an HP-only restore task.
-	 *
 	 * life stats
 	 * scheduled future
 	 */
@@ -64,7 +61,6 @@ public class LifeStatsRestoreService {
 	/**
 	 * 调度飞行值消耗任务。
 	 * Schedules a flight points reduce task.
-	 *
 	 * @param lifeStats 玩家生命状态 / player life stats
 	 * @param costFp 每次消耗量，可为 null 使用默认 / cost per tick, null for default
 	 * scheduled future
@@ -77,7 +73,6 @@ public class LifeStatsRestoreService {
 	/**
 	 * 调度飞行值恢复任务。
 	 * Schedules a flight points restore task.
-	 *
 	 * @param lifeStats 玩家生命状态 / player life stats
 	 * scheduled future
 	 */
@@ -89,7 +84,6 @@ public class LifeStatsRestoreService {
 	/**
 	 * 获取服务单例，优先走 Spring ObjectProvider。
 	 * Returns the service singleton, preferring Spring ObjectProvider when available.
-	 *
 	 * service instance
 	 */
 	public static LifeStatsRestoreService getInstance() {

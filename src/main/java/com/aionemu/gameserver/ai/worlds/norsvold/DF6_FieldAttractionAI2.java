@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Norsvold 区域 NPC AI：DF6 Field Attraction（@AIName "df6_field_attraction"），继承 NpcAI2。
  * Norsvold zone NPC AI: DF6 Field Attraction (@AIName "df6_field_attraction"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("df6_field_attraction")

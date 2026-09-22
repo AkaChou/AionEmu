@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 召唤物队伍模板：定义召唤数量、位置与调度间隔。
  * Summon group template: defines summoned counts, position and schedule interval.
- *
  * @author xTz
  */
 @Getter

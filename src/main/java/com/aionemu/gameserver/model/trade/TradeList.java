@@ -19,46 +19,26 @@ import lombok.NoArgsConstructor;
 /**
  * 交易列表。
  * Trade List model.
- *
  * @author ATracer modified by Wakizashi
  */
 @Getter
 @NoArgsConstructor
 public class TradeList {
 
-	/**
-	 * @return the npcId
-	 */
 	private int sellerObjId;
 
-	/**
-	 * @return the tradeItems
-	 */
 	private final List<TradeItem> tradeItems = new ArrayList<>();
 
-	/**
-	 * @return the requiredKinah
-	 */
 	private long requiredKinah;
 
-	/**
-	 * @return the requiredAp
-	 */
 	private int requiredAp;
 
-	/**
-	 * @return the requiredItems
-	 */
 	private final Map<Integer, Long> requiredItems = new HashMap<>();
 
 	public TradeList(int sellerObjId) {
 		this.sellerObjId = sellerObjId;
 	}
 
-	/**
-	 * @param itemId
-	 * @param count
-	 */
 	public void addBuyItem(int itemId, long count) {
 
 		ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(itemId);
@@ -69,19 +49,11 @@ public class TradeList {
 		}
 	}
 
-	/**
-	 * @param itemId
-	 * @param count
-	 */
 	public void addPSItem(int itemId, long count) {
 		TradeItem tradeItem = new TradeItem(itemId, count);
 		tradeItems.add(tradeItem);
 	}
 
-	/**
-	 * @param itemObjId
-	 * @param count
-	 */
 	public void addSellItem(int itemObjId, long count) {
 		TradeItem tradeItem = new TradeItem(itemObjId, count);
 		tradeItems.add(tradeItem);

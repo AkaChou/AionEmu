@@ -18,7 +18,6 @@ import lombok.Setter;
 /**
  * SvS（服务器对战）活动时间表配置。
  * SvS (Server vs Server) event schedule configuration.
- *
  * @author Rinzler (Encom)
  */
 @Setter
@@ -35,8 +34,6 @@ public class SvsSchedule {
 	 * -- SETTER --
 	 *  设置 SvS 列表。
 	 *  Sets the SvS list.
-
-
 	 */
 	@XmlElement(name = "svs", required = true)
 	private List<Svs> svssList;
@@ -73,8 +70,6 @@ public class SvsSchedule {
 		 * -- SETTER --
 		 *  设置 SvS ID。
 		 *  Sets the SvS ID.
-
-
 		 */
 		@XmlAttribute(required = true)
 		private int id;
@@ -88,8 +83,6 @@ public class SvsSchedule {
 		 * -- SETTER --
 		 *  设置 SvS 时间列表。
 		 *  Sets the SvS times.
-
-
 		 */
 		@XmlElement(name = "svsTime", required = true)
 		private List<String> svsTimes;

@@ -13,7 +13,6 @@ import lombok.Getter;
 /**
  * 分解物品组模板：按等级、职业与种族过滤产出条目。
  * Disassemble item group template: filters entries by level, class and race.
- *
  * @author BeckUp.Media
  */
 @Getter

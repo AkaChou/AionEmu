@@ -30,7 +30,6 @@ public final class GameMaintenanceServices implements DisposableBean {
     /**
      * 构造并注册各维护服务的实例提供者。
      * Construct and register instance providers for each maintenance service.
-     *
      * @param databaseCleaningServiceProvider 数据库清理服务提供者 / Database-cleaning service provider
      * @param abyssRankCleaningServiceProvider 欧比斯排名清理服务提供者 / Abyss-rank cleaning service provider
      * @param shugoImperialTombSpawnManagerProvider 术古皇陵生成管理器提供者 / Shugo Imperial Tomb spawn-manager provider
@@ -51,7 +50,6 @@ public final class GameMaintenanceServices implements DisposableBean {
     /**
      * 解析赛季排名更新服务：优先 Spring 提供者，否则回退工厂。
      * Resolve the season-ranking update service: prefer Spring provider, otherwise fallback factory.
-     *
      * @return 赛季排名更新服务 / Season-ranking update service
      */
     public static SeasonRankingUpdateService seasonRankingUpdateService() {
@@ -65,7 +63,6 @@ public final class GameMaintenanceServices implements DisposableBean {
     /**
      * 解析术古皇陵生成管理器：优先 Spring 提供者，否则回退工厂。
      * Resolve the Shugo Imperial Tomb spawn manager: prefer Spring provider, otherwise fallback factory.
-     *
      * @return 术古皇陵生成管理器 / Shugo Imperial Tomb spawn manager
      */
     public static ShugoImperialTombSpawnManager shugoImperialTombSpawnManager() {

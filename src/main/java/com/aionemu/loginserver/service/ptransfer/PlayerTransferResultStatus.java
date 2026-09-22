@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 玩家跨服转移结果状态码，用于登录服与游戏服之间的协议响应。
  * Player cross-server transfer result status codes used in login-server ↔ game-server protocol responses.
- *
  * @author KID
  */
 public enum PlayerTransferResultStatus {
@@ -21,7 +20,6 @@ public enum PlayerTransferResultStatus {
     /**
      * 返回协议状态码数值。
      * Return the protocol status code value.
-     *
      * status id
      */
     @Getter
@@ -30,7 +28,6 @@ public enum PlayerTransferResultStatus {
     /**
      * 以协议数值构造枚举常量。
      * Construct the enum constant with its protocol numeric id.
-     *
      * @param id 协议状态码 / protocol status id
      */
     PlayerTransferResultStatus(int id) {

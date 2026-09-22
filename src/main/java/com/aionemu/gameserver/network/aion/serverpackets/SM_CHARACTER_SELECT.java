@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 /**
  * 角色选择阶段二级密码（Passkey）相关 UI 与结果消息的服务端包。
  * Server packet for character-select passkey UI windows and result messages.
- *
  * @author cura
  */
 @RequiredArgsConstructor
@@ -22,7 +21,6 @@ public class SM_CHARACTER_SELECT extends AionServerPacket {
 	/**
 	 * 返回二级密码操作结果消息。
 	 * Returns a passkey operation result message.
-	 *
 	 * @param type 窗口类型（通常为 2 消息窗） / window type (typically 2 message)
 	 * message type
 	 * @param unk 未知字段 / unknown field

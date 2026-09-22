@@ -16,7 +16,6 @@ import java.util.Properties;
 /**
  * 登录服配置项与加载逻辑。
  * LoginServer configuration properties and loader.
- *
  * @author -Nemesiss-
  * @author SoulKeeper
  */
@@ -118,7 +117,6 @@ public class Config {
     /**
      * 配置目录路径。
      * Config directory path.
-     *
      * @return 配置目录 / Config directory
      */
     private static String configDir() {
@@ -128,7 +126,6 @@ public class Config {
     /**
      * 设置 boot 层属性覆盖。
      * Set boot-layer property overrides.
-     *
      * @param properties 覆盖属性 / Override properties
      */
     public static void setBootOverrides(Properties properties) {

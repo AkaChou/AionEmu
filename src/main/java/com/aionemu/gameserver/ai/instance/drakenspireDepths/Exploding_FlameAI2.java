@@ -12,7 +12,6 @@ import java.util.concurrent.Future;
 /**
  * Drakenspire Depths 副本 NPC AI：Exploding Flame（@AIName "exploding_flame"），继承 AggressiveNpcAI2。
  * Drakenspire Depths instance NPC AI: Exploding Flame (@AIName "exploding_flame"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("exploding_flame")

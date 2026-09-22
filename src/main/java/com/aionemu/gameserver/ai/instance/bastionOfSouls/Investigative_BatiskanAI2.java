@@ -26,7 +26,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Bastion Of Souls 副本 NPC AI：Investigative Batiskan（@AIName "Vatiskhan"），继承 GeneralNpcAI2。
  * Bastion Of Souls instance NPC AI: Investigative Batiskan (@AIName "Vatiskhan"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("Vatiskhan")

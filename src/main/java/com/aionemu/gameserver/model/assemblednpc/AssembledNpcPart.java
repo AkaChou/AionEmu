@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 /**
  * 组装 NPCPart，用于 assemblednpc 相关逻辑。
  * Assembled Npc Part for assemblednpc logic.
- *
  * @author xTz
  */
 @Getter

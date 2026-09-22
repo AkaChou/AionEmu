@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * LootDistribution 枚举。
  * Loot Distribution enumeration.
- *
  * @author KKnD
  */
 @Getter

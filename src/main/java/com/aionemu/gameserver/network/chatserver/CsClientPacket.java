@@ -14,7 +14,6 @@ public abstract class CsClientPacket extends BaseClientPacket<ChatServerConnecti
 	/**
 	 * 使用指定操作码构造客户端包。
 	 * Constructs a client packet with the given opcode.
-	 *
 	 * @param opcode 包操作码 / packet opcode
 	 */
 	protected CsClientPacket(int opcode) {
@@ -37,7 +36,6 @@ public abstract class CsClientPacket extends BaseClientPacket<ChatServerConnecti
 	/**
 	 * 向所属连接发送一个服务端包。
 	 * Sends a server packet on the owning connection.
-	 *
 	 * @param msg 待发送包 / packet to send
 	 */
 	protected void sendPacket(CsServerPacket msg) {
@@ -47,7 +45,6 @@ public abstract class CsClientPacket extends BaseClientPacket<ChatServerConnecti
 	/**
 	 * 克隆本包原型以供处理器复用。
 	 * Clones this packet prototype for handler reuse.
-	 *
 	 * @return 克隆实例，失败时返回 null / clone instance, or null on failure
 	 */
 	public CsClientPacket clonePacket() {

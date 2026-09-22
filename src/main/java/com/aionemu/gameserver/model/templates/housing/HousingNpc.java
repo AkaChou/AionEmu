@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 住房 NPC 模板（静态数据/XML）。
  * XML template.
- *
  * @author Rolandas
  */
 @Getter

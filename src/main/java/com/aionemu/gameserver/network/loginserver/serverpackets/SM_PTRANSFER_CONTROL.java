@@ -56,7 +56,6 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 	/**
 	 * 构造仅含任务 ID 的转移控制包。
 	 * Constructs a transfer-control packet with task id only.
-	 *
 	 * @param type 控制类型 / control type
 	 * @param taskId 任务 ID / task id
 	 */
@@ -69,7 +68,6 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 	/**
 	 * 构造携带可转移玩家数据的控制包。
 	 * Constructs a transfer-control packet with transferable player data.
-	 *
 	 * @param type 控制类型 / control type
 	 * @param tp 可转移玩家 / transferable player
 	 */
@@ -83,7 +81,6 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 	/**
 	 * 构造携带可转移玩家与结果文本的控制包。
 	 * Constructs a transfer-control packet with transferable player and result text.
-	 *
 	 * @param type 控制类型 / control type
 	 * @param tp 可转移玩家 / transferable player
 	 * @param result 结果文本 / result text
@@ -97,7 +94,6 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 	/**
 	 * 构造携带任务 ID 与结果文本的控制包。
 	 * Constructs a transfer-control packet with task id and result text.
-	 *
 	 * @param type 控制类型 / control type
 	 * @param taskId 任务 ID / task id
 	 * @param result 结果文本 / result text

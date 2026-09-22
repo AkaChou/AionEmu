@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Kromedes Trial 副本 NPC AI：Porgus Barbecue（@AIName "porgus_barbecue"），继承 NpcAI2。
  * Kromedes Trial instance NPC AI: Porgus Barbecue (@AIName "porgus_barbecue"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("porgus_barbecue")

@@ -21,7 +21,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * RvR 相关 NPC AI：Legion Advance Corridor（@AIName "direct_portal"），继承 NpcAI2。
  * RvR-related NPC AI: Legion Advance Corridor (@AIName "direct_portal"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("direct_portal")

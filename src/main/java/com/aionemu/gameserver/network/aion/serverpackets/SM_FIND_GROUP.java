@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 寻找队伍/实例组列表包：按动作类型同步招募条目的增删改查。
  * instance-group list packet: CRUD of recruitment entries by action type.
- *
  * @author cura, MrPoke
  */
 public class SM_FIND_GROUP extends AionServerPacket {

@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 隐身 NPC AI：限制思考/可见性相关行为。
  * Invisible NPC AI with restricted think/visibility behavior.
- *
  * @author Rinzler (Encom)
  */
 @AIName("invisible_npc")
@@ -232,7 +231,6 @@ public class InvisibleNpcAI2 extends AggressiveNpcAI2
     /**
      * 处理受到攻击事件。
      * Handle being attacked.
-     *
      * @param creature 攻击者 / attacker
      */
     @Override

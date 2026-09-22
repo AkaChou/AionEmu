@@ -58,7 +58,6 @@ public class HousingObjectData {
 	/**
 	 * 返回房屋物件模板数量。
 	 * Returns the number of housing object templates.
-	 *
 	 * @return 房屋物件模板数量 / Returns the number of housing object templates.
 	 */
 	public int size() {
@@ -68,7 +67,6 @@ public class HousingObjectData {
 	/**
 	 * 按模板 ID 获取可放置房屋物件。
 	 * Returns the placeable housing object for the given template id.
-	 *
 	 * @param templateId 物件模板 ID / object template id
 	 * @return 房屋物件模板，不存在则为 null / housing object template, or null if absent
 	 */

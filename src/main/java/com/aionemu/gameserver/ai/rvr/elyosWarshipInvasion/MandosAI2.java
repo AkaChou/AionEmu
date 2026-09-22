@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * RvR 相关 NPC AI：Mandos（@AIName "mandos"），继承 AggressiveNpcAI2。
  * RvR-related NPC AI: Mandos (@AIName "mandos"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("mandos")

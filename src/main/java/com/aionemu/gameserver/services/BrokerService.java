@@ -56,7 +56,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 经纪行（交易行）服务：上架、购买、结算、缓存与周期落库。
  * Broker (auction house) service: listing, buying, settlement, player cache and periodic DB save.
- *
  * @author kosyachok
  * @author ATracer
  * @author Antraxx
@@ -75,11 +74,9 @@ public class BrokerService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -98,7 +95,6 @@ public class BrokerService {
 	/**
 	 * 注入 Spring ObjectProvider，供 getInstance 使用。
 	 * Inject the Spring ObjectProvider used by getInstance().
-	 *
 	 * @param instanceProvider Spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<BrokerService> instanceProvider) {
@@ -162,7 +158,6 @@ public class BrokerService {
 		/**
 	 * 按客户端筛选/排序条件向玩家展示经纪行物品列表。
 	 * Show broker items to the player using client filter/sort criteria.
-	 *
 	 * requesting player
 	 * @param clientMask 客户端筛选掩码 / client filter mask
 	 * sort type
@@ -218,12 +213,6 @@ public class BrokerService {
 		PacketSendUtility.sendPacket(player, new SM_BROKER_SERVICE(searchItems, totalSearchItemsCount, startPage));
 	}
 
-	/**
-	 * @param player
-	 * @param clientMask
-	 * @param cached
-	 * @return
-	 */
 	private BrokerItem[] getItemsByMask(Player player, int clientMask, boolean cached) {
 		List<BrokerItem> searchItems = new ArrayList<>();
 		BrokerItemMask brokerMask = BrokerItemMask.getBrokerMaskById(clientMask);
@@ -269,11 +258,6 @@ public class BrokerService {
 		Arrays.sort(brokerItems, BrokerItem.getComparatoryByType(sortType));
 	}
 
-	/**
-	 * @param brokerItems
-	 * @param startPage
-	 * @return
-	 */
 	private BrokerItem[] getRequestedPage(BrokerItem[] brokerItems, int startPage) {
 		List<BrokerItem> page = new ArrayList<>();
 		int startingElement = startPage * 9;
@@ -283,10 +267,6 @@ public class BrokerService {
 		return page.toArray(new BrokerItem[page.size()]);
 	}
 
-	/**
-	 * @param race
-	 * @return
-	 */
 	private Map<Integer, BrokerItem> getRaceBrokerItems(Race race) {
 		if (race == Race.ELYOS) {
 			return elyosBrokerItems;
@@ -296,10 +276,6 @@ public class BrokerService {
 		return null;
 	}
 
-	/**
-	 * @param race
-	 * @return
-	 */
 	private Map<Integer, BrokerItem> getRaceBrokerSettledItems(Race race) {
 		if (race == Race.ELYOS) {
 			return elyosSettledItems;
@@ -312,7 +288,6 @@ public class BrokerService {
 		/**
 	 * 购买经纪行物品（支持拆分售卖数量）。
 	 * Buy a broker item (supports split-sell quantities).
-	 *
 	 * 买家 / buyer
 	 * @param itemUniqueId 经纪行物品唯一 ID / broker item unique id
 	 * quantity to buy
@@ -449,11 +424,6 @@ public class BrokerService {
 				getPlayerCache(player).getSearchItemList());
 	}
 
-	/**
-	 * @param race
-	 * @param brokerItem
-	 * @param totalBuyPrice
-	 */
 	private BrokerItem createSplitSale(Race race, BrokerItem brokerItem, Item newItem, long totalBuyPrice,
 			long buyItemCount) {
 		BrokerRace brRace;
@@ -541,11 +511,6 @@ public class BrokerService {
 		newItem.setAmplification(sourceItem.isAmplified());
 	}
 
-	/**
-	 * @param race
-	 * @param brokerItem
-	 * @param isSold
-	 */
 	private boolean putToSettled(Race race, BrokerItem brokerItem, boolean isSold) {
 		int itemNameId = brokerItem.getItem().getNameId();
 		long originalItemCount = brokerItem.getItemCount();
@@ -599,7 +564,6 @@ public class BrokerService {
 		/**
 	 * 将玩家背包物品上架到经纪行。
 	 * Register a player inventory item on the broker.
-	 *
 	 * 卖家 / seller
 	 * item object id
 	 * @param count 上架数量 / listed quantity
@@ -728,7 +692,6 @@ public class BrokerService {
 		/**
 	 * 计算指定物品在经纪行的均价/最低/最高价。
 	 * Compute average/low/high broker prices for the given item.
-	 *
 	 * requesting player
 	 * @param sortType 排序/查询类型 / sort or query type
 	 * item object id
@@ -786,7 +749,6 @@ public class BrokerService {
 		/**
 	 * 计算并下发物品均价/最低/最高价窗口数据。
 	 * Calculate and send average/low/high price window data for an item.
-	 *
 	 * @param player requesting player
 	 * @param itemUniqueId item object id
 	 */
@@ -809,7 +771,6 @@ public class BrokerService {
 	/**
 	 * 打开经纪行上架确认窗口。
 	 * Open the broker add-item confirmation window.
-	 *
 	 * @param player 玩家 / player
 	 * @param itemObjectId item object id
 	 */
@@ -834,7 +795,6 @@ public class BrokerService {
 	/**
 	 * 从物品列表计算均价、最高价、最低价。
 	 * Compute average, max and min prices from a list of broker items.
-	 *
 	 * @param items 经纪行物品列表 / broker item list
 	 * @return [均价, 最高, 最低] / [avg, max, min]
 	 */
@@ -860,7 +820,6 @@ public class BrokerService {
 		/**
 	 * 向玩家展示其已上架物品。
 	 * Show the player their currently registered broker items.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void showRegisteredItems(Player player) {
@@ -881,7 +840,6 @@ public class BrokerService {
 	/**
 	 * 判断玩家是否仍有上架中的物品。
 	 * Whether the player still has items registered on the broker.
-	 *
 	 * @param player 玩家 / player
 	 * @return 有上架物品为 true / true if registered items exist
 	 */
@@ -898,7 +856,6 @@ public class BrokerService {
 		/**
 	 * 取消上架并退回物品。
 	 * Cancel a registered listing and return the item.
-	 *
 	 * @param player 玩家 / player
 	 * @param brokerItemId 经纪行物品 ID / broker item id
 	 */
@@ -947,7 +904,6 @@ public class BrokerService {
 		/**
 	 * 向玩家展示已结算（可领取）物品/基纳。
 	 * Show the player settled items/kinah available for collection.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void showSettledItems(Player player) {
@@ -970,7 +926,6 @@ public class BrokerService {
 		/**
 	 * 统计玩家待领取的经纪行基纳总额。
 	 * Sum kinah waiting for collection for the given player common data.
-	 *
 	 * @param playerCommonData 玩家公共数据 / player common data
 	 * @return 待领取基纳 / kinah to collect
 	 */
@@ -1004,7 +959,6 @@ public class BrokerService {
 		/**
 	 * 结算账户：领取已售基纳与过期退回物品。
 	 * Settle the account: collect sold kinah and expired returned items.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public synchronized void settleAccount(Player player) {
@@ -1128,7 +1082,6 @@ public class BrokerService {
 		/**
 	 * 玩家登录时通知是否有经纪行结算可领。
 	 * On login, notify the player if broker settlements are available.
-	 *
 	 * @param player logging-in player
 	 */
 	public void onPlayerLogin(Player player) {
@@ -1142,10 +1095,6 @@ public class BrokerService {
 		}
 	}
 
-	/**
-	 * @param player
-	 * @return
-	 */
 	private BrokerPlayerCache getPlayerCache(Player player) {
 		return playerBrokerCache.computeIfAbsent(player.getObjectId(), playerId -> new BrokerPlayerCache());
 	}
@@ -1153,25 +1102,16 @@ public class BrokerService {
 	/**
 	 * 移除玩家经纪行查询缓存。
 	 * Remove the player broker query cache.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void removePlayerCache(Player player) {
 		playerBrokerCache.remove(player.getObjectId());
 	}
 
-	/**
-	 * @param player
-	 * @return
-	 */
 	private int getPlayerMask(Player player) {
 		return getPlayerCache(player).getBrokerMaskCache();
 	}
 
-	/**
-	 * @param player
-	 * @return
-	 */
 	private BrokerItem[] getFilteredItems(Player player) {
 		return getPlayerCache(player).getBrokerListCache();
 	}
@@ -1195,13 +1135,9 @@ public class BrokerService {
 			this.inventorySaves = List.copyOf(inventorySaves);
 		}
 
-		/**
-		 * @param brokerItem
-		 */
-		/**
+        /**
 		 * 构造针对单个经纪行物品的落库任务。
 		 * Construct a save task for a single broker item.
-		 *
 		 * @param brokerItem 经纪行物品 / broker item
 		 */
 		public BrokerOpSaveTask(BrokerItem brokerItem) {

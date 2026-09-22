@@ -8,7 +8,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 客户端设置当前显示称号请求包。
  * Client packet for setting the player's displayed title.
- *
  * @author Ranastic (Encom)
  */
 public class CM_TITLE_SET extends AionClientPacket {

@@ -19,7 +19,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * Bastion Of Souls 副本 NPC AI：Detachment Captain Bastikan（@AIName "Vatiskhan_Terrarium"），继承 GeneralNpcAI2。
  * Bastion Of Souls instance NPC AI: Detachment Captain Bastikan (@AIName "Vatiskhan_Terrarium"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("Vatiskhan_Terrarium")

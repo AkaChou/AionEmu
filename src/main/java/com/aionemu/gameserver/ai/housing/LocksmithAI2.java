@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 房屋相关 NPC AI：Locksmith（@AIName "locksmith"），继承 NpcAI2。
  * Housing-related NPC AI: Locksmith (@AIName "locksmith"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("locksmith")

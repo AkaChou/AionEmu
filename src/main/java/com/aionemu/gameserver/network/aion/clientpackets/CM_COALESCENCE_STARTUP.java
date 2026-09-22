@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 请求打开装备融合界面的客户端包。
  * Client packet requesting the equipment coalescence UI startup.
- *
  * @author Ranastic
  */
 public class CM_COALESCENCE_STARTUP extends AionClientPacket {
@@ -17,7 +16,6 @@ public class CM_COALESCENCE_STARTUP extends AionClientPacket {
 	/**
 	 * 构造客户端包实例。
 	 * Constructs a new client packet instance.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余允许状态 / additional allowed states

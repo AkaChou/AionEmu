@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
  * <p>
  * 若值对象无强引用，首次 GC 后条目会被移除。
  * Entries are removed after the first GC run when no strong reference to the value remains.
- *
  * @param <K> 键类型 / Key type
  * @param <V> 值类型 / Value type
  * @author Luno
@@ -23,7 +22,6 @@ class WeakCacheMap<K, V> extends AbstractCacheMap<K, V> implements CacheMap<K, V
 	/**
 	 * 带键信息的 {@link WeakReference}。
 	 * {@link WeakReference} that also holds the key.
-	 *
 	 * @author Luno
 	 */
 	private class Entry extends WeakReference<V> {
@@ -37,7 +35,6 @@ class WeakCacheMap<K, V> extends AbstractCacheMap<K, V> implements CacheMap<K, V
 		/**
 		 * 使用键、引用对象与队列构造。
 		 * Construct with key, referent and queue.
-		 *
 	 * @param key 键 / Key
 	 * @param referent 引用对象 / Referent
 		 * @param q 引用队列 / Reference queue
@@ -50,7 +47,6 @@ class WeakCacheMap<K, V> extends AbstractCacheMap<K, V> implements CacheMap<K, V
 		/**
 		 * 返回关联键。
 		 * Return the associated key.
-		 *
 		 * @return 键 / Key
 		 */
 		K getKey() {
@@ -61,7 +57,6 @@ class WeakCacheMap<K, V> extends AbstractCacheMap<K, V> implements CacheMap<K, V
 	/**
 	 * 使用缓存名与值名构造。
 	 * Construct with cache name and value name.
-	 *
 	 * @param cacheName 缓存名称 / Cache name
 	 * @param valueName 值名称 / Value name
 	 */
@@ -89,7 +84,6 @@ class WeakCacheMap<K, V> extends AbstractCacheMap<K, V> implements CacheMap<K, V
 	/**
 	 * 创建带键的弱引用。
 	 * Create a weak reference holding the key.
-	 *
 	 * @param key 键 / Key
 	 * @param value 值 / Value
 	 * @param vReferenceQueue 引用队列 / Reference queue

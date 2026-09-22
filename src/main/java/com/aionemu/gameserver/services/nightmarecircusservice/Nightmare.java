@@ -6,7 +6,6 @@ import com.aionemu.gameserver.model.nightmarecircus.NightmareCircusStateType;
 /**
  * 梦魇马戏团默认实现：切入 OPEN / 回到 CLOSED。
  * back to CLOSED.
- *
  * @author Rinzler (Encom)
  */
 public class Nightmare extends CircusInstance<NightmareCircusLocation> {
@@ -14,7 +13,6 @@ public class Nightmare extends CircusInstance<NightmareCircusLocation> {
 	/**
 	 * 绑定梦魇马戏团地点。
 	 * Binds the Nightmare Circus location.
-	 *
 	 * @param nightmareCircus location
 	 */
 	public Nightmare(NightmareCircusLocation nightmareCircus) {

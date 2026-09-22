@@ -9,7 +9,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Drakenspire Depths 副本 NPC AI：Tornado（@AIName "tornado"），继承 AggressiveNpcAI2。
  * Drakenspire Depths instance NPC AI: Tornado (@AIName "tornado"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("tornado")

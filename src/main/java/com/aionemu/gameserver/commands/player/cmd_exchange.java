@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：消耗欧比斯点数兑换指定道具。
  * Player command: spends Abyss Points to exchange for a fixed item reward.
- *
  * @author Maestross
  */
 public class cmd_exchange extends PlayerCommand {
@@ -25,7 +24,6 @@ public class cmd_exchange extends PlayerCommand {
 	/**
 	 * 若 AP 足够则扣除 15000 AP 并发放兑换道具。
 	 * If AP is sufficient, deducts 15000 AP and grants the exchange items.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 未使用的参数 / unused parameters
 	 */

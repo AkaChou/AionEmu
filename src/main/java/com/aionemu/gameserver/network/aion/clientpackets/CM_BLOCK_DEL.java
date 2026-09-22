@@ -11,7 +11,6 @@ import com.aionemu.gameserver.services.SocialService;
 /**
  * 将玩家从黑名单移除的客户端包。
  * Client packet to remove a player from the block list.
- *
  * @author Ben
  */
 @Slf4j
@@ -19,9 +18,6 @@ public class CM_BLOCK_DEL extends AionClientPacket {
 
 	private String targetName;
 
-	/**
-	 * @param opcode
-	 */
 	public CM_BLOCK_DEL(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
 	}

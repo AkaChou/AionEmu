@@ -6,7 +6,6 @@ import lombok.Getter;
 /**
  * 玩家衣橱条目，用于多里纳克衣橱相关逻辑。
  * Player Wardrobe Entry for dorinerk wardrobe logic.
- *
  * @author Ranastic
  */
 @Getter

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 /**
  * Brusthonin 区域 NPC AI：Unfaithful Ntuamu（@AIName "unfaithfulntuamu"），继承 AggressiveNpcAI2。
  * Brusthonin zone NPC AI: Unfaithful Ntuamu (@AIName "unfaithfulntuamu"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("unfaithfulntuamu")

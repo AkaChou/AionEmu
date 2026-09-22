@@ -17,7 +17,6 @@ import com.aionemu.gameserver.model.templates.outpost.OutpostTemplate;
 /**
  * 前哨据点数据容器，按 ID 索引 OutpostLocation。
  * Outpost location data holder, indexed by id.
- *
  * Created by Wnkrz on 27/08/2017.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -41,7 +40,6 @@ public class OutpostData {
 	/**
 	 * 返回已加载的前哨据点数量。
 	 * Returns the number of loaded outpost locations.
-	 *
 	 * @return 已加载的前哨基地地点数量 / Returns the number of loaded outpost locations.
 	 */
 	public int size() {
@@ -51,7 +49,6 @@ public class OutpostData {
 	/**
 	 * 返回全部前哨据点映射。
 	 * Returns the full outpost location map.
-	 *
 	 * @return ID 到据点的映射 / map of id to location
 	 */
 	public Map<Integer, OutpostLocation> getOutpostLocations() {

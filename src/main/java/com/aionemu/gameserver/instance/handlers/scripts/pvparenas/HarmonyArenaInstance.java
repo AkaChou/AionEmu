@@ -35,7 +35,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 /**
  * 合作竞技场副本事件处理器。
  * Instance event handler for Harmony Arena.
- *
  * @author Encom
  */
 
@@ -53,7 +52,6 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
-	 *
 	 * result
 	 */
 	@Override
@@ -64,7 +62,6 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -152,7 +149,6 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * npc
 	 */
 	@Override
@@ -165,7 +161,6 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 sendSystemMsg。
 	 * Handle sendSystemMsg.
-	 *
 	 * 玩家 / player
 	 * creature
 	 * rewardPoints
@@ -197,7 +192,6 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家登录到该副本时处理。
 	 * Handle a player logging into this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -208,7 +202,6 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -328,7 +321,6 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -341,7 +333,6 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -356,7 +347,6 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
-	 *
 	 * message
 	 * 阵营 / race
 	 * time
@@ -374,7 +364,6 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -391,7 +380,6 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -460,7 +448,6 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * 玩家 / player
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 * result
@@ -486,7 +473,6 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
-	 *
 	 * 玩家 / player
 	 * npc
 	 */
@@ -509,7 +495,6 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 useSkill。
 	 * Handle useSkill.
-	 *
 	 * npc
 	 * 玩家 / player
 	 * skill id
@@ -523,7 +508,6 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 处理玩家复活事件。
 	 * Handle a player revive event.
-	 *
 	 * 玩家 / player
 	 * result
 	 */

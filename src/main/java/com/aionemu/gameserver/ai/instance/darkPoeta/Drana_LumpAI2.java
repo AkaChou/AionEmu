@@ -15,7 +15,6 @@ import java.util.concurrent.Future;
 /**
  * Dark Poeta 副本 NPC AI：Drana Lump（@AIName "drana_lump"），继承 AggressiveNpcAI2。
  * Dark Poeta instance NPC AI: Drana Lump (@AIName "drana_lump"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("drana_lump")

@@ -12,7 +12,6 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 /**
  * 目标飞行条件：按限制类型校验首目标/效果目标处于飞行或地面状态。
  * Target flying condition: validates the first target/effected is flying or grounded per the restriction type.
- *
  * @author Sippolo
  * @author kecimis
  */
@@ -26,7 +25,6 @@ public class TargetFlyingCondition extends Condition {
 	/**
 	 * 校验技能环境是否满足本条件。
 	 * Validates whether the skill environment satisfies this condition.
-	 *
 	 * @param env 技能环境 / skill environment
 	 * @return 是否有效 / whether valid
 	 */
@@ -45,7 +43,6 @@ public class TargetFlyingCondition extends Condition {
 	/**
 	 * 校验效果环境是否满足本条件。
 	 * Validates whether the effect environment satisfies this condition.
-	 *
 	 * @param effect 效果环境 / effect environment
 	 * @return 是否有效 / whether valid
 	 */

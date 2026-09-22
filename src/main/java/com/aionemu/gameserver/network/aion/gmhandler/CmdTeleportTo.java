@@ -11,7 +11,6 @@ import com.aionemu.gameserver.world.WorldMapType;
 /**
  * GM 指令：按地名传送管理员到预设坐标。
  * GM command handler that teleports the admin to a named destination with preset coordinates.
- *
  * @author Alcapwnd
  */
 public class CmdTeleportTo extends AbstractGMHandler {
@@ -19,7 +18,6 @@ public class CmdTeleportTo extends AbstractGMHandler {
 	/**
 	 * 创建处理器并立即按地名传送。
 	 * Creates the handler and immediately teleports by destination name.
-	 *
 	 * @param admin 执行指令的管理员 / the admin executing the command
 	 * @param params 目的地名称 / destination name
 	 */
@@ -100,10 +98,7 @@ public class CmdTeleportTo extends AbstractGMHandler {
 		else if (destination.equalsIgnoreCase("Arbolu"))
 			goTo(admin, WorldMapType.HEIRON.getId(), 170, 1662, 120);
 
-		/**
-		 * Asmodae
-		 */
-		// 潘达梦宁 / Pandaemonium
+			// 潘达梦宁 / Pandaemonium
 		else if (destination.equalsIgnoreCase("Pandaemonium"))
 			goTo(admin, WorldMapType.PANDAEMONIUM.getId(), 1679, 1400, 195);
 		// 玛尔库坦 / Marchutran
@@ -167,13 +162,10 @@ public class CmdTeleportTo extends AbstractGMHandler {
 		else if (destination.equalsIgnoreCase("Hoarfrost"))
 			goTo(admin, WorldMapType.BELUSLAN.getId(), 2431, 2063, 579);
 
-		/**
-		 * Balaurea
-		 */
-		// 西伦特拉 / Silentera
+			// 西伦特拉 / Silentera
 		else if (destination.equalsIgnoreCase("Silentera"))
 			goTo(admin, 600010000, 583, 767, 300);
-		
+
         // 4.8 地图 / 4.8 Maps
         else if (destination.equalsIgnoreCase("Cygnea") || destination.equalsIgnoreCase("Signia"))
             goTo(admin, 210070000, 2748, 710, 552);
@@ -209,10 +201,7 @@ public class CmdTeleportTo extends AbstractGMHandler {
             goTo(admin, 210110000, 498, 500, 303);
         else if (destination.equalsIgnoreCase("Tower of Eternity Asmo") || destination.equalsIgnoreCase("TOEA"))
             goTo(admin, 220120000, 498, 500, 303);
-		
-		/**
-		 * 欧比斯 / Abyss
-		 */
+
 		else if (destination.equalsIgnoreCase("Siels Eastern Fortress") || destination.equalsIgnoreCase("sieleast"))
             goTo(admin, 400010000, 1792, 2412, 1479);
 		else if (destination.equalsIgnoreCase("Siels Western Fortress") || destination.equalsIgnoreCase("sielwest"))
@@ -231,11 +220,8 @@ public class CmdTeleportTo extends AbstractGMHandler {
             goTo(admin, 400010000, 2227, 456, 2894);
 		else if (destination.equalsIgnoreCase("Divine Fortress") || destination.equalsIgnoreCase("divine"))
             goTo(admin, 400010000, 1580, 1759, 2316);
-		
 
-		/**
-		 * Instances
-		 */
+
 		else if (destination.equalsIgnoreCase("Haramel"))
 			goTo(admin, 300200000, 176, 21, 144);
 		else if (destination.equalsIgnoreCase("Nochsana") || destination.equalsIgnoreCase("NTC"))
@@ -309,9 +295,6 @@ public class CmdTeleportTo extends AbstractGMHandler {
 		else if (destination.equalsIgnoreCase("Padmaraska Cave"))
 			goTo(admin, 320150000, 385, 506, 66);
 
-		/**
-		 * 任务实例地图 / Quest Instance Maps
-		 */
 		else if (destination.equalsIgnoreCase("Karamatis 0"))
 			goTo(admin, 310010000, 221, 250, 206);
 		else if (destination.equalsIgnoreCase("Karamatis 1"))
@@ -336,9 +319,6 @@ public class CmdTeleportTo extends AbstractGMHandler {
 		else if (destination.equalsIgnoreCase("Nidalber"))
 			goTo(admin, 320040000, 275, 168, 205);
 
-		/**
-		 * Arenas
-		 */
 		else if (destination.equalsIgnoreCase("Sanctum Arena"))
 			goTo(admin, 310080000, 275, 242, 159);
 		else if (destination.equalsIgnoreCase("Triniel Arena"))
@@ -386,10 +366,7 @@ public class CmdTeleportTo extends AbstractGMHandler {
 		else if (destination.equalsIgnoreCase("Arena Of Chaos - 6"))
 			goTo(admin, 300350000, 1949, 946, 224);
 
-		/**
-		 * Miscellaneous
-		 */
-		// 监狱 / Prison
+			// 监狱 / Prison
 		else if (destination.equalsIgnoreCase("Prison LF") || destination.equalsIgnoreCase("Prison Elyos"))
 			goTo(admin, 510010000, 256, 256, 49);
 		else if (destination.equalsIgnoreCase("Prison DF") || destination.equalsIgnoreCase("Prison Asmos"))
@@ -410,10 +387,7 @@ public class CmdTeleportTo extends AbstractGMHandler {
 		else if (destination.equalsIgnoreCase("gm"))
 			goTo(admin, 120020000, 1442, 1133, 302);
 
-		/**
-		 * 2.5 Maps
-		 */
-		else if (destination.equalsIgnoreCase("Kaisinel Academy"))
+        else if (destination.equalsIgnoreCase("Kaisinel Academy"))
 			goTo(admin, 110070000, 459, 251, 128);
 		else if (destination.equalsIgnoreCase("Marchutan Priory"))
 			goTo(admin, 120080000, 577, 250, 94);
@@ -445,7 +419,6 @@ public class CmdTeleportTo extends AbstractGMHandler {
 	/**
 	 * 传送到指定地图坐标；副本图会创建/复用实例。
 	 * Teleports to the given map coordinates; creates or reuses an instance for instance maps.
-	 *
 	 * @param admin 管理员 / the admin
 	 * @param worldId 世界地图 ID / world map id
 	 * @param x X 坐标 / X coordinate
@@ -464,7 +437,6 @@ public class CmdTeleportTo extends AbstractGMHandler {
 	/**
 	 * 获取或注册目标地图的实例 ID。
 	 * Returns or registers an instance id for the destination map.
-	 *
 	 * @param worldId 世界地图 ID / world map id
 	 * @param admin 管理员 / the admin
 	 * @return 实例 ID / instance id

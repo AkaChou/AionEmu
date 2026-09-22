@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 /**
  * 同步增益/加成活动状态（buff 编号、加成值与活动起止时间）的服务端包。
  * Server packet synchronizing boost-event state (buff id, boost value, and event start/end times).
- *
  * @author wanke
  */
 @AllArgsConstructor

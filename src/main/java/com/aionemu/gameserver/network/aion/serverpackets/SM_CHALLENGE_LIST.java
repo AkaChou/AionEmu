@@ -23,7 +23,6 @@ public class SM_CHALLENGE_LIST extends AionServerPacket {
 	/**
 	 * 构造挑战任务列表同步包。
 	 * Builds a challenge-task list sync packet.
-	 *
 	 * action code
 	 * owner id
 	 * @param ownerType 所有者类型 / owner challenge type
@@ -39,7 +38,6 @@ public class SM_CHALLENGE_LIST extends AionServerPacket {
 	/**
 	 * 构造单个挑战任务详情同步包。
 	 * Builds a single challenge-task detail sync packet.
-	 *
 	 * action code
 	 * owner id
 	 * @param ownerType 所有者类型 / owner challenge type

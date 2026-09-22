@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PositionUtil;
 /**
  * 背后伤害修正：攻击者位于目标身后时加成伤害。
  * Back damage modifier: bonus damage when the attacker is behind the target.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)

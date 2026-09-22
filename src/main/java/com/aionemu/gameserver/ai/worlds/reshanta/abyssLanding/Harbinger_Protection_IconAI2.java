@@ -9,7 +9,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Reshanta 区域 NPC AI：Harbinger Protection Icon（@AIName "harbinger_protection_icon"），继承 AggressiveNpcAI2。
  * Reshanta zone NPC AI: Harbinger Protection Icon (@AIName "harbinger_protection_icon"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("harbinger_protection_icon")

@@ -10,7 +10,6 @@ import com.aionemu.commons.network.ServerTransport;
 /**
  * 聊天服 Netty 网络入口：同时启动客户端接入与游戏服连接监听。
  * Chat-server Netty network entry: starts both client acceptor and game-server listener.
- *
  * @author ATracer
  */
 @Slf4j
@@ -23,7 +22,6 @@ public class NettyServer {
     /**
      * 获取单例（已废弃，迁移至 Boot 后请使用注入）。
      * Return the singleton (deprecated; prefer injection after Boot migration).
-     *
      * @return 单例实例 / Singleton instance
      * @deprecated boot-migration
      */
@@ -38,7 +36,6 @@ public class NettyServer {
     /**
      * 使用指定客户端包处理器获取单例（已废弃）。
      * Return the singleton with a custom client packet handler (deprecated).
-     *
      * @param clientPacketHandler 客户端包处理器 / Client packet handler
      * @return 单例实例 / Singleton instance
      * @deprecated boot-migration
@@ -69,7 +66,6 @@ public class NettyServer {
     /**
      * 判断单例是否已创建。
      * Whether the singleton has been created.
-     *
      * @return 已初始化则为 true / {@code true} if initialized
      */
     static synchronized boolean isInitialized() {
@@ -87,7 +83,6 @@ public class NettyServer {
     /**
      * 使用指定客户端包处理器构造并初始化。
      * Construct and initialize with the given client packet handler.
-     *
      * @param clientPacketHandler 客户端包处理器 / Client packet handler
      */
     public NettyServer(ClientPacketHandler clientPacketHandler) {
@@ -105,7 +100,6 @@ public class NettyServer {
     /**
      * 启动聊天客户端服务端与游戏服传输层。
      * Start the chat-client server and the game-server transport.
-     *
      * @param clientPacketHandler 客户端包处理器 / Client packet handler
      */
     private void initialize(ClientPacketHandler clientPacketHandler) {

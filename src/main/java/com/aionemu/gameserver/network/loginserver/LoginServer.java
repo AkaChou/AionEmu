@@ -33,7 +33,6 @@ import com.aionemu.gameserver.services.AccountService;
 /**
  * 游戏服与登录服通信的门面工具类。
  * Utility facade for connecting the GameServer to the LoginServer.
- *
  * @author -Nemesiss-
  */
 @Slf4j
@@ -96,11 +95,9 @@ public class LoginServer {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
@@ -118,7 +115,6 @@ public class LoginServer {
 	/**
 	 * 注入 Spring ObjectProvider，供 DI 覆盖静态单例。
 	 * Injects Spring ObjectProvider to override the static singleton.
-	 *
 	 * @param instanceProvider Spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<LoginServer> instanceProvider) {
@@ -144,7 +140,6 @@ public class LoginServer {
 	/**
 	 * 阻塞连接登录服，成功后返回连接对象；失败则每隔 10 秒重试。
 	 * Blocking connect to LoginServer; retries every 10s until success.
-	 *
 	 * @return 已建立的登录服连接 / Established LoginServer connection
 	 */
 	public LoginServerConnection connect() {
@@ -153,10 +148,6 @@ public class LoginServer {
 				return loginServer;
 			}
 			try {
-				/**
-				 * 休眠 10 秒后重试。
-				 * Sleep 10s before retry.
-				 */
 				Thread.sleep(10 * 1000);
 			} catch (Exception e) {
 			}
@@ -174,7 +165,6 @@ public class LoginServer {
 	/**
 	 * 按指定延迟调度一次连接尝试；已关闭或已排队时忽略。
 	 * Schedule one connect attempt after the given delay; no-op if shut down or already queued.
-	 *
 	 * @param delay 延迟毫秒 / Delay in milliseconds
 	 */
 	private void scheduleConnect(long delay) {
@@ -198,7 +188,6 @@ public class LoginServer {
 	/**
 	 * 执行一次连接尝试。
 	 * Perform a single connect attempt.
-	 *
 	 * @return 是否连接成功 / Whether the connect succeeded
 	 */
 	private boolean connectOnce() {
@@ -222,7 +211,6 @@ public class LoginServer {
 	/**
 	 * 通过 NettyClient 连接登录服。
 	 * Connect to LoginServer via NettyClient.
-	 *
 	 * @return 是否连接成功 / Whether the connect succeeded
 	 */
 	private boolean connectWithNetty() {
@@ -261,20 +249,12 @@ public class LoginServer {
 		}
 		shutdownNettyClient();
 		synchronized (this) {
-			/**
-			 * 登录服连接丢失，等待认证的客户端永远无法完成认证，应立即断开。
-			 * LoginServer link lost; clients pending authentication will never finish and must be closed.
-			 */
 			for (AionConnection client : loginRequests.values()) {
 				client.close(true);
 			}
 			loginRequests.clear();
 		}
 
-		/**
-		 * 非关闭流程时 5 秒后重连。
-		 * Reconnect after 5s if not in server shutdown sequence.
-		 */
 		if (!serverShutdown) {
 			scheduleConnect(5000);
 		}
@@ -283,7 +263,6 @@ public class LoginServer {
 	/**
 	 * 客户端断开时清理等待请求，并通知登录服该账号已不在本游戏服。
 	 * On client disconnect, clear pending requests and notify LoginServer the account is no longer on this GameServer.
-	 *
 	 * @param accountId 账号 ID / Account id
 	 */
 	public void aionClientDisconnected(int accountId) {
@@ -297,7 +276,6 @@ public class LoginServer {
 	/**
 	 * 向登录服发送账号断开通知。
 	 * Send account-disconnected notification to LoginServer.
-	 *
 	 * @param accountId 账号 ID / Account id
 	 */
 	private void sendAccountDisconnected(int accountId) {
@@ -310,7 +288,6 @@ public class LoginServer {
 	/**
 	 * 启动客户端认证流程；登录服将回传账号名等认证结果。
 	 * Start client authentication; LoginServer will reply with account name and result.
-	 *
 	 * @param accountId 账号 ID / Account id
 	 * @param client 客户端连接 / Client connection
 	 * @param loginOk 登录校验码 / Login OK token
@@ -319,10 +296,6 @@ public class LoginServer {
 	 */
 	public void requestAuthenticationOfClient(int accountId, AionConnection client, int loginOk, int playOk1,
 			int playOk2) {
-		/**
-		 * 无登录服连接时无法认证，应断开客户端。
-		 * Without a LoginServer link authentication is impossible; disconnect the client.
-		 */
 		if (loginServer == null || loginServer.getState() != State.AUTHED) {
 			log.warn(I18n.get("log.a7a0f4156970", (loginServer == null ? "NULL" : loginServer.getState())));
 			client.close(true);
@@ -341,7 +314,6 @@ public class LoginServer {
 	/**
 	 * 由 CM_ACCOUNT_AUTH_RESPONSE 调用，通知游戏服客户端认证结果。
 	 * Called by CM_ACCOUNT_AUTH_RESPONSE to notify GameServer of client authentication results.
-	 *
 	 * @param accountId 账号 ID / account id
 	 * @param accountName 账号名 / account name
 	 * @param result 是否认证成功 / whether authentication succeeded
@@ -387,7 +359,6 @@ public class LoginServer {
 	/**
 	 * 校验账号：若任一角色仍标记为在线则拒绝登录。
 	 * Validate account: reject login if any character is still marked online.
-	 *
 	 * @param account 账号 / Account
 	 * @return 是否通过校验 / Whether validation passed
 	 */
@@ -403,14 +374,9 @@ public class LoginServer {
 	/**
 	 * 启动重连登录服流程；登录服将回传重连密钥。
 	 * Start LoginServer reconnection procedure; LoginServer will reply with a reconnection key.
-	 *
 	 * @param client 客户端连接 / Client connection
 	 */
 	public void requestAuthReconnection(AionConnection client) {
-		/**
-		 * 无登录服连接时无法认证，应断开客户端。
-		 * Without a LoginServer link authentication is impossible; disconnect the client.
-		 */
 		if (loginServer == null || loginServer.getState() != State.AUTHED) {
 			client.close(false);
 			return;
@@ -428,7 +394,6 @@ public class LoginServer {
 	/**
 	 * 由 CM_ACCOUNT_RECONNECT_KEY 调用，将重连密钥下发给请求重连的客户端。
 	 * Called by CM_ACCOUNT_RECONNECT_KEY to deliver the reconnection key to the requesting client.
-	 *
 	 * @param accountId 账号 ID / Account id
 	 * @param reconnectKey Reconnection key
 	 */
@@ -445,7 +410,6 @@ public class LoginServer {
 	/**
 	 * 由 CM_REQUEST_KICK_ACCOUNT 调用，请求踢下指定账号的客户端。
 	 * Called by CM_REQUEST_KICK_ACCOUNT to request GameServer kick the client with the given account id.
-	 *
 	 * @param accountId 账号 ID / Account id
 	 */
 	public void kickAccount(int accountId) {
@@ -462,7 +426,6 @@ public class LoginServer {
 	/**
 	 * 关闭客户端并在 5 秒后复查是否仍残留在登录表中。
 	 * Close the client and re-check after 5s whether it still remains in the logged-in map.
-	 *
 	 * @param client 客户端连接 / Client connection
 	 * @param accountId 账号 ID / Account id
 	 */
@@ -483,7 +446,6 @@ public class LoginServer {
 	/**
 	 * 返回当前游戏服已登录账号的不可变映射（键：账号 ID，值：连接）。
 	 * Returns an unmodifiable map of accounts logged in on this GS (key: account id, value: connection).
-	 *
 	 * @return 不可变的已登录账号表 / Unmodifiable map of logged-in accounts
 	 */
 	public Map<Integer, AionConnection> getLoggedInAccounts() {
@@ -498,11 +460,7 @@ public class LoginServer {
 		synchronized (this) {
 			serverShutdown = true;
 			cancelConnectionTask();
-			/**
-			 * 游戏服关闭，必须关闭所有等待中的登录请求。
-			 * GameServer is shutting down; must close all pending login requests.
-			 */
-			for (AionConnection client : loginRequests.values()) {
+            for (AionConnection client : loginRequests.values()) {
 				client.close(true);
 			}
 			loginRequests.clear();
@@ -544,7 +502,6 @@ public class LoginServer {
 	/**
 	 * 向登录服发送 LS 控制包（权限/会员等管理操作）。
 	 * Send an LS control packet to LoginServer (access/membership admin ops).
-	 *
 	 * Account name
 	 * Player name
 	 * Admin name
@@ -560,7 +517,6 @@ public class LoginServer {
 	/**
 	 * 根据登录服回传更新本地账号的权限或会员等级。
 	 * Update local account access level or membership from LoginServer response.
-	 *
 	 * 账号 ID / Account id
 	 * New value
 	 * @param type 1=权限等级，2=会员等级 / 1=access level, 2=membership
@@ -583,7 +539,6 @@ public class LoginServer {
 	/**
 	 * 向登录服发送封禁包。
 	 * Send a ban packet to LoginServer.
-	 *
 	 * @param type 封禁类型 / Ban type
 	 * 账号 ID / Account id
 	 * @param ip IP 地址 / IP address
@@ -599,7 +554,6 @@ public class LoginServer {
 	/**
 	 * 在登录服已认证时发送任意 LS 服务端封包。
 	 * Send any LS server packet when LoginServer is authenticated.
-	 *
 	 * @param pk 待发送封包 / Packet to send
 	 * @return 是否发送成功 / Whether the packet was sent
 	 */

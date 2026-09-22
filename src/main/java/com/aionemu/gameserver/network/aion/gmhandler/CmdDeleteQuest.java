@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.Util;
 /**
  * GM 指令：删除目标玩家的指定任务进度。
  * GM command handler that deletes a quest state from the target player.
- *
  * @author Alcapwnd
  */
 public class CmdDeleteQuest extends AbstractGMHandler {
@@ -24,7 +23,6 @@ public class CmdDeleteQuest extends AbstractGMHandler {
 	/**
 	 * 创建处理器并立即执行删除任务。
 	 * Creates the handler and immediately runs the delete-quest logic.
-	 *
 	 * @param admin 执行指令的管理员 / the admin executing the command
 	 * @param params 任务 ID 字符串 / quest id as string
 	 */

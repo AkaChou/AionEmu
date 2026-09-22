@@ -11,7 +11,6 @@ import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 /**
  * 驱散增益效果：移除目标 Buff 槽位上的增益。
  * Dispel-buff effect: removes buffs from the target's buff slot.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -21,7 +20,6 @@ public class DispelBuffEffect extends AbstractDispelEffect {
 	/**
 	 * 按类别驱散目标效果。
 	 * Dispels target effects by category.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	public void applyEffect(Effect effect) {

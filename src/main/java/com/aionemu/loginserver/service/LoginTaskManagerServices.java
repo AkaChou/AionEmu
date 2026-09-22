@@ -18,7 +18,6 @@ public final class LoginTaskManagerServices implements DisposableBean {
     /**
      * 构造并注册 {@link TaskFromDBManager} 的 Spring 提供者。
      * Construct and register the Spring provider for {@link TaskFromDBManager}.
-     *
      * @param taskFromDBManagerProvider 任务管理器提供者 / task-manager provider
      */
     public LoginTaskManagerServices(ObjectProvider<TaskFromDBManager> taskFromDBManagerProvider) {
@@ -28,7 +27,6 @@ public final class LoginTaskManagerServices implements DisposableBean {
     /**
      * 获取数据库任务管理器：优先 Spring Bean，否则回退本地单例。
      * Obtain the DB task manager: prefer Spring bean, else fall back to a local singleton.
-     *
      * @return 任务管理器 / task manager
      */
     public static TaskFromDBManager taskFromDBManager() {
@@ -51,7 +49,6 @@ public final class LoginTaskManagerServices implements DisposableBean {
     /**
      * 返回回退用的本地 {@link TaskFromDBManager} 实例。
      * Return the local fallback {@link TaskFromDBManager} instance.
-     *
      * @return 回退任务管理器 / fallback task manager
      */
     private static TaskFromDBManager fallbackTaskFromDBManager() {

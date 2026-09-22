@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Dark Poeta 副本 NPC AI：Power Generator（@AIName "power_generator"），继承 AggressiveNpcAI2。
  * Dark Poeta instance NPC AI: Power Generator (@AIName "power_generator"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("power_generator")

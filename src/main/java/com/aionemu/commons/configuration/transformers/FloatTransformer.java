@@ -7,7 +7,6 @@ import java.lang.reflect.Field;
 /**
  * 单精度浮点数属性转换器
  * Float property transformer class that handles conversion of string values to Float objects.
- *
  * 支持的输入格式:
  * Supported input format:
  * - 十进制数字 decimal numbers
@@ -24,7 +23,6 @@ public class FloatTransformer implements PropertyTransformer<Float> {
     /**
      * 将字符串值转换为 Float 对象
      * Transforms string value into Float object
-     *
      * @param value 要转换的字符串值 / String value to transform
      * @param field 字段对象 / Field that will be transformed
      * @return 转换后的 Float 对象 / Transformed Float object

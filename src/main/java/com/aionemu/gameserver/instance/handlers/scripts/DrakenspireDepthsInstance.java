@@ -35,7 +35,6 @@ import java.util.concurrent.Future;
 /**
  * 龙脊深渊副本事件处理器。
  * Instance event handler for Drakenspire Depths.
- *
  * @author Encom
  */
 
@@ -62,7 +61,6 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -102,7 +100,6 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 
@@ -120,7 +117,6 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -144,7 +140,6 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -1119,7 +1114,6 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 							/**
 							 * 处理 visit。
 							 * Handle visit.
-							 *
 							 * @param player 玩家 / player
 							 */
 							@Override
@@ -1147,7 +1141,6 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 							/**
 							 * 处理 visit。
 							 * Handle visit.
-							 *
 							 * @param player 玩家 / player
 							 */
 							@Override
@@ -1175,7 +1168,6 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 							/**
 							 * 处理 visit。
 							 * Handle visit.
-							 *
 							 * @param player 玩家 / player
 							 */
 							@Override
@@ -1247,7 +1239,6 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 										/**
 										 * 处理 visit。
 										 * Handle visit.
-										 *
 										 * @param player 玩家 / player
 										 */
 										@Override
@@ -1290,7 +1281,6 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 										/**
 										 * 处理 visit。
 										 * Handle visit.
-										 *
 										 * @param player 玩家 / player
 										 */
 										@Override
@@ -1326,7 +1316,6 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -1343,7 +1332,6 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 								/**
 								 * 处理 visit。
 								 * Handle visit.
-								 *
 								 * @param player 玩家 / player
 								 */
 								@Override
@@ -1540,7 +1528,6 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -1562,7 +1549,6 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
                     /**
                      * 处理 visit。
                      * Handle visit.
-                     *
                      * @param player 玩家 / player
                      */
                     @Override
@@ -1607,13 +1593,11 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	/**
 	 * 副本销毁后不再补刷对象。
 	 * Suppresses spawns once the instance is destroyed.
-	 *
 	 * <p>场景延迟任务在副本销毁后仍会执行，此时世界实例已经拆除，底层生成必然 NPE
 	 * （见 {@code 生成 NPC 209679 时出错 ... mapRegion is null}）。返回 null 由调用方的判空兜住。
 	 * Delayed scene tasks still fire after teardown, when the world instance is gone and the underlying spawn NPEs
 	 * (see {@code 生成 NPC 209679 时出错 ... mapRegion is null}). The {@code null} result is absorbed by the
 	 * callers' null checks.</p>
-	 *
 	 * @param npcId NPC 模板 ID / NPC template id
 	 * @param x X 坐标 / X coordinate
 	 * @param y Y 坐标 / Y coordinate
@@ -1671,7 +1655,6 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	/**
 	 * 安全开门；副本销毁或门未加载时忽略延迟任务请求。
 	 * Opens a door safely; delayed tasks are ignored after teardown or when the door is absent.
-	 *
 	 * @param doorId 门 ID / door id
 	 */
 	private void openDoor(int doorId) {
@@ -1687,7 +1670,6 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
-	 *
 	 * @param player 玩家 / player
 	 */
 

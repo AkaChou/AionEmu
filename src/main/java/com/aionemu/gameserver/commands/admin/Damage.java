@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 /**
  * 对当前目标造成伤害的管理命令（{@code //damage}）。
  * Admin command that deals damage to the current target ({@code //damage}).
- *
  * @author Source
  */
 public class Damage extends AdminCommand {
@@ -28,7 +27,6 @@ public class Damage extends AdminCommand {
 	/**
 	 * 对目标生物造成固定或百分比伤害。
 	 * Deals absolute or percentage damage to the targeted creature.
-	 *
 	 * @param params 伤害值或百分比（如 50%） / damage amount or percent (e.g. 50%)
 	 */
 	@Override
@@ -66,7 +64,6 @@ public class Damage extends AdminCommand {
 	/**
 	 * 执行失败时的语法提示。
 	 * Syntax hint on failure.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

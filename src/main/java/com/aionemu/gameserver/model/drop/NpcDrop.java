@@ -77,7 +77,6 @@ public class NpcDrop implements DropCalculator {
 	/**
 	 * 掉落计算器：按种族筛选掉落组后依次执行各组计算。
 	 * Drop calculator: filters drop groups by race, then runs each matching group.
-	 *
 	 * @param result 掉落物结果集 / drop-item result set
 	 * @param index 当前索引 / current index
 	 * @param dropModifiers 掉落修正器 / drop modifiers

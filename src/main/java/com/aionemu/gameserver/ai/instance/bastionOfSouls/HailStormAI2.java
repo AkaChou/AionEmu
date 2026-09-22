@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Bastion Of Souls 副本 NPC AI：Hail Storm（@AIName "IDAb1_Ere_Boss_Final_HailStorm"），继承 AggressiveNpcAI2。
  * Bastion Of Souls instance NPC AI: Hail Storm (@AIName "IDAb1_Ere_Boss_Final_HailStorm"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("IDAb1_Ere_Boss_Final_HailStorm")

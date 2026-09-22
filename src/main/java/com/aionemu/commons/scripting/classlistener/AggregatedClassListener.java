@@ -12,8 +12,6 @@ import java.util.List;
  * - 统一管理多个监听器 (Manage multiple listeners uniformly)
  * - 按序执行监听器方法 (Execute listener methods in sequence)
  * - 支持动态添加监听器 (Support dynamic listener addition)
- *
- * @param classListeners 监听器列表，存储所有注册的 ClassListener 实例。
  *                       List of listeners storing all registered ClassListener instances.
  */
 public record AggregatedClassListener(List<ClassListener> classListeners) implements ClassListener {
@@ -28,8 +26,7 @@ public record AggregatedClassListener(List<ClassListener> classListeners) implem
 	/**
 	 * 使用预设的监听器列表构造实例
 	 * Construct instance with a predefined list of listeners
-	 *
-	 * @param classListeners 初始监听器列表 / Initial list of listeners
+	 * 初始监听器列表 / Initial list of listeners
 	 */
 	public AggregatedClassListener {
 	}
@@ -37,7 +34,6 @@ public record AggregatedClassListener(List<ClassListener> classListeners) implem
 	/**
 	 * 获取当前的监听器列表
 	 * Get the current list of listeners
-	 *
 	 * @return 监听器列表 / List of listeners
 	 */
 	@Override
@@ -48,7 +44,6 @@ public record AggregatedClassListener(List<ClassListener> classListeners) implem
 	/**
 	 * 添加新的监听器到列表中
 	 * Add a new listener to the list
-	 *
 	 * @param cl 要添加的监听器 / Listener to add
 	 */
 	public void addClassListener(ClassListener cl) {
@@ -58,7 +53,6 @@ public record AggregatedClassListener(List<ClassListener> classListeners) implem
 	/**
 	 * 按照注册顺序执行所有监听器的 postLoad 方法。
 	 * Execute postLoad method of all listeners in registration order.
-	 *
 	 * @param classes 要处理的类数组 / Array of classes to process
 	 */
 	@Override
@@ -71,7 +65,6 @@ public record AggregatedClassListener(List<ClassListener> classListeners) implem
 	/**
 	 * 按照注册顺序的反序执行所有监听器的 preUnload 方法。
 	 * Execute preUnload method of all listeners in reverse registration order.
-	 *
 	 * @param classes 要处理的类数组 / Array of classes to process
 	 */
 	@Override

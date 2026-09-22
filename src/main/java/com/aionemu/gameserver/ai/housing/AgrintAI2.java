@@ -12,7 +12,6 @@ import com.aionemu.gameserver.world.WorldPosition;
 /**
  * 房屋相关 NPC AI：Agrint（@AIName "agrint"），继承 AggressiveNpcAI2。
  * Housing-related NPC AI: Agrint (@AIName "agrint"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("agrint")

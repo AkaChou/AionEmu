@@ -3,7 +3,6 @@ package com.aionemu.gameserver.ai2.event;
 /**
  * AI2 系统中的事件类型枚举，覆盖激活、战斗、移动、感知、生命周期与对话等场景。
  * Enumeration of AI2 event types covering activation, combat, movement, perception, lifecycle, and dialogue.
- *
  * @author ATracer
  */
 public enum AIEventType {

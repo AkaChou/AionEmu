@@ -18,7 +18,6 @@ import lombok.Setter;
 /**
  * Vortex 漩涡入侵活动时间表配置。
  * Vortex invasion event schedule configuration.
- *
  * @author Rinzler (Encom)
  */
 @Getter
@@ -31,7 +30,6 @@ public class VortexSchedule {
 	 * -- GETTER --
 	 *  获取 Vortex 列表。
 	 *  Returns the vortex list.
-
 	 */
 	@XmlElement(name = "vortex", required = true)
 	private List<Vortex> vortexsList;
@@ -76,8 +74,6 @@ public class VortexSchedule {
 		 * -- SETTER --
 		 *  设置 Vortex ID。
 		 *  Sets the vortex ID.
-
-
 		 */
 		@XmlAttribute(required = true)
 		private int id;
@@ -91,8 +87,6 @@ public class VortexSchedule {
 		 * -- SETTER --
 		 *  设置入侵时间列表。
 		 *  Sets the invasion times.
-
-
 		 */
 		@XmlElement(name = "invasionTime", required = true)
 		private List<String> invasionTimes;

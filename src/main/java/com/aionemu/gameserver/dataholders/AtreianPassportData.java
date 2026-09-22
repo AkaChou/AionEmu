@@ -17,7 +17,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 阿特里亚通行证数据容器，按 ID 索引通行证模板。
  * Atreian passport data holder, indexing passport templates by id.
- *
  * @author Alcapwnd
  */
 @XmlRootElement(name = "atreian_passports")
@@ -44,7 +43,6 @@ public class AtreianPassportData {
 	/**
 	 * 返回已加载的通行证数量。
 	 * Returns the number of loaded passports.
-	 *
 	 * @return 已加载的通行证数量 / Returns the number of loaded passports.
 	 */
 	public int size() {
@@ -54,7 +52,6 @@ public class AtreianPassportData {
 	/**
 	 * 按 ID 获取通行证模板。
 	 * Returns the passport template for the given id.
-	 *
 	 * @param id 通行证 ID / passport id
 	 * @return 模板，不存在则为 null / template or null
 	 */
@@ -65,7 +62,6 @@ public class AtreianPassportData {
 	/**
 	 * 返回全部通行证映射。
 	 * Returns the full passport map.
-	 *
 	 * @return ID 到模板的映射 / map of id to template
 	 */
 	public Map<Integer, AtreianPassport> getAll() {

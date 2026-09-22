@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.stats.CalculationType;
 /**
  * 属性 WeaponMastery 函数模型。
  * Stat Weapon Mastery Function model.
- *
  * @author ATracer (based on Mr.Poke WeaponMasteryModifier)
  */
 public class StatWeaponMasteryFunction extends StatFunctionProxy {

@@ -18,18 +18,13 @@ import java.util.List;
 /**
  * Secret Munitions Factory 副本 NPC AI：Mechaturerk Cannon（@AIName "mechaturerk_cannon"），继承 ActionItemNpcAI2。
  * Secret Munitions Factory instance NPC AI: Mechaturerk Cannon (@AIName "mechaturerk_cannon"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("mechaturerk_cannon")
 public class Mechaturerk_CannonAI2 extends ActionItemNpcAI2
 {
 	@Override
-	/**
-	 * 使用加农炮后：提示玩家沉重的门已打开，释放破坏封印技能，并延时清除两扇门。
-	 * After using the cannon: notifies that a heavy door has opened, casts the Destroy Seal skill, and despawns both doors after a delay.
-	 */
-	protected void handleUseItemFinish(Player player) {
+    protected void handleUseItemFinish(Player player) {
 		WorldPosition worldPosition = player.getPosition();
 		if (worldPosition.isInstanceMap()) {
 			if (worldPosition.getMapId() == 301640000) { //Secret Munitions Factory.

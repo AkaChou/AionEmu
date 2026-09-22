@@ -17,7 +17,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_FRIEND_UPDATE;
 /**
  * Friend 列表。
  * Friend List game object.
- *
  * @author Ben
  */
 @Slf4j
@@ -27,8 +26,6 @@ public class FriendList implements Iterable<Friend> {
      * -- GETTER --
      *  获取 players 状态。
      *  Gets players status
-     *
-     * @return Status
      */
     @Getter
     private Status status = Status.OFFLINE;
@@ -58,7 +55,6 @@ public class FriendList implements Iterable<Friend> {
 	/**
 	 * 按对象 ID 获取好友，非本玩家好友则返回 null。
 	 * Gets the friend with this objId<br /> Returns null if it is not our friend
-	 *
 	 * @param objId 好友对象 ID / objId of friend
 	 * @return Friend
 	 */
@@ -74,7 +70,6 @@ public class FriendList implements Iterable<Friend> {
 	/**
 	 * 返回列表中的好友数量。
 	 * Returns number of friends in list
-	 *
 	 * @return 列表中的好友数量 / Num Friends in list
 	 */
 	public int getSize() {
@@ -84,8 +79,6 @@ public class FriendList implements Iterable<Friend> {
 	/**
 	 * 将给定好友添加到列表；数据库持久化见 {@code PlayerService}。
 	 * Adds the given friend to the list<br /> To add a friend in the database, see <tt>PlayerService</tt>
-	 *
-	 * @param friend
 	 */
 	public void addFriend(Friend friend) {
 		friends.add(friend);
@@ -94,7 +87,6 @@ public class FriendList implements Iterable<Friend> {
 	/**
 	 * 按名称获取好友。
 	 * Gets the Friend by this name
-	 *
 	 * @param name 好友名称 / Name of friend
 	 * @return 匹配名称的好友 / Friend matching name
 	 */
@@ -131,8 +123,6 @@ public class FriendList implements Iterable<Friend> {
     /**
 	 * 设置玩家状态，注意不会同步给好友。
 	 * Sets the status of the player<br /> <ul> <li>Note: Does not update friends</li> </ul>
-	 *
-	 * @param status
 	 */
 	public void setStatus(Status status, PlayerCommonData pcd) {
 		Status previousStatus = this.status;
@@ -217,7 +207,6 @@ public class FriendList implements Iterable<Friend> {
 		/**
 	 * 按整数值获取状态，超出范围返回 null。
 	 * Gets the Status from its int value<br /> Returns null if out of range
-	 *
 	 * @param value 状态值，范围 0-3 / range 0-3
 	 * @return Status
 	 */

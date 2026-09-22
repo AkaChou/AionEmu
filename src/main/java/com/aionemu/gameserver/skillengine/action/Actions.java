@@ -12,7 +12,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 技能动作集合：JAXB 绑定的施法消耗动作列表。
  * Skill action collection: JAXB-bound list of cast-cost actions.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -33,7 +32,6 @@ public class Actions {
 	/**
 	 * 获取动作列表（活动列表，非快照；修改会反映到 JAXB 对象）。
 	 * Returns the live action list (not a snapshot; mutations affect the JAXB object).
-	 *
 	 * @return 动作列表 / list of actions
 	 */
 	public List<Action> getActions() {

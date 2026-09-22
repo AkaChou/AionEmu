@@ -21,7 +21,6 @@ public interface ServerTransport {
     /**
      * 获取当前活跃连接数。
      * Get number of active connections.
-     *
      * @return 活跃连接数 / Active connection count
      */
     int getActiveConnections();

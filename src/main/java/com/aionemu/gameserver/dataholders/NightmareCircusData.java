@@ -18,7 +18,6 @@ import java.util.Map;
 /**
  * 梦魇马戏团地点数据容器，持有并索引全部 {@link NightmareCircusLocation}。
  * Nightmare Circus location data holder, indexing all {@link NightmareCircusLocation} instances.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -43,7 +42,6 @@ public class NightmareCircusData {
 	/**
 	 * 返回已加载的梦魇马戏团地点数量。
 	 * Returns the number of loaded Nightmare Circus locations.
-	 *
 	 * @return 已加载的噩梦马戏团地点数量 / Returns the number of loaded Nightmare Circus locations.
 	 */
 	public int size() {
@@ -53,7 +51,6 @@ public class NightmareCircusData {
 	/**
 	 * 返回全部梦魇马戏团地点映射。
 	 * Returns the full Nightmare Circus location map.
-	 *
 	 * @return ID 到地点的映射 / map of id to location
 	 */
 	public Map<Integer, NightmareCircusLocation> getNightmareCircusLocations() {

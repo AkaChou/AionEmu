@@ -9,7 +9,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * 职业技能召唤物/陷阱 AI：Explosive Trap（@AIName "explosive_trap"），继承 AggressiveNpcAI2。
  * Class-skill summon/trap AI: Explosive Trap (@AIName "explosive_trap"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("explosive_trap")

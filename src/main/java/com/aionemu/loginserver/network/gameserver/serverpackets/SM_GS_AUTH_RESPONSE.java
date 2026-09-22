@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 /**
  * LS→GS：游戏服注册认证结果响应（对应 CM_GS_AUTH）。
  * LS→GS: game-server registration auth result response (for CM_GS_AUTH).
- *
  * @author -Nemesiss-
  */
 @AllArgsConstructor

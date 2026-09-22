@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 /**
  * 周期调度包装：在固定周期内重新投递事件，并在上一次未完成时尝试取消。
  * Fixed-rate schedule wrapper that requeues the event and cancels if still running.
- *
  * @author wanke
  */
 @RequiredArgsConstructor
@@ -59,7 +58,6 @@ class EventScheduleWrapper implements Runnable {
 	/**
 	 * 首次或已完成则重新调度；否则取消并返回 false。
 	 * Requeues when first or finished; otherwise cancels and returns false.
-	 *
 	 * @return 是否成功投递 / whether requeue succeeded
 	 */
 	private boolean check() {

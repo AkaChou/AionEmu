@@ -11,7 +11,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 /**
  * Sauro Supply Base 副本 NPC AI：Chief Gunner Kurmata（@AIName "chief_gunner_kurmata"），继承 AggressiveNpcAI2。
  * Sauro Supply Base instance NPC AI: Chief Gunner Kurmata (@AIName "chief_gunner_kurmata"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("chief_gunner_kurmata")

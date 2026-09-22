@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Engulfed Ophidan Bridge 副本 NPC AI：Rearguard Freidr（@AIName "rearguard_freidr"），继承 NpcAI2。
  * Engulfed Ophidan Bridge instance NPC AI: Rearguard Freidr (@AIName "rearguard_freidr"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("rearguard_freidr")

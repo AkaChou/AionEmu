@@ -19,7 +19,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Pvp Arenas 副本 NPC AI：Blessed Relics（@AIName "blessed_relics"），继承 ActionItemNpcAI2。
  * Pvp Arenas instance NPC AI: Blessed Relics (@AIName "blessed_relics"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("blessed_relics")

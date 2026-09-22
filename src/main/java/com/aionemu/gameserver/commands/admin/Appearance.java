@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 管理员外观修改命令：调整目标玩家体型、发型、脸型等外观，或重置。
  * Admin appearance command: adjusts target player size/hair/face/etc., or resets appearance.
- *
  * @author Divinity
  */
 public class Appearance extends AdminCommand {
@@ -26,7 +25,6 @@ public class Appearance extends AdminCommand {
 	/**
 	 * 执行外观修改：按属性名写入外观数据并刷新客户端。
 	 * Executes appearance change: writes the attribute and refreshes the client.
-	 *
 	 * @param params 参数：属性名与值，或 reset / attribute name and value, or reset
 	 */
 	@Override
@@ -240,7 +238,6 @@ public class Appearance extends AdminCommand {
 	/**
 	 * 参数错误时输出 {@code //appearance} 用法。
 	 * Prints {@code //appearance} usage on invalid arguments.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

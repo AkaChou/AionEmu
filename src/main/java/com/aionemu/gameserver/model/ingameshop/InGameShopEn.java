@@ -37,7 +37,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 游戏内商城引擎：加载商品、处理购买请求并与登录服点数同步。
  * In-game shop engine: loads items, handles purchase requests and syncs toll with the login server.
- *
  * @author KID
  */
 @Slf4j(topic = "INGAMESHOP_LOG")
@@ -59,13 +58,11 @@ public class InGameShopEn {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：旧实现在没有 provider 时回退到 {@code SingletonHolder.instance}，
 	 * 等于在容器之外静默创建第二个实例（两套状态）。现在改为 fail-fast，
 	 * 把"未注入"暴露在启动期，而不是潜伏成两套实例。
 	 * The legacy static fallback is retired: without a provider the old code silently created a second instance
 	 * through SingletonHolder, i.e. two live states. It now fails fast so a missing injection surfaces at startup.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */

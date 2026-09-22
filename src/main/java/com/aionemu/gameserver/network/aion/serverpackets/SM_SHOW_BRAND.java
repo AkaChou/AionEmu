@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端显示队伍/联盟标记（Brand）。
  * Server packet displaying a party/alliance brand marker on the client.
- *
  * @author Sweetkr
  */
 @AllArgsConstructor

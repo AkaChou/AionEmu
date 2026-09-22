@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Iluma 区域 NPC AI：Carniverous Vines（@AIName "carniverous_vines"），继承 NpcAI2。
  * Iluma zone NPC AI: Carniverous Vines (@AIName "carniverous_vines"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("carniverous_vines")

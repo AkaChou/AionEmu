@@ -3,7 +3,6 @@ package com.aionemu.chatserver.model;
 /**
  * 聊天频道类型枚举。
  * Chat channel type enumeration.
- *
  * @author ATracer
  */
 public enum ChannelType {

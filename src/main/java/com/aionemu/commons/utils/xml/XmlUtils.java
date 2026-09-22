@@ -36,7 +36,6 @@ public class XmlUtils {
     /**
      * 将 XML 字符串解析为 Document。
      * Parse an XML string into a Document.
-     *
      * XML string
      * @return Document，输入为 null 时返回 null / Document, or null when input is null
      * On parse failure
@@ -59,7 +58,6 @@ public class XmlUtils {
     /**
      * 将 Document 转为 XML 字符串。
      * Convert a Document to an XML string.
-     *
      * document
      * XML string
      * On transform failure
@@ -81,7 +79,6 @@ public class XmlUtils {
     /**
      * 从 Schema 字符串创建 Schema。
      * Create a Schema from a schema string.
-     *
      * Schema definition
      * @return Schema，输入为 null 时返回 null / Schema, or null when input is null
      * On creation failure
@@ -101,7 +98,6 @@ public class XmlUtils {
     /**
      * 从 URL 创建 Schema。
      * Create a Schema from a URL.
-     *
      * Schema file URL
      * @return Schema，输入为 null 时返回 null / Schema, or null when input is null
      * On creation failure
@@ -121,7 +117,6 @@ public class XmlUtils {
     /**
      * 使用 Schema 校验 Document。
      * Validate a Document against a Schema.
-     *
      * schema
      * document
      * On validation failure

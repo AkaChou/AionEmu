@@ -46,7 +46,6 @@ import com.google.common.collect.Collections2;
 /**
  * 核心物品服务：发放/加载魔石、任务物品、升级拷贝与 ID 回收。
  * Core item service — grant/load manastones, quest items, upgrade copy, and id release.
- *
  * @author KID
  */
 @Slf4j(topic = "ITEM_LOG")
@@ -59,7 +58,6 @@ public class ItemService {
 	/**
 	 * 从数据库批量加载物品镶嵌的魔石/神石。
 	 * Loads manastones/godstones for a collection of items from the database.
-	 *
 	 * @param itemList item collection
 	 */
 	public static void loadItemStones(Collection<Item> itemList) {
@@ -71,7 +69,6 @@ public class ItemService {
 	/**
 	 * 确保玩家物品集合均具备技能强化配置。
 	 * Ensures skill-enhance data is applied to all items for the player.
-	 *
 	 * @param player 玩家 / player
 	 * @param items 物品集合 / items
 	 * @return 是否有任何物品被修改 / true if any item was changed
@@ -90,11 +87,9 @@ public class ItemService {
 	/**
 	 * 向玩家发放指定数量物品（默认更新谓词）。
 	 * Grants items to the player with the default update predicate.
-	 *
 	 * @param player 玩家 / player
 	 * @param itemId item template id
 	 * @param count count
-	 *
 	 * @return 未能放入的剩余数量 / remaining count that could not be added
 	 */
 	public static long addItem(Player player, int itemId, long count) {
@@ -206,12 +201,10 @@ public class ItemService {
 	/**
 	 * 向玩家发放指定数量物品，使用自定义更新谓词。
 	 * Grants items to the player with a custom update predicate.
-	 *
 	 * @param player 玩家 / player
 	 * @param itemId item template id
 	 * @param count count
 	 * @param predicate update predicate
-	 *
 	 * @return 未能放入的剩余数量 / remaining count that could not be added
 	 */
 	public static long addItem(Player player, int itemId, long count, ItemUpdatePredicate predicate) {
@@ -221,10 +214,8 @@ public class ItemService {
 	/**
 	 * 按源物品全部属性拷贝发放新物品。
 	 * Grants a new item by copying all values from the source item.
-	 *
 	 * @param player 玩家 / player
 	 * @param sourceItem source item
-	 *
 	 * @return 未能放入的剩余数量 / remaining count that could not be added
 	 */
 	public static long addItem(Player player, Item sourceItem) {
@@ -235,11 +226,9 @@ public class ItemService {
 	/**
 	 * 按源物品属性拷贝发放，并使用自定义更新谓词。
 	 * Grants by copying source-item values with a custom update predicate.
-	 *
 	 * @param player 玩家 / player
 	 * @param sourceItem source item
 	 * @param predicate update predicate
-	 *
 	 * @return 未能放入的剩余数量 / remaining count that could not be added
 	 */
 	public static long addItem(Player player, Item sourceItem, ItemUpdatePredicate predicate) {
@@ -249,7 +238,6 @@ public class ItemService {
 	/**
 	 * 发放指定数量物品，可选从源物品拷贝属性。
 	 * Grants items, optionally copying attributes from a source item.
-	 *
 	 * 玩家 / player
 	 * item template id
 	 * count
@@ -263,13 +251,11 @@ public class ItemService {
 	/**
 	 * 发放物品并设置强化等级。
 	 * Grants items and applies the given enchant level.
-	 *
 	 * @param player 玩家 / player
 	 * @param itemId item template id
 	 * @param count count
 	 * @param enchantLevel 强化等级 / enchant level
 	 * @param predicate update predicate
-	 *
 	 * @return 未能放入的剩余数量 / remaining count that could not be added
 	 */
 	public static long addItemAndEnchant(Player player, int itemId, long count, int enchantLevel,
@@ -280,7 +266,6 @@ public class ItemService {
 	/**
 	 * 发放物品并设置强化等级（默认更新谓词）。
 	 * Grants items with enchant level using the default update predicate.
-	 *
 	 * @param player 玩家 / player
 	 * @param itemId item template id
 	 * @param count count
@@ -294,7 +279,6 @@ public class ItemService {
 	/**
 	 * 发放物品并设置强化等级，可选满充能。
 	 * Grants items with enchant level, optionally full-charging them.
-	 *
 	 * 玩家 / player
 	 * item template id
 	 * count
@@ -309,7 +293,6 @@ public class ItemService {
 	/**
 	 * 发放物品核心入口：按可堆叠/不可堆叠分流，支持源物品拷贝、强化与充能。
 	 * Core grant entry: routes stackable/non-stackable, supports source copy, enchant and charge.
-	 *
 	 * 玩家 / player
 	 * item template id
 	 * count
@@ -391,11 +374,9 @@ public class ItemService {
 	/**
 	 * 确保单件物品具备技能强化（按职业随机技能）。
 	 * Ensures a single item has skill-enhance applied (random skill by class).
-	 *
 	 * item
 	 * @param data 技能强化数据 / skill enhance data
 	 * player class
-	 *
 	 * @return 是否修改了物品 / true if the item was changed
 	 */
 	static boolean ensureSkillEnhance(Item item, ItemSkillEnhanceData data, PlayerClass playerClass) {
@@ -422,7 +403,6 @@ public class ItemService {
 	/**
 	 * 将物品充能至指定等级（1 或 2）。
 	 * Charges an item to the given level (1 or 2).
-	 *
 	 * 玩家 / player
 	 * item
 	 * @param level 充能等级 / charge level
@@ -519,7 +499,6 @@ public class ItemService {
 	/**
 	 * 发放任务物品列表（默认更新谓词）。
 	 * Grants a list of quest items with the default update predicate.
-	 *
 	 * @param player 玩家 / player
 	 * @param questItems 任务物品列表 / quest items
 	 * @return 是否全部发放成功 / true if all items were granted
@@ -531,11 +510,9 @@ public class ItemService {
 	/**
 	 * 发放任务物品列表：先校验背包/特殊格空位，再逐项发放。
 	 * Grants quest items after validating free inventory and special-cube slots.
-	 *
 	 * 玩家 / player
 	 * @param questItems 任务物品列表 / quest items
 	 * update predicate
-	 *
 	 * @return 是否全部发放成功 / true if all items were granted
 	 */
 	public static boolean addQuestItems(Player player, List<QuestItems> questItems, ItemUpdatePredicate predicate) {
@@ -573,7 +550,6 @@ public class ItemService {
 	/**
 	 * 回收单个物品的对象 ID。
 	 * Releases a single item object id back to the id factory.
-	 *
 	 * @param item item
 	 */
 	public static void releaseItemId(Item item) {
@@ -583,7 +559,6 @@ public class ItemService {
 	/**
 	 * 批量回收物品对象 ID。
 	 * Releases object ids for a collection of items.
-	 *
 	 * @param items 物品集合 / items
 	 */
 	public static void releaseItemIds(Collection<Item> items) {
@@ -594,10 +569,8 @@ public class ItemService {
 	/**
 	 * 按玩家对象 ID 向其背包投放 1 件物品。
 	 * Drops one item into the inventory of the player identified by object id.
-	 *
 	 * @param playerObjectId player object id
 	 * @param itemId item template id
-	 *
 	 * @return 是否投放成功 / true if granted successfully
 	 */
 	public static boolean dropItemToInventory(int playerObjectId, int itemId) {
@@ -607,10 +580,8 @@ public class ItemService {
 	/**
 	 * 向在线玩家背包投放 1 件物品。
 	 * Drops one item into an online player's inventory.
-	 *
 	 * @param player 玩家 / player
 	 * @param itemId item template id
-	 *
 	 * @return 是否投放成功 / true if granted successfully
 	 */
 	public static boolean dropItemToInventory(Player player, int itemId) {
@@ -620,11 +591,9 @@ public class ItemService {
 	/**
 	 * 向在线玩家背包投放指定数量物品；背包满且无堆叠空间时失败。
 	 * Drops items into an online player's inventory; fails when full with no free stack.
-	 *
 	 * @param player 玩家 / player
 	 * @param itemId item template id
 	 * @param count count
-	 *
 	 * @return 是否投放成功 / true if granted successfully
 	 */
 	public static boolean dropItemToInventory(Player player, int itemId, long count) {
@@ -652,7 +621,6 @@ public class ItemService {
 	/**
 	 * 创建装备升级结果物品，并生成可选孔和随机强化奖励。
 	 * Creates an equipment-upgrade result with optional sockets and a random enchant bonus.
-	 *
 	 * @param itemId 升级结果模板 ID / upgrade-result template id
 	 * @return 新建物品，模板不存在时为 null / new item, or null if template missing
 	 */
@@ -675,7 +643,6 @@ public class ItemService {
 	/**
 	 * 检查随机物品模板 ID 是否存在。
 	 * Checks whether a random item template id exists.
-	 *
 	 * @param randomItemId 随机物品模板 ID / random item template id
 	 * @return 模板是否存在 / true if template exists
 	 */
@@ -697,7 +664,6 @@ public class ItemService {
 		/**
 		 * 使用指定添加/更新类型构造谓词。
 		 * Constructs a predicate with the given add/update types.
-		 *
 		 * @param itemAddType add type
 		 * @param itemUpdateType update type
 		 */
@@ -717,7 +683,6 @@ public class ItemService {
 		/**
 		 * 解析物品对应的数量更新类型（基纳特殊处理）。
 		 * Resolves the count update type for an item (special-cased for kinah).
-		 *
 		 * item
 		 * whether increasing
 		 * update type
@@ -732,7 +697,6 @@ public class ItemService {
 		/**
 		 * 返回添加来源类型。
 		 * Returns the add-source type.
-		 *
 		 * add type
 		 */
 		public ItemAddType getAddType() {
@@ -742,7 +706,6 @@ public class ItemService {
 		/**
 		 * 入包前可修改物品的钩子，默认不做改动。
 		 * Hook to mutate the item before it enters inventory; default is no-op.
-		 *
 		 * item
 		 * always true by default
 		 */
@@ -754,7 +717,6 @@ public class ItemService {
 	/**
 	 * 将源装备属性迁移到升级后的新物品（魔石/神石/强化/授权等会按规则衰减）。
 	 * Migrates source gear attributes onto an upgraded item (manastones/godstone/enchant/authorize decay by rule).
-	 *
 	 * source item
 	 * @param newItem 升级后物品 / upgraded item
 	 */
@@ -814,10 +776,7 @@ public class ItemService {
 	/**
 	 * 判断物品是否可升级（武器/印记/指定槽位防具，且非禁止强化）。
 	 * Returns whether the item is upgradable (weapon/stigma/selected armor slots, not no-enchant).
-	 *
 	 * item
-	 *
-	 * @param item
 	 * @return 是否可升级 / true if upgradable
 	 */
 	public static boolean isUpgradable(Item item) {

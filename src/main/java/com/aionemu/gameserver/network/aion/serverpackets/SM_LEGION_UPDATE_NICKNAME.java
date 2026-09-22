@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端同步军团成员昵称更新的服务端包。
  * Server packet that synchronizes a legion member nickname update to the client.
- *
  * @author Simple
  */
 @AllArgsConstructor

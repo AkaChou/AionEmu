@@ -23,7 +23,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Gelkmaros 区域 NPC AI：Ragnarok（@AIName "ragnarok"），继承 AggressiveNpcAI2。
  * Gelkmaros zone NPC AI: Ragnarok (@AIName "ragnarok"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("ragnarok")

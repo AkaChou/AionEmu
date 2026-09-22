@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Kamar Battlefield 副本 NPC AI：Kamar General（@AIName "kamar_general"），继承 AggressiveNpcAI2。
  * Kamar Battlefield instance NPC AI: Kamar General (@AIName "kamar_general"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("kamar_general")

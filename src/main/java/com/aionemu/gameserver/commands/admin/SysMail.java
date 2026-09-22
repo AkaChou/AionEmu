@@ -22,7 +22,6 @@ import java.util.List;
 /**
  * 发送系统邮件（含黑云邮件）的管理员命令。
  * Admin command to send system mail including black-cloud letters.
- *
  * @author xTz
  */
 public class SysMail extends AdminCommand {
@@ -49,7 +48,6 @@ public class SysMail extends AdminCommand {
 		/**
 		 * 判断给定种族是否在本收件范围内。
 		 * Whether the given race is allowed for this recipient type.
-		 *
 		 * @param race 阵营 / Race
 		 * @return 若 allowed 则为 true / True if allowed
 		 */
@@ -66,7 +64,6 @@ public class SysMail extends AdminCommand {
 	/**
 	 * 向指定玩家或种族批量发送系统邮件。
 	 * Sends system mail to a player or race groups.
-	 *
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -187,10 +184,7 @@ public class SysMail extends AdminCommand {
 	/**
 	 * 从 |...| 包裹的词列表中提取标题或正文。
 	 * Extracts title or message text enclosed in pipe chars from word tokens.
-	 *
-	 *
 	 * @param outText 输出缓冲区（长度 1） / Output buffer of length 1
-	 * @param outText
 	 * @return 消耗的词数 / Consumed word count
 	 */
 	private int extractText(String[] words, String[] outText) {
@@ -230,8 +224,6 @@ public class SysMail extends AdminCommand {
 	/**
 	 * 校验收件人、物品、数量与基纳附件是否合法。
 	 * Validates recipient, item, count, and kinah attachment rules.
-	 *
-	 *
 	 * @return 是否快递 / 在线相关标志；非法时返回 null / Express/online flag, or null if invalid
 	 */
 	private static Boolean checkExpress(Player admin, int item, int count, int kinah, String recipient, RecipientType recipientType, LetterType letterType) {
@@ -310,7 +302,6 @@ public class SysMail extends AdminCommand {
 	/**
 	 * 参数错误时的详细用法提示。
 	 * Detailed usage hint on invalid parameters.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

@@ -44,7 +44,6 @@ public final class GameMovementLoopServices implements DisposableBean {
     /**
      * 构造并注册各移动循环任务的实例提供者。
      * Construct and register instance providers for each movement-loop task.
-     *
      * @param movementNotifyTaskProvider 移动通知任务提供者 / Movement-notify task provider
      * @param moveTaskManagerProvider 移动任务管理器提供者 / Move-task-manager provider
      * @param playerMoveTaskManagerProvider 玩家移动任务管理器提供者 / Player-move-task-manager provider
@@ -71,7 +70,6 @@ public final class GameMovementLoopServices implements DisposableBean {
     /**
      * 解析移动通知任务：优先 Spring 提供者，否则单例。
      * Resolve the movement-notify task: prefer Spring provider, otherwise singleton.
-     *
      * @return 移动通知任务 / Movement-notify task
      */
     public static MovementNotifyTask movementNotifyTask() {
@@ -89,7 +87,6 @@ public final class GameMovementLoopServices implements DisposableBean {
     /**
      * 解析移动任务管理器：优先 Spring 提供者，否则单例。
      * Resolve the move-task manager: prefer Spring provider, otherwise singleton.
-     *
      * @return 移动任务管理器 / Move-task manager
      */
     public static MoveTaskManager moveTaskManager() {
@@ -107,7 +104,6 @@ public final class GameMovementLoopServices implements DisposableBean {
     /**
      * 解析玩家移动任务管理器：优先 Spring 提供者，否则单例。
      * Resolve the player-move-task manager: prefer Spring provider, otherwise singleton.
-     *
      * @return 玩家移动任务管理器 / Player-move-task manager
      */
     public static PlayerMoveTaskManager playerMoveTaskManager() {
@@ -125,7 +121,6 @@ public final class GameMovementLoopServices implements DisposableBean {
     /**
      * 解析区域更新服务：优先 Spring 提供者，否则单例。
      * Resolve the zone-update service: prefer Spring provider, otherwise singleton.
-     *
      * @return 区域更新服务 / Zone-update service
      */
     public static ZoneUpdateService zoneUpdateService() {

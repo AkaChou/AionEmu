@@ -15,7 +15,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * RvR 相关 NPC AI：Nanabel Comander（@AIName "nanabel_comander"），继承 AggressiveNpcAI2。
  * RvR-related NPC AI: Nanabel Comander (@AIName "nanabel_comander"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("nanabel_comander")

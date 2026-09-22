@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 聊天类型枚举。
  * Chat type enumeration.
- *
  * @author SoulKeeper, Imaginary
  */
 @Getter
@@ -64,15 +63,13 @@ public enum ChatType {
 	/**
 	 * 是否为全种族可见的系统消息类型。
 	 * Whether this is a system message readable by all races.
-	 *
-	 * @return 是系统消息则为 true / true if system message
+	 * 是系统消息则为 true / true if system message
 	 */
 	private final boolean sysMsg;
 
 	/**
 	 * 以客户端整型表示构造聊天类型。
 	 * Constructs chat type from client integer representation.
-	 *
 	 * @param intValue 客户端整型值 / client integer value
 	 */
 	ChatType(int intValue) {
@@ -82,7 +79,6 @@ public enum ChatType {
 	/**
 	 * 转为客户端整型表示。
 	 * Converts to client integer representation.
-	 *
 	 * @return 客户端聊天类型值 / client chat type value
 	 */
 	public int toInteger() {
@@ -92,7 +88,6 @@ public enum ChatType {
 	/**
 	 * 按客户端整型值查找聊天类型。
 	 * Returns chat type by client integer representation.
-	 *
 	 * @param integerValue 客户端整型值 / client integer value
 	 * @return 匹配的聊天类型 / matching chat type
 	 * @throws IllegalArgumentException 无匹配类型时 / if no matching type

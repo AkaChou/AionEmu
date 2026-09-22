@@ -21,12 +21,10 @@ import org.springframework.core.env.MapPropertySource;
 /**
  * 将遗留 properties 文件映射进 Spring Environment，供 {@code aion.legacy.*} 绑定使用。
  * Maps legacy properties files into the Spring Environment for {@code aion.legacy.*} binding.
- *
  * <p>镜像同时写入原始键，但同一原始键在不同服务取值不一致时不写入。扁平命名空间无法同时表达
  * 两个服务的值，保留其中任意一个都会让全局解析器把登录服的 {@code database.url} 回灌给游戏服。
  * 这类键交由各服务自己的遗留加载器读取本地文件，取值一致的键（如 {@code gameserver.thread.*}、
  * {@code svstats.*}）仍照常镜像。</p>
- *
  * The mirror also publishes raw keys, except when two services define the same raw key with different
  * values. A flat namespace cannot express both, and keeping either one would make the global resolver
  * feed the login-server {@code database.url} back into the game server. Such keys are left to each
@@ -40,7 +38,6 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
     /**
      * 加载游戏/登录/聊天遗留配置并注册为低优先级 PropertySource。
      * Loads game/login/chat legacy configs and registers them as a low-precedence PropertySource.
-     *
      * @param environment 可配置环境 / configurable environment
      * @param application Spring 应用实例 / Spring application instance
      */
@@ -71,7 +68,6 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
     /**
      * 返回本处理器顺序：略高于最低优先级，确保在大部分默认源之后生效。
      * Returns this processor's order: slightly above lowest precedence so it applies after most defaults.
-     *
      * @return 处理器顺序值 / order value
      */
     @Override
@@ -82,7 +78,6 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
     /**
      * 从游戏配置目录加载遗留属性。
      * Loads legacy properties from the game config directory.
-     *
      * @param environment 环境 / environment
      * @param collector 遗留键收集器 / legacy key collector
      */
@@ -98,7 +93,6 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
     /**
      * 从登录配置目录加载遗留属性。
      * Loads legacy properties from the login config directory.
-     *
      * @param environment 环境 / environment
      * @param collector 遗留键收集器 / legacy key collector
      */
@@ -113,7 +107,6 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
     /**
      * 从聊天配置目录加载遗留属性。
      * Loads legacy properties from the chat config directory.
-     *
      * @param environment 环境 / environment
      * @param collector 遗留键收集器 / legacy key collector
      */
@@ -132,7 +125,6 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
     /**
      * 解析统一配置根目录。
      * Resolves the shared configuration root directory.
-     *
      * @param environment 环境 / environment
      * @return 配置目录路径 / config directory path
      */
@@ -153,7 +145,6 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
     /**
      * 按文件名排序加载目录下全部 {@code .properties} 文件。
      * Loads all {@code .properties} files under a directory in filename order.
-     *
      * @param collector 遗留键收集器 / legacy key collector
      * @param directory 目录路径 / directory path
      * @param legacyPrefix 遗留键前缀 / legacy key prefix
@@ -176,7 +167,6 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
     /**
      * 读取单个 properties 文件并写入收集器。
      * Reads a single properties file into the collector.
-     *
      * @param collector 遗留键收集器 / legacy key collector
      * @param file 文件路径 / file path
      * @param legacyPrefix 遗留键前缀 / legacy key prefix
@@ -188,7 +178,6 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
     /**
      * 读取单个 properties 文件，按是否允许镜像原始键写入收集器。
      * Reads a single properties file into the collector, mirroring raw keys only when allowed.
-     *
      * @param collector 遗留键收集器 / legacy key collector
      * @param file 文件路径 / file path
      * @param legacyPrefix 遗留键前缀 / legacy key prefix
@@ -211,14 +200,11 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
 
     /**
      * 遗留键收集器：始终保存带前缀的键，原始键只在跨服务取值一致时才发布。
-     *
      * <p>服务身份取自遗留键前缀（{@code aion.legacy.game.property.} 等）。同一服务内后加载的文件
      * 覆盖先前值；两个服务为同一原始键给出不同值时，该键被永久移出镜像，避免扁平命名空间里的
      * “最后写入者”覆盖另一个服务的本地文件值。</p>
-     *
      * Collector for legacy configuration: the prefixed key is always kept, and a raw key is published
      * only while every service agrees on its value.
-     *
      * <p>The service identity is the legacy key prefix ({@code aion.legacy.game.property.} and so on).
      * A later file of the same service overrides the earlier value; when two services give one raw key
      * different values, that key is removed from the mirror for good, so a flat-namespace "last writer
@@ -247,7 +233,6 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
         /**
          * 记录一个遗留键。
          * Records one legacy key.
-         *
          * @param legacyPrefix 遗留键前缀，也标识归属服务 / legacy prefix, also the owning service identity
          * @param key 原始键 / raw key
          * @param value 属性值 / property value
@@ -284,7 +269,6 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
         /**
          * 返回待注册的镜像键值。
          * Returns the collected mirror entries.
-         *
          * @return 键值映射 / key-value map
          */
         Map<String, Object> published() {

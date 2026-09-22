@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 /**
  * 未命名操作码 0x126 的服务端包，向客户端同步一个未知短整型值。
  * Server packet for opcode 0x126 that synchronizes an unknown short value to the client.
- *
  * @author Ranastic (Encom)
  */
 @Slf4j

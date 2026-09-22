@@ -25,7 +25,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 宠物生成服务，管理宠物召唤与周期存盘。
  * Pet spawn service managing pet summoning and periodic persistence.
- *
  * @author ATracer
  */
 public class PetSpawnService {
@@ -33,7 +32,6 @@ public class PetSpawnService {
 	/**
 	 * 召唤宠物；若已有其他宠物则先解散。
 	 * Summon a pet; dismiss the current one if different.
-	 *
 	 * @param player 玩家 / Player
 	 * @param petId 宠物模板 ID / Pet template id
 	 * @param isManualSpawn 是否手动召唤 / Whether manually summoned
@@ -78,7 +76,6 @@ public class PetSpawnService {
 	/**
 	 * 重新调度宠物数据的周期存盘任务。
 	 * Reschedule the periodic pet data save task.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public static void reschedulePeriodicSaveTask(Player player) {
@@ -90,7 +87,6 @@ public class PetSpawnService {
 	/**
 	 * 若宠物具备仓库功能，向客户端发送仓库信息。
 	 * Send warehouse info to client when the pet has warehouse function.
-	 *
 	 * @param player 玩家 / Player
 	 * @param petId 宠物模板 ID / Pet template id
 	 */
@@ -110,7 +106,6 @@ public class PetSpawnService {
 	/**
 	 * 解散当前宠物并保存喂养/增益/心情数据。
 	 * Dismiss the current pet and persist feed/doping/mood data.
-	 *
 	 * 玩家 / Player
 	 * @param isManualDespawn 是否手动解散 / Whether manually despawned
 	 */

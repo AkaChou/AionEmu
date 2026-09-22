@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Kromedes Trial 副本 NPC AI：Secret Safe Door（@AIName "secret_safe_door"），继承 NpcAI2。
  * Kromedes Trial instance NPC AI: Secret Safe Door (@AIName "secret_safe_door"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("secret_safe_door")

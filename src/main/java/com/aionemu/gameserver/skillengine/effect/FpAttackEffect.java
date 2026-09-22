@@ -10,7 +10,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 飞行点持续削减效果：周期扣除目标 FP。
  * FP drain-over-time effect: periodically reduces the target's flight points.
- *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)

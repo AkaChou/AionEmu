@@ -15,7 +15,6 @@ import com.aionemu.gameserver.world.WorldPosition;
 /**
  * Reshanta 区域 NPC AI：Krotan Auxillary General（@AIName "unsealed_krotan"），继承 AggressiveNpcAI2。
  * Reshanta zone NPC AI: Krotan Auxillary General (@AIName "unsealed_krotan"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("unsealed_krotan")

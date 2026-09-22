@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * Shugo Imperial Tomb 副本 NPC AI：Crown Prince Admirer（@AIName "Crown_Prince_Admirer"），继承 NpcAI2。
  * Shugo Imperial Tomb instance NPC AI: Crown Prince Admirer (@AIName "Crown_Prince_Admirer"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Crown_Prince_Admirer")

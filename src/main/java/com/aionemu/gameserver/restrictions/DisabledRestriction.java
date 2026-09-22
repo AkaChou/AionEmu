@@ -8,7 +8,6 @@ import java.lang.annotation.Target;
 /**
  * 标记限制方法未实现，激活时跳过该方法。
  * Marks a restriction method as unimplemented so activation skips it.
- *
  * @author NB4L1
  */
 @Target(ElementType.METHOD)

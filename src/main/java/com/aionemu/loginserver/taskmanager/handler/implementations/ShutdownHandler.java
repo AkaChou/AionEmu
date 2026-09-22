@@ -11,7 +11,6 @@ import com.aionemu.loginserver.taskmanager.handler.TaskFromDBHandler;
 /**
  * 关闭登录服的数据库任务处理器。
  * DB task handler that shuts down the login server.
- *
  * @author Divinity, nrg
  */
 @Slf4j
@@ -21,7 +20,6 @@ public class ShutdownHandler extends TaskFromDBHandler {
     /**
      * 本处理器无需参数，始终有效。
      * This handler needs no params and is always valid.
-     *
      * @return true
      */
     @Override

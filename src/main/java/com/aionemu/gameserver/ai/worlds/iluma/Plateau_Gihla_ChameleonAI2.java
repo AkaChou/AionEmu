@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Iluma 区域 NPC AI：Plateau Gihla Chameleon（@AIName "plateau_gihla_chameleon"），继承 AggressiveNpcAI2。
  * Iluma zone NPC AI: Plateau Gihla Chameleon (@AIName "plateau_gihla_chameleon"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("plateau_gihla_chameleon")

@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * Place 位置枚举。
  * Place Location enumeration.
- *
  * @author Rolandas
  */
 @XmlType(name = "PlaceLocation")

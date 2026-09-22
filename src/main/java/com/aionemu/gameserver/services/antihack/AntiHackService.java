@@ -27,7 +27,6 @@ public class AntiHackService {
 	/**
 	 * 校验玩家本次移动是否合法（异常状态、加速、瞬移）。
 	 * Validates whether the player's current move is legal (abnormal state, speed, teleport).
-	 *
 	 * @param player 玩家 / Player
 	 * @param x 目标 X / Target X
 	 * @param y 目标 Y / Target Y
@@ -160,14 +159,12 @@ public class AntiHackService {
 	/**
 	 * 按配置对作弊行为执行处罚（回退、踢线等）。
 	 * Applies configured punishment for hack behavior (rollback, kick, etc.).
-	 *
 	 * @param player 玩家 / Player
 	 * @param x 坐标 X / X
 	 * @param y 坐标 Y / Y
 	 * @param type 移动类型 / Move type
 	 * @param pkt 回退同步包 / Rollback packet
 	 * @param message 审计消息 / Audit message
-	 *
 	 * @return 是否仍允许移动 / Whether move is still allowed
 	 */
 	protected static boolean punish(Player player, float x, float y, byte type, AionServerPacket pkt, String message) {
@@ -200,7 +197,6 @@ public class AntiHackService {
 	/**
 	 * 强制将玩家位置回退并同步客户端。
 	 * Forces player position rollback and syncs the client.
-	 *
 	 * @param player 玩家 / Player
 	 * @param x 坐标 X / X
 	 * @param y 坐标 Y / Y
@@ -219,7 +215,6 @@ public class AntiHackService {
 	/**
 	 * 校验客户端 aion.bin 完整性；异常则踢线。
 	 * Validates client aion.bin integrity; kicks on mismatch.
-	 *
 	 * @param size 上报文件大小 / Reported file size
 	 * @param player 玩家 / Player
 	 */

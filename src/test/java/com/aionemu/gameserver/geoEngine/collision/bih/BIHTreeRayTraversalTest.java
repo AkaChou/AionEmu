@@ -18,7 +18,6 @@ import com.aionemu.gameserver.geoEngine.scene.VertexBuffer.Type;
  * {@link BIHTree} 射线遍历的行为契约：命中集合、距离顺序、`onlyFirst` 提前返回、limit 截断与射线状态还原。
  * Behaviour contract for {@link BIHTree} ray traversal: hit set, distance order, `onlyFirst` early return, limit culling
  * and ray restoration.
- *
  * <p>用途：遍历栈（{@code BIHStackData} → 原始数组栈）这类改动会改变内部数据结构，但**不允许改变命中结果**，
  * 因此这里把当前实现的可观察结果固定下来，改造前后都必须一致。
  * Purpose: internal changes to the traversal stack must not change observable results, so this test pins them.</p>
@@ -110,7 +109,6 @@ class BIHTreeRayTraversalTest {
 	/**
 	 * 用当前线程的墙网格做一次射线查询。
 	 * Runs one ray query against the wall mesh.
-	 *
 	 * @param ray 射线 / the ray
 	 * @param limit 射线长度上限，0 表示不限 / ray limit, 0 means unlimited
 	 * @param results 结果收集器 / results collector
@@ -126,7 +124,6 @@ class BIHTreeRayTraversalTest {
 	/**
 	 * 构建墙网格对应的 BIH 树。
 	 * Builds the BIH tree for the wall mesh.
-	 *
 	 * @return BIH 树 / the tree
 	 */
 	private static BIHTree tree() {
@@ -144,7 +141,6 @@ class BIHTreeRayTraversalTest {
 	/**
 	 * 覆盖三面墙的世界包围盒。
 	 * World bound covering the three walls.
-	 *
 	 * @return 包围盒 / the bounding box
 	 */
 	private static BoundingBox bound() {
@@ -154,7 +150,6 @@ class BIHTreeRayTraversalTest {
 	/**
 	 * 构造一条射线。
 	 * Builds a ray.
-	 *
 	 * @param originX 起点 X / origin x
 	 * @param originY 起点 Y / origin y
 	 * @param originZ 起点 Z / origin z

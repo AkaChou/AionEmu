@@ -15,7 +15,6 @@ import com.aionemu.commons.database.DatabaseFactory;
 /**
  * 高级点数/Luna 点 DAO 的 MySQL 8 实现。
  * MySQL 8 PremiumDAO implementation (toll and Luna).
- *
  * @author Updated for MySQL 8
  */
 @Slf4j(topic = "PREMIUM_CTRL")

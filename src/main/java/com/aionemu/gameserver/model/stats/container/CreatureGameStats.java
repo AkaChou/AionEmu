@@ -59,7 +59,6 @@ public abstract class CreatureGameStats<T extends Creature> {
 	 * ReentrantReadWriteLock (~128 B, ~16 MB over ~127k creatures in play-15) although almost none of them ever
 	 * registers a stat function. Reads that still see the placeholder mean "no stat functions at all", which the old
 	 * code answered with the plain base value anyway, so they need no lock.
-	 *
 	 * <p>发布顺序是硬约束：{@link #writableStats()} 先写 {@code lock} 再写 {@code stats}，所以"读到非占位符的表"
 	 * 一定也能读到那把锁（volatile 顺序），读路径据此才能安全地免锁跳过。
 	 * The publication order is load-bearing: the lock is written before the map, so a reader that sees a
@@ -69,9 +68,6 @@ public abstract class CreatureGameStats<T extends Creature> {
 	private volatile Map<StatEnum, TreeSet<IStatFunction>> stats = EMPTY_STATS;
 	/** 属性表读写锁（与表一起在首次写入时分配）。 / Stats map lock, allocated with the map on the first write. */
 	private volatile ReentrantReadWriteLock lock;
-	/**
-	 * @return the atcount
-	 */
 	private int attackCounter = 0;
 	protected T owner = null;
 	private Stat2 cachedHPStat;
@@ -86,7 +82,6 @@ public abstract class CreatureGameStats<T extends Creature> {
 	 * <p>先发布锁、后发布表（见 {@link #stats} 的说明），读路径依赖这个顺序判断是否可以免锁。
 	 * Materialises the stats map and its lock with a double-checked {@code synchronized (this)} so concurrent first
 	 * writes converge on one map and one lock; the lock is published before the map on purpose.
-	 *
 	 * @return 可写表 / writable map
 	 */
 	private Map<StatEnum, TreeSet<IStatFunction>> writableStats() {
@@ -492,7 +487,6 @@ public abstract class CreatureGameStats<T extends Creature> {
 	/**
 	 * 按 stat enum 返回需要应用的函数视图。
 	 * Returns the view of the functions to apply for the given stat.
-	 *
 	 * <p>没有 SET 类型函数（priority ≥ MAX-10）时直接返回底层 {@link TreeSet}，不再每次复制整表 ——
 	 * {@code getStat(...)} 会被每个 SM_STATS_INFO 属性包触发，JFR 实测该复制路径分配数 MB/300s 的 {@code TreeSet}。
 	 * 返回值是只读视图：调用方必须已经持有 stats 锁（本类内部调用点都在读锁内；无锁的调用方需自行复制）。
@@ -500,7 +494,6 @@ public abstract class CreatureGameStats<T extends Creature> {
 	 * copying the whole set per query: {@code getStat(...)} runs for every SM_STATS_INFO packet and JFR showed
 	 * megabytes of {@code TreeSet} per 300s on that copy. The result is a read-only view; callers must already hold
 	 * the stats lock (internal callers do, unlocked callers must copy).</p>
-	 *
 	 * @param stat stat 名 / stat enum
 	 * @return 函数视图或 null / the function view, or null
 	 */
@@ -512,7 +505,6 @@ public abstract class CreatureGameStats<T extends Creature> {
 	 * 在调用方自己的快照上查表：加锁的读路径先取 volatile 快照再加锁，避免二次读字段而迭代一张自己没锁住的表。
 	 * Looks the functions up in the caller's own snapshot, so a locked read never re-reads the volatile field and
 	 * ends up iterating a map it did not lock.
-	 *
 	 * @param stat stat 名 / stat enum
 	 * @param source 调用方的表快照 / the caller's map snapshot
 	 * @return 函数视图或 null / the function view, or null
@@ -543,9 +535,6 @@ public abstract class CreatureGameStats<T extends Creature> {
 		allStats.add(function);
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean checkGeoNeedUpdate() {
 		long currentTime = System.currentTimeMillis();
 		if (currentTime - lastGeoUpdate > 600) {

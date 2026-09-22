@@ -20,7 +20,6 @@ import java.util.List;
 /**
  * 玩家命令：按职业发放/回收刺针（Stigma）并完成相关任务。
  * Player command: grants/removes class stigmas and completes related quests.
- *
  * @author K1ll3r
  */
 public class GiveStigma extends PlayerCommand {
@@ -35,7 +34,6 @@ public class GiveStigma extends PlayerCommand {
     /**
      * 处理 add/remove 等刺针子命令并弹出确认。
      * Handles stigma add/remove sub-commands with confirmation dialogs.
-     *
      * @param player 执行命令的玩家 / invoking player
      * @param param 命令参数 / command parameters
      */
@@ -554,7 +552,6 @@ public class GiveStigma extends PlayerCommand {
     /**
      * 参数错误时提示用法。
      * Shows usage when arguments are invalid.
-     *
      * @param player 执行命令的玩家 / invoking player
      * @param msg 失败消息 / failure message
      */

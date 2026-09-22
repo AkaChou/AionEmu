@@ -20,8 +20,6 @@ public abstract class Assault<siege extends Siege<?>> {
 	/**
 	 * 返回本次突击所在世界 ID。
 	 * Returns the world id of this assault.
-	 *
-	 * @return 世界 ID / world id
 	 */
 	protected final int worldId;
 	protected Future<?> dredgionTask;
@@ -37,7 +35,6 @@ public abstract class Assault<siege extends Siege<?>> {
 	/**
 	 * 开始突击。
 	 * Starts the assault.
-	 *
 	 * @param delay 延迟毫秒 / delay
 	 */
 	public void startAssault(int delay) {
@@ -47,7 +44,6 @@ public abstract class Assault<siege extends Siege<?>> {
 	/**
 	 * 结束突击。
 	 * Finishes the assault.
-	 *
 	 * @param captured 是否占领成功 / whether captured
 	 */
 	public void finishAssault(boolean captured) {

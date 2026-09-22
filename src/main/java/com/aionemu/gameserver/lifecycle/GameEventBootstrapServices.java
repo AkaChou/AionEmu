@@ -45,7 +45,6 @@ public final class GameEventBootstrapServices implements DisposableBean {
     /**
      * 构造并注册各事件子系统实例提供者。
      * Construct and register instance providers for each event subsystem.
-     *
      * @param lunaShopServiceProvider 露娜商店服务提供者 / Luna-shop service provider
      * @param minionServiceProvider 宠物役从服务提供者 / Minion service provider
      * @param shugoSweepServiceProvider 修勾扫荡服务提供者 / Shugo-sweep service provider
@@ -72,7 +71,6 @@ public final class GameEventBootstrapServices implements DisposableBean {
     /**
      * 解析露娜商店服务。
      * Resolve the Luna-shop service.
-     *
      * @return 露娜商店服务 / Luna-shop service
      */
     public static LunaShopService lunaShopService() {
@@ -86,7 +84,6 @@ public final class GameEventBootstrapServices implements DisposableBean {
     /**
      * 解析宠物役从服务。
      * Resolve the minion service.
-     *
      * @return 宠物役从服务 / Minion service
      */
     public static MinionService minionService() {
@@ -100,7 +97,6 @@ public final class GameEventBootstrapServices implements DisposableBean {
     /**
      * 解析修勾扫荡服务。
      * Resolve the Shugo-sweep service.
-     *
      * @return 修勾扫荡服务 / Shugo-sweep service
      */
     public static ShugoSweepService shugoSweepService() {
@@ -114,7 +110,6 @@ public final class GameEventBootstrapServices implements DisposableBean {
     /**
      * 解析阿特里亚护照服务。
      * Resolve the Atreian-passport service.
-     *
      * @return 阿特里亚护照服务 / Atreian-passport service
      */
     public static AtreianPassportService atreianPassportService() {
@@ -128,7 +123,6 @@ public final class GameEventBootstrapServices implements DisposableBean {
     /**
      * 解析事件窗口服务。
      * Resolve the event-window service.
-     *
      * @return 事件窗口服务 / Event-window service
      */
     public static EventWindowService eventWindowService() {

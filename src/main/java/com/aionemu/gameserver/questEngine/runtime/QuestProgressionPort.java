@@ -14,7 +14,6 @@ public interface QuestProgressionPort {
 	/**
 	 * 在不修改状态的情况下验证玩家成长动作。
 	 * Validates player-progression actions without mutating state.
-	 *
 	 * @param connection 调用方拥有的 JDBC 连接 / JDBC connection owned by the caller
 	 * @param snapshot 玩家和任务快照 / player and quest snapshot
 	 * @param promotions 待验证的晋升动作 / promotion actions to validate
@@ -26,7 +25,6 @@ public interface QuestProgressionPort {
 	/**
 	 * 在调用方事务中持久化玩家成长动作，并返回提交后在线状态发布参与者。
 	 * Persists player-progression actions in the caller transaction and returns the live-state publication participant.
-	 *
 	 * @param connection 调用方拥有的 JDBC 连接 / JDBC connection owned by the caller
 	 * @param snapshot 玩家和任务快照 / player and quest snapshot
 	 * @param promotions 待持久化的晋升动作 / promotion actions to persist

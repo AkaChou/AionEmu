@@ -75,7 +75,6 @@ public class GameWorldBootstrapGateway {
     /**
      * 使用指定进度报告器构造（包内/测试用）。
      * Construct with a given progress reporter (package/test use).
-     *
      * @param progressReporter 启动进度报告器 / Startup progress reporter
      */
     GameWorldBootstrapGateway(StartupProgressReporter progressReporter) {
@@ -85,7 +84,6 @@ public class GameWorldBootstrapGateway {
     /**
      * 注入 IDFactory 提供者。
      * Inject the IDFactory provider.
-     *
      * @param idFactoryProvider IDFactory 提供者 / IDFactory provider
      */
     @Autowired(required = false)
@@ -96,7 +94,6 @@ public class GameWorldBootstrapGateway {
     /**
      * 注入 ZoneService 提供者。
      * Inject the ZoneService provider.
-     *
      * @param zoneServiceProvider ZoneService 提供者 / ZoneService provider
      */
     @Autowired(required = false)
@@ -107,7 +104,6 @@ public class GameWorldBootstrapGateway {
     /**
      * 注入 HotspotTeleportService 提供者。
      * Inject the HotspotTeleportService provider.
-     *
      * @param hotspotTeleportServiceProvider HotspotTeleportService 提供者 / HotspotTeleportService provider
      */
     @Autowired(required = false)
@@ -118,7 +114,6 @@ public class GameWorldBootstrapGateway {
     /**
      * 注入 RoadService 提供者。
      * Inject the RoadService provider.
-     *
      * @param roadServiceProvider RoadService 提供者 / RoadService provider
      */
     @Autowired(required = false)
@@ -129,7 +124,6 @@ public class GameWorldBootstrapGateway {
     /**
      * 注入 World 提供者。
      * Inject the World provider.
-     *
      * @param worldProvider World 提供者 / World provider
      */
     @Autowired(required = false)
@@ -140,7 +134,6 @@ public class GameWorldBootstrapGateway {
     /**
      * 注入世界引导运行时桥提供者。
      * Inject the world-bootstrap runtime-bridge provider.
-     *
      * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
      */
     @Autowired(required = false)
@@ -213,7 +206,6 @@ public class GameWorldBootstrapGateway {
     /**
      * 解析 IDFactory：优先 Spring，否则运行时桥。
      * Resolve IDFactory: prefer Spring, otherwise runtime bridge.
-     *
      * @return IDFactory 实例 / IDFactory instance
      */
     private IDFactory idFactory() {
@@ -226,7 +218,6 @@ public class GameWorldBootstrapGateway {
     /**
      * 解析 ZoneService：优先 Spring，否则运行时桥。
      * Resolve ZoneService: prefer Spring, otherwise runtime bridge.
-     *
      * @return ZoneService 实例 / ZoneService instance
      */
     private ZoneService zoneService() {
@@ -239,7 +230,6 @@ public class GameWorldBootstrapGateway {
     /**
      * 解析 HotspotTeleportService：优先 Spring，否则运行时桥。
      * Resolve HotspotTeleportService: prefer Spring, otherwise runtime bridge.
-     *
      * @return HotspotTeleportService 实例 / HotspotTeleportService instance
      */
     private HotspotTeleportService hotspotTeleportService() {
@@ -252,7 +242,6 @@ public class GameWorldBootstrapGateway {
     /**
      * 解析 RoadService：优先 Spring，否则运行时桥。
      * Resolve RoadService: prefer Spring, otherwise runtime bridge.
-     *
      * @return RoadService 实例 / RoadService instance
      */
     private RoadService roadService() {
@@ -265,7 +254,6 @@ public class GameWorldBootstrapGateway {
     /**
      * 解析 World：优先 Spring，否则运行时桥。
      * Resolve World: prefer Spring, otherwise runtime bridge.
-     *
      * @return World 实例 / World instance
      */
     private World world() {
@@ -278,7 +266,6 @@ public class GameWorldBootstrapGateway {
     /**
      * 解析世界引导运行时桥：优先 Spring，否则新建。
      * Resolve the world-bootstrap runtime bridge: prefer Spring, otherwise create new.
-     *
      * @return 运行时桥 / Runtime bridge
      */
     private GameWorldBootstrapRuntimeBridge runtimeBridge() {
@@ -291,7 +278,6 @@ public class GameWorldBootstrapGateway {
     /**
      * 执行单步加载并报告开始/结束。
      * Run a single load step and report start/finish.
-     *
      * @param stepName 步骤名 / Step name
      * @param loader 加载逻辑 / Loader logic
      */
@@ -304,7 +290,6 @@ public class GameWorldBootstrapGateway {
     /**
      * 用虚拟线程并行执行引导步骤。
      * Run bootstrap steps in parallel with virtual threads.
-     *
      * @param steps 引导步骤列表 / Bootstrap step list
      */
     private void loadStepsInParallel(List<BootstrapStep> steps) {
@@ -322,7 +307,6 @@ public class GameWorldBootstrapGateway {
     /**
      * 等待 Future 完成并展开异常。
      * Await a Future and unwrap exceptions.
-     *
      * @param future 待等待的 Future / Future to await
      */
     private void await(Future<?> future) {
@@ -346,9 +330,7 @@ public class GameWorldBootstrapGateway {
     /**
      * 引导步骤：名称与加载逻辑。
      * Bootstrap step: name and loader.
-     *
-     * @param name 步骤名 / Step name
-     * @param loader 加载逻辑 / Loader logic
+     * 加载逻辑 / Loader logic
      */
     private record BootstrapStep(String name, Runnable loader) {
     }

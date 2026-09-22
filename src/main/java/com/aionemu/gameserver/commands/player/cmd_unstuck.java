@@ -14,9 +14,7 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：麻痹 10 秒后传送回绑定石位置。
  * Player command: after a 10-second paralyze cast, teleports to bind location.
- *
  * @author Nemiroff
- * @rework Eloann
  */
 public class cmd_unstuck extends PlayerCommand {
 
@@ -31,7 +29,6 @@ public class cmd_unstuck extends PlayerCommand {
 	/**
 	 * 校验状态后施加麻痹，并在延时后传送到绑定点。
 	 * Validates state, applies paralyze, and teleports to bind after delay.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 未使用的参数 / unused parameters
 	 */

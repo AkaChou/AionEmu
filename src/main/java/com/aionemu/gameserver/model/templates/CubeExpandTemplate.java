@@ -13,7 +13,6 @@ import com.aionemu.gameserver.model.templates.expand.Expand;
 /**
  * 背包扩展模板（静态数据/XML）。
  * Cube expand template (static data / XML).
- *
  * @author Simple
  */
 @XmlRootElement(name = "cube_npc")

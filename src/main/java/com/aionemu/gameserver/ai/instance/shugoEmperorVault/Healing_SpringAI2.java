@@ -11,7 +11,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * Shugo Emperor Vault 副本 NPC AI：Healing Spring（@AIName "healing_spring"），继承 AggressiveNpcAI2。
  * Shugo Emperor Vault instance NPC AI: Healing Spring (@AIName "healing_spring"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("healing_spring")

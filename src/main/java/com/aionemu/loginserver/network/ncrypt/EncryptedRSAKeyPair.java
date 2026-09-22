@@ -8,7 +8,6 @@ import lombok.Getter;
 /**
  * 保存标准 RSA 密钥对，并对模数 N 做网络传输用的简单混淆。
  * Holds a standard RSA key pair and scrambles modulus N for network transfer.
- *
  * @author EvilSpirit
  */
 public class EncryptedRSAKeyPair {
@@ -23,7 +22,6 @@ public class EncryptedRSAKeyPair {
     /**
      * 保存 RSA 密钥对并加密其模数 N。
      * Store the RSA key pair and encrypt its modulus N.
-     *
      * @param RSAKeyPair 标准 KeyPairGenerator 生成的密钥对 / key pair from KeyPairGenerator
      */
     public EncryptedRSAKeyPair(KeyPair RSAKeyPair) {
@@ -34,10 +32,7 @@ public class EncryptedRSAKeyPair {
     /**
      * 对 RSA 模数 N 做协议约定的字节混淆。
      * Scramble RSA modulus N with the protocol-defined byte mixing.
-     *
      * RSA modulus
-     *
-     * @param modulus
      * @return 混淆后的模数 / encrypted modulus
      */
     private byte[] encryptModulus(BigInteger modulus) {

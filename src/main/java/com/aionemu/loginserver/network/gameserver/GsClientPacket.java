@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 所有 GameServer → LoginServer 客户端封包的基类。
  * Base class for every GameServer → LoginServer client packet.
- *
  * @author -Nemesiss-
  */
 @Slf4j
@@ -37,7 +36,6 @@ public abstract class GsClientPacket extends BaseClientPacket<GsConnection> {
     /**
      * 向本封包所属连接发送服务端封包，等价于 {@code getConnection().sendPacket(msg)}。
      * Send a server packet to the owning connection; equivalent to {@code getConnection().sendPacket(msg)}.
-     *
      * @param msg 待发送的服务端封包 / Server packet to send
      */
     protected void sendPacket(GsServerPacket msg) {

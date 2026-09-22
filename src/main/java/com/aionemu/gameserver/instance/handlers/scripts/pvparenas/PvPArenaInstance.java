@@ -36,7 +36,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 /**
  * PvP 竞技场副本事件处理器。
  * Instance event handler for PvP Arena.
- *
  * @author Encom
  */
 
@@ -54,7 +53,6 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * 玩家 / player
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 * result
@@ -114,7 +112,6 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 sendSystemMsg。
 	 * Handle sendSystemMsg.
-	 *
 	 * 玩家 / player
 	 * creature
 	 * rewardPoints
@@ -129,7 +126,6 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * npc
 	 */
 	@Override
@@ -151,7 +147,6 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -172,7 +167,6 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -237,7 +231,6 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
-	 *
 	 * result
 	 */
 	@Override
@@ -248,7 +241,6 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -259,7 +251,6 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家登录到该副本时处理。
 	 * Handle a player logging into this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -270,7 +261,6 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -365,7 +355,6 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
-	 *
 	 * message
 	 * 阵营 / race
 	 * time
@@ -383,7 +372,6 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -400,7 +388,6 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -422,7 +409,6 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
-	 *
 	 * visible object
 	 * result
 	 */
@@ -435,7 +421,6 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 处理玩家复活事件。
 	 * Handle a player revive event.
-	 *
 	 * 玩家 / player
 	 * result
 	 */
@@ -453,7 +438,6 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -588,7 +572,6 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 返回 npc。
 	 * Return the npc.
-	 *
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
@@ -610,7 +593,6 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
-	 *
 	 * 玩家 / player
 	 * npc
 	 */
@@ -641,21 +623,13 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 				player.getLifeStats().increaseHp(SM_ATTACK_STATUS.TYPE.HP, 10000);
 				player.getLifeStats().increaseMp(SM_ATTACK_STATUS.TYPE.MP, 10000);
 			break;
-			/**
-			 * 宝箱 [混沌竞技场/混沌修炼场]
-			 * Treasure Box [Arena Of Chaos/Chaos Training Grounds]
-			 */
 			case 218784:
 			case 218785:
 			case 218786:
 			case 218787:
 			case 218788:
 			case 218789:
-			/**
-			 * 宝箱 [孤独竞技场/孤独修炼场]
-			 * Treasure Box [Arena Of Discipline/Discipline Training Grounds]
-			 */
-			case 218791:
+            case 218791:
 			case 218792:
 			case 218793:
 			case 218794:
@@ -714,7 +688,6 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 useSkill。
 	 * Handle useSkill.
-	 *
 	 * npc
 	 * 玩家 / player
 	 * skill id

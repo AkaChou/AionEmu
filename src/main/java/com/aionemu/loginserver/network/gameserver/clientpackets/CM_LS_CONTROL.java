@@ -9,7 +9,6 @@ import com.aionemu.loginserver.network.gameserver.serverpackets.SM_LS_CONTROL_RE
 /**
  * GS→LS：修改账号权限等级或会员等级。
  * GS→LS: change account access level or membership level.
- *
  * @author Aionchs-Wylovech
  */
 public class CM_LS_CONTROL extends GsClientPacket {

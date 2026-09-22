@@ -12,7 +12,6 @@ import lombok.Getter;
 /**
  * 宠物游戏对象。
  * Pet game object.
- *
  * @author ATracer
  */
 @Getter
@@ -26,7 +25,6 @@ public class Pet extends VisibleObject {
 	/**
 	 * 构造宠物。
 	 * Constructs a pet.
-	 *
 	 * @param petTemplate 宠物模板 / pet template
 	 * @param controller 宠物控制器 / pet controller
 	 * @param commonData 宠物公共数据 / pet common data

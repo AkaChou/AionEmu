@@ -14,7 +14,6 @@ import com.aionemu.gameserver.services.item.ItemPacketService.ItemAddType;
 /**
  * 仓库新增物品的服务端包。
  * Server packet for adding an item into a warehouse.
- *
  * @author kosyachok
  * @author -Nemesiss-
  */
@@ -61,7 +60,6 @@ public class SM_WAREHOUSE_ADD_ITEM extends AionServerPacket {
 	/**
 	 * 写出仓库物品信息。
 	 * Writes warehouse item info.
-	 *
 	 * @param item item
 	 */
 	private void writeItemInfo(Item item) {

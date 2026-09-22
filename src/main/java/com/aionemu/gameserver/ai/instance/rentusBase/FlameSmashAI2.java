@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 /**
  * Rentus Base 副本 NPC AI：Flame Smash（@AIName "flame_smash"），继承 NpcAI2。
  * Rentus Base instance NPC AI: Flame Smash (@AIName "flame_smash"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("flame_smash")

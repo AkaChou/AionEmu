@@ -14,7 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 房屋相关 NPC AI：Gale Cyclone（@AIName "galecyclone"），继承 NpcAI2。
  * Housing-related NPC AI: Gale Cyclone (@AIName "galecyclone"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("galecyclone")

@@ -9,7 +9,6 @@ import java.sql.*;
 /**
  * 玩家二级密码 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerPasskeyDAO.
- *
  * Updated for MySQL 8 - Fixed connection leaks.
  */
 @Slf4j
@@ -29,7 +28,6 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
     /**
      * 为账号插入二级密码。
      * Inserts a passkey for an account.
-     *
      * @param accountId 账号 ID / account id
      * @param passkey 通行密钥 / passkey
      */
@@ -49,11 +47,9 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
     /**
      * 在校验旧密码后更新二级密码。
      * Updates the passkey after verifying the old one.
-     *
      * @param accountId 账号 ID / account id
      * @param oldPasskey 旧通行密钥 / old passkey
      * @param newPasskey 新通行密钥 / new passkey
-     *
      * @return 是否更新成功 / whether update succeeded
      */
     @Override
@@ -74,10 +70,8 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
     /**
      * 强制更新二级密码（不校验旧密码）。
      * Force-updates the passkey without verifying the old one.
-     *
      * @param accountId 账号 ID / account id
      * @param newPasskey 新通行密钥 / new passkey
-     *
      * @return 是否更新成功 / whether update succeeded
      */
     @Override
@@ -97,7 +91,6 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
     /**
      * 校验账号二级密码是否匹配。
      * Checks whether the account passkey matches.
-     *
      * @param accountId 账号 ID / account id
      * @param passkey 通行密钥 / passkey
      * @return 是否匹配 / whether it matches
@@ -124,7 +117,6 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
     /**
      * 检查账号是否已设置二级密码。
      * Checks whether the account already has a passkey.
-     *
      * @param accountId 账号 ID / account id
      * @return 是否已设置 / whether a passkey exists
      */
@@ -149,7 +141,6 @@ public class PlayerPasskeyDAO extends com.aionemu.gameserver.dao.PlayerPasskeyDA
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

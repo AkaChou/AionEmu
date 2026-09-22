@@ -23,7 +23,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * 职业技能召唤物/陷阱 AI：Ranger（@AIName "ranger"），继承 AggressiveNpcAI2。
  * Class-skill summon/trap AI: Ranger (@AIName "ranger"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("ranger")

@@ -16,7 +16,6 @@ import lombok.Getter;
 /**
  * 静态门数据容器，按世界地图 ID 索引门模板。
  * Static-door data holder, indexing door templates by world map id.
- *
  * @author Wakizashi
  */
 @Getter
@@ -27,8 +26,7 @@ public class StaticDoorData {
 	/**
 	 * 返回 JAXB 加载的静态门世界列表。
 	 * Returns the JAXB-loaded list of static-door worlds.
-	 *
-	 * @return 静态门世界列表 / static-door world list
+	 * 静态门世界列表 / static-door world list
 	 */
 	@XmlElement(name = "world")
 	private List<StaticDoorWorld> staticDorWorlds;
@@ -39,7 +37,6 @@ public class StaticDoorData {
 	/**
 	 * JAXB 反序列化完成后，按世界 ID 重建门模板索引。
 	 * After JAXB unmarshalling, rebuilds the door-template index by world id.
-	 *
 	 * @param u JAXB 反序列化器 / JAXB unmarshaller
 	 * @param parent 父对象 / parent object
 	 */
@@ -54,7 +51,6 @@ public class StaticDoorData {
 	/**
 	 * 返回已加载的静态门世界数量。
 	 * Returns the number of loaded static-door worlds.
-	 *
 	 * @return 已加载的静态门世界数量 / Returns the number of loaded static-door worlds.
 	 */
 	public int size() {
@@ -64,7 +60,6 @@ public class StaticDoorData {
 	/**
 	 * 按世界 ID 获取该地图的静态门数据。
 	 * Returns the static-door data for the given world id.
-	 *
 	 * @param world 世界地图 ID / world map id
 	 * @return 静态门世界模板，不存在则为 null / static-door world template or null
 	 */
@@ -75,7 +70,6 @@ public class StaticDoorData {
 	/**
 	 * 设置静态门世界列表并重建索引。
 	 * Sets the static-door world list and rebuilds the index.
-	 *
 	 * @param staticDorWorlds 静态门世界列表 / static-door world list
 	 */
 	public void setStaticDorWorlds(List<StaticDoorWorld> staticDorWorlds) {

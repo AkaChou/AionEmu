@@ -9,7 +9,6 @@ public interface LoginMessageDispatcher {
     /**
      * 发送服务端封包给登录服。
      * Send server packet to login server.
-     *
      * @param packet 待发送封包 / packet to send
      * @return 是否发送成功 / whether sending succeeded
      */
@@ -18,7 +17,6 @@ public interface LoginMessageDispatcher {
     /**
      * 当前与登录服连接状态是否已认证就绪。
      * Whether connection to login server is authenticated and ready.
-     *
      * @return 就绪状态 / ready state
      */
     boolean isAuthed();

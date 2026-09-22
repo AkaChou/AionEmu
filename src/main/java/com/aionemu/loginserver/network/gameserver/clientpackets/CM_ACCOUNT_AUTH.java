@@ -7,7 +7,6 @@ import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 /**
  * GS→LS：校验账号会话密钥是否仍有效。
  * GS→LS: ask whether the account session key is still valid on LoginServer.
- *
  * @author -Nemesiss-
  */
 public class CM_ACCOUNT_AUTH extends GsClientPacket {

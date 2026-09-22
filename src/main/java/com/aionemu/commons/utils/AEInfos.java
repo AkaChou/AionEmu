@@ -18,7 +18,6 @@ public class AEInfos {
     /**
      * 构建内存信息行。
      * Build memory info lines.
-     *
      * @return 本地化内存信息 / Localized memory lines
      */
     public String[] getMemoryInfo() {
@@ -44,7 +43,6 @@ public class AEInfos {
     /**
      * 构建 CPU 信息行。
      * Build CPU info lines.
-     *
      * @return 本地化 CPU 信息 / Localized CPU lines
      */
     public String[] getCPUInfo() {
@@ -57,7 +55,6 @@ public class AEInfos {
     /**
      * 构建操作系统信息行。
      * Build OS info lines.
-     *
      * @return 本地化 OS 信息 / Localized OS lines
      */
     public String[] getOSInfo() {
@@ -70,7 +67,6 @@ public class AEInfos {
     /**
      * 构建 JRE 信息行。
      * Build JRE info lines.
-     *
      * @return 本地化 JRE 信息 / Localized JRE lines
      */
     public String[] getJREInfo() {
@@ -84,7 +80,6 @@ public class AEInfos {
     /**
      * 构建 JVM 信息行。
      * Build JVM info lines.
-     *
      * @return 本地化 JVM 信息 / Localized JVM lines
      */
     public String[] getJVMInfo() {
@@ -100,7 +95,6 @@ public class AEInfos {
     /**
      * 返回当前时间字符串 {@code H:mm:ss}。
      * Return current time as {@code H:mm:ss}.
-     *
      * @return 时间字符串 / Time string
      */
     public String getRealTime() {
@@ -181,7 +175,6 @@ public class AEInfos {
     /**
      * 按章节标题打印信息行。
      * Print lines under a section title.
-     *
      * @param title 章节标题 / Section title
      * @param lines 信息行数组 / Info lines
      */

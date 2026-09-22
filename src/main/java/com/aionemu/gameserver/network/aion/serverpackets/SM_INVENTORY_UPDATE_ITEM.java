@@ -23,7 +23,6 @@ public class SM_INVENTORY_UPDATE_ITEM extends AionServerPacket {
 	/**
 	 * 以默认使用消耗类型构造物品更新包。
 	 * Creates an item-update packet with the default item-use decrease type.
-	 *
 	 * target player
 	 * @param item 待更新物品 / item to update
 	 */

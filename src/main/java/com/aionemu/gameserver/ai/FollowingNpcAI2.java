@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 /**
  * 跟随型 NPC AI：持续跟随指定目标移动。
  * Following NPC AI that continuously follows a designated target.
- *
  * @author Encom
  */
 @AIName("following")
@@ -19,7 +18,6 @@ public class FollowingNpcAI2 extends GeneralNpcAI2
 	/**
 	 * 处理开始跟随事件。
 	 * Handle start-follow.
-	 *
 	 * @param creature 跟随目标 / target to follow
 	 */
 	@Override
@@ -30,7 +28,6 @@ public class FollowingNpcAI2 extends GeneralNpcAI2
 	/**
 	 * 判断是否可处理指定 AI 事件类型。
 	 * Whether the given AI event type can be handled.
-	 *
 	 * @param eventType AI 事件类型 / AI event type
 	 * @return 是否可处理 / whether it can be handled
 	 */
@@ -52,7 +49,6 @@ public class FollowingNpcAI2 extends GeneralNpcAI2
 	/**
 	 * 处理生物移动事件。
 	 * Handle creature-moved.
-	 *
 	 * @param creature 移动的生物 / moved creature
 	 */
 	@Override
@@ -63,7 +59,6 @@ public class FollowingNpcAI2 extends GeneralNpcAI2
 	/**
 	 * 处理停止跟随事件。
 	 * Handle stop-follow.
-	 *
 	 * @param creature 跟随目标 / followed target
 	 */
 	@Override

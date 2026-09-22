@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 召唤物的生命值/魔法值属性与恢复逻辑。
  * Summon HP/MP stats and restore logic.
- *
  * @author ATracer
  */
 public class SummonLifeStats extends CreatureLifeStats<Summon> {

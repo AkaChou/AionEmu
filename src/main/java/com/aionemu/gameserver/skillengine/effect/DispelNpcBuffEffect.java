@@ -19,7 +19,6 @@ public class DispelNpcBuffEffect extends AbstractDispelEffect {
 	/**
 	 * 按类别驱散目标效果。
 	 * Dispels target effects by category.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	public void applyEffect(Effect effect) {

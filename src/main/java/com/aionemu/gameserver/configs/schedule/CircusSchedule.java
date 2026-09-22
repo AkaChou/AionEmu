@@ -18,7 +18,6 @@ import lombok.Setter;
 /**
  * Circus 马戏团活动时间表配置。
  * Circus event schedule configuration.
- *
  * @author Rinzler (Encom)
  */
 @Setter
@@ -35,8 +34,6 @@ public class CircusSchedule {
 	 * -- SETTER --
 	 *  设置 Circus 列表。
 	 *  Sets the circus list.
-
-
 	 */
 	@XmlElement(name = "circus", required = true)
 	private List<Circus> circussList;
@@ -73,8 +70,6 @@ public class CircusSchedule {
 		 * -- SETTER --
 		 *  设置 Circus ID。
 		 *  Sets the circus ID.
-
-
 		 */
 		@XmlAttribute(required = true)
 		private int id;
@@ -88,8 +83,6 @@ public class CircusSchedule {
 		 * -- SETTER --
 		 *  设置 Circus 时间列表。
 		 *  Sets the circus times.
-
-
 		 */
 		@XmlElement(name = "circusTime", required = true)
 		private List<String> circusTimes;

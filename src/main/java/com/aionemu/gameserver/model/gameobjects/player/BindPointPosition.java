@@ -6,44 +6,18 @@ import lombok.Getter;
 /**
  * 绑定点坐标游戏对象。
  * Bind Point Position game object.
- *
  * @author evilset
  */
 @Getter
 public class BindPointPosition {
 
-	/**
-	 * @return 地图 ID / the mapId
-	 */
 	private final int mapId;
-	/**
-	 * @return X 坐标 / the x
-	 */
 	private final float x;
-	/**
-	 * @return Y 坐标 / the y
-	 */
 	private final float y;
-	/**
-	 * @return Z 坐标 / the z
-	 */
 	private final float z;
-	/**
-	 * @return 朝向 / the heading
-	 */
 	private final byte heading;
-	/**
-	 * @return the persistentState
-	 */
 	private PersistentState persistentState;
 
-	/**
-	 * @param mapId
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param heading
-	 */
 	public BindPointPosition(int mapId, float x, float y, float z, byte heading) {
 		this.mapId = mapId;
 		this.x = x;

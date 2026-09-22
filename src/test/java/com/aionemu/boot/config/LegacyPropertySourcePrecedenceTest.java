@@ -19,12 +19,9 @@ import com.aionemu.commons.configuration.ConfigSourceResolverHolder;
 
 /**
  * 遗留配置文件与外部覆盖来源之间的优先级契约。
- *
  * <p>锁定两件此前只在提交信息里声明、未被测试守住的行为：遗留文件必须以最低优先级注册（操作系统环境变量
  * 仍然覆盖它），且注册顺序不能依赖本处理器写入全局解析器持有者。</p>
- *
  * Contract between the legacy properties files and the external override sources.
- *
  * <p>Locks two properties that were previously only asserted in commit messages: legacy files must be
  * registered at the lowest precedence (operating-system environment variables still override them), and
  * the registration must not rely on this post-processor writing the global resolver holder.</p>
@@ -45,13 +42,10 @@ class LegacyPropertySourcePrecedenceTest {
 
 	/**
 	 * 本处理器只在 Environment 上注册属性源，不得写入全局解析器持有者。
-	 *
 	 * <p>回归背景：曾有一版把 {@code environment::getProperty} 发布到全局持有者，于是任何实例化
 	 * {@code SpringApplication} 的测试都会改写全局状态，导致 {@code VipConfigPathTest} 读到上一个用例的
 	 * {@code StandardEnvironment}。解析器只由 {@code BootConfigSourceResolver} 单例在上下文装配时发布。</p>
-	 *
 	 * The post-processor only registers a property source; it must not write the global resolver.
-	 *
 	 * <p>Regression context: an earlier revision published {@code environment::getProperty} globally, so
 	 * any test instantiating a {@code SpringApplication} rewrote global state and made
 	 * {@code VipConfigPathTest} read the previous case's {@code StandardEnvironment}. The resolver is
@@ -116,7 +110,6 @@ class LegacyPropertySourcePrecedenceTest {
 	/**
 	 * 写入一份最小 main.properties 并返回配置根目录。
 	 * Writes a minimal main.properties and returns the configuration root.
-	 *
 	 * @param content 文件内容 / file content
 	 * @return 配置根目录 / configuration root
 	 * @throws Exception 写入失败 / when writing fails
@@ -135,7 +128,6 @@ class LegacyPropertySourcePrecedenceTest {
 	 * 构造指向临时配置目录的环境，命令行源模拟真实启动时的最高优先级来源。
 	 * Builds an environment pointing at the temporary config directory; the command-line source
 	 * stands in for the highest-precedence source of a real startup.
-	 *
 	 * @param configDir 配置根目录 / configuration root
 	 * @return 环境 / environment
 	 */

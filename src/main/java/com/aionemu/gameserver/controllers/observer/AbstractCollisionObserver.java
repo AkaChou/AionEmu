@@ -15,9 +15,7 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 /**
  * 抽象碰撞观察者：在移动时对几何体做射线检测并回调。
  * Abstract collision observer: ray-tests geometry on move and invokes a callback.
- *
  * @author MrPoke
- * @moved Rolandas
  */
 public abstract class AbstractCollisionObserver extends ActionObserver {
 
@@ -37,7 +35,6 @@ public abstract class AbstractCollisionObserver extends ActionObserver {
 	/**
 	 * 默认 PASS 检测类型构造。
 	 * Constructor with default PASS check type.
-	 *
 	 * @param creature 被观察生物 / observed creature
 	 * @param geometry 碰撞几何体 / collision geometry
 	 * @param intentions 碰撞意图掩码 / collision intention mask
@@ -105,7 +102,6 @@ public abstract class AbstractCollisionObserver extends ActionObserver {
 	/**
 	 * 移动检测完成后的回调。
 	 * Callback after a move collision check completes.
-	 *
 	 * @param result 碰撞检测结果 / collision results
 	 */
 	public abstract void onMoved(CollisionResults result);

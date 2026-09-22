@@ -34,7 +34,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 发送 GM 面板指令的客户端包。
  * Client packet that dispatches GM panel commands.
- *
  * @author Ever', Magenik, Alcapwnd
  */
 public class CM_GM_COMMAND_SEND extends AionClientPacket {
@@ -46,7 +45,6 @@ public class CM_GM_COMMAND_SEND extends AionClientPacket {
 	/**
 	 * 构造客户端包实例。
 	 * Constructs a new client packet instance.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余允许状态 / additional allowed states

@@ -40,7 +40,6 @@ import java.util.concurrent.ScheduledFuture;
 /**
  * 攻城战相关 NPC AI：Artifact（@AIName "artifact"），继承 NpcAI2。
  * Siege-related NPC AI: Artifact (@AIName "artifact"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("artifact")

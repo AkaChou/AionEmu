@@ -25,7 +25,6 @@ import org.w3c.dom.NodeList;
  * 锁定“征服之祭物”击杀段在玩家可达世界按活动时段刷出的刷怪契约。
  * Locks the spawn contract that keeps the Conquest/Offering hunt stage of quest 15321/25321 solvable inside the
  * player-reachable Inggison/Gelkmaros worlds while the scheduled event runs.
- *
  * <p>背景：真端把 4.8 Rotation（征服之祭物）刷怪点登记在大师服镜像地图 LF4_M/DF4_M（世界 210130000/220140000），
  * 单机 emulator 没有大师服入口，因此 15321/25321 第 3 段原先没有可达的击杀目标。修复方式是把同一活动
  * (conquest id 1/2) 的击杀目标补登记到可玩世界 210050000/220070000，不改变活动本身的排程与状态机。</p>
@@ -116,7 +115,6 @@ class QuestConquestOfferingSpawnDataTest {
 			.collect(Collectors.toSet());
 	}
 
-	/** 汇总指定征服活动 id 的 CONQUEST 状态刷怪：声明世界、NPC 集合与点位数量。 */
 	/** Collects the CONQUEST-state spawns of one conquest id: declared worlds, npc ids and spot count. */
 	private static EventSpawn conquestEventSpawn(String fileName, int conquestId) throws Exception {
 		Set<Integer> worlds = new LinkedHashSet<>();
@@ -143,8 +141,7 @@ class QuestConquestOfferingSpawnDataTest {
 		return new EventSpawn(Set.copyOf(worlds), Set.copyOf(npcIds), spots);
 	}
 
-	/** 读取任务 XML 中全部 kill-npc 事件声明的 NPC id。 */
-	/** Reads every npc id declared by kill-npc events of the quest XML. */
+    /** Reads every npc id declared by kill-npc events of the quest XML. */
 	private static Set<Integer> questKillTargets(int questId) throws Exception {
 		Set<Integer> targets = new LinkedHashSet<>();
 		for (Element event : elements(parse(QUESTS.resolve(questId + ".xml")).getElementsByTagName("kill-npc"))) {

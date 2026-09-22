@@ -10,7 +10,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Dark Poeta 副本 NPC AI：Telepathy Controller（@AIName "telepathycontroller"），继承 AggressiveNpcAI2。
  * Dark Poeta instance NPC AI: Telepathy Controller (@AIName "telepathycontroller"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("telepathycontroller")

@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 通知客户端学会新配方的服务端包。
  * Server packet notifying the client that a new recipe has been learned.
- *
  * @author lord_rex
  */
 @AllArgsConstructor

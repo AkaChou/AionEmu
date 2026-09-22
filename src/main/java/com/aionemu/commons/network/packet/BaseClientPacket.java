@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 客户端数据包基类，提供缓冲读取与处理流程。
  * Client-side packet base providing buffer reads and processing flow.
- *
  * @param <T> 连接类型 / Connection type
  */
 @Slf4j
@@ -29,7 +28,6 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
     /**
      * 使用缓冲与操作码构造。
      * Construct with buffer and opcode.
-     *
      * @param buf 数据缓冲 / Data buffer
      * @param opcode 操作码 / Opcode
      */
@@ -41,7 +39,6 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
     /**
      * 使用操作码构造。
      * Construct with opcode.
-     *
      * @param opcode 操作码 / Opcode
      */
     public BaseClientPacket(int opcode) {
@@ -51,7 +48,6 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
     /**
      * 设置数据缓冲。
      * Set data buffer.
-     *
      * @param buf 数据缓冲 / Data buffer
      */
     public void setBuffer(ByteBuffer buf) {
@@ -61,7 +57,6 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
     /**
      * 设置客户端连接。
      * Set client connection.
-     *
      * @param client 客户端连接 / Client connection
      */
     public void setConnection(T client) {
@@ -71,7 +66,6 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
     /**
      * 读取数据包内容。
      * Read packet content.
-     *
      * @return 是否读取成功 / Whether reading succeeded
      */
     public final boolean read() {
@@ -97,7 +91,6 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
     /**
      * 获取剩余可读字节数。
      * Get remaining readable bytes.
-     *
      * @return 剩余字节数 / Remaining bytes
      */
     public final int getRemainingBytes() {
@@ -107,7 +100,6 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
     /**
      * 读取 32 位整数。
      * Read 32-bit integer.
-     *
      * @return 整数值，失败返回 0 / Integer value, 0 on failure
      */
     protected final int readD() {
@@ -122,7 +114,6 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
     /**
      * 读取 8 位无符号字节。
      * Read 8-bit unsigned byte.
-     *
      * @return 字节值，失败返回 0 / Byte value, 0 on failure
      */
     protected final int readC() {
@@ -137,7 +128,6 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
     /**
      * 读取 8 位有符号字节。
      * Read 8-bit signed byte.
-     *
      * @return 字节值，失败返回 0 / Byte value, 0 on failure
      */
     protected final byte readSC() {
@@ -152,7 +142,6 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
     /**
      * 读取 16 位有符号短整数。
      * Read 16-bit signed short.
-     *
      * @return 短整数值，失败返回 0 / Short value, 0 on failure
      */
     protected final short readSH() {
@@ -167,7 +156,6 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
     /**
      * 读取 16 位无符号短整数。
      * Read 16-bit unsigned short.
-     *
      * @return 短整数值，失败返回 0 / Short value, 0 on failure
      */
     protected final int readH() {
@@ -182,7 +170,6 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
     /**
      * 读取双精度浮点数。
      * Read double-precision float.
-     *
      * @return 双精度值，失败返回 0 / Double value, 0 on failure
      */
     protected final double readDF() {
@@ -197,7 +184,6 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
     /**
      * 读取单精度浮点数。
      * Read single-precision float.
-     *
      * @return 单精度值，失败返回 0 / Float value, 0 on failure
      */
     protected final float readF() {
@@ -212,7 +198,6 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
     /**
      * 读取 64 位长整数。
      * Read 64-bit long.
-     *
      * @return 长整数值，失败返回 0 / Long value, 0 on failure
      */
     protected final long readQ() {
@@ -227,7 +212,6 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
     /**
      * 读取 UTF-16LE 字符串（以 \\0 结尾）。
      * Read UTF-16LE string terminated by \\0.
-     *
      * @return 字符串值 / String value
      */
     protected final String readS() {
@@ -248,7 +232,6 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
     /**
      * 读取指定长度字节数组。
      * Read byte array of given length.
-     *
      * @param length 字节长度 / Byte length
      * @return 字节数组 / Byte array
      */
@@ -267,7 +250,6 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
     /**
      * 按十六进制模板长度读取字节数组。
      * Read byte array sized by hexadecimal template length.
-     *
      * @param string 十六进制模板 / Hexadecimal template
      * @return 字节数组 / Byte array
      */
@@ -297,7 +279,6 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
     /**
      * 获取客户端连接。
      * Get client connection.
-     *
      * @return 客户端连接 / Client connection
      */
     public final T getConnection() {

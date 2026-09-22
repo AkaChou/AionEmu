@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 取消当前交易的客户端包。
  * Client packet that cancels the current exchange.
- *
  * @author -Avol-
  */
 public class CM_EXCHANGE_CANCEL extends AionClientPacket {
@@ -17,7 +16,6 @@ public class CM_EXCHANGE_CANCEL extends AionClientPacket {
 	/**
 	 * 构造客户端包实例。
 	 * Constructs a new client packet instance.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余允许状态 / additional allowed states

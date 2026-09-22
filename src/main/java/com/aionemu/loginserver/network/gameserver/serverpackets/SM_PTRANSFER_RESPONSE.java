@@ -10,7 +10,6 @@ import com.aionemu.loginserver.service.ptransfer.PlayerTransferTask;
 /**
  * LS→GS：角色跨服转移结果/指令响应（按状态分发不同载荷）。
  * LS→GS: player transfer result/command response (payload varies by result status).
- *
  * @author KID
  */
 public class SM_PTRANSFER_RESPONSE extends GsServerPacket {
@@ -49,7 +48,6 @@ public class SM_PTRANSFER_RESPONSE extends GsServerPacket {
     /**
      * 构造成功类响应（仅任务 ID）。
      * Constructs an OK-style response (task id only).
-     *
      * @param result 结果状态 / result status
      * @param taskId 任务 ID / task id
      */
@@ -61,7 +59,6 @@ public class SM_PTRANSFER_RESPONSE extends GsServerPacket {
     /**
      * 构造发送角色信息响应。
      * Constructs a SEND_INFO response with transfer request payload.
-     *
      * @param result 结果状态 / result status
      * @param request 转移请求 / transfer request
      */
@@ -75,7 +72,6 @@ public class SM_PTRANSFER_RESPONSE extends GsServerPacket {
     /**
      * 构造错误响应（含原因）。
      * Constructs an ERROR response with reason text.
-     *
      * @param result 结果状态 / result status
      * @param taskId 任务 ID / task id
      * @param reason 错误原因 / error reason
@@ -89,7 +85,6 @@ public class SM_PTRANSFER_RESPONSE extends GsServerPacket {
     /**
      * 构造执行转移动作响应。
      * Constructs a PERFORM_ACTION response with transfer task payload.
-     *
      * @param result 结果状态 / result status
      * @param task 转移任务 / transfer task
      */

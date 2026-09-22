@@ -14,7 +14,6 @@ import com.aionemu.gameserver.model.templates.shield.ShieldTemplate;
 /**
  * 护盾模板数据容器，持有全部 ShieldTemplate 列表。
  * Shield template data holder storing the full ShieldTemplate list.
- *
  * @author Wakizashi
  */
 @XmlRootElement(name = "shields")
@@ -27,7 +26,6 @@ public class ShieldData {
 	/**
 	 * 返回护盾模板数量；列表为空时初始化为空列表并返回 0。
 	 * Returns the number of shield templates; initializes an empty list and returns 0 when null.
-	 *
 	 * @return shield templates; initializes an empty list and returns 0 when null数量 / Returns the number of shield templates; initializes an empty list and returns 0 when null.
 	 */
 	public int size() {
@@ -41,7 +39,6 @@ public class ShieldData {
 	/**
 	 * 返回护盾模板列表；为空时返回新空列表。
 	 * Returns the shield template list; returns a new empty list when null.
-	 *
 	 * @return 护盾模板列表 / shield template list
 	 */
 	public List<ShieldTemplate> getShieldTemplates() {
@@ -54,7 +51,6 @@ public class ShieldData {
 	/**
 	 * 批量追加护盾模板。
 	 * Appends all given shield templates.
-	 *
 	 * @param templates 待追加的模板集合 / templates to append
 	 */
 	public void addAll(Collection<ShieldTemplate> templates) {

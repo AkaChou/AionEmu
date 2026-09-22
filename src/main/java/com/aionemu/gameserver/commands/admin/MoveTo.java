@@ -9,7 +9,6 @@ import com.aionemu.gameserver.world.WorldMapType;
 /**
  * 将管理员传送到指定世界坐标的管理员命令。
  * Admin command to teleport the admin to given world coordinates.
- *
  * @author KID
  */
 public class MoveTo extends AdminCommand {
@@ -25,7 +24,6 @@ public class MoveTo extends AdminCommand {
 	/**
 	 * 传送到 {@code worldId X Y Z}。
 	 * Teleport to {@code worldId X Y Z}.
-	 *
 	 * @param admin 执行 GM / Admin player
 	 * @param params 世界 ID 与坐标 / World id and coordinates
 	 */
@@ -62,7 +60,6 @@ public class MoveTo extends AdminCommand {
 	/**
 	 * 参数错误时显示语法。
 	 * Show syntax when parameters are invalid.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

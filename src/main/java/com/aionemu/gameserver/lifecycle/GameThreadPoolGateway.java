@@ -27,7 +27,6 @@ public class GameThreadPoolGateway {
     /**
      * 注入 ThreadPoolManager 提供者。
      * Inject the ThreadPoolManager provider.
-     *
      * @param threadPoolManagerProvider ThreadPoolManager 提供者 / ThreadPoolManager provider
      */
     @Autowired(required = false)
@@ -38,7 +37,6 @@ public class GameThreadPoolGateway {
     /**
      * 注入核心服务运行时桥提供者。
      * Inject the core-services runtime-bridge provider.
-     *
      * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
      */
     @Autowired(required = false)
@@ -65,7 +63,6 @@ public class GameThreadPoolGateway {
     /**
      * 解析 ThreadPoolManager 并缓存解析结果。
      * Resolve ThreadPoolManager and remember the resolved instance.
-     *
      * @return ThreadPoolManager 实例 / ThreadPoolManager instance
      */
     private ThreadPoolManager threadPoolManager() {
@@ -80,7 +77,6 @@ public class GameThreadPoolGateway {
     /**
      * 解析核心服务运行时桥：优先 Spring，否则新建。
      * Resolve the core-services runtime bridge: prefer Spring, otherwise create new.
-     *
      * @return 运行时桥 / Runtime bridge
      */
     private GameCoreServicesRuntimeBridge runtimeBridge() {

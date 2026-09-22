@@ -23,7 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 聊天业务服务：玩家令牌注册、连接认证、频道加入与禁言管理。
  * Chat business service: player token registration, connection auth, channel join, and gag management.
- *
  * @author ATracer
  */
 @Slf4j
@@ -32,7 +31,6 @@ public class ChatService {
     /**
      * 获取单例（已废弃，迁移至 Boot 后请使用注入）。
      * Return the singleton (deprecated; prefer injection after Boot migration).
-     *
      * @return 单例实例 / singleton instance
      * @deprecated boot-migration
      */
@@ -55,7 +53,6 @@ public class ChatService {
     /**
      * 使用指定广播服务构造。
      * Construct with the given broadcast service.
-     *
      * @param broadcastService Broadcast service
      */
     public ChatService(BroadcastService broadcastService) {
@@ -65,7 +62,6 @@ public class ChatService {
     /**
      * 由游戏服侧注册玩家并生成认证令牌。
      * Register a player from the game-server side and generate an auth token.
-     *
      * @param playerId 玩家 ID / player id
      * @param playerLogin 登录账号 / login account
      * @param nick 角色昵称 / nickname
@@ -87,7 +83,6 @@ public class ChatService {
     /**
      * 将动态随机段与账号摘要拼接为 48 字节令牌。
      * Build a 48-byte token from a random dynamic segment and the account digest.
-     *
      * @param accountToken 账号摘要 / account digest
      * @return 完整令牌 / full token
      */
@@ -108,7 +103,6 @@ public class ChatService {
     /**
      * 处理客户端侧连接认证：校验令牌并绑定通道处理器。
      * Handle client-side connection auth: verify token and bind the channel handler.
-     *
      * @param playerId 玩家 ID / player id
      * @param token 认证令牌 / auth token
      * @param identifier 标识字节 / identifier bytes
@@ -137,7 +131,6 @@ public class ChatService {
     /**
      * 将玩家加入指定频道（群组类频道避免重复加入）。
      * Join the player to the given channel (group channels avoid duplicate joins).
-     *
      * @param chatClient 聊天客户端 / chat client
      * @param channelIndex 频道索引 / channel index
      * @param channelIdentifier 频道标识 / channel identifier
@@ -160,7 +153,6 @@ public class ChatService {
     /**
      * 玩家下线：移除会话、广播集合并关闭通道。
      * Player logout: remove session, leave broadcast set, and close the channel.
-     *
      * @param playerId 玩家 ID / player id
      */
     public void playerLogout(int playerId) {
@@ -179,7 +171,6 @@ public class ChatService {
     /**
      * 对在线玩家设置禁言截止时间。
      * Set gag end time for an online player.
-     *
      * @param playerId 玩家 ID / player id
      * @param gagTime 禁言截止时间戳 / gag end timestamp
      */

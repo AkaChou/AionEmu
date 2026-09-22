@@ -24,7 +24,6 @@ import java.util.Set;
 /**
  * 永恒档案库副本事件处理器。
  * Instance event handler for Archives Of Eternity.
- *
  * @author Encom
  */
 
@@ -42,7 +41,6 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 	/**
 	 * 永恒档案库秘密房间的密码背包位置。
 	 * Cryptograph Cube positions in the Archives Of Eternity secret rooms.
-	 *
 	 * <p>这些坐标与零售 condition-spawn 数据一致；每次副本只生成其中一个密码背包。
 	 * These coordinates match the retail condition-spawn data; one cube is spawned per instance.</p>
 	 */
@@ -62,7 +60,6 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -119,7 +116,6 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -183,7 +179,6 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -227,7 +222,6 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -260,7 +254,6 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
-	 *
 	 * @param msg 消息 / message
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
@@ -278,7 +271,6 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override

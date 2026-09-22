@@ -8,7 +8,6 @@ public interface QuestTimerPort {
 	 * 启动玩家可见任务计时器；超时由权威客户端/引擎 {@code QuestTimerEnd} 回调。
 	 * Starts a player-visible quest timer; timeout is reported by the authoritative
 	 * client/engine {@code QuestTimerEnd} callback.
-	 *
 	 * @return true 表示已启动；false 表示玩家离线/失败（best-effort） / true if started; false if the player is offline or it failed (best-effort)
 	 */
 	boolean startQuestTimer(QuestSnapshot snapshot, QuestMutationPlan plan, int seconds, QuestTimerPolicy policy);

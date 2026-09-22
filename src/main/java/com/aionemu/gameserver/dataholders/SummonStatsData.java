@@ -43,7 +43,6 @@ public class SummonStatsData {
 	/**
 	 * 按 NPC ID 与等级获取召唤物属性模板；未命中时回退到内置默认哈希序列。
 	 * Returns the summon stats template for the given npc id and level; falls back to a built-in hash sequence on miss.
-	 *
 	 * @param npcId NPC ID / npc id
 	 * @param level 等级 / level
 	 * @return 召唤属性模板，可能为 null / summon stats template, may be null
@@ -166,7 +165,6 @@ public class SummonStatsData {
 	/**
 	 * 返回已加载的召唤属性模板数量。
 	 * Returns the number of loaded summon stats templates.
-	 *
 	 * @return 已加载的召唤物属性模板数量 / Returns the number of loaded summon stats templates.
 	 */
 	public int size() {
@@ -184,8 +182,6 @@ public class SummonStatsData {
          * -- GETTER --
          *  返回暗属性 NPC ID。
          *  Returns the dark-side npc id.
-         *
-         * @return 暗属性 NPC ID / dark-side npc id
          */
         @XmlAttribute(name = "npc_id_dark", required = true)
 		private int npcIdDark;
@@ -194,8 +190,6 @@ public class SummonStatsData {
          * -- GETTER --
          *  返回光属性 NPC ID。
          *  Returns the light-side npc id.
-         *
-         * @return 光属性 NPC ID / light-side npc id
          */
         @XmlAttribute(name = "npc_id_light", required = true)
 		private int npcIdLight;
@@ -204,8 +198,6 @@ public class SummonStatsData {
          * -- GETTER --
          *  返回需求等级。
          *  Returns the required level.
-         *
-         * @return 所需等级 / Returns the required level.
          */
         @XmlAttribute(name = "level", required = true)
 		private int requiredLevel;
@@ -214,8 +206,6 @@ public class SummonStatsData {
          * -- GETTER --
          *  返回召唤属性模板。
          *  Returns the summon stats template.
-         *
-         * @return 召唤物属性模板 / Returns the summon stats template.
          */
         @XmlElement(name = "stats_template")
 		private SummonStatsTemplate template;

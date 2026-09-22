@@ -8,7 +8,6 @@ import lombok.Setter;
 /**
  * MAC 封禁条目。
  * Banned MAC entry.
- *
  * @author KID
  */
 @Getter
@@ -36,7 +35,6 @@ public class BannedMacEntry {
     /**
      * 按地址与到期毫秒构造。
      * Constructs entry from address and end time in millis.
-     *
      * @param address MAC 地址 / MAC address
      * @param newTime 到期时间（毫秒） / End time in millis
      */
@@ -48,7 +46,6 @@ public class BannedMacEntry {
     /**
      * 按地址、到期时间与备注构造。
      * Constructs entry from address, end timestamp and details.
-     *
      * @param address MAC 地址 / MAC address
      * @param time 到期时间 / End timestamp
      * @param details 封禁备注 / Ban details
@@ -62,7 +59,6 @@ public class BannedMacEntry {
     /**
      * 更新到期时间。
      * Updates ban end time.
-     *
      * @param newTime 到期时间（毫秒） / End time in millis
      */
     public final void updateTime(long newTime) {
@@ -72,7 +68,6 @@ public class BannedMacEntry {
     /**
      * 返回到期时间（兼容旧 API）。
      * Returns end time (legacy API alias).
-     *
      * @return 到期时间 / End timestamp
      */
     public final Timestamp getTime() {
@@ -82,7 +77,6 @@ public class BannedMacEntry {
     /**
      * 判断封禁是否仍生效。
      * Checks whether the ban is still active.
-     *
      * @return 若仍在生效则为 true / True if still active
      */
     public final boolean isActive() {
@@ -92,7 +86,6 @@ public class BannedMacEntry {
     /**
      * 判断在指定时间点是否仍生效。
      * Checks whether the ban is still active until the given time.
-     *
      * @param time 比较时间（毫秒） / Time in millis
      * @return 若仍在生效则为 true / True if still active
      */

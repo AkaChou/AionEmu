@@ -12,9 +12,7 @@ import com.aionemu.gameserver.services.player.PlayerService;
 /**
  * 检查角色昵称是否可用的客户端包。
  * Client packet that checks whether a character nickname is available.
- *
  * @author -Nemesiss-
- * @modified cura
  */
 public class CM_CHECK_NICKNAME extends AionClientPacket {
 
@@ -24,7 +22,6 @@ public class CM_CHECK_NICKNAME extends AionClientPacket {
 	/**
 	 * 构造客户端包实例。
 	 * Constructs a new client packet instance.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余允许状态 / additional allowed states

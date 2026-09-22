@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Iron Wall Warfront 副本 NPC AI：IDF5 TD War Chief D（@AIName "IDF5TDWar_chief_d"），继承 AggressiveNpcAI2。
  * Iron Wall Warfront instance NPC AI: IDF5 TD War Chief D (@AIName "IDF5TDWar_chief_d"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("IDF5TDWar_chief_d")

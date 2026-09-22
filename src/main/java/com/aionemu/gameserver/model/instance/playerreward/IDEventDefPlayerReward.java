@@ -13,9 +13,6 @@ import lombok.Setter;
 public class IDEventDefPlayerReward extends InstancePlayerReward {
 	/** 返回 score ap / Returns the score ap */
 	private int scoreAP;
-	/**
-	 * @return 是否已奖励 / whether rewarded
-	 */
 	private boolean isRewarded = false;
 	/**
 	 * 获取 WrapCashID 活动 DefLiveS 军阶。

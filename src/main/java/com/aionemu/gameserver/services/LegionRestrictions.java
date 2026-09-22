@@ -23,13 +23,11 @@ import lombok.extern.slf4j.Slf4j;
  * 军团判权与入团申请域：创建/邀请/踢人/权限/仓库/入团申请的校验与流程实现。
  * Legion restriction domain: permission checks and the join-request flow for create, invite, kick,
  * rights, warehouse and join requests.
- *
  * <p>本类从 {@link LegionService} 拆出，作为其内部判权与入团申请实现；对外调用仍统一经
  * {@link LegionService} 门面，公开方法签名保持不变。
  * Split out of {@link LegionService} as its internal permission/join-request implementation.
  * External callers keep going through the {@link LegionService} facade, whose public signatures
  * are unchanged.</p>
- *
  * @author Simple
  */
 @Slf4j
@@ -41,7 +39,6 @@ final class LegionRestrictions {
 	/**
 	 * 绑定宿主军团服务。
 	 * Binds the hosting legion service.
-	 *
 	 * @param service 军团服务 / legion service
 	 */
 	LegionRestrictions(LegionService service) {
@@ -74,10 +71,6 @@ final class LegionRestrictions {
 	/**
 	 * 检查创建军团的全部限制条件。
 	 * This method checks all restrictions for legion creation
-	 *
-	 * @param activePlayer
-	 * @param legionName
-	 *
 	 * @return 允许 / 成功则为 true / true if allow to create a legion
 	 */
 	boolean canCreateLegion(Player activePlayer, String legionName, Npc creatorNpc) {
@@ -104,10 +97,6 @@ final class LegionRestrictions {
 	/**
 	 * 检查邀请玩家加入军团的全部限制条件。
 	 * This method checks all restrictions for invite player to legion
-	 *
-	 * @param activePlayer
-	 * @param targetPlayer
-	 *
 	 * @return 允许 / 成功则为 true / true if can invite player
 	 */
 	boolean canInvitePlayer(Player activePlayer, Player targetPlayer) {
@@ -138,18 +127,10 @@ final class LegionRestrictions {
 	/**
 	 * 检查将玩家踢出军团的全部限制条件。
 	 * This method checks all restrictions for kicking a player from a legion
-	 *
-	 * @param activePlayer
-	 * @param charName
-	 *
 	 * @return 允许 / 成功则为 true / true if can kick player
 	 */
 	boolean canKickPlayer(Player activePlayer, String charName) {
-		/**
-	 * 从缓存获取 LegionMemberEx，离线则读库。
-	 * Get LegionMemberEx from cache or database if offline
-	 */
-		LegionMemberEx legionMember = service.getLegionMemberEx(charName);
+        LegionMemberEx legionMember = service.getLegionMemberEx(charName);
 		if (legionMember == null) {
 			log.error(I18n.get("log.10437023e015", charName));
 			return false;
@@ -183,10 +164,6 @@ final class LegionRestrictions {
 	/**
 	 * 检查任命军团长的全部限制条件。
 	 * This method checks all restrictions for appointing brigade general
-	 *
-	 * @param activePlayer
-	 * @param targetPlayer
-	 *
 	 * @return 允许 / 成功则为 true / true if can appoint brigade general
 	 */
 	boolean canAppointBrigadeGeneral(Player activePlayer, Player targetPlayer) {
@@ -206,10 +183,6 @@ final class LegionRestrictions {
 	/**
 	 * 检查任命军阶的全部限制条件。
 	 * This method checks all restrictions for appointing rank
-	 *
-	 * @param activePlayer
-	 * @param targetObjId
-	 *
 	 * @return 允许 / 成功则为 true / true if can appoint rank
 	 */
 	boolean canAppointRank(Player activePlayer, int targetObjId) {
@@ -229,10 +202,6 @@ final class LegionRestrictions {
 	/**
 	 * 检查修改自我介绍的全部限制条件。
 	 * This method checks all restrictions for changing self intro
-	 *
-	 * @param activePlayer
-	 * @param newSelfIntro
-	 *
 	 * @return 允许 / 成功则为 true / true if allowed to change self intro
 	 */
 	boolean canChangeSelfIntro(Player activePlayer, String newSelfIntro) {
@@ -242,10 +211,6 @@ final class LegionRestrictions {
 	/**
 	 * 检查变更军团等级的全部限制条件。
 	 * This method checks all restrictions for changing legion level
-	 *
-	 * @param activePlayer
-	 *
-	 * @param activePlayer
 	 * @return 允许 / 成功则为 true / true if allowed to change legion level
 	 */
 	boolean canChangeLevel(Player activePlayer) {
@@ -278,8 +243,6 @@ final class LegionRestrictions {
 	/**
 	 * 处理军团相关逻辑。
 	 * This method will check all restrictions for changing nickname
-	 *
-	 * @param legion
 	 * @return true if allowed to change nickname of target player
 	 */
 	boolean canChangeNickname(Legion legion, int targetObjectId, String newNickname) {
@@ -293,10 +256,6 @@ final class LegionRestrictions {
 	/**
 	 * 检查修改公告的全部限制条件。
 	 * This method checks all restrictions for changing announcements
-	 *
-	 * @param legionMember
-	 * @param announcement
-	 *
 	 * @return 允许 / 成功则为 true / true if can change announcement
 	 */
 	boolean canChangeAnnouncement(LegionMember legionMember, String announcement) {
@@ -307,10 +266,6 @@ final class LegionRestrictions {
 	/**
 	 * 检查解散军团的全部限制条件。
 	 * This method checks all restrictions for disband legion
-	 *
-	 * @param activePlayer
-	 * @param legion
-	 *
 	 * @return 允许 / 成功则为 true / true if can disband legion
 	 */
 	boolean canDisbandLegion(Player activePlayer, Legion legion) {
@@ -339,10 +294,6 @@ final class LegionRestrictions {
 	/**
 	 * 检查离开军团的全部限制条件。
 	 * This method checks all restrictions for leaving
-	 *
-	 * @param activePlayer
-	 *
-	 * @param activePlayer
 	 * @return 允许 / 成功则为 true / true if allowed to leave
 	 */
 	boolean canLeave(Player activePlayer) {
@@ -357,7 +308,6 @@ final class LegionRestrictions {
 	/**
 	 * 是否允许修改入团设置（仅旅长）。
 	 * Whether the player may change join settings (brigade general only).
-	 *
 	 * @param activePlayer 操作玩家 / Acting player
 	 * @return 允许修改时为 {@code true} / {@code true} if allowed
 	 */
@@ -368,10 +318,6 @@ final class LegionRestrictions {
 	/**
 	 * 检查重建军团的全部限制条件。
 	 * This method checks all restrictions for recreate legion
-	 *
-	 * @param activePlayer
-	 * @param legion
-	 *
 	 * @return 允许 / 成功则为 true / true if allowed to recreate legion
 	 */
 	boolean canRecreateLegion(Player activePlayer, Legion legion) {
@@ -386,10 +332,6 @@ final class LegionRestrictions {
 	/**
 	 * 检查上传徽章信息的全部限制条件。
 	 * This method checks all restrictions for upload emblem info
-	 *
-	 * @param activePlayer
-	 *
-	 * @param activePlayer
 	 * @return 允许 / 成功则为 true / true if allowed to upload emblem info
 	 */
 	boolean canUploadEmblemInfo(Player activePlayer) {
@@ -408,10 +350,6 @@ final class LegionRestrictions {
 	/**
 	 * 检查上传徽章的全部限制条件。
 	 * This method checks all restrictions for uploading emblem
-	 *
-	 * @param activePlayer
-	 *
-	 * @param activePlayer
 	 * @return 允许 / 成功则为 true / true if allowed to upload emblem
 	 */
 	boolean canUploadEmblem(Player activePlayer) {
@@ -428,7 +366,6 @@ final class LegionRestrictions {
 	/**
 	 * 是否允许打开军团仓库（成员状态、解散中、配置与占用锁）。
 	 * Whether the player may open the legion warehouse (membership, disband, config, lock).
-	 *
 	 * @param player 操作玩家 / Acting player
 	 * @return 允许打开时为 {@code true} / {@code true} if allowed
 	 */
@@ -458,7 +395,6 @@ final class LegionRestrictions {
 	/**
 	 * 是否允许保存军团徽章（ID 范围、等级与基纳）。
 	 * Whether the player may store a legion emblem (id range, level and kinah).
-	 *
 	 * @param activePlayer 操作玩家 / Acting player
 	 * @param legionId 军团 ID / Legion ID
 	 * @param emblemId 徽章模板 ID / Emblem template ID
@@ -485,9 +421,6 @@ final class LegionRestrictions {
 
 	/**
 	 * 检查玩家是否为军团长，否则返回提示消息。 / Check whether the player is the brigade general and return a message otherwise.
-	 *
-	 * @param player
-	 * @return
 	 */
 	private boolean isBrigadeGeneral(Player player) {
 		return player.getLegionMember().isBrigadeGeneral();
@@ -495,10 +428,6 @@ final class LegionRestrictions {
 
 	/**
 	 * 检查是否目标为相同作为当前玩家。 / Checks if target is same as current player
-	 *
-	 * @param player
-	 * @param targetObjId
-	 * @return
 	 */
 	private boolean isSelf(Player player, int targetObjId) {
 		return player.sameObjectId(targetObjId);
@@ -506,7 +435,6 @@ final class LegionRestrictions {
 
 	/**
 	 * 检查是否名称为已经占用与否。 / Checks if name is already taken or not
-	 *
 	 * @param name character name
 	 * @return true if is free, false in other case
 	 */
@@ -516,7 +444,6 @@ final class LegionRestrictions {
 
 	/**
 	 * 检查是否自我介绍为有效 . 其应包含仅英文字母。 / Checks if a self intro is valid. It should contain only english letters
-	 *
 	 * @param name character name
 	 * @return true if name is valid, false overwise
 	 */
@@ -526,7 +453,6 @@ final class LegionRestrictions {
 
 	/**
 	 * 检查是否昵称为有效 . 其应包含仅英文字母。 / Checks if a nickname is valid. It should contain only english letters
-	 *
 	 * @param name character name
 	 * @return true if name is valid, false overwise
 	 */
@@ -536,7 +462,6 @@ final class LegionRestrictions {
 
 	/**
 	 * 检查是否公告为有效 . 其应包含仅英文字母。 / Checks if a announcement is valid. It should contain only english letters
-	 *
 	 * @param name announcement
 	 * @return true if name is valid, false overwise
 	 */
@@ -547,7 +472,6 @@ final class LegionRestrictions {
 	/**
 	 * 记录军团仓库存取物品历史（存入/取出）。
 	 * Records legion warehouse item deposit/withdraw history.
-	 *
 	 * @param player Acting player
 	 * @param itemId Item template id
 	 * @param count Count
@@ -561,7 +485,6 @@ final class LegionRestrictions {
 	/**
 	 * 处理军团搜索：type=0 全量缓存，type=1 按名称模糊匹配。
 	 * Handles legion search: type 0 all cached, type 1 name contains filter.
-	 *
 	 * Requesting player
 	 * @param type 搜索类型 / Search type
 	 * @param legionName 名称关键字 / Name keyword
@@ -573,7 +496,6 @@ final class LegionRestrictions {
 	/**
 	 * 设置军团入团说明（仅旅长），并同步客户端与数据库。
 	 * Sets the legion join description (brigade general only) and syncs client/DB.
-	 *
 	 * @param player Acting player
 	 * @param description Join description
 	 */
@@ -584,7 +506,6 @@ final class LegionRestrictions {
 	/**
 	 * 设置军团入团类型（仅旅长），并同步客户端与数据库。
 	 * Sets the legion join type (brigade general only) and syncs client/DB.
-	 *
 	 * @param player Acting player
 	 * @param joinType Join type
 	 */
@@ -595,7 +516,6 @@ final class LegionRestrictions {
 	/**
 	 * 设置入团最低等级（仅旅长），并同步客户端与数据库。
 	 * Sets the minimum join level (brigade general only) and syncs client/DB.
-	 *
 	 * @param player Acting player
 	 * @param minLevel Minimum level
 	 */
@@ -606,7 +526,6 @@ final class LegionRestrictions {
 	/**
 	 * 向玩家发送当前入团申请对应的军团信息包。
 	 * Sends the join-request legion info packet to the player.
-	 *
 	 * Target player
 	 * @param legionId 军团 ID，<=0 表示清空 / Legion id, <=0 clears
 	 */
@@ -617,7 +536,6 @@ final class LegionRestrictions {
 	/**
 	 * 玩家进世界时，按 CommonData 中的申请军团 ID 重发入团申请信息包。
 	 * On enter-world, resends join-request info using the legion id stored in CommonData.
-	 *
 	 * @param player Target player
 	 */
 	void sendLegionJoinRequestPacketonEnterWorld(Player player) {
@@ -627,7 +545,6 @@ final class LegionRestrictions {
 	/**
 	 * 处理玩家入团申请：申请入队、直接加入或拒绝招募。
 	 * Handles a player join request: apply, direct join, or reject if not recruiting.
-	 *
 	 * @param player Applying player
 	 * @param legionId Target legion id
 	 * @param joinType Join type
@@ -640,7 +557,6 @@ final class LegionRestrictions {
 	/**
 	 * 取消玩家对指定军团的入团申请，并通知旅长。
 	 * Cancels the player join request for a legion and notifies the brigade general.
-	 *
 	 * @param player Applying player
 	 * @param legionId Legion id
 	 */
@@ -651,7 +567,6 @@ final class LegionRestrictions {
 	/**
 	 * 玩家侧处理入团申请结果（接受则入团，拒绝则清理申请）。
 	 * Applies join-request answer on the player side (join on accept, clear on deny).
-	 *
 	 * @param player Applying player
 	 */
 	void handleJoinRequestGetAnswer(Player player) {
@@ -661,7 +576,6 @@ final class LegionRestrictions {
 	/**
 	 * 旅长批复入团申请：在线则即时处理，离线则写库状态。
 	 * Brigade general answers a join request: handles online immediately or persists offline state.
-	 *
 	 * @param brigadeGeneral Brigade general player
 	 * @param playerId Applicant object id
 	 * @param accept Whether accepted
@@ -673,7 +587,6 @@ final class LegionRestrictions {
 	/**
 	 * 校验军团名称是否合法（匹配配置的正则）。
 	 * Checks whether a legion name is valid (matches the configured pattern).
-	 *
 	 * @param name 军团名称 / Legion name
 	 * @return 合法返回 true，否则 false / True if valid, false otherwise
 	 */

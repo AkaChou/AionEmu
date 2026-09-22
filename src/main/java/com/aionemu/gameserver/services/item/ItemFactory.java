@@ -12,7 +12,6 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 /**
  * 物品工厂，按模板与数量创建物品实例。
  * Item factory creating item instances from templates and counts.
- *
  * @author ATracer
  */
 
@@ -23,7 +22,6 @@ public class ItemFactory {
 	/**
 	 * 创建物品实例。
 	 * Creates a new item instance.
-	 *
 	 * itemId
 	 * result
 	 */
@@ -39,7 +37,6 @@ public class ItemFactory {
 	/**
 	 * 创建物品实例。
 	 * Creates a new item instance.
-	 *
 	 * itemId
 	 * count
 	 * result

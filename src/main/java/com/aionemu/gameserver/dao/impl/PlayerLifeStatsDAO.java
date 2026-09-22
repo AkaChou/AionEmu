@@ -11,9 +11,7 @@ import java.sql.*;
 /**
  * 玩家生命状态 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerLifeStatsDAO.
- *
  * Updated for MySQL 8.
- *
  * @author Mr. Poke
  */
 @Slf4j
@@ -30,7 +28,6 @@ public class PlayerLifeStatsDAO extends com.aionemu.gameserver.dao.PlayerLifeSta
     /**
      * 加载玩家生命状态。
      * Loads player life stats.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -60,7 +57,6 @@ public class PlayerLifeStatsDAO extends com.aionemu.gameserver.dao.PlayerLifeSta
     /**
      * 插入玩家生命状态。
      * Inserts player life stats.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -85,7 +81,6 @@ public class PlayerLifeStatsDAO extends com.aionemu.gameserver.dao.PlayerLifeSta
     /**
      * 更新玩家生命状态。
      * Updates player life stats.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -121,7 +116,6 @@ public class PlayerLifeStatsDAO extends com.aionemu.gameserver.dao.PlayerLifeSta
     /**
      * 批量更新玩家生命状态。
      * Batch updates player life stats.
-     *
      * @param players 玩家集合 / players
      */
     public void updatePlayerLifeStats(Iterable<Player> players) {
@@ -168,7 +162,6 @@ public class PlayerLifeStatsDAO extends com.aionemu.gameserver.dao.PlayerLifeSta
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

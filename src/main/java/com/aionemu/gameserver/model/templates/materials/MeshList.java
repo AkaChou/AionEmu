@@ -60,7 +60,6 @@ public class MeshList {
 	/**
 	 * 查找指定网格路径对应的材料 ID。
 	 * Finds the material ID for the specific mesh.
-	 *
 	 * @param meshPath 网格几何路径 / Mesh geo path
 	 * @return 材料 ID，未找到时为 0 / material id, 0 if not found
 	 */

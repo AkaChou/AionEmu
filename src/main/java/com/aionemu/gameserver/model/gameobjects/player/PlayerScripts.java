@@ -22,7 +22,6 @@ import com.aionemu.gameserver.model.house.PlayerScript;
 /**
  * 玩家 Scripts 游戏对象。
  * Player Scripts game object.
- *
  * @author Rolandas
  */
 @Slf4j
@@ -162,7 +161,6 @@ public class PlayerScripts {
 	/**
 	 * 将文本以 UTF-16LE 编码后 Deflate 压缩。
 	 * Encode text as UTF-16LE and Deflate-compress it.
-	 *
 	 * @param text 源文本 / source text
 	 * @return 压缩字节 / compressed bytes
 	 * @throws Exception 压缩失败时 / on compress failure
@@ -192,7 +190,6 @@ public class PlayerScripts {
 	/**
 	 * 解压字节数组为 UTF-16LE 字符串。
 	 * Decompress a byte array into a UTF-16LE string.
-	 *
 	 * @param bytes 压缩数据 / compressed bytes
 	 * @return 解压后的文本 / decompressed text
 	 * @throws Exception 解压失败时 / on decompress failure

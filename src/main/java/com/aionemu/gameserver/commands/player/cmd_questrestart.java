@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：将进行中/待领奖任务变量重置并重新开始。
  * Player command: restarts an in-progress/reward quest by resetting its vars.
- *
  * @author ginho1
  */
 public class cmd_questrestart extends PlayerCommand {
@@ -28,7 +27,6 @@ public class cmd_questrestart extends PlayerCommand {
 	/**
 	 * 解析任务 ID，在允许范围内重置任务进度。
 	 * Parses quest id and restarts the quest when allowed.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 任务 ID / quest id
 	 */

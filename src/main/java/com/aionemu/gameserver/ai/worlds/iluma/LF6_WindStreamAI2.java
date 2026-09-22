@@ -17,7 +17,6 @@ import java.util.List;
 /**
  * Iluma 区域 NPC AI：LF6 Wind Stream（@AIName "LF6_WindStream"），继承 NpcAI2。
  * Iluma zone NPC AI: LF6 Wind Stream (@AIName "LF6_WindStream"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("LF6_WindStream")

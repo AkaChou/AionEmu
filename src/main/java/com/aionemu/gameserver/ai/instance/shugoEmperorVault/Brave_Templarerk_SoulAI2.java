@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Shugo Emperor Vault 副本 NPC AI：Brave Templarerk Soul（@AIName "templarerk"），继承 NpcAI2。
  * Shugo Emperor Vault instance NPC AI: Brave Templarerk Soul (@AIName "templarerk"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("templarerk")

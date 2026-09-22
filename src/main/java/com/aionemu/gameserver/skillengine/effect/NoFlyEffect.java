@@ -11,7 +11,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 禁飞效果：强制玩家落地并施加 NOFLY 异常状态。
  * No-fly effect: forces a player to land and applies the NOFLY abnormal state.
- *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)

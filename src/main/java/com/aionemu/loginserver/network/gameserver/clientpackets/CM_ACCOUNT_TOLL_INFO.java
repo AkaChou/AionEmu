@@ -9,7 +9,6 @@ import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 /**
  * GS→LS：同步账号 toll / luna 点数。
  * luna points.
- *
  * @author xTz
  */
 public class CM_ACCOUNT_TOLL_INFO extends GsClientPacket {

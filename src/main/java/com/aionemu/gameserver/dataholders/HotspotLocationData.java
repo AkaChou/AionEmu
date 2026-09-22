@@ -17,7 +17,6 @@ import com.aionemu.gameserver.model.templates.teleport.HotspotlocationTemplate;
 /**
  * 热点传送位置配置数据容器，按地点 ID 索引热点模板。
  * Hotspot location configuration data holder, indexed by location id.
- *
  * @author Rinzler (Encom)
  */
 @XmlRootElement(name = "hotspot_location")
@@ -70,7 +69,6 @@ public class HotspotLocationData {
 	/**
 	 * 按 ID 获取热点位置模板。
 	 * Returns the hotspot location template for the given id.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 热点位置模板，不存在则为 null / hotspot location template, or null if absent
 	 */

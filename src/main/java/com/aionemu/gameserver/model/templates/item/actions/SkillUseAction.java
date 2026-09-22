@@ -31,7 +31,6 @@ import lombok.Getter;
 /**
  * 技能 Use 动作模板（静态数据/XML）。
  * XML template.
- *
  * @author ATracer
  */
 @Getter

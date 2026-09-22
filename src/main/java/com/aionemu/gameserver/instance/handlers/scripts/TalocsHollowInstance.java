@@ -40,7 +40,6 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 /**
  * 塔洛克空洞副本事件处理器。
  * Instance event handler for Talocs Hollow.
- *
  * @author Encom
  */
 
@@ -61,7 +60,6 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -75,7 +73,6 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -109,7 +106,6 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 
@@ -153,12 +149,10 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	/**
 	 * 仅当基础掉落尚未包含目标物品时补充一条实例兜底掉落。
 	 * Adds an instance fallback drop only when the base drop data does not already contain the item.
-	 *
 	 * <p>基础 NPC 掉落与任务掉落先于实例 Handler 注册；无条件追加会产生重复条目。索引暂用 1
 	 * 占位，registerDrop 在释放掉落列表前会统一重排为唯一值。 /
 	 * Base NPC and quest drops are registered before the instance handler; unconditional additions create
 	 * duplicate entries. The index is a placeholder because registerDrop renumbers all entries before release.
-	 *
 	 * @param dropItems 当前掉落集合 / current drop set
 	 * @param npc 死亡 NPC / dead NPC
 	 * @param itemId 物品 ID / item id
@@ -176,7 +170,6 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
-	 *
 	 * @param player 玩家 / player
 	 * @param npc NPC / npc
 	 */
@@ -199,7 +192,6 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
     /**
      * 处理死亡事件。
      * Handle a death event.
-     *
      * @param npc NPC / npc
      */
     @Override
@@ -269,12 +261,10 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	/**
 	 * 真端 pattern 未接管时按同一份真端数据补刷卡斯帕的幻影。
 	 * Replays the retail Taloc's mirage spawn when the pattern did not take over.
-	 *
 	 * <p>延迟一秒执行，让 Celestius 自己的 {@code on_killed_by_user} 动作先跑；实例内已有同模板 NPC 时
 	 * {@link RetailPatternAI2#spawnRetailActionNpc} 直接返回，因此不会与 pattern 产生第二份实体。
 	 * Runs one second later so Celestius' own {@code on_killed_by_user} actions run first; when an NPC of the same
 	 * template already exists, {@link RetailPatternAI2#spawnRetailActionNpc} returns without spawning a second entity.
-	 *
 	 * @param ownerNpcId 死亡的 Celestius 模板 ID / template id of the dead Celestius
 	 */
 	private void spawnMirageIfPatternMissed(final int ownerNpcId) {
@@ -288,7 +278,6 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
-	 *
 	 * @param player 玩家 / player
 	 * @param zone 区域 / zone
 	 */
@@ -321,7 +310,6 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -336,7 +324,6 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -393,7 +380,6 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 sp。
 	 * Handle sp.
-	 *
 	 * @param npcId NPC / NPC
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
@@ -408,7 +394,6 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
     /**
      * 处理 sp。
      * Handle sp.
-     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -425,7 +410,6 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
     /**
      * 处理 sp。
      * Handle sp.
-     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -457,7 +441,6 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
     /**
      * 处理 sp。
      * Handle sp.
-     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -489,7 +472,6 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -501,7 +483,6 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
-	 *
 	 * @param msg 消息 / message
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
@@ -519,7 +500,6 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
                     /**
                      * 处理 visit。
                      * Handle visit.
-                     *
                      * @param player 玩家 / player
                      */
                     @Override

@@ -15,8 +15,6 @@ public class ExactLevelFilter extends AbstractMatcherFilter<ILoggingEvent> {
 	/**
 	 * 设置需要精确匹配的日志级别
 	 * Set the exact target log level
-	 *
-	 * @param targetLevel 目标日志级别 / Target level
 	 */
 	@Setter
 	private Level targetLevel;
@@ -35,7 +33,6 @@ public class ExactLevelFilter extends AbstractMatcherFilter<ILoggingEvent> {
 	/**
 	 * 按目标级别决定是否接受日志事件
 	 * Decide whether to accept the logging event by target level
-	 *
 	 * @param event 日志事件 / Logging event
 	 * @return 匹配时返回 onMatch，否则返回 onMismatch；未启动时返回 NEUTRAL / onMatch when level matches, onMismatch otherwise; NEUTRAL when not started
 	 */

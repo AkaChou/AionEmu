@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 /**
  * 攻城战相关 NPC AI：Bomber（@AIName "Bomber"），继承 AggressiveNpcAI2。
  * Siege-related NPC AI: Bomber (@AIName "Bomber"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("Bomber")

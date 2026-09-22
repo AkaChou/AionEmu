@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Empyrean Crucible 副本 NPC AI：Empyrean Arbiter（@AIName "empyreanarbiter"），继承 NpcAI2。
  * Empyrean Crucible instance NPC AI: Empyrean Arbiter (@AIName "empyreanarbiter"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("empyreanarbiter")

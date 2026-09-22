@@ -15,7 +15,6 @@ import java.util.Set;
 /**
  * 单个 transition 真正读取的事实族集合。
  * Set of fact families that a single transition actually reads.
- *
  * <p>为什么存在：快照里最贵的事实族（任务 ID 集合、背包、装备、制作技能）只有少数条件/动作会读，而原实现
  * 每次派发都全量捕获。需求由 transition 的 {@code conditions()} 与 {@code actions()} 静态推导，采集端据此
  * 跳过本转换读不到的事实族；被跳过的事实族保持「未捕获」，读取方 fail-closed（返回不匹配或抛
@@ -24,19 +23,17 @@ import java.util.Set;
  * capture all of them. The requirement set is derived statically from the transition's conditions and
  * actions, so the capture side can skip what this transition never reads. Skipped families stay "not
  * captured" and fail closed instead of being passed off as zero.</p>
- *
  * <p>完备性由编译器保证：{@link QuestCondition} 与 {@link QuestAction} 都是 sealed 接口，下面的 switch 不写
  * {@code default}，因此新增任何条件/动作都会让推导无法编译，不可能静默漏采。Completeness is enforced by the
  * compiler: {@link QuestCondition} and {@link QuestAction} are sealed and the switches below carry no
  * {@code default}, so a new condition or action breaks the build instead of silently skipping a fact.</p>
- *
- * @param startEligibility      开始资格事实 / start-eligibility facts
- * @param eventActivityQuestIds 需要读取事件服务成员资格的任务 ID / quest ids whose event-service membership is read
- * @param worldFacts            世界实例事实（NPC 模板与区域名） / world-instance facts (NPC templates and zone names)
- * @param questIdSets           已完成/进行中任务 ID 集合 / completed and in-progress quest-id sets
- * @param inventory             背包事实 / inventory facts
- * @param equipment             装备与套装事实 / equipment and item-set facts
- * @param craft                 制作技能与配方事实 / craft skill and recipe facts
+ * 开始资格事实 / start-eligibility facts
+ * 需要读取事件服务成员资格的任务 ID / quest ids whose event-service membership is read
+ * 世界实例事实（NPC 模板与区域名） / world-instance facts (NPC templates and zone names)
+ * 已完成/进行中任务 ID 集合 / completed and in-progress quest-id sets
+ * 背包事实 / inventory facts
+ * 装备与套装事实 / equipment and item-set facts
+ * 制作技能与配方事实 / craft skill and recipe facts
  */
 public record QuestFactRequirements(boolean startEligibility, Set<Integer> eventActivityQuestIds, boolean worldFacts,
 		boolean questIdSets, boolean inventory, boolean equipment, boolean craft) {
@@ -50,7 +47,6 @@ public record QuestFactRequirements(boolean startEligibility, Set<Integer> event
 	 * 包含元数据声明的前置条件（从 NONE 状态获取未接取任务时读取的完成/进行中任务 ID 集合及装备事实）。
 	 * Derives the minimal fact set from definition and transition, including metadata-declared
 	 * prerequisites (completed/in-progress quest-id sets and equipment facts read when acquiring an unaccepted quest).
-	 *
 	 * @param definition 任务定义 / quest definition
 	 * @param event      运行时事件 / the runtime event
 	 * @param transition 转换 / the transition
@@ -110,7 +106,6 @@ public record QuestFactRequirements(boolean startEligibility, Set<Integer> event
 	/**
 	 * 从 transition 推导最小事实集。
 	 * Derives the minimal fact set from the transition.
-	 *
 	 * @param questId    transition 所属任务 ID（{@code EventActive.questId() == 0} 表示自引用）
 	 *                   / owning quest id used by self-referencing {@code EventActive.questId() == 0}
 	 * @param event      运行时事件（放弃事件也会触发任务工作物品清理）
@@ -279,7 +274,6 @@ public record QuestFactRequirements(boolean startEligibility, Set<Integer> event
 	 * 兼容入口：调用方只声明了三个旧门控时，其余事实族一律按「需要」处理。
 	 * Compatibility entry point: when a caller only declares the three legacy gates, every other family is
 	 * treated as required, keeping the old capture behaviour.
-	 *
 	 * @param startEligibility      开始资格门控 / start-eligibility gate
 	 * @param eventActivityQuestIds 事件服务事实门控 / event-service membership gate
 	 * @param worldFacts            世界事实门控 / world-facts gate

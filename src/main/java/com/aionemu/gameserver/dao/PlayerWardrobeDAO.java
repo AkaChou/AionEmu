@@ -13,7 +13,6 @@ public abstract class PlayerWardrobeDAO implements DAO {
 	/**
 	 * 返回实现唯一类名标识。
 	 * Returns unique class name for all implementations.
-	 *
 	 * @return 完整类名 / fully qualified class name
 	 */
 	@Override
@@ -24,7 +23,6 @@ public abstract class PlayerWardrobeDAO implements DAO {
 	/**
 	 * 加载玩家衣柜列表。
 	 * Loads the wardrobe list for the player.
-	 *
 	 * @param paramPlayer 玩家 / player
 	 * @return 衣柜列表 / wardrobe list
 	 */
@@ -33,7 +31,6 @@ public abstract class PlayerWardrobeDAO implements DAO {
 	/**
 	 * 保存衣柜物品记录。
 	 * Stores a wardrobe item record.
-	 *
 	 * @param paramInt1 玩家对象 ID / player object id
 	 * @param paramInt2 物品 ID / item id
 	 * @param paramInt3 槽位 / slot
@@ -45,7 +42,6 @@ public abstract class PlayerWardrobeDAO implements DAO {
 	/**
 	 * 删除衣柜物品。
 	 * Deletes a wardrobe item.
-	 *
 	 * @param paramInt 玩家对象 ID / player object id
 	 * @param paramInt2 物品/槽位标识 / item or slot id
 	 * @return 是否删除成功 / true if deleted
@@ -55,7 +51,6 @@ public abstract class PlayerWardrobeDAO implements DAO {
 	/**
 	 * 查询玩家衣柜物品数量。
 	 * Returns wardrobe item count for the player.
-	 *
 	 * @param playerId 玩家对象 ID / player object id
 	 * @return 物品数量 / item count
 	 */
@@ -64,7 +59,6 @@ public abstract class PlayerWardrobeDAO implements DAO {
 	/**
 	 * 按槽位查询衣柜物品 ID。
 	 * Returns wardrobe item id by slot.
-	 *
 	 * @param playerObjId 玩家对象 ID / player object id
 	 * @param slot 槽位 / slot
 	 * @return 物品 ID / item id
@@ -74,7 +68,6 @@ public abstract class PlayerWardrobeDAO implements DAO {
 	/**
 	 * 按槽位查询重塑次数。
 	 * Returns reskin count by slot.
-	 *
 	 * @param playerObjId 玩家对象 ID / player object id
 	 * @param slot 槽位 / slot
 	 * @return 重塑次数 / reskin count
@@ -84,7 +77,6 @@ public abstract class PlayerWardrobeDAO implements DAO {
 	/**
 	 * 按槽位设置重塑次数。
 	 * Sets reskin count by slot.
-	 *
 	 * @param playerObjId 玩家对象 ID / player object id
 	 * @param slot 槽位 / slot
 	 * @param reskin_count 重塑次数 / reskin count

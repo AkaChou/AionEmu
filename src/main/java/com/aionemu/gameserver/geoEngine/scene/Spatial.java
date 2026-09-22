@@ -13,7 +13,6 @@ import lombok.Getter;
  * <p>
  * {@link Node} 与 {@link Geometry} 等均是其子类。
  * All other nodes such as {@link Node} and {@link Geometry} are subclasses of {@code Spatial}.
- *
  * @author Mark Powell
  * @author Joshua Slack
  * @author Rolandas - added materials
@@ -44,8 +43,8 @@ public abstract class Spatial implements Collidable, Cloneable {
 		 */
 		Always,
 		/**
-		 * 永不主动剔除；若父节点被剔除仍会连带剔除。
-		 * Never cull this from view. Note it is still culled if the parent is culled.
+		// 永不主动剔除；若父节点被剔除仍会连带剔除。
+		// Never cull this from view. Note it is still culled if the parent is culled.
 		 */
 		Never
 	}
@@ -56,9 +55,6 @@ public abstract class Spatial implements Collidable, Cloneable {
 	 * -- GETTER --
 	 *  返回本节点层级上的世界包围体。
 	 *  Retrieves the world bound at this node level.
-	 *
-	 * @return 世界包围体 / world bound at this level
-
 	 */
 	protected BoundingVolume worldBound;
 	/**
@@ -67,9 +63,6 @@ public abstract class Spatial implements Collidable, Cloneable {
 	 * -- GETTER --
 	 *  返回名称。
 	 *  Returns the name of this spatial.
-	 *
-	 * @return 空间节点名称 / this spatial's name
-
 	 */
 	protected String name;
 	/**
@@ -78,9 +71,6 @@ public abstract class Spatial implements Collidable, Cloneable {
 	 * -- GETTER --
 	 *  返回父节点；为 null 时表示根节点。
 	 *  Retrieves this node's parent. If null, this is a root node.
-	 *
-	 * @return 父节点 / parent of this node
-
 	 */
 	protected transient Node parent;
 
@@ -94,7 +84,6 @@ public abstract class Spatial implements Collidable, Cloneable {
 	/**
 	 * 以给定名称构造空间节点（旋转/平移/缩放为默认值）。
 	 * Constructs a spatial with the given name (rotation/translation/scale at defaults).
-	 *
 	 * @param name 场景元素名称，用于标识与比较 / name of the scene element for identification and comparison
 	 */
 	public Spatial(String name) {
@@ -107,7 +96,6 @@ public abstract class Spatial implements Collidable, Cloneable {
 	/**
 	 * 设置名称（非 null 时 intern）。
 	 * Sets the name (interned when non-null).
-	 *
 	 * @param name 空间节点的新名称 / spatial's new name
 	 */
 	public void setName(String name) {
@@ -119,7 +107,6 @@ public abstract class Spatial implements Collidable, Cloneable {
 	/**
 	 * 由 {@link Node#attachChild(Spatial)} 与 {@link Node#detachChild(Spatial)} 调用，请勿直接调用。
 	 * Called by {@link Node#attachChild(Spatial)} and {@link Node#detachChild(Spatial)} — do not call directly.
-	 *
 	 * @param parent 父节点 / parent of this node
 	 */
 	protected void setParent(Node parent) {
@@ -129,7 +116,6 @@ public abstract class Spatial implements Collidable, Cloneable {
 	/**
 	 * 从父节点上移除自身。
 	 * Removes this spatial from its parent.
-	 *
 	 * @return 若存在父节点并完成移除则为 true / true if it had a parent and the remove was performed
 	 */
 	public boolean removeFromParent() {
@@ -143,7 +129,6 @@ public abstract class Spatial implements Collidable, Cloneable {
 	/**
 	 * 判断给定节点是否为自身的祖先（父、祖父等）。
 	 * Determines whether the provided node is a parent, grandparent, etc. of this spatial.
-	 *
 	 * @param ancestor 待查找的祖先 / ancestor object to look for
 	 * @return 若找到该祖先则为 true / true if the ancestor is found
 	 */
@@ -166,7 +151,6 @@ public abstract class Spatial implements Collidable, Cloneable {
 	/**
 	 * 设置本空间节点的包围体。
 	 * Sets the bounding object for this spatial.
-	 *
 	 * @param modelBound 包围体 / bounding object for this spatial
 	 */
 	public abstract void setModelBound(BoundingVolume modelBound);
@@ -174,7 +158,6 @@ public abstract class Spatial implements Collidable, Cloneable {
 	/**
 	 * 返回本节点下所有顶点数量之和。
 	 * Returns the sum of all vertices under this spatial.
-	 *
 	 * @return 顶点数 / vertex count
 	 */
 	public abstract int getVertexCount();
@@ -182,7 +165,6 @@ public abstract class Spatial implements Collidable, Cloneable {
 	/**
 	 * 返回本节点下所有三角形数量之和。
 	 * Returns the sum of all triangles under this spatial.
-	 *
 	 * @return 三角形数 / triangle count
 	 */
 	public abstract int getTriangleCount();
@@ -190,7 +172,6 @@ public abstract class Spatial implements Collidable, Cloneable {
 	/**
 	 * 从碰撞标志低 8 位取得材质 ID。
 	 * Returns the material id from the low 8 bits of collision flags.
-	 *
 	 * @return 材质 ID / material id
 	 */
 	public byte getMaterialId() {
@@ -200,7 +181,6 @@ public abstract class Spatial implements Collidable, Cloneable {
 	/**
 	 * 从碰撞标志高 8 位取得碰撞意图掩码。
 	 * Returns the intention mask from the high 8 bits of collision flags.
-	 *
 	 * @return 碰撞意图掩码 / intention mask
 	 */
 	public byte getIntentions() {
@@ -210,7 +190,6 @@ public abstract class Spatial implements Collidable, Cloneable {
 	/**
 	 * 返回碰撞标志。
 	 * Returns collision flags.
-	 *
 	 * @return 碰撞标志 / collision flags
 	 */
 	public abstract short getCollisionFlags();
@@ -218,7 +197,6 @@ public abstract class Spatial implements Collidable, Cloneable {
 	/**
 	 * 设置碰撞标志。
 	 * Sets collision flags.
-	 *
 	 * @param flags 碰撞标志 / collision flags
 	 */
 	public abstract void setCollisionFlags(short flags);
@@ -226,7 +204,6 @@ public abstract class Spatial implements Collidable, Cloneable {
 	/**
 	 * 判断本节点是否匹配给定子类与名称正则（整串匹配，可用 (?X) 模式）。
 	 * Returns true if this implements the specified class and its name matches the pattern (full match; (?X) modes allowed).
-	 *
 	 * @param spatialSubclass 必须实现的子类；null 表示任意 Spatial / subclass that must be implemented; null matches all
 	 * @param nameRegex 名称正则；null 表示任意名称 / name regex; null matches all names
 	 * @return 若子类与名称均匹配则为 true / true if class and name both match
@@ -243,7 +220,6 @@ public abstract class Spatial implements Collidable, Cloneable {
 	/**
 	 * 返回“名称 (简单类名) use 意图”形式的字符串。
 	 * Returns a string of the form "name (SimpleClassName) use intentions".
-	 *
 	 * @return 描述字符串 / descriptive string
 	 */
 	@Override
@@ -254,7 +230,6 @@ public abstract class Spatial implements Collidable, Cloneable {
 	/**
 	 * 设置变换（旋转、平移、均匀缩放）。
 	 * Sets transform from rotation, translation and uniform scale.
-	 *
 	 * @param rotation 旋转矩阵 / rotation
 	 * @param loc 平移 / translation
 	 * @param scale 均匀缩放 / uniform scale
@@ -264,7 +239,6 @@ public abstract class Spatial implements Collidable, Cloneable {
 	/**
 	 * 设置变换（旋转、平移、向量缩放；默认取 scale.x 作为均匀缩放）。
 	 * Sets transform from rotation, translation and vector scale (default uses scale.x as uniform scale).
-	 *
 	 * @param rotation 旋转矩阵 / rotation
 	 * @param loc 平移 / translation
 	 * @param scale 缩放向量 / scale vector
@@ -276,7 +250,6 @@ public abstract class Spatial implements Collidable, Cloneable {
 	/**
 	 * 浅克隆。
 	 * Shallow clone.
-	 *
 	 * @return 克隆实例 / clone instance
 	 */
 	@Override

@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * Dredgion Defense 副本 NPC AI：Wind Stream 05 Da（@AIName "WindStream_05_Da"），继承 NpcAI2。
  * Dredgion Defense instance NPC AI: Wind Stream 05 Da (@AIName "WindStream_05_Da"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("WindStream_05_Da")

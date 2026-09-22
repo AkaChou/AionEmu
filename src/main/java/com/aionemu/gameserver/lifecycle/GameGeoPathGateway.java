@@ -34,7 +34,6 @@ public class GameGeoPathGateway {
     /**
      * 可选注入地理服务提供者。
      * Optionally inject the geo-service provider.
-     *
      * @param geoServiceProvider 地理服务提供者 / Geo-service provider
      */
     @Autowired(required = false)
@@ -45,7 +44,6 @@ public class GameGeoPathGateway {
     /**
      * 可选注入 PATH 服务提供者。
      * Optionally inject the path-service provider.
-     *
      * @param pathServiceProvider PATH 服务提供者 / Path-service provider
      */
     @Autowired(required = false)
@@ -56,7 +54,6 @@ public class GameGeoPathGateway {
     /**
      * 可选注入世界服务运行时桥接提供者。
      * Optionally inject the world-services runtime-bridge provider.
-     *
      * @param runtimeBridgeProvider 运行时桥接提供者 / Runtime-bridge provider
      */
     @Autowired(required = false)
@@ -77,7 +74,6 @@ public class GameGeoPathGateway {
     /**
      * 解析地理服务。
      * Resolve the geo service.
-     *
      * @return 地理服务 / Geo service
      */
     private GeoService geoService() {
@@ -90,7 +86,6 @@ public class GameGeoPathGateway {
     /**
      * 解析 PATH 服务。
      * Resolve the path service.
-     *
      * @return PATH 服务 / Path service
      */
     private PathService pathService() {
@@ -103,7 +98,6 @@ public class GameGeoPathGateway {
     /**
      * 解析世界服务运行时桥接。
      * Resolve the world-services runtime bridge.
-     *
      * @return 运行时桥接 / Runtime bridge
      */
     private GameWorldServicesRuntimeBridge runtimeBridge() {

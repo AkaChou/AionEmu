@@ -11,10 +11,8 @@ import lombok.RequiredArgsConstructor;
 /**
  * 狂暴阿诺哈活动抽象基类。
  * Abstract base for Berserk Anoha world events.
- *
  * <p>封装启动/停止幂等守卫与按状态刷怪/清怪。
  * Encapsulates idempotent start/stop guards and spawn/despawn by state type.</p>
- *
  * @author Rinzler (Encom)
  * @param <AL> 阿诺哈地点类型 / Anoha location type
  */
@@ -26,7 +24,6 @@ public abstract class BerserkAnoha<AL extends AnohaLocation> {
 	/**
 	 * 获取绑定地点。
 	 * Returns the bound location.
-	 *
 	 * location
 	 */
 	private final AL anohaLocation;
@@ -76,7 +73,6 @@ public abstract class BerserkAnoha<AL extends AnohaLocation> {
 	/**
 	 * 按状态类型刷新刷怪。
 	 * Spawns entities by state type.
-	 *
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(AnohaStateType type) {
@@ -94,7 +90,6 @@ public abstract class BerserkAnoha<AL extends AnohaLocation> {
 	/**
 	 * 是否已结束。
 	 * Whether the event has finished.
-	 *
 	 * @return 已结束则为 true / true if finished
 	 */
 	public boolean isFinished() {
@@ -104,7 +99,6 @@ public abstract class BerserkAnoha<AL extends AnohaLocation> {
 	/**
 	 * 获取地点 ID。
 	 * Returns the location id.
-	 *
 	 * location id
 	 */
 	public int getAnohaLocationId() {

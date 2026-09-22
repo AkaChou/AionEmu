@@ -10,7 +10,6 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 /**
  * 多边形区域，用于几何相关逻辑。
  * Poly Area for geometry logic.
- *
  * @author SoulKeeper
  */
 public class PolyArea extends AbstractArea {
@@ -24,7 +23,6 @@ public class PolyArea extends AbstractArea {
 	/**
 	 * 由给定点创建新的多边形区域。
 	 * Creates new area from given points.
-	 *
 	 * @param zoneName 区域名称 / zone name
 	 * @param worldId 世界 ID / world id
 	 * @param points 点列表 / list of points
@@ -38,7 +36,6 @@ public class PolyArea extends AbstractArea {
 	/**
 	 * 由给定点创建新的多边形区域。
 	 * Creates new area from given points.
-	 *
 	 * @param zoneName 区域名称 / zone name
 	 * @param worldId 世界 ID / world id
 	 * @param points 点数组 / array of points

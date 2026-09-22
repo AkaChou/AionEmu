@@ -19,7 +19,6 @@ public class SM_CONQUEROR_PROTECTOR extends AionServerPacket {
 	/**
 	 * debuff 等级同步（type 0/1）。
 	 * Debuff-level sync (type 0/1).
-	 *
 	 * @param showMsg   是否显示消息 / whether to show a message
 	 * debuff level
 	 */
@@ -31,7 +30,6 @@ public class SM_CONQUEROR_PROTECTOR extends AionServerPacket {
 	/**
 	 * 领地入侵自动扫描玩家列表（type 4）。
 	 * Automatic territory-intruder scan player list (type 4).
-	 *
 	 * @param players 扫描到的玩家 / scanned players
 	 */
 	public SM_CONQUEROR_PROTECTOR(Collection<Player> players) {

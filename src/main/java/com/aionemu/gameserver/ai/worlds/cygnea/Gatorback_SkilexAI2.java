@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Cygnea 区域 NPC AI：Gatorback Skilex（@AIName "gatorback_skilex"），继承 AggressiveNpcAI2。
  * Cygnea zone NPC AI: Gatorback Skilex (@AIName "gatorback_skilex"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("gatorback_skilex")

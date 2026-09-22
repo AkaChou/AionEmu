@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 /**
  * 月之商城列表/点数等状态同步的服务端包。
  * Server packet that synchronizes Luna shop list and related point/state data.
- *
  * @author Made by Rinzler (Encom)
  */
 @Slf4j
@@ -29,7 +28,6 @@ public class SM_LUNA_SHOP_LIST extends AionServerPacket {
 	/**
 	 * 同步月之点数。
 	 * Syncs Luna points.
-	 *
 	 * @param actionId action type
 	 * @param points Luna points
 	 */
@@ -41,7 +39,6 @@ public class SM_LUNA_SHOP_LIST extends AionServerPacket {
 	/**
 	 * 同步钥匙数量。
 	 * Syncs key count.
-	 *
 	 * action type
 	 * @param keys 钥匙数量 / key count
 	 */
@@ -53,7 +50,6 @@ public class SM_LUNA_SHOP_LIST extends AionServerPacket {
 	/**
 	 * 下发配方 ID 列表（tableId = 0）。
 	 * Delivers recipe id list (tableId = 0).
-	 *
 	 * @param actionId 动作类型（构造内固定为 2） / action type (forced to 2 inside)
 	 * @param tableId 表 ID（构造内固定为 0） / table id (forced to 0 inside)
 	 * recipe id list
@@ -67,7 +63,6 @@ public class SM_LUNA_SHOP_LIST extends AionServerPacket {
 	/**
 	 * 下发每日随机制作配方列表（tableId = 1）。
 	 * Delivers random daily craft recipe list (tableId = 1).
-	 *
 	 * @param randomDailyCraft 每日随机配方 ID 列表 / random daily craft recipe ids
 	 */
 	public SM_LUNA_SHOP_LIST(List<Integer> randomDailyCraft) {
@@ -79,7 +74,6 @@ public class SM_LUNA_SHOP_LIST extends AionServerPacket {
 	/**
 	 * 同步指定表的消耗/费用 ID。
 	 * Syncs cost id for a given table.
-	 *
 	 * @param actionId action type
 	 * @param tableId table id
 	 * @param costId cost id

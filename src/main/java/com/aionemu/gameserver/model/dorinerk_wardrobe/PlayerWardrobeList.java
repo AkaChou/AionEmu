@@ -13,7 +13,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * 玩家衣橱列表，用于多里纳克衣橱相关逻辑。
  * Player Wardrobe List for dorinerk wardrobe logic.
- *
  * @author Ranastic
  */
 public final class PlayerWardrobeList {

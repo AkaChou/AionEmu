@@ -11,7 +11,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 /**
  * Tiamaranta eye 区域 NPC AI：Aide Iranati（@AIName "Aide_Iranati"），继承 AggressiveNpcAI2。
  * Tiamaranta eye zone NPC AI: Aide Iranati (@AIName "Aide_Iranati"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("Aide_Iranati")

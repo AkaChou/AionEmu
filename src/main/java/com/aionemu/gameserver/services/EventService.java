@@ -33,7 +33,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 活动服务，管理限时活动启停及活动任务的发放与维护。
  * Event service managing timed event start/stop and event quest start/maintain.
- *
  * @author Rolandas
  */
 @Slf4j
@@ -55,8 +54,7 @@ public class EventService {
      * -- GETTER --
      *  判断活动检查服务是否已启动。
      *  Returns whether the event check service is started.
-     *
-     * @return 已启动返回 true / true if started
+     * 已启动返回 true / true if started
      */
 	@Getter
     private boolean isStarted = false;
@@ -76,11 +74,9 @@ public class EventService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -110,7 +106,6 @@ public class EventService {
 	 * Starts or maintains active event quests after player login.
 	 * 仅应在登录流程中调用。
 	 * Must not be called from anywhere else.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onPlayerLogin(Player player) {
@@ -142,7 +137,6 @@ public class EventService {
 	/**
 	 * 按条件为玩家开启或重置/维护活动任务。
 	 * Starts or resets/maintains event quests for the player by conditions.
-	 *
 	 * 玩家 / player
 	 * @param questList 任务 ID 迭代器 / quest id iterator
 	 * @param templateMap 任务 → 活动模板映射 / quest → event template map
@@ -298,9 +292,7 @@ public class EventService {
 	/**
 	 * 判断任务是否属于当前活跃活动。
 	 * Returns whether the quest is part of a currently active event.
-	 *
 	 * quest id
-	 *
 	 * @param questId 若 active 则为 true / true if active
 	 */
 	public boolean checkQuestIsActive(int questId) {
@@ -315,7 +307,6 @@ public class EventService {
 	/**
 	 * 获取当前活动主题类型；无活动时返回 NONE。
 	 * Returns the current event theme type, or NONE when no event is active.
-	 *
 	 * event type
 	 */
 	public EventType getEventType() {
@@ -336,7 +327,6 @@ public class EventService {
 	/**
 	 * 获取当前活跃活动快照列表。
 	 * Returns a snapshot list of currently active events.
-	 *
 	 * event list
 	 */
 	public List<EventTemplate> getActiveEvents() {
@@ -346,7 +336,6 @@ public class EventService {
 	/**
 	 * 线程安全地复制活跃活动列表。
 	 * Thread-safely copies the active event list.
-	 *
 	 * event snapshot
 	 */
 	private List<EventTemplate> activeEventsSnapshot() {

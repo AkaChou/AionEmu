@@ -8,7 +8,6 @@ import lombok.Setter;
 /**
  * 属性2模型。
  * Stat 2 model.
- *
  * @author ATracer
  */
 public abstract class Stat2 {

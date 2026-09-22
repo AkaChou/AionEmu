@@ -23,7 +23,6 @@ public final class GameShutdownRequest implements DisposableBean {
     /**
      * 构造并缓存 {@link ShutdownHook} 提供者。
      * Construct and cache the {@link ShutdownHook} provider.
-     *
      * @param shutdownHookProvider 关停钩子提供者 / Shutdown-hook provider
      */
     @Autowired
@@ -34,7 +33,6 @@ public final class GameShutdownRequest implements DisposableBean {
     /**
      * 设置静态 {@link ShutdownHook} 提供者。
      * Set the static {@link ShutdownHook} provider.
-     *
      * @param shutdownHookProvider 关停钩子提供者 / Shutdown-hook provider
      */
     public static void setShutdownHookProvider(ObjectProvider<ShutdownHook> shutdownHookProvider) {
@@ -44,7 +42,6 @@ public final class GameShutdownRequest implements DisposableBean {
     /**
      * 以指定延迟、公告间隔与模式执行关停。
      * Perform shutdown with the given delay, announce interval, and mode.
-     *
      * @param delay 延迟秒数 / Delay in seconds
      * @param announceInterval 公告间隔秒数 / Announce interval in seconds
      * @param mode 关停模式 / Shutdown mode
@@ -56,7 +53,6 @@ public final class GameShutdownRequest implements DisposableBean {
     /**
      * 等待玩家离线后再进入关停（固定 {@link ShutdownMode#SHUTDOWN}）。
      * Wait for players to leave before shutdown (fixed {@link ShutdownMode#SHUTDOWN}).
-     *
      * @param delay 延迟秒数 / Delay in seconds
      * @param announceInterval 公告间隔秒数 / Announce interval in seconds
      */
@@ -67,7 +63,6 @@ public final class GameShutdownRequest implements DisposableBean {
     /**
      * 完成关停流程，可选 halt 运行时。
      * Complete the shutdown sequence, optionally halting the runtime.
-     *
      * @param mode 关停模式 / Shutdown mode
      * @param haltRuntime 是否强制终止运行时 / whether to halt the runtime
      */
@@ -87,7 +82,6 @@ public final class GameShutdownRequest implements DisposableBean {
     /**
      * 解析 {@link ShutdownHook}：优先 Spring 提供，否则回退。
      * Resolve {@link ShutdownHook}: prefer Spring, otherwise fallback.
-     *
      * @return 关停钩子 / Shutdown hook
      */
     private static ShutdownHook shutdownHook() {

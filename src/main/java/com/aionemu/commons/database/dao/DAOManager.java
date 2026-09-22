@@ -16,13 +16,11 @@ import com.aionemu.commons.services.ServiceContext;
 /**
  * DAO 管理器类
  * DAO Manager Class
- *
  * 这个类负责管理所有 DAO 实现类的注册和获取。它维护了一个 DAO 实现类的注册表，
  * 并提供了注册、注销和获取 DAO 实现的方法。
  * This class manages the registration and retrieval of all DAO implementations.
  * It maintains a registry of DAO implementations and provides methods for
  * registering, unregistering and retrieving DAO implementations.
- *
  * @author SoulKeeper
  * @author Saelya
  */
@@ -39,7 +37,6 @@ public class DAOManager {
     /**
  * 初始化 DAOManager
      * Initializes DAOManager
-     *
      * @param provider 当前服务上下文的 DAO 类提供器 / DAO class provider for the current service context
      */
     public static void init(DAOClassProvider provider) {
@@ -76,7 +73,6 @@ public class DAOManager {
     /**
      * 判断当前服务上下文的 DAOManager 是否已初始化
      * Check whether DAOManager is initialized for the current service context
-     *
      * @return 已初始化返回 true / True if initialized
      */
     public static boolean isInitialized() {
@@ -86,12 +82,9 @@ public class DAOManager {
     /**
  * 根据 DAO 类获取其实现
      * Returns DAO implementation by DAO class
-     *
  * DAO class
  * DAO type
  * DAO implementation
- *
- * @param clazz
  * @throws DAONotFoundException 如果未找到 DAO 实现 / If DAO implementation not found
      */
     @SuppressWarnings("unchecked")
@@ -110,7 +103,6 @@ public class DAOManager {
     /**
  * 注册 DAO 实现类
      * Registers DAO implementation
-     *
  * DAO implementation class
  * If DAO is already registered。
  * If error during DAO instantiation。
@@ -142,7 +134,6 @@ public class DAOManager {
     /**
  * 注销 DAO 实现类
      * Unregisters DAO implementation
-     *
  * @param daoClass 要注销的 DAO 实现类 / DAO implementation class to unregister
      */
     public static void unregisterDAO(Class<? extends DAO> daoClass) {
@@ -173,7 +164,6 @@ public class DAOManager {
     /**
      * 加载当前上下文的编译期 DAO 类
      * Load compiled DAO classes for the current context
-     *
      * @param context  服务上下文名称 / Service context name
      * @param provider 该上下文的 DAO 类提供器 / DAO class provider for the context
      */
@@ -188,7 +178,6 @@ public class DAOManager {
     /**
      * 获取当前服务上下文的 DAO 状态
      * Get the DAO state for the current service context
-     *
      * DAO state
      */
     private static DaoState state() {

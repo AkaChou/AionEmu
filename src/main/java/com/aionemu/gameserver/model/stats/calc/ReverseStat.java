@@ -6,7 +6,6 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
 /**
  * Reverse 属性，用于属性相关逻辑。
  * Reverse Stat for stats logic.
- *
  * @author ATracer
  */
 public class ReverseStat extends Stat2 {

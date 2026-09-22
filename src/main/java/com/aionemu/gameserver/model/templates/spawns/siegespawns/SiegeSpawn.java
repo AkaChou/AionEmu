@@ -16,7 +16,6 @@ import lombok.Getter;
 /**
  * 要塞刷新点模板（静态数据/XML）。
  * XML template.
- *
  * @author xTz
  */
 @Getter

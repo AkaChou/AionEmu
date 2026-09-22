@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Seized Danuar Sanctuary 副本 NPC AI：The Crypts Entrance（@AIName "crypts"），继承 NpcAI2。
  * Seized Danuar Sanctuary instance NPC AI: The Crypts Entrance (@AIName "crypts"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("crypts")

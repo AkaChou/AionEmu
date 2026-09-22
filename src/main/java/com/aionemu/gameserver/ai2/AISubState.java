@@ -3,7 +3,6 @@ package com.aionemu.gameserver.ai2;
 /**
  * AI 子状态枚举，用于在主状态之下表达更细粒度的行为。
  * AI sub-state enumeration for finer-grained behavior under a main state.
- *
  * @author ATracer
  */
 public enum AISubState {

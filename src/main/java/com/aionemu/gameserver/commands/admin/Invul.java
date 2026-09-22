@@ -7,7 +7,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 管理员无敌切换命令。
  * Admin invulnerability toggle command.
- *
  * @author Andy
  * @author Divinity - update
  */
@@ -20,7 +19,6 @@ public class Invul extends AdminCommand {
 	/**
 	 * 切换执行者的无敌状态。
 	 * Toggle the invoker's invulnerability.
-	 *
 	 * @param player 执行命令的管理员 / Admin executing the command
 	 */
 	@Override

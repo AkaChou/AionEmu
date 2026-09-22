@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Cygnea 区域 NPC AI：Black Fin Shaman（@AIName "black_fin_shaman"），继承 AggressiveNpcAI2。
  * Cygnea zone NPC AI: Black Fin Shaman (@AIName "black_fin_shaman"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("black_fin_shaman")

@@ -9,7 +9,6 @@ import com.aionemu.gameserver.geoEngine.utils.BufferUtils;
 /**
  * 带实体（填充）面的盒子网格。
  * A box with solid (filled) faces.
- *
  * @author Mark Powell
  * @version $Revision: 4131 $, $Date: 2009-03-19 16:15:28 -0400 (Thu, 19 Mar
  *          2009) $
@@ -39,7 +38,6 @@ public class Box extends AbstractBox {
 	 * <p>
 	 * 半长 0.5 时即为单位立方体。
 	 * An extent of 0.5 yields the unit cube.
-	 *
 	 * @param x X 轴半长（双向） / size along X in both directions
 	 * @param y Y 轴半长（双向） / size along Y in both directions
 	 * @param z Z 轴半长（双向） / size along Z in both directions
@@ -55,7 +53,6 @@ public class Box extends AbstractBox {
 	 * <p>
 	 * 半长 0.5 时即为单位立方体。
 	 * An extent of 0.5 yields the unit cube.
-	 *
 	 * @param center 盒子中心 / center of the box
 	 * @param x X 轴半长（双向） / size along X in both directions
 	 * @param y Y 轴半长（双向） / size along Y in both directions
@@ -69,7 +66,6 @@ public class Box extends AbstractBox {
 	/**
 	 * 按最小点与最大点构造盒子（定义形状与尺寸，不含朝向/平移）。
 	 * Constructs a box from minimum and maximum points (shape and size only; orientation/position are separate).
-	 *
 	 * @param min 定义盒子的最小点 / minimum point defining the box
 	 * @param max 定义盒子的最大点 / maximum point defining the box
 	 */
@@ -89,7 +85,6 @@ public class Box extends AbstractBox {
 	/**
 	 * 克隆本盒子（中心与半长相同）。
 	 * Creates a clone of this box with the same center and extents.
-	 *
 	 * @return 克隆的盒子 / cloned box
 	 */
 	@Override

@@ -12,7 +12,6 @@ import lombok.Getter;
 /**
  * 掉落状态变更的服务端包（启用/禁用拾取、打开/关闭掉落列表）。
  * Server packet for loot status changes (enable/disable loot, open/close drop list).
- *
  * @author alexa026
  */
 public class SM_LOOT_STATUS extends AionServerPacket {
@@ -24,7 +23,6 @@ public class SM_LOOT_STATUS extends AionServerPacket {
 	/**
 	 * 构造指定目标的掉落状态包。
 	 * Builds a loot-status packet for the given target.
-	 *
 	 * @param targetObjectId 掉落目标对象 ID / loot target object id
 	 * loot status
 	 */
@@ -44,7 +42,6 @@ public class SM_LOOT_STATUS extends AionServerPacket {
 	/**
 	 * 从当前掉落表中读取首个非零拾取特效 ID。
 	 * Resolves the first non-zero loot effect id from the current drop map.
-	 *
 	 * @param targetObjectId 掉落目标对象 ID / loot target object id
 	 * effect id, or 0 if none
 	 */

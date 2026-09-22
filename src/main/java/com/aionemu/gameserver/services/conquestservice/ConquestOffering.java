@@ -18,10 +18,8 @@ import lombok.RequiredArgsConstructor;
 /**
  * 征服/供奉活动抽象基类。
  * Abstract base for Conquest/Offering world events.
- *
  * <p>管理启动/停止幂等、供奉 BOSS 定位与死亡监听。
  * Manages idempotent start/stop, offering-boss location and death listeners.</p>
- *
  * @author Rinzler (Encom)
  * @param <CL> 征服地点类型 / conquest location type
  */
@@ -58,8 +56,7 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 	 * -- GETTER --
 	 * 供奉 BOSS 是否已被摧毁。
 	 * Whether the offering boss has been destroyed.
-	 *
-	 * @return 已摧毁则为 true / true if destroyed
+	 * 已摧毁则为 true / true if destroyed
 	 */
 	private boolean conquestBossDestroyed;
 	private final AtomicBoolean finished = new AtomicBoolean();
@@ -144,7 +141,6 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 	/**
 	 * 按状态类型刷新刷怪。
 	 * Spawns entities by state type.
-	 *
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(ConquestStateType type) {
@@ -183,7 +179,6 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
     /**
 	 * 是否已结束。
 	 * Whether the event has finished.
-	 *
 	 * @return 已结束则为 true / true if finished
 	 */
 	public boolean isFinished() {

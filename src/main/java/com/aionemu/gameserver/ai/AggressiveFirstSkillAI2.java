@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * 主动攻击且优先技能的 NPC AI：首轮攻击意图优先选择技能。
  * Aggressive NPC AI that prefers a skill attack as the first attack intention.
- *
  * @author Encom
  */
 @AIName("aggressive_first_skill")

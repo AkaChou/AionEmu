@@ -20,7 +20,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 客户端装备鉴定/调谐请求包；支持鉴定卷轴或直接随机开孔。
  * Client packet for item identify/tune; supports retuning scrolls or direct random socketing.
- *
  * @author Ranastic
  */
 public class CM_TUNE extends AionClientPacket {

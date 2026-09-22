@@ -27,7 +27,6 @@ public class Anoha extends AdminCommand
 	/**
 	 * 执行阿诺哈控制：解析 start/stop 与地点 ID。
 	 * Executes Anoha control: parses start/stop and location id.
-	 *
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -42,7 +41,6 @@ public class Anoha extends AdminCommand
 	/**
 	 * 处理阿诺哈活动的开始/停止逻辑。
 	 * Handles start/stop logic for an Anoha event.
-	 *
 	 * @param params 参数：动作与地点 ID / action and location id
 	 */
 	protected void handleStartStop(Player player, String... params) {
@@ -74,8 +72,6 @@ public class Anoha extends AdminCommand
 	/**
 	 * 校验阿诺哈地点 ID 是否有效。
 	 * Validates whether the Anoha location id exists.
-	 *
-	 *
 	 * @return {@code true} if valid。
 	 */
 	protected boolean isValidAnohaLocationId(Player player, int anohaId) {
@@ -89,7 +85,6 @@ public class Anoha extends AdminCommand
 	/**
 	 * 向管理员输出 {@code //anoha} 用法。
 	 * Sends {@code //anoha} usage help to the admin.
-	 *
 	 */
 	protected void showHelp(Player player) {
 		PacketSendUtility.sendMessage(player, "AdminCommand //anoha start|stop <Id>");

@@ -7,7 +7,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * 狂风旋涡观察者：玩家从 12 外进入 12 内时触发。
  * Gale cyclone observer: fires when the player moves from beyond 12 into range 12.
- *
  * @author xTz
  */
 public abstract class GaleCycloneObserver extends ActionObserver {

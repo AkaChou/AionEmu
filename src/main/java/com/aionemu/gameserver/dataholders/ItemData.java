@@ -29,7 +29,6 @@ import lombok.Getter;
 /**
  * 物品模板数据容器，持有并索引全部 {@link ItemTemplate}，支持热重载与限制清理。
  * Item template data holder, indexing all {@link ItemTemplate} instances with reload and restriction cleanup support.
- *
  * @author Luno
  */
 @Getter
@@ -51,8 +50,7 @@ public class ItemData extends ReloadableData {
 	/**
 	 * 返回按等级分组的魔石模板映射。
 	 * Returns manastone templates grouped by level.
-	 *
-	 * @return 等级到魔石列表的映射 / map of level to manastone list
+	 * 等级到魔石列表的映射 / map of level to manastone list
 	 */
 	@XmlTransient
 	Map<Integer, List<ItemTemplate>> manastones = new HashMap<>();
@@ -60,8 +58,7 @@ public class ItemData extends ReloadableData {
 	/**
 	 * 返回全部物品模板映射。
 	 * Returns the full item template map.
-	 *
-	 * @return ID 到物品模板的映射 / map of id to item template
+	 * ID 到物品模板的映射 / map of id to item template
 	 */
 	@XmlTransient
 	Map<Integer, ItemTemplate> allItems;
@@ -103,7 +100,6 @@ public class ItemData extends ReloadableData {
 	 * 以分片结果装配物品数据：分片按序合并，自定义模板按 ID 覆盖或新增，最后一次性重建全部索引。
 	 * Assembles item data from shard results: shards merge in order, custom templates override or
 	 * append by id, then all indexes are rebuilt in a single pass.
-	 *
 	 * @param shards 分片加载结果 / shard load results
 	 * @param customOverrides 自定义覆盖模板，可为 null / custom override templates, may be {@code null}
 	 */
@@ -121,7 +117,6 @@ public class ItemData extends ReloadableData {
 	 * Assembles item data from an already merged shard mapping: custom templates override or append by id,
 	 * then all indexes are rebuilt in one pass. Callers may {@code putAll} incrementally as shards complete,
 	 * avoiding the need to hold every shard index at once (peak memory).
-	 *
 	 * @param merged 已按顺序合并的分片映射 / shard mappings merged in order
 	 * @param customOverrides 自定义覆盖模板，可为 null / custom override templates, may be {@code null}
 	 */
@@ -173,7 +168,6 @@ public class ItemData extends ReloadableData {
 	/**
 	 * 按物品 ID 获取物品模板。
 	 * Returns the item template for the given item id.
-	 *
 	 * @param itemId 物品 ID / item id
 	 * @return 物品模板或 null / item template or null
 	 */
@@ -188,7 +182,6 @@ public class ItemData extends ReloadableData {
 	/**
 	 * 返回已加载的物品模板数量。
 	 * Returns the number of loaded item templates.
-	 *
 	 * @return 已加载的物品模板数量 / Returns the number of loaded item templates.
 	 */
 	public int size() {
@@ -198,7 +191,6 @@ public class ItemData extends ReloadableData {
 	/**
 	 * 按宠物 ID 获取宠物蛋模板。
 	 * Returns the pet-egg template for the given pet id.
-	 *
 	 * @param petId 宠物 ID / pet id
 	 * @return 宠物蛋模板或 null / pet-egg template or null
 	 */
@@ -209,7 +201,6 @@ public class ItemData extends ReloadableData {
 	/**
 	 * 通过分片并行路径热重载物品模板并通知管理员。
 	 * Hot-reloads item templates via the parallel shard path and notifies the admin.
-	 *
 	 * @param admin 触发重载的管理员 / admin who triggered the reload
 	 */
 	@Override
@@ -241,7 +232,6 @@ public class ItemData extends ReloadableData {
 	/**
 	 * 按描述字符串查找匹配的物品描述（忽略大小写）。
 	 * Finds a matching item description by string (case-insensitive).
-	 *
 	 * @param descr 物品描述 / item description
 	 * @return 匹配的描述，未找到则为空串 / matched description or empty string
 	 */
@@ -257,7 +247,6 @@ public class ItemData extends ReloadableData {
 	/**
 	 * 按描述字符串返回对应物品 ID。
 	 * Returns the item id matching the given description.
-	 *
 	 * @param descr 物品描述 / item description
 	 * @return 物品 ID，未找到则为 0 / item id or 0
 	 */
@@ -273,7 +262,6 @@ public class ItemData extends ReloadableData {
 	/**
 	 * 返回内部物品模板哈希表。
 	 * Returns the internal item template hash map.
-	 *
 	 * @return 物品模板映射 / item template map
 	 */
 	public IntObjectHashMap<ItemTemplate> getItemData() {

@@ -22,7 +22,6 @@ import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
 /**
  * 线程安全的可回收整数 ID 分配器；非法操作抛出 {@link IDFactoryError}。
  * Thread-safe recyclable integer ID allocator; illegal operations throw {@link IDFactoryError}.
- *
  * @author SoulKeeper
  */
 @Slf4j
@@ -75,11 +74,9 @@ public class IDFactory {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
@@ -97,7 +94,6 @@ public class IDFactory {
 	/**
 	 * 注入 Spring 实例提供者。
 	 * Inject the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / Provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<IDFactory> instanceProvider) {
@@ -107,7 +103,6 @@ public class IDFactory {
 	/**
 	 * 分配下一个空闲 ID。
 	 * Allocate the next free id.
-	 *
 	 * @return 下一个空闲 ID / Next free id
 	 * @throws IDFactoryError 无空闲 ID 时 / If no free ids remain
 	 */
@@ -145,7 +140,6 @@ public class IDFactory {
 	/**
 	 * 锁定给定 ID（已占用则抛错）。
 	 * Lock the given ids (throws if already taken).
-	 *
 	 * @param ids 要锁定的 ID / Ids to lock
 	 * @throws IDFactoryError 有 ID 已占用时 / If some ids were already locked
 	 */
@@ -167,7 +161,6 @@ public class IDFactory {
 	/**
 	 * 锁定给定 ID 集合（已占用则抛错）。
 	 * Lock the given id collection (throws if already taken).
-	 *
 	 * @param ids 要锁定的 ID / Ids to lock
 	 * @throws IDFactoryError 有 ID 已占用时 / If some ids were already locked
 	 */
@@ -189,7 +182,6 @@ public class IDFactory {
 	/**
 	 * 释放给定 ID。
 	 * Release the given id.
-	 *
 	 * @param id 要释放的 ID / Id to release
 	 * @throws IDFactoryError ID 未被占用时 / If the id was not taken
 	 */
@@ -212,7 +204,6 @@ public class IDFactory {
 	/**
 	 * 批量释放 ID。
 	 * Release a collection of ids.
-	 *
 	 * @param ids 要释放的 ID 集合 / Ids to release
 	 * @throws IDFactoryError 有 ID 未被占用时 / If any id was not taken
 	 */
@@ -241,7 +232,6 @@ public class IDFactory {
 	/**
 	 * 返回已占用 ID 数量。
 	 * Amount of used ids.
-	 *
 	 * @return 已占用数量 / Used count
 	 */
 	public int getUsedCount() {

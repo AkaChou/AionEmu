@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 传送门/传送点 AI：Idian Depths Corridor（@AIName "idian_depths_corridor"），继承 ActionItemNpcAI2。
  * Portal/teleporter AI: Idian Depths Corridor (@AIName "idian_depths_corridor"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("idian_depths_corridor")

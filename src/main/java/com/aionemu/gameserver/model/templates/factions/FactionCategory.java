@@ -7,7 +7,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 势力分类枚举。
  * Faction Category enumeration.
- *
  * @author vlog
  */
 @XmlAccessorType(XmlAccessType.FIELD)

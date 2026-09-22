@@ -15,7 +15,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 宠物模板数据容器，持有并按 ID 提供全部 {@link PetTemplate}。
  * Pet template data holder that stores and serves all {@link PetTemplate} instances by id.
- *
  * @author IlBuono
  */
 @XmlRootElement(name = "pets")
@@ -43,7 +42,6 @@ public class PetData {
 	/**
 	 * 返回已加载的宠物模板数量。
 	 * Returns the number of loaded pet templates.
-	 *
 	 * @return 已加载的宠物模板数量 / Returns the number of loaded pet templates.
 	 */
 	public int size() {
@@ -53,7 +51,6 @@ public class PetData {
 	/**
 	 * 按宠物 ID 获取宠物模板。
 	 * Returns the pet template for the given id.
-	 *
 	 * @param id 宠物 ID / pet id
 	 * @return 宠物模板，不存在则为 null / pet template or null
 	 */

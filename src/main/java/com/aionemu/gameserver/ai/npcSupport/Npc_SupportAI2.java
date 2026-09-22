@@ -14,7 +14,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * NPC 支援/增益 AI：Npc Support（@AIName "npc_support"），继承 GeneralNpcAI2。
  * NPC support/buff AI: Npc Support (@AIName "npc_support"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("npc_support")

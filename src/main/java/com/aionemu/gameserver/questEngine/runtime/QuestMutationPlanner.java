@@ -47,7 +47,6 @@ public final class QuestMutationPlanner {
 	 * 依据调用方已按 questId + action 校验过的转换构建计划，跳过事件形状匹配但仍评估条件与状态。
 	 * Builds a plan for a transition the caller already validated by questId + action: the event-shape
 	 * match is skipped, while conditions, source state, and action feasibility are still evaluated.
-	 *
 	 * <p>奖励窗口确认动作由全局窗口发出，客户端携带的交互对象可能不是完成路由绑定的 NPC。</p>
 	 * <p>Reward-window confirmation actions come from the global window, so the client's interaction
 	 * object may differ from the completion route's NPC.</p>

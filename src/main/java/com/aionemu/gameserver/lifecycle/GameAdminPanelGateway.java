@@ -14,7 +14,6 @@ public class GameAdminPanelGateway {
     /**
      * 管理面板是否已启用。
      * Whether the admin panel is enabled.
-     *
      * @return 已启用为 {@code true} / {@code true} if enabled
      */
     public boolean isAdminPanelEnabled() {
@@ -32,7 +31,6 @@ public class GameAdminPanelGateway {
     /**
      * 返回当前时间毫秒数。
      * Return the current time in milliseconds.
-     *
      * @return 当前时间毫秒 / Current time millis
      */
     public long currentTimeMillis() {

@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 登录服对游戏服认证请求的应答枚举（失败原因、成功等）。
  * Possible LoginServer responses to GameServer authentication (failure reasons, success, etc.).
- *
  * @author -Nemesiss-
  */
 public enum GsAuthResponse {
@@ -36,7 +35,6 @@ public enum GsAuthResponse {
     /**
      * 构造应答枚举项。
      * Construct response enum constant.
-     *
      * @param responseId 响应消息 ID / response message id
      */
     GsAuthResponse(int responseId) {

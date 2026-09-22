@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 基础模板（静态数据/XML）。
  * XML template.
- *
  * @author Rinzler
  */
 

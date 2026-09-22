@@ -8,7 +8,6 @@ import com.aionemu.gameserver.utils.Util;
 /**
  * GM 指令：为目标玩家授予称号。
  * GM command handler that grants a title to the target player.
- *
  * @author Alcapwnd
  */
 public class CmdGiveTitle extends AbstractGMHandler {
@@ -16,7 +15,6 @@ public class CmdGiveTitle extends AbstractGMHandler {
 	/**
 	 * 创建处理器并立即授予称号。
 	 * Creates the handler and immediately grants the title.
-	 *
 	 * @param admin 执行指令的管理员 / the admin executing the command
 	 * @param params 称号 ID 字符串 / title id as string
 	 */

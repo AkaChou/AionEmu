@@ -12,7 +12,6 @@ import java.sql.*;
 /**
  * 玩家称号列表 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerTitleListDAO.
- *
  * @author xavier, Updated for MySQL 8
  */
 @Slf4j
@@ -33,7 +32,6 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
     /**
      * 加载玩家称号列表，并跳过已过期称号。
      * Loads the player's title list, skipping expired titles.
-     *
      * @param playerId 玩家 ID / player id
      * @return 称号列表 / title list
      */
@@ -73,7 +71,6 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
     /**
      * 在调用方事务连接上保存玩家一条称号，与任务状态同事务提交/回滚。
      * Stores a title on the caller-owned transaction connection.
-     *
      * 调用方事务连接 / caller-owned transaction connection
      * @param con 玩家 object id / player object id
      * @param playerId 称号 ID / title id
@@ -92,7 +89,6 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
     /**
      * 保存单个玩家称号。
      * Stores a single player title.
-     *
      * @param player 玩家 / player
      * @param entry 称号条目 / title entry
      * @return 是否成功 / whether successful
@@ -118,7 +114,6 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
     /**
      * 删除玩家的指定称号。
      * Removes a specific title from the player.
-     *
      * @param playerId 玩家 ID / player id
      * @param titleId 称号 ID / title id
      * @return 是否成功 / whether successful
@@ -143,7 +138,6 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
     /**
      * 删除玩家的全部称号。
      * Removes all titles of the player.
-     *
      * @param playerId 玩家 ID / player id
      * @return 是否成功 / whether successful
      */
@@ -164,7 +158,6 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
     /**
      * 批量保存玩家称号列表。
      * Batch-stores the player's title list.
-     *
      * @param player 玩家 / player
      * @param titles 称号列表 / title list
      * @return 是否成功 / whether successful
@@ -229,7 +222,6 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

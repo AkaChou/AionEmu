@@ -8,7 +8,6 @@ import com.aionemu.gameserver.network.loginserver.LsServerPacket;
 /**
  * 游戏服向登录服发起商城/高级点消费控制的服务端包。
  * Server packet that requests premium/in-game shop cost control on the login server.
- *
  * @author KID
  */
 public class SM_PREMIUM_CONTROL extends LsServerPacket {
@@ -18,7 +17,6 @@ public class SM_PREMIUM_CONTROL extends LsServerPacket {
 	/**
 	 * 构造高级点/商城消费控制包。
 	 * Constructs a premium/shop cost control packet.
-	 *
 	 * in-game shop request
 	 * @param cost 消费点数 / cost amount
 	 */

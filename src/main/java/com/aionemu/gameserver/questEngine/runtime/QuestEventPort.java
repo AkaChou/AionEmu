@@ -48,7 +48,6 @@ public interface QuestEventPort {
 	/**
 	 * 按 transition 推导出的最小事实集捕获只读事实。
 	 * Captures read-only facts according to the minimal fact set derived from the transition.
-	 *
 	 * <p>默认实现回落到三个旧门控（其余事实族保守全采），因此自定义端口与测试替身无需改动即可继续工作。
 	 * The default implementation falls back to the three legacy gates with every other family captured, so
 	 * custom ports and test doubles keep working unchanged.</p>

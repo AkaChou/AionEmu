@@ -5,7 +5,6 @@ import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 /**
  * 登录服对 SM_ACCOUNT_RECONNECT_KEY 的响应包，返回账号与重连密钥。
  * LoginServer response for SM_ACCOUNT_RECONNECT_KEY with account id and reconnection key.
- *
  * @author -Nemesiss-
  */
 public class CM_ACCOUNT_RECONNECT_KEY extends LsClientPacket {
@@ -13,7 +12,6 @@ public class CM_ACCOUNT_RECONNECT_KEY extends LsClientPacket {
 	/**
 	 * 构造函数。
 	 * Constructor.
-	 *
 	 * @param opCode 操作码 opcode
 	 */
 	public CM_ACCOUNT_RECONNECT_KEY(int opCode) {

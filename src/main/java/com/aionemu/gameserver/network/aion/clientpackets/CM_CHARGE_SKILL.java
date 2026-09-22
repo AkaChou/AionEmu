@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 停止充能技能蓄力的客户端包。
  * Client packet to stop a charging skill cast.
- *
  * @author Dr.Nism
  */
 public class CM_CHARGE_SKILL extends AionClientPacket {

@@ -39,7 +39,6 @@ public class SM_SIEGE_LOCATION_INFO extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_SIEGE_LOCATION_INFO 包。
 	 * Creates a SM_SIEGE_LOCATION_INFO packet with the given parameters.
-	 *
 	 * @param loc 攻城地点 / siege location
 	 */
 	public SM_SIEGE_LOCATION_INFO(SiegeLocation loc) {

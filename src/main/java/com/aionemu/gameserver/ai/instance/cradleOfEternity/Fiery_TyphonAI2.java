@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Cradle Of Eternity 副本 NPC AI：Fiery Typhon（@AIName "Fiery_Typhon"），继承 AggressiveNpcAI2。
  * Cradle Of Eternity instance NPC AI: Fiery Typhon (@AIName "Fiery_Typhon"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("Fiery_Typhon")

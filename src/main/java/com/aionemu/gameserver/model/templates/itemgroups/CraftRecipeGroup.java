@@ -13,7 +13,6 @@ import com.aionemu.gameserver.model.templates.rewards.CraftRecipe;
 /**
  * 制作配方奖励组：制作产出的配方条目。
  * Craft recipe reward group: recipe entries produced by crafting.
- *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)

@@ -18,7 +18,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 面板 CP 石数据容器，按石 ID 索引 CP 石模板。
  * Panel CP-stone data holder, indexing stone templates by stone id.
- *
  * @author Rinzler (Encom)
  */
 @XmlRootElement(name = "stones_cp")
@@ -47,7 +46,6 @@ public class StoneCpData {
 	/**
 	 * 返回已加载的 CP 石数量。
 	 * Returns the number of loaded CP stones.
-	 *
 	 * @return 已加载的CP 石数量 / Returns the number of loaded CP stones.
 	 */
 	public int size() {
@@ -57,7 +55,6 @@ public class StoneCpData {
 	/**
 	 * 按石 ID 获取 CP 石模板。
 	 * Returns the CP-stone template for the given stone id.
-	 *
 	 * @param id 石 ID / stone id
 	 * @return CP 石模板，不存在则为 null / CP-stone template or null
 	 */
@@ -68,7 +65,6 @@ public class StoneCpData {
 	/**
 	 * 返回全部 CP 石模板映射。
 	 * Returns the full map of CP-stone templates.
-	 *
 	 * @return 石 ID → 模板映射 / stone-id to template map
 	 */
 	public Map<Integer, StoneCP> getAll() {

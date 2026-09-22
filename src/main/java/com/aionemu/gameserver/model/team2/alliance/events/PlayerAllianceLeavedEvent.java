@@ -19,7 +19,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * 玩家联盟 Leaved 活动，用于团队2相关逻辑。
  * Player Alliance Leaved Event for team 2 logic.
- *
  * @author ATracer
  */
 public class PlayerAllianceLeavedEvent extends PlayerLeavedEvent<PlayerAllianceMember, PlayerAlliance> {

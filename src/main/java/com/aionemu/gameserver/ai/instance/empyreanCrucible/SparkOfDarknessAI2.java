@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Empyrean Crucible 副本 NPC AI：Spark Of Darkness（@AIName "spark_of_darkness"），继承 GeneralNpcAI2。
  * Empyrean Crucible instance NPC AI: Spark Of Darkness (@AIName "spark_of_darkness"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("spark_of_darkness")

@@ -18,7 +18,6 @@ import lombok.Setter;
 /**
  * Anoha 活动时间表配置。
  * Anoha event schedule configuration.
- *
  * @author Rinzler (Encom)
  */
 @Getter
@@ -31,7 +30,6 @@ public class AnohaSchedule {
 	 * -- GETTER --
 	 *  获取 Anoha 列表。
 	 *  Returns the anoha list.
-
 	 */
 	@XmlElement(name = "anoha", required = true)
 	private List<Anoha> anohasList;
@@ -76,8 +74,6 @@ public class AnohaSchedule {
 		 * -- SETTER --
 		 *  设置 Anoha ID。
 		 *  Sets the anoha ID.
-
-
 		 */
 		@XmlAttribute(required = true)
 		private int id;
@@ -91,8 +87,6 @@ public class AnohaSchedule {
 		 * -- SETTER --
 		 *  设置狂暴时间列表。
 		 *  Sets the berserk times.
-
-
 		 */
 		@XmlElement(name = "berserkTime", required = true)
 		private List<String> berserkTimes;

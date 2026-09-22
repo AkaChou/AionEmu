@@ -22,7 +22,6 @@ public class DeformEffect extends TransformEffect {
 	/**
 	 * 按变形抗性计算是否命中。
 	 * Calculates hit using deform resistance.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -33,7 +32,6 @@ public class DeformEffect extends TransformEffect {
 	/**
 	 * 启动变形并设置 DEFORM 异常。
 	 * Starts transform with the DEFORM abnormal.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -47,7 +45,6 @@ public class DeformEffect extends TransformEffect {
 	/**
 	 * 结束变形并清除 DEFORM 异常。
 	 * Ends transform and clears the DEFORM abnormal.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

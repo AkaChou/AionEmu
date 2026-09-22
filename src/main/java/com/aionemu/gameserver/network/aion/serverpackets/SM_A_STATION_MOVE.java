@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 通知客户端执行 A-Station（跨服中转站）地图迁移的服务端包。
  * Server packet instructing the client to perform an A-Station (cross-server hub) map move.
- *
  * @author Ranastic
  */
 @AllArgsConstructor

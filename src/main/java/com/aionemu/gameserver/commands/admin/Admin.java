@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 管理员帮助命令：以 HTML 展示可用管理命令列表。
  * Admin help command: shows the available admin-command list via HTML.
- *
  * @author Phantom, ATracer
  */
 public class Admin extends AdminCommand {
@@ -25,7 +24,6 @@ public class Admin extends AdminCommand {
 	/**
 	 * 执行帮助展示：打开 commands.xhtml 页面。
 	 * Executes help display: opens the commands.xhtml page.
-	 *
 	 * @param params 参数（未使用） / unused params
 	 */
 	@Override

@@ -17,7 +17,6 @@ import java.util.List;
 /**
  * 管理员移动/飞行速度百分比调整命令。
  * Admin command to adjust walk and fly speed by percent.
- *
  * @author ATracer
  */
 public class Speed extends AdminCommand {
@@ -44,7 +43,6 @@ public class Speed extends AdminCommand {
 	/**
 	 * 按百分比覆盖管理员的行走与飞行速度。
 	 * Overrides admin walk and fly speed by the given percent.
-	 *
 	 * @param admin 执行 GM / Admin player
 	 * @param params 速度百分比 0–1000 / Speed percent 0–1000
 	 */
@@ -75,7 +73,6 @@ public class Speed extends AdminCommand {
 	/**
 	 * 按百分比覆盖行走与飞行速度（{@code //speed} 与 {@code //gm} 共用）。
 	 * Overrides walk and fly speed by the given percent (shared by {@code //speed} and {@code //gm}).
-	 *
 	 * @param admin 执行 GM / Admin player
 	 * @param percent 速度百分比 0–1000 / Speed percent 0–1000
 	 */
@@ -93,7 +90,6 @@ public class Speed extends AdminCommand {
 	/**
 	 * 参数错误时的用法提示。
 	 * Usage hint on invalid parameters.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

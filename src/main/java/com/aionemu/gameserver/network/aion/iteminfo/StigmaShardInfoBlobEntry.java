@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
  * 当前写入占位数据。
  * Blob for stigma-shard info.
  * Currently writes a placeholder value.
- *
  * @author Rolandas
  */
 public class StigmaShardInfoBlobEntry extends ItemBlobEntry {

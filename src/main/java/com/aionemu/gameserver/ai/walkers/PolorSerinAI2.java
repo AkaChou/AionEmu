@@ -10,7 +10,6 @@ import org.apache.commons.lang3.ArrayUtils;
 /**
  * 巡逻行走 NPC AI：Polor Serin（@AIName "polorserin"），继承 WalkGeneralRunnerAI2。
  * Walker patrol NPC AI: Polor Serin (@AIName "polorserin"), extends WalkGeneralRunnerAI2.
- *
  * @author Encom
  */
 @AIName("polorserin")

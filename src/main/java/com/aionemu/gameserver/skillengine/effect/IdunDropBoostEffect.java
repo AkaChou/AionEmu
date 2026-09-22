@@ -9,7 +9,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 伊登掉落加成效果：标记运行中效果启用 Idun 掉落提升。
  * Idun drop boost effect: marks the runtime effect to enable Idun drop increase.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -19,7 +18,6 @@ public class IdunDropBoostEffect extends BuffEffect {
 	/**
 	 * 标记本效果启用 Idun 掉落加成并记为成功。
 	 * Marks Idun drop boost and records this effect as successful.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

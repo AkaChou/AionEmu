@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 通知客户端删除指定配方。
  * Server packet notifying the client to delete a recipe.
- *
  * @author namedrisk
  */
 @AllArgsConstructor

@@ -5,7 +5,6 @@ import com.aionemu.commons.configuration.Property;
 /**
  * AI 行为相关配置。
  * AI behavior related configuration.
- *
  * @author ATracer
  */
 public class AIConfig {

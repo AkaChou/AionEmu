@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 传送门/传送点 AI：Fatebound Abbey Portal（@AIName "fatebound"），继承 NpcAI2。
  * Portal/teleporter AI: Fatebound Abbey Portal (@AIName "fatebound"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("fatebound")

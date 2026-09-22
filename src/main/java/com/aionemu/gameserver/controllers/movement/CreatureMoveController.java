@@ -11,7 +11,6 @@ import lombok.Getter;
 /**
  * 生物移动控制器抽象基类，维护目标点、朝向、移动掩码与启停状态。
  * Abstract base move controller for creatures: destination, heading, mask, and start/stop state.
- *
  * @author ATracer
  * @param <T> 所有者可见对象类型 / Owner visible-object type
  */
@@ -41,7 +40,6 @@ public abstract class CreatureMoveController<T extends VisibleObject> implements
 	/**
 	 * 使用指定所有者构造控制器。
 	 * Construct the controller for the given owner.
-	 *
 	 * @param owner 所有者 / Owner
 	 */
 	public CreatureMoveController(T owner) {
@@ -59,7 +57,6 @@ public abstract class CreatureMoveController<T extends VisibleObject> implements
 	/**
 	 * 返回目标 X 坐标。
 	 * Return the target X coordinate.
-	 *
 	 * @return 目标 X 坐标 / Target X
 	 */
 	@Override
@@ -70,7 +67,6 @@ public abstract class CreatureMoveController<T extends VisibleObject> implements
 	/**
 	 * 返回目标 Y 坐标。
 	 * Return the target Y coordinate.
-	 *
 	 * @return 目标 Y 坐标 / Target Y
 	 */
 	@Override
@@ -81,7 +77,6 @@ public abstract class CreatureMoveController<T extends VisibleObject> implements
 	/**
 	 * 返回目标 Z 坐标。
 	 * Return the target Z coordinate.
-	 *
 	 * @return 目标 Z 坐标 / Target Z
 	 */
 	@Override
@@ -92,7 +87,6 @@ public abstract class CreatureMoveController<T extends VisibleObject> implements
 	/**
 	 * 设置新方向与朝向。
 	 * Set a new destination and heading.
-	 *
 	 * @param x 目标 X / Target X
 	 * @param y 目标 Y / Target Y
 	 * @param z 目标 Z / Target Z
@@ -107,7 +101,6 @@ public abstract class CreatureMoveController<T extends VisibleObject> implements
 	/**
 	 * 仅更新目标坐标。
 	 * Update destination coordinates only.
-	 *
 	 * @param x 目标 X / Target X
 	 * @param y 目标 Y / Target Y
 	 * @param z 目标 Z / Target Z
@@ -137,7 +130,6 @@ public abstract class CreatureMoveController<T extends VisibleObject> implements
 	/**
 	 * 设置停止掩码并向周围广播停止移动包。
 	 * Set the stop mask and broadcast a stop-move packet.
-	 *
 	 * @param owner 生物所有者 / Creature owner
 	 */
 	protected void setAndSendStopMove(Creature owner) {
@@ -156,7 +148,6 @@ public abstract class CreatureMoveController<T extends VisibleObject> implements
 	/**
 	 * 返回当前移动掩码。
 	 * Return the current movement mask.
-	 *
 	 * @return 移动掩码 / Movement mask
 	 */
 	@Override
@@ -167,7 +158,6 @@ public abstract class CreatureMoveController<T extends VisibleObject> implements
 	/**
 	 * 是否处于移动中。
 	 * Whether the owner is currently moving.
-	 *
 	 * @return 是否移动中 / Whether in move
 	 */
 	@Override
@@ -178,7 +168,6 @@ public abstract class CreatureMoveController<T extends VisibleObject> implements
 	/**
 	 * 设置是否处于移动中。
 	 * Set whether the owner is currently moving.
-	 *
 	 * @param value 移动状态 / In-move flag
 	 */
 	@Override

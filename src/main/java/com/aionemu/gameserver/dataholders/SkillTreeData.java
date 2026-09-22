@@ -19,7 +19,6 @@ import lombok.Getter;
 /**
  * 技能树数据容器，按职业/阵营/等级哈希与技能 ID 双索引学习模板。
  * Skill tree data holder, dual-indexing learn templates by class/race/level hash and skill id.
- *
  * @author ATracer
  */
 @Getter
@@ -33,8 +32,7 @@ public class SkillTreeData {
 	/**
 	 * 返回按职业/阵营/等级哈希索引的学习模板映射。
 	 * Returns the learn-template map indexed by class/race/level hash.
-	 *
-	 * @return 哈希到模板列表的映射 / map of hash to template list
+	 * 哈希到模板列表的映射 / map of hash to template list
 	 */
 	private final IntObjectHashMap<ArrayList<SkillLearnTemplate>> templates = new IntObjectHashMap<>();
 	private final IntObjectHashMap<ArrayList<SkillLearnTemplate>> templatesById = new IntObjectHashMap<>();
@@ -75,7 +73,6 @@ public class SkillTreeData {
 	/**
 	 * 查找可学习技能：职业+阵营专用、职业通用、全职业通用三类。
 	 * Finds learnable skills: class+race specific, class-only, and general (all class/race).
-	 *
 	 * @param playerClass 职业 / player class
 	 * @param level 等级 / level
 	 * @param race 阵营 / race
@@ -106,7 +103,6 @@ public class SkillTreeData {
 	/**
 	 * 按技能 ID 返回全部学习模板。
 	 * Returns all learn templates for the given skill id.
-	 *
 	 * @param skillId 技能 ID / skill id
 	 * @return 学习模板数组 / learn template array
 	 */
@@ -123,7 +119,6 @@ public class SkillTreeData {
 	/**
 	 * 判断技能是否出现在技能树中（可学习）。
 	 * Returns whether the skill appears in the skill tree (is learnable).
-	 *
 	 * @param skillId 技能 ID / skill id
 	 * @return 是否可学习 / whether it is a learned skill
 	 */
@@ -134,7 +129,6 @@ public class SkillTreeData {
 	/**
 	 * 返回全部学习模板条目总数。
 	 * Returns the total number of learn-template entries.
-	 *
 	 * @return 模板条目总数 / total entry count
 	 */
 	public int size() {

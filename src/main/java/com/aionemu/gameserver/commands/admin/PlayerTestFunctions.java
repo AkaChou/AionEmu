@@ -43,7 +43,6 @@ public class PlayerTestFunctions extends AdminCommand
 	/**
 	 * 分发 pro/con/star/unk1 等子命令；外观相关会刷新 knownlist。
 	 * Dispatch pro/con/star/unk1 and related subcommands; appearance paths refresh the knownlist.
-	 *
 	 * @param params 子命令与数值 / Subcommand and values
 	 */
 	@Override
@@ -64,7 +63,6 @@ public class PlayerTestFunctions extends AdminCommand
 	/**
 	 * 对当前目标（Creature/Player）应用测试数值更新。
 	 * Apply the test value update to the current Creature/Player target.
-	 *
 	 * @param params 子命令与整型值 / Subcommand and int value
 	 */
 	protected void handleUpdate(Player player, String... params) {
@@ -126,7 +124,6 @@ public class PlayerTestFunctions extends AdminCommand
 	/**
 	 * 向管理员显示命令帮助。
 	 * Show command help to the admin.
-	 *
 	 * @param player 执行 GM / Admin player
 	 */
 	protected void showHelp(Player player) {

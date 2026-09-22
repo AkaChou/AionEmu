@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 /**
  * 圆柱模板（静态数据/XML）。
  * XML template.
- *
  * @author MrPoke
  */
 @Getter

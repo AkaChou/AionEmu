@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
 /**
  * NPC 的生命值/魔法值属性与恢复逻辑。
  * NPC HP/MP stats and restore logic.
- *
  * @author ATracer
  */
 public class NpcLifeStats extends CreatureLifeStats<Npc> {
@@ -17,7 +16,6 @@ public class NpcLifeStats extends CreatureLifeStats<Npc> {
 	/**
 	 * 创建 NPC 生命属性。
 	 * Creates NPC life stats.
-	 *
 	 * @param owner 所属 NPC / owner NPC
 	 */
 	public NpcLifeStats(Npc owner) {

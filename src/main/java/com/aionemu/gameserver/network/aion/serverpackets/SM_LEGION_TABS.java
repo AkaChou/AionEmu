@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 向客户端发送军团历史记录分页标签数据的服务端包。
  * Server packet that sends paged legion history tab data to the client.
- *
  * @author Simple, KID, xTz
  */
 public class SM_LEGION_TABS extends AionServerPacket {
@@ -21,7 +20,6 @@ public class SM_LEGION_TABS extends AionServerPacket {
 	/**
 	 * 使用历史记录与标签 ID 构造首页数据包。
 	 * Creates a first-page packet from history entries and a tab id.
-	 *
 	 * @param legionHistory 军团历史记录集合 / legion history collection
 	 * tab id
 	 */
@@ -34,7 +32,6 @@ public class SM_LEGION_TABS extends AionServerPacket {
 	/**
 	 * 使用历史记录、页码与标签 ID 构造分页数据包。
 	 * Creates a paged packet from history entries, page index and tab id.
-	 *
 	 * @param legionHistory 军团历史记录集合 / legion history collection
 	 * @param page 页码（从 0 起） / page index (0-based)
 	 * tab id
@@ -52,10 +49,7 @@ public class SM_LEGION_TABS extends AionServerPacket {
 	@Override
 	protected void writeImpl(AionConnection con) {
 		int size = legionHistory.size();
-		/**
-	 * 若历史条数不足 page*8 则返回 / If history size is less than page*8 return
-	 */
-		if (size < (page * 8)) {
+        if (size < (page * 8)) {
 			return;
 		}
 		int hisSize = Math.min(8, size - page * 8);

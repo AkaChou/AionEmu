@@ -18,7 +18,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 制作 Learn 动作模板（静态数据/XML）。
  * XML template.
- *
  * @author ATracer, MrPoke, KID
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -57,7 +56,6 @@ public class CraftLearnAction extends AbstractItemAction {
 	/**
 	 * 校验玩家是否可学习指定配方。
 	 * Validates whether the player can learn the given recipe.
-	 *
 	 * @param player 玩家 / player
 	 * @param recipeId 配方 ID / recipe id
 	 * @return 合法时返回配方模板，否则返回 null / recipe template if valid, otherwise null
@@ -97,7 +95,6 @@ public class CraftLearnAction extends AbstractItemAction {
 	/**
 	 * 为玩家添加配方，可选择是否先做校验。
 	 * Adds a recipe for the player, optionally with validation.
-	 *
 	 * @param player 玩家 / player
 	 * @param recipeId 配方 ID / recipe id
 	 * @param useValidation 是否执行校验 / whether to run validation

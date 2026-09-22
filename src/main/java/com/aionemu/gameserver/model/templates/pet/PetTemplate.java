@@ -16,7 +16,6 @@ import lombok.Getter;
 /**
  * 宠物模板（静态数据/XML）。
  * Pet template (static data / XML).
- *
  * @author IlBuono
  */
 @Getter
@@ -85,7 +84,6 @@ public class PetTemplate {
 	/**
 	 * 判断是否包含指定函数；写入 SM_PET 包时使用，仅检查所需项。
 	 * Checks whether the pet contains the given function; used for SM_PET packet, so checks only needed ones.
-	 *
 	 * @param type 宠物函数类型 / pet function type
 	 * @return 是否包含 / whether contained
 	 */
@@ -104,7 +102,6 @@ public class PetTemplate {
 	/**
 	 * 找到则返回函数，否则为空。
 	 * Returns function if found, otherwise null.
-	 *
 	 * @param type 宠物函数类型 / pet function type
 	 * @return 匹配的宠物函数 / matching pet function
 	 */

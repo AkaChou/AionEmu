@@ -5,7 +5,6 @@ import lombok.Data;
 /**
  * 攻击方暴击状态数据：结果、剩余次数、数值与是否百分比。
  * Attacker critical status data: result, remaining count, value and percent flag.
- *
  * @author kecimis
  */
 @Data
@@ -22,7 +21,6 @@ public class AttackerCriticalStatus {
 	/**
 	 * 仅携带判定结果的构造。
 	 * Constructor with result only.
-	 *
 	 * @param result 判定结果 / check result
 	 */
 	public AttackerCriticalStatus(boolean result) {
@@ -32,7 +30,6 @@ public class AttackerCriticalStatus {
 	/**
 	 * 携带次数与数值的构造。
 	 * Constructor with count and value.
-	 *
 	 * @param count 剩余次数 / remaining count
 	 * @param value 暴击数值 / critical value
 	 * @param isPercent 是否百分比 / whether percent-based

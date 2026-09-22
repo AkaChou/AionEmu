@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 向客户端播放奥德锻造（Aetherforging）进度条动画的服务端包。
  * Server packet playing the Aetherforging progress-bar animation on the client.
- *
  * @author Ranastic
  */
 public class SM_AETHERFORGING_ANIMATION extends AionServerPacket {
@@ -18,7 +17,6 @@ public class SM_AETHERFORGING_ANIMATION extends AionServerPacket {
 	/**
 	 * 构造奥德锻造动画包。
 	 * Creates an Aetherforging animation packet.
-	 *
 	 * @param player 执行锻造的玩家（当前未写入包体） / forging player (not written into the packet body currently)
 	 * recipe id
 	 * @param barTime 进度条时长 / progress bar duration

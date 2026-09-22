@@ -10,7 +10,6 @@ import lombok.Getter;
 /**
  * Sale 模板（静态数据/XML）。
  * XML template.
- *
  * @author Rolandas
  */
 @Getter

@@ -39,7 +39,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 区域数据容器，按地图 ID 索引区域信息，并维护天气区域序号。
  * Zone data holder, indexing zone info by map id and tracking weather-zone order numbers.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -105,7 +104,6 @@ public class ZoneData {
 	/**
 	 * 返回按地图 ID 分组的区域信息映射。
 	 * Returns the zone-info map keyed by map id.
-	 *
 	 * @return 区域信息映射 / zone-info map
 	 */
 	public IntObjectHashMap<List<ZoneInfo>> getZones() {
@@ -115,7 +113,6 @@ public class ZoneData {
 	/**
 	 * 返回已加载的区域数量。
 	 * Returns the number of loaded zones.
-	 *
 	 * @return 已加载的区域数量 / Returns the number of loaded zones.
 	 */
 	public int size() {
@@ -125,7 +122,6 @@ public class ZoneData {
 	/**
 	 * 获取天气区域序号（从 1 开始）；模板未登记时返回 0。
 	 * Returns the weather-zone order number (starting from 1), or 0 if the template is unregistered.
-	 *
 	 * @param template 区域模板 / zone template
 	 * @return 天气区域序号，未登记则为 0 / weather-zone id or 0
 	 */

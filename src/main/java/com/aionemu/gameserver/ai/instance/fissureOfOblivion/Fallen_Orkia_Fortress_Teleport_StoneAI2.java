@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Fissure Of Oblivion 副本 NPC AI：Fallen Orkia Fortress Teleport Stone（@AIName "Fallen_Orkia_Fortress_Teleport_Stone"），继承 NpcAI2。
  * Fissure Of Oblivion instance NPC AI: Fallen Orkia Fortress Teleport Stone (@AIName "Fallen_Orkia_Fortress_Teleport_Stone"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Fallen_Orkia_Fortress_Teleport_Stone")

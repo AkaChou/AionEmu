@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 攻城战相关 NPC AI：Ab1 1011 Sim Weak Seller Li（@AIName "Ab1_1011_Sim_Weak_Seller_Li"），继承 NpcAI2。
  * Siege-related NPC AI: Ab1 1011 Sim Weak Seller Li (@AIName "Ab1_1011_Sim_Weak_Seller_Li"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Ab1_1011_Sim_Weak_Seller_Li")

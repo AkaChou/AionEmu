@@ -11,7 +11,6 @@ import lombok.Getter;
 /**
  * 重生效果：挂载后允许以配置百分比与技能进行重生。
  * Rebirth effect: while active, allows rebirth at a configured percent and skill.
- *
  * @author Sarynth
  */
 @Getter

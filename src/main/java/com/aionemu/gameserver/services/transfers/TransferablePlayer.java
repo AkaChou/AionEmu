@@ -5,7 +5,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * 可转移玩家任务载体，保存跨服角色迁移过程中的源/目标账户与任务信息。
  * Transferable player task holder storing source/target account and task info during cross-server transfer.
- *
  * @author KID
  */
 public class TransferablePlayer {
@@ -25,7 +24,6 @@ public class TransferablePlayer {
 	/**
 	 * 构造可转移玩家记录。
 	 * Construct a transferable player record.
-	 *
 	 * @param playerId 玩家 ID / player id
 	 * @param accountId 源账号 ID / source account id
 	 * @param targetAccountId 目标账号 ID / target account id

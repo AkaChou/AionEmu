@@ -46,18 +46,12 @@ public class SiegeLocation implements ZoneHandler {
 	/** 返回军团 ID / Returns the legion id */
 	protected int legionId;
 	protected long lastArtifactActivation;
-	/**
-	 * @return 是否可攻击 / Whether vulnerable
-	 */
 	private boolean vulnerable;
 	/** 返回下一个状态 / Returns the next state */
 	private int nextState;
 	/** 获取区域。 / Returns the zone. */
 	protected List<SiegeZoneInstance> zone;
 	private List<SiegeShield> shields;
-	/**
-	 * @return 是否处于护盾下 / Whether under shield
-	 */
 	private boolean isUnderShield;
 	/** 设置传送权限 / Sets the can teleport */
 	private boolean canTeleport;
@@ -116,7 +110,6 @@ public class SiegeLocation implements ZoneHandler {
 	/**
 	 * 判断玩家是否可传送。
 	 * Checks whether the player can teleport.
-	 *
 	 * @param player 待判断的玩家 / player to check
 	 * @return 是否可传送 / Whether can teleport
 	 */
@@ -133,7 +126,6 @@ public class SiegeLocation implements ZoneHandler {
 	/**
 	 * 判断生物是否位于据点区域内。
 	 * Checks whether the creature is inside the location zone.
-	 *
 	 * @param creature 待判断的生物 / creature to check
 	 * @return 是否在区域内 / Whether inside location
 	 */

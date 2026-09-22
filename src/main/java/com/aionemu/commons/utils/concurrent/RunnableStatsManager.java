@@ -22,7 +22,6 @@ import org.apache.commons.io.IOUtils;
 /**
  * 运行时统计管理器：收集并导出方法执行耗时。
  * Runtime statistics manager for collecting and dumping method timings.
- *
  * @author NB4L1
  */
 @SuppressWarnings("unchecked")
@@ -64,7 +63,6 @@ public class RunnableStatsManager {
         /**
          * 获取或创建方法统计。
          * Get or create method statistics.
-         *
          * @param methodName 方法名 / Method name
          * @param synchronizedAlready 是否已同步 / Whether already synchronized
          * @return 方法统计 / Method statistics
@@ -122,7 +120,6 @@ public class RunnableStatsManager {
         /**
          * 累加一次运行耗时。
          * Accumulate one runtime sample.
-         *
          * @param runTime 耗时（纳秒） / Runtime in nanoseconds
          */
         private void handleStats(long runTime) {
@@ -141,7 +138,6 @@ public class RunnableStatsManager {
     /**
      * 获取或创建类统计。
      * Get or create class statistics.
-     *
      * @param clazz 类 / Class
      * @param synchronizedAlready 是否已同步 / Whether already synchronized
      * @return 类统计 / Class statistics
@@ -165,7 +161,6 @@ public class RunnableStatsManager {
     /**
      * 记录 Runnable 类的运行统计。
      * Record runtime statistics for a Runnable class.
-     *
      * @param clazz 可运行类 / Runnable class
      * @param runTime 耗时（纳秒） / Runtime in nanoseconds
      */
@@ -179,7 +174,6 @@ public class RunnableStatsManager {
     /**
      * 记录指定方法的运行统计。
      * Record runtime statistics for a named method.
-     *
      * @param clazz 类 / Class
      * @param methodName 方法名 / Method name
      * @param runTime 耗时（纳秒） / Runtime in nanoseconds
@@ -310,7 +304,6 @@ public class RunnableStatsManager {
     /**
      * 按指定字段排序后导出类统计。
      * Dump class statistics sorted by the given field.
-     *
      * @param sortBy 排序字段，可为 null / Sort field, may be null
      */
     public void dumpClassStats(final SortBy sortBy) {
@@ -417,7 +410,6 @@ public class RunnableStatsManager {
     /**
      * 追加 XML 属性，并按列宽填充空格。
      * Append an XML attribute with column padding.
-     *
      * @param sb     输出 / Output builder
      * @param sortBy 排序字段 / Sort field
      * @param value  值 / Value

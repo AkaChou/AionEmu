@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 伊迪安模板：攻击/防御燃烧加成。
  * Idian template: burn attack/defend bonuses.
- *
  * @author Rolandas
  */
 @Getter

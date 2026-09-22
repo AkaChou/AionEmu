@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * GM 指令：按 NPC ID 或名称描述传送到该 NPC 附近。
  * GM command handler that teleports the admin to an NPC by id or name description.
- *
  * @author Alcapwnd
  */
 public class CmdTeleportToNamed extends AbstractGMHandler {
@@ -17,7 +16,6 @@ public class CmdTeleportToNamed extends AbstractGMHandler {
 	/**
 	 * 创建处理器并立即按 NPC 传送。
 	 * Creates the handler and immediately teleports by NPC.
-	 *
 	 * @param admin 执行指令的管理员 / the admin executing the command
 	 * @param params NPC ID 或名称描述 / NPC id or name description
 	 */

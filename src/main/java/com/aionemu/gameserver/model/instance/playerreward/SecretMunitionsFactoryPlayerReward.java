@@ -25,9 +25,6 @@ public class SecretMunitionsFactoryPlayerReward extends InstancePlayerReward {
 	 * Returns the mechaturerk normal treasure chest.
 	 */
 	private int mechaturerkNormalTreasureChest;
-	/**
-	 * @return 是否已奖励 / whether rewarded
-	 */
 	private boolean isRewarded = false;
 
 	public SecretMunitionsFactoryPlayerReward(Integer object) {

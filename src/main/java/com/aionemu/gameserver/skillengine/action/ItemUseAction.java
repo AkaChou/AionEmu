@@ -12,7 +12,6 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 /**
  * 物品消耗动作：施法时从玩家背包扣除指定物品。
  * Item cost action: removes items from the player inventory on cast.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -36,7 +35,6 @@ public class ItemUseAction extends Action {
 	/**
 	 * 从玩家背包扣除物品；非玩家施法者忽略。
 	 * Decreases items from player inventory; ignored for non-player casters.
-	 *
 	 * @param skill 当前技能上下文 / current skill context
 	 */
 	@Override

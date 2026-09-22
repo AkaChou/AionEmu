@@ -76,9 +76,6 @@ public class House extends VisibleObject {
 	private int permissions;
 	/** 获取状态。 / Returns the status. */
 	private HouseStatus status;
-	/**
-	 * @return 是否已缴纳维护费 / whether fee paid
-	 */
 	private boolean feePaid = true;
 	/** 返回 next pay / Returns the next pay */
 	private Timestamp nextPay;
@@ -462,7 +459,6 @@ public class House extends VisibleObject {
 	/**
 	 * 判断是否处于指定房屋状态。
 	 * Returns whether the house is in the given owner-info flag state.
-	 *
 	 * @param status 房屋所有者标志 / house owner flags
 	 * @return 是否处于该状态 / whether in the given state
 	 */

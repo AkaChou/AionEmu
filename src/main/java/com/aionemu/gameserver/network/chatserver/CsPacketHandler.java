@@ -23,7 +23,6 @@ public class CsPacketHandler {
 	/**
 	 * 从缓冲中读取操作码并构造对应入站包。
 	 * Reads the opcode from the buffer and builds the matching inbound packet.
-	 *
 	 * @param data 包数据 / packet data
 	 * @param client 所属连接 / owning connection
 	 * @return 入站包实例，未知操作码时为 null / inbound packet, or null for unknown opcode
@@ -37,7 +36,6 @@ public class CsPacketHandler {
 	/**
 	 * 为指定状态注册包原型。
 	 * Registers a packet prototype for the given states.
-	 *
 	 * @param packetPrototype 包原型 / packet prototype
 	 * @param states 适用连接状态 / applicable connection states
 	 */
@@ -55,7 +53,6 @@ public class CsPacketHandler {
 	/**
 	 * 按状态与操作码查找原型，克隆并绑定缓冲与连接。
 	 * Looks up a prototype by state and opcode, then clones and binds buffer and connection.
-	 *
 	 * @param state 连接状态 / connection state
 	 * @param id 操作码 / opcode
 	 * @param buf 数据缓冲 / data buffer
@@ -81,7 +78,6 @@ public class CsPacketHandler {
 	/**
 	 * 记录未知入站包。
 	 * Logs an unknown inbound packet.
-	 *
 	 * @param state 连接状态 / connection state
 	 * @param id 操作码 / opcode
 	 */

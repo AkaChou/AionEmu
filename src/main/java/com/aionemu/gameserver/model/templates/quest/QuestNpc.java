@@ -15,7 +15,6 @@ import lombok.Getter;
 /**
  * 任务 NPC 模板（静态数据/XML）。
  * XML template.
- *
  * @author MrPoke
  */
 @Getter

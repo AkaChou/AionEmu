@@ -45,7 +45,6 @@ public class PetBuffData {
 	/**
 	 * 返回索引条目数量（含双键）。
 	 * Returns the number of index entries (including dual keys).
-	 *
 	 * @return 索引条目（含双键）数量 / Returns the number of index entries (including dual keys).
 	 */
 	public int size() {
@@ -55,7 +54,6 @@ public class PetBuffData {
 	/**
 	 * 按增益 ID 获取宠物增益属性。
 	 * Returns the pet bonus attribute for the given buff id.
-	 *
 	 * @param buffId 增益 ID / buff id
 	 * @return 增益属性，不存在则为 null / bonus attribute or null
 	 */
@@ -66,7 +64,6 @@ public class PetBuffData {
 	/**
 	 * 按食物计数获取宠物增益属性。
 	 * Returns the pet bonus attribute for the given food count.
-	 *
 	 * @param count 食物计数 / food count
 	 * @return 增益属性，不存在则为 null / bonus attribute or null
 	 */

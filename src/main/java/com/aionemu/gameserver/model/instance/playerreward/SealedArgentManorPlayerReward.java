@@ -19,9 +19,6 @@ public class SealedArgentManorPlayerReward extends InstancePlayerReward {
 	private int lesserArgentManorBox;
 	/** 返回 greater argent manor box / Returns the greater argent manor box */
 	private int greaterArgentManorBox;
-	/**
-	 * @return 是否已奖励 / whether rewarded
-	 */
 	private boolean isRewarded = false;
 
 	public SealedArgentManorPlayerReward(Integer object) {

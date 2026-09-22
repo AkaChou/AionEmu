@@ -40,7 +40,6 @@ public enum AuctionResult {
 	/**
 	 * getResultFromId 方法。
 	 * getResultFromId method.
-	 *
 	 * resultId
 	 * result
 	 */

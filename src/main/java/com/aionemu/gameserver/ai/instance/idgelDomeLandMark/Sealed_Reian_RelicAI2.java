@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * Idgel Dome Land Mark 副本 NPC AI：Sealed Reian Relic（@AIName "Sealed_Reian_Relic"），继承 ActionItemNpcAI2。
  * Idgel Dome Land Mark instance NPC AI: Sealed Reian Relic (@AIName "Sealed_Reian_Relic"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("Sealed_Reian_Relic")

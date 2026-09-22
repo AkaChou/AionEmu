@@ -14,9 +14,7 @@ import java.util.HashSet;
 /**
  * 玩家配方 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerRecipesDAO.
- *
  * Updated for MySQL 8 - Fixed connection leaks.
- *
  * @author lord_rex
  */
 @Slf4j
@@ -34,7 +32,6 @@ public class PlayerRecipesDAO extends com.aionemu.gameserver.dao.PlayerRecipesDA
 	/**
 	 * 加载玩家配方列表。
 	 * Loads a player's recipe list.
-	 *
 	 * @param playerId 玩家 ID / player id
 	 * @return 配方列表 / recipe list
 	 */
@@ -61,10 +58,8 @@ public class PlayerRecipesDAO extends com.aionemu.gameserver.dao.PlayerRecipesDA
 	/**
 	 * 为玩家添加配方。
 	 * Adds a recipe for the player.
-	 *
 	 * @param playerId 玩家 ID / player id
 	 * @param recipeId 配方 ID / recipe id
-	 *
 	 * @return 是否添加成功 / whether the insert succeeded
 	 */
 	@Override
@@ -81,10 +76,8 @@ public class PlayerRecipesDAO extends com.aionemu.gameserver.dao.PlayerRecipesDA
 	/**
 	 * 删除玩家配方。
 	 * Deletes a recipe from the player.
-	 *
 	 * @param playerId 玩家 ID / player id
 	 * @param recipeId 配方 ID / recipe id
-	 *
 	 * @return 是否删除成功 / whether the delete succeeded
 	 */
 	@Override
@@ -119,7 +112,6 @@ public class PlayerRecipesDAO extends com.aionemu.gameserver.dao.PlayerRecipesDA
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
-	 *
 	 * @param database 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version

@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Fissure Of Oblivion 副本 NPC AI：Orkia Aetheric Field Observatory Square Teleport Stone（@AIName "OAFOSTS"），继承 NpcAI2。
  * Fissure Of Oblivion instance NPC AI: Orkia Aetheric Field Observatory Square Teleport Stone (@AIName "OAFOSTS"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("OAFOSTS")

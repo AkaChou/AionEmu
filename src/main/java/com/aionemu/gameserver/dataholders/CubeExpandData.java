@@ -15,7 +15,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 背包扩展 NPC 数据容器，按 NPC ID 索引扩展模板。
  * Cube expander data holder, indexing expand templates by NPC id.
- *
  * @author dragoon112
  */
 @XmlRootElement(name = "cube_expander")
@@ -39,7 +38,6 @@ public class CubeExpandData {
 	/**
 	 * 返回已加载的扩展 NPC 数量。
 	 * Returns the number of loaded expander NPCs.
-	 *
 	 * @return 已加载的扩展商人 NPC数量 / Returns the number of loaded expander NPCs.
 	 */
 	public int size() {
@@ -49,7 +47,6 @@ public class CubeExpandData {
 	/**
 	 * 按 NPC ID 获取背包扩展模板。
 	 * Returns the cube expand template for the given NPC id.
-	 *
 	 * @param id NPC ID / npc id
 	 * @return 模板，不存在则为 null / template or null
 	 */

@@ -24,9 +24,7 @@ import java.util.ArrayList;
 /**
  * 书签管理命令（{@code //bk}）：添加、删除、传送与列表。
  * Bookmark admin command ({@code //bk}): add, delete, teleport and list.
- *
  * @author Mrakobes
- * @modified antness
  */
 @Slf4j
 public class Bk extends AdminCommand {
@@ -45,7 +43,6 @@ public class Bk extends AdminCommand {
 	/**
 	 * 执行书签操作：{@code add|del|tele|list}。
 	 * Executes bookmark actions: {@code add|del|tele|list}.
-	 *
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -147,7 +144,6 @@ public class Bk extends AdminCommand {
 	/**
 	 * 从数据库重新加载书签列表。
 	 * Reloads the bookmark list from the database.
-	 *
 	 * @param objId 角色对象 ID / character object id
 	 */
 	public void updateInfo(final int objId) {
@@ -177,7 +173,6 @@ public class Bk extends AdminCommand {
 	/**
 	 * 按名称查找书签。
 	 * Selects a bookmark by name.
-	 *
 	 * @param bk_name 书签名称 / bookmark name
 	 * @return 匹配的书签，不存在则为 null / matching bookmark, or null
 	 */
@@ -191,7 +186,6 @@ public class Bk extends AdminCommand {
 	/**
 	 * 判断指定角色是否已存在同名书签。
 	 * Checks whether a bookmark name already exists for the character.
-	 *
 	 * @param bk_name 书签名称 / bookmark name
 	 * @param objId 角色对象 ID / character object id
 	 * @return 已存在则为 true / true if exists
@@ -223,7 +217,6 @@ public class Bk extends AdminCommand {
 	/**
 	 * 执行失败时的语法提示。
 	 * Syntax hint on failure.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {
@@ -272,7 +265,6 @@ class Bookmark {
 	/**
 	 * 构造书签。
 	 * Constructs a bookmark.
-	 *
 	 * @param x X 坐标 / X coordinate
 	 * @param y Y 坐标 / Y coordinate
 	 * @param z Z 坐标 / Z coordinate

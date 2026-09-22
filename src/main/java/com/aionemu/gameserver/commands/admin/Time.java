@@ -24,7 +24,6 @@ public class Time extends AdminCommand
 	/**
 	 * 将游戏时间切换为 dawn/day/dusk/night 或指定小时，并广播给全体在线玩家。
 	 * Switches game time to dawn/day/dusk/night or a given hour and broadcasts to all online players.
-	 *
 	 * @param params 时段名或小时 / Period name or hour
 	 */
 	@Override
@@ -75,7 +74,6 @@ public class Time extends AdminCommand
 	/**
 	 * 参数错误时的用法提示。
 	 * Usage hint on invalid parameters.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

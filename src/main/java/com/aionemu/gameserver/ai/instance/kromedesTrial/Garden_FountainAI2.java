@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Kromedes Trial 副本 NPC AI：Garden Fountain（@AIName "garden_fountain"），继承 NpcAI2。
  * Kromedes Trial instance NPC AI: Garden Fountain (@AIName "garden_fountain"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("garden_fountain")

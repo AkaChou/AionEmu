@@ -21,7 +21,6 @@ public class SM_SELECT_ITEM extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_SELECT_ITEM 包。
 	 * Creates a SM_SELECT_ITEM packet with the given parameters.
-	 *
 	 * @param selsetitem 可选物品列表 / selectable items
 	 * unique item id
 	 */

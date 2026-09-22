@@ -18,15 +18,9 @@ public class Improvement {
 	@XmlAttribute(name = "way", required = true)
 	private int way;
 
-	/**
-	 * @return 价格 2 / the price2
-	 */
 	@XmlAttribute(name = "price2")
 	private int price2;
 
-	/**
-	 * @return 价格 1 / the price1
-	 */
 	@XmlAttribute(name = "price1")
 	private int price1;
 
@@ -38,9 +32,6 @@ public class Improvement {
 	@XmlAttribute(name = "burn_attack")
 	private int burnAttack;
 
-	/**
-	 * @return 强化等级 / the level
-	 */
 	@XmlAttribute(name = "level")
 	private int level;
 

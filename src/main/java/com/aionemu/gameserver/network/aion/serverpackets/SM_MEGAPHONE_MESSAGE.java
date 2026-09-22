@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 /**
  * 扩音器（喇叭）消息服务端包。
  * Server packet that delivers a megaphone/shout-item message to the client.
- *
  * @author (Encom)
  */
 @AllArgsConstructor

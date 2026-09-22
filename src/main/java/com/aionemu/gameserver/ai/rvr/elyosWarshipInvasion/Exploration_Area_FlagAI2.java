@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * RvR 相关 NPC AI：Exploration Area Flag（@AIName "battlefield_trigger_elyos"），继承 ActionItemNpcAI2。
  * RvR-related NPC AI: Exploration Area Flag (@AIName "battlefield_trigger_elyos"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("battlefield_trigger_elyos")
@@ -24,9 +23,6 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 	@Override
 	protected void handleUseItemFinish(Player player) {
 		switch (getNpcId()) {
-		   /**
-	 * 奥西亚碎片堡垒 / Othia Fragment Redoubt
-	 */
 			case 805889: // 探索区域旗帜 / Exploration Area Flag.
 			    announceF6Invasion();
 				explorationAreaStart1_1();
@@ -42,9 +38,6 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 				explorationAreaStart1_3();
 			    spawn(805949, 1264.2919f, 1046.5237f, 323.42804f, (byte) 0, 579);
 			break;
-		   /**
-	 * 坎德勒斯碎片堡垒 / Candellus Fragment Redoubt
-	 */
 			case 805891: // 探索区域旗帜 / Exploration Area Flag.
 				announceF6Invasion();
 				explorationAreaStart2_1();
@@ -60,9 +53,6 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 				explorationAreaStart2_3();
 				spawn(805951, 1755.5957f, 872.9082f, 307.162750f, (byte) 0, 494);
 			break;
-		   /**
-	 * 菲洛斯堡垒 / Philos Redoubt
-	 */
 			case 805893: // 探索区域旗帜 / Exploration Area Flag.
 				announceF6Invasion();
 				explorationAreaStart3_1();
@@ -78,10 +68,7 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 				explorationAreaStart3_3();
 			    spawn(805953, 1542.8401f, 1835.7413f, 316.32877f, (byte) 0, 47);
 			break;
-		   /**
-	 * 阿涅莫斯碎片堡垒 / Anemos Fragment Redoubt
-	 */
-			case 805895: // 探索区域旗帜 / Exploration Area Flag.
+            case 805895: // 探索区域旗帜 / Exploration Area Flag.
 				announceF6Invasion();
 				explorationAreaStart4_1();
 				spawn(805896, 1887.7408f, 1454.496f, 291.563420f, (byte) 0, 425);

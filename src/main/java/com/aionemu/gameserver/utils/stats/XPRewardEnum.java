@@ -5,7 +5,6 @@ import java.util.NoSuchElementException;
 /**
  * 按等级差调整经验奖励百分比
  * XP reward percentage modifiers by level difference
- *
  * @author ATracer
  */
 public enum XPRewardEnum {
@@ -51,7 +50,6 @@ public enum XPRewardEnum {
 	/**
 	 * 构造经验奖励条目
 	 * Construct an XP reward entry
-	 *
 	 * Level difference
 	 * @param xpRewardPercent 经验百分比 / XP percent
 	 */
@@ -63,7 +61,6 @@ public enum XPRewardEnum {
 	/**
 	 * 获取经验奖励百分比
 	 * Get XP reward percent
-	 *
 	 * @return 经验百分比 / XP percent
 	 */
 	public int rewardPercent() {
@@ -73,7 +70,6 @@ public enum XPRewardEnum {
 	/**
 	 * 按等级差返回经验奖励百分比（越界取边界值）
 	 * Return XP reward percent by level difference (clamped to bounds)
-	 *
 	 * @param levelDifference 双方等级差 / Level difference between two objects
 	 * @return 经验奖励百分比 / XP reward percentage
 	 */

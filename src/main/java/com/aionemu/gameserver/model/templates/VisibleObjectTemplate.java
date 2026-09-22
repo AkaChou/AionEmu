@@ -3,7 +3,6 @@ package com.aionemu.gameserver.model.templates;
 /**
  * 可见对象模板（静态数据/XML）。
  * Visible object template (static data / XML).
- *
  * @author ATracer
  */
 public abstract class VisibleObjectTemplate {
@@ -34,7 +33,6 @@ public abstract class VisibleObjectTemplate {
 	/**
 	 * 获取边界半径。
 	 * Get the bound radius.
-	 *
 	 * @return 边界半径 / Bound radius
 	 */
 	public BoundRadius getBoundRadius() {
@@ -44,7 +42,6 @@ public abstract class VisibleObjectTemplate {
 	/**
 	 * 获取对象默认状态。
 	 * Get the default object state.
-	 *
 	 * @return 默认状态 / Default state
 	 */
 	public int getState() {

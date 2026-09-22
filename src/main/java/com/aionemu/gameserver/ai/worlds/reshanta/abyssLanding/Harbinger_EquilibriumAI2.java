@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * Reshanta 区域 NPC AI：Harbinger Equilibrium（@AIName "harbinger_equilibrium"），继承 NpcAI2。
  * Reshanta zone NPC AI: Harbinger Equilibrium (@AIName "harbinger_equilibrium"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("harbinger_equilibrium")

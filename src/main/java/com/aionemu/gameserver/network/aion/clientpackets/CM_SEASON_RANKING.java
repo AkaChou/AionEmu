@@ -11,7 +11,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SEASON_RANKING;
 /**
  * 客户端赛季排行榜查询请求包。
  * Client packet for requesting season ranking data.
- *
  * @author Wnkrz
  */
 @Slf4j

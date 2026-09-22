@@ -19,7 +19,6 @@ final class CoordinateDestinationChecker extends DestinationChecker {
 	/**
 	 * 构造坐标目的地检查器。
 	 * Constructs a coordinate destination checker.
-	 *
 	 * @param follower 跟随生物 / follower creature
 	 * @param x 目标 X / Target X
 	 * @param y 目标 Y / Target Y
@@ -35,7 +34,6 @@ final class CoordinateDestinationChecker extends DestinationChecker {
 	/**
 	 * 判断跟随者是否接近目标坐标。
 	 * Returns whether the follower is near the target coordinates.
-	 *
 	 * @return true 表示在半径 10 内 / true if within range 10
 	 */
 	@Override

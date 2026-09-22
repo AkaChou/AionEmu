@@ -12,7 +12,6 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 /**
  * 阿塔夏副本事件处理器。
  * Instance event handler for Ataxiar.
- *
  * @author Encom
  */
 
@@ -22,7 +21,6 @@ public class AtaxiarInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
-	 *
 	 * @param player 玩家 / player
 	 * @param zone 区域 / zone
 	 */

@@ -42,7 +42,6 @@ import java.util.concurrent.Future;
 /**
  * 永风峡谷副本事件处理器。
  * Instance event handler for Evergale Canyon.
- *
  * @author Encom
  */
 
@@ -61,8 +60,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 		protected EvergaleCanyonReward evergaleCanyonReward;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed = false;
-	/** 已播放动画集合 / played-movie set */
-		/** evergalecanyon 任务 / evergale canyon task */
+	/** evergalecanyon 任务 / evergale canyon task */
 		private final List<Future<?>> evergaleCanyonTask = new ArrayList<>();
 
 	protected EvergaleCanyonPlayerReward getPlayerReward(Player player) {
@@ -77,7 +75,6 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -179,7 +176,6 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -195,7 +191,6 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param opponent 对手 / opponent
 			 */
 			@Override
@@ -222,7 +217,6 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -241,7 +235,6 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 				/**
 				 * 处理 visit。
 				 * Handle visit.
-				 *
 				 * @param player 玩家 / player
 				 */
 				@Override
@@ -254,7 +247,6 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 				/**
 				 * 处理 visit。
 				 * Handle visit.
-				 *
 				 * @param player 玩家 / player
 				 */
 				@Override
@@ -268,7 +260,6 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -370,7 +361,6 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
     /**
      * 处理玩家复活事件。
      * Handle a player revive event.
-     *
      * @param player 玩家 / player
      * @return 结果 / result
      */
@@ -386,7 +376,6 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param player 玩家 / player
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 * @return 结果 / result
@@ -484,7 +473,6 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -617,7 +605,6 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
-	 *
 	 * @param player 玩家 / player
 	 * @param npc NPC / npc
 	 */
@@ -625,9 +612,6 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
     public void handleUseItemFinish(Player player, Npc npc) {
 		int point = 0;
 		switch (npc.getNpcId()) {
-			/**
-			 * Pure Neutral
-			 */
 			case 835210: //Artifact Core Fragment.
 				despawnNpc(npc);
 				switch (player.getRace()) {
@@ -767,9 +751,6 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					break;
 				}
 			break;
-			/**
-			 * Pure Light
-			 */
 			case 835304: //Artifact Core Fragment.
 				despawnNpc(npc);
 				switch (player.getRace()) {
@@ -919,10 +900,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					break;
 				}
 			break;
-			/**
-			 * Pure Dark
-			 */
-			case 835309: //Artifact Core Fragment.
+            case 835309: //Artifact Core Fragment.
 				despawnNpc(npc);
 				switch (player.getRace()) {
 					case ELYOS:
@@ -1166,7 +1144,6 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
                     /**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
                     @Override
@@ -1191,7 +1168,6 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	/**
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
-	 *
 	 * @return 结果 / result
 	 */
 	@Override
@@ -1202,7 +1178,6 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -1213,7 +1188,6 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -1227,7 +1201,6 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家登录到该副本时处理。
 	 * Handle a player logging into this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override

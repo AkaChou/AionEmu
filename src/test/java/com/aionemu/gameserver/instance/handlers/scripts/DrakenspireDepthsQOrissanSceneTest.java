@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 /**
  * 龙脊深渊任务副本奥里萨死亡场景闸门。
  * Gate for the Drakenspire Depths quest-instance Orissan death scene.
- *
  * <p>背景：237231（虚脱的奥里萨）死亡场景原先引用从未在任务副本生成的 209712/209777（非任务副本的
  * Scene 14 任务 NPC），排定任务必然 NPE，爆破手（209711/209776）喊话也不会播。场景里的台词由
  * {@code STR_CHAT_IDSeal_Bomber_Gossip_*} 归属爆破手，因此必须落在实际生成的那个 NPC 上。</p>

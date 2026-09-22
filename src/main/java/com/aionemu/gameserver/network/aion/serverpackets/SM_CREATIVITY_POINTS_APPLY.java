@@ -10,9 +10,7 @@ import lombok.AllArgsConstructor;
 /**
  * 创造点数应用结果包：反馈某槽位/技能的点数变更。
  * Server packet for creativity-points apply result: reports a slot/skill point change.
- *
  * @author Falke_34
- * @Rework Xnemonix
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -27,7 +25,6 @@ public class SM_CREATIVITY_POINTS_APPLY extends AionServerPacket {
 	/**
 	 * 构造创造点数应用结果包（类型与槽位数）。
 	 * Creates a CP apply-result packet (type and slot count).
-	 *
 	 * @param type 应用类型 / apply type
 	 * @param size 槽位数 / slot count
 	 */
@@ -39,7 +36,6 @@ public class SM_CREATIVITY_POINTS_APPLY extends AionServerPacket {
 	/**
 	 * 构造指定槽位/技能的点数变更反馈包。
 	 * Creates a CP apply-result packet for a specific slot/skill point change.
-	 *
 	 * @param type 应用类型 / apply type
 	 * @param id 槽位或技能 ID / slot or skill id
 	 * @param slotPoint 变更后的槽位点数 / new slot point count

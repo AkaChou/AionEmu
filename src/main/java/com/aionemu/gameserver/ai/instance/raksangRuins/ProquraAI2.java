@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Raksang Ruins 副本 NPC AI：Proqura（@AIName "proqura"），继承 GeneralNpcAI2。
  * Raksang Ruins instance NPC AI: Proqura (@AIName "proqura"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("proqura")

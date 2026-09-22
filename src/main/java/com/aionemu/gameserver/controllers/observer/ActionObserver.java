@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 /**
  * 动作观察者基类，响应移动、攻击、装备、技能等事件。
  * Base action observer responding to move, attack, equip, skill and related events.
- *
  * @author ATracer
  */
 @Getter
@@ -40,7 +39,6 @@ public class ActionObserver {
 	/**
 	 * 尝试使用本观察者，仅首次返回 true。
 	 * Try to use this observer; returns true only once.
-	 *
 	 * @return 是否成功占用 / whether successfully claimed
 	 */
 	public boolean tryUse() {
@@ -57,7 +55,6 @@ public class ActionObserver {
 	/**
 	 * 受到攻击时回调。
 	 * Callback when attacked.
-	 *
 	 * @param creature 攻击者 / attacker
 	 */
 	public void attacked(Creature creature) {
@@ -74,7 +71,6 @@ public class ActionObserver {
 	/**
 	 * 主动攻击时回调。
 	 * Callback when attacking.
-	 *
 	 * @param creature 攻击目标 / target
 	 */
 	public void attack(Creature creature) {
@@ -91,7 +87,6 @@ public class ActionObserver {
 	/**
 	 * 装备物品时回调。
 	 * Callback when equipping an item.
-	 *
 	 * @param item 物品 / item
 	 * @param owner 装备者 / owner
 	 */
@@ -101,7 +96,6 @@ public class ActionObserver {
 	/**
 	 * 卸下物品时回调。
 	 * Callback when unequipping an item.
-	 *
 	 * @param item 物品 / item
 	 * @param owner 卸下者 / owner
 	 */
@@ -111,7 +105,6 @@ public class ActionObserver {
 	/**
 	 * 使用技能时回调。
 	 * Callback when using a skill.
-	 *
 	 * @param skill 使用的技能 / used skill
 	 */
 	public void skilluse(Skill skill) {
@@ -120,7 +113,6 @@ public class ActionObserver {
 	/**
 	 * 死亡时回调。
 	 * Callback on death.
-	 *
 	 * @param creature 已死亡的生物 / dead creature
 	 */
 	public void died(Creature creature) {
@@ -129,7 +121,6 @@ public class ActionObserver {
 	/**
 	 * 受到持续伤害时回调。
 	 * Callback when hit by a DoT.
-	 *
 	 * @param creature 伤害来源生物 / source creature
 	 * @param dotEffect 持续伤害效果 / DoT effect
 	 */
@@ -139,7 +130,6 @@ public class ActionObserver {
 	/**
 	 * 使用物品时回调。
 	 * Callback when an item is used.
-	 *
 	 * @param item 使用的物品 / used item
 	 */
 	public void itemused(Item item) {
@@ -148,7 +138,6 @@ public class ActionObserver {
 	/**
 	 * 请求 NPC 对话时回调。
 	 * Callback when an NPC dialog is requested.
-	 *
 	 * @param npc NPC
 	 */
 	public void npcdialogrequested(Npc npc) {
@@ -157,7 +146,6 @@ public class ActionObserver {
 	/**
 	 * 异常状态被设置时回调。
 	 * Callback when an abnormal state is set.
-	 *
 	 * @param state 异常状态 / abnormal state
 	 */
 	public void abnormalsetted(AbnormalState state) {

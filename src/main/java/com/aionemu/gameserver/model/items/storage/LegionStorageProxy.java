@@ -12,7 +12,6 @@ import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 /**
  * 军团仓库 Proxy，用于物品相关逻辑。
  * Legion Storage Proxy for items logic.
- *
  * @author ATracer
  */
 public class LegionStorageProxy extends Storage {

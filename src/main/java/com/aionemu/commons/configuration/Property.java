@@ -9,10 +9,8 @@ import java.lang.annotation.Target;
 /**
  * 配置属性注解，用于标记需要从配置文件中加载值的字段
  * Configuration property annotation used to mark fields that need to load values from configuration files
- *
  * 该注解提供了配置项的键名、默认值和值转换器的定义
  * This annotation provides definitions for configuration key name, default value and value transformer
- *
  * @author SunAion
  */
 @Documented
@@ -28,7 +26,6 @@ public @interface Property {
     /**
      * 配置项的键名
      * Configuration item key name
-     *
      * @return 配置键名 / configuration key name
      */
     String key();
@@ -36,7 +33,6 @@ public @interface Property {
     /**
      * 值转换器类，用于将配置字符串转换为字段类型
      * Value transformer class used to convert configuration string to field type
-     *
      * @return 转换器类 / transformer class
      */
     Class<? extends PropertyTransformer> propertyTransformer() default PropertyTransformer.class;
@@ -44,7 +40,6 @@ public @interface Property {
     /**
      * 配置项的默认值
      * Default value for configuration item
-     *
      * @return 默认值字符串 / default value string
      */
     String defaultValue() default DEFAULT_VALUE;

@@ -84,7 +84,6 @@ public class FlyRingObserver extends ActionObserver {
 	/**
 	 * 副本处理器是否激活本飞行环。
 	 * Whether the instance handler activates this fly ring.
-	 *
 	 * @return 是否激活 / whether active
 	 */
 	private boolean isInstanceActive() {
@@ -94,7 +93,6 @@ public class FlyRingObserver extends ActionObserver {
 	/**
 	 * 相关飞行任务是否处于可触发阶段。
 	 * Whether the related flight quest is in a triggerable stage.
-	 *
 	 * @return 任务是否激活 / whether quest is active
 	 */
 	private boolean isQuestActive() {

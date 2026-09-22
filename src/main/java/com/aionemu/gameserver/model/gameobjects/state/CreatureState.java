@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 生物状态枚举。
  * Creature State enumeration.
- *
  * @author ATracer, Sweetkr
  */
 @Getter

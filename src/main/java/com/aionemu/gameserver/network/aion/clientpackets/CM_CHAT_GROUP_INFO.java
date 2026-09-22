@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 查询目标玩家聊天组信息的客户端包。
  * Client packet requesting chat-group info for a player.
- *
  * @author ginho1
  */
 public class CM_CHAT_GROUP_INFO extends AionClientPacket {

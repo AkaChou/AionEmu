@@ -12,7 +12,6 @@ public class NameRestrictionService {
 	/**
 	 * 校验名称是否符合配置的字符模式。
 	 * Checks whether the name matches the configured character pattern.
-	 *
 	 * @param name 待校验名称 / name to validate
 	 * whether valid
 	 */
@@ -23,7 +22,6 @@ public class NameRestrictionService {
 	/**
 	 * 判断名称是否命中客户端屏蔽词或禁用序列。
 	 * Checks whether the name hits client forbidden words or forbidden sequences.
-	 *
 	 * @param name 待检查名称 / name to check
 	 * @return 是否为禁用词 / whether forbidden
 	 */
@@ -58,10 +56,7 @@ public class NameRestrictionService {
 	/**
 	 * 过滤聊天消息中的屏蔽词（替换为掩码）。
 	 * Filters forbidden words in chat messages (replaces with a mask).
-	 *
 	 * original message
-	 *
-	 * @param message
 	 * @return 过滤后消息 / filtered message
 	 */
 	public static String filterMessage(String message) {

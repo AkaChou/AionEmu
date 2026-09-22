@@ -29,7 +29,6 @@ import java.util.concurrent.Future;
 /**
  * 阿德玛要塞副本事件处理器。
  * Instance event handler for Adma Stronghold.
- *
  * @author Encom
  */
 
@@ -47,7 +46,6 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 
@@ -123,7 +121,6 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
-	 *
 	 * @param player 玩家 / player
 	 * @param npc NPC / npc
 	 */
@@ -142,7 +139,6 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -162,7 +158,6 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -192,7 +187,6 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
     /**
      * 处理死亡事件。
      * Handle a death event.
-     *
      * @param npc NPC / npc
      */
     @Override
@@ -264,7 +258,6 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 	/**
 	 * 移除相关物品。
 	 * Remove related items.
-	 *
 	 * @param player 玩家 / player
 	 */
 
@@ -290,7 +283,6 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -302,7 +294,6 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
-	 *
 	 * @param msg 消息 / message
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
@@ -320,7 +311,6 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
                     /**
                      * 处理 visit。
                      * Handle visit.
-                     *
                      * @param player 玩家 / player
                      */
                     @Override
@@ -337,7 +327,6 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -348,7 +337,6 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override

@@ -13,7 +13,6 @@ import org.springframework.beans.factory.ObjectProvider;
 /**
  * 事件调度器：从延迟队列取事件执行，并支持固定周期调度与暂停。
  * Event scheduler that drains a delay queue, supports fixed-rate schedule and pause.
- *
  * @author wanke
  */
 @Slf4j
@@ -25,9 +24,6 @@ public class EventScheduler implements Runnable {
      * -- SETTER --
      *  设置 Spring 实例提供者。
      *  Sets the Spring instance provider.
-     *
-     * @param provider 实例提供者 / instance provider
-
      */
 	@Setter
     private static volatile ObjectProvider<EventScheduler> instanceProvider;
@@ -74,7 +70,6 @@ public class EventScheduler implements Runnable {
 	/**
 	 * 延迟投递事件（先 reset）。
 	 * Schedules an event after delay (resets first).
-	 *
 	 * @param event 事件 / event
 	 * @param delay 延迟毫秒 / delay millis
 	 */
@@ -86,7 +81,6 @@ public class EventScheduler implements Runnable {
 	/**
 	 * 固定周期调度事件。
 	 * Schedules an event at fixed rate.
-	 *
 	 * @param event 事件 / event
 	 * @param delay 首次延迟毫秒 / initial delay millis
 	 * @param period 周期毫秒 / period millis
@@ -120,7 +114,6 @@ public class EventScheduler implements Runnable {
 	/**
 	 * 异步执行事件并启动超时监控。
 	 * Executes the event asynchronously and starts timeout watch.
-	 *
 	 * @param event 事件 / event
 	 */
 	private void execute(Event event) {
@@ -132,7 +125,6 @@ public class EventScheduler implements Runnable {
 	/**
 	 * 等待事件完成或超时，然后按冷却重新进入调度循环。
 	 * Waits for finish or timeout, then re-enters the loop after cooldown.
-	 *
 	 * @param event 事件 / event
 	 */
 	private void waitForExecution(Event event) {
@@ -163,7 +155,6 @@ public class EventScheduler implements Runnable {
 		/**
 		 * 构造等待任务。
 		 * Constructs the wait task.
-		 *
 		 * @param event 事件 / event
 		 */
 		public WaitForExecutionRunnable(Event event) {
@@ -187,11 +178,9 @@ public class EventScheduler implements Runnable {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */

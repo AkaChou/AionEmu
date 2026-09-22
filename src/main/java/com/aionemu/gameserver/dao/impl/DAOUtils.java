@@ -3,7 +3,6 @@ package com.aionemu.gameserver.dao.impl;
 /**
  * MySQL 8 DAO 工具类。
  * Utility helpers for MySQL 8 DAOs.
- *
  * @author SoulKeeper
  */
 public class DAOUtils {
@@ -14,7 +13,6 @@ public class DAOUtils {
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
-	 *
 	 * @param database 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version

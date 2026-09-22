@@ -9,7 +9,6 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 /**
  * 异常状态条件：校验目标是否处于指定异常状态。
  * Abnormal state condition: validates the target is under the specified abnormal state.
- *
  * @author kecimis
  */
 public class AbnormalStateCondition extends Condition {
@@ -20,7 +19,6 @@ public class AbnormalStateCondition extends Condition {
 	/**
 	 * 校验技能首目标是否带有指定异常状态。
 	 * Validates whether the skill's first target has the specified abnormal state.
-	 *
 	 * @param env 技能环境 / skill environment
 	 * @return 是否有效 / whether valid
 	 */
@@ -37,7 +35,6 @@ public class AbnormalStateCondition extends Condition {
 	/**
 	 * 校验效果作用目标是否带有指定异常状态。
 	 * Validates whether the effect's target has the specified abnormal state.
-	 *
 	 * @param effect 效果环境 / effect environment
 	 * @return 是否有效 / whether valid
 	 */

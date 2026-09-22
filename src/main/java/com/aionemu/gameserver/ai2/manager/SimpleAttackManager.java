@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * NPC 普通攻击管理器：调度并执行近战/远程普通攻击，含重复调度与射程检查。
  * NPC simple-attack manager: schedules and performs basic attacks with duplicate-schedule and range checks.
- *
  * @author ATracer Rework: Angry Catster
  */
 public class SimpleAttackManager {
@@ -24,7 +23,6 @@ public class SimpleAttackManager {
 	/**
 	 * 执行 NPC 普通攻击：防重复调度、校验射程后延迟或立即出手。
 	 * Performs an NPC simple attack: guards against re-scheduling, validates range, then delays or attacks immediately.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param delay 攻击延迟（毫秒） / attack delay in milliseconds
 	 */
@@ -70,7 +68,6 @@ public class SimpleAttackManager {
 	/**
 	 * 安排带检查的攻击动作（已有调度时使用）。
 	 * Schedules a checked attack action when an attack is already scheduled.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param delay 攻击延迟（毫秒） / attack delay in milliseconds
 	 */
@@ -86,10 +83,7 @@ public class SimpleAttackManager {
     /**
      * 判断目标是否在攻击射程内（含存活、可见与几何范围）。
      * Returns whether the target is in attack range (alive, visible, and within geometric range).
-     *
      * @return 攻击 NPC / attacking NPC
-     *
-     * @param npc
      * @return 在射程内为 {@code true} / {@code true} if in attack range
      */
     public static boolean isTargetInAttackRange(Npc npc) {
@@ -141,7 +135,6 @@ public class SimpleAttackManager {
     /**
      * 执行实际的攻击动作；目标无效或过远时触发相应 AI 事件。
      * Performs the actual attack action; fires AI events if the target is invalid or too far.
-     *
      * @param npcAI NPC AI 实例 / NPC AI instance
      */
     protected static void attackAction(final NpcAI2 npcAI) {

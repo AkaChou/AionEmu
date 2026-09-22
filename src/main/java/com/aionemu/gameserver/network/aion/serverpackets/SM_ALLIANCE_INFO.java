@@ -15,7 +15,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 向客户端同步联盟（Alliance）完整信息（队长、副队长、拾取规则与军团联盟）的服务端包。
  * Server packet synchronizing full alliance info (leader, vice-captains, loot rules, and league) to the client.
- *
  * @author Sarynth, xTz
  */
 public class SM_ALLIANCE_INFO extends AionServerPacket {
@@ -36,7 +35,6 @@ public class SM_ALLIANCE_INFO extends AionServerPacket {
 	/**
 	 * 构造无系统消息的联盟信息包。
 	 * Creates an alliance info packet without a system message.
-	 *
 	 * @param alliance player alliance
 	 */
 	public SM_ALLIANCE_INFO(PlayerAlliance alliance) {
@@ -46,7 +44,6 @@ public class SM_ALLIANCE_INFO extends AionServerPacket {
 	/**
 	 * 构造带系统消息 ID/文本的联盟信息包。
 	 * Creates an alliance info packet with an optional system message id and text.
-	 *
 	 * player alliance
 	 * @param messageId 系统消息 ID（0 表示无消息） / system message id (0 = none)
 	 * @param message 系统消息文本 / system message text

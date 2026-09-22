@@ -21,7 +21,6 @@ import java.util.ArrayList;
  * 覆盖黄金竞技场、挑战之塔、孤独竞技场、6v6 等 competition_ranking 表数据。
  * MySQL 8 implementation of SeasonRankingDAO.
  * Covers Gold Arena, Tower of Challenge, Arena of Tenacity, 6v6 and other competition ranking tables.
- *
  * @author Wnkrz
  */
 @Slf4j
@@ -42,9 +41,7 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
     /**
      * 获取指定排行表的前 300 名竞技排行玩家。
      * Loads the top 300 competition ranking players for the given table id.
-     *
      * ranking table id
-     *
      * @param tableId 排名表 ID / ranking table id
      * @return 排行结果列表 / ranking result list
      */
@@ -93,7 +90,6 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
     /**
      * 加载玩家黄金竞技场排行数据；无记录时返回 NEW 状态的空对象。
      * Loads the player's Gold Arena rank; returns a NEW empty rank when none exists.
-     *
      * @param playerId 玩家对象 ID / player object id
      * @param tableId 排名表 ID / ranking table id
      * @return 黄金竞技场排行 / Gold Arena rank
@@ -135,7 +131,6 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
     /**
      * 按持久化状态保存玩家黄金竞技场排行（table_id = 1）。
      * Stores the player's Gold Arena rank by persistent state (table_id = 1).
-     *
      * @param player 玩家 / player
      * @return 是否保存成功；无排行对象时返回 false / whether store succeeded; false if rank is null
      */
@@ -212,7 +207,6 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
     /**
      * 按持久化状态保存玩家挑战之塔排行（table_id = 2）。
      * Stores the player's Tower of Challenge rank by persistent state (table_id = 2).
-     *
      * @param player 玩家 / player
      * @return 是否保存成功；无排行对象时返回 false / whether store succeeded; false if rank is null
      */
@@ -289,7 +283,6 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
     /**
      * 按持久化状态保存玩家孤独竞技场排行（table_id = 541）。
      * Stores the player's Arena of Tenacity rank by persistent state (table_id = 541).
-     *
      * @param player 玩家 / player
      * @return 是否保存成功；无排行对象时返回 false / whether store succeeded; false if rank is null
      */
@@ -366,7 +359,6 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
     /**
      * 按持久化状态保存玩家 6v6 竞技场排行（table_id = 3）。
      * Stores the player's 6v6 Arena rank by persistent state (table_id = 3).
-     *
      * @param player 玩家 / player
      * @return 是否保存成功；无排行对象时返回 false / whether store succeeded; false if rank is null
      */
@@ -443,7 +435,6 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
     /**
      * 加载玩家孤独竞技场排行数据；无记录时返回 NEW 状态的空对象。
      * Loads the player's Arena of Tenacity rank; returns a NEW empty rank when none exists.
-     *
      * @param playerId 玩家对象 ID / player object id
      * @param tableId 排名表 ID / ranking table id
      * @return 孤独竞技场排行 / Arena of Tenacity rank
@@ -485,7 +476,6 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
     /**
      * 加载玩家挑战之塔排行数据；无记录时返回 NEW 状态的空对象。
      * Loads the player's Tower of Challenge rank; returns a NEW empty rank when none exists.
-     *
      * @param playerId 玩家对象 ID / player object id
      * @param tableId 排名表 ID / ranking table id
      * @return 挑战之塔排行 / Tower of Challenge rank
@@ -526,7 +516,6 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
     /**
      * 加载玩家 6v6 竞技场排行数据；无记录时返回 NEW 状态的空对象。
      * Loads the player's 6v6 Arena rank; returns a NEW empty rank when none exists.
-     *
      * @param playerId 玩家对象 ID / player object id
      * @param tableId 排名表 ID / ranking table id
      * @return 6v6 竞技场排行 / 6v6 Arena rank
@@ -568,7 +557,6 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
     /**
      * 判断当前数据库是否受本 DAO 支持（MySQL 8）。
      * Checks whether the given database is supported by this DAO (MySQL 8).
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

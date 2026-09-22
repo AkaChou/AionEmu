@@ -7,7 +7,6 @@ import lombok.Setter;
 /**
  * 交换物品，用于交易相关逻辑。
  * Exchange Item for trade logic.
- *
  * @author ATracer
  */
 @Getter
@@ -29,9 +28,6 @@ public class ExchangeItem {
 		this.itemDesc = item.getItemTemplate().getNameId();
 	}
 
-	/**
-	 * @param countToAdd
-	 */
 	public void addCount(long countToAdd) {
 		this.itemCount += countToAdd;
 		this.item.setItemCount(itemCount);

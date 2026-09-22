@@ -314,7 +314,6 @@ public class ItemGroupsData {
 	/**
 	 * 按技能 ID 获取制作材料奖励。
 	 * Returns craft material rewards for the given skill id.
-	 *
 	 * @param skillId 技能 ID / skill id
 	 * @return 制作材料奖励集合 / craft material rewards
 	 */
@@ -332,7 +331,6 @@ public class ItemGroupsData {
 	/**
 	 * 返回制作材料组掉落概率。
 	 * Returns the craft materials group chance.
-	 *
 	 * @return 制作材料组概率 / Returns the craft materials group chance.
 	 */
 	public float getCraftMaterialsChance() {
@@ -342,7 +340,6 @@ public class ItemGroupsData {
 	/**
 	 * 按技能 ID 获取制作商店物品奖励。
 	 * Returns craft shop item rewards for the given skill id.
-	 *
 	 * @param skillId 技能 ID / skill id
 	 * @return 制作商店物品奖励集合 / craft shop item rewards
 	 */
@@ -360,7 +357,6 @@ public class ItemGroupsData {
 	/**
 	 * 返回制作商店物品组掉落概率。
 	 * Returns the craft shop items group chance.
-	 *
 	 * @return 制作商店物品组概率 / Returns the craft shop items group chance.
 	 */
 	public float getCraftShopItemsChance() {
@@ -370,7 +366,6 @@ public class ItemGroupsData {
 	/**
 	 * 按技能 ID 获取制作礼包奖励。
 	 * Returns craft bundle rewards for the given skill id.
-	 *
 	 * @param skillId 技能 ID / skill id
 	 * @return 制作礼包奖励集合 / craft bundle rewards
 	 */
@@ -388,7 +383,6 @@ public class ItemGroupsData {
 	/**
 	 * 返回制作礼包组掉落概率。
 	 * Returns the craft bundles group chance.
-	 *
 	 * @return 制作捆绑包组概率 / Returns the craft bundles group chance.
 	 */
 	public float getCraftBundlesChance() {
@@ -398,7 +392,6 @@ public class ItemGroupsData {
 	/**
 	 * 按技能 ID 获取制作配方奖励。
 	 * Returns craft recipe rewards for the given skill id.
-	 *
 	 * @param skillId 技能 ID / skill id
 	 * @return 制作配方奖励集合 / craft recipe rewards
 	 */
@@ -416,7 +409,6 @@ public class ItemGroupsData {
 	/**
 	 * 返回制作配方组掉落概率。
 	 * Returns the craft recipes group chance.
-	 *
 	 * @return 制作配方组概率 / Returns the craft recipes group chance.
 	 */
 	public float getCraftRecipesChance() {
@@ -638,7 +630,6 @@ public class ItemGroupsData {
 	/**
 	 * 判断物品是否属于指定宠物饲料类型（排除黑名单与臭食）。
 	 * Returns whether the item is food of the given pet food type (excluding blacklist and stinky items).
-	 *
 	 * @param itemId 物品 ID / item id
 	 * @param foodType 宠物饲料类型 / pet food type
 	 * @return 若物品匹配该饲料类型则为 true / true if the item matches the food type
@@ -710,7 +701,6 @@ public class ItemGroupsData {
 	/**
 	 * 返回全部奖励组条目的总数（不含宠物饲料）。
 	 * Returns the total count of bonus group entries (excluding pet food).
-	 *
 	 * @return 奖励条目总数 / total bonus entry count
 	 */
 	public int bonusSize() {
@@ -727,7 +717,6 @@ public class ItemGroupsData {
 	/**
 	 * 返回已缓存的宠物饲料物品数量（不含排除与臭食）。
 	 * Returns the cached pet-food item count (excluding excludes and stinky).
-	 *
 	 * @return 宠物饲料数量 / pet-food count
 	 */
 	public int petFoodSize() {

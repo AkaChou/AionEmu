@@ -38,7 +38,6 @@ public class MTRandom extends Random {
     /**
      * 创建实例，可指定兼容模式。
      * Create an instance with optional compatibility mode.
-     *
      * @param compatible 是否兼容模式 / Whether compatibility mode
      */
     public MTRandom(boolean compatible) {
@@ -51,7 +50,6 @@ public class MTRandom extends Random {
     /**
      * 使用 long 种子创建实例。
      * Create an instance with a long seed.
-     *
      * @param seed 种子值 / Seed value
      */
     public MTRandom(long seed) {
@@ -62,7 +60,6 @@ public class MTRandom extends Random {
     /**
      * 使用字节数组种子创建实例。
      * Create an instance with a byte-array seed.
-     *
      * @param buf 种子字节 / Seed bytes
      */
     public MTRandom(byte[] buf) {
@@ -74,7 +71,6 @@ public class MTRandom extends Random {
     /**
      * 使用 int 数组种子创建实例。
      * Create an instance with an int-array seed.
-     *
      * @param buf 种子数组 / Seed array
      */
     public MTRandom(int[] buf) {
@@ -86,7 +82,6 @@ public class MTRandom extends Random {
     /**
      * 以单 int 种子初始化状态。
      * Initialize state with a single int seed.
-     *
      * @param seed 种子值 / Seed value
      */
     private void setSeed(int seed) {
@@ -102,7 +97,6 @@ public class MTRandom extends Random {
     /**
      * 设置 long 种子（兼容模式退化为 int 种子）。
      * Set a long seed (compat mode falls back to int seed).
-     *
      * @param seed 种子值 / Seed value
      */
     @Override
@@ -122,7 +116,6 @@ public class MTRandom extends Random {
     /**
      * 使用字节数组设置种子。
      * Set seed from a byte array.
-     *
      * @param buf 字节数组 / Byte array
      */
     public final void setSeed(byte[] buf) {
@@ -132,7 +125,6 @@ public class MTRandom extends Random {
     /**
      * 使用 int 数组设置种子。
      * Set seed from an int array.
-     *
      * @param buf 整数数组 / Int array
      */
     public final synchronized void setSeed(int[] buf) {
@@ -173,7 +165,6 @@ public class MTRandom extends Random {
     /**
      * 生成下一批随机位。
      * Generate the next random bits.
-     *
      * @param bits 请求的随机位数 / Requested bit count
      * @return 生成的随机位 / Generated random bits
      */
@@ -208,7 +199,6 @@ public class MTRandom extends Random {
     /**
      * 将字节数组打包为 int 数组。
      * Pack a byte array into an int array.
-     *
      * @param buf 字节数组 / Byte array
      * @return 打包后的 int 数组 / Packed int array
      */

@@ -8,7 +8,6 @@ import lombok.Setter;
 /**
  * HallOfTenacity 玩家奖励，用于副本相关逻辑。
  * Hall Of Tenacity Player Reward for instance logic.
- *
  * @author Ranastic
  */
 @Getter

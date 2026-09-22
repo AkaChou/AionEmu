@@ -23,32 +23,27 @@ public class MotionTime {
 	/**
 	 * 获取阿斯摩男性时间表。
 	 * Gets Asmodian male times.
-	 *
 	 */
 	protected Times am;
 	/**
 	 * 获取阿斯摩女性时间表。
 	 * Gets Asmodian female times.
-	 *
 	 */
 	protected Times af;
 	/**
 	 * 获取天族男性时间表。
 	 * Gets Elyos male times.
-	 *
 	 */
 	protected Times em;
 	/**
 	 * 获取天族女性时间表。
 	 * Gets Elyos female times.
-	 *
 	 */
 	protected Times ef;
 
 	/**
 	 * 获取动作名称。
 	 * Gets motion name.
-	 *
 	 */
 	@XmlAttribute(required = true)
 	protected String name;
@@ -56,7 +51,6 @@ public class MotionTime {
 	/**
 	 * 按种族与性别获取时间表。
 	 * Gets times by race and gender.
-	 *
 	 * 阵营 / race
 	 * @return 时间表，未知则 null / times or null
 	 */
@@ -82,7 +76,6 @@ public class MotionTime {
 	/**
 	 * 按种族、性别与武器获取动作时间。
 	 * Gets motion time for race, gender and weapon.
-	 *
 	 * 阵营 / race
 	 * @return 时间，未知则 0 / time or 0
 	 */

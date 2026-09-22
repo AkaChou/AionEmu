@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.loginserver.LsServerPacket;
 /**
  * 游戏服向登录服下发账号/IP 封禁（或解封）指令的服务端包。
  * Universal server packet for account/IP ban or unban requests sent to the login server.
- *
  * @author Watson
  */
 public class SM_BAN extends LsServerPacket {
@@ -44,7 +43,6 @@ public class SM_BAN extends LsServerPacket {
 	/**
 	 * 构造封禁/解封控制包。
 	 * Constructs a new ban/unban control packet.
-	 *
 	 * @param type 封禁类型 / ban type
 	 * @param accountId 账号 ID / account id
 	 * @param ip IP 或掩码 / IP or mask

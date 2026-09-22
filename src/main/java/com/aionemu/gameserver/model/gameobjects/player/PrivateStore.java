@@ -8,7 +8,6 @@ import lombok.Getter;
 /**
  * PrivateStore 游戏对象。
  * Private Store game object.
- *
  * @author Xav Modified by Simple
  */
 @Getter
@@ -17,8 +16,7 @@ public class PrivateStore {
 	/**
 	 * 将 return 所有者。
 	 * This method will return the owner of the store
-	 *
-	 * @return Player
+	 * Player
 	 */
 	private final Player owner;
 	private final LinkedHashMap<Integer, TradePSItem> items;
@@ -36,7 +34,6 @@ public class PrivateStore {
 	/**
 	 * 将 returnitemsbeingsold。
 	 * This method will return the items being sold
-	 *
 	 * @return LinkedHashMap<Integer, TradePSItem>
 	 */
 	public synchronized LinkedHashMap<Integer, TradePSItem> getSoldItems() {
@@ -50,9 +47,6 @@ public class PrivateStore {
 	/**
 	 * 将物品列表 price。
 	 * This method will add an item to the list and price
-	 *
-	 * @param itemObjId
-	 * @param tradeItem
 	 */
 	public synchronized void addItemToSell(int itemObjId, TradePSItem tradeItem) {
 		items.put(itemObjId, copy(tradeItem));
@@ -61,8 +55,6 @@ public class PrivateStore {
 	/**
 	 * 将物品列表。
 	 * This method will remove an item from the list
-	 *
-	 * @param itemObjId
 	 */
 	public synchronized void removeItem(int itemObjId) {
 		items.remove(itemObjId);

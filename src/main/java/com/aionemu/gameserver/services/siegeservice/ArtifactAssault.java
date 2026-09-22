@@ -13,7 +13,6 @@ public class ArtifactAssault extends Assault<ArtifactSiege> {
 	/**
 	 * 调度突击。
 	 * Schedules the assault.
-	 *
 	 * @param delay 延迟毫秒 / delay
 	 */
 	public void scheduleAssault(int delay) {
@@ -22,7 +21,6 @@ public class ArtifactAssault extends Assault<ArtifactSiege> {
 	/**
 	 * 突击结束回调。
 	 * Callback when assault finishes.
-	 *
 	 * @param captured 是否占领成功 / whether captured
 	 */
 	public void onAssaultFinish(boolean captured) {

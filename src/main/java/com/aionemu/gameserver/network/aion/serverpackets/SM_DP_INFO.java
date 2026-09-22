@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * DP（斗志点）信息包：同步玩家当前 DP 值。
  * DP (divine power) info packet: current DP of a player.
- *
  * @author Sweetkr
  */
 @AllArgsConstructor

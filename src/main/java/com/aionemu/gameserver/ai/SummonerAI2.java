@@ -26,7 +26,6 @@ import java.util.List;
 /**
  * 召唤师型 NPC AI：在战斗中按阶段召唤随从。
  * Summoner-style NPC AI that spawns adds during combat by phase.
- *
  * @author Encom
  */
 @AIName("summoner")
@@ -39,7 +38,6 @@ public class SummonerAI2 extends AggressiveNpcAI2
 	/**
 	 * 处理受到攻击事件。
 	 * Handle being attacked.
-	 *
 	 * @param creature 攻击者 / attacker
 	 */
 	@Override
@@ -230,7 +228,6 @@ public class SummonerAI2 extends AggressiveNpcAI2
 	/**
 	 * 处理生成前事件。
 	 * Handle before-spawn.
-	 *
 	 * @param percent 血量百分比 / HP percent
 	 */
 	protected void handleBeforeSpawn(Percentage percent) {
@@ -239,7 +236,6 @@ public class SummonerAI2 extends AggressiveNpcAI2
 	/**
 	 * 处理召唤物生成完成。
 	 * Handle spawn-finished for summons.
-	 *
 	 * @param summonGroup 召唤组配置 / summon group config
 	 */
 	protected void handleSpawnFinished(SummonGroup summonGroup) {
@@ -248,7 +244,6 @@ public class SummonerAI2 extends AggressiveNpcAI2
 	/**
 	 * 按血量百分比分批生成召唤物。
 	 * Spawn individual summons by HP percent.
-	 *
 	 * @param percent 血量百分比 / HP percent
 	 */
 	protected void handleIndividualSpawnedSummons(Percentage percent) {

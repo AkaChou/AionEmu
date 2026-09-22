@@ -17,7 +17,6 @@ import java.util.Map;
 /**
  * 攻城区域实例：额外维护区内玩家集合，支持访问者遍历。
  * Siege zone instance: additionally tracks players inside and supports visitor iteration.
- *
  * @author MrPoke
  */
 @Slf4j
@@ -30,7 +29,6 @@ public class SiegeZoneInstance extends ZoneInstance {
 	/**
 	 * 创建攻城区域实例。
 	 * Create a siege zone instance.
-	 *
 	 * @param mapId 地图 ID / the map id
 	 * @param template 区域模板信息 / zone template info
 	 */
@@ -41,7 +39,6 @@ public class SiegeZoneInstance extends ZoneInstance {
 	/**
 	 * 进入区域；若为玩家则加入玩家集合。
 	 * Enter the zone; if the creature is a player, add to the player map.
-	 *
 	 * @param creature 生物 / the creature
 	 * @return 是否成功进入 / whether enter succeeded
 	 */
@@ -59,7 +56,6 @@ public class SiegeZoneInstance extends ZoneInstance {
 	/**
 	 * 离开区域；若为玩家则从玩家集合移除。
 	 * Leave the zone; if the creature is a player, remove from the player map.
-	 *
 	 * @param creature 生物 / the creature
 	 * @return 是否成功离开 / whether leave succeeded
 	 */
@@ -77,7 +73,6 @@ public class SiegeZoneInstance extends ZoneInstance {
 	/**
 	 * 对区内所有玩家执行访问者回调。
 	 * Run the visitor callback for every player inside the zone.
-	 *
 	 * @param visitor 玩家访问者 / player visitor
 	 */
 	public void doOnAllPlayers(Visitor<Player> visitor) {
@@ -95,7 +90,6 @@ public class SiegeZoneInstance extends ZoneInstance {
 	/**
 	 * 快照区内玩家列表（线程安全）。
 	 * Snapshot the list of players inside the zone (thread-safe).
-	 *
 	 * @return 玩家快照 / the player snapshot
 	 */
 	private List<Player> playersSnapshot() {

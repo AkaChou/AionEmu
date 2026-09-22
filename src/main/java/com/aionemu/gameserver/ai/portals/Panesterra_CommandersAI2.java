@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 传送门/传送点 AI：Panesterra Commanders（@AIName "panesterra_commanders"），继承 GeneralNpcAI2。
  * Portal/teleporter AI: Panesterra Commanders (@AIName "panesterra_commanders"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("panesterra_commanders")

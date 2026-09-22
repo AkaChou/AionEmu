@@ -17,7 +17,6 @@ import lombok.Setter;
 /**
  * Events 窗口模板（静态数据/XML）。
  * Events Window Template (static data/XML).
- *
  * @author Ghostfur (Aion-Unique)
  */
 @Getter

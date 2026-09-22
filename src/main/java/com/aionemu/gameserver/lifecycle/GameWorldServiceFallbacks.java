@@ -20,7 +20,6 @@ final class GameWorldServiceFallbacks {
     /**
      * 回退 GeoService。
      * Fallback GeoService.
-     *
      * @return GeoService 单例 / GeoService singleton
      */
     static GeoService geoService() {
@@ -30,7 +29,6 @@ final class GameWorldServiceFallbacks {
     /**
      * 回退 PathService。
      * Fallback PathService.
-     *
      * @return PathService 单例 / PathService singleton
      */
     static PathService pathService() {
@@ -40,7 +38,6 @@ final class GameWorldServiceFallbacks {
     /**
      * 回退 DropRegistrationService。
      * Fallback DropRegistrationService.
-     *
      * @return DropRegistrationService 单例 / DropRegistrationService singleton
      */
     static DropRegistrationService dropRegistrationService() {

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 /**
  * Drakenspire Depths 副本 NPC AI：Fountless Heatvent Protector（@AIName "fountless_heatvent_protector"），继承 AggressiveNpcAI2。
  * Drakenspire Depths instance NPC AI: Fountless Heatvent Protector (@AIName "fountless_heatvent_protector"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("fountless_heatvent_protector")

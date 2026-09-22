@@ -50,15 +50,10 @@ public class ChatServerConnection extends AConnection {
 	 * -- GETTER --
 	 *  返回当前连接状态。
 	 *  Returns the current connection state.
-	 *
-	 *
 	 * -- SETTER --
 	 *  设置连接状态。
 	 *  Sets the connection state.
-	 *
-	 @return 连接状态 / connection state
-	  * @param state 新状态 / new state
-
+	  * 新状态 / new state
 	 */
 	@Setter
 	@Getter
@@ -79,7 +74,6 @@ public class ChatServerConnection extends AConnection {
 	/**
 	 * 基于传输层创建聊天服连接。
 	 * Creates a chat-server connection on the given transport.
-	 *
 	 * @param transport 传输 / transport
 	 * @param csPacketHandler 入站包处理器 / inbound packet handler
 	 */
@@ -91,7 +85,6 @@ public class ChatServerConnection extends AConnection {
 	/**
 	 * 初始化门面引用、处理器与初始状态。
 	 * Initializes facade reference, handler, and initial state.
-	 *
 	 * @param csPacketHandler 入站包处理器 / inbound packet handler
 	 */
 	private void init(CsPacketHandler csPacketHandler) {
@@ -113,7 +106,6 @@ public class ChatServerConnection extends AConnection {
 	/**
 	 * 解析并投递一个入站包到线程池。
 	 * Parses and dispatches one inbound packet to the thread pool.
-	 *
 	 * @param data 包数据缓冲 / packet data buffer
 	 * @return 始终为 true（由上层决定是否关闭） / always true (upper layer decides close)
 	 */
@@ -129,7 +121,6 @@ public class ChatServerConnection extends AConnection {
 	/**
 	 * 从发送队列取出一个包写入缓冲。
 	 * Dequeues one packet and writes it into the buffer.
-	 *
 	 * @param data 写出缓冲 / write buffer
 	 * @return 是否写出了数据 / whether data was written
 	 */
@@ -148,7 +139,6 @@ public class ChatServerConnection extends AConnection {
 	/**
 	 * 返回断开延迟（聊天服连接立即断开）。
 	 * Returns disconnection delay (immediate for chat-server connections).
-	 *
 	 * @return 0
 	 */
 	@Override
@@ -177,7 +167,6 @@ public class ChatServerConnection extends AConnection {
 	/**
 	 * 将服务端包加入发送队列并触发写兴趣。
 	 * Enqueues a server packet and enables write interest.
-	 *
 	 * @param bp 待发送包 / packet to send
 	 */
 	public final void sendPacket(CsServerPacket bp) {
@@ -193,7 +182,6 @@ public class ChatServerConnection extends AConnection {
 	/**
 	 * 清空发送队列后以指定包关闭连接。
 	 * Clears the send queue and closes the connection with the given packet.
-	 *
 	 * @param closePacket 关闭前最后发送的包 / last packet before close
 	 * @param forced 是否强制关闭 / whether forced close
 	 */
@@ -214,7 +202,6 @@ public class ChatServerConnection extends AConnection {
 	/**
 	 * 返回连接的可读描述。
 	 * Returns a human-readable description of this connection.
-	 *
 	 * @return 描述字符串 / description string
 	 */
 	@Override

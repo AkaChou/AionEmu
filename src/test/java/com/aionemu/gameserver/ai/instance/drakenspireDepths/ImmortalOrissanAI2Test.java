@@ -19,7 +19,6 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 /**
  * 锁定不灭之奥里萨（237230）向虚脱的奥里萨（237231）变身的阈值/死亡兜底合同。
  * Locks the threshold plus death-fallback contract of the Immortal Orissan (237230) transformation.
- *
  * <p>任务 15300/25300 的击杀步骤只认 237231：阈值变身一旦被一击/爆发致死跳过，任务就永久停在
  * “消灭盘龙巢穴的奥里萨”。因此死亡事件必须补生成，且阈值与死亡两条路径只能生成一次。</p>
  */

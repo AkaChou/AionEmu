@@ -9,7 +9,6 @@ import lombok.Data;
 /**
  * 子材料物品模板（静态数据/XML）。
  * Sub material item template (static data/XML).
- *
  * @author Ranastic (Encom)
  */
 

@@ -19,7 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Drakenspire Depths 副本 NPC AI：Orissan（@AIName "orissan"），继承 AggressiveNpcAI2。
  * Drakenspire Depths instance NPC AI: Orissan (@AIName "orissan"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("orissan")

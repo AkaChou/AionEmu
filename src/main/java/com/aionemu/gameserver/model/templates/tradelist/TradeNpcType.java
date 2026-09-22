@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 交易 NPC 类型枚举。
  * Trade Npc Type enumeration.
- *
  * @author namedrisk
  */
 @XmlType(name = "npc_type")

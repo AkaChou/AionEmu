@@ -16,7 +16,6 @@ import com.aionemu.loginserver.network.aion.clientpackets.CM_UPDATE_SESSION;
 /**
  * 登录服 Aion 客户端包工厂：按连接状态与 opcode 分发客户端包。
  * Login-server Aion client-packet factory: dispatches packets by connection state and opcode.
- *
  * @author -Nemesiss-
  */
 @Slf4j
@@ -26,7 +25,6 @@ public class AionPacketHandlerFactory {
     /**
      * 从 ByteBuffer 读取并构造一个客户端包。
      * Reads one client packet from the given ByteBuffer.
-     *
      * @param data 原始包数据 / raw packet data
      * @param client 登录连接 / login connection
      * @return 解析出的 AionClientPacket，未知包返回 null
@@ -82,7 +80,6 @@ public class AionPacketHandlerFactory {
     /**
      * 记录未知客户端包。
      * Logs an unknown client packet.
-     *
      * @param state 当前连接状态 / current connection state
      * @param id 包 opcode / packet opcode
      */

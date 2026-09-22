@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 玩家属性模板（静态数据/XML）。
  * XML template.
- *
  * @author Luno
  */
 @Getter

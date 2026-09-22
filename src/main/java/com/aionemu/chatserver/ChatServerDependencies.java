@@ -16,7 +16,6 @@ interface ChatServerDependencies {
     /**
      * 提供启动桥接；默认新建空桥接实例。
      * Provide the startup bridge; defaults to a new empty bridge instance.
-     *
      * @return 启动桥 / Startup bridge
      */
     default ChatServerStartupBridge startupBridge() {
@@ -26,7 +25,6 @@ interface ChatServerDependencies {
     /**
      * ID 工厂。
      * ID factory.
-     *
      * @return {@link IdFactory}
      */
     IdFactory idFactory();
@@ -34,7 +32,6 @@ interface ChatServerDependencies {
     /**
      * 游戏服对接服务。
      * Game-server integration service.
-     *
      * @return {@link GameServerService}
      */
     GameServerService gameServerService();
@@ -42,7 +39,6 @@ interface ChatServerDependencies {
     /**
      * 广播服务。
      * Broadcast service.
-     *
      * @return {@link BroadcastService}
      */
     BroadcastService broadcastService();
@@ -50,7 +46,6 @@ interface ChatServerDependencies {
     /**
      * 聊天核心服务。
      * Chat core service.
-     *
      * @return {@link ChatService}
      */
     ChatService chatService();
@@ -58,7 +53,6 @@ interface ChatServerDependencies {
     /**
      * Netty 网络服务器。
      * Netty network server.
-     *
      * @return {@link NettyServer}
      */
     NettyServer nettyServer();
@@ -66,7 +60,6 @@ interface ChatServerDependencies {
     /**
      * 重启调度服务。
      * Restart scheduling service.
-     *
      * @return {@link RestartService}
      */
     RestartService restartService();

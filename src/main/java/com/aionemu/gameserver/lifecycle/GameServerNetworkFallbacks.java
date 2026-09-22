@@ -26,7 +26,6 @@ final class GameServerNetworkFallbacks {
     /**
      * 返回 MAC 封禁管理器回退实例。
      * Return the banned-MAC manager fallback.
-     *
      * @return MAC 封禁管理器 / Banned MAC manager
      */
     static BannedMacManager bannedMacManager() {
@@ -36,7 +35,6 @@ final class GameServerNetworkFallbacks {
     /**
      * 返回 LoginServer：双源兜底已退役，交由 {@link LoginServer#getInstance()} fail-fast。
      * Returns LoginServer: the dual-source fallback is retired; delegates to LoginServer.getInstance() and fails fast.
-     *
      * @return LoginServer 实例 / LoginServer instance
      */
     static LoginServer loginServer() {
@@ -46,7 +44,6 @@ final class GameServerNetworkFallbacks {
     /**
      * 返回 ChatServer：双源兜底已退役，交由 {@link ChatServer#getInstance()} fail-fast。
      * Returns ChatServer: the dual-source fallback is retired; delegates to ChatServer.getInstance() and fails fast.
-     *
      * @return ChatServer 实例 / ChatServer instance
      */
     static ChatServer chatServer() {
@@ -56,7 +53,6 @@ final class GameServerNetworkFallbacks {
     /**
      * 返回数据包日志服务回退实例。
      * Return the packet-logger service fallback.
-     *
      * @return 数据包日志服务 / Packet logger service
      */
     static PacketLoggerService packetLoggerService() {
@@ -66,7 +62,6 @@ final class GameServerNetworkFallbacks {
     /**
      * 返回网络控制器回退实例。
      * Return the network-controller fallback.
-     *
      * @return 网络控制器 / Network controller
      */
     static NetworkController networkController() {
@@ -77,7 +72,6 @@ final class GameServerNetworkFallbacks {
      * 返回 AionPacketHandlerFactory：双源兜底已退役，交由 {@link AionPacketHandlerFactory#getInstance()} fail-fast。
      * Returns AionPacketHandlerFactory: the dual-source fallback is retired;
      * delegates to AionPacketHandlerFactory.getInstance() and fails fast.
-     *
      * @return AionPacketHandlerFactory 实例 / AionPacketHandlerFactory instance
      */
     static AionPacketHandlerFactory aionPacketHandlerFactory() {
@@ -88,7 +82,6 @@ final class GameServerNetworkFallbacks {
      * 返回 PacketFloodFilter：双源兜底已退役，交由 {@link PacketFloodFilter#getInstance()} fail-fast。
      * Returns PacketFloodFilter: the dual-source fallback is retired;
      * delegates to PacketFloodFilter.getInstance() and fails fast.
-     *
      * @return PacketFloodFilter 实例 / PacketFloodFilter instance
      */
     static PacketFloodFilter packetFloodFilter() {
@@ -99,7 +92,6 @@ final class GameServerNetworkFallbacks {
      * 返回 LsPacketHandlerFactory：双源兜底已退役，交由 {@link LsPacketHandlerFactory#getInstance()} fail-fast。
      * Returns LsPacketHandlerFactory: the dual-source fallback is retired;
      * delegates to LsPacketHandlerFactory.getInstance() and fails fast.
-     *
      * @return LsPacketHandlerFactory 实例 / LsPacketHandlerFactory instance
      */
     static LsPacketHandlerFactory lsPacketHandlerFactory() {

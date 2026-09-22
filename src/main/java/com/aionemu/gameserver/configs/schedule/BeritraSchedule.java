@@ -18,7 +18,6 @@ import lombok.Setter;
 /**
  * Beritra 入侵活动时间表配置。
  * Beritra invasion event schedule configuration.
- *
  * @author Rinzler (Encom)
  */
 @Getter
@@ -31,7 +30,6 @@ public class BeritraSchedule {
 	 * -- GETTER --
 	 *  获取 Beritra 列表。
 	 *  Returns the beritra list.
-
 	 */
 	@XmlElement(name = "beritra", required = true)
 	private List<Beritra> beritrasList;
@@ -76,8 +74,6 @@ public class BeritraSchedule {
 		 * -- SETTER --
 		 *  设置 Beritra ID。
 		 *  Sets the beritra ID.
-
-
 		 */
 		@XmlAttribute(required = true)
 		private int id;
@@ -91,8 +87,6 @@ public class BeritraSchedule {
 		 * -- SETTER --
 		 *  设置入侵时间列表。
 		 *  Sets the invasion times.
-
-
 		 */
 		@XmlElement(name = "invasionTime", required = true)
 		private List<String> invasionTimes;

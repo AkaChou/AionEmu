@@ -16,14 +16,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 裂隙信息同步器，负责向玩家广播裂隙开启/关闭与统计公告。
  * Rift informer that broadcasts open/close state and announce stats to players.
- *
  * @author Rinzler (Encom)
  */
 public class RiftInformer {
 	/**
 	 * 获取指定世界已生成的裂隙 NPC 列表。
 	 * Returns spawned rift NPCs for the given world.
-	 *
 	 * @param worldId 世界地图 ID / World map id
 	 * @return 该世界的裂隙 NPC / Rift NPCs in that world
 	 */
@@ -41,7 +39,6 @@ public class RiftInformer {
 	/**
 	 * 向指定世界（及其双子地图）广播完整裂隙信息。
 	 * Broadcast full rift info to the world and its twin map.
-	 *
 	 * @param worldId 世界地图 ID / World map id
 	 */
 	public static void sendRiftsInfo(int worldId) {
@@ -55,7 +52,6 @@ public class RiftInformer {
 	/**
 	 * 向指定玩家（及其世界双子地图）发送裂隙信息。
 	 * Send rift info to a player and the twin map of their world.
-	 *
 	 * @param player 目标玩家 / Target player
 	 */
 	public static void sendRiftsInfo(Player player) {
@@ -69,7 +65,6 @@ public class RiftInformer {
 	/**
 	 * 向多个世界同步裂隙详情（不含公告汇总）。
 	 * Sync rift details (without announce summary) to multiple worlds.
-	 *
 	 * @param worlds 世界 ID 数组 / World id array
 	 */
 	public static void sendRiftInfo(int[] worlds) {
@@ -81,7 +76,6 @@ public class RiftInformer {
 	/**
 	 * 向世界广播单个裂隙消失通知。
 	 * Broadcast a single rift despawn notice to a world.
-	 *
 	 * @param worldId 世界地图 ID / World map id
 	 * @param objId 裂隙对象 ID / Rift object id
 	 */
@@ -170,9 +164,6 @@ public class RiftInformer {
 	 */
 	private static int getTwinId(int worldId) {
 		return switch (worldId) {
-			/**
-			 * 天族 / Elyos
-			 */
 			case 110070000 -> // Kaisinel Academy -> Brusthonin
 				220050000;
 			case 210020000 -> // Eltnen -> Morheim
@@ -187,10 +178,7 @@ public class RiftInformer {
 				120080000;
 			case 210100000 -> // Iluma -> Norsvold
 				220110000;
-			/**
-			 * 魔族 / Asmodians
-			 */
-			case 120080000 -> // Marchutan Priory -> Theobomos
+            case 120080000 -> // Marchutan Priory -> Theobomos
 				210060000;
 			case 220020000 -> // Morheim -> Eltnen
 				210020000;

@@ -17,9 +17,7 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
  * Blob for mana sockets and enchant-related info.
  * Writes soul-bind, enchant level, skin, optional sockets, mana stones, god stone,
  * dye, Idian, plume bonuses, amplification, skill boost, and Luna reskin data.
- *
  * @author -Nemesiss-
- * @modified Rolandas
  */
 public class ManaStoneInfoBlobEntry extends ItemBlobEntry {
 

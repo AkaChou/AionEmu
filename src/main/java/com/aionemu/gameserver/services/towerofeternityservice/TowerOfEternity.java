@@ -11,10 +11,8 @@ import lombok.RequiredArgsConstructor;
 /**
  * 永恒之塔活动抽象基类。
  * Abstract base for Tower of Eternity world events.
- *
  * <p>封装启动/停止幂等守卫与按状态刷怪/清怪。
  * Encapsulates idempotent start/stop guards and spawn/despawn by state type.</p>
- *
  * @author Wnkrz
  * @param <TE> 永恒之塔地点类型 / tower location type
  */
@@ -26,8 +24,6 @@ public abstract class TowerOfEternity<TE extends TowerOfEternityLocation> {
 	/**
 	 * 获取绑定地点。
 	 * Returns the bound location.
-	 *
-	 * @return 绑定地点 / location
 	 */
 	private final TE towerOfEternityLocation;
 	private final AtomicBoolean closed = new AtomicBoolean();
@@ -76,7 +72,6 @@ public abstract class TowerOfEternity<TE extends TowerOfEternityLocation> {
 	/**
 	 * 按状态类型刷新刷怪。
 	 * Spawns entities by state type.
-	 *
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(TowerOfEternityStateType type) {
@@ -94,7 +89,6 @@ public abstract class TowerOfEternity<TE extends TowerOfEternityLocation> {
 	/**
 	 * 是否已关闭。
 	 * Whether the event is closed.
-	 *
 	 * @return 已关闭则为 true / true if closed
 	 */
 	public boolean isClosed() {
@@ -104,7 +98,6 @@ public abstract class TowerOfEternity<TE extends TowerOfEternityLocation> {
 	/**
 	 * 获取地点 ID。
 	 * Returns the location id.
-	 *
 	 * @return 地点 ID / location id
 	 */
 	public int getTowerOfEternityLocationId() {

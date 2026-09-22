@@ -7,7 +7,6 @@ import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
 /**
  * 服务端聊天初始化响应包。
  * Server packet for chat initialization response.
- *
  * @author ginho1
  */
 public class SM_CHAT_INI extends AbstractServerPacket {
@@ -23,7 +22,6 @@ public class SM_CHAT_INI extends AbstractServerPacket {
     /**
      * 写入初始化响应固定字段。
      * Writes the fixed fields of the init response.
-     *
      * @param cHandler 客户端通道处理器 / client channel handler
      * @param buf 包写入器 / packet writer
      */

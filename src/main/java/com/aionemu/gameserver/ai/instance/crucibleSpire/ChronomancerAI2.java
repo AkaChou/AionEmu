@@ -15,7 +15,6 @@ import java.util.List;
 /**
  * Crucible Spire 副本 NPC AI：Chronomancer（@AIName "IDInfinity_Teleport_Odd_Number"），继承 NpcAI2。
  * Crucible Spire instance NPC AI: Chronomancer (@AIName "IDInfinity_Teleport_Odd_Number"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("IDInfinity_Teleport_Odd_Number")
@@ -53,7 +52,6 @@ public class ChronomancerAI2 extends NpcAI2 {
 	/**
 	 * 在指定楼层生成挑战怪物。
 	 * Spawn the challenge monsters for the given floor.
-	 *
 	 * @param next 下一层楼层号 / next floor number
 	 */
 	private void spawnFloor(int next) {
@@ -69,7 +67,6 @@ public class ChronomancerAI2 extends NpcAI2 {
 	/**
 	 * 删除副本中指定 ID 的全部 NPC。
 	 * Delete all NPCs of the given ID in the instance.
-	 *
 	 * @param npcId 要删除的 NPC ID / NPC ID to delete
 	 */
 	private void despawnNpc(int npcId) {

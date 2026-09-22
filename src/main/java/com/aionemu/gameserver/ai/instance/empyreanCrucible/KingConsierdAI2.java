@@ -20,7 +20,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Empyrean Crucible 副本 NPC AI：King Consierd（@AIName "king_consierd"），继承 AggressiveNpcAI2。
  * Empyrean Crucible instance NPC AI: King Consierd (@AIName "king_consierd"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("king_consierd")

@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 传送地点模板（静态数据/XML）。
  * Telelocation template (static data/XML).
- *
  * @author orz
  */
 @Getter

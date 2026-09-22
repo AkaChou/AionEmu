@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 宠物函数模板（静态数据/XML）。
  * Pet function template (static data / XML).
- *
  * @author IlBuono
  */
 @Getter

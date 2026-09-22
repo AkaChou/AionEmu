@@ -15,7 +15,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * Transidium Annex 副本 NPC AI：Ahserion Flight Barrier（@AIName "ahserion_flight_barrier"），继承 NpcAI2。
  * Transidium Annex instance NPC AI: Ahserion Flight Barrier (@AIName "ahserion_flight_barrier"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("ahserion_flight_barrier")

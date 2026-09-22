@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * ID Event Def 副本 NPC AI：IDEVENT Def Heal Pol Tower B（@AIName "IDEVENT_Def_HealPolTower_B"），继承 NpcAI2。
  * ID Event Def instance NPC AI: IDEVENT Def Heal Pol Tower B (@AIName "IDEVENT_Def_HealPolTower_B"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("IDEVENT_Def_HealPolTower_B")

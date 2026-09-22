@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Haramel 副本 NPC AI：Tower Lift（@AIName "tower_lift"），继承 NpcAI2。
  * Haramel instance NPC AI: Tower Lift (@AIName "tower_lift"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("tower_lift")

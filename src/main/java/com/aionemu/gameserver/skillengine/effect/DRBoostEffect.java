@@ -10,7 +10,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 掉落稀有度加成效果：标记运行中效果启用 DR 提升。
  * Drop-rarity boost effect: marks the runtime effect to enable DR boost.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -25,7 +24,6 @@ public class DRBoostEffect extends BuffEffect {
 	/**
 	 * 标记本效果启用 DR 加成并记为成功。
 	 * Marks DR boost and records this effect as successful.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

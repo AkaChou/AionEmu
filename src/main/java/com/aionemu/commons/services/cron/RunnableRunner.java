@@ -8,7 +8,6 @@ import org.quartz.JobExecutionException;
 /**
  * 任务执行器抽象类，用于处理定时任务的执行
  * Abstract task executor class for handling scheduled task execution
- *
  * 该类实现了 Quartz 的 Job 接口，提供了任务执行的基础框架：
  * This class implements Quartz's Job interface, providing a basic framework for task execution:
  * 1. 支持长短任务的区分执行
@@ -32,7 +31,6 @@ public abstract class RunnableRunner implements Job {
     /**
      * 执行定时任务
      * Execute scheduled task
-     *
      * @param context 任务执行上下文 / task execution context
      * @throws JobExecutionException 任务执行异常 / task execution exception
      */
@@ -51,7 +49,6 @@ public abstract class RunnableRunner implements Job {
     /**
      * 执行普通任务
      * Execute normal task
-     *
      * @param r 要执行的任务 / task to execute
      */
     public abstract void executeRunnable(Runnable r);
@@ -59,7 +56,6 @@ public abstract class RunnableRunner implements Job {
     /**
      * 执行长时任务
      * Execute long-running task
-     *
      * @param r 要执行的任务 / task to execute
      */
     public abstract void executeLongRunningRunnable(Runnable r);

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 /**
  * Rentus Base 副本 NPC AI：Oil Cask（@AIName "oil_cask"），继承 AggressiveNpcAI2。
  * Rentus Base instance NPC AI: Oil Cask (@AIName "oil_cask"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("oil_cask")

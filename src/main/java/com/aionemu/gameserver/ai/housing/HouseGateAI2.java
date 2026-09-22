@@ -19,18 +19,13 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * 房屋相关 NPC AI：House Gate（@AIName "housegate"），继承 NpcAI2。
  * Housing-related NPC AI: House Gate (@AIName "housegate"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("housegate")
 public class HouseGateAI2 extends NpcAI2
 {
 	@Override
-	/**
-	 * 房屋门扉对话：仅房主或其组队成员可触发；确认弹窗后把玩家传送至房屋所在区域（个人房屋或退出点）。
-	 * House gate dialog: only the house owner or group members may trigger it; on confirmation teleports the player to the house area (personal instance or exit point).
-	 */
-	protected void handleDialogStart(Player player) {
+    protected void handleDialogStart(Player player) {
 		final int creatorId = getCreatorId();
 		if (!player.getObjectId().equals(creatorId)) {
 			if (player.getCurrentGroup() == null || !player.getCurrentGroup().hasMember(creatorId))
@@ -89,7 +84,7 @@ public class HouseGateAI2 extends NpcAI2
 				TeleportService2.teleportTo(responder, exitMapId, instanceId, x, y, z, heading, TeleportAnimation.BEAM_ANIMATION);
 				decided = true;
 			}
-			
+
 			@Override
 			public void denyRequest(Creature requester, Player responder) {
 			    decided = true;

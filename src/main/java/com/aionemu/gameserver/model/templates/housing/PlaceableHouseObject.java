@@ -10,7 +10,6 @@ import lombok.Getter;
 /**
  * Placeable 房屋对象模板（静态数据/XML）。
  * XML template.
- *
  * @author Rolandas
  */
 @Getter

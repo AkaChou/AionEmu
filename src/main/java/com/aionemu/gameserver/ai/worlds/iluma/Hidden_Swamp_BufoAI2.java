@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Iluma 区域 NPC AI：Hidden Swamp Bufo（@AIName "hidden_swamp_bufo"），继承 AggressiveNpcAI2。
  * Iluma zone NPC AI: Hidden Swamp Bufo (@AIName "hidden_swamp_bufo"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("hidden_swamp_bufo")

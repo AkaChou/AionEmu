@@ -12,7 +12,6 @@ import java.util.List;
 /**
  * Brusthonin 区域 NPC AI：Steel Rods（@AIName "steel_rods"），继承 NpcAI2。
  * Brusthonin zone NPC AI: Steel Rods (@AIName "steel_rods"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("steel_rods")

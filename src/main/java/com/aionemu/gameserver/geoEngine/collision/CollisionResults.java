@@ -32,7 +32,6 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	/**
 	 * 以意图、仅首命中与实例 id 构造（无忽略属性）。
 	 * Constructs with intentions, first-only flag and instance id (no ignore properties).
-	 *
 	 * @param intentions 意图掩码 / intention mask
 	 * @param searchFirst 是否仅搜索首个命中 / search first hit only
 	 * @param instanceId 实例 id / instance id
@@ -44,7 +43,6 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	/**
 	 * 以意图、仅首命中、实例 id 与忽略属性构造。
 	 * Constructs with intentions, first-only flag, instance id and ignore properties.
-	 *
 	 * @param intentions 意图掩码 / intention mask
 	 * @param searchFirst 是否仅搜索首个命中 / search first hit only
 	 * @param instanceId 实例 id / instance id
@@ -60,7 +58,6 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	/**
 	 * 以意图、实例 id 与忽略属性构造（收集全部命中）。
 	 * Constructs with intentions, instance id and ignore properties (collects all hits).
-	 *
 	 * @param intentions 意图掩码 / intention mask
 	 * @param instanceId 实例 id / instance id
 	 * @param ignoreProperties 忽略属性 / ignore properties
@@ -72,7 +69,6 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	/**
 	 * 以意图与实例 id 构造（收集全部命中，无忽略属性）。
 	 * Constructs with intentions and instance id (collects all hits, no ignore properties).
-	 *
 	 * @param intentions 意图掩码 / intention mask
 	 * @param instanceId 实例 id / instance id
 	 */
@@ -91,7 +87,6 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	/**
 	 * 返回按距离升序的迭代器（必要时先排序）。
 	 * Returns an iterator ordered by ascending distance (sorts lazily when needed).
-	 *
 	 * @return 结果迭代器 / result iterator
 	 */
 	@Override
@@ -107,7 +102,6 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	/**
 	 * 追加一次命中；距离为 NaN 时忽略。非仅首命中模式下标记为未排序。
 	 * Appends a hit; ignores NaN distance. Marks unsorted when not first-only mode.
-	 *
 	 * @param result 碰撞结果 / collision result
 	 */
 	public void addCollision(CollisionResult result) {
@@ -123,7 +117,6 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	/**
 	 * 返回命中数量。
 	 * Returns the number of hits.
-	 *
 	 * @return 命中数量 / hit count
 	 */
 	public int size() {
@@ -133,7 +126,6 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	/**
 	 * 返回最近的命中；无结果时返回 {@code null}。
 	 * Returns the closest hit, or {@code null} if empty.
-	 *
 	 * @return 最近命中 / closest hit
 	 */
 	public CollisionResult getClosestCollision() {
@@ -152,7 +144,6 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	/**
 	 * 返回最远的命中；无结果时返回 {@code null}。
 	 * Returns the farthest hit, or {@code null} if empty.
-	 *
 	 * @return 最远命中 / farthest hit
 	 */
 	public CollisionResult getFarthestCollision() {
@@ -171,7 +162,6 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	/**
 	 * 按排序后下标取命中。
 	 * Returns the hit at the given sorted index.
-	 *
 	 * @param index 下标 / index
 	 * @return 命中结果 / collision result
 	 */
@@ -186,7 +176,6 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	/**
 	 * 不排序直接按下标取命中（仅内部使用）。
 	 * Returns the hit at the given index without sorting (internal use only).
-	 *
 	 * @param index 下标 / index
 	 * @return 命中结果 / collision result
 	 */
@@ -197,7 +186,6 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	/**
 	 * 调试字符串。
 	 * Debug string representation.
-	 *
 	 * @return 描述字符串 / description string
 	 */
 	@Override
@@ -218,7 +206,6 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	/**
 	 * 是否应使斜坡表面无效。
 	 * Whether sloping surfaces should be invalidated.
-	 *
 	 * @return 斜坡无效标志 / sloping-surface invalidation flag
 	 */
 	public boolean shouldInvalidateSlopingSurface() {

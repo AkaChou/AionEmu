@@ -13,9 +13,7 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
  * 写入融合物品 ID 及其魔石数据（古代石优先于普通石）。
  * Blob for composite/fusioned item info.
  * Writes the fusioned item id and its mana stones (ancient stones before basic ones).
- *
  * @author -Nemesiss-
- * @modified Rolandas
  */
 public class CompositeItemBlobEntry extends ItemBlobEntry {
 

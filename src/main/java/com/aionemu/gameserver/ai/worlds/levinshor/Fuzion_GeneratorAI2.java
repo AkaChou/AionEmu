@@ -10,7 +10,6 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 /**
  * Levinshor 区域 NPC AI：Fuzion Generator（@AIName "fuzion_generator"），继承 NpcAI2。
  * Levinshor zone NPC AI: Fuzion Generator (@AIName "fuzion_generator"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("fuzion_generator")

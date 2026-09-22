@@ -8,7 +8,6 @@ import lombok.Getter;
 /**
  * 分解产出物品模板：物品 ID 与数量（支持 min-max 范围随机）。
  * Disassemble output template: item id and count (range-random supported).
- *
  * @author BeckUp.Media
  */
 @Getter
@@ -22,8 +21,7 @@ public class DisassembleItem {
 	/**
 	 * 是否已停用（不再产出）。
 	 * Whether this entry is deprecated.
-	 *
-	 * @return 是否停用 / Whether disuse
+	 * 是否停用 / Whether disuse
 	 */
 	@XmlAttribute(name = "disuse")
 	private boolean disuse;
@@ -56,7 +54,6 @@ public class DisassembleItem {
     /**
 	 * 返回指定范围（含端点）内的随机数。
 	 * Returns a random number in the specified range (inclusive).
-	 *
 	 * @param min 最小值 / minimum value
 	 * @param max 最大值 / maximum value
 	 * @return [min, max] 范围内的随机数 / random number in the range [min, max]

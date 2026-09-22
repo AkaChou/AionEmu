@@ -21,7 +21,6 @@ public class AbyssLanding extends Landing<LandingLocation> {
 	/**
 	 * 按等级启动着陆点刷怪（1–8 级，非法等级回退 LVL1）。
 	 * Start landing spawns by level (1–8; invalid levels fall back to LVL1).
-	 *
 	 * @param level 着陆等级 / Landing level
 	 */
 	@Override

@@ -47,7 +47,6 @@ final class SkillDefinitionLoader {
 	/**
 	 * 加载全部技能分片，并把串行墙钟阶段与并行分片工作量写入共享计时表。
 	 * Loads all skill parts and writes serial wall-time phases plus parallel part work into the shared timing table.
-	 *
 	 * @param directory 技能定义目录 / skill definition directory
 	 * @param phaseTimings 线程安全的阶段计时表 / thread-safe phase timing map
 	 * @return 已初始化的技能数据 / initialized skill data
@@ -197,7 +196,6 @@ final class SkillDefinitionLoader {
 	/**
 	 * 在串行阶段复制技能组 DOM，避免并行 SAX 任务共享非线程安全节点。
 	 * Copies skill-group DOM during the serial phase so parallel SAX tasks never share non-thread-safe nodes.
-	 *
 	 * @param element 待复制的 DOM 元素 / DOM element to copy
 	 * @return 不可变展开元素 / immutable expansion element
 	 */

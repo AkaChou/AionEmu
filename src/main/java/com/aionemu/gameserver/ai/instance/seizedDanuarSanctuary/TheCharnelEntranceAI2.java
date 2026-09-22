@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Seized Danuar Sanctuary 副本 NPC AI：The Charnel Entrance（@AIName "charnel"），继承 NpcAI2。
  * Seized Danuar Sanctuary instance NPC AI: The Charnel Entrance (@AIName "charnel"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("charnel")

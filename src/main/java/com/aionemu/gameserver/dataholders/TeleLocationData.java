@@ -15,7 +15,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 传送点位置数据容器，按位置 ID 索引传送坐标模板。
  * Teleport-location data holder, indexing telelocation templates by location id.
- *
  * @author orz
  */
 @XmlRootElement(name = "teleport_location")
@@ -41,7 +40,6 @@ public class TeleLocationData {
 	/**
 	 * 返回已加载的传送点数量。
 	 * Returns the number of loaded teleport locations.
-	 *
 	 * @return 已加载的传送地点数量 / Returns the number of loaded teleport locations.
 	 */
 	public int size() {
@@ -51,7 +49,6 @@ public class TeleLocationData {
 	/**
 	 * 按位置 ID 获取传送点模板。
 	 * Returns the telelocation template for the given location id.
-	 *
 	 * @param id 位置 ID / location id
 	 * @return 传送点模板，不存在则为 null / telelocation template or null
 	 */

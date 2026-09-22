@@ -23,7 +23,6 @@ public class ChatServerRuntimeBridge {
     /**
      * 注入可选的聊天服运行时提供者。
      * Injects an optional chat-server runtime provider.
-     *
      * @param chatServerRuntimeProvider 聊天服运行时提供者 / runtime ObjectProvider
      */
     @Autowired(required = false)
@@ -34,7 +33,6 @@ public class ChatServerRuntimeBridge {
     /**
      * 注入可选的进程运行时桥提供者。
      * Injects an optional process runtime-bridge provider.
-     *
      * @param processBridgeProvider 进程运行时桥提供者 / process-bridge ObjectProvider
      */
     @Autowired(required = false)
@@ -45,7 +43,6 @@ public class ChatServerRuntimeBridge {
     /**
      * 准备关闭钩子后启动聊天服（优先托管运行时）。
      * Prepares the shutdown hook, then starts chat (preferring managed runtime).
-     *
      * @param args 启动参数 / startup arguments
      */
     public void start(String[] args) {
@@ -69,7 +66,6 @@ public class ChatServerRuntimeBridge {
     /**
      * 关闭聊天进程。
      * Shuts down the chat process.
-     *
      * @param restart 是否以重启意图关闭 / whether shutdown is for restart
      */
     public void shutdown(boolean restart) {
@@ -79,7 +75,6 @@ public class ChatServerRuntimeBridge {
     /**
      * 解析可选的聊天服运行时。
      * Resolves the optional chat-server runtime.
-     *
      * @return 运行时实例，不可用则为 null / runtime instance, or null if unavailable
      */
     private ChatServerRuntime chatServerRuntime() {
@@ -92,7 +87,6 @@ public class ChatServerRuntimeBridge {
     /**
      * 懒加载并缓存进程运行时桥。
      * Lazily loads and caches the process runtime bridge.
-     *
      * @return 进程运行时桥 / process runtime bridge
      */
     private synchronized ChatProcessRuntimeBridge processBridge() {

@@ -10,7 +10,6 @@ import lombok.Setter;
 /**
  * 基础刷新点模板（静态数据/XML）。
  * XML template.
- *
  * @author Rinzler
  */
 

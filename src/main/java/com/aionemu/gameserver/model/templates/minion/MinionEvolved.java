@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 守护灵进化模板（静态数据/XML）。
  * Minion evolution template (static data/XML).
- *
  * @author Falke_34
  */
 @Getter

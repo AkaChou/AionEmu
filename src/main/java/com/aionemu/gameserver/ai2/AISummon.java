@@ -18,7 +18,6 @@ public class AISummon extends AITemplate {
 	/**
 	 * 获取召唤物所有者。
 	 * Returns the summon owner.
-	 *
 	 * @return 召唤物 / summon
 	 */
 	@Override
@@ -29,7 +28,6 @@ public class AISummon extends AITemplate {
 	/**
 	 * 获取 NPC 模板。
 	 * Returns the NPC object template.
-	 *
 	 * @return NPC 模板 / NPC template
 	 */
 	protected NpcTemplate getObjectTemplate() {
@@ -39,7 +37,6 @@ public class AISummon extends AITemplate {
 	/**
 	 * 获取刷新模板。
 	 * Returns the spawn template.
-	 *
 	 * @return 刷新模板 / spawn template
 	 */
 	protected SpawnTemplate getSpawnTemplate() {
@@ -49,7 +46,6 @@ public class AISummon extends AITemplate {
 	/**
 	 * 获取种族。
 	 * Returns the race.
-	 *
 	 * @return 阵营 / race
 	 */
 	protected Race getRace() {
@@ -59,7 +55,6 @@ public class AISummon extends AITemplate {
 	/**
 	 * 获取召唤物主人（玩家）。
 	 * Returns the summon's master player.
-	 *
 	 * @return 召唤者玩家 / master player
 	 */
 	protected Player getMaster() {
@@ -69,7 +64,6 @@ public class AISummon extends AITemplate {
 	/**
 	 * 获取移动控制器。
 	 * Returns the move controller.
-	 *
 	 * @return 移动控制器 / move controller
 	 */
 	protected SummonMoveController getMoveController() {
@@ -79,7 +73,6 @@ public class AISummon extends AITemplate {
 	/**
 	 * 获取召唤物控制器。
 	 * Returns the summon controller.
-	 *
 	 * @return 召唤物控制器 / summon controller
 	 */
 	protected SummonController getController() {

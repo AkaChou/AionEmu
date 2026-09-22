@@ -24,9 +24,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * 可见对象已知列表：维护“已知”与“可见”两套对象/玩家集合，并负责发现、遗忘与遍历。
  * Visible-object known list: maintains known/visual object and player maps, and handles discovery, forget, and iteration.
- *
  * @author -Nemesiss-
- * @modified kosyachok
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -41,7 +39,6 @@ public class KnownList {
 	/**
 	 * 所有者已知的对象映射（objectId → 对象，懒初始化）。
 	 * Objects known by the owner (objectId → object), lazily initialized.
-	 *
 	 * <p>与玩家映射同一范式：{@code volatile} 字段 + {@code synchronized (this)} 双检创建，
 	 * 读取路径先取局部引用、为 null 时直接返回而不加任何锁——这样既不会有"全服共用一个空表监视器"
 	 * 的争用，也不会出现两个线程各自持有一张映射而丢对象。创建后引用不再变化，因此
@@ -121,7 +118,6 @@ public class KnownList {
 	/**
 	 * 判断对象是否已被本列表知晓。
 	 * Checks whether the object is already known.
-	 *
 	 * @param object 待检查对象 / object to check
 	 * @return 已知则返回 {@code true} / {@code true} if known
 	 */
@@ -133,7 +129,6 @@ public class KnownList {
 	/**
 	 * 将可见对象加入本已知列表。
 	 * Adds a visible object to this known list.
-	 *
 	 * @param object 待添加对象 / object to add
 	 * @return 首次加入成功返回 {@code true} / {@code true} if newly added
 	 */
@@ -156,7 +151,6 @@ public class KnownList {
 	/**
 	 * 将对象加入可见集合，并通知控制器 {@code see}。
 	 * Adds the object to the visual set and notifies the controller via {@code see}.
-	 *
 	 * @param object 待添加的可见对象 / visual object to add
 	 */
 	public void addVisualObject(VisibleObject object) {
@@ -183,15 +177,11 @@ public class KnownList {
 	/**
 	 * 从本已知列表删除可见对象。
 	 * Removes a visible object from this known list.
-	 *
 	 * @param object 待删除对象 / object to remove
 	 * @param isOutOfRange 是否因超出范围 / whether removal is due to range
 	 */
 	private void del(VisibleObject object, boolean isOutOfRange) {
-		/**
-		 * 对象已知 / object was known
-		 */
-		Map<Integer, VisibleObject> objects = knownObjects;
+        Map<Integer, VisibleObject> objects = knownObjects;
 		if (objects != null && objects.remove(object.getObjectId()) != null) {
 			if (knownPlayers != null) {
 				knownPlayers.remove(object.getObjectId());
@@ -203,7 +193,6 @@ public class KnownList {
 	/**
 	 * 从可见集合删除对象，并通知控制器 {@code notSee}。
 	 * Removes the object from the visual set and notifies the controller via {@code notSee}.
-	 *
 	 * @param object 待删除的可见对象 / visual object to remove
 	 * @param isOutOfRange 是否因超出范围 / whether removal is due to range
 	 */
@@ -255,10 +244,7 @@ public class KnownList {
 				if (!checkObjectInRange(newObject) && !newObject.getKnownList().checkReversedObjectInRange(owner)) {
 					continue;
 				}
-				/**
-				 * 新对象尚未被知晓 / New object is not known
-				 */
-				if (add(newObject)) {
+                if (add(newObject)) {
 					newObject.getKnownList().add(owner);
 				}
 			}
@@ -268,7 +254,6 @@ public class KnownList {
 	/**
 	 * 判断所有者是否应感知该对象（是否保留在已知列表中）。
 	 * Whether the known-list owner is aware of the found object (should keep it in the list).
-	 *
 	 * @param newObject 待检查的对象 / candidate object
 	 * @return 应感知则返回 {@code true} / {@code true} if aware
 	 */
@@ -279,7 +264,6 @@ public class KnownList {
 	/**
 	 * 检查对象是否在所有者的可见距离内（含 Z 轴上限）。
 	 * Checks whether the object is within the owner's visibility distance (including max Z).
-	 *
 	 * @param newObject 待检查的对象 / candidate object
 	 * @return 在范围内返回 {@code true} / {@code true} if in range
 	 */
@@ -294,7 +278,6 @@ public class KnownList {
 	/**
 	 * 反向范围检查；若新对象使用不同的感知半径，可覆盖此方法。
 	 * Reverse range check; override when the new object uses a different awareness radius.
-	 *
 	 * @param newObject 待检查的对象 / candidate object
 	 * @return 默认返回 {@code false} / {@code false} by default
 	 */
@@ -305,7 +288,6 @@ public class KnownList {
 	/**
 	 * 对所有已知 NPC 执行访问回调（无数量上限）。
 	 * Visits all known NPCs without an iteration limit.
-	 *
 	 * @param visitor 访问回调 / visitor callback
 	 */
 	public void doOnAllNpcs(Visitor<Npc> visitor) {
@@ -315,7 +297,6 @@ public class KnownList {
 	/**
 	 * 对所有已知 NPC 执行访问回调，可限制最大遍历数。
 	 * Visits known NPCs, optionally capped by an iteration limit.
-	 *
 	 * @param visitor 访问回调 / visitor callback
 	 * @param iterationLimit 最大遍历数 / maximum iterations
 	 * @return 实际遍历数量 / number of NPCs visited
@@ -343,7 +324,6 @@ public class KnownList {
 	/**
 	 * 对所有已知 NPC 执行携带所有者的访问回调（无数量上限）。
 	 * Visits all known NPCs with owner context, without an iteration limit.
-	 *
 	 * @param visitor 访问回调 / visitor callback
 	 */
 	public void doOnAllNpcsWithOwner(VisitorWithOwner<Npc, VisibleObject> visitor) {
@@ -353,7 +333,6 @@ public class KnownList {
 	/**
 	 * 对所有已知 NPC 执行携带所有者的访问回调，可限制最大遍历数。
 	 * Visits known NPCs with owner context, optionally capped by an iteration limit.
-	 *
 	 * @param visitor 访问回调 / visitor callback
 	 * @param iterationLimit 最大遍历数 / maximum iterations
 	 * @return 实际遍历数量 / number of NPCs visited
@@ -382,10 +361,8 @@ public class KnownList {
 	/**
 	 * 生成诊断用的对象标识：类型、对象 ID、名称与所在地图。
 	 * Builds a diagnostic object identity: type, object id, name, and world id.
-	 *
 	 * <p>该方法只服务于异常兜底日志，自身不得再抛异常；名称不可用时降级为 ID。
 	 * It only serves the failure-path log and must not throw, degrading to the id when the name is unusable.</p>
-	 *
 	 * @param object 目标对象，可为 null / target object, may be null
 	 * @return 形如 {@code Npc#12345 Foo@210050000} 的标识 / identity such as {@code Npc#12345 Foo@210050000}
 	 */
@@ -405,7 +382,6 @@ public class KnownList {
 	/**
 	 * 对所有已知玩家执行访问回调。
 	 * Visits all known players.
-	 *
 	 * @param visitor 访问回调 / visitor callback
 	 */
 	public void doOnAllPlayers(Visitor<Player> visitor) {
@@ -426,7 +402,6 @@ public class KnownList {
 	/**
 	 * 对所有已知对象执行访问回调。
 	 * Visits all known objects.
-	 *
 	 * @param visitor 访问回调 / visitor callback
 	 */
 	public void doOnAllObjects(Visitor<VisibleObject> visitor) {
@@ -444,7 +419,6 @@ public class KnownList {
 	/**
 	 * 返回已知对象快照列表。
 	 * Returns a snapshot list of known objects.
-	 *
 	 * @return 已知对象快照 / known objects snapshot
 	 */
 	public List<VisibleObject> getKnownObjectsSnapshot() {
@@ -454,7 +428,6 @@ public class KnownList {
 	/**
 	 * 返回可见对象快照列表。
 	 * Returns a snapshot list of visual objects.
-	 *
 	 * @return 可见对象快照 / visual objects snapshot
 	 */
 	public List<VisibleObject> getVisibleObjectsSnapshot() {
@@ -470,7 +443,6 @@ public class KnownList {
 	/**
 	 * 已知对象值的线程安全快照。
 	 * Thread-safe snapshot of known-object values.
-	 *
 	 * <p>遍历已知列表必须走快照：容器虽为 {@link ConcurrentHashMap}（弱一致迭代器），
 	 * 但访问回调会在遍历过程中增删对象，弱一致迭代会让“遍历期间新加入的对象”被立即访问，
 	 * 破坏既有快照语义。该约定由 {@code KnownListIterationSafetyTest} 静态闸门守护。
@@ -478,7 +450,6 @@ public class KnownList {
 	 * (weakly consistent iterator), visitors add/remove entries while iterating, and a weakly
 	 * consistent iterator would immediately visit objects added during the visit. The rule is
 	 * enforced by the {@code KnownListIterationSafetyTest} gate.</p>
-	 *
 	 * @return 快照列表 / snapshot list
 	 */
 	private List<VisibleObject> knownObjectsSnapshot() {
@@ -494,7 +465,6 @@ public class KnownList {
 	/**
 	 * 已知玩家值的线程安全快照。
 	 * Thread-safe snapshot of known-player values.
-	 *
 	 * @return 快照列表 / snapshot list
 	 */
 	private List<Player> knownPlayersSnapshot() {
@@ -509,7 +479,6 @@ public class KnownList {
 	/**
 	 * 返回可见对象映射（实时视图）。
 	 * Returns the visual-objects map (live view).
-	 *
 	 * @return 可见对象映射 / visual objects map
 	 */
 	public Map<Integer, VisibleObject> getVisibleObjects() {
@@ -520,7 +489,6 @@ public class KnownList {
 	/**
 	 * 返回已知玩家映射的副本；未初始化时返回空映射。
 	 * Returns a copy of the known-players map; empty if not initialized.
-	 *
 	 * @return 已知玩家映射副本 / known players map copy
 	 */
 	public Map<Integer, Player> getKnownPlayers() {
@@ -560,7 +528,6 @@ public class KnownList {
 	/**
 	 * 返回可见玩家映射的副本；未初始化时返回空映射。
 	 * Returns a copy of the visual-players map; empty if not initialized.
-	 *
 	 * @return 可见玩家映射副本 / visual players map copy
 	 */
 	public Map<Integer, Player> getVisiblePlayers() {
@@ -623,7 +590,6 @@ public class KnownList {
 	/**
 	 * 按对象 ID 获取已知对象。
 	 * Returns a known object by object id.
-	 *
 	 * @param targetObjectId 目标对象 ID / target object id
 	 * @return 已知对象，不存在则为 {@code null} / known object, or {@code null}
 	 */
@@ -635,7 +601,6 @@ public class KnownList {
 	/**
 	 * 返回已知对象映射（实时视图）；未初始化时按需创建，调用方拿到的永远是可写映射。
 	 * Returns the known-objects map (live view), creating it on demand so callers never see null.
-	 *
 	 * @return 已知对象映射 / known objects map
 	 */
 	public Map<Integer, VisibleObject> getKnownObjects() {

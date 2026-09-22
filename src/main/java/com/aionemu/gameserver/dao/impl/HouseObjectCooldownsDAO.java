@@ -12,9 +12,7 @@ import java.util.Map;
 /**
  * 房屋物件冷却 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of HouseObjectCooldownsDAO.
- *
  * Updated for MySQL 8.
- *
  * @author Rolandas
  */
 @Slf4j
@@ -33,7 +31,6 @@ public class HouseObjectCooldownsDAO extends com.aionemu.gameserver.dao.HouseObj
     /**
      * 加载玩家房屋物件冷却。
      * Loads house object cooldowns for a player.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -68,7 +65,6 @@ public class HouseObjectCooldownsDAO extends com.aionemu.gameserver.dao.HouseObj
     /**
      * 保存玩家房屋物件冷却。
      * Stores house object cooldowns for a player.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -125,7 +121,6 @@ public class HouseObjectCooldownsDAO extends com.aionemu.gameserver.dao.HouseObj
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

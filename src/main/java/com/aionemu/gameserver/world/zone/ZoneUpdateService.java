@@ -10,7 +10,6 @@ import com.aionemu.gameserver.taskmanager.AbstractFIFOPeriodicTaskManager;
 /**
  * 区域刷新周期任务：FIFO 处理生物区域重算，并对玩家检查水位/死亡高度。
  * Zone refresh periodic task: FIFO revalidation of creature zones, and water/death-level checks for players.
- *
  * @author ATracer
  */
 public class ZoneUpdateService extends AbstractFIFOPeriodicTaskManager<Creature> {
@@ -18,8 +17,6 @@ public class ZoneUpdateService extends AbstractFIFOPeriodicTaskManager<Creature>
      * -- SETTER --
      *  设置 Spring 单例提供者。
      *  Set the Spring singleton provider.
-     *
-     * @param provider Spring 单例提供者 / the Spring singleton provider
      */
 	@Setter
     private static volatile ObjectProvider<ZoneUpdateService> instanceProvider;
@@ -35,7 +32,6 @@ public class ZoneUpdateService extends AbstractFIFOPeriodicTaskManager<Creature>
 	/**
 	 * 刷新生物区域，并对玩家执行水位/死亡高度检查。
 	 * Refresh the creature's zones and run water/death-level checks for players.
-	 *
 	 * @param creature 待处理生物 / creature to process
 	 */
 	@Override
@@ -49,7 +45,6 @@ public class ZoneUpdateService extends AbstractFIFOPeriodicTaskManager<Creature>
 	/**
 	 * 返回被调用方法名（用于任务诊断）。
 	 * Return the called method name (for task diagnostics).
-	 *
 	 * @return 被调方法名 / the method name
 	 */
 	@Override
@@ -60,11 +55,9 @@ public class ZoneUpdateService extends AbstractFIFOPeriodicTaskManager<Creature>
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available

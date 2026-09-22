@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 /**
  * 势力战位置模型。
  * Svs Location model.
- *
  * @author Rinzler (Encom)
  */
 

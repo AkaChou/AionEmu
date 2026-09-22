@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：使用 RGB 颜色值进行染色。
  * Player command: dyes using explicit RGB color values.
- *
  * @author Phenom
  */
 public class cmd_rgb extends PlayerCommand {
@@ -45,7 +44,6 @@ public class cmd_rgb extends PlayerCommand {
 	/**
 	 * 解析 RGB 参数并应用自定义颜色。
 	 * Parses RGB arguments and applies a custom color.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 命令参数 / command parameters
 	 */
@@ -98,7 +96,6 @@ public class cmd_rgb extends PlayerCommand {
 	/**
 	 * 参数错误时提示用法。
 	 * Shows usage when arguments are invalid.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param message 失败提示消息 / failure message
 	 */

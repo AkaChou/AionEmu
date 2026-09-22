@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 解除角色封禁的管理员命令。
  * Admin command to lift a character ban.
- *
  * @author nrg
  */
 public class UnBanChar extends AdminCommand {
@@ -27,7 +26,6 @@ public class UnBanChar extends AdminCommand {
 	/**
 	 * 按角色名解除角色封禁。
 	 * Unbans a character by name.
-	 *
 	 * @param admin 执行 GM / Admin player
 	 * @param params &lt;player&gt;。
 	 */
@@ -55,7 +53,6 @@ public class UnBanChar extends AdminCommand {
 	/**
 	 * 参数错误时的用法提示。
 	 * Usage hint on invalid parameters.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

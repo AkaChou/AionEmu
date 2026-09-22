@@ -19,7 +19,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 玩家效果控制器，扩展决斗校验、图标同步与登出效果恢复。
  * Player effect controller extending duel checks, icon sync and logout effect restore.
- *
  * @author ATracer
  */
 public class PlayerEffectController extends EffectController {
@@ -27,7 +26,6 @@ public class PlayerEffectController extends EffectController {
 	/**
 	 * 为指定生物构造玩家效果控制器。
 	 * Constructs a player effect controller for the given creature.
-	 *
 	 * @param owner 所有者生物（玩家） / owner creature (player)
 	 */
 	public PlayerEffectController(Creature owner) {
@@ -37,7 +35,6 @@ public class PlayerEffectController extends EffectController {
 	/**
 	 * 添加效果；决斗结束后的友好 debuff 将被拒绝。
 	 * Adds an effect; friendly debuffs after a duel ends are rejected.
-	 *
 	 * @param effect 待添加效果 / effect to add
 	 */
 	@Override
@@ -55,7 +52,6 @@ public class PlayerEffectController extends EffectController {
 	/**
 	 * 清除效果并刷新玩家/队伍图标。
 	 * Clears an effect and refreshes player/team icons.
-	 *
 	 * @param effect 待清除效果 / effect to clear
 	 */
 	@Override
@@ -67,7 +63,6 @@ public class PlayerEffectController extends EffectController {
 	/**
 	 * 获取所有者玩家。
 	 * Gets the owner player.
-	 *
 	 * @return 所有者玩家 / owner player
 	 */
 	@Override
@@ -78,7 +73,6 @@ public class PlayerEffectController extends EffectController {
 	/**
 	 * 非被动效果时更新玩家图标并通知队伍效果更新。
 	 * For non-passive effects, updates player icons and notifies team effect updates.
-	 *
 	 * @param effect 相关效果 / related effect
 	 */
 	private void updatePlayerIconsAndGroup(Effect effect) {
@@ -112,7 +106,6 @@ public class PlayerEffectController extends EffectController {
 	/**
 	 * 决斗结束后对友好单位的 DEBUFF 不应再添加。
 	 * Debuffs against a friendly unit after a duel ends must not be added.
-	 *
 	 * @param effect 待检查效果 / effect to check
 	 * @return 若应阻止添加则为 true / true if the effect should be blocked
 	 */
@@ -127,7 +120,6 @@ public class PlayerEffectController extends EffectController {
 	/**
 	 * 从持久化数据恢复登出前效果。
 	 * Restores a saved effect from logout persistence data.
-	 *
 	 * @param skillId 技能 ID / skill id
 	 * @param skillLvl 技能等级 / skill level
 	 * @param remainingTime 剩余时间（毫秒） / remaining time in ms
@@ -155,7 +147,6 @@ public class PlayerEffectController extends EffectController {
 	/**
 	 * 计算登出后的效果剩余时间：不可保存、已过期或标记不保存时返回 -1。
 	 * Computes remaining effect time after logout; returns -1 for non-saveable, expired or no-save effects.
-	 *
 	 * @param template 技能模板 / skill template
 	 * @param savedRemainingTime 存档的剩余时间 / saved remaining time
 	 * @param endTime 效果结束时间戳 / effect end timestamp

@@ -42,7 +42,6 @@ public enum MAXHP {
 	/**
 	 * 按等级计算最大生命值。
 	 * Calculate max HP for given level.
-	 *
 	 * @param level 角色等级 / Character level
 	 * @return 最大生命值 / Max HP
 	 */

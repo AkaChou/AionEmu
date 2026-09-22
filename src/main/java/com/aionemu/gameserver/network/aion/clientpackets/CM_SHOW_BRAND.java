@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 客户端队伍/联盟标记（brand）显示请求包。
  * Client packet for showing a group/alliance brand marker.
- *
  * @author Sweetkr
  * @author Simple
  */

@@ -13,7 +13,6 @@ import com.aionemu.gameserver.model.team2.TemporaryPlayerTeam;
 /**
  * 前哨 BOSS 死亡监听器，按最大伤害方切换前哨归属。
  * Outpost boss death listener that switches outpost ownership by top damager.
- *
  * @author Wnkrz
  */
 public class OutpostBossDeathListener implements AbstractAI.AiDeathListener {
@@ -22,7 +21,6 @@ public class OutpostBossDeathListener implements AbstractAI.AiDeathListener {
 	/**
 	 * 绑定目标前哨实例。
 	 * Binds the target outpost instance.
-	 *
 	 * @param outpost 目标前哨 / target outpost
 	 */
 	public OutpostBossDeathListener(Outpost outpost) {
@@ -32,7 +30,6 @@ public class OutpostBossDeathListener implements AbstractAI.AiDeathListener {
 	/**
 	 * BOSS 死亡前根据仇恨列表结算归属并触发占领。
 	 * Before boss death, resolves ownership from aggro list and triggers capture.
-	 *
 	 * @param obj 死亡的 AI / dying AI
 	 */
 	@Override
@@ -55,7 +52,6 @@ public class OutpostBossDeathListener implements AbstractAI.AiDeathListener {
 	/**
 	 * BOSS 死亡后回调（当前无额外逻辑）。
 	 * After-death callback (no-op currently).
-	 *
 	 * @param obj 死亡的 AI / dying AI
 	 */
 	@Override
@@ -65,7 +61,6 @@ public class OutpostBossDeathListener implements AbstractAI.AiDeathListener {
 	/**
 	 * 获取前哨 DAO。
 	 * Returns the outpost DAO.
-	 *
 	 * @return 前哨 DAO / outpost DAO
 	 */
 	private OutpostDAO getDAO() {

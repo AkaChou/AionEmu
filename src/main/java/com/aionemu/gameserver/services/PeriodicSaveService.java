@@ -27,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 定期持久化服务，调度军团仓库等数据的周期保存。
  * Periodic save service scheduling periodic persistence of legion warehouse data, etc.
- *
  * @author ATracer
  */
 @Slf4j
@@ -40,11 +39,9 @@ public class PeriodicSaveService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
@@ -62,7 +59,6 @@ public class PeriodicSaveService {
 	/**
 	 * 注入 Spring 的实例提供者。
 	 * Sets the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<PeriodicSaveService> instanceProvider) {
@@ -110,15 +106,9 @@ public class PeriodicSaveService {
 				List<Item> allItems = legion.getLegionWarehouse().getItemsWithKinah();
 				allItems.addAll(legion.getLegionWarehouse().getDeletedItems());
 				try {
-					/**
-	 * 1. 先保存物品 / 1. save items first
-	 */
-					DAOManager.getDAO(InventoryDAO.class).store(allItems, null, null, legion.getLegionId());
+                    DAOManager.getDAO(InventoryDAO.class).store(allItems, null, null, legion.getLegionId());
 
-					/**
-	 * 2. 保存物品镶嵌石 / 2. save item stones
-	 */
-					DAOManager.getDAO(ItemStoneListDAO.class).save(allItems);
+                    DAOManager.getDAO(ItemStoneListDAO.class).save(allItems);
 				} catch (Exception ex) {
 					log.error(I18n.get("log.ea0f9e89569d"), ex);
 				}

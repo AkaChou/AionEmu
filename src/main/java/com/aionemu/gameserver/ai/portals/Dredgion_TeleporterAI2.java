@@ -18,10 +18,6 @@ import com.aionemu.gameserver.services.instance.InstanceService;
 
 @AIName("dredgion_teleporter") // AI 名称。 / AI name.
 
-/**
- * 传送门/传送点 AI：Dredgion Teleporter（@AIName "dredgion_teleporter"），继承 ActionItemNpcAI2。
- * Portal/teleporter AI: Dredgion Teleporter (@AIName "dredgion_teleporter"), extends ActionItemNpcAI2.
- */
 public class Dredgion_TeleporterAI2 extends ActionItemNpcAI2 {
 
     // 天族传送坐标。 / Elyos teleport coordinates.
@@ -51,7 +47,7 @@ public class Dredgion_TeleporterAI2 extends ActionItemNpcAI2 {
 
         if (teleportId != 0) {
             float teleportX, teleportY, teleportZ;
-			
+
 			// 天族传送。 / Elyos teleport.
             if (player.getRace() == Race.ELYOS) {
                 teleportX = ELYOS_TELEPORT_X;
@@ -64,12 +60,12 @@ public class Dredgion_TeleporterAI2 extends ActionItemNpcAI2 {
             }
 
             goTo(player, teleportId, teleportX, teleportY, teleportZ); // 传送到德雷德吉翁。 / Teleport to Dredgion.
-			
-			
+
+
         } else {
-			
+
             PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Telepoter_Under_User);
-			
+
         }
     }
 
@@ -87,40 +83,40 @@ public class Dredgion_TeleporterAI2 extends ActionItemNpcAI2 {
         }
         return 0;
     }
-	
+
 	private static void goTo(final Player player, int worldId, float x, float y, float z) {
-		
+
 		WorldMap destinationMap = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
-		
+
 		if (destinationMap.isInstanceType()) {
-			
+
 			TeleportService2.teleportTo(player, worldId, getInstanceId(worldId, player), x, y, z);
-			
+
 		} else {
-			
+
 			TeleportService2.teleportTo(player, worldId, x, y, z);
-			
+
 		}
-		
+
 	}
-	
+
 	private static int getInstanceId(int worldId, Player player) {
-		
+
 		if (player.getWorldId() == worldId) {
-			
+
 			WorldMapInstance registeredInstance = InstanceService.getRegisteredInstance(worldId, player.getObjectId());
-			
+
 			if (registeredInstance != null) {
-				
+
 				return registeredInstance.getInstanceId();
-				
+
 			}
-			
+
 		}
-		
+
 		WorldMapInstance newInstance = InstanceService.getNextAvailableInstance(worldId);
 		InstanceService.registerPlayerWithInstance(newInstance, player);
 		return newInstance.getInstanceId();
 	}
-	
+
 }

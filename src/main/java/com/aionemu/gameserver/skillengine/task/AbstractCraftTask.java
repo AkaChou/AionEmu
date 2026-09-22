@@ -73,8 +73,6 @@ public abstract class AbstractCraftTask extends AbstractInteractionTask {
          * -- GETTER --
          *  获取暴击 ID。
          *  Returns the crit id.
-         *
-         * @return 暴击 ID / crit id
          */
         private final int critId;
 
@@ -85,7 +83,6 @@ public abstract class AbstractCraftTask extends AbstractInteractionTask {
         /**
 		 * 获取发包用暴击 ID（NONE 时回退为 1）。
 		 * Returns the packet crit id (falls back to 1 for NONE).
-		 *
 		 * @return 发包用暴击 ID / packet crit id
 		 */
 		public int getPacketId() {
@@ -96,7 +93,6 @@ public abstract class AbstractCraftTask extends AbstractInteractionTask {
 	/**
 	 * 构造制作任务。
 	 * Creates a craft task.
-	 *
 	 * @param requestor 发起玩家 / requesting player
 	 * @param responder 响应目标 / responder
 	 * @param skillLvlDiff 技能等级差 / skill level difference
@@ -109,7 +105,6 @@ public abstract class AbstractCraftTask extends AbstractInteractionTask {
 	/**
 	 * 执行一次制作交互：检查完成条件并更新进度。
 	 * Performs one craft tick: checks finish conditions and updates progress.
-	 *
 	 * @return true 表示任务应停止 / true if the task should stop
 	 */
 	@Override
@@ -158,7 +153,6 @@ public abstract class AbstractCraftTask extends AbstractInteractionTask {
 	/**
 	 * 成功完成时的处理。
 	 * Handles successful completion.
-	 *
 	 * @return true 表示任务应停止 / true if the task should stop
 	 */
 	protected abstract boolean onSuccessFinish();

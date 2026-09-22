@@ -13,7 +13,6 @@ import lombok.Getter;
 /**
  * 护盾模型。
  * Shield model.
- *
  * @author Wakizashi
  */
 @Getter

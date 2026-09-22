@@ -21,7 +21,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * XMLStartCondition 模板（静态数据/XML）。
  * XML template.
- *
  * @author antness
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -126,7 +125,6 @@ public class XMLStartCondition {
 	/**
 	 * 检查所有开始条件。
 	 * Checks all start conditions.
-	 *
 	 * @param player 玩家 / player
 	 * @param warn 不满足时是否发送警告消息 / whether to warn on failure
 	 * @return 条件是否全部满足 / whether all conditions hold

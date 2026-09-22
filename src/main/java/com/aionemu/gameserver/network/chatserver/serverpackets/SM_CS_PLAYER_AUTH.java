@@ -29,7 +29,6 @@ public class SM_CS_PLAYER_AUTH extends CsServerPacket {
 	/**
 	 * 构造玩家认证请求包。
 	 * Constructs a player auth request packet.
-	 *
 	 * @param playerId 玩家对象 ID / player object id
 	 * @param playerLogin 账号登录名 / account login name
 	 * @param nick 角色昵称 / character nick
@@ -44,7 +43,6 @@ public class SM_CS_PLAYER_AUTH extends CsServerPacket {
 	/**
 	 * 写出玩家 ID、账号名与昵称。
 	 * Writes player id, account name, and nick.
-	 *
 	 * @param con 目标连接 / target connection
 	 */
 	@Override

@@ -46,8 +46,6 @@ public class WorldMapTemplate {
 	/**
 	 * 是否监狱地图。
 	 * Whether this is a prison map.
-	 *
-	 * @return 是否监狱 / whether prison
 	 */
 	@XmlAttribute(name = "prison")
 	protected boolean prison = false;
@@ -128,7 +126,6 @@ public class WorldMapTemplate {
 	/**
 	 * 是否允许滑翔。
 	 * Whether gliding is allowed.
-	 *
 	 * @return 是否允许滑翔 / whether glide
 	  */
 	public boolean canGlide() {
@@ -138,7 +135,6 @@ public class WorldMapTemplate {
 	/**
 	 * 是否允许放置归还之石。
 	 * Whether a kisk can be placed.
-	 *
 	 * @return 是否允许放置归还之石 / whether put kisk
 	  */
 	public boolean canPutKisk() {
@@ -148,7 +144,6 @@ public class WorldMapTemplate {
 	/**
 	 * 是否允许召回。
 	 * Whether recall is allowed.
-	 *
 	 * @return 是否允许召回 / whether recall
 	 */
 	public boolean canRecall() {
@@ -158,7 +153,6 @@ public class WorldMapTemplate {
 	/**
 	 * 是否允许骑乘。
 	 * Whether riding is allowed.
-	 *
 	 * @return 是否允许骑乘 / whether ride
 	  */
 	public boolean canRide() {
@@ -168,7 +162,6 @@ public class WorldMapTemplate {
 	/**
 	 * 是否允许飞行骑乘。
 	 * Whether fly riding is allowed.
-	 *
 	 * @return 是否允许飞行骑乘 / whether fly ride
 	 */
 	public boolean canFlyRide() {
@@ -178,7 +171,6 @@ public class WorldMapTemplate {
 	/**
 	 * 是否允许 PvP。
 	 * Whether PvP is allowed.
-	 *
 	 * @return 是否允许 PvP / whether pvp allowed
 	 */
 	public boolean isPvpAllowed() {

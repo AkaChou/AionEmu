@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 飞行时间（FP）同步包：当前与最大飞行点数。
  * Fly time (FP) sync packet: current and max fly points.
- *
  * @author Nemiroff
  */
 @AllArgsConstructor

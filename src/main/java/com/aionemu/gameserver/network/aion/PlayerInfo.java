@@ -28,7 +28,6 @@ public abstract class PlayerInfo extends AionServerPacket {
 	/**
 	 * 写入单个角色的外观、位置、装备摘要等选角信息。
 	 * Writes one character's appearance, position, equipment summary for character select.
-	 *
 	 * @param accPlData 角色账号数据 / player account data
 	 */
 	protected void writePlayerInfo(PlayerAccountData accPlData) {

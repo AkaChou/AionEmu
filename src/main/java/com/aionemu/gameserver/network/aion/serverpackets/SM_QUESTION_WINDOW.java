@@ -126,7 +126,6 @@ public class SM_QUESTION_WINDOW extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_QUESTION_WINDOW 包。
 	 * Creates a SM_QUESTION_WINDOW packet with the given parameters.
-	 *
 	 * @param code message code
 	 * @param senderId sender id
 	 * @param range range

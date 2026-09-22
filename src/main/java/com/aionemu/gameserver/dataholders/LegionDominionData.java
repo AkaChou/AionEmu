@@ -18,7 +18,6 @@ import java.util.Map;
 /**
  * 军团领地地点数据容器，持有并索引全部 {@link LegionDominionLocation}。
  * Legion dominion location data holder, indexing all {@link LegionDominionLocation} instances.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -43,7 +42,6 @@ public class LegionDominionData {
 	/**
 	 * 返回已加载的军团领地数量。
 	 * Returns the number of loaded legion dominion locations.
-	 *
 	 * @return 已加载的军团领地战地点数量 / Returns the number of loaded legion dominion locations.
 	 */
 	public int size() {
@@ -53,7 +51,6 @@ public class LegionDominionData {
 	/**
 	 * 返回全部军团领地地点映射。
 	 * Returns the full legion dominion location map.
-	 *
 	 * @return 领地 ID 到地点的映射 / map of dominion id to location
 	 */
 	public Map<Integer, LegionDominionLocation> getLegionDominionLocations() {

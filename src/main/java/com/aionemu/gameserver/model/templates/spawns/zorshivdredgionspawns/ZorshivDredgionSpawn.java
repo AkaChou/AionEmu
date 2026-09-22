@@ -15,7 +15,6 @@ import lombok.Getter;
 /**
  * 佐希夫无畏舰刷新点模板（静态数据/XML）。
  * XML template.
- *
  * @author Rinzler (Encom)
  */
 

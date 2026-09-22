@@ -12,7 +12,6 @@ import java.sql.*;
 /**
  * 玩家修勾扫荡 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerShugoSweepDAO.
- *
  * Created by Wnkrz on 24/10/2017.
  * Updated for MySQL 8 - Fixed connection leaks.
  */
@@ -34,7 +33,6 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
     /**
      * 加载玩家修勾扫荡数据。
      * Loads player Shugo sweep data.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -63,7 +61,6 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
     /**
      * 新增扫荡记录。
      * Adds a sweep record.
-     *
      * @param playerId 玩家 ID / player id
      * @param dice 免费骰子 / free dice
      * @param step 扫荡步数 / sweep step
@@ -90,7 +87,6 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
     /**
      * 清空全部扫荡记录。
      * Deletes all sweep records.
-     *
      * @return 是否成功 / whether succeeded
      */
     @Override
@@ -109,7 +105,6 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
     /**
      * 持久化玩家扫荡数据。
      * Stores player sweep data.
-     *
      * @param player 玩家 / player
      * @return 是否成功 / whether succeeded
      */
@@ -146,7 +141,6 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
     /**
      * 更新玩家扫荡记录。
      * Updates player sweep record.
-     *
      * @param con 数据库连接 / database connection
      * @param player 玩家 / player
      * @return 是否成功 / whether succeeded
@@ -174,7 +168,6 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
     /**
      * 按对象 ID 设置扫荡数据。
      * Sets sweep data by object id.
-     *
      * @param obj 玩家对象 ID / player object id
      * @param freeDice free dice
      * @param step 扫荡步数 / sweep step
@@ -201,7 +194,6 @@ public class PlayerShugoSweepDAO extends com.aionemu.gameserver.dao.PlayerShugoS
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

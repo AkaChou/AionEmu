@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 管家（Butler）敬礼/互动动画相关的服务端包。
  * interaction animation.
- *
  * @author Ranastic
  */
 public class SM_BUTLER_SALUTE extends AionServerPacket {
@@ -20,7 +19,6 @@ public class SM_BUTLER_SALUTE extends AionServerPacket {
 	/**
 	 * 构造管家敬礼包。
 	 * Builds a butler salute packet.
-	 *
 	 * @param unk1 未知字段 1 / unknown field 1
 	 * @param unk2 未知字段 2 / unknown field 2
 	 * @param unk3 未知字段 3 / unknown field 3

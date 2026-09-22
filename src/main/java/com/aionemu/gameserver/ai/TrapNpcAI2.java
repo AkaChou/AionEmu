@@ -17,7 +17,6 @@ import java.util.concurrent.Future;
 /**
  * 陷阱 AI：生成后按规则对进入范围的目标生效。
  * Trap AI that applies effects to targets entering its range after spawn.
- *
  * @author Encom
  */
 @AIName("trap")
@@ -30,7 +29,6 @@ public class TrapNpcAI2 extends NpcAI2
 	/**
 	 * 处理看见生物事件。
 	 * Handle seeing a creature.
-	 *
 	 * @param creature 生物 / creature
 	 */
 	@Override
@@ -42,7 +40,6 @@ public class TrapNpcAI2 extends NpcAI2
 	/**
 	 * 处理生物移动事件。
 	 * Handle creature-moved.
-	 *
 	 * @param creature 移动的生物 / moved creature
 	 */
 	@Override
@@ -67,7 +64,6 @@ public class TrapNpcAI2 extends NpcAI2
 	/**
 	 * 处理自定义事件。
 	 * Handle custom event.
-	 *
 	 * @param eventId 事件 ID / event id
 	 * @param args 附加参数 / extra args
 	 */

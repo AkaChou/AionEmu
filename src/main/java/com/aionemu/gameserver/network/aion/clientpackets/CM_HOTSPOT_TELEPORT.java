@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 热点传送（付费快速传送）的客户端包。
  * Client packet for hotspot (paid quick) teleport.
- *
  * @author Ranastic
  */
 public class CM_HOTSPOT_TELEPORT extends AionClientPacket {
@@ -25,7 +24,6 @@ public class CM_HOTSPOT_TELEPORT extends AionClientPacket {
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余合法状态 / additional valid states

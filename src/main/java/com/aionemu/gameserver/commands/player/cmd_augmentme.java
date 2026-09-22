@@ -8,7 +8,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：对全身已装备物品执行充能/调校并扣除基纳。
  * Player command: charges/augments all equipped items and deducts Kinah.
- *
  * @author Kill3r
  */
 public class cmd_augmentme extends PlayerCommand {
@@ -24,7 +23,6 @@ public class cmd_augmentme extends PlayerCommand {
     /**
      * 对已装备物品执行二级充能，并扣除 500000 基纳。
      * Charges equipped items to level 2 and deducts 500000 Kinah.
-     *
      * @param player 执行命令的玩家 / invoking player
      * @param params 未使用的参数 / unused parameters
      */

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Aturam Sky Fortress 副本 NPC AI：Lift Control（@AIName "Lift_Control"），继承 NpcAI2。
  * Aturam Sky Fortress instance NPC AI: Lift Control (@AIName "Lift_Control"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Lift_Control")

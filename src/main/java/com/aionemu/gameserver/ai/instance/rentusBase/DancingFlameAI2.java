@@ -18,7 +18,6 @@ import java.util.concurrent.Future;
 /**
  * Rentus Base 副本 NPC AI：Dancing Flame（@AIName "dancing_flame"），继承 GeneralNpcAI2。
  * Rentus Base instance NPC AI: Dancing Flame (@AIName "dancing_flame"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("dancing_flame")

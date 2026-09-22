@@ -23,7 +23,6 @@ public abstract class PvPZone implements AdvencedZoneHandler {
 	/**
 	 * 进入 PvP 区：默认无操作。
 	 * Enter PvP zone: no-op by default.
-	 *
 	 * @param player 进入区域的生物 / creature entering the zone
 	 * @param zone 区域实例 / zone instance
 	 */
@@ -34,7 +33,6 @@ public abstract class PvPZone implements AdvencedZoneHandler {
 	/**
 	 * 离开 PvP 区：默认无操作。
 	 * Leave PvP zone: no-op by default.
-	 *
 	 * @param player 离开区域的生物 / creature leaving the zone
 	 * @param zone 区域实例 / zone instance
 	 */
@@ -45,7 +43,6 @@ public abstract class PvPZone implements AdvencedZoneHandler {
 	/**
 	 * 玩家在 PvP 区内死亡：广播死亡、通知区内玩家，并在延迟后复活传送。
 	 * Player dies inside PvP zone: broadcast death, notify zone players, then revive and teleport after delay.
-	 *
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 * @param target 死亡目标 / dead target
 	 * @param zone 区域实例 / zone instance
@@ -71,7 +68,6 @@ public abstract class PvPZone implements AdvencedZoneHandler {
 	/**
 	 * 子类实现：将玩家传送到区域对应复活点。
 	 * Implemented by subclasses: teleport the player to the zone-specific revive point.
-	 *
 	 * @param player 玩家 / player
 	 * @param zoneName 区域名称 / zone name
 	 */

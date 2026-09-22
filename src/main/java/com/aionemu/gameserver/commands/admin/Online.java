@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 查询数据库中在线玩家数量的管理员命令。
  * Admin command to query the online player count from the database.
- *
  * @author VladimirZ
  */
 public class Online extends AdminCommand {
@@ -25,7 +24,6 @@ public class Online extends AdminCommand {
 	/**
 	 * 从 {@link PlayerDAO} 读取在线人数并回复管理员。
 	 * Read the online count from {@link PlayerDAO} and reply to the admin.
-	 *
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -43,7 +41,6 @@ public class Online extends AdminCommand {
 	/**
 	 * 参数错误时显示语法。
 	 * Show syntax when parameters are invalid.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

@@ -7,7 +7,6 @@ import com.aionemu.gameserver.model.items.ItemMask;
 /**
  * 物品限制判定策略（无分配静态策略）。
  * Allocation-free static policy for item restriction checks.
- *
  * <p>该类型只服务 {@link Item}：集中物品掩码（mask）叠加会员权限解锁、仓库/交易/改造/出售、
  * 灵魂绑定、AP 提取、伊迪安、神石、注能与高阶守护者等限制判定。全部为静态纯函数，不持有状态、
  * 不创建辅助对象；对外仍通过 {@link Item} 的原公开方法访问（门面签名不变）。
@@ -28,7 +27,6 @@ final class ItemRestrictions {
 	/**
 	 * 返回叠加会员权限解锁位后的有效掩码。
 	 * Returns the effective mask with membership permission unlock bits applied.
-	 *
 	 * @param item 物品 / item
 	 * @param player 玩家 / player
 	 * @return 有效掩码 / effective mask
@@ -40,7 +38,6 @@ final class ItemRestrictions {
 	/**
 	 * 对该玩家而言物品是否视为已灵魂绑定（指定会员权限可跳过绑定）。
 	 * Whether the item counts as soul bound for the given player (a membership permission can skip binding).
-	 *
 	 * @param item 物品 / item
 	 * @param player 玩家 / player
 	 * @return 对该玩家是否已绑定 / whether soul bound for the player
@@ -55,7 +52,6 @@ final class ItemRestrictions {
 	/**
 	 * 是否可存入个人仓库。
 	 * Whether the item is storable in the regular warehouse.
-	 *
 	 * @param item 物品 / item
 	 * @param player 玩家 / player
 	 * @return 是否可存入 / whether storable
@@ -67,7 +63,6 @@ final class ItemRestrictions {
 	/**
 	 * 是否可存入账号仓库。
 	 * Whether the item is storable in the account warehouse.
-	 *
 	 * @param item 物品 / item
 	 * @param player 玩家 / player
 	 * @return 是否可存入 / whether storable
@@ -79,7 +74,6 @@ final class ItemRestrictions {
 	/**
 	 * 是否可存入军团仓库。
 	 * Whether the item is storable in the legion warehouse.
-	 *
 	 * @param item 物品 / item
 	 * @param player 玩家 / player
 	 * @return 是否可存入 / whether storable
@@ -91,7 +85,6 @@ final class ItemRestrictions {
 	/**
 	 * 是否可交易。
 	 * Whether the item is tradeable.
-	 *
 	 * @param item 物品 / item
 	 * @param player 玩家 / player
 	 * @return 是否可交易 / whether tradeable
@@ -103,7 +96,6 @@ final class ItemRestrictions {
 	/**
 	 * 是否可改造外观。
 	 * Whether the item is remodelable.
-	 *
 	 * @param item 物品 / item
 	 * @param player 玩家 / player
 	 * @return 是否可改造 / whether remodelable
@@ -115,7 +107,6 @@ final class ItemRestrictions {
 	/**
 	 * 是否可出售。
 	 * Whether the item is sellable.
-	 *
 	 * @param item 物品 / item
 	 * @return 是否可出售 / whether sellable
 	 */
@@ -126,7 +117,6 @@ final class ItemRestrictions {
 	/**
 	 * 是否可提取欧比斯点数。
 	 * Whether AP can be extracted from the item.
-	 *
 	 * @param item 物品 / item
 	 * @return 是否可提取 AP / whether AP extract
 	 */
@@ -137,7 +127,6 @@ final class ItemRestrictions {
 	/**
 	 * 是否可镶嵌伊迪安石。
 	 * Whether an idian stone can be applied.
-	 *
 	 * @param item 物品 / item
 	 * @return 是否可镶嵌伊迪安 / whether idian applicable
 	 */
@@ -148,7 +137,6 @@ final class ItemRestrictions {
 	/**
 	 * 是否可以镶嵌神石。
 	 * Whether a godstone can be socketed.
-	 *
 	 * @param item 物品 / item
 	 * @return 是否可镶嵌 / whether socket godstone
 	 */
@@ -159,7 +147,6 @@ final class ItemRestrictions {
 	/**
 	 * 是否允许注能。
 	 * Whether the item supports amplification.
-	 *
 	 * @param item 物品 / item
 	 * @return 是否允许注能 / whether amplifiable
 	 */
@@ -170,7 +157,6 @@ final class ItemRestrictions {
 	/**
 	 * 是否为高阶守护者物品。
 	 * Whether the item is an archdaeva item.
-	 *
 	 * @param item 物品 / item
 	 * @return 是否为高阶守护者物品 / whether archdaeva item
 	 */
@@ -181,7 +167,6 @@ final class ItemRestrictions {
 	/**
 	 * 按会员配置展开存储/交易/改造解锁位。
 	 * Expands the storage/trade/remodel unlock bits according to membership configuration.
-	 *
 	 * @param player 玩家 / player
 	 * @param mask 原始掩码 / raw mask
 	 * @return 叠加解锁位后的掩码 / mask with unlock bits applied
@@ -209,7 +194,6 @@ final class ItemRestrictions {
 	/**
 	 * 检查掩码是否包含指定标志位。
 	 * Checks whether the mask contains the given flag bit.
-	 *
 	 * @param mask 掩码 / mask
 	 * @param flag 标志位 / flag bit
 	 * @return 是否包含 / whether present

@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 公告模型。
  * Announcement model.
- *
  * @author Divinity
  */
 @Getter
@@ -20,7 +19,6 @@ public class Announcement {
 	/**
 	 * 无公告 ID 的构造。
 	 * Constructor without announcement id.
-	 *
 	 * @param announce 公告文本 / announcement text
 	 * @param faction 阵营（ELYOS/ASMODIANS/ALL） / faction (ELYOS/ASMODIANS/ALL)
 	 * @param chatType 聊天类型 / chat type
@@ -41,7 +39,6 @@ public class Announcement {
 	/**
 	 * 带公告 ID 的构造。
 	 * Constructor with announcement id.
-	 *
 	 * @param id 公告 ID / announcement id
 	 * @param announce 公告文本 / announcement text
 	 * @param faction 阵营（ELYOS/ASMODIANS/ALL） / faction (ELYOS/ASMODIANS/ALL)
@@ -64,7 +61,6 @@ public class Announcement {
 	/**
 	 * 返回公告 ID；不存在时返回 -1。
 	 * Returns the announcement id, or -1 if missing.
-	 *
 	 * @return 公告 ID / announcement id
 	 */
 	public int getId() {
@@ -78,7 +74,6 @@ public class Announcement {
 	/**
 	 * 返回公告阵营枚举：{@link Race#ELYOS} / {@link Race#ASMODIANS}；ALL 时为 null。
 	 * {@link Race#ASMODIANS}; null for ALL.
-	 *
 	 * @return 阵营枚举 / faction race
 	 */
 	public Race getFactionEnum() {
@@ -93,7 +88,6 @@ public class Announcement {
 	/**
 	 * 返回聊天类型字符串（用于入库）。
 	 * Returns the chat type string (for DB insert).
-	 *
 	 * @return 聊天类型字符串 / chat type string
 	 */
 	public String getType() {
@@ -103,7 +97,6 @@ public class Announcement {
 	/**
 	 * 返回聊天类型枚举。
 	 * Returns the chat type enum.
-	 *
 	 * @return 聊天类型枚举 / chat type
 	 */
 	public ChatType getChatType() {

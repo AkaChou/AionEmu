@@ -17,7 +17,6 @@ public class SM_CHANNEL_INFO extends AionServerPacket {
 	/**
 	 * 根据玩家世界坐标构造频道信息包。
 	 * Builds a channel-info packet from the player's world position.
-	 *
 	 * @param position 世界坐标（含地图实例） / world position (including map instance)
 	 */
 	public SM_CHANNEL_INFO(WorldPosition position) {

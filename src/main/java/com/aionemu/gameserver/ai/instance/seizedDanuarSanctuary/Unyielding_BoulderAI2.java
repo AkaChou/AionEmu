@@ -8,7 +8,6 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 /**
  * Seized Danuar Sanctuary 副本 NPC AI：Unyielding Boulder（@AIName "unyielding_boulder"），继承 NpcAI2。
  * Seized Danuar Sanctuary instance NPC AI: Unyielding Boulder (@AIName "unyielding_boulder"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("unyielding_boulder")

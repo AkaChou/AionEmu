@@ -8,7 +8,6 @@ import java.lang.annotation.Target;
 /**
  * 标记 AI 实现类的注册名称，供 {@link AI2Engine} 按名称查找并实例化。
  * Marks an AI implementation class with its registration name for lookup and instantiation by {@link AI2Engine}.
- *
  * @author ATracer
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -18,7 +17,6 @@ public @interface AIName {
 	/**
 	 * AI 注册名称。
 	 * Registered AI name.
-	 *
 	 * @return AI 注册名称 / registered AI name
 	 */
 	String value();

@@ -8,7 +8,6 @@ import com.aionemu.gameserver.services.item.ItemService;
 /**
  * 玩家命令：领取增益型宠物道具。
  * Player command: grants a buffer pet item.
- *
  * @author Aion-Unique
  */
 public class cmd_pet extends PlayerCommand {
@@ -23,7 +22,6 @@ public class cmd_pet extends PlayerCommand {
 	/**
 	 * 处理 {@code .pet add}，向背包添加宠物卷轴。
 	 * Handles {@code .pet add} and adds a pet scroll to inventory.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param param 子命令参数 / sub-command parameters
 	 */
@@ -42,7 +40,6 @@ public class cmd_pet extends PlayerCommand {
 	/**
 	 * 参数错误时提示用法。
 	 * Shows usage when arguments are invalid.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param msg 失败消息 / failure message
 	 */

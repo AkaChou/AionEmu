@@ -36,7 +36,6 @@ public class ParalyzeEffect extends EffectTemplate {
 
 	/**
 	 * 取消技能与移动并设置 PARALYZE 异常。
-	 *
 	 * @param effect Cancels skill / move and sets the PARALYZE abnormal state.
 	 */
 	@Override

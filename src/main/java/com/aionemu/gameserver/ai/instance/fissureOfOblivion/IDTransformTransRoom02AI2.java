@@ -15,7 +15,6 @@ import java.util.List;
 /**
  * Fissure Of Oblivion 副本 NPC AI：ID Transform Trans Room02（@AIName "IDTransform_TransRoom_02"），继承 NpcAI2。
  * Fissure Of Oblivion instance NPC AI: ID Transform Trans Room02 (@AIName "IDTransform_TransRoom_02"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("IDTransform_TransRoom_02")

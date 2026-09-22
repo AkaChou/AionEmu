@@ -19,7 +19,6 @@ import lombok.Getter;
 /**
  * 新手引导 HTML 配置数据容器，按职业、种族与等级组合索引引导模板。
  * Guide HTML configuration data holder, indexed by player class, race, and level.
- *
  * @author xTz
  */
 @Getter
@@ -32,8 +31,7 @@ public class GuideHtmlData {
 	/**
 	 * 返回全部引导模板索引。
 	 * Returns the full guide template index.
-	 *
-	 * @return 哈希键到引导模板列表的映射 / map of hash key to guide template list
+	 * 哈希键到引导模板列表的映射 / map of hash key to guide template list
 	 */
 	private final IntObjectHashMap<ArrayList<GuideTemplate>> templates = new IntObjectHashMap<>();
 	private final int CLASS_ALL = 255;
@@ -52,7 +50,6 @@ public class GuideHtmlData {
 	/**
 	 * 将单个引导模板加入按职业/种族/等级哈希的索引。
 	 * Adds a single guide template into the class/race/level hash index.
-	 *
 	 * @param template 待加入的引导模板 / guide template to add
 	 */
 	private void addTemplate(GuideTemplate template) {
@@ -74,7 +71,6 @@ public class GuideHtmlData {
 	/**
 	 * 返回引导哈希键数量。
 	 * Returns the number of guide hash keys.
-	 *
 	 * @return 哈希键数量 / hash key count
 	 */
 	public int size() {
@@ -84,7 +80,6 @@ public class GuideHtmlData {
 	/**
 	 * 按标题查找引导模板。
 	 * Finds a guide template by title.
-	 *
 	 * @param title 引导标题 / guide title
 	 * @return 匹配的引导模板，不存在则为 null / matching guide template, or null if absent
 	 */
@@ -102,7 +97,6 @@ public class GuideHtmlData {
 	/**
 	 * 按职业、种族与等级聚合匹配的引导模板（含通用回退）。
 	 * Aggregates matching guide templates for the given class, race, and level (including general fallbacks).
-	 *
 	 * @param playerClass 玩家职业 / player class
 	 * @param race 玩家种族 / player race
 	 * @param level 玩家等级 / player level
@@ -135,7 +129,6 @@ public class GuideHtmlData {
 	/**
 	 * 根据职业、种族与等级生成组合哈希键。
 	 * Builds a composite hash key from class type, race, and level.
-	 *
 	 * @param classType 职业类型序号 / class type ordinal
 	 * @param race 种族序号 / race ordinal
 	 * @param level 等级 / level

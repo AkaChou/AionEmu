@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Norsvold 区域 NPC AI：Razor Clawed Forest Cloke（@AIName "razor_clawed_forest_cloke"），继承 AggressiveNpcAI2。
  * Norsvold zone NPC AI: Razor Clawed Forest Cloke (@AIName "razor_clawed_forest_cloke"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("razor_clawed_forest_cloke")

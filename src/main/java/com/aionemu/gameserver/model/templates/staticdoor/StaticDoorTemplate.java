@@ -16,7 +16,6 @@ import lombok.Getter;
 /**
  * 静态门模板（静态数据/XML）。
  * XML template.
- *
  * @author Wakizashi
  */
 @Getter
@@ -38,16 +37,12 @@ public class StaticDoorTemplate extends VisibleObjectTemplate {
 	/**
 	 * 返回门 ID。
 	 * Returns the door id.
-	 *
-	 * @return 门 ID / the door id
 	 */
 	@XmlAttribute(name = "doorid")
 	protected int doorId;
 	/**
 	 * 返回钥匙物品 ID。
 	 * Returns the key item id.
-	 *
-	 * @return 钥匙物品 ID / the key item id
 	 */
 	@XmlAttribute(name = "keyid")
 	protected int keyId;

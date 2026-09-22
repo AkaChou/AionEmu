@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 贝里特拉模板（静态数据/XML）。
  * XML template.
- *
  * @author Rinzler (Encom)
  */
 

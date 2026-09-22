@@ -85,3 +85,18 @@ JavadocReference 根因三类：
 - 已执行：IDEA MCP 实时检查，全部被改文件 0 error；目标警告按文件抽查确认消失。
 - 已执行（用户授权）：IDEA `build_project` 全量编译 **成功**（三轮后含 test 源），仅存量 `QuestDialog` deprecation 警告；批次 A 因用户并行重构（XmlDataLoader 包移动中）改用 108 文件逐批 lint 验证 0 error。
 - 未执行：单测（如需请另行授权指定范围）。
+
+## 六轮：注释规则全仓清零（2026-09-22）
+
+- 范围：DanglingJavadoc / JavadocDeclaration / JavadocBlankLines + 重复 @param（main+test 5788 文件全扫）。
+- 工具链：`comment_wave_detect.py` 静态检测（javadoc 块解析 + 悬空判定 + 标签合法性）→ `comment_wave_fix.py` 按块修复（逐行内容校验，backup/ 全量原状备份）→ 检测器复检 → IDEA lint 抽样 → build_project 全量编译。
+- 结果：3941 文件修改（17,926 行操作）：删悬空/仅标签垃圾块 370、悬空转行注释 3、块内空白行清理 28,582 行；非法 `@param`/`@return` 转文本或删除（PlayerAppearance 60、IStorage 整文件空标签接口块等）；重复 @param 5 处（含 Matrix4f.fromFrustum near/far/right/left 标签错配修正）；BoundingBox/BrokerItem 多变量声明中夹带的字段 Javadoc 拆分独立声明（语义等价）；SocialService/BlockListDAO 残句清理。
+- **误报教训（可复用）**：
+  1. 悬空判定不能只看花括号深度——嵌套类成员 Javadoc 深度≥2 是合法的；必须看"块后第一个有效代码行是否为声明"；
+  2. 跳过注解时必须连同其跨行括号参数一起跳过（`@EnableConfigurationProperties({...})` 的参数行会被误判为悬空位置，首轮因此误删/误转 70+ 块，已从 backup 全量恢复重跑）；
+  3. 字段带 `new Foo()` 初始化器时 `extract_params` 会把初始化器括号当参数表——`=` 先于 `(` 即字段；
+  4. 变长参数 `String...params`（无空格）需特殊拆名；类/方法级 `@param <T>` 类型参数是合法标签；
+  5. 行尾裸枚举常量（无逗号/分号，如 `Never`）是合法声明位置。
+- 排除未动：quest 并行任务文件（QuestDefinitionXmlCompiler/QuestXmlBlockExpander/questEngine 测试/QuestBClassRouteContractTest 新文件）、package-info。
+- 验证：检测器复检仅剩排除文件 2 条；IDEA lint 抽样 12 文件零注释告警；build_project 全量编译成功（仅存量 DataManager Thread.getId() deprecation 警告，与本轮无关）。
+- 有意保留：`//` 风格内容的类级 Javadoc（AionBootApplication 等，IDEA 不告警）、WEAK_WARNING 级 CommentedOutCode（另行批次）。

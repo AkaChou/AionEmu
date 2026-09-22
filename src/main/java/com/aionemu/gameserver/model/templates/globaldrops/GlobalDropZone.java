@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 全局掉落区域模板（静态数据/XML）。
  * Global drop zone template (static data/XML).
- *
  * @author Wnkrz
  */
 @Getter

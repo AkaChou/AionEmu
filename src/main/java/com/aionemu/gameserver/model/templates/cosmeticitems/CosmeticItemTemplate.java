@@ -12,7 +12,6 @@ import lombok.Getter;
 /**
  * 外观物品模板（静态数据/XML）。
  * XML template.
- *
  * @author xTz
  */
 @Getter

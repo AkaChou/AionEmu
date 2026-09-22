@@ -11,7 +11,6 @@ import com.aionemu.gameserver.services.HTMLService;
 /**
  * 客户端 HTML 问卷/调查回包，领取对应奖励。
  * Client packet for HTML questionnaire responses; grants associated rewards.
- *
  * @author xTz
  */
 public class CM_QUESTIONNAIRE extends AionClientPacket {

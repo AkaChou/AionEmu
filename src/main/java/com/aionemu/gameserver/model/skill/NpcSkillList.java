@@ -13,7 +13,6 @@ import com.aionemu.gameserver.model.templates.npcskill.NpcSkillTemplates;
 /**
  * NPC 技能列表，用于技能相关逻辑。
  * Npc Skill List for skill logic.
- *
  * @author ATracer
  */
 public class NpcSkillList implements SkillList<Npc> {

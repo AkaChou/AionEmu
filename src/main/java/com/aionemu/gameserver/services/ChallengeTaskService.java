@@ -59,11 +59,9 @@ public class ChallengeTaskService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -92,7 +90,6 @@ public class ChallengeTaskService {
 	/**
 	 * 向玩家展示指定所有者的挑战任务列表。
 	 * Shows the challenge task list for the given owner to the player.
-	 *
 	 * 玩家 / player
 	 * challenge type
 	 * @param ownerId 所有者 ID（城镇/军团） / owner id (town/legion)
@@ -121,7 +118,6 @@ public class ChallengeTaskService {
 	/**
 	 * 构建可用挑战任务列表（加载缓存、补齐新任务）。
 	 * Builds the available challenge task list (loads cache and creates missing tasks).
-	 *
 	 * 玩家 / player
 	 * challenge type
 	 * owner id
@@ -183,7 +179,6 @@ public class ChallengeTaskService {
 	/**
 	 * 挑战子任务完成时的分发入口。
 	 * Entry point when a challenge sub-quest is finished.
-	 *
 	 * 玩家 / player
 	 * quest id
 	 */
@@ -202,7 +197,6 @@ public class ChallengeTaskService {
 	/**
 	 * 处理城镇挑战任务完成：加分、升级与奖励。
 	 * Handles town challenge completion: points, level-up and rewards.
-	 *
 	 * 玩家 / player
 	 * task template
 	 * quest id
@@ -254,7 +248,6 @@ public class ChallengeTaskService {
 	/**
 	 * 处理军团挑战任务完成：累计贡献并在整任务完成后按贡献发奖。
 	 * Handles legion challenge completion: tracks contribution and mails rewards by rank.
-	 *
 	 * 玩家 / player
 	 * task template
 	 * quest id
@@ -334,11 +327,8 @@ public class ChallengeTaskService {
 	/**
 	 * 判断军团是否满足指定等级的挑战升级条件。
 	 * Returns whether the legion meets the challenge requirement to raise the given level.
-	 *
 	 * legion id
-	 *
 	 * @param legionLevel 目标军团等级 / target legion level
-	 * @param legionLevel
 	 * @return 可升级返回 true / true if allowed
 	 */
 	public boolean canRaiseLegionLevel(int legionId, int legionLevel) {

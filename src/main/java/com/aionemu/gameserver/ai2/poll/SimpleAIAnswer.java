@@ -6,7 +6,6 @@ import lombok.AccessLevel;
 /**
  * 基于布尔值的简单 AI 投票回答实现。
  * Simple boolean-based implementation of an AI poll answer.
- *
  * @author ATracer
  */
 @AllArgsConstructor(access = AccessLevel.PACKAGE)

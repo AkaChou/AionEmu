@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Crucible Challenge 副本 NPC AI：Arbiter Ai2（@AIName "arbiter"），继承 NpcAI2。
  * Crucible Challenge instance NPC AI: Arbiter Ai2 (@AIName "arbiter"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("arbiter")

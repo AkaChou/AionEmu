@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 聊天服对游戏服认证结果的应答枚举。
  * Authentication response codes that the chat server may return to a game server.
- *
  * @author -Nemesiss-
  */
 public enum GsAuthResponse {
@@ -38,7 +37,6 @@ public enum GsAuthResponse {
     /**
      * 构造应答枚举值。
      * Constructs a response enum constant.
-     *
      * @param responseId 应答消息 ID / response message id
      */
 	GsAuthResponse(int responseId) {

@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * Norsvold 区域 NPC AI：DF6 Wind Stream（@AIName "DF6_WindStream"），继承 NpcAI2。
  * Norsvold zone NPC AI: DF6 Wind Stream (@AIName "DF6_WindStream"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("DF6_WindStream")

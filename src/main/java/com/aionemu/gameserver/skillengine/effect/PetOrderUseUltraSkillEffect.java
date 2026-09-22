@@ -15,7 +15,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 宠物释放奥义指令：命令召唤物使用超级技能，可选释放后解散。
  * Pet ultra-skill order: commands the summon to use an ultra skill; optional release.
- *
  * @author ATracer
  * @author Sippolo
  */

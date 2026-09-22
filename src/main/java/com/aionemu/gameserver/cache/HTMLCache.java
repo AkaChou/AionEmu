@@ -25,7 +25,6 @@ import java.util.Map;
 /**
  * HTML/XHTML 文件缓存：扫描目录、压缩空白并按国家码选择本地化路径。
  * HTML/XHTML file cache that scans directories, compacts whitespace and picks locale by country code.
- *
  * @author Layane, nbali, savormix, hex1r0, lord_rex
  */
 @Slf4j
@@ -37,9 +36,6 @@ public final class HTMLCache {
      * -- SETTER --
      *  设置 Spring 实例提供者。
      *  Sets the Spring instance provider.
-     *
-     * @param provider 实例提供者 / instance provider
-
      */
 	@Setter
     private static volatile ObjectProvider<HTMLCache> instanceProvider;
@@ -53,7 +49,6 @@ public final class HTMLCache {
 	/**
 	 * HTML 根目录。
 	 * HTML root directory.
-	 *
 	 * @return 根目录 / root directory
 	 */
 	private static File htmlRoot() {
@@ -63,11 +58,9 @@ public final class HTMLCache {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -117,7 +110,6 @@ public final class HTMLCache {
 	 * The source HTML is tiny (hundreds of KB), so a serialized derived cache saves nothing and
 	 * lacks an invalidation fingerprint; always read sources, matching the drop/path-data policy
 	 * of keeping no on-disk derived cache.
-	 *
 	 * @param deleteCacheFile 兼容保留参数，已无磁盘缓存可删 / kept for compatibility; no disk cache remains
 	 */
 	public synchronized void reload(boolean deleteCacheFile) {
@@ -179,7 +171,6 @@ public final class HTMLCache {
 	/**
 	 * 压缩 HTML 空白与标签周围空格。
 	 * Compacts HTML whitespace and spaces around tags.
-	 *
 	 * @param sb 可复用缓冲 / reusable buffer
 	 * @param html 原始 HTML / raw HTML
 	 * @return 压缩后的 HTML / compacted HTML
@@ -221,7 +212,6 @@ public final class HTMLCache {
 	/**
 	 * 在 {@link StringBuilder} 中替换全部匹配。
 	 * Replaces all matches inside a {@link StringBuilder}.
-	 *
 	 * @param sb 缓冲 / buffer
 	 * @param pattern 查找模式 / pattern
 	 * @param value 替换内容 / replacement
@@ -235,7 +225,6 @@ public final class HTMLCache {
 	/**
 	 * 重新解析指定路径并刷新缓存条目。
 	 * Re-parses the given path and refreshes cache entries.
-	 *
 	 * @param f 文件或目录 / file or directory
 	 */
 	public void reloadPath(File f) {
@@ -247,7 +236,6 @@ public final class HTMLCache {
 	/**
 	 * 递归解析目录下全部可加载 HTML。
 	 * Recursively parses all loadable HTML under a directory.
-	 *
 	 * @param dir 目录 / directory
 	 */
 	public void parseDir(File dir) {
@@ -268,7 +256,6 @@ public final class HTMLCache {
 	/**
 	 * 加载单个 HTML 文件到缓存。
 	 * Loads a single HTML file into the cache.
-	 *
 	 * @param file 文件 / file
 	 * @return 内容；不可加载时返回 null / content, or null when not loadable
 	 */
@@ -306,7 +293,6 @@ public final class HTMLCache {
 	/**
 	 * 按服务器国家码解析本地化路径并取 HTML。
 	 * Resolves the localized path by server country code and returns HTML.
-	 *
 	 * @param path 相对路径 / relative path
 	 * @return HTML 内容或 null / HTML or null
 	 */
@@ -317,7 +303,6 @@ public final class HTMLCache {
 	/**
 	 * 国家码非 5 时将 {@code .xhtml} 映射为 {@code .en.xhtml}。
 	 * Maps {@code .xhtml} to {@code .en.xhtml} when country code is not 5.
-	 *
 	 * @param path 相对路径 / relative path
 	 * @param countryCode 国家码 / country code
 	 * @return 本地化路径 / localized path
@@ -333,7 +318,6 @@ public final class HTMLCache {
 	/**
 	 * 文件是否可加载。
 	 * Whether the file is loadable.
-	 *
 	 * @param file 文件 / file
 	 * @return 是否可加载 / loadable
 	 */
@@ -344,7 +328,6 @@ public final class HTMLCache {
 	/**
 	 * 本地化路径是否存在于缓存。
 	 * Whether the localized path exists in cache.
-	 *
 	 * @param path 相对路径 / relative path
 	 * @return 是否存在 / whether present
 	 */
@@ -355,7 +338,6 @@ public final class HTMLCache {
 	/**
 	 * 缓存摘要。
 	 * Cache summary.
-	 *
 	 * @return 摘要字符串 / summary string
 	 */
 	@Override
@@ -366,7 +348,6 @@ public final class HTMLCache {
 	/**
 	 * 计算文件相对 base 的 URI 路径。
 	 * Computes the URI path of file relative to base.
-	 *
 	 * @param base 基准目录 / base directory
 	 * @param file 文件 / file
 	 * @return 相对路径 / relative path

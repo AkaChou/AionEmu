@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Cygnea 区域 NPC AI：Frosty Petrahulk（@AIName "frosty_petrahulk"），继承 AggressiveNpcAI2。
  * Cygnea zone NPC AI: Frosty Petrahulk (@AIName "frosty_petrahulk"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("frosty_petrahulk")

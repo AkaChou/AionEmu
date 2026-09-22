@@ -43,7 +43,6 @@ public class CraftService {
 	/**
 	 * 完成制作：发放产物、结算经验，并处理限次配方与冷却。
 	 * Finish crafting: grant product, settle experience, handle limited recipes and cooldown.
-	 *
 	 * @param player 玩家 / Player
 	 * @param recipetemplate 配方模板 / Recipe template
 	 * @param critCount 暴击次数（决定连击产物） / Crit count (selects combo product)
@@ -59,14 +58,7 @@ public class CraftService {
 				if (item.getItemTemplate().isWeapon() || item.getItemTemplate().isArmor()) {
 					item.setItemCreator(player.getName());
 				}
-				/**
-				 * 仅高阶守护者：由符文部落物品幻化获得的物品。
-				 * High Daeva-only items obtainable by morphing Rune Tribe items. Items from the
-				 * Rune Tribe Set that can be purchased with Ancient Coins, can be Morphed into
-				 * stronger versions. Morph product will already be +5.
-				 * http://www.aionpowerbook.com/powerbook/Rune_Hero%27s_Set
-				 */
-				// 关联制作“变形物质”= skillId: 40009 / To do linked craft "Morphing Substance" = skillId: "40009"
+                // 关联制作“变形物质”= skillId: 40009 / To do linked craft "Morphing Substance" = skillId: "40009"
 				// 仅此制作可将高阶守护者物品强化 +5 / Only this craft can enchant item archdaeva + 5
 				if (item.isArchDaevaItem()) {
 					item.setEnchantLevel(item.getEnchantLevel() + 5);
@@ -114,7 +106,6 @@ public class CraftService {
 	/**
 	 * 开始制作（默认制作数量为 1）。
 	 * Start crafting (default craft count is 1).
-	 *
 	 * @param player 玩家 / Player
 	 * @param recipeId 配方 ID / Recipe id
 	 * @param targetObjId 目标工作台对象 ID / Target workbench object id
@@ -127,7 +118,6 @@ public class CraftService {
 	/**
 	 * 开始制作流程，创建对应的制作/变形任务。
 	 * Start the crafting process and create the matching crafting/morphing task.
-	 *
 	 * @param player 玩家 / Player
 	 * @param recipeId 配方 ID / Recipe id
 	 * @param targetObjId 目标工作台对象 ID / Target workbench object id
@@ -154,7 +144,6 @@ public class CraftService {
 	/**
 	 * 停止奥德锻造（构造中断观察器，用于打断流程）。
 	 * Stop aetherforging (build abort observer used to interrupt the process).
-	 *
 	 * @param player 玩家 / Player
 	 * @param recipeId 配方 ID / Recipe id
 	 */
@@ -168,7 +157,6 @@ public class CraftService {
 	/**
 	 * 开始奥德锻造（默认制作数量为 1）。
 	 * Start aetherforging (default craft count is 1).
-	 *
 	 * @param player 玩家 / Player
 	 * @param recipeId 配方 ID / Recipe id
 	 * @param craftType 制作类型 / Craft type
@@ -180,7 +168,6 @@ public class CraftService {
 	/**
 	 * 开始奥德锻造：播放动画、延迟结算产物与经验。
 	 * Start aetherforging: play animation, then settle product and experience after delay.
-	 *
 	 * @param player 玩家 / Player
 	 * @param recipeId 配方 ID / Recipe id
 	 * @param craftType 制作类型 / Craft type
@@ -229,11 +216,9 @@ public class CraftService {
 	/**
 	 * 按客户端请求匹配完整材料面板，并按统一制作次数一次扣料。
 	 * Matches a complete component panel and consumes all materials for one uniform craft count.
-	 *
 	 * @param player 玩家 / Player
 	 * @param recipeId 配方 ID / Recipe id
 	 * @param requestedComponents 请求的材料数量 / Requested material quantities
-	 *
 	 * @return 可制作次数，失败返回 0 / Craftable count, or 0 on failure
 	 */
 	public static int consumeComponents(Player player, int recipeId, Map<Integer, Long> requestedComponents) {
@@ -285,7 +270,6 @@ public class CraftService {
 	/**
 	 * 根据单次所需与请求总量计算制作次数。
 	 * Compute craft count from required-per-craft and requested total quantity.
-	 *
 	 * @param requiredQuantity 单次所需数量 / Quantity required per craft
 	 * @param requestedQuantity 请求总量 / Requested total quantity
 	 * @return 可制作次数 / Craft count
@@ -313,11 +297,4 @@ public class CraftService {
 		return craftCount;
 	}
 
-	/**
-	 * 按技能 ID 返回对应的加成需求物品 ID。
-	 * Return the bonus-required item id for the given craft skill id.
-	 *
-	 * @param skillId 制作技能 ID / Craft skill id
-	 * @return 加成物品 ID，未匹配返回 0 / Bonus item id, or 0 if unmatched
-	 */
 }

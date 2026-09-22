@@ -21,7 +21,6 @@ import java.util.List;
 /**
  * Empyrean Crucible 副本 NPC AI：Mage Preceptor（@AIName "mage_preceptor"），继承 AggressiveNpcAI2。
  * Empyrean Crucible instance NPC AI: Mage Preceptor (@AIName "mage_preceptor"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("mage_preceptor")

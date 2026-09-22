@@ -67,8 +67,6 @@ public class HousingBidService extends AbstractCronTask {
      * -- SETTER --
      *  注入 Spring 的实例提供者。
      *  Injects the Spring instance provider.
-     *
-     * @param provider 实例提供者 / instance provider
      */
     @Setter
     private static volatile ObjectProvider<HousingBidService> instanceProvider;
@@ -88,7 +86,6 @@ public class HousingBidService extends AbstractCronTask {
 	/**
 	 * 使用指定拍卖 cron 表达式初始化。
 	 * Initializes with the given auction cron expression.
-	 *
 	 * @param auctionTime 拍卖 cron 表达式 / auction cron expression
 	 */
 	public HousingBidService(String auctionTime) throws ParseException {
@@ -98,11 +95,9 @@ public class HousingBidService extends AbstractCronTask {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -454,7 +449,6 @@ public class HousingBidService extends AbstractCronTask {
 	/**
 	 * 获取本轮拍卖开始时间戳（毫秒）。
 	 * Returns this auction round start time in milliseconds.
-	 *
 	 * @return 开始时间毫秒 / start time millis
 	 */
 	public long getAuctionStartTime() {
@@ -464,7 +458,6 @@ public class HousingBidService extends AbstractCronTask {
 	/**
 	 * 距离拍卖结算剩余秒数。
 	 * Seconds remaining until auction settlement.
-	 *
 	 * seconds left
 	 */
 	public int getSecondsTillAuction() {
@@ -479,7 +472,6 @@ public class HousingBidService extends AbstractCronTask {
 	/**
 	 * 距离拍卖结算剩余分钟数。
 	 * Minutes remaining until auction settlement.
-	 *
 	 * minutes left
 	 */
 	public int getMinutesTillAuction() {
@@ -489,7 +481,6 @@ public class HousingBidService extends AbstractCronTask {
 	/**
 	 * 当前是否允许出价。
 	 * Whether bidding is currently allowed.
-	 *
 	 * @return 是否允许出价 / whether bidding allowed
 	 */
 	public boolean isBiddingAllowed() {
@@ -502,7 +493,6 @@ public class HousingBidService extends AbstractCronTask {
 	/**
 	 * 当前是否允许登记房屋上拍。
 	 * Whether registering houses for auction is currently allowed.
-	 *
 	 * @return 是否允许登记 / whether registering allowed
 	 */
 	public boolean isRegisteringAllowed() {
@@ -524,7 +514,6 @@ public class HousingBidService extends AbstractCronTask {
 	/**
 	 * 完成房屋拍卖成交，处理赢家与房屋所有权。
 	 * Completes a house auction sale for the winner and transfers ownership.
-	 *
 	 * @param winner 赢家公共数据 / winner common data
 	 * obtained house
 	 * auction result
@@ -573,7 +562,6 @@ public class HousingBidService extends AbstractCronTask {
 	/**
 	 * 将房屋以默认起拍价加入拍卖。
 	 * Adds a house to the auction at its default starting price.
-	 *
 	 * house
 	 * whether successful
 	 */
@@ -584,7 +572,6 @@ public class HousingBidService extends AbstractCronTask {
 	/**
 	 * 将房屋加入拍卖（可指定起拍价）。
 	 * Adds a house to the auction (optional initial price).
-	 *
 	 * house
 	 * initial price
 	 * whether successful
@@ -619,7 +606,6 @@ public class HousingBidService extends AbstractCronTask {
 	/**
 	 * 将房屋从拍卖中移除。
 	 * Removes a house from the auction.
-	 *
 	 * house
 	 * @param noSale 是否流拍处理 / no-sale handling
 	 * whether successful
@@ -669,7 +655,6 @@ public class HousingBidService extends AbstractCronTask {
 	/**
 	 * 玩家对指定拍卖条目出价。
 	 * Places a player bid on the given auction entry.
-	 *
 	 * bidder
 	 * @param entryIndex 拍卖条目索引 / bid entry index
 	 * bid amount
@@ -762,7 +747,6 @@ public class HousingBidService extends AbstractCronTask {
 	/**
 	 * 玩家登录时处理竞拍相关邮件/通知。
 	 * Handles auction-related mail/notifications when a player logs in.
-	 *
 	 * logging-in player
 	 */
 	public void onPlayerLogin(Player player) {
@@ -808,7 +792,6 @@ public class HousingBidService extends AbstractCronTask {
 	/**
 	 * 按房屋对象 ID 获取拍卖条目。
 	 * Gets a house bid entry by house object id.
-	 *
 	 * house object id
 	 * bid entry
 	 */
@@ -821,10 +804,7 @@ public class HousingBidService extends AbstractCronTask {
 	/**
 	 * 获取指定种族可见的拍卖条目列表。
 	 * Lists auction entries visible to the given race.
-	 *
 	 * player race
-	 *
-	 * @param playerRace
 	 * @return 拍卖条目列表 / bid entry list
 	 */
 	public List<HouseBidEntry> getHouseBidEntries(Race playerRace) {
@@ -846,7 +826,6 @@ public class HousingBidService extends AbstractCronTask {
 	/**
 	 * 获取玩家最近一次出价条目。
 	 * Returns the player's last bid entry.
-	 *
 	 * player id
 	 * bid entry
 	 */
@@ -857,7 +836,6 @@ public class HousingBidService extends AbstractCronTask {
 	/**
 	 * 按条目索引获取拍卖条目。
 	 * Gets a bid entry by its index.
-	 *
 	 * @param index 条目索引 / entry index
 	 * bid entry
 	 */
@@ -908,11 +886,9 @@ public class HousingBidService extends AbstractCronTask {
 	/**
 	 * 判断玩家等级是否达到该地产最低竞拍要求。
 	 * Returns whether the player meets the minimum level to bid on the land.
-	 *
 	 * 玩家 / player
 	 * map id
 	 * land id
-	 *
 	 * @return 是否可竞拍 / whether can bid
 	 */
 	public static boolean canBidHouse(Player player, int mapId, int landId) {

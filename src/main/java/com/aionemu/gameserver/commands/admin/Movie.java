@@ -8,7 +8,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 向管理员客户端播放指定类型与 ID 过场动画的命令。
  * Admin command to play a cutscene of the given type and id on the admin client.
- *
  * @author d3v1an
  */
 public class Movie extends AdminCommand {
@@ -24,7 +23,6 @@ public class Movie extends AdminCommand {
 	/**
 	 * 发送 {@link SM_PLAY_MOVIE} 播放过场动画。
 	 * Send {@link SM_PLAY_MOVIE} to play the cutscene.
-	 *
 	 * @param player 执行 GM / Admin player
 	 * @param params 类型与动画 ID / Type and movie id
 	 */
@@ -41,7 +39,6 @@ public class Movie extends AdminCommand {
 	/**
 	 * 参数错误时显示语法。
 	 * Show syntax when parameters are invalid.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

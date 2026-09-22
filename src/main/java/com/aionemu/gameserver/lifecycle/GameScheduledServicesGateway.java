@@ -29,7 +29,6 @@ public class GameScheduledServicesGateway {
     /**
      * 注入术古皇陵刷怪管理器提供者。
      * Inject the Shugo Imperial Tomb spawn manager provider.
-     *
      * @param shugoImperialTombSpawnManagerProvider 刷怪管理器提供者 / Spawn manager provider
      */
     @Autowired(required = false)
@@ -40,7 +39,6 @@ public class GameScheduledServicesGateway {
     /**
      * 注入维护类运行时桥接提供者。
      * Inject the maintenance runtime bridge provider.
-     *
      * @param runtimeBridgeProvider 运行时桥接提供者 / Runtime bridge provider
      */
     @Autowired(required = false)
@@ -69,7 +67,6 @@ public class GameScheduledServicesGateway {
     /**
      * 解析术古皇陵刷怪管理器：优先 Spring 提供，否则回退桥接。
      * Resolve the Imperial Tomb spawn manager: prefer Spring, otherwise the bridge.
-     *
      * @param runtimeBridge 运行时桥接 / Runtime bridge
      * @return 刷怪管理器 / Spawn manager
      */
@@ -83,7 +80,6 @@ public class GameScheduledServicesGateway {
     /**
      * 解析维护类运行时桥接。
      * Resolve the maintenance runtime bridge.
-     *
      * @return 运行时桥接 / Runtime bridge
      */
     private GameMaintenanceServicesRuntimeBridge runtimeBridge() {

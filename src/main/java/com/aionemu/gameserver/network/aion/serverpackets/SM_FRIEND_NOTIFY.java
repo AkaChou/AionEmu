@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 好友事件通知包：好友上线/下线/删除等事件。
  * Friend event notify packet: login, logout or deletion by a friend.
- *
  * @author Ben
  */
 @AllArgsConstructor

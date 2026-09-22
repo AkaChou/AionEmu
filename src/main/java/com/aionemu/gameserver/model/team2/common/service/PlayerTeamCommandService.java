@@ -13,7 +13,6 @@ import com.google.common.base.Preconditions;
 /**
  * 玩家团队 Command 服务，用于团队2相关逻辑。
  * Player Team Command Service for team 2 logic.
- *
  * @author ATracer
  */
 public class PlayerTeamCommandService {

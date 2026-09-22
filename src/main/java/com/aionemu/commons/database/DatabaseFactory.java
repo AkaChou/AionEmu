@@ -88,7 +88,6 @@ public final class DatabaseFactory {
     /**
      * 从当前上下文连接池获取连接，并确保 autoCommit 为 true
      * Obtain a connection from the current context pool and ensure autoCommit is true
-     *
      * @return JDBC 连接 / JDBC connection
      * @throws SQLException 获取连接失败时 / When obtaining a connection fails
      */
@@ -104,7 +103,6 @@ public final class DatabaseFactory {
     /**
      * 获取当前活跃连接数
      * Get the number of active connections
-     *
      * @return 活跃连接数 / Active connection count
      */
     public int getActiveConnections() {
@@ -114,7 +112,6 @@ public final class DatabaseFactory {
     /**
      * 获取当前空闲连接数
      * Get the number of idle connections
-     *
      * @return 空闲连接数 / Idle connection count
      */
     public int getIdleConnections() {
@@ -140,7 +137,6 @@ public final class DatabaseFactory {
     /**
      * 关闭 PreparedStatement 与 Connection
      * Close a PreparedStatement and a Connection
-     *
      * @param st 预处理语句 / Prepared statement
      * @param con 数据库连接 / Database connection
      */
@@ -152,7 +148,6 @@ public final class DatabaseFactory {
     /**
      * 安全关闭 PreparedStatement
      * Safely close a PreparedStatement
-     *
      * @param st 预处理语句 / Prepared statement
      */
     public static void close(PreparedStatement st) {
@@ -170,7 +165,6 @@ public final class DatabaseFactory {
     /**
      * 安全关闭 Connection，并恢复 autoCommit
      * Safely close a Connection and restore autoCommit
-     *
      * @param con 数据库连接 / Database connection
      */
     public static void close(Connection con) {
@@ -193,7 +187,6 @@ public final class DatabaseFactory {
     /**
      * 获取当前数据库产品名称
      * Get the current database product name
-     *
      * @return 数据库名称 / Database name
      */
     public static String getDatabaseName() {
@@ -203,7 +196,6 @@ public final class DatabaseFactory {
     /**
      * 获取当前数据库主版本号
      * Get the current database major version
-     *
      * @return 主版本号 / Major version
      */
     public static int getDatabaseMajorVersion() {
@@ -213,7 +205,6 @@ public final class DatabaseFactory {
     /**
      * 获取当前数据库次版本号
      * Get the current database minor version
-     *
      * @return 次版本号 / Minor version
      */
     public static int getDatabaseMinorVersion() {
@@ -223,7 +214,6 @@ public final class DatabaseFactory {
     /**
      * 获取当前服务上下文对应的数据库状态
      * Get the database state for the current service context
-     *
      * @return 数据库状态 / Database state
      */
     private static DatabaseState state() {

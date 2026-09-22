@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 /**
  * 聊天服务器 JVM 关停钩子：关闭重启服务、Netty、GS 状态与线程池，并可选 halt。
  * Chat-server JVM shutdown hook: stop restart service, Netty, GS state, and thread pool, then optionally halt.
- *
  * @author nrg
  */
 @NoArgsConstructor
@@ -36,7 +35,6 @@ public class ShutdownHook extends Thread {
     /**
      * 直接绑定进程桥与具体服务实例。
      * Bind process bridge and concrete service instances.
-     *
      * @param processBridge 进程运行时桥 / Process runtime bridge
      * @param restartService 重启服务 / Restart service
      * @param gameServerService 游戏服服务 / Game-server service
@@ -48,7 +46,6 @@ public class ShutdownHook extends Thread {
     /**
      * 绑定进程桥与 Spring {@link ObjectProvider}（延迟取 Bean）。
      * Bind process bridge and Spring {@link ObjectProvider}s (lazy bean lookup).
-     *
      * @param processBridge 进程运行时桥 / Process runtime bridge
      * @param restartServiceProvider 重启服务提供者 / Restart-service provider
      * @param gameServerServiceProvider 游戏服服务提供者 / Game-server-service provider
@@ -66,7 +63,6 @@ public class ShutdownHook extends Thread {
     /**
      * 取得遗留单例关停钩子（须外部注册到 Runtime）。
      * Get the legacy singleton shutdown hook (must be registered with Runtime externally).
-     *
      * @return 关停钩子单例 / Singleton shutdown hook
      * @deprecated boot 迁移后请使用 Spring Bean / Prefer the Spring bean after boot migration
      */
@@ -78,7 +74,6 @@ public class ShutdownHook extends Thread {
     /**
      * 配置单例的进程桥后返回。
      * Configure the singleton with the process bridge and return it.
-     *
      * @param processBridge 进程运行时桥 / Process runtime bridge
      * @return 关停钩子单例 / Singleton shutdown hook
      * @deprecated boot 迁移后请使用 Spring Bean / Prefer the Spring bean after boot migration
@@ -92,7 +87,6 @@ public class ShutdownHook extends Thread {
     /**
      * 配置单例的进程桥与重启服务后返回。
      * Configure the singleton with process bridge and restart service, then return it.
-     *
      * @param processBridge 进程运行时桥 / Process runtime bridge
      * @param restartService 重启服务 / Restart service
      * @return 关停钩子单例 / Singleton shutdown hook
@@ -106,7 +100,6 @@ public class ShutdownHook extends Thread {
     /**
      * 配置单例的进程桥与全部服务后返回。
      * Configure the singleton with process bridge and all services, then return it.
-     *
      * @param processBridge 进程运行时桥 / Process runtime bridge
      * @param restartService 重启服务 / Restart service
      * @param gameServerService 游戏服服务 / Game-server service
@@ -122,7 +115,6 @@ public class ShutdownHook extends Thread {
     /**
      * 配置进程桥与直接服务引用。
      * Configure process bridge and direct service references.
-     *
      * @param processBridge 进程运行时桥 / Process runtime bridge
      * @param restartService 重启服务 / Restart service
      * @param gameServerService 游戏服服务 / Game-server service
@@ -136,7 +128,6 @@ public class ShutdownHook extends Thread {
     /**
      * 设置进程桥（非 null 时覆盖）。
      * Set process bridge (override when non-null).
-     *
      * @param processBridge 进程运行时桥 / Process runtime bridge
      */
     private void setProcessBridge(ChatProcessRuntimeBridge processBridge) {
@@ -148,7 +139,6 @@ public class ShutdownHook extends Thread {
     /**
      * 设置直接注入的重启服务。
      * Set directly injected restart service.
-     *
      * @param restartService 重启服务 / Restart service
      */
     private void setRestartService(RestartService restartService) {
@@ -158,7 +148,6 @@ public class ShutdownHook extends Thread {
     /**
      * 设置直接注入的游戏服服务。
      * Set directly injected game-server service.
-     *
      * @param gameServerService 游戏服服务 / Game-server service
      */
     private void setGameServerService(GameServerService gameServerService) {
@@ -168,7 +157,6 @@ public class ShutdownHook extends Thread {
     /**
      * 设置重启服务的 Spring 提供者。
      * Set Spring provider for restart service.
-     *
      * @param restartServiceProvider 重启服务提供者 / Restart-service provider
      */
     private void setRestartServiceProvider(ObjectProvider<RestartService> restartServiceProvider) {
@@ -178,7 +166,6 @@ public class ShutdownHook extends Thread {
     /**
      * 设置游戏服服务的 Spring 提供者。
      * Set Spring provider for game-server service.
-     *
      * @param gameServerServiceProvider 游戏服服务提供者 / Game-server-service provider
      */
     private void setGameServerServiceProvider(ObjectProvider<GameServerService> gameServerServiceProvider) {
@@ -188,7 +175,6 @@ public class ShutdownHook extends Thread {
     /**
      * 设置是否仅重启（不正常退出）。
      * Set whether to restart only (instead of normal exit).
-     *
      * @param restartOnly 为 true 表示仅重启 / {@code true} means restart only
      */
     public static void setRestartOnly(boolean restartOnly) {
@@ -207,7 +193,6 @@ public class ShutdownHook extends Thread {
     /**
      * 执行一次关停（幂等）：停重启服务、Netty、标记 GS 离线、关线程池，可选 halt。
      * Perform one-shot shutdown (idempotent): stop restart service, Netty, mark GS offline, shut thread pool, optionally halt.
-     *
      * @param haltJvm 是否 halt JVM / Whether to halt the JVM
      */
     public void shutdown(boolean haltJvm) {
@@ -234,7 +219,6 @@ public class ShutdownHook extends Thread {
     /**
      * 解析重启服务：直接引用 → Provider → 遗留静态定位。
      * Resolve restart service: direct ref → provider → legacy static locator.
-     *
      * @return 重启服务 / Restart service
      */
     private RestartService restartService() {
@@ -255,7 +239,6 @@ public class ShutdownHook extends Thread {
     /**
      * 解析游戏服服务：直接引用 → Provider → 遗留静态定位。
      * Resolve game-server service: direct ref → provider → legacy static locator.
-     *
      * @return 游戏服服务 / Game-server service
      */
     private GameServerService gameServerService() {

@@ -19,7 +19,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Kamar Battlefield 副本 NPC AI：Reian Guardian Statue（@AIName "reian_guardian_statue"），继承 ActionItemNpcAI2。
  * Kamar Battlefield instance NPC AI: Reian Guardian Statue (@AIName "reian_guardian_statue"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("reian_guardian_statue")

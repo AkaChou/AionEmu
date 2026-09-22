@@ -8,7 +8,6 @@ import com.aionemu.gameserver.network.loginserver.serverpackets.SM_GS_CHARACTER;
 /**
  * 登录服查询账号角色数量的请求包，游戏服以 SM_GS_CHARACTER 回复。
  * LoginServer request for the character count of an account; Gameserver replies with SM_GS_CHARACTER.
- *
  * @author cura
  */
 public class CM_GS_CHARACTER_RESPONSE extends LsClientPacket {
@@ -16,7 +15,6 @@ public class CM_GS_CHARACTER_RESPONSE extends LsClientPacket {
 	/**
 	 * 构造函数。
 	 * Constructor.
-	 *
 	 * @param opCode 操作码 opcode
 	 */
 	public CM_GS_CHARACTER_RESPONSE(int opCode) {

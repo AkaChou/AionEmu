@@ -23,7 +23,6 @@ import java.util.List;
  * //stats hp &lt;value&gt; — 覆盖最大生命 / Override max HP<br>
  * //stats dev &lt;level&gt; — 设置已装备羽饰强化等级（需高权限） / Set equipped plume authorize level (high access)
  * </p>
- *
  * @author Kill3r
  */
 public class Stats extends AdminCommand implements StatOwner {
@@ -39,7 +38,6 @@ public class Stats extends AdminCommand implements StatOwner {
 	/**
 	 * 按子命令覆盖 HP 或设置羽饰强化等级。
 	 * Overrides HP or sets plume authorize level by subcommand.
-	 *
 	 * @param player 执行 GM / Admin player
 	 * @param params hp|dev 与数值 / hp|dev and value
 	 */
@@ -448,7 +446,6 @@ public class Stats extends AdminCommand implements StatOwner {
 	/**
 	 * 参数错误时的用法提示。
 	 * Usage hint on invalid parameters.
-	 *
 	 * @param player 玩家 / Player
 	 * @param msg 失败消息 / Failure message
 	 */

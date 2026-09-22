@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Elementis Forest 副本 NPC AI：Tuali（@AIName "tuali"），继承 AggressiveNpcAI2。
  * Elementis Forest instance NPC AI: Tuali (@AIName "tuali"), extends AggressiveNpcAI2.
- *
  * @author Luzien
  * @author xTz
  */

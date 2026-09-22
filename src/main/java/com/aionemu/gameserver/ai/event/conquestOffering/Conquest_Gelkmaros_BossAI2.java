@@ -17,7 +17,6 @@ import java.util.List;
 /**
  * Conquest Offering 活动 NPC AI：Conquest Gelkmaros Boss（@AIName "conquest_gelkmaros"），继承 AggressiveNpcAI2。
  * Conquest Offering event NPC AI: Conquest Gelkmaros Boss (@AIName "conquest_gelkmaros"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("conquest_gelkmaros")

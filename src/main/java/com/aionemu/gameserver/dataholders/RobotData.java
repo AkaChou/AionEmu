@@ -17,7 +17,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 机器人（变形机体）数据容器，按机器人 ID 索引 RobotInfo。
  * Robot (transformation mech) data holder, indexing RobotInfo by robot id.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -46,7 +45,6 @@ public class RobotData {
 	/**
 	 * 按机器人/NPC ID 获取机器人信息。
 	 * Returns the robot info for the given robot/NPC id.
-	 *
 	 * @param npcId 机器人或 NPC ID / robot or npc id
 	 * @return 机器人信息，不存在则为 null / robot info or null
 	 */
@@ -57,7 +55,6 @@ public class RobotData {
 	/**
 	 * 返回已加载的机器人数量。
 	 * Returns the number of loaded robots.
-	 *
 	 * @return 机器人数量 / robot count
 	 */
 	public int size() {

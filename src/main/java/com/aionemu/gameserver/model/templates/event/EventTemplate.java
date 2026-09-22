@@ -128,9 +128,6 @@ public class EventTemplate {
 		return !isActive();
 	}
 
-	/**
-	 * @return 是否已启动 / whether started
-	 */
 	@XmlTransient
 	volatile boolean isStarted = false;
 

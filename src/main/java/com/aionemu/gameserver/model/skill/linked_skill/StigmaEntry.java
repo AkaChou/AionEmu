@@ -8,7 +8,6 @@ import lombok.AccessLevel;
 /**
  * 烙印之石条目，用于技能相关逻辑。
  * Stigma Entry for skill logic.
- *
  * @author DrNism
  */
 @AllArgsConstructor(access = AccessLevel.PACKAGE)

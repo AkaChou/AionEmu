@@ -9,7 +9,6 @@ import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 /**
  * 自动 HallOfTenacity 副本，用于 autogroup 相关逻辑。
  * Auto Hall Of Tenacity Instance for autogroup logic.
- *
  * @author Ranastic
  */
 public class AutoHallOfTenacityInstance extends AutoInstance {

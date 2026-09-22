@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Gelkmaros 区域 NPC AI：Snuffler Thistle Trap（@AIName "snufflerthistletrap"），继承 NpcAI2。
  * Gelkmaros zone NPC AI: Snuffler Thistle Trap (@AIName "snufflerthistletrap"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("snufflerthistletrap")

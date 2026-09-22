@@ -35,7 +35,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 土匪活动服务，管理土匪变身、宣战与结算。
  * Bandit event service managing bandit morph, attack state and settlement.
- *
  * @author Rinzler (Encom)
  */
 
@@ -54,7 +53,6 @@ public class BanditService {
 	/**
 	 * 开始土匪状态。
 	 * Starts bandit state.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void startBandit(final Player player) {
@@ -63,12 +61,6 @@ public class BanditService {
 		player.getEffectController().broadCastEffects();
 		final ActionObserver observer = new ActionObserver(ObserverType.ATTACKED) {
 			@Override
-			/**
-			 * attacked 方法。
-			 * attacked method.
-			 *
-			 * creature
-			 */
 			public void attacked(Creature creature) {
 				if (player.getController().hasTask(TaskId.PK)) {
 					player.getController().cancelTask(TaskId.PK);
@@ -79,10 +71,7 @@ public class BanditService {
 			}
 		};
 		player.getObserveController().attach(observer);
-		/**
-		 * 执行任务。
-		 * Runs the task.
-		 */player.getController().addTask(TaskId.PK, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		player.getController().addTask(TaskId.PK, GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			 player.getObserveController().removeObserver(observer);
 			 if (player.getLifeStats().isAlreadyDead()) {
 				 PlayerReviveService.skillRevive(player);
@@ -115,7 +104,6 @@ public class BanditService {
 	/**
 	 * 结束土匪状态。
 	 * Stops bandit state.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void stopBandit(final Player player) {
@@ -124,12 +112,6 @@ public class BanditService {
 		player.getEffectController().broadCastEffects();
 		final ActionObserver observer = new ActionObserver(ObserverType.ATTACKED) {
 			@Override
-			/**
-			 * attacked 方法。
-			 * attacked method.
-			 *
-			 * creature
-			 */
 			public void attacked(Creature creature) {
 				if (player.getController().hasTask(TaskId.PK)) {
 					player.getController().cancelTask(TaskId.PK);
@@ -140,10 +122,7 @@ public class BanditService {
 			}
 		};
 		player.getObserveController().attach(observer);
-		/**
-		 * 执行任务。
-		 * Runs the task.
-		 */player.getController().addTask(TaskId.PK, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		player.getController().addTask(TaskId.PK, GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			 player.getObserveController().removeObserver(observer);
 			 if (player.getLifeStats().isAlreadyDead()) {
 				 PlayerReviveService.skillRevive(player);
@@ -175,7 +154,6 @@ public class BanditService {
 	/**
 	 * 单位死亡时处理。
 	 * Handles unit death.
-	 *
 	 * @param player 玩家 / player
 	 * @param lastAttacker 最后攻击者 / lastAttacker
 	 */
@@ -196,10 +174,7 @@ public class BanditService {
 				100);
 		player.setTarget(null);
 		PacketSendUtility.sendPacket(player, new SM_TARGET_SELECTED(player));
-		/**
-		 * 执行任务。
-		 * Runs the task.
-		 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			 if (player.isBandit()) {
 				 if (player.getLifeStats().isAlreadyDead()) {
 					 PlayerReviveService.banditRevive(player);
@@ -223,7 +198,6 @@ public class BanditService {
 	/**
 	 * 土匪变身。
 	 * Morphs into bandit form.
-	 *
 	 * @param player 玩家 / player
 	 * @param die 是否死亡 / die
 	 */
@@ -248,16 +222,10 @@ public class BanditService {
 	/**
 	 * 发送公告。
 	 * Sends an announcement.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void sendAnnounce(final Player player) {
-		/**
-		 * visit 方法。
-		 * visit method.
-		 *
-		 * @param pl 玩家 / pl
-		 */com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
 			 if (pl.getWorldId() == player.getWorldId() && pl != player) {
 				 PacketSendUtility.sendSys3Message(pl, "[PK] Bandit", "A player just passed <Outlaw>, RUN!");
 			 }
@@ -267,17 +235,11 @@ public class BanditService {
 	/**
 	 * sendDieAnnounce 方法。
 	 * sendDieAnnounce method.
-	 *
 	 * looser
 	 * killer
 	 */
 	public void sendDieAnnounce(final Player looser, final Player killer) {
-		/**
-		 * visit 方法。
-		 * visit method.
-		 *
-		 * @param pl 玩家 / pl
-		 */com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
+        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
 			 if (pl.getWorldId() == looser.getWorldId()) {
 				 PacketSendUtility.sendSys3Message(pl, "[PK] Bandit",
 						 killer.getName() + " stop the <Outlaw> (" + looser.getName() + ") !");
@@ -288,7 +250,6 @@ public class BanditService {
 	/**
 	 * 击杀时处理。
 	 * Handles a kill event.
-	 *
 	 * 玩家 / player
 	 * diedPlayer
 	 */
@@ -305,11 +266,9 @@ public class BanditService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -328,7 +287,6 @@ public class BanditService {
 	/**
 	 * setInstanceProvider 方法。
 	 * setInstanceProvider method.
-	 *
 	 * @param instanceProvider 副本提供者 / instanceProvider
 	 */
 	public static void setInstanceProvider(ObjectProvider<BanditService> instanceProvider) {

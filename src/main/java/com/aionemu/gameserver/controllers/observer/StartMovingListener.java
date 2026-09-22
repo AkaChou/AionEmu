@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 监听施法者是否开始移动，用于打断需静止的技能。
  * Listens whether the effector started moving; used to interrupt skills that require stillness.
- *
  * @author ATracer
  */
 @Getter

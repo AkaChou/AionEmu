@@ -12,7 +12,6 @@ import java.util.List;
 /**
  * 天梯排行榜数据访问对象的 MySQL 8 实现，已修复连接泄漏。
  * MySQL 8 implementation of LadderDAO with connection leak fixes.
- *
  * @author wanke
  */
 @Slf4j
@@ -27,18 +26,10 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /** 更新玩家上次排名与时间 / Update player last rank and timestamp */
     private static final String UPDATE_LAST_RANK = "UPDATE ladder_player SET last_rank = ?, last_update = ? WHERE player_id = ?";
 
-    /** 按列查询玩家天梯字段（占位模板） / Select a ladder column by player (placeholder template) */
-
-    /** 查询玩家全部天梯数据 / Select all ladder data for a player */
+	/** 查询玩家全部天梯数据 / Select all ladder data for a player */
     private static final String SELECT_GET_ALL = "SELECT * FROM ladder_player WHERE player_id = ?";
 
-    /** 累加天梯字段（占位模板） / Increment a ladder column (placeholder template) */
-
-    /** 设置天梯字段（占位模板） / Set a ladder column (placeholder template) */
-
-    /** 插入玩家天梯记录（占位模板） / Insert player ladder row (placeholder template) */
-
-    /** 查询玩家上次更新时间 / Select player last update timestamp */
+	/** 查询玩家上次更新时间 / Select player last update timestamp */
     private static final String SELECT_LAST_UPDATE = "SELECT last_update FROM ladder_player WHERE player_id = ?";
 
     /** 设置玩家上次更新时间 / Update player last update timestamp */
@@ -47,7 +38,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /**
      * 增加玩家天梯胜利场次。
      * Adds a ladder win for the player.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -58,7 +48,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /**
      * 增加玩家天梯失败场次。
      * Adds a ladder loss for the player.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -69,7 +58,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /**
      * 增加玩家天梯离开（逃跑）场次。
      * Adds a ladder leave for the player.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -80,7 +68,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /**
      * 增加玩家天梯评分。
      * Adds rating points to the player's ladder score.
-     *
      * @param player 玩家 / player
      * @param rating 增加的评分 / rating delta to add
      */
@@ -92,7 +79,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /**
      * 设置玩家天梯胜利场次。
      * Sets the player's ladder win count.
-     *
      * @param player 玩家 / player
      * @param wins 胜利场次 / win count
      */
@@ -104,7 +90,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /**
      * 设置玩家天梯失败场次。
      * Sets the player's ladder loss count.
-     *
      * @param player 玩家 / player
      * @param losses 失败次数 / loss count
      */
@@ -116,7 +101,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /**
      * 设置玩家天梯离开场次。
      * Sets the player's ladder leave count.
-     *
      * @param player 玩家 / player
      * @param leaves 离开次数 / leave count
      */
@@ -128,7 +112,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /**
      * 设置玩家天梯评分。
      * Sets the player's ladder rating.
-     *
      * @param player 玩家 / player
      * @param rating 评级值 / rating value
      */
@@ -140,7 +123,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /**
      * 获取玩家天梯胜利场次。
      * Returns the player's ladder win count.
-     *
      * @param player 玩家 / player
      * @return 胜利次数 / win count
      */
@@ -152,7 +134,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /**
      * 获取玩家天梯失败场次。
      * Returns the player's ladder loss count.
-     *
      * @param player 玩家 / player
      * @return 失败次数 / loss count
      */
@@ -164,7 +145,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /**
      * 获取玩家天梯离开场次。
      * Returns the player's ladder leave count.
-     *
      * @param player 玩家 / player
      * @return 离开次数 / leave count
      */
@@ -176,7 +156,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /**
      * 获取玩家天梯评分；无记录时默认 1000。
      * Returns the player's ladder rating; defaults to 1000 when unset.
-     *
      * @param player 玩家 / player
      * @return 评级值 / rating value
      */
@@ -189,7 +168,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /**
      * 获取玩家当前天梯排名。
      * Returns the player's current ladder rank.
-     *
      * @param player 玩家 / player
      * @return 排名位置 / rank position
      */
@@ -280,7 +258,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /**
      * 累加玩家天梯指定列的值；不存在则插入。
      * Increments a ladder column for the player, inserting a row when missing.
-     *
      * @param player 玩家 / player
      * @param column 列名 / column name
      * @param value 要添加的值 / value to add
@@ -304,7 +281,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /**
      * 设置玩家天梯指定列的值；不存在则插入。
      * Sets a ladder column for the player, inserting a row when missing.
-     *
      * @param player 玩家 / player
      * @param column 列名 / column name
      * @param value 要设置的值 / value to set
@@ -327,7 +303,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /**
      * 按玩家 ID 设置天梯指定列的值（仅更新）。
      * Sets a ladder column by player id (update only).
-     *
      * @param playerId 玩家 ID / player id
      * @param column 列名 / column name
      * @param value 要设置的值 / value to set
@@ -347,7 +322,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /**
      * 读取玩家天梯指定列的整数值。
      * Reads an integer ladder column for the player.
-     *
      * @param player 玩家 / player
      * @param column 列名 / column name
      * @return 列值，不存在则为 0 / column value, or 0 if missing
@@ -376,7 +350,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /**
      * 按玩家 ID 读取天梯指定列的整数值。
      * Reads an integer ladder column by player id.
-     *
      * @param playerId 玩家 ID / player id
      * @param column 列名 / column name
      * @return 列值，不存在则为 0 / column value, or 0 if missing
@@ -404,7 +377,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /**
      * 获取玩家天梯上次更新时间。
      * Returns the player's ladder last-update timestamp.
-     *
      * @param player 玩家 / player
      * @return 上次更新时间，不存在则为 null / last update time, or null if missing
      */
@@ -430,7 +402,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /**
      * 设置玩家天梯上次更新时间。
      * Sets the player's ladder last-update timestamp.
-     *
      * @param player 玩家 / player
      * @param value 更新时间 / update timestamp
      */
@@ -451,7 +422,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /**
      * 按玩家 ID 设置天梯上次更新时间。
      * Sets the ladder last-update timestamp by player id.
-     *
      * @param playerId 玩家 ID / player id
      * @param value 更新时间 / update timestamp
      */
@@ -470,7 +440,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /**
      * 加载玩家完整天梯数据；无记录时返回默认值。
      * Loads full ladder data for the player; returns defaults when missing.
-     *
      * @param player 玩家 / player
      * @return ladder data
      */
@@ -508,8 +477,6 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
     /**
      * 是否支持该数据库。
      * Whether the database is supported.
-     *
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version
@@ -528,10 +495,9 @@ public class LadderDAO extends com.aionemu.gameserver.dao.LadderDAO {
 		/**
 		 * player id
 		 * rating
-		 *
-		 * @param lastUpdate 上次更新时间 / last update time
+		 * 上次更新时间 / last update time
 		 *                   wins
-		 * @param rank       当前名次 / current rank
+		 * 当前名次 / current rank
 		 */
 		private PlayerInfo {
 		}

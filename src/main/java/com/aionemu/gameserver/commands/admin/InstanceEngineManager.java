@@ -33,7 +33,6 @@ public class InstanceEngineManager extends AdminCommand {
 	/**
 	 * 处理 start/stop/restart/hot/karma 子命令。
 	 * Handle start/stop/restart/hot/karma subcommands.
-	 *
 	 * @param player 执行命令的管理员 / Admin executing the command
 	 */
 	@Override
@@ -72,7 +71,6 @@ public class InstanceEngineManager extends AdminCommand {
 	/**
 	 * 显示命令帮助。
 	 * Show command help.
-	 *
 	 * @param player 接收提示的玩家 / Player receiving the hint
 	 */
 	protected void showHelp(Player player) {

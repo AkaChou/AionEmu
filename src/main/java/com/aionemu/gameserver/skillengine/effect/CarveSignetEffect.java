@@ -13,9 +13,7 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 /**
  * 雕刻印记效果：造成物理伤害并叠加/刷新目标印记层数。
  * Carve-signet effect: deals physical damage and stacks/refreshes signet levels on the target.
- *
  * @author ATracer
- * @Rework MATTY (ADev.Team)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "CarveSignetEffect")
@@ -42,7 +40,6 @@ public class CarveSignetEffect extends DamageEffect {
 	/**
 	 * 应用伤害，并按概率叠加下一级印记技能。
 	 * Applies damage and, by chance, stacks the next signet skill level.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -85,7 +82,6 @@ public class CarveSignetEffect extends DamageEffect {
 	/**
 	 * 计算物理伤害是否命中。
 	 * Calculates whether the physical damage hits.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

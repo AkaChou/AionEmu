@@ -14,7 +14,6 @@ import lombok.Getter;
 /**
  * 道路模型。
  * Road model.
- *
  * @author SheppeR
  */
 @Getter

@@ -40,7 +40,6 @@ public enum XPLossEnum {
 	/**
 	 * 构造经验损失条目
 	 * Construct an XP loss entry
-	 *
 	 * @param level 等级阈值 / Level threshold
 	 * @param param 损失系数 / Loss parameter
 	 */
@@ -52,7 +51,6 @@ public enum XPLossEnum {
 	/**
 	 * 计算指定等级死亡时的经验损失量
 	 * Calculate XP lost on death for the given level
-	 *
 	 * @param level 玩家等级 / Player level
 	 * @param expNeed 升级所需经验 / XP needed for next level
 	 * XP lost

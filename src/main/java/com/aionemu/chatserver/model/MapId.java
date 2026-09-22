@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 聊天服使用的世界地图 ID 枚举。
  * World map id enum used by the chat server.
- *
  * @author ATracer
  */
 public enum MapId {
@@ -200,7 +199,6 @@ public enum MapId {
     /**
      * 构造地图 ID 枚举。
      * Constructs a map id enum value.
-     *
      * @param mapId 地图 ID / map id
      */
 	MapId(int mapId) {

@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Rentus Base 副本 NPC AI：Imprisoned Reian（@AIName "imprisoned_reian"），继承 GeneralNpcAI2。
  * Rentus Base instance NPC AI: Imprisoned Reian (@AIName "imprisoned_reian"), extends GeneralNpcAI2.
- *
  * @author Aion-Unique
  */
 @AIName("imprisoned_reian")

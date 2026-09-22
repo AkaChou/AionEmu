@@ -9,7 +9,6 @@ import com.aionemu.gameserver.model.team.legion.LegionEmblemType;
  * 战场身份与外观展示域：按队伍索引与种族解析披风/徽章模板，并处理战场内目标名称脱敏。
  * Battleground identity and cosmetics domain: resolves cloak/emblem templates by team index and
  * race, and handles in-BG target name masking.
- *
  * <p>该类型只服务 {@link LadderService}：全部为静态纯查表/展示函数，不持有状态、不创建对象；
  * 对外仍通过 {@link LadderService} 的原公开方法访问（门面签名不变）。
  * This type only serves {@link LadderService}: every function is a static pure table lookup or
@@ -28,7 +27,6 @@ final class BattlegroundIdentity {
 	/**
 	 * 按战场索引与种族返回伪装斗篷模板 ID。
 	 * Returns the disguise cloak template id by BG index and race.
-	 *
 	 * 玩家 / player
 	 * @param bgIndex 战场队伍索引 / battleground team index
 	 * cloak template id
@@ -165,7 +163,6 @@ final class BattlegroundIdentity {
 	/**
 	 * 返回战场内目标显示名（可能脱敏为 Contestant）。
 	 * Returns the in-BG display name for a target (may be masked as Contestant).
-	 *
 	 * viewer
 	 * target
 	 * display name
@@ -190,7 +187,6 @@ final class BattlegroundIdentity {
 	/**
 	 * 按战场队伍索引返回队伍名称。
 	 * Returns the team name for a battleground team index.
-	 *
 	 * team index
 	 * team name
 	 */
@@ -222,7 +218,6 @@ final class BattlegroundIdentity {
 	/**
 	 * 按战场队伍索引返回披风军团徽章样式。
 	 * Returns the cape legion-emblem style for a battleground team index.
-	 *
 	 * team index
 	 * emblem
 	 */

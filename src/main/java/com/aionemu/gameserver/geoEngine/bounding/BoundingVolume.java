@@ -12,7 +12,6 @@ import lombok.Getter;
 /**
  * 包围体抽象基类，定义点集的包容与相交检测接口。
  * Abstract base for bounding volumes dealing with containment of a collection of points.
- *
  * @author Mark Powell
  * @version $Id: BoundingVolume.java,v 1.24 2007/09/21 15:45:32 nca Exp $
  */
@@ -31,8 +30,6 @@ public abstract class BoundingVolume implements Collidable {
 	 * -- GETTER --
 	 *  获取应优先检测的裁剪平面索引。
 	 *  Returns the clip-plane index that should be checked first.
-	 *
-	 * @return 平面索引 / plane index
 	 */
 	@Getter
 	protected int checkPlane = 0;
@@ -49,7 +46,6 @@ public abstract class BoundingVolume implements Collidable {
 	/**
 	 * 以给定中心构造包围体。
 	 * Constructs a bounding volume with the given center.
-	 *
 	 * @param center 中心点 / center point
 	 */
 	public BoundingVolume(Vector3f center) {
@@ -59,7 +55,6 @@ public abstract class BoundingVolume implements Collidable {
 	/**
 	 * 设置渲染时优先检测的平面索引。
 	 * Sets the index of the plane that should be first checked during rendering.
-	 *
 	 * @param value 平面索引 / plane index
 	 */
 	public final void setCheckPlane(int value) {
@@ -69,7 +64,6 @@ public abstract class BoundingVolume implements Collidable {
 	/**
 	 * 返回此包围体的类型。
 	 * Returns the type of this bounding volume.
-	 *
 	 * @return 类型枚举 / type enum
 	 */
 	public abstract Type getType();
@@ -77,7 +71,6 @@ public abstract class BoundingVolume implements Collidable {
 	/**
 	 * 通过旋转、平移与缩放变换包围体。
 	 * Transforms the bounding volume by rotation, translation and scale.
-	 *
 	 * @param trans 变换矩阵 / transform matrix
 	 * @param store 结果存储（可为 null） / destination volume (may be null)
 	 * @return 变换后的包围体 / transformed bounding volume
@@ -87,7 +80,6 @@ public abstract class BoundingVolume implements Collidable {
 	/**
 	 * 判断包围体相对平面所在侧（正侧、负侧或跨越）。
 	 * Returns which side of a plane the volume lies on (positive, negative, or none/straddling).
-	 *
 	 * @param plane 检测平面 / plane to test against
 	 * @return 平面侧 / side relative to the plane
 	 */
@@ -96,7 +88,6 @@ public abstract class BoundingVolume implements Collidable {
 	/**
 	 * 根据点集计算包围体。
 	 * Computes a bounding volume that encompasses a collection of points.
-	 *
 	 * @param points 点缓冲 / point buffer
 	 */
 	public abstract void computeFromPoints(FloatBuffer points);
@@ -104,7 +95,6 @@ public abstract class BoundingVolume implements Collidable {
 	/**
 	 * 合并两个包围体，返回包含两者的新包围体。
 	 * Merges two volumes into a new volume containing both.
-	 *
 	 * @param volume 另一包围体 / the volume to combine
 	 * @return 合并后的包围体 / merged bounding volume
 	 */
@@ -113,7 +103,6 @@ public abstract class BoundingVolume implements Collidable {
 	/**
 	 * 就地合并两个包围体，结果存于自身。
 	 * Merges two volumes in place; the result is stored in this volume.
-	 *
 	 * @param volume 另一包围体 / the volume to combine
 	 * @return this
 	 */
@@ -122,7 +111,6 @@ public abstract class BoundingVolume implements Collidable {
 	/**
 	 * 克隆包围体数据到指定存储（类型不符或为 null 时新建）。
 	 * Clones this volume into the given store (creates a new one if null or wrong class).
-	 *
 	 * @param store 存储目标 / destination store
 	 * @return 克隆的包围体 / cloned bounding volume
 	 */
@@ -131,7 +119,6 @@ public abstract class BoundingVolume implements Collidable {
 	/**
 	 * 获取中心点引用。
 	 * Returns the center vector reference.
-	 *
 	 * @return 中心点 / center
 	 */
 	public final Vector3f getCenter() {
@@ -141,7 +128,6 @@ public abstract class BoundingVolume implements Collidable {
 	/**
 	 * 将中心点写入给定向量并返回。
 	 * Copies the center into the given store and returns it.
-	 *
 	 * @param store 目标向量 / destination vector
 	 * @return store
 	 */
@@ -153,7 +139,6 @@ public abstract class BoundingVolume implements Collidable {
 	/**
 	 * 设置中心点引用。
 	 * Sets the center vector reference.
-	 *
 	 * @param newCenter 新中心 / new center
 	 */
 	public final void setCenter(Vector3f newCenter) {
@@ -163,7 +148,6 @@ public abstract class BoundingVolume implements Collidable {
 	/**
 	 * 计算中心到给定点的距离。
 	 * Distance from the volume center to the given point.
-	 *
 	 * @param point 目标点 / target point
 	 * @return 距离 / distance
 	 */
@@ -174,7 +158,6 @@ public abstract class BoundingVolume implements Collidable {
 	/**
 	 * 计算中心到给定点的距离平方。
 	 * Squared distance from the volume center to the given point.
-	 *
 	 * @param point 目标点 / target point
 	 * @return 距离平方 / squared distance
 	 */
@@ -185,7 +168,6 @@ public abstract class BoundingVolume implements Collidable {
 	/**
 	 * 计算最近边到给定点的距离。
 	 * Distance from the nearest edge of this volume to the given point.
-	 *
 	 * @param point 目标点 / target point
 	 * @return 到边的距离 / distance to edge
 	 */
@@ -194,7 +176,6 @@ public abstract class BoundingVolume implements Collidable {
 	/**
 	 * 判断两包围体是否相交（包含、重叠或接触）。
 	 * Whether this volume and the other intersect (contain, overlap, or touch).
-	 *
 	 * @param bv 另一包围体 / other volume
 	 * @return 若相交则为 true / true if intersecting
 	 */
@@ -203,7 +184,6 @@ public abstract class BoundingVolume implements Collidable {
 	/**
 	 * 判断射线是否与本包围体相交。
 	 * Whether a ray intersects this bounding volume.
-	 *
 	 * @param ray 待测射线 / ray to test
 	 * @return 若相交则为 true / true if intersecting
 	 */
@@ -212,7 +192,6 @@ public abstract class BoundingVolume implements Collidable {
 	/**
 	 * 判断与给定包围球是否相交。
 	 * Whether this volume intersects the given sphere.
-	 *
 	 * @param bs 包围球 / bounding sphere
 	 * @return 若相交则为 true / true if intersecting
 	 */
@@ -221,22 +200,17 @@ public abstract class BoundingVolume implements Collidable {
 	/**
 	 * 判断与给定包围盒是否相交。
 	 * Whether this volume intersects the given axis-aligned box.
-	 *
 	 * @param bb 包围盒 / bounding box
 	 * @return 若相交则为 true / true if intersecting
 	 */
 	public abstract boolean intersectsBoundingBox(BoundingBox bb);
 
-	/**
-	 * 判断此包围体是否与给定包围盒相交。 / determines if this bounding volume and a given bounding box are intersecting.
-	 */
-	// public abstract boolean intersectsOrientedBoundingBox(OrientedBoundingBox
+    // public abstract boolean intersectsOrientedBoundingBox(OrientedBoundingBox
 	// bb);
 
 	/**
 	 * 判断点是否严格包含于包围体内。
 	 * Whether the given point is strictly contained inside this volume.
-	 *
 	 * @param point 待检测点 / point to check
 	 * @return 若包含则为 true / true if contained
 	 */
@@ -245,7 +219,6 @@ public abstract class BoundingVolume implements Collidable {
 	/**
 	 * 判断点是否与包围体相交（接触或在内部）。
 	 * Whether the given point intersects (touches or is inside) this volume.
-	 *
 	 * @param point 待检测点 / point to check
 	 * @return 若相交则为 true / true if intersecting
 	 */
@@ -254,7 +227,6 @@ public abstract class BoundingVolume implements Collidable {
 	/**
 	 * 返回包围体体积。
 	 * Returns the volume of this bounding volume.
-	 *
 	 * @return 体积 / volume
 	 */
 	public abstract float getVolume();
@@ -262,7 +234,6 @@ public abstract class BoundingVolume implements Collidable {
 	/**
 	 * 浅克隆，中心向量深拷贝。
 	 * Clones this volume with a deep-copied center vector.
-	 *
 	 * @return 克隆体 / clone
 	 */
 	@Override

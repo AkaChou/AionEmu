@@ -11,7 +11,6 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 /**
  * HP 条件：校验施法者当前生命是否高于阈值（可按技能等级与比例计算）。
  * HP condition: validates effector current HP is above a threshold (supports skill-level delta and ratio).
- *
  * @author Tomate
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -28,7 +27,6 @@ public class HpCondition extends Condition {
 	/**
 	 * 校验技能环境是否满足本条件。
 	 * Validates whether the skill environment satisfies this condition.
-	 *
 	 * @param skill 技能环境 / skill environment
 	 * @return 是否有效 / whether valid
 	 */
@@ -48,7 +46,6 @@ public class HpCondition extends Condition {
 	/**
 	 * 获取模板中配置的 HP 阈值基值。
 	 * Gets the base HP threshold configured in the template.
-	 *
 	 * @return HP 阈值基值 / HP base value
 	 */
 	public int getHpValue() {

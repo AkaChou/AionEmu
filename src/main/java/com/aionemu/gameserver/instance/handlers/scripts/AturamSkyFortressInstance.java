@@ -40,7 +40,6 @@ import java.util.concurrent.Future;
 /**
  * 阿图拉姆天空要塞副本事件处理器。
  * Instance event handler for Aturam Sky Fortress.
- *
  * @author Encom
  */
 
@@ -49,8 +48,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 {
 		/** energy generators / energy generators */
 		private int energyGenerators;
-		/** balaur spy crystal / balaur spy crystal */
-		/** drakan chief of staff / drakan chief of staff */
+	/** drakan chief of staff / drakan chief of staff */
 		private int drakanChiefOfStaff;
 		/** drakan petty officer / drakan petty officer */
 		private int drakanPettyOfficer;
@@ -66,7 +64,6 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -88,7 +85,6 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -103,7 +99,6 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 
@@ -218,7 +213,6 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -313,10 +307,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 				sendMsgByRace(1401048, Race.PC_ALL, 2000);
 			break;
 			case 218577: //Marabata Watchman.
-				/**
-	 * 阿图拉姆空中要塞指挥中心：击杀大量“指挥区龙人”后出现指挥官 / ■ At home in the Aturam Sky Fortress Command Center The Commander appears when many "Command Area Drakan" are killed
-	 */
-				despawnNpc(npc);
+                despawnNpc(npc);
 				spawn(217382, 258.3894f, 796.7554f, 901.6453f, (byte) 80); //Commander Barus.
 			break;
 			case 701029: //Energy Generator.
@@ -383,7 +374,6 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家通过飞行环时处理。
 	 * Handle a player passing a flying ring.
-	 *
 	 * @param player 玩家 / player
 	 * @param flyingRing 飞行环标识 / flying-ring id
 	 * @return 结果 / result
@@ -397,7 +387,6 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -413,7 +402,6 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -486,7 +474,6 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -498,7 +485,6 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -521,7 +507,6 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
-	 *
 	 * @param player 玩家 / player
 	 * @param npc NPC / npc
 	 */
@@ -582,7 +567,6 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 sp。
 	 * Handle sp.
-	 *
 	 * @param npcId NPC / NPC
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
@@ -597,7 +581,6 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
     /**
      * 处理 sp。
      * Handle sp.
-     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -614,7 +597,6 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
     /**
      * 处理 sp。
      * Handle sp.
-     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -646,7 +628,6 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
     /**
      * 处理 sp。
      * Handle sp.
-     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -676,7 +657,6 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
-	 *
 	 * @param msg 消息 / message
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
@@ -694,7 +674,6 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override

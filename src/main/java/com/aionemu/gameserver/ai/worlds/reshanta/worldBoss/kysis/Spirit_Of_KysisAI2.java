@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Reshanta 区域 NPC AI：Spirit Of Kysis（@AIName "spirit_of_kysis"），继承 AggressiveNpcAI2。
  * Reshanta zone NPC AI: Spirit Of Kysis (@AIName "spirit_of_kysis"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("spirit_of_kysis")

@@ -9,7 +9,6 @@ import lombok.Data;
 /**
  * 传送门 Loc 模板（静态数据/XML）。
  * XML template.
- *
  * @author xTz
  */
 @Data

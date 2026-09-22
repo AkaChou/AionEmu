@@ -8,7 +8,6 @@ import com.aionemu.gameserver.world.WorldPosition;
 /**
  * 活动事件 NPC AI：War Goods（@AIName "war_goods"），继承 AggressiveNpcAI2。
  * Event NPC AI: War Goods (@AIName "war_goods"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("war_goods")

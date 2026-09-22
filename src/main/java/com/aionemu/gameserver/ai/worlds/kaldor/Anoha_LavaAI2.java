@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Kaldor 区域 NPC AI：Anoha Lava（@AIName "anoha_lava"），继承 AggressiveNpcAI2。
  * Kaldor zone NPC AI: Anoha Lava (@AIName "anoha_lava"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("anoha_lava")

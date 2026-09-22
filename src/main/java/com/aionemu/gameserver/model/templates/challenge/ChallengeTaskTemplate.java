@@ -71,7 +71,6 @@ public class ChallengeTaskTemplate {
 	/**
 	 * 是否可重复完成。
 	 * Whether the task is repeatable.
-	 *
 	 * @return 可重复时为 {@code true} / {@code true} if repeatable
 	 */
 	public boolean isRepeatable() {
@@ -81,7 +80,6 @@ public class ChallengeTaskTemplate {
 	/**
 	 * 是否为城镇居住任务。
 	 * Whether the task is a town residence task.
-	 *
 	 * @return 是城镇居住任务时为 {@code true} / {@code true} if town residence
 	 */
 	public boolean isTownResidence() {

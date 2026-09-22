@@ -14,9 +14,7 @@ import java.sql.ResultSet;
 /**
  * 问卷控制器 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of SurveyControllerDAO.
- *
  * Updated for MySQL 8 - Fixed connection leaks.
- *
  * @author KID
  */
 @Slf4j
@@ -31,7 +29,6 @@ public class SurveyControllerDAO extends com.aionemu.gameserver.dao.SurveyContro
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
-	 *
 	 * @param database 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version
@@ -45,7 +42,6 @@ public class SurveyControllerDAO extends com.aionemu.gameserver.dao.SurveyContro
 	/**
 	 * 加载全部未使用的新问卷项。
 	 * Loads all unused new survey items.
-	 *
 	 * @return 问卷项列表 / survey item list
 	 */
 	@Override
@@ -78,7 +74,6 @@ public class SurveyControllerDAO extends com.aionemu.gameserver.dao.SurveyContro
 	/**
 	 * 将问卷标记为已使用。
 	 * Marks a survey item as used.
-	 *
 	 * @param id 唯一 ID / unique id
 	 * @return 是否更新成功 / whether the update succeeded
 	 */

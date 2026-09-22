@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Aturam Sky Fortress 副本 NPC AI：Activated Balaur Teleporter（@AIName "Activated_Balaur_Teleporter"），继承 NpcAI2。
  * Aturam Sky Fortress instance NPC AI: Activated Balaur Teleporter (@AIName "Activated_Balaur_Teleporter"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Activated_Balaur_Teleporter")

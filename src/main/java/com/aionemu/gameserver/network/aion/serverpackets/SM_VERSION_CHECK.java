@@ -16,9 +16,7 @@ import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 /**
  * 客户端版本校验应答服务端包（含建角限制、服务器模式、聊天服地址等）。
  * Server packet for client version-check response (char limits, server mode, chat server address, etc.).
- *
  * @author -Nemesiss- CC fix
- * @modified by Novo, cura
  * @author GiGatR00n, NewLives
  */
 @Slf4j

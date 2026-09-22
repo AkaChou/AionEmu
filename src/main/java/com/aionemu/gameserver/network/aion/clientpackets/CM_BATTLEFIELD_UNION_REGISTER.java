@@ -10,7 +10,6 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 /**
  * 战场联盟报名的客户端包（要塞攻城期间）。
  * Client packet to register for Battlefield Union during fortress sieges.
- *
  * @author wanke
  */
 public class CM_BATTLEFIELD_UNION_REGISTER extends AionClientPacket {

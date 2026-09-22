@@ -18,7 +18,6 @@ public final class LoginNetworkServices implements DisposableBean {
     /**
      * 注入并缓存传输层 {@link ObjectProvider}。
      * Inject and cache the transport {@link ObjectProvider}.
-     *
      * @param serverTransportProvider 传输层提供者 / transport provider
      */
     public LoginNetworkServices(ObjectProvider<ServerTransport> serverTransportProvider) {
@@ -28,7 +27,6 @@ public final class LoginNetworkServices implements DisposableBean {
     /**
      * 获取当前服务器传输；容器不可用时回退到 {@link NetConnector}。
      * Resolve current server transport; fall back to {@link NetConnector} outside the container.
-     *
      * @return 服务器传输 / server transport
      */
     public static ServerTransport serverTransport() {
@@ -51,7 +49,6 @@ public final class LoginNetworkServices implements DisposableBean {
     /**
      * 回退到当前 NetConnector 传输。
      * Fall back to the current NetConnector transport.
-     *
      * @return 服务器传输 / server transport
      */
     private static ServerTransport fallbackServerTransport() {
@@ -67,7 +64,6 @@ public final class LoginNetworkServices implements DisposableBean {
         /**
          * 读取 {@link NetConnector} 当前传输。
          * Read the current {@link NetConnector} transport.
-         *
          * @return 服务器传输 / server transport
          */
         private static ServerTransport currentTransport() {

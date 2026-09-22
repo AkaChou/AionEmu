@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 /**
  * Beshmundir Temple 副本 NPC AI：Monolithic Ambusher（@AIName "monolithicambusher"），继承 AggressiveNpcAI2。
  * Beshmundir Temple instance NPC AI: Monolithic Ambusher (@AIName "monolithicambusher"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("monolithicambusher")

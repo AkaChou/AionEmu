@@ -18,7 +18,6 @@ public class SM_NOTIFY_VIP_ICON extends AionServerPacket {
 	/**
 	 * 为目标玩家构造 VIP 图标通知包。
 	 * Creates a VIP icon notification packet for the given player.
-	 *
 	 * @param player 目标玩家 / target player
 	 */
 	public SM_NOTIFY_VIP_ICON(Player player) {

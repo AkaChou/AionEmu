@@ -23,7 +23,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Dragon Lord Refuge 副本 NPC AI：Wrathclaw（@AIName "wrathclaw"），继承 AggressiveNpcAI2。
  * Dragon Lord Refuge instance NPC AI: Wrathclaw (@AIName "wrathclaw"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("wrathclaw")

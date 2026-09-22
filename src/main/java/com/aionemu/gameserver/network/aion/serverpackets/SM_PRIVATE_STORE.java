@@ -14,7 +14,6 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
 /**
  * 向客户端同步玩家个人商店的出售物品列表。
  * Server packet synchronizing a player's private-store sell list to the client.
- *
  * @author Simple
  */
 public class SM_PRIVATE_STORE extends AionServerPacket {
@@ -28,7 +27,6 @@ public class SM_PRIVATE_STORE extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_PRIVATE_STORE 包。
 	 * Creates a SM_PRIVATE_STORE packet with the given parameters.
-	 *
 	 * @param store 个人商店 / private store
 	 * 玩家 / player
 	 */

@@ -25,7 +25,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 攻击护盾观察者：处理吸收、反射、保护与伤害转治疗等护盾逻辑。
  * Attack shield observer handling absorb, reflect, protect and convert-to-heal shield logic.
- *
  * @author ATracer modified by Sippolo, kecimis, Luzien
  */
 public class AttackShieldObserver extends AttackCalcObserver {
@@ -59,7 +58,6 @@ public class AttackShieldObserver extends AttackCalcObserver {
 	/**
 	 * 简化构造：百分比总伤、无半径/治疗/保护/MP。
 	 * Simplified constructor: percent total hit, no radius/heal/protect/MP.
-	 *
 	 * @param hit 单次数值 / per-hit value
 	 * @param totalHit 总量或反射百分比 / total amount or reflect percent
 	 * @param percent 是否百分比 / whether percent
@@ -76,7 +74,6 @@ public class AttackShieldObserver extends AttackCalcObserver {
 	/**
 	 * 带保护者承伤的构造。
 	 * Constructor with protector damage share.
-	 *
 	 * @param hit 单次数值 / per-hit value
 	 * @param effectorDamage 保护者承伤 / protector damage share
 	 * @param totalHit 总量或反射百分比 / total amount or reflect percent
@@ -94,7 +91,6 @@ public class AttackShieldObserver extends AttackCalcObserver {
 	/**
 	 * 带 MP 消耗的构造。
 	 * Constructor with MP cost.
-	 *
 	 * @param hit 单次数值 / per-hit value
 	 * @param totalHit 总量或反射百分比 / total amount or reflect percent
 	 * @param percent 是否百分比 / whether percent
@@ -112,7 +108,6 @@ public class AttackShieldObserver extends AttackCalcObserver {
 	/**
 	 * 完整构造。
 	 * Full constructor.
-	 *
 	 * @param hit 单次数值 / per-hit value
 	 * @param totalHit 总量或反射百分比 / total amount or reflect percent
 	 * @param hitPercent hit 是否百分比 / whether hit is percent
@@ -148,7 +143,6 @@ public class AttackShieldObserver extends AttackCalcObserver {
 	/**
 	 * 按护盾类型处理攻击列表中的伤害。
 	 * Process damages in the attack list according to shield type.
-	 *
 	 * @param attackList 攻击结果列表 / attack result list
 	 * @param attackerEffect 攻击方效果 / attacker effect
 	 * @param attacker 攻击者 / attacker
@@ -307,7 +301,6 @@ public class AttackShieldObserver extends AttackCalcObserver {
 	/**
 	 * 判断攻击效果是否为可穿透护盾的挑衅子效果技能。
 	 * Whether the attacker effect is a provoked sub-effect skill that punches through shields.
-	 *
 	 * @param effect 攻击方效果 / attacker effect
 	 * @return 是否可穿透 / whether punches through
 	 */

@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 /**
  * 抽象网络包。
  * Abstract network packet.
- *
  * @author ATracer
  */
 @Getter

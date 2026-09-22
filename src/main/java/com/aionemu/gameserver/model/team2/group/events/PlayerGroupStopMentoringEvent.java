@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 玩家停止指导事件（团队2）。
  * Player Group Stop Mentoring Event for team 2 logic.
- *
  * @author ATracer
  */
 public class PlayerGroupStopMentoringEvent extends PlayerStopMentoringEvent<PlayerGroup> {
@@ -18,7 +17,6 @@ public class PlayerGroupStopMentoringEvent extends PlayerStopMentoringEvent<Play
 	/**
 	 * 以队伍与玩家构造停止指导事件。
 	 * Constructs a stop-mentoring event with group and player.
-	 *
 	 * @param group 目标队伍 / target group
 	 * @param player 相关玩家 / related player
 	 */

@@ -6,7 +6,6 @@ import com.aionemu.loginserver.network.gameserver.GsServerPacket;
 /**
  * LS→GS：登录服控制指令执行结果响应。
  * LS→GS: login-server control command result response.
- *
  * @author Aionchs-Wylovech
  */
 public class SM_LS_CONTROL_RESPONSE extends GsServerPacket {
@@ -45,7 +44,6 @@ public class SM_LS_CONTROL_RESPONSE extends GsServerPacket {
     /**
      * 构造登录服控制结果响应包。
      * Constructs a login-server control result response packet.
-     *
      * @param type 控制类型 / control type
      * @param result 是否成功 / whether succeeded
      * @param playerName 玩家名 / player name

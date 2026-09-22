@@ -7,7 +7,6 @@ import java.lang.reflect.Field;
 /**
  * 类属性转换器
  * Class property transformer that handles conversion of string values to Class objects.
- *
  * 支持的输入格式:
  * Supported input format:
  * - 完整的类名 fully qualified class name
@@ -23,7 +22,6 @@ public class ClassTransformer implements PropertyTransformer<Class<?>> {
     /**
      * 将字符串值转换为 Class 对象
      * Transforms string value into Class object
-     *
      * @param value 要转换的字符串值（类的完整名称）/ String value to transform (fully qualified class name)
      * @param field 字段对象 / Field that will be transformed
      * @return 转换后的 Class 对象 / Transformed Class object

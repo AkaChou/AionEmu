@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 设置管理员对玩家/NPC 的敌对显示模式（{@code //enemy}）。
  * Admin command that sets admin enmity appearance toward players/NPCs ({@code //enemy}).
- *
  * @author Pan
  */
 public class Enemy extends AdminCommand {
@@ -25,7 +24,6 @@ public class Enemy extends AdminCommand {
 	/**
 	 * 切换对玩家、NPC 或全部的敌对显示，或取消。
 	 * Toggles enmity appearance toward players, NPCs, all, or cancels it.
-	 *
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -81,7 +79,6 @@ public class Enemy extends AdminCommand {
 	/**
 	 * 执行失败时的语法提示。
 	 * Syntax hint on failure.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

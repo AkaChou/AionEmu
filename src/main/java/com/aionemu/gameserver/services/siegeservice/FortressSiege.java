@@ -50,7 +50,6 @@ public class FortressSiege extends Siege<FortressLocation> {
 	/**
 	 * 为指定要塞据点创建攻城。
 	 * Creates a siege for the given fortress location.
-	 *
 	 * @param fortress 要塞据点 / fortress location
 	 */
 	public FortressSiege(FortressLocation fortress) {
@@ -489,7 +488,6 @@ public class FortressSiege extends Siege<FortressLocation> {
 	/**
 	 * 要塞攻城有时限，非无限模式。
 	 * Fortress sieges are timed, not endless.
-	 *
 	 * @return 始终为 false / always false
 	 */
 	@Override
@@ -499,7 +497,6 @@ public class FortressSiege extends Siege<FortressLocation> {
 	/**
 	 * 将玩家获得的欧比斯点数记入攻城统计。
 	 * Records abyss points earned by a player into siege counters.
-	 *
 	 * @param player 玩家 / player
 	 * @param abysPoints 欧比斯点数 / abyss points
 	 */
@@ -535,7 +532,6 @@ public class FortressSiege extends Siege<FortressLocation> {
 	/**
 	 * 判断玩家是否处于要塞相关攻城区。
 	 * Returns whether the player is inside a fortress-related siege zone.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否在攻城区 / whether inside a siege zone
 	 */
@@ -620,7 +616,6 @@ public class FortressSiege extends Siege<FortressLocation> {
 	/**
 	 * 按欧比斯点数排名向玩家发放勋章奖励。
 	 * Sends medal rewards to top players ranked by abyss points.
-	 *
 	 * @param winnerDamage 胜方种族计数器 / winner race counter
 	 */
 	protected void giveRewardsToPlayers(SiegeRaceCounter winnerDamage) {

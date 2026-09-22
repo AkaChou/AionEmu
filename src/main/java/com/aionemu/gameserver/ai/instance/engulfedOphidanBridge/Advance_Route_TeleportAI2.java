@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Engulfed Ophidan Bridge 副本 NPC AI：Advance Route Teleport（@AIName "advance_route_teleport"），继承 NpcAI2。
  * Engulfed Ophidan Bridge instance NPC AI: Advance Route Teleport (@AIName "advance_route_teleport"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("advance_route_teleport")

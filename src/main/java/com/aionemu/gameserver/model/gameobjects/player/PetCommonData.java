@@ -41,9 +41,6 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 	PetDopingBag dopingBag = null;
 	/** 设置 cancel feed / Sets the cancel feed */
 	private volatile boolean cancelFeed = false;
-	/**
-	 * @return 是否处于喂食时间 / Whether feeding time
-	 */
 	private boolean feedingTime = true;
 	/** 返回 curent time / Returns the curent time */
 	private long curentTime;
@@ -60,13 +57,7 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 	private final int expireTime;
 	/** 返回消失时间 / Returns the despawn time*/
 	private Timestamp despawnTime;
-	/**
-	 * @return 是否正在拾取 / Whether looting
-	 */
 	private boolean isLooting = false;
-	/**
-	 * @return 是否正在施放增益 / Whether buffing
-	 */
 	private boolean isBuffing = false;
 	/** 是否出售 / Whether selling */
 	private boolean isSelling = false;

@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Iluma 区域 NPC AI：Forest Of Life Brohum Changeling（@AIName "forest_of_life_brohum_changeling"），继承 AggressiveNpcAI2。
  * Iluma zone NPC AI: Forest Of Life Brohum Changeling (@AIName "forest_of_life_brohum_changeling"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("forest_of_life_brohum_changeling")

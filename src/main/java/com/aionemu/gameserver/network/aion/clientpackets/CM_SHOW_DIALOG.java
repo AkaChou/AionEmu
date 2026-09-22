@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 客户端请求打开 NPC 对话窗口包。
  * Client packet for requesting an NPC dialog window.
- *
  * @author alexa026, Avol modified by ATracer
  */
 public class CM_SHOW_DIALOG extends AionClientPacket {

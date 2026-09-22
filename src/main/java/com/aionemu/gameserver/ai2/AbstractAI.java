@@ -37,7 +37,6 @@ import lombok.Setter;
 /**
  * AI2 抽象基类：管理状态、事件分发、思考锁、场景与通用钩子。
  * Abstract AI2 base: manages state, event dispatch, think lock, scenario and common hooks.
- *
  * @author ATracer
  */
 @Getter
@@ -64,7 +63,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 物化 AI 死亡监听器列表：双检 + {@code synchronized (this)}，并发首次注册收敛到同一个列表。
 	 * Materialises the death-listener list with a double-checked {@code synchronized (this)}.
-	 *
 	 * @return 可写列表 / writable list
 	 */
 	private List<AiDeathListener> writableAiDeathListeners() {
@@ -99,14 +97,9 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 获取 AI 所有者生物（NpcAI2 以下可隐藏更具体类型）。
 	 * Returns the AI owner creature (more specific types are hidden below NpcAI2).
-	 *
-	 *
      * -- SETTER --
      *  绑定所有者生物。
      *  Binds the owner creature.
-     *
-     @return 所有者 / owner
-      * @param owner 所有者 / owner
 	 */
 	private Creature owner;
 	private AIState currentState;
@@ -115,36 +108,27 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 设置调试日志开关。
 	 * Sets the debug logging flag.
-	 *
-	 * @param logging 是否启用 / whether enable
+	 * 是否启用 / whether enable
 	 */
 	private boolean logging = false;
 	/**
 	 * 获取当前技能 ID。
 	 * Returns the current skill id.
-	 *
-	 * @return 技能 ID / skill id
 	 */
 	protected int skillId;
 	/**
 	 * 获取当前技能等级。
 	 * Returns the current skill level.
-	 *
-	 * @return 技能等级 / skill level
 	 */
 	protected int skillLevel;
 	/**
 	 * 获取事件日志（调试用）。
 	 * Returns the event log (for debugging).
-	 *
-	 * @return 事件日志 / event log
 	 */
 	private volatile AIEventLog eventLog;
 	/**
 	 * 获取当前 AI 场景。
 	 * Returns the current AI scenario.
-	 *
-	 * @return 场景 / scenario
 	 */
 	private AI2Scenario scenario;
 
@@ -169,7 +153,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 获取当前主状态。
 	 * Returns the current main state.
-	 *
 	 * @return 主状态 / main state
 	 */
 	@Override
@@ -180,7 +163,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 判断是否处于指定主状态。
 	 * Returns whether the AI is in the given main state.
-	 *
 	 * @param state 目标状态 / target state
 	 * @return 是否匹配 / whether matching
 	 */
@@ -191,7 +173,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 获取当前子状态。
 	 * Returns the current sub-state.
-	 *
 	 * @return 子状态 / sub-state
 	 */
 	@Override
@@ -202,7 +183,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 判断是否处于指定子状态。
 	 * Returns whether the AI is in the given sub-state.
-	 *
 	 * @param subState 目标子状态 / target sub-state
 	 * @return 是否匹配 / whether matching
 	 */
@@ -213,7 +193,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 获取 AI 名称（来自 {@link AIName}，否则 "noname"）。
 	 * Returns the AI name from {@link AIName}, or "noname".
-	 *
 	 * @return AI 名称 / AI name
 	 */
 	@Override
@@ -228,7 +207,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 判断当前状态是否允许处理该事件。
 	 * Returns whether the current state allows handling the given event.
-	 *
 	 * @param eventType 事件类型 / event type
 	 * @return 是否可处理 / whether handleable
 	 */
@@ -253,7 +231,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 判断是否处于非战斗状态（WALKING 或 IDLE）。
 	 * Returns whether the AI is in a non-fighting state (WALKING or IDLE).
-	 *
 	 * @return 是否非战斗 / whether non-fighting
 	 */
 	public boolean isNonFightingState() {
@@ -263,7 +240,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 若状态不同则切换主状态。
 	 * Changes the main state if it differs from the current one.
-	 *
 	 * @param newState 新状态 / new state
 	 * @return 是否发生切换 / whether the state changed
 	 */
@@ -294,7 +270,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 若子状态不同则切换子状态。
 	 * Changes the sub-state if it differs from the current one.
-	 *
 	 * @param newSubState 新子状态 / new sub-state
 	 * @return 是否发生切换 / whether the sub-state changed
 	 */
@@ -315,7 +290,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 接收通用事件并在允许时分发处理。
 	 * Receives a general event and dispatches it when allowed.
-	 *
 	 * @param event 事件类型 / event type
 	 */
 	@Override
@@ -331,7 +305,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 接收生物相关事件并在允许时分发处理。
 	 * Receives a creature event and dispatches it when allowed.
-	 *
 	 * @param event 事件类型 / event type
 	 * @param creature 相关生物 / related creature
 	 */
@@ -368,7 +341,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 接收自定义事件并分发处理。
 	 * Receives a custom event and dispatches it.
-	 *
 	 * @param eventId 事件 ID / event id
 	 * @param args 参数 / arguments
 	 */
@@ -383,7 +355,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 获取所有者对象 ID。
 	 * Returns the owner's object id.
-	 *
 	 * @return 对象 ID / object id
 	 */
 	public int getObjectId() {
@@ -393,7 +364,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 获取世界坐标。
 	 * Returns the world position.
-	 *
 	 * @return 世界坐标 / world position
 	 */
 	public WorldPosition getPosition() {
@@ -403,7 +373,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 获取当前目标。
 	 * Returns the current target.
-	 *
 	 * @return 目标对象 / target object
 	 */
 	public VisibleObject getTarget() {
@@ -413,7 +382,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 判断所有者是否已死亡。
 	 * Returns whether the owner is already dead.
-	 *
 	 * @return 是否已死亡 / whether already dead
 	 */
 	public boolean isAlreadyDead() {
@@ -423,7 +391,6 @@ public abstract class AbstractAI implements AI2 {
     /**
 	 * 尝试获取思考锁（非阻塞）。
 	 * Tries to acquire the think lock (non-blocking).
-	 *
 	 * @return 是否获取成功 / whether acquired
 	 */
 	public final boolean tryLockThink() {
@@ -441,7 +408,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 是否开启调试日志。
 	 * Returns whether debug logging is enabled.
-	 *
 	 * @return 是否记录日志 / whether logging
 	 */
 	@Override
@@ -549,7 +515,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 处理模式喊话。
 	 * Handles a pattern shout.
-	 *
 	 * @param event 喊话事件 / shout event
 	 * @param pattern 模式字符串 / pattern
 	 * @param skillNumber 技能编号 / skill number
@@ -560,7 +525,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 分发通用事件到具体处理器（带回调注解）。
 	 * Dispatches a general event to the concrete handler (with callback annotation).
-	 *
 	 * @param event 事件类型 / event type
 	 */
 	protected void handleGeneralEvent(AIEventType event) {
@@ -641,7 +605,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 在开启 EVENT_DEBUG 时记录事件。
 	 * Logs the event when EVENT_DEBUG is enabled.
-	 *
 	 * @param event 事件类型 / event type
 	 */
 	protected void logEvent(AIEventType event) {
@@ -660,7 +623,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 分发生物相关事件到具体处理器。
 	 * Dispatches a creature event to the concrete handler.
-	 *
 	 * @param event 事件类型 / event type
 	 * @param creature 相关生物 / related creature
 	 */
@@ -727,7 +689,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 投票式查询：先问实例，再处理通用问题。
 	 * Polls a question: instance first, then common questions.
-	 *
 	 * @param question 问题 / question
 	 * @return 是否肯定 / whether positive
 	 */
@@ -748,7 +709,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 向具体 AI 实例投票；无特有答案时返回 null。
 	 * Polls the concrete AI instance; returns null when no specific answer.
-	 *
 	 * @param question 问题 / question
 	 * @return 答案或 null / answer or null
 	 */
@@ -759,7 +719,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 询问问题，默认否定。
 	 * Asks a question; defaults to negative.
-	 *
 	 * @param question 问题 / question
 	 * @return 答案对象 / answer object
 	 */
@@ -771,7 +730,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 按当前状态判断是否已到达目的地。
 	 * Returns whether the destination is reached based on current state.
-	 *
 	 * @return 是否已到达 / whether reached
 	 */
 	protected boolean isDestinationReached() {
@@ -790,7 +748,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 昼夜切换时是否允许刷新（仅 DESPAWNED/CREATED）。
 	 * Returns whether spawn on daytime change is allowed (only DESPAWNED/CREATED).
-	 *
 	 * @return 是否允许 / whether allowed
 	 */
 	protected boolean isCanSpawnOnDaytimeChange() {
@@ -800,7 +757,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 是否允许喊话。
 	 * Returns whether shouting is allowed.
-	 *
 	 * @return 是否可喊话 / whether may shout
 	 */
 	public abstract boolean isMayShout();
@@ -808,7 +764,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 选择攻击意图。
 	 * Chooses the next attack intention.
-	 *
 	 * @return 攻击意图 / attack intention
 	 */
 	public abstract AttackIntention chooseAttackIntention();
@@ -816,7 +771,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 处理对话框选择，默认不处理。
 	 * Handles dialog select; not handled by default.
-	 *
 	 * @return 默认 false / always false
 	 */
 	@Override
@@ -827,7 +781,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 获取剩余时间，默认 0。
 	 * Returns remaining time; 0 by default.
-	 *
 	 * @return 剩余时间 / remaining time
 	 */
 	@Override
@@ -838,7 +791,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 在与所有者相同世界/实例中刷新对象。
 	 * Spawns an object in the same world/instance as the AI owner.
-	 *
 	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / x
 	 * @param y Y 坐标 / y
@@ -853,7 +805,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 在与所有者相同世界/实例中刷新带 entityId 的对象。
 	 * Spawns an object with entityId in the same world/instance as the AI owner.
-	 *
 	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / x
 	 * @param y Y 坐标 / y
@@ -869,7 +820,6 @@ public abstract class AbstractAI implements AI2 {
 	/**
 	 * 按完整参数刷新对象。
 	 * Spawns an object with full parameters.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / x

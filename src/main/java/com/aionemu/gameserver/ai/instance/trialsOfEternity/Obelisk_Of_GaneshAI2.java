@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 /**
  * Trials Of Eternity 副本 NPC AI：Obelisk Of Ganesh（@AIName "IDEternity_03_Def_Boss_Energy"），继承 NpcAI2。
  * Trials Of Eternity instance NPC AI: Obelisk Of Ganesh (@AIName "IDEternity_03_Def_Boss_Energy"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("IDEternity_03_Def_Boss_Energy")

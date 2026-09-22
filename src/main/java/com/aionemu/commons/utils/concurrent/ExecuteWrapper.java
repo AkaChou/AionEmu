@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 任务执行包装器：运行时统计与异常处理。
  * Task execution wrapper with runtime statistics and exception handling.
- *
  * @author NB4L1
  */
 @Slf4j
@@ -19,7 +18,6 @@ public class ExecuteWrapper implements Executor {
     /**
      * 执行任务（默认无超时警告阈值）。
      * Execute a task with default no-warning threshold.
-     *
      * @param runnable 待执行任务 / Task to execute
      */
     @Override
@@ -30,7 +28,6 @@ public class ExecuteWrapper implements Executor {
     /**
      * 执行任务并统计耗时；超过阈值时输出警告。
      * Execute a task with stats; warn when the threshold is exceeded.
-     *
      * @param runnable 待执行任务 / Task to execute
      * @param maximumRuntimeInMillisecWithoutWarning 警告阈值（毫秒） / Warning threshold in milliseconds
      */

@@ -5,7 +5,6 @@ import com.aionemu.commons.configuration.Property;
 /**
  * 游戏内商城相关配置。
  * In-game shop related configuration.
- *
  * @author xTz
  */
 public class InGameShopConfig {

@@ -12,7 +12,6 @@ import java.util.concurrent.Future;
 /**
  * Pvp Arenas 副本 NPC AI：Aether Vortex（@AIName "aether_vortex"），继承 AggressiveNpcAI2。
  * Pvp Arenas instance NPC AI: Aether Vortex (@AIName "aether_vortex"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("aether_vortex")

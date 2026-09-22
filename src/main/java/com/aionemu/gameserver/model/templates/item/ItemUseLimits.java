@@ -86,7 +86,6 @@ public class ItemUseLimits {
 	/**
 	 * 骑乘状态下是否可用。
 	 * Whether usable while riding.
-	 *
 	 * @return 是否可骑乘使用 / Whether ride usable
 	 */
 	public boolean isRideUsable() {

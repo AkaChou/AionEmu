@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 通知客户端热点传送相关操作（开始、确认、取消、冷却等）的服务端包。
  * Server packet that notifies the client of hotspot teleport actions (start, confirm, cancel, cooldown, etc.).
- *
  * @author Ranastic
  */
 public class SM_HOTSPOT_TELEPORT extends AionServerPacket {
@@ -19,7 +18,6 @@ public class SM_HOTSPOT_TELEPORT extends AionServerPacket {
 	/**
 	 * 构造仅含动作与玩家 ID 的热点传送包（动作 0/2）。
 	 * Creates a hotspot teleport packet with action and player id only (actions 0/2).
-	 *
 	 * @param action action type
 	 * @param playerObjId player object id
 	 */
@@ -31,7 +29,6 @@ public class SM_HOTSPOT_TELEPORT extends AionServerPacket {
 	/**
 	 * 构造含传送点 ID 的热点传送包（动作 1）。
 	 * Creates a hotspot teleport packet with teleport id (action 1).
-	 *
 	 * @param action action type
 	 * @param playerObjId player object id
 	 * @param teleportId teleport id
@@ -45,7 +42,6 @@ public class SM_HOTSPOT_TELEPORT extends AionServerPacket {
 	/**
 	 * 构造含冷却时间的热点传送包（动作 3）。
 	 * Creates a hotspot teleport packet with cooldown (action 3).
-	 *
 	 * @param player 玩家 / player
 	 * @param action action type
 	 * @param teleportId teleport id

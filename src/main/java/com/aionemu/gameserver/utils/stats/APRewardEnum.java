@@ -5,7 +5,6 @@ import java.util.NoSuchElementException;
 /**
  * 按欧比斯军衔给出 PvE AP 奖励百分比
  * PvE AP reward percentage by abyss rank
- *
  * @author Source
  */
 public enum APRewardEnum {
@@ -56,7 +55,6 @@ public enum APRewardEnum {
 	/**
 	 * 构造 AP 奖励条目
 	 * Construct an AP reward entry
-	 *
 	 * Rank id
 	 * @param rewardPercent 奖励百分比 / Reward percent
 	 */
@@ -68,7 +66,6 @@ public enum APRewardEnum {
 	/**
 	 * 获取该军衔的 AP 奖励百分比
 	 * Get AP reward percent for this rank
-	 *
 	 * @return 奖励百分比 / Reward percent
 	 */
 	public float rewardPercent() {
@@ -78,7 +75,6 @@ public enum APRewardEnum {
 	/**
 	 * 按军衔返回 AP 奖励百分比（越界取边界值）
 	 * Return AP reward percent by rank (clamped to bounds)
-	 *
 	 * @param playerRank 当前欧比斯军衔 / Current abyss rank
 	 * @return AP 奖励百分比 / AP reward percentage
 	 */

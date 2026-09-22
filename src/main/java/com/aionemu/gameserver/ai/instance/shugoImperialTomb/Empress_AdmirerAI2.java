@@ -14,7 +14,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Shugo Imperial Tomb 副本 NPC AI：Empress Admirer（@AIName "Empress_Admirer"），继承 NpcAI2。
  * Shugo Imperial Tomb instance NPC AI: Empress Admirer (@AIName "Empress_Admirer"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Empress_Admirer")

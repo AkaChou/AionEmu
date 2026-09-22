@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Empyrean Crucible 副本 NPC AI：Priest Elyos Preceptor（@AIName "priest_elyos_preceptor"），继承 AggressiveNpcAI2。
  * Empyrean Crucible instance NPC AI: Priest Elyos Preceptor (@AIName "priest_elyos_preceptor"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("priest_elyos_preceptor")

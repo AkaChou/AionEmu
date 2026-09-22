@@ -17,7 +17,6 @@ public class CloseAerialEffect extends EffectTemplate {
 	/**
 	 * 移除浮空相关效果。
 	 * Removes open-aerial related effects.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -29,7 +28,6 @@ public class CloseAerialEffect extends EffectTemplate {
 	/**
 	 * 仅在目标处于 OPENAERIAL 时计算成功。
 	 * Succeeds only if the target has the OPENAERIAL abnormal.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

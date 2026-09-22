@@ -15,7 +15,6 @@ import java.util.List;
 /**
  * Cygnea 区域 NPC AI：Palgus（@AIName "palgus"），继承 NpcAI2。
  * Cygnea zone NPC AI: Palgus (@AIName "palgus"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("palgus")

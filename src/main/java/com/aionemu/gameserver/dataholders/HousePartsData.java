@@ -20,7 +20,6 @@ import com.aionemu.gameserver.model.templates.housing.HousePart;
 /**
  * 房屋部件配置数据容器，按部件 ID 与标签索引房屋部件。
  * House part configuration data holder, indexed by part id and tags.
- *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -66,7 +65,6 @@ public class HousePartsData {
 	/**
 	 * 按部件 ID 获取房屋部件。
 	 * Returns the house part for the given part id.
-	 *
 	 * @param partId 部件 ID / part id
 	 * @return 房屋部件，不存在则为 null / house part, or null if absent
 	 */
@@ -77,7 +75,6 @@ public class HousePartsData {
 	/**
 	 * 按建筑的部件匹配标签获取可用部件列表。
 	 * Returns the parts matching the building's parts-match tag.
-	 *
 	 * @param building 房屋建筑 / building
 	 * @return 匹配部件列表，不存在则为 null / matching part list, or null if absent
 	 */
@@ -88,7 +85,6 @@ public class HousePartsData {
 	/**
 	 * 返回房屋部件数量。
 	 * Returns the number of house parts.
-	 *
 	 * @return 房屋部件数量 / Returns the number of house parts.
 	 */
 	public int size() {

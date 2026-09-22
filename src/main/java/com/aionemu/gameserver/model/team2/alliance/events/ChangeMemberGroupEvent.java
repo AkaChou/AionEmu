@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 /**
  * 成员分组变更事件。
  * Change Member Group Event.
- *
  * @author ATracer
  */
 @RequiredArgsConstructor

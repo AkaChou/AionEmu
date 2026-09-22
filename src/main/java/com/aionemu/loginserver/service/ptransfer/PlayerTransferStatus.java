@@ -3,7 +3,6 @@ package com.aionemu.loginserver.service.ptransfer;
 /**
  * 玩家跨服转移流程步骤状态。
  * Player cross-server transfer flow step statuses.
- *
  * @author KID
  */
 public enum PlayerTransferStatus {

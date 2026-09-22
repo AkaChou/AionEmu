@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Wishing Fountain 活动 NPC AI：Shimmering Spring（@AIName "shimmering_spring"），继承 NpcAI2。
  * Wishing Fountain event NPC AI: Shimmering Spring (@AIName "shimmering_spring"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("shimmering_spring")

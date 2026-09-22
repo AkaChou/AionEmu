@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Elementis Forest 副本 NPC AI：Jurdins Illusion（@AIName "jurdins_illusion"），继承 GeneralNpcAI2。
  * Elementis Forest instance NPC AI: Jurdins Illusion (@AIName "jurdins_illusion"), extends GeneralNpcAI2.
- *
  * @author xTz
  */
 @AIName("jurdins_illusion")

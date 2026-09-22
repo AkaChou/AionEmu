@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 扩展模板（静态数据/XML）。
  * Expand template (static data / XML).
- *
  * @author Simple
  */
 @Getter
@@ -17,14 +16,8 @@ import lombok.Getter;
 @XmlType(name = "Expand")
 public class Expand {
 
-	/**
-	 * @return 扩展等级 / The level
-	 */
 	@XmlAttribute(name = "level", required = true)
 	protected int level;
-	/**
-	 * @return 扩展价格（基纳） / The price
-	 */
 	@XmlAttribute(name = "price", required = true)
 	protected int price;
 }

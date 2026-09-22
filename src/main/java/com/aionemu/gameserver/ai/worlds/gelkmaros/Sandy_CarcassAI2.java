@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Gelkmaros 区域 NPC AI：Sandy Carcass（@AIName "sandycarcass"），继承 NpcAI2。
  * Gelkmaros zone NPC AI: Sandy Carcass (@AIName "sandycarcass"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("sandycarcass")

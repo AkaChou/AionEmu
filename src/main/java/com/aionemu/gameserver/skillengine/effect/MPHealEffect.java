@@ -10,7 +10,6 @@ import com.aionemu.gameserver.skillengine.model.HealType;
 /**
  * 魔法值持续恢复效果：周期回复目标 MP。
  * MP heal-over-time effect: periodically restores the target's magic points.
- *
  * @author kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)

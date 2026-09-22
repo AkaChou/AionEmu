@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端发送军团徽章元信息（含名称与数据大小）的服务端包。
  * Server packet that sends legion emblem metadata (including name and data size) to the client.
- *
  * @author Simple modified cura
  */
 @AllArgsConstructor

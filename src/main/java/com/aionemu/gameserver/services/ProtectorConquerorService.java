@@ -120,7 +120,6 @@ public class ProtectorConquerorService {
 	/**
 	 * 获取指定世界中的守护者玩家映射。
 	 * Returns the protector player map for the given world.
-	 *
 	 * 世界 ID / world id
 	 * player map
 	 */
@@ -131,7 +130,6 @@ public class ProtectorConquerorService {
 	/**
 	 * 获取指定世界中的征服者玩家映射。
 	 * Returns the conqueror player map for the given world.
-	 *
 	 * 世界 ID / world id
 	 * player map
 	 */
@@ -146,7 +144,6 @@ public class ProtectorConquerorService {
 	/**
 	 * 玩家登录时恢复守护者/征服者信息。
 	 * Restores protector/conqueror info when a player logs in.
-	 *
 	 * 玩家 / player
 	 */
 	public void onProtectorConquerorLogin(Player player) {
@@ -166,7 +163,6 @@ public class ProtectorConquerorService {
 	/**
 	 * 玩家登出时清理地图内状态。
 	 * Clears map-related state when a player logs out.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onLogout(Player player) {
@@ -179,7 +175,6 @@ public class ProtectorConquerorService {
 	/**
 	 * 进入受管地图时应用守护者/征服者状态与广播。
 	 * Applies protector/conqueror state and broadcasts on entering a handled map.
-	 *
 	 * 玩家 / player
 	 */
 	public void onEnterMap(final Player player) {
@@ -258,7 +253,6 @@ public class ProtectorConquerorService {
 	/**
 	 * 离开受管地图时移除状态并通知敌对阵营。
 	 * Removes state and notifies the enemy race when leaving a handled map.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onLeaveMap(Player player) {
@@ -304,7 +298,6 @@ public class ProtectorConquerorService {
 	/**
 	 * 向玩家同步当前世界的守护者/征服者图标。
 	 * Syncs protector/conqueror icons of the current world to the player.
-	 *
 	 * 玩家 / player
 	 */
 	public void updateIcons(Player player) {
@@ -320,7 +313,6 @@ public class ProtectorConquerorService {
 	/**
 	 * 根据击杀更新杀手的守护者/征服者等级。
 	 * Updates the killer's protector/conqueror rank based on the kill.
-	 *
 	 * killer
 	 * victim
 	 */
@@ -402,7 +394,6 @@ public class ProtectorConquerorService {
 	/**
 	 * 击杀守护者/征服者时对附近同阵营施加增益。
 	 * Applies a nearby same-race buff when a protector/conqueror is killed.
-	 *
 	 * killer
 	 * victim
 	 */
@@ -427,7 +418,6 @@ public class ProtectorConquerorService {
 	/**
 	 * 判断世界是否受守护者/征服者系统管理。
 	 * Checks whether the world is handled by this system.
-	 *
 	 * 世界 ID / world id
 	 * whether handled
 	 */
@@ -438,7 +428,6 @@ public class ProtectorConquerorService {
 	/**
 	 * 判断玩家是否处于敌对世界（征服者侧）。
 	 * Checks whether the player is in an enemy world (conqueror side).
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否敌对世界 / whether enemy world
 	 */
@@ -467,11 +456,9 @@ public class ProtectorConquerorService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -490,7 +477,6 @@ public class ProtectorConquerorService {
 	/**
 	 * 注入 Spring 的实例提供者。
 	 * Sets the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<ProtectorConquerorService> instanceProvider) {

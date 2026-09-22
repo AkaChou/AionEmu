@@ -34,7 +34,6 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * 征服/供奉（Conquest/Offering）世界活动服务：稀有怪与限时副本开启通知。
  * Service for Conquest/Offering world events: rare spawns and timed-instance open notices.
- *
  * @author Rinzler (Encom)
  */
 @Slf4j(topic = "com.aionemu.gameserver.services.ZorshivDredgionService")
@@ -96,7 +95,6 @@ public class ConquestService {
 	/**
 	 * 启动指定地点的征服/供奉活动，并在持续时长结束后自动停止。
 	 * Start the conquest/offering at the given location and auto-stop after the configured duration.
-	 *
 	 * @param id 活动地点 ID / conquest location id
 	 */
 	public void startConquest(final int id) {
@@ -111,7 +109,6 @@ public class ConquestService {
 	/**
 	 * 停止指定地点的征服/供奉活动。
 	 * Stop the conquest/offering at the given location.
-	 *
 	 * @param id 活动地点 ID / conquest location id
 	 */
 	public void stopConquest(int id) {
@@ -125,7 +122,6 @@ public class ConquestService {
 	/**
 	 * 按状态刷出征服活动相关 NPC。
 	 * Spawn conquest-event NPCs for the given location and state.
-	 *
 	 * @param loc 活动地点 / conquest location
 	 *            spawn state
 	 */
@@ -144,7 +140,6 @@ public class ConquestService {
 	/**
 	 * 清除指定地点已刷出的征服活动 NPC。
 	 * Despawn conquest-event NPCs at the given location.
-	 *
 	 * @param loc 活动地点 / conquest location
 	 */
 	public void despawn(ConquestLocation loc) {
@@ -165,7 +160,6 @@ public class ConquestService {
 	/**
 	 * 判断指定地点是否正在进行征服/供奉。
 	 * Whether a conquest/offering is in progress at the given location.
-	 *
 	 * @param id 活动地点 ID / conquest location id
 	 *           若 in progress 则为 true / true if in progress
 	 */
@@ -176,7 +170,6 @@ public class ConquestService {
 	/**
 	 * 返回当前活跃的征服/供奉映射。
 	 * Return the map of currently active conquest/offering events.
-	 *
 	 * @return 地点 ID → 活动实例 / location id to event instance
 	 */
 	public Map<Integer, ConquestOffering<?>> getActiveConquest() {
@@ -186,7 +179,6 @@ public class ConquestService {
 	/**
 	 * 返回征服/供奉持续时长（小时，来自配置）。
 	 * Return conquest/offering duration in hours (from config).
-	 *
 	 * @return 持续小时数 / duration hours
 	 */
 	public int getDuration() {
@@ -196,7 +188,6 @@ public class ConquestService {
 	/**
 	 * 按 ID 获取征服活动地点。
 	 * Get a conquest location by id.
-	 *
 	 * @param id 活动地点 ID / conquest location id
 	 *           conquest location
 	 */

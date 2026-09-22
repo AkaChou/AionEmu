@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 同步阿特雷亚护照（月签到）状态的服务端包。
  * Server packet synchronizing Atreian Passport (monthly stamp) status to the client.
- *
  * @author Rinzler (Encom)
  */
 public class SM_ATREIAN_PASSPORT extends AionServerPacket {

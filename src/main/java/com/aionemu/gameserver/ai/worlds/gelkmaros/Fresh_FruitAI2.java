@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Gelkmaros 区域 NPC AI：Fresh Fruit（@AIName "freshfruit"），继承 NpcAI2。
  * Gelkmaros zone NPC AI: Fresh Fruit (@AIName "freshfruit"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("freshfruit")

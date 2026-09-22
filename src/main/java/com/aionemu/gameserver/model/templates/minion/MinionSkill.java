@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 守护灵技能模板（静态数据/XML）。
  * Minion skill template (static data/XML).
- *
  * @author Falke_34
  */
 @Getter

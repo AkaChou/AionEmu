@@ -19,7 +19,6 @@ public class ChainSkills {
 	/**
 	 * 获取指定类别的当前连击计数（冷却过期时清零）。
 	 * Gets current chain count for a category (resets when cooldown expired).
-	 *
 	 * @param player 玩家 / player
 	 * @param template 技能模板 / skill template
 	 * @param category 连锁类别 / chain category
@@ -42,7 +41,6 @@ public class ChainSkills {
 	/**
 	 * 获取指定类别最近连击使用时间。
 	 * Gets last chain use time for a category.
-	 *
 	 * @param category 连锁类别 / chain category
 	 * @return 毫秒时间戳，无则 0 / epoch millis, or 0 if none
 	 */
@@ -59,7 +57,6 @@ public class ChainSkills {
 	/**
 	 * 判断类别在给定时间窗内是否仍处于连击有效期。
 	 * Whether the category is still within the chain time window.
-	 *
 	 * @param category 连锁类别 / chain category
 	 * @param time 有效窗口（毫秒） / window millis
 	 * @return 是否有效 / whether enabled
@@ -77,7 +74,6 @@ public class ChainSkills {
 	/**
 	 * 记录/推进一次连锁使用。
 	 * Records or advances one chain use.
-	 *
 	 * @param category 连锁类别 / chain category
 	 * @param multiCast 是否多次连击 / whether multi-cast chain
 	 */
@@ -100,7 +96,6 @@ public class ChainSkills {
 	/**
 	 * 获取全部连锁状态（含单次与多次）。
 	 * Gets all chain states (single and multi).
-	 *
 	 * @return 连锁技能集合 / chain skill collection
 	 */
 	public Collection<ChainSkill> getChainSkills() {

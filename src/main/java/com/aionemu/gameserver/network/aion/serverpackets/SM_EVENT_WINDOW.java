@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 活动窗口开关包：同步活动窗口是否激活及活跃活动数量。
  * Event-window toggle packet: active flag and active event count.
- *
  * @author Falke_34
  */
 @AllArgsConstructor

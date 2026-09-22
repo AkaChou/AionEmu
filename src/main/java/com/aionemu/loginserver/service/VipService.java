@@ -27,7 +27,6 @@ public final class VipService {
     /**
      * 按账号 ID 查询 VIP 记录。
      * Finds the VIP record by account id.
-     *
      * @param accountId 账号 ID / account id
      * @return VIP 记录，无则 null / VIP record or null
      */
@@ -41,7 +40,6 @@ public final class VipService {
     /**
      * 配置启用时，为缺失的账号批量补齐 VIP 记录。
      * When enabled in config, syncs VIP records for missing accounts.
-     *
      * @return 补齐的账号数 / number of synchronized accounts
      */
     public int syncMissingAccounts() {
@@ -57,7 +55,6 @@ public final class VipService {
     /**
      * 配置启用时，为指定账号插入默认等级 VIP 记录（已存在则不操作）。
      * When enabled in config, inserts a default-level VIP record for the account (no-op if present).
-     *
      * @param accountId 账号 ID / account id
      * @return 是否插入成功 / whether the insert succeeded
      */

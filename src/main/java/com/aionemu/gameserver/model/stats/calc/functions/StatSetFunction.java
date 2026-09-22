@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 /**
  * 属性 Set 函数模型。
  * Stat Set Function model.
- *
  * @author ATracer
  */
 @NoArgsConstructor

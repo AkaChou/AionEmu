@@ -9,7 +9,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 经验加成效果：标记运行中效果启用 XP 提升。
  * XP boost effect: marks the runtime effect to enable XP gain increase.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)

@@ -31,7 +31,6 @@ import java.util.concurrent.Future;
 /**
  * 封印达努亚尔秘术馆副本事件处理器。
  * Instance event handler for Sealed Danuar Mysticarium.
- *
  * @author Encom
  */
 
@@ -82,7 +81,6 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -93,7 +91,6 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 
@@ -148,7 +145,6 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -163,7 +159,6 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -272,7 +267,6 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
-	 *
 	 * @param player 玩家 / player
 	 * @param npc NPC / npc
 	 */
@@ -280,9 +274,6 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
 			case 219979: //Ancient Danuar Relic.
-				/**
-				 * Start Mini Game 3
-				 */
 				// 在增援到达前，保护古代达努阿尔神器免受贝里特拉部队攻击。 / Protect the ancient Danuar artifacts from Beritra's troops until reinforcements arrive.
 				sendMsgByRace(1402821, Race.PC_ALL, 0);
 				// 怪物即将进攻。 / Monsters will attack in a moment.
@@ -551,16 +542,12 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
-	 *
 	 * @param player 玩家 / player
 	 * @param zone 区域 / zone
 	 */
 	@Override
     public void onEnterZone(Player player, ZoneInstance zone) {
-	    /**
-	     * Start Mini Game 1
-	     */
-	    if (zone.getAreaTemplate().getZoneName() == ZoneName.get("DANUAR_MYSTICARIUM_300480000")) {
+		if (zone.getAreaTemplate().getZoneName() == ZoneName.get("DANUAR_MYSTICARIUM_300480000")) {
 		    if (!isStartTimer1) {
 			    isStartTimer1 = true;
 			    System.currentTimeMillis();
@@ -568,7 +555,6 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -609,11 +595,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
             AncientBox2.add((Npc) spawn(702702, 201.48772f, 207.74902f, 238.82117f, (byte) 78));
             AncientBox2.add((Npc) spawn(702702, 217.0f, 160.0f, 213.896f, (byte) 78));
             AncientBox2.add((Npc) spawn(702702, 255.0f, 213.0f, 188.69994f, (byte) 69));
-		}
-		/**
-		 * Start Mini Game 2
-		 */
-		else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("TEST_SUBJECT_PRISON_300480000")) {
+		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("TEST_SUBJECT_PRISON_300480000")) {
 		    if (!isStartTimer2) {
 			    isStartTimer2 = true;
 			    System.currentTimeMillis();
@@ -621,7 +603,6 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -833,7 +814,6 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -845,7 +825,6 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
-	 *
 	 * @param msg 消息 / message
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
@@ -863,7 +842,6 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override

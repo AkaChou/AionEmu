@@ -9,7 +9,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * 职业技能召唤物/陷阱 AI：Sleep Trap（@AIName "sleep_trap"），继承 AggressiveNpcAI2。
  * Class-skill summon/trap AI: Sleep Trap (@AIName "sleep_trap"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("sleep_trap")

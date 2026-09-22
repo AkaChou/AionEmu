@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.loginserver.LsServerPacket;
 /**
  * 游戏服向登录服下发 MAC 封禁控制指令的服务端包。
  * Server packet that sends MAC-ban control commands to the login server.
- *
  * @author KID
  */
 public class SM_MACBAN_CONTROL extends LsServerPacket {
@@ -19,7 +18,6 @@ public class SM_MACBAN_CONTROL extends LsServerPacket {
 	/**
 	 * 构造 MAC 封禁控制包。
 	 * Constructs a MAC-ban control packet.
-	 *
 	 * @param type 控制类型 / control type
 	 * @param address MAC 地址 / MAC address
 	 * @param time 时间戳/时长 / timestamp or duration

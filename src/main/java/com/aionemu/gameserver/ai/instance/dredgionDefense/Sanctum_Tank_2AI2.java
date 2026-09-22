@@ -20,7 +20,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Dredgion Defense 副本 NPC AI：Sanctum Tank 2（@AIName "Sanctum_Tank_2"），继承 GeneralNpcAI2。
  * Dredgion Defense instance NPC AI: Sanctum Tank 2 (@AIName "Sanctum_Tank_2"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("Sanctum_Tank_2")

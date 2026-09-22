@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 首要目标距离属性：校验施法者与首要目标的攻击距离与视线。
  * First-target range property: validates attack range and line-of-sight to the first target.
- *
  * @author ATracer
  */
 public class FirstTargetRangeProperty {
@@ -21,7 +20,6 @@ public class FirstTargetRangeProperty {
 	/**
 	 * 校验首要目标是否在允许距离与视线内。
 	 * Validates that the first target is within allowed range and line of sight.
-	 *
 	 * @param skill 技能上下文 / skill context
 	 * @param properties 目标筛选属性 / target filter properties
 	 * @param castState 施法阶段（开始 / 结束，结束阶段可加修订距离） / cast phase (start/end; end may add revision distance)

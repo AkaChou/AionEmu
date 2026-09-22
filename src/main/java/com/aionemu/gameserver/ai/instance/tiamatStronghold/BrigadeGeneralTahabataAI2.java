@@ -17,7 +17,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Tiamat Stronghold 副本 NPC AI：Brigade General Tahabata（@AIName "brigade_general_tahabata"），继承 AggressiveNpcAI2。
  * Tiamat Stronghold instance NPC AI: Brigade General Tahabata (@AIName "brigade_general_tahabata"), extends AggressiveNpcAI2.
- *
  * @author Ranastic (Encom)
  */
 @AIName("brigade_general_tahabata")

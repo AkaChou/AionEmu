@@ -7,7 +7,6 @@ import lombok.Getter;
 /**
  * 烙印类型：无、基础、进阶。
  * Stigma type: none, basic or advanced.
- *
  * @author Cheatkiller
  */
 @Getter
@@ -25,7 +24,6 @@ public enum StigmaType {
 	/**
 	 * 获取协议 ID。
 	 * Gets protocol id.
-	 *
 	 */
 	private final int id;
 

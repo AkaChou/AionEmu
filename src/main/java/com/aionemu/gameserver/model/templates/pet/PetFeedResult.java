@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 宠物喂食结果模板（静态数据/XML）。
  * Pet feed result template (static data / XML).
- *
  * @author Rolandas
  */
 @Getter

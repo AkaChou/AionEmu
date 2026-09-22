@@ -9,7 +9,6 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 /**
  * 玩家 PvP 判定规则域。
  * Player PvP-rule domain.
- *
  * <p>该类型只服务 {@link Player}：负责世界 PvP 开关、PvP 禁区与同族 PvP 区域判定。
  * 公开关系入口仍保留在 {@link Player}，此处为无状态静态策略。
  * This type only serves {@link Player}: it owns world PvP flags, PvP-disabled zones and same-race
@@ -24,7 +23,6 @@ final class PlayerPvpRules {
 	/**
 	 * 判断两个玩家是否满足 PvP 规则。
 	 * Decides whether two players satisfy the PvP rules.
-	 *
 	 * @param player 当前玩家 / current player
 	 * @param enemy 目标玩家 / target player
 	 * @return 满足 PvP 规则时为 true / true when PvP rules allow it

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.world.*;
 /**
  * ID Event Def 副本 NPC AI：IDEVENT Def Mob（@AIName "IDEVENT_Def_Mob"），继承 AggressiveNpcAI2。
  * ID Event Def instance NPC AI: IDEVENT Def Mob (@AIName "IDEVENT_Def_Mob"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("IDEVENT_Def_Mob")

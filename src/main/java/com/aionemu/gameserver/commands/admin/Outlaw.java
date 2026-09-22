@@ -13,7 +13,6 @@ import java.util.Iterator;
 /**
  * 切换目标或当前地图玩家 PK/中立（Outlaw）模式的管理员命令。
  * Admin command to toggle PK or neutral (Outlaw) mode for a target or all players on the map.
- *
  */
 @Slf4j(topic = "GM_MONITOR_LOG")
 public class Outlaw extends AdminCommand {
@@ -29,7 +28,6 @@ public class Outlaw extends AdminCommand {
     /**
      * 按 attackable/neutral/clear 子命令切换目标或全图玩家的 Outlaw 状态。
      * Toggle Outlaw state for the target or all map players via attackable/neutral/clear.
-     *
      * @param param 子命令与范围 / Subcommand and scope
      */
     public void execute(final Player admin, String...param){
@@ -164,7 +162,6 @@ public class Outlaw extends AdminCommand {
     /**
      * 显示 Outlaw 命令语法帮助。
      * Show Outlaw command syntax help.
-     *
      * @param admin 执行 GM / Admin player
      * @param msg 失败消息 / Failure message
      */
@@ -183,7 +180,6 @@ public class Outlaw extends AdminCommand {
     /**
      * 通过原地传送刷新玩家客户端状态。
      * Refresh the player's client state via an in-place teleport.
-     *
      */
     public void refresh(Player player){
         TeleportService2.teleportTo(player, player.getWorldId(), player.getInstanceId(), player.getX(),player.getY(),player.getZ());

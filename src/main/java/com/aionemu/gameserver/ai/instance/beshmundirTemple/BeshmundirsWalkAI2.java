@@ -21,7 +21,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Beshmundir Temple 副本 NPC AI：Beshmundirs Walk（@AIName "beshmundirswalk"），继承 ActionItemNpcAI2。
  * Beshmundir Temple instance NPC AI: Beshmundirs Walk (@AIName "beshmundirswalk"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("beshmundirswalk")

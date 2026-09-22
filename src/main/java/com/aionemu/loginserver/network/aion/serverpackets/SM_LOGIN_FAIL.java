@@ -7,7 +7,6 @@ import com.aionemu.loginserver.network.aion.LoginConnection;
 /**
  * 登录服→客户端：登录失败响应（携带原因码）。
  * LoginServer → client: login failure response with reason code.
- *
  * @author KID
  */
 public class SM_LOGIN_FAIL extends AionServerPacket {
@@ -21,7 +20,6 @@ public class SM_LOGIN_FAIL extends AionServerPacket {
     /**
      * 构造 SM_LOGIN_FAIL 包。
      * Constructs a new SM_LOGIN_FAIL packet.
-     *
      * @param response 认证响应 / auth response
      */
     public SM_LOGIN_FAIL(AionAuthResponse response) {

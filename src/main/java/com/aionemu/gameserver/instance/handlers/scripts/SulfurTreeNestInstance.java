@@ -19,7 +19,6 @@ import java.util.concurrent.Future;
 /**
  * 硫磺树巢副本事件处理器。
  * Instance event handler for Sulfur Tree Nest.
- *
  * @author Encom
  */
 
@@ -36,7 +35,6 @@ public class SulfurTreeNestInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -48,7 +46,6 @@ public class SulfurTreeNestInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家通过飞行环时处理。
 	 * Handle a player passing a flying ring.
-	 *
 	 * @param player 玩家 / player
 	 * @param flyingRing 飞行环标识 / flying-ring id
 	 * @return 结果 / result
@@ -63,7 +60,6 @@ public class SulfurTreeNestInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -86,7 +82,6 @@ public class SulfurTreeNestInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -103,7 +98,6 @@ public class SulfurTreeNestInstance extends GeneralInstanceHandler
 								/**
 								 * 处理 visit。
 								 * Handle visit.
-								 *
 								 * @param player 玩家 / player
 								 */
 								@Override
@@ -138,7 +132,6 @@ public class SulfurTreeNestInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
-	 *
 	 * @param player 玩家 / player
 	 */
 

@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * LS→GS：请求游戏服踢下线指定账号。
  * LS→GS: request the game server to kick the given account.
- *
  * @author -Nemesiss-
  */
 @AllArgsConstructor

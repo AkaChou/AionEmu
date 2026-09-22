@@ -10,7 +10,6 @@ import com.aionemu.loginserver.service.LoginProtectionServices;
 /**
  * LS→GS：同步当前 MAC 封禁列表。
  * LS→GS: synchronize the current MAC ban list.
- *
  * @author KID
  */
 public class SM_MACBAN_LIST extends GsServerPacket {

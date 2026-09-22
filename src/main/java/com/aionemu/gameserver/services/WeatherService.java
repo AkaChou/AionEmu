@@ -39,11 +39,9 @@ public class WeatherService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -62,7 +60,6 @@ public class WeatherService {
 	/**
 	 * 注入 Spring ObjectProvider。
 	 * Injects the Spring ObjectProvider.
-	 *
 	 * provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<WeatherService> instanceProvider) {
@@ -135,7 +132,6 @@ public class WeatherService {
 	/**
 	 * 为指定地图键计算并写入下一轮区域天气。
 	 * Computes and stores the next weather entries for the given map key.
-	 *
 	 * weather key
 	 */
 	private synchronized void setNextWeather(WeatherKey key) {
@@ -161,7 +157,6 @@ public class WeatherService {
 	 * 按属性等级与时段修正随机选取天气条目；前兆（before）与残留（after）档不作为独立天气参与抽取。
 	 * Randomly picks a weather entry by attribute ranking with daytime correction; sign (before) and remain
 	 * (after) entries never roll as standalone weather.
-	 *
 	 * @param createdTime 天气创建时间，用于时段修正 / creation time used for the daytime correction
 	 * @param table 该地图的天气表 / weather table of the map
 	 * @param zoneId 天气区序号 / weather-zone ordinal
@@ -219,7 +214,6 @@ public class WeatherService {
 	/**
 	 * 生成某个天气区的放晴条目，并保留正确的天气区序号。
 	 * Creates a clear-weather entry for the given zone, keeping the correct weather-zone ordinal.
-	 *
 	 * @param zoneId 天气区序号 / weather-zone ordinal
 	 * @return 放晴条目（code=0） / clear-weather entry (code=0)
 	 */
@@ -230,7 +224,6 @@ public class WeatherService {
 	/**
 	 * 为玩家加载当前地图天气。
 	 * Loads current map weather for the given player.
-	 *
 	 * target player
 	 */
 	public void loadWeather(Player player) {
@@ -240,7 +233,6 @@ public class WeatherService {
 	/**
 	 * 按地图 ID 查找天气键。
 	 * Finds the weather key by map id.
-	 *
 	 * map id
 	 * weather key or null
 	 */
@@ -256,10 +248,7 @@ public class WeatherService {
 	/**
 	 * 获取指定地图的区域天气数组。
 	 * Returns the per-zone weather array for the map.
-	 *
 	 * map id
-	 *
-	 * @param mapId
 	 * @return 天气条目数组 / weather entry array
 	 */
 	private WeatherEntry[] getWeatherEntries(int mapId) {
@@ -273,7 +262,6 @@ public class WeatherService {
 	/**
 	 * 强制将指定地图所有区域天气改为给定代码。
 	 * Forces all weather zones of the map to the given weather code.
-	 *
 	 * map id
 	 * weather code
 	 */
@@ -312,7 +300,6 @@ public class WeatherService {
 	/**
 	 * 查询地图指定天气区域的天气代码。
 	 * Returns the weather code for a map weather zone.
-	 *
 	 * map id
 	 * weather zone id
 	 * weather code
@@ -333,7 +320,6 @@ public class WeatherService {
 	/**
 	 * 返回指定地图当前天气条目的只读快照，供管理命令排查展示。
 	 * Returns a read-only snapshot of the given map's current weather entries for admin diagnostics.
-	 *
 	 * @param mapId 地图 ID / map id
 	 * @return 天气条目快照；该地图没有天气表时为空数组 / weather-entry snapshot; empty when the map has no weather table
 	 */
@@ -345,7 +331,6 @@ public class WeatherService {
 	/**
 	 * 天气变更后向玩家发送 SM_WEATHER，并通知攻城服务。
 	 * After weather change, sends SM_WEATHER to players and notifies the siege service.
-	 *
 	 * map id
 	 * @param player 单播目标；null 表示广播该地图所有在线玩家 / unicast target; null broadcasts to all online players on the map
 	 */

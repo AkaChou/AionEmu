@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Pumpkin King Haunt 活动 NPC AI：Buff Coffin（@AIName "Buff_Coffin"），继承 GeneralNpcAI2。
  * Pumpkin King Haunt event NPC AI: Buff Coffin (@AIName "Buff_Coffin"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("Buff_Coffin")

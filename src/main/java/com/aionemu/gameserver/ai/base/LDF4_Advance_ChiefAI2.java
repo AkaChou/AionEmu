@@ -17,7 +17,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * 据点/基地相关 NPC AI：LDF4 Advance Chief（@AIName "ldf4_advance_chief"），继承 AggressiveNpcAI2。
  * Base-related NPC AI: LDF4 Advance Chief (@AIName "ldf4_advance_chief"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("ldf4_advance_chief")

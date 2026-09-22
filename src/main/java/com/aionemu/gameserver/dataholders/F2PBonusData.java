@@ -17,7 +17,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * F2P 加成配置数据容器，按 buffId 索引 F2P 加成属性模板。
  * F2P bonus configuration data holder, indexed by buff id.
- *
  * Created by wanke on 12/02/2017.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -46,7 +45,6 @@ public class F2PBonusData {
 	/**
 	 * 返回 F2P 加成模板数量。
 	 * Returns the number of F2P bonus templates.
-	 *
 	 * @return F2P 加成模板数量 / Returns the number of F2P bonus templates.
 	 */
 	public int size() {
@@ -56,7 +54,6 @@ public class F2PBonusData {
 	/**
 	 * 按 buffId 获取 F2P 加成属性模板。
 	 * Returns the F2P bonus attribute template for the given buff id.
-	 *
 	 * @param buffId 加成增益 ID / bonus buff id
 	 * @return 加成属性模板，不存在则为 null / bonus attribute template, or null if absent
 	 */

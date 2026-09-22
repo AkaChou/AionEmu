@@ -12,7 +12,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Tiamaranta eye 区域 NPC AI：Limb Render（@AIName "Limb_Render"），继承 NpcAI2。
  * Tiamaranta eye zone NPC AI: Limb Render (@AIName "Limb_Render"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Limb_Render")

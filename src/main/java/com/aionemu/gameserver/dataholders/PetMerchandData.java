@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 /**
  * 宠物商人数据容器，按 ID 索引 PetMerchandEntry。
  * Pet merchant data holder, indexing PetMerchandEntry by id.
- *
  * @author Rinzler
  */
 @XmlRootElement(name = "merchands")
@@ -51,7 +50,6 @@ public class PetMerchandData {
 	/**
 	 * 返回已加载的商人条目数量。
 	 * Returns the number of loaded merchant entries.
-	 *
 	 * @return 已加载的商人条目数量 / Returns the number of loaded merchant entries.
 	 */
 	public int size() {
@@ -61,7 +59,6 @@ public class PetMerchandData {
 	/**
 	 * 按 ID 获取宠物商人模板。
 	 * Returns the pet merchant template for the given id.
-	 *
 	 * @param id 商人 ID / merchant id
 	 * @return 商人条目，不存在则为 null / merchant entry or null
 	 */

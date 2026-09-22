@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 向客户端同步玩家采集状态的服务端包。
  * Server packet that synchronizes a player's gathering status to the client.
- *
  * @author orz
  * @author Antraxx
  */

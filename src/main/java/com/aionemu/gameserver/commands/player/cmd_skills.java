@@ -8,7 +8,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：补全当前等级缺失的技能。
  * Player command: learns any missing skills for the current level.
- *
  * @author ATracer
  */
 public class cmd_skills extends PlayerCommand {
@@ -24,7 +23,6 @@ public class cmd_skills extends PlayerCommand {
 	/**
 	 * 调用技能学习服务补全缺失技能。
 	 * Invokes the skill-learn service to add missing skills.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 未使用的参数 / unused parameters
 	 */
@@ -36,7 +34,6 @@ public class cmd_skills extends PlayerCommand {
 	/**
 	 * 参数错误时提示用法。
 	 * Shows usage when arguments are invalid.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param message 失败提示消息 / failure message
 	 */

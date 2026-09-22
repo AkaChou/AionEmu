@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 管理员基纳发放命令：向自身、指定或目标玩家添加基纳（道具 182400001）。
  * Admin kinah grant command: add kinah to self, a named player or target (item 182400001).
- *
  * @author Sarynth Simple admin assistance command for adding kinah to self, named player or target player. Based on //add command. Kinah Item Id - 182400001 (Using ItemId.KINAH.value())
  */
 public class Kinah extends AdminCommand {
@@ -22,7 +21,6 @@ public class Kinah extends AdminCommand {
 	/**
 	 * 向自身或指定玩家发放指定数量基纳。
 	 * Grant the given amount of kinah to self or a named player.
-	 *
 	 * @param admin 执行命令的管理员 / Admin executing the command
 	 * @param params [玩家名] 数量 / [player] quantity
 	 */
@@ -77,7 +75,6 @@ public class Kinah extends AdminCommand {
 	/**
 	 * 参数错误时显示命令语法。
 	 * Show command syntax on invalid arguments.
-	 *
 	 * @param player 接收提示的玩家 / Player receiving the hint
 	 */
 	@Override

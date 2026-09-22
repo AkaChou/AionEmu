@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * 维尔索要塞相关 NPC AI：Explosive Sacrifice（@AIName "explosive_sacrifice"），继承 AggressiveNpcAI2。
  * Wealhtheow Keep related NPC AI: Explosive Sacrifice (@AIName "explosive_sacrifice"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("explosive_sacrifice")

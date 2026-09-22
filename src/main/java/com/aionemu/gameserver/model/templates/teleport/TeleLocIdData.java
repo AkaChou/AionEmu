@@ -10,7 +10,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 /**
  * 传送地点 ID 数据模板（静态数据/XML）。
  * Teleport location id data template (static data/XML).
- *
  * @author ATracer
  */
 @XmlRootElement(name = "locations")
@@ -23,7 +22,6 @@ public class TeleLocIdData {
 	/**
 	 * 返回全部传送位置。
 	 * Returns all teleport locations.
-	 *
 	 * @return 传送位置列表 / teleport locations
 	 */
 	public List<TeleportLocation> getTelelocations() {

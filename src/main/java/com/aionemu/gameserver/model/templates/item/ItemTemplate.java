@@ -205,7 +205,6 @@ public class ItemTemplate extends VisibleObjectTemplate {
 	/**
 	 * 返回临时交易时长（历史访问器名，保留以兼容既有调用）。
 	 * Returns the temporary-exchange duration (legacy accessor name kept for existing callers).
-	 *
 	 * @return 临时交易时长 / temporary exchange time
 	 */
 	public int getTempExchangeTime() {
@@ -285,10 +284,6 @@ public class ItemTemplate extends VisibleObjectTemplate {
 
 	private static final WeaponStats emptyWeaponStats = new WeaponStats();
 
-	/**
-	 * @param u
-	 * @param parent
-	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		setItemId(Integer.parseInt(id));
 		String[] parts = restrict.split(",");
@@ -317,10 +312,6 @@ public class ItemTemplate extends VisibleObjectTemplate {
 		return 0;
 	}
 
-	/**
-	 * @param playerClass
-	 * @return
-	 */
 	public boolean isClassSpecific(PlayerClass playerClass) {
 		boolean related = restricts[playerClass.ordinal()] > 0;
 		if (!related && !playerClass.isStartingClass()) {
@@ -329,10 +320,6 @@ public class ItemTemplate extends VisibleObjectTemplate {
 		return related;
 	}
 
-	/**
-	 * @param playerClass
-	 * @return
-	 */
 	public int getRequiredLevel(PlayerClass playerClass) {
 		int requiredLevel = restricts[playerClass.ordinal()];
 		// 玩家可装备 66–83 物品，但未必应用完整属性。 / A player can equip item between 66-83 but have not full stats apply.

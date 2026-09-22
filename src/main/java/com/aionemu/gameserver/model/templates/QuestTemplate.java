@@ -41,7 +41,7 @@ public class QuestTemplate {
 	/**
 	 * 获取 collectItems 属性值。
 	 * Gets the value of the collectItems property
-	 * @return 可能的对象是 {@link CollectItems } / Possible object is {@link CollectItems }
+	 * 可能的对象是 {@link CollectItems } / Possible object is {@link CollectItems }
 	 */
 	@XmlElement(name = "collect_items")
 	protected CollectItems collectItems;
@@ -66,14 +66,14 @@ public class QuestTemplate {
 	/**
 	 * 获取 genderPermitted 属性值。
 	 * Gets the value of the genderPermitted property
-	 * @return 可能的对象是 {@link Gender } / Possible object is {@link Gender }
+	 * 可能的对象是 {@link Gender } / Possible object is {@link Gender }
 	 */
 	@XmlElement(name = "gender_permitted")
 	protected Gender genderPermitted;
 	/**
 	 * 获取 questWorkItems 属性值。
 	 * Gets the value of the questWorkItems property
-	 * @return 可能的对象是 {@link QuestWorkItems } / Possible object is {@link QuestWorkItems }
+	 * 可能的对象是 {@link QuestWorkItems } / Possible object is {@link QuestWorkItems }
 	 */
 	@XmlElement(name = "quest_work_items")
 	protected QuestWorkItems questWorkItems;
@@ -108,22 +108,20 @@ public class QuestTemplate {
 	/**
 	 * 获取任务名称。
 	 * Gets the quest name.
-	 *
-	 * @return 任务名称 / Quest name
 	 */
 	@XmlAttribute(name = "name")
 	protected String name;
 	/**
 	 * 获取 nameId 属性值。
 	 * Gets the value of the nameId property
-	 * @return 可能的对象是 {@link Integer } / Possible object is {@link Integer }
+	 * 可能的对象是 {@link Integer } / Possible object is {@link Integer }
 	 */
 	@XmlAttribute(name = "nameId")
 	protected Integer nameId;
 	/**
 	 * 获取 minlevelPermitted 属性值。
 	 * Gets the value of the minlevelPermitted property
-	 * @return 可能的对象是 {@link Integer } / Possible object is {@link Integer }
+	 * 可能的对象是 {@link Integer } / Possible object is {@link Integer }
 	 */
 	@XmlAttribute(name = "minlevel_permitted")
 	protected Integer minlevelPermitted;
@@ -167,9 +165,6 @@ public class QuestTemplate {
 	/** 返回 npc faction id / Returns the npc faction id */
 	@XmlAttribute(name = "npcfaction_id")
 	protected int npcFactionId;
-	/**
-	 * @return 导师类型 / The mentor type
-	 */
 	@XmlAttribute(name = "mentor_type")
 	protected QuestMentorType mentorType = QuestMentorType.NONE;
 	/** 返回目标类型 / Returns the target type*/

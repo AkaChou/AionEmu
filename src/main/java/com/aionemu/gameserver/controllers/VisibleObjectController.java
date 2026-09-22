@@ -8,7 +8,6 @@ import lombok.Setter;
 /**
  * 可见对象控制器基类，管理对象的生成与消失。
  * Base controller for visible objects, managing spawn and despawn.
- *
  * @author ATracer
  * @param <T> 所有者可见对象类型 / owner visible object type
  */
@@ -22,7 +21,6 @@ public abstract class VisibleObjectController<T extends VisibleObject> {
 	/**
 	 * 当另一个可见对象进入本对象视野时回调。
 	 * Callback when another visible object enters this object's sight.
-	 *
 	 * @param object 进入视野的对象 / the object entering sight
 	 */
 	public void see(VisibleObject object) {
@@ -31,7 +29,6 @@ public abstract class VisibleObjectController<T extends VisibleObject> {
 	/**
 	 * 当另一个可见对象离开本对象视野时回调。
 	 * Callback when another visible object leaves this object's sight.
-	 *
 	 * @param object 离开视野的对象 / the object leaving sight
 	 * @param isOutOfRange 是否因超出距离离开 / whether the leave is due to being out of range
 	 */

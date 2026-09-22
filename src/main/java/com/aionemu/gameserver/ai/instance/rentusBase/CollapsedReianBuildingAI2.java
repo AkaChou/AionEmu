@@ -8,7 +8,6 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 /**
  * Rentus Base 副本 NPC AI：Collapsed Reian Building（@AIName "collapsed_reian_building"），继承 NpcAI2。
  * Rentus Base instance NPC AI: Collapsed Reian Building (@AIName "collapsed_reian_building"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("collapsed_reian_building")

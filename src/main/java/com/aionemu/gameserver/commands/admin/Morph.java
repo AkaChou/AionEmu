@@ -22,7 +22,6 @@ public class Morph extends AdminCommand
 	/**
 	 * 将目标（默认自身）变形为给定 NPC Id，或使用 {@code cancel} 取消变形。
 	 * Morph the target (self by default) into the given NPC id, or {@code cancel} the morph.
-	 *
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -67,7 +66,6 @@ public class Morph extends AdminCommand
 	/**
 	 * 参数错误时显示语法。
 	 * Show syntax when parameters are invalid.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

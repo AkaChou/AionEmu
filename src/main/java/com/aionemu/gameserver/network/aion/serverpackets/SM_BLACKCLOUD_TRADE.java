@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 /**
  * 黑云交易（Blackcloud Trade）相关的服务端包（占位/初始化）。
  * initialization).
- *
  * @author wanke
  */
 @NoArgsConstructor

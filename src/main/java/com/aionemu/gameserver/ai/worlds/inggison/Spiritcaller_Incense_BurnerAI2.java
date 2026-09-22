@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Inggison 区域 NPC AI：Spiritcaller Incense Burner（@AIName "spiritcallerincenseburner"），继承 NpcAI2。
  * Inggison zone NPC AI: Spiritcaller Incense Burner (@AIName "spiritcallerincenseburner"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("spiritcallerincenseburner")

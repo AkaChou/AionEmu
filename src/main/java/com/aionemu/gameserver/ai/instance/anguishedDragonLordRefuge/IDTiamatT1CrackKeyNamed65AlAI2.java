@@ -23,7 +23,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Anguished Dragon Lord Refuge 副本 NPC AI：ID Tiamat T1 Crack Key Named65 Al（@AIName "fissurefang2"），继承 AggressiveNpcAI2。
  * Anguished Dragon Lord Refuge instance NPC AI: ID Tiamat T1 Crack Key Named65 Al (@AIName "fissurefang2"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("fissurefang2")

@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 客户端数据包处理器：队列调度、连接互斥与自适应线程池。
  * Client packet processor: queue scheduling, connection mutex, and adaptive thread pool.
- *
  * @param <T> 连接类型 / Connection type
  */
 @Slf4j
@@ -84,7 +83,6 @@ public class PacketProcessor<T extends AConnection> {
     /**
      * 使用默认同步执行器构造。
      * Construct with default synchronous executor.
-     *
      * @param minThreads 最小线程数 / Minimum threads
      * @param maxThreads 最大线程数 / Maximum threads
      * @param threadSpawnThreshold 线程创建阈值 / Spawn threshold
@@ -97,7 +95,6 @@ public class PacketProcessor<T extends AConnection> {
     /**
      * 使用指定执行器与默认线程工厂构造。
      * Construct with executor and default thread factory.
-     *
      * @param minThreads 最小线程数 / Minimum threads
      * @param maxThreads 最大线程数 / Maximum threads
      * @param threadSpawnThreshold 线程创建阈值 / Spawn threshold
@@ -112,7 +109,6 @@ public class PacketProcessor<T extends AConnection> {
     /**
      * 完整构造并启动初始工作线程。
      * Full constructor that starts initial worker threads.
-     *
      * @param minThreads 最小线程数 / Minimum threads
      * @param maxThreads 最大线程数 / Maximum threads
      * @param threadSpawnThreshold 线程创建阈值 / Spawn threshold
@@ -160,7 +156,6 @@ public class PacketProcessor<T extends AConnection> {
     /**
      * 创建新的处理线程（不超过上限）。
      * Create a new processing thread if under max.
-     *
      * @return 是否创建成功 / Whether creation succeeded
      */
     private boolean newThread() {
@@ -179,7 +174,6 @@ public class PacketProcessor<T extends AConnection> {
     /**
      * 用工厂创建并命名受服务上下文包装的线程。
      * Create and name a service-context-wrapped thread via factory.
-     *
      * @param task 任务 / Task
      * @param name 线程名 / Thread name
      * @return 线程 / Thread
@@ -205,7 +199,6 @@ public class PacketProcessor<T extends AConnection> {
     /**
      * 将数据包入队并唤醒工作线程。
      * Enqueue packet and signal a worker.
-     *
      * @param packet 客户端数据包 / Client packet
      */
     public final void executePacket(BaseClientPacket<T> packet) {
@@ -221,7 +214,6 @@ public class PacketProcessor<T extends AConnection> {
     /**
      * 获取第一个可锁定连接的数据包。
      * Get first packet whose connection can be locked.
-     *
      * @return 可用数据包 / Available packet
      * @throws InterruptedException 等待被中断 / Wait interrupted
      */

@@ -8,7 +8,6 @@ import com.aionemu.gameserver.model.tasks.TaskFromDB;
 /**
  * 数据库定时任务数据访问抽象层。
  * DAO for scheduled tasks loaded from the database.
- *
  * @author Divinity
  */
 public abstract class TaskFromDBDAO implements DAO {
@@ -16,7 +15,6 @@ public abstract class TaskFromDBDAO implements DAO {
 	/**
 	 * 查询数据库中全部定时任务。
 	 * Returns all tasks from the database.
-	 *
 	 * @return 任务列表 / task list
 	 */
 	public abstract ArrayList<TaskFromDB> getAllTasks();
@@ -24,7 +22,6 @@ public abstract class TaskFromDBDAO implements DAO {
 	/**
 	 * 将指定任务的最后激活时间设为 NOW()。
 	 * Sets the last activation time of the task to NOW().
-	 *
 	 * @param id 任务 ID / task id
 	 */
 	public abstract void setLastActivation(final int id);
@@ -32,7 +29,6 @@ public abstract class TaskFromDBDAO implements DAO {
 	/**
 	 * 返回实现唯一类名标识。
 	 * Returns unique class name for all implementations.
-	 *
 	 * @return 完整类名 / fully qualified class name
 	 */
 	@Override

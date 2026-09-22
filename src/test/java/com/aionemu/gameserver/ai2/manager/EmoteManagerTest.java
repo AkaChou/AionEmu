@@ -67,7 +67,6 @@ class EmoteManagerTest {
 	/**
 	 * 源码闸门：消息下发必须留在可见性判定之内，且提示本身不能整体删除。
 	 * Source gate: the notice send must stay behind the visibility gate and must not be dropped entirely.
-	 *
 	 * @throws IOException 读取源码失败 / when the source cannot be read
 	 */
 	@Test
@@ -106,7 +105,6 @@ class EmoteManagerTest {
 	/**
 	 * 按大括号配对提取指定方法体的源码片段。
 	 * Extracts a method body by brace matching.
-	 *
 	 * @param source 源码 / source
 	 * @param signature 方法签名 / method signature
 	 * @return 方法体源码；找不到时返回空串（使闸门失败） / the method body, or an empty string when missing

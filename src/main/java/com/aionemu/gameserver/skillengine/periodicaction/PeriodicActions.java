@@ -13,7 +13,6 @@ import lombok.Getter;
 /**
  * 周期动作集合：JAXB 绑定的效果周期消耗动作与检查间隔。
  * Periodic action collection: JAXB-bound effect tick actions and check interval.
- *
  * @author MATTY (ADev.Team)
  */
 @Getter
@@ -28,13 +27,7 @@ public class PeriodicActions {
 	@XmlElements({ @XmlElement(name = "hpuse", type = HpUsePeriodicAction.class),
 			@XmlElement(name = "mpuse", type = MpUsePeriodicAction.class),
 			@XmlElement(name = "dpuse", type = DpUsePeriodicAction.class) })
-	/**
-	 * 获取周期动作列表。
-	 * Returns the periodic action list.
-	 *
-	 * @return 周期动作列表 / periodic actions
-	 */
-	protected List<PeriodicAction> periodicActions;
+    protected List<PeriodicAction> periodicActions;
 
 	/**
 	 * 检查间隔（毫秒）。

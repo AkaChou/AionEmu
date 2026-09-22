@@ -8,7 +8,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 战场旗帜信息包：同步旗帜 NPC 的血量与坐标。
  * Battlefield flag info packet: flag NPC HP and position.
- *
  * @author Ace
  */
 public class SM_FLAG_INFO extends AionServerPacket {
@@ -19,7 +18,6 @@ public class SM_FLAG_INFO extends AionServerPacket {
 	/**
 	 * 按旗帜序号与 NPC 构造信息包。
 	 * Creates a flag info packet for the given index and flag NPC.
-	 *
 	 * @param count 旗帜序号 / flag index
 	 * @param npc 旗帜 NPC，可为空 / flag NPC, may be null
 	 */

@@ -84,8 +84,6 @@ public class SpawnsData2 {
 	/**
 	 * 返回 JAXB 原始刷怪地图模板列表。
 	 * Returns the raw JAXB spawn-map template list.
-	 *
-	 * @return 刷怪地图列表 / spawn map list
 	 */
 	@XmlElement(name = "spawn_map", type = SpawnMap.class)
 	protected List<SpawnMap> templates;
@@ -146,7 +144,6 @@ public class SpawnsData2 {
 	/**
 	 * JAXB 反序列化完成后，将各类刷怪模板索引到运行时映射。
 	 * After JAXB unmarshalling, indexes all spawn templates into runtime maps.
-	 *
 	 * @param u Unmarshaller
 	 * @param parent 父对象 / parent object
 	 */
@@ -613,7 +610,6 @@ public class SpawnsData2 {
 	/**
 	 * 从目录加载全部刷怪 XML（使用目录内 spawns.xsd）。
 	 * Loads all spawn XML files from a directory using its spawns.xsd schema.
-	 *
 	 * @param directory 刷怪数据目录 / spawn data directory
 	 * @return 已索引的刷怪数据 / indexed spawn data
 	 * on load or validation failure。
@@ -627,7 +623,6 @@ public class SpawnsData2 {
 	/**
 	 * 使用指定 Schema 从目录加载刷怪 XML 并完成索引。
 	 * Loads spawn XML from a directory with the given schema and builds indexes.
-	 *
 	 * @param directory 刷怪数据目录 / spawn data directory
 	 * @param schema XSD Schema
 	 * @return 已索引的刷怪数据 / indexed spawn data
@@ -659,7 +654,6 @@ public class SpawnsData2 {
 	/**
 	 * 按世界地图 ID 获取全部刷怪组。
 	 * Returns all spawn groups for the given world map id.
-	 *
 	 * @param worldId 世界地图 ID / world map id
 	 * @return 刷怪组列表，不存在则为空列表 / spawn groups, or empty list
 	 */
@@ -684,7 +678,6 @@ public class SpawnsData2 {
 	/**
 	 * 按世界与 NPC ID 获取刷怪定义。
 	 * Returns the spawn definition for the given world and npc id.
-	 *
 	 * @param worldId 世界地图 ID / world map id
 	 * @param npcId NPC 模板 ID / npc template id
 	 * @return 刷怪定义，不存在则为 null / spawn or null
@@ -699,7 +692,6 @@ public class SpawnsData2 {
 	/**
 	 * 按地点 ID 获取攻城据点刷怪组列表。
 	 * Returns siege location spawn groups for the given location id.
-	 *
 	 * @param siegeId 攻城地点 ID / siege location id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
@@ -710,7 +702,6 @@ public class SpawnsData2 {
 	/**
 	 * 按地点 ID 获取军团领地刷怪组列表。
 	 * Returns legion dominion spawn groups for the given location id.
-	 *
 	 * @param legionDominionId 军团领地 ID / legion dominion id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
@@ -721,7 +712,6 @@ public class SpawnsData2 {
 	/**
 	 * 按地点 ID 获取基地刷怪组列表。
 	 * Returns base spawn groups for the given location id.
-	 *
 	 * @param id 基地 ID / base id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
@@ -732,7 +722,6 @@ public class SpawnsData2 {
 	/**
 	 * 按地点 ID 获取前哨刷怪组列表。
 	 * Returns outpost spawn groups for the given location id.
-	 *
 	 * @param id 前哨 ID / outpost id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
@@ -743,7 +732,6 @@ public class SpawnsData2 {
 	/**
 	 * 按地点 ID 获取裂隙刷怪组列表。
 	 * Returns rift spawn groups for the given location id.
-	 *
 	 * @param id 裂隙 ID / rift id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
@@ -754,7 +742,6 @@ public class SpawnsData2 {
 	/**
 	 * 按地点 ID 获取次元漩涡刷怪组列表。
 	 * Returns vortex spawn groups for the given location id.
-	 *
 	 * @param id 漩涡 ID / vortex id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
@@ -765,7 +752,6 @@ public class SpawnsData2 {
 	/**
 	 * 按地点 ID 获取贝里特拉入侵刷怪组列表。
 	 * Returns beritra invasion spawn groups for the given location id.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
@@ -776,7 +762,6 @@ public class SpawnsData2 {
 	/**
 	 * 按地点 ID 获取代理人战斗刷怪组列表。
 	 * Returns agent fight spawn groups for the given location id.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
@@ -787,7 +772,6 @@ public class SpawnsData2 {
 	/**
 	 * 按地点 ID 获取阿诺哈刷怪组列表。
 	 * Returns anoha spawn groups for the given location id.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
@@ -798,7 +782,6 @@ public class SpawnsData2 {
 	/**
 	 * 按地点 ID 获取征服刷怪组列表。
 	 * Returns conquest spawn groups for the given location id.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
@@ -809,7 +792,6 @@ public class SpawnsData2 {
 	/**
 	 * 按地点 ID 获取 Svs 刷怪组列表。
 	 * Returns svs spawn groups for the given location id.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
@@ -820,7 +802,6 @@ public class SpawnsData2 {
 	/**
 	 * 按地点 ID 获取 Rvr 刷怪组列表。
 	 * Returns rvr spawn groups for the given location id.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
@@ -831,7 +812,6 @@ public class SpawnsData2 {
 	/**
 	 * 按地点 ID 获取 IU 刷怪组列表。
 	 * Returns iu spawn groups for the given location id.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
@@ -842,7 +822,6 @@ public class SpawnsData2 {
 	/**
 	 * 按地点 ID 获取动态裂隙刷怪组列表。
 	 * Returns dynamic rift spawn groups for the given location id.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
@@ -853,7 +832,6 @@ public class SpawnsData2 {
 	/**
 	 * 按地点 ID 获取副本裂隙刷怪组列表。
 	 * Returns instance rift spawn groups for the given location id.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
@@ -864,7 +842,6 @@ public class SpawnsData2 {
 	/**
 	 * 按地点 ID 获取梦魇马戏团刷怪组列表。
 	 * Returns nightmare circus spawn groups for the given location id.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
@@ -875,7 +852,6 @@ public class SpawnsData2 {
 	/**
 	 * 按地点 ID 获取伊迪安深渊刷怪组列表。
 	 * Returns idian depths spawn groups for the given location id.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
@@ -886,7 +862,6 @@ public class SpawnsData2 {
 	/**
 	 * 按地点 ID 获取佐尔希夫无畏舰刷怪组列表。
 	 * Returns zorshiv dredgion spawn groups for the given location id.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
@@ -897,7 +872,6 @@ public class SpawnsData2 {
 	/**
 	 * 按地点 ID 获取熔岩领主刷怪组列表。
 	 * Returns moltenus spawn groups for the given location id.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
@@ -908,7 +882,6 @@ public class SpawnsData2 {
 	/**
 	 * 按地点 ID 获取登陆点刷怪组列表。
 	 * Returns landing spawn groups for the given location id.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
@@ -919,7 +892,6 @@ public class SpawnsData2 {
 	/**
 	 * 按地点 ID 获取特殊登陆点刷怪组列表。
 	 * Returns special landing spawn groups for the given location id.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
@@ -930,7 +902,6 @@ public class SpawnsData2 {
 	/**
 	 * 按地点 ID 获取永恒之塔刷怪组列表。
 	 * Returns tower of eternity spawn groups for the given location id.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 刷怪组列表，可能为 null / spawn groups or null
 	 */
@@ -941,7 +912,6 @@ public class SpawnsData2 {
 	/**
 	 * 将可见对象的位置保存为自定义刷怪 XML，或删除对应点位。
 	 * Saves a visible object's position as custom spawn XML, or deletes the matching spot.
-	 *
 	 * @param admin 操作管理员 / admin player
 	 * @param visibleObject 目标可见对象 / target visible object
 	 * @param delete true 表示删除点位 / true to delete the spot
@@ -1088,7 +1058,6 @@ public class SpawnsData2 {
 	/**
 	 * 计算自定义刷怪 XML 相对 spawns 目录的路径。
 	 * Computes the relative path under the spawns directory for a custom spawn XML.
-	 *
 	 * @param visibleObject 目标可见对象 / target visible object
 	 * @return 相对路径 / relative path
 	 */
@@ -1113,7 +1082,6 @@ public class SpawnsData2 {
 	/**
 	 * 返回已索引的世界地图数量。
 	 * Returns the number of indexed world maps.
-	 *
 	 * @return 已索引的世界地图数量 / Returns the number of indexed world maps.
 	 */
 	public int size() {
@@ -1123,10 +1091,8 @@ public class SpawnsData2 {
 	/**
 	 * 按 NPC ID 查找第一个刷怪点；优先在给定世界中查找，否则遍历其它地图。
 	 * Finds the first spawn spot for an npc id, searching the given world first then other maps.
-	 *
 	 * @param worldId 优先搜索的世界 ID / world id to search first (optional preference)
 	 * NPC 模板 ID / npc template id
-	 *
 	 * @return 搜索结果，未找到则为 null / search result or null
 	 */
 	public SpawnSearchResult getFirstSpawnByNpcId(int worldId, int npcId) {
@@ -1136,7 +1102,6 @@ public class SpawnsData2 {
 	/**
 	 * 按地图优先顺序返回 NPC 的全部有效刷怪点。
 	 * Returns all non-empty spawn spots for an NPC, preferring the requested world.
-	 *
 	 * @param worldId 优先搜索的世界 ID / preferred world id
 	 * @param npcId NPC 模板 ID / NPC template id
 	 * @return 有序刷怪点 / ordered spawn locations
@@ -1167,7 +1132,6 @@ public class SpawnsData2 {
 	/**
 	 * 追加一张刷怪地图（供活动服务注入额外刷怪）。
 	 * Appends a spawn map (used by the event service to inject extra spawns).
-	 *
 	 * @param spawnMap 要追加的刷怪地图 / spawn map to add
 	 */
 	public void addNewSpawnMap(SpawnMap spawnMap) {
@@ -1180,7 +1144,6 @@ public class SpawnsData2 {
 	/**
 	 * 移除活动刷怪对象对应的内存索引条目。
 	 * Removes in-memory index entries for the given event spawn objects.
-	 *
 	 * @param objects 可见对象列表 / visible objects to remove
 	 */
 	public void removeEventSpawnObjects(List<VisibleObject> objects) {

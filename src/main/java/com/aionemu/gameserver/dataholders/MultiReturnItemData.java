@@ -17,7 +17,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 多目标返回物品数据容器，按物品 ID 索引返回地点列表。
  * Multi-return item data holder, indexing return location lists by item id.
- *
  * @author Rinzler (Encom)
  */
 @XmlRootElement(name = "multi_returns")
@@ -47,7 +46,6 @@ public class MultiReturnItemData {
 	/**
 	 * 返回已加载的多目标返回物品数量。
 	 * Returns the number of loaded multi-return items.
-	 *
 	 * @return 已加载的多重返回物品数量 / Returns the number of loaded multi-return items.
 	 */
 	public int size() {
@@ -57,7 +55,6 @@ public class MultiReturnItemData {
 	/**
 	 * 按物品 ID 获取多目标返回模板。
 	 * Returns the multi-return template for the given item id.
-	 *
 	 * @param id 物品 ID / item id
 	 * @return 多目标返回模板或 null / multi-return template or null
 	 */
@@ -68,7 +65,6 @@ public class MultiReturnItemData {
 	/**
 	 * 返回全部多目标返回物品列表。
 	 * Returns the full multi-return item list.
-	 *
 	 * @return 多目标返回物品列表 / multi-return item list
 	 */
 	public List<MultiReturn> getMultiReturns() {

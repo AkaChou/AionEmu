@@ -14,7 +14,6 @@ import com.aionemu.gameserver.world.*;
 /**
  * Trials Of Eternity 副本 NPC AI：Boliag（@AIName "IDEternity_03_Dimension_Boss_01"），继承 AggressiveNpcAI2。
  * Trials Of Eternity instance NPC AI: Boliag (@AIName "IDEternity_03_Dimension_Boss_01"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("IDEternity_03_Dimension_Boss_01")

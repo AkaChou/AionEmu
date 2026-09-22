@@ -34,7 +34,6 @@ import java.util.List;
 /**
  * 游戏服与 Aion 客户端之间的连接对象。
  * Connection object between GameServer and an Aion client.
- *
  * @author -Nemesiss-
  */
 @Slf4j
@@ -81,9 +80,6 @@ public class AionConnection extends AConnection {
 	 * -- SETTER --
 	 *  设置连接状态。
 	 *  Sets the state of this connection.
-	 *
-	 * @param state 连接状态 / state
-
 	 */
 	@Setter
 	private volatile State state;
@@ -94,9 +90,7 @@ public class AionConnection extends AConnection {
 	 * -- GETTER --
 	 *  返回与本连接关联的账号。
 	 *  Returns the account associated with this connection.
-	 *
-	 * @return 账号对象 / account object
-
+	 * 账号对象 / account object
 	 */
 	@Getter
 	private Account account;
@@ -119,14 +113,11 @@ public class AionConnection extends AConnection {
 	 * -- GETTER --
 	 *  获取最近一次 Ping 时间（毫秒）。
 	 *  Returns the last ping time in milliseconds.
-	 *
-	 *
 	 * -- SETTER --
 	 *  设置最近一次 Ping 时间（毫秒）。
 	 *  Sets the last ping time in milliseconds.
-	 *
-	 @return 最近 Ping 时间（毫秒）/ last ping time ms
-	  * @param lastPingTimeMS 最近 Ping 时间（毫秒）/ last ping time ms
+	 最近 Ping 时间（毫秒）/ last ping time ms
+	  * 最近 Ping 时间（毫秒）/ last ping time ms
 	 */
 	@Setter
 	@Getter
@@ -139,14 +130,9 @@ public class AionConnection extends AConnection {
 	 * -- GETTER --
 	 *  获取客户端 MAC 地址。
 	 *  Returns the client MAC address.
-	 *
-	 *
 	 * -- SETTER --
 	 *  设置客户端 MAC 地址。
 	 *  Sets the client MAC address.
-	 *
-	 @return MAC 地址 / MAC address
-	  * @param mac MAC 地址 / MAC address
 	 */
 	@Setter
 	@Getter
@@ -162,7 +148,6 @@ public class AionConnection extends AConnection {
 	/**
 	 * 基于传输层创建连接并初始化。
 	 * Creates a connection from the transport and initializes it.
-	 *
 	 * @param transport 连接传输 / connection transport
 	 */
 	public AionConnection(ConnectionTransport transport) {
@@ -206,8 +191,7 @@ public class AionConnection extends AConnection {
 	 */
 	@Override
 	protected void initialized() {
-		/** 发送 SM_KEY 数据包 / Send SM_KEY packet */
-		sendPacket(new SM_KEY());
+        sendPacket(new SM_KEY());
 	}
 
 	/**
@@ -215,7 +199,6 @@ public class AionConnection extends AConnection {
 	 * 由 SM_KEY 调用，将密钥发送给 Aion 客户端。
 	 * Enables the crypt key — generates a random key to encrypt subsequent server packets
 	 * and decrypt client packets. Called from SM_KEY which sends the key to the client.
-	 *
 	 * @return 发给客户端的“伪密钥” / "false key" for the Aion client
 	 */
 	public final int enableCryptKey() {
@@ -225,7 +208,6 @@ public class AionConnection extends AConnection {
 	/**
 	 * 由传输帧处理器调用：解密并处理一个客户端包。
 	 * Called by the transport frame handler; decrypts and processes one client packet.
-	 *
 	 * @param data 包数据 / packet data
 	 * @return true 处理成功；false 表示应立即关闭连接 / true if ok, false to close now
 	 */
@@ -254,11 +236,7 @@ public class AionConnection extends AConnection {
 
 		AionClientPacket pck = aionPacketHandler.handle(data, this);
 
-		/**
-		 * 仅当包存在且读取成功时执行。
-		 * Execute packet only if it exists (!= null) and read was ok.
-		 */
-		if (pck != null) {
+        if (pck != null) {
 			if (SecurityConfig.PFF_ENABLE) {
 				syncPacketFloodFilter();
 				int opcode = pck.getOpcode();
@@ -296,7 +274,6 @@ public class AionConnection extends AConnection {
 	/**
 	 * 由传输帧处理器调用：从发送队列写入一个服务端包，直到返回 false。
 	 * Called by the transport frame handler; writes one server packet until false.
-	 *
 	 * @param data 写出缓冲区 / write buffer
 	 * @return true 已写入；false 表示无更多数据 / true if written, false if queue empty
 	 */
@@ -321,7 +298,6 @@ public class AionConnection extends AConnection {
 	/**
 	 * 连接准备关闭时由传输调用。
 	 * Called by the transport when the connection is ready to be closed.
-	 *
 	 * @return 调用 onDisconnect 前的延迟毫秒数，本实现恒为 0 / delay before onDisconnect, always 0
 	 */
 	@Override
@@ -334,11 +310,7 @@ public class AionConnection extends AConnection {
 	 */
 	@Override
 	protected final void onDisconnect() {
-		/**
-		 * 断开连接时的清理。
-		 * disconnects.
-		 */
-		pingChecker.stop();
+        pingChecker.stop();
 		if (getAccount() != null) {
 			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().aionClientDisconnected(getAccount().getId());
 			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_MAC(getAccount().getId(), macAddress));
@@ -362,7 +334,6 @@ public class AionConnection extends AConnection {
 	/**
 	 * 加密缓冲区中的服务端包。
 	 * Encrypts the server packet buffer.
-	 *
 	 * @param buf 待加密缓冲区 / buffer to encrypt
 	 */
 	public final void encrypt(ByteBuffer buf) {
@@ -372,16 +343,11 @@ public class AionConnection extends AConnection {
 	/**
 	 * 向本客户端发送服务端包。
 	 * Sends an AionServerPacket to this client.
-	 *
 	 * @param bp 待发送包 / packet to send
 	 */
 	public final void sendPacket(AionServerPacket bp) {
 		synchronized (guard) {
-			/**
-			 * 连接已关闭或正在等待最后关闭包
-			 * Connection already closed or waiting for last (close) packet
-			 */
-			if (isWriteDisabled()) {
+            if (isWriteDisabled()) {
 				return;
 			}
 			sendMsgQueue.addLast(bp);
@@ -394,7 +360,6 @@ public class AionConnection extends AConnection {
 	 * 连接由传输关闭，并调用 onDisconnect 清理。forced 在本实现无实际效果。
 	 * Guarantees closePacket is sent before closing; past and future packets are dropped.
 	 * Connection is closed by the transport and onDisconnect cleans up. forced has no effect here.
-	 *
 	 * @param closePacket 关闭前发送的包 / packet sent before closing
 	 * @param forced 本实现中无效果 / has no effect in this implementation
 	 */
@@ -414,7 +379,6 @@ public class AionConnection extends AConnection {
 	/**
 	 * 获取当前连接状态。
 	 * Returns the current state of this connection.
-	 *
 	 * @return 连接状态 / state
 	 */
 	public final State getState() {
@@ -424,7 +388,6 @@ public class AionConnection extends AConnection {
 	/**
 	 * 设置与本连接关联的账号（不可为 null）。
 	 * Sets the account associated with this connection (must not be null).
-	 *
 	 * @param account 账号对象 / account object
 	 */
 	public void setAccount(Account account) {
@@ -435,7 +398,6 @@ public class AionConnection extends AConnection {
 	/**
 	 * 设置当前在线玩家并同步连接状态。
 	 * Sets the active player and updates connection state accordingly.
-	 *
 	 * @param player 玩家，null 表示离开世界 / player, null means leave world
 	 * @return 是否成功设置 / true if active player was set
 	 */
@@ -455,7 +417,6 @@ public class AionConnection extends AConnection {
 	/**
 	 * 返回当前在线玩家，可能为 null。
 	 * Returns the active player or null.
-	 *
 	 * @return 在线玩家或 null / active player or null
 	 */
 	public Player getActivePlayer() {

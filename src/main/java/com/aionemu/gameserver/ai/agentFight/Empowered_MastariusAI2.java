@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * 代理人战争相关 NPC AI：Empowered Mastarius（@AIName "empowered_mastarius"），继承 AggressiveNpcAI2。
  * Agent-fight related NPC AI: Empowered Mastarius (@AIName "empowered_mastarius"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("empowered_mastarius")

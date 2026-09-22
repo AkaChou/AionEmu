@@ -13,7 +13,6 @@ import lombok.Getter;
 /**
  * 烙印之石模板：技能、所需技能与碎片消耗。
  * Stigma template: skills, required skills and shard cost.
- *
  * @author Rinzler
  */
 

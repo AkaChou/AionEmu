@@ -8,7 +8,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 客户端时间校验应答服务端包（服务器时间戳 + 客户端纳秒时间）。
  * Server packet for client time-check response (server timestamp + client nano time).
- *
  * @author -Nemesiss-
  */
 public class SM_TIME_CHECK extends AionServerPacket {

@@ -8,7 +8,6 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 /**
  * Dragon Lord Refuge 副本 NPC AI：Internal Passage Out（@AIName "internal_passage_out"），继承 ActionItemNpcAI2。
  * Dragon Lord Refuge instance NPC AI: Internal Passage Out (@AIName "internal_passage_out"), extends ActionItemNpcAI2.
- *
  * @author Ranastic (Encom)
  */
 @AIName("internal_passage_out")

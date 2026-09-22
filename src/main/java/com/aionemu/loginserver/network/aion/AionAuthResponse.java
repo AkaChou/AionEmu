@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 登录服可能返回给客户端的鉴权/登录失败等响应码。
  * Auth and login failure response codes the login server may send to the client.
- *
  * @author KID
  */
 public enum AionAuthResponse {
@@ -136,7 +135,6 @@ public enum AionAuthResponse {
     /**
      * 构造响应枚举。
      * Construct response enum.
-     *
      * @param msgId 消息 ID / message id
      */
     AionAuthResponse(int msgId) {

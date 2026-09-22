@@ -19,7 +19,6 @@ public class SimpleAbyssGuardHandler {
 	/**
 	 * 生物移动时检查欧比斯守卫仇恨。
 	 * Checks abyss-guard aggro when a creature moves.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param creature 移动的生物 / moving creature
 	 */
@@ -30,7 +29,6 @@ public class SimpleAbyssGuardHandler {
 	/**
 	 * 生物进入视野时检查欧比斯守卫仇恨。
 	 * Checks abyss-guard aggro when a creature is seen.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param creature 进入视野的生物 / creature that became visible
 	 */
@@ -41,7 +39,6 @@ public class SimpleAbyssGuardHandler {
 	/**
 	 * 欧比斯守卫仇恨检查：非 NPC 走通用逻辑；对可攻击/敌对且无目标的 NPC 在范围内触发仇恨。
 	 * Abyss-guard aggro check: non-NPCs use common logic; attackable/aggressive target-less NPCs trigger aggro in range.
-	 *
 	 * @param ai NPC AI 实例 / NPC AI instance
 	 * @param creature 待检查生物 / creature to evaluate
 	 */

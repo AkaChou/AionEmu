@@ -11,7 +11,6 @@ import com.aionemu.gameserver.skillengine.model.HealType;
 /**
  * DP 持续治疗效果：周期恢复神圣力。
  * DP over-time heal effect: periodically restores divine power.
- *
  * @author kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -21,7 +20,6 @@ public class DPHealEffect extends HealOverTimeEffect {
 	/**
 	 * 按 DP 治疗类型计算。
 	 * Calculates as DP heal.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -32,7 +30,6 @@ public class DPHealEffect extends HealOverTimeEffect {
 	/**
 	 * 周期结算 DP 治疗。
 	 * Applies one tick of DP heal.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -43,7 +40,6 @@ public class DPHealEffect extends HealOverTimeEffect {
 	/**
 	 * 返回当前 DP。
 	 * Returns current DP.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 * @return 当前 DP / current DP
 	 */
@@ -55,7 +51,6 @@ public class DPHealEffect extends HealOverTimeEffect {
 	/**
 	 * 返回 DP 上限。
 	 * Returns max DP.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 * @return DP 上限 / max DP
 	 */

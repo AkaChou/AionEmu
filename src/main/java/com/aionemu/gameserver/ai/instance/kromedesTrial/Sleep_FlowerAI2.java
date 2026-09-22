@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Kromedes Trial 副本 NPC AI：Sleep Flower（@AIName "sleep_flower"），继承 NpcAI2。
  * Kromedes Trial instance NPC AI: Sleep Flower (@AIName "sleep_flower"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("sleep_flower")

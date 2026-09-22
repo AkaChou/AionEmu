@@ -18,7 +18,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Esoterrace 副本 NPC AI：Captain Murugan（@AIName "captain_murugan"），继承 AggressiveNpcAI2。
  * Esoterrace instance NPC AI: Captain Murugan (@AIName "captain_murugan"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("captain_murugan")

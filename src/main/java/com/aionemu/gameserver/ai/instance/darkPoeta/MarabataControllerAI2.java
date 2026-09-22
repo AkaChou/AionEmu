@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 /**
  * Dark Poeta 副本 NPC AI：Marabata Controller（@AIName "marabatacontroller"），继承 NpcAI2。
  * Dark Poeta instance NPC AI: Marabata Controller (@AIName "marabatacontroller"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("marabatacontroller")

@@ -6,7 +6,6 @@ package com.aionemu.loginserver.network.ncrypt;
  * <p>
  * 对称 16 轮 Feistel 结构，64 位分组，密钥长度 32–448 位，依赖密钥的 4 个 32 位 S-box。
  * Symmetric 16-round Feistel cipher, 64-bit blocks, 32–448 bit key size and key-dependent 32-bit S-boxes.
- *
  * @author EvilSpirit
  */
 public class BlowfishCipher {
@@ -170,7 +169,6 @@ public class BlowfishCipher {
     /**
      * 使用给定密钥初始化 Blowfish 密码。
      * Initializes the Blowfish cipher with the given key.
-     *
      * @param blowfishKey Blowfish key
      */
     public BlowfishCipher(byte[] blowfishKey) {
@@ -182,7 +180,6 @@ public class BlowfishCipher {
     /**
      * 用新密钥更新，并重新初始化 P 数组与 S-box。
      * Updates the Blowfish key and reinitializes P-array and S-boxes.
-     *
      * @param blowfishKey new Blowfish key
      */
     public void updateKey(byte[] blowfishKey) {
@@ -231,7 +228,6 @@ public class BlowfishCipher {
     /**
      * 初始化单个 S-box。
      * Initializes one S-box.
-     *
      * @param b 工作缓冲 / work buffer
      * @param sBox 目标 S-box / target S-box
      */
@@ -246,7 +242,6 @@ public class BlowfishCipher {
     /**
      * 对整段字节数组做 Blowfish 加密。
      * Ciphers the given byte array with Blowfish.
-     *
      * @param data 待加密字节数组 / byte array to be ciphered
      */
     public void cipher(byte[] data) {
@@ -256,7 +251,6 @@ public class BlowfishCipher {
     /**
      * 对指定区间做 Blowfish 加密。
      * Ciphers the given byte-array range with Blowfish.
-     *
      * @param data 待加密字节数组 / byte array to be ciphered
      * @param offset 起始偏移 / offset
      * @param length 加密长度 / length
@@ -293,7 +287,6 @@ public class BlowfishCipher {
     /**
      * 对整段字节数组做 Blowfish 解密。
      * Deciphers the given byte array with Blowfish.
-     *
      * @param data 待解密字节数组 / byte array to be deciphered
      */
     public void decipher(byte[] data) {
@@ -303,7 +296,6 @@ public class BlowfishCipher {
     /**
      * 对指定区间做 Blowfish 解密。
      * Deciphers the given byte-array range with Blowfish.
-     *
      * @param data 待解密字节数组 / byte array to be deciphered
      * @param offset 起始偏移 / offset
      * @param length 解密长度 / length
@@ -340,7 +332,6 @@ public class BlowfishCipher {
     /**
      * Blowfish 轮函数 F。
      * Blowfish Feistel round function F.
-     *
      * @param x 输入 / input
      * @return 轮函数输出 / round-function output
      */
@@ -366,7 +357,6 @@ public class BlowfishCipher {
     /**
      * 将 4 字节转为整数（小端）。
      * Converts 4 bytes to an integer (little-endian).
-     *
      * @param b 字节数组 / byte array
      * @param offset 起始偏移 / offset
      * @return 整数值 / integer value
@@ -379,7 +369,6 @@ public class BlowfishCipher {
     /**
      * 将整数写入字节数组（小端）。
      * Writes an integer into a byte array (little-endian).
-     *
      * @param value 整数值 / integer value
      * @param b 目标字节数组 / destination byte array
      * @param offset 起始偏移 / offset

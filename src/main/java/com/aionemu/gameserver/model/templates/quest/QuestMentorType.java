@@ -5,7 +5,6 @@ import jakarta.xml.bind.annotation.XmlEnum;
 /**
  * 任务导师类型枚举。
  * Quest Mentor Type enumeration.
- *
  * @author MrPoke
  */
 @XmlEnum

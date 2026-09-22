@@ -12,7 +12,6 @@ import com.google.common.base.Predicate;
 /**
  * 玩家联盟信息更新事件。
  * Player Alliance Update Event.
- *
  * @author ATracer
  */
 public class PlayerAllianceUpdateEvent extends AlwaysTrueTeamEvent implements Predicate<PlayerAllianceMember> {

@@ -3,7 +3,6 @@ package com.aionemu.gameserver.model.svs;
 /**
  * 势力战状态类型枚举。
  * Svs State Type enumeration.
- *
  * @author Rinzler (Encom)
  */
 

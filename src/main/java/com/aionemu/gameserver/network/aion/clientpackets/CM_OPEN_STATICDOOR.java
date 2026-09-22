@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 打开静态门的客户端包。
  * Client packet for opening a static door.
- *
  * @author rhys2002 & Wakizashi
  */
 public class CM_OPEN_STATICDOOR extends AionClientPacket {
@@ -18,7 +17,6 @@ public class CM_OPEN_STATICDOOR extends AionClientPacket {
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余合法状态 / additional valid states

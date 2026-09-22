@@ -8,7 +8,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 管理员增加经验命令：给目标玩家增加指定经验值。
  * Admin add-exp command: grants a specified amount of experience to the target player.
- *
  * @author Wakizashi
  */
 public class AddExp extends AdminCommand {
@@ -24,7 +23,6 @@ public class AddExp extends AdminCommand {
 	/**
 	 * 执行增加经验：解析经验值并叠加到目标玩家。
 	 * Executes add-exp: parses the amount and adds it to the target player.
-	 *
 	 * @param params 参数：经验值 / experience amount
 	 */
 	@Override
@@ -59,7 +57,6 @@ public class AddExp extends AdminCommand {
 	/**
 	 * 参数错误时输出 {@code //addexp} 用法。
 	 * Prints {@code //addexp} usage on invalid arguments.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

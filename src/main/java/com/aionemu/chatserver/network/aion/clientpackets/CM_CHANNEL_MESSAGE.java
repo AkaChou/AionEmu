@@ -18,7 +18,6 @@ import com.aionemu.chatserver.service.BroadcastService;
 /**
  * 客户端频道聊天消息包。
  * Client packet for channel chat messages.
- *
  * @author ATracer
  */
 @Slf4j(topic = "CHAT_LOG")
@@ -31,7 +30,6 @@ public class CM_CHANNEL_MESSAGE extends AbstractClientPacket {
     /**
      * 构造频道消息客户端包。
      * Constructs a channel message client packet.
-     *
      * @param packetReader 包读取器 / packet reader
      * @param gameChannelHandler 客户端通道处理器 / client channel handler
      * @param broadcastService 广播服务 / broadcast service
@@ -89,7 +87,6 @@ public class CM_CHANNEL_MESSAGE extends AbstractClientPacket {
     /**
      * 返回调试用字符串表示。
      * Returns a debug string representation.
-     *
      * @return 调试字符串 / debug string
      */
     @Override

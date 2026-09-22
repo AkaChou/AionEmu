@@ -29,7 +29,6 @@ public final class GameCronServices {
     /**
      * 获取 Cron 服务：优先本地缓存，否则要求当前全局实例。
      * Obtain Cron service: prefer local cache, otherwise require the current global instance.
-     *
      * @return Cron 服务 / Cron service
      */
     public static CronService cronService() {

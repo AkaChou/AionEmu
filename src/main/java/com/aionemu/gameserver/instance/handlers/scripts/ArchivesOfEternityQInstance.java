@@ -17,7 +17,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 /**
  * 永恒档案库任务副本事件处理器。
  * Instance event handler for Archives Of Eternity Q.
- *
  * @author Encom
  */
 
@@ -40,7 +39,6 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -51,7 +49,6 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -63,16 +60,12 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
 	public void onDie(Npc npc) {
 		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
-			/**
-			 * MOBS
-			 */
 			case 857782: //Lesser Fleshgolem.
 			    IDEternityQSadoWi65An01++;
 				if (IDEternityQSadoWi65An01 == 3) {
@@ -134,9 +127,6 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403303, Race.PC_ALL, 0);
 			break;
 
-			/**
-			 * MALE ELYOS
-			 */
 			case 857788: //Archdaeva Of Eternal Storms.
 				despawnNpc(npc);
 				// 你获得了祝福之泉光环。 / You are graced with the aura of Blessed Spring.
@@ -162,9 +152,6 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 				// 永恒裂隙已开启，你可离开永恒档案。 / An Eternity Rift has opened, allowing you to leave the Archives of Eternity.
 				sendMsgByRace(1403304, Race.PC_ALL, 0);
 			break;
-			/**
-			 * FEMALE ELYOS
-			 */
 			case 857795: //Archdaeva Of Eternal Storms.
 				despawnNpc(npc);
 				// 你获得了祝福之泉光环。 / You are graced with the aura of Blessed Spring.
@@ -190,9 +177,6 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 				// 永恒裂隙已开启，你可离开永恒档案。 / An Eternity Rift has opened, allowing you to leave the Archives of Eternity.
 				sendMsgByRace(1403304, Race.PC_ALL, 0);
 			break;
-			/**
-			 * MALE ASMODIANS
-			 */
 			case 857799: //Archdaeva Of Eternal Storms.
 				despawnNpc(npc);
 				// 你获得了祝福之泉光环。 / You are graced with the aura of Blessed Spring.
@@ -218,10 +202,7 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 				// 永恒裂隙已开启，你可离开永恒档案。 / An Eternity Rift has opened, allowing you to leave the Archives of Eternity.
 				sendMsgByRace(1403304, Race.PC_ALL, 0);
 			break;
-			/**
-			 * FEMALE ASMODIANS
-			 */
-			case 857803: //Archdaeva Of Eternal Storms.
+            case 857803: //Archdaeva Of Eternal Storms.
 				despawnNpc(npc);
 				// 你获得了祝福之泉光环。 / You are graced with the aura of Blessed Spring.
 			    sendMsgByRace(1403365, Race.PC_ALL, 0);
@@ -252,7 +233,6 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
-	 *
 	 * @param msg 消息 / message
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
@@ -270,7 +250,6 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override

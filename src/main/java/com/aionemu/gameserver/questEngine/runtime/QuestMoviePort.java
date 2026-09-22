@@ -8,7 +8,6 @@ public interface QuestMoviePort {
 	 * 提交后播放指定过场。影片结束事件是权威客户端回调；本地 sleep/计时器绝不能估算它。
 	 * Plays the given cutscene after commit. The movie-end event is the
 	 * authoritative client callback; a local sleep/timer must never estimate it.
-	 *
 	 * @return true 表示已发送播放；false 表示玩家离线/失败（best-effort，记录审计） / true if playback was sent; false if the player is offline or it failed (best-effort, audited)
 	 */
 	boolean playMovie(QuestSnapshot snapshot, QuestMutationPlan plan, int movieId);

@@ -31,7 +31,6 @@ public class I18n {
     /**
      * 按遗留国家码切换当前语言。
      * Switch current locale by legacy country code.
-     *
      * @param countryCode 国家码，5 表示简体中文 / Country code, 5 means Simplified Chinese
      */
     public void applyCountryCode(int countryCode) {
@@ -43,7 +42,6 @@ public class I18n {
     /**
      * 返回当前语言环境（{@link LocaleContextHolder} 保证非 null）。
      * Return current locale ({@link LocaleContextHolder} never returns null).
-     *
      * @return 当前语言环境 / Current locale
      */
     public Locale currentLocale() {
@@ -53,7 +51,6 @@ public class I18n {
     /**
      * 按消息键取值（无参数）。
      * Resolve message by code without arguments.
-     *
      * @param code 消息键 / message code
      * @return 本地化文本；缺失时返回键本身 / Localized text, or the code if missing
      */
@@ -64,7 +61,6 @@ public class I18n {
     /**
      * 按消息键与参数取值。数字参数会先转成原始字符串，避免本地化千分位。
      * Resolve message by code and args. Numbers are stringified first to avoid locale grouping.
-     *
      * @param code 消息键 / message code
      * @param args 消息参数 / Message arguments
      * @return 本地化文本；缺失时返回键本身 / Localized text, or the code if missing

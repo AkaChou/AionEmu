@@ -33,7 +33,6 @@ public class SM_MAIL_SERVICE extends MailServicePacket {
 	/**
 	 * 同步邮箱总体状态（serviceId = 0）。
 	 * Syncs overall mailbox state (serviceId = 0).
-	 *
 	 * @param mailbox 邮箱（触发状态刷新） / mailbox (triggers state refresh)
 	 */
 	public SM_MAIL_SERVICE(Mailbox mailbox) {
@@ -44,7 +43,6 @@ public class SM_MAIL_SERVICE extends MailServicePacket {
 	/**
 	 * 返回发信/邮件操作消息（serviceId = 1）。
 	 * Returns send-mail/operation message (serviceId = 1).
-	 *
 	 * @param mailMessage 邮件消息结果 / mail message result
 	 */
 	public SM_MAIL_SERVICE(MailMessage mailMessage) {
@@ -56,7 +54,6 @@ public class SM_MAIL_SERVICE extends MailServicePacket {
 	/**
 	 * 下发邮件列表（serviceId = 2）。
 	 * Delivers the letter list (serviceId = 2).
-	 *
 	 * @param player target player
 	 * @param letters letter collection
 	 */
@@ -69,7 +66,6 @@ public class SM_MAIL_SERVICE extends MailServicePacket {
 	/**
 	 * 下发邮件列表，可标记是否快递（serviceId = 2）。
 	 * Delivers the letter list, optionally marked as express (serviceId = 2).
-	 *
 	 * target player
 	 * letter collection
 	 * @param isExpress 是否快递邮件模式 / whether express-mail mode
@@ -84,7 +80,6 @@ public class SM_MAIL_SERVICE extends MailServicePacket {
 	/**
 	 * 打开/阅读单封信件（serviceId = 3）。
 	 * Opens/reads a single letter (serviceId = 3).
-	 *
 	 * @param player target player
 	 * @param letter letter
 	 * @param time timestamp
@@ -99,7 +94,6 @@ public class SM_MAIL_SERVICE extends MailServicePacket {
 	/**
 	 * 更新信件附件状态（serviceId = 5）。
 	 * Updates letter attachment state (serviceId = 5).
-	 *
 	 * @param letterId letter id
 	 * @param attachmentType attachment type
 	 */
@@ -113,7 +107,6 @@ public class SM_MAIL_SERVICE extends MailServicePacket {
 	/**
 	 * 删除信件结果（serviceId = 6）。
 	 * Letter delete result (serviceId = 6).
-	 *
 	 * @param letterIds 被删除信件 ID 数组 / deleted letter ids
 	 */
 	public SM_MAIL_SERVICE(int[] letterIds) {

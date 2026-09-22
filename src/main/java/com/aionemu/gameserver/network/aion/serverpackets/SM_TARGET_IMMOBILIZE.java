@@ -16,7 +16,6 @@ import lombok.AllArgsConstructor;
  * <p>
  * 对非玩家实体在启用地理数据时会校正 Z 轴，减少怪物悬空。
  * For non-player entities, corrects Z via geo data when enabled to reduce floating mobs.
- *
  * @author Sweetkr
  */
 @AllArgsConstructor

@@ -17,9 +17,7 @@ import java.util.TreeMap;
 /**
  * 军团数据访问对象的 MySQL 8 实现，已修复连接泄漏。
  * MySQL 8 implementation of LegionDAO with connection leak fixes.
- *
  * @author Simple
- * @modified cura
  */
 @Slf4j
 public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
@@ -72,7 +70,6 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     /**
      * 检查军团名称是否已被占用。
      * Checks whether the given legion name is already used.
-     *
      * @param name 军团名称 / legion name
      * @return 是否已占用；查询失败时返回 true / whether used; true on query error
      */
@@ -97,7 +94,6 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     /**
      * 获取拥有领地（territory &gt; 0）的军团 ID 集合。
      * Returns legion ids that currently own a territory (territory &gt; 0).
-     *
      * @return 军团 ID 集合 / collection of legion ids
      */
     @Override
@@ -121,7 +117,6 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     /**
      * 保存新建军团的基础记录（ID 与名称）。
      * Saves a newly created legion base row (id and name).
-     *
      * @param legion 军团 / legion
      * @return 是否成功 / whether succeeded
      */
@@ -145,7 +140,6 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     /**
      * 持久化军团完整信息，并写入待处理的加入申请。
      * Persists full legion data and stores pending join requests.
-     *
      * @param legion 军团 / legion
      */
     @Override
@@ -186,9 +180,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     /**
      * 按名称加载军团。
      * Loads a legion by name.
-     *
      * legion name
-     *
      * @param legionName 军团名 / legion name
      * @return 军团；不存在时返回 null / legion, or null if missing
      */
@@ -217,9 +209,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     /**
      * 按 ID 加载军团，并附加加入申请列表。
      * Loads a legion by id and attaches join requests.
-     *
      * legion id
-     *
      * @param legionId 军团 ID / legion id
      * @return 军团；不存在时返回 null / legion, or null if missing
      */
@@ -283,7 +273,6 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     /**
      * 删除军团并清除其攻城归属（事务）。
      * Deletes the legion and clears its siege ownership within a transaction.
-     *
      * @param legionId 军团 ID / legion id
      */
     @Override
@@ -313,7 +302,6 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     /**
      * 获取已占用的军团 ID 列表，供 ID 工厂使用。
      * Returns used legion ids for ID factory allocation.
-     *
      * 已占用 ID 数组；出错时返回空数组。
      * used id array, or empty on error.
      */
@@ -343,9 +331,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     /**
      * 加载军团公告列表（最多 7 条，按时间升序）。
      * Loads legion announcements (up to 7, ordered by date ascending).
-     *
      * legion id
-     *
      * @param legionId 军团 ID / legion id
      * @return 时间戳到公告内容的有序映射 / ordered map of timestamp to message
      */
@@ -376,7 +362,6 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     /**
      * 保存一条新的军团公告。
      * Saves a new legion announcement.
-     *
      * @param legionId 军团 ID / legion id
      * @param currentTime 公告时间戳 / announcement timestamp
      * @param message 公告消息 / announcement message
@@ -403,7 +388,6 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     /**
      * 删除指定时间点的军团公告。
      * Removes a legion announcement at the given timestamp.
-     *
      * @param legionId 军团 ID / legion id
      * @param unixTime 公告时间戳 / announcement timestamp
      */
@@ -423,7 +407,6 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     /**
      * 持久化军团徽章：不存在则创建，需更新则更新。
      * Persists a legion emblem: inserts if missing, updates when required.
-     *
      * @param legionId 军团 ID / legion id
      * @param legionEmblem 军团徽章 / legion emblem
      */
@@ -497,7 +480,6 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     /**
      * 加载军团徽章；无记录时返回默认徽章。
      * Loads the legion emblem; returns a default emblem when none exists.
-     *
      * @param legionId 军团 ID / legion id
      * @return 军团徽章 / legion emblem
      */
@@ -539,7 +521,6 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     /**
      * 加载军团仓库物品。
      * Loads the legion warehouse storage.
-     *
      * @param legion 军团 / legion
      * @return 军团仓库 / legion warehouse
      */
@@ -610,7 +591,6 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     /**
      * 将军团历史记录加载到军团对象中。
      * Loads legion history entries into the legion instance.
-     *
      * @param legion 军团 / legion
      */
     @Override
@@ -645,7 +625,6 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     /**
      * 保存一条新的军团历史记录。
      * Saves a new legion history entry.
-     *
      * @param legionId 军团 ID / legion id
      * @param legionHistory history entry
      * @return 是否成功 / whether succeeded
@@ -672,7 +651,6 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     /**
      * 更新军团描述、加入类型与最低加入等级。
      * Updates legion description, join type and minimum join level.
-     *
      * @param legion 军团 / legion
      */
     @Override
@@ -693,7 +671,6 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     /**
      * 保存一条军团加入申请。
      * Stores a legion join request.
-     *
      * @param legionJoinRequest 加入请求 / join request
      */
     @Override
@@ -720,9 +697,7 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     /**
      * 加载军团全部加入申请。
      * Loads all join requests for the given legion.
-     *
      * legion id
-     *
      * @param legionId 军团 ID / legion id
      * @return 加入申请列表 / join request list
      */
@@ -759,7 +734,6 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     /**
      * 按军团 ID 与玩家 ID 删除加入申请。
      * Deletes a join request by legion id and player id.
-     *
      * @param legionId 军团 ID / legion id
      * @param playerId 玩家 ID / player id
      */
@@ -779,7 +753,6 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     /**
      * 按申请对象删除加入申请。
      * Deletes a join request using the request object.
-     *
      * @param ljr 加入申请 / join request
      */
     @Override
@@ -790,7 +763,6 @@ public class LegionDAO extends com.aionemu.gameserver.dao.LegionDAO {
     /**
      * 判断当前数据库是否受 MySQL 8 DAO 支持。
      * Returns whether the given database is supported by MySQL 8 DAOs.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 请求发送自定义军团徽章信息的客户端包。
  * Client packet requesting custom legion emblem info.
- *
  * @author cura
  */
 public class CM_LEGION_SEND_EMBLEM_INFO extends AionClientPacket {
@@ -19,7 +18,6 @@ public class CM_LEGION_SEND_EMBLEM_INFO extends AionClientPacket {
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余合法状态 / additional valid states

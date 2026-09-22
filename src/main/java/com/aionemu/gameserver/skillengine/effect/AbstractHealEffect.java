@@ -18,7 +18,6 @@ import lombok.Getter;
 /**
  * 治疗类效果基类：按 HP/MP/FP/DP 计算并应用治疗量，支持固定值与百分比。
  * Base class for heal effects: calculates and applies heal for HP/MP/FP/DP, fixed or percent.
- *
  * @author ATracer modified by Wakizashi, kecimis
  */
 @Getter
@@ -47,7 +46,6 @@ public abstract class AbstractHealEffect extends EffectTemplate {
 	/**
 	 * 计算最终治疗量（含治疗加成/削弱、疾病状态拦截），并写入效果预留值。
 	 * Calculates final heal (boost/deboost, disease block) and stores it in reserved values.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 * @param healType 治疗类型 / heal type
 	 */
@@ -106,7 +104,6 @@ public abstract class AbstractHealEffect extends EffectTemplate {
 	/**
 	 * 将已计算的治疗量按类型应用到受影响者。
 	 * Applies the calculated heal value to the effected creature by heal type.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 * @param healType 治疗类型 / heal type
 	 */
@@ -157,7 +154,6 @@ public abstract class AbstractHealEffect extends EffectTemplate {
 	/**
 	 * 返回受影响者当前对应属性值。
 	 * Returns the effected creature's current stat for this heal type.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 * @return 当前属性值 / current stat value
 	 */
@@ -166,7 +162,6 @@ public abstract class AbstractHealEffect extends EffectTemplate {
 	/**
 	 * 返回受影响者对应属性上限。
 	 * Returns the effected creature's max stat for this heal type.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 * @return 属性上限 / max stat value
 	 */

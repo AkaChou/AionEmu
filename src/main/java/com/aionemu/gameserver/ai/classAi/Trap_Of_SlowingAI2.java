@@ -9,7 +9,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * 职业技能召唤物/陷阱 AI：Trap Of Slowing（@AIName "trap_of_slowing"），继承 AggressiveNpcAI2。
  * Class-skill summon/trap AI: Trap Of Slowing (@AIName "trap_of_slowing"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("trap_of_slowing")

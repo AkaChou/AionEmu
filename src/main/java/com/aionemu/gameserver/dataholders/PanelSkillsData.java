@@ -39,7 +39,6 @@ public class PanelSkillsData {
 	/**
 	 * 按面板 ID 获取技能面板。
 	 * Returns the skill panel for the given panel id.
-	 *
 	 * @param id 面板 ID / panel id
 	 * @return 技能面板，不存在则为 null / skill panel or null
 	 */
@@ -50,7 +49,6 @@ public class PanelSkillsData {
 	/**
 	 * 返回已加载的技能面板数量。
 	 * Returns the number of loaded skill panels.
-	 *
 	 * @return 已加载的技能面板数量 / Returns the number of loaded skill panels.
 	 */
 	public int size() {

@@ -6,7 +6,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * 玩家生命状态（HP/MP 等）数据访问对象。
  * Player life-stats data access object.
- *
  * @author Mr. Poke
  */
 public abstract class PlayerLifeStatsDAO implements DAO {
@@ -14,7 +13,6 @@ public abstract class PlayerLifeStatsDAO implements DAO {
 	/**
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier of this DAO.
-	 *
 	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
@@ -25,7 +23,6 @@ public abstract class PlayerLifeStatsDAO implements DAO {
 	/**
 	 * 加载玩家生命状态。
 	 * Loads player life stats.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public abstract void loadPlayerLifeStat(Player player);
@@ -33,7 +30,6 @@ public abstract class PlayerLifeStatsDAO implements DAO {
 	/**
 	 * 插入玩家生命状态记录。
 	 * Inserts a player life-stat record.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public abstract void insertPlayerLifeStat(Player player);
@@ -41,7 +37,6 @@ public abstract class PlayerLifeStatsDAO implements DAO {
 	/**
 	 * 更新玩家生命状态记录。
 	 * Updates a player life-stat record.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public abstract void updatePlayerLifeStat(Player player);

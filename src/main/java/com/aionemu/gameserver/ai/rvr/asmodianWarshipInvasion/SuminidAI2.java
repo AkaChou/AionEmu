@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * RvR 相关 NPC AI：Suminid（@AIName "suminid"），继承 AggressiveNpcAI2。
  * RvR-related NPC AI: Suminid (@AIName "suminid"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("suminid")

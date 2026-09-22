@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Anguished Dragon Lord Refuge 副本 NPC AI：ID Tiamat FOBJ Teleport T2（@AIName "blood_red_jewel"），继承 ActionItemNpcAI2。
  * Anguished Dragon Lord Refuge instance NPC AI: ID Tiamat FOBJ Teleport T2 (@AIName "blood_red_jewel"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("blood_red_jewel")

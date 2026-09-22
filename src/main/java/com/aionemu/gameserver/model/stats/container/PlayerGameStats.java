@@ -29,7 +29,6 @@ import lombok.Setter;
 /**
  * 玩家的游戏属性：含装备/魔石加成与速度缓存。
  * Player game stats: includes equipment/manastone bonuses and speed caches.
- *
  * @author xavier
  */
 @Getter
@@ -45,9 +44,6 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 	/** 返回 skill efficiency / Returns the skill efficiency */
 	private float skillEfficiency;
 
-	/**
-	 * @param owner
-	 */
 	public PlayerGameStats(Player owner) {
 		super(owner);
 	}

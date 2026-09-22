@@ -8,7 +8,6 @@ import com.aionemu.commons.utils.ClassUtils;
 /**
  * DAO 加载器类
  * DAO Loader Class
- *
  * 这个工具类负责在脚本上下文初始化后加载所有 DAO 实现类。
  * This utility class is responsible for loading all DAO implementations after script context initialization.
  * DAO 实现类必须满足以下条件：
@@ -17,7 +16,6 @@ import com.aionemu.commons.utils.ClassUtils;
  * - 不能是抽象类或接口 / Cannot be abstract or interface
  * Must have default no-arg public constructor
  * - 不能被@DisabledDAO 注解标记 / Cannot be marked with @DisabledDAO annotation
- *
  * @author SoulKeeper
  * @author Aquanox
  */
@@ -26,7 +24,6 @@ public class DAOLoader implements ClassListener {
     /**
  * 在类加载后注册 DAO 实现
      * Register DAO implementations after class loading
-     *
      * @param classes 需要处理的类数组 / Array of classes to process
      */
     @SuppressWarnings("unchecked")
@@ -49,7 +46,6 @@ public class DAOLoader implements ClassListener {
     /**
  * 在类卸载前注销 DAO 实现
      * Unregister DAO implementations before class unloading
-     *
      * @param classes 需要处理的类数组 / Array of classes to process
      */
     @SuppressWarnings("unchecked")
@@ -72,7 +68,6 @@ public class DAOLoader implements ClassListener {
     /**
  * 检查类是否是有效的 DAO 实现
      * Check if the class is a valid DAO implementation
-     *
      * @param clazz 要检查的类 / Class to check
      * @return 是有效 DAO 实现时为 {@code true} / {@code true} if this is a valid DAO implementation
      */

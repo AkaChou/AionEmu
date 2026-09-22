@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * LS→GS：高级/付费相关操作结果响应（请求 ID、结果码、点数与露娜币）。
  * LS→GS: premium operation result response (request id, result code, points and luna).
- *
  * @author KID
  */
 @AllArgsConstructor

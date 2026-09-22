@@ -14,7 +14,6 @@ import java.util.concurrent.*;
 /**
  * 登录服线程池管理器：提供调度、瞬时与长任务三类执行池。
  * Login-server thread-pool manager: provides scheduled, instant and long-running executor pools.
- *
  * @author -Nemesiss-, NB4L1, MrPoke, lord_rex
  */
 @Slf4j
@@ -78,7 +77,6 @@ public final class ThreadPoolManager {
     /**
      * 延迟调度任务。
      * Schedules a runnable after the given delay.
-     *
      * @param r 任务 / runnable
      * @param delay 延迟毫秒 / delay in milliseconds
      * @return 可取消的 Future / cancellable future
@@ -93,7 +91,6 @@ public final class ThreadPoolManager {
     /**
      * 延迟调度效果类任务（等同 schedule）。
      * Schedules an effect-style task (delegates to schedule).
-     *
      * @param r 任务 / runnable
      * @param delay 延迟毫秒 / delay in milliseconds
      * @return 可取消的 Future / cancellable future
@@ -105,7 +102,6 @@ public final class ThreadPoolManager {
     /**
      * 固定频率周期调度。
      * Schedules a runnable at a fixed rate.
-     *
      * @param r 任务 / runnable
      * @param delay 初始延迟毫秒 / initial delay in milliseconds
      * @param period 周期（毫秒） / period in milliseconds
@@ -122,7 +118,6 @@ public final class ThreadPoolManager {
     /**
      * 固定频率调度效果类任务（等同 scheduleAtFixedRate）。
      * Schedules an effect-style task at a fixed rate (delegates to scheduleAtFixedRate).
-     *
      * @param r 任务 / runnable
      * @param delay 初始延迟毫秒 / initial delay in milliseconds
      * @param period 周期（毫秒） / period in milliseconds
@@ -135,7 +130,6 @@ public final class ThreadPoolManager {
     /**
      * 在瞬时线程池中执行任务。
      * Executes a runnable on the instant pool.
-     *
      * @param r 任务 / runnable
      */
     public void execute(Runnable r) {
@@ -147,7 +141,6 @@ public final class ThreadPoolManager {
     /**
      * 执行普通任务（等同 execute）。
      * Executes a general task (delegates to execute).
-     *
      * @param r 任务 / runnable
      */
     public void executeTask(Runnable r) {
@@ -157,7 +150,6 @@ public final class ThreadPoolManager {
     /**
      * 在长任务线程池中执行。
      * Executes a runnable on the long-running pool.
-     *
      * @param r 任务 / runnable
      */
     public void executeLongRunning(Runnable r) {
@@ -169,7 +161,6 @@ public final class ThreadPoolManager {
     /**
      * 提交任务到瞬时线程池。
      * Submits a runnable to the instant pool.
-     *
      * @param r 任务 / runnable
      * @return 任务 Future / task future
      */
@@ -182,7 +173,6 @@ public final class ThreadPoolManager {
     /**
      * 提交任务到长任务线程池。
      * Submits a runnable to the long-running pool.
-     *
      * @param r 任务 / runnable
      * @return 任务 Future / task future
      */
@@ -195,7 +185,6 @@ public final class ThreadPoolManager {
     /**
      * 执行登录服数据包任务。
      * Executes a login-server packet task.
-     *
      * @param pkt 可运行的数据包任务 / runnable packet for Login Server
      */
     public void executeLsPacket(Runnable pkt) {
@@ -205,7 +194,6 @@ public final class ThreadPoolManager {
     /**
      * TaskManager 使用的延迟调度入口。
      * TaskManager delay scheduler entry point.
-     *
      * @param r 可运行任务 / runnable task
      * @param delay 执行前等待毫秒 / wait before task execution
      * @return 已调度任务 / scheduled task
@@ -266,7 +254,6 @@ public final class ThreadPoolManager {
     /**
      * 收集三类线程池的运行时统计信息。
      * Collects runtime statistics for all three pools.
-     *
      * @return 可读统计行列表 / human-readable stats lines
      */
     public List<String> getStats() {
@@ -340,7 +327,6 @@ public final class ThreadPoolManager {
     /**
      * 获取单例实例（已弃用，请走 boot 注入）。
      * Returns the singleton instance (deprecated; prefer boot injection).
-     *
      * @return 单例实例 / singleton instance
      */
     @Deprecated(since = "boot-migration")

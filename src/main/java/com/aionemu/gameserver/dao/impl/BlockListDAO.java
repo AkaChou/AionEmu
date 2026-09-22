@@ -20,9 +20,7 @@ import java.util.Map;
 /**
  * 玩家屏蔽列表 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of BlockListDAO.
- *
  * Updated for MySQL 8 - Fixed connection leaks.
- *
  * @author Ben
  */
 @Slf4j
@@ -40,11 +38,9 @@ public class BlockListDAO extends com.aionemu.gameserver.dao.BlockListDAO {
 	/**
 	 * 添加被屏蔽玩家。
 	 * Adds a blocked player.
-	 *
 	 * @param playerObjId 玩家对象 ID / player object id
 	 * @param objIdToBlock 被屏蔽对象 ID / blocked object id
 	 * @param reason 屏蔽原因 / block reason
-	 *
 	 * @return 是否添加成功 / whether add succeeded
 	 */
 	@Override
@@ -66,10 +62,7 @@ public class BlockListDAO extends com.aionemu.gameserver.dao.BlockListDAO {
 	 * 移除被屏蔽玩家。
 	 * Removes a blocked player.
 	 *
-	 * player object id
-	 *
 	 * @param objIdToDelete 被移除对象 ID / object id to remove
-	 * @param objIdToDelete 玩家对象 ID / player object id
 	 * @return 是否删除成功 / whether delete succeeded
 	 */
 	@Override
@@ -89,7 +82,6 @@ public class BlockListDAO extends com.aionemu.gameserver.dao.BlockListDAO {
 	/**
 	 * 加载玩家屏蔽列表。
 	 * Loads the block list for a player.
-	 *
 	 * @param player 玩家 / player
 	 * @return 屏蔽列表 / block list
 	 */
@@ -123,11 +115,9 @@ public class BlockListDAO extends com.aionemu.gameserver.dao.BlockListDAO {
 	/**
 	 * 设置屏蔽原因。
 	 * Sets the block reason.
-	 *
 	 * @param playerObjId 玩家对象 ID / player object id
 	 * @param blockedPlayerObjId 被屏蔽对象 ID / blocked player object id
 	 * @param reason 屏蔽原因 / block reason
-	 *
 	 * @return 是否更新成功 / whether update succeeded
 	 */
 	@Override
@@ -148,7 +138,6 @@ public class BlockListDAO extends com.aionemu.gameserver.dao.BlockListDAO {
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
-	 *
 	 * @param databaseName 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version

@@ -34,8 +34,6 @@ public class SkillData {
 	/**
 	 * 返回原始技能模板列表。
 	 * Returns the raw skill template list.
-	 *
-	 * @return 技能模板列表 / skill template list
 	 */
 	@XmlElement(name = "skill_template")
 	private List<SkillTemplate> skillTemplates;
@@ -48,8 +46,7 @@ public class SkillData {
 	/**
 	 * 返回技能 ID 到模板的映射。
 	 * Returns the skill-id to template map.
-	 *
-	 * @return 技能数据映射 / skill data map
+	 * 技能数据映射 / skill data map
 	 */
 	@XmlTransient
 	private final IntObjectHashMap<SkillTemplate> skillData = new IntObjectHashMap<>();
@@ -77,7 +74,6 @@ public class SkillData {
 	/**
 	 * 按技能 ID 获取技能模板。
 	 * Returns the skill template for the given skill id.
-	 *
 	 * @param skillId 技能 ID / skill id
 	 * @return 技能模板或 null / skill template or null
 	 */
@@ -88,7 +84,6 @@ public class SkillData {
 	/**
 	 * 返回已加载的技能模板数量。
 	 * Returns the number of loaded skill templates.
-	 *
 	 * @return 已加载的技能模板数量 / Returns the number of loaded skill templates.
 	 */
 	public int size() {
@@ -98,7 +93,6 @@ public class SkillData {
 	/**
 	 * 按技能组名获取技能模板。
 	 * Returns the skill template for the given skill group name.
-	 *
 	 * @param name 技能组名 / skill group name
 	 * @return 技能模板或 null / skill template or null
 	 */
@@ -109,7 +103,6 @@ public class SkillData {
 	/**
 	 * 返回技能组索引条目数量。
 	 * Returns the number of skill-group index entries.
-	 *
 	 * @return 技能组索引条目数量 / Returns the number of skill-group index entries.
 	 */
 	public int sizeOfGroup() {
@@ -119,7 +112,6 @@ public class SkillData {
 	/**
 	 * 设置技能模板列表并立即重建索引。
 	 * Sets the skill template list and rebuilds indexes immediately.
-	 *
 	 * @param skillTemplates 技能模板列表 / skill template list
 	 */
 	public void setSkillTemplates(List<SkillTemplate> skillTemplates) {
@@ -149,7 +141,6 @@ public class SkillData {
 	/**
 	 * 返回共享同一 delayId 的技能 ID 列表；必要时懒初始化冷却组。
 	 * Returns skill ids that share the given delay id; lazily initializes cooldown groups if needed.
-	 *
 	 * @param delayId 延迟/冷却组 ID / delay or cooldown group id
 	 * @return 共享该 delayId 的技能 ID 列表 / skill id list
 	 */

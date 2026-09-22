@@ -10,7 +10,6 @@ import lombok.Getter;
 /**
  * Absolute 属性模板（静态数据/XML）。
  * XML template.
- *
  * @author Rolandas
  */
 @Getter

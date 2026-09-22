@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 武器类型包装：主/副手组合，用于动作时间查表与比较。
  * Weapon type wrapper: main/off-hand pair for motion-time lookup and compare.
- *
  * @author kecimis
  */
 @Getter
@@ -18,20 +17,17 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 	/**
 	 * 获取主手武器类型。
 	 * Gets main-hand weapon type.
-	 *
 	 */
 	private WeaponType mainHand = null;
 	/**
 	 * 获取副手武器类型。
 	 * Gets off-hand weapon type.
-	 *
 	 */
 	private WeaponType offHand = null;
 
 	/**
 	 * 构造武器类型包装；双手持有时归一为单手剑双持键。
 	 * Builds wrapper; dual-wield both hands normalize to dual 1H sword key.
-	 *
 	 */
 	public WeaponTypeWrapper(WeaponType mainHand, WeaponType offHand) {
 		if (mainHand != null && offHand != null) {
@@ -46,7 +42,6 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 	/**
 	 * 相等比较（主/副手与外层服务）。
 	 * Equality by main/off-hand and outer service.
-	 *
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -72,7 +67,6 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 	/**
 	 * 字符串表示。
 	 * String representation.
-	 *
 	 */
 	@Override
 	public String toString() {
@@ -83,7 +77,6 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 	/**
 	 * 哈希码。
 	 * Hash code.
-	 *
 	 */
 	@Override
 	public int hashCode() {
@@ -98,7 +91,6 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 	/**
 	 * 比较武器包装（用于排序/查表）。
 	 * Compares weapon wrappers (for sort/lookup).
-	 *
 	 * @param o 另一个包装 / other wrapper
 	 */
 	@Override

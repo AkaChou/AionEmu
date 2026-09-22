@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 /**
  * 玩家宏列表的服务端包。
  * Server packet that delivers a player's macro list.
- *
  * @author -Nemesiss-
  */
 @AllArgsConstructor

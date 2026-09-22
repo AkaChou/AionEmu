@@ -8,7 +8,6 @@ public abstract class Rates {
 	/**
 	 * 组队经验倍率。
 	 * Group XP rate.
-	 *
 	 * rate
 	 */
 	public abstract float getGroupXpRate();
@@ -16,7 +15,6 @@ public abstract class Rates {
 	/**
 	 * 基础经验倍率。
 	 * Base XP rate.
-	 *
 	 * rate
 	 */
 	public abstract float getXpRate();
@@ -24,7 +22,6 @@ public abstract class Rates {
 	/**
 	 * 书籍经验倍率。
 	 * Book XP rate.
-	 *
 	 * rate
 	 */
 	public abstract float getBookXpRate();
@@ -32,7 +29,6 @@ public abstract class Rates {
 	/**
 	 * 击杀 NPC 获得 AP 倍率。
 	 * AP gain rate from NPCs.
-	 *
 	 * rate
 	 */
 	public abstract float getApNpcRate();
@@ -40,7 +36,6 @@ public abstract class Rates {
 	/**
 	 * 对玩家击杀获得 AP 倍率。
 	 * AP gain rate from player kills.
-	 *
 	 * rate
 	 */
 	public abstract float getApPlayerGainRate();
@@ -48,7 +43,6 @@ public abstract class Rates {
 	/**
 	 * 对玩家击杀获得 GP 倍率。
 	 * GP gain rate from player kills.
-	 *
 	 * rate
 	 */
 	public abstract float getGpPlayerGainRate();
@@ -56,7 +50,6 @@ public abstract class Rates {
 	/**
 	 * 对玩家击杀获得经验倍率。
 	 * XP gain rate from player kills.
-	 *
 	 * rate
 	 */
 	public abstract float getXpPlayerGainRate();
@@ -64,7 +57,6 @@ public abstract class Rates {
 	/**
 	 * 死亡丢失 AP 倍率。
 	 * AP loss rate on death.
-	 *
 	 * rate
 	 */
 	public abstract float getApPlayerLossRate();
@@ -72,7 +64,6 @@ public abstract class Rates {
 	/**
 	 * 死亡丢失 GP 倍率。
 	 * GP loss rate on death.
-	 *
 	 * rate
 	 */
 	public abstract float getGpPlayerLossRate();
@@ -80,7 +71,6 @@ public abstract class Rates {
 	/**
 	 * 采集经验倍率。
 	 * Gathering XP rate.
-	 *
 	 * rate
 	 */
 	public abstract float getGatheringXPRate();
@@ -88,7 +78,6 @@ public abstract class Rates {
 	/**
 	 * 采集次数倍率。
 	 * Gathering count rate.
-	 *
 	 * rate
 	 */
 	public abstract int getGatheringCountRate();
@@ -96,7 +85,6 @@ public abstract class Rates {
 	/**
 	 * 制作经验倍率。
 	 * Crafting XP rate.
-	 *
 	 * rate
 	 */
 	public abstract float getCraftingXPRate();
@@ -104,7 +92,6 @@ public abstract class Rates {
 	/**
 	 * 掉落倍率。
 	 * Drop rate.
-	 *
 	 * rate
 	 */
 	public abstract float getDropRate();
@@ -112,7 +99,6 @@ public abstract class Rates {
 	/**
 	 * 任务经验倍率。
 	 * Quest XP rate.
-	 *
 	 * rate
 	 */
 	public abstract float getQuestXpRate();
@@ -120,7 +106,6 @@ public abstract class Rates {
 	/**
 	 * 任务基纳倍率。
 	 * Quest Kinah rate.
-	 *
 	 * rate
 	 */
 	public abstract float getQuestKinahRate();
@@ -128,7 +113,6 @@ public abstract class Rates {
 	/**
 	 * 任务 AP 倍率。
 	 * Quest AP rate.
-	 *
 	 * rate
 	 */
 	public abstract float getQuestApRate();
@@ -136,7 +120,6 @@ public abstract class Rates {
 	/**
 	 * 任务 GP 倍率。
 	 * Quest GP rate.
-	 *
 	 * rate
 	 */
 	public abstract float getQuestGpRate();
@@ -144,7 +127,6 @@ public abstract class Rates {
 	/**
 	 * 欧比斯行动任务倍率。
 	 * Quest abyss operation rate.
-	 *
 	 * rate
 	 */
 	public abstract float getQuestAbyssOpRate();
@@ -152,7 +134,6 @@ public abstract class Rates {
 	/**
 	 * 任务经验加成倍率。
 	 * Quest experience boost rate.
-	 *
 	 * rate
 	 */
 	public abstract float getQuestExpBoostRate();
@@ -160,7 +141,6 @@ public abstract class Rates {
 	/**
 	 * 击杀 NPC 获得 DP 倍率。
 	 * DP gain rate from NPCs.
-	 *
 	 * rate
 	 */
 	public abstract float getDpNpcRate();
@@ -168,7 +148,6 @@ public abstract class Rates {
 	/**
 	 * 对玩家获得 DP 倍率。
 	 * DP gain rate from players.
-	 *
 	 * rate
 	 */
 	public abstract float getDpPlayerRate();
@@ -176,7 +155,6 @@ public abstract class Rates {
 	/**
 	 * 制作暴击率。
 	 * Craft critical rate.
-	 *
 	 * rate
 	 */
 	public abstract int getCraftCritRate();
@@ -184,7 +162,6 @@ public abstract class Rates {
 	/**
 	 * 制作连击暴击率。
 	 * Craft combo critical rate.
-	 *
 	 * rate
 	 */
 	public abstract int getComboCritRate();
@@ -192,7 +169,6 @@ public abstract class Rates {
 	/**
 	 * 孤独竞技场奖励倍率。
 	 * Discipline arena reward rate.
-	 *
 	 * rate
 	 */
 	public abstract float getDisciplineRewardRate();
@@ -200,7 +176,6 @@ public abstract class Rates {
 	/**
 	 * 混沌竞技场奖励倍率。
 	 * Chaos arena reward rate.
-	 *
 	 * rate
 	 */
 	public abstract float getChaosRewardRate();
@@ -208,7 +183,6 @@ public abstract class Rates {
 	/**
 	 * 合作竞技场奖励倍率。
 	 * Harmony arena reward rate.
-	 *
 	 * rate
 	 */
 	public abstract float getHarmonyRewardRate();
@@ -216,7 +190,6 @@ public abstract class Rates {
 	/**
 	 * 荣耀竞技场奖励倍率。
 	 * Glory arena reward rate.
-	 *
 	 * rate
 	 */
 	public abstract float getGloryRewardRate();
@@ -224,7 +197,6 @@ public abstract class Rates {
 	/**
 	 * Toll 奖励倍率。
 	 * Toll reward rate.
-	 *
 	 * rate
 	 */
 	public abstract float getTollRewardRate();
@@ -232,7 +204,6 @@ public abstract class Rates {
 	/**
 	 * 宠物喂养倍率。
 	 * Pet feeding rate.
-	 *
 	 * rate
 	 */
 	public abstract float getPetFeedingRate();
@@ -240,7 +211,6 @@ public abstract class Rates {
 	/**
 	 * 按会员等级返回对应倍率实现。
 	 * Returns the rates implementation for the membership tier.
-	 *
 	 * @param membership 会员等级（0/1 普通，2 高级，3+ VIP） / membership tier (0/1 regular, 2 premium, 3+ VIP)
 	 * rates instance
 	 */

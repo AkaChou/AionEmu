@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * RvR 相关 NPC AI：Exploration Area Flag（@AIName "battlefield_trigger_asmodians"），继承 ActionItemNpcAI2。
  * RvR-related NPC AI: Exploration Area Flag (@AIName "battlefield_trigger_asmodians"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("battlefield_trigger_asmodians")
@@ -24,9 +23,6 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 	@Override
 	protected void handleUseItemFinish(Player player) {
 		switch (getNpcId()) {
-		   /**
-			* 探索区 1 的入侵触发。 / Exploration area 1 invasion trigger.
-			*/
 			case 805854: //DF6_A1_BattleField_1_1.
 				announceF6Invasion();
 				explorationAreaStart1_1();
@@ -43,9 +39,6 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 				spawn(805933, 1291.6405f, 2098.4895f, 185.14610f, (byte) 0, 131);
 			break;
 
-		   /**
-			* 探索区 2 的入侵触发。 / Exploration area 2 invasion trigger.
-			*/
 			case 805856: //DF6_A1_BattleField_2_1.
 				announceF6Invasion();
 				explorationAreaStart2_1();
@@ -62,9 +55,6 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 				spawn(805935, 1764.2432f, 2447.4143f, 213.45287f, (byte) 0, 874);
 			break;
 
-		   /**
-			* 探索区 3 的入侵触发。 / Exploration area 3 invasion trigger.
-			*/
 			case 805858: //DF6_A1_BattleField_3_1.
 				announceF6Invasion();
 				explorationAreaStart3_1();
@@ -81,10 +71,7 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 				spawn(805937, 1553.7285f, 1615.7953f, 203.65607f, (byte) 0, 890);
 			break;
 
-		   /**
-			* 探索区 4 的入侵触发。 / Exploration area 4 invasion trigger.
-			*/
-			case 805860: //DF6_A1_BattleField_4_1.
+            case 805860: //DF6_A1_BattleField_4_1.
 				announceF6Invasion();
 				explorationAreaStart4_1();
 				spawn(805861, 1971.6879f, 1701.5045f, 224.99850f, (byte) 0, 220);

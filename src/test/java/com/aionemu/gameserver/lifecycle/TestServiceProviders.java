@@ -15,7 +15,6 @@ public final class TestServiceProviders {
 	/**
 	 * 为指定类型安装返回给定实例的 provider。
 	 * Installs a provider that returns the given instance for the type.
-	 *
 	 * @param type     被测服务类型 / service type
 	 * @param instance 测试实例 / test instance
 	 * @param <T>      服务类型 / service type
@@ -29,7 +28,6 @@ public final class TestServiceProviders {
 	/**
 	 * 清空指定类型的 provider。
 	 * Clears the provider of the given type.
-	 *
 	 * @param type 服务类型 / service type
 	 */
 	public static void clear(Class<?> type) {

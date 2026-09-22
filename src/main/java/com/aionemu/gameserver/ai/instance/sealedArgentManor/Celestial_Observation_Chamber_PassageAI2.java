@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * Sealed Argent Manor 副本 NPC AI：Celestial Observation Chamber Passage（@AIName "Celestial_Observation_Chamber_Passage"），继承 NpcAI2。
  * Sealed Argent Manor instance NPC AI: Celestial Observation Chamber Passage (@AIName "Celestial_Observation_Chamber_Passage"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Celestial_Observation_Chamber_Passage")

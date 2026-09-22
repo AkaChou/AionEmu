@@ -11,16 +11,10 @@ public class PlayerVisualStateService {
 	/**
 	 * 校验隐身可见性。
 	 * Validates hide visibility.
-	 *
 	 * @param hiden 是否隐藏 / hiden
 	 */
 	public static void hideValidate(final Player hiden) {
-		/**
-		 * 访问观察者：同步隐身可见状态。
-		 * Visits the observer: syncs hide visibility.
-		 *
-		 * @param observer 观察者玩家 / observer player
-		 */hiden.getKnownList().doOnAllPlayers(observer -> {
+        hiden.getKnownList().doOnAllPlayers(observer -> {
 			 boolean canSee = observer.canSee(hiden);
 			 boolean isSee = observer.isSeePlayer(hiden);
 
@@ -35,16 +29,10 @@ public class PlayerVisualStateService {
 	/**
 	 * 校验看见条件。
 	 * Validates see conditions.
-	 *
 	 * search
 	 */
 	public static void seeValidate(final Player search) {
-		/**
-		 * 访问目标玩家：同步看见状态。
-		 * Visits the target player: syncs see state.
-		 *
-		 * @param hide 被查看玩家 / player being checked
-		 */search.getKnownList().doOnAllPlayers(hide -> {
+        search.getKnownList().doOnAllPlayers(hide -> {
 			 boolean canSee = search.canSee(hide);
 			 boolean isSee = search.isSeePlayer(hide);
 

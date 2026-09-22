@@ -16,7 +16,6 @@ import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 /**
  * 通用驱散效果：按效果 ID、ID 范围、效果类型或槽位类型移除效果。
  * Generic dispel effect: removes effects by effect id, id range, effect type, or slot type.
- *
  * @author ATracer
  */
 public class DispelEffect extends EffectTemplate {
@@ -45,7 +44,6 @@ public class DispelEffect extends EffectTemplate {
 	/**
 	 * 按配置的驱散类型移除目标效果。
 	 * Removes target effects according to the configured dispel type.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

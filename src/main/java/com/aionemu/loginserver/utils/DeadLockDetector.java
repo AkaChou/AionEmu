@@ -16,7 +16,6 @@ import com.aionemu.loginserver.lifecycle.LoginProcessRuntimeBridge;
 /**
  * 死锁检测线程：周期性扫描 JVM 死锁，发现后记录日志并可按策略重启进程。
  * Deadlock detector thread: periodically scans for JVM deadlocks, logs details and may restart the process.
- *
  * @author -Nemesiss-
  */
 @Slf4j
@@ -52,7 +51,6 @@ public class DeadLockDetector extends Thread {
     /**
      * 使用默认退出桥创建死锁检测器（已弃用构造）。
      * Create a detector with the default exit bridge (deprecated constructor).
-     *
      * @param sleepTime 检测间隔（秒） / check interval in seconds
      * @param doWhenDL 死锁处理策略 / action on deadlock
      */
@@ -64,7 +62,6 @@ public class DeadLockDetector extends Thread {
     /**
      * 使用自定义退出处理器创建死锁检测器。
      * Create a detector with a custom exit handler.
-     *
      * @param sleepTime 检测间隔（秒） / check interval in seconds
      * @param doWhenDL 死锁处理策略 / action on deadlock
      * @param exitHandler 退出回调 / exit callback
@@ -89,10 +86,7 @@ public class DeadLockDetector extends Thread {
                 long[] ids = tmx.findDeadlockedThreads();
 
                 if (ids != null) {
-                    /**
-	 * 检测到死锁。 / deadlock found :/
-	 */
-                    deadlock = true;
+					deadlock = true;
                     ThreadInfo[] tis = tmx.getThreadInfo(ids, true, true);
                     String info = "DeadLock Found!\n";
                     for (ThreadInfo ti : tis) {
@@ -103,10 +97,6 @@ public class DeadLockDetector extends Thread {
                         LockInfo[] locks = ti.getLockedSynchronizers();
                         MonitorInfo[] monitors = ti.getLockedMonitors();
                         if (locks.length == 0 && monitors.length == 0) {
-                            /**
-                             * 该线程已死锁，但未必是罪魁。
-	 * this thread is deadlocked but it is not necessarily guilty
-                             */
                             continue;
                         }
 

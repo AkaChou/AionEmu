@@ -40,8 +40,6 @@ public class GeoService {
      * -- GETTER --
      *  返回排除地理处理的 NPC 列表。
      *  Returns the NPC exclusion list for geo handling.
-     *
-     * @return 排除列表 / exclusion list
      */
 	@Getter
     private static final List<Integer> npcsExclude = new ArrayList<>();
@@ -51,11 +49,9 @@ public class GeoService {
     /**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -74,7 +70,6 @@ public class GeoService {
 	/**
 	 * 注入 Spring 单例提供者。
 	 * Injects the Spring singleton provider.
-	 *
 	 * @param instanceProvider Spring 提供者 / spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<GeoService> instanceProvider) {
@@ -105,7 +100,6 @@ public class GeoService {
 	/**
 	 * 设置指定实例中门的开合状态。
 	 * Sets the open/closed state of a door in the given instance.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param instanceId 实例 ID / instance id
 	 * @param doorId 门 ID / door id
@@ -121,7 +115,6 @@ public class GeoService {
 	/**
 	 * 按名称获取世界中的几何节点。
 	 * Returns a named geometry node from the world map.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param name 节点名称 / node name
 	 * @return 空间节点 / spatial node
@@ -133,7 +126,6 @@ public class GeoService {
 	/**
 	 * 在实例中生成可放置物碰撞体。
 	 * Spawns placeable-object collision for the instance.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param instanceId 实例 ID / instance id
 	 * @param staticId 静态物 ID / static object id
@@ -148,7 +140,6 @@ public class GeoService {
 	/**
 	 * 在实例中销毁可放置物碰撞体。
 	 * Despawns placeable-object collision for the instance.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param instanceId 实例 ID / instance id
 	 * @param staticId 静态物 ID / static object id
@@ -163,7 +154,6 @@ public class GeoService {
 	/**
 	 * 更新城镇地理等级。
 	 * Updates the geo level of a town.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param townId 城镇 ID / town id
 	 * @param level 目标等级 / target level
@@ -177,7 +167,6 @@ public class GeoService {
 	/**
 	 * 设置房屋门开合状态。
 	 * Sets the open/closed state of a house door.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param instanceId 实例 ID / instance id
 	 * @param houseAddress 房屋地址 / house address
@@ -192,7 +181,6 @@ public class GeoService {
 	/**
 	 * 判断世界是否具备地形材质数据。
 	 * Whether the world has terrain material data.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @return 有材质数据时为 true / true if materials are available
 	 */
@@ -203,13 +191,11 @@ public class GeoService {
 	/**
 	 * 获取指定坐标的地形材质 ID。
 	 * Returns the terrain material id at the given coordinates.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param x X 坐标 / x coordinate
 	 * @param y Y 坐标 / y coordinate
 	 * @param z Z 坐标 / z coordinate
 	 * @param instanceId 实例 ID / instance id
-	 *
 	 * @return 材质 ID，禁用时为 0 / material id, or 0 when disabled
 	 */
 	public int getTerrainMaterialAt(int worldId, float x, float y, float z, int instanceId) {
@@ -219,7 +205,6 @@ public class GeoService {
 	/**
 	 * 移动后根据地理高度校正 Z（禁用地理时使用 0.5 抬升）。
 	 * Corrects Z after a move from geo height (uses a 0.5 lift when geo is off).
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param x X 坐标 / x coordinate
 	 * @param y Y 坐标 / y coordinate
@@ -237,7 +222,6 @@ public class GeoService {
 	/**
 	 * 按可见对象当前位置采样地表高度。
 	 * Samples ground height at the visible object's current position.
-	 *
 	 * @param object 可见对象 / visible object
 	 * @return 地表高度 / ground height
 	 */
@@ -256,7 +240,6 @@ public class GeoService {
 	/**
 	 * 采样指定坐标的地表高度；无效时按 defaultUp 回退。
 	 * Samples ground height at the coordinates; falls back via defaultUp when invalid.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param x X 坐标 / x coordinate
 	 * @param y Y 坐标 / y coordinate
@@ -283,7 +266,6 @@ public class GeoService {
 	/**
 	 * 采样地表高度（水下兼容路径）。
 	 * Samples ground height (water-compatible path).
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param x X 坐标 / x coordinate
 	 * @param y Y 坐标 / y coordinate
@@ -306,7 +288,6 @@ public class GeoService {
 	/**
 	 * 仅按 XY 采样地表高度。
 	 * Samples ground height from X/Y only.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param x X 坐标 / x coordinate
 	 * @param y Y 坐标 / y coordinate
@@ -328,7 +309,6 @@ public class GeoService {
 	 * 返回世界的几何地图，供寻路等批量采样复用，避免每个采样点重复解析 worldId。
 	 * Returns the geo map for a world so batch samplers (pathfinding) can reuse it instead of
 	 * resolving the world id on every sample.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @return 几何地图（未加载时返回占位地图） / geo map (placeholder when not loaded)
 	 */
@@ -339,7 +319,6 @@ public class GeoService {
 	/**
 	 * 仅按 XY 采样地表高度（水下兼容路径）。
 	 * Samples ground height from X/Y only (water-compatible path).
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param x X 坐标 / x coordinate
 	 * @param y Y 坐标 / y coordinate
@@ -356,7 +335,6 @@ public class GeoService {
 	/**
 	 * 查询对象到目标点的碰撞结果。
 	 * Queries collision results from the object to a target point.
-	 *
 	 * @param object 起点对象 / origin object
 	 * @param x 目标 X / target x
 	 * @param y 目标 Y / target y
@@ -372,7 +350,6 @@ public class GeoService {
 	/**
 	 * 查询对象到目标点的碰撞结果（带忽略属性）。
 	 * Queries collision results from the object to a target point (with ignore properties).
-	 *
 	 * @param object 起点对象 / origin object
 	 * @param x 目标 X / target x
 	 * @param y 目标 Y / target y
@@ -391,10 +368,8 @@ public class GeoService {
 	/**
 	 * 判断两对象之间是否视线畅通。
 	 * Whether line of sight is clear between two objects.
-	 *
 	 * @param object 观察者 / observer
 	 * @param target 目标 / target
-	 *
 	 * @return 若 visible 则为 true / true if visible
 	 */
 	public boolean canSee(VisibleObject object, VisibleObject target) {
@@ -483,10 +458,8 @@ public class GeoService {
 	/**
 	 * 判断两对象之间是否可通行。
 	 * Whether the path is passable between two objects.
-	 *
 	 * @param object 起点对象 / origin object
 	 * @param target 目标对象 / target object
-	 *
 	 * @return 可通行则为 true / true if passable
 	 */
     public boolean canPass(VisibleObject object, VisibleObject target) {
@@ -518,7 +491,6 @@ public class GeoService {
 	/**
 	 * 计算视线检测用的垂直偏移（考虑变身与碰撞高度）。
 	 * Computes the vertical offset used for LOS checks (accounts for transform and bound height).
-	 *
 	 * @param object 被检测对象 / checked object
 	 * @return 垂直偏移 / vertical offset
 	 */
@@ -536,7 +508,6 @@ public class GeoService {
 	/**
 	 * 判断两点之间视线是否畅通。
 	 * Whether line of sight is clear between two points.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param x 起点 X / start x
 	 * @param y 起点 Y / start y
@@ -546,7 +517,6 @@ public class GeoService {
 	 * @param z1 终点 Z / end z
 	 * @param limit 检测距离上限 / ray-length limit
 	 * @param instanceId 实例 ID / instance id
-	 *
 	 * @return 若 visible 则为 true / true if visible
 	 */
 	public boolean canSee(int worldId, float x, float y, float z, float x1, float y1, float z1, float limit, int instanceId) {
@@ -556,7 +526,6 @@ public class GeoService {
 	/**
 	 * 判断两点之间视线是否畅通（带忽略属性）。
 	 * Whether line of sight is clear between two points (with ignore properties).
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param x 起点 X / start x
 	 * @param y 起点 Y / start y
@@ -567,7 +536,6 @@ public class GeoService {
 	 * @param limit 检测距离上限 / ray-length limit
 	 * @param instanceId 实例 ID / instance id
 	 * @param ignoreProperties 忽略属性 / ignore properties
-	 *
 	 * @return 若 visible 则为 true / true if visible
 	 */
 	public boolean canSee(int worldId, float x, float y, float z, float x1, float y1, float z1, float limit, int instanceId,
@@ -581,7 +549,6 @@ public class GeoService {
 	/**
 	 * 判断两点之间是否可通行。
 	 * Whether the path is passable between two points.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param x 起点 X / start x
 	 * @param y 起点 Y / start y
@@ -591,7 +558,6 @@ public class GeoService {
 	 * @param z1 终点 Z / end z
 	 * @param limit 检测距离上限 / ray-length limit
 	 * @param instanceId 实例 ID / instance id
-	 *
 	 * @return 可通行则为 true / true if passable
 	 */
 	public boolean canPass(int worldId, float x, float y, float z, float x1, float y1, float z1, float limit, int instanceId) {
@@ -601,7 +567,6 @@ public class GeoService {
 	/**
 	 * 判断行走者两点之间是否可通行。
 	 * Whether a walker path is passable between two points.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param x 起点 X / start x
 	 * @param y 起点 Y / start y
@@ -611,7 +576,6 @@ public class GeoService {
 	 * @param z1 终点 Z / end z
 	 * @param limit 检测距离上限 / ray-length limit
 	 * @param instanceId 实例 ID / instance id
-	 *
 	 * @return 可通行则为 true / true if passable
 	 */
 	public boolean canPassWalker(int worldId, float x, float y, float z, float x1, float y1, float z1, float limit, int instanceId) {
@@ -621,7 +585,6 @@ public class GeoService {
 	/**
 	 * 地理数据是否开启。
 	 * Whether geo data is enabled.
-	 *
 	 * @return 地形检测已启用时为 {@code true} / {@code true} if enabled
 	 */
 	public boolean isGeoOn() {
@@ -631,9 +594,7 @@ public class GeoService {
 	/**
 	 * 获取到目标点最近碰撞位置。
 	 * Returns the closest collision point toward the target.
-	 *
 	 * @param object 起点生物 / origin creature
-	 *
 	 * @param x 目标 X / target x
 	 * @param y 目标 Y / target y
 	 * @param z 目标 Z / target z
@@ -648,7 +609,6 @@ public class GeoService {
 	/**
 	 * 获取到目标点最近碰撞位置（带忽略属性）。
 	 * Returns the closest collision point toward the target (with ignore properties).
-	 *
 	 * @param object 起点生物 / origin creature
 	 * @param x 目标 X / target x
 	 * @param y 目标 Y / target y
@@ -670,7 +630,6 @@ public class GeoService {
 	/**
 	 * 沿给定方向寻找移动碰撞点。
 	 * Finds the movement collision point along the given direction.
-	 *
 	 * @param creature 移动生物 / moving creature
 	 * @param directionAngle 方向角（度） / direction angle in degrees
 	 * @param maxDistance 最大距离 / max distance
@@ -693,7 +652,6 @@ public class GeoService {
 	/**
 	 * 返回当前配置对应的地理模式。
 	 * Returns the geo mode matching the current configuration.
-	 *
 	 * @return 地理模式 / geo type
 	 */
 	public GeoType getConfiguredGeoType() {

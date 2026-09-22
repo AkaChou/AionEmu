@@ -11,7 +11,6 @@ import lombok.Getter;
 /**
  * 全局掉落部落模板（静态数据/XML）。
  * Global drop tribe template (static data/XML).
- *
  * @author Wnkrz
  */
 @Getter

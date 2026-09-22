@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 /**
  * 三维点，用于几何相关逻辑。
  * Point 3D for geometry logic.
- *
  * @author SoulKeeper
  */
 @SuppressWarnings("serial")
@@ -42,7 +41,6 @@ public class Point3D implements Cloneable, Serializable {
 	/**
 	 * 由二维点和 Z 坐标创建新的三维点。
 	 * Creates new 3D point from 2D point and z coord.
-	 *
 	 * @param point 二维点 / 2D point
 	 * @param z     z 坐标 / z coord
 	 */
@@ -61,7 +59,6 @@ public class Point3D implements Cloneable, Serializable {
 	/**
 	 * 检查该点是否与另一个点相等。
 	 * Checks if this point is equal to another point.
-	 *
 	 * @param o 要比较的点 / point to compare with
 	 * @return 相等返回 true / true if equal
 	 */
@@ -79,7 +76,6 @@ public class Point3D implements Cloneable, Serializable {
 	/**
 	 * 返回点的哈希码：result = x; result = 31 * result + y; result = 31 * result + z。
 	 * Returns point's hashcode: result = x; result = 31 * result + y; result = 31 * result + z.
-	 *
 	 * @return 哈希码 / hashcode
 	 */
 	@Override

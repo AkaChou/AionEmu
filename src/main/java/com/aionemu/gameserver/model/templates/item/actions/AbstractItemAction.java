@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * 抽象物品动作模板（静态数据/XML）。
  * XML template.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -20,7 +19,6 @@ public abstract class AbstractItemAction {
 	/**
 	 * 检查物品是否可以使用。
 	 * Check whether the item can be used.
-	 *
 	 * @param player 使用物品的玩家 / the player using the item
 	 * @param parentItem 父物品 / the parent item
 	 * @param targetItem 目标物品 / the target item
@@ -31,7 +29,6 @@ public abstract class AbstractItemAction {
 	/**
 	 * 执行物品动作。
 	 * Perform the item action.
-	 *
 	 * @param player 使用物品的玩家 / the player using the item
 	 * @param parentItem 父物品 / the parent item
 	 * @param targetItem 目标物品 / the target item

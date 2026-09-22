@@ -40,7 +40,6 @@ public final class FastMath {
 	/**
 	 * 判断给定整数是否为 2 的幂。
 	 * Tests whether the given integer is a power of two.
-	 *
 	 * @param number 待检测整数 / integer to test
 	 * @return 若为 2 的幂则为 true / true if the number is a power of two
 	 */
@@ -51,7 +50,6 @@ public final class FastMath {
 	/**
 	 * 返回不小于给定值的最近 2 的幂。
 	 * Returns the nearest power of two not less than the given value.
-	 *
 	 * @param number 输入值 / input value
 	 * @return 最近的 2 的幂 / nearest power of two
 	 */
@@ -62,7 +60,6 @@ public final class FastMath {
 	/**
 	 * 线性插值。
 	 * Linear interpolation.
-	 *
 	 * @param scale 插值系数（0~1） / interpolation factor (0~1)
 	 * @param startValue 起始值 / start value
 	 * @param endValue 结束值 / end value
@@ -84,7 +81,6 @@ public final class FastMath {
 	/**
 	 * 对三维向量进行线性插值。
 	 * Linearly interpolates between two 3D vectors.
-	 *
 	 * @param scale 插值系数（0~1） / interpolation factor (0~1)
 	 * @param startValue 起始向量 / start vector
 	 * @param endValue 结束向量 / end vector
@@ -101,7 +97,6 @@ public final class FastMath {
 	/**
 	 * Catmull-Rom 样条标量插值。
 	 * Catmull-Rom spline scalar interpolation.
-	 *
 	 * @param u 插值参数 / interpolation parameter
 	 * @param T 张力系数 / tension factor
 	 * @param p0 控制点 0 / control point 0
@@ -121,7 +116,6 @@ public final class FastMath {
 	/**
 	 * 对三维向量进行 Catmull-Rom 样条插值。
 	 * Catmull-Rom spline interpolation for 3D vectors.
-	 *
 	 * @param u 插值参数 / interpolation parameter
 	 * @param T 张力系数 / tension factor
 	 * @param p0 控制点 0 / control point 0
@@ -141,7 +135,6 @@ public final class FastMath {
 	/**
 	 * 反余弦，输入超出 [-1, 1] 时进行钳制。
 	 * Arc cosine with clamping for values outside [-1, 1].
-	 *
 	 * @param fValue 输入值 / input value
 	 * @return 反余弦结果（弧度） / arccosine in radians
 	 */
@@ -158,7 +151,6 @@ public final class FastMath {
 	/**
 	 * 反正弦，输入超出 [-1, 1] 时进行钳制。
 	 * Arc sine with clamping for values outside [-1, 1].
-	 *
 	 * @param fValue 输入值 / input value
 	 * @return 反正弦结果（弧度） / arcsine in radians
 	 */
@@ -175,7 +167,6 @@ public final class FastMath {
 	/**
 	 * 反正切。
 	 * Arc tangent.
-	 *
 	 * @param fValue 输入值 / input value
 	 * @return 反正切结果（弧度） / arctangent in radians
 	 */
@@ -186,7 +177,6 @@ public final class FastMath {
 	/**
 	 * 双参数反正切，返回正确象限。
 	 * Two-argument arctangent returning the correct quadrant.
-	 *
 	 * @param fY Y 分量 / Y component
 	 * @param fX X 分量 / X component
 	 * @return 反正切结果（弧度） / arctangent in radians
@@ -198,7 +188,6 @@ public final class FastMath {
 	/**
 	 * 向上取整。
 	 * Ceiling function.
-	 *
 	 * @param fValue 输入值 / input value
 	 * @return 不小于输入的最小整数 / smallest integer not less than the input
 	 */
@@ -209,7 +198,6 @@ public final class FastMath {
 	/**
 	 * 将角度归约到适合 sin 计算的范围。
 	 * Reduces an angle into a range suitable for sine computation.
-	 *
 	 * @param radians 输入弧度 / input radians
 	 * @return 归约后的角度 / reduced angle
 	 */
@@ -226,7 +214,6 @@ public final class FastMath {
 	/**
 	 * 优化的正弦计算（先归约角度）。
 	 * Optimized sine computation (with prior angle reduction).
-	 *
 	 * @param fValue 输入弧度 / input radians
 	 * @return 正弦值 / sine value
 	 */
@@ -240,7 +227,6 @@ public final class FastMath {
 	/**
 	 * 优化的余弦计算（基于 sin2）。
 	 * Optimized cosine computation (based on sin2).
-	 *
 	 * @param fValue 输入弧度 / input radians
 	 * @return 余弦值 / cosine value
 	 */
@@ -251,7 +237,6 @@ public final class FastMath {
 	/**
 	 * 余弦。
 	 * Cosine.
-	 *
 	 * @param v 输入弧度 / input radians
 	 * @return 余弦值 / cosine value
 	 */
@@ -262,7 +247,6 @@ public final class FastMath {
 	/**
 	 * 正弦。
 	 * Sine.
-	 *
 	 * @param v 输入弧度 / input radians
 	 * @return 正弦值 / sine value
 	 */
@@ -273,7 +257,6 @@ public final class FastMath {
 	/**
 	 * 自然指数 e^x。
 	 * Natural exponential e^x.
-	 *
 	 * @param fValue 指数 / exponent
 	 * @return e 的 fValue 次幂 / e raised to the power of fValue
 	 */
@@ -284,7 +267,6 @@ public final class FastMath {
 	/**
 	 * 绝对值。
 	 * Absolute value.
-	 *
 	 * @param fValue 输入值 / input value
 	 * @return 绝对值 / absolute value
 	 */
@@ -298,7 +280,6 @@ public final class FastMath {
 	/**
 	 * 向下取整。
 	 * Floor function.
-	 *
 	 * @param fValue 输入值 / input value
 	 * @return 不大于输入的最大整数 / largest integer not greater than the input
 	 */
@@ -309,7 +290,6 @@ public final class FastMath {
 	/**
 	 * 平方根倒数 1/√x。
 	 * Inverse square root 1/√x.
-	 *
 	 * @param fValue 输入值 / input value
 	 * @return 平方根倒数 / inverse square root
 	 */
@@ -320,7 +300,6 @@ public final class FastMath {
 	/**
 	 * 快速近似平方根倒数（Quake 算法）。
 	 * Fast approximate inverse square root (Quake algorithm).
-	 *
 	 * @param x 输入值 / input value
 	 * @return 近似平方根倒数 / approximate inverse square root
 	 */
@@ -336,7 +315,6 @@ public final class FastMath {
 	/**
 	 * 自然对数 ln(x)。
 	 * Natural logarithm ln(x).
-	 *
 	 * @param fValue 输入值 / input value
 	 * @return 自然对数 / natural logarithm
 	 */
@@ -347,7 +325,6 @@ public final class FastMath {
 	/**
 	 * 指定底数的对数。
 	 * Logarithm with a given base.
-	 *
 	 * @param value 真数 / argument
 	 * @param base 底数 / base
 	 * @return 对数结果 / logarithm result
@@ -359,7 +336,6 @@ public final class FastMath {
 	/**
 	 * 幂运算。
 	 * Power function.
-	 *
 	 * @param fBase 底数 / base
 	 * @param fExponent 指数 / exponent
 	 * @return 幂结果 / power result
@@ -371,7 +347,6 @@ public final class FastMath {
 	/**
 	 * 平方。
 	 * Square.
-	 *
 	 * @param fValue 输入值 / input value
 	 * @return 平方值 / squared value
 	 */
@@ -382,7 +357,6 @@ public final class FastMath {
 	/**
 	 * 平方根。
 	 * Square root.
-	 *
 	 * @param fValue 输入值 / input value
 	 * @return 平方根 / square root
 	 */
@@ -393,7 +367,6 @@ public final class FastMath {
 	/**
 	 * 正切。
 	 * Tangent.
-	 *
 	 * @param fValue 输入弧度 / input radians
 	 * @return 正切值 / tangent value
 	 */
@@ -404,7 +377,6 @@ public final class FastMath {
 	/**
 	 * 整数符号函数。
 	 * Integer signum function.
-	 *
 	 * @param iValue 输入整数 / input integer
 	 * @return 1、0 或 -1 / 1, 0 or -1
 	 */
@@ -421,7 +393,6 @@ public final class FastMath {
 	/**
 	 * 浮点符号函数。
 	 * Floating-point signum function.
-	 *
 	 * @param fValue 输入值 / input value
 	 * @return 符号（1.0、0.0 或 -1.0） / sign (1.0, 0.0 or -1.0)
 	 */
@@ -432,7 +403,6 @@ public final class FastMath {
 	/**
 	 * 判断三点的相对方向（逆时针/顺时针/共线）。
 	 * clockwise / collinear).
-	 *
 	 * @param p0 点 0 / point 0
 	 * @param p1 点 1 / point 1
 	 * @param p2 点 2 / point 2
@@ -461,7 +431,6 @@ public final class FastMath {
 	/**
 	 * 判断点是否在三角形内部（含边界）。
 	 * Tests whether a point lies inside a triangle (including boundary).
-	 *
 	 * @param t0 三角形顶点 0 / triangle vertex 0
 	 * @param t1 三角形顶点 1 / triangle vertex 1
 	 * @param t2 三角形顶点 2 / triangle vertex 2
@@ -493,7 +462,6 @@ public final class FastMath {
 	/**
 	 * 计算 4×4 矩阵行列式。
 	 * Computes the determinant of a 4×4 matrix.
-	 *
 	 * @param m00 矩阵元素 (0,0) / matrix element (0,0)
 	 * @param m01 矩阵元素 (0,1) / matrix element (0,1)
 	 * @param m02 矩阵元素 (0,2) / matrix element (0,2)
@@ -529,7 +497,6 @@ public final class FastMath {
 	/**
 	 * 生成 [0, 1) 范围的随机浮点数。
 	 * Generates a random float in the range [0, 1).
-	 *
 	 * @return 随机浮点数 / random float
 	 */
 	public static float nextRandomFloat() {
@@ -539,7 +506,6 @@ public final class FastMath {
 	/**
 	 * 生成指定闭区间内的随机整数。
 	 * Generates a random integer within the given closed range.
-	 *
 	 * @param min 最小值（含） / minimum (inclusive)
 	 * @param max 最大值（含） / maximum (inclusive)
 	 * @return 随机整数 / random integer
@@ -551,7 +517,6 @@ public final class FastMath {
 	/**
 	 * 生成随机整数。
 	 * Generates a random integer.
-	 *
 	 * @return 随机整数 / random integer
 	 */
 	public static int nextRandomInt() {
@@ -561,7 +526,6 @@ public final class FastMath {
 	/**
 	 * 球坐标转笛卡尔坐标（Y 为上轴）。
 	 * Converts spherical coordinates to Cartesian (Y-up).
-	 *
 	 * @param sphereCoords 球坐标 (半径, 方位角, 仰角) / spherical coords (radius, azimuth, elevation)
 	 * @param store 存储结果的向量 / vector to store the result
 	 * @return 存储结果的向量 / the store vector
@@ -577,7 +541,6 @@ public final class FastMath {
 	/**
 	 * 笛卡尔坐标转球坐标（Y 为上轴）。
 	 * Converts Cartesian coordinates to spherical (Y-up).
-	 *
 	 * @param cartCoords 笛卡尔坐标 / Cartesian coordinates
 	 * @param store 存储结果的向量 (半径, 方位角, 仰角) / vector to store (radius, azimuth, elevation)
 	 * @return 存储结果的向量 / the store vector
@@ -599,7 +562,6 @@ public final class FastMath {
 	/**
 	 * 球坐标转笛卡尔坐标（Z 为上轴）。
 	 * Converts spherical coordinates to Cartesian (Z-up).
-	 *
 	 * @param sphereCoords 球坐标 (半径, 方位角, 仰角) / spherical coords (radius, azimuth, elevation)
 	 * @param store 存储结果的向量 / vector to store the result
 	 * @return 存储结果的向量 / the store vector
@@ -615,7 +577,6 @@ public final class FastMath {
 	/**
 	 * 笛卡尔坐标转球坐标（Z 为上轴）。
 	 * Converts Cartesian coordinates to spherical (Z-up).
-	 *
 	 * @param cartCoords 笛卡尔坐标 / Cartesian coordinates
 	 * @param store 存储结果的向量 (半径, 方位角, 仰角) / vector to store (radius, azimuth, elevation)
 	 * @return 存储结果的向量 / the store vector
@@ -637,7 +598,6 @@ public final class FastMath {
 	/**
 	 * 将值归一化到指定区间（循环折返）。
 	 * Normalizes a value into the given range (wrapping around).
-	 *
 	 * @param val 输入值 / input value
 	 * @param min 区间下限 / range minimum
 	 * @param max 区间上限 / range maximum
@@ -660,7 +620,6 @@ public final class FastMath {
 	/**
 	 * 将 x 的符号设为与 y 相同。
 	 * Copies the sign of y onto x.
-	 *
 	 * @param x 源值 / source value
 	 * @param y 提供符号的值 / value providing the sign
 	 * @return 带有 y 符号的 x / x with the sign of y
@@ -678,7 +637,6 @@ public final class FastMath {
 	/**
 	 * 将输入钳制到 [min, max]。
 	 * Clamps the input to the range [min, max].
-	 *
 	 * @param input 输入值 / input value
 	 * @param min 区间下限 / lower bound
 	 * @param max 区间上限 / upper bound
@@ -691,7 +649,6 @@ public final class FastMath {
 	/**
 	 * 将输入饱和到 [0, 1]。
 	 * Saturates the input to the range [0, 1].
-	 *
 	 * @param input 输入值 / input value
 	 * @return 饱和后的值 / saturated value
 	 */
@@ -702,7 +659,6 @@ public final class FastMath {
 	/**
 	 * 将半精度浮点数（16 位）转换为单精度浮点数。
 	 * Converts a half-precision float (16-bit) to a single-precision float.
-	 *
 	 * @param half 半精度位模式 / half-precision bit pattern
 	 * @return 单精度浮点数 / single-precision float
 	 */
@@ -723,7 +679,6 @@ public final class FastMath {
 	/**
 	 * 将单精度浮点数转换为半精度浮点数（16 位）。
 	 * Converts a single-precision float to a half-precision float (16-bit).
-	 *
 	 * @param flt 单精度浮点数 / single-precision float
 	 * @return 半精度位模式 / half-precision bit pattern
 	 * @throws IllegalArgumentException 输入为 NaN 时 / when the input is NaN.

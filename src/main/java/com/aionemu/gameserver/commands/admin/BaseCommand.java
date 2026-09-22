@@ -12,7 +12,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 /**
  * 管理员基地命令：列出基地归属，或将基地占领为指定阵营。
  * Admin base command: lists base ownership, or captures a base for a given race.
- *
  * @author Rinzler
  */
 @SuppressWarnings("rawtypes")
@@ -32,7 +31,6 @@ public class BaseCommand extends AdminCommand
 	/**
 	 * 执行基地管理：list/capture 子命令。
 	 * Executes base management: list/capture subcommands.
-	 *
 	 * @param params 参数：list|capture 及附加参数 / list|capture and extra args
 	 */
 	@Override
@@ -50,8 +48,6 @@ public class BaseCommand extends AdminCommand
 	/**
 	 * 校验基地地点 ID 是否有效。
 	 * Validates whether the base location id exists.
-	 *
-	 *
 	 * @return {@code true} if valid。
 	 */
 	protected boolean isValidBaseLocationId(Player player, int baseId) {
@@ -65,7 +61,6 @@ public class BaseCommand extends AdminCommand
 	/**
 	 * 列出所有基地及其当前归属阵营。
 	 * Lists all bases and their current owning race.
-	 *
 	 */
 	protected void handleList(Player player, String[] params) {
 		if (params.length != 1) {
@@ -79,7 +74,6 @@ public class BaseCommand extends AdminCommand
 	/**
 	 * 将指定基地占领为给定阵营。
 	 * Captures the specified base for the given race.
-	 *
 	 * @param params 参数：capture、基地 ID、阵营 / capture, base id, race
 	 */
 	protected void capture(Player player, String[] params) {
@@ -109,7 +103,6 @@ public class BaseCommand extends AdminCommand
 	/**
 	 * 向管理员输出 {@code //base} 用法。
 	 * Sends {@code //base} usage help to the admin.
-	 *
 	 */
 	protected void showHelp(Player player) {
 		PacketSendUtility.sendMessage(player, "AdminCommand //base Help\n" + "//base list\n" + "//base capture <Id> <Race (ELYOS, ASMODIANS, NPC)>");

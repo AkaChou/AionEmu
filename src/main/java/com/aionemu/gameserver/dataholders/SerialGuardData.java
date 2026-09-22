@@ -45,8 +45,7 @@ public class SerialGuardData {
 		}
 		guardRankRestriction.clear();
 		guardRankRestriction = null;
-		////////////////////////////
-		for (GuardTypeRestriction template : guardTypeRestriction) {
+        for (GuardTypeRestriction template : guardTypeRestriction) {
 			templatesType.put(template.getTypeNum(), template);
 		}
 		guardTypeRestriction.clear();
@@ -56,7 +55,6 @@ public class SerialGuardData {
 	/**
 	 * 返回等级与类型限制的合计数量。
 	 * Returns the total count of rank and type restrictions.
-	 *
 	 * @return 限制总数 / total restriction count
 	 */
 	public int size() {
@@ -66,7 +64,6 @@ public class SerialGuardData {
 	/**
 	 * 按等级编号获取守卫等级限制。
 	 * Returns the guard rank restriction for the given rank number.
-	 *
 	 * @param rank 等级编号 / rank number
 	 * @return 等级限制，不存在则为 null / rank restriction or null
 	 */
@@ -77,7 +74,6 @@ public class SerialGuardData {
 	/**
 	 * 按类型编号获取守卫类型限制。
 	 * Returns the guard type restriction for the given type number.
-	 *
 	 * @param type 类型编号 / type number
 	 * @return 类型限制，不存在则为 null / type restriction or null
 	 */

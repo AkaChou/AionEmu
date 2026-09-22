@@ -13,7 +13,6 @@ import lombok.AllArgsConstructor;
 /**
  * 风道地点集模板（静态数据/XML）。
  * Stream locations template (static data/XML).
- *
  * @author LokiReborn
  */
 @XmlAccessorType(XmlAccessType.FIELD)

@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Cradle Of Eternity 副本 NPC AI：Sealed Fairy（@AIName "Sealed_Fairy"），继承 NpcAI2。
  * Cradle Of Eternity instance NPC AI: Sealed Fairy (@AIName "Sealed_Fairy"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Sealed_Fairy")

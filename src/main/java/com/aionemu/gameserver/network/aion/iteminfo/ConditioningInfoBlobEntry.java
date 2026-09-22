@@ -10,9 +10,7 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
  * 写入物品当前充能点数。
  * Blob that sends conditioning (charge) info.
  * Writes the item's current charge points.
- *
  * @author -Nemesiss-
- * @modified Rolandas
  */
 public class ConditioningInfoBlobEntry extends ItemBlobEntry {
 

@@ -22,7 +22,6 @@ public class SM_ABYSS_ARTIFACT_INFO3 extends AionServerPacket {
 	/**
 	 * 按位置 ID 查询单个神器并构造状态包。
 	 * Looks up a single artifact by location id and builds a status packet.
-	 *
 	 * @param loc 神器位置 ID / artifact location id
 	 */
 	public SM_ABYSS_ARTIFACT_INFO3(int loc) {
@@ -33,7 +32,6 @@ public class SM_ABYSS_ARTIFACT_INFO3 extends AionServerPacket {
 	/**
 	 * 按位置 ID 查询单个神器，并附带传送状态。
 	 * Looks up a single artifact by location id and attaches teleport status.
-	 *
 	 * artifact location id
 	 * @param teleportStatus 是否允许传送 / whether teleport is available
 	 */

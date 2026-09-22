@@ -9,7 +9,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 附魔成功率加成效果：标记运行中效果启用附魔提升。
  * Enchant boost effect: marks the runtime effect to enable enchant success increase.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -19,7 +18,6 @@ public class EnchantBoostEffect extends BuffEffect {
 	/**
 	 * 标记本效果启用附魔加成并记为成功。
 	 * Marks enchant boost and records this effect as successful.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

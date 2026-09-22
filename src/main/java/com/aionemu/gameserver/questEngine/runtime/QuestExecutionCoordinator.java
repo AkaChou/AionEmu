@@ -56,7 +56,6 @@ public final class QuestExecutionCoordinator {
 	 * Executes the recovery route of a reward-window confirmation action: the caller already selected the
 	 * transition by questId + action, so the event's interaction object is allowed to differ from the
 	 * completion route's NPC.
-	 *
 	 * <p>玩家状态、条件与动作可行性仍由 {@link QuestMutationPlanner} 按真实快照校验，
 	 * 未满足来源状态/条件时不会提交。</p>
 	 * <p>The player's state, conditions, and action feasibility are still validated against the real

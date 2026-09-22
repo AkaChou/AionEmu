@@ -15,7 +15,6 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 /**
  * 客户端目标选择请求包（点击或 /Select；objectId 为 0 时取消选择）。
  * Client packet for target selection (click or /Select; 0 unselects).
- *
  * @author SoulKeeper, Sweetkr, KID
  */
 public class CM_TARGET_SELECT extends AionClientPacket {

@@ -46,7 +46,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * 伊吉尔穹顶地标副本事件处理器。
  * Instance event handler for Idgel Dome Landmark.
- *
  * @author Encom
  */
 
@@ -63,15 +62,13 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
         private float loosingGroupMultiplier = 1;
     /** 副本是否已销毁 / whether the instance is destroyed */
     private boolean isInstanceDestroyed = false;
-	/** 已播放动画集合 / played-movie set */
-        /** 副本是否已开始 / whether the instance started */
+	/** 副本是否已开始 / whether the instance started */
         protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
         /** 地标任务 / landmark task */
         private final List<Future<?>> landMarkTask = new ArrayList<>();
     /**
      * 返回玩家奖励记录。
      * Return the player's reward record.
-     *
      * @param player 玩家 / player
      * @return 结果 / result
      */
@@ -88,7 +85,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -175,7 +171,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
     /**
      * 停止副本并结算。
      * Stop the instance and settle.
-     *
      * @param race 阵营 / race
      */
 
@@ -190,7 +185,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
     /**
      * 玩家进入副本时处理。
      * Handle a player entering the instance.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -206,7 +200,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param opponent 对手 / opponent
 			 */
 			@Override
@@ -233,7 +226,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -252,7 +244,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 				/**
 				 * 处理 visit。
 				 * Handle visit.
-				 *
 				 * @param player 玩家 / player
 				 */
 				@Override
@@ -265,7 +256,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 				/**
 				 * 处理 visit。
 				 * Handle visit.
-				 *
 				 * @param player 玩家 / player
 				 */
 				@Override
@@ -279,7 +269,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
     /**
      * 副本创建时初始化逻辑。
      * Initialize logic when the instance is created.
-     *
      * @param instance 世界地图实例 / world-map instance
      */
     @Override
@@ -373,7 +362,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
     /**
      * 处理玩家复活事件。
      * Handle a player revive event.
-     *
      * @param player 玩家 / player
      * @return 结果 / result
      */
@@ -389,7 +377,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
     /**
      * 处理死亡事件。
      * Handle a death event.
-     *
      * @param player 玩家 / player
      * @param lastAttacker 最后攻击者 / last attacker
      * @return 结果 / result
@@ -441,7 +428,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
     /**
      * 处理 updateScore。
      * Handle updateScore.
-     *
      * @param player 玩家 / player
      * @param target 目标 / target
      * @param points 分数 / points
@@ -492,7 +478,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
     /**
      * 处理死亡事件。
      * Handle a death event.
-     *
      * @param npc NPC / npc
      */
     @Override
@@ -514,7 +499,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
     /**
      * 玩家对 NPC 使用物品完成时处理。
      * Handle item-use finish on an NPC.
-     *
      * @param player 玩家 / player
      * @param npc NPC / npc
      */
@@ -526,10 +510,7 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 				point = 1000;
 				despawnNpc(npc);
 			break;
-			/**
-	 * Unsealing Device [Elyos]
-	 */
-			case 806343: //解封装置。 / Unsealing Device.
+            case 806343: //解封装置。 / Unsealing Device.
 				point = 200;
 				despawnNpc(npc);
 				// 天族激活了装置第 1 阶段。 / The Elyos activated stage 1 of the device.
@@ -555,10 +536,7 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 				// 天族成功占领了此区域。 / The Elyos successfully occupied this area.
 				sendMsgByRace(1403434, Race.PC_ALL, 10000);
 			break;
-			/**
-	 * Unsealing Device [Asmodians]
-	 */
-			case 806375: //解封装置。 / Unsealing Device.
+            case 806375: //解封装置。 / Unsealing Device.
 			    point = 200;
 				despawnNpc(npc);
 				// 魔族激活了装置第 1 阶段。 / The Asmodians activated stage 1 of the device.
@@ -635,7 +613,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
     /**
      * 打开指定门。
      * Open the given door.
-     *
      * @param doorId 门 ID / doorId
      */
 
@@ -648,7 +625,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
     /**
      * 处理 sp。
      * Handle sp.
-     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -663,7 +639,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
     /**
      * 处理 sp。
      * Handle sp.
-     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -680,7 +655,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
     /**
      * 处理 sp。
      * Handle sp.
-     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -712,7 +686,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
     /**
      * 处理 sp。
      * Handle sp.
-     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -741,7 +714,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
     /**
      * 处理 sendMsgByRace。
      * Handle sendMsgByRace.
-     *
      * @param msg 消息 / message
      * @param race 阵营 / race
      * @param time 时间 / time
@@ -759,7 +731,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
                     /**
                      * 处理 visit。
                      * Handle visit.
-                     *
                      * @param player 玩家 / player
                      */
                     @Override
@@ -784,7 +755,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
     /**
      * 返回本副本奖励对象。
      * Return this instance's reward object.
-     *
      * @return 结果 / result
      */
     @Override
@@ -795,7 +765,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
     /**
      * 玩家请求退出副本时处理。
      * Handle a player exit request.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -806,7 +775,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
     /**
      * 玩家离开副本时处理。
      * Handle a player leaving the instance.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -821,7 +789,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -832,7 +799,6 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
     /**
      * 玩家登录到该副本时处理。
      * Handle a player logging into this instance.
-     *
      * @param player 玩家 / player
      */
     @Override

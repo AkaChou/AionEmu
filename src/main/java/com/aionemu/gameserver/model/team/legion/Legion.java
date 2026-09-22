@@ -23,7 +23,6 @@ import lombok.Setter;
 /**
  * 军团，用于团队相关逻辑。
  * Legion for team logic.
- *
  * @author Simple
  */
 @Getter
@@ -32,65 +31,19 @@ public class Legion {
 
 	/** 军团信息。 / Legion information. */
 	private ServiceBuff serviceBuff;
-	/**
-	 * @param legionId the legionId to set
-	 */
 	private int legionId = 0;
-	/**
-	 * @param legionName the legionName to set
-	 */
 	private String legionName = "";
-	/**
-	 * @return the legionLevel
-	 */
 	private int legionLevel = 1;
-	/**
-	 * @param legionRank the legionRank to set
-	 */
 	private int legionRank = 0;
-	/**
-	 * @param contributionPoints
-	 */
 	private long contributionPoints = 0;
-	/**
-	 * @return the legionMembers
-	 */
 	private List<Integer> legionMembers = new ArrayList<>();
-	/**
-	 * @return the deputyPermission
-	 */
 	private short deputyPermission = 0x1E0C;
-	/**
-	 * @return the centurionPermission
-	 */
 	private short centurionPermission = 0x1C08;
-	/**
-	 * @return the legionarPermission
-	 */
 	private short legionaryPermission = 0x1800;
-	/**
-	 * @return the volunteerPermission
-	 */
 	private short volunteerPermission = 0x800;
-	/**
-	 * @param disbandTime the disbandTime to set
-	 */
 	private int disbandTime;
-	/**
-	 *
-     * -- SETTER --
-     *
-     @return the announcementList
-      * @param announcementList the announcementList to set
-	 */
 	private TreeMap<Timestamp, String> announcementList = new TreeMap<>();
-	/**
-	 * @param legionEmblem the legionEmblem to set
-	 */
 	private LegionEmblem legionEmblem = new LegionEmblem();
-	/**
-	 * @param legionWarehouse the legionWarehouse to set
-	 */
 	private LegionWarehouse legionWarehouse;
 	private final SortedSet<LegionHistory> legionHistory;
 	private final AtomicBoolean hasBonus = new AtomicBoolean(false);
@@ -156,7 +109,6 @@ public class Legion {
 	/**
 	 * 将成员对象 ID 添加到成员列表。
 	 * Adds a member object id to the members list.
-	 *
 	 * @param playerObjId 玩家对象 ID / player object id
 	 */
 	public boolean addLegionMember(int playerObjId) {
@@ -170,7 +122,6 @@ public class Legion {
 	/**
 	 * 将成员对象 ID 从成员列表移除。
 	 * Removes a member object id from the members list.
-	 *
 	 * @param playerObjId 玩家对象 ID / player object id
 	 */
 	public void deleteLegionMember(int playerObjId) {
@@ -180,7 +131,6 @@ public class Legion {
 	/**
 	 * 设置各职位权限。
 	 * Sets the permissions for all ranks.
-	 *
 	 * @param deputyPermission 副官权限 / deputy permission
 	 * @param centurionPermission 百夫长权限 / centurion permission
 	 * @param legionaryPermission 军团兵权限 / legionary permission
@@ -206,7 +156,6 @@ public class Legion {
 	/**
 	 * 检查军团是否拥有足够的成员升级。
 	 * Checks whether the legion has enough members to level up.
-	 *
 	 * @return true or false
 	 */
 	public boolean hasRequiredMembers() {
@@ -226,7 +175,6 @@ public class Legion {
 	/**
 	 * 返回升级所需的基纳价格。
 	 * Returns the kinah price required to level up.
-	 *
 	 * @return 基纳价格 / kinah price
 	 */
 	public int getKinahPrice() {
@@ -245,7 +193,6 @@ public class Legion {
 	/**
 	 * 返回升级所需的贡献点数。
 	 * Returns the contribution points required to level up.
-	 *
 	 * @return 贡献点数 / contribution points
 	 */
 	public int getContributionPrice() {
@@ -264,7 +211,6 @@ public class Legion {
 	/**
 	 * 若军团可添加成员则返回 true。
 	 * Returns true if the legion is able to add a member.
-	 *
 	 * @return 是否可添加成员 / whether a member can be added
 	 */
 	private boolean canAddMember() {
@@ -285,7 +231,6 @@ public class Legion {
     /**
 	 * 将新公告添加到公告列表。
 	 * Adds a new announcement to the list.
-	 *
 	 * @param unixTime 公告时间戳 / announcement timestamp
 	 * @param announcement 公告内容 / announcement text
 	 */
@@ -321,7 +266,6 @@ public class Legion {
 	/**
 	 * 检查对象 ID 是否在成员列表中。
 	 * Checks whether the object id is in the members list.
-	 *
 	 * @param playerObjId 玩家对象 ID / player object id
 	 * @return 是否为成员 / whether a member
 	 */
@@ -332,7 +276,6 @@ public class Legion {
 	/**
 	 * 获取仓库槽位数。
 	 * Gets the warehouse slots.
-	 *
 	 * @return 仓库槽位数 / warehouse slots
 	 */
 	public int getWarehouseSlots() {
@@ -375,9 +318,6 @@ public class Legion {
 		return result;
 	}
 
-	/**
-	 * @param history
-	 */
 	public void addHistory(LegionHistory history) {
 		this.legionHistory.add(history);
 	}
@@ -478,7 +418,6 @@ public class Legion {
 	/**
 	 * 删除玩家的加入申请。
 	 * Deletes the join request of a player.
-	 *
 	 * @param playerId 玩家 ID / player id
 	 */
 	public void deleteJoinRequest(int playerId) {

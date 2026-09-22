@@ -10,7 +10,6 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 /**
  * 盾牌条件：校验施法者是否装备了盾牌。
  * Shield condition: validates the effector has a shield equipped.
- *
  * @author KID
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -20,7 +19,6 @@ public class ShieldCondition extends Condition {
 	/**
 	 * 校验技能环境是否满足本条件。
 	 * Validates whether the skill environment satisfies this condition.
-	 *
 	 * @param env 技能环境 / skill environment
 	 * @return 是否有效 / whether valid
 	 */

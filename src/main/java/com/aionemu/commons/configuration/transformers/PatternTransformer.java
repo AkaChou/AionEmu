@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 /**
  * 正则表达式属性转换器
  * Pattern property transformer class that handles conversion of string values to Pattern objects.
- *
  * 支持的输入格式:
  * Supported input format:
  * - 有效的正则表达式字符串 valid regular expression string
@@ -24,7 +23,6 @@ public class PatternTransformer implements PropertyTransformer<Pattern> {
     /**
      * 将字符串值转换为 Pattern 对象
      * Transforms string value into Pattern object
-     *
      * @param value 要转换的字符串值（正则表达式）/ String value to transform (regular expression)
      * @param field 字段对象 / Field that will be transformed
      * @return 转换后的 Pattern 对象 / Transformed Pattern object

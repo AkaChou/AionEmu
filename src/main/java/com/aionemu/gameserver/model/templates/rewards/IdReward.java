@@ -14,7 +14,6 @@ import lombok.Getter;
 /**
  * ID 奖励模板（静态数据/XML）。
  * XML template.
- *
  * @author Rolandas
  */
 @Getter
@@ -33,7 +32,7 @@ public class IdReward {
 	/**
 	 * 获取 race 属性值。
 	 * Gets the value of the race property
-	 * @return 可能的对象类型 / possible object is {@link Race }
+	 * 可能的对象类型 / possible object is {@link Race }
 	 */
 	@XmlAttribute(name = "race")
 	protected Race race;

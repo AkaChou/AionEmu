@@ -13,7 +13,6 @@ import java.util.Map;
 /**
  * 奥德锻造：开始或停止制作的客户端包。
  * Client packet to start or stop aetherforging craft.
- *
  * @author Ranastic
  */
 public class CM_AETHERFORGING extends AionClientPacket {

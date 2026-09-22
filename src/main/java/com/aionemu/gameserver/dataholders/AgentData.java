@@ -18,7 +18,6 @@ import java.util.Map;
 /**
  * 代理战斗地点数据容器，持有并索引全部 Agent 地点。
  * Agent fight location data holder, indexing all agent locations.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -43,7 +42,6 @@ public class AgentData {
 	/**
 	 * 返回已加载的地点数量。
 	 * Returns the number of loaded locations.
-	 *
 	 * @return 已加载的地点数量 / Returns the number of loaded locations.
 	 */
 	public int size() {
@@ -53,7 +51,6 @@ public class AgentData {
 	/**
 	 * 返回全部 Agent 地点映射。
 	 * Returns the full agent location map.
-	 *
 	 * @return ID 到地点的映射 / map of id to location
 	 */
 	public Map<Integer, AgentLocation> getAgentLocations() {

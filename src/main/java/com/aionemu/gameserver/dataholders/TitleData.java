@@ -15,7 +15,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 玩家称号数据容器，按称号 ID 索引称号模板。
  * Player title data holder, indexing title templates by title id.
- *
  * @author xavier
  */
 @XmlRootElement(name = "player_titles")
@@ -42,7 +41,6 @@ public class TitleData {
 	/**
 	 * 按称号 ID 获取称号模板。
 	 * Returns the title template for the given title id.
-	 *
 	 * @param titleId 称号 ID / title id
 	 * @return 称号模板，不存在则为 null / title template or null
 	 */
@@ -53,7 +51,6 @@ public class TitleData {
 	/**
 	 * 返回已加载的称号数量。
 	 * Returns the number of loaded titles.
-	 *
 	 * @return 已加载的称号数量 / Returns the number of loaded titles.
 	 */
 	public int size() {

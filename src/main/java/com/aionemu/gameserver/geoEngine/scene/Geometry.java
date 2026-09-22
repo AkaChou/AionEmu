@@ -28,7 +28,6 @@ public class Geometry extends Spatial {
 	/**
 	 * 创建无网格数据的几何体节点。
 	 * Creates a geometry node without any mesh data.
-	 *
 	 * @param name 几何体名称 / name of this geometry
 	 */
 	public Geometry(String name) {
@@ -38,7 +37,6 @@ public class Geometry extends Spatial {
 	/**
 	 * 创建带网格数据的几何体节点。
 	 * Creates a geometry node with mesh data.
-	 *
 	 * @param name 几何体名称 / name of this geometry
 	 * @param mesh 网格数据 / mesh data for this geometry
 	 */
@@ -54,7 +52,6 @@ public class Geometry extends Spatial {
 	/**
 	 * 返回网格顶点数。
 	 * Returns the mesh vertex count.
-	 *
 	 * @return 顶点数 / vertex count
 	 */
 	@Override
@@ -65,7 +62,6 @@ public class Geometry extends Spatial {
 	/**
 	 * 返回网格三角形数。
 	 * Returns the mesh triangle count.
-	 *
 	 * @return 三角形数 / triangle count
 	 */
 	@Override
@@ -76,7 +72,6 @@ public class Geometry extends Spatial {
 	/**
 	 * 返回模型空间中的网格包围体。
 	 * Returns the bounding volume of the mesh in model space.
-	 *
 	 * @return 模型空间包围体 / model-space bounding volume
 	 */
 	public BoundingVolume getModelBound() {
@@ -96,7 +91,6 @@ public class Geometry extends Spatial {
 	/**
 	 * 返回缓存的世界变换矩阵。
 	 * Returns the cached world transform matrix.
-	 *
 	 * @return 世界矩阵 / world matrix
 	 */
 	public Matrix4f getWorldMatrix() {
@@ -106,7 +100,6 @@ public class Geometry extends Spatial {
 	/**
 	 * 设置模型空间包围体到网格。
 	 * Sets the model-space bounding volume on the mesh.
-	 *
 	 * @param modelBound 模型包围体 / model bounding volume
 	 */
 	@Override
@@ -117,7 +110,6 @@ public class Geometry extends Spatial {
 	/**
 	 * 与可碰撞对象进行碰撞检测（射线先做包围体剔除）。
 	 * Collides with another collidable (rays are first culled against the world bound).
-	 *
 	 * @param other 目标可碰撞对象 / target collidable
 	 * @param results 碰撞结果收集器 / collision results collector
 	 * @return 新增命中次数 / number of collisions added
@@ -142,7 +134,6 @@ public class Geometry extends Spatial {
 	/**
 	 * 用旋转、平移与均匀缩放设置世界变换。
 	 * Sets the world transform from rotation, translation and uniform scale.
-	 *
 	 * @param rotation 旋转矩阵 / rotation matrix
 	 * @param loc 平移 / translation
 	 * @param scale 均匀缩放 / uniform scale
@@ -158,7 +149,6 @@ public class Geometry extends Spatial {
 	/**
 	 * 用旋转、平移与非均匀缩放设置世界变换。
 	 * Sets the world transform from rotation, translation and non-uniform scale.
-	 *
 	 * @param rotation 旋转矩阵 / rotation matrix
 	 * @param loc 平移 / translation
 	 * @param scale 各轴缩放 / per-axis scale
@@ -174,7 +164,6 @@ public class Geometry extends Spatial {
 	/**
 	 * 返回网格碰撞标志。
 	 * Returns the mesh collision flags.
-	 *
 	 * @return 碰撞标志 / collision flags
 	 */
 	@Override
@@ -185,7 +174,6 @@ public class Geometry extends Spatial {
 	/**
 	 * 设置网格碰撞标志。
 	 * Sets the mesh collision flags.
-	 *
 	 * @param flags 碰撞标志 / collision flags
 	 */
 	@Override

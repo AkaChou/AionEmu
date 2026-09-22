@@ -18,7 +18,6 @@ import java.util.Map;
 /**
  * 副本裂隙地点数据容器，持有并索引全部 {@link InstanceRiftLocation}。
  * Container holding and indexing all {@link InstanceRiftLocation} instances.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -43,7 +42,6 @@ public class InstanceRiftData {
 	/**
 	 * 返回已加载的副本裂隙地点数量。
 	 * Returns the number of loaded instance rift locations.
-	 *
 	 * @return 已加载的副本裂缝地点数量 / Returns the number of loaded instance rift locations.
 	 */
 	public int size() {
@@ -53,7 +51,6 @@ public class InstanceRiftData {
 	/**
 	 * 返回全部副本裂隙地点映射。
 	 * Returns the full instance rift location map.
-	 *
 	 * @return ID 到地点的映射 / map of id to location
 	 */
 	public Map<Integer, InstanceRiftLocation> getInstanceRiftLocations() {

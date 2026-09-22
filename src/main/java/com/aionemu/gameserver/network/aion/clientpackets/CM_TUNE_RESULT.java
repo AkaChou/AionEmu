@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 客户端装备鉴定结果确认请求包（接受/拒绝重新鉴定结果）。
  * Client packet confirming an item re-identify/tune result (accept or reject).
- *
  * @author Ghostfur (Aion-Unique)
  */
 public class CM_TUNE_RESULT extends AionClientPacket {

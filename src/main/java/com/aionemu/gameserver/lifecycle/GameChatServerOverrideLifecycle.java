@@ -38,7 +38,6 @@ public class GameChatServerOverrideLifecycle {
     /**
      * 启动本阶段：若提供覆盖值则写入配置。
      * Start this stage: apply the override when provided.
-     *
      * @param chatServerEnabledOverride 覆盖值，null 表示不覆盖 / Override value; {@code null} means no override
      */
     public synchronized void start(Boolean chatServerEnabledOverride) {
@@ -65,7 +64,6 @@ public class GameChatServerOverrideLifecycle {
     /**
      * 是否已加载。
      * Whether this stage is loaded.
-     *
      * @return 已加载为 {@code true} / {@code true} if loaded
      */
     public synchronized boolean isLoaded() {
@@ -75,7 +73,6 @@ public class GameChatServerOverrideLifecycle {
     /**
      * 加载耗时毫秒。
      * Load time in milliseconds.
-     *
      * @return 耗时毫秒，未启动为 -1 / Elapsed millis, or {@code -1} if not started
      */
     public synchronized long getLoadTimeMillis() {
@@ -85,7 +82,6 @@ public class GameChatServerOverrideLifecycle {
     /**
      * 最近失败。
      * Last failure.
-     *
      * @return 最近异常，无则为 null / Last throwable, or {@code null}
      */
     public synchronized Throwable getLastFailure() {

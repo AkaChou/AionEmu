@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * Iluma 区域 NPC AI：Tunes Of Splendor Scout（@AIName "tunes_of_splendor_scout"），继承 NpcAI2。
  * Iluma zone NPC AI: Tunes Of Splendor Scout (@AIName "tunes_of_splendor_scout"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("tunes_of_splendor_scout")

@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Elementis Forest 副本 NPC AI：Jurdins Shadow（@AIName "jurdinshadow"），继承 AggressiveNpcAI2。
  * Elementis Forest instance NPC AI: Jurdins Shadow (@AIName "jurdinshadow"), extends AggressiveNpcAI2.
- *
  * @author Luzien
  */
 @AIName("jurdinshadow")

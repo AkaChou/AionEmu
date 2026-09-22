@@ -50,7 +50,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * 巴拉纳特无渊号副本事件处理器。
  * Instance event handler for Baranath Dredgion.
- *
  * @author Encom
  * @author MATTY
  */
@@ -81,7 +80,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	/**
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
-	 *
 	 * @param player 玩家 / player
 	 * @return 玩家奖励记录 / player reward record
 	 */
@@ -96,7 +94,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	/**
 	 * 使指定房间被给定阵营占领。
 	 * Have the given room captured by the given race.
-	 *
 	 * @param race 占领阵营 / capturing race
 	 * @param roomId 房间 ID / room id
 	 */
@@ -115,7 +112,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc 掉落 NPC / dropper NPC
 	 */
 
@@ -259,9 +255,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 				break;
 			}
 		}, 60000));
-	   /**
-	 * 巴拉纳斯战舰内有多处传送装置。 / Baranath Dredgion Teleportation Devices: There are numerous teleportation devices located inside the Baranath Dredgion. These teleportation devices allow players to teleport to different areas of the Dredgion with ease. Central Teleporter: This teleporter activates 10 minutes after the Instanced Dungeon has begun
-	 */
 		baranathTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			// 紧急出口已生成核控制室传送器。 / A Nuclear Control Room Teleporter has been created at the Emergency Exit.
 			sendMsgByRace(1400265, Race.PC_ALL, 0);
@@ -279,7 +272,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc 死亡的 NPC / dying NPC
 	 */
 	@Override
@@ -291,10 +283,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
         }
 		Race race = mostPlayerDamage.getRace();
 		switch (npc.getObjectTemplate().getTemplateId()) {
-		   /**
-	 * 解救囚犯：击杀囚室命名怪可获得房间钥匙。 / Rescue Prisoners: olding the named monster of a prisoner receiving chamber can accommodate prisoners get a room key. When you open the container chamber prisoner standing in the room with the key to rescue the prisoners to obtain a score of 100 points. Conversely, it is possible to obtain a 100-point touch the opponent, like captive species
-	 */
-		    case 798323: //Captured Elyos Scholar.
+			case 798323: //Captured Elyos Scholar.
             case 798324: //Captured Guardian.
             case 798325: //Captured Guardian.
 			case 798327: //Captured Asmodian Scholar.
@@ -303,9 +292,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
                 point = 100;
 				despawnNpc(npc);
             break;
-		   /**
-	 * 苏卡纳：摧毁各房间苏卡纳可获得更高分数。 / The Surkana: 1. Destroy Surkana in each room can obtain a higher score. 2. When you add monsters to attack Surkana is around 20m range. First, it is safe to be cleaned up monsters. 3. When you destroy a race that destroyed Surkana is displayed on the map, it is through you can guess the path of the opposing faction
-	 */
 			case 700485: //Armory Maintenance Surkana.
 			case 700486: //Armory Maintenance Surkana.
 			    despawnNpc(npc);
@@ -355,18 +341,12 @@ public class BaranathDredgion extends GeneralInstanceHandler
 				// 右舷船长室门已被摧毁。 / The Starboard Captain's Cabin Door has been destroyed.
 				sendMsgByRace(1400231, Race.PC_ALL, 0);
 			break;
-		   /**
-	 * 船长室传送装置：在兵营击败监督者拉卡内后激活。 / Captain’s Cabin Teleport Device: This teleporter activates when "Supervisor Lakhane" is defeated in the Barracks. Only the race that defeated "Supervisor Lakhane" can use this teleporter
-	 */
 			case 215427: //Supervisor Lakhane.
 				point = 1000;
 				// 中庭尽头生成了可持续 3 分钟的船长室传送装置。 / A Captain's Cabin Teleport Device that lasts for 3 minutes has been generated at the end of the Atrium.
 				sendMsgByRace(1400234, Race.PC_ALL, 0);
 				spawn(730197, 484.72f, 761.41998f, 388.66f, (byte) 0, 91); //Captain's Cabin Teleport Device.
             break;
-		   /**
-	 * 补给室传送器：兵营中传送发生器被摧毁后激活 / Supply Room Teleporter: This teleporter activates after the destruction of the Teleporter Generator in the Barracks
-	 */
 			case 700505: //Portside Teleporter Generator.
                 despawnNpc(npc);
 				// 左舷中央传送器已在逃生舱口生成。 / A Portside Central Teleporter has been generated at the Escape Hatch.
@@ -379,9 +359,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 				sendMsgByRace(1400229, Race.PC_ALL, 0);
 				spawn(730214, 567.59119f, 175.19655f, 432.29999f, (byte) 0, 65); //No.2 Nuclear Control Room Teleporter.
             break;
-		   /**
-	 * 每台护盾发生器需要 3 个理念物品，共 12 个 / Defense Shield Generator: When the Defense Shield Generator on the Weapons Deck or Lower Weapons deck is demolished, a shield appears in Ready Room 1 or 2. This shield blocks access to the center of the Baranath Dredgion. The Ready Room is the shortest route to the center of the Dredgion, and the quickest route to the opposing race’s area. Different tactics can be used in this area to maximize the Group’s accumulation of points. For example, if one Group decides to destroy the opposing Group’s Shield Generator, it will make it difficult for the opposing Group to reach the center of the Dredgion. In some cases, it might wiser for one Group to destroy their own Defense Shield Generator, and delay engagement with the opposing race in order to accumulate more points
-	 */
 			case 700501: //Portside Defense Shield.
 			case 700502: //Starboard Defense Shield.
 				despawnNpc(npc);
@@ -400,9 +377,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 				spawn(700502, 520.87555f, 493.40115f, 394.43292f, (byte) 0, 16);  // 生成屏障 / spawn barrier
 
 			break;
-		   /**
-	 * 舱壁：哨兵开战时激活护盾，阻挡入口。 / The Bulkhead: These shields are activated by the Baranath Churl when first encountered at the beginning of the battle. These shields block the entrance from the Armories to Gravity Control, and can be demolished with attacks, but also have a significant amount of health. Groups often opt to move around the shields instead of demolishing them. It’s worth noting that after a certain amount of time has passed, Technician Sarpa spawns in the Gravity Control room, and gives 1,000 points when defeated. There is also a chance that Adjutant Kalanadi, a Hero grade Named Monster, will spawn. Adjutant Kalanadi has a chance to drop Fabled and Heroic accessories
-	 */
 			case 700598: //Port Bulkhead.
 			case 700599: //Starboard Bulkhead.
 				bulkhead++;
@@ -473,7 +447,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -487,7 +460,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -501,7 +473,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	/**
 	 * 停止副本并结算。
 	 * Stop the instance and settle.
-	 *
 	 * @param race 阵营 / race
 	 */
 
@@ -559,7 +530,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	/**
 	 * 处理玩家复活事件。
 	 * Handle a player revive event.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否接受复活 / whether the revive is accepted
 	 */
@@ -576,7 +546,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param player 玩家 / player
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 * @return 是否接受死亡 / whether the death is accepted
@@ -623,7 +592,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	/**
 	 * 按击杀或死亡更新阵营与玩家分数，并让同组玩家共享分数。
 	 * Update race and player scores on kill or death, sharing points within the group.
-	 *
 	 * @param player 得分玩家 / scoring player
 	 * @param target 被击杀目标 / slain target
 	 * @param points 分数 / points
@@ -686,7 +654,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	/**
 	 * 打开指定门。
 	 * Open the given door.
-	 *
 	 * @param doorId 门 ID / door id
 	 */
 
@@ -702,7 +669,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -714,7 +680,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	/**
 	 * 延迟生成 NPC。
 	 * Spawn an NPC after a delay.
-	 *
 	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
@@ -729,7 +694,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	/**
 	 * 延迟生成 NPC 并广播系统消息。
 	 * Spawn an NPC after a delay and broadcast a system message.
-	 *
 	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
@@ -746,7 +710,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	/**
 	 * 延迟生成带实体 ID 的 NPC 并广播系统消息。
 	 * Spawn an NPC with an entity id after a delay and broadcast a system message.
-	 *
 	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
@@ -771,7 +734,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	/**
 	 * 延迟生成沿指定巡行路线行走的 NPC。
 	 * Spawn an NPC after a delay that walks along the given route.
-	 *
 	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
@@ -793,7 +755,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	/**
 	 * 延迟后向指定阵营广播系统消息。
 	 * Broadcast a system message to the given race after a delay.
-	 *
 	 * @param msg 系统消息 ID / system message id
 	 * @param race 目标阵营 / target race
 	 * @param time 延迟毫秒数 / delay in milliseconds
@@ -804,7 +765,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -827,7 +787,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	/**
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
-	 *
 	 * @return 副本奖励 / instance reward
 	 */
 	@Override
@@ -838,7 +797,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -849,7 +807,6 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override

@@ -18,7 +18,6 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 可放置房屋物件控制器，处理可见性同步与对话请求。
  * Placeable house-object controller handling visibility sync and dialog requests.
- *
  * @param <T> 可放置房屋物件模板类型 / placeable house object template type
  */
 public class PlaceableObjectController<T extends PlaceableHouseObject> extends VisibleObjectController<HouseObject<T>> {
@@ -29,7 +28,6 @@ public class PlaceableObjectController<T extends PlaceableHouseObject> extends V
 	/**
 	 * 玩家进入范围时发送房屋物件包并注册移动观察者。
 	 * Sends the house-object packet and registers a move observer when a player enters range.
-	 *
 	 * @param object 进入视野的可见对象 / the visible object entering sight
 	 */
 	public void see(VisibleObject object) {
@@ -43,7 +41,6 @@ public class PlaceableObjectController<T extends PlaceableHouseObject> extends V
 	/**
 	 * 玩家离开范围时移除观察者并发送删除包。
 	 * Removes the observer and sends a delete packet when a player leaves range.
-	 *
 	 * @param object 离开视野的可见对象 / the visible object leaving sight
 	 * @param isOutOfRange 是否因超出距离离开 / whether the leave is due to being out of range
 	 */
@@ -79,7 +76,6 @@ public class PlaceableObjectController<T extends PlaceableHouseObject> extends V
 	/**
 	 * 处理玩家对房屋物件的对话请求。
 	 * Handles a player's dialog request against the house object.
-	 *
 	 * @param player 发起请求的玩家 / the requesting player
 	 */
 	public void onDialogRequest(Player player) {

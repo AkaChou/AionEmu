@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 /**
  * 代理人位置模型。
  * Agent Location model.
- *
  * @author Rinzler (Encom)
  */
 

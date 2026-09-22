@@ -18,7 +18,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Tiamat Stronghold 副本 NPC AI：Adjutant Anuhart（@AIName "adjutantanuhart"），继承 AggressiveNpcAI2。
  * Tiamat Stronghold instance NPC AI: Adjutant Anuhart (@AIName "adjutantanuhart"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("adjutantanuhart")

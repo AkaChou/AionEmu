@@ -29,7 +29,6 @@ public class GameHtmlGateway {
     /**
      * 可选注入 HTML 缓存服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of HTML cache service.
-     *
      * @param htmlCacheProvider 服务提供者 / Service provider
      */
     @Autowired(required = false)
@@ -40,7 +39,6 @@ public class GameHtmlGateway {
     /**
      * 可选注入核心服务运行时桥 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of core-services runtime bridge.
-     *
      * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
      */
     @Autowired(required = false)
@@ -60,7 +58,6 @@ public class GameHtmlGateway {
     /**
      * 解析 HTML 缓存：优先 Spring，否则经运行时桥回退。
      * Resolve HTML cache: prefer Spring, otherwise fall back via runtime bridge.
-     *
      * @return HTML 缓存实例 / HTML cache instance
      */
     private HTMLCache htmlCache() {
@@ -73,7 +70,6 @@ public class GameHtmlGateway {
     /**
      * 解析核心服务运行时桥：优先 Spring，否则新建。
      * Resolve core-services runtime bridge: prefer Spring, otherwise create new.
-     *
      * @return 运行时桥实例 / Runtime-bridge instance
      */
     private GameCoreServicesRuntimeBridge runtimeBridge() {

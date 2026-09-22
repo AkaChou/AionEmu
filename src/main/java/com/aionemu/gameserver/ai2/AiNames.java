@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 常用 AI 注册名称枚举，避免硬编码字符串。
  * Enumeration of common AI registration names to avoid hard-coded strings.
- *
  * @author ATracer
  */
 @Getter
@@ -21,8 +20,6 @@ public enum AiNames {
 	/**
 	 * 获取 AI 注册名称字符串。
 	 * Returns the AI registration name string.
-	 *
-	 * @return 名称 / name
 	 */
 	private final String name;
 

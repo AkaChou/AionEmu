@@ -10,14 +10,12 @@ import lombok.Setter;
 /**
  * 天梯（Ladder）排位数据访问对象。
  * Ladder ranking data access object.
- *
  * @author wanke
  */
 public abstract class LadderDAO implements DAO {
 	/**
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier for this DAO.
-	 *
 	 * @return 类名 / class name
 	 */
 	@Override
@@ -35,92 +33,56 @@ public abstract class LadderDAO implements DAO {
 		/** 玩家。 / Player.
 		 * -- GETTER --
 		 *  获取玩家。 / Gets the player.
-		 *
-		 *
 		 * -- SETTER --
 		 *  设置玩家。 / Sets the player.
-		 *
-		 @return 玩家 / player
-		  * @param player 玩家 / player
 		 */
 		private Player player;
 		/** 评分。 / Rating.
 		 * -- GETTER --
 		 *  获取评分。 / Gets the rating.
-		 *
-		 *
 		 * -- SETTER --
 		 *  设置评分。 / Sets the rating.
-		 *
-		 @return 评分 / rating
-		  * @param rating 评分 / rating
 		 */
 		private int rating;
 		/** 排名。 / Rank.
 		 * -- GETTER --
 		 *  获取排名。 / Gets the rank.
-		 *
-		 *
 		 * -- SETTER --
 		 *  设置排名。 / Sets the rank.
-		 *
-		 @return 段位 / rank
-		  * @param rank 段位 / rank
 		 */
 		private int rank;
 		/** 胜场。 / Wins.
 		 * -- GETTER --
 		 *  获取胜场。 / Gets wins.
-		 *
-		 *
 		 * -- SETTER --
 		 *  设置胜场。 / Sets wins.
-		 *
-		 @return 胜场 / wins
-		  * @param wins 胜场 / wins
 		 */
 		private int wins;
 		/** 负场。 / Losses.
 		 * -- GETTER --
 		 *  获取负场。 / Gets losses.
-		 *
-		 *
 		 * -- SETTER --
 		 *  设置负场。 / Sets losses.
-		 *
-		 @return 败场 / losses
-		  * @param losses 败场 / losses
 		 */
 		private int losses;
 		/** 离开次数。 / Leaves.
 		 * -- GETTER --
 		 *  获取离开次数。 / Gets leaves.
-		 *
-		 *
 		 * -- SETTER --
 		 *  设置离开次数。 / Sets leaves.
-		 *
-		 @return 离场 / leaves
-		  * @param leaves 离场 / leaves
 		 */
 		private int leaves;
 		/** 最后更新时间。 / Last update time.
 		 * -- GETTER --
 		 *  获取最后更新时间。 / Gets the last update time.
-		 *
-		 *
 		 * -- SETTER --
 		 *  设置最后更新时间。 / Sets the last update time.
-		 *
-		 @return 最后更新时间 / last update time
-		  * @param lastUpdate 最后更新时间 / last update time
 		 */
 		private Timestamp lastUpdate;
 
 		/**
 		 * 构造玩家天梯数据。
 		 * Constructs player ladder data.
-		 *
 		 * @param player 玩家 / player
 		 * @param rating 评分 / rating
 		 * @param rank 段位 / rank
@@ -151,7 +113,6 @@ public abstract class LadderDAO implements DAO {
 	/**
 	 * 获取玩家排名。
 	 * Gets a player's rank.
-	 *
 	 * @param player 玩家 / player
 	 * @return 段位 / rank
 	 */
@@ -160,7 +121,6 @@ public abstract class LadderDAO implements DAO {
 	/**
 	 * 为玩家增加一场胜利。
 	 * Adds a win for a player.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public abstract void addWin(Player player);
@@ -168,7 +128,6 @@ public abstract class LadderDAO implements DAO {
 	/**
 	 * 为玩家增加一场失败。
 	 * Adds a loss for a player.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public abstract void addLoss(Player player);
@@ -176,7 +135,6 @@ public abstract class LadderDAO implements DAO {
 	/**
 	 * 为玩家增加一次离开。
 	 * Adds a leave for a player.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public abstract void addLeave(Player player);
@@ -184,7 +142,6 @@ public abstract class LadderDAO implements DAO {
 	/**
 	 * 为玩家增加评分。
 	 * Adds rating for a player.
-	 *
 	 * @param player 玩家 / player
 	 * @param rating 评分增量 / rating delta
 	 */
@@ -193,7 +150,6 @@ public abstract class LadderDAO implements DAO {
 	/**
 	 * 获取玩家胜场数。
 	 * Gets wins for a player.
-	 *
 	 * @param player 玩家 / player
 	 * @return 胜场 / wins
 	 */
@@ -202,7 +158,6 @@ public abstract class LadderDAO implements DAO {
 	/**
 	 * 获取玩家负场数。
 	 * Gets losses for a player.
-	 *
 	 * @param player 玩家 / player
 	 * @return 败场 / losses
 	 */
@@ -211,7 +166,6 @@ public abstract class LadderDAO implements DAO {
 	/**
 	 * 获取玩家离开次数。
 	 * Gets leaves for a player.
-	 *
 	 * @param player 玩家 / player
 	 * @return 离场 / leaves
 	 */
@@ -220,7 +174,6 @@ public abstract class LadderDAO implements DAO {
 	/**
 	 * 获取玩家评分。
 	 * Gets rating for a player.
-	 *
 	 * @param player 玩家 / player
 	 * @return 评分 / rating
 	 */
@@ -229,7 +182,6 @@ public abstract class LadderDAO implements DAO {
 	/**
 	 * 设置玩家胜场数。
 	 * Sets wins for a player.
-	 *
 	 * @param player 玩家 / player
 	 * @param wins 胜场 / wins
 	 */
@@ -238,7 +190,6 @@ public abstract class LadderDAO implements DAO {
 	/**
 	 * 设置玩家负场数。
 	 * Sets losses for a player.
-	 *
 	 * @param player 玩家 / player
 	 * @param losses 败场 / losses
 	 */
@@ -247,7 +198,6 @@ public abstract class LadderDAO implements DAO {
 	/**
 	 * 设置玩家离开次数。
 	 * Sets leaves for a player.
-	 *
 	 * @param player 玩家 / player
 	 * @param leaves 离场 / leaves
 	 */
@@ -256,7 +206,6 @@ public abstract class LadderDAO implements DAO {
 	/**
 	 * 设置玩家评分。
 	 * Sets rating for a player.
-	 *
 	 * @param player 玩家 / player
 	 * @param rating 评分 / rating
 	 */
@@ -265,7 +214,6 @@ public abstract class LadderDAO implements DAO {
 	/**
 	 * 获取玩家的天梯数据。
 	 * Gets ladder data for a player.
-	 *
 	 * @param player 玩家 / player
 	 * @return 天梯数据 / ladder data
 	 */

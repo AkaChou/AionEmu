@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Inggison 区域 NPC AI：Acid Canister（@AIName "acidcanister"），继承 NpcAI2。
  * Inggison zone NPC AI: Acid Canister (@AIName "acidcanister"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("acidcanister")

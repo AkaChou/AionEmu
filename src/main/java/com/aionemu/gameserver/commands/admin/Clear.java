@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 清理组队/联盟/找队缓存的管理命令（{@code //clear}）。
  * Admin command that clears group, alliance or find-group caches ({@code //clear}).
- *
  * @author KID
  */
 public class Clear extends AdminCommand {
@@ -25,7 +24,6 @@ public class Clear extends AdminCommand {
 	/**
 	 * 按类型清理缓存：groups、allys 或 findgroup。
 	 * Clears caches by type: groups, allys or findgroup.
-	 *
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -43,7 +41,6 @@ public class Clear extends AdminCommand {
 	/**
 	 * 执行失败时的语法提示。
 	 * Syntax hint on failure.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

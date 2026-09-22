@@ -26,7 +26,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * Buff 效果基类：将 change 列表转为属性修正并挂到受影响者。
  * Buff effect base: converts the change list into stat modifiers on the effected.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -41,7 +40,6 @@ public abstract class BuffEffect extends EffectTemplate {
 	/**
 	 * 将效果加入受影响者的效果控制器。
 	 * Adds the effect to the effected creature's effect controller.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -52,7 +50,6 @@ public abstract class BuffEffect extends EffectTemplate {
 	/**
 	 * 效果结束时移除属性修正。
 	 * Removes stat modifiers when the effect ends.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -64,7 +61,6 @@ public abstract class BuffEffect extends EffectTemplate {
 	/**
 	 * 效果开始时应用属性修正；maxstat 时回满 HP/MP。
 	 * Applies stat modifiers on start; fills HP/MP when maxstat is set.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -90,7 +86,6 @@ public abstract class BuffEffect extends EffectTemplate {
 	/**
 	 * 根据 change 配置构建属性修正函数列表。
 	 * Builds the list of stat modifier functions from the change config.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 * @return 属性修正列表 / list of stat modifiers
 	 */
@@ -140,7 +135,6 @@ public abstract class BuffEffect extends EffectTemplate {
 	/**
 	 * 周期动作占位（Buff 默认无周期逻辑）。
 	 * Periodic action stub (buffs have no default tick logic).
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

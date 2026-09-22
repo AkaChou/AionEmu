@@ -59,7 +59,6 @@ public class AbyssLandingSpecialService {
 	/**
 	 * 启动指定特殊登陆点。
 	 * Starts the special landing for the given id.
-	 *
 	 * @param id 登陆点 ID / landing id
 	 */
 	public void startLanding(final int id) {
@@ -73,7 +72,6 @@ public class AbyssLandingSpecialService {
 	/**
 	 * 停止指定特殊登陆点。
 	 * Stops the special landing for the given id.
-	 *
 	 * @param id 登陆点 ID / landing id
 	 */
 	public void stopLanding(int id) {
@@ -87,7 +85,6 @@ public class AbyssLandingSpecialService {
 	/**
 	 * 按状态刷新特殊登陆点怪物。
 	 * Spawns NPCs for a special landing location by state.
-	 *
 	 * @param loc 登陆点位置 / landing location
 	 * target state
 	 */
@@ -108,7 +105,6 @@ public class AbyssLandingSpecialService {
 	/**
 	 * 将登陆点状态持久化到数据库。
 	 * Persists the landing location state to the database.
-	 *
 	 * @param loc 登陆点位置 / landing location
 	 */
 	public static void onSave(LandingSpecialLocation loc) {
@@ -118,7 +114,6 @@ public class AbyssLandingSpecialService {
 	/**
 	 * 清理并删除特殊登陆点已刷出的 NPC。
 	 * Despawns and clears NPCs for the special landing location.
-	 *
 	 * @param loc 登陆点位置 / landing location
 	 */
 	public static void despawn(LandingSpecialLocation loc) {
@@ -139,11 +134,9 @@ public class AbyssLandingSpecialService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
@@ -161,7 +154,6 @@ public class AbyssLandingSpecialService {
 	/**
 	 * 注入 Spring ObjectProvider 以覆盖默认单例。
 	 * Injects a Spring ObjectProvider to override the default singleton.
-	 *
 	 * @param instanceProvider provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<AbyssLandingSpecialService> instanceProvider) {
@@ -171,7 +163,6 @@ public class AbyssLandingSpecialService {
 	/**
 	 * 按 ID 获取特殊登陆点位置。
 	 * Returns the special landing location by id.
-	 *
 	 * @param id 登陆点 ID / landing id
 	 * location
 	 */
@@ -182,7 +173,6 @@ public class AbyssLandingSpecialService {
 	/**
 	 * 获取全部特殊登陆点位置映射。
 	 * Returns the full special landing location map.
-	 *
 	 * location map
 	 */
 	public static Map<Integer, LandingSpecialLocation> getLandingSpecialLocations() {
@@ -192,7 +182,6 @@ public class AbyssLandingSpecialService {
 	/**
 	 * 获取特殊登陆点 DAO。
 	 * Returns the special landing DAO.
-	 *
 	 * DAO instance
 	 */
 	public static AbyssSpecialLandingDAO getDAO() {

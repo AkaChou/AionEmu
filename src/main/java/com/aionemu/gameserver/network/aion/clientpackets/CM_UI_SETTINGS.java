@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 客户端 UI 设置同步请求包（界面布局、快捷键、房屋好友等）。
  * Client packet syncing UI settings (layout, shortcuts, house buddies, etc.).
- *
  * @author ATracer
  */
 public class CM_UI_SETTINGS extends AionClientPacket {

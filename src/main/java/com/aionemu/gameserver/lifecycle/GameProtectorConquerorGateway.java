@@ -29,7 +29,6 @@ public class GameProtectorConquerorGateway {
     /**
      * 可选注入守护者/征服者服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of protector/conqueror service.
-     *
      * @param protectorConquerorServiceProvider 服务提供者 / Service provider
      */
     @Autowired(required = false)
@@ -40,7 +39,6 @@ public class GameProtectorConquerorGateway {
     /**
      * 可选注入功能服务运行时桥 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of feature-services runtime bridge.
-     *
      * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
      */
     @Autowired(required = false)
@@ -60,7 +58,6 @@ public class GameProtectorConquerorGateway {
     /**
      * 解析守护者/征服者服务：优先 Spring，否则经运行时桥回退。
      * Resolve protector/conqueror service: prefer Spring, otherwise fall back via runtime bridge.
-     *
      * @return 服务实例 / Service instance
      */
     private ProtectorConquerorService protectorConquerorService() {
@@ -73,7 +70,6 @@ public class GameProtectorConquerorGateway {
     /**
      * 解析功能服务运行时桥：优先 Spring，否则新建。
      * Resolve feature-services runtime bridge: prefer Spring, otherwise create new.
-     *
      * @return 运行时桥实例 / Runtime-bridge instance
      */
     private GameFeatureServicesRuntimeBridge runtimeBridge() {

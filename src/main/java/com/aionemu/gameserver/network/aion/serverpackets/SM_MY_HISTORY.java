@@ -14,7 +14,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * 按 tableId 区分排行榜类型：1=坚韧殿堂、2=试炼之塔、3=大竞技训练营、541=孤独竞技场。
  * tableId selects ranking type: 1=Hall of Tenacity, 2=Crucible Spire,
  * 3=Grand Arena Training Camp, 541=Arena of Discipline.
- *
  * @author Wnkrz
  */
 public class SM_MY_HISTORY extends AionServerPacket {
@@ -28,7 +27,6 @@ public class SM_MY_HISTORY extends AionServerPacket {
 	/**
 	 * 构造黄金竞技场（坚韧殿堂）历史包。
 	 * Builds a Gold Arena (Hall of Tenacity) history packet.
-	 *
 	 * ranking table id
 	 * @param ranking 黄金竞技场排名数据 / gold arena rank data
 	 */
@@ -40,7 +38,6 @@ public class SM_MY_HISTORY extends AionServerPacket {
 	/**
 	 * 构造试炼之塔历史包。
 	 * Builds a Tower of Challenge (Crucible Spire) history packet.
-	 *
 	 * ranking table id
 	 * @param ranking 试炼之塔排名数据 / tower rank data
 	 */
@@ -52,7 +49,6 @@ public class SM_MY_HISTORY extends AionServerPacket {
 	/**
 	 * 构造 6v6 竞技场历史包。
 	 * Builds an Arena 6v6 history packet.
-	 *
 	 * @param tableId ranking table id
 	 * @param ranking 6v6 rank data
 	 */
@@ -64,7 +60,6 @@ public class SM_MY_HISTORY extends AionServerPacket {
 	/**
 	 * 构造孤独竞技场（Arena of Tenacity）历史包。
 	 * Builds an Arena of Tenacity history packet.
-	 *
 	 * ranking table id
 	 * @param ranking 孤独竞技场排名数据 / arena of tenacity rank data
 	 */

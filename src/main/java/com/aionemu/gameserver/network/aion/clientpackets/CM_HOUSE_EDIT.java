@@ -43,7 +43,6 @@ public class CM_HOUSE_EDIT extends AionClientPacket {
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余合法状态 / additional valid states
@@ -173,7 +172,6 @@ public class CM_HOUSE_EDIT extends AionClientPacket {
 	/**
 	 * 移除装修优惠券并刷新房屋装修状态。
 	 * Removes the renovation coupon and refreshes house renovation state.
-	 *
 	 * @param player 玩家 / player
 	 * @param house 房屋 / house
 	 */

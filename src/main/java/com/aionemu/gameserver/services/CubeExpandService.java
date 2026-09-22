@@ -30,7 +30,6 @@ public class CubeExpandService {
 	/**
 	 * 通过 NPC 发起背包扩展确认与扣费。
 	 * Starts a cube expand confirmation and kinah charge via NPC.
-	 *
 	 * @param player 玩家 / player
 	 * @param npc expand NPC
 	 */
@@ -75,7 +74,6 @@ public class CubeExpandService {
 	/**
 	 * 实际增加背包扩展次数并同步客户端。
 	 * Actually increases cube expands and syncs the client size.
-	 *
 	 * @param player 玩家 / player
 	 * @param isNpcExpand true 为 NPC 扩展，false 为任务扩展 / true for NPC expand, false for quest expand
 	 */
@@ -95,7 +93,6 @@ public class CubeExpandService {
 	/**
 	 * 判断玩家是否还能继续扩展背包。
 	 * Returns whether the player can expand the cube further.
-	 *
 	 * @param player 玩家 / player
 	 * @return 可扩展返回 true / true if expandable
 	 */
@@ -106,10 +103,8 @@ public class CubeExpandService {
 	/**
 	 * 判断玩家是否可用指定等级的扩展票继续扩展。
 	 * Returns whether the player can expand further with a ticket of the given level.
-	 *
 	 * @param player 玩家 / player
 	 * @param ticketLevel ticket level
-	 *
 	 * @return 允许扩展背包时为 {@code true} / {@code true} if allowed
 	 */
 	public static boolean canExpandByTicket(Player player, int ticketLevel) {
@@ -122,9 +117,7 @@ public class CubeExpandService {
 	/**
 	 * 校验新的总扩展等级是否在合法区间。
 	 * Validates that the new total expand level is within bounds.
-	 *
 	 * new level
-	 *
 	 * @param level 若 valid 则为 true / true if valid
 	 */
 	private static boolean validateNewSize(int level) {
@@ -134,7 +127,6 @@ public class CubeExpandService {
 	/**
 	 * 判断 NPC 模板是否支持指定扩展等级。
 	 * Returns whether the NPC template supports the given expand level.
-	 *
 	 * @param clist 扩展模板 / expand template
 	 * @param level 目标等级 / target level
 	 * @return 若 supported 则为 true / true if supported
@@ -146,7 +138,6 @@ public class CubeExpandService {
 	/**
 	 * 统计已完成的背包扩展任务数（上限 2）。
 	 * Counts completed cube expand quests (capped at 2).
-	 *
 	 * 玩家 / player
 	 * completed count
 	 */
@@ -164,7 +155,6 @@ public class CubeExpandService {
 	/**
 	 * 按扩展等级获取价格。
 	 * Returns the expand price for the given level.
-	 *
 	 * @param clist 扩展模板 / expand template
 	 * @param level 目标等级 / target level
 	 * price

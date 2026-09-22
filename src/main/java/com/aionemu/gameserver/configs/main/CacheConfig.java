@@ -8,7 +8,6 @@ import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 /**
  * 玩家与账号缓存相关配置。
  * Player and account cache related configuration.
- *
  * @author Luno
  */
 public class CacheConfig {

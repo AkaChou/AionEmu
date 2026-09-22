@@ -20,7 +20,6 @@ public class TargetRelationProperty {
 	/**
 	 * 按目标关系过滤受影响单位，必要时回退为自身。
 	 * Filters effected creatures by relation; may fall back to self.
-	 *
 	 * @param skill 技能上下文 / skill context
 	 * @param properties 目标筛选属性 / target filter properties
 	 * @return 恒为 true / always true
@@ -102,7 +101,6 @@ public class TargetRelationProperty {
 	/**
 	 * 判断目标是否允许被增益（排除部分攻城 NPC 类型）。
 	 * Returns whether the target may receive buffs (excludes some siege NPC types).
-	 *
 	 * @param effected 被施法目标 / effected creature
 	 * @return 是否允许增益 / true if buff is allowed
 	 */

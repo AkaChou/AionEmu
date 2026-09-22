@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.Util;
 /**
  * GM 指令：按技能名称描述为玩家添加技能。
  * GM command handler that adds a skill to a player by skill name description.
- *
  * @author Alcapwnd
  */
 public class CmdAddSkill extends AbstractGMHandler {
@@ -18,7 +17,6 @@ public class CmdAddSkill extends AbstractGMHandler {
 	/**
 	 * 创建处理器并立即执行添加技能逻辑。
 	 * Creates the handler and immediately runs the add-skill logic.
-	 *
 	 * @param admin 执行指令的管理员 / the admin executing the command
 	 * @param params 技能名称描述 / skill name description
 	 */

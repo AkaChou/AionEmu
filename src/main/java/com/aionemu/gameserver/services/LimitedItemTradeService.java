@@ -66,7 +66,6 @@ public class LimitedItemTradeService {
 	/**
 	 * 按物品与 NPC 查询限购项。
 	 * Looks up a limited item by item id and NPC id.
-	 *
 	 * @param itemId item id
 	 * @param npcId npc id
 	 * @return 限购项，不存在则为 null / limited item, or null
@@ -85,10 +84,7 @@ public class LimitedItemTradeService {
 	/**
 	 * 判断 NPC 是否为限购商人。
 	 * Returns whether the NPC has limited-trade goods.
-	 *
 	 * npc id
-	 *
-	 * @param npcId
 	 * @return 是否限购商人 / whether limited-trade NPC
 	 */
 	public boolean isLimitedTradeNpc(int npcId) {
@@ -98,10 +94,7 @@ public class LimitedItemTradeService {
 	/**
 	 * 获取 NPC 的限购交易数据。
 	 * Returns limited-trade data for the NPC.
-	 *
 	 * npc id
-	 *
-	 * @param npcId
 	 * @return 限购交易数据 / limited-trade data
 	 */
 	public LimitedTradeNpc getLimitedTradeNpc(int npcId) {
@@ -111,11 +104,9 @@ public class LimitedItemTradeService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -134,7 +125,6 @@ public class LimitedItemTradeService {
 	/**
 	 * 注入 Spring ObjectProvider 以覆盖默认单例。
 	 * Injects a Spring ObjectProvider to override the default singleton.
-	 *
 	 * @param instanceProvider Spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<LimitedItemTradeService> instanceProvider) {

@@ -17,7 +17,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：阵营（种族）聊天频道发言。
  * Player command: posts a message on the faction (race) chat channel.
- *
  * @author Shepper
  * @author bobobear
  */
@@ -30,7 +29,6 @@ public class cmd_faction extends PlayerCommand {
 	/**
 	 * 校验冷却/费用后向同阵营玩家发送消息。
 	 * Sends a message to same-faction players after cooldown/fee checks.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 命令参数 / command parameters
 	 */

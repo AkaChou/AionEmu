@@ -17,7 +17,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * F2P/会员礼包服务，处理进服加成、续期与客户端属性包通知。
  * F2P/membership pack service handling enter-world bonuses, renewals, and client property packets.
- *
  * Created by wanke on 11/02/2017.
  */
 public class F2pService {
@@ -35,7 +34,6 @@ public class F2pService {
 	/**
 	 * 玩家进服时同步 F2P 状态、注册过期任务并下发属性包。
 	 * Syncs F2P state on enter world, registers expire tasks, and sends property packets.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onEnterWorld(Player player) {
@@ -56,7 +54,6 @@ public class F2pService {
 	/**
 	 * 为玩家施加 F2P/会员相关增益效果。
 	 * Applies F2P/membership boost effects to the player.
-	 *
 	 * 玩家 / player
 	 */
 	public void playerBoostPack(Player player) {
@@ -77,7 +74,6 @@ public class F2pService {
 	/**
 	 * 为玩家新增或续期 F2P 时长并立即生效。
 	 * Adds or renews F2P duration for the player and applies effects immediately.
-	 *
 	 * @param player 玩家 / player
 	 * @param minutes 续期分钟数，null 表示即时过期 / minutes to add; null means expire now
 	 */
@@ -95,11 +91,9 @@ public class F2pService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available

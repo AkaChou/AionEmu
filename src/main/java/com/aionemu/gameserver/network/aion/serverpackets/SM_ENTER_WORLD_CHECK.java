@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 /**
  * 进入世界检查响应包：向客户端回传进入世界的校验结果码。
  * Enter-world check response: result code for world-entry validation.
- *
  * @author -Nemesiss-
  */
 @NoArgsConstructor

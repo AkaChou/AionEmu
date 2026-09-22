@@ -26,7 +26,6 @@ public class SM_STATS_INFO extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_STATS_INFO 包。
 	 * Creates a SM_STATS_INFO packet with the given parameters.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public SM_STATS_INFO(Player player) {

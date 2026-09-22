@@ -18,7 +18,6 @@ public final class CommonsNetworkThreadPoolServices implements DisposableBean {
     /**
      * 注册 Spring 提供的线程池管理器。
      * Register Spring-provided thread pool manager.
-     *
      * @param threadPoolManagerProvider 线程池管理器提供者 / Thread pool manager provider
      */
     public CommonsNetworkThreadPoolServices(ObjectProvider<ThreadPoolManager> threadPoolManagerProvider) {
@@ -28,7 +27,6 @@ public final class CommonsNetworkThreadPoolServices implements DisposableBean {
     /**
      * 获取可用的线程池管理器（优先 Spring，否则回退）。
      * Get available thread pool manager (Spring preferred, then fallback).
-     *
      * @return 线程池管理器 / Thread pool manager
      */
     public static ThreadPoolManager threadPoolManager() {
@@ -46,7 +44,6 @@ public final class CommonsNetworkThreadPoolServices implements DisposableBean {
     /**
      * 缓存已解析的线程池管理器。
      * Remember resolved thread pool manager.
-     *
      * @param threadPoolManager 线程池管理器 / Thread pool manager
      * @return 同一实例 / Same instance
      */
@@ -67,7 +64,6 @@ public final class CommonsNetworkThreadPoolServices implements DisposableBean {
     /**
      * 回退线程池管理器。
      * Fallback thread pool manager.
-     *
      * @return 回退实例 / Fallback instance
      */
     private static ThreadPoolManager fallbackThreadPoolManager() {

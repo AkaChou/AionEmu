@@ -21,7 +21,6 @@ public class SM_CS_AUTH extends CsServerPacket {
 	/**
 	 * 写出游戏服 ID、默认地址与聊天密码。
 	 * Writes game-server id, default address, and chat password.
-	 *
 	 * @param con 目标连接 / target connection
 	 */
 	@Override

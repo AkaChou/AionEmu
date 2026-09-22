@@ -15,7 +15,6 @@ import java.util.Calendar;
 /**
  * 玩家命令：按日程传送到 PvP 地图并发送欢迎信息。
  * Player command: teleports to scheduled PvP maps and shows welcome info.
- *
  * @author Ghostfur
  * @author Nimwey
  */
@@ -28,7 +27,6 @@ public class cmd_pvp extends PlayerCommand {
     /**
      * 根据星期/活动状态选择并进入对应 PvP 地图。
      * Chooses and enters the matching PvP map by weekday/event state.
-     *
      * @param player 执行命令的玩家 / invoking player
      * @param param 命令参数 / command parameters
      */

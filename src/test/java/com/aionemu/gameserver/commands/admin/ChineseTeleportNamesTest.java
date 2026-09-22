@@ -73,7 +73,6 @@ class ChineseTeleportNamesTest {
 	/**
 	 * 校验单个中文名锚点。
 	 * Verifies one Chinese-name anchor.
-	 *
 	 * @param name 中文名 / Chinese name
 	 * @param worldId 期望的世界 ID / Expected world id
 	 * @param telelocations loc_id → mapid / loc id to world id
@@ -95,7 +94,6 @@ class ChineseTeleportNamesTest {
 	/**
 	 * 读取中文地点表的数据行（跳过注释与空行）。
 	 * Reads the data rows of the Chinese location table (comments and blank lines skipped).
-	 *
 	 * @return 数据行 / Data rows
 	 * @throws IOException 读取失败时 / When the table cannot be read
 	 */
@@ -113,7 +111,6 @@ class ChineseTeleportNamesTest {
 	/**
 	 * 解析 teleport_location.xml 的 loc_id → mapid 索引。
 	 * Parses the loc_id to mapid index of teleport_location.xml.
-	 *
 	 * @return loc_id → mapid / loc id to world id
 	 * @throws IOException 读取失败时 / When the file cannot be read
 	 */
@@ -129,7 +126,6 @@ class ChineseTeleportNamesTest {
 	/**
 	 * 读取标签属性值。
 	 * Reads one attribute value of a tag.
-	 *
 	 * @param tag 标签文本 / Tag text
 	 * @param name 属性名 / Attribute name
 	 * @return 属性值 / Attribute value

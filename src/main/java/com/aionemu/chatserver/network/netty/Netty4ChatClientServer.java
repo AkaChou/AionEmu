@@ -57,7 +57,6 @@ final class Netty4ChatClientServer {
                     /**
                      * 初始化客户端通道管线：长度帧解码与业务处理器。
                      * Initialize the client channel pipeline: length-frame decoder and business handler.
-                     *
                      * @param channel 客户端套接字通道 / Client socket channel
                      */
                     @Override
@@ -107,7 +106,6 @@ final class Netty4ChatClientServer {
         /**
          * 通道激活时通知业务处理器。
          * Notify the business handler when the channel becomes active.
-         *
          * @param context 通道上下文 / Channel handler context
          */
         @Override
@@ -118,7 +116,6 @@ final class Netty4ChatClientServer {
         /**
          * 通道失活时通知业务处理器。
          * Notify the business handler when the channel becomes inactive.
-         *
          * @param context 通道上下文 / Channel handler context
          */
         @Override
@@ -129,7 +126,6 @@ final class Netty4ChatClientServer {
         /**
          * 捕获异常后交给业务处理并关闭通道。
          * Forward exceptions to the business handler and close the channel.
-         *
          * @param context 通道上下文 / Channel handler context
          * @param cause 异常原因 / Exception cause
          */
@@ -142,7 +138,6 @@ final class Netty4ChatClientServer {
         /**
          * 读取完整帧后委托解析；非 {@link ByteBuf} 继续向下游传递。
          * Delegate complete frames for parsing; non-{@link ByteBuf} messages are forwarded downstream.
-         *
          * @param context 通道上下文 / Channel handler context
          * @param message 入站消息 / Inbound message
          */

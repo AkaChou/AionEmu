@@ -19,7 +19,6 @@ import java.util.Map;
 /**
  * 物品升级数据容器，按基础物品 ID 索引升级模板与结果物品。
  * Item upgrade data holder, indexing upgrade templates and result items by base item id.
- *
  * @author Ranastic (Encom)
  */
 @XmlRootElement(name = "item_upgrades")
@@ -56,7 +55,6 @@ public class ItemUpgradeData {
 	/**
 	 * 按基础物品 ID 获取升级模板。
 	 * Returns the upgrade template for the given base item id.
-	 *
 	 * @param itemSetId 基础物品 ID / base item id
 	 * @return 升级模板或 null / upgrade template or null
 	 */
@@ -67,7 +65,6 @@ public class ItemUpgradeData {
 	/**
 	 * 按基础物品 ID 获取结果物品映射。
 	 * Returns the result-item map for the given base item id.
-	 *
 	 * @param baseItemId 基础物品 ID / base item id
 	 * @return 结果物品映射，为空或不存在则为 null / result-item map or null
 	 */
@@ -86,7 +83,6 @@ public class ItemUpgradeData {
 	/**
 	 * 返回已加载的升级模板数量。
 	 * Returns the number of loaded upgrade templates.
-	 *
 	 * @return 已加载的升级模板数量 / Returns the number of loaded upgrade templates.
 	 */
 	public int size() {

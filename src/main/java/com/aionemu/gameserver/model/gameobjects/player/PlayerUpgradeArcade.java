@@ -5,7 +5,6 @@ import lombok.Data;
 /**
  * 玩家升级街机游戏对象。
  * Player Upgrade Arcade game object.
- *
  * @author Ranastic
  */
 @Data
@@ -18,13 +17,7 @@ public class PlayerUpgradeArcade {
 	private int frenzyLevel = 1;
 	/** 返回失败等级 / Returns the failed level*/
 	private int failedLevel = 1;
-	/**
-	 * @return 是否处于狂热状态 / Whether frenzy
-	 */
 	private boolean isFrenzy = false;
-	/**
-	 * @return 是否重试。 / Whether re try
-	 */
 	private boolean reTry = false;
 	/** 是否失败 / Whether failed*/
 	private boolean failed = false;

@@ -10,7 +10,6 @@ import lombok.Setter;
 /**
  * IU 活动刷新点模板（静态数据/XML）。
  * XML template.
- *
  * @author Rinzler (Encom)
  */
 

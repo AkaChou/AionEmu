@@ -27,8 +27,6 @@ public class Letter extends AionObject {
 	/**
 	 * 是否急件。
 	 * Whether the letter is express.
-	 *
-	 * @return 是否急件 / whether express
 	 */
 	private boolean express;
 	/** 返回时间戳 / Returns the time stamp. */
@@ -115,7 +113,6 @@ public class Letter extends AionObject {
 	/**
 	 * 恢复信件附件与持久化状态（用于数据修复场景）。
 	 * Restores the letter's attachments and persistent state (used for data repair).
-	 *
 	 * @param item 附带的物品 / attached item
 	 * @param kinah 附带的基纳 / attached Kinah
 	 * @param ap 附带的 AP / attached AP

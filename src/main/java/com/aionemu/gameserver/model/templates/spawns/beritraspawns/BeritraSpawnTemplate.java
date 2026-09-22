@@ -10,7 +10,6 @@ import lombok.Setter;
 /**
  * 贝里特拉刷新点模板（静态数据/XML）。
  * XML template.
- *
  * @author Rinzler (Encom)
  */
 
@@ -43,7 +42,6 @@ public class BeritraSpawnTemplate extends SpawnTemplate {
 	/**
 	 * 是否处于贝里特拉入侵状态。
 	 * Whether beritra invasion.
-	 *
 	 * @return 是否为入侵状态 / whether beritra invasion
 	 */
 	public final boolean isBeritraInvasion() {
@@ -53,7 +51,6 @@ public class BeritraSpawnTemplate extends SpawnTemplate {
 	/**
 	 * 是否处于贝里特拉和平状态。
 	 * Whether beritra peace.
-	 *
 	 * @return 是否为和平状态 / whether beritra peace
 	 */
 	public final boolean isBeritraPeace() {

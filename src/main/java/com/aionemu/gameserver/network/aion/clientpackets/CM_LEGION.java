@@ -17,7 +17,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 军团综合操作（创建、邀请、权限、公告等）的客户端包。
  * Client packet for general legion operations (create, invite, rights, announcements, etc.).
- *
  * @author Simple
  */
 @Slf4j
@@ -45,7 +44,6 @@ public class CM_LEGION extends AionClientPacket {
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余合法状态 / additional valid states
@@ -62,65 +60,53 @@ public class CM_LEGION extends AionClientPacket {
 		exOpcode = readC();
 
 		switch (exOpcode) {
-		/** 创建军团。 / Create a legion */
-		case 0x00:
+			case 0x00:
 			creatorNpcObjectId = readD();
 			legionName = readS();
 			break;
-		/** 邀请加入军团 / Invite to legion */
-		case 0x01:
+			case 0x01:
 			readD(); // 空 / empty
 			charName = readS();
 			break;
-		/** 离开军团 / Leave legion */
-		case 0x02:
+			case 0x02:
 			readD(); // 空 / empty
 			readH(); // 空 / empty
 			break;
-		/** 将成员踢出军团 / Kick member from legion */
-		case 0x04:
+			case 0x04:
 			readD(); // 空 / empty
 			charName = readS();
 			break;
-		/** 任命新军团长 / Appoint a new Brigade General */
-		case 0x05:
+			case 0x05:
 			readD();
 			charName = readS();
 			break;
-		/** 任命百夫长 / Appoint Centurion */
-		case 0x06:
+			case 0x06:
 			rank = readD();
 			charName = readS();
 			break;
-		/** 降为军团兵 / Demote to Legionary */
-		case 0x07:
+			case 0x07:
 			readD(); // 空或角色 ID？00 78 19 00 40 / char id? 00 78 19 00 40
 			charName = readS();
 			break;
-		/** 刷新军团信息 / Refresh legion info */
-		case 0x08:
+			case 0x08:
 			readD();
 			readH();
 			break;
-		/** 编辑公告 / Edit announcements */
-		case 0x09:
+			case 0x09:
 			readD(); // 空或角色 ID？ / empty or char id?
 			announcement = readS();
 			break;
-		/** 修改自我介绍 / Change self introduction */
-		case 0x0A:
+			case 0x0A:
 			readD(); // 空或角色 ID？ / empty char id?
 			newSelfIntro = readS();
 			break;
-		/** 编辑权限 / Edit permissions */
-		case 0x0D:
+			case 0x0D:
 			deputyPermission = (short) readH();
 			centurionPermission = (short) readH();
 			legionarPermission = (short) readH();
 			volunteerPermission = (short) readH();
 			break;
-		/** 提升军团等级 / Level legion up */
-		case 0x0E:
+			case 0x0E:
 			readD(); // 空 / empty
 			readH(); // 空 / empty
 			break;
@@ -128,8 +114,7 @@ public class CM_LEGION extends AionClientPacket {
 			charName = readS();
 			newNickname = readS();
 			break;
-		/** 石矛之地 / Stonespear Reach */
-		case 0x10:
+			case 0x10:
 			readD();
 			break;
 		case 0x11:
@@ -166,23 +151,18 @@ public class CM_LEGION extends AionClientPacket {
 				GameCoreGameplayServices.legionService().handleCharNameRequest(exOpcode, activePlayer, charName, newNickname, rank);
 			} else {
 				switch (exOpcode) {
-				/** 刷新军团信息 / Refresh legion info */
-				case 0x08:
+					case 0x08:
 					sendPacket(new SM_LEGION_INFO(legion));
 					break;
-				/** 编辑公告 / Edit announcements */
-				case 0x09:
+					case 0x09:
 					GameCoreGameplayServices.legionService().handleLegionRequest(exOpcode, activePlayer, announcement);
 					break;
-				/** 石矛之地 / Stonespear Reach */
-				case 0x10:
+					case 0x10:
 					break;
-				/** 修改自我介绍 / Change self introduction */
-				case 0x0A:
+					case 0x0A:
 					GameCoreGameplayServices.legionService().handleLegionRequest(exOpcode, activePlayer, newSelfIntro);
 					break;
-				/** 编辑权限 / Edit permissions */
-				case 0x0D:
+					case 0x0D:
 					if (activePlayer.getLegionMember().isBrigadeGeneral())
 						GameCoreGameplayServices.legionService().changePermissions(legion, deputyPermission, centurionPermission,
 								legionarPermission, volunteerPermission);
@@ -207,16 +187,14 @@ public class CM_LEGION extends AionClientPacket {
 					if (activePlayer.getLegionMember().isBrigadeGeneral())
 						GameCoreGameplayServices.legionService().handleJoinRequestGiveAnswer(activePlayer, playerId, false);
 					break;
-				/** 杂项 / Misc */
-				default:
+                    default:
 					GameCoreGameplayServices.legionService().handleLegionRequest(exOpcode, activePlayer);
 					break;
 				}
 			}
 		} else {
 			switch (exOpcode) {
-			/** 创建军团。 / Create a legion */
-			case 0x00:
+                case 0x00:
 				if (NameRestrictionService.isForbiddenWord(legionName)) {
 					PacketSendUtility.sendMessage(activePlayer,
 							"You are trying to use a forbidden name. Choose another one!");

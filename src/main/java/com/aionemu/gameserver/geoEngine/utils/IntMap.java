@@ -11,7 +11,6 @@ import lombok.Getter;
  * <p>
  * 源自 http://code.google.com/p/skorpios/
  * Taken from http://code.google.com/p/skorpios/
- *
  * @param <T> 值类型 / value type
  * @author Nate
  */
@@ -36,7 +35,6 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 	/**
 	 * 指定初始容量，负载因子 0.75。
 	 * Constructs with given initial capacity and load factor 0.75.
-	 *
 	 * @param initialCapacity 初始容量 / initial capacity
 	 */
 	public IntMap(int initialCapacity) {
@@ -46,7 +44,6 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 	/**
 	 * 指定初始容量与负载因子（容量上取 2 的幂）。
 	 * Constructs with initial capacity (rounded up to power of two) and load factor.
-	 *
 	 * @param initialCapacity 初始容量 / initial capacity
 	 * @param loadFactor 负载因子 / load factor
 	 */
@@ -73,7 +70,6 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 	/**
 	 * 深克隆表项链表。
 	 * Deep-clones the entry chains.
-	 *
 	 * @return 克隆后的映射 / the cloned map
 	 */
 	@Override
@@ -97,7 +93,6 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 	/**
 	 * 是否包含给定值（equals 比较）。
 	 * Whether any entry has the given value (equals comparison).
-	 *
 	 * @param value 查找的值 / the value to look up
 	 * @return 存在则为 true / true if present
 	 */
@@ -116,7 +111,6 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 	/**
 	 * 是否包含给定键。
 	 * Whether the map contains the given key.
-	 *
 	 * @param key 要查找的键 / the key to look up
 	 * @return 存在则为 true / true if present
 	 */
@@ -133,7 +127,6 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 	/**
 	 * 按键取值，不存在返回 null。
 	 * Returns the value for the key, or null if absent.
-	 *
 	 * @param key 键 / the key
 	 * @return 值或 null / value or null
 	 */
@@ -151,7 +144,6 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 	/**
 	 * 放入键值对；键已存在则覆盖并返回旧值。超阈值时扩容重哈希。
 	 * Puts the entry; overwrites and returns the old value if the key exists. Rehashes when threshold is exceeded.
-	 *
 	 * @param key 键 / the key
 	 * @param value 值 / the value
 	 * @return 旧值或 null / previous value or null
@@ -199,7 +191,6 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 	/**
 	 * 移除键并返回旧值。
 	 * Removes the key and returns the previous value.
-	 *
 	 * @param key 要移除的键 / the key to remove
 	 * @return 旧值或 null / previous value or null
 	 */
@@ -228,7 +219,6 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 	/**
 	 * 当前条目数。
 	 * Number of entries.
-	 *
 	 * @return 当前条目数 / the current size
 	 */
 	public int size() {
@@ -250,7 +240,6 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 	/**
 	 * 返回遍历所有条目的迭代器。
 	 * Returns an iterator over all entries.
-	 *
 	 * @return 条目迭代器 / the entry iterator
 	 */
 	@Override
@@ -282,7 +271,6 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 		/**
 		 * 是否还有元素。
 		 * Whether more elements remain.
-		 *
 		 * @return 有下一元素 / true if more
 		 */
 		@Override
@@ -293,7 +281,6 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 		/**
 		 * 返回下一个条目。
 		 * Returns the next entry.
-		 *
 		 * @return 下一个条目 / the next entry
 		 */
 		@Override
@@ -338,7 +325,6 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 	/**
 	 * 哈希表条目（键、值与同桶下一节点）。
 	 * Hash-map entry holding key, value and next link in the bucket.
-	 *
 	 * @param <T> 值类型 / value type
 	 */
 	public static final class Entry<T> implements Cloneable {
@@ -347,8 +333,6 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 		 * -- GETTER --
 		 *  返回键。
 		 *  Returns the key.
-		 *
-		 * @return 键 / the key
 		 */
 		@Getter
 		final int key;
@@ -356,8 +340,6 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
          * -- GETTER --
          *  返回值。
          *  Returns the value.
-         *
-         * @return 值 / the value
          */
         @Getter
         T value;
@@ -367,7 +349,6 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 		/**
 		 * 构造条目。
 		 * Constructs an entry.
-		 *
 		 * @param k 键 / key
 		 * @param v 值 / value
 		 * @param n 下一节点 / next entry
@@ -381,7 +362,6 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 		/**
 		 * 键值字符串表示。
 		 * String form "key => value".
-		 *
 		 * @return 字符串表示 / the string form
 		 */
 		@Override
@@ -392,7 +372,6 @@ public final class IntMap<T> implements Iterable<Entry>, Cloneable {
 		/**
 		 * 深克隆链表。
 		 * Deep-clones the chain starting at this entry.
-		 *
 		 * @return 克隆的条目 / the cloned entry
 		 */
 		@Override

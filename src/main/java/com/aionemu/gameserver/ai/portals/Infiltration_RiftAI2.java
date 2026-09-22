@@ -17,7 +17,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 传送门/传送点 AI：Infiltration Rift（@AIName "infiltration_rift"），继承 NpcAI2。
  * Portal/teleporter AI: Infiltration Rift (@AIName "infiltration_rift"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("infiltration_rift")

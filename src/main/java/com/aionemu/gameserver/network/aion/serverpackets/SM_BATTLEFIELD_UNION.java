@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 同步战场联盟（要塞战联合队列）可用性与人数的服务端包。
  * Server packet synchronizing Battlefield Union (fortress-war joint queue) availability and member counts.
- *
  * @author wanke
  */
 public class SM_BATTLEFIELD_UNION extends AionServerPacket {

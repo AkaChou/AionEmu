@@ -57,7 +57,6 @@ public class GoodsListData {
 	/**
 	 * 按 ID 获取普通商品列表。
 	 * Returns the regular goods list for the given id.
-	 *
 	 * @param id 商品列表 ID / goods list id
 	 * @return 商品列表，不存在则为 null / goods list, or null if absent
 	 */
@@ -68,7 +67,6 @@ public class GoodsListData {
 	/**
 	 * 按 ID 获取入库商品列表。
 	 * Returns the inbound goods list for the given id.
-	 *
 	 * @param id 商品列表 ID / goods list id
 	 * @return 入库商品列表，不存在则为 null / inbound goods list, or null if absent
 	 */
@@ -79,7 +77,6 @@ public class GoodsListData {
 	/**
 	 * 按 ID 获取购买商品列表。
 	 * Returns the purchase goods list for the given id.
-	 *
 	 * @param id 商品列表 ID / goods list id
 	 * @return 购买商品列表，不存在则为 null / purchase goods list, or null if absent
 	 */
@@ -90,7 +87,6 @@ public class GoodsListData {
 	/**
 	 * 返回三类商品列表条目总数。
 	 * Returns the total number of entries across all three goods list types.
-	 *
 	 * @return 条目总数 / total entry count
 	 */
 	public int size() {

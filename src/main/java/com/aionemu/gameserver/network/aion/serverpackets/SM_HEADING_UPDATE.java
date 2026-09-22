@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 通知客户端实体朝向更新的服务端包。
  * Server packet that notifies the client of an entity heading update.
- *
  * @author Nemesiss
  */
 @AllArgsConstructor

@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 客户端关闭开关型技能（如姿态）请求包。
  * Client packet for deactivating a toggle skill (e.g. stance).
- *
  * @author ATracer
  */
 public class CM_TOGGLE_SKILL_DEACTIVATE extends AionClientPacket {

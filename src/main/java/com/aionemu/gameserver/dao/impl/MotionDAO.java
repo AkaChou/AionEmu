@@ -14,9 +14,7 @@ import java.util.List;
 /**
  * 玩家动作（Motion）DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of MotionDAO.
- *
  * @author MrPoke
- * @rework MATTY
  */
 @Slf4j
 public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
@@ -33,7 +31,6 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version
@@ -47,7 +44,6 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
     /**
      * 加载玩家动作列表并设置到玩家对象。
      * Loads the player's motion list and assigns it to the player.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -66,7 +62,6 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
     /**
      * 按玩家 ID 加载动作列表。
      * Loads the motion list by player id.
-     *
      * @param playerId 玩家 ID / player id
      * @return 动作列表 / motion list
      */
@@ -95,7 +90,6 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
     /**
      * 保存动作。
      * Stores a motion.
-     *
      * @param objectId 玩家对象 ID / player object id
      * @param motion 动作 / motion
      * @return 是否成功 / whether successful
@@ -120,7 +114,6 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
     /**
      * 删除动作。
      * Deletes a motion.
-     *
      * @param objectId 玩家对象 ID / player object id
      * @param motionId 动作 ID / motion id
      * @return 是否成功 / whether successful
@@ -143,7 +136,6 @@ public class MotionDAO extends com.aionemu.gameserver.dao.MotionDAO {
     /**
      * 更新动作激活状态。
      * Updates the motion active state.
-     *
      * @param objectId 玩家对象 ID / player object id
      * @param motion 动作 / motion
      * @return 是否成功 / whether successful

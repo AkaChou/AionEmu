@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 /**
  * 玩家变身为召唤物形态时的同步服务端包。
  * Server packet that syncs a player transforming into a summon form.
- *
  * @author xTz
  */
 @AllArgsConstructor

@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 物品限制服务，校验物品是否可移除/操作。
  * Item restriction service validating whether items may be removed/operated.
- *
  * @author ATracer
  */
 public class ItemRestrictionService {
@@ -21,11 +20,9 @@ public class ItemRestrictionService {
 	/**
 	 * 检查玩家是否可从指定仓库移出物品。
 	 * Checks whether the player may move the item out of the given storage.
-	 *
 	 * @param player 玩家 / player
 	 * @param item item
 	 * @param storage storage type id
-	 *
 	 * @return 受限（不可移出）则为 true / true if restricted (cannot remove)
 	 */
 	public static boolean isItemRestrictedFrom(Player player, Item item, byte storage) {
@@ -47,11 +44,9 @@ public class ItemRestrictionService {
 	/**
 	 * 检查玩家是否可将物品移入指定仓库。
 	 * Checks whether the player may move the item into the given storage.
-	 *
 	 * @param player 玩家 / player
 	 * @param item item
 	 * @param storage storage type id
-	 *
 	 * @return 受限（不可移入）则为 true / true if restricted (cannot deposit)
 	 */
 	public static boolean isItemRestrictedTo(Player player, Item item, byte storage) {

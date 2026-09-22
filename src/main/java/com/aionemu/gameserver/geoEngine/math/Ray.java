@@ -35,7 +35,6 @@ public final class Ray implements Cloneable, Collidable {
 	/**
 	 * 按原点与方向构造射线（直接持有引用）。
 	 * Constructs a ray from origin and direction (holds references directly).
-	 *
 	 * @param origin 原点 / origin
 	 * @param direction 方向 / direction
 	 */
@@ -47,7 +46,6 @@ public final class Ray implements Cloneable, Collidable {
 	/**
 	 * 射线与三角形求交，交点写入 loc（世界坐标）。
 	 * Intersects this ray with a triangle; stores world-space hit into loc.
-	 *
 	 * @param t 三角形 / triangle
 	 * @param loc 交点存储 / hit-point storage
 	 * @return 是否相交 / whether they intersect
@@ -59,7 +57,6 @@ public final class Ray implements Cloneable, Collidable {
 	/**
 	 * 射线与三点三角形求交，交点写入 loc（世界坐标）。
 	 * Intersects this ray with a three-point triangle; stores world-space hit into loc.
-	 *
 	 * @param v0 顶点 0 / vertex 0
 	 * @param v1 顶点 1 / vertex 1
 	 * @param v2 顶点 2 / vertex 2
@@ -73,7 +70,6 @@ public final class Ray implements Cloneable, Collidable {
 	/**
 	 * 射线与三角形求交，loc 写入平面坐标 (t, w1, w2)。
 	 * Intersects this ray with a triangle; stores planar coords (t, w1, w2) into loc.
-	 *
 	 * @param t 三角形 / triangle
 	 * @param loc 平面坐标存储 / planar-coord storage
 	 * @return 是否相交 / whether they intersect
@@ -85,7 +81,6 @@ public final class Ray implements Cloneable, Collidable {
 	/**
 	 * 射线与三点三角形求交，loc 写入平面坐标 (t, w1, w2)。
 	 * Intersects this ray with a three-point triangle; stores planar coords (t, w1, w2) into loc.
-	 *
 	 * @param v0 顶点 0 / vertex 0
 	 * @param v1 顶点 1 / vertex 1
 	 * @param v2 顶点 2 / vertex 2
@@ -99,7 +94,6 @@ public final class Ray implements Cloneable, Collidable {
 	/**
 	 * Möller–Trumbore 风格射线-三角形/四边形求交。
 	 * Möller–Trumbore-style ray–triangle/quad intersection.
-	 *
 	 * @param v0 顶点 0 / vertex 0
 	 * @param v1 顶点 1 / vertex 1
 	 * @param v2 顶点 2 / vertex 2
@@ -158,7 +152,6 @@ public final class Ray implements Cloneable, Collidable {
 	/**
 	 * 射线与三点三角形求交，返回参数 t；未命中返回正无穷。
 	 * Intersects this ray with a three-point triangle; returns parameter t, or +∞ on miss.
-	 *
 	 * @param v0 顶点 0 / vertex 0
 	 * @param v1 顶点 1 / vertex 1
 	 * @param v2 顶点 2 / vertex 2
@@ -210,7 +203,6 @@ public final class Ray implements Cloneable, Collidable {
 	/**
 	 * 射线与由三点定义的四边形求交，loc 写入平面坐标 (t, w1, w2)。
 	 * Intersects this ray with a quad defined by three points; stores planar coords into loc.
-	 *
 	 * @param v0 顶点 0 / vertex 0
 	 * @param v1 顶点 1 / vertex 1
 	 * @param v2 顶点 2 / vertex 2
@@ -224,7 +216,6 @@ public final class Ray implements Cloneable, Collidable {
 	/**
 	 * 射线与平面求交（仅正向半射线，ratio ≥ epsilon）。
 	 * Intersects this ray with a plane (forward half-ray only, ratio ≥ epsilon).
-	 *
 	 * @param p 平面 / plane
 	 * @param loc 交点存储 / hit-point storage
 	 * @return 是否相交 / whether they intersect
@@ -246,7 +237,6 @@ public final class Ray implements Cloneable, Collidable {
 	/**
 	 * 与另一可碰撞体做碰撞检测（包围体转发；三角形求交写结果）。
 	 * Collides with another collidable (BV dispatch; triangle hits are recorded).
-	 *
 	 * @param other 另一可碰撞体 / other collidable
 	 * @param results 碰撞结果收集器 / collision results collector
 	 * @return 命中数 / hit count
@@ -272,7 +262,6 @@ public final class Ray implements Cloneable, Collidable {
 	/**
 	 * 点到本射线（半射线，参数 ≥ 0）的最短距离平方。
 	 * Squared distance from a point to this half-ray (parameter ≥ 0).
-	 *
 	 * @param point 查询点 / query point
 	 * @return 距离平方 / squared distance
 	 */
@@ -297,7 +286,6 @@ public final class Ray implements Cloneable, Collidable {
 	/**
 	 * 拷贝设置射线原点。
 	 * Copies and sets the ray origin.
-	 *
 	 * @param origin 新原点 / new origin
 	 */
 	public void setOrigin(Vector3f origin) {
@@ -307,7 +295,6 @@ public final class Ray implements Cloneable, Collidable {
 	/**
 	 * 拷贝设置射线方向。
 	 * Copies and sets the ray direction.
-	 *
 	 * @param direction 新方向 / new direction
 	 */
 	public void setDirection(Vector3f direction) {
@@ -317,7 +304,6 @@ public final class Ray implements Cloneable, Collidable {
 	/**
 	 * 从另一射线拷贝原点与方向。
 	 * Copies origin and direction from another ray.
-	 *
 	 * @param source 源射线 / source ray
 	 */
 	public void set(Ray source) {
@@ -328,7 +314,6 @@ public final class Ray implements Cloneable, Collidable {
 	/**
 	 * 返回可读字符串表示。
 	 * Returns a human-readable string representation.
-	 *
 	 * @return 描述字符串 / description string
 	 */
 	public String toString() {
@@ -338,7 +323,6 @@ public final class Ray implements Cloneable, Collidable {
 	/**
 	 * 返回运行时类标签。
 	 * Returns the runtime class tag.
-	 *
 	 * @return 类对象 / class object
 	 */
 	public Class<? extends Ray> getClassTag() {
@@ -348,7 +332,6 @@ public final class Ray implements Cloneable, Collidable {
 	/**
 	 * 深拷贝本射线（原点与方向独立克隆）。
 	 * Deep-clones this ray (origin and direction cloned independently).
-	 *
 	 * @return 克隆 / clone
 	 */
 	public Ray clone() {

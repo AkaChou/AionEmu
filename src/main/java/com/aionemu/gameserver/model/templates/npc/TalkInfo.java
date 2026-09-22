@@ -11,7 +11,6 @@ import lombok.Getter;
 /**
  * Talk 信息模板（静态数据/XML）。
  * XML template.
- *
  * @author Ghostfur (Aion-Unique)
  */
 @Getter
@@ -35,7 +34,6 @@ public class TalkInfo {
 	/**
 	 * 返回对话距离。
 	 * Returns the talk distance.
-	 *
 	 * @return 对话距离 / the talk distance
 	 */
 	public int getDistance() {
@@ -45,7 +43,6 @@ public class TalkInfo {
 	/**
 	 * 返回对话延迟。
 	 * Returns the talk delay.
-	 *
 	 * @return 对话延迟 / the talk delay
 	 */
 	public int getDelay() {
@@ -55,7 +52,6 @@ public class TalkInfo {
 	/**
 	 * 是否为对话型 NPC。
 	 * Whether this is a dialog NPC.
-	 *
 	 * @return 是否有对话 / the hasDialog flag
 	 */
 	public boolean isDialogNpc() {

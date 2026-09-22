@@ -8,7 +8,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 周期 HP 消耗：效果持续期间按间隔扣除受影响者 HP，不足则结束效果。
  * Periodic HP cost: reduces effected HP each tick; ends the effect if HP is too low.
- *
  * @author antness
  */
 public class HpUsePeriodicAction extends PeriodicAction {
@@ -30,7 +29,6 @@ public class HpUsePeriodicAction extends PeriodicAction {
 	/**
 	 * 扣除受影响者 HP；当前 HP 低于 value 时结束效果。
 	 * Reduces effected HP; ends the effect if current HP is below value.
-	 *
 	 * @param effect related effect
 	 */
 	@Override

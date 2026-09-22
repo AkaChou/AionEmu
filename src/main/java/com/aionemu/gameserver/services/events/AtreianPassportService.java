@@ -27,7 +27,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 艾特利亚护照服务，处理登录签到与护照奖励。
  * Atreian passport service handling login stamps and passport rewards.
- *
  * @author Rinzler (Encom)
  */
 
@@ -49,7 +48,6 @@ public class AtreianPassportService {
 	/**
 	 * getPlayerPassports 方法。
 	 * getPlayerPassports method.
-	 *
 	 * accountId
 	 * result
 	 */
@@ -65,7 +63,6 @@ public class AtreianPassportService {
 	/**
 	 * 玩家登录时同步状态。
 	 * Syncs state when a player logs in.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onLogin(Player player) {
@@ -123,10 +120,6 @@ public class AtreianPassportService {
 		log.info(I18n.get("log.9ae8def154d9"));
 	}
 
-	/**
-	 * @param player
-	 * @param atreianId
-	 */
 	public void getReward(Player player, int atreianId) {
 		AtreianPassport loginRewardTemplate = DataManager.ATREIAN_PASSPORT_DATA.getAtreianPassportId(atreianId);
 		ZonedDateTime currentTime = ZonedDateTime.now();
@@ -165,7 +158,6 @@ public class AtreianPassportService {
 	/**
 	 * getPassports 方法。
 	 * getPassports method.
-	 *
 	 * @param raw 原始通行证映射 / raw passport data
 	 */
 	public void getPassports(Map<Integer, AtreianPassport> raw) {
@@ -189,7 +181,6 @@ public class AtreianPassportService {
 	/**
 	 * getPassports 方法。
 	 * getPassports method.
-	 *
 	 * @param id ID / id
 	 * atp
 	 */
@@ -203,7 +194,6 @@ public class AtreianPassportService {
 	/**
 	 * getBasicPassports 方法。
 	 * getBasicPassports method.
-	 *
 	 * @param id ID / id
 	 * atp
 	 */
@@ -217,7 +207,6 @@ public class AtreianPassportService {
 	/**
 	 * getAnniversaryPassports 方法。
 	 * getAnniversaryPassports method.
-	 *
 	 * @param id ID / id
 	 * atp
 	 */
@@ -231,11 +220,9 @@ public class AtreianPassportService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available

@@ -11,7 +11,6 @@ import lombok.Setter;
 /**
  * 任务事件处理上下文包，携带玩家、目标对象、任务 ID 与对话框 ID 等运行时信息。
  * Quest event processing context bag carrying the player, target object, quest id, dialog id and related runtime data.
- *
  * @author MrPoke
  */
 @Getter
@@ -32,7 +31,6 @@ public class QuestEnv {
 	/**
 	 * 构造任务事件环境。
 	 * Constructs a quest event environment.
-	 *
 	 * @param visibleObject 事件目标对象 / Event target object
 	 * @param player 玩家 / Player
 	 * @param questId 任务 ID / Quest id
@@ -49,7 +47,6 @@ public class QuestEnv {
 	/**
 	 * 返回任务 ID。
 	 * Returns the quest id.
-	 *
 	 * @return 任务 ID / Quest id
 	 */
 	public Integer getQuestId() {
@@ -59,7 +56,6 @@ public class QuestEnv {
 	/**
 	 * 设置任务 ID。
 	 * Sets the quest id.
-	 *
 	 * @param questId 任务 ID / Quest id
 	 */
 	public void setQuestId(Integer questId) {
@@ -69,7 +65,6 @@ public class QuestEnv {
 	/**
 	 * 返回对话框 ID。
 	 * Returns the dialog id.
-	 *
 	 * @return 对话框 ID / Dialog id
 	 */
 	public Integer getDialogId() {
@@ -79,7 +74,6 @@ public class QuestEnv {
 	/**
 	 * 设置对话框 ID。
 	 * Sets the dialog id.
-	 *
 	 * @param dialogId 对话框 ID / Dialog id
 	 */
 	public void setDialogId(Integer dialogId) {
@@ -89,7 +83,6 @@ public class QuestEnv {
 	/**
 	 * 根据目标类型返回模板/NPC ID；无目标时返回 0。
 	 * Returns the template/NPC id based on target type; 0 when there is no target.
-	 *
 	 * @return 目标模板 ID / Target template id
 	 */
 	public int getTargetId() {

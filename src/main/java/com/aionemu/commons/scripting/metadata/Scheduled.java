@@ -9,7 +9,6 @@ import java.lang.annotation.Target;
 /**
  * 定时任务注解，用于标记需要按照指定时间计划执行的类
  * Scheduling annotation, used to mark classes that need to be executed according to specified time schedules
- *
  * 该注解只能应用于类级别，用于配置定时任务的执行计划和行为
  * This annotation can only be applied at class level and is used to configure
  * the execution schedule and behavior of scheduled tasks

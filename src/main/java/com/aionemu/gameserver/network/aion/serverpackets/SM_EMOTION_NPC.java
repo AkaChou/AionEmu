@@ -21,7 +21,6 @@ public class SM_EMOTION_NPC extends AionServerPacket {
 	/**
 	 * 构造 NPC 情绪状态包。
 	 * Creates an NPC emotion state packet.
-	 *
 	 * @param npc 目标 NPC / target NPC
 	 * @param state 动画状态 / animation state
 	 * @param et 情绪类型 / emotion type
@@ -36,7 +35,6 @@ public class SM_EMOTION_NPC extends AionServerPacket {
 	/**
 	 * 构造玩家情绪状态包。
 	 * Creates a player emotion state packet.
-	 *
 	 * @param player 目标玩家 / target player
 	 * @param state 动画状态 / animation state
 	 * @param et 情绪类型 / emotion type

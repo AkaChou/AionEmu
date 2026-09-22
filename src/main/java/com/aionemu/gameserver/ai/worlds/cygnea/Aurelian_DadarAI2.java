@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Cygnea 区域 NPC AI：Aurelian Dadar（@AIName "aurelian_dadar"），继承 AggressiveNpcAI2。
  * Cygnea zone NPC AI: Aurelian Dadar (@AIName "aurelian_dadar"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("aurelian_dadar")

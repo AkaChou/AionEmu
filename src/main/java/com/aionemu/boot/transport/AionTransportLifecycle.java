@@ -11,7 +11,6 @@ public interface AionTransportLifecycle {
     /**
      * 该实现对应的传输模式。
      * Transport mode this implementation owns.
-     *
      * @return 传输模式 / Transport mode
      */
     TransportMode mode();

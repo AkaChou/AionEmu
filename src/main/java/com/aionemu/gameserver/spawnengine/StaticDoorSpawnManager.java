@@ -21,7 +21,6 @@ import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
 /**
  * 静态门刷怪管理器，按世界与实例生成门并同步地理状态。
  * Static door spawn manager; creates doors per world/instance and syncs geo state.
- *
  * @author MrPoke
  */
 @Slf4j
@@ -30,7 +29,6 @@ public class StaticDoorSpawnManager {
 	/**
 	 * 在指定世界与实例中刷出所有静态门。
 	 * Spawns all static doors for the world and instance.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param instanceIndex 实例索引 / instance index
 	 */
@@ -62,7 +60,6 @@ public class StaticDoorSpawnManager {
 	/**
 	 * 将门对象登记、定位并刷入世界。
 	 * Stores, positions and spawns a door into the world.
-	 *
 	 * @param visibleObject 可见对象 / the visible object
 	 * @param spawn 刷怪模板 / spawn template
 	 * @param instanceIndex 实例索引 / instance index

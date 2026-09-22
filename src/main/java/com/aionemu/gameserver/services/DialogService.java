@@ -59,7 +59,6 @@ public class DialogService {
     /**
      * 关闭与 NPC 的对话框；对军团仓库管理员释放占用。
      * Close the NPC dialog; for legion warehouse keepers, release the warehouse user lock.
-     *
      * @param npc dialog NPC
      * @param player 玩家 / player
      */
@@ -122,7 +121,6 @@ public class DialogService {
     /**
      * 处理玩家选择的对话框选项（商店、传送、仓库、任务奖励等）。
      * Handle a player-selected dialog option (shop, teleport, warehouse, quest rewards, etc.).
-     *
      * @param dialogId 对话框选项 ID / dialog option id
      * 玩家 / player
      * dialog NPC
@@ -137,7 +135,6 @@ public class DialogService {
     /**
      * 处理客户端通用选择页上的 NPC 简单对话选项；该入口不再尝试任务路由。
      * Handles an NPC simple-dialog option from the client's generic selection page without attempting quest routing.
-     *
      * @param dialogId 对话框选项 ID / dialog option id
      * @param player 玩家 / player
      * @param npc 对话 NPC / dialog NPC
@@ -1177,7 +1174,6 @@ public class DialogService {
             case 10011:
             case 10012:
             case 10013:
-                //// 4.7////
             case 20006:
             case 20007:
             case 20008:

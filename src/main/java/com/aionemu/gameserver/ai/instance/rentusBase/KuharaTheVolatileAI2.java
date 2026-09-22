@@ -26,7 +26,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Rentus Base 副本 NPC AI：Kuhara The Volatile（@AIName "kuhara_the_volatile"），继承 AggressiveNpcAI2。
  * Rentus Base instance NPC AI: Kuhara The Volatile (@AIName "kuhara_the_volatile"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("kuhara_the_volatile")

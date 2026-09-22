@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 团队基纳 Distribution 活动，用于团队2相关逻辑。
  * Team Kinah Distribution Event for team 2 logic.
- *
  * @author ATracer
  */
 public class TeamKinahDistributionEvent<T extends TemporaryPlayerTeam<? extends TeamMember<Player>>>

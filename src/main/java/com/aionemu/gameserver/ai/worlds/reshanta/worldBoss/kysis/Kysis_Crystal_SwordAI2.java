@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Reshanta 区域 NPC AI：Kysis Crystal Sword（@AIName "kysis_crystal_sword"），继承 NpcAI2。
  * Reshanta zone NPC AI: Kysis Crystal Sword (@AIName "kysis_crystal_sword"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("kysis_crystal_sword")

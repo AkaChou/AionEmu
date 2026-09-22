@@ -8,7 +8,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 管理员添加技能命令：为目标玩家学习指定技能等级。
  * Admin add-skill command: teaches a skill at a given level to the target player.
- *
  * @author Phantom
  */
 public class AddSkill extends AdminCommand {
@@ -24,7 +23,6 @@ public class AddSkill extends AdminCommand {
 	/**
 	 * 执行添加技能：解析技能 ID/等级并授予目标玩家。
 	 * Executes add-skill: parses skill id/level and grants it to the target player.
-	 *
 	 * @param params 参数：技能 ID、技能等级 / skill id, skill level
 	 */
 	@Override
@@ -58,7 +56,6 @@ public class AddSkill extends AdminCommand {
 	/**
 	 * 参数错误时输出 {@code //addskill} 用法。
 	 * Prints {@code //addskill} usage on invalid arguments.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.skillengine.model.HealType;
 /**
  * 魔法值瞬时恢复效果：立即回复目标 MP。
  * Instant MP heal effect: immediately restores the target's magic points.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)

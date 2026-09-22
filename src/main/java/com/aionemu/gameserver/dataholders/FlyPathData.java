@@ -15,7 +15,6 @@ import com.aionemu.commons.utils.collections.ShortObjectHashMap;
 /**
  * 飞行路径配置数据容器，按路径 ID 索引飞行路径条目。
  * Fly path configuration data holder, indexed by path id.
- *
  * @author KID
  */
 @XmlRootElement(name = "flypath_template")
@@ -39,7 +38,6 @@ public class FlyPathData {
 	/**
 	 * 返回飞行路径条目数量。
 	 * Returns the number of fly path entries.
-	 *
 	 * @return 飞行路径条目数量 / Returns the number of fly path entries.
 	 */
 	public int size() {
@@ -49,7 +47,6 @@ public class FlyPathData {
 	/**
 	 * 按路径 ID 获取飞行路径模板。
 	 * Returns the fly path template for the given path id.
-	 *
 	 * @param i 路径 ID / path id
 	 * @return 飞行路径条目，不存在则为 null / fly path entry, or null if absent
 	 */

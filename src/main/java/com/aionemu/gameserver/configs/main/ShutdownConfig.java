@@ -5,7 +5,6 @@ import com.aionemu.commons.configuration.Property;
 /**
  * 服务器关闭/重启钩子相关配置。
  * Server shutdown/reboot hook related configuration.
- *
  * @author lord_rex
  */
 public class ShutdownConfig {

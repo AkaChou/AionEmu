@@ -20,7 +20,6 @@ import java.util.List;
 /**
  * 好友列表 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of FriendListDAO.
- *
  * @author Ben
  */
 @Slf4j
@@ -38,7 +37,6 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
     /**
      * 加载玩家好友列表。
      * Loads the player's friend list.
-     *
      * @param player 玩家 / player
      * @return 好友列表 / friend list
      */
@@ -71,7 +69,6 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
     /**
      * 双向添加好友关系。
      * Adds a mutual friendship between two players.
-     *
      * @param player 玩家 / player
      * @param friend 好友 / friend
      * @return 是否成功 / whether successful
@@ -102,7 +99,6 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
     /**
      * 双向删除好友关系。
      * Deletes a mutual friendship between two players.
-     *
      * @param playerOid 玩家对象 ID / player object id
      * @param friendOid 好友对象 ID / friend object id
      * @return 是否成功 / whether successful
@@ -133,7 +129,6 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
     /**
      * 设置好友备注。
      * Sets a note for a friend.
-     *
      * @param playerId 玩家 ID / player id
      * @param friendId 好友 ID / friend id
      * @param note 备注 / note
@@ -155,7 +150,6 @@ public class FriendListDAO extends com.aionemu.gameserver.dao.FriendListDAO {
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.
-     *
      * @param database 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

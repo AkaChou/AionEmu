@@ -15,7 +15,6 @@ import java.util.List;
 /**
  * Enshar 区域 NPC AI：Grimreoff（@AIName "grimreoff"），继承 NpcAI2。
  * Enshar zone NPC AI: Grimreoff (@AIName "grimreoff"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("grimreoff")
@@ -34,7 +33,6 @@ public class GrimreoffAI2 extends NpcAI2
 	/**
 	 * 处理对话选择：消耗钥匙并打开通往黑暗军团传送门的路。
 	 * Handles dialog selection: consumes the key and opens the Dark Legion portal path.
-	 *
 	 * @param player 对话玩家 / dialog player
 	 * @param dialogId 对话框选项 ID / dialog option ID
 	 * @param questId 任务 ID / quest ID

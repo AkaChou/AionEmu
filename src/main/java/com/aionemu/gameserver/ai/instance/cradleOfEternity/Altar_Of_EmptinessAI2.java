@@ -18,7 +18,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Cradle Of Eternity 副本 NPC AI：Altar Of Emptiness（@AIName "Altar_Of_Emptiness"），继承 NpcAI2。
  * Cradle Of Eternity instance NPC AI: Altar Of Emptiness (@AIName "Altar_Of_Emptiness"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Altar_Of_Emptiness")
@@ -56,7 +55,6 @@ public class Altar_Of_EmptinessAI2 extends NpcAI2
 	/**
 	 * 开始使用祭坛：有施放延迟时挂载使用观察者并调度结束回调，否则直接完成。
 	 * Start using the altar: attach a use observer and schedule the finish callback when a delay exists, otherwise finish immediately.
-	 *
 	 * @param player 使用祭坛的玩家 / Player using the altar
 	 */
 	protected void handleUseItemStart(final Player player) {

@@ -11,7 +11,6 @@ import lombok.Getter;
 /**
  * 任务加成模板（静态数据/XML）。
  * Quest bonuses template (static data / XML).
- *
  * @author Rolandas
  */
 @Getter
@@ -22,24 +21,21 @@ public class QuestBonuses {
 	/**
 	 * 返回加成类型。
 	 * Returns the bonus type.
-	 *
-	 * @return 加成类型 / possible object is {@link BonusType}
+	 * 加成类型 / possible object is {@link BonusType}
 	 */
 	@XmlAttribute(required = true)
 	protected BonusType type;
 	/**
 	 * 返回等级。
 	 * Returns the level.
-	 *
-	 * @return 等级 / possible object is {@link Integer}
+	 * 等级 / possible object is {@link Integer}
 	 */
 	@XmlAttribute
 	protected Integer level;
 	/**
 	 * 返回技能 ID。
 	 * Returns the skill id.
-	 *
-	 * @return 技能 ID / possible object is {@link Integer}
+	 * 技能 ID / possible object is {@link Integer}
 	 */
 	@XmlAttribute
 	protected Integer skill;

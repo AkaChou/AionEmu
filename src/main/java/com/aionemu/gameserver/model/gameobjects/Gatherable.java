@@ -9,7 +9,6 @@ import com.aionemu.gameserver.world.WorldPosition;
 /**
  * 可采集物游戏对象。
  * Gatherable game object.
- *
  * @author ATracer
  */
 public class Gatherable extends VisibleObject {

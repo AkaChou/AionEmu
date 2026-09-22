@@ -19,7 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Fire Temple 副本 NPC AI：Kromede The Corrupt（@AIName "kromedethecorrupt"），继承 AggressiveNpcAI2。
  * Fire Temple instance NPC AI: Kromede The Corrupt (@AIName "kromedethecorrupt"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("kromedethecorrupt")

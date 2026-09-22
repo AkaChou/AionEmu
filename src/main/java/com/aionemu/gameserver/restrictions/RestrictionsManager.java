@@ -32,7 +32,6 @@ public final class RestrictionsManager {
 	/**
 	 * 激活限制：扫描未禁用方法并按优先级插入对应桶。
 	 * Activates a restriction by scanning non-disabled methods and inserting into priority-ordered buckets.
-	 *
 	 * @param restriction 限制实现 / restriction implementation
 	 */
 	public synchronized static void activate(Restrictions restriction) {
@@ -57,7 +56,6 @@ public final class RestrictionsManager {
 	/**
 	 * 从所有模式桶中移除限制实现。
 	 * Removes the restriction from all mode buckets.
-	 *
 	 * @param restriction 限制实现 / restriction implementation
 	 */
 	public synchronized static void deactivate(Restrictions restriction) {
@@ -82,7 +80,6 @@ public final class RestrictionsManager {
 	/**
 	 * 判断玩家是否处于指定限制状态。
 	 * Checks whether the player is under the given restriction kind.
-	 *
 	 * @param player 玩家 / player
 	 * @param callingRestriction 调用限制类型 / calling restriction type
 	 * @return true 表示被限制 / true when restricted
@@ -102,7 +99,6 @@ public final class RestrictionsManager {
 	/**
 	 * 是否允许攻击目标。
 	 * Whether the player may attack the target.
-	 *
 	 * @param player 玩家 / player
 	 * @param target 目标 / target
 	 * @return 允许时为 true / true when allowed
@@ -119,7 +115,6 @@ public final class RestrictionsManager {
 	/**
 	 * 是否允许技能影响目标。
 	 * Whether a skill may affect the target.
-	 *
 	 * @param player 玩家 / player
 	 * @param target 目标 / target
 	 * @param skill 技能 / skill
@@ -137,7 +132,6 @@ public final class RestrictionsManager {
 	/**
 	 * 是否允许使用技能。
 	 * Whether the player may use the skill.
-	 *
 	 * @param player 玩家 / player
 	 * @param skill 技能 / skill
 	 * @return 允许时为 true / true when allowed
@@ -154,7 +148,6 @@ public final class RestrictionsManager {
 	/**
 	 * 是否允许聊天。
 	 * Whether the player may chat.
-	 *
 	 * @param player 玩家 / player
 	 * @return 允许时为 true / true when allowed
 	 */
@@ -170,7 +163,6 @@ public final class RestrictionsManager {
 	/**
 	 * 是否允许邀请进组。
 	 * Whether the player may invite to a group.
-	 *
 	 * @param player 玩家 / player
 	 * @param target 目标 / target player
 	 * @return 允许时为 true / true when allowed
@@ -187,7 +179,6 @@ public final class RestrictionsManager {
 	/**
 	 * 是否允许邀请进联盟。
 	 * Whether the player may invite to an alliance.
-	 *
 	 * @param player 玩家 / player
 	 * @param target 目标 / target player
 	 * @return 允许时为 true / true when allowed
@@ -204,7 +195,6 @@ public final class RestrictionsManager {
 	/**
 	 * 是否允许邀请进军团联盟。
 	 * Whether the player may invite to a league.
-	 *
 	 * @param player 玩家 / player
 	 * @param target 目标 / target player
 	 * @return 允许时为 true / true when allowed
@@ -221,7 +211,6 @@ public final class RestrictionsManager {
 	/**
 	 * 是否允许更换装备。
 	 * Whether the player may change equipment.
-	 *
 	 * @param player 玩家 / player
 	 * @return 允许时为 true / true when allowed
 	 */
@@ -237,7 +226,6 @@ public final class RestrictionsManager {
 	/**
 	 * 是否允许交易；已死亡时额外禁止。
 	 * Whether the player may trade; also forbids when already dead.
-	 *
 	 * @param player 玩家 / player
 	 * @return 允许时为 true / true when allowed
 	 */
@@ -253,7 +241,6 @@ public final class RestrictionsManager {
 	/**
 	 * 是否允许使用仓库。
 	 * Whether the player may use warehouse.
-	 *
 	 * @param player 玩家 / player
 	 * @return 允许时为 true / true when allowed
 	 */
@@ -269,7 +256,6 @@ public final class RestrictionsManager {
 	/**
 	 * 是否允许使用物品。
 	 * Whether the player may use the item.
-	 *
 	 * @param player 玩家 / player
 	 * @param item 物品 / item
 	 * @return 允许时为 true / true when allowed

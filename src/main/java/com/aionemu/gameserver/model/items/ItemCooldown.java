@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 /**
  * 物品冷却模型。
  * Item Cooldown model.
- *
  * @author ATracer
  */
 @Getter
@@ -27,7 +26,6 @@ public class ItemCooldown {
 	/**
 	 * 获取下次可再次使用的时间。
 	 * Returns the time of next reuse.
-	 *
 	 * @return 下次可再次使用的时间 / time of next reuse
 	 */
 	public long getReuseTime() {

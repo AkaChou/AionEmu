@@ -56,7 +56,6 @@ public class CaseStatUpEffect extends EffectTemplate {
 	/**
 	 * 线性插值：按当前生命值百分比，在低血与高血数值之间取中间值。
 	 * Linearly interpolates between the low-HP and high-HP values based on the current HP percentage.
-	 *
 	 * @param currentHp 当前生命值 / current HP
 	 * @param maxHp 最大生命值 / max HP
 	 * @param hpMin 采用低血数值的生命值百分比上限 / HP percentage at which the low-HP value fully applies

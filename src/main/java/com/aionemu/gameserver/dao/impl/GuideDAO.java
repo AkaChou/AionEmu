@@ -13,9 +13,7 @@ import java.util.List;
 /**
  * 引导（Guide）DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of GuideDAO.
- *
  * Updated for MySQL 8 - Fixed connection leaks.
- *
  * @author xTz
  */
 @Slf4j
@@ -36,7 +34,6 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
-	 *
 	 * @param database 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version
@@ -50,7 +47,6 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	/**
 	 * 删除引导。
 	 * Deletes a guide.
-	 *
 	 * @param guide_id 指南 ID / guide id
 	 * @return 是否成功 / whether successful
 	 */
@@ -70,7 +66,6 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	/**
 	 * 加载玩家全部引导。
 	 * Loads all guides of a player.
-	 *
 	 * @param playerId 玩家 ID / player id
 	 * @return 指南列表 / guide list
 	 */
@@ -101,7 +96,6 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	/**
 	 * 加载单条引导。
 	 * Loads a single guide.
-	 *
 	 * @param player_id 玩家 ID / player id
 	 * @param guide_id 指南 ID / guide id
 	 * @return 指南 / guide
@@ -131,7 +125,6 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	/**
 	 * 保存引导。
 	 * Saves a guide.
-	 *
 	 * @param guide_id 指南 ID / guide id
 	 * @param player 玩家 / player
 	 * @param title 称号 / title
@@ -153,7 +146,6 @@ public class GuideDAO extends com.aionemu.gameserver.dao.GuideDAO {
 	/**
 	 * 获取已使用的引导 ID 数组。
 	 * Gets the array of used guide ids.
-	 *
 	 * @return 已用 ID 数组 / used id array
 	 */
 	@Override

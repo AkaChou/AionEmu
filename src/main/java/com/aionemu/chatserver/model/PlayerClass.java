@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 玩家职业枚举。
  * Player class enumeration.
- *
  * @author ATracer
  */
 public enum PlayerClass {
@@ -93,7 +92,6 @@ public enum PlayerClass {
     /**
      * 构造职业枚举。
      * Constructs a player class enum value.
-     *
      * @param classId 职业 ID / class id
      */
 	PlayerClass(int classId) {

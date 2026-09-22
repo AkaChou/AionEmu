@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 阿特雷亚图鉴条目升级的客户端包。
  * Client packet to level up an Atreian Bestiary entry.
- *
  * @author Ranastic
  */
 public class CM_ATREIAN_BESTIARY_LVLUP extends AionClientPacket {

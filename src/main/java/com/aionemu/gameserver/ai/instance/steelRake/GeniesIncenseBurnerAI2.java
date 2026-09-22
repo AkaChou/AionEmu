@@ -8,7 +8,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * Steel Rake 副本 NPC AI：Genies Incense Burner（@AIName "geniesincenseburner"），继承 ActionItemNpcAI2。
  * Steel Rake instance NPC AI: Genies Incense Burner (@AIName "geniesincenseburner"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("geniesincenseburner")

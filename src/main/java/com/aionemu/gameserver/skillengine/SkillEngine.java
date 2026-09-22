@@ -17,7 +17,6 @@ import lombok.AccessLevel;
 /**
  * 技能引擎门面：按模板/玩家技能列表创建并应用技能与效果。
  * Skill engine facade: create and apply skills/effects from templates and player skill lists.
- *
  * @author ATracer
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -35,9 +34,6 @@ public class SkillEngine {
      * -- SETTER --
      *  设置 Spring 实例提供者。
      *  Sets the Spring instance provider.
-     *
-     * @param provider 实例提供者 / instance provider
-
      */
 	@Setter
     private static volatile ObjectProvider<SkillEngine> instanceProvider;
@@ -45,7 +41,6 @@ public class SkillEngine {
 	/**
 	 * 为玩家已学习技能创建 Skill 实例。
 	 * Creates a Skill for a skill the player has learned.
-	 *
 	 * @param player 施法玩家 / casting player
 	 * @param skillId 技能 ID / skill id
 	 * @param firstTarget 首选目标 / first target
@@ -63,7 +58,6 @@ public class SkillEngine {
 	/**
 	 * 按模板为玩家已学习技能创建 Skill 实例（非激怒激活时须已学习）。
 	 * Creates a Skill from a template for a learned player skill (must be learned unless PROVOKED).
-	 *
 	 * @param player 施法玩家 / casting player
 	 * @param template 技能模板 / skill template
 	 * @param firstTarget 首选目标 / first target
@@ -87,7 +81,6 @@ public class SkillEngine {
 	/**
 	 * 按模板与指定技能等级为玩家创建 Skill 实例。
 	 * Creates a Skill for a player with an explicit skill level.
-	 *
 	 * @param player 施法玩家 / casting player
 	 * @param template 技能模板 / skill template
 	 * @param firstTarget 首选目标 / first target
@@ -105,7 +98,6 @@ public class SkillEngine {
 	/**
 	 * 为未学习技能（如物品技能）创建 Skill 实例。
 	 * Creates a Skill for skills not learned by the player (e.g. item skills).
-	 *
 	 * @param creature 施法者 / caster
 	 * @param skillId 技能 ID / skill id
 	 * @param skillLevel 技能等级 / skill level
@@ -119,7 +111,6 @@ public class SkillEngine {
 	/**
 	 * 为未学习技能创建 Skill，可附带物品模板。
 	 * Creates a Skill for non-learned skills, optionally bound to an item template.
-	 *
 	 * @param creature 施法者 / caster
 	 * @param skillId 技能 ID / skill id
 	 * @param skillLevel 技能等级 / skill level
@@ -143,7 +134,6 @@ public class SkillEngine {
 	/**
 	 * 获取技能引擎实例（优先 Spring 提供者，否则静态单例）。
 	 * Returns the skill engine instance (Spring provider if set, else static singleton).
-	 *
 	 * @return 技能引擎实例 / skill engine instance
 	 */
 	public static SkillEngine getInstance() {
@@ -157,7 +147,6 @@ public class SkillEngine {
     /**
 	 * 强制直接对目标应用技能效果（忽略学习状态，可指定持续时长）。
 	 * Applies a skill effect directly to the target as a forced effect (optional duration).
-	 *
 	 * @param skillId 技能 ID / skill id
 	 * @param effector 施法者 / caster
 	 * @param effected 受影响生物 / effected creature
@@ -188,7 +177,6 @@ public class SkillEngine {
 	/**
 	 * 对目标应用普通技能效果，保留命中与抗性判定。
 	 * Applies a regular skill effect while preserving hit and resistance checks.
-	 *
 	 * @return 创建的效果，技能不存在时为 null / created effect, or null if the skill is missing
 	 */
 	public Effect applyEffect(int skillId, Creature effector, Creature effected) {

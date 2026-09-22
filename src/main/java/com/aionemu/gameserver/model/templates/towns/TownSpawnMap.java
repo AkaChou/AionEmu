@@ -14,16 +14,12 @@ import lombok.Getter;
 /**
  * 城镇刷新点地图模板（静态数据/XML）。
  * XML template.
- *
  * @author ViAl
  */
 @Getter
 @XmlType(name = "town_spawn_map")
 public class TownSpawnMap {
 
-	/**
-	 * @return the mapId
-	 */
 	@XmlAttribute(name = "map_id")
 	private int mapId;
 	@XmlElement(name = "town_spawn")
@@ -33,7 +29,6 @@ public class TownSpawnMap {
 	/**
 	 * 反序列化后将城镇出生列表转为按城镇 ID 索引的映射。
 	 * Build the town-id-indexed map after unmarshalling.
-	 *
 	 * @param u JAXB 反序列化器 / Unmarshaller
 	 * @param parent 父对象 / Parent object
 	 */

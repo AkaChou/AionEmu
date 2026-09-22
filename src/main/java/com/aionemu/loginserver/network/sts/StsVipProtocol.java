@@ -35,7 +35,6 @@ public final class StsVipProtocol {
     /**
      * 将 VIP 等级与经验解析为分数（经验优先，其次按等级表）。
      * Resolves a score from VIP level and exp (exp wins, otherwise the level table is used).
-     *
      * @param vipLevel VIP 等级 / vip level
      * @param vipExp VIP 经验 / vip exp
      * @return 分数 / score
@@ -53,7 +52,6 @@ public final class StsVipProtocol {
     /**
      * 从输入流读取并解析一个 STS 请求（请求行、头部与 body）。
      * Reads and parses one STS request (request line, headers and body) from the input stream.
-     *
      * @param input 输入流 / input stream
      * @return 解析后的请求，流结束时为 null / parsed request, or null on end of stream
      * @throws IOException 流读取失败或报文不完整 / on stream errors or truncated messages

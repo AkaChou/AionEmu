@@ -3,7 +3,6 @@ package com.aionemu.gameserver.model;
 /**
  * 请愿状态枚举。
  * Petition Status enumeration.
- *
  * @author zdead
  */
 public enum PetitionStatus {

@@ -25,7 +25,6 @@ public enum DashStatus {
 	/**
 	 * 获取协议 ID。
 	 * Gets protocol id.
-	 *
 	 */
 	private final int id;
 

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 传送门/传送点 AI：Arena Portal（@AIName "arena_portal"），继承 PortalDialogAI2。
  * Portal/teleporter AI: Arena Portal (@AIName "arena_portal"), extends PortalDialogAI2.
- *
  * @author Encom
  */
 @AIName("arena_portal")

@@ -28,7 +28,6 @@ public class SiegeWeaponMoveController extends SummonMoveController {
 	/**
 	 * 使用指定召唤物构造控制器。
 	 * Construct the controller for the given summon.
-	 *
 	 * @param owner 召唤物 / Summon owner
 	 */
 	public SiegeWeaponMoveController(Summon owner) {
@@ -74,7 +73,6 @@ public class SiegeWeaponMoveController extends SummonMoveController {
 	/**
 	 * 按速度插值向指定坐标移动，方向变化时广播移动包。
 	 * Interpolate toward the given coordinates by speed; broadcast when direction changes.
-	 *
 	 * @param targetX 目标 X 坐标 / Target X
 	 * @param targetY 目标 Y 坐标 / Target Y
 	 * @param targetZ 目标 Z 坐标 / Target Z

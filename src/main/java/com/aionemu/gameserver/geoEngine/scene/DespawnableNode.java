@@ -23,8 +23,6 @@ public class DespawnableNode extends Node {
 	 * -- SETTER --
 	 *  设置可消失类型。
 	 *  Sets the despawnable type.
-	 *
-	 * @param type 可消失类型 / type
 	 */
 	@Setter
 	public DespawnableType type = DespawnableType.NONE;
@@ -32,8 +30,6 @@ public class DespawnableNode extends Node {
 	 * -- SETTER --
 	 *  设置关联业务 ID。
 	 *  Sets the related business id.
-	 *
-	 * @param id 业务 ID / business id
 	 */
 	@Setter
 	public int id;
@@ -45,7 +41,6 @@ public class DespawnableNode extends Node {
 	/**
 	 * 设置指定实例是否激活。
 	 * Sets whether the given instance is active.
-	 *
 	 * @param instanceId 实例 ID / instance id
 	 * @param active 是否激活 / whether active
 	 */
@@ -58,7 +53,6 @@ public class DespawnableNode extends Node {
 	/**
 	 * 查询指定实例是否激活。
 	 * Queries whether the given instance is active.
-	 *
 	 * @param instanceId 实例 ID / instance id
 	 * @return 若激活则为 true / true if active
 	 */
@@ -71,7 +65,6 @@ public class DespawnableNode extends Node {
 	/**
 	 * 从普通 {@link Node} 复制名称、碰撞标志与子节点结构。
 	 * Copies name, collision flags and child structure from a plain {@link Node}.
-	 *
 	 * @param node 源节点 / source node
 	 * @throws CloneNotSupportedException 遇到不支持的子类型时 / when an unsupported child type is encountered
 	 */
@@ -92,7 +85,6 @@ public class DespawnableNode extends Node {
 	/**
 	 * 按类型/实例/护盾/忽略属性过滤后委托父类碰撞检测。
 	 * Filters by type/instance/shield/ignore properties, then delegates to the parent collision check.
-	 *
 	 * @param other 目标可碰撞对象 / target collidable
 	 * @param results 碰撞结果收集器 / collision results collector
 	 * @return 碰撞数量 / number of collisions
@@ -153,7 +145,6 @@ public class DespawnableNode extends Node {
 	/**
 	 * 深拷贝本节点及其类型/激活状态。
 	 * Deep-clones this node including type and active-instance state.
-	 *
 	 * @return 克隆节点 / cloned node
 	 */
 	@Override
@@ -187,8 +178,6 @@ public class DespawnableNode extends Node {
          * -- GETTER --
          *  返回类型字节 ID。
          *  Returns the type byte id.
-         *
-         * @return 类型字节 ID / type id
          */
 		private final byte id;
 
@@ -199,7 +188,6 @@ public class DespawnableNode extends Node {
 		/**
 		 * 按字节 ID 查找类型。
 		 * Looks up a type by its byte id.
-		 *
 		 * @param id 类型 ID / type id
 		 * @return 匹配的类型 / matching type
 		 * @throws IllegalArgumentException 当 ID 无效时 / when id is invalid

@@ -17,7 +17,6 @@ import java.util.List;
 /**
  * Sauro Supply Base 副本 NPC AI：The Brigade General Sheba（@AIName "the_brigade_general_sheba"），继承 AggressiveNpcAI2。
  * Sauro Supply Base instance NPC AI: The Brigade General Sheba (@AIName "the_brigade_general_sheba"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("the_brigade_general_sheba")

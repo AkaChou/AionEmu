@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端广播角色改名结果。
  * Server packet broadcasting a character rename result to the client.
- *
  * @author Rhys2002
  */
 @AllArgsConstructor

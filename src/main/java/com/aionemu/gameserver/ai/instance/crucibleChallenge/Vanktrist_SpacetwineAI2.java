@@ -43,7 +43,6 @@ utilizing potions, DP, and high cooldown skills to make sure you are victorious!
 /**
  * Crucible Challenge 副本 NPC AI：Vanktrist Spacetwine（@AIName "vanktrist_spacetwine"），继承 AggressiveNpcAI2。
  * Crucible Challenge instance NPC AI: Vanktrist Spacetwine (@AIName "vanktrist_spacetwine"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("vanktrist_spacetwine")

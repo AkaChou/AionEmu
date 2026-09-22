@@ -6,21 +6,17 @@ import lombok.experimental.UtilityClass;
 /**
  * Base64 编解码工具类，完全符合 RFC 2045规范。
  * A very fast and memory efficient class to encode and decode to and from BASE64 in full accordance with RFC 2045.
- *
  * 性能特点 Performance characteristics:
  * - 在 Windows XP SP1 及更高版本上，对于小数组(10-1000字节)，此编解码器比 sun.misc.Encoder()/Decoder()快10倍
  * - 对于大数组(10000-1000000字节)快2-3倍
  * - 对于字节数组，编码速度比 Jakarta Commons Base64 编解码快20%，解码大数组时快50%
  * - 对于很小的数组(<30字节)，速度是其他实现的两倍
- * 
  * 内存效率 Memory efficiency:
  * - 不创建临时数组，仅分配结果数组
  * - 产生更少的垃圾，可以处理两倍于其他算法的数组大小
- * 
  * 输出特点 Output characteristics:
  * - 输出与 Sun 的编码器相同，除了 Sun 的编码器在最后一个字符不是填充字符时会添加行分隔符
  * - 完全符合 RFC 2045规范
- *
  * @author Mikael Grev
  * @version 2.2
  */
@@ -45,7 +41,6 @@ public class Base64 {
 	/**
 	 * 将原始字节数组编码为 BASE64 字符数组
 	 * Encodes a raw byte array into a BASE64 char[] representation in accordance with RFC 2045.
-	 *
 	 * @param sArr 要转换的字节数组。如果为 null 或长度为0，将返回空数组
 	 *            The bytes to convert. If null or length 0 an empty array will be returned.
 	 * @param lineSep 是否在76个字符后添加"\r\n"换行符
@@ -103,7 +98,6 @@ public class Base64 {
 	/**
 	 * 解码 BASE64 编码的字符数组，忽略所有非法字符，可以处理包含或不包含换行符的数组
 	 * Decodes a BASE64 encoded char array. All illegal characters will be ignored and can handle both arrays with and without line separators.
-	 *
 	 * @param sArr 源字符数组，如果为 null 或长度为0将返回空数组
 	 *             The source array. <code>null</code> or length 0 will return an empty array.
 	 * @return 解码后的字节数组，可能长度为0。如果合法字符（包括'='）不能被4整除，则返回 null（即肯定已损坏）
@@ -175,7 +169,6 @@ public class Base64 {
 	 * 快速解码 BASE64 编码的字符数组，该方法比{@link #decode(char[])}快约两倍
 	 * Decodes a BASE64 encoded char array that is known to be reasonably well formatted. 
 	 * The method is about twice as fast as {@link #decode(char[])}.
-	 *
 	 * 前提条件 Preconditions:
 	 * + 数组每行长度必须为76个字符或没有行分隔符（单行）
 	 *   The array must have a line length of 76 chars OR no line separators at all (one line).
@@ -185,7 +178,6 @@ public class Base64 {
 	 *   The array must not contain illegal characters within the encoded string
 	 * + 数组开头和结尾可以包含非法字符，这些字符会被适当处理
 	 *   The array CAN have illegal characters at the beginning and end, those will be dealt with appropriately.
-	 *
 	 * @param sArr 源字符数组，如果为 null 会抛出异常
 	 *             The source array. Length 0 will return an empty array. <code>null</code> will throw an exception.
 	 * @return 解码后的字节数组，可能长度为0
@@ -265,7 +257,6 @@ public class Base64 {
 	/**
 	 * 将原始字节数组编码为 BASE64 字节数组
 	 * Encodes a raw byte array into a BASE64 byte[] representation in accordance with RFC 2045.
-	 *
 	 * @param sArr 要转换的字节数组。如果为 null 或长度为0，将返回空数组
 	 *            The bytes to convert. If null or length 0 an empty array will be returned.
 	 * @param lineSep 是否在76个字符后添加"\r\n"换行符
@@ -323,7 +314,6 @@ public class Base64 {
 	/**
 	 * 解码 BASE64 编码的字节数组，忽略所有非法字符，可以处理包含或不包含换行符的数组
 	 * Decodes a BASE64 encoded byte array. All illegal characters will be ignored and can handle both arrays with and without line separators.
-	 *
 	 * @param sArr 源字节数组，如果为 null 会抛出异常
 	 *             The source array. Length 0 will return an empty array. <code>null</code> will throw an exception.
 	 * @return 解码后的字节数组，可能长度为0。如果合法字符（包括'='）不能被4整除，则返回 null
@@ -391,7 +381,6 @@ public class Base64 {
 	 * 快速解码 BASE64 编码的字节数组，该方法比{@link #decode(byte[])}快约两倍
 	 * Decodes a BASE64 encoded byte array that is known to be reasonably well formatted. 
 	 * The method is about twice as fast as {@link #decode(byte[])}.
-	 *
 	 * 前提条件 Preconditions:
 	 * + 数组每行长度必须为76个字符或没有行分隔符（单行）
 	 *   The array must have a line length of 76 chars OR no line separators at all (one line).
@@ -401,7 +390,6 @@ public class Base64 {
 	 *   The array must not contain illegal characters within the encoded string
 	 * + 数组开头和结尾可以包含非法字符，这些字符会被适当处理
 	 *   The array CAN have illegal characters at the beginning and end, those will be dealt with appropriately.
-	 *
 	 * @param sArr 源字节数组，如果为 null 会抛出异常
 	 *             The source array. Length 0 will return an empty array. <code>null</code> will throw an exception.
 	 * @return 解码后的字节数组，可能长度为0
@@ -481,7 +469,6 @@ public class Base64 {
 	/**
 	 * 将原始字节数组编码为 BASE64 字符串
 	 * Encodes a raw byte array into a BASE64 String representation in accordance with RFC 2045.
-	 *
 	 * @param sArr 要转换的字节数组。如果为 null 或长度为0，将返回空数组
 	 *            The bytes to convert. If null or length 0 an empty array will be returned.
 	 * @param lineSep 是否在76个字符后添加"\r\n"换行符
@@ -499,11 +486,9 @@ public class Base64 {
 	/**
 	 * 解码 BASE64 编码的字符串，忽略所有非法字符，可以处理包含或不包含换行符的字符串
 	 * Decodes a BASE64 encoded String. All illegal characters will be ignored and can handle both strings with and without line separators.
-	 *
 	 * 注意：调用 decode(str.toCharArray())可能快约2倍，但会创建临时数组。此版本使用 str.charAt(i)遍历字符串
 	 * Note! It can be up to about 2x the speed to call decode(str.toCharArray()) instead. That will create a temporary array though. 
 	 * This version will use str.charAt(i) to iterate the string.
-	 *
 	 * @param str 源字符串，如果为 null 或长度为0将返回空数组
 	 *            The source string. null or length 0 will return an empty array.
 	 * @return 解码后的字节数组，可能长度为0。如果合法字符（包括'='）不能被4整除，则返回 null（即肯定已损坏）
@@ -575,7 +560,6 @@ public class Base64 {
 	 * 快速解码 BASE64 编码的字符串，该方法比{@link #decode(String)}快约两倍
 	 * Decodes a BASE64 encoded string that is known to be reasonably well formatted. 
 	 * The method is about twice as fast as {@link #decode(String)}.
-	 *
 	 * 前提条件 Preconditions:
 	 * + 数组每行长度必须为76个字符或没有行分隔符（单行）
 	 *   The array must have a line length of 76 chars OR no line separators at all (one line).
@@ -585,7 +569,6 @@ public class Base64 {
 	 *   The array must not contain illegal characters within the encoded string
 	 * + 数组开头和结尾可以包含非法字符，这些字符会被适当处理
 	 *   The array CAN have illegal characters at the beginning and end, those will be dealt with appropriately.
-	 *
 	 * @param s 源字符串，如果为 null 会抛出异常
 	 *          The source string. Length 0 will return an empty array. <code>null</code> will throw an exception.
 	 * @return 解码后的字节数组，可能长度为0

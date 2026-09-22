@@ -21,7 +21,6 @@ import java.util.List;
 /**
  * 物品栏/仓库数据访问对象的 MySQL 8 实现，已修复连接泄漏。
  * MySQL 8 implementation of InventoryDAO with connection leak fixes.
- *
  * @author ATracer
  */
 @Slf4j
@@ -60,7 +59,6 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
     /**
      * 加载指定存储类型的物品栏；账号仓库会先解析为账号 ID。
      * Loads a storage of the given type for a player; account warehouse resolves to account id first.
-     *
      * @param playerId 玩家 ID / player id
      * @param storageType 存储类型 / storage type
      * @return 存储实例 / storage instance
@@ -105,7 +103,6 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
     /**
      * 直接加载指定存储位置的物品列表（不封装为 Storage）。
      * Loads items of a storage type as a plain list (no Storage wrapper).
-     *
      * @param playerId 玩家 ID / player id
      * @param storageType 存储类型 / storage type
      * @return 物品列表 / item list
@@ -142,7 +139,6 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
     /**
      * 加载玩家已装备物品到装备栏对象。
      * Loads equipped items into an Equipment instance for the player.
-     *
      * @param player 玩家 / player
      * @return 装备 / equipment
      */
@@ -177,9 +173,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
     /**
      * 按玩家 ID 加载已装备物品列表。
      * Loads equipped items as a list by player id.
-     *
      * player id
-     *
      * @param playerId 玩家 ID / player id
      * @return 已装备物品列表 / equipped item list
      */
@@ -266,9 +260,7 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
     /**
      * 按玩家 ID 加载所属军团 ID。
      * Loads the legion id for the given player.
-     *
      * player id
-     *
      * @param playerId 玩家 ID / player id
      * @return 军团 ID；未加入或出错时返回 0 / legion id, or 0 if none/error
      */
@@ -292,7 +284,6 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
     /**
      * 持久化玩家全部脏物品（含账号仓/军团仓归属）。
      * Persists all dirty items of the player (resolves account/legion ownership).
-     *
      * @param player 玩家 / player
      * @return 是否全部成功 / whether all operations succeeded
      */
@@ -312,7 +303,6 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
     /**
      * 持久化单个物品（绑定玩家账号与军团）。
      * Persists a single item bound to the player's account and legion.
-     *
      * @param item 物品 / item
      * @param player 玩家 / player
      * @return 是否成功 / whether succeeded
@@ -328,7 +318,6 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
     /**
      * 按玩家 ID 持久化物品列表；按需解析账号仓/军团仓归属。
      * Persists an item list by player id; resolves account/legion ownership when needed.
-     *
      * @param items 物品列表 / item list
      * @param playerId 玩家 ID / player id
      * @return 是否成功 / whether succeeded
@@ -356,7 +345,6 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
     /**
      * 按持久化状态批量插入/更新/删除物品（事务提交）。
      * Batch inserts/updates/deletes items by persistent state within a transaction.
-     *
      * @param items 物品列表 / item list
      * @param playerId 玩家 ID / player id
      * @param accountId 账号 ID（账号仓用） / account id (for account warehouse)
@@ -579,7 +567,6 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
     /**
      * 删除玩家非账号仓库的全部物品。
      * Deletes all non-account-warehouse items owned by the player.
-     *
      * @param playerId 玩家 ID / player id
      * @return 是否成功 / whether succeeded
      */
@@ -600,7 +587,6 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
     /**
      * 删除指定账号的账号仓库物品。
      * Deletes account warehouse items for the given account id.
-     *
      * @param accountId 账号 ID / account id
      */
     @Override
@@ -618,7 +604,6 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
     /**
      * 获取已占用的物品唯一 ID 列表，供 ID 工厂使用。
      * Returns used item unique ids for ID factory allocation.
-     *
      * 已占用 ID 数组；出错时返回空数组。
      * used id array, or empty on error.
      */
@@ -649,7 +634,6 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
     /**
      * 判断当前数据库是否受 MySQL 8 DAO 支持。
      * Returns whether the given database is supported by MySQL 8 DAOs.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

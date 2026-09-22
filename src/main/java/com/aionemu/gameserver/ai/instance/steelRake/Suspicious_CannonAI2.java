@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Steel Rake 副本 NPC AI：Suspicious Cannon（@AIName "suspicious_cannon"），继承 NpcAI2。
  * Steel Rake instance NPC AI: Suspicious Cannon (@AIName "suspicious_cannon"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("suspicious_cannon")

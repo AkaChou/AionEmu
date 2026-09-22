@@ -10,7 +10,6 @@ import lombok.Setter;
 /**
  * 动态裂隙刷新点模板（静态数据/XML）。
  * Dynamic rift spawn template (static data/XML).
- *
  * @author Rinzler (Encom)
  */
 public class DynamicRiftSpawnTemplate extends SpawnTemplate {

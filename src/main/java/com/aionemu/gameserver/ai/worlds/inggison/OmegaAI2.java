@@ -23,7 +23,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Inggison 区域 NPC AI：Omega（@AIName "omega"），继承 AggressiveNpcAI2。
  * Inggison zone NPC AI: Omega (@AIName "omega"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("omega")

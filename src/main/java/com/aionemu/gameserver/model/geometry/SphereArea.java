@@ -7,7 +7,6 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 /**
  * 球体区域，用于几何相关逻辑。
  * Sphere Area for geometry logic.
- *
  * @author MrPoke
  */
 public class SphereArea implements Area {
@@ -22,7 +21,6 @@ public class SphereArea implements Area {
 	/**
 	 * 创建球体区域。
 	 * Creates a sphere area.
-	 *
 	 * @param zoneName 区域名称 / zone name
 	 * @param worldId 世界 ID / world id
 	 * @param x 球心 X 坐标 / center x coord
@@ -40,19 +38,12 @@ public class SphereArea implements Area {
 	}
 
 	@Deprecated
-	/**
-	 * @param point 要检查的点 / point to check
-	 * @return 是否在二维区域内 / Whether inside 2D
-	 */
 	@Override
 	public boolean isInside2D(Point2D point) {
 		return false;
 	}
 
 	@Deprecated
-	/**
-	 * @return 是否在二维区域内 / Whether inside 2D
-	 */
 	@Override
 	public boolean isInside2D(float x, float y) {
 		return false;
@@ -94,14 +85,12 @@ public class SphereArea implements Area {
 	}
 
 	@Deprecated
-	/** 返回 distance 2 d / Returns the distance 2 d */
 	@Override
 	public double getDistance2D(Point2D point) {
 		return 0;
 	}
 
 	@Deprecated
-	/** 返回 distance 2 d / Returns the distance 2 d */
 	@Override
 	public double getDistance2D(float x, float y) {
 		return 0;
@@ -121,15 +110,13 @@ public class SphereArea implements Area {
 	}
 
 	@Deprecated
-	/** 返回 closest point / Returns the closest point */
-	@Override
+    @Override
 	public Point2D getClosestPoint(Point2D point) {
 		return null;
 	}
 
 	@Deprecated
-	/** 返回 closest point / Returns the closest point */
-	@Override
+    @Override
 	public Point2D getClosestPoint(float x, float y) {
 		return null;
 	}

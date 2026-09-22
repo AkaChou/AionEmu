@@ -18,7 +18,6 @@ import java.util.Map;
 /**
  * SVS 活动数据容器，按位置 ID 索引 SVS 地点实例。
  * SVS event data holder, indexing SVS location instances by location id.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -43,7 +42,6 @@ public class SvsData {
 	/**
 	 * 返回已加载的 SVS 地点数量。
 	 * Returns the number of loaded SVS locations.
-	 *
 	 * @return 已加载的SVS 地点数量 / Returns the number of loaded SVS locations.
 	 */
 	public int size() {
@@ -53,7 +51,6 @@ public class SvsData {
 	/**
 	 * 返回全部 SVS 地点映射。
 	 * Returns the full map of SVS locations.
-	 *
 	 * @return 位置 ID → SVS 地点映射 / location-id to SVS-location map
 	 */
 	public Map<Integer, SvsLocation> getSvsLocations() {

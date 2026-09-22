@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 /**
  * 同步玩家使用/切换机器人（Aethertech）外观的服务端包。
  * switching robot (Aethertech) appearance.
- *
  * @author Ranastic
  */
 @AllArgsConstructor

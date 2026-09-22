@@ -14,7 +14,6 @@ import com.aionemu.loginserver.service.LoginProtectionServices;
 /**
  * 连接洪泛防护：限制同一 IP 过快重连，必要时写入封禁。
  * Connection flood protector: limits too-fast reconnects from the same IP and may ban it.
- *
  * @author Mr. Poke
  */
 @Slf4j(topic = "com.aionemu.loginserver.network.aion.clientpackets.CM_LOGIN")
@@ -26,7 +25,6 @@ public class FloodProtector {
     /**
      * 获取单例实例（已弃用，请走 boot 注入）。
      * Returns the singleton instance (deprecated; prefer boot injection).
-     *
      * @return 单例实例 / singleton instance
      */
     @Deprecated(since = "boot-migration")
@@ -37,7 +35,6 @@ public class FloodProtector {
     /**
      * 旧版 IP 洪泛检测：过快重连则写入 BannedIp 表（已弃用）。
      * Legacy IP flood check: bans the IP via BannedIp service when reconnects are too fast (deprecated).
-     *
      * @param ip 客户端 IP / client IP
      * @return 该 IP 是否已被或应被封禁 / whether the IP is or should be banned
      */
@@ -61,7 +58,6 @@ public class FloodProtector {
     /**
      * 判断 IP 是否重连过快；过快则加入内存临时封禁。
      * Returns whether the IP reconnects too fast; if so, places it into an in-memory temporary ban.
-     *
      * @param ip 客户端 IP / client IP
      * @return 是否重连过快或已临时封禁 / true if too fast or currently banned
      */

@@ -37,7 +37,6 @@ public class AuraEffect extends EffectTemplate {
 	/**
 	 * 校验防滥用后将效果加入控制器。
 	 * Validates against abuse then adds the effect to the controller.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -55,7 +54,6 @@ public class AuraEffect extends EffectTemplate {
 	/**
 	 * 周期动作：向范围内组队/联盟成员及自身施加光环技能。
 	 * Periodic action: applies the aura skill to group/alliance members in range and self.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -91,7 +89,6 @@ public class AuraEffect extends EffectTemplate {
 	/**
 	 * 对指定玩家施加光环关联技能。
 	 * Applies the aura-linked skill to the given player.
-	 *
 	 * @param effected 目标玩家 / target player
 	 * @param effect 运行时效果 / runtime effect
 	 */
@@ -105,7 +102,6 @@ public class AuraEffect extends EffectTemplate {
 	/**
 	 * 启动周期任务（约 6.5 秒一次）。
 	 * Starts the periodic task (about every 6.5 seconds).
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -135,7 +131,6 @@ public class AuraEffect extends EffectTemplate {
 	/**
 	 * 结束光环效果。
 	 * Ends the aura effect.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

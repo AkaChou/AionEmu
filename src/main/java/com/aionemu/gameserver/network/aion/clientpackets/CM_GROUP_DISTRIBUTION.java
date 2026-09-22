@@ -10,7 +10,6 @@ import com.aionemu.gameserver.restrictions.RestrictionsManager;
 /**
  * 在队伍/联盟中分配基纳的客户端包。
  * Client packet that distributes kinah within a party or alliance.
- *
  * @author Lyahim, Simple, xTz
  */
 public class CM_GROUP_DISTRIBUTION extends AionClientPacket {
@@ -21,7 +20,6 @@ public class CM_GROUP_DISTRIBUTION extends AionClientPacket {
 	/**
 	 * 构造客户端包实例。
 	 * Constructs a new client packet instance.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余允许状态 / additional allowed states

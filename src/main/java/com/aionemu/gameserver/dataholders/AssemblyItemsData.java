@@ -44,7 +44,6 @@ public class AssemblyItemsData {
 	/**
 	 * 返回已加载的组装物品数量。
 	 * Returns the number of loaded assembly items.
-	 *
 	 * @return 已加载的组装物品数量 / Returns the number of loaded assembly items.
 	 */
 	public int size() {
@@ -54,7 +53,6 @@ public class AssemblyItemsData {
 	/**
 	 * 按物品 ID 获取组装物品模板。
 	 * Returns the assembly item template for the given item id.
-	 *
 	 * @param itemId 物品 ID / item id
 	 * @return 模板，不存在则为 null / template or null
 	 */

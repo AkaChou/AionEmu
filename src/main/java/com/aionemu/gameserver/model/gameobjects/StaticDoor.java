@@ -16,7 +16,6 @@ import lombok.Getter;
 /**
  * 静态 Door 游戏对象。
  * Static Door game object.
- *
  * @author MrPoke
  */
 @Getter
@@ -28,7 +27,6 @@ public class StaticDoor extends StaticObject {
 	/**
 	 * 构造静态门。
 	 * Constructs a static door.
-	 *
 	 * @param objectId 对象 ID / object id
 	 * @param controller 静态对象控制器 / static-object controller
 	 * @param spawnTemplate 生成模板 / spawn template
@@ -43,7 +41,6 @@ public class StaticDoor extends StaticObject {
 	/**
 	 * 是否处于开启状态。
 	 * Whether the door is open.
-	 *
 	 * @return 是否开启 / whether open
 	 */
 	public boolean isOpen() {
@@ -53,7 +50,6 @@ public class StaticDoor extends StaticObject {
 	/**
 	 * 设置门的开启状态并广播表情包。
 	 * Sets the door's open state and broadcasts the emotion packet.
-	 *
 	 * @param open 是否开启 / whether open
 	 */
 	public void setOpen(boolean open) {

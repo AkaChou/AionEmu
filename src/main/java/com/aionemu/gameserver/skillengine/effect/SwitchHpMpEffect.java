@@ -13,7 +13,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * HP/MP 互换效果：按配置比例交换目标当前生命与魔法值。
  * Switch HP/MP effect: exchanges configured percentages of current HP and MP.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)

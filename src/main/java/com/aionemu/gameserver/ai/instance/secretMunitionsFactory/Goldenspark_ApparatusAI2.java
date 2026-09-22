@@ -13,18 +13,13 @@ import java.util.List;
 /**
  * Secret Munitions Factory 副本 NPC AI：Goldenspark Apparatus（@AIName "goldenspark_apparatus"），继承 ActionItemNpcAI2。
  * Secret Munitions Factory instance NPC AI: Goldenspark Apparatus (@AIName "goldenspark_apparatus"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("goldenspark_apparatus")
 public class Goldenspark_ApparatusAI2 extends ActionItemNpcAI2
 {
 	@Override
-	/**
-	 * 在 Secret Munitions Factory 副本中使用装置后，清除副本内的所有 Golden Living Bomb。
-	 * After using the apparatus in the Secret Munitions Factory instance, removes all golden living bombs in the instance.
-	 */
-	protected void handleUseItemFinish(Player player) {
+    protected void handleUseItemFinish(Player player) {
 		WorldPosition worldPosition = player.getPosition();
 		if (worldPosition.isInstanceMap()) {
 			if (worldPosition.getMapId() == 301640000) { //Secret Munitions Factory.
@@ -33,7 +28,7 @@ public class Goldenspark_ApparatusAI2 extends ActionItemNpcAI2
 			}
 		}
 	}
-	
+
 	private void killNpc(List<Npc> npcs) {
 		for (Npc npc: npcs) {
 			AI2Actions.killSilently(this, npc);

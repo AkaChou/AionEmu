@@ -28,7 +28,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 个人商店服务，处理开店、上架、购买与关店逻辑。
  * Private-store service handling open, list, buy, and close operations.
- *
  * @author Simple
  */
 @Slf4j(topic = "EXCHANGE_LOG")
@@ -38,7 +37,6 @@ public class PrivateStoreService {
 	/**
 	 * 成交商店物品：校验双方、转移道具与基纳，售罄时自动关店。
 	 * Completes a store sale: validates parties, transfers items and kinah, and closes the store when empty.
-	 *
 	 * @param seller 卖家 / seller
 	 * @param buyer 买家 / buyer
 	 * @param tradeList 交易列表 / trade list
@@ -48,32 +46,18 @@ public class PrivateStoreService {
 			return;
 		}
 		synchronized (seller) {
-			/**
-			 * 1. 校验双方参与者是否有效且可交易。
-			 * 1. Check if we are busy with two valid participants
-			 */
 			if (!validateParticipants(seller, buyer))
 				return;
 
-			/**
-	 * 定义商店变量以简化逻辑 / Define store to make life easier
-	 */
 			PrivateStore store = seller.getStore();
 			if (store == null) {
 				return;
 			}
 
-			/**
-			 * 2. 加载物品对象 ID 并校验卖家是否真正持有。
-			 * 2. Load all item object ids and validate if seller really owns them
-			 */
 			tradeList = loadObjIds(seller, tradeList);
 			if (tradeList == null)
 				return; // Invalid items found or store was empty
 
-			/**
-	 * 3. 检查空闲槽位 / 3. Check free slots
-	 */
 			Map<Integer, Long> requestedItems = new HashMap<>();
 			Map<Integer, ItemTemplate> templates = new HashMap<>();
 			try {
@@ -91,18 +75,12 @@ public class PrivateStoreService {
 				return;
 			}
 
-			/**
-	 * 创建 total 价格并物品。 / Create total price and items
-	 */
 			long price = getTotalPrice(store, tradeList);
 
 			// 基纳漏洞修复 / Kinah exploit fix
 			if (price < 0)
 				return;
 
-			/**
-	 * 检查玩家是否有足够基纳。 / Check whether the player has enough Kinah.
-	 */
 			if (buyer.getInventory().getKinah() >= price) {
 				for (TradeItem tradeItem : tradeList.getTradeItems()) {
 					Item item = getItemByObjId(seller, tradeItem.getItemId());
@@ -118,10 +96,6 @@ public class PrivateStoreService {
 				decreaseKinahAmount(buyer, price);
 				increaseKinahAmount(seller, price);
 
-				/**
-		 * 从商店移除物品，并检查是否为最后一件。
-		 * Remove item from store and check if last item
-				 */
 				if (store.getSoldItems().size() == 0) {
 					closePrivateStore(seller);
 				}
@@ -132,7 +106,6 @@ public class PrivateStoreService {
 	/**
 	 * 打开/更新个人商店店名广播；可按阵营过滤可见性。
 	 * Opens or updates the private-store name broadcast; may filter visibility by faction.
-	 *
 	 * @param activePlayer 店主 / store owner
 	 * @param name 店名；null 表示清空 / store name; null clears it
 	 */
@@ -169,7 +142,6 @@ public class PrivateStoreService {
 	/**
 	 * 将可交易道具加入玩家个人商店。
 	 * Adds tradeable items to the player's private store.
-	 *
 	 * @param activePlayer 店主 / store owner
 	 * @param tradePSItems 待上架道具 / items to list
 	 */
@@ -179,9 +151,6 @@ public class PrivateStoreService {
 				return;
 			}
 
-			/**
-	 * 检查玩家是否已有商店，没有则创建。 / Check whether the player already has a store and create one if needed.
-	 */
 			if (activePlayer.getStore() == null) {
 				createStore(activePlayer);
 			}
@@ -191,9 +160,6 @@ public class PrivateStoreService {
 				return;
 			}
 
-			/**
-	 * 检查玩家是否拥有指定物品，否则不添加。 / Check whether the player owns the item before adding it.
-	 */
 			for (int i = 0; i < tradePSItems.length; i++) {
 				Item item = getItemByObjId(activePlayer, tradePSItems[i].getItemObjId());
 				if (item != null && item.isTradeable(activePlayer)) {
@@ -208,7 +174,6 @@ public class PrivateStoreService {
 	/**
 	 * 校验上架条目与背包道具是否匹配且未重复。
 	 * Validates that the listed entry matches the inventory item and is not already listed.
-	 *
 	 * @param store 个人商店 / store
 	 * @param item 背包道具 / inventory item
 	 * @param psItem 商店条目 / store listing entry
@@ -230,7 +195,6 @@ public class PrivateStoreService {
 	/**
 	 * 创建玩家个人商店并广播开店表情。
 	 * Creates the player's private store and broadcasts the open-shop emotion.
-	 *
 	 * @param activePlayer 店主 / store owner
 	 */
 	private static void createStore(Player activePlayer) {
@@ -246,7 +210,6 @@ public class PrivateStoreService {
 	/**
 	 * 关闭玩家个人商店并广播关店表情。
 	 * Closes the player's private store and broadcasts the close-shop emotion.
-	 *
 	 * @param activePlayer 店主 / store owner
 	 */
 	public static void closePrivateStore(Player activePlayer) {
@@ -264,7 +227,6 @@ public class PrivateStoreService {
 	/**
 	 * 从卖家背包与商店条目中扣减道具数量。
 	 * Decreases item count from the seller inventory and store listing.
-	 *
 	 * @param seller 卖家 / seller
 	 * @param item 背包道具 / item
 	 * @param tradeItem 交易物品 / trade item
@@ -277,7 +239,6 @@ public class PrivateStoreService {
 	/**
 	 * 增加玩家基纳。
 	 * Increases the player's kinah.
-	 *
 	 * @param player 目标玩家 / target player
 	 * @param price 基纳数量 / amount
 	 */
@@ -288,7 +249,6 @@ public class PrivateStoreService {
 	/**
 	 * 按对象 ID 从背包取道具。
 	 * Returns an inventory item by object id.
-	 *
 	 * @param seller 卖家 / owner
 	 * @param itemObjId 物品对象 ID / object id
 	 * @return 道具或 null / item or null
@@ -300,7 +260,6 @@ public class PrivateStoreService {
 	/**
 	 * 计算交易列表总价。
 	 * Calculates the total price of the trade list.
-	 *
 	 * @param store 个人商店 / store
 	 * @param tradeList 交易列表 / trade list
 	 * @return 总价 / total price
@@ -324,7 +283,6 @@ public class PrivateStoreService {
 	/**
 	 * 将客户端交易索引解析为真实对象 ID 列表。
 	 * Resolves client trade indexes into a list of real item object ids.
-	 *
 	 * @param seller 卖家 / seller
 	 * @param tradeList 原始交易列表 / original trade list
 	 * @return 新交易列表；校验失败返回 null / new trade list; null if validation fails
@@ -346,9 +304,6 @@ public class PrivateStoreService {
 			return null;
 		}
 
-		/**
-	 * 检查玩家是否仍拥有物品。 / Check whether the player still owns the items.
-	 */
 		if (!validateBuyItems(seller, newTradeList)) {
 			return null;
 		}
@@ -359,7 +314,6 @@ public class PrivateStoreService {
 	/**
 	 * 校验买卖双方是否在线且同阵营。
 	 * Validates that both parties are online and of the same race.
-	 *
 	 * @param itemOwner 卖家 / seller
 	 * @param newOwner 买家 / buyer
 	 * @return 是否有效 / whether valid
@@ -372,7 +326,6 @@ public class PrivateStoreService {
 	/**
 	 * 校验买家购买的道具仍由卖家持有。
 	 * Validates that purchased items are still owned by the seller.
-	 *
 	 * @param seller 卖家 / seller
 	 * @param tradeList 交易列表 / trade list
 	 * @return 是否有效 / whether valid
@@ -395,7 +348,6 @@ public class PrivateStoreService {
 	/**
 	 * 扣减玩家基纳。
 	 * Decreases the player's kinah.
-	 *
 	 * @param player 目标玩家 / target player
 	 * @param price 基纳数量 / amount
 	 */

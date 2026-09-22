@@ -7,7 +7,6 @@ import lombok.Getter;
 /**
  * 防具类型：定义所需技能与掩码。
  * Armor type: defines required skills and mask.
- *
  * @author Rinzler (Encom)
  */
 

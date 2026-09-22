@@ -7,7 +7,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * GM 指令处理器抽象基类，封装管理员、参数与当前选中玩家目标。
  * Abstract base for GM command handlers, holding admin, params and selected player target.
- *
  * @author Magenik, Antraxx, Alcapwnd
  */
 abstract public class AbstractGMHandler {
@@ -22,7 +21,6 @@ abstract public class AbstractGMHandler {
 	/**
 	 * 构造 GM 指令处理器并解析当前选中目标。
 	 * Constructs the GM handler and resolves the current selected target.
-	 *
 	 * @param admin 执行指令的管理员 / the admin executing the command
 	 * @param params 指令参数字符串 / command parameter string
 	 */
@@ -48,7 +46,6 @@ abstract public class AbstractGMHandler {
 	/**
 	 * 检查是否已选中有效玩家目标，失败时向管理员提示。
 	 * Checks whether a valid player target is selected; notifies the admin on failure.
-	 *
 	 * @return 目标有效返回 {@code true} / {@code true} if a valid player target is set
 	 */
 	public boolean checkTarget() {

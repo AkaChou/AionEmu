@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 同步玩家 Toll（商城点券）余额的服务端包。
  * Server packet that syncs the player's Toll (cash shop currency) balance.
- *
  * @author xTz
  */
 @AllArgsConstructor

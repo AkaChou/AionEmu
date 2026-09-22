@@ -17,7 +17,6 @@ public class SM_CS_PLAYER_LOGOUT extends CsServerPacket {
 	/**
 	 * 构造玩家下线通知包。
 	 * Constructs a player logout notification packet.
-	 *
 	 * @param playerId 玩家对象 ID / player object id
 	 */
 	public SM_CS_PLAYER_LOGOUT(int playerId) {
@@ -28,7 +27,6 @@ public class SM_CS_PLAYER_LOGOUT extends CsServerPacket {
 	/**
 	 * 写出玩家对象 ID。
 	 * Writes the player object id.
-	 *
 	 * @param con 目标连接 / target connection
 	 */
 	@Override

@@ -14,7 +14,6 @@ import lombok.Setter;
 /**
  * 加成服务 Attr 模板（静态数据/XML）。
  * Bonus service attribute template (static data/XML).
- *
  * @author Ranastic (Encom)
  */
 

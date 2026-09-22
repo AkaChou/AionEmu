@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Sauro Supply Base 副本 NPC AI：Hidden Passage（@AIName "hidden_passage"），继承 NpcAI2。
  * Sauro Supply Base instance NPC AI: Hidden Passage (@AIName "hidden_passage"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("hidden_passage")
@@ -28,7 +27,6 @@ public class Hidden_PassageAI2 extends NpcAI2
 	/**
 	 * 处理对话选择：消耗钥匙把玩家传送到对应 Boss 的房间。
 	 * Handles dialog selection: consumes keys to teleport the player to the matching boss room.
-	 *
 	 * @param player 对话玩家 / dialog player
 	 * @param dialogId 对话框选项 ID / dialog option ID
 	 * @param questId 任务 ID / quest ID

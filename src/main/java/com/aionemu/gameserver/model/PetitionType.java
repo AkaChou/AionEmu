@@ -3,7 +3,6 @@ package com.aionemu.gameserver.model;
 /**
  * 请愿类型枚举。
  * Petition Type enumeration.
- *
  * @author zdead
  */
 public enum PetitionType {

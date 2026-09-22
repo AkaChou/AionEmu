@@ -20,7 +20,6 @@ import lombok.Getter;
 /**
  * 伊迪安 Stone，用于物品相关逻辑。
  * Idian Stone for items logic.
- *
  * @author Ranastic
  */
 @Getter

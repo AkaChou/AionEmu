@@ -16,7 +16,6 @@ import lombok.Getter;
 /**
  * Goods 列表模板（静态数据/XML）。
  * XML template.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -36,11 +35,6 @@ public class GoodsList {
 	@XmlElement(name = "salestime")
 	private String salesTime;
 
-	/**
-	 * -- GETTER --
-	 *
-	 * @return 物品 ID 列表 / the item id list
-	 */
 	@Getter
 	private List<Integer> itemIdList;
 
@@ -84,18 +78,8 @@ public class GoodsList {
          */
         @XmlAttribute
 		private int id;
-        /**
-         * -- GETTER --
-         *
-         * @return 出售上限 / the sell limit
-         */
         @XmlAttribute(name = "sell_limit")
 		private Integer sellLimit;
-        /**
-         * -- GETTER --
-         *
-         * @return 购买上限 / the buy limit
-         */
         @XmlAttribute(name = "buy_limit")
 		private Integer buyLimit;
 

@@ -25,7 +25,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 军团入团申请流域：搜索、招募设置、申请提交/取消/批复与仓库历史记录。
  * Legion join-request flow: search, recruiting settings, apply/cancel/answer handling and warehouse history.
- *
  * <p>该类型只服务 {@link LegionRestrictions}（与 {@link LegionMembers}/{@link LegionEmblems} 同模式）：
  * 持宿主服务与权限校验器两个引用；对外仍通过 {@link LegionRestrictions}/{@link LegionService} 的
  * 原方法访问（调用链签名不变）。
@@ -51,7 +50,6 @@ final class LegionJoinRequests {
 	/**
 	 * 记录军团仓库存取物品历史（存入/取出）。
 	 * Records legion warehouse item deposit/withdraw history.
-	 *
 	 * Acting player
 	 * Item template id
 	 * Count
@@ -75,7 +73,6 @@ final class LegionJoinRequests {
 	/**
 	 * 处理军团搜索：type=0 全量缓存，type=1 按名称模糊匹配。
 	 * Handles legion search: type 0 all cached, type 1 name contains filter.
-	 *
 	 * Requesting player
 	 * @param type 搜索类型 / Search type
 	 * @param legionName 名称关键字 / Name keyword
@@ -100,7 +97,6 @@ final class LegionJoinRequests {
 	/**
 	 * 设置军团入团说明（仅旅长），并同步客户端与数据库。
 	 * Sets the legion join description (brigade general only) and syncs client/DB.
-	 *
 	 * Acting player
 	 * Join description
 	 */
@@ -119,7 +115,6 @@ final class LegionJoinRequests {
 	/**
 	 * 设置军团入团类型（仅旅长），并同步客户端与数据库。
 	 * Sets the legion join type (brigade general only) and syncs client/DB.
-	 *
 	 * Acting player
 	 * Join type
 	 */
@@ -138,7 +133,6 @@ final class LegionJoinRequests {
 	/**
 	 * 设置入团最低等级（仅旅长），并同步客户端与数据库。
 	 * Sets the minimum join level (brigade general only) and syncs client/DB.
-	 *
 	 * Acting player
 	 * Minimum level
 	 */
@@ -157,7 +151,6 @@ final class LegionJoinRequests {
 	/**
 	 * 向玩家发送当前入团申请对应的军团信息包。
 	 * Sends the join-request legion info packet to the player.
-	 *
 	 * Target player
 	 * @param legionId 军团 ID，<=0 表示清空 / Legion id, <=0 clears
 	 */
@@ -174,7 +167,6 @@ final class LegionJoinRequests {
 	/**
 	 * 玩家进世界时，按 CommonData 中的申请军团 ID 重发入团申请信息包。
 	 * On enter-world, resends join-request info using the legion id stored in CommonData.
-	 *
 	 * Target player
 	 */
 	void sendLegionJoinRequestPacketonEnterWorld(Player player) {
@@ -191,7 +183,6 @@ final class LegionJoinRequests {
 	/**
 	 * 处理玩家入团申请：申请入队、直接加入或拒绝招募。
 	 * Handles a player join request: apply, direct join, or reject if not recruiting.
-	 *
 	 * Applying player
 	 * Target legion id
 	 * Join type
@@ -227,7 +218,6 @@ final class LegionJoinRequests {
 	/**
 	 * 取消玩家对指定军团的入团申请，并通知旅长。
 	 * Cancels the player join request for a legion and notifies the brigade general.
-	 *
 	 * Applying player
 	 * Legion id
 	 */
@@ -245,7 +235,6 @@ final class LegionJoinRequests {
 	/**
 	 * 玩家侧处理入团申请结果（接受则入团，拒绝则清理申请）。
 	 * Applies join-request answer on the player side (join on accept, clear on deny).
-	 *
 	 * Applying player
 	 */
 	void handleJoinRequestGetAnswer(Player player) {
@@ -272,7 +261,6 @@ final class LegionJoinRequests {
 	/**
 	 * 旅长批复入团申请：在线则即时处理，离线则写库状态。
 	 * Brigade general answers a join request: handles online immediately or persists offline state.
-	 *
 	 * Brigade general player
 	 * Applicant object id
 	 * Whether accepted

@@ -28,7 +28,6 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 /**
  * 烙印之石（Stigma）服务，处理装备/卸下烙印之石、技能授予、套装强化与登录校验。
  * Stigma service handling equip/unequip, skill grants, set enchant bonuses, and login validation.
- *
  * @author Wnkrz (Encom)
  */
 @Slf4j
@@ -37,7 +36,6 @@ public class StigmaService {
 	/**
 	 * 按品质返回烙印装备消耗基纳。
 	 * Returns the kinah cost to equip a stigma by item quality.
-	 *
 	 * @param item 烙印道具 / stigma item
 	 * price
 	 */
@@ -62,7 +60,6 @@ public class StigmaService {
 	/**
 	 * 装备烙印时校验槽位/职业/基纳，授予对应技能并检查连结与套装。
 	 * On stigma equip, validates slot/class/kinah, grants skills, and checks linked skills and set bonuses.
-	 *
 	 * 玩家 / player
 	 * @param resultItem 装备的烙印 / equipped stigma item
 	 * @param slot 装备槽位 / equipment slot
@@ -120,7 +117,6 @@ public class StigmaService {
 	/**
 	 * 卸下烙印时移除技能、连结技能与套装加成。
 	 * On stigma unequip, removes skills, linked skills, and set bonuses as needed.
-	 *
 	 * @param player 玩家 / player
 	 * @param resultItem 卸下的烙印 / unequipped stigma item
 	 * @return 是否允许卸下 / whether unequip is allowed
@@ -185,7 +181,6 @@ public class StigmaService {
 	/**
 	 * 按套装等级为已有烙印技能叠加强化等级。
 	 * Applies set-bonus enchant levels to existing stigma skills.
-	 *
 	 * @param player 玩家 / player
 	 * @param enchantLevel 强化等级 / enchant level
 	 */
@@ -199,7 +194,6 @@ public class StigmaService {
 	/**
 	 * 强化连结技能相关烙印技能等级。
 	 * Updates stigma skill levels for linked-skill enchant.
-	 *
 	 * @param player 玩家 / player
 	 * @param enchantLevel 强化等级 / enchant level
 	 */
@@ -213,7 +207,6 @@ public class StigmaService {
 	/**
 	 * 移除套装加成后，按单件强化等级重建烙印技能。
 	 * After set-bonus removal, rebuilds stigma skills from per-item enchant levels.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static void removeStigmaSetEnchant(Player player) {
@@ -236,7 +229,6 @@ public class StigmaService {
 	/**
 	 * 根据 6 件烙印强化等级设置套装加成值。
 	 * Sets the stigma set bonus value from the enchant levels of 6 equipped stigmas.
-	 *
 	 * @param player 玩家 / player
 	 * @param list 已装备烙印模板 ID 列表 / equipped stigma template ids
 	 */
@@ -263,7 +255,6 @@ public class StigmaService {
 	/**
 	 * 登录时重建烙印技能、校验槽位/前置技能/职业，并检查连结条件。
 	 * On login, rebuilds stigma skills, validates slots/prereqs/class, and checks linked conditions.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static void onPlayerLogin(Player player) {
@@ -317,14 +308,12 @@ public class StigmaService {
 				}
 			}
 		}
-		/** 烙印关联技能 / Stigma Linked Skills */
-		StigmaLinkedService.checkEquipConditions(player, Stigma);
+        StigmaLinkedService.checkEquipConditions(player, Stigma);
 	}
 
 	/**
 	 * 按等级、任务进度与会员权限计算可用常规烙印槽数量。
 	 * Computes available regular stigma slot count from level, quest progress, and membership.
-	 *
 	 * 玩家 / player
 	 * slot count
 	 */
@@ -371,7 +360,6 @@ public class StigmaService {
 	/**
 	 * 判断当前已装备烙印是否落在玩家可用槽位范围内。
 	 * Returns whether the equipped stigma is within the player's available slot range.
-	 *
 	 * 玩家 / player
 	 * @param item 烙印道具 / stigma item
 	 * whether valid

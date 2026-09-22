@@ -11,7 +11,6 @@ import lombok.Getter;
 /**
  * 游戏事件抽象基类：支持优先级、冷却、广播与重置。
  * Abstract game event base with priority, cooldown, announce helpers and reset.
- *
  * @author wanke
  */
 @Getter
@@ -76,7 +75,6 @@ public abstract class Event implements Runnable {
 	/**
 	 * 尝试取消事件。
 	 * Attempts to cancel the event.
-	 *
 	 * @param mayInterruptIfRunning 是否允许中断运行中任务 / whether to interrupt if running
 	 * @return 是否取消成功 / whether cancel succeeded
 	 */
@@ -85,7 +83,6 @@ public abstract class Event implements Runnable {
 	/**
 	 * 事件冷却时间（毫秒），默认 30 秒。
 	 * Cooldown in millis after finish; default 30 seconds.
-	 *
 	 * @return 冷却毫秒 / cooldown millis
 	 */
 	public int getCooldown() {
@@ -95,7 +92,6 @@ public abstract class Event implements Runnable {
 	/**
 	 * 设置优先级，自动钳制在 {@link #MIN_PRIORITY}～{@link #MAX_PRIORITY}。
 	 * Sets priority, clamped to {@link #MIN_PRIORITY}..{@link #MAX_PRIORITY}.
-	 *
 	 * @param priority 目标优先级 / desired priority
 	 */
 	public void setPriority(int priority) {
@@ -111,7 +107,6 @@ public abstract class Event implements Runnable {
 	/**
 	 * 向玩家发送事件公告。
 	 * Sends an event announce to a player.
-	 *
 	 * @param pl 玩家 / player
 	 * @param msg 消息 / message
 	 */
@@ -122,7 +117,6 @@ public abstract class Event implements Runnable {
 	/**
 	 * 向玩家集合发送事件公告。
 	 * Sends an event announce to a player collection.
-	 *
 	 * @param players 玩家集合 / players
 	 * @param msg 消息 / message
 	 */
@@ -135,7 +129,6 @@ public abstract class Event implements Runnable {
 	/**
 	 * 向玩家发送事件公告，可延迟。
 	 * Sends an event announce to a player, optionally delayed.
-	 *
 	 * @param pl 玩家 / player
 	 * @param msg 消息 / message
 	 * @param delay 延迟毫秒，0 表示立即 / delay millis, 0 means immediate
@@ -151,7 +144,6 @@ public abstract class Event implements Runnable {
 	/**
 	 * 向全服（非战场）玩家广播事件公告。
 	 * Broadcasts an event announce to all non-battleground players.
-	 *
 	 * @param msg 消息 / message
 	 */
 	protected void announceAll(String msg) {
@@ -161,7 +153,6 @@ public abstract class Event implements Runnable {
 	/**
 	 * 向全服（非战场）玩家广播事件公告，可延迟。
 	 * Broadcasts an event announce to all non-battleground players, optionally delayed.
-	 *
 	 * @param msg 消息 / message
 	 * @param delay 延迟毫秒，0 表示立即 / delay millis, 0 means immediate
 	 */

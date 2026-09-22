@@ -5,7 +5,6 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 /**
  * 经纪行 MinMaxFilter 模型。
  * Broker Min Max Filter model.
- *
  * @author ATracer
  */
 public class BrokerMinMaxFilter extends BrokerFilter {

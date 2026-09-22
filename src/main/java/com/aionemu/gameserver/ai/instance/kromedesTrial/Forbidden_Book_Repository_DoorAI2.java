@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Kromedes Trial 副本 NPC AI：Forbidden Book Repository Door（@AIName "forbidden_book_repository_door"），继承 NpcAI2。
  * Kromedes Trial instance NPC AI: Forbidden Book Repository Door (@AIName "forbidden_book_repository_door"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("forbidden_book_repository_door")

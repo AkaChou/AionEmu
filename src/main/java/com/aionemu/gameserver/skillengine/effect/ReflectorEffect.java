@@ -19,7 +19,6 @@ public class ReflectorEffect extends ShieldEffect {
 	/**
 	 * 按 hitvalue/hitdelta 注册反射护盾观察者。
 	 * Registers a reflective shield observer from hitvalue/hitdelta.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -35,7 +34,6 @@ public class ReflectorEffect extends ShieldEffect {
 	/**
 	 * 移除反射护盾观察者。
 	 * Removes the reflective shield observer.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

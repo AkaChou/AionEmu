@@ -7,7 +7,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 解除 IP 封禁的管理员命令。
  * Admin command to lift an IP ban.
- *
  * @author Watson
  */
 public class UnBanIp extends AdminCommand {
@@ -23,7 +22,6 @@ public class UnBanIp extends AdminCommand {
 	/**
 	 * 向登录服发送 IP 解封请求。
 	 * Sends an IP unban request to the login server.
-	 *
 	 * @param player 执行 GM / Admin player
 	 * @param params &lt;mask&gt;。
 	 */
@@ -40,7 +38,6 @@ public class UnBanIp extends AdminCommand {
 	/**
 	 * 参数错误时的用法提示。
 	 * Usage hint on invalid parameters.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

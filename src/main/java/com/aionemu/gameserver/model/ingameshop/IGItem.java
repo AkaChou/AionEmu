@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 /**
  * 游戏商城物品。
  * In-game shop item.
- *
  * @author xTz
  */
 @Getter

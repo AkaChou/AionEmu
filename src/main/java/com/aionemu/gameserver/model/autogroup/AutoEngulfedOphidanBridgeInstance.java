@@ -13,7 +13,6 @@ import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 /**
  * 自动 EngulfedOphidanBridge 副本，用于 autogroup 相关逻辑。
  * Auto Engulfed Ophidan Bridge Instance for autogroup logic.
- *
  * @author Rinzler (Encom)
  */
 

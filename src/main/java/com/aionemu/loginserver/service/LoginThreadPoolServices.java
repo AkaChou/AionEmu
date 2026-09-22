@@ -19,7 +19,6 @@ public final class LoginThreadPoolServices implements DisposableBean {
     /**
      * 构造并注册 {@link ThreadPoolManager} 的 Spring 提供者。
      * Construct and register the Spring provider for {@link ThreadPoolManager}.
-     *
      * @param threadPoolManagerProvider 线程池管理器提供者 / thread-pool manager provider
      */
     public LoginThreadPoolServices(ObjectProvider<ThreadPoolManager> threadPoolManagerProvider) {
@@ -29,7 +28,6 @@ public final class LoginThreadPoolServices implements DisposableBean {
     /**
      * 获取线程池管理器：优先 Spring Bean，缓存解析结果，否则回退本地单例。
      * Obtain the thread-pool manager: prefer Spring bean, cache the resolution, else fall back to a local singleton.
-     *
      * @return 线程池管理器 / thread-pool manager
      */
     public static ThreadPoolManager threadPoolManager() {
@@ -56,7 +54,6 @@ public final class LoginThreadPoolServices implements DisposableBean {
     /**
      * 返回回退用的本地 {@link ThreadPoolManager} 实例。
      * Return the local fallback {@link ThreadPoolManager} instance.
-     *
      * @return 回退线程池管理器 / fallback thread-pool manager
      */
     private static ThreadPoolManager fallbackThreadPoolManager() {
@@ -66,7 +63,6 @@ public final class LoginThreadPoolServices implements DisposableBean {
     /**
      * 缓存并返回已解析的线程池管理器。
      * Remember and return the resolved thread-pool manager.
-     *
      * @param threadPoolManager 已解析的管理器 / resolved manager
      * @return 同一实例 / the same instance
      */

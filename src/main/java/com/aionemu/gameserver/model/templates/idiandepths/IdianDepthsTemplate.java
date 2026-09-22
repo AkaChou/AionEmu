@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 伊迪安深渊模板（静态数据/XML）。
  * XML template.
- *
  * @author Rinzler (Encom)
  */
 

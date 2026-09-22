@@ -18,7 +18,6 @@ import java.util.List;
 /**
  * Sauro Supply Base 副本 NPC AI：Guard Captain Rohuka（@AIName "guard_captain_rohuka"），继承 AggressiveNpcAI2。
  * Sauro Supply Base instance NPC AI: Guard Captain Rohuka (@AIName "guard_captain_rohuka"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("guard_captain_rohuka")

@@ -6,7 +6,6 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 /**
  * 经纪行玩家职业 ExtraFilter 模型。
  * Broker Player Class Extra Filter model.
- *
  * @author ATracer
  */
 public class BrokerPlayerClassExtraFilter extends BrokerPlayerClassFilter {

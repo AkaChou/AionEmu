@@ -44,7 +44,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 账号动作总控：登录、重连、踢人及 GS 角色数统计。
  * Controls all account actions: login, reconnect, kick and GS character counts.
- *
  * @author KID
  * @author SoulKeeper
  */
@@ -73,7 +72,6 @@ public class AccountController {
     /**
      * 从登录服连接列表移除账号。
      * Removes account from list of LoginServer connections.
-     *
      * @param account 账号 / Account
      */
     public synchronized void removeAccountOnLS(Account account) {
@@ -83,7 +81,6 @@ public class AccountController {
     /**
      * 响应游戏服侧的账号会话校验请求。
      * Answers GameServer question about account authentication on GS side.
-     *
      * @param key 会话密钥 / Session key
      * @param gsConnection 游戏服连接 / GameServer connection
      */
@@ -91,19 +88,11 @@ public class AccountController {
         LoginConnection con = accountsOnLS.get(key.accountId());
 
         if (con != null && con.getSessionKey().checkSessionKey(key)) {
-            /**
-             * 账号已在游戏服成功登录，从登录服列表移除。
-             * Account successfully logged in on GS; remove it from here.
-             */
-            accountsOnLS.remove(key.accountId());
+			accountsOnLS.remove(key.accountId());
 
             GameServerInfo gsi = gsConnection.getGameServerInfo();
             Account acc = con.getAccount();
 
-            /**
-             * 加入游戏服在线列表并更新上次服务器。
-             * Add account to GameServer list and update last server.
-             */
             gsi.addAccountToGameServer(acc);
 
             acc.setLastServer(gsi.getId());
@@ -118,10 +107,6 @@ public class AccountController {
             long vipExp = vipActive ? vip.experience() : 0L;
             // keep expire even when permanent (0); zero only when inactive
             long vipExpire = vipActive ? vip.expireTime() : 0L;
-            /**
-             * 向游戏服发送认证结果。
-             * Send auth response to GameServer.
-             */
             gsConnection.sendPacket(new SM_ACCOUNT_AUTH_RESPONSE(key.accountId(), true, acc.getName(), acc.getAccessLevel(),
                 acc.getMembership(), toll, luna, acc.getReturn(), vipLevel, vipExp, vipExpire));
         } else {
@@ -133,7 +118,6 @@ public class AccountController {
     /**
      * 将账号加入重连列表。
      * Adds account to reconnection list.
-     *
      * @param acc 重连账号 / Reconnecting account
      */
     public synchronized void addReconnectingAccount(ReconnectingAccount acc) {
@@ -143,7 +127,6 @@ public class AccountController {
     /**
      * 校验快速重连账号是否允许重新认证。
      * Checks whether a reconnecting account may re-authenticate.
-     *
      * @param accountId 账号 ID / Account id
      * @param loginOk 登录确认码 / Login ok token
      * @param reconnectKey 重连密钥 / Reconnect key
@@ -172,7 +155,6 @@ public class AccountController {
      * Tries to authenticate account.<br>
      * On success returns {@link AionAuthResponse#AUTHED} and binds account to connection.<br>
      * Creates a new account when {@link com.aionemu.loginserver.configs.Config#ACCOUNT_AUTO_CREATION} is enabled.
-     *
      * @param name 账号名称 / Account name
      * @param password 密码 / Password
      * @param connection 登录连接 / Login connection
@@ -258,7 +240,6 @@ public class AccountController {
     /**
      * 从登录服与游戏服踢出指定账号。
      * Kicks account from LoginServer and GameServers.
-     *
      * @param accountId 要踢出的账号 ID / Account ID to kick
      */
     public void kickAccount(int accountId) {
@@ -279,10 +260,8 @@ public class AccountController {
     /**
      * 刷新账号的 last_mac。
      * Refreshes last_mac of account.
-     *
      * @param accountId 账号 ID / Account id
      * @param address 新 MAC 地址 / New MAC address
-     *
      * @return 是否刷新成功 / Whether refresh succeeded
      */
     public boolean refreshAccountsLastMac(int accountId, String address) {
@@ -292,7 +271,6 @@ public class AccountController {
     /**
      * 按名称从数据库加载账号；不存在则返回 null。
      * Loads account from DB by name; returns null if not found.
-     *
      * @param name 账号名称 / Account name
      * @return 已加载账号，或 null / Loaded account or null
      */
@@ -307,7 +285,6 @@ public class AccountController {
     /**
      * 按 ID 从数据库加载账号；不存在则返回 null。
      * Loads account from DB by id; returns null if not found.
-     *
      * @param id 账号 ID / Account id
      * @return 已加载账号，或 null / Loaded account or null
      */
@@ -322,10 +299,8 @@ public class AccountController {
     /**
      * 创建新账号并写入数据库；成功返回账号对象，失败返回 null。
      * Creates new account and stores it in DB; returns account on success or null on failure.
-     *
      * @param name 账号名称 / Account name
      * @param password 账号密码 / Account password
-     *
      * @return 账号对象或 null / Account object or null
      */
     public Account createAccount(String name, String password) {
@@ -352,7 +327,6 @@ public class AccountController {
     /**
      * 获取 {@link AccountDAO} 快捷方法。
      * Shortcut for {@link AccountDAO}.
-     *
      * @return AccountDAO 实例 / Account DAO
      */
     private AccountDAO getAccountDAO() {
@@ -362,7 +336,6 @@ public class AccountController {
     /**
      * 获取 {@link AccountTimeDAO} 快捷方法。
      * Shortcut for {@link AccountTimeDAO}.
-     *
      * @return AccountTimeDAO 实例 / Account time DAO
      */
     private AccountTimeDAO getAccountTimeDAO() {
@@ -372,7 +345,6 @@ public class AccountController {
     /**
      * 向各游戏服请求该账号的角色数量。
      * Requests character counts for the account from all game servers.
-     *
      * @param accountId 账号 ID / Account id
      */
     public synchronized void loadGSCharactersCount(int accountId) {
@@ -398,7 +370,6 @@ public class AccountController {
     /**
      * 判断是否已收集齐该账号在所有游戏服的角色数。
      * Whether all GS character counts for the account have been collected.
-     *
      * @param accountId 账号 ID / Account id
      * @return 是否已齐全 / Whether all counts are present
      */
@@ -415,7 +386,6 @@ public class AccountController {
     /**
      * 向指定账号发送服务器列表包 {@link SM_SERVER_LIST}。
      * Sends {@link SM_SERVER_LIST} to the given account.
-     *
      * @param accountId 账号 ID / Account id
      */
     public void sendServerListFor(int accountId) {
@@ -428,7 +398,6 @@ public class AccountController {
     /**
      * 返回该账号各游戏服角色数的不可变视图。
      * Returns an unmodifiable view of GS character counts for the account.
-     *
      * @param accountId 账号 ID / Account id
      * @return 角色数映射，可能为 null / Character-count map, or null
      */
@@ -440,7 +409,6 @@ public class AccountController {
     /**
      * 记录某账号在指定游戏服上的角色数量。
      * Records character count for an account on a specific gameserver.
-     *
      * @param accountId 账号 ID / Account id
      * @param gsid 游戏服 ID / GameServer id
      * @param characterCount 角色数量 / Character count
@@ -454,7 +422,6 @@ public class AccountController {
     /**
      * 对密码进行编码：先 SHA-1 哈希，再以 Base64 包装为字符串（原 AccountUtils）。
      * Encodes the password: SHA-1 hash wrapped in Base64 (merged from AccountUtils).
-     *
      * @param password 待编码密码 / password to encode
      * @return 编码后的密码 / encoded password
      */

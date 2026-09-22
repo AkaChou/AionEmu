@@ -13,7 +13,6 @@ import lombok.AllArgsConstructor;
 /**
  * 更新仓库中单件物品信息的服务端包。
  * Server packet that updates a single warehouse item.
- *
  * @author kosyachok
  * @author -Nemesiss-
  */

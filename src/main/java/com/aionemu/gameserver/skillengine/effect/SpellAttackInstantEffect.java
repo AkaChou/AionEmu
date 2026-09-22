@@ -10,7 +10,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 法术攻击瞬发：立即造成魔法技能伤害。
  * Instant spell attack: deals magical skill damage immediately.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)

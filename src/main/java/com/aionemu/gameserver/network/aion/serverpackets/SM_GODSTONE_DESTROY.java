@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端通知神石销毁结果的服务端包。
  * Server packet that notifies the client of a godstone destruction result.
- *
  * @author wanke
  */
 @AllArgsConstructor

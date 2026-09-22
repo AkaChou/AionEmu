@@ -30,7 +30,6 @@ public final class PlayerQuestProgressionPort implements QuestProgressionPort {
 	/**
 	 * 创建生产晋升端口，使用角色 DAO 和权威经验表。
 	 * Creates the production promotion port using the player DAO and authoritative EXP table.
-	 *
 	 * @param players 在线玩家查找端口 / online-player lookup port
 	 * @param playerDao 角色持久化 DAO / player persistence DAO
 	 */
@@ -110,7 +109,6 @@ public final class PlayerQuestProgressionPort implements QuestProgressionPort {
 		/**
 		 * 在事务中写入晋升最低经验和高阶守护者标记。
 		 * Writes minimum promotion EXP and the ArchDaeva flag in the transaction.
-		 *
 		 * @param connection 调用方拥有的 JDBC 连接 / JDBC connection owned by the caller
 		 * @param playerId 玩家对象 ID / player object ID
 		 * @param minimumExp 晋升所需的最低经验 / minimum EXP required for promotion

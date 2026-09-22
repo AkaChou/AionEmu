@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Illuminary Obelisk 副本 NPC AI：Defence Charge（@AIName "Defence_Charge"），继承 NpcAI2。
  * Illuminary Obelisk instance NPC AI: Defence Charge (@AIName "Defence_Charge"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Defence_Charge")

@@ -7,7 +7,6 @@ import com.aionemu.loginserver.network.aion.SessionKey;
 /**
  * 登录服→客户端：允许进入指定游戏服，下发 playOk 与服务器 ID。
  * LoginServer → client: allow enter selected game server with playOk tokens and server id.
- *
  * @author -Nemesiss-
  */
 public class SM_PLAY_OK extends AionServerPacket {
@@ -31,7 +30,6 @@ public class SM_PLAY_OK extends AionServerPacket {
     /**
      * 构造 SM_PLAY_OK 包。
      * Constructs a new SM_PLAY_OK packet.
-     *
      * @param key 会话密钥 / session key
      * @param serverId 游戏服 ID / game server id
      */

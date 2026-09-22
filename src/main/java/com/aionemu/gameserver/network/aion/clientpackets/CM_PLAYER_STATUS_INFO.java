@@ -10,7 +10,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 客户端队伍/联盟状态与管理指令包，进世界及组队管理时发送。
  * Client packet for party/alliance status and management commands, sent on enter-world and team ops.
- *
  * @author Lyahim, ATracer, Simple, xTz
  */
 public class CM_PLAYER_STATUS_INFO extends AionClientPacket {

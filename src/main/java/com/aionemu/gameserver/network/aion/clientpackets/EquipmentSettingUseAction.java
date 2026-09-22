@@ -43,7 +43,6 @@ class EquipmentSettingUseAction {
 	/**
 	 * 对目标执行本动作。
 	 * Applies this action to the target.
-	 *
 	 * @param target 装备方案应用目标 / equipment preset target
 	 * @return 是否变更成功 / whether changed
 	 */

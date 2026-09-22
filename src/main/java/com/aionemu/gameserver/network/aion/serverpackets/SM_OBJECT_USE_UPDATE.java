@@ -25,7 +25,6 @@ public class SM_OBJECT_USE_UPDATE extends AionServerPacket {
 	/**
 	 * 构造房屋物件使用更新包。
 	 * Builds a house-object use-update packet.
-	 *
 	 * @param usingPlayerId 使用者玩家 ID / using player id
 	 * @param ownerPlayerId 所有者玩家 ID / owner player id
 	 * use count

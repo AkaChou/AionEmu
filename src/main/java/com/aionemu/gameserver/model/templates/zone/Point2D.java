@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 点2D 模板（静态数据/XML）。
  * XML template.
- *
  * @author ATracer
  */
 @Getter
@@ -17,21 +16,11 @@ import lombok.Getter;
 @XmlType(name = "Point2D")
 public class Point2D {
 
-	/**
-	 * @return the y
-	 */
 	@XmlAttribute(name = "y")
 	protected float y;
-	/**
-	 * @return the x
-	 */
 	@XmlAttribute(name = "x")
 	protected float x;
 
-	/**
-	 * @param x
-	 * @param y
-	 */
 	public Point2D(float x, float y) {
 		this.x = x;
 		this.y = y;

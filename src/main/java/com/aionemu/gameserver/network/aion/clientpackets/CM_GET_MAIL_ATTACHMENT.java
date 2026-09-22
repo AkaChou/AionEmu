@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 领取邮件附件的客户端包。
  * Client packet that collects mail attachments.
- *
  * @author kosyachok
  */
 public class CM_GET_MAIL_ATTACHMENT extends AionClientPacket {
@@ -20,7 +19,6 @@ public class CM_GET_MAIL_ATTACHMENT extends AionClientPacket {
 	/**
 	 * 构造客户端包实例。
 	 * Constructs a new client packet instance.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余允许状态 / additional allowed states

@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 /**
  * 登录服对游戏服账号鉴权请求的响应包，返回鉴权结果与账号信息。
  * LoginServer reply to a GameServer account-auth request with result and account details.
- *
  * @author -Nemesiss-
  */
 public class CM_ACOUNT_AUTH_RESPONSE extends LsClientPacket {

@@ -16,7 +16,6 @@ public enum TargetSpeciesAttribute {
 	/**
 	 * 返回枚举名字符串。
 	 * Returns the enum name as a string.
-	 *
 	 * @return 枚举名 / enum name
 	 */
 	public String value() {
@@ -26,7 +25,6 @@ public enum TargetSpeciesAttribute {
 	/**
 	 * 由字符串解析目标物种。
 	 * Parses a target species from a string value.
-	 *
 	 * @param v 名称字符串 / name string
 	 * @return 匹配的枚举常量 / matching enum constant
 	 */

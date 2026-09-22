@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 裂隙管理指令；按世界 ID 开启或关闭裂隙。
  * Admin command that opens or closes rifts by world ID.
- *
  * @author Ranastic
  */
 public class Rift extends AdminCommand
@@ -26,7 +25,6 @@ public class Rift extends AdminCommand
 	/**
 	 * 执行该管理指令。
 	 * Executes this admin command.
-	 *
 	 * @param player 执行指令的管理员 / admin executing the command
 	 */
 	@Override

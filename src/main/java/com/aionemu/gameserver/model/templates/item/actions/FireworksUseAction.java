@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * FireworksUse 动作模板（静态数据/XML）。
  * XML template.
- *
  * @author Tiger
  */
 @XmlAccessorType(XmlAccessType.FIELD)

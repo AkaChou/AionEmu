@@ -9,7 +9,6 @@ import com.aionemu.gameserver.services.player.PlayerReviveService;
 /**
  * 客户端复活请求包（按复活类型分发处理）。
  * Client packet for revive requests (dispatched by revive type).
- *
  * @author Ranastic (Encom)
  */
 public class CM_REVIVE extends AionClientPacket {

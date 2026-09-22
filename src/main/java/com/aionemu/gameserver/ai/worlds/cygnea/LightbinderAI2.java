@@ -12,7 +12,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * Cygnea 区域 NPC AI：Lightbinder（@AIName "lightbinder"），继承 AggressiveNpcAI2。
  * Cygnea zone NPC AI: Lightbinder (@AIName "lightbinder"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("lightbinder")

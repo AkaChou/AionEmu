@@ -9,7 +9,6 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 /**
  * Elementis Forest 副本 NPC AI：Head Kutol（@AIName "kutol"），继承 AggressiveNpcAI2。
  * Elementis Forest instance NPC AI: Head Kutol (@AIName "kutol"), extends AggressiveNpcAI2.
- *
  * @author Romanz
  */
 @AIName("kutol")

@@ -14,7 +14,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 传送门/传送点 AI：Kaisinel Academy To Sanctum（@AIName "kats"），继承 NpcAI2。
  * Portal/teleporter AI: Kaisinel Academy To Sanctum (@AIName "kats"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("kats")

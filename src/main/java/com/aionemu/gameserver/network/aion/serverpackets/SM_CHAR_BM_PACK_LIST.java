@@ -31,7 +31,6 @@ public class SM_CHAR_BM_PACK_LIST extends AionServerPacket {
 	/**
 	 * 按子类型构造福利包列表包。
 	 * Creates a benefit-pack list packet for the given subtype.
-	 *
 	 * @param subtype 福利包子类型 / benefit-pack subtype
 	 */
 	public SM_CHAR_BM_PACK_LIST(int subtype) {
@@ -43,7 +42,6 @@ public class SM_CHAR_BM_PACK_LIST extends AionServerPacket {
 	 * 档位补丁将其误判为 VIP 分数）。
 	 * In-world VIP benefits. Duration is remaining seconds (must be &gt; 3759 so the
 	 * Game.dll stage patch does not treat it as a VIP score).
-	 *
 	 * @param vipLevel VIP 档位（0–6）/ VIP level (0-6)
 	 * @param remainingSeconds 剩余有效秒数 / remaining seconds
 	 */
@@ -61,7 +59,6 @@ public class SM_CHAR_BM_PACK_LIST extends AionServerPacket {
 	/**
 	 * 仅选人界面使用：duration 字段承载 AccumulateGradeScore 供 Game.dll 使用。
 	 * Char-select only: duration field carries AccumulateGradeScore for Game.dll.
-	 *
 	 * @param vipLevel VIP 档位（0–6）/ VIP level (0-6)
 	 * @param vipExp VIP 累计经验 / accumulated VIP experience
 	 */

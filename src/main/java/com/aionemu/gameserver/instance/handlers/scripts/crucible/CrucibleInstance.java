@@ -22,7 +22,6 @@ import java.util.List;
 /**
  * 熔炉副本事件处理器。
  * Instance event handler for Crucible.
- *
  * @author Encom
  */
 
@@ -39,7 +38,6 @@ public class CrucibleInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -52,7 +50,6 @@ public class CrucibleInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -64,7 +61,6 @@ public class CrucibleInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 addPlayerReward。
 	 * Handle addPlayerReward.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@SuppressWarnings("unchecked")
@@ -74,7 +70,6 @@ public class CrucibleInstance extends GeneralInstanceHandler
 	/**
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
-	 *
 	 * visible object
 	 * result
 	 */
@@ -86,7 +81,6 @@ public class CrucibleInstance extends GeneralInstanceHandler
 	/**
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
-	 *
 	 * result
 	 */
 	@Override
@@ -96,7 +90,6 @@ public class CrucibleInstance extends GeneralInstanceHandler
 	/**
 	 * 返回 npcs。
 	 * Return the npcs.
-	 *
 	 * NPC
 	 * result
 	 */
@@ -110,7 +103,6 @@ public class CrucibleInstance extends GeneralInstanceHandler
 	/**
 	 * 是否位于区域内。
 	 * Whether in zone.
-	 *
 	 * zone
 	 * 玩家 / player
 	 * result
@@ -123,7 +115,6 @@ public class CrucibleInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
-	 *
 	 * @param msg message
 	 * @param race 阵营 / race
 	 * @param time time
@@ -141,7 +132,6 @@ public class CrucibleInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -157,7 +147,6 @@ public class CrucibleInstance extends GeneralInstanceHandler
 	/**
 	 * 移除指定 NPC。
 	 * Despawn the given NPC.
-	 *
 	 * @param npc npc
 	 */
 
@@ -169,7 +158,6 @@ public class CrucibleInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 despawnNpcs。
 	 * Handle despawnNpcs.
-	 *
 	 * @param npcs npcs
 	 */
 
@@ -182,7 +170,6 @@ public class CrucibleInstance extends GeneralInstanceHandler
 	/**
 	 * 返回当前副本阶段。
 	 * Return the current instance stage.
-	 *
 	 * result
 	 */
 	@Override
@@ -193,7 +180,6 @@ public class CrucibleInstance extends GeneralInstanceHandler
 	/**
 	 * 处理玩家复活事件。
 	 * Handle a player revive event.
-	 *
 	 * 玩家 / player
 	 * result
 	 */

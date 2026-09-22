@@ -9,7 +9,6 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 /**
  * Empyrean Crucible 副本 NPC AI：Takun Gojira（@AIName "takun_gojira"），继承 AggressiveNpcAI2。
  * Empyrean Crucible instance NPC AI: Takun Gojira (@AIName "takun_gojira"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("takun_gojira")

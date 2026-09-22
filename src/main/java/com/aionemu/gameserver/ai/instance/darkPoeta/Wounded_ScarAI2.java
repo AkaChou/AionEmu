@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Dark Poeta 副本 NPC AI：Wounded Scar（@AIName "wounded_scar"），继承 NpcAI2。
  * Dark Poeta instance NPC AI: Wounded Scar (@AIName "wounded_scar"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("wounded_scar")

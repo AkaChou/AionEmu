@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Beshmundir Temple 副本 NPC AI：Macunbello（@AIName "macunbello"），继承 AggressiveNpcAI2。
  * Beshmundir Temple instance NPC AI: Macunbello (@AIName "macunbello"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("macunbello")

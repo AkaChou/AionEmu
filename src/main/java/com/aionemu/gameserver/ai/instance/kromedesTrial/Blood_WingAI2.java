@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.*;
 /**
  * Kromedes Trial 副本 NPC AI：Blood Wing（@AIName "blood_wing"），继承 NpcAI2。
  * Kromedes Trial instance NPC AI: Blood Wing (@AIName "blood_wing"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("blood_wing")

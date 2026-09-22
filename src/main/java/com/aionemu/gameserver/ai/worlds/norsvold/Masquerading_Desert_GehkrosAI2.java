@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Norsvold 区域 NPC AI：Masquerading Desert Gehkros（@AIName "masquerading_desert_gehkros"），继承 AggressiveNpcAI2。
  * Norsvold zone NPC AI: Masquerading Desert Gehkros (@AIName "masquerading_desert_gehkros"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("masquerading_desert_gehkros")

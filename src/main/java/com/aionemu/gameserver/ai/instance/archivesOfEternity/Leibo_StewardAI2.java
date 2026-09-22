@@ -19,7 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Archives Of Eternity 副本 NPC AI：Leibo Steward（@AIName "leibo"），继承 GeneralNpcAI2。
  * Archives Of Eternity instance NPC AI: Leibo Steward (@AIName "leibo"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("leibo")

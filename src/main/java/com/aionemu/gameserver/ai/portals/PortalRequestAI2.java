@@ -17,7 +17,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 传送门/传送点 AI：Portal Request（@AIName "portal_request"），继承 PortalAI2。
  * Portal/teleporter AI: Portal Request (@AIName "portal_request"), extends PortalAI2.
- *
  * @author Encom
  */
 @AIName("portal_request")

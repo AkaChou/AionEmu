@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 融合（Coalescence）结果包：返回产出物品与可选奖励信息。
  * Server packet for coalescence result: resulting item and optional bonus reward.
- *
  * @author Ranastic
  */
 @AllArgsConstructor

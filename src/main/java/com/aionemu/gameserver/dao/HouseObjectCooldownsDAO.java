@@ -12,7 +12,6 @@ public abstract class HouseObjectCooldownsDAO implements DAO {
 	/**
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier for this DAO.
-	 *
 	 * @return 类名 / class name
 	 */
 	@Override
@@ -23,7 +22,6 @@ public abstract class HouseObjectCooldownsDAO implements DAO {
 	/**
 	 * 加载玩家的房屋物件冷却时间。
 	 * Loads house object cooldowns for a player.
-	 *
 	 * @param paramPlayer 玩家 / player
 	 */
 	public abstract void loadHouseObjectCooldowns(Player paramPlayer);
@@ -31,7 +29,6 @@ public abstract class HouseObjectCooldownsDAO implements DAO {
 	/**
 	 * 存储玩家的房屋物件冷却时间。
 	 * Stores house object cooldowns for a player.
-	 *
 	 * @param paramPlayer 玩家 / player
 	 */
 	public abstract void storeHouseObjectCooldowns(Player paramPlayer);

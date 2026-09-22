@@ -14,9 +14,7 @@ import java.sql.ResultSet;
 /**
  * 玩家绑定点 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerBindPointDAO.
- *
  * Updated for MySQL 8 - Fixed connection leaks.
- *
  * @author evilset
  */
 @Slf4j
@@ -32,7 +30,6 @@ public class PlayerBindPointDAO extends com.aionemu.gameserver.dao.PlayerBindPoi
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
-	 *
 	 * @param databaseName 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version
@@ -46,7 +43,6 @@ public class PlayerBindPointDAO extends com.aionemu.gameserver.dao.PlayerBindPoi
 	/**
 	 * 加载玩家绑定点。
 	 * Loads the bind point for a player.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -76,7 +72,6 @@ public class PlayerBindPointDAO extends com.aionemu.gameserver.dao.PlayerBindPoi
 	/**
 	 * 插入玩家绑定点。
 	 * Inserts a player bind point.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否插入成功 / whether insert succeeded
 	 */
@@ -102,7 +97,6 @@ public class PlayerBindPointDAO extends com.aionemu.gameserver.dao.PlayerBindPoi
 	/**
 	 * 更新玩家绑定点。
 	 * Updates a player bind point.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否更新成功 / whether update succeeded
 	 */
@@ -128,7 +122,6 @@ public class PlayerBindPointDAO extends com.aionemu.gameserver.dao.PlayerBindPoi
 	/**
 	 * 按持久化状态保存玩家绑定点。
 	 * Stores the player bind point according to its persistent state.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否保存成功 / whether store succeeded
 	 */

@@ -19,7 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Dark Poeta 副本 NPC AI：Marabata Of Strength（@AIName "marabata_of_strength"），继承 AggressiveNpcAI2。
  * Dark Poeta instance NPC AI: Marabata Of Strength (@AIName "marabata_of_strength"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("marabata_of_strength")

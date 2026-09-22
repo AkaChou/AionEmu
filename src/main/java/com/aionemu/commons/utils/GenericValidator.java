@@ -14,7 +14,6 @@ public class GenericValidator {
     /**
      * 判断字符串是否为 null 或空。
      * Whether the string is null or empty.
-     *
      * @param s 待检查字符串 / String to check
      * @return 若为空或 null 则为 true / True if blank or null
      */
@@ -25,7 +24,6 @@ public class GenericValidator {
     /**
      * 判断集合是否为 null 或空。
      * Whether the collection is null or empty.
-     *
      * @param c 待检查集合 / Collection to check
      * @return 若为空或 null 则为 true / True if blank or null
      */
@@ -36,7 +34,6 @@ public class GenericValidator {
     /**
      * 判断 Map 是否为 null 或空。
      * Whether the map is null or empty.
-     *
      * @param m 待检查 Map / Map to check
      * @return 若为空或 null 则为 true / True if blank or null
      */
@@ -47,7 +44,6 @@ public class GenericValidator {
     /**
      * 判断数字是否为 null 或 0。
      * Whether the number is null or zero.
-     *
      * @param n 待检查数字 / Number to check
      * @return 为空或 0 则为 true / True if null or zero
      */
@@ -58,7 +54,6 @@ public class GenericValidator {
     /**
      * 判断数组是否为 null 或长度为 0。
      * Whether the array is null or empty.
-     *
      * @param a 待检查数组 / Array to check
      * @return 若为空或 null 则为 true / True if blank or null
      */

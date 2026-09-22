@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * 维尔索要塞相关 NPC AI：Wealhtheow Keep Boss（@AIName "wealhtheow_keep_boss"），继承 AggressiveNpcAI2。
  * Wealhtheow Keep related NPC AI: Wealhtheow Keep Boss (@AIName "wealhtheow_keep_boss"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("wealhtheow_keep_boss")

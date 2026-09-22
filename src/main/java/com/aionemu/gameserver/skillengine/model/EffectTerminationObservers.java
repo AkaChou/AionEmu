@@ -10,7 +10,6 @@ import com.aionemu.gameserver.skillengine.condition.Conditions;
 /**
  * 运行时效果的终止观察者域。
  * Termination-observer domain for a runtime effect.
- *
  * <p>负责在装备条件失效或受到伤害时结束 {@link Effect}，并在效果结束时注销观察者。
  * Owns the observers that end an {@link Effect} when equipment conditions fail or damage is received,
  * and unregisters them when the effect ends.</p>
@@ -25,7 +24,6 @@ final class EffectTerminationObservers {
 	/**
 	 * 绑定宿主效果。
 	 * Binds the hosting effect.
-	 *
 	 * @param effect 宿主效果 / hosting effect
 	 */
 	EffectTerminationObservers(Effect effect) {
@@ -44,7 +42,6 @@ final class EffectTerminationObservers {
 	/**
 	 * 注销全部终止观察者，并合并清理异常。
 	 * Unregisters all termination observers and merges cleanup failures.
-	 *
 	 * @param failure 既有异常 / existing failure
 	 * @return 合并后的异常 / merged failure
 	 */

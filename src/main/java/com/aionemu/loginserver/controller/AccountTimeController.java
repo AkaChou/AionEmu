@@ -13,7 +13,6 @@ import lombok.experimental.UtilityClass;
 /**
  * 账号在线/休息时间控制；部分游戏内功能依赖累计在线时长。
  * Account time controller. Some in-game features depend on accumulated online time.
- *
  * @author EvilSpirit
  */
 @UtilityClass
@@ -22,17 +21,12 @@ public class AccountTimeController {
     /**
      * 角色登录时更新账号时间：LastLoginTime、RestTime 等。
      * Updates account time on login: LastLoginTime, RestTime, etc.
-     *
      * @param account 账号 / Account
      */
     public void updateOnLogin(Account account) {
         AccountTime accountTime = account.getAccountTime();
 
-        /**
-         * 账号刚创建时需新建 AccountTime。
-         * New accounts need a fresh AccountTime.
-         */
-        if (accountTime == null) {
+		if (accountTime == null) {
             accountTime = new AccountTime();
         }
 
@@ -40,11 +34,7 @@ public class AccountTimeController {
         int currentDay = getDays(System.currentTimeMillis());
         int returnday = getDays(accountTime.getLastLoginTime().getTime() + 30L * 24 * 60 * 60 * 1000);
 
-        /**
-         * 非当日登录则清零当日累计在线/休息时间。
-         * Not online today: reset daily accumulated online/rest times.
-         */
-        if (lastLoginDay < currentDay) {
+		if (lastLoginDay < currentDay) {
             DAOManager.getDAO(AccountPlayTimeDAO.class).update(account.getId(), accountTime);
             accountTime.setAccumulatedOnlineTime(0);
             accountTime.setAccumulatedRestTime(0);
@@ -73,7 +63,6 @@ public class AccountTimeController {
     /**
      * 角色登出时更新会话时长与累计在线时间。
      * Updates session duration and accumulated online time on logout.
-     *
      * @param account 账号 / Account
      */
     public void updateOnLogout(Account account) {
@@ -88,7 +77,6 @@ public class AccountTimeController {
     /**
      * 判断账号是否已过期。
      * Checks whether the account is expired.
-     *
      * @param account 账号 / Account
      * @return 已过期时为 {@code true} / {@code true} if expired
      */
@@ -101,7 +89,6 @@ public class AccountTimeController {
     /**
      * 判断账号处罚是否仍生效。
      * Checks whether account penalty is still active.
-     *
      * @param account 账号 / Account
      * @return 处罚生效为 true / True if penalty is active
      */
@@ -115,7 +102,6 @@ public class AccountTimeController {
     /**
      * 将毫秒时间换算为天数。
      * Converts milliseconds to whole days.
-     *
      * @param millis 毫秒时间 / time in ms
      * @return 天数 / days
      */

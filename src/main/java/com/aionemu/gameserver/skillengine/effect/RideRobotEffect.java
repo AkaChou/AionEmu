@@ -20,7 +20,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 机甲骑乘效果：使玩家进入机甲形态；卸下武器时结束效果。
  * Robot ride effect: puts the player into robot form; ends when a weapon is unequipped.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -30,7 +29,6 @@ public class RideRobotEffect extends EffectTemplate {
 	/**
 	 * 启用机甲、广播外观，并监听武器卸下以结束效果。
 	 * Enables robot form, broadcasts appearance, and ends on weapon unequip.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -57,7 +55,6 @@ public class RideRobotEffect extends EffectTemplate {
 	/**
 	 * 退出机甲形态并移除卸装观察者。
 	 * Exits robot form and removes the unequip observer.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -79,7 +76,6 @@ public class RideRobotEffect extends EffectTemplate {
 	/**
 	 * 根据主手武器皮肤模板解析机甲信息。
 	 * Resolves robot info from the main-hand weapon skin template.
-	 *
 	 * @param player 玩家 / player
 	 * @return 机甲信息 / robot info
 	 */

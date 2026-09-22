@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端分片发送问卷/调查 HTML 内容（最多 255 片）。
  * Server packet that sends survey HTML to the client in chunks (up to 255).
- *
  * @author lhw and Kaipo
  */
 @AllArgsConstructor

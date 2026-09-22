@@ -31,7 +31,6 @@ public class Weather extends AdminCommand
 	/**
 	 * 无参时显示当前区域天气；否则按地图名设置或 reset。
 	 * With no args shows current zone weather; otherwise sets by map name or resets.
-	 *
 	 * @param admin 执行 GM / Admin player
 	 * @param params 地图名与天气码或 reset / Map name and weather code, or reset
 	 */
@@ -104,7 +103,6 @@ public class Weather extends AdminCommand
 	/**
 	 * 汇总指定地图的服务端天气快照，形如 {@code zone 1=1(Sand_Rain)}。
 	 * Summarizes the server-side weather snapshot of a map, e.g. {@code zone 1=1(Sand_Rain)}.
-	 *
 	 * @param mapId 地图 ID / map id
 	 * @return 快照文本；无天气表时为 {@code no weather table} / snapshot text, or {@code no weather table}
 	 */
@@ -135,7 +133,6 @@ public class Weather extends AdminCommand
 	/**
 	 * 参数错误时的用法提示。
 	 * Usage hint on invalid parameters.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

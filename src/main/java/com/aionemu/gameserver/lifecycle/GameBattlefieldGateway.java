@@ -83,7 +83,6 @@ public class GameBattlefieldGateway {
     /**
      * 可选注入卡玛战场服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of Kamar battlefield service.
-     *
      * @param kamarBattlefieldServiceProvider 服务提供者 / Service provider
      */
     @Autowired(required = false)
@@ -94,7 +93,6 @@ public class GameBattlefieldGateway {
     /**
      * 可选注入吞噬的奥菲丹桥服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of Engulfed Ophidan Bridge service.
-     *
      * @param engulfedOphidanBridgeServiceProvider 服务提供者 / Service provider
      */
     @Autowired(required = false)
@@ -105,7 +103,6 @@ public class GameBattlefieldGateway {
     /**
      * 可选注入可疑的奥菲丹桥服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of Suspicious Ophidan Bridge service.
-     *
      * @param suspiciousOphidanBridgeServiceProvider 服务提供者 / Service provider
      */
     @Autowired(required = false)
@@ -116,7 +113,6 @@ public class GameBattlefieldGateway {
     /**
      * 可选注入铁壁前线服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of Iron Wall Warfront service.
-     *
      * @param ironWallWarfrontServiceProvider 服务提供者 / Service provider
      */
     @Autowired(required = false)
@@ -127,7 +123,6 @@ public class GameBattlefieldGateway {
     /**
      * 可选注入伊迪尔穹顶服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of Idgel Dome service.
-     *
      * @param idgelDomeServiceProvider 服务提供者 / Service provider
      */
     @Autowired(required = false)
@@ -138,7 +133,6 @@ public class GameBattlefieldGateway {
     /**
      * 可选注入伊迪尔穹顶地标服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of Idgel Dome Landmark service.
-     *
      * @param idgelDomeLandmarkServiceProvider 服务提供者 / Service provider
      */
     @Autowired(required = false)
@@ -149,7 +143,6 @@ public class GameBattlefieldGateway {
     /**
      * 可选注入坚韧殿堂服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of Hall of Tenacity service.
-     *
      * @param hallOfTenacityServiceProvider 服务提供者 / Service provider
      */
     @Autowired(required = false)
@@ -160,7 +153,6 @@ public class GameBattlefieldGateway {
     /**
      * 可选注入大竞技场训练营服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of Grand Arena Training Camp service.
-     *
      * @param grandArenaTrainingCampServiceProvider 服务提供者 / Service provider
      */
     @Autowired(required = false)
@@ -171,7 +163,6 @@ public class GameBattlefieldGateway {
     /**
      * 可选注入 IDRun 服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of IDRun service.
-     *
      * @param idRunServiceProvider 服务提供者 / Service provider
      */
     @Autowired(required = false)
@@ -182,7 +173,6 @@ public class GameBattlefieldGateway {
     /**
      * 可选注入战场运行时桥 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of battlefield runtime bridge.
-     *
      * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
      */
     @Autowired(required = false)
@@ -210,7 +200,6 @@ public class GameBattlefieldGateway {
     /**
      * 解析卡玛战场服务：优先 Spring，否则经运行时桥回退。
      * Resolve Kamar battlefield service: prefer Spring, otherwise fall back via runtime bridge.
-     *
      * @return 服务实例 / Service instance
      */
     private KamarBattlefieldService kamarBattlefieldService() {
@@ -223,7 +212,6 @@ public class GameBattlefieldGateway {
     /**
      * 解析吞噬的奥菲丹桥服务。
      * Resolve Engulfed Ophidan Bridge service.
-     *
      * @return 服务实例 / Service instance
      */
     private EngulfedOphidanBridgeService engulfedOphidanBridgeService() {
@@ -236,7 +224,6 @@ public class GameBattlefieldGateway {
     /**
      * 解析可疑的奥菲丹桥服务。
      * Resolve Suspicious Ophidan Bridge service.
-     *
      * @return 服务实例 / Service instance
      */
     private SuspiciousOphidanBridgeService suspiciousOphidanBridgeService() {
@@ -249,7 +236,6 @@ public class GameBattlefieldGateway {
     /**
      * 解析铁壁前线服务。
      * Resolve Iron Wall Warfront service.
-     *
      * @return 服务实例 / Service instance
      */
     private IronWallWarfrontService ironWallWarfrontService() {
@@ -262,7 +248,6 @@ public class GameBattlefieldGateway {
     /**
      * 解析伊迪尔穹顶服务。
      * Resolve Idgel Dome service.
-     *
      * @return 服务实例 / Service instance
      */
     private IdgelDomeService idgelDomeService() {
@@ -275,7 +260,6 @@ public class GameBattlefieldGateway {
     /**
      * 解析伊迪尔穹顶地标服务。
      * Resolve Idgel Dome Landmark service.
-     *
      * @return 服务实例 / Service instance
      */
     private IdgelDomeLandmarkService idgelDomeLandmarkService() {
@@ -288,7 +272,6 @@ public class GameBattlefieldGateway {
     /**
      * 解析坚韧殿堂服务。
      * Resolve Hall of Tenacity service.
-     *
      * @return 服务实例 / Service instance
      */
     private HallOfTenacityService hallOfTenacityService() {
@@ -301,7 +284,6 @@ public class GameBattlefieldGateway {
     /**
      * 解析大竞技场训练营服务。
      * Resolve Grand Arena Training Camp service.
-     *
      * @return 服务实例 / Service instance
      */
     private GrandArenaTrainingCampService grandArenaTrainingCampService() {
@@ -314,7 +296,6 @@ public class GameBattlefieldGateway {
     /**
      * 解析 IDRun 服务。
      * Resolve IDRun service.
-     *
      * @return 服务实例 / Service instance
      */
     private IDRunService idRunService() {
@@ -327,7 +308,6 @@ public class GameBattlefieldGateway {
     /**
      * 仅在自动组队开启时执行初始化。
      * Run the initializer only when auto-group is enabled.
-     *
      * @param initializer 初始化逻辑 / Initializer
      */
     private void runIfAutoGroupEnabled(Runnable initializer) {
@@ -339,7 +319,6 @@ public class GameBattlefieldGateway {
     /**
      * 解析战场运行时桥：优先 Spring，否则新建。
      * Resolve battlefield runtime bridge: prefer Spring, otherwise create new.
-     *
      * @return 运行时桥 / Runtime bridge
      */
     private GameBattlefieldRuntimeBridge runtimeBridge() {

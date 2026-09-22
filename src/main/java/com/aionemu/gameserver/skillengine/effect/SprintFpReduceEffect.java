@@ -9,7 +9,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 疾跑飞行值消耗减免效果：作为 Buff 壳，降低疾跑时的 FP 消耗。
  * Sprint FP reduce effect: buff shell that reduces FP cost while sprinting.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)

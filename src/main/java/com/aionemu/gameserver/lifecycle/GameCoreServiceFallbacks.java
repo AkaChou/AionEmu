@@ -22,7 +22,6 @@ final class GameCoreServiceFallbacks {
     /**
      * 返回 DataManager：双源兜底已退役，交由 {@link DataManager#getInstance()} fail-fast。
      * Returns DataManager: the dual-source fallback is retired; delegates to DataManager.getInstance() and fails fast.
-     *
      * @return DataManager 实例 / DataManager instance
      */
     static DataManager dataManager() {
@@ -32,7 +31,6 @@ final class GameCoreServiceFallbacks {
     /**
      * 线程池管理器（经 {@link GameThreadPoolServices} 解析）。
      * Thread-pool manager (resolved via {@link GameThreadPoolServices}).
-     *
      * @return 线程池管理器 / Thread-pool manager
      */
     static ThreadPoolManager threadPoolManager() {
@@ -42,7 +40,6 @@ final class GameCoreServiceFallbacks {
     /**
      * HTML 缓存回退实例。
      * HTML cache fallback instance.
-     *
      * @return HTML 缓存 / HTML cache
      */
     static HTMLCache htmlCache() {
@@ -52,7 +49,6 @@ final class GameCoreServiceFallbacks {
     /**
      * XML 数据加载器回退实例。
      * XML data loader fallback instance.
-     *
      * @return XML 数据加载器 / XML data loader
      */
     static XmlDataLoader xmlDataLoader() {

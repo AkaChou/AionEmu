@@ -27,7 +27,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Drakenspire Depths 副本 NPC AI：Heatvent Protector（@AIName "heatvent_protector"），继承 AggressiveNpcAI2。
  * Drakenspire Depths instance NPC AI: Heatvent Protector (@AIName "heatvent_protector"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("heatvent_protector")

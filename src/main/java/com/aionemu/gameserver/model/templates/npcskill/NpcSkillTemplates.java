@@ -14,7 +14,6 @@ import lombok.AllArgsConstructor;
 /**
  * NPC 技能 Templates 模板（静态数据/XML）。
  * XML template.
- *
  * @author AionChs Master
  */
 @Getter

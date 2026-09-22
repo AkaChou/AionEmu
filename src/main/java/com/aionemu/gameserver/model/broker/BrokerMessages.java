@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 经纪行 Messages 枚举。
  * Broker Messages enumeration.
- *
  * @author kosyachok
  */
 @Getter

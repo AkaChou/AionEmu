@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 /**
  * 三维点，用于 3D 工具逻辑。
  * Point 3D for utils 3D logic.
- *
  * @author M@xx modified by Wakizashi
  */
 @Getter

@@ -37,7 +37,6 @@ public class GameDredgionGateway {
     /**
      * 可选注入挖掘场服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of Dredgion service.
-     *
      * @param dredgionServiceProvider 服务提供者 / Service provider
      */
     @Autowired(required = false)
@@ -48,7 +47,6 @@ public class GameDredgionGateway {
     /**
      * 可选注入 Asyunatar 服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of Asyunatar service.
-     *
      * @param asyunatarServiceProvider 服务提供者 / Service provider
      */
     @Autowired(required = false)
@@ -59,7 +57,6 @@ public class GameDredgionGateway {
     /**
      * 可选注入功能服务运行时桥 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of feature-services runtime bridge.
-     *
      * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
      */
     @Autowired(required = false)
@@ -84,7 +81,6 @@ public class GameDredgionGateway {
     /**
      * 解析挖掘场服务：优先 Spring，否则经运行时桥回退。
      * Resolve Dredgion service: prefer Spring, otherwise fall back via runtime bridge.
-     *
      * @return 服务实例 / Service instance
      */
     private DredgionService2 dredgionService() {
@@ -97,7 +93,6 @@ public class GameDredgionGateway {
     /**
      * 解析 Asyunatar 服务。
      * Resolve Asyunatar service.
-     *
      * @return 服务实例 / Service instance
      */
     private AsyunatarService asyunatarService() {
@@ -110,7 +105,6 @@ public class GameDredgionGateway {
     /**
      * 解析功能服务运行时桥：优先 Spring，否则新建。
      * Resolve feature-services runtime bridge: prefer Spring, otherwise create new.
-     *
      * @return 运行时桥 / Runtime bridge
      */
     private GameFeatureServicesRuntimeBridge runtimeBridge() {

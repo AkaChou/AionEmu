@@ -23,7 +23,6 @@ public class TalkEventHandler {
 	/**
 	 * 处理完整对话：进入对话子状态，处理任务对话框，并按标题 / 城镇发送对话窗口。
 	 * Handles full talk: enters talk sub-state, processes quest dialogs, and sends dialog window by title / town.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param creature 对话生物 / talking creature
 	 */
@@ -88,7 +87,6 @@ public class TalkEventHandler {
 	/**
 	 * 简化对话：对话框 NPC 进入 TALK 子状态并设定目标。
 	 * Simple talk: dialog NPCs enter TALK sub-state and set the target.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param creature 对话生物 / talking creature
 	 */
@@ -102,7 +100,6 @@ public class TalkEventHandler {
 	/**
 	 * 结束对话：清空目标（非跟随状态）并触发思考。
 	 * Finishes talk: clears target (unless following) and triggers think.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param creature 结束对话的对象 / creature finishing talk
 	 */
@@ -119,7 +116,6 @@ public class TalkEventHandler {
 	/**
 	 * 简化结束对话：清除 TALK 子状态并清空目标。
 	 * Simple finish talk: clears TALK sub-state and target.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param creature 结束对话的对象 / creature finishing talk
 	 */

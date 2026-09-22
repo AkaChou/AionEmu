@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_UNK_98;
 /**
  * 未知客户端包占位（opcode 127），收到后回复 {@link SM_UNK_98}。
  * Unknown client packet placeholder (opcode 127); responds with {@link SM_UNK_98}.
- *
  * @author Wnkrz
  */
 public class CM_UNK_127 extends AionClientPacket {

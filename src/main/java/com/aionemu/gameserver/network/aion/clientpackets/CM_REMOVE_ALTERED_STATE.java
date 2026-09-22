@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 客户端手动移除异常状态（效果）请求包。
  * Client packet for manually removing an altered state (effect).
- *
  * @author dragoon112
  */
 public class CM_REMOVE_ALTERED_STATE extends AionClientPacket {

@@ -12,7 +12,6 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 /**
  * 全局掉落物品模板（静态数据/XML）。
  * Global drop item template (static data/XML).
- *
  * @author Wnkrz
  */
 @XmlAccessorType(XmlAccessType.FIELD)

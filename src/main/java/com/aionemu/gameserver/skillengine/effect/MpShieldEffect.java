@@ -37,7 +37,6 @@ public class MpShieldEffect extends EffectTemplate {
 	/**
 	 * 种族条件满足时将效果加入控制器。
 	 * Adds the effect when the race condition (if any) is met.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -51,7 +50,6 @@ public class MpShieldEffect extends EffectTemplate {
 	/**
 	 * 标记本效果计算成功。
 	 * Marks this effect calculation as successful.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -62,7 +60,6 @@ public class MpShieldEffect extends EffectTemplate {
 	/**
 	 * 注册 MP 护盾观察者并标记受护盾状态。
 	 * Registers the MP shield observer and marks under-shield state.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -80,7 +77,6 @@ public class MpShieldEffect extends EffectTemplate {
 	/**
 	 * 移除护盾观察者并清除受护盾状态。
 	 * Removes the shield observer and clears under-shield state.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

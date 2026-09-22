@@ -10,7 +10,6 @@ import com.aionemu.gameserver.skillengine.model.HealType;
 /**
  * 生命持续治疗效果：周期恢复目标 HP。
  * HP heal-over-time effect: periodically restores the target's hit points.
- *
  * @author kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)

@@ -30,9 +30,6 @@ public class ArenaOfTenacityRank {
 	/** 返回 possition match / Returns the possition match */
 	private int possitionMatch;
 
-	/**
-	 * @return the persistentState
-	 */
 	private PersistentState persistentState;
 
 	public ArenaOfTenacityRank(int rank, int bestRank, int points, int lastPoints, int highPoints, int lowPoints,

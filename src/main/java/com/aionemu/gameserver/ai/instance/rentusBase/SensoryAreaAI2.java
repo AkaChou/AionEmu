@@ -16,7 +16,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Rentus Base 副本 NPC AI：Sensory Area（@AIName "sensory_area"），继承 AggressiveNpcAI2。
  * Rentus Base instance NPC AI: Sensory Area (@AIName "sensory_area"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("sensory_area")

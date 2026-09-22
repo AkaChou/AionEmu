@@ -35,7 +35,6 @@ final class ConsoleStartupProgressReporter implements StartupProgressReporter {
 	/**
 	 * 基于当前控制台与配置创建报告器。
 	 * Create a reporter for the current console and configuration.
-	 *
 	 * @return 启动进度报告器 / Startup progress reporter
 	 */
 	static StartupProgressReporter forCurrentConsole() {
@@ -45,7 +44,6 @@ final class ConsoleStartupProgressReporter implements StartupProgressReporter {
 	/**
 	 * 开始报告某分组的加载。
 	 * Start reporting load of a group.
-	 *
 	 * @param groupName 分组名 / Group name
 	 */
 	@Override
@@ -61,7 +59,6 @@ final class ConsoleStartupProgressReporter implements StartupProgressReporter {
 	/**
 	 * 步骤开始时不输出（保持行干净，直至完成）。
 	 * No output on step start (keep the console row clear until completion).
-	 *
 	 * @param stepName 步骤名 / Step name
 	 */
 	@Override
@@ -72,7 +69,6 @@ final class ConsoleStartupProgressReporter implements StartupProgressReporter {
 	/**
 	 * 步骤完成时不再渲染进度行（已移除进度条）。
 	 * Step finished; no progress line is rendered (progress bar removed).
-	 *
 	 * @param stepName 步骤名 / Step name
 	 */
 	@Override
@@ -83,7 +79,6 @@ final class ConsoleStartupProgressReporter implements StartupProgressReporter {
 	/**
 	 * 结束分组并打印耗时。
 	 * Finish a group and print elapsed time.
-	 *
 	 * @param groupName 分组名 / Group name
 	 * @param elapsedMillis 耗时毫秒 / Elapsed milliseconds
 	 */

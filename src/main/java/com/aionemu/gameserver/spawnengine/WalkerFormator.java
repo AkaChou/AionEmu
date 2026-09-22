@@ -13,10 +13,7 @@ import com.aionemu.gameserver.model.templates.walker.WalkerTemplate;
  * <p>
  * 清理与重构将在测试与错误处理后进行；需配合补丁使用。
  * Cleanup and rework will follow tests and error handling; use only with the patch.
- *
  * @author vlog
- * @based on Imaginary's imagination
- * @modified Rolandas
  */
 @Slf4j
 public class WalkerFormator {
@@ -29,7 +26,6 @@ public class WalkerFormator {
 	 * 若为重生则无需编队，仅放回第一步并恢复已保存数据。
 	 * On instance first spawn, verifies and creates groups; call organizeAndSpawn after.
 	 * On respawn, places the NPC at the first step and restores saved data.
-	 *
 	 * @param npc NPC / the NPC
 	 * @param worldId 世界 ID / world id
 	 * @param instanceId 实例 ID / instance id
@@ -63,7 +59,6 @@ public class WalkerFormator {
 	/**
 	 * 组织并刷出所有已处理的巡逻编队；仅应在实例 NPC 全部生成时调用。
 	 * Organizes and spawns all processed walker groups; call only when spawning all instance NPCs.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param instanceId 实例 ID / instance id
 	 */
@@ -75,7 +70,6 @@ public class WalkerFormator {
 	/**
 	 * 实例销毁时清理巡逻编队缓存。
 	 * Clears walker formation cache when an instance is destroyed.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param instanceId 实例 ID / instance id
 	 */

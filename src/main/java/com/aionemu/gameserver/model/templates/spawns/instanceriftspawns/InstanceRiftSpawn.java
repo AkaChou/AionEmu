@@ -15,7 +15,6 @@ import lombok.Getter;
 /**
  * 副本裂隙刷新点模板（静态数据/XML）。
  * XML template.
- *
  * @author Rinzler (Encom)
  */
 

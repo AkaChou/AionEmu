@@ -17,7 +17,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Tiamat Stronghold 副本 NPC AI：Kahrun（@AIName "kahrun"），继承 NpcAI2。
  * Tiamat Stronghold instance NPC AI: Kahrun (@AIName "kahrun"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("kahrun")

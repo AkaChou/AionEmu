@@ -23,7 +23,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Steel Rake 副本 NPC AI：Golden Eye Mantutu（@AIName "goldeneyemantutu"），继承 AggressiveNpcAI2。
  * Steel Rake instance NPC AI: Golden Eye Mantutu (@AIName "goldeneyemantutu"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("goldeneyemantutu")
@@ -72,7 +71,6 @@ public class GoldenEyeMantutuAI2 extends AggressiveNpcAI2
 	/**
 	 * 走到装置后延迟 6 秒进食/饮水，移除对应负面效果并恢复战斗。
 	 * 6 seconds after reaching the device, feed/drink, remove the corresponding debuff and resume fighting.
-	 *
 	 * @param npc 饲料或供水装置 NPC / feed or water supply NPC
 	 */
 	private void startFeedTime(final Npc npc) {

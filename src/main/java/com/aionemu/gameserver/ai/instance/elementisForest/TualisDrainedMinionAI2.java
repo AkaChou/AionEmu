@@ -10,7 +10,6 @@ import java.util.concurrent.Future;
 /**
  * Elementis Forest 副本 NPC AI：Tualis Drained Minion（@AIName "tualis_drained_minion"），继承 AggressiveNpcAI2。
  * Elementis Forest instance NPC AI: Tualis Drained Minion (@AIName "tualis_drained_minion"), extends AggressiveNpcAI2.
- *
  * @author xTz
  */
 @AIName("tualis_drained_minion")

@@ -137,7 +137,6 @@ public final class GameRuntimeServices implements DisposableBean {
     /**
      * 构造并绑定各运行时服务的 instance provider。
      * Construct and bind instance providers for all runtime services.
-     *
      * @param periodicSaveServiceProvider 周期存档服务提供者 / Periodic-save service provider
      * @param adminServiceProvider 管理服务提供者 / Admin service provider
      * @param playerTransferServiceProvider 角色转移服务提供者 / Player-transfer service provider
@@ -229,7 +228,6 @@ public final class GameRuntimeServices implements DisposableBean {
     /**
      * 解析管理服务实例。
      * Resolve the admin service instance.
-     *
      * @return 管理服务 / Admin service
      */
     public static AdminService adminService() {
@@ -239,7 +237,6 @@ public final class GameRuntimeServices implements DisposableBean {
     /**
      * 解析周期存档服务实例。
      * Resolve the periodic-save service instance.
-     *
      * @return 周期存档服务 / Periodic-save service
      */
     public static PeriodicSaveService periodicSaveService() {
@@ -249,7 +246,6 @@ public final class GameRuntimeServices implements DisposableBean {
     /**
      * 解析公告服务实例。
      * Resolve the announcement service instance.
-     *
      * @return 公告服务 / Announcement service
      */
     public static AnnouncementService announcementService() {
@@ -259,7 +255,6 @@ public final class GameRuntimeServices implements DisposableBean {
     /**
      * 解析角色转移服务实例。
      * Resolve the player-transfer service instance.
-     *
      * @return 角色转移服务 / Player-transfer service
      */
     public static PlayerTransferService playerTransferService() {
@@ -269,7 +264,6 @@ public final class GameRuntimeServices implements DisposableBean {
     /**
      * 解析领地服务实例。
      * Resolve the territory service instance.
-     *
      * @return 领地服务 / Territory service
      */
     public static TerritoryService territoryService() {
@@ -279,7 +273,6 @@ public final class GameRuntimeServices implements DisposableBean {
     /**
      * 解析天气服务实例。
      * Resolve the weather service instance.
-     *
      * @return 天气服务 / Weather service
      */
     public static WeatherService weatherService() {
@@ -289,7 +282,6 @@ public final class GameRuntimeServices implements DisposableBean {
     /**
      * 解析寄售服务实例。
      * Resolve the broker service instance.
-     *
      * @return 寄售服务 / Broker service
      */
     public static BrokerService brokerService() {
@@ -299,7 +291,6 @@ public final class GameRuntimeServices implements DisposableBean {
     /**
      * 解析影响力实例。
      * Resolve the influence instance.
-     *
      * @return 影响力 / Influence
      */
     public static Influence influence() {
@@ -309,7 +300,6 @@ public final class GameRuntimeServices implements DisposableBean {
     /**
      * 解析交易服务实例。
      * Resolve the exchange service instance.
-     *
      * @return 交易服务 / Exchange service
      */
     public static ExchangeService exchangeService() {
@@ -319,7 +309,6 @@ public final class GameRuntimeServices implements DisposableBean {
     /**
      * 解析请愿服务实例。
      * Resolve the petition service instance.
-     *
      * @return 请愿服务 / Petition service
      */
     public static PetitionService petitionService() {
@@ -329,7 +318,6 @@ public final class GameRuntimeServices implements DisposableBean {
     /**
      * 解析增益活动服务实例。
      * Resolve the boost-event service instance.
-     *
      * @return 增益活动服务 / Boost-event service
      */
     public static BoostEventService boostEventService() {
@@ -339,7 +327,6 @@ public final class GameRuntimeServices implements DisposableBean {
     /**
      * 解析限购交易服务实例。
      * Resolve the limited-item trade service instance.
-     *
      * @return 限购交易服务 / Limited-item trade service
      */
     public static LimitedItemTradeService limitedItemTradeService() {
@@ -349,7 +336,6 @@ public final class GameRuntimeServices implements DisposableBean {
     /**
      * 解析问卷服务实例。
      * Resolve the survey service instance.
-     *
      * @return 问卷服务 / Survey service
      */
     public static SurveyService surveyService() {
@@ -359,7 +345,6 @@ public final class GameRuntimeServices implements DisposableBean {
     /**
      * 解析寻找队伍服务实例。
      * Resolve the find-group service instance.
-     *
      * @return 寻找队伍服务 / Find-group service
      */
     public static FindGroupService findGroupService() {
@@ -369,7 +354,6 @@ public final class GameRuntimeServices implements DisposableBean {
     /**
      * 解析商城服务实例。
      * Resolve the in-game shop instance.
-     *
      * @return 商城服务 / In-game shop
      */
     public static InGameShopEn inGameShopEn() {
@@ -379,7 +363,6 @@ public final class GameRuntimeServices implements DisposableBean {
     /**
      * 解析 GM 服务实例。
      * Resolve the GM service instance.
-     *
      * @return GM 服务 / GM service
      */
     public static GMService gmService() {
@@ -389,7 +372,6 @@ public final class GameRuntimeServices implements DisposableBean {
     /**
      * 优先从提供者取 bean，否则执行回退供应器。
      * Prefer the provider bean, otherwise run the fallback supplier.
-     *
      * @param provider Spring 提供者 / Spring provider
      * @param fallback 回退供应器 / Fallback supplier
      * @param <T> 服务类型 / Service type

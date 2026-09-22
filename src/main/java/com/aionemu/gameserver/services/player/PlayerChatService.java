@@ -22,7 +22,6 @@ public class PlayerChatService {
 	/**
 	 * 刷屏检测：超过限额则禁言 2 分钟。
 	 * Flood detection: gags the player for 2 minutes when over the limit.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否判定为刷屏 / whether flooding
 	 */
@@ -32,11 +31,7 @@ public class PlayerChatService {
 			player.setGagged(true);
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FLOODING);
 			player.getController().cancelTask(TaskId.GAG);
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */
-			player.getController().addTask(TaskId.GAG, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+            player.getController().addTask(TaskId.GAG, GameThreadPoolServices.threadPoolManager().schedule(() -> {
 				player.setGagged(false);
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CAN_CHAT_NOW);
 			}, 2 * 60000L));
@@ -48,7 +43,6 @@ public class PlayerChatService {
 	/**
 	 * 记录聊天日志。
 	 * Logs chat messages.
-	 *
 	 * @param player 玩家 / player
 	 * @param type 聊天类型 / chat type
 	 * @param message 消息内容 / message content

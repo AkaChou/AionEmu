@@ -22,7 +22,6 @@ import com.aionemu.chatserver.network.aion.ClientPacketHandler;
 /**
  * 聊天客户端通道业务处理器：管理连接状态、收发数据包并关联 {@link ChatClient}。
  * Chat client channel business handler: manages connection state, packet I/O, and {@link ChatClient} binding.
- *
  * @author ATracer
  */
 @Slf4j
@@ -38,9 +37,7 @@ public class ClientChannelHandler {
 	 * -- SETTER --
 	 *  设置连接状态。
 	 *  Set the connection state.
-	 *
-	 * @param state 目标状态 / Target state
-
+	 * 目标状态 / Target state
 	 */
 	@Setter
 	@Getter
@@ -49,14 +46,9 @@ public class ClientChannelHandler {
      * -- GETTER --
      *  获取绑定的聊天客户端。
      *  Get the bound chat client.
-     *
-     *
 	 * -- SETTER --
 	 *  绑定聊天客户端。
 	 *  Bind a chat client.
-	 *
-	 @return 聊天客户端 / Chat client
-	  * @param chatClient 聊天客户端 / Chat client
      */
     @Setter
     @Getter
@@ -67,7 +59,6 @@ public class ClientChannelHandler {
     /**
      * 通道激活：记录远程地址并将状态设为已连接。
      * On channel active: record remote address and set state to connected.
-     *
      * Netty channel
      */
     public void nettyChannelActive(Channel channel) {
@@ -90,7 +81,6 @@ public class ClientChannelHandler {
     /**
      * 处理通道异常；忽略纯 IO 异常以免刷屏。
      * Handle channel exceptions; ignore pure I/O exceptions to reduce noise.
-     *
      * @param cause 异常原因 / Exception cause
      */
     public void nettyExceptionCaught(Throwable cause) {
@@ -102,7 +92,6 @@ public class ClientChannelHandler {
     /**
      * 收到完整客户端数据包时入口。
      * Entry point when a complete client packet frame is received.
-     *
      * Packet reader
      */
     public void nettyMessageReceived(PacketReader message) {
@@ -112,7 +101,6 @@ public class ClientChannelHandler {
     /**
      * 解析并执行客户端包。
      * Parse and execute a client packet.
-     *
      * Packet reader
      */
     private void handlePacket(PacketReader message) {
@@ -128,7 +116,6 @@ public class ClientChannelHandler {
     /**
      * 向当前客户端通道写入并刷出服务端数据包。
      * Write and flush a server packet to the current client channel.
-     *
      * @param packet 服务端数据包 / Server packet
      */
     public void sendPacket(AbstractServerPacket packet) {
@@ -160,7 +147,6 @@ public class ClientChannelHandler {
     /**
      * 获取客户端 IP 地址字符串。
      * Get the client IP address string.
-     *
      * IP address
      */
     public String getIP() {

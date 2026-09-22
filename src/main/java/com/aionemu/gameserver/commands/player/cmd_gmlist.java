@@ -12,7 +12,6 @@ import java.util.List;
 /**
  * 玩家命令：列出当前在线的 GM/团队成员。
  * Player command: lists currently online GMs/team members.
- *
  * @author Eloann
  */
 public class cmd_gmlist extends PlayerCommand {
@@ -28,7 +27,6 @@ public class cmd_gmlist extends PlayerCommand {
 	/**
 	 * 收集非离线的管理权限玩家并输出名单。
 	 * Collects non-offline staff players and prints their names/tags.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 未使用的参数 / unused parameters
 	 */

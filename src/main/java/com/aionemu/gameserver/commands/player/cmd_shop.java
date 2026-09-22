@@ -23,7 +23,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：基于 XML 配置的简易商店列表/购买/重载。
  * Player command: simple shop list/buy/reload backed by an XML catalog.
- *
  * @author abaton
  */
 public class cmd_shop extends PlayerCommand {
@@ -252,7 +251,6 @@ public class cmd_shop extends PlayerCommand {
 	/**
 	 * 处理 list/buy/reload 等子命令。
 	 * Handles list/buy/reload and related sub-commands.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 命令参数 / command parameters
 	 */
@@ -293,7 +291,6 @@ public class cmd_shop extends PlayerCommand {
 	/**
 	 * 参数错误时提示用法。
 	 * Shows usage when arguments are invalid.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param message 失败提示消息 / failure message
 	 */

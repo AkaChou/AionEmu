@@ -35,7 +35,6 @@ import java.util.concurrent.Future;
 /**
  * 活动·污染暗道副本事件处理器。
  * Instance event handler for Event Contaminated Underpath.
- *
  * @author Encom
  */
 
@@ -83,7 +82,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
-	 *
 	 * @param object 玩家对象 ID / player object id
 	 * @return 玩家奖励记录 / player reward record
 	 */
@@ -95,7 +93,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 addPlayerReward。
 	 * Handle addPlayerReward.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@SuppressWarnings("unchecked")
@@ -110,7 +107,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
-	 *
 	 * @return 副本奖励对象 / instance reward object
 	 */
 	@Override
@@ -127,7 +123,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
-	 *
 	 * @param player 玩家 / player
 	 * @param npc 目标 NPC / target NPC
 	 */
@@ -181,7 +176,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc 死亡的 NPC / dead NPC
 	 */
 	@Override
@@ -275,7 +269,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 							/**
 							 * 处理 visit。
 							 * Handle visit.
-							 *
 							 * @param player 玩家 / player
 							 */
 							@Override
@@ -556,7 +549,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -619,7 +611,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -635,7 +626,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家打开门时处理。
 	 * Handle a player opening a door.
-	 *
 	 * @param player 玩家 / player
 	 * @param doorId 门 ID / door id
 	 */
@@ -661,7 +651,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -698,7 +687,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -719,7 +707,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 停止副本并结算。
 	 * Stop the instance and settle.
-	 *
 	 * @param player 玩家 / player
 	 */
 
@@ -767,7 +754,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -805,7 +791,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 延迟刷出 NPC。
 	 * Delayed NPC spawn.
-	 *
 	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
@@ -820,7 +805,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 延迟刷出 NPC 并广播消息。
 	 * Delayed NPC spawn with a broadcast message.
-	 *
 	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
@@ -837,7 +821,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 延迟刷出带实体 ID 的 NPC 并广播消息。
 	 * Delayed NPC spawn with entity id and a broadcast message.
-	 *
 	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
@@ -869,7 +852,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 延迟刷出带巡路线 NPC。
 	 * Delayed NPC spawn with a walker route.
-	 *
 	 * @param npcId NPC ID / NPC id
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
@@ -898,7 +880,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 移除指定 NPC。
 	 * Despawn the given NPC.
-	 *
 	 * @param npc 目标 NPC / target NPC
 	 */
 
@@ -916,7 +897,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 killNpc。
 	 * Handle killNpc.
-	 *
 	 * @param npcs NPC 列表 / NPC list
 	 */
 
@@ -928,7 +908,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 返回指定 ID 的 NPC 列表。
 	 * Return the NPC list for the given id.
-	 *
 	 * @param npcId NPC ID / NPC id
 	 * @return NPC 列表 / NPC list
 	 */
@@ -943,7 +922,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -955,7 +933,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -983,7 +960,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -995,7 +971,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 按阵营广播系统消息。
 	 * Broadcasts a system message by race.
-	 *
 	 * @param msg 消息 ID / message id
 	 * @param race 目标阵营 / target race
 	 * @param time 延迟毫秒 / delay millis
@@ -1013,7 +988,6 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override

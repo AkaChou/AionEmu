@@ -8,7 +8,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 /**
  * 碰撞致死行为者：与材质几何碰撞时杀死生物。
  * Collision die actor: kills the creature when colliding with material geometry.
- *
  * @author Rolandas
  */
 public class CollisionDieActor extends AbstractCollisionObserver implements IActor {

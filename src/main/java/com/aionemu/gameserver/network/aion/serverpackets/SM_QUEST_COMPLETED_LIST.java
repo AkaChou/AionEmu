@@ -26,7 +26,6 @@ public class SM_QUEST_COMPLETED_LIST extends AionServerPacket {
     /**
      * 使用给定参数构造 SM_QUEST_COMPLETED_LIST 包。
      * Creates a SM_QUEST_COMPLETED_LIST packet with the given parameters.
-     *
      * @param allQuests 任务状态列表 / quest state list
      */
     public SM_QUEST_COMPLETED_LIST(List<QuestState> allQuests) {

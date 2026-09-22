@@ -191,7 +191,6 @@ public final class PlayerQuestSpawnPort implements QuestSpawnPort {
 	/**
 	 * 既有权威 handle 是否仍代表世界中的任务 NPC。
 	 * Whether the authoritative handle still represents a quest NPC in the world.
-	 *
 	 * <p>真实 NPC 一旦被击杀或离开世界即视为陈旧，slot 必须允许重建；无法判定生命属性的
 	 * 替身或半初始化产物保持幂等，避免把正常的重复 after-commit 误判成重建请求。</p>
 	 * A real NPC counts as stale once it is dead or no longer in the world so the slot can be

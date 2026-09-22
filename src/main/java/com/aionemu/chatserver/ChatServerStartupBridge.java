@@ -23,7 +23,6 @@ public class ChatServerStartupBridge {
     /**
      * 可选注入进程运行时桥的 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of the process runtime bridge.
-     *
      * @param processBridgeProvider 进程桥提供者 / Process-bridge provider
      */
     @Autowired(required = false)
@@ -58,7 +57,6 @@ public class ChatServerStartupBridge {
     /**
      * 是否处于 boot 嵌入式运行模式。
      * Whether running in boot-embedded mode.
-     *
      * @return 嵌入式则为 true / {@code true} if boot-embedded
      */
     public boolean isBootEmbedded() {
@@ -77,7 +75,6 @@ public class ChatServerStartupBridge {
     /**
      * 当前系统时间毫秒。
      * Current system time in milliseconds.
-     *
      * @return 毫秒时间戳 / Epoch millis
      */
     public long currentTimeMillis() {
@@ -87,7 +84,6 @@ public class ChatServerStartupBridge {
     /**
      * 解析进程桥：优先 Spring 提供，否则新建。
      * Resolve the process bridge: prefer Spring provider, otherwise create a new one.
-     *
      * @return 进程运行时桥 / Process runtime bridge
      */
     private ChatProcessRuntimeBridge processBridge() {

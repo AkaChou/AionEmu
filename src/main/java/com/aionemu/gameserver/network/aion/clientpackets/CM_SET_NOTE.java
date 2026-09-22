@@ -10,7 +10,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_UPDATE_NOTE;
 /**
  * 客户端设置个人备注请求包。
  * Client packet for setting the player's personal note.
- *
  * @author Ben
  */
 public class CM_SET_NOTE extends AionClientPacket {

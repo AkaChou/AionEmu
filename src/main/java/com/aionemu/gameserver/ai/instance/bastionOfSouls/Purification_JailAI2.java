@@ -9,7 +9,6 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 /**
  * Bastion Of Souls 副本 NPC AI：Purification Jail（@AIName "Prison_Ice"），继承 NpcAI2。
  * Bastion Of Souls instance NPC AI: Purification Jail (@AIName "Prison_Ice"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Prison_Ice")

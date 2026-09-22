@@ -26,7 +26,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Beshmundir Temple 副本 NPC AI：Isbariya The Resolute（@AIName "isbariya"），继承 AggressiveNpcAI2。
  * Beshmundir Temple instance NPC AI: Isbariya The Resolute (@AIName "isbariya"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("isbariya")

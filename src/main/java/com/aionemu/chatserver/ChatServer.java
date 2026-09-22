@@ -22,7 +22,6 @@ import lombok.experimental.UtilityClass;
 /**
  * 聊天服务器入口与日志初始化静态门面。
  * Static facade for chat-server entry and logger initialization.
- *
  * @author ATracer, KID, nrg
  */
 @UtilityClass
@@ -73,7 +72,6 @@ public class ChatServer {
     /**
      * 由 boot 管理的服务生命周期启动聊天服（使用遗留依赖实现）。
      * Start ChatServer from the boot-managed service lifecycle (legacy dependencies).
-     *
      * @param args 启动参数 / Startup arguments
      */
     public static void start(String[] args) {
@@ -83,7 +81,6 @@ public class ChatServer {
     /**
      * 使用给定依赖启动聊天服启动序列。
      * Start the chat-server startup sequence with the given dependencies.
-     *
      * @param args 启动参数 / Startup arguments
      * @param dependencies 启动依赖 / Startup dependencies
      */

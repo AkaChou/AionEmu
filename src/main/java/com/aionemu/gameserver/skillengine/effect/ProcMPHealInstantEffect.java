@@ -10,7 +10,6 @@ import com.aionemu.gameserver.skillengine.model.HealType;
 /**
  * 触发即时 MP 治疗：按 MP 治疗类型计算并应用回复。
  * Proc instant MP heal: calculates and applies MP recovery via heal type MP.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -20,7 +19,6 @@ public class ProcMPHealInstantEffect extends AbstractHealEffect {
 	/**
 	 * 以 MP 类型计算治疗量。
 	 * Calculates heal amount as MP.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -31,7 +29,6 @@ public class ProcMPHealInstantEffect extends AbstractHealEffect {
 	/**
 	 * 以 MP 类型应用治疗。
 	 * Applies heal as MP.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

@@ -13,7 +13,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 护盾效果：注册攻击护盾观察者，按层数/数值吸收伤害。
  * Shield effect: registers an attack-shield observer that absorbs damage by hit value.
- *
  * @author ATracer modified by Wakizashi, Sippolo, kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)

@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Iluma 区域 NPC AI：Auronos（@AIName "auronos"），继承 AggressiveNpcAI2。
  * Iluma zone NPC AI: Auronos (@AIName "auronos"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("auronos")

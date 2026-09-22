@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Shugo Emperor Vault 副本 NPC AI：Opened Vault Door（@AIName "opened_vault_door"），继承 NpcAI2。
  * Shugo Emperor Vault instance NPC AI: Opened Vault Door (@AIName "opened_vault_door"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("opened_vault_door")

@@ -8,7 +8,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 战场同盟相关 NPC AI：Krotan Fortress Commander（@AIName "Krotan_Fortress_Commander"），继承 AggressiveNpcAI2。
  * Battlefield-union related NPC AI: Krotan Fortress Commander (@AIName "Krotan_Fortress_Commander"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("Krotan_Fortress_Commander")

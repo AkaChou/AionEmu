@@ -66,7 +66,6 @@ public class AbyssLandingService {
 	/**
 	 * 启动指定登陆点（按当前等级）。
 	 * Start the landing at the given id using its current level.
-	 *
 	 * @param id 登陆点 ID / landing location id
 	 */
 	public void startLanding(final int id) {
@@ -80,7 +79,6 @@ public class AbyssLandingService {
 	/**
 	 * 停止指定登陆点。
 	 * Stop the landing at the given id.
-	 *
 	 * @param id 登陆点 ID / landing location id
 	 */
 	public void stopLanding(int id) {
@@ -94,7 +92,6 @@ public class AbyssLandingService {
 	/**
 	 * 按状态刷出登陆点相关 NPC。
 	 * Spawn landing NPCs for the given location and state.
-	 *
 	 * landing location
 	 * spawn state
 	 */
@@ -113,7 +110,6 @@ public class AbyssLandingService {
 	/**
 	 * 清除指定登陆点已刷出的 NPC。
 	 * Despawn NPCs at the given landing location.
-	 *
 	 * landing location
 	 */
 	public static void despawn(LandingLocation loc) {
@@ -134,7 +130,6 @@ public class AbyssLandingService {
 	/**
 	 * 更新救赎登陆点积分（胜负加减），并检查是否升级。
 	 * Update Redemption landing points (add/subtract by outcome) and check for level-up.
-	 *
 	 * @param points 积分变化量 / points delta
 	 * @param type 积分类型 / points category
 	 * @param win 是否胜利加分 / true to gain points
@@ -228,7 +223,6 @@ public class AbyssLandingService {
 	/**
 	 * 更新先驱登陆点积分（胜负加减），并检查是否升级。
 	 * Update Harbinger landing points (add/subtract by outcome) and check for level-up.
-	 *
 	 * @param points 积分变化量 / points delta
 	 * @param type 积分类型 / points category
 	 * @param win 是否胜利加分 / true to gain points
@@ -322,7 +316,6 @@ public class AbyssLandingService {
 	/**
 	 * 向全服广播登陆点积分获取/失去公告。
 	 * Broadcast a landing-points gain/loss announcement to all players.
-	 *
 	 * @param pl 触发玩家 / source player
 	 * @param race 阵营描述 ID / race description id
 	 * @param name 目标名称描述 ID / target name description id
@@ -356,7 +349,6 @@ public class AbyssLandingService {
 	/**
 	 * 检查救赎登陆点是否因积分变化而升级/降级。
 	 * Check whether Redemption landing should level up/down after a points change.
-	 *
 	 * current points
 	 * @param gain 是否为获得积分 / true if points were gained
 	 */
@@ -390,7 +382,6 @@ public class AbyssLandingService {
 	/**
 	 * 检查先驱登陆点是否因积分变化而升级/降级。
 	 * Check whether Harbinger landing should level up/down after a points change.
-	 *
 	 * current points
 	 * @param gain 是否为获得积分 / true if points were gained
 	 */
@@ -424,7 +415,6 @@ public class AbyssLandingService {
 	/**
 	 * 救赎登陆点升级处理（刷怪、广播、发包）。
 	 * Handle Redemption landing level-up (spawn, broadcast, packets).
-	 *
 	 * new level
 	 */
 	public void levelUpRedemptionLanding(int level) {
@@ -442,7 +432,6 @@ public class AbyssLandingService {
 	/**
 	 * 先驱登陆点升级处理（刷怪、广播、发包）。
 	 * Handle Harbinger landing level-up (spawn, broadcast, packets).
-	 *
 	 * new level
 	 */
 	public void levelUpHarbingerLanding(int level) {
@@ -460,7 +449,6 @@ public class AbyssLandingService {
 	/**
 	 * 先驱登陆点降级处理。
 	 * Handle Harbinger landing level-down.
-	 *
 	 * new level
 	 */
 	public void onHarbingerLandingLevelDown(int level) {
@@ -478,7 +466,6 @@ public class AbyssLandingService {
 	/**
 	 * 救赎登陆点降级处理。
 	 * Handle Redemption landing level-down.
-	 *
 	 * new level
 	 */
 	public void onRedemptionLandingLevelDown(int level) {
@@ -496,7 +483,6 @@ public class AbyssLandingService {
 		/**
 	 * 纪念碑相关奖励积分入账。
 	 * Apply monument reward points for the given race/location.
-	 *
 	 * 阵营 / race
 	 * @param id 纪念碑/地点 ID / monument or location id
 	 * points
@@ -517,7 +503,6 @@ public class AbyssLandingService {
 	/**
 	 * 纪念碑被摧毁时的积分处理。
 	 * Apply monument-death point changes for the given race/location.
-	 *
 	 * 阵营 / race
 	 * @param id 纪念碑/地点 ID / monument or location id
 	 * points
@@ -540,7 +525,6 @@ public class AbyssLandingService {
 		/**
 	 * 指挥官相关奖励积分入账。
 	 * Apply commander reward points for the given race/location.
-	 *
 	 * 阵营 / race
 	 * @param id 地点 ID / location id
 	 * points
@@ -558,7 +542,6 @@ public class AbyssLandingService {
 	/**
 	 * 指挥官阵亡时的积分处理。
 	 * Apply commander-death point changes for the given race/location.
-	 *
 	 * 阵营 / race
 	 * @param id 地点 ID / location id
 	 * points
@@ -578,7 +561,6 @@ public class AbyssLandingService {
 		/**
 	 * 设施相关奖励积分入账。
 	 * Apply facility reward points for the given race.
-	 *
 	 * 阵营 / race
 	 * points
 	 */
@@ -595,7 +577,6 @@ public class AbyssLandingService {
 	/**
 	 * 玩家进入世界时同步登陆点状态包。
 	 * Sync landing-state packets when a player enters the world.
-	 *
 	 * @param player 进入世界的玩家 / entering player
 	 */
 	public void onEnterWorld(Player player) {
@@ -622,7 +603,6 @@ public class AbyssLandingService {
 	/**
 	 * 向指定玩家发送登陆点状态包。
 	 * Send landing-state packets to the given player.
-	 *
 	 * target player
 	 */
 	public void sendPacketToPlayer(Player player) {
@@ -632,11 +612,9 @@ public class AbyssLandingService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -655,7 +633,6 @@ public class AbyssLandingService {
 	/**
 	 * 注入 Spring ObjectProvider，供 getInstance 使用。
 	 * Inject the Spring ObjectProvider used by getInstance().
-	 *
 	 * Spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<AbyssLandingService> instanceProvider) {
@@ -665,7 +642,6 @@ public class AbyssLandingService {
 	/**
 	 * 按 ID 获取登陆点。
 	 * Get a landing location by id.
-	 *
 	 * @param id 登陆点 ID / landing location id
 	 * landing location
 	 */
@@ -676,7 +652,6 @@ public class AbyssLandingService {
 	/**
 	 * 返回救赎登陆点。
 	 * Return the Redemption landing location.
-	 *
 	 * @return 救赎登陆点 / Redemption landing
 	 */
 	public LandingLocation redemptionLanding() {
@@ -686,7 +661,6 @@ public class AbyssLandingService {
 	/**
 	 * 返回先驱登陆点。
 	 * Return the Harbinger landing location.
-	 *
 	 * @return 先驱登陆点 / Harbinger landing
 	 */
 	public LandingLocation harbingerLanding() {
@@ -696,7 +670,6 @@ public class AbyssLandingService {
 	/**
 	 * 返回全部登陆点映射。
 	 * Return the map of all landing locations.
-	 *
 	 * location map
 	 */
 	public static Map<Integer, LandingLocation> getLandingLocations() {

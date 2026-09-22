@@ -8,7 +8,6 @@ import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
 /**
  * 服务端频道聊天消息包。
  * Server packet for channel chat messages.
- *
  * @author ATracer
  */
 public class SM_CHANNEL_MESSAGE extends AbstractServerPacket {
@@ -18,7 +17,6 @@ public class SM_CHANNEL_MESSAGE extends AbstractServerPacket {
     /**
      * 构造频道消息服务端包。
      * Constructs a channel message server packet.
-     *
      * @param message chat message
      */
     public SM_CHANNEL_MESSAGE(Message message) {
@@ -29,7 +27,6 @@ public class SM_CHANNEL_MESSAGE extends AbstractServerPacket {
     /**
      * 写入频道、发送者与消息正文。
      * Writes the channel, sender and message body.
-     *
      * @param cHandler 客户端通道处理器 / client channel handler
      * @param buf 包写入器 / packet writer
      */

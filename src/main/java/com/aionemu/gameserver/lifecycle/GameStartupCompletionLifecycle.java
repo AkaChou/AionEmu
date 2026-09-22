@@ -38,7 +38,6 @@ public class GameStartupCompletionLifecycle {
     /**
      * 幂等记录启动完成信息。
      * Idempotently log startup completion.
-     *
      * @param startupTime 从启动日志计时起的总耗时（毫秒） / Total startup duration from log start (ms)
      */
     public synchronized void start(long startupTime) {
@@ -63,7 +62,6 @@ public class GameStartupCompletionLifecycle {
     /**
      * 是否已成功加载。
      * Whether loading completed successfully.
-     *
      * @return 已加载为 {@code true} / {@code true} when loaded
      */
     public synchronized boolean isLoaded() {
@@ -73,7 +71,6 @@ public class GameStartupCompletionLifecycle {
     /**
      * 最近一次启动耗时（毫秒）。
      * Last start duration in milliseconds.
-     *
      * @return 耗时毫秒；未启动为 -1 / duration ms, or -1 if never started
      */
     public synchronized long getLoadTimeMillis() {
@@ -83,7 +80,6 @@ public class GameStartupCompletionLifecycle {
     /**
      * 最近一次失败异常。
      * Last failure throwable.
-     *
      * @return 失败异常，无则为 null / throwable or null
      */
     public synchronized Throwable getLastFailure() {

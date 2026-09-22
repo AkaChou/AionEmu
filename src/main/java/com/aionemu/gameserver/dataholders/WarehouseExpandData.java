@@ -15,7 +15,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 仓库扩容 NPC 静态数据容器，按 NPC ID 索引扩容模板。
  * Warehouse expander static-data holder, indexing expand templates by NPC id.
- *
  * @author spufy
  */
 @XmlRootElement(name = "warehouse_expander")
@@ -39,7 +38,6 @@ public class WarehouseExpandData {
 	/**
 	 * 返回已加载的扩容模板数量。
 	 * Returns the number of loaded expand templates.
-	 *
 	 * @return 已加载的扩展模板数量 / Returns the number of loaded expand templates.
 	 */
 	public int size() {
@@ -49,7 +47,6 @@ public class WarehouseExpandData {
 	/**
 	 * 按 NPC ID 获取仓库扩容模板。
 	 * Returns the warehouse expand template for the given NPC id.
-	 *
 	 * @param id NPC ID / npc id
 	 * @return 扩容模板，不存在则为 null / expand template or null
 	 */

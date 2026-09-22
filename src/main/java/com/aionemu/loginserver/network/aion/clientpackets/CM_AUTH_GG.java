@@ -11,7 +11,6 @@ import java.nio.ByteBuffer;
 /**
  * 客户端 GameGuard 鉴权包：校验 sessionId 后进入 AUTHED_GG。
  * Client GameGuard auth packet: verify sessionId then move to AUTHED_GG.
- *
  * @author -Nemesiss-
  */
 public class CM_AUTH_GG extends AionClientPacket {
@@ -29,7 +28,6 @@ public class CM_AUTH_GG extends AionClientPacket {
     /**
      * 构造 CM_AUTH_GG 包。
      * Construct CM_AUTH_GG packet.
-     *
      * @param buf 包体数据 / Packet data
      * @param client 登录连接 / Login connection
      */
@@ -58,10 +56,6 @@ public class CM_AUTH_GG extends AionClientPacket {
             con.setState(State.AUTHED_GG);
             con.sendPacket(new SM_AUTH_GG(sessionId));
         } else {
-            /**
-             * sessionId 不匹配：通知客户端并断开。
-             * sessionId mismatch: notify client and disconnect.
-             */
             con.close(new SM_LOGIN_FAIL(AionAuthResponse.SYSTEM_ERROR), false);
         }
     }

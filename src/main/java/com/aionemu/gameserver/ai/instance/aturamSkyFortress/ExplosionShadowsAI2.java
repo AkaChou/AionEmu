@@ -15,7 +15,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Aturam Sky Fortress 副本 NPC AI：Explosion Shadows（@AIName "explosion_shadows"），继承 AggressiveNpcAI2。
  * Aturam Sky Fortress instance NPC AI: Explosion Shadows (@AIName "explosion_shadows"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("explosion_shadows")

@@ -42,7 +42,6 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 	/**
 	 * 卡鲁内克工坊（Karunerk's Workshop）制作结果。
 	 * Karunerk's Workshop craft result.
-	 *
 	 * @param actionId action type
 	 * @param craftItemId crafted item id
 	 * @param craftItemCount crafted item count
@@ -58,7 +57,6 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 	/**
 	 * 塔基冒险（Taki's Adventure）副本相关。
 	 * Taki's Adventure instance-related payload.
-	 *
 	 * action type
 	 * @param indun_id 副本/实例 ID / instance id
 	 */
@@ -70,7 +68,6 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 	/**
 	 * 穆尼鲁内克宝藏箱开启结果。
 	 * Munirunerk's Treasure chest open result.
-	 *
 	 * @param munirunerk_treasure 奖励物品映射（物品 ID → 数量） / reward map (item id → count)
 	 */
 	public SM_LUNA_SHOP(HashMap<Integer, Long> munirunerk_treasure) {
@@ -81,7 +78,6 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 	/**
 	 * 多里内克衣柜（Dorinerk's Wardrobe）外观应用。
 	 * Dorinerk's Wardrobe appearance apply.
-	 *
 	 * action type
 	 * whether applied
 	 * apply slot
@@ -99,7 +95,6 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 	/**
 	 * 衣柜槽位/物品数量同步。
 	 * Wardrobe slot and item size sync.
-	 *
 	 * @param actionId action type
 	 * @param slotSize slot size
 	 * @param itemSize item size
@@ -113,7 +108,6 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 	/**
 	 * 物品相关操作结果（含成功/失败标志）。
 	 * Item-related operation result with success/fail flag.
-	 *
 	 * action type
 	 * @param item 物品模板 / item template
 	 * @param fail 失败标志（0 成功 / 1 失败） / fail flag (0 success / 1 fail)
@@ -127,7 +121,6 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 	/**
 	 * 物品奖励/展示（含数量）。
 	 * Item reward/display payload with count.
-	 *
 	 * @param actionId action type
 	 * @param itemId item id
 	 * @param itemCount item count

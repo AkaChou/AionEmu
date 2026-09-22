@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Prestige Coins 活动 NPC AI：Prestige Society Medical Attendant（@AIName "prestige_society_medical_attendant"），继承 NpcAI2。
  * Prestige Coins event NPC AI: Prestige Society Medical Attendant (@AIName "prestige_society_medical_attendant"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("prestige_society_medical_attendant")

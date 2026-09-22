@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * IU 活动模板（静态数据/XML）。
  * XML template.
- *
  * @author Rinzler (Encom)
  */
 

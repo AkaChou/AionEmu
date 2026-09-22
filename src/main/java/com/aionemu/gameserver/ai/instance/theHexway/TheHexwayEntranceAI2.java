@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * The Hexway 副本 NPC AI：The Hexway Entrance（@AIName "hexway_portal"），继承 NpcAI2。
  * The Hexway instance NPC AI: The Hexway Entrance (@AIName "hexway_portal"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("hexway_portal")

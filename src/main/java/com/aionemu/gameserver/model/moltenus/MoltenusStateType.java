@@ -3,7 +3,6 @@ package com.aionemu.gameserver.model.moltenus;
 /**
  * 熔岩魔状态类型枚举。
  * Moltenus State Type enumeration.
- *
  * @author Rinzler (Encom)
  */
 

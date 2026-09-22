@@ -16,7 +16,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 世界地图数据容器，持有全部地图模板，数据源为 data/static_data/world_maps.xml。
  * World maps data holder containing all {@link WorldMapTemplate} objects, loaded from data/static_data/world_maps.xml.
- *
  * @author Luno
  */
 @XmlRootElement(name = "world_maps")
@@ -41,7 +40,6 @@ public class WorldMapsData implements Iterable<WorldMapTemplate> {
 	/**
 	 * 返回地图模板列表的迭代器。
 	 * Returns an iterator over the world map templates.
-	 *
 	 * @return 地图模板迭代器 / map template iterator
 	 */
 	@Override
@@ -52,7 +50,6 @@ public class WorldMapsData implements Iterable<WorldMapTemplate> {
 	/**
 	 * 返回已加载的地图数量。
 	 * Returns the number of loaded maps.
-	 *
 	 * @return 已加载的地图数量 / Returns the number of loaded maps.
 	 */
 	public int size() {
@@ -62,7 +59,6 @@ public class WorldMapsData implements Iterable<WorldMapTemplate> {
 	/**
 	 * 按世界 ID 获取地图模板。
 	 * Returns the world map template for the given world id.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @return 地图模板，不存在则为 null / map template or null
 	 */

@@ -49,7 +49,6 @@ public class Homing extends SummonedObject<Creature> {
 	/**
 	 * 判断玩家是否为敌对目标。
 	 * Whether the player is an enemy.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否敌对 / whether enemy
 	  */

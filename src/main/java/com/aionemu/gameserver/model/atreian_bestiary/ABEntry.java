@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 /**
  * AB 条目，用于艾特里亚图鉴相关逻辑。
  * AB Entry for atreian bestiary logic.
- *
  * @author Ranastic
  */
 

@@ -10,7 +10,6 @@ import lombok.Setter;
 /**
  * 熔岩魔刷新点模板（静态数据/XML）。
  * Moltenus spawn template (static data/XML).
- *
  * @author Rinzler (Encom)
  */
 

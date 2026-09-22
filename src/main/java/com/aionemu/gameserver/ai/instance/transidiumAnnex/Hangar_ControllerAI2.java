@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Transidium Annex 副本 NPC AI：Hangar Controller（@AIName "hangar_controller"），继承 NpcAI2。
  * Transidium Annex instance NPC AI: Hangar Controller (@AIName "hangar_controller"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("hangar_controller")

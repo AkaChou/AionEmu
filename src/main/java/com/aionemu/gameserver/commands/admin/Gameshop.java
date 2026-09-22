@@ -20,7 +20,6 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * 管理员游戏商城命令：增删商品/排行、设置或增加 Toll 点数。
  * Admin gameshop command: add/delete items and rankings, set or add Toll points.
- *
  * @author xTz
  */
 public class Gameshop extends AdminCommand {
@@ -32,7 +31,6 @@ public class Gameshop extends AdminCommand {
 	/**
 	 * 处理 add/delete/addranking/deleteranking/settoll/addtoll 等商城管理操作。
 	 * Handle add/delete/addranking/deleteranking/settoll/addtoll shop admin operations.
-	 *
 	 * @param admin 执行命令的管理员 / Admin executing the command
 	 * @param params 子命令与对应参数 / Subcommand and matching arguments
 	 */
@@ -278,7 +276,6 @@ public class Gameshop extends AdminCommand {
 	/**
 	 * 参数错误时显示命令语法。
 	 * Show command syntax on invalid arguments.
-	 *
 	 * @param player 接收提示的玩家 / Player receiving the hint
 	 */
 	@Override

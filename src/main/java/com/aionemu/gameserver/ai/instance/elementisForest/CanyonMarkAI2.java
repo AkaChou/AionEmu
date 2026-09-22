@@ -11,7 +11,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 /**
  * Elementis Forest 副本 NPC AI：Canyon Mark（@AIName "canyonmark"），继承 AggressiveNpcAI2。
  * Elementis Forest instance NPC AI: Canyon Mark (@AIName "canyonmark"), extends AggressiveNpcAI2.
- *
  * @author Luzien
  */
 @AIName("canyonmark")

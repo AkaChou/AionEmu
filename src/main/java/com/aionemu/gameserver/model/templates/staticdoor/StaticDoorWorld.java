@@ -12,7 +12,6 @@ import lombok.Getter;
 /**
  * 静态门世界模板（静态数据/XML）。
  * XML template.
- *
  * @author xTz
  */
 @Getter
@@ -23,8 +22,6 @@ public class StaticDoorWorld {
 	/**
 	 * 返回世界 ID。
 	 * Returns the world id.
-	 *
-	 * @return 世界 ID / the world id
 	 */
 	@XmlAttribute(name = "world")
 	protected int world;
@@ -34,7 +31,6 @@ public class StaticDoorWorld {
 	/**
 	 * 返回该世界的静态门模板列表。
 	 * Returns the static door templates of this world.
-	 *
 	 * @return 静态门模板列表 / the list of static door templates
 	 */
 	public List<StaticDoorTemplate> getStaticDoors() {

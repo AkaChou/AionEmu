@@ -6,7 +6,6 @@ import lombok.Getter;
 /**
  * 客户端/服务端加解密密钥对，基于 baseKey 生成并随包长度滚动更新。
  * Client/server encryption key pair derived from a base key and rolled with packet size.
- *
  * @author cura
  */
 @Getter
@@ -58,7 +57,6 @@ public class EncryptionKeyPair {
 	/**
 	 * 基于 baseKey 初始化客户端/服务端加密密钥。
 	 * Initializes client/server encryption keys from the base key.
-	 *
 	 * @param baseKey 随机整数基础密钥 / random integer base key
 	 */
 	public EncryptionKeyPair(int baseKey) {
@@ -96,7 +94,6 @@ public class EncryptionKeyPair {
 	/**
 	 * 校验客户端包是否正确解码且由 Aion 客户端正确编码。
 	 * Validates that the client packet was decoded correctly and coded by the Aion client.
-	 *
 	 * @param buf 包缓冲区 / packet buffer
 	 * @return 密钥对有效时为 {@code true} / {@code true} if valid
 	 */
@@ -107,7 +104,6 @@ public class EncryptionKeyPair {
 	/**
 	 * 解密缓冲区中的客户端包；成功时滚动更新客户端密钥。
 	 * Decrypts the client packet from this buffer; on success rolls the client key.
-	 *
 	 * @param buf 待解密缓冲区 / buffer to decrypt
 	 * @return 解密是否成功 / true if decryption succeeded
 	 */
@@ -119,33 +115,26 @@ public class EncryptionKeyPair {
 		final int size = buf.remaining();
 		byte[] clientPacketKey = keys[CLIENT];
 
-		/** 当前待解密字节下标 / index of the byte to decrypt */
 		int arrayIndex = buf.arrayOffset() + buf.position();
 
-		/** 前一加密字节 / previous encrypted byte */
 		int prev = data[arrayIndex];
 
-		/** 解密首字节 / decrypt first byte */
 		data[arrayIndex++] ^= (clientPacketKey[0] & 0xff);
 
-		/** 解密循环 / decrypt loop */
 		for (int i = 1; i < size; i++, arrayIndex++) {
 			int curr = data[arrayIndex] & 0xff;
 			data[arrayIndex] ^= (staticKey[i & 63] & 0xff) ^ (clientPacketKey[i & 7] & 0xff) ^ prev;
 			prev = curr;
 		}
 
-		/** 旧密钥为长整型 / old key as long */
 		long oldKey = ((long) clientPacketKey[0] & 0xff) | (((long) clientPacketKey[1] & 0xff) << 8)
 				| (((long) clientPacketKey[2] & 0xff) << 16) | (((long) clientPacketKey[3] & 0xff) << 24)
 				| (((long) clientPacketKey[4] & 0xff) << 32) | (((long) clientPacketKey[5] & 0xff) << 40)
 				| (((long) clientPacketKey[6] & 0xff) << 48) | (((long) clientPacketKey[7] & 0xff) << 56);
 
-		/** 按包长度滚动密钥 / roll key by packet size */
 		oldKey += size;
 
 		if (validateClientPacket(buf)) {
-			/** 写回新密钥 / write new key value */
 			clientPacketKey[0] = (byte) (oldKey & 0xff);
 			clientPacketKey[1] = (byte) (oldKey >> 8 & 0xff);
 			clientPacketKey[2] = (byte) (oldKey >> 16 & 0xff);
@@ -162,7 +151,6 @@ public class EncryptionKeyPair {
 	/**
 	 * 加密缓冲区中的服务端包，并滚动更新服务端密钥。
 	 * Encrypts the server packet from this buffer and rolls the server key.
-	 *
 	 * @param buf 待加密缓冲区 / buffer to encrypt
 	 */
 	public void encrypt(ByteBuffer buf) {
@@ -170,31 +158,24 @@ public class EncryptionKeyPair {
 		final int size = buf.remaining();
 		byte[] serverPacketKey = keys[SERVER];
 
-		/** 当前待加密字节下标 / index of the byte to encrypt */
 		int arrayIndex = buf.arrayOffset() + buf.position();
 
-		/** 加密首字节 / encrypt first byte */
 		data[arrayIndex] ^= (serverPacketKey[0] & 0xff);
 
-		/** 前一加密字节 / previous encrypted byte */
 		int prev = data[arrayIndex++];
 
-		/** 加密循环 / encrypt loop */
 		for (int i = 1; i < size; i++, arrayIndex++) {
 			data[arrayIndex] ^= (staticKey[i & 0x3F] & 0xff) ^ (serverPacketKey[i & 0x07] & 0xff) ^ prev;
 			prev = data[arrayIndex];
 		}
 
-		/** 旧密钥为长整型 / old key as long */
 		long oldKey = ((long) serverPacketKey[0] & 0xff) | (((long) serverPacketKey[1] & 0xff) << 8)
 				| (((long) serverPacketKey[2] & 0xff) << 16) | (((long) serverPacketKey[3] & 0xff) << 24)
 				| (((long) serverPacketKey[4] & 0xff) << 32) | (((long) serverPacketKey[5] & 0xff) << 40)
 				| (((long) serverPacketKey[6] & 0xff) << 48) | (((long) serverPacketKey[7] & 0xff) << 56);
 
-		/** 按包长度滚动密钥 / roll key by packet size */
 		oldKey += size;
 
-		/** 写回新密钥 / write new key value */
 		serverPacketKey[0] = (byte) (oldKey & 0xff);
 		serverPacketKey[1] = (byte) (oldKey >> 8 & 0xff);
 		serverPacketKey[2] = (byte) (oldKey >> 16 & 0xff);

@@ -12,13 +12,11 @@ import java.lang.reflect.Modifier;
 /**
  * 类加载/卸载注解处理监听器。
  * Class load/unload annotation processing listener.
- *
  * 该类负责处理类的加载和卸载事件，通过反射机制调用带有特定注解的静态方法：
  * This class handles class loading and unloading events by invoking annotated static methods through reflection:
  * - 处理@OnClassLoad 注解的方法 (Process methods with @OnClassLoad annotation)
  * - 处理@OnClassUnload 注解的方法 (Process methods with @OnClassUnload annotation)
  * - 自动管理方法的访问权限 (Automatically manage method accessibility)
- *
  * @author ATracer
  */
 @Slf4j
@@ -28,7 +26,6 @@ public class OnClassLoadUnloadListener implements ClassListener {
     /**
      * 处理类加载后的注解方法调用
      * Process annotated method calls after class loading
-     *
      * @param classes 需要处理的类数组 / Array of classes to process
      */
     @Override
@@ -41,7 +38,6 @@ public class OnClassLoadUnloadListener implements ClassListener {
     /**
      * 处理类卸载前的注解方法调用
      * Process annotated method calls before class unloading
-     *
      * @param classes 需要处理的类数组 / Array of classes to process
      */
     @Override
@@ -54,7 +50,6 @@ public class OnClassLoadUnloadListener implements ClassListener {
     /**
      * 执行带有指定注解的静态方法
      * Execute static methods with specified annotation
-     *
      * @param methods 要检查的方法数组 / Array of methods to check
      * @param annotationClass 目标注解类 / Target annotation class
      */

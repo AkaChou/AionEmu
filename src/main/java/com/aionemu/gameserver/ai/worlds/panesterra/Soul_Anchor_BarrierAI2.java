@@ -20,7 +20,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Panesterra 区域 NPC AI：Soul Anchor Barrier（@AIName "Soul_Anchor_Barrier"），继承 NpcAI2。
  * Panesterra zone NPC AI: Soul Anchor Barrier (@AIName "Soul_Anchor_Barrier"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Soul_Anchor_Barrier")

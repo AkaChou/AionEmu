@@ -26,7 +26,6 @@ public class SM_GROUP_DATA_EXCHANGE extends AionServerPacket {
 	/**
 	 * 默认 action=1 的数据交换构造。
 	 * Data-exchange constructor with default action=1.
-	 *
 	 * @param byteData 交换的二进制数据 / Binary payload to exchange
 	 */
 	public SM_GROUP_DATA_EXCHANGE(byte[] byteData) {

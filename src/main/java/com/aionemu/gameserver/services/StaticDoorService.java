@@ -22,8 +22,6 @@ public class StaticDoorService {
      * -- SETTER --
      *  设置 Spring 实例提供者。
      *  Sets the Spring instance provider.
-     *
-     * @param provider 实例提供者 / instance provider
      */
     @Setter
     private static volatile ObjectProvider<StaticDoorService> instanceProvider;
@@ -31,11 +29,9 @@ public class StaticDoorService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -54,7 +50,6 @@ public class StaticDoorService {
     /**
 	 * 尝试打开指定静态门；管理员会收到门/钥匙 ID 提示。
 	 * Attempts to open the given static door; admins receive door/key id hints.
-	 *
 	 * 玩家 / player
 	 * door id
 	 */
@@ -86,7 +81,6 @@ public class StaticDoorService {
 	/**
 	 * 校验玩家是否可开启该门（管理员、无钥匙门或消耗钥匙）。
 	 * Checks whether the player may open the door (admin, keyless, or consume a key).
-	 *
 	 * 玩家 / player
 	 * door id
 	 * @param keyId 钥匙物品 ID；0 无需钥匙，1 禁止开启 / key item id; 0 none, 1 locked
@@ -112,7 +106,6 @@ public class StaticDoorService {
 	/**
 	 * 判断管理员是否按配置拥有免钥匙开门权限。
 	 * Checks whether the administrator is configured to bypass door keys.
-	 *
 	 * @param player 玩家 / player
 	 * @return 允许免钥匙开门返回 true / true if key bypass is allowed
 	 */

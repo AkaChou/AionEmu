@@ -22,11 +22,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 阵营日常归属门禁：生产 XML 必须声明 {@code npc-faction-id}，且真的能进入该阵营的日常候选池。
- *
  * <p>背景：{@link NpcFactions#sendDailyQuest()} 的候选池按 {@code metadata.npcFactionId()} 过滤；
  * 缺少声明的任务永远不会被推送，而 {@code PlayerQuestStartEligibilityPort} 又会因此跳过阵营校验。
  * 曾出现 218 个任务（含 3505x Alabaster Order 日常）整体缺声明的情况。
- *
  * <p>Gate: faction dailies must declare their faction owner, and must actually land in that faction's
  * daily candidate pool.
  */
@@ -85,7 +83,6 @@ class QuestNpcFactionRetailGateTest {
 	/**
 	 * 轮换表要么没有该任务的记录（{@code isActiveOn} 视为每天可发），要么必须至少有一个星期位；
 	 * 全 0 掩码等于永远轮不到，且必须与合同阵营一致。
-	 *
 	 * <p>The rotation table either omits the quest (treated as always active) or must enable at least one
 	 * weekday; an all-zero mask can never be rotated in, and any row must match the reviewed faction.
 	 */

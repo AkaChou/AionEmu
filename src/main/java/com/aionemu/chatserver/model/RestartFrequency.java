@@ -3,7 +3,6 @@ package com.aionemu.chatserver.model;
 /**
  * 服务器重启频率枚举。
  * Server restart frequency enumeration.
- *
  * @author nrg
  */
 public enum RestartFrequency {
@@ -34,7 +33,6 @@ public enum RestartFrequency {
     /**
      * 构造重启频率枚举。
      * Constructs a restart frequency enum value.
-     *
      * @param id 频率 ID / frequency id
      */
 	RestartFrequency(int id) {
@@ -44,7 +42,6 @@ public enum RestartFrequency {
     /**
      * 获取频率 ID。
      * Returns the frequency id.
-     *
      * @return 频率 ID / frequency id
      */
     public int getID() {

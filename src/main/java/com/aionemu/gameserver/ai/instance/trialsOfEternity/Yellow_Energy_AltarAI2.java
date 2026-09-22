@@ -22,7 +22,6 @@ import java.util.List;
 /**
  * Trials Of Eternity 副本 NPC AI：Yellow Energy Altar（@AIName "Altar_Yellow"），继承 NpcAI2。
  * Trials Of Eternity instance NPC AI: Yellow Energy Altar (@AIName "Altar_Yellow"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Altar_Yellow")

@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 区域类型枚举。
  * Area Type enumeration.
- *
  * @author MrPoke
  */
 @XmlType(name = "AreaType")

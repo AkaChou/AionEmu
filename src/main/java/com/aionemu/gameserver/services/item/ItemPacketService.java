@@ -20,7 +20,6 @@ import lombok.Getter;
 /**
  * 物品数据包服务，同步物品增删改与装备状态。
  * Item packet service syncing item add/delete/update and equip state.
- *
  * @author ATracer
  */
 
@@ -66,7 +65,6 @@ public class ItemPacketService {
 		/**
 		 * getKinahUpdateTypeFromAddType 方法。
 		 * getKinahUpdateTypeFromAddType method.
-		 *
 		 * @param itemAddType 物品添加类型 / itemAddType
 		 * isIncrease
 		 * result
@@ -126,7 +124,6 @@ public class ItemPacketService {
 		/**
 		 * 由更新类型转换。
 		 * Converts from update type.
-		 *
 		 * updateType
 		 * result
 		 */
@@ -142,7 +139,6 @@ public class ItemPacketService {
 		/**
 		 * 由任务状态转换。
 		 * Converts from quest status.
-		 *
 		 * questStatus
 		 * result
 		 */
@@ -159,7 +155,6 @@ public class ItemPacketService {
 	/**
 	 * 信息变更后更新物品包。
 	 * Updates item packets after info change.
-	 *
 	 * 玩家 / player
 	 * item
 	 */
@@ -170,7 +165,6 @@ public class ItemPacketService {
 	/**
 	 * 信息变更后更新物品包。
 	 * Updates item packets after info change.
-	 *
 	 * 玩家 / player
 	 * item
 	 * updateType
@@ -182,7 +176,6 @@ public class ItemPacketService {
 	/**
 	 * 装备后更新物品包。
 	 * Updates item packets after equip.
-	 *
 	 * 玩家 / player
 	 * item
 	 */
@@ -193,7 +186,6 @@ public class ItemPacketService {
 	/**
 	 * 发送物品包。
 	 * Sends an item packet.
-	 *
 	 * 玩家 / player
 	 * storageType
 	 * item
@@ -247,7 +239,6 @@ public class ItemPacketService {
 	/**
 	 * 发送仓库更新包。
 	 * Sends a storage update packet.
-	 *
 	 * 玩家 / player
 	 * storageType
 	 * item

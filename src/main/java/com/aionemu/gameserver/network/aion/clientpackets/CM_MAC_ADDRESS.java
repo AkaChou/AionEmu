@@ -9,13 +9,8 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MAC_INFO;
 
 /**
-	 * 此包中客户端发送 MAC 地址。 / In this packet client is sending Mac Address - haha.
-	 */
-
-/**
  * 上报 MAC 地址与硬件标识的客户端包。
  * Client packet reporting MAC address and hardware identifier.
- *
  * @author -Nemesiss-, KID
  */
 @Slf4j
@@ -29,7 +24,6 @@ public class CM_MAC_ADDRESS extends AionClientPacket {
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余合法状态 / additional valid states

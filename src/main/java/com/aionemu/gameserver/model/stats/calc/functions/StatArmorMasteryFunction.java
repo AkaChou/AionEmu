@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.stats.CalculationType;
 /**
  * 属性 ArmorMastery 函数模型。
  * Stat Armor Mastery Function model.
- *
  * @author ATracer (based on Mr.Poke ArmorMasteryModifier)
  */
 public class StatArmorMasteryFunction extends StatFunctionProxy {

@@ -17,7 +17,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 宠物技能数据容器，按指令技能与宠物 NPC ID 索引技能映射。
  * Pet skill data holder, indexing skill mappings by order skill and pet npc id.
- *
  * @author ATracer
  */
 @XmlRootElement(name = "pet_skill_templates")
@@ -58,7 +57,6 @@ public class PetSkillData {
 	/**
 	 * 返回指令技能索引条目数量。
 	 * Returns the number of order-skill index entries.
-	 *
 	 * @return 指令技能索引条目数量 / Returns the number of order-skill index entries.
 	 */
 	public int size() {
@@ -68,7 +66,6 @@ public class PetSkillData {
 	/**
 	 * 按指令技能与宠物 NPC ID 获取宠物技能 ID。
 	 * Returns the pet skill id for the given order skill and pet npc id.
-	 *
 	 * @param orderSkill 指令技能 ID / order skill id
 	 * @param petNpcId 宠物 NPC ID / pet npc id
 	 * @return 宠物技能 ID / pet skill id
@@ -80,7 +77,6 @@ public class PetSkillData {
 	/**
 	 * 判断指定宠物是否拥有某技能。
 	 * Returns whether the given pet has the skill.
-	 *
 	 * @param petNpcId 宠物 NPC ID / pet npc id
 	 * @param skillId 技能 ID / skill id
 	 * @return 宠物是否拥有该技能 / whether the pet has the skill

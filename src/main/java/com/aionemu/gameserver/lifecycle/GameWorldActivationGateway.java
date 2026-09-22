@@ -28,7 +28,6 @@ public class GameWorldActivationGateway {
     /**
      * 注入掉落注册服务提供者。
      * Inject the drop-registration-service provider.
-     *
      * @param dropRegistrationServiceProvider 掉落注册服务提供者 / Drop-registration-service provider
      */
     @Autowired(required = false)
@@ -39,7 +38,6 @@ public class GameWorldActivationGateway {
     /**
      * 注入世界服务运行时桥提供者。
      * Inject the world-services runtime-bridge provider.
-     *
      * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
      */
     @Autowired(required = false)
@@ -50,7 +48,6 @@ public class GameWorldActivationGateway {
     /**
      * 激活世界：解析掉落服务、创建并激活 GameServer、标记玩家离线。
      * Activate the world: resolve drop service, create/activate GameServer, mark players offline.
-     *
      * @return 激活后的 GameServer 实例 / Activated GameServer instance
      */
     public GameServer activate() {
@@ -65,7 +62,6 @@ public class GameWorldActivationGateway {
     /**
      * 解析掉落注册服务：优先 Spring，否则运行时桥。
      * Resolve drop-registration service: prefer Spring, otherwise runtime bridge.
-     *
      * @return DropRegistrationService 实例 / DropRegistrationService instance
      */
     private DropRegistrationService dropRegistrationService() {
@@ -78,7 +74,6 @@ public class GameWorldActivationGateway {
     /**
      * 解析世界服务运行时桥：优先 Spring，否则新建。
      * Resolve the world-services runtime bridge: prefer Spring, otherwise create new.
-     *
      * @return 运行时桥 / Runtime bridge
      */
     private GameWorldServicesRuntimeBridge runtimeBridge() {

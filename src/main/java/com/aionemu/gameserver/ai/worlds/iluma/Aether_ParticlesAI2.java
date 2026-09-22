@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Iluma 区域 NPC AI：Aether Particles（@AIName "aether_particles"），继承 AggressiveNpcAI2。
  * Iluma zone NPC AI: Aether Particles (@AIName "aether_particles"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("aether_particles")

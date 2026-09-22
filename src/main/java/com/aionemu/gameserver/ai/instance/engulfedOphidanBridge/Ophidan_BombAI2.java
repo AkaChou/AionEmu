@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Engulfed Ophidan Bridge 副本 NPC AI：Ophidan Bomb（@AIName "Ophidan_Bomb"），继承 AggressiveNpcAI2。
  * Engulfed Ophidan Bridge instance NPC AI: Ophidan Bomb (@AIName "Ophidan_Bomb"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("Ophidan_Bomb")

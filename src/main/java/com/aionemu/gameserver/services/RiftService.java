@@ -31,7 +31,6 @@ import com.aionemu.gameserver.services.rift.RiftInformer;
 /**
  * 裂隙服务，管理世界裂隙开关、刷怪与定时计划。
  * Rift service managing world rifts open/close, spawns, and schedules.
- *
  * @author Rinzler (Encom)
  */
 public class RiftService {
@@ -85,7 +84,6 @@ public class RiftService {
 	/**
 	 * 校验裂隙 ID 或世界 ID 是否有效。
 	 * Validates whether the rift id or world id is valid.
-	 *
 	 * @param id 裂隙/世界 ID / rift or world id
 	 * whether valid
 	 */
@@ -109,7 +107,6 @@ public class RiftService {
 	/**
 	 * 按裂隙 ID 或世界 ID 开启裂隙。
 	 * Opens rifts by rift id or world id.
-	 *
 	 * @param id 裂隙 / 世界 ID / rift or world id
 	 * @return 是否成功开启 / whether opened
 	 */
@@ -140,7 +137,6 @@ public class RiftService {
 	/**
 	 * 按裂隙 ID 或世界 ID 关闭裂隙。
 	 * Closes rifts by rift id or world id.
-	 *
 	 * @param id 裂隙 / 世界 ID / rift or world id
 	 * @return 是否成功关闭 / whether closed
 	 */
@@ -169,7 +165,6 @@ public class RiftService {
 	/**
 	 * 开启指定裂隙地点并在结束后自动关闭。
 	 * Opens the given rift location and auto-closes after duration.
-	 *
 	 * @param location rift location
 	 */
 	public void openRifts(RiftLocation location) {
@@ -187,7 +182,6 @@ public class RiftService {
 	/**
 	 * 关闭单个裂隙地点并删除刷怪。
 	 * Closes a single rift location and deletes its spawns.
-	 *
 	 * @param location rift location
 	 */
 	public void closeRift(RiftLocation location) {
@@ -220,7 +214,6 @@ public class RiftService {
 	/**
 	 * 获取裂隙持续时长（小时）。
 	 * Returns the rift duration in hours.
-	 *
 	 * @return 持续小时数 / duration hours
 	 */
 	public int getDuration() {
@@ -230,7 +223,6 @@ public class RiftService {
 	/**
 	 * 按 ID 获取裂隙地点。
 	 * Returns the rift location by id.
-	 *
 	 * @param id 地点 ID / location id
 	 * location
 	 */
@@ -241,7 +233,6 @@ public class RiftService {
 	/**
 	 * 获取全部裂隙地点。
 	 * Returns all rift locations.
-	 *
 	 * locations map
 	 */
 	public Map<Integer, RiftLocation> getRiftLocations() {
@@ -251,7 +242,6 @@ public class RiftService {
 	/**
 	 * 获取服务单例（优先 Spring Provider）。
 	 * Returns the service singleton (prefers Spring provider).
-	 *
 	 * service instance
 	 */
 	public static RiftService getInstance() {
@@ -265,7 +255,6 @@ public class RiftService {
 	/**
 	 * 注入 Spring 的实例提供者。
 	 * Sets the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<RiftService> instanceProvider) {

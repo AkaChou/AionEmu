@@ -17,7 +17,6 @@ public class AbyssPointsListener implements AbyssPointsService.AbyssPointsListen
 	/**
 	 * 欧比斯点数增加回调。
 	 * Callback when abyss points are added.
-	 *
 	 * @param player 玩家 / player
 	 * @param abyssPoints 欧比斯点数 / abyss points
 	 */

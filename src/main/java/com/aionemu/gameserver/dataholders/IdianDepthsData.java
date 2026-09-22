@@ -18,7 +18,6 @@ import java.util.Map;
 /**
  * 伊迪安深渊地点数据容器，持有并索引全部 {@link IdianDepthsLocation}。
  * Container holding and indexing all {@link IdianDepthsLocation} instances.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -43,7 +42,6 @@ public class IdianDepthsData {
 	/**
 	 * 返回已加载的伊迪安深渊地点数量。
 	 * Returns the number of loaded Idian Depths locations.
-	 *
 	 * @return 已加载的Idian Depths 地点数量 / Returns the number of loaded Idian Depths locations.
 	 */
 	public int size() {
@@ -53,7 +51,6 @@ public class IdianDepthsData {
 	/**
 	 * 返回全部伊迪安深渊地点映射。
 	 * Returns the full Idian Depths location map.
-	 *
 	 * @return ID 到地点的映射 / map of id to location
 	 */
 	public Map<Integer, IdianDepthsLocation> getIdianDepthsLocations() {

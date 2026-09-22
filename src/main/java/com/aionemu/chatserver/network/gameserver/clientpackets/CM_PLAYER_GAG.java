@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 游戏服请求禁言玩家的客户端包。
  * Client packet by which a game server gags (mutes) a player.
- *
  * @author ViAl
  */
 @Slf4j(topic = "com.aionemu.chatserver.network.gameserver.clientpackets.CM_PLAYER_LOGOUT")
@@ -33,7 +32,6 @@ public class CM_PLAYER_GAG extends GsClientPacket {
     /**
      * 构造玩家禁言客户端包。
      * Constructs the player gag client packet.
-     *
      * @param buf 原始字节缓冲 / raw byte buffer
      * @param connection 所属游戏服连接 / owning game-server connection
      */

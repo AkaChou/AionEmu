@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 代理人（Agent）模板：静态数据/XML 映射。
  * Agent template: static data/XML mapping.
- *
  * @author Rinzler (Encom)
  */
 

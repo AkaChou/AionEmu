@@ -13,7 +13,6 @@ public class GeomUtil {
 	/**
 	 * 从源点按角度（度）与距离推算二维目标点。
 	 * Project a 2D target point from a source by angle (degrees) and distance.
-	 *
 	 * @param source 源点 / Source point
 	 * @param angle 角度（度） / Angle in degrees
 	 * @param distance 距离 / Distance
@@ -28,7 +27,6 @@ public class GeomUtil {
 	/**
 	 * 从源坐标沿单位向量方向按距离推算二维目标点。
 	 * Project a 2D target from source coordinates along a direction vector by distance.
-	 *
 	 * @param sX 源 X / Source X
 	 * @param sY 源 Y / Source Y
 	 * @param vecX 方向 X 分量 / Direction X component
@@ -43,7 +41,6 @@ public class GeomUtil {
 	/**
 	 * 计算从 {@code from} 指向 {@code to} 的单位方向向量。
 	 * Compute the unit direction vector from {@code from} toward {@code to}.
-	 *
 	 * @param from 起点 / Origin
 	 * @param to 终点 / Destination
 	 * @return 归一化方向向量 / Normalized direction vector
@@ -56,7 +53,6 @@ public class GeomUtil {
 	/**
 	 * 从源点沿方向向量按距离推算三维目标点。
 	 * Project a 3D target point from a source along a direction by distance.
-	 *
 	 * @param source 源点 / Source point
 	 * @param direction 方向向量 / Direction vector
 	 * @param distance 距离 / Distance
@@ -69,7 +65,6 @@ public class GeomUtil {
 	/**
 	 * 计算源点到指定坐标的三维欧氏距离。
 	 * Compute the 3D Euclidean distance from a source point to given coordinates.
-	 *
 	 * @param source 源点 / Source point
 	 * @param x2 目标 X / Target X
 	 * @param y2 目标 Y / Target Y
@@ -83,7 +78,6 @@ public class GeomUtil {
 	/**
 	 * 计算两点间的三维欧氏距离。
 	 * Compute the 3D Euclidean distance between two points.
-	 *
 	 * @param x1 起点 X / Origin X
 	 * @param y1 起点 Y / Origin Y
 	 * @param z1 起点 Z / Origin Z

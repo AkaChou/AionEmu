@@ -8,7 +8,6 @@ import com.aionemu.loginserver.network.aion.LoginConnection;
 /**
  * 登录服→客户端：握手初始化包，下发会话 ID、RSA 公钥与 Blowfish 密钥。
  * LoginServer → client: handshake init with session id, RSA public key and Blowfish key.
- *
  * <pre>
  * Format: dd b dddd s
  * d: session id
@@ -42,7 +41,6 @@ public final class SM_INIT extends AionServerPacket {
     /**
      * 从连接与 Blowfish 密钥构造 SM_INIT。
      * Constructs SM_INIT from the login connection and Blowfish key.
-     *
      * @param client 登录连接 / login connection
      * @param blowfishKey Blowfish 密钥 / Blowfish secret key
      */
@@ -53,7 +51,6 @@ public final class SM_INIT extends AionServerPacket {
     /**
      * 创建 SM_INIT 包。
      * Creates a new SM_INIT packet.
-     *
      * @param publicRsaKey RSA 公钥 / public RSA key
      * @param blowfishKey Blowfish 密钥 / Blowfish key
      * @param sessionId 会话标识 / session identifier

@@ -22,7 +22,6 @@ public final class ChatCoreServices implements DisposableBean {
     /**
      * 注册各核心服务的 Spring {@link ObjectProvider}。
      * Register Spring {@link ObjectProvider}s for core services.
-     *
      * @param idFactoryProvider ID 工厂提供者 / ID factory provider
      * @param gameServerServiceProvider 游戏服服务提供者 / Game server service provider
      * @param broadcastServiceProvider 广播服务提供者 / Broadcast service provider
@@ -43,7 +42,6 @@ public final class ChatCoreServices implements DisposableBean {
     /**
      * 获取 ID 工厂。
      * Obtain the ID factory.
-     *
      * @return ID 工厂实例 / ID factory instance
      */
     public static IdFactory idFactory() {
@@ -57,7 +55,6 @@ public final class ChatCoreServices implements DisposableBean {
     /**
      * 获取游戏服服务。
      * Obtain the game server service.
-     *
      * @return 游戏服服务实例 / Game server service instance
      */
     public static GameServerService gameServerService() {
@@ -71,7 +68,6 @@ public final class ChatCoreServices implements DisposableBean {
     /**
      * 获取广播服务。
      * Obtain the broadcast service.
-     *
      * @return 广播服务实例 / Broadcast service instance
      */
     public static BroadcastService broadcastService() {
@@ -85,7 +81,6 @@ public final class ChatCoreServices implements DisposableBean {
     /**
      * 获取聊天服务。
      * Obtain the chat service.
-     *
      * @return 聊天服务实例 / Chat service instance
      */
     public static ChatService chatService() {
@@ -111,7 +106,6 @@ public final class ChatCoreServices implements DisposableBean {
     /**
      * 回退到本地 ID 工厂。
      * Fall back to the local ID factory.
-     *
      * @return 回退实例 / fallback instance
      */
     private static IdFactory fallbackIdFactory() {
@@ -121,7 +115,6 @@ public final class ChatCoreServices implements DisposableBean {
     /**
      * 回退到本地游戏服服务。
      * Fall back to the local game server service.
-     *
      * @return 回退实例 / fallback instance
      */
     private static GameServerService fallbackGameServerService() {
@@ -131,7 +124,6 @@ public final class ChatCoreServices implements DisposableBean {
     /**
      * 回退到本地广播服务。
      * Fall back to the local broadcast service.
-     *
      * @return 回退实例 / fallback instance
      */
     private static BroadcastService fallbackBroadcastService() {
@@ -141,7 +133,6 @@ public final class ChatCoreServices implements DisposableBean {
     /**
      * 回退到本地聊天服务。
      * Fall back to the local chat service.
-     *
      * @return 回退实例 / fallback instance
      */
     private static ChatService fallbackChatService() {

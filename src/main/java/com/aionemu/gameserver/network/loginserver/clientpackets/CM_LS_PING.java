@@ -8,14 +8,12 @@ import com.aionemu.gameserver.network.loginserver.serverpackets.SM_LS_PONG;
 /**
  * 登录服心跳探测包，游戏服以当前进程 PID 回复 SM_LS_PONG。
  * LoginServer ping packet; Gameserver replies with SM_LS_PONG carrying the current process PID.
- *
  * @author KID
  */
 public class CM_LS_PING extends LsClientPacket {
 	/**
 	 * 构造函数。
 	 * Constructor.
-	 *
 	 * @param opCode 操作码 opcode
 	 */
 	public CM_LS_PING(int opCode) {

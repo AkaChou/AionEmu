@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * Evergale Canyon 副本 NPC AI：ID Eternity W Tele E To OP Up（@AIName "IDEternity_W_Tele_E_To_OP_Up"），继承 NpcAI2。
  * Evergale Canyon instance NPC AI: ID Eternity W Tele E To OP Up (@AIName "IDEternity_W_Tele_E_To_OP_Up"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("IDEternity_W_Tele_E_To_OP_Up")

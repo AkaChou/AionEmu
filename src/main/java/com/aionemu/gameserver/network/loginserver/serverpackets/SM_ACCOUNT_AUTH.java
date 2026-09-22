@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.loginserver.LsServerPacket;
 /**
  * 游戏服向登录服发起账号会话校验的服务端包。
  * Server packet used by the game server to ask if a session key is valid on the login server.
- *
  * @author -Nemesiss-
  */
 public class SM_ACCOUNT_AUTH extends LsServerPacket {
@@ -35,7 +34,6 @@ public class SM_ACCOUNT_AUTH extends LsServerPacket {
 	/**
 	 * 构造账号会话校验包。
 	 * Constructs a new account session-auth packet.
-	 *
 	 * @param accountId account identifier
 	 * @param loginOk loginOk part
 	 * @param playOk1 playOk1 part

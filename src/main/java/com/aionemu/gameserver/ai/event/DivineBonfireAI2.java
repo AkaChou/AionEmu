@@ -13,9 +13,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 活动事件 NPC AI：Divine Bonfire（@AIName "divine_bonfire"），继承 GeneralNpcAI2。
  * Event NPC AI: Divine Bonfire (@AIName "divine_bonfire"), extends GeneralNpcAI2.
- *
  * @author xTz
- * @modified bobobear
  */
 @AIName("divine_bonfire")
 public class DivineBonfireAI2 extends GeneralNpcAI2 {

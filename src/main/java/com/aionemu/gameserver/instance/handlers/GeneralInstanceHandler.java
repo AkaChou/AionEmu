@@ -17,7 +17,6 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 /**
  * 通用副本处理器基类：提供空默认实现与常用刷怪/消息工具方法。
  * General instance-handler base: no-op defaults plus common spawn/message helpers.
- *
  * @author ATracer
  */
 public class GeneralInstanceHandler implements InstanceHandler {
@@ -123,7 +122,6 @@ public class GeneralInstanceHandler implements InstanceHandler {
 	/**
 	 * 在当前副本刷出一次性 NPC。
 	 * Spawn a one-shot NPC in the current instance.
-	 *
 	 * @param npcId NPC 模板 ID / NPC template id
 	 * @param x X 坐标 / X coordinate
 	 * @param y Y 坐标 / Y coordinate
@@ -148,7 +146,6 @@ public class GeneralInstanceHandler implements InstanceHandler {
 	/**
 	 * 在当前副本刷出绑定实体 ID 的一次性 NPC。
 	 * Spawn a one-shot NPC bound to an entity id in the current instance.
-	 *
 	 * @param npcId NPC 模板 ID / NPC template id
 	 * @param x X 坐标 / X coordinate
 	 * @param y Y 坐标 / Y coordinate
@@ -166,7 +163,6 @@ public class GeneralInstanceHandler implements InstanceHandler {
 	/**
 	 * 按 NPC 模板 ID 从当前实例查找 NPC。
 	 * Look up an NPC by template id in the current instance.
-	 *
 	 * @param npcId NPC 模板 ID / NPC template id
 	 * @return NPC；不存在则为 {@code null} / NPC, or {@code null}
 	 */
@@ -177,7 +173,6 @@ public class GeneralInstanceHandler implements InstanceHandler {
 	/**
 	 * 向副本内发送喊话/系统消息（立即）。
 	 * Send a shout/system message inside the instance (immediately).
-	 *
 	 * @param msg 消息 ID / message id
 	 * @param Obj 关联对象 ID / related object id
 	 * @param isShout 是否喊话 / whether shout
@@ -190,7 +185,6 @@ public class GeneralInstanceHandler implements InstanceHandler {
 	/**
 	 * 向副本内发送喊话/系统消息（可延迟）。
 	 * Send a shout/system message inside the instance (optionally delayed).
-	 *
 	 * @param msg 消息 ID / message id
 	 * @param Obj 关联对象 ID / related object id
 	 * @param isShout 是否喊话 / whether shout
@@ -204,7 +198,6 @@ public class GeneralInstanceHandler implements InstanceHandler {
 	/**
 	 * 向副本内发送默认样式系统消息。
 	 * Send a default-style system message inside the instance.
-	 *
 	 * @param msg message id
 	 */
 	protected void sendMsg(int msg) {

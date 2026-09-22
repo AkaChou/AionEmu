@@ -19,9 +19,7 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * 冲刺效果：对目标造成物理伤害，并将施法者位移到目标附近（避免完全重叠）。
  * Dash effect: deals physical damage and relocates the effector near the target (avoids full overlap).
- *
  * @author ATracer
- * @modified 修复冲刺技能位置重叠问题，玩家不会直接落在目标身上
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DashEffect")
@@ -30,7 +28,6 @@ public class DashEffect extends DamageEffect {
 	/**
 	 * 结算伤害并将施法者移动到技能目标坐标。
 	 * Applies damage and moves the effector to the skill target position.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -46,7 +43,6 @@ public class DashEffect extends DamageEffect {
 	/**
 	 * 计算物理伤害与冲刺落点（按碰撞半径偏移，避免叠体）。
 	 * Calculates physical damage and dash landing offset by collision radii.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

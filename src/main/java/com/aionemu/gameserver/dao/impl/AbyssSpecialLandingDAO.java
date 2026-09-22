@@ -16,7 +16,6 @@ import java.util.Map;
 /**
  * 欧比斯特殊登陆点 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of AbyssSpecialLandingDAO.
- *
  * Updated for MySQL 8 - Fixed connection leaks.
  */
 @Slf4j
@@ -32,7 +31,6 @@ public class AbyssSpecialLandingDAO extends com.aionemu.gameserver.dao.AbyssSpec
     /**
      * 加载全部特殊登陆点状态，缺失的记录会自动插入。
      * Loads all special landing location states; missing rows are inserted automatically.
-     *
      * @param locations 模板位置映射 / template location map
      * @return 是否加载成功 / whether load succeeded
      */
@@ -69,7 +67,6 @@ public class AbyssSpecialLandingDAO extends com.aionemu.gameserver.dao.AbyssSpec
     /**
      * 持久化特殊登陆点。
      * Persists a special landing location.
-     *
      * @param location 特殊登陆点 / special landing location
      */
     @Override
@@ -80,7 +77,6 @@ public class AbyssSpecialLandingDAO extends com.aionemu.gameserver.dao.AbyssSpec
     /**
      * 更新特殊登陆点类型。
      * Updates the type of a special landing location.
-     *
      * @param locations 特殊登陆点 / special landing location
      * @return 是否更新成功 / whether update succeeded
      */
@@ -101,7 +97,6 @@ public class AbyssSpecialLandingDAO extends com.aionemu.gameserver.dao.AbyssSpec
     /**
      * 插入新的特殊登陆点（默认 NO_ACTIVE）。
      * Inserts a new special landing location (default NO_ACTIVE).
-     *
      * @param locations 特殊登陆点 / special landing location
      * @return 是否插入成功 / whether insert succeeded
      */
@@ -122,7 +117,6 @@ public class AbyssSpecialLandingDAO extends com.aionemu.gameserver.dao.AbyssSpec
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

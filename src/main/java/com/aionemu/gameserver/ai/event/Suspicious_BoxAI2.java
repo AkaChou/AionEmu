@@ -19,7 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * 活动事件 NPC AI：Suspicious Box（@AIName "suspicious_box"），继承 NpcAI2。
  * Event NPC AI: Suspicious Box (@AIName "suspicious_box"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("suspicious_box")

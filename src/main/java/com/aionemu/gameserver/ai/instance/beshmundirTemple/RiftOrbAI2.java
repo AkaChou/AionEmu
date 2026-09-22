@@ -18,7 +18,6 @@ import java.util.List;
 /**
  * Beshmundir Temple 副本 NPC AI：Rift Orb（@AIName "riftorb"），继承 NpcAI2。
  * Beshmundir Temple instance NPC AI: Rift Orb (@AIName "riftorb"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("riftorb")

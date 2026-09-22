@@ -39,7 +39,6 @@ import java.util.concurrent.Future;
 /**
  * 灵魂堡垒副本事件处理器。
  * Instance event handler for Bastion Of Souls.
- *
  * @author Encom
  */
 
@@ -56,8 +55,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	private Race spawnRace;
 		/** 视频种族 / video race */
 		private Race videoRace;
-	/** 开始时间 / start time */
-		/** idab1ere wave / idab1ere wave */
+	/** idab1ere wave / idab1ere wave */
 		private int IDAb1EreWave;
 	/** 副本时间戳 / instance timestamp */
 	private long instanceTime;
@@ -65,10 +63,8 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 		private int startDrakanHigh;
 		/** bridge drakan high / bridge drakan high */
 		private int bridgeDrakanHigh;
-		/** 副本计时器 / instance timer */
 	// Boss 波次。 / Boss Wave.
-		/** 灵魂堡垒任务 A1 / bastion task a1 */
-		/** 灵魂堡垒任务 A2 / bastion task a2 */
+	/** 灵魂堡垒任务 A2 / bastion task a2 */
 		private Future<?> bastionTaskA2;
 		/** 灵魂堡垒任务 A3 / bastion task a3 */
 		private Future<?> bastionTaskA3;
@@ -102,7 +98,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -188,7 +183,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -226,7 +220,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -324,7 +317,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家通过飞行环时处理。
 	 * Handle a player passing a flying ring.
-	 *
 	 * @param player 玩家 / player
 	 * @param flyingRing 飞行环标识 / flying-ring id
 	 * @return 结果 / result
@@ -336,7 +328,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				/**
 				 * 处理 visit。
 				 * Handle visit.
-				 *
 				 * @param player 玩家 / player
 				 */
 				@Override
@@ -370,7 +361,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -398,7 +388,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -566,8 +555,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				final int bastionExit3 = spawnRace == Race.ASMODIANS ? 731806 : 731805;
 				spawn(bastionExit3, 110.215485f, 633.55597f, 443.95813f, (byte) 14);
 			break;
-			///////////////////////////////////////////////////////////////////////////////
-			// Boss 困难 魔族。 / Boss Hard Asmodians.
+            // Boss 困难 魔族。 / Boss Hard Asmodians.
 			case 246496: //Suffering Opel.
 			    spawnBastionHardChest();
 				// sendMsg("[成功]：你已完成 <灵魂堡垒>"); / sendMsg("[SUCCES]: You have finished <Bastion Of Souls>");
@@ -624,7 +612,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -639,7 +626,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
-	 *
 	 * @param player 玩家 / player
 	 * @param npc NPC / npc
 	 */
@@ -903,7 +889,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -933,7 +918,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -963,7 +947,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -993,7 +976,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -1023,7 +1005,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -1053,7 +1034,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -1083,7 +1063,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -1113,7 +1092,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -1143,7 +1121,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -1173,7 +1150,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -1203,7 +1179,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -1230,7 +1205,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -1647,7 +1621,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -1685,7 +1658,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -1712,7 +1684,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -1723,7 +1694,6 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override

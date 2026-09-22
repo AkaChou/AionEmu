@@ -23,7 +23,6 @@ public class SM_HOUSE_EDIT extends AionServerPacket {
 	/**
 	 * 构造含仓库与物品对象 ID 的房屋编辑包（添加/移除等）。
 	 * Creates a house edit packet with store and item object ids (add/remove, etc.).
-	 *
 	 * @param action 编辑动作类型 / edit action type
 	 * store id
 	 * item object id
@@ -37,7 +36,6 @@ public class SM_HOUSE_EDIT extends AionServerPacket {
 	/**
 	 * 构造含放置坐标与旋转的房屋编辑包。
 	 * Creates a house edit packet with placement coordinates and rotation.
-	 *
 	 * @param action 编辑动作类型 / edit action type
 	 * item object id
 	 * @param x X 坐标 / x coordinate

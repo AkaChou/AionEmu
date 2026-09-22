@@ -12,7 +12,6 @@ import com.aionemu.gameserver.network.loginserver.serverpackets.SM_MACBAN_CONTRO
 /**
  * MAC 地址封禁管理器，维护内存封禁表并同步至登录服。
  * MAC ban manager maintaining an in-memory ban table and syncing to the login server.
- *
  * @author KID
  */
 @Slf4j
@@ -22,7 +21,6 @@ public class BannedMacManager {
 	/**
 	 * 获取管理器单例。
 	 * Returns the manager singleton.
-	 *
 	 * @return 管理器实例 / manager instance
 	 */
 	public static BannedMacManager getInstance() {
@@ -35,7 +33,6 @@ public class BannedMacManager {
 	/**
 	 * 封禁指定 MAC，并通知登录服。
 	 * Bans the given MAC and notifies the login server.
-	 *
 	 * target MAC
 	 * @param newTime 截止时间戳（毫秒） / end timestamp in ms
 	 * details
@@ -63,10 +60,8 @@ public class BannedMacManager {
 	/**
 	 * 解除指定 MAC 的封禁，并通知登录服。
 	 * Unbans the given MAC and notifies the login server.
-	 *
 	 * @param address target MAC
 	 * @param details details
-	 *
 	 * @return 是否成功解除 / true if unbanned
 	 */
 	public final boolean unbanAddress(String address, String details) {
@@ -83,10 +78,7 @@ public class BannedMacManager {
 	/**
 	 * 判断指定 MAC 当前是否被封禁。
 	 * Whether the given MAC is currently banned.
-	 *
 	 * target MAC
-	 *
-	 * @param address
 	 * @return 是否封禁中 / true if banned
 	 */
 	public final boolean isBanned(String address) {
@@ -100,7 +92,6 @@ public class BannedMacManager {
 	/**
 	 * 从数据库加载一条封禁记录到内存。
 	 * Loads one ban record from DB into memory.
-	 *
 	 * target MAC
 	 * @param time 截止时间戳（毫秒） / end timestamp in ms
 	 * details

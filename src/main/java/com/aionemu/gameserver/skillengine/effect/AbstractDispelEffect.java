@@ -29,7 +29,6 @@ public class AbstractDispelEffect extends EffectTemplate {
 	/**
 	 * 无参应用入口（子类覆盖并指定驱散类别）。
 	 * No-arg apply entry (subclasses override with a concrete dispel category).
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	public void applyEffect(Effect effect) {
@@ -38,7 +37,6 @@ public class AbstractDispelEffect extends EffectTemplate {
 	/**
 	 * 按驱散类别与目标槽位移除效果，驱散层数与强度随技能等级缩放。
 	 * Removes effects by dispel category and target slot; count and power scale with skill level.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 * @param type 驱散类别 / dispel category
 	 * @param slot 目标槽位 / target slot

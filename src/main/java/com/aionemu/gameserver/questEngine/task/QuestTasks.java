@@ -14,7 +14,6 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 /**
  * 任务跟随检查任务工厂，按不同目的地类型调度 {@link FollowingNpcCheckTask}。
  * Factory for quest follow-check tasks, scheduling {@link FollowingNpcCheckTask} for various destination types.
- *
  * @author ATracer
  */
 public class QuestTasks {
@@ -22,7 +21,6 @@ public class QuestTasks {
 	/**
 	 * 调度跟随至目标 NPC 的周期检查任务。
 	 * Schedules a periodic follow-check task toward a target NPC.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * @param npc 跟随 NPC / following NPC
 	 * @param target 目标 NPC / target NPC
@@ -36,7 +34,6 @@ public class QuestTasks {
 	/**
 	 * 调度跟随至指定 NPC 模板存活目标或刷新点的周期检查任务。
 	 * Schedules a periodic follow-check task toward a living NPC or its spawn point.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * @param npc 跟随 NPC / following NPC
 	 * @param npcTargetId 目标 NPC 模板 ID / target NPC template id
@@ -73,7 +70,6 @@ public class QuestTasks {
 	/**
 	 * 调度跟随至指定坐标的周期检查任务。
 	 * Schedules a periodic follow-check task toward the given coordinates.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * @param npc 跟随 NPC / following NPC
 	 * @param x 目标 X / Target X
@@ -99,7 +95,6 @@ public class QuestTasks {
 	/**
 	 * 监视诱导 NPC 到达指定坐标，并按显式策略完成 NPC 世界副作用。
 	 * Watches a lured NPC reach a coordinate and applies the explicit NPC world-side completion effect.
-	 *
 	 * @param env 任务环境 / quest environment
 	 * @param npc 被诱导的 NPC / lured NPC
 	 * @param x 目标 X / target X
@@ -120,7 +115,6 @@ public class QuestTasks {
 	/**
 	 * 调度跟随至指定区域的周期检查任务。
 	 * Schedules a periodic follow-check task toward the given zone.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * @param npc 跟随 NPC / following NPC
 	 * @param zoneName 目标区域 / target zone
@@ -134,7 +128,6 @@ public class QuestTasks {
 	/**
 	 * 调度跟随至双区域之一的周期检查任务。
 	 * Schedules a periodic follow-check task toward either of two zones.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * @param npc 跟随 NPC / following NPC
 	 * @param zoneName1 区域 1 / zone 1

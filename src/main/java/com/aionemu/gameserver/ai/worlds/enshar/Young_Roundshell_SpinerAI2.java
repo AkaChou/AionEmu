@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Enshar 区域 NPC AI：Young Roundshell Spiner（@AIName "young_roundshell_spiner"），继承 AggressiveNpcAI2。
  * Enshar zone NPC AI: Young Roundshell Spiner (@AIName "young_roundshell_spiner"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("young_roundshell_spiner")

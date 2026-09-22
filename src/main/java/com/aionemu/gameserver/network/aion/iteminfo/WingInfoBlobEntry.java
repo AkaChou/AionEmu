@@ -11,9 +11,7 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
  * 写入翅膀可装备的槽位掩码（无副槽位）。
  * Blob sent for wings.
  * Writes the wing slot mask (no secondary slot).
- *
  * @author -Nemesiss-
- * @modified Rolandas
  */
 public class WingInfoBlobEntry extends ItemBlobEntry {
 

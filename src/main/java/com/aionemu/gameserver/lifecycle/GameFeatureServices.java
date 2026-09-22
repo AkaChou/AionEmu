@@ -105,7 +105,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 构造并注册各功能服务实例提供者。
      * Construct and register instance providers for feature services.
-     *
      * @param disputeLandServiceProvider 争议之地服务提供者 / Dispute-land service provider
      * @param dredgionServiceProvider 钢铁之战服务提供者 / Dredgion service provider
      * @param asyunatarServiceProvider 阿修那塔服务提供者 / Asyunatar service provider
@@ -230,7 +229,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析 NPC 喊话服务。
      * Resolve the NPC-shouts service.
-     *
      * @return NPC 喊话服务 / NPC-shouts service
      */
     public static NpcShoutsService npcShoutsService() {
@@ -248,7 +246,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析钢铁之战服务。
      * Resolve the Dredgion service.
-     *
      * @return 钢铁之战服务 / Dredgion service
      */
     public static DredgionService2 dredgionService() {
@@ -258,7 +255,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析争议之地服务。
      * Resolve the dispute-land service.
-     *
      * @return 争议之地服务 / Dispute-land service
      */
     public static DisputeLandService disputeLandService() {
@@ -268,7 +264,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析阿修那塔服务。
      * Resolve the Asyunatar service.
-     *
      * @return 阿修那塔服务 / Asyunatar service
      */
     public static AsyunatarService asyunatarService() {
@@ -278,7 +273,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析护盾服务。
      * Resolve the shield service.
-     *
      * @return 护盾服务 / Shield service
      */
     public static ShieldService shieldService() {
@@ -288,7 +282,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析奖励服务。
      * Resolve the reward service.
-     *
      * @return 奖励服务 / Reward service
      */
     public static RewardService rewardService() {
@@ -298,7 +291,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析保护者征服者服务。
      * Resolve the protector-conqueror service.
-     *
      * @return 保护者征服者服务 / Protector-conqueror service
      */
     public static ProtectorConquerorService protectorConquerorService() {
@@ -308,7 +300,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析 FFA 服务。
      * Resolve the FFA service.
-     *
      * @return FFA 服务 / FFA service
      */
     public static FFAService ffaService() {
@@ -322,7 +313,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析天梯服务。
      * Resolve the ladder service.
-     *
      * @return 天梯服务 / Ladder service
      */
     public static LadderService ladderService() {
@@ -336,7 +326,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析攻城服务。
      * Resolve the siege service.
-     *
      * @return 攻城服务 / Siege service
      */
     public static SiegeService siegeService() {
@@ -353,7 +342,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析基地服务。
      * Resolve the base service.
-     *
      * @return 基地服务 / Base service
      */
     public static BaseService baseService() {
@@ -371,7 +359,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析 A 站服务。
      * Resolve the A-Station service.
-     *
      * @return A 站服务 / A-Station service
      */
     public static AStationService aStationService() {
@@ -381,7 +368,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析 F2P 服务。
      * Resolve the F2P service.
-     *
      * @return F2P 服务 / F2P service
      */
     public static F2pService f2pService() {
@@ -391,7 +377,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析风之峡谷服务。
      * Resolve the windy-gorge service.
-     *
      * @return 风之峡谷服务 / Windy-gorge service
      */
     public static WindyGorgeService windyGorgeService() {
@@ -401,7 +386,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析动作日志服务。
      * Resolve the motion-logging service.
-     *
      * @return 动作日志服务 / Motion-logging service
      */
     public static MotionLoggingService motionLoggingService() {
@@ -411,7 +395,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析基斯克服务。
      * Resolve the Kisk service.
-     *
      * @return 基斯克服务 / Kisk service
      */
     public static KiskService kiskService() {
@@ -425,7 +408,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析回购服务。
      * Resolve the repurchase service.
-     *
      * @return 回购服务 / Repurchase service
      */
     public static RepurchaseService repurchaseService() {
@@ -435,7 +417,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析掉落分配服务。
      * Resolve the drop-distribution service.
-     *
      * @return 掉落分配服务 / Drop-distribution service
      */
     public static DropDistributionService dropDistributionService() {
@@ -445,7 +426,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析土匪服务。
      * Resolve the bandit service.
-     *
      * @return 土匪服务 / Bandit service
      */
     public static BanditService banditService() {
@@ -455,7 +435,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析静态门服务。
      * Resolve the static-door service.
-     *
      * @return 静态门服务 / Static-door service
      */
     public static StaticDoorService staticDoorService() {
@@ -473,7 +452,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析系统邮件服务。
      * Resolve the system-mail service.
-     *
      * @return 系统邮件服务 / System-mail service
      */
     public static SystemMailService systemMailService() {
@@ -487,7 +465,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析加成服务。
      * Resolve the bonus service.
-     *
      * @return 加成服务 / Bonus service
      */
     public static BonusService bonusService() {
@@ -497,7 +474,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析宠物服务。
      * Resolve the pet service.
-     *
      * @return 宠物服务 / Pet service
      */
     public static PetService petService() {
@@ -511,7 +487,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析街机升级服务。
      * Resolve the arcade-upgrade service.
-     *
      * @return 街机升级服务 / Arcade-upgrade service
      */
     public static ArcadeUpgradeService arcadeUpgradeService() {
@@ -521,7 +496,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析阿特里亚图鉴服务。
      * Resolve the Atreian-bestiary service.
-     *
      * @return 阿特里亚图鉴服务 / Atreian-bestiary service
      */
     public static AtreianBestiaryService atreianBestiaryService() {
@@ -531,7 +505,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析融合服务。
      * Resolve the coalescence service.
-     *
      * @return 融合服务 / Coalescence service
      */
     public static CoalescenceService coalescenceService() {
@@ -541,7 +514,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 解析成长能量。
      * Resolve growth energy.
-     *
      * @return 成长能量 / Growth energy
      */
     public static GrowthEnergy growthEnergy() {
@@ -551,7 +523,6 @@ public final class GameFeatureServices implements DisposableBean {
     /**
      * 优先从 Spring 提供者取实例，否则使用回退供应器。
      * Prefer the Spring provider instance, otherwise use the fallback supplier.
-     *
      * @param provider Spring 提供者 / Spring provider
      * @param fallback 回退供应器 / Fallback supplier
      * @param <T> 服务类型 / Service type

@@ -11,7 +11,6 @@ import lombok.Getter;
 /**
  * 守护灵属性模板（静态数据/XML）。
  * Minion stats template (static data/XML).
- *
  * @author Falke_34
  */
 @Getter

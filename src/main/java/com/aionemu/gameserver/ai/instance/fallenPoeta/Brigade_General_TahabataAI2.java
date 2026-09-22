@@ -14,7 +14,6 @@ import java.util.List;
 /**
  * Fallen Poeta 副本 NPC AI：Brigade General Tahabata（@AIName "Brigade_General_Tahabata"），继承 AggressiveNpcAI2。
  * Fallen Poeta instance NPC AI: Brigade General Tahabata (@AIName "Brigade_General_Tahabata"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("Brigade_General_Tahabata")

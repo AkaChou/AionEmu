@@ -24,7 +24,6 @@ public class ArmsfusionService {
 	/**
 	 * 将副武器属性融合到主武器上，并消耗副武器与基纳。
 	 * Fuses the secondary weapon into the primary weapon, consuming the secondary item and kinah.
-	 *
 	 * @param player 玩家 / player
 	 * @param firstItemUniqueId 主武器唯一 ID / primary weapon object id
 	 * @param secondItemUniqueId 副武器唯一 ID / secondary weapon object id
@@ -112,7 +111,6 @@ public class ArmsfusionService {
 	/**
 	 * 按品质返回融合价格倍率。
 	 * Returns the fusion price multiplier for the given item quality.
-	 *
 	 * item quality
 	 * price rate
 	 */
@@ -131,7 +129,6 @@ public class ArmsfusionService {
 	/**
 	 * 拆解已融合武器，清除融合属性与融合石。
 	 * Breaks a fused weapon, clearing fusion data and fusion stones.
-	 *
 	 * @param player 玩家 / player
 	 * @param weaponToBreakUniqueId 待拆解武器唯一 ID / weapon object id to break
 	 */

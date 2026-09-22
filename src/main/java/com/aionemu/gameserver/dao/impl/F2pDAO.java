@@ -12,7 +12,6 @@ import java.sql.*;
 /**
  * F2P 账号 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of F2pDAO.
- *
  * Updated for MySQL 8.
  */
 @Slf4j
@@ -31,7 +30,6 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
     /**
      * 加载玩家 F2P 信息。
      * Loads F2P info for a player.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -60,7 +58,6 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
     /**
      * 存储 F2P 账号时间。
      * Stores F2P account time.
-     *
      * @param objectId 玩家对象 ID / player object id
      * @param time 剩余时间 / remaining time
      * @return 是否成功 / whether succeeded
@@ -85,7 +82,6 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
     /**
      * 更新 F2P 账号时间。
      * Updates F2P account time.
-     *
      * @param objectId 玩家对象 ID / player object id
      * @param time 剩余时间 / remaining time
      * @return 是否成功 / whether succeeded
@@ -115,7 +111,6 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
     /**
      * 删除 F2P 账号记录。
      * Deletes F2P account record.
-     *
      * @param objectId 玩家对象 ID / player object id
      * @return 是否成功 / whether succeeded
      */
@@ -138,7 +133,6 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
     /**
      * 保存玩家 F2P 数据。
      * Saves player F2P data.
-     *
      * @param player 玩家 / player
      * @return 是否成功 / whether succeeded
      */
@@ -160,7 +154,6 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
     /**
      * 获取 F2P 剩余时间。
      * Gets F2P remaining time.
-     *
      * @param objectId 玩家对象 ID / player object id
      * @return 剩余时间 / remaining time
      */
@@ -186,7 +179,6 @@ public class F2pDAO extends com.aionemu.gameserver.dao.F2pDAO {
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

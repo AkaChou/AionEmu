@@ -33,7 +33,6 @@ public class ChatServerRuntime implements ChatServerDependencies {
     /**
      * 使用本运行时依赖启动聊天服。
      * Start the chat server with this runtime as dependencies.
-     *
      * @param args 启动参数 / Startup arguments
      */
     public void start(String[] args) {

@@ -6,9 +6,7 @@ import lombok.AllArgsConstructor;
 /**
  * 请求响应处理器。
  * Request Response Handler game object.
- *
  * @author Ben
- * @modified Lyahim
  */
 @AllArgsConstructor
 public abstract class RequestResponseHandler {

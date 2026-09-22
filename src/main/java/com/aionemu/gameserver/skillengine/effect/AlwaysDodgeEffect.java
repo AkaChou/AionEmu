@@ -12,7 +12,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 必定闪避效果：在限定次数内强制将攻击判定为 DODGE。
  * Always-dodge effect: forces DODGE attack status for a limited number of hits.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -22,7 +21,6 @@ public class AlwaysDodgeEffect extends EffectTemplate {
 	/**
 	 * 将效果加入受影响者的效果控制器。
 	 * Adds the effect to the effected creature's effect controller.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -33,7 +31,6 @@ public class AlwaysDodgeEffect extends EffectTemplate {
 	/**
 	 * 注册攻击判定观察者，命中 DODGE 时消耗次数并可能结束效果。
 	 * Registers an attack-calc observer; DODGE hits consume charges and may end the effect.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -60,7 +57,6 @@ public class AlwaysDodgeEffect extends EffectTemplate {
 	/**
 	 * 移除攻击判定观察者。
 	 * Removes the attack-calc observer.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

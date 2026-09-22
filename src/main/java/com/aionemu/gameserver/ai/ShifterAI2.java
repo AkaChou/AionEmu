@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 位移/切换型 AI：触发位置或状态切换。
  * Shifter AI that triggers position or state transitions.
- *
  * @author Encom
  */
 @AIName("shifter")
@@ -18,7 +17,6 @@ public class ShifterAI2 extends ActionItemNpcAI2
 	/**
 	 * 使用交互物完成时的逻辑。
 	 * Logic when action-item use finishes.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override

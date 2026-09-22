@@ -35,9 +35,7 @@ import com.aionemu.gameserver.utils.collections.cachemap.CacheMapFactory;
 /**
  * 账号服务：作为 DAO 前端，负责加载与组装 Account 对象。
  * Account service front-end for DAOs responsible for loading and assembling Account objects.
- *
  * @author Luno
- * @modified cura
  */
 @Slf4j
 public class AccountService {
@@ -49,7 +47,6 @@ public class AccountService {
 	/**
 	 * 按 ID 获取账号，缓存未命中时从数据库加载，并刷新会话相关字段。
 	 * Returns the account for the given id, loading from DB on cache miss and refreshing session fields.
-	 *
 	 * 账号 ID / account id
 	 * account name
 	 * account time
@@ -57,7 +54,6 @@ public class AccountService {
 	 * membership
 	 * toll
 	 * luna
-	 *
 	 * @return 账号 / account
 	 */
 	public static Account getAccount(int accountId, String accountName, AccountTime accountTime, byte accessLevel,
@@ -90,7 +86,6 @@ public class AccountService {
 	/**
 	 * 删除到期待删角色，并在启用阵营比例限制时更新比例。
 	 * Removes characters whose deletion time has passed and updates race ratio when limited.
-	 *
 	 * @param account 账号 / account
 	 */
 	static void removeDeletedCharacters(Account account) {
@@ -120,7 +115,6 @@ public class AccountService {
 	/**
 	 * 删除空账号的账号仓库。
 	 * Deletes the account warehouse for an empty account.
-	 *
 	 * @param accountId 账号 ID / account id
 	 */
 	private static void removeAccountWH(int accountId) {
@@ -130,7 +124,6 @@ public class AccountService {
 	/**
 	 * 从数据库加载账号下角色、外观、装备、军团与仓库数据。
 	 * Loads account characters, appearance, equipment, legion and warehouse from the database.
-	 *
 	 * @param accountId 账号 ID / account id
 	 * @return 账号 / account
 	 */
@@ -155,11 +148,7 @@ public class AccountService {
 
 			LegionMember legionMember = DAOManager.getDAO(LegionMemberDAO.class).loadLegionMember(playerId);
 
-			/**
-			 * 仅加载角色选择界面展示用的装备及其镶嵌石。
-			 * Load only equipment and its stones to display on character selection screen.
-			 */
-			List<Item> equipment = DAOManager.getDAO(InventoryDAO.class).loadEquipment(playerId);
+            List<Item> equipment = DAOManager.getDAO(InventoryDAO.class).loadEquipment(playerId);
 
 			PlayerAccountData acData = new PlayerAccountData(playerCommonData, cbi, appereance, equipment,
 					legionMember);

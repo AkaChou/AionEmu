@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Reshanta 区域 NPC AI：Enraged Sulfur Guardian（@AIName "Ab1_BossNamed_60_01_Al"），继承 AggressiveNpcAI2。
  * Reshanta zone NPC AI: Enraged Sulfur Guardian (@AIName "Ab1_BossNamed_60_01_Al"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("Ab1_BossNamed_60_01_Al")

@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 传送门/传送点 AI：Refuge Corridor（@AIName "refuge_corridor"），继承 NpcAI2。
  * Portal/teleporter AI: Refuge Corridor (@AIName "refuge_corridor"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("refuge_corridor")

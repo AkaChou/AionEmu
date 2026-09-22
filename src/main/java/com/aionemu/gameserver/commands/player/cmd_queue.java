@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：报名参加 GM 正在举办的活动队列。
  * Player command: registers the player for an ongoing GM-hosted event queue.
- *
  * @author Kill3r
  */
 public class cmd_queue extends PlayerCommand {
@@ -26,7 +25,6 @@ public class cmd_queue extends PlayerCommand {
 	/**
 	 * 查找已开启报名的 GM 活动并尝试占位注册。
 	 * Finds a GM with event registration open and attempts to register a slot.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 未使用的参数 / unused parameters
 	 */

@@ -24,7 +24,6 @@ import java.util.Map;
 /**
  * NPC 喊话数据容器，按世界 ID 与 NPC ID 索引 {@link NpcShout}。
  * NPC shout data holder, indexing {@link NpcShout} by world id and npc id.
- *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -88,7 +87,6 @@ public class NpcShoutData {
 	 * 将加载期容器冻结为升序 int 数组索引：查询时不再为 worldId/npcId 装箱，也不再复制列表。
 	 * Freezes the load-time containers into ascending int-array indexes so lookups neither box
 	 * worldId/npcId nor copy the shout lists.
-	 *
 	 * @param byWorld 加载期按世界与 NPC 建立的索引 / load-time index by world and npc
 	 */
 	private void freeze(Map<Integer, Map<Integer, List<NpcShout>>> byWorld) {
@@ -107,7 +105,6 @@ public class NpcShoutData {
 	/**
 	 * 返回指定世界与 NPC 的喊话列表（不复制，调用方禁止修改）。
 	 * Returns the shout list of one world and npc (no copy; callers must not modify it).
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param npcId NPC ID / npc id
 	 * @return 列表或 null / list or null
@@ -144,7 +141,6 @@ public class NpcShoutData {
 	/**
 	 * 返回已加载的喊话条目数量。
 	 * Returns the number of loaded shout entries.
-	 *
 	 * @return 已加载的呐喊条目数量 / Returns the number of loaded shout entries.
 	 */
 	public int size() {
@@ -154,7 +150,6 @@ public class NpcShoutData {
 	/**
 	 * 获取全局喊话与世界限定喊话的合并副本；用完后请清理。
 	 * Returns a combined copy of global and world-specific shouts; clean up after use.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param npcId NPC ID / npc id
 	 * @return 喊话列表，不存在则为 null / shout list or null
@@ -175,7 +170,6 @@ public class NpcShoutData {
 	/**
 	 * 轻量检查是否存在喊话，不复制列表。
 	 * Lightweight check for any shouts without copying lists.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param npcId NPC ID / npc id
 	 * @return 存在喊话则为 true / true if any shout exists
@@ -187,7 +181,6 @@ public class NpcShoutData {
 	/**
 	 * 轻量检查是否存在指定事件类型的喊话。
 	 * Lightweight check for shouts of the given event type.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param npcId NPC ID / npc id
 	 * @param type 喊话事件类型 / shout event type
@@ -202,7 +195,6 @@ public class NpcShoutData {
 	/**
 	 * 是否存在指定事件类型的喊话。
 	 * Whether the given list contains a shout of the requested event type.
-	 *
 	 * @param shouts 喊话列表（可为 null） / shout list (may be null)
 	 * @param type 事件类型 / event type
 	 * @return 存在则为 true / true if present
@@ -222,7 +214,6 @@ public class NpcShoutData {
 	/**
 	 * 按事件类型 / 模式 / 技能序号筛选 NPC 喊话。
 	 * Filters NPC shouts by event type, pattern and skill number.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param npcId NPC ID / npc id
 	 * @param type 喊话事件类型 / shout event type

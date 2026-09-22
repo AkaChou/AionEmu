@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Contamined Underpath 副本 NPC AI：Defense Turret Platform（@AIName "defense_turret_platform"），继承 NpcAI2。
  * Contamined Underpath instance NPC AI: Defense Turret Platform (@AIName "defense_turret_platform"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("defense_turret_platform")

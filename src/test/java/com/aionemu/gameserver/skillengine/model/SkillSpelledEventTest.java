@@ -62,13 +62,7 @@ class SkillSpelledEventTest {
 		TestCreature caster = objenesis.newInstance(TestCreature.class);
 		TestCreature target = objenesis.newInstance(TestCreature.class);
 		Npc observer = objenesis.newInstance(Npc.class);
-		/**
-		 * Objenesis 跳过构造函数，objectId 为 null；knownObjects 现为 ConcurrentHashMap（拒绝 null 键），
-		 * 生产环境中 objectId 永不为 null，因此这里补一个真实 ID。
-		 * Objenesis skips constructors, so objectId would be null; knownObjects is now a
-		 * ConcurrentHashMap (rejects null keys) while production ids are never null, so assign a real id.
-		 */
-		setField(AionObject.class, observer, "objectId", 20001);
+        setField(AionObject.class, observer, "objectId", 20001);
 		RecordingAI observerAi = new RecordingAI();
 		observer.setAi2(observerAi);
 		caster.setKnownlist(new KnownList(caster));
@@ -161,7 +155,6 @@ class SkillSpelledEventTest {
 	/**
 	 * 反射写入被测对象的字段（含 final 的 objectId）。
 	 * Writes a field (including the final objectId) on the object under test.
-	 *
 	 * @param owner  字段声明类 / declaring class
 	 * @param target 目标对象 / target object
 	 * @param name   字段名 / field name

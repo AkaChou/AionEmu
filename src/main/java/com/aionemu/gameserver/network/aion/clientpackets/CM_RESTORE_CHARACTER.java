@@ -10,7 +10,6 @@ import com.aionemu.gameserver.services.player.PlayerService;
 /**
  * 客户端取消角色删除（恢复角色）请求包。
  * Client packet for cancelling character deletion (restoring a character).
- *
  * @author -Nemesiss-
  */
 public class CM_RESTORE_CHARACTER extends AionClientPacket {

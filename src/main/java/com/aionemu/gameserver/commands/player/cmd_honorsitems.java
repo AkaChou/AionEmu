@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：荣誉/声望装备信息展示与兑换发放。
  * Player command: shows honor/reputation gear info and exchanges rewards.
- *
  * @author Maestross
  */
 public class cmd_honorsitems extends PlayerCommand {
@@ -23,7 +22,6 @@ public class cmd_honorsitems extends PlayerCommand {
 	/**
 	 * 按子命令展示分类信息或发放对应荣誉装备。
 	 * Shows category info or grants honor gear by sub-command.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 命令参数 / command parameters
 	 */
@@ -915,7 +913,6 @@ public class cmd_honorsitems extends PlayerCommand {
 	/**
 	 * 参数错误时提示用法。
 	 * Shows usage when arguments are invalid.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param message 失败提示消息 / failure message
 	 */

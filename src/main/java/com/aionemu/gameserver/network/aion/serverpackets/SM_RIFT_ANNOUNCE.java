@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 向客户端同步裂隙（Rift）状态、归属或入口信息。
  * Server packet synchronizing rift status, ownership, or portal info to the client.
- *
  * @author Sweetkr
  */
 public class SM_RIFT_ANNOUNCE extends AionServerPacket {
@@ -23,7 +22,6 @@ public class SM_RIFT_ANNOUNCE extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_RIFT_ANNOUNCE 包。
 	 * Rift announce packet
-	 *
 	 * @param rifts 裂隙映射 / rift map
 	 */
 	public SM_RIFT_ANNOUNCE(Map<Integer, Integer> rifts) {
@@ -34,7 +32,6 @@ public class SM_RIFT_ANNOUNCE extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_RIFT_ANNOUNCE 包。
 	 * Creates a SM_RIFT_ANNOUNCE packet with the given parameters.
-	 *
 	 * @param gelkmaros gelkmaros flag
 	 * @param inggison inggison flag
 	 */
@@ -47,7 +44,6 @@ public class SM_RIFT_ANNOUNCE extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_RIFT_ANNOUNCE 包。
 	 * Rift announce packet
-	 *
 	 * @param rift 裂隙控制器 / rift controller
 	 * is master
 	 */
@@ -59,7 +55,6 @@ public class SM_RIFT_ANNOUNCE extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_RIFT_ANNOUNCE 包。
 	 * Rift despawn
-	 *
 	 * @param objectId object id
 	 */
 	public SM_RIFT_ANNOUNCE(int objectId) {

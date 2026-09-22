@@ -11,7 +11,6 @@ import lombok.Getter;
 /**
  * Rectangle 区域，用于几何相关逻辑。
  * Rectangle Area for geometry logic.
- *
  * @author SoulKeeper
  */
 @Getter
@@ -44,7 +43,6 @@ public class RectangleArea extends AbstractArea {
 	/**
 	 * 由给定点创建新的矩形区域，点的顺序无关紧要。
 	 * Creates new area from given points. Point order doesn't matter.
-	 *
 	 * @param zoneName 区域名称 / zone name
 	 * @param worldId 世界 ID / world id
 	 * @param p1 顶点 1 / point 1
@@ -72,7 +70,6 @@ public class RectangleArea extends AbstractArea {
 	/**
 	 * 由给定坐标创建新的矩形区域。
 	 * Creates new area from given coords.
-	 *
 	 * @param zoneName 区域名称 / zone name
 	 * @param worldId 世界 ID / world id
 	 * @param minX 最小 X 坐标 / minimal x point

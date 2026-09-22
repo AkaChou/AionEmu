@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Linkgate Foundry 副本 NPC AI：Central Lab Entrance（@AIName "central_lab_entrance"），继承 NpcAI2。
  * Linkgate Foundry instance NPC AI: Central Lab Entrance (@AIName "central_lab_entrance"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("central_lab_entrance")
@@ -29,7 +28,6 @@ public class Central_Lab_EntranceAI2 extends NpcAI2
 	/**
 	 * 处理对话选择：按消耗的钥匙数量（1/3/5 把）开启对应难度的 Belsagos 领域并传送玩家。
 	 * Handles dialog selection: consumes keys (1/3/5) to open the matching Belsagos realm and teleports the player.
-	 *
 	 * @param player 对话玩家 / dialog player
 	 * @param dialogId 对话框选项 ID / dialog option ID
 	 * @param questId 任务 ID / quest ID

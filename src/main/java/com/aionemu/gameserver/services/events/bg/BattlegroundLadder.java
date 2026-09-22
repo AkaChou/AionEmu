@@ -9,7 +9,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * 战场天梯评分域：胜/负场与 Elo 评分变化的记录与批量更新。
  * Battleground ladder domain: win/loss recording, Elo delta and batch ladder updates.
- *
  * <p>本类从 {@link Battleground} 拆出；{@code Battleground} 保留同名 protected 委托方法，
  * 子类（DeathmatchBg / SoloSurvivorBg / TwoTeamBg / TwoTeamSmallBg）的调用方式不变。
  * Split out of {@link Battleground}; the base class keeps protected delegating methods, so subclass
@@ -23,7 +22,6 @@ final class BattlegroundLadder {
 	/**
 	 * 读取天梯 DAO。
 	 * Resolves the ladder DAO.
-	 *
 	 * @return 天梯 DAO / ladder DAO
 	 */
 	static LadderDAO dao() {
@@ -33,7 +31,6 @@ final class BattlegroundLadder {
 	/**
 	 * 记录玩家胜场与评分变化。
 	 * Records a player win and rating change.
-	 *
 	 * @param player       玩家 / player
 	 * @param ratingChange 评分变化量 / rating delta
 	 */
@@ -46,7 +43,6 @@ final class BattlegroundLadder {
 	/**
 	 * 记录玩家负场与评分变化。
 	 * Records a player loss and rating change.
-	 *
 	 * @param player       玩家 / player
 	 * @param ratingChange 评分变化量 / rating delta
 	 */
@@ -59,7 +55,6 @@ final class BattlegroundLadder {
 	/**
 	 * 按胜负双方批量更新天梯。
 	 * Batch ladder update for winners and losers.
-	 *
 	 * @param winner 胜方玩家集合 / winners
 	 * @param loser  败方玩家集合 / losers
 	 */
@@ -93,7 +88,6 @@ final class BattlegroundLadder {
 	/**
 	 * 计算 Elo 评分变化量。
 	 * Calculates the Elo rating change.
-	 *
 	 * @param ratingA 胜方平均评分 / rating A
 	 * @param ratingB 败方平均评分 / rating B
 	 * @return 评分变化量 / delta

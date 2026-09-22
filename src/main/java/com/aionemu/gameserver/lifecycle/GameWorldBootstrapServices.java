@@ -48,7 +48,6 @@ public final class GameWorldBootstrapServices implements DisposableBean {
     /**
      * 构造并注册各世界引导组件的实例提供者。
      * Construct and register instance providers for world-bootstrap components.
-     *
      * @param idFactoryProvider IDFactory 提供者 / IDFactory provider
      * @param zoneServiceProvider ZoneService 提供者 / ZoneService provider
      * @param hotspotTeleportServiceProvider HotspotTeleportService 提供者 / HotspotTeleportService provider
@@ -77,7 +76,6 @@ public final class GameWorldBootstrapServices implements DisposableBean {
     /**
      * 解析 IDFactory：优先 Spring，否则回退。
      * Resolve IDFactory: prefer Spring, otherwise fallback.
-     *
      * @return IDFactory 实例 / IDFactory instance
      */
     public static IDFactory idFactory() {
@@ -95,7 +93,6 @@ public final class GameWorldBootstrapServices implements DisposableBean {
     /**
      * 解析 ZoneService：优先 Spring，否则回退。
      * Resolve ZoneService: prefer Spring, otherwise fallback.
-     *
      * @return ZoneService 实例 / ZoneService instance
      */
     public static ZoneService zoneService() {
@@ -113,7 +110,6 @@ public final class GameWorldBootstrapServices implements DisposableBean {
     /**
      * 解析 HotspotTeleportService：优先 Spring，否则回退。
      * Resolve HotspotTeleportService: prefer Spring, otherwise fallback.
-     *
      * @return HotspotTeleportService 实例 / HotspotTeleportService instance
      */
     public static HotspotTeleportService hotspotTeleportService() {
@@ -131,7 +127,6 @@ public final class GameWorldBootstrapServices implements DisposableBean {
     /**
      * 解析 World：优先 Spring，否则回退。
      * Resolve World: prefer Spring, otherwise fallback.
-     *
      * @return World 实例 / World instance
      */
     public static World world() {

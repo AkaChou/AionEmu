@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 /**
  * 请求赛季排行/个人历史记录的客户端包。
  * Client packet requesting season ranking or personal history data.
- *
  * @author Wnkrz
  */
 public class CM_MY_HISTORY extends AionClientPacket {
@@ -17,7 +16,6 @@ public class CM_MY_HISTORY extends AionClientPacket {
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余合法状态 / additional valid states

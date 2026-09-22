@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 切换管理员对玩家/NPC 中立关系（不触发敌对）的命令。
  * Admin command to toggle admin neutrality toward players and/or NPCs.
- *
  * @author Sarynth, (edited by Pan)
  */
 public class Neutral extends AdminCommand {
@@ -25,7 +24,6 @@ public class Neutral extends AdminCommand {
 	/**
 	 * 设置对 players、npcs、all 的中立，或 cancel 恢复默认敌对。
 	 * Set neutrality for players, npcs, or all, or cancel back to default enmity.
-	 *
 	 * @param admin 执行 GM / Admin player
 	 * @param params Mode: players|npcs|all|cancel|help。
 	 */
@@ -83,7 +81,6 @@ public class Neutral extends AdminCommand {
 	/**
 	 * 参数错误时显示语法与 help 提示。
 	 * Show syntax and help hint when parameters are invalid.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

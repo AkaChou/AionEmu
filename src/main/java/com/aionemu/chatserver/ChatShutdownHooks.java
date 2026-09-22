@@ -12,7 +12,6 @@ final class ChatShutdownHooks {
     /**
      * 取得共享回退 {@link ShutdownHook} 并绑定进程桥。
      * Obtain the shared fallback {@link ShutdownHook} and bind the process bridge.
-     *
      * @param processBridge 进程运行时桥 / Process runtime bridge
      * @return 已配置的关停钩子 / Configured shutdown hook
      */

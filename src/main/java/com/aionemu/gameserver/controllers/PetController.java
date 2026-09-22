@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 宠物控制器，管理宠物可见性与心情值更新任务。
  * Pet controller that manages pet visibility and mood-update tasks.
- *
  * @author ATracer
  */
 public class PetController extends VisibleObjectController<Pet> {
@@ -20,7 +19,6 @@ public class PetController extends VisibleObjectController<Pet> {
 	/**
 	 * 宠物看到其他可见对象时的回调（当前无逻辑）。
 	 * Callback when the pet sees another visible object (currently no-op).
-	 *
 	 * @param object 进入视野的对象 / the object entering sight
 	 */
 	@Override
@@ -31,7 +29,6 @@ public class PetController extends VisibleObjectController<Pet> {
 	/**
 	 * 宠物不再看到其他可见对象时的回调（当前无逻辑）。
 	 * Callback when the pet no longer sees another visible object (currently no-op).
-	 *
 	 * @param object 离开视野的对象 / the object leaving sight
 	 * @param isOutOfRange 是否因超出距离离开 / whether the leave is due to being out of range
 	 */
@@ -53,7 +50,6 @@ public class PetController extends VisibleObjectController<Pet> {
 		/**
 		 * 构造宠物更新任务。
 		 * Constructs a pet update task.
-		 *
 		 * @param player 宠物所属玩家 / owner player of the pet
 		 */
 		public PetUpdateTask(Player player) {

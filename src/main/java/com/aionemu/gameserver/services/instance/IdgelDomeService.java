@@ -34,7 +34,6 @@ public class IdgelDomeService {
      * -- SETTER --
      *  设置服务提供者。
      *  Sets the service provider.
-     *
      */
     @Setter
     private static volatile ObjectProvider<IdgelDomeService> instanceProvider;
@@ -52,23 +51,14 @@ public class IdgelDomeService {
 		if (AutoGroupConfig.IDGEL_ENABLED) {
 			log.info(I18n.get("log.770479d27791"));
 			// 伊杰尔穹顶 一/三/五 12:00–13:00 / Idgel Dome MON-WED-FRI "12PM-1PM"
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */GameCronServices.cronService().schedule(() -> startIdgelRegistration(), AutoGroupConfig.IDGEL_SCHEDULE_MIDDAY);
+            GameCronServices.cronService().schedule(() -> startIdgelRegistration(), AutoGroupConfig.IDGEL_SCHEDULE_MIDDAY);
 			// 伊杰尔穹顶 一/三/五 23:00–00:00 / Idgel Dome MON-WED-FRI "11PM-0PM"
-			/**
-			 * 执行任务。
-			 * Runs the task.
-			 */GameCronServices.cronService().schedule(() -> startIdgelRegistration(), AutoGroupConfig.IDGEL_SCHEDULE_MIDNIGHT);
+            GameCronServices.cronService().schedule(() -> startIdgelRegistration(), AutoGroupConfig.IDGEL_SCHEDULE_MIDNIGHT);
 		}
 	}
 
 	private void startUregisterIdgelTask() {
-		/**
-		 * 执行任务。
-		 * Runs the task.
-		 */GameThreadPoolServices.threadPoolManager().schedule(() -> {
+        GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			 registerAvailable = false;
 			 playersWithCooldown.clear();
 			 GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskId);
@@ -116,7 +106,6 @@ public class IdgelDomeService {
 	/**
 	 * 获取玩家的报名掩码 ID；等级不符时返回 0。
 	 * Returns the registration mask id for the player, or 0 if level mismatch.
-	 *
 	 * 玩家 / player
 	 * @return 结果 / result
 	 */
@@ -131,7 +120,6 @@ public class IdgelDomeService {
 	/**
 	 * 添加冷却。
 	 * Adds a cooldown.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void addCoolDown(Player player) {
@@ -141,7 +129,6 @@ public class IdgelDomeService {
 	/**
 	 * 是否处于冷却。
 	 * Whether cooldown is active.
-	 *
 	 * 玩家 / player
 	 * @return 结果 / result
 	 */
@@ -152,7 +139,6 @@ public class IdgelDomeService {
 	/**
 	 * 显示报名窗口。
 	 * Shows the registration window.
-	 *
 	 * @param player 玩家 / player
 	 * @param instanceMaskId 副本掩码 ID / instance mask id
 	 */
@@ -168,11 +154,9 @@ public class IdgelDomeService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available

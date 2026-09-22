@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Seized Danuar Sanctuary 副本 NPC AI：The Catacombs Entrance（@AIName "catacombs"），继承 NpcAI2。
  * Seized Danuar Sanctuary instance NPC AI: The Catacombs Entrance (@AIName "catacombs"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("catacombs")

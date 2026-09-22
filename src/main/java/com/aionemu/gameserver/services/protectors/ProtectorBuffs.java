@@ -27,7 +27,6 @@ public class ProtectorBuffs implements StatOwner {
 	/**
 	 * 按守护等级对玩家施加属性效果。
 	 * Applies rank-based attribute effects to the player.
-	 *
 	 * target player
 	 * @param rank 守护等级 / guard rank
 	 */
@@ -54,7 +53,6 @@ public class ProtectorBuffs implements StatOwner {
 	/**
 	 * 按守护类型对玩家施加属性效果。
 	 * Applies type-based attribute effects to the player.
-	 *
 	 * target player
 	 * @param type 守护类型 / guard type
 	 */
@@ -81,7 +79,6 @@ public class ProtectorBuffs implements StatOwner {
 	/**
 	 * 是否已有生效中的属性效果。
 	 * Whether an active attribute effect is currently applied.
-	 *
 	 * @return 有效果时为 true / true if effect functions exist
 	 */
 	public boolean hasDebuff() {
@@ -91,7 +88,6 @@ public class ProtectorBuffs implements StatOwner {
 	/**
 	 * 结束并移除玩家身上的守护者属性效果。
 	 * Ends and removes protector attribute effects from the player.
-	 *
 	 * @param player target player
 	 */
 	public void endEffect(Player player) {

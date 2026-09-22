@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * Fissure Of Oblivion 副本 NPC AI：Fissure Of Oblivion Bind Point（@AIName "Fissure_Of_Oblivion_Bind_Point"），继承 NpcAI2。
  * Fissure Of Oblivion instance NPC AI: Fissure Of Oblivion Bind Point (@AIName "Fissure_Of_Oblivion_Bind_Point"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Fissure_Of_Oblivion_Bind_Point")

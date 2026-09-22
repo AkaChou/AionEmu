@@ -12,7 +12,6 @@ import lombok.Getter;
 /**
  * 背包掉落模板（静态数据/XML）。
  * Inventory Drop Template (static data/XML).
- *
  * @author Rolandas
  */
 

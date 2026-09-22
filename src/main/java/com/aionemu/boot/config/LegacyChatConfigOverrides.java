@@ -18,7 +18,6 @@ public class LegacyChatConfigOverrides {
     /**
      * 构建聊天服可消费的 {@link Properties} 覆盖集。
      * Builds the chat-server {@link Properties} override set.
-     *
      * @return 覆盖属性集 / override properties
      */
     public Properties chatProperties() {

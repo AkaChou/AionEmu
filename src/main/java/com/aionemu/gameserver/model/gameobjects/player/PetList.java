@@ -16,7 +16,6 @@ import lombok.Setter;
 /**
  * 宠物列表。
  * Pet List game object.
- *
  * @author ATracer
  */
 public class PetList {
@@ -60,10 +59,6 @@ public class PetList {
 		return pets.values();
 	}
 
-	/**
-	 * @param petId
-	 * @return
-	 */
 	public PetCommonData getPet(int petId) {
 		return pets.get(petId);
 	}
@@ -73,13 +68,6 @@ public class PetList {
 		return getPet(lastUsedPetId);
 	}
 
-	/**
-	 * @param player
-	 * @param petId
-	 * @param decorationId
-	 * @param name
-	 * @return
-	 */
 	public PetCommonData addPet(Player player, int petId, int decorationId, String name, int expireTime) {
 		return addPet(player, petId, decorationId, System.currentTimeMillis(), name, expireTime);
 	}
@@ -97,17 +85,10 @@ public class PetList {
 		return petCommonData;
 	}
 
-	/**
-	 * @param petId
-	 * @return
-	 */
 	public boolean hasPet(int petId) {
 		return pets.containsKey(petId);
 	}
 
-	/**
-	 * @param petId
-	 */
 	public void deletePet(int petId) {
 		if (hasPet(petId)) {
 			pets.remove(petId);

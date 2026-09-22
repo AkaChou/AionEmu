@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 /**
  * 攻城战相关 NPC AI：Mine（@AIName "siege_mine"），继承 AggressiveNpcAI2。
  * Siege-related NPC AI: Mine (@AIName "siege_mine"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("siege_mine")

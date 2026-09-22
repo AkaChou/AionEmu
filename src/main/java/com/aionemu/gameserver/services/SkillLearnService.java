@@ -21,7 +21,6 @@ public class SkillLearnService {
 	/**
 	 * 玩家升级时学习当前等级新技能（含 10 级制作技能迁移）。
 	 * Learns new skills for the player's current level (including level-10 craft skill migration).
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static void addNewSkills(Player player) {
@@ -47,7 +46,6 @@ public class SkillLearnService {
 	/**
 	 * 补全玩家当前等级及转职前应掌握的全部技能。
 	 * Fills in all skills the player should know for current level and starting class.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static void addMissingSkills(Player player) {
@@ -72,7 +70,6 @@ public class SkillLearnService {
 	/**
 	 * 4P 场景下补全玩家缺失技能（逻辑与 {@link #addMissingSkills} 相同）。
 	 * Fills missing skills in the 4P path (same logic as {@link #addMissingSkills}).
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static void addMissingSkills4P(Player player) {
@@ -97,7 +94,6 @@ public class SkillLearnService {
 	/**
 	 * 按职业/等级/种族模板向玩家添加可学技能。
 	 * Adds learnable skills to the player from class/level/race templates.
-	 *
 	 * @param player 玩家 / player
 	 * @param level level
 	 * @param playerClass player class
@@ -124,7 +120,6 @@ public class SkillLearnService {
 	/**
 	 * 判断模板技能是否允许学习（含自动学习与会员自动印记）。
 	 * Checks whether the template skill may be learned (auto-learn and membership stigma).
-	 *
 	 * 玩家 / player
 	 * skill list
 	 * learn template
@@ -146,7 +141,6 @@ public class SkillLearnService {
 	/**
 	 * 通过技能书学习技能至玩家当前可达最高等级。
 	 * Learns a skill from a skill book up to the max level available for the player.
-	 *
 	 * @param player 玩家 / player
 	 * @param skillId skill id
 	 */
@@ -173,7 +167,6 @@ public class SkillLearnService {
 	/**
 	 * 移除玩家技能并同步客户端（含异常效果清理）。
 	 * Removes a player skill and syncs the client (including abnormal effect cleanup).
-	 *
 	 * @param player 玩家 / player
 	 * @param skillId skill id
 	 */
@@ -194,7 +187,6 @@ public class SkillLearnService {
 	/**
 	 * 移除玩家链接技能并清空 linkedSkill 标记。
 	 * Removes a linked skill and clears the linkedSkill flag.
-	 *
 	 * @param player 玩家 / player
 	 * @param skillId skill id
 	 */
@@ -216,7 +208,6 @@ public class SkillLearnService {
 	/**
 	 * 按玩家等级与目标技能等级计算实际可学技能等级。
 	 * Computes the actual skill level learnable for the player level and wanted level.
-	 *
 	 * skill id
 	 * player level
 	 * @param wantedSkillLevel 期望技能等级 / wanted skill level
@@ -244,7 +235,6 @@ public class SkillLearnService {
 	/**
 	 * 获取学习指定技能等级所需的最低玩家等级。
 	 * Returns the minimum player level required to learn the wanted skill level.
-	 *
 	 * skill id
 	 * player level
 	 * @param wantedSkillLevel 期望技能等级 / wanted skill level

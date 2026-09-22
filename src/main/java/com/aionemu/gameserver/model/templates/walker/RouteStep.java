@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 /**
  * RouteStep 模板（静态数据/XML）。
  * XML template.
- *
  * @author KKnD, Rolandas
  */
 @Getter

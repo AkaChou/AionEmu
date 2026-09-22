@@ -38,7 +38,6 @@ public class LoginStartupRuntimeBridge {
     /**
      * 注入可选的进程运行时桥接提供者。
      * Inject optional process runtime-bridge provider.
-     *
      * @param processBridgeProvider 进程桥接提供者 / process-bridge provider
      */
     @Autowired(required = false)
@@ -98,7 +97,6 @@ public class LoginStartupRuntimeBridge {
     /**
      * 启动死锁检测器；嵌入式模式下仅记录，独立模式下触发重启退出。
      * Start the deadlock detector; embedded mode only records, standalone mode exits for restart.
-     *
      * @param bootEmbedded 是否嵌入式启动 / whether boot-embedded
      */
     public void startDeadlockDetector(boolean bootEmbedded) {
@@ -122,7 +120,6 @@ public class LoginStartupRuntimeBridge {
     /**
      * 初始化密钥生成器。
      * Initialize the key generator.
-     *
      * @throws Exception 初始化失败时抛出 / thrown when initialization fails
      */
     public void initializeKeyGenerator() throws Exception {
@@ -165,7 +162,6 @@ public class LoginStartupRuntimeBridge {
     /**
      * 获取玩家转移服务实例。
      * Obtain the player-transfer service instance.
-     *
      * @return 玩家转移服务 / player-transfer service
      */
     public PlayerTransferService playerTransferService() {
@@ -216,7 +212,6 @@ public class LoginStartupRuntimeBridge {
     /**
      * 解析进程运行时桥接：优先 Spring 提供者，否则新建实例。
      * Resolve the process runtime bridge: prefer Spring provider, else create a new instance.
-     *
      * @return 进程运行时桥接 / process runtime bridge
      */
     private LoginProcessRuntimeBridge processBridge() {

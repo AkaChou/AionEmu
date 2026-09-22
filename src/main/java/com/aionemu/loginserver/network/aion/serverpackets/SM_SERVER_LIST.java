@@ -12,9 +12,7 @@ import com.aionemu.loginserver.network.aion.LoginConnection;
 /**
  * 登录服→客户端：下发可用游戏服列表及各服角色数。
  * LoginServer → client: available game-server list with per-server character counts.
- *
  * @author -Nemesiss-
- * @modified cura
  */
 public class SM_SERVER_LIST extends AionServerPacket {
 

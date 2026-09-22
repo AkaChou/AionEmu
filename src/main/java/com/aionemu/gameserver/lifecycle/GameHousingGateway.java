@@ -50,7 +50,6 @@ public class GameHousingGateway {
     /**
      * 可选注入房屋竞拍服务提供者。
      * Optionally inject the housing-bid service provider.
-     *
      * @param housingBidServiceProvider 房屋竞拍服务提供者 / Housing-bid service provider
      */
     @Autowired(required = false)
@@ -61,7 +60,6 @@ public class GameHousingGateway {
     /**
      * 可选注入房屋维护任务提供者。
      * Optionally inject the maintenance-task provider.
-     *
      * @param maintenanceTaskProvider 房屋维护任务提供者 / Maintenance-task provider
      */
     @Autowired(required = false)
@@ -72,7 +70,6 @@ public class GameHousingGateway {
     /**
      * 可选注入城镇服务提供者。
      * Optionally inject the town-service provider.
-     *
      * @param townServiceProvider 城镇服务提供者 / Town-service provider
      */
     @Autowired(required = false)
@@ -83,7 +80,6 @@ public class GameHousingGateway {
     /**
      * 可选注入房屋服务提供者。
      * Optionally inject the housing-service provider.
-     *
      * @param housingServiceProvider 房屋服务提供者 / Housing-service provider
      */
     @Autowired(required = false)
@@ -94,7 +90,6 @@ public class GameHousingGateway {
     /**
      * 可选注入挑战任务服务提供者。
      * Optionally inject the challenge-task service provider.
-     *
      * @param challengeTaskServiceProvider 挑战任务服务提供者 / Challenge-task service provider
      */
     @Autowired(required = false)
@@ -105,7 +100,6 @@ public class GameHousingGateway {
     /**
      * 可选注入运行时桥接提供者。
      * Optionally inject the runtime-bridge provider.
-     *
      * @param runtimeBridgeProvider 运行时桥接提供者 / Runtime-bridge provider
      */
     @Autowired(required = false)
@@ -129,7 +123,6 @@ public class GameHousingGateway {
     /**
      * 解析房屋竞拍服务。
      * Resolve the housing-bid service.
-     *
      * @return 房屋竞拍服务 / Housing-bid service
      */
     private HousingBidService housingBidService() {
@@ -142,7 +135,6 @@ public class GameHousingGateway {
     /**
      * 解析房屋维护任务。
      * Resolve the maintenance task.
-     *
      * @return 房屋维护任务 / Maintenance task
      */
     private MaintenanceTask maintenanceTask() {
@@ -155,7 +147,6 @@ public class GameHousingGateway {
     /**
      * 解析城镇服务。
      * Resolve the town service.
-     *
      * @return 城镇服务 / Town service
      */
     private TownService townService() {
@@ -168,7 +159,6 @@ public class GameHousingGateway {
     /**
      * 解析房屋服务。
      * Resolve the housing service.
-     *
      * @return 房屋服务 / Housing service
      */
     private HousingService housingService() {
@@ -181,7 +171,6 @@ public class GameHousingGateway {
     /**
      * 解析挑战任务服务。
      * Resolve the challenge-task service.
-     *
      * @return 挑战任务服务 / Challenge-task service
      */
     private ChallengeTaskService challengeTaskService() {
@@ -194,7 +183,6 @@ public class GameHousingGateway {
     /**
      * 解析运行时桥接。
      * Resolve the runtime bridge.
-     *
      * @return 运行时桥接 / Runtime bridge
      */
     private GameHousingRuntimeBridge runtimeBridge() {

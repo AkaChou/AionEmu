@@ -15,7 +15,6 @@ import java.util.List;
 /**
  * 玩家衣柜（时装）DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerWardrobeDAO.
- *
  * @author Ranastic
  */
 @Slf4j
@@ -34,7 +33,6 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version
@@ -48,7 +46,6 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
     /**
      * 加载玩家衣柜列表。
      * Loads the player's wardrobe list.
-     *
      * @param player 玩家 / player
      * @return 衣柜列表 / wardrobe list
      */
@@ -78,7 +75,6 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
     /**
      * 保存衣柜条目（插入或更新）。
      * Stores a wardrobe entry (insert or update).
-     *
      * @param objectId 玩家对象 ID / player object id
      * @param itemId 物品 ID / item id
      * @param slot 槽位 / slot
@@ -105,7 +101,6 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
     /**
      * 删除指定衣柜条目。
      * Deletes a wardrobe entry.
-     *
      * @param objectId 玩家对象 ID / player object id
      * @param itemId 物品 ID / item id
      * @return 是否成功 / whether successful
@@ -128,7 +123,6 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
     /**
      * 获取玩家衣柜物品数量。
      * Returns the number of wardrobe items for the player.
-     *
      * @param playerObjId 玩家对象 ID / player object id
      * @return 物品数量 / item count
      */
@@ -154,10 +148,8 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
     /**
      * 按槽位获取衣柜物品 ID。
      * Returns the wardrobe item id for the given slot.
-     *
      * @param obj 玩家对象 ID / player object id
      * @param slot 槽位 / slot
-     *
      * @return 物品 ID，未找到时返回 0 / item id, or 0 if not found
      */
     @Override
@@ -183,10 +175,8 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
     /**
      * 按槽位获取重染次数。
      * Returns the reskin count for the given slot.
-     *
      * @param obj 玩家对象 ID / player object id
      * @param slot 槽位 / slot
-     *
      * @return 重染次数，未找到时返回 0 / reskin count, or 0 if not found
      */
     @Override
@@ -212,7 +202,6 @@ public class PlayerWardrobeDAO extends com.aionemu.gameserver.dao.PlayerWardrobe
     /**
      * 按槽位设置重染次数。
      * Sets the reskin count for the given slot.
-     *
      * @param obj 玩家对象 ID / player object id
      * @param slot 槽位 / slot
      * @param reskin_count 外观重置次数 / reskin count

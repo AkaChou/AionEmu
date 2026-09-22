@@ -7,7 +7,6 @@ import lombok.Getter;
 /**
  * Building 类型枚举。
  * Building Type enumeration.
- *
  * @author Rolandas
  */
 @Getter

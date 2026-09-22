@@ -31,10 +31,8 @@ public class IgnoreProperties {
 	/**
 	 * 按种族与静态 id 创建；{@code staticId == 0} 时复用预置常量。
 	 * Creates by race and static id; reuses prefabricated constants when {@code staticId == 0}.
-	 *
 	 * @param race 阵营 / race
 	 * @param staticId 静态物体 id / static object id
-	 *
 	 * @return 忽略属性实例 / ignore properties instance
 	 */
 	public static IgnoreProperties of(Race race, int staticId) {
@@ -55,7 +53,6 @@ public class IgnoreProperties {
 	/**
 	 * 仅按种族创建。
 	 * Creates by race only.
-	 *
 	 * @param race 阵营 / race
 	 * @return 忽略属性实例 / ignore properties instance
 	 */
@@ -66,7 +63,6 @@ public class IgnoreProperties {
 	/**
 	 * 仅按静态 id 创建。
 	 * Creates by static id only.
-	 *
 	 * @param staticId 静态物体 id / static object id
 	 * @return 忽略属性实例 / ignore properties instance
 	 */
@@ -77,7 +73,6 @@ public class IgnoreProperties {
 	/**
 	 * 调试用字符串。
 	 * Debug string representation.
-	 *
 	 * @return 描述字符串 / description string
 	 */
 	@Override

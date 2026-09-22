@@ -6,7 +6,6 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 /**
  * 刷新 / 消失 / 重生事件处理器。
  * Handles spawn, despawn, and respawn events.
- *
  * @author ATracer
  */
 public class SpawnEventHandler {
@@ -14,7 +13,6 @@ public class SpawnEventHandler {
 	/**
 	 * 刷新时：若区域活跃则切到空闲并触发思考。
 	 * On spawn: switches to idle and thinks when the map region is active.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void onSpawn(NpcAI2 npcAI) {
@@ -28,7 +26,6 @@ public class SpawnEventHandler {
 	/**
 	 * 消失时：将状态设为 DESPAWNED。
 	 * On despawn: sets state to DESPAWNED.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void onDespawn(NpcAI2 npcAI) {
@@ -38,7 +35,6 @@ public class SpawnEventHandler {
 	/**
 	 * 重生时：重置移动控制器。
 	 * On respawn: resets the move controller.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void onRespawn(NpcAI2 npcAI) {

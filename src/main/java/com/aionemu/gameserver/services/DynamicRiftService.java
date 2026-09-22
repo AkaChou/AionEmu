@@ -34,7 +34,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 动态裂隙服务：按 cron 开启龙/因德拉图/术古商队等动态裂隙，管理刷怪与生命周期。
  * Dynamic Rift service: cron-opens Dragon/Indratoo/Shugo portals and manages spawn lifecycle.
- *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -96,7 +95,6 @@ public class DynamicRiftService {
 	/**
 	 * 启动指定 ID 的动态裂隙，并在持续时长后自动关闭。
 	 * Starts the dynamic rift for the given id and auto-stops after configured duration.
-	 *
 	 * @param id 裂隙地点 ID / rift location id
 	 */
 	public void startDynamicRift(final int id) {
@@ -111,7 +109,6 @@ public class DynamicRiftService {
 	/**
 	 * 停止指定 ID 的动态裂隙。
 	 * Stops the dynamic rift for the given id.
-	 *
 	 * @param id 裂隙地点 ID / rift location id
 	 */
 	public void stopDynamicRift(int id) {
@@ -125,7 +122,6 @@ public class DynamicRiftService {
 	/**
 	 * 按状态类型在地点刷出对应模板 NPC。
 	 * Spawns NPCs for the location matching the given state type.
-	 *
 	 * @param loc 裂隙地点 / rift location
 	 * state type
 	 */
@@ -144,7 +140,6 @@ public class DynamicRiftService {
 	/**
 	 * 清除地点上已刷出的对象（无仇恨时立即删除）。
 	 * Clears spawned objects at the location (deletes immediately when no aggro).
-	 *
 	 * @param loc 裂隙地点 / rift location
 	 */
 	public void despawn(DynamicRiftLocation loc) {
@@ -165,7 +160,6 @@ public class DynamicRiftService {
 	/**
 	 * 指定裂隙是否正在进行中。
 	 * Whether the given dynamic rift is in progress.
-	 *
 	 * @param id 裂隙地点 ID / rift location id
 	 * @return 若 active 则为 true / true if active
 	 */
@@ -176,7 +170,6 @@ public class DynamicRiftService {
 	/**
 	 * 获取当前激活的动态裂隙映射。
 	 * Returns the map of active dynamic rifts.
-	 *
 	 * active rifts
 	 */
 	public Map<Integer, DynamicRift<?>> getActiveDynamicRift() {
@@ -186,7 +179,6 @@ public class DynamicRiftService {
 	/**
 	 * 返回配置的动态裂隙持续时长（小时）。
 	 * Returns configured dynamic-rift duration in hours.
-	 *
 	 * @return 持续小时数 / duration hours
 	 */
 	public int getDuration() {
@@ -196,7 +188,6 @@ public class DynamicRiftService {
 	/**
 	 * 按 ID 获取动态裂隙地点。
 	 * Returns the dynamic-rift location by id.
-	 *
 	 * @param id 地点 ID / location id
 	 * location
 	 */
@@ -207,7 +198,6 @@ public class DynamicRiftService {
 	/**
 	 * 获取全部动态裂隙地点。
 	 * Returns all dynamic-rift locations.
-	 *
 	 * location map
 	 */
 	public Map<Integer, DynamicRiftLocation> getDynamicRiftLocations() {
@@ -217,7 +207,6 @@ public class DynamicRiftService {
 	/**
 	 * 获取服务单例（优先 Spring ObjectProvider，否则 holder）。
 	 * Returns the service singleton (Spring ObjectProvider if set, else holder).
-	 *
 	 * service instance
 	 */
 	public static DynamicRiftService getInstance() {
@@ -231,7 +220,6 @@ public class DynamicRiftService {
 	/**
 	 * 注入 Spring 实例提供者。
 	 * Sets the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<DynamicRiftService> instanceProvider) {

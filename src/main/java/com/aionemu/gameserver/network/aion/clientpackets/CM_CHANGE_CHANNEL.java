@@ -8,7 +8,6 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 /**
  * 切换游戏频道的客户端包。
  * Client packet to change the game channel.
- *
  * @author ATracer
  */
 public class CM_CHANGE_CHANNEL extends AionClientPacket {

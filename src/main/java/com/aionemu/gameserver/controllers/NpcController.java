@@ -66,7 +66,6 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 /**
  * NPC 控制器，管理视野、生成/消失、死亡奖励、对话与区域事件。
  * NPC controller managing sight, spawn/despawn, death rewards, dialogs and zone events.
- *
  * @author ATracer
  */
 @Slf4j
@@ -76,7 +75,6 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 对象离开 NPC 视野时回调。
 	 * Callback when an object leaves the NPC's sight.
-	 *
 	 * @param object 离开视野的对象 / the object leaving sight
 	 * @param isOutOfRange 是否因超出距离离开 / whether the leave is due to being out of range
 	 */
@@ -95,7 +93,6 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 对象进入 NPC 视野时回调。
 	 * Callback when an object enters the NPC's sight.
-	 *
 	 * @param object 进入视野的对象 / the object entering sight
 	 */
 	@Override
@@ -127,7 +124,6 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 生成前初始化。
 	 * Initialization before spawn.
-	 *
 	 */
 	@Override
 	public void onBeforeSpawn() {
@@ -159,7 +155,6 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 生成后处理。
 	 * Processing after spawn.
-	 *
 	 */
 	@Override
 	public void onAfterSpawn() {
@@ -170,7 +165,6 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 消失时处理。
 	 * Processing on despawn.
-	 *
 	 */
 	@Override
 	public void onDespawn() {
@@ -183,7 +177,6 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 发送击败命名 NPC 的系统消息。
 	 * Sends the system message for defeating a named NPC.
-	 *
 	 * killing player
 	 */
 	public void defeatNamedMsg(final Player player) {
@@ -201,7 +194,6 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * NPC 死亡处理：掉落、奖励与重生调度。
 	 * NPC death handling: drops, rewards and respawn scheduling.
-	 *
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 */
 	@Override
@@ -254,7 +246,6 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 分发击杀经验与欧比斯点等奖励。
 	 * Distributes kill exp, abyss points and related rewards.
-	 *
 	 */
 	@Override
 	public void doReward() {
@@ -373,7 +364,6 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 获取所有者 NPC。
 	 * Gets the owner NPC.
-	 *
 	 * @return owner NPC / 所有者 NPC / owner NPC。
 	 */
 	@Override
@@ -384,7 +374,6 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 处理玩家对 NPC 的对话请求。
 	 * Handles a player dialog request to the NPC.
-	 *
 	 * requesting player
 	 */
 	@Override
@@ -400,7 +389,6 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 处理 NPC 对话选项选择。
 	 * Handles NPC dialog option selection.
-	 *
 	 * @param dialogId 对话 ID / dialog id
 	 * @param player 玩家 / player
 	 * @param questId 任务 ID / quest id
@@ -420,7 +408,6 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 处理客户端通用选择页上的 NPC 简单对话选项，不进入任务路由。
 	 * Handles an NPC simple-dialog option from the client's generic selection page without entering quest routing.
-	 *
 	 * @param dialogId 对话框选项 ID / dialog option id
 	 * @param player 玩家 / player
 	 * @param extendedRewardIndex 扩展奖励索引 / extended reward index
@@ -438,7 +425,6 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * NPC 受到攻击时的处理。
 	 * Handles the NPC being attacked.
-	 *
 	 * @param creature 攻击者 / attacker
 	 * @param skillId 技能 ID / skill id
 	 * @param type 伤害类型 / damage type
@@ -477,7 +463,6 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 停止移动时回调。
 	 * Callback when movement stops.
-	 *
 	 */
 	@Override
 	public void onStopMove() {
@@ -488,7 +473,6 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 开始移动时回调。
 	 * Callback when movement starts.
-	 *
 	 */
 	@Override
 	public void onStartMove() {
@@ -499,7 +483,6 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 返回出生点时回调。
 	 * Callback when returning home.
-	 *
 	 */
 	@Override
 	public void onReturnHome() {
@@ -512,7 +495,6 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 进入区域时回调。
 	 * Callback when entering a zone.
-	 *
 	 * zone instance
 	 */
 	@Override
@@ -574,7 +556,6 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 调度 NPC 重生。
 	 * Schedules NPC respawn.
-	 *
 	 * @return respawn task Future / 重生任务 Future / respawn task Future。
 	 */
 	public Future<?> scheduleRespawn() {
@@ -587,7 +568,6 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 获取与当前目标的攻击距离。
 	 * Gets the attack distance to the current target.
-	 *
 	 * @return attack distance / 攻击距离 / attack distance。
 	 */
 	public final float getAttackDistanceToTarget() {
@@ -597,10 +577,8 @@ public class NpcController extends CreatureController<Npc> {
 	/**
 	 * 使用指定等级的技能。
 	 * Uses a skill at the given level.
-	 *
 	 * skill id
 	 * skill level
-	 *
 	 * @return whether successful / 是否成功 / whether successful。
 	 */
 	@Override

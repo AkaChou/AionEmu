@@ -10,10 +10,8 @@ import lombok.AllArgsConstructor;
 /**
  * 贝尔特拉/埃雷什基伽尔入侵启动定时任务。
  * Beritra/Ereshkigal invasion start timer task.
- *
  * <p>按时间轴依次刷出入口、激光、黑天与正式入侵。
  * Stages portal, laser, black-sky and the actual invasion along a timed timeline.</p>
- *
  * @author Rinzler (Encom)
  */
 @AllArgsConstructor

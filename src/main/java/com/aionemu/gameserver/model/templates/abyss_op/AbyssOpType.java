@@ -5,7 +5,6 @@ import jakarta.xml.bind.annotation.XmlEnum;
 /**
  * 欧比斯 Op 类型枚举。
  * Abyss Op Type enumeration.
- *
  * @author Rinzler (Encom)
  */
 

@@ -21,7 +21,6 @@ public class BleedEffect extends AbstractOverTimeEffect {
 	/**
 	 * 按流血抗性计算是否命中。
 	 * Calculates hit using bleed resistance.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -32,7 +31,6 @@ public class BleedEffect extends AbstractOverTimeEffect {
 	/**
 	 * 预计算周期伤害并启动流血状态。
 	 * Precomputes periodic damage and starts the bleed state.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -48,7 +46,6 @@ public class BleedEffect extends AbstractOverTimeEffect {
 	/**
 	 * 清除流血异常。
 	 * Clears the bleed abnormal.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -60,7 +57,6 @@ public class BleedEffect extends AbstractOverTimeEffect {
 	/**
 	 * 周期结算流血伤害。
 	 * Applies one tick of bleed damage.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

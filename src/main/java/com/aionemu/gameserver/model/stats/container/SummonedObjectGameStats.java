@@ -6,7 +6,6 @@ import com.aionemu.gameserver.model.stats.calc.Stat2;
 /**
  * 召唤物（如陷阱、追踪弹）的游戏属性：按比例继承主人的属性加成。
  * Game stats for summoned objects: inherits a portion of the master's stat bonus.
- *
  * @author ATracer
  */
 public class SummonedObjectGameStats extends NpcGameStats {

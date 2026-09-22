@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Abbey 区域 NPC AI：Norsvold Portal（@AIName "norsvold_portal"），继承 NpcAI2。
  * Abbey zone NPC AI: Norsvold Portal (@AIName "norsvold_portal"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("norsvold_portal")

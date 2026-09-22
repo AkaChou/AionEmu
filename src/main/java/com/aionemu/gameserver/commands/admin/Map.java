@@ -12,7 +12,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * 管理员地图实例控制命令：冻结/解冻实例内 NPC AI，或输出移动广播统计。
  * Admin map-instance control command: freeze/unfreeze NPC AI in the instance, or dump movement broadcast stats.
- *
  * @author Rolandas
  */
 public class Map extends AdminCommand {
@@ -24,7 +23,6 @@ public class Map extends AdminCommand {
 	/**
 	 * 处理 freeze、unfreeze 或 stats 子命令。
 	 * Handle freeze, unfreeze or stats subcommands.
-	 *
 	 * @param admin 执行命令的管理员 / Admin executing the command
 	 */
 	@Override
@@ -49,7 +47,6 @@ public class Map extends AdminCommand {
 	/**
 	 * 参数错误时显示命令语法。
 	 * Show command syntax on invalid arguments.
-	 *
 	 * @param player 接收提示的玩家 / Player receiving the hint
 	 */
 	@Override

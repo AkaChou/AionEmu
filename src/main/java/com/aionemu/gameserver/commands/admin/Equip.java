@@ -43,7 +43,6 @@ public class Equip extends AdminCommand {
 	/**
 	 * 对目标玩家执行镶嵌、附魔、回火或神石操作。
 	 * Runs socket, enchant, tempering or godstone actions on a target player.
-	 *
 	 * @param params 子命令与参数 / sub-command and arguments
 	 */
 	@Override
@@ -279,7 +278,6 @@ public class Equip extends AdminCommand {
 	/**
 	 * 按装备部位随机选取增幅技能 ID。
 	 * Picks a random amplification skill id by equipment slot.
-	 *
 	 */
 	public int getRndSkills(Item item) {
 		if (item.getItemTemplate().getArmorType() == ArmorType.WING) {
@@ -381,9 +379,6 @@ public class Equip extends AdminCommand {
 	/**
 	 * 判断物品是否可回火。
 	 * Whether the item supports tempering.
-	 *
-	 *
-	 * @param item
 	 * @return 可回火则为 true / true if temperable
 	 */
 	public static boolean isTempering(Item item) {
@@ -417,9 +412,6 @@ public class Equip extends AdminCommand {
 	/**
 	 * 判断物品是否可附魔升级。
 	 * Whether the item supports enchant upgrades.
-	 *
-	 *
-	 * @param item
 	 * @return 可升级则为 true / true if upgradable
 	 */
 	public static boolean isUpgradable(Item item) {
@@ -447,7 +439,6 @@ public class Equip extends AdminCommand {
 	/**
 	 * 按品质与物品类型计算最大镶嵌孔数。
 	 * Computes max socket slots from quality and item type.
-	 *
 	 */
 	public static int getMaxSlots(Item item) {
 		int slots = switch (item.getItemTemplate().getItemQuality()) {
@@ -508,7 +499,6 @@ public class Equip extends AdminCommand {
 	/**
 	 * 执行失败时显示帮助。
 	 * Shows help on failure.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

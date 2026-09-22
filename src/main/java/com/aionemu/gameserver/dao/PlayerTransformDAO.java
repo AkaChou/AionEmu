@@ -12,7 +12,6 @@ public abstract class PlayerTransformDAO implements DAO {
 	/**
 	 * 加载玩家变身数据。
 	 * Loads transformation data for the player.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public abstract void loadPlTransfo(Player player);
@@ -20,7 +19,6 @@ public abstract class PlayerTransformDAO implements DAO {
 	/**
 	 * 保存玩家变身面板数据。
 	 * Stores transformation panel data for the player.
-	 *
 	 * @param playerId 玩家对象 ID / player object id
 	 * @param panelId 面板 ID / panel id
 	 * @param ItemId 物品 ID / item id
@@ -31,7 +29,6 @@ public abstract class PlayerTransformDAO implements DAO {
 	/**
 	 * 删除玩家变身数据。
 	 * Deletes transformation data for the player.
-	 *
 	 * @param playerId 玩家对象 ID / player object id
 	 * @return 是否删除成功 / true if deleted
 	 */
@@ -40,7 +37,6 @@ public abstract class PlayerTransformDAO implements DAO {
 	/**
 	 * 返回实现唯一类名标识。
 	 * Returns unique class name for all implementations.
-	 *
 	 * @return 完整类名 / fully qualified class name
 	 */
 	public String getClassName() {

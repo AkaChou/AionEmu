@@ -27,7 +27,6 @@ public final class GameThreadPoolServices implements DisposableBean {
     /**
      * 构造并注册 ThreadPoolManager 实例提供者。
      * Construct and register the ThreadPoolManager instance provider.
-     *
      * @param threadPoolManagerProvider ThreadPoolManager 提供者 / ThreadPoolManager provider
      */
     public GameThreadPoolServices(ObjectProvider<ThreadPoolManager> threadPoolManagerProvider) {
@@ -39,7 +38,6 @@ public final class GameThreadPoolServices implements DisposableBean {
     /**
      * 解析 ThreadPoolManager：优先 Spring，否则回退并缓存。
      * Resolve ThreadPoolManager: prefer Spring, otherwise fallback, and remember the result.
-     *
      * @return ThreadPoolManager 实例 / ThreadPoolManager instance
      */
     public static ThreadPoolManager threadPoolManager() {
@@ -57,7 +55,6 @@ public final class GameThreadPoolServices implements DisposableBean {
     /**
      * 记住已解析的 ThreadPoolManager。
      * Remember the resolved ThreadPoolManager.
-     *
      * @param threadPoolManager 已解析实例 / Resolved instance
      * @return 同一实例 / The same instance
      */
@@ -80,7 +77,6 @@ public final class GameThreadPoolServices implements DisposableBean {
     /**
      * 回退 ThreadPoolManager（懒加载单例）。
      * Fallback ThreadPoolManager (lazy singleton).
-     *
      * @return 回退实例 / Fallback instance
      */
     private static ThreadPoolManager fallbackThreadPoolManager() {

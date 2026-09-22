@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * RvR 相关 NPC AI：Rvr Bomb（@AIName "Rvr_Bomb"），继承 AggressiveNpcAI2。
  * RvR-related NPC AI: Rvr Bomb (@AIName "Rvr_Bomb"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("Rvr_Bomb")

@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Cradle Of Eternity 副本 NPC AI：Garden Temple Bind Point（@AIName "Garden_Temple_Bind_Point"），继承 NpcAI2。
  * Cradle Of Eternity instance NPC AI: Garden Temple Bind Point (@AIName "Garden_Temple_Bind_Point"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Garden_Temple_Bind_Point")

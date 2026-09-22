@@ -11,7 +11,6 @@ import java.nio.ByteBuffer;
 /**
  * 客户端请求服务器列表：校验会话后加载角色数并下发列表。
  * Client server-list request: validate session then load character counts and list.
- *
  * @author -Nemesiss-
  */
 public class CM_SERVER_LIST extends AionClientPacket {
@@ -30,7 +29,6 @@ public class CM_SERVER_LIST extends AionClientPacket {
     /**
      * 构造 CM_SERVER_LIST 包。
      * Construct CM_SERVER_LIST packet.
-     *
      * @param buf 包体数据 / Packet data
      * @param client 登录连接 / Login connection
      */
@@ -63,10 +61,6 @@ public class CM_SERVER_LIST extends AionClientPacket {
                 AccountController.loadGSCharactersCount(accountId);
             }
         } else {
-            /**
-             * 会话密钥不匹配：通知客户端并断开。
-             * Session key mismatch: notify client and disconnect.
-             */
             con.close(new SM_LOGIN_FAIL(AionAuthResponse.SYSTEM_ERROR), false);
         }
     }

@@ -14,7 +14,6 @@ import com.aionemu.gameserver.world.WorldPosition;
 /**
  * Panesterra 区域 NPC AI：Enraged Guardian General（@AIName "enraged_guardian_general"），继承 AggressiveNpcAI2。
  * Panesterra zone NPC AI: Enraged Guardian General (@AIName "enraged_guardian_general"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("enraged_guardian_general")

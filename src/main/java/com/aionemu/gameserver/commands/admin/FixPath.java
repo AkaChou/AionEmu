@@ -18,7 +18,6 @@ import java.util.HashMap;
 /**
  * 修正行走路径（Walker）高度并保存的管理命令（{@code //fixpath}）。
  * Admin command that corrects walker route heights and saves them ({@code //fixpath}).
- *
  * @author Rolandas
  */
 public class FixPath extends AdminCommand {
@@ -38,7 +37,6 @@ public class FixPath extends AdminCommand {
 	/**
 	 * 沿指定路线逐步传送采样 Z 轴并写回 Walker 数据，或取消进行中的任务。
 	 * Walks a route sampling Z heights into Walker data, or cancels an in-progress run.
-	 *
 	 * @param params 路线 ID 与跳跃高度，或 cancel / route id and jump height, or cancel
 	 */
 	@Override
@@ -159,7 +157,6 @@ public class FixPath extends AdminCommand {
 	/**
 	 * 执行失败时的语法提示。
 	 * Syntax hint on failure.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

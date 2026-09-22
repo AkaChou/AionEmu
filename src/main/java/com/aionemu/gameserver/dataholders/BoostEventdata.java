@@ -18,7 +18,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 增益活动数据容器，按 ID 索引增益活动模板。
  * Boost-event data holder, indexing boost event templates by id.
- *
  * Created by wanke on 02/03/2017.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -49,7 +48,6 @@ public class BoostEventdata {
 	/**
 	 * 返回已加载的增益活动数量。
 	 * Returns the number of loaded boost events.
-	 *
 	 * @return 已加载的加成事件数量 / Returns the number of loaded boost events.
 	 */
 	public int size() {
@@ -59,7 +57,6 @@ public class BoostEventdata {
 	/**
 	 * 按 ID 获取增益活动模板。
 	 * Returns the boost event template for the given id.
-	 *
 	 * @param buffId 增益 ID / buff id
 	 * @return 模板，不存在则为 null / template or null
 	 */
@@ -70,7 +67,6 @@ public class BoostEventdata {
 	/**
 	 * 返回全部增益活动映射。
 	 * Returns the full boost event map.
-	 *
 	 * @return ID 到模板的映射 / map of id to template
 	 */
 	public Map<Integer, BoostEvents> getAll() {

@@ -40,7 +40,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * Moltenus service: schedule-driven fights via MoltenusSchedule; manages spawns and fortress notices.
  * <p>
  * 参考 / See also: http://aion.power.plaync.com/wiki/%EB%B6%84%EB%85%B8%EC%9D%98+%ED%8C%8C%ED%8E%B8+%EB%A9%94%EB%85%B8%ED%8B%B0%EC%98%A4%EC%8A%A4
- *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -104,7 +103,6 @@ public class MoltenusService {
 	/**
 	 * 启动指定 ID 的熔岩领主战斗，广播消息并在持续时长后自动结束。
 	 * Starts the Moltenus fight for the given id, broadcasts, and auto-stops after duration.
-	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void startMoltenus(final int id) {
@@ -120,7 +118,6 @@ public class MoltenusService {
 	/**
 	 * 停止指定 ID 的熔岩领主战斗。
 	 * Stops the Moltenus fight for the given id.
-	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void stopMoltenus(int id) {
@@ -134,7 +131,6 @@ public class MoltenusService {
 	/**
 	 * 按状态类型在地点刷出对应模板 NPC。
 	 * Spawns NPCs for the location matching the given state type.
-	 *
 	 * @param loc location
 	 * @param mstate state type
 	 */
@@ -153,7 +149,6 @@ public class MoltenusService {
 	/**
 	 * 向全体玩家广播复活熔岩领主出现消息。
 	 * Broadcasts resurrected-Moltenus appearance message to all players.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 若 handled 则为 true / true if handled
 	 */
@@ -171,7 +166,6 @@ public class MoltenusService {
 	/**
 	 * 硫磺堡垒守护者即将出现的预告消息。
 	 * Pre-spawn notice for Enraged Sulfur Guardian.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 若 handled 则为 true / true if handled
 	 */
@@ -192,7 +186,6 @@ public class MoltenusService {
 	/**
 	 * 西部堡垒守护者即将出现的预告消息。
 	 * Pre-spawn notice for Enraged Western Guardian.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 若 handled 则为 true / true if handled
 	 */
@@ -213,7 +206,6 @@ public class MoltenusService {
 	/**
 	 * 东部堡垒守护者即将出现的预告消息。
 	 * Pre-spawn notice for Enraged Eastern Guardian.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 若 handled 则为 true / true if handled
 	 */
@@ -234,7 +226,6 @@ public class MoltenusService {
 	/**
 	 * 清除地点上已刷出的对象（无仇恨时立即删除）。
 	 * Clears spawned objects at the location (deletes immediately when no aggro).
-	 *
 	 * @param loc location
 	 */
 	public void despawn(MoltenusLocation loc) {
@@ -255,7 +246,6 @@ public class MoltenusService {
 	/**
 	 * 指定熔岩领主战斗是否正在进行中。
 	 * Whether the Moltenus fight is in progress for the given id.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 若 active 则为 true / true if active
 	 */
@@ -266,7 +256,6 @@ public class MoltenusService {
 	/**
 	 * 获取当前激活的熔岩领主战斗映射。
 	 * Returns the map of active Moltenus fights.
-	 *
 	 * active fights
 	 */
 	public Map<Integer, MoltenusFight<?>> getActiveMoltenus() {
@@ -276,7 +265,6 @@ public class MoltenusService {
 	/**
 	 * 返回配置的持续时长（小时）。
 	 * Returns configured duration in hours.
-	 *
 	 * @return 持续小时数 / duration hours
 	 */
 	public int getDuration() {
@@ -286,7 +274,6 @@ public class MoltenusService {
 	/**
 	 * 按 ID 获取地点。
 	 * Returns the location by id.
-	 *
 	 * @param id 地点 ID / location id
 	 * location
 	 */
@@ -297,7 +284,6 @@ public class MoltenusService {
 	/**
 	 * 获取全部地点。
 	 * Returns all locations.
-	 *
 	 * location map
 	 */
 	public Map<Integer, MoltenusLocation> getMoltenusLocations() {
@@ -307,7 +293,6 @@ public class MoltenusService {
 	/**
 	 * 获取服务单例（优先 Spring ObjectProvider，否则 holder）。
 	 * Returns the service singleton (Spring ObjectProvider if set, else holder).
-	 *
 	 * service instance
 	 */
 	public static MoltenusService getInstance() {
@@ -321,7 +306,6 @@ public class MoltenusService {
 	/**
 	 * 注入 Spring 实例提供者。
 	 * Sets the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<MoltenusService> instanceProvider) {

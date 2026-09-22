@@ -6,7 +6,6 @@ import lombok.Getter;
 /**
  * 静态 Door 状态枚举。
  * Static Door State enumeration.
- *
  * @author Rolandas
  */
 @Getter

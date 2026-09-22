@@ -67,7 +67,6 @@ public class WeaponDualEffect extends BuffEffect {
 	/**
 	 * 判断玩家是否拥有双持效果（未登场时扫描技能，否则看效率值）。
 	 * Checks whether the player has dual-wield effect (scan skills if not spawned, else efficiency).
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否有双持效果 / true if dual-wield is active
 	 */

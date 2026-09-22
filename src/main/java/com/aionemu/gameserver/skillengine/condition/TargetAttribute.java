@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 目标属性枚举：描述技能条件所要求的目标类型。
  * Target attribute enum: describes the required target type for a skill condition.
- *
  * @author ATracer
  */
 @XmlType(name = "TargetAttribute")
@@ -27,7 +26,6 @@ public enum TargetAttribute {
 	/**
 	 * 返回枚举常量名称。
 	 * Returns the enum constant name.
-	 *
 	 * @return 名称字符串 / name string
 	 */
 	public String value() {
@@ -37,7 +35,6 @@ public enum TargetAttribute {
 	/**
 	 * 由名称字符串解析目标属性。
 	 * Parses a target attribute from its name string.
-	 *
 	 * @param v 名称 / name
 	 * @return 目标属性 / target attribute
 	 */

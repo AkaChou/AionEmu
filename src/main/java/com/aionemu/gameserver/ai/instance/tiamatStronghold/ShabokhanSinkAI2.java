@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Tiamat Stronghold 副本 NPC AI：Shabokhan Sink（@AIName "shabokhansink"），继承 AggressiveNpcAI2。
  * Tiamat Stronghold instance NPC AI: Shabokhan Sink (@AIName "shabokhansink"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("shabokhansink")

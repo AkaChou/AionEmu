@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 聊天服与游戏服之间的网络连接。
  * Network connection between the chat server and a game server.
- *
  * @author KID
  */
 @Slf4j
@@ -60,7 +59,6 @@ public class GsConnection extends AConnection {
     /**
      * 基于传输层创建游戏服连接。
      * Creates a game-server connection on the given transport.
-     *
      * @param transport 底层连接传输 / underlying connection transport
      */
     public GsConnection(ConnectionTransport transport) {
@@ -70,7 +68,6 @@ public class GsConnection extends AConnection {
     /**
      * 解析并调度入站游戏服客户端包。
      * Parses and dispatches an inbound game-server client packet.
-     *
      * @param data 入站数据缓冲 / inbound data buffer
      * @return 是否继续处理 / whether processing should continue
      */
@@ -88,7 +85,6 @@ public class GsConnection extends AConnection {
     /**
      * 从发送队列取出并写出一个服务端包。
      * Dequeues and writes one server packet from the send queue.
-     *
      * @param data 写出缓冲 / write buffer
      * @return 是否写出了数据包 / whether a packet was written
      */
@@ -108,7 +104,6 @@ public class GsConnection extends AConnection {
     /**
      * 返回断线延迟（本连接立即断开）。
      * Returns the disconnection delay (this connection disconnects immediately).
-     *
      * @return 延迟毫秒数 / delay in milliseconds
      */
     @Override
@@ -137,7 +132,6 @@ public class GsConnection extends AConnection {
     /**
      * 将服务端包加入发送队列。
      * Enqueues a server packet for sending.
-     *
      * @param bp 待发送服务端包 / server packet to send
      */
     public final void sendPacket(GsServerPacket bp) {
@@ -154,7 +148,6 @@ public class GsConnection extends AConnection {
     /**
      * 清空发送队列并以指定包关闭连接。
      * Clears the send queue and closes the connection with the given packet.
-     *
      * @param closePacket 关闭前发送的包 / packet sent before close
      * @param forced 是否强制关闭 / whether the close is forced
      */

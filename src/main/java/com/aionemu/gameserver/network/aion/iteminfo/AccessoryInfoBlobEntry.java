@@ -11,9 +11,7 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
  * 写入该物品可装备的主/副槽位掩码。
  * Blob sent for accessory items (ring, earring, waist, etc.).
  * Writes primary/secondary slot masks the item can be equipped to.
- *
  * @author -Nemesiss-
- * @modified Rolandas
  */
 public class AccessoryInfoBlobEntry extends ItemBlobEntry {
 

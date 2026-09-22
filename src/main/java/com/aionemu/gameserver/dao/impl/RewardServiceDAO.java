@@ -14,7 +14,6 @@ import java.util.List;
 /**
  * Web 奖励服务 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of RewardServiceDAO.
- *
  * Updated for MySQL 8 - Fixed connection leaks.
  */
 @Slf4j
@@ -30,7 +29,6 @@ public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDA
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.
-     *
      * @param database 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version
@@ -44,7 +42,6 @@ public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDA
     /**
      * 将奖励标记为未领取。
      * Marks a reward as not yet received.
-     *
      * @param unique 唯一奖励 ID / unique reward id
      */
     public void setUpdateDown(int unique) {
@@ -62,9 +59,7 @@ public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDA
     /**
      * 将奖励标记为已领取。
      * Marks a reward as received.
-     *
      * unique reward id
-     *
      * @param unique 唯一奖励 ID / unique reward id
      * @return 是否更新成功 / whether update succeeded
      */
@@ -84,9 +79,7 @@ public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDA
     /**
      * 获取玩家尚未领取的 Web 奖励列表。
      * Gets the list of unclaimed web rewards for a player.
-     *
      * player id
-     *
      * @param playerId 玩家 ID / player id
      * @return 可用奖励条目 / available reward entries
      */
@@ -117,7 +110,6 @@ public class RewardServiceDAO extends com.aionemu.gameserver.dao.RewardServiceDA
     /**
      * 批量将奖励标记为已领取。
      * Batch-marks rewards as received.
-     *
      * @param ids 奖励唯一 ID 列表 / list of unique reward ids
      */
     @Override

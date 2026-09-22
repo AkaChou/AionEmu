@@ -5,7 +5,6 @@ import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 /**
  * 登录服请求踢出指定账号在线角色。
  * Login server request to kick an account's online character.
- *
  * @author -Nemesiss-
  */
 public class CM_REQUEST_KICK_ACCOUNT extends LsClientPacket {
@@ -13,7 +12,6 @@ public class CM_REQUEST_KICK_ACCOUNT extends LsClientPacket {
 	/**
 	 * 构造函数。
 	 * Constructor.
-	 *
 	 * @param opCode 操作码 opcode
 	 */
 	public CM_REQUEST_KICK_ACCOUNT(int opCode) {

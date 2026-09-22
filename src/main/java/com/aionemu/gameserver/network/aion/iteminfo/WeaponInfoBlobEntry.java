@@ -11,9 +11,7 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
  * 写入武器可装备的主/副槽位掩码；双手武器会合并掩码。
  * Blob sent for weapons.
  * Writes primary/secondary slot masks; two-hand weapons combine masks.
- *
  * @author -Nemesiss-
- * @modified Rolandas
  */
 public class WeaponInfoBlobEntry extends ItemBlobEntry {
 

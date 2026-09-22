@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端同步跨服/A-Station 服务器标识与等级限制。
  * Server packet synchronizing A-Station server id and level limits to the client.
- *
  * @author Ranastic
  */
 @AllArgsConstructor

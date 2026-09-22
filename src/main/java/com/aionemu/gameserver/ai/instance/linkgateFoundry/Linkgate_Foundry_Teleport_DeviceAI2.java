@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Linkgate Foundry 副本 NPC AI：Linkgate Foundry Teleport Device（@AIName "linkgate_foundry_teleport_device"），继承 NpcAI2。
  * Linkgate Foundry instance NPC AI: Linkgate Foundry Teleport Device (@AIName "linkgate_foundry_teleport_device"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("linkgate_foundry_teleport_device")
@@ -25,7 +24,6 @@ public class Linkgate_Foundry_Teleport_DeviceAI2 extends NpcAI2
 	/**
 	 * 处理对话选择：将玩家传送至秘密实验室的三个不同传送点。
 	 * Handles dialog selection: teleports the player to one of three secret-lab waypoints.
-	 *
 	 * @param player 对话玩家 / dialog player
 	 * @param dialogId 对话框选项 ID / dialog option ID
 	 * @param questId 任务 ID / quest ID

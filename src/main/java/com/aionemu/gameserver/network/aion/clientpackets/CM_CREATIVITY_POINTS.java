@@ -20,7 +20,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 请求分配或重置创造力点数的客户端包。
  * Client packet requesting allocation or reset of creativity points.
- *
  * @author Falke_34
  */
 @Slf4j
@@ -36,7 +35,6 @@ public class CM_CREATIVITY_POINTS extends AionClientPacket {
 	/**
 	 * 构造客户端包实例。
 	 * Constructs a new client packet instance.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余允许状态 / additional allowed states

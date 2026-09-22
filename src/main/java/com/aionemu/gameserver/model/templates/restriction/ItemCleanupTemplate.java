@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 物品清理模板（静态数据/XML）。
  * Item Cleanup Template (static data/XML).
- *
  * @author KID
  */
 @Getter

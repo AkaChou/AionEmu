@@ -50,7 +50,6 @@ public class StatFunctions {
 	/**
 	 * 计算单人击杀目标的经验奖励
 	 * Calculate solo XP reward from target
-	 *
 	 * 玩家 / Player
 	 * Target
 	 * @return 单人经验奖励 / Solo XP reward
@@ -62,7 +61,6 @@ public class StatFunctions {
 	/**
 	 * 计算队伍击杀目标的经验奖励（按范围内最高等级）
 	 * Calculate group XP reward from target using max level in range
-	 *
 	 * @param maxLevelInRange 范围内最高等级 / Max level in range
 	 * Target
 	 * @return 队伍经验奖励 / Group XP reward
@@ -74,7 +72,6 @@ public class StatFunctions {
 	/**
 	 * 计算单人击杀目标的 DP 奖励
 	 * Calculate solo DP reward from target
-	 *
 	 * 玩家 / Player
 	 * Target
 	 * Solo DP reward
@@ -86,7 +83,6 @@ public class StatFunctions {
 	/**
 	 * 计算队伍击杀目标的 DP 奖励
 	 * Calculate group DP reward from target
-	 *
 	 * 玩家 / Player
 	 * Target
 	 * Group DP reward
@@ -98,7 +94,6 @@ public class StatFunctions {
 	/**
 	 * 计算 PvE 击杀获得的 AP
 	 * Calculate AP gained from PvE kill
-	 *
 	 * 玩家 / Player
 	 * Target
 	 * AP reward
@@ -110,7 +105,6 @@ public class StatFunctions {
 	/**
 	 * 计算 PvP 死亡损失的 AP
 	 * Calculate AP lost on PvP death
-	 *
 	 * @param defeated 被击败玩家 / Defeated player
 	 * Winner
 	 * AP lost
@@ -122,7 +116,6 @@ public class StatFunctions {
 	/**
 	 * 计算 PvP 击杀获得的 AP
 	 * Calculate AP gained from PvP kill
-	 *
 	 * @param defeated 被击败玩家 / Defeated player
 	 * @param maxRank 击杀方最高军衔 / Winner max rank
 	 * @param maxLevel 击杀方最高等级 / Winner max level
@@ -135,7 +128,6 @@ public class StatFunctions {
 	/**
 	 * 计算 PvP 死亡损失的 GP
 	 * Calculate GP lost on PvP death
-	 *
 	 * @param defeated 被击败玩家 / Defeated player
 	 * Winner
 	 * GP lost
@@ -147,7 +139,6 @@ public class StatFunctions {
 	/**
 	 * 计算 PvP 击杀获得的经验
 	 * Calculate XP gained from PvP kill
-	 *
 	 * @param defeated 被击败玩家 / Defeated player
 	 * @param maxRank 击杀方最高军衔 / Winner max rank
 	 * @param maxLevel 击杀方最高等级 / Winner max level
@@ -160,7 +151,6 @@ public class StatFunctions {
 	/**
 	 * 计算 PvP 击杀获得的 DP
 	 * Calculate DP gained from PvP kill
-	 *
 	 * @param defeated 被击败玩家 / Defeated player
 	 * @param maxRank 击杀方最高军衔 / Winner max rank
 	 * @param maxLevel 击杀方最高等级 / Winner max level
@@ -173,7 +163,6 @@ public class StatFunctions {
 	/**
 	 * 按等级差调整 PvP DP 奖励
 	 * Adjust PvP DP reward by level difference
-	 *
 	 * Base points
 	 * @param defeatedLvl 被击败等级 / Defeated level
 	 * @param killerLvl 击杀者等级 / Killer level
@@ -186,7 +175,6 @@ public class StatFunctions {
 	/**
 	 * 按 BOOST_HATE 属性计算仇恨（当前主要用于技能）
 	 * Calculate hate based on BOOST_HATE (currently used mainly from skills)
-	 *
 	 * Creature
 	 * @param value 基础仇恨 / Base hate value
 	 * Final hate
@@ -199,7 +187,6 @@ public class StatFunctions {
 	/**
 	 * 计算一次攻击的主/副手伤害结果列表
 	 * Calculate main/off-hand attack damage results for one attack
-	 *
 	 * Attacker
 	 * Skill element
 	 * Attack status
@@ -295,7 +282,6 @@ public class StatFunctions {
 	/**
 	 * 计算魔法技能伤害
 	 * Calculate magical skill damage
-	 *
 	 * Speller
 	 * Target
 	 * Base damages
@@ -420,10 +406,7 @@ public class StatFunctions {
 	/**
 	 * 应用全局伤害倍率配置
 	 * Apply global damage multiplier from rate config
-	 *
 	 * Raw damage
-	 *
-	 * @param damage
 	 * @return 缩放后伤害 / Scaled damage
 	 */
 	public static int applyDamageMultiplier(int damage) {
@@ -445,7 +428,6 @@ public class StatFunctions {
 	/**
 	 * 计算魔法暴击是否触发
 	 * Calculate whether a magical critical hit occurs
-	 *
 	 * Attacker
 	 * Attacked
 	 * @param criticalProb 暴击概率修正 / Critical probability modifier
@@ -458,7 +440,6 @@ public class StatFunctions {
 	/**
 	 * 计算魔法暴击是否触发（可关闭魔暴）
 	 * Calculate whether a magical critical hit occurs (optional mcrit apply)
-	 *
 	 * Attacker
 	 * Attacked
 	 * @param criticalProb 暴击概率修正 / Critical probability modifier
@@ -488,7 +469,6 @@ public class StatFunctions {
 	/**
 	 * 按 NPC 评级返回 DP 倍率
 	 * Return DP multiplier by NPC rating
-	 *
 	 * NPC rating
 	 * Multiplier
 	 */
@@ -508,7 +488,6 @@ public class StatFunctions {
 	/**
 	 * 按 NPC 评级返回 AP 倍率
 	 * Return AP multiplier by NPC rating
-	 *
 	 * NPC rating
 	 * AP multiplier
 	 */
@@ -527,7 +506,6 @@ public class StatFunctions {
 	/**
 	 * 按等级差与 PvP/PvE 比率调整伤害
 	 * Adjust damage by level difference and PvP/PvE ratios
-	 *
 	 * Attacker
 	 * Target
 	 * Base damages
@@ -543,7 +521,6 @@ public class StatFunctions {
 	/**
 	 * 按等级差、PvP/PvE 比率与元素调整伤害
 	 * Adjust damage by level difference, PvP/PvE ratios and element
-	 *
 	 * Attacker
 	 * Target
 	 * Base damages
@@ -676,7 +653,6 @@ public class StatFunctions {
 	/**
 	 * 计算物理闪避是否触发
 	 * Calculate whether a physical dodge occurs
-	 *
 	 * Attacker
 	 * Attacked
 	 * Accuracy modifier
@@ -733,7 +709,6 @@ public class StatFunctions {
 	/**
 	 * 计算物理招架是否触发
 	 * Calculate whether a physical parry occurs
-	 *
 	 * Attacker
 	 * Attacked
 	 * Whether parried
@@ -745,7 +720,6 @@ public class StatFunctions {
 	/**
 	 * 计算物理招架是否触发（带命中修正）
 	 * Calculate whether a physical parry occurs with accuracy modifier
-	 *
 	 * Attacker
 	 * Attacked
 	 * Accuracy modifier
@@ -781,7 +755,6 @@ public class StatFunctions {
 	/**
 	 * 计算物理格挡是否触发
 	 * Calculate whether a physical block occurs
-	 *
 	 * Attacker
 	 * Attacked
 	 * Whether blocked
@@ -793,7 +766,6 @@ public class StatFunctions {
 	/**
 	 * 计算物理格挡是否触发（带命中修正）
 	 * Calculate whether a physical block occurs with accuracy modifier
-	 *
 	 * Attacker
 	 * Attacked
 	 * Accuracy modifier
@@ -843,13 +815,11 @@ public class StatFunctions {
 	/**
 	 * 根据防御-命中差值与上限判定是否闪避/招架/格挡
 	 * Resolve dodge/parry/block success from defense-accuracy difference and upper cap
-	 *
 	 * Defense value
 	 * Accuracy value
 	 * Accuracy modifier
 	 * Attacker stat ratio
 	 * Probability upper cap
-	 *
 	 * @return 是否成功规避 / Whether avoidance succeeds
 	 */
 	public static boolean calculatePhysicalEvasion(float defense, float accuracy, int accMod, float attackerStatRatio,
@@ -864,7 +834,6 @@ public class StatFunctions {
 	/**
 	 * 计算物理暴击是否触发
 	 * Calculate whether a physical critical hit occurs
-	 *
 	 * Attacker
 	 * Attacked
 	 * Whether main hand
@@ -908,7 +877,6 @@ public class StatFunctions {
 	/**
 	 * 计算魔法抗性概率
 	 * Calculate magical resist rate
-	 *
 	 * Attacker
 	 * Attacked
 	 * Accuracy modifier
@@ -921,7 +889,6 @@ public class StatFunctions {
 	/**
 	 * 计算指定元素的魔法抗性概率
 	 * Calculate magical resist rate for a specific element
-	 *
 	 * Attacker
 	 * Attacked
 	 * Accuracy modifier
@@ -975,7 +942,6 @@ public class StatFunctions {
 	/**
 	 * 计算跌落伤害；返回是否强制回城
 	 * Calculate fall damage; returns whether the player is forced to bind location
-	 *
 	 * 玩家 / Player
 	 * Fall distance
 	 * @param stoped 是否已停止 / Whether stopped
@@ -1006,12 +972,9 @@ public class StatFunctions {
 	/**
 	 * 按移动朝向修正玩家属性（前进减防、侧移加闪避等）
 	 * Modify player stats by movement heading (forward defense cut, side evasion bonus, etc.)
-	 *
 	 * Creature
-	 *
 	 * @param stat 属性枚举 / Stat enum
 	 * @param value 原始属性值 / Original stat value
-	 * @param value
 	 * @return 修正后属性值 / Modified stat value
 	 */
 	public static float getMovementModifier(Creature creature, StatEnum stat, float value) {

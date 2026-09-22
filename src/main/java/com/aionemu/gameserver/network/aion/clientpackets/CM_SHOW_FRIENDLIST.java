@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_FRIEND_LIST;
 /**
  * 客户端请求好友列表包。
  * Client packet for requesting the friend list.
- *
  * @author Ben
  */
 public class CM_SHOW_FRIENDLIST extends AionClientPacket {

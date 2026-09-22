@@ -31,8 +31,6 @@ public class InstanceEngine implements GameEngine {
      * -- SETTER --
      *  设置 Spring 实例提供者。
      *  Set the Spring instance provider.
-     *
-     * @param provider Spring 提供者 / Spring provider
      */
 	@Setter
     private static volatile ObjectProvider<InstanceEngine> instanceProvider;
@@ -52,7 +50,6 @@ public class InstanceEngine implements GameEngine {
 	/**
 	 * 加载副本脚本处理器。
 	 * Load scripted instance handlers.
-	 *
 	 * @param progressLatch 进度闩；完成后倒数 / progress latch; counted down when finished
 	 */
 	@Override
@@ -88,7 +85,6 @@ public class InstanceEngine implements GameEngine {
 	/**
 	 * 按世界地图 ID 创建新的副本处理器；未注册时返回默认处理器。
 	 * Create a new instance handler for the given world-map id; returns the dummy handler if none is registered.
-	 *
 	 * @param worldId 世界地图 ID / world-map id
 	 * @return 处理器实例 / handler instance
 	 */
@@ -111,7 +107,6 @@ public class InstanceEngine implements GameEngine {
 	/**
 	 * 将带 {@link InstanceID} 注解的处理器类注册到注册表。
 	 * Register a handler class annotated with {@link InstanceID} into the registry.
-	 *
 	 * @param handler 处理器类 / handler class
 	 */
 	final void addInstanceHandlerClass(Class<? extends InstanceHandler> handler) {
@@ -124,7 +119,6 @@ public class InstanceEngine implements GameEngine {
 	/**
 	 * 通知副本已创建，并调用其处理器的 {@code onInstanceCreate}。
 	 * Notify that an instance has been created and invoke its handler's {@code onInstanceCreate}.
-	 *
 	 * @param instance 新建的世界地图实例 / newly created world-map instance
 	 */
 	public void onInstanceCreate(final WorldMapInstance instance) {
@@ -136,11 +130,9 @@ public class InstanceEngine implements GameEngine {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available

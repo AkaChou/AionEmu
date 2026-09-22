@@ -19,7 +19,6 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 /**
  * 任务状态列表。
  * Quest State List game object.
- *
  * @author MrPoke
  */
 @Slf4j

@@ -31,8 +31,7 @@ public class RelinquishCraftStatus {
 	 * -- SETTER --
 	 *  注入 Spring ObjectProvider，用于容器管理的实例解析。
 	 *  Inject Spring ObjectProvider for container-managed instance resolution.
-	 *
-	 * @param provider 实例提供者 / Instance provider
+	 * 实例提供者 / Instance provider
 	 */
 	@Setter
 	private static volatile ObjectProvider<RelinquishCraftStatus> instanceProvider;
@@ -41,8 +40,6 @@ public class RelinquishCraftStatus {
 	 * -- GETTER --
 	 *  获取专家最低等级。
 	 *  Get expert minimum skill level.
-	 *
-	 * @return 专家最低等级 / Expert minimum level
 	 */
 	@Getter
 	private static final int expertMinValue = 399;
@@ -50,8 +47,6 @@ public class RelinquishCraftStatus {
 	 * -- GETTER --
 	 *  获取专家最高等级。
 	 *  Get expert maximum skill level.
-	 *
-	 * @return 专家最高等级 / Expert maximum level
 	 */
 	@Getter
 	private static final int expertMaxValue = 499;
@@ -59,8 +54,6 @@ public class RelinquishCraftStatus {
 	 * -- GETTER --
 	 *  获取大师最低等级。
 	 *  Get master minimum skill level.
-	 *
-	 * @return 大师最低等级 / Master minimum level
 	 */
 	@Getter
 	private static final int masterMinValue = 499;
@@ -68,8 +61,6 @@ public class RelinquishCraftStatus {
 	 * -- GETTER --
 	 *  获取大师最高等级。
 	 *  Get master maximum skill level.
-	 *
-	 * @return 大师最高等级 / Master maximum level
 	 */
 	@Getter
 	private static final int masterMaxValue = 549;
@@ -83,8 +74,6 @@ public class RelinquishCraftStatus {
      * -- GETTER --
      *  获取技能变更消息 ID。
      *  Get skill-change message id.
-     *
-     * @return 技能变更消息 ID / Message id
      */
 	@Getter
     private static final int skillMessageId = 1401127;
@@ -92,11 +81,9 @@ public class RelinquishCraftStatus {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -115,7 +102,6 @@ public class RelinquishCraftStatus {
 	/**
 	 * 放弃专家制作头衔：扣费、降级至专家下限，并清理配方与任务。
 	 * Relinquish expert craft status: charge fee, demote to expert min level, clean recipes and quests.
-	 *
 	 * @param player 玩家 / Player
 	 * @param npc 相关 NPC / Related NPC
 	 */
@@ -138,7 +124,6 @@ public class RelinquishCraftStatus {
 	/**
 	 * 放弃大师制作头衔：扣费、降级至大师下限，并清理配方与任务。
 	 * Relinquish master craft status: charge fee, demote to master min level, clean recipes and quests.
-	 *
 	 * @param player 玩家 / Player
 	 * @param npc 相关 NPC / Related NPC
 	 */
@@ -161,13 +146,11 @@ public class RelinquishCraftStatus {
 	/**
 	 * 校验是否可放弃指定区间内的制作头衔。
 	 * Validate whether the craft status in the given level range can be relinquished.
-	 *
 	 * @param player 玩家 / Player
 	 * @param skill 技能条目 / Skill entry
 	 * @param craftLearnTemplate 制作学习模板 / Craft learn template
 	 * @param minValue 最低等级 / Minimum level
 	 * @param maxValue 最高等级 / Maximum level
-	 *
 	 * @return 是否允许放弃 / Whether relinquish is allowed
 	 */
 	private static boolean canRelinquishCraftStatus(Player player, PlayerSkillEntry skill,
@@ -181,10 +164,8 @@ public class RelinquishCraftStatus {
 	/**
 	 * 按势力价格服务扣减基纳，失败时提示消息。
 	 * Decrease kinah using race-aware price service; notify on failure.
-	 *
 	 * @param player 玩家 / Player
 	 * @param basePrice 基础价格 / Base price
-	 *
 	 * @return 是否扣费成功 / Whether decrease succeeded
 	 */
 	private static boolean successDecreaseKinah(Player player, int basePrice) {
@@ -198,7 +179,6 @@ public class RelinquishCraftStatus {
 	/**
 	 * 删除指定技能在给定等级及以上的全部配方。
 	 * Remove all recipes for the skill at or above the given skill point level.
-	 *
 	 * @param player 玩家 / Player
 	 * @param skillId 技能 ID / Skill id
 	 * @param level 技能点阈值 / Skill-point threshold
@@ -215,7 +195,6 @@ public class RelinquishCraftStatus {
 	/**
 	 * 删除制作头衔相关任务状态，并刷新任务列表。
 	 * Delete craft-status related quest states and refresh the quest list.
-	 *
 	 * @param skillId 技能 ID / Skill id
 	 * @param player 玩家 / Player
 	 * @param isExpert 是否同时清理专家任务 / Whether to also clear expert quests
@@ -250,7 +229,6 @@ public class RelinquishCraftStatus {
 	/**
 	 * 当玩家专家/大师数量超出配置上限时，强制降级多余技能。
 	 * Force-demote excess expert/master craft skills when over configured limits.
-	 *
 	 * @param player 玩家 / Player
 	 * @param isExpert 是否处理专家（false 为大师，并会递归处理专家） / Process expert (false for master, then recurse to expert)
 	 */

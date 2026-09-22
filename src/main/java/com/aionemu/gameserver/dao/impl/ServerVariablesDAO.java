@@ -13,9 +13,7 @@ import java.sql.SQLException;
 /**
  * 服务器变量 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of ServerVariablesDAO.
- *
  * Updated for MySQL 8 - Fixed connection leaks.
- *
  * @author Ben
  */
 @Slf4j(topic = "com.aionemu.gameserver.dao.ServerVariablesDAO")
@@ -29,9 +27,7 @@ public class ServerVariablesDAO extends com.aionemu.gameserver.dao.ServerVariabl
 	/**
 	 * 按键加载服务器变量整数值。
 	 * Loads a server variable integer value by key.
-	 *
 	 * variable key
-	 *
 	 * @param var 变量键 / variable key
 	 * @return 变量值，不存在则 0 / value, or 0 if missing
 	 */
@@ -55,10 +51,8 @@ public class ServerVariablesDAO extends com.aionemu.gameserver.dao.ServerVariabl
 	/**
 	 * 存储服务器变量。
 	 * Stores a server variable.
-	 *
 	 * @param var 变量键 / variable key
 	 * @param time 整数值 / integer value
-	 *
 	 * @return 是否写入成功 / whether the write succeeded
 	 */
 	@Override
@@ -78,7 +72,6 @@ public class ServerVariablesDAO extends com.aionemu.gameserver.dao.ServerVariabl
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
-	 *
 	 * @param databaseName 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version

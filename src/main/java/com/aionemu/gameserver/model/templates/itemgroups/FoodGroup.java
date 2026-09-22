@@ -13,7 +13,6 @@ import com.aionemu.gameserver.model.templates.rewards.IdLevelReward;
 /**
  * 食物奖励组：按等级奖励的条目。
  * Food reward group: level-based reward entries.
- *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)

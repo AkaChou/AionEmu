@@ -50,7 +50,6 @@ public class GameSystemGateway {
     /**
      * 执行系统收尾：打印分区、信息、横幅与内存，返回启动耗时秒数。
      * Run system finalization: print sections, info, banner and memory; return startup seconds.
-     *
      * @param serverStartTimeMillis 服务器启动时间戳（毫秒） / Server start time millis
      * @return 启动耗时秒数 / Startup time in seconds
      */
@@ -74,7 +73,6 @@ public class GameSystemGateway {
     /**
      * 组装横幅行（艺术字 + 启动成功文案）。
      * Build banner lines (art plus successful-startup caption).
-     *
      * @return 横幅行列表 / Banner line list
      */
     private static List<String> bannerLines() {

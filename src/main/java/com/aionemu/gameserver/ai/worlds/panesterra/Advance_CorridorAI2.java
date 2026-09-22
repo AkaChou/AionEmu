@@ -21,7 +21,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Panesterra 区域 NPC AI：Advance Corridor（@AIName "advance_corridor"），继承 NpcAI2。
  * Panesterra zone NPC AI: Advance Corridor (@AIName "advance_corridor"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("advance_corridor")

@@ -29,16 +29,12 @@ public abstract class CreatureLifeStats<T extends Creature> {
 	protected int currentHp;
 	/** 返回当前魔法 / Returns the current mp */
 	protected int currentMp;
-	/**
-	 * @return 是否已死亡。 / Whether already dead
-	 */
 	protected boolean alreadyDead = false;
 	/** 返回所有者 / Returns the owner*/
 	protected T owner;
 	/**
 	 * 单一生命状态互斥量。
 	 * Single life-state mutex.
-	 *
 	 * <p>HP/MP/恢复任务三段临界区都只做内存状态改写与一次任务调度（回调与观察者通知都在锁外执行），
 	 * 既不阻塞也不互相嵌套，因此没有理由让每个生物持有三把锁：一把 {@link ReentrantLock} 实际是
 	 * {@code ReentrantLock} + {@code NonfairSync} 两个对象，全服 ≈38 万把锁里这里占 ≈18 MB。

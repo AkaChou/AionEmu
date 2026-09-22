@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Empyrean Crucible 副本 NPC AI：Record Keeper Reward（@AIName "recordkeeperreward"），继承 NpcAI2。
  * Empyrean Crucible instance NPC AI: Record Keeper Reward (@AIName "recordkeeperreward"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("recordkeeperreward")

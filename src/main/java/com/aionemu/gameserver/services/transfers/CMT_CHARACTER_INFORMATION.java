@@ -52,7 +52,6 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 /**
  * 角色信息解析包，从跨服转移二进制流中反序列化并在目标服重建完整角色。
  * Character-information packet that deserializes a transfer payload and rebuilds a full character on the target server.
- *
  * @author KID
  */
 public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
@@ -60,7 +59,6 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 	/**
 	 * 构造空实现的客户端包（仅用于离线反序列化，不走网络收发）。
 	 * Construct a stub client packet used only for offline deserialization (not network I/O).
-	 *
 	 * @param opcode 操作码 / opcode
 	 * @param state 连接状态 / Connection state
 	 * @param restStates 其他状态 / additional states
@@ -80,7 +78,6 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 	/**
 	 * 从当前 buffer 读取完整角色数据并在目标账户下创建新角色。
 	 * Read a full character from the current buffer and create it under the target account.
-	 *
 	 * @param name 角色名 / character name
 	 * @param targetAccount 目标账号 ID / target account ID
 	 * @param accountName 账号名 / account name

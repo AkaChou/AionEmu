@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 传送后变身面板同步：恢复大天使/副本/活动变形的技能面板关联。
  * Post-teleport transform panel sync: restores archdaeva/instance/event transform skill panels.
- *
  * <p>该类型只服务 {@link TeleportService2}：玩家使用传送/飞行/热点/回程卷轴或管理员传送命令后，
  * 若仍处于变形效果中，必须重发效果关联的技能面板。全部为静态方法，不持有状态；
  * 对外仍通过 {@link TeleportService2} 的原 public static 方法访问（门面签名不变）。
@@ -31,7 +30,6 @@ final class TransformPanelSync {
 	/**
 	 * 从数据库加载并同步玩家变形状态到客户端。
 	 * Loads and syncs player transformation state to the client.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	static void loadAndSyncTransformation(Player player) {
@@ -46,7 +44,6 @@ final class TransformPanelSync {
 	 * Archdaeva Transformation 5.1: If a player is under one of the following effects, and uses a
 	 * "Teleport/Fly/Hotspot/Return Scroll" or admin command "goto/movetoplayer/movetonpc",
 	 * the skill panel linked to this effect must not disappear.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	static void syncArchdaevaPanels(Player player) {
@@ -124,7 +121,6 @@ final class TransformPanelSync {
 	 * Instance + Event Transformation: If a player is under one of the following effects, and uses a
 	 * "Teleport/Fly/Hotspot/Return Scroll" or admin command "goto/movetoplayer/movetonpc",
 	 * the skill panel linked to this effect must not disappear.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	static void syncInstanceEventPanels(Player player) {

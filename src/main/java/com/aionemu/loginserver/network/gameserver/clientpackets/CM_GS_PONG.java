@@ -6,7 +6,6 @@ import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 /**
  * GS→LS：游戏服心跳应答（pong）。
  * GS→LS: GameServer heartbeat pong.
- *
  * @author KID
  */
 public class CM_GS_PONG extends GsClientPacket {

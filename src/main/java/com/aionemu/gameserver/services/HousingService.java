@@ -53,8 +53,6 @@ public class HousingService {
      * -- SETTER --
      *  注入 Spring 的实例提供者。
      *  Injects the Spring instance provider.
-     *
-     * @param provider 实例提供者 / instance provider
      */
     @Setter
     private static volatile ObjectProvider<HousingService> instanceProvider;
@@ -68,11 +66,9 @@ public class HousingService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -104,7 +100,6 @@ public class HousingService {
 	/**
 	 * 在指定世界/实例中生成房屋；若无地产数据则尝试生成玩家工作室。
 	 * Spawns houses in the given world/instance; if no land data, tries to spawn a player studio.
-	 *
 	 * 世界 ID / world id
 	 * instance id
 	 * @param registeredId 注册玩家 ID（工作室场景） / registered player id (studio case)
@@ -179,7 +174,6 @@ public class HousingService {
 	/**
 	 * 查询玩家拥有的房屋（工作室优先）。
 	 * Lists houses owned by the player (studio first if present).
-	 *
 	 * player object id
 	 * house list
 	 */
@@ -202,10 +196,7 @@ public class HousingService {
 	/**
 	 * 获取玩家当前房屋地址 ID（工作室或有效自定义房屋）。
 	 * Returns the player's current house address id (studio or active custom house).
-	 *
 	 * player id
-	 *
-	 * @param playerId
 	 * @return 地址 ID，无则为 0 / address id, or 0
 	 */
 	public int getPlayerAddress(int playerId) {
@@ -229,7 +220,6 @@ public class HousingService {
 	/**
 	 * 重置房屋自定义装饰外观。
 	 * Resets custom decorative parts of the house.
-	 *
 	 * @param house 目标房屋 / target house
 	 */
 	public void resetAppearance(House house) {
@@ -245,10 +235,7 @@ public class HousingService {
 	/**
 	 * 按名称查找自定义房屋。
 	 * Finds a custom house by name.
-	 *
 	 * house name
-	 *
-	 * @param houseName
 	 * @return 房屋，未找到则为 null / house, or null
 	 */
 	public House getHouseByName(String houseName) {
@@ -263,10 +250,7 @@ public class HousingService {
 	/**
 	 * 按地址 ID 查找自定义房屋。
 	 * Finds a custom house by address id.
-	 *
 	 * address id
-	 *
-	 * @param address
 	 * @return 房屋，未找到则为 null / house, or null
 	 */
 	public House getHouseByAddress(int address) {
@@ -281,10 +265,7 @@ public class HousingService {
 	/**
 	 * 激活玩家已购但处于未激活状态的房屋。
 	 * Activates a house the player bought that is still inactive.
-	 *
 	 * player id
-	 *
-	 * @param playerId
 	 * @return 激活后的房屋，不存在则为 null / activated house, or null
 	 */
 	public House activateBoughtHouse(int playerId) {
@@ -306,10 +287,7 @@ public class HousingService {
 	/**
 	 * 获取玩家工作室。
 	 * Returns the player's studio house.
-	 *
 	 * player id
-	 *
-	 * @param playerId
 	 * @return 工作室，不存在则为 null / studio, or null
 	 */
 	public House getPlayerStudio(int playerId) {
@@ -323,7 +301,6 @@ public class HousingService {
 	/**
 	 * 移除玩家工作室缓存。
 	 * Removes the player's studio from cache.
-	 *
 	 * player id
 	 */
 	public void removeStudio(int playerId) {
@@ -337,7 +314,6 @@ public class HousingService {
 	/**
 	 * 为玩家注册（创建）工作室。
 	 * Registers (creates) a studio for the player.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void registerPlayerStudio(Player player) {
@@ -347,7 +323,6 @@ public class HousingService {
 	/**
 	 * 扣费后重新创建玩家工作室。
 	 * Recreates the player's studio after charging the land fee.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void recreatePlayerStudio(Player player) {
@@ -364,7 +339,6 @@ public class HousingService {
 	/**
 	 * 创建并激活玩家工作室。
 	 * Creates and activates a player studio.
-	 *
 	 * @param player 玩家 / player
 	 */
 	private void createStudio(Player player) {
@@ -392,7 +366,6 @@ public class HousingService {
 	/**
 	 * 切换房屋建筑模板并刷新外观与物件。
 	 * Switches the house building template and refreshes appearance/objects.
-	 *
 	 * current house
 	 * @param newBuildingId 新建筑模板 ID / new building template id
 	 */
@@ -411,7 +384,6 @@ public class HousingService {
 	/**
 	 * 汇总所有已按地图登记的自定义房屋。
 	 * Collects all custom houses registered by map.
-	 *
 	 * @return 自定义房屋列表 / custom house list
 	 */
 	public List<House> getCustomHouses() {
@@ -425,7 +397,6 @@ public class HousingService {
 	/**
 	 * 实例销毁时清理工作室生成点并保存。
 	 * Clears studio spawn points and saves when an instance is destroyed.
-	 *
 	 * @param ownerId 所有者玩家 ID / owner player id
 	 */
 	public void onInstanceDestroy(int ownerId) {
@@ -444,7 +415,6 @@ public class HousingService {
 	/**
 	 * 玩家登录时同步房屋所有者状态与相关数据包。
 	 * On login, syncs house-owner flags and related packets.
-	 *
 	 * logging-in player
 	 */
 	public void onPlayerLogin(Player player) {

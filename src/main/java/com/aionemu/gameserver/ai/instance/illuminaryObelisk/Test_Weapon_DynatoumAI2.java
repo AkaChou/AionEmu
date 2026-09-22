@@ -25,7 +25,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Illuminary Obelisk 副本 NPC AI：Test Weapon Dynatoum（@AIName "test_weapon_dynatoum"），继承 AggressiveNpcAI2。
  * Illuminary Obelisk instance NPC AI: Test Weapon Dynatoum (@AIName "test_weapon_dynatoum"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("test_weapon_dynatoum")

@@ -44,7 +44,6 @@ public class GameSystemLifecycle {
     /**
      * 启动本阶段：执行系统收尾并返回启动耗时秒数。
      * Start this stage: run system finalization and return startup time in seconds.
-     *
      * @param serverStartTimeMillis 服务器启动时间戳（毫秒） / Server start time millis
      * @return 启动耗时秒数；已加载则返回缓存值 / Startup seconds; cached value if already loaded
      */
@@ -72,7 +71,6 @@ public class GameSystemLifecycle {
     /**
      * 是否已加载。
      * Whether this stage is loaded.
-     *
      * @return 已加载为 {@code true} / {@code true} if loaded
      */
     public synchronized boolean isLoaded() {
@@ -82,7 +80,6 @@ public class GameSystemLifecycle {
     /**
      * 本阶段执行耗时毫秒。
      * Stage execution time in milliseconds.
-     *
      * @return 耗时毫秒，未启动为 -1 / Elapsed millis, or {@code -1} if not started
      */
     public synchronized long getLoadTimeMillis() {
@@ -92,7 +89,6 @@ public class GameSystemLifecycle {
     /**
      * 服务器整体启动耗时秒数。
      * Overall server startup time in seconds.
-     *
      * @return 启动秒数，未成功为 -1 / Startup seconds, or {@code -1} if not successful
      */
     public synchronized long getStartupTimeSeconds() {
@@ -102,7 +98,6 @@ public class GameSystemLifecycle {
     /**
      * 最近失败。
      * Last failure.
-     *
      * @return 最近异常，无则为 null / Last throwable, or {@code null}
      */
     public synchronized Throwable getLastFailure() {

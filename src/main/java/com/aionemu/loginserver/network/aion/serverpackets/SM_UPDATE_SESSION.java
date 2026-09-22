@@ -7,7 +7,6 @@ import com.aionemu.loginserver.network.aion.SessionKey;
 /**
  * 登录服→客户端：更新会话密钥（快速重连用）。
  * LoginServer → client: update session key (for fast reconnect).
- *
  * @author -Nemesiss-
  */
 public class SM_UPDATE_SESSION extends AionServerPacket {
@@ -26,7 +25,6 @@ public class SM_UPDATE_SESSION extends AionServerPacket {
     /**
      * 构造 SM_UPDATE_SESSION 包。
      * Constructs a new SM_UPDATE_SESSION packet.
-     *
      * @param key 会话密钥 / session key
      */
     public SM_UPDATE_SESSION(SessionKey key) {

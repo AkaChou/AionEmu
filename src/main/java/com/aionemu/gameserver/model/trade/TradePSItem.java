@@ -6,7 +6,6 @@ import lombok.Setter;
 /**
  * 交易 PS 物品模型。
  * Trade PS Item model.
- *
  * @author Simple
  */
 @Getter
@@ -16,10 +15,6 @@ public class TradePSItem extends TradeItem {
 	private int itemObjId;
 	private long price;
 
-	/**
-	 * @param itemObjId
-	 * @param itemId
-	 */
 	public TradePSItem(int itemObjId, int itemId, long count, long price) {
 		super(itemId, count);
 		this.setPrice(price);

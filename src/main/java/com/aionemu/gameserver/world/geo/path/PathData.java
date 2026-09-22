@@ -198,10 +198,9 @@ public final class PathData {
 	/**
 	 * 无锁快速路径的不可变快照（一次 volatile 写完成发布，避免多字段撕裂）。
 	 * Immutable snapshot for the lock-free fast path (published by a single volatile write).
-	 *
-	 * @param worldId 世界 ID / world id
-	 * @param map     缓存的地图数据 / cached map data
-	 * @param epoch   生成该快照时的 {@link #mapsEpoch} / {@link #mapsEpoch} when the snapshot was created
+	 * 世界 ID / world id
+	 * 缓存的地图数据 / cached map data
+	 * 生成该快照时的 {@link #mapsEpoch} / {@link #mapsEpoch} when the snapshot was created
 	 */
 	private record MapLookup(int worldId, MapData map, int epoch) {
 
@@ -215,11 +214,7 @@ public final class PathData {
 	}
 
 	@FunctionalInterface
-	/**
-	 * 指定坐标处的地面高度提供者。
-	 * Provides ground height at the given coordinates.
-	 */
-	public interface HeightProvider {
+    public interface HeightProvider {
 		float get(float x, float y);
 	}
 
@@ -1528,7 +1523,6 @@ public final class PathData {
 		/**
 		 * 取得当前线程的工作区：首次调用时从共享池借出，嵌套调用复用同一份。
 		 * Acquires the thread's workspace: borrows one from the shared pool on first use and reuses it for nested calls.
-		 *
 		 * @return 工作区 / workspace
 		 */
 		private static SearchWorkspace acquireWorkspace() {
@@ -1549,7 +1543,6 @@ public final class PathData {
 		 * 归还工作区：只在租约深度归零时回到共享池，超出上限的实例直接丢弃。
 		 * Releases the workspace: it returns to the shared pool only when the lease depth reaches zero,
 		 * and instances beyond the cap are dropped.
-		 *
 		 * @param workspace 本次租约的工作区 / workspace held by this lease
 		 */
 		private static void releaseWorkspace(SearchWorkspace workspace) {
@@ -1763,7 +1756,6 @@ public final class PathData {
 			/**
 			 * 记录节点池游标，供邻居展开回退未被保留的临时节点。
 			 * Records the node-pool cursor so neighbor expansion can roll back temporary nodes it does not keep.
-			 *
 			 * @return 当前游标 / current cursor
 			 */
 			private int nodeMark() {
@@ -1774,7 +1766,6 @@ public final class PathData {
 			 * 回退到给定游标：本次展开中未被访问集合保留的节点槽位重新可用。
 			 * Rolls back to the given cursor so node slots from this expansion that the visited set did not keep
 			 * become reusable again.
-			 *
 			 * @param mark 由 {@link #nodeMark()} 记录的游标 / cursor recorded by {@link #nodeMark()}
 			 */
 			private void rollbackNodes(int mark) {

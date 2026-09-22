@@ -3,7 +3,6 @@ package com.aionemu.gameserver.model.templates.pet;
 /**
  * 宠物函数类型枚举。
  * Pet Function Type enumeration.
- *
  * @author Rinzler Formula: dataBitCount*2^5 OR id
  */
 public enum PetFunctionType {

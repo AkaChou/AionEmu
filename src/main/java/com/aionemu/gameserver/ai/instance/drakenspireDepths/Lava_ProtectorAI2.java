@@ -25,7 +25,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Drakenspire Depths 副本 NPC AI：Lava Protector（@AIName "lava_protector"），继承 AggressiveNpcAI2。
  * Drakenspire Depths instance NPC AI: Lava Protector (@AIName "lava_protector"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("lava_protector")

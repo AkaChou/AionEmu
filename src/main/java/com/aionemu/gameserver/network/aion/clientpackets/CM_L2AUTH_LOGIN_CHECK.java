@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 客户端登录会话校验（playOk/loginOk）的客户端包。
  * Client packet for login session validation (playOk/loginOk).
- *
  * @author -Nemesiss-
  */
 public class CM_L2AUTH_LOGIN_CHECK extends AionClientPacket {
@@ -30,7 +29,6 @@ public class CM_L2AUTH_LOGIN_CHECK extends AionClientPacket {
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余合法状态 / additional valid states

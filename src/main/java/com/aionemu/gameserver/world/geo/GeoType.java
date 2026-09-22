@@ -3,7 +3,6 @@ package com.aionemu.gameserver.world.geo;
 /**
  * 地理数据工作模式。
  * Geo-data operating mode.
- *
  * @author ATracer
  */
 public enum GeoType {

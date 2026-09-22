@@ -15,7 +15,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Daeva Day 活动 NPC AI：Daeva Day Cake（@AIName "daeva_day_cake"），继承 NpcAI2。
  * Daeva Day event NPC AI: Daeva Day Cake (@AIName "daeva_day_cake"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("daeva_day_cake")

@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Cradle Of Eternity 副本 NPC AI：Fighting Earth Jotun（@AIName "Fighting_Earth_Jotun"），继承 GeneralNpcAI2。
  * Cradle Of Eternity instance NPC AI: Fighting Earth Jotun (@AIName "Fighting_Earth_Jotun"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("Fighting_Earth_Jotun")

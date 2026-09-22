@@ -21,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 登录服已注册游戏服表（在线/离线均包含）。
  * Table of GameServers registered on this LoginServer (online or down).
- *
  * @author -Nemesiss-
  */
 @Slf4j
@@ -37,7 +36,6 @@ public class GameServerTable {
     /**
      * 返回全部已注册游戏服的不可变集合。
      * Return an unmodifiable collection of all registered GameServers.
-     *
      * @return 游戏服集合 / GameServer collection
      */
     public Collection<GameServerInfo> getGameServers() {
@@ -56,7 +54,6 @@ public class GameServerTable {
     /**
      * 在允许时注册游戏服连接。
      * Register a GameServer connection when allowed.
-     *
      * @param gsConnection 游戏服连接 / GameServer connection
      * @param requestedId 请求的服务器 ID / Requested server id
      * @param defaultAddress 默认网络地址（通常公网） / Default network address (usually public)
@@ -100,7 +97,6 @@ public class GameServerTable {
     /**
      * 按 ID 获取游戏服信息。
      * Get GameServerInfo by gameserver id.
-     *
      * @param gameServerId 游戏服 ID / GameServer id
      * @return 游戏服信息 / GameServer info
      */
@@ -111,7 +107,6 @@ public class GameServerTable {
     /**
      * 检查账号是否已在任意游戏服在线。
      * Check whether the account is already in use on any GameServer.
-     *
      * @param acc 待检查账号 / Account to check
      * @return 已在任意游戏服登录则为 true / true if logged in on any GameServer
      */
@@ -127,7 +122,6 @@ public class GameServerTable {
     /**
      * 若账号在任意游戏服在线则踢下线。
      * Kick account from any GameServer if it is logged in.
-     *
      * @param account 待踢账号 / Account to kick
      */
     public void kickAccountFromGameServer(Account account) {
@@ -142,7 +136,6 @@ public class GameServerTable {
     /**
      * 获取 {@link GameServersDAO} 快捷方法。
      * Shortcut for {@link GameServersDAO}.
-     *
      * @return DAO 实例 / DAO instance
      */
     private GameServersDAO getDAO() {
@@ -152,7 +145,6 @@ public class GameServerTable {
     /**
      * 向指定游戏服转发 pong。
      * Forward pong to the given GameServer.
-     *
      * @param serverId 游戏服 ID / GameServer id
      * @param pid 进程 ID / Process id
      */

@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：立即检查所有锁定任务的开启条件并尝试启动。
  * Player command: immediately checks all LOCKED missions for start conditions and starts them if met.
- *
  * @author vlog
  */
 public class cmd_mcheck extends PlayerCommand {
@@ -25,7 +24,6 @@ public class cmd_mcheck extends PlayerCommand {
 	/**
 	 * 遍历玩家任务列表，对 LOCKED 状态任务触发升级检查。
 	 * Iterates quest states and triggers level-up checks for LOCKED quests.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 未使用的参数 / unused parameters
 	 */

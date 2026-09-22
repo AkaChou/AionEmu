@@ -7,14 +7,12 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 离开当前副本实例的客户端包。
  * Client packet for leaving the current instance.
- *
  * @author xTz
  */
 public class CM_INSTANCE_LEAVE extends AionClientPacket {
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余合法状态 / additional valid states

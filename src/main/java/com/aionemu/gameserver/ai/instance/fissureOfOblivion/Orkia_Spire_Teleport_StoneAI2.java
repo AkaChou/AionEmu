@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Fissure Of Oblivion 副本 NPC AI：Orkia Spire Teleport Stone（@AIName "Orkia_Spire_Teleport_Stone"），继承 NpcAI2。
  * Fissure Of Oblivion instance NPC AI: Orkia Spire Teleport Stone (@AIName "Orkia_Spire_Teleport_Stone"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Orkia_Spire_Teleport_Stone")

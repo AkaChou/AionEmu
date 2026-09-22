@@ -23,7 +23,6 @@ import java.util.Set;
 /**
  * 索罗补给基地副本事件处理器。
  * Instance event handler for Sauro Supply Base.
- *
  * @author Encom
  */
 
@@ -35,7 +34,6 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 
@@ -162,17 +160,13 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
     /**
      * 处理死亡事件。
      * Handle a death event.
-     *
      * @param npc NPC / npc
      */
     @Override
     public void onDie(Npc npc) {
         Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
-			/**
-			 * 区域 1：警卫室与符文大厅。 / Area 1: Guardroom And Rune Hall
-			 */
-			case 230849: //Guard Captain Rohuka.
+            case 230849: //Guard Captain Rohuka.
 				doors.get(383).setOpen(true);
 				// 通往被玷污的达努阿尔神殿的门已打开。 / The door to the Defiled Danuar Temple has opened.
 				sendMsgByRace(1401914, Race.PC_ALL, 0);
@@ -197,10 +191,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 				}
 			break;
 
-			/**
-			 * 区域 2：符文回廊与后勤基地。 / Area 2: Rune Cloister And Logistic Base
-			 */
-			case 230818: //Sheban Legion Elite Gunner.
+            case 230818: //Sheban Legion Elite Gunner.
 				doors.get(372).setOpen(true);
 				// 通往首席研究员办公室的门已打开。 / The door to the Head Researcher's Office has opened.
 				sendMsgByRace(1401916, Race.PC_ALL, 0);
@@ -211,10 +202,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 				sendMsgByRace(1401917, Race.PC_ALL, 0);
 			break;
 
-			/**
-			 * 区域 3：符文桥与后勤基地军械库。 / Area 3: Rune Bridge And Logistic Base Arsenal
-			 */
-			case 233255: //Gatekeeper Stranir.
+            case 233255: //Gatekeeper Stranir.
 				doors.get(378).setOpen(true);
 				// 通往索罗军械库的门已打开。 / The door to the Sauro Armory has opened.
 				sendMsgByRace(1401918, Race.PC_ALL, 0);
@@ -225,10 +213,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 				sendMsgByRace(1401919, Race.PC_ALL, 0);
 			break;
 
-			/**
-	 * 区域 4。 / Area 4: Chiefs Chamber
-	 */
-			case 230791: //Sheban Legion Elite Assaulter.
+            case 230791: //Sheban Legion Elite Assaulter.
 				doors.get(376).setOpen(true);
 				// 通往莫里亚塔住所的门已打开。 / The door to Moriata's Quarters has opened.
 				sendMsgByRace(1401920, Race.PC_ALL, 0);
@@ -241,10 +226,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 				spawn(730872, 127.77696f, 432.75684f, 151.69659f, (byte) 0, 3);
 			break;
 
-			/**
-	 * 区域 5。 / Area 5: Final Boss
-	 */
-			case 230857: //Guard Captain Ahuradim.
+            case 230857: //Guard Captain Ahuradim.
 /* 				switch (Rnd.get(1, 2)) {
 		            case 1:
 				        spawn(702658, 703.3344f, 883.07666f, 411.5939f, (byte) 90); //修道院箱子。 / Abbey Box.
@@ -273,7 +255,6 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 	/**
 	 * 移除相关物品。
 	 * Remove related items.
-	 *
 	 * @param player 玩家 / player
 	 */
 
@@ -288,7 +269,6 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
-	 *
 	 * @param msg 消息 / message
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
@@ -306,7 +286,6 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -323,7 +302,6 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -334,7 +312,6 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override

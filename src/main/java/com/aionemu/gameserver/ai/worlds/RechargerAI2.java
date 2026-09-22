@@ -16,7 +16,6 @@ import java.util.Map;
 /**
  * 开放世界区域 NPC AI：Recharger（@AIName "recharger"），继承 ActionItemNpcAI2。
  * Open-world zone NPC AI: Recharger (@AIName "recharger"), extends ActionItemNpcAI2.
- *
  * @author (Encom)
  */
 @AIName("recharger") //730397

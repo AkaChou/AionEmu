@@ -9,7 +9,6 @@ import java.sql.SQLException;
 /**
  * 玩家配方列表数据访问抽象层。
  * DAO for player craft recipe list persistence.
- *
  * @author lord_rex
  */
 public abstract class PlayerRecipesDAO implements DAO {
@@ -17,7 +16,6 @@ public abstract class PlayerRecipesDAO implements DAO {
 	/**
 	 * 返回实现唯一类名标识。
 	 * Returns unique class name for all implementations.
-	 *
 	 * @return 完整类名 / fully qualified class name
 	 */
 	@Override
@@ -28,7 +26,6 @@ public abstract class PlayerRecipesDAO implements DAO {
 	/**
 	 * 加载玩家已学会的配方列表。
 	 * Loads the recipe list for the player.
-	 *
 	 * @param playerId 玩家对象 ID / player object id
 	 * @return 配方列表 / recipe list
 	 */
@@ -37,7 +34,6 @@ public abstract class PlayerRecipesDAO implements DAO {
 	/**
 	 * 为玩家添加一条配方。
 	 * Adds a recipe for the player.
-	 *
 	 * @param playerId 玩家对象 ID / player object id
 	 * @param recipeId 配方 ID / recipe id
 	 * @return 是否添加成功 / true if added
@@ -47,7 +43,6 @@ public abstract class PlayerRecipesDAO implements DAO {
 	/**
 	 * 删除玩家的一条配方。
 	 * Deletes a recipe from the player.
-	 *
 	 * @param playerId 玩家对象 ID / player object id
 	 * @param recipeId 配方 ID / recipe id
 	 * @return 是否删除成功 / true if deleted

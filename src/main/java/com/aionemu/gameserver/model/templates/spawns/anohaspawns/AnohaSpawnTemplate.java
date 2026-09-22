@@ -10,7 +10,6 @@ import lombok.Setter;
 /**
  * 阿诺哈刷新点模板（静态数据/XML）。
  * Anoha spawn template (static data/XML).
- *
  * @author Rinzler (Encom)
  */
 

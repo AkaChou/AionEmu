@@ -27,7 +27,6 @@ import com.aionemu.gameserver.world.knownlist.KnownList;
 /**
  * 通用 NPC AI：封装 NPC 数据访问，并处理激活/刷新/死亡/喊话等基础事件。
  * General NPC AI: wraps NPC data access and handles basic activate/spawn/death/shout events.
- *
  * @author ATracer
  */
 @AIName("npc")
@@ -36,7 +35,6 @@ public class NpcAI2 extends AITemplate {
 	/**
 	 * 获取 NPC 所有者。
 	 * Returns the NPC owner.
-	 *
 	 * @return NPC 所有者 / NPC owner
 	 */
 	@Override
@@ -47,7 +45,6 @@ public class NpcAI2 extends AITemplate {
 	/**
 	 * 获取 NPC 模板。
 	 * Returns the NPC object template.
-	 *
 	 * @return NPC 模板 / NPC template
 	 */
 	protected NpcTemplate getObjectTemplate() {
@@ -57,7 +54,6 @@ public class NpcAI2 extends AITemplate {
 	/**
 	 * 获取刷新模板。
 	 * Returns the spawn template.
-	 *
 	 * @return 刷新模板 / spawn template
 	 */
 	protected SpawnTemplate getSpawnTemplate() {
@@ -67,7 +63,6 @@ public class NpcAI2 extends AITemplate {
 	/**
 	 * 获取生命状态。
 	 * Returns the life stats.
-	 *
 	 * @return 生命状态 / life stats
 	 */
 	protected NpcLifeStats getLifeStats() {
@@ -77,7 +72,6 @@ public class NpcAI2 extends AITemplate {
 	/**
 	 * 获取种族。
 	 * Returns the race.
-	 *
 	 * @return 阵营 / race
 	 */
 	protected Race getRace() {
@@ -87,7 +81,6 @@ public class NpcAI2 extends AITemplate {
 	/**
 	 * 获取部落。
 	 * Returns the tribe.
-	 *
 	 * @return 部落 / tribe
 	 */
 	protected TribeClass getTribe() {
@@ -97,7 +90,6 @@ public class NpcAI2 extends AITemplate {
 	/**
 	 * 获取效果控制器。
 	 * Returns the effect controller.
-	 *
 	 * @return 效果控制器 / effect controller
 	 */
 	protected EffectController getEffectController() {
@@ -107,7 +99,6 @@ public class NpcAI2 extends AITemplate {
 	/**
 	 * 获取已知对象列表。
 	 * Returns the known list.
-	 *
 	 * @return 已知对象列表 / known list
 	 */
 	protected KnownList getKnownList() {
@@ -117,7 +108,6 @@ public class NpcAI2 extends AITemplate {
 	/**
 	 * 获取仇恨列表。
 	 * Returns the aggro list.
-	 *
 	 * @return 仇恨列表 / aggro list
 	 */
 	protected AggroList getAggroList() {
@@ -127,7 +117,6 @@ public class NpcAI2 extends AITemplate {
 	/**
 	 * 获取技能列表。
 	 * Returns the NPC skill list.
-	 *
 	 * @return 技能列表 / skill list
 	 */
 	protected NpcSkillList getSkillList() {
@@ -137,7 +126,6 @@ public class NpcAI2 extends AITemplate {
 	/**
 	 * 获取创建者对象。
 	 * Returns the creator object.
-	 *
 	 * @return 创建者 / creator
 	 */
 	protected VisibleObject getCreator() {
@@ -147,7 +135,6 @@ public class NpcAI2 extends AITemplate {
 	/**
 	 * 获取移动控制器（已不推荐直接使用，移动应由 AI 命令驱动）。
 	 * Returns the move controller (deprecated: movements should be AI-driven commands).
-	 *
 	 * @return 移动控制器 / move controller
 	 */
 	protected NpcMoveController getMoveController() {
@@ -157,7 +144,6 @@ public class NpcAI2 extends AITemplate {
 	/**
 	 * 获取 NPC 模板 ID。
 	 * Returns the NPC template id.
-	 *
 	 * @return NPC 模板 ID / NPC id
 	 */
 	protected int getNpcId() {
@@ -167,7 +153,6 @@ public class NpcAI2 extends AITemplate {
 	/**
 	 * 获取创建者 ID。
 	 * Returns the creator id.
-	 *
 	 * @return 创建者 ID / creator id
 	 */
 	protected int getCreatorId() {
@@ -177,7 +162,6 @@ public class NpcAI2 extends AITemplate {
 	/**
 	 * 判断与指定对象是否在三维距离范围内。
 	 * Returns whether the given object is within 3D range.
-	 *
 	 * @param object 目标对象 / target object
 	 * @param range 距离范围 / range
 	 * @return 是否在范围内 / whether in range
@@ -258,7 +242,6 @@ public class NpcAI2 extends AITemplate {
 	/**
 	 * 处理目标变更事件（可触发喊话）。
 	 * Handles target-changed (may trigger shout).
-	 *
 	 * @param creature 新目标 / new target
 	 */
 	@Override
@@ -273,7 +256,6 @@ public class NpcAI2 extends AITemplate {
 	/**
 	 * 按问题返回 NPC 特有投票答案。
 	 * Returns NPC-specific poll answers for the given question.
-	 *
 	 * @param question 问题 / question
 	 * @return 答案，未知问题返回 null / answer, or null if unknown
 	 */
@@ -291,7 +273,6 @@ public class NpcAI2 extends AITemplate {
 	/**
 	 * 判断是否允许喊话。
 	 * Returns whether shouting is allowed.
-	 *
 	 * @return 是否可喊话 / whether may shout
 	 */
 	@Override
@@ -306,7 +287,6 @@ public class NpcAI2 extends AITemplate {
 	/**
 	 * 判断是否支持移动（有移速且未冻结）。
 	 * Returns whether movement is supported (has speed and not frozen).
-	 *
 	 * @return 是否可移动 / whether move is supported
 	 */
 	public boolean isMoveSupported() {

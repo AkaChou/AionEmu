@@ -47,7 +47,6 @@ import com.aionemu.gameserver.world.WorldPosition;
 /**
  * 自由混战（FFA）竞技场服务，管理地图轮换、进出场、击杀奖励与连杀播报。
  * Free-for-all (FFA) arena service managing map rotation, enter/leave, kill rewards, and kill-streak announcements.
- *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -65,7 +64,6 @@ public class FFAService {
 	/** 定时任务秒计数器。 / Periodic task second counter. */
 	private int incrementCounter = 0;
 	@SuppressWarnings("unused")
-	/** 当前实例静态门（预留）。 / Current instance static doors (reserved). */
 	private Map<Integer, StaticDoor> doors;
 	/** 服务是否已启用。 / Whether the service is enabled.
      * -- GETTER --
@@ -314,7 +312,6 @@ public class FFAService {
 	/**
 	 * 随机挑选下一张竞技场地图；若已有活跃地图则把场内玩家重新送入新图。
 	 * Picks the next arena map at random; if a map was already active, re-enters all players into the new map.
-	 *
 	 * @return 是否成功切换到新地图 / whether a new map was selected
 	 */
 	public boolean pickArenaMap() {
@@ -359,7 +356,6 @@ public class FFAService {
 	/**
 	 * 向场内广播击杀职业信息。
 	 * Broadcasts killer/victim class info inside the arena.
-	 *
 	 * victim
 	 * killer
 	 */
@@ -373,7 +369,6 @@ public class FFAService {
 	/**
 	 * 处理 FFA 内死亡：清理状态、奖励击杀者并延迟复活传送。
 	 * Handles death inside FFA: cleans state, rewards the killer, and delayed-revives/teleports.
-	 *
 	 * dead player
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 */
@@ -404,7 +399,6 @@ public class FFAService {
 	/**
 	 * 奖励击杀者（AP/GP/回血/连杀），并广播击杀消息。
 	 * Rewards the killer (AP/GP/heal/streak) and broadcasts the kill message.
-	 *
 	 * victim
 	 * killer
 	 */
@@ -432,7 +426,6 @@ public class FFAService {
 	/**
 	 * 检查并处理连杀里程碑奖励（物品 / 点数 / 全场播报）。
 	 * toll / arena announce).
-	 *
 	 * killer
 	 */
 	public void checkKillerLevel(Player player) {
@@ -531,7 +524,6 @@ public class FFAService {
 	/**
 	 * 判断玩家是否处于任一 FFA 竞技场地图。
 	 * Returns whether the player is on any FFA arena map.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否在竞技场 / whether in arena
 	 */
@@ -547,7 +539,6 @@ public class FFAService {
 	/**
 	 * 延迟进入 FFA：睡眠保护后脱队、标记 FFA 并传送到随机出生点。
 	 * Delayed FFA entry: sleep-protects, leaves party, marks FFA, and teleports to a random spawn.
-	 *
 	 * @param player 玩家 / player
 	 * @param isMapRotation 是否地图轮换进入（不缓存原坐标） / whether entry is due to map rotation (skip caching origin)
 	 */
@@ -597,7 +588,6 @@ public class FFAService {
 	/**
 	 * 延迟离开 FFA：解除标记并传送回进入前位置（或绑定点）。
 	 * Delayed FFA leave: clears FFA flag and teleports back to the previous position (or bind point).
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void leaveArena(final Player player) {
@@ -641,7 +631,6 @@ public class FFAService {
 	/**
 	 * 判断给定实例是否为当前活跃 FFA 实例。
 	 * Returns whether the given instance is the active FFA instance.
-	 *
 	 * @param instance 世界地图实例 / world map instance
 	 * @return 是否为活跃实例 / whether active instance
 	 */
@@ -652,7 +641,6 @@ public class FFAService {
 	/**
 	 * 判断给定实例是否位于当前活跃 FFA 地图。
 	 * Returns whether the given instance is on the active FFA world map.
-	 *
 	 * @param instance 世界地图实例 / world map instance
 	 * @return 是否为活跃地图 / whether active world map
 	 */
@@ -663,7 +651,6 @@ public class FFAService {
 	/**
 	 * 返回 FFA 内用于显示的目标名称（职业名）。
 	 * Returns the display name used for a target inside FFA (player class name).
-	 *
 	 * viewer
 	 * target
 	 * display name
@@ -676,11 +663,9 @@ public class FFAService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -699,7 +684,6 @@ public class FFAService {
 	/**
 	 * 注入 Spring 实例提供者。
 	 * Injects the Spring instance provider.
-	 *
 	 * provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<FFAService> instanceProvider) {
@@ -719,8 +703,6 @@ public class FFAService {
 		private final int mapId;
 		/** 出生点坐标列表。 / Spawn coordinate list.
 		 * -- GETTER --
-		 *
-		 * @return 出生点列表 / spawn list
 		 */
 		private final List<Float[]> spawns;
 		/** 单实例人数上限。 / Per-instance player cap.
@@ -732,7 +714,6 @@ public class FFAService {
 		/**
 		 * 构造竞技场地图。
 		 * Constructs an arena map.
-		 *
 		 * map id
 		 * player cap
 		 * spawns

@@ -91,7 +91,6 @@ public class SM_HOUSE_RENDER extends AionServerPacket {
 	/**
 	 * 写入指定部位类型的装饰模板 ID；个人室内房在 skipPersonal 时写 0。
 	 * Writes the decoration template ID for the given part type; writes 0 for personal indoor houses when skipPersonal is set.
-	 *
 	 * house
 	 * part type
 	 * @param floor 楼层索引 / floor index

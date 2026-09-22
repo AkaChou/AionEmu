@@ -3,7 +3,6 @@ package com.aionemu.gameserver.model.utils3d;
 /**
  * 3x3 矩阵，用于 3D 工具逻辑。
  * Matrix 3D for utils 3D logic.
- *
  * @author M@xx
  */
 public class Matrix3D {

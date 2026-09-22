@@ -9,7 +9,6 @@ import java.net.InetSocketAddress;
 /**
  * 网络套接字地址属性转换器
  * InetSocketAddress property transformer class that handles conversion of string values to InetSocketAddress objects.
- *
  * 支持的输入格式:
  * Supported input format:
  * - "address:port" 格式的字符串，其中 address 可以是:
@@ -29,7 +28,6 @@ public class InetSocketAddressTransformer implements PropertyTransformer<InetSoc
     /**
      * 将字符串值转换为 InetSocketAddress 对象
      * Transforms string value into InetSocketAddress object
-     *
      * @param value 要转换的字符串值（格式："address:port"）/ String value to transform (format: "address:port")
      * @param field 字段对象 / Field that will be transformed
      * @return 转换后的 InetSocketAddress 对象 / Transformed InetSocketAddress object

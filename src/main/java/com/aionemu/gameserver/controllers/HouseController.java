@@ -40,7 +40,6 @@ public class HouseController extends VisibleObjectController<House> {
 	/**
 	 * 玩家进入房屋范围时发送渲染包并生成室内物件。
 	 * Sends render packets and spawns house objects when a player enters range.
-	 *
 	 * @param object 进入视野的可见对象 / the visible object entering sight
 	 */
 	@Override
@@ -62,7 +61,6 @@ public class HouseController extends VisibleObjectController<House> {
 	/**
 	 * 玩家离开房屋范围时移除观察者并可发送删除包。
 	 * Removes the observer and may send a delete packet when a player leaves range.
-	 *
 	 * @param object 离开视野的可见对象 / the visible object leaving sight
 	 * @param isOutOfRange 是否因超出距离离开 / whether the leave is due to being out of range
 	 */
@@ -137,7 +135,6 @@ public class HouseController extends VisibleObjectController<House> {
 	/**
 	 * 将访客踢出房屋区域。
 	 * Kicks visitors out of the house zone.
-	 *
 	 * @param kicker 发起踢出的玩家，可为 null / player who initiated the kick, may be null
 	 * @param kickFriends 是否连同好友一并踢出 / whether friends are also kicked
 	 * @param onSettingsChange 是否因权限设置变更触发 / whether triggered by a settings change
@@ -175,7 +172,6 @@ public class HouseController extends VisibleObjectController<House> {
 	/**
 	 * 将玩家传送到房屋外部并发送系统消息。
 	 * Teleports a player outside the house and sends a system message.
-	 *
 	 * target player
 	 * @param onSettingsChange 是否因设置变更 / whether due to a settings change
 	 */

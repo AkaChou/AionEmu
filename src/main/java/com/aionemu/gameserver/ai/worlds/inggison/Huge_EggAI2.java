@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 /**
  * Inggison 区域 NPC AI：Huge Egg（@AIName "huge_egg"），继承 NpcAI2。
  * Inggison zone NPC AI: Huge Egg (@AIName "huge_egg"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("huge_egg")

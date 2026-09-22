@@ -28,7 +28,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 /**
  * 孤独竞技场副本事件处理器。
  * Instance event handler for Arena Of Tenacity.
- *
  * @author Encom
  */
 
@@ -48,7 +47,6 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 返回玩家奖励记录。
      * Return the player's reward record.
-     *
      * @param object 可见对象 / visible object
      * @return 结果 / result
      */
@@ -61,7 +59,6 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 副本创建时初始化逻辑。
      * Initialize logic when the instance is created.
-     *
      * @param instance 世界地图实例 / world-map instance
      */
     @Override
@@ -76,7 +73,6 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 玩家进入副本时处理。
      * Handle a player entering the instance.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -93,7 +89,6 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 处理玩家复活事件。
      * Handle a player revive event.
-     *
      * @param player 玩家 / player
      * @return 结果 / result
      */
@@ -109,7 +104,6 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 处理死亡事件。
      * Handle a death event.
-     *
      * @param player 玩家 / player
      * @param lastAttacker 最后攻击者 / last attacker
      * @return 结果 / result
@@ -133,7 +127,6 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -223,7 +216,6 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 打开指定门。
      * Open the given door.
-     *
      * @param doorId 门 ID / doorId
      */
 
@@ -246,7 +238,6 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
     /**
      * 向副本内玩家发送消息。
      * Send a message to players in the instance.
-     *
      * @param msg 消息 / message
      * @param race 阵营 / race
      * @param time 时间 / time
@@ -264,7 +255,6 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
                     /**
                      * 处理 visit。
                      * Handle visit.
-                     *
                      * @param player 玩家 / player
                      */
                     @Override

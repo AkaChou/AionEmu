@@ -12,7 +12,6 @@ import java.util.List;
 /**
  * RvR 相关 NPC AI：Dynamic Norsvold Monster（@AIName "dynamic_norsvold_monster"），继承 AggressiveNpcAI2。
  * RvR-related NPC AI: Dynamic Norsvold Monster (@AIName "dynamic_norsvold_monster"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("dynamic_norsvold_monster")

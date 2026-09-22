@@ -8,7 +8,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 同步玩家完整阿特雷亚图鉴列表的服务端包。
  * Server packet synchronizing the player's full Atreian Bestiary list.
- *
  * @author Ranastic
  */
 public class SM_ATREIAN_BESTIARY_LIST extends AionServerPacket {

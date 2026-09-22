@@ -19,7 +19,6 @@ import com.aionemu.loginserver.service.LoginThreadPoolServices;
 /**
  * GS→LS：游戏服向登录服注册并鉴权。
  * GS→LS: GameServer authentication/registration packet to LoginServer.
- *
  * @author -Nemesiss-
  */
 @Slf4j

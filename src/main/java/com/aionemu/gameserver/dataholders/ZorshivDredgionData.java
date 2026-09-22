@@ -18,7 +18,6 @@ import java.util.Map;
 /**
  * 佐尔希夫无舰数据容器，按位置 ID 索引运行时地点。
  * Zorshiv Dredgion data holder, indexing runtime locations by location id.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -43,7 +42,6 @@ public class ZorshivDredgionData {
 	/**
 	 * 返回已加载的佐尔希夫龙舰地点数量。
 	 * Returns the number of loaded Zorshiv Dredgion locations.
-	 *
 	 * @return 已加载的Zorshiv Dredgion 地点数量 / Returns the number of loaded Zorshiv Dredgion locations.
 	 */
 	public int size() {
@@ -53,7 +51,6 @@ public class ZorshivDredgionData {
 	/**
 	 * 返回全部佐尔希夫龙舰地点映射。
 	 * Returns the full Zorshiv Dredgion location map.
-	 *
 	 * @return 完整的 Zorshiv Dredgion 地点映射 / Returns the full Zorshiv Dredgion location map.
 	 */
 	public Map<Integer, ZorshivDredgionLocation> getZorshivDredgionLocations() {

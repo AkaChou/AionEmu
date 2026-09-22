@@ -15,9 +15,7 @@ import com.aionemu.gameserver.model.TeleportAnimation;
 /**
  * 根据聊天位置链接传送的管理员命令（依赖 Geo）。
  * Admin command to warp from a chat location link (requires Geo).
- *
  * @author Source
- * @rework Kill3r
  */
 public class Warp extends AdminCommand {
 
@@ -32,7 +30,6 @@ public class Warp extends AdminCommand {
 	/**
 	 * 解析位置链接并传送；失败时尝试备用链接格式。
 	 * Parses a location link and teleports; falls back to alternate link format.
-	 *
 	 * @param player 执行 GM / Admin player
 	 * @param params 位置链接分词 / Location link tokens
 	 */
@@ -140,7 +137,6 @@ public class Warp extends AdminCommand {
 	/**
 	 * 参数错误或 Geo 关闭时的提示。
 	 * Hint when parameters are invalid or Geo is disabled.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

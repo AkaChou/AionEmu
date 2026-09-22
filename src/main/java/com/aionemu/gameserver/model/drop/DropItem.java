@@ -13,48 +13,20 @@ import lombok.Setter;
 /**
  * 掉落物品模型。
  * Drop Item model.
- *
  * @author ATracer
  */
 @Getter
 @Setter
 public class DropItem {
 
-	/**
-	 * @return 索引 / the index
-	 */
 	private int index = 0;
-	/**
-	 * @return 数量 / the count
-	 */
 	private long count = 0;
-	/**
-	 * @return 掉落模板 / the dropTemplate
-	 */
 	private final Drop dropTemplate;
-	/**
-	 * @return 玩家对象 ID 列表 / the playerObjId
-	 */
 	private final List<Integer> playerObjIds = new ArrayList<>();
-	/**
-	 * @return 是否自由拾取 / whether free for all
-	 */
 	private boolean isFreeForAll = false;
-	/**
-	 * @return 最高出价 / highestValue
-	 */
 	private long highestValue = 0;
-	/**
-	 * @param winningPlayer 要设置的中奖玩家 / the winningPlayer to set
-	 */
 	private Player winningPlayer = null;
-	/**
-	 * @return 是否已中奖但未拾取 / whether won but not collected
-	 */
 	private boolean isItemWonNotCollected = false;
-	/**
-	 * @return 是否分配物品 / whether to distribute the item
-	 */
 	private boolean isDistributeItem = false;
 	/** 返回 npc obj / Returns the npc obj */
 	private int npcObj;
@@ -130,7 +102,6 @@ public class DropItem {
 	/**
 	 * 是否只有该玩家是可能的拾取者（单人归属的掉落）。
 	 * Whether only this player is a possible looter (solo-owned drops).
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否仅该玩家可拾取 / whether only this player may loot
 	  */

@@ -9,7 +9,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * 圣所地下城副本事件处理器。
  * Instance event handler for Sanctuary Dungeon.
- *
  * @author Encom
  */
 
@@ -22,7 +21,6 @@ public class SanctuaryDungeonInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override

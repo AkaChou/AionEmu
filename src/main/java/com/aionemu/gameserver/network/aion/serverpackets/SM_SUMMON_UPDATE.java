@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端同步召唤物状态更新。
  * Server packet synchronizing summon status updates to the client.
- *
  * @author ATracer
  */
 @AllArgsConstructor

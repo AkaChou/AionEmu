@@ -9,7 +9,6 @@ import java.io.IOException;
 /**
  * 将 JAXB 生成的 Schema 写入内存字节流的输出解析器。
  * SchemaOutputResolver that captures generated schema into an in-memory stream.
- *
  * @author ginho1
  */
 public class StringSchemaOutputResolver extends SchemaOutputResolver {
@@ -23,7 +22,6 @@ public class StringSchemaOutputResolver extends SchemaOutputResolver {
 	/**
 	 * 创建指向内存流的输出 Result。
 	 * Create an output Result backed by the in-memory stream.
-	 *
 	 * @param namespaceUri 命名空间 URI / Namespace URI
 	 * @param suggestedFileName 建议文件名（设为 systemId） / Suggested file name (used as systemId)
 	 * @return 输出 Result / Output Result
@@ -39,7 +37,6 @@ public class StringSchemaOutputResolver extends SchemaOutputResolver {
 	/**
 	 * 获取已生成的 Schema 文本。
 	 * Get the generated schema text.
-	 *
 	 * @return Schema 字符串 / Schema string
 	 */
 	public String getSchemaString() {

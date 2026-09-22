@@ -11,7 +11,6 @@ import lombok.Getter;
 /**
  * 全局掉落种族模板（静态数据/XML）。
  * Global drop race template (static data/XML).
- *
  * @author Wnkrz
  */
 @Getter

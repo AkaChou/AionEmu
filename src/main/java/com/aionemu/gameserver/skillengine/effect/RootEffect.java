@@ -46,7 +46,6 @@ public class RootEffect extends EffectTemplate {
 
 	/**
 	 * 中止移动与当前技能，施加 ROOT 异常，并注册受击解除观察者。
-	 *
 	 * @param effect Aborts move / skill, applies ROOT abnormal, and registers an attacked observer that may remove the effect.
 	 */
 	@Override

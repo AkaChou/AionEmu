@@ -15,7 +15,6 @@ public class GameStartupLogGateway {
     /**
      * 记录启动开始日志并返回当前时间作为启动计时原点。
      * Log that the game server is starting and return the current time as the timing origin.
-     *
      * @return 启动起点毫秒时间戳 / Startup epoch millis
      */
     public long start() {

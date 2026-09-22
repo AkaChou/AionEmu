@@ -15,7 +15,6 @@ import lombok.Getter;
 /**
  * 套装部件加成模板（静态数据/XML）。
  * Set part bonus template (static data/XML).
- *
  * @author ATracer
  */
 @Getter
@@ -23,9 +22,6 @@ import lombok.Getter;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PartBonus {
 
-	/**
-	 * @return the count
-	 */
 	@XmlAttribute
 	protected int count;
 	@XmlElement(name = "modifiers", required = false)

@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.*;
 /**
  * 活动事件 NPC AI：Event Witch Flower Agrint（@AIName "Event_Witch_Flower_Agrint"），继承 AggressiveNpcAI2。
  * Event NPC AI: Event Witch Flower Agrint (@AIName "Event_Witch_Flower_Agrint"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("Event_Witch_Flower_Agrint")

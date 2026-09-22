@@ -33,7 +33,6 @@ import java.util.concurrent.Future;
 /**
  * 熔炉尖塔副本事件处理器。
  * Instance event handler for Crucible Spire.
- *
  * @author Encom
  */
 
@@ -105,7 +104,6 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     /**
      * NPC 掉落表注册时处理。
      * Handle NPC drop-table registration.
-     *
      * @param npc npc
      */
     @Override
@@ -127,7 +125,6 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     /**
      * 玩家进入副本时处理。
      * Handle a player entering the instance.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -146,7 +143,6 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     /**
      * 副本创建时初始化逻辑。
      * Initialize logic when the instance is created.
-     *
      * @param instance 世界地图实例 / world-map instance
      */
     @Override
@@ -518,7 +514,6 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     /**
      * 处理死亡事件。
      * Handle a death event.
-     *
      * @param npc npc
      */
     @Override
@@ -592,7 +587,6 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     /**
      * 处理 rewardForFloorId。
      * Handle rewardForFloorId.
-     *
      * @param player 玩家 / player
      */
 
@@ -676,7 +670,6 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     /**
      * 玩家通过飞行环时处理。
      * Handle a player passing a flying ring.
-     *
      * 玩家 / player
      * @param flyingRing 飞行环标识 / flying-ring id
      * result
@@ -698,7 +691,6 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     /**
      * 处理 sendMsgByRace。
      * Handle sendMsgByRace.
-     *
      * @param msg message
      * @param race 阵营 / race
      * @param time time
@@ -716,7 +708,6 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
                     /**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
                     @Override
@@ -744,7 +735,6 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     /**
      * 处理 despawnNpcs。
      * Handle despawnNpcs.
-     *
      * @param npcs npcs
      */
 
@@ -759,7 +749,6 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     /**
  * 返回 npcs。
      * Return the npcs.
-     *
      * NPC
      * result
      */
@@ -773,7 +762,6 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     /**
      * 处理 onFailCrucible。
      * Handle onFailCrucible.
-     *
      * @param player 玩家 / player
      */
 
@@ -783,7 +771,6 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     /**
      * 玩家请求退出副本时处理。
      * Handle a player exit request.
-     *
      * @param player 玩家 / player
      */
 
@@ -794,7 +781,6 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     /**
      * 玩家从该副本登出时处理。
      * Handle a player logging out from this instance.
-     *
      * @param player 玩家 / player
      */
 
@@ -831,7 +817,6 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     /**
      * 处理 teleportFloor。
      * Handle teleportFloor.
-     *
      * @param player 玩家 / player
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -846,7 +831,6 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     /**
      * 处理玩家复活事件。
      * Handle a player revive event.
-     *
      * 玩家 / player
      * result
      */

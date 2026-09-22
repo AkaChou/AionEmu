@@ -41,22 +41,17 @@ public class BrokerItem implements Comparable<BrokerItem> {
 	 * -- GETTER --
 	 *  是否已售出。
 	 *  Whether the item is sold.
-	 *
-	 * @return 是否已售出 / whether sold
 	 */
-	private boolean isSold, /**
+	private boolean isSold;
+	/**
 	 * -- GETTER --
 	 *  是否已取消。
 	 *  Whether the listing was canceled.
-	 *
-	 * @return 是否已取消 / whether canceled
 	 */
-		isCanceled;
+	private boolean isCanceled;
 	/**
 	 * 是否已结算。
 	 * Whether the sale is settled.
-	 *
-	 * @return 是否已结算 / whether settled
 	 */
 	private boolean isSettled;
 	/** 获取过期时间。 / Returns the expire time. */
@@ -66,8 +61,7 @@ public class BrokerItem implements Comparable<BrokerItem> {
 	/**
 	 * 是否拆分出售。
 	 * Whether the item is sold in split quantities.
-	 *
-	 * @return 是否拆分出售 / whether split sell
+	 * 是否拆分出售 / whether split sell
 	 */
 	private final boolean isSplitSell;
 	PersistentState state;
@@ -160,7 +154,6 @@ public class BrokerItem implements Comparable<BrokerItem> {
 	/**
 	 * 恢复交易状态（用于数据修复场景）。
 	 * Restores the transaction state (used for data repair).
-	 *
 	 * @param itemCount 物品数量 / item count
 	 * @param price 价格 / price
 	 * @param sold 是否已售出 / whether sold

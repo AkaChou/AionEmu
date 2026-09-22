@@ -11,7 +11,6 @@ import lombok.Getter;
 /**
  * 要塞 NPC 游戏对象。
  * Siege Npc game object.
- *
  * @author ViAl
  */
 @Getter
@@ -25,7 +24,6 @@ public class SiegeNpc extends Npc {
 	/**
 	 * 创建要塞 NPC。
 	 * Creates a siege NPC.
-	 *
 	 * @param objId 对象 ID / object id
 	 * @param controller NPC 控制器 / NPC controller
 	 * @param spawnTemplate 要塞刷新点模板 / siege spawn template

@@ -14,7 +14,6 @@ public class RndArray {
 	/**
 	 * 返回 [0, 1) 范围内的随机浮点数。
 	 * Returns a random float in the range [0, 1).
-	 *
 	 * @return 随机浮点数 / Random float
 	 */
 	public static float get() {
@@ -24,7 +23,6 @@ public class RndArray {
 	/**
 	 * 返回 [0, n) 范围内的随机整数。
 	 * Returns a random int in the range [0, n).
-	 *
 	 * @param n 上界（不含） / Exclusive upper bound
 	 * @return 随机整数 / Random int
 	 */
@@ -35,7 +33,6 @@ public class RndArray {
 	/**
 	 * 返回 [min, max] 范围内的随机整数。
 	 * Returns a random int in the range [min, max].
-	 *
 	 * @param min 包含的下界 / Inclusive lower bound
 	 * @param max 包含的上界 / Inclusive upper bound
 	 * @return 随机整数 / Random int
@@ -47,7 +44,6 @@ public class RndArray {
 	/**
 	 * 按百分比概率判定是否命中（整数百分比）。
 	 * Checks whether an integer percentage chance succeeds.
-	 *
 	 * @param chance Hit chance (1–100) / Hit chance (1–100)
 	 * @return 概率是否命中 / Whether the chance hit
 	 */
@@ -58,7 +54,6 @@ public class RndArray {
 	/**
 	 * 按百分比概率判定是否命中（双精度百分比）。
 	 * Checks whether a double percentage chance succeeds.
-	 *
 	 * @param chance Hit chance (0–100) / Hit chance (0–100)
 	 * @return 概率是否命中 / Whether the chance hit
 	 */
@@ -69,7 +64,6 @@ public class RndArray {
 	/**
 	 * 从数组中随机选取一个元素。
 	 * Selects a random element from an array.
-	 *
 	 * @param list 数组 / Array
 	 * @param <E> 元素类型 / Element type
 	 * @return 随机元素 / Random element
@@ -81,7 +75,6 @@ public class RndArray {
 	/**
 	 * 从 int 数组中随机选取一个值。
 	 * Selects a random value from an int array.
-	 *
 	 * @param list 整型数组 / Int array
 	 * @return 随机值 / Random value
 	 */
@@ -92,7 +85,6 @@ public class RndArray {
 	/**
 	 * 从列表中随机选取一个元素。
 	 * Selects a random element from a list.
-	 *
 	 * @param list 列表 / List
 	 * @param <E> 元素类型 / Element type
 	 * @return 随机元素 / Random element
@@ -104,7 +96,6 @@ public class RndArray {
 	/**
 	 * 返回 [0, n) 范围内的随机整数。
 	 * Returns a random int in the range [0, n).
-	 *
 	 * @param n 上界（不含） / Exclusive upper bound
 	 * @return 随机整数 / Random int
 	 */
@@ -115,7 +106,6 @@ public class RndArray {
 	/**
 	 * 返回下一个随机 int（全范围）。
 	 * Returns the next random int (full range).
-	 *
 	 * @return 随机整数 / Random int
 	 */
 	public static int nextInt() {
@@ -125,7 +115,6 @@ public class RndArray {
 	/**
 	 * 返回 [0, 1) 范围内的随机双精度数。
 	 * Returns a random double in the range [0, 1).
-	 *
 	 * @return 随机双精度数 / Random double
 	 */
 	public static double nextDouble() {
@@ -135,7 +124,6 @@ public class RndArray {
 	/**
 	 * 返回下一个高斯分布随机数。
 	 * Returns the next Gaussian-distributed random value.
-	 *
 	 * @return 高斯随机数 / Gaussian random value
 	 */
 	public static double nextGaussian() {
@@ -145,7 +133,6 @@ public class RndArray {
 	/**
 	 * 返回下一个随机布尔值。
 	 * Returns the next random boolean.
-	 *
 	 * @return 随机布尔值 / Random boolean
 	 */
 	public static boolean nextBoolean() {

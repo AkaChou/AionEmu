@@ -3,7 +3,6 @@ package com.aionemu.gameserver.geoEngine.collision;
 /**
  * 不支持的碰撞类型异常，当两个 {@link Collidable} 无法做碰撞检测时抛出。
  * Thrown when a pair of {@link Collidable}s cannot be tested for collision.
- *
  * @author Kirill
  */
 @SuppressWarnings("serial")
@@ -12,7 +11,6 @@ public class UnsupportedCollisionException extends UnsupportedOperationException
 	/**
 	 * 以原因构造。
 	 * Constructs with a cause.
-	 *
 	 * @param arg0 原因 / cause
 	 */
 	public UnsupportedCollisionException(Throwable arg0) {
@@ -22,7 +20,6 @@ public class UnsupportedCollisionException extends UnsupportedOperationException
 	/**
 	 * 以消息与原因构造。
 	 * Constructs with a message and cause.
-	 *
 	 * @param arg0 消息 / message
 	 * @param arg1 原因 / cause
 	 */
@@ -33,7 +30,6 @@ public class UnsupportedCollisionException extends UnsupportedOperationException
 	/**
 	 * 以消息构造。
 	 * Constructs with a message.
-	 *
 	 * @param arg0 消息 / message
 	 */
 	public UnsupportedCollisionException(String arg0) {

@@ -17,7 +17,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
 	 * 技能冷却重置/缩减效果：缩短指定 delay ID 区间内的冷却时间。
 	 * Skill cooltime reset effect: reduces cooldown for a configured delay-id range.
- *
  * @author Dr.Nism
  */
 @XmlAccessorType(XmlAccessType.FIELD)

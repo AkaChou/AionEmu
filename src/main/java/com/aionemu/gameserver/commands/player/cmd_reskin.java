@@ -18,7 +18,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：确认后将目标外观应用到已装备武器。
  * Player command: after confirmation, applies a target look to an equipped weapon.
- *
  * @author Chuck
  */
 public class cmd_reskin extends PlayerCommand {
@@ -30,7 +29,6 @@ public class cmd_reskin extends PlayerCommand {
 	/**
 	 * 发起改模确认对话框并处理消耗。
 	 * Opens a remodel confirmation dialog and handles costs.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 命令参数 / command parameters
 	 */
@@ -155,7 +153,6 @@ public class cmd_reskin extends PlayerCommand {
 	/**
 	 * 参数错误时提示用法。
 	 * Shows usage when arguments are invalid.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param message 失败提示消息 / failure message
 	 */

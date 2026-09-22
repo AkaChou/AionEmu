@@ -9,7 +9,6 @@ import java.util.Iterator;
 /**
  * 向全服在线玩家广播居中亮黄通知的管理员命令。
  * Admin command to broadcast a bright-yellow center notice to all online players.
- *
  * @author Jenose Updated By Darkwolf
  */
 public class Notice extends AdminCommand {
@@ -25,7 +24,6 @@ public class Notice extends AdminCommand {
 	/**
 	 * 拼接参数为消息并向所有在线玩家发送居中通知。
 	 * Join parameters into a message and send a center notice to every online player.
-	 *
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -51,7 +49,6 @@ public class Notice extends AdminCommand {
 	/**
 	 * 参数错误时显示语法。
 	 * Show syntax when parameters are invalid.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

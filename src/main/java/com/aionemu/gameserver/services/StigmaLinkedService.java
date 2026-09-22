@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 烙印之石连结技能服务，按职业与已装备烙印之石组合授予/移除连结技能。
  * Stigma linked-skill service that grants or removes linked skills by class and equipped stigma combinations.
- *
  * @author DrNism
  */
 @Slf4j
@@ -20,7 +19,6 @@ public class StigmaLinkedService {
 	/**
 	 * 玩家登出时清除连结技能与套装加成。
 	 * Clears linked skills and set bonus on player logout.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static void onLogOut(Player player) {
@@ -31,7 +29,6 @@ public class StigmaLinkedService {
 	/**
 	 * 按职业检查已装备烙印组合，满足 6 件且无惰性烙印时授予对应连结技能。
 	 * Checks equipped stigma combinations per class and grants the matching linked skill when 6 non-inert stigmas are equipped.
-	 *
 	 * @param player 玩家 / player
 	 * @param list 已装备烙印模板 ID 列表 / equipped stigma template ids
 	 */
@@ -314,7 +311,6 @@ public class StigmaLinkedService {
 	/**
 	 * 移除玩家全部烙印连结技能并重置连结技能 ID。
 	 * Removes all stigma linked skills from the player and resets the linked skill id.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static void DeleteLinkedSkills(Player player) {

@@ -16,7 +16,6 @@ public class SM_ABYSS_RANK extends AionServerPacket {
 	/**
 	 * 使用玩家当前欧比斯军衔数据构造同步包。
 	 * Creates a sync packet from the player's current Abyss rank data.
-	 *
 	 * @param rank 欧比斯军衔数据 / Abyss rank data
 	 */
 	public SM_ABYSS_RANK(AbyssRank rank) {

@@ -3,7 +3,6 @@ package com.aionemu.gameserver.model.team.legion;
 /**
  * 军团历史类型枚举。
  * Legion History Type enumeration.
- *
  * @author Simple
  */
 public enum LegionHistoryType {
@@ -39,7 +38,6 @@ public enum LegionHistoryType {
 	/**
 	 * 返回客户端使用的历史类型 ID。
 	 * Returns client-side id for this.
-	 *
 	 * @return 历史类型 ID / history type id
 	 */
 	public byte getHistoryId() {

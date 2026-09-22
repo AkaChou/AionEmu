@@ -16,7 +16,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Iluma 区域 NPC AI：Jump Trigger（@AIName "jump_trigger"），继承 AggressiveNpcAI2。
  * Iluma zone NPC AI: Jump Trigger (@AIName "jump_trigger"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("jump_trigger")

@@ -9,7 +9,6 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 /**
  * GM 指令：按物品 ID 与数量发放物品。
  * GM command handler that grants items by template id and quantity.
- *
  * @author Antraxx
  */
 public final class CmdWishId extends AbstractGMHandler {
@@ -17,7 +16,6 @@ public final class CmdWishId extends AbstractGMHandler {
 	/**
 	 * 创建处理器并立即按 ID 发放物品。
 	 * Creates the handler and immediately grants items by id.
-	 *
 	 * @param admin 执行指令的管理员 / the admin executing the command
 	 * @param params 数量与物品 ID / quantity and item id
 	 */

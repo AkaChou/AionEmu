@@ -8,7 +8,6 @@ import com.aionemu.gameserver.services.player.PlayerEnterWorldService;
 /**
  * 请求进入游戏世界（开始游玩）的客户端包。
  * Client packet requesting to enter the game world and start playing.
- *
  * @author -Nemesiss-, Avol
  */
 public class CM_ENTER_WORLD extends AionClientPacket {
@@ -19,7 +18,6 @@ public class CM_ENTER_WORLD extends AionClientPacket {
 	/**
 	 * 构造客户端包实例。
 	 * Constructs a new client packet instance.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余允许状态 / additional allowed states

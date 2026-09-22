@@ -17,8 +17,7 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 /**
  * 死亡竞赛：单人自由混战，击杀数最高者获胜。
  * Deathmatch: free-for-all; highest kill count wins.
- *
- * @Author Rinzler (Encom)
+ * @author Rinzler (Encom)
  */
 public class DeathmatchBg extends Battleground {
 	/**
@@ -770,7 +769,6 @@ public class DeathmatchBg extends Battleground {
 	/**
 	 * 从排队列表创建死亡竞赛对局。
 	 * Creates a deathmatch from the queue.
-	 *
 	 * @param players 排队玩家对象 ID / queued player object ids
 	 */
 	public void createMatch(List<Integer> players) {
@@ -805,13 +803,6 @@ public class DeathmatchBg extends Battleground {
 	}
 
 	@Override
-	/**
-	 * 创建死亡竞赛锦标赛对局。
-	 * Creates a deathmatch tournament match.
-	 *
-	 * @param players 各方玩家列表 / sides of players
-	 * @return 成功则 true / true on success
-	 */
 	public boolean createTournament(List<List<Player>> players) {
 		if (!super.createPlayers(players)) {
 			return false;
@@ -824,7 +815,6 @@ public class DeathmatchBg extends Battleground {
 	/**
 	 * 处理死亡：计杀并重生。
 	 * Handles death: score kill and respawn.
-	 *
 	 * @param player 死亡玩家 / dead player
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 */
@@ -859,7 +849,6 @@ public class DeathmatchBg extends Battleground {
 	/**
 	 * 处理玩家离开死亡竞赛。
 	 * Handles a player leaving deathmatch.
-	 *
 	 * @param player 玩家 / player
 	 * @param isLogout 是否登出 / whether logout
 	 * @param isAfk 是否挂机 / whether AFK
@@ -874,7 +863,6 @@ public class DeathmatchBg extends Battleground {
 	/**
 	 * 在随机出生点生成或重生玩家。
 	 * Spawns or respawns the player at a random spawn point.
-	 *
 	 * @param player 玩家 / player
 	 * @param isRespawn 是否重生 / whether respawn
 	 */

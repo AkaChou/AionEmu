@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 /**
  * int→对象 哈希映射。
  * Int-to-object hash map.
- *
  * @param <V> 值类型 / Value type
  */
 @NoArgsConstructor
@@ -15,7 +14,6 @@ public class IntObjectHashMap<V> extends LinkedHashMap<Integer, V> {
     /**
      * 创建指定初始容量的映射。
      * Create a map with the given initial capacity.
-     *
      * @param initialCapacity 初始容量 / Initial capacity
      */
     public IntObjectHashMap(int initialCapacity) {
@@ -25,7 +23,6 @@ public class IntObjectHashMap<V> extends LinkedHashMap<Integer, V> {
     /**
      * 是否包含 int 键。
      * Whether the map contains the int key.
-     *
      * @param key 要检查的 int 键 / The int key to check
      * @return 存在则为 true / True if present
      */
@@ -36,7 +33,6 @@ public class IntObjectHashMap<V> extends LinkedHashMap<Integer, V> {
     /**
      * 返回全部 int 键数组。
      * Return all keys as an int array.
-     *
      * @return 全部键组成的数组 / Key array
      */
     public int[] keys() {

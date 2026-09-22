@@ -49,7 +49,6 @@ public abstract class AConnection {
     /**
      * 构造连接并初始化读写缓冲。
      * Construct connection and initialize read/write buffers.
-     *
      * @param transport 传输层实现 / Transport implementation
      * @param rbSize 读缓冲大小 / Read buffer size
      * @param wbSize 写缓冲大小 / Write buffer size
@@ -76,7 +75,6 @@ public abstract class AConnection {
     /**
      * 关闭连接。
      * Close the connection.
-     *
      * @param forced 是否强制关闭 / Whether to force close
      */
     public final void close(boolean forced) {
@@ -91,7 +89,6 @@ public abstract class AConnection {
     /**
      * 仅关闭底层连接（不重复关闭）。
      * Only close the underlying connection if not already closed.
-     *
      * @return 是否实际执行了关闭 / Whether close was performed
      */
     final boolean onlyClose() {
@@ -106,7 +103,6 @@ public abstract class AConnection {
     /**
      * 检查是否待关闭且尚未关闭。
      * Check if pending close and not yet closed.
-     *
      * @return 是否待关闭 / Whether pending close
      */
     final boolean isPendingClose() {
@@ -116,7 +112,6 @@ public abstract class AConnection {
     /**
      * 检查写操作是否已禁用。
      * Check if write is disabled.
-     *
      * @return 写是否禁用 / Whether write is disabled
      */
     protected final boolean isWriteDisabled() {
@@ -126,7 +121,6 @@ public abstract class AConnection {
     /**
      * 获取连接 IP。
      * Get connection IP.
-     *
      * @return IP 地址 / IP address
      */
     public final String getIP() {
@@ -136,7 +130,6 @@ public abstract class AConnection {
     /**
      * 获取服务上下文标识。
      * Get service context identifier.
-     *
      * @return 服务上下文 / Service context
      */
     public final String getServiceContext() {
@@ -146,7 +139,6 @@ public abstract class AConnection {
     /**
      * 获取底层传输实现。
      * Get the underlying transport implementation.
-     *
      * @return 传输实现 / transport implementation
      */
     public final ConnectionTransport transport() {
@@ -156,7 +148,6 @@ public abstract class AConnection {
     /**
      * 尝试锁定连接以独占处理包。
      * Try to lock the connection for exclusive packet processing.
-     *
      * @return 是否锁定成功 / Whether lock was acquired
      */
     boolean tryLockConnection() {
@@ -174,7 +165,6 @@ public abstract class AConnection {
     /**
      * 处理接收到的数据帧。
      * Process received data frame.
-     *
      * @param buf 数据缓冲 / Data buffer
      * @return 是否处理成功 / Whether processing succeeded
      */
@@ -183,7 +173,6 @@ public abstract class AConnection {
     /**
      * 向缓冲写出待发送数据。
      * Write pending data into the buffer.
-     *
      * @param buf 写缓冲 / Write buffer
      * @return 是否还有后续数据 / Whether more data remains
      */
@@ -198,7 +187,6 @@ public abstract class AConnection {
     /**
      * 获取断开连接延迟（毫秒）。
      * Get disconnection delay in milliseconds.
-     *
      * @return 延迟毫秒数 / Delay in milliseconds
      */
     protected abstract long getDisconnectionDelay();

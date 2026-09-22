@@ -19,7 +19,6 @@ import lombok.Getter;
 /**
  * 称号模板（静态数据/XML）。
  * Title template (static data / XML).
- *
  * @author xavier
  */
 @Getter

@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 /**
  * 布里特拉位置模型。
  * Beritra Location model.
- *
  * @author Rinzler (Encom)
  */
 

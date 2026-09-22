@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 瞬时召回效果：向队友发起召回请求，接受后传送至施法者。
  * Instant recall effect: invites a teammate to teleport to the caster on accept.
- *
  * @author Bio
  * @author Sippolo
  */

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
 /**
  * 交易添加物品包：通知己方/对方交易窗口新增物品及其完整信息。
  * Exchange add-item packet: notifies self/other trade window of a new item with full blob.
- *
  * @author Avol
  * @author ATracer
  */

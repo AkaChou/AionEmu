@@ -18,7 +18,6 @@ import java.util.List;
 /**
  * Seized Danuar Sanctuary 副本 NPC AI：Virulent Ukahim（@AIName "ukahim"），继承 AggressiveNpcAI2。
  * Seized Danuar Sanctuary instance NPC AI: Virulent Ukahim (@AIName "ukahim"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("ukahim")

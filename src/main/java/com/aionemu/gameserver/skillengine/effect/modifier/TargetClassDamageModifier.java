@@ -13,7 +13,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 目标职业伤害修正：目标为指定玩家职业时加成伤害。
  * Target-class damage modifier: bonus damage when the target is a given player class.
- *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)

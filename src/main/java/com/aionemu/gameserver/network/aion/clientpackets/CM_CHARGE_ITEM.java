@@ -12,7 +12,6 @@ import com.aionemu.gameserver.services.item.ItemChargeService;
 /**
  * 物品充能的客户端包。
  * Client packet to charge (empower) items.
- *
  * @author ATracer
  */
 public class CM_CHARGE_ITEM extends AionClientPacket {

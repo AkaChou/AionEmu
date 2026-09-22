@@ -33,7 +33,6 @@ public class CancellationToken {
 	/**
 	 * 请求取消：仅首次生效，并依次执行已注册回调。
 	 * Request cancellation: takes effect only once and runs registered callbacks in order.
-	 *
 	 * @throws InterruptedException 回调被中断时 / if a callback is interrupted
 	 */
 	public void cancel() throws InterruptedException {
@@ -48,7 +47,6 @@ public class CancellationToken {
 	/**
 	 * 注册取消回调；若令牌已取消则立即执行该回调。
 	 * Register a cancel callback; run it immediately if the token is already cancelled.
-	 *
 	 * @param runnable 取消回调 / the cancellation callback
 	 * @throws InterruptedException 立即执行回调被中断时 / if the immediate callback is interrupted
 	 */
@@ -64,7 +62,6 @@ public class CancellationToken {
 	/**
 	 * 返回令牌是否已取消。
 	 * Return whether the token has been cancelled.
-	 *
 	 * @return 已取消为 true / {@code true} if cancelled
 	 */
 	public boolean isCancelled() {

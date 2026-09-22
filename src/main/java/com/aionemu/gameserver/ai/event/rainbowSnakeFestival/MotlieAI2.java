@@ -14,7 +14,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Rainbow Snake Festival 活动 NPC AI：Motlie（@AIName "motlie"），继承 GeneralNpcAI2。
  * Rainbow Snake Festival event NPC AI: Motlie (@AIName "motlie"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("motlie")
@@ -41,7 +40,6 @@ public class MotlieAI2 extends GeneralNpcAI2
 	/**
 	 * 处理对话框选择：先转发任务引擎，再按随机结果施加对应增益效果。
 	 * Handles dialog selection: forwards to the quest engine, then applies the matching buff by random pick.
-	 *
 	 * @param player 对话玩家 / dialog player
 	 * @param dialogId 对话框选项 ID / dialog option ID
 	 * @param questId 任务 ID / quest ID

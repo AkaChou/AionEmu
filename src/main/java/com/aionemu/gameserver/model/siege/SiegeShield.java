@@ -19,7 +19,6 @@ import lombok.Setter;
 /**
  * 要塞护盾模型。
  * Siege Shield model.
- *
  * @author Rolandas
  */
 @Getter

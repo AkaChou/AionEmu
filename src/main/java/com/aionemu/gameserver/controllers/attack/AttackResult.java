@@ -7,7 +7,6 @@ import lombok.Setter;
 /**
  * 单次攻击结果，封装伤害、命中状态、命中类型以及护盾/反射/保护等附加效果数据。
  * Single attack result holding damage, hit status, hit type and shield/reflect/protect side-effect data.
- *
  * @author ATracer, Sippolo, kecimis
  */
 @Getter
@@ -44,7 +43,6 @@ public class AttackResult {
 	/**
 	 * 以整数伤害与攻击状态构造结果。
 	 * Creates a result with integer damage and attack status.
-	 *
 	 * @param damage 伤害 / damage
 	 * @param attackStatus 攻击状态 / attack status
 	 */
@@ -56,7 +54,6 @@ public class AttackResult {
 	/**
 	 * 以浮点伤害与攻击状态构造结果。
 	 * Creates a result with float damage and attack status.
-	 *
 	 * @param damage 伤害 / damage
 	 * @param attackStatus 攻击状态 / attack status
 	 */
@@ -68,7 +65,6 @@ public class AttackResult {
 	/**
 	 * 以整数伤害、攻击状态与命中类型构造结果。
 	 * Creates a result with integer damage, attack status and hit type.
-	 *
 	 * @param damage 伤害 / damage
 	 * @param attackStatus 攻击状态 / attack status
 	 * @param type 命中类型 / hit type
@@ -81,7 +77,6 @@ public class AttackResult {
 	/**
 	 * 以浮点伤害、攻击状态与命中类型构造结果。
 	 * Creates a result with float damage, attack status and hit type.
-	 *
 	 * @param damage 伤害 / damage
 	 * @param attackStatus 攻击状态 / attack status
 	 * @param type 命中类型 / hit type
@@ -94,7 +89,6 @@ public class AttackResult {
 	/**
 	 * 返回取整后的伤害。
 	 * Returns damage as an int.
-	 *
 	 * @return 整数伤害 / integer damage
 	 */
 	public int getDamage() {
@@ -104,7 +98,6 @@ public class AttackResult {
 	/**
 	 * 返回精确（浮点）伤害。
 	 * Returns the exact float damage.
-	 *
 	 * @return 精确伤害 / exact damage
 	 */
 	public float getExactDamage() {
@@ -114,7 +107,6 @@ public class AttackResult {
 	/**
 	 * 设置整数伤害。
 	 * Sets damage from an int.
-	 *
 	 * @param damage 伤害 / damage
 	 */
 	public void setDamage(int damage) {
@@ -124,7 +116,6 @@ public class AttackResult {
 	/**
 	 * 设置浮点伤害。
 	 * Sets damage from a float.
-	 *
 	 * @param damage 伤害 / damage
 	 */
 	public void setDamage(float damage) {
@@ -134,7 +125,6 @@ public class AttackResult {
 	/**
 	 * 返回命中类型。
 	 * Returns the hit type.
-	 *
 	 * @return 命中类型 / hit type
 	 */
 	public HitType getDamageType() {
@@ -144,7 +134,6 @@ public class AttackResult {
 	/**
 	 * 设置命中类型。
 	 * Sets the hit type.
-	 *
 	 * @param type 命中类型 / hit type
 	 */
 	public void setDamageType(HitType type) {
@@ -154,7 +143,6 @@ public class AttackResult {
 	/**
 	 * 按位或合并护盾类型标志。
 	 * OR-merges a shield type flag into the bitmask.
-	 *
 	 * @param shieldType 待合并的护盾类型标志 / shield type flag to merge
 	 */
 	public void setShieldType(int shieldType) {

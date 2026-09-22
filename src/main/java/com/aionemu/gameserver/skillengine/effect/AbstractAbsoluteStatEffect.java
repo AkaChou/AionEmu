@@ -12,7 +12,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 绝对属性效果抽象基类：通过 statsetid 从数据表加载修饰器集合。
  * Abstract absolute-stat effect base: loads a modifiers set by statsetid from data.
- *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -25,7 +24,6 @@ public abstract class AbstractAbsoluteStatEffect extends BuffEffect {
 	/**
 	 * 按 statSetId 取得绝对属性修饰器模板。
 	 * Returns the absolute-stat modifiers template for the configured statSetId.
-	 *
 	 * @return 修饰器模板 / modifiers template
 	 */
 	public ModifiersTemplate getModifiersSet() {

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 客户端请求账号安全令牌包。
  * Client packet for requesting the account security token.
- *
  * @author Falke_34, CoolyT
  */
 public class CM_SECURITY_TOKEN extends AionClientPacket {

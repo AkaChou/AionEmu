@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 /**
  * IU 活动位置模型。
  * Iu Location model.
- *
  * @author Rinzler (Encom)
  */
 

@@ -11,7 +11,6 @@ import java.util.concurrent.Future;
 /**
  * Lucky Danuar Reliquary 副本 NPC AI：Venge Full Orb（@AIName "venge_full_orb"），继承 AggressiveNpcAI2。
  * Lucky Danuar Reliquary instance NPC AI: Venge Full Orb (@AIName "venge_full_orb"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("venge_full_orb")

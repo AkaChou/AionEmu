@@ -27,7 +27,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * HTML 问卷/引导服务，向客户端推送原始 HTML 并处理引导奖励。
  * HTML questionnaire/guide service pushing raw HTML to clients and handling guide rewards.
- *
  * @author lhw, xTz
  */
 @Slf4j(topic = "ITEM_HTML_LOG")
@@ -37,7 +36,6 @@ public class HTMLService {
 	/**
 	 * 根据引导模板生成可下发的 HTML 内容。
 	 * Builds deliverable HTML content from a guide template.
-	 *
 	 * guide template
 	 * HTML string
 	 */
@@ -61,7 +59,6 @@ public class HTMLService {
 	/**
 	 * 向全体在线玩家推送同一份问卷 HTML。
 	 * Pushes the same survey HTML to all online players.
-	 *
 	 * HTML content
 	 */
 	public static void pushSurvey(final String html) {
@@ -72,7 +69,6 @@ public class HTMLService {
 	/**
 	 * 向指定玩家展示 HTML 页面。
 	 * Shows an HTML page to the given player.
-	 *
 	 * 玩家 / player
 	 * HTML content
 	 */
@@ -83,7 +79,6 @@ public class HTMLService {
 	/**
 	 * 将 HTML 按包分片发送给玩家。
 	 * Sends HTML to the player, splitting into packets when needed.
-	 *
 	 * 玩家 / player
 	 * message id
 	 * HTML content
@@ -112,7 +107,6 @@ public class HTMLService {
 	/**
 	 * 按等级/职业/种族向玩家发送适用的引导 HTML。
 	 * Sends applicable guide HTML to the player by level/class/race.
-	 *
 	 * 玩家 / player
 	 */
 	public static void sendGuideHtml(Player player) {
@@ -134,7 +128,6 @@ public class HTMLService {
 	/**
 	 * 玩家登录时重发未领取的引导 HTML。
 	 * Re-sends unfinished guide HTML when the player logs in.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static void onPlayerLogin(Player player) {
@@ -158,7 +151,6 @@ public class HTMLService {
 	/**
 	 * 根据玩家选择发放引导奖励物品。
 	 * Grants guide reward items based on the player's selection.
-	 *
 	 * 玩家 / player
 	 * questionnaire message id
 	 * @param items 选中的物品 ID 列表 / selected item ids
@@ -211,7 +203,6 @@ public class HTMLService {
 	/**
 	 * 按选中物品 ID 过滤调查模板。
 	 * Filters survey templates by selected item ids.
-	 *
 	 * @param surveys 全部调查项 / all surveys
 	 * @param items 选中物品 ID / selected item ids
 	 * @return 匹配的模板列表 / matched templates
@@ -229,7 +220,6 @@ public class HTMLService {
 	/**
 	 * 按标题向玩家发送指定引导 HTML。
 	 * Sends a specific guide HTML to the player by title.
-	 *
 	 * @param player 玩家 / player
 	 * @param title 引导标题 / guide title
 	 */

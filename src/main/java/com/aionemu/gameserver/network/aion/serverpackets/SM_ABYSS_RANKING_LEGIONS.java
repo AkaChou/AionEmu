@@ -12,7 +12,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 向客户端同步军团欧比斯排行榜数据的服务端包。
  * Server packet synchronizing Abyss legion ranking data to the client.
- *
  * @author zdead, LokiReborn
  */
 public class SM_ABYSS_RANKING_LEGIONS extends AionServerPacket {
@@ -25,7 +24,6 @@ public class SM_ABYSS_RANKING_LEGIONS extends AionServerPacket {
 	/**
 	 * 使用排行榜数据构造更新包（会标记为需要刷新表格）。
 	 * Creates an update packet from ranking data (marks the table for refresh).
-	 *
 	 * @param updateTime 排行榜更新时间戳 / ranking update timestamp
 	 * @param data 军团排行结果列表 / legion ranking results
 	 * @param race 种族（天族/魔族） / race (Elyos/Asmodian)
@@ -40,7 +38,6 @@ public class SM_ABYSS_RANKING_LEGIONS extends AionServerPacket {
 	/**
 	 * 构造空数据占位包（无表格更新）。
 	 * Creates an empty placeholder packet (no table update).
-	 *
 	 * @param updateTime 排行榜更新时间戳 / ranking update timestamp
 	 * @param race 种族（天族/魔族） / race (Elyos/Asmodian)
 	 */

@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_PING_RESPONSE;
 /**
  * 客户端 /ping 命令请求包，回复延迟信息。
  * Client packet for the /ping command; returns latency info.
- *
  * @author dragoon112
  */
 public class CM_PING_REQUEST extends AionClientPacket {

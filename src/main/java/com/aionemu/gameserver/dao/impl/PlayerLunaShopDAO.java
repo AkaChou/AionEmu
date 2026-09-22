@@ -12,7 +12,6 @@ import java.sql.*;
 /**
  * 玩家 Luna 商店 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerLunaShopDAO.
- *
  * Created by wanke on 13/02/2017.
  * Updated for MySQL 8 - Fixed connection leaks.
  */
@@ -32,7 +31,6 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
     /**
      * 加载玩家 Luna 商店数据。
      * Loads player Luna shop data.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -61,7 +59,6 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
     /**
      * 新增玩家 Luna 商店记录。
      * Adds a player Luna shop record.
-     *
      * @param playerId 玩家 ID / player id
      * @param freeUnderpath 免费地下通道 / free underpath
      * @param freeFactory free factory
@@ -88,7 +85,6 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
     /**
      * 清空全部 Luna 商店记录。
      * Deletes all Luna shop records.
-     *
      * @return 是否成功 / whether succeeded
      */
     @Override
@@ -107,7 +103,6 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
     /**
      * 持久化玩家 Luna 商店数据。
      * Stores player Luna shop data.
-     *
      * @param player 玩家 / player
      * @return 是否成功 / whether succeeded
      */
@@ -144,7 +139,6 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
     /**
      * 更新玩家 Luna 商店记录。
      * Updates player Luna shop record.
-     *
      * @param con 数据库连接 / database connection
      * @param player 玩家 / player
      * @return 是否成功 / whether succeeded
@@ -172,7 +166,6 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
     /**
      * 按对象 ID 设置 Luna 商店数据。
      * Sets Luna shop data by object id.
-     *
      * @param obj 玩家对象 ID / player object id
      * @param freeUnderpath 免费地下通道 / free underpath
      * @param freeFactory free factory
@@ -199,7 +192,6 @@ public class PlayerLunaShopDAO extends com.aionemu.gameserver.dao.PlayerLunaShop
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

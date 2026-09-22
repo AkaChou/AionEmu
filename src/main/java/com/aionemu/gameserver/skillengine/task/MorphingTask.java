@@ -20,7 +20,6 @@ public class MorphingTask extends CraftingTask {
 	/**
 	 * 构造单次变形任务。
 	 * Creates a single morphing task.
-	 *
 	 * @param requestor 发起变形的玩家 / requesting player
 	 * @param responder 响应目标 / responder
 	 * @param recipeTemplates 配方模板 / recipe template
@@ -32,7 +31,6 @@ public class MorphingTask extends CraftingTask {
 	/**
 	 * 构造可批量变形的任务。
 	 * Creates a morphing task with optional multi-craft count.
-	 *
 	 * @param requestor 发起变形的玩家 / requesting player
 	 * @param responder 响应目标 / responder
 	 * @param recipeTemplates 配方模板 / recipe template
@@ -84,7 +82,6 @@ public class MorphingTask extends CraftingTask {
 	/**
 	 * 成功完成：结算产物并处理批量次数。
 	 * Success finish: settles product and handles multi-craft count.
-	 *
 	 * @return true 表示全部次数完成 / true if all attempts are done
 	 */
 	@Override
@@ -128,7 +125,6 @@ public class MorphingTask extends CraftingTask {
 	/**
 	 * 一次交互即视为成功。
 	 * Treats one interaction as immediate success.
-	 *
 	 * @return 成功结算结果 / result of success finish
 	 */
 	@Override

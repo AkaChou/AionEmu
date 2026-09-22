@@ -15,7 +15,6 @@ import lombok.Getter;
 /**
  * 阵营战刷新点模板（静态数据/XML）。
  * XML template.
- *
  * @author Rinzler (Encom)
  */
 

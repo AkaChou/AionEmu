@@ -12,7 +12,6 @@ public abstract class AccountPlayTimeDAO implements DAO {
     /**
      * 累加更新账号在线时长。
      * Accumulates and updates account online play time.
-     *
      * 账号 ID / Account id
      * @param accountTime 含在线时长的账号时间对象 / Account time with online duration
      * @return 是否更新成功 / True if updated
@@ -22,7 +21,6 @@ public abstract class AccountPlayTimeDAO implements DAO {
     /**
      * 返回实现唯一类名标识。
      * Returns unique class name for all implementations.
-     *
      * Fully qualified class name
      */
     public final String getClassName() {

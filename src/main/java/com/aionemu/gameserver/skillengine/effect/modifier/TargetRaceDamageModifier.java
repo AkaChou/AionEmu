@@ -14,7 +14,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 目标种族伤害修正：目标为指定种族（玩家/NPC）时加成伤害。
  * Target-race damage modifier: bonus damage when the target matches a given race (player/NPC).
- *
  * @author ATracer modified by Sippolo, kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)

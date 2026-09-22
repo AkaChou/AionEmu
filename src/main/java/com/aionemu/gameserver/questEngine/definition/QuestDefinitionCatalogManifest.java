@@ -209,7 +209,6 @@ public final class QuestDefinitionCatalogManifest {
 	 * {@code -Daion.quest.catalogCompileThreads=N} 覆盖以做并行度实验。
 	 * Catalog compile pool size: at most 3 by default (yields CPU to the static-data loaders); override with
 	 * {@code -Daion.quest.catalogCompileThreads=N} to run parallelism experiments.
-	 *
 	 * @param processors 可用处理器数 / available processor count
 	 * @return 编译池线程数 / compile pool thread count
 	 */

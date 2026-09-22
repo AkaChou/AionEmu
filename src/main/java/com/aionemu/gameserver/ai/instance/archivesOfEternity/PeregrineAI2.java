@@ -14,7 +14,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Archives Of Eternity 副本 NPC AI：Peregrine（@AIName "feregran"），继承 GeneralNpcAI2。
  * Archives Of Eternity instance NPC AI: Peregrine (@AIName "feregran"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("feregran")

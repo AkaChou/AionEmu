@@ -56,7 +56,6 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
     /**
      * 为武器/防具加载镶嵌石（Mana/God/Fusion/Idian）。
      * Loads item stones (Mana/God/Fusion/Idian) for weapons and armor.
-     *
      * @param items 物品集合 / item collection
      */
     @Override
@@ -126,7 +125,6 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
     /**
      * 保存物品上的全部镶嵌石变更。
      * Saves all item-stone changes for the given items.
-     *
      * @param items 物品列表 / item list
      */
     @Override
@@ -168,7 +166,6 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
     /**
      * 持久化 Mana 石集合。
      * Persists a set of mana stones.
-     *
      * @param manaStones 魔石集合 / mana stone set
      */
     @Override
@@ -179,7 +176,6 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
     /**
      * 持久化融合石集合。
      * Persists a set of fusion stones.
-     *
      * @param fusionStones 融合石集合 / fusion stone set
      */
     @Override
@@ -190,7 +186,6 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
     /**
      * 持久化单颗 Idian 石。
      * Persists a single Idian stone.
-     *
      * @param idianStone Idian stone
      */
     @Override
@@ -201,7 +196,6 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
     /**
      * 按持久化状态批量增删改镶嵌石。
      * Batch inserts/updates/deletes stones according to persistent state.
-     *
      * @param stones 镶嵌石集合 / stone set
      * @param ist 镶嵌石类型 / item stone type
      */
@@ -253,7 +247,6 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
     /**
      * 批量插入镶嵌石。
      * Batch-inserts item stones.
-     *
      * @param con 数据库连接 / database connection
      * @param itemStones 镶嵌石集合 / stone collection
      * @param ist 镶嵌石类型 / item stone type
@@ -293,7 +286,6 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
     /**
      * 批量更新镶嵌石。
      * Batch-updates item stones.
-     *
      * @param con 数据库连接 / database connection
      * @param itemStones 镶嵌石集合 / stone collection
      * @param ist 镶嵌石类型 / item stone type
@@ -333,7 +325,6 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
     /**
      * 批量删除镶嵌石。
      * Batch-deletes item stones.
-     *
      * @param con 数据库连接 / database connection
      * @param itemStones 镶嵌石集合 / stone collection
      * @param ist 镶嵌石类型 / item stone type
@@ -362,7 +353,6 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
     /**
      * 删除单颗镶嵌石（用于超限清理）。
      * Deletes a single item stone (used when sockets overflow).
-     *
      * @param con 数据库连接 / database connection
      * @param uid 物品唯一 ID / item unique id
      * @param slot 槽位 / slot
@@ -385,7 +375,6 @@ public class ItemStoneListDAO extends com.aionemu.gameserver.dao.ItemStoneListDA
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

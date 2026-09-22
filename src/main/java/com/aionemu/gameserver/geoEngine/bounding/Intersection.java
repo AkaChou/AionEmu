@@ -10,7 +10,6 @@ import com.aionemu.gameserver.geoEngine.math.Vector3f;
 /**
  * 包围体与三角形相交检测的工具类。
  * Utility methods for computing intersection between bounding volumes and triangles.
- *
  * @author Kirill
  */
 public class Intersection {
@@ -18,7 +17,6 @@ public class Intersection {
 	/**
 	 * 在给定轴上求三点最小/最大值，结果写入 minMax（x=min, y=max）。
 	 * Finds min/max of three values on one axis; stores min in x and max in y of minMax.
-	 *
 	 * @param x0 第一分量 / first component
 	 * @param x1 第二分量 / second component
 	 * @param x2 第三分量 / third component
@@ -65,7 +63,6 @@ public class Intersection {
 	 * <p>
 	 * 检测方向：三角形边与坐标轴的叉积（9 次）、三角形 AABB 轴（3 次）、三角形法线。
 	 * Tests: 9 cross-products of tri edges with axes, 3 AABB axes, and the triangle plane.
-	 *
 	 * @param bbox 轴对齐包围盒 / axis-aligned bounding box
 	 * @param v1 三角形顶点 1 / triangle vertex 1
 	 * @param v2 三角形顶点 2 / triangle vertex 2

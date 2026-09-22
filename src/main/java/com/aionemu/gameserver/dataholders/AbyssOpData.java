@@ -18,7 +18,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 欧比斯行动数据容器，按 ID 索引全部欧比斯行动模板。
  * Abyss operation data holder, indexing all abyss operation templates by id.
- *
  * @author Rinzler (Encom)
  */
 @XmlRootElement(name = "abyss_ops")
@@ -47,7 +46,6 @@ public class AbyssOpData {
 	/**
 	 * 返回已加载的欧比斯行动数量。
 	 * Returns the number of loaded abyss operations.
-	 *
 	 * @return 已加载的欧比斯行动数量 / Returns the number of loaded abyss operations.
 	 */
 	public int size() {
@@ -57,7 +55,6 @@ public class AbyssOpData {
 	/**
 	 * 按 ID 获取欧比斯行动模板。
 	 * Returns the abyss operation template for the given id.
-	 *
 	 * @param id 行动 ID / operation id
 	 * @return 模板，不存在则为 null / template or null
 	 */
@@ -68,7 +65,6 @@ public class AbyssOpData {
 	/**
 	 * 返回全部欧比斯行动映射。
 	 * Returns the full abyss operation map.
-	 *
 	 * @return ID 到模板的映射 / map of id to template
 	 */
 	public Map<Integer, AbyssOp> getAll() {

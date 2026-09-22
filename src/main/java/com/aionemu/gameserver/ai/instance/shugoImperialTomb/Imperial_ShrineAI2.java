@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Shugo Imperial Tomb 副本 NPC AI：Imperial Shrine（@AIName "Imperial_Shrine"），继承 GeneralNpcAI2。
  * Shugo Imperial Tomb instance NPC AI: Imperial Shrine (@AIName "Imperial_Shrine"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("Imperial_Shrine")

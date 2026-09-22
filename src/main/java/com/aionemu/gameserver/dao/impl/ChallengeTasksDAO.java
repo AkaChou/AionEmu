@@ -18,7 +18,6 @@ import java.util.Map;
 /**
  * 挑战任务 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of ChallengeTasksDAO.
- *
  * @author ViAl
  */
 @Slf4j
@@ -36,7 +35,6 @@ public class ChallengeTasksDAO extends com.aionemu.gameserver.dao.ChallengeTasks
     /**
      * 按所有者与类型加载挑战任务。
      * Loads challenge tasks by owner and type.
-     *
      * @param ownerId 房主 ID / owner id
      * @param type 挑战类型 / challenge type
      * @return 任务映射 / task map
@@ -81,7 +79,6 @@ public class ChallengeTasksDAO extends com.aionemu.gameserver.dao.ChallengeTasks
     /**
      * 按持久化状态存储挑战任务。
      * Stores a challenge task according to quest persistent states.
-     *
      * @param task 挑战任务 / challenge task
      */
     @Override
@@ -103,7 +100,6 @@ public class ChallengeTasksDAO extends com.aionemu.gameserver.dao.ChallengeTasks
     /**
      * 插入挑战任务任务条目。
      * Inserts a challenge quest entry.
-     *
      * @param task 挑战任务 / challenge task
      * @param quest 挑战任务 / challenge quest
      */
@@ -128,7 +124,6 @@ public class ChallengeTasksDAO extends com.aionemu.gameserver.dao.ChallengeTasks
     /**
      * 更新挑战任务任务条目。
      * Updates a challenge quest entry.
-     *
      * @param task 挑战任务 / challenge task
      * @param quest 挑战任务 / challenge quest
      */
@@ -152,7 +147,6 @@ public class ChallengeTasksDAO extends com.aionemu.gameserver.dao.ChallengeTasks
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

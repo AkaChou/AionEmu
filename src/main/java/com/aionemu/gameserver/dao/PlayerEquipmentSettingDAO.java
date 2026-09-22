@@ -14,7 +14,6 @@ public abstract class PlayerEquipmentSettingDAO implements DAO {
 	/**
 	 * 加载玩家装备方案设置。
 	 * Loads the player's equipment settings.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public abstract void loadEquipmentSetting(Player player);
@@ -22,7 +21,6 @@ public abstract class PlayerEquipmentSettingDAO implements DAO {
 	/**
 	 * 插入一条装备方案设置。
 	 * Inserts an equipment setting entry.
-	 *
 	 * @param player 玩家 / player
 	 * @param equipmentSetting 装备设置 / equipment setting
 	 */
@@ -31,7 +29,6 @@ public abstract class PlayerEquipmentSettingDAO implements DAO {
 	/**
 	 * 持久化玩家所有需要更新的装备方案。
 	 * Persists all equipment settings that require an update for the player.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void store(Player player) {
@@ -48,7 +45,6 @@ public abstract class PlayerEquipmentSettingDAO implements DAO {
 	/**
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier of this DAO.
-	 *
 	 * @return DAO 类名 / DAO class name
 	 */
 	@Override

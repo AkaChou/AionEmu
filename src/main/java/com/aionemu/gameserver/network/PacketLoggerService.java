@@ -10,7 +10,6 @@ import com.aionemu.gameserver.configs.administration.DeveloperConfig;
 /**
  * 开发期包名日志服务，按配置输出客户端/服务端包名。
  * Dev-time packet name logger for client/server packets when enabled.
- *
  * @author Ghostfur (Aion-Unique)
  */
 @Slf4j
@@ -21,7 +20,6 @@ public class PacketLoggerService {
 	/**
 	 * 记录客户端包名（CM）。
 	 * Logs a client (CM) packet name.
-	 *
 	 * @param name packet name
 	 */
 	public void logPacketCM(String name) {
@@ -33,7 +31,6 @@ public class PacketLoggerService {
 	/**
 	 * 记录服务端包名（SM）。
 	 * Logs a server (SM) packet name.
-	 *
 	 * @param name packet name
 	 */
 	public void logPacketSM(String name) {
@@ -45,11 +42,9 @@ public class PacketLoggerService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -68,7 +63,6 @@ public class PacketLoggerService {
 	/**
 	 * 注入 Spring ObjectProvider，供 DI 覆盖静态单例。
 	 * Injects Spring ObjectProvider to override the static singleton.
-	 *
 	 * @param instanceProvider Spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<PacketLoggerService> instanceProvider) {

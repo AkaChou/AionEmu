@@ -15,7 +15,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 活动事件 NPC AI：Otherworldly Pucas（@AIName "nightmare_circus"），继承 GeneralNpcAI2。
  * Event NPC AI: Otherworldly Pucas (@AIName "nightmare_circus"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("nightmare_circus")

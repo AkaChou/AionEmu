@@ -18,7 +18,6 @@ import java.util.List;
 /**
  * 目标范围属性处理器：按范围类型填充技能受影响列表（AOE/队伍/坐标点等）。
  * Target range property handler: fills the skill effected list for AOE/party/point ranges.
- *
  * @author ATracer
  */
 @Slf4j
@@ -28,7 +27,6 @@ public class TargetRangeProperty {
 	/**
 	 * 按目标范围类型收集受影响单位。
 	 * Collects effected creatures according to the target range type.
-	 *
 	 * @param skill 技能上下文 / skill context
 	 * @param properties 目标筛选属性 / target filter properties
 	 * @return 收集是否成功 / true if targets were collected successfully

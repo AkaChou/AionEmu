@@ -15,7 +15,6 @@ import lombok.Getter;
 /**
  * 区域模板（静态数据/XML）。
  * XML template.
- *
  * @author ATracer
  */
 @Getter
@@ -46,9 +45,6 @@ public class ZoneTemplate {
 	@XmlAttribute
 	protected int flags = -1;
 
-	/**
-	 * @return the priority
-	 */
 	@XmlAttribute
 	protected int priority;
 
@@ -59,8 +55,7 @@ public class ZoneTemplate {
 	private ZoneName zoneName;
 
 	@XmlAttribute(name = "name")
-	/** 返回 xml name / Returns the xml name */
-	public String getXmlName() {
+    public String getXmlName() {
 		return name;
 	}
 
@@ -84,15 +79,9 @@ public class ZoneTemplate {
 	@XmlAttribute(name = "town_id")
 	private int townId;
 
-	/**
-	 * @return the type
-	 */
 	@XmlAttribute(name = "area_type")
 	protected AreaType areaType = AreaType.POLYGON;
 
-	/**
-	 * @return the zoneType
-	 */
 	@XmlAttribute(name = "zone_type")
 	protected ZoneClassName zoneType = ZoneClassName.SUB;
 

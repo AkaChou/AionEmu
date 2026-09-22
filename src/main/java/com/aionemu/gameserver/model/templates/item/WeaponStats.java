@@ -5,7 +5,6 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 /**
  * 武器属性模板：伤害、攻速、命中与暴击等。
  * Weapon stats template: damage, attack speed, accuracy and critical.
- *
  * @author ATracer
  */
 public class WeaponStats {

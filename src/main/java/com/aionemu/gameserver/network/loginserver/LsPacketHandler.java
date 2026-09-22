@@ -11,7 +11,6 @@ import com.aionemu.gameserver.network.loginserver.LoginServerConnection.State;
 /**
  * 登录服客户端封包处理器：按连接状态与 opcode 分发原型并克隆实例。
  * LoginServer client-packet handler: dispatches prototypes by connection state and opcode, then clones instances.
- *
  * @author -Nemesiss-
  * @author Luno
  */
@@ -28,7 +27,6 @@ public class LsPacketHandler {
 	/**
 	 * 从给定 ByteBuffer 读取并构造一个客户端封包。
 	 * Read one client packet from the given ByteBuffer.
-	 *
 	 * @param data 封包数据 / Packet data
 	 * @param client 登录服连接 / LoginServer connection
 	 * @return 解析得到的 LsClientPacket；未知 opcode 时返回 null / Parsed LsClientPacket, or null for unknown opcode
@@ -43,7 +41,6 @@ public class LsPacketHandler {
 	/**
 	 * 为指定连接状态注册封包原型。
 	 * Register a packet prototype for the given connection states.
-	 *
 	 * Packet prototype
 	 * @param states 适用的连接状态 / Applicable connection states
 	 */
@@ -61,7 +58,6 @@ public class LsPacketHandler {
 	/**
 	 * 按状态与 opcode 查找原型，克隆并绑定 buffer/connection。
 	 * Look up prototype by state and opcode, clone it, and bind buffer/connection.
-	 *
 	 * @param state 连接状态 / Connection state
 	 * Packet opcode
 	 * @param buf 数据缓冲区 / Data buffer
@@ -91,7 +87,6 @@ public class LsPacketHandler {
 	/**
 	 * 记录未知封包日志。
 	 * Log an unknown packet.
-	 *
 	 * @param state 连接状态 / Connection state
 	 * Packet opcode
 	 */

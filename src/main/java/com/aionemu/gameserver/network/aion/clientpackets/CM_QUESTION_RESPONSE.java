@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 客户端对 SM_QUESTION_WINDOW 确认框的响应包。
  * Client response to an SM_QUESTION_WINDOW confirmation dialog.
- *
  * @author Ben
  * @author Sarynth
  */

@@ -32,7 +32,6 @@ import lombok.NoArgsConstructor;
 /**
  * 任务/活动加成奖励服务，按加成类型从物品组中随机抽取奖励。
  * Quest/event bonus reward service randomly selecting rewards from item groups by bonus type.
- *
  * @author Rolandas
  */
 @Slf4j
@@ -44,8 +43,6 @@ public class BonusService {
      * -- SETTER --
      *  注入 Spring 实例提供者。
      *  Inject the Spring instance provider.
-     *
-     * @param provider 实例提供者 / Instance provider
      */
     @Setter
     private static volatile ObjectProvider<BonusService> instanceProvider;
@@ -54,7 +51,6 @@ public class BonusService {
 	/**
 	 * 获取服务单例（优先 Spring ObjectProvider，否则回退本地实例）。
 	 * Get the service singleton (prefer Spring ObjectProvider, otherwise local instance).
-	 *
 	 * @return 服务实例 / Service instance
 	 */
 	public static BonusService getInstance() {
@@ -68,7 +64,6 @@ public class BonusService {
 	/**
 	 * 使用指定物品组数据获取（或覆盖）服务实例。
 	 * Obtain (or override) the service instance with the given item-group data.
-	 *
 	 * @param itemGroups 物品组数据 / Item groups data
 	 * @return 服务实例 / Service instance
 	 */
@@ -81,7 +76,6 @@ public class BonusService {
     /**
 	 * 按加成类型返回对应物品组数组。
 	 * Return the bonus item groups for the given bonus type.
-	 *
 	 * @param type 加成类型 / Bonus type
 	 * @return 物品组数组，可能为 null / Item group array, may be null
 	 */
@@ -105,7 +99,6 @@ public class BonusService {
 	/**
 	 * 按权重从物品组数组中随机选取一组。
 	 * Randomly pick one group from the array weighted by chance.
-	 *
 	 * @param groups 物品组数组 / Item group array
 	 * @return 选中的组，可能为 null / Chosen group, may be null
 	 */
@@ -140,7 +133,6 @@ public class BonusService {
 	/**
 	 * 将原始概率归一化为百分比。
 	 * Normalize a raw chance value into a percentage of the total.
-	 *
 	 * @param chance 原始概率 / Raw chance
 	 * @param total 总权重 / Total weight
 	 * @return 归一化概率 / Normalized chance
@@ -152,7 +144,6 @@ public class BonusService {
 	/**
 	 * 按加成类型随机选取一组。
 	 * Randomly pick a group for the given bonus type.
-	 *
 	 * @param type 加成类型 / Bonus type
 	 * @return 选中的组 / Chosen group
 	 */
@@ -163,7 +154,6 @@ public class BonusService {
 	/**
 	 * 根据任务模板计算玩家应得的任务加成物品。
 	 * Resolve the quest-bonus item a player should receive for the given quest template.
-	 *
 	 * @param player 玩家 / Player
 	 * @param questTemplate 任务模板 / Quest template
 	 * @return 任务物品，无加成时返回 null / Quest item, or null if no bonus
@@ -194,7 +184,6 @@ public class BonusService {
 	/**
 	 * 解析制作类任务加成奖励。
 	 * Resolve craft-task quest bonus rewards.
-	 *
 	 * @param player 玩家 / Player
 	 * @param questTemplate 任务模板 / Quest template
 	 * @return 任务物品 / Quest item
@@ -248,7 +237,6 @@ public class BonusService {
 	/**
 	 * 解析勋章类任务加成奖励。
 	 * Resolve medal quest bonus rewards.
-	 *
 	 * @param player 玩家 / Player
 	 * @param template 任务模板 / Quest template
 	 * @return 任务物品 / Quest item
@@ -286,7 +274,6 @@ public class BonusService {
 	/**
 	 * 解析魔石类任务加成奖励。
 	 * Resolve manastone quest bonus rewards.
-	 *
 	 * @param player 玩家 / Player
 	 * @param bonus 任务加成配置 / Quest bonus config
 	 * @return 任务物品 / Quest item

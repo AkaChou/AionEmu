@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 按职业与性别划分的聊天频道。
  * Job-and-gender scoped chat channel.
- *
  * @author ATracer
  */
 public class JobChannel extends RaceChannel {
@@ -30,7 +29,6 @@ public class JobChannel extends RaceChannel {
     /**
      * 创建职业频道。
      * Creates a job channel.
-     *
      * @param gender 性别 / gender
      * @param playerClass 职业 / player class
      * @param race 阵营 / race

@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 向客户端打开商店购买/出售信息窗口（S_STORE_PURCHASE_INFO）。
  * Server packet opening a shop purchase/sell info window (S_STORE_PURCHASE_INFO).
- *
  * @author BeckUp.Media
  */
 public class SM_SELL_ITEM extends AionServerPacket
@@ -22,7 +21,6 @@ public class SM_SELL_ITEM extends AionServerPacket
 	/**
 	 * 使用给定参数构造 SM_SELL_ITEM 包。
 	 * Normal sell
-	 *
 	 * @param targetObjectId target object id
 	 * @param priceModifier price modifier
 	 */
@@ -38,7 +36,6 @@ public class SM_SELL_ITEM extends AionServerPacket
 	/**
 	 * 使用给定参数构造 SM_SELL_ITEM 包。
 	 * sell ap relics
-	 *
 	 * target object id
 	 * price modifier
 	 * @param buyList 购买列表模板 / buy list template

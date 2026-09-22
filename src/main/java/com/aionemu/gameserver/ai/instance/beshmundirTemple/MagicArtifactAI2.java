@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 /**
  * Beshmundir Temple 副本 NPC AI：Magic Artifact（@AIName "magicartifact"），继承 AggressiveNpcAI2。
  * Beshmundir Temple instance NPC AI: Magic Artifact (@AIName "magicartifact"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("magicartifact")

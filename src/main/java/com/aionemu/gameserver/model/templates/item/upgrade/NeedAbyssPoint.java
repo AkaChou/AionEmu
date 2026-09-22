@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 需要欧比斯点数模板（静态数据/XML）。
  * Need Abyss Point template (static data/XML).
- *
  * @author Ranastic (Encom)
  */
 

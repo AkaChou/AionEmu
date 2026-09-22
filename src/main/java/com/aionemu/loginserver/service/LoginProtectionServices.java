@@ -26,7 +26,6 @@ public final class LoginProtectionServices implements DisposableBean {
     /**
      * 注入并缓存各防护组件的 {@link ObjectProvider}。
      * Inject and cache providers for all protection components.
-     *
      * @param bannedMacManagerProvider MAC 封禁管理器提供者 / banned MAC manager provider
      * @param bannedIpServiceProvider IP 封禁服务提供者 / banned IP service provider
      * @param bruteForceProtectorProvider 暴力破解防护提供者 / brute-force protector provider
@@ -47,7 +46,6 @@ public final class LoginProtectionServices implements DisposableBean {
     /**
      * 获取 MAC 封禁管理器。
      * Resolve the banned MAC manager.
-     *
      * @return MAC 封禁管理器 / banned MAC manager
      */
     public static BannedMacManager bannedMacManager() {
@@ -65,7 +63,6 @@ public final class LoginProtectionServices implements DisposableBean {
     /**
      * 获取 IP 封禁服务。
      * Resolve the banned IP service.
-     *
      * @return IP 封禁服务 / banned IP service
      */
     public static LoginBannedIpService bannedIpService() {
@@ -83,7 +80,6 @@ public final class LoginProtectionServices implements DisposableBean {
     /**
      * 获取暴力破解防护器。
      * Resolve the brute-force protector.
-     *
      * @return 暴力破解防护 / brute-force protector
      */
     public static BruteForceProtector bruteForceProtector() {
@@ -101,7 +97,6 @@ public final class LoginProtectionServices implements DisposableBean {
     /**
      * 获取洪水防护器。
      * Resolve the flood protector.
-     *
      * @return 洪水防护 / flood protector
      */
     public static FloodProtector floodProtector() {
@@ -131,7 +126,6 @@ public final class LoginProtectionServices implements DisposableBean {
     /**
      * 回退 MAC 封禁管理器。
      * Fallback banned MAC manager.
-     *
      * @return 回退实例 / fallback instance
      */
     private static BannedMacManager fallbackBannedMacManager() {
@@ -141,7 +135,6 @@ public final class LoginProtectionServices implements DisposableBean {
     /**
      * 回退暴力破解防护。
      * Fallback brute-force protector.
-     *
      * @return 回退实例 / fallback instance
      */
     private static BruteForceProtector fallbackBruteForceProtector() {
@@ -151,7 +144,6 @@ public final class LoginProtectionServices implements DisposableBean {
     /**
      * 回退洪水防护。
      * Fallback flood protector.
-     *
      * @return 回退实例 / fallback instance
      */
     private static FloodProtector fallbackFloodProtector() {
@@ -161,7 +153,6 @@ public final class LoginProtectionServices implements DisposableBean {
     /**
      * 缓存 MAC 封禁管理器。
      * Remember the banned MAC manager.
-     *
      * @param bannedMacManager 管理器 / manager
      * @return 同一实例 / same instance
      */
@@ -173,7 +164,6 @@ public final class LoginProtectionServices implements DisposableBean {
     /**
      * 缓存 IP 封禁服务。
      * Remember the banned IP service.
-     *
      * @param bannedIpService 服务 / service
      * @return 同一实例 / same instance
      */
@@ -185,7 +175,6 @@ public final class LoginProtectionServices implements DisposableBean {
     /**
      * 缓存暴力破解防护。
      * Remember the brute-force protector.
-     *
      * @param bruteForceProtector 防护器 / protector
      * @return 同一实例 / same instance
      */
@@ -197,7 +186,6 @@ public final class LoginProtectionServices implements DisposableBean {
     /**
      * 缓存洪水防护。
      * Remember the flood protector.
-     *
      * @param floodProtector 防护器 / protector
      * @return 同一实例 / same instance
      */

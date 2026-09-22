@@ -14,7 +14,6 @@ import java.util.Set;
 /**
  * 提供给纯条件求值的不可变事实快照。
  * Immutable fact snapshot supplied to pure condition evaluation.
- *
  * <p>背包与货币余额携带显式捕获标志：事实未被捕获的快照（例如玩家登出）
  * 会将 {@code inventoryCaptured()}/{@code currenciesCaptured()} 报告为 false，
  * 并使 {@link #itemCount}/{@link #balance} 失败关闭而非返回虚构的零。
@@ -512,7 +511,6 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 	 * 迁移到不可变副本：入参已是不可变副本时直接复用（{@code Map.copyOf}/{@code Set.copyOf} 对不可变入参返回同一实例），
 	 * 否则在复制后逐条目校验一次。
 	 * Moves to an immutable copy: an already-immutable input is reused as-is, otherwise the copy is element-wise validated once.
-	 *
 	 * <p>为什么这样做：每个 {@code withXxx} 都会重新进入紧凑构造器，而 {@code ImmutableCollections$MapN} 未覆写
 	 * {@code keySet()}/{@code forEach()} —— 遍历副本会额外分配条目视图、迭代器与 {@code KeyValueHolder}（JFR 实测
 	 * 数 MB/300s）。首建路径（调用方传入可变集合）仍会完整校验一次，之后的重入只做零成本复制；校验遍历调用方
@@ -521,7 +519,6 @@ public record QuestSnapshot(int playerId, int questId, QuestStatus status, int p
 	 * override {@code keySet()}/{@code forEach()}, so iterating the copy allocates entry views, iterators and a
 	 * {@code KeyValueHolder} per entry. The first construction (mutable input) still validates once; later re-entries only
 	 * copy for free, and validation walks the caller's container so it never pays for those views itself.</p>
-	 *
 	 * @param questIds 完成任务 ID / completed quest ids
 	 * @return 不可变副本 / the immutable copy
 	 */

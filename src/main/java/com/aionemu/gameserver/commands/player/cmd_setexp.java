@@ -21,7 +21,6 @@ public class cmd_setexp extends PlayerCommand {
     /**
      * 解析倍率参数并写入玩家公共数据。
      * Parses the multiplier argument and stores it on player common data.
-     *
      * @param player 执行命令的玩家 / invoking player
      * @param params 倍率值 / multiplier value
      */
@@ -47,7 +46,6 @@ public class cmd_setexp extends PlayerCommand {
     /**
      * 参数错误时提示用法。
      * Shows usage when arguments are invalid.
-     *
      * @param player 执行命令的玩家 / invoking player
      * @param message 失败提示消息 / failure message
      */

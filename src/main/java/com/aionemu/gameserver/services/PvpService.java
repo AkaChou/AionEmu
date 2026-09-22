@@ -43,7 +43,6 @@ import com.aionemu.gameserver.utils.stats.StatFunctions;
 /**
  * PvP 服务，处理玩家击杀计数、奖励分发与阵营战相关逻辑。
  * PvP service handling player kill counts, reward distribution, and faction combat logic.
- *
  * @author (Encom)
  */
 @Slf4j(topic = "KILL_LOG")
@@ -55,11 +54,9 @@ public class PvpService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -94,7 +91,6 @@ public class PvpService {
 	/**
 	 * 注入 Spring ObjectProvider。
 	 * Injects the Spring ObjectProvider.
-	 *
 	 * @param provider provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<PvpService> provider) {
@@ -102,11 +98,6 @@ public class PvpService {
 		resolvedInstance = null;
 	}
 
-	/**
-	 * @param winnerId
-	 * @param victimId
-	 * @return
-	 */
 	private int getKillsFor(int winnerId, int victimId) {
 		KillList winnerKillList = pvpKillLists.get(winnerId);
 
@@ -116,10 +107,6 @@ public class PvpService {
 		return winnerKillList.getKillsFor(victimId);
 	}
 
-	/**
-	 * @param winnerId
-	 * @param victimId
-	 */
 
 	private void addKillFor(int winnerId, int victimId) {
 		KillList winnerKillList = pvpKillLists.get(winnerId);
@@ -133,7 +120,6 @@ public class PvpService {
 	/**
 	 * 处理 PvP 击杀奖励：击杀计数、AP/物品/任务通知，支持小队与联盟分摊。
 	 * Handles PvP kill rewards: kill counts, AP/item/quest notify, with group and alliance sharing.
-	 *
 	 * @param victim 被击杀玩家 / killed player
 	 */
 	public void doReward(Player victim) {
@@ -311,12 +297,6 @@ public class PvpService {
 		}
 	}
 
-	/**
-	 * @param victim
-	 * @param totalDamage
-	 * @param aggro
-	 * @return true if group is not same race
-	 */
 	private boolean rewardPlayerGroup(Player victim, int totalDamage, AggroInfo aggro) {
 		// 奖励小队 / Reward Group
 		PlayerGroup group = ((PlayerGroup) aggro.getAttacker());
@@ -392,12 +372,6 @@ public class PvpService {
 		return true;
 	}
 
-	/**
-	 * @param victim
-	 * @param totalDamage
-	 * @param aggro
-	 * @return true if group is not same race
-	 */
 	private boolean rewardPlayerAlliance(Player victim, int totalDamage, AggroInfo aggro) {
 		// 奖励联盟 / Reward Alliance
 		PlayerAlliance alliance = ((PlayerAlliance) aggro.getAttacker());
@@ -474,12 +448,6 @@ public class PvpService {
 		return true;
 	}
 
-	/**
-	 * @param victim
-	 * @param totalDamage
-	 * @param aggro
-	 * @return true if player is not same race
-	 */
 	private boolean rewardPlayer(Player victim, int totalDamage, AggroInfo aggro) {
 		// 奖励玩家 / Reward Player
 		Player winner = ((Player) aggro.getAttacker());

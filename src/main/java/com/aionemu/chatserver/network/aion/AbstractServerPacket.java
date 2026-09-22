@@ -7,7 +7,6 @@ import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
 /**
  * 聊天服务端数据包抽象基类。
  * Abstract base class for chat server packets.
- *
  * @author ATracer
  */
 public abstract class AbstractServerPacket extends BaseServerPacket {
@@ -15,7 +14,6 @@ public abstract class AbstractServerPacket extends BaseServerPacket {
     /**
      * 构造服务端数据包。
      * Constructs a server packet.
-     *
      * @param opCode 操作码 / operation code
      */
     public AbstractServerPacket(int opCode) {
@@ -25,7 +23,6 @@ public abstract class AbstractServerPacket extends BaseServerPacket {
     /**
      * 写入完整数据包（含长度占位后委托具体实现）。
      * Writes the full packet (length placeholder then delegates to the concrete implementation).
-     *
      * @param clientChannelHandler 客户端通道处理器 / client channel handler
      * @param buf 包写入器 / packet writer
      */
@@ -37,7 +34,6 @@ public abstract class AbstractServerPacket extends BaseServerPacket {
     /**
      * 由子类实现的具体写入逻辑。
      * Concrete write logic implemented by subclasses.
-     *
      * @param cHandler 客户端通道处理器 / client channel handler
      * @param buf 包写入器 / packet writer
      */

@@ -8,7 +8,6 @@ import com.aionemu.gameserver.services.PrivateStoreService;
 /**
  * 客户端个人商店店名设置并开启请求包。
  * Client packet to set the private store name and open the store.
- *
  * @author Simple
  */
 public class CM_PRIVATE_STORE_NAME extends AionClientPacket {

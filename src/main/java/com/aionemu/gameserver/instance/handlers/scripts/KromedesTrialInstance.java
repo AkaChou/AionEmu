@@ -41,7 +41,6 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 克罗米德斯试炼副本事件处理器。
  * Instance event handler for Kromedes Trial.
- *
  * @author Encom
  */
 
@@ -77,7 +76,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -93,7 +91,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	/**
 	 * 根据任务步骤在副本对象与任务对象之间切换罗勃斯汀。
 	 * Selects the instance NPC or quest NPC for Robstin based on the active quest step.
-	 *
 	 * @param player 触发切换的玩家 / player that triggered the switch
 	 */
 	public void synchronizeRobstinNpc(Player player) {
@@ -157,7 +154,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家登录并恢复到该副本时处理临时任务钥匙。
 	 * Handles temporary quest-key recovery when a player logs back into this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -168,7 +164,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -187,7 +182,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 
@@ -461,7 +455,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
-	 *
 	 * @param player 玩家 / player
 	 * @param npc NPC / npc
 	 */
@@ -480,7 +473,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -493,7 +485,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -506,7 +497,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -586,7 +576,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -610,7 +599,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	/**
 	 * 记录玩家离开同一副本后可恢复的遗物钥匙。
 	 * Records a relic key that can be restored after the player leaves and re-enters this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	private void rememberRelicKey(Player player) {
@@ -624,7 +612,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	/**
 	 * 重新进入或登录同一副本时恢复离开前的遗物钥匙。
 	 * Restores the relic key held before leaving when the player re-enters or logs back into this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	private void restoreRelicKey(Player player) {
@@ -640,7 +627,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	/**
 	 * 判断任务步骤和钥匙持有状态是否符合实例重入恢复条件。
 	 * Checks whether the quest step and key possession qualify for instance re-entry recovery.
-	 *
 	 * @param questState 任务状态，可为空 / quest state, nullable
 	 * @param itemCount 离开前持有的钥匙数量 / key count held before leaving
 	 * @return 是否应记录恢复标记 / whether recovery should be recorded
@@ -652,7 +638,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	/**
 	 * 判断已推进的副本在钥匙来源已消失或离开标记存在时是否需要恢复钥匙。
 	 * Determines whether a progressed instance should restore the key after the source is gone or a leave marker exists.
-	 *
 	 * @param questState 任务状态，可为空 / quest state, nullable
 	 * @param keyPresent 是否已持有钥匙 / whether the key is already present
 	 * @param sourceNpcUnavailable 钥匙来源是否已消失 / whether the key source is unavailable
@@ -667,7 +652,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	/**
 	 * 判断遗物钥匙的来源 NPC 是否已被持久化副本消耗。
 	 * Checks whether the relic-key source NPC has already been consumed by the persisted instance.
-	 *
 	 * @return 来源是否不可用 / whether the source is unavailable
 	 */
 	private boolean isRelicKeySourceUnavailable() {
@@ -691,7 +675,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	/**
 	 * 移除相关物品。
 	 * Remove related items.
-	 *
 	 * @param player 玩家 / player
 	 */
 
@@ -708,7 +691,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 removeSilverBladeRotan。
 	 * Handle removeSilverBladeRotan.
-	 *
 	 * @param player 玩家 / player
 	 */
 
@@ -720,7 +702,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
-	 *
 	 * @param msg 消息 / message
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
@@ -738,7 +719,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -755,7 +735,6 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
-	 *
 	 * @param player 玩家 / player
 	 * @param zone 区域 / zone
 	 */

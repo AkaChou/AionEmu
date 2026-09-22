@@ -7,7 +7,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 武器属性强化效果：Buff 形态的武器相关属性提升。
  * Weapon stat-boost effect: buff-form weapon-related attribute increase.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)

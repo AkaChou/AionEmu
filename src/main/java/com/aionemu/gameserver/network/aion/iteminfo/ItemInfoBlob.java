@@ -21,9 +21,7 @@ import lombok.Getter;
  * Container for item-info blobs that aggregates {@link ItemBlobEntry} instances
  * and serializes them into the client-readable format.
  * Builds full or partial item detail payloads from the item template and runtime state.
- *
  * @author -Nemesiss-
- * @modified Rolandas
  */
 public class ItemInfoBlob extends PacketWriteHelper {
 	/** 所属玩家。 / Owning player. */
@@ -37,7 +35,6 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	/**
 	 * 为指定玩家与物品创建 Blob 容器。
 	 * Creates a blob container for the given player and item.
-	 *
 	 * @param player 所属玩家 / owning player
 	 * @param item 目标物品 / target item
 	 */
@@ -61,7 +58,6 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	/**
 	 * 按类型创建并添加一个 Blob 条目。
 	 * Creates and adds a blob entry of the given type.
-	 *
 	 * @param type blob 类型 / blob type
 	 */
 	public void addBlobEntry(ItemBlobType type) {
@@ -73,7 +69,6 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	/**
 	 * 添加一条属性加成 Blob 条目。
 	 * Adds a stat-bonus blob entry bound to the given modifier.
-	 *
 	 * @param modifier 属性修正 / stat modifier
 	 */
 	public void addBonusBlobEntry(IStatFunction modifier) {
@@ -87,7 +82,6 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	 * 不支持 {@link ItemBlobType#STAT_BONUSES}（需通过 {@link #addBonusBlobEntry}）。
 	 * Factory method that creates a single blob entry and binds ownership.
 	 * Does not support {@link ItemBlobType#STAT_BONUSES} (use {@link #addBonusBlobEntry}).
-	 *
 	 * @param type blob 类型 / blob type
 	 * @param player 所属玩家 / owning player
 	 * @param item 所属物品 / owning item
@@ -108,7 +102,6 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	 * Assembles a full item-info blob based on item type and runtime state.
 	 * Equipable items get slot, mana-stone, conditioning, plume/bracelet data, etc.;
 	 * non-equipable items may only include general info or a stigma-shard entry.
-	 *
 	 * @param player 所属玩家 / owning player
 	 * @param item 目标物品 / target item
 	 * @return 完整 blob / full blob
@@ -173,7 +166,6 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	/**
 	 * 返回当前已添加的 Blob 条目列表。
 	 * Returns the list of currently added blob entries.
-	 *
 	 * @return 条目列表 / entry list
 	 */
 	public List<ItemBlobEntry> getBlobEntries() {
@@ -183,7 +175,6 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	/**
 	 * 计算全部条目的总负载长度（每条目含 1 字节类型 ID）。
 	 * Computes the total payload size of all entries (each entry includes a 1-byte type id).
-	 *
 	 * @return 总字节数 / total size in bytes
 	 */
 	public int size() {
@@ -331,15 +322,12 @@ public class ItemInfoBlob extends PacketWriteHelper {
          * -- GETTER --
          *  返回客户端入口 ID。
          *  Returns the client entry id.
-         *
-         * @return 客户端入口 ID / entry id
          */
 		private final int entryId;
 
 		/**
 		 * 以客户端入口 ID 构造类型。
 		 * Constructs a type with the given client entry id.
-		 *
 		 * @param entryId 客户端入口 ID / entry id
 		 */
 		ItemBlobType(int entryId) {
@@ -349,7 +337,6 @@ public class ItemInfoBlob extends PacketWriteHelper {
         /**
 		 * 创建对应的 Blob 条目实例。
 		 * Creates a new blob entry instance for this type.
-		 *
 		 * @return 新条目 / new entry
 		 */
 		abstract ItemBlobEntry newBlobEntry();

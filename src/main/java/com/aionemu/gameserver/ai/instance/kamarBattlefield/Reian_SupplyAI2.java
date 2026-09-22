@@ -19,7 +19,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Kamar Battlefield 副本 NPC AI：Reian Supply（@AIName "reian_supply"），继承 ActionItemNpcAI2。
  * Kamar Battlefield instance NPC AI: Reian Supply (@AIName "reian_supply"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("reian_supply")

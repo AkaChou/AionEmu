@@ -20,7 +20,6 @@ import org.springframework.beans.factory.ObjectProvider;
 /**
  * 登录服包处理器工厂：注册 LS 客户端包原型并提供处理器单例。
  * Login-server packet handler factory: registers LS client packet prototypes and exposes the handler singleton.
- *
  * @author Luno
  */
 public class LsPacketHandlerFactory {
@@ -29,8 +28,7 @@ public class LsPacketHandlerFactory {
      * -- SETTER --
      *  注入 Spring ObjectProvider，供 DI 覆盖静态单例。
      *  Injects Spring ObjectProvider to override the static singleton.
-     *
-     * @param provider Spring Provider / Spring provider
+     * Spring Provider / Spring provider
      */
     @Setter
     private static volatile ObjectProvider<LsPacketHandlerFactory> instanceProvider;
@@ -39,11 +37,9 @@ public class LsPacketHandlerFactory {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
@@ -79,7 +75,6 @@ public class LsPacketHandlerFactory {
 	/**
 	 * 向处理器注册包原型及合法状态。
 	 * Registers a packet prototype with valid states.
-	 *
 	 * @param prototype 包原型 / packet prototype
 	 * @param states 合法连接状态 / valid connection states
 	 */
@@ -90,7 +85,6 @@ public class LsPacketHandlerFactory {
 	/**
 	 * 获取已注册的包处理器。
 	 * Returns the registered packet handler.
-	 *
 	 * @return 包处理器 / packet handler
 	 */
 	public LsPacketHandler getPacketHandler() {

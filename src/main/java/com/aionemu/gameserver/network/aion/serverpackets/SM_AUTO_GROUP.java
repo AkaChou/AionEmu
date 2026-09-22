@@ -25,7 +25,6 @@ public class SM_AUTO_GROUP extends AionServerPacket {
 	/**
 	 * 按实例 mask 初始化副本匹配基础字段。
 	 * Initializes instance-match base fields from the instance mask id.
-	 *
 	 * @param instanceMaskId instance mask id
 	 */
 	public SM_AUTO_GROUP(int instanceMaskId) {
@@ -83,7 +82,6 @@ public class SM_AUTO_GROUP extends AionServerPacket {
 	/**
 	 * 战场入口显示/隐藏。
 	 * Battleground entry show/hide.
-	 *
 	 * world map id
 	 * @param show 是否显示入口 / whether to show the entry
 	 */
@@ -98,7 +96,6 @@ public class SM_AUTO_GROUP extends AionServerPacket {
 	/**
 	 * 战场组队选择/提示消息。
 	 * prompt message.
-	 *
 	 * world map id
 	 * @param teamChoice 是否为队伍选择模式 / whether team-choice mode
 	 * message id
@@ -114,7 +111,6 @@ public class SM_AUTO_GROUP extends AionServerPacket {
 	/**
 	 * 战场通用选项包。
 	 * Generic battleground option packet.
-	 *
 	 * @param option main option
 	 * @param worldId world map id
 	 * @param specialOption special option

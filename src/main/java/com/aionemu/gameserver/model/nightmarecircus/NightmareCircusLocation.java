@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 /**
  * 梦魇马戏团位置，用于 nightmarecircus 相关逻辑。
  * Nightmare Circus Location for nightmarecircus logic.
- *
  * @author Rinzler (Encom)
  */
 

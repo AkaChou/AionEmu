@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 维尔索要塞相关 NPC AI：Wealhtheow Keep Rune Elite（@AIName "rune_elite"），继承 AggressiveNpcAI2。
  * Wealhtheow Keep related NPC AI: Wealhtheow Keep Rune Elite (@AIName "rune_elite"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("rune_elite")

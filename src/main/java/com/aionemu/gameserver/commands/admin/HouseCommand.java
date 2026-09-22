@@ -30,7 +30,6 @@ public class HouseCommand extends AdminCommand
 	/**
 	 * 处理 tp/acquire/revoke 子命令。
 	 * Handle tp/acquire/revoke subcommands.
-	 *
 	 * @param admin 执行命令的管理员 / Admin executing the command
 	 * @param params 子命令与房屋 ID / Subcommand and house id
 	 */
@@ -152,7 +151,6 @@ public class HouseCommand extends AdminCommand
 	/**
 	 * 参数错误时显示命令语法。
 	 * Show command syntax on invalid arguments.
-	 *
 	 * @param player 接收提示的玩家 / Player receiving the hint
 	 */
 	@Override

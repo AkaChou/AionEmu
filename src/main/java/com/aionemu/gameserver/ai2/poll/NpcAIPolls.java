@@ -5,7 +5,6 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 /**
  * NPC AI 的默认投票回答工具，提供腐朽与重生等通用决策的默认肯定结果。
  * Default poll-answer helpers for NPC AI, providing positive defaults for decay and respawn decisions.
- *
  * @author ATracer
  */
 public class NpcAIPolls {
@@ -13,7 +12,6 @@ public class NpcAIPolls {
 	/**
 	 * 判断 NPC 死亡后是否应当腐朽消失；默认返回肯定。
 	 * Decide whether the NPC should decay after death; defaults to positive.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @return 肯定回答 / Positive answer
 	 */
@@ -24,7 +22,6 @@ public class NpcAIPolls {
 	/**
 	 * 判断 NPC 是否应当重生；默认返回肯定。
 	 * Decide whether the NPC should respawn; defaults to positive.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @return 肯定回答 / Positive answer
 	 */

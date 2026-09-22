@@ -13,7 +13,6 @@ import lombok.Setter;
 /**
  * 加成 PenaltyAttr 模板（静态数据/XML）。
  * Bonus penalty attribute template (static data/XML).
- *
  * @author Ranastic (Encom)
  */
 

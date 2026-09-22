@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 随从（Minion）养成与操作的客户端包。
  * Client packet for minion management and actions.
- *
  * @author Falke_34, FrozenKiller Reworked by G-Robson26
  */
 @Slf4j
@@ -38,7 +37,6 @@ public class CM_MINIONS extends AionClientPacket {
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余合法状态 / additional valid states

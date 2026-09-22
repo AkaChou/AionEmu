@@ -126,7 +126,6 @@ public class VortexLocation implements ZoneHandler {
 	/**
 	 * 该对象 ID 是否已通过裂隙并处于入侵者名单中。
 	 * Whether the object id is a passed invader of the vortex.
-	 *
 	 * @param objId 对象 ID / object id
 	 * @return 是入侵者则为 true / true if invader
 	 */
@@ -137,7 +136,6 @@ public class VortexLocation implements ZoneHandler {
 	/**
 	 * 玩家是否处于激活的漩涡区域内。
 	 * Whether the player is inside the active vortex.
-	 *
 	 * @param player 玩家 / player
 	 * @return 在激活漩涡内则为 true / true if inside the active vortex
 	 */
@@ -154,7 +152,6 @@ public class VortexLocation implements ZoneHandler {
 	/**
 	 * 生物是否位于漩涡的任一区域中。
 	 * Whether the creature is inside any of the vortex zones.
-	 *
 	 * @param creature 生物 / creature
 	 * @return 在区域内则为 true / true if inside a zone
 	 */

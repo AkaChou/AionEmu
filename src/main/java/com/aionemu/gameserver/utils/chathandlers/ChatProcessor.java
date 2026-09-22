@@ -29,7 +29,6 @@ import lombok.NoArgsConstructor;
 /**
  * 聊天命令处理器：加载、注册，并将玩家输入路由到已注册命令。
  * Chat command processor: loads, registers and routes player input to commands.
- *
  * @author KID
  * @author Rolandas
  */
@@ -44,7 +43,6 @@ public class ChatProcessor implements GameEngine {
      *  注入 Spring 实例提供者。
      *  Inject the Spring instance provider.
      *  Provider
-
      */
 	@Setter
     private static volatile ObjectProvider<ChatProcessor> instanceProvider;
@@ -67,7 +65,6 @@ public class ChatProcessor implements GameEngine {
 	/**
 	 * 获取处理器实例（优先 Spring 提供者）。
 	 * Get the processor instance (Spring provider preferred).
-	 *
 	 * Processor
 	 */
 	public static ChatProcessor getInstance() {
@@ -81,7 +78,6 @@ public class ChatProcessor implements GameEngine {
     /**
 	 * 加载并初始化聊天命令。
 	 * Load and initialize chat commands.
-	 *
 	 * @param progressLatch 进度锁存器 / Progress latch
 	 */
 	@Override
@@ -107,7 +103,6 @@ public class ChatProcessor implements GameEngine {
 	/**
 	 * 加载权限配置并编译注册 admin/player 命令脚本。
 	 * Load access levels and compile/register admin/player command scripts.
-	 *
 	 * @param processor 注册目标处理器 / Target processor for registration
 	 */
 	private void init(ChatProcessor processor) {
@@ -132,7 +127,6 @@ public class ChatProcessor implements GameEngine {
 	 * 其余别名仍照常注册。
 	 * A single alias without a config entry is skipped on its own (for example a Chinese alias that a
 	 * runtime config has not been updated with yet), while the other aliases stay registered.
-	 *
 	 * Command
 	 */
 	public void registerCommand(ChatCommand cmd) {
@@ -198,7 +192,6 @@ public class ChatProcessor implements GameEngine {
 	 *（或在启用时也接受 AdminCommand）。
 	 * Prefix {@code //} → AdminCommand; {@code .} → PlayerCommand
 	 * (or AdminCommand when enabled).
-	 *
 	 * @param player 玩家 / Player
 	 * @param text 原始聊天文本 / Raw chat text
 	 * @return 已处理则为 true / True if handled
@@ -219,7 +212,6 @@ public class ChatProcessor implements GameEngine {
 	/**
 	 * 按文本首词查找已注册命令。
 	 * Look up a registered command by the first token of the text.
-	 *
 	 * @param text 去掉前缀后的文本 / Text without prefix
 	 * Command or null
 	 */

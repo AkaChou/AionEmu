@@ -28,9 +28,6 @@ public enum SiegeSpawnType {
 	/** 种族保护者。 / Race Protector. */
 	RACEPROTECTOR(8);
 
-	/**
-	 * @return 枚举 ID / the id
-	 */
 	private final int id;
 
 	SiegeSpawnType(int id) {

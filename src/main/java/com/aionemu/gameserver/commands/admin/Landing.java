@@ -19,7 +19,6 @@ public class Landing extends AdminCommand
     /**
      * 处理 help/update/level 子命令。
      * Handle help/update/level subcommands.
-     *
      * @param admin 执行命令的管理员 / Admin executing the command
      * @param params 子命令与参数 / Subcommand and arguments
      */
@@ -68,7 +67,6 @@ public class Landing extends AdminCommand
     /**
      * 参数错误时显示帮助。
      * Show help on invalid arguments.
-     *
      * @param player 接收提示的玩家 / Player receiving the hint
      */
     @Override

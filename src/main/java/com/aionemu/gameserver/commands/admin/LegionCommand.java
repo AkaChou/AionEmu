@@ -23,7 +23,6 @@ import java.util.List;
 /**
  * 管理员军团命令：解散、改级/积分/名称、邀请/踢出、任命团长与领地管理。
  * Admin legion command: disband, set level/points/name, invite/kick, promote BG, and territory control.
- *
  * @author KID
  */
 public class LegionCommand extends AdminCommand {
@@ -36,7 +35,6 @@ public class LegionCommand extends AdminCommand {
 	/**
 	 * 处理 legion 子命令（disband/setlevel/setpoints/setname/bg/kick/invite/info/territory 等）。
 	 * Handle legion subcommands (disband/setlevel/setpoints/setname/bg/kick/invite/info/territory, etc.).
-	 *
 	 * @param player 执行命令的管理员 / Admin executing the command
 	 * @param params 子命令与参数 / Subcommand and arguments
 	 */
@@ -324,7 +322,6 @@ public class LegionCommand extends AdminCommand {
 	/**
 	 * 参数错误时显示命令语法与可选失败原因。
 	 * Show command syntax and optional failure reason on invalid arguments.
-	 *
 	 * @param player 接收提示的玩家 / Player receiving the hint
 	 */
 	@Override

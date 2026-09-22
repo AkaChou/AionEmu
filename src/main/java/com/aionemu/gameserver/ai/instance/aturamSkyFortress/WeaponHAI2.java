@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Aturam Sky Fortress 副本 NPC AI：Weapon H（@AIName "weaponh"），继承 AggressiveNpcAI2。
  * Aturam Sky Fortress instance NPC AI: Weapon H (@AIName "weaponh"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("weaponh")

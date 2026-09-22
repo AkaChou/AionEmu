@@ -50,7 +50,6 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 /**
  * 地理数据加载器：网格、世界物体、地形高度与材质。
  * Geo-data loader for meshes, world objects, terrain height and materials.
- *
  * @author Mr. Poke
  */
 @Slf4j
@@ -76,7 +75,6 @@ public class GeoWorldLoader {
 	/**
 	 * 从网格二进制文件加载命名 Spatial 模型表。
 	 * Loads a name→Spatial model table from a mesh binary file.
-	 *
 	 * @param fileName 相对地理数据路径 / relative geo path
 	 * @return 小写名称到模型的映射 / lowercase name to model map
 	 * @throws IOException 读文件失败 / on I/O failure
@@ -173,7 +171,6 @@ public class GeoWorldLoader {
 	/**
 	 * 加载指定世界的放置物体到 GeoMap。
 	 * Loads placed world objects for a world into the GeoMap.
-	 *
 	 * @param worldId 世界 ID / world id
 	 * @param models 已加载模型表 / loaded model table
 	 * @param map 目标地图 / target geo map
@@ -239,13 +236,11 @@ public class GeoWorldLoader {
 	/**
 	 * 从 geo 目录 PNG 加载各地图高度图与材质图。
 	 * Loads height and material PNGs from the geo directory into maps.
-	 *
 	 * <p>PNG 解码彼此独立且是 CPU 密集操作，先并行解码再按原排序串行回填，
 	 * 保证 direct PNG 覆盖合并 PNG 的语义与串行实现完全一致。
 	 * PNG decoding steps are independent and CPU-bound; decode in parallel, then apply
 	 * sequentially in the original sort order so the direct-PNG-overrides-combined-PNG
 	 * semantics stay identical to the former sequential implementation.
-	 *
 	 * @param maps 地图集合 / geo maps
 	 * @throws IOException 读文件失败 / on I/O failure
 	 */
@@ -290,13 +285,12 @@ public class GeoWorldLoader {
 	/**
 	 * 单张地形 PNG 的解码结果（高度或材质二选一）。
 	 * Decode result of a single terrain PNG (either heights or materials).
-	 *
-	 * @param stem 去掉后缀后的文件名词干 / file-name stem without suffix
-	 * @param material 是否为材质图 / whether this is a materials image
-	 * @param width 图宽 / image width
-	 * @param height 图高 / image height
-	 * @param heights 高度数据（材质图为 null） / height data ({@code null} for materials images)
-	 * @param materials 材质数据（高度图为 null） / material data ({@code null} for height images)
+	 * 去掉后缀后的文件名词干 / file-name stem without suffix
+	 * 是否为材质图 / whether this is a materials image
+	 * 图宽 / image width
+	 * 图高 / image height
+	 * 高度数据（材质图为 null） / height data ({@code null} for materials images)
+	 * 材质数据（高度图为 null） / material data ({@code null} for height images)
 	 */
 	private record DecodedTerrain(String stem, boolean material, int width, int height, short[] heights, byte[] materials) {
 	}
@@ -304,7 +298,6 @@ public class GeoWorldLoader {
 	/**
 	 * 解码单张地形 PNG；I/O 失败包装为 {@link UncheckedIOException} 以便在并行流中传播。
 	 * Decodes one terrain PNG; wraps I/O failures in {@link UncheckedIOException} for parallel-stream propagation.
-	 *
 	 * @param file 地形 PNG / terrain PNG
 	 * @return 解码结果 / decoded result
 	 */
@@ -331,7 +324,6 @@ public class GeoWorldLoader {
 	/**
 	 * 文件名是否为单地图直接地形（无逗号别名）。
 	 * Whether the file name is a direct single-map terrain (no comma aliases).
-	 *
 	 * @param fileName 文件名 / file name
 	 * @return 是否直接地形文件 / true if direct terrain
 	 */
@@ -344,7 +336,6 @@ public class GeoWorldLoader {
 	/**
 	 * 将普通节点包装为可消隐节点。
 	 * Wraps a node as a DespawnableNode with type/id/level metadata.
-	 *
 	 * @param node 源节点 / source node
 	 * @param type 消隐类型 ID / despawnable type id
 	 * @param id 实体 ID / entity id
@@ -371,7 +362,6 @@ public class GeoWorldLoader {
 	/**
 	 * 加载同城镇更高等级实体变体。
 	 * Loads higher-level town entity variants sharing the same placement.
-	 *
 	 * @param map 目标地图 / target map
 	 * @param models 模型表 / model table
 	 * @param townEntity 当前城镇实体 / current town entity
@@ -405,7 +395,6 @@ public class GeoWorldLoader {
 	/**
 	 * 从光栅读取高度 short 数组（行列转置存储）。
 	 * Reads height shorts from a raster (transposed storage order).
-	 *
 	 * @param raster 图像光栅 / image raster
 	 * @param width 宽度 / width
 	 * @param height 高度 / height
@@ -424,7 +413,6 @@ public class GeoWorldLoader {
 	/**
 	 * 从光栅读取材质 byte 数组（行列转置存储）。
 	 * Reads material bytes from a raster (transposed storage order).
-	 *
 	 * @param raster 图像光栅 / image raster
 	 * @param width 宽度 / width
 	 * @param height 高度 / height
@@ -443,7 +431,6 @@ public class GeoWorldLoader {
 	/**
 	 * 附加到地图并为材质子节点创建区域。
 	 * Attaches a spatial to the map and creates material zones for children.
-	 *
 	 * @param map 目标地图 / target map
 	 * @param node 源空间节点 / source spatial
 	 * @param matrix 旋转 / rotation
@@ -470,7 +457,6 @@ public class GeoWorldLoader {
 	/**
 	 * 克隆节点并设置变换后附加到地图。
 	 * Clones the node, applies transform and attaches it to the map.
-	 *
 	 * @param map 目标地图 / target map
 	 * @param node 源空间节点 / source spatial
 	 * @param matrix 旋转 / rotation
@@ -491,7 +477,6 @@ public class GeoWorldLoader {
 	/**
 	 * 为带材质意图的节点创建材质区域模板。
 	 * Creates a material zone template for nodes with material collision intention.
-	 *
 	 * @param node 空间节点 / spatial
 	 * @param worldId 世界 ID / world id
 	 * @param childNumber 子序号（0 表示无后缀） / child number (0 = no suffix)
@@ -525,7 +510,6 @@ public class GeoWorldLoader {
 	 * <p>
 	 * 参考 http://www.beosil.com/download/CollisionDetectionHashing_VMV03.pdf
 	 * See http://www.beosil.com/download/CollisionDetectionHashing_VMV03.pdf
-	 *
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param z Z 坐标 / Z
@@ -541,7 +525,6 @@ public class GeoWorldLoader {
 	/**
 	 * 将文件通道只读映射为 ByteBuffer（小端视图，调用方可改序）。
 	 * Memory-maps a file channel read-only as a ByteBuffer (little-endian view; caller may reorder).
-	 *
 	 * @param channel 文件通道 / file channel
 	 * @param arena 外部 Arena / foreign Arena
 	 * @return 映射缓冲区 / mapped buffer

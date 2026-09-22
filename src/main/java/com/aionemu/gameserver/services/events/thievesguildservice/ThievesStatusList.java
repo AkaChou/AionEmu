@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 /**
  * 盗贼状态条目，保存盗贼公会相关玩家状态数据。
  * Thieves status entry holding thieves-guild related player state data.
- *
  * @author Rinzler (Encom)
  */
 

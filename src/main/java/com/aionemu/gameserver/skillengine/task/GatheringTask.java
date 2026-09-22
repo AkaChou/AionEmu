@@ -35,7 +35,6 @@ public class GatheringTask extends AbstractCraftTask {
 	/**
 	 * 构造采集任务。
 	 * Creates a gathering task.
-	 *
 	 * @param requestor 采集玩家 / gathering player
 	 * @param gatherable 可采集物对象 / gatherable object
 	 * @param material 目标材料 / target material
@@ -140,7 +139,6 @@ public class GatheringTask extends AbstractCraftTask {
 	/**
 	 * 执行一次采集交互 tick。
 	 * Performs one gathering interaction tick.
-	 *
 	 * @return true 表示任务应停止 / true if the task should stop
 	 */
 	@Override
@@ -174,7 +172,6 @@ public class GatheringTask extends AbstractCraftTask {
 	/**
 	 * 成功完成：发放材料、扣消耗物并奖励玩家。
 	 * Success finish: awards material, consumes required items, and rewards the player.
-	 *
 	 * @return 始终 true，表示任务结束 / always true to end the task
 	 */
 	@Override

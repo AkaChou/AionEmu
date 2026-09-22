@@ -23,7 +23,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Tiamat Stronghold 副本 NPC AI：Brigade General Laksyaka（@AIName "brigadegenerallaksyaka"），继承 AggressiveNpcAI2。
  * Tiamat Stronghold instance NPC AI: Brigade General Laksyaka (@AIName "brigadegenerallaksyaka"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("brigadegenerallaksyaka")

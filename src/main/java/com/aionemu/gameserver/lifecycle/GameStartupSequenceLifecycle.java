@@ -244,7 +244,6 @@ public class GameStartupSequenceLifecycle {
 	 * 网络与钩子，最后汇总耗时。
 	 * Run the full startup in phase order: system properties and logging,
      * static data and world, engines/spawns/feature services, network and hooks, then timing summary.
-     *
      * @param chatServerEnabledOverride 聊天服启用覆盖（可为 null 表示沿用配置） /
      *                                  chat-server enable override (null keeps config)
      */

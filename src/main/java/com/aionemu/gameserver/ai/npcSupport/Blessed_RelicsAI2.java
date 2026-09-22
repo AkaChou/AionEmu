@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * NPC 支援/增益 AI：Blessed Relics（@AIName "blessed_relic"），继承 NpcAI2。
  * NPC support/buff AI: Blessed Relics (@AIName "blessed_relic"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("blessed_relic")

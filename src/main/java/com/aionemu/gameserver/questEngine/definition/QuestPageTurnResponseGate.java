@@ -8,7 +8,6 @@ import java.util.Objects;
  * 「翻页动作完全无回包」编译期门禁：客户端按钮点击不会得到任何包的转换属于必现死按钮。
  * Compile-time gate for page-turn actions that answer nothing at all: a transition that sends no packet
  * for a client button press is an always-dead button.
- *
  * <p>判定条件：事件是 {@link QuestEvent.TalkToNpc} 且动作 ID 在客户端合同里对应「有按钮的页面」，同时
  * {@code after-commit} 完全为空。此时服务端不回任何包，客户端停在原页并反复重发
  * {@code CM_DIALOG_SELECT}。影片类静默形态（after-commit 只有 {@code play-movie}）由
@@ -25,7 +24,6 @@ public final class QuestPageTurnResponseGate {
 	/**
 	 * 枚举违反门禁的转换。
 	 * Lists the transitions that violate the gate.
-	 *
 	 * @param definition 已解析的任务定义 / parsed quest definition
 	 * @param contract 客户端页面契约；空契约（单元测试构造的 IR）不参与判定 /
 	 *                 client page contract; an empty contract (unit-test IR) disables the rule

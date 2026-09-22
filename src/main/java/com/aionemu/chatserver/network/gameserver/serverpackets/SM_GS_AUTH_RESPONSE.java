@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 /**
  * 回复游戏服认证结果的服务端包（含聊天服地址）。
  * Server packet that replies with game-server auth result and chat server address.
- *
  * @author ATracer
  */
 @RequiredArgsConstructor
@@ -25,7 +24,6 @@ public class SM_GS_AUTH_RESPONSE extends GsServerPacket {
     /**
      * 写出认证结果与聊天服公网地址、端口。
      * Writes auth result plus the chat server public address and port.
-     *
      * @param con 目标游戏服连接 / target game-server connection
      */
     @Override

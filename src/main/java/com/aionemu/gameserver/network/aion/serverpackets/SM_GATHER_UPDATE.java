@@ -8,7 +8,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 向客户端发送采集进度与结果更新的服务端包。
  * Server packet that sends gathering progress and result updates to the client.
- *
  * @author ATracer
  * @author orz
  * @author Antraxx

@@ -37,7 +37,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  * RuntimeServiceBridge that resolves game runtime services via {@link ObjectProvider}
  * or singleton {@code getInstance}, and provides console section printing, instance loading,
  * and game-time clock start.
- *
  * <p>覆盖的服务包括：周期存档、管理、角色转移、领地、游戏时间、公告、调试、天气、拍卖行、
  * 军团、影响力、交易、请愿、飞行环、治愈区、泉水区、增益活动、DB 任务管理、限时道具交易、
  * 网店、问卷、找队与游戏内商城等。
@@ -188,7 +187,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 注入周期存档服务提供者。
      * Inject the periodic save service provider.
-     *
      * @param periodicSaveServiceProvider 周期存档服务提供者 / Periodic save service provider
      */
     @Autowired(required = false)
@@ -199,7 +197,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 注入管理服务提供者。
      * Inject the admin service provider.
-     *
      * @param adminServiceProvider 管理服务提供者 / Admin service provider
      */
     @Autowired(required = false)
@@ -210,7 +207,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 注入角色转移服务提供者。
      * Inject the player transfer service provider.
-     *
      * @param playerTransferServiceProvider 角色转移服务提供者 / Player transfer service provider
      */
     @Autowired(required = false)
@@ -221,7 +217,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 注入领地服务提供者。
      * Inject the territory service provider.
-     *
      * @param territoryServiceProvider 领地服务提供者 / Territory service provider
      */
     @Autowired(required = false)
@@ -232,7 +227,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 注入游戏时间服务提供者。
      * Inject the game time service provider.
-     *
      * @param gameTimeServiceProvider 游戏时间服务提供者 / Game time service provider
      */
     @Autowired(required = false)
@@ -243,7 +237,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 注入公告服务提供者。
      * Inject the announcement service provider.
-     *
      * @param announcementServiceProvider 公告服务提供者 / Announcement service provider
      */
     @Autowired(required = false)
@@ -254,7 +247,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 注入调试服务提供者。
      * Inject the debug service provider.
-     *
      * @param debugServiceProvider 调试服务提供者 / Debug service provider
      */
     @Autowired(required = false)
@@ -265,7 +257,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 注入天气服务提供者。
      * Inject the weather service provider.
-     *
      * @param weatherServiceProvider 天气服务提供者 / Weather service provider
      */
     @Autowired(required = false)
@@ -276,7 +267,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 注入拍卖行服务提供者。
      * Inject the broker service provider.
-     *
      * @param brokerServiceProvider 拍卖行服务提供者 / Broker service provider
      */
     @Autowired(required = false)
@@ -287,7 +277,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 注入军团服务提供者。
      * Inject the legion service provider.
-     *
      * @param legionServiceProvider 军团服务提供者 / Legion service provider
      */
     @Autowired(required = false)
@@ -298,7 +287,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 注入影响力模型提供者。
      * Inject the influence model provider.
-     *
      * @param influenceProvider 影响力提供者 / Influence provider
      */
     @Autowired(required = false)
@@ -309,7 +297,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 注入交易服务提供者。
      * Inject the exchange service provider.
-     *
      * @param exchangeServiceProvider 交易服务提供者 / Exchange service provider
      */
     @Autowired(required = false)
@@ -320,7 +307,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 注入请愿服务提供者。
      * Inject the petition service provider.
-     *
      * @param petitionServiceProvider 请愿服务提供者 / Petition service provider
      */
     @Autowired(required = false)
@@ -331,7 +317,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 注入飞行环服务提供者。
      * Inject the fly ring service provider.
-     *
      * @param flyRingServiceProvider 飞行环服务提供者 / Fly ring service provider
      */
     @Autowired(required = false)
@@ -342,7 +327,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 注入治愈区服务提供者。
      * Inject the curing zone service provider.
-     *
      * @param curingZoneServiceProvider 治愈区服务提供者 / Curing zone service provider
      */
     @Autowired(required = false)
@@ -353,7 +337,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 注入泉水区服务提供者。
      * Inject the spring zone service provider.
-     *
      * @param springZoneServiceProvider 泉水区服务提供者 / Spring zone service provider
      */
     @Autowired(required = false)
@@ -364,7 +347,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 注入增益活动服务提供者。
      * Inject the boost event service provider.
-     *
      * @param boostEventServiceProvider 增益活动服务提供者 / Boost event service provider
      */
     @Autowired(required = false)
@@ -375,7 +357,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 注入 DB 任务管理器提供者。
      * Inject the task manager from DB provider.
-     *
      * @param taskManagerFromDBProvider DB 任务管理器提供者 / Task manager from DB provider
      */
     @Autowired(required = false)
@@ -386,7 +367,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 注入限时道具交易服务提供者。
      * Inject the limited item trade service provider.
-     *
      * @param limitedItemTradeServiceProvider 限时道具交易服务提供者 / Limited item trade service provider
      */
     @Autowired(required = false)
@@ -397,7 +377,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 注入网店服务提供者。
      * Inject the webshop service provider.
-     *
      * @param webshopServiceProvider 网店服务提供者 / Webshop service provider
      */
     @Autowired(required = false)
@@ -408,7 +387,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 注入问卷服务提供者。
      * Inject the survey service provider.
-     *
      * @param surveyServiceProvider 问卷服务提供者 / Survey service provider
      */
     @Autowired(required = false)
@@ -419,7 +397,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 注入找队服务提供者。
      * Inject the find-group service provider.
-     *
      * @param findGroupServiceProvider 找队服务提供者 / Find-group service provider
      */
     @Autowired(required = false)
@@ -430,7 +407,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 注入游戏内商城引擎提供者。
      * Inject the in-game shop engine provider.
-     *
      * @param inGameShopEnProvider 游戏内商城引擎提供者 / In-game shop engine provider
      */
     @Autowired(required = false)
@@ -449,7 +425,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 解析周期存档服务。
      * Resolve the periodic save service.
-     *
      * @return 周期存档服务 / Periodic save service
      */
     public PeriodicSaveService periodicSaveService() {
@@ -459,7 +434,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 解析管理服务。
      * Resolve the admin service.
-     *
      * @return 管理服务 / Admin service
      */
     public AdminService adminService() {
@@ -469,7 +443,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 解析角色转移服务。
      * Resolve the player transfer service.
-     *
      * @return 角色转移服务 / Player transfer service
      */
     public PlayerTransferService playerTransferService() {
@@ -479,7 +452,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 解析领地服务。
      * Resolve the territory service.
-     *
      * @return 领地服务 / Territory service
      */
     public TerritoryService territoryService() {
@@ -489,7 +461,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 解析游戏时间服务。
      * Resolve the game time service.
-     *
      * @return 游戏时间服务 / Game time service
      */
     public GameTimeService gameTimeService() {
@@ -499,7 +470,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 解析公告服务。
      * Resolve the announcement service.
-     *
      * @return 公告服务 / Announcement service
      */
     public AnnouncementService announcementService() {
@@ -509,7 +479,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 解析调试服务。
      * Resolve the debug service.
-     *
      * @return 调试服务 / Debug service
      */
     public DebugService debugService() {
@@ -519,7 +488,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 解析天气服务。
      * Resolve the weather service.
-     *
      * @return 天气服务 / Weather service
      */
     public WeatherService weatherService() {
@@ -529,7 +497,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 解析拍卖行服务。
      * Resolve the broker service.
-     *
      * @return 拍卖行服务 / Broker service
      */
     public BrokerService brokerService() {
@@ -539,7 +506,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 解析军团服务。
      * Resolve the legion service.
-     *
      * @return 军团服务 / Legion service
      */
     public LegionService legionService() {
@@ -549,7 +515,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 解析影响力模型。
      * Resolve the influence model.
-     *
      * @return 影响力模型 / Influence model
      */
     public Influence influence() {
@@ -559,7 +524,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 解析交易服务。
      * Resolve the exchange service.
-     *
      * @return 交易服务 / Exchange service
      */
     public ExchangeService exchangeService() {
@@ -569,7 +533,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 解析请愿服务。
      * Resolve the petition service.
-     *
      * @return 请愿服务 / Petition service
      */
     public PetitionService petitionService() {
@@ -587,7 +550,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 解析飞行环服务。
      * Resolve the fly ring service.
-     *
      * @return 飞行环服务 / Fly ring service
      */
     public FlyRingService flyRingService() {
@@ -597,7 +559,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 解析治愈区服务。
      * Resolve the curing zone service.
-     *
      * @return 治愈区服务 / Curing zone service
      */
     public CuringZoneService curingZoneService() {
@@ -607,7 +568,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 解析泉水区服务。
      * Resolve the spring zone service.
-     *
      * @return 泉水区服务 / Spring zone service
      */
     public SpringZoneService springZoneService() {
@@ -617,7 +577,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 解析增益活动服务。
      * Resolve the boost event service.
-     *
      * @return 增益活动服务 / Boost event service
      */
     public BoostEventService boostEventService() {
@@ -627,7 +586,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 解析 DB 任务管理器。
      * Resolve the task manager from DB.
-     *
      * @return DB 任务管理器 / Task manager from DB
      */
     public TaskManagerFromDB taskManagerFromDB() {
@@ -637,7 +595,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 解析限时道具交易服务。
      * Resolve the limited item trade service.
-     *
      * @return 限时道具交易服务 / Limited item trade service
      */
     public LimitedItemTradeService limitedItemTradeService() {
@@ -647,7 +604,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 解析网店服务。
      * Resolve the webshop service.
-     *
      * @return 网店服务 / Webshop service
      */
     public WebshopService webshopService() {
@@ -657,7 +613,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 解析问卷服务。
      * Resolve the survey service.
-     *
      * @return 问卷服务 / Survey service
      */
     public SurveyService surveyService() {
@@ -667,7 +622,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 解析找队服务。
      * Resolve the find-group service.
-     *
      * @return 找队服务 / Find-group service
      */
     public FindGroupService findGroupService() {
@@ -677,7 +631,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 解析游戏内商城引擎。
      * Resolve the in-game shop engine.
-     *
      * @return 游戏内商城引擎 / In-game shop engine
      */
     public InGameShopEn inGameShopEn() {
@@ -695,7 +648,6 @@ public class GameRuntimeServiceBridge {
     /**
      * 在 {@link ObjectProvider} 可用时取 Bean，否则走单例回退。
      * Return the bean from {@link ObjectProvider} when available, otherwise use the singleton fallback.
-     *
      * @param provider 可选提供者 / Optional provider
      * @param fallback 单例回退供应器 / Singleton fallback supplier
      * @param <T> 服务类型 / Service type

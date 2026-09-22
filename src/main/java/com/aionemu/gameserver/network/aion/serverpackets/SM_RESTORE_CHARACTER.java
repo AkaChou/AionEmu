@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 对 CM_RESTORE_CHARACTER 的应答，返回角色恢复结果。
  * Response to CM_RESTORE_CHARACTER returning character-restore success or failure.
- *
  * @author -Nemesiss-
  */
 @AllArgsConstructor

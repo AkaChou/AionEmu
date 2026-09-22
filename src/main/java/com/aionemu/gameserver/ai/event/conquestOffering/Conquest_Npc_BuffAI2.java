@@ -11,7 +11,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * Conquest Offering 活动 NPC AI：Conquest Npc Buff（@AIName "conquest_npc_buff"），继承 ActionItemNpcAI2。
  * Conquest Offering event NPC AI: Conquest Npc Buff (@AIName "conquest_npc_buff"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("conquest_npc_buff")

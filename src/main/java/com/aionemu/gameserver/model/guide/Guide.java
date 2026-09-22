@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 /**
  * 指南模型。
  * Guide model.
- *
  * @author xTz
  */
 @Getter

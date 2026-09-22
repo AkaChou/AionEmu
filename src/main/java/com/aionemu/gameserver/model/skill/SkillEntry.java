@@ -12,7 +12,6 @@ import lombok.AccessLevel;
 /**
  * 技能条目。
  * Skill Entry model.
- *
  * @author ATracer
  */
 @Getter
@@ -26,9 +25,6 @@ public abstract class SkillEntry {
 	protected int skinId;
 	protected Timestamp activeSkinTime;
 	protected int expireTime;
-	/**
-	 * @return 是否激活 / Whether activated
-	 */
 	protected boolean isActivated;
 
 	/** 返回技能 ID / Returns the skill id */

@@ -23,7 +23,6 @@ public class SM_SKILL_LIST extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_SKILL_LIST 包。
 	 * Creates a SM_SKILL_LIST packet with the given parameters.
-	 *
 	 * 玩家 / player
 	 * @param basicSkills 基础技能数组 / basic skills
 	 */
@@ -36,7 +35,6 @@ public class SM_SKILL_LIST extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_SKILL_LIST 包。
 	 * Creates a SM_SKILL_LIST packet with the given parameters.
-	 *
 	 * 玩家 / player
 	 * @param linkedSkills 连锁技能数组 / linked skills
 	 * state
@@ -52,7 +50,6 @@ public class SM_SKILL_LIST extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_SKILL_LIST 包。
 	 * Creates a SM_SKILL_LIST packet with the given parameters.
-	 *
 	 * @param player 玩家 / player
 	 * @param stigmaSkill stigma skill
 	 */
@@ -64,7 +61,6 @@ public class SM_SKILL_LIST extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_SKILL_LIST 包。
 	 * Creates a SM_SKILL_LIST packet with the given parameters.
-	 *
 	 * @param skillListEntry 技能列表项 / skill list entry
 	 * message id
 	 * @param isNew 是否新技能 / is new

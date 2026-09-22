@@ -15,7 +15,6 @@ import lombok.Setter;
 /**
  * 传送门 Use 模板（静态数据/XML）。
  * XML template.
- *
  * @author xTz
  */
 @Getter

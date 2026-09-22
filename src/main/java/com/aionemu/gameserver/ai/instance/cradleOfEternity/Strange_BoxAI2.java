@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Cradle Of Eternity 副本 NPC AI：Strange Box（@AIName "Strange_Box"），继承 GeneralNpcAI2。
  * Cradle Of Eternity instance NPC AI: Strange Box (@AIName "Strange_Box"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("Strange_Box")

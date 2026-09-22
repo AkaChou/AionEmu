@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 贝里特拉入侵相关 NPC AI：Wurg The Glacier（@AIName "wurg_the_glacier"），继承 AggressiveNpcAI2。
  * Beritra-invasion related NPC AI: Wurg The Glacier (@AIName "wurg_the_glacier"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("wurg_the_glacier")

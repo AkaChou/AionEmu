@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Ophidan Warpath 副本 NPC AI：Idle Power Generator（@AIName "idle_power_generator"），继承 NpcAI2。
  * Ophidan Warpath instance NPC AI: Idle Power Generator (@AIName "idle_power_generator"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("idle_power_generator")

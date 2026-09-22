@@ -5,7 +5,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * 可过期对象接口接口。
  * I Expirable interface.
- *
  * @author Mr. Poke
  */
 public interface IExpirable {

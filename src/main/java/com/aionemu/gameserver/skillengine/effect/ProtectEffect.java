@@ -15,7 +15,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 保护效果：作为护盾类效果，代受/减免被保护者所受伤害。
  * Protect effect: shield-like effect that absorbs/reduces damage for the protected.
- *
  * @author Sippolo
  * @author kecimis
  */
@@ -74,13 +73,7 @@ public class ProtectEffect extends ShieldEffect {
 		}
 	}
 
-	/**
-	 * 护盾类型：1 反射，2 普通护盾，8 保护。
-	 * shieldType 1:reflector 2: normal shield 8: protect
-	 *
-	 * @return
-	 */
-	/**
+    /**
 	 * 返回保护效果类型标识。
 	 * Returns the protect effect type id.
 	 */

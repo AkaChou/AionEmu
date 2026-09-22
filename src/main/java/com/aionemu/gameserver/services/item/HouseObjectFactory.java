@@ -37,7 +37,6 @@ public final class HouseObjectFactory {
 	/**
 	 * createNew 方法。
 	 * createNew method.
-	 *
 	 * house
 	 * objectId
 	 * objectTemplateId
@@ -75,7 +74,6 @@ public final class HouseObjectFactory {
 	/**
 	 * createNew 方法。
 	 * createNew method.
-	 *
 	 * house
 	 * itemTemplate
 	 * result

@@ -23,9 +23,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * Mailbox 游戏对象。
  * Mailbox game object.
- *
  * @author kosyachok
- * @modified Atracer
  */
 @Getter
 @RequiredArgsConstructor
@@ -42,9 +40,6 @@ public class Mailbox {
 	// 0x02 - 快递 / 0x02 - express
 	public byte mailBoxState = 0;
 
-	/**
-	 * @param letter
-	 */
 	public void putLetterToMailbox(Letter letter) {
 		if (haveFreeSlots()) {
 			mails.put(letter.getObjectId(), letter);
@@ -56,8 +51,6 @@ public class Mailbox {
 	/**
 	 * 获取全部 lettersmailboxsortedaccording 时间 received。
 	 * Get all letters in mailbox (sorted according to time received)
-	 *
-	 * @return
 	 */
 	public Collection<Letter> getLetters() {
 		SortedSet<Letter> letters = new TreeSet<>(new Comparator<>() {
@@ -86,7 +79,6 @@ public class Mailbox {
 	/**
 	 * 获取 systemletterswhichsendersstartstringspecifiedwerereceivedsincelast 玩家 login。
 	 * Get system letters which senders start with the string specified and were received since the last player login
-	 *
 	 * @param substring 必须以特殊字符开头：% 或 $$ / must start with special characters: % or $$
 	 * @return 新信件列表 / new list of letters
 	 */
@@ -111,9 +103,6 @@ public class Mailbox {
 	/**
 	 * 获取 letterspecifiedletterID。
 	 * Get letter with specified letter id
-	 *
-	 * @param letterObjId
-	 * @return
 	 */
 	public Letter getLetterFromMailbox(int letterObjId) {
 		return mails.get(letterObjId);
@@ -122,8 +111,6 @@ public class Mailbox {
 	/**
 	 * 检查邮箱是否包含空邮件。
 	 * Check whether the mailbox contains empty letters.
-	 *
-	 * @return
 	 */
 	public boolean haveUnread() {
 		for (Letter letter : mails.values()) {
@@ -166,16 +153,10 @@ public class Mailbox {
 		return count;
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean haveFreeSlots() {
 		return mails.size() < 100;
 	}
 
-	/**
-	 * @param letterId
-	 */
 	public void removeLetter(int letterId) {
 		mails.remove(letterId);
 		uploadReserveLetters();

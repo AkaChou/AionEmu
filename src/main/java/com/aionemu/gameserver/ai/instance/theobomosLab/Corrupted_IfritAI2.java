@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Theobomos Lab 副本 NPC AI：Corrupted Ifrit（@AIName "corrupted_ifrit"），继承 AggressiveNpcAI2。
  * Theobomos Lab instance NPC AI: Corrupted Ifrit (@AIName "corrupted_ifrit"), extends AggressiveNpcAI2.
- *
  * @author Rinzler
  * @author Ranastic (Encom)
  */

@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 /**
  * 打开 NPC 以物易物（Trade-In）列表的服务端包。
  * Server packet that opens an NPC's trade-in list.
- *
  * @author Rinzler (30.03.2014)
  */
 @AllArgsConstructor

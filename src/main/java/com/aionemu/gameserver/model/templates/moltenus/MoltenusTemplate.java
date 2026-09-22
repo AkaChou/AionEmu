@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 熔岩魔模板（静态数据/XML）。
  * Moltenus XML template.
- *
  * @author Rinzler (Encom)
  */
 

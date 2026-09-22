@@ -14,7 +14,6 @@ public interface Restrictions {
 	/**
 	 * 是否处于指定限制状态。
 	 * Whether the player is under the given restriction kind.
-	 *
 	 * @param player 玩家 / player
 	 * @param callingRestriction 调用限制类型 / calling restriction type
 	 * @return true 表示被限制 / true when restricted
@@ -24,7 +23,6 @@ public interface Restrictions {
 	/**
 	 * 是否允许攻击目标。
 	 * Whether the player may attack the target.
-	 *
 	 * @param player 玩家 / player
 	 * @param target 目标 / target
 	 * @return 允许时为 true / true when allowed
@@ -34,7 +32,6 @@ public interface Restrictions {
 	/**
 	 * 是否允许技能影响目标。
 	 * Whether a skill may affect the target.
-	 *
 	 * @param player 玩家 / player
 	 * @param target 目标 / target
 	 * @param skill 技能 / skill
@@ -45,7 +42,6 @@ public interface Restrictions {
 	/**
 	 * 是否允许使用技能。
 	 * Whether the player may use the skill.
-	 *
 	 * @param player 玩家 / player
 	 * @param skill 技能 / skill
 	 * @return 允许时为 true / true when allowed
@@ -55,7 +51,6 @@ public interface Restrictions {
 	/**
 	 * 是否允许聊天。
 	 * Whether the player may chat.
-	 *
 	 * @param player 玩家 / player
 	 * @return 允许时为 true / true when allowed
 	 */
@@ -64,7 +59,6 @@ public interface Restrictions {
 	/**
 	 * 是否允许邀请进组。
 	 * Whether the player may invite to a group.
-	 *
 	 * @param player 玩家 / player
 	 * @param target 目标玩家 / target player
 	 * @return 允许时为 true / true when allowed
@@ -74,7 +68,6 @@ public interface Restrictions {
 	/**
 	 * 是否允许邀请进联盟。
 	 * Whether the player may invite to an alliance.
-	 *
 	 * @param player 玩家 / player
 	 * @param target 目标玩家 / target player
 	 * @return 允许时为 true / true when allowed
@@ -84,7 +77,6 @@ public interface Restrictions {
 	/**
 	 * 是否允许邀请进军团联盟。
 	 * Whether the player may invite to a league.
-	 *
 	 * @param player 玩家 / player
 	 * @param target 目标玩家 / target player
 	 * @return 允许时为 true / true when allowed
@@ -94,7 +86,6 @@ public interface Restrictions {
 	/**
 	 * 是否允许更换装备。
 	 * Whether the player may change equipment.
-	 *
 	 * @param player 玩家 / player
 	 * @return 允许时为 true / true when allowed
 	 */
@@ -103,7 +94,6 @@ public interface Restrictions {
 	/**
 	 * 是否允许使用仓库。
 	 * Whether the player may use warehouse.
-	 *
 	 * @param player 玩家 / player
 	 * @return 允许时为 true / true when allowed
 	 */
@@ -112,7 +102,6 @@ public interface Restrictions {
 	/**
 	 * 是否允许交易。
 	 * Whether the player may trade.
-	 *
 	 * @param player 玩家 / player
 	 * @return 允许时为 true / true when allowed
 	 */
@@ -121,7 +110,6 @@ public interface Restrictions {
 	/**
 	 * 是否允许使用物品。
 	 * Whether the player may use the item.
-	 *
 	 * @param player 玩家 / player
 	 * @param item 物品 / item
 	 * @return 允许时为 true / true when allowed

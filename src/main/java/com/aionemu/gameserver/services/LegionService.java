@@ -65,7 +65,6 @@ import java.util.List;
 /**
  * 军团服务，负责军团的加载/持久化、成员管理、仓库、徽章与权限。
  * Legion service responsible for loading/storing legions, members, warehouse, emblem and permissions.
- *
  * @author Simple modified by cura, Source
  */
 @Slf4j
@@ -75,8 +74,7 @@ public class LegionService {
 	 * -- SETTER --
 	 *  注入 Spring 的 ObjectProvider，用于容器托管的实例解析。
 	 *  Injects the Spring ObjectProvider used for container-managed instance resolution.
-	 *
-	 * @param provider 实例提供者 / Instance provider
+	 * 实例提供者 / Instance provider
 	 */
 	@Setter
 	private static volatile ObjectProvider<LegionService> instanceProvider;
@@ -89,7 +87,6 @@ public class LegionService {
 	static final int MAX_LEGION_LEVEL = 8;
 	/** 军团排行缓存 / Legion ranking cache. */
 	private Map<Integer, Integer> legionRanking;
-	/** 军团操作限制校验器 / Legion operation restriction checker. */
 	/**
 	 * 惰性构造的判权集合，避免构造期暴露 this。
 	 * Lazily built permission checker, which keeps {@code this} out of the constructor.
@@ -99,11 +96,9 @@ public class LegionService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -131,7 +126,6 @@ public class LegionService {
 	/**
 	 * 将军团数据存入数据库。
 	 * Stores legion data into db
-	 *
 	 * legion
 	 * @param newLegion 是否新军团 / new legion
 	 */
@@ -148,7 +142,6 @@ public class LegionService {
 	/**
 	 * 存储新创建的军团。
 	 * Stores newly created legion
-	 *
 	 * legion
 	 */
 	void storeLegion(Legion legion) {
@@ -161,8 +154,6 @@ public class LegionService {
 	/**
 	 * 仅当军团在缓存中时获取。
 	 * Gets a legion ONLY if he is in the cache
-	 *
-	 * @param legionId
 	 * @return 军团，未缓存则为 null / Legion or null if not cached
 	 */
 	private Legion getCachedLegion(int legionId) {
@@ -172,8 +163,6 @@ public class LegionService {
 	/**
 	 * 仅当军团在缓存中时获取。
 	 * Gets a legion ONLY if he is in the cache
-	 *
-	 * @param legionName
 	 * @return 军团，未缓存则为 null / Legion or null if not cached
 	 */
 	private Legion getCachedLegion(String legionName) {
@@ -183,7 +172,6 @@ public class LegionService {
 	/**
 	 * 返回已缓存军团的迭代器。
 	 * Returns an iterator over cached legions.
-	 *
 	 * @return 缓存军团迭代器 / Cached legion iterator
 	 */
 	public Iterator<Legion> getCachedLegionIterator() {
@@ -193,7 +181,6 @@ public class LegionService {
 	/**
 	 * 将新军团加入缓存。
 	 * This method will add a new legion to the cache
-	 *
 	 * legion
 	 */
 	private void addCachedLegion(Legion legion) {
@@ -205,7 +192,6 @@ public class LegionService {
 	/**
 	 * 从数据库与缓存彻底移除军团。
 	 * Completely removes legion from database and cache
-	 *
 	 * legion
 	 */
 	private void deleteLegionFromDB(Legion legion) {
@@ -217,135 +203,72 @@ public class LegionService {
 	/**
 	 * 按名称获取军团（先查缓存，未命中则从数据库加载并缓存）。
 	 * Returns the legion by name (cache first, then load from DB and cache).
-	 *
 	 * Legion name
-	 *
-	 * @param legionName
 	 * @return 军团实例；不存在时可能为 null / Legion instance, or null if missing
 	 */
 	public Legion getLegion(String legionName) {
-		/**
-	 * 先检查军团是否已在缓存中。
-	 * First check if our legion already exists in our Cache
-	 */
 		if (allCachedLegions.contains(legionName)) {
 			Legion legion = getCachedLegion(legionName);
 			return legion;
 		}
 
-		/**
-	 * 否则从数据库加载军团信息。
-	 * Else load the legion information from the database
-	 */
 		Legion legion = DAOManager.getDAO(LegionDAO.class).loadLegion(legionName);
 
-		/**
-		 * 处理其余需加载的信息。
-	 * This will handle the rest of the information that needs to be loaded
-		 */
 		loadLegionInfo(legion);
 
-		/**
-	 * 将军团加入缓存。 / Add the legion to the cache.
-	 */
 		addCachedLegion(legion);
 
-		/**
-	 * 返回军团。 / Return the legion
-	 */
 		return legion;
 	}
 
 	/**
 	 * 按 ID 获取军团（先查缓存，未命中则从数据库加载并缓存）。
 	 * Returns the legion by id (cache first, then load from DB and cache).
-	 *
 	 * Legion id
 	 * Legion instance
 	 */
 	public Legion getLegion(int legionId) {
-		/**
-	 * 先检查军团是否已在缓存中。
-	 * First check if our legion already exists in our Cache
-	 */
 		if (allCachedLegions.contains(legionId)) {
 			Legion legion = getCachedLegion(legionId);
 			return legion;
 		}
 
-		/**
-	 * 否则从数据库加载军团信息。
-	 * Else load the legion information from the database
-	 */
 		Legion legion = DAOManager.getDAO(LegionDAO.class).loadLegion(legionId);
 
-		/**
-		 * 处理其余需加载的信息。
-	 * This will handle the rest of the information that needs to be loaded
-		 */
 		loadLegionInfo(legion);
 
-		/**
-	 * 将军团加入缓存。 / Add the legion to the cache.
-	 */
 		addCachedLegion(legion);
 
-		/**
-	 * 返回军团。 / Return the legion
-	 */
 		return legion;
 	}
 
 	/**
 	 * 加载军团信息。
 	 * This method will load the legion information
-	 *
 	 * legion
 	 */
 	private void loadLegionInfo(Legion legion) {
-		/**
-	 * 检查是否军团为非空。 / Check if legion is not null
-	 */
 		if (legion == null) {
 			return;
 		}
-		/**
-	 * 加载并添加军团成员到军团。 / Load and add the legion members to legion
-	 */
 		legion.setLegionMembers(DAOManager.getDAO(LegionMemberDAO.class).loadLegionMembers(legion.getLegionId()));
 
-		/**
-	 * 加载并设置公告列表。 / Load and set the announcement list
-	 */
 		legion.setAnnouncementList(DAOManager.getDAO(LegionDAO.class).loadAnnouncementList(legion.getLegionId()));
 
-		/**
-		 * 设置军团徽章。
-	 * Set legion emblem
-		 */
 		legion.setLegionEmblem(DAOManager.getDAO(LegionDAO.class).loadLegionEmblem(legion.getLegionId()));
 
-		/**
-	 * 加载军团仓库。 / Load Legion Warehouse
-	 */
 		legion.setLegionWarehouse(DAOManager.getDAO(LegionDAO.class).loadLegionStorage(legion));
 
 		if (legionRanking.containsKey(legion.getLegionId())) {
 			legion.setLegionRank(legionRanking.get(legion.getLegionId()));
 		}
-		/**
-	 * 加载军团历史。 / Load Legion History
-	 */
 		DAOManager.getDAO(LegionDAO.class).loadLegionHistory(legion);
 	}
 
 	/**
 	 * 返回指定军团团长（旅长）的玩家 objectId。
 	 * Returns the object id of the brigade general for the given legion.
-	 *
 	 * Legion id
-	 *
-	 * @param legionId
 	 * @return 团长 objectId；未找到时为 0 / Brigade general objectId, or 0 if not found
 	 */
 	public int getLegionBGeneral(int legionId) {
@@ -364,10 +287,7 @@ public class LegionService {
 	/**
 	 * 按玩家 objectId 获取军团成员（缓存/数据库），若军团已到期解散则返回 null。
 	 * Returns the legion member by player object id (cache/DB); null if the legion has finished disbanding.
-	 *
 	 * Player object id
-	 *
-	 * @param playerObjId
 	 * @return 军团成员，或 null / Legion member, or null
 	 */
 	public LegionMember getLegionMember(int playerObjId) {
@@ -392,9 +312,7 @@ public class LegionService {
 	/**
 	 * 检查军团是否处于解散中。
 	 * Method that checks if a legion is disbanding
-	 *
 	 * legion
-	 *
 	 * @param legion 若 it's time to be deleted 则为 true / true if it's time to be deleted
 	 */
 	private boolean checkDisband(Legion legion) {
@@ -410,7 +328,6 @@ public class LegionService {
 	/**
 	 * 立即解散军团：清理成员缓存、要塞关联，并更新在线成员后删除数据。
 	 * Immediately disbands a legion: clears member cache, siege links, updates online members and deletes data.
-	 *
 	 * Target legion
 	 */
 	public void disbandLegion(Legion legion) {
@@ -427,7 +344,6 @@ public class LegionService {
 	/**
 	 * 处理军团解散申请：校验权限后弹出确认框，接受则设置解散倒计时。
 	 * Handles a legion disband request: validates rights, shows confirm dialog, and schedules disband on accept.
-	 *
 	 * Triggering NPC
 	 * Requesting player
 	 */
@@ -460,24 +376,17 @@ public class LegionService {
 	/**
 	 * 创建军团：扣费、写入数据库，并将创建者设为旅长。
 	 * Creates a legion: charges kinah, persists data, and sets the creator as brigade general.
-	 *
 	 * Creator player
 	 * Legion name
 	 * legion creator NPC
 	 */
 	public void createLegion(Player activePlayer, String legionName, Npc creatorNpc) {
 		if (restrictions().canCreateLegion(activePlayer, legionName, creatorNpc)) {
-			/**
-	 * 创建新军团并放入发起者作为首位成员。 / Create new legion and put originator as first member
-	 */
 			Legion legion = new Legion(GameWorldBootstrapServices.idFactory().nextId(), legionName);
 			legion.addLegionMember(activePlayer.getObjectId());
 
 			activePlayer.getInventory().decreaseKinah(LegionConfig.LEGION_CREATE_REQUIRED_KINAH);
 
-			/**
-	 * 创建 LegionMember ,添加其到军团并绑定其到玩家。 / Create a LegionMember, add it to the legion and bind it to a Player
-	 */
 			storeLegion(legion, true);
 			Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 			storeNewAnnouncement(legion.getLegionId(), currentTime, "");
@@ -485,15 +394,9 @@ public class LegionService {
 			legionMembers().addLegionMember(legion, activePlayer, LegionRank.BRIGADE_GENERAL);
 			PacketSendUtility.broadcastPacketToLegion(legion,
 					new SM_LEGION_EDIT(0x05, (int) (System.currentTimeMillis() / 1000), ""));
-			/**
-	 * 添加并保存军团创建与加入历史。 / Add and save legion creation and join history.
-	 */
 			addHistory(legion, "", LegionHistoryType.CREATE);
 			addHistory(legion, activePlayer.getName(), LegionHistoryType.JOIN);
 
-			/**
-	 * 发送所需数据包。 / Send required packets
-	 */
 			PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_CREATED(legion.getLegionName()));
 		}
 	}
@@ -502,10 +405,8 @@ public class LegionService {
 	/**
 	 * 按军团 ID 将玩家直接加入军团（不走邀请流程）。
 	 * Directly adds a player to the legion by id (bypasses invite flow).
-	 *
 	 * Legion id
 	 * Target player
-	 *
 	 * @return 若 joined successfully 则为 true / True if joined successfully
 	 */
 	public boolean directAddPlayer(int legionId, Player player) {
@@ -519,10 +420,8 @@ public class LegionService {
 	/**
 	 * 将玩家直接加入指定军团（不走邀请流程），并广播加入历史。
 	 * Directly adds a player to the given legion (bypasses invite) and records join history.
-	 *
 	 * Target legion
 	 * Target player
-	 *
 	 * @return 若 joined successfully 则为 true / True if joined successfully
 	 */
 	public boolean directAddPlayer(Legion legion, Player player) {
@@ -546,7 +445,6 @@ public class LegionService {
 	/**
 	 * 处理军团邀请。
 	 * Method that will handle a invitation to a legion
-	 *
 	 * active player
 	 * target player
 	 */
@@ -596,7 +494,6 @@ public class LegionService {
 	/**
 	 * 显示当前军团公告。
 	 * Displays current legion announcement
-	 *
 	 * target player
 	 * current announcement
 	 */
@@ -610,7 +507,6 @@ public class LegionService {
 	/**
 	 * 处理新任命的军团长。
 	 * This method will handle a new appointed legion leader
-	 *
 	 * active player
 	 * target player
 	 */
@@ -669,7 +565,6 @@ public class LegionService {
 	/**
 	 * 处理成员离线时的升降职。
 	 * This method will handle the process when a member is demoted or promoted while offline
-	 *
 	 * active player
 	 */
 	private void appointRank(Player activePlayer, String charName, int rankId) {
@@ -699,7 +594,6 @@ public class LegionService {
 	/**
 	 * 处理成员升降职。
 	 * This method will handle the process when a member is demoted or promoted
-	 *
 	 * active player
 	 */
 	private void appointRank(Player activePlayer, Player targetPlayer, int rankId) {
@@ -724,7 +618,6 @@ public class LegionService {
 	/**
 	 * 处理自我介绍变更。
 	 * This method will handle the changement of a self intro
-	 *
 	 * active player
 	 * @param newSelfIntro 新自我介绍 / new self intro
 	 */
@@ -741,7 +634,6 @@ public class LegionService {
 	/**
 	 * 更新军团各职级权限掩码并广播给在线成员。
 	 * Updates rank permission masks for the legion and broadcasts to online members.
-	 *
 	 * Target legion
 	 * @param deputyPermission 副团长权限 / Deputy permissions
 	 * @param centurionPermission 百夫长权限 / Centurion permissions
@@ -759,7 +651,6 @@ public class LegionService {
 	/**
 	 * 处理军团升级。
 	 * This method will handle the leveling up of a legion
-	 *
 	 * active player
 	 */
 	private void requestChangeLevel(Player activePlayer) {
@@ -774,7 +665,6 @@ public class LegionService {
 	/**
 	 * 变更军团等级并通知在线成员；可选立即落库。
 	 * Changes the legion level, notifies online members, and optionally persists.
-	 *
 	 * Target legion
 	 * New level
 	 * @param save 是否立即保存 / Whether to store immediately
@@ -791,7 +681,6 @@ public class LegionService {
 	/**
 	 * 处理昵称变更。
 	 * This method will handle the changement of a nickname
-	 *
 	 * active player
 	 * character name
 	 */
@@ -824,7 +713,6 @@ public class LegionService {
 	/**
 	 * 军团解散后从所有在线成员移除军团信息。
 	 * This method will remove legion from all legion members online after a legion has been disbanded
-	 *
 	 * legion
 	 */
 	private void updateAfterDisbandLegion(Legion legion) {
@@ -840,7 +728,6 @@ public class LegionService {
 	/**
 	 * 向每位军团成员发送数据包并更新解散信息。
 	 * This method will send a packet to every legion member and update them about the disband
-	 *
 	 * legion
 	 * unix time
 	 */
@@ -855,7 +742,6 @@ public class LegionService {
 	/**
 	 * 向每位军团成员发送数据包并更新解散信息。
 	 * This method will send a packet to every legion member and update them about the disband
-	 *
 	 * legion
 	 */
 	private void updateMembersOfRecreateLegion(Legion legion) {
@@ -869,7 +755,6 @@ public class LegionService {
 	/**
 	 * 保存自定义军团徽章并同步给所有在线成员。
 	 * Stores a custom legion emblem and syncs it to all online members.
-	 *
 	 * Acting player
 	 * @param customEmblem 自定义徽章 / Custom emblem
 	 */
@@ -881,7 +766,6 @@ public class LegionService {
 	 * 保存预设/标准军团徽章（扣费、写历史、广播更新）。
 	 * Stores a standard/pre 设置军团徽章。
 	 * Set legion emblem (charges kinah, writes history, broadcasts update).
-	 *
 	 * Acting player
 	 * Legion id
 	 * Emblem template id
@@ -899,7 +783,6 @@ public class LegionService {
 	/**
 	 * 返回军团旅长名称；找不到时返回错误占位串。
 	 * Returns the brigade general name, or an error placeholder if missing.
-	 *
 	 * Target legion
 	 * Brigade general name
 	 */
@@ -915,10 +798,7 @@ public class LegionService {
 	/**
 	 * 返回在线的军团旅长玩家对象；离线则为 null。
 	 * Returns the online brigade general player, or null if offline/missing.
-	 *
 	 * Target legion
-	 *
-	 * @param legion
 	 * @return 在线旅长，或 null / Online brigade general, or null
 	 */
 	public Player getBrigadeGeneral(Legion legion) {
@@ -934,7 +814,6 @@ public class LegionService {
 	/**
 	 * 打开军团仓库：校验权限、同步仓库数据并发送物品/对话框包。
 	 * Opens the legion warehouse: validates access, syncs data, and sends item/dialog packets.
-	 *
 	 * Acting player
 	 * Warehouse NPC
 	 */
@@ -961,7 +840,6 @@ public class LegionService {
 	/**
 	 * 取消进行中的解散并恢复军团（需旅长确认）。
 	 * Cancels an in-progress disband and recreates/restores the legion (brigade general confirm).
-	 *
 	 * Triggering NPC
 	 * Acting player
 	 */
@@ -994,7 +872,6 @@ public class LegionService {
 	/**
 	 * 根据新排行表刷新已缓存军团的排名并广播编辑包。
 	 * Refreshes ranks of cached legions from the new ranking map and broadcasts edit packets.
-	 *
 	 * Map of legion id to rank
 	 */
 	public void performRankingUpdate(Map<Integer, Integer> legionRanking) {
@@ -1021,7 +898,6 @@ public class LegionService {
 	/**
 	 * 将玩家所属军团仓库的物品与魔石持久化到数据库。
 	 * Persists the player legion warehouse items and item stones to the database.
-	 *
 	 * @param player 触发同步的玩家 / Player triggering the warehouse sync
 	 */
 	public void LegionWhUpdate(Player player) {
@@ -1033,17 +909,9 @@ public class LegionService {
 		List<Item> allItems = legion.getLegionWarehouse().getItemsWithKinah();
 		allItems.addAll(legion.getLegionWarehouse().getDeletedItems());
 		try {
-			/**
-	 * 1. 先保存物品。
-	 * 1. save items first
-	 */
 			DAOManager.getDAO(InventoryDAO.class).store(allItems, player.getObjectId(),
 					player.getPlayerAccount().getId(), legion.getLegionId());
 
-			/**
-	 * 2. 保存物品镶嵌石。
-	 * 2. save item stones
-	 */
 			DAOManager.getDAO(ItemStoneListDAO.class).save(allItems);
 		} catch (Exception ex) {
 			log.error(I18n.get("log.ea0f9e89569d"), ex);
@@ -1053,7 +921,6 @@ public class LegionService {
 	/**
 	 * 向军团广播成员信息更新（等级/职业等变化）。
 	 * Broadcasts a member info update (level/class changes, etc.) to the legion.
-	 *
 	 * @param player 发生变化的成员 / Changed member
 	 */
 	public void updateMemberInfo(Player player) {
@@ -1063,7 +930,6 @@ public class LegionService {
 	/**
 	 * 设置军团贡献点（常用于管理指令），并可选落库。
 	 * Sets legion contribution points (often via admin command) and optionally persists.
-	 *
 	 * Target legion
 	 * New contribution points
 	 * @param save 是否立即保存 / Whether to store immediately
@@ -1079,7 +945,6 @@ public class LegionService {
 	/**
 	 * 开始上传自定义徽章：记录颜色/类型与总字节数并进入上传中状态。
 	 * Starts custom emblem upload: records colors/type and total size, marks uploading.
-	 *
 	 * Acting player
 	 * @param totalSize 徽章数据总大小 / Total emblem data size
 	 * @param color_r 红色分量 / Red component
@@ -1095,7 +960,6 @@ public class LegionService {
 	/**
 	 * 接收自定义徽章分片数据；收齐后扣费并落库生效。
 	 * Receives a chunk of custom emblem data; when complete, charges kinah and persists the emblem.
-	 *
 	 * Acting player
 	 * @param size 本片字节数 / Chunk size
 	 * @param data 本片数据 / Chunk bytes
@@ -1107,7 +971,6 @@ public class LegionService {
 	/**
 	 * 向玩家分包发送自定义徽章二进制数据。
 	 * Sends custom emblem binary data to a player in packets.
-	 *
 	 * Receiving player
 	 * Emblem object
 	 * Legion id
@@ -1120,7 +983,6 @@ public class LegionService {
 	/**
 	 * 重命名军团并刷新在线成员称号显示；可选落库。
 	 * Renames the legion and refreshes online member titles; optionally persists.
-	 *
 	 * Target legion
 	 * New name
 	 * @param save 是否立即保存 / Whether to store immediately
@@ -1144,7 +1006,6 @@ public class LegionService {
 	/**
 	 * 向数据库添加新公告并更新当前公告。
 	 * This will add a new announcement to the DB and change the current announcement
-	 *
 	 * active player
 	 * announcement
 	 */
@@ -1164,7 +1025,6 @@ public class LegionService {
 	/**
 	 * 存储全部军团公告。
 	 * This method stores all legion announcements
-	 *
 	 * legion
 	 */
 	void storeLegionAnnouncements(Legion legion) {
@@ -1177,11 +1037,9 @@ public class LegionService {
 	/**
 	 * 存储新创建的公告。
 	 * Stores newly created announcement
-	 *
 	 * legion id
 	 * current time
 	 * message
-	 *
 	 * @return true if announcement was successful saved.
 	 */
 	private boolean storeNewAnnouncement(int legionId, Timestamp currentTime, String message) {
@@ -1191,9 +1049,6 @@ public class LegionService {
 	/**
 	 * 军团服务辅助方法。
 	 * Legion service helper.
-	 *
-	 * @param legionId
-	 * @param key
 	 * @return true if succeeded
 	 */
 	private void removeAnnouncement(int legionId, Timestamp key) {
@@ -1207,7 +1062,6 @@ public class LegionService {
 	/**
 	 * 追加军团历史记录并广播对应页签更新。
 	 * Appends a legion history entry and broadcasts the related tab update.
-	 *
 	 * Target legion
 	 * @param text 历史文本 / History text
 	 * History type
@@ -1232,7 +1086,6 @@ public class LegionService {
 	/**
 	 * 处理与角色名相关的军团请求（邀请、踢人、任命旅长/职级、改昵称）。
 	 * Handles character-name based legion requests (invite, kick, appoint ranks, nickname).
-	 *
 	 * @param exOpcode 扩展操作码 / Extended opcode
 	 * Acting player
 	 * @param charName 目标角色名 / Target character name
@@ -1247,11 +1100,7 @@ public class LegionService {
 		Player targetPlayer = world.findPlayer(charName);
 
 		switch (exOpcode) {
-		/**
-	 * 邀请加入军团。
-	 * Invite to legion
-	 */
-		case 0x01:
+			case 0x01:
 			if (targetPlayer != null) {
 				if (targetPlayer.getPlayerSettings().isInDeniedStatus(DeniedStatus.GUILD)) {
 					PacketSendUtility.sendPacket(activePlayer,
@@ -1263,14 +1112,7 @@ public class LegionService {
 				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_INVITE_NO_USER_TO_INVITE);
 			}
 			break;
-		/**
-	 * 将成员踢出军团。
-	 * Kick member from legion
-	 */
-		case LEGION_ACTION_KICK:
-			/**
-	 * 检查玩家是否可被踢出军团。 / Check whether the player can be kicked from the legion.
-	 */
+			case LEGION_ACTION_KICK:
 			if (restrictions().canKickPlayer(activePlayer, charName)) {
 				if (legionMembers().removeLegionMember(charName, true, activePlayer.getName())) {
 					// 向成员发送数据包？ / send packet to members?
@@ -1285,32 +1127,20 @@ public class LegionService {
 				PacketSendUtility.sendPacket(activePlayer, new SM_ICON_INFO(1, false));
 			}
 			break;
-		/**
-	 * 任命新军团长。
-	 * Appoint a new Brigade General
-	 */
-		case 0x05:
+			case 0x05:
 			if (targetPlayer != null) {
 				appointBrigadeGeneral(activePlayer, targetPlayer);
 			} else {
 				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_MASTER_NO_SUCH_USER);
 			}
 			break;
-		/**
-	 * 任命百夫长/军团兵。
-	 * Appoint Centurion/Legionairy
-	 */
-		case 0x06:
+			case 0x06:
 			if (targetPlayer != null)
 				appointRank(activePlayer, targetPlayer, rank);
 			else
 				appointRank(activePlayer, charName, rank);
 			break;
-		/**
-	 * 设置昵称。
-	 * Set nickname
-	 */
-		case 0x0F:
+			case 0x0F:
 			changeNickname(activePlayer, charName, newNickname);
 			break;
 		}
@@ -1319,25 +1149,16 @@ public class LegionService {
 	/**
 	 * 处理带文本的军团请求（公告、自我介绍）。
 	 * Handles text-bearing legion requests (announcement, self intro).
-	 *
 	 * @param exOpcode 扩展操作码 / Extended opcode
 	 * Acting player
 	 * @param text 文本内容 / Text payload
 	 */
 	public void handleLegionRequest(int exOpcode, Player activePlayer, String text) {
 		switch (exOpcode) {
-		/**
-	 * 编辑公告。
-	 * Edit announcements
-	 */
-		case 0x09:
+			case 0x09:
 			changeAnnouncement(activePlayer, text);
 			break;
-		/**
-	 * 修改自我介绍。
-	 * Change self introduction
-	 */
-		case 0x0A:
+			case 0x0A:
 			changeSelfIntro(activePlayer, text);
 			break;
 		}
@@ -1346,17 +1167,12 @@ public class LegionService {
 	/**
 	 * 处理无文本的军团请求（退团、升级）。
 	 * Handles textless legion requests (leave, level up).
-	 *
 	 * @param exOpcode 扩展操作码 / Extended opcode
 	 * Acting player
 	 */
 	public void handleLegionRequest(int exOpcode, Player activePlayer) {
 		switch (exOpcode) {
-		/**
-	 * 离开军团。
-	 * Leave legion
-	 */
-		case 0x02:
+			case 0x02:
 			if (restrictions().canLeave(activePlayer)) {
 				if (legionMembers().removeLegionMember(activePlayer.getName(), false, "")) {
 					Legion legion = activePlayer.getLegion();
@@ -1369,11 +1185,7 @@ public class LegionService {
 				}
 			}
 			break;
-		/**
-	 * 提升军团等级。
-	 * Level legion up
-	 */
-		case 0x0E:
+            case 0x0E:
 			requestChangeLevel(activePlayer);
 			break;
 		}
@@ -1394,7 +1206,6 @@ public class LegionService {
 	/**
 	 * 惰性获取成员域实现。
 	 * Lazily resolves the member-domain implementation.
-	 *
 	 * @return 成员域 / member domain
 	 */
 	LegionMembers legionMembers() {
@@ -1467,7 +1278,6 @@ public class LegionService {
 	/**
 	 * 返回当前全部已缓存军团的快照列表。
 	 * Returns a snapshot list of all currently cached legions.
-	 *
 	 * @return 缓存军团列表 / cached legions
 	 */
 	public List<Legion> getAllCachedLegions() {
@@ -1486,7 +1296,6 @@ public class LegionService {
 	/**
 	 * 惰性获取徽章域实现。
 	 * Lazily resolves the emblem-domain implementation.
-	 *
 	 * @return 徽章域 / emblem domain
 	 */
 	LegionEmblems emblems() {
@@ -1504,7 +1313,6 @@ public class LegionService {
 	/**
 	 * 校验军团名称是否合法（匹配配置的正则）。
 	 * Checks whether a legion name is valid (matches the configured pattern).
-	 *
 	 * @param name 军团名称 / Legion name
 	 * @return 合法返回 true，否则 false / True if valid, false otherwise
 	 */
@@ -1515,7 +1323,6 @@ public class LegionService {
 	/**
 	 * 判断玩家是否在军团创建者 NPC 的交谈距离内。
 	 * Checks whether the player is within the legion creator NPC's talk distance.
-	 *
 	 * @param player     玩家 / player
 	 * @param creatorNpc 创建者 NPC / creator NPC
 	 * @return 在范围内为 true / true when in range

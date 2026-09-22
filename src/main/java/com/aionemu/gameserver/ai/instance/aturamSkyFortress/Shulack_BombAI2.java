@@ -12,7 +12,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Aturam Sky Fortress 副本 NPC AI：Shulack Bomb（@AIName "Shulack_Bomb"），继承 AggressiveNpcAI2。
  * Aturam Sky Fortress instance NPC AI: Shulack Bomb (@AIName "Shulack_Bomb"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("Shulack_Bomb")

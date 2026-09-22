@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 已完成任务条件模板（静态数据/XML）。
  * Finished quest condition template (static data / XML).
- *
  * @author antness
  */
 @Getter

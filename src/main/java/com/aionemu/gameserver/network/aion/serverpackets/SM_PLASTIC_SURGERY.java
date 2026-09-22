@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 开启/确认整容（含改性别）界面的服务端包。
  * Server packet that opens or confirms the plastic-surgery (including sex-change) UI.
- *
  * @author IlBuono
  */
 public class SM_PLASTIC_SURGERY extends AionServerPacket {

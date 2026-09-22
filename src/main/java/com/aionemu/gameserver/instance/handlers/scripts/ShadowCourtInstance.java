@@ -16,7 +16,6 @@ import java.util.Set;
 /**
  * 暗影法庭副本事件处理器。
  * Instance event handler for Shadow Court.
- *
  * @author Encom
  */
 
@@ -29,7 +28,6 @@ public class ShadowCourtInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -43,7 +41,6 @@ public class ShadowCourtInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 

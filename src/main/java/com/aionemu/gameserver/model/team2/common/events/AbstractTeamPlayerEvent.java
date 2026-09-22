@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 /**
  * 抽象团队玩家活动，用于团队2相关逻辑。
  * Abstract Team Player Event for team 2 logic.
- *
  * @author ATracer
  */
 @AllArgsConstructor

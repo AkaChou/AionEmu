@@ -6,7 +6,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * 玩家 UI/客户端设置数据访问抽象层。
  * DAO for player UI/client settings persistence.
- *
  * @author ATracer
  */
 public abstract class PlayerSettingsDAO implements DAO {
@@ -14,7 +13,6 @@ public abstract class PlayerSettingsDAO implements DAO {
 	/**
 	 * 返回实现唯一类名标识。
 	 * Returns unique class name for all implementations.
-	 *
 	 * @return 完整类名 / fully qualified class name
 	 */
 	@Override
@@ -25,7 +23,6 @@ public abstract class PlayerSettingsDAO implements DAO {
 	/**
 	 * 保存玩家设置。
 	 * Saves player settings.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public abstract void saveSettings(final Player player);
@@ -33,7 +30,6 @@ public abstract class PlayerSettingsDAO implements DAO {
 	/**
 	 * 加载玩家设置。
 	 * Loads player settings.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public abstract void loadSettings(final Player player);

@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 飞行限制：技能在飞行/地面状态下的可用范围。
  * Flying restriction: whether skill works in fly, ground or both states.
- *
  * @author kecimis
  */
 @XmlType(name = "FlyingRestriction")

@@ -24,7 +24,6 @@ public class SM_INSTANCE_INFO extends AionServerPacket {
 	/**
 	 * 构造全量副本冷却同步包（可附带队伍应答上下文）。
 	 * Creates a full instance-cooldown sync packet (optionally with team-answer context).
-	 *
 	 * target player
 	 * @param isAnswer 是否为队伍应答场景 / whether this is a team-answer context
 	 * @param playerTeam 临时队伍（可为空） / temporary player team (may be null)
@@ -40,7 +39,6 @@ public class SM_INSTANCE_INFO extends AionServerPacket {
 	/**
 	 * 构造单个副本冷却同步包。
 	 * Creates a single-instance cooldown sync packet.
-	 *
 	 * @param player target player
 	 * @param instanceId instance world id
 	 */

@@ -22,7 +22,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Ophidan Bridge 副本 NPC AI：Escapee Asachin（@AIName "escapee_asachin"），继承 GeneralNpcAI2。
  * Ophidan Bridge instance NPC AI: Escapee Asachin (@AIName "escapee_asachin"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("escapee_asachin")

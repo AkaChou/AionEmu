@@ -6,7 +6,6 @@ import com.aionemu.gameserver.model.moltenus.MoltenusStateType;
 /**
  * 熔岩领主默认实现：切入 FIGHT / 回到 PEACE。
  * back to PEACE.
- *
  * @author Rinzler (Encom)
  */
 public class Boss extends MoltenusFight<MoltenusLocation> {
@@ -14,7 +13,6 @@ public class Boss extends MoltenusFight<MoltenusLocation> {
 	/**
 	 * 绑定熔岩领主地点。
 	 * Binds the Moltenus location.
-	 *
 	 * @param moltenus 熔岩领主地点 / Moltenus location
 	 */
 	public Boss(MoltenusLocation moltenus) {

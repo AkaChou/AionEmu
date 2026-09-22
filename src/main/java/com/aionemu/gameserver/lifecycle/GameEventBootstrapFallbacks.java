@@ -22,7 +22,6 @@ final class GameEventBootstrapFallbacks {
     /**
      * 返回露娜商店服务回退实例。
      * Return the Luna-shop service fallback instance.
-     *
      * @return 露娜商店服务 / Luna-shop service
      */
     static LunaShopService lunaShopService() {
@@ -32,7 +31,6 @@ final class GameEventBootstrapFallbacks {
     /**
      * 返回宠物役从服务回退实例。
      * Return the minion service fallback instance.
-     *
      * @return 宠物役从服务 / Minion service
      */
     static MinionService minionService() {
@@ -42,7 +40,6 @@ final class GameEventBootstrapFallbacks {
     /**
      * 返回修勾扫荡服务回退实例。
      * Return the Shugo-sweep service fallback instance.
-     *
      * @return 修勾扫荡服务 / Shugo-sweep service
      */
     static ShugoSweepService shugoSweepService() {
@@ -52,7 +49,6 @@ final class GameEventBootstrapFallbacks {
     /**
      * 返回阿特里亚护照服务回退实例。
      * Return the Atreian-passport service fallback instance.
-     *
      * @return 阿特里亚护照服务 / Atreian-passport service
      */
     static AtreianPassportService atreianPassportService() {
@@ -62,7 +58,6 @@ final class GameEventBootstrapFallbacks {
     /**
      * 返回事件窗口服务回退实例。
      * Return the event-window service fallback instance.
-     *
      * @return 事件窗口服务 / Event-window service
      */
     static EventWindowService eventWindowService() {

@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 佐希夫无畏舰模板（静态数据/XML）。
  * XML template.
- *
  * @author Rinzler (Encom)
  */
 

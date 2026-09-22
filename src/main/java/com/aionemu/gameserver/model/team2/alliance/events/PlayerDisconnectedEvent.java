@@ -15,7 +15,6 @@ import com.google.common.base.Predicate;
 /**
  * 玩家 Disconnected 活动，用于团队2相关逻辑。
  * Player Disconnected Event for team 2 logic.
- *
  * @author ATracer
  */
 public class PlayerDisconnectedEvent implements TeamEvent, Predicate<PlayerAllianceMember> {

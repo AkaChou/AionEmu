@@ -88,7 +88,6 @@ final class LuredNpcCheckTask implements Runnable {
 	/**
 	 * 执行到达坐标后的 NPC 世界副作用；KILL 必须保留玩家死亡归因。
 	 * Applies the NPC world-side effect after arrival; KILL must preserve the player's death attribution.
-	 *
 	 * @param npc 到达目标的 NPC / NPC that reached the target
 	 * @param player 诱导玩家 / luring player
 	 * @param completion 完成策略 / completion effect

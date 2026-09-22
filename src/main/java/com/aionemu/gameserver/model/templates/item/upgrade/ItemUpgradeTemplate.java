@@ -14,7 +14,6 @@ import lombok.Getter;
 /**
  * 物品升级模板（静态数据/XML）。
  * Item upgrade template (static data/XML).
- *
  * @author Ranastic (Encom)
  */
 

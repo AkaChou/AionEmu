@@ -19,7 +19,6 @@ public class TriangleAxisComparator implements Comparator<BIHTriangle> {
 	/**
 	 * 按质心在指定轴上的分量比较两三角形。
 	 * Compares two triangles by their centroid component on the configured axis.
-	 *
 	 * @param o1 三角形 1 / triangle 1
 	 * @param o2 三角形 2 / triangle 2
 	 * @return negative / zero/positive

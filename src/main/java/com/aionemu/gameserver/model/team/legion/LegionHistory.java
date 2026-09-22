@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 军团历史记录。
  * Legion history entry.
- *
  * @author Simple, xTz
  */
 @Getter

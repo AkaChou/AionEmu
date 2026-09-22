@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 交易请求包：向目标展示发起交易的玩家名。
  * Exchange request packet: shows the requester name to the target.
- *
  * @author -Avol-
  */
 @AllArgsConstructor

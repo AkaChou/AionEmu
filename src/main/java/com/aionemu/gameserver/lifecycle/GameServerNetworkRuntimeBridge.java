@@ -36,7 +36,6 @@ public class GameServerNetworkRuntimeBridge {
     /**
      * 注入 MAC 封禁管理器提供者。
      * Inject the banned-MAC manager provider.
-     *
      * @param bannedMacManagerProvider MAC 封禁管理器提供者 / Banned-MAC manager provider
      */
     @Autowired(required = false)
@@ -47,7 +46,6 @@ public class GameServerNetworkRuntimeBridge {
     /**
      * 注入登录服连接提供者。
      * Inject the login-server provider.
-     *
      * @param loginServerProvider 登录服连接提供者 / Login-server provider
      */
     @Autowired(required = false)
@@ -58,7 +56,6 @@ public class GameServerNetworkRuntimeBridge {
     /**
      * 注入聊天服连接提供者。
      * Inject the chat-server provider.
-     *
      * @param chatServerProvider 聊天服连接提供者 / Chat-server provider
      */
     @Autowired(required = false)
@@ -69,7 +66,6 @@ public class GameServerNetworkRuntimeBridge {
     /**
      * 解析 MAC 封禁管理器。
      * Resolve the banned-MAC manager.
-     *
      * @return MAC 封禁管理器 / Banned MAC manager
      */
     public BannedMacManager bannedMacManager() {
@@ -82,7 +78,6 @@ public class GameServerNetworkRuntimeBridge {
     /**
      * 解析登录服连接。
      * Resolve the login-server connection.
-     *
      * @return 登录服连接 / Login server
      */
     public LoginServer loginServer() {
@@ -95,7 +90,6 @@ public class GameServerNetworkRuntimeBridge {
     /**
      * 解析聊天服连接。
      * Resolve the chat-server connection.
-     *
      * @return 聊天服连接 / Chat server
      */
     public ChatServer chatServer() {
@@ -108,7 +102,6 @@ public class GameServerNetworkRuntimeBridge {
     /**
      * 创建游戏客户端连接工厂。
      * Create the game-client connection factory.
-     *
      * @return 客户端连接工厂 / Game connection factory
      */
     public GameClientConnectionFactory gameConnectionFactory() {

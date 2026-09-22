@@ -65,23 +65,9 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 
 public class Equipment {
 
-	/**
-	 * -- SETTER --
-	 *
-	 * @param player
-	 */
 	@Setter
 	private Player owner;
 	private final Set<Long> markedFreeSlots = new HashSet<>();
-    /**
-     * -- GETTER --
-     *
-     *
-	 * -- SETTER --
-	 *
-	 @return the persistentState
-	  * @param persistentState the persistentState to set
-     */
     @Setter
     @Getter
     private PersistentState persistentState = PersistentState.UPDATED;
@@ -230,10 +216,6 @@ public class Equipment {
 				&& ItemSlot.getSlotsFor(requestedSlot).length == 1;
 	}
 
-	/**
-	 * @param itemSlotToEquip 装备槽位，双持武器必须是槽位组合 / must be slot combination for dual weapons
-	 * @param item
-	 */
 	private Item equip(long itemSlotToEquip, Item item) {
 		if (item.getOptionalSocket() == -1) {
 			log.warn(I18n.get("log.df0f40528edd", item.getObjectId()));
@@ -538,10 +520,6 @@ public class Equipment {
 		return requiredInventorySlots == 0 || owner.getInventory().getFreeSlots() >= requiredInventorySlots;
 	}
 
-	/**
-	 * @param requiredSkills
-	 * @return
-	 */
 	private boolean checkAvailableEquipSkills(int[] requiredSkills) {
 		boolean isSkillPresent = false;
 
@@ -601,7 +579,6 @@ public class Equipment {
 	/**
 	 * 按对象 ID 查找已装备物品。
 	 * Finds an equipped item by object id.
-	 *
 	 * @param value 物品对象 ID / item object id
 	 * @return 已装备物品，未找到则为 null / equipped item, or null if absent
 	 */
@@ -619,7 +596,6 @@ public class Equipment {
 	/**
 	 * 返回装备中与指定物品模板 ID 匹配的物品列表。
 	 * Returns the equipped items whose item template id equals the given value.
-	 *
 	 * @param value 物品模板 ID / item template id
 	 * @return 匹配的已装备物品列表 / the matching equipped items
 	 */
@@ -708,7 +684,6 @@ public class Equipment {
 	/**
 	 * 返回当前装备的全部物品。
 	 * Returns all currently equipped items.
-	 *
 	 * @return 全部已装备物品 / all equipped items
 	 */
 	public List<Item> getEquippedItems() {
@@ -721,7 +696,6 @@ public class Equipment {
 	/**
 	 * 返回当前装备的全部物品 ID。
 	 * Returns the item ids of all currently equipped items.
-	 *
 	 * @return 已装备物品 ID 列表 / the equipped item ids
 	 */
 	public List<Integer> getEquippedItemIds() {
@@ -735,7 +709,6 @@ public class Equipment {
 	/**
 	 * 返回非烙印槽位的已装备物品（双手武器仅保留一件）。
 	 * Returns equipped items outside stigma slots (only one two-handed weapon is kept).
-	 *
 	 * @return 非烙印槽已装备物品 / the equipped items outside stigma slots
 	 */
 	public List<Item> getEquippedItemsWithoutStigma() {
@@ -809,7 +782,6 @@ public class Equipment {
 	/**
 	 * 返回烙印槽位中的全部已装备物品。
 	 * Returns all equipped items in stigma slots.
-	 *
 	 * @return 烙印槽已装备物品 / the equipped items in stigma slots
 	 */
 	public List<Item> getEquippedItemsAllStigma() {
@@ -836,7 +808,6 @@ public class Equipment {
 	/**
 	 * 返回普通烙印槽位中的全部已装备物品。
 	 * Returns all equipped items in regular stigma slots.
-	 *
 	 * @return 普通烙印槽已装备物品 / the equipped items in regular stigma slots
 	 */
 	public List<Item> getEquippedItemsRegularStigma() {
@@ -1053,10 +1024,6 @@ public class Equipment {
 		return offHandPowerShard;
 	}
 
-	/**
-	 * @param powerShardItem
-	 * @param count
-	 */
 	public void usePowerShard(Item powerShardItem, int count) {
 		decreaseEquippedItemCount(powerShardItem.getObjectId(), count);
 
@@ -1191,9 +1158,6 @@ public class Equipment {
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
 	}
 
-	/**
-	 * @param weaponType
-	 */
 	public boolean isWeaponEquipped(WeaponType weaponType) {
 		if (equipment.get(ItemSlot.MAIN_HAND.getSlotIdMask()) != null && equipment.get(ItemSlot.MAIN_HAND.getSlotIdMask()).getItemTemplate().getWeaponType() == weaponType) {
 			return true;
@@ -1204,9 +1168,7 @@ public class Equipment {
 	/**
 	 * 检查任意槽位组合中是否装备了两把单手武器。
 	 * Check whether two one-handed weapons are equipped in any slot combination.
-	 *
 	 * @param slot 槽位掩码 / masks
-	 * @return
 	 */
 	public boolean hasDualWeaponEquipped(ItemSlot slot) {
 		ItemSlot[] slotValues = ItemSlot.getSlotsFor(slot.getSlotIdMask());
@@ -1222,9 +1184,6 @@ public class Equipment {
 		return false;
 	}
 
-	/**
-	 * @param armorType
-	 */
 	public boolean isArmorEquipped(ArmorType armorType) {
 		if (armorType == null) {
 			return false;
@@ -1240,7 +1199,6 @@ public class Equipment {
 	/**
 	 * 判断指定槽位是否已有装备；仅用于新建玩家。
 	 * Checks whether a slot is equipped; used only during player creation.
-	 *
 	 * @param slot 槽位掩码 / slot mask
 	 * @return 已装备时为 true / true if equipped
 	 */
@@ -1267,11 +1225,6 @@ public class Equipment {
 		return result;
 	}
 
-	/**
-	 * @param player
-	 * @param item
-	 * @return
-	 */
 	private boolean soulBindItem(final Player player, final Item item, final long slot) {
 		if (player.getInventory().getItemByObjId(item.getObjectId()) == null || player.isInState(CreatureState.GLIDING)) {
 			return false;

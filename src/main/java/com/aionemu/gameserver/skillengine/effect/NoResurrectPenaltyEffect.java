@@ -11,7 +11,6 @@ public class NoResurrectPenaltyEffect extends BuffEffect {
 	/**
 	 * 标记本效果计算成功。
 	 * Marks this effect calculation as successful.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	public void calculate(Effect effect) {
@@ -21,7 +20,6 @@ public class NoResurrectPenaltyEffect extends BuffEffect {
 	/**
 	 * 设置免除复活惩罚标记。
 	 * Sets the no-resurrect-penalty flag.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	public void startEffect(Effect effect) {

@@ -5,7 +5,6 @@ import java.util.Locale;
 /**
  * 任务定义可消费的类型化成员权限。
  * Typed membership capabilities that may be consumed by quest definitions.
- *
  * <p>The wire name is intentionally closed: quest XML must not be able to
  * invent a permission whose runtime source has not been captured.</p>
  */

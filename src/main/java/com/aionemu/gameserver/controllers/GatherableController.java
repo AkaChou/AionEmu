@@ -60,7 +60,6 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 	/**
 	 * 玩家开始采集时的入口：校验等级、技能、工具、CAPTCHA 后启动任务。
 	 * Entry when a player starts gathering: validates level, skill, tools and CAPTCHA, then starts the task.
-	 *
 	 * gathering player
 	 */
 	public void onStartUse(final Player player) {
@@ -158,7 +157,6 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 	/**
 	 * 按权重随机选取一种材料。
 	 * Randomly selects a material by weight.
-	 *
 	 * @return 选中的材料，可能为 null / selected material, may be null
 	 */
 	public Material getMaterial() {
@@ -177,10 +175,8 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 	/**
 	 * 校验玩家是否具备足够的采集技能等级。
 	 * Validates that the player has the required gather skill level.
-	 *
 	 * 玩家 / player
 	 * gather template
-	 *
 	 * @return 校验通过则为 true / true if valid
 	 */
 	private boolean checkPlayerSkill(final Player player, final GatherableTemplate template) {
@@ -206,7 +202,6 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 	/**
 	 * 校验玩家是否具备所需采集工具/消耗品。
 	 * Validates required extractor tools or consumables on the player.
-	 *
 	 * 玩家 / player
 	 * gather template
 	 * @return 0=失败，1=额外材料，2=普通材料 / 0=fail, 1=extra materials, 2=normal materials
@@ -238,10 +233,8 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 	/**
 	 * 校验玩家当前是否允许采集（惩罚/封禁计时）。
 	 * Validates whether the player is currently allowed to gather (punish/ban timer).
-	 *
 	 * 玩家 / player
 	 * gather template
-	 *
 	 * @return 允许采集时为 {@code true} / {@code true} if allowed
 	 */
 	private boolean checkGatherable(final Player player, final GatherableTemplate template) {
@@ -268,7 +261,6 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 	/**
 	 * 向玩家发放采集经验奖励。
 	 * Grants gathering experience rewards to the player.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void rewardPlayer(Player player) {
@@ -287,7 +279,6 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 	/**
 	 * 结束当前玩家的采集过程。
 	 * Finishes the current player's gathering process.
-	 *
 	 * gathering player
 	 */
 	public void finishGathering(Player player) {
@@ -303,7 +294,6 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 	/**
 	 * 开启采集保护：使玩家对其他玩家隐形，避免 PvP 干扰。
 	 * Starts gather protection by hiding the player from others to avoid PvP interference.
-	 *
 	 * gathering player
 	 */
 	public void startGatherProtection(Player player) {
@@ -316,7 +306,6 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 	/**
 	 * 关闭采集保护，恢复玩家可视状态。
 	 * Stops gather protection and restores the player's visual state.
-	 *
 	 * gathering player
 	 */
 	public void stopGatherProtection(Player player) {
@@ -351,7 +340,6 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 	/**
 	 * 获取所有者可采集物。
 	 * Gets the owner gatherable.
-	 *
 	 * gatherable
 	 */
 	@Override

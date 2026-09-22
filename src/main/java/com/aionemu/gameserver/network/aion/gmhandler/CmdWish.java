@@ -15,7 +15,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * GM 指令：按名称生成物品（可附强化）或召唤 NPC。
  * GM command handler that wishes an item by name (with enchant) or spawns an NPC by name.
- *
  * @author Kill3r
  */
 public final class CmdWish extends AbstractGMHandler {
@@ -23,7 +22,6 @@ public final class CmdWish extends AbstractGMHandler {
 	/**
 	 * 创建处理器并立即执行许愿逻辑。
 	 * Creates the handler and immediately runs the wish logic.
-	 *
 	 * @param admin 执行指令的管理员 / the admin executing the command
 	 * @param params NPC 名，或 {@code 物品名 强化等级} / NPC name, or {@code itemName enchantLevel}
 	 */

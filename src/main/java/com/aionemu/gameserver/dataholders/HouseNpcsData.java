@@ -34,7 +34,6 @@ public class HouseNpcsData {
 	/**
 	 * 返回房屋刷怪配置列表；若尚未初始化则创建空列表。
 	 * Returns the house spawn configuration list; creates an empty list if not yet initialized.
-	 *
 	 * @return 房屋刷怪列表 / house spawns list
 	 */
 	public List<HouseSpawns> getHouseSpawns() {
@@ -57,7 +56,6 @@ public class HouseNpcsData {
 	/**
 	 * 按房屋地址获取刷怪点列表。
 	 * Returns the spawn point list for the given house address.
-	 *
 	 * @param address 房屋地址 / house address
 	 * @return 刷怪点列表，不存在则为 null / spawn list, or null if absent
 	 */
@@ -68,7 +66,6 @@ public class HouseNpcsData {
 	/**
 	 * 返回估算的刷怪点总数（地址数 × 3）。
 	 * Returns the estimated total spawn count (address count × 3).
-	 *
 	 * @return 估算刷怪点数量 / estimated spawn count
 	 */
 	public int size() {

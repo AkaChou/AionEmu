@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.ai.BombTemplate;
 /**
  * 炸弹 AI：延迟后对周围造成爆炸伤害并消失。
  * Bomb AI that explodes after a delay, damages nearby targets, and despawns.
- *
  * @author Encom
  */
 @AIName("bomb")

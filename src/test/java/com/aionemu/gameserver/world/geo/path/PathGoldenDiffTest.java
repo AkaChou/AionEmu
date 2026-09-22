@@ -20,11 +20,9 @@ import org.junit.jupiter.api.io.TempDir;
 /**
  * 寻路结果的 golden 差分守护：固定地图 + 固定起终点，把搜索的「状态/模式/节点数/路径点序列」逐字比对，
  * 并在同一线程上「深搜 → 短搜」交替后再次比对，防止工作区复用与容量策略改动改变走位结果。
- *
  * <p>Golden diff guard for path search results: with a fixed map and fixed start/goal pairs it compares status,
  * mode, node counts and the exact waypoint sequence, then repeats the run after a deep search on the same thread so
  * that workspace reuse and capacity changes can never alter where NPCs walk.</p>
- *
  * <p>录制模式：{@code mvn -Dtest=PathGoldenDiffTest -Dpath.golden.record=true test} 会把当前实现的
  * 结果写入 {@code src/test/resources/aion/geo/path-golden.txt}；平时只读取比对。
  * Record mode writes the snapshot with {@code -Dpath.golden.record=true}; otherwise the snapshot is only read.</p>

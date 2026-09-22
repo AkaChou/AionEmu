@@ -9,7 +9,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 增益定身效果：无抗性检定的定身，直接标记成功。
  * Buff-bind effect: bind without resistance check; always succeeds.
- *
  * @author kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -19,7 +18,6 @@ public class BuffBindEffect extends BindEffect {
 	/**
 	 * 跳过抗性直接标记效果成功。
 	 * Marks the effect successful without a resistance check.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

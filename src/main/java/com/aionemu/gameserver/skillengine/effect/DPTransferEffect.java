@@ -10,7 +10,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * DP 转移效果：将施法者当前 DP 转给目标玩家。
  * DP transfer effect: transfers the effector's current DP to the target player.
- *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -20,7 +19,6 @@ public class DPTransferEffect extends EffectTemplate {
 	/**
 	 * 从目标扣除预留 DP，并加到施法者（方向以 reserved1 符号为准）。
 	 * Subtracts reserved DP from the target and adds it to the effector (sign via reserved1).
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -32,7 +30,6 @@ public class DPTransferEffect extends EffectTemplate {
 	/**
 	 * 计算可转移 DP，写入 reserved1。
 	 * Calculates transferable DP into reserved1.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

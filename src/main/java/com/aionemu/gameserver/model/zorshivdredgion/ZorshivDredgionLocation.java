@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 /**
  * 佐希夫无畏舰位置，用于 zorshivdredgion 相关逻辑。
  * Zorshiv Dredgion Location for zorshivdredgion logic.
- *
  * @author Rinzler (Encom)
  */
 

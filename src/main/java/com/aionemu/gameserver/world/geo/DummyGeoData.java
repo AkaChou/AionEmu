@@ -7,7 +7,6 @@ import com.aionemu.gameserver.geoEngine.models.GeoMap;
 /**
  * 空实现地理数据，所有世界共用同一张哑地图。
  * Dummy geo-data implementation sharing a single no-op map for every world.
- *
  * @author ATracer
  */
 public class DummyGeoData implements GeoData {
@@ -26,7 +25,6 @@ public class DummyGeoData implements GeoData {
 	/**
 	 * 返回共享哑地图，忽略世界 ID。
 	 * Returns the shared dummy map, ignoring the world id.
-	 *
 	 * @param worldId 世界 ID（忽略） / world id (ignored)
 	 * @return 空实现地理地图 / the dummy geo map
 	 */

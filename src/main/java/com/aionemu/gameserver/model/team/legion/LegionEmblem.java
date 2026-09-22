@@ -7,62 +7,25 @@ import lombok.Setter;
 /**
  * 军团徽章，用于团队相关逻辑。
  * Legion Emblem for team logic.
- *
  * @author Simple modified cura
  */
 @Getter
 @Setter
 public class LegionEmblem {
 
-	/**
-	 * @return the emblemId
-	 */
 	private int emblemId = 0x00;
-	/**
-	 * @return the color_r
-	 */
 	private int color_r = 0x00;
-	/**
-	 * @return the color_g
-	 */
 	private int color_g = 0x00;
-	/**
-	 * @return the color_b
-	 */
 	private int color_b = 0x00;
-	/**
-	 * @return the defaultEmblem
-	 */
 	private boolean defaultEmblem = true;
-	/**
-	 * @param emblemType the emblemType to set
-	 */
 	private LegionEmblemType emblemType = LegionEmblemType.DEFAULT;
-	/**
-	 * @return the persistentState
-	 */
 	private PersistentState persistentState;
 
-	/**
-	 * @param isUploading the isUploading to set
-	 */
 	private boolean isUploading = false;
-	/**
-	 * @param emblemSize the emblemSize to set
-	 */
 	private int uploadSize = 0;
-	/**
-	 * @return the uploadedSize
-	 */
 	private int uploadedSize = 0;
-	/**
-	 * @return the uploadData
-	 */
 	private byte[] uploadData;
 
-	/**
-	 * @return the customEmblemData
-	 */
 	private byte[] customEmblemData;
 
 	/**
@@ -78,14 +41,6 @@ public class LegionEmblem {
 		setPersistentState(PersistentState.NEW);
 	}
 
-	/**
-	 * @param emblemId    the emblemId to set
-	 * @param color_r     the color_r to set
-	 * @param color_g     the color_g to set
-	 * @param color_b     the color_b to set
-	 * @param emblemType  the emblemType to set
-	 * @param emblem_data
-	 */
 	public void setEmblem(int emblemId, int color_r, int color_g, int color_b, LegionEmblemType emblemType,
 			byte[] emblem_data) {
 		this.emblemId = emblemId;
@@ -139,9 +94,6 @@ public class LegionEmblem {
 		this.uploadData = null;
 	}
 
-	/**
-	 * @param persistentState
-	 */
 	public void setPersistentState(PersistentState persistentState) {
 		switch (persistentState) {
 		case UPDATE_REQUIRED:

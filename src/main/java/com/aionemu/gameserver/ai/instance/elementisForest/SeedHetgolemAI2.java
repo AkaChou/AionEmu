@@ -10,7 +10,6 @@ import com.aionemu.gameserver.world.WorldPosition;
 /**
  * Elementis Forest 副本 NPC AI：Seed Hetgolem（@AIName "seed_hetgolem"），继承 AggressiveNpcAI2。
  * Elementis Forest instance NPC AI: Seed Hetgolem (@AIName "seed_hetgolem"), extends AggressiveNpcAI2.
- *
  * @author xTz
  */
 @AIName("seed_hetgolem")

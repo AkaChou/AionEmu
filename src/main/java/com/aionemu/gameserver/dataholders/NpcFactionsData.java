@@ -16,7 +16,6 @@ import lombok.Getter;
 /**
  * NPC 势力数据容器，按势力 ID 与关联 NPC ID 索引 {@link NpcFactionTemplate}。
  * NPC faction data holder, indexing {@link NpcFactionTemplate} by faction id and related npc id.
- *
  * @author vlog
  */
 @Getter
@@ -27,8 +26,6 @@ public class NpcFactionsData {
 	/**
 	 * 返回原始势力模板列表。
 	 * Returns the raw faction template list.
-	 *
-	 * @return 势力模板列表 / faction template list
 	 */
 	@XmlElement(name = "npc_faction", required = true)
 	protected List<NpcFactionTemplate> npcFactionsData;
@@ -52,7 +49,6 @@ public class NpcFactionsData {
 	/**
 	 * 按势力 ID 获取势力模板。
 	 * Returns the faction template for the given faction id.
-	 *
 	 * @param id 势力 ID / faction id
 	 * @return 势力模板或 null / faction template or null
 	 */
@@ -63,7 +59,6 @@ public class NpcFactionsData {
 	/**
 	 * 按关联 NPC ID 获取势力模板。
 	 * Returns the faction template associated with the given npc id.
-	 *
 	 * @param id NPC ID / npc id
 	 * @return 势力模板或 null / faction template or null
 	 */
@@ -74,7 +69,6 @@ public class NpcFactionsData {
 	/**
 	 * 返回已加载的势力模板数量。
 	 * Returns the number of loaded faction templates.
-	 *
 	 * @return 已加载的阵营模板数量 / Returns the number of loaded faction templates.
 	 */
 	public int size() {

@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端下发军团完整信息（名称、等级、权限、公告等）的服务端包。
  * Server packet delivering full legion info (name, level, permissions, announcements, etc.) to the client.
- *
  * @author Simple
  */
 @AllArgsConstructor
@@ -34,14 +33,9 @@ public class SM_LEGION_INFO extends AionServerPacket {
 		writeS(legion.getLegionDescription());
 		writeC(legion.getLegionJoinType());
 		writeH(legion.getMinLevel());
-		/**
-	 * 获取 announcements 列表数据库按军团。
-	 * Get Announcements List From DB By Legion *
-	 */
-		Map<Timestamp, String> announcementList = legion.getAnnouncementList().descendingMap();
+        Map<Timestamp, String> announcementList = legion.getAnnouncementList().descendingMap();
 
-		/** Show max 7 announcements  / Show max 7 announcements * */
-		int i = 0;
+        int i = 0;
 		for (Timestamp unixTime : announcementList.keySet()) {
 			writeS(announcementList.get(unixTime));
 			writeD((int) (unixTime.getTime() / 1000));

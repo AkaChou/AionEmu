@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
  * 单次碰撞命中结果，包含接触点、法线、距离与命中几何体；可按距离排序。
  * A single collision hit carrying contact point, normal, distance and hit geometry;
  * comparable by distance.
- *
  * @author Kirill
  */
 @Getter
@@ -30,7 +29,6 @@ public class CollisionResult implements Comparable<CollisionResult> {
 	/**
 	 * 以接触点与距离构造结果。
 	 * Constructs a result with contact point and distance.
-	 *
 	 * @param contactPoint 接触点 / contact point
 	 * @param distance 距离 / distance
 	 */
@@ -42,7 +40,6 @@ public class CollisionResult implements Comparable<CollisionResult> {
 	/**
 	 * 按距离比较，近者优先。
 	 * Compares by distance; nearer hits come first.
-	 *
 	 * @param other 另一结果 / other result
 	 * @return 负 / 零/正 表示 近/等/远 / negative/zero/positive for nearer/equal/farther
 	 */

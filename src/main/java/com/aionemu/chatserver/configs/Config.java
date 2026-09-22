@@ -19,7 +19,6 @@ import com.aionemu.commons.utils.PropertiesUtils;
 /**
  * 聊天服务器静态配置项与从文件加载的入口。
  * Static chat-server configuration properties and file-loading entry point.
- *
  * @author ATracer
  */
 @Slf4j
@@ -116,7 +115,6 @@ public class Config {
     /**
      * 设置 boot 层覆盖属性（会复制一份）。
      * Set boot-layer override properties (copied defensively).
-     *
      * @param properties 覆盖属性，可为 null / Override properties, may be null
      */
     public static void setBootOverrides(Properties properties) {

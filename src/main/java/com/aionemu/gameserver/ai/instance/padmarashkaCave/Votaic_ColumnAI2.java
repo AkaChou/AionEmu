@@ -9,7 +9,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Padmarashka Cave 副本 NPC AI：Votaic Column（@AIName "votaic_column"），继承 AggressiveNpcAI2。
  * Padmarashka Cave instance NPC AI: Votaic Column (@AIName "votaic_column"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("votaic_column")

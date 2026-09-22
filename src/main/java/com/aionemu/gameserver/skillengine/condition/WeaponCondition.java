@@ -18,7 +18,6 @@ import com.aionemu.gameserver.skillengine.model.Skill.SkillMethod;
 /**
  * 武器条件：校验施法者主手武器类型是否在允许列表中（仅 CAST 路径强制）。
  * Weapon condition: validates the effector main-hand weapon type is in the allowed list (enforced on CAST only).
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -31,7 +30,6 @@ public class WeaponCondition extends Condition {
 	/**
 	 * 校验技能环境是否满足本条件。
 	 * Validates whether the skill environment satisfies this condition.
-	 *
 	 * @param env 技能环境 / skill environment
 	 * @return 是否有效 / whether valid
 	 */
@@ -46,7 +44,6 @@ public class WeaponCondition extends Condition {
 	/**
 	 * 校验属性计算环境是否满足本条件。
 	 * Validates whether the stat calculation environment satisfies this condition.
-	 *
 	 * @param stat 属性对象 / stat object
 	 * @param statFunction 属性函数 / stat function
 	 * @return 是否有效 / whether valid
@@ -59,7 +56,6 @@ public class WeaponCondition extends Condition {
 	/**
 	 * 判断生物主手武器是否在允许类型列表中（NPC 不校验）。
 	 * Checks whether the creature's main-hand weapon is in the allowed type list (NPCs skip validation).
-	 *
 	 * @param creature 待判断生物 / creature
 	 * @return 是否有效 / whether valid
 	 */

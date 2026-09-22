@@ -18,7 +18,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 小跟班（Minion）控制器，管理跟随与距离过远时的瞬移。
  * Minion controller managing follow behavior and teleport-when-too-far.
- *
  * @author ATracer, Improved by Neon
  */
 @Slf4j
@@ -38,7 +37,6 @@ public class MinionController extends VisibleObjectController<Minion> {
     /**
      * 小跟班看到其他对象时的回调（当前无逻辑）。
      * Callback when the minion sees another object (currently no-op).
-     *
      * @param object 进入视野的对象 / the object entering sight
      */
     @Override
@@ -49,7 +47,6 @@ public class MinionController extends VisibleObjectController<Minion> {
     /**
      * 小跟班不再看到其他对象时的回调（当前无逻辑）。
      * Callback when the minion no longer sees another object (currently no-op).
-     *
      * @param object 离开视野的对象 / the object leaving sight
      * @param isOutOfRange 是否因超出距离离开 / whether the leave is due to being out of range
      */
@@ -61,7 +58,6 @@ public class MinionController extends VisibleObjectController<Minion> {
     /**
      * 开始跟随指定玩家，启动移动与瞬移检测任务。
      * Starts following the given player by scheduling move and teleport-check tasks.
-     *
      * @param player master player
      */
     public void startFollowing(Player player) {
@@ -81,7 +77,6 @@ public class MinionController extends VisibleObjectController<Minion> {
     /**
      * 停止跟随并取消相关任务。
      * Stops following and cancels related tasks.
-     *
      * @param player master player
      */
     public void stopFollowing(Player player) {
@@ -94,7 +89,6 @@ public class MinionController extends VisibleObjectController<Minion> {
     /**
      * 将小跟班瞬移到玩家当前位置。
      * Teleports the minion to the player's current position.
-     *
      * @param player master player
      */
     public void teleportToPlayer(Player player) {
@@ -125,7 +119,6 @@ public class MinionController extends VisibleObjectController<Minion> {
         /**
          * 构造跟随任务。
          * Constructs a follow task.
-         *
          * @param player master player
          */
         public MinionFollowTask(Player player) {
@@ -189,7 +182,6 @@ public class MinionController extends VisibleObjectController<Minion> {
         /**
          * 构造瞬移检测任务。
          * Constructs a teleport-check task.
-         *
          * @param player master player
          */
         public MinionTeleportTask(Player player) {

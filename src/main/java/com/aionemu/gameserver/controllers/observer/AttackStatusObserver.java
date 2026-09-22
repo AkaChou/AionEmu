@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 /**
  * 攻击状态观察者基类，携带数值与目标攻击状态。
  * Base observer for attack status, holding a value and target attack status.
- *
  * @author ATracer
  */
 @AllArgsConstructor

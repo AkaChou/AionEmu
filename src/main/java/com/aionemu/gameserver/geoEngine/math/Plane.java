@@ -18,22 +18,15 @@ public class Plane implements Cloneable {
 	 * -- GETTER --
 	 *  返回平面法线（内部引用）。
 	 *  Returns the plane normal (internal reference).
-	 *
-	 * @return 法线 / normal
 	 */
 	protected Vector3f normal;
 	/** Plane constant term (N·X = constant) / Plane constant term (N·X = constant)
 	 * -- GETTER --
 	 *  返回平面常数项。
 	 *  Returns the plane constant term.
-	 *
-	 *
 	 * -- SETTER --
 	 *  设置平面常数项。
 	 *  Sets the plane constant term.
-	 *
-	 @return 常数项 / constant
-	  * @param constant 常数项 / constant
 	 */
 	@Setter
 	protected float constant;
@@ -49,7 +42,6 @@ public class Plane implements Cloneable {
 	/**
 	 * 按法线与常数构造平面。
 	 * Constructs a plane from normal and constant.
-	 *
 	 * @param normal 平面法线（null 时警告并替换为零向量） / plane normal (null warns and becomes zero)
 	 * @param constant 平面常数项 / plane constant
 	 */
@@ -65,7 +57,6 @@ public class Plane implements Cloneable {
 	/**
 	 * 设置平面法线（拷贝分量；null 时警告并置为零向量）。
 	 * Sets the plane normal (copies components; null warns and becomes zero).
-	 *
 	 * @param normal 新法线 / new normal
 	 */
 	public void setNormal(Vector3f normal) {
@@ -79,7 +70,6 @@ public class Plane implements Cloneable {
 	/**
 	 * 按分量设置平面法线。
 	 * Sets the plane normal by components.
-	 *
 	 * @param x X 分量 / X component
 	 * @param y Y 分量 / Y component
 	 * @param z Z 分量 / Z component
@@ -95,7 +85,6 @@ public class Plane implements Cloneable {
 	/**
 	 * 计算点到平面的最近点，结果写入 store。
 	 * Computes the closest point on the plane to the given point into store.
-	 *
 	 * @return 查询点 / query point
 	 * @param store 结果存储 / result storage
 	 * @param point store 自身（链式调用） / store itself
@@ -108,7 +97,6 @@ public class Plane implements Cloneable {
 	/**
 	 * 计算点到平面的最近点（分配新向量）。
 	 * Computes the closest point on the plane (allocates a new vector).
-	 *
 	 * @param point 查询点 / query point
 	 * @return 最近点 / closest point
 	 */
@@ -119,7 +107,6 @@ public class Plane implements Cloneable {
 	/**
 	 * 将点关于本平面做镜像反射。
 	 * Reflects a point across this plane.
-	 *
 	 * @param point 待反射点 / point to reflect
 	 * @param store 结果存储（null 则新建） / result storage (allocated if null)
 	 * @return 反射后的点 / reflected point
@@ -137,7 +124,6 @@ public class Plane implements Cloneable {
 	/**
 	 * 计算点到平面的伪距离（有符号，N·P − constant）。
 	 * Computes signed pseudo-distance from point to plane (N·P − constant).
-	 *
 	 * @param point 查询点 / query point
 	 * @return 有符号伪距离 / signed pseudo-distance
 	 */
@@ -148,7 +134,6 @@ public class Plane implements Cloneable {
 	/**
 	 * 判断点相对平面的侧别。
 	 * Determines which side of the plane the point lies on.
-	 *
 	 * @param point 查询点 / query point
 	 * @return 点的侧别 / side
 	 */
@@ -166,7 +151,6 @@ public class Plane implements Cloneable {
 	/**
 	 * 判断点是否近似落在平面上（epsilon ≈ Float.MIN_NORMAL）。
 	 * Tests whether the point lies approximately on the plane (epsilon ≈ Float.MIN_NORMAL).
-	 *
 	 * @param point 查询点 / query point
 	 * @return 是否在平面上 / whether on plane
 	 */
@@ -178,7 +162,6 @@ public class Plane implements Cloneable {
 	/**
 	 * 由三角形三个顶点定义本平面。
 	 * Defines this plane from a triangle's three vertices.
-	 *
 	 * @param t 三角形 / triangle
 	 */
 	public void setPlanePoints(AbstractTriangle t) {
@@ -188,7 +171,6 @@ public class Plane implements Cloneable {
 	/**
 	 * 由原点与法线定义本平面（constant = N·origin）。
 	 * Defines this plane from an origin point and normal (constant = N·origin).
-	 *
 	 * @param origin 平面上一点 / a point on the plane
 	 * @param normal 法线 / normal
 	 */
@@ -200,7 +182,6 @@ public class Plane implements Cloneable {
 	/**
 	 * 由三点定义本平面（法线归一化，constant = N·v1）。
 	 * Defines this plane from three points (normal normalized, constant = N·v1).
-	 *
 	 * @param v1 点 1 / point 1
 	 * @param v2 点 2 / point 2
 	 * @param v3 点 3 / point 3
@@ -214,7 +195,6 @@ public class Plane implements Cloneable {
 	/**
 	 * 返回可读字符串表示。
 	 * Returns a human-readable string representation.
-	 *
 	 * @return 描述字符串 / description string
 	 */
 	public String toString() {
@@ -224,7 +204,6 @@ public class Plane implements Cloneable {
 	/**
 	 * 返回运行时类标签。
 	 * Returns the runtime class tag.
-	 *
 	 * @return 类对象 / class object
 	 */
 	public Class<? extends Plane> getClassTag() {
@@ -234,7 +213,6 @@ public class Plane implements Cloneable {
 	/**
 	 * 深拷贝本平面（法线独立克隆）。
 	 * Deep-clones this plane (normal cloned independently).
-	 *
 	 * @return 克隆 / clone
 	 */
 	public Plane clone() {
@@ -256,7 +234,6 @@ public class Plane implements Cloneable {
 		None,
 		/** Positive normal side (pseudo-distance &gt; 0) / Positive normal side (pseudo-distance &gt; 0) */
 		Positive,
-		/** Negative normal side (pseudo-distance &lt; 0) / Negative normal side (pseudo-distance &lt; 0) */
 		Negative
 
 	}

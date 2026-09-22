@@ -5,7 +5,6 @@ import com.aionemu.commons.utils.Rnd;
 /**
  * 登录服包加解密引擎：Blowfish 加解密、校验和与首包 XOR。
  * Login-server crypto engine: Blowfish encrypt/decrypt, checksum and first-packet XOR.
- *
  * @author EvilSpirit
  */
 public class CryptEngine {
@@ -31,7 +30,6 @@ public class CryptEngine {
     /**
      * 更新后续包加解密使用的 Blowfish 密钥。
      * Update the Blowfish key used for subsequent packet crypto.
-     *
      * @param newKey new Blowfish key
      */
     public void updateKey(byte[] newKey) {
@@ -41,11 +39,9 @@ public class CryptEngine {
     /**
      * 解密数据并校验校验和。
      * Decrypt data and verify checksum.
-     *
      * @param data 待解密字节数组 / bytes to decrypt
      * @param offset 起始偏移 / offset
      * @param length 解密长度 / length
-     *
      * @return 校验和合法返回 true / true if checksum is valid
      */
     public boolean decrypt(byte[] data, int offset, int length) {
@@ -57,7 +53,6 @@ public class CryptEngine {
     /**
      * 加密数据：首包走 XOR+初始密钥，之后走校验和+会话密钥。
      * Encrypt data: first packet uses XOR+initial key, later packets use checksum+session key.
-     *
      * @param data 待加密字节数组 / bytes to encrypt
      * @param offset 起始偏移 / offset
      * @param length 加密长度 / length
@@ -86,11 +81,9 @@ public class CryptEngine {
     /**
      * 校验包尾校验和。
      * Verify the trailing packet checksum.
-     *
      * @param data encrypted packet
      * @param offset offset
      * @param length length
-     *
      * @return 校验和通过返回 true / true if checksum is ok
      */
     private boolean verifyChecksum(byte[] data, int offset, int length) {
@@ -126,7 +119,6 @@ public class CryptEngine {
     /**
      * 在包尾追加校验和。
      * Append checksum to the end of the packet.
-     *
      * @param raw 待写校验和的包 / packet buffer
      * @param offset 起始偏移 / offset
      * @param length 数据长度 / length
@@ -158,7 +150,6 @@ public class CryptEngine {
     /**
      * 首包 XOR 加密（4 字节整型密钥）。
      * First-packet XOR pass with a 4-byte integer key.
-     *
      * @param data 待加密数据 / data to encrypt
      * @param offset 起始偏移 / offset
      * @param length 加密长度 / length

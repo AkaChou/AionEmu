@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * Use 物品动作模板（静态数据/XML）。
  * XML template.
- *
  * @author Rolandas
  */
 @Getter

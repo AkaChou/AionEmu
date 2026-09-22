@@ -14,7 +14,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：查看指定 NPC 或当前目标的掉落表。
  * Player command: lists drop table of a given NPC id or current target.
- *
  * @author Eloann
  */
 public class cmd_drop extends PlayerCommand {
@@ -30,7 +29,6 @@ public class cmd_drop extends PlayerCommand {
 	/**
 	 * 按 NPC ID 或目标 NPC 输出掉落组与物品概率。
 	 * Prints drop groups and item chances for an NPC id or target NPC.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 可选 NPC ID / optional NPC id
 	 */

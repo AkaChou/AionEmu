@@ -50,7 +50,6 @@ public class PetDopingData {
 	/**
 	 * 返回已加载的药剂条目数量。
 	 * Returns the number of loaded doping entries.
-	 *
 	 * @return 已加载的药剂条目数量 / Returns the number of loaded doping entries.
 	 */
 	public int size() {
@@ -60,7 +59,6 @@ public class PetDopingData {
 	/**
 	 * 按 ID 获取宠物药剂模板。
 	 * Returns the pet doping template for the given id.
-	 *
 	 * @param id 药剂 ID / doping id
 	 * @return 药剂条目，不存在则为 null / doping entry or null
 	 */

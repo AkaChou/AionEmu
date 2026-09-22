@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Steel Rake 副本 NPC AI：Accountant Cabin Exit（@AIName "accountant_cabin_exit"），继承 ActionItemNpcAI2。
  * Steel Rake instance NPC AI: Accountant Cabin Exit (@AIName "accountant_cabin_exit"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("accountant_cabin_exit")

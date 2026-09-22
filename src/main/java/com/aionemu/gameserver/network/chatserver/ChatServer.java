@@ -64,11 +64,9 @@ public class ChatServer {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
@@ -86,7 +84,6 @@ public class ChatServer {
 	/**
 	 * 设置 Spring 单例提供者。
 	 * Sets the Spring singleton provider.
-	 *
 	 * @param instanceProvider 提供者 / provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<ChatServer> instanceProvider) {
@@ -111,7 +108,6 @@ public class ChatServer {
 	/**
 	 * 同步阻塞连接到聊天服，失败则每 10 秒重试直至成功。
 	 * Connects to the chat server synchronously, retrying every 10 seconds on failure.
-	 *
 	 * @return 已建立的聊天服连接 / established chat-server connection
 	 */
 	public ChatServerConnection connect() {
@@ -137,7 +133,6 @@ public class ChatServer {
 	/**
 	 * 延迟调度一次连接尝试；若已有任务在队或正在关闭则跳过。
 	 * Schedules a delayed connect attempt; skips if already queued or shutting down.
-	 *
 	 * @param delay 延迟毫秒 / delay in milliseconds
 	 */
 	private void scheduleConnect(long delay) {
@@ -161,7 +156,6 @@ public class ChatServer {
 	/**
 	 * 执行一次连接尝试。
 	 * Performs a single connect attempt.
-	 *
 	 * @return 是否连接成功 / whether the connection succeeded
 	 */
 	private boolean connectOnce() {
@@ -173,7 +167,6 @@ public class ChatServer {
 	/**
 	 * 通过 Netty 建立到聊天服的连接。
 	 * Establishes the chat-server connection via Netty.
-	 *
 	 * @return 是否连接成功 / whether the connection succeeded
 	 */
 	private boolean connectWithNetty() {
@@ -252,7 +245,6 @@ public class ChatServer {
 	/**
 	 * 通知聊天服玩家上线并请求认证令牌。
 	 * Notifies the chat server of a player login and requests an auth token.
-	 *
 	 * @param player 登录中的玩家 / logging-in player
 	 */
 	public void sendPlayerLoginRequst(Player player) {
@@ -265,7 +257,6 @@ public class ChatServer {
 	/**
 	 * 通知聊天服玩家下线。
 	 * Notifies the chat server of a player logout.
-	 *
 	 * @param player 登出中的玩家 / logging-out player
 	 */
 	public void sendPlayerLogout(Player player) {
@@ -277,7 +268,6 @@ public class ChatServer {
 	/**
 	 * 构建聊天服 CS 包处理器（原型 + 合法连接状态）。
 	 * Builds the chat-server CS packet handler (prototypes + valid connection states).
-	 *
 	 * @return 已注册原型的处理器 / handler with registered prototypes
 	 */
 	private static CsPacketHandler buildPacketHandler() {
@@ -305,7 +295,6 @@ public class ChatServer {
 		/**
 		 * 向处理器注册包原型及合法状态。
 		 * Registers a packet prototype with valid states.
-		 *
 		 * @param prototype 包原型 / packet prototype
 		 * @param states    合法连接状态 / valid connection states
 		 */
@@ -316,7 +305,6 @@ public class ChatServer {
 		/**
 		 * 获取已注册的包处理器。
 		 * Returns the registered packet handler.
-		 *
 		 * @return 包处理器 / packet handler
 		 */
 		private CsPacketHandler getPacketHandler() {

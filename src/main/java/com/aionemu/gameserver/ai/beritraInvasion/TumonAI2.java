@@ -27,7 +27,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * 贝里特拉入侵相关 NPC AI：Tumon（@AIName "tumon"），继承 AggressiveNpcAI2。
  * Beritra-invasion related NPC AI: Tumon (@AIName "tumon"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("tumon")

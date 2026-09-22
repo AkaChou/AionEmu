@@ -21,7 +21,6 @@ public class MinionBuff implements StatOwner {
 	/**
 	 * 应用守护灵模板的属性加成到玩家。
 	 * Applies the minion template's stat bonuses to the player.
-	 *
 	 * @param player 目标玩家 / target player
 	 * @param minionId 守护灵模板 ID / minion template id
 	 */
@@ -44,7 +43,6 @@ public class MinionBuff implements StatOwner {
 	/**
 	 * 移除玩家身上的守护灵属性加成。
 	 * Removes the minion stat bonuses from the player.
-	 *
 	 * @param player 目标玩家 / target player
 	 */
 	public void end(Player player) {

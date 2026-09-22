@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 /**
  * 经验加成道具动作模板（静态数据/XML）。
  * XML template.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)

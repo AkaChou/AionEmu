@@ -24,7 +24,6 @@ public class ConquerorBuffs implements StatOwner {
 	/**
 	 * 按击杀等级对玩家施加属性效果。
 	 * Applies rank-based attribute effects to the player.
-	 *
 	 * target player
 	 * @param rank 击杀等级 / killer rank
 	 */
@@ -49,7 +48,6 @@ public class ConquerorBuffs implements StatOwner {
 	/**
 	 * 是否已有生效中的属性效果。
 	 * Whether an active attribute effect is currently applied.
-	 *
 	 * @return 有效果时为 true / true if effect functions exist
 	 */
 	public boolean hasDebuff() {
@@ -59,7 +57,6 @@ public class ConquerorBuffs implements StatOwner {
 	/**
 	 * 结束并移除玩家身上的征服者属性效果。
 	 * Ends and removes conqueror attribute effects from the player.
-	 *
 	 * @param player target player
 	 */
 	public void endEffect(Player player) {

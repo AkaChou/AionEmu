@@ -19,7 +19,6 @@ import java.util.concurrent.Future;
 /**
  * 右翼密室副本事件处理器。
  * Instance event handler for Right Wing Chamber.
- *
  * @author Encom
  */
 
@@ -42,7 +41,6 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -59,7 +57,6 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 								/**
 								 * 处理 visit。
 								 * Handle visit.
-								 *
 								 * @param player 玩家 / player
 								 */
 								@Override
@@ -78,7 +75,6 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -91,7 +87,6 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 				/**
 				 * 处理 visit。
 				 * Handle visit.
-				 *
 				 * @param player 玩家 / player
 				 */
 				@Override
@@ -398,7 +393,6 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
-	 *
 	 * @param player 玩家 / player
 	 */
 
@@ -408,7 +402,6 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
-	 *
 	 * @param msg 消息 / message
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
@@ -426,7 +419,6 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override

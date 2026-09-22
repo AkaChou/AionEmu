@@ -18,7 +18,6 @@ import lombok.Setter;
 /**
  * Conquest 征服活动时间表配置。
  * Conquest event schedule configuration.
- *
  * @author Rinzler (Encom)
  */
 @Getter
@@ -31,7 +30,6 @@ public class ConquestSchedule {
 	 * -- GETTER --
 	 *  获取 Conquest 列表。
 	 *  Returns the conquest list.
-
 	 */
 	@XmlElement(name = "conquest", required = true)
 	private List<Conquest> conquestsList;
@@ -76,8 +74,6 @@ public class ConquestSchedule {
 		 * -- SETTER --
 		 *  设置 Conquest ID。
 		 *  Sets the conquest ID.
-
-
 		 */
 		@XmlAttribute(required = true)
 		private int id;
@@ -91,8 +87,6 @@ public class ConquestSchedule {
 		 * -- SETTER --
 		 *  设置献祭时间列表。
 		 *  Sets the offering times.
-
-
 		 */
 		@XmlElement(name = "offeringTime", required = true)
 		private List<String> offeringTimes;

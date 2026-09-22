@@ -10,7 +10,6 @@ import java.util.Iterator;
 /**
  * 管理员阵营公告命令：向天族或魔族玩家广播消息。
  * Admin faction-announce command: broadcasts a message to Elyos or Asmodian players.
- *
  * @author Divinity
  */
 public class AnnounceFaction extends AdminCommand {
@@ -26,7 +25,6 @@ public class AnnounceFaction extends AdminCommand {
 	/**
 	 * 执行阵营公告：按 ely/asmo 过滤在线玩家并居中广播。
 	 * Executes faction announce: filters online players by ely/asmo and center-broadcasts.
-	 *
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -67,7 +65,6 @@ public class AnnounceFaction extends AdminCommand {
 	/**
 	 * 参数错误时输出 {@code //announcefaction} 用法。
 	 * Prints {@code //announcefaction} usage on invalid arguments.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

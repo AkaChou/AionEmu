@@ -17,7 +17,6 @@ import com.google.common.base.Predicates;
 /**
  * 临时玩家团队，用于团队2相关逻辑。
  * Temporary Player Team for team 2 logic.
- *
  * @author ATracer
  */
 public abstract class TemporaryPlayerTeam<TM extends TeamMember<Player>> extends GeneralTeam<Player, TM> {

@@ -16,9 +16,7 @@ import com.aionemu.commons.database.DatabaseFactory;
 /**
  * 玩家护照 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerPassportsDAO.
- *
  * Updated for MySQL 8 - Fixed connection leaks.
- *
  * @author Alcapwnd, Lyras, FrozenKiller
  */
 @Slf4j
@@ -39,7 +37,6 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 	/**
 	 * 插入护照记录。
 	 * Inserts a passport record.
-	 *
 	 * @param accountId 账号 ID / account id
 	 * @param passportId 通行证 ID / passport id
 	 * @param stamps 印章 / stamps
@@ -63,7 +60,6 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 	/**
 	 * 更新护照记录。
 	 * Updates a passport record.
-	 *
 	 * @param accountId 账号 ID / account id
 	 * @param passportId 通行证 ID / passport id
 	 * @param stamps 印章 / stamps
@@ -89,7 +85,6 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 	/**
 	 * 获取护照印章数。
 	 * Gets the stamp count of a passport.
-	 *
 	 * @param accountId 账号 ID / account id
 	 * @param passportId 通行证 ID / passport id
 	 * @return 印章 / stamps
@@ -116,7 +111,6 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 	/**
 	 * 获取护照最近盖章时间。
 	 * Gets the last stamp time of a passport.
-	 *
 	 * @param accountId 账号 ID / account id
 	 * @param passportId 通行证 ID / passport id
 	 * @return 最近盖章时间 / last stamp time
@@ -143,7 +137,6 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 	/**
 	 * 获取账号全部护照 ID。
 	 * Gets all passport ids of an account.
-	 *
 	 * @param accountId 账号 ID / account id
 	 * @return 通行证 ID 列表 / passport id list
 	 */
@@ -170,7 +163,6 @@ public class PlayerPassportsDAO extends com.aionemu.gameserver.dao.PlayerPasspor
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
-	 *
 	 * @param database 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version

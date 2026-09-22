@@ -25,7 +25,6 @@ public class TargetChangeEffect extends EffectTemplate {
 	/**
 	 * 本效果无即时结算逻辑。
 	 * No instant apply logic for this effect.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -35,7 +34,6 @@ public class TargetChangeEffect extends EffectTemplate {
 	/**
 	 * 启动时变更玩家目标：特定技能概率切向施法者，否则清空目标。
 	 * On start, changes player target: listed skills may retarget effector, otherwise clear target.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

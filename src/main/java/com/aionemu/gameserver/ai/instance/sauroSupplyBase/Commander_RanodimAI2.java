@@ -11,7 +11,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 /**
  * Sauro Supply Base 副本 NPC AI：Commander Ranodim（@AIName "commander_ranodim"），继承 AggressiveNpcAI2。
  * Sauro Supply Base instance NPC AI: Commander Ranodim (@AIName "commander_ranodim"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("commander_ranodim")

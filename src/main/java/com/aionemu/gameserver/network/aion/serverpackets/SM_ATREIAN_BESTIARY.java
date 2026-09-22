@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 同步单条阿特雷亚图鉴条目（击杀数、等级、可领奖状态）的服务端包。
  * Server packet synchronizing a single Atreian Bestiary entry (kill count, level, reward claimability).
- *
  * @author Ranastic
  */
 public class SM_ATREIAN_BESTIARY extends AionServerPacket {

@@ -81,7 +81,6 @@ public record QuestEventIndex(Map<QuestEvent, List<Route>> routes) {
 	/**
 	 * 返回指定物品的唯一播放时长；不同 owner 声明冲突时拒绝启动。
 	 * Returns the unique play duration for an item; conflicting owner declarations fail startup.
-	 *
 	 * @param itemId 物品模板 ID / item template id
 	 * @return 播放时长；未注册时为空 / play duration, or empty when unregistered
 	 */

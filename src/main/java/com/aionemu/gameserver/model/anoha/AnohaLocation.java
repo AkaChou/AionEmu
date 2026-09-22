@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 /**
  * 阿诺哈位置模型。
  * Anoha Location model.
- *
  * @author Rinzler (Encom)
  */
 

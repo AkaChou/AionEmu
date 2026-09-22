@@ -13,7 +13,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 技能物理攻击吸血/吸魔瞬发：造成物理伤害并按比例回复施法者 HP/MP。
  * Instant physical skill attack with drain: deals physical damage and restores effector HP/MP by percent.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)

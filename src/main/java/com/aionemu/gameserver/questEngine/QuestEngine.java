@@ -72,7 +72,6 @@ import lombok.extern.slf4j.Slf4j;
  * 任务引擎单例：维护事件注册表，并向已注册处理器分发各类游戏事件。
  * Central quest-engine singleton that maintains event registries and dispatches
  * game events to registered processors.
- *
  */
 @Slf4j
 public class QuestEngine implements GameEngine {
@@ -193,11 +192,9 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -220,7 +217,6 @@ public class QuestEngine implements GameEngine {
 	 * Dispatch an NPC dialog event; when questId is 0, try talk-quests registered on the NPC.
 	 * CM_DIALOG_SELECT routes client NPC selections without quest context to a plain dialog first;
 	 * this questId==0 dispatch remains for interaction-object AI and other callers that still need owner routing.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * @return 是否有处理器接管 / Whether a handler took over
 	 */
@@ -324,13 +320,11 @@ public class QuestEngine implements GameEngine {
 	 * 返回 questId==0 对话的派发顺序：先客户端可见/进行中/已授权的 owner，再其余匹配 owner。
 	 * Returns the questId==0 dialog dispatch order: client-visible, live, or authorized owners first,
 	 * then every remaining match.
-	 *
 	 * <p>与 legacy 引擎一致，逐个尝试候选，第一个真正处理该动作的 owner 胜出；未接取的普通任务
 	 * 只是排在可见 owner 之后，仍会被尝试，因此不会出现“点了没反应”。</p>
 	 * <p>Legacy-engine parity: candidates are tried in order and the first owner that actually handles
 	 * the action wins. Unaccepted normal quests are only ordered after the visible owners; they are
 	 * still tried, so a dialog click can never dead-end.</p>
-	 *
 	 * @param player 玩家 / player
 	 * @param npc 对话 NPC / dialog NPC
 	 * @param event 客户端动作事件 / client action event
@@ -358,13 +352,11 @@ public class QuestEngine implements GameEngine {
 	 * 判断 typed owner 在客户端关闭普通任务标记时是否可见/可进入，用于决定派发优先级。
 	 * Determines whether a typed owner is visible/enterable while the normal-quest marker is disabled;
 	 * this decides the dispatch preference only.
-	 *
 	 * <p>非普通任务类别（IMPORTANT/MISSION 等）客户端始终可见；进行中或已由任务列表行选择的任务
 	 * 同样优先。未接取的普通任务排在它们之后，但依然会被尝试。</p>
 	 * <p>Other categories (IMPORTANT/MISSION and so on) stay visible in the client, and a live or
 	 * row-selected quest is preferred as well. Unaccepted normal quests are only ordered after them and
 	 * are still tried.</p>
-	 *
 	 * @param player 玩家 / player
 	 * @param npc 对话 NPC / dialog NPC
 	 * @param questId 候选任务 ID / candidate quest id
@@ -402,7 +394,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发击杀事件。
 	 * Dispatch a kill event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * @return 是否处理成功（异常时 false） / Whether successful ({@code false} on error)
 	 */
@@ -431,7 +422,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发攻击事件。
 	 * Dispatch an attack event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * @return 是否处理成功 / Whether successful
 	 */
@@ -474,7 +464,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发升级事件（仅对未完成任务调用处理器）。
 	 * Dispatch a level-up event (handlers only for incomplete quests).
-	 *
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onLvlUp(QuestEnv env) {
@@ -515,7 +504,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发区域任务结束事件。
 	 * Dispatch a zone-mission-end event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onEnterZoneMissionEnd(QuestEnv env) {
@@ -543,7 +531,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发玩家死亡事件。
 	 * Dispatch a player-death event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onDie(QuestEnv env) {
@@ -571,7 +558,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发玩家登出事件。
 	 * Dispatch a player-logout event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onLogOut(QuestEnv env) {
@@ -601,7 +587,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发跟随 NPC 到达目标事件。
 	 * Dispatch an escort NPC reach-target event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onNpcReachTarget(QuestEnv env) {
@@ -632,7 +617,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发跟随 NPC 丢失目标事件。
 	 * Dispatch an escort NPC lost-target event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onNpcLostTarget(QuestEnv env) {
@@ -663,7 +647,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发穿过飞行环事件。
 	 * Dispatch a pass-flying-ring event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * @param FlyRing 飞行环标识 / Flying-ring key
 	 */
@@ -704,7 +687,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发进入世界事件。
 	 * Dispatch an enter-world event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onEnterWorld(QuestEnv env) {
@@ -730,13 +712,11 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 重新评估玩家持久化的 LOCKED 任务，只执行对应 owner 的自动升级路由。
 	 * Re-evaluates the player's persisted LOCKED quests through each owner's automatic level-up routes.
-	 *
 	 * <p>LOCKED 是旧版任务列表中的持久化占位状态；规划器仍要求任务定义显式声明
 	 * {@code start-eligible} 及全部元数据前置条件，避免把普通 NPC 对话路由变成自动接取。
 	 * LOCKED is a persisted placeholder from the legacy quest list; the planner still requires
 	 * an explicit {@code start-eligible} condition and all metadata prerequisites, so ordinary
 	 * NPC dialog routes never become automatic starts.</p>
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void recheckLockedQuestStates(Player player) {
@@ -763,7 +743,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发使用物品事件；首个非 UNKNOWN 结果即返回。
 	 * Dispatch an item-use event; return the first non-UNKNOWN result.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * @param item 使用的物品 / Used item
 	 * Handler result
@@ -804,7 +783,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 调度带客户端使用动画的 typed item-play 事件。
 	 * Schedules a typed item-play event with the client-side use animation.
-	 *
 	 * @param player 使用物品的玩家 / player using the item
 	 * @param item 使用的物品 / used item
 	 * @param animationMillis 动画时长 / animation duration
@@ -835,7 +813,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发已由调用方成功完成动画和物品效果的 typed item-play 事件。
 	 * Dispatches a typed item-play event after the caller has successfully completed the animation and item effect.
-	 *
 	 * @param player 使用物品的玩家 / player using the item
 	 * @param itemId 物品模板 ID / item template ID
 	 * @return 任务处理结果 / quest handling result
@@ -866,7 +843,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发使用房屋物品事件。
 	 * Dispatch a house-item use event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * Item template id
 	 * Always {@code false}。
@@ -897,7 +873,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发获得物品事件。
 	 * Dispatch an item-obtained event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * Item id
 	 */
@@ -930,7 +905,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发击杀指定军衔玩家事件。
 	 * Dispatch a kill-ranked-player event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * @param playerRank 被杀玩家军衔 / Victim rank
 	 * @return 是否处理成功 / Whether successful
@@ -968,10 +942,8 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发世界内击杀事件。
 	 * Dispatch a kill-in-world event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * 世界 ID / World id
-	 *
 	 * @return 是否处理成功 / Whether successful
 	 */
 	public boolean onKillInWorld(QuestEnv env, int worldId) {
@@ -1012,10 +984,8 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发进入区域事件。
 	 * Dispatch an enter-zone event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * Zone name
-	 *
 	 * @return 是否处理成功 / Whether successful
 	 */
 	public boolean onEnterZone(QuestEnv env, ZoneName zoneName) {
@@ -1043,10 +1013,8 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发离开区域事件。
 	 * Dispatch a leave-zone event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * Zone name
-	 *
 	 * @return 是否处理成功 / Whether successful
 	 */
 	public boolean onLeaveZone(QuestEnv env, ZoneName zoneName) {
@@ -1074,10 +1042,8 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发动画结束事件。
 	 * Dispatch a movie-end event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * Movie id
-	 *
 	 * @return 是否有处理器接管 / Whether a handler took over
 	 */
 	public boolean onMovieEnd(QuestEnv env, int movieId) {
@@ -1106,7 +1072,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发任务计时器结束事件。
 	 * Dispatch a quest-timer-end event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onQuestTimerEnd(QuestEnv env) {
@@ -1130,7 +1095,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发隐形计时器结束事件。
 	 * Dispatch an invisible-timer-end event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onInvisibleTimerEnd(QuestEnv env) {
@@ -1149,10 +1113,8 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发使用技能事件。
 	 * Dispatch a skill-use event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * Skill id
-	 *
 	 * @return 是否处理成功 / Whether successful
 	 */
 	public boolean onUseSkill(QuestEnv env, int skillId) {
@@ -1180,7 +1142,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发制作失败事件（背包中该物品数量为 0 时触发）。
 	 * Dispatch a craft-fail event (fires when the inventory has zero of the item).
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * Item id
 	 */
@@ -1204,7 +1165,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发装备物品事件。
 	 * Dispatch an equip-item event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * Item id
 	 */
@@ -1227,7 +1187,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 查询模板是否允许执行指定任务动作。
 	 * Whether any registered handler allows the given action on the template.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * Template id
 	 * Action type
@@ -1257,7 +1216,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发挖掘号奖励事件。
 	 * Dispatch a Dredgion reward event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onDredgionReward(QuestEnv env) {
@@ -1279,7 +1237,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发卡玛尔奖励事件。
 	 * Dispatch a Kamar reward event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onKamarReward(QuestEnv env) {
@@ -1288,7 +1245,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发欧菲丹奖励事件。
 	 * Dispatch an Ophidan reward event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onOphidanReward(QuestEnv env) {
@@ -1297,7 +1253,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发堡垒奖励事件。
 	 * Dispatch a Bastion reward event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onBastionReward(QuestEnv env) {
@@ -1306,7 +1261,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发奖励加成应用事件。
 	 * Dispatch a bonus-apply event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * Bonus type
 	 * @param rewardItems 奖励物品列表 / Reward items
@@ -1341,7 +1295,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发被加入仇恨列表事件。
 	 * Dispatch an add-to-aggro-list event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * @return 是否处理成功 / Whether successful
 	 */
@@ -1357,7 +1310,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发靠近目标距离事件（20 单位内）。
 	 * Dispatch an at-distance event (within 20 units).
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * @return 是否处理成功 / Whether successful
 	 */
@@ -1393,7 +1345,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发进入风道事件。
 	 * Dispatch an enter-windstream event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * @param teleportId 传送点 ID / teleport id
 	 */
@@ -1421,7 +1372,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发骑乘动作事件。
 	 * Dispatch a ride-action event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 * Ride item id
 	 */
@@ -1431,7 +1381,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 分发创造力点数事件。
 	 * Dispatch a creativity-point event.
-	 *
 	 * @param env 任务环境 / Quest environment
 	 */
 	public void onCreativityPoint(QuestEnv env) {
@@ -1440,7 +1389,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册（或获取）NPC 的任务关联对象。
 	 * Register (or obtain) the quest association for an NPC.
-	 *
 	 * NPC 模板 ID / NPC template id
 	 * QuestNpc association
 	 */
@@ -1454,7 +1402,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册物品使用关联任务。
 	 * Register a quest for item-use events.
-	 *
 	 * Item id
 	 * Quest id
 	 */
@@ -1471,7 +1418,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册房屋物品关联任务。
 	 * Register a quest for house-item use events.
-	 *
 	 * Item id
 	 * Quest id
 	 */
@@ -1488,7 +1434,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册获得物品关联任务。
 	 * Register a quest for item-obtain events.
-	 *
 	 * Item id
 	 * Quest id
 	 */
@@ -1505,7 +1450,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册升级监听。
 	 * Register a level-up listener.
-	 *
 	 * Quest id
 	 */
 	public void registerOnLevelUp(int questId) {
@@ -1517,7 +1461,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册区域任务结束监听。
 	 * Register a zone-mission-end listener.
-	 *
 	 * Quest id
 	 */
 	public void registerOnEnterZoneMissionEnd(int questId) {
@@ -1529,7 +1472,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册进入世界监听。
 	 * Register an enter-world listener.
-	 *
 	 * Quest id
 	 */
 	public void registerOnEnterWorld(int questId) {
@@ -1541,7 +1483,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册死亡监听。
 	 * Register a death listener.
-	 *
 	 * Quest id
 	 */
 	public void registerOnDie(int questId) {
@@ -1553,7 +1494,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册登出监听。
 	 * Register a logout listener.
-	 *
 	 * Quest id
 	 */
 	public void registerOnLogOut(int questId) {
@@ -1565,7 +1505,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册进入区域监听。
 	 * Register an enter-zone listener.
-	 *
 	 * Zone name
 	 * Quest id
 	 */
@@ -1582,7 +1521,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册离开区域监听。
 	 * Register a leave-zone listener.
-	 *
 	 * Zone name
 	 * Quest id
 	 */
@@ -1599,7 +1537,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册击杀军衔玩家监听（覆盖自该军衔及以上）。
 	 * Register a kill-ranked listener (covers the given rank and above).
-	 *
 	 * Starting rank
 	 * Quest id
 	 */
@@ -1618,7 +1555,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册世界内击杀监听。
 	 * Register a kill-in-world listener.
-	 *
 	 * 世界 ID / World id
 	 * Quest id
 	 */
@@ -1635,7 +1571,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册穿过飞行环监听。
 	 * Register a pass-flying-ring listener.
-	 *
 	 * @param flyingRing 飞行环标识 / Flying-ring key
 	 * Quest id
 	 */
@@ -1652,7 +1587,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册动画结束监听。
 	 * Register a movie-end listener.
-	 *
 	 * Movie id
 	 * Quest id
 	 */
@@ -1669,7 +1603,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册计时器结束监听。
 	 * Register a quest-timer-end listener.
-	 *
 	 * Quest id
 	 */
 	public void registerOnQuestTimerEnd(int questId) {
@@ -1681,7 +1614,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册隐形计时器结束监听。
 	 * Register an invisible-timer-end listener.
-	 *
 	 * Quest id
 	 */
 	public void registerOnInvisibleTimerEnd(int questId) {
@@ -1693,7 +1625,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册使用技能监听。
 	 * Register a skill-use listener.
-	 *
 	 * Skill id
 	 * Quest id
 	 */
@@ -1710,7 +1641,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册制作失败监听。
 	 * Register a craft-fail listener.
-	 *
 	 * Item id
 	 * Quest id
 	 */
@@ -1723,7 +1653,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册装备物品监听。
 	 * Register an equip-item listener.
-	 *
 	 * Item id
 	 * Quest id
 	 */
@@ -1740,7 +1669,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册可行动作监听。
 	 * Register a can-act listener for a template.
-	 *
 	 * Quest id
 	 * Template id
 	 */
@@ -1757,7 +1685,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册挖掘号奖励监听。
 	 * Register a Dredgion reward listener.
-	 *
 	 * Quest id
 	 */
 	public void registerOnDredgionReward(int questId) {
@@ -1769,7 +1696,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册卡玛尔奖励监听。
 	 * Register a Kamar reward listener.
-	 *
 	 * Quest id
 	 */
 	public void registerOnKamarReward(int questId) {
@@ -1781,7 +1707,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册欧菲丹奖励监听。
 	 * Register an Ophidan reward listener.
-	 *
 	 * Quest id
 	 */
 	public void registerOnOphidanReward(int questId) {
@@ -1793,7 +1718,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册堡垒奖励监听。
 	 * Register a Bastion reward listener.
-	 *
 	 * Quest id
 	 */
 	public void registerOnBastionReward(int questId) {
@@ -1805,7 +1729,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册奖励加成应用监听。
 	 * Register a bonus-apply listener.
-	 *
 	 * Quest id
 	 * Bonus type
 	 */
@@ -1822,7 +1745,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册进入风道监听。
 	 * Register an enter-windstream listener.
-	 *
 	 * Quest id
 	 */
 	public void registerOnEnterWindStream(int questId) {
@@ -1833,7 +1755,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册骑乘动作监听。
 	 * Register a ride-action listener.
-	 *
 	 * Quest id
 	 */
 	public void registerOnRide(int questId) {
@@ -1844,7 +1765,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册创造力点数监听。
 	 * Register a creativity-point listener.
-	 *
 	 * Quest id
 	 */
 	public void registerOnCreativityPoint(int questId) {
@@ -1855,7 +1775,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册跟随到达目标监听。
 	 * Register a reach-target listener.
-	 *
 	 * Quest id
 	 */
 	public void registerAddOnReachTargetEvent(int questId) {
@@ -1866,7 +1785,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 注册跟随丢失目标监听。
 	 * Register a lost-target listener.
-	 *
 	 * Quest id
 	 */
 	public void registerAddOnLostTargetEvent(int questId) {
@@ -1877,7 +1795,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 获取 NPC 的任务关联对象；未注册时返回空壳。
 	 * Return the quest association for an NPC, or an empty shell if unregistered.
-	 *
 	 * NPC 模板 ID / NPC template id
 	 * QuestNpc association
 	 */
@@ -1891,7 +1808,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 查询穿过飞行环关联任务。
 	 * Look up quests related to passing a flying ring.
-	 *
 	 * @param flyingRing 飞行环标识 / Flying-ring key
 	 * Quest id list
 	 */
@@ -1905,7 +1821,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 是否已有该任务的处理器。
 	 * Whether a handler is registered for the quest.
-	 *
 	 * Quest id
 	 * Whether present
 	 */
@@ -2006,7 +1921,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 在 legacy Handler 注册前校验并安装全部正式 typed owner。
 	 * Validate and install all production typed owners before legacy handlers register.
-	 *
 	 * <p>所有 owner 和事件接线会先完成校验，dispatcher 只在 NPC 索引注册完成后发布。
 	 * All owners and event wiring are validated first; the dispatcher is published only after
 	 * NPC indexes have been registered.</p>
@@ -2168,7 +2082,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 添加处理器侧掉落（XML 未声明时由脚本侧补充）。
 	 * Add a handler-side drop (supplemental when not declared in XML).
-	 *
 	 * Quest id
 	 * NPC id
 	 * Item id
@@ -2182,7 +2095,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 添加带步骤条件的处理器侧掉落。
 	 * Add a handler-side drop gated by quest step.
-	 *
 	 * Quest id
 	 * NPC id
 	 * Item id
@@ -2206,7 +2118,6 @@ public class QuestEngine implements GameEngine {
 	/**
 	 * 启动时装载：注册掉落、加载脚本处理器与 XML 任务，并启动每日提醒。
 	 * Bootstrap load: register drops, load script handlers and XML quests, start daily reminders.
-	 *
 	 * @param progressLatch 进度闩锁（可空） / Progress latch (nullable)
 	 */
 	public void load(CountDownLatch progressLatch) {

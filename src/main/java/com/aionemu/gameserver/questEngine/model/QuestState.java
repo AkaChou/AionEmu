@@ -15,9 +15,7 @@ import lombok.Setter;
 /**
  * 玩家单个任务的运行时状态，包含进度变量、状态、完成次数与持久化标记。
  * Runtime state of a single player quest, including progress vars, status, completion count and persistence flag.
- *
  * @author MrPoke
- * @modified vlog, Rolandas
  */
 @Getter
 @Setter
@@ -45,7 +43,6 @@ public class QuestState {
 	/**
 	 * 构造任务状态。
 	 * Constructs a quest state.
-	 *
 	 * @param questId 任务 ID / Quest id
 	 * @param status 初始状态 / Initial status
 	 * @param questVars 打包的任务变量 / Packed quest vars
@@ -69,7 +66,6 @@ public class QuestState {
 	/**
 	 * 按索引设置任务子变量，并标记需要持久化更新。
 	 * Sets a quest sub-variable by index and marks the state for persistence update.
-	 *
 	 * @param id 子变量索引 / Sub-variable index
 	 * @param var 子变量值 / Sub-variable value
 	 */
@@ -81,7 +77,6 @@ public class QuestState {
 	/**
 	 * 按索引获取任务子变量。
 	 * Returns the quest sub-variable at the given index.
-	 *
 	 * @param id 子变量索引 / Sub-variable index
 	 * @return 子变量值 / Sub-variable value
 	 */
@@ -92,7 +87,6 @@ public class QuestState {
 	/**
 	 * 用打包整型设置全部任务变量，并标记需要持久化更新。
 	 * Sets all quest variables from a packed int and marks the state for persistence update.
-	 *
 	 * @param var 打包的任务变量值 / Packed quest-var value
 	 */
 	public void setQuestVar(int var) {
@@ -103,7 +97,6 @@ public class QuestState {
 	/**
 	 * 设置任务状态；首次进入 COMPLETE 时自动更新完成时间，并标记持久化。
 	 * Sets quest status; auto-updates completion time on first transition to COMPLETE and marks for persistence.
-	 *
 	 * @param status 新状态 / New status
 	 */
 	public void setStatus(QuestStatus status) {
@@ -124,7 +117,6 @@ public class QuestState {
 	/**
 	 * 设置完成次数，并标记需要持久化更新。
 	 * Sets the completion count and marks the state for persistence update.
-	 *
 	 * @param completeCount 完成计数 / Completion count
 	 */
 	public void setCompleteCount(int completeCount) {
@@ -135,7 +127,6 @@ public class QuestState {
 	/**
 	 * 设置已选奖励索引，并标记需要持久化更新。
 	 * Sets the selected reward index and marks the state for persistence update.
-	 *
 	 * @param reward 奖励索引 / Reward index
 	 */
 	public void setReward(Integer reward) {
@@ -146,7 +137,6 @@ public class QuestState {
 	/**
 	 * 返回已选奖励索引；未设置时记警告并返回 0。
 	 * Returns the selected reward index; logs a warning and returns 0 when unset.
-	 *
 	 * @return 奖励索引，缺省为 0 / Reward index, default 0
 	 */
 	public Integer getReward() {
@@ -166,7 +156,6 @@ public class QuestState {
 	/**
 	 * 判断该任务当前是否允许再次接取（状态、完成次数、变量与时间限制）。
 	 * Returns whether the quest may currently be repeated (status, completion count, vars and time limits).
-	 *
 	 * @return true 可重复；false 不可 / true if repeatable; false otherwise
 	 */
 	public boolean canRepeat() {
@@ -198,7 +187,6 @@ public class QuestState {
 	/**
 	 * 设置持久化状态；禁止 NEW→DELETED，且 NEW 状态下忽略 UPDATE_REQUIRED。
 	 * Sets persistent state; forbids NEW→DELETED and ignores UPDATE_REQUIRED while still NEW.
-	 *
 	 * @param persistentState 目标持久化状态 / Target persistent state
 	 */
 	public void setPersistentState(PersistentState persistentState) {

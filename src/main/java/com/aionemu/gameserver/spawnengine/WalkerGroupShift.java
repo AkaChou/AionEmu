@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 /**
  * 巡逻组成员相对基准点的偏移（矢状/冠状）。
  * Relative offset of a walker group member (sagittal/coronal).
- *
  * @author Rolandas
  */
 @Getter

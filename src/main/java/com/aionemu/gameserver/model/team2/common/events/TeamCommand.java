@@ -8,7 +8,6 @@ import com.google.common.base.Preconditions;
 /**
  * 团队 Command 枚举。
  * Team Command enumeration.
- *
  * @author ATracer
  */
 public enum TeamCommand {

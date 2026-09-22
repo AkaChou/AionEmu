@@ -35,14 +35,9 @@ public final class BIHNode {
 	 * -- GETTER --
 	 *  返回左分割平面。
 	 *  Returns the left split plane.
-	 *
-	 *
 	 * -- SETTER --
 	 *  设置左分割平面。
 	 *  Sets the left split plane.
-	 *
-	 @return 左分割平面 / left plane
-	  * @param leftPlane 左分割平面 / left plane
 	 */
 	@Setter
 	@Getter
@@ -51,14 +46,9 @@ public final class BIHNode {
      * -- GETTER --
      *  返回右分割平面。
      *  Returns the right split plane.
-     *
-     *
 	 * -- SETTER --
 	 *  设置右分割平面。
 	 *  Sets the right split plane.
-	 *
-	 @return 右分割平面 / right plane
-	  * @param rightPlane 右分割平面 / right plane
      */
 	@Setter
 	@Getter
@@ -69,7 +59,6 @@ public final class BIHNode {
 	/**
 	 * 构造叶节点，覆盖三角形区间 [{@code l}, {@code r}]。
 	 * Constructs a leaf covering triangle range [{@code l}, {@code r}].
-	 *
 	 * @param l 左下标 / left index
 	 * @param r 右下标 / right index
 	 */
@@ -82,7 +71,6 @@ public final class BIHNode {
 	/**
 	 * 构造内节点，指定分割轴。
 	 * Constructs an inner node with the given split axis.
-	 *
 	 * @param axis 分割轴 0/1/2 / split axis 0/1/2
 	 */
 	public BIHNode(int axis) {
@@ -99,7 +87,6 @@ public final class BIHNode {
 	/**
 	 * 返回左子节点。
 	 * Returns the left child.
-	 *
 	 * @return 左子节点 / left child
 	 */
 	public BIHNode getLeftChild() {
@@ -109,7 +96,6 @@ public final class BIHNode {
 	/**
 	 * 设置左子节点。
 	 * Sets the left child.
-	 *
 	 * @param left 左子节点 / left child
 	 */
 	public void setLeftChild(BIHNode left) {
@@ -119,7 +105,6 @@ public final class BIHNode {
 	/**
 	 * 返回右子节点。
 	 * Returns the right child.
-	 *
 	 * @return 右子节点 / right child
 	 */
 	public BIHNode getRightChild() {
@@ -129,7 +114,6 @@ public final class BIHNode {
 	/**
 	 * 设置右子节点。
 	 * Sets the right child.
-	 *
 	 * @param right 右子节点 / right child
 	 */
 	public void setRightChild(BIHNode right) {
@@ -150,7 +134,6 @@ public final class BIHNode {
 		/**
 		 * 构造栈数据。
 		 * Constructs stack data.
-		 *
 		 * @param node 待遍历节点 / node
 		 * @param min 最小 t / min t
 		 * @param max 最大 t / max t
@@ -166,7 +149,6 @@ public final class BIHNode {
 	 * 以包围盒与可碰撞对象做树遍历相交测试（当前叶处理未计入命中）。
 	 * Traverses the tree for intersection against a bounding box and collidable
 	 * (leaf hits are currently not accumulated).
-	 *
 	 * @param col 可碰撞对象 / collidable
 	 * @param box 包围盒 / bounding box
 	 * @param worldMatrix 世界变换矩阵 / world matrix
@@ -237,7 +219,6 @@ public final class BIHNode {
 	/**
 	 * 暴力遍历所有叶三角形与射线求交（调试/对照用）。
 	 * Brute-force traversal intersecting the ray with all leaf triangles (debug/reference).
-	 *
 	 * @param r 射线 / ray
 	 * @param worldMatrix 世界变换矩阵 / world matrix
 	 * @param tree 所属 BIH 树 / owning BIH tree
@@ -298,7 +279,6 @@ public final class BIHNode {
 	 * 射线与 BIH 树的精确相交测试：将射线变换到局部空间，剪枝遍历叶三角形并写回世界空间命中。
 	 * Precise ray–BIH intersection: transforms the ray into local space, prunes
 	 * traversal over leaf triangles and records hits in world space.
-	 *
 	 * @param r 射线（结束后会恢复原 origin/direction） / ray (origin/direction restored after)
 	 * @param worldMatrix 世界变换矩阵 / world matrix
 	 * @param tree 所属 BIH 树 / owning BIH tree
@@ -446,7 +426,6 @@ public final class BIHNode {
 	/**
 	 * 射线遍历用的数组栈（每线程一份，避免每次查询分配栈条目与列表扩容）。
 	 * Array stack for ray traversal (one per thread; no per-entry allocation or list growth).
-	 *
 	 * <p>容量不足时翻倍扩容，因此不依赖“栈深必有硬上限”的假设。
 	 * Doubles its capacity when full, so it does not rely on a hard depth bound.</p>
 	 */
@@ -485,7 +464,6 @@ public final class BIHNode {
 	/**
 	 * 压入数组栈，必要时翻倍扩容。
 	 * Pushes onto the array stack, doubling its capacity when needed.
-	 *
 	 * @param stack 目标栈 / target stack
 	 * @param node 待遍历节点 / node to visit
 	 * @param minT 区间下限 / lower t bound

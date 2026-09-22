@@ -15,7 +15,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 攻城战相关 NPC AI：Gate Guardian Stone（@AIName "Gate_Guardian_Stone"），继承 NpcAI2。
  * Siege-related NPC AI: Gate Guardian Stone (@AIName "Gate_Guardian_Stone"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Gate_Guardian_Stone")

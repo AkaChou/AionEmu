@@ -13,7 +13,6 @@ import java.util.List;
 /**
  * 查询/刷新区域信息的管理员命令。
  * Admin command to inspect or refresh zone information.
- *
  * @author ATracer
  */
 public class Zone extends AdminCommand {
@@ -29,7 +28,6 @@ public class Zone extends AdminCommand {
 	/**
 	 * 无参列出目标所在区域；refresh 重算；inside 判断是否在指定区域。
 	 * With no args lists zones for target; refresh revalidates; inside checks a zone name.
-	 *
 	 * @param admin 执行 GM / Admin player
 	 * @param params Optional refresh|inside &lt;name&gt;。
 	 */
@@ -89,7 +87,6 @@ public class Zone extends AdminCommand {
 	/**
 	 * 参数错误时的用法提示。
 	 * Usage hint on invalid parameters.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

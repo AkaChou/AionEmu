@@ -11,10 +11,8 @@ import lombok.RequiredArgsConstructor;
 /**
  * 佐尔希夫挖掘舰活动抽象基类。
  * Abstract base for Zorshiv dredgion world events.
- *
  * <p>封装启动/停止幂等守卫与按状态刷怪/清怪。
  * Encapsulates idempotent start/stop guards and spawn/despawn by state type.</p>
- *
  * @author Rinzler (Encom)
  * @param <ZL> 挖掘舰地点类型 / dredgion location type
  */
@@ -26,8 +24,6 @@ public abstract class ZorshivDredgion<ZL extends ZorshivDredgionLocation> {
 	/**
 	 * 获取绑定地点。
 	 * Returns the bound location.
-	 *
-	 * @return 绑定地点 / bound location
 	 */
 	private final ZL zorshivDredgionLocation;
 	private final AtomicBoolean peace = new AtomicBoolean();
@@ -76,7 +72,6 @@ public abstract class ZorshivDredgion<ZL extends ZorshivDredgionLocation> {
 	/**
 	 * 按状态类型刷新刷怪。
 	 * Spawns entities by state type.
-	 *
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(ZorshivDredgionStateType type) {
@@ -94,7 +89,6 @@ public abstract class ZorshivDredgion<ZL extends ZorshivDredgionLocation> {
 	/**
 	 * 是否已回到和平态。
 	 * Whether the event is back to peace.
-	 *
 	 * @return 和平态则为 true / true if peace
 	 */
 	public boolean isPeace() {
@@ -104,7 +98,6 @@ public abstract class ZorshivDredgion<ZL extends ZorshivDredgionLocation> {
 	/**
 	 * 获取地点 ID。
 	 * Returns the location id.
-	 *
 	 * @return 地点 ID / location id
 	 */
 	public int getZorshivDredgionLocationId() {

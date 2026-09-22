@@ -148,7 +148,6 @@ public enum StatEnum {
 	/**
 	 * 是否为可拆分主/副手的属性。
 	 * Whether this stat can split into main/sub hand variants.
-	 *
 	 * @return 是否为主手或副手属性 / Whether main or sub hand stat
 	 */
 	public boolean isMainOrSubHandStat() {

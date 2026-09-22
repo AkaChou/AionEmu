@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Kromedes Trial 副本 NPC AI：Old Relic Chest（@AIName "old_relic_chest"），继承 NpcAI2。
  * Kromedes Trial instance NPC AI: Old Relic Chest (@AIName "old_relic_chest"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("old_relic_chest")

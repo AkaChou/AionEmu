@@ -17,7 +17,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Levinshor 区域 NPC AI：Zorshiv Commander（@AIName "zorshiv_commander"），继承 AggressiveNpcAI2。
  * Levinshor zone NPC AI: Zorshiv Commander (@AIName "zorshiv_commander"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("zorshiv_commander")

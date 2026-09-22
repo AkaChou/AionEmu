@@ -18,7 +18,6 @@ import java.util.List;
 /**
  * Steel Rake 副本 NPC AI：Main Deck Mobile Cannon（@AIName "main_deck_mobile_cannon"），继承 ActionItemNpcAI2。
  * Steel Rake instance NPC AI: Main Deck Mobile Cannon (@AIName "main_deck_mobile_cannon"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("main_deck_mobile_cannon")
@@ -62,7 +61,6 @@ public class Main_Deck_Mobile_CannonAI2 extends ActionItemNpcAI2
 	/**
 	 * 静默击杀副本内指定 ID 的全部 NPC。
 	 * Silently kill all NPCs of the given ID in the instance.
-	 *
 	 * @param npcId 要清除的 NPC ID / NPC ID to remove
 	 */
 	private void despawnNpc(int npcId) {

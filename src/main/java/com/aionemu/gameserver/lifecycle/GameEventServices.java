@@ -82,7 +82,6 @@ public final class GameEventServices implements DisposableBean {
     /**
      * 构造并注册各事件运行时实例提供者。
      * Construct and register instance providers for each event-runtime service.
-     *
      * @param eventServiceProvider 事件服务提供者 / Event-service provider
      * @param playerEventServiceProvider 玩家事件服务提供者 / Player-event service provider
      * @param crazyDaevaServiceProvider 疯狂守护者服务提供者 / Crazy-Daeva service provider
@@ -113,7 +112,6 @@ public final class GameEventServices implements DisposableBean {
     /**
      * 解析事件服务。
      * Resolve the event service.
-     *
      * @return 事件服务 / Event service
      */
     public static EventService eventService() {
@@ -136,7 +134,6 @@ public final class GameEventServices implements DisposableBean {
     /**
      * 解析玩家事件服务。
      * Resolve the player-event service.
-     *
      * @return 玩家事件服务 / Player-event service
      */
     public static PlayerEventService playerEventService() {
@@ -159,7 +156,6 @@ public final class GameEventServices implements DisposableBean {
     /**
      * 解析疯狂守护者服务。
      * Resolve the Crazy-Daeva service.
-     *
      * @return 疯狂守护者服务 / Crazy-Daeva service
      */
     public static CrazyDaevaService crazyDaevaService() {
@@ -182,7 +178,6 @@ public final class GameEventServices implements DisposableBean {
     /**
      * 解析欧比斯排名更新服务。
      * Resolve the abyss-rank update service.
-     *
      * @return 欧比斯排名更新服务 / Abyss-rank update service
      */
     public static AbyssRankUpdateService abyssRankUpdateService() {
@@ -205,7 +200,6 @@ public final class GameEventServices implements DisposableBean {
     /**
      * 解析数据包广播器。
      * Resolve the packet broadcaster.
-     *
      * @return 数据包广播器 / Packet broadcaster
      */
     public static PacketBroadcaster packetBroadcaster() {
@@ -228,7 +222,6 @@ public final class GameEventServices implements DisposableBean {
     /**
      * 解析事件调度器。
      * Resolve the event scheduler.
-     *
      * @return 事件调度器 / Event scheduler
      */
     public static EventScheduler eventScheduler() {

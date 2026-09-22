@@ -19,9 +19,7 @@ public class SchemaGen {
 	/**
 	 * 在指定目录生成 static_data1.xsd。
 	 * Generate static_data1.xsd under the given directory.
-	 *
 	 * @param baseDir 输出目录 / Output directory
-	 *
 	 * @throws Exception 生成失败时 / On generation failure
 	 */
 	public static void generateStaticDataSchema(File baseDir) throws Exception {
@@ -30,7 +28,6 @@ public class SchemaGen {
 			/**
 			 * 创建 schema 输出目标。
 			 * Create the schema output target.
-			 *
 			 * @param namespaceUri 命名空间 URI / Namespace URI
 			 * @param suggestedFileName 建议文件名 / Suggested file name
 			 * @return 输出 Result / Output Result

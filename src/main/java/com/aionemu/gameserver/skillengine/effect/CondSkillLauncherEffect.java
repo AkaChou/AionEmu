@@ -16,7 +16,6 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 /**
  * 条件技能触发效果：HP/MP 低于阈值时自动维持指定技能。
  * Conditional skill launcher: maintains a linked skill while HP/MP is below a threshold.
- *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -31,7 +30,6 @@ public class CondSkillLauncherEffect extends EffectTemplate {
 	/**
 	 * 将效果加入受影响者的效果控制器。
 	 * Adds the effect to the effected creature's effect controller.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -42,7 +40,6 @@ public class CondSkillLauncherEffect extends EffectTemplate {
 	/**
 	 * 结束时清理属性修正与观察者。
 	 * Cleans up stat modifiers and the observer on end.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -57,7 +54,6 @@ public class CondSkillLauncherEffect extends EffectTemplate {
 	/**
 	 * 注册生命值观察者：低于阈值时触发关联技能，恢复后移除。
 	 * Observes HP/MP, applying the linked skill below the threshold and removing it above.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

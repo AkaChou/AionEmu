@@ -16,7 +16,6 @@ import com.aionemu.gameserver.model.templates.npcshout.ShoutEventType;
 /**
  * 通用 NPC AI：派发思考、攻击、对话、归位、移动与目标等标准事件，并选择普攻/技能攻击意图。
  * General NPC AI that dispatches think/attack/talk/return/move/target events and chooses simple or skill attack intention.
- *
  * @author Encom
  */
 @AIName("general")
@@ -43,7 +42,6 @@ public class GeneralNpcAI2 extends NpcAI2
 	/**
 	 * 处理受到攻击事件。
 	 * Handle being attacked.
-	 *
 	 * @param creature 攻击者 / attacker
 	 */
 	@Override
@@ -54,7 +52,6 @@ public class GeneralNpcAI2 extends NpcAI2
 	/**
 	 * 处理盟友需要支援事件。
 	 * Handle ally needs-support.
-	 *
 	 * @param creature 盟友 / ally
 	 * @return 是否已处理 / whether handled
 	 */
@@ -66,7 +63,6 @@ public class GeneralNpcAI2 extends NpcAI2
 	/**
 	 * 玩家开始与本 NPC 对话/交互。
 	 * Player starts dialog/interaction with this NPC.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -77,7 +73,6 @@ public class GeneralNpcAI2 extends NpcAI2
 	/**
 	 * 玩家结束与本 NPC 对话。
 	 * Player finishes dialog with this NPC.
-	 *
 	 * @param creature 玩家 / player
 	 */
 	@Override
@@ -151,7 +146,6 @@ public class GeneralNpcAI2 extends NpcAI2
 	/**
 	 * 处理目标变更事件。
 	 * Handle target changed.
-	 *
 	 * @param creature 新目标 / new target
 	 */
 	@Override
@@ -163,7 +157,6 @@ public class GeneralNpcAI2 extends NpcAI2
 	/**
 	 * 处理看不见生物事件。
 	 * Handle creature-not-see.
-	 *
 	 * @param creature 离开视野的生物 / creature that left sight
 	 */
 	@Override
@@ -196,7 +189,6 @@ public class GeneralNpcAI2 extends NpcAI2
 	/**
 	 * 处理生物移动事件。
 	 * Handle creature-moved.
-	 *
 	 * @param creature 移动的生物 / moved creature
 	 */
 	@Override
@@ -216,7 +208,6 @@ public class GeneralNpcAI2 extends NpcAI2
 	/**
 	 * 判断是否可处理指定 AI 事件类型。
 	 * Whether the given AI event type can be handled.
-	 *
 	 * @param eventType AI 事件类型 / AI event type
 	 * @return 是否可处理 / whether it can be handled
 	 */

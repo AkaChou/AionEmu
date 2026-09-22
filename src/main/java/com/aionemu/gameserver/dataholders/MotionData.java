@@ -19,7 +19,6 @@ import java.util.Map;
 /**
  * 动作时间数据容器，按动作名索引 {@link MotionTime}。
  * Motion-time data holder, indexing {@link MotionTime} by motion name.
- *
  * @author kecimis
  */
 @XmlRootElement(name = "motion_times")
@@ -45,7 +44,6 @@ public class MotionData {
 	/**
 	 * 返回动作时间列表；若为空则惰性创建。
 	 * Returns the motion-time list, creating it lazily when null.
-	 *
 	 * @return 动作时间列表 / motion-time list
 	 */
 	public List<MotionTime> getMotionTimes() {
@@ -58,7 +56,6 @@ public class MotionData {
 	/**
 	 * 按动作名获取动作时间。
 	 * Returns the motion time for the given name.
-	 *
 	 * @param name 套装名 / set name
 	 * @return 动作时间或 null / motion time or null
 	 */
@@ -69,7 +66,6 @@ public class MotionData {
 	/**
 	 * 返回已加载的动作时间数量。
 	 * Returns the number of loaded motion times.
-	 *
 	 * @return 动作时间数量 / motion-time count
 	 */
 	public int size() {

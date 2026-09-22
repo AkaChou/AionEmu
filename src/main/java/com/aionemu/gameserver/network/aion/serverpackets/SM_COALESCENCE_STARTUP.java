@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 融合（Coalescence）启动/就绪包。
  * Server packet notifying that coalescence is ready to start.
- *
  * @author Ranastic
  */
 @AllArgsConstructor

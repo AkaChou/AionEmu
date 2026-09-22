@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 需要基纳模板（静态数据/XML）。
  * Need Kinah template (static data/XML).
- *
  * @author Ranastic (Encom)
  */
 

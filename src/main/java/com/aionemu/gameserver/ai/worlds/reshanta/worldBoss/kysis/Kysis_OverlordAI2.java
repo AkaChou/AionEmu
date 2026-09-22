@@ -15,7 +15,6 @@ import com.aionemu.gameserver.world.WorldPosition;
 /**
  * Reshanta 区域 NPC AI：Kysis Overlord（@AIName "unsealed_kysis"），继承 AggressiveNpcAI2。
  * Reshanta zone NPC AI: Kysis Overlord (@AIName "unsealed_kysis"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("unsealed_kysis")

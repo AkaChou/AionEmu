@@ -105,7 +105,6 @@ public class PlayerService {
 	/**
 	 * 检查角色名是否未被占用。
 	 * Checks whether the player name is unused.
-	 *
 	 * @param name 角色名 / player name
 	 * @return 是否可用 / whether free
 	 */
@@ -116,7 +115,6 @@ public class PlayerService {
 	/**
 	 * 检查角色名是否与旧名一致。
 	 * Checks whether the name matches the previous one.
-	 *
 	 * @param name 角色名 / player name
 	 * @return 是否一致 / whether equal
 	 */
@@ -127,7 +125,6 @@ public class PlayerService {
 	/**
 	 * 持久化新建角色。
 	 * Persists a newly created player.
-	 *
 	 * @param player 玩家 / player
 	 * @param accountName 账号名 / account name
 	 * @param accountId 账号 ID / account id
@@ -143,7 +140,6 @@ public class PlayerService {
 	/**
 	 * 持久化角色数据。
 	 * Persists player data.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static void storePlayer(Player player) {
@@ -177,7 +173,6 @@ public class PlayerService {
 	/**
 	 * 获取玩家对象。
 	 * Gets the player object.
-	 *
 	 * @param playerObjId 角色对象 ID / player object id
 	 * @param account 账号 / account
 	 * @return 玩家对象 / player object
@@ -228,10 +223,6 @@ public class PlayerService {
 		player.setRecipeList(DAOManager.getDAO(PlayerRecipesDAO.class).load(player.getObjectId()));
 		player.setSkillSkinList(DAOManager.getDAO(PlayerSkillSkinListDAO.class).loadSkillSkinList(playerObjId));
 
-		/**
-	 * 账号仓库此时应已在账号中加载。
-	 * The account warehouse should already be loaded in the account.
-	 */
 		Storage accWarehouse = account.getAccountWarehouse();
 		player.setStorage(accWarehouse, StorageType.ACCOUNT_WAREHOUSE);
 		Storage inventory = DAOManager.getDAO(InventoryDAO.class).loadStorage(playerObjId, StorageType.CUBE);
@@ -307,7 +298,6 @@ public class PlayerService {
 	/**
 	 * 创建新角色对象。
 	 * Creates a new player object.
-	 *
 	 * @param playerCommonData 玩家公共数据 / player common data
 	 * @param playerAppearance 角色外观 / player appearance
 	 * @param account 账号 / account
@@ -374,7 +364,6 @@ public class PlayerService {
 	/**
 	 * 取消角色删除。
 	 * Cancels the scheduled player deletion.
-	 *
 	 * @param accData 玩家账号数据 / player account data
 	 * @return 是否已取消 / whether canceled
 	 */
@@ -393,7 +382,6 @@ public class PlayerService {
 	/**
 	 * 删除角色。
 	 * Deletes a player character.
-	 *
 	 * @param accData 玩家账号数据 / player account data
 	 */
 	public static void deletePlayer(PlayerAccountData accData) {
@@ -411,7 +399,6 @@ public class PlayerService {
 	/**
 	 * 从数据库删除角色。
 	 * Deletes a player from the database.
-	 *
 	 * @param playerId 角色 ID / player id
 	 */
 	public static void deletePlayerFromDB(int playerId) {
@@ -422,7 +409,6 @@ public class PlayerService {
 	/**
 	 * 删除账号下全部角色。
 	 * Deletes all account characters from DB.
-	 *
 	 * @param accountId 账号 ID / account id
 	 * @return 删除的角色数 / number of deleted characters
 	 */
@@ -442,7 +428,6 @@ public class PlayerService {
 	/**
 	 * 记录创建时间。
 	 * Stores creation time.
-	 *
 	 * objectId
 	 * creationDate
 	 */
@@ -453,7 +438,6 @@ public class PlayerService {
 	/**
 	 * 添加宏。
 	 * Adds a macro.
-	 *
 	 * 玩家 / player
 	 * macroOrder
 	 * macroXML
@@ -469,7 +453,6 @@ public class PlayerService {
 	/**
 	 * 移除宏。
 	 * Removes a macro.
-	 *
 	 * 玩家 / player
 	 * macroOrder
 	 */
@@ -482,7 +465,6 @@ public class PlayerService {
 	/**
 	 * getCachedPlayer 方法。
 	 * getCachedPlayer method.
-	 *
 	 * playerObjectId
 	 * result
 	 */
@@ -493,7 +475,6 @@ public class PlayerService {
 	/**
 	 * getPlayerName 方法。
 	 * getPlayerName method.
-	 *
 	 * objectId
 	 * result
 	 */
@@ -504,7 +485,6 @@ public class PlayerService {
 	/**
 	 * getPlayerNames 方法。
 	 * getPlayerNames method.
-	 *
 	 * @param playerObjIds 玩家对象 ID 列表 / playerObjIds
 	 * result
 	 */
@@ -514,12 +494,7 @@ public class PlayerService {
 		}
 		final Map<Integer, String> result = Maps.newHashMap();
 		final Set<Integer> playerObjIdsCopy = Sets.newHashSet(playerObjIds);
-		/**
-		 * visit 方法。
-		 * visit method.
-		 *
-		 * object
-		 */com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(object -> {
+        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(object -> {
 			 if (playerObjIdsCopy.contains(object.getObjectId())) {
 				 result.put(object.getObjectId(), object.getName());
 				 playerObjIdsCopy.remove(object.getObjectId());

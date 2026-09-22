@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 查询队伍/联盟服务状态的管理员命令。
  * Admin command to dump party or alliance service status.
- *
  * @author KID
  */
 public class Status extends AdminCommand {
@@ -25,7 +24,6 @@ public class Status extends AdminCommand {
 	/**
 	 * 输出联盟或队伍服务状态字符串。
 	 * Prints alliance or group service status string.
-	 *
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -40,7 +38,6 @@ public class Status extends AdminCommand {
 	/**
 	 * 参数错误时的用法提示。
 	 * Usage hint on invalid parameters.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

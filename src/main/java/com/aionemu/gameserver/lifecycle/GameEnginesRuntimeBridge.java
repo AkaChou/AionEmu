@@ -51,7 +51,6 @@ public class GameEnginesRuntimeBridge {
     /**
      * 可选注入任务引擎提供者。
      * Optionally inject the quest-engine provider.
-     *
      * @param questEngineProvider 任务引擎提供者 / Quest-engine provider
      */
     @Autowired(required = false)
@@ -62,7 +61,6 @@ public class GameEnginesRuntimeBridge {
     /**
      * 可选注入技能引擎提供者。
      * Optionally inject the skill-engine provider.
-     *
      * @param skillEngineProvider 技能引擎提供者 / Skill-engine provider
      */
     @Autowired(required = false)
@@ -73,7 +71,6 @@ public class GameEnginesRuntimeBridge {
     /**
      * 可选注入副本引擎提供者。
      * Optionally inject the instance-engine provider.
-     *
      * @param instanceEngineProvider 副本引擎提供者 / Instance-engine provider
      */
     @Autowired(required = false)
@@ -84,7 +81,6 @@ public class GameEnginesRuntimeBridge {
     /**
      * 可选注入 AI2 引擎提供者。
      * Optionally inject the AI2-engine provider.
-     *
      * @param ai2EngineProvider AI2 引擎提供者 / AI2-engine provider
      */
     @Autowired(required = false)
@@ -95,7 +91,6 @@ public class GameEnginesRuntimeBridge {
     /**
      * 可选注入聊天处理器提供者。
      * Optionally inject the chat-processor provider.
-     *
      * @param chatProcessorProvider 聊天处理器提供者 / Chat-processor provider
      */
     @Autowired(required = false)
@@ -106,7 +101,6 @@ public class GameEnginesRuntimeBridge {
     /**
      * 可选注入线程池管理器提供者。
      * Optionally inject the thread-pool-manager provider.
-     *
      * @param threadPoolManagerProvider 线程池管理器提供者 / Thread-pool-manager provider
      */
     @Autowired(required = false)
@@ -117,7 +111,6 @@ public class GameEnginesRuntimeBridge {
     /**
      * 解析任务引擎。
      * Resolve the quest engine.
-     *
      * @return 任务引擎 / Quest engine
      */
     public QuestEngine questEngine() {
@@ -130,7 +123,6 @@ public class GameEnginesRuntimeBridge {
     /**
      * 解析技能引擎。
      * Resolve the skill engine.
-     *
      * @return 技能引擎 / Skill engine
      */
     public SkillEngine skillEngine() {
@@ -143,7 +135,6 @@ public class GameEnginesRuntimeBridge {
     /**
      * 解析副本引擎。
      * Resolve the instance engine.
-     *
      * @return 副本引擎 / Instance engine
      */
     public InstanceEngine instanceEngine() {
@@ -156,7 +147,6 @@ public class GameEnginesRuntimeBridge {
     /**
      * 解析 AI2 引擎。
      * Resolve the AI2 engine.
-     *
      * @return AI2 引擎 / AI2 engine
      */
     public AI2Engine ai2Engine() {
@@ -169,7 +159,6 @@ public class GameEnginesRuntimeBridge {
     /**
      * 解析聊天处理器。
      * Resolve the chat processor.
-     *
      * @return 聊天处理器 / Chat processor
      */
     public ChatProcessor chatProcessor() {
@@ -182,7 +171,6 @@ public class GameEnginesRuntimeBridge {
     /**
      * 解析线程池管理器。
      * Resolve the thread-pool manager.
-     *
      * @return 线程池管理器 / Thread-pool manager
      */
     public ThreadPoolManager threadPoolManager() {

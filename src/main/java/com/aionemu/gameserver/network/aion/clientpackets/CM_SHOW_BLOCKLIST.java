@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_BLOCK_LIST;
 /**
  * 客户端请求黑名单列表包。
  * Client packet for requesting the block list.
- *
  * @author Ben
  */
 public class CM_SHOW_BLOCKLIST extends AionClientPacket {

@@ -21,7 +21,6 @@ public class LoginBannedIpService {
     /**
      * 判断 IP 是否处于封禁中。
      * Whether the given IP is currently banned.
-     *
      * @param ip IP 地址 / IP address
      * @return 已封禁返回 true / true if banned
      */
@@ -32,7 +31,6 @@ public class LoginBannedIpService {
     /**
      * 永久封禁 IP。
      * Ban an IP permanently.
-     *
      * @param ip IP 地址 / IP address
      * @return 操作是否成功 / whether the ban succeeded
      */
@@ -43,10 +41,8 @@ public class LoginBannedIpService {
     /**
      * 在指定过期时间前封禁 IP。
      * Ban an IP until the given expire time.
-     *
      * @param ip IP 地址 / IP address
      * @param expireTime 过期时间戳 / expire timestamp
-     *
      * @return 操作是否成功 / whether the ban succeeded
      */
     public boolean banIp(String ip, Timestamp expireTime) {
@@ -56,7 +52,6 @@ public class LoginBannedIpService {
     /**
      * 新增或更新一条 IP 封禁记录。
      * Add or update an IP ban record.
-     *
      * @param ipBan 封禁实体 / ban entity
      * @return 操作是否成功 / whether the write succeeded
      */
@@ -67,7 +62,6 @@ public class LoginBannedIpService {
     /**
      * 解除 IP 封禁。
      * Unban an IP.
-     *
      * @param ip IP 地址 / IP address
      * @return 操作是否成功 / whether the unban succeeded
      */

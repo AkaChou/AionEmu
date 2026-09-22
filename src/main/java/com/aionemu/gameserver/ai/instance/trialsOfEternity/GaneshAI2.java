@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Trials Of Eternity 副本 NPC AI：Ganesh（@AIName "IDEternity_03_Def_Boss_75"），继承 AggressiveNpcAI2。
  * Trials Of Eternity instance NPC AI: Ganesh (@AIName "IDEternity_03_Def_Boss_75"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("IDEternity_03_Def_Boss_75")

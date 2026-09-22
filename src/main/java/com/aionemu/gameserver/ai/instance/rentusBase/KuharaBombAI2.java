@@ -13,7 +13,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Rentus Base 副本 NPC AI：Kuhara Bomb（@AIName "kuhara_bomb"），继承 AggressiveNpcAI2。
  * Rentus Base instance NPC AI: Kuhara Bomb (@AIName "kuhara_bomb"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("kuhara_bomb")

@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 登录排队信息的服务端包。
  * Server packet for login queue information.
- *
  * @author Simple
  */
 public class SM_LOGIN_QUEUE extends AionServerPacket {

@@ -12,7 +12,6 @@ import java.util.concurrent.Future;
 /**
  * Pvp Arenas 副本 NPC AI：Crater（@AIName "crater"），继承 AggressiveNpcAI2。
  * Pvp Arenas instance NPC AI: Crater (@AIName "crater"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("crater")

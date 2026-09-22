@@ -11,10 +11,8 @@ import lombok.RequiredArgsConstructor;
 /**
  * 贝尔特拉入侵活动抽象基类。
  * Abstract base for Beritra invasion events.
- *
  * <p>封装启动/停止的幂等守卫，以及按状态类型刷怪/清怪的通用逻辑。
  * Encapsulates idempotent start/stop guards and shared spawn/despawn by state type.</p>
- *
  * @author Rinzler (Encom)
  * @param <BL> 入侵位置类型 / invasion location type
  */
@@ -26,8 +24,6 @@ public abstract class BeritraInvasion<BL extends BeritraLocation> {
 	/**
 	 * 获取绑定的入侵地点。
 	 * Returns the bound invasion location.
-	 *
-	 * @return 绑定的入侵地点 / invasion location
 	 */
 	private final BL beritraLocation;
 	private final AtomicBoolean finished = new AtomicBoolean();
@@ -76,7 +72,6 @@ public abstract class BeritraInvasion<BL extends BeritraLocation> {
 	/**
 	 * 按状态类型刷新该地点刷怪。
 	 * Spawns entities for this location by state type.
-	 *
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(BeritraStateType type) {
@@ -94,7 +89,6 @@ public abstract class BeritraInvasion<BL extends BeritraLocation> {
 	/**
 	 * 是否已结束。
 	 * Whether the event has finished.
-	 *
 	 * @return 已结束则为 true / true if finished
 	 */
 	public boolean isFinished() {
@@ -104,7 +98,6 @@ public abstract class BeritraInvasion<BL extends BeritraLocation> {
 	/**
 	 * 获取地点 ID。
 	 * Returns the location id.
-	 *
 	 * @return 地点 ID / location id
 	 */
 	public int getBeritraLocationId() {

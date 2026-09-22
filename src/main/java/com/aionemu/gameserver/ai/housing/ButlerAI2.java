@@ -16,7 +16,6 @@ import java.util.Map;
 /**
  * 房屋相关 NPC AI：Butler（@AIName "butler"），继承 GeneralNpcAI2。
  * Housing-related NPC AI: Butler (@AIName "butler"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("butler")
@@ -35,11 +34,7 @@ public class ButlerAI2 extends GeneralNpcAI2
 	}
 
 	@Override
-	/**
-	 * 玩家可见管家时，将房屋脚本数据按 8141 字节分包上限切块，逐包发送给玩家。
-	 * When a player sees the butler, sends the house's script data in chunks up to the 8141-byte packet limit.
-	 */
-	protected void handleCreatureSee(Creature creature) {
+    protected void handleCreatureSee(Creature creature) {
 		if (creature instanceof Player player) {
 			House house = (House) getCreator();
 			Map<Integer, PlayerScript> scriptMap = house.getPlayerScripts().getScripts();

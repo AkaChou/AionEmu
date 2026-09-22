@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Beluslan 区域 NPC AI：Mine Mage（@AIName "mine_mage"），继承 AggressiveNpcAI2。
  * Beluslan zone NPC AI: Mine Mage (@AIName "mine_mage"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("mine_mage")

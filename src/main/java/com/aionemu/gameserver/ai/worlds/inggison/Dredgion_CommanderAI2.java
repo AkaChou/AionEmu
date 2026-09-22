@@ -15,7 +15,6 @@ import com.aionemu.gameserver.world.WorldPosition;
 /**
  * Inggison 区域 NPC AI：Dredgion Commander（@AIName "dredgion_commander"），继承 AggressiveNpcAI2。
  * Inggison zone NPC AI: Dredgion Commander (@AIName "dredgion_commander"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("dredgion_commander")

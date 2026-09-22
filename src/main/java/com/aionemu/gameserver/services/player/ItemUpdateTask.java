@@ -13,7 +13,6 @@ import lombok.AccessLevel;
 /**
  * 玩家物品周期更新任务，批量持久化物品数据。
  * Player item periodic update task batch-persisting item data.
- *
  * @author Source
  */
 
@@ -24,11 +23,7 @@ class ItemUpdateTask implements Runnable {
 	private final int playerId;
 
 	@Override
-	/**
-	 * 执行任务。
-	 * Runs the task.
-	 */
-	public void run() {
+    public void run() {
 		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 		if (player != null)
 			try {

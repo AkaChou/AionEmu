@@ -7,9 +7,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 可见对象删除包：通知客户端某 AionObject 不再可见，并控制移除动画速度。
  * Informs the client that an AionObject is no longer visible, with removal animation speed.
- *
  * @author -Nemesiss-
- * @update FrozenKiller
  */
 public class SM_DELETE extends AionServerPacket {
 

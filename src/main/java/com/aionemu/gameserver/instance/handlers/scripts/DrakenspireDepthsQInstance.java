@@ -39,7 +39,6 @@ import java.util.concurrent.Future;
 /**
  * 龙脊深渊任务副本事件处理器。
  * Instance event handler for Drakenspire Depths Q.
- *
  * @author Encom
  */
 
@@ -68,7 +67,6 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -88,7 +86,6 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 
@@ -106,7 +103,6 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -183,7 +179,6 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -1081,7 +1076,6 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -1126,7 +1120,6 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 										/**
 										 * 处理 visit。
 										 * Handle visit.
-										 *
 										 * @param player 玩家 / player
 										 */
 										@Override
@@ -1165,7 +1158,6 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 										/**
 										 * 处理 visit。
 										 * Handle visit.
-										 *
 										 * @param player 玩家 / player
 										 */
 										@Override
@@ -1201,7 +1193,6 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -1218,7 +1209,6 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 								/**
 								 * 处理 visit。
 								 * Handle visit.
-								 *
 								 * @param player 玩家 / player
 								 */
 								@Override
@@ -1259,7 +1249,6 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 	/**
 	 * 移除相关物品。
 	 * Remove related items.
-	 *
 	 * @param player 玩家 / player
 	 */
 
@@ -1271,7 +1260,6 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -1283,7 +1271,6 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -1302,14 +1289,12 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 	/**
 	 * 幂等补生成任务击杀目标「虚脱的奥里萨」。
 	 * Idempotently spawns the quest kill target, the Exhausted Orissan.
-	 *
 	 * <p>237230 的死亡处理链由真端 pattern（{@code IDSeal_Q_Oritsa_01} 的 {@code on_die}）或模板 AI 负责生成
 	 * 237231，两者都在本实例 {@code onDie} 之后才执行；因此这里延迟一拍再检查，只有目标仍缺失时才补刷，
 	 * 保证任务 15300/25300 的击杀步骤不会被卡住，同时不会与正常生成叠加出第二只。
 	 * The death chain of 237230 (retail {@code on_die} or the template AI) spawns 237231 after this instance
 	 * {@code onDie} runs, so the check is delayed by one beat and only fires while the target is still missing: the kill
 	 * step of quests 15300/25300 can no longer stall and a working spawn is never duplicated.</p>
-	 *
 	 * @param immortal 死亡的不灭之奥里萨 / the dead Immortal Orissan
 	 */
 	private void ensureExhaustedOrissanSpawned(Npc immortal) {
@@ -1504,7 +1489,6 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -1526,7 +1510,6 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
                     /**
                      * 处理 visit。
                      * Handle visit.
-                     *
                      * @param player 玩家 / player
                      */
                     @Override
@@ -1565,13 +1548,11 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 	/**
 	 * 副本销毁后不再补刷对象。
 	 * Suppresses spawns once the instance is destroyed.
-	 *
 	 * <p>场景里的延迟任务最长排到 87 秒后，副本销毁后仍会执行；此时世界实例已经拆除，底层生成必然
 	 * NPE（见 {@code 生成 NPC 237219 时出错 ... NullPointerException}）。列表返回 null 由调用方的判空兜住。
 	 * The scene's delayed tasks run up to 87 seconds later and still fire after teardown, when the world instance is
 	 * already gone and the underlying spawn NPEs (see {@code 生成 NPC 237219 时出错 ... NullPointerException}). The
 	 * {@code null} result is absorbed by the callers' null checks.</p>
-	 *
 	 * @param npcId NPC 模板 ID / NPC template id
 	 * @param x X 坐标 / X coordinate
 	 * @param y Y 坐标 / Y coordinate
@@ -1635,7 +1616,6 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 	/**
 	 * 安全开门；副本销毁或门未加载时忽略延迟任务请求。
 	 * Opens a door safely; delayed tasks are ignored after teardown or when the door is absent.
-	 *
 	 * @param doorId 门 ID / door id
 	 */
 	private void openDoor(int doorId) {
@@ -1651,7 +1631,6 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
-	 *
 	 * @param player 玩家 / player
 	 */
 

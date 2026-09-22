@@ -14,7 +14,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 代理人战争相关 NPC AI：Veille Aetheric Concentrator（@AIName "veille_aetheric_concentrator"），继承 ActionItemNpcAI2。
  * Agent-fight related NPC AI: Veille Aetheric Concentrator (@AIName "veille_aetheric_concentrator"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("veille_aetheric_concentrator")

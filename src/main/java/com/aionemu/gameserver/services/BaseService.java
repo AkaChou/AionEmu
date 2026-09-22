@@ -23,7 +23,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 据点（Base）服务，管理据点位置初始化、启停、占领与旗帜同步。
  * Base service managing base location init, start/stop, capture and flag sync.
- *
  * @author Rinzler
  */
 @Slf4j
@@ -122,7 +121,6 @@ public class BaseService {
 	/**
 	 * 获取全部据点位置。
 	 * Returns all base locations.
-	 *
 	 * location map
 	 */
 	public Map<Integer, BaseLocation> getBaseLocations() {
@@ -132,7 +130,6 @@ public class BaseService {
 	/**
 	 * 按 ID 获取据点位置。
 	 * Returns a base location by id.
-	 *
 	 * @param id 据点 ID / base id
 	 * location
 	 */
@@ -143,7 +140,6 @@ public class BaseService {
 	/**
 	 * 启动指定据点。
 	 * Starts the base for the given id.
-	 *
 	 * @param id 据点 ID / base id
 	 */
 	public void start(final int id) {
@@ -157,7 +153,6 @@ public class BaseService {
 	/**
 	 * 停止指定据点并立即重新启动。
 	 * Stops the base for the given id and restarts it immediately.
-	 *
 	 * @param id 据点 ID / base id
 	 */
 	public void stop(int id) {
@@ -173,7 +168,6 @@ public class BaseService {
 	/**
 	 * 将据点占领权设为指定阵营，并广播旗帜更新。
 	 * Captures the base for the given race and broadcasts the flag update.
-	 *
 	 * @param id 据点 ID / base id
 	 * @param race 占领阵营 / capturing race
 	 */
@@ -191,7 +185,6 @@ public class BaseService {
 	/**
 	 * 判断据点是否处于活跃状态。
 	 * Returns whether the base is active.
-	 *
 	 * @param id 据点 ID / base id
 	 * @return 若 active 则为 true / true if active
 	 */
@@ -202,7 +195,6 @@ public class BaseService {
 	/**
 	 * 获取活跃据点实例。
 	 * Returns the active base instance.
-	 *
 	 * @param id 据点 ID / base id
 	 * base instance
 	 */
@@ -213,7 +205,6 @@ public class BaseService {
 	/**
 	 * 玩家进入据点地图时同步旗帜与区域/任务状态。
 	 * Syncs flag, zone and nearby quests when a player enters a base world.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onEnterBaseWorld(Player player) {
@@ -230,7 +221,6 @@ public class BaseService {
 	/**
 	 * 向据点地图内玩家广播旗帜与区域更新。
 	 * Broadcasts flag and zone updates to players on the base map.
-	 *
 	 * base location
 	 */
 	public void broadcastUpdate(final BaseLocation baseLocation) {
@@ -248,7 +238,6 @@ public class BaseService {
 	/**
 	 * 获取服务单例，优先走 Spring ObjectProvider。
 	 * Returns the service singleton, preferring Spring ObjectProvider when available.
-	 *
 	 * service instance
 	 */
 	public static BaseService getInstance() {
@@ -262,7 +251,6 @@ public class BaseService {
 	/**
 	 * 注入 Spring ObjectProvider 以覆盖默认单例。
 	 * Injects a Spring ObjectProvider to override the default singleton.
-	 *
 	 * provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<BaseService> instanceProvider) {
@@ -276,7 +264,6 @@ public class BaseService {
 	/**
 	 * 获取据点 DAO。
 	 * Returns the base DAO.
-	 *
 	 * DAO instance
 	 */
 	private BaseDAO getDAO() {

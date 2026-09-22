@@ -25,7 +25,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 欧比斯宝藏活动服务，按 cron 调度刷怪与结算。
  * Treasure Abyss event service scheduling spawns and settlement via cron.
- *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -52,7 +51,6 @@ public class TreasureAbyssService {
 	/**
 	 * 从配置解析奖励物品 ID 列表。
 	 * Parses reward item ids from config.
-	 *
 	 * @return 奖励物品 ID 数组 / reward item id array
 	 */
 	private static int[] TreasureReward() {
@@ -98,7 +96,6 @@ public class TreasureAbyssService {
 	/**
 	 * 向全服在线玩家广播活动消息。
 	 * Broadcasts an event message to all online players.
-	 *
 	 * @param msg 消息内容 / message text
 	 */
 	private static void announceAll(final String msg) {

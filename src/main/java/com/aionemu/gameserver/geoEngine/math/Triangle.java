@@ -38,7 +38,6 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	/**
 	 * 按三个顶点构造三角形（拷贝分量）。
 	 * Constructs a triangle from three vertices (copies components).
-	 *
 	 * @param p1 顶点 1 / vertex 1
 	 * @param p2 顶点 2 / vertex 2
 	 * @param p3 顶点 3 / vertex 3
@@ -52,7 +51,6 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	/**
 	 * 按索引返回顶点（0=A, 1=B, 2=C；其它返回 null）。
 	 * Returns a vertex by index (0=A, 1=B, 2=C; null otherwise).
-	 *
 	 * @param i 顶点索引 / vertex index
 	 * @return 顶点，否则为 null / vertex, or null
 	 */
@@ -68,7 +66,6 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	/**
 	 * 返回第一个顶点。
 	 * Returns the first vertex.
-	 *
 	 * @return 顶点 A / vertex A
 	 */
 	@Override
@@ -79,7 +76,6 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	/**
 	 * 返回第二个顶点。
 	 * Returns the second vertex.
-	 *
 	 * @return 顶点 B / vertex B
 	 */
 	@Override
@@ -90,7 +86,6 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	/**
 	 * 返回第三个顶点。
 	 * Returns the third vertex.
-	 *
 	 * @return 顶点 C / vertex C
 	 */
 	@Override
@@ -101,7 +96,6 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	/**
 	 * 按索引拷贝设置顶点（0=A, 1=B, 2=C）。
 	 * Copies and sets a vertex by index (0=A, 1=B, 2=C).
-	 *
 	 * @param i 顶点索引 / vertex index
 	 * @param point 新顶点 / new vertex
 	 */
@@ -124,7 +118,6 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	/**
 	 * 按索引与分量设置顶点。
 	 * Sets a vertex by index and components.
-	 *
 	 * @param i 顶点索引 / vertex index
 	 * @param x X 分量 / X component
 	 * @param y Y 分量 / Y component
@@ -149,7 +142,6 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	/**
 	 * 拷贝设置第一个顶点。
 	 * Copies and sets the first vertex.
-	 *
 	 * @param v 新顶点 / new vertex
 	 */
 	public void set1(Vector3f v) {
@@ -159,7 +151,6 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	/**
 	 * 拷贝设置第二个顶点。
 	 * Copies and sets the second vertex.
-	 *
 	 * @param v 新顶点 / new vertex
 	 */
 	public void set2(Vector3f v) {
@@ -169,7 +160,6 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	/**
 	 * 拷贝设置第三个顶点。
 	 * Copies and sets the third vertex.
-	 *
 	 * @param v 新顶点 / new vertex
 	 */
 	public void set3(Vector3f v) {
@@ -179,7 +169,6 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	/**
 	 * 拷贝设置三个顶点。
 	 * Copies and sets all three vertices.
-	 *
 	 * @param v1 顶点 1 / vertex 1
 	 * @param v2 顶点 2 / vertex 2
 	 * @param v3 顶点 3 / vertex 3
@@ -222,7 +211,6 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	/**
 	 * 返回质心；若尚未计算则先计算。
 	 * Returns the centroid; computes it first if absent.
-	 *
 	 * @return 质心 / centroid
 	 */
 	public Vector3f getCenter() {
@@ -235,7 +223,6 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	/**
 	 * 返回单位法线；若尚未计算则先计算。
 	 * Returns the unit normal; computes it first if absent.
-	 *
 	 * @return 单位法线 / unit normal
 	 */
 	public Vector3f getNormal() {
@@ -248,7 +235,6 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	/**
 	 * 由三点计算单位法线，结果写入 store。
 	 * Computes a unit normal from three points into store.
-	 *
 	 * @param v1 点 1 / point 1
 	 * @param v2 点 2 / point 2
 	 * @param v3 点 3 / point 3
@@ -268,7 +254,6 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	/**
 	 * 返回运行时类标签。
 	 * Returns the runtime class tag.
-	 *
 	 * @return 类对象 / class object
 	 */
 	public Class<? extends Triangle> getClassTag() {
@@ -278,7 +263,6 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	/**
 	 * 深拷贝本三角形（三顶点独立克隆；center/normal 不克隆）。
 	 * Deep-clones this triangle (vertices cloned; center/normal not cloned).
-	 *
 	 * @return 克隆 / clone
 	 */
 	public Triangle clone() {
@@ -310,7 +294,6 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	/**
 	 * 从工厂获取实例。
 	 * Obtains an instance from the factory.
-	 *
 	 * @return 池化实例 / pooled instance
 	 */
 	public static Triangle newInstance() {
@@ -320,7 +303,6 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	/**
 	 * 将实例回收到工厂。
 	 * Recycles the instance into the factory.
-	 *
 	 * @param instance 待回收实例 / instance to recycle
 	 */
 	public static void recycle(Triangle instance) {

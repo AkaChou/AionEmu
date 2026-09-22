@@ -13,7 +13,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 法术攻击持续效果：周期性对目标造成魔法伤害。
  * Over-time spell attack: deals periodic magical damage to the target.
- *
  * @author kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -22,7 +21,6 @@ public class SpellAttackEffect extends AbstractOverTimeEffect {
 
 	/**
 	 * 计算周期魔法伤害并触发受击与 DoT 观察者。
-	 *
 	 * @param effect Calculates periodic magical damage and notifies attack / DoT observers.
 	 */
 	@Override

@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 /**
  * ShowBrand 活动，用于团队2相关逻辑。
  * Show Brand Event for team 2 logic.
- *
  * @author ATracer
  */
 @AllArgsConstructor

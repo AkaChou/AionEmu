@@ -7,7 +7,6 @@ import com.aionemu.gameserver.model.templates.npcshout.ShoutEventType;
 /**
  * AI 模板基类：为所有抽象事件处理器提供空实现，子类按需覆盖。
  * AI template base: empty implementations for all abstract event handlers; subclasses override as needed.
- *
  * @author ATracer
  */
 public abstract class AITemplate extends AbstractAI {
@@ -23,7 +22,6 @@ public abstract class AITemplate extends AbstractAI {
 	/**
 	 * 默认允许思考。
 	 * Allows thinking by default.
-	 *
 	 * @return 默认 true / always true
 	 */
 	@Override
@@ -197,7 +195,6 @@ public abstract class AITemplate extends AbstractAI {
 	/**
 	 * 默认不允许喊话。
 	 * Disallows shouting by default.
-	 *
 	 * @return 默认 false / always false
 	 */
 	@Override
@@ -208,7 +205,6 @@ public abstract class AITemplate extends AbstractAI {
 	/**
 	 * 默认不处理模式喊话。
 	 * Does not handle pattern shouts by default.
-	 *
 	 * @return 默认 false / always false
 	 */
 	@Override
@@ -219,7 +215,6 @@ public abstract class AITemplate extends AbstractAI {
 	/**
 	 * 默认选择普通攻击意图。
 	 * Chooses simple attack intention by default.
-	 *
 	 * @return 普通攻击意图 / simple attack intention
 	 */
 	@Override

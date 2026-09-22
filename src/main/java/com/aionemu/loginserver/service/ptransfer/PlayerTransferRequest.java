@@ -5,7 +5,6 @@ import com.aionemu.loginserver.model.Account;
 /**
  * 玩家跨服转移请求上下文，承载源/目标服、账号与角色二进制数据。
  * Player cross-server transfer request context holding source/target servers, accounts, and character binary data.
- *
  * @author KID
  */
 public class PlayerTransferRequest {
@@ -36,7 +35,6 @@ public class PlayerTransferRequest {
     /**
      * 以给定步骤状态创建转移请求。
      * Create a transfer request with the given step status.
-     *
      * @param status 初始转移步骤 / Initial transfer step
      */
     public PlayerTransferRequest(PlayerTransferStatus status) {

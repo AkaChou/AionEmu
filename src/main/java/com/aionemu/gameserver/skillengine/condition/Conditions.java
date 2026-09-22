@@ -17,7 +17,6 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 /**
  * 条件容器：聚合技能模板中声明的全部条件，并在技能/属性/效果路径上逐条校验。
  * Conditions container: aggregates all conditions declared in a skill template and validates them on skill/stat/effect paths.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -52,7 +51,6 @@ public class Conditions {
 	/**
 	 * 获取条件列表（实时引用，修改会反映到 JAXB 对象中）。
 	 * Gets the conditions list (live reference; modifications are present inside the JAXB object).
-	 *
 	 * @return 条件列表 / conditions list
 	 */
 	public List<Condition> getConditions() {
@@ -65,7 +63,6 @@ public class Conditions {
 	/**
 	 * 在技能施放路径上逐条校验全部条件。
 	 * Validates all conditions on the skill cast path.
-	 *
 	 * @param skill 技能环境 / skill environment
 	 * @return 全部通过则为 true / true if all pass
 	 */
@@ -83,10 +80,8 @@ public class Conditions {
 	/**
 	 * 在属性计算路径上逐条校验全部条件。
 	 * Validates all conditions on the stat calculation path.
-	 *
 	 * @param stat 属性对象 / stat object
 	 * @param statFunction 属性函数 / stat function
-	 *
 	 * @return 全部通过则为 true / true if all pass
 	 */
 	public boolean validate(Stat2 stat, IStatFunction statFunction) {
@@ -103,7 +98,6 @@ public class Conditions {
 	/**
 	 * 在效果应用路径上逐条校验全部条件。
 	 * Validates all conditions on the effect application path.
-	 *
 	 * @param effect 效果环境 / effect environment
 	 * @return 全部通过则为 true / true if all pass
 	 */

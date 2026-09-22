@@ -7,7 +7,6 @@ import java.lang.reflect.Field;
 /**
  * 字符属性转换器
  * Character property transformer class that handles conversion of string values to Character objects.
- *
  * 支持的输入格式:
  * Supported input format:
  * - 单个字符 single character
@@ -23,7 +22,6 @@ public class CharTransformer implements PropertyTransformer<Character> {
     /**
      * 将字符串值转换为 Character 对象
      * Transforms string value into Character object
-     *
      * @param value 要转换的字符串值 / String value to transform
      * @param field 字段对象 / Field that will be transformed
      * @return 转换后的 Character 对象 / Transformed Character object

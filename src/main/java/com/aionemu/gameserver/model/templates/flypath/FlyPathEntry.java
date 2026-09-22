@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 飞行路径条目模板（静态数据/XML）。
  * XML template.
- *
  * @author KID
  */
 @Getter

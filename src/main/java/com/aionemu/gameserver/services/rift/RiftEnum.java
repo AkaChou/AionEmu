@@ -6,7 +6,6 @@ import lombok.Getter;
 /**
  * 裂隙类型枚举，定义天族/魔族各地图裂隙与次元漩涡的入口、等级与费用参数。
  * Rift type enum defining Elyos/Asmodian map rifts and dimensional vortexes with entry, level and cost params.
- *
  * @author Rinzler (Encom)
  */
 @Getter
@@ -194,64 +193,50 @@ public enum RiftEnum {
 	/**
 	 * 返回裂隙 ID。
 	 * Returns the rift id.
-	 *
-	 * @return 裂隙 ID / Rift id
 	 */
 	private final int id;
 	/**
 	 * 返回主端（入口侧）锚点名。
 	 * Returns the master (entry-side) anchor name.
-	 *
-	 * @return 主端锚点名 / Master anchor
 	 */
 	private final String master;
 	/**
 	 * 返回从端（出口侧）锚点名。
 	 * Returns the slave (exit-side) anchor name.
-	 *
-	 * @return 从端锚点名 / Slave anchor
 	 */
 	private final String slave;
 	/**
 	 * 返回允许进入次数。
 	 * Returns allowed entry count.
-	 *
-	 * @return 进入次数 / Entry count
 	 */
 	private final int entries;
 	/**
 	 * 返回欧比斯点消耗。
 	 * Returns abyss point cost.
-	 *
-	 * @return 欧比斯点消耗 / Abyss points
+	 * 欧比斯点消耗 / Abyss points
 	 */
 	private final int abyssPoint;
 	/**
 	 * 返回最低进入等级。
 	 * Returns minimum enter level.
-	 *
-	 * @return 最低等级 / Min level
+	 * 最低等级 / Min level
 	 */
 	private final int minLevel;
 	/**
 	 * 返回最高进入等级。
 	 * Returns maximum enter level.
-	 *
-	 * @return 最高等级 / Max level
+	 * 最高等级 / Max level
 	 */
 	private final int maxLevel;
 	/**
 	 * 返回目标侧种族。
 	 * Returns destination race.
-	 *
-	 * @return 目标种族 / Destination race
 	 */
 	private final Race destination;
 	/**
 	 * 是否为次元漩涡。
 	 * Whether this is a dimensional vortex.
-	 *
-	 * @return 是否为次元漩涡 / {@code true} if vortex
+	 * 是否为次元漩涡 / {@code true} if vortex
 	 */
 	private final boolean vortex;
 
@@ -276,7 +261,6 @@ public enum RiftEnum {
 	/**
 	 * 按裂隙 ID 查找枚举。
 	 * Resolve rift enum by id.
-	 *
 	 * @param id 裂隙 ID / Rift id
 	 * @return 匹配的枚举 / Matching enum
 	 * @throws IllegalArgumentException 不支持的裂隙 ID / Unsupported id
@@ -293,7 +277,6 @@ public enum RiftEnum {
 	/**
 	 * 按目标种族查找次元漩涡。
 	 * Resolve dimensional vortex by destination race.
-	 *
 	 * @param race 目标种族 / Destination race
 	 * @return 匹配的漩涡枚举 / Matching vortex enum
 	 * @throws IllegalArgumentException 不支持的种族 / Unsupported race

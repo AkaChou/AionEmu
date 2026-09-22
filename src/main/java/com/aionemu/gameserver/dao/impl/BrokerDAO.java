@@ -39,7 +39,6 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
     /**
      * 加载全部交易所物品（含未售出物品详情与镶嵌石）。
      * Loads all broker items (including unsold item details and stones).
-     *
      * @return 交易所物品列表 / list of broker items
      */
     @Override
@@ -96,7 +95,6 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
     /**
      * 从库存表加载交易所位置（location=126）的物品。
      * Loads items from inventory at broker location (location=126).
-     *
      * @return 物品列表 / list of items
      */
     private List<Item> getBrokerItems() {
@@ -146,7 +144,6 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
     /**
      * 按持久化状态存储交易所物品。
      * Stores a broker item according to its persistent state.
-     *
      * @param item 交易所物品 / broker item
      * @return 是否成功 / whether successful
      */
@@ -184,7 +181,6 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
     /**
      * 插入交易所条目。
      * Inserts a broker entry.
-     *
      * @param item 交易所物品 / broker item
      * @return 是否成功 / whether successful
      */
@@ -211,7 +207,6 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
     /**
      * 删除交易所条目。
      * Deletes a broker entry.
-     *
      * @param item 交易所物品 / broker item
      * @return 是否成功 / whether successful
      */
@@ -228,7 +223,6 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
     /**
      * 购买前检查物品是否仍可售。
      * Checks whether the item is still available for purchase.
-     *
      * @param itemForCheck 物品指针 ID / item pointer id
      * @return 是否可用 / whether available
      */
@@ -250,7 +244,6 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
     /**
      * 更新交易所条目的出售/结算状态。
      * Updates the sold/settled state of a broker entry.
-     *
      * @param item 交易所物品 / broker item
      * @return 是否成功 / whether successful
      */
@@ -269,7 +262,6 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
     /**
      * 更新交易所物品数量、价格与拆分出售等字段。
      * Updates broker item count, price, split-sell and related fields.
-     *
      * @param item 交易所物品 / broker item
      * @return 是否成功 / whether successful
      */
@@ -292,7 +284,6 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
     /**
      * 获取已使用的玩家 ID 列表（用于 ID 分配）。
      * Returns used player ids (for id allocation).
-     *
      * @return 已用 ID 数组 / array of used ids
      */
     @Override
@@ -322,7 +313,6 @@ public class BrokerDAO extends com.aionemu.gameserver.dao.BrokerDAO {
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

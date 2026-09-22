@@ -13,14 +13,10 @@ import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 /**
  * 仓库接口。
  * Storage interface.
- *
  * @author ATracer
  */
 public interface IStorage {
 
-	/**
-	 * @param player
-	 */
 	void setOwner(Player player);
 
 	/**
@@ -33,67 +29,24 @@ public interface IStorage {
 	 */
 	Item getKinahItem();
 
-	/**
-	 * @return
-	 */
 	StorageType getStorageType();
 
-	/**
-	 * @param amount
-	 */
 	void increaseKinah(long amount);
 
-	/**
-	 * @param amount
-	 * @param updateType
-	 */
 	void increaseKinah(long amount, ItemUpdateType updateType);
 
-	/**
-	 * @param amount
-	 * @return
-	 */
 	boolean tryDecreaseKinah(long amount);
 
-	/**
-	 * @param amount
-	 */
 	void decreaseKinah(long amount);
 
-	/**
-	 * @param amount
-	 * @param updateType
-	 */
 	void decreaseKinah(long amount, ItemUpdateType updateType);
 
-	/**
-	 * @param item
-	 * @param count
-	 * @return
-	 */
 	long increaseItemCount(Item item, long count);
 
-	/**
-	 * @param item
-	 * @param count
-	 * @param updateType
-	 * @return
-	 */
 	long increaseItemCount(Item item, long count, ItemUpdateType updateType);
 
-	/**
-	 * @param item
-	 * @param count
-	 * @return
-	 */
 	long decreaseItemCount(Item item, long count);
 
-	/**
-	 * @param item
-	 * @param count
-	 * @param updateType
-	 * @return
-	 */
 	long decreaseItemCount(Item item, long count, ItemUpdateType updateType);
 
 	/**
@@ -106,118 +59,43 @@ public interface IStorage {
 	 */
 	Item put(Item item);
 
-	/**
-	 * @param item
-	 * @return
-	 */
 	Item remove(Item item);
 
-	/**
-	 * @param item
-	 * @return
-	 */
 	Item delete(Item item);
 
-	/**
-	 * @param item
-	 * @param deleteType
-	 * @return
-	 */
 	Item delete(Item item, ItemDeleteType deleteType);
 
-	/**
-	 * @param itemId
-	 * @param count
-	 * @return
-	 */
 	boolean decreaseByItemId(int itemId, long count);
 
-	/**
-	 * @param itemObjId
-	 * @param count
-	 * @return
-	 */
 	boolean decreaseByObjectId(int itemObjId, long count);
 
-	/**
-	 * @param itemObjId
-	 * @param count
-	 * @param updateType
-	 * @return
-	 */
 	boolean decreaseByObjectId(int itemObjId, long count, ItemUpdateType updateType);
 
-	/**
-	 * @param itemId
-	 * @return
-	 */
 	Item getFirstItemByItemId(int itemId);
 
-	/**
-	 * @return
-	 */
 	List<Item> getItemsWithKinah();
 
-	/**
-	 * @return
-	 */
 	List<Item> getItems();
 
-	/**
-	 * @param itemId
-	 * @return
-	 */
 	List<Item> getItemsByItemId(int itemId);
 
-	/**
-	 * @param itemObjId
-	 * @return
-	 */
 	Item getItemByObjId(int itemObjId);
 
-	/**
-	 * @param itemId
-	 * @return
-	 */
 	long getItemCountByItemId(int itemId);
 
-	/**
-	 * @return
-	 */
 	boolean isFull();
 
-	/**
-	 * @return
-	 */
 	int getFreeSlots();
 
-	/**
-	 * @return
-	 */
 	int getLimit();
 
-	/**
-	 * @return
-	 */
 	int size();
 
-	/**
-	 * @return
-	 */
 	PersistentState getPersistentState();
 
-	/**
-	 * @param persistentState
-	 */
 	void setPersistentState(PersistentState persistentState);
 
-	/**
-	 * @return
-	 */
 	Queue<Item> getDeletedItems();
 
-	/**
-	 * @param item
-	 */
 	void onLoadHandler(Item item);
 }

@@ -26,7 +26,6 @@ import java.util.List;
 /**
  * 运行时热重载指令；可重载任务、技能、传送门、指令、掉落、商城、活动与配置。
  * Runtime hot-reload admin command for quests, skills, portals, chat commands, drops, shop, events and config.
- *
  * @author MrPoke
  */
 @Slf4j
@@ -40,7 +39,6 @@ public class Reload extends AdminCommand {
 	/**
 	 * 按子命令热重载对应静态数据或运行时组件。
 	 * Hot-reloads the static data or runtime component selected by the sub-command.
-	 *
 	 * @param admin 执行指令的管理员 / admin executing the command
 	 * @param params 单一子命令：quest / skill/portal/commands/drop/gameshop/events/config
 	 */
@@ -142,7 +140,6 @@ public class Reload extends AdminCommand {
 	/**
 	 * 原子替换任务数据与脚本；失败时回滚到旧数据并重新加载。
 	 * Atomically replaces quest data/scripts; rolls back and reloads previous data on failure.
-	 *
 	 * @param quests 新任务模板列表 / new quest templates
 	 * @param prepared 预编译任务定义与脚本 / prepared quest definitions and scripts
 	 */
@@ -170,7 +167,6 @@ public class Reload extends AdminCommand {
 	/**
 	 * 参数错误时输出用法。
 	 * Prints usage when arguments are invalid.
-	 *
 	 * @param player 接收提示的玩家 / player receiving the message
 	 */
 	@Override

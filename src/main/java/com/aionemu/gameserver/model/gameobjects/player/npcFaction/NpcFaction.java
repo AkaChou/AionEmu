@@ -7,45 +7,22 @@ import lombok.Getter;
 /**
  * NPC 势力游戏对象。
  * Npc Faction game object.
- *
  * @author MrPoke
  */
 @Getter
 public class NpcFaction {
 
-	/**
-	 * @return 势力 ID / Faction ID
-	 */
 	private final int id;
-	/**
-	 * @return 剩余计时（秒） / Remaining time in seconds
-	 */
 	private int time;
-	/**
-	 * @return 是否激活 / Whether active
-	 */
 	private boolean active;
-	/**
-	 * @return 是否导师 NPC / Whether mentor
-	 */
 	private final boolean mentor;
-	/**
-	 * @return 关联任务状态 / Quest state
-	 */
 	private ENpcFactionQuestState state;
-	/**
-	 * @return 关联任务 ID / Associated quest ID
-	 */
 	private int questId;
-	/**
-	 * @return 持久化状态 / Persistent state
-	 */
 	private PersistentState persistentState;
 
 	/**
 	 * 创建 NPC 势力实例。
 	 * Create a NpcFaction instance.
-	 *
 	 * @param id 势力 ID / Faction ID
 	 * @param time 剩余计时（秒） / Remaining time in seconds
 	 * @param active 是否激活 / Whether active

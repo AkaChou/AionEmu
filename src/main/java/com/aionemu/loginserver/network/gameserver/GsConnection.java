@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 表示 LoginServer 与 GameServer 之间的一条网络连接。
  * Object representing a connection between LoginServer and GameServer.
- *
  * @author -Nemesiss-
  */
 @Slf4j
@@ -54,9 +53,6 @@ public class GsConnection extends AConnection {
 	 * -- GETTER --
 	 *  返回当前连接状态。
 	 *  Return current connection state.
-	 *
-	 * @return 当前状态 / Current state
-
 	 */
     @Getter
     private State state;
@@ -66,15 +62,10 @@ public class GsConnection extends AConnection {
      * -- GETTER --
      *  返回本连接的游戏服信息；未认证时为 null。
      *  Return GameServerInfo for this connection, or null if not authenticated yet.
-     *
-     *
 	 * -- SETTER --
 	 *  绑定本连接的游戏服信息。
 	 *  Bind GameServerInfo to this connection.
-	 *
-	 @return 游戏服信息或 null / GameServerInfo or null
-	  * @param gameServerInfo 游戏服信息 / Game server info
-
+	  * 游戏服信息 / Game server info
      */
     @Setter
     @Getter
@@ -84,7 +75,6 @@ public class GsConnection extends AConnection {
     /**
      * 基于传输层创建 GS 连接。
      * Create a GS connection over the given transport.
-     *
      * @param transport 连接传输 / Connection transport
      */
     public GsConnection(ConnectionTransport transport) {
@@ -94,7 +84,6 @@ public class GsConnection extends AConnection {
     /**
      * 由传输层帧处理器调用；缓冲区中包含一个待处理封包。
      * Called by the transport frame handler; buffer holds one packet to process.
-     *
      * @param data 封包数据 / Packet data
      * @return 是否处理成功；失败时应立即关闭连接 / True if processed OK; false to close connection now
      */
@@ -112,7 +101,6 @@ public class GsConnection extends AConnection {
     /**
      * 由传输层反复调用直至返回 false，用于写出下一个待发封包。
      * Called repeatedly by the transport until false; writes the next pending packet.
-     *
      * @param data 输出缓冲区 / Output buffer
      * @return 是否写入了数据；false 表示无更多数据 / True if data was written; false if nothing left
      */
@@ -132,7 +120,6 @@ public class GsConnection extends AConnection {
     /**
      * 连接准备关闭时由传输层调用，返回断开前回调延迟。
      * Called by the transport when connection is ready to close; returns delay before onDisconnect.
-     *
      * @return 毫秒延迟，本实现恒为 0 / Delay in ms; always 0 here
      */
     @Override
@@ -174,7 +161,6 @@ public class GsConnection extends AConnection {
     /**
      * 向本连接发送 GS 服务端封包。
      * Send a GsServerPacket to this connection.
-     *
      * @param bp 待发送封包 / Packet to send
      */
     public final void sendPacket(GsServerPacket bp) {
@@ -191,7 +177,6 @@ public class GsConnection extends AConnection {
     /**
      * 保证 closePacket 在关闭前发出，清空历史/后续封包；forced 在本实现无额外效果。
      * Guarantees closePacket is sent before close and clears past/future packets; forced has no extra effect here.
-     *
      * @param closePacket 关闭前发送的封包 / Packet sent before closing
      * @param forced 是否强制关闭（本实现无额外影响） / Forced close flag (no extra effect here)
      */
@@ -212,7 +197,6 @@ public class GsConnection extends AConnection {
 	/**
      * 设置连接状态；进入 AUTHED 时按配置启动 ping。
      * Set connection state; when AUTHED, start ping if configured.
-     *
      * @param state 新状态 / New state
      */
     public void setState(State state) {
@@ -227,7 +211,6 @@ public class GsConnection extends AConnection {
 	/**
      * 返回连接的可读描述（服务器 ID 与 IP）。
      * Return a human-readable description (server id and IP).
-     *
      * @return 连接描述字符串 / Connection description
      */
     @Override
@@ -246,7 +229,6 @@ public class GsConnection extends AConnection {
     /**
      * 处理游戏服 pong 响应。
      * Handle GameServer pong response.
-     *
      * @param pid Ping ID / Ping id
      */
     public void pong(int pid) {

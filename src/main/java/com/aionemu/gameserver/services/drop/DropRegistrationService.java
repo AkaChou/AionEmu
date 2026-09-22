@@ -65,7 +65,6 @@ public class DropRegistrationService {
 	/**
 	 * 使用玩家等级注册 NPC 掉落。
 	 * Registers NPC drops using the player's level.
-	 *
 	 * @param npc 死亡的 NPC / dead NPC
 	 * @param player 主要拾取玩家 / primary looter
 	 * @param groupMembers 队伍成员 / group members
@@ -107,7 +106,6 @@ public class DropRegistrationService {
 	/**
 	 * 在 NPC 死亡后注册全部掉落（NPC 表、任务、活动与全局掉落）。
 	 * Registers full drops after NPC death (NPC table, quest, event, and global drops).
-	 *
 	 * @param npc 死亡的 NPC / dead NPC
 	 * @param player 主要拾取玩家 / primary looter
 	 * @param highestLevel 队伍最高等级 / highest group level
@@ -218,7 +216,6 @@ public class DropRegistrationService {
 	/**
 	 * 根据 NPC 与玩家状态构建掉落修正参数。
 	 * Builds drop modifiers from NPC and player state.
-	 *
 	 * @param npc 目标 NPC / target NPC
 	 * @param player 参考玩家 / reference player
 	 * @param highestLevel 队伍最高等级 / highest group level
@@ -389,7 +386,6 @@ public class DropRegistrationService {
 	/**
 	 * 创建并填充一条掉落物品记录。
 	 * Creates and fills a single drop item entry.
-	 *
 	 * @param index 掉落索引 / drop index
 	 * @param playerObjId 归属玩家对象 ID / owner player object id
 	 * @param objId NPC 对象 ID / NPC object id
@@ -409,11 +405,9 @@ public class DropRegistrationService {
 	/**
 	 * 将同一尸体的掉落索引重排为唯一连续值。
 	 * Renumbers drop indices for one corpse into unique sequential values.
-	 *
 	 * <p>多个实例 Handler 都用固定索引 1 追加掉落；客户端只回传索引，重复值会让所有行命中同一条
 	 * 记录。 / Several instance handlers append drops with the fixed index 1; the client returns only the
 	 * index, so duplicate values make every row resolve to the same entry.
-	 *
 	 * @param dropItems 掉落集合 / drop set
 	 */
 	public void normalizeDropIndices(Set<DropItem> dropItems) {
@@ -429,7 +423,6 @@ public class DropRegistrationService {
 	/**
 	 * 获取 NPC 掉落登记映射。
 	 * Returns the NPC drop registration map.
-	 *
 	 * @return 掉落登记映射 / drop registration map
 	 */
 	public Map<Integer, DropNpc> getDropRegistrationMap() {
@@ -439,7 +432,6 @@ public class DropRegistrationService {
 	/**
 	 * 获取当前掉落物品映射。
 	 * Returns the current drop-item map.
-	 *
 	 * @return 掉落物品映射 / current drop map
 	 */
 	public Map<Integer, Set<DropItem>> getCurrentDropMap() {
@@ -449,11 +441,9 @@ public class DropRegistrationService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -472,7 +462,6 @@ public class DropRegistrationService {
 	/**
 	 * 设置 Spring 实例提供者。
 	 * Sets the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<DropRegistrationService> instanceProvider) {

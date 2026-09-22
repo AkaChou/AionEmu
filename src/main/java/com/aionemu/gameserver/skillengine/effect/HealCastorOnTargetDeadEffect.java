@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * 目标死亡回施法者效果：目标死亡时治疗施法者（可选治疗小队）。
  * Heal castor on target death: heals the caster (optionally party) when the target dies.
- *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)

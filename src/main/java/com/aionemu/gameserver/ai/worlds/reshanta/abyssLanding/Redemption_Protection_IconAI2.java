@@ -9,7 +9,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Reshanta 区域 NPC AI：Redemption Protection Icon（@AIName "redemption_protection_icon"），继承 AggressiveNpcAI2。
  * Reshanta zone NPC AI: Redemption Protection Icon (@AIName "redemption_protection_icon"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("redemption_protection_icon")

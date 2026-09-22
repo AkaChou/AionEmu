@@ -126,7 +126,6 @@ public class VisibleObjectSpawner {
     /**
      * 按配置倍率缩放 NPC 属性（生命、物攻 / 魔攻、命中、物防/魔防、回避等）。
      * Scales NPC attributes by config rates (HP, physical/magical attack, accuracy, defenses, evasion).
-     *
      * @param objId NPC 模板 ID / npc template id
      * @return 缩放后的 NPC 模板，不存在时返回 null / scaled npc template, or null if absent
      */

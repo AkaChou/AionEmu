@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Iluma 区域 NPC AI：Roughhorn Wendigo（@AIName "roughhorn_wendigo"），继承 AggressiveNpcAI2。
  * Iluma zone NPC AI: Roughhorn Wendigo (@AIName "roughhorn_wendigo"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("roughhorn_wendigo")

@@ -11,7 +11,6 @@ public abstract class SvStatsDAO implements DAO {
     /**
      * 更新指定服务器为在线状态及人数。
      * Updates a server as online with current and max players.
-     *
      * Server id
      * Status code
      * Current players
@@ -22,7 +21,6 @@ public abstract class SvStatsDAO implements DAO {
     /**
      * 更新指定服务器为离线状态及人数。
      * Updates a server as offline with current players.
-     *
      * @param server Server id
      * @param status Status code
      * @param current Current players
@@ -32,7 +30,6 @@ public abstract class SvStatsDAO implements DAO {
     /**
      * 将全部服务器标记为离线。
      * Marks all servers offline with the given status and current count.
-     *
      * @param status Status code
      * @param current Current players
      */
@@ -41,7 +38,6 @@ public abstract class SvStatsDAO implements DAO {
     /**
      * 返回实现唯一类名标识。
      * Returns unique class name for all implementations.
-     *
      * Fully qualified class name
      */
     @Override

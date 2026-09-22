@@ -17,7 +17,6 @@ import lombok.Setter;
 /**
  * 可见对象。
  * Visible Object game object.
- *
  * @author -Nemesiss-
  */
 @Getter
@@ -27,8 +26,7 @@ public abstract class VisibleObject extends AionObject {
 	/**
 	 * 返回对象模板。
 	 * Returns the object template.
-	 *
-	 * @return 对象模板 / the objectTemplate
+	 * 对象模板 / the objectTemplate
 	 */
 	protected VisibleObjectTemplate objectTemplate;
 
@@ -85,7 +83,6 @@ public abstract class VisibleObject extends AionObject {
 	/**
 	 * 返回当前对象所在的 WorldRegion。
 	 * Returns the current WorldRegion the AionObject is in.
-	 *
 	 * @return 当前区域 / current WorldRegion
 	 */
 	public MapRegion getActiveRegion() {
@@ -100,7 +97,6 @@ public abstract class VisibleObject extends AionObject {
 	/**
 	 * 返回世界地图 ID。
 	 * Returns the world map id.
-	 *
 	 * @return 地图 ID / world map id
 	 */
 	public int getWorldId() {
@@ -117,7 +113,6 @@ public abstract class VisibleObject extends AionObject {
 	/**
 	 * 返回世界 X 坐标。
 	 * Returns the world x position.
-	 *
 	 * @return X 坐标 / x position
 	 */
 	public float getX() {
@@ -127,7 +122,6 @@ public abstract class VisibleObject extends AionObject {
 	/**
 	 * 返回世界 Y 坐标。
 	 * Returns the world y position.
-	 *
 	 * @return Y 坐标 / y position
 	 */
 	public float getY() {
@@ -137,7 +131,6 @@ public abstract class VisibleObject extends AionObject {
 	/**
 	 * 返回世界 Z 坐标。
 	 * Returns the world z position.
-	 *
 	 * @return Z 坐标 / z position
 	 */
 	public float getZ() {
@@ -152,7 +145,6 @@ public abstract class VisibleObject extends AionObject {
 	/**
 	 * 返回对象朝向。
 	 * Returns the object heading.
-	 *
 	 * @return 对象朝向，取值 [0,120) / heading of the object, values from [0,120)
 	 */
 	public byte getHeading() {
@@ -162,7 +154,6 @@ public abstract class VisibleObject extends AionObject {
 	/**
 	 * 检查对象是否已生成。
 	 * Checks whether the object is spawned.
-	 *
 	 * @return 是否已生成 / true if spawned
 	 */
 	public boolean isSpawned() {
@@ -172,7 +163,6 @@ public abstract class VisibleObject extends AionObject {
 	/**
 	 * 对象是否已在世界中。
 	 * Whether the object is in the world.
-	 *
 	 * @return 是否在世界中 / whether in the world
 	 */
 	public boolean isInWorld() {
@@ -181,7 +171,6 @@ public abstract class VisibleObject extends AionObject {
 
 	/**
 	 * 检查映射 is 实例。 / Check if map is instance
-	 *
 	 * @return true if object in one of the instance maps
 	 */
 	public boolean isInInstance() {
@@ -201,7 +190,6 @@ public abstract class VisibleObject extends AionObject {
 	/**
 	 * 判断能否看见指定生物。
 	 * Whether this object can see the given creature.
-	 *
 	 * @param creature 目标生物 / target creature
 	 * @return 是否可见 / whether visible
 	  */
@@ -212,7 +200,6 @@ public abstract class VisibleObject extends AionObject {
 	 /**
 	  * 返回此对象的 KnownList。
 	  * Returns the KnownList of this VisibleObject.
-	  *
 	  * @return 已知列表 / known list
 	  */
 	public KnownList getKnownList() {
@@ -222,7 +209,6 @@ public abstract class VisibleObject extends AionObject {
 	/**
 	 * 返回当前目标。
 	 * Returns the current target.
-	 *
 	 * @return 目标对象 / target VisibleObject
 	 */
 	public final VisibleObject getTarget() {
@@ -232,7 +218,6 @@ public abstract class VisibleObject extends AionObject {
 	/**
 	 * 返回到目标的距离，无目标时为 0。
 	 * Returns the distance to the target, or 0 if no target.
-	 *
 	 * @return 到目标的距离 / distance to target
 	 */
 	public float getDistanceToTarget() {
@@ -248,7 +233,6 @@ public abstract class VisibleObject extends AionObject {
 	/**
 	 * 目标是否为指定对象 ID。
 	 * Whether the target has the given object id.
-	 *
 	 * @param objectId 对象 ID / object id
 	 * @return 是否为目标 / whether the target matches
 	 */

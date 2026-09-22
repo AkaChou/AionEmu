@@ -12,7 +12,6 @@ import com.aionemu.gameserver.skillengine.model.SkillType;
 /**
  * 沉默效果：禁止目标施放魔法技能，并打断当前魔法读条。
  * Silence effect: blocks magical casts and cancels an in-progress magical skill.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)

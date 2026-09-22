@@ -14,7 +14,6 @@ import lombok.Setter;
 /**
  * 住房 Land 模板（静态数据/XML）。
  * XML template.
- *
  * @author Rolandas
  */
 @Getter

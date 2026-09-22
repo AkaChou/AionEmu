@@ -8,7 +8,6 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 /**
  * Empyrean Crucible 副本 NPC AI：Empyrean Administrator Arminos（@AIName "empadministratorarminos"），继承 NpcAI2。
  * Empyrean Crucible instance NPC AI: Empyrean Administrator Arminos (@AIName "empadministratorarminos"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("empadministratorarminos")

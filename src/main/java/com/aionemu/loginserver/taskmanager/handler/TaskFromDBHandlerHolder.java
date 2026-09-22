@@ -8,7 +8,6 @@ import lombok.Getter;
 /**
  * 数据库任务处理器类型枚举，映射名称到具体实现类。
  * Enum of DB task handler types mapping names to concrete handler classes.
- *
  * @author nrg
  */
 public enum TaskFromDBHandlerHolder {
@@ -22,8 +21,6 @@ public enum TaskFromDBHandlerHolder {
     /**
      * 获取对应的处理器实现类。
      * Returns the associated handler implementation class.
-     *
-     * @return 处理器实现类 / handler class
      */
     @Getter
     private final Class<? extends TaskFromDBHandler> taskClass;

@@ -11,7 +11,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 所需技能模板：使用物品需要的技能列表。
  * Required skill template: skills needed to use the item.
- *
  * @author Rinzler
  */
 

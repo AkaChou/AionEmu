@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Cygnea 区域 NPC AI：LF5 Field Attraction（@AIName "lf5_field_attraction"），继承 NpcAI2。
  * Cygnea zone NPC AI: LF5 Field Attraction (@AIName "lf5_field_attraction"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("lf5_field_attraction")

@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端同步副本阶段/事件进度信息的服务端包。
  * Server packet synchronizing instance stage/event progress info to the client.
- *
  * @author xTz
  */
 @AllArgsConstructor

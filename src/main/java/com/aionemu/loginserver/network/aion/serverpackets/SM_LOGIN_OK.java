@@ -7,7 +7,6 @@ import com.aionemu.loginserver.network.aion.SessionKey;
 /**
  * 登录服→客户端：登录成功，下发会话密钥片段（accountId / loginOk）。
  * LoginServer → client: login success, sends session-key parts (accountId / loginOk).
- *
  * @author -Nemesiss-
  */
 public class SM_LOGIN_OK extends AionServerPacket {
@@ -26,7 +25,6 @@ public class SM_LOGIN_OK extends AionServerPacket {
     /**
      * 构造 SM_LOGIN_OK 包。
      * Constructs a new SM_LOGIN_OK packet.
-     *
      * @param key 会话密钥 / session key
      */
     public SM_LOGIN_OK(SessionKey key) {

@@ -12,7 +12,6 @@ import lombok.experimental.UtilityClass;
 /**
  * 登录服网络传输生命周期门面：创建、获取与关闭 GS/Aion 监听。
  * Login-server network transport lifecycle facade: create, obtain and shut down GS/Aion listeners.
- *
  * @author KID
  */
 @UtilityClass
@@ -26,7 +25,6 @@ public class NetConnector {
     /**
      * 按配置创建默认 Netty 传输（GS + Aion 双监听）。
      * Create the default Netty transport (GS + Aion listeners) from config.
-     *
      * @return 新建传输实例 / New transport instance
      */
     private ServerTransport createTransport() {
@@ -39,7 +37,6 @@ public class NetConnector {
     /**
      * 返回当前传输；首次调用时懒创建并标记已初始化。
      * Return current transport; lazily create and mark initialized on first call.
-     *
      * @return 服务器传输实例 / Server transport instance
      */
     public ServerTransport currentTransport() {
@@ -55,7 +52,6 @@ public class NetConnector {
     /**
      * 兼容旧调用，等同 {@link #currentTransport()}。
      * Legacy alias of {@link #currentTransport()}.
-     *
      * @return 服务器传输实例 / Server transport instance
      * Prefer {@link #currentTransport()}。
      */
@@ -67,7 +63,6 @@ public class NetConnector {
     /**
      * 若已初始化则关闭传输并复位状态。
      * Shut down transport and reset state when previously initialized.
-     *
      * @return 是否执行了关闭 / Whether shutdown ran
      */
     public boolean shutdownIfInitialized() {
@@ -90,7 +85,6 @@ public class NetConnector {
     /**
      * 测试用：替换传输工厂并清空当前实例。
      * Test helper: replace transport factory and clear current instance.
-     *
      * @param factory 传输工厂 / transport factory
      */
     void useTransportFactory(Supplier<ServerTransport> factory) {

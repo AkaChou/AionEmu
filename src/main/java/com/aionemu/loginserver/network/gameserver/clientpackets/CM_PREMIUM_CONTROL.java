@@ -6,7 +6,6 @@ import com.aionemu.loginserver.service.LoginPremiumServices;
 /**
  * GS→LS：请求消耗 premium 点数购买。
  * GS→LS: request premium-point purchase/deduction.
- *
  * @author KID
  */
 public class CM_PREMIUM_CONTROL extends GsClientPacket {

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PositionUtil;
 /**
  * 正面伤害修正：攻击者位于目标正面时加成伤害。
  * Front damage modifier: bonus damage when the attacker is in front of the target.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)

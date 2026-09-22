@@ -15,7 +15,6 @@ import lombok.Getter;
 /**
  * 一次性技能暴击加成：在有限次数内强制/提升攻击暴击判定。
  * One-time skill-critical boost: forces/raises critical status for limited attacks.
- *
  * @author Sippolo
  */
 @Getter

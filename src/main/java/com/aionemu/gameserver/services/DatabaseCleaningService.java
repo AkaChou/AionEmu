@@ -92,7 +92,6 @@ public class DatabaseCleaningService {
 	/**
 	 * 判断所有工作线程是否已完成。
 	 * Returns whether all workers are ready.
-	 *
 	 * @return 全部完成返回 true / true if all ready
 	 */
 	private boolean allWorkersReady() {
@@ -107,7 +106,6 @@ public class DatabaseCleaningService {
 	/**
 	 * 汇总当前已删除角色数量。
 	 * Returns the total number of characters deleted so far.
-	 *
 	 * @return 已删除数量 / deleted count
 	 */
 	private int currentlyDeletedChars() {
@@ -121,7 +119,6 @@ public class DatabaseCleaningService {
 	/**
 	 * 将待删除角色 ID 均分到多个工作线程执行。
 	 * Distributes player ids to delete across worker threads.
-	 *
 	 * thread count
 	 * @param idsToDelegate 待删除角色 ID / player ids to delete
 	 */
@@ -148,11 +145,9 @@ public class DatabaseCleaningService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available

@@ -24,7 +24,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 疯狂大埃服务，管理限时 PvP 活动状态与奖励。
  * Crazy Daeva service managing timed PvP event state and rewards.
- *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -34,8 +33,6 @@ public class CrazyDaevaService {
      * -- SETTER --
      *  注入 Spring ObjectProvider 以覆盖默认单例。
      *  Injects a Spring ObjectProvider that overrides the default singleton.
-     *
-     * @param provider 实例提供者 / instance provider
      */
 	@Setter
     private static volatile ObjectProvider<CrazyDaevaService> instanceProvider;
@@ -100,7 +97,6 @@ public class CrazyDaevaService {
 	/**
 	 * 增加疯狂大埃连杀并更新连杀等级。
 	 * Increases Crazy Daeva kill count and updates spree level.
-	 *
 	 * winner
 	 */
 	public void increaseRawKillCount(Player winner) {
@@ -123,7 +119,6 @@ public class CrazyDaevaService {
 	/**
 	 * 更新疯狂大埃连杀等级。
 	 * Updates the Crazy Daeva spree level.
-	 *
 	 * winner
 	 * @param level 连杀等级 / spree level
 	 */
@@ -134,7 +129,6 @@ public class CrazyDaevaService {
 	/**
 	 * 处理疯狂大埃死亡并广播终结者。
 	 * Handles Crazy Daeva death and announces the spree ender.
-	 *
 	 * victim
 	 * killer
 	 * whether PvP death
@@ -149,7 +143,6 @@ public class CrazyDaevaService {
 	/**
 	 * 发放终结奖励并向全服广播连杀结束。
 	 * Grants ender reward and broadcasts the spree end to all players.
-	 *
 	 * victim
 	 * killer
 	 * whether PvP death
@@ -204,11 +197,9 @@ public class CrazyDaevaService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available

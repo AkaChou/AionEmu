@@ -6,7 +6,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 玩家聊天命令，基于权限位鉴权。
  * Player chat command authorized via permission bits.
- *
  * @author synchro2
  */
 public abstract class PlayerCommand extends ChatCommand {
@@ -14,7 +13,6 @@ public abstract class PlayerCommand extends ChatCommand {
 	/**
 	 * 以给定别名（可附带额外别名）构造玩家命令。
 	 * Construct a player command with the given alias and optional additional aliases.
-	 *
 	 * @param alias 主别名 / Primary alias
 	 * @param alternateAliases 额外别名 / Additional aliases
 	 */
@@ -25,7 +23,6 @@ public abstract class PlayerCommand extends ChatCommand {
 	/**
 	 * 校验玩家是否拥有所需权限。
 	 * Check whether the player has the required permission.
-	 *
 	 * @param player 玩家 / Player
 	 * @param alias 实际使用的别名 / Alias that was used
 	 * @return 有权限则为 true / True if allowed
@@ -38,7 +35,6 @@ public abstract class PlayerCommand extends ChatCommand {
 	/**
 	 * 处理玩家命令：鉴权后拆分参数并执行。
 	 * Process a player command: authorize, split args and execute.
-	 *
 	 * 玩家 / Player
 	 * @param text 去掉前缀后的命令文本 / Command text without prefix
 	 * @return 是否已处理 / Whether handled

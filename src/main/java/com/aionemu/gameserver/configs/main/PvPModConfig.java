@@ -5,7 +5,6 @@ import com.aionemu.commons.configuration.Property;
 /**
  * PvP 模式扩展（如战场）相关配置。
  * PvP mode extensions (e.g. battleground) related configuration.
- *
  * Created by wanke on 12/02/2017.
  */
 public class PvPModConfig {

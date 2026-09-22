@@ -10,7 +10,6 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 /**
  * 禁止飞行条件：校验施法者/效果目标当前未处于飞行状态。
  * No-flying condition: validates the effector/effected is currently not flying.
- *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -20,7 +19,6 @@ public class NoFlyingCondition extends Condition {
 	/**
 	 * 校验技能环境是否满足本条件。
 	 * Validates whether the skill environment satisfies this condition.
-	 *
 	 * @param env 技能环境 / skill environment
 	 * @return 是否有效 / whether valid
 	 */
@@ -32,7 +30,6 @@ public class NoFlyingCondition extends Condition {
 	/**
 	 * 校验效果环境是否满足本条件。
 	 * Validates whether the effect environment satisfies this condition.
-	 *
 	 * @param effect 效果环境 / effect environment
 	 * @return 是否有效 / whether valid
 	 */

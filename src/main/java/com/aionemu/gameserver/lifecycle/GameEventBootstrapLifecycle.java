@@ -58,7 +58,6 @@ public class GameEventBootstrapLifecycle {
     /**
      * 是否已成功加载。
      * Whether loading has completed successfully.
-     *
      * @return 已加载为 {@code true} / {@code true} if loaded
      */
     public synchronized boolean isLoaded() {
@@ -68,7 +67,6 @@ public class GameEventBootstrapLifecycle {
     /**
      * 最近一次加载耗时（毫秒）。
      * Last load duration in milliseconds.
-     *
      * @return 耗时毫秒数；未启动为 -1 / Duration ms; -1 if never started
      */
     public synchronized long getLoadTimeMillis() {
@@ -78,7 +76,6 @@ public class GameEventBootstrapLifecycle {
     /**
      * 最近一次失败原因。
      * Last failure cause.
-     *
      * @return 失败异常；成功为 {@code null} / Failure throwable; {@code null} on success
      */
     public synchronized Throwable getLastFailure() {

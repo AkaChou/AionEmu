@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 /**
  * 欧比斯军阶技能表：按种族与军阶映射技能 ID 列表。
  * Abyss-rank skill table: maps race and rank to skill-id arrays.
- *
  * <p>天族（Elyos）与魔族（Asmodians）各有一套从 5 星军官到最高指挥官的技能配置。
  * Elyos and Asmodians each have a skill set from STAR5_OFFICER up to SUPREME_COMMANDER.</p>
  */
@@ -44,8 +43,7 @@ enum AbyssSkills {
      * -- GETTER --
      *  返回该军阶的技能 ID 数组。
      *  Returns the skill-id array for this rank.
-     *
-     * @return 技能 ID 数组 / skill ids
+     * 技能 ID 数组 / skill ids
      */
     @Getter
     private final int[] skills;
@@ -54,8 +52,6 @@ enum AbyssSkills {
 	 * -- GETTER --
 	 *  返回该配置所属种族。
 	 *  Returns the race this skill set belongs to.
-	 *
-	 * @return 阵营 / Race
 	 */
 	@Getter
 	private final Race race;
@@ -69,7 +65,6 @@ enum AbyssSkills {
 	/**
 	 * 按种族与军阶查找技能；未匹配时记录警告并返回空数组。
 	 * Look up skills by race and rank; logs a warning and returns empty array when unmatched.
-	 *
 	 * @param race 阵营 / Race
 	 * @param rank 军阶 / Rank
 	 * @return 技能 ID 数组 / skill-id array

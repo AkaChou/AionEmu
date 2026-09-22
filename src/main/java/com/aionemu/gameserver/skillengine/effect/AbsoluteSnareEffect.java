@@ -15,7 +15,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 绝对定身效果：作为 Buff 壳，通过修饰器强制限制移动速度。
  * Absolute snare effect: buff shell that forces movement-speed restriction via modifiers.
- *
  * @author Dtem
  */
 @XmlAccessorType(XmlAccessType.FIELD)

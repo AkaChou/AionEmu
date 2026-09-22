@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 /**
  * 风道模板（静态数据/XML）。
  * Windstream template (static data/XML).
- *
  * @author LokiReborn
  */
 @Getter

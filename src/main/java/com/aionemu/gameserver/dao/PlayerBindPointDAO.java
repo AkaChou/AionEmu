@@ -6,7 +6,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * 玩家绑定点（回城点）数据访问对象。
  * Player bind-point data access object.
- *
  * @author evilset
  */
 public abstract class PlayerBindPointDAO implements DAO {
@@ -14,7 +13,6 @@ public abstract class PlayerBindPointDAO implements DAO {
 	/**
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier of this DAO.
-	 *
 	 * @return DAO 类名 / DAO class name
 	 */
 	@Override
@@ -25,7 +23,6 @@ public abstract class PlayerBindPointDAO implements DAO {
 	/**
 	 * 加载玩家绑定点。
 	 * Loads the player's bind point.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public abstract void loadBindPoint(Player player);
@@ -33,7 +30,6 @@ public abstract class PlayerBindPointDAO implements DAO {
 	/**
 	 * 插入玩家绑定点记录。
 	 * Inserts a player bind-point record.
-	 *
 	 * @param player 玩家 / player
 	 * @return 若成功则为 true / true if successful
 	 */
@@ -42,7 +38,6 @@ public abstract class PlayerBindPointDAO implements DAO {
 	/**
 	 * 更新玩家绑定点记录。
 	 * Updates a player bind-point record.
-	 *
 	 * @param player 玩家 / player
 	 * @return 若成功则为 true / true if successful
 	 */
@@ -51,7 +46,6 @@ public abstract class PlayerBindPointDAO implements DAO {
 	/**
 	 * 持久化玩家绑定点（插入或更新）。
 	 * Persists the player's bind point (insert or update).
-	 *
 	 * @param player 玩家 / player
 	 * @return 若成功则为 true / true if successful
 	 */

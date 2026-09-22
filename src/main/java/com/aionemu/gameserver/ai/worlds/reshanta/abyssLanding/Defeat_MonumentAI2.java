@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * Reshanta 区域 NPC AI：Defeat Monument（@AIName "defeat_monument"），继承 NpcAI2。
  * Reshanta zone NPC AI: Defeat Monument (@AIName "defeat_monument"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("defeat_monument")

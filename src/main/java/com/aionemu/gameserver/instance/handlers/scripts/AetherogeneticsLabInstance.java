@@ -14,7 +14,6 @@ import java.util.Set;
 /**
  * 奥德遗传实验室副本事件处理器。
  * Instance event handler for Aetherogenetics Lab.
- *
  * @author Encom
  */
 
@@ -26,7 +25,6 @@ public class AetherogeneticsLabInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -69,7 +67,6 @@ public class AetherogeneticsLabInstance extends GeneralInstanceHandler
     /**
      * 处理死亡事件。
      * Handle a death event.
-     *
      * @param npc NPC / npc
      */
     @Override
@@ -83,7 +80,6 @@ public class AetherogeneticsLabInstance extends GeneralInstanceHandler
 	/**
 	 * 移除相关物品。
 	 * Remove related items.
-	 *
 	 * @param player 玩家 / player
 	 */
 	
@@ -99,7 +95,6 @@ public class AetherogeneticsLabInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -110,7 +105,6 @@ public class AetherogeneticsLabInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override

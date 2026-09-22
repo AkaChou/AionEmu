@@ -24,7 +24,6 @@ public enum DropRewardEnum {
 	/**
 	 * 构造掉落奖励条目
 	 * Construct a drop reward entry
-	 *
 	 * Level difference
 	 * @param dropRewardPercent 掉落百分比 / Drop percent
 	 */
@@ -36,7 +35,6 @@ public enum DropRewardEnum {
 	/**
 	 * 获取掉落奖励百分比
 	 * Get drop reward percent
-	 *
 	 * @return 掉落百分比 / Drop percent
 	 */
 	public int rewardPercent() {
@@ -46,7 +44,6 @@ public enum DropRewardEnum {
 	/**
 	 * 按等级差返回掉落奖励百分比（越界取边界值）
 	 * Return drop reward percent by level difference (clamped to bounds)
-	 *
 	 * @param levelDifference 双方等级差 / Level difference between entities
 	 * @return 掉落奖励百分比 / Drop reward percentage
 	 */

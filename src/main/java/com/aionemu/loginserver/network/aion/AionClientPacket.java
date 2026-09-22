@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 所有 Aion 客户端 → 登录服数据包的基类。
  * Base class for every Aion client → login-server packet.
- *
  * @author -Nemesiss-
  */
 @Slf4j
@@ -18,7 +17,6 @@ public abstract class AionClientPacket extends BaseClientPacket<LoginConnection>
     /**
      * 构造客户端包并绑定连接。
      * Construct client packet and bind the connection.
-     *
      * @param buf 包体数据 / Packet data
      * @param client 登录连接 / Login connection
      * @param opcode 包操作码 / Packet opcode
@@ -52,7 +50,6 @@ public abstract class AionClientPacket extends BaseClientPacket<LoginConnection>
     /**
      * 向本包所属连接发送服务端包（等价于 getConnection().sendPacket(msg)）。
      * Send a server packet on this packet's connection (same as getConnection().sendPacket(msg)).
-     *
      * @param msg 待发送的服务端包 / Server packet to send
      */
     protected void sendPacket(AionServerPacket msg) {

@@ -15,7 +15,6 @@ import lombok.Getter;
 /**
  * 征服刷新点模板（静态数据/XML）。
  * Conquest spawn template (static data/XML).
- *
  * @author Rinzler (Encom)
  */
 

@@ -3,7 +3,6 @@ package com.aionemu.gameserver.model.team.legion;
 /**
  * 军团权限掩码枚举。
  * Legion Permissions Mask enumeration.
- *
  * @author MrPoke
  */
 public enum LegionPermissionsMask {

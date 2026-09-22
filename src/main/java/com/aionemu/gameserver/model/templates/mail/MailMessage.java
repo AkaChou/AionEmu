@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 邮件消息枚举。
  * Mail Message enumeration.
- *
  * @author kosyachok
  */
 @Getter

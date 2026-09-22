@@ -8,7 +8,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：移除糖果/变形外观（保留属性）。
  * Player command: removes candy/transform look while keeping stats.
- *
  * @author Kill3r
  */
 public class cmd_skin extends PlayerCommand {
@@ -24,7 +23,6 @@ public class cmd_skin extends PlayerCommand {
 	/**
 	 * 将变形模型重置为 0 并广播外观更新。
 	 * Resets transform model id to 0 and broadcasts the appearance update.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 未使用的参数 / unused parameters
 	 */

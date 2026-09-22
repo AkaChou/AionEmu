@@ -66,7 +66,6 @@ public class GameEventBootstrapGateway {
     /**
      * 可选注入露娜商店服务提供者。
      * Optionally inject the Luna-shop service provider.
-     *
      * @param lunaShopServiceProvider 露娜商店服务提供者 / Luna-shop service provider
      */
     @Autowired(required = false)
@@ -77,7 +76,6 @@ public class GameEventBootstrapGateway {
     /**
      * 可选注入宠物役从服务提供者。
      * Optionally inject the minion service provider.
-     *
      * @param minionServiceProvider 宠物役从服务提供者 / Minion service provider
      */
     @Autowired(required = false)
@@ -88,7 +86,6 @@ public class GameEventBootstrapGateway {
     /**
      * 可选注入修勾扫荡服务提供者。
      * Optionally inject the Shugo-sweep service provider.
-     *
      * @param shugoSweepServiceProvider 修勾扫荡服务提供者 / Shugo-sweep service provider
      */
     @Autowired(required = false)
@@ -99,7 +96,6 @@ public class GameEventBootstrapGateway {
     /**
      * 可选注入阿特里亚护照服务提供者。
      * Optionally inject the Atreian-passport service provider.
-     *
      * @param atreianPassportServiceProvider 阿特里亚护照服务提供者 / Atreian-passport service provider
      */
     @Autowired(required = false)
@@ -110,7 +106,6 @@ public class GameEventBootstrapGateway {
     /**
      * 可选注入事件窗口服务提供者。
      * Optionally inject the event-window service provider.
-     *
      * @param eventWindowServiceProvider 事件窗口服务提供者 / Event-window service provider
      */
     @Autowired(required = false)
@@ -121,7 +116,6 @@ public class GameEventBootstrapGateway {
     /**
      * 可选注入运行时桥接提供者。
      * Optionally inject the runtime-bridge provider.
-     *
      * @param runtimeBridgeProvider 运行时桥接提供者 / Runtime-bridge provider
      */
     @Autowired(required = false)
@@ -192,7 +186,6 @@ public class GameEventBootstrapGateway {
     /**
      * 解析露娜商店服务。
      * Resolve the Luna-shop service.
-     *
      * @return 露娜商店服务 / Luna-shop service
      */
     private LunaShopService lunaShopService() {
@@ -205,7 +198,6 @@ public class GameEventBootstrapGateway {
     /**
      * 解析宠物役从服务。
      * Resolve the minion service.
-     *
      * @return 宠物役从服务 / Minion service
      */
     private MinionService minionService() {
@@ -218,7 +210,6 @@ public class GameEventBootstrapGateway {
     /**
      * 解析修勾扫荡服务。
      * Resolve the Shugo-sweep service.
-     *
      * @return 修勾扫荡服务 / Shugo-sweep service
      */
     private ShugoSweepService shugoSweepService() {
@@ -231,7 +222,6 @@ public class GameEventBootstrapGateway {
     /**
      * 解析阿特里亚护照服务。
      * Resolve the Atreian-passport service.
-     *
      * @return 阿特里亚护照服务 / Atreian-passport service
      */
     private AtreianPassportService atreianPassportService() {
@@ -244,7 +234,6 @@ public class GameEventBootstrapGateway {
     /**
      * 解析事件窗口服务。
      * Resolve the event-window service.
-     *
      * @return 事件窗口服务 / Event-window service
      */
     private EventWindowService eventWindowService() {
@@ -257,7 +246,6 @@ public class GameEventBootstrapGateway {
     /**
      * 解析运行时桥接。
      * Resolve the runtime bridge.
-     *
      * @return 运行时桥接 / Runtime bridge
      */
     private GameEventBootstrapRuntimeBridge runtimeBridge() {
@@ -270,7 +258,6 @@ public class GameEventBootstrapGateway {
     /**
      * 执行并报告单个加载步骤。
      * Execute and report a single load step.
-     *
      * @param stepName 步骤名 / Step name
      * @param loader 加载逻辑 / Loader logic
      */

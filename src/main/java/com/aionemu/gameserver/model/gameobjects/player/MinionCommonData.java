@@ -32,29 +32,14 @@ public class MinionCommonData extends VisibleObjectTemplate implements IExpirabl
 	/** 获取守护灵等级。 / Returns the minion level. */
 	private int minionLevel;
 	private int miniongrowthpoint = 0;
-	/**
-	 * @return 是否已锁定。 / Whether lock
-	 */
 	private boolean lock = false;
 	/** 设置 is buffing / Sets the is buffing */
 	private boolean IsBuffing = false;
-	/**
-	 * @return 是否正在拾取 / Whether looting
-	 */
 	private boolean isLooting = false;
 	/** 返回 doping bag / Returns the doping bag */
 	MinionDopingBag dopingBag = null;
-	/**
-	 * @return the despawnTime
-	 */
 	private Timestamp despawnTime;
-	/**
-	 * @return the minionSkillPoints
-	 */
 	private int minionSkillPoints;
-	/**
-	 * @return the minionFunctionTime
-	 */
 	private Timestamp minionFunctionTime;
 
 	public MinionCommonData(int minionId, int masterObjectId, String name, String minionGrade, int minionLevel, int miniongrowthpoint) {

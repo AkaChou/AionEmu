@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 住房分类枚举。
  * Housing Category enumeration.
- *
  * @author Rolandas
  */
 @XmlType(name = "HousingObjectType")

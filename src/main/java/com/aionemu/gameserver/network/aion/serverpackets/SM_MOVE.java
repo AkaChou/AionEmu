@@ -30,7 +30,6 @@ public class SM_MOVE extends AionServerPacket {
 	/**
 	 * 由原始坐标与移动标志构造移动包（无生物引用）。
 	 * Builds a move packet from raw coordinates and flags (no creature reference).
-	 *
 	 * object id
 	 * @param sX 起点 X / start X
 	 * @param sY 起点 Y / start Y

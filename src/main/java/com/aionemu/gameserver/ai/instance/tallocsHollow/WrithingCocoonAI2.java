@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Tallocs Hollow 副本 NPC AI：Writhing Cocoon（@AIName "writhingcocoon"），继承 NpcAI2。
  * Tallocs Hollow instance NPC AI: Writhing Cocoon (@AIName "writhingcocoon"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("writhingcocoon")

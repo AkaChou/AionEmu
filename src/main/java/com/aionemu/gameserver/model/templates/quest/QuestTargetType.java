@@ -5,7 +5,6 @@ import jakarta.xml.bind.annotation.XmlEnum;
 /**
  * 任务目标类型枚举。
  * Quest target type enumeration.
- *
  * @author Rinzler (Encom)
  */
 @XmlEnum

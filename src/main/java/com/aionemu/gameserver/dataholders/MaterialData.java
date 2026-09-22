@@ -20,7 +20,6 @@ import com.aionemu.gameserver.model.templates.materials.MaterialTemplate;
 /**
  * 材质模板数据容器，按材质 ID 索引并缓存相关技能 ID。
  * Material template data holder, indexing by material id and caching related skill ids.
- *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -61,7 +60,6 @@ public class MaterialData {
 	/**
 	 * 按材质 ID 获取材质模板。
 	 * Returns the material template for the given material id.
-	 *
 	 * @param materialId 材料 ID / material id
 	 * @return 材质模板或 null / material template or null
 	 */
@@ -72,7 +70,6 @@ public class MaterialData {
 	/**
 	 * 判断给定技能 ID 是否为材质技能。
 	 * Returns whether the given skill id is a material skill.
-	 *
 	 * @param skillId 技能 ID / skill id
 	 * @return 是材质技能则为 true / true if it is a material skill
 	 */
@@ -83,7 +80,6 @@ public class MaterialData {
 	/**
 	 * 返回已加载的材质模板数量。
 	 * Returns the number of loaded material templates.
-	 *
 	 * @return 已加载的材料模板数量 / Returns the number of loaded material templates.
 	 */
 	public int size() {

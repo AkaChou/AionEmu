@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Cradle Of Eternity 副本 NPC AI：Elyos Elite Combat Mage（@AIName "Elyos_Elite_Combat_Mage"），继承 NpcAI2。
  * Cradle Of Eternity instance NPC AI: Elyos Elite Combat Mage (@AIName "Elyos_Elite_Combat_Mage"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Elyos_Elite_Combat_Mage")

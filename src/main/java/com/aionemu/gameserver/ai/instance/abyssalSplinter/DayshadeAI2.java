@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Abyssal Splinter 副本 NPC AI：Dayshade（@AIName "Dayshade"），继承 NpcAI2。
  * Abyssal Splinter instance NPC AI: Dayshade (@AIName "Dayshade"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Dayshade")

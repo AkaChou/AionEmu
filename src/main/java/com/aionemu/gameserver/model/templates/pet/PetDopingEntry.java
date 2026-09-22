@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 /**
  * 宠物兴奋剂条目模板（静态数据/XML）。
  * Pet doping entry template (static data / XML).
- *
  * @author Rolandas
  */
 @Getter
@@ -21,9 +20,6 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class PetDopingEntry {
 
-	/**
-	 * @return 条目 ID / the id
-	 */
 	@XmlAttribute(name = "id", required = true)
 	private short id;
 

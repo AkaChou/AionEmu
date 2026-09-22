@@ -5,7 +5,6 @@ import com.aionemu.commons.configuration.Property;
 /**
  * A-Station（跨服）相关配置。
  * A-Station (cross-server) related configuration.
- *
  * @author Ranastic
  */
 public class AStationConfig {

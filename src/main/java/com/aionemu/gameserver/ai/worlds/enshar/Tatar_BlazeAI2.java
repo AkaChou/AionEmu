@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Enshar 区域 NPC AI：Tatar Blaze（@AIName "tatar_blaze"），继承 AggressiveNpcAI2。
  * Enshar zone NPC AI: Tatar Blaze (@AIName "tatar_blaze"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("tatar_blaze")
@@ -68,7 +67,6 @@ public class Tatar_BlazeAI2 extends AggressiveNpcAI2
 	/**
 	 * 按血量百分比触发阶段行为：特定阈值打断思考并释放压制技能，其余阈值启动阶段任务。
 	 * Triggers phase behavior by HP percentage: certain thresholds interrupt thinking and cast a crush skill, others start the phase task.
-	 *
 	 * @param hpPercentage 当前血量百分比 / current HP percentage
 	 */
 	private synchronized void checkPercentage(int hpPercentage) {

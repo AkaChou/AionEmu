@@ -27,7 +27,6 @@ public class SiegeCounter {
 	/**
 	 * 累计伤害。
 	 * Adds damage.
-	 *
 	 * @param creature 造成伤害的生物 / damaging creature
 	 * @param damage 伤害量 / damage
 	 */
@@ -46,7 +45,6 @@ public class SiegeCounter {
 	/**
 	 * 累计欧比斯点数。
 	 * Adds abyss points.
-	 *
 	 * @param player 玩家 / player
 	 * @param ap 欧比斯点 / ap
 	 */
@@ -58,7 +56,6 @@ public class SiegeCounter {
 	/**
 	 * 返回指定阵营的种族计数器。
 	 * Returns the race counter for the given race.
-	 *
 	 * @param race 阵营 / race
 	 * @return 种族计数器 / race counter
 	 */
@@ -69,7 +66,6 @@ public class SiegeCounter {
 	/**
 	 * 累计种族伤害。
 	 * Adds race damage.
-	 *
 	 * @param race 阵营 / race
 	 * @param damage 伤害量 / damage
 	 */
@@ -80,7 +76,6 @@ public class SiegeCounter {
 	/**
 	 * 返回伤害最高的种族计数器。
 	 * Returns the race counter with the most damage.
-	 *
 	 * @return 胜方种族计数器 / winning race counter
 	 */
 	public SiegeRaceCounter getWinnerRaceCounter() {

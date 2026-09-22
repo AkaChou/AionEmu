@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端通知欧比斯着陆点等级变化的服务端包。
  * Server packet notifying the client of an Abyss landing location level change.
- *
  * @author wanke
  */
 @AllArgsConstructor

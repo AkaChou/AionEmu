@@ -23,9 +23,6 @@ public class ExpireTimerTask extends AbstractPeriodicTaskManager {
      * -- SETTER --
      *  注入 Spring 实例提供者。
      *  Inject the Spring instance provider.
-     *
-     * @param provider 实例提供者 / Provider
-
      */
 	@Setter
     private static volatile ObjectProvider<ExpireTimerTask> instanceProvider;
@@ -47,11 +44,9 @@ public class ExpireTimerTask extends AbstractPeriodicTaskManager {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -70,7 +65,6 @@ public class ExpireTimerTask extends AbstractPeriodicTaskManager {
     /**
 	 * 注册可过期对象及其所属玩家。
 	 * Register an expirable object and its owning player.
-	 *
 	 * @param expirable 可过期对象 / Expirable object
 	 * 所属玩家 / Owning player
 	 */
@@ -86,7 +80,6 @@ public class ExpireTimerTask extends AbstractPeriodicTaskManager {
 	/**
 	 * 移除某玩家相关的全部可过期条目。
 	 * Remove all expirable entries belonging to a player.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public void removePlayer(Player player) {

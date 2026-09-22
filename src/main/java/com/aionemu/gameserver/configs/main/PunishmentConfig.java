@@ -5,7 +5,6 @@ import com.aionemu.commons.configuration.Property;
 /**
  * 自动惩罚机制相关配置。
  * Automatic punishment mechanism related configuration.
- *
  * @author synchro2
  */
 public class PunishmentConfig {

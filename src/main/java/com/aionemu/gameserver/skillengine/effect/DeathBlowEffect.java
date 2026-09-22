@@ -12,7 +12,6 @@ public class DeathBlowEffect extends DamageEffect {
 	/**
 	 * 按魔法伤害计算。
 	 * Calculates damage as magical.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	public void calculate(Effect effect) {

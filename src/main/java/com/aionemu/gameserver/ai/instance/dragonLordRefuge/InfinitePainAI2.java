@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Dragon Lord Refuge 副本 NPC AI：Infinite Pain（@AIName "infinite_pain"），继承 AggressiveNpcAI2。
  * Dragon Lord Refuge instance NPC AI: Infinite Pain (@AIName "infinite_pain"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("infinite_pain")

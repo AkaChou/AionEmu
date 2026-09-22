@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.stats.StatFunctions;
 /**
  * 可玩单位（玩家/召唤物）移动控制器基类，处理强制移动包、速度插值与恐惧控制。
  * Base move controller for playable units (player/summon): forced move packets, speed interpolation, and fear control.
- *
  * @author ATracer
  * @param <T> 生物所有者类型 / Creature owner type
  */
@@ -49,7 +48,6 @@ public abstract class PlayableMoveController<T extends Creature> extends Creatur
 	/**
 	 * 使用指定所有者构造控制器。
 	 * Construct the controller for the given owner.
-	 *
 	 * @param owner 所有者 / Owner
 	 */
 	public PlayableMoveController(T owner) {
@@ -75,7 +73,6 @@ public abstract class PlayableMoveController<T extends Creature> extends Creatur
 	/**
 	 * 是否处于恐惧等强制控制状态。
 	 * Whether under forced control such as fear.
-	 *
 	 * @return 是否被控制 / Whether controlled
 	 */
 	private final boolean isControlled() {
@@ -166,7 +163,6 @@ public abstract class PlayableMoveController<T extends Creature> extends Creatur
 	/**
 	 * 设置新目标点并在变化时标记需要发包；同步计算移动朝向档位。
 	 * Set a new destination, mark packet send when changed, and recompute movement heading sector.
-	 *
 	 * @param x 目标 X / Target X
 	 * @param y 目标 Y / Target Y
 	 * @param z 目标 Z / Target Z
@@ -195,7 +191,6 @@ public abstract class PlayableMoveController<T extends Creature> extends Creatur
 	/**
 	 * 返回当前移动朝向档位；未移动时返回 -1。
 	 * Return the current movement heading sector; -1 when not moving.
-	 *
 	 * @return 朝向档位 / Heading sector
 	 */
 	public int getMovementHeading() {

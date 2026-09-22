@@ -164,7 +164,6 @@ public final class QuestProductionDispatcher {
 	 * 按 questId + action 恢复“奖励窗口确认动作”的唯一交付路由，并执行同一条事务/after-commit 管线。
 	 * Recovers the unique turn-in route of a reward-window confirmation action by questId + action and
 	 * executes it through the same transaction/after-commit pipeline.
-	 *
 	 * <p>奖励窗口由全局 UI 打开，客户端可能携带上一个交互对象，因此不能要求交互对象等于完成路由的 NPC。
 	 * 仅当 owner 内存在唯一的 REWARD -&gt; COMPLETE 且动作 ID 相同的路由时才执行；玩家状态与条件仍由
 	 * {@link QuestMutationPlanner} 按真实快照校验。</p>
@@ -172,7 +171,6 @@ public final class QuestProductionDispatcher {
 	 * and the completion route's NPC binding cannot be required. The action only executes when the owner has
 	 * exactly one REWARD -&gt; COMPLETE route with the same action id; the player's real snapshot still gates
 	 * the planner.</p>
-	 *
 	 * @param event 权威运行时对话事件（交互对象 + 奖励窗口动作） /
 	 *              authoritative runtime talk event (interaction object + reward-window action)
 	 * @param playerId 玩家 / player
@@ -258,7 +256,6 @@ public final class QuestProductionDispatcher {
 	/**
 	 * 返回 item-play 入口所需的唯一动画时长。
 	 * Returns the unique animation duration required by the item-play entry point.
-	 *
 	 * @param itemId 物品模板 ID / item template id
 	 * @return 播放时长；没有 typed owner 时为空 / duration, or empty without a typed owner
 	 */
@@ -269,7 +266,6 @@ public final class QuestProductionDispatcher {
 	/**
 	 * {@code questId == 0} 时分发全部匹配 owner，否则只分发指定 owner。
 	 * 数据库连接按需获取，无关事件不会访问连接池。
-	 *
 	 * Dispatches all matching owners when {@code questId == 0}, otherwise only the named owner.
 	 * A connection is acquired lazily, so unrelated live events do not touch the database pool.
 	 */

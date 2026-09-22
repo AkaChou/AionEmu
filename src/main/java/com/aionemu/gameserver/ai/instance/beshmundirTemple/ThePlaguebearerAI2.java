@@ -8,7 +8,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 /**
  * Beshmundir Temple 副本 NPC AI：The Plaguebearer（@AIName "theplaguebearer"），继承 AggressiveNpcAI2。
  * Beshmundir Temple instance NPC AI: The Plaguebearer (@AIName "theplaguebearer"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("theplaguebearer")

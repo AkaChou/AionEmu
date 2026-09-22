@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端更新当前 DP（神圣点数）值。
  * Server packet updating the current DP (divine points) value on the client.
- *
  * @author Luno
  */
 @AllArgsConstructor

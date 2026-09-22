@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 /**
  * 通知客户端军团新增成员的服务端包。
  * Server packet notifying the client that a member has been added to the legion.
- *
  * @author Simple
  */
 @AllArgsConstructor

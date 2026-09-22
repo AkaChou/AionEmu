@@ -8,7 +8,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 同步宠物表情/动作（含移动停驻与目标点）的服务端包。
  * Server packet that synchronizes a pet emote/action (including move-stop and move-to).
- *
  * @author ATracer
  */
 public class SM_PET_EMOTE extends AionServerPacket {
@@ -22,7 +21,6 @@ public class SM_PET_EMOTE extends AionServerPacket {
 	/**
 	 * 仅表情、无坐标的构造。
 	 * Emote-only constructor without coordinates.
-	 *
 	 * pet
 	 * @param emote 表情类型 / emote type
 	 */
@@ -33,7 +31,6 @@ public class SM_PET_EMOTE extends AionServerPacket {
 	/**
 	 * 带当前位置与朝向的表情包（如 MOVE_STOP）。
 	 * Emote packet with current position and heading (e.g. MOVE_STOP).
-	 *
 	 * pet
 	 * @param emote 表情类型 / emote type
 	 * @param x 当前位置 X / current X
@@ -48,7 +45,6 @@ public class SM_PET_EMOTE extends AionServerPacket {
 	/**
 	 * 带起止坐标的移动表情包（如 MOVETO）。
 	 * Move emote packet with start and destination coordinates (e.g. MOVETO).
-	 *
 	 * pet
 	 * @param emote 表情类型 / emote type
 	 * @param x 起点 X / start X
@@ -74,7 +70,6 @@ public class SM_PET_EMOTE extends AionServerPacket {
 	/**
 	 * 带情绪参数的表情包。
 	 * Emote packet with emotion parameters.
-	 *
 	 * pet
 	 * @param emote 表情类型 / emote type
 	 * emotion id

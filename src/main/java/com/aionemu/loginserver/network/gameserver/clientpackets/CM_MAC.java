@@ -10,7 +10,6 @@ import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 /**
  * GS→LS：上报/刷新账号最近一次 MAC 地址。
  * GS→LS: report/refresh the last MAC address of an account.
- *
  * @author nrg
  */
 @Slf4j

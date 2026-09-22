@@ -9,7 +9,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Anguished Dragon Lord Refuge 副本 NPC AI：Divisive Creation（@AIName "divisive_creation"），继承 AggressiveNpcAI2。
  * Anguished Dragon Lord Refuge instance NPC AI: Divisive Creation (@AIName "divisive_creation"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("anguished_dragon_lord_refuge_divisive_creation")

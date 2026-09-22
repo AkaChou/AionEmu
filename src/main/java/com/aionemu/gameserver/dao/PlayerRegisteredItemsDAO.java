@@ -11,7 +11,6 @@ public abstract class PlayerRegisteredItemsDAO implements IDFactoryAwareDAO {
 	/**
 	 * 返回实现唯一类名标识。
 	 * Returns unique class name for all implementations.
-	 *
 	 * @return 完整类名 / fully qualified class name
 	 */
 	@Override
@@ -22,7 +21,6 @@ public abstract class PlayerRegisteredItemsDAO implements IDFactoryAwareDAO {
 	/**
 	 * 加载玩家房屋注册表。
 	 * Loads the house registry for the player.
-	 *
 	 * @param playerId 玩家对象 ID / player object id
 	 */
 	public abstract void loadRegistry(int playerId);
@@ -30,7 +28,6 @@ public abstract class PlayerRegisteredItemsDAO implements IDFactoryAwareDAO {
 	/**
 	 * 保存玩家房屋注册表。
 	 * Stores the house registry for the player.
-	 *
 	 * @param registry 房屋注册表 / house registry
 	 * @param playerId 玩家对象 ID / player object id
 	 * @return 是否保存成功 / true if stored
@@ -40,7 +37,6 @@ public abstract class PlayerRegisteredItemsDAO implements IDFactoryAwareDAO {
 	/**
 	 * 删除玩家全部已注册物品。
 	 * Deletes all registered items for the player.
-	 *
 	 * @param playerId 玩家对象 ID / player object id
 	 * @return 是否删除成功 / true if deleted
 	 */
@@ -49,7 +45,6 @@ public abstract class PlayerRegisteredItemsDAO implements IDFactoryAwareDAO {
 	/**
 	 * 重置玩家房屋注册表。
 	 * Resets the house registry for the player.
-	 *
 	 * @param playerId 玩家对象 ID / player object id
 	 */
 	public abstract void resetRegistry(int playerId);

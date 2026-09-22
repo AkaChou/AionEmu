@@ -17,7 +17,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 玩家离队事件（团队2）。
  * Player Group Leaved Event for team 2 logic.
- *
  * @author ATracer
  */
 public class PlayerGroupLeavedEvent extends PlayerLeavedEvent<PlayerGroupMember, PlayerGroup> {

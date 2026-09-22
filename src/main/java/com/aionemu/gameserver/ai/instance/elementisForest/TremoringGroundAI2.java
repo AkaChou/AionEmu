@@ -18,7 +18,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Elementis Forest 副本 NPC AI：Tremoring Ground（@AIName "tremorground"），继承 GeneralNpcAI2。
  * Elementis Forest instance NPC AI: Tremoring Ground (@AIName "tremorground"), extends GeneralNpcAI2.
- *
  * @author Luzien
  */
 @AIName("tremorground")

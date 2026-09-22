@@ -13,9 +13,6 @@ import lombok.Setter;
 public class FissureOfOblivionPlayerReward extends InstancePlayerReward {
 	/** 返回 frozen marble of memory / Returns the frozen marble of memory */
 	private int frozenMarbleOfMemory;
-	/**
-	 * @return 是否已奖励 / whether rewarded
-	 */
 	private boolean isRewarded = false;
 
 	public FissureOfOblivionPlayerReward(Integer object) {

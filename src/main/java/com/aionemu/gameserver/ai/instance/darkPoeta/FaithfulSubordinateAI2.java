@@ -9,7 +9,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Dark Poeta 副本 NPC AI：Faithful Subordinate（@AIName "faithfulsubordinate"），继承 AggressiveNpcAI2。
  * Dark Poeta instance NPC AI: Faithful Subordinate (@AIName "faithfulsubordinate"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("faithfulsubordinate")

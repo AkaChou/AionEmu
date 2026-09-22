@@ -16,7 +16,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Transidium Annex 副本 NPC AI：Assult Pod4（@AIName "assult_pod_4"），继承 AggressiveNpcAI2。
  * Transidium Annex instance NPC AI: Assult Pod4 (@AIName "assult_pod_4"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("assult_pod_4")

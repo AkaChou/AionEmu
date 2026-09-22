@@ -59,7 +59,6 @@ public class TerritoryService {
 	/**
 	 * 通过领地 NPC 将玩家传送到对应领地坐标。
 	 * Teleports a player via territory NPC to the mapped position.
-	 *
 	 * @param player 玩家 / Player
 	 * @param npcid 传送 NPC ID / Teleporter NPC id
 	 */
@@ -81,7 +80,6 @@ public class TerritoryService {
 	/**
 	 * 玩家进世界时下发领地列表。
 	 * Sends territory list when a player enters the world.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public void onEnterWorld(Player player) {
@@ -91,7 +89,6 @@ public class TerritoryService {
 	/**
 	 * 发送石矛攻城相关包（当前实现为空）。
 	 * Sends Stonespear siege packet (currently no-op).
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public void sendStoneSpearPacket(Player player) {
@@ -102,7 +99,6 @@ public class TerritoryService {
 	/**
 	 * 玩家进入所属领地时施加领地增益。
 	 * Applies territory buff when a player enters owned territory.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public void onEnterTerritory(Player player) {
@@ -117,7 +113,6 @@ public class TerritoryService {
 	/**
 	 * 玩家离开领地时移除增益。
 	 * Removes territory buff when a player leaves.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public void onLeaveTerritory(Player player) {
@@ -133,7 +128,6 @@ public class TerritoryService {
 	/**
 	 * 扫描同图敌对种族玩家（入侵者探测）。
 	 * Scans same-map enemy-race players (intruder detection).
-	 *
 	 * @param player 发起扫描的玩家 / Scanning player
 	 */
 	public void scanForIntruders(Player player) {
@@ -151,7 +145,6 @@ public class TerritoryService {
 	/**
 	 * 军团征服指定领地并广播结果。
 	 * Assigns a territory to a legion and broadcasts the result.
-	 *
 	 * @param legion 军团 / Legion
 	 * @param id 领地 ID / Territory id
 	 */
@@ -172,7 +165,6 @@ public class TerritoryService {
 	/**
 	 * 向军团成员广播领地/石矛信息。
 	 * Broadcasts territory/Stonespear info to legion members.
-	 *
 	 * @param legion 军团 / Legion
 	 */
 	private void broadcastToLegion(Legion legion) {
@@ -183,7 +175,6 @@ public class TerritoryService {
 	/**
 	 * 军团失去领地并广播空置状态。
 	 * Clears a legion's territory and broadcasts the vacant state.
-	 *
 	 * @param legion 军团 / Legion
 	 */
 	public void onLooseTerritory(Legion legion) {
@@ -201,7 +192,6 @@ public class TerritoryService {
 	/**
 	 * 向在线玩家广播领地列表。
 	 * Broadcasts territory list to online players.
-	 *
 	 * @param terr 领地映射 / Territory map
 	 */
 	public void broadcastTerritoryList(TreeMap<Integer, LegionTerritory> terr) {
@@ -217,7 +207,6 @@ public class TerritoryService {
 	/**
 	 * 获取全部领地集合。
 	 * Returns all territories.
-	 *
 	 * @return 领地集合 / territory collection
 	 */
 	public Collection<LegionTerritory> getTerritories() {
@@ -227,11 +216,9 @@ public class TerritoryService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -250,7 +237,6 @@ public class TerritoryService {
 	/**
 	 * 设置 Spring 实例提供者。
 	 * Sets the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / Instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<TerritoryService> instanceProvider) {

@@ -11,7 +11,6 @@ import lombok.Getter;
 /**
  * 兑换列表模板：一组可兑换物品。
  * Tradein list template: a set of tradein items.
- *
  * @author MrPoke
  */
 @Getter

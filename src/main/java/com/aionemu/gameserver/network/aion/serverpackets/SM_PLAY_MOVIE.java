@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 向客户端播放过场/影片（CutScene 或 CutSceneMovie）。
  * Server packet that plays a cutscene or cutscene movie on the client.
- *
  * @author -orz-, MrPoke
  */
 public class SM_PLAY_MOVIE extends AionServerPacket {
@@ -20,7 +19,6 @@ public class SM_PLAY_MOVIE extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_PLAY_MOVIE 包。
 	 * Creates a SM_PLAY_MOVIE packet with the given parameters.
-	 *
 	 * @param type type
 	 * @param movieId movie id
 	 */
@@ -32,7 +30,6 @@ public class SM_PLAY_MOVIE extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_PLAY_MOVIE 包。
 	 * Creates a SM_PLAY_MOVIE packet with the given parameters.
-	 *
 	 * type
 	 * @param id 场景/标识 ID / scene or id
 	 * movie id
@@ -47,7 +44,6 @@ public class SM_PLAY_MOVIE extends AionServerPacket {
 	/**
 	 * 使用给定参数构造 SM_PLAY_MOVIE 包。
 	 * Creates a SM_PLAY_MOVIE packet with the given parameters.
-	 *
 	 * type
 	 * @param id 场景/标识 ID / scene or id
 	 * movie id

@@ -14,9 +14,7 @@ import lombok.AllArgsConstructor;
 /**
  * 创造点数（CP）同步包：下发总点数、等级上限与各槽位分配，登录时并应用属性变更。
  * Creativity Points sync packet: total points, level cap and slot allocations; applies stat changes on login.
- *
  * @author Falke_34, FrozenKiller
- * @Rework By Xnemonix
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -32,7 +30,6 @@ public class SM_CREATIVITY_POINTS extends AionServerPacket {
 	/**
 	 * 构造 CP 同步包（总点数与技能点数档位）。
 	 * Creates a CP sync packet (total points and dot step).
-	 *
 	 * @param totalPoint 已分配创造点数总数 / total allocated creativity points
 	 * @param dotStep 技能点数档位 / skill dot step
 	 */

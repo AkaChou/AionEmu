@@ -15,7 +15,6 @@ final class ZoneChecker extends DestinationChecker {
 	/**
 	 * 构造区域目的地检查器。
 	 * Constructs a zone destination checker.
-	 *
 	 * @param follower 跟随生物 / follower creature
 	 * @param zoneName 目标区域 / target zone
 	 */
@@ -27,7 +26,6 @@ final class ZoneChecker extends DestinationChecker {
 	/**
 	 * 判断跟随者是否在目标区域内。
 	 * Returns whether the follower is inside the target zone.
-	 *
 	 * @return true 表示在区域内 / true if inside the zone
 	 */
 	@Override
@@ -48,7 +46,6 @@ final class ZoneChecker2 extends DestinationChecker {
 	/**
 	 * 构造双区域目的地检查器。
 	 * Constructs a dual-zone destination checker.
-	 *
 	 * @param follower 跟随生物 / follower creature
 	 * @param zone1 区域 1 / zone 1
 	 * @param zone2 区域 2 / zone 2
@@ -62,7 +59,6 @@ final class ZoneChecker2 extends DestinationChecker {
 	/**
 	 * 判断跟随者是否在任一目标区域内。
 	 * Returns whether the follower is inside either target zone.
-	 *
 	 * @return true 表示在 zone1 或 zone2 内 / true if inside zone1 or zone2
 	 */
 	@Override

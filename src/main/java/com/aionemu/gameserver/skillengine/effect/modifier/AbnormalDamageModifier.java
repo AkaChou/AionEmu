@@ -8,7 +8,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 异常状态伤害修正：目标处于指定异常状态时加成伤害。
  * Abnormal-state damage modifier: bonus damage when the target has a given abnormal state.
- *
  * @author kecimis
  */
 public class AbnormalDamageModifier extends ActionModifier {

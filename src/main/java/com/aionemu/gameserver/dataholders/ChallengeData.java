@@ -50,7 +50,6 @@ public class ChallengeData {
 	/**
 	 * 返回按任务 ID 索引的全部挑战任务。
 	 * Returns all challenge tasks indexed by task id.
-	 *
 	 * @return 任务 ID 到模板的映射 / map of task id to template
 	 */
 	public Map<Integer, ChallengeTaskTemplate> getTasks() {
@@ -60,7 +59,6 @@ public class ChallengeData {
 	/**
 	 * 按任务 ID 获取挑战任务模板。
 	 * Returns the challenge task template for the given task id.
-	 *
 	 * @param taskId 任务 ID / task id
 	 * @return 模板，不存在则为 null / template or null
 	 */
@@ -71,7 +69,6 @@ public class ChallengeData {
 	/**
 	 * 按任务链任务 ID 获取所属挑战任务模板。
 	 * Returns the challenge task that owns the given quest id.
-	 *
 	 * @param questId 任务链任务 ID / quest id
 	 * @return 任务模板，不存在则为 null / task template or null
 	 */
@@ -82,7 +79,6 @@ public class ChallengeData {
 	/**
 	 * 按任务链任务 ID 获取挑战任务条目。
 	 * Returns the challenge quest template for the given quest id.
-	 *
 	 * @param questId 任务链任务 ID / quest id
 	 * @return 任务条目，不存在则为 null / quest template or null
 	 */
@@ -93,7 +89,6 @@ public class ChallengeData {
 	/**
 	 * 返回已加载的挑战任务数量。
 	 * Returns the number of loaded challenge tasks.
-	 *
 	 * @return 已加载的挑战任务数量 / Returns the number of loaded challenge tasks.
 	 */
 	public int size() {

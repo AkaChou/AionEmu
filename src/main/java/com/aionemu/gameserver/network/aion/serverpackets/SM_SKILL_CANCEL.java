@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 /**
  * 通知客户端取消生物正在施放的技能。
  * Server packet notifying the client to cancel a creature's casting skill.
- *
  * @author Sweetkr
  */
 @AllArgsConstructor

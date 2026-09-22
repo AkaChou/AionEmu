@@ -20,7 +20,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Sanctum 区域 NPC AI：Latri（@AIName "Latri"），继承 GeneralNpcAI2。
  * Sanctum zone NPC AI: Latri (@AIName "Latri"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("Latri")

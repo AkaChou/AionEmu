@@ -12,7 +12,6 @@ import lombok.AllArgsConstructor;
 /**
  * 联盟就绪检查事件。
  * Check Alliance Ready Event.
- *
  * @author ATracer
  */
 @AllArgsConstructor

@@ -10,7 +10,6 @@ import lombok.Setter;
 /**
  * 阵营战刷新点模板（静态数据/XML）。
  * XML template.
- *
  * @author Rinzler (Encom)
  */
 
@@ -48,7 +47,6 @@ public class RvrSpawnTemplate extends SpawnTemplate {
 	/**
 	 * 是否为和平状态。
 	 * Whether the rvr state is peace.
-	 *
 	 * @return 是否和平 / whether rvr peace
 	 */
 	public final boolean isRvrPeace() {

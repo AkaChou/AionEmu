@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 /**
  * 响应 Requester 游戏对象。
  * Response Requester game object.
- *
  * @author Ben
  */
 @Slf4j
@@ -20,7 +19,6 @@ public class ResponseRequester {
 	/**
 	 * 为此消息 ID 添加处理器，已存在时返回 false。
 	 * Adds this handler to this messageID, returns false if there already exists one
-	 *
 	 * @param messageId 请求消息 ID / ID of the request message
 	 * @return 是否成功 / true or false
 	 */

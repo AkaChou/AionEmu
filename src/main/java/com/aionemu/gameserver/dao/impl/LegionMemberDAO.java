@@ -16,7 +16,6 @@ import java.util.ArrayList;
 /**
  * 军团成员 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of LegionMemberDAO.
- *
  * @author Simple
  * Updated for MySQL 8 - Fixed connection leaks and SQL syntax
  */
@@ -48,9 +47,7 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
     /**
      * 判断指定玩家 ID 是否已作为军团成员使用。
      * Checks whether the given player object id is already used as a legion member.
-     *
      * player object id
-     *
      * @param playerObjId 玩家对象 ID / player object id
      * @return 是否已使用 / whether used
      */
@@ -75,9 +72,7 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
     /**
      * 保存新的军团成员记录。
      * Saves a newly created legion member record.
-     *
      * legion member
-     *
      * @param legionMember 军团成员 / legion member
      * @return 是否保存成功 / whether saved successfully
      */
@@ -100,7 +95,6 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
     /**
      * 更新指定玩家的军团成员信息。
      * Updates the legion member info for the given player.
-     *
      * @param playerId 玩家 ID / player id
      * @param legionMember 军团成员数据 / legion member data
      */
@@ -123,9 +117,7 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
     /**
      * 按玩家对象 ID 加载军团成员。
      * Loads a legion member by player object id.
-     *
      * player object id
-     *
      * @param playerObjId 玩家对象 ID / player object id
      * @return 军团成员，不存在则为 null / legion member or null
      */
@@ -172,9 +164,7 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
     /**
      * 按玩家对象 ID 加载扩展军团成员信息（含玩家基础数据）。
      * Loads extended legion member info by player object id (includes player base data).
-     *
      * player object id
-     *
      * @param playerObjId 玩家对象 ID / player object id
      * @return 扩展军团成员，不存在则为 null / extended legion member or null
      */
@@ -229,9 +219,7 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
     /**
      * 按玩家名加载扩展军团成员信息。
      * Loads extended legion member info by player name.
-     *
      * player name
-     *
      * @param playerName 玩家名 / player name
      * @return 扩展军团成员，不存在则为 null / extended legion member or null
      */
@@ -286,9 +274,7 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
     /**
      * 加载指定军团的全部成员玩家 ID 列表。
      * Loads all member player ids for the given legion.
-     *
      * legion id
-     *
      * @param legionId 军团 ID / legion id
      * @return 成员 ID 列表，无成员则为 null / member id list or null
      */
@@ -317,7 +303,6 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
     /**
      * 删除指定玩家的军团成员记录。
      * Deletes the legion member record for the given player.
-     *
      * @param playerObjId 玩家对象 ID / player object id
      */
     @Override
@@ -335,7 +320,6 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version
@@ -349,7 +333,6 @@ public class LegionMemberDAO extends com.aionemu.gameserver.dao.LegionMemberDAO 
     /**
      * 获取所有已使用的军团成员玩家 ID。
      * Returns all used legion member player ids.
-     *
      * 已使用 ID 数组。
      * used id array.
      */

@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Enshar 区域 NPC AI：Venerable Sea Giant（@AIName "venerable_sea_giant"），继承 AggressiveNpcAI2。
  * Enshar zone NPC AI: Venerable Sea Giant (@AIName "venerable_sea_giant"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("venerable_sea_giant")

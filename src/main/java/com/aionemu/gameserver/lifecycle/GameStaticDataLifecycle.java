@@ -70,7 +70,6 @@ public class GameStaticDataLifecycle {
     /**
      * 是否已加载。
      * Whether this stage is loaded.
-     *
      * @return 已加载为 {@code true} / {@code true} if loaded
      */
     public synchronized boolean isLoaded() {
@@ -80,7 +79,6 @@ public class GameStaticDataLifecycle {
     /**
      * 加载耗时毫秒。
      * Load time in milliseconds.
-     *
      * @return 耗时毫秒，未启动为 -1 / Elapsed millis, or {@code -1} if not started
      */
     public synchronized long getLoadTimeMillis() {
@@ -90,7 +88,6 @@ public class GameStaticDataLifecycle {
     /**
      * 最近失败。
      * Last failure.
-     *
      * @return 最近异常，无则为 null / Last throwable, or {@code null}
      */
     public synchronized Throwable getLastFailure() {
@@ -100,7 +97,6 @@ public class GameStaticDataLifecycle {
     /**
      * 注入移动循环网关提供者。
      * Inject the movement-loop gateway provider.
-     *
      * @param movementLoopGatewayProvider 移动循环网关提供者 / Movement-loop gateway provider
      */
     @Autowired(required = false)
@@ -111,7 +107,6 @@ public class GameStaticDataLifecycle {
     /**
      * 解析移动循环网关：优先 Spring，否则新建。
      * Resolve the movement-loop gateway: prefer Spring, otherwise create new.
-     *
      * @return 移动循环网关 / Movement-loop gateway
      */
     private GameMovementLoopGateway movementLoopGateway() {

@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Iluma 区域 NPC AI：Sky Island Rift Elyos（@AIName "sky_island_rift_E"），继承 NpcAI2。
  * Iluma zone NPC AI: Sky Island Rift Elyos (@AIName "sky_island_rift_E"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("sky_island_rift_E")

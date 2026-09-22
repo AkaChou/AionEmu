@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Theobomos Test Chamber 副本 NPC AI：Desecrated Ifrit（@AIName "IDF6_Lap_GodElemental_67_Ah"），继承 AggressiveNpcAI2。
  * Theobomos Test Chamber instance NPC AI: Desecrated Ifrit (@AIName "IDF6_Lap_GodElemental_67_Ah"), extends AggressiveNpcAI2.
- *
  * @author Rinzler
  * @author Ranastic (Encom)
  */

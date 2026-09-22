@@ -30,7 +30,6 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
     /**
      * 持久化登陆点（委托更新）。
      * Persists a landing location (delegates to update).
-     *
      * @param location 登陆点位置 / landing location
      */
     @Override
@@ -41,7 +40,6 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
     /**
      * 加载全部登陆点；缺失记录会自动插入。
      * Loads all landing locations; missing rows are inserted automatically.
-     *
      * @param locations 登陆点映射 / landing location map
      * @return 是否成功 / whether successful
      */
@@ -87,7 +85,6 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
     /**
      * 更新登陆点。
      * Updates a landing location.
-     *
      * @param locations 登陆点位置 / landing location
      * @return 是否成功 / whether successful
      */
@@ -117,7 +114,6 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
     /**
      * 插入登陆点。
      * Inserts a landing location.
-     *
      * @param locations 登陆点位置 / landing location
      * @return 是否成功 / whether successful
      */
@@ -148,7 +144,6 @@ public class AbyssLandingDAO extends com.aionemu.gameserver.dao.AbyssLandingDAO 
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

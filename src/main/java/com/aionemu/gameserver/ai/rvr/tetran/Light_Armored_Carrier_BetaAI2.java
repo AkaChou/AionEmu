@@ -19,7 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * RvR 相关 NPC AI：Light Armored Carrier Beta（@AIName "Light_Armored_Carrier_Beta"），继承 GeneralNpcAI2。
  * RvR-related NPC AI: Light Armored Carrier Beta (@AIName "Light_Armored_Carrier_Beta"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("Light_Armored_Carrier_Beta")

@@ -7,9 +7,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * FIFO 可执行队列基类：保证同一时刻至多一个执行线程按顺序处理队列。
  * Base FIFO executable queue: at most one worker drains the queue in order at a time.
- *
  * <p>计划移除（Nemesiss）。/ Going to be removed (Nemesiss).</p>
- *
  * @author NB4L1
  */
 public abstract class FIFOExecutableQueue implements Runnable {
@@ -102,7 +100,6 @@ public abstract class FIFOExecutableQueue implements Runnable {
 	/**
 	 * 在持锁下校验期望状态并切换到新状态。
 	 * Under lock, assert expected state and transition to the new value.
-	 *
 	 * @param expected 期望当前状态 / Expected current state
 	 * @param value 目标状态 / Target state
 	 */
@@ -122,7 +119,6 @@ public abstract class FIFOExecutableQueue implements Runnable {
 	/**
 	 * 队列是否为空。
 	 * Whether the queue is empty.
-	 *
 	 * @return 若 empty 则为 true / true if empty
 	 */
 	protected abstract boolean isEmpty();

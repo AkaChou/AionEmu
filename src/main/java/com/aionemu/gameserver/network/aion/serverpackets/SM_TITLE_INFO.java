@@ -12,7 +12,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * <p>
  * 通过 {@code action} 区分用途：0 列表、1 自身设置、3 广播设置、4/5 导师标记、6 奖励称号。
  * Uses {@code action} to distinguish purpose: 0 list, 1 self set, 3 broadcast set, 4/5 mentor flag, 6 bonus title.
- *
  * @author cura, xTz
  */
 public class SM_TITLE_INFO extends AionServerPacket {
@@ -26,7 +25,6 @@ public class SM_TITLE_INFO extends AionServerPacket {
 	/**
 	 * 称号列表。
 	 * Title list.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public SM_TITLE_INFO(Player player) {
@@ -37,7 +35,6 @@ public class SM_TITLE_INFO extends AionServerPacket {
 	/**
 	 * 自身称号设置。
 	 * Self title set.
-	 *
 	 * @param titleId title id
 	 */
 	public SM_TITLE_INFO(int titleId) {
@@ -48,7 +45,6 @@ public class SM_TITLE_INFO extends AionServerPacket {
 	/**
 	 * 广播称号设置。
 	 * Broadcast title set.
-	 *
 	 * @param player 玩家 / player
 	 * @param titleId title id
 	 */
@@ -61,7 +57,6 @@ public class SM_TITLE_INFO extends AionServerPacket {
 	/**
 	 * 自身导师标记。
 	 * Self mentor flag.
-	 *
 	 * @param flag 是否开启 / whether enabled
 	 */
 	public SM_TITLE_INFO(boolean flag) {
@@ -72,7 +67,6 @@ public class SM_TITLE_INFO extends AionServerPacket {
 	/**
 	 * 广播导师标记。
 	 * Broadcast mentor flag.
-	 *
 	 * 玩家 / player
 	 * @param flag   是否开启 / whether enabled
 	 */
@@ -85,7 +79,6 @@ public class SM_TITLE_INFO extends AionServerPacket {
 	/**
 	 * 奖励称号等其它 action。
 	 * Bonus title or other action.
-	 *
 	 * @param action action type
 	 * @param bonusTitleId bonus title id
 	 */

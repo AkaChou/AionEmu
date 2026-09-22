@@ -27,7 +27,6 @@ public class ActionItemNpcAI2 extends NpcAI2
 	/**
 	 * 玩家开始与本 NPC 对话/交互。
 	 * Player starts dialog/interaction with this NPC.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -38,7 +37,6 @@ public class ActionItemNpcAI2 extends NpcAI2
 	/**
 	 * 开始使用交互物（进度条）。
 	 * Start using the action item (progress bar).
-	 *
 	 * @param player 玩家 / player
 	 */
 	protected void handleUseItemStart(final Player player) {
@@ -70,7 +68,6 @@ public class ActionItemNpcAI2 extends NpcAI2
 	/**
 	 * 使用交互物完成时的逻辑。
 	 * Logic when action-item use finishes.
-	 *
 	 * @param player 玩家 / player
 	 */
 	protected void handleUseItemFinish(Player player) {

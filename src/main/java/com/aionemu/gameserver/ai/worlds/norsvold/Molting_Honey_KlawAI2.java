@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Norsvold 区域 NPC AI：Molting Honey Klaw（@AIName "molting_honey_klaw"），继承 AggressiveNpcAI2。
  * Norsvold zone NPC AI: Molting Honey Klaw (@AIName "molting_honey_klaw"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("molting_honey_klaw")

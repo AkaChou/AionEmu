@@ -12,7 +12,6 @@ import java.util.Set;
 /**
  * 管理员循环公告管理命令：列出、新增或删除数据库公告。
  * Admin scheduled-announcement command: lists, adds, or deletes DB-backed announcements.
- *
  * @author Divinity
  */
 public class Announcements extends AdminCommand {
@@ -31,7 +30,6 @@ public class Announcements extends AdminCommand {
 	/**
 	 * 执行公告管理：list/add/delete 子命令。
 	 * Executes announcement management: list/add/delete subcommands.
-	 *
 	 * @param params 参数：list|add|delete 及附加参数 / list|add|delete and extra args
 	 */
 	@Override
@@ -113,7 +111,6 @@ public class Announcements extends AdminCommand {
 	/**
 	 * 参数错误时输出 {@code //announcements} 用法。
 	 * Prints {@code //announcements} usage on invalid arguments.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

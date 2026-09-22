@@ -23,11 +23,9 @@ public class SocialService {
 	/**
 	 * 将目标加入玩家黑名单。
 	 * Adds the target to the player's block list.
-	 *
 	 * operator
 	 * @param blockedPlayer 被屏蔽玩家 / blocked player
 	 * block reason
-	 *
 	 * @return 添加成功时为 {@code true} / {@code true} if added
 	 */
 	public static boolean addBlockedUser(Player player, Player blockedPlayer, String reason) {
@@ -46,10 +44,7 @@ public class SocialService {
 	 * 从玩家黑名单中移除指定用户。
 	 * Removes the given user from the player's block list.
 	 *
-	 * operator
-	 *
 	 * @param blockedUserId 被屏蔽玩家 objectId / blocked player object id
-	 * @param blockedUserId 被屏蔽玩家 ID / Blocked player ID
 	 * @return 移除成功时为 {@code true} / {@code true} if removed
 	 */
 	public static boolean deleteBlockedUser(Player player, int blockedUserId) {
@@ -66,11 +61,9 @@ public class SocialService {
 	/**
 	 * 更新黑名单条目的屏蔽原因。
 	 * Updates the block reason for a blocked player entry.
-	 *
 	 * operator
 	 * @param target 黑名单条目 / blocked player entry
 	 * new reason
-	 *
 	 * @return 有变更且持久化成功返回 true / true if changed and persisted
 	 */
 	public static boolean setBlockedReason(Player player, BlockedPlayer target, String reason) {
@@ -87,7 +80,6 @@ public class SocialService {
 	/**
 	 * 建立双向好友关系并同步双方好友列表。
 	 * Creates a mutual friendship and syncs both friend lists.
-	 *
 	 * @param friend1 first player
 	 * @param friend2 second player
 	 */
@@ -106,7 +98,6 @@ public class SocialService {
 	/**
 	 * 删除好友关系；对方在线时同步通知。
 	 * Deletes a friendship; notifies the other side if online.
-	 *
 	 * @param deleter 发起删除的玩家 / player who deletes
 	 * @param exFriend2Id 被删除好友 objectId / former friend object id
 	 */
@@ -136,7 +127,6 @@ public class SocialService {
 	/**
 	 * 设置好友备注并刷新好友列表包。
 	 * Sets a friend note and refreshes the friend list packet.
-	 *
 	 * @param player operator
 	 * @param friend friend entry
 	 * @param notice note

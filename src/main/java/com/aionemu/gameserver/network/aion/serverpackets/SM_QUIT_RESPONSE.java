@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 /**
  * 对 CM_QUIT 的应答，通知客户端退出或进入编辑模式结果。
  * Response to CM_QUIT notifying the client of quit or edit-mode outcome.
- *
  * @author -Nemesiss-
  */
 @NoArgsConstructor

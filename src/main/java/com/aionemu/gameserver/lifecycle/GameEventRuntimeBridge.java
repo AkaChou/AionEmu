@@ -56,7 +56,6 @@ public class GameEventRuntimeBridge {
     /**
      * 可选注入事件服务提供者。
      * Optionally inject the event-service provider.
-     *
      * @param eventServiceProvider 事件服务提供者 / Event-service provider
      */
     @Autowired(required = false)
@@ -67,7 +66,6 @@ public class GameEventRuntimeBridge {
     /**
      * 可选注入玩家事件服务提供者。
      * Optionally inject the player-event service provider.
-     *
      * @param playerEventServiceProvider 玩家事件服务提供者 / Player-event service provider
      */
     @Autowired(required = false)
@@ -78,7 +76,6 @@ public class GameEventRuntimeBridge {
     /**
      * 可选注入疯狂守护者服务提供者。
      * Optionally inject the Crazy-Daeva service provider.
-     *
      * @param crazyDaevaServiceProvider 疯狂守护者服务提供者 / Crazy-Daeva service provider
      */
     @Autowired(required = false)
@@ -89,7 +86,6 @@ public class GameEventRuntimeBridge {
     /**
      * 可选注入欧比斯排名更新服务提供者。
      * Optionally inject the abyss-rank update service provider.
-     *
      * @param abyssRankUpdateServiceProvider 欧比斯排名更新服务提供者 / Abyss-rank update service provider
      */
     @Autowired(required = false)
@@ -100,7 +96,6 @@ public class GameEventRuntimeBridge {
     /**
      * 可选注入数据包广播器提供者。
      * Optionally inject the packet-broadcaster provider.
-     *
      * @param packetBroadcasterProvider 数据包广播器提供者 / Packet-broadcaster provider
      */
     @Autowired(required = false)
@@ -111,7 +106,6 @@ public class GameEventRuntimeBridge {
     /**
      * 可选注入事件调度器提供者。
      * Optionally inject the event-scheduler provider.
-     *
      * @param eventSchedulerProvider 事件调度器提供者 / Event-scheduler provider
      */
     @Autowired(required = false)
@@ -130,7 +124,6 @@ public class GameEventRuntimeBridge {
     /**
      * 事件服务是否启用。
      * Whether the event service is enabled.
-     *
      * @return 已启用为 {@code true} / {@code true} if enabled
      */
     public boolean isEventServiceEnabled() {
@@ -140,7 +133,6 @@ public class GameEventRuntimeBridge {
     /**
      * 玩家事件是否启用。
      * Whether player events are enabled.
-     *
      * @return 已启用为 {@code true} / {@code true} if enabled
      */
     public boolean isPlayerEventEnabled() {
@@ -150,7 +142,6 @@ public class GameEventRuntimeBridge {
     /**
      * 疯狂守护者是否启用。
      * Whether Crazy Daeva is enabled.
-     *
      * @return 已启用为 {@code true} / {@code true} if enabled
      */
     public boolean isCrazyDaevaEnabled() {
@@ -160,7 +151,6 @@ public class GameEventRuntimeBridge {
     /**
      * 顶级排名更新是否启用（按小时调度）。
      * Whether top-ranking update is enabled (hourly schedule).
-     *
      * @return 已启用为 {@code true} / {@code true} if enabled
      */
     public boolean isTopRankingUpdateEnabled() {
@@ -170,7 +160,6 @@ public class GameEventRuntimeBridge {
     /**
      * 解析事件服务。
      * Resolve the event service.
-     *
      * @return 事件服务 / Event service
      */
     public EventService eventService() {
@@ -183,7 +172,6 @@ public class GameEventRuntimeBridge {
     /**
      * 解析玩家事件服务。
      * Resolve the player-event service.
-     *
      * @return 玩家事件服务 / Player-event service
      */
     public PlayerEventService playerEventService() {
@@ -196,7 +184,6 @@ public class GameEventRuntimeBridge {
     /**
      * 解析疯狂守护者服务。
      * Resolve the Crazy-Daeva service.
-     *
      * @return 疯狂守护者服务 / Crazy-Daeva service
      */
     public CrazyDaevaService crazyDaevaService() {
@@ -209,7 +196,6 @@ public class GameEventRuntimeBridge {
     /**
      * 解析欧比斯排名更新服务。
      * Resolve the abyss-rank update service.
-     *
      * @return 欧比斯排名更新服务 / Abyss-rank update service
      */
     public AbyssRankUpdateService abyssRankUpdateService() {
@@ -222,7 +208,6 @@ public class GameEventRuntimeBridge {
     /**
      * 解析数据包广播器。
      * Resolve the packet broadcaster.
-     *
      * @return 数据包广播器 / Packet broadcaster
      */
     public PacketBroadcaster packetBroadcaster() {
@@ -235,7 +220,6 @@ public class GameEventRuntimeBridge {
     /**
      * 解析事件调度器。
      * Resolve the event scheduler.
-     *
      * @return 事件调度器 / Event scheduler
      */
     public EventScheduler eventScheduler() {

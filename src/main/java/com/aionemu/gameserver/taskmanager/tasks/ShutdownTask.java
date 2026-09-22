@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 数据库调度的自动关机任务处理器。
  * DB-scheduled automatic server-shutdown task handler.
- *
  * @author Divinity
  */
 @Slf4j
@@ -39,7 +38,6 @@ public class ShutdownTask extends TaskFromDBHandler {
 	/**
 	 * 返回任务名 {@code shutdown}。
 	 * Return the task name {@code shutdown}.
-	 *
 	 * @return 任务名 / Task name
 	 */
 	@Override
@@ -50,7 +48,6 @@ public class ShutdownTask extends TaskFromDBHandler {
 	/**
 	 * 校验参数个数是否为 3。
 	 * Whether parameter count is exactly 3.
-	 *
 	 * @return 配置有效时为 {@code true} / {@code true} if valid
 	 */
 	@Override

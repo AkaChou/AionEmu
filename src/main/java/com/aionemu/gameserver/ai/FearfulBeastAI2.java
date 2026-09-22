@@ -23,7 +23,6 @@ import com.aionemu.commons.utils.Rnd;
 /**
  * 胆怯野兽 AI：受击或见敌后逃跑等特殊行为。
  * Fearful-beast AI with flee-on-hit/see special behavior.
- *
  * @author Encom
  */
 @AIName("fearful_beast")
@@ -40,7 +39,6 @@ public class FearfulBeastAI2 extends GeneralNpcAI2
     /**
      * 处理看见生物事件。
      * Handle seeing a creature.
-     *
      * @param creature 生物 / creature
      */
     @Override
@@ -52,7 +50,6 @@ public class FearfulBeastAI2 extends GeneralNpcAI2
     /**
      * 处理生物移动事件。
      * Handle creature-moved.
-     *
      * @param creature 生物 / creature
      */
     @Override

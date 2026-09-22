@@ -35,7 +35,6 @@ import java.util.concurrent.Future;
 /**
  * 伏魔殿防御副本事件处理器。
  * Instance event handler for Pandaemonium.
- *
  * @author Encom
  */
 
@@ -59,7 +58,6 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 
@@ -75,7 +73,6 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -225,7 +222,6 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 							/**
 							 * 处理 visit。
 							 * Handle visit.
-							 *
 							 * @param player 玩家 / player
 							 */
 							@Override
@@ -278,7 +274,6 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 								/**
 								 * 处理 visit。
 								 * Handle visit.
-								 *
 								 * @param player 玩家 / player
 								 */
 								@Override
@@ -453,7 +448,6 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
-	 *
 	 * @param player 玩家 / player
 	 * @param npc NPC / npc
 	 */
@@ -601,9 +595,6 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
              */
             @Override
             public void run() {
-			   /**
-	 * 1. 龙族教官与基地防御：教官出现在国会大厦、黄金神殿与大神殿。 / 1. Drakan Instructor & Base Defence: Drakan Instructors appear in the "Capitol Building, Temple of Gold & Great Temple". After killing each Instructor, friendly NPCs will appear to protect that spot. At the 5th, 15th, and 20th minute, large scale battle begins at each base. If a leader of a base dies, Drakan Instructor will re-appear
-	 */
 				// 弗里吉达军团正在攻击国民议会大厦。 / The Frigida Fregida Legion is attacking the National Assembly Building.
 				sendMsgByRace(1403783, Race.PC_ALL, 0);
 				sp(220716, 1275.3842f, 1217.536f, 214.07533f, (byte) 89, 0); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
@@ -625,9 +616,6 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
              */
             @Override
             public void run() {
-			   /**
-	 * 2. 龙人战斗监督：开始 3 分钟后，3 名监督将在 3/5 随机位置出现并会再次出现。 / 2. Drakan Battle Overseer: 3 min after the start, 3 Drakan Battle Overseers will appear in 3/5 random locations. They will re-appear 3 min after being killed in a random position
-	 */
 				switch (Rnd.get(1, 5)) {
 				    case 1:
 						spawn(220730, 1626.0737f, 1400.7896f, 193.12747f, (byte) 60);
@@ -684,9 +672,6 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
              */
             @Override
             public void run() {
-			   /**
-	 * 3. 不公平之战：开始后 5 或 20 分钟，与战舰的不公平空战开始。使用地图底部传送点。 / 3. Unfair Battle: 5 min or 20 min after the start, unfair aerial battle with a Dredgion starts. Use the teleporter at the bottom of the map to join the fight. Non-Combat Method: After arriving at the sight, mouth all the turrets. You can also fly up to attack the Dredgion directly. Destroy 4 Dredgion generators (2 on each side) to win the battle. You must protect the Turret Generator from the Balaur. If the generator is destroyed, nearby turrets will not be usable. During the unfair battle, missiles might fall on the ground. They will cause great damage if not dealt quickly
-	 */
 				spawn(210039, 1685.2803f, 1400.4742f, 195.3448f, (byte) 60); //Zallad.
 				spawn(703404, 1685.2803f, 1400.4742f, 195.3448f, (byte) 60); //Zallad [Flag].
             }
@@ -698,9 +683,6 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
              */
             @Override
             public void run() {
-			   /**
-	 * 4. 战舰渗透：开始后 5 或 20 分钟城市上空出现战舰，术古可送你登船。 / 4. Dredgion Infiltration: 5 min or 20 min after the start, a Dredgion will appear over the city. A Shugo that can take you to the ship will appear near the "Temple of Gold". Buy a ticket before proceeding. - The Shugo is directly connected to the Dredgion. - Once on the Shugo Ship, you can purchase 2 items that will help you infiltrate the Dredgion. Dredgion Infiltration: - Inside the Dredgion, your objective is to kill the captain. Neutralize the cannons next to the boss before attacking. - Destroying Surkanas will disable each cannon for a while, surkanas will reappear after a minute. - The Observer is to be feared. Use bombs or hiding shield to deal with it. TIP1: Divide your force into 3 groups. (Ex: 2 groups for the Captain & 2 group for Surkanas) TIP2: Destroying both Surkanas at the same time will make it easier to kill the captain
-	 */
 				spawn(834267, 831.24658f, 2323.5696f, 96.926010f, (byte) 0, 86); //Dredgion Fissure.
 				spawn(834268, 1360.9570f, 1435.4115f, 209.09084f, (byte) 49); //Terunerk.
 				spawn(834269, 830.87830f, 2343.7078f, 93.522740f, (byte) 26); //Harunerk.
@@ -715,9 +697,6 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
              */
             @Override
             public void run() {
-			   /**
-	 * 5. 炮塔战：开始 20 分钟后开始，工匠神殿出现运输坦克。 / 5. Turret Battle: 20 min after the start, Turret Battle will begin and 2 Transport Tanks will appear in the Temple of Artisans. Talk to a Shugo behind each Tank to make them start moving to each Turret. How to Proceed: 1. Escorting Transport Tanks: - First of all, you need to take care of Balaurs that are currently attacking the Turrets. - Talk to a Shugo behind each tank to make them start moving to the area where the Defense Turrets are. - On their way, the tank will be attacked multiple times by the Balaur. Protect them at all cost. - Once the tank is destroyed it will re-appear in the Temple of Artisans. 2. Ammo: - Each time you click on the Tank, you will receive one Energy Source. - On each side of the Turret, there is a generator. It can be fueled with the Energy Source you have just obtained. - When both generators have been charged enough times, the Turret will perform a powerful attack on the Dredgion. - The Turret must be activated twice to destroy the Dredgion. - The Balaur will continue to attack the Turret and the Generators. - When a Generator is destroyed, it will re-appear after a while completely empty. 3. Turret Cooling: - Each turret can not be used for a while after firing a shot. - A Rfrigrant can be purchased from a Shugo that appears near the Defense Turret. - A Rfrigrant can be used to shorten the overheating time
-	 */
 				// 防御炮塔处有资源。护送运输车前往收集。 / Resources available at the defense turret. Escort the transport there to collect them.
 				sendMsgByRace(1403708, Race.PC_ALL, 0);
 				spawn(834255, 1211.1102f, 1502.938f, 213.83618f, (byte) 6); // 克伊琳 / Koirinerk.
@@ -736,9 +715,6 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
              */
             @Override
             public void run() {
-			   /**
-	 * 5. 指挥官泽达斯：30 分钟后出现在潘达梦宁广场；其死亡或再过 5 分钟结算最终军阶。 / 5. Commander Zedas: After 30min, Commander Zedas will appear in the "Pandaemonium Plaza" The final rank is calculated when Commander Zedas is dead or 5 min have passed
-	 */
 				deleteNpc(221525); //Hezolf.
 				deleteNpc(221526); // 盎格鲁普 / Angulof.
 				deleteNpc(221527); // 阿盖希亚 / Agehia.
@@ -791,9 +767,6 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
              */
             @Override
             public void run() {
-			   /**
-	 * 6. 最终战舰战：35 分钟后附近出现气流。 / 6. Final Dredgion Battle: After 35min, a windstream will appear near the "Pandaemonium Plaza" Use the windstream to participate in the final battle. How to Progress: - During the final Dredgion battle, you can fly freely. - If you destroy all Power Generators within 10min, you will destroy the last remaining Dredgion. - Each Dredgion Power Generator is protected by a shield. - It can be deactivated by destroying nearby controllers
-	 */
 				deleteNpc(220705); //Commander Zedas.
 				// 楚贝斯达已撤退。使用风道登上飞空艇摧毁战舰！ / Tsubesda has retreated. Use the wind road to get to the airship and destroy the Dredgion!
 				sendMsgByRace(1404024, Race.PC_ALL, 0);
@@ -819,7 +792,6 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
    /**
 	 * 奖励：高级弗里吉达军团战利品箱等。
 	 * Rewards: Premium Frigida Legion Loot Box (3 Generators destroyed) Major Frigida Legion Loot Box (2 Generators destroyed) Major Frigida Legion Supply Box Greater Frigida Legion Loot Box Greater Frigida Legion Supply Box Lesser Frigida Legion Loot Box Lesser Frigida Legion Supply Box Minor Frigida Legion Loot Box Minor Frigida Legion Supply Box
-	 *
 	 * @param player 获得奖励的玩家 / player receiving rewards
 	 */
 	@Override
@@ -879,7 +851,6 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -982,7 +953,6 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -994,7 +964,6 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -1006,7 +975,6 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -1044,7 +1012,6 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -1070,7 +1037,6 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param player 玩家 / player
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 * @return 是否已处理死亡事件 / whether the death was handled

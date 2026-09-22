@@ -7,7 +7,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * GM 指令：提升或降低目标玩家等级。
  * GM command handler that levels the target player up or down.
- *
  * @author Alcapwnd
  */
 public class CmdLevelUpDown extends AbstractGMHandler {
@@ -26,7 +25,6 @@ public class CmdLevelUpDown extends AbstractGMHandler {
 	/**
 	 * 创建处理器并立即调整等级。
 	 * Creates the handler and immediately adjusts the level.
-	 *
 	 * @param admin 执行指令的管理员 / the admin executing the command
 	 * @param params 等级变化量 / level delta
 	 * @param state 升级或降级 / level-up or level-down

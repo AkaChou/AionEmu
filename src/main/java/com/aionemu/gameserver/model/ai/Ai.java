@@ -10,7 +10,6 @@ import lombok.Getter;
 /**
  * AI 配置模板：按 NPC 定义召唤物与炸弹行为。
  * AI configuration template: defines summon and bomb behavior per NPC.
- *
  * @author xTz
  */
 @Getter

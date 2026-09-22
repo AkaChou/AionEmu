@@ -25,8 +25,6 @@ public class BattlefieldUnionService {
      * -- SETTER --
      *  注入 Spring 单例提供者。
      *  Injects the Spring singleton provider.
-     *
-     * @param provider Spring 提供者 / spring provider
      */
     @Setter
     private static volatile ObjectProvider<BattlefieldUnionService> instanceProvider;
@@ -34,15 +32,12 @@ public class BattlefieldUnionService {
 	/**
 	 * 返回当前已注册人数。
 	 * Returns the current registered size.
-	 *
-	 * @return 已注册人数 / registered size
 	 */
 	public int size = 0;
 	/**
 	 * 返回联盟人数上限。
 	 * Returns the maximum registered size.
-	 *
-	 * @return 人数上限 / max size
+	 * 人数上限 / max size
 	 */
 	public int maxSize = 24;
 	public int requestId = 0;
@@ -51,7 +46,6 @@ public class BattlefieldUnionService {
 	/**
 	 * 玩家进入世界时处理。
 	 * Handles player entering the world.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onEnterWorld(Player player) {
@@ -61,7 +55,6 @@ public class BattlefieldUnionService {
 	/**
 	 * 返回当前进行的攻城 ID（无则保持上次值）。
 	 * Returns the currently active siege id (keeps last value when none).
-	 *
 	 * @return 活跃攻城 ID / active siege id
 	 */
 	public int getSiegeActive() {
@@ -88,7 +81,6 @@ public class BattlefieldUnionService {
 	/**
 	 * 攻城开始回调。
 	 * Callback when siege starts.
-	 *
 	 * @param fortressId 要塞 ID / fortress id
 	 */
 	public void onSiegeStart(final int fortressId) {
@@ -96,7 +88,6 @@ public class BattlefieldUnionService {
 			/**
 			 * visit 方法。
 			 * visit method.
-			 *
 			 * @param player 玩家 / player
 			 */
 			public void visit(Player player) {
@@ -109,7 +100,6 @@ public class BattlefieldUnionService {
 	/**
 	 * 攻城结束回调。
 	 * Callback when siege finishes.
-	 *
 	 * @param fortressId 要塞 ID / fortress id
 	 */
 	public void onSiegeFinish(final int fortressId) {
@@ -117,7 +107,6 @@ public class BattlefieldUnionService {
 			/**
 			 * visit 方法。
 			 * visit method.
-			 *
 			 * @param player 玩家 / player
 			 */
 			public void visit(Player player) {
@@ -130,7 +119,6 @@ public class BattlefieldUnionService {
 	/**
 	 * 注册处理。
 	 * Handles registration.
-	 *
 	 * @param player 玩家 / player
 	 * @param requestId 请求 ID / request id
 	 * @param activeSiegeId 活跃攻城 ID / active siege id
@@ -147,7 +135,6 @@ public class BattlefieldUnionService {
 	/**
 	 * 返回当前请求 ID。
 	 * Returns the current request id.
-	 *
 	 * @return 请求 ID / request id
 	 */
 	public int getrequestId() {
@@ -157,7 +144,6 @@ public class BattlefieldUnionService {
 	/**
 	 * 获取服务单例。
 	 * Returns the service singleton.
-	 *
 	 * @return 服务实例 / service instance
 	 */
 	public static BattlefieldUnionService getInstance() {

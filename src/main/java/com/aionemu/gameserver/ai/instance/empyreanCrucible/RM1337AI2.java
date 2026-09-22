@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Empyrean Crucible 副本 NPC AI：RM1337（@AIName "rm_1337"），继承 AggressiveNpcAI2。
  * Empyrean Crucible instance NPC AI: RM1337 (@AIName "rm_1337"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("rm_1337")

@@ -22,7 +22,6 @@ import java.util.List;
 /**
  * Trials Of Eternity 副本 NPC AI：Dark Energy Altar（@AIName "Altar_Dark"），继承 NpcAI2。
  * Trials Of Eternity instance NPC AI: Dark Energy Altar (@AIName "Altar_Dark"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Altar_Dark")

@@ -12,7 +12,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Illuminary Obelisk 副本 NPC AI：Southern Shield Generator（@AIName "southern_shield_generator"），继承 ActionItemNpcAI2。
  * Illuminary Obelisk instance NPC AI: Southern Shield Generator (@AIName "southern_shield_generator"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("southern_shield_generator")

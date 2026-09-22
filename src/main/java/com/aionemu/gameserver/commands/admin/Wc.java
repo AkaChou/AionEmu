@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 管理员世界频道广播（按种族或全体）。
  * Admin world-channel broadcast by race or to all.
- *
  * @author -Evilwizard-, Wakizashi World Channel, only for GM/Admins
  */
 public class Wc extends AdminCommand {
@@ -25,7 +24,6 @@ public class Wc extends AdminCommand {
 	/**
 	 * 向天族/魔族/全体或默认本阵营发送世界频道消息。
 	 * Broadcasts a world-channel message to Elyos, Asmodians, all, or default own race.
-	 *
 	 * @param admin 执行 GM / Admin player
 	 * @param params ELY|ASM|ALL|default and message。
 	 */
@@ -83,7 +81,6 @@ public class Wc extends AdminCommand {
 	/**
 	 * 参数错误时的用法提示。
 	 * Usage hint on invalid parameters.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

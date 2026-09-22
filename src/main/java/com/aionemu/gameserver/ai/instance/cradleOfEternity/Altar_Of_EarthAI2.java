@@ -15,7 +15,6 @@ import java.util.List;
 /**
  * Cradle Of Eternity 副本 NPC AI：Altar Of Earth（@AIName "Altar_Of_Earth"），继承 ActionItemNpcAI2。
  * Cradle Of Eternity instance NPC AI: Altar Of Earth (@AIName "Altar_Of_Earth"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("Altar_Of_Earth")

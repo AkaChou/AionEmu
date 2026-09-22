@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 通知客户端播放施法动画的服务端包。
  * Server packet that shows the casting-spell animation on the client.
- *
  * @author alexa026
  * @author rhys2002
  */
@@ -26,7 +25,6 @@ public class SM_CASTSPELL extends AionServerPacket {
 	/**
 	 * 以对象为目标的施法动画包。
 	 * Cast-spell animation packet targeting a creature object.
-	 *
 	 * @param attackerObjectId 施法者对象 ID / caster object id
 	 * skill id
 	 * @param level 技能等级 / skill level
@@ -49,7 +47,6 @@ public class SM_CASTSPELL extends AionServerPacket {
 	/**
 	 * 以坐标点为目标的施法动画包。
 	 * Cast-spell animation packet targeting a world position.
-	 *
 	 * @param attackerObjectId 施法者对象 ID / caster object id
 	 * skill id
 	 * @param level 技能等级 / skill level

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 客户端发送邮件请求包。
  * Client packet for sending mail.
- *
  * @author Aion Gates, xTz
  */
 public class CM_SEND_MAIL extends AionClientPacket {

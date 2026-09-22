@@ -15,7 +15,6 @@ import com.aionemu.gameserver.utils.*;
 /**
  * Esoterrace 副本 NPC AI：Reian Refugee（@AIName "Reian_Refugee"），继承 NpcAI2。
  * Esoterrace instance NPC AI: Reian Refugee (@AIName "Reian_Refugee"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Reian_Refugee")

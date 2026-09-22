@@ -21,7 +21,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Elementis Forest 副本 NPC AI：Trapped Terma（@AIName "terma"），继承 NpcAI2。
  * Elementis Forest instance NPC AI: Trapped Terma (@AIName "terma"), extends NpcAI2.
- *
  * @author Luzien
  */
 @AIName("terma")

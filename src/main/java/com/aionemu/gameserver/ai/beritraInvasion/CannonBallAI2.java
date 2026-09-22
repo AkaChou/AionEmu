@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * 贝里特拉入侵相关 NPC AI：Cannon Ball（@AIName "cannon_ball"），继承 AggressiveNpcAI2。
  * Beritra-invasion related NPC AI: Cannon Ball (@AIName "cannon_ball"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("cannon_ball")

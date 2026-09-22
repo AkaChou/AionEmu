@@ -7,7 +7,6 @@ import lombok.Getter;
 /**
  * 按地图区域划分的公共聊天频道。
  * Public chat channel scoped by world map region.
- *
  * @author ATracer
  */
 public class RegionChannel extends RaceChannel {
@@ -22,7 +21,6 @@ public class RegionChannel extends RaceChannel {
     /**
      * 创建区域公共频道。
      * Creates a region public channel.
-     *
      * @param mapId 地图 ID / map id
      * @param race 阵营 / race
      * @param identifier 字符串标识 / string identifier

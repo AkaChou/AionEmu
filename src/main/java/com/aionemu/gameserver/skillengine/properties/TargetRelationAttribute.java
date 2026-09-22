@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 目标关系属性：敌人/友方/队伍/全部等敌友筛选。
  * Target relation attribute: enemy/friend/party/all relation filters.
- *
  * @author ATracer
  */
 @XmlType(name = "TargetRelationAttribute")

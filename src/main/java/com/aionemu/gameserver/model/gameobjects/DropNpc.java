@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 /**
  * 掉落 NPC 游戏对象。
  * Drop Npc game object.
- *
  * @author Simple
  */
 @Getter
@@ -34,36 +33,27 @@ public class DropNpc {
 	/**
 	 * 返回玩家状态集合。
 	 * Returns the player status collection.
-	 *
-	 * @return 玩家状态 / player status
 	 */
 	private final Collection<Player> playerStatus = new ArrayList<>();
 	/**
 	 * 设置正在拾取的玩家。
 	 * Sets the player currently looting.
-	 *
-	 * @param player 正在拾取的玩家 / the lootingPlayer to set
+	 * 正在拾取的玩家 / the lootingPlayer to set
 	 */
 	private Player lootingPlayer = null;
 	/**
 	 * 设置分配 ID。
 	 * Sets the distribution id.
-	 *
-	 * @param distributionId 分配 ID / distribution id
 	 */
 	private int distributionId = 0;
 	/**
 	 * 设置分配类型。
 	 * Sets the distribution type.
-	 *
-	 * @param distributionType 分配类型 / distribution type
 	 */
 	private boolean distributionType;
 	/**
 	 * 设置当前索引。
 	 * Sets the current index.
-	 *
-	 * @param currentIndex 当前索引 / current index
 	 */
 	private int currentIndex = 0;
 	private WeakReference<TemporaryPlayerTeam<? extends TeamMember<Player>>> lootingTeam;
@@ -75,8 +65,6 @@ public class DropNpc {
 	/**
 	 * 是否自由拾取。
 	 * Whether the drop is free for all.
-	 *
-	 * @return 是否自由拾取 / whether free for all
 	 */
 	private boolean isFreeForAll = false;
 	/** 返回剩余消失时间 / Returns the remaining decay time */
@@ -95,7 +83,6 @@ public class DropNpc {
 	/**
 	 * 是否正在被拾取。
 	 * Whether the drop is being looted.
-	 *
 	 * @return 是否正在被拾取 / whether being looted
 	 */
 	public boolean isBeingLooted() {
@@ -105,7 +92,6 @@ public class DropNpc {
 	/**
 	 * 返回分配类型。
 	 * Returns the distribution type.
-	 *
 	 * @return 分配类型 / distribution type
 	 */
 	public boolean getDistributionType() {
@@ -133,7 +119,6 @@ public class DropNpc {
 	/**
 	 * 添加玩家状态。
 	 * Adds a player status.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void addPlayerStatus(Player player) {
@@ -143,7 +128,6 @@ public class DropNpc {
 	/**
 	 * 移除玩家状态。
 	 * Removes a player status.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void delPlayerStatus(Player player) {
@@ -153,7 +137,6 @@ public class DropNpc {
 	/**
 	 * 玩家是否在状态列表中。
 	 * Whether the player is in the status list.
-	 *
 	 * @return 是否在列表中 / true if found
 	 */
 	public boolean containsPlayerStatus(Player player) {

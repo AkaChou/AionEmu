@@ -38,7 +38,6 @@ public class Quest extends AdminCommand {
     /**
      * 分发 start/set/delete/show/log 子命令；log 作用于选中玩家，未选中时默认对自己生效。
      * Dispatch start/set/delete/show/log; log applies to the selected player, or self when no player is targeted.
-     *
      * @param params 子命令与任务参数 / Subcommand and quest args
      */
     @Override
@@ -87,7 +86,6 @@ public class Quest extends AdminCommand {
     /**
      * 为选中玩家开关任务追踪日志；未选中玩家时默认对自己生效，无参数时翻转，支持 on/off 显式指定。
      * Toggles quest trace logging for the selected player (self when no player is targeted); flips when no argument is given, supports explicit on/off.
-     *
      * @param admin 执行命令的管理员 / Admin executing the command
      * @param params 子命令参数，params[1] 可为 on/off / Subcommand args, params[1] may be on/off
      */
@@ -230,7 +228,6 @@ public class Quest extends AdminCommand {
 	/**
 	 * 解析状态参数：允许大小写混用与首尾空白，无法识别时返回 null。
 	 * Parses the status argument case-insensitively, tolerating surrounding whitespace.
-	 *
 	 * @param raw 原始状态词 / Raw status token
 	 * @return 解析后的状态，未知则 null / Parsed status, or null when unknown
 	 */
@@ -364,7 +361,6 @@ public class Quest extends AdminCommand {
     /**
      * 参数错误时显示语法。
      * Show syntax when parameters are invalid.
-     *
      */
     @Override
     public void onFail(Player player, String message) {

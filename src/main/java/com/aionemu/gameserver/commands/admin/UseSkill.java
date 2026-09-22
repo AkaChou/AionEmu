@@ -14,7 +14,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 强制对目标施放技能或直接套用效果的管理员命令。
  * Admin command to force-cast a skill or apply its effect on a target.
- *
  * @author Source, kecimis
  */
 public class UseSkill extends AdminCommand {
@@ -32,7 +31,6 @@ public class UseSkill extends AdminCommand {
 	/**
 	 * 以管理员/目标为施法者对目标使用技能，或直接应用效果。
 	 * Uses a skill as admin/target effector, or applies effect directly.
-	 *
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -120,7 +118,6 @@ public class UseSkill extends AdminCommand {
 	/**
 	 * 以指定施法者对目标无动画使用技能。
 	 * Uses the skill without animation as the given effector on target.
-	 *
 	 */
 	private void useSkill(Player admin, Creature effector, Creature target, int skillId, int skillLevel) {
 		Skill skill = GameEngineServices.skillEngine().getSkill(effector, skillId, skillLevel, target);
@@ -134,7 +131,6 @@ public class UseSkill extends AdminCommand {
 	/**
 	 * 参数错误时的用法提示。
 	 * Usage hint on invalid parameters.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

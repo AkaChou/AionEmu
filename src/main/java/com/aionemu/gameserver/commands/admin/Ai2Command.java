@@ -20,7 +20,6 @@ import java.util.Iterator;
 /**
  * 管理员 AI2 调试命令：开关日志、查看/设置目标 NPC 的 AI 状态与事件。
  * Admin AI2 debug command: toggles logs and inspects/sets target NPC AI state and events.
- *
  * @author ATracer
  */
 @Slf4j
@@ -37,16 +36,11 @@ public class Ai2Command extends AdminCommand {
 	/**
 	 * 执行 AI2 调试：支持全局日志开关与目标 NPC 的 info/log/set/event 等操作。
 	 * Executes AI2 debug: global log toggles and target-NPC info/log/set/event ops.
-	 *
 	 * @param params 参数：子命令与附加参数 / subcommand and extra args
 	 */
 	@Override
 	public void execute(Player player, String... params) {
-		/**
-		 * 非目标类命令（全局日志开关）。
-		 * Non target commands
-		 */
-		String param0 = params[0];
+        String param0 = params[0];
 
 		switch (param0) {
 			case "createlog": {
@@ -72,11 +66,7 @@ public class Ai2Command extends AdminCommand {
 				break;
 		}
 
-		/**
-		 * 目标类命令（需选中 NPC）。
-		 * Target commands
-		 */
-		VisibleObject target = player.getTarget();
+        VisibleObject target = player.getTarget();
 
 		if (target == null || !(target instanceof Npc npc)) {
 			PacketSendUtility.sendMessage(player, "Select target first (Npc only)");
@@ -145,7 +135,6 @@ public class Ai2Command extends AdminCommand {
 	/**
 	 * 参数错误时输出 {@code //ai2} 用法。
 	 * Prints {@code //ai2} usage on invalid arguments.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

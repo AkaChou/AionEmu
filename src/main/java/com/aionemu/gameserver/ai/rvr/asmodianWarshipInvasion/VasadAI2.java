@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * RvR 相关 NPC AI：Vasad（@AIName "vasad"），继承 AggressiveNpcAI2。
  * RvR-related NPC AI: Vasad (@AIName "vasad"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("vasad")

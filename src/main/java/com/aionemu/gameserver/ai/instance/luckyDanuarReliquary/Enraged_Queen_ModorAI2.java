@@ -25,7 +25,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Lucky Danuar Reliquary 副本 NPC AI：Enraged Queen Modor（@AIName "enraged_queen_modor"），继承 AggressiveNpcAI2。
  * Lucky Danuar Reliquary instance NPC AI: Enraged Queen Modor (@AIName "enraged_queen_modor"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("enraged_queen_modor")

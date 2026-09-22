@@ -5,7 +5,6 @@ import com.aionemu.gameserver.configs.main.CacheConfig;
 /**
  * 缓存映射工厂，按配置创建弱引用或软引用实现。
  * Cache map factory that creates weak or soft implementations by config.
- *
  * @author Luno
  */
 public class CacheMapFactory {
@@ -13,7 +12,6 @@ public class CacheMapFactory {
 	/**
 	 * 按 {@link CacheConfig#SOFT_CACHE_MAP} 返回 {@link SoftCacheMap} 或 {@link WeakCacheMap}。
 	 * Return either {@link SoftCacheMap} or {@link WeakCacheMap} based on {@link CacheConfig#SOFT_CACHE_MAP}.
-	 *
 	 * @param <K> 键类型 / Type of keys
 	 * @param <V> 值类型 / Type of values
 	 * @param cacheName 缓存映射名称 / The name for this cache map
@@ -31,7 +29,6 @@ public class CacheMapFactory {
 	/**
 	 * 创建 {@link SoftCacheMap} 实例。
 	 * Create and return a {@link SoftCacheMap} instance.
-	 *
 	 * @param <K> 键类型 / Type of keys
 	 * @param <V> 值类型 / Type of values
 	 * @param cacheName 缓存映射名称 / The name for this cache map
@@ -45,7 +42,6 @@ public class CacheMapFactory {
 	/**
 	 * 创建 {@link WeakCacheMap} 实例。
 	 * Create and return a {@link WeakCacheMap} instance.
-	 *
 	 * @param <K> 键类型 / Type of keys
 	 * @param <V> 值类型 / Type of values
 	 * @param cacheName 缓存映射名称 / The name for this cache map

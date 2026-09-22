@@ -270,7 +270,6 @@ public class NpcTemplate extends VisibleObjectTemplate {
 	/**
 	 * 判断是否免疫指定异常状态。
 	 * Returns whether the NPC is immune to the given abnormal status.
-	 *
 	 * @param stat 异常状态属性 / abnormal status stat
 	 * @return 是否免疫 / whether immune
 	 */
@@ -376,7 +375,6 @@ public class NpcTemplate extends VisibleObjectTemplate {
 	/**
 	 * 是否可交互（存在对话信息）。
 	 * Whether the NPC can be interacted with.
-	 *
 	 * @return 是否可交互 / whether interact
 	 */
 	public boolean canInteract() {
@@ -386,7 +384,6 @@ public class NpcTemplate extends VisibleObjectTemplate {
 	/**
 	 * 是否为对话型 NPC。
 	 * Whether this is a dialog NPC.
-	 *
 	 * @return 是否对话型 / whether dialog npc
 	 */
 	public boolean isDialogNpc() {
@@ -399,7 +396,6 @@ public class NpcTemplate extends VisibleObjectTemplate {
 	/**
 	 * 尸体是否漂浮。
 	 * Whether the corpse floats.
-	 *
 	 * @return 是否漂浮尸体 / whether float corpse
 	 */
 	public boolean isFloatCorpse() {

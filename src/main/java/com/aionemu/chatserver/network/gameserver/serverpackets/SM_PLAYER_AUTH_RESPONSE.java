@@ -7,7 +7,6 @@ import com.aionemu.chatserver.network.gameserver.GsServerPacket;
 /**
  * 回复玩家聊天认证结果（客户端 ID 与令牌）的服务端包。
  * Server packet that returns player chat auth result (client id and token).
- *
  * @author ATracer
  */
 public class SM_PLAYER_AUTH_RESPONSE extends GsServerPacket {
@@ -27,7 +26,6 @@ public class SM_PLAYER_AUTH_RESPONSE extends GsServerPacket {
     /**
      * 根据聊天客户端构造认证应答包。
      * Builds the auth response packet from the chat client.
-     *
      * @param chatClient 已注册的聊天客户端 / registered chat client
      */
     public SM_PLAYER_AUTH_RESPONSE(ChatClient chatClient) {
@@ -38,7 +36,6 @@ public class SM_PLAYER_AUTH_RESPONSE extends GsServerPacket {
     /**
      * 写出玩家 ID 与令牌。
      * Writes the player id and token.
-     *
      * @param con 目标游戏服连接 / target game-server connection
      */
     @Override

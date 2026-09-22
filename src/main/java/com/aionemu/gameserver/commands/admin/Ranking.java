@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 欧比斯排名管理指令；手动触发欧比斯排名更新。
  * Admin command to manually trigger abyss ranking updates.
- *
  * @author ATracer
  */
 public class Ranking extends AdminCommand {
@@ -21,7 +20,6 @@ public class Ranking extends AdminCommand {
 	/**
 	 * 执行排名指令；支持 {@code update} 子命令触发全服欧比斯排名刷新。
 	 * Executes the ranking command; {@code update} triggers a full abyss rank refresh.
-	 *
 	 * @param admin 执行指令的管理员 / admin executing the command
 	 * @param params 参数，通常为 {@code update} / args, typically {@code update}
 	 */
@@ -38,7 +36,6 @@ public class Ranking extends AdminCommand {
 	/**
 	 * 参数错误时输出用法。
 	 * Prints usage when arguments are invalid.
-	 *
 	 * @param player 接收提示的玩家 / player receiving the message
 	 */
 	@Override

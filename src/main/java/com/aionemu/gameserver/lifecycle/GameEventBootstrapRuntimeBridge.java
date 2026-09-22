@@ -45,7 +45,6 @@ public class GameEventBootstrapRuntimeBridge {
     /**
      * 可选注入露娜商店服务提供者。
      * Optionally inject the Luna-shop service provider.
-     *
      * @param lunaShopServiceProvider 露娜商店服务提供者 / Luna-shop service provider
      */
     @Autowired(required = false)
@@ -56,7 +55,6 @@ public class GameEventBootstrapRuntimeBridge {
     /**
      * 可选注入宠物役从服务提供者。
      * Optionally inject the minion service provider.
-     *
      * @param minionServiceProvider 宠物役从服务提供者 / Minion service provider
      */
     @Autowired(required = false)
@@ -67,7 +65,6 @@ public class GameEventBootstrapRuntimeBridge {
     /**
      * 可选注入修勾扫荡服务提供者。
      * Optionally inject the Shugo-sweep service provider.
-     *
      * @param shugoSweepServiceProvider 修勾扫荡服务提供者 / Shugo-sweep service provider
      */
     @Autowired(required = false)
@@ -78,7 +75,6 @@ public class GameEventBootstrapRuntimeBridge {
     /**
      * 可选注入阿特里亚护照服务提供者。
      * Optionally inject the Atreian-passport service provider.
-     *
      * @param atreianPassportServiceProvider 阿特里亚护照服务提供者 / Atreian-passport service provider
      */
     @Autowired(required = false)
@@ -89,7 +85,6 @@ public class GameEventBootstrapRuntimeBridge {
     /**
      * 可选注入事件窗口服务提供者。
      * Optionally inject the event-window service provider.
-     *
      * @param eventWindowServiceProvider 事件窗口服务提供者 / Event-window service provider
      */
     @Autowired(required = false)
@@ -100,7 +95,6 @@ public class GameEventBootstrapRuntimeBridge {
     /**
      * 解析露娜商店服务。
      * Resolve the Luna-shop service.
-     *
      * @return 露娜商店服务 / Luna-shop service
      */
     public LunaShopService lunaShopService() {
@@ -113,7 +107,6 @@ public class GameEventBootstrapRuntimeBridge {
     /**
      * 解析宠物役从服务。
      * Resolve the minion service.
-     *
      * @return 宠物役从服务 / Minion service
      */
     public MinionService minionService() {
@@ -126,7 +119,6 @@ public class GameEventBootstrapRuntimeBridge {
     /**
      * 解析修勾扫荡服务。
      * Resolve the Shugo-sweep service.
-     *
      * @return 修勾扫荡服务 / Shugo-sweep service
      */
     public ShugoSweepService shugoSweepService() {
@@ -139,7 +131,6 @@ public class GameEventBootstrapRuntimeBridge {
     /**
      * 解析阿特里亚护照服务。
      * Resolve the Atreian-passport service.
-     *
      * @return 阿特里亚护照服务 / Atreian-passport service
      */
     public AtreianPassportService atreianPassportService() {
@@ -152,7 +143,6 @@ public class GameEventBootstrapRuntimeBridge {
     /**
      * 解析事件窗口服务。
      * Resolve the event-window service.
-     *
      * @return 事件窗口服务 / Event-window service
      */
     public EventWindowService eventWindowService() {

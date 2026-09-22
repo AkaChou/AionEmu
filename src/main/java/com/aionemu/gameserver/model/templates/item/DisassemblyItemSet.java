@@ -8,7 +8,6 @@ import lombok.Getter;
 /**
  * 分解套装模板：将被分解物品 ID 绑定到分解产出列表。
  * Disassembly set template: binds the disassembled item id to its output lists.
- *
  * @author BeckUp.Media
  */
 @Getter

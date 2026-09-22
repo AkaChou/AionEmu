@@ -11,7 +11,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * Reshanta 区域 NPC AI：Empyrean Blessing（@AIName "empyrean_blessing"），继承 ActionItemNpcAI2。
  * Reshanta zone NPC AI: Empyrean Blessing (@AIName "empyrean_blessing"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("empyrean_blessing")

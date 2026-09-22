@@ -20,7 +20,6 @@ import java.util.concurrent.Future;
 /**
  * 达努亚尔圣物匣副本事件处理器。
  * Instance event handler for Danuar Reliquary.
- *
  * @author Encom
  */
 
@@ -39,7 +38,6 @@ public class DanuarReliquaryInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc 注册掉落的 NPC / registered NPC
 	 */
 	@Override
@@ -80,7 +78,6 @@ public class DanuarReliquaryInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -97,7 +94,6 @@ public class DanuarReliquaryInstance extends GeneralInstanceHandler
 								/**
 								 * 处理 visit。
 								 * Handle visit.
-								 *
 								 * @param player 玩家 / player
 								 */
 								@Override
@@ -116,7 +112,6 @@ public class DanuarReliquaryInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc 死亡的 NPC / dead NPC
 	 */
 	@Override
@@ -143,7 +138,6 @@ public class DanuarReliquaryInstance extends GeneralInstanceHandler
 						/**
 						 * 处理 visit。
 						 * Handle visit.
-						 *
 						 * @param player 玩家 / player
 						 */
 						@Override
@@ -175,7 +169,6 @@ public class DanuarReliquaryInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -194,7 +187,6 @@ public class DanuarReliquaryInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -206,7 +198,6 @@ public class DanuarReliquaryInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
-	 *
 	 * @param msg 消息 ID / message id
 	 * @param race 阵营 / race
 	 * @param time 延迟时间 / delay time
@@ -224,7 +215,6 @@ public class DanuarReliquaryInstance extends GeneralInstanceHandler
                     /**
                      * 处理 visit。
                      * Handle visit.
-                     *
                      * @param player 玩家 / player
                      */
                     @Override
@@ -271,7 +261,6 @@ public class DanuarReliquaryInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
-	 *
 	 * @param player 玩家 / player
 	 */
 

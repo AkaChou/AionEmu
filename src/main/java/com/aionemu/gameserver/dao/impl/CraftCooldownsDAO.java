@@ -13,9 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 制作冷却 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of CraftCooldownsDAO.
- *
  * Updated for MySQL 8.
- *
  * @author synchro2
  */
 @Slf4j
@@ -34,7 +32,6 @@ public class CraftCooldownsDAO extends com.aionemu.gameserver.dao.CraftCooldowns
     /**
      * 加载玩家制作冷却。
      * Loads craft cooldowns for a player.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -69,7 +66,6 @@ public class CraftCooldownsDAO extends com.aionemu.gameserver.dao.CraftCooldowns
     /**
      * 保存玩家制作冷却。
      * Stores craft cooldowns for a player.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -132,7 +128,6 @@ public class CraftCooldownsDAO extends com.aionemu.gameserver.dao.CraftCooldowns
     /**
      * 删除玩家全部制作冷却。
      * Deletes all craft cooldowns for a player.
-     *
      * @param player 玩家 / player
      */
     private void deleteCraftCoolDowns(Player player) {
@@ -170,7 +165,6 @@ public class CraftCooldownsDAO extends com.aionemu.gameserver.dao.CraftCooldowns
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

@@ -14,7 +14,6 @@ import lombok.Setter;
 /**
  * 军团 MemberEx，用于团队相关逻辑。
  * Legion Member Ex for team logic.
- *
  * @author Simple
  */
 @Getter
@@ -33,9 +32,6 @@ public class LegionMemberEx extends LegionMember {
 	private Timestamp lastOnline;
 	/** 返回世界 ID。 / Returns the world id. */
 	private int worldId;
-	/**
-	 * @param online the online to set
-	 */
 	private boolean online = false;
 
 	/**
@@ -79,7 +75,6 @@ public class LegionMemberEx extends LegionMember {
 	/**
 	 * 按经验值计算并设置等级。
 	 * Sets the level based on the exp value.
-	 *
 	 * @param exp 经验值 / exp value
 	 */
 	public void setExp(long exp) {
@@ -112,7 +107,6 @@ public class LegionMemberEx extends LegionMember {
 	/**
 	 * 检查 LegionMemberEx 是否有效。
 	 * Checks whether this LegionMemberEx is valid.
-	 *
 	 * @return 若有效则为 true / true if valid
 	 */
 	public boolean isValidLegionMemberEx() {

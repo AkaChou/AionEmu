@@ -18,7 +18,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 攻城战相关 NPC AI：SW Tank Ride Light（@AIName "SWTank_Ride_Light"），继承 NpcAI2。
  * Siege-related NPC AI: SW Tank Ride Light (@AIName "SWTank_Ride_Light"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("SWTank_Ride_Light")

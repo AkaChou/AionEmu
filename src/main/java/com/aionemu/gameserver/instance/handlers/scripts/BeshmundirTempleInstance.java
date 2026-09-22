@@ -30,7 +30,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 /**
  * 贝斯蒙迪尔神殿副本事件处理器。
  * Instance event handler for Beshmundir Temple.
- *
  * @author Encom
  */
 
@@ -52,7 +51,6 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 
@@ -249,7 +247,6 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -266,7 +263,6 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
-	 *
 	 * @param player 玩家 / player
 	 * @param npc NPC / npc
 	 */
@@ -313,16 +309,12 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
     public void onDie(Npc npc) {
         Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
-			/**
-			 * Path To Watcher's Nexus
-			 */
 			case 216238: //Captain Lakhara.
 			    doors.get(470).setOpen(true);
 				//某处沉重的门已打开。 / A heavy door has opened somewhere.
@@ -345,9 +337,6 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 				sendMsgByRace(1401839, Race.PC_ALL, 0);
             break;
 
-			/**
-			 * Path To Macunbello's Refuge
-			 */
 			case 216583: //Brutal Soulwatcher (1st Island)
 				sp(799518, 933.982971f, 444.269104f, 222.00f, (byte) 21, 3000, 0, null); //Plegeton Boatman II.
 			break;
@@ -393,9 +382,6 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 			    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 0));
 			break;
 
-			/**
-			 * Path To Garden Of The Entombed
-			 */
 			case 216246: //The Great Virhana.
 				doors.get(473).setOpen(true);
 				//某处沉重的门已打开。 / A heavy door has opened somewhere.
@@ -407,10 +393,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 				deleteNpc(281649); //Chopper.
 			break;
 
-			/**
-			 * Path To The Prison Of Ice
-			 */
-			case 216263: //Isbariya The Resolute.
+            case 216263: //Isbariya The Resolute.
 				sendMovie(player, 439);
 				// 封印守护者已倒下。裂隙宝珠发光，封印削弱。 / The Seal Protector has fallen. The Rift Orb shines while the seal weakens.
 				sendMsgByRace(1400480, Race.PC_ALL, 0);
@@ -448,7 +431,6 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 sp。
 	 * Handle sp.
-	 *
 	 * @param npcId NPC / NPC
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
@@ -463,7 +445,6 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
     /**
      * 处理 sp。
      * Handle sp.
-     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -480,7 +461,6 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
     /**
      * 处理 sp。
      * Handle sp.
-     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -512,7 +492,6 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
     /**
      * 处理 sp。
      * Handle sp.
-     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -542,7 +521,6 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
-	 *
 	 * @param msg 消息 / message
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
@@ -560,7 +538,6 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -594,7 +571,6 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -605,7 +581,6 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override

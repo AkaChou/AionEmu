@@ -21,7 +21,6 @@ public class JAXBUtil {
     /**
      * 将对象序列化为格式化 XML 字符串。
      * Serialize an object to a formatted XML string.
-     *
      * @param obj 待序列化对象 / Object to serialize
      * @return XML 字符串 / XML string
      * @throws RuntimeException 序列化失败 / On marshal failure
@@ -43,7 +42,6 @@ public class JAXBUtil {
     /**
      * 将对象序列化为 DOM Document。
      * Serialize an object to a DOM Document.
-     *
      * @param obj 待序列化对象 / Object to serialize
      * @return DOM 文档 / Document
      */
@@ -55,7 +53,6 @@ public class JAXBUtil {
     /**
      * 反序列化 XML 字符串（无 Schema）。
      * Deserialize an XML string without schema.
-     *
      * @param s     XML 字符串 / XML string
      * @param clazz 目标类型 / Target type
      * @param <T>   类型参数 / Type parameter
@@ -68,7 +65,6 @@ public class JAXBUtil {
     /**
      * 使用 URL Schema 校验并反序列化。
      * Deserialize with schema validation from a URL.
-     *
      * @param s         XML 字符串 / XML string
      * @param clazz     目标类型 / Target type
      * @param schemaURL 校验 Schema 的 URL / Schema URL
@@ -83,7 +79,6 @@ public class JAXBUtil {
     /**
      * 使用字符串 Schema 校验并反序列化。
      * Deserialize with schema validation from a schema string.
-     *
      * @param s            XML 字符串 / XML string
      * @param clazz        目标类型 / Target type
      * @param schemaString Schema 定义 / Schema definition
@@ -98,7 +93,6 @@ public class JAXBUtil {
     /**
      * 从 Document 反序列化（字符串 Schema）。
      * Deserialize from a Document using a schema string.
-     *
      * @param xml          XML 文档 / XML document
      * @param clazz        目标类型 / Target type
      * @param schemaString Schema 定义 / Schema definition
@@ -113,7 +107,6 @@ public class JAXBUtil {
     /**
      * 核心反序列化方法。
      * Core deserialization method.
-     *
      * @param s      XML 字符串 / XML string
      * @param clazz  目标类型 / Target type
      * @param schema 校验 Schema，可为 null / Validation schema, may be null
@@ -136,7 +129,6 @@ public class JAXBUtil {
     /**
      * 为给定类生成 XML Schema 字符串。
      * Generate an XML Schema string for the given classes.
-     *
      * @param classes 目标类 / Target classes
      * @return Schema 字符串 / Schema string
      * @throws RuntimeException 生成失败 / On generation failure

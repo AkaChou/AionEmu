@@ -15,7 +15,6 @@ import com.aionemu.gameserver.world.WorldPosition;
 /**
  * Reshanta 区域 NPC AI：Miren Master General（@AIName "unsealed_miren"），继承 AggressiveNpcAI2。
  * Reshanta zone NPC AI: Miren Master General (@AIName "unsealed_miren"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("unsealed_miren")

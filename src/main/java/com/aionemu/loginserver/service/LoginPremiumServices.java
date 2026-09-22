@@ -18,7 +18,6 @@ public final class LoginPremiumServices implements DisposableBean {
     /**
      * 注入并缓存高级账号控制器 {@link ObjectProvider}。
      * Inject and cache the premium controller {@link ObjectProvider}.
-     *
      * @param premiumControllerProvider 控制器提供者 / controller provider
      */
     public LoginPremiumServices(ObjectProvider<PremiumController> premiumControllerProvider) {
@@ -28,7 +27,6 @@ public final class LoginPremiumServices implements DisposableBean {
     /**
      * 获取 {@link PremiumController}；必要时使用回退实例并缓存。
      * Resolve {@link PremiumController}; cache a fallback instance when needed.
-     *
      * @return 高级账号控制器 / premium controller
      */
     public static PremiumController premiumController() {
@@ -55,7 +53,6 @@ public final class LoginPremiumServices implements DisposableBean {
     /**
      * 创建回退控制器实例。
      * Create the fallback controller instance.
-     *
      * @return 回退控制器 / fallback controller
      */
     private static PremiumController fallbackPremiumController() {
@@ -65,7 +62,6 @@ public final class LoginPremiumServices implements DisposableBean {
     /**
      * 缓存已解析的控制器并返回。
      * Remember the resolved controller and return it.
-     *
      * @param premiumController 控制器 / controller
      * @return 同一控制器 / same controller
      */

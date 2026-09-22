@@ -13,7 +13,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Anguished Dragon Lord Refuge 副本 NPC AI：ID Tiamat Drakan Named65 Al（@AIName "tiamat_woman_form2"），继承 AggressiveNpcAI2。
  * Anguished Dragon Lord Refuge instance NPC AI: ID Tiamat Drakan Named65 Al (@AIName "tiamat_woman_form2"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("tiamat_woman_form2")

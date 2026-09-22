@@ -49,8 +49,7 @@ public class BalaurAssaultService {
      *  以覆盖默认单例。
      *  Injects a Spring
      *  to override the default singleton.
-     *
-     * @param provider Spring 提供者 / spring provider
+     * Spring 提供者 / spring provider
      */
 	@Setter
     private static volatile ObjectProvider<BalaurAssaultService> instanceProvider;
@@ -60,7 +59,6 @@ public class BalaurAssaultService {
 	/**
 	 * 获取服务单例，优先走 Spring ObjectProvider。
 	 * Returns the service singleton, preferring Spring ObjectProvider when available.
-	 *
 	 * @return 服务实例 / service instance
 	 */
 	public static BalaurAssaultService getInstance() {
@@ -74,7 +72,6 @@ public class BalaurAssaultService {
     /**
 	 * 攻城开始时评估并可能启动龙族突击。
 	 * Evaluates and may start a Balaur assault when a siege begins.
-	 *
 	 * @param siege 关联攻城 / related siege
 	 */
 	public void onSiegeStart(final Siege<?> siege) {
@@ -225,7 +222,6 @@ public class BalaurAssaultService {
 	/**
 	 * 判断要塞是否可发起龙族突击（去重、影响力、同图并发上限）。
 	 * Decides whether a fortress can start a Balaur assault (dedupe, influence, per-world limit).
-	 *
 	 * @param fortress 要塞据点 / fortress location
 	 * @return 是否可突击 / whether assault may start
 	 */
@@ -249,7 +245,6 @@ public class BalaurAssaultService {
 	/**
 	 * 判断神器是否可发起龙族突击（当前始终 false）。
 	 * Decides whether an artifact can start a Balaur assault (currently always false).
-	 *
 	 * @param artifact 神器据点 / artifact location
 	 * @return 是否可突击 / whether assault may start
 	 */
@@ -259,7 +254,6 @@ public class BalaurAssaultService {
 	/**
 	 * GM/指令手动对指定据点发起突击。
 	 * Manually starts an assault on a location (GM/command).
-	 *
 	 * @param player 发起者 / initiator
 	 * @param location 据点 ID / location id
 	 * @param delay 延迟秒数 / delay in seconds
@@ -293,7 +287,6 @@ public class BalaurAssaultService {
 	/**
 	 * 按影响力/占有要塞数与配置概率判定是否触发突击。
 	 * Rolls assault chance from influence/owned forts and config rate.
-	 *
 	 * @param isBalaurea 是否巴劳雷亚 / whether on Balaurea
 	 * @param fortress 要塞据点 / fortress location
 	 * @return 是否触发突击 / whether assault triggers
@@ -322,7 +315,6 @@ public class BalaurAssaultService {
 	/**
 	 * 向在线玩家刷出组装型德雷吉恩 NPC。
 	 * Spawns an assembled dredgion NPC for all online players.
-	 *
 	 * @param spawnId 组装 NPC 模板 ID / assembled NPC template id
 	 */
 	public void spawnDredgion(int spawnId) {

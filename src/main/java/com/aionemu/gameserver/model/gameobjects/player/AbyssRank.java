@@ -39,25 +39,6 @@ public class AbyssRank {
 	private int lastGP;
 	private long lastUpdate;
 
-	/**
-	 * @param dailyAP
-	 * @param dailyGP
-	 * @param weeklyAP
-	 *
-	 * @param weeklyGP
-	 * @param ap
-	 * @param gp
-	 *
-	 * @param rank
-	 * @param topRanking
-	 * @param dailyKill
-	 * @param weeklyKill
-	 * @param allKill
-	 * @param maxRank
-	 * @param lastKill
-	 * @param lastAP
-	 * @param lastGP
-	 */
 	public AbyssRank(int dailyAP, int dailyGP, int weeklyAP, int weeklyGP, int ap, int gp, int rank, int topRanking,
 			int dailyKill, int weeklyKill, int allKill, int maxRank, int lastKill, int lastAP, int lastGP,
 			long lastUpdate) {
@@ -100,8 +81,6 @@ public class AbyssRank {
 	/**
 	 * 添加欧比斯点数到玩家（当前玩家 AP + 新增 AP）。
 	 * Add AP to a player (current player AP + added AP)
-	 *
-	 * @param additionalAp
 	 */
 	public void addAp(int additionalAp, Player player) {
 		dailyAP += additionalAp;
@@ -129,8 +108,6 @@ public class AbyssRank {
 	/**
 	 * 添加荣耀点数到玩家（当前玩家 GP + 新增 GP）。
 	 * Add GP to a player (current player GP + added GP)
-	 *
-	 * @param additionalGp
 	 */
 	public void addGp(int additionalGp) {
 		dailyGP += additionalGp;

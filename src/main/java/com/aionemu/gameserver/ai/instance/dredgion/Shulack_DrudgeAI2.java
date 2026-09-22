@@ -14,7 +14,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Dredgion 副本 NPC AI：Shulack Drudge（@AIName "shulack_drudge"），继承 GeneralNpcAI2。
  * Dredgion instance NPC AI: Shulack Drudge (@AIName "shulack_drudge"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("shulack_drudge")

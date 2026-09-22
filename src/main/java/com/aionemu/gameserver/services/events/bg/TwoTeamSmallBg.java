@@ -21,8 +21,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 小型双队对抗：多回合小队对战，胜回合最多的队伍获胜。
  * Small two-team battleground: multi-round group fights; most round wins win.
- *
- * @Author Rinzler (Encom)
+ * @author Rinzler (Encom)
  */
 public class TwoTeamSmallBg extends Battleground {
 	/** 额外回合/超时任务。 / Extra round/timeout task. */
@@ -786,7 +785,6 @@ public class TwoTeamSmallBg extends Battleground {
 	/**
 	 * 从排队列表创建小型双队对局。
 	 * Creates a small two-team match from the queue.
-	 *
 	 * @param players 排队玩家对象 ID / queued player object ids
 	 */
 	public void createMatch(List<Integer> players) {
@@ -824,12 +822,6 @@ public class TwoTeamSmallBg extends Battleground {
 	}
 
 	@Override
-	/**
-	 * 小型双队限制隐身技能。
-	 * Small two-team restricts stealth skills.
-	 *
-	 * @return 恒为 true / always true
-	 */
 	public boolean isStealthRestricted() {
 		return true;
 	}
@@ -837,7 +829,6 @@ public class TwoTeamSmallBg extends Battleground {
 	/**
 	 * 处理死亡：检测回合胜负。
 	 * Handles death: detect round winner.
-	 *
 	 * @param player 死亡玩家 / dead player
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 */
@@ -859,13 +850,6 @@ public class TwoTeamSmallBg extends Battleground {
 	}
 
 	@Override
-	/**
-	 * 创建小型双队锦标赛对局。
-	 * Creates a small two-team tournament match.
-	 *
-	 * @param teams 各队玩家 / teams of players
-	 * @return 成功则 true / true on success
-	 */
 	public boolean createTournament(List<List<Player>> teams) {
 		if (!super.createGroups(teams)) {
 			return false;
@@ -881,7 +865,6 @@ public class TwoTeamSmallBg extends Battleground {
 	/**
 	 * 处理玩家离开小型双队战场。
 	 * Handles a player leaving small two-team BG.
-	 *
 	 * @param player 玩家 / player
 	 * @param isLogout 是否登出 / whether logout
 	 * @param isAfk 是否挂机 / whether AFK
@@ -935,7 +918,6 @@ public class TwoTeamSmallBg extends Battleground {
 	/**
 	 * 为指定小队累计回合胜场。
 	 * Adds a round win for the given group.
-	 *
 	 * @param group 胜方小队 / winning group
 	 */
 	private void addRoundWin(PlayerGroup group) {
@@ -953,7 +935,6 @@ public class TwoTeamSmallBg extends Battleground {
 	/**
 	 * 判定本回合胜方小队。
 	 * Determines the current round winning group.
-	 *
 	 * @return 回合胜方小队 / winning group
 	 */
 	private PlayerGroup getRoundWinner() {
@@ -988,7 +969,6 @@ public class TwoTeamSmallBg extends Battleground {
 	/**
 	 * 获取整场胜方小队。
 	 * Returns overall match winning group.
-	 *
 	 * @return 整场胜方小队 / winning group
 	 */
 	private PlayerGroup getWinner() {
@@ -1012,7 +992,6 @@ public class TwoTeamSmallBg extends Battleground {
 	/**
 	 * 结束双队对局并结算奖励。
 	 * Ends the two-team match and settles rewards.
-	 *
 	 * @param isDraw 是否平局 / whether draw
 	 */
 	private void endTwoTeamMatch(boolean isDraw) {

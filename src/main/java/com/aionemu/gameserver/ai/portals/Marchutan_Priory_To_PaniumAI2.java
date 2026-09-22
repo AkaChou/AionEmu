@@ -14,7 +14,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 传送门/传送点 AI：Marchutan Priory To Panium（@AIName "mptp"），继承 NpcAI2。
  * Portal/teleporter AI: Marchutan Priory To Panium (@AIName "mptp"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("mptp")

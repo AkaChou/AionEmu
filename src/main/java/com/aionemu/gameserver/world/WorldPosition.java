@@ -8,7 +8,6 @@ import lombok.Setter;
 /**
  * 世界中对象的位置：地图、区域、坐标与朝向。
  * Position of an object in the world: map, region, coordinates and heading.
- *
  * @author Rinzler (Encom)
  * @author -Nemesiss-
  */
@@ -20,7 +19,6 @@ public class WorldPosition {
 	/**
 	 * 以指定地图 ID 构造位置。
 	 * Construct a position for the given map id.
-	 *
 	 * @param mapId 地图 ID / the map id
 	 */
 	public WorldPosition(int mapId) {
@@ -45,7 +43,6 @@ public class WorldPosition {
 	/**
 	 * 返回世界地图 ID。
 	 * Return the world map id.
-	 *
 	 * @return 地图 ID / the map id
 	 */
 	public int getMapId() {
@@ -57,7 +54,6 @@ public class WorldPosition {
 	/**
 	 * 返回当前地图区域；未生成时返回 null。
 	 * Return the current map region; null when not spawned.
-	 *
 	 * @return 地图区域或 null / map region or null
 	 */
 	public MapRegion getMapRegion() {
@@ -67,7 +63,6 @@ public class WorldPosition {
 	/**
 	 * 返回实例 ID。
 	 * Return the instance id.
-	 *
 	 * @return 实例 ID / the instance id
 	 */
 	public int getInstanceId() {
@@ -77,7 +72,6 @@ public class WorldPosition {
 	/**
 	 * 返回父地图的实例数量。
 	 * Return the parent map's instance count.
-	 *
 	 * @return 实例数量 / the instance count
 	 */
 	public int getInstanceCount() {
@@ -87,7 +81,6 @@ public class WorldPosition {
 	/**
 	 * 是否副本类型地图。
 	 * Whether this is an instance-type map.
-	 *
 	 * @return 副本地图为 true / true if instance map
 	 */
 	public boolean isInstanceMap() {
@@ -97,7 +90,6 @@ public class WorldPosition {
 	/**
 	 * 当前地图区域是否处于激活状态。
 	 * Whether the current map region is active.
-	 *
 	 * @return 若 active 则为 true / true if active
 	 */
 	public boolean isMapRegionActive() {
@@ -107,7 +99,6 @@ public class WorldPosition {
 	/**
 	 * 返回所属 {@link World}。
 	 * Return the owning {@link World}.
-	 *
 	 * @return 所属世界 / the owning world
 	 */
 	public World getWorld() {
@@ -117,7 +108,6 @@ public class WorldPosition {
 	/**
 	 * 返回所属地图实例。
 	 * Return the owning world-map instance.
-	 *
 	 * @return 所属地图实例 / the world map instance
 	 */
 	public WorldMapInstance getWorldMapInstance() {
@@ -127,7 +117,6 @@ public class WorldPosition {
 	/**
 	 * 设置生成状态。
 	 * Set spawned flag.
-	 *
 	 * @param val 是否生成 / whether spawned
 	 */
 	void setIsSpawned(boolean val) {
@@ -137,7 +126,6 @@ public class WorldPosition {
 	/**
 	 * 设置地图区域。
 	 * Set the map region.
-	 *
 	 * @param r 地图区域 / map region
 	 */
 	void setMapRegion(MapRegion r) {
@@ -147,7 +135,6 @@ public class WorldPosition {
 	/**
 	 * 设置世界坐标与朝向（null 参数表示保持原值）。
 	 * Set world coordinates and heading (null args keep previous values).
-	 *
 	 * @param newX 新 X，可为 null / new X, or null
 	 * @param newY 新 Y，可为 null / new Y, or null
 	 * @param newZ 新 Z，可为 null / new Z, or null
@@ -171,7 +158,6 @@ public class WorldPosition {
 	/**
 	 * 设置朝向。
 	 * Set heading.
-	 *
 	 * @param h 朝向 / heading
 	 */
 	public void setH(byte h) {
@@ -187,7 +173,6 @@ public class WorldPosition {
 	/**
 	 * 浅克隆当前位置（共享 mapRegion 引用）。
 	 * Shallow-clone this position (shares the mapRegion reference).
-	 *
 	 * @return 浅克隆副本 / the clone
 	 */
 	@Override

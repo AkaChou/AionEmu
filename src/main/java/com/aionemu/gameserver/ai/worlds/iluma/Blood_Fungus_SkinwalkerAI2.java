@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Iluma 区域 NPC AI：Blood Fungus Skinwalker（@AIName "blood_fungus_skinwalker"），继承 AggressiveNpcAI2。
  * Iluma zone NPC AI: Blood Fungus Skinwalker (@AIName "blood_fungus_skinwalker"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("blood_fungus_skinwalker")

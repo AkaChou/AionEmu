@@ -10,7 +10,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Abyssal Splinter 副本 NPC AI：Luminous Waterworm（@AIName "Luminous_Waterworm"），继承 AggressiveNpcAI2。
  * Abyssal Splinter instance NPC AI: Luminous Waterworm (@AIName "Luminous_Waterworm"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("Luminous_Waterworm")

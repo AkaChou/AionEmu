@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Reshanta 区域 NPC AI：Spirit Of Miren（@AIName "spirit_of_miren"），继承 AggressiveNpcAI2。
  * Reshanta zone NPC AI: Spirit Of Miren (@AIName "spirit_of_miren"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("spirit_of_miren")

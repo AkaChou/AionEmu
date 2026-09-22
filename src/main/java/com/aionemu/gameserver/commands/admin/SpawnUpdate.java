@@ -20,9 +20,7 @@ import java.util.List;
 /**
  * 刷怪点坐标更新指令；修改选中 NPC 的 x/y/z/h/walker 或整体坐标并保存。
  * Admin command that updates a targeted NPC spawn's x/y/z/h/walker or full coordinates and saves them.
- *
  * @author KID
- * @modified Rolandas
  */
 @Slf4j
 public class SpawnUpdate extends AdminCommand {
@@ -34,7 +32,6 @@ public class SpawnUpdate extends AdminCommand {
 	/**
 	 * 执行该管理指令。
 	 * Executes this admin command.
-	 *
 	 * @param admin 执行指令的管理员 / admin executing the command
 	 */
 	@Override
@@ -203,7 +200,6 @@ public class SpawnUpdate extends AdminCommand {
 	/**
 	 * 参数错误时输出用法。
 	 * Prints usage when arguments are invalid.
-	 *
 	 * @param player 接收提示的玩家 / player receiving the message
 	 */
 	@Override

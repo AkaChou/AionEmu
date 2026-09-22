@@ -14,7 +14,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * GM 指令：强制完成目标玩家的指定任务。
  * GM command handler that forcibly finishes a quest for the target player.
- *
  * @author Alcapwnd
  */
 public class CmdEndQuest extends AbstractGMHandler {
@@ -22,7 +21,6 @@ public class CmdEndQuest extends AbstractGMHandler {
 	/**
 	 * 创建处理器并立即强制完成任务。
 	 * Creates the handler and immediately runs the end-quest logic.
-	 *
 	 * @param admin 执行指令的管理员 / the admin executing the command
 	 * @param params 任务 ID 字符串 / quest id as string
 	 */

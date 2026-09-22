@@ -7,7 +7,6 @@ import java.lang.reflect.Field;
 /**
  * 双精度浮点数属性转换器
  * Double property transformer class that handles conversion of string values to Double objects.
- *
  * 支持的输入格式:
  * Supported input format:
  * - 十进制数字 decimal numbers
@@ -24,7 +23,6 @@ public class DoubleTransformer implements PropertyTransformer<Double> {
     /**
      * 将字符串值转换为 Double 对象
      * Transforms string value into Double object
-     *
      * @param value 要转换的字符串值 / String value to transform
      * @param field 字段对象 / Field that will be transformed
      * @return 转换后的 Double 对象 / Transformed Double object

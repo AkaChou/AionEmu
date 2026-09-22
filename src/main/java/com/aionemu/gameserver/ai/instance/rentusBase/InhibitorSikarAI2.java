@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Rentus Base 副本 NPC AI：Inhibitor Sikar（@AIName "inhibitorsikar"），继承 AggressiveNpcAI2。
  * Rentus Base instance NPC AI: Inhibitor Sikar (@AIName "inhibitorsikar"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("inhibitorsikar")

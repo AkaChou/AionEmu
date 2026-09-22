@@ -3,7 +3,6 @@ package com.aionemu.gameserver.controllers.observer;
 /**
  * 动作观察者类型（位掩码），用于过滤关心的事件。
  * Action observer type bit-mask used to filter relevant events.
- *
  * @author ATracer
  */
 public enum ObserverType {
@@ -57,7 +56,6 @@ public enum ObserverType {
 	/**
 	 * 判断本类型是否覆盖指定观察者类型。
 	 * Whether this type covers the given observer type.
-	 *
 	 * @param observerType 待匹配类型 / type to match
 	 * @return 是否覆盖 / whether it matches
 	 */

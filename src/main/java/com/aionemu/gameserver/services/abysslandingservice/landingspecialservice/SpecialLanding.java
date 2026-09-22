@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 /**
  * 特殊欧比斯着陆点生命周期抽象基类。
  * Abstract special abyss-landing lifecycle base.
- *
  * @param <RL> 特殊着陆点位置类型 / Special landing-location type
  */
 @Getter
@@ -23,9 +22,6 @@ import lombok.RequiredArgsConstructor;
 public abstract class SpecialLanding<RL extends LandingSpecialLocation> {
 	private boolean started;
 	private final RL spacialLandingLocation;
-	/**
-	 * @return 当前状态类型 / Current state type
-	 */
 	private LandingSpecialStateType type;
 
 	/**
@@ -72,7 +68,6 @@ public abstract class SpecialLanding<RL extends LandingSpecialLocation> {
 	/**
 	 * 按状态类型刷出 NPC。
 	 * Spawn NPCs for the given special state type.
-	 *
 	 * @param type 特殊着陆状态 / Special landing state type
 	 */
 	protected void spawn(LandingSpecialStateType type) {

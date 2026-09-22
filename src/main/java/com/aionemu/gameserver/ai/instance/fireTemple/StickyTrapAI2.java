@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Fire Temple 副本 NPC AI：Sticky Trap（@AIName "stickytrap"），继承 AggressiveNpcAI2。
  * Fire Temple instance NPC AI: Sticky Trap (@AIName "stickytrap"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("stickytrap")

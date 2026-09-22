@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 物品类型枚举。
  * Item Type enumeration.
- *
  * @author Wakizashi
  */
 @XmlType(name = "item_type")

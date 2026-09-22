@@ -11,7 +11,6 @@ import lombok.AccessLevel;
 /**
  * 区域名称注册表：按字符串缓存唯一 {@link ZoneName} 实例。
  * Zone-name registry: caches unique {@link ZoneName} instances by string key.
- *
  * @author Rolandas
  */
 @Slf4j
@@ -37,7 +36,6 @@ public final class ZoneName {
 	/**
 	 * 返回区域名称字符串。
 	 * Return the zone name string.
-	 *
 	 * @return 区域名称字符串 / the name
 	 */
 	public String name() {
@@ -47,7 +45,6 @@ public final class ZoneName {
 	/**
 	 * 返回名称哈希作为 ID。
 	 * Return the name hash as the id.
-	 *
 	 * @return 名称哈希 / the name hash
 	 */
 	public int id() {
@@ -57,7 +54,6 @@ public final class ZoneName {
 	/**
 	 * 按名称创建或获取已有 {@link ZoneName}（大写键）。
 	 * Create or get an existing {@link ZoneName} by name (upper-case key).
-	 *
 	 * @param name 区域名称 / zone name
 	 * @return 区域名称实例 / zone name instance
 	 */
@@ -68,7 +64,6 @@ public final class ZoneName {
 	/**
 	 * 按名称返回 ID；未知名称回退为 NONE。
 	 * Return the id for the name; unknown names fall back to NONE.
-	 *
 	 * @param name 区域名称 / zone name
 	 * @return 区域 ID / the zone id
 	 */
@@ -80,7 +75,6 @@ public final class ZoneName {
 	/**
 	 * 按名称获取已注册实例；未知名称告警并返回 NONE。
 	 * Get a registered instance by name; unknown names warn and return NONE.
-	 *
 	 * @param name 区域名称 / zone name
 	 * @return 区域名称实例 / zone name instance
 	 */

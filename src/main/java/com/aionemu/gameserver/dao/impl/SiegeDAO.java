@@ -13,7 +13,6 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 攻城 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of SiegeDAO.
- *
  * Updated for MySQL 8.
  */
 @Slf4j
@@ -32,7 +31,6 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
     /**
      * 加载攻城据点数据。
      * Loads siege locations.
-     *
      * @param locations 地图位置 / location map
      * @return 是否成功 / whether succeeded
      */
@@ -74,7 +72,6 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
     /**
      * 更新单个攻城据点。
      * Updates a single siege location.
-     *
      * @param siegeLocation 攻城战据点 / siege location
      * @return 是否成功 / whether succeeded
      */
@@ -99,7 +96,6 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
     /**
      * 插入攻城据点。
      * Inserts a siege location.
-     *
      * @param siegeLocation 攻城战据点 / siege location
      * @return 是否成功 / whether succeeded
      */
@@ -123,7 +119,6 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
     /**
      * 批量更新攻城据点。
      * Batch updates siege locations.
-     *
      * @param locations 地图位置 / location map
      * @return 是否成功 / whether succeeded
      */
@@ -159,7 +154,6 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
     /**
      * 按种族加载攻城据点。
      * Loads siege locations by race.
-     *
      * @param race 阵营 / race
      * @return 地图位置 / location map
      */
@@ -191,7 +185,6 @@ public class SiegeDAO extends com.aionemu.gameserver.dao.SiegeDAO {
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

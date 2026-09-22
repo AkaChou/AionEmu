@@ -77,7 +77,6 @@ public final class GameBattlefieldServices implements DisposableBean {
     /**
      * 构造并注册各战场服务的静态访问器。
      * Construct and register static accessors for battlefield services.
-     *
      * @param kamarBattlefieldServiceProvider 卡玛战场服务提供者 / Kamar battlefield service provider
      * @param engulfedOphidanBridgeServiceProvider 吞噬的奥菲丹桥服务提供者 / Engulfed Ophidan Bridge service provider
      * @param suspiciousOphidanBridgeServiceProvider 可疑的奥菲丹桥服务提供者 / Suspicious Ophidan Bridge service provider
@@ -120,7 +119,6 @@ public final class GameBattlefieldServices implements DisposableBean {
     /**
      * 获取卡玛战场服务。
      * Obtain the Kamar battlefield service.
-     *
      * @return 服务实例 / Service instance
      */
     public static KamarBattlefieldService kamarBattlefieldService() {
@@ -134,7 +132,6 @@ public final class GameBattlefieldServices implements DisposableBean {
     /**
      * 获取吞噬的奥菲丹桥服务。
      * Obtain the Engulfed Ophidan Bridge service.
-     *
      * @return 服务实例 / Service instance
      */
     public static EngulfedOphidanBridgeService engulfedOphidanBridgeService() {
@@ -148,7 +145,6 @@ public final class GameBattlefieldServices implements DisposableBean {
     /**
      * 获取可疑的奥菲丹桥服务。
      * Obtain the Suspicious Ophidan Bridge service.
-     *
      * @return 服务实例 / Service instance
      */
     public static SuspiciousOphidanBridgeService suspiciousOphidanBridgeService() {
@@ -162,7 +158,6 @@ public final class GameBattlefieldServices implements DisposableBean {
     /**
      * 获取铁壁前线服务。
      * Obtain the Iron Wall Warfront service.
-     *
      * @return 服务实例 / Service instance
      */
     public static IronWallWarfrontService ironWallWarfrontService() {
@@ -176,7 +171,6 @@ public final class GameBattlefieldServices implements DisposableBean {
     /**
      * 获取伊迪尔穹顶服务。
      * Obtain the Idgel Dome service.
-     *
      * @return 服务实例 / Service instance
      */
     public static IdgelDomeService idgelDomeService() {
@@ -190,7 +184,6 @@ public final class GameBattlefieldServices implements DisposableBean {
     /**
      * 获取伊迪尔穹顶地标服务。
      * Obtain the Idgel Dome Landmark service.
-     *
      * @return 服务实例 / Service instance
      */
     public static IdgelDomeLandmarkService idgelDomeLandmarkService() {
@@ -204,7 +197,6 @@ public final class GameBattlefieldServices implements DisposableBean {
     /**
      * 获取坚韧殿堂服务。
      * Obtain the Hall of Tenacity service.
-     *
      * @return 服务实例 / Service instance
      */
     public static HallOfTenacityService hallOfTenacityService() {
@@ -218,7 +210,6 @@ public final class GameBattlefieldServices implements DisposableBean {
     /**
      * 获取大竞技场训练营服务。
      * Obtain the Grand Arena Training Camp service.
-     *
      * @return 服务实例 / Service instance
      */
     public static GrandArenaTrainingCampService grandArenaTrainingCampService() {
@@ -232,7 +223,6 @@ public final class GameBattlefieldServices implements DisposableBean {
     /**
      * 获取 IDRun 服务。
      * Obtain the IDRun service.
-     *
      * @return 服务实例 / Service instance
      */
     public static IDRunService idRunService() {

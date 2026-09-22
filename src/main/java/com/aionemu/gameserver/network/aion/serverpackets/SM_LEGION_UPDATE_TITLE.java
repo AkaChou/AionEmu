@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 向客户端同步目标军团头衔/职位信息的服务端包。
  * Server packet that synchronizes a target's legion title/rank info to the client.
- *
  * @author sweetkr
  */
 @AllArgsConstructor

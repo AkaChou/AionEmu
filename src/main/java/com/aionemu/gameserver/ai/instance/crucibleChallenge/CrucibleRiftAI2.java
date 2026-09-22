@@ -14,7 +14,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Crucible Challenge 副本 NPC AI：Crucible Rift（@AIName "cruciblerift"），继承 ActionItemNpcAI2。
  * Crucible Challenge instance NPC AI: Crucible Rift (@AIName "cruciblerift"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("cruciblerift")

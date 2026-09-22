@@ -18,10 +18,8 @@ import lombok.RequiredArgsConstructor;
 /**
  * 次元漩涡入侵活动抽象基类。
  * Abstract base for dimensional-vortex invasion events.
- *
  * <p>管理启动/停止幂等、生成器监听与攻防双方玩家列表契约。
  * Manages idempotent start/stop, generator listeners, and the defender/invader player-list contract.</p>
- *
  * @author Rinzler (Encom)
  * @param <VL> 漩涡地点类型 / vortex location type
  */
@@ -33,30 +31,23 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	/**
 	 * 获取绑定的漩涡地点。
 	 * Returns the bound vortex location.
-	 *
-	 * @return 绑定的漩涡地点 / location
 	 */
 	private final VL vortexLocation;
 	/**
 	 * 获取生成器摧毁监听器。
 	 * Returns the generator destroy listener.
-	 *
-	 * @return 生成器摧毁监听器 / listener
 	 */
 	private final GeneratorDestroyListener generatorDestroyListener = new GeneratorDestroyListener(this);
 	private final AtomicBoolean finished = new AtomicBoolean();
 	/**
 	 * 生成器是否已被摧毁。
 	 * Whether the generator has been destroyed.
-	 *
-	 * @return 已摧毁则为 true / true if destroyed
+	 * 已摧毁则为 true / true if destroyed
 	 */
 	private boolean generatorDestroyed;
 	/**
 	 * 获取裂隙生成器 NPC。
 	 * Returns the rift generator NPC.
-	 *
-	 * @return 生成器 NPC / generator
 	 */
 	private Npc generator;
 	private boolean started;
@@ -76,7 +67,6 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	/**
 	 * 将玩家加入攻方或守方。
 	 * Adds a player as invader or defender.
-	 *
 	 * @param player 玩家 / player
 	 * @param isInvader 是否攻方 / true for invader
 	 */
@@ -85,7 +75,6 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	/**
 	 * 将玩家踢出攻方或守方。
 	 * Kicks a player from invader or defender side.
-	 *
 	 * @param player 玩家 / player
 	 * @param isInvader 是否攻方 / true for invader
 	 */
@@ -94,7 +83,6 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	/**
 	 * 尝试将玩家登记为守方（可含确认弹窗）。
 	 * Tries to register a player as defender (may prompt confirmation).
-	 *
 	 * @param defender 守方玩家 / defender
 	 */
 	public abstract void updateDefenders(Player defender);
@@ -102,7 +90,6 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	/**
 	 * 将玩家登记为攻方。
 	 * Registers a player as invader.
-	 *
 	 * @param invader 攻方玩家 / invader
 	 */
 	public abstract void updateInvaders(Player invader);
@@ -110,7 +97,6 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	/**
 	 * 守方玩家表。
 	 * Defender player map.
-	 *
 	 * @return 守方玩家表 / defenders
 	 */
 	public abstract Map<Integer, Player> getDefenders();
@@ -118,7 +104,6 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	/**
 	 * 攻方玩家表。
 	 * Invader player map.
-	 *
 	 * @return 攻方玩家表 / invaders
 	 */
 	public abstract Map<Integer, Player> getInvaders();
@@ -174,7 +159,6 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	/**
 	 * 按状态类型刷新刷怪。
 	 * Spawns entities by vortex state type.
-	 *
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(VortexStateType type) {
@@ -210,7 +194,6 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	/**
 	 * 是否已结束。
 	 * Whether the event has finished.
-	 *
 	 * @return 已结束则为 true / true if finished
 	 */
 	public boolean isFinished() {
@@ -220,7 +203,6 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	/**
 	 * 获取地点 ID。
 	 * Returns the location id.
-	 *
 	 * @return 地点 ID / location id
 	 */
 	public int getVortexLocationId() {

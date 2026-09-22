@@ -7,7 +7,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：切换是否接收经验奖励。
  * Player command: toggles receiving experience rewards.
- *
  * @author Wakizashi
  */
 public class cmd_noexp extends PlayerCommand {
@@ -23,7 +22,6 @@ public class cmd_noexp extends PlayerCommand {
 	/**
 	 * 在启用/禁用经验获取之间切换。
 	 * Toggles experience gain on or off for the player.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 未使用的参数 / unused parameters
 	 */

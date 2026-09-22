@@ -10,7 +10,6 @@ import com.aionemu.gameserver.skillengine.model.HealType;
 /**
  * 触发即时 FP 治疗：按 FP 治疗类型计算并应用回复。
  * Proc instant FP heal: calculates and applies FP recovery via heal type FP.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -20,7 +19,6 @@ public class ProcFPHealInstantEffect extends AbstractHealEffect {
 	/**
 	 * 以 FP 类型计算治疗量。
 	 * Calculates heal amount as FP.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -31,7 +29,6 @@ public class ProcFPHealInstantEffect extends AbstractHealEffect {
 	/**
 	 * 以 FP 类型应用治疗。
 	 * Applies heal as FP.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

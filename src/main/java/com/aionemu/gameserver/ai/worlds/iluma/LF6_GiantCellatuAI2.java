@@ -9,7 +9,6 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 /**
  * Iluma 区域 NPC AI：LF6 Giant Cellatu（@AIName "LF6_GiantCellatu"），继承 NpcAI2。
  * Iluma zone NPC AI: LF6 Giant Cellatu (@AIName "LF6_GiantCellatu"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("LF6_GiantCellatu")

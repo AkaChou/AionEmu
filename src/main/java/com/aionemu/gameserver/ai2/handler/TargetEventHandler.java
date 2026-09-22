@@ -22,7 +22,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 目标事件处理器，负责到达目标、目标过远、放弃目标与切换目标。
  * Handles target events: target reached, target too far, give-up, and target change.
- *
  * @author ATracer
  */
 public class TargetEventHandler {
@@ -30,7 +29,6 @@ public class TargetEventHandler {
 	/**
 	 * 到达目标位置：按当前 AI 状态调度攻击、归家、行走或停止移动。
 	 * On target reached: schedules attack, return-home, walking, or aborts move based on AI state.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void onTargetReached(NpcAI2 npcAI) {
@@ -72,7 +70,6 @@ public class TargetEventHandler {
 	/**
 	 * 目标过远：战斗时由攻击管理器处理，跟随时由跟随管理器处理。
 	 * Target too far: attack manager for fight, follow manager for following.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void onTargetTooFar(NpcAI2 npcAI) {
@@ -104,7 +101,6 @@ public class TargetEventHandler {
 	/**
 	 * 放弃目标：停止仇恨、中止移动并重新思考。
 	 * Gives up the target: stops hating, aborts move, and re-thinks.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void onTargetGiveup(NpcAI2 npcAI) {
@@ -206,7 +202,6 @@ public class TargetEventHandler {
 	/**
 	 * 战斗中切换目标并调度下一次攻击。
 	 * Changes target during fight and schedules the next attack.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param creature 新目标 / new target
 	 */
@@ -234,7 +229,6 @@ public class TargetEventHandler {
 	/**
 	 * 行走到达后，对已知列表中的生物重新检查仇恨。
 	 * After walking arrival, re-checks aggro against known creatures.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	private static void checkAggro(NpcAI2 npcAI) {

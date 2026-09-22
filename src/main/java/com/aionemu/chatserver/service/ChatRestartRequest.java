@@ -24,7 +24,6 @@ public class ChatRestartRequest {
     /**
      * 设置进程运行时桥接的 Spring 提供者。
      * Set the Spring provider for the process runtime bridge.
-     *
      * @param processBridgeProvider 进程桥接提供者 / Process bridge provider
      */
     public void setProcessBridgeProvider(ObjectProvider<ChatProcessRuntimeBridge> processBridgeProvider) {
@@ -42,7 +41,6 @@ public class ChatRestartRequest {
     /**
      * 使用指定进程桥接请求重启。
      * Request restart using the given process bridge.
-     *
      * @param processBridge 进程运行时桥接 / Process runtime bridge
      */
     static void requestRestart(ChatProcessRuntimeBridge processBridge) {
@@ -60,7 +58,6 @@ public class ChatRestartRequest {
     /**
      * 解析可用的进程运行时桥接。
      * Resolve an available process runtime bridge.
-     *
      * @return 进程桥接实例 / Process bridge instance
      */
     private ChatProcessRuntimeBridge processBridge() {

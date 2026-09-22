@@ -22,7 +22,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Ophidan Bridge 副本 NPC AI：Runaway Hirakiki（@AIName "runaway_hirakiki"），继承 GeneralNpcAI2。
  * Ophidan Bridge instance NPC AI: Runaway Hirakiki (@AIName "runaway_hirakiki"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("runaway_hirakiki")

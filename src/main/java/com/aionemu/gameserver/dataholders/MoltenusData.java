@@ -18,7 +18,6 @@ import java.util.Map;
 /**
  * 熔岩领主（Moltenus）活动地点数据容器，持有并索引全部 {@link MoltenusLocation}。
  * Moltenus event location data holder, indexing all {@link MoltenusLocation} instances.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -43,7 +42,6 @@ public class MoltenusData {
 	/**
 	 * 返回已加载的 Moltenus 地点数量。
 	 * Returns the number of loaded Moltenus locations.
-	 *
 	 * @return 已加载的Moltenus 地点数量 / Returns the number of loaded Moltenus locations.
 	 */
 	public int size() {
@@ -53,7 +51,6 @@ public class MoltenusData {
 	/**
 	 * 返回全部 Moltenus 地点映射。
 	 * Returns the full Moltenus location map.
-	 *
 	 * @return ID 到地点的映射 / map of id to location
 	 */
 	public Map<Integer, MoltenusLocation> getMoltenusLocations() {

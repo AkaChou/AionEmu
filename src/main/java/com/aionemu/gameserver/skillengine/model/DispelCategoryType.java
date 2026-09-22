@@ -3,7 +3,6 @@ package com.aionemu.gameserver.skillengine.model;
 /**
  * 驱散分类：按增益/减益等类别筛选可驱散效果。
  * Dispel category: filters dispellable effects by buff/debuff class.
- *
  * @author kecimis
  */
 public enum DispelCategoryType {

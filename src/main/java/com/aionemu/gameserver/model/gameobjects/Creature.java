@@ -52,22 +52,19 @@ public abstract class Creature extends VisibleObject {
 	/**
 	 * 返回生命属性。
 	 * Returns the life stats.
-	 *
-	 * @return 生命属性 / the lifeStats
+	 * 生命属性 / the lifeStats
 	 */
 	private CreatureLifeStats<? extends Creature> lifeStats;
 	/**
 	 * 返回游戏属性。
 	 * Returns the game stats.
-	 *
-	 * @return 游戏属性 / the gameStats
+	 * 游戏属性 / the gameStats
 	 */
 	private CreatureGameStats<? extends Creature> gameStats;
 	/**
 	 * 返回效果控制器。
 	 * Returns the effect controller.
-	 *
-	 * @return 效果控制器 / the effectController
+	 * 效果控制器 / the effectController
 	 */
 	private EffectController effectController;
 	/** 返回移动控制器 / Returns the move controller */
@@ -75,51 +72,41 @@ public abstract class Creature extends VisibleObject {
 	/**
 	 * 返回状态。
 	 * Returns the state.
-	 *
-	 * @return 状态 / state
 	 */
 	private int state = CreatureState.ACTIVE.getId();
 	/**
 	 * 返回可视状态。
 	 * Returns the visual state.
-	 *
-	 * @return 可视状态 / visualState
+	 * 可视状态 / visualState
 	 */
 	private int visualState = CreatureVisualState.VISIBLE.getId();
 	/**
 	 * 返回感知状态。
 	 * Returns the see state.
-	 *
-	 * @return 感知状态 / seeState
+	 * 感知状态 / seeState
 	 */
 	private int seeState = CreatureSeeState.NORMAL.getId();
 	/**
 	 * 返回当前施放技能。
 	 * Returns the current casting skill.
-	 *
-	 * @return 施放技能 / current casting skill
 	 */
 	private volatile Skill castingSkill;
 	/**
 	 * 返回技能冷却注册表。
 	 * Returns the skill-cooldown registry.
-	 *
-	 * @return 冷却注册表 / cooldown registry
 	 */
 	@Getter(AccessLevel.NONE)
 	private final CreatureCooldowns cooldowns = new CreatureCooldowns(this);
 	/**
 	 * 返回观察控制器。
 	 * Returns the observe controller.
-	 *
-	 * @return 观察控制器 / the observeController
+	 * 观察控制器 / the observeController
 	 */
 	private final ObserveController observeController;
 	/**
 	 * 返回变身模型。
 	 * Returns the transform model.
-	 *
-	 * @return 变身模型 / the transformModel
+	 * 变身模型 / the transformModel
 	 */
 	private TransformModel transformModel;
 		@Getter
@@ -128,8 +115,6 @@ private final AggroList aggroList;
 	/**
 	 * 设置正在使用的物品。
 	 * Sets the item being used.
-	 *
-	 * @param usingItem 正在使用的物品 / item being used
 	 */
 	private Item usingItem;
 	private final transient byte[] zoneTypes = new byte[ZoneType.values().length];
@@ -146,7 +131,6 @@ private final AggroList aggroList;
 	/**
 	 * 构造生物。
 	 * Constructs a creature.
-	 *
 	 * @param objId 对象 ID / object id
 	 * @param controller 生物控制器 / creature controller
 	 * @param spawnTemplate 生成模板 / spawn template
@@ -173,7 +157,6 @@ private final AggroList aggroList;
 	/**
 	 * 返回此生物的控制器。
 	 * Returns the controller of this Creature object.
-	 *
 	 * @return 生物控制器 / creature controller
 	 */
 	@Override
@@ -192,7 +175,6 @@ private final AggroList aggroList;
 	/**
 	 * 是否延迟删除。
 	 * Whether the despawn is delayed.
-	 *
 	 * @return 是否延迟删除 / whether delete delayed
 	  */
 	public boolean isDeleteDelayed() {
@@ -207,7 +189,6 @@ private final AggroList aggroList;
 	/**
 	 * 生物是否正在施放技能。
 	 * Whether the creature is casting some skill.
-	 *
 	 * @return 是否正在施放 / whether casting
 	 */
 	public boolean isCasting() {
@@ -217,7 +198,6 @@ private final AggroList aggroList;
 	/**
 	 * 设置当前施放技能，技能结束时为 null。
 	 * Sets the current casting skill, or null when the skill ends.
-	 *
 	 * @param castingSkill 当前施放技能 / current casting skill
 	 */
 	public synchronized void setCasting(Skill castingSkill) {
@@ -231,7 +211,6 @@ private final AggroList aggroList;
 	 * 仅当当前施法仍是预期实例时清除它，避免并发完成覆盖后续施法。
 	 * Clears the cast only when it is still the expected instance, preventing concurrent completion from overwriting a later
 	 * cast.
-	 *
 	 * @param expected 预期的施法实例 / expected cast instance
 	 * @return 是否已清除 / whether the cast was cleared
 	 */
@@ -246,7 +225,6 @@ private final AggroList aggroList;
 	/**
 	 * 返回当前施放技能 ID。
 	 * Returns the current casting skill id.
-	 *
 	 * @return 技能 ID / current casting skill id
 	 */
 	public int getCastingSkillId() {
@@ -266,7 +244,6 @@ private final AggroList aggroList;
 	/**
 	 * 是否正在使用物品。
 	 * Whether the creature is using an item.
-	 *
 	 * @return 是否正在使用物品 / whether using an item
 	 */
 	public boolean isUsingItem() {
@@ -276,7 +253,6 @@ private final AggroList aggroList;
 	/**
 	 * 获取正在使用的物品 ID。
 	 * Gets the id of the item being used.
-	 *
 	 * @return 物品 ID / item id
 	 */
 	public int getUsingItemId() {
@@ -286,7 +262,6 @@ private final AggroList aggroList;
 	/**
 	 * 是否有禁用移动的异常效果。
 	 * Whether any abnormal effect disables movement.
-	 *
 	 * @return 是否禁用移动 / whether movement is disabled
 	 */
 	public boolean canPerformMove() {
@@ -297,7 +272,6 @@ private final AggroList aggroList;
 	/**
 	 * 是否有禁用攻击的异常效果。
 	 * Whether any abnormal effect disables attack.
-	 *
 	 * @return 是否禁用攻击 / whether attack is disabled
 	 */
 	public boolean canAttack() {
@@ -328,7 +302,6 @@ private final AggroList aggroList;
 	/**
 	 * 设置状态。
 	 * Sets the state.
-	 *
 	 * @param state 要设置的状态 / the state to set
 	 */
 	public void setState(CreatureState state) {
@@ -338,7 +311,6 @@ private final AggroList aggroList;
 	/**
 	 * 设置状态（通常取自模板）。
 	 * Sets the state, usually taken from templates.
-	 *
 	 * @param state 状态 / state
 	 */
 	public void setState(int state) {
@@ -360,7 +332,6 @@ private final AggroList aggroList;
 	/**
 	 * 设置可视状态。
 	 * Sets the visual state.
-	 *
 	 * @param visualState 要设置的可视状态 / the visualState to set
 	 */
 	public void setVisualState(CreatureVisualState visualState) {
@@ -375,7 +346,6 @@ private final AggroList aggroList;
 	/**
 	 * 是否处于指定可视状态。
 	 * Whether in the given visual state.
-	 *
 	 * @param visualState 可视状态 / visual state
 	 * @return 是否处于该状态 / whether in that state
 	  */
@@ -388,7 +358,6 @@ private final AggroList aggroList;
 	/**
 	 * 设置感知状态。
 	 * Sets the see state.
-	 *
 	 * @param seeState 要设置的感知状态 / the seeState to set
 	 */
 	public void setSeeState(CreatureSeeState seeState) {
@@ -403,7 +372,6 @@ private final AggroList aggroList;
 	/**
 	 * 是否处于指定感知状态。
 	 * Whether in the given see state.
-	 *
 	 * @param seeState 感知状态 / see state
 	 * @return 是否处于该状态 / whether in that state
 	  */
@@ -416,7 +384,6 @@ private final AggroList aggroList;
 	/**
 	 * 设置变身模型。
 	 * Sets the transform model.
-	 *
 	 * @param model 要设置的变身模型 / the transformedModel to set
 	 */
 	public final void setTransformModel(TransformModel model) {
@@ -460,7 +427,6 @@ private volatile byte packetBroadcastMask;
 	/**
 	 * 通过双重分派判断双方是否敌对。
 	 * Uses double dispatch to determine whether the creatures are enemies.
-	 *
 	 * @param creature 待检查生物 / creature to check
 	 * @return 双方敌对时为 true / true if the creatures are enemies
 	 */
@@ -471,7 +437,6 @@ private volatile byte packetBroadcastMask;
 	/**
 	 * 判断生物是否为敌对目标。
 	 * Whether the creature is an enemy.
-	 *
 	 * @param creature 生物 / creature
 	 * @return 是否敌对 / whether enemy
 	 */
@@ -482,7 +447,6 @@ private volatile byte packetBroadcastMask;
 	/**
 	 * 判断玩家是否为敌对目标。
 	 * Whether the player is an enemy.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否敌对 / whether enemy
 	 */
@@ -493,7 +457,6 @@ private volatile byte packetBroadcastMask;
 	/**
 	 * 判断 NPC 是否为敌对目标。
 	 * Whether the NPC is an enemy.
-	 *
 	 * @param npc NPC / NPC
 	 * @return 是否敌对 / whether enemy
 	 */
@@ -509,7 +472,6 @@ private volatile byte packetBroadcastMask;
 	/**
 	 * 通过双重分派判断当前生物是否会主动攻击目标。
 	 * Uses double dispatch to determine whether this creature is aggressive to the target.
-	 *
 	 * @param creature 待检查生物 / creature to check
 	 * @return 会主动攻击时为 true / true if this creature is aggressive to the target
 	 */
@@ -520,7 +482,6 @@ private volatile byte packetBroadcastMask;
 	/**
 	 * 判断生物是否为敌对目标。
 	 * Whether the creature is an enemy.
-	 *
 	 * @param creature 生物 / creature
 	 * @return 是否敌对 / whether enemy
 	 */
@@ -531,7 +492,6 @@ private volatile byte packetBroadcastMask;
 	/**
 	 * 判断 NPC 是否为敌对目标。
 	 * Whether the NPC is an enemy.
-	 *
 	 * @param npc NPC / NPC
 	 * @return 是否敌对 / whether enemy
 	 */
@@ -542,7 +502,6 @@ private volatile byte packetBroadcastMask;
 	/**
 	 * 判断 NPC 是否为敌对目标。
 	 * Whether the NPC is an enemy.
-	 *
 	 * @param npc NPC / NPC
 	 * @return 是否敌对 / whether enemy
 	 */
@@ -553,7 +512,6 @@ private volatile byte packetBroadcastMask;
 	/**
 	 * 判断 NPC 是否会支援本生物。
 	 * Whether the NPC supports this creature.
-	 *
 	 * @param npc NPC / NPC
 	 * @return 是否会支援 / whether support
 	 */
@@ -561,9 +519,6 @@ private volatile byte packetBroadcastMask;
 		return false;
 	}
 
-	/**
-	 * @param npc
-	 */
 	public boolean isFriendFrom(Npc npc) {
 		return false;
 	}
@@ -571,7 +526,6 @@ private volatile byte packetBroadcastMask;
 	/**
 	 * 判断生物是否为敌对目标。
 	 * Whether the creature is an enemy.
-	 *
 	 * @param creature 生物 / creature
 	 * @return 是否敌对 / whether enemy
 	 */
@@ -597,7 +551,6 @@ private volatile byte packetBroadcastMask;
 	/**
 	 * 返回 NPC 对象类型 NORMAL。
 	 * Returns NpcObjectType.NORMAL.
-	 *
 	 * @return NPC 对象类型 / NpcObjectType.NORMAL
 	 */
 	public NpcObjectType getNpcObjectType() {
@@ -621,7 +574,6 @@ private volatile byte packetBroadcastMask;
 	/**
 	 * 是否可施放指定技能。
 	 * Whether the given skill can be used.
-	 *
 	 * @param template 技能模板 / skill template
 	 * @return 是否可施放 / whether usable
 	 */
@@ -632,7 +584,6 @@ private volatile byte packetBroadcastMask;
 	/**
 	 * 检查指定冷却 ID 是否处于冷却中。
 	 * Checks whether the given cooldown id is active.
-	 *
 	 * @param delayId 冷却 ID / cooldown id
 	 * @return 是否在冷却中 / whether on cooldown
 	 */
@@ -647,7 +598,6 @@ private volatile byte packetBroadcastMask;
 	/**
 	 * 设置技能冷却。
 	 * Sets a skill cooldown.
-	 *
 	 * @param delayId 冷却 ID / cooldown id
 	 * @param time 冷却时间 / cooldown time
 	 */
@@ -658,7 +608,6 @@ private volatile byte packetBroadcastMask;
 	/**
 	 * 移除指定冷却。
 	 * Removes the cooldown for the given id.
-	 *
 	 * @param delayId 冷却 ID / cooldown id
 	 */
 	public void removeSkillCoolDown(int delayId) {
@@ -695,7 +644,6 @@ private volatile byte packetBroadcastMask;
 	/**
 	 * 返回管理员中立值。
 	 * Returns the admin neutral value.
-	 *
 	 * @return 管理员中立值 / isAdminNeutral value
 	 */
 	public int getAdminNeutral() {
@@ -705,7 +653,6 @@ private volatile byte packetBroadcastMask;
 	/**
 	 * 设置管理员中立值。
 	 * Sets the admin neutral value.
-	 *
 	 * @param newValue 新值 / new value
 	 */
 	public void setAdminNeutral(int newValue) {
@@ -715,7 +662,6 @@ private volatile byte packetBroadcastMask;
 	/**
 	 * 返回管理员仇恨值。
 	 * Returns the admin enmity value.
-	 *
 	 * @return 管理员仇恨值 / isAdminEnmity value
 	 */
 	public int getAdminEnmity() {
@@ -725,7 +671,6 @@ private volatile byte packetBroadcastMask;
 	/**
 	 * 设置管理员中立值。
 	 * Sets the admin neutral value.
-	 *
 	 * @param newValue 新值 / new value
 	 */
 	public void setAdminEnmity(int newValue) {
@@ -737,9 +682,6 @@ private volatile byte packetBroadcastMask;
 		return getObjectTemplate().getBoundRadius().getCollision();
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isAttackableNpc() {
 		return false;
 	}
@@ -752,7 +694,6 @@ private volatile byte packetBroadcastMask;
 	/**
 	 * 生物是否正在飞行（FLY 或 GLIDE 状态）。
 	 * Whether the creature is flying (FLY or GLIDE states).
-	 *
 	 * @return 是否正在飞行 / whether flying
 	 */
 	public boolean isFlying() {
@@ -763,7 +704,6 @@ private volatile byte packetBroadcastMask;
 	/**
 	 * 是否处于飞行状态。
 	 * Whether the creature is in flying state.
-	 *
 	 * @return 是否处于飞行状态 / whether in flying state
 	  */
 	public boolean isInFlyingState() {
@@ -800,7 +740,6 @@ private volatile byte packetBroadcastMask;
 	/**
 	 * 是否为 PvP 目标。
 	 * Whether the creature is a PvP target.
-	 *
 	 * @param creature 生物 / creature
 	 * @return 是否为 PvP 目标 / whether pvp target
 	  */
@@ -819,7 +758,6 @@ private volatile byte packetBroadcastMask;
 	/**
 	 * 是否处于指定区域。
 	 * Whether the creature is inside the given zone.
-	 *
 	 * @param zoneName 区域名 / zone name
 	 * @return 是否在区域内 / whether inside zone
 	 */

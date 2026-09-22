@@ -16,7 +16,6 @@ import com.aionemu.gameserver.model.templates.springzones.SpringTemplate;
 /**
  * 泉水/温泉对象数据容器，加载并持有全部泉水区域模板。
  * Spring-object data holder that loads and retains all spring-zone templates.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -41,7 +40,6 @@ public class SpringObjectsData {
 	/**
 	 * 返回已加载的泉水对象数量。
 	 * Returns the number of loaded spring objects.
-	 *
 	 * @return 已加载的泉水物件数量 / Returns the number of loaded spring objects.
 	 */
 	public int size() {
@@ -51,7 +49,6 @@ public class SpringObjectsData {
 	/**
 	 * 返回全部泉水对象模板列表。
 	 * Returns the full list of spring-object templates.
-	 *
 	 * @return 泉水模板列表 / spring template list
 	 */
 	public List<SpringTemplate> getSpringObject() {

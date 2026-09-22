@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 /**
  * 征服位置模型。
  * Conquest Location model.
- *
  * @author Rinzler (Encom)
  */
 

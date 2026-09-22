@@ -11,7 +11,6 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 /**
  * Crucible Challenge 副本 NPC AI：Administrator Arminos（@AIName "administratorarminos"），继承 NpcAI2。
  * Crucible Challenge instance NPC AI: Administrator Arminos (@AIName "administratorarminos"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("administratorarminos")

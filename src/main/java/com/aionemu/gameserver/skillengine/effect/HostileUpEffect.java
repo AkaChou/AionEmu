@@ -15,7 +15,6 @@ import lombok.Getter;
 /**
  * 仇恨提升效果：立即增加目标对施法者的仇恨值。
  * Hostile-up effect: immediately increases the target's hate toward the caster.
- *
  * @author ATracer
  */
 @Getter

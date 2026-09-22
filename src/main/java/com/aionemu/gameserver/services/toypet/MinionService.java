@@ -53,7 +53,6 @@ import com.aionemu.gameserver.model.gameobjects.player.MinionList;
 /**
  * 守护灵（Minion）服务，管理召唤、成长、进化、组合与功能增益。
  * Minion service managing summon, growth, evolution, combination and functional buffs.
- *
  * <p>Reworked by G-Robson26; Rework &amp; Test: MATTY</p>
  */
 @Slf4j
@@ -96,7 +95,6 @@ public class MinionService {
 	/**
 	 * 玩家登录时同步守护灵列表，并尝试恢复上次使用的守护灵。
 	 * Sync minion list on login and restore the last-used minion if any.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public void onPlayerLogin(Player player) {
@@ -131,7 +129,6 @@ public class MinionService {
 	/**
 	 * 使用契约/票券物品抽取并添加守护灵。
 	 * Use a contract/ticket item to roll and add a minion.
-	 *
 	 * 玩家 / Player
 	 * Item object id
 	 */
@@ -270,7 +267,6 @@ public class MinionService {
 	/**
 	 * 判断物品是否应由 Familiar 契约包处理。
 	 * Whether an item belongs to the Familiar contract packet path.
-	 *
 	 * @param item 物品 / item
 	 * @return 是否为已支持的契约 / whether it is a supported contract
 	 */
@@ -286,7 +282,6 @@ public class MinionService {
 	/**
 	 * 若已达守护灵数量上限则提示并拒绝操作。
 	 * Reject the action when minion limit is reached.
-	 *
 	 * @param player 玩家 / Player
 	 * @return 是否已拒绝 / Whether rejected
 	 */
@@ -301,10 +296,7 @@ public class MinionService {
 	/**
 	 * 判断守护灵数量是否达到上限。
 	 * Whether the minion count has reached the maximum.
-	 *
 	 * Current count
-	 *
-	 * @param minionCount
 	 * @return 是否达上限 / Whether limit reached
 	 */
 	static boolean isMinionLimitReached(int minionCount) {
@@ -314,7 +306,6 @@ public class MinionService {
 	/**
 	 * 契约相关任务进度推进。
 	 * Advance quest progress related to minion contracts.
-	 *
 	 * @param player 玩家 / Player
 	 * @param item 使用的契约物品 / Contract item used
 	 */
@@ -350,7 +341,6 @@ public class MinionService {
 	/**
 	 * 召唤指定守护灵；若已有则先解散。
 	 * Spawn the given minion; despawn the current one first if present.
-	 *
 	 * @param player 玩家 / Player
 	 * @param minionObjId 守护灵对象 ID / Minion object id
 	 */
@@ -403,7 +393,6 @@ public class MinionService {
 	/**
 	 * 解散守护灵并移除其授予的技能与增益。
 	 * Despawn the minion and remove granted skills and buffs.
-	 *
 	 * @param player 玩家 / Player
 	 * @param minionObjId 守护灵对象 ID（0 表示当前） / Minion object id (0 = current)
 	 */
@@ -439,7 +428,6 @@ public class MinionService {
 	/**
 	 * 消耗材料守护灵提升目标守护灵成长点。
 	 * Consume material minions to raise target minion growth points.
-	 *
 	 * @param player 玩家 / Player
 	 * @param minionObjectId 目标守护灵对象 ID / Target minion object id
 	 * @param material 材料守护灵对象 ID 列表 / Material minion object ids
@@ -509,7 +497,6 @@ public class MinionService {
 	/**
 	 * 消耗基纳与进化材料提升守护灵等级。
 	 * Evolve a minion by spending kinah and evolution materials.
-	 *
 	 * @param player 玩家 / Player
 	 * @param minionObjId 守护灵对象 ID / Minion object id
 	 */
@@ -567,7 +554,6 @@ public class MinionService {
 	/**
 	 * 删除守护灵（普通删除或作为材料消耗）。
 	 * Delete a minion (normal delete or material consumption).
-	 *
 	 * @param player 玩家 / Player
 	 * @param minionObjId 守护灵对象 ID / Minion object id
 	 * @param isMaterial 是否作为材料 / Whether used as material
@@ -601,7 +587,6 @@ public class MinionService {
 	/**
 	 * 锁定或解锁守护灵，防止误操作。
 	 * Lock or unlock a minion to prevent accidental actions.
-	 *
 	 * @param player 玩家 / Player
 	 * @param minionObjId 守护灵对象 ID / Minion object id
 	 * @param lock 0 解锁 / 1 lock / 0 unlock。
@@ -626,7 +611,6 @@ public class MinionService {
 	/**
 	 * 重命名守护灵。
 	 * Rename a minion.
-	 *
 	 * 玩家 / Player
 	 * @param minionObjId 守护灵对象 ID / Minion object id
 	 * New name
@@ -648,7 +632,6 @@ public class MinionService {
 	/**
 	 * 充能守护灵技能点数，并可设置自动充能。
 	 * Charge minion skill points and optionally enable auto-charge.
-	 *
 	 * @param player 玩家 / Player
 	 * @param charge 是否立即充能 / Whether to charge now
 	 * @param autoCharge 是否自动充能 / Whether auto-charge
@@ -670,10 +653,8 @@ public class MinionService {
 	/**
 	 * 消耗守护灵技能能量；自动充能开启时不足则尝试购买。
 	 * Consume minion skill energy; auto-charge buys more when short.
-	 *
 	 * 玩家 / Player
 	 * Skill id
-	 *
 	 * @return 是否允许施放 / Whether cast is allowed
 	 */
 	public boolean consumeMinionSkillPoints(Player player, int skillId) {
@@ -716,7 +697,6 @@ public class MinionService {
 	/**
 	 * 计算将技能点充至上限所需基纳。
 	 * Compute kinah cost to charge skill points to the maximum.
-	 *
 	 * @param currentSkillPoints 当前技能点 / Current skill points
 	 * Kinah cost
 	 */
@@ -727,7 +707,6 @@ public class MinionService {
 	/**
 	 * 激活守护灵功能（30 天，消耗基纳）。
 	 * Activate minion functions for 30 days (costs kinah).
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public void activateMinionFunction(Player player) {
@@ -748,7 +727,6 @@ public class MinionService {
 	/**
 	 * 停止守护灵功能，并按剩余使用时间扣除 10% 手续费后退还基纳。
 	 * Stop minion functions and refund the remaining time after a 10% fee.
-	 *
 	 * @param player 玩家 / Player
 	 */
 	public void deactivateMinionFunction(Player player) {
@@ -801,7 +779,6 @@ public class MinionService {
 	/**
 	 * 向守护灵功能背包添加增益物品。
 	 * Add functional/doping items into the minion bag.
-	 *
 	 * 玩家 / Player
 	 * @param minionObjectId 守护灵对象 ID / Minion object id
 	 * Item template id
@@ -874,7 +851,6 @@ public class MinionService {
 	/**
 	 * 使用守护灵背包中的物品为玩家施加增益。
 	 * Use an item from the minion bag to buff the player.
-	 *
 	 * 玩家 / Player
 	 * @param minionObjectId 守护灵对象 ID / Minion object id
 	 * Item template id
@@ -938,7 +914,6 @@ public class MinionService {
 	/**
 	 * 调整守护灵增益背包中卷轴槽位。
 	 * Relocate doping bag scroll slots for a minion.
-	 *
 	 * 玩家 / Player
 	 * @param minionObjectId 守护灵对象 ID / Minion object id
 	 * Source slot
@@ -974,7 +949,6 @@ public class MinionService {
 	/**
 	 * 切换守护灵自动拾取状态。
 	 * Toggle minion auto-loot state.
-	 *
 	 * 玩家 / Player
 	 * @param minionObjectId 守护灵对象 ID / Minion object id
 	 * Whether to activate
@@ -1004,7 +978,6 @@ public class MinionService {
 	/**
 	 * 组合多只守护灵生成新守护灵。
 	 * Combine multiple minions into a new minion.
-	 *
 	 * @param player 玩家 / Player
 	 * @param minionObjIds 参与组合的对象 ID 列表 / Object ids to combine
 	 */
@@ -1168,10 +1141,7 @@ public class MinionService {
 	/**
 	 * 按随机值映射守护灵模板 ID。
 	 * Map a random roll value to a minion template id.
-	 *
 	 * Random roll
-	 *
-	 * @param rnd
 	 * @return 守护灵模板 ID / Minion template id
 	 */
 	private static int minionId(int rnd) {
@@ -1275,11 +1245,9 @@ public class MinionService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available

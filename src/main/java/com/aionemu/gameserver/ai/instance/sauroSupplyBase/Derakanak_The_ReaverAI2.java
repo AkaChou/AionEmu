@@ -12,7 +12,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 /**
  * Sauro Supply Base 副本 NPC AI：Derakanak The Reaver（@AIName "derakanak_the_reaver"），继承 AggressiveNpcAI2。
  * Sauro Supply Base instance NPC AI: Derakanak The Reaver (@AIName "derakanak_the_reaver"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("derakanak_the_reaver")

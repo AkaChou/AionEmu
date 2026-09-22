@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 /**
  * 同步玩家姿态（格挡、飞行、滑翔、跳跃、静止物体等）的服务端包。
  * Server packet that synchronizes a player's stance (block, flight, glide, jump, stationary object, etc.).
- *
  * @author prix
  */
 @AllArgsConstructor

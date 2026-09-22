@@ -23,7 +23,6 @@ public class LoginLegacyServiceBridgeConfiguration {
     /**
      * 角色转移服务 Bean。
      * Player transfer service bean.
-     *
      * @return 角色转移服务 / player transfer service
      */
     @Bean
@@ -35,7 +34,6 @@ public class LoginLegacyServiceBridgeConfiguration {
     /**
      * 高级账号控制器 Bean。
      * Premium account controller bean.
-     *
      * @return 高级账号控制器 / premium controller
      */
     @Bean
@@ -47,7 +45,6 @@ public class LoginLegacyServiceBridgeConfiguration {
     /**
      * 数据库任务管理器 Bean。
      * DB-driven task manager bean.
-     *
      * @return 任务管理器 / task manager
      */
     @Bean
@@ -59,7 +56,6 @@ public class LoginLegacyServiceBridgeConfiguration {
     /**
      * 登录服线程池管理器 Bean。
      * Login thread-pool manager bean.
-     *
      * @return 线程池管理器 / thread pool manager
      */
     @Bean
@@ -71,7 +67,6 @@ public class LoginLegacyServiceBridgeConfiguration {
     /**
      * 当前网络传输层 Bean。
      * Current network transport bean.
-     *
      * @return 服务器传输 / server transport
      */
     @Bean
@@ -83,7 +78,6 @@ public class LoginLegacyServiceBridgeConfiguration {
     /**
      * MAC 封禁管理器 Bean。
      * Banned MAC manager bean.
-     *
      * @return MAC 封禁管理器 / banned MAC manager
      */
     @Bean
@@ -95,7 +89,6 @@ public class LoginLegacyServiceBridgeConfiguration {
     /**
      * IP 封禁服务 Bean。
      * Banned IP service bean.
-     *
      * @return IP 封禁服务 / banned IP service
      */
     @Bean
@@ -107,7 +100,6 @@ public class LoginLegacyServiceBridgeConfiguration {
     /**
      * 暴力破解防护 Bean。
      * Brute-force protector bean.
-     *
      * @return 暴力破解防护 / brute-force protector
      */
     @Bean
@@ -119,7 +111,6 @@ public class LoginLegacyServiceBridgeConfiguration {
     /**
      * 洪水攻击防护 Bean。
      * Flood protector bean.
-     *
      * @return 洪水防护 / flood protector
      */
     @Bean
@@ -131,7 +122,6 @@ public class LoginLegacyServiceBridgeConfiguration {
     /**
      * 关机/重启协调器 Bean。
      * Shutdown/restart coordinator bean.
-     *
      * @return 关机协调器 / shutdown coordinator
      */
     @Bean

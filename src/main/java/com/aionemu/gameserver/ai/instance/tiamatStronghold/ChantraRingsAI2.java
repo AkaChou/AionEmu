@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * Tiamat Stronghold 副本 NPC AI：Chantra Rings（@AIName "chantrarings"），继承 NpcAI2。
  * Tiamat Stronghold instance NPC AI: Chantra Rings (@AIName "chantrarings"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("chantrarings")

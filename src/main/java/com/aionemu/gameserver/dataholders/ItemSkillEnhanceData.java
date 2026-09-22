@@ -17,7 +17,6 @@ import com.aionemu.gameserver.model.templates.item.ItemSkillEnhance;
 /**
  * 物品技能强化数据容器，按 ID 与职业索引 {@link ItemSkillEnhance}。
  * Item skill-enhance data holder, indexing {@link ItemSkillEnhance} by id and player class.
- *
  * Created by wanke on 01/03/2017.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -35,7 +34,6 @@ public class ItemSkillEnhanceData {
 	/**
 	 * 按 ID 获取技能强化模板（忽略职业）。
 	 * Returns the skill-enhance template for the given id (class-agnostic).
-	 *
 	 * @param id 强化 ID / enhance id
 	 * @return 技能强化模板或 null / skill-enhance template or null
 	 */
@@ -46,7 +44,6 @@ public class ItemSkillEnhanceData {
 	/**
 	 * 按 ID 与职业获取技能强化模板；无精确匹配时回退到 {@link PlayerClass#ALL}。
 	 * Returns the skill-enhance template for the given id and class; falls back to {@link PlayerClass#ALL}.
-	 *
 	 * @param id 强化 ID / enhance id
 	 * @param playerClass 职业 / player class
 	 * @return 技能强化模板或 null / skill-enhance template or null
@@ -82,7 +79,6 @@ public class ItemSkillEnhanceData {
 	/**
 	 * 返回已加载的技能强化数量。
 	 * Returns the number of loaded skill enhances.
-	 *
 	 * @return 已加载的技能强化数量 / Returns the number of loaded skill enhances.
 	 */
 	public int size() {

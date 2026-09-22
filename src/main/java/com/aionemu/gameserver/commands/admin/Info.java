@@ -22,7 +22,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 管理员目标信息命令：输出选中玩家/NPC/采集物的坐标、属性、关系与仇恨等调试信息。
  * Admin target-info command: dump selected player/NPC/gatherable position, stats, relations and aggro debug data.
- *
  * @author Nemiroff Date: 28.12.2009
  */
 public class Info extends AdminCommand {
@@ -34,7 +33,6 @@ public class Info extends AdminCommand {
 	/**
 	 * 根据当前选中目标输出玩家、NPC 或采集物的详细信息。
 	 * Dump detailed info for the currently selected player, NPC or gatherable.
-	 *
 	 * @param admin 执行命令的管理员 / Admin executing the command
 	 */
 	@Override

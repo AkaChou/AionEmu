@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Iluma 区域 NPC AI：Giant Razorback Frillneck（@AIName "giant_razorback_frillneck"），继承 AggressiveNpcAI2。
  * Iluma zone NPC AI: Giant Razorback Frillneck (@AIName "giant_razorback_frillneck"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("giant_razorback_frillneck")

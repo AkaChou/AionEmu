@@ -19,7 +19,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Panesterra 区域 NPC AI：Mirage Dance（@AIName "mirage_dance"），继承 NpcAI2。
  * Panesterra zone NPC AI: Mirage Dance (@AIName "mirage_dance"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("mirage_dance")

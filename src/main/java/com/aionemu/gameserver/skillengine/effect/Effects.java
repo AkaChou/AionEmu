@@ -204,8 +204,7 @@ public class Effects {
 	/**
 	 * 获取已缓存的效果类型列表。
 	 * Returns the cached effect type list.
-	 *
-	 * @return 效果类型列表，可能为 null / effect types, may be null
+	 * 效果类型列表，可能为 null / effect types, may be null
 	 */
 	@XmlTransient
 	protected List<EffectType> effectTypes;
@@ -213,7 +212,6 @@ public class Effects {
 	/**
 	 * 获取效果模板列表（懒初始化）。
 	 * Returns the effect template list (lazy-initialized).
-	 *
 	 * @return 效果模板列表 / effect template list
 	 */
 	public List<EffectTemplate> getEffects() {
@@ -226,7 +224,6 @@ public class Effects {
 	/**
 	 * 添加效果类型到缓存列表。
 	 * Adds an effect type to the cached list.
-	 *
 	 * @param effectType 效果类型 / effect type
 	 */
 	public void addEffectType(EffectType effectType) {
@@ -239,7 +236,6 @@ public class Effects {
 	/**
 	 * 判断是否包含指定效果类型。
 	 * Checks whether the given effect type is present.
-	 *
 	 * @param effectType 要检查的效果类型 / effect type to check
 	 * @return 存在则为 true / true if present
 	 */
@@ -253,7 +249,6 @@ public class Effects {
 	/**
 	 * 是否包含复活类效果。
 	 * Whether this set contains a resurrect effect.
-	 *
 	 * @return true 表示含复活 / true if resurrect is present
 	 */
 	public boolean isResurrect() {
@@ -263,7 +258,6 @@ public class Effects {
 	/**
 	 * 是否包含瞬时 MP 回复效果。
 	 * Whether this set contains an instant MP heal effect.
-	 *
 	 * @return true 表示含瞬时 MP 回复 / true if instant MP heal is present
 	 */
 	public boolean isMpHealInstant() {
@@ -273,7 +267,6 @@ public class Effects {
 	/**
 	 * 反序列化后缓存各效果的 {@link EffectType}。
 	 * After unmarshalling, caches each effect's {@link EffectType}.
-	 *
 	 * @param u JAXB 反序列化器 / unmarshaller
 	 * @param parent 父对象 / parent object
 	 */

@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 房屋类型枚举。
  * House Type enumeration.
- *
  * @author Rolandas
  */
 @Getter

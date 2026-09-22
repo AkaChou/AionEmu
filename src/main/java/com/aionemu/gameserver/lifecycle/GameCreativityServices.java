@@ -91,7 +91,6 @@ public final class GameCreativityServices implements DisposableBean {
     /**
      * 构造并注册创造力面板相关服务的静态访问器。
      * Construct and register static accessors for creativity-panel services.
-     *
      * @param creativityEssenceServiceProvider 创造力精华服务提供者 / Creativity essence service provider
      * @param creativitySkillServiceProvider 创造力技能服务提供者 / Creativity skill service provider
      * @param creativityStatsServiceProvider 创造力属性服务提供者 / Creativity stats service provider
@@ -142,7 +141,6 @@ public final class GameCreativityServices implements DisposableBean {
     /**
      * 获取创造力精华服务。
      * Obtain the creativity essence service.
-     *
      * @return 服务实例 / Service instance
      */
     public static CreativityEssenceService creativityEssenceService() {
@@ -156,7 +154,6 @@ public final class GameCreativityServices implements DisposableBean {
     /**
      * 获取创造力技能服务。
      * Obtain the creativity skill service.
-     *
      * @return 服务实例 / Service instance
      */
     public static CreativitySkillService creativitySkillService() {
@@ -170,7 +167,6 @@ public final class GameCreativityServices implements DisposableBean {
     /**
      * 获取创造力属性服务。
      * Obtain the creativity stats service.
-     *
      * @return 服务实例 / Service instance
      */
     public static CreativityStatsService creativityStatsService() {
@@ -184,7 +180,6 @@ public final class GameCreativityServices implements DisposableBean {
     /**
      * 获取创造力变身服务。
      * Obtain the creativity transfo service.
-     *
      * @return 服务实例 / Service instance
      */
     public static CreativityTransfoService creativityTransfoService() {
@@ -198,7 +193,6 @@ public final class GameCreativityServices implements DisposableBean {
     /**
      * 获取精准属性。
      * Obtain Accuracy.
-     *
      * @return 属性实例 / Stat instance
      */
     public static Accuracy accuracy() {
@@ -212,7 +206,6 @@ public final class GameCreativityServices implements DisposableBean {
     /**
      * 获取敏捷属性。
      * Obtain Agility.
-     *
      * @return 属性实例 / Stat instance
      */
     public static Agility agility() {
@@ -226,7 +219,6 @@ public final class GameCreativityServices implements DisposableBean {
     /**
      * 获取生命属性。
      * Obtain Health.
-     *
      * @return 属性实例 / Stat instance
      */
     public static Health health() {
@@ -240,7 +232,6 @@ public final class GameCreativityServices implements DisposableBean {
     /**
      * 获取知识属性。
      * Obtain Knowledge.
-     *
      * @return 属性实例 / Stat instance
      */
     public static Knowledge knowledge() {
@@ -254,7 +245,6 @@ public final class GameCreativityServices implements DisposableBean {
     /**
      * 获取力量属性。
      * Obtain Power.
-     *
      * @return 属性实例 / Stat instance
      */
     public static Power power() {
@@ -268,7 +258,6 @@ public final class GameCreativityServices implements DisposableBean {
     /**
      * 获取精密度属性。
      * Obtain Precision.
-     *
      * @return 属性实例 / Stat instance
      */
     public static Precision precision() {
@@ -282,7 +271,6 @@ public final class GameCreativityServices implements DisposableBean {
     /**
      * 获取意志属性。
      * Obtain Will.
-     *
      * @return 属性实例 / Stat instance
      */
     public static Will will() {

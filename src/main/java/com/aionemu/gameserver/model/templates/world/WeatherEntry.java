@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 /**
  * Weather 条目模板（静态数据/XML）。
  * XML template.
- *
  * @author Rinzler (Encom)
  */
 

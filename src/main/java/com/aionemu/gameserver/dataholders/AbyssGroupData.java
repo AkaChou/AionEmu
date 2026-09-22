@@ -17,8 +17,7 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 欧比斯组属性数据容器，按 buff ID 索引组属性模板。
  * Abyss group attribute data holder, indexing group attribute templates by buff id.
- *
- * @Author Rinzler (Encom)
+ * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "abyssGroupattr" })
@@ -45,7 +44,6 @@ public class AbyssGroupData {
 	/**
 	 * 返回已加载的模板数量。
 	 * Returns the number of loaded templates.
-	 *
 	 * @return 已加载的模板数量 / Returns the number of loaded templates.
 	 */
 	public int size() {
@@ -55,7 +53,6 @@ public class AbyssGroupData {
 	/**
 	 * 按 buff ID 获取欧比斯组属性模板。
 	 * Returns the abyss group attribute template for the given buff id.
-	 *
 	 * @param buffId 增益 ID / buff id
 	 * @return 组属性模板，不存在则为 null / group attribute template or null
 	 */

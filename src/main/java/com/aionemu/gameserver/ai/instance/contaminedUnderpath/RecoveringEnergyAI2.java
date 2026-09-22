@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * Contamined Underpath 副本 NPC AI：Recovering Energy（@AIName "RecoveringEnergy"），继承 NpcAI2。
  * Contamined Underpath instance NPC AI: Recovering Energy (@AIName "RecoveringEnergy"), extends NpcAI2.
- *
  * @author MATTY (ADev Team)
  */
 @AIName("RecoveringEnergy")
@@ -35,7 +34,6 @@ public class RecoveringEnergyAI2 extends NpcAI2 {
     /**
      * 玩家进入 1 码范围且视线通畅时，对其施放恢复技能。
      * Cast the recovery skill on a player within 1 yard when line of sight is clear.
-     *
      * @param ai AI 实例 / AI instance
      * @param creature 进入范围的生物 / creature that entered range
      */

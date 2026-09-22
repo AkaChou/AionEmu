@@ -75,7 +75,6 @@ public enum AbyssRankEnum {
 	/**
 	 * 构造欧比斯军衔
 	 * Construct an abyss rank
-	 *
 	 * @param id 军衔 ID / Rank id
 	 * @param pointsGained 击杀获得点数 / Points gained on kill
 	 * @param pointsLost 死亡损失点数 / Points lost on death
@@ -98,7 +97,6 @@ public enum AbyssRankEnum {
 	/**
 	 * 按玩家种族返回军衔描述 ID
 	 * Return rank description id adjusted for the player's race
-	 *
 	 * 玩家 / Player
 	 * Description id
 	 */
@@ -116,7 +114,6 @@ public enum AbyssRankEnum {
 	/**
 	 * 按军衔 ID 查找枚举
 	 * Look up rank enum by id
-	 *
 	 * @param id 军衔 ID / Rank id
 	 * Matching rank
 	 */
@@ -132,7 +129,6 @@ public enum AbyssRankEnum {
 	/**
 	 * 按当前 AP 计算可达军衔
 	 * Resolve the highest rank available for the given AP
-	 *
 	 * @param ap 欧比斯点数 / Abyss points
 	 * Matching rank
 	 */
@@ -151,7 +147,6 @@ public enum AbyssRankEnum {
 	/**
 	 * 按当前 GP 计算可达军衔
 	 * Resolve the highest rank available for the given GP
-	 *
 	 * @param gp 荣耀点数 / Glory points
 	 * Matching rank
 	 */

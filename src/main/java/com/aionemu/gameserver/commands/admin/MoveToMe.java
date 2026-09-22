@@ -9,7 +9,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 将指定在线玩家传送到管理员身边的管理员命令。
  * Admin command to teleport a named online player to the admin.
- *
  * @author Cyrakuse
  */
 public class MoveToMe extends AdminCommand {
@@ -25,7 +24,6 @@ public class MoveToMe extends AdminCommand {
 	/**
 	 * 将 {@code characterName} 传送到管理员当前位置。
 	 * Teleport {@code characterName} to the admin's current location.
-	 *
 	 * @param player 执行 GM / Admin player
 	 * @param params 目标角色名 / Target character name
 	 */
@@ -56,7 +54,6 @@ public class MoveToMe extends AdminCommand {
 	/**
 	 * 参数错误时显示语法。
 	 * Show syntax when parameters are invalid.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

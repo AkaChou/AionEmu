@@ -18,7 +18,6 @@ import lombok.Setter;
 /**
  * Rift 裂隙活动时间表配置。
  * Rift event schedule configuration.
- *
  * @author Rinzler (Encom)
  */
 @Setter
@@ -35,8 +34,6 @@ public class RiftSchedule {
 	 * -- SETTER --
 	 *  设置 Rift 列表。
 	 *  Sets the rift list.
-
-
 	 */
 	@XmlElement(name = "rift", required = true)
 	private List<Rift> riftsList;
@@ -76,7 +73,6 @@ public class RiftSchedule {
 		 * -- SETTER --
 		 *  设置开启时间列表。
 		 *  Sets the open times.
-
 		 */
 		@Setter
 		@XmlElement(name = "openTime", required = true)

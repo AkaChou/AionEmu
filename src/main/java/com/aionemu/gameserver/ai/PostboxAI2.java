@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 邮箱 AI：打开玩家邮箱界面。
  * Postbox AI that opens the player mail UI.
- *
  * @author Encom
  */
 @AIName("postbox")
@@ -19,7 +18,6 @@ public class PostboxAI2 extends NpcAI2
 	/**
 	 * 玩家开始与本 NPC 对话/交互。
 	 * Player starts dialog/interaction with this NPC.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -36,7 +34,6 @@ public class PostboxAI2 extends NpcAI2
 	/**
 	 * 玩家结束与本 NPC 对话。
 	 * Player finishes dialog with this NPC.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override

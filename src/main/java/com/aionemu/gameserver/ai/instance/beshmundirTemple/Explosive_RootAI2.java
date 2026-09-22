@@ -12,7 +12,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Beshmundir Temple 副本 NPC AI：Explosive Root（@AIName "Explosive_Root"），继承 AggressiveNpcAI2。
  * Beshmundir Temple instance NPC AI: Explosive Root (@AIName "Explosive_Root"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("Explosive_Root")

@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 小队/联盟掉落分配（掷骰或竞价）的客户端包。
  * Client packet for group/alliance loot distribution (roll or bid).
- *
  * @author Rhys2002
  */
 public class CM_GROUP_LOOT extends AionClientPacket {
@@ -33,7 +32,6 @@ public class CM_GROUP_LOOT extends AionClientPacket {
 	/**
 	 * 构造该客户端包。
 	 * Constructs this client packet.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余合法状态 / additional valid states

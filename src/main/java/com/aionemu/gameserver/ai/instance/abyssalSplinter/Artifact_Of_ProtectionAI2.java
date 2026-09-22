@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Abyssal Splinter 副本 NPC AI：Artifact Of Protection（@AIName "Artifact_Of_Protection"），继承 NpcAI2。
  * Abyssal Splinter instance NPC AI: Artifact Of Protection (@AIName "Artifact_Of_Protection"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Artifact_Of_Protection")

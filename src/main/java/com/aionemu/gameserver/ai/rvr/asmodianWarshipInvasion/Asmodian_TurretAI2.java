@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * RvR 相关 NPC AI：Asmodian Turret（@AIName "DF6_Event_G1_SWHowitzer"），继承 ActionItemNpcAI2。
  * RvR-related NPC AI: Asmodian Turret (@AIName "DF6_Event_G1_SWHowitzer"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("DF6_Event_G1_SWHowitzer")

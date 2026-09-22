@@ -27,7 +27,6 @@ public class AionPacketHandler {
 	/**
 	 * 从给定 ByteBuffer 读取一个包。
 	 * Reads one packet from the given ByteBuffer.
-	 *
 	 * @param data 包数据 / packet data
 	 * @param client 客户端连接 / client connection
 	 * @return 解析出的客户端包，未知包返回 null / client packet, or null if unknown
@@ -44,7 +43,6 @@ public class AionPacketHandler {
 	/**
 	 * 注册客户端包原型。
 	 * Registers a client packet prototype.
-	 *
 	 * @param packetPrototype 包原型 / packet prototype
 	 */
 	public void addPacketPrototype(AionClientPacket packetPrototype) {
@@ -57,7 +55,6 @@ public class AionPacketHandler {
 	/**
 	 * 按 opcode 获取并克隆包实例；可选在聊天中展示包名/十六进制。
 	 * Resolves and clones a packet by opcode; optionally shows name/hex in chat.
-	 *
 	 * @param state 连接状态 / connection state
 	 * @param id opcode
 	 * @param buf 包缓冲区 / packet buffer
@@ -72,11 +69,7 @@ public class AionPacketHandler {
 			return null;
 		}
 
-		/**
-		 * 在聊天窗口展示包名与十六进制字节
-		 * Display packet name + hex bytes in chat window
-		 */
-		Player player = con.getActivePlayer();
+        Player player = con.getActivePlayer();
 
 		if (con.getState().equals(State.IN_GAME) && player != null
 				&& player.getAccessLevel() >= DeveloperConfig.SHOW_PACKETS_INCHAT_ACCESSLEVEL) {
@@ -109,10 +102,8 @@ public class AionPacketHandler {
 	/**
 	 * 判断包名是否命中聊天展示过滤列表（* 或空表示全部）。
 	 * Whether the packet name matches the chat display filter (* or empty = all).
-	 *
 	 * @param filterlist 逗号分隔过滤列表 / comma-separated filter list
 	 * @param PacketName 包名 / packet name
-	 *
 	 * @return 若 shown 则为 true / true if shown
 	 */
 	private boolean isPacketFilterd(String filterlist, String PacketName) {
@@ -135,7 +126,6 @@ public class AionPacketHandler {
 	/**
 	 * 从缓冲区复制前 count 字节（从偏移 5 起）用于调试展示。
 	 * Copies the first count bytes from the buffer (from offset 5) for debug display.
-	 *
 	 * @param buf 源缓冲区 / source buffer
 	 * @param count 字节数 / byte count
 	 * @return 复制缓冲区 / copy buffer
@@ -163,7 +153,6 @@ public class AionPacketHandler {
 	/**
 	 * 记录未知客户端包。
 	 * Logs an unknown client packet.
-	 *
 	 * @param state 连接状态 / connection state
 	 * @param id opcode
 	 * @param data 包数据 / packet data

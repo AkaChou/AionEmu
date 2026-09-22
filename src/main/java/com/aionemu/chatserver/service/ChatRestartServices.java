@@ -18,7 +18,6 @@ public final class ChatRestartServices implements DisposableBean {
     /**
      * 注册 {@link RestartService} 的 Spring 提供者。
      * Register the Spring provider for {@link RestartService}.
-     *
      * @param restartServiceProvider 重启服务提供者 / Restart service provider
      */
     public ChatRestartServices(ObjectProvider<RestartService> restartServiceProvider) {
@@ -28,7 +27,6 @@ public final class ChatRestartServices implements DisposableBean {
     /**
      * 获取重启服务实例。
      * Obtain the restart service instance.
-     *
      * @return 重启服务实例 / restart service instance
      */
     public static RestartService restartService() {
@@ -51,7 +49,6 @@ public final class ChatRestartServices implements DisposableBean {
     /**
      * 回退到本地重启服务。
      * Fall back to the local restart service.
-     *
      * @return 回退实例 / fallback instance
      */
     private static RestartService fallbackRestartService() {

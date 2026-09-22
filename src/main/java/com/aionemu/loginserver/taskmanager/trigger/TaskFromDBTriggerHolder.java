@@ -7,7 +7,6 @@ import lombok.Getter;
 /**
  * 数据库任务触发器类型枚举，映射名称到具体实现类。
  * Enum of DB task trigger types mapping names to concrete trigger classes.
- *
  * @author nrg
  */
 public enum TaskFromDBTriggerHolder {
@@ -17,8 +16,6 @@ public enum TaskFromDBTriggerHolder {
     /**
      * 获取对应的触发器实现类。
      * Returns the associated trigger implementation class.
-     *
-     * @return 触发器实现类 / trigger class
      */
     @Getter
     private final Class<? extends TaskFromDBTrigger> triggerClass;

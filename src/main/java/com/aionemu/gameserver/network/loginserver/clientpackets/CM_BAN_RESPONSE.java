@@ -7,7 +7,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 登录服对封禁请求的响应包，向发起封禁的管理员回传结果消息。
  * LoginServer ban-request response that notifies the requesting admin of the outcome.
- *
  * @author Watson
  */
 public class CM_BAN_RESPONSE extends LsClientPacket {
@@ -15,7 +14,6 @@ public class CM_BAN_RESPONSE extends LsClientPacket {
 	/**
 	 * 构造函数。
 	 * Constructor.
-	 *
 	 * @param opCode 操作码 opcode
 	 */
 	public CM_BAN_RESPONSE(int opCode) {

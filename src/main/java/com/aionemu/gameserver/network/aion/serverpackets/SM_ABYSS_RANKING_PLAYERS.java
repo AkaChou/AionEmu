@@ -11,7 +11,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 向客户端同步玩家欧比斯排行榜数据（支持分页）的服务端包。
  * Server packet synchronizing Abyss player ranking data (with paging) to the client.
- *
  * @author Rhys2002, zdead, LokiReborn
  */
 public class SM_ABYSS_RANKING_PLAYERS extends AionServerPacket {
@@ -25,7 +24,6 @@ public class SM_ABYSS_RANKING_PLAYERS extends AionServerPacket {
 	/**
 	 * 使用分页排行数据构造同步包。
 	 * Creates a sync packet from a page of ranking data.
-	 *
 	 * @param lastUpdate 排行榜最近更新时间戳 / last ranking update timestamp
 	 * @param data 玩家排行结果列表 / player ranking results
 	 * @param race 种族（天族/魔族） / race (Elyos/Asmodian)
@@ -44,7 +42,6 @@ public class SM_ABYSS_RANKING_PLAYERS extends AionServerPacket {
 	/**
 	 * 构造空数据占位包（无分页内容）。
 	 * Creates an empty placeholder packet (no page content).
-	 *
 	 * @param lastUpdate 排行榜最近更新时间戳 / last ranking update timestamp
 	 * @param race 种族（天族/魔族） / race (Elyos/Asmodian)
 	 */

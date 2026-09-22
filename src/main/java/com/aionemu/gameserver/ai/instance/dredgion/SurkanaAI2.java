@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 /**
  * Dredgion 副本 NPC AI：Surkana（@AIName "surkana"），继承 OneDmgPerHitAI2。
  * Dredgion instance NPC AI: Surkana (@AIName "surkana"), extends OneDmgPerHitAI2.
- *
  * @author Encom
  */
 @AIName("surkana")

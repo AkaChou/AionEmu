@@ -9,7 +9,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Empyrean Crucible 副本 NPC AI：Baby Consierd（@AIName "babyconsierd"），继承 AggressiveNpcAI2。
  * Empyrean Crucible instance NPC AI: Baby Consierd (@AIName "babyconsierd"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("babyconsierd")

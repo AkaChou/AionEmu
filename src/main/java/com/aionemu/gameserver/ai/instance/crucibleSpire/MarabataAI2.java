@@ -8,7 +8,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Crucible Spire 副本 NPC AI：Marabata（@AIName "IDInfinity_Named_12"），继承 AggressiveNpcAI2。
  * Crucible Spire instance NPC AI: Marabata (@AIName "IDInfinity_Named_12"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("IDInfinity_Named_12")

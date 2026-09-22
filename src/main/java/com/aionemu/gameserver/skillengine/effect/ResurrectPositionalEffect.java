@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 定点复活效果：在施法者位置复活已死亡玩家。
  * Positional resurrect: revives a dead player at the caster's position.
- *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)

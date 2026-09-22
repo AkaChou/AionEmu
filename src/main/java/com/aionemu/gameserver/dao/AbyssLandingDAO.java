@@ -13,7 +13,6 @@ public abstract class AbyssLandingDAO implements DAO {
 	/**
 	 * 加载所有着陆点。
 	 * Loads all landing locations.
-	 *
 	 * @param locations 目标映射 / target map
 	 * @return 是否成功 / whether successful
 	 */
@@ -22,7 +21,6 @@ public abstract class AbyssLandingDAO implements DAO {
 	/**
 	 * 存储着陆点。
 	 * Stores a landing location.
-	 *
 	 * @param location 着陆点 / landing location
 	 */
 	public abstract void store(LandingLocation location);
@@ -30,7 +28,6 @@ public abstract class AbyssLandingDAO implements DAO {
 	/**
 	 * 更新着陆点。
 	 * Updates a landing location.
-	 *
 	 * @param location 着陆点 / landing location
 	 * @return 是否成功 / whether successful
 	 */
@@ -39,7 +36,6 @@ public abstract class AbyssLandingDAO implements DAO {
 	/**
 	 * 更新着陆点（委托给 {@link #updateLandingLocation}）。
 	 * Updates a landing location (delegates to {@link #updateLandingLocation}).
-	 *
 	 * @param location 着陆点 / landing location
 	 */
 	public void updateLocation(final LandingLocation location) {
@@ -49,7 +45,6 @@ public abstract class AbyssLandingDAO implements DAO {
 	/**
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier for this DAO.
-	 *
 	 * @return 类名 / class name
 	 */
 	@Override

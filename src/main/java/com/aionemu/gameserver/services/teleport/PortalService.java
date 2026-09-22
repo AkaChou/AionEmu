@@ -46,7 +46,6 @@ public class PortalService {
 	/**
 	 * 按门户路径将玩家送入目标实例或区域。
 	 * Ports a player into the target instance/area along a portal path.
-	 *
 	 * @param portalPath 门户路径模板 / Portal path template
 	 * @param player 玩家 / Player
 	 * @param npcObjectId 交互 NPC 对象 ID / Interacting NPC object id

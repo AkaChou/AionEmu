@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * Server packet that synchronizes a creature's visual/see state; commonly used to stop the post-login blink.
  * <p>
  * states: 0 - normal char; 1 - crouched invisible char; 64 - standing blinking char; 128 - char is invisible
- *
  * @author Luno, Sweetkr
  */
 public class SM_PLAYER_STATE extends AionServerPacket {

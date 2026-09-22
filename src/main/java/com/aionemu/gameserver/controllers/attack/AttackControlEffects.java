@@ -12,7 +12,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
  * 攻击暴击控制效果域：判定控制系技能表，并在物理暴击时按武器类型尝试施加踉跄/摔倒。
  * Attack critical control-effect domain: the control-skill table plus stagger/stumble attempts on
  * physical crits by weapon type.
- *
  * <p>该类型只服务 {@link AttackUtil}：全部为静态纯查表/规则函数，不持有状态、不创建对象；
  * 对外仍通过 {@link AttackUtil} 的原 public static 方法访问（门面签名不变）。
  * This type only serves {@link AttackUtil}: every function is a static pure table lookup or rule
@@ -31,7 +30,6 @@ final class AttackControlEffects {
 	/**
 	 * 判断技能是否自带硬直类效果（暴击触发硬直时应跳过）。
 	 * Returns whether the skill already applies stagger/stumble-like effects (skip crit procs).
-	 *
 	 * @param skillId 技能 ID / skill id
 	 * @return 是否自带相关效果 / whether skill already applies the effect
 	 * @author KorLightNing
@@ -311,7 +309,6 @@ final class AttackControlEffects {
 	/**
 	 * 物理暴击时按武器类型尝试触发硬直/踉跄类效果。
 	 * On physical critical, attempts to apply stagger/stumble based on weapon type.
-	 *
 	 * @param attacker 攻击玩家 / attacking player
 	 * @param attacked 被攻击者 / attacked
 	 * @param returnSkill 触发来源技能 ID（0 表示普通攻击） / source skill id (0 for auto-attack)

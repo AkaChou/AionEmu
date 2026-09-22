@@ -47,7 +47,6 @@ import java.util.function.BiConsumer;
 /**
  * 铁壁前线副本事件处理器。
  * Instance event handler for Iron Wall Warfront.
- *
  * @author Encom
  */
 
@@ -217,7 +216,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     /**
      * 返回玩家奖励记录。
      * Return the player's reward record.
-     *
      * @param player 玩家 / player
      * @return 结果 / result
      */
@@ -234,7 +232,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     /**
      * NPC 掉落表注册时处理。
      * Handle NPC drop-table registration.
-     *
      * @param npc NPC / npc
      */
     @Override
@@ -352,7 +349,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     /**
      * 停止副本并结算。
      * Stop the instance and settle.
-     *
      * @param race 阵营 / race
      */
 
@@ -367,7 +363,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     /**
      * 玩家进入副本时处理。
      * Handle a player entering the instance.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -383,7 +378,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param opponent 对手 / opponent
 			 */
 			@Override
@@ -410,7 +404,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -429,7 +422,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
 				/**
 				 * 处理 visit。
 				 * Handle visit.
-				 *
 				 * @param player 玩家 / player
 				 */
 				@Override
@@ -442,7 +434,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
 				/**
 				 * 处理 visit。
 				 * Handle visit.
-				 *
 				 * @param player 玩家 / player
 				 */
 				@Override
@@ -456,7 +447,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     /**
      * 副本创建时初始化逻辑。
      * Initialize logic when the instance is created.
-     *
      * @param instance 世界地图实例 / world-map instance
      */
     @Override
@@ -551,7 +541,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     /**
      * 处理玩家复活事件。
      * Handle a player revive event.
-     *
      * @param player 玩家 / player
      * @return 结果 / result
      */
@@ -567,7 +556,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     /**
      * 处理死亡事件。
      * Handle a death event.
-     *
      * @param player 玩家 / player
      * @param lastAttacker 最后攻击者 / last attacker
      * @return 结果 / result
@@ -623,7 +611,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     /**
      * 处理 updateScore。
      * Handle updateScore.
-     *
      * @param player 玩家 / player
      * @param target 目标 / target
      * @param points 分数 / points
@@ -680,7 +667,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     /**
      * 玩家进入区域时处理。
      * Handle a player entering a zone.
-     *
      * @param player 玩家 / player
      * @param zone 区域 / zone
      */
@@ -713,7 +699,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     /**
      * 处理死亡事件。
      * Handle a death event.
-     *
      * @param npc NPC / npc
      */
     @Override
@@ -752,7 +737,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     /**
      * 玩家对 NPC 使用物品完成时处理。
      * Handle item-use finish on an NPC.
-     *
      * @param player 玩家 / player
      * @param npc NPC / npc
      */
@@ -840,7 +824,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     /**
      * 打开指定门。
      * Open the given door.
-     *
      * @param doorId 门 ID / doorId
      */
 
@@ -853,7 +836,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     /**
      * 处理 sp。
      * Handle sp.
-     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -868,7 +850,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     /**
      * 处理 sp。
      * Handle sp.
-     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -885,7 +866,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     /**
      * 处理 sp。
      * Handle sp.
-     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -917,7 +897,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     /**
      * 处理 sp。
      * Handle sp.
-     *
      * @param npcId NPC / NPC
      * @param x X 坐标 / X
      * @param y Y 坐标 / Y
@@ -946,7 +925,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     /**
      * 处理 sendMsgByRace。
      * Handle sendMsgByRace.
-     *
      * @param msg 消息 / message
      * @param race 阵营 / race
      * @param time 时间 / time
@@ -964,7 +942,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
                     /**
                      * 处理 visit。
                      * Handle visit.
-                     *
                      * @param player 玩家 / player
                      */
                     @Override
@@ -989,7 +966,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     /**
      * 返回本副本奖励对象。
      * Return this instance's reward object.
-     *
      * @return 结果 / result
      */
     @Override
@@ -1000,7 +976,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     /**
      * 玩家请求退出副本时处理。
      * Handle a player exit request.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -1011,7 +986,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     /**
      * 玩家离开副本时处理。
      * Handle a player leaving the instance.
-     *
      * @param player 玩家 / player
      */
     @Override
@@ -1025,7 +999,6 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     /**
      * 玩家登录到该副本时处理。
      * Handle a player logging into this instance.
-     *
      * @param player 玩家 / player
      */
     @Override

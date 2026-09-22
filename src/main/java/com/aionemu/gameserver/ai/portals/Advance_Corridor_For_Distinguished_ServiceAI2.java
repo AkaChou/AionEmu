@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 传送门/传送点 AI：Advance Corridor For Distinguished Service（@AIName "advance_corridor_distinguished"），继承 GeneralNpcAI2。
  * Portal/teleporter AI: Advance Corridor For Distinguished Service (@AIName "advance_corridor_distinguished"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("advance_corridor_distinguished")

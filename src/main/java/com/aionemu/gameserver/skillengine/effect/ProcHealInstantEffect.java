@@ -10,7 +10,6 @@ import com.aionemu.gameserver.skillengine.model.HealType;
 /**
  * 触发即时 HP 治疗：按 HP 治疗类型计算并应用回复。
  * Proc instant HP heal: calculates and applies HP recovery via heal type HP.
- *
  * @author ATracer modified by Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -20,7 +19,6 @@ public class ProcHealInstantEffect extends AbstractHealEffect {
 	/**
 	 * 以 HP 类型计算治疗量。
 	 * Calculates heal amount as HP.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -31,7 +29,6 @@ public class ProcHealInstantEffect extends AbstractHealEffect {
 	/**
 	 * 以 HP 类型应用治疗。
 	 * Applies heal as HP.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

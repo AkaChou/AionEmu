@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 /**
  * Fortress 位置，用于要塞相关逻辑。
  * Fortress Location for siege logic.
- *
  * @author Source
  */
 @NoArgsConstructor
@@ -47,7 +46,6 @@ public class FortressLocation extends SiegeLocation {
 	/**
 	 * 判断生物是否与要塞阵营敌对。
 	 * Checks whether the creature is hostile to the fortress race.
-	 *
 	 * @param creature 待判断的生物 / creature to check
 	 * @return 是否敌对 / isEnemy
 	 */
@@ -74,7 +72,6 @@ public class FortressLocation extends SiegeLocation {
 	/**
 	 * 判断玩家是否可传送（同阵营限制）。
 	 * Checks whether the player can teleport (limited to the owning race).
-	 *
 	 * @param player 待判断的玩家 / player to check
 	 * @return 是否可传送 / isCanTeleport
 	 */

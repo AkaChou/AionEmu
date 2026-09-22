@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * 龙脊深渊副本销毁后的延迟任务闸门。
  * Gate for delayed scene tasks that outlive a destroyed Drakenspire Depths instance.
- *
  * <p>背景：两个副本处理器（301390000 剧情副本与 301520000 任务副本）的场景延迟任务最长排到 87 秒后，
  * 副本销毁后仍会执行；此时世界实例已经拆除，底层生成必然 NPE（{@code mapRegion is null} / 纯
  * {@code NullPointerException}），日志里表现为「生成 NPC 209679/237219/237232/237217 时出错」。

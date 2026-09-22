@@ -29,7 +29,6 @@ import com.aionemu.gameserver.utils.gametime.GameTimeManager;
 /**
  * JVM 关闭钩子：倒计时公告、踢线、落盘并按模式 halt/重启进程。
  * JVM shutdown hook: countdown announce, disconnect players, persist state and halt/restart by mode.
- *
  * @author lord_rex
  */
 @Slf4j
@@ -39,7 +38,6 @@ public class ShutdownHook extends Thread {
 	/**
 	 * 获取关闭钩子单例。
 	 * Returns the shutdown-hook singleton.
-	 *
 	 * @return 单例 / singleton
 	 */
 	public static ShutdownHook getInstance() {
@@ -81,7 +79,6 @@ public class ShutdownHook extends Thread {
 	/**
 	 * 向所有在线玩家发送关服倒计时系统消息。
 	 * Sends shutdown countdown system message to all online players.
-	 *
 	 * @param seconds 剩余秒数 / remaining seconds
 	 */
 	private void sendShutdownMessage(int seconds) {
@@ -104,7 +101,6 @@ public class ShutdownHook extends Thread {
 	/**
 	 * 标记玩家关服进行中，并可按配置删除全部 NPC。
 	 * Marks players as in-shutdown and optionally despawns all NPCs when configured.
-	 *
 	 * @param status 是否进入关服流程 / whether shutdown is in progress
 	 */
 	private void sendShutdownStatus(boolean status) {
@@ -134,7 +130,6 @@ public class ShutdownHook extends Thread {
 	/**
 	 * 执行完整关闭流程：等待玩家下线后进入嵌入式或独立进程收尾。
 	 * Runs full shutdown: wait for players to leave, then embedded or standalone teardown.
-	 *
 	 * @param delay 倒计时总秒数 / total delay seconds
 	 * @param announceInterval 公告间隔秒数 / announce interval seconds
 	 * @param mode 关闭模式 / shutdown mode
@@ -160,7 +155,6 @@ public class ShutdownHook extends Thread {
 	/**
 	 * 倒计时公告并等待在线玩家离开；被中断时返回 false。
 	 * Countdown-announce and wait for online players to leave; returns false if interrupted.
-	 *
 	 * @param delay 倒计时总秒数 / total delay seconds
 	 * @param announceInterval 公告间隔秒数 / announce interval seconds
 	 * @param mode 关闭模式 / shutdown mode
@@ -197,7 +191,6 @@ public class ShutdownHook extends Thread {
 	/**
 	 * 将钩子模式映射为嵌入式关闭模式。
 	 * Maps hook mode to embedded shutdown mode.
-	 *
 	 * @param mode 钩子模式 / hook mode
 	 * @return 嵌入式模式 / embedded mode
 	 */
@@ -208,7 +201,6 @@ public class ShutdownHook extends Thread {
 	/**
 	 * 断开登录/聊天服、踢线、落盘并可选 halt 进程。
 	 * Disconnects login/chat, kicks players, persists state and optionally halts the process.
-	 *
 	 * @param mode 关闭模式 / shutdown mode
 	 * @param haltRuntime 是否强制终止当前进程 / whether to halt the current process
 	 */
@@ -310,7 +302,6 @@ public class ShutdownHook extends Thread {
 	/**
 	 * 执行单步关服任务并吞掉异常记录日志。
 	 * Runs one shutdown step and logs any thrown exception.
-	 *
 	 * @param name 步骤名 / step name
 	 * @param step 步骤逻辑 / step logic
 	 */

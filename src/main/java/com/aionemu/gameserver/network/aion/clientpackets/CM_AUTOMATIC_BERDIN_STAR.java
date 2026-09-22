@@ -10,7 +10,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 自动使用伯丁之星（Berdin Star）类道具的客户端包。
  * Client packet to automatically use a Berdin Star item.
- *
  * @author Wnkrz
  */
 public class CM_AUTOMATIC_BERDIN_STAR extends AionClientPacket {

@@ -23,7 +23,6 @@ public class SM_INVENTORY_ADD_ITEM extends AionServerPacket {
 	/**
 	 * 以默认收集类型构造新增物品包。
 	 * Creates an add-item packet with the default item-collect type.
-	 *
 	 * @param items 新增物品列表 / list of newly added items
 	 * target player
 	 */
@@ -36,7 +35,6 @@ public class SM_INVENTORY_ADD_ITEM extends AionServerPacket {
 	/**
 	 * 以指定添加类型构造新增物品包。
 	 * Creates an add-item packet with the given add type.
-	 *
 	 * @param items 新增物品列表 / list of newly added items
 	 * target player
 	 * @param addType 物品添加类型 / item add type

@@ -39,7 +39,6 @@ public final class GameWorldServices implements DisposableBean {
     /**
      * 构造并注册各世界服务组件的实例提供者。
      * Construct and register instance providers for world-service components.
-     *
      * @param geoServiceProvider GeoService 提供者 / GeoService provider
      * @param pathServiceProvider PathService 提供者 / PathService provider
      * @param dropRegistrationServiceProvider DropRegistrationService 提供者 / DropRegistrationService provider
@@ -60,7 +59,6 @@ public final class GameWorldServices implements DisposableBean {
     /**
      * 解析 GeoService：优先 Spring，否则回退。
      * Resolve GeoService: prefer Spring, otherwise fallback.
-     *
      * @return GeoService 实例 / GeoService instance
      */
     public static GeoService geoService() {
@@ -78,7 +76,6 @@ public final class GameWorldServices implements DisposableBean {
     /**
      * 解析 DropRegistrationService：优先 Spring，否则回退。
      * Resolve DropRegistrationService: prefer Spring, otherwise fallback.
-     *
      * @return DropRegistrationService 实例 / DropRegistrationService instance
      */
     public static DropRegistrationService dropRegistrationService() {
@@ -96,7 +93,6 @@ public final class GameWorldServices implements DisposableBean {
     /**
      * 解析 PathService：优先 Spring，否则回退。
      * Resolve PathService: prefer Spring, otherwise fallback.
-     *
      * @return PathService 实例 / PathService instance
      */
     public static PathService pathService() {

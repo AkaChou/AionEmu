@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 /**
  * Blocked 玩家游戏对象。
  * Blocked Player game object.
- *
  * @author Ben
  */
 @Getter

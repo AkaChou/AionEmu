@@ -18,7 +18,6 @@ import java.util.concurrent.Future;
 /**
  * Empyrean Crucible 副本 NPC AI：Queen Alukina（@AIName "alukina_emp"），继承 AggressiveNpcAI2。
  * Empyrean Crucible instance NPC AI: Queen Alukina (@AIName "alukina_emp"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("alukina_emp")

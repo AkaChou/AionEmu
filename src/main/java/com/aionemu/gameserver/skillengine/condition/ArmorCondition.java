@@ -16,7 +16,6 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 /**
  * 防具条件：校验施法者是否装备了指定类型的防具。
  * Armor condition: validates the effector has the specified armor type equipped.
- *
  * @author Sippolo
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -29,7 +28,6 @@ public class ArmorCondition extends Condition {
 	/**
 	 * 校验技能环境是否满足本条件。
 	 * Validates whether the skill environment satisfies this condition.
-	 *
 	 * @param env 技能环境 / skill environment
 	 * @return 是否有效 / whether valid
 	 */
@@ -41,7 +39,6 @@ public class ArmorCondition extends Condition {
 	/**
 	 * 校验属性计算环境是否满足本条件。
 	 * Validates whether the stat calculation environment satisfies this condition.
-	 *
 	 * @param stat 属性对象 / stat object
 	 * @param statFunction 属性函数 / stat function
 	 * @return 是否有效 / whether valid
@@ -54,7 +51,6 @@ public class ArmorCondition extends Condition {
 	/**
 	 * 校验效果环境是否满足本条件。
 	 * Validates whether the effect environment satisfies this condition.
-	 *
 	 * @param effect 效果环境 / effect environment
 	 * @return 是否有效 / whether valid
 	 */
@@ -66,7 +62,6 @@ public class ArmorCondition extends Condition {
 	/**
 	 * 判断生物是否装备了指定类型防具（仅玩家有效）。
 	 * Checks whether the creature has the required armor type equipped (players only).
-	 *
 	 * @param creature 待判断生物 / creature
 	 * @return 是否有效 / whether valid
 	 */

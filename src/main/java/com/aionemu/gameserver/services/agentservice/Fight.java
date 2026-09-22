@@ -6,7 +6,6 @@ import com.aionemu.gameserver.model.agent.AgentStateType;
 /**
  * 代理战默认实现：切入 FIGHT / 回到 PEACE。
  * back to PEACE.
- *
  * @author Rinzler (Encom)
  */
 public class Fight extends AgentFight<AgentLocation> {
@@ -14,7 +13,6 @@ public class Fight extends AgentFight<AgentLocation> {
 	/**
 	 * 绑定代理地点。
 	 * Binds the agent location.
-	 *
 	 * @param agent 位置 / location
 	 */
 	public Fight(AgentLocation agent) {

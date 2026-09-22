@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 客户端登录包：RSA 解密账号密码并完成鉴权。
  * Client login packet: RSA-decrypt credentials and authenticate.
- *
  * @author -Nemesiss-, KID, Lyahim
  */
 @Slf4j
@@ -35,7 +34,6 @@ public class CM_LOGIN extends AionClientPacket {
     /**
      * 构造 CM_LOGIN 包。
      * Construct CM_LOGIN packet.
-     *
      * @param buf 包体数据 / Packet data
      * @param client 登录连接 / Login connection
      */

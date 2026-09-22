@@ -22,7 +22,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Cradle Of Eternity 副本 NPC AI：Vile Typhon（@AIName "Vile_Typhon"），继承 AggressiveNpcAI2。
  * Cradle Of Eternity instance NPC AI: Vile Typhon (@AIName "Vile_Typhon"), extends AggressiveNpcAI2.
- *
  * @author Rinzler
  * @author Ranastic (Encom)
  */

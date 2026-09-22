@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 /**
  * 阈值变身 AI 的幂等 + 死亡兜底闸门。
  * Gate for idempotent threshold transforms that must also survive a lethal blow.
- *
  * <p>背景：{@code handleAttack} 由 {@code AggroList#addDamage} 触发，早于 {@code LifeStats#reduceHp}，
  * 因此阈值检查读到的是本次伤害前的 HP；一击/爆发致死会跳过整个变身，任务或场景永远等不到替代形态。
  * 本闸门锁定同族 AI“阈值路径与死亡路径共用一次性生成”的合同，避免新增成员时只写阈值分支。</p>

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 /**
  * Indratu Fortress 副本 NPC AI：Brigadier Indratu（@AIName "brigadier_indratu"），继承 AggressiveNpcAI2。
  * Indratu Fortress instance NPC AI: Brigadier Indratu (@AIName "brigadier_indratu"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("brigadier_indratu")

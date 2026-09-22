@@ -31,9 +31,6 @@ public class GoldArenaRank {
 	/** 返回 possition match / Returns the possition match */
 	private int possitionMatch;
 
-	/**
-	 * @return the persistentState
-	 */
 	private PersistentState persistentState;
 
 	public GoldArenaRank(int rank, int bestRank, int points, int lastPoints, int highPoints, int lowPoints,

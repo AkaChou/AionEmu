@@ -36,7 +36,6 @@ public class ClassStats {
 	/**
 	 * 获取指定职业与等级的最大生命值
 	 * Get max HP for class and level
-	 *
 	 * @param playerClass Player class
 	 * @param level Level
 	 * @return 最大生命值 / Max HP
@@ -48,7 +47,6 @@ public class ClassStats {
 	/**
 	 * 获取职业力量
 	 * Get power for class
-	 *
 	 * Player class
 	 * Power
 	 */
@@ -59,7 +57,6 @@ public class ClassStats {
 	/**
 	 * 获取职业体质
 	 * Get health for class
-	 *
 	 * Player class
 	 * Health
 	 */
@@ -70,7 +67,6 @@ public class ClassStats {
 	/**
 	 * 获取职业敏捷
 	 * Get agility for class
-	 *
 	 * Player class
 	 * Agility
 	 */
@@ -81,7 +77,6 @@ public class ClassStats {
 	/**
 	 * 获取职业精准
 	 * Get accuracy for class
-	 *
 	 * Player class
 	 * Accuracy
 	 */
@@ -92,7 +87,6 @@ public class ClassStats {
 	/**
 	 * 获取职业智力
 	 * Get knowledge for class
-	 *
 	 * Player class
 	 * Knowledge
 	 */
@@ -103,7 +97,6 @@ public class ClassStats {
 	/**
 	 * 获取职业意志
 	 * Get will for class
-	 *
 	 * Player class
 	 * Will
 	 */
@@ -114,7 +107,6 @@ public class ClassStats {
 	/**
 	 * 获取职业主手攻击
 	 * Get main-hand attack for class
-	 *
 	 * Player class
 	 * Main-hand attack
 	 */
@@ -125,10 +117,7 @@ public class ClassStats {
 	/**
 	 * 获取职业主手暴击率
 	 * Get main-hand crit rate for class
-	 *
 	 * Player class
-	 *
-	 * @param playerClass
 	 * @return 主手暴击率 / Main-hand crit rate
 	 */
 	public static int getMainHandCritRateFor(PlayerClass playerClass) {
@@ -138,7 +127,6 @@ public class ClassStats {
 	/**
 	 * 获取职业主手命中
 	 * Get main-hand accuracy for class
-	 *
 	 * Player class
 	 * Main-hand accuracy
 	 */
@@ -149,7 +137,6 @@ public class ClassStats {
 	/**
 	 * 获取职业水抗
 	 * Get water resistance for class
-	 *
 	 * Player class
 	 * Water resist
 	 */
@@ -160,7 +147,6 @@ public class ClassStats {
 	/**
 	 * 获取职业风抗
 	 * Get wind resistance for class
-	 *
 	 * Player class
 	 * Wind resist
 	 */
@@ -171,7 +157,6 @@ public class ClassStats {
 	/**
 	 * 获取职业地抗
 	 * Get earth resistance for class
-	 *
 	 * Player class
 	 * Earth resist
 	 */
@@ -182,7 +167,6 @@ public class ClassStats {
 	/**
 	 * 获取职业火抗
 	 * Get fire resistance for class
-	 *
 	 * Player class
 	 * Fire resist
 	 */
@@ -193,7 +177,6 @@ public class ClassStats {
 	/**
 	 * 获取职业魔法命中
 	 * Get magic accuracy for class
-	 *
 	 * Player class
 	 * Magic accuracy
 	 */
@@ -204,7 +187,6 @@ public class ClassStats {
 	/**
 	 * 获取职业法术暴击
 	 * Get spell crit for class
-	 *
 	 * Player class
 	 * Spell crit
 	 */
@@ -215,7 +197,6 @@ public class ClassStats {
 	/**
 	 * 获取职业法术抗性
 	 * Get spell resist for class
-	 *
 	 * Player class
 	 * Spell resist
 	 */
@@ -226,7 +207,6 @@ public class ClassStats {
 	/**
 	 * 获取职业物理抗性
 	 * Get strike resist for class
-	 *
 	 * Player class
 	 * Strike resist
 	 */
@@ -237,7 +217,6 @@ public class ClassStats {
 	/**
 	 * 获取职业闪避
 	 * Get evasion for class
-	 *
 	 * Player class
 	 * Evasion
 	 */
@@ -248,7 +227,6 @@ public class ClassStats {
 	/**
 	 * 获取职业格挡
 	 * Get block for class
-	 *
 	 * Player class
 	 * Block
 	 */
@@ -259,7 +237,6 @@ public class ClassStats {
 	/**
 	 * 获取职业招架
 	 * Get parry for class
-	 *
 	 * Player class
 	 * Parry
 	 */
@@ -270,7 +247,6 @@ public class ClassStats {
 	/**
 	 * 获取职业攻击距离
 	 * Get attack range for class
-	 *
 	 * Player class
 	 * Attack range
 	 */
@@ -281,7 +257,6 @@ public class ClassStats {
 	/**
 	 * 获取职业攻击速度
 	 * Get attack speed for class
-	 *
 	 * Player class
 	 * Attack speed
 	 */
@@ -292,7 +267,6 @@ public class ClassStats {
 	/**
 	 * 获取职业飞行速度
 	 * Get fly speed for class
-	 *
 	 * Player class
 	 * Fly speed
 	 */
@@ -303,7 +277,6 @@ public class ClassStats {
 	/**
 	 * 获取职业移动速度
 	 * Get movement speed for class
-	 *
 	 * Player class
 	 * Speed
 	 */

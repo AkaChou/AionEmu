@@ -9,7 +9,6 @@ import com.aionemu.commons.utils.concurrent.RunnableStatsManager;
 /**
  * 迭代式周期性任务管理器：维护可启动/停止的活跃任务集，每周期遍历执行。
  * Iterative periodic task manager: maintains a start/stop active-task set and runs over it each tick.
- *
  * @param <T> 任务元素类型 / Task element type
  * @author NB4L1
  */
@@ -36,7 +35,6 @@ public abstract class AbstractIterativePeriodicTaskManager<T> extends AbstractPe
 	/**
 	 * 以给定周期构造迭代式任务管理器。
 	 * Construct an iterative task manager with the given period.
-	 *
 	 * @param period 周期毫秒数 / Period in milliseconds
 	 */
 	protected AbstractIterativePeriodicTaskManager(int period) {
@@ -46,7 +44,6 @@ public abstract class AbstractIterativePeriodicTaskManager<T> extends AbstractPe
 	/**
 	 * 判断任务是否处于活跃或即将启动（且不在停止列表中）。
 	 * Whether the task is active or pending start (and not on the stop list).
-	 *
 	 * @param task 任务 / the task
 	 * @return 若 tracked as active 则为 true / true if tracked as active
 	 */
@@ -65,7 +62,6 @@ public abstract class AbstractIterativePeriodicTaskManager<T> extends AbstractPe
 	/**
 	 * 请求启动任务：加入 start 列表并取消 stop。
 	 * Request starting a task: add to start list and clear stop.
-	 *
 	 * @param task 要启动的任务 / the task to start
 	 */
 	public void startTask(T task) {
@@ -82,7 +78,6 @@ public abstract class AbstractIterativePeriodicTaskManager<T> extends AbstractPe
 	/**
 	 * 请求停止任务：加入 stop 列表并取消 start。
 	 * Request stopping a task: add to stop list and clear start.
-	 *
 	 * @param task 要停止的任务 / the task to stop
 	 */
 	public void stopTask(T task) {
@@ -129,7 +124,6 @@ public abstract class AbstractIterativePeriodicTaskManager<T> extends AbstractPe
 	/**
 	 * 处理单个活跃任务。
 	 * Process a single active task.
-	 *
 	 * @param task 任务 / the task
 	 */
 	protected abstract void callTask(T task);
@@ -137,7 +131,6 @@ public abstract class AbstractIterativePeriodicTaskManager<T> extends AbstractPe
 	/**
 	 * 供耗时统计使用的被调方法名。
 	 * Method name used for runtime statistics.
-	 *
 	 * @return 被调方法名 / the method name
 	 */
 	protected abstract String getCalledMethodName();

@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 客户端读取邮件请求包。
  * Client packet to read a mail message.
- *
  * @author kosyachok
  */
 public class CM_READ_MAIL extends AionClientPacket {

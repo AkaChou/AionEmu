@@ -13,7 +13,6 @@ import com.aionemu.gameserver.model.items.storage.StorageType;
 /**
  * 玩家储物注册表域。
  * Player storage-registry domain.
- *
  * <p>该类型只服务 {@link Player}：负责 CUBE、宠物背包、房屋仓库、普通/账号/军团仓库的
  * 注册、查询，以及脏物品收集与“已存储”标记。字段和 Lombok 访问器仍留在
  * {@link Player}，此处为无状态静态策略。
@@ -29,7 +28,6 @@ final class PlayerStorageRegistry {
 	/**
 	 * 按类型注册储物容器。
 	 * Registers a storage container by type.
-	 *
 	 * @param player 玩家 / player
 	 * @param storage 储物容器 / storage
 	 * @param storageType 储物类型 / storage type
@@ -56,7 +54,6 @@ final class PlayerStorageRegistry {
 	/**
 	 * 按类型获取储物容器。
 	 * Returns the storage container for the given type.
-	 *
 	 * @param player 玩家 / player
 	 * @param storageType 储物类型 ID / storage type id
 	 * @return 储物容器，未知类型时为 null / storage, or null for unknown types
@@ -91,7 +88,6 @@ final class PlayerStorageRegistry {
 	/**
 	 * 收集需要持久化的脏物品。
 	 * Collects dirty items that need persistence.
-	 *
 	 * @param player 玩家 / player
 	 * @return 脏物品列表 / dirty items
 	 */
@@ -149,7 +145,6 @@ final class PlayerStorageRegistry {
 	/**
 	 * 将所有已持久化容器标记为 UPDATED。
 	 * Marks all persisted containers as UPDATED.
-	 *
 	 * @param player 玩家 / player
 	 */
 	static void markDirtyItemContainersStored(Player player) {
@@ -178,7 +173,6 @@ final class PlayerStorageRegistry {
 	/**
 	 * 返回玩家全部储物与装备中的物品。
 	 * Returns all items from player-owned storages and equipment.
-	 *
 	 * @param player 玩家 / player
 	 * @return 全部物品 / all items
 	 */

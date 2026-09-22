@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 /**
  * 实例脚本 {@code sendMovie(Player, int)} 的空值守卫闸门。
  * Gate ensuring every instance script's {@code sendMovie(Player, int)} guards against a null player.
- *
  * <p>背景：脚本普遍以 {@code npc.getAggroList().getMostPlayerDamage()} 作为入参，该调用在无玩家伤害时返回
  * {@code null}；历史上暗黑波伊塔因此在 NPC 死亡处理中途抛 NPE，中断后续点位与刷怪逻辑。
  * Background: scripts commonly pass {@code npc.getAggroList().getMostPlayerDamage()}, which is null when no
@@ -63,7 +62,6 @@ class InstanceMovieNullGuardTest {
 	/**
 	 * 判断文件是否存在未判空的 {@code sendMovie} 助手。
 	 * Checks whether a file has a {@code sendMovie} helper without a null guard.
-	 *
 	 * @param path 待检查文件 / file to inspect
 	 * @return 缺守卫返回 true / true when the guard is missing
 	 */
@@ -86,7 +84,6 @@ class InstanceMovieNullGuardTest {
 	/**
 	 * 判断文件是否声明了 sendMovie 助手。
 	 * Checks whether the file declares a sendMovie helper.
-	 *
 	 * @param path 待检查文件 / file to inspect
 	 * @return 存在声明返回 true / true when a declaration exists
 	 */

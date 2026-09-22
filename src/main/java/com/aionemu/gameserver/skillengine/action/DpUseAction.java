@@ -12,7 +12,6 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 /**
  * DP 消耗动作：施法时从玩家扣除指定 DP（仅玩家施法者）。
  * DP cost action: deducts DP from the player caster on cast.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -29,7 +28,6 @@ public class DpUseAction extends Action {
 	/**
 	 * 扣除施法玩家的 DP；不足时直接返回。
 	 * Deducts DP from the casting player; no-op if insufficient.
-	 *
 	 * @param skill 当前技能上下文 / current skill context
 	 */
 	@Override

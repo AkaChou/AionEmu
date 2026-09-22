@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Dark Poeta 副本 NPC AI：Inferno Demon（@AIName "inferno_demon"），继承 AggressiveNpcAI2。
  * Dark Poeta instance NPC AI: Inferno Demon (@AIName "inferno_demon"), extends AggressiveNpcAI2.
- *
  * @author Rinzler
  * @author Ranastic (Encom)
  */

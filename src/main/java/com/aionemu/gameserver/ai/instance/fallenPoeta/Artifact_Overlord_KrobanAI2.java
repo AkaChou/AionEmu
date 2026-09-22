@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Fallen Poeta 副本 NPC AI：Artifact Overlord Kroban（@AIName "Artifact_Overlord_Kroban"），继承 AggressiveNpcAI2。
  * Fallen Poeta instance NPC AI: Artifact Overlord Kroban (@AIName "Artifact_Overlord_Kroban"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("Artifact_Overlord_Kroban")

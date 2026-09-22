@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 /**
  * 龙脊深渊任务副本死亡事件处理器闸门。
  * Gate for the Drakenspire Depths quest-instance death-event handler.
- *
  * <p>背景：{@code AggroList#getMostPlayerDamage()} 可能返回 null。若死亡事件中的阵营分支依赖击杀者，
  * 双子守护者死亡后的米西奥内/帕西娅等任务 NPC 会被静默跳过，任务 15300/25300 卡在对话步骤。
  * Background: {@code AggroList#getMostPlayerDamage()} may return null. If death-event race branches depend on

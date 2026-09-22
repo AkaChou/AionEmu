@@ -77,7 +77,6 @@ public class AutoGroupService {
 	/**
 	 * 开始为指定副本 mask 排队匹配。
 	 * Starts looking/queueing for the given instance mask.
-	 *
 	 * 玩家 / player
 	 * instance mask id
 	 * @param ert 入场请求类型 / entry request type
@@ -183,7 +182,6 @@ public class AutoGroupService {
 	/**
 	 * 玩家确认进入已匹配的副本。
 	 * Player confirms entry into a matched instance.
-	 *
 	 * @param player 玩家 / player
 	 * @param instanceMaskId instance mask id
 	 */
@@ -205,7 +203,6 @@ public class AutoGroupService {
 	/**
 	 * 玩家实际进入实例后的匹配状态处理。
 	 * Handles match state after the player actually enters the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onEnterInstance(Player player) {
@@ -221,7 +218,6 @@ public class AutoGroupService {
 	/**
 	 * 取消玩家对指定副本的排队。
 	 * Unregisters the player from looking for the given instance.
-	 *
 	 * @param player 玩家 / player
 	 * @param instanceMaskId instance mask id
 	 */
@@ -237,12 +233,6 @@ public class AutoGroupService {
 					searchers.remove(obj);
 					startPenalty(obj);
 				}
-	/**
-	 * 获取服务单例（优先 Spring 提供者）。
-	 * Returns the service singleton (preferring the Spring provider).
-	 *
-	 * service instance
-	 */
 				getInstance().unRegisterSearchInstance(player, si);
 			}
 		}
@@ -251,7 +241,6 @@ public class AutoGroupService {
 	/**
 	 * 取消进入已匹配副本。
 	 * Cancels entry into a matched instance.
-	 *
 	 * @param player 玩家 / player
 	 * @param instanceMaskId instance mask id
 	 */
@@ -317,7 +306,6 @@ public class AutoGroupService {
 	/**
 	 * 登录时恢复/推送可用自动组队入口。
 	 * On login, restores/pushes available auto-group entry points.
-	 *
 	 * @param player logging-in player
 	 */
 	public void onPlayerLogin(Player player) {
@@ -511,7 +499,6 @@ public class AutoGroupService {
 	/**
 	 * 登出时清理排队与自动实例状态。
 	 * On logout, cleans queue and auto-instance state.
-	 *
 	 * @param player logging-out player
 	 */
 	public void onPlayerLogOut(Player player) {
@@ -523,13 +510,6 @@ public class AutoGroupService {
 			if (lfp.isOnStartEnterTask()) {
 				for (AutoInstance autoInstance : autoInstances.values()) {
 					if (autoInstance.players.containsKey(obj) && !autoInstance.players.get(obj).isInInstance()) {
-	/**
-	 * 取消进入已匹配副本。
-	 * Cancels entry into a matched instance.
-	 *
-	 * 玩家 / player
-	 * instance mask id
-	 */
 						cancelEnter(player, autoInstance.agt.getInstanceMaskId());
 					}
 				}
@@ -554,7 +534,6 @@ public class AutoGroupService {
 	/**
 	 * 离开实例时清理自动组队相关状态。
 	 * Cleans auto-group state when leaving an instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onLeaveInstance(Player player) {
@@ -882,7 +861,6 @@ public class AutoGroupService {
 	/**
 	 * 注销指定副本 mask 的自动组队排队。
 	 * Unregisters auto-group queue entries for the given instance mask.
-	 *
 	 * @param instanceMaskId instance mask id
 	 */
 	public void unRegisterInstance(byte instanceMaskId) {
@@ -890,21 +868,9 @@ public class AutoGroupService {
 			LookingForParty lfp = entry.getValue();
 			if (lfp.isRegistredInstance(instanceMaskId)) {
 				if (lfp.getPlayer() != null) {
-	/**
-	 * 获取服务单例（优先 Spring 提供者）。
-	 * Returns the service singleton (preferring the Spring provider).
-	 *
-	 * service instance
-	 */
 					getInstance().unregisterLooking(lfp.getPlayer(), instanceMaskId);
 				} else {
-	/**
-	 * 获取服务单例（优先 Spring 提供者）。
-	 * Returns the service singleton (preferring the Spring provider).
-	 *
-	 * service instance
-	 */
-					getInstance().unRegisterSearchInstance(null, lfp.getSearchInstance(instanceMaskId));
+                    getInstance().unRegisterSearchInstance(null, lfp.getSearchInstance(instanceMaskId));
 					if (lfp.unregisterInstance(instanceMaskId) == 0) {
 						searchers.remove(entry.getKey(), lfp);
 					}
@@ -982,7 +948,6 @@ public class AutoGroupService {
 	/**
 	 * 注销并清理指定实例 ID 的自动组队实例。
 	 * Unregisters and cleans up the auto-group instance for the given instance id.
-	 *
 	 * @param instanceId instance id
 	 */
 	public void unRegisterInstance(Integer instanceId) {
@@ -999,10 +964,7 @@ public class AutoGroupService {
 	/**
 	 * 判断实例是否由自动组队创建。
 	 * Returns whether the instance was created by auto-group.
-	 *
 	 * instance id
-	 *
-	 * @param instanceId
 	 * @return 是否自动实例 / whether auto instance
 	 */
 	public boolean isAutoInstance(int instanceId) {
@@ -1012,11 +974,9 @@ public class AutoGroupService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -1040,7 +1000,6 @@ public class AutoGroupService {
 	/**
 	 * 注入 Spring 的实例提供者。
 	 * Injects the Spring instance provider.
-	 *
 	 * @param provider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<AutoGroupService> provider) {

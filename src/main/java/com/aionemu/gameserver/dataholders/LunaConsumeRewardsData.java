@@ -18,7 +18,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 露娜消费奖励数据容器，按奖励 ID 与累计消费点数索引。
  * Luna consume-reward data holder, indexing templates by reward id and cumulative consume points.
- *
  * @author Ranastic
  */
 @XmlRootElement(name = "luna_consume_rewards")
@@ -52,7 +51,6 @@ public class LunaConsumeRewardsData {
 	/**
 	 * 返回已加载的露娜消费奖励数量。
 	 * Returns the number of loaded Luna consume rewards.
-	 *
 	 * @return 已加载的Luna 消耗奖励数量 / Returns the number of loaded Luna consume rewards.
 	 */
 	public int size() {
@@ -62,7 +60,6 @@ public class LunaConsumeRewardsData {
 	/**
 	 * 按奖励 ID 获取露娜消费奖励模板。
 	 * Returns the Luna consume-reward template for the given id.
-	 *
 	 * @param id 奖励 ID / reward id
 	 * @return 奖励模板或 null / reward template or null
 	 */
@@ -73,7 +70,6 @@ public class LunaConsumeRewardsData {
 	/**
 	 * 按累计消费点数获取露娜消费奖励模板。
 	 * Returns the Luna consume-reward template for the given cumulative point total.
-	 *
 	 * @param point 累计消费点数 / cumulative consume points
 	 * @return 奖励模板或 null / reward template or null
 	 */
@@ -84,7 +80,6 @@ public class LunaConsumeRewardsData {
 	/**
 	 * 返回全部露娜消费奖励映射。
 	 * Returns the full Luna consume-reward map.
-	 *
 	 * @return ID 到奖励模板的映射 / map of id to reward template
 	 */
 	public Map<Integer, LunaConsumeRewardsTemplate> getAll() {

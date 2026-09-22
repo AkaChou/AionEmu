@@ -19,7 +19,6 @@ public class EvadeEffect extends DispelEffect {
 	/**
 	 * 设置后移类型，按状态计算；飞行中则取消飞行。
 	 * Sets move-behind type, calculates by state; cancels flight if flying.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

@@ -16,7 +16,6 @@ import com.aionemu.gameserver.network.sequrity.FloodManager.Result;
 /**
  * 创建游戏客户端 {@link AionConnection} 的 Netty 连接工厂，可选连接洪泛检测。
  * Netty connection factory for game-client {@link AionConnection} instances, with optional connection flood checks.
- *
  * @author -Nemesiss-
  */
 @Slf4j
@@ -44,7 +43,6 @@ public class GameClientConnectionFactory implements NettyConnectionFactory {
 	/**
 	 * 为传入传输创建 AionConnection；洪泛拒绝时关闭传输并返回 null。
 	 * Creates an AionConnection for the inbound transport; closes and returns null on flood reject.
-	 *
 	 * @param transport 连接传输 / connection transport
 	 * @return 新连接或 null / new connection or null
 	 * @throws IOException 创建失败 / if creation fails

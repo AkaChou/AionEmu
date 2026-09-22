@@ -12,7 +12,6 @@ public class Conqueror {
 	/**
 	 * 获取所属玩家。
 	 * Returns the owning player.
-	 *
 	 * owner
 	 */
 	private Player owner;
@@ -22,7 +21,6 @@ public class Conqueror {
 	/**
 	 * 创建指定所有者的征服者状态。
 	 * Creates conqueror state for the given owner.
-	 *
 	 * @param owner 所属玩家 / owning player
 	 */
 	public Conqueror(Player owner) {
@@ -32,7 +30,6 @@ public class Conqueror {
 	/**
 	 * 刷新所有者引用（例如重登后）。
 	 * Refreshes the owner reference (e.g. after re-login).
-	 *
 	 * @param player 新的玩家实例 / new player instance
 	 */
 	public void refreshOwner(Player player) {
@@ -42,7 +39,6 @@ public class Conqueror {
 	/**
 	 * 设置击杀等级。
 	 * Sets the killer rank.
-	 *
 	 * @param rank 击杀等级 / killer rank
 	 */
 	public void setRank(int rank) {
@@ -52,7 +48,6 @@ public class Conqueror {
 	/**
 	 * 获取击杀等级。
 	 * Returns the killer rank.
-	 *
 	 * killer rank
 	 */
 	public int getRank() {

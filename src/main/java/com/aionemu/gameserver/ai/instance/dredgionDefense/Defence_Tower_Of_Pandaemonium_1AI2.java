@@ -16,7 +16,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Dredgion Defense 副本 NPC AI：Defence Tower Of Pandaemonium 1（@AIName "Defence_Tower_Of_Pandaemonium_1"），继承 ActionItemNpcAI2。
  * Dredgion Defense instance NPC AI: Defence Tower Of Pandaemonium 1 (@AIName "Defence_Tower_Of_Pandaemonium_1"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("Defence_Tower_Of_Pandaemonium_1")

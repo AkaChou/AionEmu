@@ -22,7 +22,6 @@ public class GameUtilityServicesGateway {
     /**
      * 注入工具服务运行时桥提供者。
      * Inject the utility-services runtime-bridge provider.
-     *
      * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
      */
     @Autowired(required = false)
@@ -113,7 +112,6 @@ public class GameUtilityServicesGateway {
     /**
      * 返回当前时间毫秒数。
      * Return the current time in milliseconds.
-     *
      * @return 当前时间毫秒 / Current time millis
      */
     public long currentTimeMillis() {
@@ -123,7 +121,6 @@ public class GameUtilityServicesGateway {
     /**
      * 解析工具服务运行时桥：优先 Spring，否则新建。
      * Resolve the utility-services runtime bridge: prefer Spring, otherwise create new.
-     *
      * @return 运行时桥 / Runtime bridge
      */
     private GameUtilityServicesRuntimeBridge runtimeBridge() {

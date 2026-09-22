@@ -16,7 +16,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 活动任务列表模板（静态数据/XML）。
  * Event Quest List Template (static data/XML).
- *
  * @author Rolandas
  */
 @XmlType(name = "EventQuestList", propOrder = { "startable", "maintainable" })

@@ -48,7 +48,6 @@ public class ThievesGuildService {
 	/**
 	 * 玩家进入世界时处理。
 	 * Handles player entering the world.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onEnterWorld(Player player) {
@@ -72,7 +71,6 @@ public class ThievesGuildService {
 	/**
 	 * 处理盗贼逻辑。
 	 * Handles thieves logic.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void thieves(Player player) {
@@ -94,7 +92,6 @@ public class ThievesGuildService {
 	/**
 	 * 创建复仇。
 	 * Creates revenge.
-	 *
 	 * 玩家 / player
 	 * target
 	 */
@@ -120,7 +117,6 @@ public class ThievesGuildService {
 	/**
 	 * 执行复仇。
 	 * Executes revenge.
-	 *
 	 * 玩家 / player
 	 * target
 	 */
@@ -159,7 +155,6 @@ public class ThievesGuildService {
 	/**
 	 * 验证码校验。
 	 * Captcha verification.
-	 *
 	 * 玩家 / player
 	 * @param captchaCount 验证码次数 / captchaCount
 	 * state
@@ -172,7 +167,6 @@ public class ThievesGuildService {
 	/**
 	 * 验证码校验。
 	 * Captcha verification.
-	 *
 	 * 玩家 / player
 	 * target
 	 * @param captchaCount 验证码次数 / captchaCount
@@ -277,21 +271,15 @@ public class ThievesGuildService {
 	}
 
 	private void scheduleThievesTask(final Player player, long thievesTimer) {
-		/**
-		 * 执行任务。
-		 * Runs the task.
-		 */
-		player.getController().addTask(TaskId.THIEVES, GameThreadPoolServices.threadPoolManager().schedule(() -> captchaCheck(player, 0, false, 0), thievesTimer));
+        player.getController().addTask(TaskId.THIEVES, GameThreadPoolServices.threadPoolManager().schedule(() -> captchaCheck(player, 0, false, 0), thievesTimer));
 	}
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */

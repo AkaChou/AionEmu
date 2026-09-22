@@ -28,7 +28,6 @@ public class ChatServerSpringConfiguration {
     /**
      * ID 工厂 Bean。
      * ID factory bean.
-     *
      * @return {@link IdFactory}
      */
     @Bean
@@ -40,7 +39,6 @@ public class ChatServerSpringConfiguration {
     /**
      * 客户端封包处理器 Bean。
      * Client packet handler bean.
-     *
      * @param broadcastService 广播服务 / Broadcast service
      * @param chatService 聊天服务 / Chat service
      * @return {@link ClientPacketHandler}
@@ -54,7 +52,6 @@ public class ChatServerSpringConfiguration {
     /**
      * Netty 服务器 Bean，并注册到 {@link ChatNettyServers}。
      * Netty server bean, also registered with {@link ChatNettyServers}.
-     *
      * @param clientPacketHandler 客户端封包处理器 / Client packet handler
      * @return {@link NettyServer}
      */
@@ -67,7 +64,6 @@ public class ChatServerSpringConfiguration {
     /**
      * 游戏服对接服务 Bean。
      * Game-server integration service bean.
-     *
      * @return {@link GameServerService}
      */
     @Bean
@@ -79,7 +75,6 @@ public class ChatServerSpringConfiguration {
     /**
      * 广播服务 Bean。
      * Broadcast service bean.
-     *
      * @return {@link BroadcastService}
      */
     @Bean
@@ -91,7 +86,6 @@ public class ChatServerSpringConfiguration {
     /**
      * 聊天服务 Bean。
      * Chat service bean.
-     *
      * @param broadcastService 广播服务 / Broadcast service
      * @return {@link ChatService}
      */
@@ -104,7 +98,6 @@ public class ChatServerSpringConfiguration {
     /**
      * 重启服务 Bean，并绑定进程桥提供者到 {@link ChatRestartRequest}。
      * Restart service bean; also binds process-bridge provider on {@link ChatRestartRequest}.
-     *
      * @param processBridgeProvider 进程桥提供者 / Process-bridge provider
      * @return {@link RestartService}
      */
@@ -118,7 +111,6 @@ public class ChatServerSpringConfiguration {
     /**
      * 聊天服关停钩子 Bean。
      * Chat-server shutdown-hook bean.
-     *
      * @param processBridge 进程运行时桥 / Process runtime bridge
      * @param restartServiceProvider 重启服务提供者 / Restart-service provider
      * @param gameServerServiceProvider 游戏服服务提供者 / Game-server-service provider

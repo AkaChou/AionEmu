@@ -6,7 +6,6 @@ import com.aionemu.gameserver.network.loginserver.LsServerPacket;
 /**
  * 游戏服向登录服下发账号控制指令的服务端包。
  * Server packet that sends account-control commands from the game server to the login server.
- *
  * @author Aionchs-Wylovech
  */
 public class SM_LS_CONTROL extends LsServerPacket {
@@ -24,7 +23,6 @@ public class SM_LS_CONTROL extends LsServerPacket {
 	/**
 	 * 构造登录服账号控制包。
 	 * Constructs a login-server account control packet.
-	 *
 	 * account name
 	 * player name
 	 * admin name

@@ -21,7 +21,6 @@ final class GameMaintenanceServiceFallbacks {
     /**
      * 数据库清理服务回退实例。
      * Database-cleaning service fallback instance.
-     *
      * @return 数据库清理服务 / Database cleaning service
      */
     static DatabaseCleaningService databaseCleaningService() {
@@ -31,7 +30,6 @@ final class GameMaintenanceServiceFallbacks {
     /**
      * 欧比斯排名清理服务回退实例。
      * Abyss-rank cleaning service fallback instance.
-     *
      * @return 欧比斯排名清理服务 / Abyss-rank cleaning service
      */
     static AbyssRankCleaningService abyssRankCleaningService() {
@@ -41,7 +39,6 @@ final class GameMaintenanceServiceFallbacks {
     /**
      * 术古皇陵生成管理器回退实例。
      * Shugo Imperial Tomb spawn-manager fallback instance.
-     *
      * @return 术古皇陵生成管理器 / Shugo Imperial Tomb spawn manager
      */
     static ShugoImperialTombSpawnManager shugoImperialTombSpawnManager() {
@@ -51,7 +48,6 @@ final class GameMaintenanceServiceFallbacks {
     /**
      * 赛季排名更新服务回退实例。
      * Season-ranking update service fallback instance.
-     *
      * @return 赛季排名更新服务 / Season-ranking update service
      */
     static SeasonRankingUpdateService seasonRankingUpdateService() {

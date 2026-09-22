@@ -13,7 +13,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 任务 Kill 模板（静态数据/XML）。
  * XML template.
- *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -32,7 +31,6 @@ public class QuestKill {
 	/**
 	 * 返回序列号。
 	 * Returns the sequence number.
-	 *
 	 * @return 序列号 / the seq
 	 */
 	public int getSequenceNumber() {
@@ -42,7 +40,6 @@ public class QuestKill {
 	/**
 	 * 返回目标 NPC ID 集合（一次性转换后缓存）。
 	 * Returns the target NPC id set (converted once and cached).
-	 *
 	 * @return NPC ID 集合 / the npcIds
 	 */
 	public Set<Integer> getNpcIds() {

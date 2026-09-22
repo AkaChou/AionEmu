@@ -14,7 +14,6 @@ import java.util.List;
 /**
  * 游戏内商城 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of InGameShopDAO.
- *
  * @author xTz
  */
 @Slf4j
@@ -33,7 +32,6 @@ public class InGameShopDAO extends com.aionemu.gameserver.dao.InGameShopDAO {
     /**
      * 加载游戏内商城物品。
      * Loads in-game shop items.
-     *
      * @return 按分类分组的商城物品 / shop items grouped by category
      */
     @Override
@@ -79,7 +77,6 @@ public class InGameShopDAO extends com.aionemu.gameserver.dao.InGameShopDAO {
     /**
      * 删除游戏内商城物品。
      * Deletes an in-game shop item.
-     *
      * @param itemId 物品 ID / item id
      * @param category 类别 / category
      * @param subCategory 子类别 / sub category
@@ -106,7 +103,6 @@ public class InGameShopDAO extends com.aionemu.gameserver.dao.InGameShopDAO {
     /**
      * 保存游戏内商城物品。
      * Saves an in-game shop item.
-     *
      * @param objectId 对象 ID / object id
      * @param itemId 物品 ID / item id
      * @param itemCount 物品数量 / item count
@@ -148,7 +144,6 @@ public class InGameShopDAO extends com.aionemu.gameserver.dao.InGameShopDAO {
     /**
      * 增加销量排名。
      * Increases sales ranking.
-     *
      * @param object 对象 ID / object id
      * @param current 当前销售额 / current sales
      * @return 是否成功 / whether succeeded
@@ -171,7 +166,6 @@ public class InGameShopDAO extends com.aionemu.gameserver.dao.InGameShopDAO {
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

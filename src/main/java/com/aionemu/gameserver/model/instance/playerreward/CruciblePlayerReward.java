@@ -15,9 +15,6 @@ public class CruciblePlayerReward extends InstancePlayerReward {
 	private int insignia;
 	/** 设置刷新点坐标。 / Sets the spawn position. */
 	private int spawnPosition;
-	/**
-	 * @return 是否已奖励 / whether rewarded
-	 */
 	private boolean isRewarded = false;
 	/** 是否玩家离开 / Whether player leave*/
 	private boolean isPlayerLeave = false;

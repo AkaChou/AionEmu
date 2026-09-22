@@ -17,7 +17,6 @@ import lombok.Getter;
 /**
  * 目标类型条件：校验技能首目标是否符合配置的目标属性（NPC/PC 等）。
  * Target type condition: validates the skill first target matches the configured target attribute (NPC/PC, etc.).
- *
  * @author ATracer
  */
 @Getter
@@ -28,8 +27,6 @@ public class TargetCondition extends Condition {
 	/**
 	 * 获取配置的目标属性。
 	 * Gets the configured target attribute.
-	 *
-	 * @return 目标属性 / target attribute
 	 */
 	@XmlAttribute(required = true)
 	protected TargetAttribute value;
@@ -37,7 +34,6 @@ public class TargetCondition extends Condition {
 	/**
 	 * 校验技能环境是否满足本条件。
 	 * Validates whether the skill environment satisfies this condition.
-	 *
 	 * @param skill 技能环境 / skill environment
 	 * @return 是否有效 / whether valid
 	 */

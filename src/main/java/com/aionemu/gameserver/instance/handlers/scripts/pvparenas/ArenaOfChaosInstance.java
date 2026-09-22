@@ -13,7 +13,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * 混沌竞技场副本事件处理器。
  * Instance event handler for Arena Of Chaos.
- *
  * @author Encom
  */
 
@@ -23,7 +22,6 @@ public class ArenaOfChaosInstance extends PvPArenaInstance
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -36,7 +34,6 @@ public class ArenaOfChaosInstance extends PvPArenaInstance
 	/**
 	 * 玩家采集完成时处理。
 	 * Handle player gathering completion.
-	 *
 	 * @param player 玩家 / player
 	 * @param gatherable gatherable
 	 */

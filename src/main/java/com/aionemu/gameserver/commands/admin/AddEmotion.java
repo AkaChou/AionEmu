@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 管理员添加表情命令：为目标玩家解锁表情动作。
  * Admin add-emotion command: unlocks an emotion action for the target player.
- *
  * @author ginho1, Damon
  */
 public class AddEmotion extends AdminCommand {
@@ -27,7 +26,6 @@ public class AddEmotion extends AdminCommand {
 	/**
 	 * 执行添加表情：解析表情 ID/过期时间，或展示 HTML 列表。
 	 * Executes add-emotion: parses emotion id/expiry, or shows the HTML list.
-	 *
 	 * @param params 参数：表情 ID、过期分钟或 html / emotion id, expire minutes, or html
 	 */
 	@Override

@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 聊天服定时重启服务：按配置频率与时间调度重启请求。
  * Chat-server scheduled restart service: schedules restart requests by configured frequency and time.
- *
  * @author nrg
  */
 @Slf4j
@@ -39,7 +38,6 @@ public class RestartService {
     /**
      * 按频率计算下次重启时间并调度任务。
      * Compute the next restart time by frequency and schedule the task.
-     *
      * @param frequency Restart frequency
      */
     private synchronized void setTimer(RestartFrequency frequency) {
@@ -94,7 +92,6 @@ public class RestartService {
     /**
      * 解析配置中的重启时刻；非法格式回退到 5:00。
      * Parse configured restart time; fall back to 5:00 on invalid format.
-     *
      * @return [小时, 分钟] 字符串数组 / [hour, minute] string array
      */
     private String[] getRestartTime() {
@@ -109,7 +106,6 @@ public class RestartService {
     /**
      * 获取单例（已废弃，迁移至 Boot 后请使用注入）。
      * Return the singleton (deprecated; prefer injection after Boot migration).
-     *
      * @return 单例实例 / singleton instance
      * @deprecated boot-migration
      */

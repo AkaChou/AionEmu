@@ -13,8 +13,6 @@ import lombok.AllArgsConstructor;
 /**
  * 邮件相关服务端包的写入辅助基类。
  * Base helper for writing mail-related server packets.
- *
- * @rework Ranastic
  */
 @Slf4j
 @AllArgsConstructor
@@ -25,7 +23,6 @@ public abstract class MailServicePacket extends AionServerPacket {
 	/**
 	 * 写入邮件列表。
 	 * Writes a letter list.
-	 *
 	 * @param letters 信件集合 / letter collection
 	 * @param player 玩家 / player
 	 * @param isPostman 是否邮差快递视图 / whether postman/express view
@@ -63,7 +60,6 @@ public abstract class MailServicePacket extends AionServerPacket {
 	/**
 	 * 写入邮件操作结果消息 ID。
 	 * Writes a mail operation message id.
-	 *
 	 * @param messageId 消息 ID / message id
 	 */
 	protected void writeMailMessage(int messageId) {
@@ -73,7 +69,6 @@ public abstract class MailServicePacket extends AionServerPacket {
 	/**
 	 * 写入邮箱状态计数。
 	 * Writes mailbox state counters.
-	 *
 	 * @param totalCount 总数量 / total count
 	 * @param unreadCount 未读数量 / unread count
 	 * @param expressCount 快递数量 / express count
@@ -89,7 +84,6 @@ public abstract class MailServicePacket extends AionServerPacket {
 	/**
 	 * 写入单封已读信件详情。
 	 * Writes a single letter read detail.
-	 *
 	 * @param letter 信件 / letter
 	 * @param time 时间戳（毫秒） / timestamp in ms
 	 * @param totalCount 总数量 / total count
@@ -132,7 +126,6 @@ public abstract class MailServicePacket extends AionServerPacket {
 	/**
 	 * 写入信件状态（附件类型等）。
 	 * Writes letter state (attachment type, etc.).
-	 *
 	 * @param letterId 信件 ID / letter id
 	 * @param attachmentType 附件类型 / attachment type
 	 */
@@ -145,7 +138,6 @@ public abstract class MailServicePacket extends AionServerPacket {
 	/**
 	 * 写入删除信件结果。
 	 * Writes letter delete result.
-	 *
 	 * @param totalCount 总数量 / total count
 	 * @param unreadCount 未读数量 / unread count
 	 * @param expressCount 快递数量 / express count

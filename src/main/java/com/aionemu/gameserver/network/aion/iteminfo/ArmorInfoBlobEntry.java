@@ -11,9 +11,7 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
  * 写入可装备槽位掩码及染色相关数据。
  * Blob sent for armors.
  * Writes equippable slot masks and dye-related data.
- *
  * @author -Nemesiss-
- * @modified Rolandas
  */
 public class ArmorInfoBlobEntry extends ItemBlobEntry {
 

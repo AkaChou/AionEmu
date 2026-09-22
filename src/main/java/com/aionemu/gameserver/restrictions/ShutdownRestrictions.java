@@ -127,7 +127,6 @@ public class ShutdownRestrictions extends AbstractRestrictions {
 	/**
 	 * 玩家控制器是否处于关机倒计时。
 	 * Whether the player controller is in shutdown progress.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否关机中 / whether shutting down
 	 */

@@ -17,7 +17,6 @@ public class TargetSpeciesProperty {
 	/**
 	 * 按目标物种过滤受影响单位。
 	 * Filters effected creatures by target species.
-	 *
 	 * @param skill 技能上下文 / skill context
 	 * @param properties 目标筛选属性 / target filter properties
 	 * @return 恒为 true / always true

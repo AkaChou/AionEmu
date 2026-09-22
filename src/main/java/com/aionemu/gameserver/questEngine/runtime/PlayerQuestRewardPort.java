@@ -32,12 +32,10 @@ import java.util.function.IntPredicate;
  * caller-owned connection. The item grant path is injected as a function so the
  * production wiring uses {@code ItemService::addQuestItems} while tests stay
  * free of the static {@code DataManager}.
- *
  * <p>Preflight fails closed on unsupported kinds. Kinds with no transactional
  * store today ({@code EXTEND_INVENTORY}, {@code SELECTABLE_ITEM},
  * {@code EXTEND_STIGMA}) are rejected rather than guessed; their transactional
  * wiring is deferred to the retail-calibration batch.</p>
- *
  * <p>TITLE 奖励在调用方连接上经 {@link PlayerTitleListDAO#storeInTransaction} 持久化，
  * 与任务状态同事务；重复领取幂等（已拥有则不重复发放）。
  * 获得称号消息和 TitleList 刷新仅在事务提交后发送。</p>

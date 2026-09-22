@@ -306,7 +306,6 @@ public class ServerPacketsOpcodes {
 	/**
 	 * 获取指定服务端包类的操作码。
 	 * Returns the opcode for the given server packet class.
-	 *
 	 * @param packetClass 服务端包类 / server packet class
 	 * @return 操作码 / opcode
 	 * @throws IllegalArgumentException 未注册时 / if not registered
@@ -322,7 +321,6 @@ public class ServerPacketsOpcodes {
 	/**
 	 * 注册服务端包操作码；opcode &lt; 0 时跳过，重复则抛异常。
 	 * Registers a server packet opcode; skips if opcode &lt; 0, throws on duplicate.
-	 *
 	 * @param packetClass 服务端包类 / server packet class
 	 * @param opcode 操作码 / opcode
 	 * @param idSet 已使用操作码集合 / used opcode set

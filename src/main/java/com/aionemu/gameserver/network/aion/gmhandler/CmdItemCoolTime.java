@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * GM 指令：重置目标玩家技能/物品/房屋物件冷却。
  * GM command handler that resets skill, item and house-object cooldowns for the target.
- *
  * @author Alcapwnd
  */
 public class CmdItemCoolTime extends AbstractGMHandler {
@@ -24,7 +23,6 @@ public class CmdItemCoolTime extends AbstractGMHandler {
 	/**
 	 * 创建处理器并立即重置冷却。
 	 * Creates the handler and immediately resets cooldowns.
-	 *
 	 * @param admin 执行指令的管理员 / the admin executing the command
 	 */
 	public CmdItemCoolTime(Player admin) {

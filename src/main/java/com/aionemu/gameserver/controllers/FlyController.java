@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 /**
  * 玩家飞行控制器，管理飞行、滑翔状态切换与飞行冷却。
  * Player fly controller managing flight, gliding state switches and fly cooldown.
- *
  * @author ATracer
  */
 @Slf4j
@@ -41,7 +40,6 @@ public class FlyController {
 	/**
 	 * 停止滑翔；若未在飞行则恢复 FP 并可选择收起翅膀。
 	 * Stops gliding; restores FP when not flying and optionally removes wings.
-	 *
 	 * @param removeWings 是否广播落地并收翼 / whether to broadcast landing and remove wings
 	 */
 	public void onStopGliding(boolean removeWings) {
@@ -66,7 +64,6 @@ public class FlyController {
 	/**
 	 * 结束飞行。可由客户端情绪包、传送或 FP 耗尽触发。
 	 * Ends flying. Triggered by client emotion packets, teleport, or FP exhaustion.
-	 *
 	 * @param forceEndFly 是否强制广播落地动画 / whether to force-broadcast the landing animation
 	 */
 	public void endFly(boolean forceEndFly) {
@@ -97,7 +94,6 @@ public class FlyController {
 	/**
 	 * 开始飞行，并按需广播起飞动作。
 	 * Starts flying and optionally broadcasts the take-off action.
-	 *
 	 * @param broadcastPacket 是否广播起飞动作 / whether to broadcast the take-off action
 	 */
 	public void startFly(boolean broadcastPacket) {
@@ -126,7 +122,6 @@ public class FlyController {
 	/**
 	 * 切换到滑翔模式（由 CM_MOVE 的 VALIDATE_GLIDE 触发）。
 	 * Switches to gliding mode (triggered by CM_MOVE with VALIDATE_GLIDE).
-	 *
 	 * @return 是否成功切换（含已在滑翔） / whether the switch succeeded (including already gliding)
 	 */
 	public boolean switchToGliding() {

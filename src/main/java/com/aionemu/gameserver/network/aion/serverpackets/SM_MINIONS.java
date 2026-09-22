@@ -20,7 +20,6 @@ import lombok.RequiredArgsConstructor;
  * action overview: 0=list, 1=add/level-up, 2=delete, 3=rename, 4=lock, 5=spawn, 6=despawn,
  * 7=growth, 8=function sub-switch (item/auto-loot/move/buff), 9=activate function,
  * 10=deactivate function, 11=skill points/auto-charge, 12=auto-charge toggle, 13=test.
- *
  * @author Falke_34, FrozenKiller Reworked by G-Robson26
  */
 @Slf4j
@@ -48,7 +47,6 @@ public class SM_MINIONS extends AionServerPacket {
 	/**
 	 * 技能点与自动充能状态（action=11）。
 	 * Skill points and auto-charge state (action=11).
-	 *
 	 * operation type
 	 * @param minionSkillPoints 随从技能点 / minion skill points
 	 * @param autoCharge 是否自动充能 / auto-charge enabled
@@ -62,7 +60,6 @@ public class SM_MINIONS extends AionServerPacket {
 	/**
 	 * 带新增类型的单随从数据（action=1 新增/合成/升级特效）。
 	 * Single minion data with add type (action=1 add/combine/level-up effect).
-	 *
 	 * operation type
 	 * @param commonData 随从公共数据 / minion common data
 	 * @param addType 新增类型（0=新随从、1=升级、2=合成成功、3=合成失败） / add type
@@ -76,7 +73,6 @@ public class SM_MINIONS extends AionServerPacket {
 	/**
 	 * 单随从数据操作（召唤/收回/重命名/锁定/成长等）。
 	 * Single-minion data operations (spawn/despawn/rename/lock/growth, etc.).
-	 *
 	 * operation type
 	 * @param commonData 随从公共数据 / minion common data
 	 */
@@ -88,7 +84,6 @@ public class SM_MINIONS extends AionServerPacket {
 	/**
 	 * 同步全部随从列表（action=0）。
 	 * Syncs the full minion list (action=0).
-	 *
 	 * @param action operation type
 	 * @param minions minion collection
 	 */
@@ -100,7 +95,6 @@ public class SM_MINIONS extends AionServerPacket {
 	/**
 	 * 功能剩余时间（action=9）。
 	 * Function remaining time (action=9).
-	 *
 	 * @param action operation type
 	 * @param timeLeft remaining time
 	 */
@@ -112,7 +106,6 @@ public class SM_MINIONS extends AionServerPacket {
 	/**
 	 * 自动拾取子功能（action=8, subSwitch=1）。
 	 * Auto-loot sub-function (action=8, subSwitch=1).
-	 *
 	 * operation type
 	 * @param subSwitch 子切换类型 / sub-switch type
 	 * loot npc id
@@ -131,7 +124,6 @@ public class SM_MINIONS extends AionServerPacket {
 	 * <p>
 	 * subSwitch 映射：0→0 加物品、1→256 功能、2→512 移动物品、3→768 Buff、4→1 自动拾取。
 	 * subSwitch mapping: 0→0 add item, 1→256 function, 2→512 move item, 3→768 buff, 4→1 auto-loot.
-	 *
 	 * operation type
 	 * @param subSwitch 子切换原始值 / raw sub-switch value
 	 * minion object id
@@ -178,7 +170,6 @@ public class SM_MINIONS extends AionServerPacket {
 	/**
 	 * 删除随从（可选作为材料，action=2）。
 	 * Deletes a minion (optionally as material, action=2).
-	 *
 	 * operation type
 	 * @param isMaterial 是否作为材料删除 / whether deleted as material
 	 * @param commonData 随从公共数据 / minion common data

@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Inggison 区域 NPC AI：Pluma Bait（@AIName "plumabait"），继承 NpcAI2。
  * Inggison zone NPC AI: Pluma Bait (@AIName "plumabait"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("plumabait")

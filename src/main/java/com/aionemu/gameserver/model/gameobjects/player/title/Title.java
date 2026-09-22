@@ -9,20 +9,13 @@ import lombok.AllArgsConstructor;
 /**
  * 称号游戏对象。
  * Title game object.
- *
  * @author Mr. Poke
  */
 @Getter
 @AllArgsConstructor
 public class Title implements IExpirable {
 
-	/**
-	 * @return 称号模板 / the template
-	 */
 	private final TitleTemplate template;
-	/**
-	 * @return 称号 ID / the id
-	 */
 	private final int id;
 	private final int dispearTime;
 

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.skillengine.model.HealType;
 /**
  * 飞行点持续恢复效果：周期回复目标 FP。
  * FP heal-over-time effect: periodically restores the target's flight points.
- *
  * @author kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)

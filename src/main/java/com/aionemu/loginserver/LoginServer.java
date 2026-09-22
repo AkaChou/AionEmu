@@ -27,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 登录服入口：日志初始化与启动序列。
  * LoginServer entry: logger init and startup sequence.
- *
  * @author -Nemesiss-
  */
 @Slf4j
@@ -87,7 +86,6 @@ public class LoginServer {
     /**
      * 由 boot 托管生命周期启动登录服。
      * Start LoginServer via the boot-managed service lifecycle.
-     *
      * @param args 启动参数 / Startup arguments
      */
     public void start(final String[] args) {
@@ -97,7 +95,6 @@ public class LoginServer {
     /**
      * 使用指定启动序列生命周期启动登录服。
      * Start LoginServer with the given startup sequence lifecycle.
-     *
      * @param args 启动参数 / Startup arguments
      * @param startupSequenceLifecycle 启动序列生命周期 / Startup sequence lifecycle
      */

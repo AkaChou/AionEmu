@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 /**
  * 护盾点模板（静态数据/XML）。
  * XML template.
- *
  * @author M@xx, Wakizashi
  */
 @Getter

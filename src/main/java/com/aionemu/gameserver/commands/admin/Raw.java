@@ -16,7 +16,6 @@ import java.nio.file.Files;
 /**
  * 原始数据包发送指令；从 {@code data/packets/} 下的文本文件读取十六进制并下发自定义包。
  * Admin command that sends raw custom packets loaded as hex from {@code data/packets/} text files.
- *
  * @author Luno
  * @author Aquanox
  */
@@ -33,7 +32,6 @@ public class Raw extends AdminCommand {
 	/**
 	 * 读取指定名称的数据包文本文件并发送给管理员客户端。
 	 * Loads the named packet text file and sends it to the admin client.
-	 *
 	 * @param admin 执行指令的管理员 / admin executing the command
 	 * @param params 单一参数：不含扩展名的文件名 / single arg: file name without extension
 	 */
@@ -89,7 +87,6 @@ public class Raw extends AdminCommand {
 	/**
 	 * 参数错误时输出用法。
 	 * Prints usage when arguments are invalid.
-	 *
 	 * @param player 接收提示的玩家 / player receiving the message
 	 */
 	@Override

@@ -36,7 +36,6 @@ public class GameDisputeLandGateway {
     /**
      * 可选注入争议之地服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of dispute-land service.
-     *
      * @param disputeLandServiceProvider 服务提供者 / Service provider
      */
     @Autowired(required = false)
@@ -47,7 +46,6 @@ public class GameDisputeLandGateway {
     /**
      * 可选注入前哨服务 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of outpost service.
-     *
      * @param outpostServiceProvider 服务提供者 / Service provider
      */
     @Autowired(required = false)
@@ -58,7 +56,6 @@ public class GameDisputeLandGateway {
     /**
      * 可选注入功能服务运行时桥 {@link ObjectProvider}。
      * Optionally inject the {@link ObjectProvider} of feature-services runtime bridge.
-     *
      * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
      */
     @Autowired(required = false)
@@ -79,7 +76,6 @@ public class GameDisputeLandGateway {
     /**
      * 解析争议之地服务：优先 Spring，否则经运行时桥回退。
      * Resolve dispute-land service: prefer Spring, otherwise fall back via runtime bridge.
-     *
      * @return 服务实例 / Service instance
      */
     private DisputeLandService disputeLandService() {
@@ -92,7 +88,6 @@ public class GameDisputeLandGateway {
     /**
      * 解析前哨服务。
      * Resolve outpost service.
-     *
      * @return 服务实例 / Service instance
      */
     private OutpostService outpostService() {
@@ -105,7 +100,6 @@ public class GameDisputeLandGateway {
     /**
      * 解析功能服务运行时桥：优先 Spring，否则新建。
      * Resolve feature-services runtime bridge: prefer Spring, otherwise create new.
-     *
      * @return 运行时桥 / Runtime bridge
      */
     private GameFeatureServicesRuntimeBridge runtimeBridge() {

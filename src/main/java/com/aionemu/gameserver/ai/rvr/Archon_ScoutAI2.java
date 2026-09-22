@@ -12,7 +12,6 @@ import com.aionemu.gameserver.ai2.AI2Actions;
 /**
  * RvR 相关 NPC AI：Archon Scout（@AIName "archon_scout"），继承 AggressiveNpcAI2。
  * RvR-related NPC AI: Archon Scout (@AIName "archon_scout"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("archon_scout")

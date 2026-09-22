@@ -9,7 +9,6 @@ import lombok.Setter;
 /**
  * 聊天服务器桥接服务，管理玩家聊天鉴权与连接信息。
  * Chat server bridge service managing player chat auth and connection info.
- *
  * @author ATracer
  */
 public class ChatService {
@@ -22,9 +21,6 @@ public class ChatService {
 	 * -- SETTER --
 	 *  设置聊天服务器 IP。
 	 *  Sets the chat server IP.
-	 *
-	 * @param _ip IP 字节数组 / IP bytes
-
 	 */
 	@Setter
 	@Getter
@@ -38,7 +34,6 @@ public class ChatService {
 	 *  设置聊天服务器端口。
 	 *  Sets the chat server port.
 	 *  port
-
 	 */
 	@Setter
 	@Getter
@@ -47,7 +42,6 @@ public class ChatService {
 	/**
 	 * 玩家登出时断开与聊天服务器的连接。
 	 * Disconnects the player from the chat server on logout.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static void onPlayerLogout(Player player) {
@@ -57,7 +51,6 @@ public class ChatService {
 	/**
 	 * 玩家通过聊天服务器鉴权后下发初始化令牌。
 	 * Sends the chat-init token after the player is authenticated by the chat server.
-	 *
 	 * player id
 	 * @param token 鉴权令牌 / auth token
 	 */

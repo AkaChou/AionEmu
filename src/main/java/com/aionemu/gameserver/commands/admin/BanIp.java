@@ -7,7 +7,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 管理员 IP 封禁命令：按 IP 掩码封禁并通知登录服。
  * Admin IP-ban command: bans an IP mask and notifies the login server.
- *
  * @author Watson
  */
 public class BanIp extends AdminCommand {
@@ -23,7 +22,6 @@ public class BanIp extends AdminCommand {
 	/**
 	 * 执行 IP 封禁：解析掩码与时长后发送封禁包。
 	 * Executes IP ban: parses mask and duration, then sends the ban packet.
-	 *
 	 * @param params 参数：IP 掩码、时长（分钟） / ip mask, duration in minutes
 	 */
 	@Override
@@ -52,7 +50,6 @@ public class BanIp extends AdminCommand {
 	/**
 	 * 参数错误时输出 {@code //banip} 用法。
 	 * Prints {@code //banip} usage on invalid arguments.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

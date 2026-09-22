@@ -18,7 +18,6 @@ import java.util.List;
 /**
  * 组装 NPC 生成指令；按模板 ID 向全服玩家广播组装 NPC 数据包。
  * Admin command that broadcasts an assembled-NPC packet to all players by template ID.
- *
  * @author xTz
  */
 public class SpawnAssembledNpc  extends AdminCommand {
@@ -30,7 +29,6 @@ public class SpawnAssembledNpc  extends AdminCommand {
 	/**
 	 * 执行该管理指令。
 	 * Executes this admin command.
-	 *
 	 * @param player 执行指令的管理员 / admin executing the command
 	 */
 	@Override
@@ -69,7 +67,6 @@ public class SpawnAssembledNpc  extends AdminCommand {
 	/**
 	 * 参数错误时输出用法。
 	 * Prints usage when arguments are invalid.
-	 *
 	 * @param player 接收提示的玩家 / player receiving the message
 	 */
 	@Override

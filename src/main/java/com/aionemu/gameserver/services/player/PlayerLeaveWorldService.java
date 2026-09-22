@@ -58,22 +58,17 @@ public class PlayerLeaveWorldService {
 	/**
 	 * 延迟离线。
 	 * Schedules delayed leave-world.
-	 *
 	 * @param player 玩家 / player
 	 * @param delay 延迟毫秒 / delay
 	 */
 	public static final void startLeaveWorldDelay(final Player player, int delay) {
 		player.getController().stopMoving();
-		/**
-		 * 执行任务。
-		 * Runs the task.
-		 */GameThreadPoolServices.threadPoolManager().schedule(() -> startLeaveWorld(player), delay);
+        GameThreadPoolServices.threadPoolManager().schedule(() -> startLeaveWorld(player), delay);
 	}
 
 	/**
 	 * 开始离线流程。
 	 * Starts leave-world flow.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static final void startLeaveWorld(Player player) {
@@ -177,7 +172,6 @@ public class PlayerLeaveWorldService {
 	/**
 	 * 尝试离线。
 	 * Attempts to leave the world.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static void tryLeaveWorld(Player player) {

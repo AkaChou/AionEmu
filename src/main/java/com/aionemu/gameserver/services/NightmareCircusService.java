@@ -37,7 +37,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 梦魇马戏团活动服务，管理地点初始化、定时开关与刷怪。
  * Nightmare Circus event service managing location init, scheduled open/close, and spawns.
- *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -100,7 +99,6 @@ public class NightmareCircusService {
 	/**
 	 * 启动指定 ID 的梦魇马戏团活动。
 	 * Starts the Nightmare Circus event for the given id.
-	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void startNightmareCircus(final int id) {
@@ -116,7 +114,6 @@ public class NightmareCircusService {
 	/**
 	 * 停止指定 ID 的梦魇马戏团活动。
 	 * Stops the Nightmare Circus event for the given id.
-	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void stopNightmareCircus(int id) {
@@ -130,7 +127,6 @@ public class NightmareCircusService {
 	/**
 	 * 按状态在地点刷出对应 NPC。
 	 * Spawns NPCs for the location according to the given state.
-	 *
 	 * @param loc location
 	 * @param nstate state type
 	 */
@@ -149,7 +145,6 @@ public class NightmareCircusService {
 	/**
 	 * 向全服广播马戏团开启消息。
 	 * Broadcasts the circus-open system message to all players.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -166,7 +161,6 @@ public class NightmareCircusService {
 	/**
 	 * 清除地点已刷出的 NPC。
 	 * Despawns NPCs previously spawned at the location.
-	 *
 	 * @param loc location
 	 */
 	public void despawn(NightmareCircusLocation loc) {
@@ -187,7 +181,6 @@ public class NightmareCircusService {
 	/**
 	 * 判断指定马戏团是否进行中。
 	 * Checks whether the circus with the given id is in progress.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否进行中 / whether in progress
 	 */
@@ -198,7 +191,6 @@ public class NightmareCircusService {
 	/**
 	 * 获取进行中的马戏团实例映射。
 	 * Returns the map of active circus instances.
-	 *
 	 * @return 活动实例映射 / active instances map
 	 */
 	public Map<Integer, CircusInstance<?>> getActiveNightmareCircus() {
@@ -208,7 +200,6 @@ public class NightmareCircusService {
 	/**
 	 * 获取活动持续时长（小时）。
 	 * Returns the event duration in hours.
-	 *
 	 * @return 持续小时数 / duration hours
 	 */
 	public int getDuration() {
@@ -218,7 +209,6 @@ public class NightmareCircusService {
 	/**
 	 * 按 ID 获取马戏团地点。
 	 * Returns the circus location by id.
-	 *
 	 * @param id 地点 ID / location id
 	 * location
 	 */
@@ -229,7 +219,6 @@ public class NightmareCircusService {
 	/**
 	 * 获取全部马戏团地点。
 	 * Returns all circus locations.
-	 *
 	 * locations map
 	 */
 	public Map<Integer, NightmareCircusLocation> getNightmareCircusLocations() {
@@ -239,7 +228,6 @@ public class NightmareCircusService {
 	/**
 	 * 获取服务单例（优先 Spring Provider）。
 	 * Returns the service singleton (prefers Spring provider).
-	 *
 	 * service instance
 	 */
 	public static NightmareCircusService getInstance() {
@@ -253,7 +241,6 @@ public class NightmareCircusService {
 	/**
 	 * 注入 Spring 的实例提供者。
 	 * Sets the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<NightmareCircusService> instanceProvider) {

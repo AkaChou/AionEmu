@@ -16,7 +16,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 防具专精效果：在穿戴指定类型防具时应用属性修正。
  * Armor mastery effect: applies stat modifiers when wearing the configured armor type.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -29,7 +28,6 @@ public class ArmorMasteryEffect extends BuffEffect {
 	/**
 	 * 将 change 列表包装为防具专精属性函数并挂到受影响者。
 	 * Wraps change list as armor-mastery stat functions and attaches them to the effected.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

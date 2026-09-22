@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 连接/请求洪泛管理器：按 key 统计 tick 内次数，给出接受/警告/拒绝。
  * Connection/request flood manager: counts per-key ticks and returns accept/warn/reject.
- *
  * @author NB4L1
  */
 @Slf4j
@@ -88,7 +87,6 @@ public final class FloodManager {
 		/**
 		 * 是否仍活跃（近期有活动）。
 		 * Whether still active (recent activity).
-		 *
 		 * @return 若 active 则为 true / true if active
 		 */
 		public boolean isActive() {
@@ -98,7 +96,6 @@ public final class FloodManager {
 		/**
 		 * 判断当前是否洪泛，可选递增当前 tick 计数。
 		 * Whether currently flooding; optionally increments current tick count.
-		 *
 		 * @param increment 是否递增计数 / whether to increment
 		 * @return 判定结果 / flood result
 		 */
@@ -156,7 +153,6 @@ public final class FloodManager {
 		/**
 		 * 取更严重的结果。
 		 * Returns the more severe of two results.
-		 *
 		 * @param r1 结果 1 / result 1
 		 * @param r2 结果 2 / result 2
 		 * @return 更严重的结果 / the more severe result
@@ -183,7 +179,6 @@ public final class FloodManager {
 	/**
 	 * 构造洪泛管理器，并注册定时清理任务。
 	 * Constructs the flood manager and registers a periodic flush task.
-	 *
 	 * @param msecPerTick 每个 tick 的毫秒数 / milliseconds per tick
 	 * @param filters 过滤器列表 / flood filters
 	 */
@@ -222,7 +217,6 @@ public final class FloodManager {
 	/**
 	 * 判断指定 key 是否洪泛。
 	 * Whether the given key is flooding.
-	 *
 	 * @param key 统计键（如 IP） / key (e.g. IP)
 	 * @param increment 是否递增计数 / whether to increment
 	 * @return 判定结果 / flood result

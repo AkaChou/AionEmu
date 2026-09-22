@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * LS→GS：账号重连密钥响应（对应 CM_ACCOUNT_RECONNECT_KEY）。
  * LS→GS: account reconnect key response (for CM_ACCOUNT_RECONNECT_KEY).
- *
  * @author -Nemesiss-
  */
 @AllArgsConstructor

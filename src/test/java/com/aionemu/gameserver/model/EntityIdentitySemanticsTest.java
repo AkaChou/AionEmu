@@ -22,15 +22,12 @@ import lombok.Data;
 /**
  * 固化实体类的身份相等契约，并按规则约束 @Data 的使用范围。
  * Pins the identity-equality contract of game entities and constrains where @Data may be used.
- *
  * <p>规则出处：{@code .agents/rules/lombok.md} → 「Beans and Data Objects」第 4 条。
  * 本测试不维护类型名单，只按规则自动判定：只要某个 @Data 类型被任何源码放进
  * {@code Map<该类型, …>} 的键位或 {@code Set<该类型>} 的元素位，该类型就依赖身份相等，
- * @Data 生成的按字段 equals/hashCode 会让这些容器静默失效。
  * The rule lives in {@code .agents/rules/lombok.md}. This test keeps no type allowlist: whenever any
  * source places an @Data type in a map key position or a set element position, that type depends on
  * identity equality and @Data would silently break those containers.</p>
- *
  * @author refactor-guard
  */
 class EntityIdentitySemanticsTest {
@@ -72,7 +69,6 @@ class EntityIdentitySemanticsTest {
 	 * 规则护栏：带 @Data 的类不得被当作 Map 键 / Set 元素，也不得持有敏感字段。
 	 * Rule guard: a class annotated with @Data must not be used as a map key or set element,
 	 * and must not carry secret fields.
-	 *
 	 * <p>为什么扫源码：Lombok 的 @Data 只有 CLASS retention，不写进 RuntimeVisibleAnnotations，
 	 * 反射检查恒为通过（见 lombok.md 使用边界第 4 条）。
 	 * Why source scanning: Lombok's @Data has CLASS retention only and never reaches

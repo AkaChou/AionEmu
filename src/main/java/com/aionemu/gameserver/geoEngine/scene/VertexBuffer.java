@@ -95,8 +95,8 @@ public class VertexBuffer extends GLObject implements Cloneable {
 		 */
 		BoneIndex,
 		/**
-		 * 第二套纹理坐标。
-		 * Texture coordinate #2.
+		// 第二套纹理坐标。
+		// Texture coordinate #2.
 		 */
 		TexCoord2
 	}
@@ -123,8 +123,8 @@ public class VertexBuffer extends GLObject implements Cloneable {
 		 */
 		Stream,
 		/**
-		 * 数据不发送到 GPU，仅 CPU 使用。
-		 * Mesh data is not sent to the GPU at all; CPU only.
+		// 数据不发送到 GPU，仅 CPU 使用。
+		// Mesh data is not sent to the GPU at all; CPU only.
 		 */
 		CpuOnly
 	}
@@ -145,8 +145,7 @@ public class VertexBuffer extends GLObject implements Cloneable {
 		 * -- GETTER --
 		 *  返回该数据类型的字节大小。
 		 *  Returns the size in bytes of this data type.
-		 *
-		 * @return 分量字节数 / component size in bytes
+		 * 分量字节数 / component size in bytes
 		 */
 		private int componentSize = 0;
 
@@ -160,14 +159,9 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * -- GETTER --
 	 *  返回交错偏移。
 	 *  Returns the interleaved offset.
-	 *
-	 *
 	 * -- SETTER --
 	 *  设置交错偏移。
 	 *  Sets the interleaved offset.
-	 *
-	 @return 偏移 / offset
-	  * @param offset 偏移 / offset
 	 */
 	@Setter
 	@Getter
@@ -176,14 +170,9 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * -- GETTER --
 	 *  返回交错步长。
 	 *  Returns the interleaved stride.
-	 *
-	 *
 	 * -- SETTER --
 	 *  设置交错步长。
 	 *  Sets the interleaved stride.
-	 *
-	 @return 步长 / stride
-	  * @param stride 步长 / stride
 	 */
 	@Setter
 	@Getter
@@ -199,8 +188,6 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * -- GETTER --
 	 *  返回底层数据缓冲。
 	 *  Returns the underlying data buffer.
-	 *
-	 * @return 数据缓冲 / data buffer
 	 */
 	@Getter
 	protected Buffer data = null;
@@ -208,14 +195,9 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * -- GETTER --
 	 *  返回映射字节缓冲。
 	 *  Returns the mapped byte buffer.
-	 *
-	 *
 	 * -- SETTER --
 	 *  设置映射字节缓冲。
 	 *  Sets the mapped byte buffer.
-	 *
-	 @return 映射缓冲 / mapped buffer
-	  * @param mappedData 映射缓冲 / mapped buffer
 	 */
 	@Setter
 	@Getter
@@ -227,14 +209,9 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * -- GETTER --
 	 *  返回用途提示。
 	 *  Returns the usage hint.
-	 *
-	 *
 	 * -- SETTER --
 	 *  设置用途提示。
 	 *  Sets the usage hint.
-	 *
-	 @return 用途提示 / usage
-	  * @param usage 用途提示 / usage
 	 */
 	@Setter
 	@Getter
@@ -245,8 +222,6 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * -- GETTER --
 	 *  返回数据格式。
 	 *  Returns the data format.
-	 *
-	 * @return 数据格式 / format
 	 */
 	@Getter
 	protected Format format;
@@ -254,14 +229,10 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	 * -- GETTER --
 	 *  是否归一化。
 	 *  Whether data is normalized.
-	 *
-	 *
 	 * -- SETTER --
 	 *  设置是否归一化。
 	 *  Sets whether data is normalized.
-	 *
-	 @return 归一化则为 true / true if normalized
-	  * @param normalized 是否归一化 / whether normalized
+	 归一化则为 true / true if normalized
 	 */
 	@Setter
 	@Getter
@@ -272,7 +243,6 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 创建空的、未初始化缓冲；须调用 setupData() 初始化。
 	 * Creates an empty, uninitialized buffer. Must call setupData() to initialize.
-	 *
 	 * @param type 属性类型 / attribute type
 	 */
 	public VertexBuffer(Type type) {
@@ -291,7 +261,6 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 带已有 ID 的受保护构造，供可销毁浅拷贝使用。
 	 * Protected constructor with an existing id, for destructable shallow clones.
-	 *
 	 * @param id 对象 ID / object id
 	 */
 	protected VertexBuffer(int id) {
@@ -301,7 +270,6 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 返回属性类型。
 	 * Returns the attribute type.
-	 *
 	 * @return 属性类型 / buffer type
 	 */
 	public Type getBufferType() {
@@ -311,7 +279,6 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 返回每顶点分量数。
 	 * Returns the number of components per vertex.
-	 *
 	 * @return 分量数 / component count
 	 */
 	public int getNumComponents() {
@@ -321,7 +288,6 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 返回元素（顶点）个数。
 	 * Returns the number of elements (vertices).
-	 *
 	 * @return 元素（顶点）数 / element count
 	 */
 	public int getNumElements() {
@@ -335,7 +301,6 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 初始化缓冲数据（数据已上传后不可再次调用）。
 	 * Initializes buffer data (cannot be called again after data has been sent).
-	 *
 	 * @param usage 用途提示 / usage
 	 * @param components 每顶点分量数 / components per vertex
 	 * @param format 数据格式 / data format
@@ -357,7 +322,6 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 更新数据缓冲；容量变化时标记 dataSizeChanged。
 	 * Updates the data buffer; marks dataSizeChanged when capacity differs.
-	 *
 	 * @param data 新数据 / new data
 	 */
 	public void updateData(Buffer data) {
@@ -375,7 +339,6 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 数据容量是否已变化。
 	 * Whether data capacity has changed.
-	 *
 	 * @return 已变化则为 true / true if capacity changed
 	 */
 	public boolean hasDataSizeChanged() {
@@ -428,7 +391,6 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 将数据压缩为仅保留 numElements 个元素。
 	 * Compacts the data to retain only numElements elements.
-	 *
 	 * @param numElements 保留的元素个数 / number of elements to keep
 	 */
 	public void compact(int numElements) {
@@ -478,7 +440,6 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 将本缓冲第 inIndex 个元素拷贝到 outVb 的 outIndex（格式与分量数须一致）。
 	 * Copies element inIndex from this buffer into outVb at outIndex (format and component count must match).
-	 *
 	 * @param inIndex 源元素索引 / source element index
 	 * @param outVb 目标缓冲 / destination buffer
 	 * @param outIndex 目标元素索引 / destination element index
@@ -544,7 +505,6 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 按格式与分量数创建可容纳 numElements 个元素的 NIO 缓冲。
 	 * Creates an NIO buffer for the given format/components that holds numElements elements.
-	 *
 	 * @param format 数据格式 / data format
 	 * @param components 每顶点分量数（1–4） / components per vertex (1–4)
 	 * @param numElements 元素个数 / element count
@@ -571,7 +531,6 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 深拷贝本缓冲（含数据克隆，新 ID）。
 	 * Deep-clones this buffer (data cloned, new id).
-	 *
 	 * @return 克隆实例 / clone instance
 	 */
 	@Override
@@ -588,7 +547,6 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 以覆盖类型克隆（数据拷贝，新 ID，未上传）。
 	 * Clones with an overridden type (data copied, new id, not uploaded).
-	 *
 	 * @param overrideType 覆盖的属性类型 / overridden attribute type
 	 * @return 克隆实例 / clone instance
 	 */
@@ -611,7 +569,6 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 返回格式/类型/用途与元素数的摘要字符串。
 	 * Returns a summary string of format/type/usage and element count.
-	 *
 	 * @return 描述字符串 / descriptive string
 	 */
 	@Override
@@ -638,7 +595,6 @@ public class VertexBuffer extends GLObject implements Cloneable {
 	/**
 	 * 创建仅含 ID 的可销毁浅拷贝。
 	 * Creates a destructable shallow clone holding only the id.
-	 *
 	 * @return 浅拷贝 / shallow clone
 	 */
 	@Override

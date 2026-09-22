@@ -16,9 +16,7 @@ import java.sql.ResultSet;
 /**
  * 玩家 NPC 阵营 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerNpcFactionsDAO.
- *
  * Updated for MySQL 8 - Fixed connection leaks.
- *
  * @author MrPoke
  */
 @Slf4j
@@ -34,7 +32,6 @@ public class PlayerNpcFactionsDAO extends com.aionemu.gameserver.dao.PlayerNpcFa
 	/**
 	 * 加载玩家 NPC 阵营数据。
 	 * Loads NPC faction data for a player.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -68,7 +65,6 @@ public class PlayerNpcFactionsDAO extends com.aionemu.gameserver.dao.PlayerNpcFa
 	/**
 	 * 按持久化状态保存玩家 NPC 阵营。
 	 * Stores player NPC factions according to their persistent state.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -91,7 +87,6 @@ public class PlayerNpcFactionsDAO extends com.aionemu.gameserver.dao.PlayerNpcFa
 	/**
 	 * 插入 NPC 阵营记录。
 	 * Inserts an NPC faction record.
-	 *
 	 * @param playerObjectId 玩家对象 ID / player object id
 	 * @param faction 阵营 / faction
 	 */
@@ -114,7 +109,6 @@ public class PlayerNpcFactionsDAO extends com.aionemu.gameserver.dao.PlayerNpcFa
 	/**
 	 * 更新 NPC 阵营记录。
 	 * Updates an NPC faction record.
-	 *
 	 * @param playerObjectId 玩家对象 ID / player object id
 	 * @param faction 阵营 / faction
 	 */
@@ -137,7 +131,6 @@ public class PlayerNpcFactionsDAO extends com.aionemu.gameserver.dao.PlayerNpcFa
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
-	 *
 	 * @param database 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version

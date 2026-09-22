@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 攻击类型：用于条件/效果匹配命中来源。
  * Attack type: used by conditions/effects to match hit source.
- *
  * @author Sippolo
  */
 @XmlType(name = "attackType")

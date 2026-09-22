@@ -18,7 +18,6 @@ public class FirstTargetProperty {
 	/**
 	 * 根据属性设置技能首要目标，并将其加入受影响列表。
 	 * Sets the skill first target from properties and adds it to the effected list.
-	 *
 	 * @param skill 技能上下文 / skill context
 	 * @param properties 目标筛选属性 / target filter properties
 	 * @return 设置是否成功 / true if first target was set successfully

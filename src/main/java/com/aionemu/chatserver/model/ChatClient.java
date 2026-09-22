@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 /**
  * 聊天客户端会话模型，绑定玩家标识、令牌、频道与禁言状态。
  * Chat client session model binding player identity, token, channels and gag state.
- *
  * @author ATracer
  */
 @Slf4j
@@ -76,7 +75,6 @@ public class ChatClient {
     /**
      * 加入指定频道（按频道类型覆盖）。
      * Joins the given channel (overwrites by channel type).
-     *
      * @param channel 目标频道 / target channel
      */
     public void addChannel(Channel channel) {
@@ -86,7 +84,6 @@ public class ChatClient {
     /**
      * 判断是否已在指定类型频道中。
      * Checks whether the client is already in a channel of the same type.
-     *
      * @param channel 待检查频道 / channel to check
      * @return 已加入则为 true / true if already joined
      */
@@ -97,7 +94,6 @@ public class ChatClient {
     /**
      * 校验消息发送间隔是否满足配置延迟。
      * Verifies whether message send interval satisfies the configured delay.
-     *
      * @return 允许发送则为 true / true if sending is allowed
      */
     public boolean verifyLastMessage() {
@@ -123,7 +119,6 @@ public class ChatClient {
     /**
      * 判断当前是否处于禁言状态。
      * Checks whether the client is currently gagged.
-     *
      * @return 禁言中则为 true / true if gagged
      */
 	public boolean isGagged() {
@@ -135,7 +130,6 @@ public class ChatClient {
     /**
      * 比较昵称是否与会话一致，并接受私有区字形开头的管理员标签。
      * Compares the nickname with the session name and accepts admin tags starting with a private-use glyph.
-     *
      * @param nick 待比较昵称 / nickname to compare
      * @return 匹配返回 true / true if matching
      */

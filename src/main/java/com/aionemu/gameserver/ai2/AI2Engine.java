@@ -30,7 +30,6 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 /**
  * AI2 引擎：负责加载、注册、校验并为生物装配 AI 实例。
  * AI2 engine: loads, registers, validates and attaches AI instances to creatures.
- *
  * @author ATracer
  */
 @Slf4j
@@ -40,8 +39,6 @@ public class AI2Engine implements GameEngine {
 	 * -- SETTER --
 	 *  设置 Spring 实例 Provider。
 	 *  Sets the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / instance provider
 	 */
 	@Setter
 	private static volatile ObjectProvider<AI2Engine> instanceProvider;
@@ -68,7 +65,6 @@ public class AI2Engine implements GameEngine {
 	/**
 	 * 加载 AI 脚本并注册所有 AI 处理器。
 	 * Loads AI scripts and registers all AI handlers.
-	 *
 	 * @param progressLatch 进度倒计时锁 / progress latch
 	 */
 	@Override
@@ -106,7 +102,6 @@ public class AI2Engine implements GameEngine {
 	/**
 	 * 按 {@link AIName} 注解将 AI 类注册到名称映射表。
 	 * Registers an AI class into the name map using its {@link AIName} annotation.
-	 *
 	 * @param class1 AI 实现类 / AI implementation class
 	 */
 	public void registerAI(Class<? extends AbstractAI> class1) {
@@ -125,7 +120,6 @@ public class AI2Engine implements GameEngine {
 	/**
 	 * 按名称创建 AI 实例并绑定到所有者。
 	 * Creates an AI instance by name and binds it to the owner.
-	 *
 	 * @param name AI 名称 / AI name
 	 * @param owner 所有者生物 / owner creature
 	 * @return 装配好的 AI 实例 / configured AI instance
@@ -174,7 +168,6 @@ public class AI2Engine implements GameEngine {
 	/**
 	 * 使用 {@link AiNames} 枚举为 NPC 装配 AI。
 	 * Sets up AI for an NPC using an {@link AiNames} enum value.
-	 *
 	 * @param aiName AI 名称枚举 / AI name enum
 	 * @param owner 目标 NPC / target NPC
 	 */
@@ -197,7 +190,6 @@ public class AI2Engine implements GameEngine {
 	/**
 	 * 校验 NPC 引用覆盖与全部注册 AI 的无参构造可用性。
 	 * Validates NPC reference coverage and no-argument construction of every registered AI.
-	 *
 	 * @param referencedAiNames NPC 模板引用的 AI 名称 / AI names referenced by NPC templates
 	 */
 	void validateScripts(Collection<String> referencedAiNames) {
@@ -228,11 +220,9 @@ public class AI2Engine implements GameEngine {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available

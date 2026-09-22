@@ -9,7 +9,6 @@ interface StaticDataProgressReporter {
 	/**
 	 * 开始整体加载。
 	 * Starts overall loading.
-	 *
 	 * @param totalSections 分段总数 / total section count
 	 */
 	void start(int totalSections);
@@ -17,7 +16,6 @@ interface StaticDataProgressReporter {
 	/**
 	 * 某一分段开始加载。
 	 * Notifies that a section has started loading.
-	 *
 	 * @param sectionIndex 当前分段序号 / current section index
 	 * @param totalSections 分段总数 / total section count
 	 * @param sectionName 分段名称 / section name
@@ -28,7 +26,6 @@ interface StaticDataProgressReporter {
 	/**
 	 * 报告某一分段的加载进度。
 	 * Reports progress within a section.
-	 *
 	 * @param sectionIndex 当前分段序号 / current section index
 	 * @param totalSections 分段总数 / total section count
 	 * @param sectionName 分段名称 / section name
@@ -40,7 +37,6 @@ interface StaticDataProgressReporter {
 	/**
 	 * 某一分段加载完成。
 	 * Notifies that a section has finished loading.
-	 *
 	 * @param sectionIndex 当前分段序号 / current section index
 	 * @param totalSections 分段总数 / total section count
 	 * @param sectionName 分段名称 / section name
@@ -51,7 +47,6 @@ interface StaticDataProgressReporter {
 	/**
 	 * 全部加载完成。
 	 * Notifies that overall loading has finished.
-	 *
 	 * @param totalSections 分段总数 / total section count
 	 * @param elapsedMillis 耗时毫秒数 / elapsed milliseconds
 	 */
@@ -66,7 +61,6 @@ interface StaticDataProgressReporter {
 	/**
 	 * 返回空操作报告器，忽略全部进度回调。
 	 * Returns a no-op reporter that ignores all progress callbacks.
-	 *
 	 * @return 空操作报告器 / no-op reporter
 	 */
 	static StaticDataProgressReporter noop() {

@@ -11,7 +11,6 @@ import com.aionemu.gameserver.services.antihack.AntiHackService;
 /**
  * 反外挂校验数据的客户端包。
  * anti-hack validation data.
- *
  * @author Alcapwnd
  */
 @Slf4j
@@ -22,7 +21,6 @@ public class CM_GAMEGUARD extends AionClientPacket {
 	/**
 	 * 构造客户端包实例。
 	 * Constructs a new client packet instance.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余允许状态 / additional allowed states

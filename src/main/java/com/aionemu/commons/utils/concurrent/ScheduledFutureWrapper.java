@@ -23,7 +23,6 @@ public final class ScheduledFutureWrapper implements ScheduledFuture<Object> {
     /**
      * 获取剩余延迟。
      * Get remaining delay.
-     *
      * @param unit 时间单位 / Time unit
      * @return 剩余延迟 / Remaining delay
      */
@@ -35,7 +34,6 @@ public final class ScheduledFutureWrapper implements ScheduledFuture<Object> {
     /**
      * 按延迟比较。
      * Compare by remaining delay.
-     *
      * @param o 另一延迟对象 / Other delayed object
      * @return 比较结果 / Comparison result
      */
@@ -47,7 +45,6 @@ public final class ScheduledFutureWrapper implements ScheduledFuture<Object> {
     /**
      * 取消任务。
      * Cancel the task.
-     *
      * @param mayInterruptIfRunning 是否中断运行中任务 / Whether to interrupt if running
      * @return 是否取消成功 / Whether cancelled
      */
@@ -59,7 +56,6 @@ public final class ScheduledFutureWrapper implements ScheduledFuture<Object> {
     /**
      * 阻塞获取结果。
      * Block until result is available.
-     *
      * @return 结果 / Result
      * @throws InterruptedException 线程被中断 / If interrupted
      * @throws ExecutionException 计算失败 / If computation failed
@@ -72,7 +68,6 @@ public final class ScheduledFutureWrapper implements ScheduledFuture<Object> {
     /**
      * 限时获取结果。
      * Get result with timeout.
-     *
      * @param timeout 超时时间 / Timeout
      * @param unit    时间单位 / Time unit
      * @return 结果 / Result
@@ -88,7 +83,6 @@ public final class ScheduledFutureWrapper implements ScheduledFuture<Object> {
     /**
      * 是否已取消。
      * Whether cancelled.
-     *
      * @return 已取消则为 true / True if cancelled
      */
     @Override
@@ -99,7 +93,6 @@ public final class ScheduledFutureWrapper implements ScheduledFuture<Object> {
     /**
      * 是否已完成。
      * Whether done.
-     *
      * @return 已完成则为 true / True if done
      */
     @Override

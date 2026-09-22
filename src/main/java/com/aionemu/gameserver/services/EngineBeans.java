@@ -33,7 +33,6 @@ public class EngineBeans {
     /**
      * 线程池管理器桥接 Bean，注入线程配置而不是读取静态门面。
      * Thread-pool manager bridge bean, wired with the thread configuration instead of the static facade.
-     *
      * @param threadConfig 线程配置 / thread configuration
      * @return 线程池管理器 / thread-pool manager
      */

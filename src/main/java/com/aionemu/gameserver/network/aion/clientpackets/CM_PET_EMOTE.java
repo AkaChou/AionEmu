@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 客户端宠物表情/动作请求包，按表情类型同步位置与广播。
  * Client packet for pet emote actions; syncs position and broadcasts by emote type.
- *
  * @author ATracer
  */
 public class CM_PET_EMOTE extends AionClientPacket {

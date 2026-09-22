@@ -26,7 +26,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Bastion Of Souls 副本 NPC AI：Investigative Bastiel（@AIName "Bastiel"），继承 GeneralNpcAI2。
  * Bastion Of Souls instance NPC AI: Investigative Bastiel (@AIName "Bastiel"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("Bastiel")

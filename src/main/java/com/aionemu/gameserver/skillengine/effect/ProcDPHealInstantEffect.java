@@ -11,7 +11,6 @@ import com.aionemu.gameserver.skillengine.model.HealType;
 /**
  * 触发即时 DP 治疗：按 DP 治疗类型计算并应用回复。
  * Proc instant DP heal: calculates and applies DP recovery via heal type DP.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -21,7 +20,6 @@ public class ProcDPHealInstantEffect extends AbstractHealEffect {
 	/**
 	 * 以 DP 类型计算治疗量。
 	 * Calculates heal amount as DP.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -32,7 +30,6 @@ public class ProcDPHealInstantEffect extends AbstractHealEffect {
 	/**
 	 * 以 DP 类型应用治疗。
 	 * Applies heal as DP.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

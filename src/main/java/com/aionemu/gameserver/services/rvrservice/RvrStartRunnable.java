@@ -10,10 +10,8 @@ import lombok.AllArgsConstructor;
 /**
  * 种族对抗（RVR）活动启动定时任务。
  * Start runnable for the RVR (Race vs Race) world event.
- *
  * <p>按时间轴刷出入口/激光/黑天、播报入侵倒计时，并最终启动 RVR。
  * Stages portal/laser/black-sky, invasion countdown messages, then starts RVR.</p>
- *
  * @author Rinzler (Encom)
  */
 @AllArgsConstructor

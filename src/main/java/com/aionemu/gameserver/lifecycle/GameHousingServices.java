@@ -56,7 +56,6 @@ public final class GameHousingServices implements DisposableBean {
     /**
      * 构造并注册各房屋相关实例提供者。
      * Construct and register instance providers for housing-related services.
-     *
      * @param housingBidServiceProvider 房屋竞拍服务提供者 / Housing-bid service provider
      * @param maintenanceTaskProvider 房屋维护任务提供者 / Maintenance-task provider
      * @param townServiceProvider 城镇服务提供者 / Town-service provider
@@ -82,7 +81,6 @@ public final class GameHousingServices implements DisposableBean {
     /**
      * 解析房屋竞拍服务（结果缓存）。
      * Resolve the housing-bid service (cached).
-     *
      * @return 房屋竞拍服务 / Housing-bid service
      */
     public static HousingBidService housingBidService() {
@@ -100,7 +98,6 @@ public final class GameHousingServices implements DisposableBean {
     /**
      * 解析房屋维护任务（结果缓存）。
      * Resolve the maintenance task (cached).
-     *
      * @return 房屋维护任务 / Maintenance task
      */
     public static MaintenanceTask maintenanceTask() {
@@ -118,7 +115,6 @@ public final class GameHousingServices implements DisposableBean {
     /**
      * 解析城镇服务（结果缓存）。
      * Resolve the town service (cached).
-     *
      * @return 城镇服务 / Town service
      */
     public static TownService townService() {
@@ -136,7 +132,6 @@ public final class GameHousingServices implements DisposableBean {
     /**
      * 解析房屋服务（结果缓存）。
      * Resolve the housing service (cached).
-     *
      * @return 房屋服务 / Housing service
      */
     public static HousingService housingService() {
@@ -154,7 +149,6 @@ public final class GameHousingServices implements DisposableBean {
     /**
      * 解析挑战任务服务（结果缓存）。
      * Resolve the challenge-task service (cached).
-     *
      * @return 挑战任务服务 / Challenge-task service
      */
     public static ChallengeTaskService challengeTaskService() {

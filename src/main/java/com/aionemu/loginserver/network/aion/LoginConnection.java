@@ -24,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 登录服与 Aion 客户端之间的连接对象。
  * Connection object between the login server and an Aion client.
- *
  * @author -Nemesiss-
  */
 @Slf4j
@@ -109,7 +108,6 @@ public class LoginConnection extends AConnection {
     /**
      * 基于传输创建登录连接。
      * Create a login connection on the given transport.
-     *
      * @param transport 连接传输 / Connection transport
      */
     public LoginConnection(ConnectionTransport transport) {
@@ -119,7 +117,6 @@ public class LoginConnection extends AConnection {
     /**
      * 传输层回调：处理缓冲中的一包数据（解密、解析并投递执行）。
      * Transport callback: process one packet from the buffer (decrypt, parse, execute).
-     *
      * @param data 包数据 / Packet data
      * @return 成功为 true；失败需立即关闭连接 / True on success; false means close now
      */
@@ -131,11 +128,7 @@ public class LoginConnection extends AConnection {
 
         AionClientPacket pck = AionPacketHandlerFactory.handle(data, this);
 
-        /**
-         * 仅当包存在且读取成功时执行。
-         * Execute only when packet exists and read succeeded.
-         */
-        if ((pck != null) && pck.read()) {
+		if ((pck != null) && pck.read()) {
             processor.executePacket(pck);
         }
 
@@ -145,7 +138,6 @@ public class LoginConnection extends AConnection {
     /**
      * 传输层回调：向缓冲写入下一待发包，无数据返回 false。
      * Transport callback: write next pending packet; false when queue empty.
-     *
      * @param data 写出缓冲 / Write buffer
      * @return 写入了数据则为 true / True if data was written
      */
@@ -166,7 +158,6 @@ public class LoginConnection extends AConnection {
     /**
      * 连接可关闭时由传输调用；返回调用 onDisconnect 前的延迟（毫秒）。
      * Called by transport when close is ready; delay in ms before onDisconnect.
-     *
      * @return 恒为 0 / always 0
      */
     @Override
@@ -179,11 +170,7 @@ public class LoginConnection extends AConnection {
      */
     @Override
     protected final void onDisconnect() {
-        /**
-         * 尚未进入游戏服时才从 LS 移除账号。
-         * Remove account from LS only if not yet joined GS.
-         */
-        if ((account != null) && !joinedGs) {
+		if ((account != null) && !joinedGs) {
             AccountController.removeAccountOnLS(account);
             AccountTimeController.updateOnLogout(account);
         }
@@ -200,7 +187,6 @@ public class LoginConnection extends AConnection {
     /**
      * 解密入站包。
      * Decrypt inbound packet.
-     *
      * @param buf 数据缓冲 / Data buffer
      * @return 解密成功为 true / true on success
      */
@@ -219,7 +205,6 @@ public class LoginConnection extends AConnection {
     /**
      * 加密出站包。
      * Encrypt outbound packet.
-     *
      * @param buf 数据缓冲 / Data buffer
      * @return 加密后包体大小 / Encrypted payload size
      */
@@ -235,15 +220,10 @@ public class LoginConnection extends AConnection {
     /**
      * 向客户端发送服务端包。
      * Send a server packet to this client.
-     *
      * @param bp 待发送包 / Packet to send
      */
     public final synchronized void sendPacket(AionServerPacket bp) {
-        /**
-         * 连接已关闭或正在发送关闭包。
-         * Connection already closed or waiting for close packet.
-         */
-        if (isWriteDisabled()) {
+		if (isWriteDisabled()) {
             return;
         }
 
@@ -255,7 +235,6 @@ public class LoginConnection extends AConnection {
     /**
      * 保证关闭包先于断开发送；清空其它待发包。forced 表示不等待清理。
      * Guarantee closePacket is sent before disconnect; drop other queued packets. forced skips wait.
-     *
      * @param closePacket 关闭前发送的包 / Packet sent before close
      * @param forced 本实现无实际影响 / Has no effect in this implementation
      */
@@ -276,7 +255,6 @@ public class LoginConnection extends AConnection {
     /**
      * 返回加扰后的 RSA 模数。
      * Return scrambled RSA modulus.
-     *
      * @return 加扰后的模数 / scrambled modulus
      */
     public final byte[] getEncryptedModulus() {
@@ -286,7 +264,6 @@ public class LoginConnection extends AConnection {
     /**
      * 返回 RSA 私钥。
      * Return RSA private key.
-     *
      * @return RSA 私钥 / RSA private key
      */
     public final RSAPrivateKey getRSAPrivateKey() {
@@ -312,7 +289,6 @@ public class LoginConnection extends AConnection {
     /**
      * 勿改：hashCode 用于保证连接唯一 ID。
      * Do not change: hashCode ensures each connection has a unique id.
-     *
      * @return 唯一标识 / unique identifier
      */
     @Override
@@ -342,10 +318,6 @@ public class LoginConnection extends AConnection {
         cryptEngine = new CryptEngine();
         cryptEngine.updateKey(blowfishKey.getEncoded());
 
-        /**
-         * 发送 Init 包。
-         * Send Init packet.
-         */
         sendPacket(new SM_INIT(this, blowfishKey));
     }
 }

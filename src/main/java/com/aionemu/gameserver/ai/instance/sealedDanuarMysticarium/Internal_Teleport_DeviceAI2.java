@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Sealed Danuar Mysticarium 副本 NPC AI：Internal Teleport Device（@AIName "internal_teleport_device"），继承 NpcAI2。
  * Sealed Danuar Mysticarium instance NPC AI: Internal Teleport Device (@AIName "internal_teleport_device"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("internal_teleport_device")

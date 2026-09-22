@@ -18,7 +18,6 @@ import com.aionemu.gameserver.model.templates.shugosweep.ShugoSweepReward;
 /**
  * 术古扫荡奖励数据容器，按棋盘 ID 与奖励序号复合键索引。
  * Shugo Sweep reward data holder, indexed by composite board id and reward number key.
- *
  * Created by Wnkrz on 23/10/2017.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -49,7 +48,6 @@ public class ShugoSweepRewardData {
 	/**
 	 * 按棋盘 ID 与奖励序号获取奖励。
 	 * Returns the reward for the given board id and reward number.
-	 *
 	 * @param boardId 棋盘 ID / board id
 	 * @param rewardNum 奖励序号 / reward number
 	 * @return 奖励，不存在则为 null / reward or null
@@ -61,7 +59,6 @@ public class ShugoSweepRewardData {
 	/**
 	 * 返回已加载的奖励数量。
 	 * Returns the number of loaded rewards.
-	 *
 	 * @return 已加载的奖励数量 / Returns the number of loaded rewards.
 	 */
 	public int size() {

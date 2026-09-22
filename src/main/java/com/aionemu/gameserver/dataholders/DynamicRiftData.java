@@ -18,7 +18,6 @@ import java.util.Map;
 /**
  * 动态裂隙配置数据容器，维护裂隙地点模板与运行时地点映射。
  * Dynamic rift configuration data holder for rift location templates and runtime locations.
- *
  * @author Rinzler (Encom)
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -43,7 +42,6 @@ public class DynamicRiftData {
 	/**
 	 * 返回动态裂隙地点数量。
 	 * Returns the number of dynamic rift locations.
-	 *
 	 * @return 动态裂缝地点数量 / Returns the number of dynamic rift locations.
 	 */
 	public int size() {
@@ -53,7 +51,6 @@ public class DynamicRiftData {
 	/**
 	 * 返回全部动态裂隙地点映射。
 	 * Returns the map of all dynamic rift locations.
-	 *
 	 * @return 地点 ID 到地点实例的映射 / map of location id to location instance
 	 */
 	public Map<Integer, DynamicRiftLocation> getDynamicRiftLocations() {

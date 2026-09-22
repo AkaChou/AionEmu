@@ -5,7 +5,6 @@ import jakarta.xml.bind.annotation.XmlEnum;
 /**
  * 面板创造点类型枚举。
  * Panel Cp Type enumeration.
- *
  * @author Rinzler (Encom)
  */
 

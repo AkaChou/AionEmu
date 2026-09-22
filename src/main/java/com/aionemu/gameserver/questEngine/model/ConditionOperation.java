@@ -5,7 +5,6 @@ import jakarta.xml.bind.annotation.XmlEnum;
 /**
  * 任务条件比较操作符枚举，用于 XML 条件表达式中的数值/集合比较。
  * Quest condition comparison operators used in XML condition expressions for value/set comparisons.
- *
  * @author Mr. Poke
  */
 @XmlEnum
@@ -31,7 +30,6 @@ public enum ConditionOperation {
 	/**
 	 * 返回枚举名称字符串（JAXB 序列化用）。
 	 * Returns the enum name string (for JAXB serialization).
-	 *
 	 * @return 操作符名称 / Operator name
 	 */
 	public String value() {
@@ -41,7 +39,6 @@ public enum ConditionOperation {
 	/**
 	 * 根据字符串解析条件操作符。
 	 * Parses a condition operator from its string name.
-	 *
 	 * @param v 操作符名称 / Operator name
 	 * @return 对应的枚举常量 / Matching enum constant
 	 */

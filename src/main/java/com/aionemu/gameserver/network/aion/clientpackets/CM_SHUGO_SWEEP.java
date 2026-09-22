@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 客户端术古扫雷活动操作请求包（重置棋盘或投掷骰子）。
  * Client packet for Shugo Sweep event actions (reset board or launch dice).
- *
  * @author Ghostfur
  */
 public class CM_SHUGO_SWEEP extends AionClientPacket {

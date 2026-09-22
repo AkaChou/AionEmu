@@ -9,7 +9,6 @@ import lombok.Setter;
 /**
  * 账号模型。
  * Account model.
- *
  * @author SoulKeeper
  */
 @Getter
@@ -97,7 +96,6 @@ public class Account {
     /**
      * 返回回归标记。
      * Returns return flag.
-     *
      * Return flag
      */
     public byte getReturn() {
@@ -107,7 +105,6 @@ public class Account {
     /**
      * 设置回归标记。
      * Sets return flag.
-     *
      * @param isReturn Return flag
      */
     public void setReturn(byte isReturn) {
@@ -117,7 +114,6 @@ public class Account {
     /**
      * 按账号名与密码哈希判断相等。
      * Equality based on name and password hash.
-     *
      * @param o 另一对象 / Other object
      * @return 名称与密码哈希均相同则为 true / True if name and password hash match
      */
@@ -143,7 +139,6 @@ public class Account {
     /**
      * 基于名称与密码哈希的哈希码。
      * Hash code based on name and password hash.
-     *
      * Hash code
      */
     @Override

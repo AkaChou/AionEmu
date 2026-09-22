@@ -46,7 +46,6 @@ public class RideData {
 	/**
 	 * 按 NPC ID 获取坐骑信息。
 	 * Returns the ride info for the given NPC id.
-	 *
 	 * @param npcId NPC ID / npc id
 	 * @return 坐骑信息，不存在则为 null / ride info or null
 	 */
@@ -57,7 +56,6 @@ public class RideData {
 	/**
 	 * 返回已加载的坐骑数量。
 	 * Returns the number of loaded rides.
-	 *
 	 * @return 已加载的骑乘数量 / Returns the number of loaded rides.
 	 */
 	public int size() {

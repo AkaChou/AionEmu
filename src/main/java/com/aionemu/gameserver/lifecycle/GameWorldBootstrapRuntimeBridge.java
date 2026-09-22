@@ -49,7 +49,6 @@ public class GameWorldBootstrapRuntimeBridge {
     /**
      * 注入 IDFactory 提供者。
      * Inject the IDFactory provider.
-     *
      * @param idFactoryProvider IDFactory 提供者 / IDFactory provider
      */
     @Autowired(required = false)
@@ -60,7 +59,6 @@ public class GameWorldBootstrapRuntimeBridge {
     /**
      * 注入 ZoneService 提供者。
      * Inject the ZoneService provider.
-     *
      * @param zoneServiceProvider ZoneService 提供者 / ZoneService provider
      */
     @Autowired(required = false)
@@ -71,7 +69,6 @@ public class GameWorldBootstrapRuntimeBridge {
     /**
      * 注入 HotspotTeleportService 提供者。
      * Inject the HotspotTeleportService provider.
-     *
      * @param hotspotTeleportServiceProvider HotspotTeleportService 提供者 / HotspotTeleportService provider
      */
     @Autowired(required = false)
@@ -82,7 +79,6 @@ public class GameWorldBootstrapRuntimeBridge {
     /**
      * 注入 RoadService 提供者。
      * Inject the RoadService provider.
-     *
      * @param roadServiceProvider RoadService 提供者 / RoadService provider
      */
     @Autowired(required = false)
@@ -93,7 +89,6 @@ public class GameWorldBootstrapRuntimeBridge {
     /**
      * 注入 World 提供者。
      * Inject the World provider.
-     *
      * @param worldProvider World 提供者 / World provider
      */
     @Autowired(required = false)
@@ -104,7 +99,6 @@ public class GameWorldBootstrapRuntimeBridge {
     /**
      * 解析 IDFactory：优先 Spring，否则回退。
      * Resolve IDFactory: prefer Spring, otherwise fallback.
-     *
      * @return IDFactory 实例 / IDFactory instance
      */
     public IDFactory idFactory() {
@@ -117,7 +111,6 @@ public class GameWorldBootstrapRuntimeBridge {
     /**
      * 解析 ZoneService：优先 Spring，否则回退。
      * Resolve ZoneService: prefer Spring, otherwise fallback.
-     *
      * @return ZoneService 实例 / ZoneService instance
      */
     public ZoneService zoneService() {
@@ -130,7 +123,6 @@ public class GameWorldBootstrapRuntimeBridge {
     /**
      * 解析 HotspotTeleportService：优先 Spring，否则回退。
      * Resolve HotspotTeleportService: prefer Spring, otherwise fallback.
-     *
      * @return HotspotTeleportService 实例 / HotspotTeleportService instance
      */
     public HotspotTeleportService hotspotTeleportService() {
@@ -143,7 +135,6 @@ public class GameWorldBootstrapRuntimeBridge {
     /**
      * 解析 RoadService：优先 Spring，否则回退。
      * Resolve RoadService: prefer Spring, otherwise fallback.
-     *
      * @return RoadService 实例 / RoadService instance
      */
     public RoadService roadService() {
@@ -156,7 +147,6 @@ public class GameWorldBootstrapRuntimeBridge {
     /**
      * 解析 World：优先 Spring，否则回退。
      * Resolve World: prefer Spring, otherwise fallback.
-     *
      * @return World 实例 / World instance
      */
     public World world() {

@@ -6,7 +6,6 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
 /**
  * Addition 属性，用于属性相关逻辑。
  * Addition Stat for stats logic.
- *
  * @author ATracer
  */
 public class AdditionStat extends Stat2 {

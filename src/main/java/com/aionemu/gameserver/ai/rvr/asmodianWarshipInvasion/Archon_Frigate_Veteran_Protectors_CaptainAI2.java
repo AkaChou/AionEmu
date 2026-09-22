@@ -10,7 +10,6 @@ import java.util.List;
 /**
  * RvR 相关 NPC AI：Archon Frigate Veteran Protectors Captain（@AIName "DF6_Event_G1_S1_Kn_75_Ah"），继承 AggressiveNpcAI2。
  * RvR-related NPC AI: Archon Frigate Veteran Protectors Captain (@AIName "DF6_Event_G1_S1_Kn_75_Ah"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("DF6_Event_G1_S1_Kn_75_Ah")
@@ -19,13 +18,9 @@ public class Archon_Frigate_Veteran_Protectors_CaptainAI2 extends AggressiveNpcA
 	@Override
 	public void think() {
 	}
-	
+
 	@Override
-	/**
-	 * 死亡后清除护卫队，并召唤特级战斗队长与多名特级突击队长接替。
-	 * On death, despawns the protectors and spawns the special grade combat captain with several assault leaders as reinforcements.
-	 */
-	protected void handleDied() {
+    protected void handleDied() {
 		despawnNpc(240664);
 		despawnNpc(240665);
 		despawnNpc(240666);
@@ -37,7 +32,7 @@ public class Archon_Frigate_Veteran_Protectors_CaptainAI2 extends AggressiveNpcA
 		super.handleDied();
 		AI2Actions.deleteOwner(this);
 	}
-	
+
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);

@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 宠物属性模板（静态数据/XML）。
  * XML template.
- *
  * @author IlBuono
  */
 @Getter

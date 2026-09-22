@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * The Eternal Bastion 副本 NPC AI：Beritran Chariot（@AIName "beritran_chariot"），继承 NpcAI2。
  * The Eternal Bastion instance NPC AI: Beritran Chariot (@AIName "beritran_chariot"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("beritran_chariot")

@@ -21,7 +21,6 @@ import java.util.List;
 /**
  * Bastion Of Souls 副本 NPC AI：Lever Of The Sorting Room（@AIName "Torture_Lever"），继承 NpcAI2。
  * Bastion Of Souls instance NPC AI: Lever Of The Sorting Room (@AIName "Torture_Lever"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Torture_Lever")

@@ -35,12 +35,10 @@ import javax.xml.stream.events.XMLEvent;
  * 供资源目录直接加载。
  * Offline template shard writer: splits large template XML into a requested number of source files
  * with balanced byte sizes for direct resource loading.
- *
  * <p>运行时加载器不会调用此类，也不会在启动时写入缓存；它仅用于离线生成或维护
  * 已提交的源分片。
  * The runtime loader never calls this class and never writes a cache at startup; it is only for
  * offline generation or maintenance of committed source shards.
- *
  * <p>分片文件命名为 {@code {filePrefix}_{startId}_{endId}.xml}，其中 startId/endId 是该分片内
  * 数值最小和最大的模板 ID（例如 {@code item_template_10000_20000.xml}）。
  * 分片写入临时文件后原子改名，全部成功后才清理旧分片，
@@ -64,7 +62,6 @@ final class TemplateShardWriter {
 	/**
 	 * 分片是否已是最新：存在分片且没有任何源文件比分片新。
 	 * Whether shards are up to date: shards exist and no source file is newer than any shard.
-	 *
 	 * @param sources 源文件列表 / source files
 	 * @param shardDir 分片目录 / shard directory
 	 * @param filePrefix 分片文件名前缀 / shard file-name prefix
@@ -90,7 +87,6 @@ final class TemplateShardWriter {
 	/**
 	 * 列出指定前缀的全部分片文件（按名称排序）。
 	 * Lists all shard files for the given prefix, sorted by name.
-	 *
 	 * @param shardDir 分片目录 / shard directory
 	 * @param filePrefix 分片文件名前缀 / shard file-name prefix
 	 * @return 分片文件列表 / shard files
@@ -109,7 +105,6 @@ final class TemplateShardWriter {
 	 * 读取源文件后按模板 ID 排序，再按 XML 字节大小切分为不重叠的均衡分片文件。
  * Reads source files, sorts target templates by ID, then splits them into non-overlapping shards
  * with balanced XML byte sizes.
-	 *
 	 * @param sources 按加载顺序排列的源文件 / source files in load order
 	 * @param rootElement 分片根元素名 / shard root element name
 	 * @param targetElement 目标模板元素名 / target template element name

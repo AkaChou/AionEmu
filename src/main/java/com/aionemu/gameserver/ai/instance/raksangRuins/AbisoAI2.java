@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Raksang Ruins 副本 NPC AI：Abiso（@AIName "abiso"），继承 GeneralNpcAI2。
  * Raksang Ruins instance NPC AI: Abiso (@AIName "abiso"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("abiso")

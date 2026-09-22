@@ -38,7 +38,6 @@ public class GameNetworkStartupLifecycle {
     /**
      * 启动网络阶段：打印段落、运行 serverStarter，非 boot-embedded 时注册关闭钩子。
      * Start the network stage: print sections, run serverStarter, and register the shutdown hook when not boot-embedded.
-     *
      * @param serverStarter 网络服务器启动回调 / Network server starter callback
      */
     public synchronized void start(Runnable serverStarter) {
@@ -70,7 +69,6 @@ public class GameNetworkStartupLifecycle {
     /**
      * 是否已加载。
      * Whether this stage is loaded.
-     *
      * @return 已加载为 {@code true} / {@code true} if loaded
      */
     public synchronized boolean isLoaded() {
@@ -80,7 +78,6 @@ public class GameNetworkStartupLifecycle {
     /**
      * 加载耗时毫秒。
      * Load time in milliseconds.
-     *
      * @return 耗时毫秒，未启动为 -1 / Elapsed millis, or {@code -1} if not started
      */
     public synchronized long getLoadTimeMillis() {
@@ -90,7 +87,6 @@ public class GameNetworkStartupLifecycle {
     /**
      * 最近失败。
      * Last failure.
-     *
      * @return 最近异常，无则为 null / Last throwable, or {@code null}
      */
     public synchronized Throwable getLastFailure() {

@@ -8,7 +8,6 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 /**
  * Dredgion Defense 副本 NPC AI：Dredgion Power Core（@AIName "Dredgion_Power_Core"），继承 NpcAI2。
  * Dredgion Defense instance NPC AI: Dredgion Power Core (@AIName "Dredgion_Power_Core"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Dredgion_Power_Core")

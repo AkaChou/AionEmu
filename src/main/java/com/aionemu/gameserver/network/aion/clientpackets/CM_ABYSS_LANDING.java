@@ -10,7 +10,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * 请求欧比斯登陆信息的客户端包。
  * Client packet requesting abyss landing information.
- *
  * @author Ranastic & Lightning (Encom)
  */
 @Slf4j

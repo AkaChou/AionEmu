@@ -10,9 +10,7 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
  * 对所有可装备物品发送；已装备时写槽位 ID，否则写 0。
  * Blob sent for all equipable items.
  * Writes the equipped slot id when worn, otherwise 0.
- *
  * @author -Nemesiss-
- * @modified Rolandas
  */
 public class EquippedSlotBlobEntry extends ItemBlobEntry {
 

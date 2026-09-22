@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 强制重置玩家账号二级密码（Passkey）的管理员命令。
  * Admin command to force-reset a player's account passkey.
- *
  * @author cura
  */
 public class PasskeyReset extends AdminCommand {
@@ -27,7 +26,6 @@ public class PasskeyReset extends AdminCommand {
 	/**
 	 * 按角色名解析账号并写入新的 6–8 位数字二级密码，随后通知登录服。
 	 * Resolve the account by character name, write a new 6–8 digit passkey, and notify the login server.
-	 *
 	 * @param player 执行 GM / Admin player
 	 * @param params 角色名与新 passkey / Character name and new passkey
 	 */
@@ -67,7 +65,6 @@ public class PasskeyReset extends AdminCommand {
 	/**
 	 * 参数错误时显示语法。
 	 * Show syntax when parameters are invalid.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

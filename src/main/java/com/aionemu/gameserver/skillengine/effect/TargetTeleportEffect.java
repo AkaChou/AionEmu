@@ -23,7 +23,6 @@ import com.aionemu.commons.utils.Rnd;
 /**
  * 目标传送效果：将玩家目标传送到施法者前方。
  * Target teleport effect: teleports a player target in front of the effector.
- *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)

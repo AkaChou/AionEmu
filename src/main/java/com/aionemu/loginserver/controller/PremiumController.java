@@ -11,7 +11,6 @@ import com.aionemu.loginserver.network.gameserver.serverpackets.SM_PREMIUM_RESPO
 /**
  * 高级点数（Toll）消费与充值控制。
  * Premium points (toll) spend and credit controller.
- *
  * @author KID
  */
 @Slf4j(topic = "PREMIUM_CTRL")
@@ -46,7 +45,6 @@ public class PremiumController {
     /**
      * 获取单例（遗留入口，启动迁移后弃用）。
      * Returns singleton (legacy entry, deprecated after boot migration).
-     *
      * @return 控制器实例 / Controller instance
      * @deprecated 优先使用注入 / prefer injection
      */
@@ -67,7 +65,6 @@ public class PremiumController {
     /**
      * 处理游戏服发起的点数消费/增加请求。
      * Handles spend/credit request from a gameserver.
-     *
      * @param accountId 账号 ID / Account id
      * @param requestId 请求 ID / Request id
      * @param cost 消耗点数；负数表示增加 / Cost; negative means add

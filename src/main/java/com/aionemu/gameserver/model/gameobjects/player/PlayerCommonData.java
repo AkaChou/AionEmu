@@ -39,7 +39,6 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 	/**
 	 * 是否禁用经验获取（历史方法名，保留以兼容既有调用）。
 	 * Whether experience gain is disabled (legacy accessor name kept for existing callers).
-	 *
 	 * @return 禁用经验时为 true / true when exp gain is disabled
 	 */
 	public boolean getNoExp() {
@@ -65,9 +64,8 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 	 * -- GETTER --
 	 * <p>
 	 * -- SETTER --
-	 *
-	 * @return the AdvancedStigmaSlotSize
-	 * @param AdvancedStigmaSlotSize the AdvancedStigmaSlotSize to set
+	 * the AdvancedStigmaSlotSize
+	 * the AdvancedStigmaSlotSize to set
 	 */
 	private int AdvancedStigmaSlotSize = 0;
 	private int titleId = -1;
@@ -88,11 +86,6 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 	private int passportReward = 0;
 	public Map<Integer, AtreianPassport> playerPassports = new HashMap<>(1);
 	private PlayerPassports completedPassports;
-	/**
-	 * -- GETTER --
-	 *
-	 * @return 是否高阶守护者 / Whether arch daeva
-	 */
 	private boolean isArchDaeva = false;
 	private int creativityPoint;
 	private int cp_step = 0;
@@ -189,9 +182,6 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 		this.setExp(this.exp + el, false);
 	}
 
-	/**
-	 * @param value
-	 */
 	public void addExp(long value, int npcNameId) {
 		this.addExp(value, null, npcNameId, "");
 	}
@@ -439,7 +429,6 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 	 * Whether the online character is still capped at the ArchDaeva 65→66 EXP boundary.
 	 * 离线加载返回 false，避免在任务状态恢复前改写已存经验值。
 	 * Returns false while offline so stored EXP reconstruction is not rewritten before quest state loading.
-	 *
 	 * @return 仍受门禁约束时为 true / true while the EXP cap still applies
 	 */
 	boolean isArchDaevaLevelCapped() {
@@ -495,7 +484,6 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 	/**
 	 * 获取此公共数据对应的玩家，玩家不在线时返回 null。
 	 * Gets the corresponding Player for this common data. Returns null if the player is not online
-	 *
 	 * @return 玩家或 null / Player or null
 	 */
 	public Player getPlayer() {
@@ -553,9 +541,6 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 	}
 
 
-	/**
-	 * @param boundRadius
-	 */
 	public void setBoundingRadius(BoundRadius boundRadius) {
 		this.boundRadius = boundRadius;
 	}
@@ -722,7 +707,6 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 	/**
 	 * 捕获任务经验、成长光环、DP 与晋升可能修改的字段。
 	 * Captures fields changed by quest EXP, aura, DP, and promotion.
-	 *
 	 * @return 可恢复一次的事务快照 / transaction snapshot that can restore once
 	 */
 	public TransactionSnapshot transactionSnapshot() {

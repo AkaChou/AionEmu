@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Dark Poeta 副本 NPC AI：Tahabata Pyrelord（@AIName "tahabatapyrelord"），继承 AggressiveNpcAI2。
  * Dark Poeta instance NPC AI: Tahabata Pyrelord (@AIName "tahabatapyrelord"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("tahabatapyrelord")

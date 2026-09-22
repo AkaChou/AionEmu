@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * WrappingUseTarget 枚举。
  * Wrapping Use Target enumeration.
- *
  * @author Ranastic
  */
 

@@ -18,7 +18,6 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 /**
  * NPC 尸体消散与重生调度服务。
  * Service for scheduling NPC corpse decay and respawn.
- *
  * @author ATracer, Source, xTz
  */
 public class RespawnService {
@@ -29,10 +28,7 @@ public class RespawnService {
 	/**
 	 * 根据掉落情况调度 NPC 尸体消散任务。
 	 * Schedules NPC corpse decay based on current drop state.
-	 *
 	 * target NPC
-	 *
-	 * @param npc
 	 * @return 消散任务句柄 / decay task handle
 	 */
 	public static Future<?> scheduleDecayTask(Npc npc) {
@@ -52,11 +48,8 @@ public class RespawnService {
 	/**
 	 * 按指定间隔调度 NPC 尸体消散任务。
 	 * Schedules NPC corpse decay after the given interval.
-	 *
 	 * target NPC
-	 *
 	 * @param decayInterval 消散延迟（毫秒） / decay delay in milliseconds
-	 * @param decayInterval
 	 * @return 消散任务句柄 / decay task handle
 	 */
 	public static Future<?> scheduleDecayTask(Npc npc, long decayInterval) {
@@ -66,10 +59,7 @@ public class RespawnService {
 	/**
 	 * 按刷新模板的重生时间调度可见对象重生。
 	 * Schedules respawn of a visible object using its spawn template interval.
-	 *
 	 * visible object
-	 *
-	 * @param visibleObject
 	 * @return 重生任务句柄 / respawn task handle
 	 */
 	public static final Future<?> scheduleRespawnTask(VisibleObject visibleObject) {
@@ -82,7 +72,6 @@ public class RespawnService {
 	/**
 	 * 在指定副本实例中执行一次重生。
 	 * Performs a single respawn in the given instance.
-	 *
 	 * @param spawnTemplate spawn template
 	 * @param instanceId instance id
 	 * @return 重生后的可见对象，不可重生时为 null / respawned object, or null if not allowed

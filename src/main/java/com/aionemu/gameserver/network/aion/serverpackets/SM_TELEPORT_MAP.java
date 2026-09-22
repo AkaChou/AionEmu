@@ -20,7 +20,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * <p>
  * 可按配置禁用部分 NPC 的目的地展示。
  * Destination listing for certain NPCs can be disabled via config.
- *
  * @author alexa026 , orz
  */
 @Slf4j

@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 /**
  * 伊迪安深渊位置，用于 idiandepths 相关逻辑。
  * Idian Depths Location for idiandepths logic.
- *
  * @author Rinzler (Encom)
  */
 

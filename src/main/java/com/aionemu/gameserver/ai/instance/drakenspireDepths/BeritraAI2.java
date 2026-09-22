@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Drakenspire Depths 副本 NPC AI：Beritra（@AIName "beritra"），继承 AggressiveNpcAI2。
  * Drakenspire Depths instance NPC AI: Beritra (@AIName "beritra"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("beritra")

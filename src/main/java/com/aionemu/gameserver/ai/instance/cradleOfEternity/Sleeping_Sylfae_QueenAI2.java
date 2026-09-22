@@ -15,7 +15,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Cradle Of Eternity 副本 NPC AI：Sleeping Sylfae Queen（@AIName "Sleeping_Sylfae_Queen"），继承 GeneralNpcAI2。
  * Cradle Of Eternity instance NPC AI: Sleeping Sylfae Queen (@AIName "Sleeping_Sylfae_Queen"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("Sleeping_Sylfae_Queen")

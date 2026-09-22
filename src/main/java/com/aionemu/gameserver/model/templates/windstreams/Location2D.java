@@ -14,7 +14,6 @@ import lombok.AllArgsConstructor;
 /**
  * 二维地点模板（静态数据/XML）。
  * 2D location template (static data/XML).
- *
  * @author LokiReborn
  */
 @Getter
@@ -27,8 +26,6 @@ public class Location2D {
 	/**
 	 * 返回地点 ID。
 	 * Returns the location id.
-	 *
-	 * @return 地点 ID / location id
 	 */
 	@XmlAttribute(name = "id")
 	protected int id;
@@ -36,8 +33,6 @@ public class Location2D {
 	/**
 	 * 返回地点状态。
 	 * Returns the location state.
-	 *
-	 * @return 状态 / state
 	 */
 	@XmlAttribute(name = "state")
 	protected int state;

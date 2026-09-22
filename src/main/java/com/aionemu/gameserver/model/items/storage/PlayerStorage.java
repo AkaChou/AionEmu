@@ -8,16 +8,12 @@ import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 /**
  * 玩家仓库，用于物品相关逻辑。
  * Player Storage for items logic.
- *
  * @author ATracer
  */
 public class PlayerStorage extends Storage {
 
 	private Player actor;
 
-	/**
-	 * @param storageType
-	 */
 	public PlayerStorage(StorageType storageType) {
 		super(storageType);
 	}

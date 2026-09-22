@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 充能阶段模板：关联技能 ID 与充能时间。
  * Charge stage template: linked skill id and charge time.
- *
  * @author Dr.Nism
  */
 @Getter
@@ -23,7 +22,6 @@ public class ChargeTemplate {
 	/**
 	 * 获取充能时间。
 	 * Gets charge time.
-	 *
 	 */
 	@XmlAttribute(name = "time")
 	private int time;
@@ -31,7 +29,6 @@ public class ChargeTemplate {
 	/**
 	 * 获取充能阶段技能 ID。
 	 * Gets charge-stage skill id.
-	 *
 	 */
 	public int getSkillId() {
 		return skill_id;

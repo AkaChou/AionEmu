@@ -25,7 +25,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * 勇气宝藏岛副本事件处理器。
  * Instance event handler for Treasure Island Of Courage.
- *
  * @author (Encom)
  */
 
@@ -45,7 +44,6 @@ public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -57,7 +55,6 @@ public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -90,7 +87,6 @@ public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 	/**
 	 * 打开指定门。
 	 * Open the given door.
-	 *
 	 * @param doorId 门 ID / doorId
 	 */
 
@@ -104,7 +100,6 @@ public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
-	 *
 	 * @param player 玩家 / player
 	 * @param npc NPC / npc
 	 */
@@ -168,7 +163,6 @@ public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -180,7 +174,6 @@ public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -192,7 +185,6 @@ public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param player 玩家 / player
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 * @return 结果 / result

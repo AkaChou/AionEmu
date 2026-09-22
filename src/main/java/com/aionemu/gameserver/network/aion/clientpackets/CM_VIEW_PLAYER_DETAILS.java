@@ -15,7 +15,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_VIEW_PLAYER_DETAILS;
 /**
  * 客户端查看其他玩家装备详情请求包。
  * Client packet for viewing another player's equipment details.
- *
  * @author Avol
  */
 @Slf4j

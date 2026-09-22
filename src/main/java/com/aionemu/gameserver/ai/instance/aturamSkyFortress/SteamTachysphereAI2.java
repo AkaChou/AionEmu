@@ -18,7 +18,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Aturam Sky Fortress 副本 NPC AI：Steam Tachysphere（@AIName "steam_tachysphere"），继承 NpcAI2。
  * Aturam Sky Fortress instance NPC AI: Steam Tachysphere (@AIName "steam_tachysphere"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("steam_tachysphere")

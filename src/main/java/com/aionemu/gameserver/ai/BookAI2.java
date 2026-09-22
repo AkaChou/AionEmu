@@ -10,7 +10,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 书本/阅读物 AI：打开阅读界面或任务对话。
  * Book/readable AI that opens a reading UI or quest dialog.
- *
  * @author Encom
  */
 @AIName("book")
@@ -19,7 +18,6 @@ public class BookAI2 extends NpcAI2
 	/**
 	 * 玩家开始与本 NPC 对话/交互。
 	 * Player starts dialog/interaction with this NPC.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override

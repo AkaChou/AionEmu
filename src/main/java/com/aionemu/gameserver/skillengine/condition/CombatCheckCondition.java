@@ -10,7 +10,6 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 /**
  * 战斗状态条件：校验玩家是否处于非战斗状态（非玩家恒通过）。
  * Combat check condition: validates the player is not in combat (non-players always pass).
- *
  * @author nrg
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -20,7 +19,6 @@ public class CombatCheckCondition extends Condition {
 	/**
 	 * 校验技能环境是否满足本条件。
 	 * Validates whether the skill environment satisfies this condition.
-	 *
 	 * @param skill 技能环境 / skill environment
 	 * @return 是否有效 / whether valid
 	 */

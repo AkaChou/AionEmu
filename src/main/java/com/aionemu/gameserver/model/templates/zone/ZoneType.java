@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 区域类型枚举。
  * Zone Type enumeration.
- *
  * @author MrPoke
  */
 @Getter
@@ -17,14 +16,8 @@ public enum ZoneType {
 	 */
 	FLY(0), DAMAGE(1), WATER(2), SIEGE(3), PVP(4);
 
-	/**
-	 * @return the value
-	 */
 	private final byte value;
 
-	/**
-	 * @param value
-	 */
 	ZoneType(int value) {
 		this.value = (byte) value;
 	}

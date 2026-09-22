@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Cradle Of Eternity 副本 NPC AI：Sea Jotan（@AIName "Sea_Jotan"），继承 AggressiveNpcAI2。
  * Cradle Of Eternity instance NPC AI: Sea Jotan (@AIName "Sea_Jotan"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("Sea_Jotan")

@@ -62,7 +62,6 @@ public class TerrainZoneCollisionMaterialActor extends ActionObserver implements
 	/**
 	 * 按材质 ID 查找适用于当前生物的技能。
 	 * Find skills applicable to the creature for the given material id.
-	 *
 	 * @param materialId 材质 ID / material id
 	 * @return 匹配技能列表 / matching skill list
 	 */
@@ -86,7 +85,6 @@ public class TerrainZoneCollisionMaterialActor extends ActionObserver implements
 	/**
 	 * 启动材质技能周期任务。
 	 * Start the material skill periodic task.
-	 *
 	 * @param materialSkills 材质技能列表 / material skills
 	 */
 	private void start(final List<MaterialSkill> materialSkills) {
@@ -131,7 +129,6 @@ public class TerrainZoneCollisionMaterialActor extends ActionObserver implements
 	/**
 	 * 是否存在由本行为者持有的活跃任务。
 	 * Whether an active task owned by this actor exists.
-	 *
 	 * @return 是否活跃 / whether active
 	 */
 	private boolean hasActiveTask() {

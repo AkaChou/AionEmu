@@ -10,7 +10,6 @@ import com.aionemu.commons.utils.ClassUtils;
 /**
  * 定时任务类监听器，负责管理带有@Scheduled 注解的类的生命周期。
  * Scheduled task class listener that manages lifecycle of classes with @Scheduled annotation.
- *
  * 该类实现了以下功能：
  * This class implements the following features:
  * - 检测和验证定时任务类 (Detect and validate scheduled task classes)
@@ -22,7 +21,6 @@ public class ScheduledTaskClassListener implements ClassListener {
     /**
      * 处理类加载后的定时任务注册
      * Process scheduled task registration after class loading
-     *
      * @param classes 要处理的类数组 / Array of classes to process
      */
     @Override
@@ -38,7 +36,6 @@ public class ScheduledTaskClassListener implements ClassListener {
     /**
      * 处理类卸载前的定时任务注销
      * Process scheduled task deregistration before class unloading
-     *
      * @param classes 要处理的类数组 / Array of classes to process
      */
     @Override
@@ -54,7 +51,6 @@ public class ScheduledTaskClassListener implements ClassListener {
     /**
      * 验证类是否为有效的定时任务类
      * Validate if a class is a valid scheduled task class
-     *
      * @param clazz 要验证的类 / Class to validate
      * @return 是否为有效的定时任务类 / Whether it's a valid scheduled task class
      */
@@ -89,7 +85,6 @@ public class ScheduledTaskClassListener implements ClassListener {
     /**
      * 调度定时任务类
      * Schedule a task class
-     *
      * @param clazz 要调度的类 / Class to schedule
      */
     protected void scheduleClass(Class<? extends Runnable> clazz) {
@@ -115,7 +110,6 @@ public class ScheduledTaskClassListener implements ClassListener {
     /**
      * 取消定时任务类的调度
      * Unschedule a task class
-     *
      * @param clazz 要取消调度的类 / Class to unschedule
      */
     protected void unScheduleClass(Class<? extends Runnable> clazz) {
@@ -131,7 +125,6 @@ public class ScheduledTaskClassListener implements ClassListener {
     /**
      * 获取 CronService 实例。
      * Get CronService instance.
-     *
      * @return CronService 实例 / CronService instance
      */
     protected CronService getCronService() {

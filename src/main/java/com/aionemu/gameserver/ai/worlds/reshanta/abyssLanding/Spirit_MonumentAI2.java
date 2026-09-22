@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * Reshanta 区域 NPC AI：Spirit Monument（@AIName "spirit_monument"），继承 NpcAI2。
  * Reshanta zone NPC AI: Spirit Monument (@AIName "spirit_monument"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("spirit_monument")

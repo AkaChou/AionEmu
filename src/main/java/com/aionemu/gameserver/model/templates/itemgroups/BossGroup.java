@@ -13,7 +13,6 @@ import com.aionemu.gameserver.model.templates.rewards.IdReward;
 /**
  * Boss 奖励组：Boss 掉落的物品种族条目列表。
  * Boss reward group: item race entries dropped by bosses.
- *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)

@@ -30,7 +30,6 @@ import java.util.concurrent.Future;
 /**
  * 黑暗波埃塔副本事件处理器。
  * Instance event handler for Dark Poeta.
- *
  * @author Encom
  */
 
@@ -67,7 +66,6 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc NPC / npc
 	 */
 
@@ -214,7 +212,6 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -479,7 +476,6 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 							/**
 							 * 处理 visit。
 							 * Handle visit.
-							 *
 							 * @param player 玩家 / player
 							 */
 							@Override
@@ -503,7 +499,6 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -566,7 +561,6 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -581,7 +575,6 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家打开门时处理。
 	 * Handle a player opening a door.
-	 *
 	 * @param player 玩家 / player
 	 * @param doorId 门 ID / doorId
 	 */
@@ -603,7 +596,6 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -636,7 +628,6 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -657,7 +648,6 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	/**
 	 * 停止副本并结算。
 	 * Stop the instance and settle.
-	 *
 	 * @param player 玩家 / player
 	 */
 
@@ -671,7 +661,6 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	/**
 	 * 移除指定 NPC。
 	 * Despawn the given NPC.
-	 *
 	 * @param npc NPC / npc
 	 */
 
@@ -683,7 +672,6 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 despawnNpcs。
 	 * Handle despawnNpcs.
-	 *
 	 * @param npcs NPC 列表 / npcs
 	 */
 
@@ -721,7 +709,6 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -750,7 +737,6 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家采集完成时处理。
 	 * Handle player gathering completion.
-	 *
 	 * @param player 玩家 / player
 	 * @param gatherable 可采集物 / gatherable
 	 */
@@ -834,7 +820,6 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -849,7 +834,6 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -873,7 +857,6 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
-	 *
 	 * @param msg 消息 / message
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
@@ -891,7 +874,6 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override

@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 动作时间配置：名称、播放速度与是否瞬时技能。
  * Motion timing config: name, playback speed and instant-skill flag.
- *
  * @author kecimis
  */
 @Getter
@@ -20,7 +19,6 @@ public class Motion {
 	/**
 	 * 获取动作名称。
 	 * Gets motion name.
-	 *
 	 */
 	@XmlAttribute(required = true)
 	protected String name;
@@ -28,7 +26,6 @@ public class Motion {
 	/**
 	 * 获取播放速度（百分比）。
 	 * Gets playback speed (percent).
-	 *
 	 */
 	@XmlAttribute
 	protected int speed = 100;
@@ -39,7 +36,6 @@ public class Motion {
 	/**
 	 * 是否瞬时技能（无前摇）。
 	 * Whether this is an instant skill (no cast wind-up).
-	 *
 	 */
 	public boolean getInstantSkill() {
 		return this.instantSkill;

@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Bastion Of Souls 副本 NPC AI：Koinus（@AIName "IDAb1_Ere_Sub_4F_Hole"），继承 NpcAI2。
  * Bastion Of Souls instance NPC AI: Koinus (@AIName "IDAb1_Ere_Sub_4F_Hole"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("IDAb1_Ere_Sub_4F_Hole")

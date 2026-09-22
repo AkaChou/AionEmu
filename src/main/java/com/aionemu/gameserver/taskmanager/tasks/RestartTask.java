@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 数据库调度的自动重启任务处理器。
  * DB-scheduled automatic server-restart task handler.
- *
  * @author Divinity
  */
 @Slf4j
@@ -40,7 +39,6 @@ public class RestartTask extends TaskFromDBHandler {
 	/**
 	 * 返回任务名 {@code restart}。
 	 * Return the task name {@code restart}.
-	 *
 	 * @return 任务名 / Task name
 	 */
 	@Override
@@ -51,7 +49,6 @@ public class RestartTask extends TaskFromDBHandler {
 	/**
 	 * 校验参数个数是否为 3。
 	 * Whether parameter count is exactly 3.
-	 *
 	 * @return 配置有效时为 {@code true} / {@code true} if valid
 	 */
 	@Override

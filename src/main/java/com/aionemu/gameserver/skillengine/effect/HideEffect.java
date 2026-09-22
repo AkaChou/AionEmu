@@ -25,7 +25,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 隐身效果：设置视觉状态与观察者，攻击/施法/对话等可打破隐身。
  * Hide effect: sets visual state and observers; attacks/casts/dialogs can break stealth.
- *
  * @author Sweetkr
  * @author Cura
  */
@@ -128,11 +127,7 @@ public class HideEffect extends BuffEffect {
 					effect.endEffect();
 				}
 			});
-			/**
-			 * 玩家侧：使用任意物品动作或向 NPC 请求对话时移除隐身。
-	 * For player: remove Hide when using any item action or requesting dialog to any NPC
-			 */
-			effected.getObserveController().attach(new ActionObserver(ObserverType.ITEMUSE) {
+            effected.getObserveController().attach(new ActionObserver(ObserverType.ITEMUSE) {
 
 				@Override
 				public void itemused(Item item) {

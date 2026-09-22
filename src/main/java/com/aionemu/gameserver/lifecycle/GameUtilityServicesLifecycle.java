@@ -41,7 +41,6 @@ public class GameUtilityServicesLifecycle {
     /**
      * 启动本阶段：完成工具服务初始化并启动线程池生命周期。
      * Start this stage: finish utility-service init and start the thread-pool lifecycle.
-     *
      * @param threadPoolLifecycle 线程池生命周期 / Thread-pool lifecycle
      */
     public synchronized void start(GameThreadPoolLifecycle threadPoolLifecycle) {
@@ -85,7 +84,6 @@ public class GameUtilityServicesLifecycle {
     /**
      * 是否已加载。
      * Whether this stage is loaded.
-     *
      * @return 已加载为 {@code true} / {@code true} if loaded
      */
     public synchronized boolean isLoaded() {
@@ -95,7 +93,6 @@ public class GameUtilityServicesLifecycle {
     /**
      * 加载耗时毫秒。
      * Load time in milliseconds.
-     *
      * @return 耗时毫秒，未启动为 -1 / Elapsed millis, or {@code -1} if not started
      */
     public synchronized long getLoadTimeMillis() {
@@ -105,7 +102,6 @@ public class GameUtilityServicesLifecycle {
     /**
      * 最近失败。
      * Last failure.
-     *
      * @return 最近异常，无则为 null / Last throwable, or {@code null}
      */
     public synchronized Throwable getLastFailure() {

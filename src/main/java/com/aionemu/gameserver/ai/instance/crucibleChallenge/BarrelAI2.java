@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 /**
  * Crucible Challenge 副本 NPC AI：Barrel（@AIName "barrel"），继承 NpcAI2。
  * Crucible Challenge instance NPC AI: Barrel (@AIName "barrel"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("barrel")

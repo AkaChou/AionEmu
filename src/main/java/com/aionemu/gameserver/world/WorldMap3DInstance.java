@@ -5,7 +5,6 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 /**
  * 三维世界地图实例：按 X/Y/Z 划分区域（欧比斯等立体地图）。
  * Three-dimensional world-map instance: partitions by X/Y/Z (abyss and similar vertical maps).
- *
  * @author ATracer
  */
 public class WorldMap3DInstance extends WorldMapInstance {
@@ -13,7 +12,6 @@ public class WorldMap3DInstance extends WorldMapInstance {
 	/**
 	 * 构造 3D 地图实例。
 	 * Construct a 3D map instance.
-	 *
 	 * @param parent 父级世界地图 / parent world map
 	 * @param instanceId 实例 ID / instance id
 	 */
@@ -24,7 +22,6 @@ public class WorldMap3DInstance extends WorldMapInstance {
 	/**
 	 * 按 X/Y/Z 坐标取得 3D 地图区域。
 	 * Resolve the 3D map region for X/Y/Z.
-	 *
 	 * @param x 坐标 X / X coordinate
 	 * @param y 坐标 Y / Y coordinate
 	 * @param z 坐标 Z / Z coordinate
@@ -82,7 +79,6 @@ public class WorldMap3DInstance extends WorldMapInstance {
 	/**
 	 * 按 3D 区域 ID 创建地图区域及关联 Zone。
 	 * Create a map region and related zones for a 3D region id.
-	 *
 	 * @param regionId 区域 ID / the region id
 	 * @return 新建的地图区域 / newly created map region
 	 */
@@ -98,7 +94,6 @@ public class WorldMap3DInstance extends WorldMapInstance {
 	/**
 	 * 3D 实例不为个人实例。
 	 * 3D instances are never personal.
-	 *
 	 * @return 恒为 false / always false
 	 */
 	@Override
@@ -109,7 +104,6 @@ public class WorldMap3DInstance extends WorldMapInstance {
 	/**
 	 * 3D 实例无个人所有者。
 	 * 3D instances have no personal owner.
-	 *
 	 * @return 恒为 0 / always 0
 	 */
 	@Override

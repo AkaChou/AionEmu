@@ -6,7 +6,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * 激怒触发时机：攻击时或被攻击时。
  * Provoke timing: on attack or when attacked.
- *
  * @author ATracer
  */
 @XmlType(name = "ProvokeType")

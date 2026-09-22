@@ -38,7 +38,6 @@ import java.util.concurrent.Future;
 /**
  * 熔炉挑战副本事件处理器。
  * Instance event handler for Crucible Challenge.
- *
  * @author Encom
  */
 
@@ -59,7 +58,6 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -79,7 +77,6 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -94,7 +91,6 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -114,7 +110,6 @@ public class CrucibleChallengeInstance extends CrucibleInstance
             /**
              * 处理 visit。
              * Handle visit.
-             *
              * @param player 玩家 / player
              */
             @Override
@@ -129,7 +124,6 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * npc
 	 */
 	@Override
@@ -501,7 +495,6 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	/**
 	 * 结算并发放奖励。
 	 * Settle and grant rewards.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -642,7 +635,6 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * 玩家 / player
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 * result
@@ -687,7 +679,6 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	/**
 	 * 处理玩家复活事件。
 	 * Handle a player revive event.
-	 *
 	 * 玩家 / player
 	 * result
 	 */
@@ -723,7 +714,6 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -734,7 +724,6 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -745,7 +734,6 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -759,7 +747,6 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	/**
 	 * 玩家登录到该副本时处理。
 	 * Handle a player logging into this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -774,7 +761,6 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	/**
 	 * 玩家停止训练时处理。
 	 * Handle a player stopping training.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -785,7 +771,6 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	/**
 	 * 副本阶段变更时处理。
 	 * Handle instance stage change.
-	 *
 	 * @param type 阶段类型 / stage type
 	 */
 	@Override
@@ -931,7 +916,6 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * npc
 	 */
 	@Override
@@ -941,9 +925,6 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 		int itemId = 0;
 		Integer object = instance.getSoloPlayerObj();
 		switch (npcId) {
-		   /**
-	 * 交给“熔炉仲裁者”以重新加入战斗并证明自身价值 / Give to a "Crucible Arbiter" in order to rejoin the battle and prove your worthiness
-	 */
 			case 217758: //Worthiness Ticket Box (Fin Stage 1)
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000124, 1)); // 败者复活券 / Worthiness Ticket.
 			break;

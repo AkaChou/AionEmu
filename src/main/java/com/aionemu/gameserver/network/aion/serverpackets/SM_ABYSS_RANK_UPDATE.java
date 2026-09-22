@@ -7,7 +7,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 向客户端广播玩家欧比斯军衔相关外观/状态更新的服务端包。
  * Server packet broadcasting Abyss-rank related visual/status updates for a player to the client.
- *
  * @author Nemiroff
  */
 public class SM_ABYSS_RANK_UPDATE extends AionServerPacket {
@@ -18,7 +17,6 @@ public class SM_ABYSS_RANK_UPDATE extends AionServerPacket {
 	/**
 	 * 按动作类型构造军衔外观/状态更新包。
 	 * Creates a rank visual/status update packet for the given action type.
-	 *
 	 * @param action 动作类型：0=军衔、1=固定值、2=导师状态 / action type: 0=rank, 1=fixed value, 2=mentor status
 	 * target player
 	 */

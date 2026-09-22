@@ -26,7 +26,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * 职业技能召唤物/陷阱 AI：Priest（@AIName "priest"），继承 AggressiveNpcAI2。
  * Class-skill summon/trap AI: Priest (@AIName "priest"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("priest")

@@ -5,7 +5,6 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
 /**
  * 技能元素枚举。
  * Skill Element enumeration.
- *
  * @author xavier
  */
 public enum SkillElement {

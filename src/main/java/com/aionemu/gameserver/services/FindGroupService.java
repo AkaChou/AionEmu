@@ -29,7 +29,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * 寻找队伍服务：维护天族/魔族的招募与申请列表，并在组队/联盟变更时自动清理过期条目。
  * Find-group service: keeps Elyos/Asmodian recruit and apply listings and cleans them on group/alliance changes.
- *
  * @author cura, MrPoke
  */
 public class FindGroupService {
@@ -38,8 +37,6 @@ public class FindGroupService {
 	 * -- SETTER --
 	 *  注入 Spring 的实例提供者。
 	 *  Injects the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / instance provider
 	 */
 	@Setter
 	private static volatile ObjectProvider<FindGroupService> instanceProvider;
@@ -135,7 +132,6 @@ public class FindGroupService {
 	/**
 	 * 新增招募或申请条目，并通知发起者。
 	 * Adds a recruit or apply entry and notifies the initiator.
-	 *
 	 * initiator
 	 * @param action 动作类型（0x02 招募 / 0x06 申请） / action type (0x02 recruit / 0x06 apply)
 	 * listing message
@@ -188,7 +184,6 @@ public class FindGroupService {
 	/**
 	 * 更新指定招募条目的留言。
 	 * Updates the message of a recruit listing.
-	 *
 	 * operator
 	 * @param action 更新类型（0x03 招募 / 0x07 申请） / update type (0x03 recruit / 0x07 apply)
 	 * new message
@@ -210,7 +205,6 @@ public class FindGroupService {
 	/**
 	 * 按种族与动作类型获取寻找队伍列表副本。
 	 * Returns a copy of find-group listings for the race and action.
-	 *
 	 * 阵营 / race
 	 * action type
 	 * @return 列表副本；未知动作返回 null / listing copy, or null for unknown action
@@ -244,7 +238,6 @@ public class FindGroupService {
 	/**
 	 * 注册副本队伍（自动匹配相关通知）。
 	 * Registers an instance group (auto-match related notification).
-	 *
 	 * 玩家 / player
 	 * action type
 	 * instance mask id
@@ -263,7 +256,6 @@ public class FindGroupService {
 	/**
 	 * 向玩家发送当前种族的寻找队伍列表。
 	 * Sends the current race's find-group listings to the player.
-	 *
 	 * 玩家 / player
 	 * action type
 	 */
@@ -275,7 +267,6 @@ public class FindGroupService {
 	/**
 	 * 移除指定寻找队伍条目，并向同种族玩家广播删除。
 	 * Removes a find-group entry and broadcasts the removal to same-race players.
-	 *
 	 * 阵营 / race
 	 * action type
 	 * @param playerObjId 玩家或队伍对象 ID / player or team object id
@@ -319,7 +310,6 @@ public class FindGroupService {
 	/**
 	 * 清理指定映射中过期的条目。
 	 * Cleans expired entries from the given map.
-	 *
 	 * @param map 目标映射 / target map
 	 * 阵营 / race
 	 * action type
@@ -335,11 +325,9 @@ public class FindGroupService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */

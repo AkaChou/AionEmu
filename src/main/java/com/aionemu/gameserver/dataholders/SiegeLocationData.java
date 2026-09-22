@@ -35,8 +35,7 @@ public class SiegeLocationData {
 	/**
 	 * 返回全部攻城据点映射。
 	 * Returns the full siege location map.
-	 *
-	 * @return ID 到据点的映射 / map of id to location
+	 * ID 到据点的映射 / map of id to location
 	 */
 	@XmlTransient
 	private final Map<Integer, SiegeLocation> siegeLocations = new LinkedHashMap<>();
@@ -71,7 +70,6 @@ public class SiegeLocationData {
 	/**
 	 * 返回统一攻城据点数量。
 	 * Returns the number of unified siege locations.
-	 *
 	 * @return 统一攻城地点数量 / Returns the number of unified siege locations.
 	 */
 	public int size() {
@@ -81,7 +79,6 @@ public class SiegeLocationData {
 	/**
 	 * 返回神器据点映射。
 	 * Returns the artifact location map.
-	 *
 	 * @return ID 到神器的映射 / map of id to artifact
 	 */
 	public Map<Integer, ArtifactLocation> getArtifacts() {
@@ -91,7 +88,6 @@ public class SiegeLocationData {
 	/**
 	 * 返回要塞据点映射。
 	 * Returns the fortress location map.
-	 *
 	 * @return ID 到要塞的映射 / map of id to fortress
 	 */
 	public Map<Integer, FortressLocation> getFortress() {

@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 /**
  * 仆从游戏对象。
  * Servant game object.
- *
  * @author ATracer
  */
 public class Servant extends SummonedObject<Creature> {
@@ -19,7 +18,6 @@ public class Servant extends SummonedObject<Creature> {
 	/**
 	 * 构造仆从。
 	 * Constructs a servant.
-	 *
 	 * @param objId 对象 ID / object id
 	 * @param controller NPC 控制器 / NPC controller
 	 * @param spawnTemplate 生成模板 / spawn template
@@ -40,7 +38,6 @@ public class Servant extends SummonedObject<Creature> {
 	/**
 	 * 判断玩家是否为敌对目标。
 	 * Whether the player is an enemy.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否敌对 / whether enemy
 	  */

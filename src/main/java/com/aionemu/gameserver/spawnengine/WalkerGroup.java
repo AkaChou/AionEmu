@@ -19,9 +19,7 @@ import lombok.Getter;
 /**
  * 巡逻队：按队形排列成员、同步路径步骤并协同行走。
  * Walker group: arranges members by formation, syncs route steps and walks together.
- *
  * @author vlog
- * @modified Rolandas
  */
 @Getter
 @Slf4j
@@ -66,7 +64,6 @@ public class WalkerGroup {
 	/**
 	 * 以成员列表构造巡逻队并初始化基准点与队形。
 	 * Builds a walker group from members and initializes anchor and type.
-	 *
 	 * @param members 集群成员列表 / clustered members
 	 */
 	public WalkerGroup(List<ClusteredNpc> members) {
@@ -173,7 +170,6 @@ public class WalkerGroup {
 	/**
 	 * 行数数组求和。
 	 * Sums row counts.
-	 *
 	 * @param rows 各行人数 / members per row
 	 * @return 总人数 / the sum
 	 */
@@ -191,7 +187,6 @@ public class WalkerGroup {
 	/**
 	 * 成员碰撞体侧边长度之和。
 	 * Sum of member bound-radius side lengths.
-	 *
 	 * @return 侧边长度之和 / sum of sides
 	 */
 	private float sumMemberBoundSides() {
@@ -205,7 +200,6 @@ public class WalkerGroup {
 	/**
 	 * 行间额外间距（预留，当前恒为 0）。
 	 * Extra inter-row spacing (stub; currently always 0).
-	 *
 	 * @param rows 行数数组 / the row counts
 	 * @param startIndex 起始行下标 / start row index
 	 * @param endIndex 结束行下标 / end row index
@@ -219,7 +213,6 @@ public class WalkerGroup {
 	/**
 	 * 由初始点、下一路径点与偏移计算 2D 站位坐标。
 	 * Computes 2D standing coordinates from origin, next route point and shift.
-	 *
 	 * @param origin 初始刷怪点 / initial spawn location
 	 * @param destination 下一移动点 / next move point
 	 * @param shift 相对 origin 的垂直偏移：矢状负为左、正为右；冠状负为后、正为前 / offset perpendicular to destination; sagittal negative=left, coronal negative=back
@@ -285,7 +278,6 @@ public class WalkerGroup {
 	/**
 	 * 返回归一化方向符号向量。
 	 * Returns a normalized direction sign vector.
-	 *
 	 * @param origin 起始点 / origin point
 	 * @param destination 目标点 / destination point
 	 * @return 方向偏移符号 / direction shift signs
@@ -299,7 +291,6 @@ public class WalkerGroup {
 	/**
 	 * 更新成员路径步骤，并在必要时推进编队整体步骤。
 	 * Updates a member's route step and advances the group step when appropriate.
-	 *
 	 * @param member 成员 NPC / the member NPC
 	 * @param step 新步骤 / the new step
 	 */
@@ -322,7 +313,6 @@ public class WalkerGroup {
 	/**
 	 * 成员到达目标后的编队同步：等待全员到齐再统一推进。
 	 * Sync after a member reaches a target: wait for all, then advance together.
-	 *
 	 * @param npcAI 到达目标的成员 AI / the arriving member AI
 	 */
 	public void targetReached(NpcAI2 npcAI) {
@@ -364,7 +354,6 @@ public class WalkerGroup {
 	/**
 	 * 将重生 NPC 绑定回编队对应槽位并重置步骤。
 	 * Rebinds a respawned NPC into its formation slot and resets its step.
-	 *
 	 * @param npc 重生的 NPC / the respawned NPC
 	 */
 	public void respawn(Npc npc) {
@@ -384,7 +373,6 @@ public class WalkerGroup {
 	/**
 	 * 按 NPC 查找对应的集群数据。
 	 * Finds clustered data for the given NPC.
-	 *
 	 * @param npc 成员 NPC / the member NPC
 	 * @return 集群数据，未找到则为 null / clustered data or null
 	 */
@@ -400,7 +388,6 @@ public class WalkerGroup {
 	/**
 	 * 解析刷怪高度（当前直接使用模板 Z）。
 	 * Resolves spawn height (currently uses template Z).
-	 *
 	 * @param x X 坐标 / X
 	 * @param y Y 坐标 / Y
 	 * @param template 刷怪模板 / spawn template
@@ -417,7 +404,6 @@ public class WalkerGroup {
 	/**
 	 * 编队人数（池大小）。
 	 * Formation size (pool).
-	 *
 	 * @return 成员数量 / member count
 	 */
 	public int getPool() {
@@ -434,7 +420,6 @@ public class WalkerGroup {
 	/**
 	 * 判断 NPC 是否处于单行（线性）方阵站位。
 	 * Whether the NPC is in a single-row (linear) square formation.
-	 *
 	 * @param npc 成员 NPC / the member NPC
 	 * @return 线性站位则为 true / true if linearly positioned
 	 */

@@ -35,7 +35,6 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     /**
      * 使用默认断开连接执行器构造。
      * Construct with default disconnection executor.
-     *
      * @param connectionFactory 连接工厂 / Connection factory
      */
     public NettyConnectionHandler(NettyConnectionFactory connectionFactory) {
@@ -45,7 +44,6 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     /**
      * 使用指定断开连接执行器构造。
      * Construct with a disconnection executor.
-     *
      * @param connectionFactory 连接工厂 / Connection factory
      * @param disconnectionExecutor 断开连接执行器 / Disconnection executor
      */
@@ -56,7 +54,6 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     /**
      * 通道激活时创建业务连接并初始化。
      * Create business connection and initialize on channel active.
-     *
      * @param context 通道上下文 / Channel context
      * @throws IOException 连接创建失败 / Connection creation failure
      */
@@ -76,7 +73,6 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     /**
      * 读取入站消息并在连接上下文中处理。
      * Read inbound message and process in connection context.
-     *
      * @param context 通道上下文 / Channel context
      * @param message 入站消息 / Inbound message
      */
@@ -92,7 +88,6 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     /**
      * 将 ByteBuf 数据写入读缓冲并解析完整帧。
      * Copy ByteBuf data into read buffer and parse complete frames.
-     *
      * @param context 通道上下文 / Channel context
      * @param message 入站消息 / Inbound message
      */
@@ -139,7 +134,6 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     /**
      * 通道失活时通知断开。
      * Notify disconnect on channel inactive.
-     *
      * @param context 通道上下文 / Channel context
      */
     @Override
@@ -152,7 +146,6 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     /**
      * 捕获异常并强制关闭。
      * Catch exception and force close.
-     *
      * @param context 通道上下文 / Channel context
      * @param cause 异常原因 / Cause
      */
@@ -165,7 +158,6 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     /**
      * 获取对端 IP。
      * Get remote IP.
-     *
      * @return 对端 IP 或 "unknown" / IP or "unknown"
      */
     @Override
@@ -193,7 +185,6 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     /**
      * 关闭连接并通知断开。
      * Close connection and notify disconnect.
-     *
      * @param forced 是否强制关闭 / Whether to force close
      */
     @Override
@@ -206,7 +197,6 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     /**
      * 仅关闭底层通道（幂等）。
      * Close underlying channel only (idempotent).
-     *
      * @return 是否实际关闭 / Whether close was performed
      */
     @Override
@@ -224,7 +214,6 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     /**
      * 解析读缓冲中已就绪的完整帧。
      * Parse complete ready frames from the read buffer.
-     *
      * @return 是否解析成功 / Whether parsing succeeded
      */
     private boolean processReadyFrames() {
@@ -249,7 +238,6 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     /**
      * 读取帧头中的帧长度。
      * Read frame size from frame header.
-     *
      * @param buffer 缓冲 / Buffer
      * @return 帧大小 / Frame size
      */
@@ -260,7 +248,6 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     /**
      * 解析单帧并交给连接处理。
      * Parse a single frame and hand off to connection.
-     *
      * @param buffer 缓冲 / Buffer
      * @return 是否处理成功 / Whether processing succeeded
      */
@@ -326,7 +313,6 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     /**
      * 将 NIO 缓冲复制为 ByteBuf 写出并消费源位置。
      * Copy NIO buffer to ByteBuf, write it, and advance source position.
-     *
      * @param source 源缓冲 / Source buffer
      */
     private void writeAndConsume(ByteBuffer source) {
@@ -351,7 +337,6 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     /**
      * 在连接绑定的服务上下文中运行任务。
      * Run task in the connection's service context.
-     *
      * @param runnable 任务 / Task
      */
     private void runInConnectionContext(Runnable runnable) {

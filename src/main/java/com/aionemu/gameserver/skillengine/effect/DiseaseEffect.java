@@ -11,7 +11,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 疾病效果：标记 DISEASE 异常，阻止 HP 治疗生效。
  * Disease effect: marks DISEASE abnormal, blocking HP heal effectiveness.
- *
  * @author kecimis
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -21,7 +20,6 @@ public class DiseaseEffect extends EffectTemplate {
 	/**
 	 * 按疾病抗性计算是否命中。
 	 * Calculates hit using disease resistance.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -33,7 +31,6 @@ public class DiseaseEffect extends EffectTemplate {
 	/**
 	 * 将效果加入受影响者的效果控制器。
 	 * Adds the effect to the effected creature's effect controller.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -44,7 +41,6 @@ public class DiseaseEffect extends EffectTemplate {
 	/**
 	 * 设置疾病异常。
 	 * Sets the disease abnormal.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -57,7 +53,6 @@ public class DiseaseEffect extends EffectTemplate {
 	/**
 	 * 清除疾病异常。
 	 * Clears the disease abnormal.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

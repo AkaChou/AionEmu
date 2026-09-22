@@ -168,7 +168,6 @@ public final class PlayerEnterWorldService {
 	/**
 	 * 开始进入世界：冷却/封禁/二级密码校验后进图。
 	 * Starts enter-world: re-entry cooldown, ban, and passkey checks, then enters.
-	 *
 	 * @param objectId 角色对象 ID / character object id
 	 * @param client 客户端连接 / client connection
 	 */
@@ -200,7 +199,6 @@ public final class PlayerEnterWorldService {
 	/**
 	 * 弹出二级密码设置/校验界面。
 	 * Shows the character passkey setup/verify UI.
-	 *
 	 * character object id
 	 * connection
 	 */
@@ -218,7 +216,6 @@ public final class PlayerEnterWorldService {
 	/**
 	 * 校验连接状态后异步进入世界。
 	 * Validates connection state then asynchronously enters the world.
-	 *
 	 * character object id
 	 * connection
 	 */
@@ -252,7 +249,6 @@ public final class PlayerEnterWorldService {
 	/**
 	 * 完整进图流程：加载角色、发包初始化并启动周期落库等。
 	 * Full enter-world flow: load character, send init packets, start periodic saves, etc.
-	 *
 	 * connection
 	 * character object id
 	 */
@@ -413,16 +409,10 @@ public final class PlayerEnterWorldService {
 			// SM_YOUTUBE_VIDEO
 			client.sendPacket(new SM_YOUTUBE_VIDEO());
 
-			/**
-	 * 若在任意敌对领地登出，将被传送回上次登记的方尖碑。 / If a user logs out in any hostile territory, they will be transported back to the last registered Obelisk
-	 */
 			if (CustomConfig.ENABLE_RECONNECT_TO_BIND_POINT) {
 				TeleportService2.moveToBindLocation(player, true);
 			}
-			/**
-	 * 若在伊卢玛/诺斯珀德敌对领地登出，将被传送。 / http://static.ncsoft.com/aion/store/PatchNotes/AION_Patch_Notes_071316.pdf If a user logs out in hostile territory in Iluma/Norsvold, they will be transported back to the last registered Obelisk
-	 */
-			TeleportService2.onLogOutOppositeMap(player);
+            TeleportService2.onLogOutOppositeMap(player);
 			TeleportService2.sendSetBindPoint(player);
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().preSpawn(player);
 			GameLocationBootstrapServices.vortexService().validateLoginZone(player);
@@ -709,7 +699,6 @@ public final class PlayerEnterWorldService {
 	/**
 	 * 重新调度玩家通用与背包周期落库任务。
 	 * Reschedules player general and inventory periodic save tasks.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static void reschedulePeriodicSaveTasks(Player player) {
@@ -720,7 +709,6 @@ public final class PlayerEnterWorldService {
 	/**
 	 * 光系欧比斯登录广播（4.9）。
 	 * Light-side abyss login broadcast (4.9).
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static void abyssLightLogon(final Player player) {
@@ -735,7 +723,6 @@ public final class PlayerEnterWorldService {
 	/**
 	 * 暗系欧比斯登录广播（4.9）。
 	 * Dark-side abyss login broadcast (4.9).
-	 *
 	 * @param player 玩家 / player
 	 */
 	public static void abyssDarkLogon(final Player player) {
@@ -750,7 +737,6 @@ public final class PlayerEnterWorldService {
 	/**
 	 * 下发背包与装备物品信息。
 	 * Sends inventory and equipment item info.
-	 *
 	 * @param client 客户端连接 / client connection
 	 * @param player 玩家 / player
 	 */
@@ -780,7 +766,6 @@ public final class PlayerEnterWorldService {
 	/**
 	 * 下发宏列表。
 	 * Sends the macro list.
-	 *
 	 * @param client 客户端连接 / client connection
 	 * @param player 玩家 / player
 	 */
@@ -794,7 +779,6 @@ public final class PlayerEnterWorldService {
 	/**
 	 * 标记玩家已登录并记录日志。
 	 * Marks the player as logged in and logs the event.
-	 *
 	 * @param player 玩家 / player
 	 */
 	private static void playerLoggedIn(Player player) {
@@ -808,7 +792,6 @@ public final class PlayerEnterWorldService {
 	/**
 	 * 展示高级账号/会员信息。
 	 * membership info.
-	 *
 	 * connection
 	 * 账号 / account
 	 */
@@ -827,7 +810,6 @@ public final class PlayerEnterWorldService {
 	/**
 	 * 向玩家发送登录服务器/欢迎信息。
 	 * welcome info to the player.
-	 *
 	 * 玩家 / player
 	 */
 	public static void LoginServerInfo(Player player) {

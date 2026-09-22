@@ -6,7 +6,6 @@ import com.aionemu.loginserver.network.aion.LoginConnection;
 /**
  * 登录服→客户端：GG 校验通过响应。
  * LoginServer → client: GG auth OK response.
- *
  * @author -Nemesiss-
  */
 public class SM_AUTH_GG extends AionServerPacket {
@@ -20,7 +19,6 @@ public class SM_AUTH_GG extends AionServerPacket {
     /**
      * 构造 SM_AUTH_GG 包。
      * Constructs a new SM_AUTH_GG packet.
-     *
      * @param sessionId 会话 ID / session id
      */
     public SM_AUTH_GG(int sessionId) {

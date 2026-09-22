@@ -19,7 +19,6 @@ public class LegacyConfigOverrides {
     /**
      * 构建游戏服可消费的 {@link Properties} 覆盖集（含进度开关别名）。
      * Builds the game-server {@link Properties} override set (including progress-toggle aliases).
-     *
      * @return 覆盖属性集 / override properties
      */
     public Properties gameProperties() {
@@ -40,7 +39,6 @@ public class LegacyConfigOverrides {
     /**
      * 在缺少遗留键时，用 {@code aion.game.startup.progress.enabled} 补齐进度开关别名。
      * Fills the startup-progress legacy key from {@code aion.game.startup.progress.enabled} when missing.
-     *
      * @param properties 待补齐的属性集 / properties being enriched
      */
     private void addGamePropertyAlias(Properties properties) {

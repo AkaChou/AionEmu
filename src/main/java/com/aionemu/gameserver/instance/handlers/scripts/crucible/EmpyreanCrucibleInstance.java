@@ -33,7 +33,6 @@ import java.util.Set;
 /**
  * 天界熔炉副本事件处理器。
  * Instance event handler for Empyrean Crucible.
- *
  * @author Encom
  */
 
@@ -79,7 +78,6 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
-	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -96,7 +94,6 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -125,7 +122,6 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param player 玩家 / player
 			 */
 			@Override
@@ -157,7 +153,6 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 					/**
 					 * 处理 visit。
 					 * Handle visit.
-					 *
 					 * @param player 玩家 / player
 					 */
 					@Override
@@ -172,7 +167,6 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 *
 	 * @param npc npc
 	 */
 	@Override
@@ -416,9 +410,6 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		} if (point != 0) {
 			sendPacket(point, npc.getObjectTemplate().getNameId());
 		} switch (npc.getNpcId()) {
-		   /**
-	 * Kaisinel Version
-	 */
 			case 217476:
 			case 217477:
 			case 217478:
@@ -496,9 +487,6 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				    sp(217484, 345.3899f, 349.10034f, 96.09097f, (byte) 0, 2000); //Instructor Munus.
 				}
             break;
-		   /**
-	 * Marchutan Version
-	 */
 			case 217485:
 			case 217486:
 			case 217487:
@@ -1026,9 +1014,6 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 					}, 33000);
 				}
 			break;
-		   /**
-	 * 第 5 阶段（阿祖图兰版本）。 / Stage 5 (Azoturan version).
-	 */
 			case 217529:
 				despawnNpc(npc);
 				if (getNpcs(217529).isEmpty()) {
@@ -1096,9 +1081,6 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				sendMsgByRace(1400930, Race.PC_ALL, 4000);
 				sp(205339, 1260.1465f, 795.07495f, 358.60562f, (byte) 30);
 			break;
-		   /**
-	 * 第 5 阶段（钢铁钩爪号版本）。 / Stage 5 (Steel Rake version).
-	 */
 			case 217547:
 			case 217548:
 			case 217549:
@@ -1312,9 +1294,6 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				sendMsgByRace(1400930, Race.PC_ALL, 4000);
 				sp(205340, 1625.08f, 159.15f, 126f, (byte) 0);
             break;
-		   /**
-	 * 第 7 阶段天族/魔族版本不同。【魔族版本】 / Stage 7 is not same for player "Elyos/Asmodians" [Asmodians Version]
-	 */
 			case 217578:
                 despawnNpc(npc);
 				sendEventPacket(StageType.START_STAGE_7_ROUND_2, 2000);
@@ -1364,9 +1343,6 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
                 sp(205341, 1783.0873f, 796.8426f, 469.35013f, (byte) 0);
 				sp(217759, 1784.4686f, 792.8891f, 469.35013f, (byte) 0); //Empyrean Box.
             break;
-		   /**
-	 * [Elyos Version]
-	 */
 			case 217582:
                 despawnNpc(npc);
 				sendEventPacket(StageType.START_STAGE_7_ROUND_2, 2000);
@@ -1787,7 +1763,6 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	/**
 	 * 结算并发放奖励。
 	 * Settle and grant rewards.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -1818,7 +1793,6 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	/**
 	 * 处理玩家复活事件。
 	 * Handle a player revive event.
-	 *
 	 * 玩家 / player
 	 * result
 	 */
@@ -1830,7 +1804,6 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			/**
 			 * 处理 visit。
 			 * Handle visit.
-			 *
 			 * @param p 玩家 / p
 			 */
 			@Override
@@ -1859,7 +1832,6 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	/**
 	 * 副本阶段变更时处理。
 	 * Handle instance stage change.
-	 *
 	 * @param type 阶段类型 / stage type
 	 */
 	@Override
@@ -2107,7 +2079,6 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -2122,7 +2093,6 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -2133,7 +2103,6 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -2154,7 +2123,6 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	/**
 	 * 玩家停止训练时处理。
 	 * Handle a player stopping training.
-	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -2189,7 +2157,6 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
-	 *
 	 * @param npc npc
 	 */
 	@Override
@@ -2198,9 +2165,6 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
-		   /**
-	 * 交给“熔炉仲裁者”以重新加入战斗并证明自身价值 / Give to a "Crucible Arbiter" in order to rejoin the battle and prove your worthiness
-	 */
 			case 217735: //Worthiness Ticket Box (Fin Stage 3)
 			case 217756: //Worthiness Ticket Box (Fin Stage 1)
 				for (Player player: instance.getPlayersInside()) {

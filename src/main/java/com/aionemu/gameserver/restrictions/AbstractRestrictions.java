@@ -8,7 +8,6 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 /**
  * 限制实现基类：提供激活/停用，未覆盖方法默认禁用。
  * Base restriction implementation with activate/deactivate; uncovered methods are disabled by default.
- *
  * @author lord_rex
  */
 public abstract class AbstractRestrictions implements Restrictions {
@@ -32,7 +31,6 @@ public abstract class AbstractRestrictions implements Restrictions {
 	/**
 	 * 按实现类哈希，避免同类重复激活。
 	 * Hashes by implementation class to avoid duplicate activation of the same type.
-	 *
 	 * @return 类哈希 / class hash
 	 */
 	@Override
@@ -43,7 +41,6 @@ public abstract class AbstractRestrictions implements Restrictions {
 	/**
 	 * 同类实例视为相等，避免多次激活同一限制类型。
 	 * Same implementation class is equal to avoid multi-activation.
-	 *
 	 * @param obj 对象 / object
 	 * @return 是否同类 / whether same class
 	 */

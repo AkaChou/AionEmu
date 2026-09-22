@@ -20,7 +20,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Pandaemonium 区域 NPC AI：Oubliette（@AIName "Oubliette"），继承 GeneralNpcAI2。
  * Pandaemonium zone NPC AI: Oubliette (@AIName "Oubliette"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("Oubliette")

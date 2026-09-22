@@ -11,9 +11,7 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob.ItemBlobType;
  * 写入尘晶关联技能 ID 与所需碎片数量。
  * Blob containing stigma skill info.
  * Writes linked skill ids and required shard count.
- *
  * @author -Nemesiss-
- * @modified Rolandas
  */
 public class StigmaInfoBlobEntry extends ItemBlobEntry {
 

@@ -16,7 +16,6 @@ import java.util.TreeSet;
 /**
  * 查看目标生物指定属性修饰列表的管理员命令。
  * Admin command to inspect a target creature's modifiers for a given stat.
- *
  * @author MrPoke
  */
 @Slf4j
@@ -33,7 +32,6 @@ public class Stat extends AdminCommand {
 	/**
 	 * 列出目标生物某属性的修饰函数，可选 details 输出技能来源。
 	 * Lists modifiers for a stat on the target creature; optional details dump skill source.
-	 *
 	 */
 	@Override
 	public void execute(Player admin, String... params) {
@@ -70,7 +68,6 @@ public class Stat extends AdminCommand {
 	/**
 	 * 收集属性修饰的详细信息（代理函数、技能来源等）。
 	 * Collects detail text for a stat function (proxy, skill owner, etc.).
-	 *
 	 * @param stat 属性修饰函数 / Stat function
 	 */
 	private String collectDetails(IStatFunction stat) {

@@ -9,7 +9,6 @@ import com.google.common.base.Predicate;
 /**
  * 基于 {@link CountedCompleter} 的并行 for-each：对集合/数组元素应用谓词。
  * Parallel for-each over a collection/array via {@link CountedCompleter}, applying a predicate to each element.
- *
  * @param <E> 元素类型 / Element type
  */
 public final class ForEach<E> extends CountedCompleter<E> {
@@ -23,7 +22,6 @@ public final class ForEach<E> extends CountedCompleter<E> {
 	/**
 	 * 叶子分片阈值：小于该长度时不再二分，直接在当前任务内顺序处理。
 	 * Leaf slice threshold: slices shorter than this are processed sequentially inside the current task.
-	 *
 	 * <p>原来的递归会把每个元素拆成一个任务对象（JFR 实测 3.4MB/300s 的 {@code ForEach} 实例）；
 	 * 批量叶子在保持并行度的同时把任务数降到约 1/8。The recursive split used to create one task object per
 	 * element (3.4MB/300s of {@code ForEach} instances); batching the leaves keeps the parallelism while
@@ -34,7 +32,6 @@ public final class ForEach<E> extends CountedCompleter<E> {
 	/**
 	 * 对集合元素构建并行 for-each 任务；空集合返回 null。
 	 * Build a parallel for-each task over a collection; returns null if empty.
-	 *
 	 * @param list      元素集合 / Element collection
 	 * @param operation 对每个元素执行的谓词 / Predicate applied to each element
 	 * @param <E>       元素类型 / Element type
@@ -53,7 +50,6 @@ public final class ForEach<E> extends CountedCompleter<E> {
 	/**
 	 * 对变长参数数组构建并行 for-each 任务；空/null 返回 null。
 	 * Build a parallel for-each task over a vararg array; returns null if empty/null.
-	 *
 	 * @param operation 对每个元素执行的谓词 / Predicate applied to each element
 	 * @param list      元素数组 / Element array
 	 * @param <E>       元素类型 / Element type
@@ -95,7 +91,6 @@ public final class ForEach<E> extends CountedCompleter<E> {
 	/**
 	 * 构造指定分片的并行 for-each 任务。
 	 * Construct a parallel for-each task for the given slice.
-	 *
 	 * @param rootTask  父完成器 / Parent completer
 	 * @param operation 元素操作谓词 / Predicate operation
 	 * @param lo        下界（含）/ Inclusive lower bound
@@ -137,7 +132,6 @@ public final class ForEach<E> extends CountedCompleter<E> {
 	/**
 	 * 异常完成时继续传播（当前实现始终返回 true）。
 	 * On exceptional completion, keep propagating (always returns true here).
-	 *
 	 * @param ex 异常 / Exception
 	 * @param caller 调用方完成器 / Caller completer
 	 * @return 是否继续处理 / Whether to continue handling

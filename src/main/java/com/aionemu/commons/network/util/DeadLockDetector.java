@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 死锁检测器，定期扫描并按策略处理 Java 线程死锁。
  * Deadlock detector that periodically scans and handles Java thread deadlocks.
- *
  * @author -Nemesiss-, ATracer
  */
 @Slf4j
@@ -54,7 +53,6 @@ public class DeadLockDetector extends Thread {
     /**
      * 创建死锁检测器（默认退出处理）。
      * Create deadlock detector with default exit handler.
-     *
      * @param sleepTime 检查间隔（秒） / Check interval in seconds
      * @param doWhenDL 死锁处理策略 / Deadlock handling strategy
      */
@@ -65,7 +63,6 @@ public class DeadLockDetector extends Thread {
     /**
      * 创建死锁检测器。
      * Create deadlock detector.
-     *
      * @param sleepTime 检查间隔（秒） / Check interval in seconds
      * @param doWhenDL 死锁处理策略 / Deadlock handling strategy
      * @param exitHandler 退出处理器 / Exit handler
@@ -140,7 +137,6 @@ public class DeadLockDetector extends Thread {
     /**
      * 创建简短锁等待描述。
      * Create short lock-wait description.
-     *
      * @param threadInfo 线程信息 / Thread information
      * @return 格式化锁信息 / Formatted lock information
      */
@@ -161,7 +157,6 @@ public class DeadLockDetector extends Thread {
     /**
      * 打印完整线程转储片段。
      * Print full thread dump fragment.
-     *
      * @param threadInfo 线程信息 / Thread information
      * @return 格式化线程信息 / Formatted thread information
      */

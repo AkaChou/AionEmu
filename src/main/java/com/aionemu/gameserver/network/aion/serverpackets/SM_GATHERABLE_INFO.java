@@ -8,7 +8,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * 向客户端发送可采集物（或静态门）生成信息的服务端包。
  * Server packet that sends spawn info for a gatherable object (or static door) to the client.
- *
  * @author ATracer
  */
 public class SM_GATHERABLE_INFO extends AionServerPacket {

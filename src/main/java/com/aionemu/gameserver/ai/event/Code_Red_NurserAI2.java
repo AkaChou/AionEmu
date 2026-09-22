@@ -15,7 +15,6 @@ import java.time.ZonedDateTime;
 /**
  * 活动事件 NPC AI：Code Red Nurser（@AIName "coderednurse"），继承 GeneralNpcAI2。
  * Event NPC AI: Code Red Nurser (@AIName "coderednurse"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("coderednurse")

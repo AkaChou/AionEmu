@@ -15,7 +15,6 @@ import com.aionemu.gameserver.configs.main.SecurityConfig;
 /**
  * 客户端包洪泛过滤器：按 opcode 配置最小间隔，支持热重载。
  * Client packet flood filter: per-opcode min intervals with hot reload support.
- *
  * @author KID
  */
 @Slf4j
@@ -34,11 +33,9 @@ public class PacketFloodFilter {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
@@ -97,7 +94,6 @@ public class PacketFloodFilter {
 	/**
 	 * 返回当前 opcode 间隔表（热重载后引用可能变化）。
 	 * Returns the current opcode interval table (reference may change after reload).
-	 *
 	 * interval array
 	 */
 	public final int[] getPackets() {

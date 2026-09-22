@@ -28,9 +28,7 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
     /**
      * 加载玩家技能皮肤列表。
      * Loads the player's skill skin list.
-     *
      * player id
-     *
      * @param playerId 玩家 ID / player id
      * @return 技能皮肤列表 / skill skin list
      */
@@ -61,7 +59,6 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
     /**
      * 保存玩家技能皮肤。
      * Stores a player skill skin.
-     *
      * @param player 玩家 / player
      * @param entry 技能皮肤条目 / skill skin entry
      * @return 是否成功 / whether successful
@@ -86,7 +83,6 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
     /**
      * 激活指定技能皮肤。
      * Activates the specified skill skin.
-     *
      * @param playerObjId 玩家对象 ID / player object id
      * @param skinId 外观 ID / skin id
      * @return 是否成功 / whether successful
@@ -110,7 +106,6 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
     /**
      * 取消激活指定技能皮肤。
      * Deactivates the specified skill skin.
-     *
      * @param playerObjId 玩家对象 ID / player object id
      * @param skinId 外观 ID / skin id
      * @return 是否成功 / whether successful
@@ -134,7 +129,6 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
     /**
      * 移除指定技能皮肤。
      * Removes the specified skill skin.
-     *
      * @param playerId 玩家 ID / player id
      * @param skinId 外观 ID / skin id
      * @return 是否成功 / whether successful
@@ -157,7 +151,6 @@ public class PlayerSkillSkinListDAO extends com.aionemu.gameserver.dao.PlayerSki
     /**
      * 是否支持当前数据库。
      * Whether the current database is supported.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

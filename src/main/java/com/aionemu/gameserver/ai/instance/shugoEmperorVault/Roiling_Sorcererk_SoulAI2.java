@@ -13,7 +13,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Shugo Emperor Vault 副本 NPC AI：Roiling Sorcererk Soul（@AIName "sorcererk"），继承 NpcAI2。
  * Shugo Emperor Vault instance NPC AI: Roiling Sorcererk Soul (@AIName "sorcererk"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("sorcererk")

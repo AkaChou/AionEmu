@@ -8,7 +8,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家帮助命令：列出可用的点号命令。
  * Player help command: lists available dot-commands.
- *
  * @author Nimwey
  */
 public class cmd_help extends PlayerCommand {
@@ -24,7 +23,6 @@ public class cmd_help extends PlayerCommand {
 	/**
 	 * 向天族/魔族玩家发送可用命令列表。
 	 * Sends the available command list to Elyos/Asmodian players.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 应为空；非空则触发失败提示 / must be empty; otherwise failure help is shown
 	 */
@@ -73,7 +71,6 @@ public class cmd_help extends PlayerCommand {
 	/**
 	 * 参数错误时提示用法。
 	 * Shows usage when arguments are invalid.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param msg 失败消息 / failure message
 	 */

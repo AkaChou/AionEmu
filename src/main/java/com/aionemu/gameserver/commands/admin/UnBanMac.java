@@ -8,7 +8,6 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 /**
  * 解除 MAC 地址封禁的管理员命令。
  * Admin command to lift a MAC-address ban.
- *
  * @author KID
  */
 public class UnBanMac extends AdminCommand {
@@ -24,7 +23,6 @@ public class UnBanMac extends AdminCommand {
 	/**
 	 * 按 MAC 地址解除封禁。
 	 * Unbans the given MAC address.
-	 *
 	 * @param player 执行 GM / Admin player
 	 * @param params &lt;mac&gt;。
 	 */
@@ -47,7 +45,6 @@ public class UnBanMac extends AdminCommand {
 	/**
 	 * 参数错误时的用法提示。
 	 * Usage hint on invalid parameters.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

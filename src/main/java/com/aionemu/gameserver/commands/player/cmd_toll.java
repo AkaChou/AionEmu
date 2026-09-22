@@ -7,7 +7,6 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 /**
  * 玩家命令：显示账号当前 Toll 余额。
  * Player command: shows the account's current Toll balance.
- *
  * @author Kill3r
  */
 public class cmd_toll extends PlayerCommand {
@@ -23,7 +22,6 @@ public class cmd_toll extends PlayerCommand {
 	/**
 	 * 查询并发送账号 Toll 数量。
 	 * Queries and sends the account Toll amount.
-	 *
 	 * @param player 执行命令的玩家 / invoking player
 	 * @param params 未使用的参数 / unused parameters
 	 */

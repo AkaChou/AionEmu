@@ -13,7 +13,6 @@ public class Protector {
 	/**
 	 * 获取所属玩家。
 	 * Returns the owning player.
-	 *
 	 * owner
 	 */
 	private Player owner;
@@ -23,7 +22,6 @@ public class Protector {
 	/**
 	 * 创建指定所有者的守护者状态。
 	 * Creates protector state for the given owner.
-	 *
 	 * @param owner 所属玩家 / owning player
 	 */
 	public Protector(Player owner) {
@@ -33,7 +31,6 @@ public class Protector {
 	/**
 	 * 刷新所有者引用（例如重登后）。
 	 * Refreshes the owner reference (e.g. after re-login).
-	 *
 	 * @param player 新的玩家实例 / new player instance
 	 */
 	public void refreshOwner(Player player) {
@@ -43,7 +40,6 @@ public class Protector {
 	/**
 	 * 设置守护等级。
 	 * Sets the protector rank.
-	 *
 	 * @param rank 守护等级 / guard rank
 	 */
 	public void setRank(int rank) {
@@ -53,7 +49,6 @@ public class Protector {
 	/**
 	 * 获取守护等级。
 	 * Returns the protector rank.
-	 *
 	 * guard rank
 	 */
 	public int getRank() {
@@ -63,7 +58,6 @@ public class Protector {
 	/**
 	 * 设置守护类型。
 	 * Sets the protector type.
-	 *
 	 * @param type 守护类型 / guard type
 	 */
 	public void setType(int type) {
@@ -73,7 +67,6 @@ public class Protector {
 	/**
 	 * 获取守护类型。
 	 * Returns the protector type.
-	 *
 	 * guard type
 	 */
 	public int getType() {

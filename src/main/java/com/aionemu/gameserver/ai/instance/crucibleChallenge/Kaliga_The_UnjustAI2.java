@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Crucible Challenge 副本 NPC AI：Kaliga The Unjust（@AIName "kaliga_the_unjust"），继承 AggressiveNpcAI2。
  * Crucible Challenge instance NPC AI: Kaliga The Unjust (@AIName "kaliga_the_unjust"), extends AggressiveNpcAI2.
- *
  * @author Encome
  */
 @AIName("crucible_challenge_kaliga_the_unjust")

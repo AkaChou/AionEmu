@@ -17,7 +17,6 @@ public class Gps extends AdminCommand
 	/**
 	 * 向管理员输出当前坐标信息。
 	 * Print the admin's current coordinates.
-	 *
 	 * @param admin 执行命令的管理员 / Admin executing the command
 	 */
 	@Override
@@ -34,7 +33,6 @@ public class Gps extends AdminCommand
 	/**
 	 * 失败回调（本命令无额外语法提示）。
 	 * Failure callback (no extra syntax for this command).
-	 *
 	 * @param player 接收提示的玩家 / Player receiving the hint
 	 */
 	@Override

@@ -17,8 +17,7 @@ public class AionPacketHandlerFactory {
      * -- SETTER --
      *  注入 Spring ObjectProvider，供 DI 覆盖静态单例。
      *  Injects Spring ObjectProvider to override the static singleton.
-     *
-     * @param provider Spring Provider / Spring provider
+     * Spring Provider / Spring provider
      */
     @Setter
     private static volatile ObjectProvider<AionPacketHandlerFactory> instanceProvider;
@@ -27,11 +26,9 @@ public class AionPacketHandlerFactory {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
@@ -267,7 +264,6 @@ public class AionPacketHandlerFactory {
 	/**
 	 * 获取已注册的包处理器。
 	 * Returns the registered packet handler.
-	 *
 	 * @return 包处理器 / packet handler
 	 */
 	public AionPacketHandler getPacketHandler() {
@@ -277,7 +273,6 @@ public class AionPacketHandlerFactory {
 	/**
 	 * 向处理器注册一个客户端包原型。
 	 * Registers one client packet prototype with the handler.
-	 *
 	 * @param prototype 包原型 / packet prototype
 	 */
 	private void addPacket(AionClientPacket prototype) {

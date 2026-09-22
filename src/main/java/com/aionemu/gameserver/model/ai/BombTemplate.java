@@ -9,7 +9,6 @@ import lombok.Getter;
 /**
  * 炸弹模板：定义自爆技能的 ID 与冷却时间。
  * Bomb template: defines the self-destruct skill id and cooldown.
- *
  * @author xTz
  */
 @Getter

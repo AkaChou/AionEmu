@@ -19,7 +19,6 @@ import java.util.Map.Entry;
 /**
  * 冷却清除指令；清除目标玩家的技能/物品/房屋物品冷却，或指定副本冷却。
  * Admin command that clears skill/item/house-object cooldowns, or specific instance cooldowns, for the target player.
- *
  * @author kecimis
  */
 public class RemoveCd extends AdminCommand {
@@ -31,7 +30,6 @@ public class RemoveCd extends AdminCommand {
 	/**
 	 * 执行该管理指令。
 	 * Executes this admin command.
-	 *
 	 * @param admin 执行指令的管理员 / admin executing the command
 	 */
 	@Override

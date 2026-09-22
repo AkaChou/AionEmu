@@ -31,7 +31,6 @@ import java.util.List;
 /**
  * Disassembly 动作模板（静态数据/XML）。
  * XML template.
- *
  * @author BeckUp.Media
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -163,10 +162,6 @@ public class DisassemblyAction extends AbstractItemAction
 				/**
 	 * 校验操作、计算背包空位并移除待拆解物品。
 	 * Validates the action, calculates free inventory slots and removes the source item.
-	 *
-	 * @param player
-	 * @param parentItem
-	 * @return
 	 */
 				boolean checkValidate(Player player, Item parentItem)
 				{

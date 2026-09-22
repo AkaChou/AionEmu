@@ -12,7 +12,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Cradle Of Eternity 副本 NPC AI：Asmodian Elite Combat Mage（@AIName "Asmodian_Elite_Combat_Mage"），继承 NpcAI2。
  * Cradle Of Eternity instance NPC AI: Asmodian Elite Combat Mage (@AIName "Asmodian_Elite_Combat_Mage"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Asmodian_Elite_Combat_Mage")

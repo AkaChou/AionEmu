@@ -18,7 +18,6 @@ import java.util.Map;
 /**
  * 永恒之塔静态数据容器，按位置 ID 索引塔点位。
  * Tower of Eternity static-data holder, indexing tower locations by id.
- *
  * @author Wnkrz
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -43,7 +42,6 @@ public class TowerOfEternityData {
 	/**
 	 * 返回已加载的塔点位数量。
 	 * Returns the number of loaded tower locations.
-	 *
 	 * @return 已加载的塔地点数量 / Returns the number of loaded tower locations.
 	 */
 	public int size() {
@@ -53,7 +51,6 @@ public class TowerOfEternityData {
 	/**
 	 * 返回全部永恒之塔点位映射。
 	 * Returns the full map of Tower of Eternity locations.
-	 *
 	 * @return 完整的永恒之塔地点映射 / Returns the full map of Tower of Eternity locations.
 	 */
 	public Map<Integer, TowerOfEternityLocation> getTowerOfEternityLocations() {

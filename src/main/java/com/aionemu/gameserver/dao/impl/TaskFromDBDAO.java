@@ -11,9 +11,7 @@ import java.util.ArrayList;
 /**
  * 数据库定时任务 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of TaskFromDBDAO.
- *
  * Updated for MySQL 8 - Fixed connection leaks.
- *
  * @author Divinity
  */
 @Slf4j
@@ -28,7 +26,6 @@ public class TaskFromDBDAO extends com.aionemu.gameserver.dao.TaskFromDBDAO {
 	/**
 	 * 加载全部数据库任务。
 	 * Loads all database-driven tasks.
-	 *
 	 * @return 任务列表 / task list
 	 */
 	@Override
@@ -59,7 +56,6 @@ public class TaskFromDBDAO extends com.aionemu.gameserver.dao.TaskFromDBDAO {
 	/**
 	 * 更新任务最近激活时间。
 	 * Updates the last activation time of a task.
-	 *
 	 * @param id 任务 ID / task id
 	 */
 	@Override
@@ -78,7 +74,6 @@ public class TaskFromDBDAO extends com.aionemu.gameserver.dao.TaskFromDBDAO {
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
-	 *
 	 * @param database 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version

@@ -3,7 +3,6 @@ package com.aionemu.gameserver.model.templates.rewards;
 /**
  * 奖励条目物品模板（静态数据/XML）。
  * XML template.
- *
  * @author KID
  */
 public class RewardEntryItem {

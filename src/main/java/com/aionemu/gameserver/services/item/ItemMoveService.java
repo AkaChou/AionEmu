@@ -21,7 +21,6 @@ import com.aionemu.gameserver.services.item.ItemPacketService.ItemDeleteType;
 /**
  * 物品移动服务，处理仓库间移动与交换。
  * Item move service handling inter-storage moves and swaps.
- *
  * @author ATracer
  */
 
@@ -30,7 +29,6 @@ public class ItemMoveService {
 	/**
 	 * 移动物品。
 	 * Moves an item.
-	 *
 	 * 玩家 / player
 	 * itemObjId
 	 * @param sourceStorageType 源仓库类型 / sourceStorageType
@@ -87,11 +85,6 @@ public class ItemMoveService {
 		}
 	}
 
-	/**
-	 * @param storage
-	 * @param item
-	 * @param slot
-	 */
 	private static void moveInSameStorage(IStorage storage, Item item, short slot) {
 		storage.setPersistentState(PersistentState.UPDATE_REQUIRED);
 		item.setEquipmentSlot(slot);
@@ -101,7 +94,6 @@ public class ItemMoveService {
 	/**
 	 * 交换仓库物品。
 	 * Switches items between storages.
-	 *
 	 * @param player 玩家 / player
 	 * @param sourceStorageType 源仓库类型 / sourceStorageType
 	 * @param sourceItemObjId 源物品对象 ID / sourceItemObjId

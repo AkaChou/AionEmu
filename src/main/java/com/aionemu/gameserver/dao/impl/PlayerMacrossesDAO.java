@@ -15,9 +15,7 @@ import java.util.Map;
 /**
  * 玩家宏 DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of PlayerMacrossesDAO.
- *
  * Updated for MySQL 8 - Fixed connection leaks.
- *
  * @author Aquanox
  */
 @Slf4j
@@ -35,7 +33,6 @@ public class PlayerMacrossesDAO extends com.aionemu.gameserver.dao.PlayerMacross
 	/**
 	 * 新增玩家宏。
 	 * Adds a player macro.
-	 *
 	 * @param playerId 玩家 ID / player id
 	 * @param macroPosition 宏槽位 / macro slot
 	 * @param macro 宏文本 / macro text
@@ -58,7 +55,6 @@ public class PlayerMacrossesDAO extends com.aionemu.gameserver.dao.PlayerMacross
 	/**
 	 * 更新玩家宏。
 	 * Updates a player macro.
-	 *
 	 * @param playerId 玩家 ID / player id
 	 * @param macroPosition 宏槽位 / macro slot
 	 * @param macro 宏文本 / macro text
@@ -81,7 +77,6 @@ public class PlayerMacrossesDAO extends com.aionemu.gameserver.dao.PlayerMacross
 	/**
 	 * 删除玩家宏。
 	 * Deletes a player macro.
-	 *
 	 * @param playerId 玩家 ID / player id
 	 * @param macroPosition 宏槽位 / macro slot
 	 */
@@ -102,7 +97,6 @@ public class PlayerMacrossesDAO extends com.aionemu.gameserver.dao.PlayerMacross
 	/**
 	 * 恢复玩家全部宏。
 	 * Restores all macros for a player.
-	 *
 	 * @param playerId 玩家 ID / player id
 	 * @return 宏列表 / macro list
 	 */
@@ -132,7 +126,6 @@ public class PlayerMacrossesDAO extends com.aionemu.gameserver.dao.PlayerMacross
 	/**
 	 * 是否支持当前数据库。
 	 * Whether the current database is supported.
-	 *
 	 * @param databaseName 数据库名 / database name
 	 * @param majorVersion 主版本 / major version
 	 * @param minorVersion 次版本 / minor version

@@ -15,7 +15,6 @@ import lombok.Getter;
 /**
  * 技能目标属性：JAXB 绑定的首要目标/范围/关系等筛选配置，并驱动施法校验。
  * Skill target properties: JAXB-bound first-target/range/relation filters and cast validation.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -28,9 +27,6 @@ public class Properties {
 	 * -- GETTER --
 	 *  获取首要目标属性。
 	 *  Returns the first-target attribute.
-	 *
-	 * @return 首要目标属性 / first-target attribute
-
 	 */
 	@Getter
 	@XmlAttribute(name = "first_target", required = true)
@@ -42,9 +38,6 @@ public class Properties {
 	 * -- GETTER --
 	 *  获取首要目标距离。
 	 *  Returns the first-target range.
-	 *
-	 * @return 首要目标距离 / first-target range
-
 	 */
 	@Getter
 	@XmlAttribute(name = "first_target_range", required = true)
@@ -56,9 +49,7 @@ public class Properties {
 	 * -- GETTER --
 	 *  是否叠加武器攻击距离。
 	 *  Whether weapon range is added.
-	 *
-	 * @return 是否叠加武器距离 / true if weapon range is added
-
+	 * 是否叠加武器距离 / true if weapon range is added
 	 */
 	@Getter
 	@XmlAttribute(name = "awr")
@@ -70,9 +61,6 @@ public class Properties {
 	 * -- GETTER --
 	 *  获取目标关系属性。
 	 *  Returns the target relation attribute.
-	 *
-	 * @return 目标关系 / target relation
-
 	 */
 	@Getter
 	@XmlAttribute(name = "target_relation", required = true)
@@ -84,9 +72,6 @@ public class Properties {
 	 * -- GETTER --
 	 *  获取目标范围类型。
 	 *  Returns the target range type.
-	 *
-	 * @return 目标范围类型 / target range type
-
 	 */
 	@Getter
 	@XmlAttribute(name = "target_type", required = true)
@@ -98,9 +83,6 @@ public class Properties {
 	 * -- GETTER --
 	 *  获取目标距离。
 	 *  Returns the target distance.
-	 *
-	 * @return 目标距离 / target distance
-
 	 */
 	@Getter
 	@XmlAttribute(name = "target_distance")
@@ -112,9 +94,7 @@ public class Properties {
 	 * -- GETTER --
 	 *  获取最大目标数。
 	 *  Returns the maximum target count.
-	 *
-	 * @return 最大目标数 / max target count
-
+	 * 最大目标数 / max target count
 	 */
 	@Getter
 	@XmlAttribute(name = "target_maxcount")
@@ -130,9 +110,7 @@ public class Properties {
 	 * -- GETTER --
 	 *  获取目标异常状态列表。
 	 *  Returns the target abnormal-status list.
-	 *
-	 * @return 状态名列表 / status name list
-
+	 * 状态名列表 / status name list
 	 */
 	@Getter
 	@XmlAttribute(name = "target_status")
@@ -144,9 +122,6 @@ public class Properties {
 	 * -- GETTER --
 	 *  获取修订距离。
 	 *  Returns the revision distance.
-	 *
-	 * @return 修订距离 / revision distance
-
 	 */
 	@Getter
 	@XmlAttribute(name = "revision_distance")
@@ -158,9 +133,6 @@ public class Properties {
 	 * -- GETTER --
 	 *  获取有效宽度。
 	 *  Returns the effective width.
-	 *
-	 * @return 有效宽度 / effective width
-
 	 */
 	@Getter
 	@XmlAttribute(name = "effective_width")
@@ -180,9 +152,6 @@ public class Properties {
 	 * -- GETTER --
 	 *  获取有效角度。
 	 *  Returns the effective angle.
-	 *
-	 * @return 有效角度 / effective angle
-
 	 */
 	@Getter
 	@XmlAttribute(name = "effective_angle")
@@ -201,9 +170,6 @@ public class Properties {
 	 * -- GETTER --
 	 *  获取目标物种属性。
 	 *  Returns the target species attribute.
-	 *
-	 * @return 目标物种 / target species
-
 	 */
 	@Getter
 	@XmlAttribute(name = "target_species")
@@ -220,7 +186,6 @@ public class Properties {
 	/**
 	 * 施法开始时校验并填充目标列表。
 	 * Validates and fills the target list at cast start.
-	 *
 	 * @param skill 技能上下文 / skill context
 	 * @return 校验是否通过 / true if validation passes
 	 */
@@ -299,7 +264,6 @@ public class Properties {
 	/**
 	 * 施法结束时重新校验并填充目标列表。
 	 * Re-validates and refills the target list at cast end.
-	 *
 	 * @param skill 技能上下文 / skill context
 	 * @return 校验是否通过 / true if validation passes
 	 */
@@ -339,7 +303,6 @@ public class Properties {
 	/**
 	 * 是否为背后方向。
 	 * Whether the direction is back-facing.
-	 *
 	 * @return 若 direction is 1 则为 true / true if direction is 1
 	 */
 	public boolean isBackDirection() {
@@ -358,15 +321,13 @@ public class Properties {
          * -- GETTER --
          *  是否为施法开始阶段。
          *  Returns whether this is the cast-start phase.
-         *
-         * @return 是否施法开始 / true if cast start
+         * 是否施法开始 / true if cast start
          */
         private final boolean isCastStart;
 
 		/**
 		 * 构造施法阶段。
 		 * Creates a cast state.
-		 *
 		 * @param isCastStart 是否为施法开始 / whether this is cast start
 		 */
 		CastState(boolean isCastStart) {

@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Norsvold 区域 NPC AI：Nightbloom Gargonops Shifter（@AIName "nightbloom_gargonops_shifter"），继承 AggressiveNpcAI2。
  * Norsvold zone NPC AI: Nightbloom Gargonops Shifter (@AIName "nightbloom_gargonops_shifter"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("nightbloom_gargonops_shifter")

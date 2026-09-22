@@ -31,7 +31,6 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 /**
  * 物品融合服务：消耗核心与材料，随机产出同槽位大天使装备。
  * Item coalescence service — consumes core and materials, rolls same-slot Archdaeva gear.
- *
  * @author Ranastic
  */
 @Slf4j
@@ -49,7 +48,6 @@ public class CoalescenceService {
 	/**
 	 * 执行融合：播放读条动画，消耗核心与材料，随机发放同槽位大天使装备，并按材料数判定奖励。
 	 * Performs coalescence: plays cast animation, consumes core and materials, grants random same-slot Archdaeva gear, and rolls bonus by material count.
-	 *
 	 * @param player 玩家 / player
 	 * @param core_item_object_id 核心物品对象 ID / core item object id
 	 * @param material_item_object_id_collection 材料物品对象 ID 列表 / material item object ids
@@ -145,7 +143,6 @@ public class CoalescenceService {
 	/**
 	 * 融合完成后推进相关任务（15542 / 25542）至可领奖状态。
 	 * 25542) to reward status after coalescence completes.
-	 *
 	 * 玩家 / player
 	 * core item
 	 * @param success 是否触发奖励 / whether bonus reward succeeded
@@ -179,11 +176,9 @@ public class CoalescenceService {
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available

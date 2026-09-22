@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * LootRule 类型枚举。
  * Loot Rule Type enumeration.
- *
  * @author Lyahim
  */
 @Getter

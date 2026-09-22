@@ -11,7 +11,6 @@ import java.util.concurrent.Future;
 /**
  * Tiamat Stronghold 副本 NPC AI：Electrocute（@AIName "electrocute"），继承 NpcAI2。
  * Tiamat Stronghold instance NPC AI: Electrocute (@AIName "electrocute"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("electrocute")

@@ -19,9 +19,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 /**
  * NPC 攻击管理器：负责攻击调度、意图选择与追击/放弃目标判定。
  * NPC attack manager: schedules attacks, chooses attack intention, and handles chase/give-up logic.
- *
  * @author ATracer
- * @modified Yon (Aion Reconstruction Project) -- 移除非真端式的超距脱战处理 / removed the non-retail-like leash handling.
  */
 public class AttackManager {
 
@@ -40,7 +38,6 @@ public class AttackManager {
 	/**
 	 * 开始攻击目标：记录开战时间、播放攻击表情并调度下一次攻击。
 	 * Starts attacking the target: records fight start time, plays attack emote, and schedules the next attack.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void startAttacking(NpcAI2 npcAI) {
@@ -56,7 +53,6 @@ public class AttackManager {
 	/**
 	 * 安排下一次攻击；含重复调度检查，避免一次攻击多次伤害。
 	 * Schedules the next attack; includes a duplicate-schedule guard to avoid multi-hit from one attack.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void scheduleNextAttack(NpcAI2 npcAI) {
@@ -95,7 +91,6 @@ public class AttackManager {
 	/**
 	 * 按攻击意图选择普通攻击、技能攻击或结束攻击。
 	 * Chooses simple attack, skill attack, or finish-attack based on attack intention.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param delay 攻击延迟（毫秒） / attack delay in milliseconds
 	 */
@@ -131,7 +126,6 @@ public class AttackManager {
 	/**
 	 * 目标过远时的处理：切换仇恨目标、丢失视野、放弃目标或追击移动。
 	 * Handles target-too-far: switch to most hated, vision loss, give up, or chase-move.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void targetTooFar(NpcAI2 npcAI) {
@@ -189,7 +183,6 @@ public class AttackManager {
 	/**
 	 * 受击后复位可能已经停摆的攻击链：异步执行，且按对象 ID 去重。
 	 * Resumes a possibly stalled attack chain after a hit: asynchronous and deduplicated per object id.
-	 *
 	 * <p>严禁在受击调用栈内同步重排攻击。{@code AggroList#addDamageInternal} → {@code AbstractAI#onAttacked}
 	 * → {@code AttackEventHandler#onAttack} → {@code AttackManager#scheduleNextAttack}
 	 * → {@code SimpleAttackManager#attackAction} → {@code CreatureController#attackTarget}
@@ -198,7 +191,6 @@ public class AttackManager {
 	 * Never reschedule synchronously inside the hit stack: damage handling → {@code onAttacked} → this handler
 	 * → {@code scheduleNextAttack} → attack action → target's damage handling returns here, so two creatures with a
 	 * zero attack delay recurse until the worker thread dies with {@code StackOverflowError}.</p>
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	public static void resumeInterruptedAttack(NpcAI2 npcAI) {
@@ -208,7 +200,6 @@ public class AttackManager {
 	/**
 	 * 为不可移动 NPC 按攻击间隔重排一次攻击尝试。
 	 * Reschedules one attack attempt for an immobile NPC after the regular attack interval.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
 	private static void scheduleImmobileRetry(NpcAI2 npcAI) {
@@ -222,7 +213,6 @@ public class AttackManager {
 	/**
 	 * 在 AI 线程池上按延迟排入一次攻击链复位，按对象 ID 去重。
 	 * Queues one attack-chain retry on the AI thread pool after the given delay, deduplicated per object id.
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param delay 延迟毫秒 / delay in milliseconds
 	 */
@@ -247,7 +237,6 @@ public class AttackManager {
 	/**
 	 * 去重规则：只有在途任务为空或已结束时才允许排入新的重试。
 	 * Deduplication rule: queue a new retry only when no in-flight task exists or the in-flight one already finished.
-	 *
 	 * @param pending 在途任务 / in-flight task
 	 * @return 允许入队时为 {@code true} / {@code true} when a new retry may be queued
 	 */
@@ -258,7 +247,6 @@ public class AttackManager {
 	/**
 	 * 执行一次攻击链复位（始终运行在 AI 线程池线程上）。
 	 * Runs one attack-chain retry (always on an AI thread-pool thread).
-	 *
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 * @param objectId 排入任务时的对象 ID / object id captured when the task was queued
 	 */
@@ -282,10 +270,7 @@ public class AttackManager {
 	/**
 	 * 按真实 NPC 数据检查是否停止追击。
 	 * Checks whether chase should stop according to retail NPC data.
-	 *
 	 * @return NPC AI 实例 / NPC AI instance
-	 *
-	 * @param npcAI
 	 * @return 应放弃目标时为 {@code true} / {@code true} if the target should be given up
 	 */
 	private static boolean checkStopChase(NpcAI2 npcAI) {

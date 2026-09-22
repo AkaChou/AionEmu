@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 通知客户端召唤物使用技能。
  * Server packet notifying the client that a summon is using a skill.
- *
  * @author ATracer
  */
 @AllArgsConstructor

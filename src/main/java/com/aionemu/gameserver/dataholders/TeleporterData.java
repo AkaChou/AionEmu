@@ -15,7 +15,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 传送 NPC 数据容器，按传送 ID 索引传送员模板，并支持按 NPC ID 查找。
  * Teleporter data holder, indexing teleporter templates by teleport id and lookup by npc id.
- *
  * @author orz
  */
 @XmlRootElement(name = "npc_teleporter")
@@ -41,7 +40,6 @@ public class TeleporterData {
 	/**
 	 * 返回已加载的传送员模板数量。
 	 * Returns the number of loaded teleporter templates.
-	 *
 	 * @return 已加载的传送器模板数量 / Returns the number of loaded teleporter templates.
 	 */
 	public int size() {
@@ -51,7 +49,6 @@ public class TeleporterData {
 	/**
 	 * 按 NPC ID 查找包含该 NPC 的传送员模板。
 	 * Finds the teleporter template that contains the given npc id.
-	 *
 	 * @param npcId NPC ID / npc id
 	 * @return 传送员模板，未找到则为 null / teleporter template or null
 	 */
@@ -67,7 +64,6 @@ public class TeleporterData {
 	/**
 	 * 按传送 ID 获取传送员模板。
 	 * Returns the teleporter template for the given teleport id.
-	 *
 	 * @param teleportId 传送 ID / teleport id
 	 * @return 传送员模板，不存在则为 null / teleporter template or null
 	 */

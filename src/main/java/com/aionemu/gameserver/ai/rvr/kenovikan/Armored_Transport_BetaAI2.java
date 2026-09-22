@@ -19,7 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * RvR 相关 NPC AI：Armored Transport Beta（@AIName "Armored_Transport_Beta"），继承 GeneralNpcAI2。
  * RvR-related NPC AI: Armored Transport Beta (@AIName "Armored_Transport_Beta"), extends GeneralNpcAI2.
- *
  * @author Encom
  */
 @AIName("Armored_Transport_Beta")

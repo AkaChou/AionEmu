@@ -3,7 +3,6 @@ package com.aionemu.gameserver.model.ingameshop;
 /**
  * 游戏内商城购买请求（含赠送与点数同步变体）。
  * In-game shop purchase request (gift and toll-sync variants).
- *
  * @author KID
  */
 public class IGRequest {

@@ -17,7 +17,6 @@ import java.util.List;
 /**
  * Theobomos Lab 副本 NPC AI：Watcher Silikor Of Memory（@AIName "watcher_silikor_of_memory"），继承 AggressiveNpcAI2。
  * Theobomos Lab instance NPC AI: Watcher Silikor Of Memory (@AIName "watcher_silikor_of_memory"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("watcher_silikor_of_memory")

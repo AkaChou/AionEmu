@@ -8,7 +8,6 @@ import com.aionemu.gameserver.model.templates.event.MaxCountOfDay;
 /**
  * 玩家事件物品每日限购注册表。
  * Daily purchase-limit registry for event items of a player.
- *
  * <p>该类型只服务 {@link Player}：负责物品当日已购/上限计数的惰性创建、查询、移除与清空；
  * 对外仍通过 {@link Player} 的原公开方法访问（门面签名不变），并保留内部表未创建时返回
  * {@code null}、首次写入才创建的惰性语义；{@link #getItemMaxCounts()} 返回 live 视图，
@@ -25,7 +24,6 @@ final class PlayerItemDailyLimits {
 	/**
 	 * 记录或更新物品当日次数上限。
 	 * Records or updates the per-day count of an item.
-	 *
 	 * @param itemId 物品 ID / item id
 	 * @param thisCount 当日次数 / per-day count
 	 */
@@ -43,7 +41,6 @@ final class PlayerItemDailyLimits {
 	/**
 	 * 返回物品当日次数。
 	 * Returns the per-day count of an item.
-	 *
 	 * @param itemId 物品 ID / item id
 	 * @return 当日次数，未记录时为 0 / per-day count, or 0 when absent
 	 */
@@ -57,7 +54,6 @@ final class PlayerItemDailyLimits {
 	/**
 	 * 移除物品的当日次数记录。
 	 * Removes the per-day record of an item.
-	 *
 	 * @param itemId 物品 ID / item id
 	 */
 	void removeItemMaxCount(int itemId) {
@@ -81,7 +77,6 @@ final class PlayerItemDailyLimits {
 	/**
 	 * 返回原始当日次数表。
 	 * Returns the backing per-day count map.
-	 *
 	 * @return 当日次数表（live 视图），未创建时为 null / live map, or null when not created
 	 */
 	Map<Integer, MaxCountOfDay> getItemMaxCounts() {

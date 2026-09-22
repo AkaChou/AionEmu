@@ -6,7 +6,6 @@ import lombok.Getter;
 /**
  * 账号类型枚举。
  * Account Type enumeration.
- *
  * @author Rinzler (Encom)
  */
 

@@ -11,7 +11,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 /**
  * Tiamaranta eye 区域 NPC AI：Master At Arms Ranigan（@AIName "Master_At_Arms_Ranigan"），继承 AggressiveNpcAI2。
  * Tiamaranta eye zone NPC AI: Master At Arms Ranigan (@AIName "Master_At_Arms_Ranigan"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("Master_At_Arms_Ranigan")

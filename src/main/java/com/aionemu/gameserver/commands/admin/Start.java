@@ -21,7 +21,6 @@ public class Start extends AdminCommand
 	/**
 	 * 向执行者发送确认消息。
 	 * Sends a confirmation message to the invoker.
-	 *
 	 */
 	@Override
 	public void execute(Player player, String... params) {
@@ -31,7 +30,6 @@ public class Start extends AdminCommand
 	/**
 	 * 参数错误时的用法提示。
 	 * Usage hint on invalid parameters.
-	 *
 	 */
 	@Override
 	public void onFail(Player player, String message) {

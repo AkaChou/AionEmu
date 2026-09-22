@@ -25,9 +25,7 @@ public class PlayerAppearanceDAO extends com.aionemu.gameserver.dao.PlayerAppear
     /**
      * 加载指定玩家的外观数据。
      * Loads the appearance data for the given player.
-     *
      * player id
-     *
      * @param playerId 玩家 ID / player id
      * @return 玩家外观；加载失败返回 null / player appearance, or null on failure
      */
@@ -116,7 +114,6 @@ public class PlayerAppearanceDAO extends com.aionemu.gameserver.dao.PlayerAppear
     /**
      * 持久化玩家外观数据。
      * Persists the player's appearance data.
-     *
      * @param id 玩家 ID / player id
      * @param pa 外观数据 / appearance data
      * @return 是否成功 / whether successful
@@ -205,7 +202,6 @@ public class PlayerAppearanceDAO extends com.aionemu.gameserver.dao.PlayerAppear
     /**
      * 判断当前数据库是否受本 DAO 支持。
      * Checks whether the given database is supported by this DAO.
-     *
      * @param databaseName 数据库名 / database name
      * @param majorVersion 主版本 / major version
      * @param minorVersion 次版本 / minor version

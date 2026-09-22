@@ -11,7 +11,6 @@ import com.aionemu.gameserver.ai2.AIName;
 /**
  * Tiamat Stronghold 副本 NPC AI：Sardha Gravity Down（@AIName "sardhagravitydown"），继承 AggressiveNpcAI2。
  * Tiamat Stronghold instance NPC AI: Sardha Gravity Down (@AIName "sardhagravitydown"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("sardhagravitydown")

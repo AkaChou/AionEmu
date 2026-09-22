@@ -14,7 +14,6 @@ import com.aionemu.chatserver.service.ChatService;
 /**
  * 客户端玩家聊天鉴权包。
  * Client packet for player chat authentication.
- *
  * @author ATracer
  */
 @Slf4j
@@ -31,7 +30,6 @@ public class CM_PLAYER_AUTH extends AbstractClientPacket {
     /**
      * 构造玩家鉴权客户端包。
      * Constructs a player auth client packet.
-     *
      * @param packetReader 包读取器 / packet reader
      * @param clientChannelHandler 客户端通道处理器 / client channel handler
      * @param chatService 聊天服务 / chat service

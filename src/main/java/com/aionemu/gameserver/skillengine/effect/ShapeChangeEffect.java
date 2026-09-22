@@ -9,7 +9,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 /**
  * 外形变换效果：在变身基础上可对 NPC 保持中立，并移除隐身。
  * Shape-change effect: transform that may mark the player neutral to NPCs and strips hide.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)

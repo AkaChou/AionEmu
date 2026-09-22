@@ -5,7 +5,6 @@ import lombok.Getter;
 /**
  * 玩家联盟活动枚举。
  * Player Alliance Event enumeration.
- *
  * @author Sarynth
  */
 @Getter

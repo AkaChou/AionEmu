@@ -34,9 +34,6 @@ public class EternalBastionPlayerReward extends InstancePlayerReward {
 	 * Returns the highest grade material support bundle.
 	 */
 	private int highestGradeMaterialSupportBundle;
-	/**
-	 * @return 是否已奖励 / whether rewarded
-	 */
 	private boolean isRewarded = false;
 
 	public EternalBastionPlayerReward(Integer object) {

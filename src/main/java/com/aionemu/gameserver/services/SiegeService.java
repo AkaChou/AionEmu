@@ -84,14 +84,12 @@ public class SiegeService {
 	/**
 	 * 获取全部神器地点。
 	 * Returns all artifact locations.
-	 *
 	 * artifacts map
 	 */
 	private Map<Integer, ArtifactLocation> artifacts;
 	/**
 	 * 获取全部要塞地点。
 	 * Returns all fortress locations.
-	 *
 	 * fortresses map
 	 */
 	private Map<Integer, FortressLocation> fortresses;
@@ -100,7 +98,6 @@ public class SiegeService {
 	/**
 	 * 获取服务单例（优先 Spring Provider）。
 	 * Returns the service singleton (prefers Spring provider).
-	 *
 	 * service instance
 	 */
 	public static SiegeService getInstance() {
@@ -114,7 +111,6 @@ public class SiegeService {
 	/**
 	 * 注入 Spring 的实例提供者。
 	 * Sets the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<SiegeService> instanceProvider) {
@@ -145,11 +141,7 @@ public class SiegeService {
 	}
 
 	@SuppressWarnings("deprecation")
-	/**
-	 * 初始化攻城：刷和平 NPC、注册计划并启动独立神器攻城。
-	 * Initializes sieges: peace NPCs, schedules, and standalone artifact sieges.
-	 */
-	public void initSieges() {
+    public void initSieges() {
 		if (!SiegeConfig.SIEGE_ENABLED) {
 			return;
 		}
@@ -211,7 +203,6 @@ public class SiegeService {
 	/**
 	 * 检查并启动指定地点攻城（含自动种族逻辑）。
 	 * Checks and starts siege for the location (including auto-race logic).
-	 *
 	 * location id
 	 */
 	public void checkSiegeStart(int locationId) {
@@ -225,7 +216,6 @@ public class SiegeService {
 	/**
 	 * 启动指定地点的攻城战。
 	 * Starts the siege for the given location id.
-	 *
 	 * siege location id
 	 */
 	public void startSiege(final int siegeLocationId) {
@@ -243,7 +233,6 @@ public class SiegeService {
 	/**
 	 * 停止指定地点的攻城战。
 	 * Stops the siege for the given location id.
-	 *
 	 * siege location id
 	 */
 	public void stopSiege(int siegeLocationId) {
@@ -311,7 +300,6 @@ public class SiegeService {
 	/**
 	 * 获取距本小时结束的剩余秒数。
 	 * Returns seconds remaining until the end of the current hour.
-	 *
 	 * @return 剩余秒数 / remaining seconds
 	 */
 	public int getSecondsBeforeHourEnd() {
@@ -324,9 +312,7 @@ public class SiegeService {
 	/**
 	 * 获取指定攻城剩余时间（秒）。
 	 * Returns remaining siege time in seconds for the location.
-	 *
 	 * siege location id
-	 *
 	 * @param siegeLocationId 剩余秒数 / remaining seconds
 	 */
 	public int getRemainingSiegeTimeInSeconds(int siegeLocationId) {
@@ -349,7 +335,6 @@ public class SiegeService {
 	/**
 	 * 按地点对象获取进行中的攻城实例。
 	 * Returns the active siege instance for the location object.
-	 *
 	 * @param loc 攻城地点 / siege location
 	 * siege instance
 	 */
@@ -360,7 +345,6 @@ public class SiegeService {
 	/**
 	 * 按 ID 获取进行中的攻城实例。
 	 * Returns the active siege instance by location id.
-	 *
 	 * siege location id
 	 * siege instance
 	 */
@@ -371,10 +355,7 @@ public class SiegeService {
 	/**
 	 * 判断指定要塞是否处于攻城中。
 	 * Checks whether a siege is in progress for the fortress id.
-	 *
 	 * fortress id
-	 *
-	 * @param fortressId
 	 * @return 是否攻城中 / whether in progress
 	 */
 	public boolean isSiegeInProgress(int fortressId) {
@@ -384,7 +365,6 @@ public class SiegeService {
 	/**
 	 * 按 ID 获取要塞地点。
 	 * Returns the fortress location by id.
-	 *
 	 * fortress id
 	 * fortress
 	 */
@@ -395,7 +375,6 @@ public class SiegeService {
 	/**
 	 * 按 ID 获取神器地点。
 	 * Returns the artifact location by id.
-	 *
 	 * @param id 神器 ID / artifact id
 	 * artifact
 	 */
@@ -406,7 +385,6 @@ public class SiegeService {
 	/**
 	 * 获取独立（非隶属要塞）神器地点。
 	 * Returns standalone (non-fortress-bound) artifact locations.
-	 *
 	 * @return 独立神器映射 / standalone artifacts map
 	 */
 	public Map<Integer, ArtifactLocation> getStandaloneArtifacts() {
@@ -416,7 +394,6 @@ public class SiegeService {
 	/**
 	 * 获取隶属要塞的神器地点。
 	 * Returns fortress-bound artifact locations.
-	 *
 	 * @return 要塞神器映射 / fortress artifacts map
 	 */
 	public Map<Integer, ArtifactLocation> getFortressArtifacts() {
@@ -426,7 +403,6 @@ public class SiegeService {
 	/**
 	 * 获取全部攻城地点。
 	 * Returns all siege locations.
-	 *
 	 * locations map
 	 */
 	public Map<Integer, SiegeLocation> getSiegeLocations() {
@@ -436,7 +412,6 @@ public class SiegeService {
 	/**
 	 * 按 ID 获取攻城地点。
 	 * Returns the siege location by id.
-	 *
 	 * location id
 	 * location
 	 */
@@ -447,7 +422,6 @@ public class SiegeService {
 	/**
 	 * 获取指定世界内的攻城地点。
 	 * Returns siege locations within the given world.
-	 *
 	 * 世界 ID / world id
 	 * locations map
 	 */
@@ -474,7 +448,6 @@ public class SiegeService {
 	/**
 	 * 清理指定军团在攻城地点上的占领关联。
 	 * Cleans legion ownership links from siege locations.
-	 *
 	 * legion id
 	 */
 	public void cleanLegionId(int legionId) {
@@ -489,7 +462,6 @@ public class SiegeService {
 	/**
 	 * 按种族与模式刷出攻城 NPC。
 	 * Spawns siege NPCs for race and siege mode type.
-	 *
 	 * location id
 	 * 阵营 / race
 	 * @param type 攻城模式 / siege mode type
@@ -509,7 +481,6 @@ public class SiegeService {
 	/**
 	 * 删除指定地点的攻城 NPC。
 	 * Despawns siege NPCs for the location.
-	 *
 	 * location id
 	 */
 	public void deSpawnNpcs(int siegeLocationId) {
@@ -522,10 +493,7 @@ public class SiegeService {
 	/**
 	 * 判断 NPC 是否属于进行中的攻城。
 	 * Checks whether the NPC belongs to an active siege.
-	 *
 	 * @param npc NPC
-	 *
-	 * @param npc
 	 * @return 是否属于活动攻城 / whether in active siege
 	 */
 	public boolean isSiegeNpcInActiveSiege(Npc npc) {
@@ -554,7 +522,6 @@ public class SiegeService {
 	/**
 	 * 广播单个地点的攻城状态更新。
 	 * Broadcasts siege status update for a single location.
-	 *
 	 * location
 	 */
 	public void broadcastUpdate(SiegeLocation loc) {
@@ -565,7 +532,6 @@ public class SiegeService {
 	/**
 	 * 向全服发送两份攻城相关数据包。
 	 * Sends two siege-related packets to all players.
-	 *
 	 * packet 1
 	 * packet 2
 	 */
@@ -583,7 +549,6 @@ public class SiegeService {
 	/**
 	 * 广播带名称的攻城状态更新。
 	 * Broadcasts siege status update with a display name.
-	 *
 	 * location
 	 * name description id
 	 */
@@ -618,7 +583,6 @@ public class SiegeService {
 	/**
 	 * 玩家登录时下发攻城相关信息。
 	 * Sends siege-related info when a player logs in.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onPlayerLogin(Player player) {
@@ -631,7 +595,6 @@ public class SiegeService {
 	/**
 	 * 玩家进入攻城世界时同步地点状态。
 	 * Syncs location status when a player enters a siege world.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void onEnterSiegeWorld(Player player) {
@@ -654,7 +617,6 @@ public class SiegeService {
 	/**
 	 * 天气变化时的攻城侧处理钩子。
 	 * Hook for siege-side handling when weather changes.
-	 *
 	 * @param entry 天气条目 / weather entry
 	 */
 	public void onWeatherChanged(WeatherEntry entry) {
@@ -663,7 +625,6 @@ public class SiegeService {
 	/**
 	 * 将地点 ID 映射为要塞 ID。
 	 * Maps a location id to its fortress id.
-	 *
 	 * location id
 	 * fortress id
 	 */
@@ -689,8 +650,7 @@ public class SiegeService {
 	/**
 	 * 攻城启动任务，到点触发指定要塞攻城。
 	 * Siege start runnable triggering a fortress siege when due.
-	 *
-	 * @param locationId 据点 ID / location id
+	 * 据点 ID / location id
 	 */
 	public record SiegeStartRunnable(int locationId) implements Runnable {
 		@Override

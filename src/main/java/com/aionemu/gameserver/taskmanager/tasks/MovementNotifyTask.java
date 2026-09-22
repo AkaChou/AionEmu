@@ -34,9 +34,6 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
      * -- SETTER --
      *  注入 Spring 实例提供者。
      *  Inject the Spring instance provider.
-     *
-     * @param provider 实例提供者 / Provider
-
      */
 	@Setter
     private static volatile ObjectProvider<MovementNotifyTask> instanceProvider;
@@ -56,11 +53,9 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
-	 *
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
-	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
@@ -94,7 +89,6 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 	/**
 	 * 对存活生物的已知 NPC 广播 {@link AIEventType#CREATURE_MOVED}（部分地图限流）。
 	 * Broadcast {@link AIEventType#CREATURE_MOVED} to known NPCs of a living creature (rate-limited on some maps).
-	 *
 	 * @param creature 移动中的生物 / Moving creature
 	 */
 	@Override
@@ -126,7 +120,6 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 	/**
 	 * 导出各地图移动广播峰值诊断行。
 	 * Dump diagnostic lines of per-map movement-broadcast peaks.
-	 *
 	 * @return 诊断文本行 / Diagnostic text lines
 	 */
 	public String[] dumpBroadcastStats() {
@@ -144,7 +137,6 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 	/**
 	 * 耗时统计方法名。
 	 * Method name for runtime stats.
-	 *
 	 * @return 方法名 / Method name
 	 */
 	@Override
@@ -155,7 +147,6 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 	/**
 	 * 获取或创建指定地图的广播统计槽位。
 	 * Get or create the broadcast-stats slot for a map.
-	 *
 	 * @param worldId 世界地图 ID / World map id
 	 * @return 统计数组 / Stats array
 	 */
@@ -191,7 +182,6 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 		/**
 		 * 访问一个 NPC：若仍存活则触发 {@link AIEventType#CREATURE_MOVED}。
 		 * Visit one NPC: if still alive, fire {@link AIEventType#CREATURE_MOVED}.
-		 *
 		 * @param object 目标 NPC / Target NPC
 		 * @param owner  移动源对象 / Moving owner object
 		 */

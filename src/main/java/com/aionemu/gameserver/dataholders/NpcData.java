@@ -22,7 +22,6 @@ import lombok.Getter;
  * Every {@link Npc} instance represents a class of NPCs sharing the same id, name,
  * items and statistics. That class data is defined in {@link NpcTemplate} and uniquely
  * identified by npc id.
- *
  * @author Luno
  */
 @Getter
@@ -51,7 +50,6 @@ public class NpcData {
 	/**
 	 * 返回已加载的 NPC 模板数量。
 	 * Returns the number of loaded NPC templates.
-	 *
 	 * @return 已加载的NPC 模板数量 / Returns the number of loaded NPC templates.
 	 */
 	public int size() {
@@ -61,7 +59,6 @@ public class NpcData {
 	/**
 	 * 按 ID 返回 NPC 模板。
 	 * Returns the {@link NpcTemplate} for the given id.
-	 *
 	 * @param id NPC 模板 ID / npc template id
 	 * @return 模板或 null / template or null
 	 */

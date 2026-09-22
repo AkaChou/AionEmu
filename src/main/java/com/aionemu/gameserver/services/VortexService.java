@@ -102,7 +102,6 @@ public class VortexService {
 	/**
 	 * 启动指定 ID 的次元入侵。
 	 * Starts the dimensional invasion for the given id.
-	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void startInvasion(final int id) {
@@ -124,7 +123,6 @@ public class VortexService {
 	/**
 	 * 停止指定 ID 的次元入侵。
 	 * Stops the dimensional invasion for the given id.
-	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void stopInvasion(int id) {
@@ -138,7 +136,6 @@ public class VortexService {
 	/**
 	 * 按状态刷出漩涡相关 NPC/裂隙。
 	 * Spawns vortex-related NPCs/rifts according to the given state.
-	 *
 	 * location
 	 * @param state 状态类型 / state type
 	 */
@@ -161,7 +158,6 @@ public class VortexService {
 		/**
 	 * 向魔族广播通往 Theobomos 的漩涡开启消息。
 	 * Broadcasts Theobomos vortex-open message to Asmodians.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -184,7 +180,6 @@ public class VortexService {
 	/**
 	 * 向天族广播通往 Brusthonin 的漩涡开启消息。
 	 * Broadcasts Brusthonin vortex-open message to Elyos.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -207,7 +202,6 @@ public class VortexService {
 		/**
 	 * 广播次元漩涡关闭倒计时消息。
 	 * Broadcasts dimensional vortex close-countdown messages.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -265,7 +259,6 @@ public class VortexService {
 	/**
 	 * 清除地点已刷出的 NPC。
 	 * Despawns NPCs previously spawned at the location.
-	 *
 	 * location
 	 */
 	public void despawn(VortexLocation loc) {
@@ -287,7 +280,6 @@ public class VortexService {
 	/**
 	 * 判断指定入侵是否进行中。
 	 * Checks whether the invasion with the given id is in progress.
-	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否进行中 / whether in progress
 	 */
@@ -298,7 +290,6 @@ public class VortexService {
 	/**
 	 * 获取进行中的入侵实例映射。
 	 * Returns the map of active invasion instances.
-	 *
 	 * @return 活动实例映射 / active instances map
 	 */
 	public Map<Integer, DimensionalVortex<?>> getActiveInvasions() {
@@ -308,7 +299,6 @@ public class VortexService {
 	/**
 	 * 获取活动持续时长（小时）。
 	 * Returns the event duration in hours.
-	 *
 	 * @return 持续小时数 / duration hours
 	 */
 	public int getDuration() {
@@ -318,7 +308,6 @@ public class VortexService {
 	/**
 	 * 从活动入侵中移除防守方玩家。
 	 * Removes a defender player from active invasions.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void removeDefenderPlayer(Player player) {
@@ -333,7 +322,6 @@ public class VortexService {
 	/**
 	 * 从活动入侵中移除入侵方玩家。
 	 * Removes an invader player from active invasions.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void removeInvaderPlayer(Player player) {
@@ -348,7 +336,6 @@ public class VortexService {
 	/**
 	 * 判断玩家是否为当前入侵方成员。
 	 * Checks whether the player is an invader in an active invasion.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否入侵方 / whether invader
 	 */
@@ -364,7 +351,6 @@ public class VortexService {
 	/**
 	 * 判断玩家是否位于漩涡区域内。
 	 * Checks whether the player is inside a vortex zone.
-	 *
 	 * @param player 玩家 / player
 	 * @return 是否在区域内 / whether inside zone
 	 */
@@ -382,7 +368,6 @@ public class VortexService {
 	/**
 	 * 按裂隙 NPC ID 解析对应漩涡地点。
 	 * Resolves the vortex location from a rift NPC id.
-	 *
 	 * rift npc id
 	 * location
 	 */
@@ -393,7 +378,6 @@ public class VortexService {
 	/**
 	 * 按世界 ID 解析对应漩涡地点。
 	 * Resolves the vortex location from a world id.
-	 *
 	 * 世界 ID / world id
 	 * location
 	 */
@@ -410,7 +394,6 @@ public class VortexService {
 	/**
 	 * 按 ID 获取漩涡地点。
 	 * Returns the vortex location by id.
-	 *
 	 * @param id 地点 ID / location id
 	 * location
 	 */
@@ -421,7 +404,6 @@ public class VortexService {
 	/**
 	 * 获取全部漩涡地点。
 	 * Returns all vortex locations.
-	 *
 	 * locations map
 	 */
 	public Map<Integer, VortexLocation> getVortexLocations() {
@@ -431,7 +413,6 @@ public class VortexService {
 	/**
 	 * 校验登录位置；非法入侵方坐标会被送回家园点。
 	 * Validates login position; illegal invader coords are moved to home point.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public void validateLoginZone(Player player) {
@@ -453,7 +434,6 @@ public class VortexService {
 	/**
 	 * 获取服务单例（优先 Spring Provider）。
 	 * Returns the service singleton (prefers Spring provider).
-	 *
 	 * service instance
 	 */
 	public static VortexService getInstance() {
@@ -467,7 +447,6 @@ public class VortexService {
 	/**
 	 * 注入 Spring 的实例提供者。
 	 * Sets the Spring instance provider.
-	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<VortexService> instanceProvider) {

@@ -10,7 +10,6 @@ import java.nio.ByteOrder;
 /**
  * 内嵌模式下 GameServer 与 LoginServer 的进程内直连通道。
  * In-process direct channel between GameServer and LoginServer for embedded mode.
- *
  * <p>通道仅短路本地 TCP/握手开销，封包序列化、opcode 分发与认证状态机保持不变。
  * The channel only removes local socket/handshake overhead; packet encoding, opcode dispatch,
  * and authentication state machines stay unchanged.</p>
@@ -28,7 +27,6 @@ public final class DirectMemoryLoginChannel implements LoginMessageDispatcher {
     /**
      * 打开进程内双向通道并触发 GS 认证。
      * Opens the in-process bidirectional channel and starts GS authentication.
-     *
      * @return 直连通道 / direct channel
      * @throws IllegalStateException 连接创建失败 / connection creation failed
      */
@@ -80,7 +78,6 @@ public final class DirectMemoryLoginChannel implements LoginMessageDispatcher {
     /**
      * 把源端写出缓冲中的整帧直接交给对端处理。
      * Hand whole frames from the source write buffer directly to the peer.
-     *
      * <p>{@code writeData} 完成后缓冲已处于读模式（position=0、limit=帧长），因此禁止再次 flip；
      * 载荷视图必须与 socket 读缓冲一致使用小端序；投递给对端时必须切到接收方自己的服务上下文，
      * 否则对端的状态机与延迟任务会带着发送方上下文运行（socket 模式下每端各自在自身上下文中处理入站）。
@@ -88,7 +85,6 @@ public final class DirectMemoryLoginChannel implements LoginMessageDispatcher {
      * be flipped again; the payload view must be little-endian to match the socket read buffer; and delivery
      * must switch to the receiving side's service context, otherwise the peer's state machine and delayed tasks
      * inherit the sender's context (in socket mode each side handles inbound frames in its own context).</p>
-     *
      * @param source 写出端 / write side
      * @param target 接收端 / receiving side
      */
@@ -306,7 +302,6 @@ public final class DirectMemoryLoginChannel implements LoginMessageDispatcher {
     /**
      * 在端点自身服务上下文中执行关闭清理。
      * Runs an endpoint's close cleanup inside its own service context.
-     *
      * @param endpoint 待清理端点 / endpoint to clean up
      */
     static void cleanupEndpoint(DirectEndpoint endpoint) {

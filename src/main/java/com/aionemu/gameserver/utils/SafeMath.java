@@ -3,7 +3,6 @@ package com.aionemu.gameserver.utils;
 /**
  * 带溢出检测的安全加减乘运算。
  * Safe add/multiply operations with overflow detection.
- *
  * @author MrPoke
  */
 public class SafeMath {
@@ -11,7 +10,6 @@ public class SafeMath {
 	/**
 	 * 安全的 int 加法，溢出时抛出 {@link OverfowException}。
 	 * Safe int addition; throws {@link OverfowException} on overflow.
-	 *
 	 * @param source 左操作数 / Left operand
 	 * @param value 右操作数 / Right operand
 	 * @return 和 / Sum
@@ -28,7 +26,6 @@ public class SafeMath {
 	/**
 	 * 安全的 long 加法，溢出时抛出 {@link OverfowException}。
 	 * Safe long addition; throws {@link OverfowException} on overflow.
-	 *
 	 * @param source 左操作数 / Left operand
 	 * @param value 右操作数 / Right operand
 	 * @return 和 / Sum
@@ -44,7 +41,6 @@ public class SafeMath {
 	/**
 	 * 安全的 int 乘法，溢出时抛出 {@link OverfowException}。
 	 * Safe int multiplication; throws {@link OverfowException} on overflow.
-	 *
 	 * @param source 左操作数 / Left operand
 	 * @param value 右操作数 / Right operand
 	 * @return 积 / Product
@@ -61,7 +57,6 @@ public class SafeMath {
 	/**
 	 * 安全的 long 乘法，溢出时抛出 {@link OverfowException}。
 	 * Safe long multiplication; throws {@link OverfowException} on overflow.
-	 *
 	 * @param a 被乘数 / Left operand
 	 * @param b 乘数 / Right operand
 	 * @return 积 / Product

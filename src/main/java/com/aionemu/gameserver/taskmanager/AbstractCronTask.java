@@ -17,7 +17,6 @@ import lombok.Getter;
 /**
  * 基于 Cron 表达式的服务器周期任务抽象基类。
  * Abstract base for server periodic tasks driven by a Cron expression.
- *
  * <p>从服务器变量加载上次运行时间，按 Cron 调度下次执行，并在运行后回写下次时间。
  * Loads last run time from server variables, schedules the next run by Cron, and stores the next run time after execution.</p>
  */
@@ -51,7 +50,6 @@ public abstract class AbstractCronTask implements Runnable {
 	/**
 	 * 获取距离应运行时刻的延迟（毫秒）；0 表示应立即处理。
 	 * Delay until the task should run (ms); 0 means it should be handled now.
-	 *
 	 * @return 延迟毫秒数 / Delay in milliseconds
 	 */
 	abstract protected long getRunDelay();
@@ -73,7 +71,6 @@ public abstract class AbstractCronTask implements Runnable {
 	/**
 	 * 服务器变量键名，用于持久化下次运行时间。
 	 * Server-variable key used to persist the next run time.
-	 *
 	 * @return 服务器变量键名 / the variable name
 	 */
 	abstract protected String getServerTimeVariable();
@@ -94,7 +91,6 @@ public abstract class AbstractCronTask implements Runnable {
 	/**
 	 * 若构造时已到点，是否允许立即执行一次。
 	 * Whether an immediate run is allowed when already due at construction.
-	 *
 	 * @return 若 allowed 则为 true / true if allowed
 	 */
 	abstract protected boolean canRunOnInit();
@@ -109,7 +105,6 @@ public abstract class AbstractCronTask implements Runnable {
 	/**
 	 * 使用 Cron 表达式初始化任务并安排下次调度。
 	 * Initialize with a Cron expression and schedule the next run.
-	 *
 	 * @param cronExpression Cron 表达式 / the Cron expression
 	 * @throws ParseException 表达式无效时 / when the expression is invalid
 	 * @throws NullPointerException 表达式为 null 时 / when the expression is null

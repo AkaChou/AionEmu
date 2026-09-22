@@ -27,7 +27,6 @@ import java.util.concurrent.ScheduledFuture;
 /**
  * 混乱效果：使目标失去自主控制并随机移动。
  * Confuse effect: removes target control and forces random movement.
- *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -37,7 +36,6 @@ public class ConfuseEffect extends EffectTemplate {
 	/**
 	 * 移除隐身并将混乱加入目标效果控制器。
 	 * Removes hide effects and attaches confuse to the target controller.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -53,7 +51,6 @@ public class ConfuseEffect extends EffectTemplate {
 	/**
 	 * 按混乱抗性计算是否命中。
 	 * Calculates hit using confuse resistance.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -64,7 +61,6 @@ public class ConfuseEffect extends EffectTemplate {
 	/**
 	 * 启动混乱并周期性选择随机移动方向。
 	 * Starts confuse and periodically chooses a random movement direction.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -120,7 +116,6 @@ public class ConfuseEffect extends EffectTemplate {
         /**
          * 随机选一个方向并在目标点可站立时启动移动。
          * Picks a random direction and starts moving when its destination is standable.
-         *
          * @return 已启动移动返回 true / true when a move was started
          */
         private boolean moveToRandomDirection() {

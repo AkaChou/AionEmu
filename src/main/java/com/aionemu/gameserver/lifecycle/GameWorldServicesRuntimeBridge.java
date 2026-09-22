@@ -38,7 +38,6 @@ public class GameWorldServicesRuntimeBridge {
     /**
      * 注入 GeoService 提供者。
      * Inject the GeoService provider.
-     *
      * @param geoServiceProvider GeoService 提供者 / GeoService provider
      */
     @Autowired(required = false)
@@ -49,7 +48,6 @@ public class GameWorldServicesRuntimeBridge {
     /**
      * 注入 PathService 提供者。
      * Inject the PathService provider.
-     *
      * @param pathServiceProvider PathService 提供者 / PathService provider
      */
     @Autowired(required = false)
@@ -60,7 +58,6 @@ public class GameWorldServicesRuntimeBridge {
     /**
      * 注入 DropRegistrationService 提供者。
      * Inject the DropRegistrationService provider.
-     *
      * @param dropRegistrationServiceProvider DropRegistrationService 提供者 / DropRegistrationService provider
      */
     @Autowired(required = false)
@@ -71,7 +68,6 @@ public class GameWorldServicesRuntimeBridge {
     /**
      * 解析 GeoService：优先 Spring，否则回退。
      * Resolve GeoService: prefer Spring, otherwise fallback.
-     *
      * @return GeoService 实例 / GeoService instance
      */
     public GeoService geoService() {
@@ -84,7 +80,6 @@ public class GameWorldServicesRuntimeBridge {
     /**
      * 解析 PathService：优先 Spring，否则回退。
      * Resolve PathService: prefer Spring, otherwise fallback.
-     *
      * @return PathService 实例 / PathService instance
      */
     public PathService pathService() {
@@ -97,7 +92,6 @@ public class GameWorldServicesRuntimeBridge {
     /**
      * 解析 DropRegistrationService：优先 Spring，否则回退。
      * Resolve DropRegistrationService: prefer Spring, otherwise fallback.
-     *
      * @return DropRegistrationService 实例 / DropRegistrationService instance
      */
     public DropRegistrationService dropRegistrationService() {
@@ -110,7 +104,6 @@ public class GameWorldServicesRuntimeBridge {
     /**
      * 创建新的 GameServer 实例。
      * Create a new GameServer instance.
-     *
      * @return 新的 GameServer / New GameServer
      */
     public GameServer createGameServer() {
@@ -120,7 +113,6 @@ public class GameWorldServicesRuntimeBridge {
     /**
      * 激活给定的 GameServer。
      * Activate the given GameServer.
-     *
      * @param server 待激活的服务器 / Server to activate
      */
     public void activateGameServer(GameServer server) {

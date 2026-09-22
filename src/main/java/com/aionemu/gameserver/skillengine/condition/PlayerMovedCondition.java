@@ -11,7 +11,6 @@ import lombok.Getter;
 /**
  * 玩家移动条件：校验施法者移动状态是否与 allow 配置一致。
  * Player moved condition: validates the effector move state matches the allow configuration.
- *
  * @author ATracer
  */
 @Getter
@@ -22,8 +21,7 @@ public class PlayerMovedCondition extends Condition {
 	/**
 	 * 获取是否允许移动施放。
 	 * Gets whether moving is allowed for casting.
-	 *
-	 * @return 允许标记 / allow flag
+	 * 允许标记 / allow flag
 	 */
 	@XmlAttribute(required = true)
 	protected boolean allow;
@@ -31,7 +29,6 @@ public class PlayerMovedCondition extends Condition {
 	/**
 	 * 校验技能环境是否满足本条件。
 	 * Validates whether the skill environment satisfies this condition.
-	 *
 	 * @param skill 技能环境 / skill environment
 	 * @return 是否有效 / whether valid
 	 */

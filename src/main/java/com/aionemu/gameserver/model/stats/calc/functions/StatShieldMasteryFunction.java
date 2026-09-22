@@ -7,7 +7,6 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
 /**
  * 属性护盾 Mastery 函数模型。
  * Stat Shield Mastery Function model.
- *
  * @author VladimirZ
  */
 public class StatShieldMasteryFunction extends StatRateFunction {

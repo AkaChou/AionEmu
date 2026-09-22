@@ -103,7 +103,6 @@ public enum ItemSlot {
 	/**
 	 * 判断槽位掩码是否为埃斯蒂玛（创造点）槽位。
 	 * Returns whether the slot mask is an Estima (CP) slot.
-	 *
 	 * @param slot 槽位掩码 / slot mask
 	 * @return 是否埃斯蒂玛槽位 / whether estisma
 	 */

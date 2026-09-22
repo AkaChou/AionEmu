@@ -11,10 +11,8 @@ import lombok.RequiredArgsConstructor;
 /**
  * 种族对抗（RVR）活动抽象基类。
  * Abstract base for RVR (Race vs Race) world events.
- *
  * <p>封装启动/停止幂等守卫与按状态刷怪/清怪。
  * Encapsulates idempotent start/stop guards and spawn/despawn by state type.</p>
- *
  * @author Rinzler (Encom)
  * @param <RL> RVR 地点类型 / RVR location type
  */
@@ -26,8 +24,6 @@ public abstract class Rvrlf3df3<RL extends RvrLocation> {
 	/**
 	 * 获取绑定地点。
 	 * Returns the bound location.
-	 *
-	 * @return 绑定地点 / the bound location
 	 */
 	private final RL rvrLocation;
 	private final AtomicBoolean finished = new AtomicBoolean();
@@ -76,7 +72,6 @@ public abstract class Rvrlf3df3<RL extends RvrLocation> {
 	/**
 	 * 按状态类型刷新刷怪。
 	 * Spawns entities by state type.
-	 *
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(RvrStateType type) {
@@ -94,7 +89,6 @@ public abstract class Rvrlf3df3<RL extends RvrLocation> {
 	/**
 	 * 是否已结束。
 	 * Whether the event has finished.
-	 *
 	 * @return 已结束则为 true / true if finished
 	 */
 	public boolean isFinished() {
@@ -104,7 +98,6 @@ public abstract class Rvrlf3df3<RL extends RvrLocation> {
 	/**
 	 * 获取地点 ID。
 	 * Returns the location id.
-	 *
 	 * @return 地点 ID / location id
 	 */
 	public int getRvrLocationId() {

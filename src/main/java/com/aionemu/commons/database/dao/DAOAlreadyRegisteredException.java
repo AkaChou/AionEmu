@@ -5,11 +5,9 @@ import lombok.NoArgsConstructor;
 /**
  * DAO 已注册异常
  * DAO Already Registered Exception
- *
  * 当尝试注册一个已经注册过的 DAO 实现类时抛出此异常。
  * This exception is thrown when attempting to register a DAO implementation
  * that has already been registered.
- *
  * @author SoulKeeper
  * @author Saelya
  */
@@ -25,7 +23,6 @@ public class DAOAlreadyRegisteredException extends DAOException {
     /**
      * 使用指定的错误消息构造异常
      * Constructs exception with specified message
-     *
      * @param message 错误消息 / Error message
      */
     public DAOAlreadyRegisteredException(String message) {
@@ -35,7 +32,6 @@ public class DAOAlreadyRegisteredException extends DAOException {
     /**
      * 使用指定的错误消息和原因构造异常
      * Constructs exception with specified message and cause
-     *
      * @param message 错误消息 / Error message
      * @param cause 异常原因 / Cause of exception
      */
@@ -46,7 +42,6 @@ public class DAOAlreadyRegisteredException extends DAOException {
     /**
      * 使用指定的原因构造异常
      * Constructs exception with specified cause
-     *
      * @param cause 异常原因 / Cause of exception
      */
     public DAOAlreadyRegisteredException(Throwable cause) {

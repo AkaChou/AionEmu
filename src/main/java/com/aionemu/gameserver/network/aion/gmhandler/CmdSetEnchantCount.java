@@ -10,7 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
 /**
  * GM 指令：设置物品强化等级或赋能等级。
  * GM command handler that sets an item's enchant or authorize level.
- *
  * @author Angry Catster
  */
 public class CmdSetEnchantCount extends AbstractGMHandler {
@@ -18,7 +17,6 @@ public class CmdSetEnchantCount extends AbstractGMHandler {
 	/**
 	 * 创建处理器并立即设置强化/赋能等级。
 	 * Creates the handler and immediately sets enchant/authorize levels.
-	 *
 	 * @param admin 执行指令的管理员 / the admin executing the command
 	 * @param params 物品对象 ID、强化增量、赋能增量 / item object id, enchant delta, authorize delta
 	 */

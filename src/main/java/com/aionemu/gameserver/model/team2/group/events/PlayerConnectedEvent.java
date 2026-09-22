@@ -14,7 +14,6 @@ import lombok.AllArgsConstructor;
 /**
  * 玩家重连事件（团队2）。
  * Player Connected Event for team 2 logic.
- *
  * @author ATracer
  */
 @AllArgsConstructor

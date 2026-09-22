@@ -23,7 +23,6 @@ import lombok.Getter;
  * Initial data table for new players, including class starter items and race spawn locations.
  * <br/>
  * Created on: 09.08.2009 18:20:41
- *
  * @author Aquanox
  */
 @XmlRootElement(name = "player_initial_data")
@@ -56,7 +55,6 @@ public class PlayerInitialData {
 	/**
 	 * 按职业获取玩家创建数据。
 	 * Returns player creation data for the given class.
-	 *
 	 * @param cls 玩家职业 / player class
 	 * @return 创建数据，不存在则为 null / creation data or null
 	 */
@@ -67,7 +65,6 @@ public class PlayerInitialData {
 	/**
 	 * 返回已加载的职业创建数据数量。
 	 * Returns the number of loaded class creation entries.
-	 *
 	 * @return 已加载的职业创建条目数量 / Returns the number of loaded class creation entries.
 	 */
 	public int size() {
@@ -77,7 +74,6 @@ public class PlayerInitialData {
 	/**
 	 * 按阵营获取出生坐标。
 	 * Returns the spawn location for the given race.
-	 *
 	 * @param race 阵营 / race
 	 * @return 出生坐标数据 / spawn location data
 	 * @throws IllegalArgumentException 不支持的阵营 / if race is unsupported
@@ -112,7 +108,6 @@ public class PlayerInitialData {
 		/**
 		 * 返回该职业不可变的初始物品列表。
 		 * Returns the unmodifiable starter item list for this class.
-		 *
 		 * @return 初始物品列表 / starter item list
 		 */
 		public List<ItemType> getItems() {
@@ -138,8 +133,6 @@ public class PlayerInitialData {
 			 * -- GETTER --
 			 *  返回物品数量。
 			 *  Returns the item count.
-			 *
-			 * @return 物品数量 / Returns the item count.
 			 */
 			@Getter
 			@XmlAttribute(name = "count")
@@ -148,7 +141,6 @@ public class PlayerInitialData {
 			/**
 			 * 返回该物品对应的物品模板。
 			 * Returns the item template for this entry.
-			 *
 			 * @return 该条目的物品模板 / Returns the item template for this entry.
 			 */
 			public ItemTemplate getTemplate() {
@@ -181,8 +173,6 @@ public class PlayerInitialData {
 		 * -- GETTER --
 		 *  返回地图 ID。
 		 *  Returns the map id.
-		 *
-		 * @return 地图 ID / Returns the map id.
 		 */
 		@XmlAttribute(name = "map_id")
 		private int mapId;
@@ -214,8 +204,6 @@ public class PlayerInitialData {
 		 * -- GETTER --
 		 *  返回朝向。
 		 *  Returns the heading.
-		 *
-		 * @return 朝向 / heading
 		 */
 		@XmlAttribute(name = "heading")
 		private byte heading;

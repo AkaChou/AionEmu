@@ -5,7 +5,6 @@ import com.aionemu.commons.configuration.Property;
 /**
  * GM 管理面板各功能所需的最低权限等级配置。
  * Minimum access-level requirements for GM administration panel features.
- *
  * @author Hoo
  */
 public class PanelConfig {

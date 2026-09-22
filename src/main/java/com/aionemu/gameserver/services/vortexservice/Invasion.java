@@ -21,7 +21,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 次元漩涡入侵默认实现：攻防同盟、Kisk 清理与入队/踢出。
  * Default dimensional-vortex invasion: offence/defence alliances, kisk cleanup, join/kick.
- *
  * @author Rinzler (Encom)
  */
 public class Invasion extends DimensionalVortex<VortexLocation> {
@@ -33,7 +32,6 @@ public class Invasion extends DimensionalVortex<VortexLocation> {
 	/**
 	 * 绑定漩涡地点。
 	 * Binds the vortex location.
-	 *
 	 * @param vortex 漩涡地点 / vortex location
 	 */
 	public Invasion(VortexLocation vortex) {
@@ -76,7 +74,6 @@ public class Invasion extends DimensionalVortex<VortexLocation> {
 	/**
 	 * 将玩家加入攻/守方并维护对应同盟。
 	 * Adds a player to invader/defender side and maintains the matching alliance.
-	 *
 	 * @param player 玩家 / player
 	 * @param isInvader 是否攻方 / whether invader
 	 */
@@ -112,7 +109,6 @@ public class Invasion extends DimensionalVortex<VortexLocation> {
 	/**
 	 * 将玩家踢出并在攻方场景内时传送回家点。
 	 * Kicks a player and teleports home when still inside the invasion world as invader.
-	 *
 	 * @param player 玩家 / player
 	 * @param isInvader 是否攻方 / whether invader
 	 */
@@ -145,7 +141,6 @@ public class Invasion extends DimensionalVortex<VortexLocation> {
 	/**
 	 * 向守方玩家弹出加入同盟确认；同意后入队。
 	 * Prompts a defender to join the defence alliance; accepts join on confirm.
-	 *
 	 * @param defender 守方玩家 / defender
 	 */
 	@Override
@@ -182,7 +177,6 @@ public class Invasion extends DimensionalVortex<VortexLocation> {
 	/**
 	 * 拒绝对话处理（恒为 true）。
 	 * Deny-dialog handler (always true).
-	 *
 	 * @param player 玩家 / player
 	 * @return 恒为 true / always true
 	 */
@@ -193,7 +187,6 @@ public class Invasion extends DimensionalVortex<VortexLocation> {
 	/**
 	 * 将攻方玩家直接加入攻方列表。
 	 * Directly registers an invader player.
-	 *
 	 * @param invader 攻方玩家 / invader
 	 */
 	@Override

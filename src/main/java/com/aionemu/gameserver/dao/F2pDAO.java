@@ -6,7 +6,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * 免费转付费（F2P）状态数据访问对象。
  * Free-to-play (F2P) status data access object.
- *
  * @author Ranastic (Encom)
  * @author Ace
  */
@@ -14,7 +13,6 @@ public abstract class F2pDAO implements DAO {
 	/**
 	 * 加载玩家的 F2P 信息。
 	 * Loads F2P info for a player.
-	 *
 	 * @param player 玩家 / player
 	 */
 	public abstract void loadF2pInfo(Player player);
@@ -22,7 +20,6 @@ public abstract class F2pDAO implements DAO {
 	/**
 	 * 存储玩家的 F2P 时间。
 	 * Stores F2P time for a player.
-	 *
 	 * @param playerId 玩家 ID / player ID
 	 * @param time F2P 时间 / F2P time
 	 * @return 是否成功 / whether successful
@@ -32,7 +29,6 @@ public abstract class F2pDAO implements DAO {
 	/**
 	 * 更新玩家的 F2P 时间。
 	 * Updates F2P time for a player.
-	 *
 	 * @param playerId 玩家 ID / player ID
 	 * @param time F2P 时间 / F2P time
 	 * @return 是否成功 / whether successful
@@ -42,7 +38,6 @@ public abstract class F2pDAO implements DAO {
 	/**
 	 * 删除玩家的 F2P 记录。
 	 * Deletes F2P record for a player.
-	 *
 	 * @param playerId 玩家 ID / player ID
 	 * @return 是否成功 / whether successful
 	 */
@@ -51,7 +46,6 @@ public abstract class F2pDAO implements DAO {
 	/**
 	 * 返回本 DAO 的唯一类名标识。
 	 * Returns the unique class-name identifier for this DAO.
-	 *
 	 * @return 类名 / class name
 	 */
 	public String getClassName() {

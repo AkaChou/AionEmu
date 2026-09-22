@@ -21,7 +21,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Beshmundir Temple 副本 NPC AI：Forgotten Store Room（@AIName "forgottenstoreroom"），继承 NpcAI2。
  * Beshmundir Temple instance NPC AI: Forgotten Store Room (@AIName "forgottenstoreroom"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("forgottenstoreroom")

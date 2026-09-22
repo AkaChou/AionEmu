@@ -43,7 +43,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 拷贝构造。
 	 * Copy constructor.
-	 *
 	 * @param vector2f 源向量 / Source vector
 	 */
 	public Vector2f(Vector2f vector2f) {
@@ -54,7 +53,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 设置分量。
 	 * Sets the components.
-	 *
 	 * @param x X 分量 / X component
 	 * @param y Y 分量 / Y component
 	 * @return 本向量 / This vector
@@ -68,7 +66,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 从另一向量拷贝分量。
 	 * Copies components from another vector.
-	 *
 	 * @param vec 源向量 / Source vector
 	 * @return 本向量 / This vector
 	 */
@@ -81,7 +78,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 向量加法，返回新向量。
 	 * Adds another vector and returns a new vector.
-	 *
 	 * @param vec 另一向量 / Other vector
 	 * @return 结果向量；{@code vec} 为 null 时返回 null / Result vector; null if {@code vec} is null
 	 */
@@ -96,7 +92,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 就地向量加法。
 	 * Adds another vector in place.
-	 *
 	 * @param vec 另一向量 / Other vector
 	 * @return 本向量；{@code vec} 为 null 时返回 null / This vector; null if {@code vec} is null
 	 */
@@ -113,7 +108,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 就地加上给定分量。
 	 * Adds the given components in place.
-	 *
 	 * @param addX X 增量 / X increment
 	 * @param addY Y 增量 / Y increment
 	 * @return 本向量 / This vector
@@ -127,7 +121,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 向量加法，结果写入指定存储向量。
 	 * Adds another vector and stores the result.
-	 *
 	 * @param vec 另一向量 / Other vector
 	 * @param result 结果存储；为 null 时新建 / Result store; created if null
 	 * @return 结果向量；{@code vec} 为 null 时返回 null / Result vector; null if {@code vec} is null
@@ -148,7 +141,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 点积。
 	 * Computes the dot product.
-	 *
 	 * @param vec 另一向量 / Other vector
 	 * @return 点积；{@code vec} 为 null 时返回 0 / Dot product; 0 if {@code vec} is null
 	 */
@@ -163,7 +155,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 二维叉积（结果为 Z 轴三维向量）。
 	 * 2D cross product (result is a 3D vector along Z).
-	 *
 	 * @param v 另一向量 / Other vector
 	 * @return 叉积结果 / Cross-product result
 	 */
@@ -174,7 +165,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 二维行列式（有向面积）：x·vy − y·vx。
 	 * 2D determinant (signed area): x·vy − y·vx.
-	 *
 	 * @param v 另一向量 / Other vector
 	 * @return 行列式值 / Determinant value
 	 */
@@ -185,7 +175,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 向目标向量线性插值（就地）。
 	 * Linearly interpolates toward a target vector in place.
-	 *
 	 * @param finalVec 目标向量 / Target vector
 	 * @param changeAmnt 插值因子 [0,1] / Interpolation factor [0,1]
 	 * @return 本向量 / This vector
@@ -199,7 +188,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 在起止向量之间线性插值，结果写入本向量。
 	 * Linearly interpolates between two vectors into this.
-	 *
 	 * @param beginVec 起始向量 / Start vector
 	 * @param finalVec 结束向量 / End vector
 	 * @param changeAmnt 插值因子 [0,1] / Interpolation factor [0,1]
@@ -214,7 +202,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 判断向量是否有效（非 null、非 NaN、非无穷）。
 	 * Checks whether a vector is valid (non-null, non-NaN, non-infinite).
-	 *
 	 * @param vector 待检查向量 / Vector to check
 	 * @return 若 valid 则为 true / True if valid
 	 */
@@ -231,7 +218,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 向量长度（模）。
 	 * Vector length (magnitude).
-	 *
 	 * @return 长度 / Length
 	 */
 	public float length() {
@@ -241,7 +227,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 长度平方。
 	 * Squared length.
-	 *
 	 * @return 长度平方 / Squared length
 	 */
 	public float lengthSquared() {
@@ -251,7 +236,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 到另一向量的距离平方。
 	 * Squared distance to another vector.
-	 *
 	 * @param v 另一向量 / Other vector
 	 * @return 距离平方 / Squared distance
 	 */
@@ -264,7 +248,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 到指定坐标的距离平方。
 	 * Squared distance to the given coordinates.
-	 *
 	 * @param otherX 目标 X / Target X
 	 * @param otherY 目标 Y / Target Y
 	 * @return 距离平方 / Squared distance
@@ -278,7 +261,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 到另一向量的欧氏距离。
 	 * Euclidean distance to another vector.
-	 *
 	 * @param v 另一向量 / Other vector
 	 * @return 距离 / Distance
 	 */
@@ -289,7 +271,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 标量乘法，返回新向量。
 	 * Multiplies by a scalar and returns a new vector.
-	 *
 	 * @param scalar 标量 / Scalar
 	 * @return 结果向量 / Result vector
 	 */
@@ -300,7 +281,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 就地标量乘法。
 	 * Multiplies by a scalar in place.
-	 *
 	 * @param scalar 标量 / Scalar
 	 * @return 本向量 / This vector
 	 */
@@ -313,7 +293,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 就地分量乘法。
 	 * Multiplies component-wise in place.
-	 *
 	 * @param vec 另一向量 / Other vector
 	 * @return 本向量；{@code vec} 为 null 时返回 null / This vector; null if {@code vec} is null
 	 */
@@ -330,7 +309,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 标量乘法，结果写入指定存储向量。
 	 * Multiplies by a scalar and stores the result.
-	 *
 	 * @return 标量 / Scalar
 	 * @param product 结果存储；为 null 时新建 / Result store; created if null
 	 * @param scalar 结果向量 / Result vector
@@ -347,7 +325,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 标量除法，返回新向量。
 	 * Divides by a scalar and returns a new vector.
-	 *
 	 * @param scalar 标量 / Scalar
 	 * @return 结果向量 / Result vector
 	 */
@@ -358,7 +335,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 就地标量除法。
 	 * Divides by a scalar in place.
-	 *
 	 * @param scalar 标量 / Scalar
 	 * @return 本向量 / This vector
 	 */
@@ -371,7 +347,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 取反，返回新向量。
 	 * Negates and returns a new vector.
-	 *
 	 * @return 取反后的新向量 / Negated new vector
 	 */
 	public Vector2f negate() {
@@ -381,7 +356,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 就地取反。
 	 * Negates in place.
-	 *
 	 * @return 本向量 / This vector
 	 */
 	public Vector2f negateLocal() {
@@ -393,7 +367,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 向量减法，返回新向量。
 	 * Subtracts another vector and returns a new vector.
-	 *
 	 * @param vec 另一向量 / Other vector
 	 * @return 结果向量 / Result vector
 	 */
@@ -404,7 +377,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 向量减法，结果写入指定存储向量。
 	 * Subtracts another vector and stores the result.
-	 *
 	 * @param vec 另一向量 / Other vector
 	 * @param store 结果存储；为 null 时新建 / Result store; created if null
 	 * @return 结果向量 / Result vector
@@ -421,7 +393,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 减去给定分量，返回新向量。
 	 * Subtracts the given components and returns a new vector.
-	 *
 	 * @param valX 要减去的 X / X to subtract
 	 * @param valY 要减去的 Y / Y to subtract
 	 * @return 结果向量 / Result vector
@@ -433,7 +404,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 就地向量减法。
 	 * Subtracts another vector in place.
-	 *
 	 * @param vec 另一向量 / Other vector
 	 * @return 本向量；{@code vec} 为 null 时返回 null / This vector; null if {@code vec} is null
 	 */
@@ -450,7 +420,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 就地减去给定分量。
 	 * Subtracts the given components in place.
-	 *
 	 * @param valX 要减去的 X / X to subtract
 	 * @param valY 要减去的 Y / Y to subtract
 	 * @return 本向量 / This vector
@@ -464,7 +433,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 归一化，返回新单位向量。
 	 * Returns a new normalized unit vector.
-	 *
 	 * @return 单位向量 / Unit vector
 	 */
 	public Vector2f normalize() {
@@ -478,7 +446,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 就地归一化。
 	 * Normalizes in place.
-	 *
 	 * @return 本向量 / This vector
 	 */
 	public Vector2f normalizeLocal() {
@@ -492,7 +459,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 与另一向量的最小夹角（弧度，基于点积）。
 	 * Smallest angle to another vector in radians (via dot product).
-	 *
 	 * @param otherVector 另一向量 / Other vector
 	 * @return 夹角（弧度） / Angle in radians
 	 */
@@ -505,7 +471,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 与另一向量的有向夹角（弧度，基于 atan2）。
 	 * Signed angle to another vector in radians (via atan2).
-	 *
 	 * @param otherVector 另一向量 / other vector
 	 * @return 有向夹角（弧度） / Signed angle in radians
 	 */
@@ -517,7 +482,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 设置 X 分量。
 	 * Sets the X component.
-	 *
 	 * @param x X 分量 / X component
 	 * @return 本向量 / This vector
 	 */
@@ -529,7 +493,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 设置 Y 分量。
 	 * Sets the Y component.
-	 *
 	 * @param y Y 分量 / Y component
 	 * @return 本向量 / This vector
 	 */
@@ -541,7 +504,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 获取极角（弧度，取负 atan2）。
 	 * Gets the polar angle in radians (negated atan2).
-	 *
 	 * @return 夹角（弧度） / Angle in radians
 	 */
 	public float getAngle() {
@@ -551,7 +513,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 将本向量置零。
 	 * Sets this vector to zero.
-	 *
 	 * @return 本向量 / This vector
 	 */
 	public Vector2f zero() {
@@ -563,7 +524,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 哈希码。
 	 * Hash code.
-	 *
 	 * @return 哈希值 / Hash value
 	 */
 	public int hashCode() {
@@ -576,7 +536,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 浅克隆。
 	 * Shallow clone.
-	 *
 	 * @return 克隆向量 / Cloned vector
 	 */
 	public Vector2f clone() {
@@ -590,7 +549,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 转为 float 数组。
 	 * Converts to a float array.
-	 *
 	 * @param floats 目标数组；为 null 时新建 / Target array; created if null
 	 * @return 数组（null 输入时含 x,y；非 null 时原样返回） / Array (with x,y if null input; otherwise returned as-is)
 	 */
@@ -604,7 +562,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 判断与另一对象是否分量相等。
 	 * Whether this equals another object by components.
-	 *
 	 * @param o 比较对象 / Object to compare
 	 * @return 若 equal 则为 true / True if equal
 	 */
@@ -624,7 +581,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 字符串表示，形如 {@code (x, y)}。
 	 * String representation of the form {@code (x, y)}.
-	 *
 	 * @return 字符串表示 / String
 	 */
 	public String toString() {
@@ -634,7 +590,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 从外部输入读取分量。
 	 * Reads components from an external input.
-	 *
 	 * @param in 输入流 / Input stream
 	 * @throws IOException I/O 错误 / I/O error
 	 * @throws ClassNotFoundException 类未找到 / Class not found
@@ -647,7 +602,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 将分量写入外部输出。
 	 * Writes components to an external output.
-	 *
 	 * @param out 输出流 / output stream
 	 */
 	public void writeExternal(ObjectOutput out) throws IOException {
@@ -658,7 +612,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 返回运行时类标记。
 	 * Returns the runtime class tag.
-	 *
 	 * @return 类对象 / Class object
 	 */
 	public Class<? extends Vector2f> getClassTag() {
@@ -668,7 +621,6 @@ public final class Vector2f implements Cloneable {
 	/**
 	 * 绕原点旋转（就地）。
 	 * Rotates around the origin in place.
-	 *
 	 * @param angle 角度（弧度） / Angle in radians
 	 * @param cw 是否顺时针 / Whether clockwise
 	 */

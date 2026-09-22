@@ -25,7 +25,6 @@ import com.aionemu.loginserver.network.gameserver.clientpackets.CM_PTRANSFER_CON
 /**
  * 登录服游戏服包工厂：按 GS 连接状态与 opcode 分发游戏服客户端包。
  * Login-server game-server packet factory: dispatches GS client packets by state and opcode.
- *
  * @author -Nemesiss-
  */
 @Slf4j
@@ -35,7 +34,6 @@ public class GsPacketHandlerFactory {
     /**
      * 从 ByteBuffer 读取并构造一个游戏服客户端包。
      * Reads one game-server client packet from the given ByteBuffer.
-     *
      * @param data 原始包数据 / raw packet data
      * @param client 游戏服连接 / game-server connection
      * @return 解析出的 GsClientPacket，未知包返回 null
@@ -119,7 +117,6 @@ public class GsPacketHandlerFactory {
     /**
      * 记录未知游戏服包。
      * Logs an unknown game-server packet.
-     *
      * @param state 当前连接状态 / current connection state
      * @param id 包 opcode / packet opcode
      */

@@ -34,7 +34,6 @@ public abstract class AbstractInteractionTask {
 	/**
 	 * 构造交互任务。
 	 * Creates an interaction task.
-	 *
 	 * @param requestor 发起交互的玩家 / requesting player
 	 * @param responder 响应目标，null 时回退为 requestor / responder, falls back to requestor if null
 	 */
@@ -50,7 +49,6 @@ public abstract class AbstractInteractionTask {
 	/**
 	 * 执行一次交互 tick。
 	 * Performs one interaction tick.
-	 *
 	 * @return true 表示任务应停止 / true if the task should stop
 	 */
 	protected abstract boolean onInteraction();
@@ -93,7 +91,6 @@ public abstract class AbstractInteractionTask {
 	/**
 	 * 停止任务。
 	 * Stops the task.
-	 *
 	 * @param participantNull 参与者是否已无效（为 true 时不调用 finish 回调） / true if a participant is null (skip finish callback)
 	 */
 	public void stop(boolean participantNull) {
@@ -118,7 +115,6 @@ public abstract class AbstractInteractionTask {
 	/**
 	 * 判断任务是否仍在进行。
 	 * Returns whether the task is still in progress.
-	 *
 	 * @return 是否进行中 / true if running
 	 */
 	public boolean isInProgress() {
@@ -128,7 +124,6 @@ public abstract class AbstractInteractionTask {
 	/**
 	 * 校验参与者是否有效。
 	 * Validates that interaction participants are still valid.
-	 *
 	 * @return 若 requestor is non-null 则为 true / true if requestor is non-null
 	 */
 	public boolean validateParticipants() {

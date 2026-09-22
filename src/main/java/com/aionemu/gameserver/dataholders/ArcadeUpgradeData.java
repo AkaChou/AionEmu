@@ -17,7 +17,6 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 街机升级数据容器，按页签 ID 索引奖品物品列表。
  * Arcade upgrade data holder, indexing prize item lists by tab id.
- *
  * Created by wanke on 17/02/2017.
  */
 @XmlRootElement(name = "arcadelist")
@@ -42,7 +41,6 @@ public class ArcadeUpgradeData {
 	/**
 	 * 返回已加载的页签数量。
 	 * Returns the number of loaded tabs.
-	 *
 	 * @return 已加载的选项卡数量 / Returns the number of loaded tabs.
 	 */
 	public int size() {
@@ -52,7 +50,6 @@ public class ArcadeUpgradeData {
 	/**
 	 * 按页签 ID 获取物品列表。
 	 * Returns the item list for the given tab id.
-	 *
 	 * @param id 页签 ID / tab id
 	 * @return 物品列表，不存在则为 null / item list or null
 	 */
@@ -63,7 +60,6 @@ public class ArcadeUpgradeData {
 	/**
 	 * 返回全部街机页签模板列表。
 	 * Returns all arcade tab templates.
-	 *
 	 * @return 页签模板列表 / tab template list
 	 */
 	public List<ArcadeTab> getArcadeTabs() {

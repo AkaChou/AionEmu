@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * Esoterrace 副本 NPC AI：Esoterrace Wind Stream 3（@AIName "Esoterrace_WindStream_3"），继承 NpcAI2。
  * Esoterrace instance NPC AI: Esoterrace Wind Stream 3 (@AIName "Esoterrace_WindStream_3"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("Esoterrace_WindStream_3")

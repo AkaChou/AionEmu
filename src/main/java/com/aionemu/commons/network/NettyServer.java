@@ -36,7 +36,6 @@ public class NettyServer implements ServerTransport {
     /**
      * 使用默认连接执行器构造服务端。
      * Construct server with default connection executor.
-     *
      * @param cfgs 服务端配置 / Server configurations
      */
     public NettyServer(NettyServerCfg... cfgs) {
@@ -46,7 +45,6 @@ public class NettyServer implements ServerTransport {
     /**
      * 使用指定连接执行器构造服务端。
      * Construct server with a fixed connection executor.
-     *
      * @param connectionExecutor 连接/断开执行器 / Connection/disconnection executor
      * @param cfgs 服务端配置 / Server configurations
      */
@@ -57,7 +55,6 @@ public class NettyServer implements ServerTransport {
     /**
      * 使用执行器供应器构造服务端。
      * Construct server with an executor supplier.
-     *
      * @param connectionExecutor 执行器供应器 / Executor supplier
      * @param cfgs 服务端配置 / Server configurations
      */
@@ -124,7 +121,6 @@ public class NettyServer implements ServerTransport {
     /**
      * 获取活跃客户端连接数。
      * Get active client connection count.
-     *
      * @return 活跃连接数 / Active connections
      */
     @Override
@@ -135,7 +131,6 @@ public class NettyServer implements ServerTransport {
     /**
      * 将配置解析为监听地址。
      * Resolve bind address from configuration.
-     *
      * @param cfg 服务端配置 / Server configuration
      * @return 监听地址 / Bind address
      */

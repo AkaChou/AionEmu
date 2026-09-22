@@ -10,7 +10,6 @@ import lombok.Setter;
 /**
  * 伊迪安深渊刷新点模板（静态数据/XML）。
  * Idian Depths spawn XML template.
- *
  * @author Rinzler (Encom)
  */
 

@@ -16,7 +16,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 称号 Add 动作模板（静态数据/XML）。
  * XML template.
- *
  * @author Hilgert
  */
 @XmlAccessorType(XmlAccessType.FIELD)

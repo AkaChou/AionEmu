@@ -17,7 +17,6 @@ import java.nio.charset.StandardCharsets;
 /**
  * 客户端加入/请求聊天频道包。
  * Client packet for joining or requesting a chat channel.
- *
  * @author ATracer
  */
 @Slf4j
@@ -30,7 +29,6 @@ public class CM_CHANNEL_REQUEST extends AbstractClientPacket {
     /**
      * 构造频道请求客户端包。
      * Constructs a channel request client packet.
-     *
      * @param packetReader 包读取器 / packet reader
      * @param gameChannelHandler 客户端通道处理器 / client channel handler
      * @param chatService 聊天服务 / chat service
@@ -74,7 +72,6 @@ public class CM_CHANNEL_REQUEST extends AbstractClientPacket {
     /**
      * 返回调试用字符串表示。
      * Returns a debug string representation.
-     *
      * @return 调试字符串 / debug string
      */
     @Override

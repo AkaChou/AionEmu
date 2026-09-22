@@ -10,7 +10,6 @@ import lombok.Getter;
 /**
  * Aion 世界内部游戏时钟（年/月/日/时/分，独立于真实时间）。
  * In-game clock for the Aion world (year/month/day/hour/minute, independent of real time).
- *
  * @author Ben
  * @author vlog
  */
@@ -42,9 +41,7 @@ public class GameTime implements Cloneable {
      * -- GETTER --
      *  获取当前时段。
      *  Get current day-time period.
-     *
-     * @return 时段 / DayTime
-
+     * 时段 / DayTime
      */
 	@Getter
     private DayTime dayTime;
@@ -74,7 +71,6 @@ public class GameTime implements Cloneable {
 		/**
 		 * 获取该月天数。
 		 * Get days in this month.
-		 *
 		 * @return 天数 / Days
 		 */
 		public int getDays() {
@@ -85,7 +81,6 @@ public class GameTime implements Cloneable {
 	/**
 	 * 月份枚举缓存。
 	 * Cached month enum values.
-	 *
 	 * <p>{@code Enum.values()} 每次调用都会克隆一份数组（JFR 实测 9MB/300s）；月份表是常量，直接缓存复用。
 	 * {@code Enum.values()} clones its backing array on every call (9MB/300s measured); the month table is a
 	 * constant, so it is cached here and reused.</p>
@@ -95,7 +90,6 @@ public class GameTime implements Cloneable {
 	/**
 	 * 以自 01.01.0000 起的分钟数构造游戏时间。
 	 * Construct game time from minutes since 01.01.0000.
-	 *
 	 * @param time 自 01.01.0000 午夜起的分钟数 / Minutes since midnight 01.01.0000
 	 */
 	public GameTime(int time) {
@@ -109,7 +103,6 @@ public class GameTime implements Cloneable {
 	/**
 	 * 获取该月对应的游戏分钟数。
 	 * Minutes contained in the given month.
-	 *
 	 * @param m 月份 / Month
 	 * @return 该月分钟数 / Minutes in this month
 	 */
@@ -120,7 +113,6 @@ public class GameTime implements Cloneable {
 	/**
 	 * 获取游戏时间总分钟数。
 	 * Get total in-game minutes.
-	 *
 	 * @return 自 01.01.0000 00:00:00 起的分钟数 / Minutes since 01.01.0000 00:00:00
 	 */
 	public int getTime() {
@@ -187,7 +179,6 @@ public class GameTime implements Cloneable {
 	/**
 	 * 获取游戏年份（0 起）。
 	 * Get game year (from 0).
-	 *
 	 * @return 年份 / Year
 	 */
 	public int getYear() {
@@ -197,7 +188,6 @@ public class GameTime implements Cloneable {
 	/**
 	 * 获取游戏月份（1–12）。
 	 * Get game month (1–12).
-	 *
 	 * @return 月份 1–12 / Month 1–12
 	 */
 	public int getMonth() {
@@ -220,7 +210,6 @@ public class GameTime implements Cloneable {
 	/**
 	 * 获取游戏日（1–当月天数）。
 	 * Get game day (1–days in month).
-	 *
 	 * @return 日 / Day
 	 */
 	public int getDay() {
@@ -242,7 +231,6 @@ public class GameTime implements Cloneable {
 	/**
 	 * 获取游戏小时（0–23）。
 	 * Get game hour (0–23).
-	 *
 	 * @return 小时 0–23 / Hour 0–23
 	 */
 	public int getHour() {
@@ -252,7 +240,6 @@ public class GameTime implements Cloneable {
 	/**
 	 * 获取游戏分钟（0–59）。
 	 * Get game minute (0–59).
-	 *
 	 * @return 分钟 0–59 / Minute 0–59
 	 */
 	public int getMinute() {
@@ -262,7 +249,6 @@ public class GameTime implements Cloneable {
     /**
 	 * 将游戏时间换算为近似真实时间（÷12）。
 	 * Convert game time to approximate real time (÷12).
-	 *
 	 * @return 换算后的值 / Converted value
 	 * @author vlog
 	 */
@@ -273,7 +259,6 @@ public class GameTime implements Cloneable {
 	/**
 	 * 减去给定游戏时间，返回新实例。
 	 * Subtract the given game time; returns a new instance.
-	 *
 	 * @param gt 要减去的时间 / Time to subtract
 	 * @return 新游戏时间 / New game time
 	 */
@@ -284,7 +269,6 @@ public class GameTime implements Cloneable {
 	/**
 	 * 加上给定游戏时间，返回新实例。
 	 * Add the given game time; returns a new instance.
-	 *
 	 * @param gt 要加上的时间 / Time to add
 	 * @return 新游戏时间 / New game time
 	 */
@@ -295,7 +279,6 @@ public class GameTime implements Cloneable {
 	/**
 	 * 是否大于给定游戏时间。
 	 * Whether this time is greater than the given one.
-	 *
 	 * @param gt 比较对象 / Other game time
 	 * @return 若大于则为 true / True if greater
 	 */
@@ -306,7 +289,6 @@ public class GameTime implements Cloneable {
 	/**
 	 * 是否小于给定游戏时间。
 	 * Whether this time is less than the given one.
-	 *
 	 * @param gt 比较对象 / Other game time
 	 * @return 若小于则为 true / True if less
 	 */
@@ -317,7 +299,6 @@ public class GameTime implements Cloneable {
 	/**
 	 * 按总分钟数比较相等。
 	 * Equality by total minutes.
-	 *
 	 * @param o 对象 / Object
 	 * @return 若相等则为 true / True if equal
 	 * @author vlog
@@ -330,7 +311,6 @@ public class GameTime implements Cloneable {
 	/**
 	 * 按总分钟数生成哈希码。
 	 * Hash code by total minutes.
-	 *
 	 * @return 哈希码 / Hash code
 	 */
 	@Override
@@ -341,7 +321,6 @@ public class GameTime implements Cloneable {
 	/**
 	 * 克隆为相同分钟数的新实例。
 	 * Clone as a new instance with the same minutes.
-	 *
 	 * @return 克隆实例 / Clone
 	 */
 	@Override

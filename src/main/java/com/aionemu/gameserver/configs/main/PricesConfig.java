@@ -5,7 +5,6 @@ import com.aionemu.commons.configuration.Property;
 /**
  * 物价、税率与商店买卖系数相关配置。
  * Prices, taxes and vendor buy/sell modifier related configuration.
- *
  * @author Sarynth
  */
 public class PricesConfig {

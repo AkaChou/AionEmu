@@ -11,7 +11,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Engulfed Ophidan Bridge 副本 NPC AI：Daeva Of Zephyr Rearguard（@AIName "daeva_of_zephyr_rearguard"），继承 NpcAI2。
  * Engulfed Ophidan Bridge instance NPC AI: Daeva Of Zephyr Rearguard (@AIName "daeva_of_zephyr_rearguard"), extends NpcAI2.
- *
  * @author Encom
  */
 @AIName("daeva_of_zephyr_rearguard")

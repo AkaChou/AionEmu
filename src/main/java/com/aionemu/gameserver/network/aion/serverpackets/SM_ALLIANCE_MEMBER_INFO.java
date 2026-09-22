@@ -15,7 +15,6 @@ import com.aionemu.gameserver.world.WorldPosition;
 /**
  * 向客户端同步联盟成员状态/事件（加入、离开、移动、重连等）的服务端包。
  * Server packet synchronizing alliance member status/events (join, leave, movement, reconnect, etc.) to the client.
- *
  * @author Sarynth (Thx Rhys2002 for Packets)
  */
 public class SM_ALLIANCE_MEMBER_INFO extends AionServerPacket {
@@ -28,7 +27,6 @@ public class SM_ALLIANCE_MEMBER_INFO extends AionServerPacket {
 	/**
 	 * 使用联盟成员与事件类型构造同步包。
 	 * Creates a sync packet from an alliance member and event type.
-	 *
 	 * alliance member
 	 * @param event 成员事件类型 / member event type
 	 */
@@ -44,10 +42,7 @@ public class SM_ALLIANCE_MEMBER_INFO extends AionServerPacket {
 		PlayerCommonData pcd = player.getCommonData();
 		WorldPosition wp = player.getPosition();
 
-		/**
-	 * 确保成员断线且联盟槽位变更后仍显示为断线状态。 / Required so that when member is disconnected, and his playerAllianceGroup slot is changed, he will continue to appear as disconnected to the alliance
-	 */
-		if (event == PlayerAllianceEvent.ENTER && !player.isOnline()) {
+        if (event == PlayerAllianceEvent.ENTER && !player.isOnline()) {
 			event = PlayerAllianceEvent.ENTER_OFFLINE;
 		}
 

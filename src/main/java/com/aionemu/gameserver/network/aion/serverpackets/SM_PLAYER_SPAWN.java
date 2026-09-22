@@ -17,7 +17,6 @@ import com.aionemu.gameserver.world.WorldMapType;
  * <p>
  * 构造时若玩家正在使用机甲，会额外广播 {@link SM_USE_ROBOT}。
  * If the player is using a robot on construction, an extra {@link SM_USE_ROBOT} is broadcast.
- *
  * @author Ranastic (Encom)
  */
 public class SM_PLAYER_SPAWN extends AionServerPacket {
@@ -193,7 +192,6 @@ public class SM_PLAYER_SPAWN extends AionServerPacket {
 	/**
 	 * 根据主手武器皮肤模板解析机甲信息。
 	 * Resolves robot info from the main-hand weapon skin template.
-	 *
 	 * 玩家 / player
 	 * robot info
 	 */

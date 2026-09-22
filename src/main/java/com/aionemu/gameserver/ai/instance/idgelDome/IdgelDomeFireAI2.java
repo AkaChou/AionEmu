@@ -13,7 +13,6 @@ import java.util.concurrent.Future;
 /**
  * Idgel Dome 副本 NPC AI：Idgel Dome Fire（@AIName "fire"），继承 AggressiveNpcAI2。
  * Idgel Dome instance NPC AI: Idgel Dome Fire (@AIName "fire"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("fire")

@@ -7,7 +7,6 @@ import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 /**
  * 巡逻行走 NPC AI：Walk Aggro Runner（@AIName "aggro_runner"），继承 AggressiveNpcAI2。
  * Walker patrol NPC AI: Walk Aggro Runner (@AIName "aggro_runner"), extends AggressiveNpcAI2.
- *
  * @author Encom
  */
 @AIName("aggro_runner")

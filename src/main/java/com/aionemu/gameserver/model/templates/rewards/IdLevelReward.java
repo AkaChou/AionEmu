@@ -11,7 +11,6 @@ import lombok.Getter;
 /**
  * ID 等级奖励模板（静态数据/XML）。
  * XML template.
- *
  * @author Rolandas
  */
 @Getter

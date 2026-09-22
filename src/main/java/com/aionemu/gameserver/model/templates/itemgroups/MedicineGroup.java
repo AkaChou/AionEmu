@@ -13,7 +13,6 @@ import com.aionemu.gameserver.model.templates.rewards.IdLevelReward;
 /**
  * 药品奖励组：按等级奖励的条目。
  * Medicine reward group: level-based reward entries.
- *
  * @author Rolandas
  */
 @XmlAccessorType(XmlAccessType.FIELD)

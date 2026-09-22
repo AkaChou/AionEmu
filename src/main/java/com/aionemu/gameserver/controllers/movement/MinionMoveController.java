@@ -5,7 +5,6 @@ import com.aionemu.gameserver.model.gameobjects.Minion;
 /**
  * 小精灵（Minion）移动控制器，当前为占位实现。
  * Minion move controller; currently a placeholder implementation.
- *
  * @author Falke_34
  */
 public class MinionMoveController extends CreatureMoveController<Minion> {
@@ -40,7 +39,6 @@ public class MinionMoveController extends CreatureMoveController<Minion> {
 	/**
 	 * 返回目标 X 坐标。
 	 * Return the target X coordinate.
-	 *
 	 * @return 目标 X 坐标 / Target X
 	 */
 	@Override
@@ -51,7 +49,6 @@ public class MinionMoveController extends CreatureMoveController<Minion> {
 	/**
 	 * 返回目标 Y 坐标。
 	 * Return the target Y coordinate.
-	 *
 	 * @return 目标 Y 坐标 / Target Y
 	 */
 	@Override
@@ -62,7 +59,6 @@ public class MinionMoveController extends CreatureMoveController<Minion> {
 	/**
 	 * 返回目标 Z 坐标。
 	 * Return the target Z coordinate.
-	 *
 	 * @return 目标 Z 坐标 / Target Z
 	 */
 	@Override
@@ -73,7 +69,6 @@ public class MinionMoveController extends CreatureMoveController<Minion> {
 	/**
 	 * 设置新方向（朝向默认为 0）。
 	 * Set a new destination (heading defaults to 0).
-	 *
 	 * @param x2 目标 X / Target X
 	 * @param y2 目标 Y / Target Y
 	 * @param z2 目标 Z / Target Z
@@ -86,7 +81,6 @@ public class MinionMoveController extends CreatureMoveController<Minion> {
 	/**
 	 * 设置新方向与朝向。
 	 * Set a new destination and heading.
-	 *
 	 * @param x 目标 X / Target X
 	 * @param y 目标 Y / Target Y
 	 * @param z 目标 Z / Target Z
@@ -119,7 +113,6 @@ public class MinionMoveController extends CreatureMoveController<Minion> {
 	/**
 	 * 返回当前移动掩码。
 	 * Return the current movement mask.
-	 *
 	 * @return 移动掩码 / Movement mask
 	 */
 	@Override
@@ -130,7 +123,6 @@ public class MinionMoveController extends CreatureMoveController<Minion> {
 	/**
 	 * 是否处于移动中（固定返回 true）。
 	 * Whether currently in move (always true).
-	 *
 	 * @return 恒为 true / Always true
 	 */
 	@Override
@@ -141,7 +133,6 @@ public class MinionMoveController extends CreatureMoveController<Minion> {
 	/**
 	 * 设置是否处于移动中（占位空实现）。
 	 * Set whether currently in move (placeholder no-op).
-	 *
 	 * @param value 移动状态 / In-move flag
 	 */
 	@Override

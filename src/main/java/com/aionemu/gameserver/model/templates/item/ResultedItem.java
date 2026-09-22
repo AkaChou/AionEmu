@@ -15,7 +15,6 @@ import lombok.Getter;
 /**
  * 合成/制作产物物品模板：数量与随机范围。
  * Resulted item template: count and random range.
- *
  * @author antness
  */
 @Getter

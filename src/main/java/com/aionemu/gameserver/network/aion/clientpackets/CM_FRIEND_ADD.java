@@ -14,7 +14,6 @@ import com.aionemu.gameserver.services.SocialService;
 /**
  * 请求添加好友的客户端包。
  * Client packet requesting to add a friend.
- *
  * @author Ben
  */
 public class CM_FRIEND_ADD extends AionClientPacket {
@@ -24,7 +23,6 @@ public class CM_FRIEND_ADD extends AionClientPacket {
 	/**
 	 * 构造客户端包实例。
 	 * Constructs a new client packet instance.
-	 *
 	 * packet opcode
 	 * @param state 连接状态 / connection state
 	 * @param restStates 其余允许状态 / additional allowed states

@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 /**
  * 属性函数 Proxy 模型。
  * Stat Function Proxy model.
- *
  * @author ATracer
  */
 @Getter

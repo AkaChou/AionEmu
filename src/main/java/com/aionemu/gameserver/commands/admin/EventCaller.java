@@ -15,7 +15,6 @@ import java.util.Iterator;
 /**
  * 活动报名召集管理命令（{@code //eventcaller}）。
  * Event registration caller admin command ({@code //eventcaller}).
- *
  * @author Kill3r
  */
 @Slf4j(topic = "GM_MONITOR_LOG")
@@ -33,7 +32,6 @@ public class EventCaller extends AdminCommand {
 	/**
 	 * 启动/停止/取消活动报名，或列出已报名玩家并传送。
 	 * Starts, stops or cancels event registration, or lists and teleports registered players.
-	 *
 	 * @param params show|start|stop|cancel 及可选人数上限 / show|start|stop|cancel and optional player limit
 	 */
 	public void execute(Player player, String... params) {

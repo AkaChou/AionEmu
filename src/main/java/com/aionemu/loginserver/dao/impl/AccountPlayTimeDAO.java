@@ -13,7 +13,6 @@ import com.aionemu.loginserver.model.AccountTime;
 /**
  * 账号累计在线时长 DAO 的 MySQL 8 实现。
  * MySQL 8 AccountPlayTimeDAO implementation.
- *
  * @author Updated for MySQL 8
  */
 @Slf4j

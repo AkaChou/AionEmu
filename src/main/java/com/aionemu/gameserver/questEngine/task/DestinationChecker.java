@@ -14,7 +14,6 @@ abstract class DestinationChecker {
 	/**
 	 * 检查是否已到达目的地/满足目标条件。
 	 * Checks whether the destination is reached / the target condition is met.
-	 *
 	 * @return 若已到达目的地则为 true / true if destination reached
 	 */
 	abstract boolean check();

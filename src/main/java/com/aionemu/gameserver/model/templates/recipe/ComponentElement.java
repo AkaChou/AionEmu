@@ -8,7 +8,6 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * Component 元素模板（静态数据/XML）。
  * XML template.
- *
  * @author Ranastic
  */
 @XmlAccessorType(XmlAccessType.FIELD)

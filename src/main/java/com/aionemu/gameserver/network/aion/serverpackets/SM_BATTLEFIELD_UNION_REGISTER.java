@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 /**
  * 回应战场联盟报名/取消报名结果的服务端包。
  * unregister results.
- *
  * @author wanke
  */
 @AllArgsConstructor

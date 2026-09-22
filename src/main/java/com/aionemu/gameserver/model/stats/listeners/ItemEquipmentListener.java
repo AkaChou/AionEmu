@@ -29,7 +29,6 @@ import com.aionemu.gameserver.services.SkillLearnService;
 /**
  * 物品装备监听器，用于属性相关逻辑。
  * Item Equipment Listener for stats logic.
- *
  * @author xavier modified by Wakizashi
  */
 @Slf4j
@@ -38,7 +37,6 @@ public class ItemEquipmentListener {
 	/**
 	 * 装备物品时应用其全部属性效果（魔石、神石、伊迪安石、随机属性等）。
 	 * Applies all stat effects of the item on equip (stones, godstone, Idian, random stats, etc.).
-	 *
 	 * @param item 被装备的物品 / equipped item
 	 * @param owner 装备玩家 / equipping player
 	 */
@@ -85,7 +83,6 @@ public class ItemEquipmentListener {
 	/**
 	 * 卸下物品时移除其全部属性效果。
 	 * Removes all stat effects of the item on unequip.
-	 *
 	 * @param item 被卸下的物品 / unequipped item
 	 * @param owner 卸装玩家 / unequipping player
 	 */
@@ -120,9 +117,6 @@ public class ItemEquipmentListener {
 			randomStats.onUnEquip(owner);
 		}
 
-		/**
-	 * 卸装时强化技能须与效果一并移除，仅保留长期技能效果。 / onItemUnequipment Amplify skill must be removed same as effect. We leave only effects from long time playing skills. after that we must to update passive skills stats
-	 */
 		if (item.getAmplificationSkill() > 0) {
 			if (owner.getSkillList().isSkillPresent(item.getAmplificationSkill())) {
 				if (item.getAmplificationSkill() != 13030 && item.getAmplificationSkill() != 13029) {
@@ -145,7 +139,6 @@ public class ItemEquipmentListener {
 	/**
 	 * 装备物品并应用模板属性修正。
 	 * Equips the item and applies its template stat modifiers.
-	 *
 	 * @param item 物品 / item
 	 * @param cgs 生物游戏属性 / creature game stats
 	 * @param player 装备玩家 / equipping player
@@ -257,7 +250,6 @@ public class ItemEquipmentListener {
 	/**
 	 * 重新计算物品套装加成。
 	 * Recalculates the item set bonuses.
-	 *
 	 * @param itemSetTemplate 套装模板 / item set template
 	 * @param player 玩家 / player
 	 * @param isWeapon 是否为武器 / whether it is a weapon
@@ -368,7 +360,6 @@ public class ItemEquipmentListener {
 	/**
 	 * 装备时应用神石效果。
 	 * Applies the godstone effect on equip.
-	 *
 	 * @param player 玩家 / player
 	 */
 	private static void addGodstoneEffect(Player player, Item item) {
@@ -380,7 +371,6 @@ public class ItemEquipmentListener {
 	/**
 	 * 卸装时移除神石效果。
 	 * Removes the godstone effect on unequip.
-	 *
 	 * @param player 玩家 / player
 	 */
 	private static void removeGodstoneEffect(Player player, Item item) {

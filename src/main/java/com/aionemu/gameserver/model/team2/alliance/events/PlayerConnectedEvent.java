@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 /**
  * 玩家上线事件。
  * Player Connected Event.
- *
  * @author ATracer
  */
 @RequiredArgsConstructor

@@ -48,7 +48,6 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 /**
  * 交易服务，处理 NPC 买卖、欧比斯商店与以物易物。
  * Trade service for NPC buy/sell, abyss shop, and trade-in.
- *
  * @author MATTY (ADev.Team)
  */
 @Slf4j
@@ -58,8 +57,6 @@ public class TradeService {
 	 * -- GETTER --
 	 *  获取交易列表静态数据。
 	 *  Returns trade list static data.
-	 *
-	 * @return 交易列表数据 / trade list data
 	 */
 	@Getter
 	private static final TradeListData tradeListData = DataManager.TRADE_LIST_DATA;
@@ -67,8 +64,6 @@ public class TradeService {
      * -- GETTER --
      *  获取商品列表静态数据。
      *  Returns goods list static data.
-     *
-     * @return 商品列表数据 / goods list data
      */
     @Getter
     private static final GoodsListData goodsListData = DataManager.GOODSLIST_DATA;
@@ -76,7 +71,6 @@ public class TradeService {
 	/**
 	 * 从普通商店 NPC 购买物品。
 	 * Performs a buy from a regular shop NPC.
-	 *
 	 * shop npc
 	 * 玩家 / player
 	 * 交易列表 / trade list
@@ -129,7 +123,6 @@ public class TradeService {
 	/**
 	 * 从欧比斯商店以 AP 购买物品。
 	 * Performs a buy from an abyss shop using AP.
-	 *
 	 * shop npc
 	 * 玩家 / player
 	 * 交易列表 / trade list
@@ -189,7 +182,6 @@ public class TradeService {
 	/**
 	 * 从奖励商店购买物品。
 	 * Performs a buy from a reward shop.
-	 *
 	 * shop npc
 	 * 玩家 / player
 	 * 交易列表 / trade list
@@ -322,7 +314,6 @@ public class TradeService {
 	/**
 	 * 向商店出售物品换取基纳。
 	 * Sells items to a shop for Kinah.
-	 *
 	 * 玩家 / player
 	 * 交易列表 / trade list
 	 * whether successful
@@ -374,7 +365,6 @@ public class TradeService {
 	/**
 	 * 执行以物易物（Trade-in）购买。
 	 * Performs a trade-in purchase.
-	 *
 	 * @param player 玩家 / player
 	 * @param npcObjectId NPC 对象 ID / npc object id
 	 * @param itemId 目标物品 ID / target item id
@@ -450,7 +440,6 @@ public class TradeService {
 		/**
 	 * 向商店出售物品换取 AP。
 	 * Sells items to a shop for AP.
-	 *
 	 * 玩家 / player
 	 * 交易列表 / trade list
 	 * whether successful
@@ -492,7 +481,6 @@ public class TradeService {
 	/**
 	 * 出售损坏物品以回收 AP。
 	 * Sells broken items to reclaim AP.
-	 *
 	 * 玩家 / player
 	 * 交易列表 / trade list
 	 * whether successful
@@ -523,7 +511,6 @@ public class TradeService {
 		/**
 	 * 按模板配置向商店出售物品换取基纳。
 	 * Sells items to a shop for Kinah using trade template pricing.
-	 *
 	 * 玩家 / player
 	 * 交易列表 / trade list
 	 * whether successful
@@ -564,7 +551,6 @@ public class TradeService {
 	/**
 	 * 处理已终止/失效物品退回商店逻辑。
 	 * Handles returning a terminated item to shop logic.
-	 *
 	 * @param player 玩家 / player
 	 * @param objId 物品对象 ID / item object id
 	 */

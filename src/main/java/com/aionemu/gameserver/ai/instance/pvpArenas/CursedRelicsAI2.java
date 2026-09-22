@@ -19,7 +19,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Pvp Arenas 副本 NPC AI：Cursed Relics（@AIName "cursed_relics"），继承 ActionItemNpcAI2。
  * Pvp Arenas instance NPC AI: Cursed Relics (@AIName "cursed_relics"), extends ActionItemNpcAI2.
- *
  * @author Encom
  */
 @AIName("cursed_relics")

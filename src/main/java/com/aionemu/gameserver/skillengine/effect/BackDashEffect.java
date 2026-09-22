@@ -33,7 +33,6 @@ public class BackDashEffect extends DamageEffect {
 	/**
 	 * 应用伤害并更新施法者坐标。
 	 * Applies damage and updates the effector position.
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
@@ -48,7 +47,6 @@ public class BackDashEffect extends DamageEffect {
 	/**
 	 * 计算物理伤害与后撤落点（含碰撞检测）。
 	 * Calculates physical damage and back-dash landing point (with collision checks).
-	 *
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override

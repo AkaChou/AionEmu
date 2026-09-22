@@ -85,15 +85,9 @@ public class SM_PLAYER_INFO extends AionServerPacket {
 		writeF(player.getY());// y
 		writeF(player.getZ());// z
 		writeD(player.getObjectId());
-		/**
-	 * A3 female asmodian A2 male asmodian A1 female elyos A0 male elyos
-	 */
 		writeD(pcd.getTemplateId());
 		writeD(player.getRobotId());// 4.5 protocol changed
 
-		/**
-	 * 变身状态发送变身模型 ID；普通状态发送玩家模型 ID。 / Transformed state - send transformed model id Regular state - send player model id (from common data)
-	 */
 		int model = player.getTransformModel().getModelId();
 
 		writeD(model != 0 ? model : pcd.getTemplateId());
@@ -114,9 +108,6 @@ public class SM_PLAYER_INFO extends AionServerPacket {
 		writeB(new byte[8]);
 		writeC(player.getHeading());
         String nameFormat = "%s";
-		/**
-	 * 高级与 VIP 会员。 / Premium & VIP Membership
-	 */
 		StringBuilder sb = new StringBuilder(nameFormat);
 		if (player.getClientConnection() != null) {
 			// * = 高级与 VIP 会员 / * = Premium & VIP Membership
@@ -128,9 +119,6 @@ public class SM_PLAYER_INFO extends AionServerPacket {
 				};
 			}
 
-			/**
-	 * WPvP Related Features
-	 */
 			if (player.isInPvEMode()) {
 				nameFormat = sb.insert(0, CustomConfig.TAG_PVE.substring(0, 2)).toString();
 			}
@@ -206,9 +194,6 @@ public class SM_PLAYER_INFO extends AionServerPacket {
 		writeH(pcd.getDp());// current dp
 		writeC(0x00);// unk (0x00)
 
-		/**
-	 * Start Item Appearance
-	 */
 		int mask = 0;
 
 		List<Item> items = player.getEquipment().getEquippedForApparence();
@@ -233,9 +218,6 @@ public class SM_PLAYER_INFO extends AionServerPacket {
 			writeH(0);
 		}
 
-		/**
-	 * Item Appearance End
-	 */
 		writeD(playerAppearance.getSkinRGB());
 		writeD(playerAppearance.getHairRGB());
 		writeD(playerAppearance.getEyeRGB());
@@ -313,9 +295,6 @@ public class SM_PLAYER_INFO extends AionServerPacket {
 		writeC(player.getPortAnimation());// port animation
 		writeS(player.hasStore() ? player.getStore().getStoreMessage() : "");// private store message
 
-		/**
-	 * Movement
-	 */
 		writeF(0);
 		writeF(0);
 		writeF(0);
@@ -336,10 +315,7 @@ public class SM_PLAYER_INFO extends AionServerPacket {
 		writeC(player.isMentor() ? 1 : 0);
 		writeD(player.getHouseOwnerId());
 
-		/**
-	 * System By Ranastic
-	 */
-		writeD(player.getPlayersBonusId());
+        writeD(player.getPlayersBonusId());
 		writeD(10); // Player Buff.
 		writeD(0); // New Buff Icons.
 

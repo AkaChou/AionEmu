@@ -213,16 +213,13 @@ public final class PathService implements DisposableBean {
 	/**
 	 * 判断强制位移（混沌/恐惧等失控移动）的目标点是否踩在可站立地面上。
 	 * Whether a forced-movement target lies on standable ground (confuse/fear style movement).
-	 *
 	 * <p>平台或悬崖边缘之外没有地面，但 {@code GeoMap#getClosestCollision} 只判碰撞，会把这类点原样返回；
 	 * 角色一旦被推过去，客户端会拒绝该位移并把角色拉回原位，形成“跑出去又瞬间回位”的循环。
 	 * 这里用与贴地同源的窄带向下探测判定目标点是否有地面：起点本身无地形数据（哑地图/悬空）时不作判定。</p>
-	 *
 	 * <p>No ground exists beyond platform or cliff edges, yet {@code GeoMap#getClosestCollision} only checks
 	 * collisions and returns such a point unchanged; the client then rejects the move and snaps the character back.
 	 * A narrow downward probe on the same band as the ground snap decides whether the target has ground. When the
 	 * origin itself has no terrain data (dummy map or mid-air) the check stays inert.</p>
-	 *
 	 * @param owner 位移生物 / moving creature
 	 * @param x 目标 X / target X
 	 * @param y 目标 Y / target Y
@@ -841,7 +838,6 @@ public final class PathService implements DisposableBean {
 	/**
 	 * 浸没判定使用的水面余量：不小于空间寻路净空，也不小于“口鼻没入水面”所需高度。
 	 * Submersion margin: never smaller than the spatial-path clearance nor than the nose-height clearance.
-	 *
 	 * @param owner 生物 / creature
 	 * @return 水面余量 / margin below the water surface
 	 */
