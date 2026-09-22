@@ -3973,5 +3973,8 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
   `ProgressAll`（尤其 `sourceType=sensoryArea`）的任务，服务端 `reward` 投影**不得**按“末行索引”机械抬升，
   必须保留 legacy/用户真机值；同族清单：`1123`（已登记）、`50008/51008`（早已登记为 var0 非行号）、
   `1336/1661/1670/16920`（多感应区组合，行由客户端进度驱动，禁止按行号补阶梯）。
-- 建议后续把该边界提升为 memory-bank Pattern（QE-051 的客户端脚本驱动行补充），本轮因
-  `.agents/memory-bank/patterns/quest-engine.md` 正被并行任务编辑，未动该文件，仅在本报告留证。
+- **已提升为 memory-bank Pattern `QE-056`（CLIENT_SCRIPTED_JOURNAL_ROW，2026-09-22）**：边界写入
+  `.agents/memory-bank/patterns/quest-engine.md`（含 ProgressAll 家族分类：sensoryArea 13 / killedByUser 4、
+  1123 的 `REWARD/var0=0` 权威值、`REWARD/1 -> 0` 反向自愈边与 `Batch47ClientScriptedRewardRowContractTest` 门禁），
+  并在 `QE-051` 的编号说明后加“批次 47 勘误”指向；`systemPatterns.md` 同步登记路由，
+  `sync_memory_bank.py` 与 `verify_memory_bank.py` 全绿（ROUTER_IDS=97 / PATTERNS=97 / MEMORY_BANK_VERIFY_OK）。
