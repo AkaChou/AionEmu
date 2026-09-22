@@ -46,14 +46,54 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="s1" status="START">
+      <var name="var0" value="1"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- QE-051 三行阶梯（批次 35）：客户端 quest_summary 三行（槽位 %0/%3/%6）——行 0“消灭情人节布朗尼、
+         收集巧克力交给术古”([%collectitem])、行 1“在巧克力塔上使用巧克力装饰”、行 2“和术古对话”。
+         页链：select_none(accept) / select1 的 CHECK_USER_HAS_QUEST_ITEM -> check_user_item_ok 的 **SETPRO2** /
+         check_user_item_fail 的 FINISH_DIALOG / select_success 的 SELECT_QUEST_REWARD。旧定义把交付直接送到
+         reward(0)，巧克力塔物件 701466 从未接进 IR，行 1 永远拿不到状态。
+         Row ladder repair (batch 35): the client owns three rows (hand in the collected chocolate, decorate the
+         tower, report back) while the migrated definition jumped straight from the item report to REWARD. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <!-- 接取：起始对话 / start dialogs -->
     <transition source="unaccepted" target="unaccepted">
       <event>
@@ -132,14 +172,51 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
       </after-commit>
     </transition>
-    <npc-item-report npc-id="202549" source="started" target="reward" item-id="182215172" required="3" failure-page="CLOSE"/>
-    <transition source="started" target="reward">
+        <!-- 行 0：交付 3 个收集巧克力（客户端 select1 的“拿出巧克力”按钮 = CHECK_USER_HAS_QUEST_ITEM），
+         任务书切到行 1。 / Row 0: hand in the collected chocolate, moving the journal to row 1. -->
+    <transition source="started" target="s1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="202549" action="SET_SUCCEED"/>
+        <dialog type="TALK_TO_NPC" npc-id="202549" action="CHECK_USER_HAS_QUEST_ITEM"/>
+      </event>
+      <conditions>
+        <has-item item-id="182215172" count="3"/>
+      </conditions>
+      <actions>
+        <remove-item item-id="182215172" count="3"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="CHECK_USER_ITEM_OK"/>
+      </after-commit>
+    </transition>
+    <!-- check_user_item_ok 页的确认按钮（SETPRO2）：此刻已在行 1，就地关闭对话框，不再额外推进。
+         Confirm button of check_user_item_ok: stays on row 1 and just closes the dialog. -->
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="202549" action="SETPRO2"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 行 1 -> 行 2：在巧克力塔物件上使用巧克力装饰（活动系统负责刷塔）。 / Row 1 -> row 2: decorate the tower. -->
+    <transition source="s1" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="701466" action="USE_OBJECT"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 防呆：若活动塔未刷出，直接找术古对话也能进入领奖行，避免卡在行 1。 -->
+    <transition source="s1" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="202549" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
       </after-commit>
     </transition>
     <!-- 奖励：发放并完成 / reward: grant and complete -->

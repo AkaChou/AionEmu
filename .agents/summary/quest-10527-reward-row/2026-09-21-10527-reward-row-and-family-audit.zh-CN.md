@@ -2899,3 +2899,69 @@ QE-051 的行号口径对它们不适用——本批把这点写进审计脚本�
   计数行）与 **10525/20525、10530**（槽位缺口/共用，需各自取证）。
 - 挂账不变：`STATES_BEYOND_ROWS 2622`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 78`、`section0 residual 837`、
   客户端隔离族 8 个（16984/26984/20015/18706/28706/3959/4963/29706）。
+
+## 三十九、批次 35：情人节巧克力塔镜像族（50019 / 51019，2026-09-22 用户授权后执行）
+
+### 三十九之一、族判据与证据（事件任务的三行任务书 + 客户端 SETPRO2 页链）
+
+批次 34 之后全库还剩 **72 个 `MISSING_TAIL_ROWS`**。本批用「客户端槽位 + 页链 + 客户端 NPC 表 + 真端 event.xml」
+四向取证，收口事件驱动形态里成员最多的一族：
+
+| 项 | 证据 |
+|---|---|
+| 客户端 `quest_q50019/quest_q51019.html` | `quest_summary` 三行、槽位 `%0/%3/%6`：行 0「消灭情人节布朗尼、收集巧克力交给术古」([%collectitem])、行 1「在巧克力塔上使用巧克力装饰」、行 2「和术古对话」 |
+| 客户端页链 | `select_none`(accept=true) / `select1` 的 **CHECK_USER_HAS_QUEST_ITEM** / `check_user_item_ok` 的 **SETPRO2** / `check_user_item_fail` 的 FINISH_DIALOG / `select_success` 的 **SELECT_QUEST_REWARD** / `select_quest_reward1`（奖励窗） |
+| 客户端 NPC 表 | 术古 **202549** = `ShugoL`；巧克力塔 **701466** = `Light_Chocolate_Tower`（Elyos）、**701467** = `Dark_Chocolate_Tower`（Asmodian） |
+| 真端 authority | `event.xml` 的 `<monster_hunt start_npc_ids="202549" id="50019/51019">`；`quest.xml` 的 `collect quest_50011a/quest_51011a ×3`、`quest_work_item 50013a/51013a`、前置 `50010/51010`；本检出**无 Java handler**（事件驱动内容） |
+| 旧定义 | `npc-item-report 202549 started -> reward`（交付直接置 REWARD、投影 0）+ 伪造的 `started --SET_SUCCEED(202549)--> reward`；巧克力塔物件从未接进 IR，行 1 永远拿不到状态 |
+
+三个要点：
+
+1. **`npc-item-report` 指令不能指向非 REWARD 节点**：编译期报
+   `NPC_ITEM_REPORT_TARGET_STATUS ... node s1 must project REWARD`，因此交付落点必须改写成显式
+   `started --CHECK_USER_HAS_QUEST_ITEM(202549)--> s1`（带 `has-item` / `remove-item`），不再用该指令做行阶梯。
+2. **客户端 `check_user_item_ok` 的按钮是 SETPRO2（确认），不是推进两次**：交付本身（CHECK）就是行 0 的完成，
+   SETPRO2 在 `s1` 上保留为就地 `close-dialog` 的确认路由，避免把任务推过“装饰巧克力塔”这一行。
+3. **塔物件由活动系统刷出**：本检出内无 701466/701467 的静态 spawn，因此除了塔的 `USE_OBJECT` 推进路由外，
+   另补“直接找术古对话”的防呆入口（`s1 --QUEST_SELECT(202549)--> reward(2)` 并显示 `DEFAULT_SUCCESS`），
+   保证塔未刷出时不会卡在行 1。逐任务证据见 [batch35-evidence.tsv](batch35-evidence.tsv)。
+
+### 三十九之二、落点（三行阶梯 + 交付改写 + 双自愈边）
+
+- 节点：`unaccepted(0) / started(0) / s1(1) / reward(2) / complete(0)`（`var0` 原本已是 6 bit，无需放宽）。
+- 行 0：`started --CHECK_USER_HAS_QUEST_ITEM(202549)--> s1`——条件 `has-item 182215172/182215178 ×3`、动作
+  `remove-item ×3`、after-commit `LEVEL_AND_VISIBILITY_REFRESH` + `SHOW_QUEST_PAGE CHECK_USER_ITEM_OK`。
+- 行 1：`s1 --TALK_TO_NPC(701466/701467) USE_OBJECT--> reward(2)`（`LEVEL_AND_VISIBILITY_REFRESH` + `close-dialog`）。
+- 行 2：`reward + QUEST_SELECT(202549) -> DEFAULT_SUCCESS`（既有）+ `npc-complete` owner 202549（既有，
+  `<preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>` 展开 1009 奖励窗）。
+- 自愈边：`REWARD && var0==0 -> 2` 与 `REWARD && var0==1 -> 2`（无 source、`enter-world`、
+  `LEVEL_AND_VISIBILITY_REFRESH`、无 priority）。
+- SETPRO2：`s1 --SETPRO2(202549)--> s1` + `close-dialog`（客户端 check_ok 页的确认按钮）。
+
+### 三十九之三、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 2/2 validates；`apply_batch35_valentine_tower_row_ladder.py
+  --check` 幂等 2/2。
+- **全库行号审计**：`MISSING_TAIL_ROWS 74 -> 72`、`ROW_BEHIND 172 -> 170`、`ROW_WITHOUT_STATE 504 -> 502`、
+  `ROW_ALIGNED 2676 -> 2678`、`ROW_STATE_ALIGNED/ALIGNED 2448 -> 2450`；50019/51019 由
+  `MISSING_TAIL_ROWS + ROW_BEHIND + ROW_WITHOUT_STATE(1 2) + visible=0` 转
+  `ALIGNED + ROW_ALIGNED + ROW_STATE_ALIGNED + visible=0 1 2 + recovery=True`。
+- **Maven（授权后执行）**：31 个 reward/row/ladder/owner/catalog 测试类 **183 例全绿**，含新增
+  `Batch35ValentineTowerRowLadderContractTest`（8 例：三行投影 / 每行一个状态 / 交付推进（has-item + remove-item +
+  check_ok 页）/ 塔装饰推进 + 防呆入口 / owner 唯一且塔不能领奖 / `10002` 入口与 `1009` 领奖路由 /
+  0 与 1 两条自愈边 + planner 收敛 / 不再保留伪造的 `SET_SUCCEED` 且 SETPRO2 为就地关闭）；
+  `PRODUCTION_COMPILE_OK=6191 / FAILURES=0 / INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。
+  修复过程中先撞 `NPC_ITEM_REPORT_TARGET_STATUS`，改为显式 CHECK 路由后全绿。
+- **客户端实机 PENDING_CLIENT**：① 接取后任务书停在行 0；② 交满 3 个巧克力并在术古处“拿出巧克力”后切到行 1
+  （check_ok 页点确认即可关闭）；③ 在巧克力塔上使用装饰后切到行 2；④ 回术古处开奖励窗领奖；⑤ 旧存档
+  （`REWARD + var0=0/1`）登录或切图后应直接落在行 2；⑥ 若活动塔未刷出，应能直接找术古进入领奖行（防呆入口）。
+
+### 三十九之四、边界与后续
+
+- **同族未收口成员**（同一页链形态、成员更多）：`50020`(Extra-Bitter Chocolate)、`50022`(Shove-l It，塔物件是
+  701470 `Event_Cargobox`) 与 `80300-80309`（另一代情人节事件，术古 799763、物件 701774 `world_event_Cargobox` 等）
+  —— 需要逐任务确认塔/箱物件与收集物 id 后再按本批模板收口，**不得**直接套用 701466/701467。
+- `MISSING_TAIL_ROWS` 剩余 68 个仍在 [11] 节列出；事件族之外的大块是「legacy 递增但客户端行更多」形态，
+  须先判 `var0` 是否行号（QE-051 vs QE-054）。
+- 挂账不变：`STATES_BEYOND_ROWS 2622`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 78`、`section0 residual 837`、
+  客户端隔离族 8 个（16984/26984/20015/18706/28706/3959/4963/29706）。
