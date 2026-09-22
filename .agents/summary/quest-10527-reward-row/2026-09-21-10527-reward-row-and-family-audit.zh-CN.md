@@ -3361,3 +3361,94 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
   `STATES_BEYOND_ROWS 2620`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 73`、客户端隔离族 8 个
   （3959/4963/16984/18706/20015/26984/28706/29706）；既有红除登记例外另有本次沿用的
   `QuestInteractionObjectCatalogTest` 8 条资格缺口。
+
+## 四十四、批次 40：三行「接取 → 行 0 NPC → 行 1 NPC → 行 2 NPC 报告领奖」族（11072/21081/24150）
+
+### 四十四之一、族判据与证据（2026-09-22）
+
+本批收口第二族三行任务：**11072（天族 50 级）/ 21081（魔族 50 级，Gelkmaros 武器补给）/
+24150（魔族，贝鲁斯兰要塞崩溃）**。三家客户端任务书都是三行、槽位 `%0/%3/%6`，且页链完全同型：
+
+| 任务 | 接取 NPC | 行 0 NPC | 行 1 NPC | 行 2 NPC（报告/领奖） |
+|---|---|---|---|---|
+| 11072 | Seneca 798937 | Borriello 798907 | Delus 798960 | Seneca 798937 |
+| 21081 | Hler 799225 | Agovard 799332 | Renato 799217 | Sepsi 799202 |
+| 24150 | Nerthus 204702 | Bestla 204733 | Horu 204734 | Nerthus 204702 |
+
+证据链：
+
+- **客户端任务书行**（`Dialogs/10000_19999/quest_q11072.html`、
+  `Dialogs/20000_29999/quest_q21081.html`、`quest_q24150.html`）：
+  quest_summary 三行绑定 `[%0]` / `[%3]` / `[%6]`，行文本逐行点名上表的 NPC。
+- **客户端页链**（三家一致）：
+  `select1`（11072 还有 `select1_1`，按钮 `HACTION_SELECT1_1`）→ `ask_quest_accept` →
+  `quest_accept_1`；
+  行 0：`select2`（按钮 `HACTION_SELECT2_1`）→ `select2_1`（按钮 `HACTION_SETPRO1`）；
+  行 1：`select3`（按钮 `HACTION_SELECT3_1`）→ `select3_1`（按钮 `HACTION_SETPRO2`）；
+  行 2：`select5`（按钮 `HACTION_SELECT_QUEST_REWARD`）→ `select_quest_reward1` 领奖页。
+  页 id 与 `HtmlPages.xml` 一致：SELECT2=1352 / SELECT2_1=1353 / SELECT3=1693 / SELECT3_1=1694 /
+  SELECT5=2375。
+- **客户端 NPC 名表**（`client_npcs_npc.xml`）：Borriello=798907、Delus=798960、Seneca=798937、
+  Hler=799225、Agovard=799332、Renato=799217、Sepsi=799202、Bestla=204733、Horu=204734、
+  Nerthus=204702；与 legacy 合同的 `start_npc_ids`/`end_npc_ids`
+  （11072: 798937→798937、21081: 799225→799202、24150: 204702→204702）完全对上。
+- **旧定义错位**：三家都是“每个任务 NPC 都能接取 + 都能领奖”的扁平模板，只保留
+  `SELECT2 / SELECT2_1 / SETPRO1 -> reward`；`SELECT3 / SELECT3_1 / SETPRO2` 与 `SELECT5`
+  完全缺失，行 1/行 2 永远拿不到状态；21081/24150 还会在行 0 的 NPC 处直接进入领奖态。
+  审计判成 `MISSING_TAIL_ROWS | ROW_BEHIND | ROW_WITHOUT_STATE(1 2) | visible=0`。
+
+### 四十四之二、落点（行阶梯 = START/START/REWARD + owner 收敛）
+
+- **节点**：`unaccepted(0) / started(START,0) / s1(START,1) / reward(REWARD,2) / complete(0)`。
+- **接取**：只在接取 NPC 上保留 `NPC_START`（`start-page=SELECT1`），11072 额外保留
+  `unaccepted SELECT1_1 -> SELECT1_1` 第二页；21081 的 `accept-actions` 发补给品发放令
+  182214017、24150 的发奥德增强装置 182215460 均留在接取 NPC 上。
+- **行 0 → 行 1**：行 0 NPC 的 `QUEST_SELECT -> SELECT2`、`SELECT2_1 -> SELECT2_1`、
+  `SETPRO1 -> s1`（`LEVEL_AND_VISIBILITY_REFRESH`）。
+- **行 1 → 行 2**：行 1 NPC 的 `QUEST_SELECT -> SELECT3`、`SELECT3_1 -> SELECT3_1`、
+  `SETPRO2 -> reward`。
+- **行 2**：行 2 NPC 的 `NPC_REPORT source=reward target=reward page=SELECT5` 展开成
+  `QUEST_SELECT -> select5` + `SELECT_QUEST_REWARD -> SHOW_SELECT_QUEST_REWARD_WINDOW1`；
+  `npc-complete` 收敛到该 NPC（11072 固定索引 0/1/2、21081 固定 0、24150 固定 0/1/2/3 +
+  选择 4/5）；preview 只保留 `USE_OBJECT`（避免与 `NPC_REPORT` 的 SELECT_QUEST_REWARD 撞车）。
+- **自愈边**：`REWARD && var0==0` 无 source `enter-world` → `reward(var0=2)`。
+
+### 四十四之三、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 3/3 validates；
+  `apply_batch40_three_npc_talk_ladder.py --apply` 后 `--check` 幂等 3/3 OK；
+  `git diff --check` 干净。
+- **全库行号审计（脚本 [11] 节已改为批次 40，并补登本族）**：
+  `MISSING_TAIL_ROWS 50 -> 47`（-3）、`ROW_BEHIND 147 -> 144`（-3）、
+  `ROW_WITHOUT_STATE 479 -> 476`（-3）、`ROW_ALIGNED 2703 -> 2706`（+3）、
+  `ROW_STATE_ALIGNED 2475 -> 2478`（+3）；3 个任务全部
+  `ALIGNED + ROW_ALIGNED + ROW_STATE_ALIGNED + visible=0 1 2 + recovery=True`，
+  逐任务前后见 [batch40-evidence.tsv](batch40-evidence.tsv)。
+- **Maven（授权后执行）**：新增 `Batch40ThreeNpcTalkLadderContractTest`（5 例：每行一个状态 /
+  接取只留在接取 NPC / 行 owner 页链与 SETPRO1/SETPRO2 推进 + 行 2 开窗口 1 / 完成只在行 2 NPC
+  且行 0/1 NPC 无领奖口 / 旧 `REWARD var0=0` 自愈）5/5 绿；同批回归
+  `Batch39TurnInTalkReportRowContractTest` 5/5、`Batch38BranchChoiceRewardIndexContractTest` 4/4、
+  `ProductionCatalogWhitelistVerificationTest` 1/1（`PRODUCTION_COMPILE_OK=6191 / FAILURES=0 /
+  INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`）、`QuestPageButtonAuditTest`(2)、
+  `QuestHandoverContinuationAuditTest`(2)、`QuestE2eInfrastructureTest`(41)、
+  `AcceptAndConfirmationEntryContractTest`(2)、`QuestClientContractGateTest` 全绿。
+- **既有红登记（非本批引入）**：`QuestInteractionObjectCatalogTest` 的同一批 8 条
+  `TALK_TO_NPC dialog=-1` 资格缺口（13809/23809/30504/30554），本批任务不在清单内。
+- **客户端实机 PENDING_CLIENT**：① 只允许接取 NPC 开启接取对话（行 0 NPC 不再能接取）；
+  ② 接取后行 0 提示去对应 NPC，`select2 → select2_1 → SETPRO1` 后任务书切行 1；
+  ③ `select3 → select3_1 → SETPRO2` 后切行 2；④ 行 2 NPC 的 `select5` 点“报告/提交”弹出
+  奖励窗口 1 并完成（24150 需能选择索引 4/5 的奖励）；⑤ 行 0/行 1 的 NPC 处不应再出现领奖窗口；
+  ⑥ 旧存档 `REWARD + var0=0` 登录或切图后自愈到行 2。
+
+### 四十四之四、边界与后续
+
+- **21081 的可选武器未展开（既有差异，本批只登记不扩围）**：metadata 有 13 个
+  `SELECTABLE_ITEM`（含 6 条 `class-rewards`），旧定义与本次收口都沿用
+  `actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD"`（只发固定 EXP），客户端
+  `select_quest_reward1` 的“选择一件武器”因此拿不到选择结果；是否改成显式 choice 或
+  CLASS/CHOICE reported-reward 合同需要单独一轮奖励语义取证，不与行号收口混做。
+- 11072/24150 的行 2 NPC 与接取 NPC 是同一人，路由靠 source 节点（unaccepted vs reward）区分，
+  不能再把 `SELECT1` 链挂到 reward 态。
+- 剩余 `MISSING_TAIL_ROWS 47`（41 个待逐族收口 + 6 个已登记例外）。其它挂账不变：
+  `STATES_BEYOND_ROWS 2620`、`INTERIOR_GAP 263`、`MISSING_LAST_ROW 73`、客户端隔离族 8 个；
+  既有红沿用 `QuestInteractionObjectCatalogTest` 8 条资格缺口。

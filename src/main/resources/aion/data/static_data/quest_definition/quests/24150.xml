@@ -22,6 +22,10 @@
       <condition type="noacquired" quest-id="2051"/>
     </start-conditions>
   </metadata>
+  <!-- QE-051 行阶梯收口（批次 40）：客户端任务书三行、槽位 %0/%3/%6，状态 0/1/2 与行一一对应。
+       贝鲁斯兰要塞崩溃：Nerthus 委托、Bestla 诊断、Horu 装装置、回 Nerthus 复命。
+       Row ladder closure (batch 40): the accept chain, then one talking owner per journal row
+       (select2/SETPRO1 for row 0, select3/SETPRO2 for row 1, select5/SELECT_QUEST_REWARD for row 2). -->
   <progress>
     <bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/>
   </progress>
@@ -32,52 +36,41 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="s1" status="START">
+      <var name="var0" value="1"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- 旧存档自愈：迁移前的 started -> reward 直跳落盘 REWARD/var0=0，把它提到行 2。
+         / Heal the pre-migration REWARD/var0=0 save to row 2. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="0"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
+    <!-- 接取：只在接取 NPC 上。 / Accept only on the accept NPC. -->
     <dialog type="NPC_START" npc-id="204702" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
       <accept-actions>
         <give-item item-id="182215460" count="1"/>
       </accept-actions>
     </dialog>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204702" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204702" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <conditions>
-        <has-item item-id="182215460" count="1"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="182215460" count="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <npc-complete npc-id="204702" source="reward" target="complete" fixed-reward-indices="0 1 2 3" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <choice action="SELECTED_QUEST_REWARD1" reward-index="4"/>
-      <choice action="SELECTED_QUEST_REWARD2" reward-index="5"/>
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="204733" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
-      <accept-actions>
-        <give-item item-id="182215460" count="1"/>
-      </accept-actions>
-    </dialog>
+    <!-- 行 0：和 204733 对话（select2 -> select2_1 -> SETPRO1）。 / Row 0 owner. -->
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204733" action="QUEST_SELECT"/>
@@ -86,77 +79,6 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
       </after-commit>
     </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204733" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <conditions>
-        <has-item item-id="182215460" count="1"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="182215460" count="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <npc-complete npc-id="204733" source="reward" target="complete" fixed-reward-indices="0 1 2 3" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <choice action="SELECTED_QUEST_REWARD1" reward-index="4"/>
-      <choice action="SELECTED_QUEST_REWARD2" reward-index="5"/>
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <dialog type="NPC_START" npc-id="204734" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1">
-      <accept-actions>
-        <give-item item-id="182215460" count="1"/>
-      </accept-actions>
-    </dialog>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204734" action="QUEST_SELECT"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204734" action="SELECT_QUEST_REWARD"/>
-      </event>
-      <conditions>
-        <has-item item-id="182215460" count="1"/>
-      </conditions>
-      <actions>
-        <remove-item item-id="182215460" count="1"/>
-      </actions>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <npc-complete npc-id="204734" source="reward" target="complete" fixed-reward-indices="0 1 2 3" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <choice action="SELECTED_QUEST_REWARD1" reward-index="4"/>
-      <choice action="SELECTED_QUEST_REWARD2" reward-index="5"/>
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204702" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204702" action="SETPRO1"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <close-dialog/>
-      </after-commit>
-    </transition>
-
     <transition source="started" target="started">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204733" action="SELECT2_1"/>
@@ -165,15 +87,7 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
       </after-commit>
     </transition>
-      <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="204734" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-<transition source="started" target="reward">
+    <transition source="started" target="s1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204733" action="SETPRO1"/>
       </event>
@@ -182,14 +96,63 @@
         <close-dialog/>
       </after-commit>
     </transition>
-<transition source="started" target="reward">
+    <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="204734" action="SETPRO1"/>
+        <dialog type="TALK_TO_NPC" npc-id="204733" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 行 1：和 204734 对话（select3 -> select3_1 -> SETPRO2）。 / Row 1 owner. -->
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204734" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204734" action="SELECT3_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT3_1"/>
+      </after-commit>
+    </transition>
+    <transition source="s1" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204734" action="SETPRO2"/>
       </event>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
-</transitions>
+    <transition source="s1" target="s1">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204734" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 行 2：和 204702 对话（select5）+ 领奖窗口 1。 / Row 2 owner and reward. -->
+    <dialog type="NPC_REPORT" npc-id="204702" source="reward" target="reward" page="SELECT5"/>
+    <npc-complete npc-id="204702" source="reward" target="complete"
+      fixed-reward-indices="0 1 2 3" complete-reward-index="0" finish="SELECTION_DIALOG">
+      <choice action="SELECTED_QUEST_REWARD1" reward-index="4"/>
+      <choice action="SELECTED_QUEST_REWARD2" reward-index="5"/>
+      <preview actions="USE_OBJECT"/>
+    </npc-complete>
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204702" action="FINISH_DIALOG"/>
+      </event>
+      <after-commit>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+  </transitions>
 </quest-definition>
