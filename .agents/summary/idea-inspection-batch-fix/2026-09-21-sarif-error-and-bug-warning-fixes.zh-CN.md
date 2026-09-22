@@ -55,8 +55,33 @@ JavadocReference 根因三类：
 - 提交 `06e33cee8`（一轮 lint 修复）与 `b6e6957dd`（三轮 quick-fix 波次，1455 文件）；`QuestDialogPage.java` 为用户 WIP（增强 switch 降级实验）未纳入，非 Java WIP 一律未动。
 - 经验（可复用）：IDEA「Fix all」对「冗余花括号」的判定在 case 块含局部声明时会误删；跑完批量 quick-fix 后必须全量编译，再按错误行恢复 case 括号。
 
+## 四轮：批次 A 空体语句分诊（2026-09-22 凌晨）
+
+- 新写空体检测器（注释/字符串掩码 + 括号配对）扫出当前代码 190 处（SARIF 已两轮过期，不可复用行号）。
+- 六类处理：AI2 守卫反转（~70）、CAS 裸语句（~30）、副本计数空链删除（~40，`==N` 互斥才安全）、服务死 if（14）、副作用条件转裸调用（6）、注释占位清理（~15）。
+- **关键纠错（脚本化批量修改的教训）**：
+  1. 通用「空 if 删除」误删了 3 处**物品消耗调用**（条件副作用）——AnimationAddAction/AssemblyItemAction/ItemUseAction，已恢复为裸调用；
+  2. 空链分支删除对**条件重叠**链不健全——Outpost/Base 丢 `getFlag()==null` 守卫会 NPE、CM_FRIEND_ADD 满员分支使拒绝失效，均已修复（后者顺势补全 TARGET_LIST_FULL 拒绝，上游缺失逻辑）；
+  3. 链尾删除模式会吞前分支闭合括号（PlayerCommonData/CM_HOTSPOT_TELEPORT 语法破损，编译兜底抓出后修复）。
+- 有意保留：测试 while 游标推进 ×3、do-while 尾 ×4、ThreadUncaughtExceptionHandler OOM 预留点。
+- 提交时用户暂存区有其 ai-registration-gate WIP，首次提交误卷入，`reset --soft` 重做剔除并恢复其暂存；**提交前必须核对 `git diff --cached` 仅含本任务文件**。
+- 待办批次：B+C 机械大批量（JavadocBlankLines 1515 / Size→isEmpty 146 / FieldMayBeFinal 70 / 残余 import）、D 算术缺陷 ~40、E NPE 分诊 310；用户并行重构（XmlDataLoader 包移动）落定后再跑全量编译。
+
+## 五轮：批次 B+C/D（2026-09-22）
+
+- **B 悬空 Javadoc 参数回挂**：495 行/141 文件提交。首版曾误将双语描述挂成 @param（1082 文件全回滚），严格门控重做（段前必须真空行分隔 + 无同名 @param + 非句末标点 + 行数==形参数），抽样 6/6 正确。经验：javadoc「空白行将被忽略」警告的真根因是悬空参数行，修复悬空即消除。
+- **C size()==0→isEmpty() 整体放弃**：正则类型盲改在 ByteArrayOutputStream/NpcSkillList 等 5 处编译报错（无 isEmpty 方法），该类别必须交给 IDEA 类型感知修复。
+- **D 恒等算术包装移除**（5 文件提交）：ceil/floor/round(int) 恒等、`<< 0`/`>> 0`、`+ +` 手滑。EncryptionKeyPair 正则曾吞外层括号，lint 抓出修复。Stats/CmdAttrBonus 的同类移除混入用户 Lombok 改造，随用户批次走。
+- **数值行为类待拍板清单**（int 截断后才 round/乘浮点，修复=数值变化）：
+  1. `PvpService` AP 分配 `Math.round(baseApReward * dmg / totalDamage)`（全 int 截断，修复后分配略增）
+  2. `NpcController` PvE AP `Math.round(baseApReward * percentage / players.size())`
+  3. `XPLossEnum` 死亡经验损失 `Math.round(expNeed / 100 * param)`
+  4. `Stats`/`CmdAttrBonus` GM 属性百分比 `(stat * modifier) / 100`
+  5. `FortressAssault` 围攻阵型 `amount / 2`（float 上下文，奇数偏移 0.5）
+  6. `LadderService` 1100-1105（SARIF 行号漂移未定位）
+
 ## 验证状态
 
 - 已执行：IDEA MCP 实时检查，全部被改文件 0 error；目标警告按文件抽查确认消失。
-- 已执行（用户授权）：IDEA `build_project` 全量编译 **成功**（三轮后含 test 源），仅存量 `QuestDialog` deprecation 警告。
+- 已执行（用户授权）：IDEA `build_project` 全量编译 **成功**（三轮后含 test 源），仅存量 `QuestDialog` deprecation 警告；批次 A 因用户并行重构（XmlDataLoader 包移动中）改用 108 文件逐批 lint 验证 0 error。
 - 未执行：单测（如需请另行授权指定范围）。
