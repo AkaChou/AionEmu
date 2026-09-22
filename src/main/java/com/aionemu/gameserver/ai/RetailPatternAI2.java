@@ -553,8 +553,9 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			&& !hasActionType(pattern, "goto_alias")) {
 			return false;
 		}
-		for (List<Rule> rules : pattern.events().values()) {
-			for (Rule rule : rules) {
+		for (Map.Entry<String, List<Rule>> eventEntry : pattern.events().entrySet()) {
+			String event = eventEntry.getKey();
+			for (Rule rule : eventEntry.getValue()) {
 				for (Operation operation : concat(rule.conditions(), rule.actions())) {
 					if ((operation.type().equals("goto_next_waypoint") || operation.type().equals("is_last_waypoint"))
 						&& !hasWaypoints(npcWalker)) {
@@ -566,7 +567,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 						return false;
 					}
 					if ((isSkillAction(operation) || operation.type().equals("is_skill_count_left"))
-						&& skill(npc.getSkillList(), operation) == null) {
+						&& skill(npc.getSkillList(), operation) == null && !isOptionalWakeUpSkill(event, operation)) {
 						return false;
 					}
 					if ((operation.type().equals("spawn") || operation.type().equals("spawn_on_target")
@@ -3386,6 +3387,18 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		return Set.of("on_despawn", "on_killed_by_user").contains(event) && actions.size() == 2
 			&& actions.get(0).type().equals("use_skill") && value(actions.get(0), "target").equals("OBJI_SELF")
 			&& actions.get(1).type().equals("despawn") && value(actions.get(1), "spawn_id").equals("SPAWN_ID_1");
+	}
+
+	/**
+	 * 起身自增益技能缺失时可以安全跳过，且不得否决范式中的其它事件。
+	 * A missing wake-up self-buff can be skipped safely and must not discard the rest of the pattern.
+	 * @param event 事件名 / event name
+	 * @param operation 操作 / operation
+	 * @return 是否可忽略 / whether the operation may be ignored
+	 */
+	private static boolean isOptionalWakeUpSkill(String event, Operation operation) {
+		return event.equals("on_wake_up") && operation.type().equals("use_skill")
+			&& value(operation, "target").equals("OBJI_SELF");
 	}
 
 	private static boolean isSkillAction(Operation operation) {

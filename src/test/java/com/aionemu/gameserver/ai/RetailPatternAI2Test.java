@@ -292,6 +292,47 @@ class RetailPatternAI2Test {
 	}
 
 	@Test
+	void supportsArchivesOfEternityLeversWithoutServerSideWakeUpSkills() throws ReflectiveOperationException {
+		String previousDefinitions = System.getProperty("aion.game.definitions.dir");
+		NpcSkillData previousNpcSkills = DataManager.NPC_SKILL_DATA;
+		RetailAiData previousRetailAi = DataManager.RETAIL_AI_DATA;
+		try {
+			System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
+			XmlDataLoader loader = new XmlDataLoader();
+			DataManager.NPC_SKILL_DATA = loader.loadNpcSkillData();
+			DataManager.RETAIL_AI_DATA = loader.loadRetailAiData();
+
+			ObjenesisStd objenesis = new ObjenesisStd();
+			for (int npcId = 703009; npcId <= 703016; npcId++) {
+				Pattern pattern = DataManager.RETAIL_AI_DATA.getPattern(npcId);
+				assertNotNull(pattern, "missing lever pattern: " + npcId);
+				assertTrue(pattern.event("on_die").stream()
+					.flatMap(rule -> rule.actions().stream())
+					.anyMatch(action -> action.type().equals("broadcast_message")),
+					"lever must keep its death broadcast: " + npcId);
+
+				SkillNpc owner = objenesis.newInstance(SkillNpc.class);
+				owner.npcId = npcId;
+				owner.objectTemplate = objenesis.newInstance(NpcTemplate.class);
+				owner.controller = new RecordingNpcController();
+				owner.controller.setOwner(owner);
+				owner.skillList = skillList(List.of());
+				owner.setLifeStats(objenesis.newInstance(FixedNpcLifeStats.class));
+				assertTrue(RetailPatternAI2.supports(pattern, owner),
+					"lever pattern must stay active without wake-up skills: " + npcId);
+			}
+		} finally {
+			DataManager.NPC_SKILL_DATA = previousNpcSkills;
+			DataManager.RETAIL_AI_DATA = previousRetailAi;
+			if (previousDefinitions == null) {
+				System.clearProperty("aion.game.definitions.dir");
+			} else {
+				System.setProperty("aion.game.definitions.dir", previousDefinitions);
+			}
+		}
+	}
+
+	@Test
 	void usesDefaultIdleThinkingForCombatOnlyPatterns() {
 		Rule rule = new Rule(1, "DIRECT", List.of(), List.of(new Operation("do_nothing", Map.of())));
 
