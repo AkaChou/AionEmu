@@ -97,15 +97,37 @@ class QuestMovieAndDialogLoopRegressionTest {
 	@Test
 	void quest28301GrantsDeviceAndAdvancesToReward() throws Exception {
 		QuestDefinition def = definition(28301).definition();
-		for (int npcId : List.of(799530, 730373, 730374)) {
-			QuestTransition pickUp = def.transitions().stream()
-				.filter(t -> "k7".equals(t.sourceNode()) && "reward".equals(t.targetNode())
-					&& t.event() instanceof QuestEvent.TalkToNpc ttn && ttn.npcId() == npcId
-					&& Integer.valueOf(QuestDialogAction.SETPRO2.id()).equals(ttn.dialogId()))
-				.findFirst().orElseThrow();
-			assertTrue(pickUp.actions().stream().anyMatch(a -> a instanceof QuestAction.GiveItem gi && gi.itemId() == 182212110));
-			assertTrue(pickUp.afterCommit().stream().anyMatch(a -> a instanceof AfterCommitAction.ShowQuestDialog sqd && sqd.dialogId() == QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()));
-		}
+		// 批次 52：拾取页（select2/select2_1）与 SETPRO2 只属于 H-Core（730374），装置交给
+		// Hariken（799530）领奖；三个 NPC 都能发装置的旧迁移形态已收敛，与天族 18301 同形。
+		// Batch 52: the pickup pages and SETPRO2 belong to the H-Core (730374) only; the device is handed
+		// to Hariken (799530) for the reward, matching the Elyos half 18301.
+		QuestTransition pickUp = def.transitions().stream()
+			.filter(t -> "k7".equals(t.sourceNode()) && "reward".equals(t.targetNode())
+				&& t.event() instanceof QuestEvent.TalkToNpc ttn && ttn.npcId() == 730374
+				&& Integer.valueOf(QuestDialogAction.SETPRO2.id()).equals(ttn.dialogId()))
+			.findFirst().orElseThrow();
+		assertTrue(pickUp.actions().stream().anyMatch(a -> a instanceof QuestAction.GiveItem gi && gi.itemId() == 182212110));
+		assertTrue(pickUp.afterCommit().stream().anyMatch(a -> a instanceof AfterCommitAction.CloseDialog));
+		List<QuestTransition> completions = def.transitions().stream()
+			.filter(t -> "complete".equals(t.targetNode()))
+			.toList();
+		assertFalse(completions.isEmpty());
+		assertTrue(completions.stream().allMatch(
+			t -> t.event() instanceof QuestEvent.TalkToNpc ttn && ttn.npcId() == 799530),
+			() -> "28301 completes on Hariken only");
+		assertEquals(0, def.transitions().stream()
+			.filter(t -> "reward".equals(t.targetNode()) && t.event() instanceof QuestEvent.TalkToNpc ttn
+				&& ttn.npcId() == 730373)
+			.count(), "监视水晶球不再发放动力装置");
+		assertEquals(1, def.transitions().stream()
+			.filter(t -> "reward".equals(t.targetNode()) && t.event() instanceof QuestEvent.TalkToNpc ttn
+				&& ttn.npcId() == 730374)
+			.count(), "H-Core 只保留一条 SETPRO2 拾取路线");
+		assertEquals(1, def.transitions().stream()
+			.filter(t -> "reward".equals(t.targetNode()) && t.event() instanceof QuestEvent.TalkToNpc ttn
+				&& ttn.npcId() == 799530
+				&& Integer.valueOf(QuestDialogAction.QUEST_SELECT.id()).equals(ttn.dialogId()))
+			.count(), "Hariken 的 select_success(10002) 路线唯一");
 	}
 
 	@Test

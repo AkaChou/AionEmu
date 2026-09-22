@@ -30,16 +30,92 @@
     <node label="started" status="START">
       <var name="var0" value="0"/>
     </node>
+    <node label="k1" status="START">
+      <var name="var0" value="1"/>
+    </node>
+    <node label="k2" status="START">
+      <var name="var0" value="2"/>
+    </node>
+    <node label="k3" status="START">
+      <var name="var0" value="3"/>
+    </node>
+    <node label="k4" status="START">
+      <var name="var0" value="4"/>
+    </node>
+    <node label="k5" status="START">
+      <var name="var0" value="5"/>
+    </node>
+    <node label="k6" status="START">
+      <var name="var0" value="6"/>
+    </node>
+    <node label="k7" status="START">
+      <var name="var0" value="7"/>
+    </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="0"/>
+      <var name="var0" value="7"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- 接取：Hariken（799530），客户端页 select_none(4762) -> ask_quest_accept(4) -> quest_accept_1(1003)。
+         Accept at Hariken (799530); the client pages are select_none/ask_quest_accept/quest_accept_1. -->
     <dialog type="NPC_START" npc-id="799530" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
-    <dialog type="NPC_REPORT" npc-id="799530" source="started" target="reward" page="SELECT2"/>
+    <!-- 行 0：兵站区域 7 个监视水晶球（普通副本 702656 / 活动副本 730373，同族 18314/28314 的 id 组合），
+         客户端 quest_script 声明 Progress(0~6)，正好覆盖 0..6 七个 step；第 7 个把 var0 推到 7。
+         Row 0: the seven spy crystals (702656 in the normal instance, 730373 in the event instance);
+         the client script declares Progress(0~6), so seven kills own steps 0..6 and the last one opens k7. -->
+    <kill-chain nodes="started k1 k2 k3 k4 k5 k6 k7">
+      <event>
+        <kill-npc npc-ids="702656 730373"/>
+      </event>
+    </kill-chain>
+    <!-- 行 1：击毁守护兵胡根后掉落的 H-Core（730374）。legacy 只在 var==7 时开放拾取页，
+         取走装置即落入行 2（领奖行），发本任务的工作物品 quest_18301a = 182212100。
+         Row 1: the H-Core (730374) dropped by Weapon Hugen; the legacy handler only opens the pickup
+         pages at var==7 and grants the Elyos work item 182212100 (quest_18301a) when it is taken. -->
+    <transition source="k7" target="k7">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730374" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2"/>
+      </after-commit>
+    </transition>
+    <transition source="k7" target="k7">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730374" action="SELECT2_1"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
+      </after-commit>
+    </transition>
+    <transition source="k7" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="730374" action="SETPRO2"/>
+      </event>
+      <actions>
+        <give-item item-id="182212100" count="1"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+        <close-dialog/>
+      </after-commit>
+    </transition>
+    <!-- 行 2：把动力装置交给 Hariken 领奖（客户端 select_success(10002) 的按钮
+         HACTION_SELECT_QUEST_REWARD(1009) 由 npc-complete 的 preview 路由打开
+         select_quest_reward1(5)）。
+         Row 2: hand the device to Hariken; select_success(10002) -> HACTION_SELECT_QUEST_REWARD(1009)
+         opens the reward window select_quest_reward1(5). -->
+    <transition source="reward" target="reward">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="799530" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="DEFAULT_SUCCESS"/>
+      </after-commit>
+    </transition>
     <npc-complete npc-id="799530" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
       <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
       <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
@@ -49,77 +125,21 @@
       <choice action="SELECTED_QUEST_REWARD6" reward-index="6"/>
       <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
     </npc-complete>
-
-    <dialog type="NPC_REPORT" npc-id="730373" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="730373" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
-      <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
-      <choice action="SELECTED_QUEST_REWARD3" reward-index="3"/>
-      <choice action="SELECTED_QUEST_REWARD4" reward-index="4"/>
-      <choice action="SELECTED_QUEST_REWARD5" reward-index="5"/>
-      <choice action="SELECTED_QUEST_REWARD6" reward-index="6"/>
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-
-    <dialog type="NPC_REPORT" npc-id="730374" source="started" target="reward" page="SELECT2"/>
-    <npc-complete npc-id="730374" source="reward" target="complete" fixed-reward-indices="0" complete-reward-index="0" finish="SELECTION_DIALOG">
-      <choice action="SELECTED_QUEST_REWARD1" reward-index="1"/>
-      <choice action="SELECTED_QUEST_REWARD2" reward-index="2"/>
-      <choice action="SELECTED_QUEST_REWARD3" reward-index="3"/>
-      <choice action="SELECTED_QUEST_REWARD4" reward-index="4"/>
-      <choice action="SELECTED_QUEST_REWARD5" reward-index="5"/>
-      <choice action="SELECTED_QUEST_REWARD6" reward-index="6"/>
-      <preview actions="USE_OBJECT SELECT_QUEST_REWARD"/>
-    </npc-complete>
-    <transition source="started" target="started">
+    <!-- 自愈边：迁移期 reward 投影停在 0，领奖态旧存档进世界时补到水晶计数/领奖行 7。
+         Heal edge: the migrated REWARD projection stopped at 0, so stale reward saves move to step 7. -->
+    <transition target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="730373" action="SELECT2_1"/>
+        <enter-world/>
       </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="730374" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="started">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="799530" action="SELECT2_1"/>
-      </event>
-      <after-commit>
-        <dialog type="SHOW_QUEST_PAGE" page="SELECT2_1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="730373" action="SETPRO2"/>
-      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-below field="var0" value="7"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="7"/>
+      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="730374" action="SETPRO2"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
-      </after-commit>
-    </transition>
-    <transition source="started" target="reward">
-      <event>
-        <dialog type="TALK_TO_NPC" npc-id="799530" action="SETPRO2"/>
-      </event>
-      <after-commit>
-        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
-        <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
   </transitions>

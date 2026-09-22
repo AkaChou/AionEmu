@@ -4256,3 +4256,90 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
   13918/14012/14013/14053/14054/14152/17500/18213/18301/18911/21080/21138/21467/23918/24016/24053/
   24203/27500/28213/28911/29008）继续逐个核对 `collect_progress`、legacy 阶梯与页链后再落码。
 - `var0` 的 `max=63` 未改动；本批没有新增 bit-field，`ClientQuestSectionAlignmentTest` 的 6N 约束不受影响。
+
+## 五十六、批次 52：18301/28301 阿图拉姆空中要塞监视水晶球七步计数阶梯（2026-09-22）
+
+### 五十六之一、族判定与证据（客户端任务书 + 客户端脚本 + legacy 三方）
+
+- **客户端行**（`quest_q18301.html` / `quest_q28301.html` 的 `quest_summary`，各 3 行，槽位 `%0`/`%3`/`%6`）：
+  行 0 = 破坏设置在兵站区域的 [监视水晶球]（计数显示 `([%2]/7)`）、行 1 = 击毁守护兵胡根后取得
+  H-Core（胡根动力装置，`IDStation_FOBJ_BOMB`）、行 2 = 把动力装置交给 Hariken 领奖。
+- **客户端 step 声明**：`quest_script_monster.csv` 对 18301/28301 都声明
+  `Progress(0~6)`（`sourceType=killedByUser`，`sourceName=idstation_fobj_dr_cm_01`，`num=2`）——
+  七个水晶球正好占 step 0..6，第七个把 SECTION_0 推到 7；与批次 50 的 2289（`Progress(0~4)`）
+  同属 QE-012「计数行走行」合同，行 1/行 2 位于 step 7。
+- **副本侧证据**：H-Core（730374）由 `AturamSkyFortressInstance` / `Event_AturamSkyFortressInstance`
+  在 `case 217371: //Weapon Hugen` 死亡时 `sp(730374, 815.397, 288.390, 602.764, 91, ...)`
+  生成，即「击毁胡根 → 掉落装置」在副本脚本里有落点。
+- **客户端页链**（`docs/quest/client-dialog-mapping`）：`select2(1352) --HACTION_SELECT2_1(1353)-->
+  select2_1(1353) --HACTION_SETPRO2(10001)-->` 拾取装置；领奖行是
+  `select_success(10002) --HACTION_SELECT_QUEST_REWARD(1009)--> select_quest_reward1(5)`。
+- **legacy 阶梯**：`_18301MyPrec_H_ious` 与 `_28301Power_On` 两份 handler 逐行相同——水晶球 730373 在
+  `var < 7` 时 `USE_OBJECT → sendQuestDialog(1011)`、`STEP_TO_1` 删除水晶球并生成 700978
+  （IDStation_FOBJ_Fix_CM）且 `setQuestVarById(0, var + 1)`；`var == 7` 时 730374 开
+  1352/1353，`STEP_TO_2` 发放装置并 `setStatus(REWARD)`；领奖在 799530（`USE_OBJECT → 10002`、
+  `SELECT_REWARD → 5`）。
+- **缺陷与不对称**：天族 18301 被迁移塌陷成三条 `started -> reward` 直线、`reward` 投影停在 0
+  （审计 `ROW_BEHIND | MISSING_TAIL_ROWS | ROW_WITHOUT_STATE`，可见状态只有 0）；魔族镜像 28301
+  已有 k1..k7 阶梯，但 799530/730373/730374 三个 NPC 都能发装置、领奖 `npc-complete` 也是三个。
+
+### 五十六之二、落点（18301.xml / 28301.xml）
+
+1. 两侧重建 0..7 阶梯：`started(var0=0)` + `k1..k7(var0=1..7)` + `reward(var0=7)` + `complete(var0=0)`；
+   `kill-chain` 事件统一为 `kill-npc npc-ids="702656 730373"`——702656 是普通副本（300240000）
+   的水晶球、730373 是活动副本（300241000，`AturamSkyFortressInstance` 的 spawn 表）的水晶球，
+   与同族 18314/28314 的 id 组合一致。
+2. 行 1：只有 H-Core（730374）保留拾取链 `USE_OBJECT -> SELECT2`、`SELECT2_1 -> SELECT2_1`、
+   `SETPRO2 -> reward`；拾取时发放本族工作物品（天 182212100 = `quest_18301a` /
+   魔 182212110 = `quest_28301a`，两侧 `<work-items>` 原本就有，随完成/放弃清理），after-commit 为
+   `LEVEL_AND_VISIBILITY_REFRESH + close-dialog`（对应 legacy 的 `closeDialogWindow`；奖励窗留给
+   Hariken 页上的 1009 按钮）。
+3. 行 2：领奖 owner 按 QE-052 收敛到 Hariken（799530）——`reward + QUEST_SELECT ->
+   DEFAULT_SUCCESS(10002)`、`npc-complete` 六选一（`preview = USE_OBJECT SELECT_QUEST_REWARD`，
+   preview 路由按 `complete-reward-index=0` 落在 tier 0 奖励窗 = 页 5）；删除 730373/730374 的
+   `NPC_REPORT`/`npc-complete` 与两处多余 `SETPRO2` 发放路线（`AMBIGUOUS_TRANSITION` 护栏会拦住
+   同事件重叠路由，本次也踩到过一次：reward 上的显式 `SELECT_QUEST_REWARD` 与 preview 重叠）。
+4. 自愈边：无 source 的 `REWARD && var0 < 7 -> set var0=7`（`enter-world` +
+   `LEVEL_AND_VISIBILITY_REFRESH`），覆盖天族迁移期 `reward=0` 旧存档；28301 侧同步补上同名边。
+5. 收敛后两侧除物品 id 外逐项同形（节点/计数事件/页链/after-commit/owner/自愈边），
+   `QuestMovieAndDialogLoopRegressionTest#quest28301GrantsDeviceAndAdvancesToReward` 同步改为
+   「单 H-Core + Hariken owner」的新形态。
+
+### 五十六之三、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 两文件 validates；
+  `apply_batch52_aturam_crystal_ladder.py --check` 幂等 2/2 `BATCH52_CHECK OK`（脚本可 `--apply` 重放）；
+  `git diff --check` 干净。
+- **门禁**：新增 `AturamSkyFortressCrystalLadderContractTest` 5 例（0..7 状态阶梯 / 水晶球 id 组合 /
+  计数饱和不再越界 / H-Core 发放本族物品与 planner / 唯一 owner + 奖励窗 / 双族自愈边）；
+  与更新后的 `QuestMovieAndDialogLoopRegressionTest` 合跑 24 例全绿。
+- **组合回归**（授权 Maven；主工作区有并行会话未完成的 `QuestSimpleHuntRetailContractTest`
+  编译失败，按 worktree 纪律在 `/tmp/b52vt` 临时 worktree 内以 HEAD + 本批 4 个文件执行，跑完即移除）：
+  `mvn -q -Dtest='AturamSkyFortressCrystalLadderContractTest,QuestMovieAndDialogLoopRegressionTest,
+  QuestClientContractGateTest,ClientQuestSectionAlignmentTest,ProductionCatalogWhitelistVerificationTest,
+  QuestDefinitionCatalogManifestTest,QuestMonsterProgressContractAuditTest,QuestPacketOrderRegressionTest'
+  -Dquest.client.contract.failOnStaleBaseline=true test`
+  → `PRODUCTION_COMPILE_OK=6191 / PRODUCTION_COMPILE_FAILURES=0 /
+  PRODUCTION_INTERACTION_OBJECT_FAILURES=0 / PRODUCTION_WHITELIST_VIOLATIONS=0`。
+- **全库行号审计**：18301 由 `ROW_BEHIND | MISSING_TAIL_ROWS | ROW_WITHOUT_STATE（visible 0）` 变为
+  `ROW_AHEAD | STATES_BEYOND_ROWS | STATE_OUT_OF_RANGE（visible 0..7、reward=7、recovery=True）`，
+  28301 收敛后与之逐项相同；`MISSING_TAIL_ROWS 35 -> 34`、其余待逐族收口 `29 -> 28`，审计 [11] 节
+  登记「批次 52 阿图拉姆监视水晶球双子 2 个」。
+- **客户端实机 PENDING_CLIENT（请按此复测）**：① 接取后破坏兵站区域的 7 个监视水晶球，任务书行 0 的
+  `([%2]/7)` 随击杀累加；② 七个全破坏后任务书切到行 1（取得 H-Core）；③ 击毁守护兵胡根、在出现的
+  H-Core 上点「把动力装置捡起来」，装置进包且任务书切到行 2；④ 与 Hariken 对话「拿出动力装置」领奖完成；
+  ⑤ 旧存档 `REWARD/var0=0` 登录自愈到 7。
+
+### 五十六之四、边界
+
+- 本族 `var0` 是水晶球计数（0..6），第七个把 step 推到 7，行 1/行 2 与领奖态同处 step 7——与批次 50 的
+  2289（击杀行 0..4、行 1/2/3 = 5/6/7）同属「计数行走行」合同，**禁止**按「末行索引 2」把 reward 改成 2。
+  严格线性口径（reward=8）与 legacy、现有镜像 28301、同副本 18302（5 座塔 → reward=5）三者都不一致，
+  本批不采纳；若要改需先拿到实机或真端 step 证据。
+- 监视水晶球在普通副本与活动副本分别以 702656 / 730373 生成，kill 事件必须同时登记两个 id，
+  否则只覆盖一种副本（同族 18314/28314 的既有口径）。
+- 领奖 owner 按 QE-052 收敛到「交付对象」Hariken（799530）：天族客户端末行文本
+  `把[Hariken]交给[IDStation_FOBJ_BOMB]` 是客户端两侧占位符互换的文本问题（魔族侧为
+  `把[IDStation_FOBJ_BOMB]交给[Hariken]`），判定以交付对象 + 页链 `select_success(10002)` 的归属为准。
+- 本批只动 18301/28301 的定义与其门禁；`var0` 仍为 `min=0/max=63`，没有新增 bit-field，
+  `ClientQuestSectionAlignmentTest` 的 6N 约束不受影响。

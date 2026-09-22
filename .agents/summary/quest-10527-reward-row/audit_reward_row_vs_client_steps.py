@@ -183,6 +183,16 @@ BATCH50_ALTGARD_MOSBEARS_COUNTER_ROW = {2289}
 # the row/state lens is fully aligned.
 BATCH51_HOLY_TEMPLAR_FINAL_ROW_PAIR = {3938, 4942}
 
+# 批次 52（2026-09-22）：18301/28301（阿图拉姆空中要塞「监视水晶球」双子）补回七个水晶球的
+# 计数阶梯（客户端 quest_script 声明 Progress(0~6)，legacy 水晶球 var<7 每次 +1、var==7 在 H-Core
+# 取装置并置 REWARD），reward 投影与满计数同为 7；天族侧 18301 原本被塌陷成
+# `started -> reward`（reward 投影 0），本批与魔族镜像 28301 收敛成同形，因此两侧都离开缺尾桶，
+# 按设计落在 ROW_AHEAD | STATES_BEYOND_ROWS | STATE_OUT_OF_RANGE（与批次 50 的 2289 同类）。
+# 权威门禁 AturamSkyFortressCrystalLadderContractTest。
+# Batch 52 registration: the Aturam spy-crystal pair keeps the client's declared Progress(0~6) counter
+# ladder with the reward on the saturated step 7, so both halves leave the missing-tail bucket by design.
+BATCH52_ATURAM_CRYSTAL_LADDER = {18301, 28301}
+
 COUNTER_SLOT_EXCEPTIONS = {
     2303,   # var0 = 11..15 / 21..25 击杀计数（quest_script Progress(11~14)/(15)/(21~24)/(25)）
     50008,  # ProgressAll + sensoryArea 计数，末行槽位 15 不是 3×行号
@@ -838,7 +848,7 @@ def main() -> int:
           "门禁 CutsceneHiddenQuestFamilyContractTest")
     print(f"  仍隔离（无定义、无任务书行，只登记证据）={sorted(CLIENT_ONLY_ISOLATED_QUESTS)}")
 
-    print("\n[11] 缺尾部多行（MISSING_TAIL_ROWS）逐族盘点（批次 51）：")
+    print("\n[11] 缺尾部多行（MISSING_TAIL_ROWS）逐族盘点（批次 52）：")
     tail = [row for row in rows if row["shape"] == "MISSING_TAIL_ROWS"]
     tail_ids = {row["quest_id"] for row in tail}
     fixed = sorted(BATCH31_GELKMAROS_ROW_LADDER | BATCH32_KALDOR_ROW_LADDER
@@ -850,7 +860,8 @@ def main() -> int:
                    | BATCH44_FOAM_WISP_ROWS | BATCH45_THREE_ROW_AND_BRANCH_ROWS
                    | BATCH48_INGGISON_NURSING_ROWS | BATCH49_GELKMAROS_KANTELE_ROWS
                    | BATCH50_ALTGARD_MOSBEARS_COUNTER_ROW
-                   | BATCH51_HOLY_TEMPLAR_FINAL_ROW_PAIR)
+                   | BATCH51_HOLY_TEMPLAR_FINAL_ROW_PAIR
+                   | BATCH52_ATURAM_CRYSTAL_LADDER)
     registered_ids = (BLANK_JOURNAL_SLOT_EXCEPTIONS | CLIENT_ONLY_ISOLATED_QUESTS
                       | COUNTER_SLOT_EXCEPTIONS | MULTI_LAYER_COUNTER_EXCEPTIONS
                       | SHARED_VISIBLE_SLOT_EXCEPTIONS | QE045_LOCKED
@@ -862,7 +873,8 @@ def main() -> int:
           f"批次 39 交付-对话-报告族 3 个、批次 40 三 NPC 对话族 3 个、"
           f"批次 41 潘盖亚要塞战族 2 个、批次 42 献花族 1 个、批次 43 解毒剂族 1 个、"
           f"批次 44 发光体五行族 1 个、批次 45 三行/分支族 2 个、批次 48 因吉森护理族 1 个、批次 49 格尔克马洛斯 Kantele 族 1 个、"
-          f"批次 50 奥特加德棕熊计数行 1 个、批次 51 神圣圣殿骑士晋级双子 2 个，均已转 ALIGNED）={fixed}")
+          f"批次 50 奥特加德棕熊计数行 1 个、批次 51 神圣圣殿骑士晋级双子 2 个（均已转 ALIGNED）、"
+          f"批次 52 阿图拉姆监视水晶球双子 2 个（计数行走行，按设计转 STATES_BEYOND_ROWS））={fixed}")
     stuck = sorted((BATCH31_GELKMAROS_ROW_LADDER | BATCH32_KALDOR_ROW_LADDER | BATCH34_RENTUS_BASE_ROW_LADDER
                     | BATCH35_VALENTINE_TOWER_ROW_LADDER | BATCH36_EVENT_ROW_LADDER
                     | BATCH37_TALK_KILL_REPORT_ROW_LADDER | BATCH38_BRANCH_CHOICE_REWARD_INDEX
@@ -872,7 +884,8 @@ def main() -> int:
                     | BATCH45_THREE_ROW_AND_BRANCH_ROWS
                     | BATCH48_INGGISON_NURSING_ROWS | BATCH49_GELKMAROS_KANTELE_ROWS
                     | BATCH50_ALTGARD_MOSBEARS_COUNTER_ROW
-                   | BATCH51_HOLY_TEMPLAR_FINAL_ROW_PAIR) & tail_ids)
+                   | BATCH51_HOLY_TEMPLAR_FINAL_ROW_PAIR
+                   | BATCH52_ATURAM_CRYSTAL_LADDER) & tail_ids)
     if stuck:
         print(f"  ⚠ 本批修复清单仍在缺尾桶={stuck}")
     print(f"  已登记例外（空槽位/客户端隔离/计数槽/双层计数/共享槽位/QE-045 锁）={len(registered_ids)} {sorted(registered_ids)}")
