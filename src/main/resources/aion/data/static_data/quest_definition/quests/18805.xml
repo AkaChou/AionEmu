@@ -24,13 +24,34 @@
       <var name="var0" value="1"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="1"/>
+      <var name="var0" value="2"/>
     </node>
     <node label="complete" status="COMPLETE">
       <var name="var0" value="0"/>
     </node>
   </nodes>
   <transitions>
+    <!-- QE-051 领奖行合同：客户端 quest_q18805.html 的 quest_summary 共 3 行，末行（行 2）是领奖行
+         （STR_DIC_N_Shugo_housing_rec，任务内 NPC 830520）；legacy `_18805Going_Thrifting` 在回收箱 730522 的
+         STEP_TO_2 之后把 step 推到 2，回到旧货商主人的 SELECT_REWARD 才置 REWARD（step 停 2）。
+         旧投影停在 1，进入世界时纠正为 2 并下发状态包。
+         Reward row contract (QE-051): the last of the 3 journal rows is the reward row; saves persisted
+         at var0=1 are repaired to 2 on enter-world, matching the legacy step chain. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="1"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="2"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <dialog type="NPC_START" npc-id="830070" source="unaccepted" target="s0" selection-sources="unaccepted" start-page="SELECT1"/>
     <transition source="s0" target="s0">
       <event>
@@ -64,9 +85,6 @@
       <event>
         <dialog type="TALK_TO_NPC" npc-id="730522" action="SETPRO2"/>
       </event>
-      <actions>
-        <set-variable field="var0" value="1"/>
-      </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>

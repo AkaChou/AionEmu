@@ -298,6 +298,28 @@
     Maven 31 个测试类 **199 例全绿**（含新增 CounterChainBriefingStageContractTest 6 例与修复后的 QuestClientContractGateTest；
     PRODUCTION_COMPILE_OK=6189 / FAILURES=0 / WHITELIST_VIOLATIONS=0）；客户端实机 PENDING_CLIENT。
     脚本 apply_batch26_briefing_and_named_ladders.py（--check 幂等）、证据 batch26-evidence.tsv、报告 §三十。
+  - **批次 27 完成（2026-09-22，legacy 落盘 step 口径 + 住宅回收箱领奖行 18805/28805）**：先把行号口径（QE-051）与 legacy 落盘 step 对齐，
+    得到可复用判据（模式卡 QE-054）：客户端任务书行由 SM_QUEST_ACTION 下发的 step（= reward 节点投影打包值）驱动，
+    `useQuestItem(env, item, old, new, true)` 会写 newStep、`changeQuestStep(env, old, new, true)` 只置 REWARD 而 step 停 oldStep，
+    所以 reward 投影的权威值是 legacy 实际落盘值，不是一律等于客户端末行索引。对 84 个 MISSING_LAST_ROW 首轮自动分类：
+    11 个 XML 投影 = legacy step（口径例外，登记 4 个代表：15300/25300 真机验收 + Quest15300And25300RewardProjectionTest、
+    10100/20100 useQuestItem(4,4,true) + Quest10100And20100ItemUseRemovalTest）、3 个真缺陷候选（16800/18805/28805）、
+    61 个其它 handler 形态 + 9 个无 legacy 待逐族取证。本批收口同形的 18805/28805（Going Thrifting / Something Old, Something New）：
+    客户端 3 行（行 0 和旧货商主人对话、行 1 阅读回收箱、行 2 领奖），legacy 回收箱 STEP_TO_2 推到 step 2、
+    回旧货商主人 SELECT_REWARD 才置 REWARD（step 停 2），旧 XML 投影写成 1 且 s1 -> reward 交接又回写 var0=1；
+    本批投影 1 -> 2、删交接回写、补 REWARD/var0=1 的 enter-world 自愈边（LEVEL_AND_VISIBILITY_REFRESH），owner 保持任务书点名的
+    830520/830521（与 legacy 的 830660/830661、830662/830663 同组，是否补多 owner 留待取证）。验证：xmllint 2/2；
+    行号审计 18805/28805 MISSING_LAST_ROW -> ALIGNED（全库 MISSING_LAST_ROW 84 -> 82、ROW_ALIGNED 2661 -> 2663、
+    ROW_STATE_ALIGNED 2433 -> 2435、ROW_WITHOUT_STATE 516 -> 514）；section0 审计 residual 837 不变；
+    Maven 32 个测试类 **204 例全绿**（含新增 HousingRecycleRewardRowContractTest 5 例；PRODUCTION_COMPILE_OK=6189 /
+    FAILURES=0 / WHITELIST_VIOLATIONS=0）；客户端实机 PENDING_CLIENT。脚本 apply_batch27_housing_reward_row.py（--check 幂等）、
+    证据 batch27-evidence.tsv、报告 §三十一、模式卡 QE-054。
+  - **批次 27 边界（下一批前必读）**：任何 MISSING_LAST_ROW 在改 reward 投影前，必须先提取 legacy 落盘 step
+    （useQuestItem 取 newStep、changeQuestStep(..., true) 取 oldStep），XML 投影与之一致时只能登记例外，禁止按末行索引批量改
+    （15300/25300、10100/20100 都是已验收/已锁定的正确值）。下一批 = 16800/26800（真缺陷：legacy step=2，16800 投影 1、
+    26800 投影 3，客户端都是 3 行；需补 0/1/2 阶梯 + LF_TOWER_SENSORY_AREA_Q16800_210110000 / IDETERNITY_01_Q16800_301540000
+    两个 zone 触发点 + 931 movie），随后继续把剩余 70 个 MISSING_LAST_ROW（61 其它形态 + 9 无 legacy）按同口径分类，
+    并把 LEGACY_STEP_EXCEPTION 集补进审计脚本登记表。
   - **批次 26 边界（下一批前必读）**：select2 页（1352）只有 SETPRO1(10000) 一个可见动作，推进逻辑必须挂在它上面；
     同类任务改 owner 前必须先读 docs/quest/client-dialog-mapping/quest-dialog-action-details.csv 的任务页按钮集合。
     owner 收敛依据是客户端任务书行 NPC + 静态 spawn；legacy 里才有、且静态 spawn/实例 AI 都无出场点的 owner 不得保留。

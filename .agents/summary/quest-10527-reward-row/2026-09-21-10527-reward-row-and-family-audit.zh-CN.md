@@ -2183,3 +2183,91 @@ QC 判据（与批次 18/19 同源，但落点不同）：同形镜像对 `q` / 
 - **批次 26 后 `COUNTER_CHAIN_GAP` 归零**。剩余全库挂账：`NO_NODES`（16984、26984）、
   `MISSING_DEFINITION`（3959、4963、18706、18744、20015、28706、28744、29706）与行号口径的
   `MISSING_LAST_ROW 84 / ROW_BEHIND 185 / BOTH_MISALIGNED 178 / ROW_WITHOUT_STATE 516` 等，按族继续收口。
+
+## 三十一、批次 27：legacy 落盘 step 口径与住宅回收箱领奖行（18805/28805，2026-09-22）
+
+### 三十一之一、族级判据与证据
+
+批次 26 之后全库还有 84 个 `MISSING_LAST_ROW`。本批先把“行号口径”与“legacy 落盘 step”对齐，得到一条可复用的权威判据
+（QE-054）：**客户端任务书行由 `SM_QUEST_ACTION` 下发的 step（= 节点打包后的 var0）驱动，因此 reward 投影必须等于
+legacy 进入 REWARD 时真正落盘的 step，而不是一律等于客户端末行索引。** legacy 的两类 API 语义不同：
+
+- `useQuestItem(env, item, old, new, true)`：**会写 nextStep**（`10527` 的 `useQuestItem(env, item, 14, 15, true)` → step=15，
+  与客户端 16 行的末行索引 15 一致；`10100/20100` 的 `useQuestItem(env, item, 4, 4, true)` → step=4）；
+- `changeQuestStep(env, old, new, true)`：**只置 REWARD、不写 nextStep**（`15300/25300` 的
+  `changeQuestStep(env, 13, 14, true)` → step 停在 13；提交 `075464ebd` 的说明 + 2026-09-19/20 用户真机全程验收）。
+
+据此对 84 个 `MISSING_LAST_ROW` 做首轮自动分类（从 legacy handler 直接提取 reward step 写入）：
+
+| 结果 | 数量 | 处置 |
+|---|---|---|
+| `LEGACY_REWARD_STEP_MATCH`（XML 投影 = legacy 落盘 step） | 11 | 行号口径误报，登记例外（本批登记 4 个代表：15300/25300/10100/20100） |
+| `LEGACY_REWARD_STEP_MISMATCH`（XML 投影 ≠ legacy 落盘 step） | 3 | 真缺陷候选（16800/18805/28805，见下） |
+| 无可提取的 reward 写入（其它 handler 形态） | 61 | 待逐族取证 |
+| 无 legacy handler | 9 | 待逐族取证 |
+
+真缺陷候选逐一核对后，本批收口其中同形的两个：**18805/28805**（住宅回收箱任务）。`16800/26800`
+（archives_of_eternity：legacy 停在 step 2，16800 投影写成 1、26800 投影写成 3，两者客户端都是 3 行）
+留待下一批，因为需要同时重建 0/1/2 三段阶梯与两个 zone 触发点。
+
+### 三十一之二、旧模型缺陷（18805/28805）
+
+- 客户端 `quest_summary` 3 行：行 0 = 和旧货商主人对话、行 1 = 阅读回收箱说明、行 2 = 和旧货商主人对话（领奖行）；
+  任务书用通用名 `STR_DIC_N_Shugo_housing_rec`（天）/`STR_DIC_N_Shugo_housing_drec`（魔），客户端字符串正文点名
+  gomirrun/risarrinrin/gomurrun（天）与 regirron/rogirron/daserinrin（魔）一组旧货商主人。
+- legacy `_18805Going_Thrifting`/`_28805SomethingOld_SomethingNew`：回收箱（730522/730525）的
+  `STEP_TO_2 -> defaultCloseDialog(env, 1, 2)` 把 step 推到 2；回到旧货商主人（830660/830661、830662/830663 共用分支）
+  的 `SELECT_REWARD` 才 `changeQuestStep(env, 2, 2, true)` —— 领奖态 step = 2（客户端末行索引 2）。
+- 旧 XML：`reward` 投影写成 **1**，且 `s1 -> reward` 交接又显式 `set-variable var0=1`；玩家读完回收箱进入领奖态后，
+  客户端任务书停在行 1（“阅读回收箱说明”），与 10527 的报障同型。
+
+### 三十一之三、落点（18805/28805）
+
+- `reward` 节点投影 `var0 1 -> 2`；
+- 删除 `s1 -> reward` 交接里的 `set-variable var0=1`（改由 target 投影生效，与同族已对齐的 18809 的
+  `stage1 -> reward` 形态一致）；
+- 新增无 source 的 `ENTER_WORLD` 恢复边：`REWARD && var0=1 -> reward`（`set var0=2` +
+  `LEVEL_AND_VISIBILITY_REFRESH`），正规态 `var0=2` 不再被重放；
+- owner 保持任务书点名的旧货商主人（830520 / 830521）——客户端 `STR_DIC` 正文点名的是“这一组旧货商主人”，
+  830520/830521（gomurrun / regirung）与 legacy 的 830660/830661、830662/830663 同组；是否要把 legacy 分支
+  的两个成员也补成多 owner 需另行取证（已记为遗留观察，本批不改）；
+- 应用脚本：`.agents/summary/quest-10527-reward-row/apply_batch27_housing_reward_row.py`（`--check` 幂等）。
+
+### 三十一之四、口径例外登记（QE-054）
+
+- `15300/25300`（Taking Arms / A Bloody Battle with Beritra）：legacy `changeQuestStep(env, 13, 14, true)` →
+  step 停 13，reward 投影 13 是权威值，且已由 2026-09-19/20 真机验收（含领奖）与
+  `Quest15300And25300RewardProjectionTest` 锁定；行号口径（末行索引 14）属误报。
+- `10100/20100`（Kahrun Intrigue / Ghost Of A Bygone Age）：legacy `useQuestItem(env, item, 4, 4, true)` → step=4，
+  reward 投影 4 与 legacy 一致，由 `Quest10100And20100ItemUseRemovalTest`（道具消耗）锁定；同族 10101/10110 的投影
+  等于末行索引，说明**同一系列里两种口径并存**，必须逐任务看 legacy，禁止按行号批量“修正”。
+- 本批在证据表按 `LEGACY_STEP_EXCEPTION` 登记这 4 个任务（`batch27-evidence.tsv`），并在模式卡
+  QE-054 记下判据；审计脚本的例外集登记待下一批与 `/tmp` 批量分类脚本一起补。
+
+### 三十一之五、验证（2026-09-22）
+
+- **静态**：`xmllint --noout --schema quest_definition.xsd` 2/2 validates；`apply_batch27_*.py --check` 幂等
+  （`BATCH27_APPLIED` → `BATCH27_OK ... already-applied`）。
+- **全库行号审计**：18805/28805 由 `MISSING_LAST_ROW / ROW_BEHIND / ROW_WITHOUT_STATE / recovery=False` 转为
+  **`ALIGNED / ROW_ALIGNED / ROW_STATE_ALIGNED / recovery=True`**；全库 `MISSING_LAST_ROW 84 -> 82`、
+  `ROW_ALIGNED 2661 -> 2663`、`ROW_STATE_ALIGNED 2433 -> 2435`、`ROW_WITHOUT_STATE 516 -> 514`（其余桶不变）。
+- **section0 审计**：`residual rows 837` 与批次 26 完全一致（`COUNTER_CHAIN_OK 823` / 例外 6 / 闭环 7 + 1），
+  本批不涉及 COUNTER_CHAIN 族。
+- **Maven（授权后执行，2026-09-22）**：32 个测试类 **204 例全绿**（批次 26 的 31 类 199 例 + 本批新增
+  `HousingRecycleRewardRowContractTest` 5 例）；`PRODUCTION_COMPILE_OK=6189 / FAILURES=0 /
+  INTERACTION_OBJECT_FAILURES=0 / WHITELIST_VIOLATIONS=0`。
+  （已知无关红：`MissionItemConsumptionBatchRegressionTest` 的断言在 HEAD 本就不成立，本批不运行、不修。）
+- **证据表**：[batch27-evidence.tsv](batch27-evidence.tsv)（2 个修复 + 4 个口径例外）。
+- **客户端实机：PENDING_CLIENT**（静态、Maven 与真机验收分层，未做真机复测）。
+
+### 三十一之六、边界与后续
+
+- 行号口径（QE-051）是**发现工具、不是权威**：任何 `MISSING_LAST_ROW` 在改 reward 投影前，必须先按
+  `changeQuestStep(..., true)` / `useQuestItem(..., old, new, true)` 的语义提取 legacy 落盘 step；两者一致时
+  只能登记例外，不一致才是真缺陷。
+- 机械把 reward 投影推到末行索引会破坏已验收行为（15300/25300 真机 + 10100/20100 道具消耗门禁）——禁止批量替换。
+- **下一批（批次 28）候选**：
+  - `16800/26800`（真缺陷，legacy step=2；16800 投影 1、26800 投影 3，客户端 3 行；需补 0/1/2 阶梯与
+    `LF_TOWER_SENSORY_AREA_Q16800_210110000` / `IDETERNITY_01_Q16800_301540000` 两个 zone 触发点与 931 movie）；
+  - 继续对剩余 70 个 `MISSING_LAST_ROW`（61 个其它 handler 形态 + 9 个无 legacy）做同口径分类，把
+    `LEGACY_STEP_EXCEPTION` 集补进审计脚本的登记表。
