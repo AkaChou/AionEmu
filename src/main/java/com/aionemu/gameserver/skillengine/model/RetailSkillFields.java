@@ -8,6 +8,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 真实技能中尚未编译进现有运行模型的无损字段。
@@ -41,7 +42,8 @@ public class RetailSkillFields {
 		return null;
 	}
 
-	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+    @XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "RetailSkillField")
 	public static class Field {
 
@@ -54,16 +56,5 @@ public class RetailSkillFields {
 		@XmlAttribute(required = true)
 		private String value;
 
-		public String getName() {
-			return name;
-		}
-
-		public int getOccurrence() {
-			return occurrence;
-		}
-
-		public String getValue() {
-			return value;
-		}
-	}
+    }
 }

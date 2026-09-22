@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.events;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -9,7 +10,6 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
@@ -32,7 +32,6 @@ import com.aionemu.gameserver.services.events.bg.SoloSurvivorBg;
 import com.aionemu.gameserver.services.events.bg.TwoTeamBg;
 import com.aionemu.gameserver.services.events.bg.TwoTeamSmallBg;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -61,10 +60,24 @@ public class LadderService {
 	private ScheduledFuture<?> eventTask = null;
 	/** 普通报名截止任务。 / Normal registration deadline task. */
 	private ScheduledFuture<?> normalTask = null;
-	/** 普通战场是否开放报名。 / Whether normal BG registration is open. */
+	/** 普通战场是否开放报名。 / Whether normal BG registration is open.
+	 * -- GETTER --
+	 *  返回普通战场是否处于报名中。
+	 *  Returns whether normal battleground registration is open.
+	 *
+	 * @return 是否报名中 / whether ready
+	 */
+	@Getter
 	boolean normalReady = false;
-	/** 活动战场是否开放报名。 / Whether event BG registration is open. */
-	boolean eventReady = false;
+	/** 活动战场是否开放报名。 / Whether event BG registration is open.
+     * -- GETTER --
+     *  返回活动战场是否处于报名中。
+     *  Returns whether event battleground registration is open.
+     *
+     * @return 是否报名中 / whether ready
+     */
+    @Getter
+    boolean eventReady = false;
 	/** 普通队列是否按队伍匹配。 / Whether normal queue uses team-based matchmaking. */
 	boolean normalTeamBased = false;
 	/** 活动队列是否按队伍匹配。 / Whether event queue uses team-based matchmaking. */
@@ -687,26 +700,6 @@ public class LadderService {
 		eventReady = false;
 		eventBg = null;
 		eventTeamBased = false;
-	}
-
-	/**
-	 * 返回普通战场是否处于报名中。
-	 * Returns whether normal battleground registration is open.
-	 *
-	 * @return 是否报名中 / whether ready
-	 */
-	public boolean isNormalReady() {
-		return normalReady;
-	}
-
-	/**
-	 * 返回活动战场是否处于报名中。
-	 * Returns whether event battleground registration is open.
-	 *
-	 * @return 是否报名中 / whether ready
-	 */
-	public boolean isEventReady() {
-		return eventReady;
 	}
 
 	/**

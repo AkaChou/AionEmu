@@ -20,6 +20,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * GM 指令：从 skills.xml 解析并为玩家添加组合技能。
@@ -127,14 +128,11 @@ public final class CmdCombineSkill extends AbstractGMHandler {
 		@XmlAttribute(name = "id", required = true)
 		private int skillId;
 
-		@XmlAttribute(name = "name")
+		@Getter
+        @XmlAttribute(name = "name")
 		private String name;
 
-		public String getName() {
-			return name;
-		}
-
-		public int getTemplateId() {
+        public int getTemplateId() {
 			return skillId;
 		}
 	}

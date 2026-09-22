@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -15,7 +16,6 @@ import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DISPUTE_LAND;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneAttributes;
 
 /**
@@ -28,7 +28,15 @@ import com.aionemu.gameserver.world.zone.ZoneAttributes;
 
 public class DisputeLandService {
 	private static volatile ObjectProvider<DisputeLandService> instanceProvider;
-	private boolean active;
+    /**
+     * -- GETTER --
+     *  是否处于激活状态。
+     *  Whether Dispute Land is currently active.
+     *
+     * @return 若 active 则为 true / true if active
+     */
+    @Getter
+    private boolean active;
 	private final List<Integer> worlds = new ArrayList<>();
 
 	/**
@@ -95,17 +103,7 @@ public class DisputeLandService {
 		worlds.add(220110000); // Norsvold.
 	}
 
-	/**
-	 * 是否处于激活状态。
-	 * Whether Dispute Land is currently active.
-	 *
-	 * @return 若 active 则为 true / true if active
-	 */
-	public boolean isActive() {
-		return active;
-	}
-
-	/**
+    /**
 	 * 设置激活状态，同步世界 PvP 选项并向全体玩家广播。
 	 * Sets active state, syncs world PvP options, and broadcasts to all players.
 	 *

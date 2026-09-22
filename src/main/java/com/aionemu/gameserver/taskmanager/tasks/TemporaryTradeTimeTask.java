@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -24,8 +25,15 @@ public class TemporaryTradeTimeTask extends AbstractPeriodicTaskManager {
 	/**
 	 * Spring 可选实例提供者。
 	 * Optional Spring instance provider.
-	 */
-	private static volatile ObjectProvider<TemporaryTradeTimeTask> instanceProvider;
+     * -- SETTER --
+     *  注入 Spring 实例提供者。
+     *  Inject the Spring instance provider.
+     *
+     * @param provider 实例提供者 / Provider
+
+     */
+	@Setter
+    private static volatile ObjectProvider<TemporaryTradeTimeTask> instanceProvider;
 
 	/**
 	 * 物品到可交易玩家 Id 集合的映射。
@@ -70,17 +78,7 @@ public class TemporaryTradeTimeTask extends AbstractPeriodicTaskManager {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring 实例提供者。
-	 * Inject the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / Provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<TemporaryTradeTimeTask> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 注册临时可交易物品及其允许的玩家列表。
 	 * Register a temporarily tradable item and its allowed player list.
 	 *

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.services.craft;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.CraftConfig;
@@ -25,15 +27,51 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 public class RelinquishCraftStatus {
 
+	/**
+	 * -- SETTER --
+	 *  注入 Spring ObjectProvider，用于容器管理的实例解析。
+	 *  Inject Spring ObjectProvider for container-managed instance resolution.
+	 *
+	 * @param provider 实例提供者 / Instance provider
+	 */
+	@Setter
 	private static volatile ObjectProvider<RelinquishCraftStatus> instanceProvider;
 
-	/** 专家最低等级 / Expert minimum skill level */
+	/** 专家最低等级 / Expert minimum skill level
+	 * -- GETTER --
+	 *  获取专家最低等级。
+	 *  Get expert minimum skill level.
+	 *
+	 * @return 专家最低等级 / Expert minimum level
+	 */
+	@Getter
 	private static final int expertMinValue = 399;
-	/** 专家最高等级 / Expert maximum skill level */
+	/** 专家最高等级 / Expert maximum skill level
+	 * -- GETTER --
+	 *  获取专家最高等级。
+	 *  Get expert maximum skill level.
+	 *
+	 * @return 专家最高等级 / Expert maximum level
+	 */
+	@Getter
 	private static final int expertMaxValue = 499;
-	/** 大师最低等级 / Master minimum skill level */
+	/** 大师最低等级 / Master minimum skill level
+	 * -- GETTER --
+	 *  获取大师最低等级。
+	 *  Get master minimum skill level.
+	 *
+	 * @return 大师最低等级 / Master minimum level
+	 */
+	@Getter
 	private static final int masterMinValue = 499;
-	/** 大师最高等级 / Master maximum skill level */
+	/** 大师最高等级 / Master maximum skill level
+	 * -- GETTER --
+	 *  获取大师最高等级。
+	 *  Get master maximum skill level.
+	 *
+	 * @return 大师最高等级 / Master maximum level
+	 */
+	@Getter
 	private static final int masterMaxValue = 549;
 	/** 放弃专家费用（基价） / Expert relinquish base price */
 	private static final int expertPrice = 120895;
@@ -41,8 +79,15 @@ public class RelinquishCraftStatus {
 	private static final int masterPrice = 3497448;
 	/** 基纳不足系统消息 ID / Not-enough-kinah system message id */
 	private static final int systemMessageId = 1300388;
-	/** 技能变更消息 ID / Skill-change message id */
-	private static final int skillMessageId = 1401127;
+	/** 技能变更消息 ID / Skill-change message id
+     * -- GETTER --
+     *  获取技能变更消息 ID。
+     *  Get skill-change message id.
+     *
+     * @return 技能变更消息 ID / Message id
+     */
+	@Getter
+    private static final int skillMessageId = 1401127;
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -65,16 +110,6 @@ public class RelinquishCraftStatus {
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
 		return provided;
-	}
-
-	/**
-	 * 注入 Spring ObjectProvider，用于容器管理的实例解析。
-	 * Inject Spring ObjectProvider for container-managed instance resolution.
-	 *
-	 * @param provider 实例提供者 / Instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<RelinquishCraftStatus> provider) {
-		instanceProvider = provider;
 	}
 
 	/**
@@ -250,53 +285,4 @@ public class RelinquishCraftStatus {
 		}
 	}
 
-	/**
-	 * 获取专家最低等级。
-	 * Get expert minimum skill level.
-	 *
-	 * @return 专家最低等级 / Expert minimum level
-	 */
-	public static int getExpertMinValue() {
-		return expertMinValue;
-	}
-
-	/**
-	 * 获取专家最高等级。
-	 * Get expert maximum skill level.
-	 *
-	 * @return 专家最高等级 / Expert maximum level
-	 */
-	public static int getExpertMaxValue() {
-		return expertMaxValue;
-	}
-
-	/**
-	 * 获取大师最低等级。
-	 * Get master minimum skill level.
-	 *
-	 * @return 大师最低等级 / Master minimum level
-	 */
-	public static int getMasterMinValue() {
-		return masterMinValue;
-	}
-
-	/**
-	 * 获取大师最高等级。
-	 * Get master maximum skill level.
-	 *
-	 * @return 大师最高等级 / Master maximum level
-	 */
-	public static int getMasterMaxValue() {
-		return masterMaxValue;
-	}
-
-	/**
-	 * 获取技能变更消息 ID。
-	 * Get skill-change message id.
-	 *
-	 * @return 技能变更消息 ID / Message id
-	 */
-	public static int getSkillMessageId() {
-		return skillMessageId;
-	}
 }

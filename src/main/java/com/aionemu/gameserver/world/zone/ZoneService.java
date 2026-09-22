@@ -2,13 +2,13 @@ package com.aionemu.gameserver.world.zone;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,8 +59,15 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 @Slf4j
 public final class ZoneService implements GameEngine {
 
-	/** 可选 Spring 单例提供者 / optional Spring singleton provider */
-	private static volatile ObjectProvider<ZoneService> instanceProvider;
+	/** 可选 Spring 单例提供者 / optional Spring singleton provider
+     * -- SETTER --
+     *  设置 Spring 单例提供者。
+     *  Set the Spring singleton provider.
+     *
+     * @param provider Spring 单例提供者 / the Spring singleton provider
+     */
+	@Setter
+    private static volatile ObjectProvider<ZoneService> instanceProvider;
 	/** 按地图 ID 索引的区域信息 / zone info indexed by map id */
 	private final IntObjectHashMap<List<ZoneInfo>> zoneByMapIdMap;
 	/** 区域名称 → 脚本处理器类 / zone name → script handler class */
@@ -101,17 +108,7 @@ public final class ZoneService implements GameEngine {
 		return provided;
 	}
 
-	/**
-	 * 设置 Spring 单例提供者。
-	 * Set the Spring singleton provider.
-	 *
-	 * @param provider Spring 单例提供者 / the Spring singleton provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<ZoneService> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 为指定区域名称创建新的处理器实例；无脚本则返回默认空处理器。
 	 * Create a new handler instance for the given zone name; returns the dummy handler if none is registered.
 	 *

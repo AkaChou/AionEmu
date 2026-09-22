@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.abyss;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
@@ -25,7 +26,15 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 @Slf4j
 public class AbyssRankCleaningService {
 
-	private static volatile ObjectProvider<AbyssRankCleaningService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  注入 Spring 实例提供者。
+     *  Inject the Spring instance provider.
+     *
+     * @param provider 实例提供者 / Instance provider
+     */
+    @Setter
+    private static volatile ObjectProvider<AbyssRankCleaningService> instanceProvider;
 
 	private final int SECURITY_MINIMUM_PERIOD = 30;
 
@@ -126,13 +135,4 @@ public class AbyssRankCleaningService {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring 实例提供者。
-	 * Inject the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / Instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<AbyssRankCleaningService> provider) {
-		instanceProvider = provider;
-	}
 }

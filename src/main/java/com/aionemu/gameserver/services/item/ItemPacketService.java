@@ -15,6 +15,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_WAREHOUSE_ADD_ITEM;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_WAREHOUSE_UPDATE_ITEM;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
 
 /**
  * 物品数据包服务，同步物品增删改与装备状态。
@@ -25,6 +26,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class ItemPacketService {
 
+	@Getter
 	public enum ItemUpdateType {
 		EQUIP_UNEQUIP(-1, false), // 仅内部使用 / internal usage only
 		CHARGE(-2, false), // 仅内部使用 / internal usage only
@@ -41,30 +43,24 @@ public class ItemPacketService {
 		INC_ITEM_REPURCHASE(0x51, true), DEC_KINAH_CUBE(0x5A, true), // 扩展背包 / expand cube
 		DEC_PET_FOOD(0x5E, true), INC_PASSPORT_ADD(0x8A, true), PUT(0x13, true); // 来自其他仓库 / from other storage
 
+		/**
+		 * -- GETTER --
+		 *  getMask 方法。
+		 *  getMask method.
+		 *  result
+		 */
 		private final int mask;
+		/**
+		 * -- GETTER --
+		 *  isSendable 方法。
+		 *  isSendable method.
+		 *  result
+		 */
 		private final boolean sendable;
 
 		ItemUpdateType(int mask, boolean sendable) {
 			this.mask = mask;
 			this.sendable = sendable;
-		}
-
-		/**
-		 * getMask 方法。
-		 * getMask method.
-		 * result
-		 */
-		public int getMask() {
-			return mask;
-		}
-
-		/**
-		 * isSendable 方法。
-		 * isSendable method.
-		 * result
-		 */
-		public boolean isSendable() {
-			return sendable;
 		}
 
 		/**
@@ -79,19 +75,16 @@ public class ItemPacketService {
 			if (!isIncrease) {
 				return ItemUpdateType.DEC_KINAH_BUY;
 			}
-			switch (itemAddType) {
-			case BUY:
-				return ItemUpdateType.INC_KINAH_SELL;
-			case ITEM_COLLECT:
-				return ItemUpdateType.INC_KINAH_COLLECT;
-			case QUEST_WORK_ITEM:
-				return ItemUpdateType.INC_KINAH_QUEST;
-			default:
-				return ItemUpdateType.INC_KINAH_MERGE;
-			}
+			return switch (itemAddType) {
+				case BUY -> ItemUpdateType.INC_KINAH_SELL;
+				case ITEM_COLLECT -> ItemUpdateType.INC_KINAH_COLLECT;
+				case QUEST_WORK_ITEM -> ItemUpdateType.INC_KINAH_QUEST;
+				default -> ItemUpdateType.INC_KINAH_MERGE;
+			};
 		}
 	}
 
+	@Getter
 	public enum ItemAddType {
 		PARTIAL_WITH_SLOT(0x07), // 槽位部分内容 / partial content of slot
 		ALL_SLOT(0x13), // 槽位全部内容 / all content of slot
@@ -99,39 +92,35 @@ public class ItemPacketService {
 		QUEST_WORK_ITEM(0x35), LUNA_ADD(0x36), // 5.1 新增 / new 5.1
 		QUESTIONNAIRE(0x40), COALESCENCE(0xB0), AETHERFORGING(0xB2);
 
+		/**
+		 * -- GETTER --
+		 *  getMask 方法。
+		 *  getMask method.
+		 *  result
+		 */
 		private final int mask;
 
 		ItemAddType(int mask) {
 			this.mask = mask;
 		}
 
-		/**
-		 * getMask 方法。
-		 * getMask method.
-		 * result
-		 */
-		public int getMask() {
-			return mask;
-		}
 	}
 
+	@Getter
 	public enum ItemDeleteType {
 		QUEST_REWARD(0), SPLIT(0x04), MOVE(0x14), DISCARD(0x15), USE(0x17), SELL(0x1F), QUEST_COMPLETE(0x31),
 		QUEST_START(0x34), DECOMPOSE(0x66), REGISTER(0x78), COALESCENCE(0xB1);
 
+		/**
+		 * -- GETTER --
+		 *  getMask 方法。
+		 *  getMask method.
+		 *  result
+		 */
 		private final int mask;
 
 		ItemDeleteType(int mask) {
 			this.mask = mask;
-		}
-
-		/**
-		 * getMask 方法。
-		 * getMask method.
-		 * result
-		 */
-		public int getMask() {
-			return mask;
 		}
 
 		/**
@@ -142,16 +131,12 @@ public class ItemPacketService {
 		 * result
 		 */
 		public static final ItemDeleteType fromUpdateType(ItemUpdateType updateType) {
-			switch (updateType) {
-			case DEC_ITEM_SPLIT:
-				return SPLIT;
-			case DEC_ITEM_USE:
-				return USE;
-			case DEC_ITEM_SPLIT_MOVE:
-				return MOVE;
-			default:
-				return QUEST_REWARD;
-			}
+			return switch (updateType) {
+				case DEC_ITEM_SPLIT -> SPLIT;
+				case DEC_ITEM_USE -> USE;
+				case DEC_ITEM_SPLIT_MOVE -> MOVE;
+				default -> QUEST_REWARD;
+			};
 		}
 
 		/**
@@ -162,16 +147,12 @@ public class ItemPacketService {
 		 * result
 		 */
 		public static ItemDeleteType fromQuestStatus(QuestStatus questStatus) {
-			switch (questStatus) {
-			case START:
-				return QUEST_START;
-			case REWARD:
-				return QUEST_REWARD;
-			case COMPLETE:
-				return QUEST_COMPLETE;
-			default:
-				return QUEST_REWARD;
-			}
+            return switch (questStatus) {
+                case START -> QUEST_START;
+                case REWARD -> QUEST_REWARD;
+                case COMPLETE -> QUEST_COMPLETE;
+                default -> QUEST_REWARD;
+            };
 		}
 	}
 

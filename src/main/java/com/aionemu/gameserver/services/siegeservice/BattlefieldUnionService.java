@@ -8,6 +8,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_BATTLEFIELD_UNION_RE
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 import lombok.Getter;
 
@@ -20,7 +21,15 @@ import lombok.Getter;
 @Getter
 public class BattlefieldUnionService {
 	private static final BattlefieldUnionService instance = new BattlefieldUnionService();
-	private static volatile ObjectProvider<BattlefieldUnionService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  注入 Spring 单例提供者。
+     *  Injects the Spring singleton provider.
+     *
+     * @param provider Spring 提供者 / spring provider
+     */
+    @Setter
+    private static volatile ObjectProvider<BattlefieldUnionService> instanceProvider;
 
 	/**
 	 * 返回当前已注册人数。
@@ -159,13 +168,4 @@ public class BattlefieldUnionService {
 		return instance;
 	}
 
-	/**
-	 * 注入 Spring 单例提供者。
-	 * Injects the Spring singleton provider.
-	 *
-	 * @param provider Spring 提供者 / spring provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<BattlefieldUnionService> provider) {
-		instanceProvider = provider;
-	}
 }

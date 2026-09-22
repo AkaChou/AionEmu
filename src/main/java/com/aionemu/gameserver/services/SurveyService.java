@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Future;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -37,7 +38,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SurveyService {
 
-	private static volatile ObjectProvider<SurveyService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  注入 Spring 的实例提供者。
+     *  Sets the Spring instance provider.
+     *
+     * @param provider 实例提供者 / instance provider
+     */
+    @Setter
+    private static volatile ObjectProvider<SurveyService> instanceProvider;
 	private final ConcurrentMap<Integer, SurveyItem> activeItems;
 	private volatile String htmlTemplate;
 	private Future<?> updateTask;
@@ -208,13 +217,4 @@ public class SurveyService {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring 的实例提供者。
-	 * Sets the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<SurveyService> provider) {
-		instanceProvider = provider;
-	}
 }

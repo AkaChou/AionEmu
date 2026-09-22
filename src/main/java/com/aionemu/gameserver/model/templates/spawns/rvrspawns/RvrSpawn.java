@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.rvr.RvrStateType;
 import com.aionemu.gameserver.model.templates.spawns.Spawn;
+import lombok.Getter;
 
 /**
  * 阵营战刷新点模板（静态数据/XML）。
@@ -21,13 +22,13 @@ import com.aionemu.gameserver.model.templates.spawns.Spawn;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RvrSpawn")
 public class RvrSpawn {
+	/**
+	 * -- GETTER --
+	 * 返回 ID / Returns the id
+	 */
+	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
 
 	@XmlElement(name = "rvr_type")
 	private List<RvrSpawn.RvrStateTemplate> RvrStateTemplate;
@@ -37,24 +38,24 @@ public class RvrSpawn {
 		return RvrStateTemplate;
 	}
 
-	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+    @XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "RvrStateTemplate")
 	public static class RvrStateTemplate {
 
-		@XmlElement(name = "spawn")
+        /**
+         * -- GETTER --
+         * 获取刷新。 / Returns the spawns.
+         */
+        @XmlElement(name = "spawn")
 		private List<Spawn> spawns;
 
-		@XmlAttribute(name = "rstate")
+        /**
+         * -- GETTER --
+         * 获取阵营战类型。 / Returns the rvr type.
+         */
+        @XmlAttribute(name = "rstate")
 		private RvrStateType rvrType;
 
-		/** 获取刷新。 / Returns the spawns. */
-		public List<Spawn> getSpawns() {
-			return spawns;
-		}
-
-		/** 获取阵营战类型。 / Returns the rvr type. */
-		public RvrStateType getRvrType() {
-			return rvrType;
-		}
-	}
+    }
 }

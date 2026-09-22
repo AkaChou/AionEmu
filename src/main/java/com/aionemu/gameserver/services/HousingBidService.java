@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
@@ -62,7 +63,15 @@ import java.util.Map;
 
 public class HousingBidService extends AbstractCronTask {
 
-	private static volatile ObjectProvider<HousingBidService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  注入 Spring 的实例提供者。
+     *  Injects the Spring instance provider.
+     *
+     * @param provider 实例提供者 / instance provider
+     */
+    @Setter
+    private static volatile ObjectProvider<HousingBidService> instanceProvider;
 	private static CronExpression registerDateExpr;
 	private static final Map<Integer, HouseBidEntry> houseBids;
 	private static final Map<Integer, HouseBidEntry> playerBids;
@@ -109,17 +118,7 @@ public class HousingBidService extends AbstractCronTask {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring 的实例提供者。
-	 * Injects the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<HousingBidService> provider) {
-		instanceProvider = provider;
-	}
-
-	private static HousingBidService createLegacyInstance() {
+    private static HousingBidService createLegacyInstance() {
 		try {
 			return new HousingBidService(HousingConfig.HOUSE_AUCTION_TIME);
 		} catch (ParseException pe) {

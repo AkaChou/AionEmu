@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services.item;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,8 +37,14 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 @Slf4j
 public class CoalescenceService {
 
-	/** Spring ObjectProvider preferred over local singleton / Spring ObjectProvider preferred over local singleton */
-	private static volatile ObjectProvider<CoalescenceService> instanceProvider;
+	/** Spring ObjectProvider preferred over local singleton / Spring ObjectProvider preferred over local singleton
+     * -- SETTER --
+     *  注入 Spring ObjectProvider 以覆盖默认单例。
+     *  Injects a Spring ObjectProvider to override the default singleton.
+     *  provider
+     */
+	@Setter
+    private static volatile ObjectProvider<CoalescenceService> instanceProvider;
 
 	/**
 	 * 执行融合：播放读条动画，消耗核心与材料，随机发放同槽位大天使装备，并按材料数判定奖励。
@@ -192,13 +199,4 @@ public class CoalescenceService {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring ObjectProvider 以覆盖默认单例。
-	 * Injects a Spring ObjectProvider to override the default singleton.
-	 *
-	 * provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<CoalescenceService> provider) {
-		instanceProvider = provider;
-	}
 }

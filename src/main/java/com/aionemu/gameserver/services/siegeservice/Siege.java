@@ -73,7 +73,20 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 * @return 是否已击杀首领 / whether boss was killed
 	 */
 	private boolean bossKilled;
-	private SiegeNpc boss, flag;
+    /**
+     * -- GETTER --
+     *  返回攻城首领 NPC。
+     *  Returns the siege boss NPC.
+     *
+     *
+	 * -- SETTER --
+	 *  设置攻城首领 NPC。
+	 *  Sets the siege boss NPC.
+	 *
+	 @return 首领 NPC / boss NPC
+	  * @param boss 首领 NPC / boss NPC
+     */
+    private SiegeNpc boss, flag;
 	/**
 	 * 返回攻城开始时间。
 	 * Returns the siege start time.
@@ -146,26 +159,6 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 */
 	public int getSiegeLocationId() {
 		return siegeLocation.getLocationId();
-	}
-
-	/**
-	 * 返回攻城首领 NPC。
-	 * Returns the siege boss NPC.
-	 *
-	 * @return 首领 NPC / boss NPC
-	 */
-	public SiegeNpc getBoss() {
-		return boss;
-	}
-
-	/**
-	 * 设置攻城首领 NPC。
-	 * Sets the siege boss NPC.
-	 *
-	 * @param boss 首领 NPC / boss NPC
-	 */
-	public void setBoss(SiegeNpc boss) {
-		this.boss = boss;
 	}
 
 	protected abstract void onSiegeStart();

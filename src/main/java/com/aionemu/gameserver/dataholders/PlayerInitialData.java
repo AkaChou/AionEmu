@@ -16,6 +16,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
+import lombok.Getter;
 
 /**
  * 新玩家初始数据表，包含创建职业物品与阵营出生点。
@@ -82,14 +83,11 @@ public class PlayerInitialData {
 	 * @throws IllegalArgumentException 不支持的阵营 / if race is unsupported
 	 */
 	public LocationData getSpawnLocation(Race race) {
-		switch (race) {
-		case ASMODIANS:
-			return asmodianSpawnLocation;
-		case ELYOS:
-			return elyosSpawnLocation;
-		default:
-			throw new IllegalArgumentException();
-		}
+		return switch (race) {
+			case ASMODIANS -> asmodianSpawnLocation;
+			case ELYOS -> elyosSpawnLocation;
+			default -> throw new IllegalArgumentException();
+		};
 	}
 
 	/**
@@ -136,6 +134,14 @@ public class PlayerInitialData {
 			@XmlAttribute(name = "id")
 			public int templateId;
 
+			/**
+			 * -- GETTER --
+			 *  返回物品数量。
+			 *  Returns the item count.
+			 *
+			 * @return 物品数量 / Returns the item count.
+			 */
+			@Getter
 			@XmlAttribute(name = "count")
 			public int count;
 
@@ -147,16 +153,6 @@ public class PlayerInitialData {
 			 */
 			public ItemTemplate getTemplate() {
 				return DataManager.ITEM_DATA.getItemTemplate(templateId);
-			}
-
-			/**
-			 * 返回物品数量。
-			 * Returns the item count.
-			 *
-			 * @return 物品数量 / Returns the item count.
-			 */
-			public int getCount() {
-				return count;
 			}
 
 			@Override
@@ -178,16 +174,49 @@ public class PlayerInitialData {
 	 * 出生坐标数据持有者。
 	 * Spawn location data holder.
 	 */
+	@Getter
 	public static class LocationData {
 
+		/**
+		 * -- GETTER --
+		 *  返回地图 ID。
+		 *  Returns the map id.
+		 *
+		 * @return 地图 ID / Returns the map id.
+		 */
 		@XmlAttribute(name = "map_id")
 		private int mapId;
+		/**
+		 * -- GETTER --
+		 *  返回 X 坐标。
+		 *  Returns the X coordinate.
+		 *  X 坐标 / X coordinate
+		 */
 		@XmlAttribute(name = "x")
 		private float x;
+		/**
+		 * -- GETTER --
+		 *  返回 Y 坐标。
+		 *  Returns the Y coordinate.
+		 *  Y 坐标 / Y coordinate
+		 */
 		@XmlAttribute(name = "y")
 		private float y;
+		/**
+		 * -- GETTER --
+		 *  返回 Z 坐标。
+		 *  Returns the Z coordinate.
+		 *  Z 坐标 / Z coordinate
+		 */
 		@XmlAttribute(name = "z")
 		private float z;
+		/**
+		 * -- GETTER --
+		 *  返回朝向。
+		 *  Returns the heading.
+		 *
+		 * @return 朝向 / heading
+		 */
 		@XmlAttribute(name = "heading")
 		private byte heading;
 
@@ -195,54 +224,5 @@ public class PlayerInitialData {
 
 		}
 
-		/**
-		 * 返回地图 ID。
-		 * Returns the map id.
-		 *
-		 * @return 地图 ID / Returns the map id.
-		 */
-		public int getMapId() {
-			return mapId;
-		}
-
-		/**
-		 * 返回 X 坐标。
-		 * Returns the X coordinate.
-		 *
-		 * X 坐标 / X coordinate
-		 */
-		public float getX() {
-			return x;
-		}
-
-		/**
-		 * 返回 Y 坐标。
-		 * Returns the Y coordinate.
-		 *
-		 * Y 坐标 / Y coordinate
-		 */
-		public float getY() {
-			return y;
-		}
-
-		/**
-		 * 返回 Z 坐标。
-		 * Returns the Z coordinate.
-		 *
-		 * Z 坐标 / Z coordinate
-		 */
-		public float getZ() {
-			return z;
-		}
-
-		/**
-		 * 返回朝向。
-		 * Returns the heading.
-		 *
-		 * @return 朝向 / heading
-		 */
-		public byte getHeading() {
-			return heading;
-		}
 	}
 }

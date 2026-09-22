@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 
 import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 天梯（Ladder）排位数据访问对象。
@@ -27,20 +29,92 @@ public abstract class LadderDAO implements DAO {
 	 * 玩家天梯数据传输对象。
 	 * Player ladder data transfer object.
 	 */
+	@Setter
+	@Getter
 	public static class PlayerLadderData {
-		/** 玩家。 / Player. */
+		/** 玩家。 / Player.
+		 * -- GETTER --
+		 *  获取玩家。 / Gets the player.
+		 *
+		 *
+		 * -- SETTER --
+		 *  设置玩家。 / Sets the player.
+		 *
+		 @return 玩家 / player
+		  * @param player 玩家 / player
+		 */
 		private Player player;
-		/** 评分。 / Rating. */
+		/** 评分。 / Rating.
+		 * -- GETTER --
+		 *  获取评分。 / Gets the rating.
+		 *
+		 *
+		 * -- SETTER --
+		 *  设置评分。 / Sets the rating.
+		 *
+		 @return 评分 / rating
+		  * @param rating 评分 / rating
+		 */
 		private int rating;
-		/** 排名。 / Rank. */
+		/** 排名。 / Rank.
+		 * -- GETTER --
+		 *  获取排名。 / Gets the rank.
+		 *
+		 *
+		 * -- SETTER --
+		 *  设置排名。 / Sets the rank.
+		 *
+		 @return 段位 / rank
+		  * @param rank 段位 / rank
+		 */
 		private int rank;
-		/** 胜场。 / Wins. */
+		/** 胜场。 / Wins.
+		 * -- GETTER --
+		 *  获取胜场。 / Gets wins.
+		 *
+		 *
+		 * -- SETTER --
+		 *  设置胜场。 / Sets wins.
+		 *
+		 @return 胜场 / wins
+		  * @param wins 胜场 / wins
+		 */
 		private int wins;
-		/** 负场。 / Losses. */
+		/** 负场。 / Losses.
+		 * -- GETTER --
+		 *  获取负场。 / Gets losses.
+		 *
+		 *
+		 * -- SETTER --
+		 *  设置负场。 / Sets losses.
+		 *
+		 @return 败场 / losses
+		  * @param losses 败场 / losses
+		 */
 		private int losses;
-		/** 离开次数。 / Leaves. */
+		/** 离开次数。 / Leaves.
+		 * -- GETTER --
+		 *  获取离开次数。 / Gets leaves.
+		 *
+		 *
+		 * -- SETTER --
+		 *  设置离开次数。 / Sets leaves.
+		 *
+		 @return 离场 / leaves
+		  * @param leaves 离场 / leaves
+		 */
 		private int leaves;
-		/** 最后更新时间。 / Last update time. */
+		/** 最后更新时间。 / Last update time.
+		 * -- GETTER --
+		 *  获取最后更新时间。 / Gets the last update time.
+		 *
+		 *
+		 * -- SETTER --
+		 *  设置最后更新时间。 / Sets the last update time.
+		 *
+		 @return 最后更新时间 / last update time
+		  * @param lastUpdate 最后更新时间 / last update time
+		 */
 		private Timestamp lastUpdate;
 
 		/**
@@ -66,131 +140,6 @@ public abstract class LadderDAO implements DAO {
 			this.lastUpdate = lastUpdate;
 		}
 
-		/**
-		 * 设置评分。 / Sets the rating.
-		 *
-		 * @param rating 评分 / rating
-		 */
-		public void setRating(int rating) {
-			this.rating = rating;
-		}
-
-		/**
-		 * 获取评分。 / Gets the rating.
-		 *
-		 * @return 评分 / rating
-		 */
-		public int getRating() {
-			return rating;
-		}
-
-		/**
-		 * 设置排名。 / Sets the rank.
-		 *
-		 * @param rank 段位 / rank
-		 */
-		public void setRank(int rank) {
-			this.rank = rank;
-		}
-
-		/**
-		 * 获取排名。 / Gets the rank.
-		 *
-		 * @return 段位 / rank
-		 */
-		public int getRank() {
-			return rank;
-		}
-
-		/**
-		 * 设置胜场。 / Sets wins.
-		 *
-		 * @param wins 胜场 / wins
-		 */
-		public void setWins(int wins) {
-			this.wins = wins;
-		}
-
-		/**
-		 * 获取胜场。 / Gets wins.
-		 *
-		 * @return 胜场 / wins
-		 */
-		public int getWins() {
-			return wins;
-		}
-
-		/**
-		 * 设置负场。 / Sets losses.
-		 *
-		 * @param losses 败场 / losses
-		 */
-		public void setLosses(int losses) {
-			this.losses = losses;
-		}
-
-		/**
-		 * 获取负场。 / Gets losses.
-		 *
-		 * @return 败场 / losses
-		 */
-		public int getLosses() {
-			return losses;
-		}
-
-		/**
-		 * 设置离开次数。 / Sets leaves.
-		 *
-		 * @param leaves 离场 / leaves
-		 */
-		public void setLeaves(int leaves) {
-			this.leaves = leaves;
-		}
-
-		/**
-		 * 获取离开次数。 / Gets leaves.
-		 *
-		 * @return 离场 / leaves
-		 */
-		public int getLeaves() {
-			return leaves;
-		}
-
-		/**
-		 * 设置最后更新时间。 / Sets the last update time.
-		 *
-		 * @param lastUpdate 最后更新时间 / last update time
-		 */
-		public void setLastUpdate(Timestamp lastUpdate) {
-			this.lastUpdate = lastUpdate;
-		}
-
-		/**
-		 * 获取最后更新时间。 / Gets the last update time.
-		 *
-		 * @return 最后更新时间 / last update time
-		 */
-		public Timestamp getLastUpdate() {
-			return lastUpdate;
-		}
-
-		/**
-		 * 设置玩家。 / Sets the player.
-		 *
-		 * @param player 玩家 / player
-		 */
-		public void setPlayer(Player player) {
-			this.player = player;
-		}
-
-		/**
-		 * 获取玩家。 / Gets the player.
-		 *
-		 * @return 玩家 / player
-		 */
-		public Player getPlayer() {
-			return player;
-		}
 	}
 
 	/**

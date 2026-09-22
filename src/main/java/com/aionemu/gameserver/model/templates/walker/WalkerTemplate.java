@@ -42,7 +42,10 @@ public class WalkerTemplate {
 	@XmlAttribute(name = "route_id", required = true)
 	private String routeId;
 
-	/** 队形 / Formation */
+	/** 队形 / Formation
+	 * -- SETTER --
+	 * 设置队形类型 / Sets the formation type
+	 */
 	@XmlAttribute(name = "formation")
 	private WalkerGroupType formation = WalkerGroupType.POINT;
 
@@ -62,7 +65,10 @@ public class WalkerTemplate {
 	@XmlElement(name = "routestep")
 	private List<RouteStep> routeStepList;
 
-	/** 解析后的行配置 / Parsed row values */
+	/** 解析后的行配置 / Parsed row values
+     * -- SETTER --
+     * 设置行列分布 / Sets row distribution
+     */
 	@XmlTransient
 	private int[] rows;
 
@@ -180,11 +186,6 @@ public class WalkerTemplate {
 		return formation;
 	}
 
-	/** 设置队形类型 / Sets the formation type */
-	public void setFormation(WalkerGroupType formation) {
-		this.formation = formation;
-	}
-
 	/**
 	 * 获取队形定义的人数容量。
 	 * Returns the member capacity defined by the formation.
@@ -210,12 +211,7 @@ public class WalkerTemplate {
 		return offsetsx;
 	}
 
-	/** 设置行列分布 / Sets row distribution */
-	public void setRows(int[] rows) {
-		this.rows = rows;
-	}
-
-	/** 获取 Y 偏移量 / Gets the Y offsets */
+    /** 获取 Y 偏移量 / Gets the Y offsets */
 	public int[] getoffsetsY() {
 		return offsetsy;
 	}

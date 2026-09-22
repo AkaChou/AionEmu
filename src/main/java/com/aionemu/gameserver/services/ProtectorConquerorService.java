@@ -26,7 +26,6 @@ import com.aionemu.gameserver.services.protectors.Protector;
 import com.aionemu.gameserver.services.protectors.ProtectorBuffs;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;

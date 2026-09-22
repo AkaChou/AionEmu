@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.mail;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
@@ -47,8 +48,14 @@ public class SystemMailService {
 		void execute(Connection connection) throws SQLException;
 	}
 
-	/** Spring provider used to override the default singleton / Spring provider used to override the default singleton */
-	private static volatile ObjectProvider<SystemMailService> instanceProvider;
+	/** Spring provider used to override the default singleton / Spring provider used to override the default singleton
+     * -- SETTER --
+     *  注入 Spring ObjectProvider 以覆盖默认单例。
+     *  Injects a Spring ObjectProvider to override the default singleton.
+     *  provider
+     */
+	@Setter
+    private static volatile ObjectProvider<SystemMailService> instanceProvider;
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -73,17 +80,7 @@ public class SystemMailService {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring ObjectProvider 以覆盖默认单例。
-	 * Injects a Spring ObjectProvider to override the default singleton.
-	 *
-	 * provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<SystemMailService> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 构造服务并输出初始化日志。
 	 * Constructs the service and writes the init log.
 	 */

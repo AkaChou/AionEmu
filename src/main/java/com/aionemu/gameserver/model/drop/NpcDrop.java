@@ -15,6 +15,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import lombok.Getter;
 
 /**
  * NPC 掉落，用于掉落相关逻辑。
@@ -30,6 +31,12 @@ public class NpcDrop implements DropCalculator {
 	protected List<DropGroup> dropGroup;
 	@XmlElement(name = "common_drop_group")
 	protected List<CommonDropGroup> commonDropGroup;
+	/**
+	 * -- GETTER --
+	 *  获取 npcId 属性值。
+	 *  Gets the value of the npcId property
+	 */
+	@Getter
 	@XmlAttribute(name = "npc_id", required = true)
 	protected int npcId;
 
@@ -67,14 +74,6 @@ public class NpcDrop implements DropCalculator {
 		dropGroup.addAll(groups);
 	}
 
-	 /**
-	  * 获取 npcId 属性值。
-	  * Gets the value of the npcId property
-	  */
-	public int getNpcId() {
-		return npcId;
-	}
-
 	/**
 	 * 掉落计算器：按种族筛选掉落组后依次执行各组计算。
 	 * Drop calculator: filters drop groups by race, then runs each matching group.
@@ -99,21 +98,21 @@ public class NpcDrop implements DropCalculator {
 		return index;
 	}
 
+	@Getter
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public static class CommonDropGroup {
+		/**
+		 * -- GETTER --
+		 * 获取名称。 / Returns the name.
+		 */
 		@XmlAttribute(name = "name", required = true)
 		protected String name;
+		/**
+		 * -- GETTER --
+		 * 返回公共掉落倍率，100 表示 1 倍。 / Returns the common drop adjustment, 100 means 1x.
+		 */
 		@XmlAttribute(name = "common_drop_adjustment")
 		protected int commonDropAdjustment = 100;
 
-		/** 获取名称。 / Returns the name. */
-		public String getName() {
-			return name;
-		}
-
-		/** 返回公共掉落倍率，100 表示 1 倍。 / Returns the common drop adjustment, 100 means 1x. */
-		public int getCommonDropAdjustment() {
-			return commonDropAdjustment;
-		}
 	}
 }

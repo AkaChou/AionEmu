@@ -37,7 +37,21 @@ public class BrokerItem implements Comparable<BrokerItem> {
 	private final int sellerId;
 	/** 获取物品经纪行种族。 / Returns the item broker race. */
 	private final BrokerRace itemBrokerRace;
-	private boolean isSold, isCanceled;
+	/**
+	 * -- GETTER --
+	 *  是否已售出。
+	 *  Whether the item is sold.
+	 *
+	 * @return 是否已售出 / whether sold
+	 */
+	private boolean isSold, /**
+	 * -- GETTER --
+	 *  是否已取消。
+	 *  Whether the listing was canceled.
+	 *
+	 * @return 是否已取消 / whether canceled
+	 */
+		isCanceled;
 	/**
 	 * 是否已结算。
 	 * Whether the sale is settled.
@@ -111,16 +125,6 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		return itemCreator;
 	}
 
-	/**
-	 * 是否已取消。
-	 * Whether the listing was canceled.
-	 *
-	 * @return 是否已取消 / whether canceled
-	 */
-	public boolean isCanceled() {
-		return isCanceled;
-	}
-
 	/** 设置是否已取消 / Sets whether canceled */
 	public void setIsCanceled(boolean isCanceled) {
 		this.isCanceled = isCanceled;
@@ -131,16 +135,6 @@ public class BrokerItem implements Comparable<BrokerItem> {
 		this.isSold = true;
 		this.isSettled = true;
 		this.settleTime = new Timestamp(Calendar.getInstance().getTimeInMillis());
-	}
-
-	/**
-	 * 是否已售出。
-	 * Whether the item is sold.
-	 *
-	 * @return 是否已售出 / whether sold
-	  */
-	public boolean isSold() {
-		return this.isSold;
 	}
 
 	/** 设置持久化状态。 / Sets the persistent state. */
@@ -348,25 +342,16 @@ public class BrokerItem implements Comparable<BrokerItem> {
 
 	/** 按类型返回比较器 / Returns the comparator by sort type */
 	public static Comparator<BrokerItem> getComparatoryByType(int sortType) {
-		switch (sortType) {
-		case 0:
-			return NAME_SORT_ASC;
-		case 1:
-			return NAME_SORT_DESC;
-		case 2:
-			return LEVEL_SORT_ASC;
-		case 3:
-			return LEVEL_SORT_DESC;
-		case 4:
-			return PRICE_SORT_ASC;
-		case 5:
-			return PRICE_SORT_DESC;
-		case 6:
-			return PIECE_PRICE_SORT_ASC;
-		case 7:
-			return PIECE_PRICE_SORT_DESC;
-		default:
-			throw new IllegalArgumentException("Illegal sort type for broker items");
-		}
+		return switch (sortType) {
+			case 0 -> NAME_SORT_ASC;
+			case 1 -> NAME_SORT_DESC;
+			case 2 -> LEVEL_SORT_ASC;
+			case 3 -> LEVEL_SORT_DESC;
+			case 4 -> PRICE_SORT_ASC;
+			case 5 -> PRICE_SORT_DESC;
+			case 6 -> PIECE_PRICE_SORT_ASC;
+			case 7 -> PIECE_PRICE_SORT_DESC;
+			default -> throw new IllegalArgumentException("Illegal sort type for broker items");
+		};
 	}
 }

@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.reward;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,7 +40,15 @@ import lombok.NoArgsConstructor;
 public class BonusService {
 
 	private static final BonusService instance = new BonusService();
-	private static volatile ObjectProvider<BonusService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  注入 Spring 实例提供者。
+     *  Inject the Spring instance provider.
+     *
+     * @param provider 实例提供者 / Instance provider
+     */
+    @Setter
+    private static volatile ObjectProvider<BonusService> instanceProvider;
 	private ItemGroupsData itemGroups = DataManager.ITEM_GROUPS_DATA;
 
 	/**
@@ -69,17 +78,7 @@ public class BonusService {
 		return service;
 	}
 
-	/**
-	 * 注入 Spring 实例提供者。
-	 * Inject the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / Instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<BonusService> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 按加成类型返回对应物品组数组。
 	 * Return the bonus item groups for the given bonus type.
 	 *
@@ -87,34 +86,20 @@ public class BonusService {
 	 * @return 物品组数组，可能为 null / Item group array, may be null
 	 */
 	public BonusItemGroup[] getGroupsByType(BonusType type) {
-		switch (type) {
-		case BOSS:
-			return itemGroups.getBossGroups();
-		case ENCHANT:
-			return itemGroups.getEnchantGroups();
-		case FOOD:
-			return itemGroups.getFoodGroups();
-		case GATHER:
-			return ArrayUtils.addAll(itemGroups.getOreGroups(), itemGroups.getGatherGroups());
-		case MANASTONE:
-			return itemGroups.getManastoneGroups();
-		case MEDICINE:
-			return itemGroups.getMedicineGroups();
-		case TASK:
-			return itemGroups.getCraftGroups();
-		case ISLAND:
-		case LUNAR:
-		case RIFT:
-		case VOLATILE_RIFT:
-		case REDEEM:
-		case MOVIE:
-		case MAGICAL:
-		case WINTER:
-			return null;
-		default:
-			log.warn(I18n.get("log.42c321e1773d", type));
-			return null;
-		}
+		return switch (type) {
+			case BOSS -> itemGroups.getBossGroups();
+			case ENCHANT -> itemGroups.getEnchantGroups();
+			case FOOD -> itemGroups.getFoodGroups();
+			case GATHER -> ArrayUtils.addAll(itemGroups.getOreGroups(), itemGroups.getGatherGroups());
+			case MANASTONE -> itemGroups.getManastoneGroups();
+			case MEDICINE -> itemGroups.getMedicineGroups();
+			case TASK -> itemGroups.getCraftGroups();
+			case ISLAND, LUNAR, RIFT, VOLATILE_RIFT, REDEEM, MOVIE, MAGICAL, WINTER -> null;
+			default -> {
+				log.warn(I18n.get("log.42c321e1773d", type));
+				yield null;
+			}
+		};
 	}
 
 	/**
@@ -194,26 +179,16 @@ public class BonusService {
 			return null;
 		}
 
-		switch (bonus.getType()) {
-		case TASK:
-			return getCraftBonus(player, questTemplate);
-		case MANASTONE:
-			return getManastoneBonus(player, bonus);
-		case MEDAL:
-			return getMedalBonus(player, questTemplate);
-		case ISLAND:
-		case LUNAR:
-		case RIFT:
-		case VOLATILE_RIFT:
-		case REDEEM:
-		case MOVIE:
-		case MAGICAL:
-		case WINTER:
-			return null;
-		default:
-			log.warn(I18n.get("log.42c321e1773d", bonus.getType()));
-			return null;
-		}
+		return switch (bonus.getType()) {
+			case TASK -> getCraftBonus(player, questTemplate);
+			case MANASTONE -> getManastoneBonus(player, bonus);
+			case MEDAL -> getMedalBonus(player, questTemplate);
+			case ISLAND, LUNAR, RIFT, VOLATILE_RIFT, REDEEM, MOVIE, MAGICAL, WINTER -> null;
+			default -> {
+				log.warn(I18n.get("log.42c321e1773d", bonus.getType()));
+				yield null;
+			}
+		};
 	}
 
 	/**

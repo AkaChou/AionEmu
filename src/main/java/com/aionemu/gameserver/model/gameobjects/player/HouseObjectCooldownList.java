@@ -3,6 +3,7 @@ package com.aionemu.gameserver.model.gameobjects.player;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 房屋对象冷却列表。
@@ -10,10 +11,14 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Setter
 @Getter
 public class HouseObjectCooldownList {
 
-	/** 返回 house object cooldowns / Returns the house object cooldowns */
+	/** 返回 house object cooldowns / Returns the house object cooldowns
+     * -- SETTER --
+     * 设置 house object cooldowns / Sets the house object cooldowns
+     */
 	private Map<Integer, Long> houseObjectCooldowns;
 
 	HouseObjectCooldownList(Player owner) {
@@ -43,12 +48,7 @@ public class HouseObjectCooldownList {
 		return houseObjectCooldowns.get(objectId);
 	}
 
-	/** 设置 house object cooldowns / Sets the house object cooldowns */
-	public void setHouseObjectCooldowns(Map<Integer, Long> houseObjectCooldowns) {
-		this.houseObjectCooldowns = houseObjectCooldowns;
-	}
-
-	/** 添加房屋对象冷却。 / Adds house object cooldown. */
+    /** 添加房屋对象冷却。 / Adds house object cooldown. */
 	public void addHouseObjectCooldown(int objectId, int delay) {
 		if (houseObjectCooldowns == null) {
 			houseObjectCooldowns = new HashMap<>();

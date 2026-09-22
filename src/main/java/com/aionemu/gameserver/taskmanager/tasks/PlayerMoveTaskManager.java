@@ -3,6 +3,7 @@ package com.aionemu.gameserver.taskmanager.tasks;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -19,8 +20,15 @@ public class PlayerMoveTaskManager extends AbstractPeriodicTaskManager {
 	/**
 	 * Spring 可选实例提供者。
 	 * Optional Spring instance provider.
-	 */
-	private static volatile ObjectProvider<PlayerMoveTaskManager> instanceProvider;
+     * -- SETTER --
+     *  注入 Spring 实例提供者。
+     *  Inject the Spring instance provider.
+     *
+     * @param provider 实例提供者 / Provider
+
+     */
+	@Setter
+    private static volatile ObjectProvider<PlayerMoveTaskManager> instanceProvider;
 
 	/**
 	 * 正在移动的玩家/生物（objectId → 对象）。
@@ -90,13 +98,4 @@ public class PlayerMoveTaskManager extends AbstractPeriodicTaskManager {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring 实例提供者。
-	 * Inject the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / Provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<PlayerMoveTaskManager> provider) {
-		instanceProvider = provider;
-	}
 }

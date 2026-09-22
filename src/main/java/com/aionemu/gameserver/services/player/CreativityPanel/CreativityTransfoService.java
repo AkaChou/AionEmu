@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services.player.CreativityPanel;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.Race;
@@ -13,7 +14,15 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * Creativity panel transformation service handling transform skill learn/enchant.
  */
 public class CreativityTransfoService {
-	private static volatile ObjectProvider<CreativityTransfoService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  setInstanceProvider 方法。
+     *  setInstanceProvider method.
+     *
+     * @param provider 提供者 / provider
+     */
+    @Setter
+    private static volatile ObjectProvider<CreativityTransfoService> instanceProvider;
 
 	/**
 	 * 应用变形效果。
@@ -281,13 +290,4 @@ public class CreativityTransfoService {
 		return provided;
 	}
 
-	/**
-	 * setInstanceProvider 方法。
-	 * setInstanceProvider method.
-	 *
-	 * @param provider 提供者 / provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<CreativityTransfoService> provider) {
-		instanceProvider = provider;
-	}
 }

@@ -23,6 +23,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_USE_OBJECT;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Setter;
 
 /**
  * Useable 物品对象。
@@ -31,7 +32,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class UseableItemObject extends HouseObject<HousingUseableItem> {
 
-	private volatile boolean mustGiveLastReward = false;
+    /**
+     * -- SETTER --
+     * 设置是否必须发放最终奖励 / Sets whether the final reward must be given
+     */
+    @Setter
+    private volatile boolean mustGiveLastReward = false;
 	private final AtomicReference<Player> usingPlayer = new AtomicReference<>();
 	private UseDataWriter entryWriter = null;
 
@@ -253,12 +259,7 @@ public class UseableItemObject extends HouseObject<HousingUseableItem> {
 		super.expireEnd(player);
 	}
 
-	/** 设置是否必须发放最终奖励 / Sets whether the final reward must be given */
-	public void setMustGiveLastReward(boolean mustGiveLastReward) {
-		this.mustGiveLastReward = mustGiveLastReward;
-	}
-
-	/** 到期结束 / Expire end. */
+    /** 到期结束 / Expire end. */
 	@Override
 	public void expireEnd(Player player) {
 		final int descId = getObjectTemplate().getNameId();

@@ -8,6 +8,7 @@ import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.ObjectProvider;
@@ -59,7 +60,8 @@ public final class PathService implements DisposableBean {
 	/** 路径结果 TTL；对齐 NpcMoveController 500ms replan。 / Result TTL. */
 	private static final long RESULT_CACHE_TTL_MS = 500;
 	private static final int RESULT_CACHE_MAX = 1024;
-	private static volatile ObjectProvider<PathService> instanceProvider;
+	@Setter
+    private static volatile ObjectProvider<PathService> instanceProvider;
 	private final PathData data = new PathData();
 	private final WaterVolumeStore waterVolumes = new WaterVolumeStore();
 	private final AtomicLong sequence = new AtomicLong();
@@ -611,26 +613,20 @@ public final class PathService implements DisposableBean {
 		if (failure instanceof CompletionException || failure instanceof ExecutionException) {
 			return resultStatus(path, failure.getCause());
 		}
-		switch (failure) {
-			case IncompletePathSearchException incomplete:
-				return switch (incomplete.status()) {
-					case NODE_LIMIT -> PathResultStatus.NODE_LIMIT;
-					case INTERRUPTED -> PathResultStatus.INTERRUPTED;
-					case INVALID_POSITION -> PathResultStatus.INVALID_POSITION;
-					case NO_PATH -> PathResultStatus.NO_PATH;
-					case FOUND -> PathResultStatus.FAILED;
-				};
-			case TimeoutException timeoutException:
-				return PathResultStatus.TIMEOUT;
-			case QueueExpiredException queueExpiredException:
-				return PathResultStatus.QUEUE_EXPIRED;
-			case RejectedExecutionException rejectedExecutionException:
-				return PathResultStatus.REJECTED;
-			case CancellationException cancellationException:
-				return PathResultStatus.CANCELLED;
-			default:
-				return PathResultStatus.FAILED;
-		}
+		return switch (failure) {
+			case IncompletePathSearchException incomplete -> switch (incomplete.status()) {
+				case NODE_LIMIT -> PathResultStatus.NODE_LIMIT;
+				case INTERRUPTED -> PathResultStatus.INTERRUPTED;
+				case INVALID_POSITION -> PathResultStatus.INVALID_POSITION;
+				case NO_PATH -> PathResultStatus.NO_PATH;
+				case FOUND -> PathResultStatus.FAILED;
+			};
+			case TimeoutException timeoutException -> PathResultStatus.TIMEOUT;
+			case QueueExpiredException queueExpiredException -> PathResultStatus.QUEUE_EXPIRED;
+			case RejectedExecutionException rejectedExecutionException -> PathResultStatus.REJECTED;
+			case CancellationException cancellationException -> PathResultStatus.CANCELLED;
+			default -> PathResultStatus.FAILED;
+		};
 	}
 
 	private void recordResultStatus(PathResultStatus status) {
@@ -766,18 +762,13 @@ public final class PathService implements DisposableBean {
 	}
 
 	private static List<PathData.PathPoint> groundPath(PathData.SearchResult result) {
-        switch (result.status()) {
-            case FOUND:
-                return result.path();
-            case NODE_LIMIT:
-            case INTERRUPTED:
-                throw new IncompletePathSearchException(result.status(), result.processedNodes());
-            case NO_PATH:
-            case INVALID_POSITION:
-                return null;
-            default:
-                throw new IllegalArgumentException();
-        }
+		return switch (result.status()) {
+			case FOUND -> result.path();
+			case NODE_LIMIT, INTERRUPTED ->
+				throw new IncompletePathSearchException(result.status(), result.processedNodes());
+			case NO_PATH, INVALID_POSITION -> null;
+			default -> throw new IllegalArgumentException();
+		};
 	}
 
 	private float[][] findSpatialPath(PathRequest request) {
@@ -1131,11 +1122,7 @@ public final class PathService implements DisposableBean {
 		return provider == null ? Holder.INSTANCE : provider.getIfAvailable(() -> Holder.INSTANCE);
 	}
 
-	public static void setInstanceProvider(ObjectProvider<PathService> provider) {
-		instanceProvider = provider;
-	}
-
-	public enum PathResultStatus {
+    public enum PathResultStatus {
 		FOUND,
 		NO_PATH,
 		INVALID_POSITION,

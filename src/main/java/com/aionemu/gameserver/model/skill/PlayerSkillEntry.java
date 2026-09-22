@@ -6,6 +6,8 @@ import com.aionemu.gameserver.configs.main.CraftConfig;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 玩家技能条目，用于技能相关逻辑。
@@ -13,21 +15,46 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
  *
  * @author ATracer
  */
+@Getter
 public class PlayerSkillEntry extends SkillEntry {
 	record TransactionState(int skillLevel, int skinId, Timestamp activeSkinTime, int expireTime,
 		boolean activated, int currentXp, PersistentState persistentState) {
 	}
 
-	private final boolean isStigma;
-	private final boolean isLinked;
+    /**
+     * -- GETTER --
+     *
+     * @return 是否为烙印之石技能 / Whether stigma skill
+     */
+    private final boolean isStigma;
+    /**
+     * -- GETTER --
+     *
+     * @return 是否为关联技能 / Whether linked
+     */
+    private final boolean isLinked;
 
 	/**
 	 * 制作技能的经验值。
 	 * for crafting skills
-	 */
+     * -- GETTER --
+     *
+     *
+	 * -- SETTER --
+	 *
+	 @return 当前经验 / Current XP
+	  * @param currentXp 设置的经验 / Current XP to set
+
+     */
+	@Setter
 	private int currentXp;
 
-	private PersistentState persistentState;
+    /**
+     * -- GETTER --
+     *
+     * @return 持久化状态 / Persistent state
+     */
+    private PersistentState persistentState;
 
 	public PlayerSkillEntry(int skillId, boolean isStigma, boolean isLinked, int skillLvl, int skinId,
 			Timestamp activeSkinTime, int expireTime, boolean isActivated, PersistentState persistentState) {
@@ -37,21 +64,7 @@ public class PlayerSkillEntry extends SkillEntry {
 		this.persistentState = persistentState;
 	}
 
-	/**
-	 * @return 是否为烙印之石技能 / Whether stigma skill
-	 */
-	public boolean isStigma() {
-		return this.isStigma;
-	}
-
-	/**
-	 * @return 是否为关联技能 / Whether linked
-	 */
-	public boolean isLinked() {
-		return this.isLinked;
-	}
-
-	/** 设置技能等级 / Sets the skill lvl */
+    /** 设置技能等级 / Sets the skill lvl */
 	public void setSkillLvl(int skillLevel) {
 		super.setSkillLvl(skillLevel);
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
@@ -99,20 +112,6 @@ public class PlayerSkillEntry extends SkillEntry {
 			}
 		}
 		return 0;
-	}
-
-	/**
-	 * @return 当前经验 / Current XP
-	 */
-	public int getCurrentXp() {
-		return currentXp;
-	}
-
-	/**
-	 * @param currentXp 设置的经验 / Current XP to set
-	 */
-	public void setCurrentXp(int currentXp) {
-		this.currentXp = currentXp;
 	}
 
 	/**
@@ -178,14 +177,7 @@ public class PlayerSkillEntry extends SkillEntry {
 		return false;
 	}
 
-	/**
-	 * @return 持久化状态 / Persistent state
-	 */
-	public PersistentState getPersistentState() {
-		return persistentState;
-	}
-
-	/**
+    /**
 	 * @param persistentState 设置的持久化状态 / Persistent state to set
 	 */
 	public void setPersistentState(PersistentState persistentState) {

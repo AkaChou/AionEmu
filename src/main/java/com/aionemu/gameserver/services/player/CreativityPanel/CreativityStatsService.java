@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.player.CreativityPanel;
 
 import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -13,7 +14,15 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * Creativity panel stats service applying essence stat bonuses.
  */
 public class CreativityStatsService {
-	private static volatile ObjectProvider<CreativityStatsService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  setInstanceProvider 方法。
+     *  setInstanceProvider method.
+     *
+     * @param provider 提供者 / provider
+     */
+    @Setter
+    private static volatile ObjectProvider<CreativityStatsService> instanceProvider;
 
 	/**
 	 * 应用精华属性。
@@ -81,13 +90,4 @@ public class CreativityStatsService {
 		return provided;
 	}
 
-	/**
-	 * setInstanceProvider 方法。
-	 * setInstanceProvider method.
-	 *
-	 * @param provider 提供者 / provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<CreativityStatsService> provider) {
-		instanceProvider = provider;
-	}
 }

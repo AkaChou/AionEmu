@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import lombok.Setter;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -33,8 +34,15 @@ public final class HTMLCache {
 	/**
 	 * Spring 可选实例提供者。
 	 * Optional Spring instance provider.
-	 */
-	private static volatile ObjectProvider<HTMLCache> instanceProvider;
+     * -- SETTER --
+     *  设置 Spring 实例提供者。
+     *  Sets the Spring instance provider.
+     *
+     * @param provider 实例提供者 / instance provider
+
+     */
+	@Setter
+    private static volatile ObjectProvider<HTMLCache> instanceProvider;
 
 	/**
 	 * 仅接受目录或 {@code .xhtml} 文件。
@@ -75,17 +83,7 @@ public final class HTMLCache {
 		return provided;
 	}
 
-	/**
-	 * 设置 Spring 实例提供者。
-	 * Sets the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<HTMLCache> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 相对路径 → HTML 内容。
 	 * Relative path → HTML content.
 	 */

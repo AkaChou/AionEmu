@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.Kisk;
@@ -19,7 +20,14 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * Kisk (resurrection stone) service managing binds, offline retention, and member cleanup on removal.
  */
 public class KiskService {
-	private static volatile ObjectProvider<KiskService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  注入 Spring ObjectProvider 以覆盖默认单例。
+     *  Injects a Spring ObjectProvider to override the default singleton.
+     *  Spring provider
+     */
+    @Setter
+    private static volatile ObjectProvider<KiskService> instanceProvider;
 	/** 已绑定但离线的玩家 → 基斯克。 / Bound-but-offline players to their kisk. */
 	private final ConcurrentMap<Integer, Kisk> boundButOfflinePlayer = new ConcurrentHashMap<>();
 	/** 基斯克拥有者 → 基斯克。 / Kisk owners to their kisk. */
@@ -140,13 +148,4 @@ public class KiskService {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring ObjectProvider 以覆盖默认单例。
-	 * Injects a Spring ObjectProvider to override the default singleton.
-	 *
-	 * Spring provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<KiskService> provider) {
-		instanceProvider = provider;
-	}
 }

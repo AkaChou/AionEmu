@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -48,7 +49,15 @@ import com.aionemu.gameserver.world.WorldPosition;
 @Slf4j
 public class HousingService {
 
-	private static volatile ObjectProvider<HousingService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  注入 Spring 的实例提供者。
+     *  Injects the Spring instance provider.
+     *
+     * @param provider 实例提供者 / instance provider
+     */
+    @Setter
+    private static volatile ObjectProvider<HousingService> instanceProvider;
 	/** 地图 ID 到该图房屋 / Map id to houses on that map */
 	private static final Map<Integer, List<House>> housesByMapId = new HashMap<>();
 	/** 自定义（地产）房屋缓存。 / Custom (estate) house cache. */
@@ -79,17 +88,7 @@ public class HousingService {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring 的实例提供者。
-	 * Injects the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<HousingService> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 从数据库加载自定义房屋与工作室。
 	 * Loads custom houses and studios from the database.
 	 */

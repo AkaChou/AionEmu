@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.toypet;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -63,7 +64,14 @@ public class MinionService {
 	private static final int MAX_MINIONS = 200;
 	private static final long MINION_FUNCTION_PRICE = 25_000_000;
 	private static final long MINION_FUNCTION_DURATION = TimeUnit.DAYS.toMillis(30);
-	private static volatile ObjectProvider<MinionService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  注入 Spring 实例提供者。
+     *  Inject Spring instance provider.
+     *  Provider
+     */
+    @Setter
+    private static volatile ObjectProvider<MinionService> instanceProvider;
 	private MinionBuff minionbuff;
 	private final Set<Integer> minionSkillIds = new HashSet<>();
 
@@ -1087,21 +1095,15 @@ public class MinionService {
 			result = false;
 			rnd = Rnd.get(0, 3);
 			log.debug("Combination failed. Using grade: " + grade + " and rnd: " + rnd + " to determine minionId.");
-			switch (grade) {
-				case "D":
-					minionId = 980010;
-					break;
-				case "C":
-					minionId = player.getMinionList().getMinion(minionObjIds.get(rnd)).getMinionId();
-					break;
-				case "B":
-					minionId = player.getMinionList().getMinion(minionObjIds.get(rnd)).getMinionId();
-					break;
-				default:
-					log.debug("WARNING: Unknown grade: " + grade + ".  Using default minionId 0.");
-					minionId = 0;
-					break;
-			}
+            minionId = switch (grade) {
+                case "D" -> 980010;
+                case "C" -> player.getMinionList().getMinion(minionObjIds.get(rnd)).getMinionId();
+                case "B" -> player.getMinionList().getMinion(minionObjIds.get(rnd)).getMinionId();
+                default -> {
+                    log.debug("WARNING: Unknown grade: " + grade + ".  Using default minionId 0.");
+                    yield 0;
+                }
+            };
 		} else {
 			result = true;
 			log.debug("Combination succeeded. Using grade: " + grade + " to determine minionId.");
@@ -1293,13 +1295,4 @@ public class MinionService {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring 实例提供者。
-	 * Inject Spring instance provider.
-	 *
-	 * Provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<MinionService> provider) {
-		instanceProvider = provider;
-	}
 }

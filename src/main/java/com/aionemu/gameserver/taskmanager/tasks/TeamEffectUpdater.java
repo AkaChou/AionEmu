@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.taskmanager.tasks;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -18,8 +19,15 @@ public final class TeamEffectUpdater extends AbstractIterativePeriodicTaskManage
 	/**
 	 * Spring 可选实例提供者。
 	 * Optional Spring instance provider.
-	 */
-	private static volatile ObjectProvider<TeamEffectUpdater> instanceProvider;
+     * -- SETTER --
+     *  注入 Spring 实例提供者。
+     *  Inject the Spring instance provider.
+     *
+     * @param provider 实例提供者 / Provider
+
+     */
+	@Setter
+    private static volatile ObjectProvider<TeamEffectUpdater> instanceProvider;
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -44,17 +52,7 @@ public final class TeamEffectUpdater extends AbstractIterativePeriodicTaskManage
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring 实例提供者。
-	 * Inject the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / Provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<TeamEffectUpdater> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 以 500ms 周期构造队伍效果更新器。
 	 * Construct the team-effect updater with a 500ms period.
 	 */

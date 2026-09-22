@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.events;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -37,7 +38,14 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public class EventWindowService {
 
-	private static volatile ObjectProvider<EventWindowService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  setInstanceProvider 方法。
+     *  setInstanceProvider method.
+     *  provider
+     */
+    @Setter
+    private static volatile ObjectProvider<EventWindowService> instanceProvider;
 	private final Map<Integer, EventsWindow> allEvents = DataManager.EVENTS_WINDOW.getAllEvents();
 	private final ConcurrentMap<Integer, EventsWindow> activeEvents = new ConcurrentHashMap<>();
 
@@ -210,13 +218,4 @@ public class EventWindowService {
 		return provided;
 	}
 
-	/**
-	 * setInstanceProvider 方法。
-	 * setInstanceProvider method.
-	 *
-	 * provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<EventWindowService> provider) {
-		instanceProvider = provider;
-	}
 }

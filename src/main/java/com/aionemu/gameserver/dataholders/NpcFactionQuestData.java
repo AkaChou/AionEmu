@@ -12,6 +12,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.Getter;
 
 /**
  * NPC 势力每日任务的星期位数据容器。
@@ -54,24 +55,16 @@ public class NpcFactionQuestData {
 		if (entry == null) {
 			return true;
 		}
-        switch (calendarDayOfWeek) {
-            case Calendar.SUNDAY:
-                return entry.sun;
-            case Calendar.MONDAY:
-                return entry.mon;
-            case Calendar.TUESDAY:
-                return entry.tue;
-            case Calendar.WEDNESDAY:
-                return entry.wed;
-            case Calendar.THURSDAY:
-                return entry.thu;
-            case Calendar.FRIDAY:
-                return entry.fri;
-            case Calendar.SATURDAY:
-                return entry.sat;
-            default:
-                return true;
-        }
+        return switch (calendarDayOfWeek) {
+            case Calendar.SUNDAY -> entry.sun;
+            case Calendar.MONDAY -> entry.mon;
+            case Calendar.TUESDAY -> entry.tue;
+            case Calendar.WEDNESDAY -> entry.wed;
+            case Calendar.THURSDAY -> entry.thu;
+            case Calendar.FRIDAY -> entry.fri;
+            case Calendar.SATURDAY -> entry.sat;
+            default -> true;
+        };
 	}
 
 	/**
@@ -94,6 +87,7 @@ public class NpcFactionQuestData {
 	 * 单条星期位数据。
 	 * A single quest weekday entry.
 	 */
+	@Getter
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public static class NpcFactionQuestEntry {
 		@XmlAttribute(name = "quest_id")
@@ -115,40 +109,5 @@ public class NpcFactionQuestData {
 		@XmlAttribute
 		private boolean sun;
 
-		public int getQuestId() {
-			return questId;
-		}
-
-		public int getFactionId() {
-			return factionId;
-		}
-
-		public boolean isMon() {
-			return mon;
-		}
-
-		public boolean isTue() {
-			return tue;
-		}
-
-		public boolean isWed() {
-			return wed;
-		}
-
-		public boolean isThu() {
-			return thu;
-		}
-
-		public boolean isFri() {
-			return fri;
-		}
-
-		public boolean isSat() {
-			return sat;
-		}
-
-		public boolean isSun() {
-			return sun;
-		}
 	}
 }

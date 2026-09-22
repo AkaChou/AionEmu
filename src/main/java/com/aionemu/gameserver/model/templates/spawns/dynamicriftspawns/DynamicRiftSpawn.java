@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.dynamicrift.DynamicRiftStateType;
 import com.aionemu.gameserver.model.templates.spawns.Spawn;
+import lombok.Getter;
 
 /**
  * 动态裂隙刷新点模板（静态数据/XML）。
@@ -20,13 +21,13 @@ import com.aionemu.gameserver.model.templates.spawns.Spawn;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DynamicRiftSpawn")
 public class DynamicRiftSpawn {
+	/**
+	 * -- GETTER --
+	 * 返回 ID / Returns the id
+	 */
+	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
 
 	@XmlElement(name = "dynamic_rift_type")
 	private List<DynamicRiftSpawn.DynamicRiftStateTemplate> DynamicRiftStateTemplate;
@@ -36,24 +37,24 @@ public class DynamicRiftSpawn {
 		return DynamicRiftStateTemplate;
 	}
 
-	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+    @XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "DynamicRiftStateTemplate")
 	public static class DynamicRiftStateTemplate {
 
-		@XmlElement(name = "spawn")
+        /**
+         * -- GETTER --
+         * 获取刷新。 / Returns the spawns.
+         */
+        @XmlElement(name = "spawn")
 		private List<Spawn> spawns;
 
-		@XmlAttribute(name = "dstate")
+        /**
+         * -- GETTER --
+         * 获取动态裂隙类型。 / Returns the dynamic rift type.
+         */
+        @XmlAttribute(name = "dstate")
 		private DynamicRiftStateType dynamicRiftType;
 
-		/** 获取刷新。 / Returns the spawns. */
-		public List<Spawn> getSpawns() {
-			return spawns;
-		}
-
-		/** 获取动态裂隙类型。 / Returns the dynamic rift type. */
-		public DynamicRiftStateType getDynamicRiftType() {
-			return dynamicRiftType;
-		}
-	}
+    }
 }

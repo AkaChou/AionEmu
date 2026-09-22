@@ -12,6 +12,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.commons.utils.xml.JAXBUtil;
 import com.aionemu.gameserver.configs.Config;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Instance 副本活动时间表配置。
@@ -19,31 +21,25 @@ import com.aionemu.gameserver.configs.Config;
  *
  * @author Rinzler (Encom)
  */
+@Setter
+@Getter
 @XmlRootElement(name = "instance_schedule")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class InstanceSchedule {
 	/**
 	 * Instance 列表。
 	 * List of instances.
+	 * -- GETTER --
+	 *  获取 Instance 列表。
+	 *  Returns the instance list.
+	 * -- SETTER --
+	 *  设置 Instance 列表。
+	 *  Sets the instance list.
+
+
 	 */
 	@XmlElement(name = "instance", required = true)
 	private List<Instance> instancesList;
-
-	/**
-	 * 获取 Instance 列表。
-	 * Returns the instance list.
-	 */
-	public List<Instance> getInstancesList() {
-		return instancesList;
-	}
-
-	/**
-	 * 设置 Instance 列表。
-	 * Sets the instance list.
-	 */
-	public void setInstancesList(List<Instance> instanceList) {
-		this.instancesList = instanceList;
-	}
 
 	/**
 	 * 从 XML 加载时间表。
@@ -64,11 +60,21 @@ public class InstanceSchedule {
 	 * 单个 Instance 的时间表条目。
 	 * Schedule entry for a single instance.
 	 */
-	@XmlAccessorType(XmlAccessType.FIELD)
+	@Setter
+	@Getter
+    @XmlAccessorType(XmlAccessType.FIELD)
 	@XmlRootElement(name = "instance")
 	public static class Instance {
 		/**
 		 * 副本 ID / Instance ID
+         * -- GETTER --
+         *  获取 Instance ID。
+         *  Returns the instance ID.
+		 * -- SETTER --
+		 *  设置 Instance ID。
+		 *  Sets the instance ID.
+
+
 		 */
 		@XmlAttribute(required = true)
 		private int id;
@@ -76,40 +82,17 @@ public class InstanceSchedule {
 		/**
 		 * 副本时间列表。
 		 * List of instance times.
+         * -- GETTER --
+         *  获取副本时间列表。
+         *  Returns the instance times.
+		 * -- SETTER --
+		 *  设置副本时间列表。
+		 *  Sets the instance times.
+
+
 		 */
 		@XmlElement(name = "instanceTime", required = true)
 		private List<String> instanceTimes;
 
-		/**
-		 * 获取 Instance ID。
-		 * Returns the instance ID.
-		 */
-		public int getId() {
-			return id;
-		}
-
-		/**
-		 * 设置 Instance ID。
-		 * Sets the instance ID.
-		 */
-		public void setId(int id) {
-			this.id = id;
-		}
-
-		/**
-		 * 获取副本时间列表。
-		 * Returns the instance times.
-		 */
-		public List<String> getInstanceTimes() {
-			return instanceTimes;
-		}
-
-		/**
-		 * 设置副本时间列表。
-		 * Sets the instance times.
-		 */
-		public void setInstanceTimes(List<String> instanceTimes) {
-			this.instanceTimes = instanceTimes;
-		}
 	}
 }

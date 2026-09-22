@@ -4,6 +4,7 @@ import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.ai.RetailConditionSpawnEngine;
 import com.aionemu.gameserver.ai.RetailNpcPartyEngine;
 import com.aionemu.gameserver.ai2.NpcAI2;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -680,18 +681,26 @@ public class SpawnEngine {
 	 * 世界对象统计访问者。
 	 * Visitor that tallies NPCs and gatherables.
 	 */
-	static class StatsCollector implements Visitor<VisibleObject> {
+	@Getter
+    static class StatsCollector implements Visitor<VisibleObject> {
 
 		/**
 		 * NPC 计数。
 		 * NPC count.
-		 */
+         * -- GETTER --
+         *  NPC 数量 / npc count
+
+         */
 		int npcCount;
 
 		/**
 		 * 采集物计数。
 		 * Gatherable count.
-		 */
+         * -- GETTER --
+         *
+         * @return 采集物数量 / gatherable count
+
+         */
 		int gatherableCount;
 
 		@Override
@@ -703,20 +712,7 @@ public class SpawnEngine {
 			}
 		}
 
-		/**
-		 * NPC 数量 / npc count
-		 */
-		public int getNpcCount() {
-			return npcCount;
-		}
-
-		/**
-		 * @return 采集物数量 / gatherable count
-		 */
-		public int getGatherableCount() {
-			return gatherableCount;
-		}
-	}
+    }
 
 	/**
 	 * 按刷怪组在指定实例中刷出静态物体（原 StaticObjectSpawnManager）。

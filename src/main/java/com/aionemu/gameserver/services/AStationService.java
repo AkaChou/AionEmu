@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -22,7 +23,14 @@ import com.aionemu.gameserver.world.WorldType;
  */
 @Slf4j
 public class AStationService {
-	private static volatile ObjectProvider<AStationService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  注入 Spring ObjectProvider 以覆盖默认单例。
+     *  Injects a Spring ObjectProvider to override the default singleton.
+     *  Spring provider
+     */
+    @Setter
+    private static volatile ObjectProvider<AStationService> instanceProvider;
 	/** Accountscurrently 在 Stationmappedplayers / Accounts currently on A-Station mapped to players */
 	private final ConcurrentMap<Integer, Player> accountsOnAStation = new ConcurrentHashMap<>(1);
 
@@ -49,17 +57,7 @@ public class AStationService {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring ObjectProvider 以覆盖默认单例。
-	 * Injects a Spring ObjectProvider to override the default singleton.
-	 *
-	 * Spring provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<AStationService> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 校验等级后向客户端下发 A-Station 服务器列表。
 	 * After level check, sends the A-Station server list to the client.
 	 *

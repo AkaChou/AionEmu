@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.events;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -32,8 +33,15 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public class ShugoSweepService {
 
-	/** Spring 实例提供者 / Spring instance provider */
-	private static volatile ObjectProvider<ShugoSweepService> instanceProvider;
+	/** Spring 实例提供者 / Spring instance provider
+     * -- SETTER --
+     *  注入 Spring ObjectProvider 以覆盖默认单例。
+     *  Injects a Spring ObjectProvider that overrides the default singleton.
+     *
+     * @param provider 实例提供者 / instance provider
+     */
+	@Setter
+    private static volatile ObjectProvider<ShugoSweepService> instanceProvider;
 
 	/** 当前棋盘 ID / Current board id */
 	private final int boardId = EventsConfig.EVENT_SHUGOSWEEP_BOARD;
@@ -236,13 +244,4 @@ public class ShugoSweepService {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring ObjectProvider 以覆盖默认单例。
-	 * Injects a Spring ObjectProvider that overrides the default singleton.
-	 *
-	 * @param provider 实例提供者 / instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<ShugoSweepService> provider) {
-		instanceProvider = provider;
-	}
 }

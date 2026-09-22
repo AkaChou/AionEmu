@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.abyss;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.model.Race;
@@ -39,34 +40,30 @@ enum AbyssSkills {
 	/** 魔族 5 星军官 / Asmodian 5-star officer */
 	STAR5_OFFICER_A(Race.ASMODIANS, AbyssRankEnum.STAR5_OFFICER, new int[] { 11890, 11895 });
 
-	private final int[] skills;
+    /**
+     * -- GETTER --
+     *  返回该军阶的技能 ID 数组。
+     *  Returns the skill-id array for this rank.
+     *
+     * @return 技能 ID 数组 / skill ids
+     */
+    @Getter
+    private final int[] skills;
 	private final AbyssRankEnum rankenum;
+	/**
+	 * -- GETTER --
+	 *  返回该配置所属种族。
+	 *  Returns the race this skill set belongs to.
+	 *
+	 * @return 阵营 / Race
+	 */
+	@Getter
 	private final Race race;
 
 	AbyssSkills(Race race, AbyssRankEnum rankEnum, int[] skills) {
 		this.race = race;
 		rankenum = rankEnum;
 		this.skills = skills;
-	}
-
-	/**
-	 * 返回该配置所属种族。
-	 * Returns the race this skill set belongs to.
-	 *
-	 * @return 阵营 / Race
-	 */
-	public Race getRace() {
-		return race;
-	}
-
-	/**
-	 * 返回该军阶的技能 ID 数组。
-	 * Returns the skill-id array for this rank.
-	 *
-	 * @return 技能 ID 数组 / skill ids
-	 */
-	public int[] getSkills() {
-		return skills;
 	}
 
 	/**

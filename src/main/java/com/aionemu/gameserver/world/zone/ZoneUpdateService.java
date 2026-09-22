@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.world.zone;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -13,8 +14,15 @@ import com.aionemu.gameserver.taskmanager.AbstractFIFOPeriodicTaskManager;
  * @author ATracer
  */
 public class ZoneUpdateService extends AbstractFIFOPeriodicTaskManager<Creature> {
-	/** 可选 Spring 单例提供者 / optional Spring singleton provider */
-	private static volatile ObjectProvider<ZoneUpdateService> instanceProvider;
+	/** 可选 Spring 单例提供者 / optional Spring singleton provider
+     * -- SETTER --
+     *  设置 Spring 单例提供者。
+     *  Set the Spring singleton provider.
+     *
+     * @param provider Spring 单例提供者 / the Spring singleton provider
+     */
+	@Setter
+    private static volatile ObjectProvider<ZoneUpdateService> instanceProvider;
 
 	/**
 	 * 以 500ms 周期创建区域刷新服务。
@@ -72,13 +80,4 @@ public class ZoneUpdateService extends AbstractFIFOPeriodicTaskManager<Creature>
 		return provided;
 	}
 
-	/**
-	 * 设置 Spring 单例提供者。
-	 * Set the Spring singleton provider.
-	 *
-	 * @param provider Spring 单例提供者 / the Spring singleton provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<ZoneUpdateService> provider) {
-		instanceProvider = provider;
-	}
 }

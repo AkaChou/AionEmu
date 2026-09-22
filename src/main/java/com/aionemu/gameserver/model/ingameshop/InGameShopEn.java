@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.ingameshop;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -42,7 +43,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j(topic = "INGAMESHOP_LOG")
 public class InGameShopEn {
 
-	private static volatile ObjectProvider<InGameShopEn> instanceProvider;
+    /**
+     * -- SETTER --
+     * 设置实例提供者。 / Sets the instance provider.
+     */
+    @Setter
+    private static volatile ObjectProvider<InGameShopEn> instanceProvider;
 	private volatile Map<Byte, List<IGItem>> items = Collections.emptyMap();
 	private InGameShopDAO dao;
 	private volatile InGameShopProperty iGProperty;
@@ -74,12 +80,7 @@ public class InGameShopEn {
 		return provided;
 	}
 
-	/** 设置实例提供者。 / Sets the instance provider. */
-	public static void setInstanceProvider(ObjectProvider<InGameShopEn> provider) {
-		instanceProvider = provider;
-	}
-
-	public InGameShopEn() {
+    public InGameShopEn() {
 		reload();
 	}
 

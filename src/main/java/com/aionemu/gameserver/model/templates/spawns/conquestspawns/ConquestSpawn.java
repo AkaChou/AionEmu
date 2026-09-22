@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.conquest.ConquestStateType;
 import com.aionemu.gameserver.model.templates.spawns.Spawn;
+import lombok.Getter;
 
 /**
  * 征服刷新点模板（静态数据/XML）。
@@ -21,13 +22,13 @@ import com.aionemu.gameserver.model.templates.spawns.Spawn;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ConquestSpawn")
 public class ConquestSpawn {
+	/**
+	 * -- GETTER --
+	 * 返回 ID / Returns the id
+	 */
+	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
 
 	@XmlElement(name = "conquest_type")
 	private List<ConquestSpawn.ConquestStateTemplate> ConquestStateTemplate;
@@ -37,24 +38,24 @@ public class ConquestSpawn {
 		return ConquestStateTemplate;
 	}
 
-	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+    @XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "ConquestStateTemplate")
 	public static class ConquestStateTemplate {
 
-		@XmlElement(name = "spawn")
+        /**
+         * -- GETTER --
+         * 获取刷新。 / Returns the spawns.
+         */
+        @XmlElement(name = "spawn")
 		private List<Spawn> spawns;
 
-		@XmlAttribute(name = "ostate")
+        /**
+         * -- GETTER --
+         * 获取征服类型。 / Returns the conquest type.
+         */
+        @XmlAttribute(name = "ostate")
 		private ConquestStateType conquestType;
 
-		/** 获取刷新。 / Returns the spawns. */
-		public List<Spawn> getSpawns() {
-			return spawns;
-		}
-
-		/** 获取征服类型。 / Returns the conquest type. */
-		public ConquestStateType getConquestType() {
-			return conquestType;
-		}
-	}
+    }
 }

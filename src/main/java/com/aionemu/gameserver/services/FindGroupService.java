@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.objects.filter.ObjectFilter;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.autogroup.AutoGroupType;
@@ -34,6 +34,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class FindGroupService {
 
+	/**
+	 * -- SETTER --
+	 *  注入 Spring 的实例提供者。
+	 *  Injects the Spring instance provider.
+	 *
+	 * @param provider 实例提供者 / instance provider
+	 */
+	@Setter
 	private static volatile ObjectProvider<FindGroupService> instanceProvider;
 	private static final AtomicBoolean LISTENERS_REGISTERED = new AtomicBoolean();
 	/** 天族招募列表。 / Elyos recruit listings. */
@@ -277,24 +285,18 @@ public class FindGroupService {
 		FindGroup findGroup = null;
 		switch (race) {
 		case ELYOS:
-			switch (action) {
-			case 0x00:
-				findGroup = elyosRecruitFindGroups.remove(playerObjId);
-				break;
-			case 0x04:
-				findGroup = elyosApplyFindGroups.remove(playerObjId);
-				break;
-			}
+			findGroup = switch (action) {
+				case 0x00 -> elyosRecruitFindGroups.remove(playerObjId);
+				case 0x04 -> elyosApplyFindGroups.remove(playerObjId);
+				default -> findGroup;
+			};
 			break;
 		case ASMODIANS:
-			switch (action) {
-			case 0x00:
-				findGroup = asmodianRecruitFindGroups.remove(playerObjId);
-				break;
-			case 0x04:
-				findGroup = asmodianApplyFindGroups.remove(playerObjId);
-				break;
-			}
+            findGroup = switch (action) {
+                case 0x00 -> asmodianRecruitFindGroups.remove(playerObjId);
+                case 0x04 -> asmodianApplyFindGroups.remove(playerObjId);
+                default -> findGroup;
+            };
 			break;
 		}
 		if (findGroup != null)
@@ -352,13 +354,4 @@ public class FindGroupService {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring 的实例提供者。
-	 * Injects the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<FindGroupService> provider) {
-		instanceProvider = provider;
-	}
 }

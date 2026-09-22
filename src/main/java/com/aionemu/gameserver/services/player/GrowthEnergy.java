@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.player;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 
@@ -14,7 +15,6 @@ import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 成长能量服务，管理成长能量计时与发放。
@@ -24,7 +24,15 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 @Slf4j
 
 public class GrowthEnergy {
-	private static volatile ObjectProvider<GrowthEnergy> instanceProvider;
+    /**
+     * -- SETTER --
+     *  设置实例提供者（Spring 注入）。
+     *  Sets the instance provider (Spring injection).
+     *
+     * @param provider 实例提供者 / instance provider
+     */
+    @Setter
+    private static volatile ObjectProvider<GrowthEnergy> instanceProvider;
 	private boolean dailyGenerated = true;
 
 	/**
@@ -154,13 +162,4 @@ public class GrowthEnergy {
 		return provided;
 	}
 
-	/**
-	 * 设置实例提供者（Spring 注入）。
-	 * Sets the instance provider (Spring injection).
-	 *
-	 * @param provider 实例提供者 / instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<GrowthEnergy> provider) {
-		instanceProvider = provider;
-	}
 }

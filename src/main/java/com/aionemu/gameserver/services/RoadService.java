@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -16,7 +17,15 @@ import com.aionemu.gameserver.model.templates.road.RoadTemplate;
 @Slf4j
 public class RoadService {
 
-	private static volatile ObjectProvider<RoadService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  设置 Spring 实例提供者。
+     *  Sets the Spring instance provider.
+     *
+     * @param provider 实例提供者 / instance provider
+     */
+    @Setter
+    private static volatile ObjectProvider<RoadService> instanceProvider;
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -41,17 +50,7 @@ public class RoadService {
 		return provided;
 	}
 
-	/**
-	 * 设置 Spring 实例提供者。
-	 * Sets the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<RoadService> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 构造并刷出全部道路实体。
 	 * Constructs and spawns all road entities.
 	 */

@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -22,7 +23,6 @@ import com.aionemu.gameserver.services.summons.SummonsService;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
 import java.util.Map;
@@ -34,7 +34,14 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 public class DuelService {
-	private static volatile ObjectProvider<DuelService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  注入 Spring ObjectProvider 以覆盖默认单例。
+     *  Injects a Spring ObjectProvider to override the default singleton.
+     *  provider
+     */
+    @Setter
+    private static volatile ObjectProvider<DuelService> instanceProvider;
 
 	/** 玩家对象 ID 决斗配对映射 / Duel pair map of player object ids */
 	private final Map<Integer, Integer> duels;
@@ -64,17 +71,7 @@ public class DuelService {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring ObjectProvider 以覆盖默认单例。
-	 * Injects a Spring ObjectProvider to override the default singleton.
-	 *
-	 * provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<DuelService> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 构造服务并初始化决斗映射。
 	 * Constructs the service and initializes duel maps.
 	 */

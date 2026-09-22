@@ -62,8 +62,6 @@ import com.aionemu.gameserver.services.siegeservice.SiegeException;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldType;
-import com.aionemu.gameserver.world.knownlist.Visitor;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
@@ -670,48 +668,23 @@ public class SiegeService {
 	 * fortress id
 	 */
 	public int getFortressId(int locId) {
-		switch (locId) {
-		case 49:
-		case 61:
-			return 1011;
-		case 36:
-		case 54:
-			return 1131;
-		case 37:
-		case 55:
-			return 1132;
-		case 39:
-		case 56:
-			return 1141;
-		case 45:
-		case 57:
-		case 72:
-		case 75:
-			return 1221;
-		case 46:
-		case 58:
-		case 73:
-		case 76:
-			return 1231;
-		case 47:
-		case 59:
-		case 74:
-		case 77:
-			return 1241;
-		// 4.7
-		case 102:
-			return 7011;
-		case 103:
-			return 10111;
-		case 104:
-			return 10211;
-		case 105:
-			return 10311;
-		case 106:
-			return 10411;
-		}
-		return 0;
-	}
+        return switch (locId) {
+            case 49, 61 -> 1011;
+            case 36, 54 -> 1131;
+            case 37, 55 -> 1132;
+            case 39, 56 -> 1141;
+            case 45, 57, 72, 75 -> 1221;
+            case 46, 58, 73, 76 -> 1231;
+            case 47, 59, 74, 77 -> 1241;
+            // 4.7
+            case 102 -> 7011;
+            case 103 -> 10111;
+            case 104 -> 10211;
+            case 105 -> 10311;
+            case 106 -> 10411;
+            default -> 0;
+        };
+    }
 
 	/**
 	 * 攻城启动任务，到点触发指定要塞攻城。

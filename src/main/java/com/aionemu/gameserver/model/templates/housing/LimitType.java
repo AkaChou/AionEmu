@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.templates.housing;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 限制类型枚举。
@@ -28,7 +29,12 @@ public enum LimitType {
 	/** 点唱机 / Jukebox. */
 	JUKEBOX(7, new int[] { 1, 1, 1, 1, 1 }, new int[] { 1, 1, 1, 1, 0 });
 
-	int id;
+    /**
+     * -- GETTER --
+     * 返回 ID / Returns the id
+     */
+    @Getter
+    int id;
 	int[] personalLimits;
 	int[] trialLimits;
 
@@ -43,12 +49,7 @@ public enum LimitType {
 		return name();
 	}
 
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
-
-	/** 返回 object place limit / Returns the object place limit */
+    /** 返回 object place limit / Returns the object place limit */
 	public int getObjectPlaceLimit(HouseType houseType) {
 		return personalLimits[houseType.getLimitTypeIndex()];
 	}

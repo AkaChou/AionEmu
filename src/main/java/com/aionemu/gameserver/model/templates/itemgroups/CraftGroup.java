@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import lombok.Setter;
 import org.apache.commons.lang3.Range;
 
 import jakarta.xml.bind.annotation.XmlTransient;
@@ -19,11 +20,16 @@ import lombok.Getter;
  *
  * @author Rolandas
  */
+@Setter
 @Getter
 public abstract class CraftGroup extends BonusItemGroup {
 
 	/**
-	 * @return the dataHolder
+	 *
+     * -- SETTER --
+     *
+     @return the dataHolder
+      * @param dataHolder the dataHolder to set
 	 */
 	@XmlTransient
 	private Map<Integer, Map<Range<Integer>, List<CraftReward>>> dataHolder;
@@ -53,10 +59,4 @@ public abstract class CraftGroup extends BonusItemGroup {
 		return result.toArray(new ItemRaceEntry[0]);
 	}
 
-	/**
-	 * @param dataHolder the dataHolder to set
-	 */
-	public void setDataHolder(Map<Integer, Map<Range<Integer>, List<CraftReward>>> dataHolder) {
-		this.dataHolder = dataHolder;
-	}
 }

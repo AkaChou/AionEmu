@@ -14,6 +14,7 @@ import com.aionemu.gameserver.network.loginserver.clientpackets.CM_MACBAN_LIST;
 import com.aionemu.gameserver.network.loginserver.clientpackets.CM_PREMIUM_RESPONSE;
 import com.aionemu.gameserver.network.loginserver.clientpackets.CM_PTRANSFER_RESPONSE;
 import com.aionemu.gameserver.network.loginserver.clientpackets.CM_REQUEST_KICK_ACCOUNT;
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 /**
@@ -24,7 +25,15 @@ import org.springframework.beans.factory.ObjectProvider;
  */
 public class LsPacketHandlerFactory {
 
-	private static volatile ObjectProvider<LsPacketHandlerFactory> instanceProvider;
+    /**
+     * -- SETTER --
+     *  注入 Spring ObjectProvider，供 DI 覆盖静态单例。
+     *  Injects Spring ObjectProvider to override the static singleton.
+     *
+     * @param provider Spring Provider / Spring provider
+     */
+    @Setter
+    private static volatile ObjectProvider<LsPacketHandlerFactory> instanceProvider;
 	private final LsPacketHandler handler = new LsPacketHandler();
 
 	/**
@@ -49,17 +58,7 @@ public class LsPacketHandlerFactory {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring ObjectProvider，供 DI 覆盖静态单例。
-	 * Injects Spring ObjectProvider to override the static singleton.
-	 *
-	 * @param provider Spring Provider / Spring provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<LsPacketHandlerFactory> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 注册登录服包处理器。
 	 * Registers login-server packet handlers.
 	 */

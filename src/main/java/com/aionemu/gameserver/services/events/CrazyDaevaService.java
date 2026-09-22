@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.events;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.lifecycle.GameCronServices;
@@ -19,7 +20,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 疯狂大埃服务，管理限时 PvP 活动状态与奖励。
@@ -30,8 +30,15 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 @Slf4j
 public class CrazyDaevaService {
 
-	/** Spring 实例提供者 / Spring instance provider */
-	private static volatile ObjectProvider<CrazyDaevaService> instanceProvider;
+	/** Spring 实例提供者 / Spring instance provider
+     * -- SETTER --
+     *  注入 Spring ObjectProvider 以覆盖默认单例。
+     *  Injects a Spring ObjectProvider that overrides the default singleton.
+     *
+     * @param provider 实例提供者 / instance provider
+     */
+	@Setter
+    private static volatile ObjectProvider<CrazyDaevaService> instanceProvider;
 
 	/** 本轮已选出的疯狂大埃计数。 / Crazy Daeva count selected this round. */
 	int crazyCount = 0;
@@ -217,13 +224,4 @@ public class CrazyDaevaService {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring ObjectProvider 以覆盖默认单例。
-	 * Injects a Spring ObjectProvider that overrides the default singleton.
-	 *
-	 * @param provider 实例提供者 / instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<CrazyDaevaService> provider) {
-		instanceProvider = provider;
-	}
 }

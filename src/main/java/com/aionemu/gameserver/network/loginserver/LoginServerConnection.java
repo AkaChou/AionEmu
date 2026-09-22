@@ -2,6 +2,8 @@ package com.aionemu.gameserver.network.loginserver;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -51,8 +53,20 @@ public class LoginServerConnection extends AConnection {
 	/**
 	 * 当前连接状态。
 	 * Current state of this connection.
+     * -- GETTER --
+     *  返回当前连接状态。
+     *  Returns the current connection state.
+     *  Current state
+	 * -- SETTER --
+	 *  设置当前连接状态。
+	 *  Sets the current connection state.
+	 *  New state
+
+
 	 */
-	private State state;
+	@Setter
+	@Getter
+    private State state;
 
 	/**
 	 * LS 封包处理器。
@@ -206,26 +220,6 @@ public class LoginServerConnection extends AConnection {
 			sendMsgQueue.addLast(closePacket);
 			enableWriteInterest();
 		}
-	}
-
-	/**
-	 * 返回当前连接状态。
-	 * Returns the current connection state.
-	 *
-	 * Current state
-	 */
-	public State getState() {
-		return state;
-	}
-
-	/**
-	 * 设置当前连接状态。
-	 * Sets the current connection state.
-	 *
-	 * New state
-	 */
-	public void setState(State state) {
-		this.state = state;
 	}
 
 	/**

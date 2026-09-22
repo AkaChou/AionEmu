@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.ai.RetailSensoryAreaEngine;
@@ -30,8 +31,15 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 	/**
 	 * Spring 可选实例提供者。
 	 * Optional Spring instance provider.
-	 */
-	private static volatile ObjectProvider<MovementNotifyTask> instanceProvider;
+     * -- SETTER --
+     *  注入 Spring 实例提供者。
+     *  Inject the Spring instance provider.
+     *
+     * @param provider 实例提供者 / Provider
+
+     */
+	@Setter
+    private static volatile ObjectProvider<MovementNotifyTask> instanceProvider;
 
 	/**
 	 * 各地图移动广播峰值统计（[最大次数, Npc 模板 Id]）。
@@ -68,17 +76,7 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring 实例提供者。
-	 * Inject the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / Provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<MovementNotifyTask> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 向已知 NPC 投递移动事件的访问器。
 	 * Visitor that delivers move events to known NPCs.
 	 */

@@ -2,6 +2,7 @@ package com.aionemu.gameserver.world.geo;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,22 +36,19 @@ import com.aionemu.gameserver.utils.MathUtil;
 public class GeoService {
 	/** 可选 Spring 单例提供者 / Optional Spring singleton provider */
 	private static volatile ObjectProvider<GeoService> instanceProvider;
-	/** NPC ids excluded from geo handling / NPC ids excluded from geo handling */
-	private static final List<Integer> npcsExclude = new ArrayList<>();
+	/** NPC ids excluded from geo handling / NPC ids excluded from geo handling
+     * -- GETTER --
+     *  返回排除地理处理的 NPC 列表。
+     *  Returns the NPC exclusion list for geo handling.
+     *
+     * @return 排除列表 / exclusion list
+     */
+	@Getter
+    private static final List<Integer> npcsExclude = new ArrayList<>();
 	/** 当前使用的地理数据实现。 / Active geo-data implementation. */
 	private GeoData geoData;
 
-	/**
-	 * 返回排除地理处理的 NPC 列表。
-	 * Returns the NPC exclusion list for geo handling.
-	 *
-	 * @return 排除列表 / exclusion list
-	 */
-	public static List<Integer> getNpcsExclude() {
-		return npcsExclude;
-	}
-
-	/**
+    /**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
 	 *

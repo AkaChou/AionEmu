@@ -11,6 +11,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import lombok.Getter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
@@ -91,18 +93,15 @@ public class WeatherService {
 	 */
 	private class WeatherKey {
 		private GameTime created;
-		private final int mapId;
+		@Getter
+        private final int mapId;
 
 		public WeatherKey(GameTime createdTime, int mapId) {
 			this.created = createdTime;
 			this.mapId = mapId;
 		}
 
-		public int getMapId() {
-			return mapId;
-		}
-
-		public GameTime getCreatedTime() {
+        public GameTime getCreatedTime() {
 			return created;
 		}
 

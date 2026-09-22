@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 
@@ -20,7 +21,14 @@ import com.aionemu.gameserver.configs.main.SecurityConfig;
 @Slf4j
 public class PacketFloodFilter {
 
-	private static volatile ObjectProvider<PacketFloodFilter> instanceProvider;
+    /**
+     * -- SETTER --
+     *  注入 Spring ObjectProvider，供 DI 覆盖静态单例。
+     *  Injects Spring ObjectProvider to override the static singleton.
+     *  Spring provider
+     */
+    @Setter
+    private static volatile ObjectProvider<PacketFloodFilter> instanceProvider;
 
 
 	/**
@@ -45,17 +53,7 @@ public class PacketFloodFilter {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring ObjectProvider，供 DI 覆盖静态单例。
-	 * Injects Spring ObjectProvider to override the static singleton.
-	 *
-	 * Spring provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<PacketFloodFilter> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 按 opcode 索引的最小请求间隔（毫秒）；0 表示不限制。
 	 * Min request interval ms by opcode; 0 means unlimited.
 	 */

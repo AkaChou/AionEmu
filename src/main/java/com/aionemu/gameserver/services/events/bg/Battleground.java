@@ -82,7 +82,14 @@ public abstract class Battleground {
 	/** Elo 评分 K 值 / Elo rating K-value. */
 	protected final int K_VALUE = 20;
 
-	/** 战场显示名 → 实现类。 / Display name → implementation class. */
+	/** 战场显示名 → 实现类。 / Display name → implementation class.
+	 * -- GETTER --
+	 *  获取显示名到实现类的别名表。
+	 *  Returns display-name to implementation-class aliases.
+	 *
+	 * @return 别名表 / aliases
+	 */
+	@Getter
 	@SuppressWarnings("serial")
 	protected static final Map<String, Class<?>> aliases = new HashMap<>() {
 		{
@@ -111,17 +118,41 @@ public abstract class Battleground {
 	protected Integer bgId = -1;
 	/** 对局开始时间戳。 / Match start timestamp. */
 	protected long startStamp = 0;
-	/** 是否锦标赛模式。 / Whether tournament mode. */
+	/** 是否锦标赛模式。 / Whether tournament mode.
+	 * -- GETTER --
+	 *  是否锦标赛模式。
+	 *  Whether tournament mode.
+	 *
+	 * @return 若 tournament 则为 true / true if tournament
+	 */
 	protected boolean isTournament = false;
-	/** 是否活动模式。 / Whether event mode. */
+	/** 是否活动模式。 / Whether event mode.
+	 * -- GETTER --
+	 *  是否活动模式。
+	 *  Whether event mode.
+	 *
+	 * @return 若 event 则为 true / true if event
+	 */
 	protected boolean isEvent = false;
-	/** 是否 1v1 模式 / Whether 1v1 mode. */
+	/** 是否 1v1 模式 / Whether 1v1 mode.
+	 * -- GETTER --
+	 *  是否 1v1 模式。
+	 *  Whether 1v1 mode.
+	 *
+	 * @return 若 1v1 则为 true / true if 1v1
+	 */
 	protected boolean is1v1 = false;
 	/** 当前世界地图实例。 / Current world map instance. */
 	protected WorldMapInstance instance = null;
 	/** 过期/结束任务。 / Expire/end task. */
 	protected ScheduledFuture<?> expireTask = null;
-	/** 后台周期任务。 / Background periodic task. */
+	/** 后台周期任务。 / Background periodic task.
+	 * -- GETTER --
+	 *  获取后台周期任务。
+	 *  Returns the background periodic task.
+	 *
+	 * @return 后台周期任务 / the task
+	 */
 	protected ScheduledFuture<?> backgroundTask = null;
 	/** 后台任务计数。 / Background task counter. */
 	protected int backgroundCounter = 0;
@@ -133,7 +164,13 @@ public abstract class Battleground {
 	protected boolean isDone = false;
 	/** 结束时是否解散队伍。 / Whether to disband teams on end. */
 	protected boolean shouldDisband = true;
-	/** 是否基于队伍。 / Whether team-based. */
+	/** 是否基于队伍。 / Whether team-based.
+	 * -- GETTER --
+	 *  是否基于队伍。
+	 *  Whether team-based.
+	 *
+	 * @return 若 team-based 则为 true / true if team-based
+	 */
 	protected boolean teamBased = false;
 	/** 玩家进场前坐标。 / Player locations before entry. */
 	protected Map<Integer, WorldPosition> previousLocations = new HashMap<>();
@@ -1448,36 +1485,6 @@ public abstract class Battleground {
 	}
 
 	/**
-	 * 是否锦标赛模式。
-	 * Whether tournament mode.
-	 *
-	 * @return 若 tournament 则为 true / true if tournament
-	 */
-	public boolean isTournament() {
-		return isTournament;
-	}
-
-	/**
-	 * 是否活动模式。
-	 * Whether event mode.
-	 *
-	 * @return 若 event 则为 true / true if event
-	 */
-	public boolean isEvent() {
-		return isEvent;
-	}
-
-	/**
-	 * 是否 1v1 模式。
-	 * Whether 1v1 mode.
-	 *
-	 * @return 若 1v1 则为 true / true if 1v1
-	 */
-	public boolean is1v1() {
-		return is1v1;
-	}
-
-	/**
 	 * 结束时是否解散队伍。
 	 * Whether teams should be disbanded on end.
 	 *
@@ -1485,16 +1492,6 @@ public abstract class Battleground {
 	 */
 	public boolean shouldDisband() {
 		return shouldDisband;
-	}
-
-	/**
-	 * 是否基于队伍。
-	 * Whether team-based.
-	 *
-	 * @return 若 team-based 则为 true / true if team-based
-	 */
-	public boolean isTeamBased() {
-		return teamBased;
 	}
 
 	/**
@@ -1578,37 +1575,67 @@ public abstract class Battleground {
 	}
 
 	/**
-	 * 获取后台周期任务。
-	 * Returns the background periodic task.
-	 *
-	 * @return 后台周期任务 / the task
-	 */
-	public ScheduledFuture<?> getBackgroundTask() {
-		return backgroundTask;
-	}
-
-	/**
-	 * 获取显示名到实现类的别名表。
-	 * Returns display-name to implementation-class aliases.
-	 *
-	 * @return 别名表 / aliases
-	 */
-	public static Map<String, Class<?>> getAliases() {
-		return aliases;
-	}
-
-	/**
 	 * 出生点坐标。
 	 * Spawn position coordinates.
 	 */
+	@Setter
+	@Getter
 	public static class SpawnPosition {
-		/** 地图 ID / Map id */
+		/** 地图 ID / Map id
+		 * -- GETTER --
+		 *  获取地图 ID。
+		 *  Returns map id.
+		 *
+		 *
+		 * -- SETTER --
+		 *  设置地图 ID。
+		 *  Sets map id.
+		 *
+		 @return 地图 ID / map id
+		  * @param mapId 地图 ID / map id
+		 */
 		private int mapId = 0;
-		/** X coordinate / X coordinate */
+		/** X coordinate / X coordinate
+		 * -- GETTER --
+		 *  获取 X 坐标。
+		 *  Returns X.
+		 *
+		 *
+		 * -- SETTER --
+		 *  设置 X 坐标。
+		 *  Sets X.
+		 *
+		 @return X 坐标 / x
+		  * @param x X / x
+		 */
 		private float x;
-		/** Y coordinate / Y coordinate */
+		/** Y coordinate / Y coordinate
+		 * -- GETTER --
+		 *  获取 Y 坐标。
+		 *  Returns Y.
+		 *
+		 *
+		 * -- SETTER --
+		 *  设置 Y 坐标。
+		 *  Sets Y.
+		 *
+		 @return Y 坐标 / y
+		  * @param y Y / y
+		 */
 		private float y;
-		/** Z coordinate / Z coordinate */
+		/** Z coordinate / Z coordinate
+		 * -- GETTER --
+		 *  获取 Z 坐标。
+		 *  Returns Z.
+		 *
+		 *
+		 * -- SETTER --
+		 *  设置 Z 坐标。
+		 *  Sets Z.
+		 *
+		 @return Z 坐标 / z
+		  * @param z Z / z
+		 */
 		private float z;
 
 		/**
@@ -1641,101 +1668,81 @@ public abstract class Battleground {
 			this.z = z;
 		}
 
-		/**
-		 * 获取 X 坐标。
-		 * Returns X.
-		 *
-		 * @return X 坐标 / x
-		 */
-		public float getX() {
-			return x;
-		}
-
-		/**
-		 * 设置 X 坐标。
-		 * Sets X.
-		 *
-		 * @param x X / x
-		 */
-		public void setX(float x) {
-			this.x = x;
-		}
-
-		/**
-		 * 获取 Y 坐标。
-		 * Returns Y.
-		 *
-		 * @return Y 坐标 / y
-		 */
-		public float getY() {
-			return y;
-		}
-
-		/**
-		 * 设置 Y 坐标。
-		 * Sets Y.
-		 *
-		 * @param y Y / y
-		 */
-		public void setY(float y) {
-			this.y = y;
-		}
-
-		/**
-		 * 获取 Z 坐标。
-		 * Returns Z.
-		 *
-		 * @return Z 坐标 / z
-		 */
-		public float getZ() {
-			return z;
-		}
-
-		/**
-		 * 设置 Z 坐标。
-		 * Sets Z.
-		 *
-		 * @param z Z / z
-		 */
-		public void setZ(float z) {
-			this.z = z;
-		}
-
-		/**
-		 * 获取地图 ID。
-		 * Returns map id.
-		 *
-		 * @return 地图 ID / map id
-		 */
-		public int getMapId() {
-			return mapId;
-		}
-
-		/**
-		 * 设置地图 ID。
-		 * Sets map id.
-		 *
-		 * @param mapId 地图 ID / map id
-		 */
-		public void setMapId(int mapId) {
-			this.mapId = mapId;
-		}
 	}
 
 	/**
 	 * 战场地图配置：出生点、静态门、击杀高度与飞行限制。
 	 * Battleground map config: spawns, static doors, kill Z and flight restriction.
 	 */
+	@Getter
 	public static class BattlegroundMap {
-		/** 地图 ID / Map id */
+		/** 地图 ID / Map id
+		 * -- GETTER --
+		 *  获取地图 ID。
+		 *  Returns map id.
+		 *
+		 *
+		 * -- SETTER --
+		 *  设置地图 ID。
+		 *  Sets map id.
+		 *
+		 @return 地图 ID / map id
+		  * @param mapId 地图 ID / map id
+		 */
+		@Setter
 		private int mapId = 0;
-		/** 出生点列表。 / Spawn points. */
+		/** 出生点列表。 / Spawn points.
+		 * -- GETTER --
+		 *  获取出生点列表。
+		 *  Returns spawn points.
+		 *
+		 *
+		 * -- SETTER --
+		 *  设置出生点列表。
+		 *  Sets spawn points.
+		 *
+		 @return 出生点列表 / spawn points
+		  * @param spawnPoints 出生点列表 / spawn points
+		 */
+		@Setter
 		private List<SpawnPosition> spawnPoints = null;
-		/** 静态门 ID / Static door ids */
+		/** 静态门 ID / Static door ids
+		 * -- GETTER --
+		 *  获取静态门 ID 列表。
+		 *  Returns static door ids.
+		 *
+		 * @return 门 ID 列表 / door ids
+		 */
 		private List<Integer> staticDoors = null;
-		/** Kill Z threshold / Kill Z threshold */
+		/** Kill Z threshold / Kill Z threshold
+		 * -- GETTER --
+		 *  获取坠落击杀高度。
+		 *  Returns kill Z.
+		 *
+		 *
+		 * -- SETTER --
+		 *  设置坠落击杀高度。
+		 *  Sets kill Z.
+		 *
+		 @return 坠落击杀高度 / kill Z
+		  * @param killZ 坠落击杀高度 / kill Z
+		 */
+		@Setter
 		private float killZ = 0f;
-		/** 是否禁止飞行。 / Whether flight is restricted. */
+		/** 是否禁止飞行。 / Whether flight is restricted.
+		 * -- GETTER --
+		 *  是否限制飞行。
+		 *  Whether flight is restricted.
+		 *
+		 *
+		 * -- SETTER --
+		 *  设置是否限制飞行。
+		 *  Sets flight restriction.
+		 *
+		 @return 若 restricted 则为 true / true if restricted
+		  * @param restrictFlight 是否限制飞行 / restriction flag
+		 */
+		@Setter
 		private boolean restrictFlight = false;
 
 		/**
@@ -1774,94 +1781,5 @@ public abstract class Battleground {
 			staticDoors.add(doorId);
 		}
 
-		/**
-		 * 设置地图 ID。
-		 * Sets map id.
-		 *
-		 * @param mapId 地图 ID / map id
-		 */
-		public void setMapId(int mapId) {
-			this.mapId = mapId;
-		}
-
-		/**
-		 * 获取地图 ID。
-		 * Returns map id.
-		 *
-		 * @return 地图 ID / map id
-		 */
-		public int getMapId() {
-			return mapId;
-		}
-
-		/**
-		 * 获取出生点列表。
-		 * Returns spawn points.
-		 *
-		 * @return 出生点列表 / spawn points
-		 */
-		public List<SpawnPosition> getSpawnPoints() {
-			return spawnPoints;
-		}
-
-		/**
-		 * 设置出生点列表。
-		 * Sets spawn points.
-		 *
-		 * @param spawnPoints 出生点列表 / spawn points
-		 */
-		public void setSpawnPoints(List<SpawnPosition> spawnPoints) {
-			this.spawnPoints = spawnPoints;
-		}
-
-		/**
-		 * 获取静态门 ID 列表。
-		 * Returns static door ids.
-		 *
-		 * @return 门 ID 列表 / door ids
-		 */
-		public List<Integer> getStaticDoors() {
-			return staticDoors;
-		}
-
-		/**
-		 * 设置坠落击杀高度。
-		 * Sets kill Z.
-		 *
-		 * @param killZ 坠落击杀高度 / kill Z
-		 */
-		public void setKillZ(float killZ) {
-			this.killZ = killZ;
-		}
-
-		/**
-		 * 获取坠落击杀高度。
-		 * Returns kill Z.
-		 *
-		 * @return 坠落击杀高度 / kill Z
-		 */
-		public float getKillZ() {
-			return killZ;
-		}
-
-		/**
-		 * 是否限制飞行。
-		 * Whether flight is restricted.
-		 *
-		 * @return 若 restricted 则为 true / true if restricted
-		 */
-		public boolean isRestrictFlight() {
-			return restrictFlight;
-		}
-
-		/**
-		 * 设置是否限制飞行。
-		 * Sets flight restriction.
-		 *
-		 * @param restrictFlight 是否限制飞行 / restriction flag
-		 */
-		public void setRestrictFlight(boolean restrictFlight) {
-			this.restrictFlight = restrictFlight;
-		}
 	}
 }

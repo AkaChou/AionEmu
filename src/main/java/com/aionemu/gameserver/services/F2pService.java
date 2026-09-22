@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.administration.AdminConfig;
@@ -20,7 +21,14 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * Created by wanke on 11/02/2017.
  */
 public class F2pService {
-	private static volatile ObjectProvider<F2pService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  注入 Spring ObjectProvider 以覆盖默认单例。
+     *  Injects a Spring ObjectProvider to override the default singleton.
+     *  Spring provider
+     */
+    @Setter
+    private static volatile ObjectProvider<F2pService> instanceProvider;
 	private static F2pBonus f2p;
 	private static ServiceBuff boost;
 
@@ -107,13 +115,4 @@ public class F2pService {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring ObjectProvider 以覆盖默认单例。
-	 * Injects a Spring ObjectProvider to override the default singleton.
-	 *
-	 * Spring provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<F2pService> provider) {
-		instanceProvider = provider;
-	}
 }

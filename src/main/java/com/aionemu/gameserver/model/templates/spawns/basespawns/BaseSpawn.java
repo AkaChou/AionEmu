@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.templates.spawns.Spawn;
+import lombok.Getter;
 
 /**
  * 基础刷新点模板（静态数据/XML）。
@@ -21,6 +22,11 @@ import com.aionemu.gameserver.model.templates.spawns.Spawn;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "BaseSpawn")
 public class BaseSpawn {
+	/**
+	 * -- GETTER --
+	 * 返回 ID / Returns the id
+	 */
+	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
 
@@ -29,11 +35,6 @@ public class BaseSpawn {
 
 	@XmlElement(name = "simple_race")
 	private List<SimpleRaceTemplate> simpleRaceTemplates;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
 
 	/** 返回世界 ID / Returns the world id */
 	public int getWorldId() {
@@ -56,12 +57,13 @@ public class BaseSpawn {
 			return race;
 		}
 
-		@XmlElement(name = "spawn")
+        /**
+         * -- GETTER --
+         * 获取刷新。 / Returns the spawns.
+         */
+        @Getter
+        @XmlElement(name = "spawn")
 		private List<Spawn> spawns;
 
-		/** 获取刷新。 / Returns the spawns. */
-		public List<Spawn> getSpawns() {
-			return spawns;
-		}
-	}
+    }
 }

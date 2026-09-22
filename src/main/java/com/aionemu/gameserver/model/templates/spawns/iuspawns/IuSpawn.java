@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.iu.IuStateType;
 import com.aionemu.gameserver.model.templates.spawns.Spawn;
+import lombok.Getter;
 
 /**
  * IU 活动刷新点模板（静态数据/XML）。
@@ -21,13 +22,13 @@ import com.aionemu.gameserver.model.templates.spawns.Spawn;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "IuSpawn")
 public class IuSpawn {
+	/**
+	 * -- GETTER --
+	 * 返回 ID / Returns the id
+	 */
+	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
 
 	@XmlElement(name = "iu_type")
 	private List<IuSpawn.IuStateTemplate> IuStateTemplate;
@@ -37,24 +38,24 @@ public class IuSpawn {
 		return IuStateTemplate;
 	}
 
-	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+    @XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "IuStateTemplate")
 	public static class IuStateTemplate {
 
-		@XmlElement(name = "spawn")
+        /**
+         * -- GETTER --
+         * 获取刷新。 / Returns the spawns.
+         */
+        @XmlElement(name = "spawn")
 		private List<Spawn> spawns;
 
-		@XmlAttribute(name = "iustate")
+        /**
+         * -- GETTER --
+         * 返回 IU 状态类型 / Returns the iu type
+         */
+        @XmlAttribute(name = "iustate")
 		private IuStateType iuType;
 
-		/** 获取刷新。 / Returns the spawns. */
-		public List<Spawn> getSpawns() {
-			return spawns;
-		}
-
-		/** 返回 IU 状态类型 / Returns the iu type */
-		public IuStateType getIuType() {
-			return iuType;
-		}
-	}
+    }
 }

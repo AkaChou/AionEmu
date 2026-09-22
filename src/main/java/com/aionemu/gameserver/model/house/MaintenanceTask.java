@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.house;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
@@ -34,7 +35,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class MaintenanceTask extends AbstractCronTask {
 
-	private static volatile ObjectProvider<MaintenanceTask> instanceProvider;
+    /**
+     * -- SETTER --
+     * 设置实例提供者。 / Sets the instance provider.
+     */
+    @Setter
+    private static volatile ObjectProvider<MaintenanceTask> instanceProvider;
 	private static final List<House> maintainedHouses;
 
 	static {
@@ -65,12 +71,7 @@ public class MaintenanceTask extends AbstractCronTask {
 		return provided;
 	}
 
-	/** 设置实例提供者。 / Sets the instance provider. */
-	public static void setInstanceProvider(ObjectProvider<MaintenanceTask> provider) {
-		instanceProvider = provider;
-	}
-
-	private static MaintenanceTask createLegacyInstance() {
+    private static MaintenanceTask createLegacyInstance() {
 		try {
 			return new MaintenanceTask(HousingConfig.HOUSE_MAINTENANCE_TIME);
 		} catch (ParseException pe) {

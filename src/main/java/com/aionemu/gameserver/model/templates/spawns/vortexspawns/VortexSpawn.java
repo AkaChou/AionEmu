@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.spawns.Spawn;
 import com.aionemu.gameserver.model.vortex.VortexStateType;
+import lombok.Getter;
 
 /**
  * 漩涡刷新点模板（静态数据/XML）。
@@ -19,13 +20,13 @@ import com.aionemu.gameserver.model.vortex.VortexStateType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "VortexSpawn")
 public class VortexSpawn {
+	/**
+	 * -- GETTER --
+	 * 返回 ID / Returns the id
+	 */
+	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
 
 	@XmlElement(name = "state_type")
 	private List<VortexSpawn.VortexStateTemplate> VortexStateTemplate;
@@ -35,24 +36,24 @@ public class VortexSpawn {
 		return VortexStateTemplate;
 	}
 
-	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+    @XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "VortexStateTemplate")
 	public static class VortexStateTemplate {
 
-		@XmlElement(name = "spawn")
+        /**
+         * -- GETTER --
+         * 获取刷新。 / Returns the spawns.
+         */
+        @XmlElement(name = "spawn")
 		private List<Spawn> spawns;
 
-		@XmlAttribute(name = "state")
+        /**
+         * -- GETTER --
+         * 获取状态类型。 / Returns the state type.
+         */
+        @XmlAttribute(name = "state")
 		private VortexStateType stateType;
 
-		/** 获取刷新。 / Returns the spawns. */
-		public List<Spawn> getSpawns() {
-			return spawns;
-		}
-
-		/** 获取状态类型。 / Returns the state type. */
-		public VortexStateType getStateType() {
-			return stateType;
-		}
-	}
+    }
 }

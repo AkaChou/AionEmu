@@ -9,6 +9,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 交易列表模板（静态数据/XML）。
@@ -18,21 +19,46 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name = "tradelist_template")
 public class TradeListTemplate {
+	/**
+	 * -- GETTER --
+	 * 返回 NPC ID / Returns the npc id
+	 */
+	@Getter
 	@XmlAttribute(name = "npc_id", required = true)
 	private int npcId;
 
+	/**
+	 * -- GETTER --
+	 * 返回 trade npc type / Returns the trade npc type
+	 */
+	@Getter
 	@XmlAttribute(name = "npc_type")
 	private TradeNpcType tradeNpcType;
 
+	/**
+	 * -- GETTER --
+	 * 获取卖出价格比率。 / Returns the sell price rate.
+	 */
+	@Getter
 	@XmlAttribute(name = "sell_price_rate")
 	private int sellPriceRate;
 
+	/**
+	 * -- GETTER --
+	 * 获取买入价格比率。 / Returns the buy price rate.
+	 */
+	@Getter
 	@XmlAttribute(name = "buy_price_rate")
 	private int buyPriceRate;
 
 	@XmlAttribute(name = "ap_buy_price_rate")
 	private int apBuyPriceRate;
 
+	/**
+	 * -- GETTER --
+	 * 返回 ap sell price rate / Returns the ap sell price rate
+	 */
+	@Getter
 	@XmlAttribute(name = "ap_sell_price_rate")
 	private int apSellPriceRate;
 
@@ -53,29 +79,9 @@ public class TradeListTemplate {
 		return this.tradeTablist;
 	}
 
-	/** 返回 NPC ID / Returns the npc id */
-	public int getNpcId() {
-		return npcId;
-	}
-
 	/** 获取计数。 / Returns the count. */
 	public int getCount() {
 		return tradeTablist.size();
-	}
-
-	/** 返回 trade npc type / Returns the trade npc type */
-	public TradeNpcType getTradeNpcType() {
-		return tradeNpcType;
-	}
-
-	/** 获取卖出价格比率。 / Returns the sell price rate. */
-	public int getSellPriceRate() {
-		return sellPriceRate;
-	}
-
-	/** 获取买入价格比率。 / Returns the buy price rate. */
-	public int getBuyPriceRate() {
-		return buyPriceRate;
 	}
 
 	/** 返回 ap buy price rate / Returns the ap buy price rate */
@@ -83,20 +89,16 @@ public class TradeListTemplate {
 		return apBuyPriceRate != 0 ? apBuyPriceRate : buyPriceRate;
 	}
 
-	/** 返回 ap sell price rate / Returns the ap sell price rate */
-	public int getApSellPriceRate() {
-		return apSellPriceRate;
-	}
-
-	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+    @XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "Tradelist")
 	public static class TradeTab {
-		@XmlAttribute
+        /**
+         * -- GETTER --
+         * 返回 ID / Returns the id
+         */
+        @XmlAttribute
 		protected int id;
 
-		/** 返回 ID / Returns the id */
-		public int getId() {
-			return id;
-		}
-	}
+    }
 }

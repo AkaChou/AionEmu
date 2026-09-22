@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.model.instance.instancereward;
 
+import lombok.Getter;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.aionemu.commons.utils.Rnd;
@@ -18,13 +19,28 @@ import java.util.List;
  */
 
 public class DredgionReward extends InstanceReward<DredgionPlayerReward> {
+	/**
+	 * -- GETTER --
+	 * 返回 winner points / Returns the winner points
+	 */
+	@Getter
 	private final int winnerPoints;
+	/**
+	 * -- GETTER --
+	 * 返回 looser points / Returns the looser points
+	 */
+	@Getter
 	private final int looserPoints;
 	@SuppressWarnings("unused")
 	private final int drawPoins;
 	private final MutableInt asmodiansPoints = new MutableInt(0);
 	private final MutableInt elyosPoins = new MutableInt(0);
 	private Race race;
+	/**
+	 * -- GETTER --
+	 * 返回 dredgion rooms / Returns the dredgion rooms
+	 */
+	@Getter
 	private final List<DredgionRooms> dredgionRooms = new ArrayList<>();
 	private Point3D asmodiansStartPosition;
 	private Point3D elyosStartPosition;
@@ -63,17 +79,21 @@ public class DredgionReward extends InstanceReward<DredgionPlayerReward> {
 		}
 	}
 
+	@Getter
 	public class DredgionRooms {
+		/**
+		 * -- GETTER --
+		 * 返回 room id / Returns the room id
+		 */
 		private final int roomId;
+		/**
+		 * -- GETTER --
+		 * 获取状态。 / Returns the state.
+		 */
 		private int state = 0xFF;
 
 		public DredgionRooms(int roomId) {
 			this.roomId = roomId;
-		}
-
-		/** 返回 room id / Returns the room id */
-		public int getRoomId() {
-			return roomId;
 		}
 
 		/** 占领房间 / capture Room. */
@@ -81,15 +101,6 @@ public class DredgionReward extends InstanceReward<DredgionPlayerReward> {
 			state = race.equals(Race.ASMODIANS) ? 0x01 : 0x00;
 		}
 
-		/** 获取状态。 / Returns the state. */
-		public int getState() {
-			return state;
-		}
-	}
-
-	/** 返回 dredgion rooms / Returns the dredgion rooms */
-	public List<DredgionRooms> getDredgionRooms() {
-		return dredgionRooms;
 	}
 
 	/** 按 ID 返回 dredgion room / Returns the dredgion room by id */
@@ -104,15 +115,11 @@ public class DredgionReward extends InstanceReward<DredgionPlayerReward> {
 
 	/** 返回点种族 / Returns the points by race*/
 	public MutableInt getPointsByRace(Race race) {
-		switch (race) {
-		case ELYOS:
-			return elyosPoins;
-		case ASMODIANS:
-			return asmodiansPoints;
-		default:
-			break;
-		}
-		return null;
+		return switch (race) {
+			case ELYOS -> elyosPoins;
+			case ASMODIANS -> asmodiansPoints;
+			default -> null;
+		};
 	}
 
 	/** 添加 points by race / Adds points by race */
@@ -122,16 +129,6 @@ public class DredgionReward extends InstanceReward<DredgionPlayerReward> {
 		if (racePoints.intValue() < 0) {
 			racePoints.setValue(0);
 		}
-	}
-
-	/** 返回 looser points / Returns the looser points */
-	public int getLooserPoints() {
-		return looserPoints;
-	}
-
-	/** 返回 winner points / Returns the winner points */
-	public int getWinnerPoints() {
-		return winnerPoints;
 	}
 
 	/** 设置 winning race / Sets the winning race */

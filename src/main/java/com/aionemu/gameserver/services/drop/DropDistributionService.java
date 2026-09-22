@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services.drop;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
@@ -27,7 +28,15 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public class DropDistributionService {
 
-	private static volatile ObjectProvider<DropDistributionService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  设置 Spring 实例提供者。
+     *  Sets the Spring instance provider.
+     *
+     * @param provider 实例提供者 / instance provider
+     */
+    @Setter
+    private static volatile ObjectProvider<DropDistributionService> instanceProvider;
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -52,17 +61,7 @@ public class DropDistributionService {
 		return provided;
 	}
 
-	/**
-	 * 设置 Spring 实例提供者。
-	 * Sets the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<DropDistributionService> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 处理玩家掷骰结果（来自 CM_GROUP_LOOT）。
 	 * Handles a player roll result (from CM_GROUP_LOOT).
 	 *

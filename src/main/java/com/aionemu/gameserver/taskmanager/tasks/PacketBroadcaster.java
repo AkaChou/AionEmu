@@ -3,6 +3,7 @@ package com.aionemu.gameserver.taskmanager.tasks;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.taskmanager.AbstractFIFOPeriodicTaskManager;
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 /**
@@ -16,8 +17,15 @@ public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Cre
 	/**
 	 * Spring 可选实例提供者。
 	 * Optional Spring instance provider.
-	 */
-	private static volatile ObjectProvider<PacketBroadcaster> instanceProvider;
+     * -- SETTER --
+     *  注入 Spring 实例提供者。
+     *  Inject the Spring instance provider.
+     *
+     * @param provider 实例提供者 / Provider
+
+     */
+	@Setter
+    private static volatile ObjectProvider<PacketBroadcaster> instanceProvider;
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -42,17 +50,7 @@ public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Cre
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring 实例提供者。
-	 * Inject the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / Provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<PacketBroadcaster> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 以 200ms 周期构造数据包广播器。
 	 * Construct the packet broadcaster with a 200ms period.
 	 */

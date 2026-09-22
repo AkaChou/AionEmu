@@ -3,6 +3,8 @@ package com.aionemu.gameserver.services;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CHAT_INIT;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 聊天服务器桥接服务，管理玩家聊天鉴权与连接信息。
@@ -12,9 +14,34 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 public class ChatService {
 
-	/** 聊天服务器 IP / Chat server IP */
+	/** 聊天服务器 IP / Chat server IP
+	 * -- GETTER --
+	 *  获取聊天服务器 IP。
+	 *  Returns the chat server IP.
+	 *  IP bytes
+	 * -- SETTER --
+	 *  设置聊天服务器 IP。
+	 *  Sets the chat server IP.
+	 *
+	 * @param _ip IP 字节数组 / IP bytes
+
+	 */
+	@Setter
+	@Getter
 	private static byte[] ip = { 127, 0, 0, 1 };
-	/** 聊天服务器端口。 / Chat server port. */
+	/** 聊天服务器端口。 / Chat server port.
+	 * -- GETTER --
+	 *  获取聊天服务器端口。
+	 *  Returns the chat server port.
+	 *  port
+	 * -- SETTER --
+	 *  设置聊天服务器端口。
+	 *  Sets the chat server port.
+	 *  port
+
+	 */
+	@Setter
+	@Getter
 	private static int port = 10241;
 
 	/**
@@ -41,43 +68,4 @@ public class ChatService {
 		}
 	}
 
-	/**
-	 * 获取聊天服务器 IP。
-	 * Returns the chat server IP.
-	 *
-	 * IP bytes
-	 */
-	public static byte[] getIp() {
-		return ip;
-	}
-
-	/**
-	 * 获取聊天服务器端口。
-	 * Returns the chat server port.
-	 *
-	 * port
-	 */
-	public static int getPort() {
-		return port;
-	}
-
-	/**
-	 * 设置聊天服务器 IP。
-	 * Sets the chat server IP.
-	 *
-	 * @param _ip IP 字节数组 / IP bytes
-	 */
-	public static void setIp(byte[] _ip) {
-		ip = _ip;
-	}
-
-	/**
-	 * 设置聊天服务器端口。
-	 * Sets the chat server port.
-	 *
-	 * port
-	 */
-	public static void setPort(int _port) {
-		port = _port;
-	}
 }

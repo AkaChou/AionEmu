@@ -1,5 +1,7 @@
 package com.aionemu.commons.network.packet;
 
+import lombok.Getter;
+
 /**
  * 网络数据包基类，定义类型与操作码。
  * Base network packet class defining type and opcode.
@@ -100,12 +102,20 @@ public abstract class BasePacket {
      * 数据包方向类型。
      * Packet direction type.
      */
+    @Getter
     public enum PacketType {
         /** 服务器数据包 / Server packet */
         SERVER("S"),
         /** 客户端数据包 / Client packet */
         CLIENT("C");
 
+        /**
+         * -- GETTER --
+         *  获取短名称。
+         *  Get short name.
+         *
+         * @return 短名称 / Short name
+         */
         private final String name;
 
         /**
@@ -118,14 +128,5 @@ public abstract class BasePacket {
             this.name = name;
         }
 
-        /**
-         * 获取短名称。
-         * Get short name.
-         *
-         * @return 短名称 / Short name
-         */
-        public String getName() {
-            return this.name;
-        }
     }
 }

@@ -5,6 +5,7 @@ import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import java.security.InvalidParameterException;
 
 import com.aionemu.gameserver.spawnengine.TemporarySpawnEngine;
+import lombok.Getter;
 
 /**
  * Aion 世界内部游戏时钟（年/月/日/时/分，独立于真实时间）。
@@ -38,8 +39,15 @@ public class GameTime implements Cloneable {
 	/**
 	 * 当前时段。
 	 * Current day-time period.
-	 */
-	private DayTime dayTime;
+     * -- GETTER --
+     *  获取当前时段。
+     *  Get current day-time period.
+     *
+     * @return 时段 / DayTime
+
+     */
+	@Getter
+    private DayTime dayTime;
 
 	/**
 	 * 游戏月份及其天数。
@@ -251,17 +259,7 @@ public class GameTime implements Cloneable {
 		return (gameTime % MINUTES_IN_HOUR);
 	}
 
-	/**
-	 * 获取当前时段。
-	 * Get current day-time period.
-	 *
-	 * @return 时段 / DayTime
-	 */
-	public DayTime getDayTime() {
-		return dayTime;
-	}
-
-	/**
+    /**
 	 * 将游戏时间换算为近似真实时间（÷12）。
 	 * Convert game time to approximate real time (÷12).
 	 *

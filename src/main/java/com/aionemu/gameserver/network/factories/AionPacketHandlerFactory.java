@@ -4,6 +4,7 @@ import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.AionPacketHandler;
 import com.aionemu.gameserver.network.aion.clientpackets.*;
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 /**
@@ -12,7 +13,15 @@ import org.springframework.beans.factory.ObjectProvider;
  */
 public class AionPacketHandlerFactory {
 
-	private static volatile ObjectProvider<AionPacketHandlerFactory> instanceProvider;
+    /**
+     * -- SETTER --
+     *  注入 Spring ObjectProvider，供 DI 覆盖静态单例。
+     *  Injects Spring ObjectProvider to override the static singleton.
+     *
+     * @param provider Spring Provider / Spring provider
+     */
+    @Setter
+    private static volatile ObjectProvider<AionPacketHandlerFactory> instanceProvider;
 	private final AionPacketHandler handler;
 
 	/**
@@ -37,17 +46,7 @@ public class AionPacketHandlerFactory {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring ObjectProvider，供 DI 覆盖静态单例。
-	 * Injects Spring ObjectProvider to override the static singleton.
-	 *
-	 * @param provider Spring Provider / Spring provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<AionPacketHandlerFactory> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 注册全部客户端包原型（5.8 opcode）。
 	 * Registers all client packet prototypes (5.8 opcodes).
 	 */

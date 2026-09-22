@@ -11,6 +11,8 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.concurrent.Future;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -37,13 +39,27 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public class EventService {
 
+	/**
+	 * -- SETTER --
+	 *  注入 Spring ObjectProvider 以覆盖默认单例。
+	 *  Injects a Spring ObjectProvider to override the default singleton.
+	 *  provider
+	 */
+	@Setter
 	private static volatile ObjectProvider<EventService> instanceProvider;
 
 	/** 活动状态检查周期（毫秒）。 / Event status check period in ms. */
 	private final int CHECK_TIME_PERIOD = 1000 * 60 * 5;
 
-	/** 服务是否已启动。 / Whether the service is started. */
-	private boolean isStarted = false;
+	/** 服务是否已启动。 / Whether the service is started.
+     * -- GETTER --
+     *  判断活动检查服务是否已启动。
+     *  Returns whether the event check service is started.
+     *
+     * @return 已启动返回 true / true if started
+     */
+	@Getter
+    private boolean isStarted = false;
 
 	/** 周期检查任务。 / Periodic check task. */
 	private Future<?> checkTask = null;
@@ -78,16 +94,6 @@ public class EventService {
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
 		return provided;
-	}
-
-	/**
-	 * 注入 Spring ObjectProvider 以覆盖默认单例。
-	 * Injects a Spring ObjectProvider to override the default singleton.
-	 *
-	 * provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<EventService> provider) {
-		instanceProvider = provider;
 	}
 
 	/**
@@ -211,17 +217,7 @@ public class EventService {
 		return eligibility.matchesCanonicalStartConditions(player, metadata);
 	}
 
-	/**
-	 * 判断活动检查服务是否已启动。
-	 * Returns whether the event check service is started.
-	 *
-	 * @return 已启动返回 true / true if started
-	 */
-	public boolean isStarted() {
-		return isStarted;
-	}
-
-	/**
+    /**
 	 * 启动周期性活动状态检查。
 	 * Starts the periodic event status check.
 	 */

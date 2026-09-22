@@ -2,6 +2,8 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -49,10 +51,26 @@ import java.util.Map;
 @Slf4j
 public class MotionLoggingService {
 
+	/**
+	 * -- SETTER --
+	 *  注入 Spring 的实例提供者。
+	 *  Injects the Spring instance provider.
+	 *
+	 * @param provider 实例提供者 / instance provider
+	 */
+	@Setter
 	private static volatile ObjectProvider<MotionLoggingService> instanceProvider;
 
 	private final Map<String, MotionLog> motionsMap = new LinkedHashMap<>();
 
+	/**
+	 * -- SETTER --
+	 *  开关高级日志输出。
+	 *  Toggles advanced logging output.
+	 *
+	 * @param bol 是否开启 / whether enabled
+	 */
+	@Setter
 	private boolean advancedLog = false;
 
 	private boolean started = false;
@@ -78,16 +96,6 @@ public class MotionLoggingService {
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
 		return provided;
-	}
-
-	/**
-	 * 注入 Spring 的实例提供者。
-	 * Injects the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<MotionLoggingService> provider) {
-		instanceProvider = provider;
 	}
 
 	/**
@@ -566,16 +574,6 @@ public class MotionLoggingService {
 	}
 
 	/**
-	 * 开关高级日志输出。
-	 * Toggles advanced logging output.
-	 *
-	 * @param bol 是否开启 / whether enabled
-	 */
-	public void setAdvancedLog(boolean bol) {
-		this.advancedLog = bol;
-	}
-
-	/**
 	 * 是否开启高级日志。
 	 * Whether advanced logging is enabled.
 	 *
@@ -641,6 +639,7 @@ public class MotionLoggingService {
 		}
 	}
 
+	@Getter
 	private class SkillTime implements Comparable<SkillTime> {
 		private final int skillId;
 		private final int attackSpeed;
@@ -719,26 +718,6 @@ public class MotionLoggingService {
 			return skillId == other.skillId;
 		}
 
-		public int getSkillId() {
-			return this.skillId;
-		}
-
-		public int getAttackSpeed() {
-			return this.attackSpeed;
-		}
-
-		public int getClientTime() {
-			return this.clientTime;
-		}
-
-		public Race getRace() {
-			return race;
-		}
-
-		public Gender getGender() {
-			return gender;
-		}
-
 		private MotionLoggingService getOuterType() {
 			return MotionLoggingService.this;
 		}
@@ -746,39 +725,33 @@ public class MotionLoggingService {
 
 	private class WeaponTime {
 		private final TreeMap<WeaponTypeWrapper, List<Integer>> values = new TreeMap<>();
+		/**
+		 * -- GETTER --
+		 *
+		 *
+		 * -- SETTER --
+		 *
+		 @return the race
+		  * @param race the race to set
+		 */
+		@Setter
+		@Getter
 		private Race race;
-		private Gender gender;
+        /**
+         * -- GETTER --
+         *
+         *
+		 * -- SETTER --
+		 *
+		 @return the gender
+		  * @param gender the gender to set
+         */
+        @Setter
+        @Getter
+        private Gender gender;
 
 		public WeaponTime(Race race, Gender gender) {
 			this.race = race;
-			this.gender = gender;
-		}
-
-		/**
-		 * @return the race
-		 */
-		public Race getRace() {
-			return race;
-		}
-
-		/**
-		 * @param race the race to set
-		 */
-		public void setRace(Race race) {
-			this.race = race;
-		}
-
-		/**
-		 * @return the gender
-		 */
-		public Gender getGender() {
-			return gender;
-		}
-
-		/**
-		 * @param gender the gender to set
-		 */
-		public void setGender(Gender gender) {
 			this.gender = gender;
 		}
 

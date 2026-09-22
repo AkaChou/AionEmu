@@ -100,7 +100,13 @@ public abstract class AbstractAI implements AI2 {
 	 * 获取 AI 所有者生物（NpcAI2 以下可隐藏更具体类型）。
 	 * Returns the AI owner creature (more specific types are hidden below NpcAI2).
 	 *
-	 * @return 所有者 / owner
+	 *
+     * -- SETTER --
+     *  绑定所有者生物。
+     *  Binds the owner creature.
+     *
+     @return 所有者 / owner
+      * @param owner 所有者 / owner
 	 */
 	private Creature owner;
 	private AIState currentState;
@@ -237,16 +243,11 @@ public abstract class AbstractAI implements AI2 {
 		default:
 			break;
 		}
-		switch (eventType) {
-		case DIALOG_START:
-		case DIALOG_FINISH:
-			return isNonFightingState();
-		case CREATURE_MOVED:
-			return getName().equals("trap") || currentState != AIState.FIGHT && isNonFightingState();
-		default:
-			break;
-		}
-		return true;
+		return switch (eventType) {
+			case DIALOG_START, DIALOG_FINISH -> isNonFightingState();
+			case CREATURE_MOVED -> getName().equals("trap") || currentState != AIState.FIGHT && isNonFightingState();
+			default -> true;
+		};
 	}
 
 	/**
@@ -419,17 +420,7 @@ public abstract class AbstractAI implements AI2 {
 		return owner.getLifeStats().isAlreadyDead();
 	}
 
-	/**
-	 * 绑定所有者生物。
-	 * Binds the owner creature.
-	 *
-	 * @param owner 所有者 / owner
-	 */
-	public void setOwner(Creature owner) {
-		this.owner = owner;
-	}
-
-	/**
+    /**
 	 * 尝试获取思考锁（非阻塞）。
 	 * Tries to acquire the think lock (non-blocking).
 	 *
@@ -746,17 +737,12 @@ public abstract class AbstractAI implements AI2 {
 		if (instanceAnswer != null) {
 			return instanceAnswer.isPositive();
 		}
-		switch (question) {
-		case DESTINATION_REACHED:
-			return isDestinationReached();
-		case CAN_SPAWN_ON_DAYTIME_CHANGE:
-			return isCanSpawnOnDaytimeChange();
-		case CAN_SHOUT:
-			return isMayShout();
-		default:
-			break;
-		}
-		return false;
+		return switch (question) {
+			case DESTINATION_REACHED -> isDestinationReached();
+			case CAN_SPAWN_ON_DAYTIME_CHANGE -> isCanSpawnOnDaytimeChange();
+			case CAN_SHOUT -> isMayShout();
+			default -> false;
+		};
 	}
 
 	/**
@@ -790,22 +776,15 @@ public abstract class AbstractAI implements AI2 {
 	 */
 	protected boolean isDestinationReached() {
 		AIState state = currentState;
-		switch (state) {
-		case FEAR:
-			return MathUtil.isNearCoordinates(getOwner(), owner.getMoveController().getTargetX2(),
-					owner.getMoveController().getTargetY2(), owner.getMoveController().getTargetZ2(), 1);
-		case FIGHT:
-			return SimpleAttackManager.isTargetInAttackRange((Npc) owner);
-		case RETURNING:
-			return ((Npc) owner).getMoveController().isHomeReturnDestinationReached();
-		case FOLLOWING:
-			return FollowEventHandler.isInRange(this, getOwner().getTarget());
-		case WALKING:
-			return currentSubState == AISubState.TALK || WalkManager.isArrivedAtPoint((NpcAI2) this);
-		default:
-			break;
-		}
-		return true;
+		return switch (state) {
+			case FEAR -> MathUtil.isNearCoordinates(getOwner(), owner.getMoveController().getTargetX2(),
+				owner.getMoveController().getTargetY2(), owner.getMoveController().getTargetZ2(), 1);
+			case FIGHT -> SimpleAttackManager.isTargetInAttackRange((Npc) owner);
+			case RETURNING -> ((Npc) owner).getMoveController().isHomeReturnDestinationReached();
+			case FOLLOWING -> FollowEventHandler.isInRange(this, getOwner().getTarget());
+			case WALKING -> currentSubState == AISubState.TALK || WalkManager.isArrivedAtPoint((NpcAI2) this);
+			default -> true;
+		};
 	}
 
 	/**

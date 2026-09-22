@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
@@ -53,8 +54,24 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 @Slf4j
 
 public class TradeService {
+	/**
+	 * -- GETTER --
+	 *  获取交易列表静态数据。
+	 *  Returns trade list static data.
+	 *
+	 * @return 交易列表数据 / trade list data
+	 */
+	@Getter
 	private static final TradeListData tradeListData = DataManager.TRADE_LIST_DATA;
-	private static final GoodsListData goodsListData = DataManager.GOODSLIST_DATA;
+    /**
+     * -- GETTER --
+     *  获取商品列表静态数据。
+     *  Returns goods list static data.
+     *
+     * @return 商品列表数据 / goods list data
+     */
+    @Getter
+    private static final GoodsListData goodsListData = DataManager.GOODSLIST_DATA;
 
 	/**
 	 * 从普通商店 NPC 购买物品。
@@ -569,23 +586,4 @@ public class TradeService {
 		}
 	}
 
-	/**
-	 * 获取交易列表静态数据。
-	 * Returns trade list static data.
-	 *
-	 * @return 交易列表数据 / trade list data
-	 */
-	public static TradeListData getTradeListData() {
-		return tradeListData;
-	}
-
-	/**
-	 * 获取商品列表静态数据。
-	 * Returns goods list static data.
-	 *
-	 * @return 商品列表数据 / goods list data
-	 */
-	public static GoodsListData getGoodsListData() {
-		return goodsListData;
-	}
 }

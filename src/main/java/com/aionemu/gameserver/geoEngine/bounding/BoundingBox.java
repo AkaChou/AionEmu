@@ -15,6 +15,7 @@ import com.aionemu.gameserver.geoEngine.math.Triangle;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.geoEngine.scene.Mesh;
 import com.aionemu.gameserver.geoEngine.utils.BufferUtils;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 //import com.jme.scene.TriMesh;
@@ -31,11 +32,32 @@ import lombok.NoArgsConstructor;
  * @author Joshua Slack
  * @version $Id: BoundingBox.java,v 1.50 2007/09/22 16:46:35 irrisor Exp $
  */
+@Getter
 @NoArgsConstructor
 public class BoundingBox extends BoundingVolume {
 
-	/** 沿 X 轴半范围 / Half-extent along the X axis */
-	float xExtent, yExtent, zExtent;
+	/** 沿 X 轴半范围 / Half-extent along the X axis
+	 * -- GETTER --
+	 *  获取 X 轴半长。
+	 *  Returns the X-axis half-extent.
+	 *
+	 * @return X 半长 / X extent
+	 */
+	float xExtent, /**
+	 * -- GETTER --
+	 *  获取 Y 轴半长。
+	 *  Returns the Y-axis half-extent.
+	 *
+	 * @return Y 半长 / Y extent
+	 */
+		yExtent, /**
+	 * -- GETTER --
+	 *  获取 Z 轴半长。
+	 *  Returns the Z-axis half-extent.
+	 *
+	 * @return Z 半长 / Z extent
+	 */
+		zExtent;
 
 	/**
 	 * 以给定中心与三轴半长构造包围盒。
@@ -336,21 +358,20 @@ public class BoundingBox extends BoundingVolume {
 			return this;
 		}
 
-		switch (volume.getType()) {
-		case AABB: {
-			BoundingBox vBox = (BoundingBox) volume;
-			return merge(vBox.center, vBox.xExtent, vBox.yExtent, vBox.zExtent,
+		return switch (volume.getType()) {
+			case AABB -> {
+				BoundingBox vBox = (BoundingBox) volume;
+				yield merge(vBox.center, vBox.xExtent, vBox.yExtent, vBox.zExtent,
 					new BoundingBox(new Vector3f(0, 0, 0), 0, 0, 0));
-		}
+			}
 
-		// case OBB: {
-		// OrientedBoundingBox box = (OrientedBoundingBox) volume;
-		// BoundingBox rVal = (BoundingBox) this.clone(null);
-		// return rVal.mergeOBB(box);
-		// }
-		default:
-			return null;
-		}
+			// case OBB: {
+			// OrientedBoundingBox box = (OrientedBoundingBox) volume;
+			// BoundingBox rVal = (BoundingBox) this.clone(null);
+			// return rVal.mergeOBB(box);
+			// }
+			default -> null;
+		};
 	}
 
 	/**
@@ -366,17 +387,16 @@ public class BoundingBox extends BoundingVolume {
 			return this;
 		}
 
-		switch (volume.getType()) {
-		case AABB: {
-			BoundingBox vBox = (BoundingBox) volume;
-			return merge(vBox.center, vBox.xExtent, vBox.yExtent, vBox.zExtent, this);
-		}
-		// case OBB: {
-		// return mergeOBB((OrientedBoundingBox) volume);
-		// }
-		default:
-			return null;
-		}
+		return switch (volume.getType()) {
+			case AABB -> {
+				BoundingBox vBox = (BoundingBox) volume;
+				yield merge(vBox.center, vBox.xExtent, vBox.yExtent, vBox.zExtent, this);
+			}
+			// case OBB: {
+			// return mergeOBB((OrientedBoundingBox) volume);
+			// }
+			default -> null;
+		};
 	}
 
 	/**
@@ -819,36 +839,6 @@ public class BoundingBox extends BoundingVolume {
 		}
 		store.set(xExtent, yExtent, zExtent);
 		return store;
-	}
-
-	/**
-	 * 获取 X 轴半长。
-	 * Returns the X-axis half-extent.
-	 *
-	 * @return X 半长 / X extent
-	 */
-	public float getXExtent() {
-		return xExtent;
-	}
-
-	/**
-	 * 获取 Y 轴半长。
-	 * Returns the Y-axis half-extent.
-	 *
-	 * @return Y 半长 / Y extent
-	 */
-	public float getYExtent() {
-		return yExtent;
-	}
-
-	/**
-	 * 获取 Z 轴半长。
-	 * Returns the Z-axis half-extent.
-	 *
-	 * @return Z 半长 / Z extent
-	 */
-	public float getZExtent() {
-		return zExtent;
 	}
 
 	/**

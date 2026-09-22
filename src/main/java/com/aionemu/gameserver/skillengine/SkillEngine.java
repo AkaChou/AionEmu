@@ -9,6 +9,7 @@ import com.aionemu.gameserver.skillengine.model.ActivationAttribute;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 import lombok.NoArgsConstructor;
 import lombok.AccessLevel;
@@ -31,8 +32,15 @@ public class SkillEngine {
 	/**
 	 * Spring 实例提供者（可选覆盖静态单例）。
 	 * Optional Spring provider that may override the static singleton.
-	 */
-	private static volatile ObjectProvider<SkillEngine> instanceProvider;
+     * -- SETTER --
+     *  设置 Spring 实例提供者。
+     *  Sets the Spring instance provider.
+     *
+     * @param provider 实例提供者 / instance provider
+
+     */
+	@Setter
+    private static volatile ObjectProvider<SkillEngine> instanceProvider;
 
 	/**
 	 * 为玩家已学习技能创建 Skill 实例。
@@ -146,17 +154,7 @@ public class SkillEngine {
 		return skillEngine;
 	}
 
-	/**
-	 * 设置 Spring 实例提供者。
-	 * Sets the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<SkillEngine> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 强制直接对目标应用技能效果（忽略学习状态，可指定持续时长）。
 	 * Applies a skill effect directly to the target as a forced effect (optional duration).
 	 *

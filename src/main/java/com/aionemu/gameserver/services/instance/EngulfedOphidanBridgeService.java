@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.instance;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
@@ -29,7 +30,14 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 
 public class EngulfedOphidanBridgeService {
-	private static volatile ObjectProvider<EngulfedOphidanBridgeService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  设置服务提供者。
+     *  Sets the service provider.
+     *
+     */
+    @Setter
+    private static volatile ObjectProvider<EngulfedOphidanBridgeService> instanceProvider;
 	private boolean registerAvailable;
 	private final List<Integer> playersWithCooldown = new ArrayList<>();
 	public static final byte minLevel = 61, capLevel = 66;
@@ -179,13 +187,4 @@ public class EngulfedOphidanBridgeService {
 		return provided;
 	}
 
-	/**
-	 * 设置服务提供者。
-	 * Sets the service provider.
-	 *
-	 * @return 服务提供者 / provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<EngulfedOphidanBridgeService> provider) {
-		instanceProvider = provider;
-	}
 }

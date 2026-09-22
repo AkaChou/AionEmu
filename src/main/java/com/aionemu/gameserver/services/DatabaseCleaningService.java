@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -23,7 +24,14 @@ import com.aionemu.gameserver.services.player.PlayerService;
 @Slf4j
 public class DatabaseCleaningService {
 
-	private static volatile ObjectProvider<DatabaseCleaningService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  注入 Spring ObjectProvider 以覆盖默认单例。
+     *  Injects a Spring ObjectProvider to override the default singleton.
+     *  provider
+     */
+    @Setter
+    private static volatile ObjectProvider<DatabaseCleaningService> instanceProvider;
 	/** 玩家 DAO / Player DAO */
 	private final PlayerDAO dao = DAOManager.getDAO(PlayerDAO.class);
 
@@ -160,17 +168,7 @@ public class DatabaseCleaningService {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring ObjectProvider 以覆盖默认单例。
-	 * Injects a Spring ObjectProvider to override the default singleton.
-	 *
-	 * provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<DatabaseCleaningService> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 清理工作线程：删除分配的角色 ID。
 	 * Cleaning worker that deletes assigned player ids.
 	 */

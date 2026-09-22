@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.utils.chathandlers;
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,8 +40,14 @@ public class ChatProcessor implements GameEngine {
 	/**
 	 * Spring ObjectProvider，优先于静态单例。
 	 * Spring ObjectProvider preferred over the static singleton.
-	 */
-	private static volatile ObjectProvider<ChatProcessor> instanceProvider;
+     * -- SETTER --
+     *  注入 Spring 实例提供者。
+     *  Inject the Spring instance provider.
+     *  Provider
+
+     */
+	@Setter
+    private static volatile ObjectProvider<ChatProcessor> instanceProvider;
 	/**
 	 * 回退单例实例。
 	 * Fallback singleton instance.
@@ -71,17 +78,7 @@ public class ChatProcessor implements GameEngine {
 		return instance;
 	}
 
-	/**
-	 * 注入 Spring 实例提供者。
-	 * Inject the Spring instance provider.
-	 *
-	 * Provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<ChatProcessor> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 加载并初始化聊天命令。
 	 * Load and initialize chat commands.
 	 *

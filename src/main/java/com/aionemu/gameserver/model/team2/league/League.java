@@ -17,6 +17,8 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 战团，用于团队2相关逻辑。
@@ -24,8 +26,17 @@ import com.google.common.collect.Lists;
  *
  * @author ATracer
  */
+@Setter
+@Getter
 public class League extends GeneralTeam<PlayerAlliance, LeagueMember> {
-	private LootGroupRules lootGroupRules = new LootGroupRules();
+    /**
+     * -- GETTER --
+     * 返回 loot group rules / Returns the loot group rules
+	 * -- SETTER --
+	 * 设置 loot group rules / Sets the loot group rules
+
+	 */
+    private LootGroupRules lootGroupRules = new LootGroupRules();
 	private static final LeagueMemberComparator MEMBER_COMPARATOR = new LeagueMemberComparator();
 
 	public League(LeagueMember leader) {
@@ -91,16 +102,6 @@ public class League extends GeneralTeam<PlayerAlliance, LeagueMember> {
 	@Override
 	public boolean isFull() {
 		return size() == 8;
-	}
-
-	/** 返回 loot group rules / Returns the loot group rules */
-	public LootGroupRules getLootGroupRules() {
-		return lootGroupRules;
-	}
-
-	/** 设置 loot group rules / Sets the loot group rules */
-	public void setLootGroupRules(LootGroupRules lootGroupRules) {
-		this.lootGroupRules = lootGroupRules;
 	}
 
 	/** 返回 sorted members / Returns the sorted members */

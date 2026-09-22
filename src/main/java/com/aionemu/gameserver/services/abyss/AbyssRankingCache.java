@@ -2,6 +2,8 @@ package com.aionemu.gameserver.services.abyss;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
@@ -16,10 +18,8 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.model.AbyssRankingResult;
 import com.aionemu.gameserver.model.Race;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_RANKING_LEGIONS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_RANKING_PLAYERS;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 欧比斯排行榜缓存：按种族缓存玩家/军团排行数据包并支持全量刷新。
@@ -27,8 +27,22 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
  */
 @Slf4j
 public class AbyssRankingCache {
+	/**
+	 * -- SETTER --
+	 *  注入 Spring 实例提供者。
+	 *  Inject the Spring instance provider.
+	 *
+	 * @param provider 实例提供者 / Instance provider
+	 */
+	@Setter
 	private static volatile ObjectProvider<AbyssRankingCache> instanceProvider;
-	private int lastUpdate;
+    /**
+     * -- GETTER --
+     *
+     * @return 上次刷新时间戳（秒） / Last-update epoch seconds
+     */
+    @Getter
+    private int lastUpdate;
 	private final Map<Race, List<SM_ABYSS_RANKING_PLAYERS>> players = new HashMap<>();
 	private final Map<Race, SM_ABYSS_RANKING_LEGIONS> legions = new HashMap<>();
 
@@ -118,14 +132,7 @@ public class AbyssRankingCache {
 		return legions.get(race);
 	}
 
-	/**
-	 * @return 上次刷新时间戳（秒） / Last-update epoch seconds
-	 */
-	public int getLastUpdate() {
-		return lastUpdate;
-	}
-
-	/**
+    /**
 	 * @return 欧比斯军阶 DAO / Abyss-rank DAO
 	 */
 	private AbyssRankDAO getDAO() {
@@ -155,13 +162,4 @@ public class AbyssRankingCache {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring 实例提供者。
-	 * Inject the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / Instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<AbyssRankingCache> provider) {
-		instanceProvider = provider;
-	}
 }

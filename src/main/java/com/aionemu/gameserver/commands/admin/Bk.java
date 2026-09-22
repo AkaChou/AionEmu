@@ -2,11 +2,11 @@ package com.aionemu.gameserver.commands.admin;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.commons.database.DB;
 import com.aionemu.commons.database.DatabaseFactory;
-import com.aionemu.commons.database.IUStH;
 import com.aionemu.commons.database.ParamReadStH;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
@@ -235,13 +235,39 @@ public class Bk extends AdminCommand {
  * 书签坐标数据。
  * Bookmark coordinate data.
  */
+@Getter
 class Bookmark {
 
-	private final String name;
-	private final float x;
-	private final float y;
-	private final float z;
-	private final int world_id;
+    /**
+     * -- GETTER --
+     *  获取书签名称。
+     *  Gets the bookmark name.
+     */
+    private final String name;
+    /**
+     * -- GETTER --
+     *  获取 X 坐标。
+     *  Gets the X coordinate.
+     */
+    private final float x;
+    /**
+     * -- GETTER --
+     *  获取 Y 坐标。
+     *  Gets the Y coordinate.
+     */
+    private final float y;
+    /**
+     * -- GETTER --
+     *  获取 Z 坐标。
+     *  Gets the Z coordinate.
+     */
+    private final float z;
+    /**
+     * -- GETTER --
+     *  获取世界地图 ID。
+     *  Gets the world map id.
+     */
+    private final int world_id;
 
 	/**
 	 * 构造书签。
@@ -261,48 +287,4 @@ class Bookmark {
 		this.name = name;
 	}
 
-	/**
-	 * 获取书签名称。
-	 * Gets the bookmark name.
-	 *
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * 获取 X 坐标。
-	 * Gets the X coordinate.
-	 *
-	 */
-	public float getX() {
-		return x;
-	}
-
-	/**
-	 * 获取 Y 坐标。
-	 * Gets the Y coordinate.
-	 *
-	 */
-	public float getY() {
-		return y;
-	}
-
-	/**
-	 * 获取 Z 坐标。
-	 * Gets the Z coordinate.
-	 *
-	 */
-	public float getZ() {
-		return z;
-	}
-
-	/**
-	 * 获取世界地图 ID。
-	 * Gets the world map id.
-	 *
-	 */
-	public int getWorld_id() {
-		return world_id;
-	}
 }

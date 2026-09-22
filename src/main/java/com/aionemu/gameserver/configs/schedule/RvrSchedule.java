@@ -12,6 +12,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.commons.utils.xml.JAXBUtil;
 import com.aionemu.gameserver.configs.Config;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * RvR（种族对战）活动时间表配置。
@@ -19,31 +21,25 @@ import com.aionemu.gameserver.configs.Config;
  *
  * @author Rinzler (Encom)
  */
+@Setter
+@Getter
 @XmlRootElement(name = "rvr_schedule")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RvrSchedule {
 	/**
 	 * RvR 列表。
 	 * List of RvRs.
+	 * -- GETTER --
+	 *  获取 RvR 列表。
+	 *  Returns the RvR list.
+	 * -- SETTER --
+	 *  设置 RvR 列表。
+	 *  Sets the RvR list.
+
+
 	 */
 	@XmlElement(name = "rvr", required = true)
 	private List<Rvr> rvrsList;
-
-	/**
-	 * 获取 RvR 列表。
-	 * Returns the RvR list.
-	 */
-	public List<Rvr> getRvrsList() {
-		return rvrsList;
-	}
-
-	/**
-	 * 设置 RvR 列表。
-	 * Sets the RvR list.
-	 */
-	public void setRvrsList(List<Rvr> rvrList) {
-		this.rvrsList = rvrList;
-	}
 
 	/**
 	 * 从 XML 加载时间表。
@@ -64,11 +60,21 @@ public class RvrSchedule {
 	 * 单个 RvR 的时间表条目。
 	 * Schedule entry for a single RvR.
 	 */
-	@XmlAccessorType(XmlAccessType.FIELD)
+	@Setter
+	@Getter
+    @XmlAccessorType(XmlAccessType.FIELD)
 	@XmlRootElement(name = "rvr")
 	public static class Rvr {
 		/**
 		 * RvR ID / RvR ID
+         * -- GETTER --
+         *  获取 RvR ID。
+         *  Returns the RvR ID.
+		 * -- SETTER --
+		 *  设置 RvR ID。
+		 *  Sets the RvR ID.
+
+
 		 */
 		@XmlAttribute(required = true)
 		private int id;
@@ -76,40 +82,17 @@ public class RvrSchedule {
 		/**
 		 * RvR 时间列表。
 		 * List of RvR times.
+         * -- GETTER --
+         *  获取 RvR 时间列表。
+         *  Returns the RvR times.
+		 * -- SETTER --
+		 *  设置 RvR 时间列表。
+		 *  Sets the RvR times.
+
+
 		 */
 		@XmlElement(name = "rvrTime", required = true)
 		private List<String> rvrTimes;
 
-		/**
-		 * 获取 RvR ID。
-		 * Returns the RvR ID.
-		 */
-		public int getId() {
-			return id;
-		}
-
-		/**
-		 * 设置 RvR ID。
-		 * Sets the RvR ID.
-		 */
-		public void setId(int id) {
-			this.id = id;
-		}
-
-		/**
-		 * 获取 RvR 时间列表。
-		 * Returns the RvR times.
-		 */
-		public List<String> getRvrTimes() {
-			return rvrTimes;
-		}
-
-		/**
-		 * 设置 RvR 时间列表。
-		 * Sets the RvR times.
-		 */
-		public void setRvrTimes(List<String> rvrTimes) {
-			this.rvrTimes = rvrTimes;
-		}
 	}
 }

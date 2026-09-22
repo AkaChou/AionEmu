@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -139,6 +140,7 @@ public class Send extends AdminCommand {
 		return admin;
 	}
 
+	@Getter
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlRootElement(name = "packets")
 	private static class Packets implements Iterable<Packet> {
@@ -148,14 +150,6 @@ public class Send extends AdminCommand {
 
 		@XmlAttribute(name = "delay")
 		private long delay = -1;
-
-		public long getDelay() {
-			return delay;
-		}
-
-		public List<Packet> getPackets() {
-			return packets;
-		}
 
 		@SuppressWarnings("unused")
 		public boolean add(Packet packet) {
@@ -181,25 +175,19 @@ public class Send extends AdminCommand {
 	@XmlRootElement(name = "packet")
 	private static class Packet {
 
+		@Getter
 		@XmlElement(name = "part")
 		private Collection<Part> parts = new ArrayList<>();
 
 		@XmlAttribute(name = "opcode")
 		private String opcode = "-1";
 
+		@Getter
 		@XmlAttribute(name = "delay")
 		private long delay = 0;
 
 		public int getOpcode() {
 			return Integer.decode(opcode);
-		}
-
-		public Collection<Part> getParts() {
-			return parts;
-		}
-
-		public long getDelay() {
-			return delay;
 		}
 
 		@Override
@@ -219,22 +207,16 @@ public class Send extends AdminCommand {
 		@XmlAttribute(name = "type", required = true)
 		private String type = null;
 
+		@Getter
 		@XmlAttribute(name = "value", required = true)
 		private String value = null;
 
-		@XmlAttribute(name = "repeat", required = true)
+		@Getter
+        @XmlAttribute(name = "repeat", required = true)
 		private int repeatCount = 1;
 
 		public char getType() {
 			return type.charAt(0);
-		}
-
-		public String getValue() {
-			return value;
-		}
-
-		public int getRepeatCount() {
-			return repeatCount;
 		}
 
 		@Override

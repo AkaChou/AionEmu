@@ -2,6 +2,8 @@ package com.aionemu.gameserver.network.aion;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -76,13 +78,27 @@ public class AionConnection extends AConnection {
 	/**
 	 * 当前连接状态。
 	 * Current state of this connection.
+	 * -- SETTER --
+	 *  设置连接状态。
+	 *  Sets the state of this connection.
+	 *
+	 * @param state 连接状态 / state
+
 	 */
+	@Setter
 	private volatile State state;
 
 	/**
 	 * 通过账号 ID 完成认证后关联的账号对象。
 	 * Account associated after the client authenticates by account id.
+	 * -- GETTER --
+	 *  返回与本连接关联的账号。
+	 *  Returns the account associated with this connection.
+	 *
+	 * @return 账号对象 / account object
+
 	 */
+	@Getter
 	private Account account;
 
 	/**
@@ -99,11 +115,41 @@ public class AionConnection extends AConnection {
 	private String lastPlayerName = "";
 
 	private AionPacketHandler aionPacketHandler;
+	/**
+	 * -- GETTER --
+	 *  获取最近一次 Ping 时间（毫秒）。
+	 *  Returns the last ping time in milliseconds.
+	 *
+	 *
+	 * -- SETTER --
+	 *  设置最近一次 Ping 时间（毫秒）。
+	 *  Sets the last ping time in milliseconds.
+	 *
+	 @return 最近 Ping 时间（毫秒）/ last ping time ms
+	  * @param lastPingTimeMS 最近 Ping 时间（毫秒）/ last ping time ms
+	 */
+	@Setter
+	@Getter
 	private long lastPingTimeMS;
 
 	private int nbInvalidPackets = 0;
 	private final static int MAX_INVALID_PACKETS = 3;
 
+	/**
+	 * -- GETTER --
+	 *  获取客户端 MAC 地址。
+	 *  Returns the client MAC address.
+	 *
+	 *
+	 * -- SETTER --
+	 *  设置客户端 MAC 地址。
+	 *  Sets the client MAC address.
+	 *
+	 @return MAC 地址 / MAC address
+	  * @param mac MAC 地址 / MAC address
+	 */
+	@Setter
+	@Getter
 	private String macAddress;
 
 	/** 挂起连接的 Ping 检测器 / Ping checker for hanged-up connections */
@@ -376,26 +422,6 @@ public class AionConnection extends AConnection {
 	}
 
 	/**
-	 * 设置连接状态。
-	 * Sets the state of this connection.
-	 *
-	 * @param state 连接状态 / state
-	 */
-	public void setState(State state) {
-		this.state = state;
-	}
-
-	/**
-	 * 返回与本连接关联的账号。
-	 * Returns the account associated with this connection.
-	 *
-	 * @return 账号对象 / account object
-	 */
-	public Account getAccount() {
-		return account;
-	}
-
-	/**
 	 * 设置与本连接关联的账号（不可为 null）。
 	 * Sets the account associated with this connection (must not be null).
 	 *
@@ -437,51 +463,11 @@ public class AionConnection extends AConnection {
 	}
 
 	/**
-	 * 获取最近一次 Ping 时间（毫秒）。
-	 * Returns the last ping time in milliseconds.
-	 *
-	 * @return 最近 Ping 时间（毫秒）/ last ping time ms
-	 */
-	public long getLastPingTimeMS() {
-		return lastPingTimeMS;
-	}
-
-	/**
-	 * 设置最近一次 Ping 时间（毫秒）。
-	 * Sets the last ping time in milliseconds.
-	 *
-	 * @param lastPingTimeMS 最近 Ping 时间（毫秒）/ last ping time ms
-	 */
-	public void setLastPingTimeMS(long lastPingTimeMS) {
-		this.lastPingTimeMS = lastPingTimeMS;
-	}
-
-	/**
 	 * 立即关闭连接。
 	 * Closes the connection immediately.
 	 */
 	public void closeNow() {
 		this.close(false);
-	}
-
-	/**
-	 * 设置客户端 MAC 地址。
-	 * Sets the client MAC address.
-	 *
-	 * @param mac MAC 地址 / MAC address
-	 */
-	public void setMacAddress(String mac) {
-		this.macAddress = mac;
-	}
-
-	/**
-	 * 获取客户端 MAC 地址。
-	 * Returns the client MAC address.
-	 *
-	 * @return MAC 地址 / MAC address
-	 */
-	public String getMacAddress() {
-		return macAddress;
 	}
 
 	/**

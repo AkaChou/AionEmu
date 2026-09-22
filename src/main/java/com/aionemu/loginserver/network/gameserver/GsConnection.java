@@ -12,6 +12,8 @@ import com.aionemu.loginserver.PingPongThread;
 import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.network.factories.GsPacketHandlerFactory;
 import com.aionemu.loginserver.service.LoginThreadPoolServices;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -49,12 +51,33 @@ public class GsConnection extends AConnection {
     /**
      * 当前连接状态。
      * Current connection state.
-     */
+	 * -- GETTER --
+	 *  返回当前连接状态。
+	 *  Return current connection state.
+	 *
+	 * @return 当前状态 / Current state
+
+	 */
+    @Getter
     private State state;
     /**
      * 本连接对应的游戏服信息。
      * GameServerInfo bound to this connection.
+     * -- GETTER --
+     *  返回本连接的游戏服信息；未认证时为 null。
+     *  Return GameServerInfo for this connection, or null if not authenticated yet.
+     *
+     *
+	 * -- SETTER --
+	 *  绑定本连接的游戏服信息。
+	 *  Bind GameServerInfo to this connection.
+	 *
+	 @return 游戏服信息或 null / GameServerInfo or null
+	  * @param gameServerInfo 游戏服信息 / Game server info
+
      */
+    @Setter
+    @Getter
     private GameServerInfo gameServerInfo = null;
     private PingPongThread pingThread;
 
@@ -186,17 +209,7 @@ public class GsConnection extends AConnection {
         }
     }
 
-    /**
-     * 返回当前连接状态。
-     * Return current connection state.
-     *
-     * @return 当前状态 / Current state
-     */
-    public State getState() {
-        return state;
-    }
-
-    /**
+	/**
      * 设置连接状态；进入 AUTHED 时按配置启动 ping。
      * Set connection state; when AUTHED, start ping if configured.
      *
@@ -211,27 +224,7 @@ public class GsConnection extends AConnection {
         }
     }
 
-    /**
-     * 返回本连接的游戏服信息；未认证时为 null。
-     * Return GameServerInfo for this connection, or null if not authenticated yet.
-     *
-     * @return 游戏服信息或 null / GameServerInfo or null
-     */
-    public GameServerInfo getGameServerInfo() {
-        return gameServerInfo;
-    }
-
-    /**
-     * 绑定本连接的游戏服信息。
-     * Bind GameServerInfo to this connection.
-     *
-     * @param gameServerInfo 游戏服信息 / Game server info
-     */
-    public void setGameServerInfo(GameServerInfo gameServerInfo) {
-        this.gameServerInfo = gameServerInfo;
-    }
-
-    /**
+	/**
      * 返回连接的可读描述（服务器 ID 与 IP）。
      * Return a human-readable description (server id and IP).
      *

@@ -12,6 +12,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.commons.utils.xml.JAXBUtil;
 import com.aionemu.gameserver.configs.Config;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Dredgion 欧比斯舰活动时间表配置。
@@ -19,23 +21,20 @@ import com.aionemu.gameserver.configs.Config;
  *
  * @author Rinzler (Encom)
  */
+@Getter
 @XmlRootElement(name = "dredgion_schedule")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class DredgionSchedule {
 	/**
 	 * Dredgion 列表。
 	 * List of dredgions.
+	 * -- GETTER --
+	 *  获取 Dredgion 列表。
+	 *  Returns the dredgion list.
+
 	 */
 	@XmlElement(name = "dredgion", required = true)
 	private List<Dredgion> dredgionsList;
-
-	/**
-	 * 获取 Dredgion 列表。
-	 * Returns the dredgion list.
-	 */
-	public List<Dredgion> getDredgionsList() {
-		return dredgionsList;
-	}
 
 	/**
 	 * 设置 Dredgion 列表。
@@ -64,11 +63,21 @@ public class DredgionSchedule {
 	 * 单个 Dredgion 的时间表条目。
 	 * Schedule entry for a single dredgion.
 	 */
-	@XmlAccessorType(XmlAccessType.FIELD)
+	@Setter
+	@Getter
+    @XmlAccessorType(XmlAccessType.FIELD)
 	@XmlRootElement(name = "dredgion")
 	public static class Dredgion {
 		/**
 		 * 无畏舰 ID / Dredgion ID
+         * -- GETTER --
+         *  获取 Dredgion ID。
+         *  Returns the dredgion ID.
+		 * -- SETTER --
+		 *  设置 Dredgion ID。
+		 *  Sets the dredgion ID.
+
+
 		 */
 		@XmlAttribute(required = true)
 		private int id;
@@ -76,40 +85,17 @@ public class DredgionSchedule {
 		/**
 		 * Zorshiv 时间列表。
 		 * List of zorshiv times.
+         * -- GETTER --
+         *  获取 Zorshiv 时间列表。
+         *  Returns the zorshiv times.
+		 * -- SETTER --
+		 *  设置 Zorshiv 时间列表。
+		 *  Sets the zorshiv times.
+
+
 		 */
 		@XmlElement(name = "zorshivTime", required = true)
 		private List<String> zorshivTimes;
 
-		/**
-		 * 获取 Dredgion ID。
-		 * Returns the dredgion ID.
-		 */
-		public int getId() {
-			return id;
-		}
-
-		/**
-		 * 设置 Dredgion ID。
-		 * Sets the dredgion ID.
-		 */
-		public void setId(int id) {
-			this.id = id;
-		}
-
-		/**
-		 * 获取 Zorshiv 时间列表。
-		 * Returns the zorshiv times.
-		 */
-		public List<String> getZorshivTimes() {
-			return zorshivTimes;
-		}
-
-		/**
-		 * 设置 Zorshiv 时间列表。
-		 * Sets the zorshiv times.
-		 */
-		public void setZorshivTimes(List<String> zorshivTimes) {
-			this.zorshivTimes = zorshivTimes;
-		}
 	}
 }

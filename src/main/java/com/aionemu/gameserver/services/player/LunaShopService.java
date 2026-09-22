@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.player;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -40,7 +41,6 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 露娜商店服务，管理露娜点数、每日工艺与特价。
@@ -56,7 +56,14 @@ public class LunaShopService {
 	static final int LUNA_INSTANCE_PRICE = 20;
 	static final int TREASURE_CHEST_PRICE = 5;
 
-	private static volatile ObjectProvider<LunaShopService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  setInstanceProvider 方法。
+     *  setInstanceProvider method.
+     *  provider
+     */
+    @Setter
+    private static volatile ObjectProvider<LunaShopService> instanceProvider;
 	PlayerWardrobeDAO wDAO = DAOManager.getDAO(PlayerWardrobeDAO.class);
 	private boolean dailyGenerated = true;
 	private boolean specialGenerated = true;
@@ -670,18 +677,12 @@ public class LunaShopService {
 	}
 
 	static int wardrobePrice(int wardrobeSlot) {
-		switch (wardrobeSlot) {
-		case 3:
-		case 4:
-			return 10;
-		case 5:
-		case 6:
-		case 7:
-		case 8:
-			return 12;
-		}
-		return -1;
-	}
+        return switch (wardrobeSlot) {
+            case 3, 4 -> 10;
+            case 5, 6, 7, 8 -> 12;
+            default -> -1;
+        };
+    }
 
 	/**
 	 * diceGame 方法。
@@ -795,13 +796,4 @@ public class LunaShopService {
 		return provided;
 	}
 
-	/**
-	 * setInstanceProvider 方法。
-	 * setInstanceProvider method.
-	 *
-	 * provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<LunaShopService> provider) {
-		instanceProvider = provider;
-	}
 }

@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.idiandepths.IdianDepthsStateType;
 import com.aionemu.gameserver.model.templates.spawns.Spawn;
+import lombok.Getter;
 
 /**
  * 伊迪安深渊刷新点模板（静态数据/XML）。
@@ -21,13 +22,13 @@ import com.aionemu.gameserver.model.templates.spawns.Spawn;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "IdianDepthsSpawn")
 public class IdianDepthsSpawn {
+	/**
+	 * -- GETTER --
+	 * 返回 ID / Returns the id
+	 */
+	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
 
 	@XmlElement(name = "idian_depths_type")
 	private List<IdianDepthsSpawn.IdianDepthsStateTemplate> IdianDepthsStateTemplate;
@@ -37,24 +38,24 @@ public class IdianDepthsSpawn {
 		return IdianDepthsStateTemplate;
 	}
 
-	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+    @XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "IdianDepthsStateTemplate")
 	public static class IdianDepthsStateTemplate {
 
-		@XmlElement(name = "spawn")
+        /**
+         * -- GETTER --
+         * 获取刷新。 / Returns the spawns.
+         */
+        @XmlElement(name = "spawn")
 		private List<Spawn> spawns;
 
-		@XmlAttribute(name = "istate")
+        /**
+         * -- GETTER --
+         * 获取伊迪安深渊类型。 / Returns the idian depths type.
+         */
+        @XmlAttribute(name = "istate")
 		private IdianDepthsStateType idianDepthsType;
 
-		/** 获取刷新。 / Returns the spawns. */
-		public List<Spawn> getSpawns() {
-			return spawns;
-		}
-
-		/** 获取伊迪安深渊类型。 / Returns the idian depths type. */
-		public IdianDepthsStateType getIdianDepthsType() {
-			return idianDepthsType;
-		}
-	}
+    }
 }

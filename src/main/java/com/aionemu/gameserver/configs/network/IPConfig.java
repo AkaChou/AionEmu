@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 import java.util.List;
 
 import com.aionemu.commons.network.IPRange;
+import lombok.Getter;
 
 /**
  * 加载游戏服对外地址，作为静态门面供网络包使用。
@@ -25,8 +26,15 @@ public class IPConfig {
 	/**
 	 * 默认对外地址字节。
 	 * Default public address bytes.
-	 */
-	private static byte[] defaultAddress;
+     * -- GETTER --
+     *  返回默认对外地址。
+     *  Returns the default public address.
+     *
+     * @return 默认地址字节 / Default address bytes
+
+     */
+	@Getter
+    private static byte[] defaultAddress;
 
 	/**
 	 * 加载 IP 配置（支持启动覆盖项）。
@@ -67,13 +75,4 @@ public class IPConfig {
 		return List.of();
 	}
 
-	/**
-	 * 返回默认对外地址。
-	 * Returns the default public address.
-	 *
-	 * @return 默认地址字节 / Default address bytes
-	 */
-	public static byte[] getDefaultAddress() {
-		return defaultAddress;
-	}
 }

@@ -35,8 +35,16 @@ public class AionServicesProperties {
      * 网络传输模式配置（字符串绑定后规范化为枚举）。
      * Network transport mode configuration (normalizes a bound string into the enum).
      */
+    @Setter
     @Getter
     public static class Transport {
+        /**
+         * -- SETTER --
+         *  设置原始传输模式字符串（由配置绑定写入）。
+         *  Sets the raw transport mode string (written by configuration binding).
+         *
+         * @param mode 模式字符串 / mode string
+         */
         private String mode = TransportMode.NETTY.name();
 
         /**
@@ -52,15 +60,6 @@ public class AionServicesProperties {
             return TransportMode.valueOf(mode.toUpperCase().replace('-', '_'));
         }
 
-        /**
-         * 设置原始传输模式字符串（由配置绑定写入）。
-         * Sets the raw transport mode string (written by configuration binding).
-         *
-         * @param mode 模式字符串 / mode string
-         */
-        public void setMode(String mode) {
-            this.mode = mode;
-        }
     }
 
     /**

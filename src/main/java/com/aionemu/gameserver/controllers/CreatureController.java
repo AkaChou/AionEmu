@@ -2,6 +2,8 @@ package com.aionemu.gameserver.controllers;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
 
@@ -48,7 +50,6 @@ import com.aionemu.gameserver.skillengine.model.Skill.SkillMethod;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.skillengine.model.SkillType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
 import java.util.Map;
@@ -71,8 +72,21 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	private volatile TerrainZoneCollisionMaterialActor terrainMaterialActor;
 	/** 治疗技能增益倍率。 / Healing skill boost multiplier. */
 	private float healingSkillBoost = 1.0f;
-	/** 简易攻击类型。 / Simple attack type. */
-	private int SimpleAttackType;
+	/** 简易攻击类型。 / Simple attack type.
+     * -- GETTER --
+     *  获取简易攻击类型。
+     *  Gets the simple attack type.
+     *
+     *
+	 * -- SETTER --
+	 *  设置简易攻击类型。
+	 *  Sets the simple attack type.
+	 *  attack type
+	 @return attack type / 攻击类型 / attack type。
+     */
+	@Setter
+	@Getter
+    private int SimpleAttackType;
 
 	/**
 	 * 当对象离开视野时回调。
@@ -354,26 +368,6 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 * requesting player
 	 */
 	public void onDialogRequest(Player player) {
-	}
-
-	/**
-	 * 获取简易攻击类型。
-	 * Gets the simple attack type.
-	 *
-	 * @return attack type / 攻击类型 / attack type。
-	 */
-	public int getSimpleAttackType() {
-		return this.SimpleAttackType;
-	}
-
-	/**
-	 * 设置简易攻击类型。
-	 * Sets the simple attack type.
-	 *
-	 * attack type
-	 */
-	public void setSimpleAttackType(int attackType) {
-		this.SimpleAttackType = attackType;
 	}
 
 	/**

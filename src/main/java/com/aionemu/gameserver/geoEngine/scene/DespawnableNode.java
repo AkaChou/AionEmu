@@ -10,6 +10,8 @@ import com.aionemu.gameserver.lifecycle.GameEventServices;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.model.siege.SiegeLocation;
 import com.aionemu.gameserver.model.siege.SiegeRace;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 可按实例/事件/攻城护盾等条件动态禁用碰撞的场景节点。
@@ -17,9 +19,23 @@ import com.aionemu.gameserver.model.siege.SiegeRace;
  */
 public class DespawnableNode extends Node {
 
-	/** 可消失类型。 / Despawnable type. */
+	/** 可消失类型。 / Despawnable type.
+	 * -- SETTER --
+	 *  设置可消失类型。
+	 *  Sets the despawnable type.
+	 *
+	 * @param type 可消失类型 / type
+	 */
+	@Setter
 	public DespawnableType type = DespawnableType.NONE;
-	/** 关联业务 ID（事件主题、静态物件、攻城据点等）。 / Related business id (event theme, static object, siege location, etc.). */
+	/** 关联业务 ID（事件主题、静态物件、攻城据点等）。 / Related business id (event theme, static object, siege location, etc.).
+	 * -- SETTER --
+	 *  设置关联业务 ID。
+	 *  Sets the related business id.
+	 *
+	 * @param id 业务 ID / business id
+	 */
+	@Setter
 	public int id;
 	/** 等级位掩码。 / Level bit mask. */
 	public byte levelBitMask;
@@ -152,30 +168,11 @@ public class DespawnableNode extends Node {
 	}
 
 	/**
-	 * 设置可消失类型。
-	 * Sets the despawnable type.
-	 *
-	 * @param type 可消失类型 / type
-	 */
-	public void setType(DespawnableType type) {
-		this.type = type;
-	}
-
-	/**
-	 * 设置关联业务 ID。
-	 * Sets the related business id.
-	 *
-	 * @param id 业务 ID / business id
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	/**
 	 * 可消失节点类型枚举。
 	 * Despawnable node type enumeration.
 	 */
-	public enum DespawnableType {
+	@Getter
+    public enum DespawnableType {
 		NONE(0),
 		EVENT(1),
 		PLACEABLE(2),
@@ -186,7 +183,13 @@ public class DespawnableNode extends Node {
 		DOOR_STATE2(7),
 		SHIELD(8);
 
-		/** 类型字节 ID / Type byte id */
+		/** 类型字节 ID / Type byte id
+         * -- GETTER --
+         *  返回类型字节 ID。
+         *  Returns the type byte id.
+         *
+         * @return 类型字节 ID / type id
+         */
 		private final byte id;
 
 		DespawnableType(int id) {
@@ -210,14 +213,5 @@ public class DespawnableNode extends Node {
 			throw new IllegalArgumentException("Invalid despawnable type " + id);
 		}
 
-		/**
-		 * 返回类型字节 ID。
-		 * Returns the type byte id.
-		 *
-		 * @return 类型字节 ID / type id
-		 */
-		public byte getId() {
-			return id;
-		}
-	}
+    }
 }

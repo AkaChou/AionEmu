@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -25,7 +26,15 @@ import com.google.common.collect.Multimap;
  */
 public class RepurchaseService {
 
-	private static volatile ObjectProvider<RepurchaseService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  设置 Spring 实例提供者。
+     *  Sets the Spring instance provider.
+     *
+     * @param provider 实例提供者 / instance provider
+     */
+    @Setter
+    private static volatile ObjectProvider<RepurchaseService> instanceProvider;
 	private final Multimap<Integer, Item> repurchaseItems;
 
 	/**
@@ -157,13 +166,4 @@ public class RepurchaseService {
 		return provided;
 	}
 
-	/**
-	 * 设置 Spring 实例提供者。
-	 * Sets the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<RepurchaseService> provider) {
-		instanceProvider = provider;
-	}
 }

@@ -15,6 +15,7 @@ import com.aionemu.loginserver.network.sts.StsVipServer;
 import com.aionemu.loginserver.service.LoginCronServices;
 import com.aionemu.loginserver.service.LoginThreadPoolServices;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -29,7 +30,14 @@ public class Shutdown extends Thread {
     /**
      * 单例实例。
      * Singleton instance.
+     * -- GETTER --
+     *  获取关闭钩子单例（需外部注册到 Runtime）。
+     *  Get the shutdown-hook singleton (must be registered externally).
+     *
+     * @return 关闭钩子实例 / Shutdown hook instance
+
      */
+    @Getter
     private static final Shutdown instance = new Shutdown();
     private static final AtomicBoolean shutdownStarted = new AtomicBoolean(false);
     /**
@@ -46,16 +54,6 @@ public class Shutdown extends Thread {
      */
     public void setRestartOnly(boolean restartOnly) {
         Shutdown.restartOnly = restartOnly;
-    }
-
-    /**
-     * 获取关闭钩子单例（需外部注册到 Runtime）。
-     * Get the shutdown-hook singleton (must be registered externally).
-     *
-     * @return 关闭钩子实例 / Shutdown hook instance
-     */
-    public static Shutdown getInstance() {
-        return instance;
     }
 
     /**

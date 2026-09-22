@@ -77,7 +77,11 @@ public class Legion {
 	 */
 	private int disbandTime;
 	/**
-	 * @return the announcementList
+	 *
+     * -- SETTER --
+     *
+     @return the announcementList
+      * @param announcementList the announcementList to set
 	 */
 	private TreeMap<Timestamp, String> announcementList = new TreeMap<>();
 	/**
@@ -207,23 +211,16 @@ public class Legion {
 	 */
 	public boolean hasRequiredMembers() {
 		int memberSize = getLegionMembers().size();
-		switch (getLegionLevel()) {
-		case 1:
-			return memberSize >= LegionConfig.LEGION_LEVEL2_REQUIRED_MEMBERS;
-		case 2:
-			return memberSize >= LegionConfig.LEGION_LEVEL3_REQUIRED_MEMBERS;
-		case 3:
-			return memberSize >= LegionConfig.LEGION_LEVEL4_REQUIRED_MEMBERS;
-		case 4:
-			return memberSize >= LegionConfig.LEGION_LEVEL5_REQUIRED_MEMBERS;
-		case 5:
-			return memberSize >= LegionConfig.LEGION_LEVEL6_REQUIRED_MEMBERS;
-		case 6:
-			return memberSize >= LegionConfig.LEGION_LEVEL7_REQUIRED_MEMBERS;
-		case 7:
-			return memberSize >= LegionConfig.LEGION_LEVEL8_REQUIRED_MEMBERS;
-		}
-		return false;
+		return switch (getLegionLevel()) {
+			case 1 -> memberSize >= LegionConfig.LEGION_LEVEL2_REQUIRED_MEMBERS;
+			case 2 -> memberSize >= LegionConfig.LEGION_LEVEL3_REQUIRED_MEMBERS;
+			case 3 -> memberSize >= LegionConfig.LEGION_LEVEL4_REQUIRED_MEMBERS;
+			case 4 -> memberSize >= LegionConfig.LEGION_LEVEL5_REQUIRED_MEMBERS;
+			case 5 -> memberSize >= LegionConfig.LEGION_LEVEL6_REQUIRED_MEMBERS;
+			case 6 -> memberSize >= LegionConfig.LEGION_LEVEL7_REQUIRED_MEMBERS;
+			case 7 -> memberSize >= LegionConfig.LEGION_LEVEL8_REQUIRED_MEMBERS;
+			default -> false;
+		};
 	}
 
 	/**
@@ -233,23 +230,16 @@ public class Legion {
 	 * @return 基纳价格 / kinah price
 	 */
 	public int getKinahPrice() {
-		switch (getLegionLevel()) {
-		case 1:
-			return LegionConfig.LEGION_LEVEL2_REQUIRED_KINAH;
-		case 2:
-			return LegionConfig.LEGION_LEVEL3_REQUIRED_KINAH;
-		case 3:
-			return LegionConfig.LEGION_LEVEL4_REQUIRED_KINAH;
-		case 4:
-			return LegionConfig.LEGION_LEVEL5_REQUIRED_KINAH;
-		case 5:
-			return LegionConfig.LEGION_LEVEL6_REQUIRED_KINAH;
-		case 6:
-			return LegionConfig.LEGION_LEVEL7_REQUIRED_KINAH;
-		case 7:
-			return LegionConfig.LEGION_LEVEL8_REQUIRED_KINAH;
-		}
-		return 0;
+		return switch (getLegionLevel()) {
+			case 1 -> LegionConfig.LEGION_LEVEL2_REQUIRED_KINAH;
+			case 2 -> LegionConfig.LEGION_LEVEL3_REQUIRED_KINAH;
+			case 3 -> LegionConfig.LEGION_LEVEL4_REQUIRED_KINAH;
+			case 4 -> LegionConfig.LEGION_LEVEL5_REQUIRED_KINAH;
+			case 5 -> LegionConfig.LEGION_LEVEL6_REQUIRED_KINAH;
+			case 6 -> LegionConfig.LEGION_LEVEL7_REQUIRED_KINAH;
+			case 7 -> LegionConfig.LEGION_LEVEL8_REQUIRED_KINAH;
+			default -> 0;
+		};
 	}
 
 	/**
@@ -259,23 +249,16 @@ public class Legion {
 	 * @return 贡献点数 / contribution points
 	 */
 	public int getContributionPrice() {
-		switch (getLegionLevel()) {
-		case 1:
-			return LegionConfig.LEGION_LEVEL2_REQUIRED_CONTRIBUTION;
-		case 2:
-			return LegionConfig.LEGION_LEVEL3_REQUIRED_CONTRIBUTION;
-		case 3:
-			return LegionConfig.LEGION_LEVEL4_REQUIRED_CONTRIBUTION;
-		case 4:
-			return LegionConfig.LEGION_LEVEL5_REQUIRED_CONTRIBUTION;
-		case 5:
-			return LegionConfig.LEGION_LEVEL6_REQUIRED_CONTRIBUTION;
-		case 6:
-			return LegionConfig.LEGION_LEVEL7_REQUIRED_CONTRIBUTION;
-		case 7:
-			return LegionConfig.LEGION_LEVEL8_REQUIRED_CONTRIBUTION;
-		}
-		return 0;
+		return switch (getLegionLevel()) {
+			case 1 -> LegionConfig.LEGION_LEVEL2_REQUIRED_CONTRIBUTION;
+			case 2 -> LegionConfig.LEGION_LEVEL3_REQUIRED_CONTRIBUTION;
+			case 3 -> LegionConfig.LEGION_LEVEL4_REQUIRED_CONTRIBUTION;
+			case 4 -> LegionConfig.LEGION_LEVEL5_REQUIRED_CONTRIBUTION;
+			case 5 -> LegionConfig.LEGION_LEVEL6_REQUIRED_CONTRIBUTION;
+			case 6 -> LegionConfig.LEGION_LEVEL7_REQUIRED_CONTRIBUTION;
+			case 7 -> LegionConfig.LEGION_LEVEL8_REQUIRED_CONTRIBUTION;
+			default -> 0;
+		};
 	}
 
 	/**
@@ -286,35 +269,20 @@ public class Legion {
 	 */
 	private boolean canAddMember() {
 		int memberSize = getLegionMembers().size();
-		switch (getLegionLevel()) {
-		case 1:
-			return memberSize < LegionConfig.LEGION_LEVEL1_MAX_MEMBERS;
-		case 2:
-			return memberSize < LegionConfig.LEGION_LEVEL2_MAX_MEMBERS;
-		case 3:
-			return memberSize < LegionConfig.LEGION_LEVEL3_MAX_MEMBERS;
-		case 4:
-			return memberSize < LegionConfig.LEGION_LEVEL4_MAX_MEMBERS;
-		case 5:
-			return memberSize < LegionConfig.LEGION_LEVEL5_MAX_MEMBERS;
-		case 6:
-			return memberSize < LegionConfig.LEGION_LEVEL6_MAX_MEMBERS;
-		case 7:
-			return memberSize < LegionConfig.LEGION_LEVEL7_MAX_MEMBERS;
-		case 8:
-			return memberSize < LegionConfig.LEGION_LEVEL8_MAX_MEMBERS;
-		}
-		return false;
+		return switch (getLegionLevel()) {
+			case 1 -> memberSize < LegionConfig.LEGION_LEVEL1_MAX_MEMBERS;
+			case 2 -> memberSize < LegionConfig.LEGION_LEVEL2_MAX_MEMBERS;
+			case 3 -> memberSize < LegionConfig.LEGION_LEVEL3_MAX_MEMBERS;
+			case 4 -> memberSize < LegionConfig.LEGION_LEVEL4_MAX_MEMBERS;
+			case 5 -> memberSize < LegionConfig.LEGION_LEVEL5_MAX_MEMBERS;
+			case 6 -> memberSize < LegionConfig.LEGION_LEVEL6_MAX_MEMBERS;
+			case 7 -> memberSize < LegionConfig.LEGION_LEVEL7_MAX_MEMBERS;
+			case 8 -> memberSize < LegionConfig.LEGION_LEVEL8_MAX_MEMBERS;
+			default -> false;
+		};
 	}
 
-	/**
-	 * @param announcementList the announcementList to set
-	 */
-	public void setAnnouncementList(TreeMap<Timestamp, String> announcementList) {
-		this.announcementList = announcementList;
-	}
-
-	/**
+    /**
 	 * 将新公告添加到公告列表。
 	 * Adds a new announcement to the list.
 	 *
@@ -368,26 +336,18 @@ public class Legion {
 	 * @return 仓库槽位数 / warehouse slots
 	 */
 	public int getWarehouseSlots() {
-		switch (getLegionLevel()) {
-		case 1:
-			return LegionConfig.LWH_LEVEL1_SLOTS;
-		case 2:
-			return LegionConfig.LWH_LEVEL2_SLOTS;
-		case 3:
-			return LegionConfig.LWH_LEVEL3_SLOTS;
-		case 4:
-			return LegionConfig.LWH_LEVEL4_SLOTS;
-		case 5:
-			return LegionConfig.LWH_LEVEL5_SLOTS;
-		case 6:
-			return LegionConfig.LWH_LEVEL6_SLOTS;
-		case 7:
-			return LegionConfig.LWH_LEVEL7_SLOTS;
-		case 8:
-			return LegionConfig.LWH_LEVEL8_SLOTS;
-		}
-		return LegionConfig.LWH_LEVEL1_SLOTS;
-	}
+        return switch (getLegionLevel()) {
+            case 1 -> LegionConfig.LWH_LEVEL1_SLOTS;
+            case 2 -> LegionConfig.LWH_LEVEL2_SLOTS;
+            case 3 -> LegionConfig.LWH_LEVEL3_SLOTS;
+            case 4 -> LegionConfig.LWH_LEVEL4_SLOTS;
+            case 5 -> LegionConfig.LWH_LEVEL5_SLOTS;
+            case 6 -> LegionConfig.LWH_LEVEL6_SLOTS;
+            case 7 -> LegionConfig.LWH_LEVEL7_SLOTS;
+            case 8 -> LegionConfig.LWH_LEVEL8_SLOTS;
+            default -> LegionConfig.LWH_LEVEL1_SLOTS;
+        };
+    }
 
 	/** 获取仓库等级。 / Returns the warehouse level. */
 	public int getWarehouseLevel() {

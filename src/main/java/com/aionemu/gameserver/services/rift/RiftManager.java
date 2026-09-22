@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.rift;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
@@ -35,7 +36,15 @@ import java.util.List;
 
 public class RiftManager {
 
-	private static volatile ObjectProvider<RiftManager> instanceProvider;
+    /**
+     * -- SETTER --
+     *  设置 Spring 实例提供者。
+     *  Sets the Spring instance provider.
+     *
+     * @param provider 实例提供者 / Instance provider
+     */
+    @Setter
+    private static volatile ObjectProvider<RiftManager> instanceProvider;
 	private static final List<Npc> rifts = new CopyOnWriteArrayList<>();
 	private static final Map<String, SpawnTemplate> riftGroups = new HashMap<>();
 
@@ -166,17 +175,7 @@ public class RiftManager {
 		return RiftManagerHolder.INSTANCE;
 	}
 
-	/**
-	 * 设置 Spring 实例提供者。
-	 * Sets the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / Instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<RiftManager> provider) {
-		instanceProvider = provider;
-	}
-
-	private static class RiftManagerHolder {
+    private static class RiftManagerHolder {
 		private static final RiftManager INSTANCE = new RiftManager();
 	}
 }

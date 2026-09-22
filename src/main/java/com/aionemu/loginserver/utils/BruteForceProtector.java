@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.aionemu.loginserver.configs.Config;
+import lombok.Getter;
 
 /**
  * 暴力破解防护：按 IP 记录登录失败次数，达到阈值时触发封禁判定。
@@ -19,9 +20,20 @@ public class BruteForceProtector {
      * 单 IP 的登录失败统计信息。
      * Failed-login statistics for a single IP.
      */
+    @Getter
     class FailedLoginInfo {
 
+        /**
+         * -- GETTER --
+         *
+         * @return 失败次数 / the count
+         */
         private int count;
+        /**
+         * -- GETTER --
+         *
+         * @return 记录时间戳 / the time
+         */
         private final long time;
 
         /**
@@ -38,19 +50,6 @@ public class BruteForceProtector {
             count++;
         }
 
-        /**
-         * @return 失败次数 / the count
-         */
-        public int getCount() {
-            return count;
-        }
-
-        /**
-         * @return 记录时间戳 / the time
-         */
-        public long getTime() {
-            return time;
-        }
     }
 
     /**

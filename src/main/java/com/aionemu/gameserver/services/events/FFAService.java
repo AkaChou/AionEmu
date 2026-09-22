@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.services.events;
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
@@ -42,7 +43,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMap;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 自由混战（FFA）竞技场服务，管理地图轮换、进出场、击杀奖励与连杀播报。
@@ -67,8 +67,14 @@ public class FFAService {
 	@SuppressWarnings("unused")
 	/** 当前实例静态门（预留）。 / Current instance static doors (reserved). */
 	private Map<Integer, StaticDoor> doors;
-	/** 服务是否已启用。 / Whether the service is enabled. */
-	private static boolean isAvailable;
+	/** 服务是否已启用。 / Whether the service is enabled.
+     * -- GETTER --
+     *  返回 FFA 服务是否可用。
+     *  Returns whether the FFA service is available.
+     *  whether available
+     */
+	@Getter
+    private static boolean isAvailable;
 
 	/**
 	 * 初始化 FFA：加载竞技场地图并启动周期调度（人数播报 / 地图轮换 / 全服邀请）。
@@ -704,12 +710,23 @@ public class FFAService {
 	 * FFA 竞技场地图定义（地图 ID、人数上限、出生点）。
 	 * FFA arena map definition (map id, player cap, spawn points).
 	 */
+	@Getter
 	public static class ArenaMap {
-		/** 映射 ID / Map id */
+		/** 映射 ID / Map id
+		 * -- GETTER --
+		 *  map id
+		 */
 		private final int mapId;
-		/** 出生点坐标列表。 / Spawn coordinate list. */
+		/** 出生点坐标列表。 / Spawn coordinate list.
+		 * -- GETTER --
+		 *
+		 * @return 出生点列表 / spawn list
+		 */
 		private final List<Float[]> spawns;
-		/** 单实例人数上限。 / Per-instance player cap. */
+		/** 单实例人数上限。 / Per-instance player cap.
+		 * -- GETTER --
+		 *  player cap
+		 */
 		private final int playerCap;
 
 		/**
@@ -726,35 +743,6 @@ public class FFAService {
 			this.spawns = spawns;
 		}
 
-		/**
-		 * map id
-		 */
-		public int getMapId() {
-			return mapId;
-		}
-
-		/**
-		 * player cap
-		 */
-		public int getPlayerCap() {
-			return playerCap;
-		}
-
-		/**
-		 * @return 出生点列表 / spawn list
-		 */
-		public List<Float[]> getSpawns() {
-			return spawns;
-		}
 	}
 
-	/**
-	 * 返回 FFA 服务是否可用。
-	 * Returns whether the FFA service is available.
-	 *
-	 * whether available
-	 */
-	public static boolean isAvailable() {
-		return isAvailable;
-	}
 }

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.geoEngine.scene;
 
+import lombok.Getter;
+
 /**
  * 描述一个 GL 对象：对图形库原生侧某类对象的封装，用于跟踪其生命周期与更新状态。
  * Describes a GL object: encapsulation of a native graphics-library object, used to track its lifecycle and update state.
@@ -9,7 +11,14 @@ public abstract class GLObject implements Cloneable {
 	/**
 	 * 对象 ID，通常取决于类型；典型来自 glGenTextures、glGenBuffers 等调用。
 	 * Object ID, usually type-dependent; typically returned from calls such as glGenTextures or glGenBuffers.
+	 * -- GETTER --
+	 *  返回对象 ID。多数情况下用户代码不应依赖此值。
+	 *  Returns the object ID. Should not be used by user code in most cases.
+	 *
+	 * @return 对象 ID / object ID
+
 	 */
+	@Getter
 	protected int id = -1;
 	/**
 	 * 硬引用句柄。通过硬引用可在 GL 对象不再使用时发现并删除图形库中的实例。
@@ -19,8 +28,15 @@ public abstract class GLObject implements Cloneable {
 	/**
 	 * 若为 true，表示数据已变更，使用前需要更新。
 	 * True if the data represented by this GLObject has changed and needs to be updated before use.
-	 */
-	protected boolean updateNeeded = true;
+     * -- GETTER --
+     *  是否需要更新。
+     *  Whether an update is needed.
+     *
+     * @return 需要更新则为 true / true if update is needed
+
+     */
+	@Getter
+    protected boolean updateNeeded = true;
 	/**
 	 * GL 对象类型，通常由子类指定。
 	 * Type of the GLObject, usually specified by a subclass.
@@ -88,16 +104,6 @@ public abstract class GLObject implements Cloneable {
 	}
 
 	/**
-	 * 返回对象 ID。多数情况下用户代码不应依赖此值。
-	 * Returns the object ID. Should not be used by user code in most cases.
-	 *
-	 * @return 对象 ID / object ID
-	 */
-	public int getId() {
-		return id;
-	}
-
-	/**
 	 * 标记为需要更新。
 	 * Marks this object as needing an update.
 	 */
@@ -113,17 +119,7 @@ public abstract class GLObject implements Cloneable {
 		updateNeeded = false;
 	}
 
-	/**
-	 * 是否需要更新。
-	 * Whether an update is needed.
-	 *
-	 * @return 需要更新则为 true / true if update is needed
-	 */
-	public boolean isUpdateNeeded() {
-		return updateNeeded;
-	}
-
-	@Override
+    @Override
 	public String toString() {
 		return type.name() + " " + Integer.toHexString(hashCode());
 	}

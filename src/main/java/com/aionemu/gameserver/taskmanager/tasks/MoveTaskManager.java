@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import java.util.concurrent.ForkJoinTask;
@@ -30,8 +31,15 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 	/**
 	 * Spring 可选实例提供者。
 	 * Optional Spring instance provider.
-	 */
-	private static volatile ObjectProvider<MoveTaskManager> instanceProvider;
+     * -- SETTER --
+     *  注入 Spring 实例提供者。
+     *  Inject the Spring instance provider.
+     *
+     * @param provider 实例提供者 / Provider
+
+     */
+	@Setter
+    private static volatile ObjectProvider<MoveTaskManager> instanceProvider;
 
 	/**
 	 * 正在移动的生物（objectId → 生物）。
@@ -210,13 +218,4 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring 实例提供者。
-	 * Inject the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / Provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<MoveTaskManager> provider) {
-		instanceProvider = provider;
-	}
 }

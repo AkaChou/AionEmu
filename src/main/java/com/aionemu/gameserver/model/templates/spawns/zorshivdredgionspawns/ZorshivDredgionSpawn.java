@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.spawns.Spawn;
 import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionStateType;
+import lombok.Getter;
 
 /**
  * 佐希夫无畏舰刷新点模板（静态数据/XML）。
@@ -21,13 +22,13 @@ import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionStateType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ZorshivDredgionSpawn")
 public class ZorshivDredgionSpawn {
+	/**
+	 * -- GETTER --
+	 * 返回 ID / Returns the id
+	 */
+	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
 
 	@XmlElement(name = "zorshiv_dredgion_type")
 	private List<ZorshivDredgionSpawn.ZorshivDredgionStateTemplate> ZorshivDredgionStateTemplate;
@@ -37,24 +38,24 @@ public class ZorshivDredgionSpawn {
 		return ZorshivDredgionStateTemplate;
 	}
 
-	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+    @XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "ZorshivDredgionStateTemplate")
 	public static class ZorshivDredgionStateTemplate {
 
-		@XmlElement(name = "spawn")
+        /**
+         * -- GETTER --
+         * 获取刷新。 / Returns the spawns.
+         */
+        @XmlElement(name = "spawn")
 		private List<Spawn> spawns;
 
-		@XmlAttribute(name = "zstate")
+        /**
+         * -- GETTER --
+         * 获取佐希夫无畏舰类型。 / Returns the zorshiv dredgion type.
+         */
+        @XmlAttribute(name = "zstate")
 		private ZorshivDredgionStateType zorshivDredgionType;
 
-		/** 获取刷新。 / Returns the spawns. */
-		public List<Spawn> getSpawns() {
-			return spawns;
-		}
-
-		/** 获取佐希夫无畏舰类型。 / Returns the zorshiv dredgion type. */
-		public ZorshivDredgionStateType getZorshivDredgionType() {
-			return zorshivDredgionType;
-		}
-	}
+    }
 }

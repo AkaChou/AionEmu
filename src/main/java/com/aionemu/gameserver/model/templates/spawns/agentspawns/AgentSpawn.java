@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.agent.AgentStateType;
 import com.aionemu.gameserver.model.templates.spawns.Spawn;
+import lombok.Getter;
 
 /**
  * 代理人刷新点模板（静态数据/XML）。
@@ -21,13 +22,13 @@ import com.aionemu.gameserver.model.templates.spawns.Spawn;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AgentSpawn")
 public class AgentSpawn {
+	/**
+	 * -- GETTER --
+	 * 返回 ID / Returns the id
+	 */
+	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
 
 	/**
 	 * 代理状态模板列表。
@@ -45,26 +46,24 @@ public class AgentSpawn {
 	 * 代理状态模板：绑定状态类型与对应的刷新列表。
 	 * Agent state template: binds a state type with its spawn list.
 	 */
-	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+    @XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "AgentStateTemplate")
 	public static class AgentStateTemplate {
 
-		/** 刷新列表。 / Spawn list. */
+		/** 刷新列表。 / Spawn list.
+         * -- GETTER --
+         * 获取刷新。 / Returns the spawns.
+         */
 		@XmlElement(name = "spawn")
 		private List<Spawn> spawns;
 
-		/** 代理状态类型。 / Agent state type. */
+		/** 代理状态类型。 / Agent state type.
+         * -- GETTER --
+         * 获取代理人类型。 / Returns the agent type.
+         */
 		@XmlAttribute(name = "astate")
 		private AgentStateType agentType;
 
-		/** 获取刷新。 / Returns the spawns. */
-		public List<Spawn> getSpawns() {
-			return spawns;
-		}
-
-		/** 获取代理人类型。 / Returns the agent type. */
-		public AgentStateType getAgentType() {
-			return agentType;
-		}
-	}
+    }
 }

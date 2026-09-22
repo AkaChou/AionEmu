@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.events;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
@@ -33,7 +34,14 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public class AtreianPassportService {
 
-	private static volatile ObjectProvider<AtreianPassportService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  setInstanceProvider 方法。
+     *  setInstanceProvider method.
+     *  provider
+     */
+    @Setter
+    private static volatile ObjectProvider<AtreianPassportService> instanceProvider;
 	private final Map<Integer, AtreianPassport> basic = new HashMap<>(1);
 	private final Map<Integer, AtreianPassport> anny = new HashMap<>(1);
 	public Map<Integer, AtreianPassport> data = new HashMap<>(1);
@@ -243,13 +251,4 @@ public class AtreianPassportService {
 		return provided;
 	}
 
-	/**
-	 * setInstanceProvider 方法。
-	 * setInstanceProvider method.
-	 *
-	 * provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<AtreianPassportService> provider) {
-		instanceProvider = provider;
-	}
 }

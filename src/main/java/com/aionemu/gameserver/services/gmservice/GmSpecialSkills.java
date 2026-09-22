@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.gmservice;
 
 import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import lombok.Getter;
 
 /**
  * GM 特殊技能枚举：按权限等级定义显示标签与可授予技能列表。
@@ -28,9 +29,23 @@ public enum GmSpecialSkills {
 	AccessLevel9(9, AdminConfig.ADMIN_TAG_1, "\ue042Unity-Developer\ue043", new int[]{240, 241, 277, 282, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 395, 396}),
 	/** 权限等级 10：Unity-Developer / Access level 10: Unity-Developer */
 	AccessLevel10(10, AdminConfig.ADMIN_TAG_1, "\ue042Unity-Developer\ue043", new int[]{240, 241, 277, 282, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 395, 396});
-    private final int level;
+	/**
+	 * -- GETTER --
+	 *  获取权限等级数值。
+	 *  Get the access level number.
+	 *  Access level
+	 */
+	@Getter
+	private final int level;
     private final String nameLevel;
     private final String status;
+    /**
+     * -- GETTER --
+     *  获取该等级可授予的技能 ID 数组。
+     *  Get the grantable skill id array for this level.
+     *  Skill id array
+     */
+    @Getter
     private final int[] skills;
 
 	/**
@@ -60,16 +75,6 @@ public enum GmSpecialSkills {
     }
 
 	/**
-	 * 获取权限等级数值。
-	 * Get the access level number.
-	 *
-	 * Access level
-	 */
-    public int getLevel() {
-        return level;
-    }
-
-	/**
 	 * 获取状态显示名（含 GM 前缀字符）。
 	 * Get the status display name (including GM prefix glyphs).
 	 *
@@ -79,17 +84,7 @@ public enum GmSpecialSkills {
         return status;
     }
 
-	/**
-	 * 获取该等级可授予的技能 ID 数组。
-	 * Get the grantable skill id array for this level.
-	 *
-	 * Skill id array
-	 */
-    public int[] getSkills() {
-        return skills;
-    }
-
-	/**
+    /**
 	 * 按权限等级查找对应枚举项。
 	 * Look up the enum constant by access level.
 	 *

@@ -1,6 +1,8 @@
 package com.aionemu.gameserver.network.chatserver;
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -45,7 +47,21 @@ public class ChatServerConnection extends AConnection {
 	/**
 	 * 当前连接状态。
 	 * Current connection state.
+	 * -- GETTER --
+	 *  返回当前连接状态。
+	 *  Returns the current connection state.
+	 *
+	 *
+	 * -- SETTER --
+	 *  设置连接状态。
+	 *  Sets the connection state.
+	 *
+	 @return 连接状态 / connection state
+	  * @param state 新状态 / new state
+
 	 */
+	@Setter
+	@Getter
 	private State state;
 
 	/**
@@ -193,26 +209,6 @@ public class ChatServerConnection extends AConnection {
 			sendMsgQueue.addLast(closePacket);
 			enableWriteInterest();
 		}
-	}
-
-	/**
-	 * 返回当前连接状态。
-	 * Returns the current connection state.
-	 *
-	 * @return 连接状态 / connection state
-	 */
-	public State getState() {
-		return state;
-	}
-
-	/**
-	 * 设置连接状态。
-	 * Sets the connection state.
-	 *
-	 * @param state 新状态 / new state
-	 */
-	public void setState(State state) {
-		this.state = state;
 	}
 
 	/**

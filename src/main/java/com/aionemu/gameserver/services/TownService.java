@@ -5,6 +5,7 @@ import com.aionemu.boot.i18n.I18n;
 import java.util.List;
 import java.util.Map;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -31,7 +32,15 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
  */
 @Slf4j
 public class TownService {
-	private static volatile ObjectProvider<TownService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  注入 Spring 实例提供者。
+     *  Injects the Spring instance provider.
+     *
+     * @param provider 实例提供者 / instance provider
+     */
+    @Setter
+    private static volatile ObjectProvider<TownService> instanceProvider;
 	private final Map<Integer, Town> elyosTowns;
 	private final Map<Integer, Town> asmosTowns;
 
@@ -58,17 +67,7 @@ public class TownService {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring 实例提供者。
-	 * Injects the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<TownService> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 从数据库加载城镇；若为空则根据房屋地块初始化并持久化。
 	 * Loads towns from DB; if empty, initializes from housing lands and persists them.
 	 */

@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.spawns.Spawn;
 import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityStateType;
+import lombok.Getter;
 
 /**
  * 永恒之塔刷新点模板（静态数据/XML）。
@@ -19,13 +20,13 @@ import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityStateType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "TowerOfEternitySpawn")
 public class TowerOfEternitySpawn {
+	/**
+	 * -- GETTER --
+	 * 返回 ID。 / Returns the id.
+	 */
+	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
-
-	/** 返回 ID。 / Returns the id. */
-	public int getId() {
-		return id;
-	}
 
 	@XmlElement(name = "tower_of_eternity_type")
 	private List<TowerOfEternitySpawn.TowerOfEternityStateTemplate> TowerOfEternityStateTemplate;
@@ -35,24 +36,24 @@ public class TowerOfEternitySpawn {
 		return TowerOfEternityStateTemplate;
 	}
 
-	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+    @XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "TowerOfEternityStateTemplate")
 	public static class TowerOfEternityStateTemplate {
 
-		@XmlElement(name = "spawn")
+        /**
+         * -- GETTER --
+         * 获取刷新。 / Returns the spawns.
+         */
+        @XmlElement(name = "spawn")
 		private List<Spawn> spawns;
 
-		@XmlAttribute(name = "tstate")
+        /**
+         * -- GETTER --
+         * 返回永恒之塔状态类型。 / Returns the tower of eternity type.
+         */
+        @XmlAttribute(name = "tstate")
 		private TowerOfEternityStateType towerOfEternityType;
 
-		/** 获取刷新。 / Returns the spawns. */
-		public List<Spawn> getSpawns() {
-			return spawns;
-		}
-
-		/** 返回永恒之塔状态类型。 / Returns the tower of eternity type. */
-		public TowerOfEternityStateType getTowerOfEternityType() {
-			return towerOfEternityType;
-		}
-	}
+    }
 }

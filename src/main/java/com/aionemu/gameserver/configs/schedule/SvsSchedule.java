@@ -12,6 +12,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.commons.utils.xml.JAXBUtil;
 import com.aionemu.gameserver.configs.Config;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * SvS（服务器对战）活动时间表配置。
@@ -19,31 +21,25 @@ import com.aionemu.gameserver.configs.Config;
  *
  * @author Rinzler (Encom)
  */
+@Setter
+@Getter
 @XmlRootElement(name = "svs_schedule")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SvsSchedule {
 	/**
 	 * SvS 列表。
 	 * List of SvSs.
+	 * -- GETTER --
+	 *  获取 SvS 列表。
+	 *  Returns the SvS list.
+	 * -- SETTER --
+	 *  设置 SvS 列表。
+	 *  Sets the SvS list.
+
+
 	 */
 	@XmlElement(name = "svs", required = true)
 	private List<Svs> svssList;
-
-	/**
-	 * 获取 SvS 列表。
-	 * Returns the SvS list.
-	 */
-	public List<Svs> getSvssList() {
-		return svssList;
-	}
-
-	/**
-	 * 设置 SvS 列表。
-	 * Sets the SvS list.
-	 */
-	public void setSvssList(List<Svs> svsList) {
-		this.svssList = svsList;
-	}
 
 	/**
 	 * 从 XML 加载时间表。
@@ -64,11 +60,21 @@ public class SvsSchedule {
 	 * 单个 SvS 的时间表条目。
 	 * Schedule entry for a single SvS.
 	 */
-	@XmlAccessorType(XmlAccessType.FIELD)
+	@Setter
+	@Getter
+    @XmlAccessorType(XmlAccessType.FIELD)
 	@XmlRootElement(name = "svs")
 	public static class Svs {
 		/**
 		 * SvS ID / SvS ID
+         * -- GETTER --
+         *  获取 SvS ID。
+         *  Returns the SvS ID.
+		 * -- SETTER --
+		 *  设置 SvS ID。
+		 *  Sets the SvS ID.
+
+
 		 */
 		@XmlAttribute(required = true)
 		private int id;
@@ -76,40 +82,17 @@ public class SvsSchedule {
 		/**
 		 * SvS 时间列表。
 		 * List of SvS times.
+         * -- GETTER --
+         *  获取 SvS 时间列表。
+         *  Returns the SvS times.
+		 * -- SETTER --
+		 *  设置 SvS 时间列表。
+		 *  Sets the SvS times.
+
+
 		 */
 		@XmlElement(name = "svsTime", required = true)
 		private List<String> svsTimes;
 
-		/**
-		 * 获取 SvS ID。
-		 * Returns the SvS ID.
-		 */
-		public int getId() {
-			return id;
-		}
-
-		/**
-		 * 设置 SvS ID。
-		 * Sets the SvS ID.
-		 */
-		public void setId(int id) {
-			this.id = id;
-		}
-
-		/**
-		 * 获取 SvS 时间列表。
-		 * Returns the SvS times.
-		 */
-		public List<String> getSvsTimes() {
-			return svsTimes;
-		}
-
-		/**
-		 * 设置 SvS 时间列表。
-		 * Sets the SvS times.
-		 */
-		public void setSvsTimes(List<String> svsTimes) {
-			this.svsTimes = svsTimes;
-		}
 	}
 }

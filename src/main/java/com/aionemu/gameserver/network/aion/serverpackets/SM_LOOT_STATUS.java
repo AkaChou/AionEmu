@@ -7,6 +7,7 @@ import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.Getter;
 
 /**
  * 掉落状态变更的服务端包（启用/禁用拾取、打开/关闭掉落列表）。
@@ -59,7 +60,8 @@ public class SM_LOOT_STATUS extends AionServerPacket {
 	 * 掉落状态枚举。
 	 * Loot status enum.
 	 */
-	public enum Status {
+	@Getter
+    public enum Status {
 		LOOT_ENABLE(0),
 		LOOT_DISABLE(1),
 		OPEN_DROP_LIST(2),
@@ -71,8 +73,5 @@ public class SM_LOOT_STATUS extends AionServerPacket {
 			this.id = id;
 		}
 
-		public int getId() {
-			return id;
-		}
-	}
+    }
 }

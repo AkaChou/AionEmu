@@ -16,6 +16,7 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
 
 /**
  * AI2 常用动作工具类，封装对 AI 所有者的通用操作。
@@ -195,35 +196,31 @@ public class AI2Actions {
 	 * 对话框选择结果：是否成功及对应任务环境。
 	 * Dialog selection result: success flag and related quest environment.
 	 */
-	public static final class SelectDialogResult {
-		private final boolean success;
-		private final QuestEnv env;
+	@Getter
+    public static final class SelectDialogResult {
+        /**
+         * -- GETTER --
+         *  是否处理成功。
+         *  Returns whether the dialog was handled successfully.
+         *
+         * @return 是否成功 / whether successful
+         */
+        private final boolean success;
+        /**
+         * -- GETTER --
+         *  获取任务环境。
+         *  Returns the quest environment.
+         *
+         * @return 任务环境 / quest environment
+         */
+        private final QuestEnv env;
 
 		private SelectDialogResult(boolean success, QuestEnv env) {
 			this.success = success;
 			this.env = env;
 		}
 
-		/**
-		 * 是否处理成功。
-		 * Returns whether the dialog was handled successfully.
-		 *
-		 * @return 是否成功 / whether successful
-		 */
-		public boolean isSuccess() {
-			return success;
-		}
-
-		/**
-		 * 获取任务环境。
-		 * Returns the quest environment.
-		 *
-		 * @return 任务环境 / quest environment
-		 */
-		public QuestEnv getEnv() {
-			return env;
-		}
-	}
+    }
 
 	/**
 	 * 向玩家添加请求响应处理器，senderId 默认为 AI 所有者 objectId。

@@ -12,36 +12,32 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.commons.utils.xml.JAXBUtil;
 import com.aionemu.gameserver.configs.Config;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Siege 要塞攻城时间表配置。
  * Siege fortress schedule configuration.
  */
+@Setter
+@Getter
 @XmlRootElement(name = "siege_schedule")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SiegeSchedule {
 	/**
 	 * 要塞列表。
 	 * List of fortresses.
+	 * -- GETTER --
+	 *  获取要塞列表。
+	 *  Returns the fortress list.
+	 * -- SETTER --
+	 *  设置要塞列表。
+	 *  Sets the fortress list.
+
+
 	 */
 	@XmlElement(name = "fortress", required = true)
 	private List<Fortress> fortressesList;
-
-	/**
-	 * 获取要塞列表。
-	 * Returns the fortress list.
-	 */
-	public List<Fortress> getFortressesList() {
-		return fortressesList;
-	}
-
-	/**
-	 * 设置要塞列表。
-	 * Sets the fortress list.
-	 */
-	public void setFortressesList(List<Fortress> fortressList) {
-		this.fortressesList = fortressList;
-	}
 
 	/**
 	 * 从 XML 加载时间表。
@@ -62,13 +58,23 @@ public class SiegeSchedule {
 	 * 单个要塞的时间表条目。
 	 * Schedule entry for a single fortress.
 	 */
-	@XmlAccessorType(XmlAccessType.FIELD)
+	@Setter
+	@Getter
+    @XmlAccessorType(XmlAccessType.FIELD)
 	@XmlRootElement(name = "fortress")
 	public static class Fortress {
 
 		/**
 		 * 要塞 ID。
 		 * Fortress ID.
+         * -- GETTER --
+         *  获取要塞 ID。
+         *  Returns the fortress ID.
+		 * -- SETTER --
+		 *  设置要塞 ID。
+		 *  Sets the fortress ID.
+
+
 		 */
 		@XmlAttribute(required = true)
 		private int id;
@@ -76,40 +82,17 @@ public class SiegeSchedule {
 		/**
 		 * 攻城时间列表。
 		 * List of siege times.
+         * -- GETTER --
+         *  获取攻城时间列表。
+         *  Returns the siege times.
+		 * -- SETTER --
+		 *  设置攻城时间列表。
+		 *  Sets the siege times.
+
+
 		 */
 		@XmlElement(name = "siegeTime", required = true)
 		private List<String> siegeTimes;
 
-		/**
-		 * 获取要塞 ID。
-		 * Returns the fortress ID.
-		 */
-		public int getId() {
-			return id;
-		}
-
-		/**
-		 * 设置要塞 ID。
-		 * Sets the fortress ID.
-		 */
-		public void setId(int id) {
-			this.id = id;
-		}
-
-		/**
-		 * 获取攻城时间列表。
-		 * Returns the siege times.
-		 */
-		public List<String> getSiegeTimes() {
-			return siegeTimes;
-		}
-
-		/**
-		 * 设置攻城时间列表。
-		 * Sets the siege times.
-		 */
-		public void setSiegeTimes(List<String> siegeTimes) {
-			this.siegeTimes = siegeTimes;
-		}
 	}
 }

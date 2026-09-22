@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.abyss;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
@@ -30,7 +31,6 @@ import com.aionemu.gameserver.model.gameobjects.player.AbyssRank;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 欧比斯军阶定时刷新与周奖励分发服务。
@@ -42,7 +42,15 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
  */
 @Slf4j
 public class AbyssRankUpdateService {
-	private static volatile ObjectProvider<AbyssRankUpdateService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  注入 Spring 实例提供者。
+     *  Inject the Spring instance provider.
+     *
+     * @param provider 实例提供者 / Instance provider
+     */
+    @Setter
+    private static volatile ObjectProvider<AbyssRankUpdateService> instanceProvider;
 	private Race rewardRace;
 	private final Runnable updateTask = this::performUpdate;
 	private Future<?> minuteUpdateTask;
@@ -78,17 +86,7 @@ public class AbyssRankUpdateService {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring 实例提供者。
-	 * Inject the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / Instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<AbyssRankUpdateService> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 按小时 cron 规则调度军阶刷新。
 	 * Schedule rank refresh on the hourly cron rule.
 	 */

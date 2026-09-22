@@ -13,6 +13,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.templates.stats.SummonStatsTemplate;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import lombok.Getter;
 
 /**
  * 召唤物属性数据容器，按 NPC ID 与等级哈希索引召唤属性模板。
@@ -176,60 +177,50 @@ public class SummonStatsData {
 	 * 单条召唤属性条目，绑定暗/光 NPC ID、需求等级与属性模板。
 	 * Single summon-stats entry binding dark/light npc ids, required level, and the stats template.
 	 */
-	@XmlRootElement(name = "summonStatsTemplateType")
+	@Getter
+    @XmlRootElement(name = "summonStatsTemplateType")
 	private static class SummonStatsType {
-		@XmlAttribute(name = "npc_id_dark", required = true)
+        /**
+         * -- GETTER --
+         *  返回暗属性 NPC ID。
+         *  Returns the dark-side npc id.
+         *
+         * @return 暗属性 NPC ID / dark-side npc id
+         */
+        @XmlAttribute(name = "npc_id_dark", required = true)
 		private int npcIdDark;
 
-		@XmlAttribute(name = "npc_id_light", required = true)
+        /**
+         * -- GETTER --
+         *  返回光属性 NPC ID。
+         *  Returns the light-side npc id.
+         *
+         * @return 光属性 NPC ID / light-side npc id
+         */
+        @XmlAttribute(name = "npc_id_light", required = true)
 		private int npcIdLight;
 
-		@XmlAttribute(name = "level", required = true)
+        /**
+         * -- GETTER --
+         *  返回需求等级。
+         *  Returns the required level.
+         *
+         * @return 所需等级 / Returns the required level.
+         */
+        @XmlAttribute(name = "level", required = true)
 		private int requiredLevel;
 
-		@XmlElement(name = "stats_template")
+        /**
+         * -- GETTER --
+         *  返回召唤属性模板。
+         *  Returns the summon stats template.
+         *
+         * @return 召唤物属性模板 / Returns the summon stats template.
+         */
+        @XmlElement(name = "stats_template")
 		private SummonStatsTemplate template;
 
-		/**
-		 * 返回暗属性 NPC ID。
-		 * Returns the dark-side npc id.
-		 *
-		 * @return 暗属性 NPC ID / dark-side npc id
-		 */
-		public int getNpcIdDark() {
-			return npcIdDark;
-		}
-
-		/**
-		 * 返回光属性 NPC ID。
-		 * Returns the light-side npc id.
-		 *
-		 * @return 光属性 NPC ID / light-side npc id
-		 */
-		public int getNpcIdLight() {
-			return npcIdLight;
-		}
-
-		/**
-		 * 返回需求等级。
-		 * Returns the required level.
-		 *
-		 * @return 所需等级 / Returns the required level.
-		 */
-		public int getRequiredLevel() {
-			return requiredLevel;
-		}
-
-		/**
-		 * 返回召唤属性模板。
-		 * Returns the summon stats template.
-		 *
-		 * @return 召唤物属性模板 / Returns the summon stats template.
-		 */
-		public SummonStatsTemplate getTemplate() {
-			return template;
-		}
-	}
+    }
 
 	private static int makeHash(int npcId, int level) {
 		return npcId << 10 | level;

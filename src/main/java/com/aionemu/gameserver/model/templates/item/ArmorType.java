@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.templates.item;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * 防具类型：定义所需技能与掩码。
@@ -10,6 +11,7 @@ import jakarta.xml.bind.annotation.XmlType;
  * @author Rinzler (Encom)
  */
 
+@Getter
 @XmlType(name = "armor_type")
 @XmlEnum
 public enum ArmorType {
@@ -37,18 +39,17 @@ public enum ArmorType {
 	/** 手镯 / Bracelet */
 	BRACELET(new int[] {});
 
-	private final int[] requiredSkills;
+    /**
+     * -- GETTER --
+     * 返回所需技能 / Returns the required skills
+     */
+    private final int[] requiredSkills;
 
 	ArmorType(int[] requiredSkills) {
 		this.requiredSkills = requiredSkills;
 	}
 
-	/** 返回所需技能 / Returns the required skills */
-	public int[] getRequiredSkills() {
-		return requiredSkills;
-	}
-
-	/** 获取掩码。 / Returns the mask. */
+    /** 获取掩码。 / Returns the mask. */
 	public int getMask() {
 		return 1 << this.ordinal();
 	}

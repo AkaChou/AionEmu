@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services.player.CreativityPanel;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -14,7 +15,15 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * Creativity panel skill service handling skill enchant and learning.
  */
 public class CreativitySkillService {
-	private static volatile ObjectProvider<CreativitySkillService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  setInstanceProvider 方法。
+     *  setInstanceProvider method.
+     *
+     * @param provider 提供者 / provider
+     */
+    @Setter
+    private static volatile ObjectProvider<CreativitySkillService> instanceProvider;
 
 	/**
 	 * 附魔技能。
@@ -104,13 +113,4 @@ public class CreativitySkillService {
 		return provided;
 	}
 
-	/**
-	 * setInstanceProvider 方法。
-	 * setInstanceProvider method.
-	 *
-	 * @param provider 提供者 / provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<CreativitySkillService> provider) {
-		instanceProvider = provider;
-	}
 }

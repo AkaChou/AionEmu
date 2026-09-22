@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.administration.AdminConfig;
@@ -17,7 +18,15 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class StaticDoorService {
-	private static volatile ObjectProvider<StaticDoorService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  设置 Spring 实例提供者。
+     *  Sets the Spring instance provider.
+     *
+     * @param provider 实例提供者 / instance provider
+     */
+    @Setter
+    private static volatile ObjectProvider<StaticDoorService> instanceProvider;
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -42,17 +51,7 @@ public class StaticDoorService {
 		return provided;
 	}
 
-	/**
-	 * 设置 Spring 实例提供者。
-	 * Sets the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<StaticDoorService> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 尝试打开指定静态门；管理员会收到门/钥匙 ID 提示。
 	 * Attempts to open the given static door; admins receive door/key id hints.
 	 *

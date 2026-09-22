@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.landing_special.LandingSpecialStateType;
 import com.aionemu.gameserver.model.templates.spawns.Spawn;
+import lombok.Getter;
 
 /**
  * 登陆特别刷新点模板（静态数据/XML）。
@@ -19,13 +20,13 @@ import com.aionemu.gameserver.model.templates.spawns.Spawn;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "LandingSpecialSpawn")
 public class LandingSpecialSpawn {
+	/**
+	 * -- GETTER --
+	 * 返回 ID / Returns the id
+	 */
+	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
 
 	@XmlElement(name = "landing_special_type")
 	private List<LandingSpecialSpawn.LandingSpStateTemplate> LandingSpStateTemplate;
@@ -35,24 +36,24 @@ public class LandingSpecialSpawn {
 		return LandingSpStateTemplate;
 	}
 
-	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+    @XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "LandingSpStateTemplate")
 	public static class LandingSpStateTemplate {
 
-		@XmlElement(name = "spawn")
+        /**
+         * -- GETTER --
+         * 获取刷新。 / Returns the spawns.
+         */
+        @XmlElement(name = "spawn")
 		private List<Spawn> spawns;
 
-		@XmlAttribute(name = "fstate")
+        /**
+         * -- GETTER --
+         * 返回登陆特别类型 / Returns the landing special type
+         */
+        @XmlAttribute(name = "fstate")
 		private LandingSpecialStateType landingSpecialType;
 
-		/** 获取刷新。 / Returns the spawns. */
-		public List<Spawn> getSpawns() {
-			return spawns;
-		}
-
-		/** 返回登陆特别类型 / Returns the landing special type */
-		public LandingSpecialStateType getLandingSpecialType() {
-			return landingSpecialType;
-		}
-	}
+    }
 }

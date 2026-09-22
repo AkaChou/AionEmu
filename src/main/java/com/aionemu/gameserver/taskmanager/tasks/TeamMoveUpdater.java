@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.taskmanager.tasks;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -20,7 +21,14 @@ public final class TeamMoveUpdater extends AbstractIterativePeriodicTaskManager<
 	/**
 	 * Spring 可选实例提供者。
 	 * Optional Spring instance provider.
+	 * -- SETTER --
+	 *  注入 Spring 实例提供者。
+	 *  Inject the Spring instance provider.
+	 *
+	 * @param provider 实例提供者 / Provider
+
 	 */
+	@Setter
 	private static volatile ObjectProvider<TeamMoveUpdater> instanceProvider;
 
 	/**
@@ -44,16 +52,6 @@ public final class TeamMoveUpdater extends AbstractIterativePeriodicTaskManager<
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
 		return provided;
-	}
-
-	/**
-	 * 注入 Spring 实例提供者。
-	 * Inject the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / Provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<TeamMoveUpdater> provider) {
-		instanceProvider = provider;
 	}
 
 	/**

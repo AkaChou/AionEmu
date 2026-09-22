@@ -13,6 +13,7 @@ import com.aionemu.gameserver.model.templates.item.EquipType;
 import com.aionemu.gameserver.model.templates.item.ItemCategory;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.PacketWriteHelper;
+import lombok.Getter;
 
 /**
  * 物品信息 Blob 容器，聚合若干 {@link ItemBlobEntry} 并序列化为客户端可读格式。
@@ -197,7 +198,8 @@ public class ItemInfoBlob extends PacketWriteHelper {
 	 * 物品信息 Blob 类型枚举，映射客户端入口 ID 与具体条目实现。
 	 * Item-info blob type enum mapping client entry ids to concrete entry implementations.
 	 */
-	public enum ItemBlobType {
+	@Getter
+    public enum ItemBlobType {
 		/** 通用物品信息。 / General item info. */
 		GENERAL_INFO(0x00) {
 			@Override
@@ -325,7 +327,13 @@ public class ItemInfoBlob extends PacketWriteHelper {
 			}
 		};
 
-		/** 客户端入口 ID。 / Client entry id. */
+		/** 客户端入口 ID。 / Client entry id.
+         * -- GETTER --
+         *  返回客户端入口 ID。
+         *  Returns the client entry id.
+         *
+         * @return 客户端入口 ID / entry id
+         */
 		private final int entryId;
 
 		/**
@@ -338,17 +346,7 @@ public class ItemInfoBlob extends PacketWriteHelper {
 			this.entryId = entryId;
 		}
 
-		/**
-		 * 返回客户端入口 ID。
-		 * Returns the client entry id.
-		 *
-		 * @return 客户端入口 ID / entry id
-		 */
-		public int getEntryId() {
-			return entryId;
-		}
-
-		/**
+        /**
 		 * 创建对应的 Blob 条目实例。
 		 * Creates a new blob entry instance for this type.
 		 *

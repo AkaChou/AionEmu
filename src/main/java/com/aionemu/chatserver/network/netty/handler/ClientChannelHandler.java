@@ -2,7 +2,9 @@ package com.aionemu.chatserver.network.netty.handler;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -28,7 +30,36 @@ import com.aionemu.chatserver.network.aion.ClientPacketHandler;
 public class ClientChannelHandler {
 
     private final ClientPacketHandler clientPacketHandler;
-    private State state;
+	/**
+	 * -- GETTER --
+	 *  获取当前连接状态。
+	 *  Get the current connection state.
+	 *  State
+	 * -- SETTER --
+	 *  设置连接状态。
+	 *  Set the connection state.
+	 *
+	 * @param state 目标状态 / Target state
+
+	 */
+	@Setter
+	@Getter
+	private State state;
+    /**
+     * -- GETTER --
+     *  获取绑定的聊天客户端。
+     *  Get the bound chat client.
+     *
+     *
+	 * -- SETTER --
+	 *  绑定聊天客户端。
+	 *  Bind a chat client.
+	 *
+	 @return 聊天客户端 / Chat client
+	  * @param chatClient 聊天客户端 / Chat client
+     */
+    @Setter
+    @Getter
     private ChatClient chatClient;
     private InetAddress inetAddress;
     private Channel nettyChannel;
@@ -154,43 +185,4 @@ public class ClientChannelHandler {
         AUTHED,
     }
 
-    /**
-     * 获取当前连接状态。
-     * Get the current connection state.
-     *
-     * State
-     */
-    public State getState() {
-        return state;
-    }
-
-    /**
-     * 设置连接状态。
-     * Set the connection state.
-     *
-     * @param state 目标状态 / Target state
-     */
-    public void setState(State state) {
-        this.state = state;
-    }
-
-    /**
-     * 获取绑定的聊天客户端。
-     * Get the bound chat client.
-     *
-     * @return 聊天客户端 / Chat client
-     */
-    public ChatClient getChatClient() {
-        return chatClient;
-    }
-
-    /**
-     * 绑定聊天客户端。
-     * Bind a chat client.
-     *
-     * @param chatClient 聊天客户端 / Chat client
-     */
-    public void setChatClient(ChatClient chatClient) {
-        this.chatClient = chatClient;
-    }
 }

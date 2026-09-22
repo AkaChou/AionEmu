@@ -2,6 +2,8 @@ package com.aionemu.gameserver.model.gameobjects.player;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 
@@ -63,9 +65,26 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 
 public class Equipment {
 
+	/**
+	 * -- SETTER --
+	 *
+	 * @param player
+	 */
+	@Setter
 	private Player owner;
 	private final Set<Long> markedFreeSlots = new HashSet<>();
-	private PersistentState persistentState = PersistentState.UPDATED;
+    /**
+     * -- GETTER --
+     *
+     *
+	 * -- SETTER --
+	 *
+	 @return the persistentState
+	  * @param persistentState the persistentState to set
+     */
+    @Setter
+    @Getter
+    private PersistentState persistentState = PersistentState.UPDATED;
 	private final SortedMap<Long, Item> equipment = new TreeMap<>();
 
 	private static final long[] ARMOR_SLOTS = new long[] { ItemSlot.BOOTS.getSlotIdMask(), ItemSlot.GLOVES.getSlotIdMask(), ItemSlot.PANTS.getSlotIdMask(), ItemSlot.SHOULDER.getSlotIdMask(), ItemSlot.TORSO.getSlotIdMask() };
@@ -1246,27 +1265,6 @@ public class Equipment {
 			return null;
 		}
 		return result;
-	}
-
-	/**
-	 * @return the persistentState
-	 */
-	public PersistentState getPersistentState() {
-		return persistentState;
-	}
-
-	/**
-	 * @param persistentState the persistentState to set
-	 */
-	public void setPersistentState(PersistentState persistentState) {
-		this.persistentState = persistentState;
-	}
-
-	/**
-	 * @param player
-	 */
-	public void setOwner(Player player) {
-		this.owner = player;
 	}
 
 	/**

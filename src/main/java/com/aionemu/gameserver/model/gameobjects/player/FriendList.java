@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.gameobjects.player;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import java.util.Collection;
 import java.util.Iterator;
@@ -22,7 +23,15 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_FRIEND_UPDATE;
 @Slf4j
 public class FriendList implements Iterable<Friend> {
 
-	private Status status = Status.OFFLINE;
+    /**
+     * -- GETTER --
+     *  获取 players 状态。
+     *  Gets players status
+     *
+     * @return Status
+     */
+    @Getter
+    private Status status = Status.OFFLINE;
 	private volatile byte friendListSent = 0;
 
 	private final Queue<Friend> friends;
@@ -119,17 +128,7 @@ public class FriendList implements Iterable<Friend> {
 		return getSize() >= MAX_FRIENDS;
 	}
 
-	/**
-	 * 获取 players 状态。
-	 * Gets players status
-	 *
-	 * @return Status
-	 */
-	public Status getStatus() {
-		return status;
-	}
-
-	/**
+    /**
 	 * 设置玩家状态，注意不会同步给好友。
 	 * Sets the status of the player<br /> <ul> <li>Note: Does not update friends</li> </ul>
 	 *

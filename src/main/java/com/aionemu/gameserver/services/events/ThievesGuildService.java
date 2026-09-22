@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.events;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -35,7 +36,14 @@ import com.aionemu.gameserver.utils.captcha.CAPTCHAUtil;
 @Slf4j
 public class ThievesGuildService {
 
-	private static volatile ObjectProvider<ThievesGuildService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  setInstanceProvider 方法。
+     *  setInstanceProvider method.
+     *  provider
+     */
+    @Setter
+    private static volatile ObjectProvider<ThievesGuildService> instanceProvider;
 
 	/**
 	 * 玩家进入世界时处理。
@@ -196,28 +204,15 @@ public class ThievesGuildService {
 			int thievesCount = thieves.getThievesCount();
 			if (target != null && target.getName().equals(thieves.getRevengeName()) && currentTime.after(nextTime)
 					&& !currentTime.equals(nextTime)) {
-				long kinah = 0;
-				switch (ThievesType.getThievesType(thieves.getRankId())) {
-				case SILVER:
-					kinah = 1000L * thieves.getRankId();
-					break;
-				case GOLD:
-					kinah = 2000L * thieves.getRankId();
-					break;
-				case PLATINUM:
-					kinah = 3000L * thieves.getRankId();
-					break;
-				case MITHRIL:
-					kinah = 4000L * thieves.getRankId();
-					break;
-				case SERAMIUM:
-					kinah = 5000L * thieves.getRankId();
-					break;
-				default:
-					kinah = 600;
-					break;
-				}
-				int rank = 0;
+				long kinah = switch (ThievesType.getThievesType(thieves.getRankId())) {
+                    case SILVER -> 1000L * thieves.getRankId();
+                    case GOLD -> 2000L * thieves.getRankId();
+                    case PLATINUM -> 3000L * thieves.getRankId();
+                    case MITHRIL -> 4000L * thieves.getRankId();
+                    case SERAMIUM -> 5000L * thieves.getRankId();
+                    default -> 600;
+                };
+                int rank = 0;
 				switch (thieves.getThievesCount()) {
 				case 10:
 					rank = 1;
@@ -311,13 +306,4 @@ public class ThievesGuildService {
 		return provided;
 	}
 
-	/**
-	 * setInstanceProvider 方法。
-	 * setInstanceProvider method.
-	 *
-	 * provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<ThievesGuildService> provider) {
-		instanceProvider = provider;
-	}
 }

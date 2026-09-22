@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services.player;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -25,7 +26,15 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 
 public class AtreianBestiaryService {
-	private static volatile ObjectProvider<AtreianBestiaryService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  设置实例提供者（Spring 注入）。
+     *  Sets the instance provider (Spring injection).
+     *
+     * @param provider 实例提供者 / instance provider
+     */
+    @Setter
+    private static volatile ObjectProvider<AtreianBestiaryService> instanceProvider;
 
 	/**
 	 * 玩家登录时同步状态。
@@ -123,13 +132,4 @@ public class AtreianBestiaryService {
 		return provided;
 	}
 
-	/**
-	 * 设置实例提供者（Spring 注入）。
-	 * Sets the instance provider (Spring injection).
-	 *
-	 * @param provider 实例提供者 / instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<AtreianBestiaryService> provider) {
-		instanceProvider = provider;
-	}
 }

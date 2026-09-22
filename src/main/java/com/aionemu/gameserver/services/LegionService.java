@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -70,6 +71,14 @@ import java.util.List;
 @Slf4j
 public class LegionService {
 
+	/**
+	 * -- SETTER --
+	 *  注入 Spring 的 ObjectProvider，用于容器托管的实例解析。
+	 *  Injects the Spring ObjectProvider used for container-managed instance resolution.
+	 *
+	 * @param provider 实例提供者 / Instance provider
+	 */
+	@Setter
 	private static volatile ObjectProvider<LegionService> instanceProvider;
 	private final LegionContainer allCachedLegions = new LegionContainer();
 	private final LegionMemberContainer allCachedLegionMembers = new LegionMemberContainer();
@@ -108,16 +117,6 @@ public class LegionService {
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
 		return provided;
-	}
-
-	/**
-	 * 注入 Spring 的 ObjectProvider，用于容器托管的实例解析。
-	 * Injects the Spring ObjectProvider used for container-managed instance resolution.
-	 *
-	 * @param provider 实例提供者 / Instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<LegionService> provider) {
-		instanceProvider = provider;
 	}
 
 	/**
@@ -682,20 +681,13 @@ public class LegionService {
 		if (restrictions().canAppointRank(activePlayer, LM.getObjectId())) {
 			Legion legion = activePlayer.getLegion();
 			LegionRank rank = LegionRank.values()[rankId];
-			int msgId = 0;
-			switch (rank) {
-			case DEPUTY:
-				msgId = 1400902;
-				break;
-			case LEGIONARY:
-				msgId = 1300268;
-				break;
-			case CENTURION:
-				msgId = 1300267;
-				break;
-			case VOLUNTEER:
-				msgId = 1400903;
-			}
+			int msgId = switch (rank) {
+				case DEPUTY -> 1400902;
+				case LEGIONARY -> 1300268;
+				case CENTURION -> 1300267;
+				case VOLUNTEER -> 1400903;
+				default -> 0;
+			};
 			LegionMember legionMember = getLegionMember(LM.getObjectId());
 			legionMember.setRank(rank);
 			DAOManager.getDAO(LegionMemberDAO.class).storeLegionMember(legionMember.getObjectId(), legionMember);
@@ -716,19 +708,13 @@ public class LegionService {
 			int msgId = 0;
 			LegionRank rank = LegionRank.values()[rankId];
 			LegionMember legionMember = targetPlayer.getLegionMember();
-			switch (rank) {
-			case DEPUTY:
-				msgId = 1400902;
-				break;
-			case LEGIONARY:
-				msgId = 1300268;
-				break;
-			case CENTURION:
-				msgId = 1300267;
-				break;
-			case VOLUNTEER:
-				msgId = 1400903;
-			}
+            msgId = switch (rank) {
+                case DEPUTY -> 1400902;
+                case LEGIONARY -> 1300268;
+                case CENTURION -> 1300267;
+                case VOLUNTEER -> 1400903;
+                default -> msgId;
+            };
 			legionMember.setRank(rank);
 			PacketSendUtility.broadcastPacketToLegion(legion,
 					new SM_LEGION_UPDATE_MEMBER(targetPlayer, msgId, targetPlayer.getName()));

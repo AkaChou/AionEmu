@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.nightmarecircus.NightmareCircusStateType;
 import com.aionemu.gameserver.model.templates.spawns.Spawn;
+import lombok.Getter;
 
 /**
  * 梦魇马戏团刷新点模板（静态数据/XML）。
@@ -21,13 +22,13 @@ import com.aionemu.gameserver.model.templates.spawns.Spawn;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "NightmareCircusSpawn")
 public class NightmareCircusSpawn {
+	/**
+	 * -- GETTER --
+	 * 返回 ID / Returns the id
+	 */
+	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
 
 	@XmlElement(name = "nightmare_circus_type")
 	private List<NightmareCircusSpawn.NightmareCircusStateTemplate> NightmareCircusStateTemplate;
@@ -37,24 +38,24 @@ public class NightmareCircusSpawn {
 		return NightmareCircusStateTemplate;
 	}
 
-	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+    @XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "NightmareCircusStateTemplate")
 	public static class NightmareCircusStateTemplate {
 
-		@XmlElement(name = "spawn")
+        /**
+         * -- GETTER --
+         * 获取刷新。 / Returns the spawns.
+         */
+        @XmlElement(name = "spawn")
 		private List<Spawn> spawns;
 
-		@XmlAttribute(name = "nstate")
+        /**
+         * -- GETTER --
+         * 获取梦魇马戏团类型。 / Returns the nightmare circus type.
+         */
+        @XmlAttribute(name = "nstate")
 		private NightmareCircusStateType nightmareCircusType;
 
-		/** 获取刷新。 / Returns the spawns. */
-		public List<Spawn> getSpawns() {
-			return spawns;
-		}
-
-		/** 获取梦魇马戏团类型。 / Returns the nightmare circus type. */
-		public NightmareCircusStateType getNightmareCircusType() {
-			return nightmareCircusType;
-		}
-	}
+    }
 }

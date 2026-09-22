@@ -4,6 +4,7 @@ import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.item.ItemQuality;
+import lombok.Getter;
 
 /**
  * 制作类任务基类：维护成功/失败进度与暴击类型，驱动交互 tick。
@@ -63,27 +64,25 @@ public abstract class AbstractCraftTask extends AbstractInteractionTask {
 	 * 制作暴击类型。
 	 * Craft critical-hit type.
 	 */
-	protected enum CraftCritType {
+	@Getter
+    protected enum CraftCritType {
 
 		NONE(0), INSTANT(1), BLUE(2), PURPLE(3);
 
-		private final int critId;
+        /**
+         * -- GETTER --
+         *  获取暴击 ID。
+         *  Returns the crit id.
+         *
+         * @return 暴击 ID / crit id
+         */
+        private final int critId;
 
 		CraftCritType(int critId) {
 			this.critId = critId;
 		}
 
-		/**
-		 * 获取暴击 ID。
-		 * Returns the crit id.
-		 *
-		 * @return 暴击 ID / crit id
-		 */
-		public int getCritId() {
-			return critId;
-		}
-
-		/**
+        /**
 		 * 获取发包用暴击 ID（NONE 时回退为 1）。
 		 * Returns the packet crit id (falls back to 1 for NONE).
 		 *

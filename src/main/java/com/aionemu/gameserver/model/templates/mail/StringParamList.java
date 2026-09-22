@@ -8,6 +8,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlSeeAlso;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
 
 /**
  * StringParam 列表模板（静态数据/XML）。
@@ -29,16 +30,17 @@ public class StringParamList {
 		return param;
 	}
 
-	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+    @XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "")
 	public static class Param {
 
-		@XmlAttribute(name = "id", required = true)
+        /**
+         * -- GETTER --
+         * 返回 ID / Returns the id
+         */
+        @XmlAttribute(name = "id", required = true)
 		protected String id;
 
-		/** 返回 ID / Returns the id */
-		public String getId() {
-			return id;
-		}
-	}
+    }
 }

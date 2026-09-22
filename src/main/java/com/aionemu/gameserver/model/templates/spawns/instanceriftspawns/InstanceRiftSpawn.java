@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.instancerift.InstanceRiftStateType;
 import com.aionemu.gameserver.model.templates.spawns.Spawn;
+import lombok.Getter;
 
 /**
  * 副本裂隙刷新点模板（静态数据/XML）。
@@ -21,13 +22,13 @@ import com.aionemu.gameserver.model.templates.spawns.Spawn;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "InstanceRiftSpawn")
 public class InstanceRiftSpawn {
+	/**
+	 * -- GETTER --
+	 * 返回 ID / Returns the id
+	 */
+	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
 
 	@XmlElement(name = "instance_rift_type")
 	private List<InstanceRiftSpawn.InstanceRiftStateTemplate> InstanceRiftStateTemplate;
@@ -37,24 +38,24 @@ public class InstanceRiftSpawn {
 		return InstanceRiftStateTemplate;
 	}
 
-	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+    @XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "InstanceRiftStateTemplate")
 	public static class InstanceRiftStateTemplate {
 
-		@XmlElement(name = "spawn")
+        /**
+         * -- GETTER --
+         * 获取刷新。 / Returns the spawns.
+         */
+        @XmlElement(name = "spawn")
 		private List<Spawn> spawns;
 
-		@XmlAttribute(name = "estate")
+        /**
+         * -- GETTER --
+         * 获取副本裂隙类型。 / Returns the instance rift type.
+         */
+        @XmlAttribute(name = "estate")
 		private InstanceRiftStateType instanceRiftType;
 
-		/** 获取刷新。 / Returns the spawns. */
-		public List<Spawn> getSpawns() {
-			return spawns;
-		}
-
-		/** 获取副本裂隙类型。 / Returns the instance rift type. */
-		public InstanceRiftStateType getInstanceRiftType() {
-			return instanceRiftType;
-		}
-	}
+    }
 }

@@ -3,6 +3,7 @@ package com.aionemu.gameserver.services.player.CreativityPanel.stats;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -20,7 +21,15 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
 
 
 public class Accuracy implements StatOwner {
-	private static volatile ObjectProvider<Accuracy> instanceProvider;
+    /**
+     * -- SETTER --
+     *  setInstanceProvider 方法。
+     *  setInstanceProvider method.
+     *
+     * @param provider 提供器 / provider
+     */
+    @Setter
+    private static volatile ObjectProvider<Accuracy> instanceProvider;
 
 	private final List<IStatFunction> accuracy = new ArrayList<>();
 
@@ -67,13 +76,4 @@ public class Accuracy implements StatOwner {
 		return provided;
 	}
 
-	/**
-	 * setInstanceProvider 方法。
-	 * setInstanceProvider method.
-	 *
-	 * @param provider 提供器 / provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<Accuracy> provider) {
-		instanceProvider = provider;
-	}
 }

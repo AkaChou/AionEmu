@@ -4,6 +4,7 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.List;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
@@ -27,7 +28,14 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 
 public class ArcadeUpgradeService {
-	private static volatile ObjectProvider<ArcadeUpgradeService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  setInstanceProvider 方法。
+     *  setInstanceProvider method.
+     *  provider
+     */
+    @Setter
+    private static volatile ObjectProvider<ArcadeUpgradeService> instanceProvider;
 	private final int frenzyTime = 90;
 
 	public ArcadeUpgradeService() {
@@ -122,17 +130,7 @@ public class ArcadeUpgradeService {
 		return provided;
 	}
 
-	/**
-	 * setInstanceProvider 方法。
-	 * setInstanceProvider method.
-	 *
-	 * provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<ArcadeUpgradeService> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 关闭窗口。
 	 * Closes the window.
 	 *

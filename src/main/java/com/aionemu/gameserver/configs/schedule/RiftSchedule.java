@@ -12,6 +12,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.commons.utils.xml.JAXBUtil;
 import com.aionemu.gameserver.configs.Config;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Rift 裂隙活动时间表配置。
@@ -19,31 +21,25 @@ import com.aionemu.gameserver.configs.Config;
  *
  * @author Rinzler (Encom)
  */
+@Setter
+@Getter
 @XmlRootElement(name = "rift_schedule")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RiftSchedule {
 	/**
 	 * Rift 列表。
 	 * List of rifts.
+     * -- GETTER --
+     *  获取 Rift 列表。
+     *  Returns the rift list.
+	 * -- SETTER --
+	 *  设置 Rift 列表。
+	 *  Sets the rift list.
+
+
 	 */
 	@XmlElement(name = "rift", required = true)
 	private List<Rift> riftsList;
-
-	/**
-	 * 获取 Rift 列表。
-	 * Returns the rift list.
-	 */
-	public List<Rift> getRiftsList() {
-		return riftsList;
-	}
-
-	/**
-	 * 设置 Rift 列表。
-	 * Sets the rift list.
-	 */
-	public void setRiftsList(List<Rift> riftList) {
-		this.riftsList = riftList;
-	}
 
 	/**
 	 * 从 XML 加载时间表。
@@ -77,7 +73,12 @@ public class RiftSchedule {
 		/**
 		 * 开启时间列表。
 		 * List of open times.
+		 * -- SETTER --
+		 *  设置开启时间列表。
+		 *  Sets the open times.
+
 		 */
+		@Setter
 		@XmlElement(name = "openTime", required = true)
 		private List<String> openTimes;
 
@@ -97,12 +98,5 @@ public class RiftSchedule {
 			return openTimes;
 		}
 
-		/**
-		 * 设置开启时间列表。
-		 * Sets the open times.
-		 */
-		public void setOpenTimes(List<String> openTimes) {
-			this.openTimes = openTimes;
-		}
 	}
 }

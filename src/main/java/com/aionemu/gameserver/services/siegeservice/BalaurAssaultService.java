@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.siegeservice;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
@@ -31,7 +32,6 @@ import com.aionemu.gameserver.model.templates.assemblednpc.AssembledNpcTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_NPC_ASSEMBLER;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 龙族自动突击服务：按影响力概率对要塞/神器发起突击。
@@ -43,8 +43,17 @@ public class BalaurAssaultService {
 	/** 默认单例。 / Default singleton instance. */
 	private static final BalaurAssaultService instance = new BalaurAssaultService();
 
-	/** Spring ObjectProvider override / Spring ObjectProvider override */
-	private static volatile ObjectProvider<BalaurAssaultService> instanceProvider;
+	/** Spring ObjectProvider override / Spring ObjectProvider override
+     * -- SETTER --
+     *  注入 Spring
+     *  以覆盖默认单例。
+     *  Injects a Spring
+     *  to override the default singleton.
+     *
+     * @param provider Spring 提供者 / spring provider
+     */
+	@Setter
+    private static volatile ObjectProvider<BalaurAssaultService> instanceProvider;
 
 	/** 据点 ID → 进行中的要塞突击。 / Location id → active fortress assault. */
 	private final ConcurrentMap<Integer, FortressAssault> fortressAssaults = new ConcurrentHashMap<>();
@@ -61,17 +70,8 @@ public class BalaurAssaultService {
 		}
 		return instance;
 	}
-	/**
-	 * 注入 Spring {@link ObjectProvider} 以覆盖默认单例。
-	 * Injects a Spring {@link ObjectProvider} to override the default singleton.
-	 *
-	 * @param provider Spring 提供者 / spring provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<BalaurAssaultService> provider) {
-		instanceProvider = provider;
-	}
 
-	/**
+    /**
 	 * 攻城开始时评估并可能启动龙族突击。
 	 * Evaluates and may start a Balaur assault when a siege begins.
 	 *

@@ -4,6 +4,7 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.Future;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.ai2.AIState;
@@ -20,7 +21,14 @@ import com.aionemu.gameserver.model.templates.zone.ZoneType;
  */
 public class LifeStatsRestoreService {
 
-	private static volatile ObjectProvider<LifeStatsRestoreService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  注入 Spring ObjectProvider 以覆盖默认单例。
+     *  Injects a Spring ObjectProvider to override the default singleton.
+     *  provider
+     */
+    @Setter
+    private static volatile ObjectProvider<LifeStatsRestoreService> instanceProvider;
 
 	/** 默认生命/魔法恢复间隔（毫秒） / Default HP/MP restore interval in ms*/
 	private static final int DEFAULT_DELAY = 6000;
@@ -92,17 +100,7 @@ public class LifeStatsRestoreService {
 		return instance;
 	}
 
-	/**
-	 * 注入 Spring ObjectProvider 以覆盖默认单例。
-	 * Injects a Spring ObjectProvider to override the default singleton.
-	 *
-	 * provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<LifeStatsRestoreService> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 仅恢复 HP 的定时任务；战斗中或已满则取消。
 	 * HP-only restore runnable; cancels when fighting, dead or fully restored.
 	 */

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -42,7 +43,14 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class ChallengeTaskService {
-	private static volatile ObjectProvider<ChallengeTaskService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  注入 Spring ObjectProvider 以覆盖默认单例。
+     *  Injects a Spring ObjectProvider to override the default singleton.
+     *  provider
+     */
+    @Setter
+    private static volatile ObjectProvider<ChallengeTaskService> instanceProvider;
 	/** 城镇 ID → 挑战任务映射。 / Town id → challenge task map. */
 	private final Map<Integer, Map<Integer, ChallengeTask>> cityTasks;
 	/** 军团 ID → 挑战任务映射。 / Legion id → challenge task map. */
@@ -71,17 +79,7 @@ public class ChallengeTaskService {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring ObjectProvider 以覆盖默认单例。
-	 * Injects a Spring ObjectProvider to override the default singleton.
-	 *
-	 * provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<ChallengeTaskService> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 构造服务并初始化任务缓存。
 	 * Constructs the service and initializes task caches.
 	 */

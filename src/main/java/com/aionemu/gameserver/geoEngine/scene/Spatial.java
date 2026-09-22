@@ -5,6 +5,7 @@ import com.aionemu.gameserver.geoEngine.collision.Collidable;
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.math.Matrix3f;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
+import lombok.Getter;
 
 /**
  * 场景图节点基类，维护父子关系、本地/世界变换相关状态，以及包围体与碰撞标志。
@@ -18,6 +19,7 @@ import com.aionemu.gameserver.geoEngine.math.Vector3f;
  * @author Rolandas - added materials
  * @version $Revision: 4075 $, $Data$
  */
+@Getter
 public abstract class Spatial implements Collidable, Cloneable {
 
 	/**
@@ -51,16 +53,34 @@ public abstract class Spatial implements Collidable, Cloneable {
 	/**
 	 * 相对世界空间的包围体。
 	 * Spatial's bounding volume relative to the world.
+	 * -- GETTER --
+	 *  返回本节点层级上的世界包围体。
+	 *  Retrieves the world bound at this node level.
+	 *
+	 * @return 世界包围体 / world bound at this level
+
 	 */
 	protected BoundingVolume worldBound;
 	/**
 	 * 空间节点名称。
 	 * This spatial's name.
+	 * -- GETTER --
+	 *  返回名称。
+	 *  Returns the name of this spatial.
+	 *
+	 * @return 空间节点名称 / this spatial's name
+
 	 */
 	protected String name;
 	/**
 	 * 父节点；无父则为 null。
 	 * Spatial's parent, or null if it has none.
+	 * -- GETTER --
+	 *  返回父节点；为 null 时表示根节点。
+	 *  Retrieves this node's parent. If null, this is a root node.
+	 *
+	 * @return 父节点 / parent of this node
+
 	 */
 	protected transient Node parent;
 
@@ -94,26 +114,6 @@ public abstract class Spatial implements Collidable, Cloneable {
 		if (name != null) {
 			this.name = name.intern();
 		}
-	}
-
-	/**
-	 * 返回名称。
-	 * Returns the name of this spatial.
-	 *
-	 * @return 空间节点名称 / this spatial's name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * 返回父节点；为 null 时表示根节点。
-	 * Retrieves this node's parent. If null, this is a root node.
-	 *
-	 * @return 父节点 / parent of this node
-	 */
-	public Node getParent() {
-		return parent;
 	}
 
 	/**
@@ -238,16 +238,6 @@ public abstract class Spatial implements Collidable, Cloneable {
 		}
 
 		return nameRegex == null || (name != null && name.matches(nameRegex));
-	}
-
-	/**
-	 * 返回本节点层级上的世界包围体。
-	 * Retrieves the world bound at this node level.
-	 *
-	 * @return 世界包围体 / world bound at this level
-	 */
-	public BoundingVolume getWorldBound() {
-		return worldBound;
 	}
 
 	/**

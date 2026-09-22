@@ -7,6 +7,7 @@ import com.aionemu.gameserver.geoEngine.math.Matrix4f;
 import com.aionemu.gameserver.geoEngine.math.Plane;
 import com.aionemu.gameserver.geoEngine.math.Ray;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
+import lombok.Getter;
 
 /**
  * 包围体抽象基类，定义点集的包容与相交检测接口。
@@ -26,7 +27,14 @@ public abstract class BoundingVolume implements Collidable {
 		Sphere, AABB, OBB, Capsule
 	}
 
-	/** 优先检测的裁剪平面索引。 / Index of the clip plane to check first. */
+	/** 优先检测的裁剪平面索引。 / Index of the clip plane to check first.
+	 * -- GETTER --
+	 *  获取应优先检测的裁剪平面索引。
+	 *  Returns the clip-plane index that should be checked first.
+	 *
+	 * @return 平面索引 / plane index
+	 */
+	@Getter
 	protected int checkPlane = 0;
 	/** 包围体中心点。 / Center of the bounding volume. */
 	Vector3f center = new Vector3f();
@@ -46,16 +54,6 @@ public abstract class BoundingVolume implements Collidable {
 	 */
 	public BoundingVolume(Vector3f center) {
 		this.center.set(center);
-	}
-
-	/**
-	 * 获取应优先检测的裁剪平面索引。
-	 * Returns the clip-plane index that should be checked first.
-	 *
-	 * @return 平面索引 / plane index
-	 */
-	public int getCheckPlane() {
-		return checkPlane;
 	}
 
 	/**

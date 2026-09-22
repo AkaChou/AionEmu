@@ -5,6 +5,7 @@ import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -32,8 +33,15 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public class CreativityEssenceService {
 
-	/** Spring 实例提供者 / Spring instance provider */
-	private static volatile ObjectProvider<CreativityEssenceService> instanceProvider;
+	/** Spring 实例提供者 / Spring instance provider
+     * -- SETTER --
+     *  注入 Spring ObjectProvider 以覆盖默认单例。
+     *  Injects a Spring ObjectProvider to override the default singleton.
+     *
+     * @param provider 提供者 / provider
+     */
+	@Setter
+    private static volatile ObjectProvider<CreativityEssenceService> instanceProvider;
 
 	/** 玩家 creativitypointsDAO / Player creativity-points DAO */
 	PlayerCreativityPointsDAO cpDAO = DAOManager.getDAO(PlayerCreativityPointsDAO.class);
@@ -620,13 +628,4 @@ public class CreativityEssenceService {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring ObjectProvider 以覆盖默认单例。
-	 * Injects a Spring ObjectProvider to override the default singleton.
-	 *
-	 * @param provider 提供者 / provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<CreativityEssenceService> provider) {
-		instanceProvider = provider;
-	}
 }

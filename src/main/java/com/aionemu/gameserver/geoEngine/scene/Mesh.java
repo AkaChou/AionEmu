@@ -26,6 +26,8 @@ import com.aionemu.gameserver.geoEngine.scene.mesh.IndexShortBuffer;
 import com.aionemu.gameserver.geoEngine.utils.BufferUtils;
 import com.aionemu.gameserver.geoEngine.utils.IntMap;
 import com.aionemu.gameserver.geoEngine.utils.IntMap.Entry;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 网格：管理顶点/索引缓冲、图元模式、包围体与 BIH 碰撞树。
@@ -69,11 +71,46 @@ public class Mesh {
 	// private EnumMap<VertexBuffer.Type, VertexBuffer> buffers = new EnumMap<Type,
 	// VertexBuffer>(VertexBuffer.Type.class);
 	// private VertexBuffer[] buffers = new VertexBuffer[BUFFERS_SIZE];
-	/** 按类型序数索引的顶点缓冲映射。 / Vertex buffers keyed by type ordinal. */
+	/** 按类型序数索引的顶点缓冲映射。 / Vertex buffers keyed by type ordinal.
+	 * -- GETTER --
+	 *  返回全部顶点缓冲映射。
+	 *  Returns the map of all vertex buffers.
+	 *
+	 * @return 缓冲映射 / buffer map
+	 */
+	@Getter
 	private final IntMap<VertexBuffer> buffers = new IntMap<>();
-	/** 点大小。 / Point size. */
+	/** 点大小。 / Point size.
+	 * -- GETTER --
+	 *  返回点大小。
+	 *  Returns the point size.
+	 *
+	 *
+	 * -- SETTER --
+	 *  设置点大小。
+	 *  Sets the point size.
+	 *
+	 @return 点大小 / point size
+	  * @param pointSize 点大小 / point size
+	 */
+	@Setter
+	@Getter
 	private float pointSize = 1;
-	/** 线宽。 / Line width. */
+	/** 线宽。 / Line width.
+	 * -- GETTER --
+	 *  返回线宽。
+	 *  Returns the line width.
+	 *
+	 *
+	 * -- SETTER --
+	 *  设置线宽。
+	 *  Sets the line width.
+	 *
+	 @return 线宽 / line width
+	  * @param lineWidth 线宽 / line width
+	 */
+	@Setter
+	@Getter
 	private float lineWidth = 1;
 	/** 顶点数组对象 ID。 / Vertex-array object id. */
 	private transient int vertexArrayID = -1;
@@ -81,13 +118,62 @@ public class Mesh {
 	private int vertCount = -1;
 	/** 图元（元素）数。 / Primitive (element) count. */
 	private int elementCount = -1;
-	/** 骨骼动画最大权重数。 / Max bone weights (skeletal animation only). */
+	/** 骨骼动画最大权重数。 / Max bone weights (skeletal animation only).
+	 * -- GETTER --
+	 *  返回最大骨骼权重数。
+	 *  Returns the max number of bone weights.
+	 *
+	 *
+	 * -- SETTER --
+	 *  设置最大骨骼权重数。
+	 *  Sets the max number of bone weights.
+	 *
+	 @return 最大权重数 / max weights
+	  * @param maxNumWeights 最大权重数 / max weights
+	 */
+	@Setter
+	@Getter
 	private int maxNumWeights = -1; // only if using skeletal animation
-	/** 混合模式下各段起始索引。 / Mode-start indices for hybrid mode. */
+	/** 混合模式下各段起始索引。 / Mode-start indices for hybrid mode.
+	 * -- GETTER --
+	 *  返回混合模式起始索引数组。
+	 *  Returns the hybrid mode-start index array.
+	 *
+	 *
+	 * -- SETTER --
+	 *  设置混合模式起始索引数组。
+	 *  Sets the hybrid mode-start index array.
+	 *
+	 @return 起始索引数组 / mode-start array
+	  * @param modeStart 起始索引数组 / mode-start array
+	 */
+	@Setter
+	@Getter
 	private int[] modeStart;
-	/** 当前图元模式，默认三角形。 / Current primitive mode; default Triangles. */
+	/** 当前图元模式，默认三角形。 / Current primitive mode; default Triangles.
+	 * -- GETTER --
+	 *  返回图元模式。
+	 *  Returns the primitive mode.
+	 *
+	 * @return 图元模式 / primitive mode
+	 */
+	@Getter
 	private Mode mode = Mode.Triangles;
-	/** 碰撞标志（低 8 位材质，高 8 位意图）。 / Collision flags (low 8 material, high 8 intentions). */
+	/** 碰撞标志（低 8 位材质，高 8 位意图）。 / Collision flags (low 8 material, high 8 intentions).
+	 * -- GETTER --
+	 *  返回碰撞标志。
+	 *  Returns collision flags.
+	 *
+	 *
+	 * -- SETTER --
+	 *  设置碰撞标志。
+	 *  Sets collision flags.
+	 *
+	 @return 碰撞标志 / collision flags
+	  * @param collisionFlags 碰撞标志 / collision flags
+	 */
+	@Setter
+	@Getter
 	private short collisionFlags = -1;
 
 	/**
@@ -95,36 +181,6 @@ public class Mesh {
 	 * Default constructor for an empty mesh.
 	 */
 	public Mesh() {
-	}
-
-	/**
-	 * 返回混合模式起始索引数组。
-	 * Returns the hybrid mode-start index array.
-	 *
-	 * @return 起始索引数组 / mode-start array
-	 */
-	public int[] getModeStart() {
-		return modeStart;
-	}
-
-	/**
-	 * 设置混合模式起始索引数组。
-	 * Sets the hybrid mode-start index array.
-	 *
-	 * @param modeStart 起始索引数组 / mode-start array
-	 */
-	public void setModeStart(int[] modeStart) {
-		this.modeStart = modeStart;
-	}
-
-	/**
-	 * 返回图元模式。
-	 * Returns the primitive mode.
-	 *
-	 * @return 图元模式 / primitive mode
-	 */
-	public Mode getMode() {
-		return mode;
 	}
 
 	/**
@@ -136,66 +192,6 @@ public class Mesh {
 	public void setMode(Mode mode) {
 		this.mode = mode;
 		updateCounts();
-	}
-
-	/**
-	 * 返回最大骨骼权重数。
-	 * Returns the max number of bone weights.
-	 *
-	 * @return 最大权重数 / max weights
-	 */
-	public int getMaxNumWeights() {
-		return maxNumWeights;
-	}
-
-	/**
-	 * 设置最大骨骼权重数。
-	 * Sets the max number of bone weights.
-	 *
-	 * @param maxNumWeights 最大权重数 / max weights
-	 */
-	public void setMaxNumWeights(int maxNumWeights) {
-		this.maxNumWeights = maxNumWeights;
-	}
-
-	/**
-	 * 返回点大小。
-	 * Returns the point size.
-	 *
-	 * @return 点大小 / point size
-	 */
-	public float getPointSize() {
-		return pointSize;
-	}
-
-	/**
-	 * 设置点大小。
-	 * Sets the point size.
-	 *
-	 * @param pointSize 点大小 / point size
-	 */
-	public void setPointSize(float pointSize) {
-		this.pointSize = pointSize;
-	}
-
-	/**
-	 * 返回线宽。
-	 * Returns the line width.
-	 *
-	 * @return 线宽 / line width
-	 */
-	public float getLineWidth() {
-		return lineWidth;
-	}
-
-	/**
-	 * 设置线宽。
-	 * Sets the line width.
-	 *
-	 * @param lineWidth 线宽 / line width
-	 */
-	public void setLineWidth(float lineWidth) {
-		this.lineWidth = lineWidth;
 	}
 
 	/**
@@ -308,23 +304,15 @@ public class Mesh {
 	 * @return 图元数 / primitive count
 	 */
 	private int computeNumElements(int bufSize) {
-		switch (mode) {
-		case Triangles:
-			return bufSize / 3;
-		case TriangleFan:
-		case TriangleStrip:
-			return bufSize - 2;
-		case Points:
-			return bufSize;
-		case Lines:
-			return bufSize / 2;
-		case LineLoop:
-			return bufSize;
-		case LineStrip:
-			return bufSize - 1;
-		default:
-			throw new UnsupportedOperationException();
-		}
+		return switch (mode) {
+			case Triangles -> bufSize / 3;
+			case TriangleFan, TriangleStrip -> bufSize - 2;
+			case Points -> bufSize;
+			case Lines -> bufSize / 2;
+			case LineLoop -> bufSize;
+			case LineStrip -> bufSize - 1;
+			default -> throw new UnsupportedOperationException();
+		};
 	}
 
 	/**
@@ -733,16 +721,12 @@ public class Mesh {
 		}
 
 		Buffer buf = vb.getData();
-        switch (buf) {
-            case ByteBuffer byteBuffer:
-                return new IndexByteBuffer(byteBuffer);
-            case ShortBuffer shortBuffer:
-                return new IndexShortBuffer(shortBuffer);
-            case IntBuffer intBuffer:
-                return new IndexIntBuffer(intBuffer);
-            default:
-                throw new UnsupportedOperationException("Index buffer type unsupported: " + buf.getClass());
-        }
+		return switch (buf) {
+			case ByteBuffer byteBuffer -> new IndexByteBuffer(byteBuffer);
+			case ShortBuffer shortBuffer -> new IndexShortBuffer(shortBuffer);
+			case IntBuffer intBuffer -> new IndexIntBuffer(intBuffer);
+			default -> throw new UnsupportedOperationException("Index buffer type unsupported: " + buf.getClass());
+		};
 	}
 
 	/**
@@ -810,36 +794,6 @@ public class Mesh {
 	 */
 	public void setBound(BoundingVolume modelBound) {
 		meshBound = modelBound;
-	}
-
-	/**
-	 * 返回全部顶点缓冲映射。
-	 * Returns the map of all vertex buffers.
-	 *
-	 * @return 缓冲映射 / buffer map
-	 */
-	public IntMap<VertexBuffer> getBuffers() {
-		return buffers;
-	}
-
-	/**
-	 * 返回碰撞标志。
-	 * Returns collision flags.
-	 *
-	 * @return 碰撞标志 / collision flags
-	 */
-	public short getCollisionFlags() {
-		return collisionFlags;
-	}
-
-	/**
-	 * 设置碰撞标志。
-	 * Sets collision flags.
-	 *
-	 * @param collisionFlags 碰撞标志 / collision flags
-	 */
-	public void setCollisionFlags(short collisionFlags) {
-		this.collisionFlags = collisionFlags;
 	}
 
 	/**

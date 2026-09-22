@@ -2,13 +2,14 @@ package com.aionemu.gameserver.ai2;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.TreeSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import org.springframework.beans.factory.ObjectProvider;
@@ -35,6 +36,14 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 @Slf4j
 public class AI2Engine implements GameEngine {
 
+	/**
+	 * -- SETTER --
+	 *  设置 Spring 实例 Provider。
+	 *  Sets the Spring instance provider.
+	 *
+	 * @param provider 实例提供者 / instance provider
+	 */
+	@Setter
 	private static volatile ObjectProvider<AI2Engine> instanceProvider;
 	private final Map<String, Class<? extends AbstractAI>> aiMap = new HashMap<>();
 	/**
@@ -177,7 +186,7 @@ public class AI2Engine implements GameEngine {
 	 * 校验 NPC 模板中引用的 AI 名称是否均已注册。
 	 * Validates that all AI names referenced by NPC templates are registered.
 	 */
-	private void validateScripts() {
+	void validateScripts() {
 		Collection<String> npcAINames = new HashSet<>();
 		for (NpcTemplate npcTemplate : DataManager.NPC_DATA.getNpcData().values()) {
 			npcAINames.add(npcTemplate.getAi());
@@ -239,13 +248,4 @@ public class AI2Engine implements GameEngine {
 		return provided;
 	}
 
-	/**
-	 * 设置 Spring 实例 Provider。
-	 * Sets the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<AI2Engine> provider) {
-		instanceProvider = provider;
-	}
 }

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.IExpirable;
@@ -19,8 +20,15 @@ public class ExpireTimerTask extends AbstractPeriodicTaskManager {
 	/**
 	 * Spring 可选实例提供者。
 	 * Optional Spring instance provider.
-	 */
-	private static volatile ObjectProvider<ExpireTimerTask> instanceProvider;
+     * -- SETTER --
+     *  注入 Spring 实例提供者。
+     *  Inject the Spring instance provider.
+     *
+     * @param provider 实例提供者 / Provider
+
+     */
+	@Setter
+    private static volatile ObjectProvider<ExpireTimerTask> instanceProvider;
 
 	/**
 	 * 可过期对象到所属玩家的映射。
@@ -59,17 +67,7 @@ public class ExpireTimerTask extends AbstractPeriodicTaskManager {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring 实例提供者。
-	 * Inject the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / Provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<ExpireTimerTask> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 注册可过期对象及其所属玩家。
 	 * Register an expirable object and its owning player.
 	 *

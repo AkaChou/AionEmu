@@ -35,6 +35,7 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.collections.LastUsedCache;
 import com.aionemu.gameserver.world.geo.path.PathService;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -126,9 +127,23 @@ public class NpcMoveController
     private float offset = 0.1f;
     /** 当前巡逻路线 / Current walk route */
     List<RouteStep> currentRoute;
-    /** 当前路线点索引 / Current route point index */
+    /** 当前路线点索引 / Current route point index
+	 * -- GETTER --
+	 *  返回当前路线点索引。
+	 *  Return the current route point index.
+	 *
+	 * @return 路线点索引 / Point index
+	 */
+	@Getter
     int currentPoint;
-    /** 路线点停顿毫秒 / Route-step rest time ms */
+    /** 路线点停顿毫秒 / Route-step rest time ms
+     * -- GETTER --
+     *  返回当前路线点停顿时间（毫秒）。
+     *  Return the current route-step rest time in milliseconds.
+     *
+     * @return 停顿毫秒数 / Rest time ms
+     */
+    @Getter
     int walkPause;
     /** 上次因运行时碰撞重规划时间 / Last runtime-collision replan time */
     private long lastPathReplan;
@@ -2080,17 +2095,7 @@ public class NpcMoveController
         this.walkPause = paramRouteStep1.getRestTime();
     }
 
-    /**
-     * 返回当前路线点索引。
-     * Return the current route point index.
-     *
-     * @return 路线点索引 / Point index
-     */
-    public int getCurrentPoint() {
-        return this.currentPoint;
-    }
-
-    /**
+	/**
      * 是否已到达当前目标点。
      * Whether the current target point has been reached.
      *
@@ -2119,16 +2124,6 @@ public class NpcMoveController
         }
         this.currentPoint = this.currentPoint < this.currentRoute.size() - 1 ? ++this.currentPoint : 0;
         this.setRouteStep(this.currentRoute.get(this.currentPoint), this.currentRoute.get(oldPoint));
-    }
-
-    /**
-     * 返回当前路线点停顿时间（毫秒）。
-     * Return the current route-step rest time in milliseconds.
-     *
-     * @return 停顿毫秒数 / Rest time ms
-     */
-    public int getWalkPause() {
-        return this.walkPause;
     }
 
     /**

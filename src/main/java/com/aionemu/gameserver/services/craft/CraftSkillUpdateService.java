@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -36,7 +37,15 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class CraftSkillUpdateService {
-	private static volatile ObjectProvider<CraftSkillUpdateService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  注入 Spring ObjectProvider，用于容器管理的实例解析。
+     *  Inject Spring ObjectProvider for container-managed instance resolution.
+     *
+     * @param provider 实例提供者 / Instance provider
+     */
+    @Setter
+    private static volatile ObjectProvider<CraftSkillUpdateService> instanceProvider;
 
 	/** NPC → 可学制作技能模板映射 / NPC to craft-learn template mapping */
 	protected static final Map<Integer, CraftLearnTemplate> npcBySkill = new HashMap<>();
@@ -68,17 +77,7 @@ public class CraftSkillUpdateService {
 		return provided;
 	}
 
-	/**
-	 * 注入 Spring ObjectProvider，用于容器管理的实例解析。
-	 * Inject Spring ObjectProvider for container-managed instance resolution.
-	 *
-	 * @param provider 实例提供者 / Instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<CraftSkillUpdateService> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 构造服务：初始化魔/天族 NPC 技能映射、升级费用与制作技能 ID 列表。
 	 * Construct service: initialize Asmodian/Elyos NPC skill maps, upgrade costs and craft skill id list.
 	 */

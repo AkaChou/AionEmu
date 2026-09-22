@@ -23,6 +23,7 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlElement;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -63,6 +64,14 @@ import java.util.function.Supplier;
 @Slf4j
 public class XmlDataLoader {
 
+	/**
+	 * -- SETTER --
+	 *  注入 Spring 侧实例提供者，供容器接管单例解析。
+	 *  Sets the Spring ObjectProvider used to resolve the singleton.
+	 *
+	 * @param provider 实例提供者 / instance provider
+	 */
+	@Setter
 	private static volatile ObjectProvider<XmlDataLoader> instanceProvider;
 	private static final String MAIN_XML_FILE = "./data/static_data/static_data.xml";
 	private static final String ITEM_DATA_DIR = "./data/static_data/items";
@@ -129,16 +138,6 @@ public class XmlDataLoader {
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
 		return provided;
-	}
-
-	/**
-	 * 注入 Spring 侧实例提供者，供容器接管单例解析。
-	 * Sets the Spring ObjectProvider used to resolve the singleton.
-	 *
-	 * @param provider 实例提供者 / instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<XmlDataLoader> provider) {
-		instanceProvider = provider;
 	}
 
 	/**

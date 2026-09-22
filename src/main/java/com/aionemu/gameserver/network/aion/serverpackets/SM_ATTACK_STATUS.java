@@ -4,6 +4,7 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import lombok.Getter;
 
 /**
  * 同步生物生命值相关状态变化（HP/MP/FP 增减、伤害、治疗、吸收等）的服务端包。
@@ -26,7 +27,8 @@ public class SM_ATTACK_STATUS extends AionServerPacket {
 	 * 状态变更类型（对应客户端显示通道）。
 	 * Status-change type (maps to the client display channel).
 	 */
-	public enum TYPE {
+	@Getter
+    public enum TYPE {
 
 		NATURAL_HP(3),
 		USED_HP(4), // when skill uses hp as cost parameter
@@ -54,16 +56,14 @@ public class SM_ATTACK_STATUS extends AionServerPacket {
 			this.value = value;
 		}
 
-		public int getValue() {
-			return this.value;
-		}
-	}
+    }
 
 	/**
 	 * 战斗日志显示类型（决定客户端飘字/日志文案）。
 	 * log wording on the client).
 	 */
-	public enum LOG {
+	@Getter
+    public enum LOG {
 
 		SPELLATK(1),
 		HEAL(3),
@@ -86,10 +86,7 @@ public class SM_ATTACK_STATUS extends AionServerPacket {
 			this.value = value;
 		}
 
-		public int getValue() {
-			return this.value;
-		}
-	}
+    }
 
 	/**
 	 * @param creature 状态变化的目标生物 / creature whose vitals changed

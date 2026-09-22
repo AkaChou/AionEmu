@@ -14,6 +14,8 @@ import com.aionemu.gameserver.geoEngine.math.Matrix4f;
 import com.aionemu.gameserver.geoEngine.math.Ray;
 import com.aionemu.gameserver.geoEngine.math.Triangle;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 包围区间层次（BIH）节点。基于 Carsten Wächter 与 Alexander Keller 的
@@ -29,10 +31,38 @@ public final class BIHNode {
 	private BIHNode left;
 	/** 右子节点。 / Right child node. */
 	private BIHNode right;
-	/** 左分割平面。 / Left split plane. */
+	/** 左分割平面。 / Left split plane.
+	 * -- GETTER --
+	 *  返回左分割平面。
+	 *  Returns the left split plane.
+	 *
+	 *
+	 * -- SETTER --
+	 *  设置左分割平面。
+	 *  Sets the left split plane.
+	 *
+	 @return 左分割平面 / left plane
+	  * @param leftPlane 左分割平面 / left plane
+	 */
+	@Setter
+	@Getter
 	private float leftPlane;
-	/** 右分割平面。 / Right split plane. */
-	private float rightPlane;
+	/** 右分割平面。 / Right split plane.
+     * -- GETTER --
+     *  返回右分割平面。
+     *  Returns the right split plane.
+     *
+     *
+	 * -- SETTER --
+	 *  设置右分割平面。
+	 *  Sets the right split plane.
+	 *
+	 @return 右分割平面 / right plane
+	  * @param rightPlane 右分割平面 / right plane
+     */
+	@Setter
+	@Getter
+    private float rightPlane;
 	/** 分割轴；3 表示叶节点。 / Split axis; 3 marks a leaf. */
 	private int axis;
 
@@ -87,26 +117,6 @@ public final class BIHNode {
 	}
 
 	/**
-	 * 返回左分割平面。
-	 * Returns the left split plane.
-	 *
-	 * @return 左分割平面 / left plane
-	 */
-	public float getLeftPlane() {
-		return leftPlane;
-	}
-
-	/**
-	 * 设置左分割平面。
-	 * Sets the left split plane.
-	 *
-	 * @param leftPlane 左分割平面 / left plane
-	 */
-	public void setLeftPlane(float leftPlane) {
-		this.leftPlane = leftPlane;
-	}
-
-	/**
 	 * 返回右子节点。
 	 * Returns the right child.
 	 *
@@ -124,26 +134,6 @@ public final class BIHNode {
 	 */
 	public void setRightChild(BIHNode right) {
 		this.right = right;
-	}
-
-	/**
-	 * 返回右分割平面。
-	 * Returns the right split plane.
-	 *
-	 * @return 右分割平面 / right plane
-	 */
-	public float getRightPlane() {
-		return rightPlane;
-	}
-
-	/**
-	 * 设置右分割平面。
-	 * Sets the right split plane.
-	 *
-	 * @param rightPlane 右分割平面 / right plane
-	 */
-	public void setRightPlane(float rightPlane) {
-		this.rightPlane = rightPlane;
 	}
 
 	/**

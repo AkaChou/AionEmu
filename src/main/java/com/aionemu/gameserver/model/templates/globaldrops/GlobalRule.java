@@ -6,6 +6,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 全局掉落规则模板（静态数据/XML）。
@@ -38,31 +40,100 @@ public class GlobalRule {
 	@XmlElement(name = "gd_zones", required = false)
 	protected GlobalDropZones gdZones;
 
+	/**
+	 * -- GETTER --
+	 * 返回规则名称。 / Returns the rule name.
+	 * -- SETTER --
+	 * 设置规则名称。 / Sets the rule name.
+
+	 */
+	@Setter
+	@Getter
 	@XmlAttribute(name = "rule_name", required = true)
 	protected String ruleName;
 
+	/**
+	 * -- SETTER --
+	 * 设置最小数量。 / Sets the min count.
+	 */
+	@Setter
 	@XmlAttribute(name = "min_count")
 	protected Long minCount;
 
+	/**
+	 * -- SETTER --
+	 * 设置最大数量。 / Sets the max count.
+	 */
+	@Setter
 	@XmlAttribute(name = "max_count")
 	protected Long maxCount;
 
+	/**
+	 * -- GETTER --
+	 * 返回概率。 / Returns the chance.
+	 * -- SETTER --
+	 * 设置概率。 / Sets the chance.
+
+	 */
+	@Setter
+	@Getter
 	@XmlAttribute(name = "base_chance", required = true)
 	protected float chance;
 
+	/**
+	 * -- GETTER --
+	 * 返回最小等级差。 / Returns the min diff.
+	 * -- SETTER --
+	 * 设置最小等级差。 / Sets the min diff.
+
+	 */
+	@Setter
+	@Getter
 	@XmlAttribute(name = "min_diff")
 	protected int minDiff;
 
+	/**
+	 * -- GETTER --
+	 * 返回最大等级差。 / Returns the max diff.
+	 * -- SETTER --
+	 * 设置最大等级差。 / Sets the max diff.
+
+	 */
+	@Setter
+	@Getter
 	@XmlAttribute(name = "max_diff")
 	protected int maxDiff;
 
+	/**
+	 * -- GETTER --
+	 * 返回种族限制。 / Returns the restriction race.
+	 * -- SETTER --
+	 * 设置种族限制。 / Sets the restriction race.
+
+	 */
+	@Setter
+	@Getter
 	@XmlAttribute(name = "restriction_race")
 	protected RestrictionRace restrictionRace;
 
+	/**
+	 * -- SETTER --
+	 * 设置不削减掉落标志。 / Sets the no reduction flag.
+	 */
+	@Setter
 	@XmlAttribute(name = "no_reduction")
 	protected boolean noReduction;
 
-	@XmlAttribute(name = "count_per_npc_level")
+    /**
+     * -- GETTER --
+     * 返回数量是否按 NPC 等级缩放。 / Returns whether counts scale with the NPC level.
+	 * -- SETTER --
+	 * 设置数量是否按 NPC 等级缩放。 / Sets whether counts scale with the NPC level.
+
+	 */
+    @Setter
+    @Getter
+    @XmlAttribute(name = "count_per_npc_level")
 	protected boolean countPerNpcLevel;
 
 	/** 返回规则物品。 / Returns the rule items. */
@@ -145,16 +216,6 @@ public class GlobalRule {
 		this.gdZones = value;
 	}
 
-	/** 返回规则名称。 / Returns the rule name. */
-	public String getRuleName() {
-		return ruleName;
-	}
-
-	/** 设置规则名称。 / Sets the rule name. */
-	public void setRuleName(String value) {
-		this.ruleName = value;
-	}
-
 	/** 返回最小数量。 / Returns the min count. */
 	public long getMinCount() {
 		if (minCount == null) {
@@ -162,11 +223,6 @@ public class GlobalRule {
 		} else {
 			return minCount;
 		}
-	}
-
-	/** 设置最小数量。 / Sets the min count. */
-	public void setMinCount(Long value) {
-		this.minCount = value;
 	}
 
 	/** 返回最大数量。 / Returns the max count. */
@@ -178,69 +234,9 @@ public class GlobalRule {
 		}
 	}
 
-	/** 设置最大数量。 / Sets the max count. */
-	public void setMaxCount(Long value) {
-		this.maxCount = value;
-	}
-
-	/** 返回概率。 / Returns the chance. */
-	public float getChance() {
-		return chance;
-	}
-
-	/** 设置概率。 / Sets the chance. */
-	public void setChance(float value) {
-		this.chance = value;
-	}
-
-	/** 返回最小等级差。 / Returns the min diff. */
-	public int getMinDiff() {
-		return minDiff;
-	}
-
-	/** 设置最小等级差。 / Sets the min diff. */
-	public void setMinDiff(int value) {
-		this.minDiff = value;
-	}
-
-	/** 返回最大等级差。 / Returns the max diff. */
-	public int getMaxDiff() {
-		return maxDiff;
-	}
-
-	/** 设置最大等级差。 / Sets the max diff. */
-	public void setMaxDiff(int value) {
-		this.maxDiff = value;
-	}
-
-	/** 返回种族限制。 / Returns the restriction race. */
-	public RestrictionRace getRestrictionRace() {
-		return restrictionRace;
-	}
-
-	/** 设置种族限制。 / Sets the restriction race. */
-	public void setRestrictionRace(RestrictionRace value) {
-		this.restrictionRace = value;
-	}
-
 	/** 返回不削减掉落标志。 / Returns the no reduction flag. */
 	public boolean getNoReduction() {
 		return noReduction;
-	}
-
-	/** 设置不削减掉落标志。 / Sets the no reduction flag. */
-	public void setNoReduction(boolean value) {
-		this.noReduction = value;
-	}
-
-	/** 返回数量是否按 NPC 等级缩放。 / Returns whether counts scale with the NPC level. */
-	public boolean isCountPerNpcLevel() {
-		return countPerNpcLevel;
-	}
-
-	/** 设置数量是否按 NPC 等级缩放。 / Sets whether counts scale with the NPC level. */
-	public void setCountPerNpcLevel(boolean value) {
-		this.countPerNpcLevel = value;
 	}
 
 	/** 返回指定 NPC 等级下的最小数量。 / Returns the minimum count for the NPC level. */

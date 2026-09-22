@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.spawnengine;
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -17,7 +18,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * 术古皇陵活动刷怪管理器：按 cron 定时开启裂隙并公告、定时回收。
@@ -169,26 +169,42 @@ public class ShugoImperialTombSpawnManager {
 		/**
 		 * 世界 ID。
 		 * World id.
+		 * -- GETTER --
+		 *  世界 ID / world id
+
 		 */
+		@Getter
 		private final int worldId;
 
 		/**
 		 * X 坐标。
 		 * X coordinate.
+		 * -- GETTER --
+		 *  X 坐标 / X coordinate
+
 		 */
+		@Getter
 		private final float x;
 
 		/**
 		 * Y 坐标。
 		 * Y coordinate.
+		 * -- GETTER --
+		 *  Y 坐标 / Y coordinate
+
 		 */
+		@Getter
 		private final float y;
 
 		/**
 		 * Z 坐标。
 		 * Z coordinate.
-		 */
-		private final float z;
+         * -- GETTER --
+         *  Z 坐标 / Z coordinate
+
+         */
+		@Getter
+        private final float z;
 
 		/**
 		 * 朝向。
@@ -221,34 +237,6 @@ public class ShugoImperialTombSpawnManager {
 		 */
 		public int getNpcId() {
 			return npc_id;
-		}
-
-		/**
-		 * 世界 ID / world id
-		 */
-		public int getWorldId() {
-			return worldId;
-		}
-
-		/**
-		 * X 坐标 / X coordinate
-		 */
-		public float getX() {
-			return x;
-		}
-
-		/**
-		 * Y 坐标 / Y coordinate
-		 */
-		public float getY() {
-			return y;
-		}
-
-		/**
-		 * Z 坐标 / Z coordinate
-		 */
-		public float getZ() {
-			return z;
 		}
 
 		/**

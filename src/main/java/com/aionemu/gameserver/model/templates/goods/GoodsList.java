@@ -11,6 +11,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.limiteditems.LimitedItem;
+import lombok.Getter;
 
 /**
  * Goods 列表模板（静态数据/XML）。
@@ -24,11 +25,23 @@ public class GoodsList {
 
 	@XmlElement(name = "item")
 	private List<Item> items;
+	/**
+	 * -- GETTER --
+	 *  获取 id 属性值。
+	 *  Gets the value of the id property
+	 */
+	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
 	@XmlElement(name = "salestime")
 	private String salesTime;
 
+	/**
+	 * -- GETTER --
+	 *
+	 * @return 物品 ID 列表 / the item id list
+	 */
+	@Getter
 	private List<Integer> itemIdList;
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
@@ -57,54 +70,34 @@ public class GoodsList {
 	}
 
 	/**
-	 * 获取 id 属性值。
-	 * Gets the value of the id property
-	 */
-	public int getId() {
-		return id;
-	}
-
-	/**
-	 * @return 物品 ID 列表 / the item id list
-	 */
-	public List<Integer> getItemIdList() {
-		return itemIdList;
-	}
-
-	/**
 	 * 匿名复杂类型的 Java 类（XSD 生成）。 / <p> Java class for anonymous complex type. <p> The following schema fragment specifies the expected content contained within this class. <pre> &lt;complexType> &lt;complexContent> &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"> &lt;attribute name="id" type="{http://www.w3.org/2001/XMLSchema}int" /> &lt;/restriction> &lt;/complexContent> &lt;/complexType> </pre>
 	 */
-	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+    @XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "")
 	public static class Item {
 
-		@XmlAttribute
+        /**
+         * -- GETTER --
+         *  获取 id 属性值。
+         *  Gets the value of the id property
+         */
+        @XmlAttribute
 		private int id;
-		@XmlAttribute(name = "sell_limit")
+        /**
+         * -- GETTER --
+         *
+         * @return 出售上限 / the sell limit
+         */
+        @XmlAttribute(name = "sell_limit")
 		private Integer sellLimit;
-		@XmlAttribute(name = "buy_limit")
+        /**
+         * -- GETTER --
+         *
+         * @return 购买上限 / the buy limit
+         */
+        @XmlAttribute(name = "buy_limit")
 		private Integer buyLimit;
 
-	/**
-	 * 获取 id 属性值。
-	 * Gets the value of the id property
-	 */
-		public int getId() {
-			return id;
-		}
-
-		/**
-		 * @return 出售上限 / the sell limit
-		 */
-		public Integer getSellLimit() {
-			return sellLimit;
-		}
-
-		/**
-		 * @return 购买上限 / the buy limit
-		 */
-		public Integer getBuyLimit() {
-			return buyLimit;
-		}
-	}
+    }
 }

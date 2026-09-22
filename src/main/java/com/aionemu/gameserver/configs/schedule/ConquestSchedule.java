@@ -12,6 +12,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.commons.utils.xml.JAXBUtil;
 import com.aionemu.gameserver.configs.Config;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Conquest 征服活动时间表配置。
@@ -19,23 +21,20 @@ import com.aionemu.gameserver.configs.Config;
  *
  * @author Rinzler (Encom)
  */
+@Getter
 @XmlRootElement(name = "conquest_schedule")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ConquestSchedule {
 	/**
 	 * Conquest 列表。
 	 * List of conquests.
+	 * -- GETTER --
+	 *  获取 Conquest 列表。
+	 *  Returns the conquest list.
+
 	 */
 	@XmlElement(name = "conquest", required = true)
 	private List<Conquest> conquestsList;
-
-	/**
-	 * 获取 Conquest 列表。
-	 * Returns the conquest list.
-	 */
-	public List<Conquest> getConquestsList() {
-		return conquestsList;
-	}
 
 	/**
 	 * 设置 Conquest 列表。
@@ -64,11 +63,21 @@ public class ConquestSchedule {
 	 * 单个 Conquest 的时间表条目。
 	 * Schedule entry for a single conquest.
 	 */
-	@XmlAccessorType(XmlAccessType.FIELD)
+	@Setter
+	@Getter
+    @XmlAccessorType(XmlAccessType.FIELD)
 	@XmlRootElement(name = "conquest")
 	public static class Conquest {
 		/**
 		 * 征服 ID / Conquest ID
+         * -- GETTER --
+         *  获取 Conquest ID。
+         *  Returns the conquest ID.
+		 * -- SETTER --
+		 *  设置 Conquest ID。
+		 *  Sets the conquest ID.
+
+
 		 */
 		@XmlAttribute(required = true)
 		private int id;
@@ -76,40 +85,17 @@ public class ConquestSchedule {
 		/**
 		 * 献祭时间列表。
 		 * List of offering times.
+         * -- GETTER --
+         *  获取献祭时间列表。
+         *  Returns the offering times.
+		 * -- SETTER --
+		 *  设置献祭时间列表。
+		 *  Sets the offering times.
+
+
 		 */
 		@XmlElement(name = "offeringTime", required = true)
 		private List<String> offeringTimes;
 
-		/**
-		 * 获取 Conquest ID。
-		 * Returns the conquest ID.
-		 */
-		public int getId() {
-			return id;
-		}
-
-		/**
-		 * 设置 Conquest ID。
-		 * Sets the conquest ID.
-		 */
-		public void setId(int id) {
-			this.id = id;
-		}
-
-		/**
-		 * 获取献祭时间列表。
-		 * Returns the offering times.
-		 */
-		public List<String> getOfferingTimes() {
-			return offeringTimes;
-		}
-
-		/**
-		 * 设置献祭时间列表。
-		 * Sets the offering times.
-		 */
-		public void setOfferingTimes(List<String> offeringTimes) {
-			this.offeringTimes = offeringTimes;
-		}
 	}
 }

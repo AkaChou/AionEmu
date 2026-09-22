@@ -5,6 +5,7 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import java.util.Collection;
 import java.util.List;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -43,6 +44,13 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public class PetService {
 
+	/**
+	 * -- SETTER --
+	 *  注入 Spring 实例提供者。
+	 *  Inject Spring instance provider.
+	 *  Provider
+	 */
+	@Setter
 	private static volatile ObjectProvider<PetService> instanceProvider;
 
 	private PetBuff PetBuff;
@@ -73,16 +81,6 @@ public class PetService {
 	}
 
 	public PetService() {
-	}
-
-	/**
-	 * 注入 Spring 实例提供者。
-	 * Inject Spring instance provider.
-	 *
-	 * Provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<PetService> provider) {
-		instanceProvider = provider;
 	}
 
 	/**

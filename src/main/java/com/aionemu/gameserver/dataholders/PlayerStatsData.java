@@ -16,6 +16,7 @@ import com.aionemu.gameserver.model.templates.stats.CalculatedPlayerStatsTemplat
 import com.aionemu.gameserver.model.templates.stats.PlayerStatsTemplate;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import lombok.Getter;
 
 /**
  * 玩家属性模板数据容器，按职业与等级哈希索引基础属性。
@@ -118,7 +119,8 @@ public class PlayerStatsData {
 		return playerTemplates.size();
 	}
 
-	@XmlRootElement(name = "playerStatsTemplateType")
+	@Getter
+    @XmlRootElement(name = "playerStatsTemplateType")
 	private static class PlayerStatsType {
 		@XmlAttribute(name = "class", required = true)
 		private PlayerClass requiredPlayerClass;
@@ -129,18 +131,7 @@ public class PlayerStatsData {
 		@XmlElement(name = "stats_template")
 		private PlayerStatsTemplate template;
 
-		public PlayerClass getRequiredPlayerClass() {
-			return requiredPlayerClass;
-		}
-
-		public int getRequiredLevel() {
-			return requiredLevel;
-		}
-
-		public PlayerStatsTemplate getTemplate() {
-			return template;
-		}
-	}
+    }
 
 	// In 4.5 (11)
 	private static int makeHash(PlayerClass playerClass, int level) {

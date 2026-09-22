@@ -5,6 +5,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -39,7 +40,15 @@ public class HotspotTeleportService {
 	private static final int ASMODIAN_GELKMAROS_WORLD_ID = 220070000;
 	private static final int ASMODIAN_GELKMAROS_MASTER_WORLD_ID = 220140000;
 
-	private static volatile ObjectProvider<HotspotTeleportService> instanceProvider;
+    /**
+     * -- SETTER --
+     *  设置 Spring 实例提供者。
+     *  Sets the Spring instance provider.
+     *
+     * @param provider 实例提供者 / Instance provider
+     */
+    @Setter
+    private static volatile ObjectProvider<HotspotTeleportService> instanceProvider;
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -64,17 +73,7 @@ public class HotspotTeleportService {
 		return provided;
 	}
 
-	/**
-	 * 设置 Spring 实例提供者。
-	 * Sets the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / Instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<HotspotTeleportService> provider) {
-		instanceProvider = provider;
-	}
-
-	/**
+    /**
 	 * 初始化并记录热点位置模板数量。
 	 * Initializes and logs the number of hotspot location templates.
 	 */
@@ -164,14 +163,11 @@ public class HotspotTeleportService {
 	 * @return 实际可玩世界 ID / Live world id
 	 */
 	static int resolveLiveWorldId(int worldId) {
-        switch (worldId) {
-            case ELYOS_INGGISON_MASTER_WORLD_ID:
-                return ELYOS_INGGISON_WORLD_ID;
-            case ASMODIAN_GELKMAROS_MASTER_WORLD_ID:
-                return ASMODIAN_GELKMAROS_WORLD_ID;
-            default:
-                return worldId;
-        }
+        return switch (worldId) {
+            case ELYOS_INGGISON_MASTER_WORLD_ID -> ELYOS_INGGISON_WORLD_ID;
+            case ASMODIAN_GELKMAROS_MASTER_WORLD_ID -> ASMODIAN_GELKMAROS_WORLD_ID;
+            default -> worldId;
+        };
 	}
 
 	static int castTimeMillis(int castTimeSeconds) {

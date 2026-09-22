@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.moltenus.MoltenusStateType;
 import com.aionemu.gameserver.model.templates.spawns.Spawn;
+import lombok.Getter;
 
 /**
  * 熔岩魔刷新点模板（静态数据/XML）。
@@ -21,13 +22,13 @@ import com.aionemu.gameserver.model.templates.spawns.Spawn;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "MoltenusSpawn")
 public class MoltenusSpawn {
+	/**
+	 * -- GETTER --
+	 * 返回 ID / Returns the id
+	 */
+	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
 
 	@XmlElement(name = "moltenus_type")
 	private List<MoltenusSpawn.MoltenusStateTemplate> MoltenusStateTemplate;
@@ -37,24 +38,24 @@ public class MoltenusSpawn {
 		return MoltenusStateTemplate;
 	}
 
-	@XmlAccessorType(XmlAccessType.FIELD)
+	@Getter
+    @XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "MoltenusStateTemplate")
 	public static class MoltenusStateTemplate {
 
-		@XmlElement(name = "spawn")
+        /**
+         * -- GETTER --
+         * 获取刷新。 / Returns the spawns.
+         */
+        @XmlElement(name = "spawn")
 		private List<Spawn> spawns;
 
-		@XmlAttribute(name = "mstate")
+        /**
+         * -- GETTER --
+         * 获取熔岩魔类型。 / Returns the moltenus type.
+         */
+        @XmlAttribute(name = "mstate")
 		private MoltenusStateType moltenusType;
 
-		/** 获取刷新。 / Returns the spawns. */
-		public List<Spawn> getSpawns() {
-			return spawns;
-		}
-
-		/** 获取熔岩魔类型。 / Returns the moltenus type. */
-		public MoltenusStateType getMoltenusType() {
-			return moltenusType;
-		}
-	}
+    }
 }

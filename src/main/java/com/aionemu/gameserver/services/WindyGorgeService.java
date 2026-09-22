@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services;
 
+import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -13,6 +14,14 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * @author Wnkrz
  */
 public class WindyGorgeService {
+	/**
+	 * -- SETTER --
+	 *  设置 Spring 实例提供者。
+	 *  Sets the Spring instance provider.
+	 *
+	 * @param provider 实例提供者 / instance provider
+	 */
+	@Setter
 	private static volatile ObjectProvider<WindyGorgeService> instanceProvider;
 
 	/**
@@ -49,13 +58,4 @@ public class WindyGorgeService {
 		return provided;
 	}
 
-	/**
-	 * 设置 Spring 实例提供者。
-	 * Sets the Spring instance provider.
-	 *
-	 * @param provider 实例提供者 / instance provider
-	 */
-	public static void setInstanceProvider(ObjectProvider<WindyGorgeService> provider) {
-		instanceProvider = provider;
-	}
 }

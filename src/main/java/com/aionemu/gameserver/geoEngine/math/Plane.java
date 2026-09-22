@@ -2,18 +2,40 @@ package com.aionemu.gameserver.geoEngine.math;
 
 
 import com.aionemu.boot.i18n.I18n;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * 空间平面，法线加常数形式（N·X = constant）。
  * Spatial plane in normal-plus-constant form (N·X = constant).
  */
+@Getter
 @Slf4j
 public class Plane implements Cloneable {
 
-	/** 平面法线。 / Plane normal. */
+	/** 平面法线。 / Plane normal.
+	 * -- GETTER --
+	 *  返回平面法线（内部引用）。
+	 *  Returns the plane normal (internal reference).
+	 *
+	 * @return 法线 / normal
+	 */
 	protected Vector3f normal;
-	/** Plane constant term (N·X = constant) / Plane constant term (N·X = constant) */
+	/** Plane constant term (N·X = constant) / Plane constant term (N·X = constant)
+	 * -- GETTER --
+	 *  返回平面常数项。
+	 *  Returns the plane constant term.
+	 *
+	 *
+	 * -- SETTER --
+	 *  设置平面常数项。
+	 *  Sets the plane constant term.
+	 *
+	 @return 常数项 / constant
+	  * @param constant 常数项 / constant
+	 */
+	@Setter
 	protected float constant;
 
 	/**
@@ -68,36 +90,6 @@ public class Plane implements Cloneable {
 			this.normal = new Vector3f();
 		}
 		this.normal.set(x, y, z);
-	}
-
-	/**
-	 * 返回平面法线（内部引用）。
-	 * Returns the plane normal (internal reference).
-	 *
-	 * @return 法线 / normal
-	 */
-	public Vector3f getNormal() {
-		return this.normal;
-	}
-
-	/**
-	 * 设置平面常数项。
-	 * Sets the plane constant term.
-	 *
-	 * @param constant 常数项 / constant
-	 */
-	public void setConstant(float constant) {
-		this.constant = constant;
-	}
-
-	/**
-	 * 返回平面常数项。
-	 * Returns the plane constant term.
-	 *
-	 * @return 常数项 / constant
-	 */
-	public float getConstant() {
-		return this.constant;
 	}
 
 	/**

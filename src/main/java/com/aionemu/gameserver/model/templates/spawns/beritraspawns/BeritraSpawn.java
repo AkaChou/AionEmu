@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.beritra.BeritraStateType;
 import com.aionemu.gameserver.model.templates.spawns.Spawn;
+import lombok.Getter;
 
 /**
  * 贝里特拉刷新点模板（静态数据/XML）。
@@ -21,13 +22,13 @@ import com.aionemu.gameserver.model.templates.spawns.Spawn;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "BeritraSpawn")
 public class BeritraSpawn {
+	/**
+	 * -- GETTER --
+	 * 返回 ID / Returns the id
+	 */
+	@Getter
 	@XmlAttribute(name = "id")
 	private int id;
-
-	/** 返回 ID / Returns the id */
-	public int getId() {
-		return id;
-	}
 
 	@XmlElement(name = "beritra_type")
 	private List<BeritraSpawn.BeritraStateTemplate> BeritraStateTemplate;
@@ -37,24 +38,24 @@ public class BeritraSpawn {
 		return BeritraStateTemplate;
 	}
 
+	@Getter
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "BeritraStateTemplate")
 	public static class BeritraStateTemplate {
 
+		/**
+		 * -- GETTER --
+		 * 获取刷新。 / Returns the spawns.
+		 */
 		@XmlElement(name = "spawn")
 		private List<Spawn> spawns;
 
+		/**
+		 * -- GETTER --
+		 * 获取贝里特拉类型。 / Returns the beritra type.
+		 */
 		@XmlAttribute(name = "bstate")
 		private BeritraStateType beritraType;
 
-		/** 获取刷新。 / Returns the spawns. */
-		public List<Spawn> getSpawns() {
-			return spawns;
-		}
-
-		/** 获取贝里特拉类型。 / Returns the beritra type. */
-		public BeritraStateType getBeritraType() {
-			return beritraType;
-		}
 	}
 }

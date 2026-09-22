@@ -10,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.skillengine.model.Skill;
+import lombok.Getter;
 
 /**
  * 技能目标属性：JAXB 绑定的首要目标/范围/关系等筛选配置，并驱动施法校验。
@@ -24,86 +25,166 @@ public class Properties {
 	/**
 	 * 首要目标选取方式。
 	 * First-target selection mode.
+	 * -- GETTER --
+	 *  获取首要目标属性。
+	 *  Returns the first-target attribute.
+	 *
+	 * @return 首要目标属性 / first-target attribute
+
 	 */
+	@Getter
 	@XmlAttribute(name = "first_target", required = true)
 	protected FirstTargetAttribute firstTarget;
 
 	/**
 	 * 首要目标最大距离。
 	 * Maximum first-target range.
+	 * -- GETTER --
+	 *  获取首要目标距离。
+	 *  Returns the first-target range.
+	 *
+	 * @return 首要目标距离 / first-target range
+
 	 */
+	@Getter
 	@XmlAttribute(name = "first_target_range", required = true)
 	protected int firstTargetRange;
 
 	/**
 	 * 是否叠加武器攻击距离。
 	 * Whether to add weapon attack range.
+	 * -- GETTER --
+	 *  是否叠加武器攻击距离。
+	 *  Whether weapon range is added.
+	 *
+	 * @return 是否叠加武器距离 / true if weapon range is added
+
 	 */
+	@Getter
 	@XmlAttribute(name = "awr")
 	protected boolean addWeaponRange;
 
 	/**
 	 * 目标敌友关系筛选。
 	 * Target friend/enemy relation filter.
+	 * -- GETTER --
+	 *  获取目标关系属性。
+	 *  Returns the target relation attribute.
+	 *
+	 * @return 目标关系 / target relation
+
 	 */
+	@Getter
 	@XmlAttribute(name = "target_relation", required = true)
 	protected TargetRelationAttribute targetRelation;
 
 	/**
 	 * 目标范围类型。
 	 * Target range type.
+	 * -- GETTER --
+	 *  获取目标范围类型。
+	 *  Returns the target range type.
+	 *
+	 * @return 目标范围类型 / target range type
+
 	 */
+	@Getter
 	@XmlAttribute(name = "target_type", required = true)
 	protected TargetRangeAttribute targetType;
 
 	/**
 	 * 区域/队伍目标距离。
 	 * Area/party target distance.
+	 * -- GETTER --
+	 *  获取目标距离。
+	 *  Returns the target distance.
+	 *
+	 * @return 目标距离 / target distance
+
 	 */
+	@Getter
 	@XmlAttribute(name = "target_distance")
 	protected int targetDistance;
 
 	/**
 	 * 最大目标数量。
 	 * Maximum number of targets.
+	 * -- GETTER --
+	 *  获取最大目标数。
+	 *  Returns the maximum target count.
+	 *
+	 * @return 最大目标数 / max target count
+
 	 */
+	@Getter
 	@XmlAttribute(name = "target_maxcount")
 	protected int targetMaxCount;
 
+	@Getter
 	@XmlAttribute(name = "other_target_only")
 	protected boolean otherTargetOnly;
 
 	/**
 	 * 目标异常状态筛选列表。
 	 * Target abnormal-state filter list.
+	 * -- GETTER --
+	 *  获取目标异常状态列表。
+	 *  Returns the target abnormal-status list.
+	 *
+	 * @return 状态名列表 / status name list
+
 	 */
+	@Getter
 	@XmlAttribute(name = "target_status")
 	private List<String> targetStatus;
 
 	/**
 	 * 施法结束时的修订距离。
 	 * Revision distance applied at cast end.
+	 * -- GETTER --
+	 *  获取修订距离。
+	 *  Returns the revision distance.
+	 *
+	 * @return 修订距离 / revision distance
+
 	 */
+	@Getter
 	@XmlAttribute(name = "revision_distance")
 	protected int revisionDistance;
 
 	/**
 	 * 有效宽度（圆柱范围）。
 	 * Effective width for cylindrical range.
+	 * -- GETTER --
+	 *  获取有效宽度。
+	 *  Returns the effective width.
+	 *
+	 * @return 有效宽度 / effective width
+
 	 */
+	@Getter
 	@XmlAttribute(name = "effective_width")
 	private int effectiveWidth;
 
+	@Getter
 	@XmlAttribute(name = "effective_range")
 	protected int effectiveRange;
 
+	@Getter
 	@XmlAttribute(name = "effective_altitude")
 	protected int effectiveAltitude;
 
 	/**
 	 * 有效角度（扇形范围）。
 	 * Effective angle for cone range.
+	 * -- GETTER --
+	 *  获取有效角度。
+	 *  Returns the effective angle.
+	 *
+	 * @return 有效角度 / effective angle
+
 	 */
+	@Getter
 	@XmlAttribute(name = "effective_angle")
 	private int effectiveAngle;
 
@@ -117,7 +198,14 @@ public class Properties {
 	/**
 	 * 目标物种筛选。
 	 * Target species filter.
+	 * -- GETTER --
+	 *  获取目标物种属性。
+	 *  Returns the target species attribute.
+	 *
+	 * @return 目标物种 / target species
+
 	 */
+	@Getter
 	@XmlAttribute(name = "target_species")
 	protected TargetSpeciesAttribute targetSpecies;
 
@@ -249,128 +337,6 @@ public class Properties {
 	}
 
 	/**
-	 * 获取首要目标属性。
-	 * Returns the first-target attribute.
-	 *
-	 * @return 首要目标属性 / first-target attribute
-	 */
-	public FirstTargetAttribute getFirstTarget() {
-		return firstTarget;
-	}
-
-	/**
-	 * 获取首要目标距离。
-	 * Returns the first-target range.
-	 *
-	 * @return 首要目标距离 / first-target range
-	 */
-	public int getFirstTargetRange() {
-		return firstTargetRange;
-	}
-
-	/**
-	 * 是否叠加武器攻击距离。
-	 * Whether weapon range is added.
-	 *
-	 * @return 是否叠加武器距离 / true if weapon range is added
-	 */
-	public boolean isAddWeaponRange() {
-		return addWeaponRange;
-	}
-
-	/**
-	 * 获取目标关系属性。
-	 * Returns the target relation attribute.
-	 *
-	 * @return 目标关系 / target relation
-	 */
-	public TargetRelationAttribute getTargetRelation() {
-		return targetRelation;
-	}
-
-	/**
-	 * 获取目标范围类型。
-	 * Returns the target range type.
-	 *
-	 * @return 目标范围类型 / target range type
-	 */
-	public TargetRangeAttribute getTargetType() {
-		return targetType;
-	}
-
-	/**
-	 * 获取目标距离。
-	 * Returns the target distance.
-	 *
-	 * @return 目标距离 / target distance
-	 */
-	public int getTargetDistance() {
-		return targetDistance;
-	}
-
-	/**
-	 * 获取最大目标数。
-	 * Returns the maximum target count.
-	 *
-	 * @return 最大目标数 / max target count
-	 */
-	public int getTargetMaxCount() {
-		return targetMaxCount;
-	}
-
-	public boolean isOtherTargetOnly() {
-		return otherTargetOnly;
-	}
-
-	/**
-	 * 获取目标异常状态列表。
-	 * Returns the target abnormal-status list.
-	 *
-	 * @return 状态名列表 / status name list
-	 */
-	public List<String> getTargetStatus() {
-		return targetStatus;
-	}
-
-	/**
-	 * 获取修订距离。
-	 * Returns the revision distance.
-	 *
-	 * @return 修订距离 / revision distance
-	 */
-	public int getRevisionDistance() {
-		return revisionDistance;
-	}
-
-	/**
-	 * 获取有效宽度。
-	 * Returns the effective width.
-	 *
-	 * @return 有效宽度 / effective width
-	 */
-	public int getEffectiveWidth() {
-		return effectiveWidth;
-	}
-
-	public int getEffectiveRange() {
-		return effectiveRange;
-	}
-
-	public int getEffectiveAltitude() {
-		return effectiveAltitude;
-	}
-
-	/**
-	 * 获取有效角度。
-	 * Returns the effective angle.
-	 *
-	 * @return 有效角度 / effective angle
-	 */
-	public int getEffectiveAngle() {
-		return effectiveAngle;
-	}
-
-	/**
 	 * 是否为背后方向。
 	 * Whether the direction is back-facing.
 	 *
@@ -381,23 +347,21 @@ public class Properties {
 	}
 
 	/**
-	 * 获取目标物种属性。
-	 * Returns the target species attribute.
-	 *
-	 * @return 目标物种 / target species
-	 */
-	public TargetSpeciesAttribute getTargetSpecies() {
-		return targetSpecies;
-	}
-
-	/**
 	 * 施法阶段：开始或结束（影响距离校验）。
 	 * Cast phase: start or end (affects range checks).
 	 */
-	public enum CastState {
+	@Getter
+    public enum CastState {
 		CAST_START(true), CAST_END(false);
 
-		private final boolean isCastStart;
+        /**
+         * -- GETTER --
+         *  是否为施法开始阶段。
+         *  Returns whether this is the cast-start phase.
+         *
+         * @return 是否施法开始 / true if cast start
+         */
+        private final boolean isCastStart;
 
 		/**
 		 * 构造施法阶段。
@@ -409,14 +373,5 @@ public class Properties {
 			this.isCastStart = isCastStart;
 		}
 
-		/**
-		 * 是否为施法开始阶段。
-		 * Returns whether this is the cast-start phase.
-		 *
-		 * @return 是否施法开始 / true if cast start
-		 */
-		public boolean isCastStart() {
-			return isCastStart;
-		}
-	}
+    }
 }
