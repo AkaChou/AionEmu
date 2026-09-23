@@ -140,6 +140,11 @@ QE045_LOCKED = {2393, 3722, 4722, 11149, 13965, 14010, 14015, 14020, 14040, 1405
 LEGACY_STEP_EXCEPTION = {
     # 批次 27/28 登记（有真机验收或门禁锁定）
     15300, 25300, 10100, 20100,
+    # 10528 的 2026-09-23 客户端复测显示：REWARD/12 让任务书步骤列表为空，
+    # legacy REWARD/11 才是这组交接的落盘步；20528 同形镜像，仍须单独实机验收。
+    # Client retest of 10528 showed an empty step list at REWARD/12; legacy REWARD/11 is the
+    # persisted handover step. The 20528 mirror shares the contract but needs its own client retest.
+    10528, 20528,
     # 批次 29 逐任务取证（2026-09-22，明细 batch29-triage.tsv / batch29-evidence.tsv：
     # legacy handler 进入 REWARD 时落盘的 step 与当前 XML reward 投影逐一对上）
     1149, 1157, 1170, 14123, 1722, 1920, 2006, 2007, 2600, 2633, 2722, 2925, 2945, 3722,

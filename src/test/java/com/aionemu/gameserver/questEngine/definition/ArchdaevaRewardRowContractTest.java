@@ -17,11 +17,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
- * 验证 10527/10528 与魔族镜像 20527/20528 的领奖行投影：交付后任务书必须指向最后一行“和代理人维达对话”，
- * 旧存档的 REWARD/var0=14 与 REWARD/var0=11 由进入世界自愈边纠正。
- * Verifies the reward-row projection of 10527/10528 and their Asmodian mirrors 20527/20528: after the
- * handover the journal must point at the final "talk to agent Vida" row, while saves persisted as
- * REWARD/var0=14 and REWARD/var0=11 are repaired on enter-world.
+ * 验证 10527/10528 与魔族镜像 20527/20528 的领奖投影，并覆盖贤者交接时召唤道具缺失的情形。
+ * 10527 的领奖行是 15；10528/20528 必须保留 legacy REWARD/var0=11，强推到 12 会令客户端
+ * 步骤列表为空。交接后找代理人领奖，先前落盘的 REWARD/var0=12 在进入世界时恢复。
+ * Verifies the reward projection and missing-summon-item handover for 10527/10528 and their mirrors.
+ * The 10528 pair keeps legacy REWARD/var0=11 because row 12 makes the client render an empty step list;
+ * the agent owns completion, and enter-world repairs persisted REWARD/var0=12.
  */
 class ArchdaevaRewardRowContractTest {
 
@@ -41,21 +42,54 @@ class ArchdaevaRewardRowContractTest {
 	}
 
 	@Test
-	void quest10528AdvancesJournalToTheFinalRowOnHandover() throws Exception {
+	void quest10528KeepsTheLegacyRewardStepOnHandover() throws Exception {
 		CompiledQuestDefinition compiled = definition(10528);
-		assertEquals(12, rewardRow(compiled.definition()));
+		assertEquals(11, rewardRow(compiled.definition()));
 
 		QuestTransition handover = transition(compiled.definition(), "s11",
 			new QuestEvent.TalkToNpc(806292, QuestDialogAction.SET_SUCCEED.id()));
 		assertEquals(List.of(), handover.conditions());
-		assertEquals(List.of(
-			new QuestAction.SetVariable("var0", 12),
-			new QuestAction.RemoveItem(182216076, 1)), handover.actions());
+		assertEquals(List.of(new QuestAction.RemoveItem(182216076, QuestAction.RemoveItem.ALL)), handover.actions());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.CloseDialog()), handover.afterCommit());
 		assertNull(handover.priority());
-		assertPlannedHandover(compiled, handover, 11, 12, 182216076);
+		assertPlannedHandover(compiled, handover, 11, 11, 182216076);
+	}
+
+	@Test
+	void awakenedSageHandoverDoesNotRequireTheSummoningItemToRemainInInventory() throws Exception {
+		Map<Integer, Integer> sages = Map.of(10526, 806292, 20526, 806297,
+			10528, 806292, 20528, 806297);
+		for (var entry : sages.entrySet()) {
+			CompiledQuestDefinition compiled = definition(entry.getKey());
+			QuestTransition handover = transition(compiled.definition(), "s11",
+				new QuestEvent.TalkToNpc(entry.getValue(), QuestDialogAction.SET_SUCCEED.id()));
+			QuestSnapshot snapshot = snapshot(compiled, QuestStatus.START, Map.of("var0", 11), Map.of());
+			QuestMutationPlan plan = QuestMutationPlanner.plan(compiled, snapshot,
+				handover.event(), handover).orElseThrow(() -> new AssertionError(
+					"quest " + entry.getKey() + " cannot finish the sage dialog without the summoning item"));
+			assertEquals(QuestStatus.REWARD, plan.nextStatus(), () -> "quest " + entry.getKey());
+			int expectedStep = entry.getKey() == 10528 || entry.getKey() == 20528 ? 11 : 12;
+			assertEquals(expectedStep, unpack(compiled, plan).get("var0"), () -> "quest " + entry.getKey());
+		}
+	}
+
+	@Test
+	void agentReportRemainsReachableAfterTheAwakenedSageHandover() throws Exception {
+		Map<Integer, QuestEvent.TalkToNpc> agents = Map.of(
+			10528, new QuestEvent.TalkToNpc(806075, QuestDialogAction.QUEST_SELECT.id()),
+			20528, new QuestEvent.TalkToNpc(806079, QuestDialogAction.USE_OBJECT.id()));
+		for (var entry : agents.entrySet()) {
+			CompiledQuestDefinition compiled = definition(entry.getKey());
+			QuestTransition report = transition(compiled.definition(), "reward", entry.getValue());
+			QuestSnapshot snapshot = snapshot(compiled, QuestStatus.REWARD, Map.of("var0", 11), Map.of());
+			QuestMutationPlan plan = QuestMutationPlanner.plan(compiled, snapshot,
+				report.event(), report).orElseThrow(() -> new AssertionError(
+					"quest " + entry.getKey() + " cannot open the agent report at REWARD/11"));
+			assertEquals(QuestStatus.REWARD, plan.nextStatus(), () -> "quest " + entry.getKey());
+			assertEquals(11, unpack(compiled, plan).get("var0"), () -> "quest " + entry.getKey());
+		}
 	}
 
 	@Test
@@ -79,7 +113,8 @@ class ArchdaevaRewardRowContractTest {
 	@Test
 	void persistedRewardRowsAreRepairedOnEnterWorld() throws Exception {
 		assertRecovery(10527, 14, 15);
-		assertRecovery(10528, 11, 12);
+		assertRecovery(10528, 12, 11);
+		assertRecovery(20528, 12, 11);
 		assertRecovery(10525, 6, 7);
 		assertRecovery(20525, 6, 7);
 	}
@@ -87,7 +122,7 @@ class ArchdaevaRewardRowContractTest {
 	@Test
 	void asmodianMirrorsKeepTheSameRewardRow() throws Exception {
 		assertMirrorRewardRow(10527, 20527, 15);
-		assertMirrorRewardRow(10528, 20528, 12);
+		assertMirrorRewardRow(10528, 20528, 11);
 		assertMirrorRewardRow(10525, 20525, 7);
 	}
 

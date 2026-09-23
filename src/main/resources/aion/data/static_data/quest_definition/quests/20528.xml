@@ -24,6 +24,9 @@
     </start-conditions>
   </metadata>
   <progress>
+    <!-- 行 11 是醒来的贤者对话；legacy 在 REWARD 态保留该进度，强推到末行 12 会让客户端步骤列表为空。
+         Row 11 is the awakened sage dialog; the legacy REWARD state keeps this progress, whereas
+         forcing the last row 12 makes the client render an empty step list. -->
     <bit-field name="var0" offset="0" width="4" min="0" max="12" persistence="PERSISTENT" scope="LOCAL"/>
     <bit-field name="var1" offset="6" width="4" min="0" max="10" persistence="PERSISTENT" scope="LOCAL"/>
     <bit-field name="var2" offset="12" width="1" min="0" max="1" persistence="PERSISTENT" scope="LOCAL"/>
@@ -69,11 +72,32 @@
       <var name="var0" value="11"/>
     </node>
     <node label="reward" status="REWARD">
-      <var name="var0" value="12"/>
+      <var name="var0" value="11"/>
     </node>
     <node label="complete" status="COMPLETE"/>
   </nodes>
   <transitions>
+    <!-- 在威扎波波 806297 处交接后只切换 REWARD 状态；旧 helper 的 reward=true 不写 nextStep，
+         因此 var0 仍为 11，下一位领奖 NPC 是佩莱格兰 806079，不能凭任务书末行强制投影为 12。
+         Handover at 806297 changes only the status to REWARD, preserving legacy var0=11;
+         reward collection belongs to agent 806079, not a forced journal projection to row 12. -->
+    <!-- 先前落盘的 REWARD/var0=12 在客户端显示空步骤，重新进入世界时恢复到 11。
+         Recover REWARD/var0=12 saves on enter-world; row 12 renders an empty step list. -->
+    <transition target="reward">
+      <event>
+        <enter-world/>
+      </event>
+      <conditions>
+        <status-is status="REWARD"/>
+        <variable-is field="var0" value="12"/>
+      </conditions>
+      <actions>
+        <set-variable field="var0" value="11"/>
+      </actions>
+      <after-commit>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
+      </after-commit>
+    </transition>
     <transition source="unaccepted" target="started">
       <event>
         <level-up/>
@@ -498,8 +522,7 @@
         <variable-is field="var0" value="11"/>
       </conditions>
       <actions>
-        <remove-item item-id="182216088" count="1"/>
-        <set-variable field="var0" value="12"/>
+        <remove-item item-id="182216088" count="ALL"/>
       </actions>
       <after-commit>
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>

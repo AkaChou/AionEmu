@@ -424,7 +424,7 @@
         <variable-is field="var0" value="11"/>
       </conditions>
       <actions>
-        <remove-item item-id="182216086" count="1"/>
+        <remove-item item-id="182216086" count="ALL"/>
         <set-variable field="var0" value="12"/>
       </actions>
       <after-commit>
