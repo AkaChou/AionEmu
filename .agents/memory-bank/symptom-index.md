@@ -25,6 +25,9 @@
 | 全量套件里出现"只在整套跑时才失败"的配置读取错误（VipConfigPathTest 读到上一个用例的 StandardEnvironment）；或命令行/环境变量覆盖看起来只在部分场景生效 | `AR-011` | EnvironmentPostProcessor 或静态初始化块里是否写了全局状态；Bean 构造器 / @PostConstruct 里是否读了 XxxConfig 字段 |
 | 游戏服 DAO 全量报 `Table 'al_server_ls.xxx' doesn't exist`（玩家/背包/住宅/城镇表全灭），或任意服务读到另一个服务 config 目录里的同名键值（典型：登录与游戏的 `database.url` 互换） | `AR-012` | 新增服务专属原始键时先跑 raw_key_conflicts.py 确认是否跨服务同名不同值；确认解析器路径上是否还有文件派生值在覆盖本服务文件 |
 | 日志只剩一行空文本，或出现「…时异常」这类**没有堆栈**的报错（典型：ChatCommand 的空 ERROR 行、KnownList「对所有 NPC 运行访问器时异常」），异常信息与调用栈全部丢失 | `AR-013` | 见到「有异常但没有堆栈」或「一行空日志」时，先回到该调用点确认异常是否还留在 `I18n.get` 参数里；新增或修改日志后跑 LocalizedLogArgumentsTest 与 verify_invariant.py |
+| 替换客户端 .pak 后客户端一进游戏即崩溃；或数据看似生效但客户端行为异常；`aion_pak.py unpack` 报 decoded=N，回封包报 decoded=0；单条目替换本身没问题，但按仓库上一版产物整包发出后仍然崩溃 | `CPK-001` | `aion_pak.py unpack` 的 decoded= 计数与目标条目的原始编码（magic 0x80 = 二进制 XML）；回封脚本是否只是标准 zip / 是否保留原载荷字节 |
+| 用 zipfile 读 pak 抛 BadZipFile；自建封包后客户端不认；二进制 XML 自写编码器解出错误节点名 | `CPK-002` | 目标 pak 的 XOR 版本（用首个 deflate 条目试解 + CRC 校验探测）；条目是否为二进制 XML（首字节 0x80） |
+| 世界血条能显示但没有数字；以为改客户端数据（npc_ui / hpgauge_level）或服务端模板能开关数字；按 4.6/32 位偏移打补丁无效；改了列表单元格渲染器的显示模式也不见数字 | `CPK-003` | 先判断数字属于哪一类 gauge——数据里有没有 `num_type`（有→改数据即可）；再看头顶血条在数据里有没有控件定义（没有→只能改代码，且必须先确认它是否走控件数字路径，否则任何「模式翻转」都无效） |
 | 怪物血条停在旧值、要等下一次真实攻击才跳变（AI 脚本阶段转换设 5%/50%、脚本回满、Servant 出生设血后客户端毫无反应）；反向症状是实例人数变化或战斗中最大生命变化后，周围玩家收到成片与血条无关的飘字而血条纹丝不动；第三类是技能侧扣血（精灵星「精灵吸收」的负治疗量、NPC 施法耗血）后 NPC 血条与召唤物的主人面板同时停在旧值 | `CV-001` | 血条不同步时，先确认该改血是否经过 Controller.onAttack（绕过者必不发包），再确认它走的是 setCurrentHp*/rescaleCurrentHp/reduceHpFromEffect 中哪条出口；排查成片假飘字时，检查最大生命变化是否仍在走 setCurrentHp 而不是 rescaleCurrentHp；核实出生/重生期改血是否被 isSpawned() 守卫正确短路；召唤物主人面板不刷新时，检查是否漏发 SM_SUMMON_UPDATE（血条正常但面板停住是该漏发的特征） |
 | 改了源码但运行行为不变、日志与源码不一致、stale class | `ENV-001` | launch command, target/classes, JAR or resource directory and log/console.log |
 | Maven 与 standalone javac 结果不一致、Lombok 构造器缺失、JDK 25/26 行为漂移 | `ENV-002` | pom.xml, java version, Maven processor paths and baseline diff |

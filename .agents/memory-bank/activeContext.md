@@ -85,6 +85,32 @@
      `53839e5962aea7df4e9f6357267dfcd5`，待实机确认地面/雾恢复晴天。
    - 证据：`.agents/summary/weather-theobomos/diagnosis-sandrain.md`、
      探针 `.agents/summary/weather-theobomos/probe/TheobomosWeatherProbe.jsh`。
+5. **客户端血条「数字」显示（Game.dll v3）：已实机验收并收口**：
+   - **已交付并确认有效**：`patch/Game.dll`（29,795,000 字节，MD5 `71a146481980f284e1144967037e3ab1`
+     ＝ 原版 + VIP + 3 处数字改动，与原版逐字节差 502 处）；2026-09-23 用户实测
+     **窗口内血条（目标窗口/组队/基础状态栏）出现数字**，客户端稳定。部署 = 覆盖 `bin64/Game.dll`，
+     回滚 = `bin64/Game.dll.bak`。
+   - **2026-09-23 补丁目录精简（用户要求「只留最终的」）**：`patch/` 现仅剩
+     `Game.dll`（唯一二进制补丁）、`Levels/lf2a/Level.pak`（天空修复）、`L10N/CHS/Data/data.pak`（⛔ 暂不可部署）；
+     已删除 `Game.hpnum.dll`、`Game.vip-hpnum.dll`（内容并入 `patch/Game.dll`）、`data.numbers.pak`、
+     `data/Npcs/npcs.pak`、`data/ui/game/game.pak`，重建方法保留在 `patch/patch_documentation.md`。
+   - **用户已接受该形态为交付**（「显示数字就行了」）；**头顶世界血条的数字不在本轮范围**——它由
+     NPC 显示系统手动绘制（`0x108c37df`→`0x108c3ed0`→`0x108c2250`），从不调用数字文本函数
+     `0x1097d290`，需**代码注入**才能实现；若日后要做，两条路：①索取 5.8 64 位现成补丁做字节对比；
+     ②x64dbg 跟 `Game.dll+8C2250` 取子控件虚表与构造点。
+   - **机理**（模式卡 `CPK-003`）：`num_type`(→`+0x8d4`，default/small/micro) + `value_type`(→`+0x364`)
+     由 UI 数据属性写入；控件更新函数 `0x108e125d` 读 `num_type` 后调 `0x1097d290` 画数字。
+   - **已撤的两个备选包**（2026-09-23 精简时删除，配方留在 `patch/patch_documentation.md`）：
+     `data.numbers.pak`（目标窗口数字，基准 = 客户端现用 data.pak、差异条目 = 1，只在「不想动 DLL」时才需要）
+     与 `data/Npcs/npcs.pak`（非必需——世界血条默认就有）。
+   - **纪律（本轮血的教训，`CPK-001`）**：pak 交付物必须以**客户端现用文件**为基准做单条目替换，
+     出货前核对差异条目数 == 1。上一轮误用仓库版（差 60 条目：任务对话 HTML + Strings/npcs/UI）
+     整包发出 → 客户端崩溃。仓库版 `patch/L10N/CHS/Data/data.pak` 曾只撤掉「数字」一处而非真正回滚，
+     经用户指出后已 **`git checkout` 回滚为提交版本**（95,915,168 / `9e624783…`，23,271 条目）；
+     回滚后仍与客户端原版差 **58 个条目**（55 `Dialogs/*` + 2 `Strings/*` + 1 `npcs/npc_mesh_replace.txt`）
+     → 标记 ⛔ **仍不可部署**，启用只能逐条目二分定位。客户端现用文件（94,240,820 / `b47db70c…`）
+     = 原版 + 勾选框，与客户端原版仅差 1 条目。
+   - 证据：`.agents/summary/client-hp-display/2026-09-23-client-hp-display-switch.zh-CN.md`（§12–§16）。
 
 ## 交接规则 (Handoff Rules)
 
