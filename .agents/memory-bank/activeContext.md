@@ -2,7 +2,7 @@
 
 记录当前正在推进的任务与未解决的问题焦点。跨 Agent 接力时，先读此文件了解当前状态。
 
-> last_updated: 2026-09-22
+> last_updated: 2026-09-23
 > status: ACTIVE
 > scope: current checkout only
 > owner: shared agents
@@ -42,6 +42,8 @@
   - **容量口径基线**：世界全刷 + 0 玩家 ≈ **2.74 GB** 存活堆，叠加 12.98 万 NPC + 1 玩家 ≈ **2.82 GB**；16 GB 堆按 G1 live ≤75%
     给玩家的净余量 ≈ 9 GB（每人 1.5–5 MB **尚未实测**，需多做号差分）。真正的天花板是 CPU：**1 名玩家**时寻路+geo 已占 CPU 采样 ≈65%。
     部署到 16 GB 机器不要 `-Xmx16g`（用 `-Xmx10g -Xms4g`），并显式设 `-XX:MaxDirectMemorySize=2g`（默认 = Xmx，Netty 直接内存不计入堆直方图）。
+
+  - **待客户端验收（生物血量同步收口，`CV-001`，两轮已修复）**：客户端血条在绕过 `Controller.onAttack` 的改血后停在旧值。第一轮修**直接改血**：收敛到 `NpcLifeStats` 的 `setCurrentHp`/`setCurrentHpPercent` 覆写（未 spawn 短路 + 锁外补发 `TYPE.HP` + 有符号 delta），并给等比重算加显式静默出口 `CreatureLifeStats.rescaleCurrentHp`（**不能用覆写内的前后百分比推断等比重算**——`checkHPStats` 先让新 maxHp 生效，读数会失真，实例人数变化会引发整片假飘字）。第二轮修**非攻击扣血**：技能侧三个调用点（负治疗量、`hpuse` 施法耗血、周期耗血）统一走新入口 `CreatureLifeStats.reduceHpFromEffect`，NPC 覆写只广播，召唤物覆写额外下发 `SM_SUMMON_UPDATE`（主人面板消费绝对 HP，只发血条会让面板停住）；负治疗量（精灵星「精灵吸收」`EL_Unsummon`）的扣血经用户确认为零售语义、保留。**禁止在 `reduceHp` 外套锁**（`onDie` 锁外回调并跨对象取锁，外套锁会造成跨生物倒序死锁）。聚焦测试 28/28、定向回归 113/114（唯一失败为已归档的既有 `RetailPatternAI2:893` NPE）全绿；**客户端实机复测待用户执行**：确认阶段转换/回满时血条即时跳变、常规打怪无双重广播、多人进出副本无假飘字、精灵星对被召唤物施放「精灵吸收」时召唤物血条与主人面板同步下降。模式卡 `CV-001`，证据在 `.agents/summary/npc-hp-sync/`（`2026-09-23-npc-direct-hp-sync.zh-CN.md` 与 `2026-09-23-npc-effect-hp-reduction-sync.zh-CN.md`）。
 
 ---
 
