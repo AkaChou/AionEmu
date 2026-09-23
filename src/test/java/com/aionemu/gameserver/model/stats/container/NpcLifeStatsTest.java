@@ -1,7 +1,9 @@
 package com.aionemu.gameserver.model.stats.container;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -37,6 +39,16 @@ class NpcLifeStatsTest {
 		assertSame(lifeLock, field(stats, "hpLock"));
 		assertSame(lifeLock, field(stats, "mpLock"));
 		assertSame(lifeLock, stats.restoreLockInstance());
+	}
+
+	@Test
+	void onlyAVisiblePercentageChangeNeedsHpSync() {
+		// 客户端血条只认百分比：只有百分比变化才需要补包，等比重算带来的绝对值变化必须保持静默。
+		// The client bar only knows percentages: only a percentage change needs a packet, while the absolute
+		// delta of a proportional rescale must stay silent.
+		assertTrue(NpcLifeStats.hasVisibleHpChange(100, 5));
+		assertTrue(NpcLifeStats.hasVisibleHpChange(5, 100));
+		assertFalse(NpcLifeStats.hasVisibleHpChange(50, 50));
 	}
 
 	@Test

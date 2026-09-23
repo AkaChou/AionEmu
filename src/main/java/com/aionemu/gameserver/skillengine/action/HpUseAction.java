@@ -50,6 +50,6 @@ public class HpUseAction extends Action {
 		if (ratio) {
 			valueWithDelta = (int) (valueWithDelta / 100f * skill.getEffector().getLifeStats().getMaxHp());
 		}
-		effector.getLifeStats().reduceHp(valueWithDelta, effector);
+		effector.getLifeStats().reduceHpFromEffect(valueWithDelta, effector);
 	}
 }

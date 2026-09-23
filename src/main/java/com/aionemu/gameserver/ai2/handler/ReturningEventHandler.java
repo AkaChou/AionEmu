@@ -9,7 +9,6 @@ import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.model.geometry.Point3D;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
 import com.aionemu.gameserver.skillengine.model.HealType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -78,10 +77,10 @@ public class ReturningEventHandler {
 		npc.getMoveController().clearHomeReturn();
 		if (fullHeal) {
 			int restoredHp = npc.getLifeStats().getMaxHp() - npc.getLifeStats().getCurrentHp();
+			// 血量同步已由 NpcLifeStats#setCurrentHpPercent 的收敛出口负责，这里只补观察者通知，避免双包。
+			// HP sync is handled by the NpcLifeStats#setCurrentHpPercent outlet; only the observer notice stays here.
 			npc.getLifeStats().setCurrentHpPercent(100);
 			if (restoredHp > 0) {
-				PacketSendUtility.broadcastPacketAndReceive(npc,
-						new SM_ATTACK_STATUS(npc, npc, SM_ATTACK_STATUS.TYPE.HP, 0, restoredHp));
 				npc.getObserveController().notifyLifeChangedObservers(HealType.HP, npc.getLifeStats().getCurrentHp());
 			}
 		}

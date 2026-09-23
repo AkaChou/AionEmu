@@ -562,7 +562,7 @@ public abstract class CreatureGameStats<T extends Creature> {
 		}
 		if (oldHP.getCurrent() != newHP.getCurrent()) {
 			float percent = 1f * newHP.getCurrent() / oldHP.getCurrent();
-			owner.getLifeStats().setCurrentHp(Math.round(owner.getLifeStats().getCurrentHp() * percent));
+			owner.getLifeStats().rescaleCurrentHp(Math.round(owner.getLifeStats().getCurrentHp() * percent));
 		}
 	}
 

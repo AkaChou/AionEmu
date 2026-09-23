@@ -38,6 +38,6 @@ public class HpUsePeriodicAction extends PeriodicAction {
 			effect.endEffect();
 			return;
 		}
-		effected.getLifeStats().reduceHp(value, effected);
+		effected.getLifeStats().reduceHpFromEffect(value, effected);
 	}
 }

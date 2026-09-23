@@ -103,6 +103,22 @@ public abstract class CreatureLifeStats<T extends Creature> {
 		return currentHp;
 	}
 
+	/**
+	 * 非攻击流程扣血的统一入口（技能效果、施法代价、周期性消耗等）。
+	 * Unified entry for HP reduction outside the attack flow (skill effects, cast costs, periodic drains).
+	 * <p>默认等价于 {@link #reduceHp(int, Creature)}，不补发任何同步：玩家侧通知仍由 {@link #onReduceHp()}
+	 * 独占，避免双包；子类可覆写以在血量变化时补发客户端同步。</p>
+	 * <p>The default behaves exactly like {@link #reduceHp(int, Creature)} and sends no synchronization: the
+	 * player-side notice stays owned by {@link #onReduceHp()} to avoid a double packet, while subclasses may
+	 * override it to synchronize the change to clients.</p>
+	 * @param value 扣除量 / amount to reduce
+	 * @param attacker 归因来源 / source of the reduction
+	 * @return 变化后的生命值 / the resulting HP
+	 */
+	public int reduceHpFromEffect(int value, Creature attacker) {
+		return reduceHp(value, attacker);
+	}
+
 	/** Reduce Mp / Reduce Mp */
 	public int reduceMp(int value) {
 		boolean mpChanged;
@@ -358,6 +374,22 @@ public abstract class CreatureLifeStats<T extends Creature> {
 		if (hpNotAtMaxValue) {
 			onReduceHp();
 		}
+	}
+
+	/**
+	 * 最大生命变化后按比例重算当前生命值。
+	 * Rescales the current HP after the max HP changed.
+	 * <p>默认实现等价于 {@link #setCurrentHp(int)}，保持既有同步行为；子类可覆写为静默重算。
+	 * NPC 就是这种情况：等比重算保持客户端可见的生命百分比不变（新值 = 旧值 × 新上限 ÷ 旧上限，
+	 * 与新的上限相除后仍是同一个百分比），因此不需要任何网络同步。</p>
+	 * <p>The default behaves exactly like {@link #setCurrentHp(int)} and keeps the existing synchronization;
+	 * subclasses may override it with a silent rescale. NPCs are that case: the rescale preserves the
+	 * client-visible percentage (the new value is the old value times the new cap over the old cap, so
+	 * dividing by the new cap yields the same percentage), and therefore needs no network synchronization.</p>
+	 * @param hp 重算后的生命值 / rescaled HP value
+	 */
+	public void rescaleCurrentHp(int hp) {
+		setCurrentHp(hp);
 	}
 
 	/** 设置 current mp / Sets the current mp */

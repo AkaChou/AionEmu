@@ -127,7 +127,7 @@ public abstract class AbstractHealEffect extends EffectTemplate {
 					effected.getLifeStats().increaseHp(TYPE.REGULAR, healValue, 0, LOG.REGULAR);
 				}
 				else {
-					effected.getLifeStats().reduceHp(-healValue, effected);
+					effected.getLifeStats().reduceHpFromEffect(-healValue, effected);
 				}
 				break;
 			case MP:
