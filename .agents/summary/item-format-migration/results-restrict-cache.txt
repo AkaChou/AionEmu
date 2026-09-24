@@ -1,0 +1,9 @@
+=== restrict 缓存 + 自实现 finish 后 (warmup=2, iterations=5) ===
+batch-jaxb                 iterations=5 median_wall_ms=990.2 min_wall_ms=988.3 median_cpu_ms=985.7 median_alloc_mb=575.6 wall_ms=[1007.7,993.2,988.9,988.3,990.2]
+batch-jsonl                iterations=5 median_wall_ms=422.3 min_wall_ms=418.0 median_cpu_ms=419.0 median_alloc_mb=842.1 wall_ms=[426.1,419.5,422.3,418.0,423.4]
+batch-jsonl-dict           iterations=5 median_wall_ms=311.8 min_wall_ms=301.6 median_cpu_ms=305.6 median_alloc_mb=609.8 wall_ms=[316.4,301.6,302.6,311.8,313.0]
+batch-jsonl-dict-stream    iterations=5 median_wall_ms=300.1 min_wall_ms=289.4 median_cpu_ms=298.1 median_alloc_mb=522.5 wall_ms=[300.1,289.4,291.7,482.9,512.4]
+
+=== 单分片 ===
+jaxb-item                  iterations=5 median_wall_ms=120.4 min_wall_ms=91.2 median_cpu_ms=103.0 median_alloc_mb=46.3 wall_ms=[108.4,91.2,124.6,120.4,127.8]
+jsonl-dict-stream          iterations=5 median_wall_ms=29.3 min_wall_ms=28.5 median_cpu_ms=29.2 median_alloc_mb=36.2 wall_ms=[31.6,33.8,29.2,29.3,28.5]

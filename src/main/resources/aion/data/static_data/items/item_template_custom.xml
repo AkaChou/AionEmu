@@ -10,6 +10,14 @@
 	- 本文件由分片器之外的加载路径在每次启动时应用，不会被自动改写或删除。
 	  This file is applied by the loader on every start, outside the shard writer; it is never
 	  rewritten or deleted automatically.
+	- 空状态（无任何 item_template）不满足上方声明的 item_templates.xsd：该 schema 对
+	  item_template 要求 minOccurs="1"，而"当前没有自定义物品"是合法状态。二者并不冲突——
+	  那条约束是为**分片**定的，空分片意味着切分出了问题。IDE 在空状态下提示校验错误属预期；
+	  ItemTemplateShardSchemaTest 也据此对空文件跳过校验。
+	  An empty file carries no item_template, which the declared schema rejects; its
+	  minOccurs="1" is written for shards, where an empty file means the split went wrong.
+	  IDE validation warnings on the empty state are expected, and ItemTemplateShardSchemaTest
+	  skips validation for an empty override accordingly.
 	- 示例（使用时去掉注释）/ Example (uncomment to use):
 	<item_templates>
 		<item_template id="187000023" name="Blessed Godstone Box" name_desc="custom_godstone_box"

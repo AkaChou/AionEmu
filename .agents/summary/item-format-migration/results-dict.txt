@@ -1,0 +1,5 @@
+=== 全量四方对比 (warmup=2, iterations=5) ===
+batch-jaxb                 iterations=5 median_wall_ms=994.9 min_wall_ms=993.9 median_cpu_ms=988.9 median_alloc_mb=575.6 wall_ms=[1024.5,999.6,993.9,993.9,994.9]
+batch-jsonl                iterations=5 median_wall_ms=490.9 min_wall_ms=489.6 median_cpu_ms=482.7 median_alloc_mb=993.4 wall_ms=[499.3,511.0,490.9,490.9,489.6]
+batch-jsonl-dict           iterations=5 median_wall_ms=358.5 min_wall_ms=354.1 median_cpu_ms=354.8 median_alloc_mb=764.1 wall_ms=[360.6,358.5,365.0,354.1,354.5]
+batch-jsonl-dict-stream    iterations=5 median_wall_ms=371.1 min_wall_ms=360.5 median_cpu_ms=363.7 median_alloc_mb=673.8 wall_ms=[363.3,397.7,371.1,378.9,360.5]

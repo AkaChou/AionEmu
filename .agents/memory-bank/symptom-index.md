@@ -106,3 +106,4 @@
 | JAXB 反射警告、final field 写入失败、XML 属性反序列化后值未生效 | `SDJ-002` | JAXB annotations, field declarations and runtime binding warnings |
 | 英吉斯温地图驻地、门户、副本出口或任务错误进入 210130000，或运行数据再次把 210130000 当作玩家目标 | `SDJ-003` | hotspot_location.xml mapid, portal_loc.xml world_id, TeleportService2.resolveInggisonWorldId and quest world-id/zone names |
 | 某张静态数据表被改成"零子元素"后在启动期抛 NullPointerException；实体 getter 返回 null 而不是空集合 | `SDJ-004` | 目标字段是否声明为 List/Collection、XSD 与数据是否允许 0 个子元素、getter 是否可能返回 null |
+| 自写绑定器把 `"questid":"04450"` 读成 0，8 处静默错误；只有逐字段比对才暴露 | `SDJ-005` | 目标字段是数值类型但值以 `"` 开头；数据里是否存在前导零数字（`grep -oE '"[a-z_]+":"0[0-9]+"'`） |

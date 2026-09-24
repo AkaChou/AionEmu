@@ -1,0 +1,15 @@
+=== 并行时序对照（pool=15，11 分片并发，10 核）/ production-like parallelism ===
+
+--- 稳态 warmup=2 iterations=5 ---
+INFO java=26.0.2.1 scenario=parallel-jaxb file=src/main/resources/aion/data/static_data/items/item bytes=448 warmup=2 iterations=5
+RESULT label=parallel-jaxb iterations=5 pool=15 median_wall_ms=185.9 min_wall_ms=178.9 median_process_cpu_ms=1324.2 median_alloc_mb=574.6 wall_ms=[200.7,185.9,186.5,184.5,178.9]
+INFO java=26.0.2.1 scenario=parallel-jsonl file=/tmp/item-shards-dict bytes=416 warmup=2 iterations=5
+RESULT label=parallel-jsonl iterations=5 pool=15 median_wall_ms=67.5 min_wall_ms=63.5 median_process_cpu_ms=478.5 median_alloc_mb=522.5 wall_ms=[117.6,78.9,63.5,67.5,63.7]
+
+--- 冷启动首轮（独立 JVM，warmup=0 iterations=1）---
+run#1 parallel-jaxb    iterations=1 pool=15 median_wall_ms=1515.0 min_wall_ms=1515.0 median_process_cpu_ms=7562.4 median_alloc_mb=585.1 wall_ms=[1515.0]
+run#1 parallel-jsonl   iterations=1 pool=15 median_wall_ms=741.0 min_wall_ms=741.0 median_process_cpu_ms=4935.2 median_alloc_mb=542.5 wall_ms=[741.0]
+run#2 parallel-jaxb    iterations=1 pool=15 median_wall_ms=1168.4 min_wall_ms=1168.4 median_process_cpu_ms=7011.6 median_alloc_mb=584.6 wall_ms=[1168.4]
+run#2 parallel-jsonl   iterations=1 pool=15 median_wall_ms=819.8 min_wall_ms=819.8 median_process_cpu_ms=5514.7 median_alloc_mb=548.8 wall_ms=[819.8]
+run#3 parallel-jaxb    iterations=1 pool=15 median_wall_ms=1167.3 min_wall_ms=1167.3 median_process_cpu_ms=7211.7 median_alloc_mb=584.9 wall_ms=[1167.3]
+run#3 parallel-jsonl   iterations=1 pool=15 median_wall_ms=853.1 min_wall_ms=853.1 median_process_cpu_ms=5230.8 median_alloc_mb=546.1 wall_ms=[853.1]

@@ -2,10 +2,10 @@
 
 本文档记录 AionEmu 静态模板数据、XML 映射及动态反射加载的底层事实。
 
-> Pattern IDs: `SDJ-001`–`SDJ-004`
+> Pattern IDs: `SDJ-001`–`SDJ-005`
 > card_status: ACTIVE; verify source and runtime evidence before treating a claim as universal
 > scope: static data loaders, XML/JAXB entities, and dynamically loaded server classes
-> last_reviewed: 2026-09-20
+> last_reviewed: 2026-09-23
 
 ---
 
@@ -117,3 +117,30 @@ first_check: 目标字段是否声明为 List/Collection、XSD 与数据是否�
    是合法数据，模型必须能承受空集合，否则"把某图天气表清空"这种纯数据操作会让服务端启动失败。
 3. **护栏**：允许零子元素的集合字段一律在声明处 `= new ArrayList<>()`；有子元素时 JAXB 会往这个列表追加
    （已回归验证：Poeta 的 7 条 weather 条目照常解析），初始化不改变正常数据的语义。
+
+---
+
+## [SDJ-005] 五、数据里的字符串形式数字（前导零）—— 自写绑定器必须分辨字面量
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 自写 JSONL/文本绑定器解析静态模板数值字段（JAXB 路径不受影响）
+first_seen: 2026-09-23
+last_verified: 2026-09-23
+symptom: 自写绑定器把 `"questid":"04450"` 读成 0，8 处静默错误；只有逐字段比对才暴露
+root_cause: 物品模板数据里存在以字符串书写的数字（带前导零，全量 8 处）；生成器的安全转换规则不容前导零、故意保留其为字符串，而绑定器的"裸数字快路径"直接按字符累加，遇到引号立即停止并返回 0
+fix_or_guardrail: 数值快路径前先判断值是否以 `"` 开头，是则交回字符串转换路径；转换规则本身保持"不容前导零"（否则丢零）
+evidence: .agents/summary/item-format-migration/2026-09-23-plain-jsonl-probe.zh-CN.md §8.2; .agents/summary/item-format-migration/gen_plain_jsonl.py; .agents/summary/item-format-migration/JsonlItemProbe.java; src/main/java/com/aionemu/gameserver/model/templates/item/actions/QuestStartAction.java:30
+validation: 11 分片逐字段比对 11,925,674 个字段；修复前 mismatched=11（含 8 处 questid），修复后回到 3（均为重复 id 假阳性）
+boundaries: 仅适用于自写绑定器；JAXB 通过 Integer.parseInt 正确处理前导零（"04450" → 4450），现有 XML 路径不受影响
+superseded_by: none
+first_check: 目标字段是数值类型但值以 `"` 开头；数据里是否存在前导零数字（`grep -oE '"[a-z_]+":"0[0-9]+"'`）
+-->
+
+1. **数据里存在以字符串书写的数字**：`"questid":"04450"`（带前导零，全量 8 处）。这**不是数据缺陷**——
+   `questid` 在 `QuestStartAction` 里是 `int`，`Integer.parseInt("04450")` = 4450，JAXB 一直处理正确。
+2. **生成器刻意保留其为字符串**：安全转换规则 `^-?(0|[1-9]\d{0,14})$` 不容前导零，匹配失败即保留原字符串，
+   以免 `"04450"` → `4450` 静默丢零。规则本身是对的。
+3. **自写绑定器的快路径必须分辨字面量**：`readInt()` 见到 `"` 会立即停止累加并返回 0，
+   于是这 8 处被**静默读成 0 而非报错**——与 SDJ-004 同类，都属于"不报错但结果错"。
+4. **这条边界只在自写绑定器上成立**：JAXB 走 `Integer.parseInt`，本就不受前导零影响。
+   因此格式迁移期间，**XML 与 JSONL 两条路径都必须留在逐字段比对的覆盖范围内**。

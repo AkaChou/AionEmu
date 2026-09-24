@@ -1,0 +1,39 @@
+== 物品模板存储格式探针报告 / item-template storage format probe 2026-09-23 21:34:03 CST ==
+openjdk version "26.0.2.1" 2026-08-18
+OpenJDK Runtime Environment Zulu26.32+203-CA (build 26.0.2.1+1)
+OpenJDK 64-Bit Server VM Zulu26.32+203-CA (build 26.0.2.1+1, mixed mode, sharing)
+shard=/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/data/static_data/items/item/item_template_100000001_100601382.xml
+jsonl=/tmp/item-shard-1.compact.jsonl
+warmup=2 iterations=5
+
+### scenario=jaxb-item
+INFO java=26.0.2.1 scenario=jaxb-item file=/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/data/static_data/items/item/item_template_100000001_100601382.xml bytes=8306679 warmup=2 iterations=5
+RESULT label=jaxb-item iterations=5 median_wall_ms=92.2 min_wall_ms=90.4 median_cpu_ms=91.7 median_alloc_mb=46.3 wall_ms=[92.0,90.4,92.2,95.1,95.2]
+
+### scenario=sax-scan-item
+INFO java=26.0.2.1 scenario=sax-scan-item file=/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/data/static_data/items/item/item_template_100000001_100601382.xml bytes=8306679 warmup=2 iterations=5
+RESULT label=sax-scan-item iterations=5 median_wall_ms=41.3 min_wall_ms=40.5 median_cpu_ms=41.1 median_alloc_mb=0.4 wall_ms=[44.2,40.5,56.0,41.3,40.9]
+
+### scenario=jsonl-parse
+INFO java=26.0.2.1 scenario=jsonl-parse file=/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/data/static_data/items/item/item_template_100000001_100601382.xml bytes=8306679 warmup=2 iterations=5
+Exception in thread "main" java.lang.IllegalStateException: bad key table line: <?xml version="1.0" encoding="UTF-8"?>
+	at JsonlItemProbe$JsonArrays.readKeys(JsonlItemProbe.java:602)
+	at JsonlItemProbe.jsonlParse(JsonlItemProbe.java:135)
+	at JsonlItemProbe.lambda$main$1(JsonlItemProbe.java:82)
+	at JsonlItemProbe.collect(JsonlItemProbe.java:764)
+	at JsonlItemProbe.measure(JsonlItemProbe.java:748)
+	at JsonlItemProbe.main(JsonlItemProbe.java:82)
+FAILED scenario=jsonl-parse
+
+### scenario=jsonl-item
+INFO java=26.0.2.1 scenario=jsonl-item file=/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/data/static_data/items/item/item_template_100000001_100601382.xml bytes=8306679 warmup=2 iterations=5
+Exception in thread "main" java.lang.IllegalStateException: bad key table line: <?xml version="1.0" encoding="UTF-8"?>
+	at JsonlItemProbe$JsonArrays.readKeys(JsonlItemProbe.java:602)
+	at JsonlItemProbe.bindAll(JsonlItemProbe.java:171)
+	at JsonlItemProbe.jsonlBind(JsonlItemProbe.java:146)
+	at JsonlItemProbe.lambda$main$2(JsonlItemProbe.java:83)
+	at JsonlItemProbe.collect(JsonlItemProbe.java:764)
+	at JsonlItemProbe.measure(JsonlItemProbe.java:748)
+	at JsonlItemProbe.main(JsonlItemProbe.java:83)
+FAILED scenario=jsonl-item
+

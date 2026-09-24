@@ -1,0 +1,16 @@
+=== 全量正确性复验（最终）/ full verification (final) ===
+  item_template_100000001_100601382             cmp=833794    mismatched=0   missing=0
+  item_template_100601383_101801474             cmp=823584    mismatched=0   missing=0
+  item_template_101801475_110500540             cmp=906107    mismatched=0   missing=0
+  item_template_110500541_111500929             cmp=1035482   mismatched=1   missing=0
+VERIFY sample: /namedesc = cash_ms_torso_swimsuittatoo_01 vs null
+  item_template_111500930_112501856             cmp=966535    mismatched=0   missing=0
+  item_template_112501857_113601035             cmp=982374    mismatched=0   missing=0
+  item_template_113601036_114601992             cmp=981439    mismatched=0   missing=0
+  item_template_114601993_125003096             cmp=1050399   mismatched=0   missing=0
+  item_template_125003097_152209117             cmp=1295407   mismatched=0   missing=0
+  item_template_152209118_182005538             cmp=1464341   mismatched=2   missing=0
+VERIFY sample: /namedesc = world_cash_item_hair_type_li_w_205a vs null
+VERIFY sample: /namedesc = world_cash_item_hair_type_li_w_205a vs null
+  item_template_182005539_190200002             cmp=1586212   mismatched=0   missing=0
+  ---- 合计 compared=11925674  mismatched=3  missing=0 ----

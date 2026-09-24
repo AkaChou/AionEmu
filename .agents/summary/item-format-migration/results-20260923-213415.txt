@@ -1,0 +1,24 @@
+== 物品模板存储格式探针报告 / item-template storage format probe 2026-09-23 21:34:15 CST ==
+openjdk version "26.0.2.1" 2026-08-18
+OpenJDK Runtime Environment Zulu26.32+203-CA (build 26.0.2.1+1)
+OpenJDK 64-Bit Server VM Zulu26.32+203-CA (build 26.0.2.1+1, mixed mode, sharing)
+shard=/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/data/static_data/items/item/item_template_100000001_100601382.xml
+jsonl=/tmp/item-shard-1.compact.jsonl
+warmup=2 iterations=5
+
+### scenario=jaxb-item
+INFO java=26.0.2.1 scenario=jaxb-item file=/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/data/static_data/items/item/item_template_100000001_100601382.xml bytes=8306679 warmup=2 iterations=5
+RESULT label=jaxb-item iterations=5 median_wall_ms=92.1 min_wall_ms=90.4 median_cpu_ms=91.5 median_alloc_mb=46.3 wall_ms=[92.8,92.8,92.1,90.9,90.4]
+
+### scenario=sax-scan-item
+INFO java=26.0.2.1 scenario=sax-scan-item file=/Users/mc/IdeaProjects/AionEmu-test/src/main/resources/aion/data/static_data/items/item/item_template_100000001_100601382.xml bytes=8306679 warmup=2 iterations=5
+RESULT label=sax-scan-item iterations=5 median_wall_ms=41.1 min_wall_ms=40.7 median_cpu_ms=41.0 median_alloc_mb=0.4 wall_ms=[43.4,40.7,56.6,41.1,40.9]
+
+### scenario=jsonl-parse
+INFO java=26.0.2.1 scenario=jsonl-parse file=/tmp/item-shard-1.compact.jsonl bytes=4553769 warmup=2 iterations=5
+RESULT label=jsonl-parse iterations=5 median_wall_ms=17.3 min_wall_ms=17.2 median_cpu_ms=17.2 median_alloc_mb=36.6 wall_ms=[17.3,17.5,17.3,17.4,17.2]
+
+### scenario=jsonl-item
+INFO java=26.0.2.1 scenario=jsonl-item file=/tmp/item-shard-1.compact.jsonl bytes=4553769 warmup=2 iterations=5
+RESULT label=jsonl-item iterations=5 median_wall_ms=45.7 min_wall_ms=44.9 median_cpu_ms=45.4 median_alloc_mb=70.1 wall_ms=[48.7,47.5,45.5,45.7,44.9]
+
