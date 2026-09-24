@@ -490,6 +490,18 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <!-- 倒下的贤者没有可选的任务行；NPC 首次点击先发送 USE_OBJECT(-1)，
+         直接打开任务页而不是回退到 questId=0 的通用第 10 页。
+         The fallen sage has no selectable quest row; its initial USE_OBJECT(-1)
+         opens the quest page instead of falling back to generic page 10. -->
+    <transition source="s9" target="s9">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806299" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT10"/>
+      </after-commit>
+    </transition>
     <transition source="s9" target="s9">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806299" action="QUEST_SELECT"/>
@@ -536,6 +548,16 @@
     </transition>
     <!-- 806079（代理人）：报告沉睡的卫扎波波后进入领奖行（var0=11）。
          806079 (agent): report the sleeping Wizabobo, then enter the reward row (var0=11). -->
+    <!-- 报告阶段首次点击代理人先发送 USE_OBJECT(-1)；没有任务选择行时直接打开任务页。
+         Initial talk with the agent sends USE_OBJECT(-1); open the quest page without a selectable quest row. -->
+    <transition source="s10" target="s10">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="806079" action="USE_OBJECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT11"/>
+      </after-commit>
+    </transition>
     <transition source="s10" target="s10">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="806079" action="QUEST_SELECT"/>

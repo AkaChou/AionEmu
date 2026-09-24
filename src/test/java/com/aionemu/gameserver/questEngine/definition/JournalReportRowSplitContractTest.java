@@ -13,7 +13,9 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 锁定“折叠报告行”收尾批次：10529/20529 的客户端任务书共 12 行，第 10 行“带上陷入沉睡的
@@ -57,6 +59,59 @@ class JournalReportRowSplitContractTest {
 	}
 
 	@Test
+	void fallenSageInitialTalkOpensTheQuestPageWithoutAClientQuestRow() throws Exception {
+		for (ReportContract contract : REPORTS) {
+			CompiledQuestDefinition compiled = definition(contract.questId());
+			QuestEvent.TalkToNpc initialTalk = new QuestEvent.TalkToNpc(
+				contract.carrierNpcId(), QuestDialogAction.USE_OBJECT.id());
+			QuestTransition entry = route(compiled.definition(), "s9", "s9", initialTalk);
+			assertEquals(1, compiled.definition().transitions().stream()
+				.filter(transition -> transition.event().equals(initialTalk)).count(),
+				() -> "quest " + contract.questId() + " must only open on the fallen sage at s9");
+			assertEquals(List.of(), entry.conditions());
+			assertEquals(List.of(), entry.actions());
+			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT10.id())),
+				entry.afterCommit());
+			assertNull(entry.priority());
+
+			QuestSnapshot afterBossKill = snapshot(compiled, QuestStatus.START,
+				Map.of("var0", 9, "var1", 0, "var2", 3), contract.carrierInventory());
+			QuestMutationPlan plan = QuestMutationPlanner.plan(compiled, afterBossKill,
+				initialTalk, entry).orElseThrow();
+			assertEquals(QuestStatus.START, plan.nextStatus());
+			assertEquals(afterBossKill.packedVariables(), plan.nextPackedVariables(),
+				() -> "quest " + contract.questId() + " initial talk must preserve the real kill counters");
+
+			QuestTransition questRow = route(compiled.definition(), "s9", "s9",
+				new QuestEvent.TalkToNpc(contract.carrierNpcId(), QuestDialogAction.QUEST_SELECT.id()));
+			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT10.id())),
+				questRow.afterCommit());
+			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT10_1.id())),
+				route(compiled.definition(), "s9", "s9", new QuestEvent.TalkToNpc(
+					contract.carrierNpcId(), QuestDialogAction.SELECT10_1.id())).afterCommit());
+			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT10_1_1.id())),
+				route(compiled.definition(), "s9", "s9", new QuestEvent.TalkToNpc(
+					contract.carrierNpcId(), QuestDialogAction.SELECT10_1_1.id())).afterCommit());
+
+			QuestTransition handover = route(compiled.definition(), "s9", "s10",
+				new QuestEvent.TalkToNpc(contract.carrierNpcId(), QuestDialogAction.SETPRO10.id()));
+			QuestMutationPlan handoverPlan = QuestMutationPlanner.plan(compiled, afterBossKill,
+				handover.event(), handover).orElseThrow();
+			assertEquals(QuestStatus.START, handoverPlan.nextStatus());
+			assertEquals(Map.of("var0", contract.reportRow(), "var1", 0, "var2", 3),
+				unpack(compiled, handoverPlan),
+				() -> "quest " + contract.questId() + " must leave the fallen sage on the report row");
+			assertTrue(handoverPlan.requiredActions().contains(new QuestAction.GiveItem(
+				contract.questId() == 10529 ? 182216107 : 182216108, 1)));
+			assertEquals(3, handoverPlan.afterCommit().size());
+			assertInstanceOf(AfterCommitAction.TeleportPlayer.class, handoverPlan.afterCommit().get(0));
+			assertEquals(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+				handoverPlan.afterCommit().get(1));
+			assertEquals(new AfterCommitAction.CloseDialog(), handoverPlan.afterCommit().get(2));
+		}
+	}
+
+	@Test
 	void carrierHandoverEntersTheReportRow() throws Exception {
 		for (ReportContract contract : REPORTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
@@ -69,6 +124,50 @@ class JournalReportRowSplitContractTest {
 				() -> "quest " + contract.questId() + " carrier handover status");
 			assertEquals(contract.reportRow(), unpack(compiled, plan).get("var0"),
 				() -> "quest " + contract.questId() + " carrier handover journal row");
+		}
+	}
+
+	@Test
+	void agentInitialTalkOpensTheReportPageWithoutAClientQuestRow() throws Exception {
+		for (ReportContract contract : REPORTS) {
+			CompiledQuestDefinition compiled = definition(contract.questId());
+			QuestEvent.TalkToNpc initialTalk = new QuestEvent.TalkToNpc(
+				contract.agentNpcId(), QuestDialogAction.USE_OBJECT.id());
+			QuestTransition entry = route(compiled.definition(), "s10", "s10", initialTalk);
+			assertEquals(List.of(), entry.conditions());
+			assertEquals(List.of(), entry.actions());
+			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT11.id())),
+				entry.afterCommit());
+			assertNull(entry.priority());
+
+			QuestSnapshot report = snapshot(compiled, QuestStatus.START,
+				Map.of("var0", contract.reportRow(), "var1", 0, "var2", 3), contract.carrierInventory());
+			QuestMutationPlan entryPlan = QuestMutationPlanner.plan(compiled, report,
+				initialTalk, entry).orElseThrow();
+			assertEquals(QuestStatus.START, entryPlan.nextStatus());
+			assertEquals(report.packedVariables(), entryPlan.nextPackedVariables(),
+				() -> "quest " + contract.questId() + " agent talk must preserve the report stage");
+
+			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT11.id())),
+				route(compiled.definition(), "s10", "s10", new QuestEvent.TalkToNpc(
+					contract.agentNpcId(), QuestDialogAction.QUEST_SELECT.id())).afterCommit());
+			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT11_1.id())),
+				route(compiled.definition(), "s10", "s10", new QuestEvent.TalkToNpc(
+					contract.agentNpcId(), QuestDialogAction.SELECT11_1.id())).afterCommit());
+			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT11_1_1.id())),
+				route(compiled.definition(), "s10", "s10", new QuestEvent.TalkToNpc(
+					contract.agentNpcId(), QuestDialogAction.SELECT11_1_1.id())).afterCommit());
+
+			QuestTransition handover = route(compiled.definition(), "s10", "reward",
+				new QuestEvent.TalkToNpc(contract.agentNpcId(), QuestDialogAction.SET_SUCCEED.id()));
+			QuestMutationPlan rewardPlan = QuestMutationPlanner.plan(compiled, report,
+				handover.event(), handover).orElseThrow();
+			assertEquals(QuestStatus.REWARD, rewardPlan.nextStatus());
+			assertEquals(Map.of("var0", contract.rewardRow(), "var1", 0, "var2", 3),
+				unpack(compiled, rewardPlan));
+			assertEquals(List.of(
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+				new AfterCommitAction.CloseDialog()), rewardPlan.afterCommit());
 		}
 	}
 
