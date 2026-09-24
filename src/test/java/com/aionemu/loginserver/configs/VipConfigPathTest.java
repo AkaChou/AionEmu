@@ -17,7 +17,7 @@ class VipConfigPathTest {
     @TempDir
     Path tempDir;
     private final ConfigSnapshot vipSnapshot = ConfigSnapshot.of(VipConfig.class,
-        "AUTO_ENABLE", "AUTO_ENABLE_LEVEL", "STS_ENABLE", "STS_HOST", "STS_PORT");
+        "AUTO_ENABLE", "AUTO_ENABLE_LEVEL");
 
     @AfterEach
     void resetConfig() {

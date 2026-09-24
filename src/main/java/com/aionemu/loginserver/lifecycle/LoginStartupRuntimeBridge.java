@@ -9,7 +9,6 @@ import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.dao.BannedMacDAO;
 import com.aionemu.loginserver.dao.impl.LoginDAOClassProvider;
 import com.aionemu.loginserver.network.ncrypt.KeyGen;
-import com.aionemu.loginserver.network.sts.StsVipServer;
 import com.aionemu.loginserver.service.LoginCronServices;
 import com.aionemu.loginserver.service.LoginNetworkServices;
 import com.aionemu.loginserver.service.LoginPremiumServices;
@@ -156,7 +155,6 @@ public class LoginStartupRuntimeBridge {
      */
     public void connectNetwork() {
         LoginNetworkServices.serverTransport().connect();
-        StsVipServer.startIfEnabled();
     }
 
     /**

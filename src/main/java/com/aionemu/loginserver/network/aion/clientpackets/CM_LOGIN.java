@@ -9,7 +9,6 @@ import com.aionemu.loginserver.network.aion.LoginConnection.State;
 import com.aionemu.loginserver.network.aion.SessionKey;
 import com.aionemu.loginserver.network.aion.serverpackets.SM_LOGIN_FAIL;
 import com.aionemu.loginserver.network.aion.serverpackets.SM_LOGIN_OK;
-import com.aionemu.loginserver.network.sts.StsVipServer;
 import com.aionemu.loginserver.service.LoginProtectionServices;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
@@ -85,7 +84,6 @@ public class CM_LOGIN extends AionClientPacket {
         AionAuthResponse response = AccountController.login(user, password, client);
         switch (response) {
             case AUTHED:
-                StsVipServer.rememberAuthenticatedAccount(client.getIP(), client.getAccount().getId());
                 client.setState(State.AUTHED_LOGIN);
                 client.setSessionKey(new SessionKey(client.getAccount()));
                 client.sendPacket(new SM_LOGIN_OK(client.getSessionKey()));
