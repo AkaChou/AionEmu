@@ -1,6 +1,6 @@
 # 客户端补丁文档 / Client Patch Documentation
 
-`patch/` 只保留三个交付物（2026-09-23 定稿）。改动 `.pak` 前先读模式卡 `CPK-001`
+`patch/` 只保留最终交付物。改动 `.pak` 前先读模式卡 `CPK-001`
 （单条目替换 + 以客户端现用文件为基准，出货前核对差异条目数 == 1）。
 
 ## 交付物
@@ -8,6 +8,7 @@
 | 文件 | 大小 | MD5 | 部署 / 回滚 |
 |---|---|---|---|
 | `Game.dll` | 29,795,000 | `71a146481980f284e1144967037e3ab1` | 覆盖客户端 `bin64/Game.dll` 后**完全重启**；回滚 = 同目录 `Game.dll.bak` 覆盖回去 |
+| `Game.hpnum.zip`（包内 `Game.dll`） | 10,199,380（解出 29,795,000） | 包内 DLL `94daba7832635d8290eee81952f0f889` | 解压出的 `Game.dll` 覆盖客户端 `bin64/Game.dll` 后**完全重启**；回滚同上。**不含 VIP**，只有血条数字 |
 | `Levels/lf2a/Level.pak` | 9,809,347 | `f72b44b54f0989b9235519a4f3d21571` | 按目录结构覆盖客户端根目录后**完全重启**；回滚 = 原版 `Level.pak`（`fb49f0c3f1fce43d798b453e1def6dcf`） |
 | `L10N/CHS/Data/data.pak` | 95,915,168 | `9e6247830a11876b2668cfe867f4d667` | ⛔ **不可部署**，见该节 |
 
@@ -26,8 +27,10 @@
 | `0x8e13eb` | `74 7d` → `90 90` | 去掉「该字段为 0 就不画数字」 |
 | `0x8e13f9` | `76 6f` → `90 90` | 去掉「未超过当前比例才画数字」 |
 
-- 与原版（`f77e0b4729842929d6ae8bb8ec128b6d` = 客户端 `bin64/Game.dll.bak`）逐字节差 502 处
-  （VIP 497 + 数字 3 + 指令等长扩展 2）
+- 与原版（`f77e0b4729842929d6ae8bb8ec128b6d` = 客户端 `bin64/Game.dll.bak`）逐字节差 **506 处**
+  （VIP 497 + 血条数字 9，两部分不重叠）
+- **不含 VIP 的变体**：`patch/Game.hpnum.zip` 内的 `Game.dll`（与原版仅差 **9 字节**，即上表三处；
+  MD5 `94daba7832635d8290eee81952f0f889`）——把下面第 2 步直接作用于**原版** DLL 即可重建
 - 重建（按顺序，第 1 步需原始 STS 认证版 DLL）：
   1. `python3 .agents/summary/patch-game-dll-vip/patch_game_dll_vip.py --source <原版> --out Game.vip.dll --sts-ip 127.0.0.1`
   2. `python3 .agents/summary/client-hp-display/patch_game_dll_hpnum.py --source Game.vip.dll --out Game.dll`
@@ -51,12 +54,13 @@ python3 aion_pak.py pack unpacked -o Level.pak --template "<原 Level.pak>" --ov
 
 ## English
 
-`patch/` holds three deliverables (final, 2026-09-23); read pattern card `CPK-001` before editing any `.pak`
+`patch/` holds only the final deliverables; read pattern card `CPK-001` before editing any `.pak`
 (single-entry replacement, baseline the client's *current* file, diff must be exactly 1 entry).
 
 | File | Size | MD5 | Deploy / Rollback |
 |---|---|---|---|
 | `Game.dll` | 29,795,000 | `71a146481980f284e1144967037e3ab1` | Overwrite the client's `bin64/Game.dll`, then **fully restart**; roll back with the sibling `Game.dll.bak` |
+| `Game.hpnum.zip` (contains `Game.dll`) | 10,199,380 (29,795,000 uncompressed) | inner DLL `94daba7832635d8290eee81952f0f889` | Unzip and overwrite the client's `bin64/Game.dll`, then **fully restart**; same rollback. **No VIP** — gauge numbers only |
 | `Levels/lf2a/Level.pak` | 9,809,347 | `f72b44b54f0989b9235519a4f3d21571` | Overwrite the same path under the client root, then **fully restart**; roll back with the original `Level.pak` (`fb49f0c3f1fce43d798b453e1def6dcf`) |
 | `L10N/CHS/Data/data.pak` | 95,915,168 | `9e6247830a11876b2668cfe867f4d667` | ⛔ **do not deploy** |
 
@@ -64,8 +68,8 @@ python3 aion_pak.py pack unpacked -o Level.pak --template "<原 Level.pak>" --ov
 status) show numbers; the over-head world bar still shows none — it is drawn manually by the NPC display
 system (`0x108c3ed0` → `0x108c2250`) and never calls the number-text routine `0x1097d290`, so it needs
 code injection. The patch forces the `num_type` read (`+0x8d4`, read at `0x8e141c`) to `1` (small) and NOPs
-two guards at `0x8e13eb` / `0x8e13f9` inside the widget update function `0x108e125d`; 502 bytes differ from
-the original. Rebuild: `patch_game_dll_vip.py` then `patch_game_dll_hpnum.py` (both under `.agents/summary/`).
+two guards at `0x8e13eb` / `0x8e13f9` inside the widget update function `0x108e125d`; **506 bytes** differ from
+the original (497 VIP + 9 numbers, non-overlapping). Rebuild: `patch_game_dll_vip.py` then `patch_game_dll_hpnum.py` (both under `.agents/summary/`). The **non-VIP variant** ships as `patch/Game.hpnum.zip` (inner `Game.dll` differs from the original in **9 bytes**; MD5 `94daba7832635d8290eee81952f0f889`) — rebuild by running step 2 on the original DLL.
 
 **`Levels/lf2a/Level.pak`** fixes the red/sand sky and dusk-tinted ground in Theobomos (210060000) via the
 `WeatherOption` entries and the invasion/world-raid cutscene `TimeEnv` in `mission_mission0.xml`;
