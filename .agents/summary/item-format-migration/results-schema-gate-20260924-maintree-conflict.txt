@@ -1,0 +1,820 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.aionemu:aionemu >-------------------------
+[INFO] Building aionemu 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- enforcer:3.6.3:enforce (require-java-25) @ aionemu ---
+[INFO] Rule 0: org.apache.maven.enforcer.rules.version.RequireJavaVersion passed
+[INFO] Rule 1: org.apache.maven.enforcer.rules.version.RequireMavenVersion passed
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ aionemu ---
+[INFO] Copying 5772 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.15.0:compile (default-compile) @ aionemu ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 4747 source files with javac [debug release 25] to target/classes
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by lombok.permit.Permit
+WARNING: Please consider reporting this to the maintainers of class lombok.permit.Permit
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[INFO] /Users/mc/IdeaProjects/AionEmu-test/src/main/java/com/aionemu/gameserver/dataholders/DataManager.java: /Users/mc/IdeaProjects/AionEmu-test/src/main/java/com/aionemu/gameserver/dataholders/DataManager.java使用或覆盖了已过时的 API。
+[INFO] /Users/mc/IdeaProjects/AionEmu-test/src/main/java/com/aionemu/gameserver/dataholders/DataManager.java: 有关详细信息, 请使用 -Xlint:deprecation 重新编译。
+[INFO] /Users/mc/IdeaProjects/AionEmu-test/src/main/java/com/aionemu/gameserver/controllers/movement/NpcMoveController.java: 某些输入文件使用了未经检查或不安全的操作。
+[INFO] /Users/mc/IdeaProjects/AionEmu-test/src/main/java/com/aionemu/gameserver/controllers/movement/NpcMoveController.java: 有关详细信息, 请使用 -Xlint:unchecked 重新编译。
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ aionemu ---
+[INFO] Copying 39 resources from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ aionemu ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1136 source files with javac [debug release 25] to target/test-classes
+[INFO] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/dataholders/StaticDataLoadRepro.java: /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/dataholders/StaticDataLoadRepro.java使用或覆盖了已过时的 API。
+[INFO] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/dataholders/StaticDataLoadRepro.java: 有关详细信息, 请使用 -Xlint:deprecation 重新编译。
+[INFO] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/chatserver/ChatServerTest.java: 某些输入文件使用了未经检查或不安全的操作。
+[INFO] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/chatserver/ChatServerTest.java: 有关详细信息, 请使用 -Xlint:unchecked 重新编译。
+[INFO] 某些消息已经过简化; 请使用 -Xdiags:verbose 重新编译以获得完整输出
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/runtime/PlayerQuestCraftPortTest.java:[140,24] 无法访问com.aionemu.gameserver.questEngine.runtime.PlayerQuestCraftPort.RecipeResolver
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/PlayerQuestCraftPort$RecipeResolver.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/PlayerQuestCraftPort$RecipeResolver.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/runtime/PlayerQuestEventPortTest.java:[175,45] 无法访问com.aionemu.gameserver.questEngine.runtime.QuestStartEligibilityPort
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/QuestStartEligibilityPort.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/QuestStartEligibilityPort.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/runtime/PlayerQuestProgressionPortTest.java:[44,51] 无法访问com.aionemu.gameserver.questEngine.runtime.PlayerQuestProgressionPort.ArchDaevaPromotionStore
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/PlayerQuestProgressionPort$ArchDaevaPromotionStore.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/PlayerQuestProgressionPort$ArchDaevaPromotionStore.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/runtime/PlayerQuestStatePortTest.java:[51,17] 无法访问com.aionemu.gameserver.questEngine.runtime.PlayerQuestStatePort
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/PlayerQuestStatePort.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/PlayerQuestStatePort.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/runtime/Quest1112ProductionFlowTest.java:[216,25] 无法访问com.aionemu.gameserver.questEngine.runtime.PlayerQuestStatsPort
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/PlayerQuestStatsPort.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/PlayerQuestStatsPort.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/runtime/QuestExecutionCoordinatorTest.java:[105,30] 无法访问com.aionemu.gameserver.questEngine.runtime.QuestExecutionStatus
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/QuestExecutionStatus.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/QuestExecutionStatus.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/runtime/QuestExecutionCoordinatorTest.java:[331,34] 无法访问com.aionemu.gameserver.questEngine.runtime.QuestAfterCommitException
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/QuestAfterCommitException.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/QuestAfterCommitException.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/runtime/QuestMinionTutorialProductionFlowTest.java:[175,70] 不兼容的类型: com.aionemu.gameserver.questEngine.runtime.PlayerQuestStartEligibilityPort无法转换为com.aionemu.gameserver.questEngine.runtime.QuestStartEligibilityPort
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/runtime/QuestRuntimeInfrastructureTest.java:[268,64] 无法访问com.aionemu.gameserver.questEngine.runtime.QuestRouteHandler
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/QuestRouteHandler.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/QuestRouteHandler.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/runtime/QuestUnitOfWorkTest.java:[19,17] 无法访问com.aionemu.gameserver.questEngine.runtime.QuestUnitOfWork
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/QuestUnitOfWork.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/QuestUnitOfWork.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/runtime/TypedQuestAfterCommitPortTest.java:[277,51] 无法访问com.aionemu.gameserver.questEngine.definition.AfterCommitAction.AbortNpcFactionQuest
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/definition/AfterCommitAction$AbortNpcFactionQuest.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/definition/AfterCommitAction$AbortNpcFactionQuest.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/task/LuredNpcCheckTaskTest.java:[28,17] 无法访问com.aionemu.gameserver.questEngine.task.LuredNpcCheckTask
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/task/LuredNpcCheckTask.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/task/LuredNpcCheckTask.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/AccountServiceCharacterDeletionTest.java:[23,29] 无法访问com.aionemu.gameserver.services.AccountService
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/AccountService.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/AccountService.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/ClassChangeServiceSelectionTest.java:[15,36] 无法访问com.aionemu.gameserver.services.ClassChangeService
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/ClassChangeService.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/ClassChangeService.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/DialogServiceQuestDialogTest.java:[71,17] 无法访问com.aionemu.gameserver.services.DialogService
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/DialogService.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/DialogService.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/EnchantServiceTest.java:[31,37] 无法访问com.aionemu.gameserver.services.EnchantService
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/EnchantService.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/EnchantService.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/LegionServiceTest.java:[49,42] 无法访问com.aionemu.gameserver.model.team.legion.LegionWarehouse
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/model/team/legion/LegionWarehouse.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/model/team/legion/LegionWarehouse.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/LegionServiceTest.java:[75,33] 无法访问com.aionemu.gameserver.services.LegionRestrictions
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/LegionRestrictions.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/LegionRestrictions.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/PrivateStoreServiceTest.java:[22,35] 无法访问com.aionemu.gameserver.services.PrivateStoreService
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/PrivateStoreService.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/PrivateStoreService.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/QuestServiceCanonicalMetadataTest.java:[36,29] 无法访问com.aionemu.gameserver.services.QuestService
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/QuestService.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/QuestService.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/TradeServiceTest.java:[35,29] 无法访问com.aionemu.gameserver.services.TradeService
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/TradeService.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/TradeService.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/VipServiceTest.java:[26,47] 无法访问com.aionemu.gameserver.services.VipService
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/VipService.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/VipService.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/base/BaseTest.java:[48,46] 无法访问com.aionemu.gameserver.services.base.Base
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/base/Base.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/base/Base.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/craft/CraftServiceBatchTest.java:[13,34] 无法访问com.aionemu.gameserver.services.craft.CraftService
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/craft/CraftService.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/craft/CraftService.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/events/LadderServiceTest.java:[77,31] 无法访问com.aionemu.gameserver.eventEngine.Event
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/eventEngine/Event.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/eventEngine/Event.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/instance/InstanceScalerTest.java:[13,36] 无法访问com.aionemu.gameserver.services.instance.InstanceScaler
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/instance/InstanceScaler.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/instance/InstanceScaler.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/item/ItemSocketServiceTest.java:[25,36] 无法访问com.aionemu.gameserver.services.item.ItemSocketService
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/item/ItemSocketService.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/item/ItemSocketService.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/mail/SystemMailServiceTest.java:[121,63] 无法访问com.aionemu.commons.database.dao.DAONotFoundException
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/commons/database/dao/DAONotFoundException.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/commons/database/dao/DAONotFoundException.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/outpost/OutpostTest.java:[48,46] 无法访问com.aionemu.gameserver.services.outpost.Outpost
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/outpost/Outpost.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/outpost/Outpost.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/player/PlayerServiceCharacterDeletionTest.java:[38,69] 无法访问com.aionemu.gameserver.services.player.PlayerService
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/player/PlayerService.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/player/PlayerService.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/teleport/AbyssInstanceEntryRequirementTest.java:[81,36] 无法访问com.aionemu.gameserver.services.teleport.TeleportService2
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/teleport/TeleportService2.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/teleport/TeleportService2.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/teleport/AbyssTeleporterQuestRequirementTest.java:[64,29] 无法访问com.aionemu.gameserver.services.teleport.PortalService
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/teleport/PortalService.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/teleport/PortalService.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/teleport/ArchDaevaEntryRequirementTest.java:[104,102] 无法访问com.aionemu.gameserver.model.templates.teleport.TeleLocIdData
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/model/templates/teleport/TeleLocIdData.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/model/templates/teleport/TeleLocIdData.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/teleport/BalaureaTeleporterQuestRequirementTest.java:[107,58] 无法访问com.aionemu.gameserver.model.templates.portal.PortalLoc
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/model/templates/portal/PortalLoc.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/model/templates/portal/PortalLoc.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/teleport/MultiReturnServiceTest.java:[12,39] 无法访问com.aionemu.gameserver.services.teleport.MultiReturnService
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/teleport/MultiReturnService.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/teleport/MultiReturnService.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/toypet/PetFeedCalculatorTest.java:[22,30] 无法访问com.aionemu.gameserver.services.toypet.PetHungryLevel
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/toypet/PetHungryLevel.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/toypet/PetHungryLevel.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/toypet/PetFeedCalculatorTest.java:[32,51] 无法访问com.aionemu.gameserver.utils.rates.Rates
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/utils/rates/Rates.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/utils/rates/Rates.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/toypet/PetFeedCalculatorTest.java:[40,25] 无法访问com.aionemu.gameserver.services.toypet.PetFeedCalculator
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/toypet/PetFeedCalculator.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/toypet/PetFeedCalculator.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/action/DpUseActionTest.java:[34,17] 无法访问com.aionemu.gameserver.skillengine.action.DpUseAction
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/action/DpUseAction.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/action/DpUseAction.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/AlwaysAttackEffectTest.java:[43,17] 无法访问com.aionemu.gameserver.skillengine.effect.AlwaysHitEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/AlwaysHitEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/AlwaysHitEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/AlwaysAttackEffectTest.java:[53,17] 无法访问com.aionemu.gameserver.skillengine.effect.AlwaysNoResistEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/AlwaysNoResistEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/AlwaysNoResistEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/AlwaysDefenseEffectTest.java:[14,17] 无法访问com.aionemu.gameserver.skillengine.effect.AlwaysBlockEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/AlwaysBlockEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/AlwaysBlockEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/BuffStunEffectTest.java:[22,25] 无法访问com.aionemu.gameserver.skillengine.effect.StunEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/StunEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/StunEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/CaseStatUpEffectTest.java:[11,35] 无法访问com.aionemu.gameserver.skillengine.effect.CaseStatUpEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/CaseStatUpEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/CaseStatUpEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/DelayedSpellAttackInstantEffectTest.java:[11,17] 无法访问com.aionemu.gameserver.skillengine.effect.DelayedSpellAttackInstantEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/DelayedSpellAttackInstantEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/DelayedSpellAttackInstantEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/DummyEffectTest.java:[11,46] 无法访问com.aionemu.gameserver.skillengine.effect.DummyEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/DummyEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/DummyEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/MPHealInstantEffectTest.java:[22,35] 无法访问com.aionemu.gameserver.skillengine.effect.AbstractHealEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/AbstractHealEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/AbstractHealEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/MpShieldEffectTest.java:[11,17] 无法访问com.aionemu.gameserver.skillengine.effect.MpShieldEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/MpShieldEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/MpShieldEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/PersistentUtilityEffectTest.java:[19,39] 无法访问com.aionemu.gameserver.skillengine.effect.ReturnCoolReduceEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/ReturnCoolReduceEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/ReturnCoolReduceEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/PersistentUtilityEffectTest.java:[20,39] 无法访问com.aionemu.gameserver.skillengine.effect.SprintFpReduceEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SprintFpReduceEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SprintFpReduceEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/PersistentUtilityEffectTest.java:[21,39] 无法访问com.aionemu.gameserver.skillengine.effect.OdellaRecoverIncreaseEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/OdellaRecoverIncreaseEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/OdellaRecoverIncreaseEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/PersistentUtilityEffectTest.java:[22,39] 无法访问com.aionemu.gameserver.skillengine.effect.DeathPenaltyReduceEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/DeathPenaltyReduceEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/DeathPenaltyReduceEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/PetOrderUseUltraSkillEffectTest.java:[11,17] 无法访问com.aionemu.gameserver.skillengine.effect.PetOrderUseUltraSkillEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/PetOrderUseUltraSkillEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/PetOrderUseUltraSkillEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/RetailDrainEffectTest.java:[11,17] 无法访问com.aionemu.gameserver.skillengine.effect.SkillAtkDrainInstantEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SkillAtkDrainInstantEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SkillAtkDrainInstantEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/RetailDrainEffectTest.java:[26,17] 无法访问com.aionemu.gameserver.skillengine.effect.SpellAtkDrainInstantEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SpellAtkDrainInstantEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SpellAtkDrainInstantEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/RetailOneTimeAttackEffectTest.java:[13,17] 无法访问com.aionemu.gameserver.skillengine.effect.OneTimeBoostSkillAttackEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/OneTimeBoostSkillAttackEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/OneTimeBoostSkillAttackEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/RetailOneTimeAttackEffectTest.java:[30,17] 无法访问com.aionemu.gameserver.skillengine.effect.RandomMoveLocEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/RandomMoveLocEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/RandomMoveLocEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/SignetEffectTest.java:[13,17] 无法访问com.aionemu.gameserver.skillengine.effect.SignetEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SignetEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SignetEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/SignetEffectTest.java:[19,36] 无法访问com.aionemu.gameserver.skillengine.effect.CarveSignetEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/CarveSignetEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/CarveSignetEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/SignetEffectTest.java:[24,34] 无法访问com.aionemu.gameserver.skillengine.effect.SignetBurstEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SignetBurstEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SignetBurstEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/SkillCooltimeResetEffectTest.java:[13,17] 无法访问com.aionemu.gameserver.skillengine.effect.SkillCooltimeResetEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SkillCooltimeResetEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SkillCooltimeResetEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/SummonEffectTest.java:[17,36] 无法访问com.aionemu.gameserver.skillengine.effect.SummonEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SummonEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SummonEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/SwitchHpMpEffectTest.java:[25,17] 无法访问com.aionemu.gameserver.skillengine.effect.SwitchHpMpEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SwitchHpMpEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SwitchHpMpEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/WeaponDualEffectTest.java:[24,17] 无法访问com.aionemu.gameserver.skillengine.effect.WeaponDualEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/WeaponDualEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/WeaponDualEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/EffectTest.java:[86,30] 无法访问com.aionemu.gameserver.skillengine.model.SkillMoveType
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/model/SkillMoveType.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/model/SkillMoveType.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[58,95] 无法访问com.aionemu.gameserver.skillengine.effect.TransformEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/TransformEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/TransformEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[69,63] 不兼容的类型: java.lang.Class<com.aionemu.gameserver.skillengine.effect.MPHealInstantEffect>无法转换为java.lang.Class<? extends com.aionemu.gameserver.skillengine.effect.EffectTemplate>
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[89,58] 不兼容的类型: java.lang.Class<com.aionemu.gameserver.skillengine.effect.BuffStunEffect>无法转换为java.lang.Class<? extends com.aionemu.gameserver.skillengine.effect.EffectTemplate>
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[108,30] 无法访问com.aionemu.gameserver.skillengine.model.ProvokeTarget
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/model/ProvokeTarget.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/model/ProvokeTarget.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[116,41] 找不到符号
+  符号:   方法 getValue()
+  位置: 类型为com.aionemu.gameserver.skillengine.effect.MPHealInstantEffect的变量 mpHeal
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[117,39] 找不到符号
+  符号:   方法 getDelta()
+  位置: 类型为com.aionemu.gameserver.skillengine.effect.MPHealInstantEffect的变量 mpHeal
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[118,35] 找不到符号
+  符号:   方法 isPercent()
+  位置: 类型为com.aionemu.gameserver.skillengine.effect.MPHealInstantEffect的变量 mpHeal
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[126,41] 找不到符号
+  符号:   方法 isPercent()
+  位置: 类型为com.aionemu.gameserver.skillengine.effect.MPHealInstantEffect的变量 percentMpHeal
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[127,48] 找不到符号
+  符号:   方法 getValue()
+  位置: 类型为com.aionemu.gameserver.skillengine.effect.MPHealInstantEffect的变量 percentMpHeal
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[196,44] 找不到符号
+  符号:   方法 getDuration2()
+  位置: 类型为com.aionemu.gameserver.skillengine.effect.BuffStunEffect的变量 buffStun
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[197,45] 找不到符号
+  符号:   方法 getEffectid()
+  位置: 类型为com.aionemu.gameserver.skillengine.effect.BuffStunEffect的变量 buffStun
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[198,43] 找不到符号
+  符号:   方法 getBasicLvl()
+  位置: 类型为com.aionemu.gameserver.skillengine.effect.BuffStunEffect的变量 buffStun
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[199,43] 找不到符号
+  符号:   方法 getPreEffect()
+  位置: 类型为com.aionemu.gameserver.skillengine.effect.BuffStunEffect的变量 buffStun
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[231,51] 无法访问com.aionemu.gameserver.skillengine.effect.SubEffect
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SubEffect.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SubEffect.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/SkillCancellationTest.java:[42,38] 无法访问com.aionemu.gameserver.skillengine.model.SkillType
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/model/SkillType.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/model/SkillType.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/SkillCancellationTest.java:[212,50] 无法访问com.aionemu.gameserver.skillengine.model.BonusChargeType
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/model/BonusChargeType.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/model/BonusChargeType.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/SkillTemplateTest.java:[150,30] 无法访问com.aionemu.gameserver.skillengine.model.HostileType
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/model/HostileType.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/model/HostileType.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/periodicaction/DpUsePeriodicActionTest.java:[24,46] 无法访问com.aionemu.gameserver.skillengine.periodicaction.DpUsePeriodicAction
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/periodicaction/DpUsePeriodicAction.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/periodicaction/DpUsePeriodicAction.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/periodicaction/MpUsePeriodicActionTest.java:[11,17] 无法访问com.aionemu.gameserver.skillengine.periodicaction.MpUsePeriodicAction
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/periodicaction/MpUsePeriodicAction.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/periodicaction/MpUsePeriodicAction.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/properties/MaxCountPropertyTest.java:[28,39] 无法访问com.aionemu.gameserver.skillengine.properties.TargetRangeAttribute
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/properties/TargetRangeAttribute.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/properties/TargetRangeAttribute.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/properties/MaxCountPropertyTest.java:[31,28] 无法访问com.aionemu.gameserver.skillengine.properties.MaxCountProperty
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/properties/MaxCountProperty.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/properties/MaxCountProperty.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/properties/TargetRangePropertyTest.java:[41,42] 无法访问com.aionemu.gameserver.skillengine.properties.TargetRangeProperty
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/properties/TargetRangeProperty.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/properties/TargetRangeProperty.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/properties/TargetStatusPropertyTest.java:[32,28] 无法访问com.aionemu.gameserver.skillengine.properties.TargetStatusProperty
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/properties/TargetStatusProperty.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/properties/TargetStatusProperty.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/task/CraftingTaskBatchTest.java:[11,34] 无法访问com.aionemu.gameserver.skillengine.task.CraftingTask
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/task/CraftingTask.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/task/CraftingTask.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/spawnengine/InstanceWalkerFormationsPositionGroupingTest.java:[100,51] 无法访问com.aionemu.gameserver.spawnengine.InstanceWalkerFormations
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/InstanceWalkerFormations.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/InstanceWalkerFormations.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/spawnengine/InstanceWalkerFormationsPositionGroupingTest.java:[126,39] 无法访问com.aionemu.gameserver.spawnengine.WalkerGroupType
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/WalkerGroupType.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/WalkerGroupType.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/spawnengine/InstanceWalkerFormationsPositionGroupingTest.java:[136,17] 无法访问com.aionemu.gameserver.spawnengine.WalkerGroup
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/WalkerGroup.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/WalkerGroup.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/spawnengine/InstanceWalkerFormationsPositionGroupingTest.java:[140,74] 无法访问com.aionemu.gameserver.spawnengine.WalkerGroupShift
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/WalkerGroupShift.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/WalkerGroupShift.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/spawnengine/InstanceWalkerFormationsPositionGroupingTest.java:[178,30] 无法访问com.aionemu.gameserver.spawnengine.SpawnEngine
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/SpawnEngine.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/SpawnEngine.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/spawnengine/SpawnSurfaceResolverTest.java:[20,31] 无法访问com.aionemu.gameserver.spawnengine.SpawnSurfaceResolver
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/SpawnSurfaceResolver.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/SpawnSurfaceResolver.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/spawnengine/TemporarySpawnEngineTest.java:[44,17] 无法访问com.aionemu.gameserver.spawnengine.TemporarySpawnEngine
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/TemporarySpawnEngine.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/TemporarySpawnEngine.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/utils/ChatUtilTest.java:[11,34] 无法访问com.aionemu.gameserver.utils.ChatUtil
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/utils/ChatUtil.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/utils/ChatUtil.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/utils/gametime/GameTimeTest.java:[15,17] 无法访问com.aionemu.gameserver.utils.gametime.GameTime
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/utils/gametime/GameTime.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/utils/gametime/GameTime.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/utils/stats/StatFunctionsTest.java:[41,36] 无法访问com.aionemu.gameserver.utils.stats.StatFunctions
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/utils/stats/StatFunctions.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/utils/stats/StatFunctions.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/world/container/LegionContainerTest.java:[18,17] 无法访问com.aionemu.gameserver.world.container.LegionContainer
+  错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/world/container/LegionContainer.class
+    无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/world/container/LegionContainer.class
+    请删除该文件或确保该文件位于正确的类路径子目录中。
+[INFO] 100 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  39.053 s
+[INFO] Finished at: 2026-09-24T09:58:47+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.15.0:testCompile (default-testCompile) on project aionemu: Compilation failure: Compilation failure: 
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/runtime/PlayerQuestCraftPortTest.java:[140,24] 无法访问com.aionemu.gameserver.questEngine.runtime.PlayerQuestCraftPort.RecipeResolver
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/PlayerQuestCraftPort$RecipeResolver.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/PlayerQuestCraftPort$RecipeResolver.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/runtime/PlayerQuestEventPortTest.java:[175,45] 无法访问com.aionemu.gameserver.questEngine.runtime.QuestStartEligibilityPort
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/QuestStartEligibilityPort.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/QuestStartEligibilityPort.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/runtime/PlayerQuestProgressionPortTest.java:[44,51] 无法访问com.aionemu.gameserver.questEngine.runtime.PlayerQuestProgressionPort.ArchDaevaPromotionStore
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/PlayerQuestProgressionPort$ArchDaevaPromotionStore.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/PlayerQuestProgressionPort$ArchDaevaPromotionStore.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/runtime/PlayerQuestStatePortTest.java:[51,17] 无法访问com.aionemu.gameserver.questEngine.runtime.PlayerQuestStatePort
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/PlayerQuestStatePort.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/PlayerQuestStatePort.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/runtime/Quest1112ProductionFlowTest.java:[216,25] 无法访问com.aionemu.gameserver.questEngine.runtime.PlayerQuestStatsPort
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/PlayerQuestStatsPort.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/PlayerQuestStatsPort.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/runtime/QuestExecutionCoordinatorTest.java:[105,30] 无法访问com.aionemu.gameserver.questEngine.runtime.QuestExecutionStatus
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/QuestExecutionStatus.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/QuestExecutionStatus.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/runtime/QuestExecutionCoordinatorTest.java:[331,34] 无法访问com.aionemu.gameserver.questEngine.runtime.QuestAfterCommitException
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/QuestAfterCommitException.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/QuestAfterCommitException.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/runtime/QuestMinionTutorialProductionFlowTest.java:[175,70] 不兼容的类型: com.aionemu.gameserver.questEngine.runtime.PlayerQuestStartEligibilityPort无法转换为com.aionemu.gameserver.questEngine.runtime.QuestStartEligibilityPort
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/runtime/QuestRuntimeInfrastructureTest.java:[268,64] 无法访问com.aionemu.gameserver.questEngine.runtime.QuestRouteHandler
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/QuestRouteHandler.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/QuestRouteHandler.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/runtime/QuestUnitOfWorkTest.java:[19,17] 无法访问com.aionemu.gameserver.questEngine.runtime.QuestUnitOfWork
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/QuestUnitOfWork.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/runtime/QuestUnitOfWork.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/runtime/TypedQuestAfterCommitPortTest.java:[277,51] 无法访问com.aionemu.gameserver.questEngine.definition.AfterCommitAction.AbortNpcFactionQuest
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/definition/AfterCommitAction$AbortNpcFactionQuest.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/definition/AfterCommitAction$AbortNpcFactionQuest.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/questEngine/task/LuredNpcCheckTaskTest.java:[28,17] 无法访问com.aionemu.gameserver.questEngine.task.LuredNpcCheckTask
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/task/LuredNpcCheckTask.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/questEngine/task/LuredNpcCheckTask.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/AccountServiceCharacterDeletionTest.java:[23,29] 无法访问com.aionemu.gameserver.services.AccountService
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/AccountService.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/AccountService.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/ClassChangeServiceSelectionTest.java:[15,36] 无法访问com.aionemu.gameserver.services.ClassChangeService
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/ClassChangeService.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/ClassChangeService.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/DialogServiceQuestDialogTest.java:[71,17] 无法访问com.aionemu.gameserver.services.DialogService
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/DialogService.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/DialogService.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/EnchantServiceTest.java:[31,37] 无法访问com.aionemu.gameserver.services.EnchantService
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/EnchantService.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/EnchantService.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/LegionServiceTest.java:[49,42] 无法访问com.aionemu.gameserver.model.team.legion.LegionWarehouse
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/model/team/legion/LegionWarehouse.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/model/team/legion/LegionWarehouse.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/LegionServiceTest.java:[75,33] 无法访问com.aionemu.gameserver.services.LegionRestrictions
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/LegionRestrictions.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/LegionRestrictions.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/PrivateStoreServiceTest.java:[22,35] 无法访问com.aionemu.gameserver.services.PrivateStoreService
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/PrivateStoreService.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/PrivateStoreService.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/QuestServiceCanonicalMetadataTest.java:[36,29] 无法访问com.aionemu.gameserver.services.QuestService
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/QuestService.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/QuestService.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/TradeServiceTest.java:[35,29] 无法访问com.aionemu.gameserver.services.TradeService
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/TradeService.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/TradeService.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/VipServiceTest.java:[26,47] 无法访问com.aionemu.gameserver.services.VipService
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/VipService.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/VipService.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/base/BaseTest.java:[48,46] 无法访问com.aionemu.gameserver.services.base.Base
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/base/Base.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/base/Base.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/craft/CraftServiceBatchTest.java:[13,34] 无法访问com.aionemu.gameserver.services.craft.CraftService
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/craft/CraftService.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/craft/CraftService.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/events/LadderServiceTest.java:[77,31] 无法访问com.aionemu.gameserver.eventEngine.Event
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/eventEngine/Event.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/eventEngine/Event.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/instance/InstanceScalerTest.java:[13,36] 无法访问com.aionemu.gameserver.services.instance.InstanceScaler
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/instance/InstanceScaler.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/instance/InstanceScaler.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/item/ItemSocketServiceTest.java:[25,36] 无法访问com.aionemu.gameserver.services.item.ItemSocketService
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/item/ItemSocketService.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/item/ItemSocketService.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/mail/SystemMailServiceTest.java:[121,63] 无法访问com.aionemu.commons.database.dao.DAONotFoundException
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/commons/database/dao/DAONotFoundException.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/commons/database/dao/DAONotFoundException.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/outpost/OutpostTest.java:[48,46] 无法访问com.aionemu.gameserver.services.outpost.Outpost
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/outpost/Outpost.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/outpost/Outpost.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/player/PlayerServiceCharacterDeletionTest.java:[38,69] 无法访问com.aionemu.gameserver.services.player.PlayerService
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/player/PlayerService.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/player/PlayerService.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/teleport/AbyssInstanceEntryRequirementTest.java:[81,36] 无法访问com.aionemu.gameserver.services.teleport.TeleportService2
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/teleport/TeleportService2.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/teleport/TeleportService2.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/teleport/AbyssTeleporterQuestRequirementTest.java:[64,29] 无法访问com.aionemu.gameserver.services.teleport.PortalService
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/teleport/PortalService.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/teleport/PortalService.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/teleport/ArchDaevaEntryRequirementTest.java:[104,102] 无法访问com.aionemu.gameserver.model.templates.teleport.TeleLocIdData
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/model/templates/teleport/TeleLocIdData.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/model/templates/teleport/TeleLocIdData.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/teleport/BalaureaTeleporterQuestRequirementTest.java:[107,58] 无法访问com.aionemu.gameserver.model.templates.portal.PortalLoc
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/model/templates/portal/PortalLoc.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/model/templates/portal/PortalLoc.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/teleport/MultiReturnServiceTest.java:[12,39] 无法访问com.aionemu.gameserver.services.teleport.MultiReturnService
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/teleport/MultiReturnService.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/teleport/MultiReturnService.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/toypet/PetFeedCalculatorTest.java:[22,30] 无法访问com.aionemu.gameserver.services.toypet.PetHungryLevel
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/toypet/PetHungryLevel.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/toypet/PetHungryLevel.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/toypet/PetFeedCalculatorTest.java:[32,51] 无法访问com.aionemu.gameserver.utils.rates.Rates
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/utils/rates/Rates.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/utils/rates/Rates.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/services/toypet/PetFeedCalculatorTest.java:[40,25] 无法访问com.aionemu.gameserver.services.toypet.PetFeedCalculator
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/toypet/PetFeedCalculator.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/services/toypet/PetFeedCalculator.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/action/DpUseActionTest.java:[34,17] 无法访问com.aionemu.gameserver.skillengine.action.DpUseAction
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/action/DpUseAction.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/action/DpUseAction.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/AlwaysAttackEffectTest.java:[43,17] 无法访问com.aionemu.gameserver.skillengine.effect.AlwaysHitEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/AlwaysHitEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/AlwaysHitEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/AlwaysAttackEffectTest.java:[53,17] 无法访问com.aionemu.gameserver.skillengine.effect.AlwaysNoResistEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/AlwaysNoResistEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/AlwaysNoResistEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/AlwaysDefenseEffectTest.java:[14,17] 无法访问com.aionemu.gameserver.skillengine.effect.AlwaysBlockEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/AlwaysBlockEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/AlwaysBlockEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/BuffStunEffectTest.java:[22,25] 无法访问com.aionemu.gameserver.skillengine.effect.StunEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/StunEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/StunEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/CaseStatUpEffectTest.java:[11,35] 无法访问com.aionemu.gameserver.skillengine.effect.CaseStatUpEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/CaseStatUpEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/CaseStatUpEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/DelayedSpellAttackInstantEffectTest.java:[11,17] 无法访问com.aionemu.gameserver.skillengine.effect.DelayedSpellAttackInstantEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/DelayedSpellAttackInstantEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/DelayedSpellAttackInstantEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/DummyEffectTest.java:[11,46] 无法访问com.aionemu.gameserver.skillengine.effect.DummyEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/DummyEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/DummyEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/MPHealInstantEffectTest.java:[22,35] 无法访问com.aionemu.gameserver.skillengine.effect.AbstractHealEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/AbstractHealEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/AbstractHealEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/MpShieldEffectTest.java:[11,17] 无法访问com.aionemu.gameserver.skillengine.effect.MpShieldEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/MpShieldEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/MpShieldEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/PersistentUtilityEffectTest.java:[19,39] 无法访问com.aionemu.gameserver.skillengine.effect.ReturnCoolReduceEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/ReturnCoolReduceEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/ReturnCoolReduceEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/PersistentUtilityEffectTest.java:[20,39] 无法访问com.aionemu.gameserver.skillengine.effect.SprintFpReduceEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SprintFpReduceEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SprintFpReduceEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/PersistentUtilityEffectTest.java:[21,39] 无法访问com.aionemu.gameserver.skillengine.effect.OdellaRecoverIncreaseEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/OdellaRecoverIncreaseEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/OdellaRecoverIncreaseEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/PersistentUtilityEffectTest.java:[22,39] 无法访问com.aionemu.gameserver.skillengine.effect.DeathPenaltyReduceEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/DeathPenaltyReduceEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/DeathPenaltyReduceEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/PetOrderUseUltraSkillEffectTest.java:[11,17] 无法访问com.aionemu.gameserver.skillengine.effect.PetOrderUseUltraSkillEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/PetOrderUseUltraSkillEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/PetOrderUseUltraSkillEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/RetailDrainEffectTest.java:[11,17] 无法访问com.aionemu.gameserver.skillengine.effect.SkillAtkDrainInstantEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SkillAtkDrainInstantEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SkillAtkDrainInstantEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/RetailDrainEffectTest.java:[26,17] 无法访问com.aionemu.gameserver.skillengine.effect.SpellAtkDrainInstantEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SpellAtkDrainInstantEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SpellAtkDrainInstantEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/RetailOneTimeAttackEffectTest.java:[13,17] 无法访问com.aionemu.gameserver.skillengine.effect.OneTimeBoostSkillAttackEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/OneTimeBoostSkillAttackEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/OneTimeBoostSkillAttackEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/RetailOneTimeAttackEffectTest.java:[30,17] 无法访问com.aionemu.gameserver.skillengine.effect.RandomMoveLocEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/RandomMoveLocEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/RandomMoveLocEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/SignetEffectTest.java:[13,17] 无法访问com.aionemu.gameserver.skillengine.effect.SignetEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SignetEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SignetEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/SignetEffectTest.java:[19,36] 无法访问com.aionemu.gameserver.skillengine.effect.CarveSignetEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/CarveSignetEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/CarveSignetEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/SignetEffectTest.java:[24,34] 无法访问com.aionemu.gameserver.skillengine.effect.SignetBurstEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SignetBurstEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SignetBurstEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/SkillCooltimeResetEffectTest.java:[13,17] 无法访问com.aionemu.gameserver.skillengine.effect.SkillCooltimeResetEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SkillCooltimeResetEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SkillCooltimeResetEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/SummonEffectTest.java:[17,36] 无法访问com.aionemu.gameserver.skillengine.effect.SummonEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SummonEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SummonEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/SwitchHpMpEffectTest.java:[25,17] 无法访问com.aionemu.gameserver.skillengine.effect.SwitchHpMpEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SwitchHpMpEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SwitchHpMpEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/effect/WeaponDualEffectTest.java:[24,17] 无法访问com.aionemu.gameserver.skillengine.effect.WeaponDualEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/WeaponDualEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/WeaponDualEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/EffectTest.java:[86,30] 无法访问com.aionemu.gameserver.skillengine.model.SkillMoveType
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/model/SkillMoveType.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/model/SkillMoveType.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[58,95] 无法访问com.aionemu.gameserver.skillengine.effect.TransformEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/TransformEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/TransformEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[69,63] 不兼容的类型: java.lang.Class<com.aionemu.gameserver.skillengine.effect.MPHealInstantEffect>无法转换为java.lang.Class<? extends com.aionemu.gameserver.skillengine.effect.EffectTemplate>
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[89,58] 不兼容的类型: java.lang.Class<com.aionemu.gameserver.skillengine.effect.BuffStunEffect>无法转换为java.lang.Class<? extends com.aionemu.gameserver.skillengine.effect.EffectTemplate>
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[108,30] 无法访问com.aionemu.gameserver.skillengine.model.ProvokeTarget
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/model/ProvokeTarget.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/model/ProvokeTarget.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[116,41] 找不到符号
+[ERROR]   符号:   方法 getValue()
+[ERROR]   位置: 类型为com.aionemu.gameserver.skillengine.effect.MPHealInstantEffect的变量 mpHeal
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[117,39] 找不到符号
+[ERROR]   符号:   方法 getDelta()
+[ERROR]   位置: 类型为com.aionemu.gameserver.skillengine.effect.MPHealInstantEffect的变量 mpHeal
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[118,35] 找不到符号
+[ERROR]   符号:   方法 isPercent()
+[ERROR]   位置: 类型为com.aionemu.gameserver.skillengine.effect.MPHealInstantEffect的变量 mpHeal
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[126,41] 找不到符号
+[ERROR]   符号:   方法 isPercent()
+[ERROR]   位置: 类型为com.aionemu.gameserver.skillengine.effect.MPHealInstantEffect的变量 percentMpHeal
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[127,48] 找不到符号
+[ERROR]   符号:   方法 getValue()
+[ERROR]   位置: 类型为com.aionemu.gameserver.skillengine.effect.MPHealInstantEffect的变量 percentMpHeal
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[196,44] 找不到符号
+[ERROR]   符号:   方法 getDuration2()
+[ERROR]   位置: 类型为com.aionemu.gameserver.skillengine.effect.BuffStunEffect的变量 buffStun
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[197,45] 找不到符号
+[ERROR]   符号:   方法 getEffectid()
+[ERROR]   位置: 类型为com.aionemu.gameserver.skillengine.effect.BuffStunEffect的变量 buffStun
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[198,43] 找不到符号
+[ERROR]   符号:   方法 getBasicLvl()
+[ERROR]   位置: 类型为com.aionemu.gameserver.skillengine.effect.BuffStunEffect的变量 buffStun
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[199,43] 找不到符号
+[ERROR]   符号:   方法 getPreEffect()
+[ERROR]   位置: 类型为com.aionemu.gameserver.skillengine.effect.BuffStunEffect的变量 buffStun
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/RetailSkillTemplateFileTest.java:[231,51] 无法访问com.aionemu.gameserver.skillengine.effect.SubEffect
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SubEffect.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/effect/SubEffect.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/SkillCancellationTest.java:[42,38] 无法访问com.aionemu.gameserver.skillengine.model.SkillType
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/model/SkillType.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/model/SkillType.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/SkillCancellationTest.java:[212,50] 无法访问com.aionemu.gameserver.skillengine.model.BonusChargeType
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/model/BonusChargeType.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/model/BonusChargeType.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/model/SkillTemplateTest.java:[150,30] 无法访问com.aionemu.gameserver.skillengine.model.HostileType
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/model/HostileType.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/model/HostileType.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/periodicaction/DpUsePeriodicActionTest.java:[24,46] 无法访问com.aionemu.gameserver.skillengine.periodicaction.DpUsePeriodicAction
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/periodicaction/DpUsePeriodicAction.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/periodicaction/DpUsePeriodicAction.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/periodicaction/MpUsePeriodicActionTest.java:[11,17] 无法访问com.aionemu.gameserver.skillengine.periodicaction.MpUsePeriodicAction
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/periodicaction/MpUsePeriodicAction.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/periodicaction/MpUsePeriodicAction.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/properties/MaxCountPropertyTest.java:[28,39] 无法访问com.aionemu.gameserver.skillengine.properties.TargetRangeAttribute
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/properties/TargetRangeAttribute.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/properties/TargetRangeAttribute.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/properties/MaxCountPropertyTest.java:[31,28] 无法访问com.aionemu.gameserver.skillengine.properties.MaxCountProperty
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/properties/MaxCountProperty.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/properties/MaxCountProperty.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/properties/TargetRangePropertyTest.java:[41,42] 无法访问com.aionemu.gameserver.skillengine.properties.TargetRangeProperty
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/properties/TargetRangeProperty.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/properties/TargetRangeProperty.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/properties/TargetStatusPropertyTest.java:[32,28] 无法访问com.aionemu.gameserver.skillengine.properties.TargetStatusProperty
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/properties/TargetStatusProperty.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/properties/TargetStatusProperty.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/skillengine/task/CraftingTaskBatchTest.java:[11,34] 无法访问com.aionemu.gameserver.skillengine.task.CraftingTask
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/task/CraftingTask.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/skillengine/task/CraftingTask.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/spawnengine/InstanceWalkerFormationsPositionGroupingTest.java:[100,51] 无法访问com.aionemu.gameserver.spawnengine.InstanceWalkerFormations
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/InstanceWalkerFormations.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/InstanceWalkerFormations.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/spawnengine/InstanceWalkerFormationsPositionGroupingTest.java:[126,39] 无法访问com.aionemu.gameserver.spawnengine.WalkerGroupType
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/WalkerGroupType.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/WalkerGroupType.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/spawnengine/InstanceWalkerFormationsPositionGroupingTest.java:[136,17] 无法访问com.aionemu.gameserver.spawnengine.WalkerGroup
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/WalkerGroup.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/WalkerGroup.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/spawnengine/InstanceWalkerFormationsPositionGroupingTest.java:[140,74] 无法访问com.aionemu.gameserver.spawnengine.WalkerGroupShift
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/WalkerGroupShift.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/WalkerGroupShift.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/spawnengine/InstanceWalkerFormationsPositionGroupingTest.java:[178,30] 无法访问com.aionemu.gameserver.spawnengine.SpawnEngine
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/SpawnEngine.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/SpawnEngine.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/spawnengine/SpawnSurfaceResolverTest.java:[20,31] 无法访问com.aionemu.gameserver.spawnengine.SpawnSurfaceResolver
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/SpawnSurfaceResolver.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/SpawnSurfaceResolver.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/spawnengine/TemporarySpawnEngineTest.java:[44,17] 无法访问com.aionemu.gameserver.spawnengine.TemporarySpawnEngine
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/TemporarySpawnEngine.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/spawnengine/TemporarySpawnEngine.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/utils/ChatUtilTest.java:[11,34] 无法访问com.aionemu.gameserver.utils.ChatUtil
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/utils/ChatUtil.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/utils/ChatUtil.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/utils/gametime/GameTimeTest.java:[15,17] 无法访问com.aionemu.gameserver.utils.gametime.GameTime
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/utils/gametime/GameTime.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/utils/gametime/GameTime.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/utils/stats/StatFunctionsTest.java:[41,36] 无法访问com.aionemu.gameserver.utils.stats.StatFunctions
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/utils/stats/StatFunctions.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/utils/stats/StatFunctions.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/world/container/LegionContainerTest.java:[18,17] 无法访问com.aionemu.gameserver.world.container.LegionContainer
+[ERROR]   错误的类文件: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/world/container/LegionContainer.class
+[ERROR]     无法访问文件: java.nio.file.NoSuchFileException: /Users/mc/IdeaProjects/AionEmu-test/target/classes/com/aionemu/gameserver/world/container/LegionContainer.class
+[ERROR]     请删除该文件或确保该文件位于正确的类路径子目录中。
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
