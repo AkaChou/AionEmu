@@ -142,6 +142,7 @@
 | ①直接把门删掉 ⇒ 受理面扩张（判例 6 行解锁，其中 5 行客户端连 HTML 与任务书都没有 ⇒ 形状静默引用不存在的任务书行，fail-open）；②只删表不改门 ⇒ 门读不到登记（fail-closed 但出现"静默拒绝码漂移"，编译过、审查看不出）；③把门"换个名字搬走" ⇒ 搬的是一个未定义判据（发明新证据源） | `QE-095` | 要退役一张"门还活着"的表，先答：①删门后**哪些行会被解锁**（实验实测，不是推断）？②这些行有客户端证据吗（HTML/任务书）？③替代判据能从哪张**常设生产表**派生？④非回归计数是多少（登记 ∩ 受影响面 有几行缺新判据）？⑤这些门的拒绝码今天各自命中几行？ |
 | ①把零拒绝的守卫当死物直接删 ⇒ 未来数据修订（真端表新增行）无网兜底，延迟 fail-open；②保留 ⇒ 长期维护一张载荷已死（读取者只做 null 判定 / 参数零读）的表 | `QE-096` | 零拒绝的守卫要退役前先答：①三处门子句今天各命中几行（retention 拒绝码零命中？）？②不变量是什么、覆盖哪些族、基数是多少？③快照与常设门放哪儿、怎么注册进 T1？④与表无关的门子句是否已保留？ |
 | ①按"交付已接管"整旗标删 token ⇒ 体级读取点（方法级后处理）失据，IR 静默变形；②不敢删 ⇒ 表里大半 token 早已不可达，长年死重 | `QE-097` | 缩一张多旗标登记表前先答：①全部读取点在哪、测试有没有直接断言表内容？②每行会走哪条编译路径（singleStep/被拒/系统发放/链式…）？③哪些旗标是方法体无条件读的（禁删）？④前后快照怎么取、生成器属哪个车道？ |
+| ①按"看起来过时"手工改码 ⇒ 家族门白名单 / 精确前缀断言假红或放水；②不改 ⇒ SEMANTIC_GAP 永不清零、收尾判据①卡死；③从 retention 反推码 ⇒ 裁定建立在滞后视图上（retention 是 drift 的滞后派生） | `QE-098` | 改一个 retention reason 前先答：①这个码的权威 fixture 在哪、当前值逐行核对了吗？②哪些门按前缀 / 精确串 / 分类码消费这行？③有没有测试断言精确 reason 串（白名单集）？④双副本都同片改了吗、裁定脚本 fail-closed 吗？ |
 | 静态搜索无引用却删除后启动失败、AI 或技能 XML 无法加载、命令别名静默失效 | `SDJ-001` | CompiledScriptLoader, @AIName, data-text references and administration/commands.properties aliases vs command super("alias") declarations (both directions) |
 | JAXB 反射警告、final field 写入失败、XML 属性反序列化后值未生效 | `SDJ-002` | JAXB annotations, field declarations and runtime binding warnings |
 | 英吉斯温地图驻地、门户、副本出口或任务错误进入 210130000，或运行数据再次把 210130000 当作玩家目标 | `SDJ-003` | hotspot_location.xml mapid, portal_loc.xml world_id, TeleportService2.resolveInggisonWorldId and quest world-id/zone names |

@@ -63,3 +63,12 @@
   ——与基线逐字节恒等（`gates/T1-m3-reds.txt` / `gates/T3-m3-reds.txt`）。
 - **缺口曲线总账**：595 → 412（批 0+1）→ 304（批 2）→ 95（批 3+4）→ 22（批 5+6）→ **0**（批 7+8）。
 - 全程零 flip、零形状变化、零生产编译单元变化 ⇒ 无新增实机复验项（复验清单维持批 1 的 24 行）。
+- **M4 里程碑（批 7+8 后）**：T1 红集 `3b92439d…`、T3 红集 `ce4673c7…` ——与基线逐字节恒等
+  （`gates/T1-m4-reds.txt` / `gates/T3-m4-reds.txt`；T1 证物 `T1-021716.log`，首启曾因脚本路径
+  写错未起，修正为 `.agents/summary/scriptdll-quest-driver/run_quest_gates.sh` 后重跑）。
+- **终点最终全量对拍**：T1∥T3 取 M4（终态 HEAD）结果；T2 链门 285 选择器跑终态
+  （`gates/T2-022439.log` → `T2-m4-reds.txt` 51 条）——sha256 `57bb0621…` 与 DoD 基线逐字节恒等。
+  **三口齐恒等：T1 1 条 `3b92439d…` ∥ T2 51 条 `57bb0621…` ∥ T3 97 条 `ce4673c7…`。**
+- **DoD 终检（`tools/dod_selfcheck.sh`）**：①SEMANTIC_GAP=0 ✓；②6224 数据行 reason+evidence
+  零空列 ✓；③EXPECTED_TSV_COUNT=22（清单门 T1/T3 绿）✓；④三红集字节恒等 ✓；
+  ⑤客户端实机复验清单已入库（`client-recheck-list.zh-CN.md`，24 行），实机执行移交用户。

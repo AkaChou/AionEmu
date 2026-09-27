@@ -2220,3 +2220,25 @@ keywords: 行级缩表、dialog_exits、可达性普查、行×旗标、快照�
 
 - **判定规则**：整旗标死亡 ⇒ 走 QE-094 退役；旗标只死一部分 ⇒ 按（行 × 旗标）普查缩 token，判据是快照恒等而不是"看起来没人用"。
 - **保守原则**：普查判不了的行保留 token——少删只损失整洁，多删直接变形 IR；生成器在兄弟车道时，缩表必须同时登记停写移交。
+
+## [QE-098] 九十六、retention 缺口清零：drift 对码裁定 + ADJUDICATED 前缀中立化 (GAP_ADJUDICATION_PREFIX_NEUTRAL)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 保留清单（retention 双副本）残留 SEMANTIC_GAP 行的清零裁定（缺口批；owner=XML_RETENTION 不变的纯登记操作，不含 flip）
+first_seen: 2026-09-27
+last_verified: 2026-09-27
+symptom: ①按"看起来过时"手工改码 ⇒ 家族门白名单 / 精确前缀断言假红或放水；②不改 ⇒ SEMANTIC_GAP 永不清零、收尾判据①卡死；③从 retention 反推码 ⇒ 裁定建立在滞后视图上（retention 是 drift 的滞后派生）
+root_cause: retention reason 是**登记语义**而非行为语义——`SEMANTIC_GAP:` 前缀只是"未逐行裁定"标记；各门对 reason 的消费方式互不相同（前缀不变式 / 精确前缀断言 / 编译分类码断言），任何改名必须逐消费点核对，且码权威在冻结 drift fixture 而不在 retention
+fix_or_guardrail: 1. **码权威 = 冻结 drift fixture**（retail-data-driven-drift / simple-talk-drift / simplehunt-compiler-rejects），retention 滞后行以 fixture 码对齐；2. **翻转形**：`SEMANTIC_GAP:<码>` → `ADJUDICATED:<码>` + 裁定 evidence，owner/family/行集全不变（零 flip、零形状、零生产编译单元变化）；3. **前缀不变式中立化**：家族门用 stripReasonPrefix 通用剥离，**禁加逐码特判分支**（特判会让 KILL_COVERAGE_LOSS 类"必须仍合成"的行误红）；4. **精确前缀断言的门必须同片补码**（判例：ItemPlay 门 ADJUDICATED_CODES 补 RETAIL_ADVANCE_UNEXPRESSED）；5. **双副本同片编辑**（生产驱动 + 门禁消费两份恒等）+ 裁定脚本 fail-closed（旧码逐行断言、未命中/重复即抛）；6. **收口判据 = 红集字节恒等**（T1/T2/T3 红身份集 sha256 与基线 diff 为空），ADJUDICATED 不豁免逐码义务（编译器缺口码必须仍被拒、RETAIL_TABLE_GAPS 码必须仍合成、等价类必须有计划）
+evidence: .agents/summary/quest-native-dispatch/2026-09-27-b5-b8-adjudications.zh-CN.md; .agents/summary/quest-native-dispatch/tools/b78_apply_renames.py; src/main/resources/aion/data/static_data/quest_retail/retail-xml-retention.tsv
+validation: 2026-09-27 缺口批 1–8：SEMANTIC_GAP 595→412→304→95→22→**0**（ADJUDICATED=571）；M1–M4 每轮 T1∥T3 红集逐字节恒等（T1 1 条 3b92439d… / T3 97 条 ce4673c7…），终点 T2 51 条 57bb0621… 恒等；批 7+8 快筛 6 门唯一红 = 在册 T1 基线红
+boundaries: 不适用于 owner 翻转行（走 flip 三件套 + 客户端契约对拍，见 QE-095）；ADJUDICATED 是"逐行裁定已落"的登记标记，不是豁免——同码义务全部继承；若门对 reason 的消费是新形态（如按码聚合计数），须先扩判据再改名
+superseded_by: none
+see_also: [QE-084], [QE-094], [QE-095], [QE-096], [QE-097]
+first_check: 改一个 retention reason 前先答：①这个码的权威 fixture 在哪、当前值逐行核对了吗？②哪些门按前缀 / 精确串 / 分类码消费这行？③有没有测试断言精确 reason 串（白名单集）？④双副本都同片改了吗、裁定脚本 fail-closed 吗？
+keywords: ADJUDICATED、SEMANTIC_GAP、缺口清零、drift 对码、前缀中立、stripReasonPrefix、白名单门同步、红集字节恒等、双副本、fail-closed 裁定脚本、RETAIL_TABLE_GAPS、逐码义务继承
+-->
+
+- **判定规则**：缺口行清零只有两种正确动作——能采纳的走 flip 三件套（QE-095），不能采纳的走本条裁定翻转；两者都要求"同码义务继承"（ADJUDICATED 行的编译器缺口码必须仍被拒、族表缺口码必须仍合成）。
+- **一致性原则**：码权威在冻结 drift fixture；前缀中立化靠通用剥离而不是逐码特判；精确断言门与表同片改；收口判据永远是红集字节恒等，不是"门绿了"。
