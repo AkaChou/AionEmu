@@ -1,8 +1,15 @@
-# zcode 交接包：quest 真端驱动改造（下一阶段）
+# zcode 交接包：quest 真端驱动改造（下一阶段）【已被取代】
+
+> ⚠️ **本包已于 2026-09-27 被 `HANDOFF.zh-CN.md` 取代**（执行体无关版，基准提交 `b5d2a7dea`）。
+> 本包写作时"工作树是未提交的大迁移现场"的前提**已不成立**：迁移现场已提交为
+> `4ede058c0`（源码）+ `5318a8686`（台账/工具链）+ `b5d2a7dea`（产物清理），工作树干净。
+> 下文的 §1 提示词、§2-2 提交纪律、§4 基线表均已按新基准就地更新，但**请优先使用 `HANDOFF.zh-CN.md`**。
+> 保留本文件仅为历史留痕（同片证据与陷阱章节仍可参考）。
 
 > 生成：2026-09-27 23:1x（车道 `quest-native-dispatch` 收口点）。
 > 用法：**§1 完整提示词**可直接整段粘贴给 zcode 执行体；§2 防漂移约束、§3 防空等命令纪律是提示词的配套硬约束。
 > 本文与 `GOAL.zh-CN.md §0.5`、`README.zh-CN.md`（台账）构成下一阶段的**唯一权威入口**。
+> （2026-09-27 更新：唯一权威入口改为 `HANDOFF.zh-CN.md`。）
 
 ---
 
@@ -14,9 +21,10 @@
 【目标】让"可迁移"任务由真端表在加载期合成生命周期分发（RETAIL_TABLE），停止扩建任何页码类 TSV 补丁，
 把已死的页码类 TSV 退役掉；保留 XML 的行必须逐行有登记理由。
 
-【工作树状态（重要）】当前工作树是**未提交的大迁移现场**（约 5000 个因迁移删除的 quest XML + 数百个
-新增/修改的 Java/资源/文档文件）。**不要 commit、不要 push、不要启停任何服务进程**；你的产出 = 改动 +
-台账文档（别人来提交）。
+【工作树状态（重要）】迁移现场**已提交**：基线 = `b5d2a7dea`（源码 `4ede058c0`、台账/工具链 `5318a8686`、
+产物清理 `b5d2a7dea`）；工作树干净，仅 4 个未跟踪的工具链输入表（`item_name_index.tsv`、
+`npc_name_index.tsv`、`quest_registry.tsv`、`m5b2b-quest-event-census.tsv`，**不得删除**）。
+**不 push、不启停任何服务进程**；**commit 仅在用户当轮显式授权后进行**，授权后源码与台账分提交。
 
 【必读顺序（约 15 分钟）】
 1. AGENTS.md + .agents/rules/{i18n,java_general,backend,formatting,lombok,ai-artifacts,quest-repair}.md
@@ -76,7 +84,8 @@ R4 W7 收口：README 全片台账、记忆库 QE 覆盖、迁移总量复算（
 
 1. **切片判据（每片必用）**：① 指纹/漂移集 **逐行等于该片行集**（零变化片 = 逐行空集）；
    ② 链门/家族门绿；③ **T1/T2/T3 `ADDED 0 / REMOVED 0`**，更强口径 = 红身份集 **sha256 逐字节相同**。
-2. **不 commit / 不 push**；**不启停、不重启任何服务器进程**；不新增页码类 TSV。
+2. **不 push**；**提交仅在用户当轮显式授权后进行**（源码 / 台账分提交，`git add <显式路径>`，禁 `git add -A`）；
+   **不启停、不重启任何服务器进程**；不新增页码类 TSV。
 3. **受理 flip = 三件套同片**：`retail-xml-retention.tsv` owner 翻转 + **遗留 XML 退役**（`quest_definition/quests/<id>.xml`）
    + `quest_definition_catalog.xml` 条目删除；并**清理 `target/` 孤副本**（否则生产视图继续按"XML 存在"判 owner，
    级联十几条"生产视图不可读"错误）。
@@ -160,7 +169,7 @@ python3 -B .agents/memory-bank/verify_memory_bank.py   # 期望 MEMORY_BANK_VERI
 
 | 项 | 值 |
 |---|---|
-| 仓库 | `/Users/mc/IdeaProjects/AionEmu-test`（分支 `quest`；工作树未提交大迁移现场） |
+| 仓库 | `/Users/mc/IdeaProjects/AionEmu-test`（分支 `quest`；基线提交 `b5d2a7dea`，领先 origin/quest 22 个未推送提交） |
 | 车道台账 | `.agents/summary/quest-native-dispatch/`（GOAL §0.5 / README / 各片台账 / gates/ 日志与红集） |
 | 冻结面门 | `RetailTsvManifestGateTest`（磁盘集合 == 清单集合 == `EXPECTED_TSV_COUNT`，**现值 22**） |
 | 新常设门 | `RetailBriefingChainEvidenceGateTest`（简报链不变量，登记 3225 + 基数 47/5 冻结） |
@@ -230,5 +239,5 @@ R4（文档）：无 Maven；记忆库 sync+verify                              
 ```
 ⇒ 剩余总时长可压到 **~1–1.5 h**（相对最初单片节奏 ~4–5 h）。
 
-> 注：批次内改动要**逐项留独立 patch 记录**（本树未提交，"回滚"= 反向应用该项改动），
+> 注：批次内改动要**逐项留独立 patch 记录**（基线已提交，"回滚"= `git checkout b5d2a7dea -- <path>` 或反向应用该项改动），
 > 这样某批若出红，可按项二分定位，不必重跑整批。
