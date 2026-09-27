@@ -1,3 +1,0 @@
-1941	OK:DIFF transition multisets differ: missing=NONE/0>TalkToNpc[npcId=203788, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-,NONE/0>TalkToNpc[npcId=203788, dialogId=20000, interactionObjectId=0]>START/0>[StartEligi	movie=1/xml=1
-3943	OK:DIFF node sets differ: xml=4 retail=4 missing=REWARD/1 extra=REWARD/0	movie=1/xml=0
-4056	OK:DIFF node sets differ: xml=4 retail=4 missing=REWARD/1 extra=REWARD/0	movie=1/xml=0

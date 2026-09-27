@@ -1,5 +1,0 @@
-3204	OK:DIFF node sets differ: xml=4 retail=4 missing=REWARD/1 extra=REWARD/0
-3337	OK:DIFF node sets differ: xml=4 retail=4 missing=REWARD/1 extra=REWARD/0
-4204	OK:DIFF node sets differ: xml=4 retail=4 missing=REWARD/1 extra=REWARD/0
-80269	OK:DIFF transition multisets differ: missing=- extra=START/0>TalkToNpc[npcId=831174, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[CloseDialog[]]>- countMismatch=0
-80271	OK:DIFF transition multisets differ: missing=- extra=START/0>TalkToNpc[npcId=831180, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[CloseDialog[]]>- countMismatch=0
