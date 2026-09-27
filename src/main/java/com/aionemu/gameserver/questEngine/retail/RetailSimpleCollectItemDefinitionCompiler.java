@@ -525,43 +525,6 @@ public final class RetailSimpleCollectItemDefinitionCompiler {
 	}
 
 	/**
-	 * 交付检查：与 {@code npc-item-report} 展开同构（动作 39 / 20002）；失败页按客户端是否有 select6 决定。
-	 * 多交付物按整组检查/扣除（P1b：与 XML 的多条 {@code has-item}/{@code remove-item} 同构）。
-	 * <p>
-	 * 命名消歧（批 0 R3）：本参数说的"失败页"是客户端 {@code select6} 交付失败页
-	 * {@code QuestDialogPage.SELECT6}（2716）；它与 {@code QuestDialogPage.CHECK_USER_ITEM_FAIL}（10001，
-	 * 物品检查失败动作页）是两回事，后者不在本编译器任何路径上下发。
-	 * Naming disambiguation (batch 0 R3): the "failure page" here is the client {@code select6}
-	 * turn-in failure page {@code QuestDialogPage.SELECT6} (2716) — distinct from
-	 * {@code QuestDialogPage.CHECK_USER_ITEM_FAIL} (10001), which this compiler never pushes.
-	 */
-	static List<QuestTransition> itemReport(int rewardNpc, List<QuestItemRequirement> items,
-			boolean hasFailurePage, String source) {
-		List<QuestCondition> hasItems = items.stream()
-			.map(item -> (QuestCondition) new QuestCondition.HasItem(item.itemId(), item.count()))
-			.toList();
-		List<QuestAction> removeItems = items.stream()
-			.map(item -> (QuestAction) new QuestAction.RemoveItem(item.itemId(), item.count()))
-			.toList();
-		List<AfterCommitAction> success = List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()));
-		return List.of(
-			new QuestTransition(new QuestEvent.TalkToNpc(rewardNpc, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()),
-				hasItems, removeItems, "reward", success, 0, source),
-			new QuestTransition(new QuestEvent.TalkToNpc(rewardNpc, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()),
-				List.of(), List.of(), source, List.of(hasFailurePage
-					? new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT6.id())
-					: new AfterCommitAction.CloseDialog()), 1, source),
-			new QuestTransition(
-				new QuestEvent.TalkToNpc(rewardNpc, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id()),
-				hasItems, removeItems, "reward", success, 0, source),
-			new QuestTransition(
-				new QuestEvent.TalkToNpc(rewardNpc, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id()),
-				List.of(), List.of(), source, List.of(new AfterCommitAction.CloseDialog()), 1, source));
-	}
-
-	/**
 	 * 完成流：与 {@code npc-complete} 展开同构。无可选奖励 = 预览窗 + 确认区间 8..23 每条发固定奖励；
 	 * 有可选奖励 = 按 choice 逐项路由（第 k 个可选项绑确认动作 8+k，动作为固定奖励 + 该项 + 完成），
 	 * 与 XML 的 {@code <choice action="SELECTED_QUEST_REWARDk" reward-index="N">} 逐一对齐（P1b）。

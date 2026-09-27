@@ -45,7 +45,7 @@ class RetailSimpleTalkMigrationReviewContractTest {
 	);
 
 	@Test
-	void clientCheckButtonsConsumeEveryRetailRequirementAndRetireTheFailurePage() {
+	void clientCheckButtonsConsumeEveryRetailRequirementAndRetireTheSelect6TurnInFailurePage() {
 		for (CheckQuest quest : CHECK_QUESTS) {
 			QuestDefinition definition = ProductionQuestDefinitions.definitionInOverlay(quest.id()).definition();
 			// S2 规范形：交付 = NPC_REPORT 块 source（s1）上的 QUEST_SELECT(31)，整组 HasItem 门直翻

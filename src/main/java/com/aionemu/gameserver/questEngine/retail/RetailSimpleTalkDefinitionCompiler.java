@@ -1755,6 +1755,13 @@ public final class RetailSimpleTalkDefinitionCompiler {
 	 * 并推进到 target、失败留在 source（缺省 SELECT6，{@code CLOSE} 则关窗）。形状合同与
 	 * {@code QuestXmlBlockExpander.expandNpcItemReport} 同口径：source 必须投影 START、
 	 * target 必须投影 REWARD，remove-count 只能是 required 或 ALL。
+	 * <p>
+	 * 命名消歧（批 0 R3）：{@code failurePage} 列说的"失败页"是客户端 {@code select6} 交付失败页
+	 * {@code QuestDialogPage.SELECT6}（2716）；它与 {@code QuestDialogPage.CHECK_USER_ITEM_FAIL}
+	 * （10001，物品检查失败动作页）是两回事，后者不在任何编译器路径上下发。
+	 * Naming disambiguation (batch 0 R3): the {@code failurePage} column means the client
+	 * {@code select6} turn-in failure page {@code QuestDialogPage.SELECT6} (2716) — distinct from
+	 * {@code QuestDialogPage.CHECK_USER_ITEM_FAIL} (10001), which no compiler path ever pushes.
 	 * Item-check gate routes for the compiler-level {@code npc-item-report} sugar (P0c-34).
 	 */
 	private static List<QuestTransition> itemReportGate(int questId,
