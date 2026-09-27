@@ -1,0 +1,16 @@
+# 旧存档自愈边登记（真端编译消费：单步 build() 的 LEGACY_SAVE_HEAL 编译通道）
+# Compiled legacy-save heal edges consumed by the single-step build path (P0c-28).
+#
+# 口径（判例 80290/80294）：客户端任务书单行任务真端投影在行 0（0 基末行），XML 时代存档停在
+# 行 1（1 基行号），不修复则领奖书页落在不存在的行上（审计 STATE_OUT_OF_RANGE）。链路径的
+# weapon 方向（[REWARD,var0=0]→rewardRow）由 buildChain journalRowRepair 从投影直接派生、无需
+# 登记；本表只收链通道覆盖不到的 armour 方向（staleRow 逐任务证据登记）。
+# 与测试侧 /quest/retail-legacy-save-normalization.tsv（采纳时移除的 XML 边登记，门禁
+# RetailNonIrAxisGateTest 要求登记行真端定义零 EnterWorld 路由）**互斥**——已编译的自愈边是
+# 真端形状的一部分（80291/80295 链路径 weapon 边先例），不入该表。
+# The chain path derives its weapon-direction edge from the projection; this table carries the
+# armour-direction rows whose stale value needs per-quest evidence. Disjoint from the test-side
+# normalization registry (removed XML edges; its gate requires zero enter-world routes).
+# 列：quest_id / stale_row / reward_row / 依据
+80294	1	0	DurableDaevanion armour variant (P0c-14 adopted): single client journal row, XML-era saves stop on row 1; judge staleRewardRowsAreHealedOnEnterWorld
+80290	1	0	DurableDaevanion armour variant (P0c-28 adoption): same shape as 80294, sibling sharing event_Zephyrin

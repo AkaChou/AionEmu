@@ -114,8 +114,17 @@ class CollapsedSingleStepLadderContractTest {
 		QuestTransition takeTool = routes(definition, "s1", "s2").getFirst();
 		assertEquals(new QuestEvent.TalkToNpc(MILLIARD, QuestDialogAction.SETPRO2.id(), 0), takeTool.event(),
 			() -> "15000 row 1 ends with the client SETPRO2 page");
-		assertTrue(takeTool.actions().contains(new QuestAction.GiveItem(REPAIR_TOOL, 1)),
-			() -> "15000 row 1 hands over the repair tool " + REPAIR_TOOL);
+		// 真端凭证模型：维修工具（quest_work_item1 = 182215662）改为接取边同事务发放，行 1 只升行——
+		// 遗留 XML 把工具挂在行 1 的 SETPRO2 边上是旧形。
+		// The retail credential model grants the repair tool (quest_work_item1 = 182215662) on the
+		// acceptance edges in the same transaction; row 1 only bumps the row. The legacy XML hung the
+		// tool on the row-1 SETPRO2 edge.
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 2)), takeTool.actions());
+		assertTrue(definition.transitions().stream()
+			.filter(route -> "unaccepted".equals(route.sourceNode()) && "started".equals(route.targetNode()))
+			.flatMap(route -> route.actions().stream())
+			.anyMatch(action -> action instanceof QuestAction.GiveItem give && give.itemId() == REPAIR_TOOL),
+			() -> "15000 acceptance edges must grant the repair tool " + REPAIR_TOOL);
 
 		/* 客户端页按钮链：check_user_item_ok 的 SELECT2(1352) -> select2 页，select2 的 SELECT2_1(1353) -> select2_1 页。
 		   没有这两条路由时 QuestClientContractGateTest 会报 BUTTON_WITHOUT_ROUTE。 */
@@ -135,7 +144,12 @@ class CollapsedSingleStepLadderContractTest {
 
 		assertEquals(1, routes(definition, "s2", "reward").size(),
 			() -> "15000 row 2 advances into the reward row exactly once");
-		assertEquals(new QuestEvent.UseItem(REPAIR_TOOL),
+		// 真端把带演出的道具使用步写成 ItemPlay(itemId, animationMillis)：引擎的同一条"使用道具"
+		// 客户端动作先查 ItemPlay 注册（有则播 3s 演出并派发 ItemPlay），未注册才落到 UseItem 通道。
+		// The retail chain models an animated item-use step as ItemPlay(itemId, animationMillis): the
+		// engine's single "use item" client action first consults the ItemPlay registry (playing the 3s
+		// animation and dispatching ItemPlay) and only falls back to the UseItem channel otherwise.
+		assertEquals(new QuestEvent.ItemPlay(REPAIR_TOOL, 3000),
 			routes(definition, "s2", "reward").getFirst().event(),
 			() -> "15000 row 2 is the client 'use the repair tool near the generator' step");
 		assertTrue(definition.metadata().questWorkItems().contains(new QuestItemRequirement(REPAIR_TOOL, 1)),
@@ -282,11 +296,10 @@ class CollapsedSingleStepLadderContractTest {
 			true, true, 0, 0, 100000000, 1, 0f, 0f, 0f, (byte) 0);
 	}
 
-	private static CompiledQuestDefinition definition(int questId) throws IOException {
-		try (InputStream input = CollapsedSingleStepLadderContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			assertNotNull(input, () -> "missing quest definition " + questId + ".xml");
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	private static CompiledQuestDefinition definition(int questId) {
+		// 15670/25670 已由真端驱动（DD_TALK_COLLECT_CHAIN）：统一问生产视图（15000/25000 仍来自 XML）。
+		// 15670/25670 are retail-driven now (DD_TALK_COLLECT_CHAIN): ask the production view for
+		// both (15000/25000 still resolve from XML).
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

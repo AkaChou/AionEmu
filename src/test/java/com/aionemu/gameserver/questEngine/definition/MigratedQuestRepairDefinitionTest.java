@@ -181,10 +181,15 @@ class MigratedQuestRepairDefinitionTest {
 			assertEquals(3, definition.definition().transitions().stream()
 				.filter(transition -> transition.event() instanceof QuestEvent.KillInWorld kill
 					&& kill.worldId() == 0).count());
+			// 真端等级窗（ScriptDLL "PvP Target Level Gap"，装载器缺省 10）：单边上界
+			// killer - victim <= gap，无下界。
+			// Retail level window (ScriptDLL "PvP Target Level Gap", loader default 10): one-sided
+			// upper bound killer - victim <= gap with no lower bound.
 			assertTrue(definition.definition().transitions().stream()
 				.filter(transition -> transition.event() instanceof QuestEvent.KillInWorld)
 				.flatMap(transition -> transition.conditions().stream())
-				.anyMatch(condition -> condition.equals(new QuestCondition.PvpVictimLevelDelta(-5, 9))));
+				.anyMatch(condition -> condition.equals(new QuestCondition.PvpVictimLevelDelta(
+					Integer.MIN_VALUE, 10))));
 		}
 	}
 
@@ -276,7 +281,10 @@ class MigratedQuestRepairDefinitionTest {
 				&& talk.npcId() == 804782 && talk.dialogId() == 1009)
 			.findFirst().orElseThrow();
 		assertEquals("reward", report.targetNode());
-		assertTrue(report.actions().contains(new QuestAction.SetStatus(QuestStatus.REWARD)));
+		// 规范形（1919 合同逐字锁定）：状态由目标节点投影驱动，1009 路由不再显式 SetStatus。
+		// Canonical shape (the 1919 contract pins it verbatim): status comes from the target-node
+		// projection; the 1009 route carries no explicit SetStatus.
+		assertTrue(report.actions().isEmpty());
 		assertTrue(report.afterCommit().contains(new AfterCommitAction.ShowQuestDialog(5)));
 
 		QuestTransition completion = definition.definition().transitions().stream()
@@ -571,7 +579,12 @@ class MigratedQuestRepairDefinitionTest {
 			QuestTransition report = definition.definition().transitions().stream()
 				.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
 					&& talk.dialogId() == 39).findFirst().orElseThrow();
-			assertTrue(report.actions().contains(new QuestAction.RemoveItem(itemId, QuestAction.RemoveItem.ALL)));
+			// 移除量以真端 collect_item 计数为权威（遗留迁移的 ALL 没收无真端/客户端痕迹，
+			// 四家组队任务元数据同为 drop_each_member=1 无机械判据，按真端优先裁剪）。
+			// Removal follows the retail collect_item counts (the legacy ALL confiscation has no
+			// retail/client trace — all four party quests share drop_each_member=1 with no
+			// mechanical discriminator — trimmed retail-first).
+			assertTrue(report.actions().contains(new QuestAction.RemoveItem(itemId, itemCount)));
 		} else {
 			assertTrue(definition.definition().metadata().drops().isEmpty());
 		}
@@ -599,15 +612,8 @@ class MigratedQuestRepairDefinitionTest {
 	}
 
 	private static CompiledQuestDefinition load(int questId) {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-		try (InputStream input = Objects.requireNonNull(
-			MigratedQuestRepairDefinitionTest.class.getResourceAsStream(resource), resource)) {
-			return QuestDefinitionXmlCompiler.compile(input);
-		} catch (Exception e) {
-			if (e instanceof QuestCompilationException compilation) {
-				throw compilation;
-			}
-			throw new AssertionError("unable to load " + resource, e);
-		}
+		// 退役任务不再有 XML：统一走生产视图（保留任务解析内容不变，退役任务走真端 overlay）。
+		// Retired quests have no XML: resolve through the production view (XML catalog + retail overlay).
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

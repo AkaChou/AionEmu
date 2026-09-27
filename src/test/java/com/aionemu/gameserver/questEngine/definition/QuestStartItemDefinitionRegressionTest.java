@@ -2,7 +2,6 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.InputStream;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -27,13 +26,7 @@ class QuestStartItemDefinitionRegressionTest {
 	}
 
 	private CompiledQuestDefinition definition(int questId) throws Exception {
-		String path = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-		try (InputStream input = getClass().getResourceAsStream(path)) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition " + questId);
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		return ProductionQuestDefinitions.definitionInOverlay(questId);
 	}
 
 	private record ExpectedRoute(int questId, int npcId, String source, int dialogId) {

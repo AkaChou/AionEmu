@@ -4,9 +4,13 @@ import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
+import com.aionemu.gameserver.questEngine.definition.QuestCondition;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
+import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
@@ -37,13 +41,22 @@ class Quest1118ProductionFlowTest {
 		List<QuestMutationPlan> plans = new ArrayList<>();
 		List<List<QuestAction>> appliedActions = new ArrayList<>();
 		List<AfterCommitAction> afterCommit = new ArrayList<>();
-		QuestProductionDispatcher dispatcher = dispatcher(
-			definition(), status, packedVariables, inventory, plans, appliedActions, afterCommit);
+		CompiledQuestDefinition definition = definition();
+		QuestProductionDispatcher dispatcher = dispatcher(definition, status, packedVariables, inventory, plans,
+			appliedActions, afterCommit);
 
+		// S3a（quest-native-dispatch）：SimpleTalk 链式行的接取段换 canonical 形——接取 NPC 上的
+		// QUEST_SELECT(31) 直发原生接取询问窗（页 4），旧 select1 入口页（1011）与 ASK_QUEST_ACCEPT(1007)
+		// 中转随页梯退场。开窗只下发页面：不建档、不发物，发物落在下面两条提交边上。
+		// S3a (quest-native-dispatch): the chain accept segment takes the canonical shape — QUEST_SELECT(31)
+		// on the accept npc opens the native ask window (page 4) directly; the legacy select1 entry page
+		// (1011) and the 1007 relay retire with the page ladder. Opening the window only pushes a page:
+		// no start and no grant, since the grant rides the two commit edges asserted below.
 		assertHandled(dispatch(dispatcher, 203059, 31));
 		assertEquals(QuestStatus.NONE, status.get());
 		assertTrue(inventory.isEmpty());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1011)), afterCommit);
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
+			QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id())), afterCommit);
 
 		afterCommit.clear();
 		assertHandled(dispatch(dispatcher, 203059, 1002));
@@ -54,6 +67,21 @@ class Quest1118ProductionFlowTest {
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
 			new AfterCommitAction.ShowQuestDialog(1003)), afterCommit);
+
+		// 接取发物落在两条提交边（1002 与 20000）的 actions 上，条件同为 StartEligible：canonical 形里
+		// 「接取即发 182200224×1」由提交边承担，而不是接取窗口或已退场的中转边。
+		// The accept grant rides both commit edges (1002 and 20000) as route actions under the same
+		// StartEligible condition: in the canonical shape the "accept grants 182200224x1" semantics is
+		// carried by these edges rather than by the ask window or the retired relay.
+		for (int commit : List.of(QuestDialogAction.QUEST_ACCEPT_1.id(),
+				QuestDialogAction.QUEST_ACCEPT_SIMPLE.id())) {
+			QuestTransition accept = definition.transitionsFor("TALK_TO_NPC").stream()
+				.filter(transition -> transition.event().equals(new QuestEvent.TalkToNpc(203059, commit)))
+				.findFirst()
+				.orElseThrow(() -> new AssertionError("quest 1118 npc 203059 has no commit " + commit));
+			assertEquals(List.of(new QuestCondition.StartEligible()), accept.conditions());
+			assertEquals(List.of(new QuestAction.GiveItem(OINTMENT_ITEM_ID, 1)), accept.actions());
+		}
 
 		afterCommit.clear();
 		assertHandled(dispatch(dispatcher, 203070, 31));
@@ -69,12 +97,14 @@ class Quest1118ProductionFlowTest {
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
 			new AfterCommitAction.ShowQuestSelectionDialog(10)), afterCommit);
 
+		// S3c（quest-native-dispatch）：交付段也换规范形——交付 NPC 上的 QUEST_SELECT(31) 带整组
+		// `HasItem(182200224,1)` 门**直接提交**（扣物 + 直翻 REWARD）并下发档位奖励窗（页 5）；
+		// 旧报告页 SELECT5(2375) 与 39/20002 检查对随页链退场（未集齐时零路由，关窗兜底交 DialogService）。
+		// S3c: the delivery segment takes the canonical shape — the reward npc's QUEST_SELECT(31) carries the
+		// whole HasItem gate, consumes the ointment, flips REWARD directly and pushes the tiered reward
+		// window (page 5); the SELECT5 report page and the 39/20002 check pair retire.
 		afterCommit.clear();
 		assertHandled(dispatch(dispatcher, 203079, 31));
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(2375)), afterCommit);
-
-		afterCommit.clear();
-		assertHandled(dispatch(dispatcher, 203079, 1009));
 		assertEquals(QuestStatus.REWARD, status.get());
 		assertEquals(1, packedVariables.get());
 		assertTrue(inventory.isEmpty());
@@ -83,6 +113,15 @@ class Quest1118ProductionFlowTest {
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.ShowQuestDialog(5)), afterCommit);
 		assertEquals(QuestStatus.REWARD, plans.getLast().nextStatus());
+
+		// 领奖态重开：回收站态的重开载体由 `npc-complete` 预览腿承担（reward 态的 1009 只重发奖励窗，
+		// 不再走报告页 / 检查对；QE-083 预览语义）。
+		// Reward-state reopen: the carrier is the npc-complete preview leg (a reward-state 1009 only
+		// re-pushes the reward window, no report page and no check pair).
+		afterCommit.clear();
+		assertHandled(dispatch(dispatcher, 203079, 1009));
+		assertEquals(QuestStatus.REWARD, status.get());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(5)), afterCommit);
 	}
 
 	private static QuestProductionDispatcher dispatcher(CompiledQuestDefinition definition,
@@ -150,13 +189,7 @@ class Quest1118ProductionFlowTest {
 	}
 
 	private static CompiledQuestDefinition definition() throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/1118.xml";
-		try (InputStream input = Quest1118ProductionFlowTest.class.getResourceAsStream(resource)) {
-			if (input == null) {
-				throw new IllegalStateException("missing resource " + resource);
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		return com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions.definitionInOverlay(1118);
 	}
 
 	private static Connection connection() {

@@ -1,37 +1,66 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 用客户端击杀门控（quest_monster.csv 的 SECTION_1&lt;N）校验生产任务"完成所需击杀数"。
+ * 用客户端击杀门控（quest_monster.csv 的 SECTION_1&lt;N）校验**生产**任务的"完成所需击杀数"。
  * 击杀数由 {@link QuestKillCounterSimulator} 经真实 planner 模拟得出，而不是从 XML 形状反推，
  * 因此既能抓住 13758 族那种"客户端 5 杀、XML 要 15 杀"的漂移，也不会被 +1 记账形态误伤。
+ * <p>目录是生产视图（真端优先 overlay，见 {@link ProductionQuestDefinitions}）：退役行的击杀台阶
+ * 只存在于真端 IR 里，XML-only 目录对它们不可见。
  * <p>Validates the production "kills required" against the client kill gate by simulating kills through
- * the real planner. The simulator is shape-independent: it catches drift without guessing accounting forms.
+ * the real planner. The simulator is shape-independent: it catches drift without guessing accounting
+ * forms. The catalog is the production view (retail-first overlay), because retired rows answer only
+ * through the retail IR.
  */
 class QuestKillCounterRetailGateTest {
 	private static final String CONTRACT_RESOURCE = "/quest/quest-kill-counter-retail-contract.tsv";
 	/** 合同快照规模：低于该值说明基线被误删或生成脚本漏了任务。 / Guard against silent baseline shrink. */
 	private static final int EXPECTED_CONTRACT_ROWS = 414;
+	private static final String QUEST_XML_DIR =
+		"src/main/resources/aion/data/static_data/quest_definition/quests";
+	private static final String PREVIOUS_SWITCH = System.getProperty("aion.quest.retailDriver");
 
+	@BeforeAll
+	static void enableRetailFirstProduction() {
+		System.setProperty("aion.quest.retailDriver", "true");
+	}
+
+	@AfterAll
+	static void restoreSwitch() {
+		if (PREVIOUS_SWITCH == null) {
+			System.clearProperty("aion.quest.retailDriver");
+		} else {
+			System.setProperty("aion.quest.retailDriver", PREVIOUS_SWITCH);
+		}
+	}
+
+	/** 生产视图目录（真端优先 overlay）。 / The production-view catalog (retail-first overlay). */
 	private static QuestCatalog catalog() {
-		return QuestDefinitionCatalogManifest.compile(
-			Path.of("src/main/resources/aion/data/static_data/quest_definition"));
+		return ProductionQuestDefinitions.catalog();
 	}
 
 	@Test
@@ -46,69 +75,103 @@ class QuestKillCounterRetailGateTest {
 	void singleCounterQuestsRequireExactlyTheClientGate() {
 		QuestCatalog catalog = catalog();
 		Map<Integer, Integer> contract = readings(CONTRACT_RESOURCE, "quest_id", "required_kills");
+		List<String> violations = new ArrayList<>();
 		for (Map.Entry<Integer, Integer> entry : contract.entrySet()) {
 			int questId = entry.getKey();
 			int gate = entry.getValue();
 			CompiledQuestDefinition compiled = catalog.findExecutable(questId)
 				.orElseThrow(() -> new AssertionError("quest " + questId + " is not an executable owner"));
 			Set<String> counters = QuestKillCounterSimulator.killCounterFields(compiled);
-			assertEquals(1, counters.size(),
-				"quest " + questId + " is in the single-counter contract but uses " + counters);
+			if (counters.size() != 1) {
+				violations.add("quest " + questId + " is in the single-counter contract but uses " + counters);
+				continue;
+			}
 			int required = QuestKillCounterSimulator.requiredKills(compiled);
-			assertEquals(gate, required,
-				"quest " + questId + " must require exactly the client kill gate");
+			if (required != gate) {
+				violations.add("quest " + questId + " must require exactly the client kill gate " + gate
+					+ " but simulates " + required);
+			}
 		}
+		assertEquals(List.of(), violations,
+			"single-counter quests must reproduce their client kill gate");
 	}
 
 	/**
-	 * 反向对照：把 13765 恢复成修复前的漂移形态（累加门槛与收口门槛同为 14、终值 15），
-	 * 模拟器必须复现"多杀 10 只"。这条证明门禁不是空转。
-	 * Negative control: reintroduce the exact pre-fix drift of the 13758 family and require the
-	 * simulator to reproduce the overkill.
+	 * 反向对照：生产定义里 13765 的真端 IR 是一条五级击杀台阶（a0→…→a5），多插一级台阶就必须多杀一只。
+	 * 这条证明门禁不是空转：对拍真的跟着 IR 的计数步长走，而不是把合同值抄一遍。
+	 * Negative control: the production (retail) definition of 13765 is a five-rung kill ladder, so one
+	 * extra rung must raise the simulated count by exactly one — the sweep is not vacuous.
 	 */
 	@Test
 	void simulatorReproducesTheFixedOverkillDrift() {
 		CompiledQuestDefinition original = catalog().findExecutable(13765).orElseThrow();
 		assertEquals(5, QuestKillCounterSimulator.requiredKills(original), "13765 requires five kills");
-		QuestTransition accumulate = killRoute(original, "started", "started");
-		QuestTransition finish = killRoute(original, "started", "reward");
-		assertEquals(List.of(new QuestCondition.VariableBelow("var1", 4)), accumulate.conditions());
-		assertEquals(List.of(new QuestCondition.VariableAtLeast("var1", 4)), finish.conditions());
-
-		CompiledQuestDefinition drifted = replaceTransition(original, finish,
-			new QuestTransition(finish.event(), List.of(new QuestCondition.VariableAtLeast("var1", 5)),
-				finish.actions(), finish.targetNode(), finish.afterCommit(), finish.priority(),
-				finish.sourceNode()));
-		drifted = replaceTransition(drifted, accumulate,
-			new QuestTransition(accumulate.event(), List.of(new QuestCondition.VariableBelow("var1", 5)),
-				accumulate.actions(), accumulate.targetNode(), accumulate.afterCommit(),
-				accumulate.priority(), accumulate.sourceNode()));
+		assertEquals(Set.of("var0"), QuestKillCounterSimulator.killCounterFields(original),
+			"13765's retail ladder counts on one field");
+		CompiledQuestDefinition drifted = insertExtraKillRung(original);
 		assertEquals(6, QuestKillCounterSimulator.requiredKills(drifted),
-			"simulator must report one extra kill when the counting gate drifts by one");
+			"simulator must report one extra kill when the ladder grows by one rung");
 	}
 
-	private static QuestTransition killRoute(CompiledQuestDefinition compiled, String source, String target) {
-		return compiled.definition().transitions().stream()
-			.filter(transition -> transition.event() instanceof QuestEvent.KillNpcSet)
-			.filter(transition -> source.equals(transition.sourceNode()) && target.equals(transition.targetNode()))
-			.findFirst().orElseThrow();
+	/**
+	 * 把真端击杀台阶加长一级：在末级落点之后再挂一个"计数 +1"的新节点，并从末级落点补一条同事件
+	 * 路由过去。真端台阶靠"没有下一条击杀路由"收口（收口节点不进 REWARD，出边由对话/交付接管），
+	 * 因此加长一级就是给末级落点补一条击杀出边。
+	 * Lengthens the retail ladder by one rung: a new node one count further is appended and reached from
+	 * the last rung's landing node by one more transition of the same event. A retail ladder closes by
+	 * having no further kill route (the landing node is not REWARD; its outgoing edges belong to the
+	 * dialogue/hand-in), so one extra rung means one extra kill edge out of that landing node.
+	 */
+	private static CompiledQuestDefinition insertExtraKillRung(CompiledQuestDefinition compiled) {
+		QuestDefinition definition = compiled.definition();
+		String counter = QuestKillCounterSimulator.killCounterFields(compiled).stream().findFirst()
+			.orElseThrow(() -> new AssertionError("13765 owns no kill counter"));
+		QuestTransition last = definition.transitions().stream()
+			.filter(transition -> transition.event() instanceof QuestEvent.KillNpc
+				|| transition.event() instanceof QuestEvent.KillNpcSet)
+			.reduce((first, second) -> second)
+			.orElseThrow(() -> new AssertionError("13765 has no kill rung"));
+		QuestNode end = node(definition, last.targetNode());
+		Map<String, Integer> variables = new LinkedHashMap<>(end.projection().variables());
+		variables.put(counter, variables.getOrDefault(counter, 0) + 1);
+		String extraLabel = end.label() + "_extra";
+		List<QuestNode> nodes = new ArrayList<>(definition.nodes());
+		nodes.add(new QuestNode(extraLabel, new NodeProjection(end.projection().status(), variables)));
+		List<QuestTransition> transitions = new ArrayList<>(definition.transitions());
+		transitions.add(new QuestTransition(last.event(), List.of(), List.of(), extraLabel, List.of(),
+			last.priority(), end.label()));
+		return QuestDefinitionCompiler.compile(new QuestDefinition(definition.id(), definition.version(),
+			definition.metadata(), definition.progressLayout(), nodes, transitions));
+	}
+
+	private static QuestNode node(QuestDefinition definition, String label) {
+		return definition.nodes().stream()
+			.filter(candidate -> candidate.label().equals(label))
+			.findFirst().orElseThrow(() -> new AssertionError("missing node " + label));
 	}
 
 	/**
 	 * 第 2 项：`<kills>` 声明只是展示性狩猎步骤，其 npc 必须真实出现在击杀转换里；
-	 * 计数一律以 var1 计数器（上面的门禁）为准，禁止再用声明条数当合同。
-	 * Item 2: kill declarations are display-only and must stay inside the real kill transitions.
+	 * 计数一律以计数器（上面的门禁）为准，禁止再用声明条数当合同。
+	 * <p>人口护栏在真端化改造后换了口径：声明只活在 XML 侧——真端元数据没有 kills 源（该轴的分歧在
+	 * {@link RetailMetadataEquivalenceGateTest} 注册），所以"审阅过的人口"由机房 XML 目录自证：磁盘上
+	 * 含 {@code <kills>} 的保留 XML 集合必须与目录里的声明行集合逐一对应。这比原来的魔法下限
+	 * （&ge;90）更强：解析器漏读声明会少行、目录装配漏带声明会多行，两个方向都会红；而退役本来就会
+	 * 合法地移出人口，集合对拍随机房目录自动跟随，不需要任何下限数字。
+	 * Item 2: kill declarations are display-only and must stay inside the real kill transitions. The
+	 * population guard is restated for the retail-first production view: declarations exist only on the
+	 * XML side, so the retained corpus attests the population by set equality (no magic floor).
 	 */
 	@Test
-	void killDeclarationsStayInsideKillTransitions() {
+	void killDeclarationsStayInsideKillTransitions() throws IOException {
 		QuestCatalog catalog = catalog();
-		int declaring = 0;
+		Set<Integer> declaring = new TreeSet<>();
 		for (CompiledQuestDefinition compiled : catalog.executables()) {
 			List<QuestKill> declared = compiled.definition().metadata().kills();
 			if (declared.isEmpty()) {
 				continue;
 			}
-			declaring++;
+			declaring.add(compiled.id());
 			Set<Integer> hunted = new LinkedHashSet<>();
 			for (QuestEvent event : QuestKillCounterSimulator.killEvents(compiled)) {
 				if (event instanceof QuestEvent.KillNpc(int npcId)) {
@@ -125,18 +188,22 @@ class QuestKillCounterRetailGateTest {
 				}
 			}
 		}
-		assertTrue(declaring >= 90,
-			"kill declarations are display-only; their reviewed population must not silently shrink ("
-				+ declaring + " declaring quests)");
+		assertEquals(declaringQuestIdsInRetainedXml(), declaring,
+			"the declaration population must equal the retained XML that declares kills");
 	}
 
-	private static CompiledQuestDefinition replaceTransition(CompiledQuestDefinition compiled,
-			QuestTransition original, QuestTransition replacement) {
-		QuestDefinition definition = compiled.definition();
-		List<QuestTransition> transitions = definition.transitions().stream()
-			.map(transition -> transition.equals(original) ? replacement : transition).toList();
-		return QuestDefinitionCompiler.compile(new QuestDefinition(definition.id(), definition.version(),
-			definition.metadata(), definition.progressLayout(), definition.nodes(), transitions));
+	/** 机房 XML 目录里含 {@code <kills>} 的保留文件 id（文本扫描，独立于 XML 编译器）。 /
+	 * Retained XML files that declare kills, scanned as text so the check does not reuse the parser. */
+	private static Set<Integer> declaringQuestIdsInRetainedXml() throws IOException {
+		Set<Integer> declared = new TreeSet<>();
+		try (var files = Files.list(Path.of(QUEST_XML_DIR))) {
+			for (Path file : files.filter(path -> path.toString().endsWith(".xml")).toList()) {
+				if (Files.readString(file, StandardCharsets.UTF_8).contains("<kills>")) {
+					declared.add(Integer.parseInt(file.getFileName().toString().replace(".xml", "")));
+				}
+			}
+		}
+		return declared;
 	}
 
 	private static Map<Integer, Integer> readings(String resource, String idColumn, String valueColumn) {

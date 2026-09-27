@@ -284,14 +284,10 @@ class QuestMultistepChainContractTest {
 		return compiled(questId).definition();
 	}
 
-	private static CompiledQuestDefinition compiled(int questId) throws Exception {
-		try (InputStream input = QuestMultistepChainContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition " + questId + ".xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	private static CompiledQuestDefinition compiled(int questId) {
+		// 行已由真端表驱动（退役），改从生产视图取定义。
+		// The rows are retail-driven since retirement; load via the production view.
+		return ProductionQuestDefinitions.definition(questId);
 	}
 
 	private static QuestSnapshot snapshot(CompiledQuestDefinition definition, QuestStatus status,

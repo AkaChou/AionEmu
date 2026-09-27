@@ -2,9 +2,6 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
@@ -14,32 +11,42 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * 80008/80009（Cake 系, 收集 1 扣物完成）与 80028/80031/80032（Fayrefolk 系, 对话即完成）:
  * 事件激活自动弃任（level-up + event-active(false) + abandon-quest）、1009/23 进 REWARD。
- * authority: 旧 handler _80008/_80009/_80028/_80031/_80032; quest_data.xml:52806/52815/53016/53037/53042; 真实 quest.xml; client_strings_quest.xml nameId。
+ * 依据真端 quest.xml / Quest_SimpleUseItem、quest_data.xml 工作物品与客户端 1009 按钮。
  */
 class QuestEventQuestBatchDefinitionTest {
 
-	private static final Path DIR = Path.of("src/main/resources/aion/data/static_data/quest_definition/quests");
 
 	@Test
 	void cakeQuestsMatchQuestDataAndRetail() throws Exception {
-		assertCake(80008, "[Event] Piece Of Cake!", 1180008, "ELYOS", 182214006, 798415);
-		assertCake(80009, "[Event] The Cake Is The Truth!", 1180009, "ASMODIANS", 182214007, 798417);
+		assertCake(80008, "Q80008", 1180008, "ELYOS", 182214006, 798415);
+		assertCake(80009, "Q80009", 1180009, "ASMODIANS", 182214007, 798417);
 	}
 
 	@Test
-	void cakeQuestsRemoveWorkItemOnSelectReward() throws Exception {
+	void cakeQuestsRemoveWorkItemOnQuestSelectDelivery() throws Exception {
 		for (int questId : new int[] {80008, 80009}) {
 			int itemId = questId == 80008 ? 182214006 : 182214007;
 			QuestDefinition definition = load(questId);
-			assertTrue(definition.transitions().stream().anyMatch(transition ->
-				"started".equals(transition.sourceNode())
+			// P0-2 规范形交付：QUEST_SELECT 带工作物品门控直翻 REWARD（1009 中转与 SELECT5
+			// 失败页随页链删除，未集齐零路由，关窗兜底）。
+			// P0-2 canonical delivery: QUEST_SELECT gated on the work item flips REWARD (the 1009
+			// hop and SELECT5 failure page are gone; an incomplete hand-in has no route).
+			QuestTransition deliver = definition.transitions().stream()
+				.filter(transition -> "started".equals(transition.sourceNode())
 					&& "reward".equals(transition.targetNode())
 					&& transition.event() instanceof QuestEvent.TalkToNpc talk
-					&& Integer.valueOf(1009).equals(talk.dialogId())
-					&& transition.conditions().contains(new QuestCondition.HasItem(itemId, 1))
-					&& transition.actions().contains(new QuestAction.RemoveItem(itemId, 1))
-					&& transition.actions().contains(new QuestAction.SetVariable("var0", 1))),
-				"quest " + questId + " must remove the work item on SELECT_REWARD(1009) into REWARD");
+					&& talk.npcId() != 0 && QuestDialogAction.QUEST_SELECT.id() == talk.dialogId())
+				.findFirst().orElseThrow();
+			assertEquals(List.of(new QuestCondition.HasItem(itemId, 1)), deliver.conditions(),
+				"quest " + questId + " delivery conditions");
+			assertEquals(List.of(
+					new QuestAction.RemoveItem(itemId, 1), new QuestAction.SetVariable("var0", 1)),
+				deliver.actions(), "quest " + questId + " delivery removals");
+			assertTrue(definition.transitions().stream().noneMatch(transition ->
+					"started".equals(transition.sourceNode()) && "started".equals(transition.targetNode())
+						&& transition.event() instanceof QuestEvent.TalkToNpc talk
+						&& QuestDialogAction.SELECT_QUEST_REWARD.id() == talk.dialogId()),
+				"quest " + questId + " canonical removed the 1009 failure self-loop");
 		}
 	}
 
@@ -124,8 +131,7 @@ class QuestEventQuestBatchDefinitionTest {
 	}
 
 	private static QuestDefinition load(int questId) throws Exception {
-		try (InputStream input = Files.newInputStream(DIR.resolve(questId + ".xml"))) {
-			return QuestDefinitionXmlCompiler.compile(input).definition();
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definitionInOverlay(questId).definition();
 	}
 }

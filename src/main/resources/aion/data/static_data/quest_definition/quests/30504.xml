@@ -83,6 +83,15 @@
     <!-- 接取：Lition 205438 委托营救被压在柱子下的 Paios。 / Accept from Lition. -->
     <dialog type="NPC_START" npc-id="205438" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <!-- 行 0：挪开柱子物件。 / Row 0: use the column object. -->
+    <!-- 交互物 701098 的 NPC AI 是 quest_use_item（retail 只登记一个 ACTION step：action_ids=701098），
+         必须声明 ACTION_ITEM_USE 资格路由，客户端才会开该物件的使用道具动作。
+         NPC 701098 runs the quest_use_item AI and retail registers it as the quest ACTION step,
+         so the quest must declare the ACTION_ITEM_USE eligibility route. -->
+    <transition source="started" target="started">
+      <event>
+        <can-act template-id="701098" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <transition source="started" target="s1">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="701098" action="USE_OBJECT"/>

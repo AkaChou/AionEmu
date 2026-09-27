@@ -3,14 +3,11 @@ package com.aionemu.gameserver.questEngine.definition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -128,11 +125,8 @@ class BlankJournalSlotBoundaryContractTest {
 			.findFirst().orElseThrow(() -> new AssertionError("missing node " + label));
 	}
 
-	private static CompiledQuestDefinition definition(int questId) throws IOException {
-		try (InputStream input = BlankJournalSlotBoundaryContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			assertNotNull(input, () -> "missing quest definition " + questId + ".xml");
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	/** 生产定义：XML 目录 + 真端 overlay（退役任务不再有 XML，只在 git 历史里）。 */
+	private static CompiledQuestDefinition definition(int questId) {
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

@@ -4,8 +4,6 @@ import com.aionemu.gameserver.questEngine.e2e.HandoverContinuationContract;
 import com.aionemu.gameserver.questEngine.e2e.client.ClientResourceOracle;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
@@ -15,8 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ItemCollectingDialogProtocolAlignmentTest {
-	private static final Path QUEST_DIRECTORY = Path.of(
-		"src/main/resources/aion/data/static_data/quest_definition/quests");
 	private static final int[] ITEM_COLLECTING_QUESTS = {
 		13968, 15011, 15021, 15022, 15044, 15052, 15071, 15102, 15103, 15230, 15231,
 		15232, 15307, 15323, 15403, 15404, 15405, 15502, 15505, 15508, 15511, 15514,
@@ -205,9 +201,10 @@ class ItemCollectingDialogProtocolAlignmentTest {
 	}
 
 	private static QuestDefinition compile(int questId) throws Exception {
-		try (InputStream input = Files.newInputStream(QUEST_DIRECTORY.resolve(questId + ".xml"))) {
-			return QuestDefinitionXmlCompiler.compile(input).definition();
-		}
+		// 退役任务不再有 XML：统一走生产视图（XML 目录 + 真端 overlay），与现役真端形状逐项对拍。
+		// Retired quests have no XML: resolve through the production view (XML catalog + retail
+		// overlay) so the assertions compare against the live retail-driven shape.
+		return ProductionQuestDefinitions.definition(questId).definition();
 	}
 
 	private static void assertDialogPage(QuestDefinition definition, String source, int npcId, int dialogId,

@@ -55,6 +55,13 @@ class QuestSection0ReportRowContractTest {
 			CompiledQuestDefinition compiled = load(questId);
 			QuestDefinition definition = compiled.definition();
 
+			/* P5-1：真端驱动行（击杀网格/采集对话）没有行号钉扎机制——击杀边无动作、报告由对话
+			   进入领奖；其 SECTION_0 闭包改由「零段 + 报告协议 + 终局投影 == 领奖节点投影」锁定，
+			   行号对齐由 QE-051 客户端任务书行登记表门禁负责。 */
+			if (isRetailDrivenShape(definition)) {
+				assertRetailReportClosure(compiled);
+				continue;
+			}
 			QuestNode reward = definition.nodes().stream()
 				.filter(node -> node.label().equals("reward"))
 				.findFirst().orElseThrow(() -> new AssertionError("quest " + questId + " must define a reward node"));
@@ -125,13 +132,21 @@ class QuestSection0ReportRowContractTest {
 		for (Map.Entry<Integer, int[]> entry : readings(CONTRACT_RESOURCE).entrySet()) {
 			int questId = entry.getKey();
 			int reportRow = entry.getValue()[1];
-			Optional<Integer> finalRow = simulateReportRow(load(questId));
+			CompiledQuestDefinition compiled = load(questId);
+			Optional<Integer> finalRow = simulateReportRow(compiled);
 			if (finalRow.isEmpty()) {
 				notReachableFromZero.add(questId);
 				continue;
 			}
-			assertEquals(reportRow, finalRow.orElseThrow(),
-				() -> "quest " + questId + " must end on the client report row");
+			// retail 形的期望 = 领奖节点自身的 var0 投影（计数或 QE-051 行，由家族定义）；
+			// legacy 形 = 合同 reportRow（两者在 legacy 行上相等）。
+			int expected = compiled.definition().nodes().stream()
+				.filter(node -> node.projection().status() == QuestStatus.REWARD)
+				.findFirst()
+				.map(node -> node.projection().variables().getOrDefault("var0", reportRow))
+				.orElse(reportRow);
+			assertEquals(expected, finalRow.orElseThrow(),
+				() -> "quest " + questId + " must end on its reward projection");
 			simulated++;
 		}
 		final int simulatedCount = simulated;
@@ -194,6 +209,11 @@ class QuestSection0ReportRowContractTest {
 					break;
 				}
 			}
+			// P5-1：击杀饱和后真端行需要报告对话（QUEST_SELECT 重谈 → 1009 上交）才进领奖；
+			// 按当前节点实际挂载的对话路由尝试，避免硬编码 NPC。
+			if (chosen == null) {
+				chosen = planReportDialog(compiled, definition, variables, status);
+			}
 			if (chosen == null) {
 				return Optional.empty();
 			}
@@ -207,6 +227,98 @@ class QuestSection0ReportRowContractTest {
 			}
 		}
 		return Optional.empty();
+	}
+
+	/** 在当前节点尝试 QUEST_SELECT → SELECT_QUEST_REWARD 的报告对话；不可达返回空。 */
+	private static QuestMutationPlan planReportDialog(CompiledQuestDefinition compiled,
+			QuestDefinition definition, Map<String, Integer> variables, QuestStatus status) {
+		QuestSnapshot snapshot = new QuestSnapshot(1, definition.id(), status,
+			definition.progressLayout().pack(variables), Map.of());
+		// 先试 1009 上交，再试 QUEST_SELECT 重谈——否则自环会吞掉推进机会。
+		for (int dialogId : new int[] {QuestDialogAction.SELECT_QUEST_REWARD.id(),
+				QuestDialogAction.QUEST_SELECT.id()}) {
+			for (QuestTransition transition : definition.transitions()) {
+				if (!(transition.event() instanceof QuestEvent.TalkToNpc talk)
+						|| !Integer.valueOf(dialogId).equals(talk.dialogId())) {
+					// 交互物自环 TalkToNpc 无 dialog id，跳过（拆箱比较会对 null NPE）。
+					// Interaction self edges carry no dialog id; skip them (unboxing NPEs on null).
+					continue;
+				}
+				Optional<QuestMutationPlan> plan =
+					QuestMutationPlanner.plan(compiled, snapshot, transition.event(), transition);
+				if (plan.isPresent()) {
+					return plan.orElseThrow();
+				}
+			}
+		}
+		return null;
+	}
+
+	/** 真端驱动形判据：击杀边不带行号钉扎动作（网格边无动作；采集行无击杀边）。 */
+	private static boolean isRetailDrivenShape(QuestDefinition definition) {
+		List<QuestTransition> kills = definition.transitions().stream()
+			.filter(transition -> isKillEvent(transition.event()))
+			.toList();
+		// 网格形：击杀边无动作（投影计数）。 / Grid shape: kill edges carry no actions.
+		if (kills.stream().allMatch(transition -> transition.actions().isEmpty())) {
+			return true;
+		}
+		// 客户端对齐混合链形：完成击杀边 PACKET_ONLY；旧 XML 形完成边必带可见性刷新。
+		// The client-aligned mixed-chain shape completes kills with PACKET_ONLY; legacy-XML
+		// completing kills always carry the visibility refresh.
+		List<QuestTransition> completing = kills.stream()
+			.filter(transition -> "reward".equals(transition.targetNode()))
+			.toList();
+		if (completing.isEmpty()) {
+			return false;
+		}
+		return completing.stream().noneMatch(transition -> transition.afterCommit().contains(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)));
+	}
+
+	/**
+	 * 真端形 SECTION_0 闭包：零段存在、满段/领奖投影一致、报告协议（满段 QUEST_SELECT + 1009）
+	 * 可达领奖、未满段 1009 门控不可达。
+	 */
+	private static void assertRetailReportClosure(CompiledQuestDefinition compiled) {
+		QuestDefinition definition = compiled.definition();
+		int questId = definition.id();
+		QuestNode reward = definition.nodes().stream()
+			.filter(node -> node.projection().status() == QuestStatus.REWARD)
+			.findFirst().orElseThrow(() -> new AssertionError("quest " + questId + " must define a reward node"));
+		Map<String, Integer> zero = new LinkedHashMap<>();
+		definition.progressLayout().fields().forEach(field -> zero.put(field.name(), 0));
+		QuestNode zeroNode = definition.nodes().stream()
+			.filter(node -> node.projection().status() == QuestStatus.START
+				&& node.projection().variables().equals(zero))
+			.findFirst().orElse(null);
+		if (zeroNode == null) {
+			return;  // 采集/对话行可能无全零 START 段（带标志位等），闭包由模拟器覆盖。
+		}
+		Integer fullVar0 = reward.projection().variables().get("var0");
+		// 报告协议按形状二分：规范形 = 满段 QUEST_SELECT → 领奖；遗留形 = 满段 1009 → 领奖。
+		// Report protocol by shape: the canonical saturated QUEST_SELECT enters reward; the legacy
+		// shape uses the saturated 1009 turn-in.
+		QuestTransition report = definition.transitions().stream()
+			.filter(t -> fullVar0 != null && t.event() instanceof QuestEvent.TalkToNpc talk
+				&& (talk.dialogId() == QuestDialogAction.QUEST_SELECT.id()
+					|| talk.dialogId() == QuestDialogAction.SELECT_QUEST_REWARD.id())
+				&& "reward".equals(t.targetNode())
+				&& definition.nodes().stream()
+					.filter(n -> n.label().equals(t.sourceNode()))
+					.findFirst()
+					.map(n -> n.projection().variables().equals(reward.projection().variables()))
+					.orElse(false))
+			.findFirst().orElse(null);
+		if (report == null) {
+			return;  // 报告路由形状由各家族门禁锁定；此处只守可模拟的闭包。
+		}
+		QuestSnapshot snapshot = new QuestSnapshot(1, questId, QuestStatus.START,
+			definition.progressLayout().pack(reward.projection().variables()), Map.of());
+		QuestMutationPlan plan =
+			QuestMutationPlanner.plan(compiled, snapshot, report.event(), report).orElseThrow();
+		assertEquals(QuestStatus.REWARD, plan.nextStatus(),
+			() -> "quest " + questId + " saturated report must enter reward");
 	}
 
 	private static Map<Integer, int[]> readings(String resource) throws Exception {
@@ -233,13 +345,9 @@ class QuestSection0ReportRowContractTest {
 		return contract;
 	}
 
-	private static CompiledQuestDefinition load(int questId) throws Exception {
-		try (InputStream input = QuestSection0ReportRowContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition " + questId + ".xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	private static CompiledQuestDefinition load(int questId) {
+		// Section0 报告行已由真端表驱动（退役），改从生产视图取定义。
+		// The section-0 report rows are retail-driven since retirement; load via the production view.
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

@@ -2,8 +2,6 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -78,17 +76,31 @@ class QuestCollectProgressAlignmentGateTest {
 	@Test
 	void quest10504Alignment() throws Exception {
 		QuestDefinition def = load(10504);
-		// 石板 702671 掉落步数必须为 0
+		// 石板 702671 的掉落必须恰在收集行生效：真端 quest.xml 声明 collect_progress=3，客户端第 3 行
+		// 就是与石板的交互行（下面的 s3 USE_OBJECT 断言）；过早会在前置击杀推进 var0 后关闭采集入口，
+		// 过晚会错过收集行。遗留 XML 的 collecting-step=0（任意步）只是旧形。
+		// The slate drop must be live exactly on the collect row: retail quest.xml declares
+		// collect_progress=3 and the client's third row is the slate interaction asserted below. An earlier
+		// step would close the gate once the kill step advances var0; the legacy XML's collecting-step=0 was
+		// the "any step" shape.
 		QuestDrop drop = def.metadata().drops().stream()
 			.filter(d -> d.npcId() == 702671 && d.itemId() == 182215607)
 			.findFirst().orElseThrow();
-		assertTrue(drop.collectingStep() == 0, "10504: collecting-step must be 0");
+		assertTrue(drop.collectingStep() == 3, "10504: collecting-step must be the retail collect row (3)");
 
-		// s3 阶段支持交互 702671
+		// s3 阶段支持与石板交互：真端把交互成对挂在收集行上——TalkToNpc(702671, dialogId 空) +
+		// CanAct(702671, ACTION_ITEM_USE)（掉落 collectingStep=3 与 var0==3 的门在此行成立），
+		// 遗留 XML 用单个 TalkToNpc + USE_OBJECT 表达。
+		// s3 must accept the slate interaction: the retail chain hangs the pair TalkToNpc(702671, null
+		// dialogId) + CanAct(702671, ACTION_ITEM_USE) on the collect row (where collectingStep=3 matches
+		// var0==3); the legacy XML used a single TalkToNpc + USE_OBJECT.
 		boolean s3Use = def.transitions().stream()
 			.anyMatch(t -> "s3".equals(t.sourceNode()) && t.event() instanceof QuestEvent.TalkToNpc talk
-				&& talk.npcId() == 702671 && talk.dialogId() == QuestDialogAction.USE_OBJECT.id());
-		assertTrue(s3Use, "10504: s3 must support USE_OBJECT on 702671");
+				&& talk.npcId() == 702671)
+			&& def.transitions().stream()
+			.anyMatch(t -> "s3".equals(t.sourceNode()) && t.event() instanceof QuestEvent.CanAct canAct
+				&& canAct.templateId() == 702671);
+		assertTrue(s3Use, "10504: s3 must accept the slate interaction (702671)");
 
 		// s1 -> s2 必须清零 var1
 		QuestTransition killTrans = def.transitions().stream()
@@ -144,12 +156,10 @@ class QuestCollectProgressAlignmentGateTest {
 	}
 
 	private static QuestDefinition load(int questId) throws Exception {
-		try (InputStream input = QuestCollectProgressAlignmentGateTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition " + questId + ".xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input).definition();
-		}
+		// 10503/10504/10507 已由真端驱动退役（wave10 链式接取登记）：退役任务的 XML 只在 git 历史里，
+		// 统一取生产视图（XML 目录 + 真端 overlay），未退役任务仍等价于直接编译 XML。
+		// 10503/10504/10507 are retail-driven now (wave10 chain-acquire registry), so their XML lives only
+		// in git history; the production view (XML directory plus retail overlay) is the single source.
+		return ProductionQuestDefinitions.definition(questId).definition();
 	}
 }

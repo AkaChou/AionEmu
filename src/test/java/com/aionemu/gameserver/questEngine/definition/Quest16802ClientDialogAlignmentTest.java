@@ -7,152 +7,198 @@ import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 验证任务 16802 的进入世界自动接取、双计数击杀完成、客户端实时领奖入口与上线自愈合同。
- * Verifies quest 16802 area acquisition, both kill counters, the client real-time reward entry,
- * and the legacy k1/k2 stage login self-heal.
+ * 验证任务 16802 的真端区域顺序 SECTION 链合同（定义来自生产视图）：
+ * <ul>
+ * <li>接取 = 进区域系统发放（{@code SystemGrant} + {@code StartEligible}，无 NPC 接取路由，旧
+ * EnterWorld/WorldIs/链条件随退役 XML 入 git 历史）；</li>
+ * <li>进度 = 2 段顺序链（30 名 Leibo 图书管理员 → 2 只 BI Leibo 首领），链式前缀节点 a{0..30}b0、
+ * a30b{1,2}，击杀边只推进首个未满段——旧 XML 的并行双计数（var1=30、var2=2）与 k1/k2 迁移标志
+ * 一并退役；</li>
+ * <li>报告：未满链节点 QUEST_SELECT 显示客户端完成页、1009 带双段满门禁；满节点 a30b2 无门禁进领奖；
+ * 完成流按真端元数据奖励收尾 CompleteQuest。</li>
+ * </ul>
+ * Verifies the retail area-driven sequential SECTION chain of quest 16802 (production-view
+ * definitions): area-entry system grant without NPC accept routes, the two-stage chain (30 librarians
+ * then 2 sub-bosses) whose kill edges advance only the first unfinished stage, fully-gated recovery on
+ * unfinished nodes, and the metadata-driven completion flow.
  */
 class Quest16802ClientDialogAlignmentTest {
 	private static final int QUEST_ID = 16802;
 	private static final int DIALOG_NPC_ID = 806148;
-	private static final int ARCHIVES_WORLD_ID = 301540000;
+	private static final int STAGE_ONE_KILLS = 30;
+	private static final int STAGE_TWO_KILLS = 2;
+	/** 客户端段 1 清单（Leibo 图书管理员 8 变体）。 / Client stage-1 list (8 Leibo librarians). */
 	private static final Set<Integer> LIBRARIANS = Set.of(
 		220306, 220309, 220312, 220315, 220318, 220324, 220327, 220330);
+	/** 客户端段 2 清单（BI Leibo 首领 6 变体）。 / Client stage-2 list (6 BI Leibo sub-bosses). */
 	private static final Set<Integer> SUB_BOSSES = Set.of(
 		857450, 857452, 857454, 857456, 857458, 857459);
 
 	@Test
-	void keepsAreaAcquisitionSeparateFromTheRewardDialog() throws Exception {
+	void areaGrantStartsTheSequentialChainWithoutNpcRoutes() throws Exception {
 		QuestDefinition definition = definition().definition();
-		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0, "var1", 0, "var2", 0));
-		assertNode(definition, "started", QuestStatus.START, Map.of());
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 1, "var1", 30, "var2", 2));
-		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0, "var1", 0, "var2", 0));
+		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0, "var1", 0));
+		for (int first = 0; first <= STAGE_ONE_KILLS; first++) {
+			assertNode(definition, "a" + first + "b0", QuestStatus.START,
+				Map.of("var0", first, "var1", 0));
+		}
+		assertNode(definition, "a" + STAGE_ONE_KILLS + "b1", QuestStatus.START,
+			Map.of("var0", STAGE_ONE_KILLS, "var1", 1));
+		assertNode(definition, "a" + STAGE_ONE_KILLS + "b" + STAGE_TWO_KILLS, QuestStatus.START,
+			Map.of("var0", STAGE_ONE_KILLS, "var1", STAGE_TWO_KILLS));
+		assertNode(definition, "reward", QuestStatus.REWARD,
+			Map.of("var0", STAGE_ONE_KILLS, "var1", STAGE_TWO_KILLS));
+		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0, "var1", 0));
 
-		QuestTransition areaEntry = transition(definition, "unaccepted", "started", new QuestEvent.EnterWorld());
-		assertEquals(List.of(
-			new QuestCondition.WorldIs(ARCHIVES_WORLD_ID, true),
-			new QuestCondition.StartEligible(),
-			new QuestCondition.QuestsFinished(Set.of(16801))), areaEntry.conditions());
-		assertEquals(List.of(), areaEntry.actions());
+		QuestTransition grant = transition(definition, "unaccepted", "a0b0", new QuestEvent.SystemGrant());
+		assertEquals(List.of(new QuestCondition.StartEligible()), grant.conditions());
+		assertEquals(List.of(), grant.actions());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH)),
-			areaEntry.afterCommit());
+			grant.afterCommit());
+		// 进区域发放行不得有 NPC 接取路由（旧 XML 的 EnterWorld/WorldIs/链条件随退役一并移除）。
+		// Area-granted rows carry no NPC accept route (the legacy EnterWorld/WorldIs/chained
+		// conditions retired with the XML).
+		assertFalse(definition.transitions().stream().anyMatch(candidate ->
+				"unaccepted".equals(candidate.sourceNode())
+				&& candidate.event() instanceof QuestEvent.TalkToNpc),
+			"area-granted rows must not keep NPC accept routes");
 
-		// 汇报页只在领奖状态下发；进行中状态不得提前下发报告页。
-		// The report page is reserved for the reward status; START must never emit it.
-		assertFalse(hasTalk(definition, "started", QuestDialogAction.QUEST_SELECT.id()));
+		// 未满链节点：无 QUEST_SELECT/1009 报告通道（P0-2 顺序链规范形，页链不再由服务端驱动，
+		// 提前上交不可达；FINISH_DIALOG 关窗出口保留）。
+		// Unfinished chain nodes: no QUEST_SELECT/1009 report channel (canonical sequential shape
+		// since P0-2; early turn-in is unreachable; the FINISH_DIALOG close exit stays).
+		List<String> unfinished = new ArrayList<>();
+		for (int first = 0; first < STAGE_ONE_KILLS; first++) {
+			unfinished.add("a" + first + "b0");
+		}
+		unfinished.add("a" + STAGE_ONE_KILLS + "b1");
+		for (String label : unfinished) {
+			final String node = label;
+			assertTrue(definition.transitions().stream().noneMatch(candidate ->
+				node.equals(candidate.sourceNode())
+					&& candidate.event() instanceof QuestEvent.TalkToNpc talk
+					&& talk.npcId() == DIALOG_NPC_ID && talk.dialogId() != null
+					&& (talk.dialogId() == QuestDialogAction.QUEST_SELECT.id()
+						|| talk.dialogId() == QuestDialogAction.SELECT_QUEST_REWARD.id())),
+				() -> node + " 不得保留报告通道路由");
+		}
 
-		// START 只保留“满计数旧存档”的带门禁恢复路线（形状见 finalKillInEitherCounterEntersReward 与
-		// incompleteProgressCannotReachRewardOrTheRewardWindow）；无门禁的提前领奖旁路必须保持删除。
-		// START keeps only the guarded full-count recovery route; the unguarded early-reward bypass stays removed.
-		List<QuestTransition> startRecoveries = definition.transitions().stream()
-			.filter(route -> "started".equals(route.sourceNode()))
-			.filter(route -> route.event().equals(new QuestEvent.TalkToNpc(DIALOG_NPC_ID,
-				QuestDialogAction.SELECT_QUEST_REWARD.id())))
-			.toList();
-		assertEquals(1, startRecoveries.size());
-		assertFalse(startRecoveries.getFirst().conditions().isEmpty(),
-			"the START reward-window route must stay guarded by the full kill counters");
+		// 满节点：QUEST_SELECT 无门禁直翻领奖并按档位查表下发奖励窗（1009 中转删除）。
+		// Full node: the QUEST_SELECT flips reward ungated with the tiered window (no 1009 hop).
+		String fullLabel = "a" + STAGE_ONE_KILLS + "b" + STAGE_TWO_KILLS;
+		QuestTransition finish = talk(definition, fullLabel, "reward",
+			QuestDialogAction.QUEST_SELECT.id());
+		assertEquals(List.of(), finish.conditions());
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.rewardWindowForTier(
+				definition.metadata().rewardGroups().size() - 1).orElseThrow().id())),
+			finish.afterCommit());
 
-		QuestTransition report = talk(definition, "reward", "reward", QuestDialogAction.QUEST_SELECT.id());
-		assertEquals(List.of(), report.conditions());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
-			report.afterCommit());
-
+		// 领奖态预览：1009 只弹选择窗口。
+		// Reward-state preview: 1009 only re-opens the reward window.
 		QuestTransition rewardPreview = talk(definition, "reward", "reward",
 			QuestDialogAction.SELECT_QUEST_REWARD.id());
 		assertEquals(List.of(), rewardPreview.conditions());
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
 			QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())), rewardPreview.afterCommit());
+
+		// 完成流：确认段全覆盖、真端元数据奖励 + CompleteQuest 收尾。
+		// Completion: the full confirm range granting the retail metadata rewards ends in CompleteQuest.
+		assertCompletionFlow(definition, DIALOG_NPC_ID);
 	}
 
 	@Test
-	void finalKillInEitherCounterEntersRewardBeforeReporting() throws Exception {
-		QuestDefinition definition = definition().definition();
+	void killEdgesAdvanceOnlyTheFirstUnfinishedStage() throws Exception {
+		CompiledQuestDefinition compiled = definition();
+		QuestDefinition definition = compiled.definition();
 
-		assertCounter(definition, LIBRARIANS, "var1", 30);
-		assertCounter(definition, SUB_BOSSES, "var2", 2);
+		// 链上击杀边：段 1 状态只挂图书管理员，段 2 状态只挂 BI 首领；每条边推进到下一链节点。
+		// Chain kill edges: stage-1 states carry only librarians, the stage-2 state only sub-bosses;
+		// every edge advances to the next chain node.
+		Map<String, Integer> zero = Map.of("var0", 0, "var1", 0);
+		List<Set<Integer>> perStateTargets = new ArrayList<>();
+		for (int first = 0; first < STAGE_ONE_KILLS; first++) {
+			perStateTargets.add(assertChainEdges(definition, "a" + first + "b0", "a" + (first + 1) + "b0"));
+		}
+		perStateTargets.add(assertChainEdges(definition, "a" + STAGE_ONE_KILLS + "b0",
+			"a" + STAGE_ONE_KILLS + "b1"));
+		perStateTargets.add(assertChainEdges(definition, "a" + STAGE_ONE_KILLS + "b1",
+			"a" + STAGE_ONE_KILLS + "b" + STAGE_TWO_KILLS));
+		Set<Integer> stageOneTargets = new TreeSet<>();
+		perStateTargets.subList(0, STAGE_ONE_KILLS).forEach(stageOneTargets::addAll);
+		Set<Integer> stageTwoTargets = perStateTargets.getLast();
+		assertTrue(stageOneTargets.containsAll(LIBRARIANS),
+			() -> "stage 1 kill set must cover the client librarians, got " + stageOneTargets);
+		assertTrue(stageTwoTargets.containsAll(SUB_BOSSES),
+			() -> "stage 2 kill set must cover the client sub-bosses, got " + stageTwoTargets);
+		assertTrue(java.util.Collections.disjoint(stageOneTargets, stageTwoTargets),
+			"stage target sets must stay disjoint");
 
-		QuestTransition librarianCompletion = killRoute(definition, "started", "reward", LIBRARIANS, 0);
-		assertEquals(List.of(
-			new QuestCondition.QuestVariableIs("var0", 0),
-			new QuestCondition.VariableAtLeast("var1", 29),
-			new QuestCondition.VariableAtLeast("var2", 2)), librarianCompletion.conditions());
-		assertEquals(List.of(
-			new QuestAction.SetVariable("var1", 30),
-			new QuestAction.SetVariable("var0", 1)), librarianCompletion.actions());
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
-			QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), librarianCompletion.afterCommit());
+		// 乱序不计：段 1 未满时段 2 样本不得产生任何击杀计划。
+		// Out-of-order kills never count: a stage-2 sample produces no kill plan while stage 1 runs.
+		assertNoMatch(compiled, snapshot(compiled, zero), new QuestEvent.KillNpc(857450));
 
-		QuestTransition bossCompletion = killRoute(definition, "started", "reward", SUB_BOSSES, 0);
-		assertEquals(List.of(
-			new QuestCondition.QuestVariableIs("var0", 0),
-			new QuestCondition.VariableAtLeast("var1", 30),
-			new QuestCondition.VariableAtLeast("var2", 1)), bossCompletion.conditions());
-		assertEquals(List.of(
-			new QuestAction.SetVariable("var2", 2),
-			new QuestAction.SetVariable("var0", 1)), bossCompletion.actions());
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
-			QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), bossCompletion.afterCommit());
+		// 顺序推进模拟：30 名图书管理员只推进段 1；随后 2 只首领推进段 2 且末杀仍停在 START。
+		// Sequential walk: 30 librarians fill stage 1 only; the two sub-boss kills then fill stage 2,
+		// and even the final kill stays START — only the report enters reward.
+		QuestSnapshot current = snapshot(compiled, zero);
+		for (int kill = 1; kill <= STAGE_ONE_KILLS; kill++) {
+			current = nextSnapshot(current, dispatch(compiled, current, new QuestEvent.KillNpc(220306)));
+			assertEquals(Map.of("var0", kill, "var1", 0),
+				definition.progressLayout().unpack(current.packedVariables()),
+				"stage-1 kill " + kill + " must keep stage 2 untouched");
+		}
+		assertNoMatch(compiled, current, new QuestEvent.KillNpc(220306));
+		current = nextSnapshot(current, dispatch(compiled, current, new QuestEvent.KillNpc(857450)));
+		assertEquals(Map.of("var0", STAGE_ONE_KILLS, "var1", 1),
+			definition.progressLayout().unpack(current.packedVariables()));
+		assertEquals(QuestStatus.START, current.status());
+		current = nextSnapshot(current, dispatch(compiled, current, new QuestEvent.KillNpc(857459)));
+		assertEquals(QuestStatus.START, current.status());
+		assertEquals(Map.of("var0", STAGE_ONE_KILLS, "var1", STAGE_TWO_KILLS),
+			definition.progressLayout().unpack(current.packedVariables()));
+		assertNoMatch(compiled, current, new QuestEvent.KillNpc(857450));
 
-		// 满计数旧存档仍可在报告 NPC 处补进领奖并打开奖励窗。
-		// Persisted full-count saves may still report at the reward NPC and open the reward window.
-		QuestTransition recoveredReport = talk(definition, "started", "reward",
-			QuestDialogAction.SELECT_QUEST_REWARD.id());
-		assertEquals(List.of(
-			new QuestCondition.VariableAtLeast("var1", 30),
-			new QuestCondition.VariableAtLeast("var2", 2)), recoveredReport.conditions());
-		assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), recoveredReport.actions());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
-			recoveredReport.afterCommit());
+		// 满链 QUEST_SELECT 交付进领奖（P0-2 顺序链规范形）。
+		// The full chain's QUEST_SELECT delivery enters reward (canonical sequential shape).
+		QuestMutationPlan report = dispatch(compiled, current,
+			new QuestEvent.TalkToNpc(DIALOG_NPC_ID, QuestDialogAction.QUEST_SELECT.id()));
+		assertEquals(QuestStatus.REWARD, report.nextStatus());
+		assertEquals(Map.of("var0", STAGE_ONE_KILLS, "var1", STAGE_TWO_KILLS),
+			definition.progressLayout().unpack(report.nextPackedVariables()));
 	}
 
 	@Test
-	void legacyK1K2StageFlagsAreRepairedOnEnterWorld() throws Exception {
+	void retailChainReplacesTheLegacyStageFlagMigration() throws Exception {
 		QuestDefinition definition = definition().definition();
-
-		QuestTransition promote = selfHeal(definition, "reward");
-		assertEquals(Integer.valueOf(0), promote.priority());
-		assertEquals(List.of(
-			new QuestCondition.StatusIs(QuestStatus.START),
-			new QuestCondition.VariableAtLeast("var0", 1),
-			new QuestCondition.VariableAtLeast("var1", 30),
-			new QuestCondition.VariableAtLeast("var2", 2)), promote.conditions());
-		assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), promote.actions());
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
-			QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), promote.afterCommit());
-
-		QuestTransition reset = selfHeal(definition, "started");
-		assertEquals(Integer.valueOf(1), reset.priority());
-		assertEquals(List.of(
-			new QuestCondition.StatusIs(QuestStatus.START),
-			new QuestCondition.VariableAtLeast("var0", 1)), reset.conditions());
-		assertEquals(List.of(new QuestAction.SetVariable("var0", 0)), reset.actions());
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
-			reset.afterCommit());
-
-		// 旧 k2(var0=2、两组计数已满)登录时直接补进领奖；未满的旧 k1 回到计数阶段。
-		// A legacy k2 save (var0=2, both counters full) enters reward on login, while an
-		// incomplete legacy k1 save returns to the counting stage.
-		assertSelfHealPlan(definition(), "reward", Map.of("var0", 2, "var1", 30, "var2", 2),
-			QuestStatus.REWARD, Map.of("var0", 1, "var1", 30, "var2", 2));
-		assertSelfHealPlan(definition(), "started", Map.of("var0", 1, "var1", 12, "var2", 0),
-			QuestStatus.START, Map.of("var0", 0, "var1", 12, "var2", 0));
-		assertTrue(QuestMutationPlanner.plan(definition(), snapshot(definition, Map.of("var0", 1, "var1", 12, "var2", 0)),
-			new QuestEvent.EnterWorld(), promote).isEmpty(),
-			"an incomplete save must not be promoted to reward");
+		// 旧 XML 的 k1/k2 迁移标志与无 source 自愈边随真端链退役：生产 DD 链不得再登记任何
+		// 无 source 路由或 EnterWorld 事件。
+		// The legacy k1/k2 migration flags and source-less self-heal edges retired with the XML:
+		// the retail chain keeps no source-less routes and no EnterWorld events.
+		assertTrue(definition.transitions().stream()
+				.noneMatch(candidate -> candidate.sourceNode() == null),
+			"the retail chain must not keep source-less migration routes");
+		assertTrue(definition.transitions().stream()
+				.noneMatch(candidate -> candidate.event() instanceof QuestEvent.EnterWorld),
+			"the retail chain must not keep EnterWorld migration routes");
+		assertTrue(definition.transitions().stream()
+				.noneMatch(candidate -> candidate.event() instanceof QuestEvent.LevelUp
+					|| candidate.event() instanceof QuestEvent.ZoneMissionEnd),
+			"the retail chain must not keep legacy LevelUp/ZoneMissionEnd routes");
 	}
 
 	@Test
@@ -160,13 +206,12 @@ class Quest16802ClientDialogAlignmentTest {
 		CompiledQuestDefinition compiled = definition();
 		QuestDefinition definition = compiled.definition();
 		for (Map<String, Integer> variables : List.of(
-			Map.of("var0", 0, "var1", 0, "var2", 0),
-			Map.of("var0", 0, "var1", 29, "var2", 2),
-			Map.of("var0", 0, "var1", 30, "var2", 1),
-			Map.of("var0", 0, "var1", 30, "var2", 0),
-			Map.of("var0", 1, "var1", 30, "var2", 0),
-			Map.of("var0", 2, "var1", 29, "var2", 1))) {
-			QuestSnapshot snapshot = snapshot(definition, variables);
+			Map.of("var0", 0, "var1", 0),
+			Map.of("var0", 15, "var1", 0),
+			Map.of("var0", 29, "var1", 0),
+			Map.of("var0", 30, "var1", 0),
+			Map.of("var0", 30, "var1", 1))) {
+			QuestSnapshot snapshot = snapshot(compiled, variables);
 			for (QuestTransition route : definition.transitions()) {
 				if (!(route.event() instanceof QuestEvent.TalkToNpc)) {
 					continue;
@@ -187,76 +232,102 @@ class Quest16802ClientDialogAlignmentTest {
 		}
 	}
 
-	private static void assertCounter(QuestDefinition definition, Set<Integer> npcIds, String field,
-			int required) {
-		QuestTransition continuing = killRoute(definition, "started", "started", npcIds, 2);
-		assertEquals(List.of(
-			new QuestCondition.QuestVariableIs("var0", 0),
-			new QuestCondition.VariableBelow(field, required)), continuing.conditions());
-		assertEquals(List.of(new QuestAction.IncrementVariable(field, 1)), continuing.actions());
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
-			continuing.afterCommit());
-
-		QuestTransition cap = killRoute(definition, "started", "started", npcIds, 1);
-		assertEquals(List.of(
-			new QuestCondition.QuestVariableIs("var0", 0),
-			new QuestCondition.VariableAtLeast(field, required - 1)), cap.conditions());
-		assertEquals(List.of(new QuestAction.SetVariable(field, required)), cap.actions());
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
-			cap.afterCommit());
-	}
-
-	private static void assertSelfHealPlan(CompiledQuestDefinition compiled, String target,
-			Map<String, Integer> variables, QuestStatus expectedStatus, Map<String, Integer> expected) {
-		QuestDefinition definition = compiled.definition();
-		QuestMutationPlan plan = QuestMutationPlanner.plan(compiled, snapshot(definition, variables),
-			new QuestEvent.EnterWorld(), selfHeal(definition, target)).orElseThrow(() ->
-				new IllegalStateException("quest " + compiled.id() + " self-heal " + target
-					+ " did not plan at " + variables));
-		assertEquals(expectedStatus, plan.nextStatus());
-		assertEquals(expected, definition.progressLayout().unpack(plan.nextPackedVariables()));
-	}
-
-	private static QuestSnapshot snapshot(QuestDefinition definition, Map<String, Integer> variables) {
-		return new QuestSnapshot(7, definition.id(), QuestStatus.START,
-			definition.progressLayout().pack(variables), Map.of());
-	}
-
-	private static boolean hasTalk(QuestDefinition definition, String source, int action) {
-		return definition.transitions().stream()
-			.anyMatch(candidate -> source.equals(candidate.sourceNode())
-				&& candidate.event().equals(new QuestEvent.TalkToNpc(DIALOG_NPC_ID, action)));
-	}
-
-	private static QuestTransition talk(QuestDefinition definition, String source, String target, int action) {
-		return transition(definition, source, target, new QuestEvent.TalkToNpc(DIALOG_NPC_ID, action));
-	}
-
-	private static QuestTransition selfHeal(QuestDefinition definition, String target) {
-		return definition.transitions().stream()
-			.filter(candidate -> candidate.sourceNode() == null)
-			.filter(candidate -> candidate.targetNode().equals(target))
-			.filter(candidate -> candidate.event().equals(new QuestEvent.EnterWorld()))
-			.findFirst().orElseThrow();
-	}
-
-	private static QuestTransition killRoute(QuestDefinition definition, String source, String target,
-			Set<Integer> npcIds, int priority) {
-		return definition.transitions().stream()
+	/** 链节点击杀边合同：目标集合、推进目标与 PACKET_ONLY。 / Chain-node kill-edge contract. */
+	private static Set<Integer> assertChainEdges(QuestDefinition definition, String source,
+			String target) {
+		List<QuestTransition> edges = definition.transitions().stream()
 			.filter(candidate -> source.equals(candidate.sourceNode()))
-			.filter(candidate -> target.equals(candidate.targetNode()))
-			.filter(candidate -> candidate.event().equals(new QuestEvent.KillNpcSet(npcIds)))
-			.filter(candidate -> Integer.valueOf(priority).equals(candidate.priority()))
-			.findFirst().orElseThrow();
+			.filter(candidate -> candidate.event() instanceof QuestEvent.KillNpc)
+			.toList();
+		assertFalse(edges.isEmpty(), () -> source + " must carry the current stage's kill edges");
+		Set<Integer> targets = new TreeSet<>();
+		for (QuestTransition edge : edges) {
+			assertEquals(target, edge.targetNode(), edge::toString);
+			assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
+				edge.afterCommit(), edge::toString);
+			assertTrue(edge.event() instanceof QuestEvent.KillNpc killNpc && targets.add(killNpc.npcId()),
+				edge::toString);
+		}
+		return targets;
+	}
+
+	/** 完成流合同：确认段 8..23 全覆盖、真端元数据奖励 + CompleteQuest 收尾。 / Completion contract. */
+	private static void assertCompletionFlow(QuestDefinition definition, int rewardNpc) {
+		List<QuestTransition> completions = definition.transitions().stream()
+			.filter(candidate -> "complete".equals(candidate.targetNode()))
+			.toList();
+		assertFalse(completions.isEmpty(), "the reward state must complete via the confirm range");
+		Set<Integer> actionIds = new TreeSet<>();
+		for (QuestTransition completion : completions) {
+			assertTrue(completion.event() instanceof QuestEvent.TalkToNpc talk
+					&& talk.npcId() == rewardNpc
+					&& talk.dialogId() >= QuestDialogAction.SELECTED_QUEST_REWARD1.id()
+					&& talk.dialogId() <= QuestDialogAction.SELECTED_QUEST_NOREWARD.id(),
+				() -> "completion routes must hang on the confirm range " + completion);
+			assertTrue(completion.actions().stream().anyMatch(action ->
+					action instanceof QuestAction.CompleteQuest),
+				() -> "completion routes must end in CompleteQuest " + completion);
+			assertTrue(completion.actions().stream().anyMatch(action ->
+					action instanceof QuestAction.GrantReward),
+				() -> "completion routes must grant the retail metadata rewards " + completion);
+			assertEquals(List.of(
+				new AfterCommitAction.RefreshPlayerStats(),
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
+				new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
+				completion.afterCommit(), completion::toString);
+			if (completion.event() instanceof QuestEvent.TalkToNpc talk) {
+				actionIds.add(talk.dialogId());
+			}
+		}
+		for (int id = QuestDialogAction.SELECTED_QUEST_REWARD1.id();
+				id <= QuestDialogAction.SELECTED_QUEST_NOREWARD.id(); id++) {
+			final int dialogId = id;
+			assertTrue(actionIds.contains(dialogId), () -> "confirm range misses dialogId " + dialogId);
+		}
+	}
+
+	private static QuestMutationPlan dispatch(CompiledQuestDefinition compiled, QuestSnapshot snapshot,
+			QuestEvent event) {
+		List<QuestMutationPlan> plans = compiled.definition().transitions().stream()
+			.map(transition -> QuestMutationPlanner.plan(compiled, snapshot, event, transition).orElse(null))
+			.filter(Objects::nonNull)
+			.toList();
+		assertEquals(1, plans.size(), () -> compiled.id() + " " + event + " "
+			+ compiled.definition().progressLayout().unpack(snapshot.packedVariables()));
+		return plans.getFirst();
+	}
+
+	private static void assertNoMatch(CompiledQuestDefinition compiled, QuestSnapshot snapshot,
+			QuestEvent event) {
+		assertTrue(compiled.definition().transitions().stream().noneMatch(transition ->
+			QuestMutationPlanner.plan(compiled, snapshot, event, transition).isPresent()));
+	}
+
+	private static QuestSnapshot nextSnapshot(QuestSnapshot snapshot, QuestMutationPlan plan) {
+		return new QuestSnapshot(snapshot.playerId(), snapshot.questId(), plan.nextStatus(),
+			plan.nextPackedVariables(), snapshot.inventory());
+	}
+
+	private static QuestSnapshot snapshot(CompiledQuestDefinition compiled,
+			Map<String, Integer> variables) {
+		return new QuestSnapshot(7, compiled.id(), QuestStatus.START,
+			compiled.definition().progressLayout().pack(variables), Map.of());
+	}
+
+	private static QuestTransition talk(QuestDefinition definition, String source, String target,
+			int action) {
+		return transition(definition, source, target, new QuestEvent.TalkToNpc(DIALOG_NPC_ID, action));
 	}
 
 	private static QuestTransition transition(QuestDefinition definition, String source, String target,
 			QuestEvent event) {
-		return definition.transitions().stream()
-			.filter(candidate -> source.equals(candidate.sourceNode()))
-			.filter(candidate -> target.equals(candidate.targetNode()))
+		List<QuestTransition> matches = definition.transitions().stream()
+			.filter(candidate -> Objects.equals(candidate.sourceNode(), source))
+			.filter(candidate -> Objects.equals(candidate.targetNode(), target))
 			.filter(candidate -> candidate.event().equals(event))
-			.findFirst().orElseThrow();
+			.toList();
+		assertEquals(1, matches.size(), () -> source + " -> " + target + " " + event);
+		return matches.getFirst();
 	}
 
 	private static void assertNode(QuestDefinition definition, String label, QuestStatus status,
@@ -268,13 +339,7 @@ class Quest16802ClientDialogAlignmentTest {
 		assertEquals(variables, node.projection().variables());
 	}
 
-	private CompiledQuestDefinition definition() throws Exception {
-		try (InputStream input = getClass().getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + QUEST_ID + ".xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition " + QUEST_ID + ".xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	private static CompiledQuestDefinition definition() {
+		return ProductionQuestDefinitions.definition(QUEST_ID);
 	}
 }

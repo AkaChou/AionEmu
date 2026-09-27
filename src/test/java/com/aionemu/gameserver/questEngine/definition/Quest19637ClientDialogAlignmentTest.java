@@ -7,60 +7,72 @@ import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 验证任务 19637 的阶段变量与击杀计数字段隔离、第 10 击直接进入 REWARD，以及客户端对话报告合同。
- * Verifies that quest 19637 isolates its step variable from the kill counter, enters REWARD on the 10th kill,
- * and maintains the Aion 5.8 client dialog/report contract.
+ * 验证任务 19637 的真端 DataDriven 网格合同（定义来自生产驱动，P0-2 规范形）：接取直落 a0，
+ * 10 杀网格逐态推进且击杀集覆盖客户端变体，未满格节点无 QUEST_SELECT/1009 报告通道，满段
+ * QUEST_SELECT 无门禁翻领奖（分档奖励窗），以及客户端对话合同。
+ * Verifies the retail DataDriven grid contract for quest 19637 (definition from the production
+ * driver, canonical since P0-2): accept lands on a0, the ten-kill grid advances state by state
+ * with kill sets covering the client variants, unfinished nodes keep no QUEST_SELECT/1009 report
+ * channel, the saturated QUEST_SELECT enters reward ungated with the tiered window, and the
+ * client dialog contract holds.
  */
 class Quest19637ClientDialogAlignmentTest {
 	private static final int QUEST_ID = 19637;
 	private static final int CAINUS_NPC_ID = 798926;
 	private static final Set<Integer> TARGET_MOBS = Set.of(215500, 215501, 215502, 215503);
+	private static final int KILLS_REQUIRED = 10;
 
 	@Test
-	void restoresClientStepAndKillCounterSeparationAndDialogContract() throws Exception {
+	void restoresClientReportAndDialogContractOnTheRetailGrid() {
 		CompiledQuestDefinition compiled = load();
 		QuestDefinition definition = compiled.definition();
 
-		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0, "var1", 0));
-		assertNode(definition, "started", QuestStatus.START, Map.of());
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 1, "var1", 10));
-		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0, "var1", 0));
+		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0));
+		for (int kills = 0; kills <= KILLS_REQUIRED; kills++) {
+			final int state = kills;
+			assertNode(definition, "a" + state, QuestStatus.START, Map.of("var0", state));
+		}
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", KILLS_REQUIRED));
+		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0));
 
-		// 接取对话：从 unaccepted 状态收到 QUEST_SELECT(31)，下发 4762 (SELECT_NONE)
+		// 接取对话：从 unaccepted 状态收到 QUEST_SELECT(31)，直发接取窗（页 4；P0-2 规范形，
+		// 客户端 select_none 入口页不再由服务端下发）
 		QuestTransition startDialog = talk(definition, "unaccepted", "unaccepted", QuestDialogAction.QUEST_SELECT.id());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT_NONE.id())),
-			startDialog.afterCommit());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
+			QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id())), startDialog.afterCommit());
 
-		// 接受任务：QUEST_ACCEPT_SIMPLE(20000)，进入 started
-		QuestTransition acceptSimple = talk(definition, "unaccepted", "started", QuestDialogAction.QUEST_ACCEPT_SIMPLE.id());
+		// 接受任务：QUEST_ACCEPT_SIMPLE(20000)，直落网格起点 a0
+		QuestTransition acceptSimple = talk(definition, "unaccepted", "a0", QuestDialogAction.QUEST_ACCEPT_SIMPLE.id());
 		assertTrue(acceptSimple.conditions().stream().anyMatch(QuestCondition.StartEligible.class::isInstance));
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
 			new AfterCommitAction.CloseDialog()), acceptSimple.afterCommit());
 
-		// 未完成杀怪时，started 状态不暴露 started -> started 的 QUEST_SELECT 对话（绝不向玩家弹 DEFAULT_SUCCESS）
-		assertFalse(hasTalk(definition, "started", "started", QuestDialogAction.QUEST_SELECT.id()));
+		// 未满杀期间网格节点无 QUEST_SELECT/1009 报告通道（P0-2 规范形，页链不再由服务端驱动）
+		assertTrue(definition.transitions().stream().noneMatch(candidate ->
+			"a0".equals(candidate.sourceNode()) && candidate.event() instanceof QuestEvent.TalkToNpc talkRoute
+				&& talkRoute.dialogId() != null
+				&& (talkRoute.dialogId() == QuestDialogAction.QUEST_SELECT.id()
+					|| talkRoute.dialogId() == QuestDialogAction.SELECT_QUEST_REWARD.id())),
+			() -> "a0 不得保留报告通道路由");
 
-		// 满计数恢复路由：started -> reward 仅在 var1 >= 10 时允许
-		QuestTransition recoveredSelect = talk(definition, "started", "reward", QuestDialogAction.QUEST_SELECT.id());
-		assertEquals(List.of(new QuestCondition.VariableAtLeast("var1", 10)), recoveredSelect.conditions());
-		assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), recoveredSelect.actions());
-
-		// 领奖阶段：在 reward 节点收到 QUEST_SELECT(31)，下发 DEFAULT_SUCCESS(10002)
-		QuestTransition reportSuccess = talk(definition, "reward", "reward", QuestDialogAction.QUEST_SELECT.id());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
-			reportSuccess.afterCommit());
+		// 满段交付路由：a10 的 QUEST_SELECT 无条件翻 REWARD 并按档位查表下发奖励窗（P0-2 规范形）
+		QuestTransition deliver = talk(definition, "a10", "reward", QuestDialogAction.QUEST_SELECT.id());
+		assertEquals(List.of(), deliver.conditions());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.rewardWindowForTier(
+				definition.metadata().rewardGroups().size() - 1).orElseThrow().id())),
+			deliver.afterCommit());
 
 		// 领奖预览：在 reward 节点收到 SELECT_QUEST_REWARD(1009)，下发 SHOW_SELECT_QUEST_REWARD_WINDOW1(5)
 		QuestTransition previewReward = talk(definition, "reward", "reward", QuestDialogAction.SELECT_QUEST_REWARD.id());
@@ -69,78 +81,85 @@ class Quest19637ClientDialogAlignmentTest {
 
 		// 奖励选择：SELECTED_QUEST_REWARD1..6 均指向 complete 节点
 		for (int rewardIndex = 1; rewardIndex <= 6; rewardIndex++) {
-			int actionId = QuestDialogAction.SELECTED_QUEST_REWARD1.id() + rewardIndex - 1;
+			final int actionId = QuestDialogAction.SELECTED_QUEST_REWARD1.id() + rewardIndex - 1;
 			QuestTransition choice = talk(definition, "reward", "complete", actionId);
 			assertTrue(choice.actions().stream().anyMatch(QuestAction.CompleteQuest.class::isInstance));
 		}
 	}
 
 	@Test
-	void killChainAdvancesVar1UpToTenAndEntersRewardOnTenthKill() throws Exception {
+	void killGridAdvancesVar0UpToTenAndEntersRewardThroughTheReport() {
 		CompiledQuestDefinition compiled = load();
 		QuestDefinition definition = compiled.definition();
 		ProgressLayout layout = definition.progressLayout();
 
-		QuestEvent killSetEvent = new QuestEvent.KillNpcSet(TARGET_MOBS);
-		QuestEvent killSingleEvent = new QuestEvent.KillNpc(215502);
+		// 1. 网格推进：从 a{k} 状态击杀客户端变体，推进到 a{k+1}（仍 START，PACKET_ONLY）。
+		for (int kills = 0; kills < KILLS_REQUIRED; kills++) {
+			final int state = kills;
+			List<QuestTransition> edges = definition.transitions().stream()
+				.filter(transition -> Objects.equals(transition.sourceNode(), "a" + state)
+					&& transition.event() instanceof QuestEvent.KillNpc)
+				.toList();
+			Set<Integer> targets = new TreeSet<>();
+			for (QuestTransition edge : edges) {
+				assertEquals("a" + (state + 1), edge.targetNode());
+				targets.add(((QuestEvent.KillNpc) edge.event()).npcId());
+			}
+			assertTrue(targets.containsAll(TARGET_MOBS),
+				() -> "a" + state + " 击杀集必须覆盖客户端变体，实际 " + targets);
+		}
+		int sampleTarget = TARGET_MOBS.iterator().next();
+		QuestTransition continuing = transition(definition, "a0", "a1",
+			new QuestEvent.KillNpc(sampleTarget));
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
+			continuing.afterCommit());
 
-		// 1. 正常递增：从 var0=0, var1=0 开始杀怪，产生 nextStatus=START, var0=0, var1=1
-		QuestSnapshot initialSnapshot = new QuestSnapshot(1, QUEST_ID, QuestStatus.START,
-			layout.pack(Map.of("var0", 0, "var1", 0)), Map.of());
-		QuestTransition continuing = transition(definition, "started", "started", killSetEvent, 1);
-		QuestMutationPlan plan1 = QuestMutationPlanner.plan(compiled, initialSnapshot, killSingleEvent, continuing).orElseThrow();
-		assertEquals(QuestStatus.START, plan1.nextStatus());
-		assertEquals(Map.of("var0", 0, "var1", 1), layout.unpack(plan1.nextPackedVariables()));
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)), continuing.afterCommit());
-
-		// 2. 老脏数据自愈：玩家之前在 var0=1, var1=0，击杀一只怪后，var0 被修正为 0，var1 为 1
-		QuestSnapshot dirtySnapshot = new QuestSnapshot(1, QUEST_ID, QuestStatus.START,
-			layout.pack(Map.of("var0", 1, "var1", 0)), Map.of());
-		QuestMutationPlan dirtyHealPlan = QuestMutationPlanner.plan(compiled, dirtySnapshot, killSingleEvent, continuing).orElseThrow();
-		assertEquals(QuestStatus.START, dirtyHealPlan.nextStatus());
-		assertEquals(Map.of("var0", 0, "var1", 1), layout.unpack(dirtyHealPlan.nextPackedVariables()));
-
-		// 3. 第 10 次击杀：在 var0=0, var1=9 时击杀第 10 只，命中 priority 0 路线直接进入 REWARD
+		// 2. 第 10 次击杀：在 var0=9 时击杀第 10 只仍停在 START（a10），领奖入口在 1009 报告之后。
 		QuestSnapshot ninthSnapshot = new QuestSnapshot(1, QUEST_ID, QuestStatus.START,
-			layout.pack(Map.of("var0", 0, "var1", 9)), Map.of());
-		QuestTransition completing = transition(definition, "started", "reward", killSetEvent, 0);
-		QuestMutationPlan finalPlan = QuestMutationPlanner.plan(compiled, ninthSnapshot, killSingleEvent, completing).orElseThrow();
-		assertEquals(QuestStatus.REWARD, finalPlan.nextStatus());
-		assertEquals(Map.of("var0", 1, "var1", 10), layout.unpack(finalPlan.nextPackedVariables()));
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
-			completing.afterCommit());
+			layout.pack(Map.of("var0", 9)), Map.of());
+		QuestTransition finalKill = transition(definition, "a9", "a10", new QuestEvent.KillNpc(sampleTarget));
+		QuestMutationPlan finalKillPlan = QuestMutationPlanner.plan(compiled, ninthSnapshot,
+			new QuestEvent.KillNpc(sampleTarget), finalKill).orElseThrow();
+		assertEquals(QuestStatus.START, finalKillPlan.nextStatus(),
+			"第 10 杀后应停在 a10（START）");
+		assertEquals(Map.of("var0", 10), layout.unpack(finalKillPlan.nextPackedVariables()));
 
-		// 4. 满计数恢复路由：若处于 started 且 var1>=10，允许通过与 798926 对话转移至 REWARD
-		QuestTransition recoveredReport = talk(definition, "started", "reward", QuestDialogAction.QUEST_SELECT.id());
-		assertEquals(List.of(new QuestCondition.VariableAtLeast("var1", 10)), recoveredReport.conditions());
-		assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), recoveredReport.actions());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())), recoveredReport.afterCommit());
-	}
-
-	private static boolean hasTalk(QuestDefinition definition, String source, String target, int action) {
-		return definition.transitions().stream()
-			.anyMatch(candidate -> candidate.sourceNode().equals(source)
-				&& candidate.targetNode().equals(target)
-				&& candidate.event().equals(new QuestEvent.TalkToNpc(CAINUS_NPC_ID, action)));
+		// 3. 满格 QUEST_SELECT 交付无门禁进入 REWARD（P0-2 规范形，1009 中转删除）；
+		//    未满格 a5 无 QUEST_SELECT/1009 报告通道。
+		QuestTransition finish = transition(definition, "a10", "reward",
+			new QuestEvent.TalkToNpc(CAINUS_NPC_ID, QuestDialogAction.QUEST_SELECT.id()));
+		assertEquals(List.of(), finish.conditions());
+		QuestSnapshot fullSnapshot = new QuestSnapshot(1, QUEST_ID, QuestStatus.START,
+			finalKillPlan.nextPackedVariables(), Map.of());
+		QuestMutationPlan rewardPlan = QuestMutationPlanner.plan(compiled, fullSnapshot, finish.event(), finish)
+			.orElseThrow();
+		assertEquals(QuestStatus.REWARD, rewardPlan.nextStatus());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.rewardWindowForTier(
+				definition.metadata().rewardGroups().size() - 1).orElseThrow().id())),
+			finish.afterCommit());
+		assertTrue(definition.transitions().stream().noneMatch(candidate ->
+			"a5".equals(candidate.sourceNode()) && candidate.event() instanceof QuestEvent.TalkToNpc talkRoute
+				&& talkRoute.dialogId() != null
+				&& (talkRoute.dialogId() == QuestDialogAction.QUEST_SELECT.id()
+					|| talkRoute.dialogId() == QuestDialogAction.SELECT_QUEST_REWARD.id())),
+			() -> "a5 不得保留报告通道路由");
 	}
 
 	private static QuestTransition talk(QuestDefinition definition, String source, String target, int action) {
 		return definition.transitions().stream()
-			.filter(candidate -> candidate.sourceNode().equals(source)
-				&& candidate.targetNode().equals(target)
+			.filter(candidate -> Objects.equals(candidate.sourceNode(), source)
+				&& Objects.equals(candidate.targetNode(), target)
 				&& candidate.event().equals(new QuestEvent.TalkToNpc(CAINUS_NPC_ID, action)))
 			.findFirst().orElseThrow();
 	}
 
 	private static QuestTransition transition(QuestDefinition definition, String source, String target,
-			QuestEvent event, Integer priority) {
+			QuestEvent event) {
 		return definition.transitions().stream()
-			.filter(candidate -> candidate.sourceNode().equals(source)
-				&& candidate.targetNode().equals(target)
-				&& candidate.event().equals(event)
-				&& Objects.equals(candidate.priority(), priority))
+			.filter(candidate -> Objects.equals(candidate.sourceNode(), source)
+				&& Objects.equals(candidate.targetNode(), target)
+				&& candidate.event().equals(event))
 			.findFirst().orElseThrow();
 	}
 
@@ -153,13 +172,8 @@ class Quest19637ClientDialogAlignmentTest {
 		assertEquals(variables, node.projection().variables());
 	}
 
-	private static CompiledQuestDefinition load() throws Exception {
-		try (InputStream input = Quest19637ClientDialogAlignmentTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + QUEST_ID + ".xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition " + QUEST_ID + ".xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	/** 生产驱动定义（已退役的 XML 只在 git 历史）。 / The production-driver definition (the retired XML lives only in git history). */
+	private static CompiledQuestDefinition load() {
+		return ProductionQuestDefinitions.definition(QUEST_ID);
 	}
 }

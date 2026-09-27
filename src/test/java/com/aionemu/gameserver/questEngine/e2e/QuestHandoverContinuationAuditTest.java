@@ -4,7 +4,7 @@ import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinition;
-import com.aionemu.gameserver.questEngine.definition.QuestDefinitionDirectoryLoader;
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
@@ -41,11 +41,18 @@ class QuestHandoverContinuationAuditTest {
 
 	/**
 	 * 本批已接线的上交分支：quest / source / target / npc / 续接页。
+	 * 10504 由真端驱动接管（续片 19 链式接取批）后，上交成功分支的续接页改为领奖窗 5：真端合成把
+	 * 10002（报告页）留给 reward 节点的 QUEST_SELECT，成功分支直接开领奖窗——契约求值
+	 * （HandoverContinuationContract.handOverSuccessPage）在真端形状下算出的正是 reward 节点上同
+	 * NPC 的 USE_OBJECT 入口页 5，故"续接"语义仍成立。
 	 * Hand-over branches wired by this batch: quest / source / target / npc / continuation page.
+	 * After 10504 became retail-driven (slice 19) its success branch continues into the reward window
+	 * 5: the retail synthesis serves 10002 from the reward node's QUEST_SELECT, and the contract's
+	 * handOverSuccessPage resolves to the same-NPC USE_OBJECT entry page 5 in the target node.
 	 */
 	private static final String REPAIRED_BRANCHES = """
 			2372	started	reward	798079	5
-			10504	s3	reward	804706	10002
+			10504	s3	reward	804706	5
 			13968	started	reward	835217	5
 			15689	started	reward	806696	5
 			15690	started	reward	806696	5
@@ -62,7 +69,11 @@ class QuestHandoverContinuationAuditTest {
 			19022	started	reward	203793	5
 			19028	started	reward	203792	5
 			19034	started	reward	203786	5
-			21027	started	reward	799254	5
+			# 21027 的钥匙交付分支在 QE-051 行阶梯（客户端 3 行：找 Kantele / 交钥匙 / 和 Asathor 对话）
+			# 收口后移到 Kantele(799255)：stage1 -> reward 显示客户端确认页 10000；接取与领奖仍收在 Asathor。
+			# 21027's key hand-over moved to Kantele after the QE-051 three-row ladder; the branch shows the
+			# client confirmation page 10000 while offer/completion stay on Asathor.
+			21027	stage1	reward	799255	10000
 			23968	started	reward	835220	5
 			25689	started	reward	806697	5
 			25690	started	reward	806697	5
@@ -90,7 +101,10 @@ class QuestHandoverContinuationAuditTest {
 
 	@Test
 	void clientLocalCloseConfirmationPagesContinueInTheSameDialogue() throws Exception {
-		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		// 生产视图（XML 目录 + 真端 overlay）：退役任务的 REPAIRED 正向锁与死端审计照常覆盖。
+		// Production view (XML catalog + retail overlay): the REPAIRED positive locks and the
+		// dead-end audit keep covering retail-driven quests after their XML retirement.
+		QuestCatalog catalog = ProductionQuestDefinitions.catalog();
 		ClientResourceOracle oracle = ClientResourceOracle.load(CLIENT_MAPPING);
 		List<String> violations = new ArrayList<>();
 		int family = 0;
@@ -147,7 +161,7 @@ class QuestHandoverContinuationAuditTest {
 		assertTrue(family >= MINIMUM_FAMILY_QUESTS,
 			"the client mapping must expose the local-close confirmation family, family=" + family);
 		assertEquals(repaired.values().stream().mapToInt(List::size).sum(), linked,
-			"every repaired hand-over branch must stay wired");
+			() -> "every repaired hand-over branch must stay wired: " + violations);
 		assertEquals(List.of(), violations,
 			"client-local-close confirmation pages must continue in the same dialogue");
 	}
@@ -171,6 +185,11 @@ class QuestHandoverContinuationAuditTest {
 	private static Map<Integer, List<RepairedBranch>> repairedBranches() {
 		Map<Integer, List<RepairedBranch>> result = new LinkedHashMap<>();
 		for (String line : REPAIRED_BRANCHES.strip().split("\n")) {
+			if (line.strip().startsWith("#")) {
+				// 允许在分支清单里就地写注释（每条分支的迁移理由）。
+				// Inline comments document why a branch moved.
+				continue;
+			}
 			String[] fields = line.strip().split("\t");
 			if (fields.length != 5) {
 				throw new IllegalStateException("invalid repaired branch line: " + line);

@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.aionemu.gameserver.questEngine.e2e.client.ClientResourceOracle;
 import com.aionemu.gameserver.questEngine.e2e.journey.QuestProductionJourneyExecutor;
 import com.aionemu.gameserver.questEngine.e2e.journey.QuestProductionJourneyPlanner;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -75,12 +74,20 @@ class Quest19048And23704And23708And29048ClientDialogAlignmentTest {
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
 			QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), itemUse.afterCommit());
 
+		// P0-2 规范形交付：REWARD 态 USE_OBJECT/QUEST_SELECT 重开分档奖励窗（SELECT5 报告页删除）；
+		// 1009 预览通道保留并回收演出道具，窗页按档位查表。
+		// P0-2 canonical delivery: the reward-state USE_OBJECT/QUEST_SELECT re-opens the tiered
+		// reward window (the SELECT5 page is gone); the 1009 preview channel stays and removes the
+		// play item, its window resolved by tier.
+		int rewardWindow = QuestDialogPage.rewardWindowForTier(
+			definition.metadata().rewardGroups().size() - 1).orElseThrow().id();
 		QuestTransition useObject = talk(definition, "reward", "reward", npcId, QuestDialogAction.USE_OBJECT);
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT5.id())), useObject.afterCommit());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(rewardWindow)), useObject.afterCommit());
+		QuestTransition questSelect = talk(definition, "reward", "reward", npcId, QuestDialogAction.QUEST_SELECT);
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(rewardWindow)), questSelect.afterCommit());
 		QuestTransition report = talk(definition, "reward", "reward", npcId, QuestDialogAction.SELECT_QUEST_REWARD);
 		assertEquals(List.of(new QuestAction.RemoveItem(itemId, 1)), report.actions());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
-			QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())), report.afterCommit());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(rewardWindow)), report.afterCommit());
 
 		QuestTransition completion = talk(definition, "reward", "complete", npcId,
 			QuestDialogAction.SELECTED_QUEST_REWARD1);
@@ -107,11 +114,12 @@ class Quest19048And23704And23708And29048ClientDialogAlignmentTest {
 		return routes.getFirst();
 	}
 
-	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		try (InputStream input = Quest19048And23704And23708And29048ClientDialogAlignmentTest.class
-			.getResourceAsStream("/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			if (input == null) throw new IllegalStateException("missing quest definition " + questId + ".xml");
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	/**
+	 * 生产视图加载（P1 wave-2 起四行已退役）：返回真端合成定义。
+	 * Loads through the production view (all four rows retired in P1 wave-2): the retail-compiled
+	 * definition.
+	 */
+	private static CompiledQuestDefinition definition(int questId) {
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

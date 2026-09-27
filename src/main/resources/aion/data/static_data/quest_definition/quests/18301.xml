@@ -75,6 +75,15 @@
          取走装置即落入行 2（领奖行），发本任务的工作物品 quest_18301a = 182212100。
          Row 1: the H-Core (730374) dropped by Weapon Hugen; the legacy handler only opens the pickup
          pages at var==7 and grants the Elyos work item 182212100 (quest_18301a) when it is taken. -->
+    <!-- 交互物 730374 的 NPC AI 是 quest_use_item（客户端把该物件登记为 ACTION step），
+         必须声明 ACTION_ITEM_USE 资格路由，客户端才会开该物件的使用道具动作。
+         NPC 730374 runs the quest_use_item AI, so the quest must declare the ACTION_ITEM_USE
+         eligibility route for that object. -->
+    <transition source="k7" target="k7">
+      <event>
+        <can-act template-id="730374" action-type="ACTION_ITEM_USE"/>
+      </event>
+    </transition>
     <transition source="k7" target="k7">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="730374" action="USE_OBJECT"/>

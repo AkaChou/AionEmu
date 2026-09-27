@@ -6,7 +6,6 @@ import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -183,12 +182,7 @@ class RetailSingleStepRewardRowContractTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		try (InputStream input = RetailSingleStepRewardRowContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition " + questId + ".xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

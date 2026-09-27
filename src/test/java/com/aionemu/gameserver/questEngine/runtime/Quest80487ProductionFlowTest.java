@@ -12,19 +12,19 @@ import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
-import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
 import org.objenesis.ObjenesisStd;
 
-import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
@@ -111,13 +111,8 @@ class Quest80487ProductionFlowTest {
 	}
 
 	private CompiledQuestDefinition definition(int questId) throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-		try (InputStream input = getClass().getResourceAsStream(resource)) {
-			if (input == null) {
-				throw new IllegalStateException("missing resource " + resource);
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(questId);
 	}
 
 	private static QuestProductionDispatcher dispatcher(CompiledQuestDefinition definition, Player player,

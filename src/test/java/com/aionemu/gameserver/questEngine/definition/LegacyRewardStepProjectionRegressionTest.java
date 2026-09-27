@@ -17,9 +17,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Locks the migration contract that legacy handlers preserve packed quest variables when entering REWARD.
  */
 class LegacyRewardStepProjectionRegressionTest {
+	// 13965/23965 已转 DataDriven 纯 EA 链（真端 acquire 权威，领奖行携带 QE-051 行值、自愈边为
+	// EA 末链形），遗留打包步合同对其退役失效；DD 合同由门禁/指纹与 audit 锁定。
+	// 13965/23965 moved to DataDriven pure-EA chains (retail acquire authority; the reward row
+	// carries the QE-051 value and the heal edge is the EA final-chain shape), so the legacy
+	// packed-step contract no longer applies; the DD contract is locked by the gate/fingerprints.
 	private static final List<Integer> QUEST_IDS = List.of(
-		2393, 3722, 4722, 11149, 13965, 14010, 14015, 14020, 14040, 14050,
-		15674, 23965, 24010, 24020, 24040, 24050, 25674, 30057, 30158, 30208);
+		2393, 3722, 4722, 11149, 14010, 14015, 14020, 14040, 14050,
+		15674, 24010, 24020, 24040, 24050, 25674, 30057, 30158, 30208);
 
 	@Test
 	void keepsLegacyRewardEntryAtTheExistingPackedStep() throws Exception {

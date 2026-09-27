@@ -1,6 +1,8 @@
 package com.aionemu.gameserver.questEngine.definition;
 
 import org.junit.jupiter.api.BeforeAll;
+
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -80,8 +82,10 @@ class QuestRewardValueGateTest {
 		assertFalse(contract.isEmpty(), "reward contract must not be empty");
 
 		production = new HashMap<>();
-		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(
-			QuestRewardValueGateTest.class.getClassLoader());
+		// 生产视图 = XML 目录 + 真端驱动 overlay：已退役任务的生产元数据现由真端表提供。
+		// Production view = XML catalog plus the retail-driver overlay (retired quests included).
+		QuestCatalog catalog = RetailQuestDriver.overlay(QuestDefinitionDirectoryLoader.compile(
+			QuestRewardValueGateTest.class.getClassLoader()));
 		for (CompiledQuestDefinition compiled : catalog.all()) {
 			production.put(compiled.id(), compiled.definition().metadata());
 		}

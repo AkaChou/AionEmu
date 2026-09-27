@@ -3,9 +3,7 @@ package com.aionemu.gameserver.questEngine.definition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -27,33 +25,53 @@ class Quest2110WorkItemRegressionTest {
 		assertTrue(starts.stream().noneMatch(transition -> transition.actions()
 			.contains(new QuestAction.GiveItem(182203110, 1))));
 
-		QuestTransition report = definition.definition().transitions().stream()
+		// P0-3 S1：SimpleTalk 接取/交付切真端规范形（页 4 / 分档窗）。真端行 2110 只有
+		// acquired=Kaindal / reward=Motgar、零 item_check（Quest_SimpleTalk.xml:2789-2792；奖励 =
+		// quest.xml:26993-26995 的 exp + 单道具，一档），因此交付 = QUEST_SELECT(31) 空门直翻领奖态
+		// 并下发第 1 档奖励窗；报告页 SELECT5(2375) 与 1009 中转随页链退场。
+		// P0-3 S1: the canonical delivery is QUEST_SELECT(31) with an empty gate flipping REWARD and
+		// showing the first reward window; the SELECT5(2375) report page and the 1009 hop are gone.
+		QuestTransition delivery = definition.definition().transitions().stream()
 			.filter(transition -> transition.sourceNode().equals("started")
 				&& transition.targetNode().equals("reward")
-				&& transition.event() instanceof QuestEvent.TalkToNpc talk
-				&& talk.npcId() == 203533 && talk.dialogId() == 1009)
+				&& transition.event().equals(new QuestEvent.TalkToNpc(203533, 31)))
 			.findFirst().orElseThrow();
 		assertEquals(QuestStatus.REWARD,
 			definition.definition().nodes().stream().filter(node -> node.label().equals("reward"))
 			.findFirst().orElseThrow().projection().status());
-		assertTrue(report.conditions().stream()
+		assertTrue(delivery.conditions().stream()
 			.noneMatch(QuestCondition.HasItem.class::isInstance));
-		assertTrue(report.actions().stream()
+		assertTrue(delivery.actions().stream()
 			.noneMatch(action -> action instanceof QuestAction.RemoveItem remove
 				&& remove.itemId() == 182203110));
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
+			delivery.afterCommit(), "canonical delivery shows the first reward window");
+		// P0c-23 裁定（真端对、XML 错）+ P0-3 S1：报告流不再经 select5 页与 1009 中转——遗留 XML 的
+		// started→started 1009 自环（npc-report 双 prio 手工形）与 select5 报告页一并退役；
+		// reportNpcExit 关窗 CloseDialog 保持。
+		// P0c-23 adjudication + P0-3 S1: the report flow no longer goes through the select5 page or the
+		// 1009 hop; the legacy dual-priority self-loop and the report page are retired alike, while the
+		// reportNpcExit CloseDialog stays.
 		assertTrue(definition.definition().transitions().stream().anyMatch(transition ->
 			transition.sourceNode().equals("started") && transition.targetNode().equals("started")
-				&& transition.event().equals(new QuestEvent.TalkToNpc(203533, 1009))
-				&& transition.afterCommit().contains(new AfterCommitAction.ShowQuestSelectionDialog(10))));
+				&& transition.event().equals(new QuestEvent.TalkToNpc(203533, 1008))
+				&& transition.afterCommit().equals(List.of(new AfterCommitAction.CloseDialog()))),
+			"report NPC close ends the dialog");
+		assertTrue(definition.definition().transitions().stream().noneMatch(transition ->
+			transition.sourceNode().equals("started") && transition.targetNode().equals("started")
+				&& transition.event().equals(new QuestEvent.TalkToNpc(203533, 1009))),
+			"no started 1009 fallback loop on the report flow");
+		assertTrue(definition.definition().transitions().stream()
+			.flatMap(transition -> transition.afterCommit().stream())
+			.noneMatch(action -> action instanceof AfterCommitAction.ShowQuestDialog dialog
+				&& dialog.dialogId() == QuestDialogPage.SELECT5.id()),
+			"canonical removed the select5 report page");
 	}
 
 	private static CompiledQuestDefinition load() {
-		try (InputStream input = Objects.requireNonNull(
-			Quest2110WorkItemRegressionTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/2110.xml"))) {
-			return QuestDefinitionXmlCompiler.compile(input);
-		} catch (Exception e) {
-			throw new AssertionError("unable to load quest 2110", e);
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(2110);
 	}
 }

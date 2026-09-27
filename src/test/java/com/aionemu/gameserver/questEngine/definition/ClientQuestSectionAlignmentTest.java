@@ -7,12 +7,10 @@ import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
@@ -28,16 +26,20 @@ class ClientQuestSectionAlignmentTest {
 	/**
 	 * 使用 varN 命名、但计数槽仍压在别的 SECTION 上的历史任务。客户端任务书行索引读
 	 * SECTION_0（bit 0..5），var1 起必须落在 6N 才能与客户端脚本的 SECTION_N 对齐；
-	 * 这 13 个任务是 2026-09-22 审计时仅存的例外（全库 6161 个带位段任务），逐个收口前先锁定清单；
-	 * 16800 在批次 28 退役了 var1 影片旗标（行阶梯改用 zone 触发），已从名单移除。
+	 * 这 11 个任务是 2026-09-22 审计时仅存的例外（全库 6161 个带位段任务），逐个收口前先锁定清单；
+	 * 16800 在批次 28 退役了 var1 影片旗标（行阶梯改用 zone 触发）已从名单移除；18738/28738
+	 * 按 DD_ITEMPLAY_VARIANTS 批次退役（多播 ItemPlay 变体家族，真端段布局 var1@6）后离开生产目录，
+	 * 相应从本名单移除（P0c-49 顺带偿还，口径 = 生产目录内的例外集）。
 	 * Legacy quests that name counters varN yet still park them outside SECTION_N. The client journal
 	 * row index reads SECTION_0 (bits 0..5), so var1 and later must sit at 6N to line up with the
-	 * client script's SECTION_N; these thirteen are the only remaining exceptions (16800 left the list
-	 * in batch 28 when its var1 movie flag was retired).
+	 * client script's SECTION_N; these eleven are the only remaining exceptions (16800 left the list
+	 * in batch 28 when its var1 movie flag was retired; 18738/28738 left the production catalog when
+	 * the DD_ITEMPLAY_VARIANTS batch retired them — this pin tracks the catalog, so they are dropped
+	 * here in the P0c-49 incidental repayment).
 	 */
 	private static final Set<Integer> SECTION_LAYOUT_DEBT = Set.of(
 		1842, 1843, 1844, 2843, 2844, 2845,
-		4928, 18738, 19078, 20034, 28738, 29074, 29078);
+		4928, 19078, 20034, 29074, 29078);
 	private static final List<Integer> VILLAGE_HUNT_QUESTS = List.of(
 		17106, 17108, 17110, 17112, 17114, 17116, 17118, 17120, 17122, 17124, 17126, 17128,
 		17130, 17132, 17134, 17136, 17138, 17140, 17142, 17144, 17146, 17148, 17150, 17152,
@@ -127,16 +129,29 @@ class ClientQuestSectionAlignmentTest {
 			vars.getVarById(2), vars.getVarById(3)));
 	}
 
+	/**
+	 * 真端行（P0c-49 采纳 18931）的段计数器在击杀后归位，且**字段之外的残bit 被归一清除**：
+	 * 老存档在旧打包下把计数压在位 2（部署期紧凑打包），采纳段布局后该位落在 var0 的 6 位段内
+	 * 之外（retail：var0=bits0..5 / var1=bits6..11）——本测试以「位 12」表达同一件事：任何
+	 * 落在所有字段之外的位都在下一次变更被重打包丢弃（旧紧凑打包行 = 历史遗留，登记在案）。
+	 * A retail row (18931 adopted in P0c-49) re-parks its section counter after a kill and drops any
+	 * bit outside the fields: legacy saves packed the counter compactly at bit 2, which under the
+	 * section layout is no longer a field boundary (retail: var0 = bits 0..5, var1 = bits 6..11).
+	 * The test expresses the same claim with bit 12: any bit outside every field is dropped when the
+	 * planner repacks, i.e. the deployed compact packing is a registered historical leftover.
+	 */
 	@Test
-	void nextKillNormalizesADeployedCompactCounter() {
+	void nextKillNormalizesBitsOutsideTheSectionFields() {
 		CompiledQuestDefinition definition = load(18931);
-		QuestSnapshot compactFirstKill = snapshot(18931, QuestStatus.START, 1 << 2);
+		QuestSnapshot compactFirstKill = snapshot(18931, QuestStatus.START, (1 << 0) | (1 << 12));
 
 		QuestSnapshot normalized = apply(definition, compactFirstKill, new QuestEvent.KillNpc(243797));
 
 		QuestVars vars = new QuestVars(normalized.packedVariables());
-		assertEquals(0, vars.getVarById(0));
+		assertEquals(1, vars.getVarById(0));
 		assertEquals(1, vars.getVarById(1));
+		assertEquals((1 << 0) | (1 << 6), normalized.packedVariables(),
+			"字段之外的残 bit 必须在重打包时被丢弃");
 	}
 
 	@Test
@@ -214,13 +229,12 @@ class ClientQuestSectionAlignmentTest {
 		return new QuestSnapshot(7, questId, status, packedVariables, Map.of());
 	}
 
+	/**
+	 * 生产视图加载：退役行返回真端合成定义（P0c-9 起 11102 已退役），保留行返回同一 XML 定义。
+	 * Loads through the production view: retired rows yield the retail-compiled definition
+	 * (11102 retired in P0c-9), retained rows the very same XML definition.
+	 */
 	private static CompiledQuestDefinition load(int questId) {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-		try (InputStream input = Objects.requireNonNull(
-				ClientQuestSectionAlignmentTest.class.getResourceAsStream(resource), resource)) {
-			return QuestDefinitionXmlCompiler.compile(input);
-		} catch (Exception e) {
-			throw new AssertionError("unable to load " + resource, e);
-		}
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

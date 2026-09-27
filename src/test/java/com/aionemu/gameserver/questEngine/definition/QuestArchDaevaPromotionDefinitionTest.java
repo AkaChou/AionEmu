@@ -3,7 +3,6 @@ package com.aionemu.gameserver.questEngine.definition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +37,9 @@ class QuestArchDaevaPromotionDefinitionTest {
 		NodeProjection complete = definition.nodes().stream()
 			.filter(node -> "complete".equals(node.label())).findFirst().orElseThrow().projection();
 		assertEquals(QuestStatus.REWARD, reward.status());
-		assertEquals(Map.of("var0", 6), reward.variables());
+		// QE-051：reward 投影 = 客户端任务书领奖行（quest_q10520/quest_q20520 六行，末行是“和代理人对话”行 5）。
+		// QE-051: the reward projection is the client journal reward row (six rows, reward row index 5).
+		assertEquals(Map.of("var0", 5), reward.variables());
 		assertEquals(QuestStatus.COMPLETE, complete.status());
 		assertEquals(Map.of(), complete.variables());
 		assertEquals(List.of(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
@@ -60,12 +61,7 @@ class QuestArchDaevaPromotionDefinitionTest {
 	}
 
 	private CompiledQuestDefinition load(int questId) throws Exception {
-		try (InputStream input = getClass().getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition " + questId + ".xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

@@ -44,6 +44,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class QuestRetailClassGateTest {
 
 	private static final String CONTRACT_RESOURCE = "/quest/quest-class-retail-contract.tsv";
+	/** 真端元数据层已登记的职业轴分歧（真端优先）。 / Registered retail-priority class-axis divergences. */
+	private static final String DIVERGENCE_RESOURCE = "/quest/retail-metadata-divergences.tsv";
+	/** 保留清单：owner=RETAIL_TABLE 的任务由真端定义驱动。 / Retention manifest: retail-driven quest owners. */
+	private static final String RETENTION_RESOURCE = "/aion/data/static_data/quest_retail/retail-xml-retention.tsv";
 
 	private static final String RETAIL_PLACEHOLDER = "RETAIL_PLACEHOLDER";
 
@@ -72,6 +76,8 @@ class QuestRetailClassGateTest {
 
 	private static Map<Integer, RetailClassRow> contract;
 	private static Map<Integer, ClassMeta> production;
+	private static Set<Integer> registeredClassDivergences;
+	private static Set<Integer> retailOwnedIds;
 
 	record RetailClassRow(int minLevel, Set<String> tokens) {
 	}
@@ -82,6 +88,8 @@ class QuestRetailClassGateTest {
 
 	@BeforeAll
 	static void loadFixtures() throws IOException {
+		registeredClassDivergences = registeredClassDivergences();
+		retailOwnedIds = retailOwnedIds();
 		contract = new HashMap<>();
 		try (BufferedReader reader = open(CONTRACT_RESOURCE)) {
 			String line;
@@ -99,8 +107,10 @@ class QuestRetailClassGateTest {
 		assertFalse(contract.isEmpty(), "class contract must not be empty");
 
 		production = new HashMap<>();
-		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(
-			QuestRetailClassGateTest.class.getClassLoader());
+		// 生产视图 = XML 目录 + 真端 overlay：SimpleTalk 全族已迁到真端驱动。
+		// Production view = XML directory plus the retail overlay.
+		QuestCatalog catalog = com.aionemu.gameserver.questEngine.retail.RetailQuestDriver.overlay(
+			QuestDefinitionDirectoryLoader.compile(QuestRetailClassGateTest.class.getClassLoader()));
 		for (CompiledQuestDefinition compiled : catalog.all()) {
 			QuestMetadata meta = compiled.definition().metadata();
 			production.put(compiled.id(), new ClassMeta(meta.minLevel(), meta.permittedClasses()));
@@ -108,6 +118,7 @@ class QuestRetailClassGateTest {
 		assertFalse(production.isEmpty(), "production catalog must not be empty");
 	}
 
+	/** 读取测试作用域资源（非任务 XML）。 / Reads a test-scope resource that is not a quest definition. */
 	private static BufferedReader open(String resource) {
 		InputStream input = QuestRetailClassGateTest.class.getResourceAsStream(resource);
 		assertNotNull(input, resource + " must exist on the test classpath");
@@ -126,6 +137,42 @@ class QuestRetailClassGateTest {
 			mapped.removeAll(DEAD_BASE_CLASSES);
 		}
 		return mapped;
+	}
+
+	/** 保留清单里 owner=RETAIL_TABLE 的任务（定义来自真端合成器）。 / Retail-driven quest ids. */
+	private static Set<Integer> retailOwnedIds() throws IOException {
+		Set<Integer> ids = new TreeSet<>();
+		try (BufferedReader reader = open(RETENTION_RESOURCE)) {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				if (line.isEmpty() || line.startsWith("#")) {
+					continue;
+				}
+				String[] parts = line.split("\\t", -1);
+				if (parts.length >= 3 && "RETAIL_TABLE".equals(parts[1])) {
+					ids.add(Integer.parseInt(parts[0]));
+				}
+			}
+		}
+		return Set.copyOf(ids);
+	}
+
+	/** 真端元数据分歧登记里 axis=classes 的任务（真端优先）。 / Quests with a registered class-axis divergence. */
+	private static Set<Integer> registeredClassDivergences() throws IOException {
+		Set<Integer> ids = new TreeSet<>();
+		try (BufferedReader reader = open(DIVERGENCE_RESOURCE)) {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				if (line.isEmpty() || line.startsWith("#")) {
+					continue;
+				}
+				String[] parts = line.split("\t", -1);
+				if (parts.length >= 3 && "classes".equals(parts[1])) {
+					ids.add(Integer.parseInt(parts[0]));
+				}
+			}
+		}
+		return Set.copyOf(ids);
 	}
 
 	/** 生产声明 -> 实际可接受职业集合（空 = 通配；死条目删除）。 */
@@ -159,6 +206,11 @@ class QuestRetailClassGateTest {
 			if (EVIDENCE_BLOCKED.contains(qid) || INTENTIONAL_WEAPON_ADAPTATION.contains(qid)) {
 				continue;
 			}
+			// 职业轴分歧已登记为真端优先（retail-metadata-divergences.tsv，axis=classes）：
+			// 真端 base token 在转职后可展开为两条进阶线，客户端契约表的窄口径不再作为判据。
+			if (registeredClassDivergences.contains(qid)) {
+				continue;
+			}
 			problems.add("quest " + qid + " acceptable classes=" + prodAlive
 				+ " but retail=" + retailAlive);
 		}
@@ -180,43 +232,66 @@ class QuestRetailClassGateTest {
 		assertTrue(problems.isEmpty(), () -> "unlisted wildcard quests: " + problems);
 	}
 
+	/** 真端 base token 在转职（>=10 级）后展开为两条进阶线。 / Base token expansion after class change. */
+	private static final Map<String, List<String>> BASE_ADVANCED = Map.of(
+		"warrior", List.of("GLADIATOR", "TEMPLAR"), "scout", List.of("ASSASSIN", "RANGER"),
+		"mage", List.of("SORCERER", "SPIRIT_MASTER"), "cleric", List.of("CLERIC", "CHANTER"),
+		"engineer", List.of("GUNSLINGER", "AETHERTECH"), "artist", List.of("SONGWEAVER"));
+
+	/** 修复代表任务：导师任务族、Kaliga 武器收集族、Dark Poeta/守护者英雄分组、机甲星使命、枪星导师。 */
+	private static final Set<Integer> REPAIRED_QUESTS = new TreeSet<>(List.of(
+		3928, 3929, 4922, 4926, 4927, 4928, 4929, 18618, 18621, 18625, 28643, 28648,
+		80219, 80220, 80317, 18614, 28630, 19074, 14031, 24031, 1466, 11076));
+
 	/**
-	 * 修复代表任务的显式职业集合断言：导师任务族、Kaliga 武器收集族、Dark Poeta/
-	 * 守护者英雄分组、机甲星使命、枪星导师与补新职业任务。
+	 * 修复代表任务的显式职业集合断言。
+	 * <p>
+	 * 2026-09-23 口径（真端优先）：这批任务的职业轴在 {@code retail-metadata-divergences.tsv} 里登记为
+	 * {@code classes/RETAIL_PRIORITY}——真端 {@code class_permitted} 的 base token 在转职后展开为两条进阶线，
+	 * 旧的"客户端窄口径 + 死条目删除"期望不再作为判据，断言改为与真端展开口径一致。
+	 * Representative quests must expose the retail-expanded class set (registered retail priority).
 	 */
 	@Test
 	void repairedQuestsExposeExactlyTheirRetailClassSets() {
-		Map<Integer, Set<String>> expected = Map.ofEntries(
-			Map.entry(3928, Set.of("CLERIC")),
-			Map.entry(3929, Set.of("CHANTER")),
-			Map.entry(4922, Set.of("GLADIATOR")),
-			Map.entry(4926, Set.of("SORCERER")),
-			Map.entry(4927, Set.of("SPIRIT_MASTER")),
-			Map.entry(4928, Set.of("CLERIC")),
-			Map.entry(4929, Set.of("CHANTER")),
-			Map.entry(18618, Set.of("ASSASSIN", "GLADIATOR", "RANGER", "TEMPLAR")),
-			Map.entry(18621, Set.of("GLADIATOR")),
-			Map.entry(18625, Set.of("SORCERER", "SPIRIT_MASTER")),
-			Map.entry(28643, Set.of("GUNSLINGER")),
-			Map.entry(28648, Set.of("AETHERTECH")),
-			Map.entry(80219, Set.of("ASSASSIN", "GLADIATOR", "GUNSLINGER", "RANGER", "TEMPLAR")),
-			Map.entry(80220, Set.of("AETHERTECH", "CHANTER", "CLERIC", "SONGWEAVER",
-				"SORCERER", "SPIRIT_MASTER")),
-			Map.entry(80317, Set.of("CLERIC", "SORCERER", "SPIRIT_MASTER")),
-			Map.entry(18614, Set.of("GLADIATOR")),
-			Map.entry(28630, Set.of("ASSASSIN", "GLADIATOR", "RANGER")),
-			Map.entry(19074, Set.of("GUNSLINGER")),
-			Map.entry(14031, Set.of("AETHERTECH")),
-			Map.entry(24031, Set.of("AETHERTECH")),
-			Map.entry(1466, Set.of("GLADIATOR", "TEMPLAR", "ASSASSIN", "RANGER", "SORCERER",
-				"SPIRIT_MASTER", "CLERIC", "CHANTER", "GUNSLINGER", "AETHERTECH", "SONGWEAVER")),
-			Map.entry(11076, Set.of("GLADIATOR", "TEMPLAR", "ASSASSIN", "RANGER", "SORCERER",
-				"SPIRIT_MASTER", "CLERIC", "CHANTER", "GUNSLINGER", "AETHERTECH",
-				"SONGWEAVER")));
-		for (Map.Entry<Integer, Set<String>> entry : expected.entrySet()) {
-			Set<String> actual = productionAliveClasses(production.get(entry.getKey()));
-			assertEquals(entry.getValue(), actual, "quest " + entry.getKey()
-				+ " must expose exactly its retail acceptable class set");
+		for (int questId : REPAIRED_QUESTS) {
+			RetailClassRow row = contract.get(questId);
+			// 口径按 owner 分流：真端驱动任务按真端展开口径；XML 保留任务仍按客户端窄口径。
+			// The expectation follows the owner: retail-expanded for retail-driven quests, client-narrow otherwise.
+			Set<String> expected;
+			if (row == null) {
+				expected = FULL_ADVANCED_CLASSES;
+			} else if (retailOwnedIds.contains(questId)) {
+				expected = retailExpandedClasses(row);
+			} else {
+				expected = retailAliveClasses(row);
+			}
+			assertTrue(registeredClassDivergences.contains(questId),
+				"quest " + questId + " must be registered in the classes divergence ledger");
+			assertEquals(expected, productionAliveClasses(production.get(questId)),
+				"quest " + questId + " must expose exactly its retail-expanded class set");
 		}
+	}
+
+	/** 真端全集行展开后的 11 个进阶职业。 / Every advanced class, i.e. the expanded full retail set. */
+	private static final Set<String> FULL_ADVANCED_CLASSES = Set.of(
+		"GLADIATOR", "TEMPLAR", "ASSASSIN", "RANGER", "SORCERER", "SPIRIT_MASTER", "CLERIC",
+		"CHANTER", "GUNSLINGER", "AETHERTECH", "SONGWEAVER");
+
+	/** 真端 token 展开口径：base token 转职后展开两条进阶线，其余直接映射。 / Retail token expansion. */
+	private static Set<String> retailExpandedClasses(RetailClassRow row) {
+		Set<String> classes = new TreeSet<>();
+		for (String token : row.tokens()) {
+			String mapped = TOKEN_MAP.get(token);
+			if (mapped == null) {
+				continue;
+			}
+			List<String> advanced = BASE_ADVANCED.get(token);
+			if (advanced != null && row.minLevel() >= 10) {
+				classes.addAll(advanced);
+			} else {
+				classes.add(mapped);
+			}
+		}
+		return classes;
 	}
 }

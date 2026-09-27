@@ -988,7 +988,7 @@ public class NpcMoveController
             if (this.owner.getAi2().getState() == AIState.RETURNING
                     && shouldCompleteHomeReturn(path == null || pathCompleted, isHomeReturnDestinationReached())) {
                 if (this.owner.getAi2().isLogging()) {
-                    AI2Logger.moveinfo(this.owner, "\u72b6\u6001\u8fd4\u56de\uff1a\u4e2d\u6b62\u79fb\u52a8");
+                    AI2Logger.moveinfo(this.owner, "状态\u8fd4\u56de\uff1a\u4e2d\u6b62\u79fb\u52a8");
                 }
                 TargetEventHandler.onTargetReached((NpcAI2) this.owner.getAi2());
             }

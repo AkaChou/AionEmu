@@ -3,7 +3,6 @@ package com.aionemu.gameserver.questEngine.definition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -34,7 +33,9 @@ class Quest21114PoisonedFungiRetailFlowTest {
 		assertEquals(new NodeProjection(QuestStatus.START, Map.of("var0", 2)), node(definition, "s2").projection());
 		assertEquals(new NodeProjection(QuestStatus.START, Map.of("var0", 3)), node(definition, "s3").projection());
 		assertEquals(new NodeProjection(QuestStatus.START, Map.of("var0", 4)), node(definition, "s4").projection());
-		assertEquals(new NodeProjection(QuestStatus.REWARD, Map.of("var0", 4)),
+		// QE-051：reward 投影 = 客户端任务书领奖行（quest_q21114 六行，末行是“向 Martinez 报告”行 5）。
+		// QE-051: the reward projection is the client journal reward row (six rows, report row index 5).
+		assertEquals(new NodeProjection(QuestStatus.REWARD, Map.of("var0", 5)),
 			node(definition, "reward").projection());
 
 		assertEquals(Set.of(
@@ -197,9 +198,7 @@ class Quest21114PoisonedFungiRetailFlowTest {
 	}
 
 	private static QuestDefinition load() throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/21114.xml";
-		try (InputStream input = Quest21114PoisonedFungiRetailFlowTest.class.getResourceAsStream(resource)) {
-			return QuestDefinitionXmlCompiler.compile(Objects.requireNonNull(input, resource)).definition();
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(21114).definition();
 	}
 }

@@ -3,8 +3,10 @@ package com.aionemu.gameserver.questEngine.model;
 import lombok.NoArgsConstructor;
 
 /**
- * 任务变量集合，将最多 6 个 6-bit 子变量打包为一个整型值存储。
- * Quest variable set packing up to six 6-bit sub-variables into a single integer value.
+ * 任务变量集合，把最多 6 个子变量打包为一个 32 位整型值存储：槽 0..4 各 6 bit（bit0..29），
+ * 第 5 槽只有 bit30..31（真端只把 var5 用作 1 bit 标志，见 QuestVarsTest）。
+ * Quest variable set packing up to six sub-variables into a single 32-bit value: slots 0..4 own bits 0..29
+ * and slot 5 keeps only bits 30..31 (retail uses var5 as a 1-bit flag only).
  * @author MrPoke
  */
 @NoArgsConstructor
@@ -71,7 +73,10 @@ public class QuestVars {
 	 */
 	public int getVarById(int id) {
 		checkVarId(id);
-		return questVars[id];
+		// 未显式赋值的槽位按 0 处理（无参构造 + 部分 setVarById 的组合不该抛 NPE）。
+		// Unset slots read as zero so a partially populated instance never throws.
+		Integer value = questVars[id];
+		return value == null ? 0 : value;
 	}
 
 	/**
@@ -97,7 +102,8 @@ public class QuestVars {
 		int var = 0;
 		for (int i = 5; i >= 0; i--) {
 			var <<= 0x06;
-			var |= questVars[i];
+			Integer value = questVars[i];
+			var |= value == null ? 0 : value;
 		}
 		return var;
 	}
@@ -109,8 +115,9 @@ public class QuestVars {
 	 */
 	public void setVar(int var) {
 		for (int i = 0; i <= 5; i++) {
-			questVars[i] = var & 0x3F;
-			var >>= 0x06;
+			// 无符号移位：打包值的高位（第 5 槽 bit30..31）不能按符号位扩展成 62 之类的值。
+			// Unsigned shifts keep the top slot read consistent with the packed bit layout.
+			questVars[i] = (var >>> (6 * i)) & 0x3F;
 		}
 	}
 }

@@ -4,7 +4,6 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,7 +36,9 @@ class Quest1926And2938ClientDialogAlignmentTest {
 			definition.metadata().questWorkItems());
 		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0));
 		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 0));
+		// QE-051：reward 投影 = 客户端任务书领奖行（quest_q1926/quest_q2938 两行，槽位 %0/%3）。
+		// QE-051: the reward projection follows the client journal reward row (two rows, slots %0/%3).
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 1));
 		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0));
 
 		QuestTransition levelUp = transition(definition, "unaccepted", new QuestEvent.LevelUp());
@@ -52,8 +53,8 @@ class Quest1926And2938ClientDialogAlignmentTest {
 		assertEquals("reward", legacyRewardRecovery.targetNode());
 		assertEquals(List.of(
 			new QuestCondition.StatusIs(QuestStatus.REWARD),
-			new QuestCondition.QuestVariableIs("var0", 1)), legacyRewardRecovery.conditions());
-		assertEquals(List.of(), legacyRewardRecovery.actions());
+			new QuestCondition.QuestVariableIs("var0", 0)), legacyRewardRecovery.conditions());
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), legacyRewardRecovery.actions());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
 			QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), legacyRewardRecovery.afterCommit());
 		assertNull(legacyRewardRecovery.priority());
@@ -107,11 +108,11 @@ class Quest1926And2938ClientDialogAlignmentTest {
 
 		// 1926/2938 是 level-up 自动接取任务（AUTO_START_KEEPS_NONE_DIALOG_FREE）：
         // 接取由 LevelUp 路由完成，NONE 态无对话接取链；总数 25 = 6 显式 + LevelUp +
-        // EnterWorld 恢复 + npc-complete 的 preview(-1/31/1009) 与 16 个 SELECTED 完成动作。
-        // 1926/2938 are level-up auto-start quests: acceptance belongs to the LevelUp route,
-        // NONE stays free of dialog chains; 25 = 6 explicit + LevelUp + EnterWorld recovery +
-        // the npc-complete preview (-1/31/1009) and 16 SELECTED completion actions.
-        assertEquals(25, definition.transitions().size());
+        // EnterWorld 两条恢复边（旧值 0 -> 领奖行 1 的自愈 + 已是 1 的空转边）
+        // + npc-complete 的 preview(-1/31/1009) 与 16 个 SELECTED 完成动作。
+        // 1926/2938 are level-up auto-start quests: 26 = 6 explicit + LevelUp + two EnterWorld recovery
+        // edges (0 -> 1 heal and the no-op at row 1) + npc-complete preview and 16 completion actions.
+        assertEquals(26, definition.transitions().size());
 		assertTrue(routes(definition, "unaccepted", firstNpcId).isEmpty());
 		assertTrue(routes(definition, "unaccepted", secondNpcId).isEmpty());
 		assertTrue(routes(definition, "started", secondNpcId).isEmpty());
@@ -179,12 +180,7 @@ class Quest1926And2938ClientDialogAlignmentTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		try (InputStream input = Quest1926And2938ClientDialogAlignmentTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition " + questId + ".xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

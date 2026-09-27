@@ -2,9 +2,7 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -62,15 +60,27 @@ class MissionItemConsumptionBatchRegressionTest {
 		// 11216: 德拉坎的研究 4份报告交付扣除
 		assertTransitionRemovesItems(11216, "v1", "reward", Set.of(182206827, 182206828, 182206829, 182206830));
 
-		// 3092: 观察幼龙 7个毒囊交付扣除
-		assertTransitionRemovesItems(3092, "step1", "reward", Set.of(182208066));
+		// 3092: 观察幼龙 7个毒囊交付扣除。p0c11 真端接管后行轴改为规范 K 轴（采集行为 s1），
+		// 交付仍在 s1 -> reward（dialogId 39/20002 两条，均带 CHECK 门）；遗留 XML 的节点名 step1 已不存在。
+		// 3092 turn-in: after the p0c11 retail adoption the row axis is the canonical K axis (collect row s1),
+		// so the hand-in stays on s1 -> reward (dialogIds 39/20002, both gated by the CHECK pair); the legacy
+		// XML node name step1 is gone.
+		assertTransitionRemovesItems(3092, "s1", "reward", Set.of(182208066));
 
-		// 29064: 建筑之牙 证物交付扣除
-		assertTransitionRemovesItems(29064, "started", "reward", Set.of(182213239));
+		// 29064: 建筑之牙 证物交付扣除。QE-051 行阶梯（客户端两行）后交付落在 started -> s1（行 1 报告行），
+		// 领奖行是 reward（var0=1）。
+		// 29064 turn-in: after the QE-051 two-row ladder the hand-in lands on started -> s1 and reward owns row 1.
+		assertTransitionRemovesItems(29064, "s1", "reward", Set.of(182213239));
 
 		// 15606 & 15608 & 15613: 埃斯特拉任务收集物扣除与错扣纠正
 		assertTransitionRemovesItems(15606, "s4", "reward", Set.of(182215997));
-		assertTransitionRemovesItems(15608, "reward", "reward", Set.of(182215998));
+		// 15608 续片 20 由真端驱动接管（EA→采集→EA→首领）：扣除点从遗留的 reward 自环移到采集交付步
+		// s1→s2（真端 quest.xml 的 check_item1_1 = quest_15608a 1 与客户端任务书第 2 行"交给
+		// Canella"同判据；采集步不是末步，故落点是下一行 s2 而不是 reward）。
+		// 15608 became retail-driven in slice 20: the removal moved from the legacy reward self loop
+		// to the collect hand-in step s1 -> s2 (the hand-in is not the final step, so it lands on the
+		// next row).
+		assertTransitionRemovesItems(15608, "s1", "s2", Set.of(182215998));
 		assertTransitionRemovesItems(15613, "s5", "reward", Set.of(182215999));
 
 		// 25601 & 25605: 诺斯斯拉远征队信息与物品扣除纠正
@@ -127,8 +137,11 @@ class MissionItemConsumptionBatchRegressionTest {
 		// 20525: 调查材料扣除
 		assertTransitionRemovesItems(20525, "s4", "s5", Set.of(182216081, 182216082, 182216083));
 
-		// 20529: 结界石材料扣除
-		assertTransitionRemovesItems(20529, "s9", "reward", Set.of(182216090, 182216091, 182216092));
+		// 20529: 结界石材料扣除。QE-051 折叠步骤链拆分后，交付行 s10（var0=10）与领奖行 reward（var0=11）分离，
+		// 材料扣除落在 s9 -> s10。
+		// 20529: the folded journal chain now separates the report row s10 from the reward row, so the item
+		// removal sits on s9 -> s10.
+		assertTransitionRemovesItems(20529, "s9", "s10", Set.of(182216090, 182216091, 182216092));
 
 		// 24030: 命运决战证物扣除
 		assertTransitionRemovesItems(24030, "s3", "s4", Set.of(182215391));
@@ -175,9 +188,7 @@ class MissionItemConsumptionBatchRegressionTest {
 	}
 
 	private static CompiledQuestDefinition load(int questId) throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-		try (InputStream input = MissionItemConsumptionBatchRegressionTest.class.getResourceAsStream(resource)) {
-			return QuestDefinitionXmlCompiler.compile(Objects.requireNonNull(input, resource));
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

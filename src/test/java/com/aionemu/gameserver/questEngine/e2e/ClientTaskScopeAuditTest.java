@@ -1,15 +1,16 @@
 package com.aionemu.gameserver.questEngine.e2e;
 
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.e2e.client.ClientResourceOracle;
-import java.io.InputStream;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -95,10 +96,7 @@ class ClientTaskScopeAuditTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		try (InputStream input = ClientTaskScopeAuditTest.class.getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			if (input == null) throw new IllegalStateException("missing quest resource " + questId);
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

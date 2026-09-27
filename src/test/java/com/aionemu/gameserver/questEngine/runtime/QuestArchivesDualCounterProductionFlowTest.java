@@ -2,10 +2,10 @@ package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestCondition;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinition;
-import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
@@ -17,19 +17,25 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 验证档案馆双计数任务可按任意顺序完成，并由最后一次有效击杀立即进入领奖。
- * Verifies order-agnostic Archives counters and immediate reward entry on the final valid kill.
+ * 验证档案馆双计数任务（16806/26806）的顺序 SECTION 链合同（定义来自生产驱动）：进区域系统发放；
+ * 段 1 = 30 只士兵族（链态 a{0..30}b0），段 2 = 2 只 Fire named（a30b{1..2}）；乱序不计数——
+ * 士兵未打满前 Boss 击杀不产生任何计划；满段 1009 无门禁进领奖，完成流发放真端奖励。
+ * Verifies the sequential SECTION-chain contract for the Archives dual-counter quests (16806/26806,
+ * definitions from the production driver): area-entry system grant; stage 1 = 30 soldiers
+ * (chain states a{0..30}b0), stage 2 = 2 Fire named (a30b{1..2}); out-of-order kills never count —
+ * boss kills produce no plan before the soldier section fills; the full node's 1009 enters reward
+ * ungated and completion grants the retail rewards.
  */
 class QuestArchivesDualCounterProductionFlowTest {
 	private static final int SOLDIER_COUNT = 30;
@@ -43,118 +49,132 @@ class QuestArchivesDualCounterProductionFlowTest {
 		new QuestContract(26806, 806149));
 
 	@TestFactory
-	Stream<DynamicTest> preservesIndependentCountersAndRewardFlow() {
-		return CONTRACTS.stream().flatMap(contract -> Stream.of(
-			DynamicTest.dynamicTest("quest " + contract.questId() + " soldiers first",
-				() -> assertContract(contract, true)),
-			DynamicTest.dynamicTest("quest " + contract.questId() + " bosses first",
-				() -> assertContract(contract, false))));
+	Stream<DynamicTest> walksTheSequentialSectionChainInRetailStageOrder() {
+		return CONTRACTS.stream().map(contract -> DynamicTest.dynamicTest(
+			"quest " + contract.questId(), () -> assertContract(contract)));
 	}
 
-	private static void assertContract(QuestContract contract, boolean soldiersFirst) throws Exception {
+	private static void assertContract(QuestContract contract) throws Exception {
 		CompiledQuestDefinition compiled = load(contract.questId());
 		QuestDefinition definition = compiled.definition();
-		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
-		assertNode(definition, "reward", QuestStatus.REWARD,
-			Map.of("var0", 1, "var1", SOLDIER_COUNT, "var2", BOSS_COUNT));
-		assertRoutes(definition);
+		Map<String, Integer> zero = Map.of("var0", 0, "var1", 0);
+		Map<String, Integer> soldiersFull = Map.of("var0", SOLDIER_COUNT, "var1", 0);
+		Map<String, Integer> full = Map.of("var0", SOLDIER_COUNT, "var1", BOSS_COUNT);
+		assertNode(definition, "unaccepted", QuestStatus.NONE, zero);
+		assertNode(definition, "a0b0", QuestStatus.START, zero);
+		assertNode(definition, "a30b0", QuestStatus.START, soldiersFull);
+		assertNode(definition, "a30b1", QuestStatus.START,
+			Map.of("var0", SOLDIER_COUNT, "var1", 1));
+		assertNode(definition, "a30b2", QuestStatus.START, full);
+		assertNode(definition, "reward", QuestStatus.REWARD, full);
+		assertNode(definition, "complete", QuestStatus.COMPLETE, zero);
 
-		QuestSnapshot snapshot = snapshot(contract.questId(), QuestStatus.START,
-			Map.of("var0", 0, "var1", 0, "var2", 0), definition);
-		if (soldiersFirst) {
-			snapshot = dispatchSoldiers(compiled, snapshot, false);
-			assertNoMatch(compiled, snapshot, new QuestEvent.KillNpc(220306));
-			snapshot = dispatchBosses(compiled, snapshot, true);
-		} else {
-			snapshot = dispatchBosses(compiled, snapshot, false);
-			assertNoMatch(compiled, snapshot, new QuestEvent.KillNpc(857450));
-			snapshot = dispatchSoldiers(compiled, snapshot, true);
+		// 进区域系统发放接取，无 NPC 接取路由。
+		// Area-entry system grant, no NPC accept route.
+		QuestTransition grant = transition(definition, "unaccepted", "a0b0",
+			new QuestEvent.SystemGrant(), null);
+		assertEquals(List.of(new QuestCondition.StartEligible()), grant.conditions());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH)),
+			grant.afterCommit());
+
+		// 段 1 击杀边：a{0..29}b0 覆盖士兵变体（同名族超集），逐态推进；段 2 边挂在 a30b{0..1}。
+		// Stage-1 kill edges: a{0..29}b0 covers the soldier variants (display-name superset),
+		// state by state; stage-2 edges hang off a30b{0..1}.
+		Set<Integer> soldierTargets = new TreeSet<>();
+		for (int state = 0; state < SOLDIER_COUNT; state++) {
+			final int kills = state;
+			List<QuestTransition> edges = killEdges(definition, "a" + kills + "b0");
+			assertTrue(edges.size() >= SOLDIER_NPC_IDS.size(),
+				() -> "a" + kills + "b0 必须覆盖全部士兵变体");
+			for (QuestTransition edge : edges) {
+				assertEquals("a" + (kills + 1) + "b0", edge.targetNode(), edge::toString);
+				if (edge.event() instanceof QuestEvent.KillNpc killNpc) {
+					soldierTargets.add(killNpc.npcId());
+				}
+			}
 		}
-		assertEquals(QuestStatus.REWARD, snapshot.status());
-		assertEquals(Map.of("var0", 1, "var1", SOLDIER_COUNT, "var2", BOSS_COUNT),
-			definition.progressLayout().unpack(snapshot.packedVariables()));
+		assertTrue(soldierTargets.containsAll(SOLDIER_NPC_IDS),
+			() -> contract.questId() + " 士兵击杀集必须覆盖真端变体，实际 " + soldierTargets);
+		Set<Integer> bossTargets = new TreeSet<>();
+		for (int state = 0; state < BOSS_COUNT; state++) {
+			final int kills = state;
+			List<QuestTransition> edges = killEdges(definition, "a" + SOLDIER_COUNT + "b" + kills);
+			assertTrue(edges.size() >= BOSS_NPC_IDS.size(),
+				() -> "a30b" + kills + " 必须覆盖全部 Boss 变体");
+			for (QuestTransition edge : edges) {
+				assertEquals("a" + SOLDIER_COUNT + "b" + (kills + 1), edge.targetNode(), edge::toString);
+				if (edge.event() instanceof QuestEvent.KillNpc killNpc) {
+					bossTargets.add(killNpc.npcId());
+				}
+			}
+		}
+		assertTrue(bossTargets.containsAll(BOSS_NPC_IDS),
+			() -> contract.questId() + " Boss 击杀集必须覆盖真端变体，实际 " + bossTargets);
 
-		assertRewardAndCompletion(compiled, definition, contract);
-	}
+		// 乱序不计数：士兵段进行中，Boss 击杀不产生任何计划（客户端 SECTION 链门控）。
+		// Out-of-order kills never count: while the soldier section runs, a boss kill produces
+		// no plan at all (the client's SECTION chain gate).
+		QuestSnapshot snapshot = snapshot(contract.questId(), QuestStatus.START, zero, definition);
+		assertTrue(killEdges(definition, "a0b0").stream().noneMatch(edge ->
+				edge.event() instanceof QuestEvent.KillNpc killNpc && BOSS_NPC_IDS.contains(killNpc.npcId())),
+			() -> contract.questId() + " 段 1 不得登记 Boss 击杀边");
+		assertNoMatch(compiled, snapshot, new QuestEvent.KillNpc(857450));
 
-	private static void assertRoutes(QuestDefinition definition) {
-		QuestEvent soldiers = new QuestEvent.KillNpcSet(SOLDIER_NPC_IDS);
-		assertCounter(transition(definition, "started", "started", soldiers, 2),
-			List.of(new QuestCondition.VariableBelow("var1", SOLDIER_COUNT - 1)), "var1");
-		assertCounter(transition(definition, "started", "started", soldiers, 1),
-			List.of(
-				new QuestCondition.QuestVariableIs("var1", SOLDIER_COUNT - 1),
-				new QuestCondition.VariableBelow("var2", BOSS_COUNT)), "var1");
-		assertFinalCounter(transition(definition, "started", "reward", soldiers, 0),
-			List.of(
-				new QuestCondition.QuestVariableIs("var1", SOLDIER_COUNT - 1),
-				new QuestCondition.VariableAtLeast("var2", BOSS_COUNT)), "var1");
-
-		QuestEvent bosses = new QuestEvent.KillNpcSet(BOSS_NPC_IDS);
-		assertCounter(transition(definition, "started", "started", bosses, 2),
-			List.of(new QuestCondition.VariableBelow("var2", BOSS_COUNT - 1)), "var2");
-		assertCounter(transition(definition, "started", "started", bosses, 1),
-			List.of(
-				new QuestCondition.QuestVariableIs("var2", BOSS_COUNT - 1),
-				new QuestCondition.VariableBelow("var1", SOLDIER_COUNT)), "var2");
-		assertFinalCounter(transition(definition, "started", "reward", bosses, 0),
-			List.of(
-				new QuestCondition.VariableAtLeast("var1", SOLDIER_COUNT),
-				new QuestCondition.QuestVariableIs("var2", BOSS_COUNT - 1)), "var2");
-	}
-
-	private static void assertCounter(QuestTransition transition, List<QuestCondition> conditions,
-			String field) {
-		assertEquals(conditions, transition.conditions());
-		assertEquals(List.of(new QuestAction.IncrementVariable(field, 1)), transition.actions());
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
-			transition.afterCommit());
-	}
-
-	private static void assertFinalCounter(QuestTransition transition, List<QuestCondition> conditions,
-			String field) {
-		assertEquals(conditions, transition.conditions());
-		assertEquals(List.of(
-			new QuestAction.IncrementVariable(field, 1),
-			new QuestAction.SetVariable("var0", 1)), transition.actions());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
-			transition.afterCommit());
-	}
-
-	private static QuestSnapshot dispatchSoldiers(CompiledQuestDefinition compiled,
-			QuestSnapshot snapshot, boolean completesQuest) {
+		// 顺序推进模拟：30 只士兵逐态推进后，2 只 Boss 收尾。
+		// Sequential walk: 30 soldier kills advance state by state, then 2 boss kills finish.
 		for (int kills = 1; kills <= SOLDIER_COUNT; kills++) {
-			QuestMutationPlan plan = dispatch(compiled, snapshot, new QuestEvent.KillNpc(220306));
-			snapshot = nextSnapshot(snapshot, plan);
-			assertEquals(completesQuest && kills == SOLDIER_COUNT ? QuestStatus.REWARD : QuestStatus.START,
-				snapshot.status());
-			assertEquals(kills,
-				compiled.definition().progressLayout().unpack(snapshot.packedVariables()).get("var1"));
+			final int state = kills;
+			snapshot = nextSnapshot(snapshot, dispatch(compiled, snapshot, new QuestEvent.KillNpc(220306)));
+			assertEquals(QuestStatus.START, snapshot.status(), () -> "第 " + state + " 杀后应为 START");
+			assertEquals(Map.of("var0", state, "var1", 0),
+				definition.progressLayout().unpack(snapshot.packedVariables()));
 		}
-		return snapshot;
-	}
-
-	private static QuestSnapshot dispatchBosses(CompiledQuestDefinition compiled,
-			QuestSnapshot snapshot, boolean completesQuest) {
 		for (int kills = 1; kills <= BOSS_COUNT; kills++) {
-			QuestMutationPlan plan = dispatch(compiled, snapshot, new QuestEvent.KillNpc(857450));
-			snapshot = nextSnapshot(snapshot, plan);
-			assertEquals(completesQuest && kills == BOSS_COUNT ? QuestStatus.REWARD : QuestStatus.START,
-				snapshot.status());
-			assertEquals(kills,
-				compiled.definition().progressLayout().unpack(snapshot.packedVariables()).get("var2"));
+			snapshot = nextSnapshot(snapshot, dispatch(compiled, snapshot, new QuestEvent.KillNpc(857450)));
+			assertEquals(QuestStatus.START, snapshot.status());
+			assertEquals(Map.of("var0", SOLDIER_COUNT, "var1", kills),
+				definition.progressLayout().unpack(snapshot.packedVariables()));
 		}
-		return snapshot;
+
+		// 满段 QUEST_SELECT 无门禁直翻领奖（P0-2 顺序链规范形，1009 中转删除）；
+		// 未满节点无 QUEST_SELECT/1009 报告通道（提前上交不可达）。
+		// The full node's QUEST_SELECT flips reward ungated (canonical sequential shape, no 1009
+		// hop); unfinished nodes keep no QUEST_SELECT/1009 report channel.
+		QuestTransition finish = transition(definition, "a30b2", "reward",
+			new QuestEvent.TalkToNpc(contract.reportNpcId(), QuestDialogAction.QUEST_SELECT.id()), null);
+		assertEquals(List.of(), finish.conditions());
+		for (String label : List.of("a0b0", "a15b0", "a30b0", "a30b1")) {
+			final String node = label;
+			assertTrue(definition.transitions().stream().noneMatch(candidate ->
+				node.equals(candidate.sourceNode())
+					&& candidate.event() instanceof QuestEvent.TalkToNpc talk
+					&& talk.npcId() == contract.reportNpcId() && talk.dialogId() != null
+					&& (talk.dialogId() == QuestDialogAction.QUEST_SELECT.id()
+						|| talk.dialogId() == QuestDialogAction.SELECT_QUEST_REWARD.id())),
+				() -> node + " 不得保留报告通道路由");
+		}
+
+		assertRewardAndCompletion(compiled, definition, contract, full);
 	}
 
 	private static void assertRewardAndCompletion(CompiledQuestDefinition compiled,
-			QuestDefinition definition, QuestContract contract) {
-		QuestTransition success = transition(definition, "reward", "reward",
-			new QuestEvent.TalkToNpc(contract.reportNpcId(), QuestDialogAction.QUEST_SELECT.id()), null);
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
-			success.afterCommit());
+			QuestDefinition definition, QuestContract contract, Map<String, Integer> full) {
+		// 未满节点无 QUEST_SELECT/1009 报告通道（P0-2 顺序链规范形）。
+		// Unfinished nodes keep no QUEST_SELECT/1009 report channel (canonical sequential shape).
+		assertTrue(definition.transitions().stream().noneMatch(candidate ->
+			"a0b0".equals(candidate.sourceNode())
+				&& candidate.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.npcId() == contract.reportNpcId() && talk.dialogId() != null
+				&& (talk.dialogId() == QuestDialogAction.QUEST_SELECT.id()
+					|| talk.dialogId() == QuestDialogAction.SELECT_QUEST_REWARD.id())),
+			() -> "a0b0 不得保留报告通道路由");
 
+		// 满段节点 QUEST_SELECT 直翻领奖；领奖态 1009 预览只弹选择窗口（完成流保留）。
+		// The full node's QUEST_SELECT flips reward directly; the reward-state 1009 preview from
+		// the completion flow only opens the selection window.
+		QuestTransition success = transition(definition, "a30b2", "reward",
+			new QuestEvent.TalkToNpc(contract.reportNpcId(), QuestDialogAction.QUEST_SELECT.id()), null);
+		assertEquals(List.of(), success.conditions());
 		QuestTransition preview = transition(definition, "reward", "reward",
 			new QuestEvent.TalkToNpc(contract.reportNpcId(), QuestDialogAction.SELECT_QUEST_REWARD.id()), null);
 		assertEquals(List.of(
@@ -175,14 +195,21 @@ class QuestArchivesDualCounterProductionFlowTest {
 			new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
 			completion.afterCommit());
 
-		QuestSnapshot reward = snapshot(contract.questId(), QuestStatus.REWARD,
-			Map.of("var0", 1, "var1", SOLDIER_COUNT, "var2", BOSS_COUNT), definition);
+		// 完成模拟：REWARD 态确认后 COMPLETE 且计数清零。
+		// Completion simulation: the confirm route moves REWARD to COMPLETE with counters reset.
+		QuestSnapshot reward = snapshot(contract.questId(), QuestStatus.REWARD, full, definition);
 		QuestMutationPlan plan = QuestMutationPlanner.plan(compiled, reward, completionEvent, completion)
 			.orElseThrow();
 		assertEquals(QuestStatus.COMPLETE, plan.nextStatus());
-		assertEquals(Map.of("var0", 0, "var1", 0, "var2", 0),
+		assertEquals(Map.of("var0", 0, "var1", 0),
 			definition.progressLayout().unpack(plan.nextPackedVariables()));
-		assertEquals(expectedActions, plan.requiredActions());
+	}
+
+	private static List<QuestTransition> killEdges(QuestDefinition definition, String source) {
+		return definition.transitions().stream()
+			.filter(candidate -> source.equals(candidate.sourceNode()))
+			.filter(candidate -> candidate.event() instanceof QuestEvent.KillNpc)
+			.toList();
 	}
 
 	private static QuestMutationPlan dispatch(CompiledQuestDefinition compiled, QuestSnapshot snapshot,
@@ -224,8 +251,8 @@ class QuestArchivesDualCounterProductionFlowTest {
 	private static QuestTransition transition(QuestDefinition definition, String source, String target,
 			QuestEvent event, Integer priority) {
 		List<QuestTransition> matches = definition.transitions().stream()
-			.filter(candidate -> candidate.sourceNode().equals(source))
-			.filter(candidate -> candidate.targetNode().equals(target))
+			.filter(candidate -> Objects.equals(candidate.sourceNode(), source))
+			.filter(candidate -> Objects.equals(candidate.targetNode(), target))
 			.filter(candidate -> candidate.event().equals(event))
 			.filter(candidate -> priority == null || Objects.equals(candidate.priority(), priority))
 			.toList();
@@ -233,14 +260,9 @@ class QuestArchivesDualCounterProductionFlowTest {
 		return matches.getFirst();
 	}
 
-	private static CompiledQuestDefinition load(int questId) throws Exception {
-		try (InputStream input = QuestArchivesDualCounterProductionFlowTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition " + questId + ".xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	/** 生产驱动定义（XML 已退役）。 / The production-driver definition (the XML is retired). */
+	private static CompiledQuestDefinition load(int questId) {
+		return ProductionQuestDefinitions.definition(questId);
 	}
 
 	private record QuestContract(int questId, int reportNpcId) {

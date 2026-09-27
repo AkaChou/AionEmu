@@ -1,0 +1,2010 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE strings [
+	<!ENTITY quot "quot">
+	<!ENTITY amp "amp">
+	<!ENTITY apos "apos">
+	<!ENTITY lt "lt">
+	<!ENTITY gt "gt">
+	<!ENTITY nbsp "nbsp">
+	<!ENTITY iexcl "iexcl">
+	<!ENTITY cent "cent">
+	<!ENTITY pound "pound">
+	<!ENTITY curren "curren">
+	<!ENTITY yen "yen">
+	<!ENTITY brvbar "brvbar">
+	<!ENTITY sect "sect">
+	<!ENTITY uml "uml">
+	<!ENTITY copy "copy">
+	<!ENTITY ordf "ordf">
+	<!ENTITY laquo "laquo">
+	<!ENTITY not "not">
+	<!ENTITY shy "shy">
+	<!ENTITY reg "reg">
+	<!ENTITY macr "macr">
+	<!ENTITY deg "deg">
+	<!ENTITY plusmn "plusmn">
+	<!ENTITY sup2 "sup2">
+	<!ENTITY sup3 "sup3">
+	<!ENTITY acute "acute">
+	<!ENTITY micro "micro">
+	<!ENTITY para "para">
+	<!ENTITY middot "middot">
+	<!ENTITY cedil "cedil">
+	<!ENTITY sup1 "sup1">
+	<!ENTITY ordm "ordm">
+	<!ENTITY raquo "raquo">
+	<!ENTITY frac14 "frac14">
+	<!ENTITY frac12 "frac12">
+	<!ENTITY frac34 "frac34">
+	<!ENTITY iquest "iquest">
+	<!ENTITY Agrave "Agrave">
+	<!ENTITY Aacute "Aacute">
+	<!ENTITY Acirc "Acirc">
+	<!ENTITY Atilde "Atilde">
+	<!ENTITY Auml "Auml">
+	<!ENTITY Aring "Aring">
+	<!ENTITY AElig "AElig">
+	<!ENTITY Ccedil "Ccedil">
+	<!ENTITY Egrave "Egrave">
+	<!ENTITY Eacute "Eacute">
+	<!ENTITY Ecirc "Ecirc">
+	<!ENTITY Euml "Euml">
+	<!ENTITY Igrave "Igrave">
+	<!ENTITY Iacute "Iacute">
+	<!ENTITY Icirc "Icirc">
+	<!ENTITY Iuml "Iuml">
+	<!ENTITY ETH "ETH">
+	<!ENTITY Ntilde "Ntilde">
+	<!ENTITY Ograve "Ograve">
+	<!ENTITY Oacute "Oacute">
+	<!ENTITY Ocirc "Ocirc">
+	<!ENTITY Otilde "Otilde">
+	<!ENTITY Ouml "Ouml">
+	<!ENTITY times "times">
+	<!ENTITY Oslash "Oslash">
+	<!ENTITY Ugrave "Ugrave">
+	<!ENTITY Uacute "Uacute">
+	<!ENTITY Ucirc "Ucirc">
+	<!ENTITY Uuml "Uuml">
+	<!ENTITY Yacute "Yacute">
+	<!ENTITY THORN "THORN">
+	<!ENTITY szlig "szlig">
+	<!ENTITY agrave "agrave">
+	<!ENTITY aacute "aacute">
+	<!ENTITY acirc "acirc">
+	<!ENTITY atilde "atilde">
+	<!ENTITY auml "auml">
+	<!ENTITY aring "aring">
+	<!ENTITY aelig "aelig">
+	<!ENTITY ccedil "ccedil">
+	<!ENTITY egrave "egrave">
+	<!ENTITY eacute "eacute">
+	<!ENTITY ecirc "ecirc">
+	<!ENTITY euml "euml">
+	<!ENTITY igrave "igrave">
+	<!ENTITY iacute "iacute">
+	<!ENTITY icirc "icirc">
+	<!ENTITY iuml "iuml">
+	<!ENTITY eth "eth">
+	<!ENTITY ntilde "ntilde">
+	<!ENTITY ograve "ograve">
+	<!ENTITY oacute "oacute">
+	<!ENTITY ocirc "ocirc">
+	<!ENTITY otilde "otilde">
+	<!ENTITY ouml "ouml">
+	<!ENTITY divide "divide">
+	<!ENTITY oslash "oslash">
+	<!ENTITY ugrave "ugrave">
+	<!ENTITY uacute "uacute">
+	<!ENTITY ucirc "ucirc">
+	<!ENTITY uuml "uuml">
+	<!ENTITY yacute "yacute">
+	<!ENTITY thorn "thorn">
+	<!ENTITY yuml "yuml">
+	<!ENTITY OElig "OElig">
+	<!ENTITY oelig "oelig">
+	<!ENTITY Scaron "Scaron">
+	<!ENTITY scaron "scaron">
+	<!ENTITY Yuml "Yuml">
+	<!ENTITY fnof "fnof">
+	<!ENTITY circ "circ">
+	<!ENTITY tilde "tilde">
+	<!ENTITY Alpha "Alpha">
+	<!ENTITY Beta "Beta">
+	<!ENTITY Gamma "Gamma">
+	<!ENTITY Delta "Delta">
+	<!ENTITY Epsilon "Epsilon">
+	<!ENTITY Zeta "Zeta">
+	<!ENTITY Eta "Eta">
+	<!ENTITY Theta "Theta">
+	<!ENTITY Iota "Iota">
+	<!ENTITY Kappa "Kappa">
+	<!ENTITY Lambda "Lambda">
+	<!ENTITY Mu "Mu">
+	<!ENTITY Nu "Nu">
+	<!ENTITY Xi "Xi">
+	<!ENTITY Omicron "Omicron">
+	<!ENTITY Pi "Pi">
+	<!ENTITY Rho "Rho">
+	<!ENTITY Sigma "Sigma">
+	<!ENTITY Tau "Tau">
+	<!ENTITY Upsilon "Upsilon">
+	<!ENTITY Phi "Phi">
+	<!ENTITY Chi "Chi">
+	<!ENTITY Psi "Psi">
+	<!ENTITY Omega "Omega">
+	<!ENTITY alpha "alpha">
+	<!ENTITY beta "beta">
+	<!ENTITY gamma "gamma">
+	<!ENTITY delta "delta">
+	<!ENTITY epsilon "epsilon">
+	<!ENTITY zeta "zeta">
+	<!ENTITY eta "eta">
+	<!ENTITY theta "theta">
+	<!ENTITY iota "iota">
+	<!ENTITY kappa "kappa">
+	<!ENTITY lambda "lambda">
+	<!ENTITY mu "mu">
+	<!ENTITY nu "nu">
+	<!ENTITY xi "xi">
+	<!ENTITY omicron "omicron">
+	<!ENTITY pi "pi">
+	<!ENTITY rho "rho">
+	<!ENTITY sigmaf "sigmaf">
+	<!ENTITY sigma "sigma">
+	<!ENTITY tau "tau">
+	<!ENTITY upsilon "upsilon">
+	<!ENTITY phi "phi">
+	<!ENTITY chi "chi">
+	<!ENTITY psi "psi">
+	<!ENTITY omega "omega">
+	<!ENTITY thetasym "thetasym">
+	<!ENTITY upsih "upsih">
+	<!ENTITY piv "piv">
+	<!ENTITY ensp "ensp">
+	<!ENTITY emsp "emsp">
+	<!ENTITY thinsp "thinsp">
+	<!ENTITY zwnj "zwnj">
+	<!ENTITY zwj "zwj">
+	<!ENTITY lrm "lrm">
+	<!ENTITY rlm "rlm">
+	<!ENTITY ndash "ndash">
+	<!ENTITY mdash "mdash">
+	<!ENTITY lsquo "lsquo">
+	<!ENTITY rsquo "rsquo">
+	<!ENTITY sbquo "sbquo">
+	<!ENTITY ldquo "ldquo">
+	<!ENTITY rdquo "rdquo">
+	<!ENTITY bdquo "bdquo">
+	<!ENTITY dagger "dagger">
+	<!ENTITY Dagger "Dagger">
+	<!ENTITY bull "bull">
+	<!ENTITY hellip "hellip">
+	<!ENTITY permil "permil">
+	<!ENTITY prime "prime">
+	<!ENTITY Prime "Prime">
+	<!ENTITY lsaquo "lsaquo">
+	<!ENTITY rsaquo "rsaquo">
+	<!ENTITY oline "oline">
+	<!ENTITY frasl "frasl">
+	<!ENTITY euro "euro">
+	<!ENTITY image "image">
+	<!ENTITY weierp "weierp">
+	<!ENTITY real "real">
+	<!ENTITY trade "trade">
+	<!ENTITY alefsym "alefsym">
+	<!ENTITY larr "larr">
+	<!ENTITY uarr "uarr">
+	<!ENTITY rarr "rarr">
+	<!ENTITY darr "darr">
+	<!ENTITY harr "harr">
+	<!ENTITY crarr "crarr">
+	<!ENTITY lArr "lArr">
+	<!ENTITY uArr "uArr">
+	<!ENTITY rArr "rArr">
+	<!ENTITY dArr "dArr">
+	<!ENTITY hArr "hArr">
+	<!ENTITY forall "forall">
+	<!ENTITY part "part">
+	<!ENTITY exist "exist">
+	<!ENTITY empty "empty">
+	<!ENTITY nabla "nabla">
+	<!ENTITY isin "isin">
+	<!ENTITY notin "notin">
+	<!ENTITY ni "ni">
+	<!ENTITY prod "prod">
+	<!ENTITY sum "sum">
+	<!ENTITY minus "minus">
+	<!ENTITY lowast "lowast">
+	<!ENTITY radic "radic">
+	<!ENTITY prop "prop">
+	<!ENTITY infin "infin">
+	<!ENTITY ang "ang">
+	<!ENTITY and "and">
+	<!ENTITY or "or">
+	<!ENTITY cap "cap">
+	<!ENTITY cup "cup">
+	<!ENTITY int "int">
+	<!ENTITY there4 "there4">
+	<!ENTITY sim "sim">
+	<!ENTITY cong "cong">
+	<!ENTITY asymp "asymp">
+	<!ENTITY ne "ne">
+	<!ENTITY equiv "equiv">
+	<!ENTITY le "le">
+	<!ENTITY ge "ge">
+	<!ENTITY sub "sub">
+	<!ENTITY sup "sup">
+	<!ENTITY nsub "nsub">
+	<!ENTITY sube "sube">
+	<!ENTITY supe "supe">
+	<!ENTITY oplus "oplus">
+	<!ENTITY otimes "otimes">
+	<!ENTITY perp "perp">
+	<!ENTITY sdot "sdot">
+	<!ENTITY lceil "lceil">
+	<!ENTITY rceil "rceil">
+	<!ENTITY lfloor "lfloor">
+	<!ENTITY rfloor "rfloor">
+	<!ENTITY lang "lang">
+	<!ENTITY rang "rang">
+	<!ENTITY loz "loz">
+	<!ENTITY spades "spades">
+	<!ENTITY clubs "clubs">
+	<!ENTITY hearts "hearts">
+	<!ENTITY diams "diams">
+]>
+<quest_simplecollectitems>
+	<id id="1103">
+		<dev_name>용병의 임무 2</dev_name>
+		<acquired_npc_name>Mires</acquired_npc_name>
+		<object1>LF1_Cherubim_pouch</object1>
+		<reward_npc_name>Mires</reward_npc_name>
+		<con_quest>1104</con_quest>
+	</id>
+	<id id="1125">
+		<dev_name>트몰리아 동굴 오브젝트 클릭퀘</dev_name>
+		<acquired_npc_name>Poa</acquired_npc_name>
+		<object1>LF1_Tmolia_Box</object1>
+		<reward_npc_name>Kalio</reward_npc_name>
+	</id>
+	<id id="1136">
+		<dev_name>요새 주변 오브젝트 클릭퀘</dev_name>
+		<acquired_npc_name>Ipis</acquired_npc_name>
+		<object1>LF1_crystal</object1>
+		<reward_npc_name>Ipis</reward_npc_name>
+	</id>
+	<id id="1137">
+		<dev_name>요새 주변 상공 오브젝트 클릭퀘</dev_name>
+		<acquired_npc_name>Spiros</acquired_npc_name>
+		<object1>LF1_fossil</object1>
+		<reward_npc_name>Spiros</reward_npc_name>
+	</id>
+	<id id="1144">
+		<dev_name>허수아비의 임무 2</dev_name>
+		<acquired_npc_name>Eradis</acquired_npc_name>
+		<object1>LF1_pumpkin</object1>
+		<reward_npc_name>Eradis</reward_npc_name>
+	</id>
+	<id id="1154">
+		<dev_name>프릴파이맘 알 구이</dev_name>
+		<acquired_npc_name>Hianu</acquired_npc_name>
+		<object1>Frillfaimam_Egg</object1>
+		<object2>Frillfaimam_Egg_a</object2>
+		<reward_npc_name>Eradis</reward_npc_name>
+	</id>
+	<id id="1155">
+		<dev_name>톨바스 마을 도난 사건</dev_name>
+		<acquired_npc_name>Abolos</acquired_npc_name>
+		<object1>LF1_brownie_Box</object1>
+		<reward_npc_name>Abolos</reward_npc_name>
+	</id>
+	<id id="1168">
+		<dev_name>절벽길 오브젝트 수집퀘</dev_name>
+		<acquired_npc_name>Anasia</acquired_npc_name>
+		<object1>LF1_poison_mushroom</object1>
+		<reward_npc_name>Anasia</reward_npc_name>
+	</id>
+	<id id="1172">
+		<dev_name>아아아</dev_name>
+		<acquired_npc_name>Perinens</acquired_npc_name>
+		<object1>LF1_krall_Box</object1>
+		<reward_npc_name>Estino</reward_npc_name>
+	</id>
+	<id id="1177">
+		<dev_name>아르타미아 고개 수집퀘</dev_name>
+		<acquired_npc_name>Meliodas</acquired_npc_name>
+		<object1>GodStone_Q73</object1>
+		<reward_npc_name>Leipos</reward_npc_name>
+	</id>
+	<id id="1178">
+		<dev_name>오염의 근원지 수집퀘</dev_name>
+		<acquired_npc_name>Roseino</acquired_npc_name>
+		<object1>LF1_polluted_seed</object1>
+		<reward_npc_name>Roseino</reward_npc_name>
+	</id>
+	<id id="1219">
+		<dev_name>보물상자 훔쳐다 주기</dev_name>
+		<acquired_npc_name>Une</acquired_npc_name>
+		<object1>LF1a_JewelBox_Q1219</object1>
+		<reward_npc_name>Une</reward_npc_name>
+		<con_quest>1220</con_quest>
+	</id>
+	<id id="1411">
+		<dev_name>[파티] 카이단 견제 2</dev_name>
+		<acquired_npc_name>Aeolus</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LF2_FOBJ_Q1411</object1>
+		<reward_npc_name>Aeolus</reward_npc_name>
+		<con_quest>1412</con_quest>
+	</id>
+	<id id="1486">
+		<dev_name>[반복] 람부탄 열매 수집</dev_name>
+		<acquired_npc_name>Krato</acquired_npc_name>
+		<object1>LF2_Lambutan_Q1486</object1>
+		<reward_npc_name>Krato</reward_npc_name>
+	</id>
+	<id id="1487">
+		<dev_name>사막 발굴작업</dev_name>
+		<acquired_npc_name>Garperos</acquired_npc_name>
+		<object1>LF2_AnimalBone_Q1487A</object1>
+		<object2>LF2_AnimalBone_Q1487B</object2>
+		<object3>LF2_AnimalBone_Q1487C</object3>
+		<reward_npc_name>Garperos</reward_npc_name>
+	</id>
+	<id id="1490">
+		<dev_name>레파르단이 찾는 것?</dev_name>
+		<acquired_npc_name>Shugo_LF2_13</acquired_npc_name>
+		<object1>LF2_LehparBox_Q1490</object1>
+		<reward_npc_name>Alexis</reward_npc_name>
+	</id>
+	<id id="1503">
+		<dev_name>플라잉으로 물건 찾기</dev_name>
+		<acquired_npc_name>Sulates</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LF3_HiddenBox_Q1503</object1>
+		<reward_npc_name>Sulates</reward_npc_name>
+	</id>
+	<id id="1579">
+		<dev_name>[D8][파티] 언데드농장 수집</dev_name>
+		<acquired_npc_name>Edoras</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LF3_Undeaditem_Q1579</object1>
+		<reward_npc_name>Edoras</reward_npc_name>
+	</id>
+	<id id="1618">
+		<dev_name>[잠입/파티] 숨겨진 연구실의 비밀</dev_name>
+		<acquired_npc_name>Lethe</acquired_npc_name>
+		<give_item>ITEM_QUEST_1618A 1</give_item>
+		<party_drop>1</party_drop>
+		<object1>DF3_Lehparbook_02</object1>
+		<reward_npc_name>Xenophon</reward_npc_name>
+		<con_quest>1937</con_quest>
+	</id>
+	<id id="1623">
+		<dev_name>[F1] 군단 보급품 수집 1</dev_name>
+		<acquired_npc_name>Ekseus</acquired_npc_name>
+		<object1>LF3_SupplyBox_Q1623</object1>
+		<reward_npc_name>Ekseus</reward_npc_name>
+		<con_quest>1624</con_quest>
+	</id>
+	<id id="1624">
+		<dev_name>[F1] 군단 보급품 수집 2</dev_name>
+		<acquired_npc_name>Ekseus</acquired_npc_name>
+		<object1>LF3_AncientWeapon_Q1624</object1>
+		<object2>LF3_AncientArmor_Q1624</object2>
+		<reward_npc_name>Ekseus</reward_npc_name>
+	</id>
+	<id id="1630">
+		<dev_name>[F2] 물에 잠긴 골동품</dev_name>
+		<acquired_npc_name>Miobera</acquired_npc_name>
+		<object1>LF3_Relic_Q1630</object1>
+		<reward_npc_name>Miobera</reward_npc_name>
+	</id>
+	<id id="1641">
+		<dev_name>[F4] 유물 사냥꾼</dev_name>
+		<acquired_npc_name>Shugo_LF3_6</acquired_npc_name>
+		<object1>LF3_Relic_Q1641</object1>
+		<reward_npc_name>Shugo_LF3_6</reward_npc_name>
+	</id>
+	<id id="1685">
+		<dev_name>[잠입][파티]용족 인던 퀘스트3</dev_name>
+		<acquired_npc_name>LF3_Anaxa_E</acquired_npc_name>
+		<give_item>ITEM_QUEST_1685A 1</give_item>
+		<party_drop>1</party_drop>
+		<object1>DF3_FOBJ_Q2631</object1>
+		<reward_npc_name>LF3_Anaxa_E</reward_npc_name>
+	</id>
+	<id id="1776">
+		<dev_name>트레져 헌터(중립) - 도굴단</dev_name>
+		<acquired_npc_name>Shugo_AB1_10</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>Ab1_jewelbox_Q1776</object1>
+		<reward_npc_name>Shugo_AB1_10</reward_npc_name>
+	</id>
+	<id id="1793">
+		<dev_name>모듈 뗘오기- 어비스 모듈 공략</dev_name>
+		<acquired_npc_name>Belus</acquired_npc_name>
+		<object1>Ab1_Module_Q1793</object1>
+		<reward_npc_name>Belus</reward_npc_name>
+	</id>
+	<id id="1931">
+		<dev_name>사라진 페이지</dev_name>
+		<acquired_npc_name>Gerania</acquired_npc_name>
+		<object1>LC1_book_q1931</object1>
+		<reward_npc_name>Gerania</reward_npc_name>
+	</id>
+	<id id="2104">
+		<dev_name>모아 놓은 열매</dev_name>
+		<acquired_npc_name>Vanar</acquired_npc_name>
+		<object1>sprigg_FruitBasket</object1>
+		<reward_npc_name>Vanar</reward_npc_name>
+		<con_quest>2106</con_quest>
+	</id>
+	<id id="2109">
+		<dev_name>아메프레 꽃에 담은 마음</dev_name>
+		<acquired_npc_name>DF_Fisher</acquired_npc_name>
+		<object1>DF1_Lotus</object1>
+		<reward_npc_name>DF_Fisher</reward_npc_name>
+	</id>
+	<id id="2116">
+		<dev_name>보물 지도</dev_name>
+		<acquired_npc_name>Lidun</acquired_npc_name>
+		<object1>DF1_Anturn_Letter</object1>
+		<reward_npc_name>Lidun</reward_npc_name>
+		<con_quest>2119</con_quest>
+	</id>
+	<id id="2119">
+		<dev_name>검은 진주</dev_name>
+		<acquired_npc_name>Lidun</acquired_npc_name>
+		<object1>DF1_Jewelbox</object1>
+		<reward_npc_name>Lidun</reward_npc_name>
+	</id>
+	<id id="2126">
+		<dev_name>오델라 항아리</dev_name>
+		<acquired_npc_name>Devalin</acquired_npc_name>
+		<object1>DF1_Barrel</object1>
+		<reward_npc_name>Devalin</reward_npc_name>
+	</id>
+	<id id="2203">
+		<dev_name>얼음결정 모으기</dev_name>
+		<acquired_npc_name>Nemnef</acquired_npc_name>
+		<object1>crystal</object1>
+		<reward_npc_name>Nemnef</reward_npc_name>
+	</id>
+	<id id="2237">
+		<dev_name>무무족의 비료</dev_name>
+		<acquired_npc_name>DF1A_Anmuring_E</acquired_npc_name>
+		<object1>DF1A_Manure</object1>
+		<reward_npc_name>DF1A_Anmuring_E</reward_npc_name>
+	</id>
+	<id id="2246">
+		<dev_name>게르게르의 부탁</dev_name>
+		<acquired_npc_name>NPC_Gerger_3</acquired_npc_name>
+		<object1>DF1A_Gerger_Object</object1>
+		<reward_npc_name>NPC_Gerger_3</reward_npc_name>
+		<con_quest>2247</con_quest>
+	</id>
+	<id id="2257">
+		<dev_name>임페투시움 공사현장</dev_name>
+		<acquired_npc_name>Banatisai</acquired_npc_name>
+		<object1>DF1A_Iron_Piece</object1>
+		<reward_npc_name>Banatisai</reward_npc_name>
+	</id>
+	<id id="2269">
+		<dev_name>운송차 습격의 증거</dev_name>
+		<acquired_npc_name>Neifenmer</acquired_npc_name>
+		<object1>DF1a_Lehpar_Order_Q2269</object1>
+		<reward_npc_name>Neifenmer</reward_npc_name>
+	</id>
+	<id id="2329">
+		<dev_name>옥타 알 훔치기</dev_name>
+		<acquired_npc_name>Jorund</acquired_npc_name>
+		<object1>DF2_Octasideegg_Q2329</object1>
+		<reward_npc_name>Jorund</reward_npc_name>
+	</id>
+	<id id="2346">
+		<dev_name>[파티] 라이칸 지역에서 모아오기</dev_name>
+		<acquired_npc_name>Jorund</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>DF2_FOBJ_Q2346</object1>
+		<reward_npc_name>Jorund</reward_npc_name>
+	</id>
+	<id id="2353">
+		<dev_name>[파티] 뭔가 모아오기</dev_name>
+		<acquired_npc_name>Gundalpun</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>DF2_FOBJ_Crystal_Q2353</object1>
+		<reward_npc_name>Gundalpun</reward_npc_name>
+	</id>
+	<id id="2373">
+		<dev_name>[파티] 보물 모아오기</dev_name>
+		<acquired_npc_name>DF2_Flamyar_E</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>DF2_FOBJ_Q2373</object1>
+		<reward_npc_name>DF2_Flamyar_E</reward_npc_name>
+	</id>
+	<id id="2381">
+		<dev_name>괴기식물 트리피드 D-1</dev_name>
+		<acquired_npc_name>Tekor</acquired_npc_name>
+		<object1>DF2_FOBJ_Q2381</object1>
+		<reward_npc_name>Tekor</reward_npc_name>
+	</id>
+	<id id="2427">
+		<dev_name>연구재료의 수집</dev_name>
+		<acquired_npc_name>kistig</acquired_npc_name>
+		<object1>DF2_Barrel_Q2427</object1>
+		<object2>DF2_WoodenBox_Q2427</object2>
+		<reward_npc_name>kistig</reward_npc_name>
+	</id>
+	<id id="2487">
+		<dev_name>[LF2] 프레터 추적86-87-88</dev_name>
+		<acquired_npc_name>Mirka</acquired_npc_name>
+		<object1>LF2_Book_Q2487</object1>
+		<reward_npc_name>Kvasir</reward_npc_name>
+		<con_quest>2488</con_quest>
+	</id>
+	<id id="2495">
+		<dev_name>스프리그의 발광체 자루</dev_name>
+		<acquired_npc_name>Shugo_DF2_16</acquired_npc_name>
+		<object1>DF2_LightBulb_Q2495A</object1>
+		<object2>DF2_LightBulb_Q2495B</object2>
+		<object3>DF2_LightBulb_Q2495C</object3>
+		<reward_npc_name>Shugo_DF2_5</reward_npc_name>
+	</id>
+	<id id="2496">
+		<dev_name>그윽한 꽃향기</dev_name>
+		<acquired_npc_name>DF2_NPC_Sprigg</acquired_npc_name>
+		<object1>DF2_Lotus_Q2496</object1>
+		<reward_npc_name>DF2_NPC_Sprigg</reward_npc_name>
+	</id>
+	<id id="2497">
+		<dev_name>물에 빠뜨린 낚시도구</dev_name>
+		<acquired_npc_name>Lif</acquired_npc_name>
+		<object1>DF2_ToolBox_Q2497</object1>
+		<reward_npc_name>Lif</reward_npc_name>
+	</id>
+	<id id="2499">
+		<dev_name>[반복] 작은 탑의 결정</dev_name>
+		<acquired_npc_name>Bolverk</acquired_npc_name>
+		<object1>DF2_SmallCrystal_Q2499</object1>
+		<reward_npc_name>Bolverk</reward_npc_name>
+	</id>
+	<id id="2503">
+		<dev_name>위험한 파편 제거</dev_name>
+		<acquired_npc_name>Bestla</acquired_npc_name>
+		<object1>DF3_BrokenRocks_Q2503</object1>
+		<reward_npc_name>Bestla</reward_npc_name>
+	</id>
+	<id id="2527">
+		<dev_name>스프리그의 부탁</dev_name>
+		<acquired_npc_name>NPC_Gark</acquired_npc_name>
+		<object1>DF3_FoodPouch_Q2527</object1>
+		<reward_npc_name>NPC_Gark</reward_npc_name>
+	</id>
+	<id id="2542">
+		<dev_name>짜요룬의 한탕거리</dev_name>
+		<acquired_npc_name>Shugo_DF3_10</acquired_npc_name>
+		<object1>DF3_Rakeum_Q2542</object1>
+		<reward_npc_name>Shugo_DF3_10</reward_npc_name>
+	</id>
+	<id id="2554">
+		<dev_name>거래를 위한 조건</dev_name>
+		<acquired_npc_name>Shugo_DF3_12</acquired_npc_name>
+		<object1>DF3_RakeumBox_Q2554</object1>
+		<reward_npc_name>Shugo_DF3_12</reward_npc_name>
+		<con_quest>2555</con_quest>
+	</id>
+	<id id="2585">
+		<dev_name>[파티]산호초 수집</dev_name>
+		<acquired_npc_name>Baugi</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>DF3_Coral_Q2585</object1>
+		<reward_npc_name>Baugi</reward_npc_name>
+	</id>
+	<id id="2602">
+		<dev_name>세이렌의 진주</dev_name>
+		<acquired_npc_name>DF3_NPC_Esnu</acquired_npc_name>
+		<object1>DF3_Pearl_Q2602</object1>
+		<reward_npc_name>DF3_NPC_Esnu</reward_npc_name>
+	</id>
+	<id id="2617">
+		<dev_name>맘모스의 뼈</dev_name>
+		<acquired_npc_name>Onelr</acquired_npc_name>
+		<object1>DF3_MammothBone_Q2617</object1>
+		<reward_npc_name>Onelr</reward_npc_name>
+	</id>
+	<id id="2627">
+		<dev_name>정령의 눈물</dev_name>
+		<acquired_npc_name>DF3_NPC_Laksyatil</acquired_npc_name>
+		<object1>DF3_ElementalTear_Q2627</object1>
+		<reward_npc_name>DF3_NPC_Laksyatil</reward_npc_name>
+	</id>
+	<id id="2645">
+		<dev_name>라이칸의 상징 되찾기</dev_name>
+		<acquired_npc_name>DF3_NPC_Hasyaditan</acquired_npc_name>
+		<object1>DF3_LycanFlag_Q2645</object1>
+		<reward_npc_name>DF3_NPC_Hasyaditan</reward_npc_name>
+	</id>
+	<id id="2672">
+		<dev_name>무엇에 쓰이는 물건인고</dev_name>
+		<acquired_npc_name>Gwendolin</acquired_npc_name>
+		<object1>DF3_DragonEgg_Q2672</object1>
+		<reward_npc_name>Gwendolin</reward_npc_name>
+	</id>
+	<id id="2691">
+		<dev_name>[잠입] 첩보원의 조언</dev_name>
+		<acquired_npc_name>Dewi</acquired_npc_name>
+		<object1>LF3_Slate_Q2691A</object1>
+		<object2>LF3_Slate_Q2691B</object2>
+		<object3>LF3_Slate_Q2691C</object3>
+		<reward_npc_name>Gunter</reward_npc_name>
+	</id>
+	<id id="2698">
+		<dev_name>[파티] 진통제 입수</dev_name>
+		<acquired_npc_name>Stein</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>IDDF3_LP_LehparCabinet_Q2698</object1>
+		<reward_npc_name>Stein</reward_npc_name>
+		<con_quest>2699</con_quest>
+	</id>
+	<id id="2772">
+		<dev_name>1776 형식은 동일 내용만 다르게</dev_name>
+		<acquired_npc_name>Shugo_AB1_10</acquired_npc_name>
+		<object1>Ab1_jewelbox_Q1776</object1>
+		<reward_npc_name>Shugo_AB1_10</reward_npc_name>
+		<con_quest>2773</con_quest>
+	</id>
+	<id id="2783">
+		<dev_name>거신병의 기관(거신병의 묘지)</dev_name>
+		<acquired_npc_name>Rathgrid</acquired_npc_name>
+		<object1>Ab1_GiganticCore_Q2783A</object1>
+		<object2>Ab1_GiganticCore_Q2783B</object2>
+		<object3>Ab1_GiganticCore_Q2783C</object3>
+		<reward_npc_name>Fjuedil</reward_npc_name>
+	</id>
+	<id id="2793">
+		<dev_name>모듈 뗘오기- 어비스 모듈 공략</dev_name>
+		<acquired_npc_name>Lifprasir</acquired_npc_name>
+		<object1>Ab1_Module_Q1793</object1>
+		<reward_npc_name>Lifprasir</reward_npc_name>
+	</id>
+	<id id="2796">
+		<dev_name>[반복] 드라코닉 공방 핵 흡수</dev_name>
+		<acquired_npc_name>Shugo_AB1_17</acquired_npc_name>
+		<object1>Ab1_TowerCore_Q2796</object1>
+		<reward_npc_name>Shugo_AB1_17</reward_npc_name>
+	</id>
+	<id id="2797">
+		<dev_name>고대 용의 7번째 뼈</dev_name>
+		<acquired_npc_name>Shugo_AB1_17</acquired_npc_name>
+		<object1>Ab1_OldDragonBone_Q2797</object1>
+		<reward_npc_name>Shugo_AB1_17</reward_npc_name>
+	</id>
+	<id id="3004">
+		<dev_name>붉은 황무지의 황금 물잔</dev_name>
+		<acquired_npc_name>Shugo_LF2a_5</acquired_npc_name>
+		<object1>LF2A_FOBJ_Q3004</object1>
+		<reward_npc_name>Shugo_LF2a_5</reward_npc_name>
+	</id>
+	<id id="3040">
+		<dev_name>바다 화석 모아오기</dev_name>
+		<acquired_npc_name>Shugo_LF2a_17</acquired_npc_name>
+		<object1>LF2a_Fossil_Q3040</object1>
+		<reward_npc_name>Shugo_LF2a_17</reward_npc_name>
+	</id>
+	<id id="3054">
+		<dev_name>만두에 들어갈 속 재료</dev_name>
+		<acquired_npc_name>LF2A_NPC_Jabala</acquired_npc_name>
+		<object1>LF2a_Mushroom_Q3054</object1>
+		<reward_npc_name>LF2A_NPC_Jabala</reward_npc_name>
+	</id>
+	<id id="3096">
+		<dev_name>연구실 기능 복구</dev_name>
+		<acquired_npc_name>Pyrrha</acquired_npc_name>
+		<object1>LF2a_CoreGear_Q3096a</object1>
+		<object2>LF2a_CoreGear_Q3096b</object2>
+		<object3>LF2a_CoreGear_Q3096c</object3>
+		<object4>LF2a_CoreGear_Q3096d</object4>
+		<reward_npc_name>Pyrrha</reward_npc_name>
+	</id>
+	<id id="3099">
+		<dev_name>염장 부부1</dev_name>
+		<acquired_npc_name>Shugo_LF2a_11</acquired_npc_name>
+		<object1>LF2a_Shell_Q3099</object1>
+		<reward_npc_name>Utisda</reward_npc_name>
+		<con_quest>3100</con_quest>
+	</id>
+	<id id="3202">
+		<dev_name>특산물 구하기2</dev_name>
+		<acquired_npc_name>Senir</acquired_npc_name>
+		<object1>IDshulackship_Barrel_Q3202</object1>
+		<reward_npc_name>Senir</reward_npc_name>
+	</id>
+	<id id="3207">
+		<dev_name>항해일지 획득</dev_name>
+		<acquired_npc_name>LF3_Nakaching_E</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>IDshulackship_Book_Q3207</object1>
+		<reward_npc_name>LF3_Nakaching_E</reward_npc_name>
+	</id>
+	<id id="3704">
+		<dev_name>용족훈련소 FOBJ 수집퀘</dev_name>
+		<acquired_npc_name>Euros</acquired_npc_name>
+		<object1>IDAB1_MiniCastle_DragonArms_Q3704</object1>
+		<reward_npc_name>Euros</reward_npc_name>
+	</id>
+	<id id="3723">
+		<dev_name>[파티] 용족의 보급품 입수</dev_name>
+		<acquired_npc_name>Yannis</acquired_npc_name>
+		<object1>IDDreadgion_02_Drakanbox_Q3723</object1>
+		<reward_npc_name>Yannis</reward_npc_name>
+	</id>
+	<id id="4006">
+		<dev_name>[반복] 옥수수 농작물 수집</dev_name>
+		<acquired_npc_name>Jarnsaxa</acquired_npc_name>
+		<object1>DF2A_FOBJ_Q4006</object1>
+		<reward_npc_name>Jarnsaxa</reward_npc_name>
+	</id>
+	<id id="4035">
+		<dev_name>오염 덩어리 청소</dev_name>
+		<acquired_npc_name>Bielia</acquired_npc_name>
+		<object1>DF2A_Pollutant_Q4035</object1>
+		<reward_npc_name>Bielia</reward_npc_name>
+	</id>
+	<id id="4044">
+		<dev_name>보석상자를 찾아줘</dev_name>
+		<acquired_npc_name>Bumbum_Chap</acquired_npc_name>
+		<object1>DF2a_Jewelbox_Q4044</object1>
+		<reward_npc_name>Bumbum_Chap</reward_npc_name>
+	</id>
+	<id id="4045">
+		<dev_name>삼은 자연산이 최고</dev_name>
+		<acquired_npc_name>DF2a_NPC_Bumbum_Don</acquired_npc_name>
+		<object1>DF2a_Samherb_Q4045</object1>
+		<reward_npc_name>DF2a_NPC_Bumbum_Don</reward_npc_name>
+	</id>
+	<id id="4046">
+		<dev_name>결혼 예단 준비</dev_name>
+		<acquired_npc_name>Bumbum_Mep</acquired_npc_name>
+		<object1>DF2a_Knittingball_Q4046</object1>
+		<reward_npc_name>Bumbum_Mep</reward_npc_name>
+	</id>
+	<id id="4082">
+		<dev_name>오래 묵힌 약초</dev_name>
+		<acquired_npc_name>Seznec</acquired_npc_name>
+		<give_item>ITEM_DOC_QUEST_4082D 1</give_item>
+		<object1>DF2a_Jar_Q4082A</object1>
+		<object2>DF2a_Jar_Q4082B</object2>
+		<object3>DF2a_Jar_Q4082C</object3>
+		<reward_npc_name>Seznec</reward_npc_name>
+	</id>
+	<id id="4094">
+		<dev_name>성체 탈탈 털기</dev_name>
+		<acquired_npc_name>Lukmann</acquired_npc_name>
+		<object1>IDDF2a_Adma_FOBJ_Q4094A</object1>
+		<object2>IDDF2a_Adma_FOBJ_Q4094B</object2>
+		<object3>IDDF2a_Adma_FOBJ_Q4094C</object3>
+		<object4>IDDF2a_Adma_FOBJ_Q4094D</object4>
+		<reward_npc_name>Lukmann</reward_npc_name>
+	</id>
+	<id id="4099">
+		<dev_name>미스릴 광산의 광물</dev_name>
+		<acquired_npc_name>Sjazi</acquired_npc_name>
+		<object1>DF2a_Mineral_Q4099</object1>
+		<reward_npc_name>Sjazi</reward_npc_name>
+	</id>
+	<id id="4202">
+		<dev_name>특산물 구하기2</dev_name>
+		<acquired_npc_name>DF3_NPC_BabaKun</acquired_npc_name>
+		<object1>IDshulackship_Barrel_Q3202</object1>
+		<reward_npc_name>DF3_NPC_BabaKun</reward_npc_name>
+	</id>
+	<id id="4207">
+		<dev_name>항해일지 획득</dev_name>
+		<acquired_npc_name>DF3_Hasiroong_E</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>IDshulackship_Book_Q3207</object1>
+		<reward_npc_name>DF3_Hasiroong_E</reward_npc_name>
+	</id>
+	<id id="4319">
+		<dev_name>옥타 알 훔치기(반복)</dev_name>
+		<acquired_npc_name>Jorund</acquired_npc_name>
+		<object1>DF2_Octasideegg_Q2329</object1>
+		<reward_npc_name>Jorund</reward_npc_name>
+	</id>
+	<id id="4504">
+		<dev_name>[파티]산호초 수집(반복)</dev_name>
+		<acquired_npc_name>Baugi</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>DF3_Coral_Q2585</object1>
+		<reward_npc_name>Baugi</reward_npc_name>
+	</id>
+	<id id="4505">
+		<dev_name>세이렌의 진주(반복)</dev_name>
+		<acquired_npc_name>DF3_NPC_Esnu</acquired_npc_name>
+		<object1>DF3_Pearl_Q2602</object1>
+		<reward_npc_name>DF3_NPC_Esnu</reward_npc_name>
+	</id>
+	<id id="4704">
+		<dev_name>용족훈련소 FOBJ 수집퀘</dev_name>
+		<acquired_npc_name>Leban</acquired_npc_name>
+		<object1>IDAB1_MiniCastle_DragonArms_Q3704</object1>
+		<reward_npc_name>Leban</reward_npc_name>
+	</id>
+	<id id="4723">
+		<dev_name>[파티] 용족의 보급품 입수</dev_name>
+		<acquired_npc_name>Yorgen</acquired_npc_name>
+		<object1>IDDreadgion_02_Drakanbox_Q3723</object1>
+		<reward_npc_name>Yorgen</reward_npc_name>
+	</id>
+	<id id="11004">
+		<dev_name>환영 연금술을 위한 재료2</dev_name>
+		<acquired_npc_name>Phailos</acquired_npc_name>
+		<object1>LF4_FOBJ_Q11004A</object1>
+		<reward_npc_name>Phailos</reward_npc_name>
+	</id>
+	<id id="11011">
+		<dev_name>백의의 천사 나이팅2(붕대 제조)</dev_name>
+		<acquired_npc_name>Naiting</acquired_npc_name>
+		<object1>LF4_FOBJ_Q11011A</object1>
+		<reward_npc_name>Naiting</reward_npc_name>
+		<con_quest>11012</con_quest>
+	</id>
+	<id id="11043">
+		<dev_name>카스파 주변 살피기</dev_name>
+		<acquired_npc_name>Adias</acquired_npc_name>
+		<object1>LF4_FOBJ_Q11043A</object1>
+		<object2>LF4_FOBJ_Q11043B</object2>
+		<object3>LF4_FOBJ_Q11043C</object3>
+		<object4>LF4_FOBJ_Q11043D</object4>
+		<reward_npc_name>Adias</reward_npc_name>
+	</id>
+	<id id="11112">
+		<dev_name>보석자루 FOBJ 습득</dev_name>
+		<acquired_npc_name>Shugo_LF4_5</acquired_npc_name>
+		<object1>LF4_FOBJ_Q11112A</object1>
+		<reward_npc_name>Shugo_LF4_5</reward_npc_name>
+	</id>
+	<id id="11146">
+		<dev_name>뉴트 유충이 갖고 싶어</dev_name>
+		<acquired_npc_name>Rollia</acquired_npc_name>
+		<object1>LF4_FOBJ_Q11146A</object1>
+		<reward_npc_name>Rollia</reward_npc_name>
+	</id>
+	<id id="11204">
+		<dev_name>분화구 떠오기</dev_name>
+		<acquired_npc_name>Totus</acquired_npc_name>
+		<give_item>ITEM_QUEST_11204E 1</give_item>
+		<object1>LF4_FOBJ_Q11204A</object1>
+		<object2>LF4_FOBJ_Q11204B</object2>
+		<object3>LF4_FOBJ_Q11204C</object3>
+		<object4>LF4_FOBJ_Q11204D</object4>
+		<reward_npc_name>Totus</reward_npc_name>
+	</id>
+	<id id="11211">
+		<dev_name>드레이크가 가져간 물건</dev_name>
+		<acquired_npc_name>Wivius</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LF4_FOBJ_Q11211A</object1>
+		<object2>LF4_FOBJ_Q11211B</object2>
+		<object3>LF4_FOBJ_Q11211C</object3>
+		<object4>LF4_FOBJ_Q11211D</object4>
+		<reward_npc_name>Wivius</reward_npc_name>
+	</id>
+	<id id="11450">
+		<dev_name>카스파의 잎 얻기 1</dev_name>
+		<acquired_npc_name>Crosia</acquired_npc_name>
+		<object1>IDElim_Seed_Q11450</object1>
+		<reward_npc_name>Crosia</reward_npc_name>
+		<con_quest>11451</con_quest>
+	</id>
+	<id id="11457">
+		<dev_name>카스파의 생장흔 연구</dev_name>
+		<acquired_npc_name>Adias</acquired_npc_name>
+		<object1>IDElim_Mark_Q11457</object1>
+		<reward_npc_name>Adias</reward_npc_name>
+	</id>
+	<id id="11461">
+		<dev_name>연구 일지</dev_name>
+		<acquired_npc_name>Shulack_Elim_1</acquired_npc_name>
+		<object1>IDElim_Book_Q11461</object1>
+		<reward_npc_name>Marica</reward_npc_name>
+	</id>
+	<id id="11464">
+		<dev_name>카스파의 상처</dev_name>
+		<acquired_npc_name>caspa_spirit</acquired_npc_name>
+		<object1>IDElim_Seed_Q11450</object1>
+		<reward_npc_name>CaspaGhost_01</reward_npc_name>
+	</id>
+	<id id="18307">
+		<dev_name>보물상자 수집</dev_name>
+		<acquired_npc_name>LF5_Nimrod_E</acquired_npc_name>
+		<object1>IDStation_FOBJ_BOX</object1>
+		<reward_npc_name>LF5_Nimrod_E</reward_npc_name>
+	</id>
+	<id id="18501">
+		<dev_name>상인 슈고의 요청_천</dev_name>
+		<acquired_npc_name>Shugo_IDNovice_1</acquired_npc_name>
+		<object1>IDNovice_FOBJ_ODBox</object1>
+		<object2>IDNovice_Rough_Odum</object2>
+		<reward_npc_name>Shugo_IDNovice_2</reward_npc_name>
+		<con_quest>18506</con_quest>
+		<cutsceneid1>456</cutsceneid1>
+		<cs1_haction>1012</cs1_haction>
+	</id>
+	<id id="18503">
+		<dev_name>오드초를 구해라_천</dev_name>
+		<acquired_npc_name>Shugo_IDNovice_2</acquired_npc_name>
+		<object1>IDNovice_FOBJ_ODGrass</object1>
+		<reward_npc_name>Zephyros</reward_npc_name>
+	</id>
+	<id id="21000">
+		<dev_name>상인의 혼</dev_name>
+		<acquired_npc_name>Sepsi</acquired_npc_name>
+		<object1>DF4_DrakanCoprse_Q21000</object1>
+		<reward_npc_name>Sepsi</reward_npc_name>
+	</id>
+	<id id="21015">
+		<dev_name>바리케이트 보수</dev_name>
+		<acquired_npc_name>Danomdel</acquired_npc_name>
+		<object1>DF4_DrakanDebris_Q21015</object1>
+		<reward_npc_name>Danomdel</reward_npc_name>
+	</id>
+	<id id="21025">
+		<dev_name>아울라우 생태 조사</dev_name>
+		<acquired_npc_name>feles</acquired_npc_name>
+		<object1>DF4_OwllauPack_Q21025</object1>
+		<reward_npc_name>feles</reward_npc_name>
+	</id>
+	<id id="21031">
+		<dev_name>광부 스팟 1</dev_name>
+		<acquired_npc_name>Carabel</acquired_npc_name>
+		<object1>DF4_Amethyst_Q21031</object1>
+		<reward_npc_name>Carabel</reward_npc_name>
+		<con_quest>21032</con_quest>
+	</id>
+	<id id="21069">
+		<dev_name>셜록 홈즈 2</dev_name>
+		<acquired_npc_name>Sherockian</acquired_npc_name>
+		<object1>DF4_grass_Q21069</object1>
+		<object2>DF4_rock_Q21069</object2>
+		<reward_npc_name>Sherockian</reward_npc_name>
+		<con_quest>21070</con_quest>
+	</id>
+	<id id="21072">
+		<dev_name>겔크마로스여 내 노래를 들어라. 2</dev_name>
+		<acquired_npc_name>Skilving</acquired_npc_name>
+		<object1>DF4_trace_Q21072</object1>
+		<reward_npc_name>Skilving</reward_npc_name>
+	</id>
+	<id id="21104">
+		<dev_name>무글 브라우니 거주지 조사</dev_name>
+		<acquired_npc_name>Skira</acquired_npc_name>
+		<object1>DF4_Remain_Q21104</object1>
+		<reward_npc_name>Skira</reward_npc_name>
+	</id>
+	<id id="21112">
+		<dev_name>잊혀진 도시</dev_name>
+		<acquired_npc_name>Martinez</acquired_npc_name>
+		<object1>DF4_Remain_Q21112</object1>
+		<reward_npc_name>Martinez</reward_npc_name>
+	</id>
+	<id id="21200">
+		<dev_name>하다만 낚시</dev_name>
+		<acquired_npc_name>Lucal</acquired_npc_name>
+		<object1>DF4_FishingRod_Q21200</object1>
+		<object2>DF4_basket_Q21200</object2>
+		<reward_npc_name>Lucal</reward_npc_name>
+		<con_quest>21201</con_quest>
+	</id>
+	<id id="21205">
+		<dev_name>용족 물품 수집</dev_name>
+		<acquired_npc_name>Ankea</acquired_npc_name>
+		<object1>DF4_Box_Q21205</object1>
+		<reward_npc_name>Ankea</reward_npc_name>
+	</id>
+	<id id="21212">
+		<dev_name>무너진 방벽</dev_name>
+		<acquired_npc_name>Tanar</acquired_npc_name>
+		<object1>DF4_Trash_Q21212</object1>
+		<reward_npc_name>Tanar</reward_npc_name>
+	</id>
+	<id id="21214">
+		<dev_name>버려진 용족 흡수 장치</dev_name>
+		<acquired_npc_name>Tanar</acquired_npc_name>
+		<object1>DF4_RuinedDranaSuction_Q21214</object1>
+		<reward_npc_name>Tanar</reward_npc_name>
+	</id>
+	<id id="21220">
+		<dev_name>거신병 잔해 조사</dev_name>
+		<acquired_npc_name>Helen</acquired_npc_name>
+		<object1>DF4_RuinedGiant_Q21220</object1>
+		<reward_npc_name>Helen</reward_npc_name>
+	</id>
+	<id id="21248">
+		<dev_name>아이언 맨 2</dev_name>
+		<acquired_npc_name>Tonistar</acquired_npc_name>
+		<object1>DF4_weapon_Q21248</object1>
+		<reward_npc_name>Tonistar</reward_npc_name>
+		<con_quest>21249</con_quest>
+	</id>
+	<id id="21450">
+		<dev_name>카스파의 잎 얻기 1(마족)</dev_name>
+		<acquired_npc_name>Vesvola</acquired_npc_name>
+		<object1>IDElim_Seed_Q11450</object1>
+		<reward_npc_name>Vesvola</reward_npc_name>
+		<con_quest>21451</con_quest>
+	</id>
+	<id id="21457">
+		<dev_name>카스파의 생장흔 연구(마족)</dev_name>
+		<acquired_npc_name>Irkale</acquired_npc_name>
+		<object1>IDElim_Mark_Q11457</object1>
+		<reward_npc_name>Irkale</reward_npc_name>
+	</id>
+	<id id="21461">
+		<dev_name>연구 일지(마족)</dev_name>
+		<acquired_npc_name>Shulack_Elim_1</acquired_npc_name>
+		<object1>IDElim_Book_Q11461</object1>
+		<reward_npc_name>Carabel</reward_npc_name>
+	</id>
+	<id id="21464">
+		<dev_name>카스파의 상처(마족)</dev_name>
+		<acquired_npc_name>caspa_spirit</acquired_npc_name>
+		<object1>IDElim_Seed_Q11450</object1>
+		<reward_npc_name>CaspaGhost_01</reward_npc_name>
+	</id>
+	<id id="28307">
+		<dev_name>보물상자 수집</dev_name>
+		<acquired_npc_name>DF5_Nineveh_E</acquired_npc_name>
+		<object1>IDStation_FOBJ_BOX</object1>
+		<reward_npc_name>DF5_Nineveh_E</reward_npc_name>
+	</id>
+	<id id="28501">
+		<dev_name>상인 슈고의 요청_마</dev_name>
+		<acquired_npc_name>Shugo_IDNovice_1</acquired_npc_name>
+		<object1>IDNovice_FOBJ_ODBox</object1>
+		<object2>IDNovice_Rough_Odum</object2>
+		<reward_npc_name>Shugo_IDNovice_2</reward_npc_name>
+		<con_quest>28506</con_quest>
+		<cutsceneid1>456</cutsceneid1>
+		<cs1_haction>1012</cs1_haction>
+	</id>
+	<id id="28503">
+		<dev_name>오드초를 구해라_마</dev_name>
+		<acquired_npc_name>Shugo_IDNovice_2</acquired_npc_name>
+		<object1>IDNovice_FOBJ_ODGrass</object1>
+		<reward_npc_name>DF1a_Schwanz_E</reward_npc_name>
+	</id>
+	<id id="30008">
+		<dev_name>6) 느빌림의 전설</dev_name>
+		<acquired_npc_name>Honeus</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>IDTemple_GiganticCore_Q30008</object1>
+		<reward_npc_name>Honeus</reward_npc_name>
+		<con_quest>30009</con_quest>
+	</id>
+	<id id="30010">
+		<dev_name>1) 광신도가 사용하는 독?</dev_name>
+		<acquired_npc_name>Steurios</acquired_npc_name>
+		<object1>IDTemple_PoisonBottle_Q30010</object1>
+		<reward_npc_name>Steurios</reward_npc_name>
+	</id>
+	<id id="30052">
+		<dev_name>천족 수집퀘</dev_name>
+		<acquired_npc_name>Enus</acquired_npc_name>
+		<object1>Underpass_NepilimRelic_Q30052</object1>
+		<reward_npc_name>Gellius</reward_npc_name>
+	</id>
+	<id id="30108">
+		<dev_name>6) 느빌림의 전설 (마족)</dev_name>
+		<acquired_npc_name>aglauros</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>IDTemple_GiganticCore_Q30008</object1>
+		<reward_npc_name>aglauros</reward_npc_name>
+		<con_quest>30109</con_quest>
+	</id>
+	<id id="30110">
+		<dev_name>1) 광신도가 사용하는 독? (마족)</dev_name>
+		<acquired_npc_name>Sulbanyer</acquired_npc_name>
+		<object1>IDTemple_PoisonBottle_Q30010</object1>
+		<reward_npc_name>Sulbanyer</reward_npc_name>
+	</id>
+	<id id="30152">
+		<dev_name>천족 수집퀘</dev_name>
+		<acquired_npc_name>Rueur</acquired_npc_name>
+		<object1>Underpass_NepilimRelic_Q30052</object1>
+		<reward_npc_name>Gelastra</reward_npc_name>
+	</id>
+	<id id="30205">
+		<dev_name>5) 정보 입수</dev_name>
+		<acquired_npc_name>Pilomenes</acquired_npc_name>
+		<object1>LF4_DragonTabletA_Q30205</object1>
+		<object2>LF4_DragonTabletB_Q30205</object2>
+		<object3>LF4_DragonTabletC_Q30205</object3>
+		<object4>LF4_DragonTabletD_Q30205</object4>
+		<reward_npc_name>Pilomenes</reward_npc_name>
+		<con_quest>30206</con_quest>
+	</id>
+	<id id="30206">
+		<dev_name>6) 용족의 고대전승 수집</dev_name>
+		<acquired_npc_name>Pilomenes</acquired_npc_name>
+		<object1>IDTemple_AncientDocu_Q30206</object1>
+		<reward_npc_name>Pilomenes</reward_npc_name>
+		<con_quest>30207</con_quest>
+	</id>
+	<id id="30305">
+		<dev_name>5) 정보 입수</dev_name>
+		<acquired_npc_name>Herka</acquired_npc_name>
+		<object1>DF4_DragonTabletA_Q30305</object1>
+		<object2>DF4_DragonTabletB_Q30305</object2>
+		<object3>DF4_DragonTabletC_Q30305</object3>
+		<object4>DF4_DragonTabletD_Q30305</object4>
+		<reward_npc_name>Herka</reward_npc_name>
+		<con_quest>30306</con_quest>
+	</id>
+	<id id="30306">
+		<dev_name>6) 용족의 고대전승 수집</dev_name>
+		<acquired_npc_name>Herka</acquired_npc_name>
+		<object1>IDTemple_AncientDocu_Q30206</object1>
+		<reward_npc_name>Herka</reward_npc_name>
+		<con_quest>30307</con_quest>
+	</id>
+	<id id="35007">
+		<dev_name>신성 수호회 FOBJ 01</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>FOBJ_Q35007</object1>
+		<reward_npc_name>Palas</reward_npc_name>
+	</id>
+	<id id="35008">
+		<dev_name>신성 수호회 FOBJ 02</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>FOBJ_Q35008</object1>
+		<reward_npc_name>Palas</reward_npc_name>
+	</id>
+	<id id="35014">
+		<dev_name>신성 수호회 FOBJ 01</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>FOBJ_Q35014</object1>
+		<reward_npc_name>Priamos</reward_npc_name>
+	</id>
+	<id id="35015">
+		<dev_name>신성 수호회 FOBJ 02</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>FOBJ_Q35015</object1>
+		<reward_npc_name>Priamos</reward_npc_name>
+	</id>
+	<id id="35021">
+		<dev_name>신성 수호회 FOBJ 01</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>FOBJ_Q35021</object1>
+		<reward_npc_name>LF4_GuardianOfDivine</reward_npc_name>
+	</id>
+	<id id="35022">
+		<dev_name>신성 수호회 FOBJ 02</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>FOBJ_Q35022</object1>
+		<reward_npc_name>LF4_GuardianOfDivine</reward_npc_name>
+	</id>
+	<id id="36015">
+		<dev_name>보물찾기 1</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>FOBJ_Q36015a</object1>
+		<reward_npc_name>LF4_BountyHunter_Li</reward_npc_name>
+	</id>
+	<id id="36016">
+		<dev_name>보물찾기 2</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>FOBJ_Q36016a</object1>
+		<reward_npc_name>LF4_BountyHunter_Li</reward_npc_name>
+	</id>
+	<id id="36017">
+		<dev_name>보물찾기 3</dev_name>
+		<acquired_npc_name>LF4_BountyHunter_Li</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>FOBJ_Q36017a</object1>
+		<reward_npc_name>LF4_BountyHunter_Li</reward_npc_name>
+	</id>
+	<id id="45007">
+		<dev_name>결계탑 수호회 FOBJ 01</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>FOBJ_Q45007</object1>
+		<reward_npc_name>Columba</reward_npc_name>
+	</id>
+	<id id="45008">
+		<dev_name>결계탑 수호회 FOBJ 02</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>FOBJ_Q45008</object1>
+		<reward_npc_name>Columba</reward_npc_name>
+	</id>
+	<id id="45014">
+		<dev_name>결계탑 수호회 FOBJ 01</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>FOBJ_Q45014</object1>
+		<reward_npc_name>Alaum</reward_npc_name>
+	</id>
+	<id id="45015">
+		<dev_name>결계탑 수호회 FOBJ 02</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>FOBJ_Q45015</object1>
+		<reward_npc_name>Alaum</reward_npc_name>
+	</id>
+	<id id="45021">
+		<dev_name>결계탑 수호회 FOBJ 01(마족)</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>FOBJ_Q45021</object1>
+		<reward_npc_name>DF4_GuardianOfTower</reward_npc_name>
+	</id>
+	<id id="45022">
+		<dev_name>결계탑 수호회 FOBJ 02(마족)</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>FOBJ_Q45022</object1>
+		<reward_npc_name>DF4_GuardianOfTower</reward_npc_name>
+	</id>
+	<id id="46015">
+		<dev_name>보물찾기 1(마족)</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>FOBJ_Q46015a</object1>
+		<reward_npc_name>DF4_BountyHunter_Da</reward_npc_name>
+	</id>
+	<id id="46016">
+		<dev_name>보물찾기 2(마족)</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>FOBJ_Q46016a</object1>
+		<reward_npc_name>DF4_BountyHunter_Da</reward_npc_name>
+	</id>
+	<id id="46017">
+		<dev_name>보물찾기 3(마족)</dev_name>
+		<acquired_npc_name>DF4_BountyHunter_Da</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>FOBJ_Q46017a</object1>
+		<reward_npc_name>DF4_BountyHunter_Da</reward_npc_name>
+	</id>
+	<id id="37114">
+		<dev_name>[일일] 카이단 크랄의 조공</dev_name>
+		<acquired_npc_name>Velatris</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LF2_FOBJ_Q37114b</object1>
+		<reward_npc_name>Velatris</reward_npc_name>
+	</id>
+	<id id="47112">
+		<dev_name>얼음발톱 부락</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>DF2_FOBJ_Q47105b</object1>
+		<reward_npc_name>Mephisto</reward_npc_name>
+	</id>
+	<id id="18404">
+		<dev_name>수르카나 수집</dev_name>
+		<acquired_npc_name>derna</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>IDF4Re_Drana_FOBJ_Q18404</object1>
+		<reward_npc_name>derna</reward_npc_name>
+	</id>
+	<id id="28404">
+		<dev_name>수르카나 수집</dev_name>
+		<acquired_npc_name>loqui</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>IDF4Re_Drana_FOBJ_Q18404</object1>
+		<reward_npc_name>loqui</reward_npc_name>
+	</id>
+	<id id="9620">
+		<dev_name>[테스트] 심플콜렉트</dev_name>
+		<acquired_npc_name>Rebecca</acquired_npc_name>
+		<talk_npc1>Lostes</talk_npc1>
+		<talk_npc2>Gogohas</talk_npc2>
+		<talk_npc3>Gapir</talk_npc3>
+		<party_drop>1</party_drop>
+		<object1>FOBJ_Q36016b</object1>
+		<reward_npc_name>Roseino</reward_npc_name>
+	</id>
+	<id id="11518">
+		<dev_name>아울라우 깃털</dev_name>
+		<acquired_npc_name>Shuos</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF4a_FOBJ_Q11518</object1>
+		<reward_npc_name>Shuos</reward_npc_name>
+	</id>
+	<id id="21517">
+		<dev_name>칼리돈 발자국</dev_name>
+		<acquired_npc_name>Samuz</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF4a_FOBJ_Q21517</object1>
+		<reward_npc_name>Samuz</reward_npc_name>
+	</id>
+	<id id="21518">
+		<dev_name>칼리돈 그림문자</dev_name>
+		<acquired_npc_name>Estotia</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF4a_FOBJ_Q21518</object1>
+		<reward_npc_name>Estotia</reward_npc_name>
+	</id>
+	<id id="41164">
+		<dev_name>드라나 재배 1</dev_name>
+		<acquired_npc_name>Morphiuss</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF4a_Soil_Q41164</object1>
+		<reward_npc_name>Morphiuss</reward_npc_name>
+		<con_quest>41165</con_quest>
+	</id>
+	<id id="41165">
+		<dev_name>드라나 재배 2</dev_name>
+		<acquired_npc_name>Morphiuss</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF4a_Corpse_Q41165</object1>
+		<reward_npc_name>Morphiuss</reward_npc_name>
+	</id>
+	<id id="41203">
+		<dev_name>연족의 연구 단서</dev_name>
+		<acquired_npc_name>Feityios</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF4a_FOBJ_Q41203</object1>
+		<reward_npc_name>Feityios</reward_npc_name>
+		<con_quest>41204</con_quest>
+	</id>
+	<id id="41211">
+		<dev_name>아버지의 유물</dev_name>
+		<acquired_npc_name>Ganofus</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF4a_Legacy_Q41211</object1>
+		<reward_npc_name>Linacroft</reward_npc_name>
+		<con_quest>41212</con_quest>
+	</id>
+	<id id="41216">
+		<dev_name>거신병 제작 장치</dev_name>
+		<acquired_npc_name>Linacroft</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF4a_Device_Q41216</object1>
+		<reward_npc_name>Linacroft</reward_npc_name>
+	</id>
+	<id id="41219">
+		<dev_name>유적 파편 수집</dev_name>
+		<acquired_npc_name>Desios</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF4A_Debris_Q41219</object1>
+		<reward_npc_name>Desios</reward_npc_name>
+	</id>
+	<id id="41256">
+		<dev_name>대균열의 유물</dev_name>
+		<acquired_npc_name>Sotuon</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF4a_Relic_Q41256</object1>
+		<reward_npc_name>Sotuon</reward_npc_name>
+		<con_quest>41257</con_quest>
+	</id>
+	<id id="41257">
+		<dev_name>균열 막기</dev_name>
+		<acquired_npc_name>Sotuon</acquired_npc_name>
+		<give_item>ITEM_QUEST_41257B 1</give_item>
+		<party_drop>1</party_drop>
+		<object1>LDF4a_Crack_Q41257</object1>
+		<reward_npc_name>Sotuon</reward_npc_name>
+		<con_quest>41258</con_quest>
+	</id>
+	<id id="41262">
+		<dev_name>시엘의 창 유물 수집</dev_name>
+		<acquired_npc_name>Sotuon</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF4a_FOBJ_Q41262</object1>
+		<reward_npc_name>Sotuon</reward_npc_name>
+	</id>
+	<id id="41301">
+		<dev_name>새끼 수집</dev_name>
+		<acquired_npc_name>Vesetia</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF4a_Drakanstrider_Q41301</object1>
+		<reward_npc_name>Vesetia</reward_npc_name>
+		<con_quest>41302</con_quest>
+	</id>
+	<id id="41305">
+		<dev_name>전쟁 물자 수집</dev_name>
+		<acquired_npc_name>Emetis</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF4a_FOBJ_Q41305a</object1>
+		<reward_npc_name>Emetis</reward_npc_name>
+	</id>
+	<id id="41501">
+		<dev_name>균열의 공동 탐험</dev_name>
+		<acquired_npc_name>Grido</acquired_npc_name>
+		<object1>LDF4B_FOBJ_T1_GemStone</object1>
+		<reward_npc_name>Grido</reward_npc_name>
+		<con_quest>41502</con_quest>
+	</id>
+	<id id="41510">
+		<dev_name>공성전차를 위한 재료</dev_name>
+		<acquired_npc_name>Debron</acquired_npc_name>
+		<object1>LDF4b_FOBJ_TankParts1</object1>
+		<object2>LDF4b_FOBJ_TankParts2</object2>
+		<object3>LDF4b_FOBJ_TankParts3</object3>
+		<object4>LDF4b_FOBJ_TankParts4</object4>
+		<reward_npc_name>Debron</reward_npc_name>
+	</id>
+	<id id="41535">
+		<dev_name>고대의 유물 찾기</dev_name>
+		<acquired_npc_name>Taladin</acquired_npc_name>
+		<object1>LDF4b_FOBJ_CrystalBox</object1>
+		<reward_npc_name>Taladin</reward_npc_name>
+		<con_quest>41536</con_quest>
+	</id>
+	<id id="12009">
+		<dev_name>환상의 정원 식물 채집</dev_name>
+		<acquired_npc_name>Acacia</acquired_npc_name>
+		<object1>LDF4B_FOBJ_T2_Flower</object1>
+		<reward_npc_name>Acacia</reward_npc_name>
+	</id>
+	<id id="22008">
+		<dev_name>환상의 정원 조약돌 수집</dev_name>
+		<acquired_npc_name>Shugo_LDF4b_12</acquired_npc_name>
+		<object1>LDF4B_FOBJ_T2_Stone</object1>
+		<reward_npc_name>Shugo_LDF4b_12</reward_npc_name>
+	</id>
+	<id id="18811">
+		<dev_name>엘리안 보물 찾기</dev_name>
+		<acquired_npc_name>Miris</acquired_npc_name>
+		<object1>Housing_FOBJ_Q18811_Q28811</object1>
+		<reward_npc_name>Shugo_housing_49</reward_npc_name>
+	</id>
+	<id id="28811">
+		<dev_name>페르논 보물찾기</dev_name>
+		<acquired_npc_name>Harretion</acquired_npc_name>
+		<object1>Housing_FOBJ_Q18811_Q28811</object1>
+		<reward_npc_name>Shugo_housing_52</reward_npc_name>
+	</id>
+	<id id="41580">
+		<dev_name>오르프의 행방</dev_name>
+		<acquired_npc_name>Poin</acquired_npc_name>
+		<object1>LDF4b_FOBJ_Q41580A</object1>
+		<reward_npc_name>Poin</reward_npc_name>
+		<con_quest>41581</con_quest>
+	</id>
+	<id id="41597">
+		<dev_name>용신도 무기 탈취</dev_name>
+		<acquired_npc_name>Sephira</acquired_npc_name>
+		<object1>LDF4b_FOBJ_Q41597A</object1>
+		<reward_npc_name>Sephira</reward_npc_name>
+	</id>
+	<id id="30602">
+		<dev_name>보급품 수집</dev_name>
+		<acquired_npc_name>Linocus</acquired_npc_name>
+		<object1>IDDreadgion_03_Drakanbox</object1>
+		<reward_npc_name>Linocus</reward_npc_name>
+	</id>
+	<id id="30612">
+		<dev_name>보급품 수집 (마)</dev_name>
+		<acquired_npc_name>Aluna</acquired_npc_name>
+		<object1>IDDreadgion_03_Drakanbox</object1>
+		<reward_npc_name>Aluna</reward_npc_name>
+	</id>
+	<id id="50017">
+		<dev_name>커플 아이템 수집</dev_name>
+		<acquired_npc_name>White_Event_L_Shugo_hacurung</acquired_npc_name>
+		<object1>Event_Cargobox</object1>
+		<reward_npc_name>White_Event_L_Shugo_hacurung</reward_npc_name>
+	</id>
+	<id id="50018">
+		<dev_name>솔로 아이템 수집</dev_name>
+		<acquired_npc_name>White_Event_L_Shugo_Soloring</acquired_npc_name>
+		<object1>Event_Cargobox</object1>
+		<reward_npc_name>White_Event_L_Shugo_Soloring</reward_npc_name>
+	</id>
+	<id id="51017">
+		<dev_name>커플 아이템 수집</dev_name>
+		<acquired_npc_name>White_Event_D_Shugo_hacurun</acquired_npc_name>
+		<object1>Event_Cargobox</object1>
+		<reward_npc_name>White_Event_D_Shugo_hacurun</reward_npc_name>
+	</id>
+	<id id="51018">
+		<dev_name>솔로 아이템 수집</dev_name>
+		<acquired_npc_name>White_Event_D_Shugo_Soloring</acquired_npc_name>
+		<object1>Event_Cargobox</object1>
+		<reward_npc_name>White_Event_D_Shugo_Soloring</reward_npc_name>
+	</id>
+	<id id="3734">
+		<dev_name>노흐사나_FOBJ 수집</dev_name>
+		<acquired_npc_name>LF2_Brando_E_LHM</acquired_npc_name>
+		<object1>IDAB1_MiniCastle_DragonArms_Q3704</object1>
+		<reward_npc_name>LF2_Brando_E_LHM</reward_npc_name>
+	</id>
+	<id id="4734">
+		<dev_name>노흐사나_FOBJ 수집</dev_name>
+		<acquired_npc_name>DF2_Kelmar_E_DHM</acquired_npc_name>
+		<object1>IDAB1_MiniCastle_DragonArms_Q3704</object1>
+		<reward_npc_name>DF2_Kelmar_E_DHM</reward_npc_name>
+	</id>
+	<id id="18002">
+		<dev_name>요새보상솔로인던_룬족 연구일지</dev_name>
+		<acquired_npc_name>LDF5a_Solon_G</acquired_npc_name>
+		<object1>LDF5aREsolo_RuneBook</object1>
+		<reward_npc_name>LDF5a_Solon_G</reward_npc_name>
+	</id>
+	<id id="28002">
+		<dev_name>요새보상솔로인던_룬족 연구일지</dev_name>
+		<acquired_npc_name>LDF5a_Ulra_G</acquired_npc_name>
+		<object1>LDF5aREsolo_RuneBook</object1>
+		<reward_npc_name>LDF5a_Ulra_G</reward_npc_name>
+	</id>
+	<id id="39601">
+		<dev_name>[일일] 직원: 고대 환경</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF5a_Idgel_Q39601</object1>
+		<reward_npc_name>LDF5a_Silverlin_L</reward_npc_name>
+	</id>
+	<id id="39605">
+		<dev_name>[일일] 직원: 벌목 사업(2)</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF5a_Wood_Q39605</object1>
+		<reward_npc_name>LDF5a_Silverlin_L</reward_npc_name>
+	</id>
+	<id id="39608">
+		<dev_name>[일일] 직원: 고대 방벽 앞</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF5a_Wall_Q39608</object1>
+		<reward_npc_name>LDF5a_Silverlin_L</reward_npc_name>
+	</id>
+	<id id="39611">
+		<dev_name>[일일] 관리자: 정화의 돌</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF5b_Idium_Q39611</object1>
+		<reward_npc_name>LDF5b_Silverlin_LD</reward_npc_name>
+	</id>
+	<id id="39701">
+		<dev_name>[일일] 단체원: 고대 환경 지키기</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF5a_Idgel_Q39601</object1>
+		<reward_npc_name>LDF5a_Greenhat_L</reward_npc_name>
+	</id>
+	<id id="39708">
+		<dev_name>[일일] 단체원: 고대 방벽 앞 환경</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF5a_Garbage_Q39708</object1>
+		<reward_npc_name>LDF5a_Greenhat_L</reward_npc_name>
+	</id>
+	<id id="39709">
+		<dev_name>[일일] 상급 단체원: 고대 방벽 앞 환경</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF5a_Wall_Q39608</object1>
+		<reward_npc_name>LDF5b_Greenhat_LD</reward_npc_name>
+	</id>
+	<id id="49601">
+		<dev_name>[일일] 직원: 고대 환경</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF5a_Idgel_Q39601</object1>
+		<reward_npc_name>LDF5a_Silverlin_D</reward_npc_name>
+	</id>
+	<id id="49605">
+		<dev_name>[일일] 직원: 벌목 사업(2)</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF5a_Wood_Q39605</object1>
+		<reward_npc_name>LDF5a_Silverlin_D</reward_npc_name>
+	</id>
+	<id id="49608">
+		<dev_name>[일일] 직원: 고대 방벽 앞</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF5a_Wall_Q39608</object1>
+		<reward_npc_name>LDF5a_Silverlin_D</reward_npc_name>
+	</id>
+	<id id="49611">
+		<dev_name>[일일] 관리자: 정화의 돌</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF5b_Idium_Q39611</object1>
+		<reward_npc_name>LDF5b_Silverlin_LD</reward_npc_name>
+	</id>
+	<id id="49701">
+		<dev_name>[일일] 단체원: 고대 환경 지키기</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF5a_Idgel_Q39601</object1>
+		<reward_npc_name>LDF5a_Greenhat_D</reward_npc_name>
+	</id>
+	<id id="49708">
+		<dev_name>[일일] 단체원: 고대 방벽 앞 환경</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF5a_Garbage_Q39708</object1>
+		<reward_npc_name>LDF5a_Greenhat_D</reward_npc_name>
+	</id>
+	<id id="49709">
+		<dev_name>[일일] 상급 단체원: 고대 방벽 앞 환경</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF5a_Wall_Q39608</object1>
+		<reward_npc_name>LDF5b_Greenhat_LD</reward_npc_name>
+	</id>
+	<id id="12512">
+		<dev_name>용신도의 움직임</dev_name>
+		<acquired_npc_name>LDF5a_Roras_E</acquired_npc_name>
+		<object1>LDF5a_FOBJ_B5_FanaIdgel</object1>
+		<reward_npc_name>LDF5a_Roras_E</reward_npc_name>
+	</id>
+	<id id="12529">
+		<dev_name>코코나스 수확</dev_name>
+		<acquired_npc_name>LDF5a_Sapparing_E</acquired_npc_name>
+		<object1>LDF5a_FOBJ_G1_CoconasBasket</object1>
+		<reward_npc_name>LDF5a_Sapparing_E</reward_npc_name>
+	</id>
+	<id id="12545">
+		<dev_name>벌목기 수리</dev_name>
+		<acquired_npc_name>LDF5a_Perinrin_E</acquired_npc_name>
+		<object1>LDF5a_FOBJ_G3_IronParts</object1>
+		<reward_npc_name>LDF5a_Perinrin_E</reward_npc_name>
+	</id>
+	<id id="12554">
+		<dev_name>복원작업</dev_name>
+		<acquired_npc_name>LDF5a_Roeris_E</acquired_npc_name>
+		<object1>LDF5a_FOBJ_F_Soil</object1>
+		<reward_npc_name>LDF5a_Roeris_E</reward_npc_name>
+	</id>
+	<id id="12558">
+		<dev_name>룬족의 흔적 탁본 뜨기</dev_name>
+		<acquired_npc_name>LDF5a_Killros_E</acquired_npc_name>
+		<object1>LDF5a_FOBJ_E_RunePiece_1</object1>
+		<object2>LDF5a_FOBJ_E_RunePiece_2</object2>
+		<reward_npc_name>LDF5a_Killros_E</reward_npc_name>
+	</id>
+	<id id="22512">
+		<dev_name>용신도의 움직임</dev_name>
+		<acquired_npc_name>LDF5a_Latte_E</acquired_npc_name>
+		<object1>LDF5a_FOBJ_B5_FanaIdgel</object1>
+		<reward_npc_name>LDF5a_Latte_E</reward_npc_name>
+	</id>
+	<id id="22529">
+		<dev_name>코코나스 수확</dev_name>
+		<acquired_npc_name>LDF5a_Rubyring_E</acquired_npc_name>
+		<object1>LDF5a_FOBJ_C1_CoconasBasket</object1>
+		<reward_npc_name>LDF5a_Rubyring_E</reward_npc_name>
+	</id>
+	<id id="22545">
+		<dev_name>벌목기 수리</dev_name>
+		<acquired_npc_name>LDF5a_Rogring_E</acquired_npc_name>
+		<object1>LDF5a_FOBJ_C3_IronParts</object1>
+		<reward_npc_name>LDF5a_Rogring_E</reward_npc_name>
+	</id>
+	<id id="22558">
+		<dev_name>룬족의 흔적 탁본 뜨기</dev_name>
+		<acquired_npc_name>LDF5a_Notis_E</acquired_npc_name>
+		<object1>LDF5a_FOBJ_E_RunePiece_1</object1>
+		<object2>LDF5a_FOBJ_E_RunePiece_2</object2>
+		<reward_npc_name>LDF5a_Notis_E</reward_npc_name>
+	</id>
+	<id id="13554">
+		<dev_name>되찾아야 할 것</dev_name>
+		<acquired_npc_name>LDF5a_Akad_E</acquired_npc_name>
+		<object1>LDF5a_FOBJ_F_TiamatBox</object1>
+		<reward_npc_name>LDF5a_Akad_E</reward_npc_name>
+	</id>
+	<id id="13558">
+		<dev_name>광석 회수</dev_name>
+		<acquired_npc_name>LDF5a_Krering_E</acquired_npc_name>
+		<object1>LDF5a_FOBJ_E7_IdCart</object1>
+		<reward_npc_name>LDF5a_Krering_E</reward_npc_name>
+	</id>
+	<id id="13563">
+		<dev_name>채굴 도구 구해오기</dev_name>
+		<acquired_npc_name>LDF5a_Mairing_E</acquired_npc_name>
+		<object1>LDF5a_FOBJ_E3_MineToolBox</object1>
+		<reward_npc_name>LDF5a_Mairing_E</reward_npc_name>
+	</id>
+	<id id="12807">
+		<dev_name>[b]공격 대비 : 보급품 수집</dev_name>
+		<acquired_npc_name>LDF5_Village_Guard02_L</acquired_npc_name>
+		<object1>LDF5a_FOBJ_A4_SupplyBox</object1>
+		<reward_npc_name>LDF5_Village_Guard02_L</reward_npc_name>
+	</id>
+	<id id="22803">
+		<dev_name>[b]공격 대비 : 보급품 수집</dev_name>
+		<acquired_npc_name>LDF5_Village_Guard01_D</acquired_npc_name>
+		<object1>LDF5a_FOBJ_A2_SupplyBox</object1>
+		<reward_npc_name>LDF5_Village_Guard01_D</reward_npc_name>
+	</id>
+	<id id="13006">
+		<dev_name>[남부] 방벽 조사하기 (77)</dev_name>
+		<acquired_npc_name>LDF5b_Kaberinrin_E</acquired_npc_name>
+		<object1>LDF5b_FOBJ_A3_Wall</object1>
+		<reward_npc_name>LDF5b_Kaberinrin_E</reward_npc_name>
+	</id>
+	<id id="13013">
+		<dev_name>거신병 연구가의 부탁 (61)</dev_name>
+		<acquired_npc_name>LDF5b_Hesius_E</acquired_npc_name>
+		<object1>LDF5b_FOBJ_A4_Nepilim</object1>
+		<reward_npc_name>LDF5b_Hesius_E</reward_npc_name>
+	</id>
+	<id id="13022">
+		<dev_name>아로도스의 조사 (291)</dev_name>
+		<acquired_npc_name>LDF5b_Arodos_E</acquired_npc_name>
+		<object1>LDF5b_FOBJ_C2_Idgel</object1>
+		<reward_npc_name>LDF5b_Arodos_E</reward_npc_name>
+	</id>
+	<id id="13031">
+		<dev_name>분지 조사 (216)</dev_name>
+		<acquired_npc_name>LDF5b_Nesimo_E</acquired_npc_name>
+		<object1>LDF5b_FOBJ_D1_UnstableIdgel</object1>
+		<reward_npc_name>LDF5b_Nesimo_E</reward_npc_name>
+	</id>
+	<id id="23001">
+		<dev_name>방벽 조사하기 (77)</dev_name>
+		<acquired_npc_name>LDF5b_wallring_E</acquired_npc_name>
+		<object1>LDF5b_FOBJ_A3_Wall</object1>
+		<reward_npc_name>LDF5b_wallring_E</reward_npc_name>
+	</id>
+	<id id="23013">
+		<dev_name>거신병 연구가의 부탁 (61)</dev_name>
+		<acquired_npc_name>LDF5b_Roengram_E</acquired_npc_name>
+		<object1>LDF5b_FOBJ_A4_Nepilim</object1>
+		<reward_npc_name>LDF5b_Roengram_E</reward_npc_name>
+	</id>
+	<id id="23018">
+		<dev_name>이드겔 청소 (248)</dev_name>
+		<acquired_npc_name>LDF5b_Peniun_E</acquired_npc_name>
+		<object1>LDF5b_FOBJ_B1_Idgel</object1>
+		<reward_npc_name>LDF5b_Peniun_E</reward_npc_name>
+	</id>
+	<id id="23031">
+		<dev_name>분지 조사 (216)</dev_name>
+		<acquired_npc_name>LDF5b_Uster_E</acquired_npc_name>
+		<object1>LDF5b_FOBJ_D1_UnstableIdgel</object1>
+		<reward_npc_name>LDF5b_Uster_E</reward_npc_name>
+	</id>
+	<id id="23551">
+		<dev_name>갈 곳 없는 리저드 : 개발 (158)</dev_name>
+		<acquired_npc_name>LDF5b_Babanu_E</acquired_npc_name>
+		<object1>LDF5b_E2_ShulackBox</object1>
+		<reward_npc_name>LDF5b_Babanu_E</reward_npc_name>
+	</id>
+	<id id="23556">
+		<dev_name>게으른 철로 관리자 (93)</dev_name>
+		<acquired_npc_name>LDF5b_Roadring_E</acquired_npc_name>
+		<object1>LDF5b_OP_Railroad</object1>
+		<reward_npc_name>LDF5b_Roadring_E</reward_npc_name>
+	</id>
+	<id id="23559">
+		<dev_name>쓰레기 수거 (95)</dev_name>
+		<acquired_npc_name>LDF5b_Watering_E</acquired_npc_name>
+		<object1>LDF5b_G1_TrashHeap</object1>
+		<reward_npc_name>LDF5b_Watering_E</reward_npc_name>
+	</id>
+	<id id="18034">
+		<dev_name>보급기지 조사</dev_name>
+		<acquired_npc_name>LDF5b_Demades_E</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>IDLDF5b_TD_Map_Q18034</object1>
+		<reward_npc_name>LDF5b_Demades_E</reward_npc_name>
+	</id>
+	<id id="28034">
+		<dev_name>보급기지 조사</dev_name>
+		<acquired_npc_name>LDF5b_Latkel_E</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>IDLDF5b_TD_Map_Q18034</object1>
+		<reward_npc_name>LDF5b_Latkel_E</reward_npc_name>
+	</id>
+	<id id="13606">
+		<dev_name>[파티] 이디움 수집</dev_name>
+		<acquired_npc_name>LDF5_Under_Hadius_E</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF5_Under_FOBJ_Idium</object1>
+		<reward_npc_name>LDF5_Under_Kurius_E</reward_npc_name>
+	</id>
+	<id id="23606">
+		<dev_name>[파티] 이디움 수집</dev_name>
+		<acquired_npc_name>LDF5_Under_Brief_E</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF5_Under_FOBJ_Idium</object1>
+		<reward_npc_name>LDF5_Under_Oturu_E</reward_npc_name>
+	</id>
+	<id id="13651">
+		<dev_name>[파티] 슈고의 장식물</dev_name>
+		<acquired_npc_name>LDF5_Under_Broringring_E</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF5_Under_FOBJ_H1_Stone</object1>
+		<reward_npc_name>LDF5_Under_Broringring_E</reward_npc_name>
+	</id>
+	<id id="13653">
+		<dev_name>동굴에서 자라는 식물</dev_name>
+		<acquired_npc_name>LDF5_Under_Pudirung_E</acquired_npc_name>
+		<object1>LDF5_Under_FOBJ_A1_Plant</object1>
+		<reward_npc_name>LDF5_Under_Pudirung_E</reward_npc_name>
+	</id>
+	<id id="18914">
+		<dev_name>[사우로 군수기지][파티] 견본 가져오기</dev_name>
+		<acquired_npc_name>LDF5_Kanix_E</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>IDVritra_Base_Ancient_Warmachine</object1>
+		<reward_npc_name>LDF5_Kanix_E</reward_npc_name>
+	</id>
+	<id id="28914">
+		<dev_name>[파티] 필요한 실제 견본</dev_name>
+		<acquired_npc_name>LDF5_Giriltia_E</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>IDVritra_Base_Ancient_Warmachine</object1>
+		<reward_npc_name>LDF5_Giriltia_E</reward_npc_name>
+	</id>
+	<id id="14150">
+		<dev_name>[4.7 미션 튜닝 LF3 지역] 수페르스 유적 조사</dev_name>
+		<acquired_npc_name>Sarantus</acquired_npc_name>
+		<talk_npc1>Ibelia</talk_npc1>
+		<object1>LF3_FOBJ_Q14150</object1>
+		<reward_npc_name>Sarantus</reward_npc_name>
+	</id>
+	<id id="14120">
+		<dev_name>진정한 숲의 주인</dev_name>
+		<acquired_npc_name>Phomona</acquired_npc_name>
+		<talk_npc1>Tree_Move_Demro</talk_npc1>
+		<party_drop>1</party_drop>
+		<object1>LF2_Cherubim_Basket</object1>
+		<reward_npc_name>Tree_NoMove_Lodas</reward_npc_name>
+	</id>
+	<id id="24111">
+		<dev_name>혁명단 토벌 임무(4.7)</dev_name>
+		<acquired_npc_name>Okkolenja</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>DF1A_Lehpar_Order</object1>
+		<reward_npc_name>Nokirjar</reward_npc_name>
+	</id>
+	<id id="24122">
+		<dev_name>실종된 데바(4.7)</dev_name>
+		<acquired_npc_name>Mirka</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>DF2_Book_Q24122</object1>
+		<reward_npc_name>Mirka</reward_npc_name>
+	</id>
+	<id id="13806">
+		<dev_name>용족이 버리고 간 장치</dev_name>
+		<acquired_npc_name>LDF5_Fortress_Hyunmurung_E</acquired_npc_name>
+		<object1>LDF5_Fortress_FOBJ_A5_Vritramachine</object1>
+		<reward_npc_name>LDF5_Fortress_Hyunmurung_E</reward_npc_name>
+	</id>
+	<id id="23806">
+		<dev_name>용족이 두고 간 장치</dev_name>
+		<acquired_npc_name>LDF5_Fortress_Muderungrung_E</acquired_npc_name>
+		<object1>LDF5_Fortress_FOBJ_A4_Vritramachine</object1>
+		<reward_npc_name>LDF5_Fortress_Muderungrung_E</reward_npc_name>
+	</id>
+	<id id="9649">
+		<dev_name>AP 회수 테스트 (Q9649)</dev_name>
+		<acquired_npc_name>TEST_SimpleTalk_17</acquired_npc_name>
+		<reward_check>AP 10000</reward_check>
+		<reward_npc_name>TEST_SimpleTalk_17</reward_npc_name>
+	</id>
+	<id id="9650">
+		<dev_name>키나 회수 테스트 (Q9650)</dev_name>
+		<acquired_npc_name>TEST_SimpleTalk_16</acquired_npc_name>
+		<reward_check>GOLD 1000000</reward_check>
+		<reward_npc_name>TEST_SimpleTalk_16</reward_npc_name>
+	</id>
+	<id id="9654">
+		<dev_name>AP 회수 및 습득 NPC 아이템 지급 (Q9654)</dev_name>
+		<acquired_npc_name>TEST_SimpleTalk_17</acquired_npc_name>
+		<give_item>ITEM_QUEST_13609A 1</give_item>
+		<reward_check>AP 10000</reward_check>
+		<reward_npc_name>TEST_SimpleTalk_17</reward_npc_name>
+	</id>
+	<id id="9655">
+		<dev_name>키나 회수 및 중간 NPC 대화 (Q9655)</dev_name>
+		<acquired_npc_name>TEST_SimpleTalk_16</acquired_npc_name>
+		<talk_npc1>Kinesos</talk_npc1>
+		<reward_check>GOLD 1000000</reward_check>
+		<reward_npc_name>TEST_SimpleTalk_16</reward_npc_name>
+	</id>
+	<id id="9656">
+		<dev_name>AP 회수 및 중간 NPC 아이템 지급 혹은 회수 (Q9656)</dev_name>
+		<acquired_npc_name>TEST_SimpleTalk_17</acquired_npc_name>
+		<talk_npc1>Kinesos</talk_npc1>
+		<give_item1>ITEM_QUEST_13609A 1</give_item1>
+		<talk_npc2>Roseino</talk_npc2>
+		<remove_item2>ITEM_QUEST_13609A 1</remove_item2>
+		<reward_check>AP 10000</reward_check>
+		<reward_npc_name>TEST_SimpleTalk_17</reward_npc_name>
+	</id>
+	<id id="13706">
+		<dev_name>갈라진 카탈람 침투</dev_name>
+		<acquired_npc_name>LDF4_Advance_Village_Guard10_L</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF4_Advance_FOBJ_Q13706</object1>
+		<reward_npc_name>LDF4_Advance_Village_Guard10_L</reward_npc_name>
+	</id>
+	<id id="23706">
+		<dev_name>갈라진 카탈람 침투</dev_name>
+		<acquired_npc_name>LDF4_Advance_Village_Guard11_D</acquired_npc_name>
+		<party_drop>1</party_drop>
+		<object1>LDF4_Advance_FOBJ_Q23706</object1>
+		<reward_npc_name>LDF4_Advance_Village_Guard11_D</reward_npc_name>
+	</id>
+	<id id="35053">
+		<dev_name>56~65 신성 수호회 FOBJ수집 퀘스트</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<object1>LF5_FOBJ_Q35053</object1>
+		<reward_npc_name>LF5_Donand_E</reward_npc_name>
+	</id>
+	<id id="35054">
+		<dev_name>56~65 신성 수호회 FOBJ수집 퀘스트</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<object1>LF5_FOBJ_Q35054</object1>
+		<reward_npc_name>LF5_Donand_E</reward_npc_name>
+	</id>
+	<id id="36529">
+		<dev_name>56~60 현상금 사냥꾼 조합 FOBJ수집 퀘스트</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<object1>LF5_FOBJ_Q36529</object1>
+		<reward_npc_name>LF5_Cynthor_E</reward_npc_name>
+	</id>
+	<id id="36530">
+		<dev_name>56~60 현상금 사냥꾼 조합 FOBJ수집 퀘스트</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<object1>LF5_FOBJ_Q36530</object1>
+		<reward_npc_name>LF5_Cynthor_E</reward_npc_name>
+	</id>
+	<id id="36537">
+		<dev_name>61~65 현상금 사냥꾼 조합 FOBJ수집 퀘스트</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<object1>LF5_FOBJ_Q36537</object1>
+		<reward_npc_name>LF5_Charstan_E</reward_npc_name>
+	</id>
+	<id id="36538">
+		<dev_name>61~65 현상금 사냥꾼 조합 FOBJ수집 퀘스트</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<object1>LF5_FOBJ_Q36538</object1>
+		<reward_npc_name>LF5_Egartolris_E</reward_npc_name>
+	</id>
+	<id id="45053">
+		<dev_name>56~65 결계 수호단 FOBJ수집 퀘스트</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<object1>DF5_FOBJ_Q45053</object1>
+		<reward_npc_name>DF5_Andria_E</reward_npc_name>
+	</id>
+	<id id="45054">
+		<dev_name>56~65 결계 수호단 FOBJ수집 퀘스트</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<object1>DF5_FOBJ_Q45054</object1>
+		<reward_npc_name>DF5_Andria_E</reward_npc_name>
+	</id>
+	<id id="46529">
+		<dev_name>56~60 찰리룽 흥신소 FOBJ수집 퀘스트</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<object1>DF5_FOBJ_Q46529</object1>
+		<reward_npc_name>DF5_Fishring_E</reward_npc_name>
+	</id>
+	<id id="46530">
+		<dev_name>56~60 찰리룽 흥신소 FOBJ수집 퀘스트</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<object1>DF5_FOBJ_Q46530</object1>
+		<reward_npc_name>DF5_Fishring_E</reward_npc_name>
+	</id>
+	<id id="46537">
+		<dev_name>61~65 찰리룽 흥신소 FOBJ수집 퀘스트</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<object1>DF5_FOBJ_Q46537</object1>
+		<reward_npc_name>DF5_Toraring_E</reward_npc_name>
+	</id>
+	<id id="46538">
+		<dev_name>61~65 찰리룽 흥신소 FOBJ수집 퀘스트</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<object1>DF5_FOBJ_Q46538</object1>
+		<reward_npc_name>DF5_Kodarinrin_E</reward_npc_name>
+	</id>
+</quest_simplecollectitems>

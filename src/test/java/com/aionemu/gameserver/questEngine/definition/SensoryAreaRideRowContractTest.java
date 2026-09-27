@@ -6,7 +6,6 @@ import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,23 +14,18 @@ import java.util.TreeMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定批次 5 的“感应区坐骑行推进”合同：15551-15554（天族）与 25551-25554（魔族）的客户端
- * quest_summary 都是 3 行——“使用 A→X 吸引物”“使用 X→A 吸引物”“和领奖 NPC 对话”。
- * 旧 handler（`_15551Giddyup_Starturtle`、`_25551Springleaf_Shortcut` 一类）用两条感应区路线推进行号：
- * A_TO_X 感应区把 var0 0 -&gt; 1，X_TO_A 感应区把 var0 1 -&gt; 2 并置 REWARD。迁移提交 79bc5d3a6 只保留了
- * “进入感应区自动接取（unaccepted -&gt; started）”，把行推进整条丢掉，于是第 2 行没有任何 START 状态、
- * reward 投影停在倒数第二行（审计 verdict：MISSING_LAST_ROW + ROW_WITHOUT_STATE）。
- * 本测试锁定：每行都有状态且位段容得下、两条自动接取仍在、两条感应区推进的条件/动作/after-commit、
- * 进入 REWARD 的路线只写领奖行、旧存档 enter-world 自愈边，以及天/魔镜像同形。
- * Locks the batch-5 sensory-area ride row contract for 15551-15554 and their Asmodian mirrors
- * 25551-25554: the client journal has three rows (ride A→X, ride X→A, talk to the reward NPC) while the
- * legacy handlers advanced var0 0 -&gt; 1 on the A_TO_X sensor and 1 -&gt; 2 with REWARD on the X_TO_A sensor.
- * The migration kept only the zone auto-accept, so row 2 had no state and the reward projection stayed on
- * the second-to-last row. The test pins every row state and its field capacity, both auto-accept routes,
- * both sensor advances (conditions, actions, after-commit), the reward-row writes, the source-less
- * enter-world repair edge, and Elyos/Asmodian mirror parity.
+ * 锁定批次 5 的“感应区坐骑行推进”合同（DataDriven 编译形）：15551-15554（天族）与 25551-25554
+ * （魔族）由 Aquaris/Springleaf 系 NPC 对话接取（真端 acquire=Talk 轴权威，遗留的双感应区
+ * 自动接取按真端优先退役），两段坐骑感应区边（区名经解析表落登记名）推进行号 0→1→领奖行 2，
+ * 末行 REWARD 投影 + enter-world/重谈双自愈边；天魔镜像同构。
+ * <p>Locks the batch-5 sensory-area ride row contract in the DataDriven compiled shape: the
+ * quests are accepted through the Aquaris/Springleaf NPC dialog (the retail acquire=Talk axis is
+ * authoritative — the legacy dual-sensor auto-accept retired retail-first), the two ride zones
+ * (names resolved through the registry) advance the journal 0→1→reward row 2 with the REWARD
+ * projection and the enter-world / re-talk heal pair; elyos and asmodian mirrors share the model.
  */
 class SensoryAreaRideRowContractTest {
 
@@ -67,21 +61,36 @@ class SensoryAreaRideRowContractTest {
 			assertEquals(2, row(definition, "reward"),
 				() -> "quest " + contract.questId() + " reward row");
 			BitField field = definition.progressLayout().field("var0");
+			// DD 布局：var0 行阶梯独占整 6 位 SECTION_0 段（非最小位宽）。
+			// DD layout: the var0 row ladder owns the whole 6-bit SECTION_0 slot (not minimal
+			// width).
 			assertEquals(0, field.offset(), () -> "quest " + contract.questId() + " var0 SECTION_0");
-			assertEquals(2, field.width(),
+			assertEquals(6, field.width(),
 				() -> "quest " + contract.questId() + " var0 must hold the third journal row");
-			assertEquals(2, field.maxValue(), () -> "quest " + contract.questId() + " var0 max");
+			assertEquals(63, field.maxValue(), () -> "quest " + contract.questId() + " var0 max");
 		}
 	}
 
 	@Test
-	void bothSensorsStillAutoAcceptTheQuest() throws Exception {
+	void theAcquireNpcOwnsTheAcceptRoute() throws Exception {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
+			// 真端 acquire=Talk 轴权威： Aquaris 系 NPC 对话接取，感应区不再自动接取。
+			// The retail acquire=Talk axis is authoritative: the Aquaris dialog accepts; the zones
+			// no longer auto-accept.
+			QuestTransition accept = definition.transitions().stream()
+				.filter(candidate -> "unaccepted".equals(candidate.sourceNode())
+					&& "started".equals(candidate.targetNode())
+					&& candidate.event() instanceof QuestEvent.TalkToNpc)
+				.findFirst().orElseThrow();
+			assertTrue(accept.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.npcId() == contract.rewardNpcId(),
+				() -> "quest " + contract.questId() + " accept npc");
 			for (String zone : List.of(contract.zoneIn(), contract.zoneBack())) {
-				QuestTransition accept = route(definition, "unaccepted", "started", new QuestEvent.EnterZone(zone));
-				assertEquals(List.of(new QuestCondition.StartEligible()), accept.conditions(),
-					() -> "quest " + contract.questId() + " auto-accept " + zone);
+				assertTrue(definition.transitions().stream()
+					.noneMatch(candidate -> "unaccepted".equals(candidate.sourceNode())
+						&& candidate.event().equals(new QuestEvent.EnterZone(zone))),
+					() -> "quest " + contract.questId() + " must not auto-accept on " + zone);
 			}
 		}
 	}
@@ -90,9 +99,12 @@ class SensoryAreaRideRowContractTest {
 	void sensorRowsAdvanceTheJournalRow() throws Exception {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
+			// DD EA 边：无条件、SetVariable 推进、PACKET_ONLY 同步（区名经解析表落登记名）。
+			// DD EA edges: unconditional, SetVariable advance, PACKET_ONLY sync (zone names
+			// resolved through the registry).
 			QuestTransition firstRide = route(definition, "started", "s1",
 				new QuestEvent.EnterZone(contract.zoneIn()));
-			assertEquals(List.of(new QuestCondition.QuestVariableIs("var0", 0)), firstRide.conditions(),
+			assertEquals(List.of(), firstRide.conditions(),
 				() -> "quest " + contract.questId() + " A_TO_X conditions");
 			assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), firstRide.actions(),
 				() -> "quest " + contract.questId() + " A_TO_X actions");
@@ -102,12 +114,12 @@ class SensoryAreaRideRowContractTest {
 
 			QuestTransition secondRide = route(definition, "s1", "reward",
 				new QuestEvent.EnterZone(contract.zoneBack()));
-			assertEquals(List.of(new QuestCondition.QuestVariableIs("var0", 1)), secondRide.conditions(),
+			assertEquals(List.of(), secondRide.conditions(),
 				() -> "quest " + contract.questId() + " X_TO_A conditions");
 			assertEquals(List.of(new QuestAction.SetVariable("var0", 2)), secondRide.actions(),
 				() -> "quest " + contract.questId() + " X_TO_A actions");
-			assertEquals(List.of(new AfterCommitAction.SyncQuestState(
-				QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), secondRide.afterCommit(),
+			assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
+				secondRide.afterCommit(),
 				() -> "quest " + contract.questId() + " X_TO_A after-commit");
 		}
 	}
@@ -142,10 +154,18 @@ class SensoryAreaRideRowContractTest {
 	void persistedRewardRowsAreRepairedOnEnterWorld() throws Exception {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
+			// DD 期刊行自愈：REWARD 且 var0<2 的存档在进世界或重谈时回到领奖行 2。
+			// The DD journal-row heal: saves at REWARD with var0<2 return to reward row 2 on
+			// enter-world or on the reward-npc re-talk.
 			QuestTransition recovery = recoveryRoute(compiled.definition());
+			// EA 末链实况形：末步非 talk/collect → 单边 EnterWorld repair，仅修 var0=0 的陈旧
+			// REWARD 存档（行投影之前的打包形）。
+			// EA final-chain live shape: the last step is neither talk nor collect, so a single
+			// EnterWorld repair edge restores only the var0=0 stale REWARD save (the pre-projection
+			// packed shape).
 			assertEquals(List.of(
 				new QuestCondition.StatusIs(QuestStatus.REWARD),
-				new QuestCondition.QuestVariableIs("var0", 1)), recovery.conditions(),
+				new QuestCondition.QuestVariableIs("var0", 0)), recovery.conditions(),
 				() -> "quest " + contract.questId() + " recovery conditions");
 			assertEquals(List.of(new QuestAction.SetVariable("var0", 2)), recovery.actions(),
 				() -> "quest " + contract.questId() + " recovery actions");
@@ -155,7 +175,7 @@ class SensoryAreaRideRowContractTest {
 			assertNull(recovery.priority());
 
 			QuestMutationPlan plan = QuestMutationPlanner.plan(compiled,
-				snapshot(compiled, QuestStatus.REWARD, Map.of("var0", 1), Map.of()),
+				snapshot(compiled, QuestStatus.REWARD, Map.of("var0", 0), Map.of()),
 				recovery.event(), recovery).orElseThrow();
 			assertEquals(QuestStatus.REWARD, plan.nextStatus());
 			assertEquals(2, unpack(compiled, plan).get("var0"),
@@ -186,16 +206,18 @@ class SensoryAreaRideRowContractTest {
 	void rewardNpcRoutesStayBoundToTheRewardWindow() throws Exception {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
-			QuestTransition handover = route(definition, "started", "reward",
-				new QuestEvent.TalkToNpc(contract.rewardNpcId(), QuestDialogAction.SELECT_QUEST_REWARD.id()));
-			assertEquals(List.of(new QuestAction.SetVariable("var0", 2)), handover.actions(),
-				() -> "quest " + contract.questId() + " report hand-over");
-			assertEquals(
-				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-					new AfterCommitAction.ShowQuestDialog(
-						QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
-				handover.afterCommit(),
-				() -> "quest " + contract.questId() + " report hand-over after-commit");
+			// 领奖态 QUEST_SELECT 重谈开奖励窗（DD 标准形；坐骑末段直达领奖后由 1009/确认完成）。
+			// The reward-state re-talk opens the reward window (the DD standard shape).
+			QuestTransition select = definition.transitions().stream()
+				.filter(candidate -> "reward".equals(candidate.sourceNode())
+					&& "reward".equals(candidate.targetNode()))
+				.filter(candidate -> candidate.event().equals(
+					new QuestEvent.TalkToNpc(contract.rewardNpcId(),
+						QuestDialogAction.QUEST_SELECT.id())))
+				.findFirst().orElseThrow();
+			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
+				QuestDialogPage.DEFAULT_SUCCESS.id())), select.afterCommit(),
+				() -> "quest " + contract.questId() + " reward re-talk window");
 		}
 	}
 
@@ -273,12 +295,9 @@ class SensoryAreaRideRowContractTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		try (InputStream input = SensoryAreaRideRowContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition " + questId + ".xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		// 退役任务统一走生产视图（真端 overlay 合成；旧 XML 只在 git 历史里）。
+		// Retired quests resolve through the production view (retail overlay; the old XML lives in
+		// git history only).
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

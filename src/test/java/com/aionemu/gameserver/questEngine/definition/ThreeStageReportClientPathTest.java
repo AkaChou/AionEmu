@@ -145,14 +145,10 @@ class ThreeStageReportClientPathTest {
 		assertEquals(Map.of("var0", var0), node.projection().variables());
 	}
 
-	private static QuestDefinition definition(int questId) throws Exception {
-		try (InputStream input = ThreeStageReportClientPathTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition " + questId + ".xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input).definition();
-		}
+	private static QuestDefinition definition(int questId) {
+		// 退役任务不再有 XML：统一走生产视图（1876 等链行已真端驱动）。
+		// Retired quests have no XML: resolve through the production view.
+		return ProductionQuestDefinitions.definition(questId).definition();
 	}
 
 	private record Case(int questId, String race, int startNpc, int firstNpc, int secondNpc,

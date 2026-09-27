@@ -6,8 +6,6 @@ import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,21 +35,24 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * <p>
  * Locks batch 21: the five-slot chained 0/1 ladder of the mirror pair 13918/23918 together with the owner trim
  * and the restored ITEM reward index. Out-of-order kills must not count (the client can only render the elite the
- * player still owes), the offer stays on the offer NPC, the report/completion stay on the row-5 NPC, and legacy
- * saves (13918 step-model rows 2..5, both sides' incomplete reward projections) heal into the new ladder.
+ * player still owes), the offer stays on the offer NPC, and the report/completion stay on the row-5 NPC.
+ * <p>
+ * P3 裁定（真端优先）：旧 XML 的 EnterWorld 旧档修复边不属于真端形状，已随 XML 退役移除；本门禁反向锁定
+ * "不得再引入迁移边"，存量进度按新阶梯重读（判据见 {@code reports/2026-09-24-P3-simple-serial-hunt.zh-CN.md}）。
+ * P3 adjudication: the legacy enter-world repair edges are not part of the retail shape and were removed with the
+ * XML; this gate locks their absence. The definition now comes from the retail production view, not the XML.
  */
 class ChainEliteLadderContractTest {
 
-	/** 任务 / 镜像 / 接取 NPC / 行 5 NPC / 五只精锐兵 / 是否历史上用过 step 模型。 */
-	private record Contract(int questId, int mirrorId, int offerNpc, int reportNpc, List<Integer> kills,
-			boolean legacyStepModel) {
+	/** 任务 / 镜像 / 接取 NPC / 行 5 NPC / 五只精锐兵。 */
+	private record Contract(int questId, int mirrorId, int offerNpc, int reportNpc, List<Integer> kills) {
 	}
 
 	private static final List<Contract> CONTRACTS = List.of(
 		new Contract(13918, 23918, 802328, 802350,
-			List.of(235321, 235322, 235323, 235324, 235325), true),
+			List.of(235321, 235322, 235323, 235324, 235325)),
 		new Contract(23918, 13918, 802347, 802353,
-			List.of(235559, 235560, 235561, 235326, 235327), false));
+			List.of(235559, 235560, 235561, 235326, 235327)));
 
 	private static final List<String> FIELDS = List.of("var0", "var1", "var2", "var3", "var4");
 	private static final List<String> LADDER_NODES = List.of("started", "k1", "k2", "k3", "k4", "k5");
@@ -111,11 +112,15 @@ class ChainEliteLadderContractTest {
 			assertEquals(definition.nodes().stream().map(QuestNode::label).collect(Collectors.toSet()),
 				mirror.nodes().stream().map(QuestNode::label).collect(Collectors.toSet()),
 				() -> "mirror pair " + contract.questId() + "/" + contract.mirrorId() + " node shape");
+			/* 击杀面权威 = 串行阶梯的 KillNpc 边（真端客户端阶段契约登记）；XML 时代的
+			 * {@code metadata.kills} 零售元数据不填、生产代码零消费，漂移登记在 P3 报告。 */
+			/* Kill authority is the ladder's KillNpc edges from the retail client stage registry; the
+			 * XML-only metadata.kills list is not populated by the retail metadata and is unused in production. */
 			assertEquals(contract.kills().stream().sorted().toList(),
-				metadataKills(definition).stream().sorted().toList(),
-				() -> "quest " + contract.questId() + " metadata kills must name the five client elites");
-			assertEquals(5, metadataKills(mirror).size(),
-				() -> "mirror quest " + contract.mirrorId() + " must also declare five kills");
+				killTargets(definition).stream().sorted().toList(),
+				() -> "quest " + contract.questId() + " kill edges must name the five client elites");
+			assertEquals(5, killTargets(mirror).size(),
+				() -> "mirror quest " + contract.mirrorId() + " must also declare five kill edges");
 		}
 	}
 
@@ -251,81 +256,54 @@ class ChainEliteLadderContractTest {
 	}
 
 	@Test
-	void legacyStepModelSavesRepairLosslessly() throws Exception {
+	void legacyStepModelSavesAreNotRewrittenByTheRetailShape() throws Exception {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
+			/* P3 裁定：旧 step/grid 存档不再迁移，按新阶梯重读；不得再引入 EnterWorld 修复边。 */
+			/* P3 decision: stale saves are re-read on the new ladder; no enter-world repair edge may return. */
 			for (int done = 2; done <= 5; done++) {
 				int killsDone = done;
-				List<QuestMutationPlan> repairs = plans(compiled, QuestStatus.START,
-					Map.of("var0", done), new QuestEvent.EnterWorld());
-				if (!contract.legacyStepModel()) {
-					/* 23918 的历史模型是 0/1 网格，没有 var0=2..5 的存档；这些边只属于 step 模型的 13918。 */
-					/* 23918 never wrote var0=2..5 (its legacy model was a 0/1 grid), so only 13918 heals them. */
-					assertTrue(repairs.isEmpty(), () -> "quest " + contract.questId()
-						+ " must not carry step-model heal edges");
-					continue;
-				}
-				assertEquals(1, repairs.size(), () -> "quest " + contract.questId() + " step save var0="
-					+ killsDone + " must heal into the ladder");
-				assertEquals(cumulative(killsDone), unpack(compiled, repairs.getFirst()),
-					() -> "quest " + contract.questId() + " step save var0=" + killsDone
-						+ " must map to " + killsDone + " counters, not restart the ladder");
-				assertEquals(QuestStatus.START, repairs.getFirst().nextStatus(),
-					() -> "quest " + contract.questId() + " step heal keeps START");
+				assertTrue(plans(compiled, QuestStatus.START, Map.of("var0", done), new QuestEvent.EnterWorld()).isEmpty(),
+					() -> "quest " + contract.questId() + " must not carry a step-model heal edge for var0="
+						+ killsDone);
 			}
-			/* 现行阶梯状态（started / k1）不得被迁移边二次改写。 */
-			/* The live ladder states (started / k1) must not be rewritten by the migration edges. */
 			for (int ones : List.of(0, 1)) {
 				assertTrue(plans(compiled, QuestStatus.START, cumulative(ones), new QuestEvent.EnterWorld()).isEmpty(),
-					() -> "quest " + contract.questId() + " must not touch live ladder states on enter-world");
+					() -> "quest " + contract.questId() + " must not rewrite live ladder states on enter-world");
 			}
 		}
 	}
 
 	@Test
-	void rewardSavesHealToTheSaturatedProjection() throws Exception {
-		Map<String, Map<String, Integer>> stale = new LinkedHashMap<>();
-		/* 13918 旧 step 模型的领奖投影：var0=5（已击杀数），var1..3=1，var4 未投影。 */
-		/* 13918's legacy step-model reward projection: var0=5 kills done, var1..3 set, var4 unset. */
-		stale.put("step-model reward projection", Map.of("var0", 5, "var1", 1, "var2", 1, "var3", 1));
-		stale.put("four-dimension reward projection", cumulative(4));
-		stale.put("empty reward counters", cumulative(0));
+	void saturatedRewardStateStillOpensTheClientRewardWindow() throws Exception {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
-			for (Map.Entry<String, Map<String, Integer>> entry : stale.entrySet()) {
-				List<QuestMutationPlan> heals = plans(compiled, QuestStatus.REWARD, entry.getValue(),
-					new QuestEvent.EnterWorld());
-				assertEquals(1, heals.size(), () -> "quest " + contract.questId() + " " + entry.getKey()
-					+ " must heal on enter-world");
-				assertEquals(cumulative(5), unpack(compiled, heals.getFirst()),
-					() -> "quest " + contract.questId() + " " + entry.getKey()
-						+ " must heal to the saturated projection");
-				assertEquals(QuestStatus.REWARD, heals.getFirst().nextStatus(),
-					() -> "quest " + contract.questId() + " " + entry.getKey() + " must stay in REWARD");
-
-				List<QuestMutationPlan> talks = plans(compiled, QuestStatus.REWARD, entry.getValue(),
-					new QuestEvent.TalkToNpc(contract.reportNpc(), QuestDialogAction.QUEST_SELECT.id()));
-				assertEquals(1, talks.size(), () -> "quest " + contract.questId() + " " + entry.getKey()
-					+ " must heal when the report NPC is clicked");
-				assertTrue(talks.getFirst().afterCommit().contains(new AfterCommitAction.ShowQuestDialog(
-						QuestDialogPage.SELECT2.id())),
-					() -> "quest " + contract.questId() + " " + entry.getKey()
-						+ " must open the client report page after healing");
-			}
-			/* 正规领奖态（五槽全 1）不得被迁移边命中，仍能直接打开领奖窗并完成。 */
-			/* The legitimate reward state must not be rewritten; it opens the window and completes directly. */
-			assertTrue(plans(compiled, QuestStatus.REWARD, cumulative(5), new QuestEvent.EnterWorld()).isEmpty(),
+			QuestStatus reward = QuestStatus.REWARD;
+			/* 正规领奖态（五槽全 1）不得被迁移边命中，且仍能直接打开领奖窗。 */
+			/* The legitimate reward state must not be rewritten and must still open the reward window. */
+			assertTrue(plans(compiled, reward, cumulative(5), new QuestEvent.EnterWorld()).isEmpty(),
 				() -> "quest " + contract.questId() + " must not resync a saturated reward state on enter-world");
-			List<QuestMutationPlan> preview = plans(compiled, QuestStatus.REWARD, cumulative(5),
+			List<QuestMutationPlan> preview = plans(compiled, reward, cumulative(5),
 				new QuestEvent.TalkToNpc(contract.reportNpc(), QuestDialogAction.SELECT_QUEST_REWARD.id()));
 			assertTrue(preview.stream().anyMatch(plan -> plan.afterCommit().contains(
 					new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()))),
-				() -> "quest " + contract.questId() + " must open the reward window from REWARD (npc-complete preview)");
+				() -> "quest " + contract.questId() + " must open the reward window from REWARD");
+			/* 旧 step 领奖投影（var0=5/var1..3=1）也不再被"修复"成满槽。 */
+			/* Stale reward projections are no longer healed into the saturated counters either. */
+			Map<String, Integer> staleReward = Map.of("var0", 5, "var1", 1, "var2", 1, "var3", 1);
+			assertTrue(plans(compiled, reward, staleReward, new QuestEvent.EnterWorld()).isEmpty(),
+				() -> "quest " + contract.questId() + " must not heal the legacy reward projection");
 		}
 	}
 
-	private static Set<Integer> metadataKills(QuestDefinition definition) {
-		return definition.metadata().kills().stream().flatMap(kill -> kill.npcIds().stream()).collect(Collectors.toSet());
+	/** 阶梯的击杀目标集（KillNpc 边）。 / Kill targets carried by the ladder's KillNpc edges. */
+	private static Set<Integer> killTargets(QuestDefinition definition) {
+		return definition.transitions().stream()
+			.map(QuestTransition::event)
+			.filter(QuestEvent.KillNpc.class::isInstance)
+			.map(QuestEvent.KillNpc.class::cast)
+			.map(QuestEvent.KillNpc::npcId)
+			.collect(Collectors.toSet());
 	}
 
 	private static Set<Integer> npcIds(QuestDefinition definition, String source, String target) {
@@ -356,11 +334,12 @@ class ChainEliteLadderContractTest {
 		return compiled.definition().progressLayout().unpack(plan.nextPackedVariables());
 	}
 
-	private static CompiledQuestDefinition definition(int questId) throws IOException {
-		try (InputStream input = ChainEliteLadderContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			assertNotNull(input, () -> "missing quest definition " + questId + ".xml");
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	/**
+	 * 生产零售视图：13918/23918 已退役 XML，定义只能来自真端 SimpleSerialHunt 表合成。
+	 * Production retail view: the XML of both ids is retired, so the definition must come from the
+	 * retail SimpleSerialHunt synthesis.
+	 */
+	private static CompiledQuestDefinition definition(int questId) {
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

@@ -75,36 +75,48 @@ class QuestDataDrivenRetailFlowAlignmentTest {
 
 	@Test
 	void quest25306KeepsCollectionInteractionAndFiveHuntStepsInOrder() throws Exception {
-		QuestDefinition definition = load(25306);
-		assertOnlyNpcStart(definition, 805339);
-		assertOnlyNpcComplete(definition, 805339);
+		// 25306 已由真端驱动（客户端 SECTION 对齐形）：var0 = 行阶梯（SECTION_0）、var1 = 段计数
+		// （SECTION_1，段完成清零）；旧 XML 的行节点/对话梯由客户端登记表驱动。
+		// 25306 is retail-driven now (the client SECTION-aligned shape): var0 is the row ladder,
+		// var1 the stage counter reset per stage; the legacy row nodes and dialog ladder are
+		// registry-driven from the client.
+		CompiledQuestDefinition compiled = ProductionQuestDefinitions.definition(25306);
+		QuestDefinition definition = compiled.definition();
+		ProgressLayout layout = definition.progressLayout();
+		assertEquals(0, layout.field("var0").offset());
+		assertEquals(6, layout.field("var1").offset());
 		assertEquals(List.of(new QuestItemRequirement(182215876, 1)), definition.metadata().questWorkItems());
 		assertEquals(List.of(
 			new QuestDrop(702829, 182215852, 100, true, 1),
 			new QuestDrop(702862, 182215922, 100, true, 1)), definition.metadata().drops());
+
+		// 接取/完成 NPC 唯一性：unaccepted 只对 805339 开对话。
+		// Acquire/complete uniqueness: unaccepted only opens dialogs with 805339.
+		assertTrue(definition.transitions().stream()
+			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc)
+			.filter(transition -> "unaccepted".equals(transition.sourceNode()))
+			.map(QuestDataDrivenRetailFlowAlignmentTest::talk)
+			.noneMatch(event -> event.npcId() == 805340 || event.npcId() == 702829 || event.npcId() == 702862));
+
+		// 采集行交互物自环：掉落 collectingStep=1 → CanAct + TalkToNpc 挂在 s1（var0==1 行，
+		// QuestInteractionObjectValidator 启动合同）。
+		// Collecting-row interaction self edges: drops with collectingStep=1 hang CanAct +
+		// TalkToNpc on s1 (the var0==1 row, the startup contract).
 		assertEquals(Set.of(
 			new QuestEvent.CanAct(702829, "ACTION_ITEM_USE"),
 			new QuestEvent.CanAct(702862, "ACTION_ITEM_USE")), definition.transitions().stream()
 			.filter(transition -> transition.event() instanceof QuestEvent.CanAct)
+			.filter(transition -> "s1".equals(transition.sourceNode()))
 			.map(QuestTransition::event)
 			.collect(java.util.stream.Collectors.toSet()));
-		for (int objectId : List.of(702829, 702862)) {
-			QuestTransition useObject = route(definition, "s1", "s1", objectId,
-				QuestDialogAction.USE_OBJECT.id(), null);
-			assertEquals(List.of(), useObject.conditions());
-			assertEquals(List.of(), useObject.actions());
-			assertEquals(List.of(), useObject.afterCommit());
-		}
 
-		assertDialogPage(definition, "s0", 805340, QuestDialogAction.QUEST_SELECT.id(), QuestDialogPage.SELECT1.id());
-		assertDialogPage(definition, "s0", 805340, QuestDialogAction.SELECT1_1.id(), QuestDialogPage.SELECT1_1.id());
-		QuestTransition startConversation = route(definition, "s0", "s1", 805340,
-			QuestDialogAction.SETPRO1.id(), null);
-		assertEquals(List.of(new QuestAction.GiveItem(152231954, 1), new QuestAction.SetVariable("var0", 1)),
-			startConversation.actions());
-		assertEquals(new NodeProjection(QuestStatus.START, Map.of("var0", 1)),
-			node(definition, "s1").projection());
+		// 信件推进 started->s1（动作 id 从信件梯登记读）。
+		// The letter advance started->s1 (action id read from the letter-ladder registry).
+		route(definition, "started", "s1", 805340, 10000, null);
 
+		// 39 整组检查对：整组过/扣进采集行；缺货兜底自环。
+		// The 39 group-check pair: the whole group hands over into the collect row; missing goods
+		// fall back to a self loop.
 		QuestTransition collect = route(definition, "s1", "s2", 805340,
 			QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id(), 0);
 		assertEquals(List.of(
@@ -123,45 +135,64 @@ class QuestDataDrivenRetailFlowAlignmentTest {
 		QuestTransition missingItems = route(definition, "s1", "s1", 805340,
 			QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id(), 1);
 		assertEquals(List.of(), missingItems.conditions());
-		assertEquals(List.of(), missingItems.actions());
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.CHECK_USER_ITEM_FAIL.id())),
 			missingItems.afterCommit());
 
-		assertDialogPage(definition, "s1", 805340, QuestDialogAction.QUEST_SELECT.id(), QuestDialogPage.SELECT2.id());
-		assertDialogPage(definition, "s1", 805340, QuestDialogAction.SELECT2_1.id(), QuestDialogPage.SELECT2_1.id());
-		assertDialogPage(definition, "s1", 805340, 1438, QuestDialogPage.SELECT2_2.id());
-		assertDialogPage(definition, "s1", 805340, 1523, QuestDialogPage.SELECT2_3.id());
-		assertDialogPage(definition, "s1", 805340, 1608, QuestDialogPage.SELECT2_4.id());
-		assertDialogPage(definition, "s2", 805340, QuestDialogAction.QUEST_SELECT.id(), QuestDialogPage.SELECT3.id());
+		// 五个 hunt 段（60/60/30/1/5，客户端 S0==3..7）：KillNpc 逐族边 + 段完成清零；
+		// 旧 XML 击杀名单全部保留在族内（M2-c 超集语义）。
+		// Five hunt stages (60/60/30/1/5, client S0==3..7): per-family KillNpc edges with the
+		// counter reset on completion; every legacy kill id stays inside its family (the M2-c
+		// superset semantics).
+		int[][] stageCounts = {{3, 60}, {4, 60}, {5, 30}, {6, 1}, {7, 5}};
+		Set<Integer>[] families = new Set[] {
+			ids(234711, 234712, 234713, 234714, 234715, 234716, 234717, 234718, 234719),
+			ids(234292, 234294, 234295, 234296, 234298, 234528, 234529),
+			ids(234260, 234262, 234264, 234512),
+			ids(232853, 233491, 233544, 233859, 234190),
+			ids(231073, 231130, 236277)};
+		for (int stage = 0; stage < stageCounts.length; stage++) {
+			int row = stageCounts[stage][0];
+			int count = stageCounts[stage][1];
+			String source = "s" + row;
+			String target = "s" + (row + 1);
+			Set<Integer> family = families[stage];
+			List<QuestTransition> kills = definition.transitions().stream()
+				.filter(transition -> source.equals(transition.sourceNode())
+					&& transition.event() instanceof QuestEvent.KillNpc)
+				.toList();
+			Set<Integer> covered = kills.stream()
+				.map(transition -> ((QuestEvent.KillNpc) transition.event()).npcId())
+				.collect(java.util.stream.Collectors.toSet());
+			assertTrue(covered.containsAll(family),
+				() -> "hunt stage s" + row + " must cover the legacy kill family: " + covered);
+			QuestTransition continuing = kills.stream()
+				.filter(transition -> source.equals(transition.targetNode()))
+				.findFirst().orElseThrow();
+			assertEquals(1, continuing.priority());
+			assertEquals(List.of(new QuestCondition.VariableBelow("var1", count - 1)), continuing.conditions());
+			QuestTransition completion = kills.stream()
+				.filter(transition -> target.equals(transition.targetNode()))
+				.findFirst().orElseThrow();
+			assertEquals(0, completion.priority());
+			assertEquals(List.of(new QuestCondition.VariableAtLeast("var1", count - 1)), completion.conditions());
+			assertEquals(List.of(new QuestAction.SetVariable("var0", row + 1),
+				new QuestAction.SetVariable("var1", 0)), completion.actions());
+			assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
+				completion.afterCommit());
+		}
 
-		assertTalk(definition, "s2", "s3", 805340, QuestDialogAction.SETPRO3.id());
-		assertCounter(definition, "s3", "s4", 59,
-			ids(234711, 234712, 234713, 234714, 234715, 234716, 234717, 234718, 234719));
-		assertCounter(definition, "s4", "s5", 59,
-			ids(234292, 234294, 234295, 234296, 234298, 234528, 234529));
-		assertCounter(definition, "s5", "s6", 29, ids(234260, 234262, 234264, 234512));
-		assertSingleKillStep(definition, "s6", "s7", ids(232853, 233491, 233544, 233859, 234190));
-		assertCounter(definition, "s7", "s8", 4, ids(231073, 231130, 236277));
-
-		assertDialogPage(definition, "s8", 805340, QuestDialogAction.QUEST_SELECT.id(), QuestDialogPage.SELECT9.id());
-		assertDialogPage(definition, "s8", 805340, QuestDialogAction.SELECT9_1.id(), QuestDialogPage.SELECT9_1.id());
-		assertDialogPage(definition, "s8", 805340, QuestDialogAction.SELECT9_1_1.id(), QuestDialogPage.SELECT9_1_1.id());
-		QuestTransition workItem = route(definition, "s8", "s9", 805340,
-			QuestDialogAction.SETPRO9.id(), null);
-		assertTrue(workItem.actions().contains(new QuestAction.GiveItem(182215876, 1)));
-		assertDialogPage(definition, "s9", 805339, QuestDialogAction.QUEST_SELECT.id(), QuestDialogPage.SELECT10.id());
-		assertDialogPage(definition, "s9", 805339, QuestDialogAction.SELECT10_1.id(), QuestDialogPage.SELECT10_1.id());
+		// 末段 talk 推进（s8 10008）+ 回报行（s9 1009）授予任务凭证并放映过场。
+		// The final talk advance (s8 10008) plus the report row (s9 1009) granting the voucher and
+		// playing the cutscene.
+		QuestTransition workItem = route(definition, "s8", "s9", 805340, 10008, null);
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 9)), workItem.actions());
 		QuestTransition finalReport = route(definition, "s9", "reward", 805339,
 			QuestDialogAction.SELECT_QUEST_REWARD.id(), null);
-		assertEquals(List.of(new QuestAction.SetVariable("var0", 10)), finalReport.actions());
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 10),
+			new QuestAction.GiveItem(182215876, 1)), finalReport.actions());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
-			finalReport.afterCommit());
-		assertTrue(definition.transitions().stream()
-			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc)
-			.filter(transition -> transition.sourceNode().equals("unaccepted"))
-			.map(QuestDataDrivenRetailFlowAlignmentTest::talk)
-			.noneMatch(event -> event.npcId() == 805340 || event.npcId() == 702829 || event.npcId() == 702862));
+			new AfterCommitAction.PlayMovie(866, QuestMovieType.CUTSCENE),
+			new AfterCommitAction.CloseDialog()), finalReport.afterCommit());
 	}
 
 	private static void assertCounter(QuestDefinition definition, String source, String target,

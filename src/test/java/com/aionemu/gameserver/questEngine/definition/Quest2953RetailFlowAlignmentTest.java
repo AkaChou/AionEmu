@@ -3,10 +3,8 @@ package com.aionemu.gameserver.questEngine.definition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -119,9 +117,6 @@ class Quest2953RetailFlowAlignmentTest {
 	}
 
 	private static QuestDefinition load() throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/2953.xml";
-		try (InputStream input = Quest2953RetailFlowAlignmentTest.class.getResourceAsStream(resource)) {
-			return QuestDefinitionXmlCompiler.compile(Objects.requireNonNull(input, resource)).definition();
-		}
+		return ProductionQuestDefinitions.definitionInOverlay(2953).definition();
 	}
 }

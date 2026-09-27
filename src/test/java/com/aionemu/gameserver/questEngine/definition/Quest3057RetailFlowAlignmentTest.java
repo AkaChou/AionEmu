@@ -5,10 +5,8 @@ import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -29,7 +27,9 @@ class Quest3057RetailFlowAlignmentTest {
 
 		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0));
 		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 0));
+		// QE-051：reward 投影 = 客户端任务书末行（quest_q3057 两行，末行是与领奖 NPC 对话）。
+		// QE-051: the reward projection follows the last client journal row (quest_q3057 owns two rows).
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 1));
 		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0));
 
 		QuestTransition start = route(definition, "unaccepted", START_AND_REWARD_NPC, QuestDialogAction.QUEST_SELECT);
@@ -121,12 +121,7 @@ class Quest3057RetailFlowAlignmentTest {
 	}
 
 	private static CompiledQuestDefinition load() {
-		String resource = "/aion/data/static_data/quest_definition/quests/3057.xml";
-		try (InputStream input = Objects.requireNonNull(
-			Quest3057RetailFlowAlignmentTest.class.getResourceAsStream(resource), resource)) {
-			return QuestDefinitionXmlCompiler.compile(input);
-		} catch (Exception e) {
-			throw new AssertionError("unable to load " + resource, e);
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(3057);
 	}
 }

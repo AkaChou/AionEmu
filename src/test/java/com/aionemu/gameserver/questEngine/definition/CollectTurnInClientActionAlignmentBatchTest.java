@@ -4,7 +4,6 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -12,29 +11,107 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定 12 个收集交付任务的客户端动作链对齐合同：交付判定挂客户端实际发送的
- * CHECK_USER_HAS_QUEST_ITEM(39)，QUEST_SELECT 只显示客户端存在的入口页，
- * 未集齐回落页与 reward owner 归属均以 Aion 5.8 客户端与旧 handler 为准。
- * Locks the client action chain alignment contract for 12 collect turn-in quests: turn-in checks
- * are bound to the client-sent CHECK_USER_HAS_QUEST_ITEM(39), QUEST_SELECT shows only client-owned
- * entry pages, and not-ready fallback pages plus reward ownership follow the Aion 5.8 client and
- * legacy handlers.
+ * 锁定收集交付任务的客户端动作链对齐合同（P0-2 分族 / P0-3 S1 收口）：SimpleCollectItem、SimpleUseItem
+ * 与 SimpleTalk 三族交付同形——{@code QUEST_SELECT}(started→reward) 带真端整组 HasItem 门控直翻
+ * REWARD 并下发分档奖励窗；39/20002 检查对、SELECT5 报告页/入口页与 SELECT6 失败页随页链整体退场，
+ * 未集齐时零路由（关窗兜底交 DialogService）。接取段走 S1 规范形：{@code QUEST_SELECT} 直发接取窗
+ * （页 4）。reward owner 归属仍以 Aion 5.8 客户端与旧 handler 为准。
+ * Locks the client action chain alignment contract for collect turn-in quests (P0-2 split, closed by
+ * P0-3 S1): the SimpleCollectItem, SimpleUseItem and SimpleTalk families share one delivery shape —
+ * a gated {@code QUEST_SELECT}(started->reward) flips REWARD and shows the tiered window; the 39/20002
+ * check pairs, the SELECT5 report/entry pages and the SELECT6 failure page are gone, so an incomplete
+ * hand-in has no route (DialogService closes the window). The accept segment uses the S1 canonical flow
+ * ({@code QUEST_SELECT} opens the ask window, page 4). Reward ownership follows the Aion 5.8 client and
+ * the legacy handlers.
  */
 class CollectTurnInClientActionAlignmentBatchTest {
 	private static final Set<Integer> RAKSANG_QUESTS = Set.of(18739, 18740);
 
 	@Test
 	void simpleSelect5QuestsCheckItemsOnClientAction39() throws Exception {
-		checkDoubleBranchTurnIn(80482, 831959, 182215419, 1, "SELECT5", "SELECT6");
-		checkDoubleBranchTurnIn(80486, 831961, 182215421, 1, "SELECT5", "SELECT6");
-		checkDoubleBranchTurnIn(1103, 203057, 182200201, 3, "SELECT5", "SELECT6");
-		checkDoubleBranchTurnIn(30312, 799322, 182209715, 20, "SELECT5", "SELECT6");
-		checkDoubleBranchTurnIn(30314, 799226, 186000098, 100, "SELECT5", "SELECT6");
-		checkDoubleBranchTurnIn(30315, 799226, 186000098, 200, "SELECT5", "SELECT6");
-		checkDoubleBranchTurnIn(1124, 790001, 182200210, 3, "SELECT5", "SELECT6");
+		// 80482/80486 自 P0-2 起走 SimpleUseItem 规范形，分拣到 canonicalUseItemQuestDeliversOnQuestSelect；
+		// 1103 自 P0-2 起走 SimpleCollectItem 规范形，分拣到 canonicalCollectQuestDeliversOnQuestSelect；
+		// 其余（SimpleTalk 族）自 P0-3 S1 起同形收口：SELECT5 入口页 + 39 双分支退场，走
+		// canonicalAcceptFlow（接取窗页 4）+ canonicalDelivery（分档奖励窗）。
+		// P0-3 S1: the SimpleTalk family takes the same canonical shape — the SELECT5 entry page and
+		// the 39 double branch are retired in favour of canonicalAcceptFlow (ask window, page 4) plus
+		// canonicalDelivery (tiered reward window).
+		checkCanonicalTurnIn(30312, 799322, 182209715, 20);
+		checkCanonicalTurnIn(30314, 799226, 186000098, 100);
+		checkCanonicalTurnIn(30315, 799226, 186000098, 200);
+		checkCanonicalTurnIn(1124, 790001, 182200210, 3);
+	}
+
+	/**
+	 * P0-2 规范形 UseItem 交付（SimpleUseItem 族 CHECK 形）：QUEST_SELECT 带交付物 HasItem 门控
+	 * 直翻 REWARD 并下发档位奖励窗；SELECT5 报告页与 39 检查对随页链删除，未集齐零路由。
+	 * Canonical UseItem turn-in since P0-2 (the SimpleUseItem CHECK form): QUEST_SELECT gated on
+	 * the hand-in flips REWARD and shows the tiered window; the SELECT5 page and the 39 check pair
+	 * are gone, and an incomplete hand-in has no route.
+	 */
+	@Test
+	void canonicalUseItemQuestDeliversOnQuestSelect() throws Exception {
+		for (int[] quest : new int[][] {{80482, 831959, 182215419}, {80486, 831961, 182215421}}) {
+			QuestDefinition definition = definition(quest[0]).definition();
+			int rewardWindow = QuestDialogPage.rewardWindowForTier(
+				definition.metadata().rewardGroups().size() - 1).orElseThrow().id();
+			QuestTransition deliver = transition(definition, "started", "reward",
+				new QuestEvent.TalkToNpc(quest[1], QuestDialogAction.QUEST_SELECT.id()));
+			assertEquals(List.of(new QuestCondition.HasItem(quest[2], 1)), deliver.conditions(),
+				"quest " + quest[0] + " delivery conditions");
+			assertEquals(List.of(new QuestAction.RemoveItem(quest[2], 1)), deliver.actions(),
+				"quest " + quest[0] + " delivery removals");
+			assertEquals(List.of(
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+				new AfterCommitAction.ShowQuestDialog(rewardWindow)), deliver.afterCommit(),
+				"quest " + quest[0] + " delivery response");
+			assertTrue(definition.transitions().stream().noneMatch(candidate ->
+					candidate.event() instanceof QuestEvent.TalkToNpc talk
+						&& talk.npcId() == quest[1]
+						&& talk.dialogId() == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()),
+				"quest " + quest[0] + " canonical removed the 39 check pair");
+			assertTrue(definition.transitions().stream().noneMatch(candidate ->
+					candidate.sourceNode().equals("started") && candidate.targetNode().equals("started")
+						&& candidate.event() instanceof QuestEvent.TalkToNpc talk
+						&& talk.npcId() == quest[1]
+						&& talk.dialogId() == QuestDialogAction.QUEST_SELECT.id()),
+				"quest " + quest[0] + " canonical removed the SELECT5 report page self-loop");
+		}
+	}
+
+	/**
+	 * P0-2 规范形收集交付（SimpleCollectItem 族）：QUEST_SELECT 带整组 HasItem 门控直翻 REWARD 并
+	 * 下发档位奖励窗；SELECT5 报告页与 39 检查对随页链删除，未集齐零路由（关窗兜底）。
+	 * Canonical collect turn-in since P0-2 (the SimpleCollectItem family): QUEST_SELECT gated by the
+	 * whole hand-in set flips REWARD and shows the tiered window; the SELECT5 page and the 39 check
+	 * pair are gone, and an incomplete hand-in has no route.
+	 */
+	@Test
+	void canonicalCollectQuestDeliversOnQuestSelect() throws Exception {
+		QuestDefinition definition = definition(1103).definition();
+		QuestTransition deliver = transition(definition, "started", "reward",
+			new QuestEvent.TalkToNpc(203057, QuestDialogAction.QUEST_SELECT.id()));
+		assertEquals(List.of(new QuestCondition.HasItem(182200201, 3)), deliver.conditions());
+		assertEquals(List.of(new QuestAction.RemoveItem(182200201, 3)), deliver.actions());
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
+			deliver.afterCommit());
+		assertTrue(definition.transitions().stream().noneMatch(candidate ->
+				candidate.event() instanceof QuestEvent.TalkToNpc talk
+					&& talk.npcId() == 203057
+					&& talk.dialogId() == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()),
+			"canonical removed the 39 check pair at the turn-in npc");
+		assertTrue(definition.transitions().stream().noneMatch(candidate ->
+				candidate.sourceNode().equals("started") && candidate.targetNode().equals("started")
+					&& candidate.event() instanceof QuestEvent.TalkToNpc talk
+					&& talk.npcId() == 203057
+					&& talk.dialogId() == QuestDialogAction.QUEST_SELECT.id()),
+			"canonical removed the SELECT5 report page self-loop");
 	}
 
 	@Test
@@ -56,22 +133,46 @@ class CollectTurnInClientActionAlignmentBatchTest {
 	void dualNpcQuest1351KeepsRewardOwnershipOnTheTurnInNpc() throws Exception {
 		QuestDefinition definition = definition(1351).definition();
 
-		// 接取 NPC 203965 只保留任务描述页路由，不得拥有交付或完成路由。
-		QuestTransition select = talk(definition, "started", "started", 203965,
-			QuestDialogAction.QUEST_SELECT.id());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT1.id())),
-			select.afterCommit());
+		// P0c-27 裁定（真端对、XML 错）：族形 started 态在接取 NPC 上只有 FINISH_DIALOG(1008)
+		// 出口，推进后展示任务接取页（SELECT_QUEST=10）；遗留 XML 的 QUEST_SELECT→SELECT1
+		// "任务描述页"是手工形（P0c-19/20 NPC 角色词汇；翻转前 overlay 探针直证真端编译形状）。
+		// P0c-27 adjudication (retail-right, XML-wrong): the acquire NPC's started state carries
+		// only the FINISH_DIALOG(1008) family exit, which then shows the quest-selection page
+		// (SELECT_QUEST=10); the legacy QUEST_SELECT->SELECT1 description page was hand-made.
+		assertFalse(definition.transitions().stream().anyMatch(candidate ->
+				candidate.event() instanceof QuestEvent.TalkToNpc talk
+					&& talk.npcId() == 203965 && "started".equals(candidate.sourceNode())
+					&& talk.dialogId() == QuestDialogAction.QUEST_SELECT.id()),
+			"203965 must not open a QUEST_SELECT description page in the started state");
+		QuestTransition exit = talk(definition, "started", "started", 203965,
+			QuestDialogAction.FINISH_DIALOG.id());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestSelectionDialog(
+			QuestDialogPage.SELECT_QUEST.id())), exit.afterCommit());
 		assertTrue(definition.transitions().stream()
 			.noneMatch(candidate -> candidate.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == 203965 && "reward".equals(candidate.targetNode())),
 			"203965 must not own reward routes");
 
-		// 交付 NPC 203983：入口 SELECT5，动作 39 双分支，集齐同次交互移除物品并打开奖励窗口。
-		QuestTransition entry = talk(definition, "started", "started", 203983,
-			QuestDialogAction.QUEST_SELECT.id());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT5.id())),
-			entry.afterCommit());
-		checkTurnInBranches(definition, 203983, 182201321, 10, "SELECT6");
+		// P0-3 S1：SimpleTalk 接取/交付切真端规范形（页 4 / 分档窗）。
+		// 交付 NPC 203983：START 自环的 SELECT5 报告入口页与 39/20002 检查对退场；交付 =
+		// canonicalDelivery——QUEST_SELECT(started→reward) 带真端 collect_item1 整组门
+		// （quest_1351a×10）直翻领奖并下发单档奖励窗 1（单奖励组 → rewardWindowForTier(0)），
+		// 未集齐时零路由（关窗兜底交 DialogService）。
+		// P0-3 S1: the SimpleTalk accept/delivery segments take the retail canonical shape (page 4 /
+		// tiered window). The turn-in npc 203983 loses the START self-loop SELECT5 report entry and the
+		// 39/20002 check pair; the delivery is canonicalDelivery — a gated QUEST_SELECT(started->reward)
+		// carrying the whole retail collect_item1 group (quest_1351a x10) that flips REWARD and shows the
+		// single-tier reward window 1 (one reward group -> rewardWindowForTier(0)); an incomplete hand-in
+		// has no route and DialogService closes the window.
+		QuestTransition deliver = delivery(definition, 203983, "1351 delivery route");
+		assertNull(deliver.priority(), "1351 delivery route priority");
+		assertEquals(List.of(new QuestCondition.HasItem(182201321, 10)), deliver.conditions());
+		assertEquals(List.of(new QuestAction.RemoveItem(182201321, 10)), deliver.actions());
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
+			deliver.afterCommit());
+		assertNoLegacyDeliveryPages(definition, 203983, "1351");
 	}
 
 	@Test
@@ -175,15 +276,76 @@ class CollectTurnInClientActionAlignmentBatchTest {
 		}
 	}
 
-	private static void checkDoubleBranchTurnIn(int questId, int npcId, int itemId, int count,
-			String entryPage, String failPage) throws Exception {
+	/**
+	 * S1 规范形交付（P0-3）：{@code QUEST_SELECT}(started→reward) 带真端整组 HasItem 门控直翻 REWARD
+	 * 并下发单档奖励窗 1；START 自环的报告入口页与 39/20002 检查对、SELECT5/SELECT6 报告页一律不得出现
+	 * （未集齐零路由）。门物品 = 真端 quest.xml 的 collect_item1 整列（单组任务，窗 = 档位 0 即窗 1）。
+	 * The S1 canonical delivery (P0-3): the gated QUEST_SELECT(started->reward) flips REWARD and shows the
+	 * single-tier reward window 1; the START self-loop report entry, the 39/20002 check pair and the
+	 * SELECT5/SELECT6 report pages must all be absent (an incomplete hand-in has no route). The gate is the
+	 * whole retail collect_item1 group; a single reward tier maps to window 1.
+	 */
+	private static void checkCanonicalTurnIn(int questId, int npcId, int itemId, int count) throws Exception {
 		QuestDefinition definition = definition(questId).definition();
-		QuestTransition entry = talk(definition, "started", "started", npcId,
-			QuestDialogAction.QUEST_SELECT.id());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
-			pageIdOf(entryPage))), entry.afterCommit(),
-			"quest " + questId + " entry page");
-		checkTurnInBranches(definition, npcId, itemId, count, failPage);
+		QuestTransition deliver = delivery(definition, npcId, "quest " + questId + " delivery route");
+		assertNull(deliver.priority(), "quest " + questId + " delivery route priority");
+		assertEquals(List.of(new QuestCondition.HasItem(itemId, count)), deliver.conditions(),
+			"quest " + questId + " delivery gate");
+		assertEquals(List.of(new QuestAction.RemoveItem(itemId, count)), deliver.actions(),
+			"quest " + questId + " delivery removals");
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
+			deliver.afterCommit(), "quest " + questId + " delivery response");
+		assertNoLegacyDeliveryPages(definition, npcId, "quest " + questId);
+	}
+
+	/**
+	 * 旧交付页链零残留（S1 失败侧判据，单一真源）：交付 NPC 上不得再出现
+	 * <ul>
+	 * <li>{@code started→started} 的 {@code QUEST_SELECT} 报告入口页——**判据必须带 target 节点**：
+	 * canonical 交付边本身就是同 NPC 的 {@code started} 源 {@code QUEST_SELECT}（started→reward），
+	 * 只按 (npc, 事件, 源节点) 过滤会把它自己打成违规；</li>
+	 * <li>39/20002 检查对（任意源节点）；</li>
+	 * <li>定义内任何 SELECT5/SELECT6 页下发。</li>
+	 * </ul>
+	 * Zero residue of the legacy delivery page chain (the S1 failure-side criterion, one source of truth):
+	 * no started->started QUEST_SELECT report entry at the turn-in npc — the target node must be part of the
+	 * key because the canonical delivery edge is itself a started-source QUEST_SELECT (started->reward) at
+	 * the same npc — no 39/20002 check pair anywhere, and no SELECT5/SELECT6 page push in the definition.
+	 */
+	private static void assertNoLegacyDeliveryPages(QuestDefinition definition, int npcId, String detail) {
+		assertFalse(definition.transitions().stream().anyMatch(candidate ->
+				candidate.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == npcId
+					&& "started".equals(candidate.sourceNode()) && "started".equals(candidate.targetNode())
+					&& talk.dialogId() != null
+					&& talk.dialogId() == QuestDialogAction.QUEST_SELECT.id()),
+			detail + " retired the SELECT5 report entry page at " + npcId);
+		assertFalse(definition.transitions().stream().anyMatch(candidate ->
+				candidate.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == npcId
+					&& talk.dialogId() != null
+					&& (talk.dialogId() == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()
+						|| talk.dialogId() == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id())),
+			detail + " retired the 39/20002 check pair at " + npcId);
+		assertFalse(definition.transitions().stream().anyMatch(candidate ->
+				candidate.afterCommit().stream().anyMatch(action ->
+					action instanceof AfterCommitAction.ShowQuestDialog page
+						&& (page.dialogId() == QuestDialogPage.SELECT5.id()
+							|| page.dialogId() == QuestDialogPage.SELECT6.id()))),
+			detail + " retired the SELECT5/SELECT6 report pages");
+	}
+
+	/** 交付边唯一取用：同一 (npc, QUEST_SELECT) 的 started→reward 路由必须恰有一条。 /
+	 * Unique canonical delivery lookup: exactly one started->reward QUEST_SELECT route per npc. */
+	private static QuestTransition delivery(QuestDefinition definition, int npcId, String detail) {
+		List<QuestTransition> routes = definition.transitions().stream()
+			.filter(candidate -> "started".equals(candidate.sourceNode())
+				&& "reward".equals(candidate.targetNode())
+				&& candidate.event().equals(new QuestEvent.TalkToNpc(npcId,
+					QuestDialogAction.QUEST_SELECT.id())))
+			.toList();
+		assertEquals(1, routes.size(), detail);
+		return routes.getFirst();
 	}
 
 	private static void checkTurnInBranches(QuestDefinition definition, int npcId, int itemId, int count,
@@ -270,12 +432,7 @@ class CollectTurnInClientActionAlignmentBatchTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		try (InputStream input = CollectTurnInClientActionAlignmentBatchTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition " + questId + ".xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

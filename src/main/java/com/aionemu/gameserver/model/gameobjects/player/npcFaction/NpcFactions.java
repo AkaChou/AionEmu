@@ -28,6 +28,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TITLE_INFO;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
+import com.aionemu.gameserver.questEngine.retail.RetailSystemGrantDispatcher;
 import com.aionemu.gameserver.questEngine.runtime.PlayerQuestStartEligibilityPort;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
@@ -306,6 +307,9 @@ public class NpcFactions {
 				faction.setTime(getNextTime());
 			}
 			PacketSendUtility.sendPacket(owner, new SM_QUEST_ACTION(questId, true));
+			// 类别哨兵（系统发放）任务没有接取路由：分配即发放，避免"只发提示、永远接不了"。
+			// Category-sentinel (system-granted) quests have no accept route, so grant on assignment.
+			RetailSystemGrantDispatcher.grantIfSystemGranted(owner, questId);
 		}
 	}
 

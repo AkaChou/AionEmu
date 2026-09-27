@@ -7,7 +7,6 @@ import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -16,7 +15,6 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -171,10 +169,10 @@ class RewardRowResidualTwoRowContractTest {
 		/* STR_DIC_LA12 is absent from the client NPC name table; the key is resolved by matching the
 		   journal row naming against the completion owner across the family. */
 		for (int questId : PERNOS_ROW_SIBLINGS) {
-			/* 1122 的完成走 choice/select 型事务而不是 TalkToNpc，故这里直接读原文件的 npc-complete owner。 */
-			/* 1122 completes through choice/select transitions rather than TalkToNpc, so read the raw
-			   npc-complete owner from the resource text. */
-			assertTrue(resourceText(questId).contains("<npc-complete npc-id=\"790001\""),
+			/* 生产 XML 已退役（内容在 git 历史里）：完成 owner 从 reward 源路由反推；
+			   1122 的完成源是 reward1，其余是 reward。 */
+			/* The production XML is retired; the completion owner is derived from the reward-side routes. */
+			assertEquals(Set.of(790001), completionOwners(definition(questId).definition()),
 				() -> "sibling " + questId + " must complete on 790001 (STR_DIC_LA12 = Pernos)");
 		}
 	}
@@ -216,19 +214,20 @@ class RewardRowResidualTwoRowContractTest {
 			true, true, 0, 0, 100000000, 1, 0f, 0f, 0f, (byte) 0);
 	}
 
-	private static String resourceText(int questId) throws IOException {
-		try (InputStream input = RewardRowResidualTwoRowContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			assertNotNull(input, () -> "missing quest definition " + questId + ".xml");
-			return new String(input.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+	/** reward→complete 路由的 NPC 集合（完成 owner）。 / NPCs of the completion routes. */
+	private static Set<Integer> completionOwners(QuestDefinition definition) {
+		Set<Integer> owners = new LinkedHashSet<>();
+		for (QuestTransition transition : definition.transitions()) {
+			if (transition.sourceNode().startsWith("reward") && "complete".equals(transition.targetNode())
+				&& transition.event() instanceof QuestEvent.TalkToNpc talk) {
+				owners.add(talk.npcId());
+			}
 		}
+		return owners;
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws IOException {
-		try (InputStream input = RewardRowResidualTwoRowContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			assertNotNull(input, () -> "missing quest definition " + questId + ".xml");
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

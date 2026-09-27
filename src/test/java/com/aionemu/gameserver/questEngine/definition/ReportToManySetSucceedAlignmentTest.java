@@ -121,10 +121,10 @@ class ReportToManySetSucceedAlignmentTest {
 		}
 	}
 
-	private static QuestDefinition compile(int questId) throws Exception {
-		try (InputStream input = Files.newInputStream(QUEST_DIRECTORY.resolve(questId + ".xml"))) {
-			return QuestDefinitionXmlCompiler.compile(input).definition();
-		}
+	private static QuestDefinition compile(int questId) {
+		// 退役任务不再有 XML：统一走生产视图（1876 等链行已真端驱动）。
+		// Retired quests have no XML: resolve through the production view.
+		return ProductionQuestDefinitions.definition(questId).definition();
 	}
 
 	private static QuestTransition route(QuestDefinition definition, String source, int npcId, int dialogId,

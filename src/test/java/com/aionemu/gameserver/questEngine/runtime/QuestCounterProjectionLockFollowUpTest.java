@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.NodeProjection;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestCondition;
-import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
@@ -16,59 +16,31 @@ import com.aionemu.gameserver.questEngine.e2e.client.QuestHeadlessClient;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定 COUNTER_PROJECTION_LOCK 后续批次（4711/30710/49702）的完整行为合同：
+ * 锁定 COUNTER_PROJECTION_LOCK 后续批次仍由 XML 承载的 4711/30710 的完整行为合同：
  * START 源节点不投影实时计数字段，计数与步骤链由 transition 条件驱动，最后一击或交互进入 REWARD。
  * 第二批（15321/25608/27510）同型：击杀自环阶段节点只固定阶段位段 var0，
  * 计数字段 var1 由击杀转换拥有；把计数钉进 source 投影会让第一只怪之后全部 NO_MATCH。
- * Locks the full behavior contract of the follow-up COUNTER_PROJECTION_LOCK batch (4711/30710/49702):
+ * Locks the full behavior contract of the follow-up COUNTER_PROJECTION_LOCK batch still owned by XML
+ * (4711/30710):
  * the START source node projects no live counter field; counters and step chains are driven by
  * transition conditions and the final kill or interaction enters REWARD.
  */
 class QuestCounterProjectionLockFollowUpTest {
 
-	@Test
-	void quest49702CountsSixKillsThroughUnlockedStartNode() throws Exception {
-		CompiledQuestDefinition definition = load(49702);
-		assertEquals(Map.of(), node(definition, "started").projection().variables());
-
-		QuestTransition counting = killRoute(definition, 701568, 1);
-		assertEquals("started", counting.sourceNode());
-		assertEquals("started", counting.targetNode());
-		assertEquals(List.of(new QuestCondition.VariableBelow("var0", 6)), counting.conditions());
-		assertEquals(List.of(new QuestAction.IncrementVariable("var0", 1)), counting.actions());
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
-			counting.afterCommit());
-
-		QuestTransition finishing = killRoute(definition, 701568, 0);
-		assertEquals(List.of(new QuestCondition.VariableAtLeast("var0", 6)), finishing.conditions());
-		assertEquals(List.of(new QuestAction.SetVariable("var0", 6)), finishing.actions());
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
-			finishing.afterCommit());
-
-		try (QuestE2eRuntime runtime = new QuestE2eRuntime(definition)) {
-			runtime.prepare(counting);
-			for (int index = 1; index <= 5; index++) {
-				assertTrue(runtime.dispatchWorld(new QuestEvent.KillNpc(701568)).handled(),
-					"kill at index " + index + " was not handled");
-				assertEquals(QuestStatus.START, runtime.state().status());
-				assertEquals(Map.of("var0", index), variables(definition, runtime));
-			}
-			runtime.prepare(finishing);
-			assertTrue(runtime.dispatchPrepared().handled());
-			assertEquals(QuestStatus.REWARD, runtime.state().status());
-			assertEquals(Map.of("var0", 6), variables(definition, runtime));
-		}
-	}
+	// 49702 已在 P0c-3 退役：真端把它驱动为系统发放 + 逐计数网格节点（a0..a6），
+	// 旧 XML 的“START 自环 + var0 条件计数”合同随之失效；该形状的真端 IR 由
+	// RetailSimpleHuntEquivalenceGateTest 的冻结指纹与 RetailSystemGrantDispatchTest 锁定。
+	// Quest 49702 retired in P0c-3: retail drives it as a system grant plus a per-count grid
+	// (a0..a6), so the legacy self-loop counter contract no longer applies; that retail IR is
+	// pinned by RetailSimpleHuntEquivalenceGateTest fingerprints and RetailSystemGrantDispatchTest.
 
 	@Test
 	void quest30710UseObjectEntersRewardWithoutStartProjectionLock() throws Exception {
@@ -102,7 +74,9 @@ class QuestCounterProjectionLockFollowUpTest {
 	@Test
 	void quest4711RetailStepChainReachesFinalKill() throws Exception {
 		CompiledQuestDefinition definition = load(4711);
-		assertEquals(Map.of(), node(definition, "started").projection().variables());
+		// started 只固定行号 var0=0；实时计数字段 var1 由击杀/交接条件拥有，不得钉进投影。
+		// started pins only the row index var0=0; the live counter var1 stays in the transition conditions.
+		assertEquals(Map.of("var0", 0), node(definition, "started").projection().variables());
 
 		QuestTransition talkStep = dialogRoute(definition, 279042, QuestDialogAction.QUEST_SELECT);
 		assertEquals(List.of(new QuestCondition.QuestVariableIs("var0", 0)), talkStep.conditions());
@@ -113,8 +87,10 @@ class QuestCounterProjectionLockFollowUpTest {
 		QuestTransition firstHandoff = dialogRoute(definition, 279042, QuestDialogAction.SETPRO1);
 		assertEquals(List.of(new QuestCondition.QuestVariableIs("var0", 0)), firstHandoff.conditions());
 		assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), firstHandoff.actions());
+		// 行推进（0 -> 1）必须让客户端任务书换行，按生产定义用 LEVEL_AND_VISIBILITY_REFRESH。
+		// A journal row advance (0 -> 1) must refresh the client window, so the hand-over refreshes visibility.
 		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.CloseDialog()), firstHandoff.afterCommit());
 
 		QuestTransition secondHandoff = dialogRoute(definition, 730196, QuestDialogAction.SETPRO2);
@@ -122,7 +98,9 @@ class QuestCounterProjectionLockFollowUpTest {
 		assertEquals(List.of(new QuestAction.SetVariable("var0", 2)), secondHandoff.actions());
 
 		QuestTransition finalKill = killRoute(definition, 214823, null);
-		assertEquals("started", finalKill.sourceNode());
+		// 最后一击从击杀行 s2（var0=2）进入领奖态 reward（var0=3）。
+		// The final kill leaves the kill row s2 (var0=2) and enters the reward state (var0=3).
+		assertEquals("s2", finalKill.sourceNode());
 		assertEquals("reward", finalKill.targetNode());
 		assertEquals(List.of(new QuestCondition.QuestVariableIs("var0", 2)), finalKill.conditions());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
@@ -141,13 +119,15 @@ class QuestCounterProjectionLockFollowUpTest {
 			runtime.prepare(finalKill);
 			assertTrue(runtime.dispatchPrepared().handled());
 			assertEquals(QuestStatus.REWARD, runtime.state().status());
-			assertEquals(new NodeProjection(QuestStatus.REWARD, Map.of("var0", 0)),
+			// QE-051：quest_q4711 的任务书共 4 行，领奖行是最后的“向 Votan 报告”行 3。
+			// QE-051: quest_q4711 owns four journal rows, so the reward row is row 3.
+			assertEquals(new NodeProjection(QuestStatus.REWARD, Map.of("var0", 3)),
 				node(definition, "reward").projection());
 		}
 	}
 
 	/**
-	 * 15321：s1 阶段的 30 只怪必须逐只计入并推进到 s2。
+	 * 15321：s1 阶段的 30 只怪必须逐只计入并推进到 s2；25608 同形（DataDriven s3/s4 命名）。
 	 * 修复前 s1 投影 var1=0，第一只怪把 var1 写成 1 之后 source 不再匹配，
 	 * 之后每次击杀都 NO_MATCH：玩家看到"击杀只有第一只算，任务不往下"。
 	 */
@@ -169,11 +149,11 @@ class QuestCounterProjectionLockFollowUpTest {
 		}
 	}
 
-	/** 25608：step2 的 10 只 241235 必须整段计入后才推进到 step3。 */
+	/** 25608：击杀行 step3（客户端任务书第 3 行）的 10 只 241235 整段计入后才推进到 step4（报告行）。 */
 	@Test
 	void quest25608CountsEveryKillBeforeTheReport() throws Exception {
 		CompiledQuestDefinition definition = load(25608);
-		assertEquals(Map.of("var0", 2), node(definition, "step2").projection().variables(),
+		assertEquals(Map.of("var0", 3), node(definition, "s3").projection().variables(),
 			"the kill stage must not pin the live counter var1");
 
 		QuestTransition counting = killRoute(definition, 241235, 1);
@@ -184,7 +164,7 @@ class QuestCounterProjectionLockFollowUpTest {
 					"kill at index " + index + " was not handled");
 			}
 			assertEquals(QuestStatus.START, runtime.state().status());
-			assertEquals(Map.of("var0", 3, "var1", 0), variables(definition, runtime));
+			assertEquals(Map.of("var0", 4, "var1", 0), variables(definition, runtime));
 		}
 	}
 
@@ -262,10 +242,7 @@ class QuestCounterProjectionLockFollowUpTest {
 	}
 
 	private static CompiledQuestDefinition load(int questId) throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-		try (InputStream input = Objects.requireNonNull(
-				QuestCounterProjectionLockFollowUpTest.class.getResourceAsStream(resource), resource)) {
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

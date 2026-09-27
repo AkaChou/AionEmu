@@ -6,15 +6,14 @@ import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -63,11 +62,13 @@ class Batch37TalkKillReportRowLadderContractTest {
 	@Test
 	void everyJournalRowOwnsAState() throws Exception {
 		for (Kill3Contract contract : KILL3_FAMILY) {
+			/* P0c-6 起三行都走真端网格合成器：接取态（简报标志位 1）→ 简报完成零段 → 计数满段 → 领奖。 */
+			/* Since P0c-6 all three rows are grid-composed: briefing pending -> zero counters -> saturated. */
 			QuestDefinition definition = definition(contract.questId()).definition();
-			assertRow(definition, contract.questId(), "started", 0);
-			assertRow(definition, contract.questId(), "t1", 1);
-			assertRow(definition, contract.questId(), "k2", 2);
-			assertRow(definition, contract.questId(), "reward", 2);
+			assertNode(definition, contract.questId(), QuestStatus.START, counters(0, true), "briefing-pending");
+			assertNode(definition, contract.questId(), QuestStatus.START, counters(0, false), "briefed");
+			assertNode(definition, contract.questId(), QuestStatus.START, counters(1, false), "killed");
+			assertNode(definition, contract.questId(), QuestStatus.REWARD, counters(1, false), "reward");
 			assertTrue(routes(definition, "started", "reward").isEmpty(),
 				() -> "quest " + contract.questId() + " must not keep a collapsed talk -> reward jump");
 		}
@@ -86,42 +87,55 @@ class Batch37TalkKillReportRowLadderContractTest {
 	void bountyFamilyAcceptsFromStarterAndReportsToJournalNpc() throws Exception {
 		for (Kill3Contract contract : KILL3_FAMILY) {
 			QuestDefinition definition = definition(contract.questId()).definition();
+			String started = nodeLabel(definition, contract.questId(), QuestStatus.START, counters(0, true));
+			String briefed = nodeLabel(definition, contract.questId(), QuestStatus.START, counters(0, false));
+			String killed = nodeLabel(definition, contract.questId(), QuestStatus.START, counters(1, false));
+			String reward = nodeLabel(definition, contract.questId(), QuestStatus.REWARD, counters(1, false));
 
-			assertTrue(routes(definition, "unaccepted", "started").stream()
+			assertTrue(routes(definition, "unaccepted", started).stream()
 					.anyMatch(route -> talk(route, contract.startNpc())),
 				() -> "quest " + contract.questId() + " accepts from the legacy start NPC");
 
-			List<QuestTransition> advance = routes(definition, "started", "t1");
-			assertEquals(1, advance.size(),
-				() -> "quest " + contract.questId() + " advances row 0 -> 1 exactly once");
-			assertEquals(new QuestEvent.TalkToNpc(contract.endNpc(),
-				QuestDialogAction.SETPRO1.id(), 0), advance.getFirst().event(),
-				() -> "quest " + contract.questId() + " ends the first journal row on the client SETPRO1 button");
-			assertTrue(advance.getFirst().conditions().contains(
-					new QuestCondition.QuestVariableIs("var0", 0)),
-				() -> "quest " + contract.questId() + " gates row 0 on var0=0");
-			assertTrue(advance.getFirst().actions().contains(new QuestAction.SetVariable("var0", 1)),
-				() -> "quest " + contract.questId() + " writes row 1 on the SETPRO1 route");
-			assertTrue(routes(definition, "started", "started").stream()
+			/* 行 0：简报页（select2）由 QUEST_SELECT 打开，标志位保持不变。 */
+			/* Row 0: QUEST_SELECT opens the select2 briefing page and keeps the flag raised. */
+			assertTrue(routes(definition, started, started).stream()
 					.anyMatch(route -> talk(route, contract.endNpc())
 						&& route.afterCommit().equals(List.of(new AfterCommitAction.ShowQuestDialog(
 							QuestDialogPage.SELECT2.id())))),
 				() -> "quest " + contract.questId() + " shows the client select2 page on row 0");
 
-			List<QuestTransition> kill = routes(definition, "t1", "k2");
-			assertEquals(1, kill.size(),
-				() -> "quest " + contract.questId() + " advances row 1 -> 2 exactly once");
-			assertEquals(new QuestEvent.KillNpcSet(contract.kills()), kill.getFirst().event(),
-				() -> "quest " + contract.questId() + " counts the client monster-hunt targets");
+			/* 行 1：客户端末按钮（SETPRO1）清简报标志位，落入计数零段（由目标投影承担清位）。 */
+			/* Row 1: the client's SETPRO1 end button clears the briefing flag by reaching the zero grid node. */
+			List<QuestTransition> briefingClear = routes(definition, started, briefed);
+			assertEquals(1, briefingClear.size(),
+				() -> "quest " + contract.questId() + " clears the briefing exactly once");
+			assertEquals(new QuestEvent.TalkToNpc(contract.endNpc(),
+				QuestDialogAction.SETPRO1.id(), 0), briefingClear.getFirst().event(),
+				() -> "quest " + contract.questId() + " ends the briefing row on the client SETPRO1 button");
+			assertEquals(0, node(definition, briefed).projection().variables().get("var5"),
+				() -> "quest " + contract.questId() + " clears the briefing flag on its way to the counters");
 
-			assertTrue(routes(definition, "k2", "k2").stream()
+			/* 行 2：击杀把计数推到满段（客户端击杀行都以 SECTION_5==0 门控）。 */
+			/* Row 2: kills saturate the counter slot; the client gates every kill row on SECTION_5==0. */
+			List<QuestTransition> kill = routes(definition, briefed, killed);
+			assertFalse(kill.isEmpty(), () -> "quest " + contract.questId() + " counts the client hunt targets");
+			assertEquals(contract.kills(), kill.stream().map(route -> killTargets(route.event()))
+					.flatMap(Set::stream).collect(Collectors.toSet()),
+				() -> "quest " + contract.questId() + " counts the client monster-hunt targets");
+			assertTrue(kill.stream().allMatch(route -> route.afterCommit()
+					.equals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)))),
+				() -> "quest " + contract.questId() + " syncs kill progress as PACKET_ONLY");
+
+			/* 行 3：报告页是客户端的 select5（2375），交付按钮 SELECT_QUEST_REWARD 开奖励窗。 */
+			/* Row 3: the client select5 report page (2375); SELECT_QUEST_REWARD opens the reward window. */
+			assertTrue(routes(definition, killed, killed).stream()
 					.anyMatch(route -> talk(route, contract.endNpc())
 						&& route.afterCommit().equals(List.of(new AfterCommitAction.ShowQuestDialog(
 							QuestDialogPage.SELECT5.id())))),
-				() -> "quest " + contract.questId() + " shows the client select5 report page on row 2");
-			List<QuestTransition> claim = routes(definition, "k2", "reward");
+				() -> "quest " + contract.questId() + " shows the client select5 report page on the report row");
+			List<QuestTransition> claim = routes(definition, killed, reward);
 			assertEquals(1, claim.size(),
-				() -> "quest " + contract.questId() + " reports row 2 -> reward exactly once");
+				() -> "quest " + contract.questId() + " reports the saturated row -> reward exactly once");
 			assertEquals(new QuestEvent.TalkToNpc(contract.endNpc(),
 				QuestDialogAction.SELECT_QUEST_REWARD.id(), 0), claim.getFirst().event(),
 				() -> "quest " + contract.questId() + " opens the reward window from the select5 button");
@@ -130,10 +144,10 @@ class Batch37TalkKillReportRowLadderContractTest {
 						QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
 				() -> "quest " + contract.questId() + " shows the reward window page");
 
-			assertTrue(routes(definition, "reward", "complete").stream()
+			assertTrue(routes(definition, reward, "complete").stream()
 					.allMatch(route -> talk(route, contract.endNpc())),
 				() -> "quest " + contract.questId() + " completes only on the journal end NPC");
-			assertTrue(routes(definition, "reward", "complete").stream()
+			assertTrue(routes(definition, reward, "complete").stream()
 					.noneMatch(route -> talk(route, contract.startNpc())),
 				() -> "quest " + contract.questId() + " must not let the starter claim the reward");
 		}
@@ -185,7 +199,11 @@ class Batch37TalkKillReportRowLadderContractTest {
 	@Test
 	void staleCollapsedRewardSavesHealToTheRewardRow() throws Exception {
 		for (Kill3Contract contract : KILL3_FAMILY) {
-			assertHealsTo(contract.questId(), 2);
+			/* P0c-6：真端形状没有任务书行号（var0 是击杀计数，行由客户端 SECTION 门控推导），
+			 * 因此不再有也不该有"把旧存档行 0/1 推到领奖行"的无 source 自愈边（P3 既有裁定）。 */
+			/* Retail shape has no stored journal row, hence no source-less repair edge may remain. */
+			assertTrue(enterWorldRecoveries(definition(contract.questId()).definition()).isEmpty(),
+				() -> "quest " + contract.questId() + " is retail-driven and must not keep a reward heal edge");
 		}
 		for (Talk4Contract contract : TALK4_FAMILY) {
 			assertHealsTo(contract.questId(), 3);
@@ -239,6 +257,43 @@ class Batch37TalkKillReportRowLadderContractTest {
 			|| event.equals(new QuestEvent.KillNpcSet(Set.of(npcId)));
 	}
 
+	/** 击杀边覆盖的 npc 集（KillNpc 单只 / KillNpcSet 家族）。 / Npc targets covered by a kill edge. */
+	private static Set<Integer> killTargets(QuestEvent event) {
+		return switch (event) {
+			case QuestEvent.KillNpc(int npcId) -> Set.of(npcId);
+			case QuestEvent.KillNpcSet(Set<Integer> npcIds) -> npcIds;
+			default -> Set.of();
+		};
+	}
+
+	/** 真端单槽网格的目标状态：计数 0/1 + 简报标志位。 / Retail single-slot grid state. */
+	private static Map<String, Integer> counters(int kills, boolean briefing) {
+		return Map.of("var0", kills, "var5", briefing ? 1 : 0);
+	}
+
+	/**
+	 * 按 (状态, 投影) 定位真端网格节点标签（网格命名 a0/a1.. 与旧 XML 的阶梯名不同，语义才是契约）。
+	 * Semantic (status, projection) node lookup for the retail grid labels.
+	 */
+	private static String nodeLabel(QuestDefinition definition, int questId, QuestStatus status,
+			Map<String, Integer> state) {
+		List<String> labels = definition.nodes().stream()
+			.filter(node -> node.projection().status() == status)
+			.filter(node -> node.projection().variables().equals(state))
+			.map(QuestNode::label)
+			.toList();
+		assertEquals(1, labels.size(), () -> "quest " + questId + " must declare exactly one " + status
+			+ " node projecting " + state + ", got " + labels);
+		return labels.getFirst();
+	}
+
+	private static void assertNode(QuestDefinition definition, int questId, QuestStatus status,
+			Map<String, Integer> state, String role) {
+		String label = nodeLabel(definition, questId, status, state);
+		assertEquals(state, node(definition, label).projection().variables(),
+			() -> "quest " + questId + " " + role + " projection");
+	}
+
 	private static List<QuestTransition> routes(QuestDefinition definition, String source, String target) {
 		return definition.transitions().stream()
 			.filter(route -> source.equals(route.sourceNode()) && target.equals(route.targetNode()))
@@ -268,11 +323,9 @@ class Batch37TalkKillReportRowLadderContractTest {
 			true, true, 0, 0, 100000000, 1, 0f, 0f, 0f, (byte) 0);
 	}
 
-	private static CompiledQuestDefinition definition(int questId) throws IOException {
-		try (InputStream input = Batch37TalkKillReportRowLadderContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			assertNotNull(input, () -> "missing quest definition " + questId + ".xml");
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	private static CompiledQuestDefinition definition(int questId) throws Exception {
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// Retired quests live in git history only: use the production view (XML dir + retail overlay).
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

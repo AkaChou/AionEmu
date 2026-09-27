@@ -6,7 +6,6 @@ import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
@@ -19,20 +18,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定 25608 [Group] Oh, Bother 的 7 步真端行对齐。
- * <p>客户端 quest_q25608.html 的 quest_summary 有 7 个可见槽位（0/3/6/9/12/15/18），retail
- * 定义同样是 7 步：TALK 806177 → TALK 806197 → ENTER_AREA 206534 → HUNT 241235 x10 →
- * TALK 806197 → ENTER_AREA 206542 → COLLECT_ITEM 805964。旧迁移跳过了两个 ENTER_AREA 行，
- * 把 HUNT 放在 var0=2、把交付行拆成 var0=4/5，导致行 2 与行 5 永远没有状态、领奖态停在行 5。
- * 修复后 step0..step6 与行 0..6 一一对应，reward 投影为领奖行 6，旧 REWARD/var0=5 存档通过
- * 无 source 的 enter-world 或 QUEST_SELECT 自愈边回到行 6；两个 ENTER_AREA 触发器注册在
- * zones_quest.xml，坐标取自客户端 DF6 mission level 的 sensory NPC。</p>
- * <p>Locks the seven-step retail journal alignment for quest 25608: the client quest_summary has
- * seven visible slots matching the retail steps TALK, TALK, ENTER_AREA 206534, HUNT x10, TALK,
- * ENTER_AREA 206542 and COLLECT_ITEM. The old migration skipped both ENTER_AREA rows and left the
- * reward state on row 5. The repaired definition projects step0..step6 onto journal rows 0..6,
- * projects REWARD onto the reward row 6, heals stale REWARD/var0=5 saves, and registers both
- * sensory zones that were extracted from the client DF6 mission level.</p>
+ * 锁定 25608 [Group] Oh, Bother 的 7 步真端行对齐（DataDriven 编译形）。
+ * <p>客户端 quest_q25608.html 的 quest_summary 有 7 个可见槽位（0/3/6/9/12/15/18），retail 表
+ * 同样 7 步：TALK 806177 → TALK 806197 → ENTER_AREA 206534 → HUNT 241235 x10 → TALK 806197 →
+ * ENTER_AREA 206542 → COLLECT_ITEM 805964。DD 编译器把 step0..step6 投影到行 0..6，领奖行 =
+ * 客户端末行 6；两个 ENTER_AREA 步的 DD 驼峰别名经 {@code quest_enterarea_zone_resolution.tsv}
+ * 解析为 zones_quest.xml 登记名（坐标取自客户端 DF6 mission level），未登记别名在编译期被拒
+ * （RETAIL_ENTERAREA_ZONE_UNRESOLVED，防运行时死边）；hunt 段 SECTION_1 计数（count-1 门），
+ * 交付行 39 检查直达领奖；REWARD/var0=5 陈旧存档由 enter-world 或 QUEST_SELECT 自愈边回到行 6。</p>
+ * <p>Locks the seven-step retail journal alignment for quest 25608 in the DataDriven compiled
+ * shape: the client quest_summary has seven visible slots matching the retail steps TALK, TALK,
+ * ENTER_AREA 206534, HUNT x10, TALK, ENTER_AREA 206542 and COLLECT_ITEM. The compiler projects
+ * step0..step6 onto journal rows 0..6 with the reward on the client's last row 6; both ENTER_AREA
+ * aliases resolve through the zone-resolution registry to the zones_quest.xml registered names,
+ * an unregistered alias is rejected at compile time (the runtime dead-edge guard); the hunt counts
+ * in SECTION_1 behind the count-1 gate, the turn-in check lands the reward row, and stale
+ * REWARD/var0=5 saves heal back to row 6.</p>
  */
 class Quest25608RetailSevenStepAlignmentTest {
 
@@ -49,12 +50,12 @@ class Quest25608RetailSevenStepAlignmentTest {
 		QuestDefinition definition = load().definition();
 
 		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
-		assertNode(definition, "step1", QuestStatus.START, Map.of("var0", 1));
-		assertNode(definition, "step2", QuestStatus.START, Map.of("var0", 2));
-		assertNode(definition, "step3", QuestStatus.START, Map.of("var0", 3));
-		assertNode(definition, "step4", QuestStatus.START, Map.of("var0", 4));
-		assertNode(definition, "step5", QuestStatus.START, Map.of("var0", 5));
-		assertNode(definition, "step6", QuestStatus.START, Map.of("var0", 6));
+		assertNode(definition, "s1", QuestStatus.START, Map.of("var0", 1));
+		assertNode(definition, "s2", QuestStatus.START, Map.of("var0", 2));
+		assertNode(definition, "s3", QuestStatus.START, Map.of("var0", 3));
+		assertNode(definition, "s4", QuestStatus.START, Map.of("var0", 4));
+		assertNode(definition, "s5", QuestStatus.START, Map.of("var0", 5));
+		assertNode(definition, "s6", QuestStatus.START, Map.of("var0", 6));
 		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", REWARD_ROW));
 		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0));
 
@@ -72,16 +73,16 @@ class Quest25608RetailSevenStepAlignmentTest {
 	void enterAreaRowsAdvanceThroughRegisteredClientZones() throws Exception {
 		CompiledQuestDefinition compiled = load();
 
-		QuestTransition firstArea = transition(compiled, "step2", "step3");
+		QuestTransition firstArea = transition(compiled, "s2", "s3");
 		assertEquals(new QuestEvent.EnterZone(ZONE_A), firstArea.event());
-		assertEquals(List.of(new QuestCondition.QuestVariableIs("var0", 2)), firstArea.conditions());
+		assertEquals(List.of(), firstArea.conditions());
 		assertEquals(List.of(new QuestAction.SetVariable("var0", 3)), firstArea.actions());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
 			firstArea.afterCommit());
 
-		QuestTransition secondArea = transition(compiled, "step5", "step6");
+		QuestTransition secondArea = transition(compiled, "s5", "s6");
 		assertEquals(new QuestEvent.EnterZone(ZONE_B), secondArea.event());
-		assertEquals(List.of(new QuestCondition.QuestVariableIs("var0", 5)), secondArea.conditions());
+		assertEquals(List.of(), secondArea.conditions());
 		assertEquals(List.of(new QuestAction.SetVariable("var0", 6)), secondArea.actions());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
 			secondArea.afterCommit());
@@ -102,13 +103,13 @@ class Quest25608RetailSevenStepAlignmentTest {
 	void huntCounterSelfLoopAdvancesToTheTalkRow() {
 		CompiledQuestDefinition compiled = load();
 
-		QuestTransition counter = transition(compiled, "step3", "step3");
+		QuestTransition counter = transition(compiled, "s3", "s3", new QuestEvent.KillNpc(HUNT_NPC));
 		assertEquals(new QuestEvent.KillNpc(HUNT_NPC), counter.event());
 		assertEquals(1, counter.priority());
 		assertEquals(List.of(new QuestCondition.VariableBelow("var1", 9)), counter.conditions());
 		assertEquals(List.of(new QuestAction.IncrementVariable("var1", 1)), counter.actions());
 
-		QuestTransition finalKill = transition(compiled, "step3", "step4");
+		QuestTransition finalKill = transition(compiled, "s3", "s4", new QuestEvent.KillNpc(HUNT_NPC));
 		assertEquals(0, finalKill.priority());
 		assertEquals(List.of(new QuestCondition.VariableAtLeast("var1", 9)), finalKill.conditions());
 		assertEquals(List.of(
@@ -128,7 +129,10 @@ class Quest25608RetailSevenStepAlignmentTest {
 	void rewardRouteOwnsTheTurnInRowAndCompletionPage() {
 		CompiledQuestDefinition compiled = load();
 
-		QuestTransition turnIn = transition(compiled, "step6", "reward");
+		QuestEvent.TalkToNpc check = new QuestEvent.TalkToNpc(TURN_IN_NPC,
+			QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id());
+		QuestTransition turnIn = transition(compiled, "s6", "reward", check);
+		assertEquals(0, turnIn.priority());
 		assertEquals(List.of(new QuestCondition.HasItem(QUEST_ITEM, 1)), turnIn.conditions());
 		assertEquals(List.of(
 			new QuestAction.RemoveItem(QUEST_ITEM, 1),
@@ -140,6 +144,11 @@ class Quest25608RetailSevenStepAlignmentTest {
 		assertEquals(QuestStatus.REWARD, plan.nextStatus());
 		assertEquals(REWARD_ROW,
 			compiled.definition().progressLayout().unpack(plan.nextPackedVariables()).get("var0"));
+		QuestTransition missingItem = transition(compiled, "s6", "s6", check);
+		assertEquals(1, missingItem.priority());
+		assertEquals(List.of(), missingItem.actions());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(10001)),
+			missingItem.afterCommit());
 
 		QuestTransition select = compiled.definition().transitions().stream()
 			.filter(candidate -> "reward".equals(candidate.sourceNode())
@@ -161,10 +170,16 @@ class Quest25608RetailSevenStepAlignmentTest {
 	void staleRewardRowsAreHealedOnEnterWorldAndSelect() {
 		CompiledQuestDefinition compiled = load();
 
+		// 两条 enter-world 自愈边并存（REWARD/var0=0 的旧投影行与 var0<6 的旧行号存档），按
+		// 条件形锁定行号自愈边。
+		// Two enter-world heal edges coexist (the older projection's REWARD/var0=0 saves and the
+		// stale-row saves); lock the row-heal edge by its condition shape.
 		QuestTransition enterWorld = compiled.definition().transitions().stream()
 			.filter(candidate -> candidate.sourceNode() == null)
 			.filter(candidate -> "reward".equals(candidate.targetNode()))
 			.filter(candidate -> candidate.event() instanceof QuestEvent.EnterWorld)
+			.filter(candidate -> candidate.conditions().stream()
+				.anyMatch(condition -> condition instanceof QuestCondition.VariableBelow))
 			.findFirst().orElseThrow();
 		assertEquals(List.of(
 			new QuestCondition.StatusIs(QuestStatus.REWARD),
@@ -183,8 +198,8 @@ class Quest25608RetailSevenStepAlignmentTest {
 			.filter(candidate -> candidate.sourceNode() == null)
 			.filter(candidate -> candidate.event().equals(
 				new QuestEvent.TalkToNpc(TURN_IN_NPC, QuestDialogAction.QUEST_SELECT.id())))
+			.filter(candidate -> candidate.conditions().equals(enterWorld.conditions()))
 			.findFirst().orElseThrow();
-		assertEquals(enterWorld.conditions(), selectHeal.conditions());
 		assertEquals(List.of(new QuestAction.SetVariable("var0", REWARD_ROW)), selectHeal.actions());
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
 			selectHeal.afterCommit());
@@ -213,8 +228,14 @@ class Quest25608RetailSevenStepAlignmentTest {
 	}
 
 	private static QuestTransition transition(CompiledQuestDefinition compiled, String source, String target) {
+		return transition(compiled, source, target, null);
+	}
+
+	private static QuestTransition transition(CompiledQuestDefinition compiled, String source, String target,
+			QuestEvent event) {
 		List<QuestTransition> matches = compiled.definition().transitions().stream()
 			.filter(candidate -> source.equals(candidate.sourceNode()) && target.equals(candidate.targetNode()))
+			.filter(candidate -> event == null || event.equals(candidate.event()))
 			.toList();
 		assertEquals(1, matches.size(), source + " -> " + target + " routes");
 		return matches.getFirst();
@@ -236,14 +257,6 @@ class Quest25608RetailSevenStepAlignmentTest {
 	}
 
 	private static CompiledQuestDefinition load() {
-		try (InputStream input = Quest25608RetailSevenStepAlignmentTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/25608.xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition 25608.xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		} catch (Exception exception) {
-			throw new AssertionError("failed to compile quest 25608", exception);
-		}
+		return ProductionQuestDefinitions.definitionInOverlay(25608);
 	}
 }

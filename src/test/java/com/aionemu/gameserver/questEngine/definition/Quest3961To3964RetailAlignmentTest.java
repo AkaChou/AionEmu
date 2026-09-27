@@ -2,9 +2,6 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,7 +25,8 @@ class Quest3961To3964RetailAlignmentTest {
 		for (Spec spec : SPECS) {
 			QuestDefinition definition = compile(spec.questId());
 
-			assertPage(definition, "unaccepted", FLORA, QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT1);
+			assertPage(definition, "unaccepted", FLORA, QuestDialogAction.QUEST_SELECT,
+				QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW);
 			QuestTransition accept = route(definition, "unaccepted", FLORA, QuestDialogAction.QUEST_ACCEPT_1);
 			assertEquals("started", accept.targetNode(), "quest " + spec.questId() + " accept target");
 			assertTrue(accept.actions().contains(new QuestAction.GiveItem(spec.workItemId(), 1)),
@@ -39,21 +37,35 @@ class Quest3961To3964RetailAlignmentTest {
 			assertPage(definition, "started", ERDOS, QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT2);
 			assertPage(definition, "started", ERDOS, QuestDialogAction.SELECT2_1, QuestDialogPage.SELECT2_1);
 			QuestTransition handoff = route(definition, "started", ERDOS, QuestDialogAction.SETPRO1);
-			assertEquals("payment", handoff.targetNode(), "quest " + spec.questId() + " handoff target");
+			assertEquals("s1", handoff.targetNode(), "quest " + spec.questId() + " handoff target");
 			assertEquals(List.of(new QuestAction.RemoveItem(spec.workItemId(), 1)), handoff.actions(),
 				"quest " + spec.questId() + " work item removal");
-			assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
+			assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 				new AfterCommitAction.CloseDialog()), handoff.afterCommit(),
 				"quest " + spec.questId() + " handoff response");
 
-			assertPage(definition, "payment", FLORA, QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT5);
-			assertItemCheck(definition, spec, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM,
-				new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT6.id()));
-			assertItemCheck(definition, spec, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE,
-				new AfterCommitAction.CloseDialog());
-			assertEquals(List.of(new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
-				route(definition, "payment", FLORA, QuestDialogAction.FINISH_DIALOG).afterCommit(),
-				"quest " + spec.questId() + " failed check finish");
+			// S2：交付 = QUEST_SELECT(s1→reward) 带整组 HasItem 门直翻领奖态并下发奖励窗；SELECT5 报告页、
+			// 39/20002 检查对与 select6 失败页随规范交付段退场（未集齐零路由，关窗兜底交 DialogService）。
+			// S2 canonical delivery: QUEST_SELECT(s1→reward) gated by the whole hand-in set flips REWARD and
+			// shows the reward window; the report page, the check pairs and the failure page retire.
+			QuestTransition delivery = route(definition, "s1", FLORA, QuestDialogAction.QUEST_SELECT);
+			assertEquals("reward", delivery.targetNode(), "quest " + spec.questId() + " delivery target");
+			assertEquals(spec.requirements().stream()
+				.map(item -> (QuestCondition) new QuestCondition.HasItem(item.itemId(), item.count())).toList(),
+				delivery.conditions(), "quest " + spec.questId() + " hand-in gate");
+			assertEquals(spec.requirements().stream()
+				.map(item -> (QuestAction) new QuestAction.RemoveItem(item.itemId(), item.count())).toList(),
+				delivery.actions(), "quest " + spec.questId() + " item removals");
+			assertEquals(List.of(new AfterCommitAction.SyncQuestState(
+				QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH), new AfterCommitAction.ShowQuestDialog(
+				deliveryWindowPage(definition.metadata()))), delivery.afterCommit(),
+				"quest " + spec.questId() + " delivery response");
+			assertTrue(routes(definition, "s1", FLORA).stream().noneMatch(transition ->
+				transition.event() instanceof QuestEvent.TalkToNpc talk && talk.dialogId() != null
+					&& (talk.dialogId() == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()
+						|| talk.dialogId() == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id()
+						|| talk.dialogId() == QuestDialogAction.FINISH_DIALOG.id())),
+				"quest " + spec.questId() + " 的检查对与失败页关闭出口必须随规范交付段退场");
 
 			QuestTransition completion = route(definition, "reward", FLORA,
 				QuestDialogAction.SELECTED_QUEST_REWARD1);
@@ -65,36 +77,15 @@ class Quest3961To3964RetailAlignmentTest {
 		}
 	}
 
-	private static void assertItemCheck(QuestDefinition definition, Spec spec, QuestDialogAction action,
-			AfterCommitAction failureResponse) {
-		List<QuestTransition> checks = routes(definition, "payment", FLORA, action);
-		assertEquals(2, checks.size(), "quest " + spec.questId() + " " + action + " branches");
-		QuestTransition success = priority(checks, 0);
-		QuestTransition failure = priority(checks, 1);
-		List<QuestCondition> conditions = spec.requirements().stream()
-			.map(item -> (QuestCondition) new QuestCondition.HasItem(item.itemId(), item.count(), true))
-			.toList();
-		List<QuestAction> removals = spec.requirements().stream()
-			.map(item -> (QuestAction) new QuestAction.RemoveItem(item.itemId(), item.count()))
-			.toList();
-
-		assertEquals("reward", success.targetNode(), "quest " + spec.questId() + " check target");
-		assertEquals(conditions, success.conditions(), "quest " + spec.questId() + " item conditions");
-		assertEquals(removals, success.actions(), "quest " + spec.questId() + " item removals");
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
-			QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH), new AfterCommitAction.ShowQuestDialog(
-			QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())), success.afterCommit(),
-			"quest " + spec.questId() + " success response");
-		assertEquals("payment", failure.targetNode(), "quest " + spec.questId() + " failure target");
-		assertEquals(List.of(failureResponse), failure.afterCommit(),
-			"quest " + spec.questId() + " failure response");
+	/** 交付窗页（与 RetailSimpleCollectItemDefinitionCompiler.deliveryWindowPage 同口径：档位查表，零奖励组回落窗 1）。 */
+	private static int deliveryWindowPage(QuestMetadata metadata) {
+		return metadata.rewardGroups().isEmpty()
+			? QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()
+			: QuestDialogPage.rewardWindowForTier(metadata.rewardGroups().size() - 1).orElseThrow().id();
 	}
 
-	private static QuestDefinition compile(int questId) throws Exception {
-		Path path = Path.of("src/main/resources/aion/data/static_data/quest_definition/quests/" + questId + ".xml");
-		try (InputStream input = Files.newInputStream(path)) {
-			return QuestDefinitionXmlCompiler.compile(input).definition();
-		}
+	private static QuestDefinition compile(int questId) {
+		return ProductionQuestDefinitions.definitionInOverlay(questId).definition();
 	}
 
 	private static void assertPage(QuestDefinition definition, String source, int npcId,
@@ -102,11 +93,6 @@ class Quest3961To3964RetailAlignmentTest {
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(page.id())),
 			route(definition, source, npcId, action).afterCommit(),
 			"quest " + definition.id() + " " + source + " page");
-	}
-
-	private static QuestTransition priority(List<QuestTransition> transitions, int priority) {
-		return transitions.stream().filter(transition -> Integer.valueOf(priority).equals(transition.priority()))
-			.findFirst().orElseThrow();
 	}
 
 	private static QuestTransition route(QuestDefinition definition, String source, int npcId,

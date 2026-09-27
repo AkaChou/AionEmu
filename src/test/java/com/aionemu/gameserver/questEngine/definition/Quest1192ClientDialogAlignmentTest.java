@@ -24,15 +24,19 @@ class Quest1192ClientDialogAlignmentTest {
 		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0));
 		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
 
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT1.id())),
+		// S2：接取窗由 QUEST_SELECT 直发（页 4）；select1 页梯与 1007 中转随规范接取段退场。
+		// S2 canonical accept: QUEST_SELECT opens page 4 directly; the select1 ladder and the 1007 relay retire.
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
+			QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id())),
 			route(definition, "unaccepted", "unaccepted", QuestDialogAction.QUEST_SELECT.id()).afterCommit());
 
 		assertFalse(definition.transitions().stream()
 			.anyMatch(transition -> transition.event().equals(new QuestEvent.TalkToNpc(START_NPC_ID,
 				QuestDialogAction.SELECT1_1.id()))));
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
-			QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id())),
-			route(definition, "unaccepted", "unaccepted", QuestDialogAction.ASK_QUEST_ACCEPT.id()).afterCommit());
+		assertFalse(definition.transitions().stream()
+			.anyMatch(transition -> transition.event().equals(new QuestEvent.TalkToNpc(START_NPC_ID,
+				QuestDialogAction.ASK_QUEST_ACCEPT.id()))),
+			"quest 1192 的 1007 中转必须随规范接取段退场");
 
 		QuestTransition accept = route(definition, "unaccepted", "started", QuestDialogAction.QUEST_ACCEPT_1.id());
 		assertEquals(List.of(new QuestCondition.StartEligible()), accept.conditions());
@@ -60,12 +64,6 @@ class Quest1192ClientDialogAlignmentTest {
 	}
 
 	private CompiledQuestDefinition definition() throws Exception {
-		try (InputStream input = getClass().getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/1192.xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition 1192.xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		return ProductionQuestDefinitions.definitionInOverlay(1192);
 	}
 }

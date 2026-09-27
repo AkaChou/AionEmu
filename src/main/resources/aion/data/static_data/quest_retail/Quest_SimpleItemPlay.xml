@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE strings [
+	<!ENTITY quot "quot">
+	<!ENTITY amp "amp">
+	<!ENTITY apos "apos">
+	<!ENTITY lt "lt">
+	<!ENTITY gt "gt">
+	<!ENTITY nbsp "nbsp">
+	<!ENTITY iexcl "iexcl">
+	<!ENTITY cent "cent">
+	<!ENTITY pound "pound">
+	<!ENTITY curren "curren">
+	<!ENTITY yen "yen">
+	<!ENTITY brvbar "brvbar">
+	<!ENTITY sect "sect">
+	<!ENTITY uml "uml">
+	<!ENTITY copy "copy">
+	<!ENTITY ordf "ordf">
+	<!ENTITY laquo "laquo">
+	<!ENTITY not "not">
+	<!ENTITY shy "shy">
+	<!ENTITY reg "reg">
+	<!ENTITY macr "macr">
+	<!ENTITY deg "deg">
+	<!ENTITY plusmn "plusmn">
+	<!ENTITY sup2 "sup2">
+	<!ENTITY sup3 "sup3">
+	<!ENTITY acute "acute">
+	<!ENTITY micro "micro">
+	<!ENTITY para "para">
+	<!ENTITY middot "middot">
+	<!ENTITY cedil "cedil">
+	<!ENTITY sup1 "sup1">
+	<!ENTITY ordm "ordm">
+	<!ENTITY raquo "raquo">
+	<!ENTITY frac14 "frac14">
+	<!ENTITY frac12 "frac12">
+	<!ENTITY frac34 "frac34">
+	<!ENTITY iquest "iquest">
+	<!ENTITY Agrave "Agrave">
+	<!ENTITY Aacute "Aacute">
+	<!ENTITY Acirc "Acirc">
+	<!ENTITY Atilde "Atilde">
+	<!ENTITY Auml "Auml">
+	<!ENTITY Aring "Aring">
+	<!ENTITY AElig "AElig">
+	<!ENTITY Ccedil "Ccedil">
+	<!ENTITY Egrave "Egrave">
+	<!ENTITY Eacute "Eacute">
+	<!ENTITY Ecirc "Ecirc">
+	<!ENTITY Euml "Euml">
+	<!ENTITY Igrave "Igrave">
+	<!ENTITY Iacute "Iacute">
+	<!ENTITY Icirc "Icirc">
+	<!ENTITY Iuml "Iuml">
+	<!ENTITY ETH "ETH">
+	<!ENTITY Ntilde "Ntilde">
+	<!ENTITY Ograve "Ograve">
+	<!ENTITY Oacute "Oacute">
+	<!ENTITY Ocirc "Ocirc">
+	<!ENTITY Otilde "Otilde">
+	<!ENTITY Ouml "Ouml">
+	<!ENTITY times "times">
+	<!ENTITY Oslash "Oslash">
+	<!ENTITY Ugrave "Ugrave">
+	<!ENTITY Uacute "Uacute">
+	<!ENTITY Ucirc "Ucirc">
+	<!ENTITY Uuml "Uuml">
+	<!ENTITY Yacute "Yacute">
+	<!ENTITY THORN "THORN">
+	<!ENTITY szlig "szlig">
+	<!ENTITY agrave "agrave">
+	<!ENTITY aacute "aacute">
+	<!ENTITY acirc "acirc">
+	<!ENTITY atilde "atilde">
+	<!ENTITY auml "auml">
+	<!ENTITY aring "aring">
+	<!ENTITY aelig "aelig">
+	<!ENTITY ccedil "ccedil">
+	<!ENTITY egrave "egrave">
+	<!ENTITY eacute "eacute">
+	<!ENTITY ecirc "ecirc">
+	<!ENTITY euml "euml">
+	<!ENTITY igrave "igrave">
+	<!ENTITY iacute "iacute">
+	<!ENTITY icirc "icirc">
+	<!ENTITY iuml "iuml">
+	<!ENTITY eth "eth">
+	<!ENTITY ntilde "ntilde">
+	<!ENTITY ograve "ograve">
+	<!ENTITY oacute "oacute">
+	<!ENTITY ocirc "ocirc">
+	<!ENTITY otilde "otilde">
+	<!ENTITY ouml "ouml">
+	<!ENTITY divide "divide">
+	<!ENTITY oslash "oslash">
+	<!ENTITY ugrave "ugrave">
+	<!ENTITY uacute "uacute">
+	<!ENTITY ucirc "ucirc">
+	<!ENTITY uuml "uuml">
+	<!ENTITY yacute "yacute">
+	<!ENTITY thorn "thorn">
+	<!ENTITY yuml "yuml">
+	<!ENTITY OElig "OElig">
+	<!ENTITY oelig "oelig">
+	<!ENTITY Scaron "Scaron">
+	<!ENTITY scaron "scaron">
+	<!ENTITY Yuml "Yuml">
+	<!ENTITY fnof "fnof">
+	<!ENTITY circ "circ">
+	<!ENTITY tilde "tilde">
+	<!ENTITY Alpha "Alpha">
+	<!ENTITY Beta "Beta">
+	<!ENTITY Gamma "Gamma">
+	<!ENTITY Delta "Delta">
+	<!ENTITY Epsilon "Epsilon">
+	<!ENTITY Zeta "Zeta">
+	<!ENTITY Eta "Eta">
+	<!ENTITY Theta "Theta">
+	<!ENTITY Iota "Iota">
+	<!ENTITY Kappa "Kappa">
+	<!ENTITY Lambda "Lambda">
+	<!ENTITY Mu "Mu">
+	<!ENTITY Nu "Nu">
+	<!ENTITY Xi "Xi">
+	<!ENTITY Omicron "Omicron">
+	<!ENTITY Pi "Pi">
+	<!ENTITY Rho "Rho">
+	<!ENTITY Sigma "Sigma">
+	<!ENTITY Tau "Tau">
+	<!ENTITY Upsilon "Upsilon">
+	<!ENTITY Phi "Phi">
+	<!ENTITY Chi "Chi">
+	<!ENTITY Psi "Psi">
+	<!ENTITY Omega "Omega">
+	<!ENTITY alpha "alpha">
+	<!ENTITY beta "beta">
+	<!ENTITY gamma "gamma">
+	<!ENTITY delta "delta">
+	<!ENTITY epsilon "epsilon">
+	<!ENTITY zeta "zeta">
+	<!ENTITY eta "eta">
+	<!ENTITY theta "theta">
+	<!ENTITY iota "iota">
+	<!ENTITY kappa "kappa">
+	<!ENTITY lambda "lambda">
+	<!ENTITY mu "mu">
+	<!ENTITY nu "nu">
+	<!ENTITY xi "xi">
+	<!ENTITY omicron "omicron">
+	<!ENTITY pi "pi">
+	<!ENTITY rho "rho">
+	<!ENTITY sigmaf "sigmaf">
+	<!ENTITY sigma "sigma">
+	<!ENTITY tau "tau">
+	<!ENTITY upsilon "upsilon">
+	<!ENTITY phi "phi">
+	<!ENTITY chi "chi">
+	<!ENTITY psi "psi">
+	<!ENTITY omega "omega">
+	<!ENTITY thetasym "thetasym">
+	<!ENTITY upsih "upsih">
+	<!ENTITY piv "piv">
+	<!ENTITY ensp "ensp">
+	<!ENTITY emsp "emsp">
+	<!ENTITY thinsp "thinsp">
+	<!ENTITY zwnj "zwnj">
+	<!ENTITY zwj "zwj">
+	<!ENTITY lrm "lrm">
+	<!ENTITY rlm "rlm">
+	<!ENTITY ndash "ndash">
+	<!ENTITY mdash "mdash">
+	<!ENTITY lsquo "lsquo">
+	<!ENTITY rsquo "rsquo">
+	<!ENTITY sbquo "sbquo">
+	<!ENTITY ldquo "ldquo">
+	<!ENTITY rdquo "rdquo">
+	<!ENTITY bdquo "bdquo">
+	<!ENTITY dagger "dagger">
+	<!ENTITY Dagger "Dagger">
+	<!ENTITY bull "bull">
+	<!ENTITY hellip "hellip">
+	<!ENTITY permil "permil">
+	<!ENTITY prime "prime">
+	<!ENTITY Prime "Prime">
+	<!ENTITY lsaquo "lsaquo">
+	<!ENTITY rsaquo "rsaquo">
+	<!ENTITY oline "oline">
+	<!ENTITY frasl "frasl">
+	<!ENTITY euro "euro">
+	<!ENTITY image "image">
+	<!ENTITY weierp "weierp">
+	<!ENTITY real "real">
+	<!ENTITY trade "trade">
+	<!ENTITY alefsym "alefsym">
+	<!ENTITY larr "larr">
+	<!ENTITY uarr "uarr">
+	<!ENTITY rarr "rarr">
+	<!ENTITY darr "darr">
+	<!ENTITY harr "harr">
+	<!ENTITY crarr "crarr">
+	<!ENTITY lArr "lArr">
+	<!ENTITY uArr "uArr">
+	<!ENTITY rArr "rArr">
+	<!ENTITY dArr "dArr">
+	<!ENTITY hArr "hArr">
+	<!ENTITY forall "forall">
+	<!ENTITY part "part">
+	<!ENTITY exist "exist">
+	<!ENTITY empty "empty">
+	<!ENTITY nabla "nabla">
+	<!ENTITY isin "isin">
+	<!ENTITY notin "notin">
+	<!ENTITY ni "ni">
+	<!ENTITY prod "prod">
+	<!ENTITY sum "sum">
+	<!ENTITY minus "minus">
+	<!ENTITY lowast "lowast">
+	<!ENTITY radic "radic">
+	<!ENTITY prop "prop">
+	<!ENTITY infin "infin">
+	<!ENTITY ang "ang">
+	<!ENTITY and "and">
+	<!ENTITY or "or">
+	<!ENTITY cap "cap">
+	<!ENTITY cup "cup">
+	<!ENTITY int "int">
+	<!ENTITY there4 "there4">
+	<!ENTITY sim "sim">
+	<!ENTITY cong "cong">
+	<!ENTITY asymp "asymp">
+	<!ENTITY ne "ne">
+	<!ENTITY equiv "equiv">
+	<!ENTITY le "le">
+	<!ENTITY ge "ge">
+	<!ENTITY sub "sub">
+	<!ENTITY sup "sup">
+	<!ENTITY nsub "nsub">
+	<!ENTITY sube "sube">
+	<!ENTITY supe "supe">
+	<!ENTITY oplus "oplus">
+	<!ENTITY otimes "otimes">
+	<!ENTITY perp "perp">
+	<!ENTITY sdot "sdot">
+	<!ENTITY lceil "lceil">
+	<!ENTITY rceil "rceil">
+	<!ENTITY lfloor "lfloor">
+	<!ENTITY rfloor "rfloor">
+	<!ENTITY lang "lang">
+	<!ENTITY rang "rang">
+	<!ENTITY loz "loz">
+	<!ENTITY spades "spades">
+	<!ENTITY clubs "clubs">
+	<!ENTITY hearts "hearts">
+	<!ENTITY diams "diams">
+]>
+<quest_simpleitemplays>
+	<id id="9623">
+		<dev_name>[테스트] 아이템 사용</dev_name>
+		<acquired_npc_name>Rebecca_5</acquired_npc_name>
+		<talk_npc1>Rebecca_2</talk_npc1>
+		<talk_npc2>Rebecca_3</talk_npc2>
+		<use_item_name>ITEM_QUEST_9623A 1</use_item_name>
+		<reward_npc_name>Rebecca_5</reward_npc_name>
+	</id>
+	<id id="19048">
+		<dev_name>모션 커스터마이징 튜토리얼</dev_name>
+		<acquired_npc_name>Andreas</acquired_npc_name>
+		<give_item>ITEM_DOC_QUEST_19048A 1</give_item>
+		<use_item_name>ITEM_DOC_QUEST_19048A 1</use_item_name>
+		<reward_npc_name>Andreas</reward_npc_name>
+	</id>
+	<id id="29048">
+		<dev_name>모션 커스터마이징 튜토리얼</dev_name>
+		<acquired_npc_name>Seriphim</acquired_npc_name>
+		<give_item>ITEM_DOC_QUEST_29048A 1</give_item>
+		<use_item_name>ITEM_DOC_QUEST_29048A 1</use_item_name>
+		<reward_npc_name>Seriphim</reward_npc_name>
+	</id>
+	<id id="18213">
+		<dev_name>균열의 비밀</dev_name>
+		<acquired_npc_name>Junos</acquired_npc_name>
+		<give_item>ITEM_QUEST_18213A 1</give_item>
+		<talk_npc1>Inggril</talk_npc1>
+		<talk_npc2>Romedon</talk_npc2>
+		<give_item2>ITEM_QUEST_18213B 1</give_item2>
+		<remove_item2>ITEM_QUEST_18213A 1</remove_item2>
+		<use_item_name>ITEM_QUEST_18213B 1</use_item_name>
+		<reward_npc_name>Romedon</reward_npc_name>
+	</id>
+	<id id="28213">
+		<dev_name>균열의 비밀</dev_name>
+		<acquired_npc_name>Shinin</acquired_npc_name>
+		<give_item>ITEM_QUEST_28213A 1</give_item>
+		<talk_npc1>Inggness</talk_npc1>
+		<talk_npc2>Kijan</talk_npc2>
+		<give_item2>ITEM_QUEST_28213B 1</give_item2>
+		<remove_item2>ITEM_QUEST_28213A 1</remove_item2>
+		<use_item_name>ITEM_QUEST_28213B 1</use_item_name>
+		<reward_npc_name>Kijan</reward_npc_name>
+	</id>
+	<id id="41267">
+		<dev_name>용족 마을 파괴</dev_name>
+		<acquired_npc_name>Joubis</acquired_npc_name>
+		<give_item>ITEM_QUEST_41267A 1</give_item>
+		<use_item_name>ITEM_QUEST_41267A 1</use_item_name>
+		<reward_npc_name>Joubis</reward_npc_name>
+		<con_quest>41268</con_quest>
+	</id>
+	<id id="41514">
+		<dev_name>[일일] 균열의 공동 막기</dev_name>
+		<acquired_npc_name>Grido</acquired_npc_name>
+		<give_item>ITEM_QUEST_41514A 1</give_item>
+		<use_item_name>ITEM_QUEST_41514A 1</use_item_name>
+		<reward_npc_name>Grido</reward_npc_name>
+	</id>
+	<id id="41540">
+		<dev_name>[일일] 연족을 빛으로</dev_name>
+		<acquired_npc_name>Materia</acquired_npc_name>
+		<give_item>ITEM_QUEST_41540A 1</give_item>
+		<use_item_name>ITEM_QUEST_41540A 1</use_item_name>
+		<reward_npc_name>Materia</reward_npc_name>
+	</id>
+	<id id="41300">
+		<dev_name>파가티 타기</dev_name>
+		<acquired_npc_name>Fudion</acquired_npc_name>
+		<give_item>ITEM_RIDE_PAGATI_001_ET5 1</give_item>
+		<use_item_name>ITEM_RIDE_PAGATI_001_ET5 1</use_item_name>
+		<reward_npc_name>Vesetia</reward_npc_name>
+		<con_quest>41301</con_quest>
+	</id>
+	<id id="41577">
+		<dev_name>마력이 느껴지는 곳</dev_name>
+		<acquired_npc_name>Kiriyu</acquired_npc_name>
+		<give_item>ITEM_QUEST_41577A 1</give_item>
+		<use_item_name>ITEM_QUEST_41577A 1</use_item_name>
+		<reward_npc_name>Jinikin</reward_npc_name>
+		<con_quest>41578</con_quest>
+	</id>
+	<id id="41593">
+		<dev_name>방어벽 강화</dev_name>
+		<acquired_npc_name>Solpress</acquired_npc_name>
+		<give_item>ITEM_QUEST_41593A 1</give_item>
+		<use_item_name>ITEM_QUEST_41593A 1</use_item_name>
+		<reward_npc_name>Solpress</reward_npc_name>
+	</id>
+	<id id="18828">
+		<dev_name>관계의 크리스털</dev_name>
+		<acquired_npc_name>HousingManager_Li</acquired_npc_name>
+		<give_item>ITEM_DOC_QUEST_18828A 1</give_item>
+		<use_item_name>ITEM_DOC_QUEST_18828A 1</use_item_name>
+		<reward_npc_name>HousingManager_Li</reward_npc_name>
+		<con_quest>18829</con_quest>
+	</id>
+	<id id="28828">
+		<dev_name>관계의 크리스털</dev_name>
+		<acquired_npc_name>HousingManager_Da</acquired_npc_name>
+		<give_item>ITEM_DOC_QUEST_28828A 1</give_item>
+		<use_item_name>ITEM_DOC_QUEST_28828A 1</use_item_name>
+		<reward_npc_name>HousingManager_Da</reward_npc_name>
+		<con_quest>28829</con_quest>
+	</id>
+	<id id="12066">
+		<dev_name>[공훈] 근원을 점령하기 위해</dev_name>
+		<acquired_npc_name>Ancanus</acquired_npc_name>
+		<give_item>ITEM_QUEST_12066A 1</give_item>
+		<use_item_name>ITEM_QUEST_12066A 1</use_item_name>
+		<reward_npc_name>Ancanus</reward_npc_name>
+	</id>
+	<id id="22066">
+		<dev_name>[공훈] 근원에서의 전투</dev_name>
+		<acquired_npc_name>Udvi</acquired_npc_name>
+		<give_item>ITEM_QUEST_22066A 1</give_item>
+		<use_item_name>ITEM_QUEST_22066A 1</use_item_name>
+		<reward_npc_name>Udvi</reward_npc_name>
+	</id>
+	<id id="50013">
+		<dev_name>초콜릿 탑 완성</dev_name>
+		<acquired_npc_name>Event_L_Shugo_Kannaring</acquired_npc_name>
+		<give_item>ITEM_QUEST_50013A 1</give_item>
+		<use_item_name>ITEM_QUEST_50013A 1</use_item_name>
+		<reward_npc_name>Event_L_Shugo_Kannaring</reward_npc_name>
+	</id>
+	<id id="50014">
+		<dev_name>초콜릿 탑 파괴</dev_name>
+		<acquired_npc_name>Event_L_Shugo_Soloring</acquired_npc_name>
+		<give_item>ITEM_QUEST_50014A 1</give_item>
+		<use_item_name>ITEM_QUEST_50014A 1</use_item_name>
+		<reward_npc_name>Event_L_Shugo_Soloring</reward_npc_name>
+	</id>
+	<id id="51013">
+		<dev_name>초콜릿 탑 완성</dev_name>
+		<acquired_npc_name>Event_D_Shugo_Kannaring</acquired_npc_name>
+		<give_item>ITEM_QUEST_51013A 1</give_item>
+		<use_item_name>ITEM_QUEST_51013A 1</use_item_name>
+		<reward_npc_name>Event_D_Shugo_Kannaring</reward_npc_name>
+	</id>
+	<id id="51014">
+		<dev_name>초콜릿 탑 파괴</dev_name>
+		<acquired_npc_name>Event_D_Shugo_Soloring</acquired_npc_name>
+		<give_item>ITEM_QUEST_51014A 1</give_item>
+		<use_item_name>ITEM_QUEST_51014A 1</use_item_name>
+		<reward_npc_name>Event_D_Shugo_Soloring</reward_npc_name>
+	</id>
+	<id id="80255">
+		<dev_name>(월드) 문자폭죽 쓰기 (천)</dev_name>
+		<acquired_npc_name>event_Parutoo</acquired_npc_name>
+		<give_item>ITEM_QUEST_80255A 1</give_item>
+		<reward_npc_name>event_Parutoo</reward_npc_name>
+	</id>
+	<id id="80256">
+		<dev_name>(월드) 문자폭죽 쓰기 (마)</dev_name>
+		<acquired_npc_name>event_Boobanah</acquired_npc_name>
+		<give_item>ITEM_QUEST_80256A 1</give_item>
+		<reward_npc_name>event_Boobanah</reward_npc_name>
+	</id>
+	<id id="18014">
+		<dev_name>요새에 퍼지는 소문 2</dev_name>
+		<acquired_npc_name>LDF5b_Gadoron_G</acquired_npc_name>
+		<give_item>ITEM_DOC_QUEST_18011A 1</give_item>
+		<use_item_name>ITEM_DOC_QUEST_18011A 1</use_item_name>
+		<reward_npc_name>LDF5b_Gadoron_G</reward_npc_name>
+	</id>
+	<id id="28014">
+		<dev_name>요새에 퍼지는 소문 2</dev_name>
+		<acquired_npc_name>LDF5b_Sertes_G</acquired_npc_name>
+		<give_item>ITEM_DOC_QUEST_28011A 1</give_item>
+		<use_item_name>ITEM_DOC_QUEST_28011A 1</use_item_name>
+		<reward_npc_name>LDF5b_Sertes_G</reward_npc_name>
+	</id>
+	<id id="39713">
+		<dev_name>[일일] 늪지 살리기</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<talk_npc1>LDF5b_Greenhat_LD</talk_npc1>
+		<give_item1>ITEM_QUEST_39713A 1</give_item1>
+		<use_item_name>ITEM_QUEST_39713A 1</use_item_name>
+		<reward_npc_name>LDF5b_Greenhat_LD</reward_npc_name>
+	</id>
+	<id id="49713">
+		<dev_name>[일일] 늪지 정화</dev_name>
+		<acquired_npc_name>_faction_</acquired_npc_name>
+		<talk_npc1>LDF5b_Greenhat_LD</talk_npc1>
+		<give_item1>ITEM_QUEST_49713A 1</give_item1>
+		<use_item_name>ITEM_QUEST_49713A 1</use_item_name>
+		<reward_npc_name>LDF5b_Greenhat_LD</reward_npc_name>
+	</id>
+	<id id="12525">
+		<dev_name>이드 폭파 지역의 안좋은 영향</dev_name>
+		<acquired_npc_name>LDF5a_Iroas_E</acquired_npc_name>
+		<give_item>ITEM_QUEST_12525A 1</give_item>
+		<use_item_name>ITEM_QUEST_12525A 1</use_item_name>
+		<reward_npc_name>LDF5a_Iroas_E</reward_npc_name>
+	</id>
+	<id id="12562">
+		<dev_name>영혼의 돌</dev_name>
+		<acquired_npc_name>LDF5a_Thrasir_E</acquired_npc_name>
+		<give_item>ITEM_QUEST_12562A 1</give_item>
+		<use_item_name>ITEM_QUEST_12562A 1</use_item_name>
+		<reward_npc_name>LDF5a_Thrasir_E</reward_npc_name>
+	</id>
+	<id id="22525">
+		<dev_name>이드 폭파 지역의 안좋은 영향</dev_name>
+		<acquired_npc_name>LDF5a_Balbrin_E</acquired_npc_name>
+		<give_item>ITEM_QUEST_22525A 1</give_item>
+		<use_item_name>ITEM_QUEST_22525A 1</use_item_name>
+		<reward_npc_name>LDF5a_Balbrin_E</reward_npc_name>
+	</id>
+	<id id="22562">
+		<dev_name>영혼의 돌</dev_name>
+		<acquired_npc_name>LDF5a_Otr_E</acquired_npc_name>
+		<give_item>ITEM_QUEST_22562A 1</give_item>
+		<use_item_name>ITEM_QUEST_22562A 1</use_item_name>
+		<reward_npc_name>LDF5a_Otr_E</reward_npc_name>
+	</id>
+	<id id="13054">
+		<dev_name>조작된 실적 (310)</dev_name>
+		<acquired_npc_name>LDF5b_Heres_E</acquired_npc_name>
+		<talk_npc1>LDF5b_Tetis_E</talk_npc1>
+		<give_item1>ITEM_QUEST_13054A 1</give_item1>
+		<talk_npc2>LDF5b_Heres_E</talk_npc2>
+		<give_item2>ITEM_DOC_QUEST_13054B 1</give_item2>
+		<remove_item2>ITEM_QUEST_13054A 1</remove_item2>
+		<use_item_name>ITEM_DOC_QUEST_13054B 1</use_item_name>
+		<reward_npc_name>LDF5b_Demios_E</reward_npc_name>
+	</id>
+	<id id="13064">
+		<dev_name>[히든] &quot;해결사&quot; 타이틀 (천족) (130)</dev_name>
+		<acquired_npc_name>LDF5b_Pandaroong_E</acquired_npc_name>
+		<give_item>ITEM_DOC_QUEST_13064A 1</give_item>
+		<use_item_name>ITEM_DOC_QUEST_13064A 1</use_item_name>
+		<reward_npc_name>LDF5b_Pandaroong_E</reward_npc_name>
+	</id>
+	<id id="23054">
+		<dev_name>조작된 실적 (307)</dev_name>
+		<acquired_npc_name>LDF5b_Ivolk_E</acquired_npc_name>
+		<talk_npc1>LDF5b_Quage_E</talk_npc1>
+		<give_item1>ITEM_QUEST_23054A 1</give_item1>
+		<talk_npc2>LDF5b_Ivolk_E</talk_npc2>
+		<give_item2>ITEM_DOC_QUEST_23054B 1</give_item2>
+		<remove_item2>ITEM_QUEST_23054A 1</remove_item2>
+		<use_item_name>ITEM_DOC_QUEST_23054B 1</use_item_name>
+		<reward_npc_name>LDF5b_Beltane_E</reward_npc_name>
+	</id>
+	<id id="23064">
+		<dev_name>[히든] &quot;해결사&quot; 타이틀 (마족) (130)</dev_name>
+		<acquired_npc_name>LDF5b_Pandaroong_E</acquired_npc_name>
+		<give_item>ITEM_DOC_QUEST_23064A 1</give_item>
+		<use_item_name>ITEM_DOC_QUEST_23064A 1</use_item_name>
+		<reward_npc_name>LDF5b_Pandaroong_E</reward_npc_name>
+	</id>
+	<id id="23562">
+		<dev_name>불의를 못 참는 2</dev_name>
+		<acquired_npc_name>LDF5b_Offiring_E</acquired_npc_name>
+		<talk_npc1>LDF5b_Storing_E</talk_npc1>
+		<talk_npc2>LDF5b_Railring_E</talk_npc2>
+		<give_item2>ITEM_QUEST_23562A 1</give_item2>
+		<use_item_name>ITEM_QUEST_23562A 1</use_item_name>
+		<reward_npc_name>LDF5b_Devring_E</reward_npc_name>
+	</id>
+	<id id="13400">
+		<dev_name>침투 예측 조사</dev_name>
+		<acquired_npc_name>LDF5b_Portis_E</acquired_npc_name>
+		<talk_npc1>LDF5b_Pepe_E</talk_npc1>
+		<give_item1>ITEM_QUEST_13400A 1</give_item1>
+		<use_item_name>ITEM_QUEST_13400A 1</use_item_name>
+		<reward_npc_name>LDF5b_Watering_E</reward_npc_name>
+		<con_quest>13401</con_quest>
+		<cutsceneid1>859</cutsceneid1>
+	</id>
+	<id id="13401">
+		<dev_name>또 다른 목격자</dev_name>
+		<acquired_npc_name>LDF5b_Watering_E</acquired_npc_name>
+		<give_item>ITEM_QUEST_13401A 1</give_item>
+		<use_item_name>ITEM_QUEST_13401A 1</use_item_name>
+		<reward_npc_name>LDF5b_Shinisto_E</reward_npc_name>
+		<con_quest>13402</con_quest>
+	</id>
+	<id id="23400">
+		<dev_name>비상사태</dev_name>
+		<acquired_npc_name>LDF5b_Stelman_E</acquired_npc_name>
+		<talk_npc1>LDF5b_Phone_E</talk_npc1>
+		<give_item1>ITEM_QUEST_23400A 1</give_item1>
+		<use_item_name>ITEM_QUEST_23400A 1</use_item_name>
+		<reward_npc_name>LDF5b_Watering_E</reward_npc_name>
+		<con_quest>23401</con_quest>
+		<cutsceneid1>860</cutsceneid1>
+	</id>
+	<id id="23401">
+		<dev_name>새로운 목격자</dev_name>
+		<acquired_npc_name>LDF5b_Watering_E</acquired_npc_name>
+		<give_item>ITEM_QUEST_23401A 1</give_item>
+		<use_item_name>ITEM_QUEST_23401A 1</use_item_name>
+		<reward_npc_name>LDF5b_Denitz_E</reward_npc_name>
+		<con_quest>23402</con_quest>
+	</id>
+	<id id="13704">
+		<dev_name>어비스 침투</dev_name>
+		<acquired_npc_name>LDF4_Advance_Village_Guard01_L</acquired_npc_name>
+		<give_item>ITEM_QUEST_13704A 1</give_item>
+		<use_item_name>ITEM_QUEST_13704A 1</use_item_name>
+		<reward_npc_name>LDF4_Advance_Village_Guard01_L</reward_npc_name>
+	</id>
+	<id id="13708">
+		<dev_name>겔크마로스 진격</dev_name>
+		<acquired_npc_name>LDF4_Advance_Village_Guard02_L</acquired_npc_name>
+		<give_item>ITEM_QUEST_13708A 1</give_item>
+		<use_item_name>ITEM_QUEST_13708A 1</use_item_name>
+		<reward_npc_name>LDF4_Advance_Village_Guard02_L</reward_npc_name>
+	</id>
+	<id id="23704">
+		<dev_name>어비스 침투</dev_name>
+		<acquired_npc_name>LDF4_Advance_Village_Guard05_D</acquired_npc_name>
+		<give_item>ITEM_QUEST_23704A 1</give_item>
+		<use_item_name>ITEM_QUEST_23704A 1</use_item_name>
+		<reward_npc_name>LDF4_Advance_Village_Guard05_D</reward_npc_name>
+	</id>
+	<id id="23708">
+		<dev_name>잉기스온 진격</dev_name>
+		<acquired_npc_name>LDF4_Advance_Village_Guard06_D</acquired_npc_name>
+		<give_item>ITEM_QUEST_23708A 1</give_item>
+		<use_item_name>ITEM_QUEST_23708A 1</use_item_name>
+		<reward_npc_name>LDF4_Advance_Village_Guard06_D</reward_npc_name>
+	</id>
+	<id id="50048">
+		<dev_name>[이벤트/일일] 출발! 다음 행사장으로 2</dev_name>
+		<acquired_npc_name>NPC_event_devasday_shugo</acquired_npc_name>
+		<talk_npc1>NPC_event_devasday_shugoseller</talk_npc1>
+		<give_item1>ITEM_EVENT_ITEM_FIREWORK_GIANT_02 1</give_item1>
+		<remove_item1>ITEM_EVENT_2014DEVASDAY_QUEST_50047 1</remove_item1>
+		<use_item_name>ITEM_EVENT_ITEM_FIREWORK_GIANT_02 1</use_item_name>
+		<reward_npc_name>NPC_event_devasday_shugo</reward_npc_name>
+	</id>
+</quest_simpleitemplays>

@@ -33,12 +33,25 @@ class QuestDefinitionCatalogManifestTest {
 		assertFalse(catalog.executables().isEmpty());
 		assertTrue(catalog.entries().size() > catalog.executables().size());
 		assertTrue(catalog.entries().stream().allMatch(entry -> catalog.findMetadata(entry.id()).isPresent()));
-		assertTrue(catalog.findExecutable(11036).orElseThrow().definition().transitions().stream()
+		// P3b 后 11036/11143（SimpleUseItem）、P5-2 后 16977/15517（DataDriven 交付型）、
+		// enterworld 批后 10010、链式接取批后 10011 已由真端驱动退役；XML 目录抽检只保留仍在库的
+		// can-act 任务 14153（交互物 700282），并反向锁死 10011 的退役可见性。10011 遗留壳的
+		// can-act 自环（731785/731786/731787，均是 ai=quest_use_item 的对话 NPC）在真端表与
+		// quest.xml 元数据里都没有对应声明（真端链 = 4×talk + EA + 2×hunt + EA + talk，无掉落、
+		// 无 collect 步）；交互物 AI 的放行由 talk 路由满足（QuestItemNpcAI2.canStartInteraction），
+		// 掉落归属过滤只对带掉落的行有意义，故真端形状无需这些自环。
+		// After P3b, P5-2, the enterworld batch and the chain-acquire batch, 10010/10011 are
+		// retail-driven; the XML-catalog spot check keeps the still-live 14153 and asserts 10011's
+		// retirement is visible. The legacy 10011 can-act self loops (731785/731786/731787, all
+		// quest_use_item dialog npcs) have no counterpart in the retail row or its quest.xml metadata
+		// (the retail chain is 4 talks, EA, two hunts, EA, talk — no drops, no collect step); the
+		// interaction AI is admitted by the talk route alone and drop-owner filtering only matters
+		// for rows with drops, so the retail shape needs no such loops.
+		assertTrue(catalog.findExecutable(14153).orElseThrow().definition().transitions().stream()
 			.anyMatch(transition -> transition.event() instanceof QuestEvent.CanAct canAct
-				&& canAct.templateId() == 700610));
-		assertTrue(catalog.findExecutable(11143).orElseThrow().definition().transitions().stream()
-			.anyMatch(transition -> transition.event() instanceof QuestEvent.CanAct canAct
-				&& canAct.templateId() == 700909));
+				&& canAct.templateId() == 700282));
+		assertTrue(catalog.findExecutable(10011).isEmpty(),
+			"10011 must be retired from the XML catalog (retail-driven since the chain-acquire batch)");
 		assertRepeatStartDialogs(catalog);
 	}
 
@@ -145,8 +158,11 @@ class QuestDefinitionCatalogManifestTest {
 
 	@Test
 	void quest26930UsesTheSimpleItemCheckForCollectionTurnIn() {
-		QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(
-			Path.of("src/main/resources/aion/data/static_data/quest_definition"));
+		// 26930 已由真端 SimpleTalk 驱动（XML 退役）：断言必须落在生产视图（XML 目录 + 真端 overlay）。
+		// 26930 is retail-driven now (XML retired), so the contract is asserted on the production view.
+		QuestCatalog catalog = com.aionemu.gameserver.questEngine.retail.RetailQuestDriver.overlay(
+			QuestDefinitionCatalogManifest.compile(
+				Path.of("src/main/resources/aion/data/static_data/quest_definition")));
 		QuestDefinition definition = catalog.findExecutable(26930).orElseThrow().definition();
 		QuestTransition success = definition.transitions().stream()
 			.filter(transition -> transition.sourceNode().equals("started")

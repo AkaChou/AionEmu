@@ -4,10 +4,8 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -141,12 +139,6 @@ class Quest29001ClientDialogAlignmentTest {
 	}
 
 	private static CompiledQuestDefinition load() {
-		String resource = "/aion/data/static_data/quest_definition/quests/29001.xml";
-		try (InputStream input = Objects.requireNonNull(
-			Quest29001ClientDialogAlignmentTest.class.getResourceAsStream(resource), resource)) {
-			return QuestDefinitionXmlCompiler.compile(input);
-		} catch (Exception e) {
-			throw new AssertionError("unable to load " + resource, e);
-		}
+		return ProductionQuestDefinitions.definitionInOverlay(29001);
 	}
 }

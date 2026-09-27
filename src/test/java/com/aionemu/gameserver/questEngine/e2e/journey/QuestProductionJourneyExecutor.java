@@ -106,6 +106,16 @@ public final class QuestProductionJourneyExecutor {
 			case PAGE_ACTION -> journey.clickVisibleAction(dialogId(step.transition().event()));
 			case CLIENT_LOCAL_FINISH_DIALOG -> journey.finishDialogLocally();
 			case NATIVE_REWARD_ACTION -> journey.clickNativeAction(dialogId(step.transition().event()));
+			// 接取窗（页 4）的原生提交控件：与契约行走器同原语——真实 CM_DIALOG_SELECT 携 NPC 与
+			// 交互对象发送提交动作（页 4 是客户端原生窗口，任务页表可以没有登记，不能走
+			// clickVisibleAction 的可见性校验）。
+			// The ask window's native commit control: same primitive as the contract walker — a real
+			// CM_DIALOG_SELECT carrying the npc and interaction object (page 4 is a client-native
+			// window the quest page table may not register, so the visibility check cannot apply).
+			case NATIVE_ACCEPT_ACTION -> {
+				QuestEvent.TalkToNpc accept = (QuestEvent.TalkToNpc) step.transition().event();
+				yield journey.interact(accept.npcId(), accept.dialogId() == null ? 0 : accept.dialogId());
+			}
 			case USE_OBJECT -> journey.useObject(((QuestEvent.TalkToNpc) step.transition().event()).npcId());
 			case USE_OBJECT_DROP -> journey.useObjectAndReceiveMetadataDrop(
 				((QuestEvent.TalkToNpc) step.transition().event()).npcId(), step.metadataDrop().itemId());

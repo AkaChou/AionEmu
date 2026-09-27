@@ -3,6 +3,7 @@ package com.aionemu.gameserver.questEngine.e2e;
 import com.aionemu.gameserver.questEngine.e2e.client.ClientResourceOracle;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.QuestCondition;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
@@ -78,11 +79,10 @@ class QuestExclusiveSiblingAttributionTest {
 		assertEquals(QuestE2eStatus.AMBIGUOUS_ROUTE, row.status(), row::toString);
 	}
 
-	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		try (InputStream input = QuestExclusiveSiblingAttributionTest.class.getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			if (input == null) throw new IllegalStateException("missing quest resource " + questId);
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	// 退役任务统一走生产视图（真端 overlay 合成；旧 XML 只在 git 历史里）。
+	// Retired quests resolve through the production view (retail overlay; the old XML lives in
+	// git history only).
+	private static CompiledQuestDefinition definition(int questId) {
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

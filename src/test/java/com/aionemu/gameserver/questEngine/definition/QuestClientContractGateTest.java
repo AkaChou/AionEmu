@@ -39,11 +39,30 @@ class QuestClientContractGateTest {
 
 	@Test
 	void productionQuestDialogsDoNotIntroduceFatalClientContractRegressions() throws Exception {
-		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		// 生产视图 = XML 目录 + 真端 overlay：退役任务必须继续接受同一套客户端契约检查。
+		// Production view = XML directory plus the retail overlay, so retired quests stay covered.
+		QuestCatalog catalog = com.aionemu.gameserver.questEngine.retail.RetailQuestDriver.overlay(
+			QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader()));
 		Map<Integer, QuestDialogOrderAudit.ClientQuest> clientQuests = QuestDialogOrderAudit.readClientPages(
 			CLIENT_MAPPING.resolve("quest-dialog-pages.csv"),
 			CLIENT_MAPPING.resolve("quest-dialog-action-details.csv"));
 		List<QuestDialogOrderAudit.AuditRow> rows = QuestDialogOrderAudit.audit(catalog, clientQuests);
+		// 审计收窄（quest-native-dispatch P0-2，QE-066 同源对拍）：真端表驱动（已退役）任务改走
+		// 真端原生生命周期——服务端不再驱动中间页链，微观页码匹配对其失去语义；生命周期合同由
+		// RetailQuestContractTest 黑盒契约门承担。存量 XML 任务保留全页审计。
+		// Audit narrowing (quest-native-dispatch P0-2, QE-066 same-source comparison): retail-driven
+		// quests follow the native lifecycle — the server no longer drives the intermediate page chain,
+		// so per-client-page matching no longer applies; the lifecycle contract is carried by the
+		// black-box RetailQuestContractTest. XML-retained quests keep the full-page audit.
+		int unrouted = (int) rows.stream()
+			.filter(row -> RetiredQuestIds.contains(row.questId()))
+			.filter(row -> row.unresolvedReason() != null && !row.unresolvedReason().isBlank())
+			.count();
+		rows = rows.stream()
+			.filter(row -> !RetiredQuestIds.contains(row.questId()))
+			.toList();
+		System.out.println("[quest-client-contract] retired-quest audit rows narrowed out="
+			+ unrouted + " (lifecycle contract moved to RetailQuestContractTest)");
 		List<QuestPrematureRewardRouteAudit.Violation> prematureRewardRoutes =
 			QuestPrematureRewardRouteAudit.audit(catalog, clientQuests);
 		assertTrue(prematureRewardRoutes.isEmpty(), () -> prematureRewardFailureMessage(prematureRewardRoutes));

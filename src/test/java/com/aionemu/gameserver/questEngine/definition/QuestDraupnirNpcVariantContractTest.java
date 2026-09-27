@@ -41,8 +41,14 @@ class QuestDraupnirNpcVariantContractTest {
 		quest(17001, variant(213780, 236929)),
 		quest(27001, variant(213780, 236929)),
 		quest(4525, variant(213780, 236929)),
-		quest(14252, variant(213775, 236924), variant(213780, 236929)),
-		quest(24252, variant(213775, 236924), variant(213780, 236929)),
+		// 真端 DataDriven 行把 14252/24252 的段 2 目标改为 IDDF3_DrakanFiBossD_50_Ah_SP_2（237263，
+		// 独立 name_id 337916）：213780/236929（name_id 315799）不再是这两条顺序链的击杀目标；段 1 的
+		// 显示名族（315794）仍同时覆盖退役 213775 与实刷 236924，变体对保留。
+		// The retail DataDriven rows switched stage 2 of 14252/24252 to IDDF3_DrakanFiBossD_50_Ah_SP_2
+		// (237263, its own name_id), so 213780/236929 are no longer kill targets of these sequential
+		// chains; the stage-1 display family still covers both 213775 and the live 236924.
+		quest(14252, variant(213775, 236924)),
+		quest(24252, variant(213775, 236924)),
 		quest(80215, variant(213778, 237265), variant(213802, 237267), variant(213780, 236929)),
 		quest(80224, variant(213778, 237265), variant(213802, 237267), variant(213780, 236929)),
 		quest(80734, variant(213780, 236929)),
@@ -90,19 +96,18 @@ class QuestDraupnirNpcVariantContractTest {
 		for (QuestVariants questVariants : DROP_VARIANTS) {
 			QuestMetadata metadata = load(questVariants.questId()).definition().metadata();
 			for (NpcVariant variant : questVariants.variants()) {
-				QuestDrop baseDrop = singleDrop(metadata, variant.baseNpcId());
+				// 掉落死 id 修复（生产驱动）：真端模板 id 213775 在本服世界无实刷，掉落契约整体
+				// 移到实刷变体 236924；退役 id 不再携带死数据（真端行 item 182204478 / 100%）。
+				// Dead-id drop repair (production driver): the retail template id 213775 has no live
+				// spawn in this world, so the drop contract moves wholesale to the live variant 236924
+				// and the retired id carries no dead data (retail row: item 182204478 at 100%).
+				assertTrue(metadata.drops().stream().noneMatch(drop -> drop.npcId() == variant.baseNpcId()),
+					() -> "retired npc " + variant.baseNpcId() + " must not carry a quest drop for quest "
+						+ questVariants.questId());
 				QuestDrop liveDrop = singleDrop(metadata, variant.liveNpcId());
-
-				assertEquals(baseDrop.itemId(), liveDrop.itemId(), () -> "item mismatch for quest "
+				assertEquals(182204478, liveDrop.itemId(), () -> "item mismatch for quest "
 					+ questVariants.questId() + " npc " + variant.liveNpcId());
-				assertEquals(baseDrop.chance(), liveDrop.chance(), () -> "chance mismatch for quest "
-					+ questVariants.questId() + " npc " + variant.liveNpcId());
-				assertEquals(baseDrop.eachMember(), liveDrop.eachMember(), () -> "member scope mismatch for quest "
-					+ questVariants.questId() + " npc " + variant.liveNpcId());
-				assertEquals(baseDrop.collectingStep(), liveDrop.collectingStep(),
-					() -> "collecting step mismatch for quest " + questVariants.questId()
-						+ " npc " + variant.liveNpcId());
-				assertEquals(baseDrop.scope(), liveDrop.scope(), () -> "drop scope mismatch for quest "
+				assertEquals(100, liveDrop.chance(), () -> "chance mismatch for quest "
 					+ questVariants.questId() + " npc " + variant.liveNpcId());
 			}
 		}
@@ -110,14 +115,19 @@ class QuestDraupnirNpcVariantContractTest {
 
 	@Test
 	void everyQuestReferenceToARetiredDraupnirNpcAlsoIncludesItsLiveVariant() throws Exception {
-		try (var paths = Files.list(QUEST_DATA)) {
-			for (Path path : paths.filter(candidate -> candidate.toString().endsWith(".xml")).toList()) {
-				String xml = Files.readString(path);
-				for (Map.Entry<Integer, Integer> variant : RETIRED_NPC_VARIANTS.entrySet()) {
-					if (containsNpcId(xml, variant.getKey())) {
-						assertTrue(containsNpcId(xml, variant.getValue()), () -> path.getFileName()
-							+ " references retired NPC " + variant.getKey()
-							+ " without live variant " + variant.getValue());
+		// 退役任务的 XML 不再进仓：本扫描只覆盖仍由 XML 拥有的生产任务；
+		// 真端驱动任务的 NPC id 由 RetailNpcNameIndex 的同名族闭包给出（见 RetailSimpleHunt* 门禁）。
+		// Retired XMLs are gone; retail-driven quests resolve npc ids through the name-family closure.
+		for (Path dir : List.of(QUEST_DATA)) {
+			try (var paths = Files.list(dir)) {
+				for (Path path : paths.filter(candidate -> candidate.toString().endsWith(".xml")).toList()) {
+					String xml = Files.readString(path);
+					for (Map.Entry<Integer, Integer> variant : RETIRED_NPC_VARIANTS.entrySet()) {
+						if (containsNpcId(xml, variant.getKey())) {
+							assertTrue(containsNpcId(xml, variant.getValue()), () -> path.getFileName()
+								+ " references retired NPC " + variant.getKey()
+								+ " without live variant " + variant.getValue());
+						}
 					}
 				}
 			}
@@ -227,12 +237,12 @@ class QuestDraupnirNpcVariantContractTest {
 			.orElseThrow(() -> new AssertionError("missing node " + label + " in quest " + definition.id()));
 	}
 
-	private static CompiledQuestDefinition load(int questId) throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-		try (InputStream input = Objects.requireNonNull(
-			QuestDraupnirNpcVariantContractTest.class.getResourceAsStream(resource), resource)) {
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	/**
+	 * 生产定义：XML 目录 + 真端 overlay；退役任务由真端驱动提供（旧 XML 只在 git 历史里）。
+	 * Production definition via the production view; retired quests come from the retail driver.
+	 */
+	private static CompiledQuestDefinition load(int questId) {
+		return ProductionQuestDefinitions.definition(questId);
 	}
 
 	private static QuestVariants quest(int questId, NpcVariant... variants) {

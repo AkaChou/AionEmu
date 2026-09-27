@@ -16,24 +16,32 @@ import static org.junit.jupiter.api.Assertions.*;
 class QuestNoHandlerShard3DefinitionTest {
 
 	@Test
-	void directoryCompilesAllFourRestoredOwners() throws Exception {
-		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
-		assertTrue(catalog.find(29634).isPresent());
-		assertTrue(catalog.find(30208).isPresent());
-		assertTrue(catalog.find(30565).isPresent());
-		assertTrue(catalog.find(30760).isPresent());
+	void directoryCompilesAllFourRestoredOwners() {
+		/* 四行已由真端表驱动（XML 退役），改从生产视图断言可编译。 */
+		for (int questId : new int[] {29634, 30208, 30565, 30760}) {
+			assertTrue(ProductionQuestDefinitions.definition(questId) != null,
+				() -> "quest " + questId + " must compile from the production view");
+		}
 	}
 
 	@Test
 	void scaredSkurvsCarriesRetailHuntChainAndSharedTenKillCount() throws Exception {
 		CompiledQuestDefinition compiled = definition("29634.xml");
 		QuestMetadata meta = compiled.definition().metadata();
-		assertEquals("Scared Skurvs", meta.name());
+		/* P5-1：真端元数据无英文标题（仓内客户端解包为韩文），回落 "Q"+id；字符串 id 经
+		   quest_name_string_ids.tsv 完好（Q29634 -> 1800422），英文名属 L10N 数据边界。
+		   Retail metadata carries no English title (Korean client unpack), so the name falls
+		   back to Q+id; the string id itself stays intact via the name-id registry. */
+		assertEquals("Q29634", meta.name());
 		assertEquals(1800422, meta.displayNameId());
 		assertEquals(45, meta.minLevel());
 		assertEquals(Set.of("ASMODIANS"), meta.permittedRaces());
 		assertEquals("IMPORTANT", meta.category());
-		assertEquals(List.of(new QuestStartCondition("finished", 29633, 0)), meta.startConditions());
+		/* 真端元数据未声明 finished-29633 前置（finished_quest_cond 缺席；29633 的 con_quest 只指
+		   链的下一环），旧 XML 的前置来自链推断——按真端为空锁定，客户端链门控负责展示。
+		   Retail metadata declares no finished-29633 condition (only the chain's forward con_quest);
+		   the legacy prerequisite was chain-inferred — lock the retail-empty shape. */
+		assertEquals(List.of(), meta.startConditions());
 		assertEquals(List.of(new QuestReward("EXP", 0, 6242224L),
 			new QuestReward("SELECTABLE_ITEM", 110101862, 1L),
 			new QuestReward("SELECTABLE_ITEM", 110301854, 1L),
@@ -41,39 +49,35 @@ class QuestNoHandlerShard3DefinitionTest {
 			new QuestReward("SELECTABLE_ITEM", 110551182, 1L),
 			new QuestReward("SELECTABLE_ITEM", 110601652, 1L)), meta.rewards());
 
-		// The four retail mobs share one total var0 counter of 10, matching the retail template.
-		assertTrue(compiled.definition().nodes().stream().anyMatch(node ->
-			node.label().equals("started") && node.projection().status() == QuestStatus.START));
+		/* P5-1：真端击杀网格（a0..a10，var0 = 共享 10 杀计数，四个 retail 怪各一条逐 id 击杀边）；
+		   旧双变量形（var0 行号 + var1 计数 + priority 0/1 边）随退役一并退出。
+		   Grid since P5-1: a0..a10 with a shared 10-kill var0 and one per-id kill edge per mob. */
 		Set<Integer> npcIds = compiled.definition().transitions().stream()
-			.map(QuestTransition::event).filter(e -> e instanceof QuestEvent.KillNpcSet)
-			.map(e -> ((QuestEvent.KillNpcSet) e).npcIds())
-			.flatMap(Set::stream).collect(Collectors.toSet());
+			.filter(t -> "a0".equals(t.sourceNode()) && "a1".equals(t.targetNode()))
+			.map(QuestTransition::event).filter(e -> e instanceof QuestEvent.KillNpc)
+			.map(e -> ((QuestEvent.KillNpc) e).npcId())
+			.collect(Collectors.toSet());
 		assertEquals(Set.of(214371, 214372, 214440, 214441), npcIds);
-
-		List<QuestTransition> killRoutes = compiled.definition().transitions().stream()
-			.filter(t -> t.event() instanceof QuestEvent.KillNpcSet).toList();
-		assertEquals(2, killRoutes.size());
-		QuestTransition counting = killRoutes.stream().filter(t -> t.priority() != null && t.priority() == 1)
-			.findFirst().orElseThrow();
-		assertEquals("started", counting.targetNode());
-		assertEquals(new QuestCondition.VariableBelow("var1", 9), counting.conditions().get(0));
-		assertEquals(List.of(new QuestAction.SetVariable("var0", 0), new QuestAction.IncrementVariable("var1", 1)), counting.actions());
-		QuestTransition finishing = killRoutes.stream().filter(t -> t.priority() != null && t.priority() == 0)
-			.findFirst().orElseThrow();
-		assertEquals(new QuestCondition.VariableAtLeast("var1", 9), finishing.conditions().get(0));
-		assertEquals("reward", finishing.targetNode());
-		assertEquals(List.of(new QuestAction.SetVariable("var0", 1), new QuestAction.SetVariable("var1", 10)), finishing.actions());
-
-		assertEquals(1, varsOf(compiled, "reward").get("var0"));
-		assertEquals(10, varsOf(compiled, "reward").get("var1"));
-		// Five selectable rewards -> five completion routes on npc 205164.
-		List<List<QuestAction>> completions = completionActions(compiled);
-		assertEquals(5, completions.size());
-		for (List<QuestAction> path : completions) {
-			assertEquals(3, path.size());
-			assertEquals(new QuestAction.GrantReward("EXP", 0, 6242224, QuestRewardAmountMode.QUEST_BASE), path.get(0));
-			assertEquals(new QuestAction.CompleteQuest(0), path.get(2));
+		for (QuestTransition edge : compiled.definition().transitions().stream()
+				.filter(t -> "a0".equals(t.sourceNode()) && "a1".equals(t.targetNode())).toList()) {
+			assertEquals(List.of(), edge.conditions());
+			assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
+				edge.afterCommit());
 		}
+		assertEquals(10, varsOf(compiled, "reward").get("var0"));
+		/* P0c-8b 判例：真端确认段 = 8..23 全段 16 条；五个可选项路径各带一个 selectable 发放，
+		   其余确认 id 只发固定奖励。 */
+		List<List<QuestAction>> completions = completionActions(compiled);
+		assertEquals(16, completions.size());
+		int selectablePaths = 0;
+		for (List<QuestAction> path : completions) {
+			assertEquals(new QuestAction.GrantReward("EXP", 0, 6242224, QuestRewardAmountMode.QUEST_BASE), path.get(0));
+			assertEquals(new QuestAction.CompleteQuest(0), path.getLast());
+			if (path.size() == 3) {
+				selectablePaths++;
+			}
+		}
+		assertEquals(5, selectablePaths, "five selectable rewards must keep their grant paths");
 	}
 
 	@Test
@@ -123,7 +127,8 @@ class QuestNoHandlerShard3DefinitionTest {
 	void reunitingTheReiansIsAPureDialogTwoStepChain() throws Exception {
 		CompiledQuestDefinition compiled = definition("30565.xml");
 		QuestMetadata meta = compiled.definition().metadata();
-		assertEquals("[Spy] Reuniting the Reians", meta.name());
+		/* 同 29634：真端元数据无英文标题，回落 Q+id；字符串 id 完好。 */
+		assertEquals("Q30565", meta.name());
 		assertEquals(1801111, meta.displayNameId());
 		assertEquals(65, meta.minLevel());
 		assertEquals(Set.of("ASMODIANS"), meta.permittedRaces());
@@ -133,21 +138,18 @@ class QuestNoHandlerShard3DefinitionTest {
 			new QuestReward("EXP", 0, 4432902L),
 			new QuestReward("ITEM", 186000469, 210L)), meta.rewards());
 
-		// Ekios (805156) starts; Garnon (804879) advances var0 0->1, then 1->2 reward.
+		/* P5-1：真端 30565 是单步报告对话（Ekios 805156 接取；Garnon 804879 QUEST_SELECT 显示
+		   客户端完成页 10002、1009 进领奖）——旧 s1/s2 两步阶梯随退役退出。
+		   Retail 30565 is a single report dialog: Garnon's QUEST_SELECT shows the client page and
+		   1009 enters reward; the legacy s1/s2 ladder retired with the XML. */
 		assertTrue(hasDialog(compiled, 805156, 1002, "unaccepted", "started"));
 		assertTrue(hasDialog(compiled, 805156, 20000, "unaccepted", "started"));
-		assertEquals(1, varsOf(compiled, "s1").get("var0"));
-		assertEquals(2, varsOf(compiled, "reward").get("var0"));
-		List<QuestTransition> stepRoutes = compiled.definition().transitions().stream()
-			.filter(t -> t.event().equals(new QuestEvent.TalkToNpc(804879, 10000))).toList();
-		assertEquals(1, stepRoutes.size());
-		assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), stepRoutes.get(0).actions());
-		// USE_OBJECT 与 SELECT_QUEST_REWARD 在 reward 节点另有同事件过渡，推进路由以 source="s1" 区分。
-		List<QuestTransition> selectRoutes = compiled.definition().transitions().stream()
-			.filter(t -> "s1".equals(t.sourceNode())
-				&& t.event().equals(new QuestEvent.TalkToNpc(804879, 1009))).toList();
-		assertEquals(1, selectRoutes.size());
-		assertEquals("reward", selectRoutes.get(0).targetNode());
+		assertTrue(hasDialog(compiled, 804879, 31, "started", "started"));
+		QuestTransition report = compiled.definition().transitions().stream()
+			.filter(t -> "started".equals(t.sourceNode()) && "reward".equals(t.targetNode())
+				&& t.event().equals(new QuestEvent.TalkToNpc(804879, 1009)))
+			.findFirst().orElseThrow();
+		assertEquals(List.of(), report.conditions());
 
 		// Fixed gold/exp/medal reward completes through the 8..23 dialog range.
 		List<List<QuestAction>> completions = completionActions(compiled);
@@ -215,10 +217,10 @@ class QuestNoHandlerShard3DefinitionTest {
 			.map(QuestTransition::actions).toList();
 	}
 
-	private CompiledQuestDefinition definition(String file) throws Exception {
-		try (InputStream input = resource("/aion/data/static_data/quest_definition/quests/" + file)) {
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	private CompiledQuestDefinition definition(String file) {
+		// Shard3 行已由真端表驱动（退役），改从生产视图取定义；file 形如 "29634.xml"。
+		// The shard-3 rows are retail-driven since retirement; load via the production view.
+		return ProductionQuestDefinitions.definition(Integer.parseInt(file.substring(0, file.length() - 4)));
 	}
 
 	private InputStream resource(String path) {

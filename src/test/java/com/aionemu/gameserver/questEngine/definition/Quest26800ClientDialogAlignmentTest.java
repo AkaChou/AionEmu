@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +36,7 @@ class Quest26800ClientDialogAlignmentTest {
 		"src/main/resources/aion/data/static_data/portals/portal_loc.xml");
 
 	@Test
-	void followsTheAion58SimpleAcceptPageChain() throws Exception {
+	void acceptsThroughTheRetailAskWindow() throws Exception {
 		QuestDefinition definition = definition(26800);
 
 		assertNode(definition, "unaccepted", QuestStatus.NONE, 0);
@@ -48,10 +47,30 @@ class Quest26800ClientDialogAlignmentTest {
 		assertNode(definition, "reward", QuestStatus.REWARD, 2);
 		assertNode(definition, "complete", QuestStatus.COMPLETE, 0);
 
+		// P0-2 DD 尾片：按真端规范形重锚。接取段 = 真端原生相位 A——QUEST_SELECT 自环直发接取询问窗
+		// （页 4），客户端原生控件 1002/20000 回传建档；旧形的 select_none 信页（页 4762）、
+		// SELECT_NONE_1 续页（动作 4763）与 ASK_QUEST_ACCEPT(1007) 中转一律无路由。
+		// P0-2 DD tail slice: re-anchored to the retail canonical shape. The accept segment is the
+		// native lifecycle phase A — QUEST_SELECT emits the ask window (page 4) and the native controls
+		// 1002/20000 commit; the select_none letter page, its continuation and the 1007 hop carry no
+		// route.
 		assertPage(definition, "unaccepted", START_NPC, QuestDialogAction.QUEST_SELECT,
-			QuestDialogPage.SELECT_NONE);
-		assertPage(definition, "unaccepted", START_NPC, QuestDialogAction.SELECT_NONE_1,
-			QuestDialogPage.SELECT_NONE_1);
+			QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW);
+		List<Integer> retiredAcceptActions = List.of(QuestDialogPage.SELECT_NONE_1.id(),
+			QuestDialogAction.ASK_QUEST_ACCEPT.id());
+		assertTrue(routes(definition, "unaccepted", START_NPC).stream()
+			.noneMatch(route -> route.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.dialogId() != null && retiredAcceptActions.contains(talk.dialogId())),
+			"quest 26800 owns no select_none letter chain after the canonical accept");
+
+		QuestTransition askWindowCommit = talk(definition, "unaccepted", "started", START_NPC,
+			QuestDialogAction.QUEST_ACCEPT_1);
+		assertEquals(List.of(new QuestCondition.StartEligible()), askWindowCommit.conditions());
+		assertEquals(List.of(), askWindowCommit.actions());
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.QUEST_ACCEPT_1.id())),
+			askWindowCommit.afterCommit());
 
 		QuestTransition accept = talk(definition, "unaccepted", "started", START_NPC,
 			QuestDialogAction.QUEST_ACCEPT_SIMPLE);
@@ -68,23 +87,36 @@ class Quest26800ClientDialogAlignmentTest {
 
 		QuestTransition towerArrival = transition(definition, "started", "s1",
 			new QuestEvent.EnterZone("DF_TOWER_SENSORY_AREA_Q26800_220120000"));
-		assertEquals(List.of(new QuestCondition.QuestVariableIs("var0", 0)), towerArrival.conditions());
+		// 真端把三段行门写进节点投影（引擎按投影匹配源行），条件下不再有显式 var0 断言。
+		// The retail ladder writes the row guards into the node projections (the engine matches source
+		// rows through them), so the conditions carry no explicit var0 check.
+		assertEquals(Map.of("var0", 0), nodeVariables(definition, "started"));
+		assertEquals(List.of(), towerArrival.conditions());
 		assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), towerArrival.actions());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
 			towerArrival.afterCommit());
 
-		assertPage(definition, "s1", HANDOFF_NPC, QuestDialogAction.QUEST_SELECT,
+		// 客户端链登记（quest_client_talk_chain_pages.tsv）给 26800 第 1 行只登记单页
+		// `talk:1352:10255`：事件页 SELECT2(1352) 同时是推进页，遗留 XML 多出的 SELECT2_1(1353)
+		// 路由随退役退场（16800 同形）。
+		// The client chain registry declares a single page for 26800's row 1 (`talk:1352:10255`): SELECT2
+		// (1352) is both the event and the advance page, so the extra SELECT2_1 (1353) route of the legacy
+		// XML retired with it (the 16800 shape).
+		assertPage(definition, "s1", HANDOFF_NPC, QuestDialogAction.SELECT2,
 			QuestDialogPage.SELECT2);
-		assertPage(definition, "s1", HANDOFF_NPC, QuestDialogAction.SELECT2_1,
-			QuestDialogPage.SELECT2_1);
+		assertTrue(routes(definition, "s1", HANDOFF_NPC).stream()
+			.noneMatch(route -> route.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.dialogId() != null && talk.dialogId() == QuestDialogPage.SELECT2_1.id()),
+			"quest 26800 row 1 owns no SELECT2_1 page route");
 
 		QuestTransition handoff = talk(definition, "s1", "s2", HANDOFF_NPC,
 			QuestDialogAction.SET_SUCCEED);
-		assertEquals(List.of(new QuestCondition.QuestVariableIs("var0", 1)), handoff.conditions());
+		assertEquals(Map.of("var0", 1), nodeVariables(definition, "s1"));
+		assertEquals(List.of(), handoff.conditions());
 		assertEquals(List.of(new QuestAction.SetVariable("var0", 2)), handoff.actions());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
-			new AfterCommitAction.CloseDialog()), handoff.afterCommit());
+			new AfterCommitAction.ShowQuestSelectionDialog(10)), handoff.afterCommit());
 	}
 
 	@Test
@@ -93,11 +125,14 @@ class Quest26800ClientDialogAlignmentTest {
 
 		QuestTransition archivesArrival = transition(definition, "s2", "reward",
 			new QuestEvent.EnterZone("IDETERNITY_01_Q16800_301540000"));
-		assertEquals(List.of(new QuestCondition.QuestVariableIs("var0", 2)), archivesArrival.conditions());
-		// 交接不再回写 step：target 投影（var0=2）就是 legacy 落盘值。
-		assertEquals(List.of(), archivesArrival.actions());
+		assertEquals(Map.of("var0", 2), nodeVariables(definition, "s2"));
+		assertEquals(List.of(), archivesArrival.conditions());
+		// 真端显式回写 target 行（= reward 投影 var0=2），packed step 仍是 legacy 落盘值 2。
+		// The retail edge writes the target row back (= the reward projection var0=2); the packed step
+		// still lands on the legacy persisted value 2.
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 2)), archivesArrival.actions());
 		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
 			new AfterCommitAction.PlayMovie(932)), archivesArrival.afterCommit());
 
 		assertPage(definition, "reward", REWARD_NPC, QuestDialogAction.QUEST_SELECT,
@@ -215,13 +250,20 @@ class Quest26800ClientDialogAlignmentTest {
 		return (Element) matches.item(0);
 	}
 
+	/** 节点投影（引擎按它匹配源行——显式 var0 条件在真端形里由投影承担）。 / Node projection. */
+	private static Map<String, Integer> nodeVariables(QuestDefinition definition, String label) {
+		return definition.nodes().stream()
+			.filter(node -> label.equals(node.label()))
+			.findFirst().orElseThrow()
+			.projection().variables();
+	}
+
 	private static QuestDefinition definition(int questId) throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-		try (InputStream input = Quest26800ClientDialogAlignmentTest.class.getResourceAsStream(resource)) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition " + questId + ".xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input).definition();
-		}
+		// 26800 已由真端驱动退役（wave4 enterarea 区名解析）：退役任务的 XML 只在 git 历史里，
+		// 统一取生产视图（XML 目录 + 真端 overlay）——未退役任务与直接编译 XML 等价（20527 仍走 XML）。
+		// 26800 is retail-driven now (wave4 enterarea zone resolution), so its XML lives only in git
+		// history; the production view (XML directory plus retail overlay) is the single source (20527
+		// still compiles from its XML).
+		return ProductionQuestDefinitions.definition(questId).definition();
 	}
 }

@@ -110,8 +110,9 @@ class QuestRetailStartMetadataGateTest {
 		assertFalse(capExceptions.isEmpty(), "cap exception ledger must not be empty");
 
 		production = new HashMap<>();
-		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(
-			QuestRetailStartMetadataGateTest.class.getClassLoader());
+		// 生产视图 = XML 目录 + 真端 overlay：退役任务的接取元数据来自真端合成器。
+		// Production view: retired quests take their start metadata from the retail compiler.
+		QuestCatalog catalog = ProductionQuestDefinitions.catalog();
 		for (CompiledQuestDefinition compiled : catalog.all()) {
 			QuestMetadata meta = compiled.definition().metadata();
 			production.put(compiled.id(), new StartMeta(meta.minLevel(), meta.maxLevel(),
@@ -119,7 +120,7 @@ class QuestRetailStartMetadataGateTest {
 				meta.repeatPolicy().maxRepeatCount()));
 		}
 		for (int qid : metadataOnlyQuestIds()) {
-			production.putIfAbsent(qid, parseMetadataOnly(qid));
+			production.putIfAbsent(qid, startMeta(questResource(qid)));
 		}
 		assertFalse(production.isEmpty(), "production catalog must not be empty");
 	}
@@ -131,9 +132,7 @@ class QuestRetailStartMetadataGateTest {
 
 	/** 供同类门禁复用：解析任务 XML 的 metadata（min/max/races/gender/repeat）。 */
 	static QuestMetadata parseQuestMetadata(int questId) throws Exception {
-		Element root = parseXml(
-			"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")
-			.getDocumentElement();
+		Element root = parseQuestXml(questId).getDocumentElement();
 		Element metadata = (Element) root.getElementsByTagName("metadata").item(0);
 		Set<String> races = new java.util.HashSet<>();
 		var raceNodes = metadata.getElementsByTagName("race");
@@ -189,10 +188,8 @@ class QuestRetailStartMetadataGateTest {
 		return ids;
 	}
 
-	private static StartMeta parseMetadataOnly(int questId) throws Exception {
-		Element root = parseXml(
-			"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")
-			.getDocumentElement();
+	private static StartMeta startMeta(String resource) throws Exception {
+		Element root = parseXml(resource).getDocumentElement();
 		Element metadata = (Element) root.getElementsByTagName("metadata").item(0);
 		Set<String> races = new java.util.HashSet<>();
 		var raceNodes = metadata.getElementsByTagName("race");
@@ -214,10 +211,29 @@ class QuestRetailStartMetadataGateTest {
 			Integer.parseInt(metadata.getAttribute("max-level")), races, gender, maxRepeat);
 	}
 
-	/** 供同类门禁复用：解析任务 XML 文档根。 */
+	/** 生产任务 XML 资源路径（METADATA_ONLY 条目仍由 XML 拥有）。 / Production XML resource path. */
+	private static String questResource(int questId) {
+		return "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
+	}
+
+	/**
+	 * 已退役（真端文件驱动接管）的任务 id，来自保留清单 owner=RETAIL_TABLE。
+	 * 旧 XML 已随 git 历史保存，仓库不再保留测试作用域冻结副本。
+	 * <p>
+	 * Quest ids retired to the retail driver, sourced from the retention ledger; the legacy XML
+	 * lives in git history instead of a test-scope frozen copy.
+	 */
+	static Set<Integer> retiredFixtureIds() {
+		return RetiredQuestIds.all();
+	}
+
+	/** 供同类门禁复用：解析任务 XML 文档根（生产优先，退役取冻结副本）。 */
 	static org.w3c.dom.Document parseQuestXml(int questId) throws Exception {
-		return parseXml(
-			"/aion/data/static_data/quest_definition/quests/" + questId + ".xml");
+		try (InputStream input = QuestXmlFixtures.open(questId)) {
+			var factory = DocumentBuilderFactory.newInstance();
+			factory.setAttribute("http://apache.org/xml/features/disallow-doctype-decl", true);
+			return factory.newDocumentBuilder().parse(input);
+		}
 	}
 
 	private static org.w3c.dom.Document parseXml(String resource) throws Exception {

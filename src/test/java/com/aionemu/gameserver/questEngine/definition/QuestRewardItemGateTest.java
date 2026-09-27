@@ -124,7 +124,9 @@ class QuestRewardItemGateTest {
 
 		production = new HashMap<>();
 		for (Integer qid : contract.keySet()) {
-			production.put(qid, parseProduction(qid));
+			// 已退役任务的 XML 只在 git 历史里：道具轴改从生产视图（真端合成定义）反推。
+			// Retired quests carry no XML any more; their item axes come from the synthesized definition.
+			production.put(qid, RetiredQuestIds.contains(qid) ? parseRetailProduction(qid) : parseProduction(qid));
 		}
 		assertFalse(production.isEmpty(), "production items must not be empty");
 	}
@@ -287,6 +289,55 @@ class QuestRewardItemGateTest {
 		extItems.sort(null);
 		return new ProductionItems(fixed, allSelectable, new TreeSet<>(),
 			extGold, extItems);
+	}
+
+	/**
+	 * 已退役任务的检查路径：定义取生产视图（真端合成），三个来源从 IR 反推——
+	 * 固定道具 = 档位 1 的 ITEM 奖励；可选项 = 领奖确认分支相对固定奖励额外发放的道具；
+	 * extended = 元数据的最后一轮追加奖励。
+	 * Retired quests carry no XML; the item axes are re-derived from the synthesized definition.
+	 */
+	private static ProductionItems parseRetailProduction(int questId) {
+		CompiledQuestDefinition compiled = ProductionQuestDefinitions.definition(questId);
+		QuestMetadata metadata = compiled.definition().metadata();
+		List<QuestReward> group = metadata.rewardGroups().isEmpty() ? List.of()
+			: metadata.rewardGroups().get(0).rewards();
+		List<String> fixed = new ArrayList<>();
+		for (QuestReward reward : group) {
+			if ("ITEM".equals(reward.kind())) {
+				fixed.add(reward.id() + ":" + reward.amount());
+			}
+		}
+		Set<Integer> selectable = new TreeSet<>();
+		for (QuestTransition transition : compiled.definition().transitions()) {
+			if (!(transition.event() instanceof QuestEvent.TalkToNpc talk) || talk.dialogId() == null) {
+				continue;
+			}
+			if (talk.dialogId() < QuestDialogAction.SELECTED_QUEST_REWARD1.id()
+				|| talk.dialogId() > QuestDialogAction.SELECTED_QUEST_NOREWARD.id()) {
+				continue;
+			}
+			for (QuestAction action : transition.actions()) {
+				// choice 确认路由上的可选项发放带 SELECTABLE_ITEM kind（P1b 合成口径），同样计入可选集合。
+				// Choice confirm routes grant selectable items with SELECTABLE_ITEM kind (P1b synthesis).
+				if (action instanceof QuestAction.GrantReward grant
+					&& ("ITEM".equals(grant.kind()) || "SELECTABLE_ITEM".equals(grant.kind()))
+					&& !fixed.contains(grant.id() + ":" + grant.amount())) {
+					selectable.add(grant.id());
+				}
+			}
+		}
+		Long extGold = null;
+		List<String> extItems = new ArrayList<>();
+		for (QuestReward reward : metadata.extendedRewards()) {
+			if ("GOLD".equals(reward.kind())) {
+				extGold = reward.amount();
+			} else if ("ITEM".equals(reward.kind()) || "SELECTABLE_ITEM".equals(reward.kind())) {
+				extItems.add(reward.id() + ":" + reward.amount());
+			}
+		}
+		extItems.sort(null);
+		return new ProductionItems(fixed, selectable, new TreeSet<>(), extGold, extItems);
 	}
 
 	/** 固定道具多重集合必须与真端一致（真端字段缺失跳过）。 */

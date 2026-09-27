@@ -73,7 +73,10 @@ class Quest3100ClientDialogAlignmentTest {
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.CloseDialog()), handoff.afterCommit());
 
-		assertPage(definition, "reward", REWARD_NPC_ID, QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT5);
+		// S3c-D（quest-native-dispatch）：交付 NPC 侧报告页按 R-REP 页下发判据退场（有 reward 入边翻面记录
+		// 且无报告块的行）——奖励面由领奖态奖励窗载体承担（下方 USE_OBJECT/SELECT_QUEST_REWARD 断言）。
+		// R-REP retires the reward-side report page; the reward-window carrier takes over.
+		assertTrue(routes(definition, "reward", REWARD_NPC_ID, QuestDialogAction.QUEST_SELECT).isEmpty());
 		for (QuestDialogAction action : List.of(QuestDialogAction.USE_OBJECT,
 				QuestDialogAction.SELECT_QUEST_REWARD)) {
 			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
@@ -154,10 +157,6 @@ class Quest3100ClientDialogAlignmentTest {
 	}
 
 	private static CompiledQuestDefinition definition() throws Exception {
-		try (InputStream input = Quest3100ClientDialogAlignmentTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/3100.xml")) {
-			if (input == null) throw new IllegalStateException("missing quest definition 3100.xml");
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		return ProductionQuestDefinitions.definitionInOverlay(3100);
 	}
 }

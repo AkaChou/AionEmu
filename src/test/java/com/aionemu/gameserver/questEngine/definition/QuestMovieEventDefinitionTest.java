@@ -2,9 +2,6 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
@@ -18,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class QuestMovieEventDefinitionTest {
 
-	private static final Path DIR = Path.of("src/main/resources/aion/data/static_data/quest_definition/quests");
 
 	@Test
 	void metadataMatchesQuestDataAndRetail() throws Exception {
@@ -114,8 +110,7 @@ class QuestMovieEventDefinitionTest {
 	}
 
 	private static QuestDefinition load(int questId) throws Exception {
-		try (InputStream input = Files.newInputStream(DIR.resolve(questId + ".xml"))) {
-			return QuestDefinitionXmlCompiler.compile(input).definition();
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(questId).definition();
 	}
 }

@@ -8,11 +8,11 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
-import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
@@ -21,9 +21,9 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.objenesis.ObjenesisStd;
 
-import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,10 +71,12 @@ class QuestEngineNpcDialogDispatchTest {
 	}
 
 	/**
-	 * 203949：1370/1371（未接取普通任务）与 1373（未接取 IMPORTANT）共用 1012 时，
-	 * 可见的 1373 优先，未接取普通任务仍排在后面继续被尝试。
-	 * 203949: when unaccepted normal quests 1370/1371 share 1012 with unaccepted IMPORTANT 1373 the
-	 * visible 1373 is preferred, and the unaccepted normal quests still stay in the dispatch order.
+	 * 203949：1370（规范形 SimpleHunt，QUEST_SELECT 派发）与 1371/1373（未接取普通/IMPORTANT，旧梯
+	 * 也保留 QUEST_SELECT 入口）在接取入口动作上共号；可见的 1373 优先，未接取普通任务仍排在后面
+	 * 继续被尝试。
+	 * 203949: canonical SimpleHunt 1370 dispatches on QUEST_SELECT, and legacy-ladder 1371/1373 keep
+	 * their QUEST_SELECT entry too; the visible 1373 is preferred and the unaccepted normal quests
+	 * still stay in the dispatch order.
 	 */
 	@Test
 	void prefersClientVisibleOwnersAndStillDispatchesUnacceptedNormalQuests() throws Exception {
@@ -88,7 +90,7 @@ class QuestEngineNpcDialogDispatchTest {
 		assertNull(player.getQuestStateList().getQuestState(1373));
 
 		assertEquals(List.of(1373, 1370, 1371), engine.npcDialogDispatchOwners(player, npc,
-			new QuestEvent.TalkToNpc(NPC_TEMPLATE_ID, QuestDialogAction.SELECT1_1.id(), NPC_OBJECT_ID)));
+			new QuestEvent.TalkToNpc(NPC_TEMPLATE_ID, QuestDialogAction.QUEST_SELECT.id(), NPC_OBJECT_ID)));
 	}
 
 	/**
@@ -105,15 +107,15 @@ class QuestEngineNpcDialogDispatchTest {
 		player.rememberNpcQuestDialogSelection(NPC_OBJECT_ID, 1370);
 
 		assertEquals(List.of(1370, 1373), engine.npcDialogDispatchOwners(player, npc,
-			new QuestEvent.TalkToNpc(NPC_TEMPLATE_ID, QuestDialogAction.SELECT1_1.id(), NPC_OBJECT_ID)));
+			new QuestEvent.TalkToNpc(NPC_TEMPLATE_ID, QuestDialogAction.QUEST_SELECT.id(), NPC_OBJECT_ID)));
 	}
 
 	/**
-	 * 参考实现中的同类 NPC：730019 上未接取普通任务 1321/1322 与 IMPORTANT 1320/1478 共用 1012，
-	 * 可见的 1320/1478 优先，普通任务仍在派发序列里，因此点击一定会被服务到。
-	 * Reference-shaped NPC: on 730019 the unaccepted normal quests 1321/1322 share 1012 with IMPORTANT
-	 * 1320/1478; the visible owners are preferred and the normal quests remain dispatchable, so the click
-	 * is always served.
+	 * 参考实现中的同类 NPC：规范形后 730019 上的派发动作分两半——SimpleHunt 1320/1321 与 SimpleTalk
+	 * 单步行 1478 走规范形 QUEST_SELECT，XML 保留行 1322 仍走旧梯 1012；两半的点击都必须被服务到。
+	 * Reference-shaped NPC: after canonicalization the dispatch splits on 730019 — SimpleHunt
+	 * 1320/1321 and the SimpleTalk single-step 1478 dispatch on QUEST_SELECT while the XML-retained
+	 * 1322 keeps the legacy 1012 ladder; both halves must stay served.
 	 */
 	@Test
 	void servesTheVisibleQuestChainOnTheReferenceEltnenQuestNpc() throws Exception {
@@ -122,6 +124,17 @@ class QuestEngineNpcDialogDispatchTest {
 		Npc npc = dialogNpc(REFERENCE_NPC_TEMPLATE_ID);
 
 		assertEquals(List.of(1320, 1478, 1321, 1322), engine.npcDialogDispatchOwners(player, npc,
+			new QuestEvent.TalkToNpc(REFERENCE_NPC_TEMPLATE_ID, QuestDialogAction.QUEST_SELECT.id(),
+				NPC_OBJECT_ID)));
+		// P0-3 S1：SimpleTalk 接取/交付切真端规范形（页 4 / 分档窗）。1478 是真端单步行
+		// （Quest_SimpleTalk.xml:1313-1318 acquired=reward=Tree_NoMove_Lodas + quest.xml:10167-10168
+		// 的 collect_item），其 select1_1 续页随页链退场——canonical 接取流不含 SELECT1_1
+		// （RetailSimpleHuntDefinitionCompiler:1096-1122）；旧梯 1012 只剩 XML 保留行 1322
+		// （retail-xml-retention.tsv:152 NO_TABLE，XML 定义驱动）。
+		// P0-3 S1: quest 1478 is a retail single-step row whose select1_1 continuation retires with
+		// the page chain (the canonical accept flow carries no SELECT1_1), so only the XML-retained
+		// 1322 keeps the legacy 1012 hop.
+		assertEquals(List.of(1322), engine.npcDialogDispatchOwners(player, npc,
 			new QuestEvent.TalkToNpc(REFERENCE_NPC_TEMPLATE_ID, QuestDialogAction.SELECT1_1.id(),
 				NPC_OBJECT_ID)));
 	}
@@ -180,16 +193,11 @@ class QuestEngineNpcDialogDispatchTest {
 		return engine;
 	}
 
-	private static QuestCatalog productionXml(int... questIds) throws Exception {
+	/** 生产视图目录（XML 目录 + 真端 overlay）；退役任务的旧 XML 只在 git 历史里。 */
+	private static QuestCatalog productionXml(int... questIds) {
 		List<CompiledQuestDefinition> definitions = new ArrayList<>();
 		for (int questId : questIds) {
-			String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-			try (InputStream input = QuestEngineNpcDialogDispatchTest.class.getResourceAsStream(resource)) {
-				if (input == null) {
-					throw new IllegalStateException("missing quest definition " + resource);
-				}
-				definitions.add(QuestDefinitionXmlCompiler.compile(input));
-			}
+			definitions.add(ProductionQuestDefinitions.definition(questId));
 		}
 		return new ImmutableQuestCatalog(definitions);
 	}

@@ -4,7 +4,7 @@ import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
-import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestItemRequirement;
 import com.aionemu.gameserver.questEngine.definition.QuestStartCondition;
@@ -12,7 +12,6 @@ import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -149,13 +148,7 @@ class QuestDispatchToAltgardFamilyProductionFlowTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-		try (InputStream input = QuestDispatchToAltgardFamilyProductionFlowTest.class.getResourceAsStream(resource)) {
-			if (input == null) {
-				throw new IllegalStateException("missing resource " + resource);
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		return ProductionQuestDefinitions.definitionInOverlay(questId);
 	}
 
 	private static QuestActionPort noOpActions() {

@@ -7,7 +7,6 @@ import com.aionemu.gameserver.questEngine.runtime.QuestStartEligibility;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,8 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Full production-definition proof for the former MonsterHunt owner of quest 1102. */
 class MonsterHunt1102DefinitionTest {
-	private static final String DEFINITION =
-		"/aion/data/static_data/quest_definition/quests/1102.xml";
 
 	@Test
 	void definitionCoversTheCompleteLegacyDialogAndKillLifecycle() throws Exception {
@@ -28,9 +25,9 @@ class MonsterHunt1102DefinitionTest {
 		List<QuestTransition> transitions = compiled.definition().transitions();
 
 		// 客户端 1102 HTML 无 select1_1(1012) 页：select1 的按钮直接是 ASK_QUEST_ACCEPT(1007)，
-		// 接取链不含 1012 翻页。
-		// The client 1102 HTML has no select1_1 (1012) page: select1's button goes straight to
-		// ASK_QUEST_ACCEPT; the accept chain has no 1012 turn.
+		// 接取链不含 1012 翻页。节点标签是真端合成器的规范形（a0..a3 = 0..3 次击杀）。
+		// The client 1102 HTML has no select1_1 (1012) page: select1 goes straight to
+		// ASK_QUEST_ACCEPT; grid labels are the retail canonical form a0..a3.
 		assertEquals(35, transitions.size());
 		assertEquals(6, transitions.stream().filter(t -> t.event() instanceof QuestEvent.KillNpc).count());
 		assertEquals(Set.of(210133, 210134), transitions.stream()
@@ -38,7 +35,7 @@ class MonsterHunt1102DefinitionTest {
 			.map(t -> ((QuestEvent.KillNpc) t.event()).npcId()).collect(Collectors.toSet()));
 		assertEquals(Set.of(31, 1007, 1002, 20000, 1003, 1004, 20001, 1008),
 			dialogIds(transitions, "unaccepted"));
-		assertEquals(Set.of(31, 1009), dialogIds(transitions, "target-count-reached"));
+		assertEquals(Set.of(31, 1009), dialogIds(transitions, "a3"));
 		assertEquals(Set.of(-1, 1009), transitions.stream()
 			.filter(t -> t.sourceNode().equals("reward") && t.targetNode().equals("reward"))
 			.map(t -> ((QuestEvent.TalkToNpc) t.event()).dialogId()).collect(Collectors.toSet()));
@@ -49,7 +46,7 @@ class MonsterHunt1102DefinitionTest {
 	void everyKillAdvancesOneStepAndSendsTheProgressPacket() throws Exception {
 		CompiledQuestDefinition compiled = definition();
 		int packed = 0;
-		for (String source : List.of("started", "one-kill", "two-kills")) {
+		for (String source : List.of("a0", "a1", "a2")) {
 			QuestTransition transition = compiled.definition().transitions().stream()
 				.filter(t -> t.sourceNode().equals(source))
 				.filter(t -> t.event().equals(new QuestEvent.KillNpc(210134)))
@@ -97,13 +94,15 @@ class MonsterHunt1102DefinitionTest {
 	}
 
 	@Test
-	void packagedDefinitionContainsOnlyQuestSemanticsAndHasNoLegacyOwner() throws Exception {
-		String definition;
-		try (InputStream input = resource(DEFINITION)) {
-			definition = new String(input.readAllBytes(), StandardCharsets.UTF_8);
-		}
-		assertFalse(definition.contains("<evidence"));
-		assertFalse(definition.contains("ownership="));
+	void packagedDefinitionContainsOnlyQuestSemanticsAndHasNoLegacyOwner() {
+		// 1102 已退役：生产 XML 不再进仓（内容在 git 历史里），定义由真端驱动合成，
+		// 合成结果只含任务语义（无证据/归属元数据）。
+		// 1102 is retired: no production XML ships; the synthesized definition carries quest semantics only.
+		assertFalse(QuestXmlFixtures.productionXmlPresent(1102),
+			"retired quest must not keep a production XML");
+		CompiledQuestDefinition compiled = definition();
+		assertEquals(1102, compiled.id());
+		assertFalse(compiled.definition().nodes().isEmpty());
 
 		assertFalse(legacyScriptDataExists(), "quest_script_data directory must be fully removed");
 	}
@@ -121,10 +120,10 @@ class MonsterHunt1102DefinitionTest {
 			.findFirst().orElseThrow();
 	}
 
-	private CompiledQuestDefinition definition() throws Exception {
-		try (InputStream input = resource(DEFINITION)) {
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	private CompiledQuestDefinition definition() {
+		// 1102 已迁到真端驱动（XML 不进仓）；装载走生产视图。
+		// 1102 is retail-driven now; the definition comes from the production view.
+		return ProductionQuestDefinitions.definition(1102);
 	}
 
 	private InputStream resource(String path) {

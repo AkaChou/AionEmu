@@ -3,7 +3,6 @@ package com.aionemu.gameserver.questEngine.definition;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -231,15 +230,7 @@ class ReportToManyLegacyFlowRegressionTest {
 	}
 
 	private static QuestDefinition definition(int questId) {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-		try (InputStream input = ReportToManyLegacyFlowRegressionTest.class.getResourceAsStream(resource)) {
-			if (input == null) {
-				throw new AssertionError("missing resource " + resource);
-			}
-			return QuestDefinitionXmlCompiler.compile(input).definition();
-		} catch (Exception e) {
-			throw new AssertionError("failed to load quest " + questId, e);
-		}
+		return ProductionQuestDefinitions.definitionInOverlay(questId).definition();
 	}
 
 	private record Contract(int id, int startNpc, int endNpc, List<Integer> progressNpcs,

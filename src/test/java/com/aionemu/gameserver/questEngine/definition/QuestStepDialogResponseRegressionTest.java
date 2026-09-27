@@ -2,7 +2,6 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,14 +37,6 @@ class QuestStepDialogResponseRegressionTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-		try (InputStream input = QuestStepDialogResponseRegressionTest.class.getResourceAsStream(resource)) {
-			if (input == null) {
-				throw new AssertionError("missing resource " + resource);
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		} catch (Exception e) {
-			throw new AssertionError("failed to load quest " + questId, e);
-		}
+		return ProductionQuestDefinitions.definitionInOverlay(questId);
 	}
 }

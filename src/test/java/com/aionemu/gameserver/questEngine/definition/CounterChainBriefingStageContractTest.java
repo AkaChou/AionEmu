@@ -6,8 +6,6 @@ import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +14,6 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -34,11 +31,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * （客户端行 2 的计数永远是 0/1），并且有两条**无守卫**的 `started --SETPRO1--> reward` 直跳，
  * 领奖 owner 还落在静态 spawn 与实例/AI 代码里都没有出场点的 205842(Ancanus)/205864(Udvi) 上。
  * 本门禁同时锁死：简报标志位的接取/清除、每只（组）怪只推自己那一槽、击杀必须发生在简报之后、
- * 报告与 completion owner 收敛到任务书行 0/行 3 点名的 NPC、旧存档迁移与饱和领奖投影。
+ * 报告与 completion owner 收敛到任务书行 0/行 3 点名的 NPC、饱和领奖投影。
+ * <p>
+ * P0c-6 起 24112 也由真端表驱动（XML 已退役）：它的"存档修复边"按 P3 既有裁定一并移除
+ * （旧 XML 的 AionEmu 历史包袱，真端表没有修复列），因此单槽族与双槽族共用同一组
+ * "retail 不迁移旧存档"断言。节点名不进契约：门禁用 (状态, 投影) 语义查找节点，
+ * 网格族（a0/a1..）与串行族（briefed/k1..）的命名差异不应影响本文件要锁的语义。
  * <p>
  * Locks batch 26: the briefing flag (SECTION_5) plus the named/boss counter ladders of 24112/30600/30610,
- * the journal-NPC owners (24112 Nokir -&gt; Brodir; 30600 Hejitor/Linocus; 30610 Astella/Aluna),
- * the removal of the unguarded SETPRO1 reward jumps and of the unreachable 205842/205864 owners.
+ * the journal-NPC owners (24112 Nokir -&gt; Brodir; 30600 Hejitor/Linocus; 30610 Astella/Aluna), the removal of
+ * the unguarded SETPRO1 reward jumps and of the unreachable 205842/205864 owners. Since P0c-6, 24112 is
+ * retail-driven too and its legacy save-repair edges are gone (P3 adjudication: no repair column in retail).
  */
 class CounterChainBriefingStageContractTest {
 
@@ -77,68 +80,54 @@ class CounterChainBriefingStageContractTest {
 					() -> "quest " + contract.questId() + " declares exactly two fields");
 			}
 
-			/* 接取后 = started（简报标志位 1）；听完简报 = briefed（标志位 0）。 */
-			/* After accept the flag is raised; the briefing clears it. */
-			assertEquals(slots(contract, 0, false, true), projection(definition, "started"),
-				() -> "quest " + contract.questId() + " started projection");
-			assertEquals(slots(contract, 0, false, false), projection(definition, "briefed"),
-				() -> "quest " + contract.questId() + " briefed projection");
-			if (contract.bossKill() == null) {
-				/* 单槽族：击杀态节点是 killed。 */
-				/* Single-slot family: the killed count is the terminal START node. */
-				assertEquals(slots(contract, 1, false, false), projection(definition, "killed"),
-					() -> "quest " + contract.questId() + " killed projection");
-			} else {
-				assertEquals(slots(contract, 1, false, false), projection(definition, "k1"),
-					() -> "quest " + contract.questId() + " k1 projection");
-				assertEquals(slots(contract, 1, true, false), projection(definition, "k2"),
-					() -> "quest " + contract.questId() + " k2 projection");
+			/* 接取后 = 标志位 1 的 START 节点；听完简报 = 零计数 START 节点（网格/串行族命名不同）。 */
+			/* After accept the flag is raised; the briefing clears it. Node naming stays a family detail. */
+			assertNode(definition, QuestStatus.START, slots(contract, 0, false, true), "briefing-pending");
+			assertNode(definition, QuestStatus.START, slots(contract, 0, false, false), "briefed");
+			assertNode(definition, QuestStatus.START, slots(contract, 1, false, false), "first-kill");
+			if (contract.bossKill() != null) {
+				assertNode(definition, QuestStatus.START, slots(contract, 1, true, false), "boss-kill");
 			}
-			assertEquals(slots(contract, 1, contract.bossKill() != null, false),
-				projection(definition, "reward"),
-				() -> "quest " + contract.questId() + " reward must project the saturated counters");
-			assertEquals(slots(contract, 0, false, false), projection(definition, "complete"),
-				() -> "quest " + contract.questId() + " complete projection");
-			assertEquals(slots(contract, 0, false, false), projection(definition, "unaccepted"),
-				() -> "quest " + contract.questId() + " unaccepted projection");
+			assertNode(definition, QuestStatus.REWARD,
+				slots(contract, 1, contract.bossKill() != null, false), "reward");
+			assertNode(definition, QuestStatus.COMPLETE, slots(contract, 0, false, false), "complete");
+			assertNode(definition, QuestStatus.NONE, slots(contract, 0, false, false), "unaccepted");
 		}
 	}
 
 	@Test
-	void briefingPageKeepsTheFlagAndTheEndDialogButtonClearsIt() throws Exception {
+	void briefingTalkClearsTheFlagInOneStepAndKillsStayGated() throws Exception {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
-			/* 行 0a：QUEST_SELECT 只回应对话并展示简报页，标志位保持不变。 */
-			/* Row 0a: QUEST_SELECT only opens the briefing page and keeps the flag raised. */
-			List<QuestMutationPlan> briefings = plans(compiled, QuestStatus.START, slots(contract, 0, false, true),
+			/* 规范形简报（quest-native-dispatch P0-2，网格族与串行族同形）：简报 NPC 的 QUEST_SELECT
+			 * 一步清标志位直达首段节点（SELECT2 页链不再由服务端驱动，SETPRO1 按钮路由随之消失）；
+			 * "击杀不得跳过简报"语义由节点承担——briefing-pending 节点不带击杀边。
+			 * Canonical briefing (quest-native-dispatch P0-2, same shape for the grid and serial
+			 * families): the briefing NPC's QUEST_SELECT clears the flag and lands on the first stage
+			 * node in one step (the SELECT2 page chain is no longer server-driven, so the SETPRO1
+			 * button route is gone); "no kill shortcuts the briefing" is carried by the nodes — the
+			 * briefing-pending node has no kill edges. */
+			List<QuestMutationPlan> briefings = plans(compiled, QuestStatus.START,
+				slots(contract, 0, false, true),
 				new QuestEvent.TalkToNpc(contract.briefNpc(), QuestDialogAction.QUEST_SELECT.id()));
 			assertEquals(1, briefings.size(), () -> "quest " + contract.questId()
 				+ " must answer the journal row-0 briefing talk");
 			QuestMutationPlan briefing = briefings.getFirst();
 			assertEquals(QuestStatus.START, briefing.nextStatus(),
 				() -> "quest " + contract.questId() + " briefing stays in START");
-			assertEquals(slots(contract, 0, false, true), unpack(compiled, briefing),
-				() -> "quest " + contract.questId() + " must keep var5 while the select2 page is open");
-			assertTrue(briefing.afterCommit().contains(new AfterCommitAction.ShowQuestDialog(
-					QuestDialogPage.SELECT2.id())),
-				() -> "quest " + contract.questId() + " briefing must open the client select2 page");
-
-			/* 行 0b：select2 页唯一可见按钮 HACTION_SETPRO1(10000) 才清标志位并推进到 briefed。 */
-			/* Row 0b: the select2 page's only visible button HACTION_SETPRO1(10000) clears the flag. */
-			List<QuestMutationPlan> endDialog = plans(compiled, QuestStatus.START, slots(contract, 0, false, true),
-				new QuestEvent.TalkToNpc(contract.briefNpc(), QuestDialogAction.SETPRO1.id()));
-			assertEquals(1, endDialog.size(), () -> "quest " + contract.questId()
-				+ " must route the visible SETPRO1 end-dialog button");
-			QuestMutationPlan briefed = endDialog.getFirst();
-			assertEquals(QuestStatus.START, briefed.nextStatus(),
-				() -> "quest " + contract.questId() + " end-dialog stays in START");
-			assertEquals(slots(contract, 0, false, false), unpack(compiled, briefed),
-				() -> "quest " + contract.questId() + " end-dialog must clear var5 only");
-			assertTrue(briefed.afterCommit().contains(new AfterCommitAction.SyncQuestState(
+			assertEquals(slots(contract, 0, false, false), unpack(compiled, briefing),
+				() -> "quest " + contract.questId() + " briefing must clear var5 in one step");
+			assertTrue(briefing.afterCommit().contains(new AfterCommitAction.SyncQuestState(
 					QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
-				() -> "quest " + contract.questId() + " end-dialog must refresh journal visibility");
-			assertTrue(briefed.afterCommit().contains(new AfterCommitAction.CloseDialog()),
-				() -> "quest " + contract.questId() + " end-dialog must close the dialog");
+				() -> "quest " + contract.questId() + " briefing must refresh journal visibility");
+			assertTrue(briefing.afterCommit().contains(new AfterCommitAction.CloseDialog()),
+				() -> "quest " + contract.questId() + " briefing must close the dialog");
+			assertTrue(briefing.afterCommit().stream().noneMatch(
+					AfterCommitAction.ShowQuestDialog.class::isInstance),
+				() -> "quest " + contract.questId() + " briefing must not open any page");
+			assertTrue(plans(compiled, QuestStatus.START, slots(contract, 0, false, true),
+					new QuestEvent.TalkToNpc(contract.briefNpc(), QuestDialogAction.SETPRO1.id())).isEmpty(),
+				() -> "quest " + contract.questId() + " must drop the legacy SETPRO1 briefing button");
 
 			/* 击杀不得跳过简报：标志位仍为 1 时所有击杀都不计数。 */
 			/* Kills must not shortcut the briefing. */
@@ -200,13 +189,25 @@ class CounterChainBriefingStageContractTest {
 	void journalNpcOwnersConvergeAndUnreachableLegacyOwnersAreGone() throws Exception {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
-			assertEquals(Set.of(contract.acceptNpc()), talkNpcIds(definition, "unaccepted", "started"),
+			String unaccepted = nodeLabel(definition, QuestStatus.NONE, slots(contract, 0, false, false));
+			String started = nodeLabel(definition, QuestStatus.START, slots(contract, 0, false, true));
+			String briefed = nodeLabel(definition, QuestStatus.START, slots(contract, 0, false, false));
+			String killed = nodeLabel(definition, QuestStatus.START, slots(contract, 1, false, false));
+			String reward = nodeLabel(definition, QuestStatus.REWARD,
+				slots(contract, 1, contract.bossKill() != null, false));
+			/* 双层族从满段节点（boss 击杀后）报告，单层族从首个击杀节点报告。 */
+			/* The two-slot family reports from the boss node, the other from the first kill. */
+			String reportSource = contract.bossKill() == null ? killed
+				: nodeLabel(definition, QuestStatus.START, slots(contract, 1, true, false));
+			assertEquals(Set.of(contract.acceptNpc()), talkNpcIds(definition, unaccepted, started),
 				() -> "quest " + contract.questId() + " must accept from the journal NPC");
-			assertEquals(Set.of(contract.briefNpc()), talkNpcIds(definition, "started", "briefed"),
+			assertEquals(Set.of(contract.briefNpc()), talkNpcIds(definition, started, briefed),
 				() -> "quest " + contract.questId() + " must take the briefing from the journal row-0 NPC");
-			assertEquals(Set.of(contract.reportNpc()), talkNpcIds(definition, reportSource(contract), "reward"),
+			assertEquals(Set.of(contract.reportNpc()), talkNpcIds(definition, reportSource, reward),
 				() -> "quest " + contract.questId() + " must report on the journal report-row NPC");
-			assertEquals(Set.of(contract.reportNpc()), talkNpcIds(definition, "reward", "complete"),
+			assertEquals(Set.of(contract.reportNpc()),
+				talkNpcIds(definition, reward, nodeLabel(definition, QuestStatus.COMPLETE,
+					slots(contract, 0, false, false))),
 				() -> "quest " + contract.questId() + " must complete on the journal report-row NPC");
 			Set<Integer> allNpcs = definition.transitions().stream()
 				.filter(route -> route.event() instanceof QuestEvent.TalkToNpc)
@@ -219,7 +220,7 @@ class CounterChainBriefingStageContractTest {
 			/* 无守卫的 started -> reward 直跳必须全部消失（否则可以接取后立刻领奖）。 */
 			/* No unguarded shortcut into reward may remain. */
 			assertTrue(definition.transitions().stream().noneMatch(route ->
-					"started".equals(route.sourceNode()) && "reward".equals(route.targetNode())),
+					started.equals(route.sourceNode()) && "reward".equals(route.targetNode())),
 				() -> "quest " + contract.questId() + " must not keep an unguarded reward shortcut");
 		}
 	}
@@ -246,37 +247,26 @@ class CounterChainBriefingStageContractTest {
 				() -> "quest " + contract.questId() + " must not resync the saturated reward state");
 
 			if (contract.bossKill() == null) {
-				/* 24112：接取后没听简报就先杀怪的旧存档（var0=1、var5=1）归一化到 killed。 */
-				/* 24112: legacy saves that killed before the briefing normalize onto killed. */
-				List<QuestMutationPlan> skipped = plans(compiled, QuestStatus.START,
-					Map.of("var0", 1, "var5", 1), new QuestEvent.EnterWorld());
-				assertEquals(1, skipped.size(),
-					() -> "quest " + contract.questId() + " must normalize the kill-before-briefing save");
-				assertEquals(slots(contract, 1, false, false), unpack(compiled, skipped.getFirst()),
-					() -> "quest " + contract.questId() + " kill-before-briefing save must land on killed");
-				/* 旧定义 reward 投影 var0=0 的领奖态存档补齐到饱和值 1。 */
-				/* The old REWARD projection var0=0 heals to the saturated 1. */
-				List<QuestMutationPlan> heals = plans(compiled, QuestStatus.REWARD, Map.of("var0", 0),
-					new QuestEvent.EnterWorld());
-				assertEquals(1, heals.size(), () -> "quest " + contract.questId() + " must heal the old reward save");
-				assertEquals(slots(contract, 1, false, false), unpack(compiled, heals.getFirst()),
-					() -> "quest " + contract.questId() + " old reward save must heal to (1,0)");
-				assertEquals(QuestStatus.REWARD, heals.getFirst().nextStatus(),
-					() -> "quest " + contract.questId() + " must stay in REWARD while healing");
+				/* 24112 自 P0c-6 起也由真端表驱动（XML 已退役）：旧 XML 的 AionEmu 历史包袱
+				 * （"接取后未听简报就先杀怪" 的归一化、旧 reward 投影 var0=0 的自愈）按 P3 既有裁定
+				 * 一并移除——真端表没有"存档修复"列。一次性 DB 归一化是可选项，登记在 P0c-6 报告。 */
+				/* 24112 is retail-driven since P0c-6: the legacy save-repair edges are gone (P3 ruling);
+				 * the optional one-time DB normalization is registered in the P0c-6 report. */
+				assertTrue(plans(compiled, QuestStatus.START, Map.of("var0", 1, "var5", 1),
+					new QuestEvent.EnterWorld()).isEmpty(),
+					() -> "quest " + contract.questId() + " must not normalize the kill-before-briefing save");
+				assertTrue(plans(compiled, QuestStatus.REWARD, Map.of("var0", 0),
+					new QuestEvent.EnterWorld()).isEmpty(),
+					() -> "quest " + contract.questId() + " must not heal the old reward save");
 				continue;
 			}
-			/* 30600/30610：旧步骤号 var0=2（打完舰长）映射到 k2，旧 REWARD 投影 var0=2 补齐到 (1,1)。 */
-			/* 30600/30610: the legacy step value 2 maps onto k2 and its reward save heals to (1,1). */
-			List<QuestMutationPlan> stepSaves = plans(compiled, QuestStatus.START, Map.of("var0", 2),
-				new QuestEvent.EnterWorld());
-			assertEquals(1, stepSaves.size(), () -> "quest " + contract.questId() + " must migrate the step-2 save");
-			assertEquals(slots(contract, 1, true, false), unpack(compiled, stepSaves.getFirst()),
-				() -> "quest " + contract.questId() + " step-2 save must land on k2");
-			List<QuestMutationPlan> heals = plans(compiled, QuestStatus.REWARD, Map.of("var0", 2),
-				new QuestEvent.EnterWorld());
-			assertEquals(1, heals.size(), () -> "quest " + contract.questId() + " must heal the old reward save");
-			assertEquals(slots(contract, 1, true, false), unpack(compiled, heals.getFirst()),
-				() -> "quest " + contract.questId() + " old reward save must heal to (1,1)");
+			/* 30600/30610 已按真端串行表驱动：旧 step 档（var0=2 的步骤号）不再迁移，也没有自愈边；
+			 * P3 裁定见 P3 报告与 p3-serial-hunt-decisions.tsv。 */
+			/* 30600/30610 are retail-driven: legacy step saves are not migrated and no repair edge remains. */
+			assertTrue(plans(compiled, QuestStatus.START, Map.of("var0", 2), new QuestEvent.EnterWorld()).isEmpty(),
+				() -> "quest " + contract.questId() + " must not migrate the legacy step-2 save");
+			assertTrue(plans(compiled, QuestStatus.REWARD, Map.of("var0", 2), new QuestEvent.EnterWorld()).isEmpty(),
+				() -> "quest " + contract.questId() + " must not heal the legacy reward projection");
 		}
 	}
 
@@ -309,11 +299,6 @@ class CounterChainBriefingStageContractTest {
 		}
 	}
 
-	/** 双层族从 k2 报告，单层族从 killed 报告。 / The two-slot family reports from k2, the other from killed. */
-	private static String reportSource(Contract contract) {
-		return contract.bossKill() == null ? "killed" : "k2";
-	}
-
 	/** 目标状态：var0[/var1] 计数 + 简报标志位。 / Expected state: counter slots plus the briefing flag. */
 	private static Map<String, Integer> slots(Contract contract, int named, boolean boss, boolean briefing) {
 		Map<String, Integer> variables = new LinkedHashMap<>();
@@ -325,10 +310,32 @@ class CounterChainBriefingStageContractTest {
 		return variables;
 	}
 
-	private static Map<String, Integer> projection(QuestDefinition definition, String label) {
-		return definition.nodes().stream().filter(node -> label.equals(node.label()))
-			.findFirst().orElseThrow(() -> new AssertionError("missing node " + label))
-			.projection().variables();
+	/**
+	 * 按 (状态, 投影) 语义定位节点标签：网格族叫 a0/a1..、串行族叫 briefed/k1..，命名是家族细节，
+	 * 语义才是契约。同一 (状态, 投影) 必须唯一——否则家族形状本身自相矛盾。
+	 * Semantic (status, projection) node lookup: naming is a family detail, the state is the contract.
+	 */
+	private static String nodeLabel(QuestDefinition definition, QuestStatus status, Map<String, Integer> state) {
+		List<String> labels = definition.nodes().stream()
+			.filter(node -> node.projection().status() == status)
+			.filter(node -> node.projection().variables().equals(state))
+			.map(QuestNode::label)
+			.toList();
+		assertEquals(1, labels.size(), () -> "quest " + definition.id() + " must declare exactly one "
+			+ status + " node projecting " + state + ", got " + labels);
+		return labels.getFirst();
+	}
+
+	/** 该 (状态, 投影) 的节点必须存在且唯一。 / The (status, projection) node must exist exactly once. */
+	private static void assertNode(QuestDefinition definition, QuestStatus status, Map<String, Integer> state,
+			String role) {
+		List<String> labels = definition.nodes().stream()
+			.filter(node -> node.projection().status() == status)
+			.filter(node -> node.projection().variables().equals(state))
+			.map(QuestNode::label)
+			.toList();
+		assertEquals(1, labels.size(), () -> "quest " + definition.id() + " must declare exactly one " + role
+			+ " node (" + status + " projecting " + state + "), got " + labels);
 	}
 
 	private static Set<Integer> talkNpcIds(QuestDefinition definition, String source, String target) {
@@ -354,11 +361,12 @@ class CounterChainBriefingStageContractTest {
 		return compiled.definition().progressLayout().unpack(plan.nextPackedVariables());
 	}
 
-	private static CompiledQuestDefinition definition(int questId) throws IOException {
-		try (InputStream input = CounterChainBriefingStageContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			assertNotNull(input, () -> "missing quest definition " + questId + ".xml");
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	/**
+	 * 生产零售视图：30600/30610 已退役 XML（24112 仍是 XML 家族），统一走生产定义入口。
+	 * Production retail view: 30600/30610 have no XML anymore and resolve through the retail table,
+	 * while 24112 still comes from the XML directory; both are exposed by the same production entry point.
+	 */
+	private static CompiledQuestDefinition definition(int questId) {
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

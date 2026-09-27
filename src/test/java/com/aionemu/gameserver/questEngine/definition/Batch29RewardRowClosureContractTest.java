@@ -192,11 +192,9 @@ class Batch29RewardRowClosureContractTest {
 		return compiled.definition().progressLayout().unpack(plan.nextPackedVariables());
 	}
 
-	private static CompiledQuestDefinition definition(int questId) throws IOException {
-		try (InputStream input = Batch29RewardRowClosureContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			assertNotNull(input, () -> "missing quest definition " + questId + ".xml");
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	private static CompiledQuestDefinition definition(int questId) {
+		// 退役任务不再有 XML：统一走生产视图（1876/2876 等链行已真端驱动）。
+		// Retired quests have no XML: resolve through the production view.
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

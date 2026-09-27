@@ -65,25 +65,28 @@ class QuestDaevanionThreeStageFlowTest {
 	void nodesAndClientPagesKeepAllThreePhasesReachable(Contract contract) throws Exception {
 		CompiledQuestDefinition compiled = definition(contract.questId());
 		assertNode(compiled, "unaccepted", QuestStatus.NONE, 0);
-		for (int stage = 0; stage <= 2; stage++) {
+		assertNode(compiled, "started", QuestStatus.START, 0);
+		for (int stage = 1; stage <= 2; stage++) {
 			assertNode(compiled, "s" + stage, QuestStatus.START, stage);
 		}
 		assertNode(compiled, "reward", QuestStatus.REWARD, 3);
 		assertNode(compiled, "complete", QuestStatus.COMPLETE, 0);
 		assertEquals(6, compiled.definition().nodes().size());
-		assertPage(compiled, "s0", contract.worker(), QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT1);
-		assertPage(compiled, "s0", contract.worker(), QuestDialogAction.SELECT1_1, QuestDialogPage.SELECT1_1);
+		assertPage(compiled, "started", contract.worker(), QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT1);
+		assertPage(compiled, "started", contract.worker(), QuestDialogAction.SELECT1_1, QuestDialogPage.SELECT1_1);
 		if (contract.introDepth() == 3) {
-			assertPage(compiled, "s0", contract.worker(), QuestDialogAction.SELECT1_1_1, QuestDialogPage.SELECT1_1_1);
-			assertPage(compiled, "s0", contract.worker(), QuestDialogAction.SELECT1_1_1_1,
+			assertPage(compiled, "started", contract.worker(), QuestDialogAction.SELECT1_1_1, QuestDialogPage.SELECT1_1_1);
+			assertPage(compiled, "started", contract.worker(), QuestDialogAction.SELECT1_1_1_1,
 				QuestDialogPage.SELECT1_1_1_1);
 		}
-		QuestTransition introduction = route(compiled, "s0", contract.worker(), QuestDialogAction.SETPRO1, null);
+		QuestTransition introduction = route(compiled, "started", contract.worker(), QuestDialogAction.SETPRO1, null);
 		assertEquals("s1", introduction.targetNode());
 		assertEquals(List.of(), introduction.conditions());
-		assertEquals(List.of(), introduction.actions());
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), introduction.actions(),
+			() -> "the advance carries the ladder value explicitly");
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
-			new AfterCommitAction.CloseDialog()), introduction.afterCommit());
+			new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
+			introduction.afterCommit());
 		assertState(compiled, handled(compiled, snapshot(compiled, QuestStatus.START, 0, Map.of()),
 			contract.worker(), QuestDialogAction.SETPRO1), QuestStatus.START, 1);
 
@@ -200,9 +203,12 @@ class QuestDaevanionThreeStageFlowTest {
 			QuestReward selected = compiled.definition().metadata().rewards().get(choice + 1);
 			assertEquals("complete", reward.targetNode());
 			assertEquals(List.of(), reward.conditions());
+			// 采集族规范形（P1b）：确认动作按条目自身 kind 发放（可选条目 = SELECTABLE_ITEM）。
+			// The collect-family canonical (P1b) grants each entry by its own kind (selectables
+			// stay SELECTABLE_ITEM).
 			assertEquals(List.of(new QuestAction.GrantReward("GOLD", 0, 1807920, QuestRewardAmountMode.QUEST_BASE),
 				new QuestAction.GrantReward("EXP", 0, 8961038, QuestRewardAmountMode.QUEST_BASE),
-				new QuestAction.GrantReward("ITEM", selected.id(), selected.amount()),
+				new QuestAction.GrantReward(selected.kind(), selected.id(), selected.amount()),
 				new QuestAction.CompleteQuest(0)), reward.actions());
 			assertEquals(List.of(new AfterCommitAction.RefreshPlayerStats(),
 				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
@@ -242,8 +248,8 @@ class QuestDaevanionThreeStageFlowTest {
 		assertState(compiled, handover, QuestStatus.START, 2);
 		List<QuestAction> debits = new ArrayList<>();
 		contract.materials().forEach(material -> debits.add(new QuestAction.RemoveItem(material.itemId(), material.count())));
-		debits.add(new QuestAction.SetVariable("var0", 2));
-		assertEquals(debits, handover.requiredActions());
+		assertEquals(debits, handover.requiredActions(),
+			() -> "the group check consumes the materials; the ladder rides the target projection");
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
 			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.CHECK_USER_ITEM_OK.id())), handover.afterCommit());
 		QuestTransition finish = route(compiled, "s2", contract.worker(), QuestDialogAction.SET_SUCCEED, null);
@@ -251,8 +257,8 @@ class QuestDaevanionThreeStageFlowTest {
 		assertEquals(List.of(), finish.conditions());
 		QuestMutationPlan result = handled(compiled, snapshot(compiled, QuestStatus.START, 2, Map.of()),
 			contract.worker(), QuestDialogAction.SET_SUCCEED);
-		assertEquals(List.of(new QuestAction.GiveItem(contract.workItem(), 1),
-			new QuestAction.SetVariable("var0", 3)), finish.actions());
+		assertEquals(List.of(new QuestAction.GiveItem(contract.workItem(), 1)), finish.actions(),
+			() -> "the handover grants the voucher; the reward row rides the target projection");
 		assertEquals(finish.actions(), result.requiredActions());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.CloseDialog()), result.afterCommit());
@@ -318,12 +324,10 @@ class QuestDaevanionThreeStageFlowTest {
 		return inventory;
 	}
 
-	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		try (InputStream input = QuestDaevanionThreeStageFlowTest.class.getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			assertNotNull(input, () -> "missing quest " + questId);
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	private static CompiledQuestDefinition definition(int questId) {
+		// 16 契约已由真端驱动（DD_TALK_COLLECT_CHAIN）：只问生产视图（历史 XML 在 git 里）。
+		// All 16 contracts are retail-driven now (DD_TALK_COLLECT_CHAIN): ask the production view.
+		return ProductionQuestDefinitions.definition(questId);
 	}
 
 	private static Stream<Contract> contracts() {

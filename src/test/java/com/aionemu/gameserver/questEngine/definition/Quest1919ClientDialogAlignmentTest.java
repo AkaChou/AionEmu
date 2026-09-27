@@ -4,10 +4,8 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -34,8 +32,10 @@ class Quest1919ClientDialogAlignmentTest {
 
 		QuestTransition offer = route(definition, "unaccepted", START_NPC,
 			QuestDialogAction.QUEST_SELECT);
+		// P0-2 DD 尾片：接取/交付切真端规范形（页 4 / 分档窗）。
+		// P0-2 DD tail slice: accept/delivery switch to the retail canonical shape (page 4 / tiered window).
 		assertContract(offer, "unaccepted", List.of(), List.of(
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT_NONE.id())));
+			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id())));
 
 		QuestTransition accept = route(definition, "unaccepted", START_NPC,
 			QuestDialogAction.QUEST_ACCEPT_SIMPLE);
@@ -56,17 +56,17 @@ class Quest1919ClientDialogAlignmentTest {
 		assertTrue(routes(definition, "reward", START_NPC).isEmpty());
 
 		assertTrue(routes(definition, "unaccepted", REPORT_NPC).isEmpty());
+		// P0-2 DD 尾片：接取/交付切真端规范形（页 4 / 分档窗）。
+		// P0-2 DD tail slice: accept/delivery switch to the retail canonical shape (page 4 / tiered window).
 		QuestTransition reportPage = route(definition, "started", REPORT_NPC,
 			QuestDialogAction.QUEST_SELECT);
-		assertContract(reportPage, "started", List.of(), List.of(
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())));
-
-		QuestTransition report = route(definition, "started", REPORT_NPC,
-			QuestDialogAction.SELECT_QUEST_REWARD);
-		assertContract(report, "reward", List.of(), List.of(
+		assertContract(reportPage, "reward", List.of(), List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.ShowQuestDialog(
 				QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())));
+		// 1009 领奖中转随页链删除（P0-2 DD 尾片）。
+		// The 1009 reward hop goes with the page chain (P0-2 DD tail slice).
+		assertNoRoute(definition, "started", REPORT_NPC, QuestDialogAction.SELECT_QUEST_REWARD);
 
 		for (QuestDialogAction previewAction : List.of(
 			QuestDialogAction.USE_OBJECT, QuestDialogAction.SELECT_QUEST_REWARD)) {
@@ -139,12 +139,8 @@ class Quest1919ClientDialogAlignmentTest {
 	}
 
 	private static CompiledQuestDefinition load() {
-		String resource = "/aion/data/static_data/quest_definition/quests/1919.xml";
-		try (InputStream input = Objects.requireNonNull(
-			Quest1919ClientDialogAlignmentTest.class.getResourceAsStream(resource), resource)) {
-			return QuestDefinitionXmlCompiler.compile(input);
-		} catch (Exception e) {
-			throw new AssertionError("unable to load " + resource, e);
-		}
+		// 1919 已退役（真端驱动）：改生产视图，与现役合成形状对拍。
+		// 1919 is retail-driven now: resolve through the production view.
+		return ProductionQuestDefinitions.definition(1919);
 	}
 }

@@ -41,12 +41,36 @@ final class QuestKillCounterSimulator {
 		if (killEvents.isEmpty()) {
 			return UNREACHABLE;
 		}
+		List<QuestTransition> ordered = killTransitions(compiled);
+		// 全新 START 快照（所有字段 0）先试一次；不命中时退回到第一条击杀转换的 source 投影。
+		// 15101 这类任务在击杀行之前还有一段客户端行 0 对话（legacy STEP_TO_1 写 SECTION_0=1），
+		// 只从 0 态模拟会把"要杀几只"误判成不可达。
+		// First try a fresh START snapshot; if no kill route matches, restart from the source projection of
+		// the first kill transition, because quests such as 15101 open the kill row through a dialogue step.
+		Integer fresh = simulate(compiled, definition, killEvents, ordered, Map.of());
+		if (fresh != null && fresh != UNREACHABLE) {
+			return fresh;
+		}
+		Map<String, Integer> stage = firstKillStageVariables(compiled, ordered);
+		if (stage == null || stage.equals(Map.of())) {
+			return UNREACHABLE;
+		}
+		Integer entered = simulate(compiled, definition, killEvents, ordered, stage);
+		return entered == null ? UNREACHABLE : entered;
+	}
+
+	/**
+	 * 从给定起始变量模拟连续击杀；无法匹配任何击杀路由时返回 null。
+	 * Simulates consecutive kills from the given start variables, returning null when no kill route matches.
+	 */
+	private static Integer simulate(CompiledQuestDefinition compiled, QuestDefinition definition,
+			List<QuestEvent> killEvents, List<QuestTransition> ordered, Map<String, Integer> start) {
 		Map<String, Integer> variables = new LinkedHashMap<>();
 		for (BitField field : definition.progressLayout().fields()) {
 			variables.put(field.name(), 0);
 		}
+		variables.putAll(start);
 		QuestStatus status = QuestStatus.START;
-		List<QuestTransition> ordered = killTransitions(compiled);
 		for (int kills = 1; kills <= MAX_SIMULATED_KILLS; kills++) {
 			QuestEvent event = killEvents.get((kills - 1) % killEvents.size());
 			QuestSnapshot snapshot = new QuestSnapshot(1, definition.id(), status,
@@ -60,7 +84,9 @@ final class QuestKillCounterSimulator {
 				}
 			}
 			if (plan == null) {
-				return UNREACHABLE;
+				// 击杀段在此收口（后续由对话/交付推进，如 25304 的 s2 -> s3）：返回已计入的击杀数。
+				// The kill stage ends here (a dialogue or hand-in takes over, e.g. 25304 s2 -> s3).
+				return kills == 1 ? null : kills - 1;
 			}
 			variables = definition.progressLayout().unpack(plan.nextPackedVariables());
 			status = plan.nextStatus();
@@ -69,6 +95,24 @@ final class QuestKillCounterSimulator {
 			}
 		}
 		return EXCEEDED_CAP;
+	}
+
+	/** 第一条击杀转换的 source 节点投影（阶段入口）。 / Source-node projection of the first kill transition. */
+	private static Map<String, Integer> firstKillStageVariables(CompiledQuestDefinition compiled,
+			List<QuestTransition> ordered) {
+		for (QuestTransition transition : ordered) {
+			String source = transition.sourceNode();
+			if (source == null) {
+				continue;
+			}
+			var node = compiled.definition().nodes().stream()
+				.filter(candidate -> candidate.label().equals(source))
+				.findFirst();
+			if (node.isPresent()) {
+				return node.get().projection().variables();
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -80,15 +124,53 @@ final class QuestKillCounterSimulator {
 	static Set<String> killCounterFields(CompiledQuestDefinition compiled) {
 		Set<String> fields = new LinkedHashSet<>();
 		for (QuestTransition transition : killTransitions(compiled)) {
+			Map<String, Integer> targetProjection = projectionVariables(compiled, transition.targetNode());
 			for (QuestAction action : transition.actions()) {
 				if (action instanceof QuestAction.IncrementVariable(String field, int delta) && delta > 0) {
 					fields.add(field);
-				} else if (action instanceof QuestAction.SetVariable(String field, int value) && value > 1) {
+				} else if (action instanceof QuestAction.SetVariable(String field, int value) && value > 1
+						&& !Integer.valueOf(value).equals(targetProjection.get(field))) {
+					// 写入目标节点投影值的动作是"阶段/行号钉住"，不是计数器（15101 收口击杀写 SECTION_0=2）。
+					// Writes equal to the target projection pin the stage/row instead of counting.
 					fields.add(field);
 				}
 			}
 		}
+		return fields.isEmpty() ? ladderCounterFields(compiled) : fields;
+	}
+
+	/**
+	 * 台阶计数（真端 IR 形态）：击杀把局面一级一级推上节点台阶，转换上没有动作；每级往前挪的
+	 * 那个进度字段就是计数器（13765 真端形态为 a0→a1→…→a5，全部钉在 var0 上）。
+	 * 只在动作口径一无所获时才走这条路——否则真端"台阶 + 附带动词"的写法会把阶段标记也算进来。
+	 * Ladder counters (the retail IR form): kills walk a node ladder whose transitions carry no
+	 * actions, and the progress field advanced by every rung is the counter. This rule only runs when
+	 * the action rule found nothing, so a mixed retail form cannot promote stage markers to counters.
+	 */
+	private static Set<String> ladderCounterFields(CompiledQuestDefinition compiled) {
+		Set<String> fields = new LinkedHashSet<>();
+		for (QuestTransition transition : killTransitions(compiled)) {
+			Map<String, Integer> source = projectionVariables(compiled, transition.sourceNode());
+			Map<String, Integer> target = projectionVariables(compiled, transition.targetNode());
+			if (source.isEmpty() || target.isEmpty()) {
+				continue;
+			}
+			for (Map.Entry<String, Integer> entry : target.entrySet()) {
+				if (!entry.getValue().equals(source.get(entry.getKey()))) {
+					fields.add(entry.getKey());
+				}
+			}
+		}
 		return fields;
+	}
+
+	/** 目标节点的投影变量。 / Projected variables of the target node. */
+	private static Map<String, Integer> projectionVariables(CompiledQuestDefinition compiled, String label) {
+		return compiled.definition().nodes().stream()
+			.filter(node -> node.label().equals(label))
+			.findFirst()
+			.map(node -> Map.copyOf(node.projection().variables()))
+			.orElseGet(Map::of);
 	}
 
 	/** 击杀类事件（按 npc/world/rank 排序，供模拟轮转）。 / Kill-like events, sorted for deterministic rotation. */

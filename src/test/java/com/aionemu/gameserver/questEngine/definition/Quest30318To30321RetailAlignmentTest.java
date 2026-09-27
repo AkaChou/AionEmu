@@ -2,9 +2,6 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,8 +29,14 @@ class Quest30318To30321RetailAlignmentTest {
 	private static void assertQuest(int questId, int prerequisite, int npcId,
 		Set<Integer> expectedKillNpcIds, int expectedKillCount, Set<QuestReward> expectedRewards) throws Exception {
 		QuestDefinition definition = load(questId);
+		/* 前置任务两种表达等价：XML 写 finished 启动条件，真端表 `finished_quest_cond` 无后缀且无其它条件族时
+		   编译为 prerequisites（RetailQuestMetadataCompiler 的归属规则）。二者语义相同，断言接受两种表达。
+		   The prerequisite is expressed either way: XML as a finished start condition, retail (plain
+		   finished_quest_cond without other condition families) as a prerequisite entry. */
 		assertTrue(definition.metadata().startConditions()
-			.contains(new QuestStartCondition("finished", prerequisite, 0)));
+				.contains(new QuestStartCondition("finished", prerequisite, 0))
+			|| definition.metadata().prerequisites().contains(prerequisite),
+			() -> "quest " + questId + " must require finished " + prerequisite);
 		assertEquals(expectedRewards, Set.copyOf(definition.metadata().rewards()));
 		assertTrue(definition.transitions().stream()
 			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc)
@@ -57,10 +60,9 @@ class Quest30318To30321RetailAlignmentTest {
 	}
 
 	private static QuestDefinition load(int questId) throws Exception {
-		Path path = Path.of("src/main/resources/aion/data/static_data/quest_definition/quests/" + questId + ".xml");
-		try (InputStream input = Files.newInputStream(path)) {
-			return QuestDefinitionXmlCompiler.compile(input).definition();
-		}
+		// P0c-8c（2026-09-24）：30319 已由真端 SimpleHunt 网格驱动（退役 XML），统一取生产视图。
+		// Retired quests live in git history only: use the production view (XML dir + retail overlay).
+		return ProductionQuestDefinitions.definition(questId).definition();
 	}
 
 	private static long killRouteCount(QuestDefinition definition, int npcId) {

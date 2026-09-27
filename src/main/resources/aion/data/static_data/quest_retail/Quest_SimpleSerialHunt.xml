@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE strings [
+	<!ENTITY quot "quot">
+	<!ENTITY amp "amp">
+	<!ENTITY apos "apos">
+	<!ENTITY lt "lt">
+	<!ENTITY gt "gt">
+	<!ENTITY nbsp "nbsp">
+	<!ENTITY iexcl "iexcl">
+	<!ENTITY cent "cent">
+	<!ENTITY pound "pound">
+	<!ENTITY curren "curren">
+	<!ENTITY yen "yen">
+	<!ENTITY brvbar "brvbar">
+	<!ENTITY sect "sect">
+	<!ENTITY uml "uml">
+	<!ENTITY copy "copy">
+	<!ENTITY ordf "ordf">
+	<!ENTITY laquo "laquo">
+	<!ENTITY not "not">
+	<!ENTITY shy "shy">
+	<!ENTITY reg "reg">
+	<!ENTITY macr "macr">
+	<!ENTITY deg "deg">
+	<!ENTITY plusmn "plusmn">
+	<!ENTITY sup2 "sup2">
+	<!ENTITY sup3 "sup3">
+	<!ENTITY acute "acute">
+	<!ENTITY micro "micro">
+	<!ENTITY para "para">
+	<!ENTITY middot "middot">
+	<!ENTITY cedil "cedil">
+	<!ENTITY sup1 "sup1">
+	<!ENTITY ordm "ordm">
+	<!ENTITY raquo "raquo">
+	<!ENTITY frac14 "frac14">
+	<!ENTITY frac12 "frac12">
+	<!ENTITY frac34 "frac34">
+	<!ENTITY iquest "iquest">
+	<!ENTITY Agrave "Agrave">
+	<!ENTITY Aacute "Aacute">
+	<!ENTITY Acirc "Acirc">
+	<!ENTITY Atilde "Atilde">
+	<!ENTITY Auml "Auml">
+	<!ENTITY Aring "Aring">
+	<!ENTITY AElig "AElig">
+	<!ENTITY Ccedil "Ccedil">
+	<!ENTITY Egrave "Egrave">
+	<!ENTITY Eacute "Eacute">
+	<!ENTITY Ecirc "Ecirc">
+	<!ENTITY Euml "Euml">
+	<!ENTITY Igrave "Igrave">
+	<!ENTITY Iacute "Iacute">
+	<!ENTITY Icirc "Icirc">
+	<!ENTITY Iuml "Iuml">
+	<!ENTITY ETH "ETH">
+	<!ENTITY Ntilde "Ntilde">
+	<!ENTITY Ograve "Ograve">
+	<!ENTITY Oacute "Oacute">
+	<!ENTITY Ocirc "Ocirc">
+	<!ENTITY Otilde "Otilde">
+	<!ENTITY Ouml "Ouml">
+	<!ENTITY times "times">
+	<!ENTITY Oslash "Oslash">
+	<!ENTITY Ugrave "Ugrave">
+	<!ENTITY Uacute "Uacute">
+	<!ENTITY Ucirc "Ucirc">
+	<!ENTITY Uuml "Uuml">
+	<!ENTITY Yacute "Yacute">
+	<!ENTITY THORN "THORN">
+	<!ENTITY szlig "szlig">
+	<!ENTITY agrave "agrave">
+	<!ENTITY aacute "aacute">
+	<!ENTITY acirc "acirc">
+	<!ENTITY atilde "atilde">
+	<!ENTITY auml "auml">
+	<!ENTITY aring "aring">
+	<!ENTITY aelig "aelig">
+	<!ENTITY ccedil "ccedil">
+	<!ENTITY egrave "egrave">
+	<!ENTITY eacute "eacute">
+	<!ENTITY ecirc "ecirc">
+	<!ENTITY euml "euml">
+	<!ENTITY igrave "igrave">
+	<!ENTITY iacute "iacute">
+	<!ENTITY icirc "icirc">
+	<!ENTITY iuml "iuml">
+	<!ENTITY eth "eth">
+	<!ENTITY ntilde "ntilde">
+	<!ENTITY ograve "ograve">
+	<!ENTITY oacute "oacute">
+	<!ENTITY ocirc "ocirc">
+	<!ENTITY otilde "otilde">
+	<!ENTITY ouml "ouml">
+	<!ENTITY divide "divide">
+	<!ENTITY oslash "oslash">
+	<!ENTITY ugrave "ugrave">
+	<!ENTITY uacute "uacute">
+	<!ENTITY ucirc "ucirc">
+	<!ENTITY uuml "uuml">
+	<!ENTITY yacute "yacute">
+	<!ENTITY thorn "thorn">
+	<!ENTITY yuml "yuml">
+	<!ENTITY OElig "OElig">
+	<!ENTITY oelig "oelig">
+	<!ENTITY Scaron "Scaron">
+	<!ENTITY scaron "scaron">
+	<!ENTITY Yuml "Yuml">
+	<!ENTITY fnof "fnof">
+	<!ENTITY circ "circ">
+	<!ENTITY tilde "tilde">
+	<!ENTITY Alpha "Alpha">
+	<!ENTITY Beta "Beta">
+	<!ENTITY Gamma "Gamma">
+	<!ENTITY Delta "Delta">
+	<!ENTITY Epsilon "Epsilon">
+	<!ENTITY Zeta "Zeta">
+	<!ENTITY Eta "Eta">
+	<!ENTITY Theta "Theta">
+	<!ENTITY Iota "Iota">
+	<!ENTITY Kappa "Kappa">
+	<!ENTITY Lambda "Lambda">
+	<!ENTITY Mu "Mu">
+	<!ENTITY Nu "Nu">
+	<!ENTITY Xi "Xi">
+	<!ENTITY Omicron "Omicron">
+	<!ENTITY Pi "Pi">
+	<!ENTITY Rho "Rho">
+	<!ENTITY Sigma "Sigma">
+	<!ENTITY Tau "Tau">
+	<!ENTITY Upsilon "Upsilon">
+	<!ENTITY Phi "Phi">
+	<!ENTITY Chi "Chi">
+	<!ENTITY Psi "Psi">
+	<!ENTITY Omega "Omega">
+	<!ENTITY alpha "alpha">
+	<!ENTITY beta "beta">
+	<!ENTITY gamma "gamma">
+	<!ENTITY delta "delta">
+	<!ENTITY epsilon "epsilon">
+	<!ENTITY zeta "zeta">
+	<!ENTITY eta "eta">
+	<!ENTITY theta "theta">
+	<!ENTITY iota "iota">
+	<!ENTITY kappa "kappa">
+	<!ENTITY lambda "lambda">
+	<!ENTITY mu "mu">
+	<!ENTITY nu "nu">
+	<!ENTITY xi "xi">
+	<!ENTITY omicron "omicron">
+	<!ENTITY pi "pi">
+	<!ENTITY rho "rho">
+	<!ENTITY sigmaf "sigmaf">
+	<!ENTITY sigma "sigma">
+	<!ENTITY tau "tau">
+	<!ENTITY upsilon "upsilon">
+	<!ENTITY phi "phi">
+	<!ENTITY chi "chi">
+	<!ENTITY psi "psi">
+	<!ENTITY omega "omega">
+	<!ENTITY thetasym "thetasym">
+	<!ENTITY upsih "upsih">
+	<!ENTITY piv "piv">
+	<!ENTITY ensp "ensp">
+	<!ENTITY emsp "emsp">
+	<!ENTITY thinsp "thinsp">
+	<!ENTITY zwnj "zwnj">
+	<!ENTITY zwj "zwj">
+	<!ENTITY lrm "lrm">
+	<!ENTITY rlm "rlm">
+	<!ENTITY ndash "ndash">
+	<!ENTITY mdash "mdash">
+	<!ENTITY lsquo "lsquo">
+	<!ENTITY rsquo "rsquo">
+	<!ENTITY sbquo "sbquo">
+	<!ENTITY ldquo "ldquo">
+	<!ENTITY rdquo "rdquo">
+	<!ENTITY bdquo "bdquo">
+	<!ENTITY dagger "dagger">
+	<!ENTITY Dagger "Dagger">
+	<!ENTITY bull "bull">
+	<!ENTITY hellip "hellip">
+	<!ENTITY permil "permil">
+	<!ENTITY prime "prime">
+	<!ENTITY Prime "Prime">
+	<!ENTITY lsaquo "lsaquo">
+	<!ENTITY rsaquo "rsaquo">
+	<!ENTITY oline "oline">
+	<!ENTITY frasl "frasl">
+	<!ENTITY euro "euro">
+	<!ENTITY image "image">
+	<!ENTITY weierp "weierp">
+	<!ENTITY real "real">
+	<!ENTITY trade "trade">
+	<!ENTITY alefsym "alefsym">
+	<!ENTITY larr "larr">
+	<!ENTITY uarr "uarr">
+	<!ENTITY rarr "rarr">
+	<!ENTITY darr "darr">
+	<!ENTITY harr "harr">
+	<!ENTITY crarr "crarr">
+	<!ENTITY lArr "lArr">
+	<!ENTITY uArr "uArr">
+	<!ENTITY rArr "rArr">
+	<!ENTITY dArr "dArr">
+	<!ENTITY hArr "hArr">
+	<!ENTITY forall "forall">
+	<!ENTITY part "part">
+	<!ENTITY exist "exist">
+	<!ENTITY empty "empty">
+	<!ENTITY nabla "nabla">
+	<!ENTITY isin "isin">
+	<!ENTITY notin "notin">
+	<!ENTITY ni "ni">
+	<!ENTITY prod "prod">
+	<!ENTITY sum "sum">
+	<!ENTITY minus "minus">
+	<!ENTITY lowast "lowast">
+	<!ENTITY radic "radic">
+	<!ENTITY prop "prop">
+	<!ENTITY infin "infin">
+	<!ENTITY ang "ang">
+	<!ENTITY and "and">
+	<!ENTITY or "or">
+	<!ENTITY cap "cap">
+	<!ENTITY cup "cup">
+	<!ENTITY int "int">
+	<!ENTITY there4 "there4">
+	<!ENTITY sim "sim">
+	<!ENTITY cong "cong">
+	<!ENTITY asymp "asymp">
+	<!ENTITY ne "ne">
+	<!ENTITY equiv "equiv">
+	<!ENTITY le "le">
+	<!ENTITY ge "ge">
+	<!ENTITY sub "sub">
+	<!ENTITY sup "sup">
+	<!ENTITY nsub "nsub">
+	<!ENTITY sube "sube">
+	<!ENTITY supe "supe">
+	<!ENTITY oplus "oplus">
+	<!ENTITY otimes "otimes">
+	<!ENTITY perp "perp">
+	<!ENTITY sdot "sdot">
+	<!ENTITY lceil "lceil">
+	<!ENTITY rceil "rceil">
+	<!ENTITY lfloor "lfloor">
+	<!ENTITY rfloor "rfloor">
+	<!ENTITY lang "lang">
+	<!ENTITY rang "rang">
+	<!ENTITY loz "loz">
+	<!ENTITY spades "spades">
+	<!ENTITY clubs "clubs">
+	<!ENTITY hearts "hearts">
+	<!ENTITY diams "diams">
+]>
+<quest_simpleserialhunts>
+	<id id="9622">
+		<dev_name>[테스트] 병렬사냥</dev_name>
+		<acquired_npc_name>Rebecca_5</acquired_npc_name>
+		<talk_npc1>Rebecca_2</talk_npc1>
+		<talk_npc2>Rebecca_3</talk_npc2>
+		<talk_npc3>Rebecca_4</talk_npc3>
+		<count_first>1</count_first>
+		<monster_first>DF4_DaQ_Owllau_As_52</monster_first>
+		<count_second>1</count_second>
+		<monster_second>DF4_DaQ_FanaticRa_54</monster_second>
+		<count_third>1</count_third>
+		<monster_third>DF4_DaQ_DrakanWi_Re_55</monster_third>
+		<count_fourth>1</count_fourth>
+		<monster_fourth>DF4_DaQ_Light_Fi_53</monster_fourth>
+		<count_fifth>1</count_fifth>
+		<monster_fifth>DF4_DayQ_Spakle_Crk_51_n</monster_fifth>
+		<reward_npc_name>Rebecca_5</reward_npc_name>
+	</id>
+	<id id="41189">
+		<dev_name>[포스] 레이드 사냥 퀘스트</dev_name>
+		<acquired_npc_name>Ganofus</acquired_npc_name>
+		<count_first>1</count_first>
+		<monster_first>LDF4a_Public_Quest_Monster_02</monster_first>
+		<count_second>1</count_second>
+		<monster_second>LDF4a_Public_Quest_Monster_08</monster_second>
+		<count_third>1</count_third>
+		<monster_third>LDF4a_Public_Quest_Monster_05</monster_third>
+		<count_fourth>1</count_fourth>
+		<monster_fourth>LDF4a_Public_Quest_Monster_11</monster_fourth>
+		<reward_npc_name>Ganofus</reward_npc_name>
+	</id>
+	<id id="30600">
+		<dev_name>사드하 드레드기온 동선 유도</dev_name>
+		<acquired_npc_name>Hejitor</acquired_npc_name>
+		<talk_npc1>Linocus</talk_npc1>
+		<count_first>1</count_first>
+		<monster_first>IDDreadgion_03_DrakanFiNamedAA_60_Ae, IDDreadgion_03_DrakanFiNamedAB_60_Ae</monster_first>
+		<count_second>1</count_second>
+		<monster_second>IDDreadgion_03_DrakanWi_Boss_Ah</monster_second>
+		<reward_npc_name>Hejitor</reward_npc_name>
+	</id>
+	<id id="30610">
+		<dev_name>사드하 드레드기온 동선 유도 (마)</dev_name>
+		<acquired_npc_name>Astella</acquired_npc_name>
+		<talk_npc1>Aluna</talk_npc1>
+		<count_first>1</count_first>
+		<monster_first>IDDreadgion_03_DrakanFiNamedAA_60_Ae, IDDreadgion_03_DrakanFiNamedAB_60_Ae</monster_first>
+		<count_second>1</count_second>
+		<monster_second>IDDreadgion_03_DrakanWi_Boss_Ah</monster_second>
+		<reward_npc_name>Astella</reward_npc_name>
+	</id>
+	<id id="13025">
+		<dev_name>브리트라군과 격전 중인 티아마트군 (182)</dev_name>
+		<acquired_npc_name>LDF5b_Survival_Drakan</acquired_npc_name>
+		<count_first>9</count_first>
+		<monster_first>LDF5B_c3_Vri_Tanker_Fi_DD_65_An, LDF5B_c3_Vri_DDealer_Gu_DD_65_An, LDF5B_c3_Vri_HPDrainDD_Fi_65_An, LDF5B_c3_Vri_Alert_As_65_An, LDF5B_c3_Vri_Alert_Wi_65_An, LDF5B_c3_Vri_Heal_Pr_65_An</monster_first>
+		<count_second>1</count_second>
+		<monster_second>LDF5B_c3_Vri_Confuse_El_SN_NmdQ_65_Ae</monster_second>
+		<reward_npc_name>LDF5b_Survival_Drakan</reward_npc_name>
+	</id>
+	<id id="23025">
+		<dev_name>브리트라군에게 패배한 티아마트군 : 빼앗긴 고대 병기 (181)</dev_name>
+		<acquired_npc_name>LDF5b_Defeat_Drakan</acquired_npc_name>
+		<count_first>9</count_first>
+		<monster_first>LDF5B_b3_Vri_Tanker_Fi_DD_65_An, LDF5B_b3_Vri_DDealer_Gu_DD_65_An, LDF5B_b3_Vri_HPDrainDD_Fi_65_An, LDF5B_b3_Vri_Alert_As_65_An, LDF5B_b3_Vri_Alert_Wi_65_An, LDF5B_b3_Vri_Heal_Pr_65_An</monster_first>
+		<count_second>1</count_second>
+		<monster_second>LDF5B_b3_Vri_Weabind_Ri_SN_NmdQ_65_Ae</monster_second>
+		<reward_npc_name>LDF5b_Defeat_Drakan</reward_npc_name>
+	</id>
+	<id id="13619">
+		<dev_name>[파티] 브리트라 드라칸 처치</dev_name>
+		<acquired_npc_name>LDF5_Under_Kurius_E</acquired_npc_name>
+		<count_first>7</count_first>
+		<monster_first>LDF5_Under_VriTR_Drakan_Fi_Stun_65_Ae, LDF5_Under_VriTR_Drakan_As_2_Broad_65_Ae, LDF5_Under_VriTR_Drakan_Fi_DD_65_Ae, LDF5_Under_VriTR_Drakan_Wi_Mes_65_Ae, LDF5_Under_VriTR_Drakan_Pr_Heal_65_Ae, LDF5_Under_VriTR_Drakan_Wi_DoT_65_Ae, LDF5_Under_VriTR_Drakan_As_Hide_65_Ae</monster_first>
+		<count_second>1</count_second>
+		<monster_second>LDF5_Under_Vri_5th_Q_Wi_N_65_Ah</monster_second>
+		<reward_npc_name>LDF5_Under_Kurius_E</reward_npc_name>
+	</id>
+	<id id="23619">
+		<dev_name>[파티] 브리트라 드라칸 처치</dev_name>
+		<acquired_npc_name>LDF5_Under_Oturu_E</acquired_npc_name>
+		<count_first>7</count_first>
+		<monster_first>LDF5_Under_VriTR_Drakan_Fi_Stun_65_Ae, LDF5_Under_VriTR_Drakan_As_2_Broad_65_Ae, LDF5_Under_VriTR_Drakan_Fi_DD_65_Ae, LDF5_Under_VriTR_Drakan_Wi_Mes_65_Ae, LDF5_Under_VriTR_Drakan_Pr_Heal_65_Ae, LDF5_Under_VriTR_Drakan_Wi_DoT_65_Ae, LDF5_Under_VriTR_Drakan_As_Hide_65_Ae</monster_first>
+		<count_second>1</count_second>
+		<monster_second>LDF5_Under_Vri_5th_Q_Wi_N_65_Ah</monster_second>
+		<reward_npc_name>LDF5_Under_Oturu_E</reward_npc_name>
+	</id>
+	<id id="18911">
+		<dev_name>[IDVritra_Base] [파티] 반드시 해치울 것</dev_name>
+		<acquired_npc_name>LDF5_Kanix_E</acquired_npc_name>
+		<count_first>1</count_first>
+		<monster_first>IDVritra_Base_Drakan_As_65_Ae2_Nmd</monster_first>
+		<count_second>1</count_second>
+		<monster_second>IDVritra_Base_Drakan_Gi_65_Ae2_Nmd</monster_second>
+		<count_third>1</count_third>
+		<monster_third>IDVritra_Base_Drakan_Wi_65_Ae2_Nmd</monster_third>
+		<count_fourth>1</count_fourth>
+		<monster_fourth>IDVritra_Base_Drakan_Fi_65_Ae2_Nmd</monster_fourth>
+		<count_fifth>1</count_fifth>
+		<monster_fifth>IDVritra_Base_Drakan_Guardian_65_Ae2_Nmd</monster_fifth>
+		<reward_npc_name>LDF5_Kanix_E</reward_npc_name>
+	</id>
+	<id id="18912">
+		<dev_name>[파티] 제40 군단장의 최후</dev_name>
+		<acquired_npc_name>LDF5_Kanix_E</acquired_npc_name>
+		<count_first>2</count_first>
+		<monster_first>IDVritra_Base_Fake_Box_65_An</monster_first>
+		<count_second>1</count_second>
+		<monster_second>IDVritra_Base_Shita_B5_65_Ah_Nmd</monster_second>
+		<reward_npc_name>LDF5_Kanix_E</reward_npc_name>
+	</id>
+	<id id="28911">
+		<dev_name>[파티] 핵심 간부 척살</dev_name>
+		<acquired_npc_name>LDF5_Giriltia_E</acquired_npc_name>
+		<count_first>1</count_first>
+		<monster_first>IDVritra_Base_Drakan_As_65_Ae2_Nmd</monster_first>
+		<count_second>1</count_second>
+		<monster_second>IDVritra_Base_Drakan_Gi_65_Ae2_Nmd</monster_second>
+		<count_third>1</count_third>
+		<monster_third>IDVritra_Base_Drakan_Wi_65_Ae2_Nmd</monster_third>
+		<count_fourth>1</count_fourth>
+		<monster_fourth>IDVritra_Base_Drakan_Fi_65_Ae2_Nmd</monster_fourth>
+		<count_fifth>1</count_fifth>
+		<monster_fifth>IDVritra_Base_Drakan_Guardian_65_Ae2_Nmd</monster_fifth>
+		<reward_npc_name>LDF5_Giriltia_E</reward_npc_name>
+	</id>
+	<id id="28912">
+		<dev_name>[파티] 정보부대의 사령관</dev_name>
+		<acquired_npc_name>LDF5_Giriltia_E</acquired_npc_name>
+		<count_first>2</count_first>
+		<monster_first>IDVritra_Base_Fake_Box_65_An</monster_first>
+		<count_second>1</count_second>
+		<monster_second>IDVritra_Base_Shita_B5_65_Ah_Nmd</monster_second>
+		<reward_npc_name>LDF5_Giriltia_E</reward_npc_name>
+	</id>
+	<id id="16991">
+		<dev_name>디펜스 가이드 (사냥)</dev_name>
+		<acquired_npc_name>IDLDF5_Under_03_Tonda_E</acquired_npc_name>
+		<count_first>4</count_first>
+		<monster_first>IDF5_U3_Vri_Fi_65_An, IDF5_U3_Vri_As_65_An, IDF5_U3_Vri_Wi_65_An, IDF5_U3_Vri_Ri_65_An, IDF5_U3_Vri_Pr_65_An, IDF5_U3_Vri_Ra_65_An, IDF5_U3_Vri_Gu_65_An, IDF5_U3_Vri_Ba_65_An</monster_first>
+		<count_second>4</count_second>
+		<monster_second>IDF5_U3_Vri_Fi_65_Ae, IDF5_U3_Vri_As_65_Ae, IDF5_U3_Vri_Wi_65_Ae, IDF5_U3_Vri_Ri_65_Ae, IDF5_U3_Vri_Pr_65_Ae, IDF5_U3_Vri_Ra_65_Ae, IDF5_U3_Vri_Gu_65_Ae, IDF5_U3_Vri_Ba_65_Ae</monster_second>
+		<count_third>2</count_third>
+		<monster_third>IDF5_U3_Vri_Fi_SN_65_Ae, IDF5_U3_Vri_As_SN_65_Ae, IDF5_U3_Vri_Wi_SN_65_Ae, IDF5_U3_Vri_Pr_SN_65_Ae</monster_third>
+		<reward_npc_name>LDF4_Advance_Florrick_E</reward_npc_name>
+	</id>
+	<id id="26991">
+		<dev_name>디펜스 가이드 (사냥)</dev_name>
+		<acquired_npc_name>IDLDF5_Under_03_Kamenz_E</acquired_npc_name>
+		<count_first>4</count_first>
+		<monster_first>IDF5_U3_Vri_Fi_65_An, IDF5_U3_Vri_As_65_An, IDF5_U3_Vri_Wi_65_An, IDF5_U3_Vri_Ri_65_An, IDF5_U3_Vri_Pr_65_An, IDF5_U3_Vri_Ra_65_An, IDF5_U3_Vri_Gu_65_An, IDF5_U3_Vri_Ba_65_An</monster_first>
+		<count_second>4</count_second>
+		<monster_second>IDF5_U3_Vri_Fi_65_Ae, IDF5_U3_Vri_As_65_Ae, IDF5_U3_Vri_Wi_65_Ae, IDF5_U3_Vri_Ri_65_Ae, IDF5_U3_Vri_Pr_65_Ae, IDF5_U3_Vri_Ra_65_Ae, IDF5_U3_Vri_Gu_65_Ae, IDF5_U3_Vri_Ba_65_Ae</monster_second>
+		<count_third>2</count_third>
+		<monster_third>IDF5_U3_Vri_Fi_SN_65_Ae, IDF5_U3_Vri_As_SN_65_Ae, IDF5_U3_Vri_Wi_SN_65_Ae, IDF5_U3_Vri_Pr_SN_65_Ae</monster_third>
+		<reward_npc_name>LDF4_Advance_Gatener_E</reward_npc_name>
+	</id>
+	<id id="13918">
+		<dev_name>[영웅/파티] 게르하 대형 기지 방어전2</dev_name>
+		<acquired_npc_name>LDF4_Advance_Village_Guard09_L</acquired_npc_name>
+		<count_first>1</count_first>
+		<monster_first>LDF4_Advance_B_Killer_Dr_65_Ae</monster_first>
+		<count_second>1</count_second>
+		<monster_second>LDF4_Advance_B_Killer_Dr_65_Ah</monster_second>
+		<count_third>1</count_third>
+		<monster_third>LDF4_Advance_B1_Killer_Dr_65_Ah</monster_third>
+		<count_fourth>1</count_fourth>
+		<monster_fourth>LDF4_Advance_B_Killer_Da_65_Al</monster_fourth>
+		<count_fifth>1</count_fifth>
+		<monster_fifth>LDF4_Advance_B1_Killer_Da_65_Al</monster_fifth>
+		<reward_npc_name>LDF4_Advance_Elger_E</reward_npc_name>
+	</id>
+	<id id="23918">
+		<dev_name>[영웅/파티] 게르하 대형 기지 수비전2</dev_name>
+		<acquired_npc_name>LDF4_Advance_Village_Guard09_D</acquired_npc_name>
+		<count_first>1</count_first>
+		<monster_first>LDF4_Advance_B_Killer_Dr_01_65_Ae</monster_first>
+		<count_second>1</count_second>
+		<monster_second>LDF4_Advance_B_Killer_Dr_01_65_Ah</monster_second>
+		<count_third>1</count_third>
+		<monster_third>LDF4_Advance_B1_Killer_Dr_01_65_Ah</monster_third>
+		<count_fourth>1</count_fourth>
+		<monster_fourth>LDF4_Advance_B_Killer_Li_65_Al</monster_fourth>
+		<count_fifth>1</count_fifth>
+		<monster_fifth>LDF4_Advance_B1_Killer_Li_65_Al</monster_fifth>
+		<reward_npc_name>LDF4_Advance_Helgund_E</reward_npc_name>
+	</id>
+</quest_simpleserialhunts>

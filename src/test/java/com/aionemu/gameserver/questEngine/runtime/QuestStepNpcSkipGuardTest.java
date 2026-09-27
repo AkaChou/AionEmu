@@ -1,7 +1,7 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
-import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
@@ -11,9 +11,7 @@ import com.aionemu.gameserver.questEngine.e2e.client.ServerPacketObservation;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.Map;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -46,35 +44,29 @@ class QuestStepNpcSkipGuardTest {
 
 	private static void assertSkipGuarded(CompiledQuestDefinition definition, int talkStepNpc,
 			int actionStepNpc, int killNpc, int finalStepValue) throws Exception {
-		// 步骤 NPC 不再有无条件 SELECT_QUEST_REWARD started->reward 边。
+		// 步骤 NPC 不得存在任何直达 REWARD 的 SELECT_QUEST_REWARD 边（中间行都不允许跳步）。
+		// No SELECT_QUEST_REWARD edge at the step NPC may jump straight into REWARD.
 		assertTrue(definition.definition().transitions().stream()
 			.filter(candidate -> candidate.event().equals(
 				new QuestEvent.TalkToNpc(actionStepNpc, QuestDialogAction.SELECT_QUEST_REWARD.id())))
-			.filter(candidate -> "started".equals(candidate.sourceNode())
-				&& "reward".equals(candidate.targetNode()))
-			.findFirst().isEmpty(), "unconditional skip edge must not exist");
+			.noneMatch(candidate -> nodeStatus(definition, candidate.targetNode()) == QuestStatus.REWARD),
+			"unconditional skip edge must not exist");
 
 		try (QuestE2eRuntime runtime = new QuestE2eRuntime(definition)) {
-			// 走到步骤链末端:talk 步骤 SETPRO1 -> action 步骤 SETPRO2(var0=finalStepValue)。
+			// 步骤链:talk 步骤 SETPRO1(started -> s1) -> action 步骤 SETPRO2(s1 -> s2=finalStepValue)。
+			// Step chain: talk NPC SETPRO1 (started -> s1), then action NPC SETPRO2 (s1 -> s2).
 			QuestTransition firstHandoff = dialogRoute(definition, talkStepNpc, QuestDialogAction.SETPRO1);
 			runtime.prepare(firstHandoff);
 			assertTrue(runtime.dispatchPrepared().handled());
-			QuestTransition secondHandoff = dialogRoute(definition, actionStepNpc, QuestDialogAction.SETPRO2);
-			runtime.prepare(secondHandoff);
-			assertTrue(runtime.dispatchPrepared().handled());
-			assertEquals(Map.of("var0", finalStepValue), unpack(definition, runtime));
+			assertEquals(Map.of("var0", 1), unpack(definition, runtime));
 
-			// 中间态直接索要奖励必须无响应且不改变状态。
-			QuestHeadlessClient.DispatchOutcome skip = runtime.dispatchWorld(
-				new QuestEvent.TalkToNpc(actionStepNpc, QuestDialogAction.SELECT_QUEST_REWARD.id()));
-			assertFalse(skip.handled(), "premature reward report was handled");
-			assertEquals(QuestStatus.START, runtime.state().status());
-
-			// 页面入口保留:QUEST_SELECT 仍返回 SELECT2 页面供 SETPRO 按钮交互。
+			// 页面入口保留:行 1（s1）的 QUEST_SELECT 仍返回 SELECT2 页面供 SETPRO 按钮交互。
+			// The page entry stays on row 1: QUEST_SELECT still answers with the SELECT2 page.
 			QuestTransition pageEntry = definition.definition().transitions().stream()
 				.filter(candidate -> candidate.event().equals(
 					new QuestEvent.TalkToNpc(actionStepNpc, QuestDialogAction.QUEST_SELECT.id())))
-				.filter(candidate -> "started".equals(candidate.sourceNode()))
+				.filter(candidate -> "s1".equals(candidate.sourceNode())
+					&& "s1".equals(candidate.targetNode()))
 				.findFirst().orElseThrow();
 			runtime.prepare(pageEntry);
 			QuestHeadlessClient.DispatchOutcome page = runtime.dispatchPrepared();
@@ -84,11 +76,31 @@ class QuestStepNpcSkipGuardTest {
 						&& packet.dialogId() == QuestDialogPage.SELECT2.id()),
 				"SELECT2 page packet missing");
 
+			// 中间态直接索要奖励必须无响应且不改变状态。
+			// A premature reward request mid-chain must be ignored.
+			QuestHeadlessClient.DispatchOutcome skip = runtime.dispatchWorld(
+				new QuestEvent.TalkToNpc(actionStepNpc, QuestDialogAction.SELECT_QUEST_REWARD.id()));
+			assertFalse(skip.handled(), "premature reward report was handled");
+			assertEquals(QuestStatus.START, runtime.state().status());
+
+			QuestTransition secondHandoff = dialogRoute(definition, actionStepNpc, QuestDialogAction.SETPRO2);
+			runtime.prepare(secondHandoff);
+			assertTrue(runtime.dispatchPrepared().handled());
+			assertEquals(Map.of("var0", finalStepValue), unpack(definition, runtime));
+
 			// 最后一击照常进入 REWARD。
+			// The final kill still enters REWARD.
 			runtime.prepare(killRoute(definition, killNpc));
 			assertTrue(runtime.dispatchPrepared().handled());
 			assertEquals(QuestStatus.REWARD, runtime.state().status());
 		}
+	}
+
+	private static QuestStatus nodeStatus(CompiledQuestDefinition definition, String label) {
+		return definition.definition().nodes().stream()
+			.filter(candidate -> candidate.label().equals(label))
+			.map(candidate -> candidate.projection().status())
+			.findFirst().orElseThrow();
 	}
 
 	private static QuestTransition dialogRoute(CompiledQuestDefinition definition, int npcId,
@@ -111,10 +123,7 @@ class QuestStepNpcSkipGuardTest {
 	}
 
 	private static CompiledQuestDefinition load(int questId) throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-		try (InputStream input = Objects.requireNonNull(
-				QuestStepNpcSkipGuardTest.class.getResourceAsStream(resource), resource)) {
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

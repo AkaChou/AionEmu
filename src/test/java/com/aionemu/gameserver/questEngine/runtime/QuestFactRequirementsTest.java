@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -125,27 +127,41 @@ class QuestFactRequirementsTest {
 	 */
 	@Test
 	void acquiringTransitionInheritsMetadataPrerequisites() throws Exception {
+		/* P5-1：19638/19637 已是网格形，接取目标 = 网格零段（a0），不再是 started——按
+		   NONE→START 的接取路由通用定位。 */
 		CompiledQuestDefinition quest19638 = loadQuest(19638);
-		QuestTransition accept19638 = findTransition(quest19638, "unaccepted", "started");
+		QuestTransition accept19638 = findAcquire(quest19638);
 		QuestFactRequirements req19638 = QuestFactRequirements.of(quest19638, accept19638.event(), accept19638);
 		assertTrue(req19638.questIdSets(), "19638 接取时必须采集前置任务 ID 集合以校验 19637 完成状态");
 
 		CompiledQuestDefinition quest19637 = loadQuest(19637);
-		QuestTransition accept19637 = findTransition(quest19637, "unaccepted", "started");
+		QuestTransition accept19637 = findAcquire(quest19637);
 		QuestFactRequirements req19637 = QuestFactRequirements.of(quest19637, accept19637.event(), accept19637);
 		assertFalse(req19637.questIdSets(), "19637 无前置条件，接取转换不应多采 questIdSets");
 	}
 
-	private static CompiledQuestDefinition loadQuest(int questId) throws Exception {
-		try (InputStream in = QuestFactRequirementsTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			return QuestDefinitionXmlCompiler.compile(Objects.requireNonNull(in, "missing quest " + questId));
-		}
+	private static CompiledQuestDefinition loadQuest(int questId) {
+		// 前置采集契约行已由真端表驱动（退役），改从生产视图取定义。
+		// The fact-requirement rows are retail-driven since retirement; load via the production view.
+		return ProductionQuestDefinitions.definition(questId);
 	}
 
 	private static QuestTransition findTransition(CompiledQuestDefinition compiled, String source, String target) {
 		return compiled.definition().transitions().stream()
 			.filter(t -> Objects.equals(t.sourceNode(), source) && Objects.equals(t.targetNode(), target))
+			.findFirst().orElseThrow();
+	}
+
+	/** 接取路由：unaccepted 出发、目标为 START 投影节点（网格零段或 started）。 */
+	private static QuestTransition findAcquire(CompiledQuestDefinition compiled) {
+		return compiled.definition().transitions().stream()
+			.filter(t -> "unaccepted".equals(t.sourceNode()) && t.targetNode() != null
+				&& !t.targetNode().equals(t.sourceNode()))
+			.filter(t -> compiled.definition().nodes().stream()
+				.filter(n -> n.label().equals(t.targetNode()))
+				.findFirst()
+				.map(n -> n.projection().status() == QuestStatus.START)
+				.orElse(false))
 			.findFirst().orElseThrow();
 	}
 

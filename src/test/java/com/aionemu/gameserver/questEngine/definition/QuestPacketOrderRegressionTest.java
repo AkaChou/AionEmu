@@ -63,12 +63,17 @@ class QuestPacketOrderRegressionTest {
 
 	@Test
 	void quest24153SynchronizesRewardStateBeforeRewardWindow() throws Exception {
-		// 客户端 SECTION_0..4 是 5 只冰冻独眼巨人的独立计数（SECTION_5==0 门控），报告行由 hunted 承载。
-		// Client SECTION_0..4 are the five cyclops counters gated by SECTION_5==0; the report row lives on hunted.
-		assertRouteContract(24153, "hunted", new NodeProjection(QuestStatus.START, Map.of("var5", 0)), "reward",
+		// 客户端 SECTION_0..4 是 5 只冰冻独眼巨人的独立计数（SECTION_5==0 门控），报告行是计数满段节点
+		// （P0c-6 起真端网格合成：五段全满 = 网格名 a1b1c1d1e1）。P0-2 规范形后交付动作是满段 QUEST_SELECT。
+		// Client SECTION_0..4 are the five cyclops counters gated by SECTION_5==0; since P0c-6 the report row
+		// is the grid's fully saturated node a1b1c1d1e1. Canonical since P0-2: delivery is the full node's
+		// QUEST_SELECT.
+		assertRouteContract(24153, "a1b1c1d1e1",
+			new NodeProjection(QuestStatus.START, Map.of("var0", 1, "var1", 1, "var2", 1, "var3", 1, "var4", 1,
+				"var5", 0)), "reward",
 			new NodeProjection(QuestStatus.REWARD, Map.of("var0", 1, "var1", 1, "var2", 1, "var3", 1, "var4", 1,
 				"var5", 0)),
-			204787, QuestDialogAction.SELECT_QUEST_REWARD, null,
+			204787, QuestDialogAction.QUEST_SELECT, null,
 			List.of(), List.of(),
 			List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 				new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())));
@@ -82,7 +87,8 @@ class QuestPacketOrderRegressionTest {
 		assertProtocolPacketOrder(2392, "started", QuestDialogAction.SETPRO3.id(), 0);
 		assertProtocolPacketOrder(2533, "v1", QuestDialogAction.QUEST_SELECT.id(), null);
 		assertProtocolPacketOrder(10032, "s7", QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id(), 0);
-		assertProtocolPacketOrder(24153, "hunted", QuestDialogAction.SELECT_QUEST_REWARD.id(), null);
+		// P0-2 规范形：24153 交付 = 满段 QUEST_SELECT。 / Canonical since P0-2: delivery = full-node QUEST_SELECT.
+		assertProtocolPacketOrder(24153, "a1b1c1d1e1", QuestDialogAction.QUEST_SELECT.id(), null);
 	}
 
 	private static void assertItemRewardRoute(QuestDialogAction action, int itemId, String target, int variable,
@@ -161,9 +167,8 @@ class QuestPacketOrderRegressionTest {
 	}
 
 	private static CompiledQuestDefinition compiledDefinition(int questId) throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-		try (InputStream input = QuestPacketOrderRegressionTest.class.getResourceAsStream(resource)) {
-			return QuestDefinitionXmlCompiler.compile(Objects.requireNonNull(input, resource));
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// Retired quests live in git history only: use the production view (XML dir + retail overlay).
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

@@ -6,14 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.aionemu.gameserver.questEngine.e2e.client.ClientResourceOracle;
 import com.aionemu.gameserver.questEngine.e2e.journey.QuestProductionJourneyExecutor;
 import com.aionemu.gameserver.questEngine.e2e.journey.QuestProductionJourneyPlanner;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /**
- * 锁定任务 25670 的四物品报告、确认页和唯一奖励归属。
- * Locks quest 25670's four-item report, confirmation pages, and unique reward owner.
+ * 锁定任务 25670 的四物品报告、确认页和唯一奖励归属（真端驱动 talk+collectitem 混合链形）。
+ * Locks quest 25670's four-item report, confirmation pages, and unique reward owner (the
+ * retail-driven talk+collectitem chain shape).
  */
 class Quest25670ClientDialogAlignmentTest {
 	private static final int START_NPC = 806116;
@@ -28,29 +28,32 @@ class Quest25670ClientDialogAlignmentTest {
 		assertTrue(definition.metadata().drops().stream().allMatch(drop ->
 			ITEMS.contains(drop.itemId()) && drop.chance() == 100 && drop.collectingStep() == 1));
 
-		QuestTransition handoff = route(definition, "s0", "s1", REPORT_NPC, QuestDialogAction.SETPRO1);
+		// 阶梯推进：SETPRO1 s0 -> s1（段变量由目标投影承担）。 / Ladder advance: SETPRO1 s0 -> s1
+		// (the stage variable rides the target projection).
+		QuestTransition handoff = route(definition, "started", "s1", REPORT_NPC, QuestDialogAction.SETPRO1);
+		assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), handoff.actions());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
-			new AfterCommitAction.CloseDialog()), handoff.afterCommit());
+			new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
+			handoff.afterCommit());
 
+		// 采集段：39 检查整组过/扣 s1 -> s2。 / Collect stage: the group check advances s1 -> s2.
 		QuestTransition report = route(definition, "s1", "s2", REPORT_NPC,
 			QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM);
 		assertEquals(ITEMS.stream().map(item -> new QuestAction.RemoveItem(item, 1)).toList(), report.actions());
-		assertEquals(List.of(
-			new QuestCondition.HasItem(182216194, 1),
-			new QuestCondition.HasItem(182216195, 1),
-			new QuestCondition.HasItem(182216196, 1),
-			new QuestCondition.HasItem(182216197, 1)), report.conditions());
+		assertEquals(ITEMS.stream().map(item -> new QuestCondition.HasItem(item, 1)).toList(), report.conditions());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
 			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.CHECK_USER_ITEM_OK.id())), report.afterCommit());
 
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT3.id())),
-			route(definition, "s2", "s2", CONFIRM_OBJECT, QuestDialogAction.USE_OBJECT).afterCommit());
+		// 收尾调查：末段 SET_SUCCEED 挂在第五处痕迹物体上，s2 -> reward。
+		// The closing survey: the final stage's SET_SUCCEED rides the fifth-track object into reward.
+		QuestTransition handover = route(definition, "s2", "reward", CONFIRM_OBJECT,
+			QuestDialogAction.SET_SUCCEED);
+		assertEquals(List.of(), handover.actions());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.CloseDialog()),
-			route(definition, "s2", "reward", CONFIRM_OBJECT, QuestDialogAction.SET_SUCCEED).afterCommit());
+			new AfterCommitAction.CloseDialog()), handover.afterCommit());
 
 		assertTrue(routes(definition, "unaccepted", REPORT_NPC).isEmpty());
 		assertTrue(routes(definition, "reward", REPORT_NPC).isEmpty());
@@ -95,10 +98,9 @@ class Quest25670ClientDialogAlignmentTest {
 	}
 
 	private static CompiledQuestDefinition definition() throws Exception {
-		try (InputStream input = Quest25670ClientDialogAlignmentTest.class.getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/25670.xml")) {
-			if (input == null) throw new IllegalStateException("missing quest definition 25670.xml");
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		// 退役后只有生产视图：真端模板表 + quest.xml 元数据合成（历史 XML 在 git 里）。
+		// After retirement only the production view remains: synthesized from the retail table
+		// plus quest.xml metadata (the historical XML lives in git).
+		return ProductionQuestDefinitions.definition(25670);
 	}
 }

@@ -515,7 +515,7 @@ private static QuestDsl.QuestBuilder simpleCollect1103() {
 |---|---|---|
 | report_to（无 work item） | 见 §3.4 | `quests/1138.xml` |
 | report_to（有 work item） | give/has/remove-item + priority=1 拒绝分支 | `quests/1106.xml` |
-| monster_hunt（击杀计数） | var0 逐级推进，每 NPC 一条 kill transition，`source=k{i} target=k{i+1}`，after-commit `sync PACKET_ONLY`；终态报告 dialog 1009 → reward | `quests/1120.xml`（单组）、`quests/1112.xml`（双组，var0/var1 交叉，offset 0/6） |
+| monster_hunt（击杀计数） | var0 逐级推进，每 NPC 一条 kill transition，`source=k{i} target=k{i+1}`，after-commit `sync PACKET_ONLY`；终态报告 dialog 1009 → reward | `quests/1120.xml`（单组）、`1112`（双组，var0/var1 交叉，offset 0/6；生产 XML 已退役，可用 `git log --follow -- src/main/resources/aion/data/static_data/quest_definition/quests/1112.xml` 回溯） |
 | item_collecting | end NPC 动作 `CHECK_USER_HAS_QUEST_ITEM(39)` 上交检查：has-item（每个 collect_item）+ remove-item；无物品时 priority=1 fallback `SHOW_QUEST_PAGE page="SELECT6"`；metadata 必须有 drops | `quests/1129.xml` |
 | item_order | start_item_id 接取时 give-item，talk_npc 对话推进 var，end_npc 报告 | `quests/2146.xml`、`quests/2210.xml` |
 | xml_quest（复杂） | 每 var 值一个 node，每 dialog 分支一条 transition | `quests/1115.xml`、`quests/1127.xml` |

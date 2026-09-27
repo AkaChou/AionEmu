@@ -199,11 +199,9 @@ class RewardRowTwoRowTalkFamilyContractTest {
 			true, true, 0, 0, 100000000, 1, 0f, 0f, 0f, (byte) 0);
 	}
 
-	private static CompiledQuestDefinition definition(int questId) throws IOException {
-		try (InputStream input = RewardRowTwoRowTalkFamilyContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			assertNotNull(input, () -> "missing quest definition " + questId + ".xml");
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	private static CompiledQuestDefinition definition(int questId) {
+		// 行已由真端表驱动（退役），改从生产视图取定义。
+		// The rows are retail-driven since retirement; load via the production view.
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

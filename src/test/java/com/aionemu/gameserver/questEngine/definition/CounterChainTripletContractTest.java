@@ -7,8 +7,6 @@ import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,28 +14,28 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 锁定批次 25：COUNTER_CHAIN 三槽族（18033/28033/28313）与 2842 的饱和领奖投影。
+ * 锁定 28313 的真端网格三槽合同与 2842/1841 的饱和领奖投影。
  * <p>
- * 族级判据：这三个任务的客户端 {@code Quest_unpacked/quest_monster.csv} 各有三条**链式** 0/1 计数记录
- * （行 0 = {@code SECTION_0<1; SECTION_5==0}、行 1 = {@code SECTION_1<1}、行 2 = {@code SECTION_2<1}），
- * 任务书 {@code quest_summary} 也是 3 行（行 0..2 = 依次消灭三组目标，行 3 不存在：报告与领奖同在末行）。
- * 旧定义把三条记录压成一个 {@code counter-grid}（单维 var0 required=1，任意一只怪即可满足）或一条
- * “步骤号”单槽（28313 写 var0 = 已完成组数 0..3），SECTION_1/SECTION_2 永远为 0 —— 客户端任务书第 2、3 个
- * 计数永远显示 0/1、后续行永远沉不下去（QE-053 症状）。本门禁按 13918/23918 的已验收模板锁死：
- * var0..var2 各占 {@code 6n}、每只（组）怪只推自己那一槽、乱序/回看不计数、领奖投影三槽全 1。
+ * 28313 已在 P0c-9 退役为真端文件驱动（{@code <class>_selectable_reward} 职业奖励区块落地后采纳）。
+ * 客户端合同不变：{@code Quest_unpacked/quest_monster.csv} 三条 0/1 计数记录（行 0..2 各占
+ * {@code SECTION_n<1}），真端形状是三槽 6 位计数网格（var0/var1/var2 @ 0/6/12），每只（组）怪只推
+ * 自己那一槽、**各维度独立推进（乱序击杀也计数——真端网格语义）**、领奖投影三槽全 1
+ * （REWARD/4161）、完成段按 11 职业条件展开 27 件职业物品 × 确认段 dialogId 8..23。
+ * 旧 XML 的"步骤号单槽 + 乱序不计数 + EnterWorld 存档自愈边"是历史错误/历史形状，已按
+ * 真端权威退役；自愈边按 P0c-6 先例登记进 p0c6-legacy-save-normalization.tsv（可选 DB 归一化）。
+ * 节点定位一律按 (状态, 打包投影)，不再依赖旧标签（started/k1..k3）。
  * <p>
  * 2842（天族镜像 1841）：客户端门控是 {@code SECTION_0<39; SECTION_5==0} 的单行狩猎计数，var0 是 0..39 的
  * 击杀数；reward 投影必须携带饱和值 39，否则 {@code QuestMutationPlanner#matchesSourceNode} 的逐字段全等会把
  * 领奖态存档挡在所有 reward 路由之外（玩家在领奖阶段卡死）。天族 1841 早已是 39，本门禁同时锁死镜像一致。
  * <p>
- * Locks batch 25: the three-slot chained ladders of 18033/28033/28313 (each client row owns one 6-bit counter
- * slot, each target advances exactly its own slot, out-of-order kills do not count, the saturated reward
- * projection is all ones) plus 2842's 39-kill reward projection, which must match its Elyos mirror 1841.
+ * Locks 28313's retail three-slot grid contract (retail/client authoritative since P0c-9) plus 2842's
+ * 39-kill reward projection, which must match its Elyos mirror 1841. Nodes are located by
+ * (status, packed projection); the legacy step-model labels and EnterWorld heal edges are gone by design.
  */
 class CounterChainTripletContractTest {
 
@@ -46,11 +44,15 @@ class CounterChainTripletContractTest {
 			int legacyRewardVar0, boolean legacyStepModel) {
 	}
 
+	/**
+	 * 18033/28033 已在 P0c-4 退役为真端区域发放（{@code _area_}）：真端形状是"产性格子
+	 * （{@code a0b0c0..a1b1c1}）+ SystemGrant 边"，不是本 XML 的链式 {@code k1..k3} 阶梯，
+	 * 也不再有点名接取 NPC；其真端 IR 由 {@code retail-simple-hunt-adjudicated-ir-fingerprints.tsv} 冻结，
+	 * 区域绑定与系统发放边由 {@code RetailSystemGrantDispatchTest} 守。本门禁只锁仍由 XML 承载的行。
+	 * 18033/28033 retired to the retail area grant in P0c-4: the retail shape is a product grid plus a
+	 * {@code SystemGrant} edge (no offer NPC), frozen separately; this gate keeps the XML-owned rows.
+	 */
 	private static final List<Contract> CONTRACTS = List.of(
-		new Contract(18033, 801037, 801281,
-			List.of(List.of(230744), List.of(230745), List.of(230749)), 1, false),
-		new Contract(28033, 801047, 801280,
-			List.of(List.of(230744), List.of(230745), List.of(230749)), 1, false),
 		new Contract(28313, 804821, 804821,
 			List.of(List.of(217371, 246131, 248077), List.of(217373, 246132, 248078),
 				List.of(217376, 246133, 248079)), 3, true));
@@ -71,7 +73,7 @@ class CounterChainTripletContractTest {
 	}
 
 	@Test
-	void everyClientRowOwnsOneChainedCounterSlot() throws Exception {
+	void everyClientRowOwnsOneCounterSlot() throws Exception {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			QuestDefinition definition = compiled.definition();
@@ -84,7 +86,7 @@ class CounterChainTripletContractTest {
 				assertEquals(6 * section, field.offset(),
 					() -> "quest " + contract.questId() + " " + fieldName + " must map SECTION_" + section);
 				assertEquals(6, field.width(),
-					() -> "quest " + contract.questId() + " " + fieldName + " keeps 6 bits for legacy saves");
+					() -> "quest " + contract.questId() + " " + fieldName + " keeps 6 bits");
 			}
 			/* SECTION_3 必须保持未声明：客户端三条记录只声明到 SECTION_2。 */
 			/* SECTION_3 must stay undeclared: the client only gates on SECTION_0..2. */
@@ -92,16 +94,21 @@ class CounterChainTripletContractTest {
 				layout.fields().stream().map(BitField::name).collect(Collectors.toSet()),
 				() -> "quest " + contract.questId() + " must declare exactly three counter slots");
 
-			assertEquals(cumulative(0), projection(definition, "started"),
-				() -> "quest " + contract.questId() + " started must project the empty ladder");
-			for (int ones = 1; ones <= FIELDS.size(); ones++) {
-				int expected = ones;
-				assertEquals(cumulative(ones), projection(definition, "k" + ones),
-					() -> "quest " + contract.questId() + " node k" + expected + " projection");
+			/* 真端网格：三槽 {0,1} 全组合 8 个 START 节点 + NONE/0 + REWARD/4161 + COMPLETE/0。 */
+			/* Retail grid: all eight {0,1}^3 START combos plus NONE/0, REWARD/4161, COMPLETE/0. */
+			for (int var0 = 0; var0 <= 1; var0++) {
+				for (int var1 = 0; var1 <= 1; var1++) {
+					for (int var2 = 0; var2 <= 1; var2++) {
+						Map<String, Integer> state = Map.of("var0", var0, "var1", var1, "var2", var2);
+						assertEquals(state, projectionAt(definition, QuestStatus.START,
+								packedOf(layout, state)),
+							() -> "quest " + contract.questId() + " must own the grid node " + state);
+					}
+				}
 			}
-			assertEquals(cumulative(3), projection(definition, "reward"),
+			assertEquals(cumulative(3), projectionAt(definition, QuestStatus.REWARD, 4161),
 				() -> "quest " + contract.questId() + " reward must project the saturated ladder");
-			assertEquals(cumulative(0), projection(definition, "complete"),
+			assertEquals(cumulative(0), projectionAt(definition, QuestStatus.COMPLETE, 0),
 				() -> "quest " + contract.questId() + " complete must reset the ladder");
 		}
 	}
@@ -131,25 +138,42 @@ class CounterChainTripletContractTest {
 	}
 
 	@Test
-	void outOfOrderOrBackwardKillsHaveNoPlan() throws Exception {
+	void outOfOrderKillsAdvanceOnlyTheirOwnSlot() throws Exception {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
+			/* 真端网格语义：各维度独立推进——任意网格状态下，组 i 的怪把 var_i 0→1、
+			 * 其余槽保持不变；旧 XML 的"乱序不计数"链式约束已按真端权威退役。 */
+			/* Retail grid semantics: dimensions advance independently — a group-i kill flips var_i
+			 * from any grid state; the legacy "out-of-order kills do not count" chain is retired. */
 			for (int index = 0; index < contract.killGroups().size(); index++) {
-				int expectedStep = index;
+				int slot = index;
 				for (int npcId : contract.killGroups().get(index)) {
-					for (int step = 0; step <= FIELDS.size(); step++) {
-						if (step == expectedStep) {
-							continue;
+					for (int var0 = 0; var0 <= 1; var0++) {
+						for (int var1 = 0; var1 <= 1; var1++) {
+							for (int var2 = 0; var2 <= 1; var2++) {
+								Map<String, Integer> state = Map.of("var0", var0, "var1", var1, "var2", var2);
+								if (state.get("var" + slot) == 1) {
+									continue;
+								}
+								String at = state.values().toString();
+								List<QuestMutationPlan> advance = plans(compiled, QuestStatus.START, state,
+									new QuestEvent.KillNpc(npcId));
+								assertEquals(1, advance.size(), () -> "quest " + contract.questId()
+									+ " target " + npcId + " must advance its own slot from grid state " + at);
+								Map<String, Integer> expected = new LinkedHashMap<>(state);
+								expected.put("var" + slot, 1);
+								assertEquals(expected, unpack(compiled, advance.getFirst()),
+									() -> "quest " + contract.questId() + " target " + npcId
+										+ " must flip exactly var" + slot);
+								assertEquals(List.of(new AfterCommitAction.SyncQuestState(
+										QuestStateSyncMode.PACKET_ONLY)), advance.getFirst().afterCommit(),
+									() -> "quest " + contract.questId() + " target " + npcId
+										+ " must sync PACKET_ONLY");
+							}
 						}
-						int probeStep = step;
-						assertTrue(plans(compiled, QuestStatus.START, cumulative(step),
-								new QuestEvent.KillNpc(npcId)).isEmpty(),
-							() -> "quest " + contract.questId() + " target " + npcId
-								+ " must not count on ladder step " + probeStep
-								+ " (client journal row " + expectedStep + ")");
 					}
-					/* 领奖态下不再计数：所有击杀只在 START 阶梯上响应。 */
-					/* No counting in the reward stage: kills only answer on the START ladder. */
+					/* 领奖态下不再计数：所有击杀只在 START 网格上响应。 */
+					/* No counting in the reward stage: kills only answer on the START grid. */
 					assertTrue(plans(compiled, QuestStatus.REWARD, cumulative(3),
 							new QuestEvent.KillNpc(npcId)).isEmpty(),
 						() -> "quest " + contract.questId() + " target " + npcId + " must not count in REWARD");
@@ -162,29 +186,21 @@ class CounterChainTripletContractTest {
 	void reportAndCompletionStayOnTheJournalRowNpc() throws Exception {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
-			assertEquals(Set.of(contract.offerNpc()), talkNpcIds(definition, "unaccepted", "started"),
+			/* 真端形状按 (状态, 打包投影) 定位边：客户端任务书行 0（接取）/行 1（报告+领奖）
+			 * 都点名 Nineveh(804821)，真端合成定义必须保持同一 NPC 归属。 */
+			/* Retail shape, located by (status, packed projection): client journal rows 0 (accept)
+			 * and 1 (report + reward) both name Nineveh(804821); the retail definition keeps that. */
+			assertEquals(Set.of(contract.offerNpc()),
+				talkNpcIdsByStatus(definition, QuestStatus.NONE, null, QuestStatus.START),
 				() -> "quest " + contract.questId() + " offer must stay on the offer NPC " + contract.offerNpc());
-			assertEquals(Set.of(contract.reportNpc()), talkNpcIds(definition, "k3", "reward"),
+			assertEquals(Set.of(contract.reportNpc()),
+				talkNpcIdsByStatus(definition, QuestStatus.START, 4161, QuestStatus.REWARD),
 				() -> "quest " + contract.questId() + " report must move to the row-1 NPC "
 					+ contract.reportNpc());
-			assertEquals(Set.of(contract.reportNpc()), talkNpcIds(definition, "reward", "complete"),
+			assertEquals(Set.of(contract.reportNpc()),
+				talkNpcIdsByStatus(definition, QuestStatus.REWARD, 4161, QuestStatus.COMPLETE),
 				() -> "quest " + contract.questId() + " completion must stay on the row-1 NPC "
 					+ contract.reportNpc());
-			if (contract.offerNpc() == contract.reportNpc()) {
-				/* 28313 的客户端行 0（接取）与行 1（向 Nineveh 报告）点名同一个 NPC，保持原样。 */
-				/* 28313's client row 0 (accept) and row 1 (report to Nineveh) name the same NPC. */
-				continue;
-			}
-			/* QE-052：接取 NPC 不再兼任报告或领奖（18033/28033 旧定义把 801037/801047 当报告 NPC）。 */
-			/* QE-052: the offer NPC no longer owns the report or the completion. */
-			for (QuestTransition route : definition.transitions()) {
-				if (!(route.event() instanceof QuestEvent.TalkToNpc talk) || talk.npcId() != contract.offerNpc()) {
-					continue;
-				}
-				assertFalse("complete".equals(route.targetNode())
-						|| talk.dialogId() == QuestDialogAction.SELECT_QUEST_REWARD.id(),
-					() -> "quest " + contract.questId() + " offer NPC must not report or complete");
-			}
 		}
 	}
 
@@ -220,79 +236,116 @@ class CounterChainTripletContractTest {
 	}
 
 	@Test
-	void legacySavesHealOnEnterWorld() throws Exception {
+	void legacySaveHealEdgesAreRetiredWithTheXml() throws Exception {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
-			List<QuestMutationPlan> heals = plans(compiled, QuestStatus.REWARD,
-				Map.of("var0", contract.legacyRewardVar0()), new QuestEvent.EnterWorld());
-			assertEquals(1, heals.size(), () -> "quest " + contract.questId()
-				+ " legacy reward projection must heal on enter-world");
-			assertEquals(cumulative(3), unpack(compiled, heals.getFirst()),
-				() -> "quest " + contract.questId() + " must heal to the saturated (1,1,1) projection");
-			assertEquals(QuestStatus.REWARD, heals.getFirst().nextStatus(),
-				() -> "quest " + contract.questId() + " must stay in REWARD while healing");
-			assertTrue(heals.getFirst().afterCommit().contains(new AfterCommitAction.SyncQuestState(
-					QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
-				() -> "quest " + contract.questId() + " heal must refresh visibility");
-
-			/* 正规领奖态不得被自愈边重写。 */
-			/* The legitimate reward state must not be rewritten by the heal edge. */
-			assertTrue(plans(compiled, QuestStatus.REWARD, cumulative(3), new QuestEvent.EnterWorld()).isEmpty(),
-				() -> "quest " + contract.questId() + " must not resync a saturated reward state");
-
-			/* 旧 step 模型（28313）的 START 阶梯存档：var0=2 -> k2、var0=3 -> k3；var0=1 与新 k1 同形。 */
-			/* Legacy step-model START saves (28313): var0=2 -> k2, var0=3 -> k3; var0=1 already equals k1. */
-			for (int done = 1; done <= 3; done++) {
-				int killsDone = done;
-				List<QuestMutationPlan> repairs = plans(compiled, QuestStatus.START, Map.of("var0", done),
-					new QuestEvent.EnterWorld());
-				if (!contract.legacyStepModel() || done == 1) {
-					assertTrue(repairs.isEmpty(), () -> "quest " + contract.questId()
-						+ " must not migrate START var0=" + killsDone + " (already a ladder state)");
-					continue;
-				}
-				assertEquals(1, repairs.size(), () -> "quest " + contract.questId()
-					+ " must migrate START var0=" + killsDone);
-				assertEquals(cumulative(done), unpack(compiled, repairs.getFirst()),
-					() -> "quest " + contract.questId() + " var0=" + killsDone + " maps onto k" + killsDone);
-				assertEquals(QuestStatus.START, repairs.getFirst().nextStatus(),
-					() -> "quest " + contract.questId() + " migration must stay in START");
+			/* 真端网格不表达旧 XML 的 EnterWorld 存档自愈边（步骤号→行号归一）：登录边按 P0c-6 先例
+			 * 登记进 p0c6-legacy-save-normalization.tsv（可选一次性 DB 归一化），不再编入定义。
+			 * The retail grid drops the legacy EnterWorld save-heal edges; they are registered
+			 * per the P0c-6 precedent instead of being compiled. */
+			for (int step = 0; step <= FIELDS.size(); step++) {
+				int probeStep = step;
+				assertTrue(plans(compiled, QuestStatus.START, cumulative(step),
+						new QuestEvent.EnterWorld()).isEmpty(),
+					() -> "quest " + contract.questId() + " must not carry an enter-world heal edge on ladder step "
+						+ probeStep);
 			}
+			assertTrue(plans(compiled, QuestStatus.REWARD, cumulative(3),
+					new QuestEvent.EnterWorld()).isEmpty(),
+				() -> "quest " + contract.questId() + " must not carry an enter-world heal edge in REWARD");
 		}
 	}
 
 	@Test
 	void ninevehKeepsEveryClassRewardBranch() throws Exception {
 		QuestDefinition definition = definition(28313).definition();
+		ProgressLayout layout = definition.progressLayout();
+		/* 完成段 = 源投影 REWARD/4161、目标投影 COMPLETE/0 的全部确认路由（真端规范确认段 8..23）。 */
+		/* Completions = every confirm route from REWARD/4161 to COMPLETE/0 (retail confirm range 8..23). */
 		List<QuestTransition> completions = definition.transitions().stream()
-			.filter(route -> "reward".equals(route.sourceNode()) && "complete".equals(route.targetNode()))
+			.filter(route -> projectionStatus(definition, layout, route.sourceNode()) == QuestStatus.REWARD
+				&& projectionStatus(definition, layout, route.targetNode()) == QuestStatus.COMPLETE)
 			.toList();
-		assertEquals(27, completions.size(), "28313 must keep all 27 class-expanded reward branches");
-		Set<PlayerClass> classes = completions.stream()
-			.flatMap(route -> route.conditions().stream())
-			.filter(QuestCondition.AdvancedClassIs.class::isInstance)
-			.map(QuestCondition.AdvancedClassIs.class::cast)
-			.map(QuestCondition.AdvancedClassIs::playerClass)
-			.collect(Collectors.toSet());
-		assertEquals(11, classes.size(), "28313 reward branches must cover 11 advanced classes");
-		for (QuestTransition route : completions) {
-			assertTrue(route.conditions().stream().anyMatch(QuestCondition.AdvancedClassIs.class::isInstance),
-				() -> "28313 reward branch " + route.event() + " must stay class-gated");
-			assertTrue(route.actions().stream().anyMatch(action -> action instanceof QuestAction.GrantReward reward
-					&& "ITEM".equals(reward.kind())),
-				() -> "28313 reward branch " + route.event() + " must grant its class item");
-			assertTrue(route.actions().stream().anyMatch(QuestAction.CompleteQuest.class::isInstance),
-				() -> "28313 reward branch " + route.event() + " must complete the quest");
-		}
-		Set<Integer> dialogs = completions.stream()
+		Set<Integer> confirmDialogs = completions.stream()
 			.filter(route -> route.event() instanceof QuestEvent.TalkToNpc)
 			.map(route -> ((QuestEvent.TalkToNpc) route.event()).dialogId())
 			.collect(Collectors.toSet());
-		assertEquals(Set.of(QuestDialogAction.SELECTED_QUEST_REWARD1.id(),
-				QuestDialogAction.SELECTED_QUEST_REWARD2.id(), QuestDialogAction.SELECTED_QUEST_REWARD3.id(),
-				QuestDialogAction.SELECTED_QUEST_REWARD4.id(), QuestDialogAction.SELECTED_QUEST_REWARD5.id(),
-				QuestDialogAction.SELECTED_QUEST_REWARD6.id()),
-			dialogs, "28313 must keep the six client reward selections");
+		Set<Integer> fullConfirmRange = new java.util.TreeSet<>();
+		for (int id = QuestDialogAction.SELECTED_QUEST_REWARD1.id();
+				id <= QuestDialogAction.SELECTED_QUEST_NOREWARD.id(); id++) {
+			fullConfirmRange.add(id);
+		}
+		assertEquals(fullConfirmRange, confirmDialogs, "28313 must keep the retail confirm range 8..23");
+		/* 27 个 (职业, 物品) 分支：真端表逐职业点名的 27 件物品全部保留（× 16 确认 id = 432 条路由）。 */
+		/* 27 (class, item) branches: every retail-named class item survives (×16 confirm ids = 432 routes). */
+		Map<String, Set<Integer>> itemsByClass = new LinkedHashMap<>();
+		for (QuestTransition route : completions) {
+			PlayerClass playerClass = route.conditions().stream()
+				.filter(QuestCondition.AdvancedClassIs.class::isInstance)
+				.map(QuestCondition.AdvancedClassIs.class::cast)
+				.map(QuestCondition.AdvancedClassIs::playerClass)
+				.findFirst()
+				.orElseThrow(() -> new AssertionError("28313 reward branch " + route.event()
+					+ " must stay class-gated"));
+			List<Integer> classItems = route.actions().stream()
+				.filter(action -> action instanceof QuestAction.GrantReward reward
+					&& "ITEM".equals(reward.kind()))
+				.map(action -> ((QuestAction.GrantReward) action).id())
+				.toList();
+			assertEquals(1, classItems.size(), () -> "28313 reward branch " + route.event()
+				+ " must grant exactly its class item");
+			itemsByClass.computeIfAbsent(playerClass.name(), ignored -> new java.util.TreeSet<>())
+				.add(classItems.getFirst());
+			assertTrue(route.actions().stream().anyMatch(QuestAction.CompleteQuest.class::isInstance),
+				() -> "28313 reward branch " + route.event() + " must complete the quest");
+		}
+		assertEquals(11, itemsByClass.size(), "28313 reward branches must cover 11 advanced classes");
+		assertEquals(27, itemsByClass.values().stream().mapToInt(Set::size).sum(),
+			"28313 must keep all 27 class reward items");
+	}
+
+	/** 按 (状态, 打包投影) 找节点投影（真端网格标签与旧标签不同）。 / Node lookup by (status, packed). */
+	private static Map<String, Integer> projectionAt(QuestDefinition definition, QuestStatus status,
+			int packed) {
+		return definition.nodes().stream()
+			.filter(node -> node.projection().status() == status
+				&& definition.progressLayout().pack(node.projection().variables()) == packed)
+			.findFirst()
+			.orElseThrow(() -> new AssertionError("missing node " + status + "/" + packed))
+			.projection().variables();
+	}
+
+	private static int packedOf(ProgressLayout layout, Map<String, Integer> variables) {
+		return layout.pack(variables);
+	}
+
+	private static QuestStatus projectionStatus(QuestDefinition definition, ProgressLayout layout,
+			String label) {
+		return definition.nodes().stream().filter(node -> label.equals(node.label()))
+			.findFirst().map(node -> node.projection().status())
+			.orElseThrow(() -> new AssertionError("missing node " + label));
+	}
+
+	private static Set<Integer> talkNpcIdsByStatus(QuestDefinition definition, QuestStatus sourceStatus,
+			Integer sourcePacked, QuestStatus targetStatus) {
+		return definition.transitions().stream()
+			.filter(route -> route.event() instanceof QuestEvent.TalkToNpc)
+			.filter(route -> {
+				var source = nodeByLabel(definition, route.sourceNode());
+				var target = nodeByLabel(definition, route.targetNode());
+				return source != null && target != null
+					&& source.projection().status() == sourceStatus
+					&& target.projection().status() == targetStatus
+					&& (sourcePacked == null || definition.progressLayout()
+						.pack(source.projection().variables()) == sourcePacked);
+			})
+			.map(route -> ((QuestEvent.TalkToNpc) route.event()).npcId())
+			.collect(Collectors.toSet());
+	}
+
+	private static QuestNode nodeByLabel(QuestDefinition definition, String label) {
+		return definition.nodes().stream().filter(node -> label.equals(node.label()))
+			.findFirst().orElse(null);
 	}
 
 	@Test
@@ -351,11 +404,9 @@ class CounterChainTripletContractTest {
 		return compiled.definition().progressLayout().unpack(plan.nextPackedVariables());
 	}
 
-	private static CompiledQuestDefinition definition(int questId) throws IOException {
-		try (InputStream input = CounterChainTripletContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			assertNotNull(input, () -> "missing quest definition " + questId + ".xml");
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	private static CompiledQuestDefinition definition(int questId) {
+		// 生产视图：XML 目录 + 真端 overlay（退役行返回真端形状，未退役行返回 XML）。
+		// Production view: XML directory plus the retail overlay.
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

@@ -4,10 +4,8 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -41,7 +39,10 @@ class Quest28808ClientDialogAlignmentTest {
 			QuestDialogAction.QUEST_ACCEPT_SIMPLE);
 		assertEquals("started", accept.targetNode());
 		assertEquals(List.of(new QuestCondition.StartEligible()), accept.conditions());
-		assertEquals(List.of(), accept.actions());
+		// 接取发放工作物：legacy `_28808OpenSaysMe` 在 ACCEPT_QUEST_SIMPLE 分支 giveQuestItem(182213216)；
+		// 真端 quest_work_item 同为该锁箱（client quest_28808a），迁移一度漏发。
+		// Accept-time work item: the legacy handler granted 182213216 and the metadata declares it as work item.
+		assertEquals(List.of(new QuestAction.GiveItem(182213216, 1)), accept.actions());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
 			new AfterCommitAction.CloseDialog()), accept.afterCommit());
@@ -139,12 +140,7 @@ class Quest28808ClientDialogAlignmentTest {
 	}
 
 	private static CompiledQuestDefinition load() {
-		String resource = "/aion/data/static_data/quest_definition/quests/28808.xml";
-		try (InputStream input = Objects.requireNonNull(
-			Quest28808ClientDialogAlignmentTest.class.getResourceAsStream(resource), resource)) {
-			return QuestDefinitionXmlCompiler.compile(input);
-		} catch (Exception e) {
-			throw new AssertionError("unable to load " + resource, e);
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(28808);
 	}
 }

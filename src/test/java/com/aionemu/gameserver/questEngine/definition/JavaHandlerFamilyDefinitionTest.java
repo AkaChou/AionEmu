@@ -8,7 +8,6 @@ import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import com.aionemu.gameserver.questEngine.runtime.QuestStartEligibility;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -21,7 +20,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class JavaHandlerFamilyDefinitionTest {
 	@Test
 	void packagedProductionDirectoryCompilesTheMigratedHandlerOwners() throws Exception {
-		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		// 生产视图 = XML 目录 + 真端 overlay：部分 Poeta owner 已迁到真端驱动，不再由 XML 目录持有。
+		// Production view = XML directory plus the retail overlay.
+		QuestCatalog catalog = com.aionemu.gameserver.questEngine.retail.RetailQuestDriver.overlay(
+			QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader()));
 		assertTrue(catalog.find(1107).isPresent());
 		assertTrue(catalog.find(1111).isPresent());
 		assertTrue(catalog.find(1122).isPresent());
@@ -45,12 +47,16 @@ class JavaHandlerFamilyDefinitionTest {
 			.findFirst().orElseThrow();
 		assertEquals(new QuestEvent.QuestDialog(1002), start.event());
 
+		// P0-2 规范形交付：QUEST_SELECT(31) 直翻 REWARD（1009 中转随页链删除）。
+		// P0-2 canonical delivery: QUEST_SELECT (31) flips REWARD directly (the 1009 hop is gone).
 		QuestTransition reward = transitions.stream()
 			.filter(t -> t.sourceNode().equals("started") && t.targetNode().equals("reward")
 				&& t.event() instanceof QuestEvent.TalkToNpc talk
-				&& talk.npcId() == 203075 && talk.dialogId() == 1009)
+				&& talk.npcId() == 203075 && talk.dialogId() == QuestDialogAction.QUEST_SELECT.id())
 			.findFirst().orElseThrow();
-		assertEquals(1, varsOf(compiled, "reward").get("var0"));
+		// QE-051：1107 客户端任务书单行，领奖投影 = 末行行号 0（旧 XML 的 var0=1 为历史投影，M5-c A 类同判）。
+		// QE-051: the 1107 journal has a single row, so the reward projection is row index 0.
+		assertEquals(0, varsOf(compiled, "reward").get("var0"));
 
 		List<QuestAction> completion = completions(transitions, "reward");
 		assertTrue(completion.contains(new QuestAction.GrantReward("GOLD", 0, 1560, QuestRewardAmountMode.QUEST_BASE)));
@@ -236,9 +242,13 @@ class JavaHandlerFamilyDefinitionTest {
 	void messageForMadelinAndIrreconcilableLoversArePlainReports() throws Exception {
 		CompiledQuestDefinition madelin = definition("1230.xml");
 		List<QuestAction> madelinCompletions = completions(madelin.definition().transitions(), "reward");
-		assertEquals(2, madelin.definition().transitions().stream()
+		// 真端合成器对领奖确认按钮发放全段（SELECTED_QUEST_REWARD1..NOREWARD）共 16 条完成路由；
+		// 退役前 XML 只声明了 choice 1/2 两条，差异已登记 retail-simple-talk-drift.tsv（1230 DIFF:TRANSITION_SET）。
+		// The retail synthesis registers the whole confirm range (16 routes); the narrower XML-era
+		// choice set is a registered divergence (retail-simple-talk-drift.tsv).
+		assertEquals(16, madelin.definition().transitions().stream()
 			.filter(t -> t.sourceNode().equals("reward") && t.targetNode().equals("complete")).count());
-		assertEquals(2, madelinCompletions.stream().filter(a -> a.equals(
+		assertEquals(16, madelinCompletions.stream().filter(a -> a.equals(
 			new QuestAction.GrantReward("GOLD", 0, 6800, QuestRewardAmountMode.QUEST_BASE))).count());
 		assertTrue(madelinCompletions.contains(new QuestAction.GrantReward("ITEM", 164000076, 1)));
 		assertTrue(madelinCompletions.contains(new QuestAction.GrantReward("ITEM", 164000073, 1)));
@@ -346,15 +356,11 @@ class JavaHandlerFamilyDefinitionTest {
 			.findFirst().orElseThrow().projection().variables();
 	}
 
-	private CompiledQuestDefinition definition(String file) throws Exception {
-		try (InputStream input = resource("/aion/data/static_data/quest_definition/quests/" + file)) {
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
-	}
-
-	private InputStream resource(String path) {
-		InputStream input = getClass().getResourceAsStream(path);
-		if (input == null) throw new IllegalStateException("missing resource " + path);
-		return input;
+	/**
+	 * 生产定义：XML 目录 + 真端 overlay（退役任务的 XML 只在 git 历史里）。
+	 * Production definition through the production view; retired XML lives in git history only.
+	 */
+	private CompiledQuestDefinition definition(String file) {
+		return ProductionQuestDefinitions.definition(Integer.parseInt(file.replace(".xml", "")));
 	}
 }

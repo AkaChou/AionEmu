@@ -2,9 +2,6 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,7 +35,10 @@ class Quest1163ClientDialogAlignmentTest {
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.CloseDialog()), handoff.afterCommit());
 
-		assertPage(definition, "reward", REWARD_NPC, QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT5);
+		// S3c-D（quest-native-dispatch）：交付 NPC 侧下发报告页的记录按 R-REP **页下发判据**退场（本行有
+		// reward 入边翻面记录且无报告块）——奖励面由领奖态奖励窗载体承担（下一条断言）。
+		// R-REP retires the reward-side report page; the reward-window carrier takes over.
+		assertTrue(routes(definition, "reward", REWARD_NPC, QuestDialogAction.QUEST_SELECT).isEmpty());
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
 			route(definition, "reward", REWARD_NPC, QuestDialogAction.SELECT_QUEST_REWARD).afterCommit());
 		assertTrue(route(definition, "reward", REWARD_NPC, QuestDialogAction.SELECTED_QUEST_REWARD1)
@@ -76,9 +76,6 @@ class Quest1163ClientDialogAlignmentTest {
 	}
 
 	private static QuestDefinition load() throws Exception {
-		Path path = Path.of("src/main/resources/aion/data/static_data/quest_definition/quests/1163.xml");
-		try (InputStream input = Files.newInputStream(path)) {
-			return QuestDefinitionXmlCompiler.compile(input).definition();
-		}
+		return ProductionQuestDefinitions.definitionInOverlay(1163).definition();
 	}
 }

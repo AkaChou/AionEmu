@@ -16,9 +16,13 @@ class Quest1913ClientDialogAlignmentTest {
 
 	@Test
 	void followsTheClientAcceptProgressReportAndRewardLifecycle() throws Exception {
-		List<QuestTransition> transitions = definition().definition().transitions();
+		QuestDefinition definition = definition().definition();
+		List<QuestTransition> transitions = definition.transitions();
 
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT1.id())),
+		// S2：接取窗由 QUEST_SELECT 直发（页 4）；select1 页梯与 1007 中转随规范接取段退场。
+		// S2 canonical accept: QUEST_SELECT opens page 4 directly; the select1 ladder and the 1007 relay retire.
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
+			QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id())),
 			talk(transitions, "unaccepted", START_NPC, QuestDialogAction.QUEST_SELECT).afterCommit());
 		assertEquals("started",
 			talk(transitions, "unaccepted", START_NPC, QuestDialogAction.QUEST_ACCEPT_1).targetNode());
@@ -35,14 +39,24 @@ class Quest1913ClientDialogAlignmentTest {
 		assertEquals(210030000, teleport.worldId());
 		assertEquals(new AfterCommitAction.CloseDialog(), progress.afterCommit().getLast());
 
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT5.id())),
-			talk(transitions, "started1", REPORT_NPC, QuestDialogAction.QUEST_SELECT).afterCommit());
-		assertEquals("reward",
-			talk(transitions, "started1", REPORT_NPC, QuestDialogAction.SELECT_QUEST_REWARD).targetNode());
+		// S2：交付 = QUEST_SELECT(started1→reward) 空门直翻领奖态并下发奖励窗；SELECT5 报告页与 1009
+		// 检查中转随规范交付段退场（未集齐零路由，关窗兜底交 DialogService）。传送后的语义靠交付边锚在
+		// started1 体现。
+		// S2 canonical delivery: QUEST_SELECT(started1→reward) flips REWARD with the reward window; the
+		// report page and the 1009 check relay retire. The teleport-gated stage is the started1 anchor.
+		QuestTransition delivery = talk(transitions, "started1", REPORT_NPC, QuestDialogAction.QUEST_SELECT);
+		assertEquals("reward", delivery.targetNode());
+		assertEquals(List.of(), delivery.conditions());
+		assertEquals(List.of(), delivery.actions());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
 			QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH), new AfterCommitAction.ShowQuestDialog(
-			QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
-			talk(transitions, "started1", REPORT_NPC, QuestDialogAction.SELECT_QUEST_REWARD).afterCommit());
+			deliveryWindowPage(definition.metadata()))), delivery.afterCommit());
+		assertTrue(transitions.stream().noneMatch(transition ->
+			"started1".equals(transition.sourceNode())
+				&& transition.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.npcId() == REPORT_NPC
+				&& Integer.valueOf(QuestDialogAction.SELECT_QUEST_REWARD.id()).equals(talk.dialogId())),
+			"quest 1913 的 1009 检查中转必须随规范交付段退场");
 
 		QuestTransition completion = talk(transitions, "reward", REPORT_NPC,
 			QuestDialogAction.SELECTED_QUEST_REWARD1);
@@ -59,13 +73,14 @@ class Quest1913ClientDialogAlignmentTest {
 			.findFirst().orElseThrow();
 	}
 
+	/** 交付窗页（与 RetailSimpleCollectItemDefinitionCompiler.deliveryWindowPage 同口径：档位查表，零奖励组回落窗 1）。 */
+	private static int deliveryWindowPage(QuestMetadata metadata) {
+		return metadata.rewardGroups().isEmpty()
+			? QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()
+			: QuestDialogPage.rewardWindowForTier(metadata.rewardGroups().size() - 1).orElseThrow().id();
+	}
+
 	private CompiledQuestDefinition definition() throws Exception {
-		try (InputStream input = getClass().getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/1913.xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition 1913.xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		return ProductionQuestDefinitions.definitionInOverlay(1913);
 	}
 }

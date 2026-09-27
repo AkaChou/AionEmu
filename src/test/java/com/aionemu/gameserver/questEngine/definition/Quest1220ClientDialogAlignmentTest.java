@@ -74,15 +74,24 @@ class Quest1220ClientDialogAlignmentTest {
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.CloseDialog()), exchange.afterCommit());
 
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT5.id())),
-			talk(definition, "started1", "started1", END_NPC_ID, QuestDialogAction.QUEST_SELECT.id()).afterCommit());
-
-		QuestTransition report = talk(definition, "started1", "reward", END_NPC_ID,
-			QuestDialogAction.SELECT_QUEST_REWARD.id());
+		// S2：交付 = QUEST_SELECT(started1→reward) 空门直翻领奖态并下发奖励窗；SELECT5 报告页与 1009
+		// 检查中转随规范交付段退场（未集齐零路由，关窗兜底交 DialogService）。
+		// S2 canonical delivery: QUEST_SELECT(started1→reward) flips REWARD with the reward window; the
+		// report page and the 1009 check relay retire with the canonical segment.
+		QuestTransition delivery = talk(definition, "started1", "reward", END_NPC_ID,
+			QuestDialogAction.QUEST_SELECT.id());
+		assertEquals(List.of(), delivery.conditions());
+		assertEquals(List.of(), delivery.actions());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
-			report.afterCommit());
+			new AfterCommitAction.ShowQuestDialog(deliveryWindowPage(definition.metadata()))),
+			delivery.afterCommit());
+		assertTrue(definition.transitions().stream().noneMatch(transition ->
+			"started1".equals(transition.sourceNode()) && "reward".equals(transition.targetNode())
+				&& transition.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.npcId() == END_NPC_ID
+				&& Integer.valueOf(QuestDialogAction.SELECT_QUEST_REWARD.id()).equals(talk.dialogId())),
+			"quest 1220 的 1009 检查中转必须随规范交付段退场");
 
 		List<QuestTransition> completions = definition.transitions().stream()
 			.filter(transition -> "reward".equals(transition.sourceNode())
@@ -124,13 +133,14 @@ class Quest1220ClientDialogAlignmentTest {
 		assertEquals(variables, node.projection().variables());
 	}
 
+	/** 交付窗页（与 RetailSimpleCollectItemDefinitionCompiler.deliveryWindowPage 同口径：档位查表，零奖励组回落窗 1）。 */
+	private static int deliveryWindowPage(QuestMetadata metadata) {
+		return metadata.rewardGroups().isEmpty()
+			? QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()
+			: QuestDialogPage.rewardWindowForTier(metadata.rewardGroups().size() - 1).orElseThrow().id();
+	}
+
 	private static CompiledQuestDefinition definition() throws Exception {
-		try (InputStream input = Quest1220ClientDialogAlignmentTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/1220.xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition 1220.xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		return ProductionQuestDefinitions.definitionInOverlay(1220);
 	}
 }

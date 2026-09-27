@@ -230,9 +230,27 @@ public enum QuestDialogAction {
 	}
 
 	/**
-	 * 判断是否为客户端奖励窗口的确认动作（SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD）。
+	 * 按 id 查动作，未登记返回 null（客户端页 id 与按钮动作共用编号空间：页 id 只有作为按钮发出时
+	 * 才是动作，登记表外的 id 没有路由可挂）。
+	 * Looks an action up by id, returning null for unregistered ids (client page ids and button
+	 * actions share a numbering space: a page id is an action only when a button sends it, and an id
+	 * outside the registry has no route to hang on).
+	 * @param id 对话动作 ID / dialog action id
+	 * @return 动作或 null / the action, or null
+	 */
+	public static QuestDialogAction findId(int id) {
+		return BY_ID.get(id);
+	}
+
+	/** 奖励窗口自动确认的可选槽位数（SELECTED_QUEST_AUTO_REWARD1..15 = 110..124）。 / Auto-confirm selectable slot count. */
+	public static final int AUTO_REWARD_SLOT_COUNT = 15;
+
+	/**
+	 * 判断是否为客户端奖励窗口的确认动作（SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD，
+	 * 以及自动确认通道 SELECTED_QUEST_AUTO_REWARD 与 SELECTED_QUEST_AUTO_REWARD1..15）。
 	 * Returns whether the id is a client reward-window confirmation action
-	 * (SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD).
+	 * (SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD, plus the auto-confirm channel
+	 * SELECTED_QUEST_AUTO_REWARD and SELECTED_QUEST_AUTO_REWARD1..15).
 	 * <p>这些动作由全局奖励窗口发出，客户端可能携带上一个交互对象；服务端必须按
 	 * questId + action 解析，不能把该对象当作完成 NPC 绑定。</p>
 	 * <p>These actions come from the global reward window and may carry the previously
@@ -242,7 +260,10 @@ public enum QuestDialogAction {
 	 * @return 是否为奖励窗口确认动作 / whether it is a reward-window confirmation action
 	 */
 	public static boolean isRewardWindowAction(int actionId) {
-		return actionId >= SELECTED_QUEST_REWARD1.id() && actionId <= SELECTED_QUEST_NOREWARD.id();
+		return (actionId >= SELECTED_QUEST_REWARD1.id() && actionId <= SELECTED_QUEST_NOREWARD.id())
+			|| actionId == SELECTED_QUEST_AUTO_REWARD.id()
+			|| (actionId >= SELECTED_QUEST_AUTO_REWARD1.id()
+				&& actionId <= SELECTED_QUEST_AUTO_REWARD1.id() + AUTO_REWARD_SLOT_COUNT - 1);
 	}
 
 	private static Map<Integer, QuestDialogAction> buildById() {

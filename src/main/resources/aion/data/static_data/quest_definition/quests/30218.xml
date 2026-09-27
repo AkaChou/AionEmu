@@ -107,7 +107,7 @@
   <transitions>
     <dialog type="NPC_START" npc-id="799504" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
     <counter-grid>
-      <dimension field="var0" required="25" npc-ids="216195 216196 216197 216198 216276 216277 216278 216279"/>
+      <dimension field="var0" required="25" npc-ids="216195 216276 216277 216278 216279"/>
     </counter-grid>
     <dialog type="NPC_REPORT" npc-id="799504" source="k25" target="reward" page="SELECT2"/>
     <npc-complete npc-id="799504" source="reward" target="complete" fixed-reward-indices="0 1" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">

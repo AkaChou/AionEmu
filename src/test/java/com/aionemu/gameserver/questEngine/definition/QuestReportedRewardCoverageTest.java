@@ -50,15 +50,15 @@ class QuestReportedRewardCoverageTest {
 				.toList();
 			assertTrue(choices.size() >= 2 && choices.size() <= 15, "quest=" + questId);
 			for (int slot = 0; slot < choices.size(); slot++) {
-				assertTargetlessCompletionRoutes(compiled,
-					QuestDialogAction.SELECTED_QUEST_REWARD1.id() + slot, 1);
+				assertTalkConfirmRoutes(compiled,
+					QuestDialogAction.SELECTED_QUEST_REWARD1.id() + slot, 1, false);
 				assertTargetlessCompletionRoutes(compiled,
 					QuestDialogAction.SELECTED_QUEST_AUTO_REWARD1.id() + slot, 1);
 			}
 		}
 		for (int questId : union(CLASS_QUEST_IDS, EXPLICIT_CLASS_QUEST_IDS)) {
 			CompiledQuestDefinition compiled = catalog.findExecutable(questId).orElseThrow();
-			assertTargetlessCompletionRoutes(compiled, QuestDialogAction.SELECTED_QUEST_REWARD1.id(), 11);
+			assertTalkConfirmRoutes(compiled, QuestDialogAction.SELECTED_QUEST_REWARD1.id(), 11, true);
 			assertTargetlessCompletionRoutes(compiled, QuestDialogAction.SELECTED_QUEST_AUTO_REWARD1.id(), 11);
 		}
 	}
@@ -83,6 +83,40 @@ class QuestReportedRewardCoverageTest {
 					QuestRewardKind.ITEM.name(), reward.id(), reward.amount(), QuestRewardAmountMode.EXACT)),
 					"quest=" + questId + " class=" + playerClass);
 			}
+		}
+	}
+
+	/**
+	 * 对话页确认通道（TalkToNpc 报告 NPC 键）：DD 形与遗留形同键注册；classScoped 时按
+	 * AdvancedClassIs 条件计数（无条件交付兜底路由不计入职业梯）。
+	 * The talk-page confirm channel (TalkToNpc report-NPC key): the DD and legacy shapes register
+	 * under the same key; when classScoped, count AdvancedClassIs-conditioned routes (the
+	 * unconditional delivery fallback stays out of the class ladder).
+	 */
+	private static void assertTalkConfirmRoutes(CompiledQuestDefinition compiled, int dialogId,
+			int expectedCount, boolean classScoped) {
+		List<QuestTransition> routes = compiled.definition().transitions().stream()
+			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.dialogId() != null && talk.dialogId() == dialogId)
+			.filter(transition -> !classScoped || transition.conditions().stream()
+				.anyMatch(QuestCondition.AdvancedClassIs.class::isInstance))
+			.toList();
+		assertEquals(expectedCount, routes.size(), "quest=" + compiled.id() + " action=" + dialogId);
+		Map<String, QuestStatus> statuses = new LinkedHashMap<>();
+		for (QuestNode node : compiled.definition().nodes()) {
+			statuses.put(node.label(), node.projection().status());
+		}
+		for (QuestTransition transition : routes) {
+			assertEquals(QuestStatus.REWARD, statuses.get(transition.sourceNode()),
+				"quest=" + compiled.id() + " action=" + dialogId);
+			assertEquals(QuestStatus.COMPLETE, statuses.get(transition.targetNode()),
+				"quest=" + compiled.id() + " action=" + dialogId);
+			assertEquals(1, transition.actions().stream()
+				.filter(QuestAction.CompleteQuest.class::isInstance).count());
+			assertEquals(List.of(new AfterCommitAction.RefreshPlayerStats(),
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.COMPLETION),
+				new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
+				transition.afterCommit(), "quest=" + compiled.id() + " action=" + dialogId);
 		}
 	}
 
@@ -118,9 +152,11 @@ class QuestReportedRewardCoverageTest {
 			.toList();
 	}
 
+	// 报告奖励覆盖清单跨真端驱动行：生产视图（真端 overlay 合成）替代原始 XML 目录。
+	// The reported-reward coverage set spans retail-driven rows: the production view (retail
+	// overlay) replaces the raw XML directory.
 	private static QuestCatalog productionCatalog() {
-		return QuestDefinitionCatalogManifest.compile(
-			Path.of("src/main/resources/aion/data/static_data/quest_definition"));
+		return ProductionQuestDefinitions.catalog();
 	}
 
 	private static Set<Integer> fixedQuestIds() {

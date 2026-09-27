@@ -7,6 +7,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.runtime.QuestInteractionObjectTestData;
 import com.aionemu.gameserver.questEngine.runtime.QuestInteractionObjectValidator;
+import com.aionemu.gameserver.questEngine.runtime.QuestProductionEventWiring;
 
 import org.junit.jupiter.api.Test;
 
@@ -76,41 +77,7 @@ public class ProductionCatalogWhitelistVerificationTest {
 							&& t.afterCommit().stream().anyMatch(AfterCommitAction.ShowQuestDialog.class::isInstance)) {
 						violations.add(d.id() + ":ENTER_ZONE_QUEST_DIALOG");
 					}
-					if (!(t.event() instanceof QuestEvent.TalkToNpc)
-							&& !(t.event() instanceof QuestEvent.KillNpc)
-							&& !(t.event() instanceof QuestEvent.KillNpcSet)
-							&& !(t.event() instanceof QuestEvent.AttackNpc)
-							&& !(t.event() instanceof QuestEvent.CanAct)
-							&& !(t.event() instanceof QuestEvent.EnterZone)
-							&& !(t.event() instanceof QuestEvent.LevelUp)
-							&& !(t.event() instanceof QuestEvent.EnterWorld)
-							&& !(t.event() instanceof QuestEvent.UseItem)
-							&& !(t.event() instanceof QuestEvent.ItemPlay)
-							&& !(t.event() instanceof QuestEvent.GetItem)
-							&& !(t.event() instanceof QuestEvent.CollectItem)
-							&& !(t.event() instanceof QuestEvent.PassFlyingRing)
-							&& !(t.event() instanceof QuestEvent.EnterWindStream)
-							&& !(t.event() instanceof QuestEvent.AtDistance)
-							&& !(t.event() instanceof QuestEvent.Die)
-							&& !(t.event() instanceof QuestEvent.LogOut)
-							&& !(t.event() instanceof QuestEvent.MovieEnd)
-							&& !(t.event() instanceof QuestEvent.NpcReachTarget)
-							&& !(t.event() instanceof QuestEvent.NpcLostTarget)
-							&& !(t.event() instanceof QuestEvent.ZoneMissionEnd)
-							&& !(t.event() instanceof QuestEvent.EventQuestRefresh)
-							&& !(t.event() instanceof QuestEvent.InvisibleTimerEnd)
-							&& !(t.event() instanceof QuestEvent.FailCraft)
-							&& !(t.event() instanceof QuestEvent.EquipItem)
-							&& !(t.event() instanceof QuestEvent.Abandon)
-							&& !(t.event() instanceof QuestEvent.DredgionReward)
-							&& !(t.event() instanceof QuestEvent.HouseItemUse)
-							&& !(t.event() instanceof QuestEvent.KillInWorld)
-							&& !(t.event() instanceof QuestEvent.KillRanked)
-							&& !(t.event() instanceof QuestEvent.LeaveZone)
-							&& !(t.event() instanceof QuestEvent.QuestTimerEnd)
-							&& !(t.event() instanceof QuestEvent.UseSkill)
-							&& !(t.event() instanceof QuestEvent.QuestDialog)
-							&& !(t.event() instanceof QuestEvent.BonusApply)) {
+					if (!QuestProductionEventWiring.isWired(t.event())) {
 						violations.add(d.id() + ":" + t.event().type());
 					}
 				}

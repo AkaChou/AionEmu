@@ -55,7 +55,8 @@ class QuestPrerequisiteRetailContractTest {
 	@Test
 	void everyPortedRetailPrerequisiteBranchIsExpressedByTheCatalog() throws Exception {
 		Map<Integer, List<List<Integer>>> contract = loadContract();
-		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		QuestCatalog catalog = com.aionemu.gameserver.questEngine.retail.RetailQuestDriver.overlay(
+			QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader()));
 		Set<Integer> catalogIds = new LinkedHashSet<>();
 		catalog.entries().forEach(entry -> catalogIds.add(entry.id()));
 
@@ -88,7 +89,8 @@ class QuestPrerequisiteRetailContractTest {
 
 	@Test
 	void batchPrerequisitesMatchTheRetailConditionExactly() throws Exception {
-		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		QuestCatalog catalog = com.aionemu.gameserver.questEngine.retail.RetailQuestDriver.overlay(
+			QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader()));
 		for (Map.Entry<Integer, Integer> expected : PREREQ_BATCH.entrySet()) {
 			QuestCatalogEntry entry = catalog.findEntry(expected.getKey())
 				.orElseThrow(() -> new AssertionError("quest " + expected.getKey() + " missing from catalog"));
@@ -103,7 +105,8 @@ class QuestPrerequisiteRetailContractTest {
 
 	@Test
 	void unportedSingleBranchChainsStayOpenUntilTheDependencyIsPorted() throws Exception {
-		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		QuestCatalog catalog = com.aionemu.gameserver.questEngine.retail.RetailQuestDriver.overlay(
+			QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader()));
 		for (Map.Entry<Integer, Integer> pending : UNPORTED_CHAIN_PENDING.entrySet()) {
 			boolean dependencyPorted = catalog.findEntry(pending.getValue()).isPresent();
 			Set<Integer> effective = effectiveFinishedConditions(

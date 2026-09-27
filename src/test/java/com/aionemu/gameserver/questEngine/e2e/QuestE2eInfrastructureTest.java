@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.questEngine.e2e;
 
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestCondition;
-import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestDsl;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
@@ -21,9 +21,9 @@ import com.aionemu.gameserver.model.gameobjects.player.npcFaction.ENpcFactionQue
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.ObjectProvider;
 
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -595,7 +595,13 @@ class QuestE2eInfrastructureTest {
 
 	@Test
 	void unreachableCounterContinuationIsAttributedToItsExecutableSibling() throws Exception {
-		CompiledQuestDefinition definition = definition(3118);
+		/* P0c-8c（2026-09-24）：3118 已由真端文件驱动（真端网格没有"计数饱和后仍存在的续接边"），
+		   该判据改挂在 80751 上：它是保留 XML 的 SimpleHunt 行（保留码 SEMANTIC_GAP:CLIENT_BUTTON_UNWIRED），
+		   其 required=1 的 compact counter 仍会编出严格低于字段最小值的不可执行续接边（var0 < 0），
+		   形状与判定口径完全不变；这里同时是"引擎归因"路径在保留 XML 任务上的长期回归点。
+		   Retail-driven since P0c-8c: quest 3118 lost this shape, so the same adjudication now runs on 80751,
+		   a retained-XML SimpleHunt row whose required=1 compact counter keeps the unreachable continuation. */
+		CompiledQuestDefinition definition = definition(80751);
 		QuestTransition unreachable = definition.definition().transitions().stream()
 			.filter(transition -> "started".equals(transition.sourceNode()))
 			.filter(transition -> "started".equals(transition.targetNode()))
@@ -823,10 +829,7 @@ class QuestE2eInfrastructureTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		try (InputStream input = QuestE2eInfrastructureTest.class.getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			if (input == null) throw new IllegalStateException("missing quest resource " + questId);
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

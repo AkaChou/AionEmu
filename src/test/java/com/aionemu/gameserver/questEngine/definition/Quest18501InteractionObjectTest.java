@@ -3,7 +3,6 @@ package com.aionemu.gameserver.questEngine.definition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -77,14 +76,8 @@ class Quest18501InteractionObjectTest {
 	}
 
 	private static CompiledQuestDefinition load() {
-		String resource = "/aion/data/static_data/quest_definition/quests/18501.xml";
-		try (InputStream input = Quest18501InteractionObjectTest.class.getResourceAsStream(resource)) {
-			if (input == null) {
-				throw new AssertionError("missing resource " + resource);
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		} catch (Exception e) {
-			throw new AssertionError("failed to load " + resource, e);
-		}
+		// 已退役任务不再有 XML：问生产视图（XML 目录 + 真端 overlay）。
+		// Retired quests have no XML left; ask the production view (XML directory + retail overlay).
+		return ProductionQuestDefinitions.definition(18501);
 	}
 }

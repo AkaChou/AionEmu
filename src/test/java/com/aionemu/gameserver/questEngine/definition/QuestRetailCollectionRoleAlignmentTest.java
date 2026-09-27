@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -35,7 +34,9 @@ class QuestRetailCollectionRoleAlignmentTest {
 			node(definition, "unaccepted").projection());
 		assertEquals(new NodeProjection(QuestStatus.START, Map.of("var0", 0)),
 			node(definition, "started").projection());
-		assertEquals(new NodeProjection(QuestStatus.REWARD, Map.of("var0", 0)),
+		// QE-051：reward 投影 = 客户端任务书领奖行（见 questCase.rewardRow，取自 quest_q<id> 可见槽位）。
+		// QE-051: the reward projection is the client journal reward row (see questCase.rewardRow).
+		assertEquals(new NodeProjection(QuestStatus.REWARD, Map.of("var0", questCase.rewardRow())),
 			node(definition, "reward").projection());
 		assertEquals(new NodeProjection(QuestStatus.COMPLETE, Map.of("var0", 0)),
 			node(definition, "complete").projection());
@@ -60,8 +61,13 @@ class QuestRetailCollectionRoleAlignmentTest {
 			.map(item -> (QuestCondition) new QuestCondition.HasItem(item.itemId(), item.count()))
 			.toList();
 		List<QuestAction> turnInActions = new ArrayList<>();
+		if (!"reward".equals(questCase.turnInTarget())) {
+			// 交付边落在中间行（未到领奖态）时会显式写下目标行号，与其它行阶梯任务同形。
+			// A hand-in that lands on an intermediate row writes the target row explicitly.
+			turnInActions.add(new QuestAction.SetVariable("var0", 1));
+		}
 		questCase.items().forEach(item -> turnInActions.add(new QuestAction.RemoveItem(item.itemId(), item.count())));
-		assertRoute(definition, "started", "reward", questCase.startNpcId(),
+		assertRoute(definition, "started", questCase.turnInTarget(), questCase.startNpcId(),
 			QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM, 0, itemConditions, turnInActions,
 			List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 				new AfterCommitAction.ShowQuestDialog(questCase.successPage())));
@@ -80,7 +86,10 @@ class QuestRetailCollectionRoleAlignmentTest {
 		assertEquals(List.of(new QuestItemRequirement(182215709, 1)), definition.metadata().questWorkItems());
 		assertUniqueAcceptNpc(definition, 804908);
 
-		QuestTransition turnIn = route(definition, "started", "prepared", 804908,
+		// 真端驱动混合采集链（DD_TALK_COLLECT_CHAIN）：采集段落点节点 = s1（旧形 prepared）。
+		// The retail-driven mixed collect chain (DD_TALK_COLLECT_CHAIN) names the collect landing
+		// state s1 (the legacy shape called it prepared).
+		QuestTransition turnIn = route(definition, "started", "s1", 804908,
 			QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM, 0);
 		assertEquals(List.of(
 			new QuestAction.RemoveItem(182215707, 5),
@@ -90,14 +99,14 @@ class QuestRetailCollectionRoleAlignmentTest {
 			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.CHECK_USER_ITEM_OK.id())),
 			turnIn.afterCommit());
 		assertEquals(new NodeProjection(QuestStatus.START, Map.of("var0", 1)),
-			node(definition, "prepared").projection());
+			node(definition, "s1").projection());
 
-		assertRoute(definition, "prepared", "prepared", 804908, QuestDialogAction.FINISH_DIALOG, null,
+		assertRoute(definition, "s1", "s1", 804908, QuestDialogAction.FINISH_DIALOG, null,
 			List.of(), List.of(), List.of(new AfterCommitAction.CloseDialog()));
-		assertRoute(definition, "prepared", "prepared", 804908, QuestDialogAction.QUEST_SELECT, null,
+		assertRoute(definition, "s1", "s1", 804908, QuestDialogAction.QUEST_SELECT, null,
 			List.of(), List.of(),
 			List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT2.id())));
-		assertRoute(definition, "prepared", "reward", 804908, QuestDialogAction.SET_SUCCEED, null,
+		assertRoute(definition, "s1", "reward", 804908, QuestDialogAction.SET_SUCCEED, null,
 			List.of(), List.of(new QuestAction.GiveItem(182215709, 1)),
 			List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 				new AfterCommitAction.CloseDialog()));
@@ -140,35 +149,47 @@ class QuestRetailCollectionRoleAlignmentTest {
 	private static Stream<CollectionCase> collectionCases() {
 		return Stream.of(
 			collection(25013, 804907, 804907, items(item(182215704, 4)),
-				QuestDialogPage.CHECK_USER_ITEM_OK.id(), 702750, false, false),
+				QuestDialogPage.CHECK_USER_ITEM_OK.id(), 702750, false, false, 0),
+			// 下列任务的客户端任务书都有独立领奖行（quest_q<id> 的可见槽位 %0/%3…），reward 投影落在领奖行。
+			// The quests below own a separate client journal reward row, so their reward projection sits on it.
 			collection(25062, 804917, 804918, items(item(182215722, 10)),
-				QuestDialogPage.CHECK_USER_ITEM_OK.id(), 0, false, false),
+				QuestDialogPage.CHECK_USER_ITEM_OK.id(), 0, false, false, 1),
 			collection(25080, 804922, 804922, items(item(182215727, 10)),
-				QuestDialogPage.CHECK_USER_ITEM_OK.id(), 702751, false, false),
+				QuestDialogPage.CHECK_USER_ITEM_OK.id(), 702751, false, false, 0),
 			collection(25081, 804922, 804922, items(item(182215732, 10)),
-				QuestDialogPage.CHECK_USER_ITEM_OK.id(), 702752, false, false),
+				QuestDialogPage.CHECK_USER_ITEM_OK.id(), 702752, false, false, 0),
+			// 25094 的客户端行 1/2 共槽（%3/%3），交付边落在中间行 s1；其余任务的交付边直奔领奖态 reward。
+			// 25094 shares slot %3 between its rows 1/2, so the hand-in lands on the intermediate row s1.
 			collection(25094, 804929, 804740, items(item(182215736, 10)),
-				QuestDialogPage.CHECK_USER_ITEM_OK.id(), 702768, false, false),
+				QuestDialogPage.CHECK_USER_ITEM_OK.id(), 702768, false, false, 1, "s1"),
 			collection(25526, 806109, 806109, items(item(182215970, 10)),
-				QuestDialogPage.CHECK_USER_ITEM_OK.id(), 703082, false, false),
+				QuestDialogPage.CHECK_USER_ITEM_OK.id(), 703082, false, false, 1),
 			collection(25532, 806111, 806111, items(item(182215971, 10)),
-				QuestDialogPage.CHECK_USER_ITEM_OK.id(), 703084, false, false),
+				QuestDialogPage.CHECK_USER_ITEM_OK.id(), 703084, false, false, 1),
 			collection(25535, 806112, 806112, items(item(182215972, 10)),
-				QuestDialogPage.CHECK_USER_ITEM_OK.id(), 703085, false, false),
+				QuestDialogPage.CHECK_USER_ITEM_OK.id(), 703085, false, false, 1),
 			collection(25538, 806255, 806255, items(item(182216066, 10)),
-				QuestDialogPage.CHECK_USER_ITEM_OK.id(), 703295, false, false),
+				QuestDialogPage.CHECK_USER_ITEM_OK.id(), 703295, false, false, 1),
 			// 交付成功后直接进入奖励窗：该任务客户端确认页 10000 的按钮是本地关闭，不能承载服务端续接。
 			// Straight into the reward window: this quest's client confirmation page 10000 button is a local
 			// close and cannot carry a server continuation.
 			collection(25690, 806697, 806697, items(item(186000474, 1)),
-				QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id(), 0, false, true));
+				QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id(), 0, false, true, 1));
 	}
 
 	private static CollectionCase collection(int questId, int startNpcId, int rewardNpcId,
 			List<CollectedItem> items, int successPage, int interactionNpcId,
-			boolean closeInteraction, boolean finishDialogCompletes) {
+			boolean closeInteraction, boolean finishDialogCompletes, int rewardRow) {
+		return collection(questId, startNpcId, rewardNpcId, items, successPage, interactionNpcId,
+			closeInteraction, finishDialogCompletes, rewardRow, "reward");
+	}
+
+	private static CollectionCase collection(int questId, int startNpcId, int rewardNpcId,
+			List<CollectedItem> items, int successPage, int interactionNpcId,
+			boolean closeInteraction, boolean finishDialogCompletes, int rewardRow,
+			String turnInTarget) {
 		return new CollectionCase(questId, startNpcId, rewardNpcId, items, successPage,
-			interactionNpcId, closeInteraction, finishDialogCompletes);
+			interactionNpcId, closeInteraction, finishDialogCompletes, rewardRow, turnInTarget);
 	}
 
 	private static CollectedItem item(int itemId, int count) {
@@ -312,10 +333,8 @@ class QuestRetailCollectionRoleAlignmentTest {
 	}
 
 	private static QuestDefinition load(int questId) throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-		try (InputStream input = QuestRetailCollectionRoleAlignmentTest.class.getResourceAsStream(resource)) {
-			return QuestDefinitionXmlCompiler.compile(Objects.requireNonNull(input, resource)).definition();
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(questId).definition();
 	}
 
 	/**
@@ -331,7 +350,7 @@ class QuestRetailCollectionRoleAlignmentTest {
 	 */
 	private record CollectionCase(int questId, int startNpcId, int rewardNpcId, List<CollectedItem> items,
 		int successPage, int interactionNpcId,
-		boolean closeInteraction, boolean finishDialogCompletes) {
+		boolean closeInteraction, boolean finishDialogCompletes, int rewardRow, String turnInTarget) {
 		@Override
 		public String toString() {
 			return Integer.toString(questId);

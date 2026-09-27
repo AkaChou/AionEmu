@@ -7,7 +7,6 @@ import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import com.aionemu.gameserver.questEngine.runtime.QuestStartEligibility;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -39,7 +38,11 @@ class EarlyElyosQuestRegressionTest {
 	@Test
 	void ointmentDeliveryRequiresAndConsumesTheWorkItem() {
 		CompiledQuestDefinition definition = load(1118);
-		QuestEvent event = new QuestEvent.TalkToNpc(203079, 1009);
+		// S3c（quest-native-dispatch）：交付段规范形——门与扣物挂在交付 NPC 的 `QUEST_SELECT(31)` 提交边
+		// （直翻 REWARD）上；旧 `1009` 报告边（`v1→reward`）随报告页退场。
+		// S3c: gate and consumption ride the canonical QUEST_SELECT(31) submission edge; the legacy
+		// 1009 report edge (v1->reward) retires with the report page.
+		QuestEvent event = new QuestEvent.TalkToNpc(203079, 31);
 		QuestTransition delivery = route(definition, "v1", "reward", event);
 
 		assertTrue(delivery.conditions().contains(new QuestCondition.HasItem(182200224, 1)));
@@ -81,12 +84,21 @@ class EarlyElyosQuestRegressionTest {
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.CloseDialog()),
 			route(definition, "started", "k1", new QuestEvent.TalkToNpc(700003, 10000)).afterCommit());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(2375)),
-			route(definition, "k1", "k1", new QuestEvent.TalkToNpc(798003, 31)).afterCommit());
+		// S2：交付 = QUEST_SELECT(k1→reward) 空门（真端行无 item_check）直翻领奖态并下发奖励窗；SELECT5
+		// 报告页与 1009 检查中转随规范交付段退场（未集齐零路由，关窗兜底交 DialogService）。
+		// S2 canonical delivery: QUEST_SELECT(k1→reward) with the empty gate flips REWARD and shows the
+		// reward window; the report page and the 1009 check relay retire with the canonical segment.
+		QuestTransition delivery = route(definition, "k1", "reward", new QuestEvent.TalkToNpc(798003, 31));
+		assertEquals(List.of(), delivery.conditions());
+		assertEquals(List.of(), delivery.actions());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(5)),
-			route(definition, "k1", "reward", new QuestEvent.TalkToNpc(798003, 1009)).afterCommit());
+			new AfterCommitAction.ShowQuestDialog(deliveryWindowPage(definition.definition().metadata()))),
+			delivery.afterCommit());
+		assertFalse(definition.definition().transitions().stream().anyMatch(transition ->
+			Objects.equals(transition.sourceNode(), "k1") && "reward".equals(transition.targetNode())
+				&& transition.event().equals(new QuestEvent.TalkToNpc(798003, 1009))),
+			"quest 1156 的 1009 检查中转必须随规范交付段退场");
 		route(definition, "reward", "complete", new QuestEvent.TalkToNpc(798003, 8));
 
 		assertFalse(definition.definition().transitions().stream().anyMatch(transition ->
@@ -120,19 +132,46 @@ class EarlyElyosQuestRegressionTest {
 	void belbuasWineBarrelUsesTheObjectRouteOnlyAfterAcceptance() {
 		CompiledQuestDefinition definition = load(1141);
 
-		assertObjectGate(definition, "started", 700122);
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(2375)),
-			route(definition, "started", "started", new QuestEvent.TalkToNpc(700122, -1)).afterCommit());
+		// P0c-24 裁定（真端对、XML 错）：客户端模板索引声明酒桶(700122)的报告开启动作 =
+		// QUEST_SELECT(31)（对象也走对话开启），与族编译一致；遗留 XML 的 USE_OBJECT 与手制
+		// CanAct 门是推断形。1141 真端行无掉落——validator 的 ACTION_ITEM_USE 门要求是掉落驱动
+		// （quest_use_item 掉落才需要），无掉落无门。
+		// P0c-24 adjudication (retail-right, XML-wrong): the client template index declares the
+		// barrel's (700122) report opener as QUEST_SELECT(31) — objects also open via the dialog
+		// action, matching the family compile. The legacy XML's USE_OBJECT route and hand-made
+		// CanAct gate were inferred. The retail row has no drops, and the validator's
+		// ACTION_ITEM_USE gate requirement is drop-driven, so no gate applies.
+		// P0-3 S1：SimpleTalk 接取/交付切真端规范形（页 4 / 分档窗）。真端行 1141 只有
+		// acquired=Scarecrow_Nola / reward=LF1a_Barrel 两列、零 item_check（Quest_SimpleTalk.xml:379-383），
+		// 交付 = QUEST_SELECT(31) 空门直翻领奖态并下发第 1 档奖励窗（quest.xml:3729-3731 的 exp +
+		// 单道具一档）；报告页 SELECT5(2375) 与 1009 中转随页链退场。
+		// P0-3 S1: 1141's canonical delivery is the empty-gate QUEST_SELECT(31) flipping REWARD with
+		// the first reward window; the SELECT5(2375) report page and the 1009 hop are gone.
+		QuestTransition delivery = route(definition, "started", "reward",
+			new QuestEvent.TalkToNpc(700122, QuestDialogAction.QUEST_SELECT.id()));
+		assertTrue(delivery.conditions().isEmpty(), "no item gate without item_check");
+		assertTrue(delivery.actions().isEmpty());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(5)),
-			route(definition, "started", "reward", new QuestEvent.TalkToNpc(700122, 1009)).afterCommit());
-		assertObjectGate(definition, "reward", 700122);
+			new AfterCommitAction.ShowQuestDialog(5)), delivery.afterCommit());
+		// 负控限定交付段（started 源）：reward 源的完成预览另一条 1009 边属完成流，不在本轮面内。
+		// The negative control is scoped to the delivery segment (started source); the reward-state
+		// completion preview keeps its own 1009 edge.
+		assertTrue(definition.definition().transitions().stream()
+			.filter(transition -> "started".equals(transition.sourceNode()))
+			.noneMatch(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.dialogId() != null && talk.dialogId() == QuestDialogAction.SELECT_QUEST_REWARD.id()),
+			"canonical removed the started 1009 hop");
+		assertTrue(definition.definition().transitions().stream()
+			.flatMap(transition -> transition.afterCommit().stream())
+			.noneMatch(action -> action instanceof AfterCommitAction.ShowQuestDialog dialog
+				&& dialog.dialogId() == QuestDialogPage.SELECT5.id()),
+			"canonical removed the select5 report page");
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(5)),
 			route(definition, "reward", "reward", new QuestEvent.TalkToNpc(700122, -1)).afterCommit());
 		QuestTransition completion = route(definition, "reward", "complete",
 			new QuestEvent.TalkToNpc(700122, 8));
-		assertEquals(new AfterCommitAction.CloseDialog(), completion.afterCommit().getLast());
+		assertEquals(new AfterCommitAction.ShowQuestSelectionDialog(10), completion.afterCommit().getLast());
 
 		assertNoUnacceptedObjectRoute(definition, 700122);
 	}
@@ -357,16 +396,16 @@ class EarlyElyosQuestRegressionTest {
 						&& canAct.templateId() == npcId))));
 	}
 
+	/** 交付窗页（与 RetailSimpleCollectItemDefinitionCompiler.deliveryWindowPage 同口径：档位查表，零奖励组回落窗 1）。 */
+	private static int deliveryWindowPage(QuestMetadata metadata) {
+		return metadata.rewardGroups().isEmpty()
+			? QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()
+			: QuestDialogPage.rewardWindowForTier(metadata.rewardGroups().size() - 1).orElseThrow().id();
+	}
+
 	private static CompiledQuestDefinition load(int questId) {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-		try (InputStream input = EarlyElyosQuestRegressionTest.class.getResourceAsStream(resource)) {
-			if (input == null) {
-				throw new AssertionError("missing resource " + resource);
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		} catch (Exception e) {
-			throw new AssertionError("failed to load " + resource, e);
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(questId);
 	}
 	@Test
 	void insomniaMedicineAcceptanceOpensAskAcceptWindowNotRefusePage() {
@@ -386,12 +425,26 @@ class EarlyElyosQuestRegressionTest {
 	@Test
 	void singleItemCollection1117DeliveryTransitionsToRewardWindowDirectly() {
 		CompiledQuestDefinition definition = load(1117);
+		// P0-3 S1：SimpleTalk 接取/交付切真端规范形（页 4 / 分档窗）。真端行 1117 acquired=reward=
+		// Pranoa、item_check=1 且 quest.xml 已声明 collect_item（quest_1117a 3，Quest_SimpleTalk.xml:310-314），
+		// 交付 = QUEST_SELECT(31) 带整组 HasItem 门直翻领奖态并下发第 1 档奖励窗；39/20002 检查对与
+		// select6 失败页退场（未集齐 = 零路由，关窗兜底交 DialogService）。
+		// P0-3 S1: 1117's canonical delivery is QUEST_SELECT(31) gated by the whole hand-in set,
+		// flipping REWARD with the first reward window; the 39/20002 check pairs and the select6
+		// failure page are gone (an incomplete hand-in has no route at all).
 		QuestTransition itemCheck = route(definition, "started", "reward",
-			new QuestEvent.TalkToNpc(203074, 39));
+			new QuestEvent.TalkToNpc(203074, QuestDialogAction.QUEST_SELECT.id()));
 		assertTrue(itemCheck.conditions().contains(new QuestCondition.HasItem(182200208, 3)));
+		assertTrue(itemCheck.actions().contains(new QuestAction.RemoveItem(182200208, 3)));
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.ShowQuestDialog(5)), itemCheck.afterCommit());
+		assertTrue(definition.definition().transitions().stream()
+			.filter(transition -> "started".equals(transition.sourceNode()))
+			.noneMatch(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.dialogId() != null && talk.dialogId() == QuestDialogAction
+					.CHECK_USER_HAS_QUEST_ITEM.id()),
+			"canonical removed the 39/20002 check pairs");
 	}
 
 	@Test

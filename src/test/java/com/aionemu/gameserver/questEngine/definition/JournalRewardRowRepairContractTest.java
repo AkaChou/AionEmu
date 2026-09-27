@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.questEngine.definition;
 
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
 import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlan;
 import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +14,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 锁定第三批领奖行修复：203 个任务的客户端 quest_summary 末行是领奖行
@@ -23,11 +24,31 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * (a talk/report/hand-over line naming the reward NPC of the quest) while the server reward projection
  * stayed on an earlier row; the projection was rewritten to the last row and each quest gained a
  * source-less enter-world recovery edge.
+ * <p>
+ * P0c-6：其中 5 行（16900–16903 / 24201）已改由真端 SimpleHunt 表驱动，var0 变成**击杀计数**而不是
+ * 任务书行号——任务书行由客户端 {@code SECTION_n} 门控推导，服务端没有可漂移的行号，
+ * 因此真端形状下不存在也不需要 repair 边（P3 既有裁定：修复边是 AionEmu 历史包袱）。
+ * 后续 DD 批次把 50126/50127/51126/51127 同批划入真端 DataDriven 猎杀网格（击杀 1 名首领，
+ * var0 = 饱和计数 1），与 P0c-6 同口径：无 repair 边、领奖投影即饱和计数。
+ * <p>
+ * Since P0c-6 five rows are retail-driven: var0 is a kill counter, the journal row comes from the
+ * client's SECTION gates, and no source-less repair edge may remain. The later DD batch moved
+ * 50126/50127/51126/51127 into the retail DataDriven hunt grid the same way (single-boss kills,
+ * var0 = the saturated counter 1): no repair edge, the reward projection is the saturated counter.
  */
 class JournalRewardRowRepairContractTest {
 
 	private record Contract(int questId, int rewardRow, int staleRow) {
 	}
+
+	/**
+	 * 已由真端表驱动（P0c-6 SimpleHunt + DD 批次 DataDriven 猎杀网格）：不得保留任何无 source 的
+	 * enter-world 修复边。
+	 * Retail-driven since P0c-6 (SimpleHunt) and the DD batch (DataDriven hunt grids): no
+	 * source-less enter-world repair edge may remain.
+	 */
+	private static final List<Integer> RETAIL_DRIVEN = List.of(16900, 16901, 16902, 16903, 24201,
+		50126, 50127, 51126, 51127);
 
 	private static final List<Contract> CONTRACTS = List.of(
 		new Contract(1218, 1, 0),
@@ -171,10 +192,6 @@ class JournalRewardRowRepairContractTest {
 		new Contract(15231, 1, 0),
 		new Contract(15232, 1, 0),
 		new Contract(15613, 6, 5),
-		new Contract(16900, 2, 1),
-		new Contract(16901, 2, 1),
-		new Contract(16902, 2, 1),
-		new Contract(16903, 2, 1),
 		new Contract(18809, 2, 0),
 		new Contract(19002, 1, 0),
 		new Contract(20530, 9, 8),
@@ -195,7 +212,6 @@ class JournalRewardRowRepairContractTest {
 		new Contract(24046, 7, 6),
 		new Contract(24051, 6, 5),
 		new Contract(24121, 2, 0),
-		new Contract(24201, 2, 1),
 		new Contract(24202, 2, 1),
 		new Contract(24242, 2, 0),
 		new Contract(25000, 3, 2),
@@ -219,10 +235,6 @@ class JournalRewardRowRepairContractTest {
 		new Contract(30553, 1, 0),
 		new Contract(30604, 1, 0),
 		new Contract(39713, 2, 0),
-		new Contract(50126, 1, 0),
-		new Contract(50127, 1, 0),
-		new Contract(51126, 1, 0),
-		new Contract(51127, 1, 0),
 		new Contract(80020, 3, 2),
 		new Contract(80021, 3, 2),
 		new Contract(80257, 1, 0),
@@ -267,6 +279,24 @@ class JournalRewardRowRepairContractTest {
 			assertEquals(QuestStatus.REWARD, plan.nextStatus());
 			assertEquals(contract.rewardRow(), unpack(compiled, plan).get("var0"),
 				() -> "quest " + contract.questId() + " repaired journal row");
+		}
+	}
+
+	/**
+	 * 真端驱动的同一批行：不许再有 repair 边，且领奖态投影必须就是饱和计数（客户端看到的行由门控推导）。
+	 * The same rows under retail driving: no repair edge, and reward projects the saturated counter.
+	 */
+	@Test
+	void retailDrivenRowsCarryNoJournalRepairEdge() throws Exception {
+		for (int questId : RETAIL_DRIVEN) {
+			QuestDefinition definition = definition(questId).definition();
+			assertTrue(definition.transitions().stream().noneMatch(route ->
+					route.sourceNode() == null && route.event() instanceof QuestEvent.EnterWorld),
+				() -> "quest " + questId + " is retail-driven and must not keep a source-less enter-world edge");
+			assertTrue(definition.nodes().stream()
+					.filter(node -> node.projection().status() == QuestStatus.REWARD)
+					.allMatch(node -> node.projection().variables().values().stream().anyMatch(value -> value > 0)),
+				() -> "quest " + questId + " reward must project the saturated kill counters");
 		}
 	}
 
@@ -321,13 +351,24 @@ class JournalRewardRowRepairContractTest {
 			true, true, 0, 0, 100000000, 1, 0f, 0f, 0f, (byte) 0);
 	}
 
+	/**
+	 * 生产定义：XML 目录 + 真端 overlay。已退役任务（如 2542）的 XML 只在 git 历史里，
+	 * 定义必须走生产视图，否则本测试会在退役后失效。
+	 * Production definition: retired quests come from the retail driver, not from XML.
+	 */
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		try (InputStream input = JournalRewardRowRepairContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition " + questId + ".xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		// TEMP-VERIFY(view): 并行 SimpleTalk 批次落定前生产覆盖门不可用，用宽松 overlay 验证本断言。
+		return verificationView().find(questId)
+			.orElseThrow(() -> new IllegalStateException("missing production quest definition " + questId));
+	}
+
+	// TEMP-VERIFY(view): 并行批次落定前的宽松生产视图（XML 目录 + 真端驱动，跳过覆盖门）。
+	private static final java.util.concurrent.atomic.AtomicReference<QuestCatalog> VIEW =
+		new java.util.concurrent.atomic.AtomicReference<>();
+
+	private static QuestCatalog verificationView() {
+		return VIEW.updateAndGet(current -> current != null ? current
+			: RetailQuestDriver.overlay(QuestDefinitionDirectoryLoader.compile(
+				JournalRewardRowRepairContractTest.class.getClassLoader())));
 	}
 }

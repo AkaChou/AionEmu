@@ -4,10 +4,8 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,17 +24,28 @@ class Quest23902ClientDialogAlignmentTest {
 	void keepsTheRetailSimpleStartReportAndRewardOwnersExclusive() {
 		QuestDefinition definition = load().definition();
 
-		assertEquals(Set.of(23900), definition.metadata().startConditions().stream()
-			.map(condition -> condition.questId()).collect(java.util.stream.Collectors.toSet()));
+		// P0c-21 归属裁定：真端 finished_quest_cond1=Q23900 无后缀 → mapper 固定规则归
+		// prerequisites（RETAIL_COND_PLACEMENT 已登记）；真端不表达桶归属，遗留 XML 的
+		// start-conditions 归属随 XML 退役。
+		// P0c-21 placement adjudication: the retail plain finished_quest_cond maps to
+		// prerequisites via the fixed mapper rule; the legacy XML's start-conditions placement
+		// is retired with the XML.
+		assertEquals(Set.of(23900), definition.metadata().prerequisites());
+		assertTrue(definition.metadata().startConditions().isEmpty());
 		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0));
 		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
 		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 0));
 		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0));
 
+		// P0-3 S1：SimpleTalk 接取切真端规范形——QUEST_SELECT 直发询问窗（页 4）；
+		// select1 简报页（1011）与 ASK_QUEST_ACCEPT(1007) 中转随页链退场。
+		// P0-3 S1: the SimpleTalk accept switches to the retail canonical shape — QUEST_SELECT
+		// emits the ask-accept window (page 4); the select1 letter page (1011) and the
+		// ASK_QUEST_ACCEPT(1007) hop retire with the page chain.
 		QuestTransition offer = route(definition, "unaccepted", START_NPC,
 			QuestDialogAction.QUEST_SELECT);
 		assertContract(offer, "unaccepted", List.of(), List.of(
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT1.id())));
+			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id())));
 
 		QuestTransition accept = route(definition, "unaccepted", START_NPC,
 			QuestDialogAction.QUEST_ACCEPT_SIMPLE);
@@ -57,17 +66,22 @@ class Quest23902ClientDialogAlignmentTest {
 		assertTrue(routes(definition, "reward", START_NPC).isEmpty());
 
 		assertTrue(routes(definition, "unaccepted", REPORT_NPC).isEmpty());
-		QuestTransition reportPage = route(definition, "started", REPORT_NPC,
+		// P0-3 S1：交付切真端规范形——QUEST_SELECT 带门（本行无 item_check = 空门）直翻 REWARD
+		// 并下发档位奖励窗；报告页 SELECT5(2375) 与 SELECT_QUEST_REWARD(1009) 中转随页链退场，
+		// 未集齐时零路由（关窗兜底交 DialogService）。
+		// P0-3 S1: the delivery switches to the retail canonical shape — the gated QUEST_SELECT
+		// (no item_check on this row = empty gate) flips REWARD and shows the tiered reward
+		// window; the SELECT5 report page and the SELECT_QUEST_REWARD(1009) hop retire with the
+		// page chain, so an incomplete hand-in has no route at all.
+		int deliveryWindow = QuestDialogPage.rewardWindowForTier(
+			definition.metadata().rewardGroups().size() - 1)
+			.orElse(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1).id();
+		QuestTransition delivery = route(definition, "started", REPORT_NPC,
 			QuestDialogAction.QUEST_SELECT);
-		assertContract(reportPage, "started", List.of(), List.of(
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT5.id())));
-
-		QuestTransition report = route(definition, "started", REPORT_NPC,
-			QuestDialogAction.SELECT_QUEST_REWARD);
-		assertContract(report, "reward", List.of(), List.of(
+		assertContract(delivery, "reward", List.of(), List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(
-				QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())));
+			new AfterCommitAction.ShowQuestDialog(deliveryWindow)));
+		assertNoLegacyPageChainResidue(definition, REPORT_NPC);
 
 		for (QuestDialogAction previewAction : List.of(
 			QuestDialogAction.USE_OBJECT, QuestDialogAction.SELECT_QUEST_REWARD)) {
@@ -139,13 +153,37 @@ class Quest23902ClientDialogAlignmentTest {
 		assertEquals(variables, node.projection().variables());
 	}
 
+	/**
+	 * 旧页链零残留（P0-3 S1）：交付段（started→reward）不得有带优先级的路由，定义内不得再下发
+	 * SELECT5/SELECT6 页，started 态不得残留 1009/39/20002 交付路由（完成流的 reward→complete
+	 * 类/槽位路由本来就带优先级，不是残留）。
+	 * Zero legacy page-chain residue (P0-3 S1): no priority-carrying delivery route, no SELECT5/SELECT6
+	 * page push, and no started-state 1009/39/20002 hand-in route (the completion flow's
+	 * reward→complete class/slot routes legitimately carry priorities and are not residue).
+	 */
+	private static void assertNoLegacyPageChainResidue(QuestDefinition definition, int rewardNpc) {
+		assertTrue(definition.transitions().stream().noneMatch(transition ->
+			"started".equals(transition.sourceNode()) && "reward".equals(transition.targetNode())
+				&& transition.priority() != null),
+			"the started->reward delivery segment must be priority-free");
+		assertTrue(definition.transitions().stream().noneMatch(transition ->
+			transition.afterCommit().stream().anyMatch(action ->
+				action instanceof AfterCommitAction.ShowQuestDialog page
+					&& (page.dialogId() == QuestDialogPage.SELECT5.id()
+						|| page.dialogId() == QuestDialogPage.SELECT6.id()))),
+			"the retired SELECT5/SELECT6 pages must not be pushed");
+		assertTrue(definition.transitions().stream().noneMatch(transition ->
+			"started".equals(transition.sourceNode())
+				&& transition.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == rewardNpc
+				&& talk.dialogId() != null
+				&& (talk.dialogId() == QuestDialogAction.SELECT_QUEST_REWARD.id()
+					|| talk.dialogId() == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()
+					|| talk.dialogId() == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id())),
+			"the started-state 1009/39/20002 hand-in routes must not survive");
+	}
+
 	private static CompiledQuestDefinition load() {
-		String resource = "/aion/data/static_data/quest_definition/quests/23902.xml";
-		try (InputStream input = Objects.requireNonNull(
-			Quest23902ClientDialogAlignmentTest.class.getResourceAsStream(resource), resource)) {
-			return QuestDefinitionXmlCompiler.compile(input);
-		} catch (Exception e) {
-			throw new AssertionError("unable to load " + resource, e);
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(23902);
 	}
 }

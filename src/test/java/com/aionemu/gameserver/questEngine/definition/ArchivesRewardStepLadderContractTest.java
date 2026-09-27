@@ -7,7 +7,6 @@ import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +14,6 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -43,7 +41,7 @@ class ArchivesRewardStepLadderContractTest {
 	/** 客户端任务书末行的索引（= 领奖态 packed step）。 */
 	private static final int REWARD_ROW = 2;
 
-	/** 任务 / 接取 NPC / 行 1 NPC / 领奖 NPC / 塔感应区 / 知识书库区 / 影片 / 旧投影行。 */
+	/** 任务 / 接取 NPC / 行 1 NPC / 领奖 NPC / 塔感应区 / 知识书库区 / 影片 / 旧投影行（登记用，真端链统一为 var0=0 修复）。 */
 	private record Contract(int questId, int starterNpc, int handoffNpc, int rewardNpc,
 			String towerZone, String archivesZone, int movieId, int staleRow) {
 	}
@@ -79,31 +77,47 @@ class ArchivesRewardStepLadderContractTest {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			QuestDefinition definition = compiled.definition();
 
+			// 真端把三段行门写进节点投影（started/s1/s2 = {var0=0/1/2}，引擎按投影匹配源行），
+			// 条件下不再有显式 var0 断言；推进边照旧显式回写行号（packed step 与客户端末行一致）。
+			// The retail ladder writes the row guards into the node projections (started/s1/s2 =
+			// {var0=0/1/2}, the engine matches source rows through them) so the conditions carry no
+			// explicit var0 check; the advance edges still write the row back (the packed step stays
+			// equal to the client's last row).
 			QuestTransition towerArrival = transition(definition, "started", "s1",
 				new QuestEvent.EnterZone(contract.towerZone()));
-			assertEquals(List.of(new QuestCondition.QuestVariableIs("var0", 0)),
-				towerArrival.conditions(), () -> "quest " + contract.questId() + " tower arrival");
+			assertEquals(Map.of("var0", 0), nodeVariables(definition, "started"),
+				() -> "quest " + contract.questId() + " started projection");
+			assertEquals(List.of(), towerArrival.conditions(),
+				() -> "quest " + contract.questId() + " tower arrival");
 			assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), towerArrival.actions());
 			assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
 				towerArrival.afterCommit());
 
 			QuestTransition handoff = transition(definition, "s1", "s2",
 				new QuestEvent.TalkToNpc(contract.handoffNpc(), QuestDialogAction.SET_SUCCEED.id()));
-			assertEquals(List.of(new QuestCondition.QuestVariableIs("var0", 1)),
-				handoff.conditions(), () -> "quest " + contract.questId() + " sentry handover");
+			assertEquals(Map.of("var0", 1), nodeVariables(definition, "s1"),
+				() -> "quest " + contract.questId() + " s1 projection");
+			assertEquals(List.of(), handoff.conditions(),
+				() -> "quest " + contract.questId() + " sentry handover");
 			assertEquals(List.of(new QuestAction.SetVariable("var0", 2)), handoff.actions());
 			assertEquals(List.of(
 				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
-				new AfterCommitAction.CloseDialog()), handoff.afterCommit());
+				new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
+				handoff.afterCommit());
 
 			QuestTransition archivesArrival = transition(definition, "s2", "reward",
 				new QuestEvent.EnterZone(contract.archivesZone()));
-			assertEquals(List.of(new QuestCondition.QuestVariableIs("var0", 2)),
-				archivesArrival.conditions(), () -> "quest " + contract.questId() + " archives arrival");
-			assertEquals(List.of(), archivesArrival.actions(),
+			assertEquals(Map.of("var0", 2), nodeVariables(definition, "s2"),
+				() -> "quest " + contract.questId() + " s2 projection");
+			assertEquals(List.of(), archivesArrival.conditions(),
+				() -> "quest " + contract.questId() + " archives arrival");
+			// 真端显式回写 target 行（= reward 投影 var0=2）——packed step 仍是客户端末行 2。
+			// The retail edge writes the target row back (= the reward projection var0=2); the packed
+			// step still lands on the client's last row 2.
+			assertEquals(List.of(new QuestAction.SetVariable("var0", 2)), archivesArrival.actions(),
 				() -> "quest " + contract.questId() + " must keep the packed step at 2");
 			assertEquals(List.of(
-				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
 				new AfterCommitAction.PlayMovie(contract.movieId())), archivesArrival.afterCommit());
 
 			assertAdvance(compiled, QuestStatus.START, 0, towerArrival, QuestStatus.START, 1);
@@ -151,9 +165,15 @@ class ArchivesRewardStepLadderContractTest {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			QuestTransition recovery = recoveryRoute(compiled.definition());
+			// 真端链的通用修复边只覆盖规范未设值（var0=0）：本链的领奖投影两侧同为 2，遗留 XML 的每侧
+			// 过期行（16800=1 / 26800=3）随旧投影退役——旧世代存档不再逐侧修复（台账已登记）。
+			// The retail generic repair edge covers only the canonical unset (var0=0): the reward
+			// projection is 2 on both sides, and the legacy per-side stale rows (16800=1 / 26800=3)
+			// retired with the old projections (old-generation saves are no longer repaired per side;
+			// recorded in the ledger).
 			assertEquals(List.of(
 				new QuestCondition.StatusIs(QuestStatus.REWARD),
-				new QuestCondition.QuestVariableIs("var0", contract.staleRow())), recovery.conditions(),
+				new QuestCondition.QuestVariableIs("var0", 0)), recovery.conditions(),
 				() -> "quest " + contract.questId() + " recovery conditions");
 			assertEquals(List.of(new QuestAction.SetVariable("var0", REWARD_ROW)), recovery.actions(),
 				() -> "quest " + contract.questId() + " recovery actions");
@@ -163,7 +183,7 @@ class ArchivesRewardStepLadderContractTest {
 			assertNull(recovery.priority());
 
 			QuestMutationPlan plan = QuestMutationPlanner.plan(compiled,
-				snapshot(compiled, QuestStatus.REWARD, Map.of("var0", contract.staleRow())),
+				snapshot(compiled, QuestStatus.REWARD, Map.of("var0", 0)),
 				recovery.event(), recovery).orElseThrow();
 			assertEquals(QuestStatus.REWARD, plan.nextStatus());
 			assertEquals(REWARD_ROW, unpack(compiled, plan).get("var0"),
@@ -186,11 +206,21 @@ class ArchivesRewardStepLadderContractTest {
 	void rewardOwnerStaysOnTheAgentNamedByTheJournalRow() throws Exception {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
+			// 真端把领奖分支同时铺成 TalkToNpc（带 owner）与 QuestDialog（无 owner，npcId=-1 哨兵）两种
+			// 客户端路由；owner 断言只看带 NPC 的那些，并单独把无 owner 集合钉在 QuestDialog 形上。
+			// The retail chain fans the reward branches onto TalkToNpc routes (with an owner) and
+			// ownerless QuestDialog routes (npcId = -1); the owner assertion covers the npc-owned ones
+			// and separately pins the ownerless set to the QuestDialog shape.
 			List<QuestTransition> completions = definition.transitions().stream()
 				.filter(route -> "complete".equals(route.targetNode()))
 				.toList();
 			assertFalse(completions.isEmpty(), () -> "quest " + contract.questId() + " completion routes");
 			for (QuestTransition route : completions) {
+				if (route.event() instanceof QuestEvent.QuestDialog) {
+					assertEquals(-1, dialogNpc(route), () -> "quest " + contract.questId()
+						+ " dialog-page completion routes own no npc");
+					continue;
+				}
 				assertEquals(contract.rewardNpc(), dialogNpc(route),
 					() -> "quest " + contract.questId() + " completion owner");
 			}
@@ -324,11 +354,20 @@ class ArchivesRewardStepLadderContractTest {
 		return compiled.definition().progressLayout().unpack(plan.nextPackedVariables());
 	}
 
+	/** 节点投影（引擎按它匹配源行——显式 var0 条件在真端形里由投影承担）。 / Node projection. */
+	private static Map<String, Integer> nodeVariables(QuestDefinition definition, String label) {
+		return definition.nodes().stream()
+			.filter(node -> label.equals(node.label()))
+			.findFirst().orElseThrow()
+			.projection().variables();
+	}
+
 	private static CompiledQuestDefinition definition(int questId) throws IOException {
-		try (InputStream input = ArchivesRewardStepLadderContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			assertNotNull(input, () -> "missing quest definition " + questId + ".xml");
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		// 16800/26800 已由真端驱动退役（wave4 enterarea 区名解析）：退役任务的 XML 只在 git 历史里，
+		// 统一取生产视图（XML 目录 + 真端 overlay）——未退役任务与直接编译 XML 等价。
+		// The archives quests 16800/26800 are retail-driven now (wave4 enterarea zone resolution), so
+		// their XML lives only in git history; the production view (XML directory plus retail overlay)
+		// is the single source.
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

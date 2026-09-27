@@ -6,13 +6,12 @@ import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 锁定击杀完成后仍处于 START 中间节点的任务报告对话合同。
@@ -21,35 +20,88 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class Quest11110And1548PostKillReportDialogTest {
 	@Test
 	void quest11110KeepsTheReportEntryAndRewardRoutesAfterTheFinalKill() throws Exception {
+		/* P0c-8c（2026-09-24）：11110 已由真端 SimpleHunt 表驱动（10 段击杀网格，count1=10），旧 XML 的
+		   k1（var0=1, var1=9）是同一语义的另一种表示；形状定位改用"START 饱和段"，不再写死标签。
+		   Since P0c-8c the quest is retail-driven: the legacy k1 labelling is replaced by the grid's
+		   saturated START step, located semantically rather than by label. */
 		CompiledQuestDefinition compiled = load(11110);
 		QuestDefinition definition = compiled.definition();
-		assertNode(definition, "k1", QuestStatus.START, Map.of("var0", 1));
+		List<QuestNode> steps = startNodesByPack(definition);
+		QuestNode postKill = steps.getLast();
+		QuestNode beforeFinalKill = steps.get(steps.size() - 2);
+		assertEquals(new NodeProjection(QuestStatus.START, Map.of("var0", 10)), postKill.projection());
 
 		for (int npcId : List.of(217039, 217040)) {
-			QuestTransition finalKill = transition(definition, "started", "k1",
-				new QuestEvent.KillNpc(npcId), 0);
-			assertEquals(List.of(new QuestCondition.VariableAtLeast("var1", 9)), finalKill.conditions());
-			assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), finalKill.actions());
+			QuestTransition finalKill = transition(definition, beforeFinalKill.label(), postKill.label(),
+				new QuestEvent.KillNpc(npcId));
+			assertEquals(List.of(), finalKill.conditions());
+			assertEquals(List.of(), finalKill.actions());
 			assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
 				finalKill.afterCommit());
 		}
 
-		assertPostKillReportContract(compiled, definition, "k1", 799075, Map.of("var0", 1, "var1", 9));
+		/* P0-2 规范形：11110 满段 QUEST_SELECT 直翻 REWARD（报告页与 1009 中转删除）。
+		   Canonical since P0-2: the full node's QUEST_SELECT flips REWARD directly. */
+		assertPostKillReportContract(compiled, definition, postKill.label(), 799075, Map.of("var0", 10), true);
 	}
 
 	@Test
 	void quest1548KeepsTheReportEntryAndRewardRoutesAfterTheFinalKillChainStep() throws Exception {
 		CompiledQuestDefinition compiled = load(1548);
 		QuestDefinition definition = compiled.definition();
-		assertNode(definition, "k5", QuestStatus.START, Map.of("var0", 5));
+		List<QuestNode> steps = startNodesByPack(definition);
+		QuestNode postKill = steps.getLast();
+		assertEquals(new NodeProjection(QuestStatus.START, Map.of("var0", 5)), postKill.projection());
+		QuestNode beforeFinalKill = steps.get(steps.size() - 2);
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
-			transition(definition, "k4", "k5", new QuestEvent.KillNpc(700209)).afterCommit());
+			transition(definition, beforeFinalKill.label(), postKill.label(),
+				new QuestEvent.KillNpc(700209)).afterCommit());
 
-		assertPostKillReportContract(compiled, definition, "k5", 204583, Map.of("var0", 5));
+		assertPostKillReportContract(compiled, definition, postKill.label(), 204583, Map.of("var0", 5), false);
 	}
 
+	/** START 节点按打包值升序：末位即"饱和段"（真端网格与旧 XML 阶梯通用）。 */
+	private static List<QuestNode> startNodesByPack(QuestDefinition definition) {
+		return definition.nodes().stream()
+			.filter(node -> node.projection().status() == QuestStatus.START)
+			.sorted(Comparator.comparingInt(node ->
+				definition.progressLayout().pack(node.projection().variables())))
+			.toList();
+	}
+
+	/**
+	 * 击杀饱和后的报告合同。canonical=true（P0-2 规范形：QUEST_SELECT 直翻 REWARD，1009 删除）；
+	 * canonical=false（1548 仍为 XML 保留行）：QUEST_SELECT 只开报告页、1009 中转进领奖。
+	 * The post-kill report contract. canonical=true (P0-2: QUEST_SELECT flips REWARD, no 1009);
+	 * canonical=false (1548 is XML-retained): QUEST_SELECT opens the report page and the 1009 hop
+	 * enters the reward state.
+	 */
 	private static void assertPostKillReportContract(CompiledQuestDefinition compiled,
-		QuestDefinition definition, String source, int npcId, Map<String, Integer> variables) {
+		QuestDefinition definition, String source, int npcId, Map<String, Integer> variables,
+		boolean canonical) {
+		if (canonical) {
+			QuestTransition deliver = transition(definition, source, "reward",
+				new QuestEvent.TalkToNpc(npcId, QuestDialogAction.QUEST_SELECT.id()));
+			assertEquals(List.of(), deliver.conditions());
+			assertEquals(List.of(), deliver.actions());
+			assertEquals(List.of(
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+				new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
+				deliver.afterCommit());
+			assertTrue(definition.transitions().stream().noneMatch(candidate ->
+					source.equals(candidate.sourceNode())
+					&& candidate.event().equals(new QuestEvent.TalkToNpc(npcId, QuestDialogAction.SELECT_QUEST_REWARD.id()))),
+				"canonical removed the full-node 1009 hand-in / 规范形删除满段 1009 上交");
+
+			int packed = definition.progressLayout().pack(variables);
+			QuestSnapshot snapshot = new QuestSnapshot(7, compiled.id(), QuestStatus.START, packed, Map.of());
+			QuestMutationPlan deliverPlan = QuestMutationPlanner.plan(compiled, snapshot,
+				new QuestEvent.TalkToNpc(npcId, QuestDialogAction.QUEST_SELECT.id()), deliver).orElseThrow();
+			assertEquals(QuestStatus.REWARD, deliverPlan.nextStatus());
+			assertEquals(variables, definition.progressLayout().unpack(deliverPlan.nextPackedVariables()));
+			return;
+		}
+
 		QuestTransition reportPage = transition(definition, source, source,
 			new QuestEvent.TalkToNpc(npcId, QuestDialogAction.QUEST_SELECT.id()));
 		assertEquals(List.of(), reportPage.conditions());
@@ -102,9 +154,8 @@ class Quest11110And1548PostKillReportDialogTest {
 	}
 
 	private static CompiledQuestDefinition load(int questId) throws Exception {
-		Path path = Path.of("src/main/resources/aion/data/static_data/quest_definition/quests/" + questId + ".xml");
-		try (InputStream input = Files.newInputStream(path)) {
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// Retired quests live in git history only: use the production view (XML dir + retail overlay).
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

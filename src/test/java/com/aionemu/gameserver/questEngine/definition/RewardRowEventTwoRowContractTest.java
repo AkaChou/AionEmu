@@ -6,8 +6,6 @@ import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -62,6 +60,15 @@ class RewardRowEventTwoRowContractTest {
 	/* 德雷得奇安事件链头本：击杀事务必须保留 legacy 的 var0=1（SECTION_0 = 报告行）。 */
 	/* Dredgion chain heads: the kill transaction must keep the legacy var0=1 (SECTION_0 = report row). */
 	private static final List<Integer> DREDGION_CHAIN_HEADS = List.of(80601, 80606);
+	/**
+	 * P0c-8c（2026-09-24）起已由真端 SimpleHunt 表驱动的合同行：击杀只把 START 段推进到饱和段
+	 * （`a0 --击杀--> a1`，无动作），报告路由 `a1 --1009--> reward` 才进领奖态；旧的"击杀事务写行号
+	 * var0=1"与"REWARD/var0=0 自愈边"都不再由服务端表达（任务书行号改由客户端 SECTION 门控推导），
+	 * 旧存档按 `p0c6-legacy-save-normalization.tsv` 做一次性 DB 归一化。
+	 * Retail-driven since P0c-8c: kills step the grid, the report route enters REWARD, and the journal row is
+	 * no longer server-side state; pre-existing saves are covered by the registered one-shot normalization.
+	 */
+	private static final Set<Integer> RETAIL_DRIVEN_CONTRACTS = Set.of(80601, 80606);
 
 	@Test
 	void rewardRowIsTheSecondClientRow() throws Exception {
@@ -72,7 +79,7 @@ class RewardRowEventTwoRowContractTest {
 				() -> "quest " + contract.questId() + " reward node status");
 			assertEquals(Map.of("var0", REWARD_ROW), reward.projection().variables(),
 				() -> "quest " + contract.questId() + " reward journal row");
-			assertEquals(Map.of("var0", STALE_ROW), node(definition, "started").projection().variables(),
+			assertEquals(Map.of("var0", STALE_ROW), preKillStart(definition).projection().variables(),
 				() -> "quest " + contract.questId() + " start state keeps journal row 0");
 		}
 	}
@@ -95,6 +102,24 @@ class RewardRowEventTwoRowContractTest {
 					new QuestCondition.StatusIs(QuestStatus.REWARD),
 					new QuestCondition.QuestVariableIs("var0", STALE_ROW))))
 				.toList();
+			if (RETAIL_DRIVEN_CONTRACTS.contains(contract.questId())) {
+				// 真端网格下不保留行号自愈边：所有进 REWARD 的路由都落在 reward 节点（投影 var0=1），
+				// 新存档不可能停在 REWARD/0；领奖行由客户端 SECTION 门控推导，旧存档走一次性 DB 归一化。
+				assertTrue(matches.isEmpty(), () -> "quest " + contract.questId()
+					+ " retail grid must not keep the legacy journal-row heal edge");
+				for (QuestTransition route : compiled.definition().transitions()) {
+					if (!"reward".equals(route.targetNode())) {
+						continue;
+					}
+					assertEquals(QuestStatus.REWARD,
+						node(compiled.definition(), route.targetNode()).projection().status(),
+						() -> "quest " + contract.questId() + " reward node status");
+					assertEquals(Map.of("var0", REWARD_ROW),
+						node(compiled.definition(), route.targetNode()).projection().variables(),
+						() -> "quest " + contract.questId() + " REWARD state is the reward journal row");
+				}
+				continue;
+			}
 			assertEquals(1, matches.size(),
 				() -> "quest " + contract.questId() + " heal route for stale row " + STALE_ROW);
 			QuestTransition heal = matches.getFirst();
@@ -143,26 +168,59 @@ class RewardRowEventTwoRowContractTest {
 		}
 	}
 
+	/**
+	 * 德雷得奇安链头本的击杀事务：XML 行保留 legacy 的 `started --击杀--> reward [var0==0] [var0:=1]`；
+	 * 真端驱动的行（P0c-8c）改为"击杀推进网格段、报告路由进领奖态"，两种形状都必须把玩家送进
+	 * `reward` 节点（投影 var0=1）。
+	 * Kill transaction of the Dredgion chain heads: XML rows keep the legacy set-var step, retail-driven rows
+	 * step the grid, and both must land in the `reward` node projecting the reward row.
+	 */
 	@Test
-	void dredgionChainHeadsKeepTheLegacyKillStep() throws Exception {
+	void dredgionChainHeadsAdvanceFromTheFirstKillToTheRewardRow() throws Exception {
 		for (int questId : DREDGION_CHAIN_HEADS) {
-			List<QuestTransition> killRoutes = definition(questId).definition().transitions().stream()
-				.filter(route -> "started".equals(route.sourceNode()))
-				.filter(route -> "reward".equals(route.targetNode()))
+			QuestDefinition quest = definition(questId).definition();
+			String preKill = preKillStart(quest).label();
+			List<QuestTransition> killRoutes = quest.transitions().stream()
+				.filter(route -> preKill.equals(route.sourceNode()))
 				.filter(route -> route.event() instanceof QuestEvent.KillNpc)
 				.toList();
-			assertEquals(1, killRoutes.size(), () -> "quest " + questId + " kill route into REWARD");
-			List<QuestAction.SetVariable> stepWrites = killRoutes.getFirst().actions().stream()
+			assertFalse(killRoutes.isEmpty(), () -> "quest " + questId + " kill routes from " + preKill);
+			if (RETAIL_DRIVEN_CONTRACTS.contains(questId)) {
+				// 真端网格：击杀无条件下发，只推进段（a0→a1），不进领奖态也不写行号。
+				for (QuestTransition killRoute : killRoutes) {
+					assertEquals(List.of(), killRoute.conditions(),
+						() -> "quest " + questId + " grid kill conditions");
+					assertEquals(List.of(), killRoute.actions(),
+						() -> "quest " + questId + " grid kill actions");
+				}
+				String saturated = killRoutes.getFirst().targetNode();
+				QuestTransition report = quest.transitions().stream()
+					.filter(route -> saturated.equals(route.sourceNode()))
+					.filter(route -> "reward".equals(route.targetNode()))
+					.findFirst().orElseThrow();
+				assertTrue(report.afterCommit().contains(new AfterCommitAction.SyncQuestState(
+						QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
+					() -> "quest " + questId + " report route refresh: " + report.afterCommit());
+				continue;
+			}
+			List<QuestTransition> intoReward = killRoutes.stream()
+				.filter(route -> "reward".equals(route.targetNode()))
+				.toList();
+			assertEquals(1, intoReward.size(), () -> "quest " + questId + " kill route into REWARD");
+			assertLegacyKillStep(questId, intoReward.getFirst());
+		}
+	}
+
+	private static void assertLegacyKillStep(int questId, QuestTransition killRoute) {
+		List<QuestAction.SetVariable> stepWrites = killRoute.actions().stream()
 				.filter(QuestAction.SetVariable.class::isInstance)
 				.map(QuestAction.SetVariable.class::cast)
 				.filter(action -> "var0".equals(action.field()))
 				.toList();
 			assertEquals(List.of(new QuestAction.SetVariable("var0", REWARD_ROW)), stepWrites,
 				() -> "quest " + questId + " must keep the legacy setQuestVarById(0, 1) step");
-			assertTrue(killRoutes.getFirst().conditions().contains(
-					new QuestCondition.QuestVariableIs("var0", STALE_ROW)),
-				() -> "quest " + questId + " kill route must be gated on the pre-reward row");
-		}
+		assertTrue(killRoute.conditions().contains(new QuestCondition.QuestVariableIs("var0", STALE_ROW)),
+			() -> "quest " + questId + " kill route must be gated on the pre-reward row");
 	}
 
 	private static QuestNode node(QuestDefinition definition, String label) {
@@ -202,11 +260,23 @@ class RewardRowEventTwoRowContractTest {
 			true, true, 0, 0, 100000000, 1, 0f, 0f, 0f, (byte) 0);
 	}
 
-	private static CompiledQuestDefinition definition(int questId) throws IOException {
-		try (InputStream input = RewardRowEventTwoRowContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			assertNotNull(input, () -> "missing quest definition " + questId + ".xml");
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	private static CompiledQuestDefinition definition(int questId) throws Exception {
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// Retired quests live in git history only: use the production view (XML dir + retail overlay).
+		return ProductionQuestDefinitions.definition(questId);
+	}
+
+	/**
+	 * 击杀前的 START 节点：80257..80260/80255/80256 仍是 XML（标签 `started`），
+	 * 80601/80606 已由真端网格驱动（标签 `a0`）；按打包值最小的 START 节点定位两者通用。
+	 * The pre-kill START node: XML rows use `started`, retail-driven rows use the grid's `a0`, so locate
+	 * the START node with the smallest packed value instead of hard-coding a label.
+	 */
+	private static QuestNode preKillStart(QuestDefinition definition) {
+		return definition.nodes().stream()
+			.filter(candidate -> candidate.projection().status() == QuestStatus.START)
+			.min(java.util.Comparator.comparingInt(candidate ->
+				definition.progressLayout().pack(candidate.projection().variables())))
+			.orElseThrow(() -> new AssertionError("missing pre-kill START node"));
 	}
 }

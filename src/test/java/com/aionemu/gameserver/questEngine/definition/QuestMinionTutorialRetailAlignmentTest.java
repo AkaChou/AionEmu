@@ -5,7 +5,6 @@ import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -120,15 +119,10 @@ class QuestMinionTutorialRetailAlignmentTest {
 		assertTrue(start.actions().contains(new QuestAction.GiveItem(workItemId, 1)));
 	}
 
+	// 退役任务统一走生产视图（真端 overlay 合成；旧 XML 只在 git 历史里）。
+	// Retired quests resolve through the production view (retail overlay; the old XML lives in
+	// git history only).
 	private static CompiledQuestDefinition load(int questId) {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-		try (InputStream input = QuestMinionTutorialRetailAlignmentTest.class.getResourceAsStream(resource)) {
-			if (input == null) {
-				throw new AssertionError("missing resource " + resource);
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		} catch (Exception e) {
-			throw new AssertionError("failed to load " + resource, e);
-		}
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

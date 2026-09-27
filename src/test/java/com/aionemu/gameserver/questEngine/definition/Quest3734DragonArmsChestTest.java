@@ -3,7 +3,6 @@ package com.aionemu.gameserver.questEngine.definition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -41,17 +40,11 @@ class Quest3734DragonArmsChestTest {
 			.findFirst().orElseThrow();
 	}
 
+	/**
+	 * 生产零售视图：3734 已退役 XML，定义由真端 SimpleCollectItem 表合成（M5-b3 裁定）。
+	 * Production retail view: 3734 has no XML anymore and resolves through the retail table.
+	 */
 	private static CompiledQuestDefinition load(int questId) {
-		String resource = "/aion/data/static_data/quest_definition/quests/"
-			+ questId + ".xml";
-		try (InputStream input = Quest3734DragonArmsChestTest.class
-			.getResourceAsStream(resource)) {
-			if (input == null) {
-				throw new AssertionError("missing resource " + resource);
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		} catch (Exception exception) {
-			throw new AssertionError("failed to load " + resource, exception);
-		}
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

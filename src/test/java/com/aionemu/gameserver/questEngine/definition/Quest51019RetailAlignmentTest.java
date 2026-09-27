@@ -2,9 +2,6 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
@@ -42,9 +39,11 @@ class Quest51019RetailAlignmentTest {
 		assertTrue(hasStartRoute(definition, 1002));
 		assertTrue(hasStartRoute(definition, 20000));
 		assertTrue(hasStartRoute(definition, 10000));
+		// QE-051 三行阶梯（批次 35）：客户端任务书三行，交付行是 started -> s1，装饰行推进到领奖行 reward。
+		// QE-051 three-row ladder: the hand-in lands on started -> s1, then the tower row opens the reward row.
 		assertTrue(definition.transitions().stream().anyMatch(transition ->
 			"started".equals(transition.sourceNode())
-				&& "reward".equals(transition.targetNode())
+				&& "s1".equals(transition.targetNode())
 				&& transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == 202549
 				&& Integer.valueOf(39).equals(talk.dialogId())
@@ -70,9 +69,7 @@ class Quest51019RetailAlignmentTest {
 	}
 
 	private static QuestDefinition load() throws Exception {
-		try (InputStream input = Files.newInputStream(
-			Path.of("src/main/resources/aion/data/static_data/quest_definition/quests/51019.xml"))) {
-			return QuestDefinitionXmlCompiler.compile(input).definition();
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(51019).definition();
 	}
 }

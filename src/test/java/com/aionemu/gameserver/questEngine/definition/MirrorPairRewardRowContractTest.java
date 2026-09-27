@@ -6,7 +6,6 @@ import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +13,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 锁定第二批领奖行修复：天/魔镜像“两侧都缺最后一行”的 118 个任务（59 对）；
@@ -29,6 +29,15 @@ class MirrorPairRewardRowContractTest {
 
 	private record Contract(int questId, int rewardRow, int staleRow) {
 	}
+
+	/**
+	 * P0c-6 起由真端 SimpleHunt 表驱动的镜像对（16960/26960）：var0 变成击杀计数（真端 count1=1），
+	 * 任务书行由客户端 {@code SECTION_0} 门控推导，因此没有"存档行号"可漂移，也不得保留修复边
+	 * （P3 既有裁定：修复边是 AionEmu 历史包袱）。
+	 * Retail-driven mirror pair since P0c-6: var0 is a kill counter and the journal row is derived from
+	 * the client SECTION gate, so no stored row can go stale and no repair edge may remain.
+	 */
+	private static final List<Integer> RETAIL_DRIVEN = List.of(16960, 26960);
 
 	private static final List<Contract> CONTRACTS = List.of(
 		new Contract(10110, 6, 5),
@@ -69,7 +78,6 @@ class MirrorPairRewardRowContractTest {
 		new Contract(15689, 1, 0),
 		new Contract(15690, 1, 0),
 		new Contract(15691, 1, 0),
-		new Contract(16960, 2, 1),
 		new Contract(16990, 1, 0),
 		new Contract(17540, 5, 4),
 		new Contract(18210, 1, 0),
@@ -129,7 +137,6 @@ class MirrorPairRewardRowContractTest {
 		new Contract(25689, 1, 0),
 		new Contract(25690, 1, 0),
 		new Contract(25691, 1, 0),
-		new Contract(26960, 2, 1),
 		new Contract(26990, 1, 0),
 		new Contract(27540, 5, 4),
 		new Contract(28210, 1, 0),
@@ -237,6 +244,22 @@ class MirrorPairRewardRowContractTest {
 		return matches.getFirst();
 	}
 
+	/** 真端驱动的镜像对：不得保留修复边，领奖投影是饱和计数。 / Retail-driven pair: no repair edge. */
+	@Test
+	void retailDrivenMirrorPairsCarryNoRewardRepairEdge() throws Exception {
+		for (int questId : RETAIL_DRIVEN) {
+			QuestDefinition definition = definition(questId).definition();
+			assertTrue(definition.transitions().stream().noneMatch(route ->
+					route.sourceNode() == null && route.event() instanceof QuestEvent.EnterWorld),
+				() -> "quest " + questId + " is retail-driven and must not keep a source-less enter-world edge");
+			QuestNode reward = definition.nodes().stream()
+				.filter(node -> node.projection().status() == QuestStatus.REWARD)
+				.findFirst().orElseThrow(() -> new AssertionError("quest " + questId + " has no reward node"));
+			assertTrue(reward.projection().variables().values().stream().anyMatch(value -> value > 0),
+				() -> "quest " + questId + " reward must project the saturated kill counters");
+		}
+	}
+
 	private static Map<String, Integer> unpack(CompiledQuestDefinition definition, QuestMutationPlan plan) {
 		return definition.definition().progressLayout().unpack(plan.nextPackedVariables());
 	}
@@ -252,12 +275,8 @@ class MirrorPairRewardRowContractTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		try (InputStream input = MirrorPairRewardRowContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition " + questId + ".xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// Retired quests live in git history only: use the production view (XML dir + retail overlay).
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

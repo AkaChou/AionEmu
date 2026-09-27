@@ -6,16 +6,14 @@ import com.aionemu.gameserver.questEngine.runtime.QuestMutationPlanner;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -153,14 +151,24 @@ class Batch31GelkmarosRowLadderContractTest {
 	void rewardWindowButtonsKeepTheirClientRoutes() throws Exception {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
-			QuestTransition showPage = routes(definition, "reward", "reward").stream()
+			// S3c-D（quest-native-dispatch）：交付 NPC 侧下发报告页的记录按 R-REP **页下发判据**退场（有
+			// reward 入边翻面记录且无报告块的行，判例 21217）；退场后同一张奖励面由领奖态奖励窗载体承担
+			// （下面的 claim 路由断言）。未退场行（无翻面记录的 legacy 行）保持原页下发。
+			// R-REP retires the reward-side report page on flip rows; the reward-window carrier takes over.
+			Optional<QuestTransition> showPage = routes(definition, "reward", "reward").stream()
 				.filter(route -> route.event().equals(new QuestEvent.TalkToNpc(
 					contract.rewardNpc(), QuestDialogAction.QUEST_SELECT.id(), 0)))
-				.findFirst().orElseThrow(() -> new AssertionError(
-					"quest " + contract.questId() + " has no reward-page route"));
-			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
-				REWARD_PAGE.get(contract.questId()).id())), showPage.afterCommit(),
-				() -> "quest " + contract.questId() + " opens the client reward page");
+				.findFirst();
+			if (showPage.isPresent()) {
+				assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
+					REWARD_PAGE.get(contract.questId()).id())), showPage.get().afterCommit(),
+					() -> "quest " + contract.questId() + " opens the client reward page");
+			} else {
+				int retiredPage = REWARD_PAGE.get(contract.questId()).id();
+				assertTrue(definition.transitions().stream().noneMatch(transition ->
+						transition.afterCommit().contains(new AfterCommitAction.ShowQuestDialog(retiredPage))),
+					() -> "quest " + contract.questId() + " keeps pushing the retired report page");
+			}
 
 			QuestTransition claim = routes(definition, "reward", "reward").stream()
 				.filter(route -> route.event().equals(new QuestEvent.TalkToNpc(
@@ -274,11 +282,7 @@ class Batch31GelkmarosRowLadderContractTest {
 			true, true, 0, 0, 100000000, 1, 0f, 0f, 0f, (byte) 0);
 	}
 
-	private static CompiledQuestDefinition definition(int questId) throws IOException {
-		try (InputStream input = Batch31GelkmarosRowLadderContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			assertNotNull(input, () -> "missing quest definition " + questId + ".xml");
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	private static CompiledQuestDefinition definition(int questId) {
+		return ProductionQuestDefinitions.definitionInOverlay(questId);
 	}
 }

@@ -7,7 +7,6 @@ import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -16,7 +15,6 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -101,10 +99,9 @@ class DurableDaevanionWeaponRewardRowContractTest {
 			int questId = entry.getKey();
 			assertEquals(Set.of(entry.getValue()), rewardOwners(definition(questId).definition()),
 				() -> "quest " + questId + " reward completion owner must be the family NPC only");
-			String text = resourceText(questId);
-			assertEquals(1, countNpcComplete(text),
-				() -> "quest " + questId + " must register exactly one npc-complete block");
-			assertTrue(text.contains("<npc-complete npc-id=\"" + entry.getValue() + "\""),
+			// 生产 XML 已退役：完成 owner 从 reward→complete 路由反推（真端合成定义）。
+			// The production XML is retired; the owner is derived from the completion routes.
+			assertEquals(Set.of(entry.getValue()), completionOwners(definition(questId).definition()),
 				() -> "quest " + questId + " npc-complete owner");
 		}
 	}
@@ -214,14 +211,16 @@ class DurableDaevanionWeaponRewardRowContractTest {
 			.toList();
 	}
 
-	private static int countNpcComplete(String text) {
-		int count = 0;
-		int index = text.indexOf("<npc-complete ");
-		while (index >= 0) {
-			count++;
-			index = text.indexOf("<npc-complete ", index + 1);
+	/** reward→complete 路由的 NPC 集合（完成 owner）。 / NPCs of the completion routes. */
+	private static Set<Integer> completionOwners(QuestDefinition definition) {
+		Set<Integer> owners = new LinkedHashSet<>();
+		for (QuestTransition transition : definition.transitions()) {
+			if ("complete".equals(transition.targetNode())
+				&& transition.event() instanceof QuestEvent.TalkToNpc talk) {
+				owners.add(talk.npcId());
+			}
 		}
-		return count;
+		return owners;
 	}
 
 	private static Map<String, Integer> unpack(CompiledQuestDefinition definition, QuestMutationPlan plan) {
@@ -237,19 +236,8 @@ class DurableDaevanionWeaponRewardRowContractTest {
 			true, true, 0, 0, 100000000, 1, 0f, 0f, 0f, (byte) 0);
 	}
 
-	private static String resourceText(int questId) throws IOException {
-		try (InputStream input = DurableDaevanionWeaponRewardRowContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			assertNotNull(input, () -> "missing quest definition " + questId + ".xml");
-			return new String(input.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
-		}
-	}
-
 	private static CompiledQuestDefinition definition(int questId) throws IOException {
-		try (InputStream input = DurableDaevanionWeaponRewardRowContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			assertNotNull(input, () -> "missing quest definition " + questId + ".xml");
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

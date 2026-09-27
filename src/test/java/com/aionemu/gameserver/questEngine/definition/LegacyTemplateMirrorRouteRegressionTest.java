@@ -2,9 +2,6 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,11 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Regression coverage for routes filled from the complete origin/history template index. */
 class LegacyTemplateMirrorRouteRegressionTest {
-	private static final Path QUEST_DIRECTORY = Path.of(
-		"src/main/resources/aion/data/static_data/quest_definition/quests");
-
-	private record ItemMirror(int questId, int npcId, int actionId, int failurePageId) {
-	}
 
 	private record DialogRoute(int questId, String source, int npcId, int actionId, String targetNode,
 			List<AfterCommitAction> afterCommit) {
@@ -24,49 +16,95 @@ class LegacyTemplateMirrorRouteRegressionTest {
 
 	@Test
 	void itemCollectingMirrorsUseTheClientOwnedReportAndTurnInProtocol() throws Exception {
-		for (ItemMirror mirror : List.of(
-			new ItemMirror(2237, 700145, 20002, 0),
-			new ItemMirror(2527, 700328, 39, 2716),
-			new ItemMirror(3096, 700423, 39, 2716),
-			new ItemMirror(3096, 700424, 39, 2716),
-			new ItemMirror(3096, 700425, 39, 2716),
-			new ItemMirror(3096, 700426, 39, 2716),
-			new ItemMirror(11003, 798933, 39, 2716),
-			new ItemMirror(80356, 831815, 20002, 2716),
-			new ItemMirror(80365, 831827, 20002, 2716))) {
-			QuestDefinition definition = compile(mirror.questId());
-			assertPage(definition, "started", mirror.npcId(), 2375);
+		// 2237 仍是 XML_RETENTION 成员（真端 SimpleCollectItem 行的交付 NPC 三方不一致：
+		// retail-xml-retention.tsv:702 SEMANTIC_GAP:REPORT_NPC_DIVERGENCE），不进真端编译集合
+		// （RetailQuestDriver.java:413-440：只有 RETAIL_TABLE 行进 retailOwned*，XML_RETENTION 只记
+		// reasons），因此定义由 XML 驱动、不在 S1 面内——报告页 SELECT5(2375) 与 20002
+		// (CHECK_USER_HAS_QUEST_ITEM_SIMPLE) 双 prio 检查对逐字保留
+		// （quest_definition/quests/2237.xml:143-165：prio0 成功→reward + 窗 1，prio1 失败→CloseDialog）。
+		// 该行的真端校验动作是 20002（SIMPLE 变体）：真端 collect 行与 quest.xml 均无 39 检查轴。
+		// 2237 stays XML-retained and outside the S1 face (only RETAIL_TABLE rows enter the retail
+		// driver), so its SELECT5(2375) report page and the 20002 (CHECK_USER_HAS_QUEST_ITEM_SIMPLE)
+		// dual-priority check pair are preserved verbatim; the retail row carries no 39 check axis.
+		int legacyNpc = 700145;
+		QuestDefinition legacy = compile(2237);
+		assertPage(legacy, "started", legacyNpc, 2375);
 
-			List<QuestTransition> checks = talkRoutes(
-				definition, "started", mirror.npcId(), mirror.actionId());
-			assertEquals(2, checks.size(), "quest " + mirror.questId() + " item checks");
-			QuestTransition success = checks.stream()
-				.filter(transition -> Integer.valueOf(0).equals(transition.priority()))
-				.findFirst().orElseThrow();
-			QuestTransition failure = checks.stream()
-				.filter(transition -> Integer.valueOf(1).equals(transition.priority()))
-				.findFirst().orElseThrow();
-			List<QuestCondition> expectedConditions = definition.metadata().itemRequirements().stream()
+		List<QuestTransition> legacyChecks = talkRoutes(legacy, "started", legacyNpc, 20002);
+		assertEquals(2, legacyChecks.size(), "quest 2237 item checks");
+		QuestTransition legacySuccess = legacyChecks.stream()
+			.filter(transition -> Integer.valueOf(0).equals(transition.priority()))
+			.findFirst().orElseThrow();
+		QuestTransition legacyFailure = legacyChecks.stream()
+			.filter(transition -> Integer.valueOf(1).equals(transition.priority()))
+			.findFirst().orElseThrow();
+		List<QuestCondition> legacyConditions = legacy.metadata().itemRequirements().stream()
+			.map(item -> (QuestCondition) new QuestCondition.HasItem(item.itemId(), item.count(), true))
+			.toList();
+		List<QuestAction> legacyRemovals = legacy.metadata().itemRequirements().stream()
+			.map(item -> (QuestAction) new QuestAction.RemoveItem(item.itemId(), item.count()))
+			.toList();
+
+		assertEquals("reward", legacySuccess.targetNode(), "quest 2237 success target");
+		assertEquals(legacyConditions, legacySuccess.conditions(), "quest 2237 conditions");
+		assertEquals(legacyRemovals, legacySuccess.actions(), "quest 2237 removals");
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(5)), legacySuccess.afterCommit(),
+			"quest 2237 success response");
+		assertEquals("started", legacyFailure.targetNode(), "quest 2237 failure target");
+		assertTrue(legacyFailure.conditions().isEmpty(), "quest 2237 failure conditions");
+		assertTrue(legacyFailure.actions().isEmpty(), "quest 2237 failure actions");
+		assertEquals(List.of(new AfterCommitAction.CloseDialog()), legacyFailure.afterCommit(),
+			"quest 2237 failure response");
+
+		// P0-2 规范形（SimpleCollectItem 族）：2527/3096 是 RETAIL_TABLE 成员，随页链退役改走
+		// QUEST_SELECT(31；QE-017 页 id 与按钮动作共号) 交付——客户端模板索引把交付挂在报告
+		// NPC 204811 / 798225（Pyrrha，start/end 同体）上，采集对象 700328/700423..426 本就
+		// 不在客户端契约内。整组 HasItem 门控直翻 REWARD，领奖窗按分档查表（单档=5）；
+		// 39/20002 检查对与报告页 2375 一并删除。
+		// P0-2 canonical (the SimpleCollectItem family): 2527/3096 are RETAIL_TABLE members;
+		// with the page chain retired they deliver on QUEST_SELECT (31; QE-017 page/action shared
+		// numbering) — the client template index owns the turn-in on the report NPCs 204811 /
+		// 798225 (Pyrrha); the collect objects 700328/700423..426 were never in the client
+		// contract. The whole HasItem hand-in set flips REWARD with the tiered reward window
+		// (single tier = 5); the 39/20002 check pairs and report page 2375 are gone.
+		// P0-3 S1：SimpleTalk 接取/交付切真端规范形（页 4 / 分档窗）——11003/80356/80365 是真端单步
+		// item_check 行（Quest_SimpleTalk.xml：item_check=1 且 quest.xml 已声明 collect_item），交付
+		// 与采集族同构（canonicalDelivery 单一真源），随 S1 页链退役一并改锚。P0c-19 裁定（真端对、
+		// XML 错）：客户端模板索引 start/end 列声明接取/交付分离——11003 接取 798933(Phailos)、交付
+		// 798942(Strabon)；80356 接取 831815、交付 831819；80365 接取 831827、交付 831819（真端表
+		// acquired/reward 同对）；遗留 XML 的对称双 NPC 全形状是手工漂移，已退役（git 历史可回溯）。
+		// P0-3 S1: the SimpleTalk item_check rows 11003/80356/80365 deliver through the same
+		// canonicalDelivery shape as the collect family. P0c-19 adjudication (retail-right,
+		// XML-wrong): the client template index declares the asymmetric acquire/hand-in split and the
+		// retail table agrees; the legacy symmetric dual-NPC shape was drift and is retired.
+		for (int[] mirror : new int[][] {
+			{2527, 204811}, {3096, 798225}, {11003, 798942}, {80356, 831819}, {80365, 831819}}) {
+			QuestDefinition definition = compile(mirror[0]);
+			List<QuestTransition> delivery = talkRoutes(definition, "started", mirror[1],
+				QuestDialogAction.QUEST_SELECT.id());
+			assertEquals(1, delivery.size(), "quest " + mirror[0] + " canonical delivery route count");
+			QuestTransition deliver = delivery.getFirst();
+			assertEquals("reward", deliver.targetNode(), "quest " + mirror[0] + " delivery target");
+			assertEquals(definition.metadata().itemRequirements().stream()
 				.map(item -> (QuestCondition) new QuestCondition.HasItem(item.itemId(), item.count(), true))
-				.toList();
-			List<QuestAction> expectedActions = definition.metadata().itemRequirements().stream()
+				.toList(), deliver.conditions(), "quest " + mirror[0] + " delivery conditions");
+			assertEquals(definition.metadata().itemRequirements().stream()
 				.map(item -> (QuestAction) new QuestAction.RemoveItem(item.itemId(), item.count()))
-				.toList();
-
-			assertEquals("reward", success.targetNode(), "quest " + mirror.questId() + " success target");
-			assertEquals(expectedConditions, success.conditions(), "quest " + mirror.questId() + " conditions");
-			assertEquals(expectedActions, success.actions(), "quest " + mirror.questId() + " removals");
+				.toList(), deliver.actions(), "quest " + mirror[0] + " delivery removals");
+			int rewardWindow = QuestDialogPage
+				.rewardWindowForTier(definition.metadata().rewardGroups().size() - 1).orElseThrow().id();
 			assertEquals(List.of(
 				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-				new AfterCommitAction.ShowQuestDialog(5)), success.afterCommit(),
-				"quest " + mirror.questId() + " success response");
-			assertEquals("started", failure.targetNode(), "quest " + mirror.questId() + " failure target");
-			assertTrue(failure.conditions().isEmpty(), "quest " + mirror.questId() + " failure conditions");
-			assertTrue(failure.actions().isEmpty(), "quest " + mirror.questId() + " failure actions");
-			assertEquals(mirror.failurePageId() == 0
-					? List.of(new AfterCommitAction.CloseDialog())
-					: List.of(new AfterCommitAction.ShowQuestDialog(mirror.failurePageId())),
-				failure.afterCommit(), "quest " + mirror.questId() + " failure response");
+				new AfterCommitAction.ShowQuestDialog(rewardWindow)), deliver.afterCommit(),
+				"quest " + mirror[0] + " delivery response");
+			assertTrue(talkRoutes(definition, "started", mirror[1], 39).isEmpty(),
+				"quest " + mirror[0] + " legacy item-check route removed");
+			assertTrue(talkRoutes(definition, "started", mirror[1], 20002).isEmpty(),
+				"quest " + mirror[0] + " legacy simple item-check route removed");
+			assertTrue(talkRoutes(definition, "started", mirror[1], 2375).isEmpty(),
+				"quest " + mirror[0] + " legacy report page route removed");
 		}
 	}
 
@@ -84,52 +122,6 @@ class LegacyTemplateMirrorRouteRegressionTest {
 		}
 	}
 
-	@Test
-	void quest25602UsesTheClientSuccessReportAndRewardResponse() throws Exception {
-		QuestDefinition definition = compile(25602);
-		// 旧 handler 中 CHECK_COLLECTED_ITEMS 的权威 source node 是 s1（var=1）：
-		// 成功页推进 s2，失败页停留在 s1。
-		// Per the legacy handler, CHECK_COLLECTED_ITEMS' authoritative source node is s1 (var=1):
-		// the success page advances to s2 and the failure page stays on s1.
-		List<QuestTransition> checks = talkRoutes(definition, "s1", 806171, 39);
-		assertEquals(2, checks.size(), "quest 25602 item check branches");
-		QuestTransition success = checks.stream()
-			.filter(transition -> Integer.valueOf(0).equals(transition.priority()))
-			.findFirst().orElseThrow();
-		QuestTransition failure = checks.stream()
-			.filter(transition -> Integer.valueOf(10).equals(transition.priority()))
-			.findFirst().orElseThrow();
-		assertEquals("s2", success.targetNode(), "quest 25602 success target");
-		assertEquals(List.of(new QuestCondition.HasItem(182216002, 4)), success.conditions(),
-			"quest 25602 success conditions");
-		assertEquals(List.of(
-			new QuestAction.RemoveItem(182216002, QuestAction.RemoveItem.ALL),
-			new QuestAction.SetVariable("var0", 2)),
-			success.actions(), "quest 25602 success removals and step advance");
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
-			new AfterCommitAction.ShowQuestDialog(10000)), success.afterCommit(),
-			"quest 25602 success response");
-		assertEquals("s1", failure.targetNode(), "quest 25602 failure target");
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(10001)), failure.afterCommit(),
-			"quest 25602 failure response");
-		// 剧情链：s2 对话给 select3，SETPRO3 播放动画 872 并推进到 s3。
-		// Story chain: talk at s2 shows select3, SETPRO3 plays movie 872 and advances to s3.
-		assertPage(definition, "s2", 806171, 1693);
-		QuestTransition movie = talkRoutes(definition, "s2", 806171, 10002).getFirst();
-		assertEquals("s3", movie.targetNode(), "quest 25602 movie target");
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
-			new AfterCommitAction.PlayMovie(872),
-			new AfterCommitAction.CloseDialog()), movie.afterCommit(),
-			"quest 25602 movie response");
-		// 领奖链：reward 对话给 select_success，确认后打开奖励窗口。
-		// Reward chain: talk at reward shows select_success, then confirmation opens the reward window.
-		assertPage(definition, "reward", 806171, 10002);
-		QuestTransition reward = talkRoutes(definition, "reward", 806171, 1009).getFirst();
-		assertEquals("reward", reward.targetNode());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(5)), reward.afterCommit());
-	}
 
 	@Test
 	void uniqueClientGraphCandidatesUseOwnedAcceptAndReportPages() throws Exception {
@@ -412,9 +404,8 @@ class LegacyTemplateMirrorRouteRegressionTest {
 	}
 
 	private static QuestDefinition compile(int questId) throws Exception {
-		try (InputStream input = Files.newInputStream(QUEST_DIRECTORY.resolve(questId + ".xml"))) {
-			return QuestDefinitionXmlCompiler.compile(input).definition();
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(questId).definition();
 	}
 
 	private static void assertPage(QuestDefinition definition, String source, int npcId, int pageId) {

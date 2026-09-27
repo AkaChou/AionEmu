@@ -487,7 +487,7 @@ Key points:
 |---|---|---|
 | report_to (no work item) | see §3.4 | `quests/1138.xml` |
 | report_to (with work item) | give/has/remove-item + priority=1 rejection branch | `quests/1106.xml` |
-| monster_hunt (kill counter) | var0 advances step by step, one kill transition per NPC, `source=k{i} target=k{i+1}`, after-commit `sync PACKET_ONLY`; final report dialog 1009 → reward | `quests/1120.xml` (single group), `quests/1112.xml` (two groups, var0/var1 interleaved, offsets 0/6) |
+| monster_hunt (kill counter) | var0 advances step by step, one kill transition per NPC, `source=k{i} target=k{i+1}`, after-commit `sync PACKET_ONLY`; final report dialog 1009 → reward | `quests/1120.xml` (single group), `1112` (two groups, var0/var1 interleaved, offsets 0/6; production XML retired, recover it via `git log --follow -- src/main/resources/aion/data/static_data/quest_definition/quests/1112.xml`) |
 | item_collecting | end NPC action `CHECK_USER_HAS_QUEST_ITEM(39)` turn-in check: has-item (per collect_item) + remove-item; priority=1 fallback `SHOW_QUEST_PAGE page="SELECT6"` when items are missing; metadata must carry `drops` | `quests/1129.xml` |
 | item_order | start_item_id given on accept, talk_npc dialog advances var, end_npc report | `quests/2146.xml`, `quests/2210.xml` |
 | xml_quest (complex) | one node per var value, one transition per dialog branch | `quests/1115.xml`, `quests/1127.xml` |

@@ -4,7 +4,6 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +29,9 @@ class ReportToManyMirrorQuestFamilyTest {
 				new QuestReward("ITEM", 170190060, 1)), definition.metadata().rewards());
 			assertNode(definition, "s0", 0);
 			assertNode(definition, "s1", 1);
-			assertNode(definition, "reward", QuestStatus.REWARD, 1);
+			// QE-051：客户端任务书三行（槽位 %0/%3/%6），末行是与报告 NPC 对话的领奖行。
+			// QE-051: the client journal owns three rows (%0/%3/%6); the reward projection is the last row.
+			assertNode(definition, "reward", QuestStatus.REWARD, 2);
 			assertStartContract(definition, contract.startNpc());
 
 			assertPage(definition, "s0", contract.firstNpc(),
@@ -43,9 +44,11 @@ class ReportToManyMirrorQuestFamilyTest {
 
 			assertPage(definition, "s1", contract.secondNpc(),
 				QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT3);
+			// 交接 transition 不再改写领奖行字段：目标投影（reward var0=2）权威。
+			// The hand-over transition no longer writes the reward row field: the target projection owns it.
 			assertTalk(definition, "s1", "reward", contract.secondNpc(),
 				QuestDialogAction.SETPRO2,
-				List.of(), List.of(new QuestAction.SetVariable("var0", 1)),
+				List.of(), List.of(),
 				List.of(new AfterCommitAction.SyncQuestState(
 						QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 					new AfterCommitAction.CloseDialog()));
@@ -118,7 +121,9 @@ class ReportToManyMirrorQuestFamilyTest {
 			QuestDialogAction action, List<QuestCondition> conditions) {
 		QuestEvent.TalkToNpc event = new QuestEvent.TalkToNpc(npcId, action.id());
 		return definition.transitions().stream()
-			.filter(candidate -> candidate.sourceNode().equals(source))
+			// 生产定义带无 source 的 enter-world 自愈边，按 source 过滤时必须容忍 null。
+			// Production definitions carry source-less recovery edges, so null sources are skipped.
+			.filter(candidate -> java.util.Objects.equals(candidate.sourceNode(), source))
 			.filter(candidate -> candidate.event().equals(event))
 			.filter(candidate -> candidate.conditions().equals(conditions))
 			.findFirst()
@@ -141,13 +146,8 @@ class ReportToManyMirrorQuestFamilyTest {
 	}
 
 	private static QuestDefinition definition(int questId) throws Exception {
-		try (InputStream input = ReportToManyMirrorQuestFamilyTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition " + questId + ".xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input).definition();
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(questId).definition();
 	}
 
 	private record Case(int questId, String race, int startNpc, int firstNpc, int secondNpc) {

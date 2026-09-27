@@ -7,9 +7,6 @@ import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import com.aionemu.gameserver.questEngine.runtime.QuestStartEligibility;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,8 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /** Runtime parity for the former Java owners 80030 and 80033. */
 class QuestCharmedEventDefinitionTest {
-	private static final Path DIR = Path.of("src/main/resources/aion/data/static_data/quest_definition/quests");
-
 	@Test
 	void metadataMatchesLegacyAndRetailAuthority() throws Exception {
 		assertMetadata(80030, "[Event] An Unwelcome Gaze", "ELYOS");
@@ -115,8 +110,7 @@ class QuestCharmedEventDefinitionTest {
 	}
 
 	private static CompiledQuestDefinition load(int questId) throws Exception {
-		try (InputStream input = Files.newInputStream(DIR.resolve(questId + ".xml"))) {
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

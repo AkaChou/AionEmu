@@ -1,0 +1,50 @@
+# 非 IR 轴统一登记表（P0c-11）——采纳真端会连带改变的"节点/转换之外"的轴
+# 生成：python3 -B .agents/summary/scriptdll-quest-driver/p0c11_build_non_ir_registry.py（采纳切片落地后必须重跑）
+# 门禁：RetailNonIrAxisGateTest（登记新鲜度 + 封顶行不得为已采纳 + 自愈边任务必须真端驱动且无 EnterWorld 路由）
+# quest_id	axis	disposition	detail	source
+15300	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+25300	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+35052	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+35055	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+35056	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+35057	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+35064	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+35065	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+35514	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+35515	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+36542	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+36543	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+36544	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+36547	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+36548	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+39022	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+45052	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+45055	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+45056	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+45057	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+45064	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+45065	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+45514	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+45515	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+46542	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+46543	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+46544	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+46547	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+46548	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+49022	CAP_LEVEL	SERVER_SIDE_CAP_INTENTIONAL	cap=82 intentional server cap (family-consistent)	quest-start-metadata-retail-cap-exceptions.tsv
+16900	LEGACY_SAVE_HEAL	DB_NORMALIZATION_OPTIONAL	edges=1 ((none)->reward)	retail-legacy-save-normalization.tsv
+16901	LEGACY_SAVE_HEAL	DB_NORMALIZATION_OPTIONAL	edges=1 ((none)->reward)	retail-legacy-save-normalization.tsv
+16902	LEGACY_SAVE_HEAL	DB_NORMALIZATION_OPTIONAL	edges=1 ((none)->reward)	retail-legacy-save-normalization.tsv
+16903	LEGACY_SAVE_HEAL	DB_NORMALIZATION_OPTIONAL	edges=1 ((none)->reward)	retail-legacy-save-normalization.tsv
+16960	LEGACY_SAVE_HEAL	DB_NORMALIZATION_OPTIONAL	edges=1 ((none)->reward)	retail-legacy-save-normalization.tsv
+24112	LEGACY_SAVE_HEAL	DB_NORMALIZATION_OPTIONAL	edges=2 ((none)->killed;(none)->reward)	retail-legacy-save-normalization.tsv
+24153	LEGACY_SAVE_HEAL	DB_NORMALIZATION_OPTIONAL	edges=1 ((none)->reward)	retail-legacy-save-normalization.tsv
+24201	LEGACY_SAVE_HEAL	DB_NORMALIZATION_OPTIONAL	edges=1 ((none)->reward)	retail-legacy-save-normalization.tsv
+26905	LEGACY_SAVE_HEAL	DB_NORMALIZATION_OPTIONAL	edges=2 ((none)->reward;(none)->reward)	retail-legacy-save-normalization.tsv
+26906	LEGACY_SAVE_HEAL	DB_NORMALIZATION_OPTIONAL	edges=2 ((none)->reward;(none)->reward)	retail-legacy-save-normalization.tsv
+26908	LEGACY_SAVE_HEAL	DB_NORMALIZATION_OPTIONAL	edges=2 ((none)->reward;(none)->reward)	retail-legacy-save-normalization.tsv
+26960	LEGACY_SAVE_HEAL	DB_NORMALIZATION_OPTIONAL	edges=1 ((none)->reward)	retail-legacy-save-normalization.tsv
+28313	LEGACY_SAVE_HEAL	DB_NORMALIZATION_OPTIONAL	edges=3 ((none)->reward;(none)->a1b1(START/4161);(none)->a1b0(START/65))	retail-legacy-save-normalization.tsv
+80601	LEGACY_SAVE_HEAL	DB_NORMALIZATION_OPTIONAL	edges=1 ((none)->reward)	retail-legacy-save-normalization.tsv
+80606	LEGACY_SAVE_HEAL	DB_NORMALIZATION_OPTIONAL	edges=1 ((none)->reward)	retail-legacy-save-normalization.tsv
+*	PREREQ_DUAL_EXPRESSION	METADATA_MAPPING_RULE	startConditions=1136;prerequisites=991（分歧行数，M1 门禁守）	retail-metadata-divergences.tsv

@@ -3,6 +3,7 @@ package com.aionemu.gameserver.questEngine.runtime;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestCondition;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
@@ -205,11 +206,7 @@ class QuestMutationPlannerTest {
 
 	@Test
 	void ringForLuckRemovesItsQuestWorkItemWhenCompleting() throws Exception {
-		CompiledQuestDefinition definition;
-		try (InputStream input = Objects.requireNonNull(getClass().getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/2578.xml"))) {
-			definition = QuestDefinitionXmlCompiler.compile(input);
-		}
+		CompiledQuestDefinition definition = ProductionQuestDefinitions.definitionInOverlay(2578);
 
 		var completion = definition.definition().transitions().stream()
 			.filter(transition -> "reward".equals(transition.sourceNode())
@@ -455,20 +452,20 @@ class QuestMutationPlannerTest {
 	void dailyRotatingNpcFactionQuestStartsTheFactionLifecycleOnAccept() throws Exception {
 		// 真实依据:36525 阵营任务每日轮换,daily 标志不可靠;NONE→START 接取即应
 		// 启动阵营生命周期,不再按 timeBased 取消。
-		CompiledQuestDefinition definition;
-		try (InputStream input = Objects.requireNonNull(getClass().getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/36525.xml"))) {
-			definition = QuestDefinitionXmlCompiler.compile(input);
-		}
+		// P0c-2 起 36525 由真端系统发放驱动：接取边是 SystemGrant，不再有客户端手势；
+		// 这里锁定同一条"进入 START 即启动阵营生命周期"的提交语义。
+		// Since P0c-2 quest 36525 is granted by the retail system (SystemGrant edge, no client
+		// gesture); the committed "entering START starts the faction lifecycle" stays locked.
+		CompiledQuestDefinition definition = ProductionQuestDefinitions.definitionInOverlay(36525);
 
 		var accept = definition.definition().transitions().stream()
 			.filter(transition -> "unaccepted".equals(transition.sourceNode())
-				&& "started".equals(transition.targetNode()))
+				&& transition.event() instanceof QuestEvent.SystemGrant)
 			.findFirst().orElseThrow();
 		var acceptPlan = QuestMutationPlanner.plan(definition,
 			new QuestSnapshot(7, 36525, QuestStatus.NONE, 0, Map.of())
 				.withStartEligibility(QuestStartEligibility.allowed()),
-			new QuestEvent.TalkToNpc(799837, 1002), accept).orElseThrow();
+			new QuestEvent.SystemGrant(), accept).orElseThrow();
 
 		assertTrue(acceptPlan.afterCommit().stream()
 			.anyMatch(AfterCommitAction.StartNpcFactionQuest.class::isInstance));

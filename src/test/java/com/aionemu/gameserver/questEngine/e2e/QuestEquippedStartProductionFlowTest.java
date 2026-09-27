@@ -1,7 +1,7 @@
 package com.aionemu.gameserver.questEngine.e2e;
 
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
-import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
@@ -14,7 +14,6 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.runtime.QuestE2eRuntime;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -145,12 +144,6 @@ class QuestEquippedStartProductionFlowTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-		try (InputStream input = QuestEquippedStartProductionFlowTest.class.getResourceAsStream(resource)) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition " + questId);
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		return ProductionQuestDefinitions.definitionInOverlay(questId);
 	}
 }

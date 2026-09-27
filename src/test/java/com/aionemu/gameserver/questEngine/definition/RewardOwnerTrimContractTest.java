@@ -161,9 +161,20 @@ class RewardOwnerTrimContractTest {
 		/* 279042 has no client NPC name; the Henir key is resolved through the sibling quests' row naming
 		   and their completion owner. */
 		for (int questId : HENIR_ROW_SIBLINGS) {
-			assertEquals(Set.of(279042), rewardOwners(definition(questId).definition()),
+			CompiledQuestDefinition compiled = definition(questId);
+			assertEquals(Set.of(279042), rewardOwners(compiled.definition()),
 				() -> "sibling " + questId + " must complete on 279042 (STR_DIC_N_Henir)");
-			assertTrue(resourceText(questId).contains("<npc-complete npc-id=\"279042\""),
+			// 4714/4716 已退役（P0c-8b 领奖确认段批）：XML 只在 git 历史里，完成 owner 由真端驱动定义承担；
+			// 仍在 XML 名下的同族任务继续按 XML 文本断言（源真相未变）。
+			// 4714/4716 are retired: the retail-driven definition carries the completion owner instead of an
+			// in-tree XML, while the remaining siblings still assert the XML text.
+			String xml = resourceTextOrNull(questId);
+			if (xml == null) {
+				assertTrue(RetiredQuestIds.contains(questId),
+					() -> "sibling " + questId + " has no XML and must be registered as retired");
+				continue;
+			}
+			assertTrue(xml.contains("<npc-complete npc-id=\"279042\""),
 				() -> "sibling " + questId + " must register 279042 as its completion owner");
 		}
 	}
@@ -234,11 +245,17 @@ class RewardOwnerTrimContractTest {
 		}
 	}
 
-	private static CompiledQuestDefinition definition(int questId) throws IOException {
+	/** 退役任务没有 XML（返回 null，由调用方按退役登记断言）。 / Retired quests have no XML resource. */
+	private static String resourceTextOrNull(int questId) throws IOException {
 		try (InputStream input = RewardOwnerTrimContractTest.class.getResourceAsStream(
 				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			assertNotNull(input, () -> "missing quest definition " + questId + ".xml");
-			return QuestDefinitionXmlCompiler.compile(input);
+			return input == null ? null
+				: new String(input.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
 		}
+	}
+
+	/** 生产定义：XML 目录 + 真端 overlay（退役任务不再有 XML，只在 git 历史里）。 */
+	private static CompiledQuestDefinition definition(int questId) {
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

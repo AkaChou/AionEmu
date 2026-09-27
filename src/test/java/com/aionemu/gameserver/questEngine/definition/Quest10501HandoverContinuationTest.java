@@ -2,8 +2,9 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -35,15 +36,24 @@ class Quest10501HandoverContinuationTest {
 
 		QuestTransition handOver = transition(definition, "s6", "reward",
 			new QuestEvent.TalkToNpc(HAND_OVER_NPC_ID, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()));
-		assertEquals(List.of(
-			new QuestCondition.QuestVariableIs("var0", 6),
-			new QuestCondition.HasItem(DRAGON_RELIC, 1, true)), handOver.conditions());
-		assertEquals(List.of(
-			new QuestAction.RemoveItem(DRAGON_RELIC, 1),
-			new QuestAction.SetVariable("var0", 7)), handOver.actions());
+		// 真端把行门写进节点投影（s6 = {var0=6}，引擎按投影匹配源行），条件下只剩持物检查；交付不升行——
+		// 领奖节点与末行同投影 {var0=6}（遗留 XML 的 var0=7 是旧行轴）。
+		// The retail row guard lives in the s6 node projection (the engine matches source rows through
+		// it), so the condition keeps only the item check; the hand-over does not bump the row — the
+		// reward node shares the last row's projection {var0=6} (the legacy XML's var0=7 was the old
+		// row axis).
+		assertEquals(Map.of("var0", 6), nodeVariables(definition, "s6"));
+		assertEquals(Map.of("var0", 6), nodeVariables(definition, "reward"));
+		assertEquals(List.of(new QuestCondition.HasItem(DRAGON_RELIC, 1, true)), handOver.conditions());
+		assertEquals(List.of(new QuestAction.RemoveItem(DRAGON_RELIC, 1)), handOver.actions());
+		// 真端交接续接模型（10504 同形）：成功分支直接开第 1 档奖励窗（5）；客户端报告页 10002 留给
+		// reward 节点的 QUEST_SELECT 路由（见下方 1009 断言）。本地关闭页 10000 依旧不得下发。
+		// The retail hand-over continuation (the 10504 shape): the success branch opens reward window 1
+		// directly (5); the client report page 10002 is served by the reward node's QUEST_SELECT route
+		// (the 1009 assertion below). The client-local close page 10000 is still never pushed.
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
+			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
 			handOver.afterCommit());
 
 		// 客户端本地关闭页（10000）只关闭窗口、不回传任务动作，任何下发都会把对话停在死端。
@@ -57,36 +67,54 @@ class Quest10501HandoverContinuationTest {
 		// SELECT_QUEST landing.
 		QuestTransition itemMissing = transition(definition, "s6", "s6",
 			new QuestEvent.TalkToNpc(HAND_OVER_NPC_ID, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()), 1);
-		assertEquals(List.of(new QuestCondition.QuestVariableIs("var0", 6)), itemMissing.conditions());
+		assertEquals(List.of(), itemMissing.conditions(),
+			"the row guard is the s6 node projection, not a transition condition");
 		assertEquals(List.of(), itemMissing.actions());
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.CHECK_USER_ITEM_FAIL.id())),
 			itemMissing.afterCommit());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
-			talk(definition, "s6", "s6", HAND_OVER_NPC_ID, QuestDialogAction.FINISH_DIALOG.id()).afterCommit(),
-			"the fail page close button keeps its SELECT_QUEST landing");
+		// 失败页的关闭按钮回传 FINISH_DIALOG（1008）：真端形只关窗（SELECT_QUEST 页只由推进边下发）。
+		// The fail page's close button posts FINISH_DIALOG (1008): the retail shape closes the window
+		// (the SELECT_QUEST page is only pushed by advance edges).
+		assertEquals(List.of(new AfterCommitAction.CloseDialog()),
+			talk(definition, "s6", "s6", HAND_OVER_NPC_ID, QuestDialogAction.FINISH_DIALOG.id()).afterCommit());
 
 		// 领奖链：上交后落的页 = REWARD 态入口页，其 1009 打开第 1 档奖励窗。
 		// Reward chain: the handed-over page equals the REWARD-state entry page, whose 1009 opens
 		// reward window 1.
 		QuestTransition rewardEntry = talk(definition, "reward", "reward", HAND_OVER_NPC_ID,
 			QuestDialogAction.USE_OBJECT.id());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
-			rewardEntry.afterCommit());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
+				QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())), rewardEntry.afterCommit());
 		assertEquals(showedPage(handOver), showedPage(rewardEntry),
-			"hand-over continuation and reward entry must display the same report page");
+			"hand-over continuation and reward entry must open the same reward window page");
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
 				QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())),
 			talk(definition, "reward", "reward", HAND_OVER_NPC_ID,
 				QuestDialogAction.SELECT_QUEST_REWARD.id()).afterCommit());
 
 		// 六条可选奖励分支：三条固定奖励 + 本条可选奖励 + 完成标记，after-commit 固定三段。
+		// 六条可选奖励分支：三条固定奖励 + 本条可选奖励 + 完成标记，after-commit 固定三段。
+		// 真端链把同一分支同时铺成三条客户端路由（动作 id 8..13，加页 id 110..115 的 QuestDialog 与
+		// TalkToNpc 变体），此处只锁动作 id 那六条；reward->complete 总计 18 条。
 		// Six selectable reward branches: three fixed rewards, this branch's selectable reward and the
-		// completion marker, with a fixed three-step after-commit.
+		// completion marker, with a fixed three-step after-commit. The retail chain lays each branch on
+		// three client routes (action ids 8..13 plus the QuestDialog and TalkToNpc variants of page ids
+		// 110..115); only the action-id routes are locked, out of 18 reward -> complete edges.
+		Set<Integer> selectableRewardActions = Set.of(
+			QuestDialogAction.SELECTED_QUEST_REWARD1.id(), QuestDialogAction.SELECTED_QUEST_REWARD2.id(),
+			QuestDialogAction.SELECTED_QUEST_REWARD3.id(), QuestDialogAction.SELECTED_QUEST_REWARD4.id(),
+			QuestDialogAction.SELECTED_QUEST_REWARD5.id(), QuestDialogAction.SELECTED_QUEST_REWARD6.id());
 		List<QuestTransition> completions = definition.transitions().stream()
 			.filter(candidate -> "reward".equals(candidate.sourceNode())
-				&& "complete".equals(candidate.targetNode()))
+				&& "complete".equals(candidate.targetNode())
+				&& candidate.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.dialogId() != null && selectableRewardActions.contains(talk.dialogId()))
 			.toList();
 		assertEquals(6, completions.size(), "quest 10501 must keep its six selectable reward branches");
+		assertEquals(18, definition.transitions().stream()
+			.filter(candidate -> "reward".equals(candidate.sourceNode())
+				&& "complete".equals(candidate.targetNode()))
+			.count(), "the retail chain fans each branch onto three client routes");
 		assertEquals(List.of(
 			QuestDialogAction.SELECTED_QUEST_REWARD1.id(), QuestDialogAction.SELECTED_QUEST_REWARD2.id(),
 			QuestDialogAction.SELECTED_QUEST_REWARD3.id(), QuestDialogAction.SELECTED_QUEST_REWARD4.id(),
@@ -166,13 +194,19 @@ class Quest10501HandoverContinuationTest {
 			.findFirst().orElseThrow();
 	}
 
+	/** 节点投影（引擎按它匹配源行——显式 var0 条件在真端形里由投影承担）。 / Node projection. */
+	private static Map<String, Integer> nodeVariables(QuestDefinition definition, String label) {
+		return definition.nodes().stream()
+			.filter(node -> label.equals(node.label()))
+			.findFirst().orElseThrow()
+			.projection().variables();
+	}
+
 	private static QuestDefinition definition() throws Exception {
-		try (InputStream input = Quest10501HandoverContinuationTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/10501.xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition 10501.xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input).definition();
-		}
+		// 10501 已由真端驱动退役（wave10 链式接取登记）：退役任务的 XML 只在 git 历史里，
+		// 统一取生产视图（XML 目录 + 真端 overlay）——未退役任务与直接编译 XML 等价。
+		// 10501 is retail-driven now (wave10 chain-acquire registry), so its XML lives only in git
+		// history; the production view (XML directory plus retail overlay) is the single source.
+		return ProductionQuestDefinitions.definition(10501).definition();
 	}
 }

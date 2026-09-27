@@ -1,0 +1,1220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE strings [
+	<!ENTITY quot "quot">
+	<!ENTITY amp "amp">
+	<!ENTITY apos "apos">
+	<!ENTITY lt "lt">
+	<!ENTITY gt "gt">
+	<!ENTITY nbsp "nbsp">
+	<!ENTITY iexcl "iexcl">
+	<!ENTITY cent "cent">
+	<!ENTITY pound "pound">
+	<!ENTITY curren "curren">
+	<!ENTITY yen "yen">
+	<!ENTITY brvbar "brvbar">
+	<!ENTITY sect "sect">
+	<!ENTITY uml "uml">
+	<!ENTITY copy "copy">
+	<!ENTITY ordf "ordf">
+	<!ENTITY laquo "laquo">
+	<!ENTITY not "not">
+	<!ENTITY shy "shy">
+	<!ENTITY reg "reg">
+	<!ENTITY macr "macr">
+	<!ENTITY deg "deg">
+	<!ENTITY plusmn "plusmn">
+	<!ENTITY sup2 "sup2">
+	<!ENTITY sup3 "sup3">
+	<!ENTITY acute "acute">
+	<!ENTITY micro "micro">
+	<!ENTITY para "para">
+	<!ENTITY middot "middot">
+	<!ENTITY cedil "cedil">
+	<!ENTITY sup1 "sup1">
+	<!ENTITY ordm "ordm">
+	<!ENTITY raquo "raquo">
+	<!ENTITY frac14 "frac14">
+	<!ENTITY frac12 "frac12">
+	<!ENTITY frac34 "frac34">
+	<!ENTITY iquest "iquest">
+	<!ENTITY Agrave "Agrave">
+	<!ENTITY Aacute "Aacute">
+	<!ENTITY Acirc "Acirc">
+	<!ENTITY Atilde "Atilde">
+	<!ENTITY Auml "Auml">
+	<!ENTITY Aring "Aring">
+	<!ENTITY AElig "AElig">
+	<!ENTITY Ccedil "Ccedil">
+	<!ENTITY Egrave "Egrave">
+	<!ENTITY Eacute "Eacute">
+	<!ENTITY Ecirc "Ecirc">
+	<!ENTITY Euml "Euml">
+	<!ENTITY Igrave "Igrave">
+	<!ENTITY Iacute "Iacute">
+	<!ENTITY Icirc "Icirc">
+	<!ENTITY Iuml "Iuml">
+	<!ENTITY ETH "ETH">
+	<!ENTITY Ntilde "Ntilde">
+	<!ENTITY Ograve "Ograve">
+	<!ENTITY Oacute "Oacute">
+	<!ENTITY Ocirc "Ocirc">
+	<!ENTITY Otilde "Otilde">
+	<!ENTITY Ouml "Ouml">
+	<!ENTITY times "times">
+	<!ENTITY Oslash "Oslash">
+	<!ENTITY Ugrave "Ugrave">
+	<!ENTITY Uacute "Uacute">
+	<!ENTITY Ucirc "Ucirc">
+	<!ENTITY Uuml "Uuml">
+	<!ENTITY Yacute "Yacute">
+	<!ENTITY THORN "THORN">
+	<!ENTITY szlig "szlig">
+	<!ENTITY agrave "agrave">
+	<!ENTITY aacute "aacute">
+	<!ENTITY acirc "acirc">
+	<!ENTITY atilde "atilde">
+	<!ENTITY auml "auml">
+	<!ENTITY aring "aring">
+	<!ENTITY aelig "aelig">
+	<!ENTITY ccedil "ccedil">
+	<!ENTITY egrave "egrave">
+	<!ENTITY eacute "eacute">
+	<!ENTITY ecirc "ecirc">
+	<!ENTITY euml "euml">
+	<!ENTITY igrave "igrave">
+	<!ENTITY iacute "iacute">
+	<!ENTITY icirc "icirc">
+	<!ENTITY iuml "iuml">
+	<!ENTITY eth "eth">
+	<!ENTITY ntilde "ntilde">
+	<!ENTITY ograve "ograve">
+	<!ENTITY oacute "oacute">
+	<!ENTITY ocirc "ocirc">
+	<!ENTITY otilde "otilde">
+	<!ENTITY ouml "ouml">
+	<!ENTITY divide "divide">
+	<!ENTITY oslash "oslash">
+	<!ENTITY ugrave "ugrave">
+	<!ENTITY uacute "uacute">
+	<!ENTITY ucirc "ucirc">
+	<!ENTITY uuml "uuml">
+	<!ENTITY yacute "yacute">
+	<!ENTITY thorn "thorn">
+	<!ENTITY yuml "yuml">
+	<!ENTITY OElig "OElig">
+	<!ENTITY oelig "oelig">
+	<!ENTITY Scaron "Scaron">
+	<!ENTITY scaron "scaron">
+	<!ENTITY Yuml "Yuml">
+	<!ENTITY fnof "fnof">
+	<!ENTITY circ "circ">
+	<!ENTITY tilde "tilde">
+	<!ENTITY Alpha "Alpha">
+	<!ENTITY Beta "Beta">
+	<!ENTITY Gamma "Gamma">
+	<!ENTITY Delta "Delta">
+	<!ENTITY Epsilon "Epsilon">
+	<!ENTITY Zeta "Zeta">
+	<!ENTITY Eta "Eta">
+	<!ENTITY Theta "Theta">
+	<!ENTITY Iota "Iota">
+	<!ENTITY Kappa "Kappa">
+	<!ENTITY Lambda "Lambda">
+	<!ENTITY Mu "Mu">
+	<!ENTITY Nu "Nu">
+	<!ENTITY Xi "Xi">
+	<!ENTITY Omicron "Omicron">
+	<!ENTITY Pi "Pi">
+	<!ENTITY Rho "Rho">
+	<!ENTITY Sigma "Sigma">
+	<!ENTITY Tau "Tau">
+	<!ENTITY Upsilon "Upsilon">
+	<!ENTITY Phi "Phi">
+	<!ENTITY Chi "Chi">
+	<!ENTITY Psi "Psi">
+	<!ENTITY Omega "Omega">
+	<!ENTITY alpha "alpha">
+	<!ENTITY beta "beta">
+	<!ENTITY gamma "gamma">
+	<!ENTITY delta "delta">
+	<!ENTITY epsilon "epsilon">
+	<!ENTITY zeta "zeta">
+	<!ENTITY eta "eta">
+	<!ENTITY theta "theta">
+	<!ENTITY iota "iota">
+	<!ENTITY kappa "kappa">
+	<!ENTITY lambda "lambda">
+	<!ENTITY mu "mu">
+	<!ENTITY nu "nu">
+	<!ENTITY xi "xi">
+	<!ENTITY omicron "omicron">
+	<!ENTITY pi "pi">
+	<!ENTITY rho "rho">
+	<!ENTITY sigmaf "sigmaf">
+	<!ENTITY sigma "sigma">
+	<!ENTITY tau "tau">
+	<!ENTITY upsilon "upsilon">
+	<!ENTITY phi "phi">
+	<!ENTITY chi "chi">
+	<!ENTITY psi "psi">
+	<!ENTITY omega "omega">
+	<!ENTITY thetasym "thetasym">
+	<!ENTITY upsih "upsih">
+	<!ENTITY piv "piv">
+	<!ENTITY ensp "ensp">
+	<!ENTITY emsp "emsp">
+	<!ENTITY thinsp "thinsp">
+	<!ENTITY zwnj "zwnj">
+	<!ENTITY zwj "zwj">
+	<!ENTITY lrm "lrm">
+	<!ENTITY rlm "rlm">
+	<!ENTITY ndash "ndash">
+	<!ENTITY mdash "mdash">
+	<!ENTITY lsquo "lsquo">
+	<!ENTITY rsquo "rsquo">
+	<!ENTITY sbquo "sbquo">
+	<!ENTITY ldquo "ldquo">
+	<!ENTITY rdquo "rdquo">
+	<!ENTITY bdquo "bdquo">
+	<!ENTITY dagger "dagger">
+	<!ENTITY Dagger "Dagger">
+	<!ENTITY bull "bull">
+	<!ENTITY hellip "hellip">
+	<!ENTITY permil "permil">
+	<!ENTITY prime "prime">
+	<!ENTITY Prime "Prime">
+	<!ENTITY lsaquo "lsaquo">
+	<!ENTITY rsaquo "rsaquo">
+	<!ENTITY oline "oline">
+	<!ENTITY frasl "frasl">
+	<!ENTITY euro "euro">
+	<!ENTITY image "image">
+	<!ENTITY weierp "weierp">
+	<!ENTITY real "real">
+	<!ENTITY trade "trade">
+	<!ENTITY alefsym "alefsym">
+	<!ENTITY larr "larr">
+	<!ENTITY uarr "uarr">
+	<!ENTITY rarr "rarr">
+	<!ENTITY darr "darr">
+	<!ENTITY harr "harr">
+	<!ENTITY crarr "crarr">
+	<!ENTITY lArr "lArr">
+	<!ENTITY uArr "uArr">
+	<!ENTITY rArr "rArr">
+	<!ENTITY dArr "dArr">
+	<!ENTITY hArr "hArr">
+	<!ENTITY forall "forall">
+	<!ENTITY part "part">
+	<!ENTITY exist "exist">
+	<!ENTITY empty "empty">
+	<!ENTITY nabla "nabla">
+	<!ENTITY isin "isin">
+	<!ENTITY notin "notin">
+	<!ENTITY ni "ni">
+	<!ENTITY prod "prod">
+	<!ENTITY sum "sum">
+	<!ENTITY minus "minus">
+	<!ENTITY lowast "lowast">
+	<!ENTITY radic "radic">
+	<!ENTITY prop "prop">
+	<!ENTITY infin "infin">
+	<!ENTITY ang "ang">
+	<!ENTITY and "and">
+	<!ENTITY or "or">
+	<!ENTITY cap "cap">
+	<!ENTITY cup "cup">
+	<!ENTITY int "int">
+	<!ENTITY there4 "there4">
+	<!ENTITY sim "sim">
+	<!ENTITY cong "cong">
+	<!ENTITY asymp "asymp">
+	<!ENTITY ne "ne">
+	<!ENTITY equiv "equiv">
+	<!ENTITY le "le">
+	<!ENTITY ge "ge">
+	<!ENTITY sub "sub">
+	<!ENTITY sup "sup">
+	<!ENTITY nsub "nsub">
+	<!ENTITY sube "sube">
+	<!ENTITY supe "supe">
+	<!ENTITY oplus "oplus">
+	<!ENTITY otimes "otimes">
+	<!ENTITY perp "perp">
+	<!ENTITY sdot "sdot">
+	<!ENTITY lceil "lceil">
+	<!ENTITY rceil "rceil">
+	<!ENTITY lfloor "lfloor">
+	<!ENTITY rfloor "rfloor">
+	<!ENTITY lang "lang">
+	<!ENTITY rang "rang">
+	<!ENTITY loz "loz">
+	<!ENTITY spades "spades">
+	<!ENTITY clubs "clubs">
+	<!ENTITY hearts "hearts">
+	<!ENTITY diams "diams">
+]>
+<quest_simpleuseitems>
+	<id id="1107">
+		<dev_name>나무꾼의 분실물</dev_name>
+		<use_item_name>ITEM_QUEST_1107A</use_item_name>
+		<reward_npc_name>Namus</reward_npc_name>
+	</id>
+	<id id="1182">
+		<dev_name>고대의 돌조각</dev_name>
+		<use_item_name>ITEM_QUEST_1182A</use_item_name>
+		<reward_npc_name>Selene</reward_npc_name>
+	</id>
+	<id id="1197">
+		<dev_name>크랄의 책</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_1197A</use_item_name>
+		<reward_npc_name>Leto</reward_npc_name>
+	</id>
+	<id id="1198">
+		<dev_name>벽에 꽂힌 편지</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_1198A</use_item_name>
+		<reward_npc_name>Spatalos</reward_npc_name>
+	</id>
+	<id id="1309">
+		<dev_name>만두리의 일기</dev_name>
+		<use_item_name>ITEM_QUEST_1309A</use_item_name>
+		<talk_npc1>Phomona</talk_npc1>
+		<reward_npc_name>Vatonia</reward_npc_name>
+	</id>
+	<id id="1355">
+		<dev_name>차원의 문</dev_name>
+		<use_item_name>ITEM_QUEST_1355A</use_item_name>
+		<reward_npc_name>Actaeon</reward_npc_name>
+	</id>
+	<id id="1391">
+		<dev_name>RM-12b</dev_name>
+		<use_item_name>ITEM_QUEST_1391A</use_item_name>
+		<reward_npc_name>Perento </reward_npc_name>
+	</id>
+	<id id="1514">
+		<dev_name>목걸이의 주인</dev_name>
+		<use_item_name>ITEM_QUEST_1514A</use_item_name>
+		<talk_npc1>Ibelia</talk_npc1>
+		<talk_npc2>Sulates</talk_npc2>
+		<reward_npc_name>Biesa</reward_npc_name>
+	</id>
+	<id id="1559">
+		<dev_name>상자를 열어줘</dev_name>
+		<use_item_name>ITEM_QUEST_1559A</use_item_name>
+		<talk_npc1>Shugo_LF3_4</talk_npc1>
+		<talk_npc2>Lomulias</talk_npc2>
+		<talk_npc3>Shugo_c5</talk_npc3>
+		<give_item3>ITEM_QUEST_1559B 1</give_item3>
+		<remove_item3>ITEM_QUEST_1559A 1</remove_item3>
+		<reward_npc_name>Shugo_LF3_4</reward_npc_name>
+	</id>
+	<id id="1561">
+		<dev_name>수전노의 낡은 지도</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_1561A</use_item_name>
+		<reward_npc_name>LF3_JewelBox_Q1561</reward_npc_name>
+	</id>
+	<id id="1644">
+		<dev_name>언데드의 편지</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_1644A</use_item_name>
+		<talk_npc1>Lisidike</talk_npc1>
+		<talk_npc2>Endyon</talk_npc2>
+		<remove_item2>ITEM_DOC_QUEST_1644A 1</remove_item2>
+		<talk_npc3>Lisidike</talk_npc3>
+		<reward_npc_name>Miobera</reward_npc_name>
+	</id>
+	<id id="1718">
+		<dev_name>분수 메달에서 나온 시작아이템</dev_name>
+		<use_item_name>ITEM_QUEST_1718A</use_item_name>
+		<talk_npc1>Gaione</talk_npc1>
+		<give_item1>ITEM_QUEST_1718B 1</give_item1>
+		<remove_item1>ITEM_QUEST_1718A 1</remove_item1>
+		<talk_npc2>NPC_Griffonix</talk_npc2>
+		<give_item2>ITEM_QUEST_1718C 1</give_item2>
+		<remove_item2>ITEM_QUEST_1718B 1</remove_item2>
+		<talk_npc3>NPC_LF3_Ettin</talk_npc3>
+		<give_item3>ITEM_QUEST_1718D 1</give_item3>
+		<remove_item3>ITEM_QUEST_1718C 1</remove_item3>
+		<reward_npc_name>Ab1_NPC_LugBug</reward_npc_name>
+	</id>
+	<id id="1845">
+		<dev_name>[천] 하층 상자_아이템 시작</dev_name>
+		<use_item_name>ITEM_QUEST_1845A</use_item_name>
+		<talk_npc1>Deidamia</talk_npc1>
+		<talk_npc2>Ikipio</talk_npc2>
+		<reward_npc_name>Anusis</reward_npc_name>
+	</id>
+	<id id="1846">
+		<dev_name>[천] 상층 상자_아이템 시작</dev_name>
+		<use_item_name>ITEM_QUEST_1846A</use_item_name>
+		<talk_npc1>Shugo_AB1_L7</talk_npc1>
+		<talk_npc2>Shugo_AB1_L8</talk_npc2>
+		<reward_npc_name>Shugo_c16</reward_npc_name>
+	</id>
+	<id id="1847">
+		<dev_name>[천] 심층 상자_아이템 시작</dev_name>
+		<use_item_name>ITEM_QUEST_1847A</use_item_name>
+		<talk_npc1>Lamia</talk_npc1>
+		<talk_npc2>Actaeon</talk_npc2>
+		<reward_npc_name>dionera</reward_npc_name>
+	</id>
+	<id id="1965">
+		<dev_name>천족 어비스 배달 무기</dev_name>
+		<use_item_name>ITEM_QUEST_1965A</use_item_name>
+		<reward_npc_name>Clatanan</reward_npc_name>
+	</id>
+	<id id="1966">
+		<dev_name>천족 어비스 배달 장비</dev_name>
+		<use_item_name>ITEM_QUEST_1966A</use_item_name>
+		<reward_npc_name>Clatanan</reward_npc_name>
+	</id>
+	<id id="1967">
+		<dev_name>천족 어비스 배달 법봉</dev_name>
+		<use_item_name>ITEM_QUEST_1967A</use_item_name>
+		<reward_npc_name>Clatanan</reward_npc_name>
+	</id>
+	<id id="1968">
+		<dev_name>천족 어비스 배달 군수 물자</dev_name>
+		<use_item_name>ITEM_QUEST_1968A</use_item_name>
+		<reward_npc_name>Cymaon</reward_npc_name>
+	</id>
+	<id id="1969">
+		<dev_name>천족 어비스 배달 법서</dev_name>
+		<use_item_name>ITEM_QUEST_1969A</use_item_name>
+		<reward_npc_name>Cymaon</reward_npc_name>
+	</id>
+	<id id="1970">
+		<dev_name>천족 어비스 배달 로브</dev_name>
+		<use_item_name>ITEM_QUEST_1970A</use_item_name>
+		<reward_npc_name>Cymaon</reward_npc_name>
+	</id>
+	<id id="2107">
+		<dev_name>전할 수 없는 편지</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_2107A</use_item_name>
+		<talk_npc1>Ulgorn</talk_npc1>
+		<reward_npc_name>Linevir</reward_npc_name>
+	</id>
+	<id id="2216">
+		<dev_name>너덜너덜한 풀매듭</dev_name>
+		<use_item_name>ITEM_QUEST_2216A</use_item_name>
+		<reward_npc_name>Okkolenja</reward_npc_name>
+		<con_quest>2217</con_quest>
+	</id>
+	<id id="2228">
+		<dev_name>가르키온에게 꽂힌 칼</dev_name>
+		<use_item_name>ITEM_QUEST_2228A</use_item_name>
+		<reward_npc_name>Nornes</reward_npc_name>
+	</id>
+	<id id="2274">
+		<dev_name>라이칸의 긴 막대</dev_name>
+		<use_item_name>ITEM_QUEST_2274A</use_item_name>
+		<talk_npc1>Jolkk</talk_npc1>
+		<reward_npc_name>Morn</reward_npc_name>
+	</id>
+	<id id="2296">
+		<dev_name>상자에서 나온 전표</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_2296A</use_item_name>
+		<talk_npc1>Urnir</talk_npc1>
+		<reward_npc_name>Shugo_DF1_9</reward_npc_name>
+	</id>
+	<id id="2316">
+		<dev_name>비비의 책</dev_name>
+		<use_item_name>ITEM_QUEST_2316A</use_item_name>
+		<reward_npc_name>DF2_NPC_Sprigg</reward_npc_name>
+	</id>
+	<id id="2321">
+		<dev_name>딸에게 보내는 편지</dev_name>
+		<use_item_name>ITEM_QUEST_2321B</use_item_name>
+		<talk_npc1>Gunter</talk_npc1>
+		<give_item1>ITEM_DOC_QUEST_2321A 1</give_item1>
+		<remove_item1>ITEM_QUEST_2321B 1</remove_item1>
+		<reward_npc_name>Hellione</reward_npc_name>
+	</id>
+	<id id="2324">
+		<dev_name>혼령의 수첩</dev_name>
+		<use_item_name>ITEM_QUEST_2324A</use_item_name>
+		<reward_npc_name>Hermod</reward_npc_name>
+	</id>
+	<id id="2409">
+		<dev_name>혁명단의 전단지</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_2409A</use_item_name>
+		<talk_npc1>Aegir</talk_npc1>
+		<reward_npc_name>Kushar</reward_npc_name>
+	</id>
+	<id id="2435">
+		<dev_name>덩굴 목걸이</dev_name>
+		<use_item_name>ITEM_QUEST_2435A</use_item_name>
+		<talk_npc1>DF2_NPC_Ananta</talk_npc1>
+		<reward_npc_name>DF2_NPC_BumbumKong</reward_npc_name>
+	</id>
+	<id id="2498">
+		<dev_name>DF2 추가퀘스트</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_2498A</use_item_name>
+		<reward_npc_name>Shugo_DF2_16</reward_npc_name>
+	</id>
+	<id id="2549">
+		<dev_name>드레이키 피규어</dev_name>
+		<use_item_name>ITEM_QUEST_2549A</use_item_name>
+		<talk_npc1>Shugo_DF3_12</talk_npc1>
+		<reward_npc_name>Ai</reward_npc_name>
+	</id>
+	<id id="2578">
+		<dev_name>반지의 주인은? </dev_name>
+		<use_item_name>ITEM_QUEST_2578A</use_item_name>
+		<talk_npc1>Denarynt</talk_npc1>
+		<talk_npc2>Rerua</talk_npc2>
+		<reward_npc_name>Midheim</reward_npc_name>
+	</id>
+	<id id="2670">
+		<dev_name>DF3 레파르 인던 책</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_2670A</use_item_name>
+		<talk_npc1>Nerthus</talk_npc1>
+		<reward_npc_name>Kushar</reward_npc_name>
+	</id>
+	<id id="2718">
+		<dev_name>분수 메달에서 나온 시작아이템</dev_name>
+		<use_item_name>ITEM_QUEST_2718A</use_item_name>
+		<talk_npc1>NPC_KimciFriend_3</talk_npc1>
+		<give_item1>ITEM_QUEST_2718B 1</give_item1>
+		<remove_item1>ITEM_QUEST_2718A 1</remove_item1>
+		<talk_npc2>DF2_NPC_Sprigg</talk_npc2>
+		<give_item2>ITEM_QUEST_2718C 1</give_item2>
+		<remove_item2>ITEM_QUEST_2718B 1</remove_item2>
+		<talk_npc3>NPC_Gark</talk_npc3>
+		<give_item3>ITEM_QUEST_2718D 1</give_item3>
+		<remove_item3>ITEM_QUEST_2718C 1</remove_item3>
+		<reward_npc_name>Ab1_NPC_LugBug</reward_npc_name>
+	</id>
+	<id id="2846">
+		<dev_name>[마] 하층 상자_아이템 시작</dev_name>
+		<use_item_name>ITEM_QUEST_2846A</use_item_name>
+		<talk_npc1>Grunn</talk_npc1>
+		<talk_npc2>Shugo_AB1_D3</talk_npc2>
+		<reward_npc_name>Usener</reward_npc_name>
+	</id>
+	<id id="2847">
+		<dev_name>[마] 상층 상자_아이템 시작</dev_name>
+		<use_item_name>ITEM_QUEST_2847A</use_item_name>
+		<talk_npc1>Grunn</talk_npc1>
+		<talk_npc2>Shugo_AB1_D4</talk_npc2>
+		<reward_npc_name>Shugo_DC1_8</reward_npc_name>
+	</id>
+	<id id="2848">
+		<dev_name>[마] 심층 상자_아이템 시작</dev_name>
+		<use_item_name>ITEM_QUEST_2848A</use_item_name>
+		<talk_npc1>Neurath</talk_npc1>
+		<talk_npc2>Ganglot</talk_npc2>
+		<reward_npc_name>Siegfried</reward_npc_name>
+	</id>
+	<id id="2918">
+		<dev_name>애끓는 모정</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_2918A</use_item_name>
+		<reward_npc_name>Arekedil</reward_npc_name>
+	</id>
+	<id id="2966">
+		<dev_name>마족 어비스 배달 무기</dev_name>
+		<use_item_name>ITEM_QUEST_2966A</use_item_name>
+		<reward_npc_name>Fyra</reward_npc_name>
+	</id>
+	<id id="2967">
+		<dev_name>마족 어비스 배달 장비</dev_name>
+		<use_item_name>ITEM_QUEST_2967A</use_item_name>
+		<reward_npc_name>Fyra</reward_npc_name>
+	</id>
+	<id id="2968">
+		<dev_name>마족 어비스 배달 법봉</dev_name>
+		<use_item_name>ITEM_QUEST_2968A</use_item_name>
+		<reward_npc_name>Fyra</reward_npc_name>
+	</id>
+	<id id="2969">
+		<dev_name>마족 어비스 배달 군수 물자</dev_name>
+		<use_item_name>ITEM_QUEST_2969A</use_item_name>
+		<reward_npc_name>Blir</reward_npc_name>
+	</id>
+	<id id="2970">
+		<dev_name>마족 어비스 배달 법서</dev_name>
+		<use_item_name>ITEM_QUEST_2970A</use_item_name>
+		<reward_npc_name>Blir</reward_npc_name>
+	</id>
+	<id id="2971">
+		<dev_name>마족 어비스 배달 로브</dev_name>
+		<use_item_name>ITEM_QUEST_2971A</use_item_name>
+		<reward_npc_name>Blir</reward_npc_name>
+	</id>
+	<id id="3048">
+		<dev_name>불에탄 좀비가 떨군 물건</dev_name>
+		<use_item_name>ITEM_QUEST_3048A</use_item_name>
+		<talk_npc1>Maeleagros</talk_npc1>
+		<reward_npc_name>Pygmalion</reward_npc_name>
+	</id>
+	<id id="3049">
+		<dev_name>쓰러진 패럿의 주인</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_3049A</use_item_name>
+		<reward_npc_name>Ruria</reward_npc_name>
+	</id>
+	<id id="3058">
+		<dev_name>진범이 가진 물건</dev_name>
+		<use_item_name>ITEM_QUEST_3058A</use_item_name>
+		<talk_npc1>Oileus</talk_npc1>
+		<talk_npc2>Lavirintos</talk_npc2>
+		<remove_item2>ITEM_QUEST_3058A 1</remove_item2>
+		<reward_npc_name>Siraus</reward_npc_name>
+	</id>
+	<id id="3060">
+		<dev_name>살생부의 주인</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_3060A</use_item_name>
+		<talk_npc1>Rosina</talk_npc1>
+		<talk_npc2>Tityus</talk_npc2>
+		<talk_npc3>LF2a_Tavern_TrollBodyguard</talk_npc3>
+		<reward_npc_name>Shugo_LF2a_14</reward_npc_name>
+	</id>
+	<id id="3095">
+		<dev_name>연구시설의 정보가 담긴 책</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_3095A</use_item_name>
+		<talk_npc1>Pyrrha</talk_npc1>
+		<talk_npc2>LF2a_Oflisma_E</talk_npc2>
+		<reward_npc_name>Pyrrha</reward_npc_name>
+		<con_quest>3096</con_quest>
+	</id>
+	<id id="3914">
+		<dev_name>동선유도 퀘스트A</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_3914A</use_item_name>
+		<talk_npc1>Jucleas</talk_npc1>
+		<reward_npc_name>Creusa</reward_npc_name>
+	</id>
+	<id id="4042">
+		<dev_name>유리병 속의 편지
+(4042)-4043</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_4042A</use_item_name>
+		<talk_npc1>DF2a_Seiren_Sahnu</talk_npc1>
+		<talk_npc2>Gunter</talk_npc2>
+		<give_item2>ITEM_DOC_QUEST_4042B 1</give_item2>
+		<remove_item2>ITEM_DOC_QUEST_4042A 1</remove_item2>
+		<reward_npc_name>DF2a_Seiren_Sahnu</reward_npc_name>
+		<con_quest>4043</con_quest>
+	</id>
+	<id id="4053">
+		<dev_name>반짝이는 호미</dev_name>
+		<use_item_name>ITEM_QUEST_4053A</use_item_name>
+		<talk_npc1>DF2a_NPC_Bumbum_Don</talk_npc1>
+		<talk_npc2>DF2a_NPC_Bumbum_Taan</talk_npc2>
+		<reward_npc_name>Hlebard</reward_npc_name>
+	</id>
+	<id id="4060">
+		<dev_name>좀비의 후손</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_4060A</use_item_name>
+		<talk_npc1>Ervin</talk_npc1>
+		<talk_npc2>Aur</talk_npc2>
+		<talk_npc3>Aurvandil</talk_npc3>
+		<reward_npc_name>Asustri</reward_npc_name>
+	</id>
+	<id id="4087">
+		<dev_name>루필리니에게 떨어진 물건</dev_name>
+		<use_item_name>ITEM_QUEST_4087A</use_item_name>
+		<reward_npc_name>Tree_Moving_Krodos</reward_npc_name>
+	</id>
+	<id id="11036">
+		<dev_name>슈라크의 조리법</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_11036A</use_item_name>
+		<talk_npc1>Marica</talk_npc1>
+		<reward_npc_name>Armond</reward_npc_name>
+		<con_quest>11037</con_quest>
+	</id>
+	<id id="11046">
+		<dev_name>주인 없는 물약병</dev_name>
+		<use_item_name>ITEM_QUEST_11046A</use_item_name>
+		<reward_npc_name>Dorsia</reward_npc_name>
+	</id>
+	<id id="11059">
+		<dev_name>에픽무기퀘스트_01</dev_name>
+		<use_item_name>ITEM_QUEST_11059A</use_item_name>
+		<reward_npc_name>Queesia</reward_npc_name>
+	</id>
+	<id id="11123">
+		<dev_name>광신도 방에서 얻은 물건</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_11123A</use_item_name>
+		<talk_npc1>Barus</talk_npc1>
+		<reward_npc_name>Zenobia</reward_npc_name>
+	</id>
+	<id id="11143">
+		<dev_name>바구니에 숨긴 슈라크 베이비</dev_name>
+		<use_item_name>ITEM_QUEST_11143A</use_item_name>
+		<talk_npc1>Shulack_LF4_1</talk_npc1>
+		<talk_npc2>Shugo_LF4_5</talk_npc2>
+		<talk_npc3>Geta</talk_npc3>
+		<reward_npc_name>Shugo_LF4_3</reward_npc_name>
+	</id>
+	<id id="11212">
+		<dev_name>용족의 병법서</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_11212A</use_item_name>
+		<talk_npc1>Wivius</talk_npc1>
+		<reward_npc_name>Iaetia</reward_npc_name>
+	</id>
+	<id id="11233">
+		<dev_name>콘돌 알에서 나온 물건</dev_name>
+		<use_item_name>ITEM_QUEST_11233A</use_item_name>
+		<talk_npc1>Suleion</talk_npc1>
+		<give_item1>ITEM_QUEST_11233B 1</give_item1>
+		<remove_item1>ITEM_QUEST_11233A 1</remove_item1>
+		<talk_npc2>Geta</talk_npc2>
+		<give_item2>ITEM_QUEST_11233C 1</give_item2>
+		<remove_item2>ITEM_QUEST_11233B 1</remove_item2>
+		<reward_npc_name>Shugo_LF4_3</reward_npc_name>
+	</id>
+	<id id="11465">
+		<dev_name>정직한 보상(천마)</dev_name>
+		<use_item_name>ITEM_QUEST_11465A</use_item_name>
+		<reward_npc_name>Tree_moving_Triminos</reward_npc_name>
+	</id>
+	<id id="11466">
+		<dev_name>운좋은 보상(천마)</dev_name>
+		<use_item_name>ITEM_QUEST_11466A</use_item_name>
+		<reward_npc_name>Tree_moving_Triminos</reward_npc_name>
+	</id>
+	<id id="18405">
+		<dev_name>변이된 드라겔</dev_name>
+		<use_item_name>ITEM_QUEST_18405A</use_item_name>
+		<talk_npc1>Antigone</talk_npc1>
+		<give_item1>ITEM_QUEST_18405B 1</give_item1>
+		<remove_item1>ITEM_QUEST_18405A 1</remove_item1>
+		<reward_npc_name>Leah</reward_npc_name>
+	</id>
+	<id id="18406">
+		<dev_name>지룡검 1</dev_name>
+		<use_item_name>ITEM_QUEST_18406A</use_item_name>
+		<reward_npc_name>Leah</reward_npc_name>
+		<con_quest>18407</con_quest>
+	</id>
+	<id id="18708">
+		<dev_name>봉인의 마법</dev_name>
+		<use_item_name>ITEM_QUEST_18708A</use_item_name>
+		<reward_npc_name>Ein</reward_npc_name>
+	</id>
+	<id id="21059">
+		<dev_name>에픽무기퀘스트_01(마족)</dev_name>
+		<use_item_name>ITEM_QUEST_21059A</use_item_name>
+		<reward_npc_name>Krizarid</reward_npc_name>
+	</id>
+	<id id="21125">
+		<dev_name>광신도의 신전</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_21125A</use_item_name>
+		<reward_npc_name>Ortiz</reward_npc_name>
+		<con_quest>21124</con_quest>
+	</id>
+	<id id="21137">
+		<dev_name>클로버 필드 3</dev_name>
+		<use_item_name>ITEM_QUEST_21137A</use_item_name>
+		<talk_npc1>Skira</talk_npc1>
+		<reward_npc_name>Wolfgang</reward_npc_name>
+	</id>
+	<id id="21221">
+		<dev_name>느빌림</dev_name>
+		<use_item_name>ITEM_QUEST_21221A</use_item_name>
+		<talk_npc1>Wolfgang</talk_npc1>
+		<reward_npc_name>Helen</reward_npc_name>
+		<con_quest>21220</con_quest>
+	</id>
+	<id id="21243">
+		<dev_name>윈드패쓰 퀘스트 0</dev_name>
+		<use_item_name>ITEM_QUEST_21243A</use_item_name>
+		<talk_npc1>Batalrion</talk_npc1>
+		<reward_npc_name>Ducalis</reward_npc_name>
+	</id>
+	<id id="21465">
+		<dev_name>정직한 보상(마)</dev_name>
+		<use_item_name>ITEM_QUEST_21465A</use_item_name>
+		<reward_npc_name>Tree_moving_Triminos</reward_npc_name>
+	</id>
+	<id id="28405">
+		<dev_name>변이된 드라겔</dev_name>
+		<use_item_name>ITEM_QUEST_28405A</use_item_name>
+		<talk_npc1>Luigir</talk_npc1>
+		<give_item1>ITEM_QUEST_28405B 1</give_item1>
+		<remove_item1>ITEM_QUEST_28405A 1</remove_item1>
+		<reward_npc_name>Dmytro</reward_npc_name>
+	</id>
+	<id id="28406">
+		<dev_name>지룡검 1</dev_name>
+		<use_item_name>ITEM_QUEST_28406A</use_item_name>
+		<reward_npc_name>Dmytro</reward_npc_name>
+		<con_quest>28407</con_quest>
+	</id>
+	<id id="28708">
+		<dev_name>봉인의 마법</dev_name>
+		<use_item_name>ITEM_QUEST_28708A</use_item_name>
+		<reward_npc_name>Ein</reward_npc_name>
+	</id>
+	<id id="30007">
+		<dev_name>드라칸의 비밀 (천족)</dev_name>
+		<use_item_name>ITEM_QUEST_30007A</use_item_name>
+		<talk_npc1>Sueros</talk_npc1>
+		<reward_npc_name>Honeus</reward_npc_name>
+		<con_quest>30008</con_quest>
+	</id>
+	<id id="30107">
+		<dev_name>드라칸의 비밀 (마족)</dev_name>
+		<use_item_name>ITEM_QUEST_30107A</use_item_name>
+		<talk_npc1>Taustir</talk_npc1>
+		<reward_npc_name>aglauros</reward_npc_name>
+		<con_quest>30108</con_quest>
+	</id>
+	<id id="30261">
+		<dev_name>기묘한 파편</dev_name>
+		<use_item_name>ITEM_QUEST_30261A</use_item_name>
+		<talk_npc1>Rentia</talk_npc1>
+		<talk_npc2>Ab1_NPC_LugBug</talk_npc2>
+		<reward_npc_name>Ab1_1011_TreasureGate_Li</reward_npc_name>
+		<con_quest>30262</con_quest>
+	</id>
+	<id id="30264">
+		<dev_name>정령의 목걸이</dev_name>
+		<use_item_name>ITEM_QUEST_30264A</use_item_name>
+		<reward_npc_name>Hecate</reward_npc_name>
+	</id>
+	<id id="30265">
+		<dev_name>아카리오스의 창</dev_name>
+		<use_item_name>ITEM_QUEST_30265A</use_item_name>
+		<talk_npc1>Vatonia</talk_npc1>
+		<talk_npc2>Asteros</talk_npc2>
+		<reward_npc_name>Pernos</reward_npc_name>
+	</id>
+	<id id="30361">
+		<dev_name>기묘한 파편</dev_name>
+		<use_item_name>ITEM_QUEST_30361A</use_item_name>
+		<talk_npc1>Erik</talk_npc1>
+		<talk_npc2>Ab1_NPC_LugBug</talk_npc2>
+		<reward_npc_name>Ab1_1011_TreasureGate_Da</reward_npc_name>
+		<con_quest>30362</con_quest>
+	</id>
+	<id id="30364">
+		<dev_name>정령의 목걸이</dev_name>
+		<use_item_name>ITEM_QUEST_30364A</use_item_name>
+		<talk_npc1>Lanse</talk_npc1>
+		<reward_npc_name>Sif</reward_npc_name>
+	</id>
+	<id id="30365">
+		<dev_name>낡은 일기장</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_30365A</use_item_name>
+		<talk_npc1>Annemari</talk_npc1>
+		<talk_npc2>Arekedil</talk_npc2>
+		<talk_npc3>Haug</talk_npc3>
+		<reward_npc_name>Arekedil</reward_npc_name>
+	</id>
+	<id id="30505">
+		<dev_name>[파티] 메롭스의 일기</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_30505A</use_item_name>
+		<reward_npc_name>Oreitia</reward_npc_name>
+		<con_quest>30506</con_quest>
+	</id>
+	<id id="30555">
+		<dev_name>[파티] 메롭스의 심경</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_30555A</use_item_name>
+		<reward_npc_name>Oreitia</reward_npc_name>
+		<con_quest>30556</con_quest>
+	</id>
+	<id id="80008">
+		<dev_name>[이벤트]일본대만_1주년_09</dev_name>
+		<use_item_name>ITEM_QUEST_80008A</use_item_name>
+		<reward_npc_name>Ias</reward_npc_name>
+	</id>
+	<id id="80009">
+		<dev_name>[이벤트]일본대만_1주년_10</dev_name>
+		<use_item_name>ITEM_QUEST_80009A</use_item_name>
+		<reward_npc_name>Belenus</reward_npc_name>
+	</id>
+	<id id="80135">
+		<dev_name>[이벤트] 비틀어진 시공의 균열 방지</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_80135A</use_item_name>
+		<reward_npc_name>event_Prematunuse</reward_npc_name>
+	</id>
+	<id id="80137">
+		<dev_name>[이벤트] 비틀어진 시공의 균열 방지</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_80137A</use_item_name>
+		<reward_npc_name>event_Prematunuse</reward_npc_name>
+	</id>
+	<id id="80139">
+		<dev_name>[이벤트] 비틀어진 시공의 균열 방지</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_80139A</use_item_name>
+		<reward_npc_name>event_Prematunuse</reward_npc_name>
+	</id>
+	<id id="80141">
+		<dev_name>[이벤트] 비틀어진 시공의 균열 방지</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_80141A</use_item_name>
+		<reward_npc_name>event_Prematunuse</reward_npc_name>
+	</id>
+	<id id="80143">
+		<dev_name>[이벤트] 비틀어진 시공의 균열 방지</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_80143A</use_item_name>
+		<reward_npc_name>event_Caltimonea</reward_npc_name>
+	</id>
+	<id id="80145">
+		<dev_name>[이벤트] 비틀어진 시공의 균열 방지</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_80145A</use_item_name>
+		<reward_npc_name>event_Caltimonea</reward_npc_name>
+	</id>
+	<id id="80147">
+		<dev_name>[이벤트] 비틀어진 시공의 균열 방지</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_80147A</use_item_name>
+		<reward_npc_name>event_Caltimonea</reward_npc_name>
+	</id>
+	<id id="80149">
+		<dev_name>[이벤트] 비틀어진 시공의 균열 방지</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_80149A</use_item_name>
+		<reward_npc_name>event_Caltimonea</reward_npc_name>
+	</id>
+	<id id="80172">
+		<dev_name>[이벤트]아버지의 편지</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_80172</use_item_name>
+		<reward_npc_name>event_Erdat</reward_npc_name>
+		<con_quest>80173</con_quest>
+	</id>
+	<id id="80176">
+		<dev_name>[이벤트]아버지의 편지</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_80176</use_item_name>
+		<reward_npc_name>event_Netalion</reward_npc_name>
+		<con_quest>80177</con_quest>
+	</id>
+	<id id="80182">
+		<dev_name>[이벤트] 테스트_천족_한류드라마_드랍형</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_80182A</use_item_name>
+		<talk_npc1>event_ryoenniya</talk_npc1>
+		<give_item1>ITEM_QUEST_80182B 1</give_item1>
+		<remove_item1>ITEM_DOC_QUEST_80182A 1</remove_item1>
+		<reward_npc_name>event_luiel</reward_npc_name>
+	</id>
+	<id id="80186">
+		<dev_name>[이벤트] 테스트_마족_한류드라마_드랍형</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_80186A</use_item_name>
+		<talk_npc1>event_rikanelly</talk_npc1>
+		<give_item1>ITEM_QUEST_80186B 1</give_item1>
+		<remove_item1>ITEM_DOC_QUEST_80186A 1</remove_item1>
+		<reward_npc_name>event_karjannke</reward_npc_name>
+	</id>
+	<id id="80189">
+		<dev_name>[이벤트] 테스트_천족_제작 협회_아이템시작</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_80188</use_item_name>
+		<reward_npc_name>event_Kerasiss</reward_npc_name>
+	</id>
+	<id id="80193">
+		<dev_name>[이벤트] 테스트_마족_제작 협회_아이템시작</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_80192</use_item_name>
+		<reward_npc_name>event_Proburr</reward_npc_name>
+	</id>
+	<id id="80197">
+		<dev_name>[이벤트] 사랑 고백 편지_아이템형 (천)</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_80197</use_item_name>
+		<talk_npc1>event_Riderin</talk_npc1>
+		<remove_item1>ITEM_DOC_QUEST_80197 1</remove_item1>
+		<reward_npc_name>event_Riderin</reward_npc_name>
+	</id>
+	<id id="80201">
+		<dev_name>[이벤트] 사랑 고백 편지_아이템형 (마)</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_80201</use_item_name>
+		<talk_npc1>event_Wuendy</talk_npc1>
+		<remove_item1>ITEM_DOC_QUEST_80201 1</remove_item1>
+		<reward_npc_name>event_Wuendy</reward_npc_name>
+	</id>
+	<id id="80207">
+		<dev_name>[이벤트] 테스트_천족_아이템</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_80207</use_item_name>
+		<reward_npc_name>event_Fooingta</reward_npc_name>
+	</id>
+	<id id="80211">
+		<dev_name>[이벤트] 테스트_마족_아이템</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_80211</use_item_name>
+		<reward_npc_name>event_Suike</reward_npc_name>
+	</id>
+	<id id="80274">
+		<dev_name>[이벤트][인던] 긴급서신 (천) - 동선유도</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_80274A</use_item_name>
+		<reward_npc_name>IDEvent01_In_NPC</reward_npc_name>
+	</id>
+	<id id="80276">
+		<dev_name>[이벤트][인던] 긴급서신 (마) - 동선유도</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_80276A</use_item_name>
+		<reward_npc_name>IDEvent01_In_NPC_Da</reward_npc_name>
+	</id>
+	<id id="19059">
+		<dev_name>천족 어비스 배달 가구</dev_name>
+		<use_item_name>ITEM_QUEST_19059A</use_item_name>
+		<reward_npc_name>Cymaon</reward_npc_name>
+	</id>
+	<id id="29059">
+		<dev_name>마족 어비스 배달 가구</dev_name>
+		<use_item_name>ITEM_QUEST_29059A</use_item_name>
+		<reward_npc_name>Blir</reward_npc_name>
+	</id>
+	<id id="41250">
+		<dev_name>파괴된 퍼즐</dev_name>
+		<use_item_name>ITEM_QUEST_41250A</use_item_name>
+		<reward_npc_name>Moraytia</reward_npc_name>
+		<con_quest>41251</con_quest>
+	</id>
+	<id id="41350">
+		<dev_name>용족의 소지품</dev_name>
+		<use_item_name>ITEM_QUEST_41350A</use_item_name>
+		<reward_npc_name>Morphiuss</reward_npc_name>
+	</id>
+	<id id="80315">
+		<dev_name>[이벤트] 가디언의 영웅이 빛나는 이유</dev_name>
+		<use_item_name>ITEM_QUEST_80314B</use_item_name>
+		<talk_npc1>event_Celta</talk_npc1>
+		<reward_npc_name>event_Alef</reward_npc_name>
+	</id>
+	<id id="80321">
+		<dev_name>[이벤트] 아칸의 영웅이 빛나는 이유</dev_name>
+		<use_item_name>ITEM_QUEST_80320B</use_item_name>
+		<talk_npc1>event_Soraya</talk_npc1>
+		<reward_npc_name>event_Dalet</reward_npc_name>
+	</id>
+	<id id="11289">
+		<dev_name>헤라나스의 선물</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_11289A</use_item_name>
+		<reward_npc_name>Laestrygos</reward_npc_name>
+	</id>
+	<id id="21291">
+		<dev_name>테그라크의 선물</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_21291A</use_item_name>
+		<reward_npc_name>Vedrfonir</reward_npc_name>
+	</id>
+	<id id="41570">
+		<dev_name>버려진 과일 바구니</dev_name>
+		<use_item_name>ITEM_QUEST_41570A</use_item_name>
+		<reward_npc_name>Kiriyu</reward_npc_name>
+		<con_quest>41571</con_quest>
+	</id>
+	<id id="41573">
+		<dev_name>수상한 해골</dev_name>
+		<use_item_name>ITEM_QUEST_41573A</use_item_name>
+		<reward_npc_name>Shumaron</reward_npc_name>
+		<con_quest>41574</con_quest>
+	</id>
+	<id id="41576">
+		<dev_name>이상한 기운의 목걸이</dev_name>
+		<use_item_name>ITEM_QUEST_41576A</use_item_name>
+		<reward_npc_name>Kiriyu</reward_npc_name>
+		<con_quest>41577</con_quest>
+	</id>
+	<id id="41579">
+		<dev_name>연족의 거울</dev_name>
+		<use_item_name>ITEM_QUEST_41579A</use_item_name>
+		<reward_npc_name>Poin</reward_npc_name>
+		<con_quest>41580</con_quest>
+	</id>
+	<id id="41582">
+		<dev_name>빛나는 구슬</dev_name>
+		<use_item_name>ITEM_QUEST_41582A</use_item_name>
+		<reward_npc_name>Avrite</reward_npc_name>
+	</id>
+	<id id="41583">
+		<dev_name>지저분한 반지</dev_name>
+		<use_item_name>ITEM_QUEST_41583A</use_item_name>
+		<reward_npc_name>Aius</reward_npc_name>
+		<con_quest>41584</con_quest>
+	</id>
+	<id id="18833">
+		<dev_name>화분 재료 모으기</dev_name>
+		<use_item_name>ITEM_QUEST_18833A</use_item_name>
+		<reward_npc_name>Gadorus</reward_npc_name>
+		<con_quest>18834</con_quest>
+	</id>
+	<id id="18835">
+		<dev_name>화분 재료 모으기2</dev_name>
+		<use_item_name>ITEM_QUEST_18835A</use_item_name>
+		<reward_npc_name>Gadorus</reward_npc_name>
+		<con_quest>18836</con_quest>
+	</id>
+	<id id="18837">
+		<dev_name>화분 재료 모으기3</dev_name>
+		<use_item_name>ITEM_QUEST_18837A</use_item_name>
+		<reward_npc_name>Gadorus</reward_npc_name>
+		<con_quest>18838</con_quest>
+	</id>
+	<id id="28833">
+		<dev_name>화분 재료 모으기</dev_name>
+		<use_item_name>ITEM_QUEST_28833A</use_item_name>
+		<reward_npc_name>Aridella</reward_npc_name>
+		<con_quest>28834</con_quest>
+	</id>
+	<id id="28835">
+		<dev_name>화분 재료 모으기2</dev_name>
+		<use_item_name>ITEM_QUEST_28835A</use_item_name>
+		<reward_npc_name>Aridella</reward_npc_name>
+		<con_quest>28836</con_quest>
+	</id>
+	<id id="28837">
+		<dev_name>화분 재료 모으기3</dev_name>
+		<use_item_name>ITEM_QUEST_28837A</use_item_name>
+		<reward_npc_name>Aridella</reward_npc_name>
+		<con_quest>28838</con_quest>
+	</id>
+	<id id="41191">
+		<dev_name>희귀한 광석</dev_name>
+		<use_item_name>ITEM_QUEST_41191A</use_item_name>
+		<reward_npc_name>Teckous</reward_npc_name>
+	</id>
+	<id id="30720">
+		<dev_name>[포스] 카룬 증표 보상</dev_name>
+		<use_item_name>ITEM_QUEST_30720A</use_item_name>
+		<reward_npc_name>magician_apprentice</reward_npc_name>
+	</id>
+	<id id="16904">
+		<dev_name>키사르 부락 2 (반복)</dev_name>
+		<use_item_name>ITEM_QUEST_16904A</use_item_name>
+		<reward_npc_name>LF3_Demonax_G</reward_npc_name>
+	</id>
+	<id id="16909">
+		<dev_name>[잠입] 서리눈썹 전초기지 2 (반복)</dev_name>
+		<use_item_name>ITEM_QUEST_16909A</use_item_name>
+		<reward_npc_name>DF3_Alcmenes_G</reward_npc_name>
+	</id>
+	<id id="26904">
+		<dev_name>[잠입] 키사르 부락 2 (반복)</dev_name>
+		<use_item_name>ITEM_QUEST_26904A</use_item_name>
+		<reward_npc_name>LF3_Leif_G</reward_npc_name>
+	</id>
+	<id id="26909">
+		<dev_name>서리눈썹 전초기지 2 (반복)</dev_name>
+		<use_item_name>ITEM_QUEST_26909A</use_item_name>
+		<reward_npc_name>DF3_Helgi_G</reward_npc_name>
+	</id>
+	<id id="12527">
+		<dev_name>브리트라 정보부가 찾는 것</dev_name>
+		<use_item_name>ITEM_QUEST_12527A</use_item_name>
+		<reward_npc_name>LDF5a_Repta_E</reward_npc_name>
+	</id>
+	<id id="22527">
+		<dev_name>브리트라 정보부가 찾는 것</dev_name>
+		<use_item_name>ITEM_QUEST_22527A</use_item_name>
+		<reward_npc_name>LDF5a_Serip_E</reward_npc_name>
+	</id>
+	<id id="13562">
+		<dev_name>마이링의 목걸이</dev_name>
+		<use_item_name>ITEM_QUEST_13562A</use_item_name>
+		<reward_npc_name>LDF5a_Mairing_E</reward_npc_name>
+	</id>
+	<id id="13060">
+		<dev_name>[남부] 이상한 물 (302)</dev_name>
+		<use_item_name>ITEM_QUEST_13060A</use_item_name>
+		<talk_npc1>LDF5b_Shinisto_E</talk_npc1>
+		<talk_npc2>LDF5b_Mopolrio_E</talk_npc2>
+		<talk_npc3>LDF5b_Shinisto_E</talk_npc3>
+		<reward_npc_name>LDF5b_Greenhat_LD</reward_npc_name>
+	</id>
+	<id id="23060">
+		<dev_name>이상한 물 (301)</dev_name>
+		<use_item_name>ITEM_QUEST_23060A</use_item_name>
+		<talk_npc1>LDF5b_Denitz_E</talk_npc1>
+		<talk_npc2>LDF5b_Ulvali_E</talk_npc2>
+		<talk_npc3>LDF5b_Denitz_E</talk_npc3>
+		<reward_npc_name>LDF5b_Greenhat_LD</reward_npc_name>
+	</id>
+	<id id="23558">
+		<dev_name>골드린의 흔적</dev_name>
+		<use_item_name>ITEM_QUEST_23558A</use_item_name>
+		<reward_npc_name>LDF5b_Albaring_E</reward_npc_name>
+	</id>
+	<id id="80332">
+		<dev_name>[이벤트] 요정으로부터&hellip;</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_80332A</use_item_name>
+		<reward_npc_name>IDAsteria_IU_IN_NPC01</reward_npc_name>
+	</id>
+	<id id="13520">
+		<dev_name>[최상]타브로쉬 처치 1</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_13520A</use_item_name>
+		<reward_npc_name>LDF5a_Tiryns_Commander</reward_npc_name>
+		<con_quest>13521</con_quest>
+	</id>
+	<id id="23520">
+		<dev_name>[최상]타브로쉬 처치 1</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_23520A</use_item_name>
+		<reward_npc_name>LDF5a_Bard_Commander</reward_npc_name>
+		<con_quest>23521</con_quest>
+	</id>
+	<id id="16982">
+		<dev_name>[IDLDF5_Under_02 룬의 안식처] 연구일지</dev_name>
+		<use_item_name>ITEM_QUEST_16982A</use_item_name>
+		<reward_npc_name>LDF5_Under_Liponia_E</reward_npc_name>
+	</id>
+	<id id="26982">
+		<dev_name>연구일지</dev_name>
+		<use_item_name>ITEM_QUEST_26982A</use_item_name>
+		<reward_npc_name>LDF5_Under_Nibella_E</reward_npc_name>
+	</id>
+	<id id="80482">
+		<dev_name>[이벤트] 검의 섬의 비밀4(천족)</dev_name>
+		<use_item_name>ITEM_QUEST_80481A</use_item_name>
+		<reward_npc_name>event_Lisenic</reward_npc_name>
+		<item_check>1</item_check>
+	</id>
+	<id id="80486">
+		<dev_name>[이벤트] 검의 섬의 비밀4(마족)</dev_name>
+		<use_item_name>ITEM_QUEST_80485A</use_item_name>
+		<reward_npc_name>event_Shoomir</reward_npc_name>
+		<item_check>1</item_check>
+	</id>
+	<id id="80554">
+		<dev_name>[이벤트] 천슈고의 청첩장(천)</dev_name>
+		<use_item_name>ITEM_QUEST_80553A</use_item_name>
+		<reward_npc_name>event_MaMumu_1</reward_npc_name>
+		<con_quest>80555</con_quest>
+	</id>
+	<id id="80558">
+		<dev_name>[이벤트] 천슈고의 청첩장(마)</dev_name>
+		<use_item_name>ITEM_QUEST_80557A</use_item_name>
+		<reward_npc_name>event_MaMumu_2</reward_npc_name>
+		<con_quest>80559</con_quest>
+	</id>
+	<id id="13812">
+		<dev_name>검은 계획</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_13812A</use_item_name>
+		<reward_npc_name>LDF5_Fortress_Village_Guard02_L</reward_npc_name>
+	</id>
+	<id id="23812">
+		<dev_name>검은 계략</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_23812A</use_item_name>
+		<reward_npc_name>LDF5_Fortress_Village_Guard02_D</reward_npc_name>
+	</id>
+	<id id="80612">
+		<dev_name>[이벤트] 돌팔이 의사의 처방</dev_name>
+		<use_item_name>ITEM_DOC_QUEST_80611A</use_item_name>
+		<reward_npc_name>event_Mugura</reward_npc_name>
+		<item_check>1</item_check>
+	</id>
+	<id id="80615">
+		<dev_name>[이벤트] 행운의 자격 (천)</dev_name>
+		<use_item_name>ITEM_QUEST_80615A</use_item_name>
+		<reward_npc_name>event_GACHA</reward_npc_name>
+		<item_check>1</item_check>
+	</id>
+	<id id="80616">
+		<dev_name>[이벤트] 행운의 자격 (마)</dev_name>
+		<use_item_name>ITEM_QUEST_80616A</use_item_name>
+		<reward_npc_name>event_GACHA</reward_npc_name>
+		<item_check>1</item_check>
+	</id>
+	<id id="30723">
+		<dev_name>[잠입/포스] 용제의 오르골</dev_name>
+		<use_item_name>ITEM_QUEST_30723A</use_item_name>
+		<reward_npc_name>magician_apprentice</reward_npc_name>
+	</id>
+	<id id="18954">
+		<dev_name>어둠의 용제의 팔</dev_name>
+		<use_item_name>ITEM_QUEST_18954A</use_item_name>
+		<reward_npc_name>LF5_Aithria_E</reward_npc_name>
+	</id>
+	<id id="28954">
+		<dev_name>어둠의 주인의 팔</dev_name>
+		<use_item_name>ITEM_QUEST_28954A</use_item_name>
+		<reward_npc_name>DF5_Vard_E</reward_npc_name>
+	</id>
+	<id id="15200">
+		<dev_name>[4.8 LF5 인터렉티브 시공 GP 보상 퀘스트] 슈퍼가드의 증표</dev_name>
+		<use_item_name>ITEM_QUEST_15200A</use_item_name>
+		<reward_npc_name>LF5_Atmos_E</reward_npc_name>
+	</id>
+	<id id="80739">
+		<dev_name>[이벤트] 고대의 강령술사</dev_name>
+		<use_item_name>ITEM_QUEST_80739A</use_item_name>
+		<reward_npc_name>event_undertaker</reward_npc_name>
+	</id>
+</quest_simpleuseitems>

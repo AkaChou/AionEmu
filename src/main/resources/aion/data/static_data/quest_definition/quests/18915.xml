@@ -103,7 +103,7 @@
   <transitions>
     <dialog type="NPC_START" npc-id="801945" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT1"/>
     <counter-grid>
-      <dimension field="var0" required="20" npc-ids="230786 230788 230789 233333 230810 233338 230798 230800 230801 233336 233337 230792 230794 230795 233334 233335 230814 230816 230817 233339 230804 230806 230807 230820 230822 230823 230787"/>
+      <dimension field="var0" required="20" npc-ids="230786 230792 230798 230804 230810 230814 230820 233333 233334 233336 233338 233339"/>
     </counter-grid>
     <kill-chain nodes="started k1 k2 k3 k4 k5 k6 k7 k8 k9 k10 k11 k12 k13 k14 k15 k16 k17 k18 k19 k20">
       <event>

@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.questEngine.e2e;
 
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
-import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
@@ -13,7 +13,6 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -42,9 +41,11 @@ class QuestGoldenJourneyTest {
 		CompiledQuestDefinition definition = definition(1913);
 		QuestTransition ingress = talk(definition, "unaccepted", 203758, 31);
 		try (QuestJourneyRunner journey = new QuestJourneyRunner(definition, ingress, oracle)) {
-			assertStep(journey.interact(203758, 31), QuestStatus.NONE, 0, 1011);
-			assertStep(journey.clickVisibleAction(1012), QuestStatus.NONE, 0, 1012);
-			assertStep(journey.clickVisibleAction(1007), QuestStatus.NONE, 0, 4);
+			// S2 规范形接取：QUEST_SELECT(31) 从 unaccepted 直发接取窗页 4（接受 1002 / 拒绝 1003），
+			// SELECT1 页梯与 1007 中转退场；接取提交后页 1003 的出口是 1008。
+			// S2 canonical accept: QUEST_SELECT(31) pops the ask window page 4 straight from
+			// unaccepted (accept 1002 / refuse 1003); the SELECT1 ladder and the 1007 relay are gone.
+			assertStep(journey.interact(203758, 31), QuestStatus.NONE, 0, 4);
 			assertStep(journey.clickVisibleAction(1002), QuestStatus.START, 0, 1003);
 			assertStep(journey.clickVisibleAction(1008), QuestStatus.START, 0, 10);
 
@@ -53,8 +54,11 @@ class QuestGoldenJourneyTest {
 				QuestStatus.START, 1, 0);
 			assertTraceOrder(teleport, "STATE", "publish:START", "WORLD", "teleport:210030000:1");
 
-			assertStep(journey.interact(203097, 31), QuestStatus.START, 1, 2375);
-			assertStep(journey.clickVisibleAction(1009), QuestStatus.REWARD, 1, 5);
+			// S2 规范形交付：交付边锚在传送后的 started1，点 31 即翻 REWARD 并下发本档奖励窗
+			// （单档 → 窗 1 页 5）；SELECT5 报告页与 1009 中转退场。
+			// S2 canonical delivery: the edge is anchored at the post-transfer started1; clicking 31
+			// flips REWARD and shows the tiered window (one group -> window 1, page 5).
+			assertStep(journey.interact(203097, 31), QuestStatus.REWARD, 1, 5);
 			QuestJourneyRunner.Step completion = assertStep(journey.clickNativeAction(8),
 				QuestStatus.COMPLETE, 0, 10);
 
@@ -231,12 +235,6 @@ class QuestGoldenJourneyTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		try (InputStream input = QuestGoldenJourneyTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition " + questId);
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		return ProductionQuestDefinitions.definitionInOverlay(questId);
 	}
 }

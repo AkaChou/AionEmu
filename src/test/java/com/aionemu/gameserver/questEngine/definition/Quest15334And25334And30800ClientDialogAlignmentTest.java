@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.aionemu.gameserver.questEngine.e2e.client.ClientResourceOracle;
 import com.aionemu.gameserver.questEngine.e2e.journey.QuestProductionJourneyExecutor;
 import com.aionemu.gameserver.questEngine.e2e.journey.QuestProductionJourneyPlanner;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -58,15 +57,34 @@ class Quest15334And25334And30800ClientDialogAlignmentTest {
 			}
 		}
 
-		QuestTransition itemUse = transition(definition, "started", "reward", new QuestEvent.UseItem(itemId));
-		assertEquals(List.of(new QuestCondition.QuestVariableIs("var0", 0)), itemUse.conditions());
-		assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), itemUse.actions());
-		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
-			QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), itemUse.afterCommit());
+		// 15334/25334 已转 DataDriven 链形：ItemPlay 边推进（3000ms 遗留标准时长）、无条件、
+		// PACKET_ONLY；工作物品的完成清理由 planner 追加（定义不再携带显式 RemoveItem）。
+		// 30800 仍为遗留 XML（LevelUpLogIn 轴暂缓），保留 UseItem + 显式 RemoveItem 形。
+		// 15334/25334 moved to the DataDriven chain shape: an ItemPlay edge advances (the 3000ms
+		// legacy standard duration), unconditional with PACKET_ONLY; the planner appends the
+		// work-item completion cleanup (the definition no longer carries an explicit RemoveItem).
+		// 30800 stays on the legacy XML (the LevelUpLogIn axis is deferred), keeping the UseItem
+		// plus explicit RemoveItem shape.
+		boolean dataDriven = questId != 30800;
+		QuestTransition itemUse = transition(definition, "started", "reward", dataDriven
+			? new QuestEvent.ItemPlay(itemId, 3000)
+			: new QuestEvent.UseItem(itemId));
+		if (dataDriven) {
+			assertEquals(List.of(), itemUse.conditions());
+			assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), itemUse.actions());
+			assertEquals(List.of(new AfterCommitAction.SyncQuestState(
+				QuestStateSyncMode.PACKET_ONLY)), itemUse.afterCommit());
+		} else {
+			assertEquals(List.of(new QuestCondition.QuestVariableIs("var0", 0)), itemUse.conditions());
+			assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), itemUse.actions());
+			assertEquals(List.of(new AfterCommitAction.SyncQuestState(
+				QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), itemUse.afterCommit());
+		}
 
 		QuestTransition useObject = talk(definition, "reward", "reward", npcId, QuestDialogAction.USE_OBJECT);
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
-			useObject.afterCommit());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(dataDriven
+			? QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()
+			: QuestDialogPage.DEFAULT_SUCCESS.id())), useObject.afterCommit());
 		QuestTransition report = talk(definition, "reward", "reward", npcId, QuestDialogAction.SELECT_QUEST_REWARD);
 		assertTrue(report.actions().isEmpty());
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
@@ -75,7 +93,9 @@ class Quest15334And25334And30800ClientDialogAlignmentTest {
 		QuestTransition completion = talk(definition, "reward", "complete", npcId,
 			QuestDialogAction.SELECTED_QUEST_REWARD1);
 		List<QuestAction> expectedActions = new java.util.ArrayList<>();
-		expectedActions.add(new QuestAction.RemoveItem(itemId, 1));
+		if (!dataDriven) {
+			expectedActions.add(new QuestAction.RemoveItem(itemId, 1));
+		}
 		expectedActions.addAll(completionActions);
 		assertEquals(expectedActions, completion.actions());
 		assertEquals(List.of(
@@ -100,11 +120,10 @@ class Quest15334And25334And30800ClientDialogAlignmentTest {
 		return routes.getFirst();
 	}
 
+	// 退役任务统一走生产视图（真端 overlay 合成；旧 XML 只在 git 历史里）。
+	// Retired quests resolve through the production view (retail overlay; the old XML lives in
+	// git history only).
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		try (InputStream input = Quest15334And25334And30800ClientDialogAlignmentTest.class
-			.getResourceAsStream("/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			if (input == null) throw new IllegalStateException("missing quest definition " + questId + ".xml");
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

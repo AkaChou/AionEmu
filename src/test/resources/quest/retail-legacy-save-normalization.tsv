@@ -1,0 +1,32 @@
+# 非 IR 轴登记表·旧存档自愈边（LEGACY_SAVE_HEAL）——**规范位置，受 RetailNonIrAxisGateTest 门禁守**
+# P0c-11（2026-09-25）起从 .agents/summary/scriptdll-quest-driver/p0c6-legacy-save-normalization.tsv 迁入；
+# 采纳切片移除 EnterWorld 自愈边时在本表追加（p0c9_retire_rows.py 落地器已指向本文件），
+# 随后重跑 python3 -B .agents/summary/scriptdll-quest-driver/p0c11_build_non_ir_registry.py 刷新统一登记表。
+# 口径：真端驱动后 var0 是击杀计数（bit 0..5 = SECTION_0）、var5 是简报标志位（bit 30）；
+#       旧存档若停在旧 XML 的"行号/未听简报"形状，可按本表做一次性归一化（**可选**，不要求零进度损失）。
+# 列：quest_id / 旧源节点 / 旧目标节点 / 事件 / 被移除边的条件 / 被移除边的动作 / 真端形状
+# P0c-6 退役 XML 的"存档修复边"→ 可选一次性 DB 归一化清单
+# 口径：真端驱动后 var0 是击杀计数（bit 0..5 = SECTION_0）、var5 是简报标志位（bit 30）；
+#       旧存档若停在旧 XML 的"行号/未听简报"形状，可按本表做一次性归一化（**可选**，不要求零进度损失）。
+# 列：quest_id / 旧源节点 / 旧目标节点 / 事件 / 被移除边的条件 / 被移除边的动作 / 真端形状
+16900	(none)	reward	enter-world	status=REWARD var0=1 [(quest_vars & 63) = 1]	var0:=2	真端形状：REWARD 投影满段计数（var0=1）＋ 客户端 SECTION 门控推导任务书行，服务端无行号可漂移；**不要**把旧边写入的行号搬过来
+16901	(none)	reward	enter-world	status=REWARD var0=1 [(quest_vars & 63) = 1]	var0:=2	真端形状：REWARD 投影满段计数（var0=1）＋ 客户端 SECTION 门控推导任务书行，服务端无行号可漂移；**不要**把旧边写入的行号搬过来
+16902	(none)	reward	enter-world	status=REWARD var0=1 [(quest_vars & 63) = 1]	var0:=2	真端形状：REWARD 投影满段计数（var0=1）＋ 客户端 SECTION 门控推导任务书行，服务端无行号可漂移；**不要**把旧边写入的行号搬过来
+16903	(none)	reward	enter-world	status=REWARD var0=1 [(quest_vars & 63) = 1]	var0:=2	真端形状：REWARD 投影满段计数（var0=1）＋ 客户端 SECTION 门控推导任务书行，服务端无行号可漂移；**不要**把旧边写入的行号搬过来
+16960	(none)	reward	enter-world	status=REWARD var0=1 [(quest_vars & 63) = 1]	var0:=2	真端形状：REWARD 投影满段计数（var0=1）＋ 客户端 SECTION 门控推导任务书行，服务端无行号可漂移；**不要**把旧边写入的行号搬过来
+24112	(none)	killed	enter-world	status=START var0=1 [(quest_vars & 63) = 1] var5=1 [bit30]	var5:=0 var0:=1	真端形状：REWARD 投影满段计数（var0=1）＋ 客户端 SECTION 门控推导任务书行，服务端无行号可漂移；**不要**把旧边写入的行号搬过来
+24112	(none)	reward	enter-world	status=REWARD	var0:=1 var5:=0	真端形状：REWARD 投影满段计数（var0=1）＋ 客户端 SECTION 门控推导任务书行，服务端无行号可漂移；**不要**把旧边写入的行号搬过来
+24153	(none)	reward	enter-world	status=REWARD	var0:=1 var1:=1 var2:=1 var3:=1 var4:=1 var5:=0	真端形状：REWARD 投影满段计数（var0=1,var1=1,var2=1,var3=1,var4=1）＋ 客户端 SECTION 门控推导任务书行，服务端无行号可漂移；**不要**把旧边写入的行号搬过来
+24201	(none)	reward	enter-world	status=REWARD var0=1 [(quest_vars & 63) = 1]	var0:=2	真端形状：REWARD 投影满段计数（var0=12）＋ 客户端 SECTION 门控推导任务书行，服务端无行号可漂移；**不要**把旧边写入的行号搬过来
+26905	(none)	reward	enter-world	status=REWARD var0=0 [(quest_vars & 63) = 0]	var0:=2	真端形状：REWARD 投影满段计数（var0=1）＋ 客户端 SECTION 门控推导任务书行，服务端无行号可漂移；**不要**把旧边写入的行号搬过来
+26905	(none)	reward	enter-world	status=REWARD var0=1 [(quest_vars & 63) = 1]	var0:=2	真端形状：REWARD 投影满段计数（var0=1）＋ 客户端 SECTION 门控推导任务书行，服务端无行号可漂移；**不要**把旧边写入的行号搬过来
+26906	(none)	reward	enter-world	status=REWARD var0=0 [(quest_vars & 63) = 0]	var0:=2	真端形状：REWARD 投影满段计数（var0=1）＋ 客户端 SECTION 门控推导任务书行，服务端无行号可漂移；**不要**把旧边写入的行号搬过来
+26906	(none)	reward	enter-world	status=REWARD var0=1 [(quest_vars & 63) = 1]	var0:=2	真端形状：REWARD 投影满段计数（var0=1）＋ 客户端 SECTION 门控推导任务书行，服务端无行号可漂移；**不要**把旧边写入的行号搬过来
+26908	(none)	reward	enter-world	status=REWARD var0=0 [(quest_vars & 63) = 0]	var0:=2	真端形状：REWARD 投影满段计数（var0=1）＋ 客户端 SECTION 门控推导任务书行，服务端无行号可漂移；**不要**把旧边写入的行号搬过来
+26908	(none)	reward	enter-world	status=REWARD var0=1 [(quest_vars & 63) = 1]	var0:=2	真端形状：REWARD 投影满段计数（var0=1）＋ 客户端 SECTION 门控推导任务书行，服务端无行号可漂移；**不要**把旧边写入的行号搬过来
+26960	(none)	reward	enter-world	status=REWARD var0=1 [(quest_vars & 63) = 1]	var0:=2	真端形状：REWARD 投影满段计数（var0=1）＋ 客户端 SECTION 门控推导任务书行，服务端无行号可漂移；**不要**把旧边写入的行号搬过来
+80601	(none)	reward	enter-world	status=REWARD var0=0	var0:=1	P0c-8c：真端网格下击杀只推进 START 段（a0→a1，无动作），REWARD 投影恒为领奖行 var0=1；旧 XML 的 var0=1 步进与 REWARD/var0=0 自愈边都不再表达（领奖行由客户端 SECTION 门控推导）⇒ 旧存档可按本表一次性归一化为 var0:=1（**可选**）
+80606	(none)	reward	enter-world	status=REWARD var0=0	var0:=1	P0c-8c：同上（80601 的 Asmodian 侧链头本）
+28313	(none)	reward	enter-world	status=REWARD var0=3	var0:=1 var1:=1 var2:=1	真端形状：6 位 SECTION 网格即计数；REWARD 投影恒为满段，客户端 SECTION 门控推导任务书行，服务端无行号可漂移
+28313	(none)	a1b1(START/4161)	enter-world	status=START var0=3	var0:=1 var1:=1 var2:=1	真端形状：饱和段投影即报告门控；旧"换武器步数归一"边不再表达（可选 DB 归一化）
+28313	(none)	a1b0(START/65)	enter-world	status=START var0=2	var0:=1 var1:=1 var2:=0	真端形状：同上；计数在网格打包值中，登录期改写会破坏网格形状

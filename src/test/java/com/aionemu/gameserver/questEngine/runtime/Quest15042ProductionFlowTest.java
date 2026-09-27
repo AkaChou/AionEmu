@@ -6,7 +6,6 @@ import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestCondition;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinition;
-import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
@@ -14,11 +13,11 @@ import com.aionemu.gameserver.questEngine.definition.QuestItemRequirement;
 import com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode;
 import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -27,8 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 验证主神的行踪任务在限定地图内累计三次物品使用，并保留旧 handler 的物品合同。
- * Verifies the three-use, world-gated item flow and legacy item/reward contract for Calling Kaisinel's Butterfly.
+ * 验证真端任务的三次道具演出、物品产出和领奖合同。
+ * Verifies the three retail item plays, output item and reward contract for Calling Kaisinel's Butterfly.
  */
 class Quest15042ProductionFlowTest {
 	private static final int QUEST_ID = 15042;
@@ -38,13 +37,13 @@ class Quest15042ProductionFlowTest {
 	private static final int DRAGON_LORDS_GARDENS_WORLD_ID = 210070000;
 
 	@Test
-	void preservesTheWorldGatedThreeUseItemAndRewardFlow() throws Exception {
+	void preservesTheThreeItemPlaysAndRewardFlow() {
 		CompiledQuestDefinition compiled = load();
 		QuestDefinition definition = compiled.definition();
 		assertProgressAndWorkItems(definition);
-		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0, "var1", 0));
+		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0));
 		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 1, "var1", 0));
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 1));
 		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0, "var1", 0));
 		QuestTransition accept = transition(definition, "unaccepted", "started",
 			new QuestEvent.TalkToNpc(REPORT_NPC_ID, QuestDialogAction.QUEST_ACCEPT_SIMPLE.id()));
@@ -54,21 +53,17 @@ class Quest15042ProductionFlowTest {
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
 			new AfterCommitAction.CloseDialog()), accept.afterCommit());
 
-		QuestEvent useFlute = new QuestEvent.UseItem(FLUTE_ITEM_ID);
+		QuestEvent useFlute = new QuestEvent.ItemPlay(FLUTE_ITEM_ID, 3000);
 		QuestTransition countUse = transition(definition, "started", "started", useFlute);
 		assertEquals(1, countUse.priority());
-		assertEquals(List.of(
-			new QuestCondition.WorldIs(DRAGON_LORDS_GARDENS_WORLD_ID, true),
-			new QuestCondition.VariableBelow("var1", 2)), countUse.conditions());
+		assertEquals(List.of(new QuestCondition.VariableBelow("var1", 2)), countUse.conditions());
 		assertEquals(List.of(new QuestAction.IncrementVariable("var1", 1)), countUse.actions());
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
 			countUse.afterCommit());
 
 		QuestTransition finalUse = transition(definition, "started", "reward", useFlute);
 		assertEquals(0, finalUse.priority());
-		assertEquals(List.of(
-			new QuestCondition.WorldIs(DRAGON_LORDS_GARDENS_WORLD_ID, true),
-			new QuestCondition.VariableAtLeast("var1", 2)), finalUse.conditions());
+		assertEquals(List.of(new QuestCondition.VariableAtLeast("var1", 2)), finalUse.conditions());
 		assertEquals(List.of(
 			new QuestAction.GiveItem(BUTTERFLY_ITEM_ID, 1),
 			new QuestAction.RemoveItem(FLUTE_ITEM_ID, 1),
@@ -80,7 +75,7 @@ class Quest15042ProductionFlowTest {
 
 		QuestSnapshot outside = snapshot(QuestStatus.START, Map.of("var0", 0, "var1", 0),
 			Map.of(FLUTE_ITEM_ID, 1), 210060000, definition);
-		assertNoMatch(compiled, outside, useFlute);
+		assertNoMatch(compiled, outside, new QuestEvent.UseItem(FLUTE_ITEM_ID));
 
 		QuestSnapshot current = snapshot(QuestStatus.START, Map.of("var0", 0, "var1", 0),
 			Map.of(FLUTE_ITEM_ID, 1), DRAGON_LORDS_GARDENS_WORLD_ID, definition);
@@ -100,7 +95,8 @@ class Quest15042ProductionFlowTest {
 		assertEquals(finalUse.actions(), completedUse.requiredActions());
 
 		assertRewardDialog(definition, QuestDialogAction.QUEST_SELECT, QuestDialogPage.DEFAULT_SUCCESS);
-		assertRewardDialog(definition, QuestDialogAction.USE_OBJECT, QuestDialogPage.DEFAULT_SUCCESS);
+		assertRewardDialog(definition, QuestDialogAction.USE_OBJECT,
+			QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1);
 		assertRewardDialog(definition, QuestDialogAction.SELECT_QUEST_REWARD,
 			QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1);
 		assertCompletion(compiled, definition, QuestDialogAction.SELECTED_QUEST_REWARD1, 169300007);
@@ -110,12 +106,12 @@ class Quest15042ProductionFlowTest {
 	private static void assertProgressAndWorkItems(QuestDefinition definition) {
 		BitField stage = definition.progressLayout().field("var0");
 		assertEquals(0, stage.offset());
-		assertEquals(1, stage.width());
-		assertEquals(1, stage.maxValue());
+		assertEquals(6, stage.width());
+		assertEquals(63, stage.maxValue());
 		BitField useCount = definition.progressLayout().field("var1");
 		assertEquals(6, useCount.offset());
-		assertEquals(2, useCount.width());
-		assertEquals(2, useCount.maxValue());
+		assertEquals(6, useCount.width());
+		assertEquals(63, useCount.maxValue());
 		assertEquals(List.of(
 			new QuestItemRequirement(FLUTE_ITEM_ID, 1),
 			new QuestItemRequirement(BUTTERFLY_ITEM_ID, 1)), definition.metadata().questWorkItems());
@@ -202,7 +198,7 @@ class Quest15042ProductionFlowTest {
 	private static QuestTransition transition(QuestDefinition definition, String source, String target,
 			QuestEvent event) {
 		List<QuestTransition> matches = definition.transitions().stream()
-			.filter(candidate -> candidate.sourceNode().equals(source))
+			.filter(candidate -> source.equals(candidate.sourceNode()))
 			.filter(candidate -> candidate.targetNode().equals(target))
 			.filter(candidate -> candidate.event().equals(event))
 			.toList();
@@ -210,13 +206,7 @@ class Quest15042ProductionFlowTest {
 		return matches.getFirst();
 	}
 
-	private static CompiledQuestDefinition load() throws Exception {
-		try (InputStream input = Quest15042ProductionFlowTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/15042.xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition 15042.xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	private static CompiledQuestDefinition load() {
+		return ProductionQuestDefinitions.definitionInOverlay(QUEST_ID);
 	}
 }

@@ -48,12 +48,6 @@ class Quest1309ClientDialogAlignmentTest {
 	}
 
 	private CompiledQuestDefinition definition() throws Exception {
-		try (InputStream input = getClass().getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/1309.xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition 1309.xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		return ProductionQuestDefinitions.definitionInOverlay(1309);
 	}
 }

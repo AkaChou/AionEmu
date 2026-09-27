@@ -4,14 +4,13 @@ import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
-import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.definition.QuestStartCondition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -31,6 +30,15 @@ class QuestDispatchToVerteronFamilyProductionFlowTest {
 	private static final int REWARD_NPC_ID = 203097;
 	private static final int NPC_OBJECT_ID = 900_007;
 	private static final List<Integer> QUEST_IDS = List.of(1913, 1914, 1915, 1916, 19070, 19071);
+	/**
+	 * S2 规范段行：同时具备 NPC_START 与 NPC_REPORT 块（retention owner = RETAIL_TABLE）的四行，
+	 * 交付边 {@code QUEST_SELECT(31)} 直翻 REWARD 并下发档位奖励窗。
+	 * 19070/19071 无 NPC_START 块（retention owner = XML_RETENTION），保留登记的 SELECT5 报告页与 1009 中转。
+	 * S2 canonical-segment rows (both NPC_START and NPC_REPORT blocks, RETAIL_TABLE retention): the delivery edge
+	 * flips REWARD on {@code QUEST_SELECT(31)} and shows the tiered window. 19070/19071 are XML-retained without an
+	 * NPC_START block, so they keep the registered SELECT5 report page and the 1009 relay.
+	 */
+	private static final Set<Integer> CANONICAL_DELIVERY_QUEST_IDS = Set.of(1913, 1914, 1915, 1916);
 
 	@Test
 	void preservesRetailMetadataForTechnistDispatchBranches() throws Exception {
@@ -58,6 +66,8 @@ class QuestDispatchToVerteronFamilyProductionFlowTest {
 			QuestProductionDispatcher dispatcher = dispatcher(
 				definition(questId), questId, status, packedVariables, plans, afterCommit);
 
+			boolean canonicalDelivery = CANONICAL_DELIVERY_QUEST_IDS.contains(questId);
+
 			QuestEventRouter.DispatchResult prematureReward = dispatch(
 				dispatcher, questId, REWARD_NPC_ID, 1009);
 
@@ -66,6 +76,18 @@ class QuestDispatchToVerteronFamilyProductionFlowTest {
 			assertEquals(0, packedVariables.get());
 			assertTrue(plans.isEmpty());
 			assertTrue(afterCommit.isEmpty());
+
+			if (canonicalDelivery) {
+				// 规范段行的交付边锚在传送后的 started1：传送前（started）连 QUEST_SELECT(31) 也零路由。
+				// The canonical delivery edge is anchored at the post-transfer started1, so even
+				// QUEST_SELECT(31) has no route before the transfer.
+				assertNotHandled(dispatch(dispatcher, questId, REWARD_NPC_ID, 31),
+					questId + " delivered before the transfer");
+				assertEquals(QuestStatus.START, status.get());
+				assertEquals(0, packedVariables.get());
+				assertTrue(plans.isEmpty());
+				assertTrue(afterCommit.isEmpty());
+			}
 
 			QuestEventRouter.DispatchResult teleport = dispatch(
 				dispatcher, questId, TRANSPORT_NPC_ID, 10000);
@@ -90,25 +112,47 @@ class QuestDispatchToVerteronFamilyProductionFlowTest {
 			assertTrue(plans.isEmpty());
 			assertTrue(afterCommit.isEmpty());
 
-			QuestEventRouter.DispatchResult rewardOffer = dispatch(
-				dispatcher, questId, REWARD_NPC_ID, 31);
+			if (canonicalDelivery) {
+				// S2 规范形交付：QUEST_SELECT(31) 带整组交付门（本族空门）直翻 REWARD，
+				// 并下发本档奖励窗（单档 → 窗 1 页 5）；SELECT5 报告页与 1009 中转已退场。
+				// S2 canonical delivery: QUEST_SELECT(31) carries the whole hand-in gate (empty for this
+				// family) and flips REWARD with the tiered window (one group -> window 1, page 5).
+				QuestEventRouter.DispatchResult reward = dispatch(
+					dispatcher, questId, REWARD_NPC_ID, 31);
 
-			assertHandled(rewardOffer, questId + " did not open the Hyacinte reward dialog");
-			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(2375)), afterCommit);
+				assertHandled(reward, questId + " did not enter reward state at Hyacinte");
+				assertEquals(QuestStatus.REWARD, status.get());
+				assertEquals(1, packedVariables.get());
+				assertEquals(QuestStatus.REWARD, plans.getLast().nextStatus());
+				assertEquals(1, plans.getLast().nextPackedVariables());
+				assertTrue(plans.getLast().requiredActions().isEmpty());
+				assertEquals(List.of(
+					new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+					new AfterCommitAction.ShowQuestDialog(5)), afterCommit);
+			} else {
+				// 保留 XML 行（γ 面）：31 只下发 SELECT5 报告页，1009 才提交并翻 REWARD。
+				// XML-retained rows (the gamma face) keep the registered report page: 31 shows SELECT5
+				// and 1009 commits the hand-in.
+				QuestEventRouter.DispatchResult rewardOffer = dispatch(
+					dispatcher, questId, REWARD_NPC_ID, 31);
 
-			afterCommit.clear();
-			QuestEventRouter.DispatchResult reward = dispatch(
-				dispatcher, questId, REWARD_NPC_ID, 1009);
+				assertHandled(rewardOffer, questId + " did not open the Hyacinte reward dialog");
+				assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(2375)), afterCommit);
 
-			assertHandled(reward, questId + " did not enter reward state at Hyacinte");
-			assertEquals(QuestStatus.REWARD, status.get());
-			assertEquals(1, packedVariables.get());
-			assertEquals(QuestStatus.REWARD, plans.getLast().nextStatus());
-			assertEquals(1, plans.getLast().nextPackedVariables());
-			assertTrue(plans.getLast().requiredActions().isEmpty());
-			assertEquals(List.of(
-				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-				new AfterCommitAction.ShowQuestDialog(5)), afterCommit);
+				afterCommit.clear();
+				QuestEventRouter.DispatchResult reward = dispatch(
+					dispatcher, questId, REWARD_NPC_ID, 1009);
+
+				assertHandled(reward, questId + " did not enter reward state at Hyacinte");
+				assertEquals(QuestStatus.REWARD, status.get());
+				assertEquals(1, packedVariables.get());
+				assertEquals(QuestStatus.REWARD, plans.getLast().nextStatus());
+				assertEquals(1, plans.getLast().nextPackedVariables());
+				assertTrue(plans.getLast().requiredActions().isEmpty());
+				assertEquals(List.of(
+					new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+					new AfterCommitAction.ShowQuestDialog(5)), afterCommit);
+			}
 		}
 	}
 
@@ -147,13 +191,7 @@ class QuestDispatchToVerteronFamilyProductionFlowTest {
 	}
 
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-		try (InputStream input = QuestDispatchToVerteronFamilyProductionFlowTest.class.getResourceAsStream(resource)) {
-			if (input == null) {
-				throw new IllegalStateException("missing resource " + resource);
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		return ProductionQuestDefinitions.definitionInOverlay(questId);
 	}
 
 	private static QuestActionPort noOpActions() {

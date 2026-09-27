@@ -10,11 +10,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,27 +29,38 @@ class QuestPrematureRewardRouteExclusionTest {
 	// Thresholds come from XML/911440146 handler review, never from the route under test.
 	private static Stream<RewardCase> rewardCases() {
 		return Stream.of(
-			stage(1347, 7, 3, 7, "a7b3", 203966),
-			stage(16837, 1, -1, 0, "k1", 806568),
-			stage(16986, 1, -1, 0, "k1", 804864),
-			new RewardCase(16988, List.of(804865), "k1", Map.of("var0", 1, "var1", 5),
-				Map.of("var0", 0, "var1", 5), range(0, 5), false),
-			counter(19631, 10, 798155, 800411),
-			counter(19633, 10, 800411, 205304),
-			counter(19638, 10, 799022),
-			counter(19642, 10, 798926),
-			stage(2569, 1, -1, 1, "s1", 204768),
-			counter(28743, 1, 206395, 206396, 206397, 804732),
-			counter(28932, 1, 806261, 806260),
+			/* P0-2 规范形：1347 满段交付动作 = QUEST_SELECT（1009 中转删除）。
+			   Canonical since P0-2: 1347's full-node delivery action is QUEST_SELECT (no 1009 hop). */
+			stageOnQuestSelect(1347, 7, 3, 7, "a7b3", 203966),
+			/* P5-1 网格族 + P0-2 DD 切片（2026-09-26）规范形：16837/16986/16988/19631/19633/19638/
+			   19642/28932/28972-4/25640/25698/28743 由真端击杀网格驱动（var0 = 计数），满段 a<required>
+			   的 QUEST_SELECT 直接翻 REWARD 并按档位查表下发奖励窗；未满段零对话路由，交付 NPC 唯一
+			  （接取变体不承担交付）。
+			   Grid family in the canonical shape since the P0-2 DD slice: the full segment's QUEST_SELECT
+			   flips REWARD with the tiered reward window, incomplete segments carry no dialog routes, and
+			   only the hand-in npc delivers. */
+			grid(16837, 1, 806568),
+			grid(16986, 1, 804864),
+			grid(16988, 5, 804865),
+			grid(19631, 10, 800411),
+			grid(19633, 10, 205304),
+			grid(19638, 10, 799022),
+			grid(19642, 10, 798926),
+			/* S2 链式规范形：2569 双块行由规范段接管，交付 = NPC_REPORT 块 source（s1）的
+			   QUEST_SELECT(31) 空门直翻领奖态（无 item_check ⇒ 规范门为空）。
+			   S2 canonical chain delivery: the report block source's empty-gated QUEST_SELECT(31). */
+			stageOnQuestSelect(2569, 1, -1, 1, "s1", 204768),
+			grid(28743, 1, 804732),
+			grid(28932, 1, 806260),
 			counter(28951, 25, 209743, 804738),
 			stage(28952, 4, -1, 4, "k4", 209743, 804738),
-			counter(28972, 6, 804924, 805216),
-			counter(28973, 6, 804924, 805217),
-			counter(28974, 6, 804924, 805218),
+			grid(28972, 6, 805216),
+			grid(28973, 6, 805217),
+			grid(28974, 6, 805218),
 			// 25640/25698 为“满计数恢复报告”形态的 A03 碎片任务，与 Quest25640/25698ClientDialogAlignmentTest 配对。
 			// The 25640/25698 pair are full-count recovery-report owners; paired with their dialog alignment gates.
-			counter(25640, 30, 806101),
-			counter(25698, 5, 806804));
+			grid(25640, 30, 806101),
+			grid(25698, 5, 806804));
 	}
 
 	@ParameterizedTest
@@ -70,8 +79,10 @@ class QuestPrematureRewardRouteExclusionTest {
 
 	@Test
 	void fiveKillsNotOneUnlock16988ReportStage() {
+		/* P5-1：16988 已是击杀网格（var0 = 计数 0..5），第 5 杀进满段 a5，报告（1009）才进领奖。
+		   Grid since P5-1: var0 counts 0..5; the fifth kill lands on a5 and only the report rewards. */
 		CompiledQuestDefinition compiled = load(16988);
-		Map<String, Integer> variables = Map.of("var0", 0, "var1", 0);
+		Map<String, Integer> variables = Map.of("var0", 0);
 		QuestEvent event = new QuestEvent.KillNpc(233129);
 		for (int count = 1; count <= 5; count++) {
 			List<QuestMutationPlan> plans = plans(compiled, variables, event);
@@ -79,7 +90,7 @@ class QuestPrematureRewardRouteExclusionTest {
 			QuestMutationPlan plan = plans.getFirst();
 			assertEquals(QuestStatus.START, plan.nextStatus());
 			variables = compiled.definition().progressLayout().unpack(plan.nextPackedVariables());
-			assertEquals(Map.of("var0", count == 5 ? 1 : 0, "var1", count), variables);
+			assertEquals(Map.of("var0", count), variables);
 			if (count < 5) {
 				assertNoPrematureReward(compiled, variables);
 			}
@@ -87,8 +98,31 @@ class QuestPrematureRewardRouteExclusionTest {
 	}
 
 	@Test
-	void alternate2569ReportStageRemainsUsable() {
-		assertCompletedReport(load(2569), stage(2569, 2, -1, 2, "s2", 204768));
+	void quest2569RewardStateKeepsTheTurnInPreview() {
+		/* 2569 的备选报告段 s2 已被 XML 侧修复移除（生产定义只剩单报告段 s1，由上方契约案例锁定）；
+		   S2 之后 reward 态的页链入口（31 → SELECT5 页）与 1009 中转记录随规范段退场，领奖态重开
+		   预览改由 NPC_COMPLETE 块的 preview 承担（USE_OBJECT / SELECT_QUEST_REWARD 同形，档位窗）。
+		   2569's alternate report stage s2 was removed by an XML-side repair (a single report stage
+		   s1 remains, locked by the contract case above). Since S2 the reward-state page-chain entry
+		   (31 pushing SELECT5) retires with the canonical segments, and the completion block's preview
+		   owns the reward-state re-open window (the USE_OBJECT / SELECT_QUEST_REWARD twin shape). */
+		CompiledQuestDefinition compiled = load(2569);
+		for (QuestDialogAction preview : List.of(QuestDialogAction.USE_OBJECT,
+			QuestDialogAction.SELECT_QUEST_REWARD)) {
+			QuestEvent event = new QuestEvent.TalkToNpc(204768, preview.id());
+			List<QuestTransition> routes = compiled.definition().transitions().stream()
+				.filter(t -> "reward".equals(t.sourceNode()) && "reward".equals(t.targetNode())
+					&& t.event().equals(event))
+				.toList();
+			assertEquals(1, routes.size(), () -> "quest 2569 reward-state preview " + preview);
+			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
+				QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())), routes.getFirst().afterCommit(),
+				() -> "quest 2569 reward-state preview " + preview);
+		}
+		assertTrue(compiled.definition().transitions().stream().noneMatch(t -> "reward".equals(t.sourceNode())
+			&& t.event() instanceof QuestEvent.TalkToNpc talk && talk.dialogId() != null
+			&& talk.dialogId() == QuestDialogAction.QUEST_SELECT.id()),
+			"quest 2569 reward-state SELECT5 page-chain entry must retire");
 	}
 
 	/**
@@ -115,19 +149,28 @@ class QuestPrematureRewardRouteExclusionTest {
 
 	@ParameterizedTest
 	@ValueSource(ints = {0, 9})
-	void gateRejectsRemovedOrWeakened19631CounterCondition(int weakenedMinimum) {
+	void gateRejectsRelocated19631DeliveryRoute(int weakenedMinimum) {
+		/* P0-2 DD 切片后 19631 网格形的守门对象 = 满段 a10 的 QUEST_SELECT 交付（无条件、分档奖励窗）；
+		   负控把交付边原样搬到未满段 a<weakened>，零进度快照必须真的能上交，门禁必须拦下。
+		   Since the P0-2 DD slice the gate target is the full-node QUEST_SELECT delivery on a10
+		   (unconditional, tiered reward window); re-sourcing it verbatim to an incomplete segment
+		   must let a zero-progress snapshot turn in, and the gate must catch exactly that. */
 		CompiledQuestDefinition original = load(19631);
-		QuestEvent event = new QuestEvent.TalkToNpc(800411, QuestDialogAction.SELECT_QUEST_REWARD.id());
+		QuestEvent event = new QuestEvent.TalkToNpc(800411, QuestDialogAction.QUEST_SELECT.id());
 		QuestTransition route = original.definition().transitions().stream()
-			.filter(t -> "started".equals(t.sourceNode()) && t.event().equals(event))
+			.filter(t -> "a10".equals(t.sourceNode()) && "reward".equals(t.targetNode())
+				&& t.event().equals(event))
 			.findFirst().orElseThrow();
-		assertEquals(List.of(new QuestCondition.VariableAtLeast("var1", 10)), route.conditions());
-		List<QuestCondition> brokenConditions = weakenedMinimum == 0 ? List.of()
-			: List.of(new QuestCondition.VariableAtLeast("var1", weakenedMinimum));
-		QuestTransition broken = new QuestTransition(route.event(), brokenConditions, route.actions(),
-			route.targetNode(), route.afterCommit(), route.priority(), route.sourceNode());
+		assertEquals(List.of(
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+				new AfterCommitAction.ShowQuestDialog(QuestDialogPage.rewardWindowForTier(
+					original.definition().metadata().rewardGroups().size() - 1).orElseThrow().id())),
+			route.afterCommit());
+		String weakenedSource = "a" + weakenedMinimum;
+		QuestTransition broken = new QuestTransition(route.event(), route.conditions(), route.actions(),
+			route.targetNode(), route.afterCommit(), route.priority(), weakenedSource);
 		CompiledQuestDefinition mutated = replaceTransition(original, route, broken);
-		Map<String, Integer> incomplete = Map.of("var0", 0, "var1", weakenedMinimum);
+		Map<String, Integer> incomplete = Map.of("var0", weakenedMinimum);
 		assertNoPrematureReward(original, incomplete);
 		assertEquals(1, plans(mutated, incomplete, event).size(), "negative control must actually unlock");
 		AssertionError failure = assertThrows(AssertionError.class,
@@ -138,7 +181,11 @@ class QuestPrematureRewardRouteExclusionTest {
 	@Test
 	void gateRejects1347ReportWithOnlyOneCounterComplete() {
 		CompiledQuestDefinition original = load(1347);
-		QuestEvent event = new QuestEvent.TalkToNpc(203966, QuestDialogAction.SELECT_QUEST_REWARD.id());
+		// P0-2 规范形：交付边 = 满段 QUEST_SELECT（1009 中转删除）；负控把交付边搬到未满段节点，
+		// 门禁必须仍然拦下"少一只就领奖"的旁路。
+		// Canonical since P0-2: the delivery edge is the full node's QUEST_SELECT (no 1009 hop); the
+		// negative control re-sources it to an incomplete node and the gate must still catch it.
+		QuestEvent event = new QuestEvent.TalkToNpc(203966, QuestDialogAction.QUEST_SELECT.id());
 		QuestTransition route = original.definition().transitions().stream()
 			.filter(t -> "a7b3".equals(t.sourceNode()) && t.event().equals(event))
 			.findFirst().orElseThrow();
@@ -174,8 +221,15 @@ class QuestPrematureRewardRouteExclusionTest {
 	}
 
 	private static void assertCompletedReport(CompiledQuestDefinition compiled, RewardCase contract) {
+		// 规范形（QUEST_SELECT 交付）按奖励组档位查表；遗留 1009 中转固定窗口 1（QE-028 禁写死档位）。
+		// Canonical QUEST_SELECT delivery resolves the tiered window; the legacy 1009 hop keeps
+		// the fixed first window (tier lookup is mandatory, never hard-coded).
+		int rewardWindow = contract.reportAction() == QuestDialogAction.QUEST_SELECT
+			? QuestDialogPage.rewardWindowForTier(
+				compiled.definition().metadata().rewardGroups().size() - 1).orElseThrow().id()
+			: QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id();
 		for (int npcId : contract.reportNpcs()) {
-			QuestEvent event = new QuestEvent.TalkToNpc(npcId, QuestDialogAction.SELECT_QUEST_REWARD.id());
+			QuestEvent event = new QuestEvent.TalkToNpc(npcId, contract.reportAction().id());
 			List<QuestTransition> routes = compiled.definition().transitions().stream()
 				.filter(t -> QuestMutationPlanner.plan(compiled, snapshot(compiled, contract.full()), event, t).isPresent())
 				.toList();
@@ -196,7 +250,7 @@ class QuestPrematureRewardRouteExclusionTest {
 			assertEquals(actions, plan.requiredActions());
 			List<AfterCommitAction> effects = List.of(
 				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-				new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()));
+				new AfterCommitAction.ShowQuestDialog(rewardWindow));
 			assertEquals(effects, route.afterCommit());
 			assertEquals(effects, plan.afterCommit());
 		}
@@ -223,9 +277,26 @@ class QuestPrematureRewardRouteExclusionTest {
 			definition.metadata(), definition.progressLayout(), definition.nodes(), transitions));
 	}
 
+	/**
+	 * 真端击杀网格合同（P0-2 DD 切片规范形）：var0 = 击杀计数；未满段零对话路由，
+	 * 满段 a<required> 的 QUEST_SELECT 直接进领奖（无条件、分档奖励窗），领奖投影 = 满段计数。
+	 * Retail kill-grid contract in the canonical shape since the P0-2 DD slice: var0 counts kills,
+	 * incomplete stages carry no dialog routes, the full segment's QUEST_SELECT reports to reward
+	 * (unconditional, tiered window), and the reward projection equals the saturated count.
+	 */
+	private static RewardCase grid(int questId, int required, Integer... npcs) {
+		List<Map<String, Integer>> incomplete = new ArrayList<>();
+		for (int kills = 0; kills < required; kills++) {
+			incomplete.add(Map.of("var0", kills));
+		}
+		return new RewardCase(questId, List.of(npcs), "a" + required, Map.of("var0", required),
+			Map.of("var0", required), List.copyOf(incomplete), false, QuestDialogAction.QUEST_SELECT);
+	}
+
 	private static RewardCase counter(int questId, int required, Integer... npcs) {
 		return new RewardCase(questId, List.of(npcs), "started", Map.of("var0", 0, "var1", required),
-			Map.of("var0", 1, "var1", required), range(0, required - 1), true);
+			Map.of("var0", 1, "var1", required), range(0, required - 1), true,
+			QuestDialogAction.SELECT_QUEST_REWARD);
 	}
 
 	private static RewardCase stage(int questId, int var0, int var1, int rewardVar0, String source, Integer... npcs) {
@@ -234,7 +305,20 @@ class QuestPrematureRewardRouteExclusionTest {
 			: Map.of("var0", rewardVar0, "var1", var1);
 		List<Map<String, Integer>> incomplete = new ArrayList<>(range(var0, var1));
 		incomplete.remove(full);
-		return new RewardCase(questId, List.of(npcs), source, full, reward, List.copyOf(incomplete), false);
+		return new RewardCase(questId, List.of(npcs), source, full, reward, List.copyOf(incomplete), false,
+			QuestDialogAction.SELECT_QUEST_REWARD);
+	}
+
+	/** 规范形交付动作变体（P0-2：SimpleHunt 满段 QUEST_SELECT）。 / Canonical delivery-action variant. */
+	private static RewardCase stageOnQuestSelect(int questId, int var0, int var1, int rewardVar0, String source,
+			Integer... npcs) {
+		Map<String, Integer> full = var1 < 0 ? Map.of("var0", var0) : Map.of("var0", var0, "var1", var1);
+		Map<String, Integer> reward = var1 < 0 ? Map.of("var0", rewardVar0)
+			: Map.of("var0", rewardVar0, "var1", var1);
+		List<Map<String, Integer>> incomplete = new ArrayList<>(range(var0, var1));
+		incomplete.remove(full);
+		return new RewardCase(questId, List.of(npcs), source, full, reward, List.copyOf(incomplete), false,
+			QuestDialogAction.QUEST_SELECT);
 	}
 
 	private static List<Map<String, Integer>> range(int maxVar0, int maxVar1) {
@@ -252,16 +336,13 @@ class QuestPrematureRewardRouteExclusionTest {
 	}
 
 	private record RewardCase(int questId, List<Integer> reportNpcs, String source, Map<String, Integer> full,
-			Map<String, Integer> reward, List<Map<String, Integer>> incomplete, boolean recovery) {
+			Map<String, Integer> reward, List<Map<String, Integer>> incomplete, boolean recovery,
+			QuestDialogAction reportAction) {
 	}
 
 	private static CompiledQuestDefinition load(int questId) {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-		try (InputStream input = Objects.requireNonNull(
-			QuestPrematureRewardRouteExclusionTest.class.getResourceAsStream(resource), resource)) {
-			return QuestDefinitionXmlCompiler.compile(input);
-		} catch (Exception e) {
-			throw new AssertionError("unable to load " + resource, e);
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// Retired quests keep their production XML in git history only, so use the production view.
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

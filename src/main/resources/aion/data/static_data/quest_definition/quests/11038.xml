@@ -172,7 +172,7 @@
     <dialog type="NPC_START" npc-id="799035" source="unaccepted" target="a0b0" selection-sources="unaccepted a0b0" start-page="SELECT1"/>
     <counter-grid>
       <dimension field="var0" required="6" npc-ids="215550 215551 215553 215554 215555 216466 216467 216655 216705 216706 216707 216708 216709 216710"/>
-      <dimension field="var1" required="4" npc-ids="215562 215563 215564 215565 215566 215567 215640 216468 216469 216657 216658 216717 216718" source-order="VALUE_THEN_NODE"/>
+      <dimension field="var1" required="4" npc-ids="215562 215563 215564 215565 215566 215567 216657 216658 216717 216718" source-order="VALUE_THEN_NODE"/>
     </counter-grid>
     <dialog type="NPC_REPORT" npc-id="799035" source="a6b4" target="reward" page="SELECT2"/>
     <npc-complete npc-id="799035" source="reward" target="complete" fixed-reward-indices="0 1 2" actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0" finish="SELECTION_DIALOG">

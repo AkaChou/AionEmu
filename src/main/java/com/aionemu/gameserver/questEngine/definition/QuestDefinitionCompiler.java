@@ -69,10 +69,16 @@ public final class QuestDefinitionCompiler {
 				fail("BAD_NODE_REFERENCE", "transition points to unknown node: " + transition.targetNode());
 			}
 			for (QuestCondition condition : transition.conditions()) {
+				// 真端 PVP 网格在军衔阈值边（KillRanked）上同样携带等级窗（ScriptDLL 同一计数路径
+				// 同时施加军衔门与等级门），两者都从 PvpKillFacts 求值。
+				// The retail PVP grid carries the level window on ranked-threshold edges too (the
+				// ScriptDLL counting path applies rank and level gates together); both evaluate from
+				// PvpKillFacts.
 				if (condition instanceof QuestCondition.PvpVictimLevelDelta
-						&& !(transition.event() instanceof QuestEvent.KillInWorld)) {
+						&& !(transition.event() instanceof QuestEvent.KillInWorld)
+						&& !(transition.event() instanceof QuestEvent.KillRanked)) {
 					fail("PVP_CONDITION_EVENT_MISMATCH",
-						"pvp-victim-level-delta is only valid on kill-in-world events");
+						"pvp-victim-level-delta is only valid on kill-in-world or kill-ranked events");
 				}
 				if (condition instanceof QuestCondition.PvpRecipientInZone
 						&& !(transition.event() instanceof QuestEvent.KillRanked
@@ -622,7 +628,9 @@ public final class QuestDefinitionCompiler {
 		}
 		if (!a.hasExplicitPriority() || !b.hasExplicitPriority() || a.priority().equals(b.priority())) {
 			fail("AMBIGUOUS_TRANSITION", "same event has overlapping transitions without unique priorities: "
-				+ a.event().type());
+				+ a.event().type() + " | pair: [" + a.sourceNode() + " " + a.event() + " -> " + a.targetNode()
+				+ " prio=" + a.priority() + "] vs [" + b.sourceNode() + " " + b.event() + " -> "
+				+ b.targetNode() + " prio=" + b.priority() + "]");
 		}
 	}
 

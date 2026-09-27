@@ -155,7 +155,7 @@
   <transitions>
     <dialog type="NPC_START" npc-id="798189" source="unaccepted" target="a0b0" selection-sources="unaccepted" start-page="SELECT1"/>
     <counter-grid>
-      <dimension field="var0" required="5" npc-ids="214301 214302 214702 214703 214704 214705"/>
+      <dimension field="var0" required="5" npc-ids="214301 214302"/>
       <dimension field="var1" required="4" npc-ids="214307 214308" source-order="VALUE_THEN_NODE"/>
     </counter-grid>
     <dialog type="NPC_REPORT" npc-id="798189" source="a5b4" target="reward" page="SELECT2"/>

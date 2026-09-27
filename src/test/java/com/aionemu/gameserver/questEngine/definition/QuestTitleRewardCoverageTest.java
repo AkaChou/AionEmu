@@ -9,6 +9,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,7 +28,9 @@ class QuestTitleRewardCoverageTest {
 
 	@Test
 	void catalogMatchesEveryKnownServerTitleQuest() throws Exception {
-		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
+		// 生产视图 = XML 目录 + 真端驱动 overlay：退役任务由真端表驱动，称号合同照旧生效。
+		// Production view = XML catalog plus the retail-driver overlay.
+		QuestCatalog catalog = questCatalog();
 		TitleRewards expected = expectedTitleRewards();
 		TitleRewards actual = catalogTitleRewards(catalog);
 
@@ -143,10 +147,19 @@ class QuestTitleRewardCoverageTest {
 		return QuestRewardKind.fromWire(reward.kind()) == QuestRewardKind.TITLE;
 	}
 
-	private static TitleRewards catalogTitleRewards(QuestCatalog catalog) {
+	private static TitleRewards catalogTitleRewards(QuestCatalog catalog) throws Exception {
 		Map<Integer, Set<Integer>> regular = new TreeMap<>();
 		Map<Integer, Set<Integer>> extended = new TreeMap<>();
 		for (QuestCatalogEntry entry : catalog.entries()) {
+			putTitles(regular, entry.id(), entry.metadata().rewards());
+			putTitles(extended, entry.id(), entry.metadata().extendedRewards());
+		}
+		// 退役任务的 XML 已删除，但称号奖励合同继续生效：证据取生产视图（真端 overlay）的元数据。
+		// Retired quests keep their title contract through the production (retail overlay) metadata.
+		for (QuestCatalogEntry entry : ProductionQuestDefinitions.catalog().entries()) {
+			if (!RetiredQuestIds.contains(entry.id())) {
+				continue;
+			}
 			putTitles(regular, entry.id(), entry.metadata().rewards());
 			putTitles(extended, entry.id(), entry.metadata().extendedRewards());
 		}
@@ -164,6 +177,12 @@ class QuestTitleRewardCoverageTest {
 		if (!titleIds.isEmpty()) {
 			destination.put(questId, Set.copyOf(titleIds));
 		}
+	}
+
+	/** 生产任务目录（XML 目录 + 真端驱动 overlay）。 / Production catalog with the retail overlay. */
+	private static QuestCatalog questCatalog() {
+		return RetailQuestDriver.overlay(
+			QuestDefinitionDirectoryLoader.compile(QuestTitleRewardCoverageTest.class.getClassLoader()));
 	}
 
 	private static TitleRewards expectedTitleRewards() throws Exception {

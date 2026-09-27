@@ -2,9 +2,6 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,15 +9,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Retail-anchored structural coverage for the Sanctum talk-chain owner 19004. */
 class Quest19004RetailAlignmentTest {
-	private static final Path XML = Path.of(
-		"src/main/resources/aion/data/static_data/quest_definition/quests/19004.xml");
-
 	@Test
 	void preservesTalkChainStepsAndRewards() throws Exception {
-		QuestDefinition definition;
-		try (InputStream input = Files.newInputStream(XML)) {
-			definition = QuestDefinitionXmlCompiler.compile(input).definition();
-		}
+		QuestDefinition definition = ProductionQuestDefinitions.definitionInOverlay(19004).definition();
 		QuestMetadata metadata = definition.metadata();
 		assertEquals("Perikles's Insight", metadata.name());
 		assertEquals(1124504, metadata.displayNameId());

@@ -68,8 +68,15 @@ class QuestIlumaNorsvoldKillTargetCoverageTest {
 			"kill-target contract snapshot must keep its reviewed coverage");
 		for (Map.Entry<Integer, Set<Integer>> entry : contract.entrySet()) {
 			int questId = entry.getKey();
-			assertEquals(entry.getValue(), killTargets(load(questId)),
-				() -> "quest " + questId + " must register exactly the reviewed Iluma/Norsvold variant set");
+			Set<Integer> actual = killTargets(load(questId));
+			// 真端优先 + 变体轴裁定后断言为超集：真端名解析的显示名族闭包（M2-c）会把世界中
+			// 实刷的同名兄弟 id 一并并入，客户端名单是必须覆盖的下界而非精确相等。
+			// After the retail-first adoption plus the variant-axis registry the assertion is a
+			// superset: the retail names' display-family closure (M2-c) also pulls same-name live
+			// siblings, so the client list is a lower bound rather than an exact set.
+			assertTrue(actual.containsAll(entry.getValue()),
+				() -> "quest " + questId + " must cover the reviewed Iluma/Norsvold variant set; missing="
+					+ entry.getValue().stream().filter(target -> !actual.contains(target)).toList());
 		}
 	}
 
@@ -100,9 +107,20 @@ class QuestIlumaNorsvoldKillTargetCoverageTest {
 				assertTrue(routesKill(compiled, npcId),
 					() -> "quest " + questId + " has no kill route for spawned variant " + npcId);
 			}
-			assertEquals(Set.of("var1", "var2", "var3", "var4"), QuestKillCounterSimulator.killCounterFields(compiled),
+			// 真端四段顺序链：四个计数槽 var0..var3（客户端 SECTION_1..4 一一对应），每段 4 变体；
+			// 领奖节点投影 = 全链满态（4 段 × 4 杀 = 16）。
+			// Retail four-stage chain: counter slots var0..var3, four variants each; the reward node
+			// projects the full chain state (4 stages x 4 kills = 16).
+			Map<String, Set<Integer>> stageTargets = chainStageTargets(compiled);
+			assertEquals(Set.of("var0", "var1", "var2", "var3"), stageTargets.keySet(),
 				() -> "quest " + questId + " must keep four independent client counters");
-			assertEquals(FOUR_COUNTER_QUESTS_REQUIRED_KILLS, QuestKillCounterSimulator.requiredKills(compiled),
+			for (Map.Entry<String, Set<Integer>> stage : stageTargets.entrySet()) {
+				assertEquals(4, stage.getValue().size(),
+					() -> "quest " + questId + " stage " + stage.getKey() + " must keep four variants");
+			}
+			int rewardTotal = rewardProjection(compiled.definition()).variables().values().stream()
+				.mapToInt(Integer::intValue).sum();
+			assertEquals(FOUR_COUNTER_QUESTS_REQUIRED_KILLS, rewardTotal,
 				() -> "quest " + questId + " must complete after four kills per family");
 		}
 	}
@@ -120,9 +138,22 @@ class QuestIlumaNorsvoldKillTargetCoverageTest {
 		return targets;
 	}
 
-	/** 从全新 START 快照出发，至少有一条击杀转换能匹配该 NPC 击杀事实。 */
+	/**
+	 * 至少存在一个可提交状态能匹配该 NPC 击杀事实：零态（旧网格 / 链首段）+ 顺序链全部前缀态
+	 * （每槽依次为活跃段、计数 0..required-1）。
+	 * Whether any committable state matches the kill fact: the zero state (legacy grid / chain
+	 * head) plus every chained prefix state (each slot active in turn, counts 0..required-1).
+	 */
 	private static boolean routesKill(CompiledQuestDefinition compiled, int npcId) {
-		return matchesAnyKillRoute(compiled, zeroCounters(compiled), npcId);
+		if (matchesAnyKillRoute(compiled, zeroCounters(compiled), npcId)) {
+			return true;
+		}
+		for (Map<String, Integer> state : chainStates(compiled)) {
+			if (matchesAnyKillRoute(compiled, state, npcId)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -135,7 +166,7 @@ class QuestIlumaNorsvoldKillTargetCoverageTest {
 	void saturatedCountersRejectExtraKillsWithoutMatchingAnyRoute() {
 		for (int questId : List.of(15546, 25546)) {
 			CompiledQuestDefinition compiled = load(questId);
-			for (String field : List.of("var1", "var2", "var3", "var4")) {
+			for (String field : List.of("var0", "var1", "var2", "var3")) {
 				Map<String, Integer> variables = zeroCounters(compiled);
 				variables.put(field, FOUR_COUNTER_QUEST_CEILING);
 				Set<Integer> targets = counterKillTargets(compiled, field);
@@ -159,7 +190,13 @@ class QuestIlumaNorsvoldKillTargetCoverageTest {
 		return variables;
 	}
 
-	/** 由自环击杀路线计数（set/increment）的字段 -> 该族的全部目标 NPC。 */
+	/**
+	 * 某计数槽的全部目标 NPC：旧并行网格取"该字段的自环计数路线"，顺序链取"该槽为首个未满段的
+	 * 链上击杀边"（{@code var0..}槽号即链形槽位）。
+	 * All target NPCs of one counter slot: legacy parallel grids use that field's self-loop counting
+	 * routes, sequential chains use the kill edges hanging off states where the slot is the first
+	 * unfinished one.
+	 */
 	private static Set<Integer> counterKillTargets(CompiledQuestDefinition compiled, String field) {
 		Set<Integer> targets = new LinkedHashSet<>();
 		for (QuestTransition transition : compiled.definition().transitions()) {
@@ -178,7 +215,81 @@ class QuestIlumaNorsvoldKillTargetCoverageTest {
 				targets.addAll(npcIds);
 			}
 		}
-		return targets;
+		if (!targets.isEmpty()) {
+			return targets;
+		}
+		return chainStageTargets(compiled).getOrDefault(field, Set.of());
+	}
+
+	/**
+	 * 顺序链形状：计数槽字段 → 该段目标集（由链上前缀态的击杀边归组）。无链形返回空映射。
+	 * The sequential-chain shape: counter field → that stage's targets, grouped from the chained
+	 * prefix states' kill edges. Empty for non-chain shapes.
+	 */
+	private static Map<String, Set<Integer>> chainStageTargets(CompiledQuestDefinition compiled) {
+		QuestDefinition definition = compiled.definition();
+		Map<String, Integer> required = rewardProjection(definition).variables();
+		Map<String, Set<Integer>> byField = new LinkedHashMap<>();
+		for (int slot = 0; slot < definition.progressLayout().fields().size(); slot++) {
+			BitField field = definition.progressLayout().fields().get(slot);
+			int ceiling = required.getOrDefault(field.name(), 0);
+			Set<Integer> targets = new LinkedHashSet<>();
+			for (int count = 0; count < ceiling; count++) {
+				String source = chainLabel(definition, slot, count);
+				for (QuestTransition transition : definition.transitions()) {
+					if (source.equals(transition.sourceNode())
+						&& transition.event() instanceof QuestEvent.KillNpc(int npcId)) {
+						targets.add(npcId);
+					}
+				}
+			}
+			byField.put(field.name(), targets);
+		}
+		return byField;
+	}
+
+	/** 槽位 slot 计数为 count、前序段全满、后序段为 0 的链态标签（编译器 {@code label()} 同构）。 */
+	private static String chainLabel(QuestDefinition definition, int slot, int count) {
+		Map<String, Integer> required = rewardProjection(definition).variables();
+		StringBuilder label = new StringBuilder();
+		for (int index = 0; index < definition.progressLayout().fields().size(); index++) {
+			int value;
+			if (index < slot) {
+				value = required.get("var" + index);
+			} else if (index == slot) {
+				value = count;
+			} else {
+				value = 0;
+			}
+			label.append((char) ('a' + index)).append(value);
+		}
+		return label.toString();
+	}
+
+	/** 顺序链全部前缀态（每槽依次为活跃段）。 / Every chained prefix state, each slot active in turn. */
+	private static List<Map<String, Integer>> chainStates(CompiledQuestDefinition compiled) {
+		List<Map<String, Integer>> states = new ArrayList<>();
+		QuestDefinition definition = compiled.definition();
+		Map<String, Integer> required = rewardProjection(definition).variables();
+		for (int slot = 0; slot < definition.progressLayout().fields().size(); slot++) {
+			int ceiling = required.get("var" + slot);
+			for (int count = 0; count < ceiling; count++) {
+				Map<String, Integer> state = new LinkedHashMap<>();
+				for (int index = 0; index < definition.progressLayout().fields().size(); index++) {
+					state.put("var" + index, index < slot ? required.get("var" + index)
+						: (index == slot ? count : 0));
+				}
+				states.add(state);
+			}
+		}
+		return states;
+	}
+
+	/** 领奖节点投影（链满态）。 / The reward node projection (the full chain state). */
+	private static NodeProjection rewardProjection(QuestDefinition definition) {
+		return definition.nodes().stream()
+			.filter(node -> "reward".equals(node.label()))
+			.findFirst().orElseThrow().projection();
 	}
 
 	/** 给定快照下是否有任意击杀转换能匹配该 NPC 击杀事实。 */
@@ -261,12 +372,8 @@ class QuestIlumaNorsvoldKillTargetCoverageTest {
 	}
 
 	private static CompiledQuestDefinition load(int questId) {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-		try (InputStream input = Objects.requireNonNull(
-				QuestIlumaNorsvoldKillTargetCoverageTest.class.getResourceAsStream(resource), resource)) {
-			return QuestDefinitionXmlCompiler.compile(input);
-		} catch (Exception e) {
-			throw new AssertionError("unable to load " + resource, e);
-		}
+		// Iluma/Norsvold 行已由真端表驱动（退役），改从生产视图取定义；对拍口径不变。
+		// The Iluma/Norsvold rows are retail-driven since retirement; load via the production view.
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

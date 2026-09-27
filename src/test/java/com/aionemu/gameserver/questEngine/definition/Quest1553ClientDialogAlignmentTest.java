@@ -3,7 +3,6 @@ package com.aionemu.gameserver.questEngine.definition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -31,17 +30,20 @@ class Quest1553ClientDialogAlignmentTest {
 
 		assertNode(definition, "unaccepted", QuestStatus.NONE, Map.of("var0", 0));
 		assertNode(definition, "started", QuestStatus.START, Map.of("var0", 0));
-		assertNode(definition, "stage1", QuestStatus.START, Map.of("var0", 1));
+		assertNode(definition, "s1", QuestStatus.START, Map.of("var0", 1));
+		assertNode(definition, "s2", QuestStatus.START, Map.of("var0", 2));
 		// QE-051：客户端 QUEST_Q1553.html 共 3 行，末行为领奖行，reward 投影 = 2（批次 1-7 已收口）。
 		// QE-051: QUEST_Q1553.html has 3 journal rows and the last one is the reward row, so the REWARD
 		// projection is 2 (closed by batches 1-7).
 		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 2));
 		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0));
 
-		// 1. 迪亚娜 (203786) 为唯一的接任务 NPC
+		// 1. 迪亚娜 (203786) 为唯一的接任务 NPC。S2：接取窗由 QUEST_SELECT 直发（页 4），
+		// select1 页梯与 1007 中转随规范接取段退场。
+		// 1. Diana (203786) is the only accept NPC. S2 canonical accept: QUEST_SELECT opens page 4 directly.
 		QuestTransition startDialog = route(definition, "unaccepted", START_NPC, QuestDialogAction.QUEST_SELECT);
 		assertContract(startDialog, "unaccepted", List.of(), List.of(
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT1.id())));
+			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id())));
 
 		QuestTransition accept = route(definition, "unaccepted", START_NPC, QuestDialogAction.QUEST_ACCEPT_1);
 		assertEquals("started", accept.targetNode());
@@ -55,7 +57,7 @@ class Quest1553ClientDialogAlignmentTest {
 
 		// 2. 会说话的镜子 (730051) 仅作为第 1 步 (started) 交互对象，严禁作为 Start / Complete NPC
 		assertTrue(routes(definition, "unaccepted", TALKING_MIRROR_NPC).isEmpty());
-		assertTrue(routes(definition, "stage1", TALKING_MIRROR_NPC).isEmpty());
+		assertTrue(routes(definition, "s1", TALKING_MIRROR_NPC).isEmpty());
 		assertTrue(routes(definition, "reward", TALKING_MIRROR_NPC).isEmpty());
 
 		QuestTransition mirrorSelect2 = route(definition, "started", TALKING_MIRROR_NPC, QuestDialogAction.QUEST_SELECT);
@@ -67,10 +69,10 @@ class Quest1553ClientDialogAlignmentTest {
 			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT2_1.id())));
 
 		QuestTransition mirrorSetpro1 = route(definition, "started", TALKING_MIRROR_NPC, QuestDialogAction.SETPRO1);
-		assertEquals("stage1", mirrorSetpro1.targetNode());
+		assertEquals("s1", mirrorSetpro1.targetNode());
 		assertEquals(List.of(
-			new QuestAction.RemoveItem(INITIAL_MIRROR_ITEM, 1),
-			new QuestAction.GiveItem(INFUSED_MIRROR_ITEM, 1)
+			new QuestAction.GiveItem(INFUSED_MIRROR_ITEM, 1),
+			new QuestAction.RemoveItem(INITIAL_MIRROR_ITEM, 1)
 		), mirrorSetpro1.actions());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
@@ -82,16 +84,16 @@ class Quest1553ClientDialogAlignmentTest {
 		assertTrue(routes(definition, "started", PERENTO_NPC).isEmpty());
 		assertTrue(routes(definition, "reward", PERENTO_NPC).isEmpty());
 
-		QuestTransition perentoSelect3 = route(definition, "stage1", PERENTO_NPC, QuestDialogAction.QUEST_SELECT);
-		assertContract(perentoSelect3, "stage1", List.of(), List.of(
+		QuestTransition perentoSelect3 = route(definition, "s1", PERENTO_NPC, QuestDialogAction.QUEST_SELECT);
+		assertContract(perentoSelect3, "s1", List.of(), List.of(
 			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT3.id())));
 
-		QuestTransition perentoSelect31 = route(definition, "stage1", PERENTO_NPC, QuestDialogAction.SELECT3_1);
-		assertContract(perentoSelect31, "stage1", List.of(), List.of(
+		QuestTransition perentoSelect31 = route(definition, "s1", PERENTO_NPC, QuestDialogAction.SELECT3_1);
+		assertContract(perentoSelect31, "s1", List.of(), List.of(
 			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT3_1.id())));
 
-		QuestTransition perentoSetpro2 = route(definition, "stage1", PERENTO_NPC, QuestDialogAction.SETPRO2);
-		assertEquals("reward", perentoSetpro2.targetNode());
+		QuestTransition perentoSetpro2 = route(definition, "s1", PERENTO_NPC, QuestDialogAction.SETPRO2);
+		assertEquals("s2", perentoSetpro2.targetNode());
 		assertEquals(List.of(), perentoSetpro2.actions());
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
@@ -101,12 +103,23 @@ class Quest1553ClientDialogAlignmentTest {
 		// 4. 皮埃拉 (204584) 仅作为第 3 步奖励交付 NPC，严禁作为 Start NPC
 		assertTrue(routes(definition, "unaccepted", PIERA_NPC).isEmpty());
 		assertTrue(routes(definition, "started", PIERA_NPC).isEmpty());
-		assertTrue(routes(definition, "stage1", PIERA_NPC).isEmpty());
+		assertTrue(routes(definition, "s1", PIERA_NPC).isEmpty());
+		// S2：交付 = QUEST_SELECT(s2→reward) 空门直翻领奖态并下发奖励窗；SELECT5 报告页与 1009 检查中转
+		// 随规范交付段退场（未集齐零路由，关窗兜底交 DialogService）。
+		// S2 canonical delivery: QUEST_SELECT(s2→reward) flips REWARD with the reward window; the report
+		// page and the 1009 check relay retire with the canonical segment.
+		QuestTransition pieraReport = route(definition, "s2", PIERA_NPC, QuestDialogAction.QUEST_SELECT);
+		assertContract(pieraReport, "reward", List.of(), List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(deliveryWindowPage(definition.metadata()))));
 
-		QuestTransition pieraSelect5 = route(definition, "reward", PIERA_NPC, QuestDialogAction.USE_OBJECT);
-		assertContract(pieraSelect5, "reward", List.of(), List.of(
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT5.id())));
+		assertTrue(routes(definition, "reward", PIERA_NPC).stream().noneMatch(transition ->
+			transition.event() instanceof QuestEvent.TalkToNpc talk
+				&& Integer.valueOf(QuestDialogAction.QUEST_SELECT.id()).equals(talk.dialogId())),
+			"quest 1553 reward 态不再保留 SELECT5 报告页路由");
 
+		// 完成流的领奖态预览出口（1009）保留：下发本档奖励窗（preview 形，cri=0 ⇒ 第 1 档）。
+		// The completion flow keeps its REWARD-state preview exit (1009), showing this tier's reward window.
 		QuestTransition pieraPreview = route(definition, "reward", PIERA_NPC, QuestDialogAction.SELECT_QUEST_REWARD);
 		assertContract(pieraPreview, "reward", List.of(), List.of(
 			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())));
@@ -168,13 +181,14 @@ class Quest1553ClientDialogAlignmentTest {
 		assertEquals(variables, node.projection().variables());
 	}
 
+	/** 交付窗页（与 RetailSimpleCollectItemDefinitionCompiler.deliveryWindowPage 同口径：档位查表，零奖励组回落窗 1）。 */
+	private static int deliveryWindowPage(QuestMetadata metadata) {
+		return metadata.rewardGroups().isEmpty()
+			? QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()
+			: QuestDialogPage.rewardWindowForTier(metadata.rewardGroups().size() - 1).orElseThrow().id();
+	}
+
 	private static CompiledQuestDefinition load() {
-		String resource = "/aion/data/static_data/quest_definition/quests/1553.xml";
-		try (InputStream input = Objects.requireNonNull(
-			Quest1553ClientDialogAlignmentTest.class.getResourceAsStream(resource), resource)) {
-			return QuestDefinitionXmlCompiler.compile(input);
-		} catch (Exception e) {
-			throw new AssertionError("unable to load " + resource, e);
-		}
+		return ProductionQuestDefinitions.definitionInOverlay(1553);
 	}
 }

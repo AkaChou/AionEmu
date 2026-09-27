@@ -3,6 +3,7 @@ package com.aionemu.gameserver.questEngine.runtime;
 import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.NodeProjection;
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestCondition;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
@@ -39,16 +40,18 @@ class QuestCounterSourceProjectionProductionFlowTest {
 	private static final Set<Integer> GI_GUARDIANS = Set.of(219286, 243852);
 
 	@Test
-	void archivesDualCounterQuestsCompleteOnTheLastKillInEitherCounterOrder() throws Exception {
-		// 26802/16802 是同构的天魔双计数档案任务：两组计数可乱序推进，最后一击直接进入领奖。
-		// 26802/16802 are twin dual-counter Archives quests: either counter order is valid and
-		// the final kill enters reward.
+	void archivesDualCounterQuestsWalkTheSequentialSectionChain() throws Exception {
+		// 26802/16802 是同构的天魔档案馆顺序链：真端表段序 = 30 图书管理员（段 1）→ 2 sub-boss
+		// （段 2），客户端 quest_monster.csv 的链式 SECTION 门控决定乱序不计数——段 1 进行中
+		// Boss 击杀不产生任何计划，段 1 打满后 Boss 才逐只推进，满段经 1009 领奖。
+		// 26802/16802 are twin Archives sequential chains: the retail stage order is 30 librarians
+		// (stage 1) then 2 sub-bosses (stage 2); the client's chained SECTION gates make out-of-order
+		// kills never count — boss kills produce no plan during stage 1 and the full chain reports.
 		for (int questId : List.of(26802, 16802)) {
 			CompiledQuestDefinition definition = load(questId);
-			assertEquals(Map.of(), node(definition, "started").projection().variables());
-
-			assertDualCounterOrder(definition, true);
-			assertDualCounterOrder(definition, false);
+			assertEquals(Map.of("var0", 0, "var1", 0), node(definition, "a0b0").projection().variables());
+			assertSequentialOrder(definition, true);
+			assertSequentialOrder(definition, false);
 		}
 	}
 
@@ -58,22 +61,42 @@ class QuestCounterSourceProjectionProductionFlowTest {
 		assertFourCounterMonsterHunt(load(30613), 800327);
 	}
 
-	private static void assertDualCounterOrder(CompiledQuestDefinition definition, boolean librariansFirst)
+	private static void assertSequentialOrder(CompiledQuestDefinition definition, boolean negativeProbeFirst)
 			throws Exception {
-		QuestTransition continuing = killRoute(definition, LIBRARIANS, 2);
+		// 系统发放接取（EnterArea）：SystemGrant 边引导进链首 a0b0。
+		// System-grant acquire (EnterArea): the SystemGrant edge leads into the first chain node.
+		QuestTransition grant = definition.definition().transitions().stream()
+			.filter(candidate -> candidate.event() instanceof QuestEvent.SystemGrant)
+			.findFirst().orElseThrow();
 		try (QuestE2eRuntime runtime = new QuestE2eRuntime(definition)) {
-			runtime.prepare(continuing);
-			if (librariansFirst) {
-				dispatchKills(runtime, 220306, 30);
-				assertEquals(QuestStatus.START, runtime.state().status());
-				dispatchKills(runtime, 857450, 2);
-			} else {
-				dispatchKills(runtime, 857450, 2);
-				assertEquals(QuestStatus.START, runtime.state().status());
-				dispatchKills(runtime, 220306, 30);
+			runtime.prepare(grant);
+			runtime.dispatchPrepared();
+			assertEquals(QuestStatus.START, runtime.state().status());
+			// 负例只属于段 1 进行中（a0b0）；a30b0 起 Boss 已是当前段、击杀合法计数。
+			// The negative probe belongs to stage 1 only (a0b0); from a30b0 on, bosses are the
+			// current stage and their kills legitimately count.
+			if (negativeProbeFirst) {
+				assertFalse(runtime.dispatchWorld(new QuestEvent.KillNpc(857450)).handled());
 			}
+			dispatchKills(runtime, 220306, 30);
+			assertEquals(QuestStatus.START, runtime.state().status());
+			assertEquals(Map.of("var0", 30, "var1", 0), variables(definition, runtime));
+			dispatchKills(runtime, 857450, 2);
+			// 满段仍是 START：真端把领奖入口放在报告 NPC 的 QUEST_SELECT 交付之后（P0-2 规范形）。
+			// The full chain stays START: retail keeps reward entry behind the report NPC's
+			// QUEST_SELECT delivery (canonical since P0-2).
+			assertEquals(QuestStatus.START, runtime.state().status());
+			assertEquals(Map.of("var0", 30, "var1", 2), variables(definition, runtime));
+			// P0-2 顺序链规范形：满段 QUEST_SELECT 直翻领奖（1009 中转删除）。
+			// Canonical sequential delivery: the full node's QUEST_SELECT flips reward (no 1009 hop).
+			QuestTransition finish = definition.definition().transitions().stream()
+				.filter(candidate -> "a30b2".equals(candidate.sourceNode())
+					&& "reward".equals(candidate.targetNode())
+					&& candidate.event() instanceof QuestEvent.TalkToNpc talk
+					&& talk.dialogId() == QuestDialogAction.QUEST_SELECT.id())
+				.findFirst().orElseThrow();
+			assertTrue(runtime.dispatchWorld(finish.event()).handled());
 			assertEquals(QuestStatus.REWARD, runtime.state().status());
-			assertEquals(Map.of("var0", 1, "var1", 30, "var2", 2), variables(definition, runtime));
 		}
 	}
 
@@ -166,10 +189,15 @@ class QuestCounterSourceProjectionProductionFlowTest {
 			.findFirst().orElseThrow();
 	}
 
+	/** 30603/30613 仍由 XML 拥有；26802/16802 走生产驱动（XML 已退役）。 /
+	 * 30603/30613 remain XML-owned; 26802/16802 load through the production driver. */
 	private static CompiledQuestDefinition load(int questId) throws Exception {
 		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-		try (InputStream input = Objects.requireNonNull(
-				QuestCounterSourceProjectionProductionFlowTest.class.getResourceAsStream(resource), resource)) {
+		InputStream input = QuestCounterSourceProjectionProductionFlowTest.class.getResourceAsStream(resource);
+		if (input == null) {
+			return ProductionQuestDefinitions.definition(questId);
+		}
+		try (input) {
 			return QuestDefinitionXmlCompiler.compile(input);
 		}
 	}

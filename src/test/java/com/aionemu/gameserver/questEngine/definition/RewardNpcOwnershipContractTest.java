@@ -219,12 +219,13 @@ class RewardNpcOwnershipContractTest {
 		return definitionResource(questId).definition();
 	}
 
-	private static CompiledQuestDefinition definitionResource(int questId) throws IOException {
-		try (InputStream input = RewardNpcOwnershipContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			assertNotNull(input, () -> "missing quest definition " + questId + ".xml");
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	/**
+	 * 生产定义入口：本族里 30610 等已退役 XML，定义改由真端表合成；未退役 id 仍回落到 XML 目录。
+	 * Production entry point: retired ids such as 30610 resolve through the retail table, while
+	 * non-retired ids still fall back to the XML directory.
+	 */
+	private static CompiledQuestDefinition definitionResource(int questId) {
+		return ProductionQuestDefinitions.definition(questId);
 	}
 
 	private static String resourceText(int questId) throws IOException {

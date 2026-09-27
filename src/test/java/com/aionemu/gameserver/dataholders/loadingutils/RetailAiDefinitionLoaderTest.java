@@ -170,7 +170,11 @@ class RetailAiDefinitionLoaderTest {
 		// existed there and the per-world duplicate check rejects a second copy, so pin the deduped 133.
 		assertEquals(133, data.areaCount());
 		assertEquals(18, data.resurrectAreaCount());
-		assertEquals(231, data.questAreaCount());
+		// P0c-4 真端绑定补齐：InvadePortalDest 42/41 的 questArea_02/03 四条（39005/39007/39009/49004-49007）
+		// + LDF4_Advance_QuestArea_PVP_ALL（13745/23745，DD 家族区域发放批）。
+		// P0c-4 retail bindings restored: the four InvadePortalDest questArea_02/03 rows plus
+		// LDF4_Advance_QuestArea_PVP_ALL (the 13745/23745 area-grant batch).
+		assertEquals(236, data.questAreaCount());
 		assertEquals(1, data.limitAreaCount());
 		assertEquals(112, data.groupControlAreaCount());
 		assertEquals(56, data.groupControllerCount());

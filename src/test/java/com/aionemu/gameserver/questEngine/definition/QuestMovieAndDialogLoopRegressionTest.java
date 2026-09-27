@@ -84,14 +84,21 @@ class QuestMovieAndDialogLoopRegressionTest {
 	}
 
 	@Test
-	void quest24155AdvancesToArmedOnSetpro2() throws Exception {
+	void quest24155AdvancesToArmedOnTheBriefingTalk() throws Exception {
 		QuestDefinition def = definition(24155).definition();
+		// P0c-6：24155 走真端网格合成器，简报完成后的计数态是网格零段节点 a0（旧 XML 叫 armed）；
+		// 标志位由目标节点投影承担（a0 投影 var5=0），不再写成显式 SetVariable 动作。
+		// P0-2 规范形：简报一步直达——对话入口是 QUEST_SELECT，select2 页链与其 SETPRO2 按钮不再下发。
+		// Since P0c-6 24155 is grid-composed: the post-briefing counting state is the zero grid node a0
+		// (named armed by the retired XML); the cleared flag comes from that node's projection.
+		// Canonical since P0-2: one-step briefing — the entry is QUEST_SELECT, and the select2 page
+		// chain with its SETPRO2 button is no longer served.
 		QuestTransition talk = def.transitions().stream()
-			.filter(t -> "started".equals(t.sourceNode()) && "armed".equals(t.targetNode())
+			.filter(t -> "started".equals(t.sourceNode()) && "a0".equals(t.targetNode())
 				&& t.event() instanceof QuestEvent.TalkToNpc ttn && ttn.npcId() == 204785
-				&& Integer.valueOf(QuestDialogAction.SETPRO2.id()).equals(ttn.dialogId()))
+				&& Integer.valueOf(QuestDialogAction.QUEST_SELECT.id()).equals(ttn.dialogId()))
 			.findFirst().orElseThrow();
-		assertTrue(talk.actions().stream().anyMatch(a -> a instanceof QuestAction.SetVariable sv && "var5".equals(sv.field()) && sv.value() == 0));
+		assertNode(def, "a0", Map.of("var0", 0, "var5", 0));
 	}
 
 	@Test
@@ -146,11 +153,11 @@ class QuestMovieAndDialogLoopRegressionTest {
 		for (int qid : List.of(15301, 25301)) {
 			QuestDefinition def = definition(qid).definition();
 			int npcId = qid == 15301 ? 805327 : 805339;
-			// Daevanion 三段对话流程（98b34418a）把首段节点由 started 改名为 s0；接取合同不变。
-			// The Daevanion three-stage flow renamed the first stage node from started to s0; the
-			// acceptance contract itself is unchanged.
+			// 真端驱动混合采集链（DD_TALK_COLLECT_CHAIN）以 started 作为接取落点；接取合同不变。
+			// The retail-driven mixed collect chain (DD_TALK_COLLECT_CHAIN) lands acceptance on
+			// started; the acceptance contract itself is unchanged.
 			QuestTransition accept = def.transitions().stream()
-				.filter(t -> "unaccepted".equals(t.sourceNode()) && "s0".equals(t.targetNode())
+				.filter(t -> "unaccepted".equals(t.sourceNode()) && "started".equals(t.targetNode())
 					&& t.event() instanceof QuestEvent.TalkToNpc ttn && ttn.npcId() == npcId
 					&& Integer.valueOf(QuestDialogAction.QUEST_ACCEPT_1.id()).equals(ttn.dialogId()))
 				.findFirst().orElseThrow();
@@ -237,11 +244,23 @@ class QuestMovieAndDialogLoopRegressionTest {
 
 	@Test
 	void quests2372And4907And24202And24203DropsStepCorrected() throws Exception {
-		for (int qid : List.of(2372, 4907, 24202, 24203)) {
+		// 2372/4907/24203 仍由 XML 拥有：XML 期把掉落生效步压成 0（收集期全程可掉）。
+		// XML-owned rows keep the flattened step 0.
+		for (int qid : List.of(2372, 4907, 24203)) {
 			QuestDefinition def = definition(qid).definition();
 			assertTrue(def.metadata().drops().stream().allMatch(d -> d.collectingStep() == 0),
 				"Quest " + qid + " drops must have collectingStep=0");
 		}
+		// 24202 于 P0c-35 退役（真端驱动）：真端 quest.xml collect_progress=2 = 客户端任务书第 2 行
+		// （带 [%collectitem] 的交付行），掉落生效步按真端声明并由 START 行 2 承载（QE-061 可达性）。
+		// Quest 24202 is retail-driven since P0c-35: the retail collect_progress (2) is authoritative and
+		// must be reachable through the matching START row.
+		QuestDefinition def = definition(24202).definition();
+		assertTrue(def.metadata().drops().stream().allMatch(d -> d.collectingStep() == 2),
+			"Quest 24202 drops must carry the retail collect_progress (2)");
+		assertTrue(def.nodes().stream().anyMatch(node -> node.projection().status() == QuestStatus.START
+			&& Integer.valueOf(2).equals(node.projection().variables().get("var0"))),
+			"Quest 24202 must project a START row at the retail drop step");
 	}
 
 	@Test
@@ -614,12 +633,8 @@ class QuestMovieAndDialogLoopRegressionTest {
 	}
 
 	private CompiledQuestDefinition definition(int questId) throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/" + questId + ".xml";
-		try (InputStream input = getClass().getResourceAsStream(resource)) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition " + questId + ".xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		// Retired quests live in git history only: use the production view (XML dir + retail overlay).
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

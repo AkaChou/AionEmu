@@ -63,14 +63,17 @@ class ExternalRewardAdvanceReentryContractTest {
 			// no reward route at all.
 			assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", row.writerStep()));
 
-			// 进入 REWARD 的事务不得再改写 var0：打包步数由 reward 节点投影决定。
-			// Transactions entering REWARD must not rewrite var0: the reward node projection owns it.
+			// 进入 REWARD 的事务不得把 var0 改写成对齐行之外的步数：遗留形由 reward 投影独占，
+			// DD 链形允许写入与投影对齐的领奖行（writer == projection）。
+			// Transactions entering REWARD must not rewrite var0 to a step other than the aligned
+			// row: the legacy form lets the reward projection own it, while the DD chain shape may
+			// write the aligned reward row (writer == projection).
 			assertTrue(definition.transitions().stream()
 					.filter(transition -> "started".equals(transition.sourceNode()))
 					.filter(transition -> "reward".equals(transition.targetNode()))
 					.flatMap(transition -> transition.actions().stream())
 					.noneMatch(action -> action instanceof QuestAction.SetVariable set
-						&& "var0".equals(set.field())),
+						&& "var0".equals(set.field()) && set.value() != row.writerStep()),
 				"quest " + row.questId() + " must not rewrite the reward packed step");
 
 			// 每个完成 NPC 都必须注册领奖态入口页：31 -> select_success(10002) -> 1009 -> 奖励窗口。
@@ -100,7 +103,12 @@ class ExternalRewardAdvanceReentryContractTest {
 					new QuestCondition.StatusIs(QuestStatus.REWARD),
 					new QuestCondition.QuestVariableIs("var0", row.staleRewardSteps().get(index))),
 					recovery.conditions(), "quest " + row.questId() + " recovery conditions");
-				assertEquals(List.of(), recovery.actions(), "quest " + row.questId() + " recovery actions");
+				// 遗留形自愈无动作；DD 链形自愈写入与投影对齐的领奖行。
+				// The legacy heal carries no actions; the DD chain heal writes the aligned reward row.
+				assertTrue(recovery.actions().isEmpty()
+					|| recovery.actions().equals(List.of(
+						new QuestAction.SetVariable("var0", row.writerStep()))),
+					"quest " + row.questId() + " recovery actions");
 				assertEquals(List.of(new AfterCommitAction.SyncQuestState(
 					QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), recovery.afterCommit(),
 					"quest " + row.questId() + " recovery response");
@@ -207,15 +215,13 @@ class ExternalRewardAdvanceReentryContractTest {
 		return List.copyOf(values);
 	}
 
+	// 退役任务统一走生产视图（真端 overlay 合成；旧 XML 只在 git 历史里）。
+	// Retired quests resolve through the production view (retail overlay; the old XML lives in
+	// git history only).
 	private static CompiledQuestDefinition definition(int questId) throws Exception {
-		try (InputStream input = ExternalRewardAdvanceReentryContractTest.class.getResourceAsStream(
-			"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition " + questId + ".xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		return ProductionQuestDefinitions.definition(questId);
 	}
+
 
 	private record BaselineRow(int questId, String writerEvidence, int writerStep, int rewardProjection,
 			List<Integer> completionNpcIds, List<Integer> staleRewardSteps) {

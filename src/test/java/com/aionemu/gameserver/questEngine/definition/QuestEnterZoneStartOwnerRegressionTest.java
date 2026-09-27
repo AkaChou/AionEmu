@@ -3,9 +3,6 @@ package com.aionemu.gameserver.questEngine.definition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -69,10 +66,11 @@ class QuestEnterZoneStartOwnerRegressionTest {
 			.status();
 	}
 
+	/**
+	 * 生产视图：XML 目录 + 真端 overlay（已退役任务的 XML 只在 git 历史里，直读文件会在退役后失效）。
+	 * Production view: the XML directory plus the retail overlay, so a later retirement cannot break this lock.
+	 */
 	private static CompiledQuestDefinition load(int questId) throws Exception {
-		Path path = Path.of("src/main/resources/aion/data/static_data/quest_definition/quests/" + questId + ".xml");
-		try (InputStream input = Files.newInputStream(path)) {
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		return ProductionQuestDefinitions.definition(questId);
 	}
 }

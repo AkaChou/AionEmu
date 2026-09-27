@@ -24,7 +24,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
-import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode;
@@ -34,7 +34,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
-import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
@@ -63,8 +62,6 @@ class Quest1112ProductionFlowTest {
 	private static final int NPC_ID = 203072;
 	private static final int NPC_OBJECT_ID = 900_007;
 	private static final int A5B5 = 5 + (5 << 6);
-	private static final String DEFINITION =
-		"/aion/data/static_data/quest_definition/quests/1112.xml";
 
 	@BeforeAll
 	static void configurePacketProcessor() {
@@ -75,25 +72,36 @@ class Quest1112ProductionFlowTest {
 	}
 
 	@Test
-	void reportDialogsRouteThroughTheAuthoritativeNpcObjectAndPublishRewardState() throws Exception {
+	void fullNodeDialogsRouteThroughTheAuthoritativeNpcObjectAndPublishRewardState() throws Exception {
 		Fixture fixture = fixture(QuestStatus.START, A5B5);
 
+		// 规范形交付（quest-native-dispatch P0-2）：满段 QUEST_SELECT 直翻 REWARD 并按档位下发
+		// 奖励窗（页 5）；报告页 1352 与 1009 中转删除。
+		// Canonical delivery (quest-native-dispatch P0-2): the full node's QUEST_SELECT flips REWARD
+		// and shows the tiered reward window (page 5); the 1352 report page and the 1009 hop are gone.
 		QuestEventRouter.DispatchResult view = fixture.dispatch(31);
 		assertNoFailure(view);
 		assertTrue(view.handled(), view::toString);
-		assertEquals(QuestStatus.START, fixture.state().getStatus());
-		assertDialog(fixture.lastPacket(), NPC_OBJECT_ID, 1352, QUEST_ID);
-
-		fixture.clearPackets();
-		QuestEventRouter.DispatchResult report = fixture.dispatch(1009);
-		assertNoFailure(report);
-		assertTrue(report.handled(), report::toString);
 		assertEquals(QuestStatus.REWARD, fixture.state().getStatus());
 		assertEquals(A5B5, fixture.state().getQuestVars().getQuestVars());
 		assertEquals(List.of(SM_QUEST_ACTION.class, SM_DIALOG_WINDOW.class), fixture.packetTypes());
 		assertQuestAction(fixture.packets().get(0), QuestStatus.REWARD, A5B5);
 		assertDialog(fixture.packets().get(1), NPC_OBJECT_ID, 5, QUEST_ID);
 		assertEquals(List.of(NPC_OBJECT_ID), fixture.resolvedInteractionObjects());
+
+		// REWARD 态的 1009 / -1 只是完成流的预览重开：不翻状态、仅重发奖励窗。
+		// The REWARD-state 1009 / -1 are completion-flow previews: no status flip, just re-showing
+		// the reward window.
+		fixture.clearPackets();
+		QuestEventRouter.DispatchResult report = fixture.dispatch(1009);
+		assertNoFailure(report);
+		assertTrue(report.handled(), report::toString);
+		assertEquals(QuestStatus.REWARD, fixture.state().getStatus());
+		assertEquals(List.of(SM_DIALOG_WINDOW.class), fixture.packetTypes());
+		assertDialog(fixture.packets().get(0), NPC_OBJECT_ID, 5, QUEST_ID);
+		/* 完成流预览边只重发奖励窗（afterCommit 无 SyncQuestState）：交互对象解析不重跑。
+		   The completion-flow preview edge only re-shows the window (no SyncQuestState in its
+		   afterCommit), so the interaction-object resolver is not re-run. */
 
 		fixture.clearPackets();
 		QuestEventRouter.DispatchResult preview = fixture.dispatch(-1);
@@ -229,13 +237,12 @@ class Quest1112ProductionFlowTest {
 			resolvedInteractionObjects, auditEvents);
 	}
 
-	private CompiledQuestDefinition definition() throws Exception {
-		try (InputStream input = getClass().getResourceAsStream(DEFINITION)) {
-			if (input == null) {
-				throw new IllegalStateException("missing resource " + DEFINITION);
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+	/**
+	 * 1112 已退役（真端驱动），生产 XML 只在 git 历史里；定义取生产视图。
+	 * Quest 1112 is retail-driven now, so its definition comes from the production view.
+	 */
+	private CompiledQuestDefinition definition() {
+		return ProductionQuestDefinitions.definition(1112);
 	}
 
 	private static Player player(QuestStatus status, int packedVariables, List<String> calls) throws Exception {

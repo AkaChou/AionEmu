@@ -13,6 +13,7 @@ import com.aionemu.gameserver.model.gameobjects.player.npcFaction.NpcFactions;
 import com.aionemu.gameserver.model.gameobjects.player.title.TitleList;
 import com.aionemu.gameserver.model.items.storage.PlayerStorage;
 import com.aionemu.gameserver.model.items.storage.StorageType;
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
@@ -20,17 +21,18 @@ import com.aionemu.gameserver.questEngine.definition.QuestStartCondition;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.objenesis.ObjenesisStd;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -337,11 +339,21 @@ class PlayerQuestStartEligibilityPortTest {
 	void commaSeparatedSlotEntriesStayInsideOneConjunction() throws Exception {
 		// 客户端 quest.xml:80613 的 finished_quest_cond1 = Q80611,Q80612 属于同一个槽位,
 		// 槽位内的多个条目在零售判定中是 AND,不能拆成备选组。
+		// P0c-8c（2026-09-24）：80613 已由真端文件驱动。真端元数据编译器把"无后缀、且不与其它条件族共存"
+		// 的 finished 条件编成 prerequisites（集合语义即合取），旧 XML 则编成单个 start-condition 组；
+		// 两种表达等价，断言改为在任一表达下都锁死"两个条目同属一个合取、未被拆成备选"。
+		// Retail-driven since P0c-8c: the conjunction is asserted on whichever equivalent representation
+		// carries it (prerequisites set or a single start-condition group), never split into alternatives.
 		QuestMetadata tutorial = metadata(80613);
-		assertEquals(1, tutorial.startConditionGroups().size());
-		assertEquals(Set.of(new QuestStartCondition("finished", 80611, 0),
-			new QuestStartCondition("finished", 80612, 0)),
-			Set.copyOf(tutorial.startConditionGroups().getFirst().conditions()));
+		assertTrue(tutorial.startConditionGroups().size() <= 1,
+			() -> "finished slot must stay one conjunction: " + tutorial.startConditionGroups());
+		Set<Integer> conjunction = new TreeSet<>(tutorial.prerequisites());
+		tutorial.startConditionGroups().stream()
+			.flatMap(group -> group.conditions().stream())
+			.filter(condition -> "finished".equals(condition.type()))
+			.map(QuestStartCondition::questId)
+			.forEach(conjunction::add);
+		assertEquals(Set.of(80611, 80612), conjunction);
 	}
 
 	@Test
@@ -404,13 +416,8 @@ class PlayerQuestStartEligibilityPortTest {
 	}
 
 	private static QuestMetadata metadata(int questId) throws Exception {
-		try (InputStream input = PlayerQuestStartEligibilityPortTest.class.getClassLoader().getResourceAsStream(
-				"aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest " + questId);
-			}
-			return QuestDefinitionXmlCompiler.parse(input).metadata();
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(questId).definition().metadata();
 	}
 
 	private static QuestMetadata metadataFromXml(String metadata) {

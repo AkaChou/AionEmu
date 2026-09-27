@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class Quest1913ProductionFlowTest {
@@ -45,7 +46,9 @@ class Quest1913ProductionFlowTest {
 		assertHandled(offer);
 		assertEquals(QuestStatus.NONE, status.get());
 		assertTrue(plans.isEmpty());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1011)), afterCommit);
+		// S2 规范形接取：QUEST_SELECT(31) 从 unaccepted 直发接取窗页 4（SELECT1 页梯与 1007 中转已退场）。
+		// S2 canonical accept: QUEST_SELECT(31) pops the ask window page 4 straight from unaccepted.
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(4)), afterCommit);
 
 		plans.clear();
 		afterCommit.clear();
@@ -96,21 +99,28 @@ class Quest1913ProductionFlowTest {
 	void rewardDialogIsAvailableOnlyAfterTheVerteronTransfer() throws Exception {
 		CompiledQuestDefinition definition = definition();
 		AtomicReference<QuestStatus> status = new AtomicReference<>(QuestStatus.START);
-		AtomicInteger packedVariables = new AtomicInteger(1);
+		AtomicInteger packedVariables = new AtomicInteger();
 		List<QuestMutationPlan> plans = new ArrayList<>();
 		List<AfterCommitAction> afterCommit = new ArrayList<>();
 		QuestProductionDispatcher dispatcher = dispatcher(definition, status, packedVariables, plans, afterCommit);
 
-		QuestEventRouter.DispatchResult offer = dispatch(dispatcher, REWARD_NPC_ID, 31);
+		// 传送前（started，var0=0）：S2 交付边锚在 started1，QUEST_SELECT(31) 零路由 ——
+		// "必须先完成传送才可领奖"由交付边源节点承担，不再有 SELECT5 报告页与 1009 中转。
+		// Before the transfer (started, var0=0): the S2 delivery edge is anchored at started1, so
+		// QUEST_SELECT(31) has no route; the report page and the 1009 relay are gone.
+		QuestEventRouter.DispatchResult premature = dispatch(dispatcher, REWARD_NPC_ID, 31);
 
-		assertHandled(offer);
+		assertNotHandled(premature);
 		assertEquals(QuestStatus.START, status.get());
-		assertEquals(1, packedVariables.get());
+		assertEquals(0, packedVariables.get());
 		assertTrue(plans.isEmpty());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(2375)), afterCommit);
+		assertTrue(afterCommit.isEmpty());
 
-		afterCommit.clear();
-		QuestEventRouter.DispatchResult reward = dispatch(dispatcher, REWARD_NPC_ID, 1009);
+		// 传送后（started1，var0=1）：点 31 即翻 REWARD 并下发本档奖励窗（单档 → 窗 1 页 5）。
+		// After the transfer (started1, var0=1): clicking 31 flips REWARD and shows the tiered
+		// reward window (one group -> window 1, page 5).
+		packedVariables.set(1);
+		QuestEventRouter.DispatchResult reward = dispatch(dispatcher, REWARD_NPC_ID, 31);
 
 		assertHandled(reward);
 		assertEquals(QuestStatus.REWARD, status.get());
@@ -133,12 +143,15 @@ class Quest1913ProductionFlowTest {
 		QuestProductionDispatcher dispatcher = dispatcher(definition, status, packedVariables, plans, afterCommit);
 
 		assertResponse(dispatch(dispatcher, START_NPC_ID, 31), afterCommit,
-			new AfterCommitAction.ShowQuestDialog(1011));
-		assertEquals(QuestStatus.NONE, status.get());
-
-		assertResponse(dispatch(dispatcher, START_NPC_ID, 1007), afterCommit,
 			new AfterCommitAction.ShowQuestDialog(4));
 		assertEquals(QuestStatus.NONE, status.get());
+
+		// S2 接取段退场：ASK_QUEST_ACCEPT(1007) 中转随 SELECT1 页梯消失，接取窗由 31 直发（页 4）。
+		// S2 retired accept relay: ASK_QUEST_ACCEPT(1007) goes with the SELECT1 ladder; 31 pops the
+		// ask window (page 4) itself.
+		assertNotHandled(dispatch(dispatcher, START_NPC_ID, 1007));
+		assertEquals(QuestStatus.NONE, status.get());
+		assertTrue(afterCommit.isEmpty());
 
 		assertResponse(dispatch(dispatcher, START_NPC_ID, 1003), afterCommit,
 			new AfterCommitAction.ShowQuestDialog(1004));
@@ -158,9 +171,15 @@ class Quest1913ProductionFlowTest {
 		assertEquals(QuestStatus.START, status.get());
 		assertEquals(1, packedVariables.get());
 
+		// S2 交付段退场：SELECT_QUEST_REWARD(1009) 中转消失，交付边只认 QUEST_SELECT(31)。
+		// S2 retired delivery relay: SELECT_QUEST_REWARD(1009) is gone; only QUEST_SELECT(31)
+		// commits the hand-in.
+		assertNotHandled(dispatch(dispatcher, REWARD_NPC_ID, 1009));
+		assertEquals(QuestStatus.START, status.get());
+		assertEquals(1, packedVariables.get());
+		assertTrue(afterCommit.isEmpty());
+
 		assertResponse(dispatch(dispatcher, REWARD_NPC_ID, 31), afterCommit,
-			new AfterCommitAction.ShowQuestDialog(2375));
-		assertResponse(dispatch(dispatcher, REWARD_NPC_ID, 1009), afterCommit,
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.ShowQuestDialog(5));
 		assertEquals(QuestStatus.REWARD, status.get());
@@ -213,13 +232,7 @@ class Quest1913ProductionFlowTest {
 	}
 
 	private static CompiledQuestDefinition definition() throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/1913.xml";
-		try (InputStream input = Quest1913ProductionFlowTest.class.getResourceAsStream(resource)) {
-			if (input == null) {
-				throw new IllegalStateException("missing resource " + resource);
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		return com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions.definitionInOverlay(1913);
 	}
 
 	private static QuestActionPort noOpActions() {
@@ -246,11 +259,22 @@ class Quest1913ProductionFlowTest {
 	}
 
 	private static void assertHandled(QuestEventRouter.DispatchResult result) {
+		assertNoFailure(result);
+		assertTrue(result.handled(), result::toString);
+	}
+
+	/** 零路由断言：S2 退场的旧页链中转（1007/1009）不得再被任何 owner 接管。 /
+	 * Zero-route assertion: the S2-retired page-chain relays (1007/1009) must not be handled. */
+	private static void assertNotHandled(QuestEventRouter.DispatchResult result) {
+		assertNoFailure(result);
+		assertFalse(result.handled(), result::toString);
+	}
+
+	private static void assertNoFailure(QuestEventRouter.DispatchResult result) {
 		result.owners().stream().map(QuestEventRouter.OwnerResult::failure)
 			.filter(java.util.Objects::nonNull).findFirst().ifPresent(failure -> {
 				throw failure;
 			});
-		assertTrue(result.handled(), result::toString);
 	}
 
 	private static void assertResponse(QuestEventRouter.DispatchResult result,

@@ -185,12 +185,6 @@ class Quest1192StepChainContractTest {
 	}
 
 	private static CompiledQuestDefinition definition() throws Exception {
-		try (InputStream input = Quest1192StepChainContractTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/1192.xml")) {
-			if (input == null) {
-				throw new IllegalStateException("missing quest definition 1192.xml");
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
+		return ProductionQuestDefinitions.definitionInOverlay(1192);
 	}
 }

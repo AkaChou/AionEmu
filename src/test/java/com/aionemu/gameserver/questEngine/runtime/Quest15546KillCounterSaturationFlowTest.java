@@ -3,15 +3,14 @@ package com.aionemu.gameserver.questEngine.runtime;
 import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
-import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -26,43 +25,51 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 15546《[每日]雷欧娜的委托》计数器饱和后的额外击杀合同。
- * Oversaturation contract for the four-counter daily 15546: while other families are still incomplete, a kill of an
- * already saturated family must not change quest state and must not announce a quest update to the client.
- * <p>回归背景：四个 SECTION 各自计数上限为 4（客户端 {@code Progress(SECTION_n<4)}）。原先第 4 次击杀由
- * "收口"路线（{@code variable-at-least 3 -> set 4}）写入；该路线在计数器到达 4 之后仍然命中，
- * 于是超额击杀会提交一笔状态未变化的空事务，并因 {@code sync-quest-state PACKET_ONLY} 下发一次
- * {@code SM_QUEST_ACTION}，客户端因此显示"任务更新"而进度并未变化。</p>
+ * 15546《[每日]雷欧娜的委托》顺序链的段饱和合同（定义来自生产驱动，真端四段顺序链）。
+ * Saturation contract for the sequential-chain daily 15546 (production-driver definition, the
+ * retail four-stage chain): while later stages are closed, a kill of an already saturated stage
+ * must not change quest state and must not announce a quest update to the client.
+ * <p>回归背景：客户端每段计数上限 4（{@code Progress(SECTION_n<4)}）。顺序链的击杀边只从
+ * "首个未满段"推进——段满后同段再击杀不再命中任何路线，不会提交空事务、不会因
+ * {@code sync-quest-state PACKET_ONLY} 下发 {@code SM_QUEST_ACTION}（旧并行网格的"收口路线"
+ * 假更新问题在链形下结构性消失）。</p>
+ * <p>Regression background: each stage caps at 4. Chain kill edges only advance the first
+ * unfinished stage, so post-saturation kills match no route — no empty transaction, no spurious
+ * quest-update packet (the legacy parallel grid's closing-route double-announce disappears
+ * structurally in the chain shape).</p>
  */
 class Quest15546KillCounterSaturationFlowTest {
 	private static final int PLAYER_ID = 7;
 	private static final int QUEST_ID = 15546;
-	/** 星光精灵 T_ 变体：Iluma 生产刷怪数据里真实刷新的第 1 族目标。 */
+	/** 星光精灵 T_ 变体：Iluma 生产刷怪数据里真实刷新的第 1 段目标（逐段登记表并入）。 */
 	private static final int ELEMENTAL_LIGHT_NPC_ID = 241656;
-	/** 第 2 族（达鲁）目标，用于验证其他族未满时第 1 族的超额击杀。 */
+	/** 第 2 段（达鲁）目标，用于验证第 1 段满后下一段继续计数。 */
 	private static final int DARU_NPC_ID = 241664;
-	private static final int COUNTER_CEILING = 4;
+	/** 第 3 段（波波库）目标，用于验证前段进行中后段永不提前计数。 */
+	private static final int POPOKU_NPC_ID = 241676;
+	private static final int STAGE_CEILING = 4;
 
 	@Test
-	void fourKillsSaturateTheCounterAndAnnounceProgress() throws Exception {
+	void fourKillsSaturateTheFirstStageAndAnnounceProgress() throws Exception {
 		Fixture fixture = new Fixture();
-		for (int kill = 1; kill <= COUNTER_CEILING; kill++) {
+		for (int kill = 1; kill <= STAGE_CEILING; kill++) {
+			final int progress = kill;
 			fixture.afterCommit.clear();
 			assertHandled(fixture.dispatchKill(ELEMENTAL_LIGHT_NPC_ID));
-			assertEquals(kill, fixture.counter("var1"), "SECTION_1 progress after kill " + kill);
+			assertEquals(progress, fixture.counter("var0"), "SECTION_1 progress after kill " + kill);
 			assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
 				fixture.afterCommit, "kill " + kill + " must announce the counter progress");
 		}
 	}
 
 	@Test
-	void extraKillsOfASaturatedFamilyDoNotAnnounceAQuestUpdate() throws Exception {
+	void extraKillsOfASaturatedStageDoNotAnnounceAQuestUpdate() throws Exception {
 		Fixture fixture = new Fixture();
-		for (int kill = 1; kill <= COUNTER_CEILING; kill++) {
+		for (int kill = 1; kill <= STAGE_CEILING; kill++) {
 			assertHandled(fixture.dispatchKill(ELEMENTAL_LIGHT_NPC_ID));
 		}
-		// 第 2 族仍未计数：任务既不能完成，也不该因为第 1 族的超额击杀下发任何状态更新。
-		assertEquals(0, fixture.counter("var2"));
+		// 第 2 段仍未计数：任务既不能完成，也不该因为第 1 段的超额击杀下发任何状态更新。
+		assertEquals(0, fixture.counter("var1"));
 		int packedAfterCeiling = fixture.packedVariables.get();
 
 		fixture.afterCommit.clear();
@@ -76,15 +83,19 @@ class Quest15546KillCounterSaturationFlowTest {
 	}
 
 	@Test
-	void incompleteFamiliesStillCountWhileTheFirstOneIsSaturated() throws Exception {
+	void theNextStageStillCountsWhileLaterStagesNeverCountEarly() throws Exception {
 		Fixture fixture = new Fixture();
-		for (int kill = 1; kill <= COUNTER_CEILING; kill++) {
+		// 第 1 段进行中：第 3 段目标不得提前计数（链式 SECTION 门控）。
+		// While stage 1 runs, a stage-3 target must never count early (the chained SECTION gate).
+		assertFalse(fixture.dispatchKill(POPOKU_NPC_ID).handled(),
+			"a later-stage kill must not match any route before its stage opens");
+		for (int kill = 1; kill <= STAGE_CEILING; kill++) {
 			assertHandled(fixture.dispatchKill(ELEMENTAL_LIGHT_NPC_ID));
 		}
 		fixture.afterCommit.clear();
 		assertHandled(fixture.dispatchKill(DARU_NPC_ID));
 
-		assertEquals(1, fixture.counter("var2"), "SECTION_2 must keep counting");
+		assertEquals(1, fixture.counter("var1"), "SECTION_2 must keep counting");
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
 			fixture.afterCommit, "real progress must still be announced");
 	}
@@ -98,7 +109,7 @@ class Quest15546KillCounterSaturationFlowTest {
 		private final QuestProductionDispatcher dispatcher;
 
 		private Fixture() throws Exception {
-			this.definition = definition();
+			this.definition = ProductionQuestDefinitions.definition(QUEST_ID);
 			QuestEventPort eventPort = (connection, playerId, questId, event) ->
 				new QuestSnapshot(playerId, questId, status.get(), packedVariables.get(), Map.of())
 					.withStartEligibility(QuestStartEligibility.allowed());
@@ -147,16 +158,6 @@ class Quest15546KillCounterSaturationFlowTest {
 				return QuestTransactionParticipant.none();
 			}
 		};
-	}
-
-	private static CompiledQuestDefinition definition() throws Exception {
-		String resource = "/aion/data/static_data/quest_definition/quests/15546.xml";
-		try (InputStream input = Quest15546KillCounterSaturationFlowTest.class.getResourceAsStream(resource)) {
-			if (input == null) {
-				throw new IllegalStateException("missing resource " + resource);
-			}
-			return QuestDefinitionXmlCompiler.compile(input);
-		}
 	}
 
 	private static Connection connection() {

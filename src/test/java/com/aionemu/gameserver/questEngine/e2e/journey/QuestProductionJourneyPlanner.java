@@ -42,6 +42,7 @@ public final class QuestProductionJourneyPlanner {
 		PAGE_ACTION,
 		CLIENT_LOCAL_FINISH_DIALOG,
 		NATIVE_REWARD_ACTION,
+		NATIVE_ACCEPT_ACTION,
 		USE_OBJECT,
 		USE_OBJECT_DROP,
 		USE_ITEM,
@@ -226,9 +227,11 @@ public final class QuestProductionJourneyPlanner {
 			.map(ClientResourceOracle.ClientAction::actionId)
 			.collect(java.util.stream.Collectors.toCollection(java.util.LinkedHashSet::new));
 		boolean rewardWindow = state.page() == QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id();
+		boolean acceptWindow = state.page() == QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id();
 		List<Choice> choices = new ArrayList<>();
 		for (QuestTransition transition : fromNode(definition, state, nodes)) {
-			StepKind kind = pageKind(transition.event(), state.npcId(), visibleActions, rewardWindow);
+			StepKind kind = pageKind(transition.event(), state.npcId(), visibleActions, rewardWindow,
+				acceptWindow);
 			if (kind != null) choices.add(new Choice(kind, transition, null));
 		}
 		return firstRoutes(choices);
@@ -305,14 +308,32 @@ public final class QuestProductionJourneyPlanner {
 		return fields.stream().mapToInt(field -> state.variables().getOrDefault(field, 0)).sum();
 	}
 
+	/**
+	 * 判定一条来自当前页面的边能否被客户端真实动作驱动。奖励窗（页 5）的动作由客户端原生控件发出、
+	 * 从不登记在任务页表里，故原生判定优先；接取窗（页 4）的接受/拒绝是全局原生控件，但**只在任务
+	 * 自己的 HTML 完全没有登记该页按钮时才回退到原生提交**——登记了按钮的任务（如 1103 的页 4 只声明
+	 * 接受 1002/拒绝 1003）必须走可见性判定，否则规划器会发明客户端根本不会发的按钮（20000）；
+	 * 未登记的 select_none 直接接取形按客户端语义直接回传提交动作（QE-082）。
+	 * Classifies an edge reachable from the current page. The reward window's actions come from native
+	 * client controls that never appear in a quest page table, so the native check runs first; the ask
+	 * window's accept/refuse controls are client-global but the native fallback applies only when the
+	 * quest's own HTML registers no button on that page — a quest that declares its ask window (1103's
+	 * page 4 declares accept 1002 / refuse 1003) must be driven through the visibility check, otherwise
+	 * the planner invents a commit the client would never send; unregistered select_none direct-accept
+	 * shapes commit directly, as the client does.
+	 */
 	private static StepKind pageKind(QuestEvent event, int currentNpcId, Set<Integer> visibleActions,
-			boolean rewardWindow) {
+			boolean rewardWindow, boolean acceptWindow) {
 		if (event instanceof QuestEvent.TalkToNpc talk && talk.dialogId() != null) {
 			if (rewardWindow && isNativeRewardAction(talk.dialogId()) && currentNpcId == talk.npcId()) {
 				return StepKind.NATIVE_REWARD_ACTION;
 			}
 			if (visibleActions.contains(talk.dialogId()) && currentNpcId == talk.npcId()) {
 				return StepKind.PAGE_ACTION;
+			}
+			if (acceptWindow && visibleActions.isEmpty() && isNativeAcceptAction(talk.dialogId())
+					&& currentNpcId == talk.npcId()) {
+				return StepKind.NATIVE_ACCEPT_ACTION;
 			}
 		}
 		if (event instanceof QuestEvent.QuestDialog(int dialogId)) {
@@ -399,6 +420,17 @@ public final class QuestProductionJourneyPlanner {
 	private static boolean isNativeRewardAction(int actionId) {
 		return actionId >= QuestDialogAction.SELECTED_QUEST_REWARD1.id()
 			&& actionId <= QuestDialogAction.SELECTED_QUEST_NOREWARD.id();
+	}
+
+	/**
+	 * 接取询问窗（页 4）的原生提交控件：规范接取流的两个接取形 {@code QUEST_ACCEPT_1}(1002) 与
+	 * {@code QUEST_ACCEPT_SIMPLE}(20000)；拒绝族不推进任务，规划器不为其建模。
+	 * The ask-accept window's native commit controls: the canonical accept flow's two commit shapes;
+	 * the refuse family never advances the quest and is not modelled.
+	 */
+	private static boolean isNativeAcceptAction(int actionId) {
+		return actionId == QuestDialogAction.QUEST_ACCEPT_1.id()
+			|| actionId == QuestDialogAction.QUEST_ACCEPT_SIMPLE.id();
 	}
 
 	private static List<Choice> firstRoutes(List<Choice> choices) {

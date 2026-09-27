@@ -14,6 +14,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
+import java.util.function.IntFunction;
 import java.util.function.Supplier;
 
 import lombok.Setter;
@@ -41,6 +42,7 @@ import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogDrop;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinitionCatalogManifest;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogRegistry;
 import com.aionemu.gameserver.questEngine.definition.QuestDropScope;
@@ -58,6 +60,7 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.runtime.PlayerQuestBroadcastPort;
 import com.aionemu.gameserver.questEngine.runtime.QuestDispatchContract;
 import com.aionemu.gameserver.questEngine.runtime.QuestInteractionObjectValidator;
+import com.aionemu.gameserver.questEngine.runtime.QuestProductionEventWiring;
 import com.aionemu.gameserver.questEngine.runtime.QuestProductionDispatcher;
 import com.aionemu.gameserver.questEngine.runtime.QuestRouteResult;
 import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeComposition;
@@ -1847,11 +1850,19 @@ public class QuestEngine implements GameEngine {
 			QuestDispatchContract.EXCLUSIVE).handled();
 	}
 
-	/** 从显式 production catalog 加载已通过 owner 审核的 typed 定义。 */
+	/**
+	 * 从显式 production catalog 加载已通过 owner 审核的 typed 定义。
+	 * 真端驱动开关（{@code aion.quest.retailDriver}，默认开启）开启时，保留清单判定为
+	 * RETAIL_TABLE 的任务用真端定义替换/补入（retail-package overlay）；关闭开关时
+	 * 只有 XML 目录仍覆盖全部生产任务才允许启动，已退役的 XML 不会被开关恢复。
+	 * Loads the typed catalog; the retail-first overlay replaces retail-owned definitions when
+	 * the switch is on; the off state requires a complete legacy XML catalog.
+	 */
 	private QuestCatalog loadProductionCatalog() throws Exception {
 		QuestDialogContract.invalidateDefault();
-		return QuestDefinitionCatalogManifest.compile(
+		QuestCatalog xmlCatalog = QuestDefinitionCatalogManifest.compile(
 			Config.dataFile("./data/static_data/quest_definition").toPath());
+		return RetailQuestDriver.overlayProduction(xmlCatalog);
 	}
 
 	/**
@@ -1925,18 +1936,38 @@ public class QuestEngine implements GameEngine {
 	 * All owners and event wiring are validated first; the dispatcher is published only after
 	 * NPC indexes have been registered.</p>
 	 */
+	/**
+	 * 生产 NPC AI 查询（启动期固定使用）：{@code DataManager.NPC_DATA} 未就绪时返回 null。
+	 * Production NPC AI lookup; returns null while the runtime {@code DataManager} is not ready.
+	 */
+	private static String productionNpcAi(int templateId) {
+		if (DataManager.NPC_DATA == null) {
+			return null;
+		}
+		var template = DataManager.NPC_DATA.getNpcTemplate(templateId);
+		return template == null ? null : template.getAi();
+	}
+
 	PreparedProductionDefinitions prepareProductionDefinitions(QuestCatalog catalog) {
+		return prepareProductionDefinitions(catalog, QuestEngine::productionNpcAi);
+	}
+
+	/**
+	 * 生产准备的可注入重载：NPC AI 索引由调用方给出，其余启动期合同完全一致。
+	 * <p>
+	 * 生产调用固定注入 {@link #productionNpcAi(int)}（{@code DataManager.NPC_DATA}）；启动期门禁注入测试侧
+	 * AI 索引，从而在不起静态数据的情况下跑完整准备路径（交互对象合同 + 事件接线合同 + item-play 索引）。
+	 * Production preparation with an injectable NPC AI index; the gates use it to exercise the whole
+	 * startup path without the runtime {@code DataManager} bootstrap.
+	 */
+	PreparedProductionDefinitions prepareProductionDefinitions(QuestCatalog catalog,
+			IntFunction<String> aiNameByTemplate) {
+		java.util.Objects.requireNonNull(aiNameByTemplate, "aiNameByTemplate");
 		QuestCatalogRegistry registry = catalog instanceof QuestCatalogRegistry existing
 			? existing : new QuestCatalogRegistry(catalog);
 		QuestRuntimeComposition snapshotComposition = QuestRuntimeComposition.production(registry);
 		QuestProductionDispatcher dispatcher = QuestProductionDispatcher.production(registry, snapshotComposition);
-		QuestInteractionObjectValidator.validate(dispatcher, templateId -> {
-			if (DataManager.NPC_DATA == null) {
-				return null;
-			}
-			var template = DataManager.NPC_DATA.getNpcTemplate(templateId);
-			return template == null ? null : template.getAi();
-		});
+		QuestInteractionObjectValidator.validate(dispatcher, aiNameByTemplate);
 		snapshotComposition.installBroadcastPort(new PlayerQuestBroadcastPort(
 			playerId -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId),
 			(player, questIds) -> dispatcher.dispatchOwners(new QuestEvent.ZoneMissionEnd(), player.getObjectId(),
@@ -1944,46 +1975,7 @@ public class QuestEngine implements GameEngine {
 			(player, questIds) -> dispatcher.dispatchOwners(new QuestEvent.EventQuestRefresh(), player.getObjectId(),
 				questIds, QuestDispatchContract.EXCLUSIVE)));
 		for (CompiledQuestDefinition definition : registry.executables()) {
-			for (var transition : definition.definition().transitions()) {
-				if (!(transition.event() instanceof QuestEvent.TalkToNpc)
-						&& !(transition.event() instanceof QuestEvent.KillNpc)
-						&& !(transition.event() instanceof QuestEvent.KillNpcSet)
-						&& !(transition.event() instanceof QuestEvent.AttackNpc)
-						&& !(transition.event() instanceof QuestEvent.CanAct)
-						&& !(transition.event() instanceof QuestEvent.EnterZone)
-						&& !(transition.event() instanceof QuestEvent.LevelUp)
-						&& !(transition.event() instanceof QuestEvent.EnterWorld)
-						&& !(transition.event() instanceof QuestEvent.UseItem)
-						&& !(transition.event() instanceof QuestEvent.ItemPlay)
-						&& !(transition.event() instanceof QuestEvent.GetItem)
-						&& !(transition.event() instanceof QuestEvent.CollectItem)
-						&& !(transition.event() instanceof QuestEvent.PassFlyingRing)
-						&& !(transition.event() instanceof QuestEvent.EnterWindStream)
-						&& !(transition.event() instanceof QuestEvent.AtDistance)
-						&& !(transition.event() instanceof QuestEvent.Die)
-						&& !(transition.event() instanceof QuestEvent.LogOut)
-						&& !(transition.event() instanceof QuestEvent.MovieEnd)
-						&& !(transition.event() instanceof QuestEvent.NpcReachTarget)
-						&& !(transition.event() instanceof QuestEvent.NpcLostTarget)
-						&& !(transition.event() instanceof QuestEvent.ZoneMissionEnd)
-						&& !(transition.event() instanceof QuestEvent.EventQuestRefresh)
-							&& !(transition.event() instanceof QuestEvent.InvisibleTimerEnd)
-							&& !(transition.event() instanceof QuestEvent.FailCraft)
-							&& !(transition.event() instanceof QuestEvent.EquipItem)
-							&& !(transition.event() instanceof QuestEvent.Abandon)
-							&& !(transition.event() instanceof QuestEvent.DredgionReward)
-							&& !(transition.event() instanceof QuestEvent.HouseItemUse)
-							&& !(transition.event() instanceof QuestEvent.KillInWorld)
-							&& !(transition.event() instanceof QuestEvent.KillRanked)
-							&& !(transition.event() instanceof QuestEvent.LeaveZone)
-							&& !(transition.event() instanceof QuestEvent.QuestTimerEnd)
-							&& !(transition.event() instanceof QuestEvent.UseSkill)
-							&& !(transition.event() instanceof QuestEvent.QuestDialog)
-							&& !(transition.event() instanceof QuestEvent.BonusApply)) {
-					throw new IllegalStateException("typed production event is not wired into QuestEngine: "
-						+ transition.event().type());
-				}
-			}
+			QuestProductionEventWiring.validateDefinition(definition);
 			if (definition.definition().transitions().stream()
 					.map(com.aionemu.gameserver.questEngine.definition.QuestTransition::event)
 					.filter(QuestEvent.ItemPlay.class::isInstance)

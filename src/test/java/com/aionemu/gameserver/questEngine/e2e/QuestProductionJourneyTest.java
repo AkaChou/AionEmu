@@ -2,9 +2,10 @@ package com.aionemu.gameserver.questEngine.e2e;
 
 import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
-import com.aionemu.gameserver.questEngine.definition.QuestDefinitionDirectoryLoader;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.e2e.client.ClientResourceOracle;
 import com.aionemu.gameserver.questEngine.e2e.client.ServerPacketObservation;
@@ -33,7 +34,9 @@ class QuestProductionJourneyTest {
 
 	@BeforeAll
 	static void loadProductionSources() throws Exception {
-		catalog = QuestDefinitionDirectoryLoader.compile(QuestProductionJourneyTest.class.getClassLoader());
+		// 生产视图 = XML 目录 + 真端 overlay：已退役任务的定义由真端模板表合成，仍属"生产"。
+		// Production view = XML directory plus the retail overlay; retired quests stay covered.
+		catalog = ProductionQuestDefinitions.catalog();
 		oracle = ClientResourceOracle.load(Path.of("docs/quest/client-dialog-mapping"));
 	}
 
@@ -76,7 +79,9 @@ class QuestProductionJourneyTest {
 
 	@Test
 	void plansAndExecutesTargetlessNpcFactionAcquisitionFromProductionXml() throws Exception {
-		CompiledQuestDefinition definition = definition(49715);
+		// 49715 已在 P0c-3 退役为真端系统发放（无客户端手势），XML 目标less 接取形状现由 49713 承担。
+		// 49715 retired to retail system grant in P0c-3; quest 49713 now carries the XML targetless shape.
+		CompiledQuestDefinition definition = definition(49713);
 		QuestProductionJourneyPlanner.Result planned = new QuestProductionJourneyPlanner().plan(definition, oracle);
 
 		assertTrue(planned.planned(), () -> String.valueOf(planned.failure()));
@@ -87,8 +92,40 @@ class QuestProductionJourneyTest {
 		assertTrue(executed.completed(), () -> String.valueOf(executed.failure()));
 	}
 
+	/**
+	 * 49715 的 XML 已在 P0c-3 退役为真端系统发放（`_faction_` 裁定）：旅程首步是 SystemGrant
+	 * （规划为 WORLD_EVENT，无需客户端手势），十次击杀网格、交付 NPC 上报与领奖出口仍完整可执行。
+	 * 49715's XML retired to the retail system grant in P0c-3: the journey opens with SystemGrant
+	 * (planned as WORLD_EVENT, no client gesture), then still executes the ten-kill grid, the
+	 * delivery-NPC report and the reward exit to completion.
+	 */
 	@Test
-	void executesFinishDialogAndDeterministicObjectDropsFromProductionXml() throws Exception {
+	void plansAndExecutesRetailSystemGrantFactionQuestThroughDeliveryNpcs() throws Exception {
+		CompiledQuestDefinition definition = definition(49715);
+		QuestProductionJourneyPlanner.Result planned = new QuestProductionJourneyPlanner().plan(definition, oracle);
+		assertTrue(planned.planned(), () -> String.valueOf(planned.failure()));
+		assertEquals(QuestProductionJourneyPlanner.StepKind.WORLD_EVENT,
+			planned.plan().steps().getFirst().kind(),
+			"retired faction quests are granted by the retail system, not by a client gesture");
+		long killSteps = planned.plan().steps().stream()
+			.filter(step -> step.transition().event() instanceof QuestEvent.KillNpc)
+			.count();
+		assertEquals(10, killSteps, "the retail ten-kill grid must stay in the plan");
+		QuestProductionJourneyExecutor.Result executed = new QuestProductionJourneyExecutor()
+			.execute(definition, oracle, planned.plan());
+		assertTrue(executed.completed(), () -> String.valueOf(executed.failure()));
+	}
+
+	/**
+	 * 1103 交付链（真端驱动，M5-b2 起）：采集对象掉落到交付检查到领奖，覆盖 FINISH_DIALOG 出口与
+	 * 确定性对象掉落。FINISH_DIALOG 的回应取<b>家族规范口径</b>——{@code npc-start} 展开把
+	 * {@code FINISH_DIALOG} 回应为任务列表页（{@code SELECT_QUEST}=10），历史 XML 的"直接关窗"
+	 * 覆盖率已登记为漂移轴 {@code XML_EXTRA:DIALOG_1008}（见 `retail-simple-collect-item-drift.tsv`）。
+	 * Production journey for the now retail-driven collect quest; the FINISH_DIALOG response follows the
+	 * family-canonical quest-selection page instead of the legacy XML's close override.
+	 */
+	@Test
+	void executesFinishDialogAndDeterministicObjectDropsFromProductionView() throws Exception {
 		CompiledQuestDefinition definition = definition(1103);
 		QuestProductionJourneyPlanner.Result planned = new QuestProductionJourneyPlanner().plan(definition, oracle);
 
@@ -124,10 +161,10 @@ class QuestProductionJourneyTest {
 		var finishDialog = executed.steps().get(finishDialogIndex);
 		assertTrue(finishDialog.outcome().handled());
 		assertFalse(finishDialog.outcome().failed());
-		assertEquals(0, finishDialog.page());
+		assertEquals(QuestDialogPage.SELECT_QUEST.id(), finishDialog.page());
 		assertTrue(finishDialog.outcome().packets().stream()
 			.anyMatch(packet -> packet.type() == ServerPacketObservation.Type.DIALOG_WINDOW
-				&& packet.dialogId() == 0));
+				&& packet.dialogId() == QuestDialogPage.SELECT_QUEST.id()));
 		assertEquals(List.of(1, 2, 3), java.util.stream.IntStream.range(0, planned.plan().steps().size())
 			.filter(index -> planned.plan().steps().get(index).kind()
 				== QuestProductionJourneyPlanner.StepKind.USE_OBJECT_DROP)

@@ -3,7 +3,6 @@ package com.aionemu.gameserver.questEngine.definition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +23,12 @@ class ReportToManyDialogRouteRegressionTest {
 		new ExpectedRoute(4914, 203385, 2375),
 		new ExpectedRoute(18210, 205985, 2375),
 		new ExpectedRoute(24120, 730038, 1352),
-		new ExpectedRoute(24120, 802441, 2375),
+		// 24120 随 P0c-39 采纳真端阶梯形状：客户端 quest_summary 第 2 行点名 stage-2 NPC
+		// DF2_Tree_Bellumus_Q24120A（802441 → 本阶段页 select3=1693），末行/交付点名 Tree_Move_Nabalu
+		// （730038 → 报告页 select5=2375）。旧期望 (802441, 2375) 是 XML 期把 Bellumus 当交付 NPC 的写法，
+		// 会让 select3/select3_1 成为死页（审计 CLIENT_PAGE_UNREACHED），判客户端/真端对。
+		new ExpectedRoute(24120, 802441, 1693),
+		new ExpectedRoute(24120, 730038, 2375),
 		new ExpectedRoute(28210, 205986, 2375),
 		new ExpectedRoute(35025, 799800, 2375),
 		new ExpectedRoute(35025, 799801, 2375),
@@ -95,15 +99,8 @@ class ReportToManyDialogRouteRegressionTest {
 	}
 
 	private static QuestDefinition load(int questId) {
-		try (InputStream input = ReportToManyDialogRouteRegressionTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_definition/quests/" + questId + ".xml")) {
-			if (input == null) {
-				throw new AssertionError("missing quest " + questId + " resource");
-			}
-			return QuestDefinitionXmlCompiler.compile(input).definition();
-		} catch (Exception e) {
-			throw new AssertionError("failed to load quest " + questId, e);
-		}
+		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 真端 overlay）。
+		return ProductionQuestDefinitions.definition(questId).definition();
 	}
 
 	private record ExpectedRoute(int questId, int npcId, int pageId) {
