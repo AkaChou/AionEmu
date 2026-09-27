@@ -44,7 +44,7 @@
 1134	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 1135	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 1136	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=OBJECT_TALK_AFTER_COMMIT
-1137	XML_RETENTION	SimpleCollectItem	SEMANTIC_GAP:WORK_ITEM_GRANT_AND_COLLECT_ROUTE	m5b3-collect-route-decisions.tsv 真端 quest_work_item1=quest_1137a；XML 在接取路由显式 give-item 182200512 且有 collect-item 182200513 进度刷新路由；真端驱动两者都没有（引擎无 work-item 自动发放；CollectItem 进度路由不在合成器语义内）→ 保留 XML 降级
+1137	XML_RETENTION	SimpleCollectItem	ADJUDICATED:WORK_ITEM_GRANT_AND_COLLECT_ROUTE	work-item grant + collect combined route unsupported
 1138	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 1139	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 1140	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -2726,7 +2726,7 @@
 13956	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 13960	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
 13961	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk-chain axis unimplemented for this shape
-13962	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ENTERAREA_ZONE_UNRESOLVED	retail-data-driven-drift.tsv
+13962	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ENTERAREA_ZONE_UNRESOLVED	enter-area zone not resolvable server-side
 13963	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 13964	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 13965	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
@@ -2764,13 +2764,13 @@
 14054	XML_RETENTION	-	SCRIPTED	registry=FUN_180caa850,FUN_180caf350,FUN_180caf3c0
 14110	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 14111	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=CONFIRM_RANGE+CLOSE_DIALOG_LEGACY
-14112	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:QUEST_SPAWN_UNEXPRESSED	retail-simple-hunt-adjudicated-decisions.tsv retail table has no spawn column; reward_npc_name=Soul_Kato->203195（XML: spawn-npc-at-player slot=kato）; XML spawn edges=spawn-npc-at-player slot=kato template-id=203195 x3; static spawns/** for 203195: none; ScriptDLL registers the name->quest binding only (fun_196.cpp:933); retail talk_npc1=Lepios->203148; acquired=Gogohas; reward=Soul_Kato; counters=1/1; client chain=1353:1353 10000:0 (terminal=10000); report_page=2375; kill gate SECTION_5==0=y; old xml { npc_start=-; 203148:QUEST_SELECT 203148:SELECT2_1 203148:SETPRO1 203149:QUEST_SELECT 203149:SELECT2_1 203195:QUEST_SELECT 203195:SELECT2_1 203195:SETPRO1 }
+14112	XML_RETENTION	SimpleHunt	ADJUDICATED:QUEST_SPAWN_UNEXPRESSED	quest spawn axis not expressible (P0c-6 adjudication, test-locked)
 14113	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 14114	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640
 14120	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=SELECTABLE_CHOICE_EXPANSION
 14121	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c11-collect-gate-adopt-decisions.tsv basis=COLLECT_ITEM_GATE_CHANNEL
 14122	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10i-canonical-decisions.tsv basis=RETAIL_STAGE_CANONICAL
-14123	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:QUEST_SPAWN_UNEXPRESSED	retail-simple-hunt-adjudicated-decisions.tsv retail table has no spawn column; monster1=hippolyta_Q14123->206360（XML: spawn-npc-current-or-default slot=peddler-hippola）; XML spawn edges=spawn-npc-current-or-default slot=peddler-hippola template-id=206360 x3; static spawns/** for 206360: none; ScriptDLL registers the name->quest binding only (fun_196.cpp:933); retail talk_npc1=dionera->203991; acquired=Actaeon; reward=dionera; counters=1/1; client chain=1353:1353 1354:1354 10000:0 (terminal=10000); report_page=2375; kill gate SECTION_5==0=y; old xml { npc_start=-; 203933:QUEST_SELECT 203933:SELECT1_1 203933:SELECT2_1 203933:SELECT2_1_1 203933:SETPRO1 203991:QUEST_SELECT 203991:SELECT2_1 203991:SELECT2_1_1 203991:SETPRO1 }
+14123	XML_RETENTION	SimpleHunt	ADJUDICATED:QUEST_SPAWN_UNEXPRESSED	quest spawn axis not expressible (P0c-6 adjudication, test-locked)
 14124	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=XML_ACCEPT_FLOW_DEVIATION
 14125	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 14150	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=JOURNAL_ROW_OVERFLOW
@@ -2861,7 +2861,7 @@
 15315	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
 15316	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_HUNT_CHAIN
 15321	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
-15322	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ENTERAREA_ZONE_UNRESOLVED	retail-data-driven-drift.tsv
+15322	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ENTERAREA_ZONE_UNRESOLVED	enter-area zone not resolvable server-side
 15323	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 15324	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15325	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -3114,7 +3114,7 @@
 16941	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 16942	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
 16960	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=BRIEFING_STEP
-16961	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:XML_EXTRA_REWARD	simplehunt-dialog-route-gaps.txt
+16961	XML_RETENTION	SimpleHunt	ADJUDICATED:XML_EXTRA_REWARD	legacy XML carries extra client-journal-named reward the retail table lacks (RETAIL_TABLE_GAPS class)
 16962	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 16974	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 16975	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c56-item-acquire-decisions.tsv basis=DD_ITEMPLAY_ACQUIRE
@@ -3495,7 +3495,7 @@
 19690	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 19691	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 19694	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
-19900	XML_RETENTION	DataDriven	SEMANTIC_GAP:CURATED_LEGACY_CONTRACT_LOCK	downgraded:the minion tutorial prerequisite axis is unexpressed in the retail metadata (legacy contract pins LevelUp+EnterWorld dual accept at 1500ms)
+19900	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	curated deferral: reshape decision pending (DD gate CURATED_DEFERRED guard)
 20010	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_HUNT_CHAIN
 20011	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
 20031	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
@@ -3797,7 +3797,7 @@
 23956	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 23960	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
 23961	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk-chain axis unimplemented for this shape
-23962	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ENTERAREA_ZONE_UNRESOLVED	retail-data-driven-drift.tsv
+23962	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ENTERAREA_ZONE_UNRESOLVED	enter-area zone not resolvable server-side
 23963	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 23964	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 23965	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
@@ -3880,7 +3880,7 @@
 25031	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
 25032	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
 25033	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
-25050	XML_RETENTION	DataDriven	SEMANTIC_GAP:CURATED_LEGACY_CONTRACT_LOCK	downgraded:collect-chain vocabulary lacks the ritual spawn/despawn + altar offering advances (legacy contract test pins them)
+25050	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	curated deferral: reshape decision pending (DD gate CURATED_DEFERRED guard)
 25051	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
 25052	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c51-fobj-collect-decisions.tsv basis=DD_FOBJ_COLLECT
 25060	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -3889,7 +3889,7 @@
 25073	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
 25080	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
 25081	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
-25082	XML_RETENTION	DataDriven	SEMANTIC_GAP:CURATED_LEGACY_CONTRACT_LOCK	downgraded:collect-chain vocabulary lacks the ritual spawn/despawn advances (legacy contract pins them)
+25082	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	curated deferral: reshape decision pending (DD gate CURATED_DEFERRED guard)
 25084	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave6-narrow-rider-decisions.tsv basis=DD_NARROW_RIDER_CHAIN
 25085	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
 25090	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -3930,7 +3930,7 @@
 25315	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
 25316	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_HUNT_CHAIN
 25321	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
-25322	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ENTERAREA_ZONE_UNRESOLVED	retail-data-driven-drift.tsv
+25322	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ENTERAREA_ZONE_UNRESOLVED	enter-area zone not resolvable server-side
 25323	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 25324	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25325	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -4336,7 +4336,7 @@
 28314	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 28500	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 28501	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=MULTI_ITEM_HANDIN
-28503	XML_RETENTION	SimpleCollectItem	SEMANTIC_GAP:COLLECT_PROGRESS_ROUTE	m5b3-collect-route-decisions.tsv XML 有 collect-item 182212016 进度刷新路由；真端合成器无对应表达 → 保留 XML 降级
+28503	XML_RETENTION	SimpleCollectItem	ADJUDICATED:COLLECT_PROGRESS_ROUTE	collect progress row projection route unsupported
 28504	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_COUNTER_EXCEEDS_6BIT	client count exceeds the 6-bit SECTION field (fixed 6-bit layout invariant)
 28505	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28506	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -4562,7 +4562,7 @@
 29690	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 29691	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 29694	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
-29900	XML_RETENTION	DataDriven	SEMANTIC_GAP:CURATED_LEGACY_CONTRACT_LOCK	downgraded:the minion tutorial prerequisite axis is unexpressed in the retail metadata (legacy contract pins LevelUp+EnterWorld dual accept at 1500ms)
+29900	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	curated deferral: reshape decision pending (DD gate CURATED_DEFERRED guard)
 30001	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30002	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30003	XML_RETENTION	-	SCRIPTED	registry=FUN_180cab520,FUN_180caf350
@@ -5222,8 +5222,8 @@
 50080	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 50081	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 50088	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
-50089	XML_RETENTION	DataDriven	SEMANTIC_GAP:CURATED_LEGACY_CONTRACT_LOCK	retail-data-driven-drift.tsv
-50090	XML_RETENTION	DataDriven	SEMANTIC_GAP:CURATED_LEGACY_CONTRACT_LOCK	retail-data-driven-drift.tsv
+50089	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	curated deferral: reshape decision pending (DD gate CURATED_DEFERRED guard)
+50090	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	curated deferral: reshape decision pending (DD gate CURATED_DEFERRED guard)
 50091	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
 50092	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
 50094	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
@@ -5516,8 +5516,8 @@
 80252	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80253	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80254	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-80255	XML_RETENTION	SimpleItemPlay	SEMANTIC_GAP:RETAIL_ADVANCE_UNEXPRESSED	p1-itemplay-decisions.tsv
-80256	XML_RETENTION	SimpleItemPlay	SEMANTIC_GAP:RETAIL_ADVANCE_UNEXPRESSED	p1-itemplay-decisions.tsv
+80255	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_ADVANCE_UNEXPRESSED	advance axis not expressible (ItemPlay gate whitelist)
+80256	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_ADVANCE_UNEXPRESSED	advance axis not expressible (ItemPlay gate whitelist)
 80257	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
 80258	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
 80259	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
@@ -6054,18 +6054,18 @@
 80818	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80819	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80820	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
-80821	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_COLLECT_ITEM_SHAPE	retail-data-driven-drift.tsv
-80822	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_COLLECT_ITEM_SHAPE	retail-data-driven-drift.tsv
+80821	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_COLLECT_ITEM_SHAPE	collect item shape unsupported by retail synthesis
+80822	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_COLLECT_ITEM_SHAPE	collect item shape unsupported by retail synthesis
 80823	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_JOURNAL_MISSING	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: client journal absent - reward projection underivable (QE-051/W5-g3 fail-closed)
 80824	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_JOURNAL_MISSING	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: client journal absent - reward projection underivable (QE-051/W5-g3 fail-closed)
 80825	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 80826	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-80827	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ITEMPLAY_ACQUIRE_EVENT_DEFERRED	retail-data-driven-drift.tsv
-80828	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ITEMPLAY_ACQUIRE_EVENT_DEFERRED	retail-data-driven-drift.tsv
+80827	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ITEMPLAY_ACQUIRE_EVENT_DEFERRED	itemplay acquire-by-world-event axis deferred
+80828	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ITEMPLAY_ACQUIRE_EVENT_DEFERRED	itemplay acquire-by-world-event axis deferred
 80829	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80830	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_JOURNAL_MISSING	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: client journal absent - reward projection underivable (QE-051/W5-g3 fail-closed)
 80831	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-80832	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ITEMPLAY_ACQUIRE_EVENT_DEFERRED	retail-data-driven-drift.tsv
+80832	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ITEMPLAY_ACQUIRE_EVENT_DEFERRED	itemplay acquire-by-world-event axis deferred
 80833	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_JOURNAL_MISSING	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: client journal absent - reward projection underivable (QE-051/W5-g3 fail-closed)
 80834	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80835	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
