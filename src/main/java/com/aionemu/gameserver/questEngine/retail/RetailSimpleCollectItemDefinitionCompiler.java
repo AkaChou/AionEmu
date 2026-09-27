@@ -527,8 +527,13 @@ public final class RetailSimpleCollectItemDefinitionCompiler {
 	/**
 	 * 交付检查：与 {@code npc-item-report} 展开同构（动作 39 / 20002）；失败页按客户端是否有 select6 决定。
 	 * 多交付物按整组检查/扣除（P1b：与 XML 的多条 {@code has-item}/{@code remove-item} 同构）。
-	 * Canonical npc-item-report expansion; the failure page follows the client select6 exit.
-	 * Multi-item quests check and remove the whole set in one pair (P1b).
+	 * <p>
+	 * 命名消歧（批 0 R3）：本参数说的"失败页"是客户端 {@code select6} 交付失败页
+	 * {@code QuestDialogPage.SELECT6}（2716）；它与 {@code QuestDialogPage.CHECK_USER_ITEM_FAIL}（10001，
+	 * 物品检查失败动作页）是两回事，后者不在本编译器任何路径上下发。
+	 * Naming disambiguation (batch 0 R3): the "failure page" here is the client {@code select6}
+	 * turn-in failure page {@code QuestDialogPage.SELECT6} (2716) — distinct from
+	 * {@code QuestDialogPage.CHECK_USER_ITEM_FAIL} (10001), which this compiler never pushes.
 	 */
 	static List<QuestTransition> itemReport(int rewardNpc, List<QuestItemRequirement> items,
 			boolean hasFailurePage, String source) {
