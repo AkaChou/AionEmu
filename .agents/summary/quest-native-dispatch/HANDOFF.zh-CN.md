@@ -1,4 +1,4 @@
-# 交接包：quest 真端驱动改造（下一阶段 · 基准 `b5d2a7dea`）
+# 交接包：quest 真端驱动改造（下一阶段 · 基准 `2ab91c0f8`）
 
 > 生成：2026-09-27（车道 `quest-native-dispatch`，**已提交基线**）。
 > 取代：`ZCODE-HANDOFF.zh-CN.md`（旧版假设"未提交大迁移现场"，已过时）。
@@ -21,9 +21,12 @@
 （SCRIPTED 494 + NO_TABLE 176）+ **595 SEMANTIC_GAP（37 个缺口码）**。这 595 行就是本阶段主线；
 R1–R4 只是开场收尾（批 0）。
 
-【工作树状态（重要）】迁移现场**已提交**，基线 = b5d2a7dea（其父：5318a8686 台账/工具链、4ede058c0 源码）。
-工作树当前**干净**，只有 4 个未跟踪的工具链输入表（见 §2-13，**不得删除、不得移动**）。
-未推送（比 origin/quest 领先 22 个提交）：不要 push；提交仅在用户当轮显式授权后进行。
+【工作树状态（重要）】迁移现场**已提交**；**基线 = 你启动时的 HEAD**（写作时 = `837e4c58e`；链路：
+4ede058c0 源码迁移 → 5318a8686 台账/工具链 → b5d2a7dea 产物清理 → d1806b476 交接包与工具 →
+2ab91c0f8 工具链输入表入库 → 837e4c58e 自主推进契约）。
+工作树应**干净**；4 个工具链输入表（`item_name_index.tsv`/`npc_name_index.tsv`/`quest_registry.tsv`/
+`m5b2b-quest-event-census.tsv`）**已入库且被活脚本消费——不得删除、不得移动**（§2-13）。
+未推送（写作时领先 origin/quest 25 个提交）：不要 push；提交仅在用户当轮显式授权后进行。
 
 【必读顺序（约 15 分钟）】
 1. AGENTS.md + .agents/rules/{i18n,java_general,backend,formatting,lombok,ai-artifacts,quest-repair}.md
@@ -36,7 +39,7 @@ R1–R4 只是开场收尾（批 0）。
    再 --id <PATTERN_ID> 展开单条（不要整篇读领域卡片）。重点：QE-094/095/096（退役三范式）、
    ENV-004（文本编辑/删除纪律）、QE-051（领奖行）、QE-083/089/090/091/092/093（形状守卫族）。
 
-【当前状态（截至 b5d2a7dea）】
+【当前状态（截至 2ab91c0f8）】
 - SimpleTalk γ 面（W1–W4）收口：S1/S2/S3a/S3b/S3c-A/S3c-D/S3c-obj（285 链行 + 1323 物件行）。
 - W5 已退役四张页码类 TSV：report_pages(5995 行) / entry_pages(2449) / talk_pages(1340) /
   briefing_chains(3230)；`RetailTsvManifestGateTest.EXPECTED_TSV_COUNT` = 22。
@@ -49,6 +52,20 @@ R1–R4 只是开场收尾（批 0）。
   基线文件：gates/T1-baseline-reds.txt、gates/T2-w6a-reds.txt、gates/T3-w6a-reds.txt（均在车道 gates/ 下）。
 
 【你的任务：批 0 收尾 → 缺口批（主线）→ 客户端验收批；每批独立验收、独立回滚、指标单调下降】
+
+★【自主推进契约（一次跑完所有阶段，不逐批请示）】
+  连续执行：批 0 → 缺口批 1–8（按行数从大到小）→ 客户端实机复验清单 → §7.1 完成判据自检。
+  **批次之间不要停下来征求确认**；每批收口仍要完成六步流水线 + 片台账 + 指标回报（回报 = 交付凭证，
+  不是请示）。回报格式固定一行：`批<N> <名称> | SEMANTIC_GAP <前>→<后> | 门禁 <绿/红集 sha256> | 台账 <路径>`。
+  **任何阻塞一律"记录 + 跳过 + 继续"，全程不中断、不停下提问**（用户 2026-09-27 明确要求）。典型阻塞
+  与处置：① 需用户客户端实机复验（你无法执行）⇒ 写入"待实机复验清单"并继续；② 需改兄弟车道文件
+  （`scriptdll-quest-driver/**`，唯一例外 = `affected_quest_tests.py` 的 `T1_GATE_CLASSES` 追加一行）
+  ⇒ 登记"移交项"并继续；③ 判据与既有裁定冲突（如复活被否决方案）⇒ 记"待裁定"并继续；④ 需 push /
+  启停服务 / 未授权提交 ⇒ 直接不做、记一条并继续；⑤ 同一根因连续 2 次失败 / 单批 3 次尝试无进展
+  ⇒ 记 BLOCKED（写清已试路径 + 证据）并转下一批。
+  **除"工具本身不可用/仓库不可写"这类执行环境故障外，没有别的停下条件。**
+  全部批次跑完 ⇒ 输出**总收口报告**：缺口逐批曲线（595→0）、各批台账路径、T1/T2/T3 红集 sha256、
+  BLOCKED / 待裁定 / 移交项 / **待实机复验清单**（集中给用户逐行执行）。
 
 ■ 批 0（收尾，先做，~1.5–2 h；提速口径见 §6）
   R1 `quest_client_dialog_exits.tsv` 行级缩表（**非删除**表）
@@ -146,7 +163,7 @@ R1–R4 只是开场收尾（批 0）。
     "briefing 唯一解锁面"）。被否决的结论要**留在台账里**（含被否方案）。
 13. **产物清理与保护（2026-09-27 新增）**：清理只删「**全仓按精确文件名零引用** + 瞬态族（漂移/指纹/
     快照/pre-post/`.new`/census/dump/probe 输出/零字节/一次性脚本）」的产物；**以下一律不删**——
-    被活脚本消费的 4 个未跟踪输入表 `item_name_index.tsv`、`npc_name_index.tsv`、`quest_registry.tsv`、
+    被活脚本消费的 4 个工具链输入表 `item_name_index.tsv`、`npc_name_index.tsv`、`quest_registry.tsv`、
     `m5b2b-quest-event-census.tsv`（`build_retention_list.py` / `p0c11_build_item_name_index.py` / `p0c43_*`
     等直接读取），以及全部 `.md` 台账、`gates/*-reds.txt` 红身份集基线、决策/登记表
     （`*-decisions*`/`*-registry*`/`retention`）、`build_*`/`retire_*`/`refreeze_*` 生成器。
@@ -189,8 +206,8 @@ diff gates/T1-baseline-reds.txt gates/<slice>-reds.txt && echo "ADDED 0 / REMOVE
 shasum -a 256 gates/<slice>-reds.txt
 
 # 本片改动面（已提交基线 ⇒ 直接对 diff，不再靠"反向应用"回滚）
-git diff --stat b5d2a7dea -- src/ | tail -3
-git checkout b5d2a7dea -- <path>          # 单文件回滚
+git diff --stat 2ab91c0f8 -- src/ | tail -3
+git checkout 2ab91c0f8 -- <path>          # 单文件回滚
 
 # 排查导出（只在需要时用）
 #   DD 漂移：  -Dretail.dataDriven.equivOut=/tmp/<slice>-drift.tsv
@@ -242,9 +259,9 @@ python3 -B .agents/memory-bank/verify_memory_bank.py   # 期望 MEMORY_BANK_VERI
 | 项 | 值 |
 |---|---|
 | 仓库 | `/Users/mc/IdeaProjects/AionEmu-test`（分支 `quest`） |
-| **基线提交** | `b5d2a7dea`（清理产物）← `5318a8686`（台账/工具链/证据）← `4ede058c0`（源码迁移） |
-| 远端状态 | 领先 `origin/quest` **22 个提交，未推送**（不要 push） |
-| 工作树 | **干净**；仅 4 个未跟踪工具链输入表（§2-13，不得删） |
+| **基线提交** | 启动时的 `HEAD`（写作时 `837e4c58e`）← 2ab91c0f8（输入表）← d1806b476（交接包/工具）← b5d2a7dea（产物清理）← 5318a8686（台账/工具链/证据）← 4ede058c0（源码迁移） |
+| 远端状态 | 领先 `origin/quest` **25 个提交，未推送**（不要 push） |
+| 工作树 | 应**干净**；4 个工具链输入表已入库、不得删（§2-13） |
 | 车道台账 | `.agents/summary/quest-native-dispatch/`（GOAL §0.5 / README / 各片台账 / gates/ 红集与日志） |
 | 冻结面门 | `RetailTsvManifestGateTest`（磁盘集合 == 清单集合 == `EXPECTED_TSV_COUNT`，**现值 22**） |
 | 新常设门 | `RetailBriefingChainEvidenceGateTest`（简报链不变量，登记 3225 + 基数 47/5 冻结） |
@@ -273,7 +290,7 @@ python3 -B .agents/memory-bank/verify_memory_bank.py   # 期望 MEMORY_BANK_VERI
    `.agents/summary/quest/generate_quest_dialog_enums.py`；排除它会在 T3 里造出 1 条**假新增红**
    （实测：2017 测试中 98 红 = 基线 97 + 该假红；主树内该测试 4/4 绿）。
 9. **清理产物的边界**：只删「零引用 + 瞬态族」；生成器输入表与红集基线一旦删掉，
-   工具链与门禁对拍会立刻断链（4 个未跟踪输入表是活依赖，删了 `build_retention_list.py` 直接报错）。
+   工具链与门禁对拍会立刻断链（4 个工具链输入表是活依赖，删了 `build_retention_list.py` 直接报错）。
 10. **"跑完还在等"不是必然要等**：日志出现 `Tests run:` / `BUILD …` / `[DONE]` 就是**判定已到**，
     不是"再等等看进程退没退"；悬挂的 surefire fork 直接 `pkill -f surefirebooter` 并按已有结果决策
     （§3 防空等表：三种根因与对策）。**禁 `sleep` 轮询**——一次 `tail` 即决策。
@@ -325,7 +342,7 @@ R4（文档）：无 Maven；记忆库 sync+verify                              
 ```
 ⇒ 剩余总时长可压到 **~1–1.5 h**（相对最初单片节奏 ~4–5 h）。
 
-> 注：批次内改动要**逐项留独立 patch 记录**；基线已提交，"回滚" = `git checkout b5d2a7dea -- <path>`
+> 注：批次内改动要**逐项留独立 patch 记录**；基线已提交，"回滚" = `git checkout 2ab91c0f8 -- <path>`
 > 或反向应用该项改动，这样某批若出红，可按项二分定位，不必重跑整批。
 
 ---
@@ -334,7 +351,7 @@ R4（文档）：无 Maven；记忆库 sync+verify                              
 
 ### 7.1 完成判据（Definition of Done，全部满足才算"改造完成"）
 
-| # | 判据 | 现状（起点 `b5d2a7dea`） | 终点 |
+| # | 判据 | 现状（起点 `2ab91c0f8`） | 终点 |
 |---|---|---|---|
 | 1 | `retail-xml-retention.tsv` 中 `SEMANTIC_GAP:*` 行数 | **595** | **0** |
 | 2 | 保留行每行有 reason + 证据 | 670（494 SCRIPTED + 176 NO_TABLE）已有；595 缺口行缺 | 670 + 经裁定的"不可迁移"行，逐行有证据 |
@@ -343,6 +360,8 @@ R4（文档）：无 Maven；记忆库 sync+verify                              
 | 5 | 客户端实机复验（受理 flip 行） | 多批"复测未做" | 复验清单执行完毕、无新增报障 |
 
 **进度的唯一硬指标 = 判据 1 的数（595 → 0），每批收口后重算并回报。**
+推进方式见 §1「自主推进契约」：**一次跑完所有批次，不逐批请示**；**任何阻塞只记录不中断**（含需用户
+实机复验、需改兄弟车道、判据冲突、连续失败），收口时集中列清单。
 
 ### 7.2 缺口码全表（实测 595 行 / 37 码）与批次归并
 
