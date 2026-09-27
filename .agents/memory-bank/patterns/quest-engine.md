@@ -2198,3 +2198,25 @@ keywords: 零拒绝守卫、briefing_chains、覆盖不变量、SETPRO 终点、
 
 - **判定规则**：门活但零拒绝 ⇒ 门是**不变量守卫**，不是受理面；退役 = 不变量迁构建期，而不是把守卫删掉。
 - **为什么可迁**：不变量是两份冻结件的静态性质（真端表 × 客户端证据），构建期断言与运行期等价且更省。
+
+## [QE-097] 九十五、客户端合同登记表的行级缩表：行×旗标可达性普查 + 快照恒等判据 (REGISTRY_ROW_LEVEL_TOKEN_SHRINK)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 多旗标共用一张登记表（quest_id \t token…）且旗标死亡面只在**行级**的客户端合同表（整旗标仍活，不能整列退场）
+first_seen: 2026-09-27
+last_verified: 2026-09-27
+symptom: ①按"交付已接管"整旗标删 token ⇒ 体级读取点（方法级后处理）失据，IR 静默变形；②不敢删 ⇒ 表里大半 token 早已不可达，长年死重
+root_cause: 登记表的消费者是**逐旗标、逐行类**的——同一 token 在 A 类行是活合同、在 B 类行永不被读（读取点在特定编译分支/特定方法内）。死亡面只能按（行 × 旗标）普查，普查必须以"读取点在哪条执行路径上"为准，而不是"这条数据还有没有意义"
+fix_or_guardrail: 1. **普查 = 静态调用点 × 行分类**：先 grep 出全部 `requires(`/读取点（含测试侧零调用证明），再对每行分类（哪些编译路径会处理它）；singleStep 行若编译入口**不传表**、被拒行若 `precheck` 先返，则全 token 静态不可达；2. **禁删体级仍读的旗标**（方法体无条件读它的行一律保留 token——判例：交接包明令禁删 SELECT2_CONTINUE/SELECT5_CHECK*/SELECT6）；3. **判不了的行保守保留**（少删安全）；4. **判据 = 前后定义快照逐键相同**（每行指纹 dump 前后逐字节 diff + 家族门合并跑 + 红身份集与基线恒等）；5. **行数与旗标常量不变**（缩表≠删表≠删旗标）；6. 表若由**兄弟车道生成器**生成 ⇒ 只登记"停写/同步"移交，不越界改生成器（重跑会复活 token，表头注释声明）
+evidence: .agents/summary/quest-native-dispatch/r1-dialog-exits-shrink/census_dialog_exits.py + census-report.tsv; .agents/summary/quest-native-dispatch/2026-09-27-b0-wrapup.zh-CN.md; src/main/resources/aion/data/static_data/quest_retail/quest_client_dialog_exits.tsv
+validation: 2026-09-27 批 0 R1：3938 数据行不变，token 13429→443（删 6493；family-None 1232 行/singleStep 1459 行全删、DD/采集 310 行只留 SELECT_NONE_1、链行体级四 token 保留）；DD 指纹 1217 行 + 链指纹 285 行前后逐字节相同；7 家族门 32 例唯一红 = 在册 20035，红身份集与 T1 基线恒等
+boundaries: 只适用于"行级可达性可静态判定"的表；若 token 读取点依赖运行期分支（编译后处理按 IR 内容触发），token 必须保留（判例：SELECT2_CONTINUE 的重写边存在与否不影响"表被读过"这一事实）；快照判据只证"这批删除无害"，不证"以后也不会被读"——新读取点上马前必须重跑普查
+superseded_by: none
+see_also: [QE-094], [QE-095], [QE-096]
+first_check: 缩一张多旗标登记表前先答：①全部读取点在哪、测试有没有直接断言表内容？②每行会走哪条编译路径（singleStep/被拒/系统发放/链式…）？③哪些旗标是方法体无条件读的（禁删）？④前后快照怎么取、生成器属哪个车道？
+keywords: 行级缩表、dialog_exits、可达性普查、行×旗标、快照恒等、singleStep、precheck、体级仍读、保守保留、生成器停写、SELECT_NONE_1、SELECT1_1
+-->
+
+- **判定规则**：整旗标死亡 ⇒ 走 QE-094 退役；旗标只死一部分 ⇒ 按（行 × 旗标）普查缩 token，判据是快照恒等而不是"看起来没人用"。
+- **保守原则**：普查判不了的行保留 token——少删只损失整洁，多删直接变形 IR；生成器在兄弟车道时，缩表必须同时登记停写移交。

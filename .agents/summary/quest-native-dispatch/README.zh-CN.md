@@ -823,6 +823,21 @@ XML 目录**（`src/main/resources/aion/data/static_data/quest_definition`，350
 - **产物**：`2026-09-27-w5g4-briefing-chains-retirement.zh-CN.md` + **QE-096**。
 
 
+## 批 0 已收口：R1–R4（2026-09-27，交接包 §1 批 0）
+
+- **R1 `dialog_exits` 行级缩表**：`requires(` 12 处/3 文件静态可达性普查（singleStep 行 `build(` 不带
+  exits、被拒行 precheck 先返、DD/采集只读 SELECT_NONE_1、链行体级四 token 禁删、256 行保守保留）⇒
+  3938 数据行不变、token 13429→443（删 6493）；**DD 指纹 1217 行 + 链指纹 285 行前后逐字节相同**、
+  7 家族门唯一红 = 在册 20035、红身份集与 T1 基线恒等。生成器停写移交（兄弟车道）。
+- **R2 D 类加窗裁定 = ③维持现状**（①镜像腿/②窗落交付 NPC 均否决：QE-092 e2e + 客户端 authored
+  翻面记录 + 1163/3100/Batch31/ReportToMany 逐行锁定；零形状变化）；余面 = 11 行无报告页的中间人翻面。
+- **R3**：EarlyElyos 3 在册红裁定为"锁旧形测试被迁移取代、登记保留"（修复会破红集字节恒等 ⇒ 待裁定
+  基线重冻后再重锚）；`FailurePage` 消歧注释落 `RetailSimpleCollectItemDefinitionCompiler.itemReport`
+  （SELECT6=2716 ≠ CHECK_USER_ITEM_FAIL=10001）；生成器停写移交 ×2（report_pages + dialog_exits）。
+- **R4**：本节 + 台账 `2026-09-27-b0-wrapup.zh-CN.md` + 记忆库 QE-097 + 总量复算（6224 =
+  4959 RETAIL_TABLE + 670 计划保留 + **595 SEMANTIC_GAP**，批 0 零受理变化）。
+- 门禁：`gates/r1-fp-pre.log` / `gates/r1-fp-post.log`（快照两轮）；无受理 flip ⇒ 无新增待实机复验项。
+
 ## 下一面（Phase 2 续片：其余家族规范形滚动）
 
 > 已收口：SimpleHunt / SimpleCollectItem / SimpleSerialHunt / SimpleUseItem / SimpleItemPlay /
