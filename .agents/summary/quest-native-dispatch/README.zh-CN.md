@@ -885,6 +885,18 @@ XML 目录**（`src/main/resources/aion/data/static_data/quest_definition`，350
 4. 各 IR 指纹（SimpleHunt 链/等价/网格）重冻，沿用"同态对拍 ADDED 0/REMOVED 0 + 有意漂移逐条登记"。
 5. 每步收口线：**`RetailQuestContractTest` 全绿 + T1 零新增失败 + T3 身份集对拍**。
 
+## 缺口批 1+2 已收口：哨兵接取/击杀族（2026-09-28，提交 `06f4da5c8`）
+
+- **SEMANTIC_GAP 595 → 304**（−291 = 24 受理 flip + 267 逐行裁定 ADJUDICATED + 9 行 drift 码对齐）。
+- 批 1：挑战哨兵采纳边（`RetailChallengeAcquireAdoptions` 24 条 + `bind()` 管道归一化）+ flip 三件套；
+  fail-closed 实录 = 10 行采纳后被拒（MONSTER_UNRESOLVED 击杀别名）门先红回退延期；裁定保留新前缀
+  `ADJUDICATED:<码>`（归属门词表 + 家族门前缀不变式中立化）；裁定指纹 344→368。
+- 批 2：108 行击杀/狩猎族零行为裁定改名（MONSTER_UNRESOLVED 69 / KILL_COVERAGE_LOSS 35 /
+  MULTI_STAGE 4；35 行"可合成但契约弱于 XML"继承门禁必须合成断言）。
+- 快筛：家族门 2/2、等价门 2/2（裁定集 +24）、归属门 4/4、ItemPlay 门 1/1 全绿；
+  台账 `2026-09-27-b1-acquire-sentinel.zh-CN.md` + `2026-09-27-b2-kill-family.zh-CN.md`；
+  实机复验清单 +24 行（`client-recheck-list.zh-CN.md`）。
+
 ## 命令与日志
 
 - T1：`QUEST_LOG_DIR=<本目录>/gates .agents/summary/scriptdll-quest-driver/run_quest_gates.sh T1`
