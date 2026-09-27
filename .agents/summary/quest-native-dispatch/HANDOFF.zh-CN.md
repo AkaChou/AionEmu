@@ -53,19 +53,25 @@ R1–R4 只是开场收尾（批 0）。
 
 【你的任务：批 0 收尾 → 缺口批（主线）→ 客户端验收批；每批独立验收、独立回滚、指标单调下降】
 
-★【自主推进契约（一次跑完所有阶段，不逐批请示）】
-  连续执行：批 0 → 缺口批 1–8（按行数从大到小）→ 客户端实机复验清单 → §7.1 完成判据自检。
-  **批次之间不要停下来征求确认**；每批收口仍要完成六步流水线 + 片台账 + 指标回报（回报 = 交付凭证，
-  不是请示）。回报格式固定一行：`批<N> <名称> | SEMANTIC_GAP <前>→<后> | 门禁 <绿/红集 sha256> | 台账 <路径>`。
-  **任何阻塞一律"记录 + 跳过 + 继续"，全程不中断、不停下提问**（用户 2026-09-27 明确要求）。典型阻塞
-  与处置：① 需用户客户端实机复验（你无法执行）⇒ 写入"待实机复验清单"并继续；② 需改兄弟车道文件
-  （`scriptdll-quest-driver/**`，唯一例外 = `affected_quest_tests.py` 的 `T1_GATE_CLASSES` 追加一行）
-  ⇒ 登记"移交项"并继续；③ 判据与既有裁定冲突（如复活被否决方案）⇒ 记"待裁定"并继续；④ 需 push /
-  启停服务 / 未授权提交 ⇒ 直接不做、记一条并继续；⑤ 同一根因连续 2 次失败 / 单批 3 次尝试无进展
-  ⇒ 记 BLOCKED（写清已试路径 + 证据）并转下一批。
-  **除"工具本身不可用/仓库不可写"这类执行环境故障外，没有别的停下条件。**
-  全部批次跑完 ⇒ 输出**总收口报告**：缺口逐批曲线（595→0）、各批台账路径、T1/T2/T3 红集 sha256、
-  BLOCKED / 待裁定 / 移交项 / **待实机复验清单**（集中给用户逐行执行）。
+★【自主推进契约（一次跑完所有阶段；**中途不回报，只在终点交一次总收口报告**）】
+  连续执行：批 0 → 缺口批 1–8 → 客户端实机复验清单 → §7.1 完成判据自检；**中间不请示、不逐批汇报**。
+  **快速口径（用户 2026-09-27 明确要求：快速推进，不要分片逐个校对）**：
+  - 批内可连续改多个片，**不逐片跑门禁**；批末跑一次**快筛**（聚焦门 + 家族门，一次 mvn 合并选择器）；
+  - 每批收口**直接落提交**（见下），不写中间报告、不等确认；台账按批合成一篇（不必一微片一篇）；
+  - 全量门禁按**里程碑**跑：**M1 = 批0+1、M2 = 批2+3、M3 = 批4+5、M4 = 批6+7+8**；每个里程碑跑一次
+    **T1 ∥ T3**（T3 走暖副本、forkCount=4，§6.1），红集与基线逐字节对拍（§2-1③）；
+  - **终点必须跑一次最终全量**（T1 + T2 + T3）对拍，这一道不能省——它是 DoD 判据 4 的唯一证据。
+  **提交授权（用户已明确授予本阶段）**：每批落**两条提交**——`feat/fix(quest): …`（源码/资源）+ `docs(quest): …`
+  （该批台账）；`git add <显式路径>`（**禁 `git add -A`**）、**不 push**、不提交中间产物；两条均以
+  `Co-Authored-By: Claude Code <noreply@anthropic.com>` 结尾。
+  **任何阻塞一律"记录 + 跳过 + 继续"**，全程不中断、不停下提问：① 需用户客户端实机复验（你无法执行）
+  ⇒ 写入"待实机复验清单"继续；② 需改兄弟车道文件（`scriptdll-quest-driver/**`，唯一例外 =
+  `affected_quest_tests.py` 的 `T1_GATE_CLASSES` 追加一行）⇒ 登记"移交项"继续；③ 判据与既有裁定冲突
+  （如复活被否决方案）⇒ 记"待裁定"继续；④ 需 push / 启停服务 ⇒ 直接不做、记一条继续；⑤ 同一根因连续
+  2 次失败 / 单批 3 次尝试无进展 ⇒ 记 BLOCKED（写清已试路径 + 证据）并转下一批。
+  **除"工具本身不可用 / 仓库不可写"这类执行环境故障外，没有别的停下条件。**
+  全部跑完 ⇒ **只输出一次总收口报告**：缺口逐批曲线（595→0）、各批台账与提交号、T1/T2/T3 红集 sha256、
+  BLOCKED / 待裁定 / 移交项 / 待实机复验清单（逐行：任务 id / 复验动作 / 期望现象）。
 
 ■ 批 0（收尾，先做，~1.5–2 h；提速口径见 §6）
   R1 `quest_client_dialog_exits.tsv` 行级缩表（**非删除**表）
@@ -93,9 +99,10 @@ R1–R4 只是开场收尾（批 0）。
      任务书）× ScriptDLL 语义三路交叉；结论必须复核（本项目已两次否决代理结论）。
   3) **生产改动**：单写者串行、锚定式编辑；可迁移行走**受理 flip 三件套**（§2-4：retention + 遗留 XML +
      catalog 同片，并清 `target/` 孤副本）。
-  4) **门禁**：聚焦 + 家族门；T1 必跑；T2/T3 按批合并（§3/§6 提速口径继续适用）。
-  5) **台账 + 指标**：写片台账 + 更新 README，并**重算缺口计数**，回复里报
-     「SEMANTIC_GAP 行数：<前> → <后>」——该数只允许单调下降（起点 595，终点 0）。
+  4) **批末快筛 + 提交**：聚焦门 + 家族门**一次合并跑**（~1–2 min）；绿即落两条提交（源码 + 台账）；
+     全量 T1∥T3 留给里程碑。出红先按项二分定位（§6 注），修完重跑快筛。
+  5) **台账 + 指标**：写**批台账**（一篇可覆盖该批多片）+ 更新 README，并**重算缺口计数**（§7.3），
+     把「SEMANTIC_GAP <前>→<后>」写进该批提交说明与台账——**不单独回报**，留到终点总收口报告。
 
 ■ 客户端验收批（与缺口批并行，不占服务端门禁）
   - 受理 flip 的行失去逐页审计兜底（§5-5）⇒ flip **前**必须逐行取到客户端证据；flip 后进入"待实机复验"清单。
@@ -119,6 +126,8 @@ R1–R4 只是开场收尾（批 0）。
 
 【长命令纪律（防空等，硬要求）】所有长命令（门禁 / T3 / mvn / rsync）走
   .agents/summary/quest-native-dispatch/tools/gate_bg.sh <日志名> <超时秒> -- <命令...>
+**超时秒一律 ≤600 —— 单条命令不得超过 10 分钟**；预计超限的命令**必须先切分**（分片选择器 / 提高 forkCount /
+拆多次调用），T3 已按 definition / retail / 其余 **三片**给出命令（§3，每片 ≤600s）。
 （nohup+disown+哨兵+看门狗；超时按进程组杀，连带 surefire fork）。**完成判定只看产物**：日志尾部出现
 `[DONE] exit=` 或 `BUILD SUCCESS|FAILURE` 或 `Tests run:` 汇总行 + `pgrep -fl surefirebooter` 为空
 —— 任一即立刻决策，**不等进程退出事件、禁 `sleep` 轮询**；日志已出结果而 fork 仍悬停就
@@ -176,8 +185,10 @@ R1–R4 只是开场收尾（批 0）。
 
 ## §3 命令与"防空等/空转"纪律（提速口径）
 
-**总则**：长命令一律**后台跑 + 等完成通知**；**禁止 `sleep N` 轮询**（需要查进度时看一次日志文件即可）；
-Maven 加 `-o -B`；测试用 `-DforkCount=2`（10 核机可用 4）；测试日志写文件，事后 grep 摘要。
+**总则（用户 2026-09-27 明确要求）**：**单条命令硬上限 600s（10 分钟）**——`gate_bg.sh` 第二个参数一律 ≤600；
+**预计超过 10 分钟的命令必须切分**（分片选择器 / 提高 forkCount / 拆成多次调用），**"超 10 分钟的命令"视为配置错误**，
+不是可以商量的慢。长命令**后台跑**；**禁止 `sleep N` 轮询**（查进度看一次日志即可）；Maven 加 `-o -B`；
+`forkCount=4`（10 核机）；日志写文件，事后 grep 摘要。
 
 ```bash
 # 聚焦测试（首选；类列表按本片受影响面选）
@@ -192,12 +203,22 @@ IDS=$(cat /tmp/<ids>.txt)   # 复算：retention owner=RETAIL_TABLE ∩ quest_cl
 QUEST_LOG_DIR=.agents/summary/quest-native-dispatch/gates \
   .agents/summary/scriptdll-quest-driver/run_quest_gates.sh T2 ${=IDS}
 
-# T3（仓库外副本，跑完即删；**只能排除 .git 与 target**，.agents 必须带上）
-rsync -a --exclude .git --exclude target /Users/mc/IdeaProjects/AionEmu-test/ /private/tmp/aion-t3-<slice>/
-cd /private/tmp/aion-t3-<slice>
-mvn -o -B test '-Dtest=com.aionemu.gameserver.questEngine.**' -DfailIfNoTests=false -DforkCount=2 \
-  > /Users/mc/IdeaProjects/AionEmu-test/.agents/summary/quest-native-dispatch/gates/T3-<slice>.log 2>&1
-rm -rf /private/tmp/aion-t3-<slice>
+# T3（暖副本/仓库外副本；**只能排除 .git 与 target**，.agents 必须带上）——**分 3 片，每片 ≤600s**
+rsync -a --delete --exclude .git --exclude target /Users/mc/IdeaProjects/AionEmu-test/ /private/tmp/aion-t3-warm/
+cd /private/tmp/aion-t3-warm
+# 片 1/3（definition 包）
+mvn -o -B test '-Dtest=com.aionemu.gameserver.questEngine.definition.**' -DfailIfNoTests=false -DforkCount=4
+# 片 2/3（retail 包）
+mvn -o -B test '-Dtest=com.aionemu.gameserver.questEngine.retail.**' -DfailIfNoTests=false -DforkCount=4
+# 片 3/3（questEngine 其余：e2e / runtime / handlers…）
+mvn -o -B test '-Dtest=com.aionemu.gameserver.questEngine.**,!com.aionemu.gameserver.questEngine.definition.**,!com.aionemu.gameserver.questEngine.retail.**' \
+  -DfailIfNoTests=false -DforkCount=4
+# 每片都套 gate_bg.sh（≤600s），日志分别落 gates/T3-<slice>-{1,2,3}.log；
+# 红集 = 三片抽取后拼接再排序（与基线对拍的口径不变）：
+{ grep -ohE "^\[ERROR\] [A-Za-z0-9_.$]+\.[A-Za-z0-9_]+ -- Time elapsed" \
+    .agents/summary/quest-native-dispatch/gates/T3-<slice>-{1,2,3}.log | sed -E 's/^\[ERROR\] //; s/ -- Time elapsed$//'; } \
+  | LC_ALL=C sort -u > .agents/summary/quest-native-dispatch/gates/T3-<slice>-reds.txt
+rm -rf /private/tmp/aion-t3-warm     # 收口时清零（§6.1 暖副本纪律）
 
 # 红身份集提取 + 对拍（必用 LC_ALL=C sort；locale 排序会造假 ADDED/REMOVED 假象）
 grep -oE "^\[ERROR\] [A-Za-z0-9_.$]+\.[A-Za-z0-9_]+ -- Time elapsed" <log> \
@@ -312,14 +333,14 @@ python3 -B .agents/memory-bank/verify_memory_bank.py   # 期望 MEMORY_BANK_VERI
 
 | 批 | 内容 | 门禁 | 预估 |
 |---|---|---|---|
-| **A（形状片）** | R1 `dialog_exits` 行级缩表（行级普查脚本 + 家族门定义快照对拍） | 聚焦 + T1 ∥ T3（1 轮） | ~45 min |
+| **A（形状片）** | R1 `dialog_exits` 行级缩表（行级普查脚本 + 家族门定义快照对拍） | 聚焦 + T1 ∥ T3（1 轮，T3 分 3 片） | ~25–30 min |
 | **B（零行为，与 A 同批）** | R3：`FailurePage` 命名（跨文件重命名）+ 生成器停写移交登记 | 复用 A 的门禁 | +0 |
 | **C（裁定片）** | R2 D 类加窗（先取证 → 裁定 → 可能含 EarlyElyos 3 条断言重锚） | 聚焦 + `RetailQuestContractTest` + T1 ∥ T3 | ~60 min |
 | **D（文档批）** | R4 W7 收口（README / 记忆库 / 迁移总量复算） | 无 Maven；`sync_memory_bank.py` + `verify_memory_bank.py` | ~20 min |
 
 ⇒ 门禁轮数 **5 → 2**；剩余总时长预估 **~4–5 h → ~1.5–2 h**。
 
-### §6.1 追加三杠杆（实测瓶颈：家族门 5–6 min 占 T1 九成；T3 全量 20–25 min；每次 mvn 启动/资源拷贝 30–60 s）
+### §6.1 追加三杠杆（实测瓶颈：家族门 5–6 min 占 T1 九成；T3 全量 20–25 min，**按 ≤600s 规则分 3 片跑，见 §3**；每次 mvn 启动/资源拷贝 30–60 s）
 
 1. **暖副本（T3 增量跑）**：持久化一个副本 `/private/tmp/aion-t3-warm`，**首次**全量 rsync + `test-compile` 暖一次；
    之后每次只 `rsync -a --delete --exclude .git --exclude target <repo>/ /private/tmp/aion-t3-warm/`
