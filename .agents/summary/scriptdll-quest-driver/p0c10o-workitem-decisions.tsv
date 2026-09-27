@@ -1,0 +1,11 @@
+# P0c-10o：item_check 无 collect_item 行（工作物品门报告流）5 行采纳退役
+# 判据：item_check=1 校验目标 = 接取发放的工作物品（quest_work_item1 与 give_item 同物，判例 3204/80269）；
+# 客户端 select5 页链无检查按钮/无 select6（quest-dialog-pages.csv 实证）→ 门落在 SELECT_QUEST_REWARD 路由，
+# priority 0 成功（HasItem→REWARD）+ priority 1 失败（→started 回选择页）——与老 XML 形状逐字等价；
+# 与判例 4056（collect_item + CHECK 按钮 + select6 失败页）形状互斥并存。
+# quest_id	decision	basis	-	evidence
+3204	ADOPT_RETAIL	PROJECTION_QE051	-	p0c10o-workitem-probe.tsv gated route matches old XML (HasItem/RemoveItem work item, priority pair); only node projection diff; QE-051
+3337	ADOPT_RETAIL	PROJECTION_QE051	-	p0c10o-workitem-probe.tsv gated route matches old XML; only node projection diff; QE-051
+4204	ADOPT_RETAIL	PROJECTION_QE051	-	p0c10o-workitem-probe.tsv gated route matches old XML; only node projection diff; QE-051
+80269	ADOPT_RETAIL	PROJECTION_QE051+RETAIL_REPORT_CLOSE_EDGE	-	p0c10o-workitem-probe.tsv gated route matches; extra = canonical close edge (acquired!=reward, 10m Class A); QE-051
+80271	ADOPT_RETAIL	PROJECTION_QE051+RETAIL_REPORT_CLOSE_EDGE	-	p0c10o-workitem-probe.tsv gated route matches; extra = canonical close edge (acquired!=reward, 10m Class A); QE-051

@@ -1,0 +1,23 @@
+# 续片 15 / P0c-36：窄链（talk-collect）骑行者落地 + select_none 阶梯接入链编译器。
+# Narrow-chain (talk/collect) rider support and the select_none rung wired into the chain compilers.
+#
+# 一、窄链骑行者 / narrow-chain riders
+#   - Step 记录扩为 (npc, collect, enterArea, enterWorld)：骑行者占行不占对话段（stageIndexOf 跳段），
+#     段数核对按**可见步**（客户端窄链登记同口径排除骑行者）。
+#   - enterarea 别名编译期解析（未登记 → RETAIL_ENTERAREA_ZONE_UNRESOLVED，与宽链同码）。
+#   - itemplay/talkfobj 尚无动作实现（宽链的物品解析/授予未抽公共件）→ 明细精确化为
+#     "rider unsupported: itemplay"，不再笼统 "no steps"。
+# 二、新增映射 3 行（登记表 133 → 136 行；双副本）
+#quest_id	dd_alias	zone_name	evidence
+15613	DF6_SensoryArea_Q15613a	DF6_SENSORY_AREA_Q15613_A_220110000	遗留 enter-zone 令牌逐名（Q15613 + 字母 a/A）+ zones 在册
+15613	DF6_SensoryArea_Q25604a_Dynamic_Env	DF6_SENSORY_AREA_Q25604_A_DYNAMIC_ENV_220110000	**同名字符串已由镜像 25604 登记**（别名恒等映射）+ zones 在册
+25084	DF5_SensoryArea_Q25084	DF5_SENSORYAREA_Q25084_220080000	遗留 enter-zone 令牌逐名 + zones 在册
+# 三、采纳并退役 / adopted and retired
+#quest_id	basis	notes
+15613	DD_NARROW_RIDER_CHAIN	窄链骑行者首个用例（EA 步 + 3 talk 步 + collect 步）
+25084	DD_NARROW_RIDER_CHAIN	末步即 EA 骑行者（落 reward 行，landingRow = lastRow）
+# 四、select_none 阶梯接入链编译器（契约门修红）/ select_none rung wired into the chain compilers
+#quest_id	symptom	fix
+16800	BUTTON_WITHOUT_ROUTE|unaccepted|806075|31|4762|4763	两个混合链编译器的 acceptFlow 增 selectNoneLadder（进出表声明 SELECT_NONE_1 时发 4762→4763 续页路由）
+26800	BUTTON_WITHOUT_ROUTE|unaccepted|806079|31|4762|4763	同上
+# 备注：16800/26800 的 IR 因此变化 → 两行指纹合规重冻结（cause=select_none rung）；契约门指纹归零。

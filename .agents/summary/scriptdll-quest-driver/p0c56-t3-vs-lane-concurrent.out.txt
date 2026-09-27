@@ -1,0 +1,3 @@
+baseline=107 candidate=107
+ADDED x0 (in candidate only):
+REMOVED x0 (in baseline only):

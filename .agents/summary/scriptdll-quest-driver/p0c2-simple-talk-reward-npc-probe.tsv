@@ -1,0 +1,35 @@
+# quest_id	reward_ref	talk_chain	client_npc_ids	source_dic	npc_descs
+35024	LF4_GuardianOfDivine	-	799800,799801	35021	Thersander,Tersichore
+35025	LF4_GuardianOfDivine	-	799800,799801	35021	Thersander,Tersichore
+35026	LF4_GuardianOfDivine	-	799800,799801	35021	Thersander,Tersichore
+35045	LF4_GuardianOfDivine	-	799800,799801	35021	Thersander,Tersichore
+35046	LF4_GuardianOfDivine	-	799800,799801	35021,Q35046	Thersander,Tersichore
+35047	LF4_GuardianOfDivine	-	799800,799801	35021,Q35047	Thersander,Tersichore
+35048	LF4_GuardianOfDivine	-	799800,799801	35021	Thersander,Tersichore
+36503	LF4_BountyHunter_Li	-	799837,799838	36500	Rima,Socinus
+36509	LF4_BountyHunter_Li	-	799837,799838	36500	Rima,Socinus
+36515	LF4_BountyHunter_Li	-	799837,799838	36500	Rima,Socinus
+36520	LF4_BountyHunter_Li	-	799837,799838	36500	Rima,Socinus
+36522	LF4_BountyHunter_Li	-	799837,799838	36500	Rima,Socinus
+36524	LF4_BountyHunter_Li	-	799837,799838	36500	Rima,Socinus
+36525	LF4_BountyHunter_Li	-	799837,799838	36500	Rima,Socinus
+36527	LF4_BountyHunter_Li	-	799837,799838	36500	Rima,Socinus
+36528	LF4_BountyHunter_Li	-	799837,799838	36500	Rima,Socinus
+39603	LDF5a_Silverlin_L	-	800922,800923	LDF5a_Silverlin_BL	LDF5a_Jialinlin_Silverlin,LDF5a_Minggiling_Silverlin
+39610	LDF5b_Silverlin_LD	-	800927,800928,800929	LDF5b_B2_VriZomb,LDF5b_Silverlin_BA	LDF5b_Sootaling_Silverlin,LDF5b_Malinlin_Silverlin,LDF5b_Gumaling_Silverlin
+45024	DF4_GuardianOfTower	-	799842,799843	45021	Amphibia,Mollusca
+45025	DF4_GuardianOfTower	-	799842,799843	45021	Amphibia,Mollusca
+45026	DF4_GuardianOfTower	-	799842,799843	45021	Amphibia,Mollusca
+45045	DF4_GuardianOfTower	-	UNRESOLVED		-
+45046	DF4_GuardianOfTower	-	UNRESOLVED		-
+45047	DF4_GuardianOfTower	-	UNRESOLVED		-
+45048	DF4_GuardianOfTower	-	UNRESOLVED		-
+46503	DF4_BountyHunter_Da	-	799882,799883	46500	Shugo_DQ_001,Shugo_DQ_002
+46509	DF4_BountyHunter_Da	-	799882,799883	46500	Shugo_DQ_001,Shugo_DQ_002
+46521	DF4_BountyHunter_Da	-	799882,799883	46500	Shugo_DQ_001,Shugo_DQ_002
+46524	DF4_BountyHunter_Da	-	799882,799883	46500	Shugo_DQ_001,Shugo_DQ_002
+46525	DF4_BountyHunter_Da	-	799882,799883	46500	Shugo_DQ_001,Shugo_DQ_002
+46526	DF4_BountyHunter_Da	-	799882,799883	46500	Shugo_DQ_001,Shugo_DQ_002
+46528	DF4_BountyHunter_Da	-	799882,799883	46500	Shugo_DQ_001,Shugo_DQ_002
+49603	LDF5a_Silverlin_D	-	800925,800926	LDF5a_Silverlin_BD	LDF5a_Bialinlin_Silverlin,LDF5a_Dunaling_Silverlin
+49610	LDF5b_Silverlin_LD	-	800927,800928,800929	LDF5b_B2_VriZomb,LDF5b_Silverlin_BA	LDF5b_Sootaling_Silverlin,LDF5b_Malinlin_Silverlin,LDF5b_Gumaling_Silverlin

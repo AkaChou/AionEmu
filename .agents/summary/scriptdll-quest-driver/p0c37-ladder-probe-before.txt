@@ -1,0 +1,504 @@
+<![CDATA[PRODUCTION-FATAL total=44
+=== 1479 audit rows=12
+  AUDIT page=1003 client=1008 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1004 client=1008 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1011 client=1007 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1352 client=1353 status=CLIENT_PAGE_UNREACHED reason=active page is absent from compiled IR responses; no current path identifies its NPC or state
+  AUDIT page=1353 client=10000 status=CLIENT_PAGE_UNREACHED reason=active page is absent from compiled IR responses; no current path identifies its NPC or state
+  AUDIT page=1693 client=1694 status=CLIENT_PAGE_UNREACHED reason=active page is absent from compiled IR responses; no current path identifies its NPC or state
+  AUDIT page=1694 client=10001 status=CLIENT_PAGE_UNREACHED reason=active page is absent from compiled IR responses; no current path identifies its NPC or state
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=4 client=1002 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=4 client=1003 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  FATAL_HIT=false
+  transitions=30 drops=[]
+  NODE unaccepted NONE {var0=0}
+  NODE started START {var0=0}
+  NODE reward REWARD {var0=2}
+  NODE complete COMPLETE {var0=0}
+  R unaccepted -> unaccepted TalkToNpc[npcId=730020, dialogId=1007, interactionObjectId=0]
+  R unaccepted -> started TalkToNpc[npcId=730020, dialogId=1002, interactionObjectId=0]
+  R unaccepted -> started TalkToNpc[npcId=730020, dialogId=20000, interactionObjectId=0]
+  R unaccepted -> unaccepted TalkToNpc[npcId=730020, dialogId=1003, interactionObjectId=0]
+  R unaccepted -> unaccepted TalkToNpc[npcId=730020, dialogId=1004, interactionObjectId=0]
+  R unaccepted -> unaccepted TalkToNpc[npcId=730020, dialogId=20001, interactionObjectId=0]
+  R unaccepted -> unaccepted TalkToNpc[npcId=730020, dialogId=31, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=730020, dialogId=1008, interactionObjectId=0]
+  R unaccepted -> unaccepted TalkToNpc[npcId=730020, dialogId=1008, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=203912, dialogId=31, interactionObjectId=0]
+  R started -> reward TalkToNpc[npcId=203912, dialogId=1009, interactionObjectId=0]
+  R reward -> reward TalkToNpc[npcId=203912, dialogId=-1, interactionObjectId=0]
+  R reward -> reward TalkToNpc[npcId=203912, dialogId=1009, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=203912, dialogId=8, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=203912, dialogId=9, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=203912, dialogId=10, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=203912, dialogId=11, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=203912, dialogId=12, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=203912, dialogId=13, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=203912, dialogId=14, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=203912, dialogId=15, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=203912, dialogId=16, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=203912, dialogId=17, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=203912, dialogId=18, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=203912, dialogId=19, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=203912, dialogId=20, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=203912, dialogId=21, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=203912, dialogId=22, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=203912, dialogId=23, interactionObjectId=0]
+=== 35010 audit rows=21
+  AUDIT page=1352 client=1353 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1352 client=1353 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1353 client=10000 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1353 client=10000 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=4 client=1008 status=CLIENT_PAGE_UNREACHED reason=active page is absent from compiled IR responses; no current path identifies its NPC or state
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  FATAL_HIT=false
+  transitions=51 drops=[]
+  NODE unaccepted NONE {var0=0}
+  NODE reward REWARD {var0=1}
+  NODE complete COMPLETE {var0=0}
+  NODE started START {}
+  R started -> started TalkToNpc[npcId=204560, dialogId=31, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=204560, dialogId=1352, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=204560, dialogId=10000, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=204560, dialogId=10000, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799805, dialogId=31, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799805, dialogId=2375, interactionObjectId=0]
+  R started -> reward TalkToNpc[npcId=799805, dialogId=1009, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799805, dialogId=1009, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799806, dialogId=31, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799806, dialogId=2375, interactionObjectId=0]
+  R started -> reward TalkToNpc[npcId=799806, dialogId=1009, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799806, dialogId=1009, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=204560, dialogId=1353, interactionObjectId=0]
+  R reward -> reward TalkToNpc[npcId=799805, dialogId=-1, interactionObjectId=0]
+  R reward -> reward TalkToNpc[npcId=799805, dialogId=1009, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799805, dialogId=8, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799805, dialogId=9, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799805, dialogId=10, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799805, dialogId=11, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799805, dialogId=12, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799805, dialogId=13, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799805, dialogId=14, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799805, dialogId=15, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799805, dialogId=16, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799805, dialogId=17, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799805, dialogId=18, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799805, dialogId=19, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799805, dialogId=20, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799805, dialogId=21, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799805, dialogId=22, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799805, dialogId=23, interactionObjectId=0]
+  R reward -> reward TalkToNpc[npcId=799806, dialogId=-1, interactionObjectId=0]
+  R reward -> reward TalkToNpc[npcId=799806, dialogId=1009, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=8, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=9, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=10, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=11, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=12, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=13, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=14, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=15, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=16, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=17, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=18, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=19, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=20, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=21, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=22, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=23, interactionObjectId=0]
+=== 35018 audit rows=13
+  AUDIT page=1352 client=1353 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1352 client=1353 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1353 client=10000 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1353 client=10000 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=4 client=1008 status=CLIENT_PAGE_UNREACHED reason=active page is absent from compiled IR responses; no current path identifies its NPC or state
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  FATAL_HIT=false
+  transitions=29 drops=[]
+  NODE unaccepted NONE {var0=0}
+  NODE reward REWARD {var0=1}
+  NODE complete COMPLETE {var0=0}
+  NODE started START {}
+  R started -> started TalkToNpc[npcId=798135, dialogId=31, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=798135, dialogId=1352, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=798135, dialogId=10000, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=798135, dialogId=10000, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799806, dialogId=31, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799806, dialogId=2375, interactionObjectId=0]
+  R started -> reward TalkToNpc[npcId=799806, dialogId=1009, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799806, dialogId=1009, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=798135, dialogId=1353, interactionObjectId=0]
+  R reward -> reward TalkToNpc[npcId=799806, dialogId=-1, interactionObjectId=0]
+  R reward -> reward TalkToNpc[npcId=799806, dialogId=1009, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=8, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=9, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=10, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=11, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=12, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=13, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=14, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=15, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=16, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=17, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=18, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=19, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=20, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=21, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=22, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799806, dialogId=23, interactionObjectId=0]
+=== 35024 audit rows=21
+  AUDIT page=1352 client=1353 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1352 client=1353 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1353 client=10000 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1353 client=10000 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=4 client=1008 status=CLIENT_PAGE_UNREACHED reason=active page is absent from compiled IR responses; no current path identifies its NPC or state
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  FATAL_HIT=false
+  transitions=51 drops=[]
+  NODE unaccepted NONE {var0=0}
+  NODE reward REWARD {var0=1}
+  NODE complete COMPLETE {var0=0}
+  NODE started START {}
+  R started -> started TalkToNpc[npcId=798946, dialogId=31, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=798946, dialogId=1352, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=798946, dialogId=10000, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=798946, dialogId=10000, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799800, dialogId=31, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799800, dialogId=2375, interactionObjectId=0]
+  R started -> reward TalkToNpc[npcId=799800, dialogId=1009, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799800, dialogId=1009, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799801, dialogId=31, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799801, dialogId=2375, interactionObjectId=0]
+  R started -> reward TalkToNpc[npcId=799801, dialogId=1009, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799801, dialogId=1009, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=798946, dialogId=1353, interactionObjectId=0]
+  R reward -> reward TalkToNpc[npcId=799800, dialogId=-1, interactionObjectId=0]
+  R reward -> reward TalkToNpc[npcId=799800, dialogId=1009, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799800, dialogId=8, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799800, dialogId=9, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799800, dialogId=10, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799800, dialogId=11, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799800, dialogId=12, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799800, dialogId=13, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799800, dialogId=14, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799800, dialogId=15, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799800, dialogId=16, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799800, dialogId=17, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799800, dialogId=18, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799800, dialogId=19, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799800, dialogId=20, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799800, dialogId=21, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799800, dialogId=22, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799800, dialogId=23, interactionObjectId=0]
+  R reward -> reward TalkToNpc[npcId=799801, dialogId=-1, interactionObjectId=0]
+  R reward -> reward TalkToNpc[npcId=799801, dialogId=1009, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799801, dialogId=8, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799801, dialogId=9, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799801, dialogId=10, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799801, dialogId=11, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799801, dialogId=12, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799801, dialogId=13, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799801, dialogId=14, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799801, dialogId=15, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799801, dialogId=16, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799801, dialogId=17, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799801, dialogId=18, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799801, dialogId=19, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799801, dialogId=20, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799801, dialogId=21, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799801, dialogId=22, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799801, dialogId=23, interactionObjectId=0]
+=== 45011 audit rows=13
+  AUDIT page=1352 client=1353 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1352 client=1353 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1353 client=10000 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1353 client=10000 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=4 client=1008 status=CLIENT_PAGE_UNREACHED reason=active page is absent from compiled IR responses; no current path identifies its NPC or state
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  FATAL_HIT=false
+  transitions=29 drops=[]
+  NODE unaccepted NONE {var0=0}
+  NODE reward REWARD {var0=1}
+  NODE complete COMPLETE {var0=0}
+  NODE started START {}
+  R started -> started TalkToNpc[npcId=204772, dialogId=31, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=204772, dialogId=1352, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=204772, dialogId=10000, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=204772, dialogId=10000, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799848, dialogId=31, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799848, dialogId=2375, interactionObjectId=0]
+  R started -> reward TalkToNpc[npcId=799848, dialogId=1009, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799848, dialogId=1009, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=204772, dialogId=1353, interactionObjectId=0]
+  R reward -> reward TalkToNpc[npcId=799848, dialogId=-1, interactionObjectId=0]
+  R reward -> reward TalkToNpc[npcId=799848, dialogId=1009, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799848, dialogId=8, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799848, dialogId=9, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799848, dialogId=10, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799848, dialogId=11, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799848, dialogId=12, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799848, dialogId=13, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799848, dialogId=14, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799848, dialogId=15, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799848, dialogId=16, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799848, dialogId=17, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799848, dialogId=18, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799848, dialogId=19, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799848, dialogId=20, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799848, dialogId=21, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799848, dialogId=22, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799848, dialogId=23, interactionObjectId=0]
+=== 45025 audit rows=21
+  AUDIT page=1352 client=1353 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1352 client=1353 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1353 client=10000 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1353 client=10000 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=1009 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=4 client=1008 status=CLIENT_PAGE_UNREACHED reason=active page is absent from compiled IR responses; no current path identifies its NPC or state
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  FATAL_HIT=false
+  transitions=51 drops=[]
+  NODE unaccepted NONE {var0=0}
+  NODE reward REWARD {var0=1}
+  NODE complete COMPLETE {var0=0}
+  NODE started START {}
+  R started -> started TalkToNpc[npcId=799271, dialogId=31, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799271, dialogId=1352, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799271, dialogId=10000, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799271, dialogId=10000, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799842, dialogId=31, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799842, dialogId=2375, interactionObjectId=0]
+  R started -> reward TalkToNpc[npcId=799842, dialogId=1009, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799842, dialogId=1009, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799843, dialogId=31, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799843, dialogId=2375, interactionObjectId=0]
+  R started -> reward TalkToNpc[npcId=799843, dialogId=1009, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799843, dialogId=1009, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=799271, dialogId=1353, interactionObjectId=0]
+  R reward -> reward TalkToNpc[npcId=799842, dialogId=-1, interactionObjectId=0]
+  R reward -> reward TalkToNpc[npcId=799842, dialogId=1009, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799842, dialogId=8, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799842, dialogId=9, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799842, dialogId=10, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799842, dialogId=11, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799842, dialogId=12, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799842, dialogId=13, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799842, dialogId=14, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799842, dialogId=15, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799842, dialogId=16, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799842, dialogId=17, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799842, dialogId=18, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799842, dialogId=19, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799842, dialogId=20, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799842, dialogId=21, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799842, dialogId=22, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799842, dialogId=23, interactionObjectId=0]
+  R reward -> reward TalkToNpc[npcId=799843, dialogId=-1, interactionObjectId=0]
+  R reward -> reward TalkToNpc[npcId=799843, dialogId=1009, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799843, dialogId=8, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799843, dialogId=9, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799843, dialogId=10, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799843, dialogId=11, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799843, dialogId=12, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799843, dialogId=13, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799843, dialogId=14, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799843, dialogId=15, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799843, dialogId=16, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799843, dialogId=17, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799843, dialogId=18, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799843, dialogId=19, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799843, dialogId=20, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799843, dialogId=21, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799843, dialogId=22, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=799843, dialogId=23, interactionObjectId=0]
+=== 24202 audit rows=18
+  AUDIT page=1003 client=1008 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1004 client=1008 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1011 client=1012 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1012 client=1007 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1352 client=1353 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1353 client=10000 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1693 client=1694 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1694 client=10001 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=20002 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=20002 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=20002 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=20002 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=4 client=1002 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=4 client=1003 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  FATAL_HIT=false
+  transitions=43 drops=[QuestDrop[npcId=214437, itemId=182215465, chance=100, eachMember=true, collectingStep=2, scope=GROUP], QuestDrop[npcId=214438, itemId=182215465, chance=100, eachMember=true, collectingStep=2, scope=GROUP]]
+  NODE unaccepted NONE {var0=0}
+  NODE started START {var0=0}
+  NODE s1 START {var0=1}
+  NODE s2 START {var0=2}
+  NODE reward REWARD {var0=2}
+  NODE complete COMPLETE {var0=0}
+  R unaccepted -> unaccepted TalkToNpc[npcId=205150, dialogId=31, interactionObjectId=0]
+  R unaccepted -> unaccepted TalkToNpc[npcId=205150, dialogId=1007, interactionObjectId=0]
+  R unaccepted -> started TalkToNpc[npcId=205150, dialogId=1002, interactionObjectId=0]
+  R unaccepted -> started TalkToNpc[npcId=205150, dialogId=20000, interactionObjectId=0]
+  R unaccepted -> started TalkToNpc[npcId=205150, dialogId=10000, interactionObjectId=0]
+  R unaccepted -> unaccepted TalkToNpc[npcId=205150, dialogId=1003, interactionObjectId=0]
+  R unaccepted -> unaccepted TalkToNpc[npcId=205150, dialogId=1004, interactionObjectId=0]
+  R unaccepted -> unaccepted TalkToNpc[npcId=205150, dialogId=20001, interactionObjectId=0]
+  R unaccepted -> unaccepted TalkToNpc[npcId=205150, dialogId=1008, interactionObjectId=0]
+  R s2 -> s2 TalkToNpc[npcId=205150, dialogId=31, interactionObjectId=0]
+  R s2 -> reward TalkToNpc[npcId=205150, dialogId=10255, interactionObjectId=0]
+  R unaccepted -> unaccepted TalkToNpc[npcId=205150, dialogId=1012, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=205150, dialogId=1008, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=205159, dialogId=31, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=205159, dialogId=1353, interactionObjectId=0]
+  R started -> s1 TalkToNpc[npcId=205159, dialogId=10000, interactionObjectId=0]
+  R s1 -> s1 TalkToNpc[npcId=205198, dialogId=31, interactionObjectId=0]
+  R s1 -> s1 TalkToNpc[npcId=205198, dialogId=1694, interactionObjectId=0]
+  R s1 -> s2 TalkToNpc[npcId=205198, dialogId=10001, interactionObjectId=0]
+  R s2 -> s2 TalkToNpc[npcId=205150, dialogId=1008, interactionObjectId=0]
+  R s2 -> reward TalkToNpc[npcId=205150, dialogId=39, interactionObjectId=0]
+  R s2 -> s2 TalkToNpc[npcId=205150, dialogId=39, interactionObjectId=0]
+  R s2 -> reward TalkToNpc[npcId=205150, dialogId=20002, interactionObjectId=0]
+  R s2 -> s2 TalkToNpc[npcId=205150, dialogId=20002, interactionObjectId=0]
+  R reward -> reward TalkToNpc[npcId=205150, dialogId=-1, interactionObjectId=0]
+  R reward -> reward TalkToNpc[npcId=205150, dialogId=1009, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=205150, dialogId=8, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=205150, dialogId=9, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=205150, dialogId=10, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=205150, dialogId=11, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=205150, dialogId=12, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=205150, dialogId=13, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=205150, dialogId=14, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=205150, dialogId=15, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=205150, dialogId=16, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=205150, dialogId=17, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=205150, dialogId=18, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=205150, dialogId=19, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=205150, dialogId=20, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=205150, dialogId=21, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=205150, dialogId=22, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=205150, dialogId=23, interactionObjectId=0]
+=== 80320 audit rows=15
+  AUDIT page=1003 client=1008 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1004 client=1008 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1011 client=1007 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=1352 client=1008 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=39 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=39 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=39 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2375 client=39 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=2716 client=1008 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=4 client=1002 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=4 client=1003 status=PAGE_ACTION_MATCHED reason=
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  AUDIT page=5 client= status=TERMINAL_PAGE_REACHED reason=
+  FATAL_HIT=false
+  transitions=38 drops=[QuestDrop[npcId=219646, itemId=182215303, chance=100, eachMember=true, collectingStep=1, scope=GROUP]]
+  NODE unaccepted NONE {var0=0}
+  NODE started START {var0=0}
+  NODE s1 START {var0=1}
+  NODE reward REWARD {var0=1}
+  NODE complete COMPLETE {var0=0}
+  R unaccepted -> unaccepted TalkToNpc[npcId=831426, dialogId=31, interactionObjectId=0]
+  R unaccepted -> unaccepted TalkToNpc[npcId=831426, dialogId=1007, interactionObjectId=0]
+  R unaccepted -> started TalkToNpc[npcId=831426, dialogId=1002, interactionObjectId=0]
+  R unaccepted -> started TalkToNpc[npcId=831426, dialogId=20000, interactionObjectId=0]
+  R unaccepted -> started TalkToNpc[npcId=831426, dialogId=10000, interactionObjectId=0]
+  R unaccepted -> unaccepted TalkToNpc[npcId=831426, dialogId=1003, interactionObjectId=0]
+  R unaccepted -> unaccepted TalkToNpc[npcId=831426, dialogId=1004, interactionObjectId=0]
+  R unaccepted -> unaccepted TalkToNpc[npcId=831426, dialogId=20001, interactionObjectId=0]
+  R unaccepted -> unaccepted TalkToNpc[npcId=831426, dialogId=1008, interactionObjectId=0]
+  R s1 -> s1 TalkToNpc[npcId=831427, dialogId=31, interactionObjectId=0]
+  R s1 -> reward TalkToNpc[npcId=831427, dialogId=10255, interactionObjectId=0]
+  R reward -> reward TalkToNpc[npcId=831427, dialogId=-1, interactionObjectId=0]
+  R reward -> reward TalkToNpc[npcId=831427, dialogId=1009, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=831427, dialogId=8, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=831427, dialogId=9, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=831427, dialogId=10, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=831427, dialogId=11, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=831427, dialogId=12, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=831427, dialogId=13, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=831427, dialogId=14, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=831427, dialogId=15, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=831427, dialogId=16, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=831427, dialogId=17, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=831427, dialogId=18, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=831427, dialogId=19, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=831427, dialogId=20, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=831427, dialogId=21, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=831427, dialogId=22, interactionObjectId=0]
+  R reward -> complete TalkToNpc[npcId=831427, dialogId=23, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=831426, dialogId=1008, interactionObjectId=0]
+  R started -> started TalkToNpc[npcId=831427, dialogId=1008, interactionObjectId=0]
+  R started -> s1 TalkToNpc[npcId=831427, dialogId=31, interactionObjectId=0]
+  R s1 -> s1 TalkToNpc[npcId=831427, dialogId=1008, interactionObjectId=0]
+  R s1 -> reward TalkToNpc[npcId=831427, dialogId=39, interactionObjectId=0]
+  R s1 -> s1 TalkToNpc[npcId=831427, dialogId=39, interactionObjectId=0]
+  R s1 -> reward TalkToNpc[npcId=831427, dialogId=20002, interactionObjectId=0]
+  R s1 -> s1 TalkToNpc[npcId=831427, dialogId=20002, interactionObjectId=0]
+]]>

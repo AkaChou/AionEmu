@@ -1,0 +1,33 @@
+=== KILL AXIS (retail simulated vs client gate) ===
+  13769 retailRequired=5 clientGate=5
+  13768 retailRequired=5 clientGate=5
+  13767 retailRequired=5 clientGate=5
+  13766 retailRequired=5 clientGate=5
+  13765 retailRequired=5 clientGate=5
+  13764 retailRequired=5 clientGate=5
+  13763 retailRequired=5 clientGate=5
+  13762 retailRequired=5 clientGate=5
+  13761 retailRequired=5 clientGate=5
+  13760 retailRequired=5 clientGate=5
+  13759 retailRequired=5 clientGate=5
+  13758 retailRequired=5 clientGate=5
+  13770 retailRequired=12 clientGate=12
+  23770 retailRequired=12 clientGate=12
+  23758 retailRequired=5 clientGate=null
+  23759 retailRequired=5 clientGate=5
+  23760 retailRequired=5 clientGate=5
+  23761 retailRequired=5 clientGate=5
+  23762 retailRequired=5 clientGate=5
+  23763 retailRequired=5 clientGate=5
+  23764 retailRequired=5 clientGate=5
+  23765 retailRequired=5 clientGate=5
+  23766 retailRequired=5 clientGate=5
+  23767 retailRequired=5 clientGate=5
+  23768 retailRequired=5 clientGate=5
+  23769 retailRequired=5 clientGate=5
+=== KILL AXIS CONFLICTS 0/26
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by lombok.permit.Permit
+WARNING: Please consider reporting this to the maintainers of class lombok.permit.Permit
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+

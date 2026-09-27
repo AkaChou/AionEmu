@@ -1,0 +1,8 @@
+# P0c-3 审计：测试直读已退役任务 XML（脏 target/classes 下会假通过）
+test_file	line	quest_id	snippet
+src/test/java/com/aionemu/gameserver/questEngine/definition/Quest1309ClientDialogAlignmentTest.java	52	1309	"/aion/data/static_data/quest_definition/quests/1309.xml")) {
+src/test/java/com/aionemu/gameserver/questEngine/definition/Quest14120ClientDialogAlignmentTest.java	97	14120	"/aion/data/static_data/quest_definition/quests/14120.xml")) {
+src/test/java/com/aionemu/gameserver/questEngine/definition/Quest14150ClientDialogAlignmentTest.java	97	14150	"/aion/data/static_data/quest_definition/quests/14150.xml")) {
+src/test/java/com/aionemu/gameserver/questEngine/definition/Quest18501InteractionObjectTest.java	80	18501	String resource = "/aion/data/static_data/quest_definition/quests/18501.xml";
+src/test/java/com/aionemu/gameserver/questEngine/runtime/QuestMutationPlannerTest.java	210	2578	"/aion/data/static_data/quest_definition/quests/2578.xml"))) {
+src/test/java/com/aionemu/gameserver/questEngine/runtime/QuestMutationPlannerTest.java	460	36525	"/aion/data/static_data/quest_definition/quests/36525.xml"))) {

@@ -1,0 +1,80 @@
+package com.aionemu.gameserver.questEngine.retail;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.TreeSet;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
+import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
+import com.aionemu.gameserver.questEngine.definition.QuestDefinition;
+import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestTransition;
+
+/**
+ * P0c-53 探针（一次性）：打印代表行的对话轴（owner / 源节点 / 目标节点 / 下发页），用于
+ * 组表扩域前后的"双侧对拍"。跑两遍（扩域表 / 仅守备队表）后 diff。树内跑完即删。
+ */
+class P0c53DialogAxisProbeTest {
+
+	private static final String SWITCH = "aion.quest.retailDriver";
+	private static String previous;
+
+	@BeforeAll
+	static void enableRetailDriver() {
+		previous = System.getProperty(SWITCH);
+		System.setProperty(SWITCH, "true");
+	}
+
+	@AfterAll
+	static void restoreSwitch() {
+		if (previous == null) {
+			System.clearProperty(SWITCH);
+		} else {
+			System.setProperty(SWITCH, previous);
+		}
+	}
+
+	private static final List<Integer> QUESTS =
+		List.of(18742, 28742, 18745, 28745, 50091, 50092, 15476, 15478, 50073, 50074, 50068, 50088);
+
+	@Test
+	void dumpDialogAxis() throws Exception {
+		StringBuilder text = new StringBuilder();
+		for (int questId : QUESTS) {
+			CompiledQuestDefinition compiled = ProductionQuestDefinitions.catalog()
+				.findExecutable(questId).orElse(null);
+			if (compiled == null) {
+				text.append(questId).append("\tMISSING\n");
+				continue;
+			}
+			QuestDefinition definition = compiled.definition();
+			text.append(questId).append("\tnodes=").append(definition.nodes().size())
+				.append("\ttransitions=").append(definition.transitions().size()).append('\n');
+			for (QuestTransition transition : definition.transitions()) {
+				if (!(transition.event() instanceof QuestEvent.TalkToNpc talk)) {
+					continue;
+				}
+				var pages = new TreeSet<Integer>();
+				for (AfterCommitAction action : transition.afterCommit()) {
+					if (action instanceof AfterCommitAction.ShowQuestDialog show) {
+						pages.add(show.dialogId());
+					}
+				}
+				text.append('\t').append(transition.sourceNode()).append(" -> ")
+					.append(transition.targetNode()).append(" by ").append(talk.npcId())
+					.append(" pages=").append(pages).append('\n');
+			}
+		}
+		String out = System.getProperty("p0c53.probeOut");
+		if (out != null) {
+			Files.writeString(Path.of(out), text.toString());
+		}
+		System.out.println(text);
+	}
+}

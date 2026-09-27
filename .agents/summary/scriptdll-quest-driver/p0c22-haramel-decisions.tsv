@@ -1,0 +1,23 @@
+# P0c-22：Haramel 三行裁定（18505/18509/28509 ADOPT_RETAIL）+ 交互物门编译器通道
+# P0c-22: Haramel trio adjudication + the interaction-object gate compiler channel.
+#
+# 裁定（真端/客户端对、XML 错）：
+#   ① 空报告失败应答：exits 三行都声明 SELECT6 → 编译器 hasFailurePage 分支发 SELECT6(2716)，
+#     与判官原断言一致（非分歧）。
+#   ② 报告 NPC 关窗应答：客户端 1008 按钮全页字面 = "结束对话"（page-action-map.csv 跨任务
+#     一致）→ 族形 reportNpcExit 的 CloseDialog 是字面建模；遗留 XML 的
+#     ShowQuestSelectionDialog(SELECT_QUEST) 是手工推断（推断了"关窗后回任务选择页"的
+#     未声明行为）。判官 emptyReportFinish 改锁 CloseDialog。
+#   ③ 交互物门（18509/28509）：真端 drop_monster_1=IDNovice_WoodenBox = 交互物 700853
+#     （quest_use_item_npcs 登记域）→ 启动期交互对象合同要求 START 态 ACTION_ITEM_USE 门。
+#     SimpleTalk 单步 build 原不发门（1141 同构缺口的根因）→ P0c-22 编译器通道：真端掉落
+#     解析为交互物时与 CollectItem 规范形同构发射 USE_OBJECT + CanAct 门对。
+#     影响面普查：已采纳 SimpleTalk 行零命中（通道只作用于本批）。
+#   ④ 18505：掉落为命名怪（IDNovice_02/05/07_named_*）非交互物 → 无门；路由断言已族形。
+# Adjudication (client-literal, XML-wrong): the client 1008 button reads "end conversation"
+# everywhere, so the family CloseDialog stands; the XML's ShowQuestSelectionDialog was
+# inferred. The trio's box drops are interaction objects, so the compiler now emits the
+# canonical gate pair for SimpleTalk rows (survey: zero adopted rows affected).
+18505	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	named-monster drops (no gates); exits SELECT6; close=CloseDialog per client literal; judge CASES-free bespoke test passes family shape
+18509	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	box drop=IDNovice_WoodenBox(700853) -> P0c-22 gate channel; close=CloseDialog; judge rewritten (emptyReportFinish + gate pair locked)
+28509	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	box drop=IDNovice_WoodenBox(700853) -> P0c-22 gate channel; close=CloseDialog; judge rewritten (emptyReportFinish + gate pair locked)

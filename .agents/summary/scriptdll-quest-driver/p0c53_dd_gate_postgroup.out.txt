@@ -1,0 +1,99 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.aionemu:aionemu >-------------------------
+[INFO] Building aionemu 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- enforcer:3.6.3:enforce (require-java-25) @ aionemu ---
+[INFO] Rule 0: org.apache.maven.enforcer.rules.version.RequireJavaVersion passed
+[INFO] Rule 1: org.apache.maven.enforcer.rules.version.RequireMavenVersion passed
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ aionemu ---
+[INFO] Copying 3458 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.15.0:compile (default-compile) @ aionemu ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 4771 source files with javac [debug release 25] to target/classes
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by lombok.permit.Permit
+WARNING: Please consider reporting this to the maintainers of class lombok.permit.Permit
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[INFO] /Users/mc/IdeaProjects/AionEmu-test/src/main/java/com/aionemu/gameserver/dataholders/DataManager.java: /Users/mc/IdeaProjects/AionEmu-test/src/main/java/com/aionemu/gameserver/dataholders/DataManager.java使用或覆盖了已过时的 API。
+[INFO] /Users/mc/IdeaProjects/AionEmu-test/src/main/java/com/aionemu/gameserver/dataholders/DataManager.java: 有关详细信息, 请使用 -Xlint:deprecation 重新编译。
+[INFO] /Users/mc/IdeaProjects/AionEmu-test/src/main/java/com/aionemu/gameserver/controllers/movement/NpcMoveController.java: 某些输入文件使用了未经检查或不安全的操作。
+[INFO] /Users/mc/IdeaProjects/AionEmu-test/src/main/java/com/aionemu/gameserver/controllers/movement/NpcMoveController.java: 有关详细信息, 请使用 -Xlint:unchecked 重新编译。
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ aionemu ---
+[INFO] Copying 49 resources from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ aionemu ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1145 source files with javac [debug release 25] to target/test-classes
+[INFO] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/dataholders/StaticDataLoadRepro.java: /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/dataholders/StaticDataLoadRepro.java使用或覆盖了已过时的 API。
+[INFO] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/gameserver/dataholders/StaticDataLoadRepro.java: 有关详细信息, 请使用 -Xlint:deprecation 重新编译。
+[INFO] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/chatserver/ChatServerTest.java: 某些输入文件使用了未经检查或不安全的操作。
+[INFO] /Users/mc/IdeaProjects/AionEmu-test/src/test/java/com/aionemu/chatserver/ChatServerTest.java: 有关详细信息, 请使用 -Xlint:unchecked 重新编译。
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ aionemu ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.aionemu.gameserver.questEngine.retail.RetailDataDrivenGateTest
+[ERROR] Tests run: 6, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 3.829 s <<< FAILURE! -- in com.aionemu.gameserver.questEngine.retail.RetailDataDrivenGateTest
+[ERROR] com.aionemu.gameserver.questEngine.retail.RetailDataDrivenGateTest.frozenFingerprintsCoverExactlyTheRetiredQuests -- Time elapsed: 0.353 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: DataDriven 冻结指纹失同步：[18738: 指纹漂移 7c5d8135fd8b940e95d7eacd0280e0a6cdc70d2e5bdae2bc87ce17537ab64df7 -> 3b171288d2a375a467c5fadd259212067939dd2a92bc38a50ce388bb4cd1a90d, 18742: 指纹漂移 d347bf20fcd3e38ad3d3a9d9a720bad5f0f7ac1de5834f678c88038f003abbec -> d80e195a8217eba87c2bddeb85692a0587f35328bfc5f2a624e7e87ea859e469, 18745: 指纹漂移 c7d92154f204ce638cbe668f7d316eb89ec006f13e3b9ad3b641801c3ab01373 -> 0575b493ec60390a85a4d21d1824bf9670c835e3a2e366a6324ebe6e68ee72c8, 50052: 指纹漂移 cb7209ebac19336d16214ed17ab115d1998902026cfcb91723ed73388fc63863 -> 44b918bfe3c2329700f297c58bac3100b8322ecbd238d4350d9c5def7c3f6f21, 50053: 指纹漂移 530036bbacf9a5be2473f68edf533cea6950389b19ff23de9f02719f182cfab7 -> 3ff128eb559143507cb5f4cbdb4b6c5d61148d9cb7e7e1a6232e2247a72139a5, 50054: 指纹漂移 802b95b0edd6a1814bb2fcfda4e59098dada7865fc233f809154a09f6412d412 -> 95908047fb0ecb4d21786b7b83b683c1dc9c7f853682e91723694b0cfae99edd, 50055: 指纹漂移 1a3c000a8f3e88d7eeb210165a5b943fc85bf15438fae67068c311c4fcf4c35e -> 01e00ef8d12d3a50dd1de6602aef209ea939ce1971f5f572e6cd8a33b29a2e00, 50056: 指纹漂移 c69c90313b618c60355adbd3231447068533623b3a2b691aefc6140e445ffb67 -> 1049e408b7b6813d75605993ae0eeff50216901eec2957446206590b6714375f, 50057: 指纹漂移 62977a10cc0e50587acf9c18c5c9de64aaf431656a9c6bcc22d7f979a5cbc2fb -> fb3f7e4b02ccd7932ddec2388b75b4c6b97e41ee5b0aab2aae8f6178d67a0024, 50065: 指纹漂移 3c069e2e7932a124debf7277b48de7f0633afdd926e64d5a725772dbc0ece5c6 -> 2133ad187099a4ddea9eb7cd953d7b3e868dc49a118e6fd6fb635217add41bd0] ==> expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:158)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:139)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:69)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:48)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:204)
+	at com.aionemu.gameserver.questEngine.retail.RetailDataDrivenGateTest.frozenFingerprintsCoverExactlyTheRetiredQuests(RetailDataDrivenGateTest.java:452)
+
+[ERROR] com.aionemu.gameserver.questEngine.retail.RetailDataDrivenGateTest.driftVersusShellsIsRegistered -- Time elapsed: 0.007 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: DataDriven 漂移登记失同步：[15476: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=ADOPTED, 15477: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=ADOPTED, 15478: 登记=REJECTED:RETAIL_REWARD_NPC_UNRESOLVED 实际=ADOPTED, 15479: 登记=REJECTED:RETAIL_REWARD_NPC_UNRESOLVED 实际=ADOPTED, 15480: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=REJECTED:RETAIL_MONSTER_UNRESOLVED, 18743: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=ADOPTED, 20035: 登记=REJECTED:RETAIL_TALK_HUNT_CHAIN_DEFERRED 实际=REJECTED:RETAIL_ITEMPLAY_OUTPUT_UNRESOLVED, 25476: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=ADOPTED, 25477: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=ADOPTED, 25478: 登记=REJECTED:RETAIL_REWARD_NPC_UNRESOLVED 实际=ADOPTED, 25479: 登记=REJECTED:RETAIL_REWARD_NPC_UNRESOLVED 实际=ADOPTED, 25480: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=REJECTED:RETAIL_MONSTER_UNRESOLVED, 28743: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=ADOPTED, 50068: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=ADOPTED, 50069: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=ADOPTED, 50072: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=ADOPTED, 50073: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=ADOPTED, 50074: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=ADOPTED, 50088: 登记=REJECTED:RETAIL_REWARD_NPC_UNRESOLVED 实际=ADOPTED, 50089: 登记=REJECTED:RETAIL_REWARD_NPC_UNRESOLVED 实际=ADOPTED] ==> expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:158)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:139)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:69)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:48)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:204)
+	at com.aionemu.gameserver.questEngine.retail.RetailDataDrivenGateTest.driftVersusShellsIsRegistered(RetailDataDrivenGateTest.java:409)
+
+[ERROR] com.aionemu.gameserver.questEngine.retail.RetailDataDrivenGateTest.retentionManifestMatchesDriverOwnership -- Time elapsed: 0.015 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: 保留清单与真端驱动不一致：[15476: 可驱动却被留在 XML, 15477: 可驱动却被留在 XML, 15478: 可驱动却被留在 XML, 15479: 可驱动却被留在 XML, 18743: 可驱动却被留在 XML, 25476: 可驱动却被留在 XML, 25477: 可驱动却被留在 XML, 25478: 可驱动却被留在 XML, 25479: 可驱动却被留在 XML, 28743: 可驱动却被留在 XML, 50068: 可驱动却被留在 XML, 50069: 可驱动却被留在 XML, 50072: 可驱动却被留在 XML, 50073: 可驱动却被留在 XML, 50074: 可驱动却被留在 XML, 50088: 可驱动却被留在 XML, 50089: 可驱动却被留在 XML, 50090: 可驱动却被留在 XML, 50091: 可驱动却被留在 XML, 50092: 可驱动却被留在 XML] ==> expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:158)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:139)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:69)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:48)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:204)
+	at com.aionemu.gameserver.questEngine.retail.RetailDataDrivenGateTest.retentionManifestMatchesDriverOwnership(RetailDataDrivenGateTest.java:476)
+
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   RetailDataDrivenGateTest.driftVersusShellsIsRegistered:409 DataDriven 漂移登记失同步：[15476: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=ADOPTED, 15477: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=ADOPTED, 15478: 登记=REJECTED:RETAIL_REWARD_NPC_UNRESOLVED 实际=ADOPTED, 15479: 登记=REJECTED:RETAIL_REWARD_NPC_UNRESOLVED 实际=ADOPTED, 15480: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=REJECTED:RETAIL_MONSTER_UNRESOLVED, 18743: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=ADOPTED, 20035: 登记=REJECTED:RETAIL_TALK_HUNT_CHAIN_DEFERRED 实际=REJECTED:RETAIL_ITEMPLAY_OUTPUT_UNRESOLVED, 25476: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=ADOPTED, 25477: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=ADOPTED, 25478: 登记=REJECTED:RETAIL_REWARD_NPC_UNRESOLVED 实际=ADOPTED, 25479: 登记=REJECTED:RETAIL_REWARD_NPC_UNRESOLVED 实际=ADOPTED, 25480: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=REJECTED:RETAIL_MONSTER_UNRESOLVED, 28743: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=ADOPTED, 50068: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=ADOPTED, 50069: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=ADOPTED, 50072: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=ADOPTED, 50073: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=ADOPTED, 50074: 登记=REJECTED:RETAIL_ACQUIRE_NPC_UNRESOLVED 实际=ADOPTED, 50088: 登记=REJECTED:RETAIL_REWARD_NPC_UNRESOLVED 实际=ADOPTED, 50089: 登记=REJECTED:RETAIL_REWARD_NPC_UNRESOLVED 实际=ADOPTED] ==> expected: <true> but was: <false>
+[ERROR]   RetailDataDrivenGateTest.frozenFingerprintsCoverExactlyTheRetiredQuests:452 DataDriven 冻结指纹失同步：[18738: 指纹漂移 7c5d8135fd8b940e95d7eacd0280e0a6cdc70d2e5bdae2bc87ce17537ab64df7 -> 3b171288d2a375a467c5fadd259212067939dd2a92bc38a50ce388bb4cd1a90d, 18742: 指纹漂移 d347bf20fcd3e38ad3d3a9d9a720bad5f0f7ac1de5834f678c88038f003abbec -> d80e195a8217eba87c2bddeb85692a0587f35328bfc5f2a624e7e87ea859e469, 18745: 指纹漂移 c7d92154f204ce638cbe668f7d316eb89ec006f13e3b9ad3b641801c3ab01373 -> 0575b493ec60390a85a4d21d1824bf9670c835e3a2e366a6324ebe6e68ee72c8, 50052: 指纹漂移 cb7209ebac19336d16214ed17ab115d1998902026cfcb91723ed73388fc63863 -> 44b918bfe3c2329700f297c58bac3100b8322ecbd238d4350d9c5def7c3f6f21, 50053: 指纹漂移 530036bbacf9a5be2473f68edf533cea6950389b19ff23de9f02719f182cfab7 -> 3ff128eb559143507cb5f4cbdb4b6c5d61148d9cb7e7e1a6232e2247a72139a5, 50054: 指纹漂移 802b95b0edd6a1814bb2fcfda4e59098dada7865fc233f809154a09f6412d412 -> 95908047fb0ecb4d21786b7b83b683c1dc9c7f853682e91723694b0cfae99edd, 50055: 指纹漂移 1a3c000a8f3e88d7eeb210165a5b943fc85bf15438fae67068c311c4fcf4c35e -> 01e00ef8d12d3a50dd1de6602aef209ea939ce1971f5f572e6cd8a33b29a2e00, 50056: 指纹漂移 c69c90313b618c60355adbd3231447068533623b3a2b691aefc6140e445ffb67 -> 1049e408b7b6813d75605993ae0eeff50216901eec2957446206590b6714375f, 50057: 指纹漂移 62977a10cc0e50587acf9c18c5c9de64aaf431656a9c6bcc22d7f979a5cbc2fb -> fb3f7e4b02ccd7932ddec2388b75b4c6b97e41ee5b0aab2aae8f6178d67a0024, 50065: 指纹漂移 3c069e2e7932a124debf7277b48de7f0633afdd926e64d5a725772dbc0ece5c6 -> 2133ad187099a4ddea9eb7cd953d7b3e868dc49a118e6fd6fb635217add41bd0] ==> expected: <true> but was: <false>
+[ERROR]   RetailDataDrivenGateTest.retentionManifestMatchesDriverOwnership:476 保留清单与真端驱动不一致：[15476: 可驱动却被留在 XML, 15477: 可驱动却被留在 XML, 15478: 可驱动却被留在 XML, 15479: 可驱动却被留在 XML, 18743: 可驱动却被留在 XML, 25476: 可驱动却被留在 XML, 25477: 可驱动却被留在 XML, 25478: 可驱动却被留在 XML, 25479: 可驱动却被留在 XML, 28743: 可驱动却被留在 XML, 50068: 可驱动却被留在 XML, 50069: 可驱动却被留在 XML, 50072: 可驱动却被留在 XML, 50073: 可驱动却被留在 XML, 50074: 可驱动却被留在 XML, 50088: 可驱动却被留在 XML, 50089: 可驱动却被留在 XML, 50090: 可驱动却被留在 XML, 50091: 可驱动却被留在 XML, 50092: 可驱动却被留在 XML] ==> expected: <true> but was: <false>
+[INFO] 
+[ERROR] Tests run: 6, Failures: 3, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  47.092 s
+[INFO] Finished at: 2026-09-26T19:44:59+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project aionemu: There are test failures.
+[ERROR] 
+[ERROR] See /Users/mc/IdeaProjects/AionEmu-test/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

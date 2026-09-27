@@ -1,0 +1,39 @@
+package com.aionemu.gameserver.questEngine.definition;
+
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import org.junit.jupiter.api.Test;
+
+import java.util.Map;
+
+/**
+ * 临时探针（P0c-20）：28800 翻转态全量真端编译形状转储（单一事实源供判官重写）。
+ * Temporary probe: dump the flipped-state retail compile of 28800 for the judge rewrite.
+ */
+class Retail28800ShapeProbeTest {
+
+	@Test
+	void dumpRetailCompileShape() {
+		QuestDefinition definition = ProductionQuestDefinitions.definition(28800).definition();
+		System.out.println("=== nodes ===");
+		definition.nodes().forEach(node -> System.out.println("  " + node.label() + " "
+			+ node.projection().status() + " " + node.projection().variables()));
+		System.out.println("=== metadata ===");
+		System.out.println("  name=" + definition.metadata().name()
+			+ " prerequisites=" + definition.metadata().prerequisites()
+			+ " startConditions=" + definition.metadata().startConditions()
+			+ " itemRequirements=" + definition.metadata().itemRequirements());
+		System.out.println("=== transitions (" + definition.transitions().size() + ") ===");
+		definition.transitions().stream()
+			.sorted(java.util.Comparator.<QuestTransition, String>comparing(QuestTransition::sourceNode)
+				.thenComparing(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
+					? "%d/%d".formatted(talk.npcId(), talk.dialogId()) : transition.event().toString()))
+			.forEach(transition -> System.out.println("  [" + transition.sourceNode() + "->"
+				+ transition.targetNode() + "] prio=" + transition.priority()
+				+ " event=" + transition.event()
+				+ " cond=" + transition.conditions() + " act=" + transition.actions()
+				+ " after=" + transition.afterCommit()));
+		System.out.println("=== status projection of nodes ===");
+		definition.nodes().forEach(node -> System.out.println("  " + node.label() + " -> "
+			+ node.projection().status() + " " + QuestStatus.NONE));
+	}
+}

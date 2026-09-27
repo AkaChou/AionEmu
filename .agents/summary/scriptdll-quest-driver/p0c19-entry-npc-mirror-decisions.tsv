@@ -1,0 +1,28 @@
+# P0c-19：入口 NPC 镜像裁定（第六类"缺口"证伪 + 3 行 ADOPT_RETAIL）
+# P0c-19: entry-NPC mirror adjudication — the "sixth class gap" is disproven; 3 rows adopt retail.
+#
+# P0c-18 更正的更正（本轮核心发现，如实记录）：
+#   P0c-18 曾判"单步 item_check 行的编译只有接取流、报告流整体缺失"。本轮直证该结论是
+#   探针单 NPC 过滤伪影：判官镜像的 npcId 抄自遗留 XML 首块（= 接取 NPC），而 SimpleTalk
+#   单步编译的报告流（itemCheckReportFlow）按真端表 reward_npc_name 发在交付 NPC 上——
+#   探针只过滤接取 NPC，从未观察交付 NPC 路由。
+#   Correction-of-correction: P0c-18's "report flow entirely missing" was a probe single-NPC
+#   filter artifact. The judge mirrors were transcribed from the legacy XML's first block
+#   (= the acquired NPC); the single-step compile emits itemCheckReportFlow on the reward
+#   NPC per the retail table, which the probe never observed.
+#
+# 客户端强二证据（legacy-quest-dialog-template-index.csv start/end NPC 列）：
+#   11003 start=798933(Phailos) end=798942(Strabon)；80356 start=831815(event_Scrooge_l_1)
+#   end=831819(event_guarantee_1)；80365 start=831827(event_Scrooge_d_1) end=831819。
+#   客户端契约自身声明非对称形（接取/交付分离）；真端表 acquired/reward 同名同对。
+#   Client template index start/end columns declare the asymmetric shape themselves; the
+#   retail table agrees. Legacy XML's symmetric dual-NPC full shape = hand-made drift.
+#
+# 裁定（真端对、XML 错）：三行 ADOPT_RETAIL；判官镜像改指交付 NPC（action=39 按模板索引列，
+# 编译器 39/20002 双变体都登记）；遗留 XML 对称形退役（git 历史可回溯）。
+# 判据链：真端表 reward_npc_name（形状权威）+ 客户端模板索引 end NPC（强二）+ 编译器
+# itemCheckReportFlow 代码路径（QUEST_SELECT→SELECT5(2375)/39 对/20002 对，SELECT6 失败页
+# 按 exits）+ 对照组 2527/3096（start==end 同体）判绿反证编译器形状正确。
+11003	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	mirror-npc=798942(Strabon) per template-index end col; XML symmetric dual-NPC(798933/798942 full shape)=drift; judge=LegacyTemplateMirrorRouteRegressionTest updated to retail shape
+80356	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	mirror-npc=831819(event_guarantee_1) per template-index end col; action 20002->39 per template-index; XML symmetric(831815/831819)=drift; judge updated
+80365	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	mirror-npc=831819(event_guarantee_1) per template-index end col; action 20002->39 per template-index; XML symmetric(831827/831819)=drift; judge updated

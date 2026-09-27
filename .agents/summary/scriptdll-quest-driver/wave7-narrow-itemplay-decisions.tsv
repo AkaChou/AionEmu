@@ -1,0 +1,26 @@
+# 续片 16 / P0c-37：窄链（talk-collect）itemplay 骑行者落地 —— 15000/15680/25023 翻转退役。
+# Narrow-chain (talk/collect) itemplay rider support — retiring 15000/15680/25023.
+#
+# 一、itemplay 骑行者 / the itemplay rider
+#   - Step 记录再扩一列 itemPlay（RetailDataDrivenTable.ItemPlayTarget）：骑行者占行不占对话段，
+#     段数核对仍按可见步（窄链登记表同口径）。expandSteps 白名单 + itemplay 游标。
+#   - 符号解析（与宽链编译器同判据）：RETAIL_ITEMPLAY_ITEM_UNRESOLVED（未登记符号）、
+#     RETAIL_ITEMPLAY_ITEM_COUNT_MISMATCH（步数 < work 数量）、RETAIL_ITEMPLAY_OUTPUT_UNRESOLVED
+#     （输出物未登记/数量不符）；多播形（count > 1）需要独立计数段，单阶梯布局无落点 →
+#     RETAIL_TALK_COLLECT_CHAIN_DEFERRED detail "rider unsupported: itemplay multiplay"。
+#   - 边形状：ItemPlay(itemId, 3000) + SetVariable(var0, 落点行) + PACKET_ONLY，sourceNode = 本步行
+#     （事件只在链上该行可路由，提前持有道具不会误推进）；声明输出物时同边
+#     GiveItem(输出, 数量) + RemoveItem(被演, 1)（15680 形）。
+#   - 接取授予：被演的 work item 按真端数量在接取路由（QUEST_ACCEPT_1/SIMPLE）发放（workCount>0 →
+#     putIfAbsent；普通物品按 count merge）；带 itemplay 的行**末步不再重复授予 work item**，
+#     否则被演物品与输出物会被二次发放。
+# 二、段首页回显边的新判据 / the head-page echo rule
+#   - 页 id 与按钮动作共用编号空间：段首页 id 未登记为 QuestDialogAction 时**不发同名回显边**
+#     （没有任何客户端按钮会发出该 id）；梯上更深页 id 未登记则按稳定码拒绝
+#     （detail "client nav page not a dialog action: <id>"），不静默丢边。
+#   - QuestDialogAction 新增 findId(int)（未登记返回 null，fromId 保持严格）。
+#
+# quest_id	source	acquire	steps	itemplay(x工作项)	证据
+15000	data_driven_quest.xml	Talk:LF5_Milliard_E	CollectItem(LF5_Milliard_E) + Talk(LF5_Milliard_E, QUEST_15000B 1) + ItemPlay(QUEST_15000B)	QUEST_15000B -> quest_15000b 182215662 x1（work item x1，单播无输出）	quest.xml quest_work_item1=quest_15000b 1；遗留 15000.xml give-item 182215662 + use-item 182215662；窄链登记 3 段（4762 talk:1011:10000 collect:1352:39:10000:10001 talk:1693:10002）
+15680	data_driven_quest.xml	Talk:LF6_Hemellos_E	Talk(DF6_Shuket_E) + CollectItem(DF6_Shuket_E) + Talk(DF6_Shuket_E, quest_15680b 1) + ItemPlay(QUEST_15680B, 输出 quest_15680c 1) + Talk(DF6_Shuket_E) + Talk(DF6_FOBJ_Flowerpot_Q15680a) + Talk(DF6_FOBJ_Flowerpot_Q15680b) + Talk(DF6_Shuket_E)	QUEST_15680B -> quest_15680b 182216204 x1（work item x1）；输出 quest_15680c 182216205 x1（work item x1）	quest.xml quest_work_item1/2=quest_15680b/quest_15680c；遗留 15680.xml remove 182216203 + give/use 182216204 + give 182216204+182216205（真端模型：被演项接取即发、演出消耗，输出在演出边）；窄链登记 7 段（4762 ... talk:3057:10006 talk:3398:10255，select7=3057 无同名回显边）
+25023	data_driven_quest.xml	Talk:DF5_Malthorn_E	CollectItem(DF5_Malthorn_E) + Talk(DF5_Malthorn_E, QUEST_25023B 1) + ItemPlay(quest_25023b, 1)	quest_25023b -> quest_25023b 182215711 x1（work item x1，单播无输出）	quest.xml quest_work_item1=quest_25023b；遗留 25023.xml give-item 182215711 + use-item 182215711 + remove-item 182215711；窄链登记 3 段（4762 collect:1011:39:10000:10001 talk:1352:10001）

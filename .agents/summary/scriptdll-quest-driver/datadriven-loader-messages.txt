@@ -1,0 +1,45 @@
+DataDrivenQuest - Add Timer
+DataDrivenQuest - Collect Item
+DataDrivenQuest - Delay Time
+DataDrivenQuest - Enter Instance
+DataDrivenQuest - Enter Sensory Area
+DataDrivenQuest - Enter World
+DataDrivenQuest - Give/Remove Items
+DataDrivenQuest - GiveItems/Remove item
+DataDrivenQuest - Hunt Progress
+DataDrivenQuest - Item Play
+DataDrivenQuest - Level Up / Level Up LogIn
+DataDrivenQuest - Message
+DataDrivenQuest - Play Cutscene
+DataDrivenQuest - PvP Kill Num
+DataDrivenQuest - PvP Target Level Gap
+DataDrivenQuest - PvP Target Max Rank
+DataDrivenQuest - PvP Target Min Rank
+DataDrivenQuest - QPCAT_ITEM_PLAY
+DataDrivenQuest - Spawn Npcs
+DataDrivenQuest - Talk FOBJ
+DataDrivenQuest - Talk Progress
+DataDrivenQuest - Teleport To
+DataDrivenQuestLoader::LoadBasicInfo() Failed!! Quest ID : %d
+DataDrivenQuestLoader::LoadExtraAction() : Add Timer - Dest Progress Not Exists!!
+DataDrivenQuestLoader::LoadExtraAction() : Add Timer - Dest Progress is Not Exists!!
+DataDrivenQuestLoader::LoadExtraAction() : Add Timer - Timer Time is Not Exists!!
+DataDrivenQuestLoader::LoadExtraAction() : Enter Instance - Ins Creation ID Not Exists!!
+DataDrivenQuestLoader::LoadExtraAction() : Enter Instance - Ins World ID Not Exists!!
+DataDrivenQuestLoader::LoadExtraAction() : Enter Instance - Leave Progress Not Exists!!
+DataDrivenQuestLoader::LoadExtraAction() : Give/Remove Item - Item Num Not Exists!!
+DataDrivenQuestLoader::LoadExtraAction() : Message - Wrong String Index!!
+DataDrivenQuestLoader::LoadExtraAction() : Play CutScene - CutScene ID Not Exists!!
+DataDrivenQuestLoader::LoadExtraAction() : Play CutScene - CutScene Type Not Exists!!
+DataDrivenQuestLoader::LoadExtraAction() : Play CutScene - Wrong Hyper Link ID!!
+DataDrivenQuestLoader::LoadExtraAction() : Play CutScene - Wrong Type!!
+DataDrivenQuestLoader::LoadExtraAction() : Spawn NPC - Wrong Arguments Number!!
+DataDrivenQuestLoader::LoadExtraAction() : Spawn NPC - Wrong NPC Name ID!!
+DataDrivenQuestLoader::LoadExtraAction() : Spawn NPC - Wrong NPC Spawn Type!!
+DataDrivenQuestLoader::LoadExtraAction() Wrong Category for Extra Action : %d
+DataDrivenQuestLoader::LoadProgressInfo() Failed!! Quest ID : %d, Progress : %d
+DataDrivenQuestLoader::LoadProgressInfo() Unknown Category Name \
+DataDrivenQuestLoader::LoadProgressInfo() unknown attribute name \
+DataDrivenQuestLoader::LoadProgressInfo(n), T_PROGRESSn_CATEGORY
+DataDrivenQuestLoader::LoadProgressInfoValues() : QPCAT_ITEM_PLAY - Item Name ID Not Exists!!
+DataDrivenQuestLoader::LoadProgressInfoValues() : QPCAT_TALK_FOBJ - Field OBJ Kill Option is Not Exists!!

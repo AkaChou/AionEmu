@@ -1,0 +1,49 @@
+# P0c-10n：单步过场行裁定（13 采纳退役 + 28 craft 缺口 KEEP）
+# 判据（非等价路线，10k 方法论扩展）：movie id = 真端表 cutsceneid1；触发 = cs1_haction 限 canonical
+# 路由（1009=SELECT_QUEST_REWARD / 1007=ASK_QUEST_ACCEPT，判例 3020 同轴）；探针 movie=1/xml=0——
+# 老 XML 从未实现过场（play-movie 零出现），合成是补真端语义。领奖投影差 = QE-051。
+# 28 行 KEEP（RETAIL_CRAFT_AXIS_UNDECLARED）：老 XML 载 craft 语义（can-grant-craft-skill 条件 +
+# grant-craft-skill 动作 + movie-end 续边），真端表/quest.xml 无 craft 轴来源 → 真端缺口保留 XML；
+# 编译器虽已能合成其 canonical 形状（precheck 放行），retention 层 KEEP_XML 闸住退役。
+# quest_id	decision	basis	-	evidence
+1941	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+1942	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+1943	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+1944	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+1945	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+1946	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+2931	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+2932	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+2933	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+2934	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+2935	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+2936	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+3943	ADOPT_RETAIL	CUTSCENE_HACTION_EVIDENCED	-	p0c10n-cutscene-probe.tsv movie=1/xml=0 trigger=1009; 10k methodology (old XML has zero play-movie elements); QE-051 projection diff
+3946	ADOPT_RETAIL	CUTSCENE_HACTION_EVIDENCED	-	p0c10n-cutscene-probe.tsv movie=1/xml=0 trigger=1009; 10k methodology (old XML has zero play-movie elements); QE-051 projection diff
+3949	ADOPT_RETAIL	CUTSCENE_HACTION_EVIDENCED	-	p0c10n-cutscene-probe.tsv movie=1/xml=0 trigger=1009; 10k methodology (old XML has zero play-movie elements); QE-051 projection diff
+3952	ADOPT_RETAIL	CUTSCENE_HACTION_EVIDENCED	-	p0c10n-cutscene-probe.tsv movie=1/xml=0 trigger=1009; 10k methodology (old XML has zero play-movie elements); QE-051 projection diff
+3955	ADOPT_RETAIL	CUTSCENE_HACTION_EVIDENCED	-	p0c10n-cutscene-probe.tsv movie=1/xml=0 trigger=1009; 10k methodology (old XML has zero play-movie elements); QE-051 projection diff
+3958	ADOPT_RETAIL	CUTSCENE_HACTION_EVIDENCED	-	p0c10n-cutscene-probe.tsv movie=1/xml=0 trigger=1009; 10k methodology (old XML has zero play-movie elements); QE-051 projection diff
+4056	ADOPT_RETAIL	CUTSCENE_HACTION_EVIDENCED+LEGACY_DOC_GATE_REDUNDANT	-	p0c10n-cutscene-probe.tsv movie=1/xml=0 trigger=1007; 10k methodology (old XML has zero play-movie elements); QE-051 projection + planner work-item cleanup covers legacy doc gate
+4947	ADOPT_RETAIL	CUTSCENE_HACTION_EVIDENCED	-	p0c10n-cutscene-probe.tsv movie=1/xml=0 trigger=1009; 10k methodology (old XML has zero play-movie elements); QE-051 projection diff
+4950	ADOPT_RETAIL	CUTSCENE_HACTION_EVIDENCED	-	p0c10n-cutscene-probe.tsv movie=1/xml=0 trigger=1009; 10k methodology (old XML has zero play-movie elements); QE-051 projection diff
+4953	ADOPT_RETAIL	CUTSCENE_HACTION_EVIDENCED	-	p0c10n-cutscene-probe.tsv movie=1/xml=0 trigger=1009; 10k methodology (old XML has zero play-movie elements); QE-051 projection diff
+4956	ADOPT_RETAIL	CUTSCENE_HACTION_EVIDENCED	-	p0c10n-cutscene-probe.tsv movie=1/xml=0 trigger=1009; 10k methodology (old XML has zero play-movie elements); QE-051 projection diff
+4959	ADOPT_RETAIL	CUTSCENE_HACTION_EVIDENCED	-	p0c10n-cutscene-probe.tsv movie=1/xml=0 trigger=1009; 10k methodology (old XML has zero play-movie elements); QE-051 projection diff
+4962	ADOPT_RETAIL	CUTSCENE_HACTION_EVIDENCED	-	p0c10n-cutscene-probe.tsv movie=1/xml=0 trigger=1009; 10k methodology (old XML has zero play-movie elements); QE-051 projection diff
+19009	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+19015	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+19021	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+19027	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+19033	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+19039	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+19050	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+19058	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+29009	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+29015	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+29021	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+29027	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+29033	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+29039	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+29050	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained
+29058	KEEP_XML	KEEP_XML:RETAIL_CRAFT_AXIS_UNDECLARED	-	p0c10n-cutscene-probe.tsv old XML grant-craft-skill/can-grant-craft-skill/movie-end; retail table + quest.xml declare no craft axis -> semantic gap, XML retained

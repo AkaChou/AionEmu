@@ -1,0 +1,1197 @@
+目标地址 378 个
+
+0x18123c180 DataDrivenAILoader::Load() Failed!! - Not found NPC AI Class
+   0x180c40a80 FUN_180c40a80  refs=1
+
+0x18123c220 DataDrivenAILoader::LoadBasicInfo() Failed!! SimpleTeleportInfo ID : %d
+   0x180c40a80 FUN_180c40a80  refs=1
+
+0x18123c2c0 DataDrivenAILoader::LoadBasicInfo() Failed!! - Not Found ID Node
+   0x180c40ca0 FUN_180c40ca0  refs=1
+
+0x18123c520 ScriptTeleport2 - quest_cond_error_html
+   0x180c40ca0 FUN_180c40ca0  refs=1
+
+0x18123c760 ScriptTeleport2 - finished_quest_cond
+   0x180c40ca0 FUN_180c40ca0  refs=1
+
+0x18123c7b0 ScriptTeleport2 - acquired_quest_cond
+   0x180c40ca0 FUN_180c40ca0  refs=1
+
+0x18123c800 DataDrivenAILoader::LoadBasicInfo() Failed!! - Invalid Node : %d
+   0x180c40ca0 FUN_180c40ca0  refs=1
+
+0x18123c890 DataDrivenAILoader::LoadInstanceList() Failed!! - Not Found Indun_list Node
+   (无引用)
+
+0x18123ca00 DataDrivenAILoader::LoadInstanceList() Failed!! - Invalid Node : %d
+   (无引用)
+
+0x18123d340 RegisterQuestSucceedEventHandler, %d already registered
+   (无引用)
+
+0x18123d4d8 quest_data_drivens
+   (无引用)
+
+0x18123d500 quest_data_driven
+   (无引用)
+
+0x18123d530 DataDrivenQuestLoader::LoadBasicInfo() Failed!! Quest ID : %d
+   (无引用)
+
+0x18123d5b0 DataDrivenQuestLoader::LoadProgressInfo() Failed!! Quest ID : %d, Progress : %d
+   (无引用)
+
+0x18123d678 Data Driven - Category_Acquire
+   (无引用)
+
+0x18123d728 con_quest
+   (无引用)
+
+0x18123d740 con_quest_list
+   (无引用)
+
+0x18123d760 Data Driven - ZoneQuestList
+   (无引用)
+
+0x18123d7b8 progress_info
+   (无引用)
+
+0x18123d7e0 DataDrivenQuestLoader::LoadProgressInfo(n), T_PROGRESSn_CATEGORY
+   (无引用)
+
+0x18123d8d0 DataDrivenQuestLoader::LoadProgressInfo() Unknown Category Name "%s"
+   (无引用)
+
+0x18123d960 DataDrivenQuestLoader::LoadProgressInfo() unknown attribute name "%s"
+   (无引用)
+
+0x18123da18 DataDrivenQuest - Collect Item
+   (无引用)
+
+0x18123da60 DataDrivenQuest - Hunt Progress
+   (无引用)
+
+0x18123dab0 DataDrivenQuest - QPCAT_ITEM_PLAY
+   (无引用)
+
+0x18123db00 DataDrivenQuest - Item Play
+   (无引用)
+
+0x18123db40 DataDrivenQuestLoader::LoadProgressInfoValues() : QPCAT_ITEM_PLAY - Item Name ID Not Exists!!
+   (无引用)
+
+0x18123dc00 DataDrivenQuest - Talk Progress
+   (无引用)
+
+0x18123dc40 DataDrivenQuest - PvP Kill Num
+   (无引用)
+
+0x18123dc80 DataDrivenQuest - PvP Target Min Rank
+   (无引用)
+
+0x18123dcd0 DataDrivenQuest - PvP Target Max Rank
+   (无引用)
+
+0x18123dd20 DataDrivenQuest - PvP Target Level Gap
+   (无引用)
+
+0x18123dd70 DataDrivenQuest - Enter Sensory Area
+   (无引用)
+
+0x18123ddc0 DataDrivenQuest - Enter World
+   (无引用)
+
+0x18123de00 DataDrivenQuest - Level Up / Level Up LogIn
+   (无引用)
+
+0x18123de58 DataDrivenQuest - Talk FOBJ
+   (无引用)
+
+0x18123de90 DataDrivenQuestLoader::LoadProgressInfoValues() : QPCAT_TALK_FOBJ - Field OBJ Kill Option is Not Exists!!
+   (无引用)
+
+0x18123df70 DataDrivenQuestLoader::LoadExtraAction() Wrong Category for Extra Action : %d
+   (无引用)
+
+0x18123e010 DataDrivenQuest - Give/Remove Items
+   (无引用)
+
+0x18123e060 DataDrivenQuest - GiveItems/Remove item
+   (无引用)
+
+0x18123e0b0 DataDrivenQuestLoader::LoadExtraAction() : Give/Remove Item - Item Num Not Exists!!
+   (无引用)
+
+0x18123e158 DataDrivenQuest - Teleport To
+   (无引用)
+
+0x18123e1a0 DataDrivenQuest - Play Cutscene
+   (无引用)
+
+0x18123e230 DataDrivenQuestLoader::LoadExtraAction() : Play CutScene - Wrong Type!!
+   (无引用)
+
+0x18123e2c0 DataDrivenQuestLoader::LoadExtraAction() : Play CutScene - CutScene Type Not Exists!!
+   (无引用)
+
+0x18123e370 DataDrivenQuestLoader::LoadExtraAction() : Play CutScene - CutScene ID Not Exists!!
+   (无引用)
+
+0x18123e420 DataDrivenQuestLoader::LoadExtraAction() : Play CutScene - Wrong Hyper Link ID!!
+   (无引用)
+
+0x18123e4c8 DataDrivenQuest - Spawn Npcs
+   (无引用)
+
+0x18123e540 DataDrivenQuestLoader::LoadExtraAction() : Spawn NPC - Wrong NPC Spawn Type!!
+   (无引用)
+
+0x18123e5e0 DataDrivenQuestLoader::LoadExtraAction() : Spawn NPC - Wrong NPC Name ID!!
+   (无引用)
+
+0x18123e680 DataDrivenQuestLoader::LoadExtraAction() : Spawn NPC - Wrong Arguments Number!!
+   (无引用)
+
+0x18123e720 DataDrivenQuest - Delay Time
+   (无引用)
+
+0x18123e760 DataDrivenQuest - Message
+   (无引用)
+
+0x18123e7a0 DataDrivenQuestLoader::LoadExtraAction() : Message - Wrong String Index!!
+   (无引用)
+
+0x18123e840 DataDrivenQuest - Enter Instance
+   (无引用)
+
+0x18123e890 DataDrivenQuestLoader::LoadExtraAction() : Enter Instance - Ins Creation ID Not Exists!!
+   (无引用)
+
+0x18123e950 DataDrivenQuestLoader::LoadExtraAction() : Enter Instance - Ins World ID Not Exists!!
+   (无引用)
+
+0x18123ea00 DataDrivenQuestLoader::LoadExtraAction() : Enter Instance - Leave Progress Not Exists!!
+   (无引用)
+
+0x18123eab0 DataDrivenQuest - Add Timer
+   (无引用)
+
+0x18123eaf0 DataDrivenQuestLoader::LoadExtraAction() : Add Timer - Timer Time is Not Exists!!
+   (无引用)
+
+0x18123eba0 DataDrivenQuestLoader::LoadExtraAction() : Add Timer - Dest Progress is Not Exists!!
+   (无引用)
+
+0x18123ec50 DataDrivenQuestLoader::LoadExtraAction() : Add Timer - Dest Progress Not Exists!!
+   (无引用)
+
+0x181246ed8 L_UPOP_QUEST01
+   (无引用)
+
+0x181246ef8 D_UPOP_QUEST01
+   (无引用)
+
+0x181252de0 ND2_AnB_QuestB
+   0x180518ae0 FUN_180518ae0  refs=1
+
+0x181252e00 ND2_AnK_QuestB
+   0x180519980 FUN_180519980  refs=1
+
+0x181253a78 ND2_FhE_QUEST
+   0x180523280 FUN_180523280  refs=1
+
+0x18125a1a0 IDCT_Quest_Rufukin_Normal
+   0x18024e720 FUN_18024e720  refs=1
+
+0x18125a1d8 IDCT_Quest_Reric_Normal
+   0x18024e600 FUN_18024e600  refs=1
+
+0x18125a208 IDCT_Quest_Reric_Hard
+   0x18024e4e0 FUN_18024e4e0  refs=1
+
+0x18125b178 LF4_Quest1
+   0x180469400 FUN_180469400  refs=1
+
+0x18125b190 LF4_Quest2
+   0x180469520 FUN_180469520  refs=1
+
+0x18125cdf0 Cromede_Noshow_Quest
+   0x1800977c0 FUN_1800977c0  refs=1
+
+0x1812695e0 IDStation_QuestChecker
+   0x18037b3e0 FUN_18037b3e0  refs=1
+
+0x181276900 IDDreadgion_03_DrakanRa_QuestNamed_60_Ae
+   0x1802655e0 FUN_1802655e0  refs=1
+   0x180730510 FUN_180730510  refs=1
+   0x180730540 FUN_180730540  refs=1
+   0x180730570 FUN_180730570  refs=1
+   0x1807305a0 FUN_1807305a0  refs=1
+
+0x181292190 LDF5_under_quest_on
+   0x18044e0a0 FUN_18044e0a0  refs=1
+
+0x181292590 lDF5Re_03_QuestSet_NoShowNPC
+   0x1805c0f00 FUN_1805c0f00  refs=1
+
+0x18129da88 TEST_LimitedQuest_01
+   0x180580e20 FUN_180580e20  refs=1
+   0x180902c50 FUN_180902c50  refs=1
+
+0x18129dab8 TEST_LimitedQuest_02
+   0x180580f40 FUN_180580f40  refs=1
+   0x18076d1a0 FUN_18076d1a0  refs=1
+
+0x1812a9b08 Gab1_sub_Quest_Check
+   0x1801e19a0 FUN_1801e19a0  refs=1
+
+0x1812aa8d0 LDF5_Fortress_Li_Pre_Quest
+   0x18043dde0 FUN_18043dde0  refs=1
+
+0x1812aa908 LDF5_Fortress_Li_Com_Quest
+   0x18043dcc0 FUN_18043dcc0  refs=1
+
+0x1812aa940 LDF5_Fortress_Da_Pre_Quest
+   0x18043b9e0 FUN_18043b9e0  refs=1
+
+0x1812aa978 LDF5_Fortress_Da_Com_Quest
+   0x18043b8c0 FUN_18043b8c0  refs=1
+
+0x1812ac5e8 LDF4_Advance_GodElite_Quest_Li
+   0x1803eee80 FUN_1803eee80  refs=1
+
+0x1812ac628 LDF4_Advance_GodElite_Quest_Da
+   0x1803eed60 FUN_1803eed60  refs=1
+
+0x1812b3e80 DF5_QuestMonster_01
+   0x1800be700 FUN_1800be700  refs=1
+
+0x1812b3ea8 DF5_QuestMonster_02
+   0x1800be820 FUN_1800be820  refs=1
+
+0x1812b3ed0 DF5_QuestMonster_03
+   0x1800be940 FUN_1800be940  refs=1
+
+0x1812b3ef8 DF5_QuestMonster_04
+   0x1800bea60 FUN_1800bea60  refs=1
+
+0x1812b3f20 DF5_QuestMonster_05
+   0x1800beb80 FUN_1800beb80  refs=1
+
+0x1812b3f48 DF5_QuestMonster_06
+   0x1800beca0 FUN_1800beca0  refs=1
+
+0x1812b3f70 DF5_QuestMonster_07
+   0x1800bedc0 FUN_1800bedc0  refs=1
+
+0x1812b3f98 DF5_QuestMonster_08
+   0x1800beee0 FUN_1800beee0  refs=1
+
+0x1812b3fc0 DF5_QuestMonster_09
+   0x1800bf000 FUN_1800bf000  refs=1
+
+0x1812b3fe8 DF5_QuestMonster_10
+   0x1800bf120 FUN_1800bf120  refs=1
+
+0x1812b4010 DF5_QuestMonster_11
+   0x1800bf240 FUN_1800bf240  refs=1
+
+0x1812b4038 DF5_QuestMonster_12
+   0x1800bf360 FUN_1800bf360  refs=1
+
+0x1812b4060 DF5_QuestMonster_13
+   0x1800bf480 FUN_1800bf480  refs=1
+
+0x1812b4088 DF5_QuestMonster_14
+   0x1800bf5a0 FUN_1800bf5a0  refs=1
+
+0x1812c0f68 LF5_Quest_Nmd_Fi_HpDrain
+   0x180472520 FUN_180472520  refs=1
+
+0x1812c20c8 DF5_QuestMonster_15
+   0x1800bf6c0 FUN_1800bf6c0  refs=1
+
+0x1812c20f0 DF5_QuestMonster_16
+   0x1800bf7e0 FUN_1800bf7e0  refs=1
+
+0x1812c2118 DF5_QuestMonster_17
+   0x1800bf900 FUN_1800bf900  refs=1
+
+0x1812c2140 DF5_QuestMonster_18
+   0x1800bfa20 FUN_1800bfa20  refs=1
+
+0x1812c2168 DF5_QuestMonster_19
+   0x1800bfb40 FUN_1800bfb40  refs=1
+
+0x1812c2190 DF5_QuestMonster_20
+   0x1800bfc60 FUN_1800bfc60  refs=1
+
+0x1812c21b8 LF5_Quest_Nmd_Strike_Wi
+   0x180472760 FUN_180472760  refs=1
+
+0x1812c21e8 LF5_Quest_Nmd_Oritsa_Fi
+   0x180472640 FUN_180472640  refs=1
+
+0x1812c3938 DF5_QuestMonster_21
+   0x1800bfd80 FUN_1800bfd80  refs=1
+
+0x1812c3960 DF5_QuestMonster_22
+   0x1800bfea0 FUN_1800bfea0  refs=1
+
+0x1812c3988 DF5_QuestMonster_23
+   0x1800bffc0 FUN_1800bffc0  refs=1
+
+0x1812c39b0 DF5_QuestMonster_24
+   0x1800c00e0 FUN_1800c00e0  refs=1
+
+0x1812c39d8 DF5_QuestMonster_25
+   0x1800c0200 FUN_1800c0200  refs=1
+
+0x1812c3a00 DF5_QuestMonster_26
+   0x1800c0320 FUN_1800c0320  refs=1
+
+0x1812c3a28 DF5_QuestMonster_27
+   0x1800c0440 FUN_1800c0440  refs=1
+
+0x1812c3a50 DF5_QuestMonster_28
+   0x1800c0560 FUN_1800c0560  refs=1
+
+0x1812c3a78 DF5_QuestMonster_29
+   0x1800c0680 FUN_1800c0680  refs=1
+
+0x1812c3aa0 DF5_QuestMonster_30
+   0x1800c07a0 FUN_1800c07a0  refs=1
+
+0x1812c3ac8 LF5_QuestNPC_01
+   0x1804719e0 FUN_1804719e0  refs=1
+
+0x1812c3ae8 LF5_QuestNPC_02
+   0x180471b00 FUN_180471b00  refs=1
+
+0x1812c3b08 LF5_QuestNPC_03
+   0x180471c20 FUN_180471c20  refs=1
+
+0x1812c3b28 LF5_QuestNPC_04
+   0x180471d40 FUN_180471d40  refs=1
+
+0x1812c3b48 LF5_QuestNPC_05
+   0x180471e60 FUN_180471e60  refs=1
+
+0x1812c3b68 LF5_QuestNPC_06
+   0x180471f80 FUN_180471f80  refs=1
+
+0x1812c3b88 LF5_QuestNPC_07
+   0x1804720a0 FUN_1804720a0  refs=1
+
+0x1812c3ba8 LF5_QuestNPC_08
+   0x1804721c0 FUN_1804721c0  refs=1
+
+0x1812c3bc8 LF5_QuestNPC_09
+   0x1804722e0 FUN_1804722e0  refs=1
+
+0x1812c3be8 LF5_QuestNPC_10
+   0x180472400 FUN_180472400  refs=1
+
+0x1812c4008 IDSeal_Scene_16_QuestNPC_Li
+   0x180368660 FUN_180368660  refs=1
+
+0x1812c40b0 IDSeal_Scene_16_QuestNPC_Da
+   0x180368540 FUN_180368540  refs=1
+
+0x1812c4158 IDSeal_Scene_17_QuestNPC
+   0x1803688a0 FUN_1803688a0  refs=1
+
+0x1812c41c0 IDSeal_Scene_18_QuestNPC
+   0x180368c00 FUN_180368c00  refs=1
+
+0x1812c41f8 IDSeal_Scene_19_QuestNPC
+   0x180368f60 FUN_180368f60  refs=1
+
+0x1812c4230 IDSeal_Scene_20_QuestNPC
+   0x1803692c0 FUN_1803692c0  refs=1
+
+0x1812c4268 IDSeal_Scene_21_QuestNPC
+   0x180369740 FUN_180369740  refs=1
+
+0x1812c42d0 IDSeal_Scene_22_QuestNPC
+   0x180369980 FUN_180369980  refs=1
+
+0x1812c5ee0 LDF4_Advance_QuestArea_01
+   0x1803f5f00 FUN_1803f5f00  refs=1
+
+0x1812fa7a0 DF6_Event_Quest_01
+   0x1800f8060 FUN_1800f8060  refs=1
+
+0x1812fa7c8 DF6_Event_Quest_02
+   0x1800f8180 FUN_1800f8180  refs=1
+
+0x1812fa7f0 DF6_Event_Quest_03
+   0x1800f82a0 FUN_1800f82a0  refs=1
+
+0x1812fa818 DF6_Event_Quest_04
+   0x1800f83c0 FUN_1800f83c0  refs=1
+
+0x1812fa840 DF6_Event_Quest_05
+   0x1800f84e0 FUN_1800f84e0  refs=1
+
+0x1812fa868 LF6_Event_Quest_01
+   0x1804a8d00 FUN_1804a8d00  refs=1
+
+0x1812fa890 LF6_Event_Quest_02
+   0x1804a8e20 FUN_1804a8e20  refs=1
+
+0x1812fa8b8 LF6_Event_Quest_03
+   0x1804a8f40 FUN_1804a8f40  refs=1
+
+0x1812fa8e0 LF6_Event_Quest_04
+   0x1804a9060 FUN_1804a9060  refs=1
+
+0x1812fa908 LF6_Event_Quest_05
+   0x1804a9180 FUN_1804a9180  refs=1
+
+0x1812fb380 IDEternity_01_QuestArea_All
+   0x1802751e0 FUN_1802751e0  refs=1
+
+0x1812fb3c0 IDEternity_01_QuestArea_Random_01
+   0x180275300 FUN_180275300  refs=1
+
+0x1812fb410 IDEternity_01_QuestArea_Random_02
+   0x180275420 FUN_180275420  refs=1
+
+0x1812fb460 IDEternity_01_QuestArea_Random_03
+   0x180275540 FUN_180275540  refs=1
+
+0x1812fb4b0 IDEternity_01_QuestArea_Random_04
+   0x180275660 FUN_180275660  refs=1
+
+0x1812fb880 DF6_Quest_Ctrl_01
+   0x18013a9c0 FUN_18013a9c0  refs=1
+
+0x1812fb8a8 DF6_Quest_Ctrl_02
+   0x18013aae0 FUN_18013aae0  refs=1
+
+0x1812fb8d0 DF6_Quest_Ctrl_03
+   0x18013ac00 FUN_18013ac00  refs=1
+
+0x1812fb8f8 DF6_Quest_Ctrl_04
+   0x18013ad20 FUN_18013ad20  refs=1
+
+0x1812fb920 DF6_Quest_Ctrl_05
+   0x18013ae40 FUN_18013ae40  refs=1
+
+0x181303200 IDDreadgion_04_DrakanRa_QuestNamed_60_Ae
+   0x1802679e0 FUN_1802679e0  refs=1
+
+0x1813106d0 Dreadgion_Quest_Li_01
+   0x180178100 FUN_180178100  refs=1
+
+0x181310700 Dreadgion_Quest_Li_02
+   0x180178220 FUN_180178220  refs=1
+
+0x181310730 Dreadgion_Quest_Da_01
+   0x180177ec0 FUN_180177ec0  refs=1
+
+0x181310760 Dreadgion_Quest_Da_02
+   0x180177fe0 FUN_180177fe0  refs=1
+
+0x181318650 IDAb1_Ere_3F_Smigol_Request_01
+   0x1801f81a0 FUN_1801f81a0  refs=1
+
+0x181318690 IDAb1_Ere_3F_Smigol_Request_02
+   0x1801f82c0 FUN_1801f82c0  refs=1
+
+0x1813186d0 IDAb1_Ere_3F_Smigol_Request_03
+   0x1801f83e0 FUN_1801f83e0  refs=1
+
+0x181318710 IDAb1_Ere_3F_Smigol_Request_04
+   0x1801f8500 FUN_1801f8500  refs=1
+
+0x181318750 IDAb1_Ere_3F_Smigol_Request_05
+   0x1801f8620 FUN_1801f8620  refs=1
+
+0x181318790 IDAb1_Ere_3F_Smigol_Request_06
+   0x1801f8740 FUN_1801f8740  refs=1
+
+0x1813187d0 IDAb1_Ere_3F_Smigol_Request_07
+   0x1801f8860 FUN_1801f8860  refs=1
+
+0x181318810 IDAb1_Ere_3F_Smigol_Request_08
+   0x1801f8980 FUN_1801f8980  refs=1
+
+0x181318850 IDAb1_Ere_3F_Smigol_Request_09
+   0x1801f8aa0 FUN_1801f8aa0  refs=1
+
+0x181318890 IDAb1_Ere_3F_Smigol_Request_10
+   0x1801f8bc0 FUN_1801f8bc0  refs=1
+
+0x1813188d0 IDAb1_Ere_3F_Smigol_Request_11
+   0x1801f8ce0 FUN_1801f8ce0  refs=1
+
+0x181318910 IDAb1_Ere_3F_Smigol_Request_12
+   0x1801f8e00 FUN_1801f8e00  refs=1
+
+0x181318950 IDAb1_Ere_3F_Smigol_Request_13
+   0x1801f8f20 FUN_1801f8f20  refs=1
+
+0x1813198e8 NoShowNPC_F6_Raid_Quest_01
+   0x18054d340 FUN_18054d340  refs=1
+
+0x181319920 NoShowNPC_F6_Raid_Quest_02
+   0x18054d460 FUN_18054d460  refs=1
+
+0x18131a6d8 F6_Quest_LF6_Start_On
+   0x1801ac4e0 FUN_1801ac4e0  refs=1
+
+0x18131a708 F6_Quest_DF6_Start_On
+   0x1801ac2a0 FUN_1801ac2a0  refs=1
+
+0x18131ad30 F6_Quest_LF6_NPCSpawn_On
+   0x1801ac3c0 FUN_1801ac3c0  refs=1
+
+0x18131ad68 F6_Quest_DF6_NPCSpawn_On
+   0x1801ac180 FUN_1801ac180  refs=1
+
+0x1813256c8 Tiamat_Down_Quest_Npc_01
+   0x1805a3f80 FUN_1805a3f80  refs=1
+
+0x181325700 Tiamat_Down_Quest_Npc_02
+   0x1805a40a0 FUN_1805a40a0  refs=1
+
+0x181325db8 QuestTimerTestAi
+   0x180556fa0 FUN_180556fa0  refs=1
+
+0x181326030 NPC_AI_DevanionQuest
+   0x180541ac0 FUN_180541ac0  refs=1
+
+0x181329ce8 LDF4a_Raid_Quest_A1
+   0x18040f9a0 FUN_18040f9a0  refs=1
+
+0x181329d10 LDF4a_Raid_Quest_A2
+   0x18040fac0 FUN_18040fac0  refs=1
+
+0x181329d38 LDF4a_Raid_Quest_B1
+   0x18040fbe0 FUN_18040fbe0  refs=1
+
+0x181329d60 LDF4a_Raid_Quest_C1
+   0x18040fd00 FUN_18040fd00  refs=1
+
+0x181330558 IDAb1_Ere_PrisonQuest01
+   0x180204e60 FUN_180204e60  refs=1
+
+0x1813305c8 IDAb1_Ere_PrisonQuest02
+   0x180204f80 FUN_180204f80  refs=1
+
+0x1813305f8 IDAb1_Ere_PrisonQuest03
+   0x1802050a0 FUN_1802050a0  refs=1
+
+0x181330628 IDAb1_Ere_PrisonQuest04
+   0x1802051c0 FUN_1802051c0  refs=1
+
+0x181330658 IDAb1_Ere_PrisonQuest05
+   0x1802052e0 FUN_1802052e0  refs=1
+
+0x181339d98 attempting to Jump Progress
+   (无引用)
+
+0x181342a70 Ab1_1131_Quest_Li
+   0x1807135f0 FUN_1807135f0  refs=1
+   0x180b42b80 FUN_180b42b80  refs=1
+
+0x181343c08 Ab1_1132_Quest_Li
+   0x180713f20 FUN_180713f20  refs=1
+   0x1808d9370 FUN_1808d9370  refs=1
+   0x180b42be0 FUN_180b42be0  refs=1
+
+0x181349280 Ab1_1131_Quest_Da
+   0x1807135c0 FUN_1807135c0  refs=1
+   0x180b42b50 FUN_180b42b50  refs=1
+
+0x1813492e8 Ab1_1132_Quest_Da
+   0x180713ef0 FUN_180713ef0  refs=1
+   0x180b42bb0 FUN_180b42bb0  refs=1
+
+0x181349670 Ab1_1141_Quest_Da
+   0x180714940 FUN_180714940  refs=1
+   0x1808d93a0 FUN_1808d93a0  refs=1
+   0x180b43030 FUN_180b43030  refs=1
+
+0x1813496b8 Ab1_1251_Quest_Da
+   0x180718030 FUN_180718030  refs=1
+   0x1808d9730 FUN_1808d9730  refs=1
+   0x180b43210 FUN_180b43210  refs=1
+
+0x18135f6f0 IDDreadgion_03_DrakanGi_QuestNamed_60_Ae
+   0x18072ff70 FUN_18072ff70  refs=1
+   0x18072ffa0 FUN_18072ffa0  refs=1
+   0x18072ffd0 FUN_18072ffd0  refs=1
+   0x180730000 FUN_180730000  refs=1
+
+0x1813611a0 LDF4a_Public_Quest_Monster_05
+   0x1807437a0 FUN_1807437a0  refs=1
+   0x1807437d0 FUN_1807437d0  refs=1
+   0x1808d48d0 FUN_1808d48d0  refs=1
+
+0x1813611e0 LDF4a_Public_Quest_Monster_08
+   0x180743800 FUN_180743800  refs=1
+   0x180743830 FUN_180743830  refs=1
+   0x1808d4900 FUN_1808d4900  refs=1
+
+0x181361220 LDF4a_Public_Quest_Monster_11
+   0x180743860 FUN_180743860  refs=1
+   0x180743890 FUN_180743890  refs=1
+   0x1808d4930 FUN_1808d4930  refs=1
+
+0x181376cb8 Corridor_L_MainQuest_E
+   0x18071cb00 FUN_18071cb00  refs=1
+   0x1808de7a0 FUN_1808de7a0  refs=1
+   0x1808de7d0 FUN_1808de7d0  refs=1
+   0x1808de800 FUN_1808de800  refs=1
+
+0x181376eb0 GAb1_Quest_E
+   0x180729340 FUN_180729340  refs=1
+   0x180729370 FUN_180729370  refs=1
+
+0x181377080 Corridor_L_PangeaQuest_E
+   0x18071cb30 FUN_18071cb30  refs=1
+   0x18071cb60 FUN_18071cb60  refs=1
+   0x1808de830 FUN_1808de830  refs=1
+   0x1808de860 FUN_1808de860  refs=1
+
+0x181377528 Corridor_D_MainQuest_E
+   0x18071ca70 FUN_18071ca70  refs=1
+   0x1808de6b0 FUN_1808de6b0  refs=1
+   0x1808de6e0 FUN_1808de6e0  refs=1
+   0x1808de710 FUN_1808de710  refs=1
+
+0x181377638 Corridor_D_PangeaQuest_E
+   0x18071caa0 FUN_18071caa0  refs=1
+   0x18071cad0 FUN_18071cad0  refs=1
+   0x1808de740 FUN_1808de740  refs=1
+   0x1808de770 FUN_1808de770  refs=1
+
+0x181379860 LDF4a_Public_Quest_Monster_02
+   0x1808d48a0 FUN_1808d48a0  refs=1
+
+0x18137b350 Ab1_1141_Quest_Li
+   0x1808d93d0 FUN_1808d93d0  refs=1
+   0x1808d9400 FUN_1808d9400  refs=1
+   0x180b43060 FUN_180b43060  refs=1
+
+0x18137b3a8 Ab1_1251_Quest_Li
+   0x1808d9760 FUN_1808d9760  refs=1
+   0x1808d9790 FUN_1808d9790  refs=1
+   0x180b43240 FUN_180b43240  refs=1
+
+0x18137b3d0 Ab1_1211_Quest_Li
+   0x1808d9490 FUN_1808d9490  refs=1
+   0x1808d94c0 FUN_1808d94c0  refs=1
+   0x180b430c0 FUN_180b430c0  refs=1
+
+0x18137b408 Ab1_1221_Quest_Li
+   0x1808d9550 FUN_1808d9550  refs=1
+   0x1808d9580 FUN_1808d9580  refs=1
+   0x180b43120 FUN_180b43120  refs=1
+
+0x18137b440 Ab1_1231_Quest_Li
+   0x1808d9610 FUN_1808d9610  refs=1
+   0x1808d9640 FUN_1808d9640  refs=1
+   0x180b43180 FUN_180b43180  refs=1
+
+0x18137b468 Ab1_1241_Quest_Li
+   0x1808d96d0 FUN_1808d96d0  refs=1
+   0x1808d9700 FUN_1808d9700  refs=1
+   0x180b431e0 FUN_180b431e0  refs=1
+
+0x18137b530 Ab1_1011_Quest_Li
+   0x1808d9250 FUN_1808d9250  refs=1
+   0x1808d9280 FUN_1808d9280  refs=1
+   0x180b42ac0 FUN_180b42ac0  refs=1
+
+0x18137bd58 Ab1_1211_Quest_Da
+   0x1808d9430 FUN_1808d9430  refs=1
+   0x1808d9460 FUN_1808d9460  refs=1
+   0x180b43090 FUN_180b43090  refs=1
+
+0x18137bd90 Ab1_1221_Quest_Da
+   0x1808d94f0 FUN_1808d94f0  refs=1
+   0x1808d9520 FUN_1808d9520  refs=1
+   0x180b430f0 FUN_180b430f0  refs=1
+
+0x18137bdb8 Ab1_1231_Quest_Da
+   0x1808d95b0 FUN_1808d95b0  refs=1
+   0x1808d95e0 FUN_1808d95e0  refs=1
+   0x180b43150 FUN_180b43150  refs=1
+
+0x18137bdf0 Ab1_1241_Quest_Da
+   0x1808d9670 FUN_1808d9670  refs=1
+   0x1808d96a0 FUN_1808d96a0  refs=1
+   0x180b431b0 FUN_180b431b0  refs=1
+
+0x18137be68 Ab1_1011_Quest_Da
+   0x1808d91f0 FUN_1808d91f0  refs=1
+   0x1808d9220 FUN_1808d9220  refs=1
+   0x180b42a90 FUN_180b42a90  refs=1
+
+0x181383b50 Q1149. failed to add quest timer.
+   (无引用)
+
+0x181383ec0 Q1364. failed to add quest timer.
+   (无引用)
+
+0x181383f50 Q1385. failed to add quest timer.
+   (无引用)
+
+0x1813843f0 Q1614. failed to add quest timer.
+   (无引用)
+
+0x1813845b0 Q1636 : the quest item was removed by unexpected way
+   (无引用)
+
+0x181384850 Q1643 : the quest item was removed by an unexpected way
+   (无引用)
+
+0x1813848c0 Q1643 : Fail to ExchangeQuestUserId - Spawned NPC
+   (无引用)
+
+0x181384f80 Q2002 NPC_Ran_1 user not found progress rollback will be done when user log on
+   (无引用)
+
+0x181385a98 Q2041 quest progress assertion
+   (无引用)
+
+0x181385c80 Q2051 - Quest user has no quest item. The item was removed by unexpected way.
+   (无引用)
+
+0x181386010 Q2061 - The quest item was removed by unexpected way.
+   (无引用)
+
+0x181386200 Q2076 - Progress Error - It should not be happened.
+   (无引用)
+
+0x181386b90 Q2333 - failed to add a quest timer
+   (无引用)
+
+0x181387260 Q2061 - Spawned NPC - Failed to ExchangeQuestUserId
+   (无引用)
+
+0x1813872d0 Q2061 - Spawned NPC - Failed to add a quest timer
+   (无引用)
+
+0x181387640 Q4004 - The quest item was removed by unexpected way.
+   (无引用)
+
+0x181387d80 Q1033 unknown progress in SuccessStep:Diomedes
+   (无引用)
+
+0x181387e20 q1036 wrong progress on success state.
+   (无引用)
+
+0x181388080 Q1041. failed to add quest timer.
+   (无引用)
+
+0x1813881f8 Q1043 quest progress assertion
+   (无引用)
+
+0x181388640 ERROR QUEST1071: NEED QUEST ITEM
+   (无引用)
+
+0x181388740 Q1073. failed to add quest timer.
+   (无引用)
+
+0x18138aff0 Q30056 - The quest item was removed by unexpected way.
+   (无引用)
+
+0x18138b130 Q30156 - The quest item was removed by unexpected way.
+   (无引用)
+
+0x18138b1c0 Q30157 - The quest item was removed by unexpected way.
+   (无引用)
+
+0x18138d9d0 Q24026 quest progress assertion
+   (无引用)
+
+0x18138da10 Q24046 - Progress Error - It should not be happened.
+   (无引用)
+
+0x18138e8d8 IDSEAL_Q_NPC_QUEST_LI_01
+   0x180b51fa0 FUN_180b51fa0  refs=1
+
+0x18138eab0 QUEST
+   (无引用)
+
+0x18138eb60 IDSEAL_Q_NOSHOW_VRITRA_QUEST
+   0x180b51f10 FUN_180b51f10  refs=1
+   0x180b51f40 FUN_180b51f40  refs=1
+
+0x18138ec28 IDSEAL_Q_NPC_QUEST_DA_01
+   0x180b51f70 FUN_180b51f70  refs=1
+
+0x181390ae8 %squest\event_quest.xml
+   (无引用)
+
+0x181390b00 Error while loading event quest xml : %s
+   (无引用)
+
+0x181390b30 event_quest
+   (无引用)
+
+0x181390b48 quest
+   (无引用)
+
+0x181391060 cs1_progress
+   (无引用)
+
+0x181391460 iquest
+   (无引用)
+
+0x1813936d0 category_progress_
+   (无引用)
+
+0x181393838 value0_progress_
+   (无引用)
+
+0x1813938b0 value1_progress_
+   (无引用)
+
+0x181393940 value2_progress_
+   (无引用)
+
+0x1813939c8 value3_progress_
+   (无引用)
+
+0x181393a48 value4_progress_
+   (无引用)
+
+0x181393ad8 value5_progress_
+   (无引用)
+
+0x181393b68 value6_progress_
+   (无引用)
+
+0x181393be8 value7_progress_
+   (无引用)
+
+0x181393c88 value8_progress_
+   (无引用)
+
+0x181393d50 value9_progress_
+   (无引用)
+
+0x181393e18 value10_progress_
+   (无引用)
+
+0x181394388 item_quest.xml
+   (无引用)
+
+0x181397468 entrance_finished_quest_cond
+   (无引用)
+
+0x181397550 entrance_acquired_quest_cond
+   (无引用)
+
+0x181397620 quest_cond_error_html
+   (无引用)
+
+0x1813977f8 progress_failure_adj
+   (无引用)
+
+0x1813978a0 progress_success_adj
+   (无引用)
+
+0x181397ef8 acquire_quest
+   (无引用)
+
+0x181397f80 acquired_quest_cond1
+   (无引用)
+
+0x181398008 acquired_quest_cond2
+   (无引用)
+
+0x1813980c8 acquired_quest_cond3
+   (无引用)
+
+0x181398190 acquired_quest_cond4
+   (无引用)
+
+0x181398238 acquired_quest_cond5
+   (无引用)
+
+0x181398318 acquired_quest_cond6
+   (无引用)
+
+0x181398408 acquired_quest_cond7
+   (无引用)
+
+0x18139a7f8 quest_ai_name
+   (无引用)
+
+0x18139a898 quest_class
+   (无引用)
+
+0x18139a940 quest_cooltime
+   (无引用)
+
+0x18139a9f0 quest_end
+   (无引用)
+
+0x18139aaa0 quest_flag
+   (无引用)
+
+0x18139ab58 quest_index
+   (无引用)
+
+0x18139abf8 quest_label
+   (无引用)
+
+0x18139acc8 quest_list
+   (无引用)
+
+0x18139ad60 quest_min_level
+   (无引用)
+
+0x18139ae10 quest_start
+   (无引用)
+
+0x18139aeb0 quest_work_item1
+   (无引用)
+
+0x18139af58 quest_work_item2
+   (无引用)
+
+0x18139aff0 quest_work_item3
+   (无引用)
+
+0x18139b078 quest_work_item4
+   (无引用)
+
+0x18139b100 questscript_area
+   (无引用)
+
+0x18139b170 quest_permitted_worlds
+   (无引用)
+
+0x18139d068 unfinished_quest_cond1
+   (无引用)
+
+0x18139d0b8 exchange_coin_quest
+   (无引用)
+
+0x18139d120 unfinished_quest_cond2
+   (无引用)
+
+0x18139d1d0 unfinished_quest_cond3
+   (无引用)
+
+0x18139d280 unfinished_quest_cond4
+   (无引用)
+
+0x18139d338 unfinished_quest_cond5
+   (无引用)
+
+0x18139d400 unfinished_quest_cond6
+   (无引用)
+
+0x18139d4c8 unfinished_quest_cond7
+   (无引用)
+
+0x18139eb68 addquest_expansion
+   (无引用)
+
+0x18139ec18 add_quest
+   (无引用)
+
+0x18139ecb8 endquest_expansion
+   (无引用)
+
+0x18139ed60 end_quest
+   (无引用)
+
+0x18139eeb8 required_quest
+   (无引用)
+
+0x18139f1a8 addquest_set
+   (无引用)
+
+0x18139f238 endquest_set
+   (无引用)
+
+0x1813a0c90 finished_quest_name
+   (无引用)
+
+0x1813a0d38 finished_quest_cond1
+   (无引用)
+
+0x1813a0dc8 finished_quest_cond2
+   (无引用)
+
+0x1813a0e80 finished_quest_cond3
+   (无引用)
+
+0x1813a0f50 finished_quest_cond4
+   (无引用)
+
+0x1813a1020 finished_quest_cond5
+   (无引用)
+
+0x1813a10c8 finished_quest_cond6
+   (无引用)
+
+0x1813a1150 finished_quest_cond7
+   (无引用)
+
+0x1813a1200 finished_quest_count1
+   (无引用)
+
+0x1813a1290 finished_quest_count2
+   (无引用)
+
+0x1813a1358 finished_quest_count3
+   (无引用)
+
+0x1813a1408 finished_quest_count4
+   (无引用)
+
+0x1813a14c8 finished_quest_count5
+   (无引用)
+
+0x1813a1590 finished_quest_count6
+   (无引用)
+
+0x1813a1640 finished_quest_count7
+   (无引用)
+
+0x1813a8a68 collect_ap_progress
+   (无引用)
+
+0x1813a8d28 collect_progress
+   (无引用)
+
+0x1813a9aa0 complete_quest
+   (无引用)
+
+0x1813ae780 quest_repeat_cycle
+   (无引用)
+
+0x1813ae818 quest_repeat_count
+   (无引用)
+
+0x1813ae8f8 max_count_limitedquest
+   (无引用)
+
+0x1813ae9c8 count_recover_limitedquest
+   (无引用)
+
+0x1813b2e58 dialog_file
+   (无引用)
+
+0x1813b4c40 mentor_quest_type
+   (无引用)
+
+0x1813b4ce0 mentor_quest_max_level
+   (无引用)
+
+0x1813b4d88 mentor_quest_min_level
+   (无引用)
+
+0x1813b8e70 noacquired_quest_cond1
+   (无引用)
+
+0x1813b8f48 noacquired_quest_cond2
+   (无引用)
+
+0x1813b9020 noacquired_quest_cond3
+   (无引用)
+
+0x1813b90f0 noacquired_quest_cond4
+   (无引用)
+
+0x1813b91c8 noacquired_quest_cond5
+   (无引用)
+
+0x1813b92a0 noacquired_quest_cond6
+   (无引用)
+
+0x1813b9358 noacquired_quest_cond7
+   (无引用)
+
+0x1813b93b0 subdialog_type
+   (无引用)
+
+0x1813b9458 subdialog_value
+   (无引用)
+
+0x1813c4e40 connection_already_in_progress
+   (无引用)
+
+0x1813c4f08 operation_in_progress
+   (无引用)
+
+0x1813c5180 connection already in progress
+   (无引用)
+
+0x1813c53f8 operation in progress
+   (无引用)
+
+0x18471f230 .?AVQuestProgressExtraInfo@@
+   (无引用)
+
+0x18471f260 .?AVIOneQuestScriptNpc@@
+   (无引用)
+
+0x18471f290 .?AVQuestProgressExtraInfo_Hunt@@
+   (无引用)
+
+0x18471f2c8 .?AVQuestProgressExtraInfo_PvP@@
+   (无引用)
+
+0x18471f300 .?AVQuestProgressExtraInfo_Talk@@
+   (无引用)
+
+0x18471f338 .?AVQuestProgressExtraInfo_ItemPlay@@
+   (无引用)
+
+0x18471f370 .?AVQuestProgressExtraInfo_CollectItem@@
+   (无引用)
+
+0x18471f3b0 .?AVQuestProgressExtraInfo_EnterArea@@
+   (无引用)
+
+0x18471f3e8 .?AVQuestProgressExtraInfo_EnterWorld@@
+   (无引用)
+
+0x18471f420 .?AVQuestProgressExtraInfo_LevelUp@@
+   (无引用)
+
+0x18471f458 .?AVQuestProgressExtraInfo_TalkFOBJ@@
+   (无引用)
+
+0x18471f4e0 .?AVISimpleEventQuest@@
+   (无引用)
+
+0x18471f508 .?AVSimpleTalkQuest@@
+   (无引用)
+
+0x18471f530 .?AVSimpleHuntQuest@@
+   (无引用)
+
+0x18471f558 .?AVSimpleCollectQuest@@
+   (无引用)
+
+0x18471f588 .?AVSimpleUseItemQuest@@
+   (无引用)
+
+0x18471f5b8 .?AVSimpleItemPlayQuest@@
+   (无引用)
+
+0x18471f5e8 .?AVSimpleSerialHuntQuest@@
+   (无引用)
+
+0x18663c4bc       <requestedPrivileges>
+   (无引用)
+
+0x18663c4d9         <requestedExecutionLevel level='asInvoker' uiAccess='false' />
+   (无引用)
+
+0x18663c521       </requestedPrivileges>
+   (无引用)

@@ -1,0 +1,90 @@
+package com.aionemu.gameserver.questEngine.definition;
+
+import com.aionemu.gameserver.questEngine.retail.RetailClientTalkChainSteps;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
+
+import org.junit.jupiter.api.Test;
+
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 临时探针（P0c-43）：24123 改道 canonical 后的编译 IR 与审计逐行。
+ * Temporary P0c-43 probe: compiled IR + audit rows for quest 24123 after the canonical reroute.
+ */
+class P0c43CanonicalResynthesisProbeTest {
+
+	private static final int QUEST_ID = 24123;
+
+	@Test
+	void dumpQuest() throws Exception {
+		QuestCatalog production = RetailQuestDriver.overlay(
+			QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader()));
+		Map<Integer, QuestDialogOrderAudit.ClientQuest> client = QuestDialogOrderAudit.readClientPages(
+			Path.of("docs/quest/client-dialog-mapping/quest-dialog-pages.csv"),
+			Path.of("docs/quest/client-dialog-mapping/quest-dialog-action-details.csv"));
+		List<QuestDialogOrderAudit.AuditRow> rows = QuestDialogOrderAudit.audit(production, client);
+		RetailClientTalkChainSteps steps;
+		try (InputStream input = getClass().getResourceAsStream(
+				"/aion/data/static_data/quest_retail/quest_client_talk_chain_steps.tsv")) {
+			steps = RetailClientTalkChainSteps.load(input);
+		}
+		CompiledQuestDefinition compiled = production.findExecutable(QUEST_ID).orElseThrow();
+		QuestDefinition definition = compiled.definition();
+		System.out.println("=== P0C43 QUEST " + QUEST_ID + " IR ===");
+		definition.transitions().stream()
+			.sorted(Comparator
+				.comparing((QuestTransition t) -> t.sourceNode(),
+					Comparator.nullsFirst(Comparator.naturalOrder()))
+				.thenComparing(t -> String.valueOf(t.priority()))
+				.thenComparing(t -> t.event().toString()))
+			.forEach(t -> System.out.println("  T src=" + t.sourceNode() + " " + t.event()
+				+ " -> " + t.targetNode() + " pri=" + t.priority() + " cond=" + t.conditions()
+				+ " act=" + t.actions() + " after=" + t.afterCommit()));
+		System.out.println("--- P0C43 NODES " + QUEST_ID + " ---");
+		definition.nodes().forEach(node -> System.out.println("  N " + node));
+		System.out.println("--- P0C43 REGISTRY ROWS " + QUEST_ID + " ---");
+		steps.blocks(QUEST_ID, "NPC_START").forEach(block -> System.out.println("  B " + block));
+		steps.blocks(QUEST_ID, "NPC_REPORT").forEach(block -> System.out.println("  B " + block));
+		System.out.println("--- P0C43 CLIENT PAGES " + QUEST_ID + " ---");
+		QuestDialogOrderAudit.ClientQuest quest = client.get(QUEST_ID);
+		quest.pages().entrySet().stream()
+			.sorted(Map.Entry.comparingByKey())
+			.forEach(entry -> System.out.println("  P " + entry.getKey()
+				+ " order=" + entry.getValue().pageOrder()
+				+ " name=" + entry.getValue().pageName()
+				+ " actions=" + entry.getValue().actions().keySet()
+				+ " unmapped=" + entry.getValue().unmappedActions().keySet()));
+		System.out.println("--- P0C43 AUDIT " + QUEST_ID + " (status\\tpage\\taction\\tpath\\treason) ---");
+		rows.stream().filter(row -> row.questId() == QUEST_ID)
+			.forEach(row -> System.out.println("  A " + String.join("\t",
+				row.auditStatus(), row.shownPage(), row.clientVisibleAction(),
+				row.actualPath(), String.valueOf(row.unresolvedReason()))));
+		System.out.println("P0C43 rows=" + rows.stream().filter(row -> row.questId() == QUEST_ID).count()
+			+ " transitions=" + definition.transitions().size()
+			+ " retention=" + manifestOf(QUEST_ID, 1) + "/" + manifestOf(QUEST_ID, 2));
+	}
+
+	/** retention 清单列（owner=1 / family=2）。 / Retention manifest column lookup. */
+	private static String manifestOf(int questId, int column) {
+		try (InputStream input = P0c43CanonicalResynthesisProbeTest.class.getResourceAsStream(
+				"/aion/data/static_data/quest_retail/retail-xml-retention.tsv")) {
+			if (input == null) {
+				return "?";
+			}
+			for (String line : new String(input.readAllBytes(), StandardCharsets.UTF_8).split("\n")) {
+				String[] parts = line.split("\t", -1);
+				if (parts.length > column && parts[0].equals(Integer.toString(questId))) {
+					return parts[column];
+				}
+			}
+		} catch (java.io.IOException ignored) {
+			return "?";
+		}
+		return "?";
+	}
+}

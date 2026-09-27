@@ -1,0 +1,68 @@
+# P0c-12：挑战任务哨兵 60 行采纳（受理 = 交付 shugo 本人，真端形状归位）
+# 判据：老 XML 全 60 行实证接取 NPC == 交付 NPC（55 同名体 + 5 行种族修正 27100 系：老接 E 侧
+# shugo，真端表交付 D 侧变体 = 5.8 种族归一）；客户端 select1 在册（对话接取页存在），无 ask_accept
+# 页 = 5.8 接取词形走标准 accept 流；item_check 全部有 collect_item（CHECK 按钮对 + collect 门，
+# 判例 4056/17100：152000204×5）；SystemGrant 边不适用（挑战任务在本服无发放 caller——dispatcher
+# 只有 faction 调用点）。投影差 = QE-051。编译器：CHALLENGE_TASK 哨兵 → requireAcquire/build 落
+# 交付 NPC 对话接取（非系统发放边）。
+# quest_id	decision	basis	-	evidence
+17100	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17101	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17102	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17103	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17104	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17105	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17107	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17109	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17111	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17113	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17115	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17117	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17119	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17121	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17123	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17125	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17127	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17129	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17131	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17133	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17135	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17137	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17139	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17141	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17143	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17145	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17147	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17149	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17151	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+17153	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27100	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27101	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27102	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27103	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27104	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27105	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27107	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27109	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27111	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27113	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27115	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27117	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27119	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27121	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27123	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27125	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27127	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27129	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27131	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27133	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27135	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27137	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27139	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27141	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27143	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27145	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27147	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27149	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27151	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection
+27153	ADOPT_RETAIL	CHALLENGE_TASK_ACCEPT_AT_REWARD	-	p0c12-probe.tsv compile OK; old XML accept NPC == reward shugo (17100: 831222==Town_shugo_Worker_05); collect gate via CHECK pair; QE-051 projection

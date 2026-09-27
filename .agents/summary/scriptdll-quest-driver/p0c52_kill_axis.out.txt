@@ -1,0 +1,33 @@
+=== KILL AXIS (retail simulated vs client gate) ===
+  13769 retailRequired=20 clientGate=5  <<< CONFLICT
+  13768 retailRequired=6 clientGate=5  <<< CONFLICT
+  13767 retailRequired=12 clientGate=5  <<< CONFLICT
+  13766 retailRequired=20 clientGate=5  <<< CONFLICT
+  13765 retailRequired=8 clientGate=5  <<< CONFLICT
+  13764 retailRequired=15 clientGate=5  <<< CONFLICT
+  13763 retailRequired=20 clientGate=5  <<< CONFLICT
+  13762 retailRequired=6 clientGate=5  <<< CONFLICT
+  13761 retailRequired=12 clientGate=5  <<< CONFLICT
+  13760 retailRequired=20 clientGate=5  <<< CONFLICT
+  13759 retailRequired=8 clientGate=5  <<< CONFLICT
+  13758 retailRequired=15 clientGate=5  <<< CONFLICT
+  13770 retailRequired=5 clientGate=12  <<< CONFLICT
+  23770 retailRequired=5 clientGate=12  <<< CONFLICT
+  23758 retailRequired=15 clientGate=null
+  23759 retailRequired=8 clientGate=5  <<< CONFLICT
+  23760 retailRequired=20 clientGate=5  <<< CONFLICT
+  23761 retailRequired=12 clientGate=5  <<< CONFLICT
+  23762 retailRequired=6 clientGate=5  <<< CONFLICT
+  23763 retailRequired=20 clientGate=5  <<< CONFLICT
+  23764 retailRequired=15 clientGate=5  <<< CONFLICT
+  23765 retailRequired=8 clientGate=5  <<< CONFLICT
+  23766 retailRequired=20 clientGate=5  <<< CONFLICT
+  23767 retailRequired=12 clientGate=5  <<< CONFLICT
+  23768 retailRequired=6 clientGate=5  <<< CONFLICT
+  23769 retailRequired=20 clientGate=5  <<< CONFLICT
+=== KILL AXIS CONFLICTS 25/26
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by lombok.permit.Permit
+WARNING: Please consider reporting this to the maintainers of class lombok.permit.Permit
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+

@@ -1,0 +1,15 @@
+# P0c-44 2482 审计行（改道后）：stage1=Sereniti(204210) / stage2=Neusa(204224) / report=Moreinen(204211) / accept=Hakon(204333)
+# status	page	action	path	reason
+PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 204333 + 1002 -> started + page 1003	
+PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 204333 + 1003 -> unaccepted + page 1004	
+PAGE_ACTION_MATCHED	1011	1007	unaccepted + NPC 204333 + 31 -> unaccepted + page 1011	
+PAGE_ACTION_MATCHED	1352	1353	started + NPC 204210 + 31 -> started + page 1352	
+PAGE_ACTION_MATCHED	1353	10000	started + NPC 204210 + 1353 -> started + page 1353	
+PAGE_ACTION_MATCHED	1693	1694	s1 + NPC 204224 + 31 -> s1 + page 1693	
+PAGE_ACTION_MATCHED	1694	10001	s1 + NPC 204224 + 1694 -> s1 + page 1694	
+PAGE_ACTION_MATCHED	2375	1009	reward + NPC 204211 + 31 -> reward + page 2375	
+PAGE_ACTION_MATCHED	2375	1009	s2 + NPC 204211 + 31 -> s2 + page 2375	
+PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 204333 + 1007 -> unaccepted + page 4	
+PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 204333 + 1007 -> unaccepted + page 4	
+TERMINAL_PAGE_REACHED	5		reward + NPC 204211 + -1 -> reward + terminal page 5	
+TERMINAL_PAGE_REACHED	5		s2 + NPC 204211 + 1009 -> reward + terminal page 5	

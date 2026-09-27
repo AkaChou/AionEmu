@@ -1,0 +1,355 @@
+package com.aionemu.gameserver.questEngine.definition;
+
+import com.aionemu.gameserver.questEngine.retail.RetailClientDialogExits;
+import com.aionemu.gameserver.questEngine.retail.RetailClientRewardNpcs;
+import com.aionemu.gameserver.questEngine.retail.RetailClientSummaryRows;
+import com.aionemu.gameserver.questEngine.retail.RetailClientTalkChainSteps;
+import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
+import com.aionemu.gameserver.questEngine.retail.RetailNpcNameIndex;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestXmlTable;
+import com.aionemu.gameserver.questEngine.retail.RetailSimpleTalkDefinitionCompiler;
+import com.aionemu.gameserver.questEngine.retail.RetailSimpleTalkTable;
+
+import org.junit.jupiter.api.Test;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
+
+/**
+ * 临时探针（P0c-40）：3 行 HOLD（21460/29070/29071）的接取对话页链——真端 IR 与 XML 侧
+ * 逐转换 dump + 双侧客户端页审计全行 dump（含 MATCHED），定位 1011→1012 按钮无路由的根因。
+ * Temporary P0c-40 probe: transition-level dump plus full (matched included) client-page audit
+ * for the three ACCEPT_DIALOG_ENTRANCE HOLD rows.
+ */
+class P0c40AcceptChainProbeTest {
+
+	private static final int[] QUEST_IDS = {21460, 29070, 29071};
+
+	private static final String NPC_DIR = "/aion/data/static_data/npcs/";
+	private static final List<String> NPC_TEMPLATES = List.of(
+		"npc_template_200000_216188.xml", "npc_template_216189_235748.xml", "npc_template_235749_247606.xml",
+		"npc_template_247607_270057.xml", "npc_template_270058_286320.xml", "npc_template_286321_800030.xml",
+		"npc_template_800031_834289.xml", "npc_template_834290_885645.xml");
+
+	@Test
+	void dumpAcceptChainTransitions() throws Exception {
+		RetailSimpleTalkTable table;
+		try (InputStream input = open("/aion/data/static_data/quest_retail/Quest_SimpleTalk.xml")) {
+			table = RetailSimpleTalkTable.load(input);
+		}
+		RetailQuestXmlTable retailTable;
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest.xml")) {
+			retailTable = RetailQuestXmlTable.load(input);
+		}
+		RetailClientDialogExits exits;
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_dialog_exits.tsv")) {
+			exits = RetailClientDialogExits.load(input);
+		}
+		RetailClientSummaryRows summaryRows;
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_summary_rows.tsv")) {
+			summaryRows = RetailClientSummaryRows.load(input);
+		}
+		RetailClientRewardNpcs clientRewardNpcs;
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_reward_npcs.tsv")) {
+			clientRewardNpcs = RetailClientRewardNpcs.load(input);
+		}
+		RetailClientTalkChainSteps chainSteps;
+		try (InputStream input = open(
+				"/aion/data/static_data/quest_retail/quest_client_talk_chain_steps.tsv")) {
+			chainSteps = RetailClientTalkChainSteps.load(input);
+		}
+		RetailNpcNameIndex npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_TEMPLATES));
+		RetailItemNameIndex itemIndex = RetailItemNameIndex.build(openAll("/aion/data/static_data/items/item/",
+			listXmlNames("/aion/data/static_data/items/item/")));
+		Map<String, Integer> randomRewards = randomRewardIds();
+		Map<Integer, Integer> nameIds = nameIds();
+
+		Map<Integer, QuestDialogOrderAudit.ClientQuest> all = QuestDialogOrderAudit.readClientPages(
+			Path.of("docs/quest/client-dialog-mapping/quest-dialog-pages.csv"),
+			Path.of("docs/quest/client-dialog-mapping/quest-dialog-action-details.csv"));
+		Map<Integer, QuestDialogOrderAudit.ClientQuest> client = new LinkedHashMap<>();
+		for (int questId : QUEST_IDS) {
+			if (all.containsKey(questId)) {
+				client.put(questId, all.get(questId));
+			}
+		}
+
+		List<CompiledQuestDefinition> definitions = new ArrayList<>();
+		for (int questId : QUEST_IDS) {
+			var entry = table.find(questId).orElse(null);
+			var meta = retailTable.find(questId).orElse(null);
+			if (entry == null || meta == null) {
+				System.out.println("RET " + questId + " MISSING-INPUT");
+				continue;
+			}
+			var metadata = RetailQuestMetadataCompiler.compile(meta, npcIndex, itemIndex, randomRewards, nameIds);
+			var outcome = RetailSimpleTalkDefinitionCompiler.compile(entry, npcIndex, metadata, exits,
+				summaryRows, clientRewardNpcs, chainSteps);
+			if (!outcome.accepted()) {
+				System.out.println("RET " + questId + " REJECTED " + outcome.rejectionCode() + " "
+					+ outcome.detail());
+				continue;
+			}
+			definitions.add(outcome.definition());
+			System.out.println("=== RET DUMP " + questId + " ===");
+			System.out.println("EXITS-select1_1=" + exits.requires(questId, RetailClientDialogExits.SELECT1_1)
+				+ " select1_1_1=" + exits.requires(questId, RetailClientDialogExits.SELECT1_1_1)
+				+ " select6=" + exits.requires(questId, RetailClientDialogExits.SELECT6)
+				+ " cutsceneTrigger=" + entry.cutsceneTrigger());
+			dump(outcome.definition().definition());
+		}
+
+		QuestCatalog retailCatalog = new ImmutableQuestCatalog(definitions);
+		QuestCatalog production = RetailQuestDriver.overlay(
+			QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader()));
+		for (int questId : QUEST_IDS) {
+			Optional<CompiledQuestDefinition> compiled = production.findExecutable(questId);
+			System.out.println("=== XML DUMP " + questId + " executable=" + compiled.isPresent() + " ===");
+			compiled.ifPresent(view -> dump(view.definition()));
+		}
+
+		System.out.println("=== AUDIT RET ===");
+		printAll("RET", QuestDialogOrderAudit.audit(retailCatalog, client));
+		System.out.println("=== AUDIT XML ===");
+		printAll("XML", QuestDialogOrderAudit.audit(production, client));
+	}
+
+	/**
+	 * 全目录爆炸半径：现生产视图下所有 1011→1012 按钮无路由行 + 页未达分布 + 逐行分类（链/单步、
+	 * NPC_START 块、客户端续页出口），用于判定编译器补 acceptContinuation 的影响面。
+	 * Full-catalog blast radius of the missing accept continuation.
+	 */
+	@Test
+	void fullCatalogBlastRadius() throws Exception {
+		RetailClientDialogExits exits;
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_dialog_exits.tsv")) {
+			exits = RetailClientDialogExits.load(input);
+		}
+		RetailClientTalkChainSteps chainSteps;
+		try (InputStream input = open(
+				"/aion/data/static_data/quest_retail/quest_client_talk_chain_steps.tsv")) {
+			chainSteps = RetailClientTalkChainSteps.load(input);
+		}
+		Map<Integer, QuestDialogOrderAudit.ClientQuest> client = QuestDialogOrderAudit.readClientPages(
+			Path.of("docs/quest/client-dialog-mapping/quest-dialog-pages.csv"),
+			Path.of("docs/quest/client-dialog-mapping/quest-dialog-action-details.csv"));
+		QuestCatalog production = RetailQuestDriver.overlay(
+			QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader()));
+		List<QuestDialogOrderAudit.AuditRow> rows = QuestDialogOrderAudit.audit(production, client);
+
+		List<QuestDialogOrderAudit.AuditRow> selectorGap = rows.stream()
+			.filter(row -> row.auditStatus().equals("EVIDENCE_REQUIRED")
+				&& "1011".equals(row.shownPage()) && "1012".equals(row.clientVisibleAction()))
+			.toList();
+		System.out.println("=== BLAST selectorGap(1011->1012) count=" + selectorGap.size() + " ===");
+		List<Integer> gapIds = selectorGap.stream().map(QuestDialogOrderAudit.AuditRow::questId)
+			.distinct().sorted().toList();
+		System.out.println("GAP-IDS " + gapIds);
+		for (int questId : gapIds) {
+			System.out.println("GAP " + questId
+				+ " hasChainRecords=" + chainSteps.has(questId)
+				+ " npcStartBlocks=" + chainSteps.blocks(questId, "NPC_START").size()
+				+ " routes=" + chainSteps.routes(questId).size()
+				+ " exit-1012=" + exits.requires(questId, RetailClientDialogExits.SELECT1_1)
+				+ " exit-1013=" + exits.requires(questId, RetailClientDialogExits.SELECT1_1_1)
+				+ " executable=" + production.findExecutable(questId).isPresent());
+		}
+		Map<String, List<Integer>> unreached = new TreeMap<>();
+		rows.stream().filter(row -> row.auditStatus().equals("CLIENT_PAGE_UNREACHED"))
+			.forEach(row -> unreached.computeIfAbsent(row.shownPage(), key -> new ArrayList<>()).add(row.questId()));
+		System.out.println("=== BLAST unreached pages (page -> count) ===");
+		unreached.forEach((page, ids) -> System.out.println("  page=" + page + " count=" + ids.size()
+			+ " first=" + ids.stream().sorted().limit(12).toList()));
+		Map<String, Integer> statuses = new TreeMap<>();
+		rows.forEach(row -> statuses.merge(row.auditStatus(), 1, Integer::sum));
+		System.out.println("=== BLAST production statuses=" + statuses + " ===");
+		for (int questId : QUEST_IDS) {
+			System.out.println("BLAST-HOST " + questId + " rows=" + rows.stream()
+				.filter(row -> row.questId() == questId).count());
+		}
+	}
+
+	/**
+	 * 新增致命行（1932/3092）根因诊断：契约门禁报出的 page 2716(select6) 按钮 1008 无路由，
+	 * 用「post-fix 目录」与「post-fix 去掉接取续页转换的目录」两侧逐行对拍。
+	 * Diagnosis for the two rows the contract gate reports as newly fatal (1932/3092).
+	 */
+	@Test
+	void introducedFatalRowDiagnosis() throws Exception {
+		int[] ids = {1932, 3092};
+		RetailSimpleTalkTable table;
+		try (InputStream input = open("/aion/data/static_data/quest_retail/Quest_SimpleTalk.xml")) {
+			table = RetailSimpleTalkTable.load(input);
+		}
+		RetailQuestXmlTable retailTable;
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest.xml")) {
+			retailTable = RetailQuestXmlTable.load(input);
+		}
+		RetailClientDialogExits exits;
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_dialog_exits.tsv")) {
+			exits = RetailClientDialogExits.load(input);
+		}
+		RetailClientSummaryRows summaryRows;
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_summary_rows.tsv")) {
+			summaryRows = RetailClientSummaryRows.load(input);
+		}
+		RetailClientRewardNpcs clientRewardNpcs;
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_reward_npcs.tsv")) {
+			clientRewardNpcs = RetailClientRewardNpcs.load(input);
+		}
+		RetailClientTalkChainSteps chainSteps;
+		try (InputStream input = open(
+				"/aion/data/static_data/quest_retail/quest_client_talk_chain_steps.tsv")) {
+			chainSteps = RetailClientTalkChainSteps.load(input);
+		}
+		RetailNpcNameIndex npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_TEMPLATES));
+		RetailItemNameIndex itemIndex = RetailItemNameIndex.build(openAll("/aion/data/static_data/items/item/",
+			listXmlNames("/aion/data/static_data/items/item/")));
+		Map<String, Integer> randomRewards = randomRewardIds();
+		Map<Integer, Integer> nameIds = nameIds();
+
+		List<CompiledQuestDefinition> post = new ArrayList<>();
+		List<CompiledQuestDefinition> pre = new ArrayList<>();
+		for (int questId : ids) {
+			var entry = table.find(questId).orElseThrow();
+			var meta = retailTable.find(questId).orElseThrow();
+			var metadata = RetailQuestMetadataCompiler.compile(meta, npcIndex, itemIndex, randomRewards, nameIds);
+			var outcome = RetailSimpleTalkDefinitionCompiler.compile(entry, npcIndex, metadata, exits,
+				summaryRows, clientRewardNpcs, chainSteps);
+			if (!outcome.accepted()) {
+				System.out.println("DIAG " + questId + " REJECTED " + outcome.rejectionCode());
+				continue;
+			}
+			post.add(outcome.definition());
+			QuestDefinition definition = outcome.definition().definition();
+			System.out.println("DIAG " + questId + " itemCheck=" + entry.itemCheck()
+				+ " exits=[select1_1=" + exits.requires(questId, RetailClientDialogExits.SELECT1_1)
+				+ " select1_1_1=" + exits.requires(questId, RetailClientDialogExits.SELECT1_1_1)
+				+ " select5_check=" + exits.requires(questId, RetailClientDialogExits.SELECT5_CHECK)
+				+ " select5_check_simple=" + exits.requires(questId, RetailClientDialogExits.SELECT5_CHECK_SIMPLE)
+				+ " select6=" + exits.requires(questId, RetailClientDialogExits.SELECT6) + "]");
+			definition.transitions().stream()
+				.filter(t -> t.event() instanceof QuestEvent.TalkToNpc talk
+					&& (talk.dialogId() == 1012 || talk.dialogId() == 1013 || talk.dialogId() == 20002
+						|| talk.dialogId() == 39 || talk.dialogId() == 1008 || talk.dialogId() == 1009))
+				.forEach(t -> System.out.println("DIAG-T " + questId + " " + t.sourceNode() + " --"
+					+ t.event() + "--> " + t.targetNode() + " pri=" + t.priority() + " cond=" + t.conditions()
+					+ " after=" + t.afterCommit()));
+		}
+		// pre-fix 仿真：post-fix 目录去掉接取续页转换（SELECT1_1/SELECT1_1_1，unaccepted 自环）。
+		for (CompiledQuestDefinition compiled : post) {
+			QuestDefinition definition = compiled.definition();
+			List<QuestTransition> kept = definition.transitions().stream()
+				.filter(t -> !(t.event() instanceof QuestEvent.TalkToNpc talk
+					&& (talk.dialogId() == 1012 || talk.dialogId() == 1013)
+					&& "unaccepted".equals(t.sourceNode())))
+				.toList();
+			pre.add(new CompiledQuestDefinition(new QuestDefinition(definition.id(), definition.version(),
+				definition.metadata(), definition.progressLayout(), definition.nodes(), kept)));
+		}
+		Map<Integer, QuestDialogOrderAudit.ClientQuest> all = QuestDialogOrderAudit.readClientPages(
+			Path.of("docs/quest/client-dialog-mapping/quest-dialog-pages.csv"),
+			Path.of("docs/quest/client-dialog-mapping/quest-dialog-action-details.csv"));
+		Map<Integer, QuestDialogOrderAudit.ClientQuest> client = new LinkedHashMap<>();
+		for (int questId : ids) {
+			client.put(questId, all.get(questId));
+		}
+		printAll("DIAG-POST", QuestDialogOrderAudit.audit(new ImmutableQuestCatalog(post), client));
+		printAll("DIAG-PRE", QuestDialogOrderAudit.audit(new ImmutableQuestCatalog(pre), client));
+	}
+
+	private static void dump(QuestDefinition definition) {
+		definition.transitions().stream()
+			.sorted(Comparator.comparing((QuestTransition t) -> t.sourceNode(), Comparator.nullsFirst(Comparator.naturalOrder())).thenComparing(t -> t.event().toString()))
+			.forEach(t -> System.out.println("  T " + t.sourceNode() + " --" + t.event() + "--> "
+				+ t.targetNode() + " pri=" + t.priority() + " cond=" + t.conditions()
+				+ " act=" + t.actions() + " after=" + t.afterCommit()));
+	}
+
+	private static void printAll(String side, List<QuestDialogOrderAudit.AuditRow> rows) {
+		Map<String, Integer> statuses = new TreeMap<>();
+		rows.forEach(row -> statuses.merge(row.auditStatus(), 1, Integer::sum));
+		System.out.println(side + " statuses=" + statuses);
+		rows.stream()
+			.sorted(Comparator.comparingInt(QuestDialogOrderAudit.AuditRow::questId)
+				.thenComparing(QuestDialogOrderAudit.AuditRow::shownPage))
+			.forEach(row -> System.out.println("  " + side + " q=" + row.questId() + " page=" + row.shownPage()
+				+ " clientAction=" + row.clientVisibleAction() + " status=" + row.auditStatus()
+				+ " path=" + row.actualPath() + " | " + row.unresolvedReason()));
+	}
+
+	private static Map<String, Integer> randomRewardIds() throws Exception {
+		Map<String, Integer> ids = new LinkedHashMap<>();
+		var document = parse(open("/aion/data/static_data/quest_random_rewards.xml"));
+		var nodes = document.getDocumentElement().getElementsByTagName("quest_random_reward");
+		for (int index = 0; index < nodes.getLength(); index++) {
+			var element = (org.w3c.dom.Element) nodes.item(index);
+			ids.put(element.getElementsByTagName("name").item(0).getTextContent().trim(),
+				Integer.parseInt(element.getElementsByTagName("id").item(0).getTextContent().trim()));
+		}
+		return ids;
+	}
+
+	private static Map<Integer, Integer> nameIds() throws Exception {
+		Map<Integer, Integer> ids = new LinkedHashMap<>();
+		for (String line : lines(open("/aion/data/static_data/quest_retail/quest_name_string_ids.tsv"))) {
+			if (line.startsWith("#") || line.isBlank()) {
+				continue;
+			}
+			String[] parts = line.split("\t");
+			ids.put(Integer.parseInt(parts[0].substring("STR_QUEST_NAME_Q".length())),
+				Integer.parseInt(parts[1]));
+		}
+		return ids;
+	}
+
+	private static List<String> listXmlNames(String dir) throws Exception {
+		var url = P0c40AcceptChainProbeTest.class.getResource(dir);
+		java.io.File[] files = new java.io.File(url.toURI()).listFiles((d, name) -> name.endsWith(".xml"));
+		return java.util.Arrays.stream(files).map(java.io.File::getName).sorted().toList();
+	}
+
+	private static List<InputStream> openAll(String dir, List<String> files) throws Exception {
+		List<InputStream> inputs = new ArrayList<>();
+		for (String file : files) {
+			inputs.add(open(dir + file));
+		}
+		return inputs;
+	}
+
+	private static org.w3c.dom.Document parse(InputStream input) throws Exception {
+		try (input) {
+			var factory = javax.xml.parsers.DocumentBuilderFactory.newInstance();
+			factory.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, true);
+			factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+			return factory.newDocumentBuilder().parse(input);
+		}
+	}
+
+	private static List<String> lines(InputStream input) throws Exception {
+		try (BufferedReader reader = new BufferedReader(
+				new InputStreamReader(input, StandardCharsets.UTF_8))) {
+			return reader.lines().toList();
+		}
+	}
+
+	private static InputStream open(String resource) throws Exception {
+		InputStream input = P0c40AcceptChainProbeTest.class.getResourceAsStream(resource);
+		if (input == null) {
+			throw new IllegalStateException("missing resource " + resource);
+		}
+		return input;
+	}
+}

@@ -1,0 +1,45 @@
+# P0c-37 客户端页可达性分区（探针 P0c37GapPartitionProbeTest 实测；audit = QuestDialogOrderAudit）
+# verdict: GENUINE_GAP = 中间对话页（SELECT 前缀页）在编译后 IR 里 CLIENT_PAGE_UNREACHED；
+#          CENSUS_OVERFLAG = 中间页已可达（阶段以单 START 节点的 var0 旗标 + 条件化路由承载），普查误报
+# quest_id	verdict	unreached_middle	unreached_other
+1324	GENUINE_GAP	2375/select5	-
+1463	CENSUS_OVERFLAG	-	-
+1471	CENSUS_OVERFLAG	-	-
+1479	GENUINE_GAP	1352/select2, 1353/select2_1, 1693/select3, 1694/select3_1	-
+2428	GENUINE_GAP	1693/select3, 1694/select3_1, 2375/select5, 2716/select6	-
+2963	CENSUS_OVERFLAG	-	-
+11001	GENUINE_GAP	1693/select3, 1694/select3_1, 2034/select4, 2035/select4_1, 2375/select5	-
+13800	CENSUS_OVERFLAG	-	-
+18035	CENSUS_OVERFLAG	-	-
+18600	CENSUS_OVERFLAG	-	-
+18806	GENUINE_GAP	2375/select5	-
+18807	GENUINE_GAP	2375/select5	-
+18809	GENUINE_GAP	1693/select3, 2375/select5	-
+19064	CENSUS_OVERFLAG	-	-
+21070	GENUINE_GAP	2375/select5	-
+21138	GENUINE_GAP	1693/select3, 1694/select3_1, 2034/select4, 2035/select4_1, 2036/select4_1_1, 2375/select5	-
+21244	CENSUS_OVERFLAG	-	-
+21460	GENUINE_GAP	2375/select5	-
+23800	CENSUS_OVERFLAG	-	-
+24120	GENUINE_GAP	1693/select3, 1694/select3_1	-
+24123	GENUINE_GAP	1352/select2, 1353/select2_1, 1693/select3	-
+24202	CENSUS_OVERFLAG	-	-
+28035	CENSUS_OVERFLAG	-	-
+28600	CENSUS_OVERFLAG	-	-
+28806	GENUINE_GAP	2375/select5	-
+28807	GENUINE_GAP	2375/select5	-
+29064	CENSUS_OVERFLAG	-	-
+29070	GENUINE_GAP	1011/select1, 1012/select1_1, 1013/select1_1_1	1003/quest_accept_1, 1004/quest_refuse_1, 4/ask_quest_accept
+29071	GENUINE_GAP	1011/select1, 1012/select1_1, 1013/select1_1_1	1003/quest_accept_1, 1004/quest_refuse_1, 4/ask_quest_accept
+30055	GENUINE_GAP	2375/select5	-
+30202	GENUINE_GAP	1693/select3, 1694/select3_1, 2375/select5	-
+30302	GENUINE_GAP	1693/select3, 1694/select3_1, 2375/select5	-
+30711	CENSUS_OVERFLAG	-	-
+30761	CENSUS_OVERFLAG	-	-
+35010	CENSUS_OVERFLAG	-	4/ask_quest_accept
+35018	CENSUS_OVERFLAG	-	4/ask_quest_accept
+35024	CENSUS_OVERFLAG	-	4/ask_quest_accept
+45011	CENSUS_OVERFLAG	-	4/ask_quest_accept
+45025	CENSUS_OVERFLAG	-	4/ask_quest_accept
+80021	CENSUS_OVERFLAG	-	1004/quest_refuse_1
+80320	CENSUS_OVERFLAG	-	-

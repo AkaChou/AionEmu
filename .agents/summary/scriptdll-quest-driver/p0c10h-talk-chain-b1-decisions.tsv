@@ -1,0 +1,187 @@
+# P0c-10h：SimpleTalk wave B 复合行裁定（B-1：16 ADOPT 含 19004 重裁定升级；其余 KEEP 留 XML）
+# quest_id	decision	basis	-	evidence
+1118	ADOPT_RETAIL	P0C10H_EQUIVALENT	-	probe-round5 equivalence
+1131	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+1152	KEEP_XML	CHAIN_SHAPE_UNSUPPORTED	-	REJECTED:COMPILATION_FAILED:UNREACHABLE_NODE: node is not reachable from the first node: complete
+1158	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=- extra=REWARD/1>TalkToNpc[npcId=203128, dialogId=10, interactionObjectId=0]>C
+1163	ADOPT_RETAIL	P0C10H_EQUIVALENT	-	probe-round5 equivalence
+1183	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+1192	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+1218	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+1220	ADOPT_RETAIL	P0C10H_EQUIVALENT	-	probe-round5 equivalence
+1323	KEEP_XML	CHAIN_NO_START_BLOCK	-	REJECTED:RETAIL_TALK_CHAIN_NO_START:no NPC_START block recorded
+1363	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+1422	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+1452	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+1469	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+1483	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+1484	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=NONE/0>TalkToNpc[npcId=204011, dialogId=1002, interactionObjectId=0]>START/0>[
+1527	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+1528	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+1540	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+1553	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+1574	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+1691	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+1721	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+1724	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+1725	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+1909	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+1918	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+1932	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+1937	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+1963	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+1964	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+1971	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=- extra=REWARD/1>TalkToNpc[npcId=203812, dialogId=12, interactionObjectId=0]>C
+2135	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+2207	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+2209	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+2247	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+2266	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=NONE/0>TalkToNpc[npcId=203654, dialogId=1002, interactionObjectId=0]>START/0>[
+2271	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=NONE/0>TalkToNpc[npcId=203557, dialogId=1002, interactionObjectId=0]>START/0>[
+2278	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+2279	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+2421	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+2458	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+2480	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=NONE/0>TalkToNpc[npcId=730019, dialogId=1002, interactionObjectId=0]>START/0>[
+2505	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+2512	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+2515	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+2523	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+2538	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=NONE/0>TalkToNpc[npcId=204805, dialogId=1002, interactionObjectId=0]>START/0>[
+2569	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+2646	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=NONE/0>TalkToNpc[npcId=204700, dialogId=1002, interactionObjectId=0]>START/0>[
+2663	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=NONE/0>TalkToNpc[npcId=204790, dialogId=1002, interactionObjectId=0]>START/0>[
+2692	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+2767	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+2901	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+2902	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+2903	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+2904	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+2912	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+2913	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+2914	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=NONE/0>TalkToNpc[npcId=204236, dialogId=1002, interactionObjectId=0]>START/0>[
+2917	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+2928	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+2953	ADOPT_RETAIL	P0C10H_EQUIVALENT	-	probe-round5 equivalence
+2954	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=COMPLETE/0>TalkToNpc[npcId=204221, dialogId=1003, interactionObjectId=0]>COMPL
+2964	KEEP_XML	CHAIN_SHAPE_UNSUPPORTED	-	REJECTED:COMPILATION_FAILED:AMBIGUOUS_TRANSITION: same event has overlapping transitions without unique priorities: TALK
+3006	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+3020	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+3023	KEEP_XML	CHAIN_NO_START_BLOCK	-	REJECTED:RETAIL_TALK_CHAIN_NO_START:no NPC_START block recorded
+3035	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+3037	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=NONE/0>TalkToNpc[npcId=798199, dialogId=1002, interactionObjectId=0]>START/0>[
+3041	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=NONE/0>TalkToNpc[npcId=700378, dialogId=1002, interactionObjectId=0]>START/0>[
+3076	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+3085	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+3086	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+3087	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=NONE/0>TalkToNpc[npcId=700419, dialogId=1002, interactionObjectId=0]>START/0>[
+3092	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+3093	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=NONE/0>TalkToNpc[npcId=203784, dialogId=1002, interactionObjectId=0]>START/0>[
+3100	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=- extra=REWARD/1>TalkToNpc[npcId=798169, dialogId=13, interactionObjectId=0]>C
+3208	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+3209	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+3218	KEEP_XML	CHAIN_SHAPE_UNSUPPORTED	-	REJECTED:COMPILATION_FAILED:AMBIGUOUS_TRANSITION: same event has overlapping transitions without unique priorities: TALK
+3319	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+3340	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+3547	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+3920	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+3961	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+3962	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+3963	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+3964	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+3965	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+3967	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+3968	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+3969	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+3970	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+3973	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+4015	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+4020	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+4052	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=NONE/0>TalkToNpc[npcId=205166, dialogId=1002, interactionObjectId=0]>START/0>[
+4208	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+4209	KEEP_XML	CHAIN_SHAPE_UNSUPPORTED	-	REJECTED:COMPILATION_FAILED:AMBIGUOUS_TRANSITION: same event has overlapping transitions without unique priorities: TALK
+4218	KEEP_XML	CHAIN_SHAPE_UNSUPPORTED	-	REJECTED:COMPILATION_FAILED:AMBIGUOUS_TRANSITION: same event has overlapping transitions without unique priorities: TALK
+4501	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+4905	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+4906	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+4920	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+4966	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+4967	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+4968	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+4969	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+11001	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+11008	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+11009	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+11010	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=NONE/0>TalkToNpc[npcId=730323, dialogId=1002, interactionObjectId=0]>START/0>[
+11026	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+11068	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+11069	ADOPT_RETAIL	P0C10H_EQUIVALENT	-	probe-round5 equivalence
+11070	ADOPT_RETAIL	P0C10H_EQUIVALENT	-	probe-round5 equivalence
+11072	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+11077	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+11103	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=NONE/0>TalkToNpc[npcId=798963, dialogId=1002, interactionObjectId=0]>START/0>[
+11105	ADOPT_RETAIL	P0C10H_EQUIVALENT	-	probe-round5 equivalence
+11106	ADOPT_RETAIL	P0C10H_EQUIVALENT	-	probe-round5 equivalence
+11117	ADOPT_RETAIL	P0C10H_EQUIVALENT	-	probe-round5 equivalence
+11139	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+11294	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+11304	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+11455	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+11458	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+11460	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=NONE/0>TalkToNpc[npcId=798985, dialogId=1002, interactionObjectId=0]>START/0>[
+13700	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=START/0>TalkToNpc[npcId=804699, dialogId=1353, interactionObjectId=0]>START/0>
+13701	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=START/0>TalkToNpc[npcId=798926, dialogId=1353, interactionObjectId=0]>START/0>
+13800	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+13809	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=- extra=REWARD/3>TalkToNpc[npcId=802427, dialogId=10, interactionObjectId=0]>C
+14121	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+14122	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+14201	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+18035	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+18210	ADOPT_RETAIL	P0C10H_EQUIVALENT	-	probe-round5 equivalence
+18600	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+18807	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+18809	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+18940	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=START/0>TalkToNpc[npcId=802431, dialogId=1353, interactionObjectId=0]>START/0>
+19004	ADOPT_RETAIL	P0C10H_EQUIVALENT	-	probe-round5 equivalence RE-ADJUDICATED from p0c10f ENTER_WORLD_EDGE (registry snapshot lacked E-record)
+19064	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+21033	KEEP_XML	CHAIN_SHAPE_UNSUPPORTED	-	REJECTED:COMPILATION_FAILED:AMBIGUOUS_TRANSITION: same event has overlapping transitions without unique priorities: TALK
+21036	ADOPT_RETAIL	P0C10H_EQUIVALENT	-	probe-round5 equivalence
+21070	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+21073	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=- extra=REWARD/1>TalkToNpc[npcId=799407, dialogId=13, interactionObjectId=0]>C
+21081	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=REWARD/2>TalkToNpc[npcId=799202, dialogId=10, interactionObjectId=0]>COMPLETE/
+21136	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+21138	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+21217	ADOPT_RETAIL	P0C10H_EQUIVALENT	-	probe-round5 equivalence
+21244	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+21296	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+21455	KEEP_XML	CHAIN_SHAPE_UNSUPPORTED	-	REJECTED:COMPILATION_FAILED:AMBIGUOUS_TRANSITION: same event has overlapping transitions without unique priorities: TALK
+21458	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+21460	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+23700	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=START/0>TalkToNpc[npcId=804719, dialogId=1353, interactionObjectId=0]>START/0>
+23701	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=START/0>TalkToNpc[npcId=799225, dialogId=1353, interactionObjectId=0]>START/0>
+23800	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+23809	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=- extra=REWARD/3>TalkToNpc[npcId=802429, dialogId=10, interactionObjectId=0]>C
+24120	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+24121	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+24150	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+24152	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+24202	KEEP_XML	CHAIN_NO_START_BLOCK	-	REJECTED:RETAIL_TALK_CHAIN_NO_START:no NPC_START block recorded
+24242	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+26990	ADOPT_RETAIL	P0C10H_EQUIVALENT	-	probe-round5 equivalence
+28035	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+28210	ADOPT_RETAIL	P0C10H_EQUIVALENT	-	probe-round5 equivalence
+28600	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+28807	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+28809	ADOPT_RETAIL	P0C10H_EQUIVALENT	-	probe-round5 equivalence
+28940	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=START/0>TalkToNpc[npcId=802433, dialogId=1353, interactionObjectId=0]>START/0>
+29064	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+29070	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+29071	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+30055	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+30202	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+30302	KEEP_XML	CHAIN_DEFERRED_COMPOUND	-	con_quest/cutscene axis pending evidence
+39003	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=START/0>TalkToNpc[npcId=800500, dialogId=1353, interactionObjectId=0]>START/0>
+49003	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=START/0>TalkToNpc[npcId=800502, dialogId=1353, interactionObjectId=0]>START/0>
+80020	KEEP_XML	CHAIN_AXIS_MISMATCH	-	retail axis counts differ from legacy XML structure
+80320	KEEP_XML	CHAIN_NO_START_BLOCK	-	REJECTED:RETAIL_TALK_CHAIN_NO_START:no NPC_START block recorded
+80752	KEEP_XML	DIFF:TRANSITION_SET	-	DIFF:transition multisets differ: missing=REWARD/1>TalkToNpc[npcId=833584, dialogId=-1, interactionObjectId=0]>REWARD/1>

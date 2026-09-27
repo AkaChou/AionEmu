@@ -1,0 +1,5 @@
+参与校验的任务: 1650
+计数器序号/上限 != CSV 守卫: 0
+param_5 != Σ limits<<6n    : 2
+  [goal ] 13912 registry=[4097] expected=1
+  [goal ] 23912 registry=[4097] expected=1

@@ -1,0 +1,8 @@
+family	rows	faction_sentinel_rows	npcfaction_covered	disabled_all_zero	uncovered_ids
+Quest_SimpleCollectItem	262	43	43	15	
+Quest_SimpleHunt	1865	231	125	89	37106,47106
+Quest_SimpleItemPlay	43	2	2	2	
+Quest_SimpleSerialHunt	16	0	0	0	
+Quest_SimpleTalk	3152	181	98	44	
+Quest_SimpleUseItem	0	0	0	0	
+Quest_CombineTask	0	0	0	0	

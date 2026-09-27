@@ -1,0 +1,68 @@
+package com.aionemu.gameserver.questEngine.definition;
+
+import com.aionemu.gameserver.questEngine.retail.RetailClientTalkChainSteps;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
+
+import org.junit.jupiter.api.Test;
+
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.util.Comparator;
+import java.util.List;
+
+/**
+ * 临时探针（P0c-53）：`DELIVER_UNCOVERED` 残留 5 项（2964 / 11106 / 21036 / 39003 / 49003）的
+ * 生产视图逐条取证——领奖窗页（page 5）在**哪些 NPC** 上被下发、领奖选择动作（SELECTED_QUEST_REWARD*）
+ * 与完成动作（SELECT_QUEST_REWARD / USE_OBJECT）绑在哪个 NPC，用来判定"阶段 NPC 上的领奖窗"是
+ * 死页（按钮无路由）还是可完成（绕过交付 NPC）。
+ * Temporary P0c-53 probe: per-NPC binding of the reward window page and reward-completion handlers.
+ */
+class P0c53DeliverUncoveredProbeTest {
+
+	private static final int[] QUESTS = {2964, 11106, 21036, 39003, 49003};
+
+	@Test
+	void dumpQuests() throws Exception {
+		QuestCatalog production = RetailQuestDriver.overlay(
+			QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader()));
+		List<QuestDialogOrderAudit.AuditRow> rows = QuestDialogOrderAudit.audit(production,
+			QuestDialogOrderAudit.readClientPages(
+				Path.of("docs/quest/client-dialog-mapping/quest-dialog-pages.csv"),
+				Path.of("docs/quest/client-dialog-mapping/quest-dialog-action-details.csv")));
+		RetailClientTalkChainSteps steps;
+		try (InputStream input = getClass().getResourceAsStream(
+				"/aion/data/static_data/quest_retail/quest_client_talk_chain_steps.tsv")) {
+			steps = RetailClientTalkChainSteps.load(input);
+		}
+		for (int questId : QUESTS) {
+			QuestDefinition definition = production.findExecutable(questId).orElseThrow().definition();
+			System.out.println("=== P0C53 QUEST " + questId + " ===");
+			System.out.println("--- AUDIT (status\tpage\taction\tpath\treason) ---");
+			rows.stream().filter(row -> row.questId() == questId)
+				.forEach(row -> System.out.println("  A " + String.join("\t",
+					String.valueOf(row.auditStatus()), row.shownPage(), row.clientVisibleAction(),
+					row.actualPath(), String.valueOf(row.unresolvedReason()))));
+			System.out.println("--- TRANSITIONS（event → 目标；actions / afterCommit）---");
+			definition.transitions().stream()
+				.sorted(Comparator
+					.comparing((QuestTransition t) -> String.valueOf(t.sourceNode()))
+					.thenComparing(t -> String.valueOf(t.priority()))
+					.thenComparing(t -> t.event().toString()))
+				.forEach(t -> System.out.println("  T " + t.sourceNode() + " | " + t.event()
+					+ " -> " + t.targetNode() + " pri=" + t.priority()
+					+ " | acts=" + t.actions() + " | after=" + t.afterCommit()));
+			System.out.println("--- 领奖窗页（dialogId=5）与领奖动作的 NPC 绑定 ---");
+			definition.transitions().stream()
+				.filter(t -> t.actions().toString().contains("dialogId=5")
+					|| t.afterCommit().toString().contains("dialogId=5")
+					|| t.actions().stream().anyMatch(a -> a.toString().contains("QuestReward"))
+					|| t.event().toString().contains("SelectQuestReward"))
+				.forEach(t -> System.out.println("  W " + t.sourceNode() + " | " + t.event()
+					+ " -> " + t.targetNode() + " | acts=" + t.actions() + " | after=" + t.afterCommit()));
+			System.out.println("--- BLOCKS ---");
+			for (String block : List.of("NPC_START", "NPC_REPORT", "NPC_COMPLETE")) {
+				steps.blocks(questId, block).forEach(record -> System.out.println("  B " + record));
+			}
+		}
+	}
+}

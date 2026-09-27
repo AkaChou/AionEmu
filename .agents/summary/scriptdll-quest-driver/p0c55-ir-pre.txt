@@ -1,0 +1,567 @@
+### quest 1323 accepted=true rejection=null
+L	BitField[name=var0, offset=0, width=6, minValue=0, maxValue=63, persistence=PERSISTENT, scope=LOCAL]
+N	COMPLETE/2
+N	NONE/0
+N	REWARD/2
+N	START/0
+N	START/1
+T	NONE/0>TalkToNpc[npcId=730032, dialogId=-1, interactionObjectId=0]>NONE/0>[]>[GiveItem[itemId=182201309, count=1]]>[ShowQuestDialog[dialogId=1011]]>-
+T	NONE/0>TalkToNpc[npcId=730032, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=730032, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=730032, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=730032, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	REWARD/2>TalkToNpc[npcId=203939, dialogId=-1, interactionObjectId=0]>REWARD/2>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	REWARD/2>TalkToNpc[npcId=203939, dialogId=10, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=2550, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=100097, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203939, dialogId=10000, interactionObjectId=0]>REWARD/2>[]>[]>[CloseDialog[]]>-
+T	REWARD/2>TalkToNpc[npcId=203939, dialogId=1009, interactionObjectId=0]>REWARD/2>[]>[]>[ShowQuestDialog[dialogId=5]]>-
+T	REWARD/2>TalkToNpc[npcId=203939, dialogId=11, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=2550, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=100097, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203939, dialogId=12, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=2550, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=100097, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203939, dialogId=13, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=2550, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=100097, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203939, dialogId=1353, interactionObjectId=0]>REWARD/2>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	REWARD/2>TalkToNpc[npcId=203939, dialogId=14, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=2550, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=100097, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203939, dialogId=15, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=2550, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=100097, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203939, dialogId=16, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=2550, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=100097, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203939, dialogId=17, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=2550, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=100097, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203939, dialogId=18, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=2550, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=100097, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203939, dialogId=19, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=2550, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=100097, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203939, dialogId=20, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=2550, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=100097, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203939, dialogId=21, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=2550, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=100097, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203939, dialogId=22, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=2550, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=100097, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203939, dialogId=23, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=2550, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=100097, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203939, dialogId=8, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=2550, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=100097, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203939, dialogId=9, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=2550, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=100097, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=730019, dialogId=10000, interactionObjectId=0]>START/1>[]>[]>[SyncQuestState[mode=PACKET_ONLY], CloseDialog[]]>-
+T	START/0>TalkToNpc[npcId=730019, dialogId=1353, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/0>TalkToNpc[npcId=730019, dialogId=31, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	START/0>TalkToNpc[npcId=730032, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[CloseDialog[]]>-
+T	START/1>TalkToNpc[npcId=203939, dialogId=1009, interactionObjectId=0]>REWARD/2>[]>[RemoveItem[itemId=182201309, count=1]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH], ShowQuestDialog[dialogId=5]]>-
+T	START/1>TalkToNpc[npcId=203939, dialogId=31, interactionObjectId=0]>START/1>[]>[]>[ShowQuestDialog[dialogId=2375]]>-
+T	null>EnterWorld[]>REWARD/2>[StatusIs[status=REWARD], QuestVariableIs[field=var0, value=0]]>[SetVariable[field=var0, value=2]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH]]>-
+### quest 1394 accepted=true rejection=null
+L	BitField[name=var0, offset=0, width=6, minValue=0, maxValue=63, persistence=PERSISTENT, scope=LOCAL]
+N	COMPLETE/2
+N	NONE/0
+N	REWARD/2
+N	START/0
+N	START/1
+N	START/2
+T	NONE/0>TalkToNpc[npcId=204041, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=204041, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=204041, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=204041, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=204041, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=204041, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=204041, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=204041, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	REWARD/2>TalkToNpc[npcId=203941, dialogId=-1, interactionObjectId=0]>REWARD/2>[]>[]>[ShowQuestDialog[dialogId=5]]>-
+T	REWARD/2>TalkToNpc[npcId=203941, dialogId=10, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=8730, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=806224, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=164000079, amount=2, amountMode=EXACT], GrantReward[kind=ITEM, id=186000003, amount=2, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203941, dialogId=1009, interactionObjectId=0]>REWARD/2>[]>[]>[ShowQuestDialog[dialogId=5]]>-
+T	REWARD/2>TalkToNpc[npcId=203941, dialogId=11, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=8730, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=806224, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=164000079, amount=2, amountMode=EXACT], GrantReward[kind=ITEM, id=186000003, amount=2, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203941, dialogId=12, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=8730, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=806224, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=164000079, amount=2, amountMode=EXACT], GrantReward[kind=ITEM, id=186000003, amount=2, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203941, dialogId=13, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=8730, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=806224, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=164000079, amount=2, amountMode=EXACT], GrantReward[kind=ITEM, id=186000003, amount=2, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203941, dialogId=14, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=8730, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=806224, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=164000079, amount=2, amountMode=EXACT], GrantReward[kind=ITEM, id=186000003, amount=2, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203941, dialogId=15, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=8730, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=806224, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=164000079, amount=2, amountMode=EXACT], GrantReward[kind=ITEM, id=186000003, amount=2, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203941, dialogId=16, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=8730, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=806224, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=164000079, amount=2, amountMode=EXACT], GrantReward[kind=ITEM, id=186000003, amount=2, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203941, dialogId=17, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=8730, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=806224, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=164000079, amount=2, amountMode=EXACT], GrantReward[kind=ITEM, id=186000003, amount=2, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203941, dialogId=18, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=8730, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=806224, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=164000079, amount=2, amountMode=EXACT], GrantReward[kind=ITEM, id=186000003, amount=2, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203941, dialogId=19, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=8730, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=806224, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=164000079, amount=2, amountMode=EXACT], GrantReward[kind=ITEM, id=186000003, amount=2, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203941, dialogId=20, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=8730, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=806224, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=164000079, amount=2, amountMode=EXACT], GrantReward[kind=ITEM, id=186000003, amount=2, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203941, dialogId=21, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=8730, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=806224, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=164000079, amount=2, amountMode=EXACT], GrantReward[kind=ITEM, id=186000003, amount=2, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203941, dialogId=22, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=8730, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=806224, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=164000079, amount=2, amountMode=EXACT], GrantReward[kind=ITEM, id=186000003, amount=2, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203941, dialogId=23, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=8730, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=806224, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=164000079, amount=2, amountMode=EXACT], GrantReward[kind=ITEM, id=186000003, amount=2, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203941, dialogId=8, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=8730, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=806224, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=164000079, amount=2, amountMode=EXACT], GrantReward[kind=ITEM, id=186000003, amount=2, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=203941, dialogId=9, interactionObjectId=0]>COMPLETE/2>[]>[GrantReward[kind=GOLD, id=0, amount=8730, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=806224, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=164000079, amount=2, amountMode=EXACT], GrantReward[kind=ITEM, id=186000003, amount=2, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=204039, dialogId=-1, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	START/0>TalkToNpc[npcId=204039, dialogId=10000, interactionObjectId=0]>START/1>[]>[]>[SyncQuestState[mode=PACKET_ONLY], CloseDialog[]]>-
+T	START/0>TalkToNpc[npcId=204039, dialogId=1353, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/0>TalkToNpc[npcId=204039, dialogId=31, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	START/0>TalkToNpc[npcId=204041, dialogId=10000, interactionObjectId=0]>START/1>[]>[]>[SyncQuestState[mode=PACKET_ONLY], CloseDialog[]]>-
+T	START/0>TalkToNpc[npcId=204041, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=204041, dialogId=1353, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/0>TalkToNpc[npcId=204041, dialogId=31, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	START/1>TalkToNpc[npcId=203946, dialogId=-1, interactionObjectId=0]>START/1>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	START/1>TalkToNpc[npcId=203946, dialogId=10000, interactionObjectId=0]>START/2>[]>[]>[SyncQuestState[mode=PACKET_ONLY], CloseDialog[]]>-
+T	START/1>TalkToNpc[npcId=203946, dialogId=1353, interactionObjectId=0]>START/1>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/1>TalkToNpc[npcId=203946, dialogId=31, interactionObjectId=0]>START/1>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	START/2>TalkToNpc[npcId=203941, dialogId=10000, interactionObjectId=0]>REWARD/2>[]>[]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH], ShowQuestDialog[dialogId=5]]>-
+T	START/2>TalkToNpc[npcId=203941, dialogId=1009, interactionObjectId=0]>REWARD/2>[]>[]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH], ShowQuestDialog[dialogId=5]]>-
+T	START/2>TalkToNpc[npcId=203941, dialogId=1353, interactionObjectId=0]>START/2>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/2>TalkToNpc[npcId=203941, dialogId=31, interactionObjectId=0]>START/2>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	null>EnterWorld[]>REWARD/2>[StatusIs[status=REWARD], QuestVariableIs[field=var0, value=0]]>[SetVariable[field=var0, value=2]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH]]>-
+### quest 1484 accepted=true rejection=null
+L	BitField[name=var0, offset=0, width=6, minValue=0, maxValue=63, persistence=PERSISTENT, scope=LOCAL]
+N	COMPLETE/0
+N	NONE/0
+N	REWARD/3
+N	START/0
+N	START/1
+N	START/2
+T	NONE/0>TalkToNpc[npcId=204011, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=204011, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=204011, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=204011, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=204011, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=204011, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=204011, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=204011, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	NONE/0>TalkToNpc[npcId=204045, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=204045, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=204045, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=204045, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=204045, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=204045, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=204045, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=204045, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	NONE/0>TalkToNpc[npcId=204048, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=204048, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=204048, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=204048, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=204048, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=204048, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=204048, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=204048, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	NONE/0>TalkToNpc[npcId=798126, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=798126, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=798126, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798126, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=798126, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=798126, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798126, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798126, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	NONE/0>TalkToNpc[npcId=798127, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=798127, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=798127, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798127, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=798127, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=798127, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798127, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798127, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	REWARD/3>TalkToNpc[npcId=798126, dialogId=-1, interactionObjectId=0]>REWARD/3>[]>[]>[ShowQuestDialog[dialogId=5]]>-
+T	REWARD/3>TalkToNpc[npcId=798126, dialogId=10, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=26930, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=136650, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798126, dialogId=1009, interactionObjectId=0]>REWARD/3>[]>[]>[ShowQuestDialog[dialogId=5]]>-
+T	REWARD/3>TalkToNpc[npcId=798126, dialogId=11, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=26930, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=136650, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798126, dialogId=12, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=26930, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=136650, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798126, dialogId=13, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=26930, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=136650, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798126, dialogId=14, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=26930, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=136650, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798126, dialogId=15, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=26930, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=136650, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798126, dialogId=16, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=26930, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=136650, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798126, dialogId=17, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=26930, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=136650, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798126, dialogId=18, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=26930, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=136650, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798126, dialogId=19, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=26930, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=136650, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798126, dialogId=20, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=26930, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=136650, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798126, dialogId=21, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=26930, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=136650, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798126, dialogId=22, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=26930, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=136650, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798126, dialogId=23, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=26930, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=136650, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798126, dialogId=8, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=26930, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=136650, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798126, dialogId=9, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=26930, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=136650, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000002, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=204011, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=204045, dialogId=10000, interactionObjectId=0]>START/1>[]>[GiveItem[itemId=182201403, count=1]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH], CloseDialog[]]>-
+T	START/0>TalkToNpc[npcId=204045, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=204045, dialogId=1353, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/0>TalkToNpc[npcId=204045, dialogId=31, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	START/0>TalkToNpc[npcId=204048, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=798126, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=798126, dialogId=31, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=10002]]>-
+T	START/0>TalkToNpc[npcId=798127, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=798127, dialogId=31, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=10002]]>-
+T	START/1>TalkToNpc[npcId=204048, dialogId=10000, interactionObjectId=0]>START/2>[]>[GiveItem[itemId=182201404, count=1]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH], CloseDialog[]]>-
+T	START/1>TalkToNpc[npcId=204048, dialogId=1353, interactionObjectId=0]>START/1>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/1>TalkToNpc[npcId=204048, dialogId=31, interactionObjectId=0]>START/1>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	START/2>TalkToNpc[npcId=204011, dialogId=10000, interactionObjectId=0]>REWARD/3>[]>[GiveItem[itemId=182201405, count=1]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH], CloseDialog[]]>-
+T	START/2>TalkToNpc[npcId=204011, dialogId=1353, interactionObjectId=0]>START/2>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/2>TalkToNpc[npcId=204011, dialogId=31, interactionObjectId=0]>START/2>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	null>EnterWorld[]>REWARD/3>[StatusIs[status=REWARD], QuestVariableIs[field=var0, value=0]]>[SetVariable[field=var0, value=3]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH]]>-
+### quest 2480 accepted=true rejection=null
+L	BitField[name=var0, offset=0, width=6, minValue=0, maxValue=63, persistence=PERSISTENT, scope=LOCAL]
+N	COMPLETE/0
+N	NONE/0
+N	REWARD/2
+N	START/0
+N	START/1
+T	NONE/0>TalkToNpc[npcId=730019, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=730019, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=730019, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=730019, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=730019, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=730019, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=730019, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=730019, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	NONE/0>TalkToNpc[npcId=730021, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=730021, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=730021, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=730021, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=730021, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=730021, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=730021, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=730021, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	NONE/0>TalkToNpc[npcId=730038, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=730038, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=730038, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=730038, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=730038, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=730038, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=730038, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=730038, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	REWARD/2>TalkToNpc[npcId=730038, dialogId=-1, interactionObjectId=0]>REWARD/2>[]>[]>[ShowQuestDialog[dialogId=5]]>-
+T	REWARD/2>TalkToNpc[npcId=730038, dialogId=10, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=142950, amountMode=QUEST_BASE], GrantReward[kind=AP, id=0, amount=100, amountMode=QUEST_BASE], GrantReward[kind=TITLE, id=67, amount=1, amountMode=EXACT], GrantReward[kind=ITEM, id=186000469, amount=2, amountMode=EXACT], GrantReward[kind=ITEM, id=110500786, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=730038, dialogId=1009, interactionObjectId=0]>REWARD/2>[]>[]>[ShowQuestDialog[dialogId=5]]>-
+T	REWARD/2>TalkToNpc[npcId=730038, dialogId=11, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=142950, amountMode=QUEST_BASE], GrantReward[kind=AP, id=0, amount=100, amountMode=QUEST_BASE], GrantReward[kind=TITLE, id=67, amount=1, amountMode=EXACT], GrantReward[kind=ITEM, id=186000469, amount=2, amountMode=EXACT], GrantReward[kind=ITEM, id=110600772, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=730038, dialogId=8, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=142950, amountMode=QUEST_BASE], GrantReward[kind=AP, id=0, amount=100, amountMode=QUEST_BASE], GrantReward[kind=TITLE, id=67, amount=1, amountMode=EXACT], GrantReward[kind=ITEM, id=186000469, amount=2, amountMode=EXACT], GrantReward[kind=ITEM, id=110100861, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=730038, dialogId=9, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=142950, amountMode=QUEST_BASE], GrantReward[kind=AP, id=0, amount=100, amountMode=QUEST_BASE], GrantReward[kind=TITLE, id=67, amount=1, amountMode=EXACT], GrantReward[kind=ITEM, id=186000469, amount=2, amountMode=EXACT], GrantReward[kind=ITEM, id=110300816, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=730019, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=730021, dialogId=10000, interactionObjectId=0]>START/1>[]>[GiveItem[itemId=182204201, count=1]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH], CloseDialog[]]>-
+T	START/0>TalkToNpc[npcId=730021, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=730021, dialogId=1353, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/0>TalkToNpc[npcId=730021, dialogId=31, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	START/0>TalkToNpc[npcId=730038, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=730038, dialogId=31, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=10002]]>-
+T	START/1>TalkToNpc[npcId=730019, dialogId=10000, interactionObjectId=0]>REWARD/2>[]>[GiveItem[itemId=182204202, count=1]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH], CloseDialog[]]>-
+T	START/1>TalkToNpc[npcId=730019, dialogId=1353, interactionObjectId=0]>START/1>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/1>TalkToNpc[npcId=730019, dialogId=31, interactionObjectId=0]>START/1>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	null>EnterWorld[]>REWARD/2>[StatusIs[status=REWARD], QuestVariableIs[field=var0, value=0]]>[SetVariable[field=var0, value=2]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH]]>-
+### quest 2538 accepted=true rejection=null
+L	BitField[name=var0, offset=0, width=6, minValue=0, maxValue=63, persistence=PERSISTENT, scope=LOCAL]
+N	COMPLETE/0
+N	NONE/0
+N	REWARD/3
+N	START/0
+N	START/1
+N	START/2
+T	NONE/0>TalkToNpc[npcId=204805, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=204805, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=204805, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=204805, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=204805, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=204805, dialogId=1012, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1012]]>-
+T	NONE/0>TalkToNpc[npcId=204805, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=204805, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=204805, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	NONE/0>TalkToNpc[npcId=204827, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=204827, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=204827, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=204827, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=204827, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=204827, dialogId=1012, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1012]]>-
+T	NONE/0>TalkToNpc[npcId=204827, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=204827, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=204827, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	NONE/0>TalkToNpc[npcId=790002, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=790002, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=790002, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=790002, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=790002, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=790002, dialogId=1012, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1012]]>-
+T	NONE/0>TalkToNpc[npcId=790002, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=790002, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=790002, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	REWARD/3>TalkToNpc[npcId=204827, dialogId=-1, interactionObjectId=0]>REWARD/3>[]>[]>[ShowQuestDialog[dialogId=5]]>-
+T	REWARD/3>TalkToNpc[npcId=204827, dialogId=10, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=27220, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1496758, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162000023, amount=30, amountMode=EXACT], GrantReward[kind=ITEM, id=113501084, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=204827, dialogId=1009, interactionObjectId=0]>REWARD/3>[]>[]>[ShowQuestDialog[dialogId=5]]>-
+T	REWARD/3>TalkToNpc[npcId=204827, dialogId=11, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=27220, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1496758, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162000023, amount=30, amountMode=EXACT], GrantReward[kind=ITEM, id=113601049, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=204827, dialogId=12, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=27220, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1496758, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162000023, amount=30, amountMode=EXACT], GrantReward[kind=ITEM, id=113501599, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=204827, dialogId=8, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=27220, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1496758, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162000023, amount=30, amountMode=EXACT], GrantReward[kind=ITEM, id=113101105, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=204827, dialogId=9, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=27220, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1496758, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162000023, amount=30, amountMode=EXACT], GrantReward[kind=ITEM, id=113301108, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=204805, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=204827, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=204827, dialogId=31, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=10002]]>-
+T	START/0>TalkToNpc[npcId=790002, dialogId=10000, interactionObjectId=0]>START/1>[]>[]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH], CloseDialog[]]>-
+T	START/0>TalkToNpc[npcId=790002, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=790002, dialogId=1353, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/0>TalkToNpc[npcId=790002, dialogId=31, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	START/1>TalkToNpc[npcId=204805, dialogId=10000, interactionObjectId=0]>START/2>[]>[GiveItem[itemId=182204517, count=1]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH], CloseDialog[]]>-
+T	START/1>TalkToNpc[npcId=204805, dialogId=1353, interactionObjectId=0]>START/1>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/1>TalkToNpc[npcId=204805, dialogId=31, interactionObjectId=0]>START/1>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	START/2>TalkToNpc[npcId=790002, dialogId=10000, interactionObjectId=0]>REWARD/3>[]>[RemoveItem[itemId=182204517, count=1], GiveItem[itemId=182204518, count=1]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH], CloseDialog[]]>-
+T	START/2>TalkToNpc[npcId=790002, dialogId=1353, interactionObjectId=0]>START/2>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/2>TalkToNpc[npcId=790002, dialogId=31, interactionObjectId=0]>START/2>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	null>EnterWorld[]>REWARD/3>[StatusIs[status=REWARD], QuestVariableIs[field=var0, value=0]]>[SetVariable[field=var0, value=3]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH]]>-
+### quest 3093 accepted=true rejection=null
+L	BitField[name=var0, offset=0, width=6, minValue=0, maxValue=63, persistence=PERSISTENT, scope=LOCAL]
+N	COMPLETE/0
+N	NONE/0
+N	REWARD/3
+N	START/0
+N	START/1
+N	START/2
+T	NONE/0>TalkToNpc[npcId=203784, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=203784, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=203784, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=203784, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=203784, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=203784, dialogId=1012, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1012]]>-
+T	NONE/0>TalkToNpc[npcId=203784, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=203784, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=203784, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	NONE/0>TalkToNpc[npcId=798177, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=798177, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=798177, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798177, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=798177, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=798177, dialogId=1012, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1012]]>-
+T	NONE/0>TalkToNpc[npcId=798177, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798177, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798177, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	NONE/0>TalkToNpc[npcId=798179, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=798179, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=798179, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798179, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=798179, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=798179, dialogId=1012, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1012]]>-
+T	NONE/0>TalkToNpc[npcId=798179, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798179, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798179, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	NONE/0>TalkToNpc[npcId=798185, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=798185, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=798185, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798185, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=798185, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=798185, dialogId=1012, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1012]]>-
+T	NONE/0>TalkToNpc[npcId=798185, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798185, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798185, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	REWARD/3>TalkToNpc[npcId=798185, dialogId=-1, interactionObjectId=0]>REWARD/3>[]>[]>[ShowQuestDialog[dialogId=5]]>-
+T	REWARD/3>TalkToNpc[npcId=798185, dialogId=10, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=35280, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1112775, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798185, dialogId=1009, interactionObjectId=0]>REWARD/3>[]>[]>[ShowQuestDialog[dialogId=5]]>-
+T	REWARD/3>TalkToNpc[npcId=798185, dialogId=11, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=35280, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1112775, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798185, dialogId=12, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=35280, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1112775, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798185, dialogId=13, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=35280, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1112775, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798185, dialogId=14, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=35280, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1112775, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798185, dialogId=15, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=35280, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1112775, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798185, dialogId=16, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=35280, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1112775, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798185, dialogId=17, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=35280, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1112775, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798185, dialogId=18, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=35280, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1112775, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798185, dialogId=19, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=35280, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1112775, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798185, dialogId=20, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=35280, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1112775, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798185, dialogId=21, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=35280, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1112775, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798185, dialogId=22, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=35280, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1112775, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798185, dialogId=23, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=35280, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1112775, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798185, dialogId=8, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=35280, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1112775, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=798185, dialogId=9, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=35280, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1112775, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=203784, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=798177, dialogId=10000, interactionObjectId=0]>START/1>[]>[]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH], CloseDialog[]]>-
+T	START/0>TalkToNpc[npcId=798177, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=798177, dialogId=1353, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/0>TalkToNpc[npcId=798177, dialogId=31, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	START/0>TalkToNpc[npcId=798179, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=798185, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=798185, dialogId=31, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=10002]]>-
+T	START/1>TalkToNpc[npcId=798179, dialogId=10000, interactionObjectId=0]>START/2>[]>[GiveItem[itemId=182208052, count=1]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH], CloseDialog[]]>-
+T	START/1>TalkToNpc[npcId=798179, dialogId=1353, interactionObjectId=0]>START/1>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/1>TalkToNpc[npcId=798179, dialogId=31, interactionObjectId=0]>START/1>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	START/2>TalkToNpc[npcId=203784, dialogId=10000, interactionObjectId=0]>REWARD/3>[]>[RemoveItem[itemId=182208052, count=1]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH], CloseDialog[]]>-
+T	START/2>TalkToNpc[npcId=203784, dialogId=1353, interactionObjectId=0]>START/2>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/2>TalkToNpc[npcId=203784, dialogId=31, interactionObjectId=0]>START/2>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	null>EnterWorld[]>REWARD/3>[StatusIs[status=REWARD], QuestVariableIs[field=var0, value=0]]>[SetVariable[field=var0, value=3]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH]]>-
+### quest 4052 accepted=true rejection=null
+L	BitField[name=var0, offset=0, width=6, minValue=0, maxValue=63, persistence=PERSISTENT, scope=LOCAL]
+N	COMPLETE/0
+N	NONE/0
+N	REWARD/3
+N	START/0
+N	START/1
+N	START/2
+T	NONE/0>TalkToNpc[npcId=205166, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=205166, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=205166, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=205166, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=205166, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=205166, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=205166, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=205166, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	NONE/0>TalkToNpc[npcId=205179, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=205179, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=205179, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=205179, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=205179, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=205179, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=205179, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=205179, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	NONE/0>TalkToNpc[npcId=205197, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=205197, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=205197, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=205197, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=205197, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=205197, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=205197, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=205197, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	NONE/0>TalkToNpc[npcId=730152, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=730152, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=730152, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=730152, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=730152, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=730152, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=730152, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=730152, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	REWARD/3>TalkToNpc[npcId=730152, dialogId=-1, interactionObjectId=0]>REWARD/3>[]>[]>[ShowQuestDialog[dialogId=5]]>-
+T	REWARD/3>TalkToNpc[npcId=730152, dialogId=10, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=7283931, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000019, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=730152, dialogId=1009, interactionObjectId=0]>REWARD/3>[]>[]>[ShowQuestDialog[dialogId=5]]>-
+T	REWARD/3>TalkToNpc[npcId=730152, dialogId=11, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=7283931, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000019, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=730152, dialogId=12, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=7283931, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000019, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=730152, dialogId=13, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=7283931, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000019, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=730152, dialogId=14, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=7283931, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000019, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=730152, dialogId=15, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=7283931, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000019, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=730152, dialogId=16, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=7283931, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000019, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=730152, dialogId=17, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=7283931, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000019, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=730152, dialogId=18, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=7283931, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000019, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=730152, dialogId=19, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=7283931, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000019, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=730152, dialogId=20, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=7283931, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000019, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=730152, dialogId=21, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=7283931, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000019, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=730152, dialogId=22, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=7283931, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000019, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=730152, dialogId=23, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=7283931, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000019, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=730152, dialogId=8, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=7283931, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000019, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=730152, dialogId=9, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=7283931, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000019, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=205166, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=205179, dialogId=10000, interactionObjectId=0]>START/1>[]>[]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH], CloseDialog[]]>-
+T	START/0>TalkToNpc[npcId=205179, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=205179, dialogId=1353, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/0>TalkToNpc[npcId=205179, dialogId=31, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	START/0>TalkToNpc[npcId=205197, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=730152, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=730152, dialogId=31, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=10002]]>-
+T	START/1>TalkToNpc[npcId=205166, dialogId=10000, interactionObjectId=0]>START/2>[]>[GiveItem[itemId=182209030, count=1]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH], CloseDialog[]]>-
+T	START/1>TalkToNpc[npcId=205166, dialogId=1353, interactionObjectId=0]>START/1>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/1>TalkToNpc[npcId=205166, dialogId=31, interactionObjectId=0]>START/1>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	START/2>TalkToNpc[npcId=205197, dialogId=10000, interactionObjectId=0]>REWARD/3>[]>[RemoveItem[itemId=182209030, count=1]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH], CloseDialog[]]>-
+T	START/2>TalkToNpc[npcId=205197, dialogId=1353, interactionObjectId=0]>START/2>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/2>TalkToNpc[npcId=205197, dialogId=31, interactionObjectId=0]>START/2>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	null>EnterWorld[]>REWARD/3>[StatusIs[status=REWARD], QuestVariableIs[field=var0, value=0]]>[SetVariable[field=var0, value=3]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH]]>-
+### quest 11010 accepted=true rejection=null
+L	BitField[name=var0, offset=0, width=6, minValue=0, maxValue=63, persistence=PERSISTENT, scope=LOCAL]
+N	COMPLETE/0
+N	NONE/0
+N	REWARD/3
+N	START/0
+N	START/1
+N	START/2
+T	NONE/0>TalkToNpc[npcId=730323, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=730323, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=730323, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=730323, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=730323, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=730323, dialogId=1012, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1012]]>-
+T	NONE/0>TalkToNpc[npcId=730323, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=730323, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=730323, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	NONE/0>TalkToNpc[npcId=798906, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=798906, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=798906, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798906, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=798906, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=798906, dialogId=1012, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1012]]>-
+T	NONE/0>TalkToNpc[npcId=798906, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798906, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798906, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	NONE/0>TalkToNpc[npcId=798931, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=798931, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=798931, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798931, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=798931, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=798931, dialogId=1012, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1012]]>-
+T	NONE/0>TalkToNpc[npcId=798931, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798931, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798931, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	NONE/0>TalkToNpc[npcId=799071, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=799071, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=799071, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=799071, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=799071, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=799071, dialogId=1012, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1012]]>-
+T	NONE/0>TalkToNpc[npcId=799071, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=799071, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=799071, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	REWARD/3>TalkToNpc[npcId=799071, dialogId=-1, interactionObjectId=0]>REWARD/3>[]>[]>[ShowQuestDialog[dialogId=5]]>-
+T	REWARD/3>TalkToNpc[npcId=799071, dialogId=10, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=5690, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=2924378, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000018, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=799071, dialogId=1009, interactionObjectId=0]>REWARD/3>[]>[]>[ShowQuestDialog[dialogId=5]]>-
+T	REWARD/3>TalkToNpc[npcId=799071, dialogId=11, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=5690, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=2924378, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000018, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=799071, dialogId=12, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=5690, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=2924378, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000018, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=799071, dialogId=13, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=5690, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=2924378, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000018, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=799071, dialogId=14, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=5690, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=2924378, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000018, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=799071, dialogId=15, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=5690, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=2924378, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000018, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=799071, dialogId=16, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=5690, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=2924378, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000018, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=799071, dialogId=17, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=5690, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=2924378, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000018, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=799071, dialogId=18, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=5690, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=2924378, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000018, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=799071, dialogId=19, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=5690, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=2924378, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000018, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=799071, dialogId=20, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=5690, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=2924378, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000018, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=799071, dialogId=21, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=5690, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=2924378, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000018, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=799071, dialogId=22, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=5690, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=2924378, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000018, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=799071, dialogId=23, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=5690, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=2924378, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000018, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=799071, dialogId=8, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=5690, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=2924378, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000018, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/3>TalkToNpc[npcId=799071, dialogId=9, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=5690, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=2924378, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000018, amount=6, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=730323, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=798906, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=798931, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=798931, dialogId=31, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=10002]]>-
+T	START/0>TalkToNpc[npcId=799071, dialogId=10000, interactionObjectId=0]>START/1>[]>[]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH], CloseDialog[]]>-
+T	START/0>TalkToNpc[npcId=799071, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=799071, dialogId=1353, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/0>TalkToNpc[npcId=799071, dialogId=31, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	START/1>TalkToNpc[npcId=798906, dialogId=10000, interactionObjectId=0]>START/2>[]>[]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH], CloseDialog[]]>-
+T	START/1>TalkToNpc[npcId=798906, dialogId=1353, interactionObjectId=0]>START/1>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/1>TalkToNpc[npcId=798906, dialogId=31, interactionObjectId=0]>START/1>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	START/2>TalkToNpc[npcId=730323, dialogId=10000, interactionObjectId=0]>REWARD/3>[]>[GiveItem[itemId=182206713, count=1]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH], CloseDialog[]]>-
+T	START/2>TalkToNpc[npcId=730323, dialogId=1353, interactionObjectId=0]>START/2>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/2>TalkToNpc[npcId=730323, dialogId=31, interactionObjectId=0]>START/2>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	null>EnterWorld[]>REWARD/3>[StatusIs[status=REWARD], QuestVariableIs[field=var0, value=0]]>[SetVariable[field=var0, value=3]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH]]>-
+### quest 11103 accepted=true rejection=null
+L	BitField[name=var0, offset=0, width=6, minValue=0, maxValue=63, persistence=PERSISTENT, scope=LOCAL]
+N	COMPLETE/0
+N	NONE/0
+N	REWARD/2
+N	START/0
+N	START/1
+T	NONE/0>TalkToNpc[npcId=798963, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=798963, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=798963, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798963, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=798963, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=798963, dialogId=1012, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1012]]>-
+T	NONE/0>TalkToNpc[npcId=798963, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798963, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798963, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	NONE/0>TalkToNpc[npcId=798973, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=798973, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=798973, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798973, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=798973, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=798973, dialogId=1012, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1012]]>-
+T	NONE/0>TalkToNpc[npcId=798973, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798973, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798973, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	NONE/0>TalkToNpc[npcId=798983, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-
+T	NONE/0>TalkToNpc[npcId=798983, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-
+T	NONE/0>TalkToNpc[npcId=798983, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798983, dialogId=1007, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=4]]>-
+T	NONE/0>TalkToNpc[npcId=798983, dialogId=1008, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	NONE/0>TalkToNpc[npcId=798983, dialogId=1012, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1012]]>-
+T	NONE/0>TalkToNpc[npcId=798983, dialogId=20000, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798983, dialogId=20001, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>-
+T	NONE/0>TalkToNpc[npcId=798983, dialogId=31, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1011]]>-
+T	REWARD/2>TalkToNpc[npcId=798983, dialogId=-1, interactionObjectId=0]>REWARD/2>[]>[]>[ShowQuestDialog[dialogId=5]]>-
+T	REWARD/2>TalkToNpc[npcId=798983, dialogId=10, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=10700, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=5989348, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=798983, dialogId=1009, interactionObjectId=0]>REWARD/2>[]>[]>[ShowQuestDialog[dialogId=5]]>-
+T	REWARD/2>TalkToNpc[npcId=798983, dialogId=11, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=10700, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=5989348, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=798983, dialogId=12, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=10700, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=5989348, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=798983, dialogId=13, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=10700, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=5989348, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=798983, dialogId=14, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=10700, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=5989348, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=798983, dialogId=15, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=10700, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=5989348, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=798983, dialogId=16, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=10700, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=5989348, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=798983, dialogId=17, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=10700, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=5989348, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=798983, dialogId=18, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=10700, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=5989348, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=798983, dialogId=19, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=10700, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=5989348, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=798983, dialogId=20, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=10700, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=5989348, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=798983, dialogId=21, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=10700, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=5989348, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=798983, dialogId=22, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=10700, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=5989348, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=798983, dialogId=23, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=10700, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=5989348, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=798983, dialogId=8, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=10700, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=5989348, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	REWARD/2>TalkToNpc[npcId=798983, dialogId=9, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=10700, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=5989348, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=798963, dialogId=10000, interactionObjectId=0]>START/1>[]>[]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH], CloseDialog[]]>-
+T	START/0>TalkToNpc[npcId=798963, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=798963, dialogId=1353, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/0>TalkToNpc[npcId=798963, dialogId=31, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	START/0>TalkToNpc[npcId=798973, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=798983, dialogId=1008, interactionObjectId=0]>START/0>[]>[]>[ShowQuestSelectionDialog[dialogId=10]]>-
+T	START/0>TalkToNpc[npcId=798983, dialogId=31, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=10002]]>-
+T	START/1>TalkToNpc[npcId=798973, dialogId=10000, interactionObjectId=0]>REWARD/2>[]>[GiveItem[itemId=182206750, count=1]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH], CloseDialog[]]>-
+T	START/1>TalkToNpc[npcId=798973, dialogId=1353, interactionObjectId=0]>START/1>[]>[]>[ShowQuestDialog[dialogId=1353]]>-
+T	START/1>TalkToNpc[npcId=798973, dialogId=31, interactionObjectId=0]>START/1>[]>[]>[ShowQuestDialog[dialogId=1352]]>-
+T	null>EnterWorld[]>REWARD/2>[StatusIs[status=REWARD], QuestVariableIs[field=var0, value=0]]>[SetVariable[field=var0, value=2]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH]]>-

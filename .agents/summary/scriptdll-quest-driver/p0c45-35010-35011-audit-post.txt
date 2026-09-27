@@ -1,0 +1,82 @@
+--- P0C45 AUDIT 35010 (status	page	action	path	reason) ---
+  A PAGE_ACTION_MATCHED	1352	1353	started + NPC 204560 + 1352 -> started + page 1352	
+  A PAGE_ACTION_MATCHED	1352	1353	started + NPC 204560 + 31 -> started + page 1352	
+  A PAGE_ACTION_MATCHED	1353	10000	started + NPC 204560 + 1353 -> started + page 1353	
+  A PAGE_ACTION_MATCHED	1353	10000	started + NPC 204560 + 1353 -> started + page 1353	
+  A PAGE_ACTION_MATCHED	2375	1009	started + NPC 799805 + 1009 -> started + page 2375	
+  A PAGE_ACTION_MATCHED	2375	1009	started + NPC 799805 + 1009 -> started + page 2375	
+  A PAGE_ACTION_MATCHED	2375	1009	started + NPC 799805 + 2375 -> started + page 2375	
+  A PAGE_ACTION_MATCHED	2375	1009	started + NPC 799805 + 2375 -> started + page 2375	
+  A PAGE_ACTION_MATCHED	2375	1009	started + NPC 799805 + 31 -> started + page 2375	
+  A PAGE_ACTION_MATCHED	2375	1009	started + NPC 799805 + 31 -> started + page 2375	
+  A CLIENT_PAGE_UNREACHED	4	1008	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+  A TERMINAL_PAGE_REACHED	5		reward + NPC 799805 + -1 -> reward + terminal page 5	
+  A TERMINAL_PAGE_REACHED	5		started + NPC 799805 + 1009 -> reward + terminal page 5	
+--- P0C45 TRANSITIONS 35010 ---
+  T null EnterWorld[] -> reward pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=-1, interactionObjectId=0] -> reward pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=10, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=1009, interactionObjectId=0] -> reward pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=11, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=12, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=13, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=14, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=15, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=16, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=17, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=18, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=19, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=20, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=21, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=22, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=23, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=8, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=9, interactionObjectId=0] -> complete pri=null
+  T started TalkToNpc[npcId=204560, dialogId=10000, interactionObjectId=0] -> started pri=0
+  T started TalkToNpc[npcId=799805, dialogId=1009, interactionObjectId=0] -> reward pri=0
+  T started TalkToNpc[npcId=204560, dialogId=10000, interactionObjectId=0] -> started pri=1
+  T started TalkToNpc[npcId=799805, dialogId=1009, interactionObjectId=0] -> started pri=1
+  T started TalkToNpc[npcId=204560, dialogId=1352, interactionObjectId=0] -> started pri=null
+  T started TalkToNpc[npcId=204560, dialogId=1353, interactionObjectId=0] -> started pri=null
+  T started TalkToNpc[npcId=204560, dialogId=31, interactionObjectId=0] -> started pri=null
+  T started TalkToNpc[npcId=799805, dialogId=2375, interactionObjectId=0] -> started pri=null
+  T started TalkToNpc[npcId=799805, dialogId=31, interactionObjectId=0] -> started pri=null
+  T unaccepted SystemGrant[] -> started pri=null
+--- P0C45 BLOCKS 35010 ---
+  B BlockRecord[block=NPC_COMPLETE, npcId=799805, source=reward, target=complete, extra=cri=0|fixed=0 1 2|actions=SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD|finish=SELECTION_DIALOG|preview=USE_OBJECT SELECT_QUEST_REWARD|choice=-|fallback=-]
+P0C45 quest=35010 auditRows=13 unreached=1 transitions=29 refsTo799806=0 completeBlocks=1
+--- P0C45 AUDIT 35011 (status	page	action	path	reason) ---
+  A PAGE_ACTION_MATCHED	1352	1353	started + NPC 204504 + 31 -> started + page 1352	
+  A PAGE_ACTION_MATCHED	1353	10000	started + NPC 204504 + 1353 -> started + page 1353	
+  A PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799805 + 31 -> v1 + page 2375	
+  A CLIENT_PAGE_UNREACHED	4	1008	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+  A TERMINAL_PAGE_REACHED	5		reward + NPC 799805 + -1 -> reward + terminal page 5	
+  A TERMINAL_PAGE_REACHED	5		v1 + NPC 799805 + 1009 -> reward + terminal page 5	
+--- P0C45 TRANSITIONS 35011 ---
+  T null EnterWorld[] -> reward pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=-1, interactionObjectId=0] -> reward pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=10, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=1009, interactionObjectId=0] -> reward pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=11, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=12, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=13, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=14, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=15, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=16, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=17, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=18, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=19, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=20, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=21, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=22, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=23, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=8, interactionObjectId=0] -> complete pri=null
+  T reward TalkToNpc[npcId=799805, dialogId=9, interactionObjectId=0] -> complete pri=null
+  T started TalkToNpc[npcId=204504, dialogId=10000, interactionObjectId=0] -> v1 pri=null
+  T started TalkToNpc[npcId=204504, dialogId=1353, interactionObjectId=0] -> started pri=null
+  T started TalkToNpc[npcId=204504, dialogId=31, interactionObjectId=0] -> started pri=null
+  T unaccepted SystemGrant[] -> started pri=null
+  T v1 TalkToNpc[npcId=799805, dialogId=1009, interactionObjectId=0] -> reward pri=null
+  T v1 TalkToNpc[npcId=799805, dialogId=31, interactionObjectId=0] -> v1 pri=null
+--- P0C45 BLOCKS 35011 ---
+P0C45 quest=35011 auditRows=6 unreached=1 transitions=25 refsTo799806=0 completeBlocks=0

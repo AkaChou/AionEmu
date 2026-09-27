@@ -1,0 +1,20 @@
+# P0c-23：2150/2110 双行裁定（ADOPT_RETAIL）
+# P0c-23: quests 2150/2110 adjudication — adopt the retail family shape.
+#
+# 2150（초보자 통합 서버로(마)）：判官 = 族形模板 + 唯一红点"完成路由钉 2"。canonical
+# npc-complete 块发全 SELECTED_QUEST_REWARD1..NOREWARD 路由范围（16 条）；同族四判官
+# （28800/28802/23902/18802）钉 16 且对真端编译全绿 = 家族先例。遗留 XML 只登记 2 条 =
+# 手工缺漏（真端对、XML 错）。
+# 2110：判官前段本就是早期 wave 的真端裁定形（无 work-item、接取不发 182203110、报告无
+# HasItem/RemoveItem——真端行裸 acquired/reward，全部兼容族编译）；唯一红 = 末段钉遗留
+# XML 的 started→started 1009 自环（npc-report 双 prio 手工形）。族形报告流 = QUEST_SELECT→
+# select5 + 1009→reward（无 prio-1 回退）+ reportNpcExit 关窗 CloseDialog。
+# P0c-15 笔记"接取发物 182203110 差"为压缩误归因（实际红在末段断言；接取侧断言对真端编译
+# 全过）——又一例压缩归因需溯源判例。
+# 2150: the judge pinned 2 completion routes (legacy hand-made); the canonical block emits the
+# full 16-route range per four sibling judges. 2110: the judge's earlier sections were already
+# the retail adjudication; the only red was the final assert pinning the legacy dual-priority
+# npc-report fallback loop. The P0c-15 note "accept-grant divergence" was compressed
+# misattribution (accept-side asserts pass on the retail compile).
+2150	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	completion routes 2->16 per canonical npc-complete range (sibling precedent 28800/28802/23902/18802); judge updated with bilingual comment
+2110	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	report flow family shape (no prio-1 1009 fallback; QUEST_SELECT->select5 + 1009->reward + CloseDialog); P0c-15 note was compressed misattribution; judge updated

@@ -1,0 +1,260 @@
+### quest 1323 rows=11
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 730032 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 730032 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1011	1007	unaccepted + NPC 730032 + -1 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1352	1353	reward + NPC 203939 + -1 -> reward + page 1352	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 730019 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	reward + NPC 203939 + 1353 -> reward + page 1353	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 730019 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 203939 + 31 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 730032 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 730032 + 1007 -> unaccepted + page 4	
+  TERMINAL_PAGE_REACHED	5		v1 + NPC 203939 + 1009 -> reward + terminal page 5	
+### quest 1394 rows=20
+! CLIENT_PAGE_UNREACHED	1693	1694	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	1694	10001	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	2375	1009	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 204041 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 204041 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1011	1007	unaccepted + NPC 204041 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 204039 + -1 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 204039 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 204041 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1352	1353	v1 + NPC 203946 + -1 -> v1 + page 1352	
+  PAGE_ACTION_MATCHED	1352	1353	v1 + NPC 203946 + 31 -> v1 + page 1352	
+  PAGE_ACTION_MATCHED	1352	1353	v2 + NPC 203941 + 31 -> v2 + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 204039 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 204041 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	1353	10000	v1 + NPC 203946 + 1353 -> v1 + page 1353	
+  PAGE_ACTION_MATCHED	1353	10000	v2 + NPC 203941 + 1353 -> v2 + page 1353	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 204041 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 204041 + 1007 -> unaccepted + page 4	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 203941 + -1 -> reward + terminal page 5	
+  TERMINAL_PAGE_REACHED	5		v2 + NPC 203941 + 10000 -> reward + terminal page 5	
+### quest 1484 rows=37
+! CLIENT_PAGE_UNREACHED	1693	1694	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	1694	10001	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	2034	2035	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	2035	10002	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	2375	1009	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 204011 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 204045 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 204048 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 798126 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 798127 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 204011 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 204045 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 204048 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 798126 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 798127 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1011	1007	unaccepted + NPC 204011 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1011	1007	unaccepted + NPC 204045 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1011	1007	unaccepted + NPC 204048 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1011	1007	unaccepted + NPC 798126 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1011	1007	unaccepted + NPC 798127 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1352	1353	stage1 + NPC 204048 + 31 -> stage1 + page 1352	
+  PAGE_ACTION_MATCHED	1352	1353	stage2 + NPC 204011 + 31 -> stage2 + page 1352	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 204045 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	stage1 + NPC 204048 + 1353 -> stage1 + page 1353	
+  PAGE_ACTION_MATCHED	1353	10000	stage2 + NPC 204011 + 1353 -> stage2 + page 1353	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 204045 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 204011 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 204045 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 204048 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 798126 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 798127 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 204011 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 204045 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 204048 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 798126 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 798127 + 1007 -> unaccepted + page 4	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 798126 + -1 -> reward + terminal page 5	
+### quest 2480 rows=23
+! CLIENT_PAGE_UNREACHED	1693	1694	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	1694	10001	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	2375	1009	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 730019 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 730021 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 730038 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 730019 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 730021 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 730038 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1011	1007	unaccepted + NPC 730019 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1011	1007	unaccepted + NPC 730021 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1011	1007	unaccepted + NPC 730038 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1352	1353	stage1 + NPC 730019 + 31 -> stage1 + page 1352	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 730021 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	stage1 + NPC 730019 + 1353 -> stage1 + page 1353	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 730021 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 730019 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 730021 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 730038 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 730019 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 730021 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 730038 + 1007 -> unaccepted + page 4	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 730038 + -1 -> reward + terminal page 5	
+### quest 2538 rows=30
+! CLIENT_PAGE_UNREACHED	1693	1694	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	1694	10001	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	2034	2035	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	2035	10002	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	2375	1009	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 204805 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 204827 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 790002 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 204805 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 204827 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 790002 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1011	1012	unaccepted + NPC 204805 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1011	1012	unaccepted + NPC 204827 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1011	1012	unaccepted + NPC 790002 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1012	1007	unaccepted + NPC 204805 + 1012 -> unaccepted + page 1012	
+  PAGE_ACTION_MATCHED	1012	1007	unaccepted + NPC 204827 + 1012 -> unaccepted + page 1012	
+  PAGE_ACTION_MATCHED	1012	1007	unaccepted + NPC 790002 + 1012 -> unaccepted + page 1012	
+  PAGE_ACTION_MATCHED	1352	1353	stage1 + NPC 204805 + 31 -> stage1 + page 1352	
+  PAGE_ACTION_MATCHED	1352	1353	stage2 + NPC 790002 + 31 -> stage2 + page 1352	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 790002 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	stage1 + NPC 204805 + 1353 -> stage1 + page 1353	
+  PAGE_ACTION_MATCHED	1353	10000	stage2 + NPC 790002 + 1353 -> stage2 + page 1353	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 790002 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 204805 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 204827 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 790002 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 204805 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 204827 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 790002 + 1007 -> unaccepted + page 4	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 204827 + -1 -> reward + terminal page 5	
+### quest 3093 rows=36
+! CLIENT_PAGE_UNREACHED	1693	1694	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	1694	10001	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	2034	2035	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	2035	10002	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	2375	1009	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 203784 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 798177 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 798179 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 798185 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 203784 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 798177 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 798179 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 798185 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1011	1012	unaccepted + NPC 203784 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1011	1012	unaccepted + NPC 798177 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1011	1012	unaccepted + NPC 798179 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1011	1012	unaccepted + NPC 798185 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1012	1007	unaccepted + NPC 203784 + 1012 -> unaccepted + page 1012	
+  PAGE_ACTION_MATCHED	1012	1007	unaccepted + NPC 798177 + 1012 -> unaccepted + page 1012	
+  PAGE_ACTION_MATCHED	1012	1007	unaccepted + NPC 798179 + 1012 -> unaccepted + page 1012	
+  PAGE_ACTION_MATCHED	1012	1007	unaccepted + NPC 798185 + 1012 -> unaccepted + page 1012	
+  PAGE_ACTION_MATCHED	1352	1353	stage1 + NPC 798179 + 31 -> stage1 + page 1352	
+  PAGE_ACTION_MATCHED	1352	1353	stage2 + NPC 203784 + 31 -> stage2 + page 1352	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 798177 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	stage1 + NPC 798179 + 1353 -> stage1 + page 1353	
+  PAGE_ACTION_MATCHED	1353	10000	stage2 + NPC 203784 + 1353 -> stage2 + page 1353	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 798177 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 203784 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 798177 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 798179 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 798185 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 203784 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 798177 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 798179 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 798185 + 1007 -> unaccepted + page 4	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 798185 + -1 -> reward + terminal page 5	
+### quest 4052 rows=32
+! CLIENT_PAGE_UNREACHED	1693	1694	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	1694	10001	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	2034	2035	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	2035	10002	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	2375	1009	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 205166 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 205179 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 205197 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 730152 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 205166 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 205179 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 205197 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 730152 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1011	1007	unaccepted + NPC 205166 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1011	1007	unaccepted + NPC 205179 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1011	1007	unaccepted + NPC 205197 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1011	1007	unaccepted + NPC 730152 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1352	1353	stage1 + NPC 205166 + 31 -> stage1 + page 1352	
+  PAGE_ACTION_MATCHED	1352	1353	stage2 + NPC 205197 + 31 -> stage2 + page 1352	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 205179 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	stage1 + NPC 205166 + 1353 -> stage1 + page 1353	
+  PAGE_ACTION_MATCHED	1353	10000	stage2 + NPC 205197 + 1353 -> stage2 + page 1353	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 205179 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 205166 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 205179 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 205197 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 730152 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 205166 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 205179 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 205197 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 730152 + 1007 -> unaccepted + page 4	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 730152 + -1 -> reward + terminal page 5	
+### quest 11010 rows=36
+! CLIENT_PAGE_UNREACHED	1693	1694	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	1694	10001	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	2034	2035	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	2035	10002	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	2375	1009	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 730323 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 798906 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 798931 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 799071 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 730323 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 798906 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 798931 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 799071 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1011	1012	unaccepted + NPC 730323 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1011	1012	unaccepted + NPC 798906 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1011	1012	unaccepted + NPC 798931 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1011	1012	unaccepted + NPC 799071 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1012	1007	unaccepted + NPC 730323 + 1012 -> unaccepted + page 1012	
+  PAGE_ACTION_MATCHED	1012	1007	unaccepted + NPC 798906 + 1012 -> unaccepted + page 1012	
+  PAGE_ACTION_MATCHED	1012	1007	unaccepted + NPC 798931 + 1012 -> unaccepted + page 1012	
+  PAGE_ACTION_MATCHED	1012	1007	unaccepted + NPC 799071 + 1012 -> unaccepted + page 1012	
+  PAGE_ACTION_MATCHED	1352	1353	stage1 + NPC 798906 + 31 -> stage1 + page 1352	
+  PAGE_ACTION_MATCHED	1352	1353	stage2 + NPC 730323 + 31 -> stage2 + page 1352	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 799071 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	stage1 + NPC 798906 + 1353 -> stage1 + page 1353	
+  PAGE_ACTION_MATCHED	1353	10000	stage2 + NPC 730323 + 1353 -> stage2 + page 1353	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 799071 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 730323 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 798906 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 798931 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 799071 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 730323 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 798906 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 798931 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 799071 + 1007 -> unaccepted + page 4	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 799071 + -1 -> reward + terminal page 5	
+### quest 11103 rows=26
+! CLIENT_PAGE_UNREACHED	1693	1694	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	1694	10001	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	2375	1009	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 798963 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 798973 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 798983 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 798963 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 798973 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 798983 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1011	1012	unaccepted + NPC 798963 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1011	1012	unaccepted + NPC 798973 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1011	1012	unaccepted + NPC 798983 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1012	1007	unaccepted + NPC 798963 + 1012 -> unaccepted + page 1012	
+  PAGE_ACTION_MATCHED	1012	1007	unaccepted + NPC 798973 + 1012 -> unaccepted + page 1012	
+  PAGE_ACTION_MATCHED	1012	1007	unaccepted + NPC 798983 + 1012 -> unaccepted + page 1012	
+  PAGE_ACTION_MATCHED	1352	1353	stage1 + NPC 798973 + 31 -> stage1 + page 1352	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 798963 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	stage1 + NPC 798973 + 1353 -> stage1 + page 1353	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 798963 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 798963 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 798973 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 798983 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 798963 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 798973 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 798983 + 1007 -> unaccepted + page 4	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 798983 + -1 -> reward + terminal page 5	

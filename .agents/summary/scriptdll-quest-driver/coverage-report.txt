@@ -1,0 +1,40 @@
+registry quests=6814  retail quests=10035  repo quests=6224
+registry ∩ retail=6814 (67.9% of retail)
+registry ∩ repo   =4540 (72.9% of repo)
+
+== 各族：模板表行数 / 注册表命中 ==
+  SimpleHunt        rows=1865  registered=1863  100%
+  SimpleTalk        rows=3152  registered=3151  100%
+  SimpleCollectItem rows=262   registered=262   100%
+  SimpleUseItem     rows=160   registered=160   100%
+  SimpleItemPlay    rows=43    registered=43    100%
+  SimpleSerialHunt  rows=16    registered=16    100%
+  CombineTask       rows=574   registered=574   100%
+  DataDriven        rows=2510  registered=0     0%
+  模板并集=8580  真端任务覆盖=8225 (82%)
+  无模板行的真端任务=1810  其中在注册表=745
+  本仓库无模板任务=670  其中在注册表=494
+
+== 注册辅助函数 -> 族归属（按最大重叠）==
+  FUN_180cabb10: quests=3671  stubs=4516  family=SimpleTalk           overlap=3151
+  FUN_180cab520: quests=3284  stubs=3284  family=SimpleTalk           overlap=2970
+  FUN_180cafa40: quests=1877  stubs=1935  family=SimpleHunt           overlap=1861
+  FUN_180cb13b0: quests=1786  stubs=2429  family=SimpleHunt           overlap=1786
+  FUN_180caf7c0: quests=1648  stubs=1648  family=SimpleHunt           overlap=1632
+  FUN_180caf350: quests=645   stubs=1082  family=SCRIPTED(无模板)        overlap=0
+  FUN_180caac10: quests=574   stubs=1148  family=CombineTask          overlap=574
+  FUN_180caaf00: quests=574   stubs=574   family=CombineTask          overlap=574
+  FUN_180caf6c0: quests=493   stubs=493   family=SCRIPTED(无模板)        overlap=0
+  FUN_180caca90: quests=472   stubs=472   family=SimpleTalk           overlap=407
+  FUN_180caf640: quests=416   stubs=416   family=SCRIPTED(无模板)        overlap=0
+  FUN_180caf3c0: quests=416   stubs=1034  family=SCRIPTED(无模板)        overlap=0
+  FUN_180caf740: quests=337   stubs=739   family=SCRIPTED(无模板)        overlap=0
+  FUN_180caf5f0: quests=103   stubs=103   family=SCRIPTED(无模板)        overlap=0
+  FUN_180cacb30: quests=102   stubs=205   family=SimpleTalk           overlap=67
+  FUN_180cafe40: quests=50    stubs=50    family=SimpleHunt           overlap=47
+  FUN_180cb1610: quests=47    stubs=57    family=SimpleHunt           overlap=47
+  FUN_180caa850: quests=38    stubs=72    family=SCRIPTED(无模板)        overlap=0
+  FUN_180cab150: quests=31    stubs=31    family=SCRIPTED(无模板)        overlap=0
+  FUN_180caa1b0: quests=27    stubs=27    family=SCRIPTED(无模板)        overlap=0
+  FUN_180cb14e0: quests=26    stubs=34    family=SimpleHunt           overlap=26
+  FUN_180cacbf0: quests=25    stubs=31    family=SCRIPTED(无模板)        overlap=0

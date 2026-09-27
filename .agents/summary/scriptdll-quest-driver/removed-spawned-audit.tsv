@@ -1,0 +1,113 @@
+# quest	field	removed_id	removed_name_desc	removed_name_id	relation_to_kept	kept_ids	spawned_in
+11029.xml	var0	216693	LF4_A4_Vampire_Tree_Root_51_An	319558	same_name_id	215536;215537	src/main/resources/aion/data/static_data/spawns/Npcs/210050000_Inggison.xml
+11029.xml	var0	216694	LF4_A4_Vampire_Tree_Root_52_An	319559	same_name_id	215536;215537	src/main/resources/aion/data/static_data/spawns/Npcs/210050000_Inggison.xml
+11038.xml	var1	215640	LF4_B4_ShulackWi_54_An	319662	distinct	215562;215563;215564;215565;215566;215567	src/main/resources/aion/data/static_data/spawns/Npcs/210050000_Inggison.xml
+11038.xml	var1	216468	LF4_A5_ShulackWi_Attack_51_Ae	321599	distinct	215562;215563;215564;215565;215566;215567	
+11038.xml	var1	216469	LF4_A5_ShulackWi_Attack_52_Ae	321600	distinct	215562;215563;215564;215565;215566;215567	src/main/resources/aion/data/static_data/spawns/Npcs/210050000_Inggison.xml
+11038.xml	var1	216657	LF4_A5_ShulackWi_Work_51_Ae	319584	same_name_id	215562;215563;215564;215565;215566;215567	
+11038.xml	var1	216658	LF4_A5_ShulackWi_Work_52_Ae	319587	same_name_id	215562;215563;215564;215565;215566;215567	src/main/resources/aion/data/static_data/spawns/Npcs/210050000_Inggison.xml
+11038.xml	var1	216717	LF4_A5_ShulackWi_Drink_51_Ae	319584	same_name_id	215562;215563;215564;215565;215566;215567	src/main/resources/aion/data/static_data/spawns/Npcs/210050000_Inggison.xml
+11038.xml	var1	216718	LF4_A5_ShulackWi_Drink_52_Ae	319587	same_name_id	215562;215563;215564;215565;215566;215567	
+11150.xml	var0	216784	LF4_B4_DrakanWorkerFi_Farm_54_An	319644	same_name_id	215622	
+11150.xml	var1	216731	LF4_B4_LizardAs_Attack_54_An	319655	same_name_id	215633;215634	src/main/resources/aion/data/static_data/spawns/Npcs/210050000_Inggison.xml
+11202.xml	var1	216732	LF4_C_Vampire_Acid_Root_55_An	319755	same_name_id	215733	src/main/resources/aion/data/static_data/spawns/Npcs/210050000_Inggison.xml
+1179.xml	var0	211099	UndeadLight_36_An	302829	distinct	210343	
+1179.xml	var0	211135	UndeadLight_37_An	302865	distinct	210343	
+1179.xml	var0	211153	UndeadLight_38_An	302883	distinct	210343	
+1179.xml	var0	211960	UndeadLight_39_An	304285	distinct	210343	
+1179.xml	var0	211961	UndeadLight_40_An	304286	distinct	210343	
+1470.xml	var0	214621	FireSanctuaryQueenBossHard_37_Ah	318113	distinct	212846	
+1497.xml	var0	211830	KrallScoutHK_28_Ae	304160	distinct	235478;235479	
+1497.xml	var0	211831	KrallScoutHK_29_Ae	304161	distinct	235478;235479	
+1497.xml	var1	212070	ReC_KrallRangerK_29_Ae	304511	distinct	235470;235471	
+1497.xml	var1	212071	ReC_KrallRangerK_30_Ae	304512	distinct	235470;235471	
+17001.xml	var0	236929	IDDF3_DrakanFiBossD_50_Ah_SP	315799	same_name_id	213780	
+18205.xml	var0	277068	SFinal_Immotal_Boss_55_Ah_Atable	323561	same_name_id	217609	
+18310.xml	var0	246137	IDStation_SP_DrakanBoss_58Re2	323286	same_name_id	217382	
+18915.xml	var0	230787	IDVritra_Base_Drakan_Fi_65_Ae2_Talk	343227	distinct	230786;230792;230798;230804;230810;230814;230820	src/main/resources/aion/data/static_data/spawns/Instances/301130000_Sauro_Supply_Base.xml
+18915.xml	var0	230788	IDVritra_Base_Drakan_Fi_65_Ae2_Order	343228	distinct	230786;230792;230798;230804;230810;230814;230820	
+18915.xml	var0	230789	IDVritra_Base_Drakan_Fi_65_Ae2_Read	343229	distinct	230786;230792;230798;230804;230810;230814;230820	
+18915.xml	var0	230794	IDVritra_Base_Drakan_As_65_Ae2_Order	343234	distinct	230786;230792;230798;230804;230810;230814;230820	
+18915.xml	var0	230795	IDVritra_Base_Drakan_As_65_Ae2_Read	343235	distinct	230786;230792;230798;230804;230810;230814;230820	
+18915.xml	var0	230800	IDVritra_Base_Drakan_Wi_65_Ae2_Order	343240	distinct	230786;230792;230798;230804;230810;230814;230820	
+18915.xml	var0	230801	IDVritra_Base_Drakan_Wi_65_Ae2_Read	343241	distinct	230786;230792;230798;230804;230810;230814;230820	
+18915.xml	var0	230806	IDVritra_Base_Drakan_Pr_65_Ae2_Order	343246	distinct	230786;230792;230798;230804;230810;230814;230820	
+18915.xml	var0	230807	IDVritra_Base_Drakan_Pr_65_Ae2_Read	343247	distinct	230786;230792;230798;230804;230810;230814;230820	
+18915.xml	var0	230816	IDVritra_Base_Drakan_Gu_65_Ae2_Order	343256	distinct	230786;230792;230798;230804;230810;230814;230820	
+18915.xml	var0	230817	IDVritra_Base_Drakan_Gu_65_Ae2_Read	343257	distinct	230786;230792;230798;230804;230810;230814;230820	
+18915.xml	var0	230822	IDVritra_Base_Drakan_Ba_65_Ae2_Order	343262	distinct	230786;230792;230798;230804;230810;230814;230820	
+18915.xml	var0	230823	IDVritra_Base_Drakan_Ba_65_Ae2_Read	343263	distinct	230786;230792;230798;230804;230810;230814;230820	
+18915.xml	var0	233333	IDVritra_Base_Drakan_Fi_65_Ae2_ent	343226	same_name_id	230786;230792;230798;230804;230810;230814;230820	src/main/resources/aion/data/static_data/spawns/Instances/301130000_Sauro_Supply_Base.xml
+18915.xml	var0	233334	IDVritra_Base_Drakan_As_65_Ae2_ent	343232	same_name_id	230786;230792;230798;230804;230810;230814;230820	src/main/resources/aion/data/static_data/spawns/Instances/301130000_Sauro_Supply_Base.xml
+18915.xml	var0	233335	IDVritra_Base_Drakan_As_65_Ae2_Talk_ent	343233	distinct	230786;230792;230798;230804;230810;230814;230820	src/main/resources/aion/data/static_data/spawns/Instances/301130000_Sauro_Supply_Base.xml
+18915.xml	var0	233336	IDVritra_Base_Drakan_Wi_65_Ae2_ent	343238	same_name_id	230786;230792;230798;230804;230810;230814;230820	src/main/resources/aion/data/static_data/spawns/Instances/301130000_Sauro_Supply_Base.xml
+18915.xml	var0	233337	IDVritra_Base_Drakan_Wi_65_Ae2_Talk_ent	343239	distinct	230786;230792;230798;230804;230810;230814;230820	src/main/resources/aion/data/static_data/spawns/Instances/301130000_Sauro_Supply_Base.xml
+18915.xml	var0	233338	IDVritra_Base_Drakan_Ri_65_Ae2_ent	343250	same_name_id	230786;230792;230798;230804;230810;230814;230820	
+18915.xml	var0	233339	IDVritra_Base_Drakan_Gu_65_Ae2_ent	343254	same_name_id	230786;230792;230798;230804;230810;230814;230820	src/main/resources/aion/data/static_data/spawns/Instances/301130000_Sauro_Supply_Base.xml
+24275.xml	var0	214621	FireSanctuaryQueenBossHard_37_Ah	318113	distinct	212846	
+27001.xml	var0	236929	IDDF3_DrakanFiBossD_50_Ah_SP	315799	same_name_id	213780	
+30218.xml	var0	216196	IDCatacombsH_UnDrakanBoneWi_55_Ae	320483	distinct	216195;216276;216277;216278;216279	src/main/resources/aion/data/static_data/spawns/Instances/300170000_Beshmundir_Temple.xml
+30218.xml	var0	216197	IDCatacombsH_UnDrakanBoneAs_55_Ae	320484	distinct	216195;216276;216277;216278;216279	src/main/resources/aion/data/static_data/spawns/Instances/300170000_Beshmundir_Temple.xml
+30218.xml	var0	216198	IDCatacombsH_UnDrakanBoneSc_55_Ae	320485	distinct	216195;216276;216277;216278;216279	src/main/resources/aion/data/static_data/spawns/Instances/300170000_Beshmundir_Temple.xml
+3052.xml	var0	214702	LF2A_CalydonAssassinHTalk_48_An	318205	distinct	214301;214302	src/main/resources/aion/data/static_data/spawns/Npcs/210060000_Theobomos.xml
+3052.xml	var0	214703	LF2A_CalydonAssassinHTalk_49_An	318206	distinct	214301;214302	src/main/resources/aion/data/static_data/spawns/Npcs/210060000_Theobomos.xml
+3052.xml	var0	214704	LF2A_CalydonAssassinHSleep_48_An	318207	distinct	214301;214302	src/main/resources/aion/data/static_data/spawns/Npcs/210060000_Theobomos.xml
+3052.xml	var0	214705	LF2A_CalydonAssassinHSleep_49_An	318208	distinct	214301;214302	src/main/resources/aion/data/static_data/spawns/Npcs/210060000_Theobomos.xml
+3097.xml	var0	237116	IDLF2A_HolyServantVioletNmd_50_Ah_SP	318167	same_name_id	214668;237248	
+3213.xml	var0	214978	IDShip_ShulackRa_44_Ae_Order	318637	distinct	214977;214979;214983	src/main/resources/aion/data/static_data/spawns/Instances/300100000_Steel Rake.xml
+3213.xml	var0	214980	IDShip_ShulackRa_44_Ae_Watch	318639	distinct	214977;214979;214983	
+3213.xml	var0	214981	IDShip_ShulackRa_44_Ae_Fight	318640	distinct	214977;214979;214983	
+3213.xml	var0	214982	IDShip_ShulackRa_44_Ae_Sleep	318641	distinct	214977;214979;214983	src/main/resources/aion/data/static_data/spawns/Instances/300100000_Steel Rake.xml
+3213.xml	var0	214984	IDShip_ShulackRa_44_Ae_Drink	318643	distinct	214977;214979;214983	
+3713.xml	var1	214811	IDAb1_Dreadgion_NagaFiHigh_50_Ae	318453	distinct	214806;214808;214813;214814;214819;214820;214821;214822	src/main/resources/aion/data/static_data/spawns/Instances/300110000_Baranath_Dredgion.xml
+3713.xml	var1	214812	IDAb1_Dreadgion_NagaPrHigh_50_Ae	318454	distinct	214806;214808;214813;214814;214819;214820;214821;214822	src/main/resources/aion/data/static_data/spawns/Instances/300110000_Baranath_Dredgion.xml
+80399.xml	var0	237267	IDDF3_NagaChNurseryD_47_Ah_SP_2	315838	same_name_id	213802	src/main/resources/aion/data/static_data/spawns/Instances/320080000_Draupnir_Cave.xml
+80400.xml	var0	237265	IDDF3_NagaWiLovelyNamedD_48_Ah_SP_2	315797	same_name_id	213778	src/main/resources/aion/data/static_data/spawns/Instances/320080000_Draupnir_Cave.xml
+80415.xml	var0	237267	IDDF3_NagaChNurseryD_47_Ah_SP_2	315838	same_name_id	213802	src/main/resources/aion/data/static_data/spawns/Instances/320080000_Draupnir_Cave.xml
+80416.xml	var0	237265	IDDF3_NagaWiLovelyNamedD_48_Ah_SP_2	315797	same_name_id	213778	src/main/resources/aion/data/static_data/spawns/Instances/320080000_Draupnir_Cave.xml
+80434.xml	var0	237267	IDDF3_NagaChNurseryD_47_Ah_SP_2	315838	same_name_id	213802	src/main/resources/aion/data/static_data/spawns/Instances/320080000_Draupnir_Cave.xml
+80435.xml	var0	237265	IDDF3_NagaWiLovelyNamedD_48_Ah_SP_2	315797	same_name_id	213778	src/main/resources/aion/data/static_data/spawns/Instances/320080000_Draupnir_Cave.xml
+80450.xml	var0	237267	IDDF3_NagaChNurseryD_47_Ah_SP_2	315838	same_name_id	213802	src/main/resources/aion/data/static_data/spawns/Instances/320080000_Draupnir_Cave.xml
+80451.xml	var0	237265	IDDF3_NagaWiLovelyNamedD_48_Ah_SP_2	315797	same_name_id	213778	src/main/resources/aion/data/static_data/spawns/Instances/320080000_Draupnir_Cave.xml
+test:11027.xml	var0	215519	LF4_A2_LizardAs_Wound_52_An	319541	distinct	215517	src/main/resources/aion/data/static_data/spawns/Npcs/210050000_Inggison.xml
+test:11027.xml	var0	216648	LF4_A2_LizardAs_Attack_52_An	319539	same_name_id	215517	src/main/resources/aion/data/static_data/spawns/Npcs/210050000_Inggison.xml
+test:11027.xml	var0	216692	LF4_A2_LizardAs_Weak_52_An	319539	same_name_id	215517	src/main/resources/aion/data/static_data/spawns/Npcs/210050000_Inggison.xml
+test:11027.xml	var1	215518	LF4_A2_LizardFi_Wound_52_An	319540	distinct	215516	src/main/resources/aion/data/static_data/spawns/Npcs/210050000_Inggison.xml
+test:11027.xml	var1	216647	LF4_A2_LizardFi_Attack_52_An	319538	same_name_id	215516	src/main/resources/aion/data/static_data/spawns/Npcs/210050000_Inggison.xml
+test:11027.xml	var1	216691	LF4_A2_LizardFi_Weak_52_An	319538	same_name_id	215516	src/main/resources/aion/data/static_data/spawns/Npcs/210050000_Inggison.xml
+test:11293.xml	var0	218675	IDDramata_DrakanFiEgg_55_Ae	324867	distinct	218670;218671;218673;218674	src/main/resources/aion/data/static_data/spawns/Instances/320150000_Padmarashka's_Cave.xml
+test:11293.xml	var0	218676	IDDramata_DrakanWiEgg_55_Ae	324868	distinct	218670;218671;218673;218674	src/main/resources/aion/data/static_data/spawns/Instances/320150000_Padmarashka's_Cave.xml
+test:11293.xml	var0	218677	IDDramata_DrakanFiHigh_55_Ae	324869	distinct	218670;218671;218673;218674	src/main/resources/aion/data/static_data/spawns/Instances/320150000_Padmarashka's_Cave.xml
+test:11293.xml	var0	218678	IDDramata_DrakanWiHigh_55_Ae	324870	distinct	218670;218671;218673;218674	src/main/resources/aion/data/static_data/spawns/Instances/320150000_Padmarashka's_Cave.xml
+test:11293.xml	var0	218679	IDDramata_DrakanAsHigh_55_Ae	324871	distinct	218670;218671;218673;218674	src/main/resources/aion/data/static_data/spawns/Instances/320150000_Padmarashka's_Cave.xml
+test:11293.xml	var0	218680	IDDramata_DrakanScHigh_55_Ae	324872	distinct	218670;218671;218673;218674	src/main/resources/aion/data/static_data/spawns/Instances/320150000_Padmarashka's_Cave.xml
+test:11293.xml	var0	218681	IDDramata_DrakanClHigh_55_Ae	324873	distinct	218670;218671;218673;218674	src/main/resources/aion/data/static_data/spawns/Instances/320150000_Padmarashka's_Cave.xml
+test:14276.xml	var0	212807	GargoyleD_36_Ae	306690	distinct	212788;212801	src/main/resources/aion/data/static_data/spawns/Instances/320100000_Fire_Temple.xml
+test:14276.xml	var0	214094	DFlame_GargoyleDarkD_34_Ae	317177	distinct	212788;212801	src/main/resources/aion/data/static_data/spawns/Instances/320100000_Fire_Temple.xml
+test:14276.xml	var0	214095	DFlame_GargoyleDarkD_35_Ae	317178	distinct	212788;212801	src/main/resources/aion/data/static_data/spawns/Instances/320100000_Fire_Temple.xml
+test:14276.xml	var0	214096	DFlame_GargoyleDarkD_36_Ae	317179	distinct	212788;212801	src/main/resources/aion/data/static_data/spawns/Instances/320100000_Fire_Temple.xml
+test:14276.xml	var1	212787	SAMD_33_Ae	306670	distinct	212802;212803	src/main/resources/aion/data/static_data/spawns/Instances/320100000_Fire_Temple.xml
+test:14276.xml	var1	212806	SAMD_36_Ae	306689	distinct	212802;212803	src/main/resources/aion/data/static_data/spawns/Instances/320100000_Fire_Temple.xml
+test:14276.xml	var2	212785	SouledstoneD_33_Ae	306668	distinct	212794	src/main/resources/aion/data/static_data/spawns/Instances/320100000_Fire_Temple.xml
+test:14276.xml	var2	212786	SouledstoneAD_34_Ae	306669	distinct	212794	src/main/resources/aion/data/static_data/spawns/Instances/320100000_Fire_Temple.xml
+test:14276.xml	var2	212789	SouledstoneDReD_33_Ae	306672	distinct	212794	src/main/resources/aion/data/static_data/spawns/Instances/320100000_Fire_Temple.xml
+test:14276.xml	var2	212790	SouledstoneDReD_34_Ae	306673	distinct	212794	src/main/resources/aion/data/static_data/spawns/Instances/320100000_Fire_Temple.xml
+test:14276.xml	var2	212792	SouledstoneAReD_34_Ae	306675	distinct	212794	src/main/resources/aion/data/static_data/spawns/Instances/320100000_Fire_Temple.xml
+test:14276.xml	var2	212793	SouledstoneDReD_35_Ae	306676	distinct	212794	src/main/resources/aion/data/static_data/spawns/Instances/320100000_Fire_Temple.xml
+test:18309.xml	var0	855613	BIDStation_ShuLackFI_2_58n	323226	same_name_id	282277;282278;282279;282280;282281	
+test:18309.xml	var0	855614	BIDStation_ShuLackKN_2_58n	323227	same_name_id	282277;282278;282279;282280;282281	
+test:18309.xml	var0	855615	BIDStation_ShuLackRA_2_58n	323228	same_name_id	282277;282278;282279;282280;282281	
+test:18309.xml	var0	855616	BIDStation_ShuLackWI_2_58n	323229	same_name_id	282277;282278;282279;282280;282281	
+test:18309.xml	var0	855617	BIDStation_ShuLackPR_2_58n	323230	same_name_id	282277;282278;282279;282280;282281	
+test:18617.xml	var0	217119	IDCromede_2up_Named_JudgeQ_38_An	322849	distinct	217005;217006	
+test:3098.xml	var0	237110	IDLF2A_BeholderKeyNmd_43_Ae_SP	318161	same_name_id	214662	src/main/resources/aion/data/static_data/spawns/Instances/310110000_Theobomos_Lab.xml
+test:3113.xml	var0	237117	IDLF2A_ElementalKingNmd_50_Ah_SP	318168	same_name_id	214669;237250	
+test:3527.xml	var0	212005	UndeadLightFi_44_An	304330	distinct	212349;212350	src/main/resources/aion/data/static_data/spawns/Npcs/210040000_Heiron.xml
+test:3532.xml	var0	236929	IDDF3_DrakanFiBossD_50_Ah_SP	315799	same_name_id	213780	
+test:4525.xml	var0	236929	IDDF3_DrakanFiBossD_50_Ah_SP	315799	same_name_id	213780	
+test:80215.xml	var1	237265	IDDF3_NagaWiLovelyNamedD_48_Ah_SP_2	315797	same_name_id	213778	src/main/resources/aion/data/static_data/spawns/Instances/320080000_Draupnir_Cave.xml
+test:80215.xml	var2	237267	IDDF3_NagaChNurseryD_47_Ah_SP_2	315838	same_name_id	213802	src/main/resources/aion/data/static_data/spawns/Instances/320080000_Draupnir_Cave.xml
+test:80215.xml	var4	236929	IDDF3_DrakanFiBossD_50_Ah_SP	315799	same_name_id	213780	
+test:80224.xml	var1	237265	IDDF3_NagaWiLovelyNamedD_48_Ah_SP_2	315797	same_name_id	213778	src/main/resources/aion/data/static_data/spawns/Instances/320080000_Draupnir_Cave.xml
+test:80224.xml	var2	237267	IDDF3_NagaChNurseryD_47_Ah_SP_2	315838	same_name_id	213802	src/main/resources/aion/data/static_data/spawns/Instances/320080000_Draupnir_Cave.xml
+test:80224.xml	var4	236929	IDDF3_DrakanFiBossD_50_Ah_SP	315799	same_name_id	213780	

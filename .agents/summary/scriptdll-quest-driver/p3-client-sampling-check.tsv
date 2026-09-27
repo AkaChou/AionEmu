@@ -1,0 +1,27 @@
+# P3 客户端抽检（升级版）
+# 层1 全量：4421 退役任务客户端任务书页集 100% 在案（missing=0，7 族核对）
+# 层2 链行 QE-051：REWARD 投影 var0 == 客户端任务书行数-1（SimpleTalk 链行登记抽 3）
+# 层3 族门禁：各族领奖投影由族门禁全量断言（强于人工抽检）
+# 未覆盖：人工客户端目检（页面渲染/文案）——超出静态数据可达范围
+#
+1872	DataDriven	client_pages=7	page-set-only
+25433	DataDriven	client_pages=7	page-set-only
+80996	DataDriven	client_pages=10	page-set-only
+1103	SimpleCollectItem	client_pages=11	page-set-only
+11461	SimpleCollectItem	client_pages=11	page-set-only
+49709	SimpleCollectItem	client_pages=8	page-set-only
+1102	SimpleHunt	client_pages=10	page-set-only
+4533	SimpleHunt	client_pages=10	page-set-only
+80740	SimpleHunt	client_pages=10	page-set-only
+13704	SimpleItemPlay	client_pages=7	page-set-only
+23704	SimpleItemPlay	client_pages=7	page-set-only
+29048	SimpleItemPlay	client_pages=10	page-set-only
+13918	SimpleSerialHunt	client_pages=7	page-set-only
+26991	SimpleSerialHunt	client_pages=7	page-set-only
+30610	SimpleSerialHunt	client_pages=8	page-set-only
+1101	SimpleTalk	client_pages=10	page-set-only
+18641	SimpleTalk	client_pages=11	page-set-only
+80767	SimpleTalk	client_pages=11	page-set-only
+1107	SimpleUseItem	client_pages=7	page-set-only
+11046	SimpleUseItem	client_pages=7	page-set-only
+80739	SimpleUseItem	client_pages=7	page-set-only

@@ -1,0 +1,20 @@
+# P0c-36 中间对话行阶梯裁定（真端 talk_npcK + 客户端任务书 steps 命名 + collect_progress 三轴背书） / Talk-ladder adjudication
+#
+# 背景：XML 期把多行任务书压成单个 started 行（`var0=0`），中间对话行（talk_npcK）与其客户端页
+# 全部缺失；P0c-35 的「进度行投影」把 started 抬到 collect_progress 只是权宜（跳过了真端声明的
+# 对话门）。本表把压平行改写成逐行阶梯：
+#   accept → started(START,var0=0) → talk_npc(1) 页链 → 推进到 s1(var0=1) → … → s{K}(var0=K)
+#   s{K} 承接收集 + 交付段（I 门 / QUEST_SELECT / SET_SUCCEED 的 source 由 started 迁到 s{K}）；
+#   s{K} 的 var0 = collect_progress = 掉落生效行（QE-061 可达性成立）。
+#
+# 轴①（外部证据层，见 p0c36-talk-ladder-census.tsv 与 p0c36_ladder_gap_census.py）：
+#     客户端 quest_summary <steps> 第 k 行文本点名 STR_DIC_N_<talk_npcK>，末行带 [%collectitem]；
+# 轴②：quest_client_summary_rows.tsv 行数 = K+1（生成器 fail-closed 校验）；
+# 轴③：真端 quest.xml collect_progress = K（生成器 fail-closed 校验）。
+# advance_mode：
+#     SETPRO = 阶段末页（select{k+1}_1）带 HACTION_SETPRO{k} 按钮（客户端页链唯一推进按钮）；
+#     TALK   = 阶段页链无推进按钮（仅 FINISH_DIALOG）→ 该次对话本身推进（推进事件 = QUEST_SELECT）。
+#
+# quest_id	K	advance_mode	basis
+24202	2	SETPRO	steps3:row0=STR_DIC_N_Tree_Moving_Neligor;row1=STR_DIC_N_Cairon;row2=[%collectitem]+STR_DIC_N_Surt;talk1=Tree_Moving_Neligor→205159;talk2=Cairon→205198;collect_progress=2;pages:select2=1352>SELECT2_1(1353)>SETPRO1(10000)@205159,select3=1693>SELECT3_1(1694)>SETPRO2(10001)@205198;reward_npc=Surt→205150;gate=I(182215465×1,failure=CLOSE)source started→s2
+80320	1	TALK	steps2:row0=STR_DIC_N_event_Soraya;row1=[%collectitem]×12+STR_DIC_N_event_Soraya;talk1=event_Soraya→831427;collect_progress=1;page:select2=1352 only HACTION_FINISH_DIALOG(no SETPRO)→talk_advances;reward_npc=event_Soraya→831427;gate=I(182215303×12,failure=SELECT6)source started→s1

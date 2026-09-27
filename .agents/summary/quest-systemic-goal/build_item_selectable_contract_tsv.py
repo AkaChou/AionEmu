@@ -22,6 +22,10 @@ RETAIL_ITEMS_DIR = "/Users/mc/PycharmProjects/unpak/Items_unpacked"
 ITEM_DIR = os.path.join(REPO, "src/main/resources/aion/data/static_data/items/item")
 PROD_DIR = os.path.join(
     REPO, "src/main/resources/aion/data/static_data/quest_definition/quests")
+# 生产宇宙 = XML 目录 ∪ 保留清单（已退役任务的 XML 只在 git 历史里，但仍按真端驱动生产）。
+# Production universe = XML directory plus the retention ledger (retired quests stay relevant).
+LEDGER = os.path.join(
+    REPO, "src/test/resources/quest/retail-xml-retention.tsv")
 OUT = os.path.join(
     REPO, "src/test/resources/quest/quest-item-selectable-retail-contract.tsv")
 
@@ -60,6 +64,16 @@ def build_item_map():
     return mapping
 
 
+def ledger_ids():
+    ids = set()
+    with open(LEDGER, encoding="utf-8") as fh:
+        for line in fh:
+            if line.startswith("#") or not line.strip():
+                continue
+            ids.add(line.split("\t")[0])
+    return ids
+
+
 def main():
     item_map = build_item_map()
     print(f"item map size: {len(item_map)}")
@@ -76,7 +90,8 @@ def main():
                 qid = (child.text or "").strip()
             elif re.match(r"^(reward_item1|selectable_reward_item1)_\d+$", tag):
                 fields[tag] = (child.text or "").strip()
-            elif tag in ("reward_gold_ext", "reward_item_ext_1", "reward_title_ext"):
+            elif (tag in ("reward_gold_ext", "reward_title_ext")
+                  or re.match(r"^reward_item_ext_\d+$", tag)):
                 fields[tag] = (child.text or "").strip()
             elif re.match(r"^selectable_reward_item_ext_\d+$", tag):
                 fields[tag] = (child.text or "").strip()
@@ -93,8 +108,9 @@ def main():
                  "rows with unmapped names are EVIDENCE_BLOCKED and excluded.\n")
         fh.write("quest_id\tretail_fixed_items\tretail_selectable_ids\t"
                  "retail_extended\n")
+        universe = ledger_ids()
         for qid in sorted(retail, key=int):
-            if not os.path.exists(os.path.join(PROD_DIR, qid + ".xml")):
+            if not os.path.exists(os.path.join(PROD_DIR, qid + ".xml")) and qid not in universe:
                 continue
             fields = retail[qid]
             fixed = []

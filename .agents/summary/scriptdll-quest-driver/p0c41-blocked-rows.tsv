@@ -1,0 +1,16 @@
+# P0c-41 阻塞登记（本片后仍未收口的轴；承接 p0c40-blocked-rows.tsv，只记变化与残留）
+# quest_id	axis	evidence
+1932/3092	SELECT6_CLOSE_EXIT_CLOSED(本片修复)	契约门残留 2 条归零：reward 态 CHECK 失败页 SELECT6(2716) 的 FINISH_DIALOG(1008) 关闭出口由编译器闭包补出（同节点同 NPC，形状逐字取自同任务既有关闭出口）。修复面 = 缺陷面：链式指纹 changed 恰好 {1932,3092}、added/removed=0；契约审计 fatal 2→0、EVIDENCE_REQUIRED 桶清空（PAGE_ACTION_MATCHED +2 = 两条新关闭路由被匹配）
+<62 行：1002 1005 1006 1007 10101 10110 10506 10520 10521 10525 10526 10530 1111 1205 1319 13403 14021 14025 14041 14046 14054 1722 18302 1901 1929 1989 2002 20031 2007 2008 2009 20101 20110 20501 20504 20520 20521 20525 20526 20530 2132 23403 24022 24030 24041 24043 2430 25680 2722 2900 2916 2989 30700 30750 3933 3934 3938 4542 4937 4938 4942 10031>	SELECT6_CLOSE_EXIT_OTHER_FAMILIES	同一"下发 select6 页但同节点无 1008 关闭路由"形状在非 SimpleTalk-链式族仍有 62 行 / 65 个 SCOPED 键（DataDriven、SimpleCollectItem、CombineTask、旧 Java 形态行；节点名如 s5 39 键、equipped96、reward30、instance95）。**审计不可达故非致命**（契约门 fatal 全表 = 0），本片只按客户端证据闭合链式族；这 62 行是否可达需按族单独取证（各自族门的审计可达性），不得套用本片规则批量改
+<1011 未达 48 行>	ACCEPT_PAGE_NOT_EMITTED	客户端有 select1(1011) 页但真端 IR 没有任何转换下发 1011（多为 block startPage 非 SELECT1 或零 NPC_START 块的行）；本片未触碰该轴
+21460/29070/29071	RUNTIME_PENDING	P0c-40 已采纳（真端侧 0 未达 0 致命）；运行时/客户端目检未做（未启服）
+18035/18807/18809/21070/24120/28035/28807	RUNTIME_PENDING	P0c-39 已采纳；目检仍待授权
+1131/1183/1363/1452/1527/1528/1691/1909/1918/1932/2135/2209/2247/2278/2515/2523/2569/2692/2767/2901/2902/2903/2904/2912/2917/3006/3020/3035/3085/3092/3961/3962/3963/3964/3970/3973/4501/4905/11068/11072/11139/14122	ACCEPT_CONTINUATION_CLOSED	P0c-40 修复面（42 行）保持不变；本片对 1932/3092 只在 reward 态追加关闭出口，未回改接取页梯
+3914	START_DIALOG_ROUTE_GAP	ReportToManyDialogRouteRegressionTest 期望 (3914, 203752, 1352) MISSING（SimpleUseItem 族；本片未触碰）
+80310/80311	START_DIALOG_ROUTE_GAP	同测试期望 (80310, 831384, 1003) / (80311, 831387, 1003) MISSING（非 SimpleTalk 族）
+1324/2428	NOT_IN_CANONICAL_SET	真端 body 无 con_quest/cutscene 标记，但既不在 canonical 待合成集也不在 AXIS-MISMATCH 列表（承接 P0c-38）
+11001/21138/30055/30202/30302	DEFERRED_BLOCK	真端 body 含 <con_quest>（延迟波），未合成
+18806/28806	CUTSCENE_AXIS	真端 body 含 <con_quest> + <cutscene>，未合成
+24123	XML_NPC_AXIS	XML 转写 NPC 204345=Rikesh vs 真端 reward_npc_name=DF2_NPC_Ananta → 204387；reward 投影 1 vs 客户端末行 2（承接 P0c-37，未裁）。注：该行平铺形态的 CHECK 对锚在 started（与 1932/3092 的 reward 锚不同），其 select6 失败页由接取流的 started 态关闭出口覆盖，审计已 PAGE_ACTION_MATCHED
+2458/4905/4906	RUNTIME_PENDING	P0c-38 的物品链置换修正（RETAIL_TABLE）已入生产；运行时目检未做
+15673/25673/80846/80847	OTHER_LANE_TRANSIENT	DataDriven 车道在途行（历史瞬态，复跑即绿）

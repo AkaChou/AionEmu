@@ -1,0 +1,9 @@
+# P0c-9 族级分歧表：<族>	<码>	<行数>	<可否归零>	<归零路径>
+SimpleHunt	CLIENT_BUTTON_UNWIRED	11	不可归零（当前）	客户端按钮（select5 20002 / 报告页 1009）在真端路由集无对应动作；P0c-9 已逐行复核
+SimpleHunt	KILL_COVERAGE_LOSS	35	不可归零（当前）	真端编译集缺客户端点名且生产刷怪可达的怪；P0c-9 已复核 monster* 列外无可用真端源
+SimpleHunt	QUEST_SPAWN_UNEXPRESSED	2	不可归零（当前）	族表无刷怪列；任务自身 <spawn> 是该 NPC 进世界的唯一来源（P0c-6 裁定）
+SimpleHunt	RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	84	可归零（未排期）	需按 M5-b2c 三类哨兵发放系统接线 CHALLENGE_TASK 挑战任务发放（P0c-2/3 先例），需 ScriptDLL 证据
+SimpleHunt	RETAIL_COUNTER_EXCEEDS_6BIT	13	不可归零（当前）	真端计数 > 63 超出 6 位 quest_vars 打包上限；扩位会破坏客户端 SECTION 门控合同
+SimpleHunt	RETAIL_MONSTER_UNRESOLVED	11	可归零（需证据）	npc_templates 无精确名匹配；需补客户端/ScriptDLL 名→id 解析证据后重算
+SimpleHunt	XML_EXTRA_REWARD	1	不可归零（当前）	旧 XML 多出客户端任务书点名的奖励物品，真端表没有；按客户端契约保留 XML
+SimpleTalk	M3D_CLIENT_ROUTE	83	待评估	-

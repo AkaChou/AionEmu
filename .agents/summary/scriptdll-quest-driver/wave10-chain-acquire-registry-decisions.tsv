@@ -1,0 +1,45 @@
+# 续片 19 / P0c-45：链式接取（none）行登记缺口修复 —— 12 行采纳退役（wave10）。
+# The chain-acquire (none) registration gap — retiring the twelve rows (wave10).
+#
+# 起因 / cause：`build_quest_client_talk_collect_chain_pages.py` 只为 `enterworld`/`enterarea` 放行
+#   "无 select_none 接取页" 的行；`none`（链式接取：前序完成/区域任务结束自动发放）行没有接取页 →
+#   生成器把它们当 `no_pages` 丢弃 → 12 行同族（10011/10501..10507/20011/20502..20507）一律
+#   `RETAIL_TALK_COLLECT_CHAIN_DEFERRED stages=0`（其中 10503/10504/10507 被宽链先拒）。
+#   证据：链式接取与进世界/进区域接取同构（无接取 NPC → 无 select_none 简报页，简报在步骤 1 的
+#   talk NPC），narrow 编译器对 `acquiredNpc < 0` 只发自动发放边、不用 entry_page。
+# Evidence: chain acquire is isomorphic to the world/zone-entry acquires (no acquire npc, hence no
+# select_none briefing page; the briefing sits on the step-1 talk npc), and the narrow compiler's
+# chain-acquire path never reads entry_page.
+#
+# 修复 / fix：生成器接取白名单 `('enterworld','enterarea')` → `('enterworld','enterarea','none')`；
+#   登记行按生成器干跑结果外科插入（12 行，entry_page=0，数值序），**排除 20035**（lane 在飞：其行
+#   的 DD 分类正被 lane 处理，其 narrow 登记行会影响宽链的 collect 段解析，按并发纪律不代劳）。
+# The generator's acquire allow-list gains `none`; the twelve registry rows are inserted surgically
+# from the generator's dry run (entry_page=0, numeric order), excluding 20035 (the lane's in-flight
+# row: its narrow registry row would feed the broad chain's collect-stage lookup).
+#
+# quest_id	acquire	registry_row	action
+10011	none	0	talk:1011 > 1012 > 1013 > 1014:10000	talk:1352 > 1353:10001	talk:1693 > 1694:10002	talk:2034 > 2035 > 2036 > 2037:10003	talk:3739 > 3740 > 3741:10255	ADOPT_RETAIL（basis=DD_CHAIN_ACQUIRE_REGISTRY）
+10501	none	0	talk:1011 > 1012 > 1013:10000	talk:1693 > 1694 > 1779 > 1864 > 1695:10002	talk:2375 > 2376:10004	collect:3057:39:10000:10001	ADOPT_RETAIL
+10502	none	0	（见登记表）	ADOPT_RETAIL
+10503	none	0	（见登记表）	ADOPT_RETAIL
+10504	none	0	（见登记表）	ADOPT_RETAIL
+10505	none	0	（见登记表）	ADOPT_RETAIL
+10507	none	0	（见登记表）	ADOPT_RETAIL
+20011	none	0	（见登记表）	ADOPT_RETAIL
+20502	none	0	（见登记表）	ADOPT_RETAIL
+20503	none	0	（见登记表）	ADOPT_RETAIL
+20506	none	0	（见登记表）	ADOPT_RETAIL
+20507	none	0	（见登记表）	ADOPT_RETAIL
+
+# 附：10505 链页梯扇出修复后的**故意重冻**（同批契约门抓到 4 条 BUTTON_WITHOUT_ROUTE）。
+# Appendix: 10505's deliberate re-freeze after the talk-ladder fan-out fix (the same-batch contract
+# gate had caught four BUTTON_WITHOUT_ROUTE fingerprints on it).
+#   生成器旧法只取首个导航按钮 → 2205 的三分支 {2036,2057,2078} 被线性化成单一 2036，
+#   2036 的 2078/2042/2047 成死按钮；改 BFS 收集整段导航分量后梯 7 → 10 页。
+#   The generator used to take only the first nav button, linearising 2205's three-way branch
+#   {2036,2057,2078} into 2036 alone and leaving 2036's 2078/2042/2047 dead; the BFS collects the
+#   whole stage component and the ladder grows from 7 to 10 pages.
+#
+# quest_id	old_fingerprint	new_fingerprint	nodes	transitions
+10505	cd005f28be880cc63f2e235700a912867a6b3a0e6c34083dfc863c1e8a07a0a3	66dd6eae7a5336accb82fe75ae56ddc75be411c3b7151198a325130cbb8fa983	8	58 -> 61

@@ -1,0 +1,24 @@
+# P0c-45 多余 owner 剪除裁定表（SimpleTalk 链登记表 / 生成物耐久性：修复必须落进生成器）
+# 语义：登记表里由遗留 XML 转写带入、而**真端与客户端都不声明**的交付 owner 记录整组剪除。
+#   生成器加载器 fail-closed 九轴（见 build_quest_client_talk_chain_steps.py 注释）：
+#   ①code 域；②与阶梯/接取入口/改道三表互斥；③owner=RETAIL_TABLE；④多余 NPC ∉ 声明集（真端 ∪ 客户端）；
+#   ⑤census DEVIATION 记过；⑥客户端交付登记未背书；⑦声明 owner 名 == 真端 reward_npc_name 且唯一；
+#   ⑧覆盖守卫（多余 owner 的动作/页集 ⊆ 声明 owner）；⑨越界守卫（只许出现在 <dialog>/<npc-complete>）。
+#
+# 取证（判例 35010/35011，四源一致 = 真端胜）：
+#   ① 真端表 Quest_SimpleTalk.xml：reward_npc_name=Palas（唯一解析 799805）；acquired_npc_name=_faction_
+#      （类别哨兵 = 系统发放，非 NPC 接取）；talk_npc1=Trou/Sofne（204560/204504，简报人）。
+#   ② 客户端任务书正文：QUEST_Q35010.html 明文「向[%dic:STR_DIC_E_35007]报告」= dic 35007 → Palas(799805)；
+#      正文人名计数 Palas 0/Priamos 0（客户端用 dic 占位，名字走字符串表）而 dic 链交付登记
+#      35007→799805 / 35014→799806 分派明确。
+#   ③ 客户端交付登记 quest_client_reward_npcs.tsv：35010/35011 **无行**（未被多 NPC 背书）；
+#      同族被背书的多 NPC 形有行（35021+→799800,799801；45024+→799842,799843）。
+#   ④ 客户端模板索引 legacy-quest-dialog-template-index.csv：35010/35011 的 end_npc_ids=**799805 单值**
+#      （同 template_type=report_to_many 的 35024/35025/35026/45024+ 均列出**成对** end NPC ⇒
+#      单值是实测而非解析失败）。
+#   遗留 XML 侧的对立证据：35011 退役 XML 注释「第二步：向 Palas (799805) / Priamos (799806) 任一报告」
+#   ——手工形"任一"便利，无真端/客户端背书；按判据 ③ 裁 XML 错、真端+客户端对。
+#
+# quest_id	code	extra_npc	declared_owner_npc_name	basis
+35010	LEGACY_EXTRA_DELIVERY_OWNER	799806	Palas	真端 reward=Palas(799805)；客户端 dic STR_DIC_E_35007→799805；交付登记无行；模板索引 end_npc=799805（同 template_type 同族成对 ⇒ 单值为实测）；遗留 XML 注释"任一报告"无背书。剪除 799806 的 4 R 行 + 1 B NPC_COMPLETE（Palas 同动作同页齐全，覆盖守卫通过）
+35011	LEGACY_EXTRA_DELIVERY_OWNER	799806	Palas	同上（35011 的 2 R 行 + 遗留注释同形）；同族成对形对照 = 35024/45024 的 799800,799801 / 799842,799843 均有客户端登记背书

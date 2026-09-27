@@ -1,0 +1,20 @@
+# P0c-35 裁定：进度行投影（真端 collect_progress = 任务书掉落生效行）+ 24202/80320 入台
+# 判据（真端文件=形状权威；客户端解包数据=强二证据；遗留 XML 只是对照）：
+#   1. 真端 quest.xml 声明 collect_progress（掉落生效行）；运行时掉落门 QuestService.isQuestDrop 要求
+#      `status=START && 该任务 var0 == collectingStep`（0 表示任意 START 行）——所以定义里必须存在
+#      「START 且 var0==collect_progress」的行态，否则掉落永不触发。
+#   2. 客户端任务书 quest_summary 的行号与 collect_progress 一致：带 `[%collectitem]` 的那一行就是
+#      掉落/交付行（24202 第 2 行、80320 第 1 行；行数登记 quest_client_summary_rows.tsv）。
+#   3. 同族 19 行（11304/14121/1932/3092/3340/3547/4966-4969/14201/24121/24152/24242 等）已是
+#      「started(0) + s1(1)[+ s2(2)]、交付门挂最后一列 START 行」的形状；只有本两行把多行压成
+#      started(var0=0)（XML 期简化），故按同族约定把该 START 行的 var0 投影到 collect_progress。
+#   4. 生成器 fail-closed：p0c35-progress-row-overrides.tsv 记录 node/旧值/新值/basis，校验
+#      collect_progress>0、客户端末行行号==collect_progress、有 drop/item_check 轴背书。
+#   5. 门通道（P0c-34）就位：两行的 npc-item-report 已是 I 记录（39/20002 对，失败页 CLOSE / SELECT6），
+#      与已删 XML 的 IR 差集在投影前为 0/+1 自愈边——本片只改 START 行的 var0，不动任何路由。
+#   6. 未建模缺口（登记不阻塞）：24202 真端声明 talk_npc1=Neligor / talk_npc2=Cairon（客户端页链
+#      select2→select2_1(SETPRO1)、select3→select3_1(SETPRO2) 在案且当前不可达），本片未合成这两条中间行；
+#      8xxx 行首编号行为由后续「中间行合成」切片处理（派生通道：信件行序 + 页→NPC 的 HTML dic 名 + 同族约定）。
+quest_id	decision	code	evidence
+24202	ADOPT_RETAIL	PROGRESS_ROW_PROJECTION	真端 quest.xml collect_progress=2 + 客户端任务书 3 行第 2 行 [%collectitem]（0/1 行 = Neligor/Cairon 中间对话，客户端页 1352/1353 与 1693/1694 在案）;registry N started 0->2（p0c35-progress-row-overrides.tsv）;drops=drop_monster/drop_item 声明 + item_check + npc-item-report 182215465 required 1 failure-page CLOSE;reward 投影 2=末行（QE-051，未变）;IR vs XML=DIFF:NODE_PROJECTION（冻结登记）;镜像形状=24121/24242（started+s1+s2，交付门在 s2）;judge=JournalRewardRowRepairContractTest(24202,2,1) 由 E 记录边满足（P0c-34 已停发重复通用边）
+80320	ADOPT_RETAIL	PROGRESS_ROW_PROJECTION	真端 quest.xml collect_progress=1 + 客户端任务书 2 行第 1 行 [%collectitem]（第 0 行 = 与交付同上 NPC Soraya 的接取对话，接取即完成该行）;registry N started 0->1;drops + item_check + npc-item-report 182215303 required 12（失败页缺省 SELECT6=2716，客户端在案）;reward 投影 1=末行（未变）;IR vs XML=DIFF:NODE_PROJECTION;无中间行（真端无 talk_npcN 声明）→ 单 START 行形状即完整形状

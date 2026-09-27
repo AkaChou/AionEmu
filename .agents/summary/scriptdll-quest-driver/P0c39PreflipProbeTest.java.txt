@@ -1,0 +1,298 @@
+package com.aionemu.gameserver.questEngine.definition;
+
+import com.aionemu.gameserver.questEngine.retail.RetailClientDialogExits;
+import com.aionemu.gameserver.questEngine.retail.RetailClientRewardNpcs;
+import com.aionemu.gameserver.questEngine.retail.RetailClientSummaryRows;
+import com.aionemu.gameserver.questEngine.retail.RetailClientTalkChainSteps;
+import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
+import com.aionemu.gameserver.questEngine.retail.RetailNpcNameIndex;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestXmlTable;
+import com.aionemu.gameserver.questEngine.retail.RetailSimpleTalkDefinitionCompiler;
+import com.aionemu.gameserver.questEngine.retail.RetailSimpleTalkTable;
+
+import org.junit.jupiter.api.Test;
+
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.Map;
+import java.util.TreeMap;
+
+/**
+ * 临时探针（P0c-39）：flip 前对拍——把 10 行按**真端路径**编译后做客户端页可达性审计，
+ * 与**XML 侧**（现生产视图，owner=XML_RETENTION）逐行比：致命类计数（BUTTON_WITHOUT_ROUTE /
+ * PAGE_NOT_IN_TASK_HTML）与未达页集合。flip 的准入判据 = 真端侧致命类不得比 XML 侧多。
+ * Temporary P0c-39 probe: retail-side vs XML-side client-contract audit for the ten pending flips.
+ */
+class P0c39PreflipProbeTest {
+
+	/** 待 flip 的 10 行（owner=XML_RETENTION，P0c-38 已合成）。 */
+	private static final int[] FLIP = {18035, 18807, 18809, 21070, 21460, 24120, 28035, 28807, 29070, 29071};
+
+	private static final String NPC_DIR = "/aion/data/static_data/npcs/";
+	private static final List<String> NPC_TEMPLATES = List.of(
+		"npc_template_200000_216188.xml", "npc_template_216189_235748.xml", "npc_template_235749_247606.xml",
+		"npc_template_247607_270057.xml", "npc_template_270058_286320.xml", "npc_template_286321_800030.xml",
+		"npc_template_800031_834289.xml", "npc_template_834290_885645.xml");
+
+	@Test
+	void retailSideAuditVersusXmlSide() throws Exception {
+		RetailSimpleTalkTable table;
+		try (InputStream input = open("/aion/data/static_data/quest_retail/Quest_SimpleTalk.xml")) {
+			table = RetailSimpleTalkTable.load(input);
+		}
+		RetailQuestXmlTable retailTable;
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest.xml")) {
+			retailTable = RetailQuestXmlTable.load(input);
+		}
+		RetailClientDialogExits exits;
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_dialog_exits.tsv")) {
+			exits = RetailClientDialogExits.load(input);
+		}
+		RetailClientSummaryRows summaryRows;
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_summary_rows.tsv")) {
+			summaryRows = RetailClientSummaryRows.load(input);
+		}
+		RetailClientRewardNpcs clientRewardNpcs;
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_reward_npcs.tsv")) {
+			clientRewardNpcs = RetailClientRewardNpcs.load(input);
+		}
+		RetailClientTalkChainSteps chainSteps;
+		try (InputStream input = open(
+				"/aion/data/static_data/quest_retail/quest_client_talk_chain_steps.tsv")) {
+			chainSteps = RetailClientTalkChainSteps.load(input);
+		}
+		RetailNpcNameIndex npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_TEMPLATES));
+		RetailItemNameIndex itemIndex = RetailItemNameIndex.build(openAll("/aion/data/static_data/items/item/",
+			listXmlNames("/aion/data/static_data/items/item/")));
+		Map<String, Integer> randomRewards = randomRewardIds();
+		Map<Integer, Integer> nameIds = nameIds();
+
+		Map<Integer, QuestDialogOrderAudit.ClientQuest> all = QuestDialogOrderAudit.readClientPages(
+			Path.of("docs/quest/client-dialog-mapping/quest-dialog-pages.csv"),
+			Path.of("docs/quest/client-dialog-mapping/quest-dialog-action-details.csv"));
+		Map<Integer, QuestDialogOrderAudit.ClientQuest> client = new LinkedHashMap<>();
+		for (int questId : FLIP) {
+			if (all.containsKey(questId)) {
+				client.put(questId, all.get(questId));
+			}
+		}
+		System.out.println("CLIENT-MAPPED " + client.keySet());
+
+		List<CompiledQuestDefinition> definitions = new ArrayList<>();
+		for (int questId : FLIP) {
+			var entry = table.find(questId).orElse(null);
+			var meta = retailTable.find(questId).orElse(null);
+			if (entry == null || meta == null) {
+				System.out.println("RET " + questId + " MISSING-INPUT entry=" + (entry != null)
+					+ " meta=" + (meta != null));
+				continue;
+			}
+			var metadata = RetailQuestMetadataCompiler.compile(meta, npcIndex, itemIndex, randomRewards, nameIds);
+			var outcome = RetailSimpleTalkDefinitionCompiler.compile(entry, npcIndex, metadata, exits,
+				summaryRows, clientRewardNpcs, chainSteps);
+			if (!outcome.accepted()) {
+				System.out.println("RET " + questId + " REJECTED " + outcome.rejectionCode()
+					+ " " + outcome.detail());
+				continue;
+			}
+			definitions.add(outcome.definition());
+			QuestDefinition definition = outcome.definition().definition();
+			System.out.println("RET " + questId + " nodes=" + definition.nodes().stream()
+				.map(node -> node.label() + ":" + node.projection().status()
+					+ node.projection().variables()).toList()
+				+ " transitions=" + definition.transitions().size());
+		}
+
+		QuestCatalog retailCatalog = new ImmutableQuestCatalog(definitions);
+		QuestCatalog production = RetailQuestDriver.overlay(
+			QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader()));
+
+		printSide("XML", QuestDialogOrderAudit.audit(production, client));
+		printSide("RET", QuestDialogOrderAudit.audit(retailCatalog, client));
+
+		// flip 后复跑（重跑本探针时）：生产视图必须仍含这 10 行（7 行走真端定义、3 行仍走 XML），
+		// 且 7 行的未达/致命必须为 0——否则 flip 是回归。
+		// Post-flip re-run: the production view must still expose all ten rows, with the seven flipped
+		// rows carrying zero unresolved/fatal client pages.
+		System.out.println("=== PROD (live production view) ===");
+		for (int questId : FLIP) {
+			var compiled = production.findExecutable(questId).orElse(null);
+			System.out.println("PROD " + questId + " executable=" + (compiled != null)
+				+ (compiled == null ? "" : " nodes=" + compiled.definition().nodes().size()
+					+ " transitions=" + compiled.definition().transitions().size()));
+		}
+		printSide("PROD", QuestDialogOrderAudit.audit(production, client));
+
+		// ReportToManyDialogRouteRegressionTest（EXPECTED_ROUTES 含 24120 两条）的逐条对拍：
+		// START 态 + TalkToNpc(dialogId=31) + ShowQuestDialog(page) 路由必须存在。
+		System.out.println("=== START_DIALOG(31) routes ===");
+		for (int questId : FLIP) {
+			var compiled = production.findExecutable(questId).orElse(null);
+			if (compiled == null) {
+				System.out.println("ROUTE " + questId + " NOT-EXECUTABLE");
+				continue;
+			}
+			QuestDefinition definition = compiled.definition();
+			Set<String> started = definition.nodes().stream()
+				.filter(node -> node.projection().status() == QuestStatus.START)
+				.map(QuestNode::label)
+				.collect(java.util.stream.Collectors.toSet());
+			definition.transitions().stream()
+				.filter(transition -> started.contains(transition.sourceNode())
+					&& transition.event() instanceof QuestEvent.TalkToNpc talk
+					&& Integer.valueOf(31).equals(talk.dialogId())
+					&& transition.afterCommit().stream().anyMatch(action ->
+						action instanceof AfterCommitAction.ShowQuestDialog))
+				.forEach(transition -> {
+					QuestEvent.TalkToNpc talk = (QuestEvent.TalkToNpc) transition.event();
+					transition.afterCommit().stream()
+						.filter(action -> action instanceof AfterCommitAction.ShowQuestDialog)
+						.forEach(action -> System.out.println("ROUTE " + questId
+							+ " npc=" + talk.npcId() + " page="
+							+ ((AfterCommitAction.ShowQuestDialog) action).dialogId()
+							+ " from=" + transition.sourceNode()));
+				});
+		}
+
+		// ReportToManyDialogRouteRegressionTest 的 EXPECTED_ROUTES 逐条复算（判定该测试红归属）：
+		// 本片 7 行只与 24120 相关，其余条目属其它族/其它车道。
+		System.out.println("=== ReportToMany EXPECTED_ROUTES replay ===");
+		// 直接从测试源码解析全部 EXPECTED_ROUTES（避免手抄遗漏）
+		List<int[]> expected = new ArrayList<>();
+		java.util.regex.Matcher routeMatcher = java.util.regex.Pattern.compile(
+			"new ExpectedRoute\\((\\d+), (\\d+), (\\d+)\\)")
+			.matcher(java.nio.file.Files.readString(Path.of(
+				"src/test/java/com/aionemu/gameserver/questEngine/definition/ReportToManyDialogRouteRegressionTest.java")));
+		while (routeMatcher.find()) {
+			expected.add(new int[] {Integer.parseInt(routeMatcher.group(1)),
+				Integer.parseInt(routeMatcher.group(2)), Integer.parseInt(routeMatcher.group(3))});
+		}
+		System.out.println("EXP total=" + expected.size());
+		Map<Integer, QuestDefinition> cache = new LinkedHashMap<>();
+		for (int[] entry : expected) {
+			QuestDefinition definition = cache.computeIfAbsent(entry[0], questId ->
+				production.findExecutable(questId).map(CompiledQuestDefinition::definition).orElse(null));
+			if (definition == null) {
+				System.out.println("EXP " + entry[0] + " npc=" + entry[1] + " page=" + entry[2]
+					+ " -> NOT-EXECUTABLE");
+				continue;
+			}
+			Set<String> started = definition.nodes().stream()
+				.filter(node -> node.projection().status() == QuestStatus.START)
+				.map(QuestNode::label)
+				.collect(java.util.stream.Collectors.toSet());
+			boolean ok = definition.transitions().stream().anyMatch(transition ->
+				started.contains(transition.sourceNode())
+					&& transition.event() instanceof QuestEvent.TalkToNpc talk
+					&& talk.npcId() == entry[1] && Integer.valueOf(31).equals(talk.dialogId())
+					&& transition.afterCommit().contains(
+						new AfterCommitAction.ShowQuestDialog(entry[2])));
+			System.out.println("EXP " + entry[0] + " npc=" + entry[1] + " page=" + entry[2]
+				+ " -> " + (ok ? "OK" : "MISSING"));
+		}
+	}
+
+	private static void printSide(String side, List<QuestDialogOrderAudit.AuditRow> rows) {
+		Map<String, Integer> statuses = new TreeMap<>();
+		rows.forEach(row -> statuses.merge(row.auditStatus(), 1, Integer::sum));
+		System.out.println("=== " + side + " statuses=" + statuses);
+		List<String> fatal = new ArrayList<>();
+		rows.stream()
+			.filter(row -> row.auditStatus().equals("EVIDENCE_REQUIRED")
+				|| row.auditStatus().equals("CLIENT_PAGE_UNREACHED"))
+			.sorted(Comparator.comparingInt(QuestDialogOrderAudit.AuditRow::questId)
+				.thenComparing(QuestDialogOrderAudit.AuditRow::shownPage)
+				.thenComparing(QuestDialogOrderAudit.AuditRow::clientVisibleAction))
+			.forEach(row -> System.out.println("  " + side + " " + row.questId() + " page=" + row.shownPage()
+				+ " client=" + row.clientVisibleAction() + " status=" + row.auditStatus()
+				+ " | " + row.unresolvedReason()));
+		rows.forEach(row -> {
+			String reason = row.unresolvedReason();
+			if (reason.startsWith("compiled IR emits a task page absent from the active client page index")) {
+				fatal.add("PAGE_NOT_IN_TASK_HTML\t" + row.questId() + "\t" + row.shownPage()
+					+ "\t" + row.clientVisibleAction());
+			} else if (reason.startsWith("visible client action has no route")) {
+				fatal.add("BUTTON_WITHOUT_ROUTE\t" + row.questId() + "\t" + row.shownPage()
+					+ "\t" + row.clientVisibleAction() + "\t" + row.actualPath());
+			}
+		});
+		System.out.println("FATAL-" + side + " count=" + fatal.size());
+		fatal.forEach(line -> System.out.println("  FATAL-" + side + " " + line));
+	}
+
+	private static Map<String, Integer> randomRewardIds() throws Exception {
+		Map<String, Integer> ids = new LinkedHashMap<>();
+		var document = parse(open("/aion/data/static_data/quest_random_rewards.xml"));
+		var nodes = document.getDocumentElement().getElementsByTagName("quest_random_reward");
+		for (int index = 0; index < nodes.getLength(); index++) {
+			var element = (org.w3c.dom.Element) nodes.item(index);
+			ids.put(element.getElementsByTagName("name").item(0).getTextContent().trim(),
+				Integer.parseInt(element.getElementsByTagName("id").item(0).getTextContent().trim()));
+		}
+		return ids;
+	}
+
+	private static Map<Integer, Integer> nameIds() throws Exception {
+		Map<Integer, Integer> ids = new LinkedHashMap<>();
+		for (String line : lines(open(
+				"/aion/data/static_data/quest_retail/quest_name_string_ids.tsv"))) {
+			if (line.startsWith("#") || line.isBlank()) {
+				continue;
+			}
+			String[] parts = line.split("\t");
+			ids.put(Integer.parseInt(parts[0].substring("STR_QUEST_NAME_Q".length())),
+				Integer.parseInt(parts[1]));
+		}
+		return ids;
+	}
+
+	private static List<String> listXmlNames(String dir) throws Exception {
+		var url = P0c39PreflipProbeTest.class.getResource(dir);
+		java.io.File[] files = new java.io.File(url.toURI()).listFiles((d, name) -> name.endsWith(".xml"));
+		return java.util.Arrays.stream(files).map(java.io.File::getName).sorted().toList();
+	}
+
+	private static List<InputStream> openAll(String dir, List<String> files) throws Exception {
+		List<InputStream> inputs = new ArrayList<>();
+		for (String file : files) {
+			inputs.add(open(dir + file));
+		}
+		return inputs;
+	}
+
+	private static org.w3c.dom.Document parse(InputStream input) throws Exception {
+		try (input) {
+			var factory = javax.xml.parsers.DocumentBuilderFactory.newInstance();
+			factory.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, true);
+			factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+			return factory.newDocumentBuilder().parse(input);
+		}
+	}
+
+	private static List<String> lines(InputStream input) throws Exception {
+		try (BufferedReader reader = new BufferedReader(
+				new InputStreamReader(input, StandardCharsets.UTF_8))) {
+			return reader.lines().toList();
+		}
+	}
+
+	private static InputStream open(String resource) throws Exception {
+		InputStream input = P0c39PreflipProbeTest.class.getResourceAsStream(resource);
+		if (input == null) {
+			throw new IllegalStateException("missing resource " + resource);
+		}
+		return input;
+	}
+}

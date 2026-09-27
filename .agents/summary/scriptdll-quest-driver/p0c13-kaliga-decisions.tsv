@@ -1,0 +1,25 @@
+# P0c-13：Kaliga 系 20 行复験采纳（M3-d 降级复核——当前编译器可表达契约形状）
+# 契约（QuestKaligaCollectionClientDialogAlignmentTest）：种族门 QUEST_SELECT + CHECK 对 +
+# select6 失败页 + var0=0 节点；零售行 = 物件哨兵 accept==reward + item_check+collect 通道。
+# 验收 = 契约测试走生产视图（所有权翻转后自动切真端定义）。
+# quest_id	decision	basis	-	evidence
+18618	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	contract test green against production view (race at quest level via permittedRaces + isRacePermitted at start, not route level; ASMO rows also drop legacy PACKET_ONLY progress edges; probe OK:DIFF)
+18619	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	contract test green against production view (race at quest level via permittedRaces + isRacePermitted at start, not route level; ASMO rows also drop legacy PACKET_ONLY progress edges; probe OK:DIFF)
+18620	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	contract test green against production view (race at quest level via permittedRaces + isRacePermitted at start, not route level; ASMO rows also drop legacy PACKET_ONLY progress edges; probe OK:DIFF)
+18621	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	contract test green against production view (race at quest level via permittedRaces + isRacePermitted at start, not route level; ASMO rows also drop legacy PACKET_ONLY progress edges; probe OK:DIFF)
+18622	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	contract test green against production view (race at quest level via permittedRaces + isRacePermitted at start, not route level; ASMO rows also drop legacy PACKET_ONLY progress edges; probe OK:DIFF)
+18623	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	contract test green against production view (race at quest level via permittedRaces + isRacePermitted at start, not route level; ASMO rows also drop legacy PACKET_ONLY progress edges; probe OK:DIFF)
+18624	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	contract test green against production view (race at quest level via permittedRaces + isRacePermitted at start, not route level; ASMO rows also drop legacy PACKET_ONLY progress edges; probe OK:DIFF)
+18625	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	contract test green against production view (race at quest level via permittedRaces + isRacePermitted at start, not route level; ASMO rows also drop legacy PACKET_ONLY progress edges; probe OK:DIFF)
+18626	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	contract test green against production view (race at quest level via permittedRaces + isRacePermitted at start, not route level; ASMO rows also drop legacy PACKET_ONLY progress edges; probe OK:DIFF)
+18627	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	contract test green against production view (race at quest level via permittedRaces + isRacePermitted at start, not route level; ASMO rows also drop legacy PACKET_ONLY progress edges; probe OK:DIFF)
+28618	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	contract test green against production view (race at quest level via permittedRaces + isRacePermitted at start, not route level; ASMO rows also drop legacy PACKET_ONLY progress edges; probe OK:DIFF)
+28619	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	contract test green against production view (race at quest level via permittedRaces + isRacePermitted at start, not route level; ASMO rows also drop legacy PACKET_ONLY progress edges; probe OK:DIFF)
+28620	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	contract test green against production view (race at quest level via permittedRaces + isRacePermitted at start, not route level; ASMO rows also drop legacy PACKET_ONLY progress edges; probe OK:DIFF)
+28621	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	contract test green against production view (race at quest level via permittedRaces + isRacePermitted at start, not route level; ASMO rows also drop legacy PACKET_ONLY progress edges; probe OK:DIFF)
+28622	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	contract test green against production view (race at quest level via permittedRaces + isRacePermitted at start, not route level; ASMO rows also drop legacy PACKET_ONLY progress edges; probe OK:DIFF)
+28623	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	contract test green against production view (race at quest level via permittedRaces + isRacePermitted at start, not route level; ASMO rows also drop legacy PACKET_ONLY progress edges; probe OK:DIFF)
+28624	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	contract test green against production view (race at quest level via permittedRaces + isRacePermitted at start, not route level; ASMO rows also drop legacy PACKET_ONLY progress edges; probe OK:DIFF)
+28625	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	contract test green against production view (race at quest level via permittedRaces + isRacePermitted at start, not route level; ASMO rows also drop legacy PACKET_ONLY progress edges; probe OK:DIFF)
+28626	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	contract test green against production view (race at quest level via permittedRaces + isRacePermitted at start, not route level; ASMO rows also drop legacy PACKET_ONLY progress edges; probe OK:DIFF)
+28627	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	contract test green against production view (race at quest level via permittedRaces + isRacePermitted at start, not route level; ASMO rows also drop legacy PACKET_ONLY progress edges; probe OK:DIFF)

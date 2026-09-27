@@ -1,0 +1,23 @@
+package com.aionemu.gameserver.questEngine.definition;
+
+import org.junit.jupiter.api.Test;
+
+/**
+ * 临时探针（P0c-33）：风暴轮询——全视图生产目录构建（门控：清单缺行即故障关闭）打印
+ * entries/missing/wrongOwner 三计数；构建成功即窗口开启。
+ * Temporary probe: poll the production catalog build; a clean build means the storm window opened.
+ */
+class RetailStormPollProbeTest {
+
+	@Test
+	void pollProductionCatalogStorm() {
+		System.setProperty("aion.quest.retailDriver", "true");
+		try {
+			QuestCatalog production = ProductionQuestDefinitions.catalog();
+			System.out.println("STORM_HEALED entries=" + production.entries().size());
+		} catch (RuntimeException failure) {
+			System.out.println("STORM_ACTIVE " + failure.getClass().getSimpleName() + ": "
+				+ failure.getMessage());
+		}
+	}
+}

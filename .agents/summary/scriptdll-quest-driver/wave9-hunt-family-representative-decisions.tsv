@@ -1,0 +1,24 @@
+# 续片 18 / P0c-44：hunt 家族代表形 —— 18996/28996 采纳退役（wave9）。
+# The hunt family-representative shape — retiring 18996/28996 (wave9).
+#
+# 起因 / cause：18996/28996 在 wave8 感官区注册后卡 `RETAIL_HUNT_PROGRESS_SHAPE | IDLF1_T_Barricade_Dragon_01`。
+#   真端块：`Hunt: IDLF1_T_Barricade_Dragon_01 1; IDLF1_T_Barricade_Dragon_03 1;`（两段，各 1 杀）；
+#   客户端组（quest_monster.csv → `quest_client_hunt_progress_rows.tsv` ladder_row=2）：
+#     SECTION_1<1 = {dragon_01, 02, 04, 05, 07, 09}，SECTION_2<1 = {dragon_03, 06, 08, 10}
+#   —— 真端每段只列一个**家族代表**，客户端行列的是该段所属**家族全表**；原实现要求两侧名单集合相等，
+#   于是落到"段共享"分支（段号不同）→ 拒。
+# Evidence: the retail block names one family representative per segment while the client rows for that
+# gate list the whole family; the equality check fell through to the shared-section branch and rejected.
+#
+# 规则 / rule（新分支，置于 `!shared` 之前）：段数 == 行数，且每段的全部怪物名都落在**唯一一行**的
+#   名单里（行号不重复使用）时 → 每段取该行的家族名单 + 该行的 section/count 建 BlockRow。
+#   计数权威 = 客户端任务书（玩家击杀家族任一并被该行计入；真端名是家族成员，故其击杀同样计入）。
+#   段数不符 / 落点不唯一 / 无包含关系 → 保持拒绝（不猜）。
+# New branch: when the segment count equals the row count and every segment's monsters all sit in
+# exactly one (not yet used) row's list, each segment takes that row's family names, section and count.
+# The client journal is the counting authority; a retail name is a family member, so its kills count.
+# Any other shape stays rejected.
+#
+# quest_id	dd_hunt_block	client_group	ladders	action
+18996	IDLF1_T_Barricade_Dragon_01 1; IDLF1_T_Barricade_Dragon_03 1; + IDF1_T_Vanq_Named_73_Ah 1;	row2: S1<1 {dragon_01,02,04,05,07,09} / S2<1 {dragon_03,06,08,10}; row4: S1<1 {vanq_named_73_ah}	2 段 == 2 行（代表∈家族唯一命中）	ADOPT_RETAIL（basis=DD_HUNT_FAMILY_REPRESENTATIVE）
+28996	同上（镜像）	同上	同上	ADOPT_RETAIL（basis=DD_HUNT_FAMILY_REPRESENTATIVE）

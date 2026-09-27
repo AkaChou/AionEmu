@@ -1,0 +1,36 @@
+# P0c-47 阶段推进行「领奖窗下发」外溢裁定（code=LEGACY_STAGE_REWARD_WINDOW_SPREAD）
+# Adjudication: drop the reward-window after-commit from the stage-advance row that lands in REWARD.
+#
+# 轴（P0c-46 残留 DELIVER_UNCOVERED 的第二形）：遗留转写把「下发领奖窗」
+# （`DIALOG:SHOW_QUEST_PAGE:SHOW_SELECT_QUEST_REWARD_WINDOW1`）挂在**阶段推进行**（`SETPRO<k>`，落到
+# REWARD 的那条）上；而真端与客户端都把领奖窗归**交付 owner**（真端 `reward_npc_name` ∪ 客户端
+# `end_npc_ids`）。P0c-46 角色域投影判据因此把该阶段 NPC 判为 `DELIVER_UNCOVERED`（自带 owner 没有的
+# 交付页）：它的交付投影**不是** owner 的子集 ⇒ 不得剪行（P0c-46 已按结构不同保留），本表按「行内
+# after-commit 收窄」处置——保留该行的阶段语义（REMOVE/GIVE/SYNC），只去掉领奖窗下发。
+#
+# 客户端口径（`/private/tmp/dataverify/Dialogs/**/QUEST_Q<id>.html`，与
+# `docs/quest/client-dialog-mapping` 同源解包）：阶段推进按钮 `HACTION_SETPRO<k>` 的文案是
+# **「结束对话。」**（select2_1/select2_3/select3_1 等页），即阶段推进只关窗、不下发领奖窗；领奖窗
+# 由 owner 侧打开（`npc-complete` 的 `preview=` 路由在 owner 上下发对应档领奖窗页，或 owner 名下
+# 显式领奖页行）。与判例 2963（同族 K=1：`SETPRO1 started→reward SYNC:PACKET_ONLY;CLOSE` 无领奖窗）
+# 及 canonical 阶梯（24123/2482：`SETPROK ... SYNC:LEVEL_AND_VISIBILITY_REFRESH;CLOSE`）同形。
+#
+# 生成器 fail-closed 轴（装载期 + 转写期复算，见 build_quest_client_talk_chain_steps.py）：
+#   ①code 域；②与阶梯/接取入口/改道/多余 owner/角色收窄各表互斥；③owner 必须 RETAIL_TABLE；
+#   ④stage_npc 唯一解析；⑤stage_npc == 真端 `talk_npc<k>`，且 action == `SETPRO<k>`（阶段归属轴一致）；
+#   ⑥该 (npc, action) 的转写行存在、target 节点投影 = REWARD，且 after-commit 形状逐字为
+#      `SYNC:<mode>;DIALOG:SHOW_QUEST_PAGE:SHOW_SELECT_QUEST_REWARD_WINDOW1`（窗外溢必须在末位、只此一处）；
+#   ⑦owner = 真端 `reward_npc_name` 唯一解析 == 裁定表 owner_npc ≠ stage_npc；客户端 end（若登记）== owner；
+#   ⑧**无页丢失守卫**（转写后复算）：改写后该任务仍有 owner 名下开领奖窗的记录
+#      （`B NPC_COMPLETE` 的 preview ≠ '-'，或 owner 名下 after/页列含 SHOW_SELECT_QUEST_REWARD_WINDOW1）。
+#   改写形状 = 末位窗外溢令牌替换为 `CLOSE`（SYNC 模式逐字保留）——与客户端「结束对话。」按钮语义一致。
+#
+# 五源取证：真端 SimpleTalk 表（acquired/talk_npcK/reward）× 客户端任务书角色列（end_npc_ids）+
+#   客户端页索引（select5 报告页在 owner 名下，按钮 1009=HACTION_SELECT_QUEST_REWARD）× 客户端 HTML
+#   阶段页正文与按钮文案 × client-lifecycle-alignment.csv。
+#
+# quest_id	code	stage_npc	action	owner_npc	stage_name	owner_name	client_end	basis
+11106	LEGACY_STAGE_REWARD_WINDOW_SPREAD	798979	SETPRO2	203832	Gelon	Dimos	203832	真端 talk_npc1=Savinus(798978)/talk_npc2=Gelon(798979)/reward=Dimos(203832)；客户端 end=203832、任务书三行「和[%dic:STR_DIC_N_Savinus]对话 / 和[%dic:STR_DIC_N_Gelon]对话 / 去极乐世界和[%dic:STR_DIC_N_Dimos]对话」；页链 1352→1353(SETPRO1)/1693→1694→1779(SETPRO2)、select5 报告页(1009)；HTML 阶段按钮 HACTION_SETPRO2=「结束对话。」；领奖窗归 owner（NPC_COMPLETE preview=SELECT_QUEST_REWARD + R5 owner USE_OBJECT→SELECT5）
+21036	LEGACY_STAGE_REWARD_WINDOW_SPREAD	798713	SETPRO2	799239	Fjoersvith	Wolfgang	799239	真端 talk_npc1=Arwen(799238)/talk_npc2=Fjoersvith(798713)/reward=Wolfgang(799239)；客户端 end=799239、任务书三行「把标本袋子交给[%dic:STR_DIC_N_Arwen] / 把标本袋子交给[%dic:STR_DIC_N_Fjoersvith] / 和[%dic:STR_DIC_N_Wolfgang]对话」；页链 1352→1353(SETPRO1)/1693→1694(SETPRO2)、select5 报告页(1009)；HTML 阶段按钮 HACTION_SETPRO2=「结束对话。」、select2_1 正文点名「交给[%dic:STR_DIC_N_Fjoersvith]大学者」；领奖窗归 owner（NPC_COMPLETE preview=USE_OBJECT SELECT_QUEST_REWARD + R5 owner QUEST_SELECT→SELECT5）
+39003	LEGACY_STAGE_REWARD_WINDOW_SPREAD	800512	SETPRO1	800504	DF2a_Ionia_E_LHW	DF2a_Nevma_G_LHM	800504	真端 talk_npc1=DF2a_Ionia_E_LHW(800512)/reward=DF2a_Nevma_G_LHM(800504)；客户端 end=800504、progress_npc_ids=800512/progress_page_ids=1352/progress_actions=SETPRO1、任务书「和[%dic:STR_DIC_DF2a_Ionia_E_LHW]对话 / 和[%dic:STR_DIC_NPC_DF2a_Nevma_G_LHM]对话」、select5 报告页(1009)、页链 1352→1353(SETPRO1)；HTML 阶段按钮 HACTION_SETPRO1=「结束对话。」；领奖窗归 owner（B NPC_REPORT 800504→SELECT5 + NPC_COMPLETE preview=USE_OBJECT SELECT_QUEST_REWARD）
+49003	LEGACY_STAGE_REWARD_WINDOW_SPREAD	800511	SETPRO1	800505	LF2a_Noorn_E_DHM	LF2a_dromik_G_DHM	800505	真端 talk_npc1=LF2a_Noorn_E_DHM(800511)/reward=LF2a_dromik_G_DHM(800505)；客户端 end=800505、progress_npc_ids=800511/progress_page_ids=1352/progress_actions=SETPRO1、任务书「和[%dic:STR_DIC_N_Noorn]对话 / 和[%dic:STR_DIC_N_dromik]对话」、select5 报告页(1009)、页链 1352→1353(SETPRO1)；HTML 阶段按钮 HACTION_SETPRO1=「结束对话。」；领奖窗归 owner（B NPC_REPORT 800505→SELECT5 + NPC_COMPLETE preview=USE_OBJECT SELECT_QUEST_REWARD）

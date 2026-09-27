@@ -1,0 +1,338 @@
+// 包含 0x180c4b330 的函数 0x180c4b330
+/* 180c4b330 */
+
+undefined8 FUN_180c4b330(undefined8 param_1,longlong param_2,longlong param_3)
+
+{
+  undefined8 *puVar1;
+  char cVar2;
+  int iVar3;
+  undefined4 uVar4;
+  undefined8 *puVar5;
+  undefined4 *puVar6;
+  undefined4 *puVar7;
+  undefined4 *puVar8;
+  undefined8 *puVar9;
+  undefined8 uVar10;
+  undefined8 *puVar11;
+  longlong lVar12;
+  undefined4 uVar13;
+  undefined4 uVar14;
+  undefined4 uVar15;
+  undefined4 local_e8;
+  undefined4 uStack_e4;
+  undefined8 uStack_e0;
+  undefined4 local_d8;
+  undefined4 uStack_d4;
+  undefined8 uStack_d0;
+  wchar_t local_c8;
+  undefined8 local_c6;
+  undefined8 local_be;
+  undefined8 local_b6;
+  undefined8 local_ae;
+  undefined8 local_a6;
+  undefined8 local_9e;
+  undefined8 local_96;
+  undefined4 local_8e;
+  undefined2 local_8a;
+  undefined4 local_88 [2];
+  undefined8 *local_80;
+  undefined4 local_78 [2];
+  undefined8 *local_70;
+  undefined4 local_68 [2];
+  undefined8 *local_60;
+  undefined4 local_58 [2];
+  undefined8 *local_50;
+  undefined4 local_48 [2];
+  undefined8 *local_40;
+  undefined4 local_38 [2];
+  undefined8 *local_30;
+  
+  puVar11 = *(undefined8 **)(param_3 + 0x18);
+  while( true ) {
+    if (puVar11 == (undefined8 *)0x0) {
+      return 1;
+    }
+    if (((wchar_t *)*puVar11 != (wchar_t *)0x0) &&
+       (iVar3 = _wcsicmp((wchar_t *)*puVar11,L"progress_info"), iVar3 == 0)) break;
+    puVar11 = (undefined8 *)puVar11[6];
+  }
+  lVar12 = puVar11[3];
+  if (lVar12 != 0) {
+    puVar11 = (undefined8 *)0x0;
+    do {
+      for (puVar1 = *(undefined8 **)(lVar12 + 0x18); puVar1 != (undefined8 *)0x0;
+          puVar1 = (undefined8 *)puVar1[6]) {
+        uVar4 = FUN_181079920(*puVar1,1);
+        switch(uVar4) {
+        case 0xfe9:
+          local_c8 = L'\0';
+          local_c6 = 0;
+          local_be = 0;
+          local_b6 = 0;
+          local_ae = 0;
+          local_a6 = 0;
+          local_9e = 0;
+          local_96 = 0;
+          local_8e = 0;
+          local_8a = 0;
+          FUN_181079e40(puVar1,&local_c8,0x20,
+                        L"DataDrivenQuestLoader::LoadProgressInfo(n), T_PROGRESSn_CATEGORY");
+          iVar3 = _wcsicmp(&local_c8,L"CollectItem");
+          if (iVar3 == 0) {
+            puVar5 = (undefined8 *)FUN_18107ac38(0x48);
+            uStack_d0 = puVar11;
+            if (puVar5 != (undefined8 *)0x0) {
+              *puVar5 = QuestProgressExtraInfo_CollectItem::vftable;
+              puVar5[4] = 7;
+              puVar5[3] = 0;
+              *(undefined2 *)(puVar5 + 1) = 0;
+              puVar5[5] = 0;
+              puVar5[6] = 0;
+              puVar5[7] = 0;
+              *(undefined4 *)(puVar5 + 8) = 0;
+              uStack_d0 = puVar5;
+            }
+            puVar6 = *(undefined4 **)(param_2 + 0x80);
+            local_d8 = 1;
+            if ((puVar6 <= &local_d8) ||
+               (puVar7 = *(undefined4 **)(param_2 + 0x78), &local_d8 < puVar7)) {
+              if (puVar6 == *(undefined4 **)(param_2 + 0x88)) {
+                FUN_180c50850(param_2 + 0x78,1);
+              }
+              puVar6 = *(undefined4 **)(param_2 + 0x80);
+              if (puVar6 != (undefined4 *)0x0) {
+                uVar4 = local_d8;
+                uVar13 = uStack_d4;
+                uVar14 = (undefined4)uStack_d0;
+                uVar15 = uStack_d0._4_4_;
+LAB_180c4b5e1:
+                *puVar6 = uVar4;
+                puVar6[1] = uVar13;
+                puVar6[2] = uVar14;
+                puVar6[3] = uVar15;
+              }
+              goto LAB_180c4b5e4;
+            }
+            puVar8 = &local_d8;
+LAB_180c4b4b8:
+            if (puVar6 == *(undefined4 **)(param_2 + 0x88)) {
+              FUN_180c50850(param_2 + 0x78,1);
+            }
+            puVar5 = *(undefined8 **)(param_2 + 0x80);
+            puVar9 = (undefined8 *)
+                     (((longlong)puVar8 - (longlong)puVar7 & 0xfffffffffffffff0U) +
+                     *(longlong *)(param_2 + 0x78));
+            if (puVar5 != (undefined8 *)0x0) {
+              uVar10 = puVar9[1];
+              *puVar5 = *puVar9;
+              puVar5[1] = uVar10;
+            }
+            *(longlong *)(param_2 + 0x80) = *(longlong *)(param_2 + 0x80) + 0x10;
+          }
+          else {
+            iVar3 = _wcsicmp(&local_c8,L"Hunt");
+            if (iVar3 == 0) {
+              puVar5 = (undefined8 *)FUN_18107ac38(0x38);
+              uStack_e0 = puVar11;
+              if (puVar5 != (undefined8 *)0x0) {
+                *puVar5 = QuestProgressExtraInfo_Hunt::vftable;
+                puVar5[1] = 0;
+                puVar5[2] = 0;
+                puVar5[3] = 0;
+                puVar5[4] = 0;
+                puVar5[5] = 0;
+                puVar5[6] = 0;
+                uStack_e0 = puVar5;
+              }
+              puVar6 = *(undefined4 **)(param_2 + 0x80);
+              local_e8 = 2;
+              if ((&local_e8 < puVar6) &&
+                 (puVar7 = *(undefined4 **)(param_2 + 0x78), puVar7 <= &local_e8)) {
+                puVar8 = &local_e8;
+                goto LAB_180c4b4b8;
+              }
+              if (puVar6 == *(undefined4 **)(param_2 + 0x88)) {
+                FUN_180c50850(param_2 + 0x78,1);
+              }
+              puVar6 = *(undefined4 **)(param_2 + 0x80);
+              if (puVar6 != (undefined4 *)0x0) {
+                uVar4 = local_e8;
+                uVar13 = uStack_e4;
+                uVar14 = (undefined4)uStack_e0;
+                uVar15 = uStack_e0._4_4_;
+                goto LAB_180c4b5e1;
+              }
+LAB_180c4b5e4:
+              *(longlong *)(param_2 + 0x80) = *(longlong *)(param_2 + 0x80) + 0x10;
+            }
+            else {
+              iVar3 = _wcsicmp(&local_c8,L"ItemPlay");
+              if (iVar3 == 0) {
+                puVar5 = (undefined8 *)FUN_18107ac38(0x28);
+                local_60 = puVar11;
+                if (puVar5 != (undefined8 *)0x0) {
+                  *(undefined4 *)((longlong)puVar5 + 0xc) = 1;
+                  *puVar5 = QuestProgressExtraInfo_ItemPlay::vftable;
+                  puVar5[2] = 0;
+                  puVar5[3] = 0;
+                  puVar5[4] = 0;
+                  local_60 = puVar5;
+                }
+                local_68[0] = 3;
+                FUN_180c517c0(param_2 + 0x78,local_68);
+              }
+              else {
+                iVar3 = _wcsicmp(&local_c8,L"Talk");
+                if (iVar3 == 0) {
+                  puVar5 = (undefined8 *)FUN_18107ac38(0x40);
+                  local_30 = puVar11;
+                  if (puVar5 != (undefined8 *)0x0) {
+                    *puVar5 = QuestProgressExtraInfo_Talk::vftable;
+                    puVar5[4] = 7;
+                    puVar5[3] = 0;
+                    *(undefined2 *)(puVar5 + 1) = 0;
+                    puVar5[5] = 0;
+                    puVar5[6] = 0;
+                    puVar5[7] = 0;
+                    local_30 = puVar5;
+                  }
+                  local_38[0] = 4;
+                  FUN_180c517c0(param_2 + 0x78,local_38);
+                }
+                else {
+                  iVar3 = _wcsicmp(&local_c8,L"Pvp");
+                  if (iVar3 == 0) {
+                    puVar5 = (undefined8 *)FUN_18107ac38(0x18);
+                    local_80 = puVar11;
+                    if (puVar5 != (undefined8 *)0x0) {
+                      *puVar5 = QuestProgressExtraInfo_PvP::vftable;
+                      puVar5[1] = 0;
+                      *(undefined4 *)(puVar5 + 2) = 0;
+                      *(undefined4 *)((longlong)puVar5 + 0x14) = 10;
+                      local_80 = puVar5;
+                    }
+                    local_88[0] = 5;
+                    FUN_180c517c0(param_2 + 0x78,local_88);
+                  }
+                  else {
+                    iVar3 = _wcsicmp(&local_c8,L"EnterArea");
+                    if (iVar3 == 0) {
+                      puVar5 = (undefined8 *)FUN_18107ac38(0x40);
+                      local_40 = puVar11;
+                      if (puVar5 != (undefined8 *)0x0) {
+                        *puVar5 = QuestProgressExtraInfo_EnterArea::vftable;
+                        puVar5[4] = 7;
+                        puVar5[3] = 0;
+                        *(undefined2 *)(puVar5 + 1) = 0;
+                        puVar5[5] = 0;
+                        puVar5[6] = 0;
+                        puVar5[7] = 0;
+                        local_40 = puVar5;
+                      }
+                      local_48[0] = 6;
+                      FUN_180c517c0(param_2 + 0x78,local_48);
+                    }
+                    else {
+                      iVar3 = _wcsicmp(&local_c8,L"EnterWorld");
+                      if (iVar3 == 0) {
+                        puVar5 = (undefined8 *)FUN_18107ac38(0x28);
+                        local_70 = puVar11;
+                        if (puVar5 != (undefined8 *)0x0) {
+                          *puVar5 = QuestProgressExtraInfo_EnterWorld::vftable;
+                          puVar5[2] = 0;
+                          puVar5[3] = 0;
+                          puVar5[4] = 0;
+                          local_70 = puVar5;
+                        }
+                        local_78[0] = 7;
+                        FUN_180c517c0(param_2 + 0x78,local_78);
+                      }
+                      else {
+                        iVar3 = _wcsicmp(&local_c8,L"TalkFOBJ");
+                        if (iVar3 != 0) {
+                          FUN_180cb3bf0(3,
+                                        L"DataDrivenQuestLoader::LoadProgressInfo() Unknown Category Name \"%s\""
+                                        ,&local_c8);
+                          return 0;
+                        }
+                        puVar5 = (undefined8 *)FUN_18107ac38(0x68);
+                        local_50 = puVar11;
+                        if (puVar5 != (undefined8 *)0x0) {
+                          *puVar5 = QuestProgressExtraInfo_TalkFOBJ::vftable;
+                          puVar5[1] = 0;
+                          puVar5[2] = 0;
+                          puVar5[3] = 0;
+                          puVar5[4] = 0;
+                          puVar5[5] = 0;
+                          puVar5[6] = 0;
+                          puVar5[7] = 0;
+                          puVar5[8] = 0;
+                          puVar5[9] = 0;
+                          puVar5[10] = 0;
+                          puVar5[0xb] = 0;
+                          puVar5[0xc] = 0;
+                          local_50 = puVar5;
+                        }
+                        local_58[0] = 9;
+                        FUN_180c517c0(param_2 + 0x78,local_58);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          goto LAB_180c4b8e4;
+        default:
+          FUN_180cb3bf0(3,L"DataDrivenQuestLoader::LoadProgressInfo() unknown attribute name \"%s\""
+                       );
+          goto LAB_180c4b8e4;
+        case 0xfec:
+          uVar10 = 0;
+          break;
+        case 0xfed:
+          uVar10 = 1;
+          break;
+        case 0xfee:
+          uVar10 = 2;
+          break;
+        case 0xfef:
+          uVar10 = 3;
+          break;
+        case 0xff0:
+          uVar10 = 4;
+          break;
+        case 0xff1:
+          uVar10 = 5;
+          break;
+        case 0xff2:
+          uVar10 = 6;
+          break;
+        case 0xff3:
+          uVar10 = 7;
+          break;
+        case 0xff4:
+          uVar10 = 8;
+          break;
+        case 0xff5:
+          uVar10 = 9;
+          break;
+        case 0xff6:
+          uVar10 = 10;
+        }
+        cVar2 = FUN_180c4b980(param_1,param_2,uVar10,puVar1,0,0);
+        if (cVar2 == '\0') {
+          return 0;
+        }
+LAB_180c4b8e4:
+      }
+      lVar12 = *(longlong *)(lVar12 + 0x30);
+    } while (lVar12 != 0);
+  }
+  return 1;
+}
+
+
+
+

@@ -1,0 +1,184 @@
+== 50073 name=Q50073 displayNameId=1803481 minLevel=46 category=EVENT races=[PC_ALL] repeat=RepeatPolicy[maxRepeatCount=255, rewardRepeatCount=0, cooldownSeconds=0, daily=false, weekly=false] rewards=[QuestReward[kind=EXP, id=0, amount=20000000], QuestReward[kind=ITEM, id=162001063, amount=5]]
+   var1=null
+   kill events: {KillNpc 246293=15, KillNpc 246326=15}
+   reward->complete routes:
+     1 × npcs=835570 dialog=8 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=9 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=10 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=11 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=12 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=13 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=14 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=15 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=16 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=17 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=18 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=19 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=20 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=21 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=22 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=23 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=8 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=9 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=10 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=11 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=12 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=13 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=14 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=15 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=16 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=17 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=18 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=19 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=20 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=21 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=22 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=23 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=108 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=108 actions=[GrantReward[kind=EXP, id=0, amount=20000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+   transition shape:
+     4 × a0 -> a0 | TalkToNpc
+     2 × a0 -> a1 | KillNpc
+     2 × a0 -> reward | TalkToNpc
+     2 × a1 -> a1 | TalkToNpc
+     2 × a1 -> a2 | KillNpc
+     2 × a1 -> reward | TalkToNpc
+     2 × a10 -> a10 | TalkToNpc
+     2 × a10 -> a11 | KillNpc
+     2 × a10 -> reward | TalkToNpc
+     2 × a11 -> a11 | TalkToNpc
+     2 × a11 -> a12 | KillNpc
+     2 × a11 -> reward | TalkToNpc
+     2 × a12 -> a12 | TalkToNpc
+     2 × a12 -> a13 | KillNpc
+     2 × a12 -> reward | TalkToNpc
+     2 × a13 -> a13 | TalkToNpc
+     2 × a13 -> a14 | KillNpc
+     2 × a13 -> reward | TalkToNpc
+     2 × a14 -> a14 | TalkToNpc
+     2 × a14 -> a15 | KillNpc
+     2 × a14 -> reward | TalkToNpc
+     2 × a15 -> a15 | TalkToNpc
+     2 × a15 -> reward | TalkToNpc
+     2 × a2 -> a2 | TalkToNpc
+     2 × a2 -> a3 | KillNpc
+     2 × a2 -> reward | TalkToNpc
+     2 × a3 -> a3 | TalkToNpc
+     2 × a3 -> a4 | KillNpc
+     2 × a3 -> reward | TalkToNpc
+     2 × a4 -> a4 | TalkToNpc
+     2 × a4 -> a5 | KillNpc
+     2 × a4 -> reward | TalkToNpc
+     2 × a5 -> a5 | TalkToNpc
+     2 × a5 -> a6 | KillNpc
+     2 × a5 -> reward | TalkToNpc
+     2 × a6 -> a6 | TalkToNpc
+     2 × a6 -> a7 | KillNpc
+     2 × a6 -> reward | TalkToNpc
+     2 × a7 -> a7 | TalkToNpc
+     2 × a7 -> a8 | KillNpc
+     2 × a7 -> reward | TalkToNpc
+     2 × a8 -> a8 | TalkToNpc
+     2 × a8 -> a9 | KillNpc
+     2 × a8 -> reward | TalkToNpc
+     2 × a9 -> a10 | KillNpc
+     2 × a9 -> a9 | TalkToNpc
+     2 × a9 -> reward | TalkToNpc
+     12 × complete -> complete | TalkToNpc
+     1 × reward -> complete | QuestDialog
+     34 × reward -> complete | TalkToNpc
+     4 × reward -> reward | TalkToNpc
+     4 × unaccepted -> a0 | TalkToNpc
+     12 × unaccepted -> unaccepted | TalkToNpc
+== 50074 name=Q50074 displayNameId=1803482 minLevel=51 category=EVENT races=[PC_ALL] repeat=RepeatPolicy[maxRepeatCount=255, rewardRepeatCount=0, cooldownSeconds=0, daily=false, weekly=false] rewards=[QuestReward[kind=EXP, id=0, amount=55000000], QuestReward[kind=ITEM, id=162001063, amount=5]]
+   var1=null
+   kill events: {KillNpc 246293=15, KillNpc 246326=15}
+   reward->complete routes:
+     1 × npcs=835570 dialog=8 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=9 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=10 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=11 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=12 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=13 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=14 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=15 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=16 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=17 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=18 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=19 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=20 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=21 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=22 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=23 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=8 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=9 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=10 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=11 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=12 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=13 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=14 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=15 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=16 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=17 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=18 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=19 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=20 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=21 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=22 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=23 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835570 dialog=108 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+     1 × npcs=835571 dialog=108 actions=[GrantReward[kind=EXP, id=0, amount=55000000, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=162001063, amount=5, amountMode=EXACT], CompleteQuest[rewardIndex=0]]
+   transition shape:
+     4 × a0 -> a0 | TalkToNpc
+     2 × a0 -> a1 | KillNpc
+     2 × a0 -> reward | TalkToNpc
+     2 × a1 -> a1 | TalkToNpc
+     2 × a1 -> a2 | KillNpc
+     2 × a1 -> reward | TalkToNpc
+     2 × a10 -> a10 | TalkToNpc
+     2 × a10 -> a11 | KillNpc
+     2 × a10 -> reward | TalkToNpc
+     2 × a11 -> a11 | TalkToNpc
+     2 × a11 -> a12 | KillNpc
+     2 × a11 -> reward | TalkToNpc
+     2 × a12 -> a12 | TalkToNpc
+     2 × a12 -> a13 | KillNpc
+     2 × a12 -> reward | TalkToNpc
+     2 × a13 -> a13 | TalkToNpc
+     2 × a13 -> a14 | KillNpc
+     2 × a13 -> reward | TalkToNpc
+     2 × a14 -> a14 | TalkToNpc
+     2 × a14 -> a15 | KillNpc
+     2 × a14 -> reward | TalkToNpc
+     2 × a15 -> a15 | TalkToNpc
+     2 × a15 -> reward | TalkToNpc
+     2 × a2 -> a2 | TalkToNpc
+     2 × a2 -> a3 | KillNpc
+     2 × a2 -> reward | TalkToNpc
+     2 × a3 -> a3 | TalkToNpc
+     2 × a3 -> a4 | KillNpc
+     2 × a3 -> reward | TalkToNpc
+     2 × a4 -> a4 | TalkToNpc
+     2 × a4 -> a5 | KillNpc
+     2 × a4 -> reward | TalkToNpc
+     2 × a5 -> a5 | TalkToNpc
+     2 × a5 -> a6 | KillNpc
+     2 × a5 -> reward | TalkToNpc
+     2 × a6 -> a6 | TalkToNpc
+     2 × a6 -> a7 | KillNpc
+     2 × a6 -> reward | TalkToNpc
+     2 × a7 -> a7 | TalkToNpc
+     2 × a7 -> a8 | KillNpc
+     2 × a7 -> reward | TalkToNpc
+     2 × a8 -> a8 | TalkToNpc
+     2 × a8 -> a9 | KillNpc
+     2 × a8 -> reward | TalkToNpc
+     2 × a9 -> a10 | KillNpc
+     2 × a9 -> a9 | TalkToNpc
+     2 × a9 -> reward | TalkToNpc
+     12 × complete -> complete | TalkToNpc
+     1 × reward -> complete | QuestDialog
+     34 × reward -> complete | TalkToNpc
+     4 × reward -> reward | TalkToNpc
+     4 × unaccepted -> a0 | TalkToNpc
+     12 × unaccepted -> unaccepted | TalkToNpc

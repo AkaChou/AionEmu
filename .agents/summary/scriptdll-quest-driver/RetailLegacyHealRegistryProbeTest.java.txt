@@ -1,0 +1,29 @@
+package com.aionemu.gameserver.questEngine.retail;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+/**
+ * 临时探针（P0c-28）：自愈边登记表装载直证——解析、两行登记、未登记行为 null。
+ * 窗口前消除"发射通道首次读表失败 = 全 SimpleTalk 编译中断"的风险。
+ * Temporary probe: exercises the heal-registry loader before the window wiring — a parse failure
+ * here would otherwise surface as a fleet-wide SimpleTalk compile interruption mid-window.
+ */
+class RetailLegacyHealRegistryProbeTest {
+
+	@Test
+	void registryParsesAndServesTheTwoArmourRows() throws Exception {
+		try (var input = getClass().getResourceAsStream(
+				"/aion/data/static_data/quest_retail/quest_legacy_heal_rows.tsv")) {
+			var rows = RetailLegacySaveHealRows.load(input);
+			assertEquals(2, rows.size(), "registry row count");
+			assertEquals(new RetailLegacySaveHealRows.HealEdge(1, 0), rows.get(80290));
+			assertEquals(new RetailLegacySaveHealRows.HealEdge(1, 0), rows.get(80294));
+		}
+		assertEquals(new RetailLegacySaveHealRows.HealEdge(1, 0), RetailLegacySaveHealRows.forQuest(80290));
+		assertEquals(new RetailLegacySaveHealRows.HealEdge(1, 0), RetailLegacySaveHealRows.forQuest(80294));
+		assertNull(RetailLegacySaveHealRows.forQuest(9999), "unregistered quests must not heal");
+	}
+}

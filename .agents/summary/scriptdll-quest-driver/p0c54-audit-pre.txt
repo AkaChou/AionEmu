@@ -1,0 +1,251 @@
+### quest 2611 rows=21
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 204763 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 204763 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1011	1012	unaccepted + NPC 204763 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1012	1007	unaccepted + NPC 204763 + 1012 -> unaccepted + page 1012	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 204783 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 204783 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	1693	1694	step1 + NPC 204784 + 31 -> step1 + page 1693	
+  PAGE_ACTION_MATCHED	1694	10001	step1 + NPC 204784 + 1694 -> step1 + page 1694	
+  PAGE_ACTION_MATCHED	2034	2035	step2 + NPC 204700 + 31 -> step2 + page 2034	
+  PAGE_ACTION_MATCHED	2035	10002	step2 + NPC 204700 + 2035 -> step2 + page 2035	
+  PAGE_ACTION_MATCHED	2375	1009	started + NPC 204763 + 31 -> started + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	step1 + NPC 204763 + 31 -> step1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	step2 + NPC 204763 + 31 -> step2 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	step3 + NPC 204763 + 31 -> step3 + page 2375	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 204763 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 204763 + 1007 -> unaccepted + page 4	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 204763 + -1 -> reward + terminal page 5	
+  TERMINAL_PAGE_REACHED	5		started + NPC 204763 + 1009 -> reward + terminal page 5	
+  TERMINAL_PAGE_REACHED	5		step1 + NPC 204763 + 1009 -> reward + terminal page 5	
+  TERMINAL_PAGE_REACHED	5		step2 + NPC 204763 + 1009 -> reward + terminal page 5	
+  TERMINAL_PAGE_REACHED	5		step3 + NPC 204763 + 1009 -> reward + terminal page 5	
+### quest 3001 rows=13
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 798132 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 798132 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1011	1007	unaccepted + NPC 798132 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 798133 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 798133 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	1693	1694	v1 + NPC 798136 + 31 -> v1 + page 1693	
+  PAGE_ACTION_MATCHED	1694	10001	v1 + NPC 798136 + 1694 -> v1 + page 1694	
+  PAGE_ACTION_MATCHED	2034	2035	v2 + NPC 798139 + 31 -> v2 + page 2034	
+  PAGE_ACTION_MATCHED	2035	10002	v2 + NPC 798139 + 2035 -> v2 + page 2035	
+  PAGE_ACTION_MATCHED	2375	1009	v3 + NPC 798132 + 31 -> v3 + page 2375	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 798132 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 798132 + 1007 -> unaccepted + page 4	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 798132 + -1 -> reward + terminal page 5	
+### quest 3023 rows=14
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 798138 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 798138 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1011	1007	unaccepted + NPC 798138 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 203785 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 203785 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	1693	1694	v1 + NPC 798138 + 31 -> v1 + page 1693	
+  PAGE_ACTION_MATCHED	1694	1695	v1 + NPC 798138 + 1694 -> v1 + page 1694	
+  PAGE_ACTION_MATCHED	1695	10001	v1 + NPC 798138 + 1695 -> v1 + page 1695	
+  PAGE_ACTION_MATCHED	2034	2035	v2 + NPC 798222 + 31 -> v2 + page 2034	
+  PAGE_ACTION_MATCHED	2035	10002	v2 + NPC 798222 + 2035 -> v2 + page 2035	
+  PAGE_ACTION_MATCHED	2375	1009	v3 + NPC 798138 + 31 -> v3 + page 2375	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 798138 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 798138 + 1007 -> unaccepted + page 4	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 798138 + -1 -> reward + terminal page 5	
+### quest 11070 rows=13
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 798945 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 798945 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1011	1007	unaccepted + NPC 798945 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 798943 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 798943 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	1693	1694	s1 + NPC 798949 + 31 -> s1 + page 1693	
+  PAGE_ACTION_MATCHED	1694	10001	s1 + NPC 798949 + 1694 -> s1 + page 1694	
+  PAGE_ACTION_MATCHED	2034	2035	s2 + NPC 798932 + 31 -> s2 + page 2034	
+  PAGE_ACTION_MATCHED	2035	10002	s2 + NPC 798932 + 2035 -> s2 + page 2035	
+  PAGE_ACTION_MATCHED	2375	1009	reward + NPC 798945 + -1 -> reward + page 2375	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 798945 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 798945 + 1007 -> unaccepted + page 4	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 798945 + 1009 -> reward + terminal page 5	
+### quest 11105 rows=11
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 798948 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 798948 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1011	1007	unaccepted + NPC 798948 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 798984 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 798984 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	1693	1694	s1 + NPC 798980 + 31 -> s1 + page 1693	
+  PAGE_ACTION_MATCHED	1694	10001	s1 + NPC 798980 + 1694 -> s1 + page 1694	
+  PAGE_ACTION_MATCHED	2375	1009	reward + NPC 798948 + -1 -> reward + page 2375	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 798948 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 798948 + 1007 -> unaccepted + page 4	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 798948 + 1009 -> reward + terminal page 5	
+### quest 11106 rows=15
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 798976 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 798976 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1011	1012	unaccepted + NPC 798976 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1012	1007	unaccepted + NPC 798976 + 1012 -> unaccepted + page 1012	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 798978 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	1438	started + NPC 798978 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	1438	1523	started + NPC 798978 + 1438 -> started + page 1438	
+  PAGE_ACTION_MATCHED	1523	10000	started + NPC 798978 + 1523 -> started + page 1523	
+  PAGE_ACTION_MATCHED	1693	1694	s1 + NPC 798979 + 31 -> s1 + page 1693	
+  PAGE_ACTION_MATCHED	1694	1779	s1 + NPC 798979 + 1694 -> s1 + page 1694	
+  PAGE_ACTION_MATCHED	1779	10001	s1 + NPC 798979 + 1779 -> s1 + page 1779	
+  PAGE_ACTION_MATCHED	2375	1009	reward + NPC 203832 + -1 -> reward + page 2375	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 798976 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 798976 + 1007 -> unaccepted + page 4	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 203832 + 1009 -> reward + terminal page 5	
+### quest 11117 rows=11
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 798985 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 798985 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1011	1007	unaccepted + NPC 798985 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 798963 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 798963 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	1693	1694	s1 + NPC 798984 + 31 -> s1 + page 1693	
+  PAGE_ACTION_MATCHED	1694	10001	s1 + NPC 798984 + 1694 -> s1 + page 1694	
+  PAGE_ACTION_MATCHED	2375	1009	reward + NPC 798985 + -1 -> reward + page 2375	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 798985 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 798985 + 1007 -> unaccepted + page 4	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 798985 + 1009 -> reward + terminal page 5	
+### quest 19004 rows=11
+! CLIENT_PAGE_UNREACHED	2375	1009	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 203757 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 203757 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1011	1007	unaccepted + NPC 203757 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 203752 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 203752 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	1693	1694	s1 + NPC 203701 + 31 -> s1 + page 1693	
+  PAGE_ACTION_MATCHED	1694	10001	s1 + NPC 203701 + 1694 -> s1 + page 1694	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 203757 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 203757 + 1007 -> unaccepted + page 4	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 798500 + -1 -> reward + terminal page 5	
+### quest 21004 rows=13
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 799227 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 799227 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1011	1012	unaccepted + NPC 799227 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1012	1007	unaccepted + NPC 799227 + 1012 -> unaccepted + page 1012	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 799268 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 799268 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	1693	1694	s1 + NPC 799269 + 31 -> s1 + page 1693	
+  PAGE_ACTION_MATCHED	1694	10001	s1 + NPC 799269 + 1694 -> s1 + page 1694	
+  PAGE_ACTION_MATCHED	2375	1009	s2 + NPC 799227 + 31 -> s2 + page 2375	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 799227 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 799227 + 1007 -> unaccepted + page 4	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 799227 + -1 -> reward + terminal page 5	
+  TERMINAL_PAGE_REACHED	5		s2 + NPC 799227 + 1009 -> reward + terminal page 5	
+### quest 21036 rows=12
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 799258 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 799258 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1011	1007	unaccepted + NPC 799258 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 799238 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 799238 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	1693	1694	s1 + NPC 798713 + 31 -> s1 + page 1693	
+  PAGE_ACTION_MATCHED	1694	10001	s1 + NPC 798713 + 1694 -> s1 + page 1694	
+  PAGE_ACTION_MATCHED	2375	1009	reward + NPC 799239 + 31 -> reward + page 2375	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 799258 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 799258 + 1007 -> unaccepted + page 4	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 799239 + -1 -> reward + terminal page 5	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 799239 + 1009 -> reward + terminal page 5	
+### quest 21136 rows=11
+  PAGE_ACTION_MATCHED	1003	1008	unaccepted + NPC 799271 + 1002 -> started + page 1003	
+  PAGE_ACTION_MATCHED	1004	1008	unaccepted + NPC 799271 + 1003 -> unaccepted + page 1004	
+  PAGE_ACTION_MATCHED	1011	1007	unaccepted + NPC 799271 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 799413 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 799413 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	1693	1694	s1 + NPC 799414 + 31 -> s1 + page 1693	
+  PAGE_ACTION_MATCHED	1694	10001	s1 + NPC 799414 + 1694 -> s1 + page 1694	
+  PAGE_ACTION_MATCHED	2375	1009	reward + NPC 730355 + -1 -> reward + page 2375	
+  PAGE_ACTION_MATCHED	4	1002	unaccepted + NPC 799271 + 1007 -> unaccepted + page 4	
+  PAGE_ACTION_MATCHED	4	1003	unaccepted + NPC 799271 + 1007 -> unaccepted + page 4	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 730355 + 1009 -> reward + terminal page 5	
+### quest 35017 rows=6
+! CLIENT_PAGE_UNREACHED	4	1008	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 798155 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 798155 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	2375	1009	s1 + NPC 799806 + 31 -> s1 + page 2375	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 799806 + -1 -> reward + terminal page 5	
+  TERMINAL_PAGE_REACHED	5		s1 + NPC 799806 + 1009 -> reward + terminal page 5	
+### quest 39003 rows=7
+! CLIENT_PAGE_UNREACHED	1352	1353	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	1353	10000	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+  PAGE_ACTION_MATCHED	1011	20000	unaccepted + NPC 800500 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1011	20001	unaccepted + NPC 800500 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	2375	1009	started + NPC 800504 + 31 -> started + page 2375	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 800504 + -1 -> reward + terminal page 5	
+  TERMINAL_PAGE_REACHED	5		started + NPC 800504 + 1009 -> reward + terminal page 5	
+### quest 45010 rows=13
+! CLIENT_PAGE_UNREACHED	4	1008	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 204715 + 1352 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 204715 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 204715 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 204715 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799848 + 1009 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799848 + 1009 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799848 + 2375 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799848 + 2375 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799848 + 31 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799848 + 31 -> v1 + page 2375	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 799848 + -1 -> reward + terminal page 5	
+  TERMINAL_PAGE_REACHED	5		v1 + NPC 799848 + 1009 -> reward + terminal page 5	
+### quest 45017 rows=13
+! CLIENT_PAGE_UNREACHED	4	1008	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 205143 + 1352 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 205143 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 205143 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 205143 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799849 + 1009 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799849 + 1009 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799849 + 2375 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799849 + 2375 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799849 + 31 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799849 + 31 -> v1 + page 2375	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 799849 + -1 -> reward + terminal page 5	
+  TERMINAL_PAGE_REACHED	5		v1 + NPC 799849 + 1009 -> reward + terminal page 5	
+### quest 45024 rows=21
+! CLIENT_PAGE_UNREACHED	4	1008	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 799244 + 1352 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 799244 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 799244 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 799244 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799842 + 1009 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799842 + 1009 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799842 + 2375 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799842 + 2375 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799842 + 31 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799842 + 31 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799843 + 1009 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799843 + 1009 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799843 + 2375 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799843 + 2375 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799843 + 31 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799843 + 31 -> v1 + page 2375	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 799842 + -1 -> reward + terminal page 5	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 799843 + -1 -> reward + terminal page 5	
+  TERMINAL_PAGE_REACHED	5		v1 + NPC 799842 + 1009 -> reward + terminal page 5	
+  TERMINAL_PAGE_REACHED	5		v1 + NPC 799843 + 1009 -> reward + terminal page 5	
+### quest 45026 rows=21
+! CLIENT_PAGE_UNREACHED	4	1008	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 799285 + 1352 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1352	1353	started + NPC 799285 + 31 -> started + page 1352	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 799285 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	1353	10000	started + NPC 799285 + 1353 -> started + page 1353	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799842 + 1009 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799842 + 1009 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799842 + 2375 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799842 + 2375 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799842 + 31 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799842 + 31 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799843 + 1009 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799843 + 1009 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799843 + 2375 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799843 + 2375 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799843 + 31 -> v1 + page 2375	
+  PAGE_ACTION_MATCHED	2375	1009	v1 + NPC 799843 + 31 -> v1 + page 2375	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 799842 + -1 -> reward + terminal page 5	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 799843 + -1 -> reward + terminal page 5	
+  TERMINAL_PAGE_REACHED	5		v1 + NPC 799842 + 1009 -> reward + terminal page 5	
+  TERMINAL_PAGE_REACHED	5		v1 + NPC 799843 + 1009 -> reward + terminal page 5	
+### quest 49003 rows=7
+! CLIENT_PAGE_UNREACHED	1352	1353	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+! CLIENT_PAGE_UNREACHED	1353	10000	no compiled transition emits this active client page	active page is absent from compiled IR responses; no current path identifies its NPC or state
+  PAGE_ACTION_MATCHED	1011	20000	unaccepted + NPC 800502 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	1011	20001	unaccepted + NPC 800502 + 31 -> unaccepted + page 1011	
+  PAGE_ACTION_MATCHED	2375	1009	started + NPC 800505 + 31 -> started + page 2375	
+  TERMINAL_PAGE_REACHED	5		reward + NPC 800505 + -1 -> reward + terminal page 5	
+  TERMINAL_PAGE_REACHED	5		started + NPC 800505 + 1009 -> reward + terminal page 5	

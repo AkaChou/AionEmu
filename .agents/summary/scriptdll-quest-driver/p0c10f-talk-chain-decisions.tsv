@@ -1,0 +1,125 @@
+# P0c-10f SimpleTalk wave A 链式行逐任务裁定（真端优先；由裁定脚本生成）
+# quest_id	verdict	basis	axes	evidence
+1115	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=4e0958f485b8638d01d0a0e73a547174e7935c79bcebe1183540d63db55a6b58 (retail-simple-talk-chain-ir-fingerprints.tsv)
+1156	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=914ac1d0d0e4393c8dc20a7dedc80f278eff54888fbe329c15abdc79af8e83b4 (retail-simple-talk-chain-ir-fingerprints.tsv)
+1394	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=79c1a946ba3e3498644b2d1a24134da897e35b95cce07b8cd03b9df7cf3566d5 (retail-simple-talk-chain-ir-fingerprints.tsv)
+1537	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=3ee3d5684ada68c5d22201b12a107acf5a633744af64a68da771ac134e512ff1 (retail-simple-talk-chain-ir-fingerprints.tsv)
+1560	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=dc7ebffc04219b67a866999dcea42b33b713629d8cd9962be644a85b47240175 (retail-simple-talk-chain-ir-fingerprints.tsv)
+1578	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=2a7947d0e5ee190c604fde162ad441efbbdd5c8d8db410d6cd3bb1c001bf01ca (retail-simple-talk-chain-ir-fingerprints.tsv)
+1620	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=4a3c342e5cd8c991f8a050f4b4e97baaa431cf8de86468e2e61e69b0d991365d (retail-simple-talk-chain-ir-fingerprints.tsv)
+1628	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=b09dd8594845a1b98be838165e230b296b5ff4d835917bc2467c506e2d857e34 (retail-simple-talk-chain-ir-fingerprints.tsv)
+1648	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=e8b6c3d83831bb7fd81b6721c9fa74deacca5a04c976f44e42586a2e27a57035 (retail-simple-talk-chain-ir-fingerprints.tsv)
+1851	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=9c3e04ced8820d12b027c33947dca12b7b65ed8cd6db25a5398ad4f9be12c68f (retail-simple-talk-chain-ir-fingerprints.tsv)
+1913	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=8c326646da3a1cb2af3b337b9255eb1c3d5865deb6bce6259b7c6b7cc1b5d365 (retail-simple-talk-chain-ir-fingerprints.tsv)
+1914	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=ea627874e6581e3f60eab529c557d4926acceaa59bf9183619854776caade352 (retail-simple-talk-chain-ir-fingerprints.tsv)
+1915	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=2f301bbf7485a3d3ae3987d92516c3efe0366ba2b8f3ea291cc2f9fc11b92e3a (retail-simple-talk-chain-ir-fingerprints.tsv)
+1916	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=3f7a0757af409d32a48974bb649172bac77ad3925be183640133b8b9b481e578 (retail-simple-talk-chain-ir-fingerprints.tsv)
+1928	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=6e135026db9cee0acd32c948bca4e2b8f3350b1e52fe399870115dc93426a869 (retail-simple-talk-chain-ir-fingerprints.tsv)
+1935	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=38134430b4eb48d0c80662e55a1fd812ae57795d08e44ad8127178e5087f4af9 (retail-simple-talk-chain-ir-fingerprints.tsv)
+2125	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=0d94d81ed624524bfaa117b3f56f11343139fa37c73c51bf44677b45a6114d36 (retail-simple-talk-chain-ir-fingerprints.tsv)
+2222	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=f7d01288d6983b70fbbc2f87f6b3f3008e486254d6947e3053c9959bbf4200e1 (retail-simple-talk-chain-ir-fingerprints.tsv)
+2383	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=98dd1f7194b67c368cc92e052836ddddddd7f169fa918d307fa969fa6cefed3a (retail-simple-talk-chain-ir-fingerprints.tsv)
+2414	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=447af92eb9de2d3cf5bc135b09133256f74c07dc6481f7375a6fe95ec8bd7c6b (retail-simple-talk-chain-ir-fingerprints.tsv)
+2433	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=4b7cf846227dac4bed677d102ae3b3b9507c7a7da1fffa2c303f7f491203a45d (retail-simple-talk-chain-ir-fingerprints.tsv)
+2482	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=b2e52f477132518527e3d3ed6216ca22776d8e3f7c29e2d25e1fe88e19bf8eb0 (retail-simple-talk-chain-ir-fingerprints.tsv)
+2486	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=fcbccabdabc3af6ac92de4158cd094cd8610b9fe490f7a1236a7f982a8dd3542 (retail-simple-talk-chain-ir-fingerprints.tsv)
+2488	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=f4e291f7ef89b9d9f59cd6c2bee3fa051dfc7ff16a3e960f26ea7ca97e97fcbc (retail-simple-talk-chain-ir-fingerprints.tsv)
+2501	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=04c3637199a1fcd5aa029ae87d9fc098424b61af44904d261b84956ddda5d8c3 (retail-simple-talk-chain-ir-fingerprints.tsv)
+2514	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=8b72403c2ca7158895232f48e94b26ba0670e446f3bb294bd7d32c0ca0774ab0 (retail-simple-talk-chain-ir-fingerprints.tsv)
+2553	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=e6138b92f146c0833c7750b771e22b432382f21356a3a8464e5196521be49049 (retail-simple-talk-chain-ir-fingerprints.tsv)
+2583	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=51a967438ec2c6215a99e9c3e7a3789489f6c3a4411c1cea10f4c36387d28c55 (retail-simple-talk-chain-ir-fingerprints.tsv)
+2630	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=7f3102bac932418d10c9b9af7bec545085c927b73542837155ac71beefee919a (retail-simple-talk-chain-ir-fingerprints.tsv)
+2651	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=4e93cb016af46be6924e29a22bff6e58b9f3e1949605960758b4f2fe86f1826e (retail-simple-talk-chain-ir-fingerprints.tsv)
+2693	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=429a3984a21c3e67c2b77f0bec2ea771fe0d444325bf2be888d773e21459c317 (retail-simple-talk-chain-ir-fingerprints.tsv)
+2721	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=805e33749bc8a522949187a57e19e49be11c3a4f34e72e7667aee29c169af618 (retail-simple-talk-chain-ir-fingerprints.tsv)
+2725	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=232b00475eb4b800124ca8f91547f346f87783875a22a396e42ee0406162b9bf (retail-simple-talk-chain-ir-fingerprints.tsv)
+2921	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=dee814a8f6732a342c84bd8902aec014997e351f1e1475d75506984b1a3a593d (retail-simple-talk-chain-ir-fingerprints.tsv)
+2957	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=628bfb5c9df994e9e9312fa1c784683bf0fd612ed39c1a43c510df4ff31122c9 (retail-simple-talk-chain-ir-fingerprints.tsv)
+2963	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=e479c2334b68fd1a00c76c994b3b40e4a47d78e1f7a6f50fcf7d7d738aa56348 (retail-simple-talk-chain-ir-fingerprints.tsv)
+3008	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=4ab10ac53388b4c6b1bf5282fbc350fe14798430d33d67635a5e681c6ebfe61f (retail-simple-talk-chain-ir-fingerprints.tsv)
+3083	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=69415d7203b823fa4d05cb97c2210a9ca470062113f1e89b22bba58d328e6b75 (retail-simple-talk-chain-ir-fingerprints.tsv)
+3091	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=4e81df1df5fbf6d948777d36b9949daccf0e7218e2fdfcbdc084f98557cdc213 (retail-simple-talk-chain-ir-fingerprints.tsv)
+3102	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=5d03a133363ace0b10994c9cba832b97e167d161a95e0028dfbac42a35b8f482 (retail-simple-talk-chain-ir-fingerprints.tsv)
+3116	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=0a68b75930819e27c7c43387e5bc5b7bcb2efed03cd0004e3c99cecabbdd582f (retail-simple-talk-chain-ir-fingerprints.tsv)
+3972	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=1595963b1d73b2bcd987fe17d88a3a2afd20947937ff2f41f55347fdba7e55ed (retail-simple-talk-chain-ir-fingerprints.tsv)
+4001	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=17afd16e5c9577347198250b29103b6366da95a7844e91f6edbfdf3e63a5fa4b (retail-simple-talk-chain-ir-fingerprints.tsv)
+4036	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=3691c73517d2ca67faef1cca390cceea09c301ca5840b4e986560b13be9fc74a (retail-simple-talk-chain-ir-fingerprints.tsv)
+4101	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=a0dee08ba15d5504179c9ce84211ff7563ebd425cd3a5c5c151748c8f3cbaee9 (retail-simple-talk-chain-ir-fingerprints.tsv)
+4115	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=1751255036873338a71ce81ba51c460d560a4787d347773e9c0c1acd67289f9b (retail-simple-talk-chain-ir-fingerprints.tsv)
+4971	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=7cd1a49f58074e96e6c74aeaf9091a5792075d284e63599992310f822f3d0de9 (retail-simple-talk-chain-ir-fingerprints.tsv)
+4972	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=78730ffd92eaeaeb4909f91c6999411bb7ae50d06565e9f44cba9f5076f1c7f9 (retail-simple-talk-chain-ir-fingerprints.tsv)
+4973	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=4b52927bad0c13d6cad10979da4d4c26e60d980de8350c9e0b4b7fd70d73642a (retail-simple-talk-chain-ir-fingerprints.tsv)
+4974	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=2a981f00068950c55233c543ce978bac6d818869ec390c628c0291927aa418e4 (retail-simple-talk-chain-ir-fingerprints.tsv)
+4976	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=9c189838b4af5ae6838eff5f3b904904a835e723315ff8a1098b4196058660b0 (retail-simple-talk-chain-ir-fingerprints.tsv)
+9550	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=bbbeca56db43e8f2bb1b041c235a26b9dfdaee4f03d1314ed098fe3ae6fa8043 (retail-simple-talk-chain-ir-fingerprints.tsv)
+9553	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=d1c8168a5496b79fa6317d314f652056e2c08d4d18a65d9f6019a7e22471b552 (retail-simple-talk-chain-ir-fingerprints.tsv)
+9558	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=3b3b52b02d7a2b0c822a7ed50fa53016bc37f526f888aa0e40a79d9e55b93887 (retail-simple-talk-chain-ir-fingerprints.tsv)
+9559	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=8fe463c17ce7a8bd521bd6664d464aeddd99c3df491a5524fc71dcab26a3886b (retail-simple-talk-chain-ir-fingerprints.tsv)
+11000	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=47f69ccec45231999b5589f8fcb137162d847b73f5db1b821ecc2c104d33628a (retail-simple-talk-chain-ir-fingerprints.tsv)
+11005	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=c9415956076f4e10ab84583153fc68d953b6f545bfaa6d5ac142c4eb10ae658d (retail-simple-talk-chain-ir-fingerprints.tsv)
+11109	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=bc0c1ff8cc15d33441fd3e0464ad9a886856a60287cb6692e57b3c56997af7ca (retail-simple-talk-chain-ir-fingerprints.tsv)
+11228	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=aaad47531f4693ca57dbd7c05efa901f5b466439bad4deb5fc75b60fa2e0907c (retail-simple-talk-chain-ir-fingerprints.tsv)
+13900	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=9331ef5d347d571eb9a51bace3044322c416618ef097b06c09307ab844d769c0 (retail-simple-talk-chain-ir-fingerprints.tsv)
+18225	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=8bedcc1873fef13bfbc867564eb5a7ba4d93f65f723f1df0fdc16d1a6ce408e0 (retail-simple-talk-chain-ir-fingerprints.tsv)
+18917	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=ce0d867f6d384d3fde0e9ea448368ab5a42dcaa3aa33b32a63f4b3c258cb6154 (retail-simple-talk-chain-ir-fingerprints.tsv)
+21004	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=b59da50aa5c70222183c1cd5c47141bf7788cc267e42acf574a25e840b98843c (retail-simple-talk-chain-ir-fingerprints.tsv)
+21065	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=52798a05ffd01bd9ed7312eebdb6648e0bb227d334631c03d6839f871297d574 (retail-simple-talk-chain-ir-fingerprints.tsv)
+21066	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=ad79f9b2b28d9d53e446912dbbbba10c4693308237d1e65de036948158e13f2d (retail-simple-talk-chain-ir-fingerprints.tsv)
+21068	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=045742245bfdc039ae3b31aed9c13b5dd790848d9883ed1b5a6edb5811546ef8 (retail-simple-talk-chain-ir-fingerprints.tsv)
+21071	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=67ba1ce4a62def07453d64476b1b32ff229b11709e3c8c5d6085953ef28486b0 (retail-simple-talk-chain-ir-fingerprints.tsv)
+21106	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=cb3ec3fa2ea7886aa52b7fdc5590e864114d762188a79e460ef52a171d516bc9 (retail-simple-talk-chain-ir-fingerprints.tsv)
+21110	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=b19403be620d82cf544ca3c1dbb33c4a0d05229857a20a149ffa7abdb477631d (retail-simple-talk-chain-ir-fingerprints.tsv)
+21111	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=b05e940292142210f2dc57622069101b3b40e0b7943de1c546baff2678868461 (retail-simple-talk-chain-ir-fingerprints.tsv)
+21135	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=92652354e50b99611812004a3d5e213c38b162f8df41ab0d13da23e6f5de4971 (retail-simple-talk-chain-ir-fingerprints.tsv)
+23900	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=321c80d2b4a952edc659e4aa2d6681f7f7d73a578a883ba5ff7300fcbef09408 (retail-simple-talk-chain-ir-fingerprints.tsv)
+28225	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=6905f26236fec7077e0fe76588da472d2de5492d368f8091f87f952ed15cfd75 (retail-simple-talk-chain-ir-fingerprints.tsv)
+28917	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=7daa0e47ebc5f366d7cfb74f6a8691483e75337384db37e769ed20e878c827b5 (retail-simple-talk-chain-ir-fingerprints.tsv)
+29004	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=f27a01397fff42cf471dc952097d2da19c2f704c961350067c95a8f453c9fb93 (retail-simple-talk-chain-ir-fingerprints.tsv)
+30054	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=59e6b9ec9cfc49218d9af3ff1d747cb2b7562eef4b10b48ef95986bcbbb3630a (retail-simple-talk-chain-ir-fingerprints.tsv)
+30061	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=a5df44533674497f953fc2acb299761bf8781ea5a9b5aa3848c55721f32728ed (retail-simple-talk-chain-ir-fingerprints.tsv)
+30154	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=0071bfc4a44f0bd3597960f0601518f5dcc4408b2c73dc10d2f6abf7efe8c1e7 (retail-simple-talk-chain-ir-fingerprints.tsv)
+30161	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=d5952dea51aec7ce96ad2e445c9d8c76f01321f0fef7afa0a64340e25372c273 (retail-simple-talk-chain-ir-fingerprints.tsv)
+30500	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=9dbb85711d57cb9fb9e8e096cf42d26d1e8790b540097f446cfc57daad21c66c (retail-simple-talk-chain-ir-fingerprints.tsv)
+30550	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=c0c349a4ec375a88bb5e6b9d02f0e869e11ab48ce72f1a1e74518042ad768a88 (retail-simple-talk-chain-ir-fingerprints.tsv)
+39000	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=b110af54048227db2e102090697e17badb33ccd24946110883ecf97a6e75fc18 (retail-simple-talk-chain-ir-fingerprints.tsv)
+49000	ADOPT_RETAIL	CHAIN_REPLAY	-	IR-equivalent to production XML; fingerprint=991318dd1a4d1f08c78c5236df5341f4edbdffe73edfbc5c0540d30f7e34a189 (retail-simple-talk-chain-ir-fingerprints.tsv)
+1605	KEEP_XML	NPC_COMPLETE_VARIANT	-	transition multisets differ: missing=- extra=REWARD/2>TalkToNpc[npcId=204577, dialogId=12,
+1609	KEEP_XML	NPC_COMPLETE_VARIANT	-	transition multisets differ: missing=- extra=REWARD/1>TalkToNpc[npcId=730024, dialogId=12,
+1938	KEEP_XML	CHAIN_SHAPE_UNSUPPORTED	-	REJECTED:COMPILATION_FAILED:AMBIGUOUS_TRANSITION: same event has overlapping transitions w
+2231	KEEP_XML	NPC_COMPLETE_VARIANT	-	transition multisets differ: missing=REWARD/2>TalkToNpc[npcId=203610, dialogId=10, interac
+2539	KEEP_XML	NPC_COMPLETE_VARIANT	-	transition multisets differ: missing=- extra=REWARD/3>TalkToNpc[npcId=790022, dialogId=13,
+2611	KEEP_XML	CHAIN_NO_START_BLOCK	-	REJECTED:RETAIL_TALK_CHAIN_NO_START:no NPC_START block recorded
+2641	KEEP_XML	NPC_COMPLETE_VARIANT	-	transition multisets differ: missing=REWARD/3>TalkToNpc[npcId=204700, dialogId=10, interac
+2653	KEEP_XML	NPC_COMPLETE_VARIANT	-	transition multisets differ: missing=REWARD/1>TalkToNpc[npcId=204775, dialogId=10, interac
+2724	KEEP_XML	NPC_COMPLETE_VARIANT	-	transition multisets differ: missing=REWARD/2>TalkToNpc[npcId=278097, dialogId=10, interac
+2958	KEEP_XML	NPC_COMPLETE_VARIANT	-	transition multisets differ: missing=- extra=REWARD/1>TalkToNpc[npcId=204242, dialogId=20,
+3001	KEEP_XML	CHAIN_NO_START_BLOCK	-	REJECTED:RETAIL_TALK_CHAIN_NO_START:no NPC_START block recorded
+3081	KEEP_XML	NPC_COMPLETE_VARIANT	-	transition multisets differ: missing=- extra=REWARD/1>TalkToNpc[npcId=798116, dialogId=13,
+3913	KEEP_XML	NPC_COMPLETE_VARIANT	-	transition multisets differ: missing=- extra=REWARD/1>TalkToNpc[npcId=204656, dialogId=14,
+3966	KEEP_XML	CHAIN_SHAPE_UNSUPPORTED	-	REJECTED:COMPILATION_FAILED:UNREACHABLE_NODE: node is not reachable from the first node: c
+4970	KEEP_XML	CHAIN_NO_START_BLOCK	-	REJECTED:RETAIL_TALK_CHAIN_NO_START:no NPC_START block recorded
+16990	KEEP_XML	NPC_COMPLETE_VARIANT	-	transition multisets differ: missing=NONE/0>TalkToNpc[npcId=804598, dialogId=1002, interac
+18805	KEEP_XML	NPC_COMPLETE_VARIANT	-	transition multisets differ: missing=REWARD/2>TalkToNpc[npcId=830520, dialogId=10, interac
+19004	KEEP_XML	ENTER_WORLD_EDGE	-	transition multisets differ: missing=null>EnterWorld[]>REWARD/2>[StatusIs[status=REWARD], 
+19070	KEEP_XML	CHAIN_NO_START_BLOCK	-	REJECTED:RETAIL_TALK_CHAIN_NO_START:no NPC_START block recorded
+19071	KEEP_XML	CHAIN_NO_START_BLOCK	-	REJECTED:RETAIL_TALK_CHAIN_NO_START:no NPC_START block recorded
+24123	KEEP_XML	CHAIN_NO_START_BLOCK	-	REJECTED:RETAIL_TALK_CHAIN_NO_START:no NPC_START block recorded
+28805	KEEP_XML	NPC_COMPLETE_VARIANT	-	transition multisets differ: missing=REWARD/2>TalkToNpc[npcId=830521, dialogId=10, interac
+30042	KEEP_XML	NPC_COMPLETE_VARIANT	-	transition multisets differ: missing=- extra=REWARD/1>TalkToNpc[npcId=799029, dialogId=10,
+30142	KEEP_XML	NPC_COMPLETE_VARIANT	-	transition multisets differ: missing=- extra=REWARD/1>TalkToNpc[npcId=799333, dialogId=10,
+30711	KEEP_XML	CHAIN_SHAPE_UNSUPPORTED	-	REJECTED:COMPILATION_FAILED:BAD_NODE_REFERENCE: transition has unknown source node: starte
+30761	KEEP_XML	CHAIN_SHAPE_UNSUPPORTED	-	REJECTED:COMPILATION_FAILED:BAD_NODE_REFERENCE: transition has unknown source node: starte
+35010	KEEP_XML	CHAIN_SHAPE_UNSUPPORTED	-	REJECTED:COMPILATION_FAILED:BAD_NODE_REFERENCE: transition points to unknown node: started
+35011	KEEP_XML	CHAIN_START_CONFLICT	-	REJECTED:RETAIL_TALK_CHAIN_START_CONFLICT:system-grant with npc-start
+35017	KEEP_XML	CHAIN_SHAPE_VARIANT	-	transition multisets differ: missing=- extra=NONE/0>SystemGrant[]>START/0>[StartEligible[]
+35018	KEEP_XML	CHAIN_SHAPE_UNSUPPORTED	-	REJECTED:COMPILATION_FAILED:BAD_NODE_REFERENCE: transition points to unknown node: started
+35024	KEEP_XML	CHAIN_SHAPE_UNSUPPORTED	-	REJECTED:COMPILATION_FAILED:BAD_NODE_REFERENCE: transition points to unknown node: started
+35025	KEEP_XML	CHAIN_SHAPE_UNSUPPORTED	-	REJECTED:COMPILATION_FAILED:No enum constant com.aionemu.gameserver.questEngine.definition
+35026	KEEP_XML	CHAIN_START_CONFLICT	-	REJECTED:RETAIL_TALK_CHAIN_START_CONFLICT:system-grant with npc-start
+45010	KEEP_XML	CHAIN_SHAPE_UNSUPPORTED	-	REJECTED:COMPILATION_FAILED:No enum constant com.aionemu.gameserver.questEngine.definition
+45011	KEEP_XML	CHAIN_SHAPE_UNSUPPORTED	-	REJECTED:COMPILATION_FAILED:BAD_NODE_REFERENCE: transition points to unknown node: started
+45017	KEEP_XML	CHAIN_SHAPE_UNSUPPORTED	-	REJECTED:COMPILATION_FAILED:No enum constant com.aionemu.gameserver.questEngine.definition
+45018	KEEP_XML	CHAIN_SHAPE_UNSUPPORTED	-	REJECTED:COMPILATION_FAILED:UNREACHABLE_NODE: node is not reachable from the first node: c
+45024	KEEP_XML	CHAIN_SHAPE_UNSUPPORTED	-	REJECTED:COMPILATION_FAILED:No enum constant com.aionemu.gameserver.questEngine.definition
+45025	KEEP_XML	CHAIN_SHAPE_UNSUPPORTED	-	REJECTED:COMPILATION_FAILED:BAD_NODE_REFERENCE: transition points to unknown node: started
+45026	KEEP_XML	CHAIN_SHAPE_UNSUPPORTED	-	REJECTED:COMPILATION_FAILED:UNREACHABLE_NODE: node is not reachable from the first node: c

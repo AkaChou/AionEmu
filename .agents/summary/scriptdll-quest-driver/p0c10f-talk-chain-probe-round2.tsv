@@ -1,0 +1,123 @@
+1115	EQUIVALENT
+1156	EQUIVALENT
+1394	DIFF:transition multisets differ: missing=START/0>TalkToNpc[npcId=204039, dialogId=-1, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=1352]]>-,START/0>TalkToNpc[npcId=204039, dialogId=31, interactionObjectId=0]>START/0>[]>[]>[ShowQuestDialog[dialogId=1352]]>-,START/1>TalkToNpc[npcId=203946, dialogId=-1, interactionObjectId=0]>START/1>[]>[]>[ShowQuestDialog[dialogId=1352]]>- extra=- countMismatch=4
+1537	EQUIVALENT
+1560	EQUIVALENT
+1578	EQUIVALENT
+1605	DIFF:transition multisets differ: missing=- extra=REWARD/2>TalkToNpc[npcId=204577, dialogId=12, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=1807399, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000004, amount=3, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/2>TalkToNpc[npcId=204577, dialogId=13, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=1807399, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000004, amount=3, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/2>TalkToNpc[npcId=204577, dialogId=14, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=1807399, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000004, amount=3, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>- countMismatch=0
+1609	DIFF:transition multisets differ: missing=- extra=REWARD/1>TalkToNpc[npcId=730024, dialogId=12, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=2467774, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000004, amount=3, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/1>TalkToNpc[npcId=730024, dialogId=13, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=2467774, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000004, amount=3, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/1>TalkToNpc[npcId=730024, dialogId=14, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=2467774, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000004, amount=3, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>- countMismatch=0
+1620	EQUIVALENT
+1628	EQUIVALENT
+1648	EQUIVALENT
+1851	EQUIVALENT
+1913	EQUIVALENT
+1914	EQUIVALENT
+1915	EQUIVALENT
+1916	EQUIVALENT
+1928	EQUIVALENT
+1935	EQUIVALENT
+1938	REJECTED:COMPILATION_FAILED:AMBIGUOUS_TRANSITION: same event has overlapping transitions without unique priorities: TALK_TO_NPC
+2125	EQUIVALENT
+2222	EQUIVALENT
+2231	DIFF:transition multisets differ: missing=REWARD/2>TalkToNpc[npcId=203610, dialogId=10, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=3490, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=30450, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000007, amount=1, amountMode=EXACT], GrantReward[kind=ITEM, id=100200236, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/2>TalkToNpc[npcId=203610, dialogId=11, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=3490, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=30450, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000007, amount=1, amountMode=EXACT], GrantReward[kind=ITEM, id=100500171, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/2>TalkToNpc[npcId=203610, dialogId=12, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=3490, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=30450, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000007, amount=1, amountMode=EXACT], GrantReward[kind=ITEM, id=100600202, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>- extra=REWARD/2>TalkToNpc[npcId=203610, dialogId=10, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=3490, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=30450, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/2>TalkToNpc[npcId=203610, dialogId=11, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=3490, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=30450, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/2>TalkToNpc[npcId=203610, dialogId=12, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=3490, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=30450, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>- countMismatch=9
+2383	EQUIVALENT
+2414	EQUIVALENT
+2433	EQUIVALENT
+2482	EQUIVALENT
+2486	EQUIVALENT
+2488	EQUIVALENT
+2501	EQUIVALENT
+2514	EQUIVALENT
+2539	DIFF:transition multisets differ: missing=- extra=REWARD/3>TalkToNpc[npcId=790022, dialogId=13, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=16730, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=987102, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=169000008, amount=300, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/3>TalkToNpc[npcId=790022, dialogId=14, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=16730, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=987102, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=169000008, amount=300, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/3>TalkToNpc[npcId=790022, dialogId=15, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=16730, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=987102, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=169000008, amount=300, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>- countMismatch=0
+2553	EQUIVALENT
+2583	EQUIVALENT
+2611	REJECTED:RETAIL_TALK_CHAIN_NO_START:no NPC_START block recorded
+2630	EQUIVALENT
+2641	DIFF:transition multisets differ: missing=REWARD/3>TalkToNpc[npcId=204700, dialogId=10, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=1974220, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000008, amount=3, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/3>TalkToNpc[npcId=204700, dialogId=11, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=1974220, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000008, amount=3, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/3>TalkToNpc[npcId=204700, dialogId=12, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=1974220, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000008, amount=3, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>- extra=REWARD/3>TalkToNpc[npcId=204700, dialogId=10, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=28860, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1974220, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=110501107, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/3>TalkToNpc[npcId=204700, dialogId=11, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=28860, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1974220, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=110601089, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/3>TalkToNpc[npcId=204700, dialogId=12, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=28860, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=1974220, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=110551027, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>- countMismatch=16
+2651	EQUIVALENT
+2653	DIFF:transition multisets differ: missing=REWARD/1>TalkToNpc[npcId=204775, dialogId=10, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=2954681, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000009, amount=3, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/1>TalkToNpc[npcId=204775, dialogId=11, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=2954681, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000009, amount=3, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/1>TalkToNpc[npcId=204775, dialogId=12, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=2954681, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000009, amount=3, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>- extra=REWARD/1>TalkToNpc[npcId=204775, dialogId=10, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=2954681, amountMode=QUEST_BASE], GrantReward[kind=AP, id=0, amount=100, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/1>TalkToNpc[npcId=204775, dialogId=11, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=2954681, amountMode=QUEST_BASE], GrantReward[kind=AP, id=0, amount=100, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/1>TalkToNpc[npcId=204775, dialogId=12, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=2954681, amountMode=QUEST_BASE], GrantReward[kind=AP, id=0, amount=100, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>- countMismatch=16
+2693	EQUIVALENT
+2721	EQUIVALENT
+2724	DIFF:transition multisets differ: missing=REWARD/2>TalkToNpc[npcId=278097, dialogId=10, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=185880, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=3015580, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000007, amount=1, amountMode=EXACT], GrantReward[kind=ITEM, id=100200331, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/2>TalkToNpc[npcId=278097, dialogId=11, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=185880, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=3015580, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000007, amount=1, amountMode=EXACT], GrantReward[kind=ITEM, id=100500293, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/2>TalkToNpc[npcId=278097, dialogId=12, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=185880, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=3015580, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000007, amount=1, amountMode=EXACT], GrantReward[kind=ITEM, id=100600329, amount=1, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>- extra=REWARD/2>TalkToNpc[npcId=278097, dialogId=10, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=185880, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=3015580, amountMode=QUEST_BASE], GrantReward[kind=AP, id=0, amount=100, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/2>TalkToNpc[npcId=278097, dialogId=11, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=185880, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=3015580, amountMode=QUEST_BASE], GrantReward[kind=AP, id=0, amount=100, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/2>TalkToNpc[npcId=278097, dialogId=12, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=GOLD, id=0, amount=185880, amountMode=QUEST_BASE], GrantReward[kind=EXP, id=0, amount=3015580, amountMode=QUEST_BASE], GrantReward[kind=AP, id=0, amount=100, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>- countMismatch=9
+2725	EQUIVALENT
+2921	EQUIVALENT
+2957	EQUIVALENT
+2958	DIFF:transition multisets differ: missing=- extra=REWARD/1>TalkToNpc[npcId=204242, dialogId=20, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=64755, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/1>TalkToNpc[npcId=204242, dialogId=21, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=64755, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/1>TalkToNpc[npcId=204242, dialogId=22, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=64755, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>- countMismatch=0
+2963	EQUIVALENT
+3001	REJECTED:RETAIL_TALK_CHAIN_NO_START:no NPC_START block recorded
+3008	EQUIVALENT
+3081	DIFF:transition multisets differ: missing=- extra=REWARD/1>TalkToNpc[npcId=798116, dialogId=13, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=3884596, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/1>TalkToNpc[npcId=798116, dialogId=14, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=3884596, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/1>TalkToNpc[npcId=798116, dialogId=15, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=3884596, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>- countMismatch=0
+3083	EQUIVALENT
+3091	EQUIVALENT
+3102	EQUIVALENT
+3116	EQUIVALENT
+3913	DIFF:transition multisets differ: missing=- extra=REWARD/1>TalkToNpc[npcId=204656, dialogId=14, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=7667186, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000018, amount=40, amountMode=EXACT], GrantReward[kind=ITEM, id=188053405, amount=2, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/1>TalkToNpc[npcId=204656, dialogId=15, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=7667186, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000018, amount=40, amountMode=EXACT], GrantReward[kind=ITEM, id=188053405, amount=2, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/1>TalkToNpc[npcId=204656, dialogId=16, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=7667186, amountMode=QUEST_BASE], GrantReward[kind=ITEM, id=186000018, amount=40, amountMode=EXACT], GrantReward[kind=ITEM, id=188053405, amount=2, amountMode=EXACT], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>- countMismatch=0
+3966	REJECTED:COMPILATION_FAILED:UNREACHABLE_NODE: node is not reachable from the first node: complete
+3972	EQUIVALENT
+4001	EQUIVALENT
+4036	EQUIVALENT
+4101	EQUIVALENT
+4115	EQUIVALENT
+4970	REJECTED:RETAIL_TALK_CHAIN_NO_START:no NPC_START block recorded
+4971	EQUIVALENT
+4972	EQUIVALENT
+4973	EQUIVALENT
+4974	EQUIVALENT
+4976	EQUIVALENT
+9550	EQUIVALENT
+9553	EQUIVALENT
+9558	EQUIVALENT
+9559	EQUIVALENT
+11000	EQUIVALENT
+11005	EQUIVALENT
+11109	EQUIVALENT
+11228	EQUIVALENT
+13900	EQUIVALENT
+16990	DIFF:transition multisets differ: missing=NONE/0>TalkToNpc[npcId=804598, dialogId=1002, interactionObjectId=0]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH], ShowQuestDialog[dialogId=1003]]>-,NONE/0>TalkToNpc[npcId=804598, dialogId=1003, interactionObjectId=0]>NONE/0>[]>[]>[ShowQuestDialog[dialogId=1004]]>-,NONE/0>TalkToNpc[npcId=804598, dialogId=1004, interactionObjectId=0]>NONE/0>[]>[]>[CloseDialog[]]>- extra=- countMismatch=10
+18225	EQUIVALENT
+18805	REJECTED:COMPILATION_FAILED:BAD_NODE_REFERENCE: transition points to unknown node: started
+18917	EQUIVALENT
+19004	DIFF:transition multisets differ: missing=null>EnterWorld[]>REWARD/2>[StatusIs[status=REWARD], QuestVariableIs[field=var0, value=1]]>[SetVariable[field=var0, value=2]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH]]>- extra=- countMismatch=1
+19070	REJECTED:RETAIL_TALK_CHAIN_NO_START:no NPC_START block recorded
+19071	REJECTED:RETAIL_TALK_CHAIN_NO_START:no NPC_START block recorded
+21004	EQUIVALENT
+21065	EQUIVALENT
+21066	EQUIVALENT
+21068	EQUIVALENT
+21071	EQUIVALENT
+21106	EQUIVALENT
+21110	EQUIVALENT
+21111	EQUIVALENT
+21135	EQUIVALENT
+23900	EQUIVALENT
+24123	REJECTED:RETAIL_TALK_CHAIN_NO_START:no NPC_START block recorded
+28225	EQUIVALENT
+28805	REJECTED:COMPILATION_FAILED:BAD_NODE_REFERENCE: transition points to unknown node: started
+28917	EQUIVALENT
+29004	EQUIVALENT
+30042	DIFF:transition multisets differ: missing=- extra=REWARD/1>TalkToNpc[npcId=799029, dialogId=10, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=8798808, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/1>TalkToNpc[npcId=799029, dialogId=11, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=8798808, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/1>TalkToNpc[npcId=799029, dialogId=12, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=8798808, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>- countMismatch=0
+30054	EQUIVALENT
+30061	EQUIVALENT
+30142	DIFF:transition multisets differ: missing=- extra=REWARD/1>TalkToNpc[npcId=799333, dialogId=10, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=8798808, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/1>TalkToNpc[npcId=799333, dialogId=11, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=8798808, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>-,REWARD/1>TalkToNpc[npcId=799333, dialogId=12, interactionObjectId=0]>COMPLETE/0>[]>[GrantReward[kind=EXP, id=0, amount=8798808, amountMode=QUEST_BASE], CompleteQuest[rewardIndex=0]]>[RefreshPlayerStats[], SyncQuestState[mode=COMPLETION], ShowQuestSelectionDialog[dialogId=10]]>- countMismatch=0
+30154	EQUIVALENT
+30161	EQUIVALENT
+30500	EQUIVALENT
+30550	EQUIVALENT
+30711	REJECTED:COMPILATION_FAILED:BAD_NODE_REFERENCE: transition has unknown source node: started
+30761	REJECTED:COMPILATION_FAILED:BAD_NODE_REFERENCE: transition has unknown source node: started
+35010	REJECTED:COMPILATION_FAILED:BAD_NODE_REFERENCE: transition points to unknown node: started
+35011	REJECTED:RETAIL_TALK_CHAIN_START_CONFLICT:system-grant with npc-start
+35017	DIFF:transition multisets differ: missing=COMPLETE/0>TalkToNpc[npcId=799806, dialogId=1003, interactionObjectId=0]>COMPLETE/0>[StartEligible[]]>[]>[CloseDialog[]]>-,COMPLETE/0>TalkToNpc[npcId=799806, dialogId=1004, interactionObjectId=0]>COMPLETE/0>[StartEligible[]]>[]>[CloseDialog[]]>-,COMPLETE/0>TalkToNpc[npcId=799806, dialogId=20001, interactionObjectId=0]>COMPLETE/0>[StartEligible[]]>[]>[CloseDialog[]]>- extra=NONE/0>SystemGrant[]>START/0>[StartEligible[]]>[]>[SyncQuestState[mode=VISIBILITY_REFRESH]]>- countMismatch=6
+35018	REJECTED:COMPILATION_FAILED:BAD_NODE_REFERENCE: transition points to unknown node: started
+35024	REJECTED:COMPILATION_FAILED:BAD_NODE_REFERENCE: transition points to unknown node: started
+35025	REJECTED:COMPILATION_FAILED:UNREACHABLE_NODE: node is not reachable from the first node: complete
+35026	REJECTED:RETAIL_TALK_CHAIN_START_CONFLICT:system-grant with npc-start
+39000	EQUIVALENT
+45010	REJECTED:COMPILATION_FAILED:UNREACHABLE_NODE: node is not reachable from the first node: complete
+45011	REJECTED:COMPILATION_FAILED:BAD_NODE_REFERENCE: transition points to unknown node: started
+45017	REJECTED:COMPILATION_FAILED:UNREACHABLE_NODE: node is not reachable from the first node: complete
+45018	REJECTED:COMPILATION_FAILED:UNREACHABLE_NODE: node is not reachable from the first node: complete
+45024	REJECTED:COMPILATION_FAILED:UNREACHABLE_NODE: node is not reachable from the first node: complete
+45025	REJECTED:COMPILATION_FAILED:BAD_NODE_REFERENCE: transition points to unknown node: started
+45026	REJECTED:COMPILATION_FAILED:UNREACHABLE_NODE: node is not reachable from the first node: complete
+49000	EQUIVALENT

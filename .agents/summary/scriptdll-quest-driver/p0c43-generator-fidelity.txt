@@ -1,0 +1,114 @@
+canonical 待合成（P0c-10i）：111 行；P0c-11 阶段门批：10 行
+wave A 行：137；wave B 物品轴批：129；deferred(con_quest/cutscene)：42
+P0c-43 canonical 改道：1 行 ['24123(LEGACY_REPORT_FLOW_ON_ACQUIRED,K=2)']
+CANONICAL-OVERRIDE 24123：转写与真端结构性分歧，弃转写改走 canonical 合成
+AXIS-MISMATCH 1183：真端 give/remove=2/1，XML=6/0（交付豁免 1）——跳过转写
+AXIS-MISMATCH 1363：真端 give/remove=1/1，XML=0/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 1527：真端 give/remove=1/0，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 1528：真端 give/remove=1/0，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 1540：真端 give/remove=1/1，XML=0/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 1721：真端 give/remove=1/0，XML=4/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 1724：真端 give/remove=1/0，XML=5/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 1725：真端 give/remove=1/0，XML=3/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 1909：真端 give/remove=1/0，XML=3/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 1918：真端 give/remove=1/0，XML=3/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 1932：真端 give/remove=0/0，XML=0/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 1963：真端 give/remove=1/1，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 1964：真端 give/remove=1/1，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 2135：真端 give/remove=1/1，XML=0/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 2209：真端 give/remove=1/0，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 2505：真端 give/remove=2/1，XML=1/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 2512：真端 give/remove=1/1，XML=0/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 2515：真端 give/remove=3/1，XML=2/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 2523：真端 give/remove=1/3，XML=0/3（交付豁免 0）——跳过转写
+AXIS-MISMATCH 2569：真端 give/remove=1/0，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 2692：真端 give/remove=2/1，XML=1/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 2767：真端 give/remove=1/1，XML=0/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 2901：真端 give/remove=1/0，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 2902：真端 give/remove=1/0，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 2903：真端 give/remove=1/0，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 2904：真端 give/remove=1/0，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 2912：真端 give/remove=1/0，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 2917：真端 give/remove=1/0，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 2928：真端 give/remove=1/1，XML=0/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 3076：真端 give/remove=1/0，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 3092：真端 give/remove=0/0，XML=0/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 3208：真端 give/remove=1/0，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 3209：真端 give/remove=1/0，XML=2/0（交付豁免 1）——跳过转写
+AXIS-MISMATCH 3319：真端 give/remove=1/1，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 3340：真端 give/remove=0/0，XML=0/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 3547：真端 give/remove=0/0，XML=0/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 3961：真端 give/remove=1/1，XML=1/2（交付豁免 0）——跳过转写
+AXIS-MISMATCH 3962：真端 give/remove=1/1，XML=1/3（交付豁免 0）——跳过转写
+AXIS-MISMATCH 3963：真端 give/remove=1/1，XML=1/3（交付豁免 0）——跳过转写
+AXIS-MISMATCH 3964：真端 give/remove=1/1，XML=1/3（交付豁免 0）——跳过转写
+AXIS-MISMATCH 3965：真端 give/remove=1/1，XML=0/3（交付豁免 0）——跳过转写
+AXIS-MISMATCH 3967：真端 give/remove=1/0，XML=0/2（交付豁免 0）——跳过转写
+AXIS-MISMATCH 3969：真端 give/remove=1/0，XML=0/2（交付豁免 0）——跳过转写
+AXIS-MISMATCH 4020：真端 give/remove=2/1，XML=1/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 4208：真端 give/remove=1/0，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 4501：真端 give/remove=1/0，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 4906：真端 give/remove=4/3，XML=3/3（交付豁免 0）——跳过转写
+AXIS-MISMATCH 4966：真端 give/remove=1/1，XML=1/2（交付豁免 0）——跳过转写
+AXIS-MISMATCH 4967：真端 give/remove=1/1，XML=1/3（交付豁免 0）——跳过转写
+AXIS-MISMATCH 4968：真端 give/remove=1/1，XML=1/3（交付豁免 0）——跳过转写
+AXIS-MISMATCH 4969：真端 give/remove=1/1，XML=1/3（交付豁免 0）——跳过转写
+AXIS-MISMATCH 11008：真端 give/remove=1/0，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 11009：真端 give/remove=2/3，XML=1/3（交付豁免 0）——跳过转写
+AXIS-MISMATCH 11026：真端 give/remove=1/0，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 11068：真端 give/remove=1/0，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 11072：真端 give/remove=1/1，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 11077：真端 give/remove=1/0，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 11139：真端 give/remove=1/0，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 11294：真端 give/remove=1/1，XML=0/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 11304：真端 give/remove=0/0，XML=0/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 11455：真端 give/remove=2/1，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 11458：真端 give/remove=1/1，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 14121：真端 give/remove=0/0，XML=0/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 14122：真端 give/remove=1/0，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 14201：真端 give/remove=0/0，XML=0/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 18035：真端 give/remove=1/0，XML=0/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 18807：真端 give/remove=1/1，XML=0/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 18809：真端 give/remove=1/0，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 21070：真端 give/remove=1/1，XML=1/0（交付豁免 2）——跳过转写
+AXIS-MISMATCH 21296：真端 give/remove=1/1，XML=3/0（交付豁免 3）——跳过转写
+AXIS-MISMATCH 21458：真端 give/remove=1/1，XML=1/0（交付豁免 1）——跳过转写
+AXIS-MISMATCH 21460：真端 give/remove=1/0，XML=3/0（交付豁免 3）——跳过转写
+AXIS-MISMATCH 24120：真端 give/remove=1/1，XML=1/0（交付豁免 1）——跳过转写
+AXIS-MISMATCH 24121：真端 give/remove=0/0，XML=0/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 24150：真端 give/remove=1/1，XML=1/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 24152：真端 give/remove=0/0，XML=0/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 24242：真端 give/remove=0/0，XML=0/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 28035：真端 give/remove=1/0，XML=0/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 28807：真端 give/remove=1/1，XML=0/1（交付豁免 0）——跳过转写
+AXIS-MISMATCH 29070：真端 give/remove=1/0，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 29071：真端 give/remove=1/0，XML=0/0（交付豁免 0）——跳过转写
+AXIS-MISMATCH 80020：真端 give/remove=2/3，XML=5/3（交付豁免 0）——跳过转写
+CANONICAL-INDEX 18035：quest_data 无 work_items，改走真端 item 名索引（1 符号）
+CANONICAL-INDEX 18807：quest_data 无 work_items，改走真端 item 名索引（1 符号）
+CANONICAL-INDEX 18809：quest_data 无 work_items，改走真端 item 名索引（1 符号）
+CANONICAL-INDEX 21070：quest_data 无 work_items，改走真端 item 名索引（1 符号）
+CANONICAL-INDEX 21460：quest_data 无 work_items，改走真端 item 名索引（1 符号）
+CANONICAL-INDEX 24120：quest_data 无 work_items，改走真端 item 名索引（1 符号）
+CANONICAL-INDEX 24123：quest_data 无 work_items，改走真端 item 名索引（0 符号）
+CANONICAL-INDEX 28035：quest_data 无 work_items，改走真端 item 名索引（1 符号）
+CANONICAL-INDEX 28807：quest_data 无 work_items，改走真端 item 名索引（1 符号）
+CANONICAL-INDEX 29070：quest_data 无 work_items，改走真端 item 名索引（1 符号）
+CANONICAL-INDEX 29071：quest_data 无 work_items，改走真端 item 名索引（1 符号）
+canonical 合成：112 行；缺口（KEEP）：0 行 []
+item 符号通道留痕：132 条
+REWARD 投影分歧（XML vs 客户端任务书）：15 行 [1152, 1323, 1479, 2482, 2553, 2963, 21004, 28809, 30711, 30761, 45010, 45017, 45018, 45024, 45026]
+I 记录（item_check 门）：3 行 ['1152', '24202', '80320']
+TALK-LADDER 1479：K=2 mode=SETPRO talk=[203912, 203898] 迁移=['B']（steps3(talk_npc2=Coeus)）
+TALK-LADDER 24202：K=2 mode=SETPRO talk=[205159, 205198] 迁移=['I', 'R:FINISH_DIALOG+copy', 'R:QUEST_SELECT', 'R:SET_SUCCEED']（steps3:row0=STR_DIC_N_Tree_Moving_Neligor）
+TALK-LADDER 80320：K=1 mode=TALK talk=[831427] 迁移=['I', 'R:FINISH_DIALOG+copy', 'R:QUEST_SELECT', 'R:SET_SUCCEED']（steps2:row0=STR_DIC_N_event_Soraya）
+阶梯改写行：[1479, 24202, 80320]
+ACCEPT-ENTRANCE 1323：物件 730032 承载 USE_OBJECT → 入口页 SELECT1 / 接取窗页 ASK_QUEST_ACCEPT（引擎 SHOW_ASK_QUEST_ACCEPT_WINDOW）/ 阶梯 ['QUEST_ACCEPT_1', 'QUEST_REFUSE_1']（R 行 14；RETAIL_ACQUIRED_OBJECT_SENTINEL）
+接取入口重绑行：[1323]
+页证据未核验（wave B）：0 处 / 0 行
+登记表 -> /tmp/p0c43-fidelity.tsv（1350 行路由）
+XML 无链路由（残组）：6 行 [1479, 11069, 18210, 21073, 26990, 28210]
+页面交叉核验：1004/1004 命中（CLIENT=信件页 / GLOBAL=引擎常页）
+FIDELITY_OK: 生成器重跑输出与登记表逐字节相同（430735 字节）
+REGISTRY_MD5 322f4d1a99192de960ec52d6c18c16f1
+DECISION_TABLES_STABLE: 8 张裁定表零漂移

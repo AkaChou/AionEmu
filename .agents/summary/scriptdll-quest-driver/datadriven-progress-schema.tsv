@@ -1,0 +1,67 @@
+category	slot	steps	sample
+Hunt	value0	1393	Ab1_1131_guard_Da_c_1, Ab1_1131_guard_Da_c_2, Ab1_1131_guard
+Hunt	value4	5	Cutscene 940
+Hunt	value5	5	Absolute Anilmo, 1, 5000, 562 189 136 285
+Talk	value0	692	Ab1_1132_Quest_Li
+Talk	value1	104	QUEST_1817B 3
+Talk	value2	46	QUEST_1817A 1
+Talk	value3	6	210050000 1440 408 553 77
+Talk	value4	17	Movie 30, HACTION_SELECT6_1
+Talk	value5	21	Relative LF5_Q_B_Vri_Hide_As_57_An, 1, 60
+Talk	value6	18	5
+Talk	value7	4	STR_QUEST_SAY_LF4_04
+Talk	value9	7	12, 300190000, 7, QUEST_10032A, QUEST_10032B
+Talk	value10	25	120, 7, 1
+CollectItem	value0	549	Taranis
+CollectItem	value1	79	LF1_fossil
+CollectItem	value2	17	LF4_FOBJ_Q11043B
+CollectItem	value3	6	LF4_FOBJ_Q11043C
+CollectItem	value4	4	LF4_FOBJ_Q11043D
+CollectItem	value5	91	0
+PVP	value0	389	5
+PVP	value1	92	1
+PVP	value2	24	15
+PVP	value3	104	5
+EnterArea	value0	207	AB1_SensoryArea_Q1868a
+EnterArea	value1	1	QUEST_9696A 1
+EnterArea	value3	1	210050000 1440 407 553 90
+EnterArea	value4	13	Cutscene 502
+EnterArea	value5	7	Relative TEST_SimpleTalk_04, 1, 100
+EnterArea	value7	4	STR_CHAT_TEST_FA_KR_GOSSIP
+EnterArea	value8	1	STR_MSG_LIMIT_SALE_TEST_DESC01
+EnterArea	value10	2	600, 6, 0
+ItemPlay	value0	70	QUEST_9693D
+ItemPlay	value1	6	QUEST_9693A 1
+ItemPlay	value2	5	QUEST_9693B 1, QUEST_9693C 1, QUEST_9693D 1, QUEST_9693E 1,
+ItemPlay	value4	4	Cutscene 992
+ItemPlay	value5	6	Relative TEST_SimpleTalk_03, 1, 100
+ItemPlay	value7	2	STR_CHAT_TEST_FA_KR_GOSSIP
+ItemPlay	value9	1	12, 300190000, 7, QUEST_9693A
+ItemPlay	value10	2	310, 5, 0
+EnterWorld	value0	66	210040000
+EnterWorld	value1	5	QUEST_9697A 1
+EnterWorld	value2	4	QUEST_10032A 1, QUEST_10032B 1
+EnterWorld	value3	1	210020000 274 459 329 90
+EnterWorld	value4	5	Cutscene 502
+EnterWorld	value5	1	Relative TEST_SimpleTalk_04, 1, 100
+EnterWorld	value7	1	STR_CHAT_TEST_FA_KR_GOSSIP
+TalkFOBJ	value0	33	LF4_FOBJ_Q10031A, 0
+TalkFOBJ	value1	9	doc_quest_10034a 1
+TalkFOBJ	value2	5	QUEST_10031C 1
+TalkFOBJ	value3	1	210070000 2837 2991 680 67
+TalkFOBJ	value4	3	Cutscene 1001
+TalkFOBJ	value5	8	Absolute LF4_OdReceirver_Q10020, 1, 30, 2192 368 431 90
+TalkFOBJ	value6	2	8
+TalkFOBJ	value10	3	1800, 7, 0
+Collectitem	value0	15	Test_SimpleTalk_17
+Collectitem	value1	3	Test_DataDriven_FOBJ_02
+Collectitem	value5	3	0
+Itemplay	value0	7	QUEST_9667A
+Itemplay	value1	1	quest_15692b 1
+Itemplay	value2	1	quest_15692a 1
+Itemplay	value3	1	210050000 1440 407 553 90
+Itemplay	value4	1	Cutscene 502
+Itemplay	value5	1	Relative LF6_ElementalWater4_E_67_n, 1, 100
+Pvp	value0	5	2
+Enterworld	value0	2	301720000
+PvP	value0	1	15

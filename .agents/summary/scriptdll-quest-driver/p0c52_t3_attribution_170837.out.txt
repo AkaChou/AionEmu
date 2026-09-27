@@ -1,0 +1,10 @@
+baseline=112 candidate=105
+ADDED x0 (in candidate only):
+REMOVED x7 (in baseline only):
+  - Quest13765RetailAlignmentTest.preservesWeeklyMetadataKillTargetAndThreeGuardNpcs  L22 » NoSuchFile src/main/resources/aion/data/static_data/quest_definition/quests/13765.xml
+  - QuestKillCounterRetailGateTest.killDeclarationsStayInsideKillTransitions  L136 kill declarations are display-only; their reviewed population must not silently shrink (19 declaring quests) ==> expecte
+  - QuestKillCounterRetailGateTest.simulatorReproducesTheFixedOverkillDrift  L79 » NoSuchElement No value present
+  - QuestKillCounterRetailGateTest.singleCounterQuestsRequireExactlyTheClientGate  L55 ->lambda$singleCounterQuestsRequireExactlyTheClientGate$0:55 quest 13758 is not an executable owner
+  - RetailCombineTaskGateTest.frozenFingerprintsMatch  L174 冻结指纹漂移 574 行：
+  - RetailDataDrivenGateTest.frozenFingerprintsCoverExactlyTheRetiredQuests  L452 DataDriven 冻结指纹失同步：[15042: 指纹漂移 8bcf5e204564209bb6472bce0c1dbf009aac03f73228426d161f0d6974322232 -> fe46e3d5571d4262330b
+  - RetailSimpleCollectItemGateTest.frozenFingerprintsCoverExactlyTheRetiredQuests  L234 冻结集合与退役集合不一致：frozen=155 retired=175 ==> expected: <true> but was: <false>

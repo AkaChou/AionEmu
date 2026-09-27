@@ -1,0 +1,320 @@
+package com.aionemu.gameserver.questEngine.retail;
+
+import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
+import com.aionemu.gameserver.questEngine.definition.QuestDefinition;
+import com.aionemu.gameserver.questEngine.definition.QuestDefinitionCompiler;
+import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
+import com.aionemu.gameserver.questEngine.definition.QuestNode;
+import com.aionemu.gameserver.questEngine.definition.QuestTransition;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+/**
+ * P0c-8 临时探针（**用后删除**）：把 SimpleHunt 保留行（{@code owner=XML_RETENTION}）逐行算出
+ * "真端合成 vs 生产 XML"的 IR 差异轴，供逐行裁定分桶。P0c-6 只覆盖 {@code talk_npc1} 简报行，
+ * 本探针覆盖全部保留行（含编译拒绝行，后者只登记拒绝码）。
+ * <p>
+ * Temporary probe (deleted after use): per-row IR diff axis for every retained SimpleHunt row.
+ * 排查模式：{@code -Dp0c8.out=<path>}。
+ */
+class P0c8RetentionDiffProbeTest {
+
+	private static final String NPC_DIR = "/aion/data/static_data/npcs/";
+	private static final List<String> NPC_TEMPLATES = List.of(
+		"npc_template_200000_216188.xml", "npc_template_216189_235748.xml", "npc_template_235749_247606.xml",
+		"npc_template_247607_270057.xml", "npc_template_270058_286320.xml", "npc_template_286321_800030.xml",
+		"npc_template_800031_834289.xml", "npc_template_834290_885645.xml");
+	private static final String RETENTION = "/quest/retail-xml-retention.tsv";
+	private static final String XML_RESOURCE = "/aion/data/static_data/quest_definition/quests/%d.xml";
+
+	private static RetailQuestCatalog catalog;
+	private static RetailQuestXmlTable retailTable;
+	private static RetailClientRewardNpcs clientRewardNpcs;
+	private static RetailQuestAreaIndex questAreas;
+	private static RetailClientBriefingChains clientBriefingChains;
+	private static RetailClientDialogExits clientDialogExits;
+	private static RetailClientReportPages clientReportPages;
+	private static RetailNpcNameIndex npcIndex;
+	private static RetailItemNameIndex itemIndex;
+	private static Map<String, Integer> randomRewards;
+	private static Map<Integer, Integer> nameIds;
+
+	@BeforeAll
+	static void loadFixtures() throws Exception {
+		RetailSimpleHuntTable table;
+		try (InputStream input = open("/aion/data/static_data/quest_retail/Quest_SimpleHunt.xml")) {
+			table = RetailSimpleHuntTable.load(input);
+		}
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest.xml")) {
+			retailTable = RetailQuestXmlTable.load(input);
+		}
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_reward_npcs.tsv")) {
+			clientRewardNpcs = RetailClientRewardNpcs.load(input);
+		}
+		try (InputStream input = open("/aion/definitions/compact/ai/ai-areas.xml")) {
+			questAreas = RetailQuestAreaIndex.load(input);
+		}
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_briefing_chains.tsv")) {
+			clientBriefingChains = RetailClientBriefingChains.load(input);
+		}
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_dialog_exits.tsv")) {
+			clientDialogExits = RetailClientDialogExits.load(input);
+		}
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_report_pages.tsv")) {
+			clientReportPages = RetailClientReportPages.load(input);
+		}
+		npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_TEMPLATES));
+		itemIndex = RetailItemNameIndex.build(openAll("/aion/data/static_data/items/item/",
+			listXmlNames("/aion/data/static_data/items/item/")));
+		randomRewards = randomRewardIds();
+		nameIds = nameIds();
+		catalog = new RetailQuestCatalog(table, npcIndex);
+	}
+
+	@Test
+	void dumpRetainedRowDiffAxes() throws Exception {
+		Map<Integer, String> reasons = retainedRows();
+		List<String> lines = new ArrayList<>();
+		Map<String, Integer> histogram = new TreeMap<>();
+		for (Map.Entry<Integer, String> entry : reasons.entrySet()) {
+			int questId = entry.getKey();
+			String axis;
+			String detail = "";
+			var plan = catalog.simpleHuntPlan(questId);
+			if (plan.isEmpty()) {
+				axis = "NO_PLAN";
+			} else {
+				RetailQuestXmlTable.Entry meta = retailTable.find(questId).orElse(null);
+				if (meta == null) {
+					axis = "NO_METADATA";
+				} else {
+					RetailSimpleHuntDefinitionCompiler.Outcome outcome = RetailSimpleHuntDefinitionCompiler.compile(
+						plan.get(), RetailQuestMetadataCompiler.compile(meta, npcIndex, itemIndex, randomRewards,
+							nameIds),
+						clientRewardNpcs, questAreas, clientBriefingChains, clientDialogExits, clientReportPages);
+					if (!outcome.accepted()) {
+						axis = "REJECTED:" + outcome.rejectionCode();
+						detail = String.valueOf(outcome.detail()).replace('\t', ' ');
+					} else {
+						CompiledQuestDefinition fromXml = null;
+						String unreadable = null;
+						boolean expanded = true;
+						try {
+							fromXml = compileXml(questId, true);
+						} catch (Exception exception) {
+							// 展开口径下 XML 编译不过（如 KILL_NPC 歧义转换）：退回未展开口径再试一次。
+							unreadable = exception.getMessage().replace('\t', ' ');
+							expanded = false;
+							try {
+								fromXml = compileXml(questId, false);
+							} catch (Exception rawFailure) {
+								unreadable = unreadable + " | raw: " + rawFailure.getMessage();
+							}
+						}
+						if (fromXml == null) {
+							axis = unreadable == null ? "NO_XML" : "XML_UNCOMPILABLE";
+							detail = String.valueOf(unreadable).replace('\t', ' ');
+						} else {
+							QuestDefinition xml = fromXml.definition();
+							QuestDefinition retail = outcome.definition().definition();
+							String problem = RetailSimpleHuntEquivalenceGateTest.irEquivalenceProblem(xml, retail);
+							axis = (problem == null ? "EQUAL" : problem.split(":")[0]);
+							if (!expanded) {
+								axis = "RAW_" + axis;
+							}
+							detail = (problem == null ? "" : describe(problem, xml, retail))
+								+ " nodes=xml/" + xml.nodes().size() + ",retail/" + retail.nodes().size()
+								+ " transitions=xml/" + xml.transitions().size()
+								+ ",retail/" + retail.transitions().size();
+						}
+					}
+				}
+			}
+			histogram.merge(axis, 1, Integer::sum);
+			lines.add(questId + "\t" + axis + "\t" + entry.getValue() + "\t" + detail);
+		}
+		String out = System.getProperty("p0c8.out");
+		assertNotNull(out, "missing -Dp0c8.out");
+		StringBuilder text = new StringBuilder("# 行数=" + lines.size() + "\n");
+		histogram.forEach((key, count) -> text.append("# ").append(key).append('\t').append(count).append('\n'));
+		lines.forEach(line -> text.append(line).append('\n'));
+		Files.writeString(Path.of(out), text.toString());
+	}
+
+	/**
+	 * 差异明细：转换轴给出缺失/多余的首条完整签名与计数差，节点轴给出两侧节点键数。
+	 * Diff detail: for the transition axis the first full missing/extra signature, for the node axis key counts.
+	 */
+	private static String describe(String problem, QuestDefinition xml, QuestDefinition retail) throws Exception {
+		if (problem.startsWith("node sets differ")) {
+			Map<String, String> xmlKeys = nodeKeys(xml);
+			Map<String, String> retailKeys = nodeKeys(retail);
+			Set<String> xmlSet = new TreeSet<>(xmlKeys.values());
+			Set<String> retailSet = new TreeSet<>(retailKeys.values());
+			Set<String> missing = new TreeSet<>(xmlSet);
+			missing.removeAll(retailSet);
+			Set<String> extra = new TreeSet<>(retailSet);
+			extra.removeAll(xmlSet);
+			return "nodes xml=" + xmlSet.size() + " retail=" + retailSet.size()
+				+ " xmlOnly=" + join(missing, 6) + " retailOnly=" + join(extra, 6);
+		}
+		if (problem.startsWith("transition multisets differ")) {
+			Map<String, Integer> xmlCounts = transitionSignatures(xml, labelToKey(nodeKeys(xml)));
+			Map<String, Integer> retailCounts = transitionSignatures(retail, labelToKey(nodeKeys(retail)));
+			Set<String> missing = new TreeSet<>(xmlCounts.keySet());
+			missing.removeAll(retailCounts.keySet());
+			Set<String> extra = new TreeSet<>(retailCounts.keySet());
+			extra.removeAll(xmlCounts.keySet());
+			Set<String> countMismatch = new TreeSet<>();
+			for (String key : new TreeSet<>(xmlCounts.keySet())) {
+				if (retailCounts.containsKey(key) && !xmlCounts.get(key).equals(retailCounts.get(key))) {
+					countMismatch.add(key + " x" + xmlCounts.get(key) + "->x" + retailCounts.get(key));
+				}
+			}
+			return "xmlOnlyTransitions=" + join(missing, 6) + " retailOnlyTransitions=" + join(extra, 6)
+				+ " countMismatch=" + join(countMismatch, 6);
+		}
+		return problem;
+	}
+
+	private static String join(Set<String> values, int limit) {
+		return values.isEmpty() ? "-" : String.join(" ; ", values.stream().limit(limit).toList());
+	}
+
+	private static Map<String, String> nodeKeys(QuestDefinition definition) {
+		Map<String, String> keys = new HashMap<>();
+		for (QuestNode node : definition.nodes()) {
+			keys.put(node.label(), node.projection().status() + "/"
+				+ definition.progressLayout().pack(node.projection().variables()));
+		}
+		return keys;
+	}
+
+	private static Map<String, String> labelToKey(Map<String, String> keys) {
+		return new HashMap<>(keys);
+	}
+
+	private static Map<String, Integer> transitionSignatures(QuestDefinition definition,
+			Map<String, String> labels) {
+		Map<String, Integer> counts = new TreeMap<>();
+		for (QuestTransition transition : definition.transitions()) {
+			String source = transition.sourceNode() == null ? "null" : labels.get(transition.sourceNode());
+			String target = labels.get(transition.targetNode());
+			for (String event : RetailKillRoutes.eventTexts(transition.event())) {
+				counts.merge(source + ">" + event + ">" + target + ">" + transition.conditions() + ">"
+					+ transition.actions() + ">" + transition.afterCommit() + ">"
+					+ (transition.priority() == null ? "-" : transition.priority()), 1, Integer::sum);
+			}
+		}
+		return counts;
+	}
+
+	private static CompiledQuestDefinition compileXml(int questId, boolean expandKillTargets)
+			throws Exception {
+		try (InputStream input = P0c8RetentionDiffProbeTest.class.getResourceAsStream(
+				String.format(XML_RESOURCE, questId))) {
+			if (input == null) {
+				return null;
+			}
+			String xml = new String(input.readAllBytes(), StandardCharsets.UTF_8);
+			if (expandKillTargets) {
+				xml = RetailKillTargetXml.expand(xml, npcIndex);
+			}
+			return QuestDefinitionCompiler.compile(QuestDefinitionXmlCompiler.parse(
+				new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))));
+		}
+	}
+
+	/** 保留行（family=SimpleHunt 且 owner=XML_RETENTION）：quest_id → 保留原因。 */
+	private static Map<Integer, String> retainedRows() throws Exception {
+		Map<Integer, String> rows = new TreeMap<>();
+		for (String line : lines(open(RETENTION))) {
+			if (line.startsWith("#") || line.isBlank()) {
+				continue;
+			}
+			String[] parts = line.split("\t", -1);
+			if (parts.length > 3 && "SimpleHunt".equals(parts[2]) && "XML_RETENTION".equals(parts[1])) {
+				rows.put(Integer.parseInt(parts[0]), parts[3]);
+			}
+		}
+		return rows;
+	}
+
+	private static Map<String, Integer> randomRewardIds() throws Exception {
+		Map<String, Integer> ids = new HashMap<>();
+		var document = parse(open("/aion/data/static_data/quest_random_rewards.xml"));
+		var nodes = document.getDocumentElement().getElementsByTagName("quest_random_reward");
+		for (int index = 0; index < nodes.getLength(); index++) {
+			var element = (org.w3c.dom.Element) nodes.item(index);
+			ids.put(element.getElementsByTagName("name").item(0).getTextContent().trim(),
+				Integer.parseInt(element.getElementsByTagName("id").item(0).getTextContent().trim()));
+		}
+		return ids;
+	}
+
+	private static Map<Integer, Integer> nameIds() throws Exception {
+		Map<Integer, Integer> ids = new HashMap<>();
+		for (String line : lines(open("/aion/data/static_data/quest_retail/quest_name_string_ids.tsv"))) {
+			if (line.startsWith("#") || line.isBlank()) {
+				continue;
+			}
+			String[] parts = line.split("\t");
+			ids.put(Integer.parseInt(parts[0].substring("STR_QUEST_NAME_Q".length())), Integer.parseInt(parts[1]));
+		}
+		return ids;
+	}
+
+	private static List<String> listXmlNames(String dir) throws Exception {
+		var url = P0c8RetentionDiffProbeTest.class.getResource(dir);
+		assertNotNull(url, "missing dir " + dir);
+		java.io.File[] files = new java.io.File(url.toURI()).listFiles((directory, name) -> name.endsWith(".xml"));
+		assertNotNull(files);
+		return java.util.Arrays.stream(files).map(java.io.File::getName).sorted().toList();
+	}
+
+	private static org.w3c.dom.Document parse(InputStream input) throws Exception {
+		try (input) {
+			var factory = javax.xml.parsers.DocumentBuilderFactory.newInstance();
+			factory.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, true);
+			factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+			return factory.newDocumentBuilder().parse(input);
+		}
+	}
+
+	private static List<InputStream> openAll(String dir, List<String> files) throws Exception {
+		List<InputStream> inputs = new ArrayList<>();
+		for (String file : files) {
+			inputs.add(open(dir + file));
+		}
+		return inputs;
+	}
+
+	private static List<String> lines(InputStream input) throws Exception {
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
+			return reader.lines().toList();
+		}
+	}
+
+	private static InputStream open(String resource) throws Exception {
+		InputStream input = P0c8RetentionDiffProbeTest.class.getResourceAsStream(resource);
+		assertNotNull(input, "missing resource " + resource);
+		return input;
+	}
+}

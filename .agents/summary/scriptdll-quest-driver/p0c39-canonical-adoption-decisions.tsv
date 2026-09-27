@@ -1,0 +1,14 @@
+# P0c-39 canonical 采纳裁定（flip 前对拍；每行一裁定，证据=探针 P0c39PreflipProbeTest 实测）
+# 判准：真端侧 IR 的致命类计数（BUTTON_WITHOUT_ROUTE / PAGE_NOT_IN_TASK_HTML）不得比 XML 侧多；
+#      未达页只能减少。xml_unresolved / retail_unresolved = 该侧 CLIENT_PAGE_UNREACHED+EVIDENCE_REQUIRED 行数。
+# quest_id	decision	family	xml_unresolved	retail_unresolved	fatal_xml	fatal_retail	closed_pages	basis
+18035	ADOPT	SimpleTalk	0	0	0	0	-	shape-only：XML 侧本已全页 matched，真端形状（s1 阶梯 + 真端 item 动作串）取代历史 XML；basis=CANONICAL_ITEM_CHANNEL
+18807	ADOPT	SimpleTalk	1	0	0	0	2375	真端侧闭合 XML 死页 2375(client 1009)；basis=CANONICAL_ITEM_CHANNEL
+18809	ADOPT	SimpleTalk	2	0	0	0	1693,2375	真端侧闭合 1693(client 10001) 与 2375(client 1009)；basis=CANONICAL_ITEM_CHANNEL
+21070	ADOPT	SimpleTalk	1	0	0	0	2375	真端侧闭合 2375；basis=CANONICAL_ITEM_CHANNEL
+24120	ADOPT	SimpleTalk	2	0	0	0	1693,1694	真端侧闭合 1693(client 1694) 与 1694(client 10001)；basis=CANONICAL_ITEM_CHANNEL
+28035	ADOPT	SimpleTalk	0	0	0	0	-	shape-only（同 18035）；basis=CANONICAL_ITEM_CHANNEL
+28807	ADOPT	SimpleTalk	1	0	0	0	2375	真端侧闭合 2375；basis=CANONICAL_ITEM_CHANNEL
+21460	HOLD	SimpleTalk	1	6	0	1	-	真端侧**新增 1 条致命** BUTTON_WITHOUT_ROUTE（page 1011 SELECT1 → 按钮 1012 SELECT1_1 无路由）+ 5 行接取对话页未达（1003/1004/4）；axis=ACCEPT_DIALOG_ENTRANCE
+29070	HOLD	SimpleTalk	6	6	0	1	-	真端侧把 XML 的非致命未达页 1011 升级为**致命**（页面已下发但 1012 无路由）+ 同轴 5 行；axis=ACCEPT_DIALOG_ENTRANCE
+29071	HOLD	SimpleTalk	6	6	0	1	-	同 29070；axis=ACCEPT_DIALOG_ENTRANCE

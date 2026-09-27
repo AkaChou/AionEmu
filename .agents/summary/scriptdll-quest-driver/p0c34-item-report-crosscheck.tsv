@@ -1,0 +1,5 @@
+# P0c-34 npc-item-report（item_check 门）转写与真端 cross-check
+# quest_id	npc_id	真端 collect_item 解析	required	item_id	remove_count	failure_page	判定
+1152	203130	quest.xml collect_item → 169400112	1	169400112	-	-	MATCH
+24202	205150	quest.xml collect_item → 182215465	1	182215465	-	CLOSE	MATCH
+80320	831427	quest.xml collect_item → 182215303	12	182215303	-	-	MATCH

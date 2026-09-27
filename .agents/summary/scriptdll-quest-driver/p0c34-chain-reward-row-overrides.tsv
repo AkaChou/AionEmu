@@ -1,0 +1,7 @@
+# P0c-34 链登记表 REWARD 投影裁定（依据：客户端任务书行数 = QE-051 权威通道）
+# 背景：1479 的 reward var0 在旧 XML 里是 1，而客户端任务书 3 行 → 末行行号 2；登记表持有 2
+# （早期裁定值），但 XML 已于 P0c-32 退役、修正无法回写，重新生成会把该行静默翻回 1。
+# 本表把该裁定显式化：生成器读本表覆盖 XML 转写值，并与 quest_client_summary_rows.tsv
+# 交叉核验（不符即 fail-closed，防止裁定表腐化）。
+# quest_id	var0	basis
+1479	2	CLIENT_LAST_ROW_INDEX rows=3;XML=1 与客户端相左，判客户端对（判例 QE-051）

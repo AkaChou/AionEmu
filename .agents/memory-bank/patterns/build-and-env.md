@@ -99,7 +99,7 @@ first_check: same-name methods, parameter count, final-field initialization and 
 status: CONFIRMED
 scope: Bulk source text edits, comment localization and lexical structure preservation
 first_seen: 2026-08-14
-last_verified: 2026-09-14
+last_verified: 2026-09-27
 symptom: 批量注释后代码行丢失、括号错位、词法状态被破坏
 root_cause: Broad string replacement or two-stage comment stripping crossed code and comment lexical boundaries
 fix_or_guardrail: Use minimal unique anchors, preserve code bytes and scan comments with a single-pass lexer
@@ -121,6 +121,29 @@ first_check: git diff added/removed code lines, anchor uniqueness and lexical st
      - 包含 `case/if` 块的大段替换，必须在锚定串中包含边界行（如 `}` 或 `break;`），严防括号多写或漏写。
 2. **词法解析的单遍状态机原则**：
    - 源码中存在装饰性注释（如 `//\\//\\//***...`）内嵌 `/*` 字符的情况。两阶段正则剥离会导致语法解析错乱，批量处理必须使用单遍词法状态机。
+3. **成员级删除（方法/记录/常量）的锚定与快照纪律**（2026-09-27 事故）：
+   - **事故**：用"方法名 + 向上找最近的注释起点"启发式的脚本批量删除四个死方法时，删除器把**类头一段**
+     （两个常量 + 私有构造器 + 一条 `record` + 家族入口 javadoc 首行）一并吃掉；该类是**未跟踪文件**
+     （无 git 基线可回滚），编译立刻报 5 处 `找不到符号`。
+   - **纪律**：①按名删除必须**锚定签名行，并从签名后的第一个 `{` 做花括号配对**，禁止"往上找最近的
+     `/**`"之类的启发式（注释里可能出现 `/**`，也可能是上一个成员的 javadoc）；②**批量删除前先落副本**
+     （未跟踪文件尤其如此——没有 git 兜底）；③删完立刻 `test-compile` + **结构体检**（孤立注释行、
+     花括号平衡）。
+   - **救回通道（值得记住）**：未跟踪文件被误删的文本可从**会话历史（`~/.claude/projects/**/*.jsonl`）
+     里的工具输出逐字恢复**——本项目已用此通道逐字重建被删的常量、`record` 与方法 javadoc。
+4. **删除 `src/main/resources` 下的文件后必须清理 `target/` 孤副本**（2026-09-27 事故）：
+   - **事故**：受理退役一枚任务（删了它的遗留 XML + catalog 条目）后，`verifyProductionCoverage` 仍报
+     `wrongOwner=[…]`，级联 **15 个测试错误**（启动门 / 交互物门 / 覆盖门 / 系统发放门全部"生产视图不可读"）。
+   - **根因**：Maven **资源拷贝不删除**已从源码删除的文件 ⇒ `target/classes/...` 里的旧副本仍在 classpath 上，
+     运行期继续按"XML 存在"判定 owner。
+   - **纪律**：删 `src/main/resources/**` 文件后，同步删对应 `target/classes/**` 孤副本（等价于对该文件 clean）；
+     或干脆 `mvn clean`（慢）。排查此类"改了没生效"现象时，**先比对 target 与源码树**。
+5. **派生生成器重跑前必须备份 + 逐行核差**（2026-09-27 事故，未造成后果）：
+   - **事故**：按"生成器产出则改生成器"的常规思路重跑 `build_retention_list.py`，它**回退 472 行**——该脚本
+     不消费其他车道后来新增的裁定文件（如 `wave10-chain-acquire-registry-decisions.tsv`），输出的是**旧口径**。
+     处置：立即从备份还原三份，改用手工精确改本片 9 行（锚定 + 逐行断言）。
+   - **纪律**：重跑任何**派生生成器**前：①备份全部输出（含镜像副本）；②跑完逐行 `diff`，确认差异**只有本片
+     变化面**；③若产生 foreign 行差异，**还原并用定向编辑**完成本片改动，同时把"生成器已滞后"登记为移交项。
 
 ---
 

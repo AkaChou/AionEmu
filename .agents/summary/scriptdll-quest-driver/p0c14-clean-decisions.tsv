@@ -1,0 +1,10 @@
+# P0c-14：CLIENT_ROUTE 复験第二批——过渡集相等/已裁定类 20 行采纳（M3-d 降级反转）
+# 接受判据：探针过渡多重集相等（纯 QE-051 投影差，10m 判例 106 行同类 真端对 XML 错）或小差异
+# legacy 边（VISIBILITY_REFRESH/页边/关窗边，10 系已裁定类），且各有专属契约测试可增量判定；
+# 大差异行（26930 cnt179 / 80356+80365 cnt39 / 2654 / 11003 / 1141 / 1117 / 1353）本轮缓议留 XML。
+# 事件轴 9 行（80028/80031/80032/80034-80039：真端编译丢 EventActive/LevelUp/EventQuestRefresh 边）
+# = 真端缺口，KEEP 不变（降级码 CLIENT_ROUTE 暂留，报告记录事件轴精化证据）。
+# 门复终判（P0c-15）：17 行契约红 → 回退 KEEP（divergence 见 P0c-15 报告）；仅 30314/80018/80294 保持 ADOPT。
+30314	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	node-projection-only (QE-051) + Quest30314RetailAlignmentTest
+80018	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	node-projection-only (QE-051; transitions equal incl. event edges) + Movie/DialogOrder tests
+80294	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	legacy-edges cnt4 + DurableDaevanionWeaponRewardRowContractTest

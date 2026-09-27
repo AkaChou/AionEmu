@@ -1,0 +1,21 @@
+[ERROR] Tests run: 4, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 1.855 s <<< FAILURE! -- in com.aionemu.gameserver.questEngine.definition.QuestKillCounterRetailGateTest
+[ERROR] com.aionemu.gameserver.questEngine.definition.QuestKillCounterRetailGateTest.killDeclarationsStayInsideKillTransitions -- Time elapsed: 1.020 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: kill declarations are display-only; their reviewed population must not silently shrink (31 declaring quests) ==> expected: <true> but was: <false>
+	at com.aionemu.gameserver.questEngine.definition.QuestKillCounterRetailGateTest.killDeclarationsStayInsideKillTransitions(QuestKillCounterRetailGateTest.java:136)
+
+[ERROR] com.aionemu.gameserver.questEngine.definition.QuestKillCounterRetailGateTest.singleCounterQuestsRequireExactlyTheClientGate -- Time elapsed: 0.358 s <<< FAILURE!
+java.lang.AssertionError: quest 13770 is not an executable owner
+	at com.aionemu.gameserver.questEngine.definition.QuestKillCounterRetailGateTest.lambda$singleCounterQuestsRequireExactlyTheClientGate$0(QuestKillCounterRetailGateTest.java:55)
+	at com.aionemu.gameserver.questEngine.definition.QuestKillCounterRetailGateTest.singleCounterQuestsRequireExactlyTheClientGate(QuestKillCounterRetailGateTest.java:55)
+
+[ERROR] Failures: 
+[ERROR]   QuestKillCounterRetailGateTest.killDeclarationsStayInsideKillTransitions:136 kill declarations are display-only; their reviewed population must not silently shrink (31 declaring quests) ==> expected: <true> but was: <false>
+[ERROR]   QuestKillCounterRetailGateTest.singleCounterQuestsRequireExactlyTheClientGate:55->lambda$singleCounterQuestsRequireExactlyTheClientGate$0:55 quest 13770 is not an executable owner
+[ERROR] Tests run: 4, Failures: 2, Errors: 0, Skipped: 0
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project aionemu: There are test failures.
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by lombok.permit.Permit
+WARNING: Please consider reporting this to the maintainers of class lombok.permit.Permit
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+
+[full output: "$HOME/Library/Application Support/rtk/tee/1790413599_mvn_quiet.log"]

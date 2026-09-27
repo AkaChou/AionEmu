@@ -1,0 +1,10 @@
+retail rows=574 family=574 items=128163 npcs=87719 recipes=11766
+wrote /Users/mc/IdeaProjects/AionEmu-test/.agents/summary/scriptdll-quest-driver/retail-combine-task-shapes.tsv
+  component_match          574
+  nodes_unaccepted:NONE:v0/started:START:v0/reward:REWARD:v0/complete:COMPLETE:v0 574
+  npc_unique               574
+  point_match              574
+  product_match            574
+  recipe_match             574
+  skill_match              574
+  xml_present              574

@@ -1,0 +1,115 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.aionemu:aionemu >-------------------------
+[INFO] Building aionemu 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- enforcer:3.6.3:enforce (require-java-25) @ aionemu ---
+[INFO] Rule 0: org.apache.maven.enforcer.rules.version.RequireJavaVersion passed
+[INFO] Rule 1: org.apache.maven.enforcer.rules.version.RequireMavenVersion passed
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ aionemu ---
+[INFO] Copying 3435 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.15.0:compile (default-compile) @ aionemu ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ aionemu ---
+[INFO] Copying 49 resources from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ aionemu ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ aionemu ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.aionemu.gameserver.questEngine.runtime.QuestRepeatLifecycleTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.13 s -- in com.aionemu.gameserver.questEngine.runtime.QuestRepeatLifecycleTest
+[INFO] Running com.aionemu.gameserver.questEngine.definition.QuestEventShardRetailAlignmentTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 s -- in com.aionemu.gameserver.questEngine.definition.QuestEventShardRetailAlignmentTest
+[INFO] Running com.aionemu.gameserver.questEngine.definition.ItemCollectingDialogProtocolAlignmentTest
+[ERROR] Tests run: 6, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 1.184 s <<< FAILURE! -- in com.aionemu.gameserver.questEngine.definition.ItemCollectingDialogProtocolAlignmentTest
+[ERROR] com.aionemu.gameserver.questEngine.definition.ItemCollectingDialogProtocolAlignmentTest.retailItemCollectingQuestsUseTheClientItemCheckProtocol -- Time elapsed: 0.013 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: quest 18742 turn-in NPCs ==> expected: <[804707]> but was: <[206378, 206379, 206380]>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:158)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:139)
+	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:201)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:184)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1199)
+	at com.aionemu.gameserver.questEngine.definition.ItemCollectingDialogProtocolAlignmentTest.retailItemCollectingQuestsUseTheClientItemCheckProtocol(ItemCollectingDialogProtocolAlignmentTest.java:52)
+
+[INFO] Running com.aionemu.gameserver.questEngine.definition.QuestMonsterProgressContractAuditTest
+[ERROR] Tests run: 22, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 0.082 s <<< FAILURE! -- in com.aionemu.gameserver.questEngine.definition.QuestMonsterProgressContractAuditTest
+[ERROR] com.aionemu.gameserver.questEngine.definition.QuestMonsterProgressContractAuditTest.quest16823And26823AutoGrantOnAreaLifecycleAndWalkTheSensoryChain -- Time elapsed: 0.003 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: quest 16823 must not replay the clipped 939 movie ==> expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:158)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:139)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:69)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:48)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:204)
+	at com.aionemu.gameserver.questEngine.definition.QuestMonsterProgressContractAuditTest.quest16823And26823AutoGrantOnAreaLifecycleAndWalkTheSensoryChain(QuestMonsterProgressContractAuditTest.java:823)
+
+[ERROR] com.aionemu.gameserver.questEngine.definition.QuestMonsterProgressContractAuditTest.repairedMultiKillQuestsDeclareSeparateKillCounters -- Time elapsed: 0.001 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: quest 50091 must declare var1 ==> expected: not <null>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:159)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:139)
+	at org.junit.jupiter.api.AssertNotNull.failNull(AssertNotNull.java:55)
+	at org.junit.jupiter.api.AssertNotNull.assertNotNull(AssertNotNull.java:40)
+	at org.junit.jupiter.api.Assertions.assertNotNull(Assertions.java:334)
+	at com.aionemu.gameserver.questEngine.definition.QuestMonsterProgressContractAuditTest.repairedMultiKillQuestsDeclareSeparateKillCounters(QuestMonsterProgressContractAuditTest.java:258)
+
+[INFO] Running com.aionemu.gameserver.questEngine.definition.CollectTurnInClientActionAlignmentBatchTest
+[ERROR] Tests run: 7, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.011 s <<< FAILURE! -- in com.aionemu.gameserver.questEngine.definition.CollectTurnInClientActionAlignmentBatchTest
+[ERROR] com.aionemu.gameserver.questEngine.definition.CollectTurnInClientActionAlignmentBatchTest.quest18745KeepsTheRewardOwnerExclusive -- Time elapsed: 0.001 s <<< ERROR!
+java.util.NoSuchElementException: No value present
+	at java.base/java.util.Optional.orElseThrow(Optional.java:381)
+	at com.aionemu.gameserver.questEngine.definition.CollectTurnInClientActionAlignmentBatchTest.transition(CollectTurnInClientActionAlignmentBatchTest.java:269)
+	at com.aionemu.gameserver.questEngine.definition.CollectTurnInClientActionAlignmentBatchTest.checkTurnInBranches(CollectTurnInClientActionAlignmentBatchTest.java:216)
+	at com.aionemu.gameserver.questEngine.definition.CollectTurnInClientActionAlignmentBatchTest.checkTurnInBranches(CollectTurnInClientActionAlignmentBatchTest.java:205)
+	at com.aionemu.gameserver.questEngine.definition.CollectTurnInClientActionAlignmentBatchTest.quest18745KeepsTheRewardOwnerExclusive(CollectTurnInClientActionAlignmentBatchTest.java:173)
+
+[INFO] Running com.aionemu.gameserver.questEngine.e2e.QuestHandoverContinuationAuditTest
+[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.435 s <<< FAILURE! -- in com.aionemu.gameserver.questEngine.e2e.QuestHandoverContinuationAuditTest
+[ERROR] com.aionemu.gameserver.questEngine.e2e.QuestHandoverContinuationAuditTest.clientLocalCloseConfirmationPagesContinueInTheSameDialogue -- Time elapsed: 0.240 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: every repaired hand-over branch must stay wired: [quest 18742: started -> reward by NPC 804707 must display continuation page 5, quest 28742: started -> reward by NPC 804732 must display continuation page 5] ==> expected: <42> but was: <40>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:158)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:139)
+	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:201)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:158)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:625)
+	at com.aionemu.gameserver.questEngine.e2e.QuestHandoverContinuationAuditTest.clientLocalCloseConfirmationPagesContinueInTheSameDialogue(QuestHandoverContinuationAuditTest.java:163)
+
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   ItemCollectingDialogProtocolAlignmentTest.retailItemCollectingQuestsUseTheClientItemCheckProtocol:52 quest 18742 turn-in NPCs ==> expected: <[804707]> but was: <[206378, 206379, 206380]>
+[ERROR]   QuestMonsterProgressContractAuditTest.quest16823And26823AutoGrantOnAreaLifecycleAndWalkTheSensoryChain:823 quest 16823 must not replay the clipped 939 movie ==> expected: <true> but was: <false>
+[ERROR]   QuestMonsterProgressContractAuditTest.repairedMultiKillQuestsDeclareSeparateKillCounters:258 quest 50091 must declare var1 ==> expected: not <null>
+[ERROR]   QuestHandoverContinuationAuditTest.clientLocalCloseConfirmationPagesContinueInTheSameDialogue:163 every repaired hand-over branch must stay wired: [quest 18742: started -> reward by NPC 804707 must display continuation page 5, quest 28742: started -> reward by NPC 804732 must display continuation page 5] ==> expected: <42> but was: <40>
+[ERROR] Errors: 
+[ERROR]   CollectTurnInClientActionAlignmentBatchTest.quest18745KeepsTheRewardOwnerExclusive:173->checkTurnInBranches:205->checkTurnInBranches:216->transition:269 » NoSuchElement No value present
+[INFO] 
+[ERROR] Tests run: 42, Failures: 4, Errors: 1, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  14.627 s
+[INFO] Finished at: 2026-09-26T20:31:26+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project aionemu: There are test failures.
+[ERROR] 
+[ERROR] See /Users/mc/IdeaProjects/AionEmu-test/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

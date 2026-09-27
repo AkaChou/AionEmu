@@ -18,6 +18,8 @@
   （整族一致 max=82）的任务。仅接受 82 这一唯一封顶值，任何其他值必须逐条重新定性。
 """
 import os
+import re
+import subprocess
 import xml.etree.ElementTree as ET
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
@@ -54,8 +56,56 @@ def parse_retail():
     return quests
 
 
+PROD_REL_DIR = "src/main/resources/aion/data/static_data/quest_definition/quests"
+LEDGER = os.path.join(
+    REPO, "src/test/resources/quest/retail-xml-retention.tsv")
+
+
+def ledger_ids():
+    """保留清单里的任务全集（含已退役 id；旧 XML 只在 git 历史里）。
+
+    Ledger ids, retired ones included: their XML now lives in git history only.
+    """
+    ids = set()
+    with open(LEDGER, encoding="utf-8") as fh:
+        for line in fh:
+            if line.startswith("#") or not line.strip():
+                continue
+            ids.add(line.split("\t")[0])
+    return ids
+
+
 def prod_ids():
-    return {fn[:-4] for fn in os.listdir(PROD_DIR) if fn.endswith(".xml")}
+    """生产任务全集 = 生产 XML 目录 ∪ 既有保留清单（冻结宇宙，恒为 6224）。"""
+    live = {fn[:-4] for fn in os.listdir(PROD_DIR) if fn.endswith(".xml")}
+    return live | ledger_ids()
+
+
+def prod_path(qid):
+    """生产任务 XML 路径；已退役任务从 git 历史取内容（仓库不再保留副本）。
+
+    Path for live XML, or the git-history text for a retired quest.
+    """
+    live = os.path.join(PROD_DIR, qid + ".xml")
+    if os.path.exists(live):
+        return live
+    return f"git-history:{PROD_REL_DIR}/{qid}.xml"
+
+
+def read_prod_head(qid, limit=None):
+    """读生产 XML 头部：live 走文件系统，已退役走 `git show HEAD:<path>`。"""
+    path = prod_path(qid)
+    if path.startswith("git-history:"):
+        rel = path.split(":", 1)[1]
+        proc = subprocess.run(["git", "show", f"HEAD:{rel}"], cwd=REPO,
+                              capture_output=True, text=True)
+        if proc.returncode != 0:
+            return ""
+        text = proc.stdout
+    else:
+        with open(path, encoding="utf-8") as pf:
+            text = pf.read()
+    return text if limit is None else text[:limit]
 
 
 def norm_faction(race_permitted, prod_race=""):
@@ -104,15 +154,21 @@ def main():
             repeat = r.get("max_repeat_count", "1")
             fh.write(f"{qid}\t{rmin_out}\t{rmax}\t{fac}\t{gender}\t{repeat}\n")
 
-    # 有意封顶例外 = 生产 max 为封顶值 82 且真端为 UNLIMITED 的行（逐行留档）
+    # 有意封顶例外 = 生产 max 为封顶值 82 且真端为 UNLIMITED 的行（逐行留档）。
+    # 只统计**仍在生产白名单里**的任务：已退役（owner=RETAIL_TABLE）的任务由真端元数据合成，
+    # 其 max-level 来自真端 quest.xml（UNLIMITED），服务端 82 封顶随之消失，不能再留在例外清单里。
+    # Cap exceptions only cover quests still backed by production XML; retired quests take the retail
+    # metadata (unlimited) so the server-side cap no longer exists for them.
+    catalog_path = os.path.join(
+        REPO, "src/main/resources/aion/data/static_data/quest_definition/quest_definition_catalog.xml")
+    with open(catalog_path, encoding="utf-8") as fh:
+        live_catalog = set(re.findall(r'<definition id="(\d+)"', fh.read()))
     for qid in sorted(pids, key=int):
         r = retail.get(qid)
-        if r is None:
+        if r is None or qid not in live_catalog:
             continue
         prod_max = None
-        with open(os.path.join(PROD_DIR, qid + ".xml"), encoding="utf-8") as pf:
-            head = pf.read(900)
-        import re
+        head = read_prod_head(qid, 900)
         m = re.search(r'max-level="([^"]+)"', head)
         if m:
             prod_max = m.group(1)

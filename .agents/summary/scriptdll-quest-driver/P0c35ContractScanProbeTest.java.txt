@@ -1,0 +1,39 @@
+package com.aionemu.gameserver.questEngine.definition;
+
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
+
+import org.junit.jupiter.api.Test;
+
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 临时探针（P0c-35）：生产视图致命契约指纹扫描——本片入台行（24202/80320）是否贡献新指纹。
+ * Temporary probe: fatal client-contract scan for this slice's rows in the production view.
+ */
+class P0c35ContractScanProbeTest {
+
+	@Test
+	void fatalRowsForThisSlice() throws Exception {
+		QuestCatalog catalog = RetailQuestDriver.overlay(
+			QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader()));
+		Map<Integer, QuestDialogOrderAudit.ClientQuest> clientQuests = QuestDialogOrderAudit.readClientPages(
+			Path.of("docs/quest/client-dialog-mapping/quest-dialog-pages.csv"),
+			Path.of("docs/quest/client-dialog-mapping/quest-dialog-action-details.csv"));
+		List<QuestDialogOrderAudit.AuditRow> rows = QuestDialogOrderAudit.audit(catalog, clientQuests);
+		List<QuestDialogOrderAudit.AuditRow> fatal = rows.stream()
+			.filter(row -> row.unresolvedReason().startsWith("visible client action has no route")
+				|| row.unresolvedReason().startsWith(
+					"compiled IR emits a task page absent from the active client page index"))
+			.toList();
+		System.out.println("PRODUCTION-FATAL total=" + fatal.size());
+		fatal.stream().filter(row -> row.questId() == 24202 || row.questId() == 80320 || row.questId() == 1152)
+			.forEach(row -> System.out.println("  FATAL " + row.questId() + " |" + row.serverSourceState()
+				+ "|" + row.npcId() + "|" + row.triggerAction() + "|" + row.shownPage() + "|"
+				+ row.clientVisibleAction() + "|" + row.unresolvedReason()));
+		rows.stream().filter(row -> row.questId() == 24202 || row.questId() == 80320)
+			.forEach(row -> System.out.println("  INFO " + row.questId() + " page=" + row.shownPage()
+				+ " client=" + row.clientVisibleAction() + " status=" + row.auditStatus()));
+	}
+}

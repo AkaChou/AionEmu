@@ -1,0 +1,11 @@
+com.aionemu.gameserver.questEngine.definition.GrowthQuestDialogPageAlignmentTest,
+com.aionemu.gameserver.questEngine.definition.LegacyTemplateMirrorRouteRegressionTest,
+com.aionemu.gameserver.questEngine.definition.Quest30312RetailAlignmentTest,
+com.aionemu.gameserver.questEngine.definition.Quest30314RetailAlignmentTest,
+com.aionemu.gameserver.questEngine.definition.Quest30315RetailAlignmentTest,
+com.aionemu.gameserver.questEngine.definition.QuestBatchReportNpcAlignmentTest,
+com.aionemu.gameserver.questEngine.definition.QuestCharmedEventDefinitionTest,
+com.aionemu.gameserver.questEngine.definition.QuestEventQuestBatchDefinitionTest,
+com.aionemu.gameserver.questEngine.definition.QuestKaligaCollectionClientDialogAlignmentTest,
+com.aionemu.gameserver.questEngine.definition.QuestLunarEventDefinitionTest,
+com.aionemu.gameserver.questEngine.definition.QuestMovieEventDefinitionTest

@@ -1,0 +1,26 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------< com.aionemu:aionemu >-------------------------
+[INFO] Building aionemu 1.0-SNAPSHOT
+[INFO] Running com.aionemu.gameserver.questEngine.definition.QuestKillCounterRetailGateTest
+[ERROR] Tests run: 4, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 12.23 s <<< FAILURE! -- in com.aionemu.gameserver.questEngine.definition.QuestKillCounterRetailGateTest
+[ERROR] com.aionemu.gameserver.questEngine.definition.QuestKillCounterRetailGateTest.simulatorReproducesTheFixedOverkillDrift -- Time elapsed: 0.020 s <<< FAILURE!
+java.lang.AssertionError: 13765 has no closing kill rung
+	at com.aionemu.gameserver.questEngine.definition.QuestKillCounterRetailGateTest.lambda$insertExtraKillRung$3(QuestKillCounterRetailGateTest.java:132)
+	at com.aionemu.gameserver.questEngine.definition.QuestKillCounterRetailGateTest.insertExtraKillRung(QuestKillCounterRetailGateTest.java:132)
+	at com.aionemu.gameserver.questEngine.definition.QuestKillCounterRetailGateTest.simulatorReproducesTheFixedOverkillDrift(QuestKillCounterRetailGateTest.java:111)
+
+[ERROR] com.aionemu.gameserver.questEngine.definition.QuestKillCounterRetailGateTest.singleCounterQuestsRequireExactlyTheClientGate -- Time elapsed: 0.436 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: single-counter quests must reproduce their client kill gate ==> expected: <[]> but was: <[quest 13841 must require exactly the client kill gate 40 but simulates 60, quest 23841 must require exactly the client kill gate 40 but simulates 60]>
+	at com.aionemu.gameserver.questEngine.definition.QuestKillCounterRetailGateTest.singleCounterQuestsRequireExactlyTheClientGate(QuestKillCounterRetailGateTest.java:95)
+
+[INFO] Results:
+[ERROR] Failures: 
+[ERROR]   QuestKillCounterRetailGateTest.simulatorReproducesTheFixedOverkillDrift:111->insertExtraKillRung:132->lambda$insertExtraKillRung$3:132 13765 has no closing kill rung
+[ERROR]   QuestKillCounterRetailGateTest.singleCounterQuestsRequireExactlyTheClientGate:95 single-counter quests must reproduce their client kill gate ==> expected: <[]> but was: <[quest 13841 must require exactly the client kill gate 40 but simulates 60, quest 23841 must require exactly the client kill gate 40 but simulates 60]>
+[ERROR] Tests run: 4, Failures: 2, Errors: 0, Skipped: 0
+[INFO] BUILD FAILURE
+[INFO] Total time:  31.684 s
+[INFO] Finished at: 2026-09-26T17:32:31+08:00
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project aionemu: There are test failures.
+
+[full output: "$HOME/Library/Application Support/rtk/tee/1790415151_mvn_test.log"]

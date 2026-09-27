@@ -1,0 +1,17 @@
+本仓库任务定义 XML: 6224
+
+表                                行数      ∩本仓库
+Quest_CombineTask               574       574
+Quest_SimpleCollectItem         262       178
+Quest_SimpleGather                0         0
+Quest_SimpleHunt               1865       942
+Quest_SimpleItemPlay             43        15
+Quest_SimpleSerialHunt           16        10
+Quest_SimpleTalk               3152      2223
+Quest_SimpleUseItem             160       104
+data_driven_quest.xml          2510      1508
+quest.xml(服务器权威表)             10035      6217
+
+模板表并集（不含 quest.xml）: 8580   ∩本仓库=5554
+本仓库未被模板表覆盖        : 670
+  示例: [1000, 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1044, 1100, 1109, 1111, 1114, 1122, 1123, 1127, 1146, 1149, 1157, 1162, 1170, 1194, 1195, 1205, 1311]

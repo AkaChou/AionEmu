@@ -1,0 +1,19 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------< com.aionemu:aionemu >-------------------------
+[INFO] Building aionemu 1.0-SNAPSHOT
+[INFO] Running com.aionemu.gameserver.questEngine.retail.RetailDataDrivenGateTest
+[ERROR] Tests run: 6, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 3.956 s <<< FAILURE! -- in com.aionemu.gameserver.questEngine.retail.RetailDataDrivenGateTest
+[ERROR] com.aionemu.gameserver.questEngine.retail.RetailDataDrivenGateTest.driftVersusShellsIsRegistered -- Time elapsed: 0.015 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: DataDriven 漂移登记失同步：[20035: 登记=REJECTED:RETAIL_TALK_HUNT_CHAIN_DEFERRED 实际=REJECTED:RETAIL_ITEMPLAY_OUTPUT_UNRESOLVED] ==> expected: <true> but was: <false>
+	at com.aionemu.gameserver.questEngine.retail.RetailDataDrivenGateTest.driftVersusShellsIsRegistered(RetailDataDrivenGateTest.java:409)
+
+[INFO] Results:
+[ERROR] Failures: 
+[ERROR]   RetailDataDrivenGateTest.driftVersusShellsIsRegistered:409 DataDriven 漂移登记失同步：[20035: 登记=REJECTED:RETAIL_TALK_HUNT_CHAIN_DEFERRED 实际=REJECTED:RETAIL_ITEMPLAY_OUTPUT_UNRESOLVED] ==> expected: <true> but was: <false>
+[ERROR] Tests run: 13, Failures: 1, Errors: 0, Skipped: 0
+[INFO] BUILD FAILURE
+[INFO] Total time:  18.972 s
+[INFO] Finished at: 2026-09-26T17:42:28+08:00
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project aionemu: There are test failures.
+
+[full output: "$HOME/Library/Application Support/rtk/tee/1790415748_mvn_test.log"]

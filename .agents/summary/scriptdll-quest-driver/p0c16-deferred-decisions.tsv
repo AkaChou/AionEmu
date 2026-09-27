@@ -1,0 +1,20 @@
+# P0c-16：缓议 7 行细裁——6 行 flip-and-test 候选（门开即验，红即回退）+ 1141 KEEP
+# 1141 = KEEP：真端编译缺 CanAct(700122, ACTION_ITEM_USE) 对象交互边（drop-box validator 合同；
+# 2119 先例：缺边可炸启动）——真端缺口，归对象交互通道；降级码维持。
+# 下列 6 行静态证据在案；retire 前必须门开跑完各 judge 方法。
+# 门窗口未再开（lane 18 悬挂波持续），6 行回退 XML 待下窗执行 flip-and-test；裁定与 judge 方法已就绪。
+# 下窗执行序：①接线本文件进 build_retention_list b1 层 → 重建 → ②retract 前先改回 QuestBatchReportNpc.quest2654
+# 的 endNpc 到 212314（P0c-16 已裁定的真端形状，本次因回退暂撤）→ ③retire + 清 target → ④跑 judge 方法集，红即回退。
+# P0c-17 门复终判：2654/1353/1117 确认采纳；11003 红（798933 的 2375 页路由缺失）回退 KEEP；80356/80365 重判。
+# 80356 亦红（831815 的 2375 页路由缺失，同 11003 类）回退 KEEP。
+# 80365 亦红（831827 同族对称）回退 KEEP——P0c-17 终判：2654/1117/1353 ADOPT，11003/80356/80365 回退。
+# P0c-18 重大反转：P0c-17 的 11003/80356/80365 红为陈旧资源伪影（surefire 直跑时 target 客户端
+# TSV 为 lane 更新前旧拷贝；全量资源刷新后 11003 编译恰有 assertPage 所需唯一 2375 路由）。
+# 三行重新入台，等窗以全量 mvn test 重判（资源全刷新口径）；2654/1117/1353 一并复验。
+# P0c-18 终更正：所谓"陈旧资源伪影"不成立——绿探针当时测的是 XML 编译（清单未翻转时
+# definitionInOverlay 原样返回 XML 条目）。翻转态直证：单步 item_check 行的编译只有接取流、
+# 无任何报告流（31→2375/1009 对/39 对全缺）= 真实第六类缺口。11003/80356/80365 回退 KEEP；
+# 2654/1117/1353 的绿判不受影响（其绿在 P0c-17 窗口内经受门生产视图实跑取得）。
+1117	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	diff=P0c-12 adjudicated classes only (NONE 10000 entry + SET_SUCCEED 10255 + 1008 variant); work-item edges equal (P0c-10o channel); judge=EarlyElyos ointment methods
+1353	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	diff=10000 entry + SET_SUCCEED 10255 (P0c-12 classes); judge=ladder contracts + GoldenJourney + 80312/80318 + Dialog31 + Quest1007Movie method-set
+2654	ADOPT_RETAIL	M3D_DOWNGRADE_REVERSED	-	reward-npc substitution adjudicated retail-right: retail row reward_npc_name=AkanNamed_50_Al(212314) vs legacy 204655=Lasberg_Normal_Q1647 (quest-1647 npc drift); contract method updated to retail shape (Kaliga precedent); judge=quest2654ReportsAndCompletesAtEndNpc

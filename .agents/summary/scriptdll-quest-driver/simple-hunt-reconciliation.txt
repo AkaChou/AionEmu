@@ -1,0 +1,29 @@
+NPC 名索引: 87719 个 name_desc（多 id 名字 0 个）
+真端 SimpleHunt 行: 1863
+对账任务: 942
+  CHAIN_COUNT_MISMATCH 32
+  EQUIVALENT_KILL_CHAIN 185
+  FIELD_WITHOUT_KILL_MODEL 191
+  MATCH            840
+  MISMATCH         13
+  NO_FIELD         103
+  NO_REPO_XML      921
+  UNRESOLVED_NAME  35
+  WIDE_FIELD_FOR_COUNT_GT_63 5
+完全一致: 536 / 942
+--- 前 15 个不一致 ---
+  1135: EQUIVALENT_KILL_CHAIN:n1:9杀 || retail=n1:9x[Potcrab_9_n] || repo=
+  1175: EQUIVALENT_KILL_CHAIN:n1:9杀 || retail=n1:9x[lupyllini_17_n] || repo=
+  1181: EQUIVALENT_KILL_CHAIN:n1:5杀 | EQUIVALENT_KILL_CHAIN:n2:5杀 || retail=n1:5x[TKrallWarrior_17_Ae]; n2:5x[TKrallWatcher_17_Ae] || repo=
+  1185: EQUIVALENT_KILL_CHAIN:n1:6杀 || retail=n1:6x[WElemental1st_18_An] || repo=
+  1196: EQUIVALENT_KILL_CHAIN:n1:14杀 | CHAIN_COUNT_MISMATCH:n2:链14杀≠表8 || retail=n1:14x[AElemental1st_18_An]; n2:8x[ElementalAir2_19_An] || repo=
+  1201: EQUIVALENT_KILL_CHAIN:n1:9杀 || retail=n1:9x[Potcrab_9_n] || repo=
+  1202: EQUIVALENT_KILL_CHAIN:n1:5杀 | EQUIVALENT_KILL_CHAIN:n2:5杀 || retail=n1:5x[TKrallWarrior_17_Ae]; n2:5x[TKrallWatcher_17_Ae] || repo=
+  1216: EQUIVALENT_KILL_CHAIN:n1:10杀 || retail=n1:10x[Starturtle_19_n] || repo=
+  1221: EQUIVALENT_KILL_CHAIN:n1:3杀 || retail=n1:3x[IDNovice_07_TKrallWa_prion_18_an] || repo=
+  1346: EQUIVALENT_KILL_CHAIN:n1:9杀 || retail=n1:9x[Basilisk_29_An,Basilisk_30_An,Shellizard_30_An,Shellizard_31_An,Scorpion_28_An,Scorpion_29_An,Worm_30_An,Worm_31_An] || repo=
+  1347: EQUIVALENT_KILL_CHAIN:n1:7杀 | CHAIN_COUNT_MISMATCH:n2:链7杀≠表3 || retail=n1:7x[NeutL1_30_An,NeutL1_31_An]; n2:3x[NeutL1_32_An] || repo=
+  1348: EQUIVALENT_KILL_CHAIN:n1:5杀 || retail=n1:5x[NeutL2_32_An] || repo=
+  1349: EQUIVALENT_KILL_CHAIN:n1:4杀 || retail=n1:4x[LF2_Neut_Spawner] || repo=
+  1357: EQUIVALENT_KILL_CHAIN:n1:7杀 || retail=n1:7x[Dritonfield_33_An] || repo=
+  1376: EQUIVALENT_KILL_CHAIN:n1:7杀 || retail=n1:7x[Cherubim2_35_n,Cherubim2_36_n] || repo=

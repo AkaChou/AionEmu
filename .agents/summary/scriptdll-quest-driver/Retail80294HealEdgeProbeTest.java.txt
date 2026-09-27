@@ -1,0 +1,24 @@
+package com.aionemu.gameserver.questEngine.definition;
+
+import org.junit.jupiter.api.Test;
+
+/**
+ * 临时探针（P0c-26）：80294 真端编译的 EnterWorld 自愈边直证（lenient 视图，风暴期可用）。
+ * Temporary probe: dump 80294's retail-compile EnterWorld edges via the lenient overlay.
+ */
+class Retail80294HealEdgeProbeTest {
+
+	@Test
+	void dump80294EnterWorldEdges() {
+		QuestDefinition definition = ProductionQuestDefinitions.definitionInOverlay(80294).definition();
+		definition.transitions().stream()
+			.filter(transition -> transition.event() instanceof QuestEvent.EnterWorld
+				|| transition.sourceNode() == null)
+			.forEach(transition -> System.out.println("EDGE " + transition.event()
+				+ " cond=" + transition.conditions() + " act=" + transition.actions()
+				+ " target=" + transition.targetNode() + " after=" + transition.afterCommit()));
+		System.out.println("reward projection: "
+			+ definition.nodes().stream().filter(node -> node.label().equals("reward")).findFirst().orElseThrow()
+				.projection().variables());
+	}
+}

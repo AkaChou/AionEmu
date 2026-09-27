@@ -1,0 +1,93 @@
+package com.aionemu.gameserver.questEngine.retail;
+
+import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
+import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
+import com.aionemu.gameserver.questEngine.definition.QuestCondition;
+import com.aionemu.gameserver.questEngine.definition.QuestDefinition;
+import com.aionemu.gameserver.questEngine.definition.QuestAction;
+import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestItemRequirement;
+import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
+import com.aionemu.gameserver.questEngine.definition.QuestTransition;
+import org.junit.jupiter.api.Test;
+
+import java.io.PrintWriter;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+/**
+ * 临时探针（P0c-18）：入口页路由轴三行的 ItemMirror 契约断言复刻（lenient overlay 视图，
+ * 不经生产门）。P0c-17 的红为陈旧资源伪影，本探针以全量刷新后的编译逐断言复验。
+ * Temporary probe replicating the ItemMirror contract assertions on the lenient overlay.
+ */
+class RetailTalkEntryAxisProbeTest {
+
+	private record ItemMirror(int questId, int npcId, int actionId, int failurePageId) {
+	}
+
+	private static final List<ItemMirror> MIRRORS = List.of(
+		new ItemMirror(11003, 798933, 39, 2716),
+		new ItemMirror(80356, 831815, 20002, 2716),
+		new ItemMirror(80365, 831827, 20002, 2716));
+
+	@Test
+	void itemMirrorContractsOnFreshResources() throws Exception {
+		for (ItemMirror mirror : MIRRORS) {
+			CompiledQuestDefinition compiled = ProductionQuestDefinitions.definitionInOverlay(mirror.questId());
+			QuestDefinition definition = compiled.definition();
+			System.out.println("=== " + mirror.questId() + " all started/31 routes on npc " + mirror.npcId());
+			definition.transitions().stream()
+				.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
+					&& talk.npcId() == mirror.npcId())
+				.forEach(transition -> System.out.println("  " + transition.sourceNode() + "->"
+					+ transition.targetNode() + " dialog=" + ((QuestEvent.TalkToNpc) transition.event()).dialogId()
+					+ " " + transition.afterCommit()));
+			assertPage(definition, "started", mirror.npcId(), 2375);
+
+			List<QuestTransition> checks = talkRoutes(definition, "started", mirror.npcId(), mirror.actionId());
+			assertEquals(2, checks.size(), "quest " + mirror.questId() + " item checks");
+			QuestTransition success = checks.stream()
+				.filter(transition -> Integer.valueOf(0).equals(transition.priority()))
+				.findFirst().orElseThrow();
+			QuestTransition failure = checks.stream()
+				.filter(transition -> Integer.valueOf(1).equals(transition.priority()))
+				.findFirst().orElseThrow();
+			List<QuestCondition> expectedConditions = definition.metadata().itemRequirements().stream()
+				.map(item -> (QuestCondition) new QuestCondition.HasItem(item.itemId(), item.count(), true))
+				.toList();
+			List<QuestAction> expectedActions = definition.metadata().itemRequirements().stream()
+				.map(item -> (QuestAction) new QuestAction.RemoveItem(item.itemId(), item.count()))
+				.toList();
+			assertEquals("reward", success.targetNode(), "quest " + mirror.questId() + " success target");
+			assertEquals(expectedConditions, success.conditions(), "quest " + mirror.questId() + " conditions");
+			assertEquals(expectedActions, success.actions(), "quest " + mirror.questId() + " removals");
+			assertEquals(List.of(
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+				new AfterCommitAction.ShowQuestDialog(5)), success.afterCommit(),
+				"quest " + mirror.questId() + " success response");
+			assertEquals("started", failure.targetNode(), "quest " + mirror.questId() + " failure target");
+			assertTrue(failure.conditions().isEmpty(), "quest " + mirror.questId() + " failure conditions");
+			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(mirror.failurePageId())),
+				failure.afterCommit(), "quest " + mirror.questId() + " failure response");
+		}
+	}
+
+	private static void assertPage(QuestDefinition definition, String source, int npcId, int pageId) {
+		List<QuestTransition> routes = talkRoutes(definition, source, npcId, 31);
+		assertEquals(1, routes.size(), "quest " + definition.id() + " page route count");
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(pageId)), routes.getFirst().afterCommit(),
+			"quest " + definition.id() + " page response");
+	}
+
+	private static List<QuestTransition> talkRoutes(QuestDefinition definition, String source, int npcId,
+			int dialogId) {
+		return definition.transitions().stream()
+			.filter(transition -> source.equals(transition.sourceNode()))
+			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.npcId() == npcId && Integer.valueOf(dialogId).equals(talk.dialogId()))
+			.toList();
+	}
+}

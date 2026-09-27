@@ -1,0 +1,29 @@
+package com.aionemu.gameserver.questEngine.definition;
+
+import org.junit.jupiter.api.Test;
+
+/**
+ * 临时探针（P0c-28）：风暴归因——missing 集首行 5000（CombineTask 族）经 lenient overlay
+ * 直接编译，落败即打印异常签名（lane 05:56-57 六编译器在飞态的诊断证据）。
+ * Temporary probe: overlay-compile quest 5000 (first CombineTask row in the missing set) to
+ * capture the storm's failure signature for the ledger; a clean compile means the window opened.
+ */
+class RetailStormSignatureProbeTest {
+
+	@Test
+	void probeMissingRow5000CompileSignature() {
+		try {
+			QuestDefinition definition = ProductionQuestDefinitions.definitionInOverlay(5000).definition();
+			System.out.println("STORM_HEALED 5000 nodes=" + definition.nodes().size()
+				+ " transitions=" + definition.transitions().size());
+		} catch (RuntimeException failure) {
+			System.out.println("STORM_SIGNATURE " + failure.getClass().getSimpleName() + ": "
+				+ failure.getMessage());
+			Throwable cause = failure.getCause();
+			while (cause != null) {
+				System.out.println("  caused by " + cause.getClass().getSimpleName() + ": " + cause.getMessage());
+				cause = cause.getCause();
+			}
+		}
+	}
+}

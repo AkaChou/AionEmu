@@ -1,0 +1,22 @@
+# P0c-10h：SimpleTalk 链行 in-disk KEEP 收口表（19 行逐机制裁定；全部已有 b1/b2 KEEP 决定，本表补机制归因）
+# 立场：以下行保留 XML，直至对应机制入链表词汇（真端缺口 → 保留 XML；数据不一致 → 响亮拒绝优于静默近似）
+# quest_id	family	mechanism	rationale
+1323	SimpleTalk	NO_START_OBJECT	acquired_npc 为物件哨兵（判例 1323 LF2_Lost_JewelBox）：接取经物件交互，链表无物件起始词汇——真端缺口保留 XML
+2611	SimpleTalk	NO_START_OBJECT	acquired_npc 为物件哨兵（判例 1323 LF2_Lost_JewelBox）：接取经物件交互，链表无物件起始词汇——真端缺口保留 XML
+3001	SimpleTalk	NO_START_OBJECT	acquired_npc 为物件哨兵（判例 1323 LF2_Lost_JewelBox）：接取经物件交互，链表无物件起始词汇——真端缺口保留 XML
+3023	SimpleTalk	NO_START_OBJECT	acquired_npc 为物件哨兵（判例 1323 LF2_Lost_JewelBox）：接取经物件交互，链表无物件起始词汇——真端缺口保留 XML
+19070	SimpleTalk	NO_START_OBJECT	acquired_npc 为物件哨兵（判例 1323 LF2_Lost_JewelBox）：接取经物件交互，链表无物件起始词汇——真端缺口保留 XML
+19071	SimpleTalk	NO_START_OBJECT	acquired_npc 为物件哨兵（判例 1323 LF2_Lost_JewelBox）：接取经物件交互，链表无物件起始词汇——真端缺口保留 XML
+21136	SimpleTalk	NO_START_OBJECT	acquired_npc 为物件哨兵（判例 1323 LF2_Lost_JewelBox）：接取经物件交互，链表无物件起始词汇——真端缺口保留 XML
+24123	SimpleTalk	NO_START_OBJECT	acquired_npc 为物件哨兵（判例 1323 LF2_Lost_JewelBox）：接取经物件交互，链表无物件起始词汇——真端缺口保留 XML
+24202	SimpleTalk	NO_START_OBJECT	acquired_npc 为物件哨兵（判例 1323 LF2_Lost_JewelBox）：接取经物件交互，链表无物件起始词汇——真端缺口保留 XML
+80320	SimpleTalk	NO_START_OBJECT	acquired_npc 为物件哨兵（判例 1323 LF2_Lost_JewelBox）：接取经物件交互，链表无物件起始词汇——真端缺口保留 XML
+2231	SimpleTalk	NPC_COMPLETE_META_MISMATCH	npc-complete 块索引（fixed 0 1 2 + choice 3..11）与 quest.xml 奖励档不符：参数化回放响亮拒绝（旧按位近似掩盖之）——数据不一致保留 XML
+2724	SimpleTalk	NPC_COMPLETE_META_MISMATCH	npc-complete 块索引（fixed 0 1 2 + choice 3..11）与 quest.xml 奖励档不符：参数化回放响亮拒绝（旧按位近似掩盖之）——数据不一致保留 XML
+18805	SimpleTalk	NPC_COMPLETE_META_MISMATCH	npc-complete 块索引（fixed 0 1 2 + choice 3..11）与 quest.xml 奖励档不符：参数化回放响亮拒绝（旧按位近似掩盖之）——数据不一致保留 XML
+28805	SimpleTalk	NPC_COMPLETE_META_MISMATCH	npc-complete 块索引（fixed 0 1 2 + choice 3..11）与 quest.xml 奖励档不符：参数化回放响亮拒绝（旧按位近似掩盖之）——数据不一致保留 XML
+1938	SimpleTalk	REPORT_VIEW_SYNC_DIFF	1009 页视图路由 sync 形态差（XML 无 sync / 合成含 SYNC LV_REFRESH）——逐行复核后若确认为 XML 漏 sync 再翻案
+21081	SimpleTalk	REPORT_VIEW_SYNC_DIFF	1009 页视图路由 sync 形态差（XML 无 sync / 合成含 SYNC LV_REFRESH）——逐行复核后若确认为 XML 漏 sync 再翻案
+2641	SimpleTalk	COMPLETE_PARAM_DIFF	多变体完成块参数差（204700/204775 完成流缺转）——待逐块核对
+2653	SimpleTalk	COMPLETE_PARAM_DIFF	多变体完成块参数差（204700/204775 完成流缺转）——待逐块核对
+1152	SimpleTalk	SHAPE_UNSUPPORTED	complete 节点不可达（合成图缺口）——保留 XML

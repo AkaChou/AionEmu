@@ -1,0 +1,5 @@
+# P0c-37 阻塞登记（本轮实测；每行一条轴，均带证据）
+# quest_id	axis	evidence
+24123	XML_NPC_AXIS	XML 转写 NPC 204345=Rikesh（接取/交付块全用它）vs 真端 reward_npc_name=DF2_NPC_Ananta → npc_name_index 204387；客户端 3 行（末行=向 Ananta 报告）⇒ reward 行应为 2（现登记 1）。两轴都需逐行裁定（NPC 归属需客户端信件页/NPC 对话树佐证），本轮不带入；证据：p0c37_ladder_batch_derive.py 输出 + npc_name_index.tsv + 真端 Quest_SimpleTalk.xml 24123 行
+1324/2428/11001/18806/18807/18809/21070/21138/21460/24120/28806/28807/29070/29071/30055/30202/30302	ADOPTION_BLOCKED	真端行未被合成（登记表无 N 记录，编译器稳定码拒绝：RETAIL_TALK_CHAIN_COMPOUND / NO_START / ACQUIRE_NPC_UNRESOLVED 等），阶梯通道不可用；且这 17 行在客户端侧确有中间页不可达（p0c37-gap-partition.tsv GENUINE_GAP）⇒ 先采纳（canonical/compound 通道）再套阶梯
+1463/1471/2963/13800/18035/18600/19064/21244/23800/28035/28600/29064/30711/30761/35010/35018/35024/45011/45025/18809	CENSUS_OVERFLAG	中间页在编译后 IR 里已可达（p0c37-gap-partition.tsv）；阶段语义由单 START 节点上的 var0 旗标 + 条件化路由承载（例：35010 R12 SETPRO1 cond VAR_IS:var0=0 / act SET_VAR:var0=1，交付 R16 要求 var0=1），普查轴①/②/③看不见 transition 级编码 ⇒ 不重写形状

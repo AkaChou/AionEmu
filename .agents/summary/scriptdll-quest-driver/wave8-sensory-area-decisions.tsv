@@ -1,0 +1,40 @@
+# 续片 17 / P0c-41..43：EA 区名桶 wave8 —— 感官区注册（真端世界文件证据）+ 16820/26820/17525/27525 采纳退役。
+# Entry-area zone bucket wave8 — sensory-area registration from the retail world files, retiring
+# 16820/26820/17525/27525.
+#
+# 证据链 / evidence chain:
+#   1. 扫描器 `p0c41_sensory_area_scan.py`（只读，478 个真端世界文件）在
+#      `/Users/mc/IdeaProjects/58Server/Map/Worlds/<dir>/world.xml`（UTF-16）里逐别名找同名**感官区 NPC**
+#      （`<name><别名></name>` + `<sensory_area>` 多边形 + top/bottom），并经
+#      `aion/definitions/compact/id-mappings.xml` 把世界目录名换算成 mapid（世界条目带属性，正则需要容属性）。
+#   2. 区名 = 别名大写 + `_<mapid>`（与既有 `DF5_SENSORYAREA_Q25084_220080000`、`IDINFINITY_SENSORYAREA_Q18252A_302400000` 同惯例），
+#      注册进 `zones_quest.xml`（POLYGON/SUB，src + target/classes 双副本）；映射行进
+#      `quest_enterarea_zone_resolution.tsv`（source=`retail-world-sensory-area`）。
+#   3. 多胞别名不注册（"无据不猜"）：同一 NPC 名在真端世界里对应多个互异多边形时，单多边形区遮不住
+#      "任一格进入"语义，错格注册 = 静默死边 —— 13962/23962（IDEternity_War_ShugoSeller，6 格）、
+#      15322/25322（DF5_SensoryArea_65_Deva_Q15322b，3 格；且遗留 enter-zone 是 4 个 DF5 大区名的 OR 集，
+#      与任一格都不对应）保持 `RETAIL_ENTERAREA_ZONE_UNRESOLVED`。
+#
+# 批次结果 / batch outcome:
+#   采纳 4 行：16820/26820（IDEternity_02，1 胞）、17525/27525（IDAbRe_Core_03，1 胞）；
+#   码位前移 7 行：17500/27500 → TALK_HUNT_CHAIN_DEFERRED（ladders=0 talks=1）、
+#     18996/28996 → HUNT_PROGRESS_SHAPE（IDLF1_T_Barricade_Dragon_01）、
+#     20501/20507 → TALK_HUNT_CHAIN_DEFERRED、20503 → TALK_COLLECT_CHAIN_DEFERRED（stages=0 steps=3）;
+#   留拒 4 行：13962/23962/15322/25322（多胞）。
+#
+# quest_id	dd_alias	world_dir	mapid	cells	zone_name	action
+16820	IDEternity_02_SensoryArea_Q16820a	IDEternity_02	301550000	1	IDETERNITY_02_SENSORYAREA_Q16820A_301550000	ADOPT_RETAIL（basis=DD_ENTERAREA_ZONE_RESOLUTION）
+26820	IDEternity_02_SensoryArea_Q16820a	IDEternity_02	301550000	1	IDETERNITY_02_SENSORYAREA_Q16820A_301550000	ADOPT_RETAIL（basis=DD_ENTERAREA_ZONE_RESOLUTION）
+17525	IDAbRe_Core_03_SensoryArea_Q17525	IDAbRe_Core_03	301720000	1	IDABRE_CORE_03_SENSORYAREA_Q17525_301720000	ADOPT_RETAIL（basis=DD_ENTERAREA_ZONE_RESOLUTION）
+27525	IDAbRe_Core_03_SensoryArea_Q17525	IDAbRe_Core_03	301720000	1	IDABRE_CORE_03_SENSORYAREA_Q17525_301720000	ADOPT_RETAIL（basis=DD_ENTERAREA_ZONE_RESOLUTION）
+17500	IDLDF5_Fortress_War_SensoryArea_Q17500a	IDLDF5_Fortress_War	301680000	1	IDLDF5_FORTRESS_WAR_SENSORYAREA_Q17500A_301680000	区域已注册，留拒于 talk-hunt 链页梯（码位前移）
+27500	IDLDF5_Fortress_War_SensoryArea_Q17500a	IDLDF5_Fortress_War	301680000	1	IDLDF5_FORTRESS_WAR_SENSORYAREA_Q17500A_301680000	同上
+18996	IDF6_LF1_SensoryArea_Q18996	IDF6_LF1	301660000	1	IDF6_LF1_SENSORYAREA_Q18996_301660000	区域已注册，留拒于 hunt 进度行（码位前移）
+28996	IDF6_LF1_SensoryArea_Q18996	IDF6_LF1	301660000	1	IDF6_LF1_SENSORYAREA_Q18996_301660000	同上
+20501	DF5_SensoryArea_Q20501a	df5	220080000	1	DF5_SENSORYAREA_Q20501A_220080000	区域已注册，留拒于 talk-hunt 链页梯（码位前移）
+20503	DF5_SensoryArea_Q20503a	df5	220080000	1	DF5_SENSORYAREA_Q20503A_220080000	区域已注册，留拒于窄链登记（stages=0，码位前移）
+20507	DF5_SensoryArea_Q20507a	df5	220080000	1	DF5_SENSORYAREA_Q20507A_220080000	区域已注册，留拒于 talk-hunt 链页梯（码位前移）
+13962	IDEternity_War_ShugoSeller	IDEternity_War	302350000	6	（未注册）	多胞留拒：6 个互异 4 点多边形，无辨格证据
+23962	IDEternity_War_ShugoSeller	IDEternity_War	302350000	6	（未注册）	同上
+15322	DF5_SensoryArea_65_Deva_Q15322b	df5	220080000	3	（未注册）	多胞留拒：3 个互异多边形 + 遗留 4 大区名 OR 集不对应
+25322	LF5_SensoryArea_65_Deva_Q25322b	df5	220080000	3	（未注册）	同上

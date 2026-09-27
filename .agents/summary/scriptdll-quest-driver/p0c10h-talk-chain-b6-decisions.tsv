@@ -1,0 +1,4 @@
+# P0c-10h：B-6 微波（varless 节点支持后新增等价采纳）
+# quest_id	decision	basis	-	evidence
+30711	ADOPT_RETAIL	P0C10H_EQUIVALENT	-	probe-round14 equivalence after varless-node replay support
+30761	ADOPT_RETAIL	P0C10H_EQUIVALENT	-	probe-round14 equivalence after varless-node replay support

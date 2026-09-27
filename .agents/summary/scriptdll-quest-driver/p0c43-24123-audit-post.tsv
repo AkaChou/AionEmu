@@ -1,0 +1,12 @@
+# P0c-43 24123 审计行（改道 canonical 后）：真端 talk_npc1/2 + reward NPC 绑定，阶段页全达
+# 接取页 1011 的 20000/20001 两按钮由编译器 acceptFlow 覆盖（NPC_START 块 startPages=SELECT1 下发入口页）
+# status	page	action	path	reason
+PAGE_ACTION_MATCHED	1011	20000	unaccepted + NPC 204345 + 31 -> unaccepted + page 1011	
+PAGE_ACTION_MATCHED	1011	20001	unaccepted + NPC 204345 + 31 -> unaccepted + page 1011	
+PAGE_ACTION_MATCHED	1352	1353	started + NPC 204387 + 31 -> started + page 1352	
+PAGE_ACTION_MATCHED	1353	10000	started + NPC 204387 + 1353 -> started + page 1353	
+PAGE_ACTION_MATCHED	1693	10001	s1 + NPC 802442 + 31 -> s1 + page 1693	
+PAGE_ACTION_MATCHED	2375	1009	reward + NPC 204387 + 31 -> reward + page 2375	
+PAGE_ACTION_MATCHED	2375	1009	s2 + NPC 204387 + 31 -> s2 + page 2375	
+TERMINAL_PAGE_REACHED	5		reward + NPC 204387 + -1 -> reward + terminal page 5	
+TERMINAL_PAGE_REACHED	5		s2 + NPC 204387 + 1009 -> reward + terminal page 5	

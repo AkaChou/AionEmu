@@ -1,0 +1,69 @@
+package com.aionemu.gameserver.questEngine.retail;
+
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
+import com.aionemu.gameserver.questEngine.definition.QuestDefinition;
+import com.aionemu.gameserver.questEngine.definition.QuestNode;
+import com.aionemu.gameserver.questEngine.definition.QuestTransition;
+import org.junit.jupiter.api.Test;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+/**
+ * P0c-8c 临时探针（**用后删除**）：打印生产视图（真端 overlay）里给定任务的节点与"报告/交付"相关转换，
+ * 用于核对客户端页面链要求的按钮路由是否真的接线。临时探针 / Temporary probe, deleted after use.
+ */
+class P0c8cProductionShapeProbeTest {
+
+	private static final String DIALOGS =
+		"dialogId=31,|dialogId=1009,|dialogId=10002,|dialogId=20002,|dialogId=5,|dialogId=1352,|dialogId=2375,|KillNpc[";
+	private static final String NODES_FILTER =
+		"dialogId=31,|dialogId=1009,|dialogId=10002,|dialogId=20002,|dialogId=1352,|dialogId=2375,";
+
+	@Test
+	void dumpProductionShapes() throws Exception {
+		String ids = System.getProperty("p0c8c.prod.ids");
+		String out = System.getProperty("p0c8c.prod.out");
+		assertNotNull(ids, "missing -Dp0c8c.prod.ids");
+		assertNotNull(out, "missing -Dp0c8c.prod.out");
+		List<String> lines = new ArrayList<>();
+		for (String token : ids.split(",")) {
+			int questId = Integer.parseInt(token.trim());
+			var compiled = ProductionQuestDefinitions.definition(questId);
+			QuestDefinition definition = compiled == null ? null : compiled.definition();
+			if (definition == null) {
+				lines.add(questId + "\tNO_DEFINITION");
+				continue;
+			}
+			StringBuilder nodes = new StringBuilder();
+			for (QuestNode node : definition.nodes()) {
+				nodes.append(node.label()).append('=').append(node.projection().status()).append('/')
+					.append(definition.progressLayout().pack(node.projection().variables())).append(' ');
+			}
+			lines.add(questId + "\tNODES\t" + nodes.toString().trim());
+			for (QuestTransition transition : definition.transitions()) {
+				String text = transition.sourceNode() + ">" + transition.event() + ">" + transition.targetNode()
+					+ ">" + transition.conditions() + ">" + transition.actions() + ">"
+					+ transition.afterCommit();
+				if (matches(text) || transition.event() instanceof com.aionemu.gameserver.questEngine.definition.QuestEvent.KillNpc
+						|| transition.event() instanceof com.aionemu.gameserver.questEngine.definition.QuestEvent.KillNpcSet) {
+					lines.add(questId + "\tT\t" + text);
+				}
+			}
+		}
+		Files.writeString(Path.of(out), String.join("\n", lines) + "\n");
+	}
+
+	private static boolean matches(String text) {
+		for (String token : NODES_FILTER.split("\\|")) {
+			if (text.contains(token)) {
+				return true;
+			}
+		}
+		return false;
+	}
+}

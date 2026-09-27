@@ -1,0 +1,13 @@
+# P0c-10h：B-7 微波（系统发放链行规范形采纳：P0c-2 形状合同验收，非等价路线）
+# 判据：真端表 grantKind=systemGrant（挑战型委托）→ SystemGrant 边必需（真端对）；
+# XML 的 unaccepted 源接取/拒绝路由为旧 UI 接线残留（真端经系统发放），编译器按合同剔除；
+# 验收 = SimpleTalk 族门禁系统发放形状不变量（无接取路由 + SystemGrant 边存在 + 领奖投影合同）。
+# quest_id	decision	basis	-	evidence
+35010	ADOPT_RETAIL	SYSTEM_GRANT_CHAIN_P02	-	probe-round17 compiled retail shape passes P0c-2 system-grant contract; XML diff = extra SystemGrant edge (required) + dropped legacy accept routes
+35017	ADOPT_RETAIL	SYSTEM_GRANT_CHAIN_P02	-	probe-round17 compiled retail shape passes P0c-2 system-grant contract; XML diff = extra SystemGrant edge (required) + dropped legacy accept routes
+35018	ADOPT_RETAIL	SYSTEM_GRANT_CHAIN_P02	-	probe-round17 compiled retail shape passes P0c-2 system-grant contract; XML diff = extra SystemGrant edge (required) + dropped legacy accept routes
+35024	ADOPT_RETAIL	SYSTEM_GRANT_CHAIN_P02	-	probe-round17 compiled retail shape passes P0c-2 system-grant contract; XML diff = extra SystemGrant edge (required) + dropped legacy accept routes
+45011	ADOPT_RETAIL	SYSTEM_GRANT_CHAIN_P02	-	probe-round17 compiled retail shape passes P0c-2 system-grant contract; XML diff = extra SystemGrant edge (required) + dropped legacy accept routes
+45018	ADOPT_RETAIL	SYSTEM_GRANT_CHAIN_P02	-	probe-round17 compiled retail shape passes P0c-2 system-grant contract; XML diff = extra SystemGrant edge (required) + dropped legacy accept routes
+45025	ADOPT_RETAIL	SYSTEM_GRANT_CHAIN_P02	-	probe-round17 compiled retail shape passes P0c-2 system-grant contract; XML diff = extra SystemGrant edge (required) + dropped legacy accept routes
+45026	ADOPT_RETAIL	SYSTEM_GRANT_CHAIN_P02	-	probe-round17 compiled retail shape passes P0c-2 system-grant contract; XML diff = extra SystemGrant edge (required) + dropped legacy accept routes

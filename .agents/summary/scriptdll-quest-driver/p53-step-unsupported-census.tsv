@@ -1,0 +1,668 @@
+# quest_id	acquire	combo	values
+1872	EnterArea	pvp	3
+1873	EnterArea	pvp	3
+1874	EnterArea	pvp	3
+1875	EnterArea	pvp	3
+1876	Talk	talk	Sakmis|Ascalon
+1877	EnterArea	pvp	3
+1878	EnterArea	pvp	3
+1879	EnterArea	pvp	3
+1880	EnterArea	pvp	3
+1881	EnterArea	pvp	3
+1882	EnterArea	pvp	3
+1883	EnterArea	pvp	3
+1884	EnterArea	pvp	3
+1885	EnterArea	pvp	3
+1886	EnterArea	pvp	3
+1887	EnterArea	pvp	3
+1888	Talk	talk	Deidamia|Shugo_AB1_L8|Ineias|Shugo_AB1_L8|Lamia
+1919	Talk	NO_PROGRESS	
+2852	EnterArea	pvp	5
+2872	EnterArea	pvp	3
+2873	EnterArea	pvp	3
+2874	EnterArea	pvp	3
+2875	EnterArea	pvp	3
+2876	Talk	talk	Lasanya|Semotor
+2877	EnterArea	pvp	3
+2878	EnterArea	pvp	3
+2879	EnterArea	pvp	3
+2880	EnterArea	pvp	3
+2881	EnterArea	pvp	3
+2882	EnterArea	pvp	3
+2883	EnterArea	pvp	3
+2884	EnterArea	pvp	3
+2885	EnterArea	pvp	3
+2886	EnterArea	pvp	3
+2887	EnterArea	pvp	3
+2888	Talk	talk	Asynja|Shugo_AB1_D4|Durin|Shugo_AB1_D4|Gagnrad
+2929	Talk	NO_PROGRESS	
+3122	EnterArea	hunt	Adma_T_Pot_SP 1;|Adma_T_TestresultZombieNamedK_50_Ae_SP 1|Adma_T_PricessNamed_50_Ah_SP 1;|Adma_T_HorseZombieNamedK_50_Ae_SP 1;|Adma_T_DeathknightNamed_50_Ah_SP 1;|Adma_T_EvilSpirit_50_Ah_SP 1;
+3123	EnterArea	hunt	IDLF2A_T_OdeStone_SP 1;|IDLF2A_T_ShelukKeyNamed_50_Ae_SP 1;|IDLF2A_T_HolyServantVioletNmd_50_Ah_SP 1|IDLF2A_T_StatueFNamed_50_Ae 1;|IDLF2A_T_ElementalKingNmd_50_Ah_SP 1;|IDLF2A_T_GodElemental_50_Ah_SP 1;
+3735	Talk	NO_PROGRESS	
+3736	Talk	NO_PROGRESS	
+3737	Talk	NO_PROGRESS	
+3738	Talk	NO_PROGRESS	
+3739	Talk	NO_PROGRESS	
+3740	Talk	NO_PROGRESS	
+3741	Talk	NO_PROGRESS	
+3742	Talk	NO_PROGRESS	
+3743	Talk	NO_PROGRESS	
+3744	Talk	NO_PROGRESS	
+3745	Talk	NO_PROGRESS	
+4122	EnterArea	hunt	Adma_T_Pot_SP 1;|Adma_T_TestresultZombieNamedK_50_Ae_SP 1|Adma_T_PricessNamed_50_Ah_SP 1;|Adma_T_HorseZombieNamedK_50_Ae_SP 1;|Adma_T_DeathknightNamed_50_Ah_SP 1;|Adma_T_EvilSpirit_50_Ah_SP 1;
+4123	EnterArea	hunt	IDLF2A_T_OdeStone_SP 1;|IDLF2A_T_ShelukKeyNamed_50_Ae_SP 1;|IDLF2A_T_HolyServantVioletNmd_50_Ah_SP 1|IDLF2A_T_StatueFNamed_50_Ae 1;|IDLF2A_T_ElementalKingNmd_50_Ah_SP 1;|IDLF2A_T_GodElemental_50_Ah_SP 1;
+4735	Talk	NO_PROGRESS	
+4736	Talk	NO_PROGRESS	
+4737	Talk	NO_PROGRESS	
+4738	Talk	NO_PROGRESS	
+4739	Talk	NO_PROGRESS	
+4740	Talk	NO_PROGRESS	
+4741	Talk	NO_PROGRESS	
+4742	Talk	NO_PROGRESS	
+4743	Talk	NO_PROGRESS	
+4744	Talk	NO_PROGRESS	
+4745	Talk	NO_PROGRESS	
+10010	EnterWorld	collectitem+hunt+talk	IDAb1_Ere_Start_Bastiel_E|IDAb1_Ere_Manager_Front_Bastiel_E|IDAb1_Ere_Manager_Front_Bastiel_E|IDAb1_Ere_Boss_Leader_Hard_75_Ah, IDAb1_|IDAb1_Ere_FOBJ_Report_Q10010a|IDAb1_Ere_Manager_Room_Bastiel_E
+10011	none	enterarea+hunt+talk	IDAb1_Ere_Manager_Room_Bastiel_E|IDAb1_Ere_Dead_Deva_L_E|IDAb1_Ere_Dying_Deva_L_E|IDAb1_Ere_Pain_Deva_L_E|IDAb1_Ere_SensoryArea_Q10011a|IDAb1_Ere_Boss_Heal_Wave_HealBoost_Neutl|IDAb1_Ere_Boss_Witch_01_75_Ah 1; IDAb1_E|IDAb1_Ere_SensoryArea_Q10012a|IDAb1_Ere_Terrarium_End_Bastiel_E
+10031	LevelUpLogIn	enterworld+hunt+talk+talkfobj	Fasimedes|Eremitia|Sibylle|210050000|Cainus|steropes|Versetti|LF4_FOBJ_Q10020B|LF4_FOBJ_Q10031A, 0|LF4_A2_DrakanWorkerFi_51_An, LF4_A2_Drak
+10032	none	collectitem+enterworld+itemplay+talk	Crosia|Dorsia|Elim_DF4_01|300190000|QUEST_10032A|QUEST_10032B, 20|CaspaGhost_01|210050000
+10033	none	talk	Pomponia|Sulla|Philon|LF4_FOBJ_Q10023A|LF4_FOBJ_Q10023B|LF4_FOBJ_Q10023C|Sulla
+10034	none	hunt+itemplay+talk+talkfobj	Sueros|Honeus|Titus|LF4_FOBJ_Q10023D|LF4_FOBJ_Q10023E, 0|LF4_Temple_Nepilim_NamedQ_53_An 1|LF4_FOBJ_Q10023F, 1|DOC_QUEST_10034A
+10035	none	enterarea+hunt+talk+talkfobj	Yulia|Laokoon|Heranas|Iaetia|LF4_SensoryArea_Q10035A|LF4_B_DrakanFi_55_An_1, LF4_B_DrakanWi_5|LF4_FOBJ_Q10035A, 1|Yulia
+10111	none	enterworld+hunt+talk	Ab1_Giscours_E|Ab1_Bastiel_E|310160000|IDAb1_Heroes_Boss_73_Ah 1;|Ab1_Bastiel_E
+10112	none	collectitem+hunt+itemplay+talk	Ab1_Giscours_E|Ab1_Pedion_E|quest_10112a, 5|Ab1_Eresh_Fi_Event 5; Ab1_Eresh_Fi_Event|Ab1_Pedion_E
+10113	none	enterarea+enterworld+hunt+talk	Ab1_Giscours_E|301720000|IDAbRe_Core_03_SensoryArea_Q10113|IDAbRe_Core_03_Witch_MBoss_An, IDAbRe_Co|IDAbRe_Core_03_FOBJ_Empty_Altar_Q10113a|IDAbRe_Core_03_Witch_Boss_Ae 1;|IDAbRe_Core_03_FOBJ_Ere_Mirror_Q10113a
+10500	LevelUpLogIn	talk	LF5_Nubes_E
+10501	none	collectitem+itemplay+talk	LF5_Mosphera_E|QUEST_10501A|LF5_FOBJ_Broken_Wedgestone_Q10501a|QUEST_10501A|LF5_FOBJ_Tiamat_SealWatcher_Q10501a|QUEST_10501A|LF5_Mosphera_E
+10502	none	collectitem+itemplay+talk	LF5_Nixkaion_E|LF5_Nixkaion_Disguise_E|LF5_Nixkaion_Disguise_E|LF5_Nixkaion_Disguise_E|QUEST_10502B|LF5_Nixkaion_Disguise_E|LF5_FOBJ_Ancient_Fossil_Q10502a
+10503	none	collectitem+enterarea+hunt+itemplay+talk	LF5_Eukraton_E|LF5_Q_D_TrDrZombie_Fi_60_An 3;|LF5_Euvia_E|LF5_Euvia_E|DOC_QUEST_10503B|LF5_Euvia_E|LF5_SensoryArea_Q10503
+10504	none	collectitem+hunt+talk	LF5_Astrape_E|LF5_Q_E_Vri_Hide_As_62_An, LF5_Q_E_Vri_S|LF5_Q_E_Vri_HPDrainDD_Fi_NM_62_An 1;|LF5_Astrape_E
+10505	none	collectitem+itemplay+talk	LF5_Averse_E|LF5_Erinos_E|LF5_Erinos_E|LF5_Erinos_E|QUEST_10505E
+10506	none	enterarea+hunt+talk+talkfobj	LF5_Brontte_E|LF5_Pnoeh_E|LF5_SensoryArea_Q10506|LF5_Q_H_Vri_Strike_Wi_63_An 2;|LF5_FOBJ_Fake_Vritra_Portal_Q10506a, 0;|LF5_Pnoeh_E|LF5_Q_H_Vri_HPDrainDD_Fi_63_An 1;|LF5_Pnoeh_E
+10507	none	enterarea+hunt+talk	LF5_Aithria_E|LF5_Pluvius_E|LF5_Pruina_E|LF5_Rocio_E|LF5_Aithria_E|LF5_Nostibas_E|LF5_Q_J_Vri_Hide_As_63_An, LF5_Q_J_Vri_S|LF5_SensoryArea_Q10507
+10526	none	enterworld+talk+talkfobj	LF6_Weatha_E|210110000|LF6_Fores_E|LF_Tower_Dejabobo_E|210100000|Item_Summon_Dejabobo_E|LF6_FOBJ_Mystery_Piece_Q10526a, 1;|Item_Summon_Dejabobo_E|LF6_FOBJ_Mystery_Piece_Q10526b, 1;|Item_Summon_Dejabobo_E|LF6_FOBJ_Mystery_Piece_Q10526c, 1;|Item_Summon_Dejabobo_E
+10527	none	collectitem+enterarea+hunt+itemplay+talk+talkfobj	LF6_Weatha_E|LF_Tower_Dejabobo_E|LF6_Weatha_E|LF6_SensoryArea_Q10527a|LF6_FOBJ_Trapped_Dejabobo_Q10527a, 1;|LF6_FOBJ_Tower_Piece_Q10527a|LF6_SensoryArea_Q10527b|LF6_FOBJ_Trapped_Dejabobo_Q10527b, 1;|LF6_FOBJ_Tower_Piece_Q10527b|LF6_SensoryArea_Q10527c|LF6_FOBJ_Trapped_Dejabobo_Q10527c, 1;|LF6_Mission_Dark_Ra_71_An 7;|LF6_Weatha_E|LF6_Weatha_E|doc_quest_10527a, 1
+10530	LevelUpLogIn	collectitem+talk+talkfobj	Jucleas|Rhea|LC1_FOBJ_FrozenPot_Q10530, 1|Letia|Ludina|LC1_Damasion_E|LC1_FOBJ_Bottle_Q10530|Jucleas|Jucleas
+11319	Talk	NO_PROGRESS	
+11323	Talk	talk	LF4_Rotation_Teleporter_OP_1|LF4_Rotation_Teleporter_1|LF4_Rotation_Teleporter_2|LF4_Rotation_Teleporter_3|LF4_Rotation_Teleporter_4
+11324	Talk	pvp	2
+11325	Talk	pvp	2
+13403	Talk	itemplay+talk	Kinesos|QUEST_13403A|Beris|QUEST_13403B|Jenel|LF1a_FOBJ_Vritramachine_L_1|LF1a_FOBJ_Vritramachine_L_2
+13744	EnterArea	pvp	12
+13745	EnterArea	pvp	2
+13801	EnterArea	pvp	2
+13830	LevelUpLogIn	itemplay	Doc_quest_13830a
+13831	LevelUpLogIn	itemplay	Doc_quest_13831a
+13832	LevelUpLogIn	itemplay	Doc_quest_13832a
+13833	LevelUpLogIn	itemplay	Doc_quest_13833a
+13834	LevelUpLogIn	itemplay	Doc_quest_13834a
+13842	EnterArea	NO_PROGRESS	
+13843	EnterArea	pvp	6
+13846	EnterArea	NO_PROGRESS	
+13847	EnterArea	pvp	6
+13850	EnterArea	NO_PROGRESS	
+13851	EnterArea	pvp	6
+13862	EnterArea	NO_PROGRESS	
+13863	EnterArea	pvp	6
+13866	EnterArea	NO_PROGRESS	
+13867	EnterArea	pvp	6
+13870	EnterArea	NO_PROGRESS	
+13871	EnterArea	pvp	6
+13882	EnterArea	NO_PROGRESS	
+13883	EnterArea	pvp	6
+13945	Talk	hunt+talk	Ab1_Alaus_E|Ab1_1017_Boss_Dr, Ab1_1016_Boss_Dr, Ab1_
+13947	EnterArea	hunt	Ab1_1011_Page2_Guard_Fi_Dr, Ab1_1011_Pag
+13950	Talk	enterworld+talk	Ab1_Giscours_E|Ab1_Bastiel_E|302340000
+13951	Talk	itemplay	doc_quest_13951b
+13952	ItemPlay	NO_PROGRESS	
+13953	Talk	NO_PROGRESS	
+13954	Talk	hunt+talk	IDAb1_Ere_Fiance_L_E|basmos|IDAb1_Ere_Quest_Debrie_66_n 1;|basmos
+13955	EnterWorld	hunt	IDAb1_Ere_1round_Drakan_Fi 5; IDAb1_Ere_
+13956	EnterWorld	enterarea+hunt	IDAb1_Ere_SensoryArea_Q13956a|IDAb1_Ere_Boss_Leader_Hard_75_Ah, IDAb1_|IDAb1_Ere_SensoryArea_Q13956b|IDAb1_Ere_SensoryArea_Q13956c|IDAb1_Ere_SensoryArea_Q10012a
+13960	Talk	enterarea+enterworld+talk	302350000|IDEternity_War_Abigail_E|IDEternity_War_SensoryArea_Q13960
+13961	EnterWorld	talk	IDEternity_War_Erios_E
+13962	Talk	enterarea	IDEternity_War_ShugoSeller
+13965	EnterArea	enterarea	IDEternity_War_SensoryArea_Q13965a
+13966	EnterArea	hunt	IDEternity_War_Score_Named_01_75_Ah, IDE
+13967	EnterArea	enterarea	IDEternity_War_SensoryArea_Q13967a
+15000	Talk	collectitem+itemplay+talk	LF5_Milliard_E|LF5_Milliard_E|QUEST_15000B
+15042	Talk	itemplay	QUEST_15042A, 3
+15101	Talk	hunt+talk	LF5_Nostibas_E|LF5_J_TauricRe_64_An, LF5_J_TauricRe_65_
+15204	Talk	pvp	5
+15220	Talk	pvp	2
+15221	Talk	pvp	2
+15222	Talk	pvp	2
+15223	Talk	pvp	2
+15224	Talk	pvp	2
+15225	Talk	pvp	2
+15235	none	pvp	2
+15236	none	pvp	2
+15237	none	pvp	2
+15301	Talk	collectitem+talk	LF5_Efaion_E|LF5_Efaion_E|LF5_Efaion_E
+15302	Talk	collectitem+talk	LF5_Agon_E|LF5_Agon_E|LF5_Agon_E
+15303	Talk	collectitem+talk	LF5_Efaion_E|LF5_Efaion_E|LF5_Efaion_E
+15304	Talk	collectitem+hunt+talk	LF5_Efaion_E|LF5_Efaion_E|LDF4_Advance_crestlich_65_An, LDF4_Advan|LF5_Efaion_E
+15305	Talk	collectitem+talk	LF5_Agon_E|LF5_Agon_E|LF5_Agon_E
+15306	Talk	collectitem+hunt+talk	LF5_Efaion_E|LF5_Efaion_E|LF5_Efaion_E|LDF4_Advance_E_65_Deva_Q15306, LDF4_Adva|LDF5_Fortress_D2_65_Deva_Q15306, LDF5_Fo|LDF5_Fortress_A5_Agrint_65_An, LDF5_Fort|IDKamar_DrakanGeneral_Nmd_65_Ah, IDF5_U1|IDTiamat_Tiamat_Dragon_Dying_Named_65_Al|LF5_Efaion_E|LF5_Dike_E
+15311	Talk	collectitem+talk	LF5_Efaion_E|LF5_Efaion_E|LF5_Efaion_E
+15312	Talk	collectitem+talk	LF5_Agon_E|LF5_Agon_E|LF5_Agon_E
+15313	Talk	collectitem+talk	LF5_Efaion_E|LF5_Efaion_E|LF5_Efaion_E
+15314	Talk	collectitem+hunt+talk	LF5_Efaion_E|LF5_Efaion_E|LDF4_Advance_crestlich_65_An, LDF4_Advan|LF5_Efaion_E
+15315	Talk	collectitem+talk	LF5_Agon_E|LF5_Agon_E|LF5_Agon_E
+15316	Talk	collectitem+hunt+talk	LF5_Efaion_E|LF5_Efaion_E|LF5_Efaion_E|LDF4_Advance_E_65_Deva_Q15306, LDF4_Adva|LDF5_Fortress_D2_65_Deva_Q15306, LDF5_Fo|LDF5_Fortress_A5_Agrint_65_An, LDF5_Fort|IDKamar_DrakanGeneral_Nmd_65_Ah, IDF5_U1|IDTiamat_Tiamat_Dragon_Dying_Named_65_Al|LF5_Efaion_E|LF5_Dike_E
+15321	Talk	hunt+talk	LF5_Nephoria_E|LF5_P1_Varanus_58_n, LF5_P1_XipetoRage_5|LF5_Frestelle_E|LF5_P2_Cyclops_63_An, LF5_P2_KuillusM_63|LF4_Somation_E|LF4_Rotation_65_Deva_Q15321_01, LF4_Rota|LDF4_Advance_Sphintelle_E|LDF4_Advance_Baku_65_n, LDF4_Advance_Zai|LDF5_Fortress_Hasteness_E|LDF5_Fortress_A2_Merdion_65_n, LDF5_Fort|AB1_Tallasleon_E|LDF5_Fortress_B1_Statue_M_Rune_65_An, LD
+15322	Talk	enterarea+hunt	DF5_SensoryArea_65_Deva_Q15322b|DF5_B_Rottentree_56_n, DF5_B_Rottentree_|DF5_SensoryArea_65_Deva_Q15322d|DF5_D_NeutFly_58_n, DF5_D_NeutFly_59_n, |DF5_SensoryArea_65_Deva_Q15322f|DF5_F_Basilisk_61_An, DF5_F_NagaWarrior_|DF5_SensoryArea_65_Deva_Q15322h|DF5_H_Shellizard_62_An, DF5_H_Shellizard|DF5_SensoryArea_65_Deva_Q15322j|DF5_J_Tauric_64_An, DF5_J_Tauric_65_An, 
+15334	Talk	itemplay	quest_65_Deva_L_Relic_Of_Devotion_a
+15400	EnterWorld	collectitem+enterarea+hunt+talk	Ab1_Giscours_E|Ab1_Kirwan_E|Ab1_Buard_E|Ab1_Lagund_E|Ab1_Lagund_E|AB1_SensoryArea_Q15400a|Ab1_Mission_Eresh_Ra_65_Ae 2;|Ab1_Ferriere_E|Ab1_Kirwan_E
+15401	Talk	talk	LF5_OP1_ZoneTeleport_L
+15402	Talk	talk	Ab1_Kirwan_E|Ab1_Desmirail_E|Ab1_Marqudalen_E
+15446	none	pvp	2
+15447	none	pvp	2
+15448	none	pvp	2
+15449	none	pvp	2
+15450	none	pvp	2
+15451	none	pvp	2
+15452	none	pvp	2
+15453	none	pvp	2
+15454	none	pvp	2
+15464	EnterArea	pvp	2
+15465	EnterArea	pvp	2
+15466	EnterArea	pvp	5
+15545	Talk	itemplay	quest_15545a
+15548	EnterArea	NO_PROGRESS	
+15550	Talk	talk	LF6_Volter_E|LF6_Ador_E|LF6_Aquaris_E
+15551	Talk	enterarea	LF6_SensoryArea_Q15551_AtoB|LF6_SensoryArea_Q15551_BtoA
+15552	Talk	enterarea	LF6_SensoryArea_Q15552_AtoD|LF6_SensoryArea_Q15552_DtoA
+15553	Talk	enterarea	LF6_SensoryArea_Q15553_AtoF|LF6_SensoryArea_Q15553_FtoA
+15554	Talk	enterarea	LF6_SensoryArea_Q15554_AtoH|LF6_SensoryArea_Q15554_HtoA
+15563	ItemPlay	NO_PROGRESS	
+15566	EnterArea	pvp	5
+15590	Talk	talk	LF6_Este_E|LF6_Ovest_E|LF6_Meridies_E|LF6_Ceber_E
+15595	Talk	pvp	5
+15596	EnterWorld	pvp	5
+15601	Talk	enterarea+hunt+talk+talkfobj	LF6_SensoryArea_Q15601a_Dynamic_Env|LF6_HardenGhost_E|LF6_SensoryArea_Q15601b|LF6_FOBJ_PirateChest_Q15601a, 0;|LF6_HardenGhost_E|LF6_B2_24_Named_SkeletonKing_70_Al 1;
+15602	Talk	collectitem+enterarea+hunt+talk	LF6_SensoryArea_Q15602a_Dynamic_Env|LF6_Frogboy_01_E|LF6_C_6_Named_FrogFighter_68_Ah 1;|LF6_Frogboy_01_E
+15604	Talk	enterarea+hunt+talk	LF6_SensoryArea_Q15604a_Dynamic_Env|LF6_E_Environment_Octaside_66_An 5;|LF6_Cyclon_E|LF6_SensoryArea_Q15604a_Dynamic_Env|LF6_E_6_Named_SpiderQueen_68_Ah 1;
+15605	Talk	collectitem+enterarea+hunt+talk	LF6_Polonius_E|LF6_Polonius_E|LF6_SensoryArea_Q15605a_Named|LF6_F2_24_Named_RuinsGolem_70_Al 1;
+15606	Talk	collectitem+enterarea+talk+talkfobj	LF6_SensoryArea_Q15606a_Dynamic_Env|LF6_FOBJ_ZephyrChest_Q15606a, 0;|LF6_Thaleia_E|LF6_SensoryArea_Q15606a_Dynamic_Env|LF6_Thaleia_E
+15608	Talk	collectitem+enterarea+hunt	LF6_SensoryArea_Q15608a_Dynamic_Env|LF6_Canella_E|LF6_SensoryArea_Q15608a_Dynamic_Env|LF6_I_6_Named_NoName_68_Ah 1;
+15613	Talk	collectitem+enterarea+talk	DF6_SensoryArea_Q15613a|DF6_Schedar_E|DF6_SensoryArea_Q25604a_Dynamic_Env|DF6_FOBJ_Prometheus_Q15613a|DF6_Prometheus_Q15613b|LF6_Volter_E
+15670	Talk	collectitem+talk	LF6_Hemellos_E|LF6_Hemellos_E|LF6_FOBJ_Od_Track_Q15670e
+15671	EnterArea	hunt	F6_Raid_Drop_Dark_Sum 1; F6_Raid_Guard_L
+15672	EnterArea	hunt	F6_Raid_Drop_Dark 1;
+15673	Talk	enterarea+pvp	DF6_SensoryArea_Q15673|12
+15674	EnterArea	collectitem	LF6_Ilisia_E
+15680	Talk	collectitem+itemplay+talk	DF6_Shuket_E|DF6_Shuket_E|DF6_Shuket_E|QUEST_15680B|DF6_Shuket_E|DF6_FOBJ_Flowerpot_Q15680a|DF6_FOBJ_Flowerpot_Q15680b|DF6_Shuket_E
+15681	EnterArea	pvp	5
+15682	EnterArea	pvp	5
+15683	EnterArea	pvp	5
+15684	EnterArea	pvp	5
+15685	EnterArea	pvp	8
+15686	EnterArea	pvp	8
+15687	EnterArea	pvp	8
+15688	EnterArea	pvp	8
+15710	EnterArea	pvp	5
+15711	EnterArea	pvp	5
+15712	EnterArea	pvp	5
+15713	EnterArea	pvp	5
+15714	EnterArea	pvp	8
+15715	EnterArea	pvp	8
+15716	EnterArea	pvp	8
+15717	EnterArea	pvp	8
+16800	Talk	enterarea+talk	LF_Tower_SensoryArea_Q16800|LF_Tower_Etezar_E|IDEternity_01_SensoryArea_Q16800
+16801	EnterArea	hunt	IDEternity_01_Leibo_Fi_66_Ae, IDEternity
+16802	EnterArea	hunt	IDEternity_01_Leibo_Fi_68_Ae, IDEternity
+16803	EnterArea	hunt	IDEternity_01_Leibo_Fi_70_Ae, IDEternity
+16804	EnterArea	hunt	BIDEternity_01_Leibo_Fire_Zone_N_70_Ah, 
+16805	EnterArea	hunt	IDEternity_01_Leibo_Fi_66_Ae, IDEternity
+16806	EnterArea	hunt	IDEternity_01_Leibo_Fi_68_Ae, IDEternity
+16807	EnterArea	hunt	IDEternity_01_Leibo_Fi_70_Ae, IDEternity
+16808	EnterArea	hunt	BIDEternity_01_Leibo_Fire_Zone_N_70_Ah, 
+16809	ItemPlay	NO_PROGRESS	
+16810	ItemPlay	NO_PROGRESS	
+16811	ItemPlay	NO_PROGRESS	
+16820	Talk	enterarea+talk	LF_Tower_Etezar_E|IDEternity_02_SensoryArea_Q16820a
+16821	EnterArea	enterarea+hunt+talk	IDEternity_02_Venio_E|IDEternity_02_Burgos_E|IDEternity_02_A_Silika_Wi_S_72_Ae, IDEte|IDEternity_02_SensoryArea_Q16821a|IDEternity_02_SensoryArea_Q16821b|IDEternity_02_Tower_Boss_75_Ah 1;
+16822	EnterArea	enterarea+hunt+talk	IDEternity_02_SensoryArea_Q16822a|IDEternity_02_Event_Nepilim_03|IDEternity_02_SensoryArea_Q16822b|IDEternity_02_Event_Nepilim_05|IDEternity_02_SensoryArea_Q16822c|IDEternity_02_Nepilim_Boss_75_Ah 1;|IDEternity_02_SensoryArea_Q16822d
+16823	EnterArea	enterarea+hunt+talk	IDEternity_02_Event_Guard_Fi_Da_01, IDEt|IDEternity_02_SensoryArea_Q16823a|IDEternity_02_Weatha01_E|IDEternity_02_SensoryArea_Q16823b|IDEternity_02_SnakeM_Boss_75_Ah 1;
+16824	EnterArea	hunt	IDEternity_02_Tower_Boss_75_Ah 1;
+16825	EnterArea	hunt	IDEternity_02_Nepilim_Boss_75_Ah, IDEter
+16826	EnterArea	hunt	IDEternity_02_SnakeM_Boss_75_Ah 1;
+16827	Talk	enterarea	IDEternity_02_SensoryArea_Q16827a
+16830	EnterArea	enterarea	IDEternity_02_SensoryArea_Q16830b
+16831	EnterArea	enterarea	IDEternity_02_SensoryArea_Q16831a|IDEternity_02_SensoryArea_Q16831b|IDEternity_02_SensoryArea_Q16831c
+16835	Talk	enterworld+talk	LF_Tower_Etezar_E|301560000
+16836	EnterArea	enterarea+hunt+talk	IDEternity_03_Weatha01_E|IDEternity_03_SensoryArea_Q16836a|IDEternity_03_SensoryArea_Q16836b|IDEternity_03_SensoryArea_Q16836c|IDEternity_03_SensoryArea_Q16836d|IDEternity_03_SensoryArea_Q16836e|IDEternity_03_SensoryArea_Q16836f|IDEternity_03_SensoryArea_Q16836g|IDEternity_03_Guard_Boss_Da_Kn 1; IDEter|IDEternity_03_SensoryArea_Q16836h|IDEternity_03_SensoryArea_Q16836i|IDEternity_03_SensoryArea_Q16836j|IDEternity_03_SensoryArea_Q16836k|IDEternity_03_Dimension_Boss_01 1;
+16839	Talk	enterarea+hunt	IDEternity_03_SensoryArea_Q16836g|IDEternity_03_Dimension_Boss_01 1;
+16942	Talk	collectitem+talk	IDLDF4_Re_01_Ctesibius_E|LDF4_Advance_Elger_E
+16975	ItemPlay	NO_PROGRESS	
+16976	Talk	collectitem+talk	IDLDF5_Under_01_Theano_E|LDF5_Under_Timarchus_E
+16985	Talk	collectitem+talk	IDLDF5_Under_02_E_Alkatron_E|LF5_Supri_E
+16987	Talk	enterarea	DF5_SensoryArea_Q16987
+17162	Talk	pvp	6
+17500	Talk	enterarea+enterworld+talk	301680000|IDLDF5_Fortress_War_Neleus_E|IDLDF5_Fortress_War_SensoryArea_Q17500a
+17501	Talk	pvp	15
+17505	Talk	enterarea+enterworld+itemplay+talk	LF6_Hiyorin_E|301670000|quest_17505a 1|IDLDF5_Under_02_War_Terua_E|IDLDF5_Under_02_War_SensoryArea_Q17505a
+17506	Talk	pvp	15
+17510	LevelUpLogIn	enterworld+hunt+talk	LF6_Weatha_E|LF6_Remaia_E|302100000|IDTransform_Sado_Fi_66_An, IDTransform_S|IDTransform_Exit_All
+17525	Talk	enterarea+enterworld+hunt	301720000|IDAbRe_Core_03_A1_Witch_An 1;|IDAbRe_Core_03_A2_Witch_D_01_An, IDAbRe_|IDAbRe_Core_03_SensoryArea_Q17525|IDAbRe_Core_03_Witch_Boss_Ae 1;
+17540	Talk	collectitem+enterworld+hunt+talk	300250000|Nepion|IDF4Re_Dra_01_BionicCPU_53_Ah 1;|IDF4Re_Dra_02_DrakanRa_Named_54_Ah 1;|Antigone
+17550	Talk	NO_PROGRESS	
+17551	Talk	enterworld+hunt+talk	310160000|IDAb1_Heroes_L_teleporter|IDAb1_Heroes_Drakan_Fi_73_Ae, IDAb1_Hero|IDAb1_Heroes_Boss_73_Ah 1;|400010000
+17552	Talk	enterworld+hunt	IDAb1_Heroes_Boss_73_Ah 1;|400010000
+18226	Talk	pvp	5
+18227	Talk	pvp	5
+18250	Talk	NO_PROGRESS	
+18251	Talk	NO_PROGRESS	
+18252	Talk	enterarea	IDInfinity_SensoryArea_Q18252a
+18253	Talk	enterarea	IDInfinity_SensoryArea_Q18253a
+18649	EnterArea	talk	Onesimus
+18737	Talk	NO_PROGRESS	
+18738	Talk	itemplay	idraksha_solo_bomb_01a, 10
+18739	EnterArea	collectitem	LF5_Averse_E
+18740	EnterArea	collectitem	LF5_Averse_E
+18741	EnterArea	hunt	IDraksha_solo_IceCyclops_61_An, Idraksha
+18930	Talk	enterworld+hunt+talk	301650000|IDDreadgion_04_Nizna_E|IDDreadgion_04_DrakanWi_Vil_71_Ae 1;|IDDreadgion_04_DrakanFiNamedAA_71_Ae, ID|IDDreadgion_04_DrakanRaNamedBA_71_Ae, ID
+18931	Talk	hunt+talkfobj	IDdreadgion_04_DrakanWeapon_Q18931, 1|IDDreadgion_04_DrakanFi_Noble_71_Ae 2;
+18950	Talk	NO_PROGRESS	
+18970	Talk	talk	LF5_Pequs_E
+18990	Talk	hunt+talk	LF6_Enosi_E|IDF6_Adma_Zombie_SN_67_Ae 1; IDF6_Adma_P|IDF6_Adma_EvilSpirit_67_Ah 1;
+18992	Talk	hunt+talk	LF6_Stochio_E|IDF6_Lap_Sheluk_SN_67_Ae 1; IDF6_Lap_Pri|IDF6_Lap_GodElemental_67_Ah 1;
+18994	Talk	hunt+talk	LF6_Riseon_E|BIDF6_Dragon_Artifact_Boost 3;|IDF6_Dragon_Messenger_69_Ah 1;
+18996	Talk	enterarea+hunt+talk	LF6_Favoni_E|IDF6_LF1_NPC_Ra_L|IDLF1_T_Barricade_Dragon_01 1; IDLF1_T_B|IDF6_LF1_SensoryArea_Q18996|IDLF1_T_Vanq_Named_73_Ah 1;
+19671	Talk	talk	LC1_L_grow_npc_seller_Mellina_01
+19683	Talk	talk	LC1_L_grow_npc_seller_Prina_01
+19690	Talk	pvp	3
+19900	LevelUpLogIn	itemplay	quest_19900a
+20010	EnterWorld	collectitem+hunt+talk	IDAb1_Ere_Start_Vatiskhan_E|IDAb1_Ere_Manager_Front_Vatiskhan_E|IDAb1_Ere_Manager_Front_Vatiskhan_E|IDAb1_Ere_Boss_Leader_Hard_75_Ah, IDAb1_|IDAb1_Ere_FOBJ_Report_Q10010a|IDAb1_Ere_Manager_Room_Vatiskhan_E
+20011	none	enterarea+hunt+talk	IDAb1_Ere_Manager_Room_Vatiskhan_E|IDAb1_Ere_Dead_Deva_D_E|IDAb1_Ere_Dying_Deva_D_E|IDAb1_Ere_Pain_Deva_D_E|IDAb1_Ere_SensoryArea_Q10011a|IDAb1_Ere_Boss_Heal_Wave_HealBoost_Neutl|IDAb1_Ere_Boss_Witch_01_75_Ah 1; IDAb1_E|IDAb1_Ere_SensoryArea_Q10012a|IDAb1_Ere_Terrarium_End_Vatiskhan_E
+20031	LevelUpLogIn	collectitem+enterworld+hunt+itemplay+talk	Vidar|Agehia|Tigrina|220070000|Hler|Merhen|Gudinho|Barretta|DF4_DrakanFi_51_An, DF4_DrakanFi_Wound_5|QUEST_20031A|Barretta
+20032	none	enterworld+hunt+itemplay+talk	Angrad|Aesir|CaspaGhost_02|300190000|QUEST_20032B|QUEST_20032A, 20|IDElim_3F_KomadeNM_53_Ae 1;|220070000
+20033	none	hunt+itemplay+talk+talkfobj	Skira|DF4_DrakanFi_Re_B1_53_An, DF4_DrakanFi_R|DF4_DranaSuctionDevice_B1_Q20022, 2|QUEST_20033A
+20034	none	enterworld+hunt+talk+talkfobj	Fjoelnir|Ortiz|DF4_SecretEntrance_Q20023|IDTemple_Prisoner_01, 0; IDTemple_Prison|IDTemple_Up_FanaticWiQ_53_An 1;|Anilmo|220070000
+20035	none	hunt+itemplay+talk	Barretta|Notud|Tegrak|reptilia|Arango|DF4_DrakanAs_Re_55_An, DF4_DrakanAs_Re_C|QUEST_20035C|Barretta
+20111	none	enterworld+hunt+talk	Ab1_Pontekane_E|Ab1_Vatiskhan_E|320160000|IDAb1_Heroes_Boss_73_Ah 1;|Ab1_Vatiskhan_E
+20112	none	collectitem+hunt+itemplay+talk	Ab1_Pontekane_E|Ab1_Rahdpel_E|quest_20112a, 5|Ab1_Eresh_Fi_Event 5; Ab1_Eresh_Fi_Event|Ab1_Rahdpel_E
+20113	none	enterarea+enterworld+hunt+talk	Ab1_Pontekane_E|301720000|IDAbRe_Core_03_SensoryArea_Q10113|IDAbRe_Core_03_Witch_MBoss_An, IDAbRe_Co|IDAbRe_Core_03_FOBJ_Empty_Altar_Q10113a|IDAbRe_Core_03_Witch_Boss_Ae 1;|IDAbRe_Core_03_FOBJ_Ere_Mirror_Q10113a
+20500	LevelUpLogIn	talk	DF5_CogelHogan_E
+20501	none	enterarea+talk	DF5_Bonat_E|DF5_Nixie_E|DF5_SensoryArea_Q20501a|DF5_FOBJ_Q20501a|DF5_FOBJ_Q20501b|DF5_FOBJ_Q20501c|DF5_TiamatArmy_Corpse_Q20501a
+20502	none	collectitem+talk	DF5_Walqule_E|DF5_Kronag_E|DF5_Kanovi_E|DF5_Kanovi_E|DF5_Kanovi_E|DF5_Muratun_E|DF5_Batuga_E
+20503	none	collectitem+enterarea+talk	DF5_Engrid_E|DF5_Egzen_E|DF5_Egzen_E|DF5_SensoryArea_Q20503a
+20504	none	hunt+talk	DF5_Xeikun_E|DF5_F_MissionVritra_Fi_61_An, DF5_F_Miss|DF5_Xeikun_E|DF5_F_MissionTiamat_Fi_61_An, DF5_F_Miss|DF5_F_MissionGilgamesh_Fi_61_An 1;|DF5_Gilgamesh_E|DF5_Jalturan_E
+20505	none	hunt+talk	DF5_Cnut_E|DF5_Maleite_E|DF5_TiamatSealGuard_Q20505a|DF5_TiamatSeal_Q20505a|DF5_G_MissionVritra_Research_Wi_61_An 1;
+20506	none	enterarea+hunt+talk	DF5_Sefrimnir_E|DF5_Julia_E|DF5_SensoryArea_Q20506a|DF5_H_MissionVritra_Low_As_63_An 1;|DF5_H_MissionDeva_Fi_63_An 1;|DF5_Jadun_E|DF5_Julia_E
+20507	none	enterarea+talk	DF5_Vard_E|DF5_Theodoricus_E|DF5_Daruku_E|DF5_Bakun_E|DF5_SensoryArea_Q20507a
+20526	none	enterworld+talk+talkfobj	DF6_Feregran_E|220120000|DF6_Varotta_E|DF_Tower_Wizabobo_E|220110000|Item_Summon_Wizabobo_E|DF6_FOBJ_Mystery_Piece_Q20526a, 1;|Item_Summon_Wizabobo_E|DF6_FOBJ_Mystery_Piece_Q20526b, 1;|Item_Summon_Wizabobo_E|DF6_FOBJ_Mystery_Piece_Q20526c, 1;|Item_Summon_Wizabobo_E
+20527	none	collectitem+enterarea+hunt+itemplay+talk+talkfobj	DF6_Feregran_E|DF_Tower_Wizabobo_E|DF6_Feregran_E|DF6_SensoryArea_Q20527a|DF6_FOBJ_Trapped_Wizabobo_Q20527a, 1;|DF6_FOBJ_Tower_Piece_Q20527a|DF6_SensoryArea_Q20527b|DF6_FOBJ_Trapped_Wizabobo_Q20527b, 1;|DF6_FOBJ_Tower_Piece_Q20527b|DF6_SensoryArea_Q20527c|DF6_FOBJ_Trapped_Wizabobo_Q20527c, 1;|DF6_Mission_Light_Ra_71_An 7;|DF6_Feregran_E|DF6_Feregran_E|doc_quest_20527a, 1
+20530	LevelUpLogIn	collectitem+talk+talkfobj	Balder|Heimdall|DC1_FOBJ_FrozenPot_Q20530, 1|Silke|Genpels|DC1_Zwhariman_E|DC1_FOBJ_Bottle_Q20530|Balder|Balder
+21320	Talk	NO_PROGRESS	
+21323	Talk	talk	DF4_Rotation_Teleporter_OP_1|DF4_Rotation_Teleporter_2|DF4_Rotation_Teleporter_4|DF4_Rotation_Teleporter_3|DF4_Rotation_Teleporter_1
+21324	Talk	pvp	2
+21325	Talk	pvp	2
+23403	Talk	itemplay+talk	Meibjar|QUEST_23403A|Kueve|QUEST_23403B|DF1a_Schwanz_E|DF1a_FOBJ_Vritramachine_D_1|DF1a_FOBJ_Vritramachine_D_2
+23744	EnterArea	pvp	12
+23745	EnterArea	pvp	2
+23801	EnterArea	pvp	2
+23830	LevelUpLogIn	itemplay	Doc_quest_23830a
+23831	LevelUpLogIn	itemplay	Doc_quest_23831a
+23832	LevelUpLogIn	itemplay	Doc_quest_23832a
+23833	LevelUpLogIn	itemplay	Doc_quest_23833a
+23834	LevelUpLogIn	itemplay	Doc_quest_23834a
+23842	EnterArea	NO_PROGRESS	
+23843	EnterArea	pvp	6
+23846	EnterArea	NO_PROGRESS	
+23847	EnterArea	pvp	6
+23850	EnterArea	NO_PROGRESS	
+23851	EnterArea	pvp	6
+23862	EnterArea	NO_PROGRESS	
+23863	EnterArea	pvp	6
+23866	EnterArea	NO_PROGRESS	
+23867	EnterArea	pvp	6
+23870	EnterArea	NO_PROGRESS	
+23871	EnterArea	pvp	6
+23882	EnterArea	NO_PROGRESS	
+23883	EnterArea	pvp	6
+23945	Talk	hunt+talk	Ab1_Zaken_E|Ab1_1017_Boss_Dr, Ab1_1016_Boss_Dr, Ab1_
+23947	EnterArea	hunt	Ab1_1011_Page2_Guard_Fi_Dr, Ab1_1011_Pag
+23950	Talk	enterworld+talk	Ab1_Pontekane_E|Ab1_Vatiskhan_E|302340000
+23951	Talk	itemplay	doc_quest_23951b
+23952	ItemPlay	NO_PROGRESS	
+23953	Talk	NO_PROGRESS	
+23954	Talk	hunt+talk	IDAb1_Ere_Fiance_D_E|Venbol|IDAb1_Ere_Quest_Debrie_66_n 1;|Venbol
+23955	EnterWorld	hunt	IDAb1_Ere_1round_Drakan_Fi 5; IDAb1_Ere_
+23956	EnterWorld	enterarea+hunt	IDAb1_Ere_SensoryArea_Q13956a|IDAb1_Ere_Boss_Leader_Hard_75_Ah, IDAb1_|IDAb1_Ere_SensoryArea_Q13956b|IDAb1_Ere_SensoryArea_Q13956c|IDAb1_Ere_SensoryArea_Q10012a
+23960	Talk	enterarea+enterworld+talk	302350000|IDEternity_War_Freja_E|IDEternity_War_SensoryArea_Q23960
+23961	EnterWorld	talk	IDEternity_War_Rmod_E
+23962	Talk	enterarea	IDEternity_War_ShugoSeller
+23965	EnterArea	enterarea	IDEternity_War_SensoryArea_Q13965a
+23966	EnterArea	hunt	IDEternity_War_Score_Named_01_75_Ah, IDE
+23967	EnterArea	enterarea	IDEternity_War_SensoryArea_Q13967a
+25000	Talk	talk	DF5_OP1_ZoneTeleport_D|DF5_op_a_Middleman_01|DF5_op_a_goods_Seller
+25022	Talk	collectitem+talk	DF5_Swith_E|DF5_Swith_E
+25023	Talk	collectitem+itemplay+talk	DF5_Malthorn_E|DF5_Malthorn_E|quest_25023b, 1
+25030	Talk	collectitem+talk	DF5_Egzen_E|DF5_Egzen_E|DF5_Redelf_E|DF5_Engrid_E
+25031	Talk	collectitem+talk	DF5_Sigmuel_E|DF5_Sigmuel_E|DF5_Redelf_E
+25032	Talk	hunt+talk	DF5_C_QMerman_NM_As_58_An 1;|DF5_Muwel_E|DF5_Redelf_E
+25050	Talk	collectitem+talk	DF5_Soglo_E|DF5_Soglo_E|DF5_E_FOBJ_headstone_01|DF5_Zagmus_E
+25051	Talk	talk+talkfobj	DF5_E_FOBJ_headstone_01|DF5_Zagmus_E|DF5_FOBJ_chest_Q25051a, 1|DF5_FOBJ_chest_Q25051b, 1
+25052	Talk	talkfobj	DF5_FOBJ_giantcrystal_Q25052, 1;
+25070	Talk	talkfobj	DF5_FOBJ_icecrystal_Q25070, 0;
+25082	Talk	collectitem+hunt+talk	DF5_FOBJ_bait_Q25082|DF5_FOBJ_bait_Q25082|DF5_H2_QuestShellizard_63_An 1;
+25084	Talk	collectitem+enterarea+talk	DF5_Coli_E|DF5_Zake_E|DF5_SensoryArea_Q25084
+25200	ItemPlay	NO_PROGRESS	
+25204	Talk	pvp	5
+25220	Talk	pvp	2
+25221	Talk	pvp	2
+25222	Talk	pvp	2
+25223	Talk	pvp	2
+25224	Talk	pvp	2
+25225	Talk	pvp	2
+25235	none	pvp	2
+25236	none	pvp	2
+25237	none	pvp	2
+25301	Talk	collectitem+talk	DF5_Fachmann_E|DF5_Fachmann_E|DF5_Fachmann_E
+25302	Talk	collectitem+talk	DF5_Kampfyna_E|DF5_Kampfyna_E|DF5_Kampfyna_E
+25303	Talk	collectitem+talk	DF5_Fachmann_E|DF5_Fachmann_E|DF5_Fachmann_E
+25304	Talk	collectitem+hunt+talk	DF5_Fachmann_E|DF5_Fachmann_E|LDF4_Advance_babymosbear_65_n, LDF4_Adva|DF5_Fachmann_E
+25305	Talk	collectitem+talk	DF5_Kampfyna_E|DF5_Kampfyna_E|DF5_Kampfyna_E
+25306	Talk	collectitem+hunt+talk	DF5_Fachmann_E|DF5_Fachmann_E|DF5_Fachmann_E|LDF4_Advance_J_65_Deva_Q25306, LDF4_Adva|LDF5_Fortress_D2_65_Deva_Q15306, LDF5_Fo|LDF5_Fortress_A4_FlowerWorm_65_An, LDF5_|IDKamar_DrakanGeneral_Nmd_65_Ah, IDF5_U1|IDTiamat_Tiamat_Dragon_Dying_Named_65_Al|DF5_Fachmann_E|DF5_Skuldun_E
+25311	Talk	collectitem+talk	DF5_Fachmann_E|DF5_Fachmann_E|DF5_Fachmann_E
+25312	Talk	collectitem+talk	DF5_Kampfyna_E|DF5_Kampfyna_E|DF5_Kampfyna_E
+25313	Talk	collectitem+talk	DF5_Fachmann_E|DF5_Fachmann_E|DF5_Fachmann_E
+25314	Talk	collectitem+hunt+talk	DF5_Fachmann_E|DF5_Fachmann_E|LDF4_Advance_babymosbear_65_n, LDF4_Adva|DF5_Fachmann_E
+25315	Talk	collectitem+talk	DF5_Kampfyna_E|DF5_Kampfyna_E|DF5_Kampfyna_E
+25316	Talk	collectitem+hunt+talk	DF5_Fachmann_E|DF5_Fachmann_E|DF5_Fachmann_E|LDF4_Advance_J_65_Deva_Q25306, LDF4_Adva|LDF5_Fortress_D2_65_Deva_Q15306, LDF5_Fo|LDF5_Fortress_A4_FlowerWorm_65_An, LDF5_|IDKamar_DrakanGeneral_Nmd_65_Ah, IDF5_U1|IDTiamat_Tiamat_Dragon_Dying_Named_65_Al|DF5_Fachmann_E|DF5_Skuldun_E
+25321	Talk	hunt+talk	DF5_Nuiage_E|DF5_P1_Cellatu_58_An, DF5_P1_Cellatu_59_|DF5_Strurmwind_E|DF5_P2_Mimic_63_n, DF5_P2_Lobster_63_n, |DF4_Korperchen_E|DF4_Rotation_65_Deva_Q25321_01, DF4_Rota|LDF4_Advance_Funke_E|LDF4_Advance_F_TiamatLoser_Fi_65_An, LDF|LDF5_Fortress_Schwach_E|LDF5_Fortress_A1_Merdion_65_n, LDF5_Fort|AB1_Seelewoe_E|LDF5_Fortress_B1_Statue_M_Rune_65_An, LD
+25322	Talk	enterarea+hunt	LF5_SensoryArea_65_Deva_Q25322b|LF5_B_Trico_56_An, LF5_B_Trico_57_An, LF|LF5_SensoryArea_65_Deva_Q25322d|LF5_D_Brohum_M_Forest_58_An, LF5_D_Brohu|LF5_SensoryArea_65_Deva_Q25322f|LF5_F_Drakan_60_An, LF5_F_Drakan_61_An, |LF5_SensoryArea_65_Deva_Q25322h|LF5_H_LizardmanFighter_61_An, LF5_H_Liza|LF5_SensoryArea_65_Deva_Q25322j|LF5_J_TauricRe_64_An, LF5_J_TauricRe_65_
+25334	Talk	itemplay	quest_65_Deva_D_Relic_Of_Devotion_a
+25400	EnterWorld	collectitem+enterarea+hunt+talk	Ab1_Pontekane_E|Ab1_Darmian_E|Ab1_Batai_E|Ab1_Dukas_E|Ab1_Dukas_E|AB1_SensoryArea_Q25400a|Ab1_Mission_Eresh_Ra_65_Ae 2;|Ab1_Lanbaz_E|Ab1_Darmian_E
+25401	Talk	talk	DF5_OP1_ZoneTeleport_D
+25402	Talk	talk	Ab1_Darmian_E|Ab1_Houtbar_E|Ab1_Kroaze_E
+25446	none	pvp	2
+25447	none	pvp	2
+25448	none	pvp	2
+25449	none	pvp	2
+25450	none	pvp	2
+25451	none	pvp	2
+25452	none	pvp	2
+25453	none	pvp	2
+25454	none	pvp	2
+25464	EnterArea	pvp	2
+25465	EnterArea	pvp	2
+25466	EnterArea	pvp	5
+25545	Talk	itemplay	quest_25545a
+25548	EnterArea	NO_PROGRESS	
+25550	Talk	talk	DF6_Svanhild_E|DF6_Conrto_E|DF6_Vadorei_E
+25551	Talk	enterarea	DF6_SensoryArea_Q25551_AtoB|DF6_SensoryArea_Q25551_BtoA
+25552	Talk	enterarea	DF6_SensoryArea_Q25552_AtoD|DF6_SensoryArea_Q25552_DtoA
+25553	Talk	enterarea	DF6_SensoryArea_Q25553_AtoF|DF6_SensoryArea_Q25553_FtoA
+25554	Talk	enterarea	DF6_SensoryArea_Q25554_AtoH|DF6_SensoryArea_Q25554_HtoA
+25563	ItemPlay	NO_PROGRESS	
+25566	EnterArea	pvp	5
+25590	Talk	talk	DF6_Bastok_E|DF6_Duisys_E|DF6_Sieden_E|DF6_Norte_E
+25595	Talk	pvp	5
+25596	EnterWorld	pvp	5
+25601	Talk	collectitem+enterarea+hunt+itemplay+talk	DF6_SensoryArea_Q25601a_Dynamic_Env|DF6_Hekadun_E|DF6_Hekadun_E|QUEST_25601B|LF6_SpiritusSoul_E|DF6_SensoryArea_Q25601c_Named|DF6_B2_24_Named_Birdmom_70_Al 1;
+25602	Talk	collectitem+enterarea+hunt+talk	DF6_SensoryArea_Q25602a_Dynamic_Env|DF6_Phyndar_E|DF6_Phyndar_E|DF6_SensoryArea_Q25602a_Dynamic_Env|DF6_C_6_Named_DemonTree_68_Ah 1;
+25604	Talk	collectitem+enterarea+hunt+talk	DF6_Groma_E|DF6_SensoryArea_Q25604a_Dynamic_Env|DF6_FOBJ_Sacrifice_Guardian_01 3;|DF6_Groma_E|DF6_Groma_E
+25605	Talk	collectitem+enterarea+hunt+itemplay+talk	DF6_SensoryArea_Q25605a_Dynamic_Env|DF6_Chardelil_E|DF6_Chardelil_E|QUEST_25605B|DF6_TimeChainedDeva_E|DF6_SensoryArea_Q25605c_Named|DF6_F2_24_Named_DeathKnight_70_Al 1;
+25606	Talk	enterarea+hunt+talk+talkfobj	DF6_SensoryArea_Q25606a|DF6_Wandersoul01_E|DF6_SensoryArea_Q25606b_Dynamic_Env|DF6_Ninetailfoxwoman_E|DF6_SensoryArea_Q25606c_Named|DF6_G_6_Named_Sinsi_68_Ah 1;|DF6_Ninetailfoxwoman_Soul_E|DF6_FOBJ_LeeniBox_Q25606a, 0;
+25608	Talk	collectitem+enterarea+hunt+talk	DF6_Mondhes_E|DF6_Mumu01_E|DF6_SensoryArea_Q25608a_Dynamic_Env|DF6_I_Environment_NoName_67_An 10;|DF6_Mumu01_E|DF6_SensoryArea_Q25608b_Named|DF6_op_goods_Seller
+25670	Talk	collectitem+talk	DF6_Blizzne_E|DF6_Blizzne_E|DF6_FOBJ_Od_Track_Q25670e
+25671	EnterArea	hunt	F6_Raid_Drop_Light_Sum 1; F6_Raid_Guard_
+25672	EnterArea	hunt	F6_Raid_Drop_Light 1;
+25673	Talk	enterarea+pvp	LF6_SensoryArea_Q25673|12
+25674	EnterArea	collectitem	DF6_Reinhard_E
+25680	Talk	hunt+itemplay+talk	LF6_Frogboy_01_E|LF6_CowardCellatu_E|F6_Q_Tauric_An 1;|LF6_CowardCellatu_E|QUEST_25680A|LF6_CowardCellatu_E|LF6_Frogboy_01_E
+25681	EnterArea	pvp	5
+25682	EnterArea	pvp	5
+25683	EnterArea	pvp	5
+25684	EnterArea	pvp	5
+25685	EnterArea	pvp	8
+25686	EnterArea	pvp	8
+25687	EnterArea	pvp	8
+25688	EnterArea	pvp	8
+25710	EnterArea	pvp	5
+25711	EnterArea	pvp	5
+25712	EnterArea	pvp	5
+25713	EnterArea	pvp	5
+25714	EnterArea	pvp	8
+25715	EnterArea	pvp	8
+25716	EnterArea	pvp	8
+25717	EnterArea	pvp	8
+26800	Talk	enterarea+talk	DF_Tower_SensoryArea_Q26800|DF_Tower_Enfitenta_E|IDEternity_01_SensoryArea_Q16800
+26801	EnterArea	hunt	IDEternity_01_Leibo_Fi_66_Ae, IDEternity
+26802	EnterArea	hunt	IDEternity_01_Leibo_Fi_68_Ae, IDEternity
+26803	EnterArea	hunt	IDEternity_01_Leibo_Fi_70_Ae, IDEternity
+26804	EnterArea	hunt	BIDEternity_01_Leibo_Fire_Zone_N_70_Ah, 
+26805	EnterArea	hunt	IDEternity_01_Leibo_Fi_66_Ae, IDEternity
+26806	EnterArea	hunt	IDEternity_01_Leibo_Fi_68_Ae, IDEternity
+26807	EnterArea	hunt	IDEternity_01_Leibo_Fi_70_Ae, IDEternity
+26808	EnterArea	hunt	BIDEternity_01_Leibo_Fire_Zone_N_70_Ah, 
+26809	ItemPlay	NO_PROGRESS	
+26810	ItemPlay	NO_PROGRESS	
+26811	ItemPlay	NO_PROGRESS	
+26820	Talk	enterarea+talk	DF_Tower_Enfitenta_E|IDEternity_02_SensoryArea_Q16820a
+26821	EnterArea	enterarea+hunt+talk	IDEternity_02_Jangrike_E|IDEternity_02_Bregat_E|IDEternity_02_A_Silika_Wi_S_72_Ae, IDEte|IDEternity_02_SensoryArea_Q16821a|IDEternity_02_SensoryArea_Q16821b|IDEternity_02_Tower_Boss_75_Ah 1;
+26822	EnterArea	enterarea+hunt+talk	IDEternity_02_SensoryArea_Q16822a|IDEternity_02_Event_Nepilim_03|IDEternity_02_SensoryArea_Q16822b|IDEternity_02_Event_Nepilim_05|IDEternity_02_SensoryArea_Q16822c|IDEternity_02_Nepilim_Boss_75_Ah 1;|IDEternity_02_SensoryArea_Q16822d
+26823	EnterArea	enterarea+hunt+talk	IDEternity_02_Event_Guard_Fi_Li_01, IDEt|IDEternity_02_SensoryArea_Q16823a|IDEternity_02_Feregran01_E|IDEternity_02_SensoryArea_Q16823b|IDEternity_02_SnakeM_Boss_75_Ah 1;
+26824	EnterArea	hunt	IDEternity_02_Tower_Boss_75_Ah 1;
+26825	EnterArea	hunt	IDEternity_02_Nepilim_Boss_75_Ah, IDEter
+26826	EnterArea	hunt	IDEternity_02_SnakeM_Boss_75_Ah 1;
+26827	Talk	enterarea	IDEternity_02_SensoryArea_Q16827a
+26830	EnterArea	enterarea	IDEternity_02_SensoryArea_Q16830b
+26831	EnterArea	enterarea	IDEternity_02_SensoryArea_Q16831a|IDEternity_02_SensoryArea_Q16831b|IDEternity_02_SensoryArea_Q16831c
+26835	Talk	enterworld+talk	DF_Tower_Enfitenta_E|301560000
+26836	EnterArea	enterarea+hunt+talk	IDEternity_03_Feregran01_E|IDEternity_03_SensoryArea_Q16836a|IDEternity_03_SensoryArea_Q16836b|IDEternity_03_SensoryArea_Q16836c|IDEternity_03_SensoryArea_Q16836d|IDEternity_03_SensoryArea_Q16836e|IDEternity_03_SensoryArea_Q16836f|IDEternity_03_SensoryArea_Q16836g|IDEternity_03_Guard_Boss_Li_Kn 1; IDEter|IDEternity_03_SensoryArea_Q16836h|IDEternity_03_SensoryArea_Q16836i|IDEternity_03_SensoryArea_Q16836j|IDEternity_03_SensoryArea_Q16836k|IDEternity_03_Dimension_Boss_01 1;
+26839	Talk	enterarea+hunt	IDEternity_03_SensoryArea_Q16836g|IDEternity_03_Dimension_Boss_01 1;
+26942	Talk	collectitem+talk	IDLDF4_Re_01_Aitu_E|LDF4_Advance_Helgund_E
+26975	ItemPlay	NO_PROGRESS	
+26976	Talk	collectitem+talk	IDLDF5_Under_01_Rohellein_E|LDF5_Under_Undgankt_E
+26985	Talk	collectitem+talk	IDLDF5_Under_02_E_Dintanum_E|DF5_Primenk_E
+26987	Talk	enterarea	LF5_SensoryArea_Q26987
+27162	Talk	pvp	6
+27500	Talk	enterarea+enterworld+talk	301680000|IDLDF5_Fortress_War_Zaiksene_E|IDLDF5_Fortress_War_SensoryArea_Q17500a
+27501	Talk	pvp	15
+27505	Talk	enterarea+enterworld+itemplay+talk	DF6_Togoring_E|301670000|quest_27505a 1|IDLDF5_Under_02_War_Gangher_E|IDLDF5_Under_02_War_SensoryArea_Q17505a
+27506	Talk	pvp	15
+27510	LevelUpLogIn	enterworld+hunt+talk	DF6_Feregran_E|DF6_Stula_E|302100000|IDTransform_Sado_Fi_66_An, IDTransform_S|IDTransform_Exit_All
+27525	Talk	enterarea+enterworld+hunt	301720000|IDAbRe_Core_03_A1_Witch_An 1;|IDAbRe_Core_03_A2_Witch_D_01_An, IDAbRe_|IDAbRe_Core_03_SensoryArea_Q17525|IDAbRe_Core_03_Witch_Boss_Ae 1;
+27540	Talk	collectitem+enterworld+hunt+talk	300250000|Nepion|IDF4Re_Dra_01_BionicCPU_53_Ah 1;|IDF4Re_Dra_02_DrakanRa_Named_54_Ah 1;|Luigir
+27550	Talk	NO_PROGRESS	
+27551	Talk	enterworld+hunt+talk	320160000|IDAb1_Heroes_D_teleporter|IDAb1_Heroes_Drakan_Fi_73_Ae, IDAb1_Hero|IDAb1_Heroes_Boss_73_Ah 1;|400010000
+27552	Talk	enterworld+hunt	IDAb1_Heroes_Boss_73_Ah 1;|400010000
+28226	Talk	pvp	5
+28227	Talk	pvp	5
+28250	Talk	NO_PROGRESS	
+28251	Talk	NO_PROGRESS	
+28252	Talk	enterarea	IDInfinity_SensoryArea_Q18252a
+28253	Talk	enterarea	IDInfinity_SensoryArea_Q18253a
+28649	EnterArea	talk	Orhe
+28737	Talk	NO_PROGRESS	
+28738	Talk	itemplay	idraksha_solo_bomb_01a, 10
+28739	EnterArea	collectitem	DF5_Cnut_E
+28740	EnterArea	collectitem	DF5_Cnut_E
+28741	EnterArea	hunt	IDraksha_solo_IceCyclops_61_An, Idraksha
+28930	Talk	enterworld+hunt+talk	301650000|IDDreadgion_04_Lenanti_E|IDDreadgion_04_DrakanWi_Vil_71_Ae 1;|IDDreadgion_04_DrakanFiNamedAA_71_Ae, ID|IDDreadgion_04_DrakanRaNamedBA_71_Ae, ID
+28931	Talk	hunt+talkfobj	IDdreadgion_04_DrakanWeapon_Q18931, 1|IDDreadgion_04_DrakanFi_Noble_71_Ae 2;
+28950	Talk	NO_PROGRESS	
+28970	Talk	talk	DF5_Wigric_E
+28990	Talk	hunt+talk	DF6_Petur_E|IDF6_Adma_Zombie_SN_67_Ae 1; IDF6_Adma_P|IDF6_Adma_EvilSpirit_67_Ah 1;
+28992	Talk	hunt+talk	DF6_Guranka_E|IDF6_Lap_Sheluk_SN_67_Ae 1; IDF6_Lap_Pri|IDF6_Lap_GodElemental_67_Ah 1;
+28994	Talk	hunt+talk	DF6_Bakao_E|BIDF6_Dragon_Artifact_Boost 3;|IDF6_Dragon_Messenger_69_Ah 1;
+28996	Talk	enterarea+hunt+talk	DF6_Vienste_E|IDF6_LF1_NPC_Ra_D|IDLF1_T_Barricade_Dragon_01 1; IDLF1_T_B|IDF6_LF1_SensoryArea_Q18996|IDLF1_T_Vanq_Named_73_Ah 1;
+29671	Talk	talk	DC1_D_grow_npc_seller_Mellica_01
+29683	Talk	talk	DC1_D_grow_npc_seller_Prinis_01
+29690	Talk	pvp	3
+29900	LevelUpLogIn	itemplay	quest_29900a
+30515	Talk	NO_PROGRESS	
+30565	Talk	NO_PROGRESS	
+30721	Talk	itemplay+talk	LF5_Monroe_E|LF5_Rosalee_E|quest_30721a|LF5_Rosalee_E
+30722	Talk	enterarea	DF5_SensoryArea_Q30722
+30771	Talk	itemplay+talk	DF5_Hank_E|DF5_Ginie_E|quest_30771a|DF5_Ginie_E
+30772	Talk	enterarea	LF5_SensoryArea_Q30772
+30800	Talk	itemplay	doc_quest_30800a
+35052	none	hunt	LF5_FOBJ_Q35052 5;
+35055	none	talk	LF5_Milliard_E
+35056	none	talk	LF5_Eukraton_E
+35057	none	talk	LF5_Brontte_E
+35058	none	hunt	LF5_B_Vespa_56_An, LF5_B_Vespa_57_An 10;
+35059	none	hunt	LF5_C_KuillusM_57_An, LF5_C_KuillusM_58_
+35060	none	hunt	LF5_D_RafflesiaSea_58_An 10;
+35061	none	hunt	LF5_E_Sheluk_59_An, LF5_E_Sheluk_60_An 1
+35062	none	hunt	LF5_F_Xipeto_60_An, LF5_F_Xipeto_61_An 1
+35063	none	hunt	LF5_H_Rafflesia_62_An 10;
+35064	none	hunt	LF5_I_Octaside_63_An, LF5_I_Octaside_64_
+35065	none	hunt	LF5_J_FrillFaimam_64_An 10;
+35510	none	pvp	5
+35511	none	pvp	5
+35512	none	pvp	5
+35513	none	pvp	5
+35514	none	pvp	5
+35515	none	pvp	5
+36531	none	hunt	LF5_A_Starfish_55_DQ 1;
+36532	none	hunt	LF5_D_potcrab_56_DQ 1;
+36533	none	hunt	LF5_C_Startutle_58_DQ 1;
+36534	none	hunt	LF5_D_Lobster_59_DQ 1;
+36535	none	hunt	LF5_E_Slime_59_DQ 1;
+36536	none	hunt	LF5_C_RottentreeS_58_DQ 1;
+36539	none	hunt	LF5_F_Sheluk_60_DQ 1;
+36540	none	hunt	LF5_F_Drakan_61_DQ 1;
+36541	none	hunt	LF5_H_ElemetLi_62_DQ 1;
+36542	none	hunt	LF5_I_Condor_64_DQ 1;
+36543	none	hunt	LF5_J_SandShark_65_DQ 1;
+36544	none	hunt	LF5_H_Ettin_63_DQ 1;
+36545	none	hunt	DF5_A_QNamde_Cherubim_56_N 1;
+36546	none	hunt	DF5_B_QNamde_StarCrab_56_N 1;
+36547	none	hunt	DF5_E2_QNamde_ElementalWater1_60_N 1;
+36548	none	hunt	DF5_H_QNamde_Worm_Oasis_63_An 1;
+45052	none	hunt	DF5_FOBJ_Q45052 3;
+45055	none	talk	DF5_Danpaul_E
+45056	none	talk	DF5_Egzen_E
+45057	none	talk	DF5_Wigric_E
+45058	none	hunt	DF5_B_Dionaea_56_An, DF5_B_Dionaea_57_An
+45059	none	hunt	DF5_C_Harpy_57_An, DF5_C_Harpy_58_An 10;
+45060	none	hunt	DF5_D_Cyclops_58_An, DF5_D_Cyclops_59_An
+45061	none	hunt	DF5_E1_Sheluk_59_An, DF5_E1_Sheluk_60_An
+45062	none	hunt	DF5_F_NagaWarrior_60_An, DF5_F_NagaWarri
+45063	none	hunt	DF5_H_Xipeto_62_An, DF5_H_Xipeto_63_An 1
+45064	none	hunt	DF5_I_Cyclops_Worker_63_An, DF5_I_Cyclop
+45065	none	hunt	DF5_J_FrillFaimam_64_An, DF5_J_FrillFaim
+45510	none	pvp	5
+45511	none	pvp	5
+45512	none	pvp	5
+45513	none	pvp	5
+45514	none	pvp	5
+45515	none	pvp	5
+46531	none	hunt	DF5_A_QNamde_Cherubim_56_N 1;
+46532	none	hunt	DF5_B_QNamde_StarCrab_56_N 1;
+46533	none	hunt	DF5_C_QNamde_Harpy_58_An 1;
+46534	none	hunt	DF5_D_QNamde_Potcrab_58_N 1;
+46535	none	hunt	DF5_E2_QNamde_ElementalWater1_60_N 1;
+46536	none	hunt	DF5_C_QNamde_Shellizard_58_N 1;
+46539	none	hunt	DF5_F_QNamde_Scorpion_61_An 1;
+46540	none	hunt	DF5_G_QNamde_Startutle_62_N 1;
+46541	none	hunt	DF5_H_QNamde_Worm_Oasis_63_An 1;
+46542	none	hunt	DF5_I_QNamde_SandShark_64_An 1;
+46543	none	hunt	DF5_J_QNamde_Merdion_64_N 1;
+46544	none	hunt	DF5_H_QNamde_Varanus_63_An 1;
+46545	none	hunt	LF5_A_Starfish_55_DQ 1;
+46546	none	hunt	LF5_D_potcrab_56_DQ 1;
+46547	none	hunt	LF5_E_Slime_59_DQ 1;
+46548	none	hunt	LF5_H_ElemetLi_62_DQ 1;
+50079	Talk	pvp	3
+50080	Talk	pvp	5
+50081	Talk	pvp	20
+50125	EnterArea	pvp	20
+50128	Talk	enterworld	600040000
+51079	Talk	pvp	3
+51080	Talk	pvp	5
+51081	Talk	pvp	20
+51125	EnterArea	pvp	20
+51128	Talk	enterworld	600040000
+80708	Talk	NO_PROGRESS	
+80709	Talk	pvp	40
+80710	Talk	pvp	15
+80711	Talk	pvp	15
+80712	Talk	pvp	40
+80713	Talk	pvp	15
+80714	Talk	pvp	15
+80721	Talk	NO_PROGRESS	
+80722	Talk	NO_PROGRESS	
+80741	Talk	NO_PROGRESS	
+80744	Talk	NO_PROGRESS	
+80746	Talk	NO_PROGRESS	
+80747	Talk	NO_PROGRESS	
+80749	Talk	NO_PROGRESS	
+80754	Talk	NO_PROGRESS	
+80755	Talk	NO_PROGRESS	
+80756	Talk	NO_PROGRESS	
+80757	Talk	pvp	5
+80758	Talk	pvp	5
+80759	Talk	pvp	5
+80760	Talk	pvp	5
+80772	Talk	NO_PROGRESS	
+80783	Talk	NO_PROGRESS	
+80784	Talk	NO_PROGRESS	
+80787	Talk	NO_PROGRESS	
+80788	Talk	NO_PROGRESS	
+80789	Talk	NO_PROGRESS	
+80790	Talk	NO_PROGRESS	
+80791	Talk	NO_PROGRESS	
+80792	Talk	NO_PROGRESS	
+80793	Talk	NO_PROGRESS	
+80794	Talk	NO_PROGRESS	
+80806	Talk	pvp	2
+80807	Talk	pvp	2
+80808	Talk	pvp	2
+80809	Talk	pvp	2
+80810	Talk	pvp	2
+80811	Talk	pvp	2
+80812	Talk	pvp	2
+80813	Talk	pvp	2
+80814	Talk	NO_PROGRESS	
+80823	Talk	NO_PROGRESS	
+80824	Talk	NO_PROGRESS	
+80827	ItemPlay	NO_PROGRESS	
+80828	ItemPlay	NO_PROGRESS	
+80830	Talk	NO_PROGRESS	
+80832	ItemPlay	NO_PROGRESS	
+80833	Talk	NO_PROGRESS	
+80842	Talk	NO_PROGRESS	
+80843	Talk	NO_PROGRESS	
+80846	Talk	collectitem+pvp	2|world_event_megaquest_shugo_01
+80847	Talk	collectitem+pvp	2|world_event_megaquest_shugo_01
+80848	Talk	collectitem+hunt	IDF5_TD_DragonRider_Chief_N_65_Al 3;|world_event_megaquest_shugo_01
+80853	Talk	NO_PROGRESS	
+80860	Talk	pvp	50
+80861	Talk	pvp	50
+80862	Talk	pvp	10
+80863	Talk	pvp	10
+80864	Talk	pvp	50
+80865	Talk	pvp	50
+80866	Talk	pvp	10
+80867	Talk	pvp	10
+80868	Talk	NO_PROGRESS	
+80876	Talk	NO_PROGRESS	
+80882	Talk	NO_PROGRESS	
+80885	ItemPlay	NO_PROGRESS	
+80921	Talk	pvp	2
+80922	Talk	pvp	2
+80933	Talk	pvp	8
+80934	Talk	pvp	8
+80935	Talk	pvp	8
+80936	Talk	pvp	8
+80937	Talk	pvp	8
+80938	Talk	pvp	8
+80939	Talk	NO_PROGRESS	
+80940	ItemPlay	NO_PROGRESS	
+80952	Talk	NO_PROGRESS	
+80954	Talk	NO_PROGRESS	
+80955	Talk	pvp	1
+80956	Talk	pvp	5
+80958	Talk	collectitem+hunt	IDF5_TD_DragonRider_Chief_N_65_Al 1;|world_event_usernpc_npc_legion
+80960	Talk	NO_PROGRESS	
+80961	ItemPlay	hunt	FireSanctuaryQueenBoss_37_Ae 1;
+80978	Talk	itemplay	world_wrap_event_halloween_polymorph
+80989	Talk	talk	IDRUN_Quest_Reward
+80990	Talk	talk	IDRUN_Quest_Reward

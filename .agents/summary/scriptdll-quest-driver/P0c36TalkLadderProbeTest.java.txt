@@ -1,0 +1,163 @@
+// P0c-36 临时探针源码归档（用毕即删；树内文件已移除）。
+// Archived source of the temporary P0c-36 probe (deleted from the test tree after use).
+// 运行：mvn -o -B test -Dtest=P0c36TalkLadderProbeTest
+// 复现的实测输出见同目录 p0c36-probe-out.txt（24202 transitions=43 collectingStep=2；80320 transitions=38 collectingStep=1）。
+// 说明：本文件是对该探针的重建（原源文件已删除且未入库），查询与打印语句与首轮运行一致，并在最终树态上重跑取收据。
+// Note: faithful reconstruction of the deleted probe; identical queries/prints, re-run on the final tree state for the receipt.
+
+package com.aionemu.gameserver.questEngine.definition;
+
+import com.aionemu.gameserver.questEngine.retail.RetailClientDialogExits;
+import com.aionemu.gameserver.questEngine.retail.RetailClientRewardNpcs;
+import com.aionemu.gameserver.questEngine.retail.RetailClientSummaryRows;
+import com.aionemu.gameserver.questEngine.retail.RetailClientTalkChainSteps;
+import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
+import com.aionemu.gameserver.questEngine.retail.RetailNpcNameIndex;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
+import com.aionemu.gameserver.questEngine.retail.RetailQuestXmlTable;
+import com.aionemu.gameserver.questEngine.retail.RetailSimpleTalkDefinitionCompiler;
+import com.aionemu.gameserver.questEngine.retail.RetailSimpleTalkTable;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+/**
+ * P0c-36 探针（临时，用毕即删；源码归档 .agents/summary/scriptdll-quest-driver/P0c36TalkLadderProbeTest.java.txt）。
+ * 打印 24202/80320 合成后的节点阶梯、路由全集与掉落 collectingStep，供人工核对阶梯形状。
+ * Temporary P0c-36 probe: dumps the synthesised node ladder, transition set and drop collecting steps.
+ */
+class P0c36TalkLadderProbeTest {
+
+	private static final int[] QUESTS = {24202, 80320};
+	private static RetailSimpleTalkTable table;
+	private static RetailQuestXmlTable retailTable;
+	private static RetailClientDialogExits clientDialogExits;
+	private static RetailClientSummaryRows clientSummaryRows;
+	private static RetailClientRewardNpcs clientRewardNpcs;
+	private static RetailClientTalkChainSteps chainSteps;
+	private static RetailNpcNameIndex npcIndex;
+	private static RetailItemNameIndex itemIndex;
+	private static Map<String, Integer> randomRewards;
+	private static Map<Integer, Integer> nameIds;
+
+	@BeforeAll
+	static void loadFixtures() throws Exception {
+		try (InputStream input = open("/aion/data/static_data/quest_retail/Quest_SimpleTalk.xml")) {
+			table = RetailSimpleTalkTable.load(input);
+		}
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest.xml")) {
+			retailTable = RetailQuestXmlTable.load(input);
+		}
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_dialog_exits.tsv")) {
+			clientDialogExits = RetailClientDialogExits.load(input);
+		}
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_summary_rows.tsv")) {
+			clientSummaryRows = RetailClientSummaryRows.load(input);
+		}
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_reward_npcs.tsv")) {
+			clientRewardNpcs = RetailClientRewardNpcs.load(input);
+		}
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_talk_chain_steps.tsv")) {
+			chainSteps = RetailClientTalkChainSteps.load(input);
+		}
+		npcIndex = RetailNpcNameIndex.build(openAll("/aion/data/static_data/npcs/", listXmlNames("/aion/data/static_data/npcs/")));
+		itemIndex = RetailItemNameIndex.build(openAll("/aion/data/static_data/items/item/",
+			listXmlNames("/aion/data/static_data/items/item/")));
+		randomRewards = randomRewardIds();
+		nameIds = nameIds();
+	}
+
+	@Test
+	void dumpLadder() throws Exception {
+		for (int questId : QUESTS) {
+			var entry = table.find(questId).orElseThrow();
+			var metadataOutcome = RetailQuestMetadataCompiler.compile(retailTable.find(questId).orElseThrow(), npcIndex,
+				itemIndex, randomRewards, nameIds);
+			QuestMetadata metadata = metadataOutcome.metadata();
+			var outcome = RetailSimpleTalkDefinitionCompiler.compile(entry, npcIndex, metadataOutcome,
+				clientDialogExits, clientSummaryRows, clientRewardNpcs, chainSteps);
+			QuestDefinition definition = outcome.definition().definition();
+			System.out.println("=== " + questId + " transitions=" + definition.transitions().size()
+				+ " drops=" + metadata.drops());
+			for (QuestNode node : definition.nodes()) {
+				System.out.println("  NODE " + node.label() + " " + node.projection().status()
+					+ " " + node.projection().variables());
+			}
+			for (QuestTransition transition : definition.transitions()) {
+				System.out.println("  R " + transition.sourceNode() + " -> " + transition.targetNode()
+					+ " " + transition.event() + " after=" + transition.afterCommit());
+			}
+		}
+	}
+
+	private static Map<String, Integer> randomRewardIds() throws Exception {
+		Map<String, Integer> ids = new HashMap<>();
+		var document = parse(open("/aion/data/static_data/quest_random_rewards.xml"));
+		var nodes = document.getDocumentElement().getElementsByTagName("quest_random_reward");
+		for (int index = 0; index < nodes.getLength(); index++) {
+			var element = (org.w3c.dom.Element) nodes.item(index);
+			ids.put(element.getElementsByTagName("name").item(0).getTextContent().trim(),
+				Integer.parseInt(element.getElementsByTagName("id").item(0).getTextContent().trim()));
+		}
+		return ids;
+	}
+
+	private static Map<Integer, Integer> nameIds() throws Exception {
+		Map<Integer, Integer> ids = new HashMap<>();
+		for (String line : lines(open("/aion/data/static_data/quest_retail/quest_name_string_ids.tsv"))) {
+			if (line.startsWith("#") || line.isBlank()) {
+				continue;
+			}
+			String[] parts = line.split("\t");
+			ids.put(Integer.parseInt(parts[0].substring("STR_QUEST_NAME_Q".length())), Integer.parseInt(parts[1]));
+		}
+		return ids;
+	}
+
+	private static List<String> listXmlNames(String dir) throws Exception {
+		var url = P0c36TalkLadderProbeTest.class.getResource(dir);
+		assertNotNull(url, "missing dir " + dir);
+		java.io.File[] files = new java.io.File(url.toURI()).listFiles((directory, name) -> name.endsWith(".xml"));
+		assertNotNull(files);
+		return java.util.Arrays.stream(files).map(java.io.File::getName).sorted().toList();
+	}
+
+	private static org.w3c.dom.Document parse(InputStream input) throws Exception {
+		try (input) {
+			var factory = javax.xml.parsers.DocumentBuilderFactory.newInstance();
+			factory.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, true);
+			factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+			return factory.newDocumentBuilder().parse(input);
+		}
+	}
+
+	private static List<InputStream> openAll(String dir, List<String> files) throws Exception {
+		List<InputStream> inputs = new ArrayList<>();
+		for (String file : files) {
+			inputs.add(open(dir + file));
+		}
+		return inputs;
+	}
+
+	private static List<String> lines(InputStream input) throws Exception {
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
+			return reader.lines().toList();
+		}
+	}
+
+	private static InputStream open(String resource) throws Exception {
+		InputStream input = P0c36TalkLadderProbeTest.class.getResourceAsStream(resource);
+		assertNotNull(input, "missing resource " + resource);
+		return input;
+	}
+}

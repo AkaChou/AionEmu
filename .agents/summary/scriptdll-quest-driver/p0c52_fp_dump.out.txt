@@ -1,0 +1,16 @@
+[ERROR] Tests run: 6, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 3.153 s <<< FAILURE! -- in com.aionemu.gameserver.questEngine.retail.RetailDataDrivenGateTest
+[ERROR] com.aionemu.gameserver.questEngine.retail.RetailDataDrivenGateTest.frozenFingerprintsCoverExactlyTheRetiredQuests -- Time elapsed: 0.257 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: 冻结集合与退役集合不一致：frozen=1150 retired=1174 ==> expected: <true> but was: <false>
+	at com.aionemu.gameserver.questEngine.retail.RetailDataDrivenGateTest.frozenFingerprintsCoverExactlyTheRetiredQuests(RetailDataDrivenGateTest.java:450)
+
+[ERROR] com.aionemu.gameserver.questEngine.retail.RetailDataDrivenGateTest.driftVersusShellsIsRegistered -- Time elapsed: 0.003 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: DataDriven 漂移登记失同步：[20035: 登记=REJECTED:RETAIL_TALK_HUNT_CHAIN_DEFERRED 实际=REJECTED:RETAIL_ITEMPLAY_OUTPUT_UNRESOLVED] ==> expected: <true> but was: <false>
+	at com.aionemu.gameserver.questEngine.retail.RetailDataDrivenGateTest.driftVersusShellsIsRegistered(RetailDataDrivenGateTest.java:409)
+
+[ERROR] Failures: 
+[ERROR]   RetailDataDrivenGateTest.driftVersusShellsIsRegistered:409 DataDriven 漂移登记失同步：[20035: 登记=REJECTED:RETAIL_TALK_HUNT_CHAIN_DEFERRED 实际=REJECTED:RETAIL_ITEMPLAY_OUTPUT_UNRESOLVED] ==> expected: <true> but was: <false>
+[ERROR]   RetailDataDrivenGateTest.frozenFingerprintsCoverExactlyTheRetiredQuests:450 冻结集合与退役集合不一致：frozen=1150 retired=1174 ==> expected: <true> but was: <false>
+[ERROR] Tests run: 6, Failures: 2, Errors: 0, Skipped: 0
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project aionemu: There are test failures.
+
+[full output: "$HOME/Library/Application Support/rtk/tee/1790412489_mvn_quiet.log"]

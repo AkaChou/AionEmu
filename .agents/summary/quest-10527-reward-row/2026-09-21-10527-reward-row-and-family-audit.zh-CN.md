@@ -4365,3 +4365,25 @@ Bitter or Sweet?”四个同构任务，客户端 `quest_summary` 都是三行�
   不得据本条宣称它们已通过验收。
 - 本条登记进 memory-bank QE-051 的 `validation`（client 层）与代表案例行；审计口径与门禁
   （`ArchdaevaRewardRowContractTest`、`AlignedMirrorRewardRowContractTest` 等）不变。
+
+## 五十八、勘误（2026-09-22）：10528/20528 的领奖投影不是末行 12，而是 legacy 落盘 step 11
+
+- 用户口径（本轮最终，两次明确给出 11，并显式推翻了 12/13）：
+  「任务要求发动了 2 次实体，start 最后是 11，然后奖励是 reward 11」——
+  即交付后的领奖态**保持在第 11 行**（「使用召唤道具、威扎波波醒来后和他对话」），不是末行 12。
+- 因此本报告第二、三、七节里「10528 reward 投影 11 -> 12、交接写 12、镜像 20528 本就是 12」的处置
+  **被本勘误推翻**：`changeQuestStep(env, from, to, true)` 的 `to` 从不写盘（旧 helper 在 reward=true 时
+  只置状态），legacy 落盘 step 是 `from=11`；客户端末行 12（「和代理人 X 对话」）只是第 0 行的复述，
+  属 QE-051 的「末行 = 第 0 行重复行」例外情形，按客户端验收值记例外。
+- 现状（本批修复后）：`10528.xml` / `20528.xml` 的 `reward` 投影 = 11，交接不再回写该字段，
+  无 source `enter-world` 自愈边方向反转为 `REWARD/var0=12 -> 11`，`var0` 的 `max` 仍为 12
+  （旧存档要 pack 得动，QE-047）；门禁 `ArchdaevaRewardRowContractTest` 同步改断言。
+- 审计登记：10528/20528 进入 `audit_reward_row_vs_client_steps.py` 的 `LEGACY_STEP_EXCEPTION`
+  （QE-054 家族），判定变为 `ROW_BEHIND / ROW_WITHOUT_STATE(rows_without_state=12)` 属**已登记例外**，
+  不是待修缺陷。
+- 效力边界：本条**只针对 10528/20528**。10527 的 15（§五十七 实机验收）保持不变；
+  同族 10525/20525、10526/20526、10529/20529 等 36 个「reward = 末行 = 最后 START + 1」的歧义带任务
+  仍未实机复核，禁止按任一方向批量改，清单与判据见
+  `.agents/summary/quest-20528-reward-row/2026-09-22-20528-reward-row-legacy-step.zh-CN.md` §六。
+- 验收边界：本批只完成静态验证（XML 良构 + 审计脚本重跑 + 家族扫描）；聚焦 Maven 测试、生产目录与
+  白名单门禁**未执行**（无构建授权），修复后的客户端实机复测 **PENDING_CLIENT**，不得据此宣称验收完成。

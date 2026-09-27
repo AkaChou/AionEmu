@@ -1,0 +1,8 @@
+80751	NODES	unaccepted=NONE/0 started=START/0 reward=REWARD/1 complete=COMPLETE/0
+80751	T	unaccepted>TalkToNpc[npcId=833629, dialogId=31, interactionObjectId=0]>unaccepted>[]>[]>[ShowQuestDialog[dialogId=1011]]
+80751	T	complete>TalkToNpc[npcId=833629, dialogId=31, interactionObjectId=0]>complete>[StartEligible[]]>[]>[ShowQuestDialog[dialogId=1011]]
+80751	T	started>KillNpcSet[npcIds=[237261]]>started>[VariableBelow[field=var0, value=0]]>[IncrementVariable[field=var0, delta=1]]>[SyncQuestState[mode=PACKET_ONLY]]
+80751	T	started>KillNpcSet[npcIds=[237261]]>reward>[QuestVariableIs[field=var0, value=0]]>[IncrementVariable[field=var0, delta=1]]>[SyncQuestState[mode=LEVEL_AND_VISIBILITY_REFRESH]]
+80751	T	reward>TalkToNpc[npcId=833629, dialogId=31, interactionObjectId=0]>reward>[]>[]>[ShowQuestDialog[dialogId=2375]]
+80751	T	reward>TalkToNpc[npcId=833629, dialogId=20002, interactionObjectId=0]>reward>[]>[]>[ShowQuestDialog[dialogId=5]]
+80751	T	reward>TalkToNpc[npcId=833629, dialogId=1009, interactionObjectId=0]>reward>[]>[]>[ShowQuestDialog[dialogId=5]]

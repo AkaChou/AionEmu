@@ -1,0 +1,5 @@
+baseline=110 candidate=112
+ADDED x2 (in candidate only):
+  + Quest13765RetailAlignmentTest.preservesWeeklyMetadataKillTargetAndThreeGuardNpcs  L22 » NoSuchFile src/main/resources/aion/data/static_data/quest_definition/quests/13765.xml
+  + QuestKillCounterRetailGateTest.simulatorReproducesTheFixedOverkillDrift  L79 » NoSuchElement No value present
+REMOVED x0 (in baseline only):

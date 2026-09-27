@@ -1,0 +1,67 @@
+// P0c-37 临时探针源码归档（用毕即删；树内文件已移除）。
+// Archived source of the temporary P0c-37 probe (deleted from the test tree after use).
+// 运行：mvn -o -B test -Dtest=P0c37LadderProbeTest
+// 实测输出见同目录 p0c37-ladder-probe-out.txt。
+
+package com.aionemu.gameserver.questEngine.definition;
+
+import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
+
+import org.junit.jupiter.api.Test;
+
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 临时探针（P0c-37）：阶梯余量分批的"改动前/后"对拍——①生产视图契约审计逐页判定（中间页是否
+ * `CLIENT_PAGE_UNREACHED`）②该行编译后的节点/路由/掉落（阶梯形状核对）。登记表已同步 target/classes。
+ * Temporary P0c-37 probe: client-contract verdicts and the compiled IR for the ladder batch rows.
+ */
+class P0c37LadderProbeTest {
+
+	/** 本片批次（P0c-37 裁定表）+ 两个同族对照行（24202/80320 已阶梯化）。 */
+	private static final int[] QUESTS = {1479, 35010, 35018, 35024, 45011, 45025, 24202, 80320};
+
+	@Test
+	void auditAndIrDump() throws Exception {
+		QuestCatalog catalog = RetailQuestDriver.overlay(
+			QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader()));
+		Map<Integer, QuestDialogOrderAudit.ClientQuest> clientQuests = QuestDialogOrderAudit.readClientPages(
+			Path.of("docs/quest/client-dialog-mapping/quest-dialog-pages.csv"),
+			Path.of("docs/quest/client-dialog-mapping/quest-dialog-action-details.csv"));
+		List<QuestDialogOrderAudit.AuditRow> rows = QuestDialogOrderAudit.audit(catalog, clientQuests);
+		List<QuestDialogOrderAudit.AuditRow> fatal = rows.stream()
+			.filter(row -> row.unresolvedReason().startsWith("visible client action has no route")
+				|| row.unresolvedReason().startsWith(
+					"compiled IR emits a task page absent from the active client page index"))
+			.toList();
+		System.out.println("PRODUCTION-FATAL total=" + fatal.size());
+		for (int questId : QUESTS) {
+			List<QuestDialogOrderAudit.AuditRow> mine = rows.stream()
+				.filter(row -> row.questId() == questId).toList();
+			System.out.println("=== " + questId + " audit rows=" + mine.size());
+			mine.forEach(row -> System.out.println("  AUDIT page=" + row.shownPage()
+				+ " client=" + row.clientVisibleAction() + " status=" + row.auditStatus()
+				+ " reason=" + row.unresolvedReason()));
+			boolean fatalHit = fatal.stream().anyMatch(row -> row.questId() == questId);
+			System.out.println("  FATAL_HIT=" + fatalHit);
+			var compiled = catalog.findExecutable(questId).orElse(null);
+			if (compiled == null) {
+				System.out.println("  (no executable definition)");
+				continue;
+			}
+			QuestDefinition definition = compiled.definition();
+			System.out.println("  transitions=" + definition.transitions().size()
+				+ " drops=" + definition.metadata().drops());
+			for (QuestNode node : definition.nodes()) {
+				System.out.println("  NODE " + node.label() + " " + node.projection().status()
+					+ " " + node.projection().variables());
+			}
+			definition.transitions().stream()
+				.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc)
+				.forEach(transition -> System.out.println("  R " + transition.sourceNode() + " -> "
+					+ transition.targetNode() + " " + transition.event()));
+		}
+	}
+}

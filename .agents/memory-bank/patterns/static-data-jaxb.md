@@ -14,12 +14,12 @@
 status: CONFIRMED
 scope: Dynamic script loading, AI classes, command handlers and data-text mappings
 first_seen: 2026-09-09
-last_verified: 2026-09-21
+last_verified: 2026-09-22
 symptom: 静态搜索无引用却删除后启动失败、AI 或技能 XML 无法加载、命令别名静默失效
 root_cause: Runtime discovers classes through package scanning, reflection and data attributes rather than static Java calls
 fix_or_guardrail: Preserve dynamic package trees and search aion data text before rename or deletion; verify command aliases in administration/commands.properties against super("alias") declarations in both directions
 evidence: src/main/java/com/aionemu/commons/scripting/CompiledScriptLoader.java; src/main/resources/aion/data/static_data/npcs/; src/test/java/com/aionemu/gameserver/commands/CommandAliasRegistryTest.java; .agents/summary/command-alias-registry/2026-09-21-dropinfo-removal-and-command-alias-gate.md
-validation: static; runtime loader logs when the affected package or data is exercised; client acceptance 2026-09-21 for the restored //dropinfo (CommandAliasRegistryTest still pending Maven run)
+validation: static; `mvn -Dtest="com.aionemu.gameserver.commands.CommandAliasRegistryTest" test` passed 2026-09-22 (4/4) covering the reflective admin/player alias registry (`//movetonpc` etc.); runtime loader logs when the affected package or data is exercised; client acceptance 2026-09-21 for the restored //dropinfo
 boundaries: Package allowlists do not prove every class is used; validate the specific loader and data version
 superseded_by: none
 first_check: CompiledScriptLoader, @AIName, data-text references and administration/commands.properties aliases vs command super("alias") declarations (both directions)

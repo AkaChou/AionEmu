@@ -1,0 +1,5 @@
+# **已迁移（P0c-11，2026-09-25）**：本登记表的规范位置 =
+#   `src/test/resources/quest/retail-legacy-save-normalization.tsv`（受 RetailNonIrAxisGateTest 门禁守）。
+# 后续登记请写规范位置，并重跑 `python3 -B .agents/summary/scriptdll-quest-driver/p0c11_build_non_ir_registry.py`
+# 刷新统一登记表 `retail-non-ir-axis-registry.tsv`。本文件仅为历史存档，勿再追加。
+

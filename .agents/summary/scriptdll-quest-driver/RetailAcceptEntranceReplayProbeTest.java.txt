@@ -1,0 +1,45 @@
+package com.aionemu.gameserver.questEngine.definition;
+
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+/**
+ * 临时探针（P0c-32）：接取入口两形放行的 9 行采纳后形状直证（lenient overlay）。
+ * 每行：unaccepted→started 接取入口存在 + reward→complete 完成路存在 + 无 unaccepted→reward 直跳；
+ * 1479 另证 reward 投影 = 2（客户端任务书 3 行 → 0 基末行索引）。
+ * Temporary probe: post-adoption shape evidence for the 9 accept-entrance rows.
+ */
+class RetailAcceptEntranceReplayProbeTest {
+
+	private static final Map<Integer, Integer> REWARD_PROJECTIONS = Map.of(1479, 2, 1323, 2, 2611, 3,
+		3001, 3, 3023, 3, 21136, 2, 24123, 1, 24202, 2, 80320, 1);
+
+	@Test
+	void acceptedRowsCarryEntranceCompletionAndRegisteredProjections() {
+		for (var entry : new TreeMap<>(REWARD_PROJECTIONS).entrySet()) {
+			int questId = entry.getKey();
+			QuestDefinition definition = ProductionQuestDefinitions.definitionInOverlay(questId).definition();
+			boolean entrance = definition.transitions().stream()
+				.anyMatch(t -> "unaccepted".equals(t.sourceNode()) && "started".equals(t.targetNode()));
+			assertTrue(entrance, () -> questId + " must carry an unaccepted->started entrance");
+			boolean completion = definition.transitions().stream()
+				.anyMatch(t -> "reward".equals(t.sourceNode()) && "complete".equals(t.targetNode()));
+			assertTrue(completion, () -> questId + " must carry a reward->complete route");
+			assertFalse(definition.transitions().stream()
+					.anyMatch(t -> "unaccepted".equals(t.sourceNode()) && "reward".equals(t.targetNode())),
+				() -> questId + " must not bypass started");
+			QuestNode reward = definition.nodes().stream()
+				.filter(n -> "reward".equals(n.label())).findFirst().orElseThrow();
+			assertEquals(Map.of("var0", entry.getValue()), reward.projection().variables(),
+				() -> questId + " reward projection must match the client journal row");
+		}
+	}
+}

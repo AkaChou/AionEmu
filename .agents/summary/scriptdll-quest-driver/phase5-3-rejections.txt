@@ -1,0 +1,3 @@
+# phase5-3 旧拒绝表：已清空。
+# P0c-9（2026-09-24）：23 行经 p0c8c 判据机逐行裁定（16 ADOPT 退役 / 7 KEEP 并码入缺口表），
+# 逐行证据见 p0c9-decisions.tsv（batch=phase53）与 p0c9-phase53-shape-census.tsv。

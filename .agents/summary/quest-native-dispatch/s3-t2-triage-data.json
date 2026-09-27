@@ -1,0 +1,5574 @@
+{
+ "lane": "quest-native-dispatch",
+ "slice": "SimpleTalk S3 / gamma face",
+ "role": "T2 triage pre-screen (read-only)",
+ "snapshot": "2026-09-27 16:05:40",
+ "discipline": "machine pre-screen, not a verdict; no Maven, no compile, no test run, no source/test/TSV edit; python3 -B; artifacts in /tmp",
+ "commands": {
+  "selector_s3": "python3 -B .agents/summary/scriptdll-quest-driver/affected_quest_tests.py --json $(cat /tmp/s3-ids.txt | tr \"\\n\" \" \")",
+  "selector_285": "python3 -B .agents/summary/scriptdll-quest-driver/affected_quest_tests.py --json $(cat /tmp/s2-chain-ids.txt | tr \"\\n\" \" \")",
+  "triage": "python3 -B /tmp/s3_triage.py s3   # 复用 /tmp/s2_triage.py 的掩码/硬命中口径，含 S1+S2 双重校准"
+ },
+ "scale": {
+  "xml_id_blocks": 3152,
+  "retail_table_simpletalk": 2089,
+  "chain285": 285,
+  "G1_dual_block": 203,
+  "G1_pure_block": 203,
+  "G1_equals_pureblock": true,
+  "G2_pure": 80,
+  "G3_pure": 2,
+  "system_grant_rows": 14,
+  "S3": 82,
+  "block_shapes": {
+   "COMPLETE+START": 60,
+   "COMPLETE": 10,
+   "none": 7,
+   "START": 3,
+   "REPORT": 1,
+   "COMPLETE+REPORT": 1
+  }
+ },
+ "selector": {
+  "s3": {
+   "scanned": 1105,
+   "affected": 30,
+   "unmatched": 25,
+   "unmatched_ids": [
+    "1394",
+    "2553",
+    "2963",
+    "3218",
+    "4209",
+    "4218",
+    "4970",
+    "28809",
+    "30711",
+    "30761",
+    "35010",
+    "35011",
+    "35017",
+    "35018",
+    "35024",
+    "35026",
+    "45010",
+    "45011",
+    "45017",
+    "45018",
+    "45024",
+    "45025",
+    "45026",
+    "80320",
+    "80752"
+   ],
+   "missing_t1_gates": [],
+   "elapsed": 1.594001,
+   "passed": true,
+   "selector_lengths": {
+    "affected": 2352,
+    "gates": 1654,
+    "combined": 3937
+   },
+   "gate_classes": 23,
+   "gate_mode": "t1-fixed"
+  },
+  "recheck285": {
+   "scanned": 1105,
+   "affected": 82,
+   "unmatched": 45,
+   "elapsed": 4.790908,
+   "passed": true,
+   "selector_lengths": {
+    "affected": 6385,
+    "gates": 1654,
+    "combined": 7898
+   },
+   "missing_t1_gates": []
+  }
+ },
+ "set_arithmetic": {
+  "A82_subset_A285": true,
+  "A285_equals_S2_recorded": true,
+  "A285_minus_A82": 52,
+  "S3_classes_all_pure_gamma": true,
+  "mixed_face": 0,
+  "s3_ids_referenced": 57,
+  "s3_ids_unreferenced": 25,
+  "unmatched_delta_vs_s2": {
+   "s2_45_plus_delta": "2421 gained coverage via RetailSimpleTalkChainGateTest (14:09:34 comment)"
+  },
+  "S3_classes_mixed_face": 13,
+  "S3_classes_pure_gamma": 17,
+  "mixed_face_classes": [
+   "JournalRewardRowRepairContractTest",
+   "ReportToManyLegacyFlowRegressionTest",
+   "RetailSingleStepRewardRowContractTest",
+   "QuestMultistepChainContractTest",
+   "QuestDialogOrderAuditTest",
+   "ReportToManyDialogRouteRegressionTest",
+   "EarlyElyosQuestRegressionTest",
+   "QuestDialog31RegressionTest",
+   "QuestPrerequisiteRetailContractTest",
+   "LegacyTemplateMirrorRouteRegressionTest",
+   "AlignedMirrorRewardRowContractTest",
+   "InstanceServiceTest",
+   "QuestMinionTutorialRetailAlignmentTest"
+  ],
+  "pure_gamma_classes": [
+   "Batch29RewardRowClosureContractTest",
+   "Batch31GelkmarosRowLadderContractTest",
+   "EquipmentSettingUseActionTest",
+   "EquipmentTest",
+   "Quest1118ProductionFlowTest",
+   "Quest1152RetailAlignmentTest",
+   "Quest1163ClientDialogAlignmentTest",
+   "Quest19004RetailAlignmentTest",
+   "Quest2953RetailFlowAlignmentTest",
+   "Quest3100ClientDialogAlignmentTest",
+   "QuestA03ShardRetailAlignmentTest",
+   "QuestMovieAndDialogLoopRegressionTest",
+   "QuestStartItemDefinitionRegressionTest",
+   "ReportToManySetSucceedAlignmentTest",
+   "RetailQuestContractTest",
+   "RewardNpcOwnershipContractTest",
+   "TreeLadderOwnerTrimContractTest"
+  ],
+  "method_note": "混合面判定必须用 285 口径的 class_hits；用 S3 口径会循环论证地得到 MIX=0"
+ },
+ "tiers": {
+  "t1": [
+   "com.aionemu.gameserver.questEngine.definition.AlignedMirrorRewardRowContractTest",
+   "com.aionemu.gameserver.questEngine.definition.Batch31GelkmarosRowLadderContractTest",
+   "com.aionemu.gameserver.questEngine.definition.EarlyElyosQuestRegressionTest",
+   "com.aionemu.gameserver.questEngine.definition.LegacyTemplateMirrorRouteRegressionTest",
+   "com.aionemu.gameserver.questEngine.definition.Quest1152RetailAlignmentTest",
+   "com.aionemu.gameserver.questEngine.definition.Quest1163ClientDialogAlignmentTest",
+   "com.aionemu.gameserver.questEngine.definition.Quest2953RetailFlowAlignmentTest",
+   "com.aionemu.gameserver.questEngine.definition.Quest3100ClientDialogAlignmentTest",
+   "com.aionemu.gameserver.questEngine.definition.QuestA03ShardRetailAlignmentTest",
+   "com.aionemu.gameserver.questEngine.definition.QuestDialog31RegressionTest",
+   "com.aionemu.gameserver.questEngine.definition.QuestDialogOrderAuditTest",
+   "com.aionemu.gameserver.questEngine.definition.QuestMovieAndDialogLoopRegressionTest",
+   "com.aionemu.gameserver.questEngine.definition.QuestMultistepChainContractTest",
+   "com.aionemu.gameserver.questEngine.definition.ReportToManyDialogRouteRegressionTest",
+   "com.aionemu.gameserver.questEngine.definition.ReportToManyLegacyFlowRegressionTest",
+   "com.aionemu.gameserver.questEngine.definition.ReportToManySetSucceedAlignmentTest",
+   "com.aionemu.gameserver.questEngine.definition.RewardNpcOwnershipContractTest",
+   "com.aionemu.gameserver.questEngine.definition.TreeLadderOwnerTrimContractTest",
+   "com.aionemu.gameserver.questEngine.e2e.RetailQuestContractTest",
+   "com.aionemu.gameserver.questEngine.runtime.Quest1118ProductionFlowTest"
+  ],
+  "both": [
+   "com.aionemu.gameserver.questEngine.definition.QuestMovieAndDialogLoopRegressionTest"
+  ],
+  "t2": [],
+  "t3": [
+   "com.aionemu.gameserver.model.gameobjects.player.EquipmentTest",
+   "com.aionemu.gameserver.network.aion.clientpackets.EquipmentSettingUseActionTest",
+   "com.aionemu.gameserver.questEngine.definition.Batch29RewardRowClosureContractTest",
+   "com.aionemu.gameserver.questEngine.definition.JournalRewardRowRepairContractTest",
+   "com.aionemu.gameserver.questEngine.definition.Quest19004RetailAlignmentTest",
+   "com.aionemu.gameserver.questEngine.definition.QuestMinionTutorialRetailAlignmentTest",
+   "com.aionemu.gameserver.questEngine.definition.QuestPrerequisiteRetailContractTest",
+   "com.aionemu.gameserver.questEngine.definition.QuestStartItemDefinitionRegressionTest",
+   "com.aionemu.gameserver.questEngine.definition.RetailSingleStepRewardRowContractTest",
+   "com.aionemu.gameserver.services.instance.InstanceServiceTest"
+  ]
+ },
+ "tier_counts": {
+  "t1_with_overlap": 20,
+  "both": 1,
+  "t2_independent": 0,
+  "t3": 10
+ },
+ "buckets": {
+  "W 交付段页链单点": [
+   "Quest1152RetailAlignmentTest",
+   "Quest1163ClientDialogAlignmentTest",
+   "Quest2953RetailFlowAlignmentTest",
+   "Quest3100ClientDialogAlignmentTest",
+   "QuestDialogOrderAuditTest"
+  ],
+  "X 报告段2375路由表": [
+   "ReportToManyLegacyFlowRegressionTest",
+   "ReportToManyDialogRouteRegressionTest",
+   "ReportToManySetSucceedAlignmentTest",
+   "TreeLadderOwnerTrimContractTest",
+   "LegacyTemplateMirrorRouteRegressionTest"
+  ],
+  "Y 多步阶梯页梯": [
+   "QuestMultistepChainContractTest",
+   "Batch31GelkmarosRowLadderContractTest"
+  ],
+  "Z 奖励行镜像行契约": [
+   "AlignedMirrorRewardRowContractTest",
+   "QuestA03ShardRetailAlignmentTest",
+   "RewardNpcOwnershipContractTest",
+   "QuestDialog31RegressionTest"
+  ],
+  "AA 生产流e2e走查": [
+   "Quest1118ProductionFlowTest",
+   "RetailQuestContractTest",
+   "EarlyElyosQuestRegressionTest"
+  ],
+  "AB 过场轴(档1∩档2)": [
+   "QuestMovieAndDialogLoopRegressionTest"
+  ]
+ },
+ "entries": {
+  "com.aionemu.gameserver.model.gameobjects.player.EquipmentTest": {
+   "file": "src/test/java/com/aionemu/gameserver/model/gameobjects/player/EquipmentTest.java",
+   "ids_chain285": [
+    3001
+   ],
+   "ids_s3": [
+    3001
+   ],
+   "ids_g1": [],
+   "tier": [
+    "t3"
+   ],
+   "bucket": "-",
+   "h1": [],
+   "h2": [],
+   "mtime": "2026-09-09 14:38:29",
+   "old_form_lines": {},
+   "s2_tier": "t3",
+   "s2_ids_n": 1,
+   "s2_bucket": "-",
+   "ids_g2": [
+    3001
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    3001
+   ],
+   "mixed_face": false,
+   "n_ids_s3": 1,
+   "n_ids_g1": 0
+  },
+  "com.aionemu.gameserver.network.aion.clientpackets.EquipmentSettingUseActionTest": {
+   "file": "src/test/java/com/aionemu/gameserver/network/aion/clientpackets/EquipmentSettingUseActionTest.java",
+   "ids_chain285": [
+    3001
+   ],
+   "ids_s3": [
+    3001
+   ],
+   "ids_g1": [],
+   "tier": [
+    "t3"
+   ],
+   "bucket": "-",
+   "h1": [],
+   "h2": [],
+   "mtime": "2026-09-21 23:24:11",
+   "old_form_lines": {},
+   "s2_tier": "t3",
+   "s2_ids_n": 1,
+   "s2_bucket": "-",
+   "ids_g2": [
+    3001
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    3001
+   ],
+   "mixed_face": false,
+   "n_ids_s3": 1,
+   "n_ids_g1": 0
+  },
+  "com.aionemu.gameserver.questEngine.definition.AlignedMirrorRewardRowContractTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/AlignedMirrorRewardRowContractTest.java",
+   "ids_chain285": [
+    11294,
+    19004,
+    29004
+   ],
+   "ids_s3": [
+    19004,
+    29004
+   ],
+   "ids_g1": [
+    11294
+   ],
+   "tier": [
+    "t1"
+   ],
+   "bucket": "Z 奖励行镜像行契约",
+   "h1": [
+    "CHECK_USER_HAS_QUEST_ITEM",
+    "SELECT_QUEST_REWARD"
+   ],
+   "h2": [],
+   "mtime": "2026-09-25 12:14:51",
+   "old_form_lines": {
+    "CHECK_USER_HAS_QUEST_ITEM": {
+     "code": [
+      {
+       "line": 70,
+       "assert": false,
+       "neg": false,
+       "text": "new QuestEvent.TalkToNpc(806093, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()),"
+      },
+      {
+       "line": 80,
+       "assert": false,
+       "neg": false,
+       "text": "new QuestEvent.TalkToNpc(804917, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()),"
+      }
+     ]
+    },
+    "SELECT_QUEST_REWARD": {
+     "code": [
+      {
+       "line": 57,
+       "assert": false,
+       "neg": false,
+       "text": "new QuestEvent.TalkToNpc(804698, QuestDialogAction.SELECT_QUEST_REWARD.id()),"
+      },
+      {
+       "line": 62,
+       "assert": false,
+       "neg": false,
+       "text": "new QuestEvent.TalkToNpc(804700, QuestDialogAction.SELECT_QUEST_REWARD.id()),"
+      },
+      {
+       "line": 65,
+       "assert": false,
+       "neg": false,
+       "text": "new QuestEvent.TalkToNpc(804891, QuestDialogAction.SELECT_QUEST_REWARD.id()),"
+      }
+     ]
+    }
+   },
+   "s2_tier": "t1",
+   "s2_ids_n": 3,
+   "s2_bucket": "T",
+   "ids_g2": [
+    19004,
+    29004
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    19004,
+    29004
+   ],
+   "mixed_face": true,
+   "n_ids_s3": 2,
+   "n_ids_g1": 1
+  },
+  "com.aionemu.gameserver.questEngine.definition.Batch29RewardRowClosureContractTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/Batch29RewardRowClosureContractTest.java",
+   "ids_chain285": [
+    11010
+   ],
+   "ids_s3": [
+    11010
+   ],
+   "ids_g1": [],
+   "tier": [
+    "t3"
+   ],
+   "bucket": "-",
+   "h1": [],
+   "h2": [],
+   "mtime": "2026-09-25 00:58:56",
+   "old_form_lines": {},
+   "s2_tier": "t3",
+   "s2_ids_n": 1,
+   "s2_bucket": "-",
+   "ids_g2": [
+    11010
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    11010
+   ],
+   "mixed_face": false,
+   "n_ids_s3": 1,
+   "n_ids_g1": 0
+  },
+  "com.aionemu.gameserver.questEngine.definition.Batch31GelkmarosRowLadderContractTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/Batch31GelkmarosRowLadderContractTest.java",
+   "ids_chain285": [
+    21217
+   ],
+   "ids_s3": [
+    21217
+   ],
+   "ids_g1": [],
+   "tier": [
+    "t1"
+   ],
+   "bucket": "Y 多步阶梯页梯",
+   "h1": [
+    "SELECT5",
+    "SELECT_QUEST_REWARD",
+    "DEFAULT_SUCCESS"
+   ],
+   "h2": [],
+   "mtime": "2026-09-25 23:52:15",
+   "old_form_lines": {
+    "SELECT5": {
+     "code": [
+      {
+       "line": 59,
+       "assert": false,
+       "neg": false,
+       "text": "21217, QuestDialogPage.SELECT5,"
+      },
+      {
+       "line": 60,
+       "assert": false,
+       "neg": false,
+       "text": "21244, QuestDialogPage.SELECT5,"
+      }
+     ],
+     "comment": [
+      {
+       "line": 57,
+       "assert": false,
+       "neg": false,
+       "text": "/** 行 2 的领奖页：21217/21244 是 select5，21249 是 select_success(=DEFAULT_SUCCESS)。 */"
+      }
+     ]
+    },
+    "SELECT_QUEST_REWARD": {
+     "code": [
+      {
+       "line": 164,
+       "assert": false,
+       "neg": false,
+       "text": "contract.rewardNpc(), QuestDialogAction.SELECT_QUEST_REWARD.id(), 0)))"
+      },
+      {
+       "line": 238,
+       "assert": false,
+       "neg": false,
+       "text": "npcId, QuestDialogAction.SELECT_QUEST_REWARD.id(), 0)))"
+      }
+     ]
+    },
+    "DEFAULT_SUCCESS": {
+     "code": [
+      {
+       "line": 61,
+       "assert": false,
+       "neg": false,
+       "text": "21249, QuestDialogPage.DEFAULT_SUCCESS"
+      }
+     ],
+     "comment": [
+      {
+       "line": 57,
+       "assert": false,
+       "neg": false,
+       "text": "/** 行 2 的领奖页：21217/21244 是 select5，21249 是 select_success(=DEFAULT_SUCCESS)。 */"
+      }
+     ]
+    }
+   },
+   "s2_tier": "t1",
+   "s2_ids_n": 1,
+   "s2_bucket": "Q",
+   "ids_g2": [
+    21217
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    21217
+   ],
+   "mixed_face": false,
+   "n_ids_s3": 1,
+   "n_ids_g1": 0
+  },
+  "com.aionemu.gameserver.questEngine.definition.EarlyElyosQuestRegressionTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/EarlyElyosQuestRegressionTest.java",
+   "ids_chain285": [
+    1118,
+    1131,
+    1156,
+    1158,
+    1691
+   ],
+   "ids_s3": [
+    1118
+   ],
+   "ids_g1": [
+    1131,
+    1156,
+    1158,
+    1691
+   ],
+   "tier": [
+    "t1"
+   ],
+   "bucket": "AA 生产流e2e走查",
+   "h1": [
+    "SELECT5",
+    "CHECK_USER_HAS_QUEST_ITEM",
+    "2375",
+    "SELECT_QUEST_REWARD"
+   ],
+   "h2": [],
+   "mtime": "2026-09-27 14:20:30",
+   "old_form_lines": {
+    "SELECT5": {
+     "code": [
+      {
+       "line": 164,
+       "assert": false,
+       "neg": false,
+       "text": "&& dialog.dialogId() == QuestDialogPage.SELECT5.id()),"
+      }
+     ],
+     "string": [
+      {
+       "line": 165,
+       "assert": false,
+       "neg": false,
+       "text": "\"canonical removed the select5 report page\");"
+      }
+     ],
+     "comment": [
+      {
+       "line": 83,
+       "assert": false,
+       "neg": false,
+       "text": "// S2：交付 = QUEST_SELECT(k1→reward) 空门（真端行无 item_check）直翻领奖态并下发奖励窗；SELECT5"
+      },
+      {
+       "line": 143,
+       "assert": false,
+       "neg": false,
+       "text": "// 单道具一档）；报告页 SELECT5(2375) 与 1009 中转随页链退场。"
+      },
+      {
+       "line": 145,
+       "assert": false,
+       "neg": false,
+       "text": "// the first reward window; the SELECT5(2375) report page and the 1009 hop are gone."
+      }
+     ]
+    },
+    "CHECK_USER_HAS_QUEST_ITEM": {
+     "code": [
+      {
+       "line": 442,
+       "assert": false,
+       "neg": false,
+       "text": ".CHECK_USER_HAS_QUEST_ITEM.id()),"
+      }
+     ]
+    },
+    "20002": {
+     "string": [
+      {
+       "line": 443,
+       "assert": false,
+       "neg": false,
+       "text": "\"canonical removed the 39/20002 check pairs\");"
+      }
+     ],
+     "comment": [
+      {
+       "line": 426,
+       "assert": false,
+       "neg": false,
+       "text": "// 交付 = QUEST_SELECT(31) 带整组 HasItem 门直翻领奖态并下发第 1 档奖励窗；39/20002 检查对与"
+      },
+      {
+       "line": 429,
+       "assert": false,
+       "neg": false,
+       "text": "// flipping REWARD with the first reward window; the 39/20002 check pairs and the select6"
+      }
+     ]
+    },
+    "SELECT6": {
+     "comment": [
+      {
+       "line": 427,
+       "assert": false,
+       "neg": false,
+       "text": "// select6 失败页退场（未集齐 = 零路由，关窗兜底交 DialogService）。"
+      },
+      {
+       "line": 429,
+       "assert": false,
+       "neg": false,
+       "text": "// flipping REWARD with the first reward window; the 39/20002 check pairs and the select6"
+      }
+     ]
+    },
+    "2375": {
+     "code": [
+      {
+       "line": 249,
+       "assert": true,
+       "neg": false,
+       "text": "assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(2375)),"
+      },
+      {
+       "line": 359,
+       "assert": false,
+       "neg": false,
+       "text": "new QuestEvent.TalkToNpc(203075, 2375));"
+      },
+      {
+       "line": 362,
+       "assert": false,
+       "neg": false,
+       "text": "new AfterCommitAction.ShowQuestDialog(2375)), handoff.afterCommit());"
+      }
+     ],
+     "comment": [
+      {
+       "line": 143,
+       "assert": false,
+       "neg": false,
+       "text": "// 单道具一档）；报告页 SELECT5(2375) 与 1009 中转随页链退场。"
+      },
+      {
+       "line": 145,
+       "assert": false,
+       "neg": false,
+       "text": "// the first reward window; the SELECT5(2375) report page and the 1009 hop are gone."
+      }
+     ]
+    },
+    "SELECT_QUEST_REWARD": {
+     "code": [
+      {
+       "line": 159,
+       "assert": false,
+       "neg": false,
+       "text": "&& talk.dialogId() != null && talk.dialogId() == QuestDialogAction.SELECT_QUEST_REWARD.id()),"
+      }
+     ]
+    }
+   },
+   "s2_tier": "t1",
+   "s2_ids_n": 5,
+   "s2_bucket": "P",
+   "ids_g2": [
+    1118
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    1118
+   ],
+   "mixed_face": true,
+   "n_ids_s3": 1,
+   "n_ids_g1": 4
+  },
+  "com.aionemu.gameserver.questEngine.definition.JournalRewardRowRepairContractTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/JournalRewardRowRepairContractTest.java",
+   "ids_chain285": [
+    1218,
+    1363,
+    1452,
+    1469,
+    1483,
+    1484,
+    1540,
+    1553,
+    1574,
+    1918,
+    1937,
+    2271,
+    2278,
+    2279,
+    2458,
+    2480,
+    2505,
+    2512,
+    2515,
+    2523,
+    2538,
+    2663,
+    2912,
+    2913,
+    2914,
+    2917,
+    2928,
+    2954,
+    3037,
+    3041,
+    3085,
+    3086,
+    3093,
+    3319,
+    3547,
+    3920,
+    3965,
+    3967,
+    3969,
+    3970,
+    3973,
+    4052,
+    4905,
+    4906,
+    4920,
+    11008,
+    11009,
+    11026,
+    11068,
+    11069,
+    11070,
+    11103,
+    11105,
+    11106,
+    11117,
+    11460,
+    13809,
+    14121,
+    14122,
+    18809,
+    21033,
+    21036,
+    21070,
+    21073,
+    21296,
+    21460,
+    24121,
+    24202,
+    24242,
+    80020
+   ],
+   "ids_s3": [
+    1484,
+    2271,
+    2480,
+    2538,
+    2663,
+    2914,
+    2954,
+    3037,
+    3041,
+    3093,
+    4052,
+    11070,
+    11103,
+    11105,
+    11106,
+    11117,
+    11460,
+    13809,
+    21033,
+    21036,
+    24202
+   ],
+   "ids_g1": [
+    1218,
+    1363,
+    1452,
+    1469,
+    1483,
+    1540,
+    1553,
+    1574,
+    1918,
+    1937,
+    2278,
+    2279,
+    2458,
+    2505,
+    2512,
+    2515,
+    2523,
+    2912,
+    2913,
+    2917,
+    2928,
+    3085,
+    3086,
+    3319,
+    3547,
+    3920,
+    3965,
+    3967,
+    3969,
+    3970,
+    3973,
+    4905,
+    4906,
+    4920,
+    11008,
+    11009,
+    11026,
+    11068,
+    11069,
+    14121,
+    14122,
+    18809,
+    21070,
+    21073,
+    21296,
+    21460,
+    24121,
+    24242,
+    80020
+   ],
+   "tier": [
+    "t3"
+   ],
+   "bucket": "-",
+   "h1": [],
+   "h2": [],
+   "mtime": "2026-09-25 12:15:15",
+   "old_form_lines": {},
+   "s2_tier": "t3",
+   "s2_ids_n": 70,
+   "s2_bucket": "-",
+   "ids_g2": [
+    1484,
+    2271,
+    2480,
+    2538,
+    2663,
+    2914,
+    2954,
+    3037,
+    3041,
+    3093,
+    4052,
+    11070,
+    11103,
+    11105,
+    11106,
+    11117,
+    11460,
+    13809,
+    21033,
+    21036,
+    24202
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    1484,
+    2271,
+    2480,
+    2538,
+    2663,
+    2914,
+    2954,
+    3037,
+    3041,
+    3093,
+    4052,
+    11070,
+    11103,
+    11105,
+    11106,
+    11117,
+    11460,
+    13809,
+    21033,
+    21036,
+    24202
+   ],
+   "mixed_face": true,
+   "n_ids_s3": 21,
+   "n_ids_g1": 49
+  },
+  "com.aionemu.gameserver.questEngine.definition.LegacyTemplateMirrorRouteRegressionTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/LegacyTemplateMirrorRouteRegressionTest.java",
+   "ids_chain285": [
+    1115,
+    1131,
+    1323,
+    35025
+   ],
+   "ids_s3": [
+    1323,
+    35025
+   ],
+   "ids_g1": [
+    1115,
+    1131
+   ],
+   "tier": [
+    "t1"
+   ],
+   "bucket": "X 报告段2375路由表",
+   "h1": [
+    "20002",
+    "2375"
+   ],
+   "h2": [],
+   "mtime": "2026-09-27 13:23:00",
+   "old_form_lines": {
+    "SELECT5": {
+     "comment": [
+      {
+       "line": 22,
+       "assert": false,
+       "neg": false,
+       "text": "// reasons），因此定义由 XML 驱动、不在 S1 面内——报告页 SELECT5(2375) 与 20002"
+      },
+      {
+       "line": 27,
+       "assert": false,
+       "neg": false,
+       "text": "// driver), so its SELECT5(2375) report page and the 20002 (CHECK_USER_HAS_QUEST_ITEM_SIMPLE)"
+      }
+     ]
+    },
+    "CHECK_USER_HAS_QUEST_ITEM": {
+     "comment": [
+      {
+       "line": 23,
+       "assert": false,
+       "neg": false,
+       "text": "// (CHECK_USER_HAS_QUEST_ITEM_SIMPLE) 双 prio 检查对逐字保留"
+      },
+      {
+       "line": 27,
+       "assert": false,
+       "neg": false,
+       "text": "// driver), so its SELECT5(2375) report page and the 20002 (CHECK_USER_HAS_QUEST_ITEM_SIMPLE)"
+      }
+     ]
+    },
+    "20002": {
+     "code": [
+      {
+       "line": 33,
+       "assert": false,
+       "neg": false,
+       "text": "List<QuestTransition> legacyChecks = talkRoutes(legacy, \"started\", legacyNpc, 20002);"
+      },
+      {
+       "line": 104,
+       "assert": true,
+       "neg": false,
+       "text": "assertTrue(talkRoutes(definition, \"started\", mirror[1], 20002).isEmpty(),"
+      }
+     ],
+     "comment": [
+      {
+       "line": 22,
+       "assert": false,
+       "neg": false,
+       "text": "// reasons），因此定义由 XML 驱动、不在 S1 面内——报告页 SELECT5(2375) 与 20002"
+      },
+      {
+       "line": 25,
+       "assert": false,
+       "neg": false,
+       "text": "// 该行的真端校验动作是 20002（SIMPLE 变体）：真端 collect 行与 quest.xml 均无 39 检查轴。"
+      },
+      {
+       "line": 27,
+       "assert": false,
+       "neg": false,
+       "text": "// driver), so its SELECT5(2375) report page and the 20002 (CHECK_USER_HAS_QUEST_ITEM_SIMPLE)"
+      },
+      {
+       "line": 65,
+       "assert": false,
+       "neg": false,
+       "text": "// 39/20002 检查对与报告页 2375 一并删除。"
+      },
+      {
+       "line": 71,
+       "assert": false,
+       "neg": false,
+       "text": "// (single tier = 5); the 39/20002 check pairs and report page 2375 are gone."
+      }
+     ]
+    },
+    "2375": {
+     "code": [
+      {
+       "line": 31,
+       "assert": true,
+       "neg": false,
+       "text": "assertPage(legacy, \"started\", legacyNpc, 2375);"
+      },
+      {
+       "line": 106,
+       "assert": true,
+       "neg": false,
+       "text": "assertTrue(talkRoutes(definition, \"started\", mirror[1], 2375).isEmpty(),"
+      }
+     ],
+     "comment": [
+      {
+       "line": 22,
+       "assert": false,
+       "neg": false,
+       "text": "// reasons），因此定义由 XML 驱动、不在 S1 面内——报告页 SELECT5(2375) 与 20002"
+      },
+      {
+       "line": 27,
+       "assert": false,
+       "neg": false,
+       "text": "// driver), so its SELECT5(2375) report page and the 20002 (CHECK_USER_HAS_QUEST_ITEM_SIMPLE)"
+      },
+      {
+       "line": 65,
+       "assert": false,
+       "neg": false,
+       "text": "// 39/20002 检查对与报告页 2375 一并删除。"
+      },
+      {
+       "line": 71,
+       "assert": false,
+       "neg": false,
+       "text": "// (single tier = 5); the 39/20002 check pairs and report page 2375 are gone."
+      }
+     ]
+    }
+   },
+   "s2_tier": "t1",
+   "s2_ids_n": 4,
+   "s2_bucket": "S",
+   "ids_g2": [
+    1323
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    1323,
+    35025
+   ],
+   "mixed_face": true,
+   "n_ids_s3": 2,
+   "n_ids_g1": 2
+  },
+  "com.aionemu.gameserver.questEngine.definition.Quest1152RetailAlignmentTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/Quest1152RetailAlignmentTest.java",
+   "ids_chain285": [
+    1152
+   ],
+   "ids_s3": [
+    1152
+   ],
+   "ids_g1": [],
+   "tier": [
+    "t1"
+   ],
+   "bucket": "W 交付段页链单点",
+   "h1": [
+    "SELECT5",
+    "CHECK_USER_HAS_QUEST_ITEM",
+    "SELECT6"
+   ],
+   "h2": [],
+   "mtime": "2026-09-26 11:10:31",
+   "old_form_lines": {
+    "SELECT5": {
+     "code": [
+      {
+       "line": 36,
+       "assert": true,
+       "neg": false,
+       "text": "assertPage(definition, \"pepper\", DELIVERY_NPC, QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT5);"
+      }
+     ]
+    },
+    "CHECK_USER_HAS_QUEST_ITEM": {
+     "code": [
+      {
+       "line": 38,
+       "assert": false,
+       "neg": false,
+       "text": "QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM);"
+      },
+      {
+       "line": 60,
+       "assert": false,
+       "neg": false,
+       "text": "QuestDialogAction.SETPRO1, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM)) {"
+      }
+     ]
+    },
+    "20002": {
+     "comment": [
+      {
+       "line": 68,
+       "assert": false,
+       "neg": false,
+       "text": "* 生产视图 = XML 目录 + 真端 overlay，门路由（39/20002 对）由链登记 I 记录展开。"
+      }
+     ]
+    },
+    "SELECT6": {
+     "code": [
+      {
+       "line": 49,
+       "assert": true,
+       "neg": false,
+       "text": "assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT6.id())),"
+      }
+     ]
+    }
+   },
+   "s2_tier": "t1",
+   "s2_ids_n": 1,
+   "s2_bucket": "P",
+   "ids_g2": [
+    1152
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    1152
+   ],
+   "mixed_face": false,
+   "n_ids_s3": 1,
+   "n_ids_g1": 0
+  },
+  "com.aionemu.gameserver.questEngine.definition.Quest1163ClientDialogAlignmentTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/Quest1163ClientDialogAlignmentTest.java",
+   "ids_chain285": [
+    1163
+   ],
+   "ids_s3": [
+    1163
+   ],
+   "ids_g1": [],
+   "tier": [
+    "t1"
+   ],
+   "bucket": "W 交付段页链单点",
+   "h1": [
+    "SELECT5",
+    "SELECT_QUEST_REWARD"
+   ],
+   "h2": [],
+   "mtime": "2026-09-25 23:52:15",
+   "old_form_lines": {
+    "SELECT5": {
+     "code": [
+      {
+       "line": 38,
+       "assert": true,
+       "neg": false,
+       "text": "assertPage(definition, \"reward\", REWARD_NPC, QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT5);"
+      }
+     ]
+    },
+    "SELECT_QUEST_REWARD": {
+     "code": [
+      {
+       "line": 40,
+       "assert": false,
+       "neg": false,
+       "text": "route(definition, \"reward\", REWARD_NPC, QuestDialogAction.SELECT_QUEST_REWARD).afterCommit());"
+      }
+     ]
+    }
+   },
+   "s2_tier": "t1",
+   "s2_ids_n": 1,
+   "s2_bucket": "P",
+   "ids_g2": [
+    1163
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    1163
+   ],
+   "mixed_face": false,
+   "n_ids_s3": 1,
+   "n_ids_g1": 0
+  },
+  "com.aionemu.gameserver.questEngine.definition.Quest19004RetailAlignmentTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/Quest19004RetailAlignmentTest.java",
+   "ids_chain285": [
+    19004
+   ],
+   "ids_s3": [
+    19004
+   ],
+   "ids_g1": [],
+   "tier": [
+    "t3"
+   ],
+   "bucket": "-",
+   "h1": [],
+   "h2": [],
+   "mtime": "2026-09-25 23:52:15",
+   "old_form_lines": {},
+   "s2_tier": "t3",
+   "s2_ids_n": 1,
+   "s2_bucket": "-",
+   "ids_g2": [
+    19004
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    19004
+   ],
+   "mixed_face": false,
+   "n_ids_s3": 1,
+   "n_ids_g1": 0
+  },
+  "com.aionemu.gameserver.questEngine.definition.Quest2953RetailFlowAlignmentTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/Quest2953RetailFlowAlignmentTest.java",
+   "ids_chain285": [
+    2953
+   ],
+   "ids_s3": [
+    2953
+   ],
+   "ids_g1": [],
+   "tier": [
+    "t1"
+   ],
+   "bucket": "W 交付段页链单点",
+   "h1": [
+    "SELECT5",
+    "SELECT_QUEST_REWARD"
+   ],
+   "h2": [],
+   "mtime": "2026-09-25 23:52:15",
+   "old_form_lines": {
+    "SELECT5": {
+     "code": [
+      {
+       "line": 57,
+       "assert": false,
+       "neg": false,
+       "text": "QuestDialogPage.SELECT5);"
+      }
+     ]
+    },
+    "SELECT_QUEST_REWARD": {
+     "code": [
+      {
+       "line": 58,
+       "assert": true,
+       "neg": false,
+       "text": "assertPage(definition, \"reward\", START_AND_REWARD_NPC, QuestDialogAction.SELECT_QUEST_REWARD,"
+      }
+     ]
+    }
+   },
+   "s2_tier": "t1",
+   "s2_ids_n": 1,
+   "s2_bucket": "P",
+   "ids_g2": [
+    2953
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    2953
+   ],
+   "mixed_face": false,
+   "n_ids_s3": 1,
+   "n_ids_g1": 0
+  },
+  "com.aionemu.gameserver.questEngine.definition.Quest3100ClientDialogAlignmentTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/Quest3100ClientDialogAlignmentTest.java",
+   "ids_chain285": [
+    3100
+   ],
+   "ids_s3": [
+    3100
+   ],
+   "ids_g1": [],
+   "tier": [
+    "t1"
+   ],
+   "bucket": "W 交付段页链单点",
+   "h1": [
+    "SELECT5",
+    "SELECT_QUEST_REWARD"
+   ],
+   "h2": [],
+   "mtime": "2026-09-25 23:52:15",
+   "old_form_lines": {
+    "SELECT5": {
+     "code": [
+      {
+       "line": 76,
+       "assert": true,
+       "neg": false,
+       "text": "assertPage(definition, \"reward\", REWARD_NPC_ID, QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT5);"
+      }
+     ]
+    },
+    "SELECT_QUEST_REWARD": {
+     "code": [
+      {
+       "line": 65,
+       "assert": true,
+       "neg": false,
+       "text": "assertTrue(routes(definition, \"started\", START_NPC_ID, QuestDialogAction.SELECT_QUEST_REWARD).isEmpty());"
+      },
+      {
+       "line": 78,
+       "assert": false,
+       "neg": false,
+       "text": "QuestDialogAction.SELECT_QUEST_REWARD)) {"
+      }
+     ]
+    }
+   },
+   "s2_tier": "t1",
+   "s2_ids_n": 1,
+   "s2_bucket": "P",
+   "ids_g2": [
+    3100
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    3100
+   ],
+   "mixed_face": false,
+   "n_ids_s3": 1,
+   "n_ids_g1": 0
+  },
+  "com.aionemu.gameserver.questEngine.definition.QuestA03ShardRetailAlignmentTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/QuestA03ShardRetailAlignmentTest.java",
+   "ids_chain285": [
+    21065
+   ],
+   "ids_s3": [
+    21065
+   ],
+   "ids_g1": [],
+   "tier": [
+    "t1"
+   ],
+   "bucket": "Z 奖励行镜像行契约",
+   "h1": [
+    "2375",
+    "SELECT_QUEST_REWARD"
+   ],
+   "h2": [],
+   "mtime": "2026-09-27 07:51:45",
+   "old_form_lines": {
+    "2375": {
+     "code": [
+      {
+       "line": 47,
+       "assert": false,
+       "neg": false,
+       "text": "25640, Set.of(237455, 237460, 237450, 237494, 237499, 237489, 237560, 237555, 237550, 237618, 237623, 237613),"
+      },
+      {
+       "line": 47,
+       "assert": false,
+       "neg": false,
+       "text": "25640, Set.of(237455, 237460, 237450, 237494, 237499, 237489, 237560, 237555, 237550, 237618, 237623, 237613),"
+      },
+      {
+       "line": 47,
+       "assert": false,
+       "neg": false,
+       "text": "25640, Set.of(237455, 237460, 237450, 237494, 237499, 237489, 237560, 237555, 237550, 237618, 237623, 237613),"
+      }
+     ]
+    },
+    "SELECT_QUEST_REWARD": {
+     "code": [
+      {
+       "line": 161,
+       "assert": false,
+       "neg": false,
+       "text": "|| Integer.valueOf(QuestDialogAction.SELECT_QUEST_REWARD.id())"
+      }
+     ]
+    }
+   },
+   "s2_tier": "t1",
+   "s2_ids_n": 1,
+   "s2_bucket": "P",
+   "ids_g2": [
+    21065
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    21065
+   ],
+   "mixed_face": false,
+   "n_ids_s3": 1,
+   "n_ids_g1": 0
+  },
+  "com.aionemu.gameserver.questEngine.definition.QuestDialog31RegressionTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/QuestDialog31RegressionTest.java",
+   "ids_chain285": [
+    1131,
+    1963,
+    1964,
+    11106,
+    21033,
+    21455
+   ],
+   "ids_s3": [
+    11106,
+    21033,
+    21455
+   ],
+   "ids_g1": [
+    1131,
+    1963,
+    1964
+   ],
+   "tier": [
+    "t1"
+   ],
+   "bucket": "Z 奖励行镜像行契约",
+   "h1": [
+    "2375"
+   ],
+   "h2": [],
+   "mtime": "2026-09-23 17:32:54",
+   "old_form_lines": {
+    "2375": {
+     "code": [
+      {
+       "line": 12,
+       "assert": true,
+       "neg": false,
+       "text": "assertDialog(\"1131.xml\", \"shugo\", \"shugo\", 203101, 2375);"
+      },
+      {
+       "line": 36,
+       "assert": true,
+       "neg": false,
+       "text": "assertDialog(\"1963.xml\", \"s1\", \"s1\", 203726, 2375);"
+      },
+      {
+       "line": 38,
+       "assert": true,
+       "neg": false,
+       "text": "assertDialog(\"1964.xml\", \"s1\", \"s1\", 203726, 2375);"
+      },
+      {
+       "line": 42,
+       "assert": true,
+       "neg": false,
+       "text": "assertDialog(\"1900.xml\", \"s3\", \"s3\", 203795, 2375);"
+      },
+      {
+       "line": 49,
+       "assert": true,
+       "neg": false,
+       "text": "assertDialog(\"10525.xml\", \"s4\", \"s4\", 806134, 2375,"
+      },
+      {
+       "line": 51,
+       "assert": true,
+       "neg": false,
+       "text": "assertDialog(\"20525.xml\", \"s4\", \"s4\", 806135, 2375,"
+      }
+     ],
+     "comment": [
+      {
+       "line": 27,
+       "assert": false,
+       "neg": false,
+       "text": "// 无 1011/2375 页——旧客户端形状的两行断言移除（start 批已按契约删除该对话入口）。"
+      },
+      {
+       "line": 29,
+       "assert": true,
+       "neg": false,
+       "text": "// the stale 1011/2375 page assertions were removed when the contract-driven start"
+      }
+     ]
+    }
+   },
+   "s2_tier": "t1",
+   "s2_ids_n": 6,
+   "s2_bucket": "R",
+   "ids_g2": [
+    11106,
+    21033,
+    21455
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    11106,
+    21033,
+    21455
+   ],
+   "mixed_face": true,
+   "n_ids_s3": 3,
+   "n_ids_g1": 3
+  },
+  "com.aionemu.gameserver.questEngine.definition.QuestDialogOrderAuditTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/QuestDialogOrderAuditTest.java",
+   "ids_chain285": [
+    1913,
+    2611,
+    3001,
+    3006,
+    3020,
+    3023,
+    3035,
+    3092,
+    3208,
+    21136
+   ],
+   "ids_s3": [
+    2611,
+    3001,
+    3023,
+    21136
+   ],
+   "ids_g1": [
+    1913,
+    3006,
+    3020,
+    3035,
+    3092,
+    3208
+   ],
+   "tier": [
+    "t1"
+   ],
+   "bucket": "W 交付段页链单点",
+   "h1": [
+    "CHECK_USER_HAS_QUEST_ITEM"
+   ],
+   "h2": [],
+   "mtime": "2026-09-13 10:22:25",
+   "old_form_lines": {
+    "CHECK_USER_HAS_QUEST_ITEM": {
+     "code": [
+      {
+       "line": 163,
+       "assert": false,
+       "neg": false,
+       "text": "new QuestEvent.TalkToNpc(100007, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()),"
+      },
+      {
+       "line": 168,
+       "assert": false,
+       "neg": false,
+       "text": "QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id(),"
+      },
+      {
+       "line": 170,
+       "assert": false,
+       "neg": false,
+       "text": "QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id(),"
+      },
+      {
+       "line": 177,
+       "assert": false,
+       "neg": false,
+       "text": "QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id())))"
+      },
+      {
+       "line": 181,
+       "assert": false,
+       "neg": false,
+       "text": "QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE.id())))"
+      }
+     ]
+    }
+   },
+   "s2_tier": "t1",
+   "s2_ids_n": 10,
+   "s2_bucket": "T",
+   "ids_g2": [
+    3001,
+    3023,
+    21136
+   ],
+   "ids_g3": [
+    2611
+   ],
+   "ids_s3_selector_view": [
+    2611,
+    3001,
+    3023,
+    21136
+   ],
+   "mixed_face": true,
+   "n_ids_s3": 4,
+   "n_ids_g1": 6
+  },
+  "com.aionemu.gameserver.questEngine.definition.QuestMinionTutorialRetailAlignmentTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/QuestMinionTutorialRetailAlignmentTest.java",
+   "ids_chain285": [
+    2266,
+    3085
+   ],
+   "ids_s3": [
+    2266
+   ],
+   "ids_g1": [
+    3085
+   ],
+   "tier": [
+    "t3"
+   ],
+   "bucket": "-",
+   "h1": [],
+   "h2": [],
+   "mtime": "2026-09-26 04:34:42",
+   "old_form_lines": {},
+   "s2_tier": "t3",
+   "s2_ids_n": 2,
+   "s2_bucket": "-",
+   "ids_g2": [
+    2266
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    2266
+   ],
+   "mixed_face": true,
+   "n_ids_s3": 1,
+   "n_ids_g1": 1
+  },
+  "com.aionemu.gameserver.questEngine.definition.QuestMovieAndDialogLoopRegressionTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/QuestMovieAndDialogLoopRegressionTest.java",
+   "ids_chain285": [
+    24202
+   ],
+   "ids_s3": [
+    24202
+   ],
+   "ids_g1": [],
+   "tier": [
+    "both",
+    "t1"
+   ],
+   "bucket": "AB 过场轴(档1∩档2)",
+   "h1": [
+    "CHECK_USER_HAS_QUEST_ITEM",
+    "SELECT_QUEST_REWARD"
+   ],
+   "h2": [
+    "PlayMovie",
+    "movieId"
+   ],
+   "mtime": "2026-09-27 02:56:07",
+   "old_form_lines": {
+    "CHECK_USER_HAS_QUEST_ITEM": {
+     "code": [
+      {
+       "line": 366,
+       "assert": false,
+       "neg": false,
+       "text": "&& Integer.valueOf(QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id()).equals(talk.dialogId()))"
+      }
+     ]
+    },
+    "SELECT_QUEST_REWARD": {
+     "code": [
+      {
+       "line": 436,
+       "assert": false,
+       "neg": false,
+       "text": "|| Integer.valueOf(QuestDialogAction.SELECT_QUEST_REWARD.id()).equals(talk.dialogId()))"
+      },
+      {
+       "line": 539,
+       "assert": false,
+       "neg": false,
+       "text": "|| Integer.valueOf(QuestDialogAction.SELECT_QUEST_REWARD.id()).equals(talk.dialogId())))"
+      }
+     ],
+     "string": [
+      {
+       "line": 557,
+       "assert": false,
+       "neg": false,
+       "text": "? \"      <preview actions=\\\"USE_OBJECT SELECT_QUEST_REWARD\\\"/>\\n\" : \"\";"
+      }
+     ],
+     "comment": [
+      {
+       "line": 608,
+       "assert": false,
+       "neg": false,
+       "text": "// 档位 1（1 个线索）展示 select_quest_reward1；档位 2（3 个线索）展示 select_quest_reward2。"
+      },
+      {
+       "line": 608,
+       "assert": false,
+       "neg": false,
+       "text": "// 档位 1（1 个线索）展示 select_quest_reward1；档位 2（3 个线索）展示 select_quest_reward2。"
+      },
+      {
+       "line": 609,
+       "assert": false,
+       "neg": false,
+       "text": "// Tier 1 (1 clue) opens select_quest_reward1; tier 2 (3 clues) opens select_quest_reward2."
+      },
+      {
+       "line": 609,
+       "assert": false,
+       "neg": false,
+       "text": "// Tier 1 (1 clue) opens select_quest_reward1; tier 2 (3 clues) opens select_quest_reward2."
+      }
+     ]
+    },
+    "PlayMovie": {
+     "code": [
+      {
+       "line": 39,
+       "assert": true,
+       "neg": false,
+       "text": "assertTrue(trans16942.afterCommit().stream().anyMatch(a -> a instanceof AfterCommitAction.PlayMovie movie && movie.movieId() == 899));"
+      },
+      {
+       "line": 50,
+       "assert": true,
+       "neg": false,
+       "text": "assertTrue(trans26942.afterCommit().stream().anyMatch(a -> a instanceof AfterCommitAction.PlayMovie movie && movie.movieId() == 900));"
+      },
+      {
+       "line": 71,
+       "assert": true,
+       "neg": false,
+       "text": "assertTrue(validKill.afterCommit().stream().anyMatch(a -> a instanceof AfterCommitAction.PlayMovie movie && movie.movieId() == 422));"
+      },
+      {
+       "line": 205,
+       "assert": false,
+       "neg": false,
+       "text": "boolean playsMovie = t.afterCommit().stream().anyMatch(AfterCommitAction.PlayMovie.class::isInstance);"
+      }
+     ]
+    },
+    "movieId": {
+     "code": [
+      {
+       "line": 39,
+       "assert": true,
+       "neg": false,
+       "text": "assertTrue(trans16942.afterCommit().stream().anyMatch(a -> a instanceof AfterCommitAction.PlayMovie movie && movie.movieId() == 899));"
+      },
+      {
+       "line": 50,
+       "assert": true,
+       "neg": false,
+       "text": "assertTrue(trans26942.afterCommit().stream().anyMatch(a -> a instanceof AfterCommitAction.PlayMovie movie && movie.movieId() == 900));"
+      },
+      {
+       "line": 71,
+       "assert": true,
+       "neg": false,
+       "text": "assertTrue(validKill.afterCommit().stream().anyMatch(a -> a instanceof AfterCommitAction.PlayMovie movie && movie.movieId() == 422));"
+      }
+     ]
+    }
+   },
+   "s2_tier": "t1",
+   "s2_ids_n": 1,
+   "s2_bucket": "V",
+   "ids_g2": [
+    24202
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    24202
+   ],
+   "mixed_face": false,
+   "n_ids_s3": 1,
+   "n_ids_g1": 0
+  },
+  "com.aionemu.gameserver.questEngine.definition.QuestMultistepChainContractTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/QuestMultistepChainContractTest.java",
+   "ids_chain285": [
+    1183,
+    1192,
+    1483,
+    1721,
+    1724,
+    2646,
+    2692,
+    2767,
+    3966,
+    3968,
+    4501
+   ],
+   "ids_s3": [
+    2646,
+    3966
+   ],
+   "ids_g1": [
+    1183,
+    1192,
+    1483,
+    1721,
+    1724,
+    2692,
+    2767,
+    3968,
+    4501
+   ],
+   "tier": [
+    "t1"
+   ],
+   "bucket": "Y 多步阶梯页梯",
+   "h1": [
+    "SELECT5",
+    "SELECT6",
+    "SELECT_QUEST_REWARD",
+    "DEFAULT_SUCCESS"
+   ],
+   "h2": [],
+   "mtime": "2026-09-25 04:20:47",
+   "old_form_lines": {
+    "SELECT5": {
+     "code": [
+      {
+       "line": 53,
+       "assert": false,
+       "neg": false,
+       "text": "new Step(730014, QuestDialogPage.SELECT3)), 730012, QuestDialogPage.SELECT5),"
+      },
+      {
+       "line": 58,
+       "assert": false,
+       "neg": false,
+       "text": "new Step(203915, QuestDialogPage.SELECT5),"
+      },
+      {
+       "line": 65,
+       "assert": false,
+       "neg": false,
+       "text": "new Step(203944, QuestDialogPage.SELECT3)), 798127, QuestDialogPage.SELECT5),"
+      },
+      {
+       "line": 68,
+       "assert": false,
+       "neg": false,
+       "text": "new Step(204505, QuestDialogPage.SELECT3)), 203831, QuestDialogPage.SELECT5),"
+      },
+      {
+       "line": 71,
+       "assert": false,
+       "neg": false,
+       "text": "new Step(278502, QuestDialogPage.SELECT3)), 278518, QuestDialogPage.SELECT5),"
+      },
+      {
+       "line": 74,
+       "assert": false,
+       "neg": false,
+       "text": "new Step(278599, QuestDialogPage.SELECT3)), 278594, QuestDialogPage.SELECT5),"
+      },
+      {
+       "line": 80,
+       "assert": false,
+       "neg": false,
+       "text": "new Step(204702, QuestDialogPage.SELECT4)), 204817, QuestDialogPage.SELECT5),"
+      },
+      {
+       "line": 84,
+       "assert": false,
+       "neg": false,
+       "text": "new Step(279029, QuestDialogPage.SELECT4)), 212164, QuestDialogPage.SELECT5),"
+      },
+      {
+       "line": 87,
+       "assert": false,
+       "neg": false,
+       "text": "new Step(279061, QuestDialogPage.SELECT3)), 279004, QuestDialogPage.SELECT5),"
+      },
+      {
+       "line": 91,
+       "assert": false,
+       "neg": false,
+       "text": "new Step(204568, QuestDialogPage.SELECT4)), 798391, QuestDialogPage.SELECT5),"
+      },
+      {
+       "line": 95,
+       "assert": false,
+       "neg": false,
+       "text": "new Step(203927, QuestDialogPage.SELECT4)), 798390, QuestDialogPage.SELECT5),"
+      },
+      {
+       "line": 98,
+       "assert": false,
+       "neg": false,
+       "text": "new Step(204348, QuestDialogPage.SELECT3)), 204728, QuestDialogPage.SELECT5));"
+      }
+     ]
+    },
+    "SELECT6": {
+     "code": [
+      {
+       "line": 59,
+       "assert": false,
+       "neg": false,
+       "text": "new Step(203907, QuestDialogPage.SELECT6),"
+      }
+     ]
+    },
+    "SELECT_QUEST_REWARD": {
+     "code": [
+      {
+       "line": 193,
+       "assert": false,
+       "neg": false,
+       "text": "QuestDialogAction.SELECT_QUEST_REWARD.id()).equals(transition.event())),"
+      },
+      {
+       "line": 236,
+       "assert": false,
+       "neg": false,
+       "text": "QuestDialogAction.SELECT_QUEST_REWARD.id());"
+      }
+     ],
+     "string": [
+      {
+       "line": 194,
+       "assert": false,
+       "neg": false,
+       "text": "\"quest \" + chain.questId() + \" 缺少领奖行进入 REWARD 的 SELECT_QUEST_REWARD 路由\");"
+      }
+     ],
+     "comment": [
+      {
+       "line": 32,
+       "assert": false,
+       "neg": false,
+       "text": "* {@code SELECT_QUEST_REWARD} 进入 REWARD，入口页取自该行客户端链；只有领奖行 NPC 能完成任务。"
+      },
+      {
+       "line": 35,
+       "assert": false,
+       "neg": false,
+       "text": "* row enters REWARD through its own client {@code SELECT_QUEST_REWARD}, entry pages come from the client chain,"
+      }
+     ]
+    },
+    "DEFAULT_SUCCESS": {
+     "code": [
+      {
+       "line": 76,
+       "assert": false,
+       "neg": false,
+       "text": "new Step(798115, QuestDialogPage.SELECT1)), 798080, QuestDialogPage.DEFAULT_SUCCESS),"
+      }
+     ]
+    }
+   },
+   "s2_tier": "t1",
+   "s2_ids_n": 11,
+   "s2_bucket": "Q",
+   "ids_g2": [
+    2646,
+    3966
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    2646,
+    3966
+   ],
+   "mixed_face": true,
+   "n_ids_s3": 2,
+   "n_ids_g1": 9
+  },
+  "com.aionemu.gameserver.questEngine.definition.QuestPrerequisiteRetailContractTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/QuestPrerequisiteRetailContractTest.java",
+   "ids_chain285": [
+    18035,
+    21004,
+    21065,
+    28035,
+    49003
+   ],
+   "ids_s3": [
+    21004,
+    21065
+   ],
+   "ids_g1": [
+    18035,
+    28035,
+    49003
+   ],
+   "tier": [
+    "t3"
+   ],
+   "bucket": "-",
+   "h1": [],
+   "h2": [],
+   "mtime": "2026-09-23 15:42:33",
+   "old_form_lines": {},
+   "s2_tier": "t3",
+   "s2_ids_n": 5,
+   "s2_bucket": "-",
+   "ids_g2": [
+    21004,
+    21065
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    21004,
+    21065
+   ],
+   "mixed_face": true,
+   "n_ids_s3": 2,
+   "n_ids_g1": 3
+  },
+  "com.aionemu.gameserver.questEngine.definition.QuestStartItemDefinitionRegressionTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/QuestStartItemDefinitionRegressionTest.java",
+   "ids_chain285": [
+    1323
+   ],
+   "ids_s3": [
+    1323
+   ],
+   "ids_g1": [],
+   "tier": [
+    "t3"
+   ],
+   "bucket": "-",
+   "h1": [],
+   "h2": [],
+   "mtime": "2026-09-25 23:52:15",
+   "old_form_lines": {},
+   "s2_tier": "t3",
+   "s2_ids_n": 1,
+   "s2_bucket": "-",
+   "ids_g2": [
+    1323
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    1323
+   ],
+   "mixed_face": false,
+   "n_ids_s3": 1,
+   "n_ids_g1": 0
+  },
+  "com.aionemu.gameserver.questEngine.definition.ReportToManyDialogRouteRegressionTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/ReportToManyDialogRouteRegressionTest.java",
+   "ids_chain285": [
+    1971,
+    18210,
+    24120,
+    28210,
+    35025,
+    39000,
+    49000
+   ],
+   "ids_s3": [
+    35025
+   ],
+   "ids_g1": [
+    1971,
+    18210,
+    24120,
+    28210,
+    39000,
+    49000
+   ],
+   "tier": [
+    "t1"
+   ],
+   "bucket": "X 报告段2375路由表",
+   "h1": [
+    "2375"
+   ],
+   "h2": [],
+   "mtime": "2026-09-26 13:50:44",
+   "old_form_lines": {
+    "SELECT5": {
+     "comment": [
+      {
+       "line": 28,
+       "assert": false,
+       "neg": false,
+       "text": "// （730038 → 报告页 select5=2375）。旧期望 (802441, 2375) 是 XML 期把 Bellumus 当交付 NPC 的写法，"
+      }
+     ]
+    },
+    "2375": {
+     "code": [
+      {
+       "line": 17,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(1971, 203812, 2375),"
+      },
+      {
+       "line": 20,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(3914, 203384, 2375),"
+      },
+      {
+       "line": 23,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(4914, 203385, 2375),"
+      },
+      {
+       "line": 24,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(18210, 205985, 2375),"
+      },
+      {
+       "line": 31,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(24120, 730038, 2375),"
+      },
+      {
+       "line": 32,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(28210, 205986, 2375),"
+      },
+      {
+       "line": 33,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(35025, 799800, 2375),"
+      },
+      {
+       "line": 34,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(35025, 799801, 2375),"
+      },
+      {
+       "line": 37,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80268, 831172, 2375),"
+      },
+      {
+       "line": 38,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80269, 831174, 2375),"
+      },
+      {
+       "line": 39,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80270, 831178, 2375),"
+      },
+      {
+       "line": 40,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80271, 831180, 2375),"
+      },
+      {
+       "line": 43,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80324, 831447, 2375),"
+      },
+      {
+       "line": 44,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80325, 831447, 2375),"
+      },
+      {
+       "line": 45,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80326, 831448, 2375),"
+      },
+      {
+       "line": 46,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80327, 831448, 2375),"
+      },
+      {
+       "line": 47,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80344, 831787, 2375),"
+      },
+      {
+       "line": 48,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80351, 831797, 2375),"
+      },
+      {
+       "line": 49,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80353, 831818, 2375),"
+      },
+      {
+       "line": 50,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80354, 831818, 2375),"
+      },
+      {
+       "line": 51,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80355, 831818, 2375),"
+      },
+      {
+       "line": 52,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80360, 831806, 2375),"
+      },
+      {
+       "line": 53,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80362, 831830, 2375),"
+      },
+      {
+       "line": 54,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80363, 831830, 2375),"
+      },
+      {
+       "line": 55,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80364, 831830, 2375),"
+      },
+      {
+       "line": 56,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80575, 832041, 2375),"
+      },
+      {
+       "line": 57,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80577, 832040, 2375),"
+      },
+      {
+       "line": 58,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80578, 832041, 2375),"
+      },
+      {
+       "line": 59,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80580, 832040, 2375),"
+      },
+      {
+       "line": 60,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80623, 832870, 2375),"
+      },
+      {
+       "line": 61,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80624, 832871, 2375),"
+      },
+      {
+       "line": 62,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80683, 832965, 2375),"
+      },
+      {
+       "line": 63,
+       "assert": false,
+       "neg": false,
+       "text": "new ExpectedRoute(80686, 832976, 2375),"
+      }
+     ],
+     "comment": [
+      {
+       "line": 28,
+       "assert": false,
+       "neg": false,
+       "text": "// （730038 → 报告页 select5=2375）。旧期望 (802441, 2375) 是 XML 期把 Bellumus 当交付 NPC 的写法，"
+      },
+      {
+       "line": 28,
+       "assert": false,
+       "neg": false,
+       "text": "// （730038 → 报告页 select5=2375）。旧期望 (802441, 2375) 是 XML 期把 Bellumus 当交付 NPC 的写法，"
+      }
+     ]
+    }
+   },
+   "s2_tier": "t1",
+   "s2_ids_n": 7,
+   "s2_bucket": "R",
+   "ids_g2": [],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    35025
+   ],
+   "mixed_face": true,
+   "n_ids_s3": 1,
+   "n_ids_g1": 6
+  },
+  "com.aionemu.gameserver.questEngine.definition.ReportToManyLegacyFlowRegressionTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/ReportToManyLegacyFlowRegressionTest.java",
+   "ids_chain285": [
+    1422,
+    1537,
+    1560,
+    1578,
+    1609,
+    1620,
+    1628,
+    1851,
+    1928,
+    1935,
+    2125,
+    2222,
+    2383,
+    2486,
+    2488,
+    2501,
+    2514,
+    2539,
+    2583,
+    2630,
+    2651,
+    2693,
+    2721,
+    2725,
+    2921,
+    2957,
+    3008,
+    3081,
+    3083,
+    3091,
+    3102,
+    3913,
+    3972,
+    4001,
+    4036,
+    4101,
+    4971,
+    4972,
+    4973,
+    4974,
+    4976,
+    11000,
+    11005,
+    11228,
+    13900,
+    18917,
+    21066,
+    21068,
+    21071,
+    21106,
+    21111,
+    21135,
+    23900,
+    28917,
+    29004,
+    30054,
+    30154
+   ],
+   "ids_s3": [
+    1851,
+    2486,
+    2488,
+    4971,
+    4972,
+    4973,
+    4974,
+    4976,
+    21068,
+    21071,
+    21106,
+    21111,
+    21135,
+    29004
+   ],
+   "ids_g1": [
+    1422,
+    1537,
+    1560,
+    1578,
+    1609,
+    1620,
+    1628,
+    1928,
+    1935,
+    2125,
+    2222,
+    2383,
+    2501,
+    2514,
+    2539,
+    2583,
+    2630,
+    2651,
+    2693,
+    2721,
+    2725,
+    2921,
+    2957,
+    3008,
+    3081,
+    3083,
+    3091,
+    3102,
+    3913,
+    3972,
+    4001,
+    4036,
+    4101,
+    11000,
+    11005,
+    11228,
+    13900,
+    18917,
+    21066,
+    23900,
+    28917,
+    30054,
+    30154
+   ],
+   "tier": [
+    "t1"
+   ],
+   "bucket": "X 报告段2375路由表",
+   "h1": [
+    "2375"
+   ],
+   "h2": [],
+   "mtime": "2026-09-25 23:52:15",
+   "old_form_lines": {
+    "2375": {
+     "code": [
+      {
+       "line": 103,
+       "assert": true,
+       "neg": false,
+       "text": "assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(2375)),"
+      },
+      {
+       "line": 111,
+       "assert": true,
+       "neg": false,
+       "text": "assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(2375)),"
+      }
+     ]
+    }
+   },
+   "s2_tier": "t1",
+   "s2_ids_n": 57,
+   "s2_bucket": "R",
+   "ids_g2": [
+    1851,
+    2486,
+    2488,
+    4971,
+    4972,
+    4973,
+    4974,
+    4976,
+    21068,
+    21071,
+    21106,
+    21111,
+    21135,
+    29004
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    1851,
+    2486,
+    2488,
+    4971,
+    4972,
+    4973,
+    4974,
+    4976,
+    21068,
+    21071,
+    21106,
+    21111,
+    21135,
+    29004
+   ],
+   "mixed_face": true,
+   "n_ids_s3": 14,
+   "n_ids_g1": 43
+  },
+  "com.aionemu.gameserver.questEngine.definition.ReportToManySetSucceedAlignmentTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/ReportToManySetSucceedAlignmentTest.java",
+   "ids_chain285": [
+    19004
+   ],
+   "ids_s3": [
+    19004
+   ],
+   "ids_g1": [],
+   "tier": [
+    "t1"
+   ],
+   "bucket": "X 报告段2375路由表",
+   "h1": [
+    "2375"
+   ],
+   "h2": [],
+   "mtime": "2026-09-25 00:58:56",
+   "old_form_lines": {
+    "2375": {
+     "code": [
+      {
+       "line": 42,
+       "assert": false,
+       "neg": false,
+       "text": "new Step(702744, 2034), new Step(702745, 2375))),"
+      },
+      {
+       "line": 49,
+       "assert": false,
+       "neg": false,
+       "text": "new Step(702747, 2034), new Step(702728, 2375))),"
+      }
+     ]
+    }
+   },
+   "s2_tier": "t1",
+   "s2_ids_n": 1,
+   "s2_bucket": "R",
+   "ids_g2": [
+    19004
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    19004
+   ],
+   "mixed_face": false,
+   "n_ids_s3": 1,
+   "n_ids_g1": 0
+  },
+  "com.aionemu.gameserver.questEngine.definition.RetailSingleStepRewardRowContractTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/RetailSingleStepRewardRowContractTest.java",
+   "ids_chain285": [
+    1527,
+    1528,
+    1725,
+    1963,
+    1964,
+    2135,
+    2247,
+    2266,
+    3087,
+    4020,
+    11455,
+    18035,
+    21455,
+    21458
+   ],
+   "ids_s3": [
+    2266,
+    3087,
+    21455
+   ],
+   "ids_g1": [
+    1527,
+    1528,
+    1725,
+    1963,
+    1964,
+    2135,
+    2247,
+    4020,
+    11455,
+    18035,
+    21458
+   ],
+   "tier": [
+    "t3"
+   ],
+   "bucket": "-",
+   "h1": [],
+   "h2": [],
+   "mtime": "2026-09-23 17:32:54",
+   "old_form_lines": {},
+   "s2_tier": "t3",
+   "s2_ids_n": 14,
+   "s2_bucket": "-",
+   "ids_g2": [
+    2266,
+    3087,
+    21455
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    2266,
+    3087,
+    21455
+   ],
+   "mixed_face": true,
+   "n_ids_s3": 3,
+   "n_ids_g1": 11
+  },
+  "com.aionemu.gameserver.questEngine.definition.RewardNpcOwnershipContractTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/RewardNpcOwnershipContractTest.java",
+   "ids_chain285": [
+    21455
+   ],
+   "ids_s3": [
+    21455
+   ],
+   "ids_g1": [],
+   "tier": [
+    "t1"
+   ],
+   "bucket": "Z 奖励行镜像行契约",
+   "h1": [
+    "SELECT_QUEST_REWARD",
+    "DEFAULT_SUCCESS"
+   ],
+   "h2": [],
+   "mtime": "2026-09-24 11:29:18",
+   "old_form_lines": {
+    "SELECT5": {
+     "string": [
+      {
+       "line": 149,
+       "assert": false,
+       "neg": false,
+       "text": "\"21455 stale SELECT5 route must be gone\");"
+      }
+     ]
+    },
+    "SELECT_QUEST_REWARD": {
+     "string": [
+      {
+       "line": 146,
+       "assert": true,
+       "neg": true,
+       "text": "assertFalse(text.contains(\"npc-id=\\\"799404\\\" action=\\\"SELECT_QUEST_REWARD\\\"\"),"
+      }
+     ]
+    },
+    "DEFAULT_SUCCESS": {
+     "string": [
+      {
+       "line": 135,
+       "assert": true,
+       "neg": false,
+       "text": "assertTrue(text.contains(\"<!-- 领奖态入口页：reward + 800327 QUEST_SELECT(31) -> DEFAULT_SUCCESS(10002) -->\"),"
+      }
+     ]
+    }
+   },
+   "s2_tier": "t1",
+   "s2_ids_n": 1,
+   "s2_bucket": "T",
+   "ids_g2": [
+    21455
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    21455
+   ],
+   "mixed_face": false,
+   "n_ids_s3": 1,
+   "n_ids_g1": 0
+  },
+  "com.aionemu.gameserver.questEngine.definition.TreeLadderOwnerTrimContractTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/definition/TreeLadderOwnerTrimContractTest.java",
+   "ids_chain285": [
+    13809,
+    23809
+   ],
+   "ids_s3": [
+    13809,
+    23809
+   ],
+   "ids_g1": [],
+   "tier": [
+    "t1"
+   ],
+   "bucket": "X 报告段2375路由表",
+   "h1": [
+    "SELECT5",
+    "SELECT_QUEST_REWARD"
+   ],
+   "h2": [],
+   "mtime": "2026-09-22 13:20:29",
+   "old_form_lines": {
+    "SELECT5": {
+     "code": [
+      {
+       "line": 230,
+       "assert": true,
+       "neg": false,
+       "text": "assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT5.id())),"
+      }
+     ],
+     "string": [
+      {
+       "line": 229,
+       "assert": false,
+       "neg": false,
+       "text": "() -> \"quest \" + contract.questId() + \" report row opens the client select5 page once\");"
+      },
+      {
+       "line": 232,
+       "assert": false,
+       "neg": false,
+       "text": "() -> \"quest \" + contract.questId() + \" report row must show the client select5 page\");"
+      }
+     ]
+    },
+    "SELECT_QUEST_REWARD": {
+     "code": [
+      {
+       "line": 240,
+       "assert": false,
+       "neg": false,
+       "text": "QuestDialogAction.SELECT_QUEST_REWARD.id())))"
+      }
+     ],
+     "string": [
+      {
+       "line": 243,
+       "assert": false,
+       "neg": false,
+       "text": "() -> \"quest \" + contract.questId() + \" keeps exactly the npc-complete preview SELECT_QUEST_REWARD route\");"
+      }
+     ],
+     "comment": [
+      {
+       "line": 234,
+       "assert": false,
+       "neg": false,
+       "text": "/* 领奖窗口与 1009 只由 npc-complete 的 preview 承接：再显式声明 SELECT_QUEST_REWARD 自环会"
+      },
+      {
+       "line": 237,
+       "assert": false,
+       "neg": false,
+       "text": "SELECT_QUEST_REWARD self-loop is ambiguous (batch 19 lesson). */"
+      }
+     ]
+    }
+   },
+   "s2_tier": "t1",
+   "s2_ids_n": 2,
+   "s2_bucket": "Q",
+   "ids_g2": [
+    13809,
+    23809
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    13809,
+    23809
+   ],
+   "mixed_face": false,
+   "n_ids_s3": 2,
+   "n_ids_g1": 0
+  },
+  "com.aionemu.gameserver.questEngine.e2e.RetailQuestContractTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/e2e/RetailQuestContractTest.java",
+   "ids_chain285": [
+    1118
+   ],
+   "ids_s3": [
+    1118
+   ],
+   "ids_g1": [],
+   "tier": [
+    "t1"
+   ],
+   "bucket": "AA 生产流e2e走查",
+   "h1": [
+    "CHECK_USER_HAS_QUEST_ITEM",
+    "SELECT_QUEST_REWARD"
+   ],
+   "h2": [],
+   "mtime": "2026-09-27 09:53:12",
+   "old_form_lines": {
+    "CHECK_USER_HAS_QUEST_ITEM": {
+     "code": [
+      {
+       "line": 62,
+       "assert": false,
+       "neg": false,
+       "text": "QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id(), QuestDialogAction.QUEST_SELECT.id());"
+      }
+     ]
+    },
+    "SELECT_QUEST_REWARD": {
+     "code": [
+      {
+       "line": 61,
+       "assert": false,
+       "neg": false,
+       "text": "QuestDialogAction.FINISH_DIALOG.id(), QuestDialogAction.SELECT_QUEST_REWARD.id(),"
+      }
+     ]
+    }
+   },
+   "s2_tier": "t1",
+   "s2_ids_n": 1,
+   "s2_bucket": "T",
+   "ids_g2": [
+    1118
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    1118
+   ],
+   "mixed_face": false,
+   "n_ids_s3": 1,
+   "n_ids_g1": 0
+  },
+  "com.aionemu.gameserver.questEngine.runtime.Quest1118ProductionFlowTest": {
+   "file": "src/test/java/com/aionemu/gameserver/questEngine/runtime/Quest1118ProductionFlowTest.java",
+   "ids_chain285": [
+    1118
+   ],
+   "ids_s3": [
+    1118
+   ],
+   "ids_g1": [],
+   "tier": [
+    "t1"
+   ],
+   "bucket": "AA 生产流e2e走查",
+   "h1": [
+    "2375"
+   ],
+   "h2": [],
+   "mtime": "2026-09-25 23:52:15",
+   "old_form_lines": {
+    "2375": {
+     "code": [
+      {
+       "line": 74,
+       "assert": true,
+       "neg": false,
+       "text": "assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(2375)), afterCommit);"
+      }
+     ]
+    }
+   },
+   "s2_tier": "t1",
+   "s2_ids_n": 1,
+   "s2_bucket": "S",
+   "ids_g2": [
+    1118
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    1118
+   ],
+   "mixed_face": false,
+   "n_ids_s3": 1,
+   "n_ids_g1": 0
+  },
+  "com.aionemu.gameserver.services.instance.InstanceServiceTest": {
+   "file": "src/test/java/com/aionemu/gameserver/services/instance/InstanceServiceTest.java",
+   "ids_chain285": [
+    3001,
+    4001
+   ],
+   "ids_s3": [
+    3001
+   ],
+   "ids_g1": [
+    4001
+   ],
+   "tier": [
+    "t3"
+   ],
+   "bucket": "-",
+   "h1": [],
+   "h2": [],
+   "mtime": "2026-09-19 20:04:39",
+   "old_form_lines": {},
+   "s2_tier": "t3",
+   "s2_ids_n": 2,
+   "s2_bucket": "-",
+   "ids_g2": [
+    3001
+   ],
+   "ids_g3": [],
+   "ids_s3_selector_view": [
+    3001
+   ],
+   "mixed_face": true,
+   "n_ids_s3": 1,
+   "n_ids_g1": 1
+  }
+ },
+ "s2_reanchored_16": [
+  "Batch40ThreeNpcTalkLadderContractTest",
+  "EarlyElyosQuestRegressionTest",
+  "Quest1192ClientDialogAlignmentTest",
+  "Quest1220ClientDialogAlignmentTest",
+  "Quest1553ClientDialogAlignmentTest",
+  "Quest1913ClientDialogAlignmentTest",
+  "Quest1913ProductionFlowTest",
+  "Quest3961To3964RetailAlignmentTest",
+  "QuestBatchReportNpcAlignmentTest",
+  "QuestDispatchToVerteronFamilyProductionFlowTest",
+  "QuestGoldenJourneyTest",
+  "QuestPrematureRewardRouteExclusionTest",
+  "QuestProductionAcceptProtocolRegressionTest",
+  "QuestRepeatLifecycleTest",
+  "RetailSimpleTalkMigrationReviewContractTest",
+  "XmlQuestFamilyDefinitionTest"
+ ],
+ "s2_reanchored_16_intersect_s3": [
+  "EarlyElyosQuestRegressionTest"
+ ],
+ "gamma_untouched_by_s2_sort": [
+  "AlignedMirrorRewardRowContractTest",
+  "Batch29RewardRowClosureContractTest",
+  "Batch31GelkmarosRowLadderContractTest",
+  "EquipmentSettingUseActionTest",
+  "EquipmentTest",
+  "InstanceServiceTest",
+  "JournalRewardRowRepairContractTest",
+  "LegacyTemplateMirrorRouteRegressionTest",
+  "Quest1118ProductionFlowTest",
+  "Quest1152RetailAlignmentTest",
+  "Quest1163ClientDialogAlignmentTest",
+  "Quest19004RetailAlignmentTest",
+  "Quest2953RetailFlowAlignmentTest",
+  "Quest3100ClientDialogAlignmentTest",
+  "QuestA03ShardRetailAlignmentTest",
+  "QuestDialog31RegressionTest",
+  "QuestDialogOrderAuditTest",
+  "QuestMinionTutorialRetailAlignmentTest",
+  "QuestMovieAndDialogLoopRegressionTest",
+  "QuestMultistepChainContractTest",
+  "QuestPrerequisiteRetailContractTest",
+  "QuestStartItemDefinitionRegressionTest",
+  "ReportToManyDialogRouteRegressionTest",
+  "ReportToManyLegacyFlowRegressionTest",
+  "ReportToManySetSucceedAlignmentTest",
+  "RetailQuestContractTest",
+  "RetailSingleStepRewardRowContractTest",
+  "RewardNpcOwnershipContractTest",
+  "TreeLadderOwnerTrimContractTest"
+ ],
+ "fingerprints": {
+  "RetailSimpleTalkDefinitionCompiler.java": {
+   "md5_12": "afa06e48fe8d",
+   "mtime": "2026-09-27 14:32:25"
+  },
+  "RetailSimpleTalkGateTest.java": {
+   "md5_12": "48c965f01de0",
+   "mtime": "2026-09-27 14:01:13"
+  },
+  "RetailSimpleTalkChainGateTest.java": {
+   "md5_12": "b90876b0d2b4",
+   "mtime": "2026-09-27 14:09:34"
+  },
+  "Quest_SimpleTalk.xml": {
+   "md5_12": "85d84d329fd2",
+   "mtime": "2026-09-23 13:14:18"
+  },
+  "retail-xml-retention.tsv": {
+   "md5_12": "24f8ca5d7950",
+   "mtime": "2026-09-26 22:40:41"
+  },
+  "quest_client_talk_chain_steps.tsv": {
+   "md5_12": "0ae2d9243e96",
+   "mtime": "2026-09-26 22:48:34"
+  },
+  "retail-simple-talk-chain-ir-fingerprints.tsv": {
+   "md5_12": "6ef4f9a3cb56",
+   "mtime": "2026-09-27 14:33:21"
+  },
+  "affected_quest_tests.py": {
+   "md5_12": "ee73c759ccfe",
+   "mtime": "2026-09-27 09:58:27"
+  }
+ },
+ "id_profile": {
+  "1118": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 5,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": "ITEM_QUEST_1118A 1",
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Polinia",
+   "rew": "Melpone",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1"
+   ]
+  },
+  "1152": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 6,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": "1",
+   "give_item": "ITEM_QUEST_1152A 1",
+   "give_item1": null,
+   "remove_item1": "ITEM_QUEST_1152A 1",
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Nemia",
+   "rew": "Eradis",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "FINISH_DIALOG",
+    "QUEST_SELECT",
+    "SELECT1_1",
+    "SELECT2_1",
+    "SETPRO1"
+   ]
+  },
+  "1163": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 4,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": "ITEM_QUEST_1163A 1",
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Kinesos",
+   "rew": "Roseino",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SETPRO1"
+   ]
+  },
+  "1323": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 11,
+   "nB": 1,
+   "blocks": [
+    "NPC_COMPLETE"
+   ],
+   "item_check": null,
+   "give_item": "ITEM_QUEST_1323A 1",
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "LF2_Lost_JewelBox",
+   "rew": "Justachys",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "ASK_QUEST_ACCEPT",
+    "FINISH_DIALOG",
+    "QUEST_ACCEPT_1",
+    "QUEST_REFUSE_1",
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1",
+    "USE_OBJECT"
+   ]
+  },
+  "1394": {
+   "group": "G2",
+   "nN": 6,
+   "nR": 11,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 2,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2"
+   ],
+   "acq": "Elram",
+   "rew": "Paion",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1",
+    "SETPRO2",
+    "USE_OBJECT"
+   ]
+  },
+  "1484": {
+   "group": "G2",
+   "nN": 6,
+   "nR": 12,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": "ITEM_QUEST_1484A 1",
+   "remove_item1": null,
+   "ntalk": 3,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2",
+    "talk_npc3"
+   ],
+   "acq": "Shugo_LF2_14",
+   "rew": "Shugo_LF2_13",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SELECT4_1",
+    "SETPRO1",
+    "SETPRO2",
+    "SETPRO3"
+   ]
+  },
+  "1851": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 7,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 2,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2"
+   ],
+   "acq": "Rentia",
+   "rew": "Rentia",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SETPRO1",
+    "SETPRO2"
+   ]
+  },
+  "2266": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 5,
+   "nB": 4,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": "ITEM_DOC_QUEST_2266A 1",
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Valuerin",
+   "rew": "Aurtri",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SETPRO1"
+   ]
+  },
+  "2271": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 5,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": "ITEM_DOC_QUEST_2271A 1",
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Neifenmer",
+   "rew": "Sueron",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SETPRO1"
+   ]
+  },
+  "2480": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 8,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": "ITEM_QUEST_2480A 1",
+   "remove_item1": null,
+   "ntalk": 2,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2"
+   ],
+   "acq": "Tree_Move_Nabalu",
+   "rew": "Tree_Move_Nabalu",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SETPRO1",
+    "SETPRO2"
+   ]
+  },
+  "2486": {
+   "group": "G2",
+   "nN": 6,
+   "nR": 11,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 3,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2",
+    "talk_npc3"
+   ],
+   "acq": "Kvasir",
+   "rew": "Mirka",
+   "con": "2487",
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT1_1",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SELECT4_1",
+    "SETPRO1",
+    "SETPRO2",
+    "SETPRO3",
+    "USE_OBJECT"
+   ]
+  },
+  "2488": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 4,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Kvasir",
+   "rew": "Nerthus",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SETPRO1",
+    "USE_OBJECT"
+   ]
+  },
+  "2538": {
+   "group": "G2",
+   "nN": 6,
+   "nR": 12,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 3,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2",
+    "talk_npc3"
+   ],
+   "acq": "NPC_Debrie_Hild",
+   "rew": "NPC_Debrie_Hild",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT1_1",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SELECT4_1",
+    "SETPRO1",
+    "SETPRO2",
+    "SETPRO3"
+   ]
+  },
+  "2553": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 7,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Shugo_DF3_12",
+   "rew": "Shugo_DF3_12",
+   "con": "2554",
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1"
+   ]
+  },
+  "2611": {
+   "group": "G3",
+   "nN": 7,
+   "nR": 22,
+   "nB": 4,
+   "blocks": [
+    "NPC_REPORT"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 3,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2",
+    "talk_npc3"
+   ],
+   "acq": "Freyja",
+   "rew": "Freyja",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "ASK_QUEST_ACCEPT",
+    "FINISH_DIALOG",
+    "QUEST_ACCEPT_1",
+    "QUEST_ACCEPT_SIMPLE",
+    "QUEST_REFUSE_1",
+    "QUEST_REFUSE_2",
+    "QUEST_REFUSE_SIMPLE",
+    "QUEST_SELECT",
+    "SELECT1_1",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SELECT4_1",
+    "SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1",
+    "SETPRO2",
+    "SETPRO3",
+    "USE_OBJECT"
+   ]
+  },
+  "2646": {
+   "group": "G2",
+   "nN": 7,
+   "nR": 11,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": "ITEM_QUEST_2646A 1",
+   "remove_item1": null,
+   "ntalk": 3,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2",
+    "talk_npc3"
+   ],
+   "acq": "Svafnir",
+   "rew": "Svafnir",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SELECT4_1",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1",
+    "SETPRO2",
+    "SETPRO3"
+   ]
+  },
+  "2663": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 4,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": "ITEM_QUEST_2663A 1",
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Dewi",
+   "rew": "Dewi",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SETPRO1"
+   ]
+  },
+  "2914": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 7,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": "ITEM_QUEST_2914A 1",
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Air",
+   "rew": "Air",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT1_1",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SELECT4_1",
+    "SETPRO1"
+   ]
+  },
+  "2953": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 6,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": "ITEM_QUEST_2953A 1",
+   "give_item1": null,
+   "remove_item1": "ITEM_QUEST_2953A 1",
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Doman",
+   "rew": "Doman",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT1_1",
+    "SELECT2_1",
+    "SETPRO1"
+   ]
+  },
+  "2954": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 4,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": "ITEM_QUEST_2954A 1",
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Doman",
+   "rew": "Doman",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SETPRO1"
+   ]
+  },
+  "2963": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 4,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Srudgelmir",
+   "rew": "Srudgelmir",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SETPRO1",
+    "USE_OBJECT"
+   ]
+  },
+  "3001": {
+   "group": "G2",
+   "nN": 7,
+   "nR": 21,
+   "nB": 0,
+   "blocks": [],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 3,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2",
+    "talk_npc3"
+   ],
+   "acq": "Shugo_LF2a_1",
+   "rew": "Shugo_LF2a_1",
+   "con": "3002",
+   "self_loop": true,
+   "actions": [
+    "ASK_QUEST_ACCEPT",
+    "FINISH_DIALOG",
+    "QUEST_ACCEPT_1",
+    "QUEST_REFUSE_1",
+    "QUEST_REFUSE_2",
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SELECT4_1",
+    "SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1",
+    "SETPRO2",
+    "SETPRO3",
+    "USE_OBJECT"
+   ]
+  },
+  "3023": {
+   "group": "G2",
+   "nN": 7,
+   "nR": 24,
+   "nB": 0,
+   "blocks": [],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": "ITEM_QUEST_3023A 1",
+   "remove_item1": null,
+   "ntalk": 3,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2",
+    "talk_npc3"
+   ],
+   "acq": "Shugo_LF2a_7",
+   "rew": "Shugo_LF2a_7",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "ASK_QUEST_ACCEPT",
+    "FINISH_DIALOG",
+    "QUEST_ACCEPT_1",
+    "QUEST_REFUSE_1",
+    "QUEST_REFUSE_2",
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SELECT3_1_1",
+    "SELECT4_1",
+    "SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1",
+    "SETPRO2",
+    "SETPRO3",
+    "USE_OBJECT"
+   ]
+  },
+  "3037": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 5,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": "ITEM_QUEST_3037A 1",
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Grynos",
+   "rew": "Grynos",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT1_1",
+    "SELECT2_1",
+    "SETPRO1"
+   ]
+  },
+  "3041": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 5,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": "ITEM_QUEST_3041A 1",
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Shugo_LF2a_9",
+   "rew": "Shugo_LF2a_9",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT1_1",
+    "SELECT2_1",
+    "SETPRO1"
+   ]
+  },
+  "3087": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 5,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": "ITEM_DOC_QUEST_3087A 1",
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Shugo_LF2a_16",
+   "rew": "Talos",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT1_1",
+    "SETPRO1"
+   ]
+  },
+  "3093": {
+   "group": "G2",
+   "nN": 6,
+   "nR": 12,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 3,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2",
+    "talk_npc3"
+   ],
+   "acq": "Shugo_LF2a_12",
+   "rew": "Shugo_LF2a_12",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT1_1",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SELECT4_1",
+    "SETPRO1",
+    "SETPRO2",
+    "SETPRO3"
+   ]
+  },
+  "3100": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 4,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": "ITEM_QUEST_3100A 1",
+   "give_item1": null,
+   "remove_item1": "ITEM_QUEST_3100A 1",
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Utisda",
+   "rew": "Shugo_LF2a_11",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SETPRO1"
+   ]
+  },
+  "3218": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 4,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": "ITEM_QUEST_3218A 1",
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "LF3_Konaching_E",
+   "rew": "LF3_Konaching_E",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT1_1",
+    "SELECT_QUEST_REWARD"
+   ]
+  },
+  "3966": {
+   "group": "G2",
+   "nN": 7,
+   "nR": 11,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 3,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2",
+    "talk_npc3"
+   ],
+   "acq": "Andu",
+   "rew": "Andu",
+   "con": "3967",
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SELECT4_1",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1",
+    "SETPRO2",
+    "SETPRO3"
+   ]
+  },
+  "4052": {
+   "group": "G2",
+   "nN": 6,
+   "nR": 11,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 3,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2",
+    "talk_npc3"
+   ],
+   "acq": "DF2a_NPC_Moai",
+   "rew": "DF2a_NPC_Moai",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SELECT4_1",
+    "SETPRO1",
+    "SETPRO2",
+    "SETPRO3"
+   ]
+  },
+  "4209": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 6,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": "1",
+   "give_item": null,
+   "give_item1": "ITEM_QUEST_4209A 1",
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "DF3_Fairringring_E",
+   "rew": "Shugo_Shulack_02",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1"
+   ]
+  },
+  "4218": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 4,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": "ITEM_QUEST_4218A 1",
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "DF3_Hasiroong_E",
+   "rew": "DF3_Hasiroong_E",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT1_1",
+    "SELECT_QUEST_REWARD"
+   ]
+  },
+  "4970": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 6,
+   "nB": 1,
+   "blocks": [
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Shugo_DC1_17",
+   "rew": "Timogand",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1",
+    "USE_OBJECT"
+   ]
+  },
+  "4971": {
+   "group": "G2",
+   "nN": 6,
+   "nR": 10,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 3,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2",
+    "talk_npc3"
+   ],
+   "acq": "Timogand",
+   "rew": "Timogand",
+   "con": "4972",
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SELECT4_1",
+    "SETPRO1",
+    "SETPRO2",
+    "SETPRO3",
+    "USE_OBJECT"
+   ]
+  },
+  "4972": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 4,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Timogand",
+   "rew": "Timogand",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SETPRO1",
+    "USE_OBJECT"
+   ]
+  },
+  "4973": {
+   "group": "G2",
+   "nN": 6,
+   "nR": 10,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 3,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2",
+    "talk_npc3"
+   ],
+   "acq": "Mione",
+   "rew": "Mione",
+   "con": "4974",
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SELECT4_1",
+    "SETPRO1",
+    "SETPRO2",
+    "SETPRO3",
+    "USE_OBJECT"
+   ]
+  },
+  "4974": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 4,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Mione",
+   "rew": "Mione",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SETPRO1",
+    "USE_OBJECT"
+   ]
+  },
+  "4976": {
+   "group": "G2",
+   "nN": 6,
+   "nR": 10,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 3,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2",
+    "talk_npc3"
+   ],
+   "acq": "Heltinjola",
+   "rew": "Heltinjola",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SELECT4_1",
+    "SETPRO1",
+    "SETPRO2",
+    "SETPRO3",
+    "USE_OBJECT"
+   ]
+  },
+  "11010": {
+   "group": "G2",
+   "nN": 6,
+   "nR": 12,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 3,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2",
+    "talk_npc3"
+   ],
+   "acq": "Pucio",
+   "rew": "Naiting",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT1_1",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SELECT4_1",
+    "SETPRO1",
+    "SETPRO2",
+    "SETPRO3"
+   ]
+  },
+  "11070": {
+   "group": "G2",
+   "nN": 6,
+   "nR": 10,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": "ITEM_QUEST_11070A 3",
+   "give_item1": null,
+   "remove_item1": "ITEM_QUEST_11070A 1",
+   "ntalk": 3,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2",
+    "talk_npc3"
+   ],
+   "acq": "Meiria",
+   "rew": "Meiria",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SELECT4_1",
+    "SETPRO1",
+    "SETPRO2",
+    "SETPRO3",
+    "USE_OBJECT"
+   ]
+  },
+  "11103": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 9,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 2,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2"
+   ],
+   "acq": "Croton",
+   "rew": "Croton",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT1_1",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SETPRO1",
+    "SETPRO2"
+   ]
+  },
+  "11105": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 7,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": "ITEM_DOC_QUEST_11105A 1",
+   "give_item1": "ITEM_QUEST_11105B 1",
+   "remove_item1": "ITEM_DOC_QUEST_11105A 1",
+   "ntalk": 2,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2"
+   ],
+   "acq": "Shugo_LF4_3",
+   "rew": "Shugo_LF4_3",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SETPRO1",
+    "SETPRO2",
+    "USE_OBJECT"
+   ]
+  },
+  "11106": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 11,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": "ITEM_DOC_QUEST_11106A 1",
+   "give_item1": "ITEM_DOC_QUEST_11106B 1",
+   "remove_item1": "ITEM_DOC_QUEST_11106A 1",
+   "ntalk": 2,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2"
+   ],
+   "acq": "Geta",
+   "rew": "Dimos",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT1_1",
+    "SELECT2_1",
+    "SELECT2_2",
+    "SELECT2_3",
+    "SELECT3_1",
+    "SELECT3_2",
+    "SETPRO1",
+    "SETPRO2",
+    "USE_OBJECT"
+   ]
+  },
+  "11117": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 7,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 2,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2"
+   ],
+   "acq": "Shulack_LF4_1",
+   "rew": "Shulack_LF4_1",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SETPRO1",
+    "SETPRO2",
+    "USE_OBJECT"
+   ]
+  },
+  "11460": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 5,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": "ITEM_QUEST_11460A 1",
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Dorsia",
+   "rew": "Shulack_LF4_1",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SETPRO1"
+   ]
+  },
+  "13809": {
+   "group": "G2",
+   "nN": 6,
+   "nR": 7,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": "1",
+   "give_item": null,
+   "give_item1": "ITEM_QUEST_13809A 1",
+   "remove_item1": null,
+   "ntalk": 3,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2",
+    "talk_npc3"
+   ],
+   "acq": "LDF5_Fortress_Village_Guard01_L",
+   "rew": "LDF5_Fortress_Village_Guard01_L",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SETPRO1",
+    "SETPRO2",
+    "SETPRO3",
+    "USE_OBJECT"
+   ]
+  },
+  "19004": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 6,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 2,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2"
+   ],
+   "acq": "Perikles",
+   "rew": "Hilarus",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SETPRO1",
+    "SETPRO2"
+   ]
+  },
+  "21004": {
+   "group": "G2",
+   "nN": 6,
+   "nR": 9,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 2,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2"
+   ],
+   "acq": "Gelastra",
+   "rew": "Gelastra",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT1_1",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1",
+    "SETPRO2"
+   ]
+  },
+  "21033": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 7,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": "ITEM_QUEST_21033A 1",
+   "give_item1": "ITEM_QUEST_21033B 1",
+   "remove_item1": "ITEM_QUEST_21033A 1",
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Carabel",
+   "rew": "Carabel",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1",
+    "SETPRO2"
+   ]
+  },
+  "21036": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 7,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": "ITEM_QUEST_21036A 1",
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 2,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2"
+   ],
+   "acq": "Denskel",
+   "rew": "Wolfgang",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SETPRO1",
+    "SETPRO2"
+   ]
+  },
+  "21065": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 5,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Niamela",
+   "rew": "Niamela",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1"
+   ]
+  },
+  "21068": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 8,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 2,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2"
+   ],
+   "acq": "Homesiane",
+   "rew": "Sherockian",
+   "con": "21069",
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT1_1",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SETPRO1",
+    "SETPRO2",
+    "USE_OBJECT"
+   ]
+  },
+  "21071": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 5,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Skilving",
+   "rew": "Skilving",
+   "con": "21072",
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT1_1",
+    "SELECT2_1",
+    "SETPRO1"
+   ]
+  },
+  "21106": {
+   "group": "G2",
+   "nN": 6,
+   "nR": 11,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 3,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2",
+    "talk_npc3"
+   ],
+   "acq": "Gehlen",
+   "rew": "Gehlen",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT1_1",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SELECT4_1",
+    "SETPRO1",
+    "SETPRO2",
+    "SETPRO3",
+    "USE_OBJECT"
+   ]
+  },
+  "21111": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 5,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Shulack_DF4_1",
+   "rew": "Shulack_DF4_1",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "SELECT1_1",
+    "SELECT2_1",
+    "SETPRO1",
+    "USE_OBJECT"
+   ]
+  },
+  "21135": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 4,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Wolfgang",
+   "rew": "Gehlen",
+   "con": "21136",
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SETPRO1",
+    "USE_OBJECT"
+   ]
+  },
+  "21136": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 15,
+   "nB": 1,
+   "blocks": [
+    "NPC_COMPLETE"
+   ],
+   "item_check": null,
+   "give_item": "ITEM_QUEST_21136A 1",
+   "give_item1": null,
+   "remove_item1": "ITEM_QUEST_21136A 1",
+   "ntalk": 2,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2"
+   ],
+   "acq": "Gehlen",
+   "rew": "DF4_shugobody_Q21136",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "ASK_QUEST_ACCEPT",
+    "FINISH_DIALOG",
+    "QUEST_ACCEPT_1",
+    "QUEST_REFUSE_1",
+    "QUEST_REFUSE_2",
+    "QUEST_REFUSE_SIMPLE",
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SETPRO1",
+    "SETPRO2",
+    "USE_OBJECT"
+   ]
+  },
+  "21217": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 8,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": "ITEM_QUEST_21217A 1",
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 2,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2"
+   ],
+   "acq": "Itar",
+   "rew": "Barretta",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1",
+    "SETPRO2"
+   ]
+  },
+  "21455": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 6,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": "ITEM_QUEST_21455A 1",
+   "give_item1": "ITEM_QUEST_21455B 1",
+   "remove_item1": "ITEM_QUEST_21455A 1",
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "Tree_NoMove_Miener",
+   "rew": "Unset",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1"
+   ]
+  },
+  "23809": {
+   "group": "G2",
+   "nN": 6,
+   "nR": 7,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": "1",
+   "give_item": null,
+   "give_item1": "ITEM_QUEST_23809A 1",
+   "remove_item1": null,
+   "ntalk": 3,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2",
+    "talk_npc3"
+   ],
+   "acq": "LDF5_Fortress_Village_Guard01_D",
+   "rew": "LDF5_Fortress_Village_Guard01_D",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SETPRO1",
+    "SETPRO2",
+    "SETPRO3",
+    "USE_OBJECT"
+   ]
+  },
+  "24202": {
+   "group": "G2",
+   "nN": 6,
+   "nR": 20,
+   "nB": 1,
+   "blocks": [
+    "NPC_COMPLETE"
+   ],
+   "item_check": "1",
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 2,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2"
+   ],
+   "acq": "Surt",
+   "rew": "Surt",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "ASK_QUEST_ACCEPT",
+    "FINISH_DIALOG",
+    "QUEST_ACCEPT_1",
+    "QUEST_ACCEPT_SIMPLE",
+    "QUEST_REFUSE_1",
+    "QUEST_REFUSE_2",
+    "QUEST_REFUSE_SIMPLE",
+    "QUEST_SELECT",
+    "SELECT1_1",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SETPRO1",
+    "SETPRO2",
+    "SET_SUCCEED"
+   ]
+  },
+  "28809": {
+   "group": "G2",
+   "nN": 6,
+   "nR": 7,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": "ITEM_RIDE_WHALE_002_ET60 1",
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 2,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2"
+   ],
+   "acq": "Shugo_housing_42",
+   "rew": "Shugo_housing_42",
+   "con": null,
+   "self_loop": true,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1",
+    "SETPRO2"
+   ]
+  },
+  "29004": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 7,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 2,
+   "talk_keys": [
+    "talk_npc1",
+    "talk_npc2"
+   ],
+   "acq": "Veldina",
+   "rew": "Angulof",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT3_1",
+    "SETPRO1",
+    "SETPRO2",
+    "USE_OBJECT"
+   ]
+  },
+  "30711": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 7,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "IDTiamat_FOBJ_Dagger_1",
+   "rew": "LF5_Monroe_E",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1",
+    "USE_OBJECT"
+   ]
+  },
+  "30761": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 7,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "IDTiamat_FOBJ_Dagger_1",
+   "rew": "DF5_Hank_E",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1",
+    "USE_OBJECT"
+   ]
+  },
+  "35010": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 19,
+   "nB": 1,
+   "blocks": [
+    "NPC_COMPLETE"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "_faction_",
+   "rew": "Palas",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "ASK_QUEST_ACCEPT",
+    "FINISH_DIALOG",
+    "QUEST_ACCEPT_1",
+    "QUEST_ACCEPT_SIMPLE",
+    "QUEST_REFUSE_1",
+    "QUEST_REFUSE_2",
+    "QUEST_REFUSE_SIMPLE",
+    "QUEST_SELECT",
+    "SELECT2",
+    "SELECT2_1",
+    "SELECT5",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1"
+   ]
+  },
+  "35011": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 8,
+   "nB": 1,
+   "blocks": [
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "_faction_",
+   "rew": "Palas",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1",
+    "USE_OBJECT"
+   ]
+  },
+  "35017": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 12,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_REPORT"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "_faction_",
+   "rew": "Priamos",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "ASK_QUEST_ACCEPT",
+    "FINISH_DIALOG",
+    "QUEST_ACCEPT_1",
+    "QUEST_ACCEPT_SIMPLE",
+    "QUEST_REFUSE_1",
+    "QUEST_REFUSE_2",
+    "QUEST_REFUSE_SIMPLE",
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SETPRO1"
+   ]
+  },
+  "35018": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 19,
+   "nB": 1,
+   "blocks": [
+    "NPC_COMPLETE"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "_faction_",
+   "rew": "Priamos",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "ASK_QUEST_ACCEPT",
+    "FINISH_DIALOG",
+    "QUEST_ACCEPT_1",
+    "QUEST_ACCEPT_SIMPLE",
+    "QUEST_REFUSE_1",
+    "QUEST_REFUSE_2",
+    "QUEST_REFUSE_SIMPLE",
+    "QUEST_SELECT",
+    "SELECT2",
+    "SELECT2_1",
+    "SELECT5",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1"
+   ]
+  },
+  "35024": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 23,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "_faction_",
+   "rew": "LF4_GuardianOfDivine",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "ASK_QUEST_ACCEPT",
+    "FINISH_DIALOG",
+    "QUEST_ACCEPT_1",
+    "QUEST_ACCEPT_SIMPLE",
+    "QUEST_REFUSE_1",
+    "QUEST_REFUSE_2",
+    "QUEST_REFUSE_SIMPLE",
+    "QUEST_SELECT",
+    "SELECT2",
+    "SELECT2_1",
+    "SELECT5",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1"
+   ]
+  },
+  "35025": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 23,
+   "nB": 0,
+   "blocks": [],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "_faction_",
+   "rew": "LF4_GuardianOfDivine",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "ASK_QUEST_ACCEPT",
+    "FINISH_DIALOG",
+    "QUEST_ACCEPT_1",
+    "QUEST_ACCEPT_SIMPLE",
+    "QUEST_REFUSE_1",
+    "QUEST_REFUSE_2",
+    "QUEST_REFUSE_SIMPLE",
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1",
+    "USE_OBJECT"
+   ]
+  },
+  "35026": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 10,
+   "nB": 1,
+   "blocks": [
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "_faction_",
+   "rew": "LF4_GuardianOfDivine",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SELECT2_1",
+    "SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1",
+    "USE_OBJECT"
+   ]
+  },
+  "45010": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 21,
+   "nB": 0,
+   "blocks": [],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "_faction_",
+   "rew": "Columba",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "ASK_QUEST_ACCEPT",
+    "FINISH_DIALOG",
+    "QUEST_ACCEPT_1",
+    "QUEST_ACCEPT_SIMPLE",
+    "QUEST_REFUSE_1",
+    "QUEST_REFUSE_2",
+    "QUEST_REFUSE_SIMPLE",
+    "QUEST_SELECT",
+    "SELECT2",
+    "SELECT2_1",
+    "SELECT5",
+    "SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1",
+    "USE_OBJECT"
+   ]
+  },
+  "45011": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 19,
+   "nB": 1,
+   "blocks": [
+    "NPC_COMPLETE"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "_faction_",
+   "rew": "Columba",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "ASK_QUEST_ACCEPT",
+    "FINISH_DIALOG",
+    "QUEST_ACCEPT_1",
+    "QUEST_ACCEPT_SIMPLE",
+    "QUEST_REFUSE_1",
+    "QUEST_REFUSE_2",
+    "QUEST_REFUSE_SIMPLE",
+    "QUEST_SELECT",
+    "SELECT2",
+    "SELECT2_1",
+    "SELECT5",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1"
+   ]
+  },
+  "45017": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 21,
+   "nB": 0,
+   "blocks": [],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "_faction_",
+   "rew": "Alaum",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "ASK_QUEST_ACCEPT",
+    "FINISH_DIALOG",
+    "QUEST_ACCEPT_1",
+    "QUEST_ACCEPT_SIMPLE",
+    "QUEST_REFUSE_1",
+    "QUEST_REFUSE_2",
+    "QUEST_REFUSE_SIMPLE",
+    "QUEST_SELECT",
+    "SELECT2",
+    "SELECT2_1",
+    "SELECT5",
+    "SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1",
+    "USE_OBJECT"
+   ]
+  },
+  "45018": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 19,
+   "nB": 1,
+   "blocks": [
+    "NPC_COMPLETE"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "_faction_",
+   "rew": "Alaum",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "ASK_QUEST_ACCEPT",
+    "FINISH_DIALOG",
+    "QUEST_ACCEPT_1",
+    "QUEST_ACCEPT_SIMPLE",
+    "QUEST_REFUSE_1",
+    "QUEST_REFUSE_2",
+    "QUEST_REFUSE_SIMPLE",
+    "QUEST_SELECT",
+    "SELECT2",
+    "SELECT2_1",
+    "SELECT5",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1"
+   ]
+  },
+  "45024": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 37,
+   "nB": 0,
+   "blocks": [],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "_faction_",
+   "rew": "DF4_GuardianOfTower",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "ASK_QUEST_ACCEPT",
+    "FINISH_DIALOG",
+    "QUEST_ACCEPT_1",
+    "QUEST_ACCEPT_SIMPLE",
+    "QUEST_REFUSE_1",
+    "QUEST_REFUSE_2",
+    "QUEST_REFUSE_SIMPLE",
+    "QUEST_SELECT",
+    "SELECT2",
+    "SELECT2_1",
+    "SELECT5",
+    "SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1",
+    "USE_OBJECT"
+   ]
+  },
+  "45025": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 23,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "_faction_",
+   "rew": "DF4_GuardianOfTower",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "ASK_QUEST_ACCEPT",
+    "FINISH_DIALOG",
+    "QUEST_ACCEPT_1",
+    "QUEST_ACCEPT_SIMPLE",
+    "QUEST_REFUSE_1",
+    "QUEST_REFUSE_2",
+    "QUEST_REFUSE_SIMPLE",
+    "QUEST_SELECT",
+    "SELECT2",
+    "SELECT2_1",
+    "SELECT5",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1"
+   ]
+  },
+  "45026": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 31,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE"
+   ],
+   "item_check": null,
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "_faction_",
+   "rew": "DF4_GuardianOfTower",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "ASK_QUEST_ACCEPT",
+    "FINISH_DIALOG",
+    "QUEST_ACCEPT_1",
+    "QUEST_ACCEPT_SIMPLE",
+    "QUEST_REFUSE_1",
+    "QUEST_REFUSE_2",
+    "QUEST_REFUSE_SIMPLE",
+    "QUEST_SELECT",
+    "SELECT2",
+    "SELECT2_1",
+    "SELECT5",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1"
+   ]
+  },
+  "80320": {
+   "group": "G2",
+   "nN": 5,
+   "nR": 18,
+   "nB": 0,
+   "blocks": [],
+   "item_check": "1",
+   "give_item": null,
+   "give_item1": null,
+   "remove_item1": null,
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "event_Ziva",
+   "rew": "event_Soraya",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "ASK_QUEST_ACCEPT",
+    "FINISH_DIALOG",
+    "QUEST_ACCEPT_1",
+    "QUEST_ACCEPT_SIMPLE",
+    "QUEST_REFUSE_1",
+    "QUEST_REFUSE_2",
+    "QUEST_REFUSE_SIMPLE",
+    "QUEST_SELECT",
+    "SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD",
+    "SELECT_QUEST_REWARD",
+    "SETPRO1",
+    "SET_SUCCEED",
+    "USE_OBJECT"
+   ]
+  },
+  "80752": {
+   "group": "G2",
+   "nN": 4,
+   "nR": 3,
+   "nB": 2,
+   "blocks": [
+    "NPC_COMPLETE",
+    "NPC_START"
+   ],
+   "item_check": null,
+   "give_item": "ITEM_WORLD_EVENT_HORSE_1HOURS 1",
+   "give_item1": null,
+   "remove_item1": "ITEM_WORLD_EVENT_HORSE_1HOURS 1",
+   "ntalk": 1,
+   "talk_keys": [
+    "talk_npc1"
+   ],
+   "acq": "event_ivan",
+   "rew": "event_warewolf",
+   "con": null,
+   "self_loop": false,
+   "actions": [
+    "QUEST_SELECT",
+    "SETPRO1"
+   ]
+  }
+ },
+ "calibration": {
+  "s1": "56/10/62/5 identical to /tmp/tiers-fixed.json",
+  "s2": "2 flips: RetailSimpleTalkChainGateTest t3->t1+both; Quest1913ProductionFlowTest t1->t3"
+ },
+ "methodology_correction": "初版误用 S3 选择器的 class_hits 判定混合面（得 MIX=0，属循环论证）；已按 285 口径重算并在台账 §2.2 留痕更正：13 混合 + 17 纯 γ"
+}

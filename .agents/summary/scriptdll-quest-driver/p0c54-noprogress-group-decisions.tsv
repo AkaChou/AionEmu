@@ -1,0 +1,7 @@
+# P0c-54 / 续片 28 决策表：无进度交付行的声明组多 owner 采纳（18737 / 28737）
+# 判据 = 无进度交付行 ∧ 接取 NPC 非空 ∧ reward 名在组表内声明 ∧ 客户端 npc 块声明 ≥2 成员 ∧ 遗留 XML 逐成员带报告/完成块
+# 机械：resolvePartyName（精确→声明组→变体）优先；只对 noProgress 行放行多 owner；报告流逐 owner、完成流按集合一次
+# basis=DD_NO_PROGRESS_GROUP_REWARD
+quest_id	acquire	reward（组名）	组员（客户端声明序）	组表行	遗留 XML 见证	结论
+18737	LF5_Averse_E（804707，精确）	IDRaksha_Solo_StageStart	206378,206379,206380	第 18 行（3 员，共 `title_id`）	3 × `NPC_REPORT` + 3 × `npc-complete`（206378/206379/206380 各一份，逐字同形）	ADOPT：交付集 = 组员全展开
+28737	DF5_Cnut_E（804732，精确）	IDRaksha_Solo_StageStart_Dark	206395,206396,206397	第 19 行（3 员）	同形（暗面三人各一份）	ADOPT：交付集 = 组员全展开

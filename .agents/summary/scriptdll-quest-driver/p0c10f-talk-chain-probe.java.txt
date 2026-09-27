@@ -1,0 +1,193 @@
+package com.aionemu.gameserver.questEngine.retail;
+
+import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+/**
+ * 临时对拍探针（P0c-10f wave A）：123 行链式登记逐行编译 → 与退役前 XML IR 对拍；
+ * 结果经 {@code -Dretail.talkChain.out=<path>} 导出。裁定完成后本测试删除（源码归档 .java.txt）。
+ * Temporary equivalence probe for the wave-A chain rows; deleted after adjudication.
+ */
+class RetailTalkChainProbeTest {
+
+	private static RetailSimpleTalkTable table;
+	private static RetailQuestXmlTable retailTable;
+	private static RetailNpcNameIndex npcIndex;
+	private static RetailItemNameIndex itemIndex;
+	private static RetailClientDialogExits exits;
+	private static RetailClientSummaryRows summaryRows;
+	private static RetailClientRewardNpcs clientRewardNpcs;
+	private static RetailClientTalkChainSteps chainSteps;
+	private static Map<String, Integer> randomRewards;
+	private static Map<Integer, Integer> nameIds;
+
+	@BeforeAll
+	static void loadFixtures() throws Exception {
+		try (InputStream input = open("/aion/data/static_data/quest_retail/Quest_SimpleTalk.xml")) {
+			table = RetailSimpleTalkTable.load(input);
+		}
+		try (InputStream input = open("/aion/data/static_data/quest_retail/quest.xml")) {
+			retailTable = RetailQuestXmlTable.load(input);
+		}
+		npcIndex = RetailNpcNameIndex.build(openAll("/aion/data/static_data/npcs/", List.of(
+			"npc_template_200000_216188.xml", "npc_template_216189_235748.xml",
+			"npc_template_235749_247606.xml", "npc_template_247607_270057.xml",
+			"npc_template_270058_286320.xml", "npc_template_286321_800030.xml",
+			"npc_template_800031_834289.xml", "npc_template_834290_885645.xml")));
+		itemIndex = RetailItemNameIndex.build(openAll("/aion/data/static_data/items/item/",
+			listXmlNames("/aion/data/static_data/items/item/")));
+		exits = RetailClientDialogExits.empty();
+		summaryRows = RetailClientSummaryRows.load(open(
+			"/aion/data/static_data/quest_retail/quest_client_summary_rows.tsv"));
+		clientRewardNpcs = RetailClientRewardNpcs.load(open(
+			"/aion/data/static_data/quest_retail/quest_client_reward_npcs.tsv"));
+		chainSteps = RetailClientTalkChainSteps.load();
+		randomRewards = randomRewardIds();
+		nameIds = nameIds();
+	}
+
+	private static Map<String, Integer> randomRewardIds() throws Exception {
+		Map<String, Integer> ids = new java.util.HashMap<>();
+		var document = parse(open("/aion/data/static_data/quest_random_rewards.xml"));
+		var nodes = document.getDocumentElement().getElementsByTagName("quest_random_reward");
+		for (int index = 0; index < nodes.getLength(); index++) {
+			var element = (org.w3c.dom.Element) nodes.item(index);
+			ids.put(element.getElementsByTagName("name").item(0).getTextContent().trim(),
+				Integer.parseInt(element.getElementsByTagName("id").item(0).getTextContent().trim()));
+		}
+		return ids;
+	}
+
+	private static Map<Integer, Integer> nameIds() throws Exception {
+		Map<Integer, Integer> ids = new java.util.HashMap<>();
+		for (String line : lines(open("/aion/data/static_data/quest_retail/quest_name_string_ids.tsv"))) {
+			if (line.startsWith("#") || line.isBlank()) {
+				continue;
+			}
+			String[] parts = line.split("\t");
+			ids.put(Integer.parseInt(parts[0].substring("STR_QUEST_NAME_Q".length())),
+				Integer.parseInt(parts[1]));
+		}
+		return ids;
+	}
+
+	private static List<String> listXmlNames(String dir) throws Exception {
+		var url = RetailTalkChainProbeTest.class.getResource(dir);
+		assertNotNull(url, "missing dir " + dir);
+		java.io.File[] files = new java.io.File(url.toURI()).listFiles((d, name) -> name.endsWith(".xml"));
+		assertNotNull(files);
+		return java.util.Arrays.stream(files).map(java.io.File::getName).sorted().toList();
+	}
+
+	private static List<InputStream> openAll(String dir, List<String> files) throws Exception {
+		List<InputStream> inputs = new ArrayList<>();
+		for (String file : files) {
+			inputs.add(open(dir + file));
+		}
+		return inputs;
+	}
+
+	private static org.w3c.dom.Document parse(InputStream input) throws Exception {
+		try (input) {
+			var factory = javax.xml.parsers.DocumentBuilderFactory.newInstance();
+			factory.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, true);
+			factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+			return factory.newDocumentBuilder().parse(input);
+		}
+	}
+
+	private static List<String> lines(InputStream input) throws Exception {
+		try (java.io.BufferedReader reader = new java.io.BufferedReader(
+				new java.io.InputStreamReader(input, java.nio.charset.StandardCharsets.UTF_8))) {
+			return reader.lines().toList();
+		}
+	}
+
+	@Test
+	void probeChainEquivalence() throws Exception {
+		List<String> lines = new ArrayList<>();
+		Map<Integer, String> results = new TreeMap<>();
+		for (int questId : new java.util.TreeSet<>(chainSteps.questIds())) {
+			var entry = table.find(questId);
+			var meta = retailTable.find(questId);
+			if (entry.isEmpty() || meta.isEmpty()) {
+				results.put(questId, "MISSING_INPUTS");
+				continue;
+			}
+			var outcome = RetailSimpleTalkDefinitionCompiler.compile(entry.get(), npcIndex,
+				RetailQuestMetadataCompiler.compile(meta.get(), npcIndex, itemIndex, randomRewards, nameIds),
+				exits, summaryRows, clientRewardNpcs, chainSteps);
+			if (!outcome.accepted()) {
+				results.put(questId, "REJECTED:" + outcome.rejectionCode() + ":" + outcome.detail());
+				continue;
+			}
+			CompiledQuestDefinition fromXml = compileXml(questId);
+			if (fromXml == null) {
+				results.put(questId, "NO_XML");
+				continue;
+			}
+			String problem = RetailSimpleHuntEquivalenceGateTest.irEquivalenceProblem(
+				fromXml.definition(), outcome.definition().definition());
+			results.put(questId, problem == null ? "EQUIVALENT" : "DIFF:" + problem);
+		}
+		String out = System.getProperty("retail.talkChain.out");
+		if (out != null) {
+			for (var e : results.entrySet()) {
+				lines.add(e.getKey() + "\t" + e.getValue());
+			}
+			Files.writeString(Path.of(out), String.join("\n", lines) + "\n");
+		}
+		String freezeOut = System.getProperty("retail.talkChain.fingerprintOut");
+		if (freezeOut != null) {
+			StringBuilder text = new StringBuilder("# SimpleTalk wave A 链式行真端侧冻结 IR 指纹\n"
+				+ "# 由 -Dretail.talkChain.fingerprintOut 重算生成；任何变化必须人工核对后入仓\n"
+				+ "# quest_id\tir_fingerprint\n");
+			int frozen = 0;
+			for (var e : results.entrySet()) {
+				if (e.getValue().equals("EQUIVALENT")) {
+					text.append(e.getKey()).append('\t')
+						.append(RetailIrFingerprint.fingerprint(
+							compileXml(e.getKey()).definition())).append('\n');
+					frozen++;
+				}
+			}
+			Files.writeString(Path.of(freezeOut), text.toString());
+			System.out.println("PROBE_FROZEN=" + frozen);
+		}
+		assertNotNull(out, "run with -Dretail.talkChain.out=<path> (probe mode)");
+		assertTrue(results.values().stream().allMatch(r -> r.equals("EQUIVALENT")),
+			() -> "non-equivalent rows: " + results.entrySet().stream()
+				.filter(e -> !e.getValue().equals("EQUIVALENT")).count());
+	}
+
+	private static CompiledQuestDefinition compileXml(int questId) throws Exception {
+		try (InputStream input = RetailTalkChainProbeTest.class.getResourceAsStream(
+				"/aion/data/static_data/quest_definition/quests/%d.xml".formatted(questId))) {
+			if (input == null) {
+				return null;
+			}
+			String xml = new String(input.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+			return com.aionemu.gameserver.questEngine.definition.QuestDefinitionCompiler.compile(
+				com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler.parse(
+					new java.io.ByteArrayInputStream(xml.getBytes(java.nio.charset.StandardCharsets.UTF_8))));
+		}
+	}
+
+	private static InputStream open(String resource) throws Exception {
+		InputStream input = RetailTalkChainProbeTest.class.getResourceAsStream(resource);
+		assertNotNull(input, "missing resource " + resource);
+		return input;
+	}
+}

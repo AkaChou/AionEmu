@@ -1,0 +1,30 @@
+# P0c-39：窄链首段失败页关窗出口 —— 25084 指纹故意重冻（前后对照）。
+# p0c-39: the narrow chain leading-stage fail-page close exit — 25084's fingerprint
+# deliberately re-frozen, with the before/after pair.
+#
+# 起因 / cause：契约门（翻转后复跑，续片 15 判例）在 25084 上留下一条真缺陷：
+#   BUTTON_WITHOUT_ROUTE|25084|started|804925|39|10001|1008
+# 25084 的接取 NPC（DF5_Zake_E）≠ 首段检查 NPC（DF5_Coli_E）：39 失败边停在源节点 started 并显示
+# 失败页 10001，而该页唯一的 FINISH_DIALOG(1008) 按钮在 started 上没有同键路由（探针 candidates=0）；
+# 成功页（10000）的出口由落点节点 s1 补（既有 landedNpc 分支），失败页停在源节点，此前无人补。
+# The contract gate (re-run after every flip, the 续片-15 rule) left one real defect on 25084: the
+# accept npc (DF5_Zake_E) differs from the leading check npc (DF5_Coli_E), so the 39 fail edge stays on
+# the started node with the fail page 10001, whose only FINISH_DIALOG(1008) button had no same-key
+# route there (probe candidates=0). The ok page's exit comes from the landed node (the existing
+# landedNpc branch); the fail page stays on the source node and nothing covered it.
+#
+# 修复 / fix：collectCheck 增加 sourceNeedsClose（= index 0 且检查 NPC ≠ 接取 NPC，或本行无接取 NPC）：
+#   在源节点补 FINISH_DIALOG → CloseDialog 同键路由；检查 NPC 与接取 NPC 相同时 acceptFlow 已发出该
+#   出口（25023 形，探针候选命中 SHOW_SELECTION_PAGE），不重复发；index > 0 的段由段循环发出。
+# collectCheck gains sourceNeedsClose (= leading stage with a check npc other than the accept npc, or no
+# accept npc at all): a same-key FINISH_DIALOG -> CloseDialog route on the source node. An identical
+# accept npc already owns that exit via acceptFlow (the 25023 shape, whose probe candidate matched
+# SHOW_SELECTION_PAGE), and stages past the first are covered by the stage loop.
+#
+# 影响面 / blast radius：仅 25084 一行指纹变化（其余 1120 冻结行零漂移，见 p0c-37 同批 dump 对比）；
+# 同级 25023（接取 NPC = 检查 NPC）与 15613（首段为 talk）不变。
+# Only 25084's fingerprint moved (the other 1120 frozen rows: zero drift); 25023 (accept npc == check
+# npc) and 15613 (talk-first) are unchanged.
+#
+# quest_id	old_fingerprint	new_fingerprint	nodes	transitions
+25084	8c986ee7c5b90ea0ca76c29b5a08aecb724159ade9f2e5a40cf82d800ccb150e	5c2081a5703a794f353026b9643b674fb11adaef4caa3557660aa927af3822ea	6	43 -> 44

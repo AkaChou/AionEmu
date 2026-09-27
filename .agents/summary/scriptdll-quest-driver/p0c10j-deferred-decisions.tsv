@@ -1,0 +1,175 @@
+
+
+
+
+
+
+
+
+
+
+1131	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 1132 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+1192	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 1193 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+1218	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 1219 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+1422	ADOPT_RETAIL	CUTSCENE_HACTION_EVIDENCED	-	movie=cutsceneid1 trigger=cs1_haction (SELECT{n}_1/ASK_QUEST_ACCEPT per QuestDialogAction ids); PlayMovie CUTSCENE edge synthesized
+
+
+
+1452	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 1460 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+1469	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 1470 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+1483	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 1484 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+1553	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 1554 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+1574	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 1575 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+1691	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 1692 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+1937	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 1619 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+2207	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 2208 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+2247	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 2284 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+2278	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 2279 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+2279	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 2282 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+2421	ADOPT_RETAIL	CUTSCENE_HACTION_EVIDENCED	-	movie=cutsceneid1 trigger=cs1_haction (SELECT{n}_1/ASK_QUEST_ACCEPT per QuestDialogAction ids); PlayMovie CUTSCENE edge synthesized
+
+
+
+2458	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 2459 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+2913	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 2915 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+3006	ADOPT_RETAIL	CUTSCENE_HACTION_EVIDENCED	-	movie=cutsceneid1 trigger=cs1_haction (SELECT{n}_1/ASK_QUEST_ACCEPT per QuestDialogAction ids); PlayMovie CUTSCENE edge synthesized
+
+
+
+3020	ADOPT_RETAIL	CUTSCENE_HACTION_EVIDENCED	-	movie=cutsceneid1 trigger=cs1_haction (SELECT{n}_1/ASK_QUEST_ACCEPT per QuestDialogAction ids); PlayMovie CUTSCENE edge synthesized
+
+
+
+3035	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 3036 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+3085	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 3086 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+3086	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 3087 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+3920	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 3921 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+3968	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 3969 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+3970	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 3971 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+3973	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 3974 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+4015	KEEP_XML	CANONICAL_INPUT_GAP	-	work_items/symbol channel missing (see p0c10i-canonical-gaps.tsv)
+
+
+
+4905	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 4906 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+4920	ADOPT_RETAIL	CON_QUEST_METADATA_CLOSED	-	successor 4921 finished_quest_cond expresses prerequisite; runtime prerequisitesMet enforces (probe round5 canonical shape compiles)
+
+
+
+11001	KEEP_XML	CON_QUEST_SUCCESSOR_COND_MISSING	-	successor 11070 lacks finished_quest_cond in retail main table (data gap; mirror-verified)
+
+
+
+13800	KEEP_XML	CUTSCENE_EVIDENCE_PENDING	-	cutsceneid1 movie-id client evidence not yet built; PlayMovie IR available
+
+
+
+18600	KEEP_XML	CANONICAL_INPUT_GAP	-	work_items/symbol channel missing (see p0c10i-canonical-gaps.tsv)
+
+
+
+19064	KEEP_XML	CANONICAL_INPUT_GAP	-	work_items/symbol channel missing (see p0c10i-canonical-gaps.tsv)
+
+
+
+21138	KEEP_XML	CANONICAL_INPUT_GAP	-	work_items/symbol channel missing (see p0c10i-canonical-gaps.tsv)
+
+
+
+21244	KEEP_XML	CANONICAL_INPUT_GAP	-	work_items/symbol channel missing (see p0c10i-canonical-gaps.tsv)
+
+
+
+23800	KEEP_XML	CUTSCENE_EVIDENCE_PENDING	-	cutsceneid1 movie-id client evidence not yet built; PlayMovie IR available
+
+
+
+28600	KEEP_XML	CANONICAL_INPUT_GAP	-	work_items/symbol channel missing (see p0c10i-canonical-gaps.tsv)
+
+
+
+29064	KEEP_XML	CANONICAL_INPUT_GAP	-	work_items/symbol channel missing (see p0c10i-canonical-gaps.tsv)
+
+
+
+30055	KEEP_XML	CANONICAL_INPUT_GAP	-	work_items/symbol channel missing (see p0c10i-canonical-gaps.tsv)
+
+
+
+30202	KEEP_XML	CANONICAL_INPUT_GAP	-	work_items/symbol channel missing (see p0c10i-canonical-gaps.tsv)
+
+
+
+30302	KEEP_XML	CANONICAL_INPUT_GAP	-	work_items/symbol channel missing (see p0c10i-canonical-gaps.tsv)

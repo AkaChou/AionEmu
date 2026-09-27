@@ -1,0 +1,76 @@
+# 续片 20 / P0c-46：hunt+collectitem 混合链词汇扩展 —— 采纳退役 15608/80848/80958（DD 1139 → 1142）。
+# Slice 20 / P0c-46 — the hunt+collectitem mixed-chain vocabulary extension adopts and retires
+# 15608/80848/80958 (DataDriven 1139 -> 1142).
+#
+# 缺口 / the gap
+#   `RetailDataDrivenDefinitionCompiler` 的混合链路由表（第 176 行）没有 hunt+collectitem（无 talk）
+#   形状：三类谓词都要求 talk 在场（isTalkHuntMix / isTalkCollectHuntMix / isHuntEaMix），
+#   无 talk 的 hunt+collectitem 一律落 `RETAIL_STEP_UNSUPPORTED`。
+#   The mixed-chain router had no hunt+collectitem (talk-free) shape: every predicate required a talk
+#   step, so talk-free hunt+collectitem rows fell through to RETAIL_STEP_UNSUPPORTED.
+#
+# 证据链 / evidence chain（逐行）
+#   工厂侧（真端表 + 客户端任务书 + 客户端 quest_monster + 遗留 XML 三方对读）：
+#   per row: the retail DD table, the client journal HTML, the client quest_monster.csv and the
+#   legacy XML read side by side.
+#
+# --- 15608（EA → 采集 → EA → 首领；伴随区名映射 1 行）---
+#   真端表 steps = [EnterArea LF6_SensoryArea_Q15608a_Dynamic_Env, CollectItem LF6_Canella_E /
+#   LF6_FOBJ_SpoiledSpore_Q15607a ×2, EnterArea <同一别名>, Hunt LF6_I_6_Named_NoName_68_Ah 1]；
+#   客户端任务书 5 行（0 调查洞窟[%2] / 1 采集孢子交给 Canella[collectitem] / 2 再次调查洞窟[%8] /
+#   3 消除 LF6_I_6_Named_NoName_68_Ah([%11]/1) / 4 向 Canella 报告），`quest_client_summary_rows`
+#   = 5 → 末行 4，与遗留 XML 节点号 started0/s1/s2/s3/reward4 逐位一致；
+#   客户端 quest_monster.csv：`Progress(1)`（FOBJ 掉落 quest_15608a）+ `Progress(SECTION_0==3;
+#   SECTION_1<1)`（击杀行门控 = var0==3、计数段 SECTION_1 上限 1）——证明行梯在 SECTION_0、
+#   击杀计数在 SECTION_1（QE-012），IR 的 var0/var1 布局与之一致。
+#   遗留 XML 逐边核对：enter-zone(A) started→s1、39 检查对（has-item 182215998×1）s1→s2、
+#   enter-zone(B) s2→s3、kill-npc 241175 s3→reward、can-act 703139 ACTION_ITEM_USE 自环于 s1 ——
+#   IR 全部命中，逐边同构。
+#   **A/B 区名裁定**：真端表两步同名（都是 `...Q15608a_Dynamic_Env`），遗留是 A、B 两区；两区在
+#   zones_quest.xml 里是**同一球体**（x1749.9060 y2281.4033 z373.0877 r10.0，A 与 B 逐字段相同），
+#   运行时进/离行为等价（两者都必须离开并重新进入该球体才能再次触发），故按 name-token 匹配规则
+#   （wave4：`逐名匹配，不依赖顺序`）取 A 一区、两步共用；B 区在真端表无对应别名，不登记。
+#   A/B zone adjudication: the retail table names the SAME alias for both EA steps while the legacy
+#   splits A and B; both registered zones are the identical sphere (same centre and radius), so the
+#   runtime enter/leave behaviour is equivalent — the alias resolves to A by the wave-4 name-token
+#   rule and both steps share it.
+#   遗留差异（真端优先，已登记）：遗留把 182215998 的扣除挂在 reward 自环（打开领奖页时扣），真端
+#   与客户端 `check_item1_1 = quest_15608a 1` 都把扣除放在交付步——`MissionItemConsumptionBatch
+#   RegressionTest` 的 15608 行随之重塑为 s1→reward（与同族 15606/15613 的 s4/s5→reward 同形）。
+#   The one legacy divergence (retail-first): the legacy removes 182215998 on the reward self loop,
+#   the retail/client shape removes it at the hand-in step; the regression test line was reshaped
+#   accordingly (same form as its 15606/15613 siblings).
+#
+# --- 80848 / 80958（首领 → 交付；事件任务）---
+#   80848：真端 steps = [Hunt IDF5_TD_DragonRider_Chief_N_65_Al 3, CollectItem
+#   world_event_megaquest_shugo_01]；客户端任务书 2 行（0 消灭首领([%2]/3) / 1 搜集 1000 个徽记交给
+#   术古罗伯[collectitem]）；quest.xml `check_item1_1 = world_promotion_vip_continue_coin 1000`
+#   → IR 的 39 检查 = HasItem 186000344×1000 + RemoveItem×1000（遗留 80846 同物品 required=800
+#   证明物品身份；80848 的 1000 与真端表/客户端一致）。
+#   80958：真端 steps = [Hunt <同族> 1, CollectItem world_event_usernpc_npc_legion]；客户端
+#   `check_item1_1 = world_event_item_usernpc_l 1` → 39 检查 = HasItem 186000485×1（遗留 XML 的
+#   CHECK_USER_HAS_QUEST_ITEM item-id=186000485 count=1 逐字一致），交付 NPC 222002 与遗留
+#   NPC_START/NPC_REPORT 的 222002 同一。
+#   两行的客户端采集页梯都已在 `quest_client_talk_collect_chain_pages.tsv`（`collect:1352:39:
+#   10000:10001`）、入口/报告页在 entry=4762 / report=10002 登记；hunt 步无客户端进度行组
+#   → 单段块（SECTION_1 计数），与客户端文本的 ([%2]/3)、([%2]/1) 计数一致。
+#   遗留差异（真端优先，已登记）：80848 的遗留壳只有单行进度（SETPRO1/SET_SUCCEED，无击杀步），
+#   80958 的遗留壳只表达"交 1 个物品"（无击杀步）——真端表与客户端任务书两源一致要求击杀步，
+#   采纳即补齐该步；两行无任何测试提名（affected_quest_tests.py 报 unmatched）。
+#   Legacy divergence (retail-first): the 80848/80958 shells model no kill step at all; the retail
+#   table and the client journal both require it, so adoption restores it. Neither row is nominated
+#   by any test class.
+#
+# --- 采纳与退役 / adoption and retirement ---
+# basis=DD_HUNT_COLLECT_MIX；壳 XML 双删（main + target/classes）+ catalog 双删 + 清单五副本
+# （src/main + target/classes + src/test + target/test + .agents 快照）。防掩盖对拍：改动前后
+# 1508 行分类逐行 diff = 恰好 3 行由 REJECTED:RETAIL_STEP_UNSUPPORTED 变 ADOPTED、无其他行增减/漂移。
+# Anti-masking diff: exactly three rows moved and nothing else changed.
+#quest_id	owner	basis	client_contract_fingerprints	notes
+15608	RETAIL_TABLE	DD_HUNT_COLLECT_MIX	0	EA→采集→EA→首领；区名映射 1 行（A 区，token 匹配）；扣物点由 reward 自环移到交付步
+80848	RETAIL_TABLE	DD_HUNT_COLLECT_MIX	0	首领3杀 → 交 1000 徽记；遗留壳缺击杀步，按真端+客户端补齐
+80958	RETAIL_TABLE	DD_HUNT_COLLECT_MIX	0	首领1杀 → 交 1 个 186000485；遗留壳缺击杀步，按真端+客户端补齐
+#
+# --- 区名映射新增 1 行 / one zone-resolution row added ---
+#quest_id	dd_alias	zone_name	legacy_enter_zone	token_match	zone_registered	outcome
+15608	LF6_SensoryArea_Q15608a_Dynamic_Env	LF6_SENSORY_AREA_Q15608_A_DYNAMIC_ENV_210100000	LF6_SENSORY_AREA_Q15608_A_DYNAMIC_ENV_210100000	Q15608a	yes	ADOPTED

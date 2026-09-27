@@ -1,0 +1,47 @@
+package com.aionemu.gameserver.questEngine.definition;
+
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+import java.util.Objects;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+/**
+ * 临时探针（P0c-30）：P0c-24 三件套最后未验项——EarlyElyosQuestRegressionTest.belbuasWineBarrel
+ * 的 P0c-29 回放未覆盖三断言（-1 预览形状 / 完成尾 ShowQuestSelectionDialog(10) /
+ * unaccepted 无对象路由），以 lenient overlay 补齐。
+ * Temporary probe: replays the three barrel asserts the P0c-29 replay did not cover, via the
+ * lenient overlay — completing the P0c-24 trio's storm-time verification.
+ */
+class RetailEarlyElyosBarrelReplayProbeTest {
+
+	@Test
+	void barrelPreviewCompletionTailAndNoUnacceptedRoute() {
+		QuestDefinition definition = ProductionQuestDefinitions.definitionInOverlay(1141).definition();
+		// reward 态 -1 预览（USE_OBJECT 语义走对话键）：直接开奖励窗 5。
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(5)),
+			route(definition, "reward", "reward", new QuestEvent.TalkToNpc(700122, -1)).afterCommit());
+		// 完成路由尾 = 任务接取页（族形）。
+		QuestTransition completion = route(definition, "reward", "complete",
+			new QuestEvent.TalkToNpc(700122, 8));
+		assertEquals(new AfterCommitAction.ShowQuestSelectionDialog(10),
+			completion.afterCommit().getLast());
+		// unaccepted 态不得有任何对象路由（接取前酒桶不存在交互）。
+		assertFalse(definition.transitions().stream().anyMatch(transition ->
+				Objects.equals(transition.sourceNode(), "unaccepted")
+					&& ((transition.event() instanceof QuestEvent.TalkToNpc talk && talk.npcId() == 700122)
+						|| (transition.event() instanceof QuestEvent.CanAct canAct
+							&& canAct.templateId() == 700122))),
+			"1141 must not expose barrel routes before acceptance");
+	}
+
+	private QuestTransition route(QuestDefinition definition, String source, String target,
+			QuestEvent event) {
+		return definition.transitions().stream()
+			.filter(candidate -> Objects.equals(candidate.sourceNode(), source)
+				&& candidate.targetNode().equals(target) && candidate.event().equals(event))
+			.findFirst().orElseThrow();
+	}
+}

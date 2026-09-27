@@ -1,0 +1,29 @@
+# P0c-55 阶段腿逐阶段重建裁定表（真端 talk_npc<k> + 客户端页链/任务书行 + 登记表塌缩签名，三轴 fail-closed） / Stage-leg rebuild adjudication
+#
+# 背景：XML 期把这 9 个多阶段任务的**阶段腿参数**压成了第一阶段的值——每阶段都是 `action="SETPRO1"`、
+# 每阶段都下发 `SELECT2/SELECT2_1`（见 HEAD 版 XML 的 `<!-- 对话链按客户端按钮图重建 -->` 注释：重建
+# 模板没按阶段参数化）。真端声明 K 个 `talk_npc<k>`、客户端每阶段各有自己的页链与推进按钮，故：
+#   * 阶段 k 的页行归属 `talk_npc<k>`、状态 = 前一阶段节点，下发页 = `SELECT{k+1}`（入口）+ `SELECT{k+1}_1`（续页）；
+#   * 阶段腿动作名 = `SETPRO{k}`（客户端按钮 `HACTION_SETPRO{k}` = 页 id `10000+k-1`），src→dst = 阶段 k-1 → k；
+#   * 领奖页 = 客户端 `SELECT5`（唯一按钮 `HACTION_SELECT_QUEST_REWARD`），owner = 真端 `reward_npc_name`，
+#     状态 = packed 值 K 的节点（客户端任务书第 K 行 = 领奖 NPC 行；QE-051 行契约）。
+# 越界（阶段页/阶段腿落在非 owner NPC 上）按 P0c-54 同域剪除（只剪阶段行，接取页行不动——
+# `SELECT1/SELECT1_1` 的接取侧扩散属 `XML_ONLY_ACCEPT_ROLE_SPREAD_PENDING`，不在本表）。
+#
+# 三轴（生成器装载期逐条 fail-closed 校验，见 build_quest_client_talk_chain_steps.py）：
+#  ①真端：`talk_npc1..K` 连续无缺 + 名字唯一解析 + `reward_npc_name` 唯一解析 + `collect_progress` = 0
+#    （本族全是赠礼/传话链，无收集段；真端 body 无 `<collect_progress>`）；
+#  ②客户端：任务书行数 = K+1（行 0..K-1 按序点名 `talk_npc<k>`、行 K 点名 `reward_npc_name`）+ 每阶段
+#    页链 `SELECT{k+1} → 按钮 → … → HACTION_SETPRO{k}` 成立 + 领奖页 `SELECT5` 唯一按钮 = 1009；
+#  ③登记表：塌缩签名（阶段腿逐跳 src→dst 形成 K 跳链、末跳 dst = packed K 节点）+ 阶段 owner == talk_npc<k>。
+#
+# quest_id	K	report_page	basis
+1323	1	SELECT5	真端 talk1=Tree_NoMove_Lodas(730019)/reward=Justachys(203939)/acquired=LF2_Lost_JewelBox(730032 箱子,P0c-42 已改绑)；客户端 select2(1352)>select2_1(1353)>SETPRO1(10000)+select5(2375)>1009；任务书 2 行=row0 Lodas/row1 Justachys；缺页 0 ⇒ 仅剪领奖 NPC 上的 3 条阶段行(USE_OBJECT→1352/SELECT2_1→1353/SETPRO1)
+1394	2	SELECT5	真端 talk1=Lemia(204039)/talk2=Asclepius(203946)/reward=Paion(203941)/acquired=Elram(204041)；客户端 s1=1352>1353>10000、s2=1693>1694>10001、select5(2375)>1009；任务书 3 行=Lemia/Asclepius/Paion；阶段 2 页+动作塌缩 + 领奖页写成 1352 + 接取 NPC 204041 上 3 条阶段行 + 领奖 NPC 上 1353 续页行
+1484	3	SELECT5	真端 talk1=Anasya(204045)/talk2=Telamone(204048)/talk3=Sandinas(204011)/reward=Shugo_LF2_13(798126)/acquired=Shugo_LF2_14(798127)；客户端 s1=1352>1353>10000、s2=1693>1694>10001、s3=2034>2035>10002、select5(2375)>1009；任务书 4 行=Anasya/Telamone/Sandinas/Shugo_LF2_13；阶段 2/3 页+动作塌缩 + 领奖页从未下发(现为 798126 无按钮页 DEFAULT_SUCCESS)
+2480	2	SELECT5	真端 talk1=Tree_Move_virdi(730021)/talk2=Tree_NoMove_Lodas(730019)/reward=acquired=Tree_Move_Nabalu(730038)；客户端 s1=1352>1353>10000、s2=1693>1694>10001、select5(2375)>1009；任务书 3 行=virdi/Lodas/Nabalu；阶段 2 页+动作塌缩 + 领奖页从未下发
+2538	3	SELECT5	真端 talk1=Verdandi(790002)/talk2=NPC_Vanargand(204805)/talk3=Verdandi(790002)/reward=acquired=NPC_Debrie_Hild(204827)；客户端 s1=1352>1353>10000、s2=1693>1694>10001、s3=2034>2035>10002、select5(2375)>1009；任务书 4 行=Verdandi/Vanargand/Verdandi/Debrie_Hild(talk1==talk3 合法)；阶段 2/3 页+动作塌缩 + 领奖页从未下发
+3093	3	SELECT5	真端 talk1=LF2A_NPC_Gastak(798177)/talk2=LF2A_NPC_Jabala(798179)/talk3=Hestia(203784)/reward=acquired=Shugo_LF2a_12(798185)；客户端 s1=1352>1353>10000、s2=1693>1694>10001、s3=2034>2035>10002、select5(2375)>1009；任务书 4 行=Gastak/Jabala/Hestia/Shugo_LF2a_12；阶段 2/3 页+动作塌缩 + 领奖页从未下发
+4052	3	SELECT5	真端 talk1=DF2a_NPC_Bumbum_Lin(205179)/talk2=DF2a_NPC_Bumbum_Jin(205166)/talk3=DF2a_NPC_Bumbum_Chan(205197)/reward=acquired=DF2a_NPC_Moai(730152)；客户端 s1=1352>1353>10000、s2=1693>1694>10001、s3=2034>2035>10002、select5(2375)>1009；任务书 4 行=Lin/Jin/Chan/Moai；阶段 2/3 页+动作塌缩 + 领奖页从未下发
+11010	3	SELECT5	真端 talk1=Naiting(799071)/talk2=Lionel(798906)/talk3=LF4_FOBJ_Q11010A(730323,物件)/reward=Naiting(799071)=talk1/acquired=Pucio(798931)；客户端 s1=1352>1353>10000、s2=1693>1694>10001、s3=2034>2035>10002、select5(2375)>1009；任务书 4 行=Naiting/Lionel/Supply_Box/Naiting；阶段 2/3 页+动作塌缩 + 领奖页从未下发
+11103	2	SELECT5	真端 talk1=Cinisca(798963)/talk2=Maisa(798973)/reward=acquired=Croton(798983)；客户端 s1=1352>1353>10000、s2=1693>1694>10001、select5(2375)>1009；任务书 3 行=Cinisca/Maisa/Croton；阶段 2 页+动作塌缩 + 领奖页从未下发

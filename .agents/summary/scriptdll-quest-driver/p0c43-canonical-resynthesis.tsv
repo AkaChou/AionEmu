@@ -1,0 +1,56 @@
+# P0c-43/44 canonical 改道裁定：XML 转写在结构两轴上与真端分歧 ⇒ 弃逐字转写，改走真端 canonical 合成。
+# 三个已观测漂移形（code 域）：LEGACY_REPORT_FLOW_ON_ACQUIRED（报告流全绑接取 NPC）/ LEGACY_STAGE_OWNER_DRIFT
+# （阶段与报告 flow 绑真端声明集之外的第三方 NPC——转写形自己已在 census DEVIATION 列与 npc_check=XML_ONLY 承认）
+# / LEGACY_DELIVER_FLOW_ON_TALKNPC（P0c-47：真端 reward_npc_name == 接取 NPC 的行，转写把交付流
+# 绑到了**真端声明的阶段 NPC**（talk_npcK）上——P0c-46 角色域投影判 `DELIVER_UNCOVERED`：阶段 NPC 自带
+# owner 没有的交付页/动作，不得剪行，须整块改道）。
+# Adjudication: re-synthesize these rows from the retail table instead of transcribing the legacy XML.
+#
+# 判例 24123（真端 + 客户端双证）：
+#   真端 `Quest_SimpleTalk.xml` 24123 = acquired_npc_name=Rikesh(204345) + talk_npc1=DF2_NPC_Ananta(204387)
+#   + talk_npc2=DF2_LycanPrisoner_Q24123A(802442) + reward_npc_name=DF2_NPC_Ananta(204387)。
+#   客户端 `QUEST_Q24123.html`：页序 select1(1011, 按钮 20000/20001 ACCEPT/REFUSE_SIMPLE)
+#   → select2(1352, 按钮 1353「继续听。」) → select2_1(1353, 按钮 10000 SETPRO1「结束对话。」)
+#   → select3(1693, 按钮 10001 SETPRO2「结束对话。」) → select5(2375, 按钮 1009 SELECT_QUEST_REWARD
+#   「报告结果。」) → 领奖窗(5)；任务书 3 行（QE-051）。
+#   遗留 XML（git 历史）两轴分歧：①**零阶段路由**（页 1352/1353/1693 从未下发 ⇒ p0c37 `GENUINE_GAP`）；
+#   ②**报告/完成流全绑接取 NPC**（QUEST_SELECT→SELECT5 / CHECK_USER_HAS_QUEST_ITEM[+_SIMPLE] /
+#   SET_SUCCEED / SELECT_QUEST_REWARD / npc-complete 的 npc-id 全是 204345=Rikesh），而真端声明报告 NPC
+#   是 204387=Ananta（P0c-19 判例："遗留 XML 把全形状铺满一个 NPC = 手工转写惯性漂移，按真端对、XML 错裁"）。
+#
+# 生成器 fail-closed 断言（见 load_canonical_resynthesis）：
+#   1. code 必须在登记域内（LEGACY_REPORT_FLOW_ON_ACQUIRED / LEGACY_STAGE_OWNER_DRIFT /
+#      LEGACY_DELIVER_FLOW_ON_TALKNPC）；
+#   2. legacy_report_npc 必须解析为唯一 id，且**等于**真端 acquired_npc_name 的 id（确认是"全绑接取 NPC"漂移形，
+#      不是任意改绑）；# `LEGACY_DELIVER_FLOW_ON_TALKNPC` 行反向：legacy_report_npc 必须**等于某个 talk_npcK**
+#      的 id（交付流绑在声明的阶段 NPC 上），且该形状**要求** 真端 reward == acquired；
+#   3. 真端 reward_npc_name 必须解析为唯一 id，且**不等于**接取 id（否则无需改道）；`LEGACY_DELIVER_FLOW_ON_TALKNPC`
+#      行反向：必须有 `reward_id == acquired_id` 且客户端任务书 end（全行并集，非空时）== 该唯一 id；
+#   4. 该行必须有 talk_npc1..K（canonical 合成的前置），且**每个 talk_npcK 的 id 都不等于接取 id**
+#      （阶段归属必须换人，否则阶梯是自环；`LEGACY_DELIVER_FLOW_ON_TALKNPC` 行不适用——stage 可等于 reward NPC）；
+#   5. 客户端任务书行数 == K+1（QE-051 投影判据）；
+#   6. 客户端页册必须有 SELECT{i+2}（i=0..K-1），且 canonical 的页链走边（SETPRO{i+1} 按钮）可定位。
+#
+# 判例 2964（真端 + 客户端 + 同族判例三证；P0c-47）：
+#   真端 `Quest_SimpleTalk.xml` 2964 = acquired_npc_name=Srudgelmir(204253) + talk_npc1=Jafnhar(278137)
+#   + give_item1=ITEM_QUEST_2964A(182207043) + reward_npc_name=Srudgelmir(204253)——即 **reward == acquired**。
+#   客户端 `QUEST_Q2964.html`：任务书两行逐字点名「和[%dic:STR_DIC_N_Jafnhar]对话 / 和[%dic:STR_DIC_N_Srudgelmir]对话」；
+#   页链 select1(1011)→select1_1(1012)→ask_quest_accept(4)→quest_accept_1(1003)/quest_refuse_1(1004)（接取，司鲁德盖密尔）
+#   ; select2(1352)→select2_1(1353, 10000 SETPRO1「结束对话。」)（阶段，贾夫纳）；
+#   select5(2375, 1009 SELECT_QUEST_REWARD「拿出雅芬哈尔给的证物。」)→ 领奖窗(5)（报告，司鲁德盖密尔）。
+#   客户端任务书列：start=end=204253（单值）report_action=SELECT_QUEST_REWARD reward_page=SHOW_SELECT_QUEST_REWARD_WINDOW1。
+#   遗留 XML（git 历史）三轴分歧：①交付流（QUEST_SELECT→SELECT5 / SELECT_QUEST_REWARD[+HAS_ITEM 门] / npc-complete）
+#   **全绑 278137=Jafnhar**（真端声明他只有 talk_npc1 阶段角色）；②give_item1 的物件被提前到接取发放
+#   （`NPC_START` accept-actions 的 GIVE_ITEM:182207043 应为 SETPRO1 发物）；③XML 自造 `HAS_ITEM` 门
+#   （真端 2964 无 `<item_check>`；客户端 select5 页只有 1009 一个按钮、无检查按钮/select6 页）。
+#   客户端页 1352/1353 在改道前从未下发（审计 CLIENT_PAGE_UNREACHED），改道后阶段行补齐。
+#   同族判例 2963（并排 id、同三 NPC）：阶段=278137（SELECT2/SETPRO1）、交付=204253（USE_OBJECT→SELECT5）——
+#   XML 在 2964 上把两角色写反，本表按真端 + 客户端重排。
+#
+# 落地形状 = synthesize_canonical（真端 talk_npcK 建 started(0)/s1(1)../sK(K) 阶梯 + 报告流绑 reward NPC +
+# P 布局 0/6/0/63 容 K），转写阶段对该任务 skip（避免双份行）。
+#
+# quest_id	code	legacy_report_npc	retail_reward_npc	basis
+24123	LEGACY_REPORT_FLOW_ON_ACQUIRED	Rikesh	DF2_NPC_Ananta	真端 talk_npc1/talk_npc2=DF2_NPC_Ananta/DF2_LycanPrisoner_Q24123A；客户端页 1352/1353(SETPRO1)/1693(SETPRO2) 与任务书 3 行；遗留 XML 报告流全绑 204345 且零阶段路由（p0c37 GENUINE_GAP + p0c39/p0c41 XML_NPC_AXIS）
+2482	LEGACY_STAGE_OWNER_DRIFT	Finne	Moreinen	真端 acquired=Hakon(204333)/talk_npc1=Sereniti(204210)/talk_npc2=Neusa(204224)/reward=Moreinen(204211)（census NPC 集 204333|204210|204224|204211）；转写形阶段 2 与报告/完成 owner = Andraste(278018)/Finne(278020)——**均不在真端声明集**，census DEVIATION 列已记 `SELECT3_1@278018;SELECT_QUEST_REWARD@278020`、R 行 npc_check=XML_ONLY；客户端四证：`QUEST_Q2482.html` 正文只出现 Sereniti(3)/Neusa(1)/Moreinen(2)（Andraste/Finne 0 次），任务书 3 行逐行点名「和塞雷尼提对话/和纽萨对话/和莫雷内恩对话」，页梯 1352→1353(SETPRO1)/1693→1694(SETPRO2)/2375(SELECT_QUEST_REWARD) 与 K=2 一致
+2964	LEGACY_DELIVER_FLOW_ON_TALKNPC	Jafnhar	Srudgelmir	真端 acquired=reward=Srudgelmir(204253)（单值同人）、talk_npc1=Jafnhar(278137)、give_item1=ITEM_QUEST_2964A(182207043)；客户端任务书 start=end=204253（单值）、两行逐字点名「和[%dic:STR_DIC_N_Jafnhar]对话 / 和[%dic:STR_DIC_N_Srudgelmir]对话」、select5 页正文与按钮「拿出雅芬哈尔给的证物。」均为司鲁德盖密尔、阶段按钮 HACTION_SETPRO1=「结束对话。」；转写形把交付流全绑 278137（census DELIVER_UNCOVERED@278137：act:SELECT_QUEST_REWARD|block:NPC_COMPLETE|page:SELECT5|page:SHOW_SELECT_QUEST_REWARD_WINDOW1）⇒ 不得剪、整块改道；同族判例 2963 为正确形（阶段=278137 / 交付=204253）

@@ -1,0 +1,23 @@
+[T3] selector / 选择器: -Dtest=com.aionemu.gameserver.questEngine.**
+[T3] forkCount=1 log=/Users/mc/IdeaProjects/AionEmu-test/.agents/summary/scriptdll-quest-driver/gates/T3-212101.log
+[ERROR] Tests run: 3, Failures: 1, Errors: 1, Skipped: 0, Time elapsed: 0.626 s <<< FAILURE! -- in com.aionemu.gameserver.questEngine.definition.QuestWorkItemMigrationCoverageTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in com.aionemu.gameserver.questEngine.definition.Quest11110And1548PostKillReportDialogTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in com.aionemu.gameserver.questEngine.definition.Batch41PangaiaFortressRowContractTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.498 s -- in com.aionemu.gameserver.questEngine.ProductionCatalogWhitelistVerificationTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in com.aionemu.gameserver.questEngine.task.LuredNpcCheckTaskTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in com.aionemu.gameserver.questEngine.model.QuestVarsTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in com.aionemu.gameserver.questEngine.model.RetailQuestStateTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.aionemu.gameserver.questEngine.QuestEngineNpcDialogDispatchTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.461 s -- in com.aionemu.gameserver.questEngine.e2e.QuestExclusiveSiblingAttributionTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.912 s -- in com.aionemu.gameserver.questEngine.e2e.ClientTaskScopeAuditTest
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.251 s <<< FAILURE! -- in com.aionemu.gameserver.questEngine.e2e.QuestEquippedStartProductionFlowTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.315 s -- in com.aionemu.gameserver.questEngine.e2e.QuestProductionJourneyTest
+[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.476 s <<< FAILURE! -- in com.aionemu.gameserver.questEngine.e2e.QuestHandoverContinuationAuditTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.187 s -- in com.aionemu.gameserver.questEngine.e2e.QuestDialogLoopBreakerProductionFlowTest
+[ERROR] Tests run: 3, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.427 s <<< FAILURE! -- in com.aionemu.gameserver.questEngine.e2e.QuestWorldReachabilityOracleTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.460 s -- in com.aionemu.gameserver.questEngine.e2e.QuestPageButtonAuditTest
+[ERROR] Tests run: 41, Failures: 1, Errors: 3, Skipped: 0, Time elapsed: 3.348 s <<< FAILURE! -- in com.aionemu.gameserver.questEngine.e2e.QuestE2eInfrastructureTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.235 s -- in com.aionemu.gameserver.questEngine.e2e.QuestGoldenJourneyTest
+[ERROR] Tests run: 2013, Failures: 117, Errors: 22, Skipped: 1
+[INFO] BUILD FAILURE
+[T3] exit=1 elapsed=452s log=/Users/mc/IdeaProjects/AionEmu-test/.agents/summary/scriptdll-quest-driver/gates/T3-212101.log

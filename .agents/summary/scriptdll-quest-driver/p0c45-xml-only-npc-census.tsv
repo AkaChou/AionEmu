@@ -1,0 +1,4 @@
+# P0c-45 XML_ONLY 身份轴普查（投影式 v4；判据沿革见 p0c45_xml_only_npc_census.py 文件头）
+# quest_id	owner	npc	marker	rows	actions	pages	covered_by_declared	dev_recorded	client_reg_ids	verdict
+2653	XML_RETENTION	204655	XML_ONLY:204655	3	QUEST_SELECT;SELECT2_1;SETPRO1	SELECT2;SELECT2_1	NO	YES	-	RETAINED_SUBSTITUTE_OWNER
+28805	XML_RETENTION	730525	XML_ONLY:730525	2	QUEST_SELECT;SETPRO2	SELECT3	NO	YES	-	RETAINED_SUBSTITUTE_OWNER

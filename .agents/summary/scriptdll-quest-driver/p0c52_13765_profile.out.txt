@@ -1,0 +1,9 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------< com.aionemu:aionemu >-------------------------
+[INFO] Building aionemu 1.0-SNAPSHOT
+[INFO] Results:
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+[INFO] Total time:  27.717 s
+[INFO] Finished at: 2026-09-26T17:43:13+08:00
+
