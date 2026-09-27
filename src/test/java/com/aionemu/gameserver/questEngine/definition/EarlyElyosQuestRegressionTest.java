@@ -64,7 +64,12 @@ class EarlyElyosQuestRegressionTest {
 			new QuestEvent.TalkToNpc(799093, 31));
 
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1352)), route.afterCommit());
-		QuestTransition transfer = route(definition, "started", "shugo",
+		// W6 尾（quest-native-dispatch）：SimpleTalk 阶段腿重建把阶段节点改为 s1/s2/… 命名（QE-080），
+		// 旧转写长名 shugo 随之退场；1352 交付前对话页与 10000 交接边（装甲 Give/Remove）语义不变。
+		// W6 tail: the staged-ladder rebuild renamed stage nodes to s1/s2/… (QE-080); the legacy
+		// transcribed name "shugo" retires, while the 1352 pre-transfer page and the 10000 hand-over
+		// edge (armour give/remove) keep their semantics.
+		QuestTransition transfer = route(definition, "started", "s1",
 			new QuestEvent.TalkToNpc(799093, 10000));
 		assertTrue(transfer.actions().contains(new QuestAction.GiveItem(182200507, 1)));
 		assertTrue(transfer.actions().contains(new QuestAction.RemoveItem(182200506, 1)));
@@ -248,15 +253,25 @@ class EarlyElyosQuestRegressionTest {
 		assertNoUnacceptedObjectRoute(flowers, 730039);
 
 		CompiledQuestDefinition map = load(1561);
-		for (String source : List.of("started", "reward")) {
-			assertObjectGate(map, source, 700188);
-			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(2375)),
-				route(map, source, source, new QuestEvent.TalkToNpc(700188, -1)).afterCommit());
+		// W6 尾（quest-native-dispatch）：1561 迁 SimpleUseItem 规范形——宝箱 700188 的
+		// QUEST_SELECT(31) 提交边从 started 直翻领奖态并下发奖励窗，旧 CanAct 物件门与
+		// -1→2375 页随物件规范形退场；"领奖态宝箱可重开"由 -1/1009 → 窗 5 的自环保留。
+		// W6 tail: 1561 moved to the SimpleUseItem canonical — the chest's QUEST_SELECT(31)
+		// submission edge flips REWARD from started with the reward window; the legacy CanAct
+		// object gates and the -1->2375 page retire, while "the chest reopens at reward" survives
+		// as the -1/1009 -> window-5 self-loops.
+		QuestTransition chestDelivery = route(map, "started", "reward",
+			new QuestEvent.TalkToNpc(700188, 31));
+		assertEquals(List.of(), chestDelivery.conditions());
+		assertEquals(List.of(
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(5)), chestDelivery.afterCommit());
+		for (int dialogId : List.of(-1, 1009)) {
+			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(5)),
+				route(map, "reward", "reward", new QuestEvent.TalkToNpc(700188, dialogId)).afterCommit());
 		}
-		assertTrue(route(map, "started", "reward", new QuestEvent.TalkToNpc(700188, 1009))
-			.afterCommit().contains(new AfterCommitAction.ShowQuestDialog(5)));
 		assertEquals(new AfterCommitAction.CloseDialog(),
-			route(map, "reward", "complete", new QuestEvent.TalkToNpc(700188, 8)).afterCommit().getLast());
+			route(map, "reward", "complete", new QuestEvent.TalkToNpc(700188, 108)).afterCommit().getLast());
 	}
 
 	@Test
@@ -306,20 +321,24 @@ class EarlyElyosQuestRegressionTest {
 		assertNoUnacceptedObjectRoute(bollvig, 700272);
 
 		CompiledQuestDefinition slipper = load(1691);
+		// W6 尾（quest-native-dispatch）：阶段腿重建（QE-080）把 spoken-to-diana / returned-to-sneaker
+		// 改为 s1 / s2+s3 阶梯；鞋匠 700563 的对话页 2034 现挂 QUEST_SELECT(31) 自环（旧 -1 门随
+		// 物件规范形退场），10002 交接边新增任务物品发放，领奖 = 798386 的 QUEST_SELECT(31) 直达奖励窗。
+		// W6 tail: the staged-ladder rebuild (QE-080) renamed spoken-to-diana / returned-to-sneaker to
+		// the s1 / s2+s3 ladder; the shoe NPC's page 2034 now rides the QUEST_SELECT(31) self-loop (the
+		// legacy -1 gate retires with the object canonical), the 10002 edge grants the quest item, and
+		// the reward window is reached on 798386/31.
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1352)),
 			route(slipper, "started", "started", new QuestEvent.TalkToNpc(790005, 31)).afterCommit());
-		route(slipper, "started", "spoken-to-diana", new QuestEvent.TalkToNpc(790005, 10000));
-		route(slipper, "spoken-to-diana", "returned-to-sneaker",
-			new QuestEvent.TalkToNpc(798386, 10001));
-		assertObjectGate(slipper, "returned-to-sneaker", 700563);
+		route(slipper, "started", "s1", new QuestEvent.TalkToNpc(790005, 10000));
+		route(slipper, "s1", "s2", new QuestEvent.TalkToNpc(798386, 10001));
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(2034)),
-			route(slipper, "returned-to-sneaker", "returned-to-sneaker",
-				new QuestEvent.TalkToNpc(700563, -1)).afterCommit());
-		assertEquals(List.of(
-			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-			new AfterCommitAction.CloseDialog()),
-			route(slipper, "returned-to-sneaker", "reward",
-				new QuestEvent.TalkToNpc(700563, 10002)).afterCommit());
+			route(slipper, "s2", "s2", new QuestEvent.TalkToNpc(700563, 31)).afterCommit());
+		QuestTransition slipperHandin = route(slipper, "s2", "s3",
+			new QuestEvent.TalkToNpc(700563, 10002));
+		assertTrue(slipperHandin.actions().contains(new QuestAction.GiveItem(182201826, 1)));
+		assertEquals(new AfterCommitAction.CloseDialog(), slipperHandin.afterCommit().getLast());
+		route(slipper, "s3", "reward", new QuestEvent.TalkToNpc(798386, 31));
 		assertNoUnacceptedObjectRoute(slipper, 700563);
 	}
 
