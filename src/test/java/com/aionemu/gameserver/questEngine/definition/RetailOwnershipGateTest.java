@@ -43,11 +43,15 @@ class RetailOwnershipGateTest {
 	/** 清单允许的保留原因前缀。 / Allowed retention reason prefixes. */
 	/**
 	 * 清单允许的保留原因前缀。{@code FAMILY_PENDING} = 真端表有行但该族驱动尚未实现
-	 * （禁止虚报为 RETAIL_TABLE，见 build_retention_list.py 的 IMPLEMENTED_FAMILIES）。
-	 * Allowed retention reasons; FAMILY_PENDING marks a retail row whose family driver is not implemented yet.
+	 * （禁止虚报为 RETAIL_TABLE，见 build_retention_list.py 的 IMPLEMENTED_FAMILIES）；
+	 * {@code ADJUDICATED:<码>} = 缺口批逐行裁定的保留行（冒号后必须仍是原编译器拒绝码，
+	 * 由家族门 fail-closed 复核"裁定行必须仍以同码被拒"）。
+	 * Allowed retention reasons; {@code FAMILY_PENDING} marks a retail row whose family driver is not
+	 * implemented yet; {@code ADJUDICATED:<code>} marks a per-row adjudicated retention whose embedded
+	 * compiler code must still reject the row (fail-closed, checked by the family gates).
 	 */
 	private static final Set<String> RETENTION_REASONS =
-		Set.of("SCRIPTED", "NO_TABLE", "SEMANTIC_GAP", "FAMILY_PENDING");
+		Set.of("SCRIPTED", "NO_TABLE", "SEMANTIC_GAP", "FAMILY_PENDING", "ADJUDICATED");
 	/** 已入仓真端表（后续族切片逐个加入）。 / In-repo retail tables so far. */
 	private static final Set<String> IN_REPO_FAMILIES = Set.of("SimpleHunt", "SimpleTalk");
 

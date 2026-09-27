@@ -195,7 +195,11 @@ class RetailSimpleHuntFamilyGateTest {
 				}
 				continue;
 			}
-			String code = reason == null ? "" : reason.substring("SEMANTIC_GAP:".length());
+			// 保留原因前缀（SEMANTIC_GAP: / ADJUDICATED:）不影响逐码不变量：缺口批裁定的行沿用
+			// 既有分类语义——编译器缺口码（RETAIL_*）必须仍被拒，族表覆盖码（KILL_COVERAGE_LOSS 等）
+			// 必须仍能合成，等价类必须有计划。前缀只是"逐行裁定已落"的登记标记（fail-closed 继承）。
+			// The reason prefix is invariant-neutral: adjudicated rows keep the per-code obligations.
+			String code = reason == null ? "" : stripReasonPrefix(reason);
 			if (DRIVER_COVERAGE_GAPS.contains(code)) {
 				// 族表能合成，但族表没有该语义的列（如任务刷怪）→ 保留 XML 才是正确结果。
 				// The family compiles it, but the tables cannot express the axis, so XML retention is right.
@@ -255,6 +259,55 @@ class RetailSimpleHuntFamilyGateTest {
 			rows.put(Integer.parseInt(parts[0]), parts[1]);
 		}
 		return rows;
+	}
+
+	/** 保留原因去前缀（{@code SEMANTIC_GAP:} / {@code ADJUDICATED:}）。 / Strips the retention reason prefix. */
+	private static String stripReasonPrefix(String reason) {
+		int colon = reason.indexOf(':');
+		return colon < 0 ? reason : reason.substring(colon + 1);
+	}
+
+	/**
+	 * 缺口批 1 采纳门：挑战哨兵采纳集（{@link RetailChallengeAcquireAdoptions}）必须与裁定登记表
+	 * 逐 id 恒等，且每条采纳的四方证据在册——真端行是 {@code CHALLENGE_TASK}、交付名经
+	 * {@code resolvePartyName} 解析恰为采纳 NPC、采纳集 ⊆ 裁定登记（basis=CHALLENGE_TASK_NPC_DELIVERY）。
+	 * 变异负例：登记表删一行或采纳表改一个 npc id 都会让本红亮起（fail-closed）。
+	 * Gap-batch-1 adoption gate: the frozen adoption set must match the adjudication registry and
+	 * every entry must carry its four-sided evidence (challenge sentinel row + delivery-name
+	 * resolution to the adopted NPC + registry row).
+	 */
+	@Test
+	void challengeAcquireAdoptionsMatchRegistryAndResolveToDeliveryNpc() throws Exception {
+		Set<Integer> adopted = RetailChallengeAcquireAdoptions.adoptedQuestIds();
+		Set<Integer> registry = new TreeSet<>();
+		InputStream decisions = RetailSimpleHuntFamilyGateTest.class.getResourceAsStream(
+			"/quest/retail-simple-hunt-adjudicated-decisions.tsv");
+		assertNotNull(decisions, "missing adjudication registry");
+		for (String line : lines(decisions)) {
+			if (line.startsWith("#") || line.isBlank()) {
+				continue;
+			}
+			String[] parts = line.split("\t", -1);
+			if (parts.length >= 3 && "ADOPT_RETAIL".equals(parts[1])
+					&& "CHALLENGE_TASK_NPC_DELIVERY".equals(parts[2])) {
+				registry.add(Integer.parseInt(parts[0]));
+			}
+		}
+		assertEquals(registry, adopted, () -> "采纳集与裁定登记表失同步：registry=" + registry + " adopted=" + adopted);
+		RetailSimpleHuntTable table;
+		try (InputStream input = open("/aion/data/static_data/quest_retail/Quest_SimpleHunt.xml")) {
+			table = RetailSimpleHuntTable.load(input);
+		}
+		for (int questId : adopted) {
+			RetailSimpleHuntTable.Entry entry = table.find(questId).orElse(null);
+			assertNotNull(entry, () -> "采纳行不在真端表：" + questId);
+			assertEquals(RetailGrantKind.CHALLENGE_TASK, entry.grantKind(),
+				() -> "采纳行接取类别不是挑战哨兵：" + questId);
+			int npc = RetailChallengeAcquireAdoptions.acquireNpcId(questId);
+			String rewardName = entry.rewardNpc() == null ? "" : entry.rewardNpc();
+			assertEquals(Set.of(npc), npcIndexFull.resolvePartyName(rewardName),
+				() -> "采纳行交付名必须唯一解析到采纳 NPC：" + questId);
+		}
 	}
 
 	private RetailQuestMetadataCompiler.Outcome retailMetadata(int questId) {

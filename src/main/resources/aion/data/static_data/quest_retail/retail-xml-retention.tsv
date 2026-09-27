@@ -329,7 +329,7 @@
 1514	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 1515	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 1516	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-1517	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+1517	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 1518	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 1521	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 1522	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
@@ -511,8 +511,8 @@
 1754	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 1755	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 1756	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
-1840	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-simplehunt-compiler-rejects.tsv slot 1 [IDAbRe_Up_Asteria]
-1841	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-simplehunt-compiler-rejects.tsv slot 1 [IDAbRe_Up_Rhoo]
+1840	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+1841	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 1842	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_COUNTER_EXCEEDS_6BIT	retail-simplehunt-compiler-rejects.tsv slot 1 count 80
 1843	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_COUNTER_EXCEEDS_6BIT	retail-simplehunt-compiler-rejects.tsv slot 1 count 80
 1844	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_COUNTER_EXCEEDS_6BIT	retail-simplehunt-compiler-rejects.tsv slot 1 count 80
@@ -790,7 +790,7 @@
 2333	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 2334	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 2340	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-2341	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+2341	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 2342	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 2343	XML_RETENTION	-	NO_TABLE	retail-none
 2344	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
@@ -875,7 +875,7 @@
 2431	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 2432	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 2433	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
-2434	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+2434	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 2435	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 2436	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf740
 2437	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
@@ -1077,7 +1077,7 @@
 2652	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 2653	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_TALK_CHAIN	p0c10f-talk-chain-decisions.tsv basis=NPC_COMPLETE_VARIANT
 2654	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c16-deferred-decisions.tsv basis=M3D_DOWNGRADE_REVERSED
-2655	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+2655	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 2656	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10m-item-decisions.tsv basis=PROJECTION_QE051
 2657	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 2658	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -1141,14 +1141,14 @@
 2755	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 2756	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 2767	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10i-canonical-decisions.tsv basis=RETAIL_STAGE_CANONICAL
-2841	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-simplehunt-compiler-rejects.tsv slot 1 [IDAbRe_Up_Asteria]
-2842	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-simplehunt-compiler-rejects.tsv slot 1 [IDAbRe_Up_Rhoo]
+2841	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+2842	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 2843	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_COUNTER_EXCEEDS_6BIT	retail-simplehunt-compiler-rejects.tsv slot 1 count 80
 2844	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_COUNTER_EXCEEDS_6BIT	retail-simplehunt-compiler-rejects.tsv slot 1 count 80
 2845	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_COUNTER_EXCEEDS_6BIT	retail-simplehunt-compiler-rejects.tsv slot 1 count 80
 2849	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 2852	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-2869	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+2869	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 2870	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	retail-data-driven-drift.tsv
 2872	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 2873	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
@@ -1295,7 +1295,7 @@
 3049	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 3050	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 3051	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
-3052	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+3052	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 3053	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 3054	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=OBJECT_TALK_ROUTE_MISSING
 3055	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
@@ -1350,8 +1350,8 @@
 3119	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 3120	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=STAGE_FLIP_PAIRED+EXTRA_KILL_COUNTER_LEGACY+GRID
 3121	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
-3122	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_HUNT_MULTI_STAGE_DEFERRED	retail-data-driven-drift.tsv
-3123	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_HUNT_MULTI_STAGE_DEFERRED	retail-data-driven-drift.tsv
+3122	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HUNT_MULTI_STAGE_DEFERRED	b2 multi-stage hunt axis unimplemented (deferred); XML operational
+3123	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HUNT_MULTI_STAGE_DEFERRED	b2 multi-stage hunt axis unimplemented (deferred); XML operational
 3200	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 3201	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_TALK_CHAIN_NO_START	retail-simple-talk-drift.tsv
 3202	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=MULTI_ITEM_HANDIN
@@ -1543,7 +1543,7 @@
 3974	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 3975	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 3976	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10m-item-decisions.tsv basis=PROJECTION_QE051
-3977	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+3977	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 3978	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 3979	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 4001	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
@@ -1642,8 +1642,8 @@
 4118	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 4119	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=STAGE_FLIP_PAIRED+EXTRA_KILL_COUNTER_LEGACY+GRID
 4120	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
-4122	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_HUNT_MULTI_STAGE_DEFERRED	retail-data-driven-drift.tsv
-4123	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_HUNT_MULTI_STAGE_DEFERRED	retail-data-driven-drift.tsv
+4122	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HUNT_MULTI_STAGE_DEFERRED	b2 multi-stage hunt axis unimplemented (deferred); XML operational
+4123	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HUNT_MULTI_STAGE_DEFERRED	b2 multi-stage hunt axis unimplemented (deferred); XML operational
 4200	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 4201	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_TALK_CHAIN_NO_START	retail-simple-talk-drift.tsv
 4202	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=MULTI_ITEM_HANDIN
@@ -1745,7 +1745,7 @@
 4542	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf640,FUN_180caf740
 4711	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
 4712	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
-4713	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+4713	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 4714	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
 4715	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 4716	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
@@ -2428,16 +2428,16 @@
 10010	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_HUNT_CHAIN
 10011	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
 10031	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_STEP_UNSUPPORTED	retail-data-driven-drift.tsv
-10032	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	retail-data-driven-drift.tsv
+10032	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_COLLECT_CHAIN_DEFERRED	b1-acquire-sentinel/b1_forensics.tsv retention-lag fix: code realigned to frozen drift REJECTED:RETAIL_TALK_COLLECT_CHAIN_DEFERRED (talk-chain family, batch 3)
 10033	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_CHAIN_DEFERRED	retail-data-driven-drift.tsv
 10034	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-data-driven-drift.tsv
 10035	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-data-driven-drift.tsv
 10100	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf6c0,FUN_180caf740
 10101	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 10110	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
-10111	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	retail-data-driven-drift.tsv
+10111	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_HUNT_CHAIN_DEFERRED	b1-acquire-sentinel/b1_forensics.tsv retention-lag fix: code realigned to frozen drift REJECTED:RETAIL_TALK_HUNT_CHAIN_DEFERRED (talk-chain family, batch 3)
 10112	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-data-driven-drift.tsv
-10113	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	retail-data-driven-drift.tsv
+10113	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_HUNT_CHAIN_DEFERRED	b1-acquire-sentinel/b1_forensics.tsv retention-lag fix: code realigned to frozen drift REJECTED:RETAIL_TALK_HUNT_CHAIN_DEFERRED (talk-chain family, batch 3)
 10500	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_CHAIN_DEFERRED	retail-data-driven-drift.tsv
 10501	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
 10502	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
@@ -2450,7 +2450,7 @@
 10521	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf6c0,FUN_180caf740
 10522	XML_RETENTION	-	NO_TABLE	retail-none
 10525	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
-10526	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	retail-data-driven-drift.tsv
+10526	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_HUNT_CHAIN_DEFERRED	b1-acquire-sentinel/b1_forensics.tsv retention-lag fix: code realigned to frozen drift REJECTED:RETAIL_TALK_HUNT_CHAIN_DEFERRED (talk-chain family, batch 3)
 10527	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-data-driven-drift.tsv
 10528	XML_RETENTION	-	SCRIPTED	registry=FUN_180caa850,FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 10529	XML_RETENTION	-	SCRIPTED	registry=FUN_180caa850,FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
@@ -2483,7 +2483,7 @@
 11035	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 11036	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 11037	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-11038	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+11038	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 11039	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 11040	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 11042	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -2651,28 +2651,28 @@
 13832	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_CHAIN
 13833	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_CHAIN
 13834	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_CHAIN
-13840	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+13840	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 13841	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 13842	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 13843	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-13844	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
-13845	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+13844	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+13845	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 13846	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 13847	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-13848	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
-13849	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+13848	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+13849	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 13850	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 13851	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-13860	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+13860	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 13862	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 13863	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-13864	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+13864	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 13866	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 13867	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-13868	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+13868	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 13870	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 13871	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-13880	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+13880	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 13882	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 13883	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 13900	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
@@ -2685,7 +2685,7 @@
 13907	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 13908	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 13909	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
-13910	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-simplehunt-compiler-rejects.tsv slot 1 [LDF5_Fortress_7011_Boss_Da, LDF5_Fortress_7011_Boss_Dr]
+13910	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 13914	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 13915	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 13916	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -2712,17 +2712,17 @@
 13940	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 13941	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 13942	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-13943	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
-13944	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+13943	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+13944	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 13945	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN
-13946	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+13946	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 13947	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_AREA_HUNT_GRID
 13950	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 13951	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_CHAIN
 13952	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c56-item-acquire-decisions.tsv basis=DD_ITEMPLAY_ACQUIRE
 13953	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
 13954	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-data-driven-drift.tsv
-13955	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+13955	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 13956	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 13960	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_STEP_UNSUPPORTED	retail-data-driven-drift.tsv
 13961	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_CHAIN_DEFERRED	retail-data-driven-drift.tsv
@@ -2772,7 +2772,7 @@
 14122	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10i-canonical-decisions.tsv basis=RETAIL_STAGE_CANONICAL
 14123	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:QUEST_SPAWN_UNEXPRESSED	retail-simple-hunt-adjudicated-decisions.tsv retail table has no spawn column; monster1=hippolyta_Q14123->206360（XML: spawn-npc-current-or-default slot=peddler-hippola）; XML spawn edges=spawn-npc-current-or-default slot=peddler-hippola template-id=206360 x3; static spawns/** for 206360: none; ScriptDLL registers the name->quest binding only (fun_196.cpp:933); retail talk_npc1=dionera->203991; acquired=Actaeon; reward=dionera; counters=1/1; client chain=1353:1353 1354:1354 10000:0 (terminal=10000); report_page=2375; kill gate SECTION_5==0=y; old xml { npc_start=-; 203933:QUEST_SELECT 203933:SELECT1_1 203933:SELECT2_1 203933:SELECT2_1_1 203933:SETPRO1 203991:QUEST_SELECT 203991:SELECT2_1 203991:SELECT2_1_1 203991:SETPRO1 }
 14124	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=XML_ACCEPT_FLOW_DEVIATION
-14125	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+14125	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 14150	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=JOURNAL_ROW_OVERFLOW
 14151	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=XML_ACCEPT_FLOW_DEVIATION
 14152	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=BRIEFING_STEP
@@ -2780,16 +2780,16 @@
 14200	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=BRIEFING_STEP
 14201	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c11-collect-gate-adopt-decisions.tsv basis=COLLECT_ITEM_GATE_CHANNEL
 14202	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-14203	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
-14204	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
-14211	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
+14203	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+14204	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+14211	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
 14220	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 14240	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=ACCEPT_FLOW_LEGACY
 14241	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-14242	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+14242	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 14243	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 14244	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-14250	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+14250	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 14251	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 14252	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 14260	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -2830,7 +2830,7 @@
 15104	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15200	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 15201	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-15202	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+15202	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 15203	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15204	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 15205	XML_RETENTION	-	NO_TABLE	retail-none
@@ -2879,9 +2879,9 @@
 15408	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15409	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15410	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-15411	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
-15412	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
-15413	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+15411	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+15412	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+15413	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 15414	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15415	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15416	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -2935,7 +2935,7 @@
 15477	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
 15478	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
 15479	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
-15480	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+15480	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 15500	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15501	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15502	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
@@ -2980,14 +2980,14 @@
 15542	XML_RETENTION	-	NO_TABLE	retail-none
 15545	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_CHAIN
 15546	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-15548	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	retail-data-driven-drift.tsv
+15548	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	b1-acquire-sentinel/b1_forensics.tsv enter-area acquire: no quest_area binding (or collect-progress shape unsupported by the area grant edge)
 15550	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_CHAIN_DEFERRED	retail-data-driven-drift.tsv
 15551	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 15552	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 15553	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 15554	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
-15560	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
-15561	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+15560	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+15561	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 15562	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15563	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c56-item-acquire-decisions.tsv basis=DD_ITEMPLAY_ACQUIRE
 15564	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -3026,10 +3026,10 @@
 15666	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 15667	XML_RETENTION	-	NO_TABLE	retail-none
 15670	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
-15671	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
-15672	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+15671	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+15672	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 15673	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave12-in-chain-pvp-decisions.tsv basis=DD_IN_CHAIN_PVP
-15674	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	retail-data-driven-drift.tsv
+15674	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	b1-acquire-sentinel/b1_forensics.tsv enter-area acquire: no quest_area binding (or collect-progress shape unsupported by the area grant edge)
 15680	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave7-narrow-itemplay-decisions.tsv basis=DD_NARROW_ITEMPLAY_RIDER
 15681	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 15682	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
@@ -3115,8 +3115,8 @@
 16942	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
 16960	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=BRIEFING_STEP
 16961	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:XML_EXTRA_REWARD	simplehunt-dialog-route-gaps.txt
-16962	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
-16974	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+16962	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
+16974	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 16975	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c56-item-acquire-decisions.tsv basis=DD_ITEMPLAY_ACQUIRE
 16976	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
 16977	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
@@ -3131,81 +3131,81 @@
 16991	RETAIL_TABLE	SimpleSerialHunt	OK	retired-xml-in-git-history
 16992	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 16994	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
-17000	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-17001	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-17002	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-17003	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-17004	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-17005	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-17006	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-17007	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-17008	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-17009	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-17010	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-17011	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17000	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800447
+17001	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800447
+17002	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800447
+17003	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800447
+17004	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800447
+17005	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800447
+17006	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800447
+17007	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800447
+17008	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800447
+17009	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800447
+17010	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800447
+17011	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge-adopter deferred: acquire evidence complete (delivery npc + client NPC_START) but kill targets (WorldRaid_*/quest-boss aliases) unresolved server-side - flip deferred to the kill-target axis (batch 2)
 17012	XML_RETENTION	-	NO_TABLE	retail-none
 17013	XML_RETENTION	-	NO_TABLE	retail-none
 17014	XML_RETENTION	-	NO_TABLE	retail-none
-17015	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-17016	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-17017	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-17018	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-17019	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17015	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge-adopter deferred: acquire evidence complete (delivery npc + client NPC_START) but kill targets (WorldRaid_*/quest-boss aliases) unresolved server-side - flip deferred to the kill-target axis (batch 2)
+17016	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge-adopter deferred: acquire evidence complete (delivery npc + client NPC_START) but kill targets (WorldRaid_*/quest-boss aliases) unresolved server-side - flip deferred to the kill-target axis (batch 2)
+17017	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge-adopter deferred: acquire evidence complete (delivery npc + client NPC_START) but kill targets (WorldRaid_*/quest-boss aliases) unresolved server-side - flip deferred to the kill-target axis (batch 2)
+17018	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge-adopter deferred: acquire evidence complete (delivery npc + client NPC_START) but kill targets (WorldRaid_*/quest-boss aliases) unresolved server-side - flip deferred to the kill-target axis (batch 2)
+17019	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800445
 17100	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
 17101	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
 17102	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
 17103	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
 17104	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
 17105	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17106	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17106	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17107	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17108	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17108	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17109	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17110	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17110	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17111	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17112	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17112	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17113	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17114	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17114	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17115	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17116	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17116	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17117	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17118	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17118	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17119	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17120	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17120	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17121	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17122	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17122	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17123	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17124	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17124	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17125	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17126	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17126	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17127	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17128	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17128	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17129	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17130	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17130	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17131	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17132	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17132	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17133	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17134	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17134	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17135	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17136	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17136	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17137	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17138	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17138	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17139	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17140	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17140	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17141	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17142	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17142	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17143	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17144	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17144	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17145	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17146	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17146	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17147	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17148	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17148	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17149	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17150	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17150	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17151	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17152	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17152	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17153	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17154	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+17154	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
 17160	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c58-challenge-sentinel-decisions.tsv basis=DD_CHALLENGE_SENTINEL_ACCEPT_AT_REWARD_NPC
 17161	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c58-challenge-sentinel-decisions.tsv basis=DD_CHALLENGE_SENTINEL_ACCEPT_AT_REWARD_NPC
 17162	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c58-challenge-sentinel-decisions.tsv basis=DD_CHALLENGE_SENTINEL_ACCEPT_AT_REWARD_NPC
@@ -3328,8 +3328,8 @@
 18649	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_CHAIN_DEFERRED	retail-data-driven-drift.tsv
 18737	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c54-noprogress-group-decisions.tsv basis=DD_NO_PROGRESS_GROUP_REWARD
 18738	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_VARIANTS
-18739	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	retail-data-driven-drift.tsv
-18740	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	retail-data-driven-drift.tsv
+18739	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	b1-acquire-sentinel/b1_forensics.tsv enter-area acquire: no quest_area binding (or collect-progress shape unsupported by the area grant edge)
+18740	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	b1-acquire-sentinel/b1_forensics.tsv enter-area acquire: no quest_area binding (or collect-progress shape unsupported by the area grant edge)
 18741	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_AREA_HUNT_GRID
 18742	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 18743	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
@@ -3339,7 +3339,7 @@
 18801	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18802	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c21-prereq-bucket-decisions.tsv basis=M3D_DOWNGRADE_REVERSED
 18805	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_TALK_CHAIN	p0c10f-talk-chain-decisions.tsv basis=NPC_COMPLETE_VARIANT
-18806	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
+18806	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
 18807	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c39-canonical-adoption-decisions.tsv basis=CANONICAL_ITEM_CHANNEL
 18808	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_REWARD_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
 18809	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c39-canonical-adoption-decisions.tsv basis=CANONICAL_ITEM_CHANNEL
@@ -3353,15 +3353,15 @@
 18818	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18819	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18820	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-18821	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
+18821	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
 18822	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18823	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18824	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18825	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18826	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18827	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_REWARD_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
-18828	XML_RETENTION	SimpleItemPlay	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	p1-itemplay-decisions.tsv
-18829	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
+18828	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
+18829	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
 18830	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_TALK_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
 18831	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_REWARD_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
 18832	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_TALK_CUTSCENE	retail-simple-talk-drift.tsv
@@ -3384,7 +3384,7 @@
 18912	RETAIL_TABLE	SimpleSerialHunt	OK	retired-xml-in-git-history
 18913	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18914	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=SELECTABLE_CHOICE_EXPANSION
-18915	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+18915	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 18916	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18917	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
 18930	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_STEP_UNSUPPORTED	retail-data-driven-drift.tsv
@@ -3393,8 +3393,8 @@
 18940	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10h-talk-chain-b4-decisions.tsv basis=P0C10H_EQUIVALENT
 18941	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 18950	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
-18951	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
-18952	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+18951	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+18952	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 18953	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 18954	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 18970	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
@@ -3493,22 +3493,22 @@
 19688	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 19689	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 19690	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-19691	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+19691	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 19694	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 19900	XML_RETENTION	DataDriven	SEMANTIC_GAP:CURATED_LEGACY_CONTRACT_LOCK	downgraded:the minion tutorial prerequisite axis is unexpressed in the retail metadata (legacy contract pins LevelUp+EnterWorld dual accept at 1500ms)
 20010	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_HUNT_CHAIN
 20011	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
 20031	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_STEP_UNSUPPORTED	retail-data-driven-drift.tsv
-20032	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	retail-data-driven-drift.tsv
+20032	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_HUNT_CHAIN_DEFERRED	b1-acquire-sentinel/b1_forensics.tsv retention-lag fix: code realigned to frozen drift REJECTED:RETAIL_TALK_HUNT_CHAIN_DEFERRED (talk-chain family, batch 3)
 20033	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-data-driven-drift.tsv
-20034	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	retail-data-driven-drift.tsv
+20034	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_HUNT_CHAIN_DEFERRED	b1-acquire-sentinel/b1_forensics.tsv retention-lag fix: code realigned to frozen drift REJECTED:RETAIL_TALK_HUNT_CHAIN_DEFERRED (talk-chain family, batch 3)
 20035	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-data-driven-drift.tsv
 20100	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf6c0,FUN_180caf740
 20101	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 20110	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
-20111	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	retail-data-driven-drift.tsv
+20111	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_HUNT_CHAIN_DEFERRED	b1-acquire-sentinel/b1_forensics.tsv retention-lag fix: code realigned to frozen drift REJECTED:RETAIL_TALK_HUNT_CHAIN_DEFERRED (talk-chain family, batch 3)
 20112	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-data-driven-drift.tsv
-20113	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	retail-data-driven-drift.tsv
+20113	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_HUNT_CHAIN_DEFERRED	b1-acquire-sentinel/b1_forensics.tsv retention-lag fix: code realigned to frozen drift REJECTED:RETAIL_TALK_HUNT_CHAIN_DEFERRED (talk-chain family, batch 3)
 20500	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_CHAIN_DEFERRED	retail-data-driven-drift.tsv
 20501	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_STEP_UNSUPPORTED	retail-data-driven-drift.tsv
 20502	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
@@ -3521,7 +3521,7 @@
 20521	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf6c0,FUN_180caf740
 20522	XML_RETENTION	-	NO_TABLE	retail-none
 20525	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
-20526	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	retail-data-driven-drift.tsv
+20526	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_HUNT_CHAIN_DEFERRED	b1-acquire-sentinel/b1_forensics.tsv retention-lag fix: code realigned to frozen drift REJECTED:RETAIL_TALK_HUNT_CHAIN_DEFERRED (talk-chain family, batch 3)
 20527	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-data-driven-drift.tsv
 20528	XML_RETENTION	-	SCRIPTED	registry=FUN_180caa850,FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 20529	XML_RETENTION	-	SCRIPTED	registry=FUN_180caa850,FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
@@ -3722,28 +3722,28 @@
 23832	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_CHAIN
 23833	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_CHAIN
 23834	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_CHAIN
-23840	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+23840	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 23841	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 23842	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 23843	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-23844	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
-23845	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+23844	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+23845	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 23846	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 23847	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-23848	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
-23849	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+23848	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+23849	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 23850	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 23851	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-23860	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+23860	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 23862	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 23863	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-23864	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+23864	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 23866	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 23867	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-23868	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+23868	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 23870	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 23871	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-23880	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+23880	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 23882	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 23883	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 23900	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
@@ -3756,7 +3756,7 @@
 23907	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=ACCEPT_NPC_DRIFT+KILL_VARIANT_UNREACHABLE
 23908	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=ACCEPT_NPC_DRIFT
 23909	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
-23910	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-simplehunt-compiler-rejects.tsv slot 1 [LDF5_Fortress_7011_Boss_Li, LDF5_Fortress_7011_Boss_Dr]
+23910	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 23914	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 23915	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 23916	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -3783,17 +3783,17 @@
 23940	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 23941	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 23942	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-23943	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
-23944	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+23943	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+23944	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 23945	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN
-23946	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+23946	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 23947	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_AREA_HUNT_GRID
 23950	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 23951	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_CHAIN
 23952	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c56-item-acquire-decisions.tsv basis=DD_ITEMPLAY_ACQUIRE
 23953	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
 23954	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-data-driven-drift.tsv
-23955	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+23955	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 23956	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 23960	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_STEP_UNSUPPORTED	retail-data-driven-drift.tsv
 23961	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_CHAIN_DEFERRED	retail-data-driven-drift.tsv
@@ -3852,7 +3852,7 @@
 24201	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=BRIEFING_STEP
 24202	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c35-progress-row-projection-decisions.tsv basis=PROGRESS_ROW_PROJECTION
 24203	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
-24211	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
+24211	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
 24220	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 24230	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=STAGE_FLIP_PAIRED+REPORT_PAGE_DIALOG_LEGACY+ACCEPT_FLOW_LEGACY+CLOSE_DIALOG_LEGACY
 24231	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -3898,8 +3898,8 @@
 25093	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25094	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	retail-data-driven-drift.tsv
 25200	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history retail-data-driven-drift.tsv basis=DD_TALK_JOURNAL_ROW
-25201	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
-25202	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+25201	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+25202	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 25203	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25204	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 25205	XML_RETENTION	-	NO_TABLE	retail-none
@@ -3948,9 +3948,9 @@
 25408	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25409	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25410	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-25411	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
-25412	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
-25413	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+25411	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+25412	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+25413	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 25414	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25415	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25416	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -4004,7 +4004,7 @@
 25477	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
 25478	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
 25479	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
-25480	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+25480	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 25500	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25501	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25502	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
@@ -4049,14 +4049,14 @@
 25542	XML_RETENTION	-	NO_TABLE	retail-none
 25545	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_CHAIN
 25546	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-25548	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	retail-data-driven-drift.tsv
+25548	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	b1-acquire-sentinel/b1_forensics.tsv enter-area acquire: no quest_area binding (or collect-progress shape unsupported by the area grant edge)
 25550	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_CHAIN_DEFERRED	retail-data-driven-drift.tsv
 25551	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 25552	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 25553	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 25554	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
-25560	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
-25561	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+25560	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+25561	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 25562	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25563	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c56-item-acquire-decisions.tsv basis=DD_ITEMPLAY_ACQUIRE
 25564	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -4094,10 +4094,10 @@
 25666	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 25667	XML_RETENTION	-	NO_TABLE	retail-none
 25670	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
-25671	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
-25672	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+25671	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+25672	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 25673	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave12-in-chain-pvp-decisions.tsv basis=DD_IN_CHAIN_PVP
-25674	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	retail-data-driven-drift.tsv
+25674	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	b1-acquire-sentinel/b1_forensics.tsv enter-area acquire: no quest_area binding (or collect-progress shape unsupported by the area grant edge)
 25680	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-data-driven-drift.tsv
 25681	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 25682	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
@@ -4184,7 +4184,7 @@
 26960	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=BRIEFING_STEP
 26961	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 26962	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
-26974	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+26974	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 26975	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c56-item-acquire-decisions.tsv basis=DD_ITEMPLAY_ACQUIRE
 26976	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
 26977	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
@@ -4198,81 +4198,81 @@
 26991	RETAIL_TABLE	SimpleSerialHunt	OK	retired-xml-in-git-history
 26992	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 26994	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
-27000	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-27001	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-27002	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-27003	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-27004	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-27005	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-27006	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-27007	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-27008	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-27009	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-27010	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-27011	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27000	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800452
+27001	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800452
+27002	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800452
+27003	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800452
+27004	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800452
+27005	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800452
+27006	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800452
+27007	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800452
+27008	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800452
+27009	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800452
+27010	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800452
+27011	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge-adopter deferred: acquire evidence complete (delivery npc + client NPC_START) but kill targets (WorldRaid_*/quest-boss aliases) unresolved server-side - flip deferred to the kill-target axis (batch 2)
 27012	XML_RETENTION	-	NO_TABLE	retail-none
 27013	XML_RETENTION	-	NO_TABLE	retail-none
 27014	XML_RETENTION	-	NO_TABLE	retail-none
-27015	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-27016	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-27017	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-27018	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
-27019	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27015	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge-adopter deferred: acquire evidence complete (delivery npc + client NPC_START) but kill targets (WorldRaid_*/quest-boss aliases) unresolved server-side - flip deferred to the kill-target axis (batch 2)
+27016	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge-adopter deferred: acquire evidence complete (delivery npc + client NPC_START) but kill targets (WorldRaid_*/quest-boss aliases) unresolved server-side - flip deferred to the kill-target axis (batch 2)
+27017	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge-adopter deferred: acquire evidence complete (delivery npc + client NPC_START) but kill targets (WorldRaid_*/quest-boss aliases) unresolved server-side - flip deferred to the kill-target axis (batch 2)
+27018	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge-adopter deferred: acquire evidence complete (delivery npc + client NPC_START) but kill targets (WorldRaid_*/quest-boss aliases) unresolved server-side - flip deferred to the kill-target axis (batch 2)
+27019	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800450
 27100	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
 27101	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
 27102	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
 27103	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
 27104	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
 27105	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27106	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27106	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27107	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27108	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27108	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27109	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27110	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27110	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27111	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27112	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27112	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27113	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27114	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27114	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27115	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27116	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27116	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27117	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27118	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27118	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27119	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27120	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27120	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27121	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27122	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27122	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27123	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27124	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27124	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27125	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27126	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27126	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27127	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27128	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27128	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27129	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27130	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27130	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27131	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27132	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27132	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27133	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27134	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27134	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27135	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27136	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27136	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27137	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27138	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27138	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27139	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27140	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27140	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27141	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27142	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27142	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27143	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27144	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27144	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27145	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27146	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27146	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27147	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27148	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27148	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27149	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27150	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27150	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27151	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27152	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27152	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27153	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27154	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	retail-simplehunt-compiler-rejects.tsv _challengetask_ -> CHALLENGE_TASK
+27154	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
 27160	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c58-challenge-sentinel-decisions.tsv basis=DD_CHALLENGE_SENTINEL_ACCEPT_AT_REWARD_NPC
 27161	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c58-challenge-sentinel-decisions.tsv basis=DD_CHALLENGE_SENTINEL_ACCEPT_AT_REWARD_NPC
 27162	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c58-challenge-sentinel-decisions.tsv basis=DD_CHALLENGE_SENTINEL_ACCEPT_AT_REWARD_NPC
@@ -4291,7 +4291,7 @@
 27552	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 28030	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=ACCEPT_NPC_DRIFT+KILL_VARIANT_UNREACHABLE+BRIEFING_ROUTE_RETAIL
 28031	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=STAGE_FLIP_PAIRED+ACCEPT_NPC_DRIFT+ACCEPT_FLOW_LEGACY
-28032	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+28032	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 28033	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=AREA_GRANT
 28034	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=SELECTABLE_CHOICE_EXPANSION
 28035	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c39-canonical-adoption-decisions.tsv basis=CANONICAL_ITEM_CHANNEL
@@ -4395,8 +4395,8 @@
 28649	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_CHAIN_DEFERRED	retail-data-driven-drift.tsv
 28737	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c54-noprogress-group-decisions.tsv basis=DD_NO_PROGRESS_GROUP_REWARD
 28738	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_VARIANTS
-28739	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	retail-data-driven-drift.tsv
-28740	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	retail-data-driven-drift.tsv
+28739	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	b1-acquire-sentinel/b1_forensics.tsv enter-area acquire: no quest_area binding (or collect-progress shape unsupported by the area grant edge)
+28740	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	b1-acquire-sentinel/b1_forensics.tsv enter-area acquire: no quest_area binding (or collect-progress shape unsupported by the area grant edge)
 28741	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_AREA_HUNT_GRID
 28742	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 28743	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c53-group-table-decisions.tsv basis=DD_AINAME_GROUP_TABLE
@@ -4406,7 +4406,7 @@
 28801	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28802	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c21-prereq-bucket-decisions.tsv basis=M3D_DOWNGRADE_REVERSED
 28805	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_TALK_CHAIN	p0c10f-talk-chain-decisions.tsv basis=NPC_COMPLETE_VARIANT
-28806	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
+28806	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
 28807	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c39-canonical-adoption-decisions.tsv basis=CANONICAL_ITEM_CHANNEL
 28808	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_REWARD_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
 28809	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10h-talk-chain-b1-decisions.tsv basis=P0C10H_EQUIVALENT
@@ -4420,15 +4420,15 @@
 28818	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28819	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28820	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-28821	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
+28821	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
 28822	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28823	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28824	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28825	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28826	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28827	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_REWARD_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
-28828	XML_RETENTION	SimpleItemPlay	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	p1-itemplay-decisions.tsv
-28829	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
+28828	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
+28829	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
 28830	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_TALK_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
 28831	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_REWARD_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
 28832	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_TALK_CUTSCENE	retail-simple-talk-drift.tsv
@@ -4451,7 +4451,7 @@
 28912	RETAIL_TABLE	SimpleSerialHunt	OK	retired-xml-in-git-history
 28913	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28914	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=SELECTABLE_CHOICE_EXPANSION
-28915	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+28915	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 28916	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28917	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
 28930	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_STEP_UNSUPPORTED	retail-data-driven-drift.tsv
@@ -4460,8 +4460,8 @@
 28940	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10h-talk-chain-b4-decisions.tsv basis=P0C10H_EQUIVALENT
 28941	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 28950	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
-28951	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
-28952	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+28951	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+28952	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 28953	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 28954	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 28970	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
@@ -4560,13 +4560,13 @@
 29688	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 29689	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 29690	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-29691	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+29691	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 29694	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 29900	XML_RETENTION	DataDriven	SEMANTIC_GAP:CURATED_LEGACY_CONTRACT_LOCK	downgraded:the minion tutorial prerequisite axis is unexpressed in the retail metadata (legacy contract pins LevelUp+EnterWorld dual accept at 1500ms)
 30001	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30002	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30003	XML_RETENTION	-	SCRIPTED	registry=FUN_180cab520,FUN_180caf350
-30005	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+30005	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 30007	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 30008	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=SELECTABLE_CHOICE_EXPANSION
 30009	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -4611,7 +4611,7 @@
 30056	XML_RETENTION	-	SCRIPTED	registry=FUN_180cab520,FUN_180caca90,FUN_180caf350,FUN_180caf3c0
 30057	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
 30061	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
-30062	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+30062	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 30101	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30102	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30103	XML_RETENTION	-	SCRIPTED	registry=FUN_180cab520,FUN_180caf350
@@ -4661,7 +4661,7 @@
 30157	XML_RETENTION	-	SCRIPTED	registry=FUN_180cab520,FUN_180caca90,FUN_180caf350,FUN_180caf3c0
 30158	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
 30161	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
-30162	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+30162	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 30201	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30202	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_TALK_CHAIN	p0c10j-deferred-decisions.tsv basis=CANONICAL_INPUT_GAP
 30203	XML_RETENTION	-	SCRIPTED	registry=FUN_180cab150,FUN_180caf350,FUN_180caf6c0
@@ -4679,10 +4679,10 @@
 30215	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30216	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30217	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
-30218	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+30218	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 30219	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=KILL_VARIANT_UNREACHABLE
-30220	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
-30221	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+30220	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
+30221	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 30222	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:CLIENT_BUTTON_UNWIRED	simplehunt-dialog-route-gaps.txt
 30223	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30224	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=KILL_VARIANT_UNREACHABLE
@@ -4693,7 +4693,7 @@
 30229	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30230	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30231	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_TALK_CUTSCENE	retail-simple-talk-drift.tsv
-30232	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+30232	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 30233	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30234	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=CONFIRM_RANGE+KILL_VARIANT_UNREACHABLE
 30235	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
@@ -4705,7 +4705,7 @@
 30241	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
 30242	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
 30243	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
-30244	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+30244	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 30245	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 30246	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30247	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
@@ -4729,10 +4729,10 @@
 30315	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c25-30312-30315-decisions.tsv basis=M3D_DOWNGRADE_REVERSED
 30316	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30317	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
-30318	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+30318	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 30319	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=KILL_VARIANT_UNREACHABLE
-30320	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
-30321	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+30320	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
+30321	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 30322	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=CONFIRM_RANGE+KILL_VARIANT_UNREACHABLE
 30323	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30324	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=KILL_VARIANT_UNREACHABLE
@@ -4743,7 +4743,7 @@
 30329	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30330	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30331	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_TALK_CUTSCENE	retail-simple-talk-drift.tsv
-30332	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+30332	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 30333	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30334	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=CONFIRM_RANGE+KILL_VARIANT_UNREACHABLE
 30335	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
@@ -4755,7 +4755,7 @@
 30341	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
 30342	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
 30343	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
-30344	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+30344	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 30345	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 30346	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30347	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
@@ -4768,7 +4768,7 @@
 30507	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30508	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30511	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-30512	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+30512	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 30513	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30514	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 30515	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
@@ -4779,20 +4779,20 @@
 30557	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30558	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30561	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-30562	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+30562	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 30563	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30564	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 30565	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
 30566	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 30600	RETAIL_TABLE	SimpleSerialHunt	OK	retired-xml-in-git-history
-30601	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+30601	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 30602	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=SELECTABLE_CHOICE_EXPANSION
-30603	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+30603	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 30604	XML_RETENTION	-	SCRIPTED	registry=FUN_180caa850,FUN_180cab520,FUN_180cacbf0,FUN_180caf350,FUN_180caf6c0
 30610	RETAIL_TABLE	SimpleSerialHunt	OK	retired-xml-in-git-history
-30611	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+30611	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 30612	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=SELECTABLE_CHOICE_EXPANSION
-30613	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+30613	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 30614	XML_RETENTION	-	SCRIPTED	registry=FUN_180caa850,FUN_180cab520,FUN_180cacbf0,FUN_180caf350,FUN_180caf6c0
 30700	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 30701	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
@@ -4866,29 +4866,29 @@
 35049	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=FACTION_GRANT_DAILY
 35050	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=FACTION_GRANT_DAILY
 35051	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=FACTION_GRANT_DAILY
-35052	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
+35052	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
 35053	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 35054	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 35055	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_CHAIN_DEFERRED	retail-data-driven-drift.tsv
 35056	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_CHAIN_DEFERRED	retail-data-driven-drift.tsv
 35057	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_CHAIN_DEFERRED	retail-data-driven-drift.tsv
-35058	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-35059	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-35060	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-35061	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-35062	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-35063	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-35064	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-35065	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
+35058	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+35059	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+35060	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+35061	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+35062	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+35063	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+35064	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+35065	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
 35505	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
 35508	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
 35509	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
-35510	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-35511	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-35512	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-35513	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-35514	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-35515	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
+35510	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+35511	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+35512	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+35513	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+35514	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+35515	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
 36015	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 36016	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 36500	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
@@ -4915,24 +4915,24 @@
 36528	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 36529	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 36530	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
-36531	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-36532	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-36533	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-36534	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-36535	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-36536	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
+36531	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+36532	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+36533	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+36534	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+36535	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+36536	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
 36537	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 36538	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
-36539	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-36540	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-36541	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-36542	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-36543	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-36544	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-36545	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-36546	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-36547	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-36548	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
+36539	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+36540	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+36541	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+36542	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+36543	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+36544	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+36545	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+36546	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+36547	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+36548	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
 38000	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
 38001	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
 38002	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
@@ -4948,7 +4948,7 @@
 38506	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 38507	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 39000	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
-39001	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:KILL_COVERAGE_LOSS	simplehunt-dialog-route-gaps.txt
+39001	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 39002	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=ACCEPT_NPC_DRIFT
 39003	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10h-talk-chain-b4-decisions.tsv basis=P0C10H_EQUIVALENT
 39004	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
@@ -4981,9 +4981,9 @@
 39710	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=FACTION_GRANT_DISABLED
 39711	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=FACTION_GRANT_DISABLED
 39712	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=FACTION_GRANT_DISABLED
-39713	XML_RETENTION	SimpleItemPlay	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL	p1-itemplay-decisions.tsv
+39713	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL	b1-acquire-sentinel/b1_forensics.tsv faction sentinel with reward npc unresolved (no deliverable owner on this server)
 39715	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=FACTION_GRANT_DISABLED
-42000	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+42000	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 42001	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 42002	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 42003	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -4994,7 +4994,7 @@
 42011	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 42012	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 42013	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-42100	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-data-driven-drift.tsv
+42100	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 42101	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 42102	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 42103	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -5042,29 +5042,29 @@
 45049	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=FACTION_GRANT_DAILY
 45050	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=FACTION_GRANT_DAILY
 45051	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=FACTION_GRANT_DAILY
-45052	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
+45052	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
 45053	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 45054	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 45055	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_CHAIN_DEFERRED	retail-data-driven-drift.tsv
 45056	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_CHAIN_DEFERRED	retail-data-driven-drift.tsv
 45057	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_TALK_CHAIN_DEFERRED	retail-data-driven-drift.tsv
-45058	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-45059	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-45060	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-45061	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-45062	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-45063	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-45064	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-45065	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
+45058	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+45059	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+45060	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+45061	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+45062	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+45063	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+45064	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+45065	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
 45505	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
 45508	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
 45509	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
-45510	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-45511	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-45512	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-45513	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-45514	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-45515	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
+45510	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+45511	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+45512	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+45513	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+45514	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+45515	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
 46015	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 46016	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 46500	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
@@ -5092,24 +5092,24 @@
 46528	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 46529	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 46530	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
-46531	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-46532	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-46533	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-46534	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-46535	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-46536	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
+46531	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+46532	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+46533	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+46534	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+46535	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+46536	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
 46537	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 46538	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
-46539	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-46540	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-46541	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-46542	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-46543	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-46544	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-46545	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-46546	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-46547	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
-46548	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
+46539	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+46540	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+46541	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+46542	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+46543	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+46544	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+46545	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+46546	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+46547	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+46548	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
 48000	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
 48001	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
 48002	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
@@ -5158,7 +5158,7 @@
 49710	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=FACTION_GRANT_DISABLED
 49711	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=FACTION_GRANT_DISABLED
 49712	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=FACTION_GRANT_DISABLED
-49713	XML_RETENTION	SimpleItemPlay	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL	p1-itemplay-decisions.tsv
+49713	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL	b1-acquire-sentinel/b1_forensics.tsv faction sentinel with reward npc unresolved (no deliverable owner on this server)
 49715	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=FACTION_GRANT_DISABLED
 50007	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 50008	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
@@ -5185,16 +5185,16 @@
 50039	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 50040	XML_RETENTION	-	NO_TABLE	retail-none
 50041	XML_RETENTION	-	NO_TABLE	retail-none
-50042	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
-50043	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
+50042	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
+50043	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
 50044	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 50045	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 50046	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-50047	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
-50048	XML_RETENTION	SimpleItemPlay	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	p1-itemplay-decisions.tsv
-50049	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
-50050	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
-50051	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
+50047	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
+50048	XML_RETENTION	SimpleItemPlay	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
+50049	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
+50050	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
+50051	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
 50052	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 50053	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 50054	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
@@ -5240,7 +5240,7 @@
 50111	XML_RETENTION	-	NO_TABLE	retail-none
 50123	XML_RETENTION	-	NO_TABLE	retail-none
 50124	XML_RETENTION	-	NO_TABLE	retail-none
-50125	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
+50125	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
 50126	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 50127	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 50128	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
@@ -5270,14 +5270,14 @@
 51039	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 51040	XML_RETENTION	-	NO_TABLE	retail-none
 51041	XML_RETENTION	-	NO_TABLE	retail-none
-51042	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
-51043	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
+51042	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
+51043	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
 51044	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 51045	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 51046	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-51049	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
-51050	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
-51051	XML_RETENTION	SimpleTalk	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	retail-simple-talk-drift.tsv
+51049	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
+51050	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
+51051	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
 51059	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 51060	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 51061	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
@@ -5296,7 +5296,7 @@
 51100	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 51110	XML_RETENTION	-	NO_TABLE	retail-none
 51111	XML_RETENTION	-	NO_TABLE	retail-none
-51125	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	retail-data-driven-drift.tsv
+51125	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
 51126	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 51127	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 51128	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
@@ -5582,11 +5582,11 @@
 80330	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80331	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80333	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-80334	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-simplehunt-compiler-rejects.tsv slot 1 [IDAsteria_IU_3Stage_Boss]
-80337	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-simplehunt-compiler-rejects.tsv slot 2 [IDAsteria_IU_3Stage_Boss]
+80334	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+80337	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 80341	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-80342	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-simplehunt-compiler-rejects.tsv slot 1 [IDAsteria_IU_WORLD_3Stage_Boss]
-80343	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-simplehunt-compiler-rejects.tsv slot 2 [IDAsteria_IU_WORLD_3Stage_Boss]
+80342	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
+80343	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 80344	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80345	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80346	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -5668,7 +5668,7 @@
 80422	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
 80423	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
 80424	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-80425	XML_RETENTION	SimpleHunt	SEMANTIC_GAP:RETAIL_MONSTER_UNRESOLVED	retail-simplehunt-compiler-rejects.tsv slot 1 [IDDF3_DrakanClericNamedDQ_45_Ae]
+80425	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 80426	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
 80427	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
 80428	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
@@ -6112,7 +6112,7 @@
 80882	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
 80883	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80884	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-80885	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	retail-data-driven-drift.tsv
+80885	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
 80886	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	retail-data-driven-drift.tsv
 80887	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80888	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
@@ -6166,7 +6166,7 @@
 80937	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 80938	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 80939	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
-80940	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	retail-data-driven-drift.tsv
+80940	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
 80941	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 80942	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80943	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
@@ -6187,7 +6187,7 @@
 80958	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave11-hunt-collect-mix-decisions.tsv basis=DD_HUNT_COLLECT_MIX
 80959	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80960	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
-80961	XML_RETENTION	DataDriven	SEMANTIC_GAP:RETAIL_ACQUIRE_NPC_UNRESOLVED	retail-data-driven-drift.tsv
+80961	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
 80962	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80963	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 80964	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID

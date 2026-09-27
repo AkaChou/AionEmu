@@ -113,8 +113,21 @@ import java.util.Set;
 		// The acquire/hand-in fields ride the unified name channel: exact, then name variant families,
 		// then the declared dialog-name group expanded to every member (isomorphic to the legacy XML's
 		// multi-npc accept/report for the guard, landing-base, event-vendor and instance-stage families).
-		Set<Integer> acquired = entry.grantKind() == RetailGrantKind.NPC
-			? index.resolvePartyName(names(entry.acquiredNpc()))
+		// 缺口批 1：挑战任务哨兵采纳（冻结集 RetailChallengeAcquireAdoptions）——挑战 NPC 本人是交付
+		// NPC 且客户端在该 NPC 上声明了 NPC_START 接取边 ⇒ 接取名归一化到交付名，下游按普通 NPC
+		// 接取合成（归一化名必须贯到整条管道：ids、名字、grantKind、对话名组判定）。
+		// Gap batch 1: challenge-sentinel adoption — the challenge NPC is the delivery NPC with a
+		// client-authored NPC_START edge, so the acquire name normalizes to the delivery name and the
+		// whole pipeline (ids, name, grantKind, group flag) sees a plain NPC acquire.
+		String acquiredName = names(entry.acquiredNpc());
+		RetailGrantKind kind = entry.grantKind();
+		if (kind == RetailGrantKind.CHALLENGE_TASK
+				&& RetailChallengeAcquireAdoptions.isAdopted(entry.questId())) {
+			acquiredName = names(entry.rewardNpc());
+			kind = RetailGrantKind.NPC;
+		}
+		Set<Integer> acquired = kind == RetailGrantKind.NPC
+			? index.resolvePartyName(acquiredName)
 			: Set.of();
 		Set<Integer> reward = index.resolvePartyName(names(entry.rewardNpc()));
 		// talk_npc1 = 真端简报 NPC（网格族据此合成"接取 → 见简报 → 清标志位 → 开计数"）。
@@ -124,9 +137,9 @@ import java.util.Set;
 			: index.resolveAll(List.of(talkName)).npcIds();
 		return new RetailSimpleHuntPlan(entry.questId(), List.copyOf(bound), Set.copyOf(acquired),
 			Set.copyOf(reward), RetailHuntCounterLayout.goal(entry.counters()), List.copyOf(unresolved),
-			names(entry.acquiredNpc()), names(entry.rewardNpc()), entry.grantKind(), Set.copyOf(briefing),
+			acquiredName, names(entry.rewardNpc()), kind, Set.copyOf(briefing),
 			talkName, entry.pvpProgress(), 0, 0, 0,
-			entry.grantKind() == RetailGrantKind.NPC && index.isQuestAiNameGroup(names(entry.acquiredNpc())),
+			kind == RetailGrantKind.NPC && index.isQuestAiNameGroup(acquiredName),
 			index.isQuestAiNameGroup(names(entry.rewardNpc())));
 	}
 
