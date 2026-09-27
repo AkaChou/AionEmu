@@ -50,12 +50,13 @@ class RetailSimpleItemPlayGateTest {
 		"RETAIL_TALK_CHAIN", Set.of(18213, 28213),
 		"RETAIL_ADVANCE_UNEXPRESSED", Set.of(80255, 80256));
 	/**
-	 * 缺口批 1 逐行裁定的码：接取/交付 NPC 在本服数据缺失的 5 行转 {@code ADJUDICATED:<码>} 保留
-	 * （裁定=本服无该 NPC，无法合成接取/交付边；家族门 fail-closed 复核仍以同码被拒）。
-	 * Codes adjudicated in gap batch 1: their rows keep XML with the {@code ADJUDICATED:} prefix.
+	 * 缺口批裁定的码：接取/交付 NPC 在本服数据缺失的 5 行与 itemplay+talk 链轴的 2 行
+	 * （18213/28213，批 3）转 {@code ADJUDICATED:<码>} 保留（裁定=轴未实现/NPC 本服缺失，
+	 * 家族门 fail-closed 复核仍以同码被拒）。
+	 * Codes adjudicated in the gap batches: their rows keep XML with the {@code ADJUDICATED:} prefix.
 	 */
 	private static final Set<String> ADJUDICATED_CODES =
-		Set.of("RETAIL_ACQUIRE_NPC_UNRESOLVED", "RETAIL_ACQUIRE_NPC_SENTINEL");
+		Set.of("RETAIL_ACQUIRE_NPC_UNRESOLVED", "RETAIL_ACQUIRE_NPC_SENTINEL", "RETAIL_TALK_CHAIN");
 	/** wave-1 六行的真端侧冻结 IR 指纹（退役证明，任何重算须显式入仓）。 */
 	private static final String FINGERPRINTS = "/quest/retail-simple-item-play-ir-fingerprints.tsv";
 	private static final String RETENTION = "/quest/retail-xml-retention.tsv";
