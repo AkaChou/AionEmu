@@ -98,9 +98,7 @@ class RetailSimpleHuntFamilyGateTest {
 		try (InputStream input = open("/aion/definitions/compact/ai/ai-areas.xml")) {
 			questAreas = RetailQuestAreaIndex.load(input);
 		}
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_dialog_exits.tsv")) {
-			clientDialogExits = RetailClientDialogExits.load(input);
-		}
+		clientDialogExits = RetailClientDialogExits.defaultExits();
 		npcIndexFull = npcIndex();
 		catalog = new RetailQuestCatalog(table, npcIndexFull);
 		retailOwned = retailOwned();

@@ -87,9 +87,7 @@ class RetailSimpleUseItemGateTest {
 			clientSummaryRows = RetailClientSummaryRows.load(input);
 		}
 		clientReportModes = RetailClientUseItemReport.defaultReport();
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_dialog_exits.tsv")) {
-			clientDialogExits = RetailClientDialogExits.load(input);
-		}
+		clientDialogExits = RetailClientDialogExits.defaultExits();
 		npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_TEMPLATES), RetailQuestAiNameGroupsFixture.streams());
 		itemIndex = RetailItemNameIndex.build(openAll(ITEM_DIR, listXmlNames(ITEM_DIR)));
 		randomRewards = randomRewardIds();

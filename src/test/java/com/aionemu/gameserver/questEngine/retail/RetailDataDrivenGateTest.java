@@ -146,9 +146,7 @@ class RetailDataDrivenGateTest {
 		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_enterarea_zone_resolution.tsv")) {
 			enterAreaZoneResolution = RetailEnterAreaZoneResolution.load(input);
 		}
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_dialog_exits.tsv")) {
-			clientDialogExits = RetailClientDialogExits.load(input);
-		}
+		clientDialogExits = RetailClientDialogExits.defaultExits();
 		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_reward_npcs.tsv")) {
 			// 与生产驱动同一登记表：空夹具会让交付 dic 链解析与驱动口径漂移（P5-4 收口）。
 			// Same registry as the production driver: the empty fixture diverges from driver hand-in

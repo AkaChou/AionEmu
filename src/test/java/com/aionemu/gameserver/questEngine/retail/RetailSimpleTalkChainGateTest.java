@@ -124,9 +124,7 @@ class RetailSimpleTalkChainGateTest {
 		try (InputStream input = open("/aion/data/static_data/quest_retail/quest.xml")) {
 			retailTable = RetailQuestXmlTable.load(input);
 		}
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_dialog_exits.tsv")) {
-			exits = RetailClientDialogExits.load(input);
-		}
+		exits = RetailClientDialogExits.defaultExits();
 		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_summary_rows.tsv")) {
 			summaryRows = RetailClientSummaryRows.load(input);
 		}

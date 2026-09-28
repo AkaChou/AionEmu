@@ -93,9 +93,7 @@ class RetailSimpleHuntEquivalenceGateTest {
 		try (InputStream input = open("/aion/definitions/compact/ai/ai-areas.xml")) {
 			questAreas = RetailQuestAreaIndex.load(input);
 		}
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_dialog_exits.tsv")) {
-			clientDialogExits = RetailClientDialogExits.load(input);
-		}
+		clientDialogExits = RetailClientDialogExits.defaultExits();
 		npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_TEMPLATES), RetailQuestAiNameGroupsFixture.streams());
 		itemIndex = RetailItemNameIndex.build(openAll("/aion/data/static_data/items/item/",
 			listXmlNames("/aion/data/static_data/items/item/")));
