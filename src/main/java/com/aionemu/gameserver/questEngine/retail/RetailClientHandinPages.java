@@ -27,6 +27,17 @@ public final class RetailClientHandinPages {
 
 	private static final RetailClientHandinPages EMPTY = new RetailClientHandinPages(Map.of(), Set.of());
 
+	/**
+	 * 交付型超出模板例外任务集（固化 48 例，稳定拒绝码 RETAIL_HANDIN_VOCABULARY_UNSUPPORTED）。
+	 * 2026-09-28 退役 417 KB 的 quest_client_handin_exceptions.tsv 后转为内存静态规范集合。
+	 */
+	private static final Set<Integer> DEFAULT_EXCLUDED = Set.of(
+		1870, 2870, 15002, 15010, 15070, 15514, 16838, 18977, 18978, 19010, 19016, 19022, 19028, 19034,
+		25012, 25013, 25062, 25073, 25080, 25081, 25085, 25092, 25094, 25526, 25532, 25535, 25538, 28977,
+		28978, 29010, 29016, 29022, 29028, 29034, 80745, 80748, 80785, 80786, 80870, 80871, 80872, 80874,
+		80886, 80945, 80946, 80975, 80976, 80977
+	);
+
 	private final Map<Integer, Pages> entries;
 	/** 交付型「像但不标准」的任务（页面集合超出模板）→ 合成器按稳定码拒绝。 / Hand-in-like exceptions. */
 	private final Set<Integer> excluded;
@@ -81,12 +92,12 @@ public final class RetailClientHandinPages {
 		} catch (RuntimeException e) {
 			throw new IOException("failed to parse client hand-in page registry", e);
 		}
-		return new RetailClientHandinPages(Map.copyOf(entries), Set.of());
+		return new RetailClientHandinPages(Map.copyOf(entries), DEFAULT_EXCLUDED);
 	}
 
 	/** 附加例外登记：页面集合超出交付型模板的任务（合成器拒绝、保留 XML）。 / Attaches the exception set. */
 	public RetailClientHandinPages withExceptions(InputStream exceptions) throws IOException {
-		Set<Integer> ids = new HashSet<>();
+		Set<Integer> ids = new HashSet<>(DEFAULT_EXCLUDED);
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(exceptions,
 				StandardCharsets.UTF_8))) {
 			String line;

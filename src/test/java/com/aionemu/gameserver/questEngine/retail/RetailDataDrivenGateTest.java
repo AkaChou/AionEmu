@@ -124,9 +124,6 @@ class RetailDataDrivenGateTest {
 		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_handin_pages.tsv")) {
 			clientHandinPages = RetailClientHandinPages.load(input);
 		}
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_handin_exceptions.tsv")) {
-			clientHandinPages = clientHandinPages.withExceptions(input);
-		}
 		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_talk_chain_pages.tsv")) {
 			clientTalkChainPages = RetailClientTalkChainPages.load(input);
 		}

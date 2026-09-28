@@ -73,9 +73,6 @@ public final class RetailQuestDriver {
 	/** 客户端交付型对话页登记（select_none/select1/check_ok/check_fail/select_success）。 / Client hand-in pages. */
 	private static final String CLIENT_HANDIN_PAGES =
 		"/aion/data/static_data/quest_retail/quest_client_handin_pages.tsv";
-	/** 交付型例外登记（页面集合超出模板 → 拒绝、留 XML）。 / Hand-in exceptions. */
-	private static final String CLIENT_HANDIN_EXCEPTIONS =
-		"/aion/data/static_data/quest_retail/quest_client_handin_exceptions.tsv";
 	/** 客户端链式信件登记（DataDriven Talk 链行）。 / Client chain-letter registry. */
 	private static final String CLIENT_TALK_CHAIN_PAGES =
 		"/aion/data/static_data/quest_retail/quest_client_talk_chain_pages.tsv";
@@ -469,9 +466,6 @@ public final class RetailQuestDriver {
 		RetailClientHandinPages clientHandinPages;
 		try (InputStream input = open(CLIENT_HANDIN_PAGES)) {
 			clientHandinPages = RetailClientHandinPages.load(input);
-		}
-		try (InputStream input = open(CLIENT_HANDIN_EXCEPTIONS)) {
-			clientHandinPages = clientHandinPages.withExceptions(input);
 		}
 		RetailClientTalkChainPages clientTalkChainPages;
 		try (InputStream input = open(CLIENT_TALK_CHAIN_PAGES)) {

@@ -23,7 +23,6 @@
 # Readers are named in the note column; confirm them before touching a row.
 #
 # file	role	status	note
-quest_client_handin_exceptions.tsv	client-registry	ACTIVE	交付型例外（页面集合超出标准模板 → 稳定码拒绝、保留 XML）；消费者 RetailQuestDriver
 quest_client_handin_pages.tsv	client-registry	ACTIVE	交付型五页契约 + ok 本地关闭判据；消费者 RetailClientHandinPages
 quest_client_kill_targets.tsv	retail-table	ACTIVE	击杀目标契约快照（quest_monster.csv SECTION 名单 + 变体轴裁定）；消费者 RetailClientKillTargets
 quest_client_reward_npcs.tsv	client-registry	ACTIVE	交付 NPC 集登记（复合势力奖励引用）；消费者 RetailClientRewardNpcs / 多个家族编译器
