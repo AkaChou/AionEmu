@@ -89,8 +89,8 @@
 3. **P4c 快赢（已执行，见 §11）**：`quest_client_kill_targets.tsv` 单源化（M4），
    消除 `src/test/resources/quest/iluma-norsvold-kill-target-contract.tsv` 重复快照；
    如果生产表继续保留，则 manifest 计数不变，只减少一份拷贝。
-4. **P4d monster 系批**：先决定是否把 2.1MB `quest_monster.csv` 或其最小投影入仓；
-   否则 4 张表继续按“仓内快照”处理，不做构建期生成。
+4. **P4d monster 系批（已执行，见 §12）**：用户裁定源入仓 + 构建期生成须 Java/Maven；
+   实际范围 3 张（`quest_client_kill_targets.tsv` 因 45 个 ZONE XML 已退役而不可重放，不动）。
 5. **P4e 混合/注册批**：`talk_collect_chain_pages` + `enterarea_zone_resolution`；
    先消外部 Dialogs 依赖与 zone XML 双写。
 6. **P4f IR 批**：`talk_chain_steps` 的替代 IR 设计，单独立项，不与前五批混合。
@@ -142,3 +142,26 @@ P4b 试点（`quest_use_item_npcs.tsv`，M3 直接源）**已执行**：
 - 台账：`2026-09-28-p4c-kill-targets-single-source.zh-CN.md`。
 - 遗留：P4d（monster 系）仍待 §8 三问决策；`generate_kill_target_contract_tsv.py`
   属兄弟车道，只登记停写不改。
+
+## 12. P4d 执行回执（2026-09-28 追加）
+
+- **§8 三问的用户裁定**：① 外部源**入仓库、不钉 sha**（文件会持续修订）；
+  ② 构建期生成**必须 Java 或 Maven**；③ 用户未就"运行时 classpath 是否也去掉表"另作裁定 ⇒
+  按 **M1/M2** 执行（减少源码树 TSV 数，生成物仍进 classpath/部署面）。
+- **范围收缩**：立项 §6.4 的 4 张 → **3 张**。`quest_client_kill_targets.tsv` 的源是 45 个 ZONE 任务 XML，
+  这些 XML **45/45 已随真端迁移退役**，生成链断裂、不能构建期重放；该表保持 P4c 的单源冻结，不动。
+- **源入仓**：`src/main/resources/aion/definitions/quest_monster/quest_monster.csv`
+  （8499 行 / 2227716 字节 / sha256 `aaa8da03…`，记录不钉）。
+- **生成管线**：`maven-antrun-plugin` 3.2.0 绑 `generate-resources` → `javac release=25`
+  编译 `src/main/generator/java/**`（不参与主编译）→ `<java fork>` 跑 `QuestMonsterTableGenerator`
+  → `target/generated-resources`；`scripts/package.sh` 追加生成物 rsync（缺失 `exit 1` fail-closed）。
+- **profile 形态**：`checkout-resources`（`activeByDefault`）与 `external-runtime-resources`
+  （`-Daion.external-resources=true`）互斥；后者两项均排除 `aion/**`。
+  实测默认构建 `target/classes/aion` 存在且含 3 张生成表；带属性构建该目录消失、生成物仍产出；
+  `package` 后 jar 内 `aion/**`、生成表条目均为 0。
+- **退役同轴**：删源码树 3 张表 + manifest 45→42 行 + `EXPECTED_TSV_COUNT` 20→17。
+- **验收**：三对「`git show HEAD:<表>` ⇄ 生成物」sha256 逐字节全等（`b83d134f…`/`753e15a2…`/`319e699f…`）；
+  聚焦门 28 例 1 红（在册 20035）；DD `016e4542…` / 链 `49e34999…` 指纹恒等；
+  T1 红集 `3b92439da8…`、T3 调用级 `720e2cb3…` / 基线口径 `5e3acdb9…` 恒等（取自 T3 副本，见台账 §5）。
+- 台账：`2026-09-28-p4d-monster-tables-generation.zh-CN.md`。
+- 遗留：P4e（`talk_collect_chain_pages`、`enterarea_zone_resolution`）、P4f（`talk_chain_steps` IR）。

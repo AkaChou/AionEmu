@@ -1150,3 +1150,26 @@ T3 在仓库外全树副本（`/private/tmp/aion-t3-w5g2`）跑、跑完即 `rm 
 - P4c 门禁：关键门 4/4 绿；DD/链指纹与 P4b 逐字节相同；T1 `3b92439da8…`、
   T3 调用级 `720e2cb3…` / 基线口径 `5e3acdb9…` 红集恒等。
 - P4c 执行台账：`2026-09-28-p4c-kill-targets-single-source.zh-CN.md`。
+
+### P4d monster 系构建期生成（2026-09-28：源入仓 + Java/Maven 生成管线）
+
+- **范围收缩**：立项书列 4 张 monster 系表，其中 `quest_client_kill_targets.tsv` 的源是
+  45 个 ZONE 任务 XML，而这 45 个 XML **已随真端迁移 45/45 退役** ⇒ 生成链断裂、无法构建期重放，
+  该表（P4c 已转单源冻结）**不动**；P4d 实际 = `quest_client_hunt_progress_rows`、
+  `quest_client_hunt_stages`、`quest_client_kill_targets_stages` **3 张**。
+- **源入仓**：`src/main/resources/aion/definitions/quest_monster/quest_monster.csv`
+  （8499 行 / 2.1MB / sha256 `aaa8da03…`，**记录不钉**——用户明确该文件会持续修订）。
+- **生成管线（用户裁定：必须 Java 或 Maven）**：`maven-antrun-plugin` 3.2.0 绑 `generate-resources`，
+  `<javac release="25">` 编译 `src/main/generator/java/**`（不参与主编译）到 `target/generator-classes`，
+  再 `<java fork>` 跑 `QuestMonsterTableGenerator` 输出到 `target/generated-resources`。
+- **resources 互斥双 profile**：`checkout-resources`（`activeByDefault`，源码树 + 生成物都进 classpath）；
+  `external-runtime-resources`（`-Daion.external-resources=true`，两项均排除 `aion/**`）。
+  实测：默认构建 `target/classes/aion` 存在且含 3 张生成表；带属性构建该目录不存在、
+  生成物仍产出；`package` 后 jar 内 `aion/**` 与生成表条目均为 0。
+- **部署**：`scripts/package.sh` 追加 `target/generated-resources/aion/**` 同步，目录缺失 `exit 1`（fail-closed）。
+- **退役同轴**：删 3 张源码树表 + manifest 删 3 行（45→42）+ `EXPECTED_TSV_COUNT` 20→17。
+- **验收**：三对「旧表 ⇄ 生成物」sha256 逐字节全等（`b83d134f…` / `753e15a2…` / `319e699f…`）；
+  聚焦门 28 例 1 红（在册 20035）；DD `016e4542…` / 链 `49e34999…` 指纹恒等；
+  T1 `3b92439da8…`、T3 调用级 `720e2cb3…` / 基线口径 `5e3acdb9…` 红集恒等。
+- 执行台账：`2026-09-28-p4d-monster-tables-generation.zh-CN.md`；
+  主树聚焦门复跑被并行车道 80787 测试编译错误阻塞（详见台账 §5）。
