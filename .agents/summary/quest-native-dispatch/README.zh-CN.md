@@ -1142,3 +1142,11 @@ T3 在仓库外全树副本（`/private/tmp/aion-t3-w5g2`）跑、跑完即 `rm 
   T1 `3b92439da8…`、T3 基线口径 `5e3acdb9…` 红集恒等；manifest 21→20（`EXPECTED_TSV_COUNT`=20）；
   快照 `retired-tsv/quest_use_item_npcs.tsv.retired-20260928`（sha256 `2f7b4d22…`）。
 - P4b 执行台账：`2026-09-28-p4b-use-item-npcs-retirement.zh-CN.md`；记忆库判例 QE-099。
+- **P4c 已执行（M4 单源化）**：`quest_client_kill_targets.tsv` 与测试夹具
+  `iluma-norsvold-kill-target-contract.tsv` 本是逐字节相同的两份副本（50 行，sha256 `250ff5ee…`）——
+  覆盖率门禁 `QuestIlumaNorsvoldKillTargetCoverageTest` 改直读生产表，夹具退役；G3 血缘 pin 转单源，
+  `regenerate_kill_targets_production.py` 变为只读冻结校验、`--apply` fail-closed；
+  manifest 与 `EXPECTED_TSV_COUNT` = 20 不变，无生产代码改动。
+- P4c 门禁：关键门 4/4 绿；DD/链指纹与 P4b 逐字节相同；T1 `3b92439da8…`、
+  T3 调用级 `720e2cb3…` / 基线口径 `5e3acdb9…` 红集恒等。
+- P4c 执行台账：`2026-09-28-p4c-kill-targets-single-source.zh-CN.md`。

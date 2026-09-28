@@ -86,7 +86,7 @@
    `DataManager.NPC_DATA.getNpcTemplate(id).getAi().equals("quest_use_item")` 的同源查询；
    DD/链指纹不变；T1/T3 红集恒等；无需新增 Maven 生成插件。若同源查询触及启动顺序，
    fallback = M1 构建期生成。
-3. **P4c 快赢**：`quest_client_kill_targets.tsv` 单源化（M4），
+3. **P4c 快赢（已执行，见 §11）**：`quest_client_kill_targets.tsv` 单源化（M4），
    消除 `src/test/resources/quest/iluma-norsvold-kill-target-contract.tsv` 重复快照；
    如果生产表继续保留，则 manifest 计数不变，只减少一份拷贝。
 4. **P4d monster 系批**：先决定是否把 2.1MB `quest_monster.csv` 或其最小投影入仓；
@@ -128,3 +128,17 @@ P4b 试点（`quest_use_item_npcs.tsv`，M3 直接源）**已执行**：
 - 执行台账：`2026-09-28-p4b-use-item-npcs-retirement.zh-CN.md`；结论固化为记忆库 QE-099。
 - §8 三问对 P4b 不构成阻塞（不需外部源入仓、不需构建插件、目标是减少运行时 classpath 文件数）；
   P4c（kill_targets 单源化）与 P4d（monster 系）仍待用户决定。
+
+## 11. P4c 执行回执（2026-09-28 追加）
+
+- `quest_client_kill_targets.tsv` 与测试夹具 `iluma-norsvold-kill-target-contract.tsv`
+  （逐字节相同，50 行 / sha256 `250ff5ee…`）单源化：`QuestIlumaNorsvoldKillTargetCoverageTest`
+  直读生产表，夹具退役。
+- G3 pin 转单源（source 列 `-`/`-`）；`regenerate_kill_targets_production.py` 改为只读冻结校验，
+  `--apply` 关闭（exit 2 fail-closed）；`check_provenance_pins.py` = `checks=7 skipped=0 failed=0`。
+- 生产表、manifest 与 `EXPECTED_TSV_COUNT` = 20 不变；无生产代码改动。
+- 门禁：关键门 4/4 绿；DD/链指纹与 P4b 逐字节恒等；T1 88 例 1 红红集 `3b92439da8…`；
+  T3 调用级 129 条 `720e2cb3…` / 基线口径 94 条 `5e3acdb9…` 恒等。
+- 台账：`2026-09-28-p4c-kill-targets-single-source.zh-CN.md`。
+- 遗留：P4d（monster 系）仍待 §8 三问决策；`generate_kill_target_contract_tsv.py`
+  属兄弟车道，只登记停写不改。
