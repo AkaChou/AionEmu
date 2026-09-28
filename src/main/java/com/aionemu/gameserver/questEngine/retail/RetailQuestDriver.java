@@ -67,10 +67,6 @@ public final class RetailQuestDriver {
 	private static final String CLIENT_HUNT_STAGES =
 		"/aion/data/static_data/quest_retail/quest_client_hunt_stages.tsv";
 	/** 客户端报告页登记（承载 HACTION_SELECT_QUEST_REWARD 的页）。 / Client report pages hosting the reward button. */
-	/** 客户端 talk+collect 混合链登记（DataDriven {talk, collectitem} 行）。 /
-	 * Client talk+collect chain registry (DataDriven {talk, collectitem} rows). */
-	private static final String CLIENT_TALK_COLLECT_CHAIN_PAGES =
-		"/aion/data/static_data/quest_retail/quest_client_talk_collect_chain_pages.tsv";
 	private static final String CLIENT_KILL_TARGETS =
 		"/aion/data/static_data/quest_retail/quest_client_kill_targets.tsv";
 	private static final String CLIENT_KILL_TARGETS_STAGES =
@@ -453,10 +449,8 @@ public final class RetailQuestDriver {
 		}
 		RetailClientHandinPages clientHandinPages = RetailClientHandinPages.defaultHandinPages();
 		RetailClientTalkChainPages clientTalkChainPages = RetailClientTalkChainPages.defaultTalkChainPages();
-		RetailClientTalkCollectChainPages clientTalkCollectChainPages;
-		try (InputStream input = open(CLIENT_TALK_COLLECT_CHAIN_PAGES)) {
-			clientTalkCollectChainPages = RetailClientTalkCollectChainPages.load(input);
-		}
+		RetailClientTalkCollectChainPages clientTalkCollectChainPages =
+			RetailClientTalkCollectChainPages.defaultTalkCollectChainPages();
 		RetailClientKillTargets clientKillTargets;
 		try (InputStream input = open(CLIENT_KILL_TARGETS)) {
 			clientKillTargets = RetailClientKillTargets.load(input);

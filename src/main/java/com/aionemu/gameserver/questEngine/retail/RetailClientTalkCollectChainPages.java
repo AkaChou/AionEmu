@@ -12,11 +12,12 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * 客户端 talk+collect 混合链登记（{@code quest_client_talk_collect_chain_pages.tsv}，只读视图）。
+ * 客户端 talk+collect 混合链登记（只读内存视图）。
  * <p>
  * 每阶段列 = {@code talk:p1>p2>...:advance} 或 {@code collect:p:advance:ok页:fail页}：talk 段 =
  * select{i} 页梯 + 梯尾推进按钮；collect 段 = 段首页 + 39 检查按钮 + check_user_item_ok/fail
- * 结果页。阶段类别序列与真端表 stepCategories 逐位一致（生成器登记即证据对齐）。
+ * 结果页。阶段类别序列与真端表 stepCategories 逐位一致。
+ * 2026-09-28 退役生成器后转为内存静态规范视图。
  * <p>
  * Read-only view of the client talk+collect chain registry; the stage kinds mirror the retail
  * table's step categories position for position.
@@ -54,6 +55,98 @@ public final class RetailClientTalkCollectChainPages {
 	record Pages(int entryPage, List<Stage> stageLadders) {
 	}
 
+	private static final String[] DEFAULT_ROWS = {
+		"9640	4762	talk:1352:10255",
+		"9696	4762	talk:1352:10001	talk:2034:10003",
+		"9801	4762	collect:1011:39:10000:10001	talk:1352 > 1353:10001",
+		"10010	0	talk:1011 > 1012 > 1013:10000	collect:1352:39:10000:10001	talk:1693 > 1694 > 1695:10002	talk:2375 > 2376 > 2377 > 2378 > 2461:10004	talk:2716 > 2717:1009",
+		"10011	0	talk:1011 > 1012 > 1013 > 1014:10000	talk:1352 > 1353:10001	talk:1693 > 1694:10002	talk:2034 > 2035 > 2036 > 2037:10003	talk:3739 > 3740 > 3741:10255",
+		"10501	0	talk:1011 > 1012 > 1013:10000	talk:1693 > 1694 > 1779 > 1864 > 1695:10002	talk:2375 > 2376:10004	collect:3057:39:10000:10001",
+		"10502	0	talk:1011 > 1012 > 1013:10000	talk:1352 > 1353:10001	collect:1693:39:10000:10001	talk:2034 > 2035:10003	talk:2716 > 2717 > 2718:10005	talk:3057 > 3058:10255",
+		"10503	0	talk:1011 > 1012 > 1013:10000	collect:1693:39:10000:10001	talk:2034 > 2035:10003	talk:2716 > 2717:10005",
+		"10504	0	talk:1011 > 1012:10000	collect:2034:39:10000:10001",
+		"10505	0	talk:1011 > 1012:10000	talk:1352 > 1353 > 1354:10001	collect:1693:39:10000:10001	talk:2034 > 2035 > 2120 > 2205 > 2036 > 2057 > 2078 > 2037 > 2042 > 2047:10003",
+		"10507	0	talk:1011 > 1012:10000	talk:1352 > 1353 > 1354:10001	talk:1693 > 1694 > 1695:10002	talk:2034 > 2035:10003	talk:2375 > 2376 > 2377:10004	talk:2716 > 2717:10005",
+		"15000	4762	collect:1011:39:10000:10001	talk:1352 > 1353:10001",
+		"15301	4762	talk:1011 > 1012 > 1013 > 1014:10000	collect:1352:39:10000:10001	talk:1693 > 1694 > 1695:10255",
+		"15302	4762	talk:1011 > 1012:10000	collect:1352:39:10000:10001	talk:1693 > 1694 > 1695:10255",
+		"15303	4762	talk:1011 > 1012:10000	collect:1352 > 1353 > 1438 > 1523:39:10000:10001	talk:1693 > 1694 > 1695:10255",
+		"15304	4762	talk:1011:10000	collect:1352 > 1353:39:10000:10001	talk:2034 > 2035 > 2036:10255",
+		"15305	4762	talk:1011 > 1012:10000	collect:1352 > 1353 > 1438:39:10000:10001	talk:1693 > 1694 > 1695:10255",
+		"15306	4762	talk:1011 > 1012:10000	collect:1352 > 1353 > 1438 > 1523 > 1608:39:10000:10001	talk:1693:10002	talk:3739 > 3740 > 3741:10008	talk:4080 > 4081:1009:994",
+		"15311	4762	talk:1011 > 1012 > 1013:10000	collect:1352:39:10000:10001	talk:1693 > 1694 > 1695:10255",
+		"15312	4762	talk:1011 > 1012:10000	collect:1352:39:10000:10001	talk:1693 > 1694 > 1695:10255",
+		"15313	4762	talk:1011 > 1012:10000	collect:1352 > 1353 > 1438 > 1523:39:10000:10001	talk:1693 > 1694 > 1695:10255",
+		"15314	4762	talk:1011:10000	collect:1352 > 1353:39:10000:10001	talk:2034 > 2035 > 2036:10255",
+		"15315	4762	talk:1011 > 1012:10000	collect:1352 > 1353 > 1438:39:10000:10001	talk:1693 > 1694 > 1695:10255",
+		"15316	4762	talk:1011 > 1012:10000	collect:1352 > 1353 > 1438 > 1523 > 1608:39:10000:10001	talk:1693:10002	talk:3739 > 3740 > 3741:10008	talk:4080 > 4081:1009:994",
+		"15358	4762	talk:1011:10000	talk:1693:10002	talk:2375:10004	talk:3057:10006	collect:3739:39:10000:10001",
+		"15400	0	talk:1011 > 1012:10000	talk:1352 > 1353:10001	talk:1693 > 1694:10002	collect:2034:39:10000:10001	talk:2375 > 2376:10004	talk:3398:10007	talk:3739 > 3740:10255",
+		"15602	4762	talk:1352:10001	collect:2034:39:10000:10001",
+		"15604	4762	talk:1693 > 1694:10002:1000",
+		"15605	4762	collect:1011:39:10000:10001	talk:1352 > 1353:10001:1002",
+		"15608	4762	collect:1352:39:10000:10001",
+		"15613	4762	talk:1352 > 1353:10001:875	talk:2034:10003	talk:2375:10004	collect:2716:39:10000:10001",
+		"15670	4762	talk:1011:10000	collect:1352:39:10000:10001	talk:1693:10255",
+		"15680	4762	talk:1011:10000	collect:1352:39:10000:10001	talk:1693:10002	talk:2375:10004	talk:2716:10005	talk:3057:10006	talk:3398:10255",
+		"16800	4762	talk:1352:10255",
+		"16821	0	talk:1011 > 1012:10000	talk:1352 > 1353:10001",
+		"16822	0	talk:1352 > 1353:10001	talk:2034 > 2035:10003",
+		"16823	0	talk:1693 > 1694:10002",
+		"16836	0	talk:1011 > 1012:10000",
+		"16942	4762	talk:1011 > 1012:10000:899	collect:1352:39:10000:10001",
+		"16976	4762	talk:1011:10000	collect:1352:39:10000:10001",
+		"16985	4762	talk:1011 > 1012:10000	collect:1352:39:10000:10001",
+		"20010	0	talk:1011 > 1012 > 1013:10000	collect:1352:39:10000:10001	talk:1693 > 1694 > 1695:10002	talk:2375 > 2376 > 2377 > 2378 > 2461:10004	talk:2716 > 2717:1009",
+		"20011	0	talk:1011 > 1012 > 1013 > 1014:10000	talk:1352 > 1353:10001	talk:1693 > 1694:10002	talk:2034 > 2035 > 2036 > 2037:10003	talk:3739 > 3740 > 3741:10255",
+		"20502	0	talk:1011 > 1012:10000	talk:1352 > 1353:10001	talk:1693 > 1694 > 1695:10002	collect:2034:39:10000:10001	talk:2375 > 2376 > 2377:10004	talk:2716 > 2717:10005	talk:3057 > 3058 > 3059 > 3060 > 3061:10255",
+		"20503	0	talk:1011 > 1012:10000	talk:1352 > 1353 > 1354:10001	collect:1693:39:10000:10001",
+		"20506	0	talk:1011 > 1012:10000	talk:1352 > 1353 > 1354:10001	talk:2716 > 2717 > 2718:10005	talk:3057 > 3058:10255",
+		"20507	0	talk:1011 > 1012 > 1013:10000	talk:1352 > 1353 > 1354:10001	talk:1693 > 1694 > 1695:10002	talk:2034 > 2035:10003",
+		"25022	4762	collect:1011:39:10000:10001	talk:1352:10255",
+		"25023	4762	collect:1011:39:10000:10001	talk:1352:10001",
+		"25030	4762	collect:1011:39:10000:10001	talk:1352:10001	talk:1693 > 1694:10002	talk:2034 > 2035:10255",
+		"25031	4762	collect:1011:39:10000:10001	talk:1352:10001	talk:1693 > 1694:10255",
+		"25050	4762	collect:1011:39:10000:10001	talk:1352:10001	talk:1693:10002	talk:2034 > 2035:10255",
+		"25082	4762	collect:1011:39:10000:10001	talk:1352:10001",
+		"25084	4762	collect:1011:39:10000:10001	talk:1352:10001",
+		"25301	4762	talk:1011 > 1012 > 1013 > 1014:10000	collect:1352:39:10000:10001	talk:1693 > 1694 > 1695:10255",
+		"25302	4762	talk:1011 > 1012:10000	collect:1352:39:10000:10001	talk:1693 > 1694 > 1695:10255",
+		"25303	4762	talk:1011 > 1012:10000	collect:1352 > 1353 > 1438 > 1523:39:10000:10001	talk:1693 > 1694 > 1695:10255",
+		"25304	4762	talk:1011:10000	collect:1352 > 1353:39:10000:10001	talk:2034 > 2035 > 2036:10255",
+		"25305	4762	talk:1011 > 1012:10000	collect:1352 > 1353 > 1438:39:10000:10001	talk:1693 > 1694 > 1695:10255",
+		"25306	4762	talk:1011 > 1012:10000	collect:1352 > 1353 > 1438 > 1523 > 1608:39:10000:10001	talk:1693:10002	talk:3739 > 3740 > 3741:10008	talk:4080 > 4081:1009:866",
+		"25311	4762	talk:1011 > 1012 > 1013:10000	collect:1352:39:10000:10001	talk:1693 > 1694 > 1695:10255",
+		"25312	4762	talk:1011 > 1012:10000	collect:1352:39:10000:10001	talk:1693 > 1694 > 1695:10255",
+		"25313	4762	talk:1011 > 1012:10000	collect:1352 > 1353 > 1438 > 1523:39:10000:10001	talk:1693 > 1694 > 1695:10255",
+		"25314	4762	talk:1011:10000	collect:1352 > 1353:39:10000:10001	talk:2034 > 2035 > 2036:10255",
+		"25315	4762	talk:1011 > 1012:10000	collect:1352 > 1353 > 1438:39:10000:10001	talk:1693 > 1694 > 1695:10255",
+		"25316	4762	talk:1011 > 1012:10000	collect:1352 > 1353 > 1438 > 1523 > 1608:39:10000:10001	talk:1693:10002	talk:3739 > 3740 > 3741:10008	talk:4080 > 4081:1009:866",
+		"25358	4762	talk:1011:10000	talk:1693:10002	talk:2375:10004	talk:3057:10006	collect:3739:39:10000:10001",
+		"25400	0	talk:1011 > 1012:10000	talk:1352 > 1353:10001	talk:1693 > 1694:10002	collect:2034:39:10000:10001	talk:2375 > 2376:10004	talk:3398:10007	talk:3739 > 3740:10255",
+		"25601	4762	collect:1352:39:10000:10001	talk:1693:10002	talk:2375 > 2376:10004",
+		"25602	4762	collect:1352:39:10000:10001	talk:1693 > 1694:10002:872",
+		"25604	4762	talk:1011 > 1012:10000:874	talk:2034:10003	collect:2375:39:10000:10001",
+		"25605	4762	collect:1352:39:10000:10001	talk:1693:10002	talk:2375:10004",
+		"25608	4762	talk:1011 > 1012:10000	talk:1352:10001	talk:2375:10004	collect:3057:39:10000:10001",
+		"25670	4762	talk:1011:10000	collect:1352:39:10000:10001	talk:1693:10255",
+		"26800	4762	talk:1352:10255",
+		"26821	0	talk:1011 > 1012:10000	talk:1352 > 1353:10001",
+		"26822	0	talk:1352 > 1353:10001	talk:2034 > 2035:10003",
+		"26823	0	talk:1693 > 1694:10002",
+		"26836	0	talk:1011 > 1012:10000",
+		"26942	4762	talk:1011 > 1012:10000:900	collect:1352:39:10000:10001",
+		"26976	4762	talk:1011:10000	collect:1352:39:10000:10001",
+		"26985	4762	talk:1011 > 1012:10000	collect:1352:39:10000:10001",
+		"80846	4762	collect:1352:39:10000:10001",
+		"80847	4762	collect:1352:39:10000:10001",
+		"80848	4762	collect:1352:39:10000:10001",
+		"80958	4762	collect:1352:39:10000:10001"
+	};
+
+	private static final RetailClientTalkCollectChainPages DEFAULT =
+		new RetailClientTalkCollectChainPages(buildDefaultEntries());
+
 	private static final RetailClientTalkCollectChainPages EMPTY =
 		new RetailClientTalkCollectChainPages(Map.of());
 
@@ -61,6 +154,11 @@ public final class RetailClientTalkCollectChainPages {
 
 	private RetailClientTalkCollectChainPages(Map<Integer, Pages> entries) {
 		this.entries = Map.copyOf(entries);
+	}
+
+	/** 缺省规范混合链页梯登记（退役后生产通道）。 / Default canonical talk+collect chain pages registry. */
+	public static RetailClientTalkCollectChainPages defaultTalkCollectChainPages() {
+		return DEFAULT;
 	}
 
 	/** 空登记（测试合成器用）。 / Empty registry for tests. */
@@ -77,33 +175,7 @@ public final class RetailClientTalkCollectChainPages {
 				if (line.startsWith("#") || line.isBlank()) {
 					continue;
 				}
-				String[] parts = line.split("\t");
-				if (parts.length < 3) {
-					continue;
-				}
-				List<Stage> stageLadders = new ArrayList<>(parts.length - 2);
-				for (int index = 2; index < parts.length; index++) {
-					String[] fields = parts[index].split(":");
-					Kind kind = Kind.valueOf(fields[0].trim().toUpperCase(java.util.Locale.ROOT));
-					List<Integer> ladder = new ArrayList<>();
-					for (String pageId : fields[1].split(">")) {
-						ladder.add(Integer.parseInt(pageId.trim()));
-					}
-					int advance = Integer.parseInt(fields[2].trim());
-					int[] resultPages = null;
-					Integer movieId = null;
-					if (kind == Kind.COLLECT) {
-						resultPages = new int[] {Integer.parseInt(fields[3].trim()),
-							Integer.parseInt(fields[4].trim())};
-					} else if (fields.length >= 4 && !fields[3].isBlank()) {
-						// 梯尾页 CutScene 声明的过场（16942 形：select1_1 的 899）。
-						// The tail page's CutScene movie (16942 shape: 899 on select1_1).
-						movieId = Integer.parseInt(fields[3].trim());
-					}
-					stageLadders.add(new Stage(kind, List.copyOf(ladder), advance, resultPages, movieId));
-				}
-				entries.put(Integer.parseInt(parts[0]), new Pages(Integer.parseInt(parts[1]),
-					List.copyOf(stageLadders)));
+				parseLine(line, entries);
 			}
 		} catch (IOException e) {
 			throw e;
@@ -113,8 +185,45 @@ public final class RetailClientTalkCollectChainPages {
 		return new RetailClientTalkCollectChainPages(entries);
 	}
 
+	private static void parseLine(String line, Map<Integer, Pages> entries) {
+		String[] parts = line.split("	");
+		if (parts.length < 3) {
+			return;
+		}
+		List<Stage> stageLadders = new ArrayList<>(parts.length - 2);
+		for (int index = 2; index < parts.length; index++) {
+			String[] fields = parts[index].split(":");
+			Kind kind = Kind.valueOf(fields[0].trim().toUpperCase(java.util.Locale.ROOT));
+			List<Integer> ladder = new ArrayList<>();
+			for (String pageId : fields[1].split(">")) {
+				ladder.add(Integer.parseInt(pageId.trim()));
+			}
+			int advance = Integer.parseInt(fields[2].trim());
+			int[] resultPages = null;
+			Integer movieId = null;
+			if (kind == Kind.COLLECT) {
+				resultPages = new int[] {Integer.parseInt(fields[3].trim()),
+					Integer.parseInt(fields[4].trim())};
+			} else if (fields.length >= 4 && !fields[3].isBlank()) {
+				movieId = Integer.parseInt(fields[3].trim());
+			}
+			stageLadders.add(new Stage(kind, List.copyOf(ladder), advance, resultPages, movieId));
+		}
+		entries.put(Integer.parseInt(parts[0]), new Pages(Integer.parseInt(parts[1]),
+			List.copyOf(stageLadders)));
+	}
+
 	/** 该任务的混合链页（未登记为空）。 / The mixed chain pages, empty when unregistered. */
 	public Optional<Pages> find(int questId) {
 		return Optional.ofNullable(entries.get(questId));
 	}
-}
+
+	private static Map<Integer, Pages> buildDefaultEntries() {
+		Map<Integer, Pages> m = new HashMap<>();
+		for (String line : DEFAULT_ROWS) {
+			parseLine(line, m);
+		}
+		return Map.copyOf(m);
+	}
+
+	}

@@ -123,10 +123,7 @@ class RetailDataDrivenGateTest {
 		}
 		clientHandinPages = RetailClientHandinPages.defaultHandinPages();
 		clientTalkChainPages = RetailClientTalkChainPages.defaultTalkChainPages();
-		try (InputStream input =
-				open("/aion/data/static_data/quest_retail/quest_client_talk_collect_chain_pages.tsv")) {
-			clientTalkCollectChainPages = RetailClientTalkCollectChainPages.load(input);
-		}
+		clientTalkCollectChainPages = RetailClientTalkCollectChainPages.defaultTalkCollectChainPages();
 		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_kill_targets.tsv")) {
 			clientKillTargets = RetailClientKillTargets.load(input);
 		}
