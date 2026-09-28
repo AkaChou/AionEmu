@@ -1065,3 +1065,13 @@ T3 在仓库外全树副本（`/private/tmp/aion-t3-w5g2`）跑、跑完即 `rm 
 - 门禁证物：`gates/n1-earlyelyos-focus/fix.log`、`gates/T1-073737.log`、`gates/T2-072910.log`、
   `gates/n1-t3-1/2/3.log`、`gates/n2-quick.log`、`gates/T1-075148.log`、`gates/T2-080039.log`、
   `gates/n3-t3-1/2/3.log`。
+
+## Phase 3 勘测已收口：TSV 全量退役可行性（只读，2026-09-28，提交待记）
+
+- 授权 = 用户「phase 3」；范围 = 只读取证（零形状、零 Maven、红集不解冻）。
+- 报告：`phase3-recon/2026-09-28-phase3-feasibility.zh-CN.md` + 引用矩阵
+  `phase3-recon/census-readers.tsv`（脚本 `census_readers.py`）。
+- 结论：22 张 → **可退役 1**（`ai-name-groups-rejected`，main/test 双零引用，删除需 owner
+  认可审计账处置）+ **需缩表 1**（`dialog_exits` 普查 v2：读取点全活但 Phase 2 后行级死亡面
+  扩大，批 0 R1 同法重算）+ **仍活 20**（多为语义登记非页码补丁；老 Goal「废 18 张页码 TSV」
+  已到自然终点）。执行批 P1（整表退役）/P2（缩表）/P3（计数冻结）待用户决定立项。
