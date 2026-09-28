@@ -1084,3 +1084,28 @@ T3 在仓库外全树副本（`/private/tmp/aion-t3-w5g2`）跑、跑完即 `rm 
   **门禁已过**：聚焦清单门 3/3、T1 红集 `3b92439da8…`、T3 基线口径红集 `5e3acdb9dcaf…`
   均与基线逐字节相同（T3 首轮 +2 为副本陈旧 test-classes 幽灵红，已清理并沉淀 QE-084）。
   台账：`2026-09-28-p1-ainame-rejected-retirement.zh-CN.md`。
+
+## Phase 3 权威血缘审计：21 张在册 TSV 的"真端驱动"成色（只读，2026-09-28）
+
+- 报告：`phase3-provenance/2026-09-28-authority-provenance-audit.zh-CN.md` + 矩阵
+  `phase3-provenance/authority-provenance.tsv`（21 行 × 9 列：权威源/生成器/证明门/
+  是否补真端表没有的/证据指针/裁定）。
+- 结论：运行时主驱动 = 9 张真端表（4983 RETAIL_TABLE）+ 1241 保留 XML；TSV 为
+  客户端合同 / 派生投影 / 审计账三类辅助，**未发现"真端表 ∪ 客户端 ∪ 旧存档"三源之外的行为注入**。
+- 裁定：保留 17、保留+缩表 1（`dialog_exits` → P2）、再生成通道需补 3
+  （G1 `use_item_report` 生成器缺失 / G2 `name_string_ids` 无脚本 / G3 `kill_targets`
+  生产表与测试夹具逐字节相同=未记录拷贝）、门禁说明 1（G4 `legacy_heal` census 口径 test=0）。
+- 无退役候选；不新增 TSV。
+
+### 血缘缺口处置（2026-09-28，随审计落账）
+
+- **G1/G2 已冻结**：`quest_client_use_item_report.tsv`（声明生成器不在树内）与
+  `quest_name_string_ids.tsv`（无脚本）——内容 sha256（+ G2 主来源客户端
+  `client_strings_quest.xml` sha256）钉入 `phase3-provenance/provenance-pins.tsv`，
+  由 `check_provenance_pins.py` 校验（`PROVENANCE_PINS_OK`）。
+- **G3 已补通道**：`quest_client_kill_targets.tsv` 与测试夹具整文件逐字节相同（`250ff5ee…`）；
+  新增 fail-closed 提升脚本 `regenerate_kill_targets_production.py --check/--apply`（`G3_CHECK_OK`）。
+- **G4 已解除**：`quest_legacy_heal_rows.tsv` 表头书面口径（armour 方向 vs 移除 XML 边互斥）+
+  机检互斥不变量；测试侧链条由 `RetailNonIrAxisGateTest`（经 p0c11 统一登记表）常设守。
+- **P2 已立项**：`2026-09-28-p2-dialog-exits-shrink-charter.zh-CN.md`
+  （P2a 只读普查 v2 → P2b 缩表；判据新增「每 token 必须有客户端出口证据」）。
