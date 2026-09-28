@@ -59,7 +59,7 @@ class RetailTsvManifestGateTest {
 	 * Frozen row count: the only legal way to add or retire a TSV row is to change this constant,
 	 * which keeps every change of the frozen surface visible in review.
 	 */
-	private static final int EXPECTED_TSV_COUNT = 16;
+	private static final int EXPECTED_TSV_COUNT = 15;
 
 	/**
 	 * ①清单覆盖：磁盘上的 *.tsv 集合与清单登记集合双向零差集。

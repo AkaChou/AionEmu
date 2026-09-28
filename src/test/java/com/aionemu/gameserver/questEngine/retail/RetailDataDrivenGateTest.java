@@ -104,7 +104,6 @@ class RetailDataDrivenGateTest {
 	private static RetailEnterAreaZoneResolution enterAreaZoneResolution;
 	private static RetailClientDialogExits clientDialogExits;
 	private static RetailQuestAreaIndex clientQuestAreas;
-	private static RetailClientUseItemReport clientReportModes;
 	private static Map<String, Integer> randomRewards;
 	private static Map<Integer, Integer> nameIds;
 	private static Set<Integer> familyIds;
@@ -158,9 +157,6 @@ class RetailDataDrivenGateTest {
 		}
 		try (InputStream input = open("/aion/definitions/compact/ai/ai-areas.xml")) {
 			clientQuestAreas = RetailQuestAreaIndex.load(input);
-		}
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_use_item_report.tsv")) {
-			clientReportModes = RetailClientUseItemReport.load(input);
 		}
 		npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR(), NPC_TEMPLATES()), RetailQuestAiNameGroupsFixture.streams());
 		interactionObjects = RetailQuestUseItemNpcs.fromIds(npcIndex.questUseItemNpcIds());

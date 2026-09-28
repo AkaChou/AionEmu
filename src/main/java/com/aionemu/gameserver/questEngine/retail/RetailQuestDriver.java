@@ -71,9 +71,6 @@ public final class RetailQuestDriver {
 	/** 客户端串行阶段契约登记（SimpleSerialHunt 链式门控 + 刷怪名单）。 / Client serial-stage contract for SimpleSerialHunt. */
 	private static final String CLIENT_HUNT_STAGES =
 		"/aion/data/static_data/quest_retail/quest_client_hunt_stages.tsv";
-	/** 客户端报告模式登记（SimpleUseItem select5 按钮）。 / Client report-mode registry for SimpleUseItem. */
-	private static final String CLIENT_USE_ITEM_REPORT =
-		"/aion/data/static_data/quest_retail/quest_client_use_item_report.tsv";
 	/** 客户端报告页登记（承载 HACTION_SELECT_QUEST_REWARD 的页）。 / Client report pages hosting the reward button. */
 	/** 客户端交付型对话页登记（select_none/select1/check_ok/check_fail/select_success）。 / Client hand-in pages. */
 	private static final String CLIENT_HANDIN_PAGES =
@@ -435,10 +432,7 @@ public final class RetailQuestDriver {
 		try (InputStream input = open(SIMPLE_USE_ITEM_TABLE)) {
 			useItemTable = RetailSimpleUseItemTable.load(input);
 		}
-		RetailClientUseItemReport useItemReport;
-		try (InputStream input = open(CLIENT_USE_ITEM_REPORT)) {
-			useItemReport = RetailClientUseItemReport.load(input);
-		}
+		RetailClientUseItemReport useItemReport = RetailClientUseItemReport.defaultReport();
 		RetailSimpleItemPlayTable itemPlayTable;
 		try (InputStream input = open(SIMPLE_ITEM_PLAY_TABLE)) {
 			itemPlayTable = RetailSimpleItemPlayTable.load(input);

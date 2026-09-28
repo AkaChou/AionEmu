@@ -9,14 +9,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 客户端报告模式登记（{@code quest_client_use_item_report.tsv}，只读视图）。
+ * 客户端报告模式登记（只读内存视图）。
  * <p>
- * SimpleUseItem 的交付方式由客户端任务书 select5 页的按钮决定：{@code CHECK} = 页面按钮是
- * {@code HACTION_CHECK_USER_HAS_QUEST_ITEM}（39/20002 交付检查对，交付物 = 用物品本体）；
- * {@code REWARD} = 页面无检查按钮，1009 直接交付进领奖。生成脚本
- * {@code p3b_client_use_item_report.py} 从客户端 Dialogs 的 select5 页烘焙。
+ * SimpleUseItem 的交付方式：CHECK = 交付物 HasItem 门控（5 个活动任务，交付物 = 用物品本体）；
+ * REWARD = 1009 直接交付进领奖。该视图在 2026-09-28 退役 {@code quest_client_use_item_report.tsv}
+ * 后转为内存静态视图。
  * <p>
- * Read-only view of the client report-mode registry for SimpleUseItem (CHECK pair vs direct 1009).
+ * In-memory view of the client report-mode registry for SimpleUseItem (retired TSV, in-memory view).
  */
 public final class RetailClientUseItemReport {
 
@@ -29,6 +28,27 @@ public final class RetailClientUseItemReport {
 		REWARD
 	}
 
+	/** 5 个 CHECK 模式任务及其交付物 id（与退役前 TSV 逐项恒等）。 */
+	private static final Map<Integer, Integer> CHECK_ITEMS = Map.of(
+		80482, 182215419,
+		80486, 182215421,
+		80554, 182215444,
+		80558, 182215445,
+		80612, 182215579
+	);
+
+	private static final RetailClientUseItemReport DEFAULT =
+		new RetailClientUseItemReport(
+			Map.of(
+				80482, Mode.CHECK,
+				80486, Mode.CHECK,
+				80554, Mode.CHECK,
+				80558, Mode.CHECK,
+				80612, Mode.CHECK
+			),
+			CHECK_ITEMS
+		);
+
 	private static final RetailClientUseItemReport EMPTY =
 		new RetailClientUseItemReport(Map.of(), Map.of());
 
@@ -40,12 +60,17 @@ public final class RetailClientUseItemReport {
 		this.items = items;
 	}
 
+	/** 缺省规范报告模式（退役后生产通道）。 / Default canonical report-mode registry. */
+	public static RetailClientUseItemReport defaultReport() {
+		return DEFAULT;
+	}
+
 	/** 空登记（全部按 REWARD 处理）。 / Empty registry: everything is treated as REWARD. */
 	public static RetailClientUseItemReport empty() {
 		return EMPTY;
 	}
 
-	/** 解析登记表（UTF-8 TSV；{@code #} 开头为注释）。 / Parses the registry TSV. */
+	/** 解析登记表（兼容方法；UTF-8 TSV；{@code #} 开头为注释）。 / Parses the registry TSV. */
 	public static RetailClientUseItemReport load(InputStream input) throws IOException {
 		Map<Integer, Mode> modes = new HashMap<>();
 		Map<Integer, Integer> items = new HashMap<>();
