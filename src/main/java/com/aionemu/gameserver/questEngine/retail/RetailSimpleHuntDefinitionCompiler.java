@@ -878,19 +878,6 @@ public final class RetailSimpleHuntDefinitionCompiler {
 	 * The report NPC carries no NONE-state selection page exit: the client's select1 belongs to the
 	 * quest giver, no retail XML declares such a route, and every frozen row has reward == acquired.
 	 */
-	static List<QuestTransition> acceptFlow(int acquiredNpc, String acceptTarget) {
-		return acceptFlow(acquiredNpc, acceptTarget, 0);
-	}
-
-	/**
-	 * 接取流（入口页可覆盖）：{@code entryPage <= 0} 用家族默认 {@code select1}；客户端任务书没有
-	 * select1（未接态首屏是 select_none）时必须传入客户端页号，否则契约门禁报 PAGE_NOT_IN_TASK_HTML。
-	 * The accept flow with an overridable entry page; the client's own page wins when it has no select1.
-	 */
-	static List<QuestTransition> acceptFlow(int acquiredNpc, String acceptTarget, int entryPage) {
-		return acceptFlow(acquiredNpc, acceptTarget, entryPage, false);
-	}
-
 	/**
 	 * 接取流（入口页可覆盖 + select_none 阶梯）：客户端未接态首屏是 {@code select_none} 且其唯一按钮
 	 * 是续页 {@code SELECT_NONE_1}(4763)（接取/拒绝按钮落在续页上）时，服务端必须给出续页路由，
