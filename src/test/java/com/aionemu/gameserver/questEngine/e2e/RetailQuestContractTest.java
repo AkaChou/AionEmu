@@ -95,6 +95,9 @@ class RetailQuestContractTest {
 		new ContractCase("SimpleTalk", 1101),
 		new ContractCase("SimpleTalk", 1115),
 		new ContractCase("SimpleTalk", 1118),
+		// SimpleTalk 1938: 2-step talk chain
+		new ContractCase("SimpleTalk", 1938),
+		new ContractCase("SimpleTalk", 2641),
 		new ContractCase("SimpleTalk", 2101),
 		new ContractCase("SimpleItemPlay", 13704),
 		// DataDriven hunt grid 形：带击杀推进

@@ -570,7 +570,7 @@
 1935	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
 1936	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 1937	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10j-deferred-decisions.tsv basis=CON_QUEST_METADATA_CLOSED
-1938	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: retail synthesizes a different transition set than XML (registered drift DIFF)
+1938	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 1939	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 1940	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
 1941	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
@@ -1063,7 +1063,7 @@
 2638	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 2639	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 2640	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-2641	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: retail synthesizes a different transition set than XML (registered drift DIFF)
+2641	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 2642	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 2643	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 2644	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
@@ -1075,7 +1075,7 @@
 2650	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
 2651	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
 2652	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-2653	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: retail synthesizes a different transition set than XML (registered drift DIFF)
+2653	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 2654	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c16-deferred-decisions.tsv basis=M3D_DOWNGRADE_REVERSED
 2655	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 2656	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10m-item-decisions.tsv basis=PROJECTION_QE051
@@ -2492,11 +2492,11 @@
 11045	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 11046	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 11047	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-11051	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
-11052	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
-11053	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
-11054	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
-11055	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
+11051	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+11052	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+11053	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+11054	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+11055	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 11068	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10i-canonical-decisions.tsv basis=RETAIL_STAGE_CANONICAL
 11069	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10h-talk-chain-b1-decisions.tsv basis=P0C10H_EQUIVALENT
 11070	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10h-talk-chain-b1-decisions.tsv basis=P0C10H_EQUIVALENT
@@ -3556,11 +3556,11 @@
 21041	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 21042	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 21043	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-21051	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
-21052	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
-21053	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
-21054	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
-21055	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
+21051	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+21052	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+21053	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+21054	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+21055	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 21064	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 21065	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
 21066	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
@@ -3578,7 +3578,7 @@
 21078	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 21079	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 21080	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
-21081	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: retail synthesizes a different transition set than XML (registered drift DIFF)
+21081	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 21100	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 21101	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 21102	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
@@ -4177,7 +4177,7 @@
 26909	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 26921	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 26922	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-26930	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
+26930	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 26931	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=UNREACHABLE_DIALOG_LEGACY
 26941	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 26942	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
@@ -5329,18 +5329,18 @@
 80025	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80026	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80027	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-80028	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
+80028	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80029	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-80030	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
-80031	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
-80032	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
-80033	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
-80034	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
-80035	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
-80036	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
-80037	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
-80038	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
-80039	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
+80030	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+80031	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+80032	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+80033	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+80034	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+80035	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+80036	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+80037	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+80038	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+80039	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80040	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80041	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80042	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -5565,10 +5565,10 @@
 80309	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 80310	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c14-report-decisions.tsv basis=M3D_DOWNGRADE_REVERSED
 80311	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c14-report-decisions.tsv basis=M3D_DOWNGRADE_REVERSED
-80312	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
+80312	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80316	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80317	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-80318	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
+80318	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80319	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 80320	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c35-progress-row-projection-decisions.tsv basis=PROGRESS_ROW_PROJECTION
 80322	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -5593,7 +5593,7 @@
 80347	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80348	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80349	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-80350	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:TRANSITION_SET	per-family gate registered rejection [drift DIFF equivalence-class registration]
+80350	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80351	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80352	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80353	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c14-report-decisions.tsv basis=M3D_DOWNGRADE_REVERSED
