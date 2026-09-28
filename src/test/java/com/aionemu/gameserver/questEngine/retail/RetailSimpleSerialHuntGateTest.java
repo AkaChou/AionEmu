@@ -79,9 +79,7 @@ class RetailSimpleSerialHuntGateTest {
 		try (InputStream input = open("/aion/data/static_data/quest_retail/quest.xml")) {
 			retailTable = RetailQuestXmlTable.load(input);
 		}
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_hunt_stages.tsv")) {
-			huntStages = RetailClientHuntStages.load(input);
-		}
+		huntStages = RetailClientHuntStages.defaultHuntStages();
 		npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_TEMPLATES), RetailQuestAiNameGroupsFixture.streams());
 		itemIndex = RetailItemNameIndex.build(openAll(ITEM_DIR, listXmlNames(ITEM_DIR)));
 		randomRewards = randomRewardIds();

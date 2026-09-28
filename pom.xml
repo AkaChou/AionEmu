@@ -262,41 +262,11 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>3.2.0</version>
-                <executions>
-                    <execution>
-                        <id>generate-retail-monster-tables</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <mkdir dir="${project.build.directory}/generator-classes"/>
-                                <javac srcdir="${project.basedir}/src/main/generator/java"
-                                       destdir="${project.build.directory}/generator-classes"
-                                       release="25" encoding="UTF-8" includeantruntime="false" failonerror="true"/>
-                                <java classname="com.aionemu.tools.questgen.QuestMonsterTableGenerator"
-                                      fork="true" failonerror="true">
-                                    <classpath>
-                                        <pathelement location="${project.build.directory}/generator-classes"/>
-                                    </classpath>
-                                    <arg value="${project.basedir}"/>
-                                    <arg value="${project.build.directory}/generated-resources"/>
-                                </java>
-                            </target>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
     <profiles>
-        <!-- 默认（IDE/测试）构建：源码树 + 构建期生成的 monster 表都进 test/runtime classpath。
+        <!-- 默认（IDE/测试）构建：源码树进 test/runtime classpath。
              Default (IDE/test) build: source tree plus generated monster tables on the classpath.
              activeByDefault 在 external-runtime-resources 激活时会自动失效。 -->
         <profile>
@@ -308,9 +278,6 @@
                 <resources>
                     <resource>
                         <directory>src/main/resources</directory>
-                    </resource>
-                    <resource>
-                        <directory>${project.build.directory}/generated-resources</directory>
                     </resource>
                 </resources>
             </build>
@@ -327,12 +294,6 @@
                 <resources combine.self="override">
                     <resource>
                         <directory>src/main/resources</directory>
-                        <excludes>
-                            <exclude>aion/**</exclude>
-                        </excludes>
-                    </resource>
-                    <resource>
-                        <directory>${project.build.directory}/generated-resources</directory>
                         <excludes>
                             <exclude>aion/**</exclude>
                         </excludes>

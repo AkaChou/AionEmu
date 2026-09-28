@@ -17,7 +17,6 @@ mvn -T "$MAVEN_THREADS" clean "$@"
 
 ARTIFACT="$ROOT_DIR/target/AionEmu.jar"
 RESOURCE_AION_DIR="$ROOT_DIR/src/main/resources/aion"
-RESOURCE_GENERATED_AION_DIR="$ROOT_DIR/target/generated-resources/aion"
 RESOURCE_LOGBACK="$ROOT_DIR/src/main/resources/logback-spring.xml"
 AION_HOME="${AION_HOME:-$ROOT_DIR/aion}"
 AION_PRESERVE_CONFIG="${AION_PRESERVE_CONFIG:-false}"
@@ -63,20 +62,6 @@ else
   done < <(find "$RESOURCE_AION_DIR" -type f -print0)
 fi
 
-if [ ! -d "$RESOURCE_GENERATED_AION_DIR" ]; then
-  echo "Missing generated runtime resources: $RESOURCE_GENERATED_AION_DIR" >&2
-  exit 1
-fi
-if command -v rsync >/dev/null 2>&1; then
-  rsync -a "$RESOURCE_GENERATED_AION_DIR/" "$AION_HOME/"
-else
-  while IFS= read -r -d '' source_file; do
-    rel_path="${source_file#"$RESOURCE_GENERATED_AION_DIR/"}"
-    target_file="$AION_HOME/$rel_path"
-    mkdir -p "$(dirname "$target_file")"
-    cp -f "$source_file" "$target_file"
-  done < <(find "$RESOURCE_GENERATED_AION_DIR" -type f -print0)
-fi
 
 if [ "$AION_PRESERVE_CONFIG" = "true" ]; then
   while IFS= read -r -d '' source_file; do

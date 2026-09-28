@@ -63,17 +63,9 @@ public final class RetailQuestDriver {
 	/** 客户端任务书行数登记表（REWARD 投影 = 末行行号）。 / Client journal row counts for the reward projection. */
 	private static final String CLIENT_SUMMARY_ROWS =
 		"/aion/data/static_data/quest_retail/quest_client_summary_rows.tsv";
-	/** 客户端串行阶段契约登记（SimpleSerialHunt 链式门控 + 刷怪名单）。 / Client serial-stage contract for SimpleSerialHunt. */
-	private static final String CLIENT_HUNT_STAGES =
-		"/aion/data/static_data/quest_retail/quest_client_hunt_stages.tsv";
 	/** 客户端报告页登记（承载 HACTION_SELECT_QUEST_REWARD 的页）。 / Client report pages hosting the reward button. */
 	private static final String CLIENT_KILL_TARGETS =
 		"/aion/data/static_data/quest_retail/quest_client_kill_targets.tsv";
-	private static final String CLIENT_KILL_TARGETS_STAGES =
-		"/aion/data/static_data/quest_retail/quest_client_kill_targets_stages.tsv";
-	/** 客户端 hunt 进度行登记（混合链 SECTION 校准）。 / Client hunt progress-row registry (mixed-chain SECTION calibration). */
-	private static final String CLIENT_HUNT_PROGRESS_ROWS =
-		"/aion/data/static_data/quest_retail/quest_client_hunt_progress_rows.tsv";
 	/** enterarea 别名 → 登记区名解析表（EA 步死边防线）。 / Enterarea alias to registered zone name (EA dead-edge guard). */
 	private static final String ENTERAREA_ZONE_RESOLUTION =
 		"/aion/data/static_data/quest_retail/quest_enterarea_zone_resolution.tsv";
@@ -443,10 +435,7 @@ public final class RetailQuestDriver {
 			clientSummaryRows = RetailClientSummaryRows.load(input);
 		}
 		RetailClientRewardNpcs clientRewardNpcs = RetailClientRewardNpcs.defaultRewardNpcs();
-		RetailClientHuntStages clientHuntStages;
-		try (InputStream input = open(CLIENT_HUNT_STAGES)) {
-			clientHuntStages = RetailClientHuntStages.load(input);
-		}
+		RetailClientHuntStages clientHuntStages = RetailClientHuntStages.defaultHuntStages();
 		RetailClientHandinPages clientHandinPages = RetailClientHandinPages.defaultHandinPages();
 		RetailClientTalkChainPages clientTalkChainPages = RetailClientTalkChainPages.defaultTalkChainPages();
 		RetailClientTalkCollectChainPages clientTalkCollectChainPages =
@@ -455,13 +444,8 @@ public final class RetailQuestDriver {
 		try (InputStream input = open(CLIENT_KILL_TARGETS)) {
 			clientKillTargets = RetailClientKillTargets.load(input);
 		}
-		try (InputStream input = open(CLIENT_KILL_TARGETS_STAGES)) {
-			clientKillTargets = clientKillTargets.withStages(input);
-		}
-		RetailClientHuntProgressRows clientHuntProgressRows;
-		try (InputStream input = open(CLIENT_HUNT_PROGRESS_ROWS)) {
-			clientHuntProgressRows = RetailClientHuntProgressRows.load(input);
-		}
+		clientKillTargets = clientKillTargets.withDefaultStages();
+		RetailClientHuntProgressRows clientHuntProgressRows = RetailClientHuntProgressRows.defaultHuntProgressRows();
 		RetailEnterAreaZoneResolution enterAreaZoneResolution;
 		try (InputStream input = open(ENTERAREA_ZONE_RESOLUTION)) {
 			enterAreaZoneResolution = RetailEnterAreaZoneResolution.load(input);

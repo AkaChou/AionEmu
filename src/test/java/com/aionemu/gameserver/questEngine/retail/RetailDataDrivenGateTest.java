@@ -127,12 +127,8 @@ class RetailDataDrivenGateTest {
 		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_kill_targets.tsv")) {
 			clientKillTargets = RetailClientKillTargets.load(input);
 		}
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_kill_targets_stages.tsv")) {
-			clientKillTargets = clientKillTargets.withStages(input);
-		}
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_hunt_progress_rows.tsv")) {
-			clientHuntProgressRows = RetailClientHuntProgressRows.load(input);
-		}
+		clientKillTargets = clientKillTargets.withDefaultStages();
+		clientHuntProgressRows = RetailClientHuntProgressRows.defaultHuntProgressRows();
 		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_enterarea_zone_resolution.tsv")) {
 			enterAreaZoneResolution = RetailEnterAreaZoneResolution.load(input);
 		}

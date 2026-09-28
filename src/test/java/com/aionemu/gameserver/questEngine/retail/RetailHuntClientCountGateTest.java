@@ -36,8 +36,6 @@ import org.junit.jupiter.api.Test;
 class RetailHuntClientCountGateTest {
 
 	private static final String DD_TABLE = "/aion/data/static_data/quest_retail/data_driven_quest.xml";
-	private static final String CLIENT_ROWS =
-		"/aion/data/static_data/quest_retail/quest_client_hunt_progress_rows.tsv";
 	private static final String NPC_DIR = "/aion/data/static_data/npcs/";
 	private static final List<String> NPC_TEMPLATES = List.of(
 		"npc_template_200000_216188.xml", "npc_template_216189_235748.xml", "npc_template_235749_247606.xml",
@@ -69,16 +67,7 @@ class RetailHuntClientCountGateTest {
 	@BeforeAll
 	static void setUp() throws Exception {
 		Map<String, List<RetailClientHuntProgressRows.Row>> rows = new LinkedHashMap<>();
-		for (String line : lines(open(CLIENT_ROWS))) {
-			if (line.startsWith("#") || line.isBlank()) {
-				continue;
-			}
-			String[] parts = line.split("\t");
-			rows.computeIfAbsent(parts[0], key -> new ArrayList<>())
-				.add(new RetailClientHuntProgressRows.Row(Integer.parseInt(parts[1]),
-					Integer.parseInt(parts[2]), Integer.parseInt(parts[3]),
-					List.of(parts[4].split(";"))));
-		}
+		RetailClientHuntProgressRows.defaultHuntProgressRows().allRows().forEach((qid, rowList) -> rows.put(String.valueOf(qid), rowList));
 		clientRows = rows;
 
 		Map<String, Stage> stages = new TreeMap<>();

@@ -18,8 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /** Retail-anchored structural coverage for the six event shard owners 50031/50038/50040/50041/50073/50074. */
 class QuestEventShardRetailAlignmentTest {
 
-	private static final String CLIENT_HUNT_ROWS =
-		"/aion/data/static_data/quest_retail/quest_client_hunt_progress_rows.tsv";
 
 	/**
 	 * 已退役、由真端模板合成的两支：结构 pin 断真端族形（网格阶梯）而不是遗留 XML 的形，且计数轴以
@@ -136,22 +134,10 @@ class QuestEventShardRetailAlignmentTest {
 	}
 
 	/** 客户端进度行的计数（每任务恰一行；多行说明该任务不是单段形，须重新裁定）。 */
-	private static int clientHuntCount(int questId) throws Exception {
-		List<Integer> counts = new ArrayList<>();
-		try (InputStream input = Objects.requireNonNull(
-				QuestEventShardRetailAlignmentTest.class.getResourceAsStream(CLIENT_HUNT_ROWS))) {
-			for (String line : new String(input.readAllBytes(), StandardCharsets.UTF_8).lines().toList()) {
-				if (line.startsWith("#") || line.isBlank()) {
-					continue;
-				}
-				String[] parts = line.split("\t");
-				if (parts.length >= 4 && Integer.parseInt(parts[0]) == questId) {
-					counts.add(Integer.parseInt(parts[3]));
-				}
-			}
-		}
-		assertEquals(1, counts.size(), "client progress rows of " + questId);
-		return counts.getFirst();
+	private static int clientHuntCount(int questId) {
+		var rows = com.aionemu.gameserver.questEngine.retail.RetailClientHuntProgressRows.defaultHuntProgressRows().rows(questId);
+		assertEquals(1, rows.size(), "client progress rows of " + questId);
+		return rows.getFirst().count();
 	}
 
 	@Test

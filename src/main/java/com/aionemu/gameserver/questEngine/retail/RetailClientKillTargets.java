@@ -87,6 +87,27 @@ public final class RetailClientKillTargets {
 	 * with the stage index matching the DD counter slot 1..N — the precondition for keeping stage
 	 * isolation on multi-stage sequential chains.
 	 */
+	/**
+	 * 并入缺省逐段登记（退役后生产通道：15546/25546 各 4 段变体）。
+	 * Merges the default per-stage registry for multi-stage DD hunt rows.
+	 */
+	public RetailClientKillTargets withDefaultStages() {
+		Map<Integer, Map<Integer, Set<Integer>>> merged = new HashMap<>(stageEntries);
+		merged.put(15546, Map.of(
+			1, Set.of(240475, 240476, 241656, 241657),
+			2, Set.of(240483, 240484, 241664, 241665),
+			3, Set.of(240495, 240496, 241676, 241677),
+			4, Set.of(240497, 240498, 241678, 241679)
+		));
+		merged.put(25546, Map.of(
+			1, Set.of(240377, 240378, 241504, 241505),
+			2, Set.of(240371, 240372, 241498, 241499),
+			3, Set.of(240381, 240382, 241508, 241509),
+			4, Set.of(240385, 240386, 241512, 241513)
+		));
+		return new RetailClientKillTargets(entries, Map.copyOf(merged));
+	}
+
 	public RetailClientKillTargets withStages(InputStream input) throws IOException {
 		Map<Integer, Map<Integer, Set<Integer>>> merged = new HashMap<>(stageEntries);
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
