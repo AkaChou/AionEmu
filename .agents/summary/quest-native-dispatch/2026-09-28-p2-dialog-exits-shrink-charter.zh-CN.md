@@ -5,6 +5,16 @@
 > 用户决定「1、2、3、4」= 执行 G1–G3 冻结/补通道 + 立项 P2 + G4 说明 + 审计提交与 push。
 > 性质：**只缩行、不删表**；零 IR 变化；manifest 行与 `EXPECTED_TSV_COUNT`（21）不变。
 
+> **执行状态（2026-09-28）**：**P2a 已完成**——报告 `phase3-provenance/2026-09-28-p2a-census-report.zh-CN.md`
+> + 逐行矩阵 `phase3-provenance/census-dialog-exits-v2.tsv`（脚本 `census_dialog_exits_v2.py`，可重放）。
+> 结论：候选删 **104 token / 98 行**（SELECT1_1 98 + SELECT1_1_1 6，全部有客户端证据），
+> 保留 339，判不了 0；`talk-ladder-live` = 0 行。
+>
+> **P2b 已完成**（2026-09-28）——执行台账
+> `2026-09-28-p2b-dialog-exits-shrink-ledger.zh-CN.md`：token 443→339，数据行 3938 不变，
+> DD / 链指纹前后逐字节相同，清单门 3/3，T1 `3b92439d…` / T3 `5e3acdb9…` 红集 sha256 恒等；
+> manifest 与 `EXPECTED_TSV_COUNT` = 21 不变。
+
 ## 1. 对象与现状
 
 - 表：`src/main/resources/aion/data/static_data/quest_retail/quest_client_dialog_exits.tsv`

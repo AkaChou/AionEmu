@@ -1076,8 +1076,8 @@ T3 在仓库外全树副本（`/private/tmp/aion-t3-w5g2`）跑、跑完即 `rm 
 - 结论：22 张 → **可退役 1**（`ai-name-groups-rejected`，main/test 双零引用，删除需 owner
   认可审计账处置）+ **需缩表 1**（`dialog_exits` 普查 v2：读取点全活但 Phase 2 后行级死亡面
   扩大，批 0 R1 同法重算）+ **仍活 20**（多为语义登记非页码补丁；老 Goal「废 18 张页码 TSV」
-  已到自然终点）。执行批立项：**P1 已执行（2026-09-28，用户决定「1」）**，
-  P2（缩表）/P3（计数冻结）待决定。
+  已到自然终点）。执行批立项：**P1 已执行（2026-09-28，用户决定「1」）**；
+  **P2a/P2b 已执行**（2026-09-28，见下方「P2a/P2b 已完成」）；P3（计数冻结）待决定。
 - **批 P1 已执行（2026-09-28，用户决定「1」）**：`retail-quest-ai-name-groups-rejected.tsv`
   （23 行，sha256 `180627ee…`）整表退役——快照 `retired-tsv/…retired-20260928` + 删表 +
   删清单行 + `EXPECTED_TSV_COUNT` 22→21 + 生成器停写移交（终版清单第 ④ 项）。零代码变化；
@@ -1109,3 +1109,17 @@ T3 在仓库外全树副本（`/private/tmp/aion-t3-w5g2`）跑、跑完即 `rm 
   机检互斥不变量；测试侧链条由 `RetailNonIrAxisGateTest`（经 p0c11 统一登记表）常设守。
 - **P2 已立项**：`2026-09-28-p2-dialog-exits-shrink-charter.zh-CN.md`
   （P2a 只读普查 v2 → P2b 缩表；判据新增「每 token 必须有客户端出口证据」）。
+
+### P2a/P2b 已完成（2026-09-28）
+
+- 报告：`phase3-provenance/2026-09-28-p2a-census-report.zh-CN.md` + 逐行矩阵
+  `phase3-provenance/census-dialog-exits-v2.tsv`（3938 行；脚本可重放）。
+- 结论：阶梯 token **104 个全部可删**（SELECT1_1 98 + SELECT1_1_1 6，98 行）——
+  `acceptSourcesWithinSegment` 当前对全部有块行为真 ⇒ `:1212/1214` else 分支 0 次进入；
+  体级四 token + SELECT_NONE_1（339）保留；判不了 0。
+- **P2b 已执行**：`quest_client_dialog_exits.tsv` token **443 → 339**（数据行 3938 不变），
+  前后快照 `retired-tsv/quest_client_dialog_exits.tsv.rows-20260928.{before,after}`；
+  DD（1218 数据行）/链（285 数据行）指纹逐字节相同；清单门 3/3；T1 `3b92439d…` /
+  T3 `5e3acdb9…` 红集 sha256 恒等；manifest 与 `EXPECTED_TSV_COUNT` = 21 不变。
+- 每个删候选带客户端证据（`quest-dialog-pages.csv` active/exact + 源 sha256 前 8）。
+- 执行台账：`2026-09-28-p2b-dialog-exits-shrink-ledger.zh-CN.md`。
