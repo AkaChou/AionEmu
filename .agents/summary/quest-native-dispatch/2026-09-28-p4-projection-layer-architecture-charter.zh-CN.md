@@ -91,8 +91,8 @@
    如果生产表继续保留，则 manifest 计数不变，只减少一份拷贝。
 4. **P4d monster 系批（已执行，见 §12）**：用户裁定源入仓 + 构建期生成须 Java/Maven；
    实际范围 3 张（`quest_client_kill_targets.tsv` 因 45 个 ZONE XML 已退役而不可重放，不动）。
-5. **P4e 混合/注册批**：`talk_collect_chain_pages` + `enterarea_zone_resolution`；
-   先消外部 Dialogs 依赖与 zone XML 双写。
+5. **P4e 混合/注册批（已执行，见 §13）**：`talk_collect_chain_pages` 走「20 行冻结事实 +
+   构建期生成」；`enterarea_zone_resolution` 判定为声明式注册表，保留并新增区名登记门。
 6. **P4f IR 批**：`talk_chain_steps` 的替代 IR 设计，单独立项，不与前五批混合。
 
 ## 7. DoD（每张表迁移时）
@@ -165,3 +165,23 @@ P4b 试点（`quest_use_item_npcs.tsv`，M3 直接源）**已执行**：
   T1 红集 `3b92439da8…`、T3 调用级 `720e2cb3…` / 基线口径 `5e3acdb9…` 恒等（取自 T3 副本，见台账 §5）。
 - 台账：`2026-09-28-p4d-monster-tables-generation.zh-CN.md`。
 - 遗留：P4e（`talk_collect_chain_pages`、`enterarea_zone_resolution`）、P4f（`talk_chain_steps` IR）。
+
+## 13. P4e 执行回执（2026-09-28 追加）
+
+- **P4e-1 `quest_client_talk_collect_chain_pages.tsv` 改构建期生成**：冻结面仅 20 行
+  （`exclude` 7 ← 退役 talk_pages 注册表在 DD 混合域的实际影响面；`cutscene` 11 ← 外部
+  `data_unpacked/Dialogs` 的 `<CutScene>`；`withheld` 2 ← `p0c48:WITHHELD`），源落
+  `aion/definitions/quest_dialog/talk_collect_frozen_facts.csv`；Java 生成器
+  `QuestTalkCollectChainPagesGenerator`（414 行，移植 254 行 Python）由 antrun 绑
+  `generate-resources`；删源码树表 + manifest 42→41 + `EXPECTED_TSV_COUNT` 17→16。
+- **等价判据**：生成物 vs 退役前手工表 = 只差第 4 行生成器署名（86/86 数据行逐字节相同）；
+  DD 1220 行 / 链 288 行 IR 指纹与 P4d 基线逐字节相同；聚焦门绿（在册 20035 唯一红）。
+- **执行偏差**：冻结源用 `.csv` 而非批准的 `.tsv`——manifest 冻结面覆盖
+  `definitions/quest_dialog/*.tsv`，用 `.tsv` 会把计数加回 17、净收益归零（P4d 源同族即 CSV）。
+- **P4e-2 `quest_enterarea_zone_resolution.tsv` 保留 + 新增登记门**：新门
+  `RetailEnterAreaZoneRegistrationGateTest` 断言 146 行 / 101 个目标区名**全部**已在 zones 目录登记
+  （含 15 个只在逐地图 `zones_<mapId>.xml` 的名字），并设 4000 名下界防真空通过；
+  已做负向注入验证（必红）。
+- 台账：`2026-09-28-p4e-mixed-registry-recon.zh-CN.md`（立项）+ `2026-09-28-p4e-execution.zh-CN.md`（执行）；
+  判据实测 `gates/p4e-static-equivalence.txt`、红集 `gates/p4e-T1-reds.txt`。
+- 遗留：P4f（`quest_client_talk_chain_steps.tsv` 替代 IR 设计）单独立项。

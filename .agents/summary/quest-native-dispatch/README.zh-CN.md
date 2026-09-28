@@ -1173,3 +1173,21 @@ T3 在仓库外全树副本（`/private/tmp/aion-t3-w5g2`）跑、跑完即 `rm 
   T1 `3b92439da8…`、T3 调用级 `720e2cb3…` / 基线口径 `5e3acdb9…` 红集恒等。
 - 执行台账：`2026-09-28-p4d-monster-tables-generation.zh-CN.md`；
   主树聚焦门复跑被并行车道 80787 测试编译错误阻塞（详见台账 §5）。
+
+### P4e talk+collect 构建期生成 + enterarea 区名登记门（2026-09-28）
+
+- **P4e-1**：`quest_client_talk_collect_chain_pages.tsv`（86 数据行）改**构建期生成**——冻结面仅 **20 行**
+  （`exclude` 7 ← 退役 `quest_client_talk_pages.tsv` 在 DD 混合域的实际影响面；`cutscene` 11 ← 外部
+  `data_unpacked/Dialogs` 的 `<CutScene>`；`withheld` 2 ← `p0c48:WITHHELD`，TALK_HUNT_CHAIN_DEFERRED 桶），
+  源 = `aion/definitions/quest_dialog/talk_collect_frozen_facts.csv`；Java 生成器
+  `QuestTalkCollectChainPagesGenerator`（414 行，逐行移植 254 行 Python）由 antrun 绑 `generate-resources`。
+- **等价**：生成物 vs 退役前手工表只差第 4 行生成器署名（86/86 数据行逐字节相同）；DD/链 IR 指纹与 P4d 基线恒等；
+  聚焦门绿（唯一红 = 在册 20035）。
+- **退役同轴**：删源码树表 + manifest 42→41 + `EXPECTED_TSV_COUNT` 17→16；冻结源用 **CSV**（若用 .tsv 会被
+  manifest 冻结面要求登记、计数加回 17、净收益归零）。
+- **P4e-2**：`quest_enterarea_zone_resolution.tsv` 判定为**声明式注册表**（别名→登记名是遗留语义映射，
+  不可重算）⇒ 保留 + 新增 `RetailEnterAreaZoneRegistrationGateTest`（146 行 / 101 个目标区名必须全部已在
+  zones 目录登记，含 15 个只在逐地图 `zones_<mapId>.xml` 的名字；已做负向注入验证）。
+- 台账：`2026-09-28-p4e-mixed-registry-recon.zh-CN.md`（立项）+ `2026-09-28-p4e-execution.zh-CN.md`（执行）；
+  判据 `gates/p4e-static-equivalence.txt`；复现探针 `tools/p4e_talk_collect_repro_probe.py`。
+- 遗留：P4f（`quest_client_talk_chain_steps.tsv` 替代 IR 设计）。
