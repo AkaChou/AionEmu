@@ -26,10 +26,7 @@
 quest_client_dialog_exits.tsv	client-registry	ACTIVE	对话出口标记（select_none/select1 续页、SELECT2 1353 等）；消费者 RetailClientDialogExits / RetailQuestDriver
 quest_client_handin_exceptions.tsv	client-registry	ACTIVE	交付型例外（页面集合超出标准模板 → 稳定码拒绝、保留 XML）；消费者 RetailQuestDriver
 quest_client_handin_pages.tsv	client-registry	ACTIVE	交付型五页契约 + ok 本地关闭判据；消费者 RetailClientHandinPages
-quest_client_hunt_progress_rows.tsv	retail-table	ACTIVE	混合链 SECTION 校准（quest_monster.csv simpleQuest 行）；消费者 RetailClientHuntProgressRows
-quest_client_hunt_stages.tsv	retail-table	ACTIVE	SimpleSerialHunt 串行阶段契约（quest_monster.csv Progress 行）；消费者 RetailClientHuntStages
 quest_client_kill_targets.tsv	retail-table	ACTIVE	击杀目标契约快照（quest_monster.csv SECTION 名单 + 变体轴裁定）；消费者 RetailClientKillTargets
-quest_client_kill_targets_stages.tsv	retail-table	ACTIVE	逐段击杀目标（多段 DD hunt 行的变体轴，段号 = DD 计数槽）；消费者 RetailClientKillTargets
 quest_client_reward_npcs.tsv	client-registry	ACTIVE	交付 NPC 集登记（复合势力奖励引用）；消费者 RetailClientRewardNpcs / 多个家族编译器
 quest_client_summary_rows.tsv	client-registry	ACTIVE	任务书行数（REWARD 节点 var0 投影 = rows-1）；消费者 RetailClientSummaryRows
 quest_client_talk_chain_pages.tsv	client-registry	ACTIVE	链式信件页梯 + 推进动作（p1>p2>...:advance）；消费者 RetailClientTalkChainPages
