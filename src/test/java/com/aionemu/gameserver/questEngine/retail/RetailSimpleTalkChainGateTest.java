@@ -93,7 +93,6 @@ class RetailSimpleTalkChainGateTest {
 	private static final Set<String> CHAIN_RETIRED_PAGES = Set.of(
 		"SELECT1", "SELECT1_1", "SELECT1_1_1", "SELECT5", "SELECT6");
 
-	private static final String CHAIN_STEPS = "/aion/data/static_data/quest_retail/quest_client_talk_chain_steps.tsv";
 	private static final String FINGERPRINTS = "/quest/retail-simple-talk-chain-ir-fingerprints.tsv";
 	private static final String RETENTION = "/quest/retail-xml-retention.tsv";
 	private static final String NPC_DIR = "/aion/data/static_data/npcs/";
@@ -127,9 +126,7 @@ class RetailSimpleTalkChainGateTest {
 		exits = RetailClientDialogExits.defaultExits();
 		summaryRows = RetailClientSummaryRows.defaultSummaryRows();
 		clientRewardNpcs = RetailClientRewardNpcs.defaultRewardNpcs();
-		try (InputStream input = open(CHAIN_STEPS)) {
-			chainSteps = RetailClientTalkChainSteps.load(input);
-		}
+		chainSteps = RetailClientTalkChainSteps.defaultTalkChainSteps();
 		npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_TEMPLATES), RetailQuestAiNameGroupsFixture.streams());
 		itemIndex = RetailItemNameIndex.build(openAll("/aion/data/static_data/items/item/",
 			listXmlNames("/aion/data/static_data/items/item/")));

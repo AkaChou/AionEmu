@@ -107,11 +107,7 @@ class RetailSimpleTalkGateTest {
 		clientDialogExits = RetailClientDialogExits.defaultExits();
 		clientSummaryRows = RetailClientSummaryRows.defaultSummaryRows();
 		clientRewardNpcs = RetailClientRewardNpcs.defaultRewardNpcs();
-		try (InputStream input = RetailSimpleTalkGateTest.class.getResourceAsStream(
-				"/aion/data/static_data/quest_retail/quest_client_talk_chain_steps.tsv")) {
-			assertNotNull(input, "chain steps registry");
-			chainSteps = RetailClientTalkChainSteps.load(input);
-		}
+		chainSteps = RetailClientTalkChainSteps.defaultTalkChainSteps();
 		npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_TEMPLATES), RetailQuestAiNameGroupsFixture.streams());
 		itemIndex = RetailItemNameIndex.build(openAll("/aion/data/static_data/items/item/",
 			listXmlNames("/aion/data/static_data/items/item/")));
