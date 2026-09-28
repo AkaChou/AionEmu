@@ -77,8 +77,12 @@ class RetailQuestContractTest {
 
 	private static final List<ContractCase> CASES = List.of(
 		new ContractCase("SimpleHunt", 1112),
+		new ContractCase("SimpleHunt", 1102),
 		new ContractCase("SimpleHunt", 30715),
+		new ContractCase("SimpleHunt", 1350),
 		new ContractCase("SimpleSerialHunt", 13918),
+		new ContractCase("SimpleSerialHunt", 23918),
+		new ContractCase("SimpleCollectItem", 1103),
 		// SimpleCollectItem 14120：带中间 NPC 简报步（P0-2 一步直达采集行）+ HasItem 门控交付。
 		// SimpleCollectItem 14120: briefed collect quest (one-step briefing) with the HasItem-gated delivery.
 		new ContractCase("SimpleCollectItem", 14120),
@@ -88,8 +92,17 @@ class RetailQuestContractTest {
 		// form (QUEST_SELECT flips unconditionally), 80554 the CHECK form gated on the hand-in.
 		new ContractCase("SimpleUseItem", 1107),
 		new ContractCase("SimpleUseItem", 80554),
+		new ContractCase("SimpleTalk", 1101),
+		new ContractCase("SimpleTalk", 1115),
 		new ContractCase("SimpleTalk", 1118),
+		new ContractCase("SimpleTalk", 2101),
 		new ContractCase("SimpleItemPlay", 13704),
+		// DataDriven hunt grid 形：带击杀推进
+		new ContractCase("DataDriven", 13770),
+		// DataDriven talk chain 形：多 NPC 链式对话推进
+		new ContractCase("DataDriven", 11323),
+		// DataDriven talk collect canonical 形：带采集物门控的对话交付
+		new ContractCase("DataDriven", 13968),
 		// DataDriven no-progress 形（D-a 片）：接取 → 交付 NPC 对话直翻 REWARD + 分档窗，无进度相位
 		// （契约门对无进度形允许零进度步）。 / DataDriven no-progress shape (the D-a slice): acquire,
 		// then the reward npc's dialogue flips REWARD with the tiered window; no progress phase.
