@@ -1186,34 +1186,16 @@ public final class RetailSimpleTalkDefinitionCompiler {
 				String[] startExtra = start.extra().split("\\|");
 				List<QuestAction> startActions = startExtra.length > 2
 					? decodeActions(startExtra[2]) : List.of();
-				if (canonicalAccept) {
-					// S2：接取段整段换 canonicalAcceptFlow——QUEST_SELECT 直发接取窗（页 4）、1002/20000
-					// 两形提交（带接取发物）、拒绝族、FINISH_DIALOG→任务列表页；select1 页梯与
-					// ASK_QUEST_ACCEPT(1007) 中转随页链退场（其登记记录已被策略 A 过滤）。过场轴按 S1 判例
-					// 重挂到下发接取窗的那条 QUEST_SELECT 边（cs1_haction=1007，判例 3020/4056）。
-					// S2 canonical accept: ask window straight from QUEST_SELECT; the select1 ladder and the
-					// 1007 relay retire, the 1007-triggered cutscene re-attaches to the ask-window edge.
-					blockTransitions.addAll(attachMovieToRoute(
-						RetailSimpleHuntDefinitionCompiler.canonicalAcceptFlow(start.npcId(), start.target(),
-							startActions),
-						"unaccepted", start.npcId(), QuestDialogAction.QUEST_SELECT.id(),
-						entry.cutsceneTrigger() == QuestDialogAction.ASK_QUEST_ACCEPT.id()
-							? entry.cutsceneMovieId() : -1));
-					assertCanonicalSelectionSources(entry.questId(), start, startExtra[0], steps);
-				} else {
-					blockTransitions.addAll(acceptFlowChain(start.npcId(),
-						List.of(startExtra[0].split(" ")),
-						startExtra[1], start.target(), startActions));
-					// P0c-40：接取页梯（select1 → select1_1 → [select1_1_1] → 接取窗）与单步路径同形，
-					// 续页出口同样只认客户端登记（真端模板表没有页链列）。缺这一段则 select1 页的
-					// 「继续听」按钮在链式行上无路由（客户端死按钮；判例 21460/29070/29071）。
-					// P0c-40: the accept page ladder (select1 → select1_1 → [select1_1_1]) is shared with
-					// the single-step path and likewise driven by the client exit registry.
-					if (exits.requires(entry.questId(), RetailClientDialogExits.SELECT1_1)) {
-						blockTransitions.addAll(acceptContinuation(start.npcId(),
-							exits.requires(entry.questId(), RetailClientDialogExits.SELECT1_1_1)));
-					}
-				}
+				// S2 规范形接取（quest-native-dispatch）：接取段整段换 canonicalAcceptFlow——QUEST_SELECT
+				// 直发接取窗（页 4）、1002/20000 两形提交（带接取发物）、拒绝族、FINISH_DIALOG→任务列表页；
+				// select1 页梯与 ASK_QUEST_ACCEPT(1007) 中转随页链退场。过场轴重挂到下发接取窗的 QUEST_SELECT 边。
+				blockTransitions.addAll(attachMovieToRoute(
+					RetailSimpleHuntDefinitionCompiler.canonicalAcceptFlow(start.npcId(), start.target(),
+						startActions),
+					"unaccepted", start.npcId(), QuestDialogAction.QUEST_SELECT.id(),
+					entry.cutsceneTrigger() == QuestDialogAction.ASK_QUEST_ACCEPT.id()
+						? entry.cutsceneMovieId() : -1));
+				assertCanonicalSelectionSources(entry.questId(), start, startExtra[0], steps);
 			}
 		}
 		for (RetailClientTalkChainSteps.RouteRecord route : steps.routes(entry.questId())) {
@@ -1319,10 +1301,6 @@ public final class RetailSimpleTalkDefinitionCompiler {
 					report.source(), reportNpc, QuestDialogAction.QUEST_SELECT.id(),
 					entry.cutsceneTrigger() == QuestDialogAction.SELECT_QUEST_REWARD.id()
 						? entry.cutsceneMovieId() : -1));
-			} else {
-				blockTransitions.addAll(reportFlowChain(reportNpc, report.source(), report.target(),
-					report.extra(), nodeByLabel, reportItems, entry.itemCheck(),
-					exits, entry.questId()));
 			}
 		}
 		// S3c：A 形交付边合成——无报告块的行，逐条翻面记录合成规范交付边（源节点 = 记录源、落 reward、
@@ -1665,91 +1643,6 @@ public final class RetailSimpleTalkDefinitionCompiler {
 	}
 
 	/**
-	 * 链式接取流：npc-start 块参数化——selection-sources 与 start-page 逐字取登记表，
-	 * 其余与单步 {@link #acceptFlow(int)} 同构。
-	 * Chain accept flow: npc-start block parameterized by the registry's selection sources and page.
-	 */
-	private static List<QuestTransition> acceptFlowChain(int acquiredNpc, List<String> selectionSources,
-			String startPage, String target, List<QuestAction> acceptActions) {
-		// 与 QuestXmlBlockExpander.expandNpcStart 同口径：finish 源 = {source, target} ∪ selection-sources；
-		// 块展开路由若与显式原始路由同 (source, npc, action) 则被覆盖（expander 的 explicitDialogRoutes 过滤）。
-		List<QuestTransition> flow = new ArrayList<>(acceptFlow(acquiredNpc, target, acceptActions));
-		flow.removeIf(transition -> transition.event().equals(
-				new QuestEvent.TalkToNpc(acquiredNpc, QuestDialogAction.QUEST_SELECT.id())));
-		flow.add(talk(acquiredNpc, QuestDialogAction.QUEST_SELECT, "unaccepted", "unaccepted", null,
-			List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.valueOf(startPage).id()))));
-		Set<String> finishSources = new TreeSet<>(List.of("unaccepted", target));
-		selectionSources.stream().filter(source -> !source.equals("-")).forEach(finishSources::add);
-		flow.removeIf(transition -> transition.event().equals(
-			new QuestEvent.TalkToNpc(acquiredNpc, QuestDialogAction.FINISH_DIALOG.id())));
-		for (String source : finishSources) {
-			flow.add(talk(acquiredNpc, QuestDialogAction.FINISH_DIALOG, source, source, null,
-				List.of(new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id()))));
-		}
-		return flow;
-	}
-
-	/** 链式报告流：交付按钮取客户端，门物品取真端元数据。 / Client button and retail item gate. */
-	private static List<QuestTransition> reportFlowChain(int rewardNpc, String source, String target,
-			String page, Map<String, QuestNode> nodeByLabel, List<QuestItemRequirement> items,
-			boolean itemCheck, RetailClientDialogExits exits, int questId) {
-		QuestStatus targetStatus = nodeByLabel.containsKey(target)
-			? nodeByLabel.get(target).projection().status() : QuestStatus.REWARD;
-		QuestStateSyncMode mode = targetStatus == QuestStatus.REWARD
-			|| targetStatus == QuestStatus.COMPLETE
-			? QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH : QuestStateSyncMode.PACKET_ONLY;
-		boolean checkButton = exits.requires(questId, RetailClientDialogExits.SELECT5_CHECK)
-			|| exits.requires(questId, RetailClientDialogExits.SELECT5_CHECK_SIMPLE);
-		boolean requiresItems = checkButton || itemCheck && !items.isEmpty();
-		if (requiresItems && items.isEmpty()) {
-			throw new IllegalArgumentException("retail report item gate missing: " + questId);
-		}
-		List<QuestTransition> flow = new ArrayList<>();
-		flow.add(talk(rewardNpc, QuestDialogAction.QUEST_SELECT, source, source, null,
-			List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.valueOf(page).id()))));
-		List<QuestCondition> conditions = new ArrayList<>();
-		List<QuestAction> actions = new ArrayList<>();
-		if (requiresItems) {
-			for (QuestItemRequirement item : items) {
-				conditions.add(new QuestCondition.HasItem(item.itemId(), item.count()));
-				actions.add(new QuestAction.RemoveItem(item.itemId(), item.count()));
-			}
-		}
-		List<AfterCommitAction> success = List.of(new AfterCommitAction.SyncQuestState(mode),
-			new AfterCommitAction.ShowQuestDialog(
-				QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id()));
-		if (checkButton) {
-			for (QuestDialogAction button : List.of(QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM,
-				QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM_SIMPLE)) {
-				flow.add(new QuestTransition(new QuestEvent.TalkToNpc(rewardNpc, button.id()),
-					List.copyOf(conditions), List.copyOf(actions), target, success, 0, source));
-				AfterCommitAction failure = button == QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM
-					&& exits.requires(questId, RetailClientDialogExits.SELECT6)
-					? new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT6.id())
-					: new AfterCommitAction.CloseDialog();
-				flow.add(new QuestTransition(new QuestEvent.TalkToNpc(rewardNpc, button.id()),
-					List.of(), List.of(), source, List.of(failure), 1, source));
-			}
-			if (exits.requires(questId, RetailClientDialogExits.SELECT6)) {
-				flow.add(talk(rewardNpc, QuestDialogAction.FINISH_DIALOG, source, source, null,
-					List.of(new AfterCommitAction.ShowQuestSelectionDialog(
-						QuestDialogPage.SELECT_QUEST.id()))));
-			}
-		} else {
-			QuestEvent.TalkToNpc event = new QuestEvent.TalkToNpc(rewardNpc,
-				QuestDialogAction.SELECT_QUEST_REWARD.id());
-			flow.add(new QuestTransition(event, List.copyOf(conditions), List.copyOf(actions), target,
-				success, requiresItems ? 0 : null, source));
-			if (requiresItems) {
-				flow.add(new QuestTransition(event, List.of(), List.of(), source,
-					List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.valueOf(page).id())),
-					1, source));
-			}
-		}
-		return List.copyOf(flow);
-	}
-
-	/**
 	 * item_check 门路由（编译器级糖元素 {@code npc-item-report}，P0c-34）：两个检查按钮
 	 * ({@code CHECK_USER_HAS_QUEST_ITEM} / {@code ..._SIMPLE}) 各出一对成功/失败路由——成功扣物
 	 * 并推进到 target、失败留在 source（缺省 SELECT6，{@code CLOSE} 则关窗）。形状合同与
@@ -1925,45 +1818,6 @@ public final class RetailSimpleTalkDefinitionCompiler {
 		return List.copyOf(out);
 	}
 
-	private static List<QuestTransition> acceptFlow(int acquiredNpc) {
-		return acceptFlow(acquiredNpc, "started");
-	}
-
-	private static List<QuestTransition> acceptFlow(int acquiredNpc, String target) {
-		return acceptFlow(acquiredNpc, target, List.of());
-	}
-
-	/** 接取流（acceptActions = wave B 接取发物，落到 QUEST_ACCEPT_1/SIMPLE 两条路由）。 */
-	private static List<QuestTransition> acceptFlow(int acquiredNpc, String target,
-			List<QuestAction> acceptActions) {
-		List<QuestTransition> flow = new ArrayList<>();
-		String source = "unaccepted";
-		flow.add(talk(acquiredNpc, QuestDialogAction.QUEST_SELECT, source, source, null,
-			List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT1.id()))));
-		flow.add(talk(acquiredNpc, QuestDialogAction.ASK_QUEST_ACCEPT, source, source, null,
-			List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id()))));
-		List<QuestCondition> eligible = List.of(new QuestCondition.StartEligible());
-		flow.add(new QuestTransition(new QuestEvent.TalkToNpc(acquiredNpc, QuestDialogAction.QUEST_ACCEPT_1.id()),
-			eligible, acceptActions, target,
-			List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
-				new AfterCommitAction.ShowQuestDialog(QuestDialogPage.QUEST_ACCEPT_1.id())), null, source));
-		flow.add(new QuestTransition(new QuestEvent.TalkToNpc(acquiredNpc, QuestDialogAction.QUEST_ACCEPT_SIMPLE.id()),
-			eligible, acceptActions, target,
-			List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
-				new AfterCommitAction.CloseDialog()), null, source));
-		flow.add(talk(acquiredNpc, QuestDialogAction.QUEST_REFUSE_1, source, source, null,
-			List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.QUEST_REFUSE_1.id()))));
-		for (QuestDialogAction action : List.of(QuestDialogAction.QUEST_REFUSE_2,
-			QuestDialogAction.QUEST_REFUSE_SIMPLE)) {
-			flow.add(talk(acquiredNpc, action, source, source, null, List.of(new AfterCommitAction.CloseDialog())));
-		}
-		for (String finishSource : new TreeSet<>(List.of(source, target))) {
-			flow.add(talk(acquiredNpc, QuestDialogAction.FINISH_DIALOG, finishSource, finishSource, null,
-				List.of(new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id()))));
-		}
-		return List.copyOf(flow);
-	}
-
 	/**
 	 * S3c-obj 规范形：**物件哨兵接取者**的接取段。与 NPC 规范形同构（提交边 = `StartEligible` + 接取动作 +
 	 * `Sync(VISIBILITY_REFRESH)`），差异只有两处、均有真端/客户端证据：
@@ -2071,22 +1925,6 @@ public final class RetailSimpleTalkDefinitionCompiler {
 				+ " entryPages=" + entryPages + " relayPages=" + relayPages
 				+ " declaredEntry=" + declaredEntryPages + " declaredRelay=" + declaredRelayPages);
 		}
-	}
-
-	/**
-	 * 接取续页流：真端模板表没有"页链"列，{@code SELECT1_1} 来自客户端对话出口登记表
-	 * （客户端 5.8 的 select1 页按钮 {@code HACTION_SELECT1_1}）。
-	 * Client dialog continuation for select1; the retail template table carries no page-chain column.
-	 */
-	private static List<QuestTransition> acceptContinuation(int acquiredNpc, boolean continues) {
-		List<QuestTransition> flow = new ArrayList<>(2);
-		flow.add(talk(acquiredNpc, QuestDialogAction.SELECT1_1, "unaccepted", "unaccepted", null,
-			List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT1_1.id()))));
-		if (continues) {
-			flow.add(talk(acquiredNpc, QuestDialogAction.SELECT1_1_1, "unaccepted", "unaccepted", null,
-				List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT1_1_1.id()))));
-		}
-		return List.copyOf(flow);
 	}
 
 	/**
