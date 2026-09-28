@@ -154,7 +154,7 @@ public final class RetailSimpleHuntDefinitionCompiler {
 		}
 		try {
 			QuestDefinition definition = build(plan, metadata.metadata(), clientRewardNpcs,
-				plan.briefingNpcIds(), clientDialogExits, sequentialStages);
+				plan.briefingNpcIds(), sequentialStages);
 			return new Outcome(QuestDefinitionCompiler.compile(definition), null, null);
 		} catch (RuntimeException e) {
 			return new Outcome(null, "COMPILATION_FAILED", e.getMessage());
@@ -578,7 +578,7 @@ public final class RetailSimpleHuntDefinitionCompiler {
 
 	private static QuestDefinition build(RetailSimpleHuntPlan plan, QuestMetadata metadata,
 			RetailClientRewardNpcs clientRewardNpcs, Set<Integer> briefingNpcIds,
-			RetailClientDialogExits clientDialogExits, boolean sequentialStages) {
+			boolean sequentialStages) {
 		int questId = plan.questId();
 		boolean briefing = briefingNpcIds != null && !briefingNpcIds.isEmpty();
 		List<Slot> slots = slots(plan);
