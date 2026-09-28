@@ -343,37 +343,6 @@ public final class RetailSimpleCollectItemDefinitionCompiler {
 		return new QuestDefinition(entry.questId(), 1, metadata, layout, nodes, List.copyOf(transitions));
 	}
 
-	/** 接取流：与 {@code npc-start} 展开同构。 / The canonical npc-start expansion. */
-	static List<QuestTransition> acceptFlow(int acquiredNpc) {
-		String source = "unaccepted";
-		String target = "started";
-		List<QuestCondition> eligible = List.of(new QuestCondition.StartEligible());
-		List<QuestTransition> flow = new ArrayList<>(9);
-		flow.add(talk(acquiredNpc, QuestDialogAction.QUEST_SELECT, source, source, null,
-			List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT1.id()))));
-		flow.add(talk(acquiredNpc, QuestDialogAction.ASK_QUEST_ACCEPT, source, source, null,
-			List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id()))));
-		flow.add(new QuestTransition(new QuestEvent.TalkToNpc(acquiredNpc, QuestDialogAction.QUEST_ACCEPT_1.id()),
-			eligible, List.of(), target,
-			List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
-				new AfterCommitAction.ShowQuestDialog(QuestDialogPage.QUEST_ACCEPT_1.id())), null, source));
-		flow.add(new QuestTransition(new QuestEvent.TalkToNpc(acquiredNpc, QuestDialogAction.QUEST_ACCEPT_SIMPLE.id()),
-			eligible, List.of(), target,
-			List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
-				new AfterCommitAction.CloseDialog()), null, source));
-		flow.add(talk(acquiredNpc, QuestDialogAction.QUEST_REFUSE_1, source, source, null,
-			List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.QUEST_REFUSE_1.id()))));
-		for (QuestDialogAction action : List.of(QuestDialogAction.QUEST_REFUSE_2,
-			QuestDialogAction.QUEST_REFUSE_SIMPLE)) {
-			flow.add(talk(acquiredNpc, action, source, source, null, List.of(new AfterCommitAction.CloseDialog())));
-		}
-		for (String finishSource : new TreeSet<>(List.of(source, target))) {
-			flow.add(talk(acquiredNpc, QuestDialogAction.FINISH_DIALOG, finishSource, finishSource, null,
-				List.of(new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id()))));
-		}
-		return List.copyOf(flow);
-	}
-
 	/** 真端表自带的备选接取路由 {@code SETPRO1}（133/138 行有）。 / The retail {@code SETPRO1} accept variant. */
 	static QuestTransition setproRoute(int acquiredNpc) {
 		return new QuestTransition(new QuestEvent.TalkToNpc(acquiredNpc, QuestDialogAction.SETPRO1.id()),
@@ -411,31 +380,7 @@ public final class RetailSimpleCollectItemDefinitionCompiler {
 	 * their lifecycle semantics; the SELECT1(1011) entry page and the 1007 hop are gone.
 	 */
 	static List<QuestTransition> canonicalAcceptFlow(int acquiredNpc) {
-		String source = "unaccepted";
-		String target = "started";
-		List<QuestCondition> eligible = List.of(new QuestCondition.StartEligible());
-		List<QuestTransition> flow = new ArrayList<>(9);
-		flow.add(talk(acquiredNpc, QuestDialogAction.QUEST_SELECT, source, source, null,
-			List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id()))));
-		flow.add(new QuestTransition(new QuestEvent.TalkToNpc(acquiredNpc, QuestDialogAction.QUEST_ACCEPT_1.id()),
-			eligible, List.of(), target,
-			List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
-				new AfterCommitAction.ShowQuestDialog(QuestDialogPage.QUEST_ACCEPT_1.id())), null, source));
-		flow.add(new QuestTransition(new QuestEvent.TalkToNpc(acquiredNpc, QuestDialogAction.QUEST_ACCEPT_SIMPLE.id()),
-			eligible, List.of(), target,
-			List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH),
-				new AfterCommitAction.CloseDialog()), null, source));
-		flow.add(talk(acquiredNpc, QuestDialogAction.QUEST_REFUSE_1, source, source, null,
-			List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.QUEST_REFUSE_1.id()))));
-		for (QuestDialogAction action : List.of(QuestDialogAction.QUEST_REFUSE_2,
-			QuestDialogAction.QUEST_REFUSE_SIMPLE)) {
-			flow.add(talk(acquiredNpc, action, source, source, null, List.of(new AfterCommitAction.CloseDialog())));
-		}
-		for (String finishSource : new TreeSet<>(List.of(source, target))) {
-			flow.add(talk(acquiredNpc, QuestDialogAction.FINISH_DIALOG, finishSource, finishSource, null,
-				List.of(new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id()))));
-		}
-		return List.copyOf(flow);
+		return RetailSimpleHuntDefinitionCompiler.canonicalAcceptFlow(acquiredNpc, "started");
 	}
 
 	/**
