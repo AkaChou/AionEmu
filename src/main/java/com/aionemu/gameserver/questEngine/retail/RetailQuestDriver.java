@@ -63,19 +63,10 @@ public final class RetailQuestDriver {
 	/** 客户端任务书行数登记表（REWARD 投影 = 末行行号）。 / Client journal row counts for the reward projection. */
 	private static final String CLIENT_SUMMARY_ROWS =
 		"/aion/data/static_data/quest_retail/quest_client_summary_rows.tsv";
-	/** 客户端交付 NPC 集登记（复合奖励引用的任务书 dic 链解析）。 / Client hand-in NPC sets behind composite reward references. */
-	private static final String CLIENT_REWARD_NPCS =
-		"/aion/data/static_data/quest_retail/quest_client_reward_npcs.tsv";
 	/** 客户端串行阶段契约登记（SimpleSerialHunt 链式门控 + 刷怪名单）。 / Client serial-stage contract for SimpleSerialHunt. */
 	private static final String CLIENT_HUNT_STAGES =
 		"/aion/data/static_data/quest_retail/quest_client_hunt_stages.tsv";
 	/** 客户端报告页登记（承载 HACTION_SELECT_QUEST_REWARD 的页）。 / Client report pages hosting the reward button. */
-	/** 客户端交付型对话页登记（select_none/select1/check_ok/check_fail/select_success）。 / Client hand-in pages. */
-	private static final String CLIENT_HANDIN_PAGES =
-		"/aion/data/static_data/quest_retail/quest_client_handin_pages.tsv";
-	/** 客户端链式信件登记（DataDriven Talk 链行）。 / Client chain-letter registry. */
-	private static final String CLIENT_TALK_CHAIN_PAGES =
-		"/aion/data/static_data/quest_retail/quest_client_talk_chain_pages.tsv";
 	/** 客户端 talk+collect 混合链登记（DataDriven {talk, collectitem} 行）。 /
 	 * Client talk+collect chain registry (DataDriven {talk, collectitem} rows). */
 	private static final String CLIENT_TALK_COLLECT_CHAIN_PAGES =
@@ -455,22 +446,13 @@ public final class RetailQuestDriver {
 		try (InputStream input = open(CLIENT_SUMMARY_ROWS)) {
 			clientSummaryRows = RetailClientSummaryRows.load(input);
 		}
-		RetailClientRewardNpcs clientRewardNpcs;
-		try (InputStream input = open(CLIENT_REWARD_NPCS)) {
-			clientRewardNpcs = RetailClientRewardNpcs.load(input);
-		}
+		RetailClientRewardNpcs clientRewardNpcs = RetailClientRewardNpcs.defaultRewardNpcs();
 		RetailClientHuntStages clientHuntStages;
 		try (InputStream input = open(CLIENT_HUNT_STAGES)) {
 			clientHuntStages = RetailClientHuntStages.load(input);
 		}
-		RetailClientHandinPages clientHandinPages;
-		try (InputStream input = open(CLIENT_HANDIN_PAGES)) {
-			clientHandinPages = RetailClientHandinPages.load(input);
-		}
-		RetailClientTalkChainPages clientTalkChainPages;
-		try (InputStream input = open(CLIENT_TALK_CHAIN_PAGES)) {
-			clientTalkChainPages = RetailClientTalkChainPages.load(input);
-		}
+		RetailClientHandinPages clientHandinPages = RetailClientHandinPages.defaultHandinPages();
+		RetailClientTalkChainPages clientTalkChainPages = RetailClientTalkChainPages.defaultTalkChainPages();
 		RetailClientTalkCollectChainPages clientTalkCollectChainPages;
 		try (InputStream input = open(CLIENT_TALK_COLLECT_CHAIN_PAGES)) {
 			clientTalkCollectChainPages = RetailClientTalkCollectChainPages.load(input);

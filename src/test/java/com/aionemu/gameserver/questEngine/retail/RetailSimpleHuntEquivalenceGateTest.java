@@ -87,9 +87,7 @@ class RetailSimpleHuntEquivalenceGateTest {
 		try (InputStream input = open("/aion/data/static_data/quest_retail/quest.xml")) {
 			retailTable = RetailQuestXmlTable.load(input);
 		}
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_reward_npcs.tsv")) {
-			clientRewardNpcs = RetailClientRewardNpcs.load(input);
-		}
+		clientRewardNpcs = RetailClientRewardNpcs.defaultRewardNpcs();
 		try (InputStream input = open("/aion/definitions/compact/ai/ai-areas.xml")) {
 			questAreas = RetailQuestAreaIndex.load(input);
 		}

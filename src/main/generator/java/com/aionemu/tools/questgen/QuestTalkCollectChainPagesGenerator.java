@@ -65,8 +65,8 @@ public final class QuestTalkCollectChainPagesGenerator {
 
 	private static final String FACTS_FILE = "src/main/resources/aion/definitions/quest_dialog/talk_collect_frozen_facts.csv";
 	private static final String DD_XML = "src/main/resources/aion/data/static_data/quest_retail/data_driven_quest.xml";
-	private static final String HANDIN_TABLE = "src/main/resources/aion/data/static_data/quest_retail/quest_client_handin_pages.tsv";
-	private static final String CHAIN_TABLE = "src/main/resources/aion/data/static_data/quest_retail/quest_client_talk_chain_pages.tsv";
+	private static final String HANDIN_TABLE = ".agents/summary/quest-native-dispatch/retired-tsv/quest_client_handin_pages.tsv.retired-20260928";
+	private static final String CHAIN_TABLE = ".agents/summary/quest-native-dispatch/retired-tsv/quest_client_talk_chain_pages.tsv.retired-20260928";
 	private static final String PAGES_CSV = "docs/quest/client-dialog-mapping/quest-dialog-pages.csv";
 	private static final String ACTIONS_CSV = "docs/quest/client-dialog-mapping/quest-dialog-action-details.csv";
 	private static final String OUTPUT_TABLE = "aion/data/static_data/quest_retail/quest_client_talk_collect_chain_pages.tsv";

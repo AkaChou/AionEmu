@@ -121,12 +121,8 @@ class RetailDataDrivenGateTest {
 		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_summary_rows.tsv")) {
 			clientSummaryRows = RetailClientSummaryRows.load(input);
 		}
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_handin_pages.tsv")) {
-			clientHandinPages = RetailClientHandinPages.load(input);
-		}
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_talk_chain_pages.tsv")) {
-			clientTalkChainPages = RetailClientTalkChainPages.load(input);
-		}
+		clientHandinPages = RetailClientHandinPages.defaultHandinPages();
+		clientTalkChainPages = RetailClientTalkChainPages.defaultTalkChainPages();
 		try (InputStream input =
 				open("/aion/data/static_data/quest_retail/quest_client_talk_collect_chain_pages.tsv")) {
 			clientTalkCollectChainPages = RetailClientTalkCollectChainPages.load(input);
@@ -144,12 +140,7 @@ class RetailDataDrivenGateTest {
 			enterAreaZoneResolution = RetailEnterAreaZoneResolution.load(input);
 		}
 		clientDialogExits = RetailClientDialogExits.defaultExits();
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_reward_npcs.tsv")) {
-			// 与生产驱动同一登记表：空夹具会让交付 dic 链解析与驱动口径漂移（P5-4 收口）。
-			// Same registry as the production driver: the empty fixture diverges from driver hand-in
-			// resolution (P5-4 closeout).
-			clientRewardNpcs = RetailClientRewardNpcs.load(input);
-		}
+		clientRewardNpcs = RetailClientRewardNpcs.defaultRewardNpcs();
 		try (InputStream input = open("/aion/definitions/compact/ai/ai-areas.xml")) {
 			clientQuestAreas = RetailQuestAreaIndex.load(input);
 		}

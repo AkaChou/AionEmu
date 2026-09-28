@@ -23,11 +23,8 @@
 # Readers are named in the note column; confirm them before touching a row.
 #
 # file	role	status	note
-quest_client_handin_pages.tsv	client-registry	ACTIVE	交付型五页契约 + ok 本地关闭判据；消费者 RetailClientHandinPages
 quest_client_kill_targets.tsv	retail-table	ACTIVE	击杀目标契约快照（quest_monster.csv SECTION 名单 + 变体轴裁定）；消费者 RetailClientKillTargets
-quest_client_reward_npcs.tsv	client-registry	ACTIVE	交付 NPC 集登记（复合势力奖励引用）；消费者 RetailClientRewardNpcs / 多个家族编译器
 quest_client_summary_rows.tsv	client-registry	ACTIVE	任务书行数（REWARD 节点 var0 投影 = rows-1）；消费者 RetailClientSummaryRows
-quest_client_talk_chain_pages.tsv	client-registry	ACTIVE	链式信件页梯 + 推进动作（p1>p2>...:advance）；消费者 RetailClientTalkChainPages
 quest_client_talk_chain_steps.tsv	retail-table	ACTIVE	SimpleTalk 链式路由登记（真端表权威 + 客户端背书 + XML 转写）；消费者 RetailClientTalkChainSteps
 quest_enterarea_zone_resolution.tsv	retail-table	ACTIVE	DD enterarea 别名 → 服务端登记区名（真端 world questscript_area）；消费者 RetailEnterAreaZoneResolution
 quest_legacy_heal_rows.tsv	heal	ACTIVE	旧存档自愈边（真端编译消费的单步 build 通道，P0c-28）；消费者 RetailLegacySaveHealRows
