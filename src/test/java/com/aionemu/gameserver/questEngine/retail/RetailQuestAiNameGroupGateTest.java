@@ -39,8 +39,6 @@ import org.junit.jupiter.api.Test;
 class RetailQuestAiNameGroupGateTest {
 
 	private static final String NPC_DIR = "/aion/data/static_data/npcs/";
-	private static final String GROUP_TABLE =
-		"/aion/data/static_data/quest_retail/retail-quest-ai-name-groups.tsv";
 	private static final List<String> NPC_TEMPLATES = List.of(
 		"npc_template_200000_216188.xml", "npc_template_216189_235748.xml", "npc_template_235749_247606.xml",
 		"npc_template_247607_270057.xml", "npc_template_270058_286320.xml", "npc_template_286321_800030.xml",
@@ -217,17 +215,8 @@ class RetailQuestAiNameGroupGateTest {
 	}
 
 	/** 组表全量读取（`组名 \t 成员1,成员2`；`#` 起头为注释）。 / Every declared group row. */
-	private static Map<String, List<String>> declaredGroups() throws Exception {
-		Map<String, List<String>> groups = new LinkedHashMap<>();
-		for (String line : lines(open(GROUP_TABLE))) {
-			if (line.isBlank() || line.startsWith("#")) {
-				continue;
-			}
-			String[] parts = line.split("\t");
-			assertEquals(2, parts.length, () -> "组表行列数异常：" + line);
-			groups.put(parts[0], List.of(parts[1].split(",")));
-		}
-		return groups;
+	private static Map<String, List<String>> declaredGroups() {
+		return RetailQuestAiNameGroups.defaultGroups();
 	}
 
 	private static List<String> lines(InputStream input) throws Exception {

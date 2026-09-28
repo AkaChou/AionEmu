@@ -122,14 +122,9 @@ class RetailDataDrivenGateTest {
 		clientHandinPages = RetailClientHandinPages.defaultHandinPages();
 		clientTalkChainPages = RetailClientTalkChainPages.defaultTalkChainPages();
 		clientTalkCollectChainPages = RetailClientTalkCollectChainPages.defaultTalkCollectChainPages();
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_kill_targets.tsv")) {
-			clientKillTargets = RetailClientKillTargets.load(input);
-		}
-		clientKillTargets = clientKillTargets.withDefaultStages();
+		clientKillTargets = RetailClientKillTargets.defaultKillTargets();
 		clientHuntProgressRows = RetailClientHuntProgressRows.defaultHuntProgressRows();
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_enterarea_zone_resolution.tsv")) {
-			enterAreaZoneResolution = RetailEnterAreaZoneResolution.load(input);
-		}
+		enterAreaZoneResolution = RetailEnterAreaZoneResolution.defaultZoneResolution();
 		clientDialogExits = RetailClientDialogExits.defaultExits();
 		clientRewardNpcs = RetailClientRewardNpcs.defaultRewardNpcs();
 		try (InputStream input = open("/aion/definitions/compact/ai/ai-areas.xml")) {

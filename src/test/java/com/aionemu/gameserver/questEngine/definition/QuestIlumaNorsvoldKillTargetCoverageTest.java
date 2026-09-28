@@ -52,8 +52,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * asserts directly against the production table.
  */
 class QuestIlumaNorsvoldKillTargetCoverageTest {
-	private static final String CONTRACT_RESOURCE =
-		"/aion/data/static_data/quest_retail/quest_client_kill_targets.tsv";
 	/** 快照规模：低于该值说明基线被误删或生成脚本漏了任务。 / Guard against silent baseline shrink. */
 	private static final int EXPECTED_CONTRACT_ROWS = 45;
 	/** 15546/25546：四族各 4 杀的目标集合与实际刷新变体。 */
@@ -352,30 +350,7 @@ class QuestIlumaNorsvoldKillTargetCoverageTest {
 	}
 
 	private static Map<Integer, Set<Integer>> contractSnapshot() {
-		try (InputStream input = Objects.requireNonNull(
-				QuestIlumaNorsvoldKillTargetCoverageTest.class.getResourceAsStream(CONTRACT_RESOURCE), CONTRACT_RESOURCE);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
-			Map<Integer, Set<Integer>> rows = new LinkedHashMap<>();
-			String line;
-			while ((line = reader.readLine()) != null) {
-				String trimmed = line.trim();
-				if (trimmed.isEmpty() || trimmed.startsWith("#") || trimmed.startsWith("quest_id")) {
-					continue;
-				}
-				String[] columns = trimmed.split("\t");
-				if (columns.length != 2) {
-					throw new AssertionError("malformed contract row: " + trimmed);
-				}
-				Set<Integer> targets = Arrays.stream(columns[1].trim().split(" "))
-					.filter(token -> !token.isEmpty())
-					.map(Integer::parseInt)
-					.collect(Collectors.toCollection(LinkedHashSet::new));
-				rows.put(Integer.parseInt(columns[0].trim()), targets);
-			}
-			return rows;
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
+		return com.aionemu.gameserver.questEngine.retail.RetailClientKillTargets.defaultKillTargets().entries();
 	}
 
 	private static CompiledQuestDefinition load(int questId) {

@@ -60,17 +60,8 @@ public final class RetailQuestDriver {
 		"/aion/data/static_data/quest_retail/Quest_SimpleCollectItem.xml";
 	/** 本服配方模板（{@code (skillid, productid)} → recipe id）。 / Local recipe templates. */
 	private static final String RECIPE_TEMPLATES = "/aion/data/static_data/recipe/recipe_templates.xml";
-	/** 客户端报告页登记（承载 HACTION_SELECT_QUEST_REWARD 的页）。 / Client report pages hosting the reward button. */
-	private static final String CLIENT_KILL_TARGETS =
-		"/aion/data/static_data/quest_retail/quest_client_kill_targets.tsv";
-	/** enterarea 别名 → 登记区名解析表（EA 步死边防线）。 / Enterarea alias to registered zone name (EA dead-edge guard). */
-	private static final String ENTERAREA_ZONE_RESOLUTION =
-		"/aion/data/static_data/quest_retail/quest_enterarea_zone_resolution.tsv";
 	private static final String RETAIL_QUEST_XML = "/aion/data/static_data/quest_retail/quest.xml";
 	private static final String NAME_IDS_TSV = "/aion/data/static_data/quest_retail/quest_name_string_ids.tsv";
-	/** 真端对话名组表（守备队同组共用 ScriptDLL 对话名）。 / Retail dialog-name group table. */
-	private static final String QUEST_AI_NAME_GROUPS =
-		"/aion/data/static_data/quest_retail/retail-quest-ai-name-groups.tsv";
 	private static final String RANDOM_REWARDS = "/aion/data/static_data/quest_random_rewards.xml";
 	private static final String NPC_DIR = "/aion/data/static_data/npcs/";
 	private static final String ITEM_DIR = "/aion/data/static_data/items/item/";
@@ -434,16 +425,9 @@ public final class RetailQuestDriver {
 		RetailClientTalkChainPages clientTalkChainPages = RetailClientTalkChainPages.defaultTalkChainPages();
 		RetailClientTalkCollectChainPages clientTalkCollectChainPages =
 			RetailClientTalkCollectChainPages.defaultTalkCollectChainPages();
-		RetailClientKillTargets clientKillTargets;
-		try (InputStream input = open(CLIENT_KILL_TARGETS)) {
-			clientKillTargets = RetailClientKillTargets.load(input);
-		}
-		clientKillTargets = clientKillTargets.withDefaultStages();
+		RetailClientKillTargets clientKillTargets = RetailClientKillTargets.defaultKillTargets();
 		RetailClientHuntProgressRows clientHuntProgressRows = RetailClientHuntProgressRows.defaultHuntProgressRows();
-		RetailEnterAreaZoneResolution enterAreaZoneResolution;
-		try (InputStream input = open(ENTERAREA_ZONE_RESOLUTION)) {
-			enterAreaZoneResolution = RetailEnterAreaZoneResolution.load(input);
-		}
+		RetailEnterAreaZoneResolution enterAreaZoneResolution = RetailEnterAreaZoneResolution.defaultZoneResolution();
 		RetailQuestXmlTable retailTable;
 		try (InputStream input = open(RETAIL_QUEST_XML)) {
 			retailTable = RetailQuestXmlTable.load(input);
@@ -451,10 +435,8 @@ public final class RetailQuestDriver {
 		// 真端对话名组表（守备队同组共用 ScriptDLL 对话名）：接取/交付字段可写组名的唯一展开通道。
 		// The retail dialog-name group table: the only expansion channel for group names written in
 		// the acquire/hand-in fields (one guard squad shares a ScriptDLL dialog name).
-		RetailNpcNameIndex npcIndex;
-		try (InputStream groups = open(QUEST_AI_NAME_GROUPS)) {
-			npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_FILES), List.of(groups));
-		}
+		RetailNpcNameIndex npcIndex =
+			RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_FILES), RetailQuestAiNameGroups.streams());
 		RetailQuestUseItemNpcs interactionObjects =
 			RetailQuestUseItemNpcs.fromIds(npcIndex.questUseItemNpcIds());
 		RetailItemNameIndex itemIndex = RetailItemNameIndex.build(

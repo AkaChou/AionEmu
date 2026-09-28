@@ -41,8 +41,6 @@ import org.junit.jupiter.api.Test;
  */
 class RetailEnterAreaZoneRegistrationGateTest {
 
-	private static final String RESOLUTION =
-		"/aion/data/static_data/quest_retail/quest_enterarea_zone_resolution.tsv";
 	private static final String ZONES_DIR = "/aion/data/static_data/zones";
 	private static final Pattern ZONE_NAME = Pattern.compile("<zone\\b[^>]*\\bname=\"([^\"]+)\"");
 	/** zones 登记名总量的下界（防空表通过：目录缺失或解析失效时立刻红）。 / Sanity floor. */
@@ -80,24 +78,14 @@ class RetailEnterAreaZoneRegistrationGateTest {
 			+ "登记名或别名归属需要重新裁定）: " + unresolved);
 	}
 
-	private static List<String[]> resolutionRows() throws Exception {
-		try (InputStream input = RetailEnterAreaZoneRegistrationGateTest.class.getResourceAsStream(RESOLUTION)) {
-			assertNotNull(input, () -> "缺少解析表资源: " + RESOLUTION);
-			List<String[]> rows = new ArrayList<>();
-			try (BufferedReader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
-				String line;
-				while ((line = reader.readLine()) != null) {
-					if (line.startsWith("#") || line.isBlank() || !Character.isDigit(line.charAt(0))) {
-						continue;
-					}
-					String[] parts = line.split("\t");
-					if (parts.length >= 3) {
-						rows.add(new String[] { parts[0].trim(), parts[1].trim(), parts[2].trim() });
-					}
-				}
-			}
-			return rows;
-		}
+	private static List<String[]> resolutionRows() {
+		List<String[]> rows = new ArrayList<>();
+		RetailEnterAreaZoneResolution.defaultZoneResolution().zones().forEach((qid, aliases) -> {
+			aliases.forEach((alias, zone) -> {
+				rows.add(new String[]{String.valueOf(qid), alias, zone});
+			});
+		});
+		return rows;
 	}
 
 	private static Set<String> registeredZoneNames() throws Exception {
