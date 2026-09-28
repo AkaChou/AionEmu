@@ -1,0 +1,28 @@
+# 客户端 talk+collect 混合链登记表的构建期冻结事实（P4e-1）。
+# 本表只承载三类“非仓内/已退役”输入的最小投影；eligible 规则、页梯推导、阶段类别对齐全部由
+# 构建期生成器 QuestTalkCollectChainPagesGenerator 从仓内源（data_driven_quest.xml +
+# docs/quest/client-dialog-mapping/quest-dialog-pages.csv + quest-dialog-action-details.csv +
+# quest_client_handin_pages.tsv + quest_client_talk_chain_pages.tsv）重放。
+# Frozen facts for the talk+collect chain registry: the minimal projection of the retired and
+# out-of-repo inputs only; everything else is replayed from in-repo sources at build time.
+#kind,quest_id,key,value,provenance
+exclude,9639,-,-,retired-talk-pages:quest_client_talk_pages.tsv.retired-20260927
+exclude,13956,-,-,retired-talk-pages:quest_client_talk_pages.tsv.retired-20260927
+exclude,15322,-,-,retired-talk-pages:quest_client_talk_pages.tsv.retired-20260927
+exclude,16839,-,-,retired-talk-pages:quest_client_talk_pages.tsv.retired-20260927
+exclude,23956,-,-,retired-talk-pages:quest_client_talk_pages.tsv.retired-20260927
+exclude,25322,-,-,retired-talk-pages:quest_client_talk_pages.tsv.retired-20260927
+exclude,26839,-,-,retired-talk-pages:quest_client_talk_pages.tsv.retired-20260927
+cutscene,15306,4081,994,client-html:Dialogs/10000_19999/quest_q15306.html#select10_1
+cutscene,15316,4081,994,client-html:Dialogs/10000_19999/quest_q15316.html#select10_1
+cutscene,15604,1694,1000,client-html:Dialogs/10000_19999/quest_q15604.html#select3_1
+cutscene,15605,1353,1002,client-html:Dialogs/10000_19999/quest_q15605.html#select2_1
+cutscene,15613,1353,875,client-html:Dialogs/10000_19999/quest_q15613.html#select2_1
+cutscene,16942,1012,899,client-html:Dialogs/10000_19999/quest_q16942.html#select1_1
+cutscene,25306,4081,866,client-html:Dialogs/20000_29999/quest_q25306.html#select10_1
+cutscene,25316,4081,866,client-html:Dialogs/20000_29999/quest_q25316.html#select10_1
+cutscene,25602,1694,872,client-html:Dialogs/20000_29999/quest_q25602.html#select3_1
+cutscene,25604,1012,874,client-html:Dialogs/20000_29999/quest_q25604.html#select1_1
+cutscene,26942,1012,900,client-html:Dialogs/20000_29999/quest_q26942.html#select1_1
+withheld,20035,-,-,p0c48_add_pvp_collect_stage_rows.py:WITHHELD:TALK_HUNT_CHAIN_DEFERRED
+withheld,20501,-,-,p0c48_add_pvp_collect_stage_rows.py:WITHHELD:TALK_HUNT_CHAIN_DEFERRED

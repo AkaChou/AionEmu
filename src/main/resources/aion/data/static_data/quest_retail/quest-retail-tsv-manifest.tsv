@@ -31,7 +31,6 @@ quest_client_reward_npcs.tsv	client-registry	ACTIVE	交付 NPC 集登记（复�
 quest_client_summary_rows.tsv	client-registry	ACTIVE	任务书行数（REWARD 节点 var0 投影 = rows-1）；消费者 RetailClientSummaryRows
 quest_client_talk_chain_pages.tsv	client-registry	ACTIVE	链式信件页梯 + 推进动作（p1>p2>...:advance）；消费者 RetailClientTalkChainPages
 quest_client_talk_chain_steps.tsv	retail-table	ACTIVE	SimpleTalk 链式路由登记（真端表权威 + 客户端背书 + XML 转写）；消费者 RetailClientTalkChainSteps
-quest_client_talk_collect_chain_pages.tsv	client-registry	ACTIVE	talk+collect 混合链页梯（阶段类别与真端 stepCategories 逐位一致）；消费者 RetailClientTalkCollectChainPages
 quest_client_use_item_report.tsv	client-registry	ACTIVE	SimpleUseItem 报告模式（客户端 select5 页按钮）；消费者 RetailClientUseItemReport
 quest_enterarea_zone_resolution.tsv	retail-table	ACTIVE	DD enterarea 别名 → 服务端登记区名（真端 world questscript_area）；消费者 RetailEnterAreaZoneResolution
 quest_legacy_heal_rows.tsv	heal	ACTIVE	旧存档自愈边（真端编译消费的单步 build 通道，P0c-28）；消费者 RetailLegacySaveHealRows
