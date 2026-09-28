@@ -1897,25 +1897,26 @@ keywords: canonical 旗标、家族重载、规范形四相位、canonicalAccept
 - **两个坑**：①REWARD 态 1009/-1 预览边没有 SyncQuestState，交互对象解析断言照抄交付段必红；②指纹表行数变化有两种（id 集变化 = 登记面移动、指纹值变化 = 形状移动），回写前必须分开核对。
 - **验收口径**：T1 的判据是"唯一红与基线**同身份**"（本片 = 20035 DD 漂移登记逐字相同），不是全绿——并行车道在飞时全绿反而可疑。
 
-## [QE-084] 八十二、**门禁收口对拍的两条操作假象**：`surefire:test` 不编译（红的是旧字节码）、`comm` 按 locale 排序（身份集对拍产出全假象）——改后必须编译、对拍必须 LC=C 集合运算（GATE_CLOSEOUT_PROBE_DISCIPLINE）
+## [QE-084] 八十二、**门禁收口对拍的三条操作假象**：`surefire:test` 不编译（红的是旧字节码）、`comm` 按 locale 排序（身份集对拍产出全假象）、**副本带入源码已删的陈旧 `target/test-classes` 测试类（幽灵红）**——改后必须编译、对拍必须 LC=C 集合运算、全树副本先清 source-less class（GATE_CLOSEOUT_PROBE_DISCIPLINE）
 
 <!-- pattern-metadata
 status: CONFIRMED
 scope: 一切"改代码→聚焦复跑→门禁身份集对拍收口"流程的操作纪律；跨域可复用（questEngine 门禁链、任意 surefire 项目、任意日志对拍）
 first_seen: 2026-09-27
-last_verified: 2026-09-27
-symptom: ①修完测试类用 `mvn surefire:test -Dtest=...` 复跑，失败形状与行号和改动前逐字相同（三处修复像全部没生效）；②T3 身份集对拍给出 REMOVED 98 / ADDED 36 的大漂移，逐条归因时发现"被消除"的身份（如 quest 1131）在两轮日志里明明都在红
+last_verified: 2026-09-28
+symptom: ①修完测试类用 `mvn surefire:test -Dtest=...` 复跑，失败形状与行号和改动前逐字相同（三处修复像全部没生效）；②T3 身份集对拍给出 REMOVED 98 / ADDED 36 的大漂移，逐条归因时发现"被消除"的身份（如 quest 1131）在两轮日志里明明都在红；③T3 仓库外副本以 rsync 全树创建时，源码已删但 `target/test-classes` 仍在的陈旧测试类被 surefire 选择器拾起 ⇒ 红集凭空多出"幽灵红"（2026-09-28 P1 实测 +2）
 root_cause: ①`surefire:test` 直接执行 target/test-classes 里已编译类，不触发增量编译——改的是源码、跑的是旧字节码；②sort/comm 走 locale 排序规则，不同轮次提取的身份集字典序在两侧不一致 ⇒ comm 把交集判成两侧独有，ADDED/REMOVED 全是排序假象（真相可能是 0/0）
-fix_or_guardrail: ①改测试（或生产）代码后的聚焦复跑必须 `mvn test`（触发 test-compile）而不是裸 `surefire:test`；第一信号 = 失败行号——行号还在旧位置即编译产物过期；②门禁身份集提取统一 `grep ... | sed ... | LC=C sort -u`，对拍用集合运算（python set）不用 comm；并发车道共享 gates/ 目录时认领日志以链输出自报的 `[T3] log=...` 行为准（自报路径优先于目录里"看起来像别人写的"同名猜测）；③zsh 下 `$VAR` 展开不做词分割——门禁脚本传变量形式的 id 列表会被当成**单个参数**（argparse 报 usage/数字校验错），必须 `${=VAR}` 强制分割或直接写字面量列表（SimpleUseItem T2 102 id 实锤）
-evidence: .agents/summary/quest-native-dispatch/gates/T1-042720.log（76 例 1F 与上轮同身份=20035 DD 车道红）; .agents/summary/quest-native-dispatch/gates/T3-042013.log; comm 假象实例 = LC 未固定的 comm 输出 REMOVED 98/ADDED 36，python 集合重算真相 0/0
-validation: SimpleCollectItem 收口 = T3 身份集 138→138 对基线 T3-030925 同态（ADDED 0/REMOVED 0）、对上轮 T3-035909 REMOVED 3 且逐条=本片修复；三修复类 `mvn test` 复跑全绿（仅剩基线在册红 1131）
+fix_or_guardrail: ①改测试（或生产）代码后的聚焦复跑必须 `mvn test`（触发 test-compile）而不是裸 `surefire:test`；第一信号 = 失败行号——行号还在旧位置即编译产物过期；②门禁身份集提取统一 `grep ... | sed ... | LC=C sort -u`，对拍用集合运算（python set）不用 comm；并发车道共享 gates/ 目录时认领日志以链输出自报的 `[T3] log=...` 行为准（自报路径优先于目录里"看起来像别人写的"同名猜测）；③zsh 下 `$VAR` 展开不做词分割——门禁脚本传变量形式的 id 列表会被当成**单个参数**（argparse 报 usage/数字校验错），必须 `${=VAR}` 强制分割或直接写字面量列表（SimpleUseItem T2 102 id 实锤）；④全树副本（T3）跑完/对拍前先做 **source-less class 普查**：对 `target/test-classes/**/*.class` 逐个检查 `src/test/java` 有无对应 `.java`（内部类 `A$B.class` 归并到 `A.java`），有源码缺失的类先删除再判定 ADDED/REMOVED——本轮 P1 的 +2 幽灵红即为源码已删的探针类残渣
+evidence: .agents/summary/quest-native-dispatch/gates/T1-042720.log（76 例 1F 与上轮同身份=20035 DD 车道红）; .agents/summary/quest-native-dispatch/gates/T3-042013.log; comm 假象实例 = LC 未固定的 comm 输出 REMOVED 98/ADDED 36，python 集合重算真相 0/0; 幽灵红实例 = P1 批 `gates/p1-T3-vs-n1-invocation-diff.txt`（ADDED 恰 2 个 source-less 探针类）+ `2026-09-28-p1-ainame-rejected-retirement.zh-CN.md` §4.1
+validation: SimpleCollectItem 收口 = T3 身份集 138→138 对基线 T3-030925 同态（ADDED 0/REMOVED 0）、对上轮 T3-035909 REMOVED 3 且逐条=本片修复；三修复类 `mvn test` 复跑全绿（仅剩基线在册红 1131）。**P1（2026-09-28）**：n1-调用级 129 / 本片 131，ADDED 恰为 2 个 source-less 探针类（`RetailTalkChainGateProbeTest` / `RetailTalkChainProbeTest`），清 6 个 source-less class 后车道基线口径红集 94 条 sha256 `5e3acdb9dcaf255c…` 与 n1 基线逐字节相同
 boundaries: 不涉及门禁脚本本身的修改；LC=C 的必要性以"同一提取命令跨会话复跑"为前提——单次会话内两次同 LC 提取的 comm 也可能碰巧正确，不能以单次正确反证纪律多余
 superseded_by: none
-first_check: 聚焦复跑结果与改动前逐字相同 → 先怀疑编译产物过期（看失败行号）再怀疑修复本身；身份对拍结果"大到不像本车道改动面" → 先用 python 集合重算再逐条归因
-keywords: surefire:test 不编译、test-compile 新鲜度、失败行号指纹、LC=C sort、comm locale 假象、身份集对拍、python set、共享 gates 目录、日志认领、zsh 词分割、${=VAR}
+first_check: 聚焦复跑结果与改动前逐字相同 → 先怀疑编译产物过期（看失败行号）再怀疑修复本身；身份对拍结果"大到不像本车道改动面" → 先用 python 集合重算再逐条归因；红集出现"基线没有且无对应源码"的条目 → 先查 `target/test-classes` 陈旧类（source-less 普查），别先怀疑改动面
+keywords: surefire:test 不编译、test-compile 新鲜度、失败行号指纹、LC=C sort、comm locale 假象、身份集对拍、python set、共享 gates 目录、日志认领、zsh 词分割、${=VAR}、source-less class、陈旧 test-classes、幽灵红、rsync 全树副本、T3 副本卫生
 -->
 - **一句话判据**：复跑前先保证字节码新鲜（`mvn test`），对拍前先保证排序可比（`LC=C sort -u` + 集合运算）——两个环节都"看起来跑了"不等于"验的是真的"。
 - **验收口径**：收口对拍的合法判据是 python/排序统一的集合差（本轮 138→138 同态、REMOVED 3=本片修复逐条对上），comm 在未固定 locale 下的任何大数字（98/36）先当假象处理。
+- **副本卫生（2026-09-28 追加）**：T3 全树副本（rsync 含 `target/`）会把"源码已删、字节码仍在"的陈旧测试类带进选择器；对拍前先做 source-less 普查并清理，红集对拍以"源码面"为准。
 
 ## [QE-085] 八十三、**规范形伤亡的契约改写判据**：交付 NPC 提取点随形状搬家、未满段"零路由"必须收窄为"零报告通道"、形状二分断言处理混合族（CANONICAL_CASUALTY_REWRITE）
 
@@ -2135,24 +2136,25 @@ keywords: 物件哨兵、USE_OBJECT、LF2_Lost_JewelBox、730032、1323、入口
 
 <!-- pattern-metadata
 status: CONFIRMED
-scope: `static_data/quest_retail/*.tsv` 与 `definitions/quest_dialog/*.tsv` 里的**页码类登记表**（承载服务端页链驱动的补丁）退役；`RetailTsvManifestGateTest` + `quest-retail-tsv-manifest.tsv` 冻结面
+scope: `static_data/quest_retail/*.tsv` 与 `definitions/quest_dialog/*.tsv` 里的**页码类登记表**（承载服务端页链驱动的补丁）与**零消费者生成物账**（审计账/排除账）退役；`RetailTsvManifestGateTest` + `quest-retail-tsv-manifest.tsv` 冻结面
 first_seen: 2026-09-27
-last_verified: 2026-09-27
-symptom: ①只删表文件而不删**唯一读取者** ⇒ 加载期找不到资源（或残留 `empty()` 兜底静默丢页）；②只删读取者而不停**生成器** ⇒ 下次重跑生成器把表写回来（或无人重跑而表永久滞留）；③只删文件不删**清单行**与 `EXPECTED_TSV_COUNT` ⇒ `RetailTsvManifestGateTest` 立刻红；④把页码类表当普通数据表删、未先证"唯一读取点在死分支" ⇒ 删掉仍在服务端的页下发
+last_verified: 2026-09-28
+symptom: ①只删表文件而不删**唯一读取者** ⇒ 加载期找不到资源（或残留 `empty()` 兜底静默丢页）；②只删读取者而不停**生成器** ⇒ 下次重跑生成器把表写回来（或无人重跑而表永久滞留）；③只删文件不删**清单行**与 `EXPECTED_TSV_COUNT` ⇒ `RetailTsvManifestGateTest` 立刻红；④把页码类表当普通数据表删、未先证"唯一读取点在死分支" ⇒ 删掉仍在服务端的页下发；⑤零消费者审计账滞留：不删则冻结面无谓膨胀，删前不快照则审计史丢失
 root_cause: 页码类 TSV 是**生成物**（生成器 → 表 → 读取者类 → 编译器消费点），四个环节的生命周期被独立管理；退役必须**同轴**：先证消费点为死分支（或已换规范形），再按"读取者类 → 参数穿线 → 表 → 清单行 → 计数"整体退场，生产者（生成器）另行停写
-fix_or_guardrail: 1. **死分支证明（逐调用点）**：`grep` 出值读取点 → 证明其所在分支的**入口重载零调用者**（判例：`reportPage(` 唯一调用点在 `canonical=false` 分支，而 `canonical=false` 的两个公有重载全仓 3 处调用全是 canonical 形）；2. **退役三步**：删文件 + 删清单行 + `EXPECTED_TSV_COUNT` −1（同一片完成；`RetailTsvManifestGateTest` 是 fail-closed 兜底：磁盘集合 == 清单集合 == 计数）；3. **读取者同轴退场**：删类 + 删全部参数穿线（含跨族编译器与驱动）+ 删死重载/死页链流，**但保留仍被排除族使用的旧形**（判例：`acceptFlow` 因 HandinDialogFlow 三票否决排除迁移而保留）；4. **生成器移交**：生成器若属兄弟车道，只在台账登记"停写"移交项，不越界改脚本——重跑生成器会被清单门**立刻拦红**；5. **零 IR 变化**：退役片必须"全家族门绿 + T1/T2/T3 零新增"，任何行形状改变都说明删错了东西
-evidence: .agents/summary/quest-native-dispatch/2026-09-27-w5g1-report-pages-retirement.zh-CN.md（死分支证明逐调用点 + 处置清单 8 项 + 事故留痕）; .agents/summary/quest-native-dispatch/2026-09-27-tsv-retirement-candidates.zh-CN.md（候选四类明细与依赖图）; src/test/java/com/aionemu/gameserver/questEngine/retail/RetailTsvManifestGateTest.java（EXPECTED_TSV_COUNT 26 → 25）; src/main/resources/aion/data/static_data/quest_retail/quest-retail-tsv-manifest.tsv
-validation: 2026-09-27 W5-g1：`quest_client_report_pages.tsv`（5995 行）整体退场——删读取者类 + 2 个死重载 + 4 个死页链流 + 全部参数穿线（3 生产文件 + 1 驱动 + 3 测试夹具）；清单门 3/3、SimpleHunt 家族门 1/1（356 s）、等价门 2/2、SimpleTalk 链门 8/8 与家族门 4/4 绿；**T1/T2/T3 ADDED 0 / REMOVED 0**，T1 红集 sha256 `3b92439da8…`、T3 `ce4673c7…` 与基线逐字节相同；零 IR 变化。**W5-g2（同日）**：`quest_client_entry_pages.tsv`（2449 行）同型退场——三处读取全部零效果（链编译器接住形参不读、定义编译器读出的局部无处可传）⇒ 删读取者类 + 全部参数穿线（3 生产文件 + 1 驱动 + 1 测试夹具）+ 表 + 清单行 + 计数 25 → 24；T1/T2/T3 同样 0/0 且红集 sha256 三项恒等。两例均**无形状裁定**，可作纯机械退役模板；删除前须落快照（`static_data/quest_retail/` 未纳入 git）
-boundaries: 只管**页码类**（服务端页链驱动）的生成物；客户端侧事实表（任务书行数、页链按钮、SECTION 门控、变体名单、交付对象）必须保留（真端表无对应列）；禁止"看着没人用就删"；生成器属兄弟车道时只登记不移交改脚本
+fix_or_guardrail: 1. **死分支证明（逐调用点）**：`grep` 出值读取点 → 证明其所在分支的**入口重载零调用者**（判例：`reportPage(` 唯一调用点在 `canonical=false` 分支，而 `canonical=false` 的两个公有重载全仓 3 处调用全是 canonical 形）；2. **退役三步**：删文件 + 删清单行 + `EXPECTED_TSV_COUNT` −1（同一片完成；`RetailTsvManifestGateTest` 是 fail-closed 兜底：磁盘集合 == 清单集合 == 计数）；3. **读取者同轴退场**：删类 + 删全部参数穿线（含跨族编译器与驱动）+ 删死重载/死页链流，**但保留仍被排除族使用的旧形**（判例：`acceptFlow` 因 HandinDialogFlow 三票否决排除迁移而保留）；4. **生成器移交**：生成器若属兄弟车道，只在台账登记"停写"移交项，不越界改脚本——重跑生成器会被清单门**立刻拦红**；5. **零 IR 变化**：退役片必须"全家族门绿 + T1/T2/T3 零新增"，任何行形状改变都说明删错了东西；6. **零消费者整表退役（P1 变体）**：main/test `grep` 双零引用（唯一命中=清单行）即可整表退场，但必须**先快照 `retired-tsv/<name>.retired-<yyyymmdd>` 并记 sha256**（数据目录未纳入 git；审计史保全、生成器可重算再生），生成器停写仍走兄弟车道移交登记
+evidence: .agents/summary/quest-native-dispatch/2026-09-28-p1-ainame-rejected-retirement.zh-CN.md（P1 零消费者整表退役 + 快照 sha256 + 红集对拍）; .agents/summary/quest-native-dispatch/retired-tsv/（P1 快照目录，sha256 `180627ee…`）; .agents/summary/quest-native-dispatch/2026-09-27-w5g1-report-pages-retirement.zh-CN.md（死分支证明逐调用点 + 处置清单 8 项 + 事故留痕）; .agents/summary/quest-native-dispatch/2026-09-27-tsv-retirement-candidates.zh-CN.md（候选四类明细与依赖图）; src/test/java/com/aionemu/gameserver/questEngine/retail/RetailTsvManifestGateTest.java（EXPECTED_TSV_COUNT 26 → 25）; src/main/resources/aion/data/static_data/quest_retail/quest-retail-tsv-manifest.tsv
+validation: 2026-09-27 W5-g1：`quest_client_report_pages.tsv`（5995 行）整体退场——删读取者类 + 2 个死重载 + 4 个死页链流 + 全部参数穿线（3 生产文件 + 1 驱动 + 3 测试夹具）；清单门 3/3、SimpleHunt 家族门 1/1（356 s）、等价门 2/2、SimpleTalk 链门 8/8 与家族门 4/4 绿；**T1/T2/T3 ADDED 0 / REMOVED 0**，T1 红集 sha256 `3b92439da8…`、T3 `ce4673c7…` 与基线逐字节相同；零 IR 变化。**W5-g2（同日）**：`quest_client_entry_pages.tsv`（2449 行）同型退场——三处读取全部零效果（链编译器接住形参不读、定义编译器读出的局部无处可传）⇒ 删读取者类 + 全部参数穿线（3 生产文件 + 1 驱动 + 1 测试夹具）+ 表 + 清单行 + 计数 25 → 24；T1/T2/T3 同样 0/0 且红集 sha256 三项恒等。两例均**无形状裁定**，可作纯机械退役模板；删除前须落快照（`static_data/quest_retail/` 未纳入 git）。**P1（2026-09-28）**：`retail-quest-ai-name-groups-rejected.tsv`（23 行 / 18 数据行，main/test 双零引用，唯一写入方=兄弟车道生成器 `p0c52_quest_ai_name_groups.py`）整表退役——快照 sha256 `180627ee…` + 删表 + 删清单行 + `EXPECTED_TSV_COUNT` 22→21 + 生成器停写移交；聚焦清单门 3/3 绿、T1 红集 `3b92439da8052988…`、T3 车道基线口径红集 `5e3acdb9dcaf255c…` 均与基线逐字节相同
+boundaries: 只管**页码类**（服务端页链驱动）与**零消费者生成物账**的退役；客户端侧事实表（任务书行数、页链按钮、SECTION 门控、变体名单、交付对象）必须保留（真端表无对应列）；禁止"看着没人用就删"——零消费者退役须有 `grep` 双零引用实证 + 快照先行 + 生成器停写移交；生成器属兄弟车道时只登记不改脚本
 superseded_by: none
 see_also: [QE-066], [QE-070], [QE-089], [QE-093]
 first_check: 要退役一张 TSV 前先答四问：①它的值读取点是**哪一行**、所在分支还能到达吗（入口重载有调用者吗）？②除该读取点外还有别的消费者吗（类/测试/脚本/审计）？③谁生成它、生成器在哪个车道？④删完之后谁兜底发现"磁盘/清单/计数"不一致？
-keywords: 页码类 TSV、退役、死分支证明、dead branch、RetailTsvManifestGateTest、EXPECTED_TSV_COUNT、quest-retail-tsv-manifest、report_pages、entry_pages、RetailClientReportPages、RetailClientEntryPages、读取者同轴、生成器移交、零 IR 变化、26→25→24、接住不读、删除前快照
+keywords: 页码类 TSV、退役、死分支证明、dead branch、RetailTsvManifestGateTest、EXPECTED_TSV_COUNT、quest-retail-tsv-manifest、report_pages、entry_pages、RetailClientReportPages、RetailClientEntryPages、读取者同轴、生成器移交、零 IR 变化、26→25→24、接住不读、删除前快照、零消费者整表退役、retention 审计账、retired-tsv、快照先行、22→21
 -->
 
 - **判定规则**：页码类 TSV 的退役是**四环节同轴**（生成器 / 表 / 读取者 / 消费点），缺一环就会静默回来或静默丢页；死分支证明必须**逐调用点**落到"入口重载零调用者"这一层。
 - **为什么必须 fail-closed**：清单门保证"磁盘集合 == 清单集合 == 计数"，越界重跑生成器或手工加表都会立刻红；而"零 IR 变化"证明删掉的确是死物。
 - **代表案例（2026-09-27 W5-g1）**：`quest_client_report_pages.tsv` 退役；`acceptFlow` 因 HandinDialogFlow 保留属**边界判定**，不是遗漏。
+- **零消费者变体（2026-09-28 P1）**：`retail-quest-ai-name-groups-rejected.tsv` 零引用整表退役——先快照 `retired-tsv/…retired-20260928`（审计史），再删表/删清单行/计数 −1，生成器停写只登记；重跑生成器会被清单门拦红（fail-closed）。
 
 ## [QE-095] 九十三、活门退役：先派生可派生判据，再退役（表代表的审计结论可能早已过期）(PAGE_TSV_RETIREMENT_WITH_LIVE_GATE)
 

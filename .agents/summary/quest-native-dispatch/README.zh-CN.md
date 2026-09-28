@@ -1059,7 +1059,9 @@ T3 在仓库外全树副本（`/private/tmp/aion-t3-w5g2`）跑、跑完即 `rm 
   ① `build_quest_client_report_pages.py` 仍会写回已退役 report_pages 路径（W5-g1 起）；
   ② `build_quest_client_dialog_exits.py` 不感知 R1 缩表（批 0 起）；
   ③ `build_retention_list.py` 已滞后于全部手工裁定（重跑会回退 ADJUDICATED 行，
-  是否补语义由 owner 裁定）。三者本车道均只登记不改。
+  是否补语义由 owner 裁定）；
+  ④ `p0c52_quest_ai_name_groups.py` 仍会写回已退役的 `retail-quest-ai-name-groups-rejected.tsv`
+  （P1 起；重跑即被清单门拦红）。四者本车道均只登记不改。
 - **用户侧并行项**：24 行实机复验（`client-recheck-list.zh-CN.md`）；push 授权
   （缺口批 11 提交 + 本阶段提交均未 push）。
 - 门禁证物：`gates/n1-earlyelyos-focus/fix.log`、`gates/T1-073737.log`、`gates/T2-072910.log`、
@@ -1074,4 +1076,11 @@ T3 在仓库外全树副本（`/private/tmp/aion-t3-w5g2`）跑、跑完即 `rm 
 - 结论：22 张 → **可退役 1**（`ai-name-groups-rejected`，main/test 双零引用，删除需 owner
   认可审计账处置）+ **需缩表 1**（`dialog_exits` 普查 v2：读取点全活但 Phase 2 后行级死亡面
   扩大，批 0 R1 同法重算）+ **仍活 20**（多为语义登记非页码补丁；老 Goal「废 18 张页码 TSV」
-  已到自然终点）。执行批 P1（整表退役）/P2（缩表）/P3（计数冻结）待用户决定立项。
+  已到自然终点）。执行批立项：**P1 已执行（2026-09-28，用户决定「1」）**，
+  P2（缩表）/P3（计数冻结）待决定。
+- **批 P1 已执行（2026-09-28，用户决定「1」）**：`retail-quest-ai-name-groups-rejected.tsv`
+  （23 行，sha256 `180627ee…`）整表退役——快照 `retired-tsv/…retired-20260928` + 删表 +
+  删清单行 + `EXPECTED_TSV_COUNT` 22→21 + 生成器停写移交（终版清单第 ④ 项）。零代码变化；
+  **门禁已过**：聚焦清单门 3/3、T1 红集 `3b92439da8…`、T3 基线口径红集 `5e3acdb9dcaf…`
+  均与基线逐字节相同（T3 首轮 +2 为副本陈旧 test-classes 幽灵红，已清理并沉淀 QE-084）。
+  台账：`2026-09-28-p1-ainame-rejected-retirement.zh-CN.md`。

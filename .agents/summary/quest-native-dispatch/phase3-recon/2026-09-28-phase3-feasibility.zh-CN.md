@@ -40,3 +40,10 @@ README Phase 2 各切片的退场记录。
 - 读取点人工核对：`RetailSimpleTalkDefinitionCompiler`（buildChain/reportFlowChain 行号见上）、
   `RetailQuestDriver.java:479-490`（handin_pages/exceptions 装载）、
   `RetailDataDrivenDefinitionCompiler:163-165`（selectNoneLadder）
+
+## 执行状态（2026-09-28 追加）
+
+- **批 P1 已执行**（用户决定「1」）：`retail-quest-ai-name-groups-rejected.tsv` 整表退役
+  （快照 + 删表 + 删清单行 + 计数 22→21 + 生成器停写移交登记）；台账
+  `../2026-09-28-p1-ainame-rejected-retirement.zh-CN.md`。
+- 批 P2（`dialog_exits` 缩表）/ P3（计数冻结）仍待决定。
