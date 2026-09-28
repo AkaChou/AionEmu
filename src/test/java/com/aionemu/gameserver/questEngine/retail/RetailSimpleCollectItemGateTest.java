@@ -103,9 +103,7 @@ class RetailSimpleCollectItemGateTest {
 			retailTable = RetailQuestXmlTable.load(input);
 		}
 		clientDialogExits = RetailClientDialogExits.defaultExits();
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_summary_rows.tsv")) {
-			clientSummaryRows = RetailClientSummaryRows.load(input);
-		}
+		clientSummaryRows = RetailClientSummaryRows.defaultSummaryRows();
 		clientRewardNpcs = RetailClientRewardNpcs.defaultRewardNpcs();
 		npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_TEMPLATES), RetailQuestAiNameGroupsFixture.streams());
 		itemIndex = RetailItemNameIndex.build(openAll(ITEM_DIR, listXmlNames(ITEM_DIR)));

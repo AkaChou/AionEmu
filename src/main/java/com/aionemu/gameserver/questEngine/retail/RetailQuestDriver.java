@@ -60,9 +60,6 @@ public final class RetailQuestDriver {
 		"/aion/data/static_data/quest_retail/Quest_SimpleCollectItem.xml";
 	/** 本服配方模板（{@code (skillid, productid)} → recipe id）。 / Local recipe templates. */
 	private static final String RECIPE_TEMPLATES = "/aion/data/static_data/recipe/recipe_templates.xml";
-	/** 客户端任务书行数登记表（REWARD 投影 = 末行行号）。 / Client journal row counts for the reward projection. */
-	private static final String CLIENT_SUMMARY_ROWS =
-		"/aion/data/static_data/quest_retail/quest_client_summary_rows.tsv";
 	/** 客户端报告页登记（承载 HACTION_SELECT_QUEST_REWARD 的页）。 / Client report pages hosting the reward button. */
 	private static final String CLIENT_KILL_TARGETS =
 		"/aion/data/static_data/quest_retail/quest_client_kill_targets.tsv";
@@ -430,10 +427,7 @@ public final class RetailQuestDriver {
 		}
 		RetailRecipeIndex recipeIndex = RetailRecipeIndex.build(List.of(open(RECIPE_TEMPLATES)));
 		RetailClientDialogExits clientDialogExits = RetailClientDialogExits.defaultExits();
-		RetailClientSummaryRows clientSummaryRows;
-		try (InputStream input = open(CLIENT_SUMMARY_ROWS)) {
-			clientSummaryRows = RetailClientSummaryRows.load(input);
-		}
+		RetailClientSummaryRows clientSummaryRows = RetailClientSummaryRows.defaultSummaryRows();
 		RetailClientRewardNpcs clientRewardNpcs = RetailClientRewardNpcs.defaultRewardNpcs();
 		RetailClientHuntStages clientHuntStages = RetailClientHuntStages.defaultHuntStages();
 		RetailClientHandinPages clientHandinPages = RetailClientHandinPages.defaultHandinPages();

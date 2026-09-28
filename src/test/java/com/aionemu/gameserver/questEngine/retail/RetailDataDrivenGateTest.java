@@ -118,9 +118,7 @@ class RetailDataDrivenGateTest {
 		try (InputStream input = open("/aion/data/static_data/quest_retail/quest.xml")) {
 			retailTable = RetailQuestXmlTable.load(input);
 		}
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_summary_rows.tsv")) {
-			clientSummaryRows = RetailClientSummaryRows.load(input);
-		}
+		clientSummaryRows = RetailClientSummaryRows.defaultSummaryRows();
 		clientHandinPages = RetailClientHandinPages.defaultHandinPages();
 		clientTalkChainPages = RetailClientTalkChainPages.defaultTalkChainPages();
 		clientTalkCollectChainPages = RetailClientTalkCollectChainPages.defaultTalkCollectChainPages();
