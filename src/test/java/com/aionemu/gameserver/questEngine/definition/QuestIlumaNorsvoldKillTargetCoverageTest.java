@@ -42,11 +42,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 因此 {@code QuestEngine.onKill} 拿不到该任务的 onKill owner，击杀不会下发到任务、进度不更新。
  * Regression background: quest 15546 registered only the base templates that are never spawned, so the
  * spawned {@code T_} variants of the same family never reached the quest owner and the counters stayed 0.
- * <p>契约快照 {@code iluma-norsvold-kill-target-contract.tsv} 由客户端 {@code quest_monster.csv}
- * 的怪物名单经 npc_template 名称解析后生成，见 {@code .agents/summary/quest-15546-kill-progress/}。
+ * <p>契约来源为生产登记表 {@code quest_client_kill_targets.tsv}（P4c 单源化）：内容由客户端
+ * {@code quest_monster.csv} 的怪物名单经 npc_template 名称解析 + 生产刷怪可达性自检生成，
+ * 生成器见 {@code .agents/summary/quest-15546-kill-progress/}（已停写；改动必须落到生产表）。
+ * P4c 之前测试另读一份逐字节相同的测试夹具，磁盘上出现两份副本；现在测试直读生产表，
+ * 夹具已退役。
+ * <p>The contract source is the production registry {@code quest_client_kill_targets.tsv}
+ * (single-sourced in P4c): the former byte-identical test fixture is retired and this gate now
+ * asserts directly against the production table.
  */
 class QuestIlumaNorsvoldKillTargetCoverageTest {
-	private static final String CONTRACT_RESOURCE = "/quest/iluma-norsvold-kill-target-contract.tsv";
+	private static final String CONTRACT_RESOURCE =
+		"/aion/data/static_data/quest_retail/quest_client_kill_targets.tsv";
 	/** 快照规模：低于该值说明基线被误删或生成脚本漏了任务。 / Guard against silent baseline shrink. */
 	private static final int EXPECTED_CONTRACT_ROWS = 45;
 	/** 15546/25546：四族各 4 杀的目标集合与实际刷新变体。 */
