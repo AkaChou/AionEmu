@@ -1,10 +1,13 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.questEngine.retail.RetailClientAcceptEntryPage;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class Quest80787To80794RetailAlignmentTest {
 	private static final Map<Integer, Integer> QUEST_NPCS = Map.of(
@@ -18,17 +21,25 @@ class Quest80787To80794RetailAlignmentTest {
 		80794, 833674);
 
 	@Test
-	void opensGivingRotundAskWindowWhenUnacceptedQuestNpcIsTalkedTo() throws Exception {
+	void opensGivingRotundAcceptEntryPageWhenUnacceptedQuestNpcIsTalkedTo() throws Exception {
+		QuestDialogContract clientPages = QuestDialogContract.loadDefault();
 		for (Map.Entry<Integer, Integer> entry : QUEST_NPCS.entrySet()) {
 			QuestDefinition definition = load(entry.getKey());
 			QuestTransition startDialog = dialogRoute(definition, "unaccepted", entry.getValue(), 31);
-			// P0-2 DD 尾片：接取/交付切真端规范形（页 4 / 分档窗）。未接态 QUEST_SELECT 直发接取窗
-			// （页 4，真端原生相位 A）；客户端 select_none(4762) 入口页不再由服务端下发。
-			// The unaccepted QUEST_SELECT pops the ask window (page 4); the client select_none
-			// entry page is no longer server-driven.
+			// P0-2 DD 尾片 + 接取入口页客户端契约：未接态 QUEST_SELECT 必须发**客户端任务页里存在的页**。
+			// 本族任务页只有 select_none(4762)，真端接取窗页(4) 客户端加载不到（load fail）；
+			// 入口页由 RetailClientAcceptEntryPage 按客户端页契约选定。
+			// The unaccepted QUEST_SELECT must pop a page the quest's client task HTML declares. This
+			// family declares select_none(4762) only, so the native ask window page (4) cannot be
+			// loaded (load fail); RetailClientAcceptEntryPage picks the client-declared entry page.
+			int entryPage = RetailClientAcceptEntryPage.entryPage(entry.getKey(), clientPages);
+			assertEquals(QuestDialogPage.SELECT_NONE.id(), entryPage, "quest " + entry.getKey());
+			assertTrue(clientPages.hasButtonPage(entry.getKey(), entryPage),
+				() -> "quest " + entry.getKey() + " entry page " + entryPage
+					+ " is not declared by the client task page");
 			assertEquals("unaccepted", startDialog.targetNode());
-			assertEquals(java.util.List.of(new AfterCommitAction.ShowQuestDialog(
-				QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id())), startDialog.afterCommit());
+			assertEquals(java.util.List.of(new AfterCommitAction.ShowQuestDialog(entryPage)),
+				startDialog.afterCommit());
 		}
 	}
 

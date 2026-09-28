@@ -2268,3 +2268,25 @@ keywords: 派生投影、直接源消除、M3、同源索引、fromIds、内存�
 - **与 QE-094 的区别**：QE-094 删的是"没人读的生成物账"；本条删的是"有人读、但值可从既有源无损重算的投影视图"——判据不是 grep 零引用，而是源-投影等价复算。
 - **M1/M2 构建期生成**：源在仓外且必须保留投影表时，把源入仓（记录 sha256 不钉）+ 用 Java/Maven 生成（antrun 绑 `generate-resources`）+ 双 profile 互斥 + 部署 fail-closed 同步；收口判据是旧表与生成物的**逐字节对拍**，不是「生成成功」——生成器语义漂移一个字节都必须在提交前暴露。
 - **M4 单源化**：同一内容存在逐字节相同的两份副本时，保留生产表为唯一源（测试直读、副本删除、pin 转单源、写入通道关闭），不触碰生产行为与冻结计数。
+
+## [QE-100] 一〇〇、接取入口页客户端契约：未接态首屏只下发任务页 HTML 声明的页 (ACCEPT_ENTRY_PAGE_CLIENT_CONTRACT)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 真端表驱动（overlay owner=RETAIL_TABLE）任务的"未接态第一屏"页选择，含重复任务的再开局别名；不适用于 XML 保留行，也不适用于客户端本地驱动的物件对话窗（见 QE-093）
+first_seen: 2026-09-28
+last_verified: 2026-09-28
+symptom: ①玩家从 NPC 任务列表选中该任务即 `对话 html load fail`（NPC 可见、任务行可选中，对话框本身加载失败）；②整族同形（80787–80794 共 16 点）；③只修报障那一条，同族其它行照旧 load fail
+root_cause: 真端任务表没有"对话页"列，合成器给的是真端原生相位 A——未接态 QUEST_SELECT(31)/UseItem 直发接取窗页 4(ask_quest_accept)；但 5.8 客户端按该任务自己的任务页 HTML 解析这一屏：只有声明 ask_quest_accept 的任务能开页 4，其余任务页往往只有 select_none(4762)/select1(1011) ⇒ 客户端加载不到页 4
+fix_or_guardrail: 1. **页规则**（153 条迁移前 XML 见证对拍 agree 153 / disagree 0）：入口页 = 客户端声明 4 → 4；否则 4762(select_none)；否则 1011(select1)；都没有保持合成器页（无据可改，进冻结缺口表）；2. **改在 driver overlay 层**（`RetailClientAcceptEntryPage.repair` + `RetailQuestDriver.compile`）：只碰接取入口边（NONE 投影，或重复任务再开局别名 COMPLETE+StartEligible；事件 31/UseItem；afterCommit 含 ShowQuestDialog(4)），条件/动作/目标/顺序逐项保留；3. **族编译器与族指纹不动**（夹具指纹仍对合成器输出；生产 = 合成器 + 该 overlay 层）；4. **门禁双层**：规则逐 id + 全 owner 面"下发的页必须在客户端任务页里"，缺口 = 客户端页索引完全缺登记的行（本次 583 行）逐行冻结；夹具/生产对照门（`RetailSimpleCollectItemGateTest`）必须在夹具侧套同一层，否则报分叉（真分叉＝族门假绿，P0c-5b 判例）；5. **契约换代清缓存**：热重载 `QuestDialogContract.invalidateDefault()` 换实例后必须丢弃逐任务定义缓存，否则页停在旧契约
+evidence: src/main/java/com/aionemu/gameserver/questEngine/retail/RetailClientAcceptEntryPage.java; src/main/java/com/aionemu/gameserver/questEngine/retail/RetailQuestDriver.java（compile 分派 + refreshAcceptEntryContract）; src/main/java/com/aionemu/gameserver/questEngine/retail/RetailSimpleHuntDefinitionCompiler.java（canonicalAcceptFlow / canonicalItemAcceptFlow 的页 4 来源）; src/test/java/com/aionemu/gameserver/questEngine/retail/RetailClientAcceptEntryPageTest.java; src/test/resources/quest/retail-accept-entry-page-gaps.tsv; src/main/resources/aion/definitions/quest_dialog/client_dialog_contract.tsv; /Users/mc/PycharmProjects/unpak/data_unpacked/Dialogs/80000-84999/quest_q<id>.html（仓外客户端解包；80787 的 select_none 页声明 HACTION_QUEST_ACCEPT_SIMPLE=20000 / HACTION_QUEST_REFUSE_SIMPLE=20001）; .agents/summary/quest-80787-event-npc-missing/2026-09-28-accept-entry-page-client-contract.zh-CN.md; .agents/summary/quest-80787-event-npc-missing/crosscheck-accept-entry.txt
+validation: 2026-09-28 隔离副本 T3 全树 2020 例红集 = 并行会话已登记基线 129 条、差集 0（夹具对照门同片修好后归零）；聚焦：RetailClientAcceptEntryPageTest 2/2、Quest80787To80794RetailAlignmentTest 2/2、RetailQuestContractTest（黑盒 e2e，含页变 4762 的 1919/15042/15546）1/1、QuestClientContractGateTest 1/1、RetailQuestDriverOverlayTest 5/5、RetailSimpleCollectItemGateTest 6/6；修复面 1872 行（缺页 4 且有 4762/1011），冻结缺口 583 行；迁移前 XML 对拍 153/0；客户端侧验收（真端 + 客户端点接取）仍待做
+boundaries: 不适用于 XML 保留行（其页来自 XML，overlay 不改）；不适用于客户端本地驱动的物件对话窗（走 QE-093）；缺口行本次不发明页——要补客户端页索引/解包证据或走 QE-095 形状裁定；规则优先级只在现有 153 条见证上验证过，出现新见证与规则冲突必须重跑对拍再改规则
+superseded_by: none
+see_also: [QE-093], [QE-095], [QE-099]
+first_check: 动"未接态第一屏"前先答：①该任务页 HTML 声明了哪些页与按钮（真客户端解包证据在吗）？②合成器现在发哪个页、为什么？③这行是 fresh accept 还是重复再开局别名？④改页要不要同步族指纹/夹具-生产对照门？⑤契约换代要不要清逐任务缓存？⑥无页声明的行是登记缺口还是补证据？
+keywords: 接取入口页、load fail、对话 html、ask_quest_accept、select_none、4762、select1、1011、SHOW_ASK_QUEST_ACCEPT_WINDOW、页 4、client_dialog_contract.tsv、driver overlay、RetailClientAcceptEntryPage、再开局别名、StartEligible、冻结缺口、红集恒等、80787
+-->
+
+- **判定规则**：未接态首屏页由**客户端任务页**说了算；真端表没有页列，服务端的"原生相位 A"必须落到客户端声明页上，否则整族 load fail。
+- **与 QE-093 的区别**：QE-093 是客户端本地驱动的物件对话窗（页梯本身是合同、必须保留）；本条是 NPC 任务列表接取（服务端下发首屏，页按客户端页索引选、按优先级回退）。

@@ -47,15 +47,15 @@ class Quest26800ClientDialogAlignmentTest {
 		assertNode(definition, "reward", QuestStatus.REWARD, 2);
 		assertNode(definition, "complete", QuestStatus.COMPLETE, 0);
 
-		// P0-2 DD 尾片：按真端规范形重锚。接取段 = 真端原生相位 A——QUEST_SELECT 自环直发接取询问窗
-		// （页 4），客户端原生控件 1002/20000 回传建档；旧形的 select_none 信页（页 4762）、
-		// SELECT_NONE_1 续页（动作 4763）与 ASK_QUEST_ACCEPT(1007) 中转一律无路由。
-		// P0-2 DD tail slice: re-anchored to the retail canonical shape. The accept segment is the
-		// native lifecycle phase A — QUEST_SELECT emits the ask window (page 4) and the native controls
-		// 1002/20000 commit; the select_none letter page, its continuation and the 1007 hop carry no
-		// route.
+		// 接取段 = 真端原生相位 A：QUEST_SELECT 自环下发**客户端任务页声明的入口页**（本任务页只有
+		// select_none(4762)，没有 ask_quest_accept(4) ⇒ 发 4762），客户端原生控件 1002/20000 回传建档；
+		// 旧形的 SELECT_NONE_1 续页（动作 4763）与 ASK_QUEST_ACCEPT(1007) 中转一律无路由。
+		// The accept segment is native lifecycle phase A: the QUEST_SELECT self-loop emits the page the
+		// client task HTML declares (this page declares select_none(4762) but no ask_quest_accept(4), so
+		// 4762 is emitted) and the native controls 1002/20000 commit; the SELECT_NONE_1 continuation and
+		// the ASK_QUEST_ACCEPT(1007) hop carry no route.
 		assertPage(definition, "unaccepted", START_NPC, QuestDialogAction.QUEST_SELECT,
-			QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW);
+			ClientAcceptEntryPageAssertions.expectedEntryPage(26800));
 		List<Integer> retiredAcceptActions = List.of(QuestDialogPage.SELECT_NONE_1.id(),
 			QuestDialogAction.ASK_QUEST_ACCEPT.id());
 		assertTrue(routes(definition, "unaccepted", START_NPC).stream()
@@ -200,10 +200,15 @@ class Quest26800ClientDialogAlignmentTest {
 
 	private static void assertPage(QuestDefinition definition, String source, int npcId,
 			QuestDialogAction action, QuestDialogPage page) {
+		assertPage(definition, source, npcId, action, page.id());
+	}
+
+	private static void assertPage(QuestDefinition definition, String source, int npcId,
+			QuestDialogAction action, int pageId) {
 		QuestTransition transition = talk(definition, source, source, npcId, action);
 		assertEquals(List.of(), transition.conditions());
 		assertEquals(List.of(), transition.actions());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(page.id())), transition.afterCommit());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(pageId)), transition.afterCommit());
 	}
 
 	private static QuestTransition talk(QuestDefinition definition, String source, String target, int npcId,

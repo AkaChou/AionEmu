@@ -36,8 +36,11 @@ class Quest25512ClientDialogAlignmentTest {
 		List<QuestTransition> transitions = compiled.definition().transitions();
 		int required = requiredKills(compiled);
 
+		// 未接态 QUEST_SELECT 下发的页 = 客户端任务页声明的页（否则客户端 load fail）。
+		// The unaccepted QUEST_SELECT page is the client task page's declared entry page (page 4 only
+		// where the client declares ask_quest_accept).
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
-			QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id())),
+			ClientAcceptEntryPageAssertions.expectedEntryPage(compiled.id()))),
 			talk(transitions, "unaccepted", DIALOG_NPC, QuestDialogAction.QUEST_SELECT.id()).afterCommit());
 		assertEquals("a0",
 			talk(transitions, "unaccepted", DIALOG_NPC, QuestDialogAction.QUEST_ACCEPT_SIMPLE.id()).targetNode());

@@ -4,6 +4,7 @@ import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogEntry;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -160,6 +161,8 @@ public final class RetailQuestDriver {
 	private final RetailClientHuntProgressRows clientHuntProgressRows;
 	private final RetailEnterAreaZoneResolution enterAreaZoneResolution;
 	private final Map<Integer, Optional<CompiledQuestDefinition>> cache = new ConcurrentHashMap<>();
+	/** 入口页契约快照（见 {@link #refreshAcceptEntryContract()}）。 / Accept entry page contract snapshot. */
+	private volatile QuestDialogContract acceptEntryContract;
 	private final Map<Integer, String> rejections = new ConcurrentHashMap<>();
 
 	private RetailQuestDriver(Set<Integer> retailOwnedSimpleHunt, Set<Integer> retailOwnedSimpleSerialHunt,
@@ -572,7 +575,28 @@ public final class RetailQuestDriver {
 		if (!retailOwned.contains(questId)) {
 			return Optional.empty();
 		}
+		refreshAcceptEntryContract();
 		return cache.computeIfAbsent(questId, this::compile);
+	}
+
+	/**
+	 * 接取入口页的客户端契约快照。任务热重载会 {@code QuestDialogContract.invalidateDefault()} 换掉契约
+	 * 实例，此时丢弃逐任务定义缓存，让入口页按新契约重算；契约未变时只是一次 volatile 比较。
+	 * Contract snapshot for the accept entry page. A quest hot reload swaps the contract instance
+	 * ({@code QuestDialogContract.invalidateDefault()}), so the per-quest cache is dropped and the entry
+	 * pages follow the new contract; an unchanged contract costs one volatile comparison.
+	 */
+	private void refreshAcceptEntryContract() {
+		QuestDialogContract contract = QuestDialogContract.loadDefault();
+		if (acceptEntryContract == contract) {
+			return;
+		}
+		synchronized (this) {
+			if (acceptEntryContract != contract) {
+				cache.clear();
+				acceptEntryContract = contract;
+			}
+		}
 	}
 
 	/** 拒绝码（未拒绝任务无映射）。 / The rejection code for a retail-owned quest, if any. */
@@ -584,7 +608,18 @@ public final class RetailQuestDriver {
 		return retailOwned.size();
 	}
 
+	/**
+	 * 合成一行并做接取入口页的客户端契约修复（真端表无对话页列，见
+	 * {@link RetailClientAcceptEntryPage}）。
+	 * Compiles one row and applies the client accept-entry-page contract repair (the retail tables
+	 * carry no dialog-page column; see {@link RetailClientAcceptEntryPage}).
+	 */
 	private Optional<CompiledQuestDefinition> compile(int questId) {
+		return compileByFamily(questId).map(definition ->
+			RetailClientAcceptEntryPage.repair(definition, QuestDialogContract.loadDefault()));
+	}
+
+	private Optional<CompiledQuestDefinition> compileByFamily(int questId) {
 		if (retailOwnedSimpleTalk.contains(questId)) {
 			return compileSimpleTalk(questId);
 		}

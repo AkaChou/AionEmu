@@ -64,15 +64,17 @@ class GrowthQuestDialogPageAlignmentTest {
 		for (int questId : ABBEY_KILL_QUESTS) {
 			int npcId = questId < 20000 ? 806698 : 806700;
 			assertDialogPage(compile(questId), "unaccepted", npcId, 31,
-				QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id());
+				ClientAcceptEntryPageAssertions.expectedEntryPage(questId));
 		}
 		for (ItemQuest quest : ABBEY_ITEM_QUESTS) {
 			assertDialogPage(compile(quest.id()), "unaccepted", quest.npcId(), 31, 4762);
 		}
 		for (WelcomeQuest quest : ABBEY_WELCOME_QUESTS) {
-			// P0-2 DD 尾片：接取/交付切真端规范形（页 4 / 分档窗）。
+			// 接取入口页 = 客户端任务页声明的页（真端接取窗 4 只在客户端声明 ask_quest_accept 时可用）。
+			// The accept entry page is the client task page's declared page (page 4 only where the
+			// client declares ask_quest_accept).
 			assertDialogPage(compile(quest.id()), "unaccepted", quest.instructorNpcId(), 31,
-				QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id());
+				ClientAcceptEntryPageAssertions.expectedEntryPage(quest.id()));
 		}
 	}
 

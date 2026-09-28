@@ -45,11 +45,14 @@ class Quest19637ClientDialogAlignmentTest {
 		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", KILLS_REQUIRED));
 		assertNode(definition, "complete", QuestStatus.COMPLETE, Map.of("var0", 0));
 
-		// 接取对话：从 unaccepted 状态收到 QUEST_SELECT(31)，直发接取窗（页 4；P0-2 规范形，
-		// 客户端 select_none 入口页不再由服务端下发）
+		// 接取对话：未接态 QUEST_SELECT(31) 下发的页必须是客户端任务页声明的页（真端接取窗 4 只在
+		// 客户端声明 ask_quest_accept 时可用，否则发信页 select_none/select1，不然客户端 load fail）。
+		// The unaccepted QUEST_SELECT(31) page must be one the client task HTML declares: the native ask
+		// window 4 needs ask_quest_accept, otherwise the letter page (select_none/select1) is emitted or
+		// the client reports load fail.
 		QuestTransition startDialog = talk(definition, "unaccepted", "unaccepted", QuestDialogAction.QUEST_SELECT.id());
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
-			QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id())), startDialog.afterCommit());
+			ClientAcceptEntryPageAssertions.expectedEntryPage(definition.id()))), startDialog.afterCommit());
 
 		// 接受任务：QUEST_ACCEPT_SIMPLE(20000)，直落网格起点 a0
 		QuestTransition acceptSimple = talk(definition, "unaccepted", "a0", QuestDialogAction.QUEST_ACCEPT_SIMPLE.id());

@@ -7,6 +7,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestCondition;
 import com.aionemu.gameserver.questEngine.definition.QuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestItemRequirement;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
@@ -238,6 +239,14 @@ class RetailSimpleCollectItemGateTest {
 	 * 夹具与生产驱动必须产出同一个定义：本类夹具走合成器公共入口，生产走 {@code RetailQuestDriver} 的 overlay
 	 * （{@code ProductionQuestDefinitions}）。两者一旦分叉，夹具就会给生产发"假绿"——P0c-5b 就是这样：
 	 * 14120 缺真端 {@code talk_npc1} 步骤让服务端启动失败，而族门禁全绿（夹具走的是不带该步骤的重载）。
+	 * <p>
+	 * 对照前夹具侧同样套用生产 overlay 的接取入口页修复（{@link RetailClientAcceptEntryPage}）：真端表没有
+	 * 对话页列，入口页按客户端任务页 HTML 判定，属生产组合层而非合成器；页契约本身由
+	 * {@code RetailClientAcceptEntryPageTest} 全 owner 面守。夹具合成器输出与生产 overlay 的其余各轴仍须逐字节一致。
+	 * The fixture applies the same accept-entry-page overlay as the production driver before comparing: the
+	 * retail tables carry no dialog-page column, so the entry page is resolved against the client task HTML
+	 * at the composition layer (its own contract gate is {@code RetailClientAcceptEntryPageTest}); every
+	 * other axis of the fixture synthesizer output must still match production byte for byte.
 	 * The fixture and the production driver must build the identical definition; a fork between the two
 	 * turns the whole family gate into a false green.
 	 */
@@ -258,7 +267,8 @@ class RetailSimpleCollectItemGateTest {
 				continue;
 			}
 			compared++;
-			String fixture = RetailIrFingerprint.fingerprint(row.outcome().definition().definition());
+			String fixture = RetailIrFingerprint.fingerprint(RetailClientAcceptEntryPage.repair(
+				row.outcome().definition(), QuestDialogContract.loadDefault()).definition());
 			String production = RetailIrFingerprint.fingerprint(
 				ProductionQuestDefinitions.definition(questId).definition());
 			if (!fixture.equals(production)) {

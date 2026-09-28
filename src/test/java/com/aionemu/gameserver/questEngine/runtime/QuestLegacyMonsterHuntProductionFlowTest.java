@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
+import com.aionemu.gameserver.questEngine.definition.ClientAcceptEntryPageAssertions;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestCondition;
@@ -320,14 +321,15 @@ class QuestLegacyMonsterHuntProductionFlowTest {
 			QuestNode full = gridNode(definition, 10);
 			QuestNode reward = nodeByProjection(definition, QuestStatus.REWARD, Map.of("var0", 10));
 
-			// 接取页：未接态的 QUEST_SELECT 直发接取窗（页 4；P0-2 规范形，客户端入口页不再由服务端下发）。
-			// Accept page: the unaccepted QUEST_SELECT emits the ask window (page 4; canonical since
-			// P0-2, the client entry page is no longer server-driven).
+			// 接取页：未接态 QUEST_SELECT 下发的页必须是客户端任务页声明的页（这四行只有信页
+			// select_none(4762)，真端接取窗页 4 客户端加载不到 ⇒ 下发 4762，否则 load fail）。
+			// Accept page: the unaccepted QUEST_SELECT must emit a page the client task HTML declares
+			// (these four rows declare select_none(4762) only, so page 4 cannot load — emit 4762).
 			QuestTransition entryPage = transition(definition, "unaccepted", "unaccepted",
 				new QuestEvent.TalkToNpc(acceptNpc, QuestDialogAction.QUEST_SELECT.id()));
 			assertEquals(List.of(), entryPage.conditions());
 			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
-				QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id())), entryPage.afterCommit());
+				ClientAcceptEntryPageAssertions.expectedEntryPage(questId))), entryPage.afterCommit());
 
 			// 接取边：ACCEPT_SIMPLE(20000) 直落网格零段（"接取人 = 交付人"的真端形）。
 			// Accept edge: ACCEPT_SIMPLE lands on the zero segment (accept npc == hand-in npc).

@@ -33,10 +33,14 @@ class Quest28950ClientDialogAlignmentTest {
 
 		QuestTransition offer = route(definition, "unaccepted", START_NPC,
 			QuestDialogAction.QUEST_SELECT);
-		// P0-2 DD 尾片：接取/交付切真端规范形（页 4 / 分档窗）。
-		// P0-2 DD tail slice: accept/delivery switch to the retail canonical shape (page 4 / tiered window).
+		// 接取入口页 = 客户端任务页声明的页：真端接取窗 4 只在客户端声明 ask_quest_accept 时可用，
+		// 否则必须下发该任务页声明的信页（select_none 4762 / select1 1011），不然客户端 load fail。
+		// The accept entry page is the page the client task HTML declares: the native ask window 4 only
+		// works when the client declares ask_quest_accept, otherwise the declared letter page
+		// (select_none 4762 / select1 1011) must be emitted or the client reports load fail.
 		assertContract(offer, "unaccepted", List.of(), List.of(
-			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id())));
+			new AfterCommitAction.ShowQuestDialog(
+				ClientAcceptEntryPageAssertions.expectedEntryPage(definition.id()))));
 
 		QuestTransition accept = route(definition, "unaccepted", START_NPC,
 			QuestDialogAction.QUEST_ACCEPT_SIMPLE);
