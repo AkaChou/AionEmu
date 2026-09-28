@@ -1032,3 +1032,36 @@ T3 在仓库外全树副本（`/private/tmp/aion-t3-w5g2`）跑、跑完即 `rm 
 （`/private/tmp/aion-t3-w6a`）跑、跑完即 `rm -rf`；Maven 仅用于聚焦测试与 T1/T2/T3 门禁；树内与副本并行时
 树内只有一个 Maven；兄弟车道文件只读；**取证子代理只读、不跑 Maven**，结论由主执行体复核（一条"过期基数"
 结论被复核否决并更正）。
+
+## W6 尾 + W7 终局已收口（2026-09-28，缺口批后收尾阶段）
+
+> 宪章：`2026-09-28-w6tail-w7-stage-charter.zh-CN.md`（提交 `82e7e3419`）。此前「下一面」一节
+> 的剩余项就此全部关闭：D 类加窗已裁定维持现状（缺口批 5 台账）、W5 `dialog_exits` 缩表已收口
+> （批 0 R1）、W6 尾两项见下；Phase 2 规范形全家族已由并行车道收口（见上各节）。
+
+- **批 N1（EarlyElyos 3 在册红重锚）**：`ed45c2b35` + 台账 `7a83739b1`
+  （`2026-09-28-n1-earlyelyos-reanchor.zh-CN.md`）。三红 = 锁迁移前旧 XML 形的
+  `EarlyElyosQuestRegressionTest` 断言（1131 节点名 s1 / 1561 SimpleUseItem 规范形 /
+  1691 s1·s2·s3 阶梯），探针 dump 留档 `w6tail-earlyelyos/`。聚焦 17/17 绿；
+  **T2/T3 基线有意重冻**：T2 51→48（`fb70bc91…`）、T3 97→94（`5e3acdb9…`），
+  diff 恰各 3 条 EarlyElyos 移除；T1 基线不变（`3b92439d…`）。
+  新基线入册 `gates/T2-n1-baseline-reds.txt` / `gates/T3-n1-baseline-reds.txt`。
+- **批 N2（FailurePage 命名拆分，零形状）**：`bfe9a0aa7` + 台账 `c45b5d266`
+  （`2026-09-28-n2-failurepage-naming.zh-CN.md`）。删零调用死代码 `itemReport`
+  （`hasFailurePage` 载体）；R3 消歧 javadoc（SELECT6=2716 ≠ CHECK_USER_ITEM_FAIL=10001）
+  迁到活路径 `itemReportGate`；审查契约测试方法名带页号消歧。快筛 4 门 22/22 绿。
+- **批 N3（W7 终局）**：终点全量对拍对**新基线**（结果见下）；README 终审（本节 +
+  「下一面」节标记为已由本节关闭）；迁移总量终局复算：
+  **6224 = 4983 真端驱动（RETAIL_TABLE）+ 1241 保留 XML（catalog 与生产 XML 一一对应；
+  保留内部 = ADJUDICATED 571 + SCRIPTED 494 + NO_TABLE 176，精确闭合）；
+  SEMANTIC_GAP = 0；`EXPECTED_TSV_COUNT` = 22**。
+- **生成器停写移交（终版清单，scriptdll-quest-driver 车道 owner 消费）**：
+  ① `build_quest_client_report_pages.py` 仍会写回已退役 report_pages 路径（W5-g1 起）；
+  ② `build_quest_client_dialog_exits.py` 不感知 R1 缩表（批 0 起）；
+  ③ `build_retention_list.py` 已滞后于全部手工裁定（重跑会回退 ADJUDICATED 行，
+  是否补语义由 owner 裁定）。三者本车道均只登记不改。
+- **用户侧并行项**：24 行实机复验（`client-recheck-list.zh-CN.md`）；push 授权
+  （缺口批 11 提交 + 本阶段提交均未 push）。
+- 门禁证物：`gates/n1-earlyelyos-focus/fix.log`、`gates/T1-073737.log`、`gates/T2-072910.log`、
+  `gates/n1-t3-1/2/3.log`、`gates/n2-quick.log`、`gates/T1-075148.log`、`gates/T2-080039.log`、
+  `gates/n3-t3-1/2/3.log`。
