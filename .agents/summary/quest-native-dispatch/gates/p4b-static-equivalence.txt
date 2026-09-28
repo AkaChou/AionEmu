@@ -1,0 +1,6 @@
+snapshot=.agents/summary/quest-native-dispatch/retired-tsv/quest_use_item_npcs.tsv.retired-20260928 ids=804 sha256=2f7b4d226b0c0297a4a2b673c1a746148a4abf3cd43570b0db96651863973dcf
+projection_ids=804
+missing_in_projection=0 []
+extra_in_projection=0 []
+canonical_ids_sha256=62c0095f9bdb5b50f3aa00cffa32b8b0b66be68c802acf856e3212299c13f160
+VERDICT=EQUIVALENT

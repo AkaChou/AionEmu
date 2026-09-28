@@ -1123,3 +1123,22 @@ T3 在仓库外全树副本（`/private/tmp/aion-t3-w5g2`）跑、跑完即 `rm 
   T3 `5e3acdb9…` 红集 sha256 恒等；manifest 与 `EXPECTED_TSV_COUNT` = 21 不变。
 - 每个删候选带客户端证据（`quest-dialog-pages.csv` active/exact + 源 sha256 前 8）。
 - 执行台账：`2026-09-28-p2b-dialog-exits-shrink-ledger.zh-CN.md`。
+
+### P4 投影层退场（2026-09-28：P4a 立项 + P4b 已执行）
+
+- 立项书：`2026-09-28-p4-projection-layer-architecture-charter.zh-CN.md`。
+- 对象：8 张 `retail-table` / `server-registry` 投影表；客户端合同、name-index、contract、
+  heal、retention 不在范围。
+- 关键发现：4 张 monster 系表的生成器依赖仓库外 `quest_monster.csv`（8499 行 / 2.1MB，
+  sha256 `aaa8da03…`），仓内 `client-monster-progress-contracts.csv` 只有 853 条简单契约，
+  覆盖不了当前 965 quest 的全量；因此“先冻结源再构建期化”，不是直接删表。
+- 首个低风险试点 = `quest_use_item_npcs.tsv`：直接用已加载的 NPC 模板 AI 查询替代 registry
+  （复用 `QuestInteractionObjectValidator` 的 `aiNameByTemplate` 同源通道；无需新增 Maven 插件）；
+  `quest_client_talk_chain_steps.tsv` 是编译器 IR，留到最后单独立项。
+- **P4b 已执行**：`quest_use_item_npcs.tsv` 整表退役（4 注释行 + 804 数据行）——
+  `RetailQuestUseItemNpcs` 改为 `fromIds` 内存视图，源=`RetailNpcNameIndex` 从同批 8 个
+  `npc_template_*.xml` 收集的 `ai="quest_use_item"` id 集；静态复算 804=804（missing/extra 0）；
+  DD（1218 数据行）/链（285 数据行）指纹逐字节恒等；聚焦门 28 例 1 红（在册 20035）、
+  T1 `3b92439da8…`、T3 基线口径 `5e3acdb9…` 红集恒等；manifest 21→20（`EXPECTED_TSV_COUNT`=20）；
+  快照 `retired-tsv/quest_use_item_npcs.tsv.retired-20260928`（sha256 `2f7b4d22…`）。
+- P4b 执行台账：`2026-09-28-p4b-use-item-npcs-retirement.zh-CN.md`；记忆库判例 QE-099。

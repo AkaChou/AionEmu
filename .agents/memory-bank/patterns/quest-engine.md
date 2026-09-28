@@ -2244,3 +2244,25 @@ keywords: ADJUDICATED、SEMANTIC_GAP、缺口清零、drift 对码、前缀中�
 
 - **判定规则**：缺口行清零只有两种正确动作——能采纳的走 flip 三件套（QE-095），不能采纳的走本条裁定翻转；两者都要求"同码义务继承"（ADJUDICATED 行的编译器缺口码必须仍被拒、族表缺口码必须仍合成）。
 - **一致性原则**：码权威在冻结 drift fixture；前缀中立化靠通用剥离而不是逐码特判；精确断言门与表同片改；收口判据永远是红集字节恒等，不是"门绿了"。
+
+## [QE-099] 九十七、派生投影表退役：读取者接同源索引 + 静态集合复算 + IR 指纹恒等 (PROJECTION_TSV_DIRECT_SOURCE)
+
+<!-- pattern-metadata
+status: CONFIRMED
+scope: 有活读取者、但值可从仓内既有源无损重算的派生投影登记表（判例：`quest_use_item_npcs` ← `npc_template_*.xml` 的 `ai="quest_use_item"`；M3 直接源路径，区别于 QE-094 的死分支/零消费者退役）
+first_seen: 2026-09-28
+last_verified: 2026-09-28
+symptom: ①把"有活读取者"当成"表必须保留"⇒ 构建/部署面长期多一份可重算快照，源漂移时静默不一致；②直接删表 ⇒ 读取者找不到资源（或落 `empty()` 静默丢路由）；③不对源 diff 就删 ⇒ 快照覆盖不全，少一个 id 就是一类交互物路由丢失
+root_cause: 这类表是**同源投影**而非独立合同：权威在既有源（模板 XML / 静态数据）里，表只是启动期视图；退役的正确动作不是"删数据"，而是把读取者接到同一次源读取构建出的索引上，使运行时视图与源在启动期强一致
+fix_or_guardrail: 1. **源可达性**：确认权威源在仓内、启动期已随既有加载器读入（判例：`RetailNpcNameIndex` 与驱动同批 8 个 `npc_template` 分片），禁止为退役引入构建期生成器或外部绝对路径；2. **读取者接同源索引**：`load(InputStream)` → `fromIds(Collection)` 内存视图，索引侧在解析同一批流时顺带收集投影集（`Set.copyOf` 冻结），不新增第二次 IO；3. **静态集合复算**：退役快照与源逐 id 复算，`missing=0 / extra=0` 才允许删表，脚本落盘可重放；4. **指纹恒等**：DD/链等 IR 指纹与门禁红集 sha256 前后逐字节相同，读表口径的消费者门同片跑绿；5. **同轴三件套**：删表 + 删 manifest 行 + `EXPECTED_TSV_COUNT` −1，快照先落 `retired-tsv/<name>.retired-<yyyymmdd>` 并记 sha256；6. **生成器停写登记**（属分析/兄弟车道时只登记不改）
+evidence: .agents/summary/quest-native-dispatch/2026-09-28-p4b-use-item-npcs-retirement.zh-CN.md（执行台账）; .agents/summary/quest-native-dispatch/2026-09-28-p4-projection-layer-architecture-charter.zh-CN.md（P4a 评估 + §10 回执）; .agents/summary/quest-native-dispatch/retired-tsv/（快照 quest_use_item_npcs.tsv.retired-20260928，sha256 `2f7b4d22…`）; .agents/summary/quest-native-dispatch/tools/verify_use_item_npcs_projection.py（静态复算）; .agents/summary/quest-native-dispatch/tools/extract_surefire_reds_from_reports.py（逐 testcase 红集口径）; src/main/java/com/aionemu/gameserver/questEngine/retail/RetailNpcNameIndex.java + RetailQuestUseItemNpcs.java + RetailQuestDriver.java; src/test/java/com/aionemu/gameserver/questEngine/retail/RetailTsvManifestGateTest.java（21→20）
+validation: 2026-09-28 P4b：`quest_use_item_npcs.tsv`（4 注释行 + 804 数据行）整表退役——`RetailNpcNameIndex` 与驱动同批 8 个 `npc_template_*.xml` 分片收集 `ai="quest_use_item"` 804 id，`RetailQuestUseItemNpcs` 由 `load(InputStream)` 改 `fromIds` 内存视图；静态复算 804=804（missing/extra 0，脚本可重放）；DD 1218 数据行 sha `016e4542…`、链 285 数据行 sha `49e34999…` 与 P2b 基线 `cmp` 逐字节相同；聚焦门 28 例 1 红（在册 20035）、T1 88 例 1 红红集 `3b92439da8…` 恒等、T3（1352+83+583 例）调用级红集 129 条 sha `720e2cb3…` / 基线口径 94 条 sha `5e3acdb9…` 恒等；清单门 3/3、`EXPECTED_TSV_COUNT` 21→20；无新增 Maven 插件/TSV；生成器 `build_quest_use_item_npcs.py` 只读保留 + 停写登记
+boundaries: 只在"权威源在仓内且启动期已被读取"时适用；源在仓外（monster 系 `quest_monster.csv`）必须先冻结源再谈退役；编译器 IR（`talk_chain_steps`）不是投影，走 IR 设计立项；与 QE-094 的差别是读取点仍活——不能拿 grep 零引用当判据；与 QE-097 的差别是本条整表退场，缩表的判据是行×旗标可达性而不是源-投影等价
+superseded_by: none
+see_also: [QE-094], [QE-095], [QE-097]
+first_check: 退役一张派生投影表前先答：①权威源在仓内吗、启动期已随既有加载器读进来了吗？②读取者能否接到同一次源读取（而不是新增构建插件/二次 IO）？③静态复算能否做到 missing=0/extra=0 且脚本可重放？④哪些 IR 指纹与红集做前后判据？⑤manifest 行 + EXPECTED_TSV_COUNT 同片改了吗、retired-tsv 快照 sha256 落了吗？
+keywords: 派生投影、直接源消除、M3、同源索引、fromIds、内存视图、静态集合复算、IR 指纹恒等、EXPECTED_TSV_COUNT、quest_use_item_npcs、retired-tsv、生成器停写、fail-closed 复算
+-->
+
+- **判定规则**：读取点仍活 ⇒ 不能走 QE-094 的死分支/零消费者证明；要么接同源索引并满足集合复算 + 指纹恒等（本条），要么按 QE-097 缩表，要么整表保留。
+- **与 QE-094 的区别**：QE-094 删的是"没人读的生成物账"；本条删的是"有人读、但值可从既有源无损重算的投影视图"——判据不是 grep 零引用，而是源-投影等价复算。
