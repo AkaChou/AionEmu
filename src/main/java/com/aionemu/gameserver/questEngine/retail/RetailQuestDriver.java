@@ -80,9 +80,6 @@ public final class RetailQuestDriver {
 	/** 交付型例外登记（页面集合超出模板 → 拒绝、留 XML）。 / Hand-in exceptions. */
 	private static final String CLIENT_HANDIN_EXCEPTIONS =
 		"/aion/data/static_data/quest_retail/quest_client_handin_exceptions.tsv";
-	/** 交互物 NPC 登记（掉落箱路由判据）。 / Interaction-object npc registry. */
-	private static final String USE_ITEM_NPCS =
-		"/aion/data/static_data/quest_retail/quest_use_item_npcs.tsv";
 	/** 客户端链式信件登记（DataDriven Talk 链行）。 / Client chain-letter registry. */
 	private static final String CLIENT_TALK_CHAIN_PAGES =
 		"/aion/data/static_data/quest_retail/quest_client_talk_chain_pages.tsv";
@@ -484,10 +481,6 @@ public final class RetailQuestDriver {
 		try (InputStream input = open(CLIENT_HANDIN_EXCEPTIONS)) {
 			clientHandinPages = clientHandinPages.withExceptions(input);
 		}
-		RetailQuestUseItemNpcs interactionObjects;
-		try (InputStream input = open(USE_ITEM_NPCS)) {
-			interactionObjects = RetailQuestUseItemNpcs.load(input);
-		}
 		RetailClientTalkChainPages clientTalkChainPages;
 		try (InputStream input = open(CLIENT_TALK_CHAIN_PAGES)) {
 			clientTalkChainPages = RetailClientTalkChainPages.load(input);
@@ -522,6 +515,8 @@ public final class RetailQuestDriver {
 		try (InputStream groups = open(QUEST_AI_NAME_GROUPS)) {
 			npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_FILES), List.of(groups));
 		}
+		RetailQuestUseItemNpcs interactionObjects =
+			RetailQuestUseItemNpcs.fromIds(npcIndex.questUseItemNpcIds());
 		RetailItemNameIndex itemIndex = RetailItemNameIndex.build(
 			openAll(ITEM_DIR, listXmlNames(ITEM_DIR)));
 		return new RetailQuestDriver(retailOwnedHunt, retailOwnedSerialHunt, retailOwnedUseItem,

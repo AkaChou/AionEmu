@@ -36,6 +36,7 @@ public final class RetailNpcNameIndex {
 	private static final Pattern NAME_DESC = Pattern.compile("name_desc=\"([^\"]*)\"");
 	private static final Pattern NPC_ID = Pattern.compile("npc_id=\"(\\d+)\"");
 	private static final Pattern NAME_ID = Pattern.compile("name_id=\"([^\"]*)\"");
+	private static final Pattern AI = Pattern.compile("ai=\"([^\"]*)\"");
 
 	/** 同名族展开上限：家族成员数超过此值视为占位名，不展开。 / Family size cap; larger families are placeholder names. */
 	public static final int DISPLAY_NAME_FAMILY_LIMIT = 16;
@@ -54,13 +55,17 @@ public final class RetailNpcNameIndex {
 	 * Retail dialog-name groups: the declared member list and the resolved npc id set per name. */
 	private final Map<String, Set<String>> questAiNameGroupMembers;
 	private final Map<String, Set<Integer>> questAiNameGroups;
+	/** 同一批 npc_template 流里 {@code ai="quest_use_item"} 的 id 集。 / ids with quest_use_item AI from the same template streams. */
+	private final Set<Integer> questUseItemNpcIds;
 
 	private RetailNpcNameIndex(Map<String, Set<Integer>> byName, Map<Integer, Set<Integer>> byDisplayNameFamily,
-			Map<String, Set<String>> questAiNameGroupMembers, Map<String, Set<Integer>> questAiNameGroups) {
+			Map<String, Set<String>> questAiNameGroupMembers, Map<String, Set<Integer>> questAiNameGroups,
+			Set<Integer> questUseItemNpcIds) {
 		this.byName = Map.copyOf(byName);
 		this.byDisplayNameFamily = Map.copyOf(byDisplayNameFamily);
 		this.questAiNameGroupMembers = Map.copyOf(questAiNameGroupMembers);
 		this.questAiNameGroups = Map.copyOf(questAiNameGroups);
+		this.questUseItemNpcIds = Set.copyOf(questUseItemNpcIds);
 	}
 
 	/** 按名字解析 npc_id 集合（大小写不敏感）。 / Resolves npc ids by spawn name, case-insensitively. */
@@ -73,6 +78,11 @@ public final class RetailNpcNameIndex {
 			return Set.of(Integer.parseInt(key));
 		}
 		return byName.getOrDefault(key, Set.of());
+	}
+
+	/** 同一批 npc_template 流里的 {@code ai="quest_use_item"} NPC id 集。 / NPC ids with quest_use_item AI from the same template streams. */
+	public Set<Integer> questUseItemNpcIds() {
+		return questUseItemNpcIds;
 	}
 
 	/**
@@ -219,6 +229,7 @@ public final class RetailNpcNameIndex {
 		Map<String, Set<Integer>> byName = new LinkedHashMap<>();
 		Map<String, Set<Integer>> byNameId = new LinkedHashMap<>();
 		Map<Integer, String> nameIdByNpc = new LinkedHashMap<>();
+		Set<Integer> questUseItemNpcIds = new LinkedHashSet<>();
 		for (InputStream input : templates) {
 			String text = new String(input.readAllBytes(), StandardCharsets.UTF_8);
 			Matcher template = TEMPLATE.matcher(text);
@@ -230,6 +241,10 @@ public final class RetailNpcNameIndex {
 					continue;
 				}
 				int id = Integer.parseInt(npcId.group(1));
+				Matcher ai = AI.matcher(tag);
+				if (ai.find() && "quest_use_item".equals(ai.group(1))) {
+					questUseItemNpcIds.add(id);
+				}
 				byName.computeIfAbsent(name.group(1).toLowerCase(Locale.ROOT), key -> new LinkedHashSet<>()).add(id);
 				Matcher nameId = NAME_ID.matcher(tag);
 				if (!nameId.find() || nameId.group(1).isBlank()) {
@@ -280,7 +295,7 @@ public final class RetailNpcNameIndex {
 				groups.put(key, Collections.unmodifiableSet(new LinkedHashSet<>(ids)));
 			}
 		}
-		return new RetailNpcNameIndex(byName, families, groupMembers, groups);
+		return new RetailNpcNameIndex(byName, families, groupMembers, groups, questUseItemNpcIds);
 	}
 
 	/**

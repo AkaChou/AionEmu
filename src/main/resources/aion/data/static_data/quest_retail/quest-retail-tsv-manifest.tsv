@@ -39,7 +39,6 @@ quest_client_use_item_report.tsv	client-registry	ACTIVE	SimpleUseItem 报告模�
 quest_enterarea_zone_resolution.tsv	retail-table	ACTIVE	DD enterarea 别名 → 服务端登记区名（真端 world questscript_area）；消费者 RetailEnterAreaZoneResolution
 quest_legacy_heal_rows.tsv	heal	ACTIVE	旧存档自愈边（真端编译消费的单步 build 通道，P0c-28）；消费者 RetailLegacySaveHealRows
 quest_name_string_ids.tsv	name-index	ACTIVE	displayNameId 索引（STR_QUEST_NAME_Q* 优先 / quest_data.xml nameId 回退）；消费者 RetailQuestMetadataCompiler
-quest_use_item_npcs.tsv	server-registry	ACTIVE	交互物 NPC 模板 id（npc_template 的 ai=quest_use_item）；消费者 RetailQuestUseItemNpcs
 retail-quest-ai-name-groups.tsv	name-index	ACTIVE	真端对话名组表（组名 → 成员 name_desc）；消费者 RetailQuestDriver，全表由 RetailQuestAiNameGroupGateTest 覆盖
 retail-xml-retention.tsv	retention	ACTIVE	6224 全量 owner/保留清单（quest_id, owner, family, reason, evidence）；消费者 RetailQuestDriver + RetailOwnershipGateTest
 client_dialog_contract.tsv	contract	ACTIVE	客户端对话页契约（client-dialog-mapping CSV 派生，源哈希由 QuestMovieContinuationGateTest 校验）；消费者 QuestDialogContract

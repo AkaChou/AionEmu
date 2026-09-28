@@ -128,9 +128,6 @@ class RetailDataDrivenGateTest {
 		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_handin_exceptions.tsv")) {
 			clientHandinPages = clientHandinPages.withExceptions(input);
 		}
-		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_use_item_npcs.tsv")) {
-			interactionObjects = RetailQuestUseItemNpcs.load(input);
-		}
 		try (InputStream input = open("/aion/data/static_data/quest_retail/quest_client_talk_chain_pages.tsv")) {
 			clientTalkChainPages = RetailClientTalkChainPages.load(input);
 		}
@@ -166,6 +163,7 @@ class RetailDataDrivenGateTest {
 			clientReportModes = RetailClientUseItemReport.load(input);
 		}
 		npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR(), NPC_TEMPLATES()), RetailQuestAiNameGroupsFixture.streams());
+		interactionObjects = RetailQuestUseItemNpcs.fromIds(npcIndex.questUseItemNpcIds());
 		itemIndex = RetailItemNameIndex.build(openAll(ITEM_DIR(), listXmlNames(ITEM_DIR())));
 		randomRewards = randomRewardIds();
 		nameIds = nameIds();
