@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -39,18 +41,28 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 下发的页必须落在任务页 HTML 实际声明的页里；发客户端没有的页（例如只有 select_none 的行发真端
  * 接取窗页 4）会让客户端直接 {@code load fail}。80787 家族即此形（任务页只有 select_none(4762)）。
  * <p>
- * 两条断言：① 入口页选择规则逐 id 落页；② 生产视图（真端 overlay，含修复）里每个真端 owner 行
- * 下发的接取入口页都在客户端任务页里 —— 只有任务页连 4/4762/1011 都没有的行留在
- * {@code /quest/retail-accept-entry-page-gaps.tsv} 冻结缺口表里（无据可改；新增或消失都必须
- * 显式改表，重生成用 {@code -Dretail.acceptEntryPage.gapOut=...}）。
+ * 断言：① 入口页选择规则逐 id 落页；② 1144 的 select1→select1_1 续页必须由服务端路由；
+ * ③ 生产视图（真端 overlay，含修复）里每个真端 owner 行下发的接取入口页都在客户端任务页里 ——
+ * 只有任务页连 4/4762/1011 都没有的行留在 {@code /quest/retail-accept-entry-page-gaps.tsv}
+ * 冻结缺口表里（无据可改；新增或消失都必须显式改表，重生成用
+ * {@code -Dretail.acceptEntryPage.gapOut=...}）；④ select1 首屏的客户端声明续页梯不得缺路由。
  * <p>
  * Gate for the accept entry page (see {@link RetailClientAcceptEntryPage}): the page popped by an
  * accept entry edge must be one the quest's task HTML declares, otherwise the client reports
  * {@code load fail} (the 80787 family declares select_none(4762) only). Only rows whose task HTML
- * declares none of 4/4762/1011 stay in the frozen gap baseline.
+ * declares none of 4/4762/1011 stay in the frozen gap baseline; a select1 entry must also route its
+ * client-declared continuation ladder.
  */
 class RetailClientAcceptEntryPageTest {
 
+	/** 1144 的真端接取 NPC（Eradis）。 / The retail acquire NPC for quest 1144 (Eradis). */
+	private static final int QUEST_1144_ACQUIRE_NPC = 203130;
+	/**
+	 * select1→1012/1013 可对话入口边冻结下限：静态契约命中的 56 行里，非 NPC 31 接取入口
+	 * （系统/事件/自动发放等）不适用本梯。 / Frozen floor for dialog-entry select1 ladders; non-NPC-31
+	 * acquisitions from the 56 static contract rows do not use this ladder.
+	 */
+	private static final int SELECT1_LADDER_COVERAGE_FLOOR = 34;
 	/** 真端 owner 登记（owner=RETAIL_TABLE 的行由真端驱动，overlay 会替换 XML 与页）。 /
 	 * Retail ownership registry (RETAIL_TABLE rows are retail-driven, so the overlay owns their pages). */
 	private static final String RETENTION_REGISTRY =
@@ -80,6 +92,66 @@ class RetailClientAcceptEntryPageTest {
 			RetailClientAcceptEntryPage.entryPage(999999, contract));
 		assertTrue(contract.hasButtonPage(80787, QuestDialogPage.SELECT_NONE.id()),
 			"client page registry must declare select_none for 80787");
+	}
+
+	@Test
+	void select1EntryRegistersTheClientAcceptLadder() {
+		QuestDialogContract contract = QuestDialogContract.loadDefault();
+		CompiledQuestDefinition compiled = ProductionQuestDefinitions.definition(1144);
+		assertTrue(contract.hasButtonPage(1144, RetailClientAcceptEntryPage.SELECT1_PAGE),
+			"1144 must declare select1");
+		assertTrue(contract.hasButtonPage(1144, QuestDialogPage.SELECT1_1.id()),
+			"1144 must declare the select1 continuation");
+		assertTrue(continuationRoute(compiled.definition(), QUEST_1144_ACQUIRE_NPC, QuestDialogAction.SELECT1_1.id(),
+				QuestDialogPage.SELECT1_1.id(), "unaccepted").isPresent(),
+			"1144's 1011->1012 page turn must be server-routed");
+		assertEquals(contract.hasButtonPage(1144, QuestDialogPage.SELECT1_1_1.id()),
+			continuationRoute(compiled.definition(), QUEST_1144_ACQUIRE_NPC,
+				QuestDialogAction.SELECT1_1_1.id(), QuestDialogPage.SELECT1_1_1.id(),
+				"unaccepted").isPresent(),
+			"1144 must not invent a page beyond the client contract");
+	}
+
+	@Test
+	void everySelect1EntryFollowsTheClientAcceptLadder() throws Exception {
+		QuestDialogContract contract = QuestDialogContract.loadDefault();
+		List<String> missing = new ArrayList<>();
+		int checked = 0;
+		for (int questId : retailOwnedQuestIds()) {
+			QuestDefinition definition = ProductionQuestDefinitions.definition(questId).definition();
+			for (QuestTransition entry : acceptEntryEdges(definition)) {
+				if (shownPage(entry) != RetailClientAcceptEntryPage.SELECT1_PAGE
+						|| !(entry.event() instanceof QuestEvent.TalkToNpc talk)) {
+					continue;
+				}
+				for (int pageId : List.of(QuestDialogPage.SELECT1_1.id(), QuestDialogPage.SELECT1_1_1.id())) {
+					if (!contract.hasButtonPage(questId, pageId)) {
+						continue;
+					}
+					checked++;
+					if (continuationRoute(definition, talk.npcId(), pageId, pageId, entry.sourceNode())
+							.isEmpty()) {
+						missing.add(questId + "\t" + pageId);
+					}
+				}
+			}
+		}
+		int coverage = checked;
+		assertTrue(coverage >= SELECT1_LADDER_COVERAGE_FLOOR,
+			() -> "select1 continuation coverage too small: " + coverage);
+		assertTrue(missing.isEmpty(), () -> "select1 accept ladder missing routes: " + missing);
+	}
+
+	/** 同 NPC/动作/来源且确实下发客户端声明页的续页路由。 / A same-owner page-turn route showing the page. */
+	private static Optional<QuestTransition> continuationRoute(QuestDefinition definition, int npcId,
+			int actionId, int pageId, String sourceNode) {
+		return definition.transitions().stream()
+			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.npcId() == npcId
+				&& Objects.equals(talk.dialogId(), actionId)
+				&& Objects.equals(transition.sourceNode(), sourceNode)
+				&& transition.afterCommit().contains(new AfterCommitAction.ShowQuestDialog(pageId)))
+			.findFirst();
 	}
 
 	@Test

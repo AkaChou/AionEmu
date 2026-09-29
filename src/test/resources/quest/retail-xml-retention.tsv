@@ -2438,7 +2438,7 @@
 10111	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
 10112	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
 10113	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
-10500	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk-chain axis unimplemented for this shape
+10500	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 10501	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
 10502	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
 10503	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
@@ -2725,7 +2725,7 @@
 13955	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 13956	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 13960	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
-13961	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk-chain axis unimplemented for this shape
+13961	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 13962	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ENTERAREA_ZONE_UNRESOLVED	enter-area zone not resolvable server-side
 13963	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 13964	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -3325,7 +3325,7 @@
 18646	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18647	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18648	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-18649	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk-chain axis unimplemented for this shape
+18649	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 18737	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c54-noprogress-group-decisions.tsv basis=DD_NO_PROGRESS_GROUP_REWARD
 18738	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_VARIANTS
 18739	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	b1-acquire-sentinel/b1_forensics.tsv enter-area acquire: no quest_area binding (or collect-progress shape unsupported by the area grant edge)
@@ -3509,7 +3509,7 @@
 20111	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
 20112	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
 20113	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
-20500	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk-chain axis unimplemented for this shape
+20500	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 20501	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
 20502	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
 20503	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
@@ -3796,7 +3796,7 @@
 23955	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 23956	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 23960	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
-23961	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk-chain axis unimplemented for this shape
+23961	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 23962	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ENTERAREA_ZONE_UNRESOLVED	enter-area zone not resolvable server-side
 23963	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 23964	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -4392,7 +4392,7 @@
 28646	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28647	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28648	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-28649	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk-chain axis unimplemented for this shape
+28649	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 28737	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c54-noprogress-group-decisions.tsv basis=DD_NO_PROGRESS_GROUP_REWARD
 28738	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_VARIANTS
 28739	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_GRANT_UNSUPPORTED	b1-acquire-sentinel/b1_forensics.tsv enter-area acquire: no quest_area binding (or collect-progress shape unsupported by the area grant edge)
@@ -4869,9 +4869,9 @@
 35052	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
 35053	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 35054	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
-35055	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk-chain axis unimplemented for this shape
-35056	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk-chain axis unimplemented for this shape
-35057	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk-chain axis unimplemented for this shape
+35055	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
+35056	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
+35057	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 35058	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
 35059	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
 35060	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
@@ -5045,9 +5045,9 @@
 45052	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
 45053	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 45054	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
-45055	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk-chain axis unimplemented for this shape
-45056	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk-chain axis unimplemented for this shape
-45057	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk-chain axis unimplemented for this shape
+45055	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
+45056	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
+45057	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 45058	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
 45059	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
 45060	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
@@ -6215,7 +6215,7 @@
 80986	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80987	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80988	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
-80989	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk-chain axis unimplemented for this shape
+80989	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 80990	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 80991	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 80992	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID

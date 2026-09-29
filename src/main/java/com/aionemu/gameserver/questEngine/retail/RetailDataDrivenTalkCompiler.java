@@ -12,6 +12,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
+import com.aionemu.gameserver.questEngine.definition.QuestMovieType;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.definition.QuestNode;
 import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
@@ -21,6 +22,7 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * DataDriven 无进度行（P5-3 wave A）的合成器：Talk 接取 → 交付 NPC 报告 → 领奖。
@@ -149,11 +151,25 @@ public final class RetailDataDrivenTalkCompiler {
 	 * 页，按钮 SETPRO{i} 推进中间步（PACKET_ONLY + 全局任务簿页）、末步 SET_SUCCEED 进领奖态；
 	 * var0 = 阶梯计数（0 → 1 → … → 领奖行），领奖投影 = 客户端任务书末行（QE-051）。
 	 * 前置步 NPC 的 SET_SUCCEED 直达领奖（1876 捷径同构）；REWARD 态陈旧阶梯值进入世界时纠正。
-	 * Builds the talk-chain definition; step i pairs with the client's select{i} page.
+	 * 系统接取（chain / enterarea / enterworld / leveluplogin）无接取 NPC：发放边与 hunt 链同判据
+	 * （TalkCollectChain 同片先例），逐任务客户端 cutscene 声明挂到对应步推进边。
+	 * Builds the talk-chain definition; step i pairs with the client's select{i} page. System acquires
+	 * (chain / enterarea / enterworld / leveluplogin) carry no acquire npc: grant edges share the hunt
+	 * chain's predicate (the TalkCollectChain precedent), and per-step client cutscenes ride the
+	 * matching advance edge.
 	 */
 	public static QuestDefinition buildChain(int questId, int acquiredNpc, int rewardNpc, QuestMetadata metadata,
 			int entryPage, List<RetailClientTalkChainPages.Stage> stageLadders, List<Integer> stepNpcs,
-			int lastRowIndex) {
+			int lastRowIndex, String acquireCategory, String acquireParam, int worldAcquireId,
+			Map<Integer, Integer> stepCutscenes) {
+		Objects.requireNonNull(metadata, "metadata");
+		Objects.requireNonNull(stageLadders, "stageLadders");
+		Objects.requireNonNull(stepNpcs, "stepNpcs");
+		String category = acquireCategory == null ? "" : acquireCategory.trim();
+		boolean chainOrAreaAcquire = acquiredNpc < 0
+			&& ("none".equalsIgnoreCase(category) || "enterarea".equalsIgnoreCase(category));
+		boolean levelUpAcquire = acquiredNpc < 0 && "leveluplogin".equalsIgnoreCase(category);
+		boolean worldAcquire = acquiredNpc < 0 && "enterworld".equalsIgnoreCase(category);
 		int steps = stepNpcs.size();
 		ProgressLayout layout = new ProgressLayout.Builder()
 			.add(new BitField("var0", 0, RetailHuntCounterLayout.SECTION_BITS, 0,
@@ -170,14 +186,44 @@ public final class RetailDataDrivenTalkCompiler {
 		nodes.add(new QuestNode("reward", new NodeProjection(QuestStatus.REWARD, rewardRow)));
 		nodes.add(new QuestNode("complete", new NodeProjection(QuestStatus.COMPLETE, zero)));
 		List<QuestTransition> transitions = new ArrayList<>();
-		// 接取规范形（P0-2 DD 尾片）：QUEST_SELECT 直发接取窗（页 4），select_none 极简信页链不再驱动。
-		// Canonical accept (the DD tail slice): QUEST_SELECT pops the ask window (page 4) directly.
-		transitions.addAll(RetailSimpleHuntDefinitionCompiler.canonicalAcceptFlow(acquiredNpc, "started"));
+		if (acquiredNpc >= 0) {
+			// 接取规范形（P0-2 DD 尾片）：QUEST_SELECT 直发接取窗（页 4），select_none 极简信页链不再驱动。
+			// Canonical accept (the DD tail slice): QUEST_SELECT pops the ask window (page 4) directly.
+			transitions.addAll(RetailSimpleHuntDefinitionCompiler.canonicalAcceptFlow(acquiredNpc, "started"));
+		} else if (worldAcquire) {
+			// EnterWorld 接取（10010 形）：进世界事件 + WorldIs 直接进 START（与 hunt 链同判据）。
+			// EnterWorld acquire (the 10010 shape): the world-enter event plus WorldIs lands START
+			// (same predicate as the hunt chain).
+			transitions.add(new QuestTransition(new QuestEvent.EnterWorld(),
+				List.of(new QuestCondition.WorldIs(worldAcquireId, true)), List.of(), "started",
+				List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH)),
+				null, "unaccepted"));
+		} else {
+			// 链式 / 区域 / 升级登录接取：自动发放。chain + enterarea = LevelUp + ZoneMissionEnd；
+			// leveluplogin = LevelUp + EnterWorld（LogIn 半边）；StartEligible 承载等级/前置门。
+			// Chain / area / level-up-login acquires auto-grant. Chain + area = LevelUp +
+			// ZoneMissionEnd; leveluplogin = LevelUp + EnterWorld (the LogIn half); StartEligible
+			// carries the level and prerequisite gates.
+			List<QuestCondition> grantGate = new ArrayList<>(2);
+			grantGate.add(new QuestCondition.StartEligible());
+			if (!metadata.prerequisites().isEmpty()) {
+				grantGate.add(new QuestCondition.QuestsFinished(metadata.prerequisites()));
+			}
+			QuestEvent[] grantEvents = levelUpAcquire
+				? new QuestEvent[] {new QuestEvent.LevelUp(), new QuestEvent.EnterWorld()}
+				: new QuestEvent[] {new QuestEvent.LevelUp(), new QuestEvent.ZoneMissionEnd()};
+			for (QuestEvent grantEvent : grantEvents) {
+				transitions.add(new QuestTransition(grantEvent, List.copyOf(grantGate), List.of(), "started",
+					List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH)),
+					null, "unaccepted"));
+			}
+		}
 		for (int index = 0; index < steps; index++) {
 			int npc = stepNpcs.get(index);
 			String source = index == 0 ? "started" : "s" + index;
 			boolean finalStep = index == steps - 1;
 			String target = finalStep ? "reward" : "s" + (index + 1);
+			Integer movieId = stepCutscenes == null ? null : stepCutscenes.get(index);
 			// 阶段页面梯：QUEST_SELECT 显示梯首页，导航按钮沿梯下行（动作 id = 下一页 id）。
 			// The stage page ladder: QUEST_SELECT shows the head page; nav buttons walk down the
 			// ladder (a nav action's dialog id is the next page's id).
@@ -194,22 +240,47 @@ public final class RetailDataDrivenTalkCompiler {
 			if (finalStep) {
 				// 末步推进动作（SET_SUCCEED 或 1009 变体）进领奖态。
 				// The final advance action (SET_SUCCEED or the 1009 variant) moves to reward.
+				List<AfterCommitAction> afterCommit = new ArrayList<>(3);
+				afterCommit.add(new AfterCommitAction.SyncQuestState(
+					QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH));
+				if (movieId != null) {
+					afterCommit.add(new AfterCommitAction.PlayMovie(movieId, QuestMovieType.CUTSCENE));
+				}
+				afterCommit.add(new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id()));
 				transitions.add(new QuestTransition(
 					new QuestEvent.TalkToNpc(npc, stage.advanceActionId()),
 					List.of(), List.of(), "reward",
-					List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-						new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
+					List.copyOf(afterCommit),
 					null, source));
+				if (steps == 1 && stage.advanceActionId() != QuestDialogAction.SET_SUCCEED.id()) {
+					// 35055 单步捷径：步骤 NPC 的 SET_SUCCEED 落 s1（保留遗留别名边），与 SETPRO1
+					// 主边（进领奖）并存；推进动作本身已是 SET_SUCCEED 时不发重复边，也不声明不可达别名节点。
+					// The one-step shortcut: the step npc's SET_SUCCEED lands on s1 (the legacy
+					// alias edge), coexisting with the SETPRO1 primary edge into reward; when the
+					// advance action is already SET_SUCCEED, neither a duplicate edge nor an
+					// unreachable alias node is emitted.
+					nodes.add(new QuestNode("s1", new NodeProjection(QuestStatus.START, Map.of("var0", 1))));
+					transitions.add(new QuestTransition(
+						new QuestEvent.TalkToNpc(npc, QuestDialogAction.SET_SUCCEED.id()),
+						List.of(), List.of(new QuestAction.SetVariable("var0", 1)), "s1",
+						List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY)),
+						null, source));
+				}
 			} else {
 				// 中间步推进动作（登记表从按钮图导出）推进阶梯（只下发状态包 + 全局任务簿页）；
 				// 同时保留 SET_SUCCEED 直达领奖的捷径（1876 修复期形状：前置步 NPC 也能收尾）。
 				// An intermediate advance (from the button graph) moves the ladder; the SET_SUCCEED
 				// shortcut to the reward state stays available from earlier stage npcs (1876 shape).
+				List<AfterCommitAction> afterCommit = new ArrayList<>(3);
+				afterCommit.add(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY));
+				if (movieId != null) {
+					afterCommit.add(new AfterCommitAction.PlayMovie(movieId, QuestMovieType.CUTSCENE));
+				}
+				afterCommit.add(new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id()));
 				transitions.add(new QuestTransition(
 					new QuestEvent.TalkToNpc(npc, stage.advanceActionId()),
 					List.of(), List.of(new QuestAction.SetVariable("var0", index + 1)), target,
-					List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
-						new AfterCommitAction.ShowQuestSelectionDialog(QuestDialogPage.SELECT_QUEST.id())),
+					List.copyOf(afterCommit),
 					null, source));
 				transitions.add(new QuestTransition(
 					new QuestEvent.TalkToNpc(npc, QuestDialogAction.SET_SUCCEED.id()),

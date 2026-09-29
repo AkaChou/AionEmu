@@ -253,6 +253,24 @@ public final class RetailClientTalkChainPages {
 		Pages p20 = new Pages(4762, List.of(new Stage(10000, List.of(1352, 1353)), new Stage(10001, List.of(1693, 1694)), new Stage(10255, List.of(1779))));
 		m.put(15402, p20);
 		m.put(25402, p20);
+		// 标准单步链（SELECT_NONE(4762) 首页 + SELECT2(1352) 步骤页 + SETPRO1 推进；
+		// DEAL:QUEST_SELECT 交付窗）：13 个单步任务同形。
+		// The standard one-step chain (SELECT_NONE(4762) head + SELECT2(1352) step page +
+		// SETPRO1 advance; the QUEST_SELECT hand-in window): 13 single-step quests share this shape.
+		Pages p21 = new Pages(4762, List.of(new Stage(10000, List.of(1352))));
+		m.put(10500, p21);
+		m.put(20500, p21);
+		m.put(13961, p21);
+		m.put(23961, p21);
+		m.put(18649, p21);
+		m.put(28649, p21);
+		m.put(35055, p21);
+		m.put(35056, p21);
+		m.put(35057, p21);
+		m.put(45055, p21);
+		m.put(45056, p21);
+		m.put(45057, p21);
+		m.put(80989, p21);
 		return Map.copyOf(m);
 	}
 }

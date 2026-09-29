@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
@@ -27,7 +28,8 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
  * 其余任务页里往往是 {@code select_none}(4762) 或 {@code select1}(1011)——发一个客户端任务页里
  * 不存在的页，客户端会直接报 {@code load fail}（例：80787 家族任务页只有 select_none）。
  * 本类按客户端页契约（{@link QuestDialogContract}）把接取入口页改发客户端实际声明的那一页；
- * 修复只作用于未接态接取边，路由目标/条件/动作与完成流都不动。
+ * select1 首屏没有接受按钮时，再按同一契约补齐 1012/1013 页面翻页边。除这些接取入口边外，
+ * 路由目标/条件/动作与完成流都不动。
  * <p>
  * Client contract for the accept entry page (the unaccepted first page must exist in the quest's
  * client task HTML). The retail tables carry no dialog-page column, so the synthesizer emits the
@@ -36,7 +38,9 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
  * the quest's task HTML: only quests declaring {@code ask_quest_accept} can open it; the rest
  * declare {@code select_none}(4762) or {@code select1}(1011) and fail with {@code load fail}
  * (e.g. the 80787 family declares select_none only). This class re-points the accept entry at the
- * page the client actually declares; only unaccepted accept edges are touched.
+ * page the client actually declares; select1 entry points also receive client-declared 1012/1013
+ * page-turn edges. Aside from these accept-entry edges, targets, conditions, actions, and completion
+ * flows remain untouched.
  */
 public final class RetailClientAcceptEntryPage {
 
@@ -47,6 +51,10 @@ public final class RetailClientAcceptEntryPage {
 	public static final int SELECT_NONE_PAGE = QuestDialogPage.SELECT_NONE.id();
 	/** 对话入口页 {@code select1}(1011)。 / The dialog entry page {@code select1}(1011). */
 	public static final int SELECT1_PAGE = QuestDialogPage.SELECT1.id();
+	/** {@code select1} 的续页 {@code select1_1}(1012)。 / The {@code select1} continuation page. */
+	private static final int SELECT1_1_PAGE = QuestDialogPage.SELECT1_1.id();
+	/** {@code select1_1} 的续页 {@code select1_1_1}(1013)。 / The {@code select1_1} continuation page. */
+	private static final int SELECT1_1_1_PAGE = QuestDialogPage.SELECT1_1_1.id();
 
 	private RetailClientAcceptEntryPage() {
 	}
@@ -85,17 +93,74 @@ public final class RetailClientAcceptEntryPage {
 			statuses.put(node.label(), node.projection().status());
 		}
 		List<QuestTransition> transitions = new ArrayList<>(definition.transitions().size());
+		List<QuestTransition> continuations = new ArrayList<>(2);
 		boolean changed = false;
 		for (QuestTransition transition : definition.transitions()) {
 			QuestTransition repaired = withEntryPage(statuses, transition, entryPage);
 			changed |= repaired != transition;
 			transitions.add(repaired);
+			if (isAcceptEntryEdge(statuses, repaired) && isAcceptTrigger(repaired.event())
+					&& showsPage(repaired, entryPage)) {
+				addClientContinuations(definition.id(), repaired, contract, transitions, continuations);
+			}
 		}
-		if (!changed) {
+		if (!changed && continuations.isEmpty()) {
 			return compiled;
 		}
+		transitions.addAll(continuations);
 		return QuestDefinitionCompiler.compile(new QuestDefinition(definition.id(), definition.version(),
 			definition.metadata(), definition.progressLayout(), definition.nodes(), transitions));
+	}
+
+	/**
+	 * 按客户端页契约补齐 select1 接取梯：1011 首屏本身没有接受按钮，必须先登记 1012（以及客户端
+	 * 继续声明的 1013）页面翻页边；接受/拒绝动作仍由既有 canonical 接取流处理。重复路由不登记，
+	 * SimpleTalk 等已有客户端续页梯的家族保持原定义。
+	 * Adds the client-declared select1 accept ladder: page 1011 has no accept button, so page-turn
+	 * routes for 1012 (and 1013 when the client declares it) are required; the existing canonical
+	 * flow still owns accept/refuse. Existing ladders (for example SimpleTalk) are left unchanged.
+	 */
+	private static void addClientContinuations(int questId, QuestTransition entry, QuestDialogContract contract,
+			List<QuestTransition> existing, List<QuestTransition> additions) {
+		if (!(entry.event() instanceof QuestEvent.TalkToNpc talk)) {
+			return;
+		}
+		int npcId = talk.npcId();
+		for (int pageId : List.of(SELECT1_1_PAGE, SELECT1_1_1_PAGE)) {
+			QuestDialogAction action = QuestDialogAction.findId(pageId);
+			if (action == null || !contract.hasButtonPage(questId, pageId)) {
+				continue;
+			}
+			QuestTransition continuation = new QuestTransition(
+				new QuestEvent.TalkToNpc(npcId, action.id()), List.of(), List.of(), entry.targetNode(),
+				List.of(new AfterCommitAction.ShowQuestDialog(pageId)), null, entry.sourceNode());
+			if (hasCompatibleRoute(existing, continuation) || hasCompatibleRoute(additions, continuation)) {
+				continue;
+			}
+			additions.add(continuation);
+		}
+	}
+
+	/** 判断已有路由是否已覆盖同 NPC、同动作、同来源的客户端续页。 / Whether an equivalent route already exists. */
+	private static boolean hasCompatibleRoute(List<QuestTransition> transitions, QuestTransition candidate) {
+		if (!(candidate.event() instanceof QuestEvent.TalkToNpc expected)) {
+			return false;
+		}
+		return transitions.stream().anyMatch(transition -> {
+			if (!(transition.event() instanceof QuestEvent.TalkToNpc actual)
+					|| actual.npcId() != expected.npcId()
+					|| !Objects.equals(actual.dialogId(), expected.dialogId())) {
+				return false;
+			}
+			// 隐式来源会覆盖全部节点；显式来源不同才可能互斥并允许并存。
+			// An implicit source covers every node; only distinct explicit sources may coexist.
+			return transition.sourceNode() == null
+				|| Objects.equals(transition.sourceNode(), candidate.sourceNode());
+		});
+	}
+
+	private static boolean showsPage(QuestTransition transition, int pageId) {
+		return transition.afterCommit().contains(new AfterCommitAction.ShowQuestDialog(pageId));
 	}
 
 	/** 未接态接取边换页；其余 transition 原样返回（同一实例，便于判等）。 /

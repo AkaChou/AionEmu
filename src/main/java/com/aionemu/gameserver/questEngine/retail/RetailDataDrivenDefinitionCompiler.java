@@ -151,8 +151,14 @@ public final class RetailDataDrivenDefinitionCompiler {
 		// 不走 NPC 接取名门。
 		// Item-acquired rows join the hunt/pvp grid rows here: both carry their own accept segment
 		// (item use opens the window) and do not ride the npc acquire name gate.
+		// 纯 Talk 链行的接取词汇与混合链同域（Talk/EnterArea/EnterWorld/none/LevelUpLogIn 均有
+		// 已裁定发放边）；只要有 talk 步，就不把该行挡在接取轴门外。
+		// Pure-talk chain rows share the mixed chain's acquire vocabulary (talk / enterarea /
+		// enterworld / none / leveluplogin all have adjudicated grant edges); any talk step keeps
+		// the row out of the acquire-axis gate.
+		boolean talkChainAcquire = entry.allTalk() && entry.stepCategories().contains("talk");
 		if (!npcAcquire && !itemAcquire && !grantedMixAcquire && !areaNoProgressAcquire
-				&& !chainMixAcquire && !entry.allHunt() && !entry.allPvp()) {
+				&& !chainMixAcquire && !talkChainAcquire && !entry.allHunt() && !entry.allPvp()) {
 			return new Outcome(null, "RETAIL_ACQUIRE_GRANT_UNSUPPORTED", acquireCategory);
 		}
 		// select_none 阶梯：客户端未接态首屏 select_none 的唯一按钮是续页 4763 时，接取流必须发
@@ -487,7 +493,8 @@ public final class RetailDataDrivenDefinitionCompiler {
 				var chain = clientTalkChainPages.find(entry.questId()).orElseThrow();
 				definition = RetailDataDrivenTalkCompiler.buildChain(entry.questId(), acquiredNpc, rewardNpc,
 					metadata.metadata(), chain.entryPage(), chain.stageLadders(), stepNpcs,
-					clientSummaryRows.lastRowIndex(entry.questId()));
+					clientSummaryRows.lastRowIndex(entry.questId()), acquireCategory, acquireParam,
+					worldAcquireId, entry.stepCutscenes());
 				return new Outcome(QuestDefinitionCompiler.compile(definition), null, null);
 			}
 			// P5-2：交付型客户端流程（客户端任务书五页齐备）；页面集合超出模板的行无法在标准形状内
