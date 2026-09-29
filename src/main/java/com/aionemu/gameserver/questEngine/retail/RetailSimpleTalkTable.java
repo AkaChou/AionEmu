@@ -10,6 +10,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,6 +102,12 @@ public final class RetailSimpleTalkTable {
 				steps.add(npc);
 			}
 		}
+		List<String> stepGiveItems = new ArrayList<>(MAX_STEPS);
+		List<String> stepRemoveItems = new ArrayList<>(MAX_STEPS);
+		for (int step = 1; step <= MAX_STEPS; step++) {
+			stepGiveItems.add(text(element, "give_item" + step));
+			stepRemoveItems.add(text(element, "remove_item" + step));
+		}
 		boolean givesItem = text(element, "give_item") != null || text(element, "give_item1") != null;
 		boolean removesItem = text(element, "remove_item1") != null
 			|| text(element, "remove_item2") != null
@@ -108,7 +115,8 @@ public final class RetailSimpleTalkTable {
 		return new Entry(questId, acquired, reward, List.copyOf(steps), givesItem, removesItem,
 			text(element, "item_check") != null, text(element, "con_quest"),
 			intValue(element, "cutsceneid1"), intValue(element, "cs1_haction"),
-			text(element, "give_item"), RetailGrantKind.of(acquired));
+			text(element, "give_item"), RetailGrantKind.of(acquired),
+			Collections.unmodifiableList(stepGiveItems), Collections.unmodifiableList(stepRemoveItems));
 	}
 
 	/** 严格整数轴：真端表机器生成，畸形值必须炸出来而非静默忽略。 / Strict int axis; malformed values fail loudly. */
@@ -141,7 +149,16 @@ public final class RetailSimpleTalkTable {
 	public record Entry(int questId, String acquiredNpc, String rewardNpc, List<String> talkNpcs,
 			boolean givesItem, boolean removesItem, boolean itemCheck, String conQuest,
 			int cutsceneMovieId, int cutsceneTrigger,
-			String giveItemSymbol, RetailGrantKind grantKind) {
+			String giveItemSymbol, RetailGrantKind grantKind,
+			List<String> stepGiveItems, List<String> stepRemoveItems) {
+
+		public String stepGiveItem(int step) {
+			return step >= 1 && step <= stepGiveItems.size() ? stepGiveItems.get(step - 1) : null;
+		}
+
+		public String stepRemoveItem(int step) {
+			return step >= 1 && step <= stepRemoveItems.size() ? stepRemoveItems.get(step - 1) : null;
+		}
 
 		/** 是否为单步形态（无对话链）。 / Whether the row is the single-step shape. */
 		public boolean singleStep() {

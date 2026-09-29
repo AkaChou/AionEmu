@@ -23,6 +23,12 @@ public final class RetailItemNameIndex {
 	private static final Pattern TEMPLATE = Pattern.compile("<item_template\\b[^>]*>");
 	private static final Pattern NAME_DESC = Pattern.compile("name_desc=\"([^\"]*)\"");
 	private static final Pattern ITEM_ID = Pattern.compile("\\bid=\"(\\d+)\"");
+	private static final RetailItemNameIndex EMPTY = new RetailItemNameIndex(Map.of());
+
+	/** 空索引单例。 / Empty index singleton. */
+	public static RetailItemNameIndex empty() {
+		return EMPTY;
+	}
 
 	private final Map<String, Integer> byName;
 

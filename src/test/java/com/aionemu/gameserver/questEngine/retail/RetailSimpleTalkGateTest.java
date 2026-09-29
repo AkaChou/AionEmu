@@ -94,7 +94,7 @@ class RetailSimpleTalkGateTest {
 	private static RetailClientDialogExits clientDialogExits;
 	private static RetailClientSummaryRows clientSummaryRows;
 	private static RetailClientRewardNpcs clientRewardNpcs;
-	private static RetailClientTalkChainSteps chainSteps;
+	private static RetailQuestUseItemNpcs interactionObjects;
 
 	@BeforeAll
 	static void loadFixtures() throws Exception {
@@ -107,10 +107,10 @@ class RetailSimpleTalkGateTest {
 		clientDialogExits = RetailClientDialogExits.defaultExits();
 		clientSummaryRows = RetailClientSummaryRows.defaultSummaryRows();
 		clientRewardNpcs = RetailClientRewardNpcs.defaultRewardNpcs();
-		chainSteps = RetailClientTalkChainSteps.defaultTalkChainSteps();
 		npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_TEMPLATES), RetailQuestAiNameGroupsFixture.streams());
 		itemIndex = RetailItemNameIndex.build(openAll("/aion/data/static_data/items/item/",
 			listXmlNames("/aion/data/static_data/items/item/")));
+		interactionObjects = RetailQuestUseItemNpcs.fromIds(npcIndex.questUseItemNpcIds());
 		randomRewards = randomRewardIds();
 		nameIds = nameIds();
 		familyIds = familyIds();
@@ -150,8 +150,8 @@ class RetailSimpleTalkGateTest {
 	 * 逐行断言：已受理且声明 {@code cutsceneid1} 且 {@code cs1_haction} ∈ {1007, 1009} 的<b>单步行</b>，
 	 * 定义内 {@code PlayMovie} 恰好 1 个、movieId = 真端 {@code cutsceneid1}、类型 = {@code CUTSCENE}。
 	 * <b>禁止</b>改写成"全家族电影总数守恒"——别的行会补数，那种弱断言拦不住单行静默丢失。
-	 * 链面过场（S2 已落地）改由 {@code RetailSimpleTalkChainGateTest#chainCutsceneRowsCarryExactlyOneRetailMovie}
-	 * 逐行守护（触发轴决定落点：1007/1009 重挂到规范段 QUEST_SELECT 边，页触发留在登记记录同号动作边）。
+	 * 链面过场统一由规范模型驱动，逐行守护（触发轴决定落点：1007/1009 重挂到规范段 QUEST_SELECT 边，
+	 * 中转页触发留在阶段同号动作边）。
 	 * Per-row cutscene invariant for accepted single-step rows: exactly one PlayMovie carrying the retail
 	 * cutsceneid1 with the CUTSCENE type. A whole-family movie total would be a weak assertion because
 	 * other rows can compensate for a silently dropped one; chain-row movies are covered per-row by the
@@ -163,12 +163,13 @@ class RetailSimpleTalkGateTest {
 		int checked = 0;
 		for (int questId : new TreeSet<>(familyIds)) {
 			RetailRow row = retailRow(questId);
-			if (!row.outcome().accepted() || !row.entry().cutscene() || chainSteps.has(questId)) {
+			if (!row.outcome().accepted() || !row.entry().cutscene()) {
 				continue;
 			}
 			int trigger = row.entry().cutsceneTrigger();
 			if (trigger != QuestDialogAction.SELECT_QUEST_REWARD.id()
-					&& trigger != QuestDialogAction.ASK_QUEST_ACCEPT.id()) {
+					&& trigger != QuestDialogAction.ASK_QUEST_ACCEPT.id()
+					&& trigger != 1353 && trigger != 1694) {
 				continue;
 			}
 			checked++;
@@ -187,9 +188,12 @@ class RetailSimpleTalkGateTest {
 			}
 			// 落点守卫：重挂边必须是 QUEST_SELECT（接取窗页 4 / 交付窗页），页链按钮不再承载过场。
 			// Landing guard: the re-hung edge must be QUEST_SELECT; page-chain buttons no longer carry it.
-			if (!(carriers.get(0).event() instanceof QuestEvent.TalkToNpc carrier)
-					|| !isAction(carrier, QuestDialogAction.QUEST_SELECT)) {
-				problems.add(questId + ": 过场未挂在 QUEST_SELECT 边上（" + carriers.get(0).event() + "）");
+			if (trigger == QuestDialogAction.SELECT_QUEST_REWARD.id()
+					|| trigger == QuestDialogAction.ASK_QUEST_ACCEPT.id()) {
+				if (!(carriers.get(0).event() instanceof QuestEvent.TalkToNpc carrier)
+						|| !isAction(carrier, QuestDialogAction.QUEST_SELECT)) {
+					problems.add(questId + ": 过场未挂在 QUEST_SELECT 边上（" + carriers.get(0).event() + "）");
+				}
 			}
 			AfterCommitAction.PlayMovie movie = movies.get(0);
 			if (movie.movieId() != row.entry().cutsceneMovieId()) {
@@ -251,56 +255,7 @@ class RetailSimpleTalkGateTest {
 
 	// ------------------------------------------------------------------ 语义不变量
 
-	/**
-	 * 链式行（wave A）回放保真不变量：定义节点须与登记表 N 记录逐一相等（标签/状态/var0），
-	 * 布局单一 var0，状态集合覆盖四态；系统发放行不得有接取路由且必须有 SystemGrant 边。
-	 * Chain rows (wave A) replay-fidelity invariants: definition nodes must equal the registry's
-	 * node records; layout is a single var0 field; status set covers all four statuses.
-	 */
-	private static void inspectChain(int questId, RetailRow row, List<String> problems) {
-		QuestDefinition definition = row.outcome().definition().definition();
-		if (definition.progressLayout().fields().size() != 1
-			|| !"var0".equals(definition.progressLayout().fields().get(0).name())) {
-			problems.add(questId + ": 进度域应为单一 var0，实际 " + definition.progressLayout().fields());
-		}
-		var registryNodes = chainSteps.nodes(questId);
-		if (definition.nodes().size() != registryNodes.size()) {
-			problems.add(questId + ": 节点数 " + definition.nodes().size()
-				+ " != 登记表 " + registryNodes.size());
-			return;
-		}
-		Map<String, String> registryByLabel = new java.util.HashMap<>();
-		for (var node : registryNodes) {
-			registryByLabel.put(node.label(), node.status() + ":" + node.var0());
-		}
-		for (QuestNode node : definition.nodes()) {
-			String expected = registryByLabel.get(node.label());
-			if (expected == null) {
-				problems.add(questId + ": 节点 " + node.label() + " 不在登记表");
-				continue;
-			}
-			Integer var0 = node.projection().variables().get("var0");
-			String actual = node.projection().status() + ":" + var0;
-			if (!expected.equals(actual)) {
-				problems.add(questId + ": 节点 " + node.label() + " 投影 " + actual + " != 登记表 " + expected);
-			}
-		}
-		Set<QuestStatus> statuses = new LinkedHashSet<>();
-		definition.nodes().forEach(node -> statuses.add(node.projection().status()));
-		if (!statuses.equals(Set.of(QuestStatus.NONE, QuestStatus.START, QuestStatus.REWARD,
-			QuestStatus.COMPLETE))) {
-			problems.add(questId + ": 节点状态集合异常 " + statuses);
-		}
-		if (row.entry().grantKind().systemGrant() && !hasSystemGrant(definition)) {
-			problems.add(questId + ": 系统发放行缺 SystemGrant 边");
-		}
-	}
-
 	private static void inspect(int questId, RetailRow row, List<String> problems) {
-		if (chainSteps.has(questId)) {
-			inspectChain(questId, row, problems);
-			return;
-		}
 		if (!row.entry().singleStep()) {
 			inspectCanonicalChain(questId, row, problems);
 			return;
@@ -664,8 +619,8 @@ class RetailSimpleTalkGateTest {
 		RetailSimpleTalkTable.Entry entry = table.find(questId).orElseThrow();
 		var metadata = RetailQuestMetadataCompiler.compile(retailTable.find(questId).orElseThrow(), npcIndex,
 			itemIndex, randomRewards, nameIds);
-		var outcome = RetailSimpleTalkDefinitionCompiler.compile(entry, npcIndex, metadata, clientDialogExits,
-			clientSummaryRows, clientRewardNpcs, chainSteps);
+		var outcome = RetailSimpleTalkDefinitionCompiler.compile(entry, npcIndex, itemIndex, metadata,
+			clientDialogExits, clientSummaryRows, clientRewardNpcs, interactionObjects);
 		// 交付 NPC 集：唯一名解析优先，复合势力引用取客户端任务书 dic 链登记（与合成器同口径）。
 		// Hand-in NPC set: unique name first, composite faction references via the client registry.
 		Set<Integer> resolvedReward = npcIndex.resolveAll(List.of(

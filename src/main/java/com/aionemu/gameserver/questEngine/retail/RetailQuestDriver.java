@@ -115,7 +115,6 @@ public final class RetailQuestDriver {
 	private final RetailQuestUseItemNpcs interactionObjects;
 	private final RetailClientTalkChainPages clientTalkChainPages;
 	private final RetailClientTalkCollectChainPages clientTalkCollectChainPages;
-	private final RetailClientTalkChainSteps chainSteps;
 	private final RetailClientKillTargets clientKillTargets;
 	private final RetailClientHuntProgressRows clientHuntProgressRows;
 	private final RetailEnterAreaZoneResolution enterAreaZoneResolution;
@@ -145,7 +144,6 @@ public final class RetailQuestDriver {
 			RetailQuestUseItemNpcs interactionObjects,
 			RetailClientTalkChainPages clientTalkChainPages,
 			RetailClientTalkCollectChainPages clientTalkCollectChainPages,
-			RetailClientTalkChainSteps chainSteps,
 			RetailClientKillTargets clientKillTargets, RetailClientHuntProgressRows clientHuntProgressRows,
 			RetailEnterAreaZoneResolution enterAreaZoneResolution) {
 		this.retailOwnedSimpleHunt = retailOwnedSimpleHunt;
@@ -189,7 +187,6 @@ public final class RetailQuestDriver {
 		this.interactionObjects = interactionObjects;
 		this.clientTalkChainPages = clientTalkChainPages;
 		this.clientTalkCollectChainPages = clientTalkCollectChainPages;
-		this.chainSteps = chainSteps;
 		this.clientKillTargets = clientKillTargets;
 		this.clientHuntProgressRows = clientHuntProgressRows;
 		this.enterAreaZoneResolution = enterAreaZoneResolution;
@@ -399,7 +396,6 @@ public final class RetailQuestDriver {
 		try (InputStream input = open(SIMPLE_ITEM_PLAY_TABLE)) {
 			itemPlayTable = RetailSimpleItemPlayTable.load(input);
 		}
-		RetailClientTalkChainSteps chainSteps = RetailClientTalkChainSteps.load();
 		RetailDataDrivenTable dataDrivenTable;
 		try (InputStream input = open(DATA_DRIVEN_TABLE)) {
 			dataDrivenTable = RetailDataDrivenTable.load(input);
@@ -448,7 +444,7 @@ public final class RetailQuestDriver {
 			retailTable, npcIndex, itemIndex, randomRewardIds(), nameIds(), serialHuntTable, clientHuntStages,
 			useItemTable, useItemReport, itemPlayTable, questAreas,
 			dataDrivenTable, clientHandinPages, interactionObjects,
-			clientTalkChainPages, clientTalkCollectChainPages, chainSteps, clientKillTargets,
+			clientTalkChainPages, clientTalkCollectChainPages, clientKillTargets,
 			clientHuntProgressRows, enterAreaZoneResolution);
 	}
 
@@ -738,8 +734,8 @@ public final class RetailQuestDriver {
 			if (metadata == null) {
 				return Optional.empty();
 			}
-			var outcome = RetailSimpleTalkDefinitionCompiler.compile(row.orElseThrow(), npcIndex, metadata,
-				clientDialogExits, clientSummaryRows, clientRewardNpcs, interactionObjects, chainSteps);
+			var outcome = RetailSimpleTalkDefinitionCompiler.compile(row.orElseThrow(), npcIndex, itemIndex, metadata,
+				clientDialogExits, clientSummaryRows, clientRewardNpcs, interactionObjects);
 			if (outcome.accepted()) {
 				return Optional.of(outcome.definition());
 			}
