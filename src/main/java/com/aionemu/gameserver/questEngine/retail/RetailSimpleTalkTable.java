@@ -102,7 +102,9 @@ public final class RetailSimpleTalkTable {
 			}
 		}
 		boolean givesItem = text(element, "give_item") != null || text(element, "give_item1") != null;
-		boolean removesItem = text(element, "remove_item1") != null;
+		boolean removesItem = text(element, "remove_item1") != null
+			|| text(element, "remove_item2") != null
+			|| text(element, "remove_item3") != null;
 		return new Entry(questId, acquired, reward, List.copyOf(steps), givesItem, removesItem,
 			text(element, "item_check") != null, text(element, "con_quest"),
 			intValue(element, "cutsceneid1"), intValue(element, "cs1_haction"),

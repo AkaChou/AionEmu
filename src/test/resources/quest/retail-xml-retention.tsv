@@ -151,7 +151,7 @@
 1321	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 1322	XML_RETENTION	-	NO_TABLE	retail-none
 1323	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c32-accept-entrance-decisions.tsv basis=M3D_DOWNGRADE_REVERSED
-1324	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN_COMPOUND	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: compound chain axis unimplemented
+1324	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 1325	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 1326	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 1327	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
@@ -3451,7 +3451,7 @@
 19057	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
 19058	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
 19059	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
-19064	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: deep chain shape divergence (drift-authoritative code)
+19064	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 19065	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10m-item-decisions.tsv basis=PROJECTION_QE051
 19070	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: deep chain shape divergence (drift-authoritative code)
 19071	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: deep chain shape divergence (drift-authoritative code)
@@ -4518,7 +4518,7 @@
 29057	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
 29058	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
 29059	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
-29064	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: deep chain shape divergence (drift-authoritative code)
+29064	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 29065	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10m-item-decisions.tsv basis=PROJECTION_QE051
 29070	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c40-accept-chain-decisions.tsv basis=CHAIN_ACCEPT_CONTINUATION
 29071	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c40-accept-chain-decisions.tsv basis=CHAIN_ACCEPT_CONTINUATION
@@ -4663,7 +4663,7 @@
 30161	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
 30162	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 30201	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-30202	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: deep chain shape divergence (drift-authoritative code)
+30202	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30203	XML_RETENTION	-	SCRIPTED	registry=FUN_180cab150,FUN_180caf350,FUN_180caf6c0
 30204	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30205	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=MULTI_ITEM_HANDIN
@@ -4713,7 +4713,7 @@
 30249	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
 30250	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
 30301	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-30302	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: deep chain shape divergence (drift-authoritative code)
+30302	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30303	XML_RETENTION	-	SCRIPTED	registry=FUN_180cab150,FUN_180caf350,FUN_180caf6c0
 30304	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30305	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=MULTI_ITEM_HANDIN

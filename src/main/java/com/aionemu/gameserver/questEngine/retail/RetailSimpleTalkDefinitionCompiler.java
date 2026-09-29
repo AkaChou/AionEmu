@@ -174,9 +174,15 @@ public final class RetailSimpleTalkDefinitionCompiler {
 				if (!registryCovered) {
 					return new Outcome(null, "RETAIL_TALK_CHAIN_COMPOUND", "talk=" + entry.talkNpcs());
 				}
-				} else {
+			} else {
+				boolean canonicalSupported = !entry.removesItem() && !entry.cutscene()
+					&& ((!entry.itemCheck() && entry.givesItem() && entry.giveItemSymbol() != null)
+						|| (entry.itemCheck() && (!metadata.itemRequirements().isEmpty()
+							|| RetailQuestWorkItems.first(entry.giveItemSymbol(), entry.questId()) != null)));
+				if (!canonicalSupported) {
 					return new Outcome(null, "RETAIL_TALK_CHAIN_COMPOUND", "talk=" + entry.talkNpcs());
 				}
+			}
 			}
 			// P0c-32：接取入口两形——规范 NPC_START 块（块合成接取流）或**逐字接取路由**
 			// （登记表 R/Q 记录里 unaccepted→started 的入口，如 QUEST_ACCEPT_1/ACCEPT_SIMPLE/
