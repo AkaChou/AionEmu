@@ -1313,13 +1313,10 @@ public final class QuestService {
 			if (!questEngine.onAbandon(player, questId)) {
 				return false;
 			}
-			finishAbandon(player, questId);
+			finishAbandon(player, questId, metadata);
 			return true;
 		}
 
-		if (metadata.npcFactionId() != 0) {
-			player.getNpcFactions().abortQuest(metadata.npcFactionId());
-		}
 		qs.setStatus(QuestStatus.NONE);
 		qs.setQuestVar(0);
 		for (var workItem : metadata.questWorkItems()) {
@@ -1328,7 +1325,7 @@ public final class QuestService {
 				player.getInventory().decreaseByItemId(workItem.itemId(), count);
 			}
 		}
-		finishAbandon(player, questId);
+		finishAbandon(player, questId, metadata);
 		return true;
 	}
 
@@ -1336,7 +1333,10 @@ public final class QuestService {
 		return metadata != null && !metadata.cannotGiveup() && state != null;
 	}
 
-	private static void finishAbandon(Player player, int questId) {
+	private static void finishAbandon(Player player, int questId, QuestMetadata metadata) {
+		if (metadata != null && metadata.npcFactionId() != 0 && player.getNpcFactions() != null) {
+			player.getNpcFactions().abortQuest(metadata.npcFactionId());
+		}
 		if (hasQuestTimers(player.getObjectId(), questId)) {
 			cleanupQuestTimers(player.getObjectId(), questId);
 			PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, 0));
