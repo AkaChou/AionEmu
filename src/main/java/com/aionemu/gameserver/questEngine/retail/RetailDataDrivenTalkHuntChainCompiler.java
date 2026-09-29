@@ -378,7 +378,7 @@ public final class RetailDataDrivenTalkHuntChainCompiler {
 		}
 		// 信件页梯必须覆盖全部 talk 步（外层下标 = 第几个 talk 步）。
 		// The letter-page ladders must cover every talk step (index = talk ordinal).
-		List<RetailClientTalkChainPages.Stage> ladders = clientTalkChainPages.find(entry.questId())
+		List<RetailClientTalkChainPages.Stage> ladders = clientTalkChainPages.find(entry.questId(), true)
 			.map(RetailClientTalkChainPages.Pages::stageLadders).orElse(List.of());
 		// 采集/信息段来自混合采集链登记表：段序 = 非 hunt 步序。
 		// The collect/info stages come from the mixed collect registry: stage order = non-hunt

@@ -150,7 +150,7 @@ public final class RetailClientTalkChainPages {
 			int head = STEP_PAGE_HEADS.get(step);
 			String headName = pages.get(head);
 			if (headName == null) {
-				break;
+				continue;
 			}
 			List<Integer> ladder = new ArrayList<>();
 			ladder.add(head);

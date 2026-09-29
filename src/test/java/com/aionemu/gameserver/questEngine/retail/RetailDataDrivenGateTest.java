@@ -85,7 +85,9 @@ class RetailDataDrivenGateTest {
 			+ "(QuestClientContractGateTest PAGE_NOT_IN_TASK_HTML)",
 		50090, "event-vendor collect row: the client task HTML does not declare the accept pages "
 			+ "(1002->1003 / 1003->1004) emitted for the declared group members "
-			+ "(QuestClientContractGateTest PAGE_NOT_IN_TASK_HTML)");
+			+ "(QuestClientContractGateTest PAGE_NOT_IN_TASK_HTML)",
+		25051, "TalkFOBJ relative monster spawn axis exceeds the standard talk+hunt vocabulary "
+			+ "(the legacy contract pins it; curated deferral)");
 	private static final String CURATED_CODE = "CURATED_LEGACY_CONTRACT_LOCK";
 
 	private static RetailDataDrivenTable table;

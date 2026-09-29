@@ -2427,30 +2427,30 @@
 9565	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 10010	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_HUNT_CHAIN
 10011	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
-10031	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
+10031	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 10032	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_COLLECT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+collect mixed-chain axis unimplemented
 10033	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
-10034	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
-10035	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
+10034	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+10035	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 10100	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf6c0,FUN_180caf740
 10101	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 10110	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
-10111	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
+10111	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 10112	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
-10113	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
+10113	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 10500	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 10501	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
 10502	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
 10503	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
 10504	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
 10505	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
-10506	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
+10506	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 10507	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
 10520	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf3c0,FUN_180caf740
 10521	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf6c0,FUN_180caf740
 10522	XML_RETENTION	-	NO_TABLE	retail-none
 10525	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
-10526	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
+10526	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 10527	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
 10528	XML_RETENTION	-	SCRIPTED	registry=FUN_180caa850,FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 10529	XML_RETENTION	-	SCRIPTED	registry=FUN_180caa850,FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
@@ -2724,7 +2724,7 @@
 13954	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
 13955	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 13956	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
-13960	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
+13960	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 13961	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 13962	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ENTERAREA_ZONE_UNRESOLVED	enter-area zone not resolvable server-side
 13963	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -3006,7 +3006,7 @@
 15590	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 15595	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 15596	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-15601	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
+15601	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 15602	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 15604	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 15605	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
@@ -3209,18 +3209,18 @@
 17160	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c58-challenge-sentinel-decisions.tsv basis=DD_CHALLENGE_SENTINEL_ACCEPT_AT_REWARD_NPC
 17161	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c58-challenge-sentinel-decisions.tsv basis=DD_CHALLENGE_SENTINEL_ACCEPT_AT_REWARD_NPC
 17162	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c58-challenge-sentinel-decisions.tsv basis=DD_CHALLENGE_SENTINEL_ACCEPT_AT_REWARD_NPC
-17500	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
+17500	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 17501	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 17505	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ITEMPLAY_ITEM_UNRESOLVED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
 17506	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-17510	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
+17510	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 17511	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
 17525	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave8-sensory-area-decisions.tsv basis=DD_ENTERAREA_ZONE_RESOLUTION
 17526	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 17540	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
 17541	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 17550	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
-17551	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
+17551	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 17552	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 18030	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 18031	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
@@ -3387,7 +3387,7 @@
 18915	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 18916	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18917	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
-18930	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
+18930	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 18931	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c49-talkfobj-hunt-decisions.tsv basis=DD_TALKFOBJ_HUNT
 18932	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 18940	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10h-talk-chain-b4-decisions.tsv basis=P0C10H_EQUIVALENT
@@ -3499,29 +3499,29 @@
 20010	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_HUNT_CHAIN
 20011	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
 20031	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
-20032	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
-20033	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
-20034	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
+20032	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+20033	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+20034	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 20035	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ITEMPLAY_OUTPUT_UNRESOLVED	retail-data-driven-drift.tsv: itemplay output item unresolved in quest item dictionary
 20100	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf6c0,FUN_180caf740
 20101	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 20110	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
-20111	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
+20111	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 20112	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
-20113	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
+20113	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 20500	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
-20501	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
+20501	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 20502	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
 20503	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
-20504	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
-20505	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
+20504	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+20505	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 20506	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
 20507	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave10-chain-acquire-registry-decisions.tsv basis=DD_CHAIN_ACQUIRE_REGISTRY
 20520	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf3c0,FUN_180caf740
 20521	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf6c0,FUN_180caf740
 20522	XML_RETENTION	-	NO_TABLE	retail-none
 20525	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
-20526	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
+20526	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 20527	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
 20528	XML_RETENTION	-	SCRIPTED	registry=FUN_180caa850,FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 20529	XML_RETENTION	-	SCRIPTED	registry=FUN_180caa850,FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
@@ -3795,7 +3795,7 @@
 23954	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
 23955	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history basis=DD_HUNT_PROGRESS_CLIENT_NAMES
 23956	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
-23960	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
+23960	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 23961	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 23962	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ENTERAREA_ZONE_UNRESOLVED	enter-area zone not resolvable server-side
 23963	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -3878,7 +3878,7 @@
 25023	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave7-narrow-itemplay-decisions.tsv basis=DD_NARROW_ITEMPLAY_RIDER
 25030	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
 25031	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
-25032	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
+25032	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 25033	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 25050	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	curated deferral: reshape decision pending (DD gate CURATED_DEFERRED guard)
 25051	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
@@ -4079,7 +4079,7 @@
 25602	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 25604	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 25605	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_CHAIN
-25606	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+hunt mixed-chain axis unimplemented for this shape (ladder/stage deficit)
+25606	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 25608	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 25620	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25621	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -4276,18 +4276,18 @@
 27160	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c58-challenge-sentinel-decisions.tsv basis=DD_CHALLENGE_SENTINEL_ACCEPT_AT_REWARD_NPC
 27161	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c58-challenge-sentinel-decisions.tsv basis=DD_CHALLENGE_SENTINEL_ACCEPT_AT_REWARD_NPC
 27162	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c58-challenge-sentinel-decisions.tsv basis=DD_CHALLENGE_SENTINEL_ACCEPT_AT_REWARD_NPC
-27500	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
+27500	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 27501	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 27505	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ITEMPLAY_ITEM_UNRESOLVED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
 27506	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
-27510	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
+27510	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 27511	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
 27525	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave8-sensory-area-decisions.tsv basis=DD_ENTERAREA_ZONE_RESOLUTION
 27526	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 27540	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
 27541	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 27550	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
-27551	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
+27551	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 27552	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 28030	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=ACCEPT_NPC_DRIFT+KILL_VARIANT_UNREACHABLE+BRIEFING_ROUTE_RETAIL
 28031	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=STAGE_FLIP_PAIRED+ACCEPT_NPC_DRIFT+ACCEPT_FLOW_LEGACY
@@ -4454,7 +4454,7 @@
 28915	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 28916	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28917	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
-28930	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
+28930	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 28931	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c49-talkfobj-hunt-decisions.tsv basis=DD_TALKFOBJ_HUNT
 28932	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 28940	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10h-talk-chain-b4-decisions.tsv basis=P0C10H_EQUIVALENT
