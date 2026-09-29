@@ -518,7 +518,7 @@
 1844	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_COUNTER_EXCEEDS_6BIT	client count exceeds the 6-bit SECTION field (fixed 6-bit layout invariant)
 1848	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 1851	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
-1870	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+1870	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 1872	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 1873	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 1874	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
@@ -1149,7 +1149,7 @@
 2849	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 2852	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 2869	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
-2870	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+2870	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 2872	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 2873	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 2874	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
@@ -2800,8 +2800,8 @@
 14276	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 15000	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave7-narrow-itemplay-decisions.tsv basis=DD_NARROW_ITEMPLAY_RIDER
 15001	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-15002	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
-15010	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+15002	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
+15010	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 15011	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 15012	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 15020	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -2818,7 +2818,7 @@
 15062	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15065	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15066	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
-15070	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+15070	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 15071	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 15072	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 15073	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
@@ -2950,7 +2950,7 @@
 15511	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 15512	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15513	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-15514	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+15514	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 15515	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15516	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 15517	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
@@ -3095,7 +3095,7 @@
 16835	RETAIL_TABLE	DataDriven	OK	retail-data-driven-drift.tsv
 16836	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 16837	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-16838	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+16838	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 16839	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN_CLIENT_ROWS
 16900	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=BRIEFING_STEP
 16901	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=BRIEFING_STEP
@@ -3403,8 +3403,8 @@
 18974	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 18975	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 18976	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
-18977	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
-18978	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+18977	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
+18978	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 18990	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN
 18991	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 18992	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN
@@ -3420,19 +3420,19 @@
 19004	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10h-talk-chain-b1-decisions.tsv basis=P0C10H_EQUIVALENT
 19008	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
 19009	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
-19010	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+19010	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 19014	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
 19015	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
-19016	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+19016	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 19020	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
 19021	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
-19022	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+19022	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 19026	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
 19027	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
-19028	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+19028	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 19032	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
 19033	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
-19034	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+19034	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 19038	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640
 19039	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
 19040	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -3871,8 +3871,8 @@
 25001	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 25002	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25010	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-25012	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
-25013	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+25012	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
+25013	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 25020	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 25022	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CHAIN
 25023	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave7-narrow-itemplay-decisions.tsv basis=DD_NARROW_ITEMPLAY_RIDER
@@ -3884,19 +3884,19 @@
 25051	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_HUNT_CHAIN_DEFERRED	step vocabulary unsupported by retail synthesis [retention-lag fix: code realigned to frozen drift]
 25052	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c51-fobj-collect-decisions.tsv basis=DD_FOBJ_COLLECT
 25060	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-25062	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+25062	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 25070	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c50-fobj-only-decisions.tsv basis=DD_TALKFOBJ_ONLY
-25073	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
-25080	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
-25081	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+25073	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
+25080	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
+25081	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 25082	XML_RETENTION	DataDriven	ADJUDICATED:CURATED_LEGACY_CONTRACT_LOCK	curated deferral: reshape decision pending (DD gate CURATED_DEFERRED guard)
 25084	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history wave6-narrow-rider-decisions.tsv basis=DD_NARROW_RIDER_CHAIN
-25085	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+25085	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 25090	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25091	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
-25092	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+25092	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 25093	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-25094	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+25094	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 25200	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history retail-data-driven-drift.tsv basis=DD_TALK_JOURNAL_ROW
 25201	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
 25202	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_MONSTER_UNRESOLVED	b2 kill targets: retail monster name(s) absent from server npc index (per-row names in retail-simplehunt-compiler-rejects.tsv / retail-data-driven-drift.tsv); XML carries operational targets
@@ -4031,19 +4031,19 @@
 25523	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 25524	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25525	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-25526	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+25526	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 25527	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25528	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25529	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25530	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25531	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-25532	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+25532	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 25533	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25534	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-25535	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+25535	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 25536	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 25537	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-25538	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+25538	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 25540	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 25541	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 25542	XML_RETENTION	-	NO_TABLE	retail-none
@@ -4470,8 +4470,8 @@
 28974	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 28975	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 28976	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
-28977	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
-28978	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+28977	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
+28978	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 28990	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN
 28991	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 28992	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_CHAIN
@@ -4487,19 +4487,19 @@
 29004	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
 29008	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
 29009	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
-29010	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+29010	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 29014	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
 29015	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
-29016	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+29016	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 29020	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
 29021	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
-29022	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+29022	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 29026	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
 29027	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
-29028	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+29028	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 29032	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
 29033	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
-29034	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+29034	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 29038	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640
 29039	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
 29040	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -5982,10 +5982,10 @@
 80742	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80743	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80744	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
-80745	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+80745	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 80746	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
 80747	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
-80748	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+80748	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 80749	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
 80750	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80751	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
@@ -6018,8 +6018,8 @@
 80778	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80783	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
 80784	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
-80785	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
-80786	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+80785	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
+80786	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 80787	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
 80788	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
 80789	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
@@ -6100,10 +6100,10 @@
 80866	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 80867	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 80868	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
-80870	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
-80871	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
-80872	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
-80874	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+80870	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
+80871	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
+80872	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
+80874	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 80875	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80876	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
 80877	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
@@ -6113,7 +6113,7 @@
 80883	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80884	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 80885	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_UNRESOLVED	b1-acquire-sentinel/b1_forensics.tsv acquire npc unresolved: name absent from this server's npc_name_index
-80886	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+80886	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 80887	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80888	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80889	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
@@ -6171,8 +6171,8 @@
 80942	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80943	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80944	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
-80945	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
-80946	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+80945	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
+80946	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 80947	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80948	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80949	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
@@ -6201,9 +6201,9 @@
 80972	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 80973	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
 80974	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-80975	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
-80976	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
-80977	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
+80975	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
+80976	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
+80977	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 80978	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_ITEMPLAY_CHAIN
 80979	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80980	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL

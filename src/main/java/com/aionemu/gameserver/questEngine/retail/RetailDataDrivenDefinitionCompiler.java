@@ -497,13 +497,6 @@ public final class RetailDataDrivenDefinitionCompiler {
 					worldAcquireId, entry.stepCutscenes());
 				return new Outcome(QuestDefinitionCompiler.compile(definition), null, null);
 			}
-			// P5-2：交付型客户端流程（客户端任务书五页齐备）；页面集合超出模板的行无法在标准形状内
-			// 表达，按稳定码拒绝、保留 XML（例如带 select_none_1 跳页 / select2 + SET_SUCCEED 的行）。
-			// Hand-in client flow; rows whose client page set exceeds the template stay on XML.
-			if (clientHandinPages.excluded(entry.questId()) && clientHandinPages.find(entry.questId()).isEmpty()) {
-				return new Outcome(null, "RETAIL_HANDIN_VOCABULARY_UNSUPPORTED",
-					"client pages exceed the hand-in template");
-			}
 			if (metadata.metadata().itemRequirements().isEmpty()) {
 				return new Outcome(null, "RETAIL_COLLECT_ITEM_SHAPE", "真端交付物为空");
 			}
