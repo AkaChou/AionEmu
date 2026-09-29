@@ -129,6 +129,15 @@ public final class RetailClientTalkChainPages {
 	}
 
 	public Optional<Pages> find(int questId, boolean allowDerive) {
+		if (allowContractFallback && allowDerive) {
+			Optional<Pages> derived = deriveFromContract(questId);
+			if (derived.isPresent()) {
+				Pages existing = entries.get(questId);
+				if (existing == null || existing.stageLadders().size() < derived.get().stageLadders().size()) {
+					return derived;
+				}
+			}
+		}
 		Pages existing = entries.get(questId);
 		if (existing != null) {
 			return Optional.of(existing);
