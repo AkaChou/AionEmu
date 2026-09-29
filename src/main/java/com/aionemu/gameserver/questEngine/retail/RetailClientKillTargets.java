@@ -29,7 +29,7 @@ public final class RetailClientKillTargets {
 		this.stageEntries = stageEntries;
 	}
 
-	/** 内存静态规范实例（45 个任务 targets + 默认 stages 全覆盖）。 / Memory static canonical instance. */
+	/** 内存静态规范实例（45 个任务 targets + stages 全覆盖）。 / Memory static canonical instance. */
 	public static RetailClientKillTargets defaultKillTargets() {
 		RetailClientKillTargets instance = defaultInstance;
 		if (instance == null) {
@@ -49,14 +49,26 @@ public final class RetailClientKillTargets {
 		if (in == null) {
 			in = RetailClientKillTargets.class.getResourceAsStream("/aion/data/static_data/quest_retail/quest_client_kill_targets.tsv");
 		}
-		if (in == null) {
-			return EMPTY.withDefaultStages();
+		RetailClientKillTargets targets = EMPTY;
+		if (in != null) {
+			try (InputStream input = in) {
+				targets = load(input);
+			} catch (IOException e) {
+				targets = EMPTY;
+			}
 		}
-		try (InputStream input = in) {
-			return load(input).withDefaultStages();
-		} catch (IOException e) {
-			return EMPTY.withDefaultStages();
+		InputStream stageIn = RetailClientKillTargets.class.getResourceAsStream("/quest/quest_client_kill_targets_stages.tsv");
+		if (stageIn == null) {
+			stageIn = RetailClientKillTargets.class.getResourceAsStream("/aion/data/static_data/quest_retail/quest_client_kill_targets_stages.tsv");
 		}
+		if (stageIn != null) {
+			try (InputStream sIn = stageIn) {
+				targets = targets.withStages(sIn);
+			} catch (IOException e) {
+				// ignore
+			}
+		}
+		return targets;
 	}
 
 	public static RetailClientKillTargets load() {
@@ -129,23 +141,6 @@ public final class RetailClientKillTargets {
 
 	public int size() {
 		return entries.size();
-	}
-
-	public RetailClientKillTargets withDefaultStages() {
-		Map<Integer, Map<Integer, Set<Integer>>> merged = new HashMap<>(stageEntries);
-		merged.put(15546, Map.of(
-			1, Set.of(240475, 240476, 241656, 241657),
-			2, Set.of(240483, 240484, 241664, 241665),
-			3, Set.of(240495, 240496, 241676, 241677),
-			4, Set.of(240497, 240498, 241678, 241679)
-		));
-		merged.put(25546, Map.of(
-			1, Set.of(240377, 240378, 241504, 241505),
-			2, Set.of(240371, 240372, 241498, 241499),
-			3, Set.of(240381, 240382, 241508, 241509),
-			4, Set.of(240385, 240386, 241512, 241513)
-		));
-		return new RetailClientKillTargets(entries, Map.copyOf(merged));
 	}
 
 	public RetailClientKillTargets withStages(InputStream input) throws IOException {
