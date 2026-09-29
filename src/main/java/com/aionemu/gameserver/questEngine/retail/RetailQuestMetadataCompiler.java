@@ -223,11 +223,12 @@ public final class RetailQuestMetadataCompiler {
 					continue;
 				}
 				int colon = token.indexOf(':');
+				int prerequisiteId = questRef(token);
 				if (colon >= 0 || hasNonFinishedFamilies) {
-					startConditions.add(new QuestStartCondition("finished", questRef(token),
-						colon < 0 ? 0 : Integer.parseInt(token.substring(colon + 1))));
+					startConditions.add(new QuestStartCondition("finished", prerequisiteId,
+						parseRewardMode(prerequisiteId, token, colon)));
 				} else {
-					prerequisites.add(questRef(token));
+					prerequisites.add(prerequisiteId);
 				}
 			}
 		}
@@ -440,12 +441,32 @@ public final class RetailQuestMetadataCompiler {
 			for (String token : raw.split("[\\s,]+")) {
 				if (!token.isBlank()) {
 					int colon = token.indexOf(':');
-					int rewardMode = colon < 0 ? 0 : Integer.parseInt(token.substring(colon + 1));
-					conditions.add(new QuestStartCondition(type, questRef(token), rewardMode));
+					int questId = questRef(token);
+					int rewardMode = parseRewardMode(questId, token, colon);
+					conditions.add(new QuestStartCondition(type, questId, rewardMode));
 				}
 			}
 		}
 		return conditions;
+	}
+
+	/**
+	 * 解析开始条件的奖励分支模式（0 基对齐）。
+	 * Parses the reward-mode index aligned to zero-based engine storage.
+	 */
+	private static int parseRewardMode(int questId, String token, int colon) {
+		if (colon < 0) {
+			return 0;
+		}
+		int raw = Integer.parseInt(token.substring(colon + 1));
+		if (questId == 1007 || questId == 2009) {
+			// NCSoft 真端 quest.xml 中 Q1007:1..6 与 Q2009:1..6 对应 1 基奖励槽（reward_exp1..6：战士、斥候、法师、祭司、枪炮、乐手）；
+			// AionEmu 转职仪式（1007.xml / 2009.xml）与数据库 player_quests.reward 以及 quest_data.xml 一致采用 0 基索引（0..5）。
+			// Retail Q1007:1..6 / Q2009:1..6 map to 1-based reward slots in retail XML, whereas AionEmu
+			// ascension rites, DB player_quests.reward, and quest_data.xml use zero-based reward indices (0..5).
+			return Math.max(0, raw - 1);
+		}
+		return raw;
 	}
 
 	/**

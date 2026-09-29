@@ -50,6 +50,13 @@ class QuestDispatchToAltgardFamilyProductionFlowTest {
 			assertTrue(plans.isEmpty());
 			assertTrue(afterCommit.isEmpty());
 
+			assertNotHandled(dispatch(dispatcher, questId, REWARD_NPC_ID, 31),
+				questId + " delivered before the transfer");
+			assertEquals(QuestStatus.START, status.get());
+			assertEquals(0, packedVariables.get());
+			assertTrue(plans.isEmpty());
+			assertTrue(afterCommit.isEmpty());
+
 			QuestEventRouter.DispatchResult teleport = dispatch(
 				dispatcher, questId, TRANSPORT_NPC_ID, 10000);
 			assertHandled(teleport, questId + " did not handle the transfer dialog");
@@ -57,10 +64,9 @@ class QuestDispatchToAltgardFamilyProductionFlowTest {
 			assertEquals(1, packedVariables.get());
 			assertEquals(QuestStatus.START, plans.getLast().nextStatus());
 			assertEquals(1, plans.getLast().nextPackedVariables());
-			assertEquals(List.of(new QuestAction.SetVariable("var0", 1)), plans.getLast().requiredActions());
+			assertTrue(plans.getLast().requiredActions().isEmpty());
 			assertEquals(List.of(
-				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.PACKET_ONLY),
-				new AfterCommitAction.TeleportPlayer(220030000, 1748f, 1807f, 255f, (byte) 0),
+				new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 				new AfterCommitAction.CloseDialog()), afterCommit);
 
 			plans.clear();
@@ -71,14 +77,8 @@ class QuestDispatchToAltgardFamilyProductionFlowTest {
 			assertTrue(plans.isEmpty());
 			assertTrue(afterCommit.isEmpty());
 
-			QuestEventRouter.DispatchResult rewardOffer = dispatch(
-				dispatcher, questId, REWARD_NPC_ID, 31);
-			assertHandled(rewardOffer, questId + " did not open the Meibjar reward dialog");
-			assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(2375)), afterCommit);
-
-			afterCommit.clear();
 			QuestEventRouter.DispatchResult reward = dispatch(
-				dispatcher, questId, REWARD_NPC_ID, 1009);
+				dispatcher, questId, REWARD_NPC_ID, 31);
 			assertHandled(reward, questId + " did not enter reward state at Meibjar");
 			assertEquals(QuestStatus.REWARD, status.get());
 			assertEquals(1, packedVariables.get());

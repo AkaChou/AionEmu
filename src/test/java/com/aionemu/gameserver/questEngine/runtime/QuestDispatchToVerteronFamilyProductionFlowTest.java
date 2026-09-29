@@ -41,12 +41,17 @@ class QuestDispatchToVerteronFamilyProductionFlowTest {
 	private static final Set<Integer> CANONICAL_DELIVERY_QUEST_IDS = Set.of(1913, 1914, 1915, 1916);
 
 	@Test
-	void preservesRetailMetadataForTechnistDispatchBranches() throws Exception {
+	void preservesRetailMetadataForEveryVerteronBranch() throws Exception {
 		Map<Integer, Set<String>> classes = Map.of(
+			1913, Set.of("GLADIATOR", "TEMPLAR"),
+			1914, Set.of("ASSASSIN", "RANGER"),
+			1915, Set.of("SORCERER", "SPIRIT_MASTER"),
+			1916, Set.of("CHANTER", "CLERIC"),
 			19070, Set.of("GUNSLINGER", "AETHERTECH"),
 			19071, Set.of("SONGWEAVER"));
-		Map<Integer, Integer> rewardModes = Map.of(19070, 4, 19071, 5);
-		for (int questId : List.of(19070, 19071)) {
+		Map<Integer, Integer> rewardModes = Map.of(
+			1913, 0, 1914, 1, 1915, 2, 1916, 3, 19070, 4, 19071, 5);
+		for (int questId : QUEST_IDS) {
 			var metadata = definition(questId).definition().metadata();
 			assertEquals(classes.get(questId), metadata.permittedClasses());
 			assertEquals(14046, metadata.rewards().getFirst().amount());
