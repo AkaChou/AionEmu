@@ -532,8 +532,8 @@ public final class QuestDefinitionCompiler {
 
 	private static void validateTransitionConflicts(List<QuestTransition> transitions,
 			Map<String, QuestNode> nodes) {
-		Map<EventConflictKey, List<ConflictCandidate>> candidatesByEvent =
-			new HashMap<>(Math.max(16, transitions.size() * 2));
+		Map<EventConflictKey, EventConflictBucket> candidatesByEvent =
+			new HashMap<>(Math.clamp((long) transitions.size() * 2, 16, 1024));
 		List<QuestNode> sourceNodes = List.copyOf(nodes.values());
 		Map<String, Integer> sourceNodeIndexes = new HashMap<>(Math.max(16, sourceNodes.size() * 2));
 		for (int index = 0; index < sourceNodes.size(); index++) {
@@ -546,22 +546,17 @@ public final class QuestDefinitionCompiler {
 				compatibleSourceNodes(transition, nodes, sourceNodes, sourceNodeIndexes));
 			List<EventConflictKey> keys = conflictKeys(transition.event());
 			int seenMarker = ordinal + 1;
-			for (int keyIndex = 0; keyIndex < keys.size(); keyIndex++) {
-				List<ConflictCandidate> previousCandidates = candidatesByEvent.get(keys.get(keyIndex));
-				if (previousCandidates == null) {
-					continue;
-				}
-				for (int candidateIndex = 0; candidateIndex < previousCandidates.size(); candidateIndex++) {
-					ConflictCandidate previous = previousCandidates.get(candidateIndex);
-					if (seenCandidates[previous.ordinal()] == seenMarker) {
-						continue;
-					}
-					seenCandidates[previous.ordinal()] = seenMarker;
-					checkConflict(previous, current);
+			for (EventConflictKey key : keys) {
+				EventConflictBucket bucket = candidatesByEvent.get(key);
+				if (bucket != null) {
+					bucket.checkConflicts(current, seenCandidates, seenMarker);
 				}
 			}
-			for (int keyIndex = 0; keyIndex < keys.size(); keyIndex++) {
-				candidatesByEvent.computeIfAbsent(keys.get(keyIndex), ignored -> new ArrayList<>()).add(current);
+			if (!current.compatibleSourceNodes().isEmpty()) {
+				for (EventConflictKey key : keys) {
+					candidatesByEvent.computeIfAbsent(key, ignored -> new EventConflictBucket())
+						.add(current);
+				}
 			}
 		}
 	}
@@ -688,6 +683,68 @@ public final class QuestDefinitionCompiler {
 	}
 
 	private record ConflictCandidate(int ordinal, QuestTransition transition, BitSet compatibleSourceNodes) {
+	}
+
+	/**
+	 * 同事件键下的冲突候选集，按来源状态节点分桶以消除不同单节点间无谓的 $O(N^2)$ 交叉比较。
+	 * Conflict candidate bucket under the same event key, partitioned by source node to eliminate
+	 * useless O(N^2) cross-comparisons between disjoint single nodes.
+	 */
+	private static final class EventConflictBucket {
+		private final Map<Integer, List<ConflictCandidate>> singleNodeCandidates = new HashMap<>();
+		private final List<ConflictCandidate> multiNodeCandidates = new ArrayList<>();
+
+		void checkConflicts(ConflictCandidate current, int[] seenCandidates, int seenMarker) {
+			BitSet currentNodes = current.compatibleSourceNodes();
+			int cardinality = currentNodes.cardinality();
+			if (cardinality == 0) {
+				return;
+			}
+			if (cardinality == 1) {
+				int nodeIndex = currentNodes.nextSetBit(0);
+				checkSingleMatches(nodeIndex, current, seenCandidates, seenMarker);
+				for (ConflictCandidate previous : multiNodeCandidates) {
+					if (previous.compatibleSourceNodes().get(nodeIndex)) {
+						checkAndMark(previous, current, seenCandidates, seenMarker);
+					}
+				}
+			} else {
+				for (int nodeIndex = currentNodes.nextSetBit(0); nodeIndex >= 0; nodeIndex = currentNodes.nextSetBit(nodeIndex + 1)) {
+					checkSingleMatches(nodeIndex, current, seenCandidates, seenMarker);
+				}
+				for (ConflictCandidate previous : multiNodeCandidates) {
+					if (previous.compatibleSourceNodes().intersects(currentNodes)) {
+						checkAndMark(previous, current, seenCandidates, seenMarker);
+					}
+				}
+			}
+		}
+
+		private void checkSingleMatches(int nodeIndex, ConflictCandidate current, int[] seenCandidates, int seenMarker) {
+			List<ConflictCandidate> singleMatches = singleNodeCandidates.get(nodeIndex);
+			if (singleMatches != null) {
+				for (ConflictCandidate previous : singleMatches) {
+					checkAndMark(previous, current, seenCandidates, seenMarker);
+				}
+			}
+		}
+
+		private static void checkAndMark(ConflictCandidate previous, ConflictCandidate current, int[] seenCandidates, int seenMarker) {
+			if (seenCandidates[previous.ordinal()] != seenMarker) {
+				seenCandidates[previous.ordinal()] = seenMarker;
+				checkConflict(previous, current);
+			}
+		}
+
+		void add(ConflictCandidate candidate) {
+			BitSet nodes = candidate.compatibleSourceNodes();
+			int cardinality = nodes.cardinality();
+			if (cardinality == 1) {
+				singleNodeCandidates.computeIfAbsent(nodes.nextSetBit(0), ignored -> new ArrayList<>()).add(candidate);
+			} else if (cardinality > 1) {
+				multiNodeCandidates.add(candidate);
+			}
+		}
 	}
 
 	private static boolean conditionsCannotMatchNode(List<QuestCondition> conditions, QuestNode node) {
