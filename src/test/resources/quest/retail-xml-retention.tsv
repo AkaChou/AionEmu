@@ -237,7 +237,7 @@
 1411	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history
 1412	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10m-item-decisions.tsv basis=PROJECTION_QE051
 1413	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-1414	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN_COMPOUND	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: compound chain axis unimplemented
+1414	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 1415	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 1417	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 1418	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
@@ -280,7 +280,7 @@
 1460	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 1461	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 1462	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-1463	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN_COMPOUND	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: compound chain axis unimplemented
+1463	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 1464	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 1465	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 1466	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
@@ -573,12 +573,12 @@
 1938	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 1939	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 1940	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
-1941	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
-1942	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
-1943	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
-1944	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
-1945	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
-1946	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
+1941	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+1942	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+1943	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+1944	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+1945	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+1946	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 1950	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10m-item-decisions.tsv basis=PROJECTION_QE051
 1951	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10m-item-decisions.tsv basis=PROJECTION_QE051
 1952	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10m-item-decisions.tsv basis=PROJECTION_QE051
@@ -1197,12 +1197,12 @@
 2927	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 2928	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10i-canonical-decisions.tsv basis=RETAIL_STAGE_CANONICAL
 2929	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
-2931	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
-2932	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
-2933	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
-2934	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
-2935	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
-2936	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
+2931	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+2932	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+2933	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+2934	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+2935	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
+2936	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 2938	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 2939	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10m-item-decisions.tsv basis=PROJECTION_QE051
 2940	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10m-item-decisions.tsv basis=PROJECTION_QE051
@@ -1560,7 +1560,7 @@
 4012	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0
 4013	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 4014	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
-4015	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: deep chain shape divergence (drift-authoritative code)
+4015	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 4016	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 4017	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
 4018	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
@@ -2456,7 +2456,7 @@
 10529	XML_RETENTION	-	SCRIPTED	registry=FUN_180caa850,FUN_180caf350,FUN_180caf3c0,FUN_180caf5f0,FUN_180caf6c0,FUN_180caf740
 10530	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_TALK_COLLECT_CHAIN_DEFERRED	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: talk+collect mixed-chain axis unimplemented
 11000	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
-11001	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: deep chain shape divergence (drift-authoritative code)
+11001	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 11002	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 11003	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c19-entry-npc-mirror-decisions.tsv basis=M3D_DOWNGRADE_REVERSED
 11004	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=MULTI_ITEM_HANDIN
@@ -2514,7 +2514,7 @@
 11104	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 11105	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10h-talk-chain-b1-decisions.tsv basis=P0C10H_EQUIVALENT
 11106	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10h-talk-chain-b1-decisions.tsv basis=P0C10H_EQUIVALENT
-11107	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN_COMPOUND	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: compound chain axis unimplemented
+11107	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 11108	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 11109	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
 11110	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=CONFIRM_RANGE+PREMATURE+EXTRA_KILL_COUNTER_LEGACY+PACK_REBASE_LEGACY+KILL_VARIANT_UNREACHABLE+GRID+LEGACY_NODE+BRIEFING_PAGE_LEGACY
@@ -2637,7 +2637,7 @@
 13768	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c52-guard-group-decisions.tsv basis=DD_HUNT_GUARD_GROUP
 13769	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c52-guard-group-decisions.tsv basis=DD_HUNT_GUARD_GROUP
 13770	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-13800	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: deep chain shape divergence (drift-authoritative code)
+13800	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 13801	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 13806	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=SELECTABLE_CHOICE_EXPANSION
 13807	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -3278,7 +3278,7 @@
 18509	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c22-haramel-decisions.tsv basis=M3D_DOWNGRADE_REVERSED
 18510	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
 18511	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
-18600	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: deep chain shape divergence (drift-authoritative code)
+18600	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18601	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10m-item-decisions.tsv basis=LEGACY_ITEM_GATE_REDUNDANT
 18602	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 18605	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
@@ -3419,22 +3419,22 @@
 19003	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10m-item-decisions.tsv basis=RETAIL_REPORT_CLOSE_EDGE
 19004	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10h-talk-chain-b1-decisions.tsv basis=P0C10H_EQUIVALENT
 19008	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
-19009	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
+19009	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 19010	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 19014	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
-19015	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
+19015	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 19016	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 19020	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
-19021	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
+19021	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 19022	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 19026	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
-19027	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
+19027	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 19028	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 19032	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
-19033	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
+19033	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 19034	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 19038	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640
-19039	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
+19039	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 19040	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 19041	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 19042	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -3444,12 +3444,12 @@
 19047	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 19048	RETAIL_TABLE	SimpleItemPlay	OK	retired-xml-in-git-history p1-itemplay-decisions.tsv basis=ITEM_PLAY_CANONICAL
 19049	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-19050	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
+19050	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 19051	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10m-item-decisions.tsv basis=PROJECTION_QE051
 19052	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 19053	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 19057	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
-19058	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
+19058	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 19059	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 19064	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 19065	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10m-item-decisions.tsv basis=PROJECTION_QE051
@@ -3608,7 +3608,7 @@
 21135	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
 21136	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c32-accept-entrance-decisions.tsv basis=M3D_DOWNGRADE_REVERSED
 21137	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
-21138	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: deep chain shape divergence (drift-authoritative code)
+21138	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 21139	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=RETAIL_REWARD_CONFIRM_RANGE
 21200	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=MULTI_ITEM_HANDIN
 21201	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -3708,7 +3708,7 @@
 23768	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c52-guard-group-decisions.tsv basis=DD_HUNT_GUARD_GROUP
 23769	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c52-guard-group-decisions.tsv basis=DD_HUNT_GUARD_GROUP
 23770	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_HUNT_GRID
-23800	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: deep chain shape divergence (drift-authoritative code)
+23800	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 23801	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 23806	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=SELECTABLE_CHOICE_EXPANSION
 23807	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -4345,7 +4345,7 @@
 28509	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c22-haramel-decisions.tsv basis=M3D_DOWNGRADE_REVERSED
 28510	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
 28511	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
-28600	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: deep chain shape divergence (drift-authoritative code)
+28600	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28601	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10m-item-decisions.tsv basis=LEGACY_GRANT_MISSING
 28602	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 28605	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
@@ -4486,22 +4486,22 @@
 29003	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10m-item-decisions.tsv basis=LEGACY_REWARD_DROPPED
 29004	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
 29008	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
-29009	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
+29009	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 29010	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 29014	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
-29015	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
+29015	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 29016	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 29020	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
-29021	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
+29021	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 29022	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 29026	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
-29027	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
+29027	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 29028	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 29032	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
-29033	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
+29033	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 29034	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_HANDIN_CANONICAL
 29038	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640
-29039	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
+29039	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 29040	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 29041	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 29042	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -4511,12 +4511,12 @@
 29047	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 29048	RETAIL_TABLE	SimpleItemPlay	OK	retired-xml-in-git-history p1-itemplay-decisions.tsv basis=ITEM_PLAY_CANONICAL
 29049	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-29050	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
+29050	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 29051	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10m-item-decisions.tsv basis=LEGACY_GRANT_MISSING
 29052	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 29053	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 29057	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
-29058	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_CRAFT_AXIS_UNDECLARED	craft progress axis not expressible in retail tables (CombineTask family; in-game craft product is the progress)
+29058	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 29059	RETAIL_TABLE	SimpleUseItem	OK	retired-xml-in-git-history p3b-use-item-decisions.tsv basis=USE_ITEM_CANONICAL
 29064	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 29065	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10m-item-decisions.tsv basis=PROJECTION_QE051
@@ -4607,7 +4607,7 @@
 30052	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=NPC_ID_RESOLUTION
 30053	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 30054	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
-30055	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: deep chain shape divergence (drift-authoritative code)
+30055	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30056	XML_RETENTION	-	SCRIPTED	registry=FUN_180cab520,FUN_180caca90,FUN_180caf350,FUN_180caf3c0
 30057	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
 30061	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10f-talk-chain-decisions.tsv basis=CHAIN_REPLAY
@@ -5317,12 +5317,12 @@
 80013	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 80014	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 80015	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-80016	XML_RETENTION	SimpleTalk	SCRIPTED	registry=FUN_180cab520,FUN_180cabb10
+80016	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80017	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80018	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c14-clean-decisions.tsv basis=M3D_DOWNGRADE_REVERSED
 80019	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80020	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10i-canonical-decisions.tsv basis=RETAIL_STAGE_CANONICAL
-80021	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN_COMPOUND	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: compound chain axis unimplemented
+80021	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80022	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80023	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 80024	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
