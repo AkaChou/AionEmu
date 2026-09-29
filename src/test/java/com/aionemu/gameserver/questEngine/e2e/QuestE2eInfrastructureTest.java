@@ -595,13 +595,11 @@ class QuestE2eInfrastructureTest {
 
 	@Test
 	void unreachableCounterContinuationIsAttributedToItsExecutableSibling() throws Exception {
-		/* P0c-8c（2026-09-24）：3118 已由真端文件驱动（真端网格没有"计数饱和后仍存在的续接边"），
-		   该判据改挂在 80751 上：它是保留 XML 的 SimpleHunt 行（保留码 SEMANTIC_GAP:CLIENT_BUTTON_UNWIRED），
-		   其 required=1 的 compact counter 仍会编出严格低于字段最小值的不可执行续接边（var0 < 0），
+		/* 36534 是保留 XML 的 SimpleHunt 行（保留码 ADJUDICATED:KILL_COVERAGE_LOSS），
+		   其 required=1 的 compact counter 仍会编出严格低于字段最小值的不可执行续接边（var1 < 0），
 		   形状与判定口径完全不变；这里同时是"引擎归因"路径在保留 XML 任务上的长期回归点。
-		   Retail-driven since P0c-8c: quest 3118 lost this shape, so the same adjudication now runs on 80751,
-		   a retained-XML SimpleHunt row whose required=1 compact counter keeps the unreachable continuation. */
-		CompiledQuestDefinition definition = definition(80751);
+		   80751 已随 CLIENT_BUTTON_UNWIRED 批退役转向真端规范形驱动，故该判据改挂在 36534 上。 */
+		CompiledQuestDefinition definition = definition(36534);
 		QuestTransition unreachable = definition.definition().transitions().stream()
 			.filter(transition -> "started".equals(transition.sourceNode()))
 			.filter(transition -> "started".equals(transition.targetNode()))

@@ -380,3 +380,14 @@
 27009	ADOPT_RETAIL	CHALLENGE_TASK_NPC_DELIVERY	-	挑战哨兵接取=交付 NPC 本人：真端 reward_npc_name 唯一解析到 800452，客户端 lifecycle 在同 NPC 登记 NPC_START 接取边（NONE→START）；归一化名贯到下游（RetailSimpleHuntPlan.bind + RetailChallengeAcquireAdoptions）
 27010	ADOPT_RETAIL	CHALLENGE_TASK_NPC_DELIVERY	-	挑战哨兵接取=交付 NPC 本人：真端 reward_npc_name 唯一解析到 800452，客户端 lifecycle 在同 NPC 登记 NPC_START 接取边（NONE→START）；归一化名贯到下游（RetailSimpleHuntPlan.bind + RetailChallengeAcquireAdoptions）
 27019	ADOPT_RETAIL	CHALLENGE_TASK_NPC_DELIVERY	-	挑战哨兵接取=交付 NPC 本人：真端 reward_npc_name 唯一解析到 800450，客户端 lifecycle 在同 NPC 登记 NPC_START 接取边（NONE→START）；归一化名贯到下游（RetailSimpleHuntPlan.bind + RetailChallengeAcquireAdoptions）
+1470	ADOPT_RETAIL	CLIENT_BUTTON_UNWIRED	-	规范形生命周期交付窗直接进分档奖励窗，废弃微观页码阶梯
+1548	ADOPT_RETAIL	CLIENT_BUTTON_UNWIRED	-	规范形生命周期交付窗直接进分档奖励窗，废弃微观页码阶梯
+30222	ADOPT_RETAIL	CLIENT_BUTTON_UNWIRED	-	规范形生命周期交付窗直接进分档奖励窗，废弃微观页码阶梯
+80751	ADOPT_RETAIL	CLIENT_BUTTON_UNWIRED	-	规范形生命周期交付窗直接进分档奖励窗，废弃微观页码阶梯
+80753	ADOPT_RETAIL	CLIENT_BUTTON_UNWIRED	-	规范形生命周期交付窗直接进分档奖励窗，废弃微观页码阶梯
+80763	ADOPT_RETAIL	CLIENT_BUTTON_UNWIRED	-	规范形生命周期交付窗直接进分档奖励窗，废弃微观页码阶梯
+80764	ADOPT_RETAIL	CLIENT_BUTTON_UNWIRED	-	规范形生命周期交付窗直接进分档奖励窗，废弃微观页码阶梯
+80765	ADOPT_RETAIL	CLIENT_BUTTON_UNWIRED	-	规范形生命周期交付窗直接进分档奖励窗，废弃微观页码阶梯
+80768	ADOPT_RETAIL	CLIENT_BUTTON_UNWIRED	-	规范形生命周期交付窗直接进分档奖励窗，废弃微观页码阶梯
+80769	ADOPT_RETAIL	CLIENT_BUTTON_UNWIRED	-	规范形生命周期交付窗直接进分档奖励窗，废弃微观页码阶梯
+80770	ADOPT_RETAIL	CLIENT_BUTTON_UNWIRED	-	规范形生命周期交付窗直接进分档奖励窗，废弃微观页码阶梯

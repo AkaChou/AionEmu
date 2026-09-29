@@ -286,7 +286,7 @@
 1466	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf640,FUN_180caf6c0
 1467	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf740
 1469	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10j-deferred-decisions.tsv basis=CON_QUEST_METADATA_CLOSED
-1470	XML_RETENTION	SimpleHunt	ADJUDICATED:CLIENT_BUTTON_UNWIRED	client button with no retail route (repair-era XML button set); gate CLIENT_BUTTON_UNWIRED class
+1470	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 1471	XML_RETENTION	SimpleTalk	ADJUDICATED:RETAIL_TALK_CHAIN_NO_START	retail-simple-talk-drift.tsv / retail-data-driven-drift.tsv: chain without NPC_START block (no accept segment to synthesize)
 1472	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 1473	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -358,7 +358,7 @@
 1545	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 1546	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 1547	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-1548	XML_RETENTION	SimpleHunt	ADJUDICATED:CLIENT_BUTTON_UNWIRED	client button with no retail route (repair-era XML button set); gate CLIENT_BUTTON_UNWIRED class
+1548	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 1549	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 1550	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 1551	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
@@ -3230,7 +3230,7 @@
 18035	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c39-canonical-adoption-decisions.tsv basis=CANONICAL_ITEM_CHANNEL
 18036	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 18037	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
-18200	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:NODE_PROJECTION	per-family gate registered rejection [drift DIFF equivalence-class registration]
+18200	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 18201	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 18202	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 18203	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
@@ -4297,7 +4297,7 @@
 28035	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c39-canonical-adoption-decisions.tsv basis=CANONICAL_ITEM_CHANNEL
 28036	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf3c0,FUN_180caf640,FUN_180caf6c0,FUN_180caf740
 28037	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=STAGE_FLIP_PAIRED+ACCEPT_NPC_DRIFT+ACCEPT_FLOW_LEGACY
-28200	XML_RETENTION	SimpleTalk	ADJUDICATED:DIFF:NODE_PROJECTION	per-family gate registered rejection [drift DIFF equivalence-class registration]
+28200	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 28201	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 28202	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=KILL_VARIANT_UNREACHABLE
 28203	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
@@ -4683,7 +4683,7 @@
 30219	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=KILL_VARIANT_UNREACHABLE
 30220	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
 30221	XML_RETENTION	SimpleHunt	ADJUDICATED:KILL_COVERAGE_LOSS	b2 kill coverage: retail target set below client SECTION contract (family-gate RETAIL_TABLE_GAPS class, row must still compile); XML carries the full repaired target set
-30222	XML_RETENTION	SimpleHunt	ADJUDICATED:CLIENT_BUTTON_UNWIRED	client button with no retail route (repair-era XML button set); gate CLIENT_BUTTON_UNWIRED class
+30222	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 30223	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 30224	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=KILL_VARIANT_UNREACHABLE
 30225	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
@@ -5988,9 +5988,9 @@
 80748	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_HANDIN_VOCABULARY_UNSUPPORTED	RetailHandinDialogFlowCompiler three-vote exclusion (client page-by-page vocabulary mirror is its contract; shared by DD chain compiler; HandoverContinuationContract locked)
 80749	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
 80750	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-80751	XML_RETENTION	SimpleHunt	ADJUDICATED:CLIENT_BUTTON_UNWIRED	client button with no retail route (repair-era XML button set); gate CLIENT_BUTTON_UNWIRED class
+80751	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 80752	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c10h-talk-chain-b5-decisions.tsv basis=P0C10H_EQUIVALENT
-80753	XML_RETENTION	SimpleHunt	ADJUDICATED:CLIENT_BUTTON_UNWIRED	client button with no retail route (repair-era XML button set); gate CLIENT_BUTTON_UNWIRED class
+80753	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 80754	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
 80755	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
 80756	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
@@ -6000,14 +6000,14 @@
 80760	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_PVP_GRID
 80761	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350
 80762	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-80763	XML_RETENTION	SimpleHunt	ADJUDICATED:CLIENT_BUTTON_UNWIRED	client button with no retail route (repair-era XML button set); gate CLIENT_BUTTON_UNWIRED class
-80764	XML_RETENTION	SimpleHunt	ADJUDICATED:CLIENT_BUTTON_UNWIRED	client button with no retail route (repair-era XML button set); gate CLIENT_BUTTON_UNWIRED class
-80765	XML_RETENTION	SimpleHunt	ADJUDICATED:CLIENT_BUTTON_UNWIRED	client button with no retail route (repair-era XML button set); gate CLIENT_BUTTON_UNWIRED class
+80763	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
+80764	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
+80765	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 80766	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350
 80767	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
-80768	XML_RETENTION	SimpleHunt	ADJUDICATED:CLIENT_BUTTON_UNWIRED	client button with no retail route (repair-era XML button set); gate CLIENT_BUTTON_UNWIRED class
-80769	XML_RETENTION	SimpleHunt	ADJUDICATED:CLIENT_BUTTON_UNWIRED	client button with no retail route (repair-era XML button set); gate CLIENT_BUTTON_UNWIRED class
-80770	XML_RETENTION	SimpleHunt	ADJUDICATED:CLIENT_BUTTON_UNWIRED	client button with no retail route (repair-era XML button set); gate CLIENT_BUTTON_UNWIRED class
+80768	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
+80769	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
+80770	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 80771	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
 80772	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_SIMPLE
 80773	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_COLLECT_CANONICAL
