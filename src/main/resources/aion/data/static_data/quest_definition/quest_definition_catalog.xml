@@ -416,31 +416,6 @@
   <definition id="17016" resource="aion/data/static_data/quest_definition/quests/17016.xml" mode="EXECUTABLE" />
   <definition id="17017" resource="aion/data/static_data/quest_definition/quests/17017.xml" mode="EXECUTABLE" />
   <definition id="17018" resource="aion/data/static_data/quest_definition/quests/17018.xml" mode="EXECUTABLE" />
-  <definition id="17106" resource="aion/data/static_data/quest_definition/quests/17106.xml" mode="EXECUTABLE" />
-  <definition id="17108" resource="aion/data/static_data/quest_definition/quests/17108.xml" mode="EXECUTABLE" />
-  <definition id="17110" resource="aion/data/static_data/quest_definition/quests/17110.xml" mode="EXECUTABLE" />
-  <definition id="17112" resource="aion/data/static_data/quest_definition/quests/17112.xml" mode="EXECUTABLE" />
-  <definition id="17114" resource="aion/data/static_data/quest_definition/quests/17114.xml" mode="EXECUTABLE" />
-  <definition id="17116" resource="aion/data/static_data/quest_definition/quests/17116.xml" mode="EXECUTABLE" />
-  <definition id="17118" resource="aion/data/static_data/quest_definition/quests/17118.xml" mode="EXECUTABLE" />
-  <definition id="17120" resource="aion/data/static_data/quest_definition/quests/17120.xml" mode="EXECUTABLE" />
-  <definition id="17122" resource="aion/data/static_data/quest_definition/quests/17122.xml" mode="EXECUTABLE" />
-  <definition id="17124" resource="aion/data/static_data/quest_definition/quests/17124.xml" mode="EXECUTABLE" />
-  <definition id="17126" resource="aion/data/static_data/quest_definition/quests/17126.xml" mode="EXECUTABLE" />
-  <definition id="17128" resource="aion/data/static_data/quest_definition/quests/17128.xml" mode="EXECUTABLE" />
-  <definition id="17130" resource="aion/data/static_data/quest_definition/quests/17130.xml" mode="EXECUTABLE" />
-  <definition id="17132" resource="aion/data/static_data/quest_definition/quests/17132.xml" mode="EXECUTABLE" />
-  <definition id="17134" resource="aion/data/static_data/quest_definition/quests/17134.xml" mode="EXECUTABLE" />
-  <definition id="17136" resource="aion/data/static_data/quest_definition/quests/17136.xml" mode="EXECUTABLE" />
-  <definition id="17138" resource="aion/data/static_data/quest_definition/quests/17138.xml" mode="EXECUTABLE" />
-  <definition id="17140" resource="aion/data/static_data/quest_definition/quests/17140.xml" mode="EXECUTABLE" />
-  <definition id="17142" resource="aion/data/static_data/quest_definition/quests/17142.xml" mode="EXECUTABLE" />
-  <definition id="17144" resource="aion/data/static_data/quest_definition/quests/17144.xml" mode="EXECUTABLE" />
-  <definition id="17146" resource="aion/data/static_data/quest_definition/quests/17146.xml" mode="EXECUTABLE" />
-  <definition id="17148" resource="aion/data/static_data/quest_definition/quests/17148.xml" mode="EXECUTABLE" />
-  <definition id="17150" resource="aion/data/static_data/quest_definition/quests/17150.xml" mode="EXECUTABLE" />
-  <definition id="17152" resource="aion/data/static_data/quest_definition/quests/17152.xml" mode="EXECUTABLE" />
-  <definition id="17154" resource="aion/data/static_data/quest_definition/quests/17154.xml" mode="EXECUTABLE" />
   <definition id="17505" resource="aion/data/static_data/quest_definition/quests/17505.xml" mode="EXECUTABLE" />
   <definition id="17511" resource="aion/data/static_data/quest_definition/quests/17511.xml" mode="EXECUTABLE" />
   <definition id="17540" resource="aion/data/static_data/quest_definition/quests/17540.xml" mode="EXECUTABLE" />
@@ -584,31 +559,6 @@
   <definition id="27016" resource="aion/data/static_data/quest_definition/quests/27016.xml" mode="EXECUTABLE" />
   <definition id="27017" resource="aion/data/static_data/quest_definition/quests/27017.xml" mode="EXECUTABLE" />
   <definition id="27018" resource="aion/data/static_data/quest_definition/quests/27018.xml" mode="EXECUTABLE" />
-  <definition id="27106" resource="aion/data/static_data/quest_definition/quests/27106.xml" mode="EXECUTABLE" />
-  <definition id="27108" resource="aion/data/static_data/quest_definition/quests/27108.xml" mode="EXECUTABLE" />
-  <definition id="27110" resource="aion/data/static_data/quest_definition/quests/27110.xml" mode="EXECUTABLE" />
-  <definition id="27112" resource="aion/data/static_data/quest_definition/quests/27112.xml" mode="EXECUTABLE" />
-  <definition id="27114" resource="aion/data/static_data/quest_definition/quests/27114.xml" mode="EXECUTABLE" />
-  <definition id="27116" resource="aion/data/static_data/quest_definition/quests/27116.xml" mode="EXECUTABLE" />
-  <definition id="27118" resource="aion/data/static_data/quest_definition/quests/27118.xml" mode="EXECUTABLE" />
-  <definition id="27120" resource="aion/data/static_data/quest_definition/quests/27120.xml" mode="EXECUTABLE" />
-  <definition id="27122" resource="aion/data/static_data/quest_definition/quests/27122.xml" mode="EXECUTABLE" />
-  <definition id="27124" resource="aion/data/static_data/quest_definition/quests/27124.xml" mode="EXECUTABLE" />
-  <definition id="27126" resource="aion/data/static_data/quest_definition/quests/27126.xml" mode="EXECUTABLE" />
-  <definition id="27128" resource="aion/data/static_data/quest_definition/quests/27128.xml" mode="EXECUTABLE" />
-  <definition id="27130" resource="aion/data/static_data/quest_definition/quests/27130.xml" mode="EXECUTABLE" />
-  <definition id="27132" resource="aion/data/static_data/quest_definition/quests/27132.xml" mode="EXECUTABLE" />
-  <definition id="27134" resource="aion/data/static_data/quest_definition/quests/27134.xml" mode="EXECUTABLE" />
-  <definition id="27136" resource="aion/data/static_data/quest_definition/quests/27136.xml" mode="EXECUTABLE" />
-  <definition id="27138" resource="aion/data/static_data/quest_definition/quests/27138.xml" mode="EXECUTABLE" />
-  <definition id="27140" resource="aion/data/static_data/quest_definition/quests/27140.xml" mode="EXECUTABLE" />
-  <definition id="27142" resource="aion/data/static_data/quest_definition/quests/27142.xml" mode="EXECUTABLE" />
-  <definition id="27144" resource="aion/data/static_data/quest_definition/quests/27144.xml" mode="EXECUTABLE" />
-  <definition id="27146" resource="aion/data/static_data/quest_definition/quests/27146.xml" mode="EXECUTABLE" />
-  <definition id="27148" resource="aion/data/static_data/quest_definition/quests/27148.xml" mode="EXECUTABLE" />
-  <definition id="27150" resource="aion/data/static_data/quest_definition/quests/27150.xml" mode="EXECUTABLE" />
-  <definition id="27152" resource="aion/data/static_data/quest_definition/quests/27152.xml" mode="EXECUTABLE" />
-  <definition id="27154" resource="aion/data/static_data/quest_definition/quests/27154.xml" mode="EXECUTABLE" />
   <definition id="27505" resource="aion/data/static_data/quest_definition/quests/27505.xml" mode="EXECUTABLE" />
   <definition id="27511" resource="aion/data/static_data/quest_definition/quests/27511.xml" mode="EXECUTABLE" />
   <definition id="27540" resource="aion/data/static_data/quest_definition/quests/27540.xml" mode="EXECUTABLE" />

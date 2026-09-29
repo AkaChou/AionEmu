@@ -3142,14 +3142,14 @@
 17008	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800447
 17009	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800447
 17010	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800447
-17011	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge-adopter deferred: acquire evidence complete (delivery npc + client NPC_START) but kill targets (WorldRaid_*/quest-boss aliases) unresolved server-side - flip deferred to the kill-target axis (batch 2)
+17011	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc unique in npc index; acquire-sentinel deferral
 17012	XML_RETENTION	-	NO_TABLE	retail-none
 17013	XML_RETENTION	-	NO_TABLE	retail-none
 17014	XML_RETENTION	-	NO_TABLE	retail-none
-17015	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge-adopter deferred: acquire evidence complete (delivery npc + client NPC_START) but kill targets (WorldRaid_*/quest-boss aliases) unresolved server-side - flip deferred to the kill-target axis (batch 2)
-17016	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge-adopter deferred: acquire evidence complete (delivery npc + client NPC_START) but kill targets (WorldRaid_*/quest-boss aliases) unresolved server-side - flip deferred to the kill-target axis (batch 2)
-17017	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge-adopter deferred: acquire evidence complete (delivery npc + client NPC_START) but kill targets (WorldRaid_*/quest-boss aliases) unresolved server-side - flip deferred to the kill-target axis (batch 2)
-17018	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge-adopter deferred: acquire evidence complete (delivery npc + client NPC_START) but kill targets (WorldRaid_*/quest-boss aliases) unresolved server-side - flip deferred to the kill-target axis (batch 2)
+17015	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc unique in npc index; acquire-sentinel deferral
+17016	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc unique in npc index; acquire-sentinel deferral
+17017	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc unique in npc index; acquire-sentinel deferral
+17018	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc unique in npc index; acquire-sentinel deferral
 17019	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800445
 17100	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
 17101	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
@@ -3157,55 +3157,55 @@
 17103	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
 17104	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
 17105	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17106	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17106	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17107	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17108	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17108	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17109	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17110	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17110	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17111	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17112	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17112	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17113	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17114	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17114	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17115	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17116	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17116	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17117	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17118	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17118	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17119	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17120	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17120	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17121	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17122	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17122	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17123	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17124	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17124	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17125	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17126	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17126	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17127	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17128	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17128	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17129	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17130	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17130	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17131	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17132	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17132	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17133	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17134	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17134	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17135	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17136	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17136	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17137	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17138	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17138	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17139	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17140	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17140	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17141	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17142	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17142	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17143	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17144	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17144	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17145	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17146	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17146	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17147	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17148	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17148	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17149	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17150	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17150	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17151	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17152	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17152	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17153	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-17154	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_Visitorpot_seller_05 unresolved in npc index
+17154	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 17160	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c58-challenge-sentinel-decisions.tsv basis=DD_CHALLENGE_SENTINEL_ACCEPT_AT_REWARD_NPC
 17161	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c58-challenge-sentinel-decisions.tsv basis=DD_CHALLENGE_SENTINEL_ACCEPT_AT_REWARD_NPC
 17162	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c58-challenge-sentinel-decisions.tsv basis=DD_CHALLENGE_SENTINEL_ACCEPT_AT_REWARD_NPC
@@ -4209,14 +4209,14 @@
 27008	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800452
 27009	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800452
 27010	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800452
-27011	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge-adopter deferred: acquire evidence complete (delivery npc + client NPC_START) but kill targets (WorldRaid_*/quest-boss aliases) unresolved server-side - flip deferred to the kill-target axis (batch 2)
+27011	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc unique in npc index; acquire-sentinel deferral
 27012	XML_RETENTION	-	NO_TABLE	retail-none
 27013	XML_RETENTION	-	NO_TABLE	retail-none
 27014	XML_RETENTION	-	NO_TABLE	retail-none
-27015	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge-adopter deferred: acquire evidence complete (delivery npc + client NPC_START) but kill targets (WorldRaid_*/quest-boss aliases) unresolved server-side - flip deferred to the kill-target axis (batch 2)
-27016	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge-adopter deferred: acquire evidence complete (delivery npc + client NPC_START) but kill targets (WorldRaid_*/quest-boss aliases) unresolved server-side - flip deferred to the kill-target axis (batch 2)
-27017	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge-adopter deferred: acquire evidence complete (delivery npc + client NPC_START) but kill targets (WorldRaid_*/quest-boss aliases) unresolved server-side - flip deferred to the kill-target axis (batch 2)
-27018	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge-adopter deferred: acquire evidence complete (delivery npc + client NPC_START) but kill targets (WorldRaid_*/quest-boss aliases) unresolved server-side - flip deferred to the kill-target axis (batch 2)
+27015	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc unique in npc index; acquire-sentinel deferral
+27016	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc unique in npc index; acquire-sentinel deferral
+27017	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc unique in npc index; acquire-sentinel deferral
+27018	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc unique in npc index; acquire-sentinel deferral
 27019	RETAIL_TABLE	SimpleHunt	OK	retail-simple-hunt-adjudicated-decisions.tsv ADOPT_RETAIL CHALLENGE_TASK_NPC_DELIVERY npc=800450
 27100	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
 27101	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
@@ -4224,55 +4224,55 @@
 27103	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
 27104	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
 27105	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27106	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27106	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27107	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27108	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27108	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27109	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27110	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27110	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27111	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27112	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27112	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27113	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27114	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27114	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27115	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27116	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27116	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27117	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27118	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27118	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27119	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27120	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27120	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27121	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27122	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27122	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27123	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27124	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27124	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27125	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27126	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27126	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27127	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27128	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27128	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27129	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27130	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27130	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27131	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27132	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27132	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27133	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27134	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27134	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27135	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27136	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27136	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27137	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27138	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27138	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27139	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27140	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27140	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27141	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27142	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27142	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27143	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27144	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27144	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27145	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27146	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27146	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27147	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27148	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27148	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27149	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27150	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27150	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27151	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27152	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27152	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27153	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history p0c12-sentinel-decisions.tsv basis=CHALLENGE_TASK_ACCEPT_AT_REWARD
-27154	XML_RETENTION	SimpleHunt	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_NO_GRANT_PATH	b1-acquire-sentinel/b1_forensics.tsv challenge grant: no server accept entry; delivery npc Town_D_Visitorpot_seller_05 unresolved in npc index
+27154	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history
 27160	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c58-challenge-sentinel-decisions.tsv basis=DD_CHALLENGE_SENTINEL_ACCEPT_AT_REWARD_NPC
 27161	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c58-challenge-sentinel-decisions.tsv basis=DD_CHALLENGE_SENTINEL_ACCEPT_AT_REWARD_NPC
 27162	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p0c58-challenge-sentinel-decisions.tsv basis=DD_CHALLENGE_SENTINEL_ACCEPT_AT_REWARD_NPC
