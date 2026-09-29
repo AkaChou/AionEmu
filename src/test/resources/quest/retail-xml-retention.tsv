@@ -4866,29 +4866,29 @@
 35049	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=FACTION_GRANT_DAILY
 35050	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=FACTION_GRANT_DAILY
 35051	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=FACTION_GRANT_DAILY
-35052	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+35052	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 35053	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 35054	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 35055	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 35056	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 35057	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
-35058	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-35059	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-35060	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-35061	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-35062	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-35063	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-35064	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-35065	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+35058	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+35059	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+35060	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+35061	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+35062	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+35063	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+35064	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+35065	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 35505	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
 35508	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
 35509	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
-35510	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-35511	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-35512	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-35513	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-35514	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-35515	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+35510	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+35511	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+35512	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+35513	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+35514	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+35515	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 36015	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 36016	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 36500	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
@@ -4915,24 +4915,24 @@
 36528	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 36529	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 36530	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
-36531	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-36532	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-36533	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-36534	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-36535	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-36536	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+36531	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+36532	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+36533	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+36534	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+36535	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+36536	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 36537	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 36538	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
-36539	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-36540	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-36541	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-36542	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-36543	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-36544	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-36545	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-36546	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-36547	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-36548	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+36539	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+36540	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+36541	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+36542	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+36543	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+36544	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+36545	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+36546	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+36547	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+36548	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 38000	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
 38001	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
 38002	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
@@ -5042,29 +5042,29 @@
 45049	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=FACTION_GRANT_DAILY
 45050	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=FACTION_GRANT_DAILY
 45051	RETAIL_TABLE	SimpleHunt	OK	retired-xml-in-git-history retail-simple-hunt-adjudicated-decisions.tsv basis=FACTION_GRANT_DAILY
-45052	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+45052	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 45053	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 45054	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 45055	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 45056	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
 45057	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history p5-datadriven-decisions.tsv basis=DD_TALK_CHAIN
-45058	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-45059	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-45060	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-45061	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-45062	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-45063	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-45064	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-45065	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+45058	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+45059	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+45060	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+45061	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+45062	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+45063	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+45064	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+45065	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 45505	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
 45508	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
 45509	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
-45510	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-45511	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-45512	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-45513	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-45514	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-45515	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+45510	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+45511	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+45512	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+45513	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+45514	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+45515	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 46015	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 46016	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 46500	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
@@ -5092,24 +5092,24 @@
 46528	RETAIL_TABLE	SimpleTalk	OK	retired-xml-in-git-history
 46529	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 46530	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
-46531	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-46532	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-46533	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-46534	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-46535	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-46536	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+46531	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+46532	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+46533	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+46534	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+46535	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+46536	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 46537	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
 46538	RETAIL_TABLE	SimpleCollectItem	OK	retired-xml-in-git-history m5b3-collect-route-decisions.tsv basis=FACTION_GRANT_DAILY
-46539	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-46540	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-46541	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-46542	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-46543	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-46544	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-46545	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-46546	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-46547	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
-46548	XML_RETENTION	DataDriven	ADJUDICATED:RETAIL_ACQUIRE_NPC_SENTINEL_AREA_PENDING	b1-acquire-sentinel/b1_forensics.tsv area grant: no quest_area binding in ai-areas.xml (retail world files do not wire it)
+46539	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+46540	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+46541	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+46542	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+46543	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+46544	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+46545	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+46546	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+46547	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
+46548	RETAIL_TABLE	DataDriven	OK	retired-xml-in-git-history
 48000	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
 48001	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0
 48002	XML_RETENTION	-	SCRIPTED	registry=FUN_180caf350,FUN_180caf6c0

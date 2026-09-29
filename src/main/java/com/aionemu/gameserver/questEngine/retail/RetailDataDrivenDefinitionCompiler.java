@@ -77,9 +77,12 @@ public final class RetailDataDrivenDefinitionCompiler {
 		// P5-4: three acquire shapes — Talk via the NPC uniqueness gate; EnterArea/none have no NPC and
 		// are granted on world quest-area entry (P0c-4), landing only in the hunt/pvp grid family.
 		String acquireCategory = entry.acquireCategory() == null ? "" : entry.acquireCategory();
+		String rewardName = entry.rewardNpc() == null ? "" : entry.rewardNpc();
 		boolean isEnterWorld = "enterworld".equalsIgnoreCase(acquireCategory);
 		boolean isEnterArea = "enterarea".equalsIgnoreCase(acquireCategory);
 		boolean isNone = "none".equalsIgnoreCase(acquireCategory);
+		boolean noneNpcAcquire = isNone && !questAreas.isBound(entry.questId())
+			&& (entry.allHunt() || entry.allPvp()) && !rewardName.isBlank();
 		// 物品接取轴（P0c-56）：真端 `category_acquire_ = ItemPlay` 的接取参数是**任务起始道具**符号
 		// （13952 形：道具模板自带 `<queststart questid=...>`/`<read/>`，遗留 XML 的接取边正是
 		// `<use-item item-id=...>` + 无主 QUEST_ACCEPT_SIMPLE/QUEST_REFUSE_SIMPLE，客户端该行
@@ -109,7 +112,7 @@ public final class RetailDataDrivenDefinitionCompiler {
 		}
 		// 物品接取行的接取位点由道具承担（不查 NPC 名表），其余族照旧。
 		// Item-acquired rows have no acquire npc; the deliverable name channel stays untouched for the rest.
-		boolean npcAcquire = !isEnterArea && !isNone && !isEnterWorld && !itemAcquire;
+		boolean npcAcquire = (!isEnterArea && !isNone && !isEnterWorld && !itemAcquire) || noneNpcAcquire;
 		int worldAcquireId = 0;
 		if (isEnterWorld) {
 			String param = entry.acquireParam() == null ? "" : entry.acquireParam().trim();
@@ -313,7 +316,6 @@ public final class RetailDataDrivenDefinitionCompiler {
 		// multi-npc shape; every other family keeps exact/variant resolution and still rejects a group
 		// name as unresolved (the single-owner gates refuse multi-value sets as before).
 		boolean huntFamily = entry.allHunt() || entry.allPvp();
-		String rewardName = entry.rewardNpc() == null ? "" : entry.rewardNpc();
 		// 挑战任务哨兵（P0c-58）：真端表用 `value0_acquire_ = _challengetask_`（哨兵，不是 NPC 名）
 		// 表示"由挑战任务 NPC 发放"。挑战任务由**交付 NPC 本人**发放：客户端 npc 块在 804699/804719 上
 		// 声明的对话路由名（`quest_ai_name`）正是真端 reward 名，客户端该行的 accept 页（select_none
@@ -330,6 +332,8 @@ public final class RetailDataDrivenDefinitionCompiler {
 		String acquireParam = entry.acquireParam() == null ? "" : entry.acquireParam();
 		if (CHALLENGE_TASK_SENTINEL.equalsIgnoreCase(acquireParam.trim())
 				&& "CHALLENGE_TASK".equals(metadata.metadata().category())) {
+			acquireParam = rewardName;
+		} else if (noneNpcAcquire) {
 			acquireParam = rewardName;
 		}
 		// 无进度交付行（交付即完成）的**声明组**也走统一名字通道：18737 形 = 真端 reward 名是
@@ -811,7 +815,7 @@ public final class RetailDataDrivenDefinitionCompiler {
 		// EnterArea/none 接取 = 世界 quest_area 进区域发放（P0c-4 机制）；未绑定的行由 requireAcquire 稳定码拒绝。
 		// EnterArea/none acquires are granted on world quest-area entry (P0c-4); unbound rows are rejected by requireAcquire.
 		RetailGrantKind grantKind = "enterarea".equalsIgnoreCase(entry.acquireCategory())
-			|| "none".equalsIgnoreCase(entry.acquireCategory())
+			|| ("none".equalsIgnoreCase(entry.acquireCategory()) && (acquireName == null || acquireName.isBlank()))
 				? RetailGrantKind.AREA
 				: ("enterworld".equalsIgnoreCase(entry.acquireCategory())
 					? RetailGrantKind.WORLD
